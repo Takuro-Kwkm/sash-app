@@ -13,24 +13,17 @@ const makeDefinition = (productId, key, displayLabel, displayOrder, sourceRole, 
   sourceRole
 });
 
-const makeWindowValues = (productId, windows) => windows.map((window, index) => ({
+const makeWindowValues = (productId, windows) => windows.map(([value, displayLabel], index) => ({
   productId,
   specificationKey: "window_type",
-  value: window.id,
-  displayLabel: window.label,
+  value,
+  displayLabel,
   displayOrder: index + 1,
-  status: "ACTIVE",
-  metadata: window.metadata ?? {}
+  status: "ACTIVE"
 }));
 
 const makeModule = ({ product, windows, source, appControlSheet, sizeMode = "STANDARD" }) => ({
-  product: {
-    ...product,
-    category: "サッシ",
-    status: "ACTIVE",
-    recoveryStatus: "SOURCE_VERIFIED",
-    source
-  },
+  product: { ...product, category: "サッシ", status: "ACTIVE", recoveryStatus: "SOURCE_VERIFIED", source },
   specificationDefinitions: [
     makeDefinition(product.id, "window_type", "窓種", 10, "WINDOWS"),
     makeDefinition(product.id, "size_mode", "サイズ方式", 20, "SIZE"),
@@ -51,16 +44,14 @@ const makeModule = ({ product, windows, source, appControlSheet, sizeMode = "STA
     { productId: product.id, specificationKey: "size_mode", required: true, selector: { productId: product.id } },
     { productId: product.id, specificationKey: "size", required: true, selector: { productId: product.id } }
   ],
-  ruleSets: [
-    {
-      productId: product.id,
-      id: `${product.id}:app-control`,
-      type: "SOURCE_ROUTING",
-      selector: { productId: product.id },
-      payload: { appControlSheet },
-      status: "ACTIVE"
-    }
-  ],
+  ruleSets: [{
+    productId: product.id,
+    id: `${product.id}:app-control`,
+    type: "SOURCE_ROUTING",
+    selector: { productId: product.id },
+    payload: { appControlSheet },
+    status: "ACTIVE"
+  }],
   dependencies: [],
   evidence: [{
     productId: product.id,
@@ -78,10 +69,24 @@ export const CURRENT_WINDOW_SERIES_MODULES = [
     source: { id: "17nX4MDq9eNj-GaLvESMrRBobqoR0s5pj", title: "サーモスⅡH_商品マスター_v0.8_網戸格子全面監査_GoldenTest版.xlsx" },
     appControlSheet: "14_APP_候補制御",
     windows: [
-      ["WT-S2H-HIKICHIGAI","単体引違い窓"], ["WT-S2H-SHUTTER-HIKI","シャッター付引違い窓"], ["WT-S2H-AMADO-HIKI","雨戸付引違い窓"], ["WT-S2H-MENKOSHI-HIKI","面格子付引違い窓"],
-      ["WT-S2H-AGE-SAGE","上げ下げ窓FS"], ["WT-S2H-TATE-SUBERI","縦すべり出し窓"], ["WT-S2H-SUBERI","すべり出し窓"], ["WT-S2H-FIX","FIX窓"], ["WT-S2H-UCHITAO-SHI","内倒し窓"], ["WT-S2H-SOTO-TAOSHI","外倒し窓"],
-      ["WT-S2H-RENMADO","連窓"], ["WT-S2H-DANMADO","段窓"], ["WT-S2H-DEG-SHO","出窓"], ["WT-S2H-KAZARI-HIKI","装飾引違い窓"], ["WT-S2H-KOSHO","高所用横すべり出し窓"], ["WT-S2H-SAIHU-KATTEGUCHI","採風勝手口ドアFS"], ["WT-S2H-KATTEGUCHI","勝手口ドア" ]
-    ].map(([id,label]) => ({id,label}))
+      ["WT-S2H-HIKICHIGAI","単体引違い窓"],
+      ["WT-S2H-SHUTTER-HIKI","シャッター付引違い窓"],
+      ["WT-S2H-AMADO-HIKI","雨戸付引違い窓"],
+      ["WT-S2H-MENKOSHI-HIKI","面格子付引違い窓"],
+      ["WT-S2H-TATE-SUBERI","縦すべり出し窓"],
+      ["WT-S2H-YOKO-SUBERI","横すべり出し窓"],
+      ["WT-S2H-KOSHO-YOKO","高所用横すべり出し窓"],
+      ["WT-S2H-AGE-SAGE-FS","上げ下げ窓FS"],
+      ["WT-S2H-MENKOSHI-AGE-FS","面格子付上げ下げ窓FS"],
+      ["WT-S2H-FIX-OUT","FIX窓（外押縁タイプ）"],
+      ["WT-S2H-FIX-IN","FIX窓（内押縁タイプ）"],
+      ["WT-S2H-UCHIDAOSHI","内倒し窓"],
+      ["WT-S2H-SOTODAOSHI","外倒し窓"],
+      ["WT-S2H-KAZARI-HIKI","装飾引違い窓"],
+      ["WT-S2H-TERRACE-DOOR","テラスドア"],
+      ["WT-S2H-KATTEGUCHI-VENT-FS","採風勝手口ドアFS"],
+      ["WT-S2H-KATTEGUCHI","勝手口ドア"]
+    ]
   }),
   makeModule({
     product: { id: "SER-LIX-SAMOSL", manufacturer: "LIXIL", displayName: "サーモスL" },
@@ -89,10 +94,24 @@ export const CURRENT_WINDOW_SERIES_MODULES = [
     appControlSheet: "16_APP_候補制御",
     sizeMode: "STANDARD_CUSTOM",
     windows: [
-      ["WT-SL-HIKICHIGAI","単体引違い窓"], ["WT-SL-SHUTTER-HIKI","シャッター付引違い窓"], ["WT-SL-AMADO-HIKI","雨戸付引違い窓"], ["WT-SL-MENKOSHI-HIKI","面格子付引違い窓"],
-      ["WT-SL-AGE-SAGE","上げ下げ窓FS"], ["WT-SL-TATE-SUBERI","縦すべり出し窓"], ["WT-SL-SUBERI","すべり出し窓"], ["WT-SL-FIX","FIX窓"], ["WT-SL-UCHITAO-SHI","内倒し窓"], ["WT-SL-SOTO-TAOSHI","外倒し窓"],
-      ["WT-SL-RENMADO","連窓"], ["WT-SL-DANMADO","段窓"], ["WT-SL-KOSHO","高所用横すべり出し窓"], ["WT-SL-KATTEGUCHI","勝手口ドア"], ["WT-SL-SAIHU-KATTEGUCHI","採風勝手口ドアFS"]
-    ].map(([id,label]) => ({id,label}))
+      ["WT-SL-HIKICHIGAI","単体引違い窓"],
+      ["WT-SL-SHUTTER-HIKI","シャッター付引違い窓"],
+      ["WT-SL-AMADO-HIKI","雨戸付引違い窓"],
+      ["WT-SL-MENKOSHI-HIKI","面格子付引違い窓"],
+      ["WT-SL-TATE-SUBERI","縦すべり出し窓"],
+      ["WT-SL-YOKO-SUBERI","横すべり出し窓"],
+      ["WT-SL-KOSHO-YOKO","高所用横すべり出し窓"],
+      ["WT-SL-AGE-SAGE-FS","上げ下げ窓FS"],
+      ["WT-SL-MENKOSHI-AGE-FS","面格子付上げ下げ窓FS"],
+      ["WT-SL-FIX-OUT","FIX窓（外押縁タイプ）"],
+      ["WT-SL-FIX-IN","FIX窓（内押縁タイプ）"],
+      ["WT-SL-UCHIDAOSHI","内倒し窓"],
+      ["WT-SL-SOTODAOSHI","外倒し窓"],
+      ["WT-SL-KAZARI-HIKI","装飾引違い窓"],
+      ["WT-SL-TERRACE-DOOR","テラスドア"],
+      ["WT-SL-KATTEGUCHI-VENT-FS","採風勝手口ドアFS"],
+      ["WT-SL-KATTEGUCHI","勝手口ドア"]
+    ]
   }),
   makeModule({
     product: { id: "SER-YKK-APW430", manufacturer: "YKK AP", displayName: "APW 430" },
@@ -100,8 +119,32 @@ export const CURRENT_WINDOW_SERIES_MODULES = [
     appControlSheet: "COMMON_MASTER_RULE_TABLES",
     sizeMode: "STANDARD_CUSTOM",
     windows: [
-      ["APW430-HIKI","引違い窓"], ["APW430-SHUTTER-HIKI","シャッター付引違い窓"], ["APW430-MENKOSHI-HIKI","面格子付引違い窓"], ["APW430-TATE-SUBERI","たてすべり出し窓"], ["APW430-SUBERI","すべり出し窓"], ["APW430-FIX","FIX窓"], ["APW430-KOSHO","高所用窓"]
-    ].map(([id,label]) => ({id,label}))
+      ["SWT-YKK-APW430-TATE-GREMON-SINGLE","たてすべり出し窓（グレモンハンドル仕様）単窓"],
+      ["SWT-YKK-APW430-TATE-GREMON-FIX-DAN","たてすべり出し窓（グレモンハンドル仕様）＋FIX段窓"],
+      ["SWT-YKK-APW430-TATE-GREMON-FIX-REN","たてすべり出し窓（グレモンハンドル仕様）＋FIX連窓"],
+      ["SWT-YKK-APW430-TATE-GREMON-WINDCATCH","たてすべり出し窓（グレモンハンドル仕様）ウインドキャッチ連窓"],
+      ["SWT-YKK-APW430-TATE-OP-SINGLE","たてすべり出し窓（オペレーターハンドル仕様）単窓"],
+      ["SWT-YKK-APW430-TATE-OP-FIX-DAN","たてすべり出し窓（オペレーターハンドル仕様）＋FIX段窓"],
+      ["SWT-YKK-APW430-TATE-OP-FIX-REN","たてすべり出し窓（オペレーターハンドル仕様）＋FIX連窓"],
+      ["SWT-YKK-APW430-TATE-OP-WINDCATCH","たてすべり出し窓（オペレーターハンドル仕様）ウインドキャッチ連窓"],
+      ["SWT-YKK-APW430-SUBERI-GREMON-SINGLE","すべり出し窓（グレモンハンドル仕様）単窓"],
+      ["SWT-YKK-APW430-SUBERI-GREMON-FIX-DAN","すべり出し窓（グレモンハンドル仕様）＋FIX段窓"],
+      ["SWT-YKK-APW430-SUBERI-GREMON-FIX-REN","すべり出し窓（グレモンハンドル仕様）＋FIX連窓"],
+      ["SWT-YKK-APW430-SUBERI-OP-SINGLE","すべり出し窓（オペレーターハンドル仕様）単窓"],
+      ["SWT-YKK-APW430-SUBERI-OP-FIX-DAN","すべり出し窓（オペレーターハンドル仕様）＋FIX段窓"],
+      ["SWT-YKK-APW430-SUBERI-OP-FIX-REN","すべり出し窓（オペレーターハンドル仕様）＋FIX連窓"],
+      ["SWT-YKK-APW430-HIGH-SINGLE","高所用すべり出し窓 単窓"],
+      ["SWT-YKK-APW430-HIGH-ENDOP-SINGLE","高所用すべり出し窓（端部操作仕様）単窓"],
+      ["SWT-YKK-APW430-TWOACTION-SINGLE","ツーアクション窓 単窓"],
+      ["SWT-YKK-APW430-TWOACTION-FIX-DAN","ツーアクション窓＋FIX段窓"],
+      ["SWT-YKK-APW430-TWOACTION-FIX-REN","ツーアクション窓＋FIX連窓"],
+      ["SWT-YKK-APW430-HIKI","引違い窓"],
+      ["SWT-YKK-APW430-MENKOSHI-HIKI","面格子付引違い窓"],
+      ["SWT-YKK-APW430-SHUTTER-HIKI","シャッター付引違い窓"],
+      ["SWT-YKK-APW430-FIX-MADO","FIX窓 窓タイプ"],
+      ["SWT-YKK-APW430-FIX-TR-ZAIRAI","FIX窓 テラスタイプ（在来）"],
+      ["SWT-YKK-APW430-FIX-TR-204","FIX窓 テラスタイプ（2×4）"]
+    ]
   }),
   makeModule({
     product: { id: "SER-YKK-APW431", manufacturer: "YKK AP", displayName: "APW 431" },
@@ -109,7 +152,12 @@ export const CURRENT_WINDOW_SERIES_MODULES = [
     appControlSheet: "27_APP統合選択",
     sizeMode: "STANDARD_CUSTOM",
     windows: [
-      ["W431-001","引違いテラス戸"], ["W431-002","シャッター付引違いテラス戸"], ["W431-003","大開口スライディング"], ["W431-004","開き窓テラス"], ["W431-005","FIX窓"], ["W431-006","勝手口ドア"]
-    ].map(([id,label]) => ({id,label}))
+      ["W431-001","引違いテラス戸"],
+      ["W431-002","シャッター付引違いテラス戸"],
+      ["W431-003","大開口スライディング"],
+      ["W431-004","開き窓テラス"],
+      ["W431-005","テラスドア"],
+      ["W431-006","勝手口ドア"]
+    ]
   })
 ];
