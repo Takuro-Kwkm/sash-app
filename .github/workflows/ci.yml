@@ -1,0 +1,28 @@
+name: V2 Recovery CI
+
+on:
+  push:
+    branches: [main, feat/catalog-recovery-v2]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm test
+      - name: Runtime smoke
+        run: |
+          npm run start:qa > /tmp/sash-v2.log 2>&1 &
+          PID=$!
+          trap 'kill $PID || true' EXIT
+          for i in {1..20}; do
+            if curl -fsS http://127.0.0.1:4173/api/health > /tmp/health.json; then break; fi
+            sleep 0.5
+          done
+          cat /tmp/health.json
+          node -e 'const h=require("/tmp/health.json"); if(!h.ok || h.inventory.length!==4) process.exit(1)'
