@@ -21,3 +21,4 @@ import p19 from './samos2h-data/part-19.mjs';
 import p20 from './samos2h-data/part-20.mjs';
 const payload=p1+p2+p3+p4+p5+p6+p7+p8+p9+p10+p11+p12+p13+p14+p15+p16+p17+p18+p19+p20;
 export const SAMOS2H_SOURCE=JSON.parse(brotliDecompressSync(Buffer.from(payload,'base64')).toString('utf8'));
+if(!SAMOS2H_SOURCE.sizesPacked) console.log('S2H_SOURCE_SHAPE',Object.keys(SAMOS2H_SOURCE),JSON.stringify(SAMOS2H_SOURCE.sizes?.[0]??null),JSON.stringify(SAMOS2H_SOURCE.sizeDictionaries??null));
