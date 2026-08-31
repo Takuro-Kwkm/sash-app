@@ -107,10 +107,14 @@ for(const row of source.highOperationMatrix.filter((item)=>item.allowed)){
   if(!highAllowedBySize.has(row.sizeId))highAllowedBySize.set(row.sizeId,[]);
   highAllowedBySize.get(row.sizeId).push(row.spec);
 }
-const sizeValues=source.sizes.filter((row)=>row.active).map((row,index)=>{
+const standardSizeSelector=(row)=>{
   const selector={size_mode:"STANDARD",window_type:row.window,construction:row.construction,...specific(row.spec)};
   if(row.window==="WT-SL-KOSHO-YOKO")selector.specific_spec={$in:highAllowedBySize.get(row.id)??[]};
   if(needsHanding(row.window,row.spec))selector.handing={$in:["L","R"]};
+  return selector;
+};
+const sizeValues=source.sizes.filter((row)=>row.active).map((row,index)=>{
+  const selector=standardSizeSelector(row);
   return value("size",row.id,`${row.callCode} ｜ ${row.actualW}×${row.actualH}mm`,index+1,{
     idSuffix:row.id,selector,evidenceIds:ev("EV-SL-SIZE"),
     metadata:sourceMeta("06_サイズ",row.sourceRow,{
@@ -120,6 +124,13 @@ const sizeValues=source.sizes.filter((row)=>row.active).map((row,index)=>{
     })
   });
 });
+const standardSizeRecords=source.sizes.map((row,index)=>({
+  id:row.id,productId:PRODUCT_ID,windowTypeId:row.window,specificationId:row.spec&&row.spec!=="*"?row.spec:null,
+  construction:row.construction,nominalW:row.callW,nominalH:row.callH,actualW:row.actualW,actualH:row.actualH,
+  sizeCode:row.callCode,windowClass:row.windowClass,selectable:Boolean(row.active),status:row.active?"ACTIVE":"INACTIVE",
+  selector:standardSizeSelector(row),displayLabel:`${row.callCode} ｜ ${row.actualW}×${row.actualH}mm`,displayOrder:index+1,
+  evidenceIds:ev("EV-SL-SIZE"),metadata:sourceMeta("06_サイズ",row.sourceRow,{sourceSizeId:row.id,actualW:row.actualW,actualH:row.actualH,callW:row.callW,callH:row.callH,callCode:row.callCode,construction:row.construction,windowClass:row.windowClass,glassSymbol:row.glassSymbol,glassState:row.glassState,page:row.page})
+}));
 
 const leafValues=["2枚建","4枚建"].map((label,index)=>value("leaf_configuration",label,label,index+1,{
   selector:{size_mode:"CUSTOM",window_type:"WT-SL-MENKOSHI-HIKI"},evidenceIds:ev("EV-SL-CUSTOM")
@@ -318,6 +329,7 @@ export const THERMOSL_MODULE={
     ...exteriorValues,...interiorValues,...screenPresenceValues,...screenFormValues,...screenMidrailValues,...screenNetValues,
     ...glassBaseValues,...glassTypeValues,...glassDetailValues,...glassFunctionValues,...optionValues
   ],
+  standardSizeRecords,
   requiredFieldRules,
   ruleSets:[
     {id:`${PRODUCT_ID}:app-control`,productId:PRODUCT_ID,type:"SOURCE_ROUTING",status:"ACTIVE",selector:{},payload:source.appControls,evidenceIds:ev("EV-SL-APP")},

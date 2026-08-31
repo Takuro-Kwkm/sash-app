@@ -6,3 +6,11 @@ export const handingSelector={any:handingScopes};
 export const handingValues=[value('handing','L','L（左吊元）',1,{selector:handingSelector,evidenceIds:ev('EV-S2H-001'),metadata:{sourceFile:master.title,sourceSheet:'06_サイズ',sourceKey:'吊元=L/R'}}),value('handing','R','R（右吊元）',2,{selector:handingSelector,evidenceIds:ev('EV-S2H-001'),metadata:{sourceFile:master.title,sourceSheet:'06_サイズ',sourceKey:'吊元=L/R'}})];
 export const constructionMap=new Map();for(const r of sizes){const selector={window_type:r.window,...(r.spec?{specific_spec:r.spec}:{})},k=JSON.stringify([r.window,r.spec,r.construction]);if(!constructionMap.has(k))constructionMap.set(k,value('construction',r.construction,r.construction==='在来・204'?'在来・2×4共通':r.construction,constructionMap.size+1,{selector,evidenceIds:ev('EV-S2H-001'),metadata:{sourceFile:master.title,sourceSheet:'06_サイズ'}}));}
 export const sizeValues=sizes.map((r,i)=>value('size',r.id,`${r.callCode??`${r.callW}${r.callH}`} ｜ ${r.actualW}×${r.actualH}mm`,i+1,{selector:{window_type:r.window,construction:r.construction,...(r.spec?{specific_spec:r.spec}:{}),...(r.handingRequired?{handing:{$in:['L','R']}}:{})},evidenceIds:ev('EV-S2H-001'),metadata:{actualW:r.actualW,actualH:r.actualH,callW:r.callW,callH:r.callH,callCode:r.callCode,innerCode:r.innerCode,construction:r.construction,windowClass:r.windowClass,frameType:r.frameType,glassSymbol:r.glassSymbol,patternAllowed:r.patternAllowed,handingRequired:r.handingRequired,sourceFile:master.title,sourceSheet:'06_サイズ',sourceRow:r.sourceRow}}));
+export const activeStandardSizeRecords=sizeValues.map((row)=>({
+ id:row.value,productId:row.productId,windowTypeId:row.selector.window_type,
+ specificationId:row.selector.specific_spec??null,construction:row.metadata.construction,
+ nominalW:row.metadata.callW,nominalH:row.metadata.callH,actualW:row.metadata.actualW,actualH:row.metadata.actualH,
+ sizeCode:row.metadata.callCode,innerCode:row.metadata.innerCode,windowClass:row.metadata.windowClass,
+ frameType:row.metadata.frameType,selectable:true,status:'ACTIVE',selector:row.selector,
+ displayLabel:row.displayLabel,displayOrder:row.displayOrder,evidenceIds:row.evidenceIds,metadata:row.metadata
+}));

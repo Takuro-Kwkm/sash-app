@@ -1,6 +1,43 @@
 import{COLLECTIONS,ROLE_ALIASES,resolveSheetRole}from'./catalog-roles.mjs';
 import{validateCatalogModule,validateCatalog}from'./catalog-validation.mjs';
-export function installCatalogModule(module,catalog){validateCatalogModule(module);catalog.products.push(module.product);for(const key of COLLECTIONS)catalog[key].push(...(module[key]??[]));return catalog;}
-export function createCatalog(modules=[]){const c={products:[],specificationDefinitions:[],allowedValues:[],requiredFieldRules:[],ruleSets:[],dependencies:[],evidence:[]};for(const m of modules)installCatalogModule(m,c);validateCatalog(c);return c;}
-export function catalogInventory(catalog){return catalog.products.map(p=>{const m=r=>r.productId===p.id,sets=catalog.ruleSets.filter(m),dimensionRules=sets.filter(r=>r.type==='DIMENSION_RULES').reduce((n,r)=>n+(Array.isArray(r.payload)?r.payload.length:(r.payload?.rules?.length??0)),0),base={productId:p.id,manufacturer:p.manufacturer,series:p.displayName,definitions:catalog.specificationDefinitions.filter(m).length,allowedValues:catalog.allowedValues.filter(m).length,requiredRules:catalog.requiredFieldRules.filter(m).length,ruleSets:sets.length,dependencies:catalog.dependencies.filter(m).length,evidence:catalog.evidence.filter(m).length};return{...base,...(dimensionRules?{dimensionRules}:{}),...(p.sourceInventory?{sourceInventory:p.sourceInventory}:{})};});}
+import{sizeCoverage}from'./size-resolver.mjs';
+
+export function installCatalogModule(module,catalog){
+  validateCatalogModule(module);
+  catalog.products.push(module.product);
+  for(const key of COLLECTIONS)catalog[key].push(...(module[key]??[]));
+  return catalog;
+}
+
+export function createCatalog(modules=[]){
+  const catalog={products:[],...Object.fromEntries(COLLECTIONS.map((key)=>[key,[]]))};
+  for(const module of modules)installCatalogModule(module,catalog);
+  validateCatalog(catalog);
+  return catalog;
+}
+
+export function catalogInventory(catalog){
+  return catalog.products.map((product)=>{
+    const matches=(row)=>row.productId===product.id;
+    const sets=catalog.ruleSets.filter(matches);
+    const dimensionRules=sets.filter((row)=>row.type==='DIMENSION_RULES').reduce((n,row)=>n+(Array.isArray(row.payload)?row.payload.length:(row.payload?.rules?.length??0)),0);
+    const coverage=sizeCoverage(catalog,product.id);
+    const base={
+      productId:product.id,manufacturer:product.manufacturer,series:product.displayName,
+      definitions:catalog.specificationDefinitions.filter(matches).length,
+      allowedValues:catalog.allowedValues.filter(matches).length,
+      requiredRules:catalog.requiredFieldRules.filter(matches).length,
+      ruleSets:sets.length,dependencies:catalog.dependencies.filter(matches).length,
+      evidence:catalog.evidence.filter(matches).length,
+      standardSizeRows:coverage.standardSizeRows,
+      selectableSizeRows:coverage.selectableSizeRows,
+      inactiveSizeRows:coverage.inactiveSizeRows,
+      missingSizeRows:coverage.missing,
+      extraSizeRows:coverage.extra,
+      sizeCoverage:coverage.coverage
+    };
+    return{...base,...(dimensionRules?{dimensionRules}:{}),...(product.sourceInventory?{sourceInventory:product.sourceInventory}:{})};
+  });
+}
+
 export{ROLE_ALIASES,resolveSheetRole,validateCatalogModule,validateCatalog};

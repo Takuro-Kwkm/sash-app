@@ -9,7 +9,7 @@ function fill(select,rows,placeholder="選択してください"){
   if(rows.some(x=>x.value===current))select.value=current;
 }
 function renderInventory(health){
-  $("inventory").innerHTML=health.inventory.map(x=>`<div class="inventory-row"><div><strong>${esc(x.manufacturer)} ${esc(x.series)}</strong><small>${esc(x.productId)}</small></div><div>${x.definitions} fields / ${x.allowedValues} values / ${x.dependencies} deps</div></div>`).join("");
+  $("inventory").innerHTML=health.inventory.map(x=>`<div class="inventory-row"><div><strong>${esc(x.manufacturer)} ${esc(x.series)}</strong><small>${esc(x.productId)}</small></div><div>${x.selectableSizeRows} sizes / ${x.inactiveSizeRows} inactive / ${(Number(x.sizeCoverage)*100).toFixed(2)}%</div></div>`).join("");
   $("build").textContent=`${health.buildId} · ${health.buildTimestamp} · ${health.catalogVersion}`;
   $("status").textContent="CATALOG CONNECTED";$("status").classList.add("ok");
 }
@@ -45,7 +45,8 @@ async function resolve(){
     const options=field.values.map(v=>`<option value="${esc(v.value)}"${selected.includes(v.value)?" selected":""}>${esc(v.displayLabel)}${v.manualCheck?"（要確認）":""}</option>`).join("");
     const multi=field.dataType==="MULTI_ENUM";
     const disabled=field.values.length===0?" disabled":"";
-    return `<div class="field" data-key="${esc(field.key)}"><label>${esc(field.displayLabel)}${required}</label><select data-spec-key="${esc(field.key)}"${multi?' multiple size="5"':""}${disabled}>${multi?"":'<option value="">選択してください</option>'}${options}</select>${multi?'<small class="field-help">複数選択できます</small>':""}</div>`;
+    const sizeSearch=field.key==="size"?`<div class="size-tools"><input type="search" data-size-search="${esc(field.key)}" aria-label="サイズ検索" placeholder="呼称・W・H・サイズIDで検索"><small class="size-count" data-size-count>${field.values.length}件</small></div>`:"";
+    return `<div class="field" data-key="${esc(field.key)}"><label>${esc(field.displayLabel)}${required}</label>${sizeSearch}<select data-spec-key="${esc(field.key)}"${multi?' multiple size="5"':""}${disabled}>${multi?"":'<option value="">選択してください</option>'}${options}</select>${multi?'<small class="field-help">複数選択できます</small>':""}</div>`;
   }).join("");
   document.querySelectorAll("[data-spec-key]").forEach(el=>el.addEventListener("change",async()=>{
     const key=el.dataset.specKey;
@@ -56,6 +57,18 @@ async function resolve(){
       if(values.length)state.selection[key]=values;else delete state.selection[key];
     }else if(el.value)state.selection[key]=el.value;else delete state.selection[key];
     await resolve();
+  }));
+  document.querySelectorAll("[data-size-search]").forEach(input=>input.addEventListener("input",()=>{
+    const wrapper=input.closest(".field"),select=wrapper?.querySelector("select[data-spec-key='size']");
+    if(!select)return;
+    const query=input.value.trim().toLocaleLowerCase("ja");
+    let visible=0;
+    for(const option of select.querySelectorAll("option[value]")){
+      const match=!query||`${option.value} ${option.textContent}`.toLocaleLowerCase("ja").includes(query);
+      option.hidden=!match;if(match)visible++;
+    }
+    const count=wrapper.querySelector("[data-size-count]");
+    if(count)count.textContent=`${visible} / ${select.querySelectorAll("option[value]").length}件`;
   }));
   renderWarnings(result);renderSummary(result);
 }

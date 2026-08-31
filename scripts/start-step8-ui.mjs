@@ -14,7 +14,7 @@ const webRoot=join(root,"src","ui","web");
 const catalog=createCatalog([...CURRENT_WINDOW_SERIES_MODULES,CONCORDS30_MODULE]);
 const buildTimestamp=new Date().toISOString();
 const buildId=`RECOVERY-${createHash("sha256").update(JSON.stringify(catalog)).digest("hex").slice(0,12)}`;
-const catalogVersion="V4.4 RECOVERY + CONCORD-S30 CANONICAL";
+const catalogVersion="V4.5 SIZE-MASTER-FORMAL + CONCORD-S30";
 
 const json=(res,status,body)=>{
   res.writeHead(status,{"content-type":"application/json; charset=utf-8","cache-control":"no-store","x-sash-build-id":buildId});

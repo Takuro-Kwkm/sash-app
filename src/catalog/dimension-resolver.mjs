@@ -23,7 +23,7 @@ const inPolygon=(x,y,points=[])=>{
 const autoPass=(rule,w,h)=>{
   if(!inBounds(w,h,rule.bounds))return false;
   if(rule.type==="AUTO_RECT")return true;
-  if(rule.type==="AUTO_RATIO")return finite(rule.ratio)&&Number(h)<=Number(rule.ratio)*Number(w);
+  if(rule.type==="AUTO_RATIO")return finite(rule.ratio)&&Number(h)<=Number(rule.ratio)*Number(w)+Number(rule.intercept??0);
   if(rule.type==="AUTO_PIECEWISE")return (rule.regions??[]).some(([minW,maxW,minH,maxH])=>within(w,minW,maxW)&&within(h,minH,maxH));
   if(rule.type==="AUTO_POLYGON")return inPolygon(Number(w),Number(h),rule.points);
   return false;
@@ -40,7 +40,7 @@ export function evaluateDimension(catalog,productId,selection={}){
   const rules=dimensionRules(catalog,productId).filter((rule)=>selectorMatches(rule.selector??{},selection,context));
   if(!rules.length)return{status:"BLOCK",message:"選択条件に対応する正式な特注寸法ルールがありません。",matchedRuleIds:[],ruleTypes:[]};
   const review=rules.filter((rule)=>REVIEW_TYPES.has(rule.type));
-  const reviewInside=review.filter((rule)=>rule.type==="COMPOUND_GATE"||inBounds(width,height,rule.bounds));
+  const reviewInside=review.filter((rule)=>inBounds(width,height,rule.bounds));
   if(reviewInside.length)return{
     status:"REVIEW_REQUIRED",
     message:"原本グラフまたは複合条件の確認が必要です。発注前にLIXIL一次資料・見積システムで確認してください。",

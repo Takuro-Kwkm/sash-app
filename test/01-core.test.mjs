@@ -5,7 +5,12 @@ import{getAllowedValues}from'../src/catalog/catalog-resolver.mjs';
 import{assertIntegrity,assertCommonArchitecture}from'./core-gates.mjs';
 const c=createCatalog(CURRENT_WINDOW_SERIES_MODULES),p='SER-LIX-SAMOS2H',inv=()=>catalogInventory(c).find(x=>x.productId===p);
 test('01 four products use one catalog',()=>assert.equal(c.products.length,4));
-test('02 S2H inventory is formal Wave2 shape',()=>assert.deepEqual(inv(),{productId:p,manufacturer:'LIXIL',series:'サーモスⅡ-H',definitions:27,allowedValues:2444,requiredRules:26,ruleSets:3,dependencies:25,evidence:13}));
+test('02 S2H inventory is formal Wave2 shape',()=>assert.deepEqual(inv(),{
+  productId:p,manufacturer:'LIXIL',series:'サーモスⅡ-H',definitions:27,allowedValues:2444,
+  requiredRules:26,ruleSets:3,dependencies:25,evidence:13,
+  standardSizeRows:2297,selectableSizeRows:2131,inactiveSizeRows:166,missingSizeRows:0,extraSizeRows:0,sizeCoverage:1,
+  sourceInventory:{activeWindows:17,standardSizeRows:2297,selectableSizeRows:2131,inactiveSizeRows:166}
+}));
 test('03 canonical v0.7 source is retained',()=>{const s=c.products.find(x=>x.id===p).source;assert.equal(s.id,'1zHi-XsMqJp0MKH-sDoTcnTqkLMGcuRdo');assert.equal(s.version,'v0.7');assert.equal(s.folder,'01_正本');});
 test('04 active windows are exactly 17',()=>assert.equal(c.allowedValues.filter(x=>x.productId===p&&x.specificationKey==='window_type').length,17));
 test('05 selectable real sizes are exactly 2131',()=>assert.equal(c.allowedValues.filter(x=>x.productId===p&&x.specificationKey==='size').length,2131));
