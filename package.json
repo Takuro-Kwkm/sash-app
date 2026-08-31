@@ -1,6 +1,6 @@
 {
   "name": "sash-information-app-v2",
-  "version": "0.1.0-recovery",
+  "version": "0.2.0-recovery",
   "private": true,
   "type": "module",
   "scripts": {
@@ -8,7 +8,5 @@
     "start:qa": "HOST=0.0.0.0 node scripts/start-step8-ui.mjs",
     "test": "node --test test/*.test.mjs"
   },
-  "engines": {
-    "node": ">=22"
-  }
+  "engines": { "node": ">=22" }
 }

@@ -7,28 +7,29 @@
   <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
-  <header class="topbar">
-    <div><strong>サッシ情報管理アプリ V2</strong><span class="sub">商品マスター統合 Recovery Build</span></div>
-    <span id="status" class="badge">loading</span>
-  </header>
-  <main>
-    <section class="card">
-      <h1>見積商品選択</h1>
-      <p class="lead">共通Catalogからメーカー・シリーズ・窓種を動的表示します。商品専用Formは使用していません。</p>
-      <label>メーカー</label>
-      <select id="manufacturer"><option value="">選択してください</option></select>
-      <label>シリーズ</label>
-      <select id="product" disabled><option value="">選択してください</option></select>
-      <label>窓種</label>
-      <select id="window" disabled><option value="">選択してください</option></select>
-      <div id="nextFields"></div>
-    </section>
-    <section class="card compact">
-      <h2>Runtime Catalog</h2>
-      <div id="inventory"></div>
-    </section>
-  </main>
-  <footer id="build">Build identity loading...</footer>
-  <script type="module" src="/app.js"></script>
+<header class="topbar">
+  <div><strong>サッシ情報管理アプリ V2</strong><span class="sub">共通Catalog / Dynamic UI</span></div>
+  <span id="status" class="badge">loading</span>
+</header>
+<main>
+  <section class="card">
+    <h1>見積商品選択</h1>
+    <p class="lead">商品専用Formを使用せず、CatalogのDefinition / Selector / Dependencyから入力項目を生成します。</p>
+    <div class="field"><label for="manufacturer">メーカー</label><select id="manufacturer"><option value="">選択してください</option></select></div>
+    <div class="field"><label for="product">シリーズ</label><select id="product" disabled><option value="">選択してください</option></select></div>
+    <div id="dynamicForm"></div>
+    <div id="warnings"></div>
+  </section>
+  <section class="card compact">
+    <h2>選択内容</h2>
+    <div id="selectionSummary" class="summary muted">シリーズを選択してください。</div>
+  </section>
+  <section class="card compact">
+    <h2>Runtime Catalog</h2>
+    <div id="inventory"></div>
+  </section>
+</main>
+<footer id="build">Build identity loading...</footer>
+<script type="module" src="/app.js"></script>
 </body>
 </html>
