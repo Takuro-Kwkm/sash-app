@@ -21,4 +21,4 @@ import p19 from './samos2h-data/part-19.mjs';
 import p20 from './samos2h-data/part-20.mjs';
 const payload=p1+p2+p3+p4+p5+p6+p7+p8+p9+p10+p11+p12+p13+p14+p15+p16+p17+p18+p19+p20;
 export const SAMOS2H_SOURCE=JSON.parse(brotliDecompressSync(Buffer.from(payload,'base64')).toString('utf8'));
-if(!SAMOS2H_SOURCE.sizesPacked) console.log('S2H_SOURCE_SHAPE',Object.keys(SAMOS2H_SOURCE),JSON.stringify(SAMOS2H_SOURCE.sizes?.[0]??null),JSON.stringify(SAMOS2H_SOURCE.sizeDictionaries??null));
+console.log('S2H_TABLE_SHAPES',JSON.stringify({source:SAMOS2H_SOURCE.source,counts:SAMOS2H_SOURCE.counts,color:SAMOS2H_SOURCE.colors?.[0],glass:SAMOS2H_SOURCE.glasses?.[0],screen:SAMOS2H_SOURCE.screens?.[0],net:SAMOS2H_SOURCE.nets?.[0],screenLimit:SAMOS2H_SOURCE.screenLimits?.[0],option:SAMOS2H_SOURCE.options?.[0],optionRule:SAMOS2H_SOURCE.optionRules?.[0],golden:SAMOS2H_SOURCE.golden?.[0],appControl:SAMOS2H_SOURCE.appControl?.[0]}));
