@@ -15,14 +15,17 @@ function renderInventory(health){
 }
 function renderWarnings(result){
   const items=[...(result.notices??[]),...(result.manualWarnings??[])];
-  $("warnings").innerHTML=items.length?`<div class="notice warning">${items.map(esc).join("<br>")}</div>`:"";
+  const dimension=result.dimensionResult;
+  const dimensionHtml=dimension?`<div class="notice dimension ${esc(String(dimension.status).toLowerCase())}"><strong>${esc(dimension.status)}</strong><span>${esc(dimension.message)}</span>${dimension.matchedRuleIds?.length?`<small>${esc(dimension.matchedRuleIds.join(" / "))}</small>`:""}</div>`:"";
+  $("warnings").innerHTML=dimensionHtml+(items.length?`<div class="notice warning">${items.map(esc).join("<br>")}</div>`:"");
 }
 function renderSummary(result){
   const labels=new Map();
   for(const field of result.fields)for(const v of field.values)labels.set(`${field.key}:${v.value}`,v.displayLabel);
   const rows=Object.entries(result.selection).map(([k,v])=>{
     const f=result.fields.find(x=>x.key===k);
-    return f?`<div><span>${esc(f.displayLabel)}</span><strong>${esc(labels.get(`${k}:${v}`)??v)}</strong></div>`:"";
+    const display=Array.isArray(v)?v.map(one=>labels.get(`${k}:${one}`)??one).join("、"):(labels.get(`${k}:${v}`)??v);
+    return f?`<div><span>${esc(f.displayLabel)}</span><strong>${esc(display)}</strong></div>`:"";
   }).filter(Boolean);
   $("selectionSummary").classList.toggle("muted",rows.length===0);
   $("selectionSummary").innerHTML=rows.length?rows.join(""):"項目を選択してください。";
@@ -33,13 +36,25 @@ async function resolve(){
   const result=await getJson(`/api/catalog/resolve?${q}`);
   state.selection=result.selection;state.resolved=result;
   $("dynamicForm").innerHTML=result.fields.map(field=>{
-    const options=field.values.map(v=>`<option value="${esc(v.value)}"${state.selection[field.key]===v.value?" selected":""}>${esc(v.displayLabel)}${v.manualCheck?"（要確認）":""}</option>`).join("");
+    const required=field.required?'<span class="required">必須</span>':"";
+    if(field.dataType==="NUMBER"){
+      const value=state.selection[field.key]??"";
+      return `<div class="field" data-key="${esc(field.key)}"><label>${esc(field.displayLabel)}${required}</label><input type="number" inputmode="numeric" step="1" data-spec-key="${esc(field.key)}" value="${esc(value)}" placeholder="mm単位で入力"></div>`;
+    }
+    const selected=Array.isArray(state.selection[field.key])?state.selection[field.key]:[state.selection[field.key]];
+    const options=field.values.map(v=>`<option value="${esc(v.value)}"${selected.includes(v.value)?" selected":""}>${esc(v.displayLabel)}${v.manualCheck?"（要確認）":""}</option>`).join("");
+    const multi=field.dataType==="MULTI_ENUM";
     const disabled=field.values.length===0?" disabled":"";
-    return `<div class="field" data-key="${esc(field.key)}"><label>${esc(field.displayLabel)}${field.required?'<span class="required">必須</span>':""}</label><select data-spec-key="${esc(field.key)}"${disabled}><option value="">選択してください</option>${options}</select></div>`;
+    return `<div class="field" data-key="${esc(field.key)}"><label>${esc(field.displayLabel)}${required}</label><select data-spec-key="${esc(field.key)}"${multi?' multiple size="5"':""}${disabled}>${multi?"":'<option value="">選択してください</option>'}${options}</select>${multi?'<small class="field-help">複数選択できます</small>':""}</div>`;
   }).join("");
   document.querySelectorAll("[data-spec-key]").forEach(el=>el.addEventListener("change",async()=>{
     const key=el.dataset.specKey;
-    if(el.value)state.selection[key]=el.value;else delete state.selection[key];
+    if(el.type==="number"){
+      if(el.value!=="")state.selection[key]=Number(el.value);else delete state.selection[key];
+    }else if(el.multiple){
+      const values=[...el.selectedOptions].map(option=>option.value);
+      if(values.length)state.selection[key]=values;else delete state.selection[key];
+    }else if(el.value)state.selection[key]=el.value;else delete state.selection[key];
     await resolve();
   }));
   renderWarnings(result);renderSummary(result);

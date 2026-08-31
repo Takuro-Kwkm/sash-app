@@ -1,4 +1,5 @@
 import { SAMOS2H_MODULE } from "./samos2h-module.mjs";
+import { THERMOSL_MODULE } from "./thermosl-module.mjs";
 
 const makeDefinition=(productId,key,label,order,sourceRole,dataType="ENUM")=>({
   id:`${productId}:def:${key}`,productId,key,displayLabel:label,dataType,displayOrder:order,
@@ -35,22 +36,6 @@ const makeSkeleton=({id,manufacturer,displayName,source,appControlSheet,sizeMode
   };
 };
 
-const THERMOS_L=makeSkeleton({
-  id:"SER-LIX-SAMOSL",manufacturer:"LIXIL",displayName:"サーモスL",
-  source:{id:"17lVzBZ1hp4RVcGv0yNdnrKt25SFO2FhL",title:"サーモスL_商品マスター_v0.7_特注寸法発注アプリ投入完成版_QA確定.xlsx"},
-  appControlSheet:"16_APP_候補制御",sizeMode:"STANDARD_CUSTOM",
-  windows:[
-    ["WT-SL-HIKICHIGAI","単体引違い窓"],["WT-SL-SHUTTER-HIKI","シャッター付引違い窓"],
-    ["WT-SL-AMADO-HIKI","雨戸付引違い窓"],["WT-SL-MENKOSHI-HIKI","面格子付引違い窓"],
-    ["WT-SL-TATE-SUBERI","縦すべり出し窓"],["WT-SL-YOKO-SUBERI","横すべり出し窓"],
-    ["WT-SL-KOSHO-YOKO","高所用横すべり出し窓"],["WT-SL-AGE-SAGE-FS","上げ下げ窓FS"],
-    ["WT-SL-MENKOSHI-AGE-FS","面格子付上げ下げ窓FS"],["WT-SL-FIX-OUT","FIX窓（外押縁タイプ）"],
-    ["WT-SL-FIX-IN","FIX窓（内押縁タイプ）"],["WT-SL-UCHIDAOSHI","内倒し窓"],
-    ["WT-SL-SOTODAOSHI","外倒し窓"],["WT-SL-KAZARI-HIKI","装飾引違い窓"],
-    ["WT-SL-TERRACE-DOOR","テラスドア"],["WT-SL-KATTEGUCHI-VENT-FS","採風勝手口ドアFS"],
-    ["WT-SL-KATTEGUCHI","勝手口ドア"]
-  ]
-});
 const APW430=makeSkeleton({
   id:"SER-YKK-APW430",manufacturer:"YKK AP",displayName:"APW 430",
   source:{id:"1QDocQ7yoXE6TAnzHtfsyKwwK6YB5_mgk90Bw1hm4iPo",title:"20260830_YKKAP_APW430_商品マスター_正本"},
@@ -91,4 +76,4 @@ const APW431=makeSkeleton({
   ]
 });
 
-export const CURRENT_WINDOW_SERIES_MODULES=[SAMOS2H_MODULE,THERMOS_L,APW430,APW431];
+export const CURRENT_WINDOW_SERIES_MODULES=[SAMOS2H_MODULE,THERMOSL_MODULE,APW430,APW431];

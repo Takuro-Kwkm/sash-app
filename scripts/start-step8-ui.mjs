@@ -13,7 +13,7 @@ const webRoot=join(root,"src","ui","web");
 const catalog=createCatalog(CURRENT_WINDOW_SERIES_MODULES);
 const buildTimestamp=new Date().toISOString();
 const buildId=`RECOVERY-${createHash("sha256").update(JSON.stringify(catalog)).digest("hex").slice(0,12)}`;
-const catalogVersion="V4.3 RECOVERY + WAVE2-LR";
+const catalogVersion="V4.3 RECOVERY + WAVE3-1 THERMOS-L";
 
 const json=(res,status,body)=>{
   res.writeHead(status,{"content-type":"application/json; charset=utf-8","cache-control":"no-store","x-sash-build-id":buildId});
@@ -59,6 +59,7 @@ const server=createServer(async(req,res)=>{
   if(url.pathname==="/api/catalog") return json(res,200,catalog);
   if(url.pathname==="/app.js") return staticFile(res,"app.js","text/javascript; charset=utf-8");
   if(url.pathname==="/styles.css") return staticFile(res,"styles.css","text/css; charset=utf-8");
+  if(url.pathname==="/styles-wave3.css") return staticFile(res,"styles-wave3.css","text/css; charset=utf-8");
   return staticFile(res,"index.html","text/html; charset=utf-8");
 });
 const host=process.env.HOST??"127.0.0.1";
