@@ -1,7 +1,7 @@
 const $=(id)=>document.getElementById(id);
 const state={products:[],productId:null,selection:{},resolved:null};
 async function getJson(url){const r=await fetch(url,{cache:"no-store"});if(!r.ok)throw new Error(`${r.status} ${url}`);return r.json();}
-function esc(v){return String(v??"").replace(/[&<>'"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[c]));}
+function esc(v){return String(v??"").replace(/[&<>'\"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'\"':"&quot;"}[c]));}
 function fill(select,rows,placeholder="選択してください"){
   const current=select.value;
   select.innerHTML=`<option value="">${placeholder}</option>`+rows.map(x=>`<option value="${esc(x.value)}">${esc(x.label)}</option>`).join("");
@@ -15,9 +15,11 @@ function renderInventory(health){
 }
 function renderWarnings(result){
   const items=[...(result.notices??[]),...(result.manualWarnings??[])];
+  const validationErrors=result.validation?.errors??[];
+  const validationHtml=validationErrors.length?`<div class="notice error"><strong>INVALID</strong>${validationErrors.map(error=>`<span>${esc(error.message)}${error.errorCode?`<small>${esc(error.errorCode)}</small>`:""}</span>`).join("")}</div>`:"";
   const dimension=result.dimensionResult;
   const dimensionHtml=dimension?`<div class="notice dimension ${esc(String(dimension.status).toLowerCase())}"><strong>${esc(dimension.status)}</strong><span>${esc(dimension.message)}</span>${dimension.matchedRuleIds?.length?`<small>${esc(dimension.matchedRuleIds.join(" / "))}</small>`:""}</div>`:"";
-  $("warnings").innerHTML=dimensionHtml+(items.length?`<div class="notice warning">${items.map(esc).join("<br>")}</div>`:"");
+  $("warnings").innerHTML=validationHtml+dimensionHtml+(items.length?`<div class="notice warning">${items.map(esc).join("<br>")}</div>`:"");
 }
 function renderSummary(result){
   const labels=new Map();
