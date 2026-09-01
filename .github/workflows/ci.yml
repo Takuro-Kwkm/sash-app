@@ -42,6 +42,35 @@ jobs:
           cat /tmp/health.json
           node -e 'const h=require("/tmp/health.json"); const expected={"SER-LIX-SAMOS2H":2131,"SER-LIX-SAMOSL":1410,"SER-YKK-APW430":718,"SER-YKK-APW431":538}; const sash=h.inventory.filter(x=>expected[x.productId]!==undefined); const concord=h.inventory.find(x=>x.productId==="SER-YKK-CONCORD-S30"); if(!h.ok || h.catalogVersion!=="V4.5 SIZE-MASTER-FORMAL + CONCORD-S30" || h.inventory.length!==5 || !concord || sash.length!==4 || sash.some(x=>x.sizeCoverage!==1 || x.missingSizeRows!==0 || x.extraSizeRows!==0 || expected[x.productId]!==x.selectableSizeRows)) process.exit(1)'
 
+  concord_regression:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Existing four series plus Concord regression
+        run: node --test test/01-core.test.mjs test/02-lr.test.mjs test/03-features.test.mjs test/04-thermosl.test.mjs test/05-concords30.test.mjs
+
+  runtime_smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Runtime smoke
+        run: |
+          npm run start:qa > runtime-smoke.log 2>&1 &
+          PID=$!
+          trap 'kill $PID || true' EXIT
+          for i in {1..20}; do
+            if curl -fsS http://127.0.0.1:4173/api/health > /tmp/health.json; then break; fi
+            sleep 0.5
+          done
+          cat /tmp/health.json
+          node -e 'const h=require("/tmp/health.json"); const expected={"SER-LIX-SAMOS2H":2131,"SER-LIX-SAMOSL":1410,"SER-YKK-APW430":718,"SER-YKK-APW431":538}; const sash=h.inventory.filter(x=>expected[x.productId]!==undefined); const concord=h.inventory.find(x=>x.productId==="SER-YKK-CONCORD-S30"); if(!h.ok || h.catalogVersion!=="V4.5 SIZE-MASTER-FORMAL + CONCORD-S30" || h.inventory.length!==5 || !concord || sash.length!==4 || sash.some(x=>x.sizeCoverage!==1 || x.missingSizeRows!==0 || x.extraSizeRows!==0 || expected[x.productId]!==x.selectableSizeRows)) process.exit(1)'
+
   browser_qa:
     runs-on: ubuntu-latest
     steps:
