@@ -13,7 +13,8 @@ const root=join(__dirname,"..");
 const webRoot=join(root,"src","ui","web");
 const catalog=createCatalog([...CURRENT_WINDOW_SERIES_MODULES,CONCORDS30_MODULE]);
 const buildTimestamp=new Date().toISOString();
-const buildId=`RECOVERY-${createHash("sha256").update(JSON.stringify(catalog)).digest("hex").slice(0,12)}`;
+const uiIdentity=(await Promise.all(["index.html","app.js","size-presentation.js","styles.css","styles-wave3.css"].map((name)=>readFile(join(webRoot,name))))).map((body)=>body.toString("utf8")).join("\n");
+const buildId=`RECOVERY-${createHash("sha256").update(JSON.stringify(catalog)).update(uiIdentity).digest("hex").slice(0,12)}`;
 const catalogVersion="V4.5 SIZE-MASTER-FORMAL + CONCORD-S30";
 
 const json=(res,status,body)=>{
@@ -59,6 +60,7 @@ const server=createServer(async(req,res)=>{
   }
   if(url.pathname==="/api/catalog") return json(res,200,catalog);
   if(url.pathname==="/app.js") return staticFile(res,"app.js","text/javascript; charset=utf-8");
+  if(url.pathname==="/size-presentation.js") return staticFile(res,"size-presentation.js","text/javascript; charset=utf-8");
   if(url.pathname==="/styles.css") return staticFile(res,"styles.css","text/css; charset=utf-8");
   if(url.pathname==="/styles-wave3.css") return staticFile(res,"styles-wave3.css","text/css; charset=utf-8");
   return staticFile(res,"index.html","text/html; charset=utf-8");

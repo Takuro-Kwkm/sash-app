@@ -94,13 +94,16 @@ jobs:
           exit 1
       - name: Concord S30 PC and Smartphone Browser QA
         run: node test/browser/concords30-browser-qa.mjs
-      - name: Upload Concord Browser QA evidence
+      - name: Formal Size UI PC and Smartphone Browser QA
+        run: node test/browser/size-ui-browser-qa.mjs
+      - name: Upload Browser QA evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: concord-s30-browser-qa
           path: |
             artifacts/concord-browser-qa
+            artifacts/size-ui-browser-qa
             runtime-qa.log
       - name: Stop Runtime
         if: always()
