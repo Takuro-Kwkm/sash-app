@@ -8,7 +8,9 @@
     "start:qa": "HOST=0.0.0.0 node scripts/start-step8-ui.mjs",
     "test": "node --test test/*.test.mjs",
     "test:product-master-core": "node --test test/08-product-master-core.test.mjs",
-    "validate:product-master-core": "node scripts/validate-product-master-core.mjs"
+    "validate:product-master-core": "node scripts/validate-product-master-core.mjs",
+    "test:product-master-core:v02": "node --test test/09-product-master-core-v02-evidence.test.mjs",
+    "validate:product-master-core:v02": "node scripts/validate-product-master-core-v02.mjs"
   },
   "engines": { "node": ">=22" }
 }
