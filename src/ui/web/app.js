@@ -8,8 +8,13 @@ function fill(select,rows,placeholder="選択してください"){
   select.disabled=rows.length===0;
   if(rows.some(x=>x.value===current))select.value=current;
 }
+function inventoryStats(x){
+  const selectable=Number(x.selectableSizeRows??0),inactive=Number(x.inactiveSizeRows??0),coverage=Number(x.sizeCoverage);
+  if(selectable>0||inactive>0)return `${selectable} sizes / ${inactive} inactive / ${(coverage*100).toFixed(2)}%`;
+  return `${x.definitions} fields / ${x.allowedValues} values / ${x.dependencies} deps`;
+}
 function renderInventory(health){
-  $("inventory").innerHTML=health.inventory.map(x=>`<div class="inventory-row"><div><strong>${esc(x.manufacturer)} ${esc(x.series)}</strong><small>${esc(x.productId)}</small></div><div>${x.selectableSizeRows} sizes / ${x.inactiveSizeRows} inactive / ${(Number(x.sizeCoverage)*100).toFixed(2)}%</div></div>`).join("");
+  $("inventory").innerHTML=health.inventory.map(x=>`<div class="inventory-row"><div><strong>${esc(x.manufacturer)} ${esc(x.series)}</strong><small>${esc(x.productId)}</small></div><div>${esc(inventoryStats(x))}</div></div>`).join("");
   $("build").textContent=`${health.buildId} · ${health.buildTimestamp} · ${health.catalogVersion}`;
   $("status").textContent="CATALOG CONNECTED";$("status").classList.add("ok");
 }
