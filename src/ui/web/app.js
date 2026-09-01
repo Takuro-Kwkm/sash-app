@@ -1,6 +1,7 @@
 import{
   findSizeByCode,findSizeRecords,getAvailableHeights,getAvailableWidths,
-  getSelectedSizeMetadata,reconcileSizeDraft,toSizeRecords
+  getSelectedSizeMetadata,getSizePresentationCounts,groupSizeRecordsByWidth,
+  reconcileSizeDraft,toSizeRecords
 }from"/size-presentation.js";
 
 const $=(id)=>document.getElementById(id);
@@ -52,10 +53,28 @@ const sizeRecordLabel=(record)=>`${record.sizeCode||record.label}${has(record.ac
 function groupedOptions(rows,current){return rows.map((row)=>`<option value="${esc(row.value)}"${selected(row.value,current)}>${esc(row.value)}${row.count>1?`（${row.count}候補）`:""}</option>`).join("");}
 function recordOptions(rows,current){return rows.map((record)=>`<option value="${esc(record.id)}"${selected(record.id,current)}>${esc(sizeRecordLabel(record))}</option>`).join("");}
 
-function renderSizeField(field){
+function selectedFieldLabel(field,value){
+  const one=field.values.find((candidate)=>String(candidate.value)===String(value));
+  return one?.displayLabel??value;
+}
+function sizeContextHtml(result,sizeField){
+  const rows=result.fields.filter((field)=>field.key!=="size"&&field.displayOrder<sizeField.displayOrder&&has(result.selection[field.key])).map((field)=>{
+    const raw=result.selection[field.key],value=Array.isArray(raw)?raw.map((one)=>selectedFieldLabel(field,one)).join("、"):selectedFieldLabel(field,raw);
+    return `<span><small>${esc(field.displayLabel)}</small><strong>${esc(value)}</strong></span>`;
+  });
+  return rows.length?`<div class="size-context" data-size-context><b>現在の上流仕様</b><div>${rows.join("")}</div></div>`:"";
+}
+function formalSizeList(values,current){
+  const groups=groupSizeRecordsByWidth(values);
+  const content=groups.map((group)=>`<section class="size-list-group"><h4>W ${esc(group.nominalW)}<small>正式H ${group.heights.length}種類 / ${group.records.length}件</small></h4><div>${group.records.map((record)=>`<button type="button" data-size-list-record="${esc(record.id)}" class="size-list-record${record.id===current?" selected":""}"><strong>${esc(record.sizeCode||`${record.nominalW}${record.nominalH}`)}</strong><span>H ${esc(record.nominalH)}</span>${has(record.actualW)&&has(record.actualH)?`<small>${esc(record.actualW)}×${esc(record.actualH)}mm</small>`:""}</button>`).join("")}</div></section>`).join("");
+  return `<details class="size-catalog-list" data-size-list><summary data-size-list-toggle>正式サイズ一覧を見る <span>全${toSizeRecords(values).length}件</span></summary><div class="size-list-scroll" data-size-list-scroll>${content}</div></details>`;
+}
+
+function renderSizeField(field,result){
   state.sizeDraft=reconcileSizeDraft(field.values,state.sizeDraft,state.selection.size);
   const widths=getAvailableWidths(field.values);
   const heights=getAvailableHeights(field.values,state.sizeDraft.width);
+  const counts=getSizePresentationCounts(field.values,state.sizeDraft.width);
   const pair=state.sizeDraft.width&&state.sizeDraft.height?findSizeRecords(field.values,{nominalW:state.sizeDraft.width,nominalH:state.sizeDraft.height}):[];
   const chosen=getSelectedSizeMetadata(field.values,state.selection.size);
   const searchMatches=state.sizeDraft.query?findSizeByCode(field.values,state.sizeDraft.query):[];
@@ -64,12 +83,13 @@ function renderSizeField(field){
   const detail=chosen?`<div class="size-detail selected" data-size-selected-id="${esc(chosen.id)}"><div><b>正式サイズ確定</b><small>${esc(chosen.id)}</small></div><span><small>呼称</small><strong>${esc(chosen.sizeCode||`${chosen.nominalW}${chosen.nominalH}`)}</strong></span>${actual}</div>`:`<div class="size-detail"><span>呼称Wと呼称Hを選択してください。</span></div>`;
   const recordChoice=pair.length>1?`<div class="size-record-choice"><label for="formal-size-record">正式サイズ</label><select id="formal-size-record" data-size-record><option value="">仕様を選択してください</option>${recordOptions(pair,state.selection.size)}</select><small>同じ呼称W/Hに複数の正式Recordがあります。</small></div>`:"";
   const searchChoice=state.sizeDraft.query?`<div class="size-search-results"><label for="size-search-result">検索結果</label><select id="size-search-result" data-size-search-result ${searchMatches.length?"":"disabled"}><option value="">正式サイズを選択</option>${recordOptions(searchMatches,state.selection.size)}</select><small data-size-search-count>${searchMatches.length}件</small></div>`:'<div class="size-search-results" hidden></div>';
-  return `<div class="field size-field" data-key="size"><label>${esc(field.displayLabel)}${required}</label><div class="size-tools"><input type="search" data-size-search aria-label="サイズコード検索" value="${esc(state.sizeDraft.query)}" placeholder="呼称・W・H・サイズIDで検索"><small class="size-count">正式候補 ${field.values.length}件</small></div>${searchChoice}<div class="size-axis-grid"><div class="size-axis"><label for="nominal-width">呼称W</label><select id="nominal-width" data-size-width><option value="">選択してください</option>${groupedOptions(widths,state.sizeDraft.width)}</select></div><div class="size-axis"><label for="nominal-height">呼称H</label><select id="nominal-height" data-size-height${state.sizeDraft.width?"":" disabled"}><option value="">${state.sizeDraft.width?"選択してください":"先に呼称Wを選択"}</option>${groupedOptions(heights,state.sizeDraft.height)}</select></div></div>${recordChoice}${detail}</div>`;
+  const heightStatus=state.sizeDraft.width?`W=${esc(state.sizeDraft.width)} に対応する正式H：${counts.heightCandidates}種類 / ${counts.selectedWidthRecords}件`:`呼称Wを選択すると、正式に存在するHだけを表示します。`;
+  return `<div class="field size-field" data-key="size">${sizeContextHtml(result,field)}<label>${esc(field.displayLabel)}${required}</label><div class="size-tools"><input type="search" data-size-search aria-label="サイズコード検索" value="${esc(state.sizeDraft.query)}" placeholder="呼称・W・H・サイズIDで検索"><small class="size-count" data-size-candidate-count>正式サイズ候補：${counts.candidateRecords}件</small></div>${searchChoice}<div class="size-axis-grid"><div class="size-axis"><label for="nominal-width">呼称W</label><select id="nominal-width" data-size-width><option value="">選択してください</option>${groupedOptions(widths,state.sizeDraft.width)}</select><small>正式W ${counts.widthCandidates}種類</small></div><div class="size-axis"><label for="nominal-height">呼称H</label><select id="nominal-height" data-size-height${state.sizeDraft.width?"":" disabled"}><option value="">${state.sizeDraft.width?"選択してください":"先に呼称Wを選択"}</option>${groupedOptions(heights,state.sizeDraft.height)}</select><small data-size-height-count>${heightStatus}</small></div></div>${recordChoice}${detail}${formalSizeList(field.values,state.selection.size)}</div>`;
 }
 
-function renderField(field){
+function renderField(field,result){
   const required=field.required?'<span class="required">必須</span>':"";
-  if(field.key==="size")return renderSizeField(field);
+  if(field.key==="size")return renderSizeField(field,result);
   if(field.dataType==="NUMBER"){
     const value=state.selection[field.key]??"";
     return `<div class="field" data-key="${esc(field.key)}"><label>${esc(field.displayLabel)}${required}</label><div class="number-input"><input type="number" inputmode="numeric" step="1" data-spec-key="${esc(field.key)}" value="${esc(value)}" placeholder="mm単位で入力"><span>mm</span></div></div>`;
@@ -77,7 +97,8 @@ function renderField(field){
   const selectedValues=Array.isArray(state.selection[field.key])?state.selection[field.key]:[state.selection[field.key]];
   const options=field.values.map(v=>`<option value="${esc(v.value)}"${selectedValues.includes(v.value)?" selected":""}>${esc(v.displayLabel)}${v.manualCheck?"（要確認）":""}</option>`).join("");
   const multi=field.dataType==="MULTI_ENUM",disabled=field.values.length===0?" disabled":"";
-  return `<div class="field" data-key="${esc(field.key)}"><label>${esc(field.displayLabel)}${required}</label><select data-spec-key="${esc(field.key)}"${multi?' multiple size="5"':""}${disabled}>${multi?"":'<option value="">選択してください</option>'}${options}</select>${multi?'<small class="field-help">複数選択できます</small>':""}</div>`;
+  const activeCount=field.key==="window_type"?`<small class="field-help window-count" data-window-count>窓種：${field.values.length}種類（ACTIVE）</small>`:"";
+  return `<div class="field" data-key="${esc(field.key)}"><label>${esc(field.displayLabel)}${required}</label><select data-spec-key="${esc(field.key)}"${multi?' multiple size="5"':""}${disabled}>${multi?"":'<option value="">選択してください</option>'}${options}</select>${activeCount}${multi?'<small class="field-help">複数選択できます</small>':""}</div>`;
 }
 
 function sizeUpstreamChanged(result,key){
@@ -116,6 +137,7 @@ function bindSizePresentation(field){
     await resolve();
   });
   document.querySelector("[data-size-record]")?.addEventListener("change",async(event)=>{await commitSizeRecord(field,event.target.value);});
+  document.querySelectorAll("[data-size-list-record]").forEach((button)=>button.addEventListener("click",async()=>{await commitSizeRecord(field,button.dataset.sizeListRecord);}));
 }
 
 function bindGenericFields(result){
@@ -139,7 +161,7 @@ async function resolve(){
   const result=await getJson(`/api/catalog/resolve?${q}`);
   if(revision!==state.resolveRevision||productId!==state.productId)return;
   state.selection=result.selection;state.resolved=result;
-  $("dynamicForm").innerHTML=result.fields.map(renderField).join("");
+  $("dynamicForm").innerHTML=result.fields.map((field)=>renderField(field,result)).join("");
   bindGenericFields(result);
   const sizeField=result.fields.find((field)=>field.key==="size");
   if(sizeField)bindSizePresentation(sizeField);else state.sizeDraft=emptySizeDraft();

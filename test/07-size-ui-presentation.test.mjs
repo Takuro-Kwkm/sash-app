@@ -9,7 +9,8 @@ import{APW430_SOURCE}from"../src/catalog/modules/apw430-source.mjs";
 import{THERMOSL_SOURCE}from"../src/catalog/modules/thermosl-source.mjs";
 import{
   findSizeByCode,findSizeRecords,getAvailableHeights,getAvailableWidths,
-  getSelectedSizeMetadata,reconcileSizeDraft,toSizeRecords
+  getSelectedSizeMetadata,getSizePresentationCounts,groupSizeRecordsByWidth,
+  reconcileSizeDraft,toSizeRecords
 }from"../src/ui/web/size-presentation.js";
 
 const catalog=createCatalog(CURRENT_WINDOW_SERIES_MODULES);
@@ -129,4 +130,61 @@ test("91 common Size Presentation and UI contain no product/window name branches
     const source=await readFile(new URL(path,import.meta.url),"utf8");
     assert.equal(/サーモス|APW|SER-|WT-|W431-|SWT-/.test(source),false,path);
   }
+});
+
+test("92 formal size list groups every current record by W without omission",()=>{
+  for(const productId of Object.values(ids)){
+    const field=sizeField(productId),records=toSizeRecords(field.values),groups=groupSizeRecordsByWidth(field.values);
+    assert.equal(groups.flatMap((group)=>group.records).length,records.length,productId);
+    assert.deepEqual(new Set(groups.flatMap((group)=>group.records.map((record)=>record.id))),new Set(records.map((record)=>record.id)),productId);
+    for(const group of groups){
+      assert.equal(group.records.every((record)=>record.nominalW===group.nominalW),true,`${productId}:${group.nominalW}`);
+      assert.deepEqual(group.heights,[...new Set(group.records.map((record)=>record.nominalH))].sort((a,b)=>Number(a)-Number(b)||a.localeCompare(b,"ja")));
+    }
+  }
+});
+
+test("93 presentation counts expose exact records, W values and selected-W H values",()=>{
+  for(const productId of Object.values(ids)){
+    const field=sizeField(productId),width=getAvailableWidths(field.values)[0].value,counts=getSizePresentationCounts(field.values,width);
+    assert.equal(counts.candidateRecords,field.values.length,productId);
+    assert.equal(counts.widthCandidates,getAvailableWidths(field.values).length,productId);
+    assert.equal(counts.heightCandidates,getAvailableHeights(field.values,width).length,productId);
+    assert.equal(counts.selectedWidthRecords,findSizeRecords(field.values,{nominalW:width}).length,productId);
+  }
+});
+
+function firstFormalSizeForWindow(productId,windowType){
+  let selection={window_type:windowType};
+  for(let pass=0;pass<60;pass+=1){
+    const result=stabilizeSelection(catalog,productId,selection);selection={...result.selection};
+    const field=result.fields.find((candidate)=>candidate.key==="size");
+    if(field?.values.length)return field.values[0];
+    const next=result.fields.find((candidate)=>candidate.key!=="size"&&candidate.dataType!=="NUMBER"&&selection[candidate.key]===undefined&&candidate.values.length);
+    if(!next)break;
+    selection[next.key]=(next.values.find((value)=>String(value.value).toUpperCase()==="STANDARD")??next.values[0]).value;
+  }
+  return null;
+}
+
+test("94 all 65 ACTIVE windows reach at least one formal Size Record through dynamic fields",()=>{
+  const expectedCounts={[ids.s2h]:17,[ids.sl]:17,[ids.a430]:25,[ids.a431]:6};
+  let total=0;
+  for(const productId of Object.values(ids)){
+    const windowField=stabilizeSelection(catalog,productId,{}).fields.find((field)=>field.key==="window_type");
+    assert.equal(windowField.values.length,expectedCounts[productId],productId);total+=windowField.values.length;
+    for(const window of windowField.values)assert.ok(firstFormalSizeForWindow(productId,window.value),`${productId}:${window.value}`);
+  }
+  assert.equal(total,65);
+});
+
+test("95 Runtime UI exposes registry hierarchy, window counts, upstream context and full formal list",async()=>{
+  const source=await readFile(new URL("../src/ui/web/app.js",import.meta.url),"utf8");
+  assert.match(source,/new Set\(products\.map\(x=>x\.manufacturer\)\)/);
+  assert.match(source,/data-window-count/);
+  assert.match(source,/data-size-context/);
+  assert.match(source,/data-size-candidate-count/);
+  assert.match(source,/data-size-height-count/);
+  assert.match(source,/data-size-list-record/);
+  assert.match(source,/正式サイズ一覧を見る/);
 });

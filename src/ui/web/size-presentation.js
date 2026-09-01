@@ -43,6 +43,29 @@ export function getAvailableHeights(values=[],nominalW=""){
   return[...groups.values()].sort((a,b)=>compare(a.value,b.value));
 }
 
+export function groupSizeRecordsByWidth(values=[]){
+  const groups=new Map();
+  for(const record of toSizeRecords(values)){
+    const group=groups.get(record.nominalW)??{nominalW:record.nominalW,records:[]};
+    group.records.push(record);groups.set(record.nominalW,group);
+  }
+  return[...groups.values()].sort((a,b)=>compare(a.nominalW,b.nominalW)).map((group)=>({
+    ...group,
+    records:group.records.sort((a,b)=>compare(a.nominalH,b.nominalH)||compare(a.sizeCode,b.sizeCode)||a.id.localeCompare(b.id,"ja")),
+    heights:[...new Set(group.records.map((record)=>record.nominalH))].sort(compare)
+  }));
+}
+
+export function getSizePresentationCounts(values=[],nominalW=""){
+  const records=toSizeRecords(values),widths=getAvailableWidths(values),heights=getAvailableHeights(values,nominalW);
+  return{
+    candidateRecords:records.length,
+    widthCandidates:widths.length,
+    heightCandidates:heights.length,
+    selectedWidthRecords:nominalW?records.filter((record)=>record.nominalW===text(nominalW)).length:0
+  };
+}
+
 export function findSizeRecords(values=[],criteria={}){
   const width=text(criteria.nominalW),height=text(criteria.nominalH);
   return toSizeRecords(values).filter((record)=>(!width||record.nominalW===width)&&(!height||record.nominalH===height));

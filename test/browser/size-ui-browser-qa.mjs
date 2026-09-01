@@ -5,10 +5,10 @@ import { chromium } from 'playwright';
 const BASE=process.env.QA_BASE_URL??'http://127.0.0.1:4173';
 const OUT=process.env.QA_ARTIFACT_DIR??'artifacts/size-ui-browser-qa';
 const PRODUCTS=[
-  {id:'SER-LIX-SAMOS2H',manufacturer:'LIXIL',label:'サーモスⅡ-H'},
-  {id:'SER-LIX-SAMOSL',manufacturer:'LIXIL',label:'サーモスL'},
-  {id:'SER-YKK-APW430',manufacturer:'YKK AP',label:'APW 430'},
-  {id:'SER-YKK-APW431',manufacturer:'YKK AP',label:'APW 431'}
+  {id:'SER-LIX-SAMOS2H',manufacturer:'LIXIL',label:'サーモスⅡ-H',windowCount:17,windows:['WT-S2H-HIKICHIGAI','WT-S2H-TATE-SUBERI','WT-S2H-FIX-OUT','WT-S2H-TERRACE-DOOR']},
+  {id:'SER-LIX-SAMOSL',manufacturer:'LIXIL',label:'サーモスL',windowCount:17,windows:['WT-SL-HIKICHIGAI','WT-SL-TATE-SUBERI','WT-SL-FIX-OUT','WT-SL-TERRACE-DOOR']},
+  {id:'SER-YKK-APW430',manufacturer:'YKK AP',label:'APW 430',windowCount:25,windows:['SWT-YKK-APW430-TATE-GREMON-SINGLE','SWT-YKK-APW430-SUBERI-GREMON-SINGLE','SWT-YKK-APW430-FIX-MADO']},
+  {id:'SER-YKK-APW431',manufacturer:'YKK AP',label:'APW 431',windowCount:6,windows:['W431-001','W431-003','W431-005']}
 ];
 await mkdir(OUT,{recursive:true});
 
@@ -82,6 +82,13 @@ async function chooseFirstFormalSize(page){
   assert.match(await detail.innerText(),/実寸/);
   return{widths,heights,id:await detail.getAttribute('data-size-selected-id'),code:await detail.locator('span strong').first().innerText()};
 }
+async function verifyFormalSizeList(page,formalCount){
+  assert.equal(await page.locator('[data-size-list-record]').count(),formalCount,'Formal size list omitted current candidates');
+  assert.match(await page.locator('[data-size-list-toggle]').innerText(),new RegExp(`全${formalCount}件`));
+  await page.locator('[data-size-list-toggle]').click();
+  assert.equal(await page.locator('[data-size-list-scroll]').isVisible(),true);
+  assert.ok(await page.locator('.size-list-group').count()>0,'No W groups in formal size list');
+}
 async function verifyCodeSearch(page,selected){
   await page.locator('[data-size-search]').fill(selected.code);
   const results=page.locator('[data-size-search-result]');
@@ -108,6 +115,9 @@ async function verifyUpstreamClear(page){
 }
 async function standardFlow(page,product,artifactPrefix){
   await openProduct(page,product);
+  const windowOptions=await page.locator('[data-spec-key="window_type"] option').evaluateAll((options)=>options.map((option)=>option.value).filter(Boolean));
+  assert.equal(windowOptions.length,product.windowCount,`${product.label}: ACTIVE window count`);
+  assert.match(await page.locator('[data-window-count]').innerText(),new RegExp(`${product.windowCount}種類`));
   await fillUpstreamUntilSize(page);
   assert.equal(await page.locator('select[data-spec-key="size"]').count(),0,'Legacy giant size select is still exposed');
   assert.equal(await page.locator('[data-size-width]').isVisible(),true);
@@ -116,7 +126,10 @@ async function standardFlow(page,product,artifactPrefix){
   const countText=await page.locator('.size-count').innerText();
   const formalCount=Number(countText.match(/\d+/)?.[0]);
   assert.ok(formalCount>0,`Formal candidate count is missing: ${countText}`);
+  await verifyFormalSizeList(page,formalCount);
   let selected=await chooseFirstFormalSize(page);
+  assert.match(await page.locator('[data-size-context]').innerText(),/窓種/);
+  assert.match(await page.locator('[data-size-height-count]').innerText(),/正式H/);
   await page.screenshot({path:`${OUT}/${artifactPrefix}-${product.id}-selected.png`,fullPage:true});
   await verifyCodeSearch(page,selected);
   const widthCleared=await verifyWidthClear(page,selected);
@@ -127,7 +140,22 @@ async function standardFlow(page,product,artifactPrefix){
   }
   const upstreamCleared=await verifyUpstreamClear(page);
   await page.screenshot({path:`${OUT}/${artifactPrefix}-${product.id}.png`,fullPage:true});
-  return{product:product.label,status:'PASS',formalCandidateCount:formalCount,widthCount:selected.widths.length,heightCount:selected.heights.length,recordId:selected.id,code:selected.code,widthClear:widthCleared,upstreamClear:upstreamCleared};
+  return{product:product.label,status:'PASS',activeWindowCount:windowOptions.length,formalCandidateCount:formalCount,widthCount:selected.widths.length,heightCount:selected.heights.length,recordId:selected.id,code:selected.code,widthClear:widthCleared,upstreamClear:upstreamCleared};
+}
+async function representativeWindowFlows(page,product){
+  const rows=[];
+  for(const windowType of product.windows){
+    await openProduct(page,product);
+    await selectSpec(page,'window_type',windowType);
+    await fillUpstreamUntilSize(page);
+    const countText=await page.locator('[data-size-candidate-count]').innerText();
+    const formalCount=Number(countText.match(/\d+/)?.[0]);
+    assert.ok(formalCount>0,`${product.label}:${windowType} has no formal size`);
+    await verifyFormalSizeList(page,formalCount);
+    const selected=await chooseFirstFormalSize(page);
+    rows.push({windowType,status:'PASS',formalCandidateCount:formalCount,recordId:selected.id,code:selected.code});
+  }
+  return rows;
 }
 async function thermosCustomFlow(page){
   const product=PRODUCTS.find((row)=>row.id==='SER-LIX-SAMOSL');
@@ -156,13 +184,38 @@ async function thermosCustomFlow(page){
   report.custom.push({product:product.label,case:'REVIEW_REQUIRED',status:'PASS'});
   await page.screenshot({path:`${OUT}/desktop-custom-review.png`,fullPage:true});
 }
+async function apw431CustomFlow(page){
+  const product=PRODUCTS.find((row)=>row.id==='SER-YKK-APW431');
+  await openProduct(page,product);
+  for(const [key,value] of [['window_type','W431-001'],['region','北海道'],['configuration','2枚建'],['variant','標準'],['construction','在来'],['size_mode','CUSTOM']])await selectSpec(page,key,value);
+  assert.equal(await page.locator('[data-size-width]').count(),0);
+  assert.equal(await page.locator('[data-size-height]').count(),0);
+  await selectSpec(page,'custom_width',1000);
+  await selectSpec(page,'custom_height',1571);
+  await page.waitForFunction(()=>document.querySelector('.notice.dimension')?.textContent.includes('○ 製作可能'));
+  report.custom.push({product:product.label,case:'PASS',status:'PASS'});
+  await selectSpec(page,'custom_width',999);
+  await page.waitForFunction(()=>document.querySelector('.notice.dimension')?.textContent.includes('× 製作範囲外'));
+  report.custom.push({product:product.label,case:'BLOCK',status:'PASS'});
+
+  await selectSpec(page,'window_type','W431-003');
+  for(const [key,value] of [['region','北海道'],['configuration','片引き'],['variant','均等タイプ'],['construction','在来'],['size_mode','CUSTOM'],['custom_width',1600],['custom_height',1571]])await selectSpec(page,key,value);
+  await page.waitForFunction(()=>document.querySelector('.notice.dimension')?.textContent.includes('△ 発注前に原本・メーカー確認が必要'));
+  report.custom.push({product:product.label,case:'REVIEW_REQUIRED',status:'PASS'});
+  await page.screenshot({path:`${OUT}/desktop-apw431-custom-review.png`,fullPage:true});
+}
 
 try{
   const desktopContext=await browser.newContext({viewport:{width:1440,height:1000}});
   const desktop=await desktopContext.newPage();
   trackErrors(desktop,'desktop');
-  for(const product of PRODUCTS)report.desktop.push(await standardFlow(desktop,product,'desktop'));
+  for(const product of PRODUCTS){
+    const result=await standardFlow(desktop,product,'desktop');
+    result.representativeWindows=await representativeWindowFlows(desktop,product);
+    report.desktop.push(result);
+  }
   await thermosCustomFlow(desktop);
+  await apw431CustomFlow(desktop);
   await desktopContext.close();
 
   const mobileContext=await browser.newContext({viewport:{width:390,height:844},isMobile:true,hasTouch:true});
