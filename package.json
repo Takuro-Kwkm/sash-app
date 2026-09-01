@@ -6,7 +6,9 @@
   "scripts": {
     "start": "node scripts/start-step8-ui.mjs",
     "start:qa": "HOST=0.0.0.0 node scripts/start-step8-ui.mjs",
-    "test": "node --test test/*.test.mjs"
+    "test": "node --test test/*.test.mjs",
+    "test:product-master-core": "node --test test/08-product-master-core.test.mjs",
+    "validate:product-master-core": "node scripts/validate-product-master-core.mjs"
   },
   "engines": { "node": ">=22" }
 }
