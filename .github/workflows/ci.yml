@@ -41,3 +41,39 @@ jobs:
           done
           cat /tmp/health.json
           node -e 'const h=require("/tmp/health.json"); const expected={"SER-LIX-SAMOS2H":2131,"SER-LIX-SAMOSL":1410,"SER-YKK-APW430":718,"SER-YKK-APW431":538}; const sash=h.inventory.filter(x=>expected[x.productId]!==undefined); const concord=h.inventory.find(x=>x.productId==="SER-YKK-CONCORD-S30"); if(!h.ok || h.catalogVersion!=="V4.5 SIZE-MASTER-FORMAL + CONCORD-S30" || h.inventory.length!==5 || !concord || sash.length!==4 || sash.some(x=>x.sizeCoverage!==1 || x.missingSizeRows!==0 || x.extraSizeRows!==0 || expected[x.productId]!==x.selectableSizeRows)) process.exit(1)'
+
+  browser_qa:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install Chromium QA runtime
+        run: |
+          npm install --no-save --package-lock=false playwright@1.55.0
+          npx playwright install --with-deps chromium
+      - name: Start actual Runtime
+        run: |
+          npm run start:qa > runtime-qa.log 2>&1 &
+          echo $! > runtime-qa.pid
+          for i in {1..30}; do
+            if curl -fsS http://127.0.0.1:4173/api/health > /tmp/browser-health.json; then exit 0; fi
+            sleep 0.5
+          done
+          cat runtime-qa.log
+          exit 1
+      - name: Concord S30 PC and Smartphone Browser QA
+        run: node test/browser/concords30-browser-qa.mjs
+      - name: Upload Concord Browser QA evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: concord-s30-browser-qa
+          path: |
+            artifacts/concord-browser-qa
+            runtime-qa.log
+      - name: Stop Runtime
+        if: always()
+        run: |
+          if [ -f runtime-qa.pid ]; then kill "$(cat runtime-qa.pid)" || true; fi
