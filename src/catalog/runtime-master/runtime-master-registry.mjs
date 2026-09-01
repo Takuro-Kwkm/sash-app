@@ -4,7 +4,8 @@ import { loadRuntimeMasterFromZipBase64, verifySourceZipSha256 } from './runtime
 import { runtimeApi } from './generic-rule-engine.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
-const XE_B64 = Array.from({ length: 6 }, (_, index) => join(HERE, `../runtime-master-packages/lixil-xe/XE_V1_0_RC.source.zip.b64.parts/part-${String(index).padStart(2, '0')}`));
+const XE_PARTS = ['part-00','part-01','part-02a','part-02b','part-03','part-04','part-05'];
+const XE_B64 = XE_PARTS.map((name) => join(HERE, `../runtime-master-packages/lixil-xe/XE_V1_0_RC.source.zip.b64.parts/${name}`));
 const XE_SHA256 = 'e2e5974e730508f4588afde5811df73032443c0cfc9b2f039ec44f61838653aa';
 
 export const runtimeMasterInventory = Object.freeze([
