@@ -1,13 +1,13 @@
 {
-  "snapshotSchemaVersion": "1.1",
+  "snapshotSchemaVersion": "1.2",
   "recordType": "FORMAL_PRODUCT_MASTER_READ_SNAPSHOT",
   "productId": "SER-LIX-SAMOSL",
   "readDate": "2026-09-02",
   "driveFile": {
     "id": "17lVzBZ1hp4RVcGv0yNdnrKt25SFO2FhL",
     "title": "サーモスL_商品マスター_v0.7_特注寸法発注アプリ投入完成版_QA確定.xlsx",
-    "revisionId": "0B1PsqngSohhlZ0dycXFVYTVFY3JzQWJLLzNkVGFVcFhsNHQ0PQ",
-    "modifiedTime": "2026-08-30T09:28:18.039Z",
+    "revisionId": "0B1PsqngSohhldjYycXpvcXp5VVlLSDQyUlBBUmJPTFZxbU1nPQ",
+    "modifiedTime": "2026-09-02T11:49:26.018Z",
     "sizeBytes": 666560
   },
   "sheets": {
@@ -39,11 +39,15 @@
     "workbookTextRead": true,
     "tailRecordRead": true,
     "excelRowAddressRead": true,
+    "rollbackReadbackHashMatched": true,
     "formalWorkbookWritePerformed": false
   },
   "correction": {
-    "reason": "v1.7 post-write readback detected append start one row too early; artifact_tool readback proved last record is Excel row 1562, so append starts at 1563",
+    "reason": "v1.7 post-write readback detected append start one row too early; formal workbook was rolled back byte-for-byte, producing a new Drive revision. Correct append begins at Excel row 1563 and Preview must bind to the rollback revision.",
     "supersedesNextExcelRow": 1562,
-    "correctNextExcelRow": 1563
+    "correctNextExcelRow": 1563,
+    "preRollbackRevisionId": "0B1PsqngSohhlWWQ3cG5GTFc0M0dhdnRxdDJVMTFjcG02a2I0PQ",
+    "rollbackRevisionId": "0B1PsqngSohhldjYycXpvcXp5VVlLSDQyUlBBUmJPTFZxbU1nPQ",
+    "rollbackSha256": "eec989d1fd2e1ad4fc025e08c8b122c522e7811840b075f5b9eff2567ea4d4ac"
   }
 }
