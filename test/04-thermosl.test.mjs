@@ -19,26 +19,29 @@ test("25 Thermos L canonical source is 01_正本",()=>{
   assert.equal(THERMOSL_SOURCE.master.id,"17lVzBZ1hp4RVcGv0yNdnrKt25SFO2FhL");
   assert.equal(THERMOSL_SOURCE.master.folder,"01_正本");
   assert.equal(THERMOSL_SOURCE.master.version,"v0.7");
+  assert.equal(THERMOSL_SOURCE.master.revisionId,"0B1PsqngSohhlRDByanJSNkxtSlpqdVo0WXBRT01MNDIzM2tNPQ");
 });
 
-test("26 Thermos L source inventory is exact",()=>{
+test("26 Thermos L source inventory is exact after formal v1.8 regeneration",()=>{
   assert.deepEqual(THERMOSL_SOURCE.sourceInventory,{
-    activeWindows:17,masterSizeRows:1559,selectableSizeRows:1410,dimensionRules:50,
+    activeWindows:17,masterSizeRows:1644,selectableSizeRows:1495,dimensionRules:50,
     dimensionAuto:29,dimensionReview:21,highOperationRows:144,appControls:17,goldenTests:29
   });
   assert.equal(THERMOSL_SOURCE.windows.length,17);
-  assert.equal(THERMOSL_SOURCE.sizes.length,1559);
-  assert.equal(THERMOSL_SOURCE.sizes.filter((row)=>row.active).length,1410);
+  assert.equal(THERMOSL_SOURCE.sizes.length,1644);
+  assert.equal(THERMOSL_SOURCE.sizes.filter((row)=>row.active).length,1495);
+  assert.equal(THERMOSL_SOURCE.runtimeRegeneration.version,"v1.8");
+  assert.equal(THERMOSL_SOURCE.runtimeRegeneration.addedSizeRows,85);
 });
 
 test("27 normalized catalog exposes 17 active window types",()=>{
   assert.equal(catalog.allowedValues.filter((row)=>row.productId===productId&&row.specificationKey==="window_type").length,17);
 });
 
-test("28 selectable size source ids are exactly 1410",()=>{
+test("28 selectable size source ids are exactly 1495",()=>{
   const rows=catalog.allowedValues.filter((row)=>row.productId===productId&&row.specificationKey==="size");
-  assert.equal(rows.length,1410);
-  assert.equal(new Set(rows.map((row)=>row.metadata.sourceSizeId)).size,1410);
+  assert.equal(rows.length,1495);
+  assert.equal(new Set(rows.map((row)=>row.metadata.sourceSizeId)).size,1495);
 });
 
 test("29 dimension inventory is 50 / AUTO29 / REVIEW21",()=>{
