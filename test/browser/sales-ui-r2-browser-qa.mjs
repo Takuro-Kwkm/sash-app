@@ -51,13 +51,18 @@ async function verifyThermosLGlass(page){
 }
 async function verifyThermosLShutter(page,prefix){
   await openProduct(page,'LIXIL','SER-LIX-SAMOSL');
-  await select(page,'window_type','WT-SL-SHUTTER-HIKI');await select(page,'shutter_type','SP-SL-SHUT-M-STD');await select(page,'size_mode','STANDARD');await select(page,'construction','在来');
-  assert.equal(await candidateCount(page),6);assert.deepEqual(await page.locator('[data-size-width] option').evaluateAll((rows)=>rows.map((row)=>row.value).filter(Boolean)),['178','183']);
-  await resolveAction(page,()=>page.locator('[data-size-width]').selectOption('178'));
-  assert.deepEqual(await page.locator('[data-size-height] option').evaluateAll((rows)=>rows.map((row)=>row.value).filter(Boolean)),['18','20','22']);
-  report.shutter.push({viewport:prefix,shutter:'手動 標準タイプ',construction:'在来',canonical:6,runtime:6,widths:['178','183'],heightsBy178:['18','20','22'],missing:0,extra:0,status:'PASS'});
+  await select(page,'window_type','WT-SL-SHUTTER-HIKI');await select(page,'shutter_type','SP-SL-SHUT-M-STD');await select(page,'size_mode','STANDARD');
+  const constructionCounts={};
+  for(const[construction,expected]of[['在来・204',51],['在来',46]]){
+    await select(page,'construction',construction);
+    assert.equal(await candidateCount(page),expected,`${prefix}:${construction}:candidate count`);
+    assert.equal(await page.locator('[data-size-list-record]').count(),expected,`${prefix}:${construction}:full formal list`);
+    constructionCounts[construction]=expected;
+  }
+  assert.equal(Object.values(constructionCounts).reduce((a,b)=>a+b,0),97);
+  report.shutter.push({viewport:prefix,shutter:'手動 標準タイプ',constructionCounts,total:97,missing:0,extra:0,status:'PASS'});
   await select(page,'shutter_type','SP-SL-SHUT-E-STD');
-  assert.equal(await candidateCount(page),52);report.shutter.push({viewport:prefix,shutter:'電動 標準タイプ',construction:'在来',canonical:52,runtime:52,missing:0,extra:0,status:'PASS'});
+  await select(page,'construction','在来');assert.equal(await candidateCount(page),52);report.shutter.push({viewport:prefix,shutter:'電動 標準タイプ',construction:'在来',canonical:52,runtime:52,missing:0,extra:0,status:'PASS'});
   await select(page,'construction','204');assert.equal(await candidateCount(page),4);report.shutter.push({viewport:prefix,shutter:'電動 標準タイプ',construction:'204',canonical:4,runtime:4,missing:0,extra:0,status:'PASS'});
 }
 async function verifyCustomAvailability(page){
