@@ -6,6 +6,7 @@ import{
   persistCandidateUnderReview
 }from'./evidence-adjudication-store.mjs';
 import{inspectCanonicalEvidenceOverlap}from'./evidence-overlap.mjs';
+import{registerPersistedTransportIssue}from'./transport-issue-lifecycle.mjs';
 import{APW430_GEMINI_INBOX_POC}from'./poc/apw430-gemini-inbox-poc.mjs';
 import{APW430_OFFICIAL_EVIDENCE_POC}from'./poc/apw430-official-evidence-poc.mjs';
 
@@ -31,6 +32,7 @@ const PLAN={
 };
 
 const isoAt=(offsetSeconds)=>new Date(Date.parse('2026-09-02T06:10:00Z')+offsetSeconds*1000).toISOString();
+const pendingIdForIssue=(batchId,index)=>`PEND-${batchId.replace(/^BATCH-/,'')}-ISSUE-${String(index+1).padStart(3,'0')}`;
 
 export function runApw430LiveEvidenceRoundTrip({
   artifactDir=path.resolve('artifacts/product-master-live-v1'),
@@ -82,6 +84,18 @@ export function runApw430LiveEvidenceRoundTrip({
     });
   }
 
+  const transportIssueRows=[];
+  for(let index=0;index<envelope.issues.length;index+=1){
+    const issue=envelope.issues[index];
+    const linked=registerPersistedTransportIssue({
+      rootDir:inboxRoot,batchId:envelope.batchId,issueId:issue.id,
+      pendingId:pendingIdForIssue(envelope.batchId,index),severity:'NON_BLOCKING',
+      at:isoAt(30+index),by:'CHATGPT'
+    });
+    if(!linked.pass)throw new Error(`Transport issue lifecycle link failed for ${issue.id}: ${JSON.stringify(linked.errors)}`);
+    transportIssueRows.push({issueId:issue.id,pendingId:linked.pending.id,status:linked.pending.status,severity:linked.pending.severity,subjectField:issue.subjectField,type:issue.type});
+  }
+
   const state=loadEvidenceAdjudicationStore(inboxRoot);
   const summary=evidenceAdjudicationSummary(inboxRoot);
   const decisions={
@@ -93,11 +107,12 @@ export function runApw430LiveEvidenceRoundTrip({
   const redundantRejectedIds=rows.filter((row)=>row.decision==='REJECT'&&row.existingCanonicalSourceRegionOverlap).map((row)=>row.candidateId);
   const uniqueAcceptedFromOverlapIds=rows.filter((row)=>row.decision==='ACCEPT'&&row.existingCanonicalSourceRegionOverlap).map((row)=>row.candidateId);
   const existingCanonicalUnmodified=JSON.stringify(existingCanonicalEvidence)===existingBefore;
-  const pass=rawPreserved&&summary.adjudications===12&&summary.canonicalEvidence===9&&decisions.ACCEPT===9&&decisions.REJECT===3&&decisions.PENDING===0&&overlapCandidateIds.length===4&&redundantRejectedIds.length===3&&uniqueAcceptedFromOverlapIds.length===1&&existingCanonicalUnmodified;
+  const allTransportIssuesLinked=transportIssueRows.length===envelope.issues.length&&transportIssueRows.every((row)=>row.status==='OPEN'&&row.severity==='NON_BLOCKING');
+  const pass=rawPreserved&&summary.adjudications===12&&summary.canonicalEvidence===9&&decisions.ACCEPT===9&&decisions.REJECT===3&&decisions.PENDING===0&&overlapCandidateIds.length===4&&redundantRejectedIds.length===3&&uniqueAcceptedFromOverlapIds.length===1&&existingCanonicalUnmodified&&allTransportIssuesLinked&&summary.pending===4&&summary.openPending===4;
   const report={
-    reportVersion:'1.0',
-    status:pass?'CANDIDATE_ROUNDTRIP_PASS':'FAIL',
-    fullProductionGate:'PARTIAL_PASS',
+    reportVersion:'1.0-R1',
+    status:pass?'LIVE_ROUNDTRIP_PASS':'FAIL',
+    fullProductionGate:pass?'PASS_WITH_NON_BLOCKING_PENDING':'FAIL',
     batchId:envelope.batchId,
     producer:envelope.producer,
     productId:envelope.productId,
@@ -106,9 +121,10 @@ export function runApw430LiveEvidenceRoundTrip({
     transport:{candidateCount:envelope.candidates.length,issueCount:envelope.issues.length},
     adjudication:{...summary,decisions},
     existingCanonical:{count:existingCanonicalEvidence.length,unmodified:existingCanonicalUnmodified,sourceRegionOverlapCandidateIds:overlapCandidateIds,redundantRejectedIds,uniqueAcceptedFromOverlapIds},
+    transportIssues:{linked:transportIssueRows.length,blocking:transportIssueRows.filter((row)=>row.severity==='BLOCKING').length,nonBlocking:transportIssueRows.filter((row)=>row.severity==='NON_BLOCKING').length,rows:transportIssueRows},
     productionMasterWritePerformed:false,
     runtimeWritePerformed:false,
-    transportIssueLifecycle:'NOT_CONNECTED_IN_V0.9',
+    transportIssueLifecycle:'CONNECTED_TO_PERSISTENT_PENDING',
     candidateResults:rows,
     gates:{
       LIVE_EXTERNAL_INPUT:envelope.producer?.mode==='LIVE_EXTERNAL'?'PASS':'FAIL',
@@ -120,8 +136,11 @@ export function runApw430LiveEvidenceRoundTrip({
       EXISTING_CANONICAL_OVERLAP_PREFLIGHT:overlapCandidateIds.length===4?'PASS':'FAIL',
       REDUNDANT_CANONICAL_SUPPRESSION:redundantRejectedIds.length===3?'PASS':'FAIL',
       EXISTING_CANONICAL_IMMUTABLE:existingCanonicalUnmodified?'PASS':'FAIL',
+      TRANSPORT_ISSUES_LINKED_4_OF_4:allTransportIssuesLinked?'PASS':'FAIL',
+      OPEN_BLOCKING_PENDING:transportIssueRows.filter((row)=>row.severity==='BLOCKING').length,
+      OPEN_NON_BLOCKING_PENDING:transportIssueRows.filter((row)=>row.severity==='NON_BLOCKING').length,
       PRODUCTION_MASTER_AUTO_WRITE:'0',
-      TRANSPORT_ISSUE_LIFECYCLE:'PENDING_V1_1'
+      RUNTIME_AUTO_WRITE:'0'
     }
   };
   fs.writeFileSync(path.join(absoluteArtifactDir,'report.json'),`${JSON.stringify(report,null,2)}\n`,'utf8');
