@@ -1,0 +1,116 @@
+{
+  "schemaVersion": "1.0",
+  "recordType": "CUSTOM_SIZE_CAPABILITY_AUDIT",
+  "status": "PARTIAL_PASS",
+  "products": [
+    {
+      "productId": "SER-LIX-SAMOS2H",
+      "series": "サーモスⅡ-H",
+      "classification": "CUSTOM_AVAILABLE",
+      "sourceCapability": "CONFIRMED",
+      "canonicalRuleCoverage": "MISSING",
+      "runtimeRuleCoverage": "MISSING",
+      "runtimeDimensionRuleCount": 0,
+      "officialSources": [
+        {
+          "driveFileId": "1UXmP4gyH3Hurw_uxU0djon19rpxDZaef",
+          "title": "202211_LIXIL_サーモスⅡ－Ｈ／Ｌ　防火戸ＦＧ－Ｈ／Ｌ_商品カタログ.pdf",
+          "evidence": [
+            "寸法特注範囲 SAMOSⅡ",
+            "寸法特注範囲",
+            "寸法特注範囲 電動・手動 標準タイプ",
+            "寸法特注範囲は耐風圧性能:S-3（160）等級範囲を示す"
+          ]
+        },
+        {
+          "driveFileId": "1x4lovMcyfkyFzulYiQIv8OE5dpq6wDor",
+          "title": "202604_LIXIL_サーモスⅡ－Ｈ_業務用資料集_完成品価格表.pdf",
+          "role": "CURRENT_PRICE/ORDER_SOURCE"
+        }
+      ],
+      "decision": "AVAILABLE_SOURCE_CONFIRMED_RULE_EXTRACTION_PENDING",
+      "blockingPending": "Extract exact Product Node/selector-specific W/H ranges, graph boundaries and special conditions from official source before any Change Proposal."
+    },
+    {
+      "productId": "SER-LIX-SAMOSL",
+      "series": "サーモスL",
+      "classification": "CUSTOM_AVAILABLE",
+      "sourceCapability": "CONFIRMED",
+      "canonicalRuleCoverage": "PRESENT_NEEDS_SOURCE_AUDIT",
+      "runtimeRuleCoverage": "PRESENT_NEEDS_SOURCE_AUDIT",
+      "runtimeDimensionRuleCount": 50,
+      "officialSources": [
+        {
+          "driveFileId": "1YUN-mtWYs48YBUHJk0C3vJXnhjyZFHyf",
+          "title": "202604_LIXIL_サーモスＬ_業務用資料集_完成品価格表.pdf"
+        },
+        {
+          "driveFileId": "1UXmP4gyH3Hurw_uxU0djon19rpxDZaef",
+          "title": "202211_LIXIL_サーモスⅡ－Ｈ／Ｌ　防火戸ＦＧ－Ｈ／Ｌ_商品カタログ.pdf",
+          "role": "DIMENSION_RANGE_BACKGROUND_SOURCE"
+        }
+      ],
+      "decision": "AVAILABLE_RULE_BY_RULE_AUDIT_PENDING",
+      "blockingPending": "Verify all 50 existing Dimension Rules against official source; an existing rule is not automatically accepted as official-source correct."
+    },
+    {
+      "productId": "SER-YKK-APW430",
+      "series": "APW 430",
+      "classification": "CUSTOM_AVAILABLE",
+      "sourceCapability": "CONFIRMED",
+      "canonicalRuleCoverage": "MISSING",
+      "runtimeRuleCoverage": "MISSING",
+      "runtimeDimensionRuleCount": 0,
+      "officialSources": [
+        {
+          "driveFileId": "1GZRfXqRKZKti-LreyNgW9-wegAF-HzaK",
+          "title": "202608_YKKAP_APW430_業務用資料集.pdf",
+          "officialTitleRole": "業務用（製作範囲・納まり図）",
+          "productionRangePages": {
+            "たてすべり出し窓": 2,
+            "すべり出し窓": 3,
+            "高所用すべり出し窓": 4,
+            "FIX窓": "4-5",
+            "ツーアクション窓": 5,
+            "引違い窓": "6-7",
+            "面格子付引違い窓": 6,
+            "シャッター付引違い窓": 8
+          }
+        }
+      ],
+      "decision": "AVAILABLE_SOURCE_CONFIRMED_RULE_EXTRACTION_PENDING",
+      "blockingPending": "Extract exact p.2-p.8 Product Node rules and graph/weight/glass restrictions before Change Proposal."
+    },
+    {
+      "productId": "SER-YKK-APW431",
+      "series": "APW 431",
+      "classification": "CUSTOM_AVAILABLE",
+      "sourceCapability": "CONFIRMED",
+      "canonicalRuleCoverage": "PRESENT_NEEDS_SOURCE_AUDIT",
+      "runtimeRuleCoverage": "PRESENT_NEEDS_SOURCE_AUDIT",
+      "runtimeDimensionRuleCount": 29,
+      "officialSources": [
+        {
+          "driveFileId": "1GZRfXqRKZKti-LreyNgW9-wegAF-HzaK",
+          "title": "202608_YKKAP_APW430_業務用資料集.pdf",
+          "officialTitleRole": "APW 430 / APW 431 業務用 製作範囲・納まり図",
+          "productionRangePages": {
+            "引違いテラス戸_北海道": 6,
+            "引違いテラス戸_本州": 7,
+            "シャッター付引違いテラス戸": 9,
+            "大開口スライディング": 11,
+            "テラスドア": 12,
+            "開き窓テラス": 13,
+            "勝手口ドア": 13
+          }
+        }
+      ],
+      "decision": "AVAILABLE_RULE_BY_RULE_AUDIT_PENDING",
+      "blockingPending": "Compare all 29 existing rules to official p.6-p.13 conditions, including source-graph and compound gates."
+    }
+  ],
+  "notApplicableCount": 0,
+  "note": "No product was classified CUSTOM_NOT_APPLICABLE merely because Runtime lacked a Dimension Rule. S2H and APW430 have official production-range sources and therefore cannot be treated as standard-only products.",
+  "formalMasterWritePerformed": false,
+  "runtimeManufacturerDataWritePerformed": false
+}
