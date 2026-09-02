@@ -6,6 +6,9 @@ export const EVIDENCE_SOURCE_TYPES=new Set(['OFFICIAL_PDF','OFFICIAL_WEB','MASTE
 const error=(code,message)=>({code,message});
 
 export function validateEvidenceRecord(record,{knownFields=new Set(),nodeIds=new Set()}={}){
+  if(record?.recordType==='EVIDENCE_CANDIDATE'||record?.candidateSchemaVersion){
+    return{pass:false,legacy:false,errors:[error('INBOX_CANDIDATE_NOT_CANONICAL','Evidence Inbox Candidate cannot be stored in the Canonical Evidence Registry before adjudication')]};
+  }
   if(record?.schemaVersion!==EVIDENCE_SCHEMA_VERSION)return{pass:true,legacy:true,errors:[]};
   const errors=[];
   if(!record.id)errors.push(error('EVIDENCE_ID_MISSING','Evidence id is required'));
