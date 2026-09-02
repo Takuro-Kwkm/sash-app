@@ -13,7 +13,7 @@ const field=(productId,selection,key)=>stabilizeSelection(catalog,productId,sele
 const fieldOrder=(productId,selection={})=>stabilizeSelection(catalog,productId,selection).fields.map((row)=>row.key);
 const values=(productId,key,selection={})=>getAllowedValues(catalog,productId,key,selection).map((row)=>row.value);
 
-test('122 LIXIL glass order is detail, spacer, then air layer',()=>{
+test('122 LIXIL glass order is performance, spacer, then air layer',()=>{
   const s2h=fieldOrder(ids.s2h,{window_type:'WT-S2H-HIKICHIGAI'});
   assert.ok(s2h.indexOf('glass_base')<s2h.indexOf('glass_detail'));
   assert.ok(s2h.indexOf('glass_detail')<s2h.indexOf('glass_spacer'));
@@ -25,18 +25,46 @@ test('122 LIXIL glass order is detail, spacer, then air layer',()=>{
   assert.ok(sl.indexOf('glass_air_layer')<sl.indexOf('glass_type'));
 });
 
-test('123 resin spacer exposes argon only from formal LIXIL glass rows',()=>{
+test('123 Thermos L uses broad sales glass categories and resin spacer exposes argon only',()=>{
+  assert.deepEqual(values(ids.sl,'glass_detail',{window_type:'WT-SL-HIKICHIGAI',glass_base:'LOWE'}),[
+    'LOWE_STANDARD','LOWE_GREEN','LOWE_GREEN_HS','LOWE_CLEAR_HISOLAR'
+  ]);
   assert.deepEqual(values(ids.s2h,'glass_gas',{glass_base:'LOWE',glass_detail:'GL-S2H-LOWE-CLEAR',glass_spacer:'RESIN'}),['ARGON']);
-  assert.deepEqual(values(ids.sl,'glass_air_layer',{glass_base:'LOWE',glass_detail:'GL-SL-001',glass_spacer:'RESIN'}),['ARGON']);
+  assert.deepEqual(values(ids.sl,'glass_air_layer',{window_type:'WT-SL-HIKICHIGAI',glass_base:'LOWE',glass_detail:'LOWE_STANDARD',glass_spacer:'RESIN'}),['ARGON']);
 });
 
 test('124 changing spacer clears an invalid air layer and stabilizes to the valid candidate',()=>{
   const s2h=stabilizeSelection(catalog,ids.s2h,{window_type:'WT-S2H-HIKICHIGAI',glass_base:'LOWE',glass_detail:'GL-S2H-LOWE-CLEAR',glass_spacer:'RESIN',glass_gas:'DRY_AIR'});
   assert.equal(s2h.selection.glass_gas,'ARGON');
   assert.equal(s2h.fields.find((row)=>row.key==='glass_gas').values.length,1);
-  const sl=stabilizeSelection(catalog,ids.sl,{window_type:'WT-SL-HIKICHIGAI',glass_base:'LOWE',glass_detail:'GL-SL-001',glass_spacer:'RESIN',glass_air_layer:'DRY_AIR'});
+  const sl=stabilizeSelection(catalog,ids.sl,{window_type:'WT-SL-HIKICHIGAI',glass_base:'LOWE',glass_detail:'LOWE_STANDARD',glass_spacer:'RESIN',glass_air_layer:'DRY_AIR'});
   assert.equal(sl.selection.glass_air_layer,'ARGON');
   assert.equal(sl.fields.find((row)=>row.key==='glass_air_layer').values.length,1);
+});
+
+test('124A Thermos L manual wind shutter is CUSTOM-only',()=>{
+  const selection={window_type:'WT-SL-SHUTTER-HIKI',shutter_type:'SP-SL-SHUT-M-WIND'};
+  assert.deepEqual(values(ids.sl,'size_mode',selection),['CUSTOM']);
+  assert.equal(matchingStandardSizeRecords(catalog,ids.sl,selection).length,0);
+  assert.equal(matchingDimensionRules(catalog,ids.sl,selection).length,1);
+});
+
+test('124B Thermos L glass UI hides physical build strings and exposes Frost as a formal manual-check type',()=>{
+  const selection={window_type:'WT-SL-HIKICHIGAI',glass_base:'LOWE'};
+  const details=field(ids.sl,selection,'glass_detail').values;
+  assert.deepEqual(details.map((row)=>row.displayLabel),[
+    'Low-E 標準','遮熱（Low-E グリーン）','高遮熱（Low-E グリーン）','高日射取得（Low-E クリア）'
+  ]);
+  assert.equal(details.some((row)=>/\d[-–](?:Ar|A)\d/i.test(row.displayLabel)),false);
+  const types=field(ids.sl,selection,'glass_type').values;
+  assert.deepEqual(types.map((row)=>row.value),['CLEAR','PATTERN','FROST']);
+  const frost=types.find((row)=>row.value==='FROST');
+  assert.equal(frost.manualCheck,true);
+  assert.equal(values(ids.sl,'glass_function',selection).includes('GL-SL-OPT-FROST'),false);
+  const result=stabilizeSelection(catalog,ids.sl,{
+    ...selection,glass_detail:'LOWE_STANDARD',glass_spacer:'RESIN',glass_air_layer:'ARGON',glass_type:'FROST'
+  });
+  assert.ok(result.manualWarnings.some((message)=>message.includes('フロスト')&&message.includes('CONFIRM_REQUIRED')));
 });
 
 test('125 Thermos L manual standard shutter sizes are 97 and runtime-exact',()=>{
