@@ -6,6 +6,7 @@ const writeJson=(filePath,value)=>{
   fs.mkdirSync(path.dirname(filePath),{recursive:true});
   fs.writeFileSync(filePath,`${JSON.stringify(value,null,2)}\n`,'utf8');
 };
+const expected=(actual,value)=>value==null||actual===value?'PASS':'FAIL';
 
 export function runStandardSizeSourceGapProposalWorkflow({
   artifactDir,productId,sourceRecords,canonicalRecords,existingSizeGlassConditions=[],config={},reportVersion='1.6'
@@ -28,10 +29,14 @@ export function runStandardSizeSourceGapProposalWorkflow({
       baseMasterFingerprint:result.proposal.target?.baseMasterFingerprint??null
     }:null,
     gates:{
-      DIRECT_OFFICIAL_SOURCE_RECORDS:sourceRecords?.length===97?'PASS':'FAIL',
-      CURRENT_SOURCE_GAP:result.auditBefore?.counts?.missingInCanonical===85?'PASS':'FAIL',
+      DIRECT_OFFICIAL_SOURCE_RECORDS:expected(sourceRecords?.length,config.expectedOfficialAvailable),
+      CURRENT_SOURCE_MATCH:expected(result.auditBefore?.counts?.match,config.expectedCurrentMatch),
+      CURRENT_SOURCE_GAP:expected(result.auditBefore?.counts?.missingInCanonical,config.expectedCurrentMissing),
+      EVIDENCE_ADDITIONS:expected(result.counts?.evidenceAdditions,config.expectedEvidenceAdditions),
+      SIZE_ADDITIONS:expected(result.counts?.sizeAdditions,config.expectedSizeAdditions),
+      GLASS_CONDITION_ADDITIONS:expected(result.counts?.glassConditionAdditions,config.expectedGlassConditionAdditions),
       PROJECTED_OFFICIAL_SOURCE_SIZE_COVERAGE:result.projectedAudit?.coveragePass?'PASS':'FAIL',
-      HUMAN_APPROVAL_REQUIRED:result.proposal?.approvalPolicy==='HUMAN_REQUIRED'?'PASS':'FAIL',
+      HUMAN_APPROVAL_REQUIRED:result.proposal?.approvalPolicy==='HUMAN_REQUIRED'&&result.proposal?.status==='PROPOSED'?'PASS':'FAIL',
       FORMAL_WORKBOOK_AUTO_WRITE:result.formalWorkbookWritePerformed===false?'PASS':'FAIL',
       RUNTIME_AUTO_WRITE:result.runtimeWritePerformed===false?'PASS':'FAIL'
     },
