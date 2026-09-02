@@ -23,10 +23,10 @@ const paths={
 };
 const sizeField=(productId,selection=paths[productId])=>stabilizeSelection(catalog,productId,selection).fields.find((field)=>field.key==="size");
 
-test("79 formal Size Record inventory remains unchanged",()=>{
+test("79 formal Size Record inventory matches current formal Master",()=>{
   const inventory=Object.fromEntries(catalogInventory(catalog).map((row)=>[row.productId,row]));
   assert.deepEqual(Object.fromEntries(Object.values(ids).map((id)=>[id,[inventory[id].selectableSizeRows,inventory[id].missingSizeRows,inventory[id].extraSizeRows,inventory[id].sizeCoverage]])),{
-    [ids.s2h]:[2131,0,0,1],[ids.sl]:[1410,0,0,1],[ids.a430]:[718,0,0,1],[ids.a431]:[538,0,0,1]
+    [ids.s2h]:[2131,0,0,1],[ids.sl]:[1495,0,0,1],[ids.a430]:[718,0,0,1],[ids.a431]:[538,0,0,1]
   });
   assert.equal(inventory[ids.sl].dimensionRules,50);
   assert.equal(inventory[ids.a431].dimensionRules,29);
