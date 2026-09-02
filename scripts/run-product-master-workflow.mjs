@@ -1,13 +1,14 @@
 import path from'node:path';
 import{runEvidenceRoundTrip}from'../src/product-master-core/evidence-roundtrip-runner.mjs';
 import{runStandardSizeSourceAuditWorkflow}from'../src/product-master-core/standard-size-source-audit-runner.mjs';
+import{runStandardSizeSourceGapProposalWorkflow}from'../src/product-master-core/standard-size-source-gap-proposal-runner.mjs';
 import{runTechnicalFactResolutionWorkflow}from'../src/product-master-core/technical-fact-resolution-runner.mjs';
 import{PRODUCT_MASTER_WORKFLOW_REGISTRY}from'../src/product-master-core/products/index.mjs';
 
 const productId=process.argv[2];
 const stage=process.argv[3]??'evidence-roundtrip';
 const artifactDir=path.resolve(process.argv[4]??`artifacts/product-master-workflow/${productId??'unknown'}/${stage}`);
-if(!productId)throw new Error('Usage: node scripts/run-product-master-workflow.mjs <productId> <evidence-roundtrip|technical-facts|size-source-audit> [artifactDir]');
+if(!productId)throw new Error('Usage: node scripts/run-product-master-workflow.mjs <productId> <evidence-roundtrip|technical-facts|size-source-audit|size-gap-proposal> [artifactDir]');
 const profile=PRODUCT_MASTER_WORKFLOW_REGISTRY.require(productId);
 const runRoundTrip=({artifactDir:dir})=>{
   if(!profile.capabilities.evidenceRoundTrip)throw new Error(`Evidence round trip is not enabled for ${productId}`);
@@ -34,6 +35,14 @@ else if(stage==='technical-facts'){
   result=runStandardSizeSourceAuditWorkflow({
     artifactDir,productId:profile.productId,sourceRecords:audit.sourceRecords,canonicalRecords:audit.canonicalRecords,
     sourceScopeLabel:audit.sourceScopeLabel,reportVersion:'1.5'
+  });
+}else if(stage==='size-gap-proposal'){
+  if(!profile.capabilities.standardSizeGapProposal)throw new Error(`Standard-size gap proposal is not enabled for ${productId}`);
+  const audit=profile.standardSizeSourceAudit;
+  result=runStandardSizeSourceGapProposalWorkflow({
+    artifactDir,productId:profile.productId,sourceRecords:audit.sourceRecords,canonicalRecords:audit.canonicalRecords,
+    existingSizeGlassConditions:profile.standardSizeGapProposal.existingSizeGlassConditions??[],
+    config:profile.standardSizeGapProposal,reportVersion:'1.6'
   });
 }else throw new Error(`Unsupported Product Master workflow stage: ${stage}`);
 
