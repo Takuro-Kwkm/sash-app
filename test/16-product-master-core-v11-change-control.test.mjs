@@ -5,8 +5,10 @@ import os from'node:os';
 import path from'node:path';
 import{runApw430LiveEvidenceRoundTrip}from'../src/product-master-core/live-roundtrip-v1.mjs';
 import{
-  applyApprovedProductMasterChangeProposal,approveProductMasterChangeProposal,
-  createProductMasterChangeProposal,persistAppliedStagingMaster,persistProductMasterChangeProposal,
+  applyApprovedProductMasterChangeProposal,applyPersistedProductMasterChangeProposal,
+  approvePersistedProductMasterChangeProposal,approveProductMasterChangeProposal,
+  createProductMasterChangeProposal,loadPersistedProductMasterChangeProposal,
+  persistAppliedStagingMaster,persistProductMasterChangeProposal,
   productMasterFingerprint,proposalFingerprint
 }from'../src/product-master-core/master-change-control.mjs';
 import{APW430_OFFICIAL_EVIDENCE_POC}from'../src/product-master-core/poc/apw430-official-evidence-poc.mjs';
@@ -114,4 +116,28 @@ test('v1.1 persists Proposal audit record without treating it as approval',t=>{
   assert.equal(saved.status,'PROPOSED');
   assert.equal(saved.approval,undefined);
   assert.equal(saved.proposalFingerprint,proposal.proposalFingerprint);
+});
+
+test('v1.1 durable lifecycle persists PROPOSED -> APPROVED -> APPLIED and staging Master snapshot',t=>{
+  const{artifactDir,baseMaster,evidence,proposal}=buildProposal(t);
+  const rootDir=path.join(artifactDir,'durable-control');
+  persistProductMasterChangeProposal(proposal,{rootDir});
+  const approved=approvePersistedProductMasterChangeProposal({
+    rootDir,proposalId:proposal.id,approverType:'HUMAN',approvedBy:'TEST_HUMAN_FIXTURE',
+    expectedProposalFingerprint:proposal.proposalFingerprint,note:'TEST_ONLY persistent lifecycle fixture.',at:'2026-09-02T06:31:00Z'
+  });
+  assert.equal(approved.pass,true,JSON.stringify(approved.errors));
+  assert.equal(loadPersistedProductMasterChangeProposal(proposal.id,{rootDir}).proposal.status,'APPROVED');
+  const applied=applyPersistedProductMasterChangeProposal({
+    rootDir,proposalId:proposal.id,baseMaster,openBlockingPending:0,mode:'STAGING',appliedBy:'TEST_SYSTEM',
+    at:'2026-09-02T06:32:00Z',validateMaster:(master)=>({pass:master.evidence.length===11})
+  });
+  assert.equal(applied.pass,true,JSON.stringify(applied.errors));
+  assert.equal(applied.appliedMaster.evidence.length,baseMaster.evidence.length+evidence.length);
+  assert.equal(fs.existsSync(applied.stagingMasterPath),true);
+  const loaded=loadPersistedProductMasterChangeProposal(proposal.id,{rootDir});
+  assert.equal(loaded.pass,true);
+  assert.equal(loaded.proposal.status,'APPLIED');
+  assert.equal(loaded.proposal.applied.mode,'STAGING');
+  assert.equal(loaded.proposal.approval.approverType,'HUMAN');
 });
