@@ -59,7 +59,7 @@ export function buildThermosLProductionPreview({snapshot,proposalBuild,approval,
     }
   ];
   const preview={
-    previewSchemaVersion:'1.1',recordType:'PRODUCT_MASTER_PRODUCTION_PREVIEW',status:'PRODUCTION_WRITE_PREVIEW_READY',
+    previewSchemaVersion:'1.2',recordType:'PRODUCT_MASTER_PRODUCTION_PREVIEW',status:'PRODUCTION_WRITE_PREVIEW_READY',
     productId:'SER-LIX-SAMOSL',proposalId:proposal.id,proposalFingerprint:proposal.proposalFingerprint,
     approvedStagingResultFingerprint:stagingResultFingerprint,
     formalTarget:{...snapshot.driveFile,expectedRevisionId:snapshot.driveFile.revisionId},
@@ -67,7 +67,13 @@ export function buildThermosLProductionPreview({snapshot,proposalBuild,approval,
     projectedInventory:{standardSizeRows:1644,selectableSizeRows:1495,sizeGlassConditionRows:1644},
     productionApproval:{required:true,status:'PENDING',scopeRequired:'APPROVE_PRODUCTION_WRITE_ONLY'},
     safety:{backupRequired:true,revisionRecheckRequired:true,tailRecheckRequired:true,appendBoundaryRecheckRequired:true,atomicWorkbookReplacementOrEquivalentRequired:true,postWriteReadbackRequired:true,runtimeRegenerationDeferred:true},
-    correction:{supersedesPreviewFingerprint:'sha256:a057d745c8a3a93b06aebc20c98fba99dd121804d35985d074ed5764bdab9168',reason:'Post-write readback detected one-row-early append in superseded preview.'},
+    correction:{
+      supersedesPreviewFingerprints:[
+        'sha256:a057d745c8a3a93b06aebc20c98fba99dd121804d35985d074ed5764bdab9168',
+        'sha256:47cda6534569bbd2c1deb5fb34ce62083e091db19ae26e1e6c941329dd286c3b'
+      ],
+      reason:'Post-write readback detected one-row-early append in the first preview; rollback produced a new formal Drive revision, so the corrected preview is rebound to that rollback revision.'
+    },
     formalWorkbookWritePerformed:false,runtimeWritePerformed:false
   };
   return{...preview,previewFingerprint:hash(preview)};
