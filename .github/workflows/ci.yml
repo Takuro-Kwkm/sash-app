@@ -231,7 +231,7 @@ jobs:
       - name: Build Thermos L exact formal workbook write preview
         run: npm run master:production-preview:v17 -- artifacts/product-master-production-preview-v17/thermosl
       - name: Enforce exact formal workbook write plan
-        run: node -e 'const r=require("./artifacts/product-master-production-preview-v17/thermosl/production-preview-report.json"); if(r.status!=="PRODUCTION_WRITE_PREVIEW_READY"||r.writeSummary.sizeSheet!=="06_サイズ"||r.writeSummary.sizeRange!=="A1562:V1646"||r.writeSummary.sizeRows!==85||r.writeSummary.glassSheet!=="08A_サイズ別ガラス条件"||r.writeSummary.glassRange!=="A1562:N1646"||r.writeSummary.glassRows!==85||r.projectedInventory.standardSizeRows!==1644||r.projectedInventory.selectableSizeRows!==1495||r.projectedInventory.sizeGlassConditionRows!==1644||!r.productionApproval.required||r.productionApproval.status!=="PENDING"||r.formalWorkbookWritePerformed||r.runtimeWritePerformed) process.exit(1)'
+        run: node -e 'const r=require("./artifacts/product-master-production-preview-v17/thermosl/production-preview-report.json"); if(r.status!=="PRODUCTION_WRITE_PREVIEW_READY"||r.writeSummary.sizeSheet!=="06_サイズ"||r.writeSummary.sizeRange!=="A1563:V1647"||r.writeSummary.sizeRows!==85||r.writeSummary.glassSheet!=="08A_サイズ別ガラス条件"||r.writeSummary.glassRange!=="A1563:N1647"||r.writeSummary.glassRows!==85||r.projectedInventory.standardSizeRows!==1644||r.projectedInventory.selectableSizeRows!==1495||r.projectedInventory.sizeGlassConditionRows!==1644||!r.productionApproval.required||r.productionApproval.status!=="PENDING"||r.formalWorkbookWritePerformed||r.runtimeWritePerformed) process.exit(1)'
       - name: Upload Thermos L production preview evidence
         if: always()
         uses: actions/upload-artifact@v4
