@@ -1,5 +1,5 @@
 {
-  "snapshotSchemaVersion": "1.0",
+  "snapshotSchemaVersion": "1.1",
   "recordType": "FORMAL_PRODUCT_MASTER_READ_SNAPSHOT",
   "productId": "SER-LIX-SAMOSL",
   "readDate": "2026-09-02",
@@ -16,7 +16,8 @@
       "headerColumns": 22,
       "lastRecordId": "SZ-SL-001559",
       "lastDataIndex": 1560,
-      "nextExcelRow": 1562,
+      "lastExcelRow": 1562,
+      "nextExcelRow": 1563,
       "appendColumns": "A:V"
     },
     "08A_サイズ別ガラス条件": {
@@ -24,7 +25,8 @@
       "headerColumns": 14,
       "lastRecordId": "GSC-SL-001559",
       "lastDataIndex": 1560,
-      "nextExcelRow": 1562,
+      "lastExcelRow": 1562,
+      "nextExcelRow": 1563,
       "appendColumns": "A:N"
     }
   },
@@ -36,6 +38,12 @@
     "driveRevisionRead": true,
     "workbookTextRead": true,
     "tailRecordRead": true,
+    "excelRowAddressRead": true,
     "formalWorkbookWritePerformed": false
+  },
+  "correction": {
+    "reason": "v1.7 post-write readback detected append start one row too early; artifact_tool readback proved last record is Excel row 1562, so append starts at 1563",
+    "supersedesNextExcelRow": 1562,
+    "correctNextExcelRow": 1563
   }
 }
