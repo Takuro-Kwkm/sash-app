@@ -185,6 +185,24 @@ jobs:
           name: product-master-standard-size-source-v15-thermosl
           path: artifacts/product-master-workflow-v15/thermosl
 
+  product_master_size_gap_proposal_v16:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Build Thermos L official-source Size Master gap proposal
+        run: npm run master:workflow -- SER-LIX-SAMOSL size-gap-proposal artifacts/product-master-workflow-v16/thermosl
+      - name: Enforce proposal and projected source coverage
+        run: node -e 'const r=require("./artifacts/product-master-workflow-v16/thermosl/report.json"); if(r.gate!=="PASS"||r.currentCoverage.officialAvailable!==97||r.currentCoverage.match!==12||r.currentCoverage.missingInCanonical!==85||r.projectedCoverage.match!==97||r.projectedCoverage.missingInCanonical!==0||r.additions.evidenceAdditions!==8||r.additions.sizeAdditions!==85||r.additions.glassConditionAdditions!==85||r.additions.totalChanges!==178||r.proposal.status!=="PROPOSED"||r.proposal.approvalPolicy!=="HUMAN_REQUIRED"||r.formalWorkbookWritePerformed||r.runtimeWritePerformed) process.exit(1)'
+      - name: Upload Thermos L Size Master gap proposal evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: product-master-size-gap-proposal-v16-thermosl
+          path: artifacts/product-master-workflow-v16/thermosl
+
   browser_qa:
     runs-on: ubuntu-latest
     steps:
