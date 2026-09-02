@@ -1,35 +1,139 @@
 const PRODUCT_ID='SER-LIX-SAMOSL';
 const WINDOW_TYPE_ID='WT-SL-SHUTTER-HIKI';
 const SPECIFICATION_ID='SP-SL-SHUT-M-STD';
-const SOURCE_BASE={
-  type:'OFFICIAL_PDF',driveFileId:'1YUN-mtWYs48YBUHJk0C3vJXnhjyZFHyf',
-  title:'202604_LIXIL_サーモスＬ_業務用資料集_完成品価格表.pdf',version:'202604'
-};
+const SOURCE_BASE={type:'OFFICIAL_PDF',driveFileId:'1YUN-mtWYs48YBUHJk0C3vJXnhjyZFHyf',title:'202604_LIXIL_サーモスＬ_業務用資料集_完成品価格表.pdf',version:'202604'};
 
-const code=(width,height)=>{
-  if(!width.includes('-'))return`${width}${height}`;
-  const [base,suffix]=width.split('-');
-  return`${base}${height}-${suffix}`;
+// Directly verified against the rendered official PDF tables. Every tuple below is one printed size cell; no W×H Cartesian generation is used.
+const PAGE_META={
+  54:{pdfPage:56,construction:"在来・204",section:"手動（在来・204）マド①",legendPrintedPage:55,windowClass:"在来・204｜手動"},
+  55:{pdfPage:57,construction:"在来・204",section:"手動（在来・204）マド① 続き",legendPrintedPage:55,windowClass:"在来・204｜手動"},
+  56:{pdfPage:58,construction:"在来・204",section:"手動（在来・204）マド②",legendPrintedPage:57,windowClass:"在来・204｜手動"},
+  57:{pdfPage:59,construction:"在来・204",section:"手動（在来・204）マド② 続き",legendPrintedPage:57,windowClass:"在来・204｜手動"},
+  58:{pdfPage:60,construction:"在来",section:"手動（在来）テラス①",legendPrintedPage:59,windowClass:"在来｜手動｜テラス①"},
+  59:{pdfPage:61,construction:"在来",section:"手動（在来）テラス① 続き",legendPrintedPage:59,windowClass:"在来｜手動｜テラス①"},
+  60:{pdfPage:62,construction:"在来",section:"手動（在来）テラス②",legendPrintedPage:61,windowClass:"在来｜手動｜テラス②"},
+  61:{pdfPage:63,construction:"在来",section:"手動（在来）テラス② 続き",legendPrintedPage:61,windowClass:"在来｜手動｜テラス②"},
 };
-const cross=(widths,heights)=>heights.flatMap((height)=>widths.map((width)=>code(width,height)));
-const groups=[
-  {printedPage:54,pdfPage:56,construction:'在来・204',section:'手動（在来・204）マド①',codes:cross(['114','119','128','133'],['09','11','13'])},
-  {printedPage:55,pdfPage:57,construction:'在来・204',section:'手動（在来・204）マド① 続き',codes:['16507',...cross(['150','160','165','174','176'],['09','11','13']),...cross(['150','160','165'],['15'])]},
-  {printedPage:56,pdfPage:58,construction:'在来・204',section:'手動（在来・204）マド②',codes:cross(['178','180','183','186'],['09','11','13'])},
-  {printedPage:57,pdfPage:59,construction:'在来・204',section:'手動（在来・204）マド② 続き',codes:cross(['251-2','251-4','256-2','256-4'],['11','13'])},
-  {printedPage:58,pdfPage:60,construction:'在来',section:'手動（在来）テラス①',codes:[...cross(['119','133','150','160'],['18','20']),...cross(['150','160'],['22'])]},
-  {printedPage:59,pdfPage:61,construction:'在来',section:'手動（在来）テラス① 続き',codes:cross(['165','174','176','178'],['18','20','22'])},
-  {printedPage:60,pdfPage:62,construction:'在来',section:'手動（在来）テラス②',codes:cross(['180','183','186','251-2'],['18','20','22'])},
-  {printedPage:61,pdfPage:63,construction:'在来',section:'手動（在来）テラス② 続き',codes:cross(['251-4','256-2','256-4','347'],['18','20','22'])}
+const ROWS=[
+  // printed p.54 / PDF p.56
+  [54,"11409","114","09",1185,970,"無印"],
+  [54,"11909","119","09",1235,970,"無印"],
+  [54,"12809","128","09",1320,970,"無印"],
+  [54,"13309","133","09",1370,970,"無印"],
+  [54,"11411","114","11",1185,1170,"無印"],
+  [54,"11911","119","11",1235,1170,"無印"],
+  [54,"12811","128","11",1320,1170,"無印"],
+  [54,"13311","133","11",1370,1170,"無印"],
+  [54,"11413","114","13",1185,1370,"無印"],
+  [54,"11913","119","13",1235,1370,"無印"],
+  [54,"12813","128","13",1320,1370,"無印"],
+  [54,"13313","133","13",1370,1370,"無印"],
+  // printed p.55 / PDF p.57
+  [55,"16507","165","07",1690,770,"無印"],
+  [55,"15009","150","09",1540,970,"無印"],
+  [55,"16009","160","09",1640,970,"無印"],
+  [55,"16509","165","09",1690,970,"無印"],
+  [55,"17409","174","09",1780,970,"無印"],
+  [55,"17609","176","09",1800,970,"無印"],
+  [55,"15011","150","11",1540,1170,"無印"],
+  [55,"16011","160","11",1640,1170,"無印"],
+  [55,"16511","165","11",1690,1170,"無印"],
+  [55,"17411","174","11",1780,1170,"無印"],
+  [55,"17611","176","11",1800,1170,"無印"],
+  [55,"15013","150","13",1540,1370,"無印"],
+  [55,"16013","160","13",1640,1370,"★"],
+  [55,"16513","165","13",1690,1370,"★"],
+  [55,"17413","174","13",1780,1370,"★"],
+  [55,"17613","176","13",1800,1370,"★"],
+  [55,"15015","150","15",1540,1570,"○"],
+  [55,"16015","160","15",1640,1570,"○"],
+  [55,"16515","165","15",1690,1570,"○"],
+  // printed p.56 / PDF p.58
+  [56,"17809","178","09",1820,970,"無印"],
+  [56,"18009","180","09",1845,970,"無印"],
+  [56,"18309","183","09",1870,970,"無印"],
+  [56,"18609","186","09",1900,970,"無印"],
+  [56,"17811","178","11",1820,1170,"無印"],
+  [56,"18011","180","11",1845,1170,"無印"],
+  [56,"18311","183","11",1870,1170,"無印"],
+  [56,"18611","186","11",1900,1170,"★"],
+  [56,"17813","178","13",1820,1370,"★"],
+  [56,"18013","180","13",1845,1370,"★"],
+  [56,"18313","183","13",1870,1370,"★"],
+  [56,"18613","186","13",1900,1370,"★"],
+  // printed p.57 / PDF p.59
+  [57,"25111-2","251-2","11",2550,1170,"☆"],
+  [57,"25111-4","251-4","11",2550,1170,"無印"],
+  [57,"25611-2","256-2","11",2600,1170,"☆"],
+  [57,"25611-4","256-4","11",2600,1170,"無印"],
+  [57,"25113-2","251-2","13",2550,1370,"●"],
+  [57,"25113-4","251-4","13",2550,1370,"無印"],
+  [57,"25613-2","256-2","13",2600,1370,"●"],
+  [57,"25613-4","256-4","13",2600,1370,"無印"],
+  // printed p.58 / PDF p.60
+  [58,"11918","119","18",1235,1830,"無印"],
+  [58,"13318","133","18",1370,1830,"無印"],
+  [58,"15018","150","18",1540,1830,"無印"],
+  [58,"16018","160","18",1640,1830,"無印"],
+  [58,"11920","119","20",1235,2030,"無印"],
+  [58,"13320","133","20",1370,2030,"無印"],
+  [58,"15020","150","20",1540,2030,"○"],
+  [58,"16020","160","20",1640,2030,"▲"],
+  [58,"15022","150","22",1540,2230,"★"],
+  [58,"16022","160","22",1640,2230,"★"],
+  // printed p.59 / PDF p.61
+  [59,"16518","165","18",1690,1830,"無印"],
+  [59,"17418","174","18",1780,1830,"無印"],
+  [59,"17618","176","18",1800,1830,"無印"],
+  [59,"17818","178","18",1820,1830,"▲"],
+  [59,"16520","165","20",1690,2030,"★"],
+  [59,"17420","174","20",1780,2030,"★"],
+  [59,"17620","176","20",1800,2030,"★"],
+  [59,"17820","178","20",1820,2030,"★"],
+  [59,"16522","165","22",1690,2230,"★"],
+  [59,"17422","174","22",1780,2230,"★"],
+  [59,"17622","176","22",1800,2230,"★"],
+  [59,"17822","178","22",1820,2230,"★"],
+  // printed p.60 / PDF p.62
+  [60,"18018","180","18",1845,1830,"★"],
+  [60,"18318","183","18",1870,1830,"★"],
+  [60,"18618","186","18",1900,1830,"★"],
+  [60,"25118-2","251-2","18",2550,1830,"☆"],
+  [60,"18020","180","20",1845,2030,"★"],
+  [60,"18320","183","20",1870,2030,"★"],
+  [60,"18620","186","20",1900,2030,"★"],
+  [60,"25120-2","251-2","20",2550,2030,"◆"],
+  [60,"18022","180","22",1845,2230,"★"],
+  [60,"18322","183","22",1870,2230,"★"],
+  [60,"18622","186","22",1900,2230,"★"],
+  [60,"25122-2","251-2","22",2550,2230,"◆"],
+  // printed p.61 / PDF p.63
+  [61,"25118-4","251-4","18",2550,1830,"無印"],
+  [61,"25618-2","256-2","18",2600,1830,"◆"],
+  [61,"25618-4","256-4","18",2600,1830,"無印"],
+  [61,"34718","347","18",3510,1830,"無印"],
+  [61,"25120-4","251-4","20",2550,2030,"無印"],
+  [61,"25620-2","256-2","20",2600,2030,"◆"],
+  [61,"25620-4","256-4","20",2600,2030,"無印"],
+  [61,"34720","347","20",3510,2030,"★"],
+  [61,"25122-4","251-4","22",2550,2230,"★"],
+  [61,"25622-2","256-2","22",2600,2230,"◆"],
+  [61,"25622-4","256-4","22",2600,2230,"★"],
+  [61,"34722","347","22",3510,2230,"★"],
 ];
 
-export const THERMOSL_MANUAL_SHUTTER_STANDARD_SIZE_SOURCE_RECORDS=groups.flatMap((group)=>group.codes.map((sizeCode)=>({
-  schemaVersion:'1.0',recordType:'STANDARD_SIZE_SOURCE_RECORD',
-  id:`SSR-LIX-SAMOSL-SHUT-MSTD-P${group.printedPage}-${sizeCode.replaceAll('-','_')}`,
-  productId:PRODUCT_ID,windowTypeId:WINDOW_TYPE_ID,specificationId:SPECIFICATION_ID,
-  construction:group.construction,sizeCode,availability:'AVAILABLE',strength:'EXPLICIT',
-  source:{...SOURCE_BASE,printedPage:group.printedPage,pdfPage:group.pdfPage,locatorText:`${group.section} / 呼称 ${sizeCode} / 標準タイプ価格掲載`}
-})));
+export const THERMOSL_MANUAL_SHUTTER_STANDARD_SIZE_SOURCE_RECORDS=ROWS.map(([printedPage,sizeCode,callW,callH,actualW,actualH,glassSymbol])=>{
+  const meta=PAGE_META[printedPage];
+  return{
+    schemaVersion:'1.0',recordType:'STANDARD_SIZE_SOURCE_RECORD',
+    id:`SSR-CHATGPT-LIX-SAMOSL-SHUT-MSTD-P${printedPage}-${sizeCode.replaceAll('-','_')}`,
+    productId:PRODUCT_ID,windowTypeId:WINDOW_TYPE_ID,specificationId:SPECIFICATION_ID,
+    construction:meta.construction,sizeCode,availability:'AVAILABLE',strength:'EXPLICIT',
+    attributes:{callW,callH,actualW,actualH,glassSymbol,legendPrintedPage:meta.legendPrintedPage,
+      glassState:meta.legendPrintedPage===printedPage?'同頁凡例へ直接連動':'同一価格表・次頁凡例を継承',windowClass:meta.windowClass},
+    source:{...SOURCE_BASE,printedPage,pdfPage:meta.pdfPage,locatorText:`${meta.section} / 呼称 ${sizeCode} / 標準タイプ価格掲載`}
+  };
+});
 
 export const THERMOSL_MANUAL_SHUTTER_STANDARD_SIZE_SOURCE_SCOPE={
   productId:PRODUCT_ID,windowTypeId:WINDOW_TYPE_ID,specificationId:SPECIFICATION_ID,
