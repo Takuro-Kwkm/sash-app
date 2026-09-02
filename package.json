@@ -21,7 +21,8 @@
     "import:gemini-evidence": "node scripts/import-gemini-evidence-transport.mjs",
     "evidence:adjudicate": "node scripts/adjudicate-evidence-candidate.mjs",
     "evidence:live-v1": "node scripts/run-product-master-live-v1.mjs",
-    "master:change-proposal:v11": "node scripts/run-product-master-change-proposal-v11.mjs"
+    "master:change-proposal:v11": "node scripts/run-product-master-change-proposal-v11.mjs",
+    "master:staging-apply:v11": "node scripts/run-approved-product-master-staging-v11.mjs"
   },
   "engines": { "node": ">=22" }
 }
