@@ -40,7 +40,7 @@ jobs:
             sleep 0.5
           done
           cat /tmp/health.json
-          node -e 'const h=require("/tmp/health.json"); const expected={"SER-LIX-SAMOS2H":2131,"SER-LIX-SAMOSL":1410,"SER-YKK-APW430":718,"SER-YKK-APW431":538}; const sash=h.inventory.filter(x=>expected[x.productId]!==undefined); const concord=h.inventory.find(x=>x.productId==="SER-YKK-CONCORD-S30"); if(!h.ok || h.catalogVersion!=="V4.6 SALES-UI-R2 + CONCORD-S30" || h.inventory.length!==5 || !concord || sash.length!==4 || sash.some(x=>x.sizeCoverage!==1 || x.missingSizeRows!==0 || x.extraSizeRows!==0 || expected[x.productId]!==x.selectableSizeRows)) process.exit(1)'
+          node -e 'const h=require("/tmp/health.json"); const expected={"SER-LIX-SAMOS2H":2131,"SER-LIX-SAMOSL":1495,"SER-YKK-APW430":718,"SER-YKK-APW431":538}; const sash=h.inventory.filter(x=>expected[x.productId]!==undefined); const concord=h.inventory.find(x=>x.productId==="SER-YKK-CONCORD-S30"); if(!h.ok || h.catalogVersion!=="V4.6 SALES-UI-R2 + CONCORD-S30" || h.inventory.length!==5 || !concord || sash.length!==4 || sash.some(x=>x.sizeCoverage!==1 || x.missingSizeRows!==0 || x.extraSizeRows!==0 || expected[x.productId]!==x.selectableSizeRows)) process.exit(1)'
 
   concord_regression:
     runs-on: ubuntu-latest
@@ -69,7 +69,7 @@ jobs:
             sleep 0.5
           done
           cat /tmp/health.json
-          node -e 'const h=require("/tmp/health.json"); const expected={"SER-LIX-SAMOS2H":2131,"SER-LIX-SAMOSL":1410,"SER-YKK-APW430":718,"SER-YKK-APW431":538}; const sash=h.inventory.filter(x=>expected[x.productId]!==undefined); const concord=h.inventory.find(x=>x.productId==="SER-YKK-CONCORD-S30"); if(!h.ok || h.catalogVersion!=="V4.6 SALES-UI-R2 + CONCORD-S30" || h.inventory.length!==5 || !concord || sash.length!==4 || sash.some(x=>x.sizeCoverage!==1 || x.missingSizeRows!==0 || x.extraSizeRows!==0 || expected[x.productId]!==x.selectableSizeRows)) process.exit(1)'
+          node -e 'const h=require("/tmp/health.json"); const expected={"SER-LIX-SAMOS2H":2131,"SER-LIX-SAMOSL":1495,"SER-YKK-APW430":718,"SER-YKK-APW431":538}; const sash=h.inventory.filter(x=>expected[x.productId]!==undefined); const concord=h.inventory.find(x=>x.productId==="SER-YKK-CONCORD-S30"); if(!h.ok || h.catalogVersion!=="V4.6 SALES-UI-R2 + CONCORD-S30" || h.inventory.length!==5 || !concord || sash.length!==4 || sash.some(x=>x.sizeCoverage!==1 || x.missingSizeRows!==0 || x.extraSizeRows!==0 || expected[x.productId]!==x.selectableSizeRows)) process.exit(1)'
 
   product_master_live_v1:
     runs-on: ubuntu-latest
@@ -174,11 +174,11 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Audit Thermos L manual shutter sizes against official source
+      - name: Reproduce historical Thermos L pre-production source gap
         run: npm run master:workflow -- SER-LIX-SAMOSL size-source-audit artifacts/product-master-workflow-v15/thermosl
-      - name: Enforce calibrated official-source gap detection
+      - name: Enforce historical calibrated source-gap detection
         run: node -e 'const r=require("./artifacts/product-master-workflow-v15/thermosl/standard-size-source-audit-report.json"); if(r.status!=="SOURCE_COVERAGE_GAP_DETECTED"||r.officialSourceAvailable!==97||r.canonicalMatch!==12||r.missingInCanonical!==85||r.canonicalInactive!==0||r.extraInCanonical!==0||r.gates.OFFICIAL_SOURCE_SIZE_COVERAGE!=="FAIL"||r.formalWorkbookWritePerformed||r.runtimeWritePerformed) process.exit(1)'
-      - name: Upload Thermos L source coverage audit
+      - name: Upload historical Thermos L source coverage audit
         if: always()
         uses: actions/upload-artifact@v4
         with:
@@ -192,11 +192,11 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Build Thermos L official-source Size Master gap proposal
+      - name: Reproduce historical Thermos L Size Master gap proposal
         run: npm run master:workflow -- SER-LIX-SAMOSL size-gap-proposal artifacts/product-master-workflow-v16/thermosl
-      - name: Enforce proposal and projected source coverage
+      - name: Enforce historical proposal and projected source coverage
         run: node -e 'const r=require("./artifacts/product-master-workflow-v16/thermosl/report.json"); if(r.gate!=="PASS"||r.currentCoverage.officialAvailable!==97||r.currentCoverage.match!==12||r.currentCoverage.missingInCanonical!==85||r.projectedCoverage.match!==97||r.projectedCoverage.missingInCanonical!==0||r.additions.evidenceAdditions!==8||r.additions.sizeAdditions!==85||r.additions.glassConditionAdditions!==85||r.additions.totalChanges!==178||r.proposal.status!=="PROPOSED"||r.proposal.approvalPolicy!=="HUMAN_REQUIRED"||r.formalWorkbookWritePerformed||r.runtimeWritePerformed) process.exit(1)'
-      - name: Upload Thermos L Size Master gap proposal evidence
+      - name: Upload historical Thermos L Size Master proposal evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
@@ -210,11 +210,11 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Apply human-approved Thermos L Size Master gap proposal to STAGING
+      - name: Reproduce human-approved historical Thermos L STAGING apply
         run: npm run master:staging-apply:v16 -- artifacts/product-master-staging-v16/thermosl
-      - name: Enforce exact approved STAGING result
+      - name: Enforce exact historical STAGING result
         run: node -e 'const r=require("./artifacts/product-master-staging-v16/thermosl/staging-apply-report.json"); if(r.status!=="STAGING_APPLY_COMPLETE"||r.proposalId!=="PMCP-LIX-SAMOSL-SHUT-MSTD-SIZE-GAP-20260902-001"||r.proposalStatus!=="APPLIED"||r.stagingChangesApplied!==178||r.stagingStandardSizeBefore!==1559||r.stagingStandardSizeAfter!==1644||r.stagingSizeGlassConditionsBefore!==1559||r.stagingSizeGlassConditionsAfter!==1644||r.stagingEvidenceAfter!==8||r.newSizeCount!==85||r.sourceCoverage.match!==97||r.sourceCoverage.missingInCanonical!==0||r.openBlockingPending!==0||r.productionMasterWritePerformed||r.runtimeWritePerformed) process.exit(1)'
-      - name: Upload approved Thermos L STAGING Master evidence
+      - name: Upload historical approved Thermos L STAGING evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
@@ -228,16 +228,26 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Build Thermos L exact formal workbook write preview
+      - name: Reproduce corrected historical Thermos L production preview
         run: npm run master:production-preview:v17 -- artifacts/product-master-production-preview-v17/thermosl
-      - name: Enforce exact formal workbook write plan
+      - name: Enforce corrected historical formal workbook write plan
         run: node -e 'const r=require("./artifacts/product-master-production-preview-v17/thermosl/production-preview-report.json"); if(r.status!=="PRODUCTION_WRITE_PREVIEW_READY"||r.writeSummary.sizeSheet!=="06_サイズ"||r.writeSummary.sizeRange!=="A1563:V1647"||r.writeSummary.sizeRows!==85||r.writeSummary.glassSheet!=="08A_サイズ別ガラス条件"||r.writeSummary.glassRange!=="A1563:N1647"||r.writeSummary.glassRows!==85||r.projectedInventory.standardSizeRows!==1644||r.projectedInventory.selectableSizeRows!==1495||r.projectedInventory.sizeGlassConditionRows!==1644||!r.productionApproval.required||r.productionApproval.status!=="PENDING"||r.formalWorkbookWritePerformed||r.runtimeWritePerformed) process.exit(1)'
-      - name: Upload Thermos L production preview evidence
+      - name: Upload historical Thermos L production preview evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: product-master-production-preview-v17-thermosl
           path: artifacts/product-master-production-preview-v17/thermosl
+
+  product_master_thermosl_runtime_v18:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Verify Thermos L runtime regeneration from current formal Master
+        run: node --test test/23-product-master-core-v18-thermosl-runtime-regeneration.test.mjs
 
   browser_qa:
     runs-on: ubuntu-latest
