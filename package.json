@@ -16,8 +16,10 @@
     "test:product-master-core:v04": "node --test test/11-product-master-core-v04-gemini-transport.test.mjs",
     "test:product-master-core:v08": "node --test test/12-product-master-core-v08-persistent-inbox.test.mjs",
     "test:product-master-core:v09": "node --test test/13-product-master-core-v09-persistent-adjudication.test.mjs",
+    "test:product-master-core:v10": "node --test test/15-product-master-core-v10-live-roundtrip.test.mjs",
     "import:gemini-evidence": "node scripts/import-gemini-evidence-transport.mjs",
-    "evidence:adjudicate": "node scripts/adjudicate-evidence-candidate.mjs"
+    "evidence:adjudicate": "node scripts/adjudicate-evidence-candidate.mjs",
+    "evidence:live-v1": "node scripts/run-product-master-live-v1.mjs"
   },
   "engines": { "node": ">=22" }
 }
