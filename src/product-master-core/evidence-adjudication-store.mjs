@@ -168,8 +168,9 @@ export function adjudicatePersistedCandidate({
 
 export function transitionPersistedPending({
   rootDir=path.resolve('data/evidence-inbox'),pendingId,nextStatus,
-  evidenceIds=[],ruleIds=[],resolutionNote=null,
-  externalCanonicalEvidenceIds=[],at=new Date().toISOString(),by='CHATGPT'
+  evidenceIds=[],technicalFactIds=[],ruleIds=[],resolutionNote=null,
+  externalCanonicalEvidenceIds=[],externalTechnicalFactIds=[],
+  at=new Date().toISOString(),by='CHATGPT'
 }={}){
   let store;
   try{store=loadEvidenceAdjudicationStore(rootDir);}catch(err){return{pass:false,status:'PENDING_TRANSITION_REJECTED',errors:[error('ADJUDICATION_STORE_INVALID',err.message)]};}
@@ -177,11 +178,14 @@ export function transitionPersistedPending({
   if(index<0)return{pass:false,status:'PENDING_TRANSITION_REJECTED',errors:[error('PENDING_NOT_FOUND',`PENDING not found: ${pendingId}`,{pendingId})]};
   if(nextStatus==='RESOLVED'){
     const knownEvidenceIds=new Set([...store.canonicalEvidence.map((row)=>row.id),...externalCanonicalEvidenceIds]);
-    const unknown=evidenceIds.filter((id)=>!knownEvidenceIds.has(id));
-    if(unknown.length)return{pass:false,status:'PENDING_TRANSITION_REJECTED',errors:[error('PENDING_RESOLUTION_EVIDENCE_UNKNOWN',`PENDING resolution references unknown Evidence: ${unknown.join(', ')}`,{pendingId,unknownEvidenceIds:unknown})]};
+    const unknownEvidence=evidenceIds.filter((id)=>!knownEvidenceIds.has(id));
+    if(unknownEvidence.length)return{pass:false,status:'PENDING_TRANSITION_REJECTED',errors:[error('PENDING_RESOLUTION_EVIDENCE_UNKNOWN',`PENDING resolution references unknown Evidence: ${unknownEvidence.join(', ')}`,{pendingId,unknownEvidenceIds:unknownEvidence})]};
+    const knownTechnicalFactIds=new Set(externalTechnicalFactIds);
+    const unknownFacts=technicalFactIds.filter((id)=>!knownTechnicalFactIds.has(id));
+    if(unknownFacts.length)return{pass:false,status:'PENDING_TRANSITION_REJECTED',errors:[error('PENDING_RESOLUTION_TECHNICAL_FACT_UNKNOWN',`PENDING resolution references unknown Technical Fact: ${unknownFacts.join(', ')}`,{pendingId,unknownTechnicalFactIds:unknownFacts})]};
   }
   let transitioned;
-  try{transitioned=transitionPending(store.pending[index],nextStatus,{evidenceIds,ruleIds,resolutionNote,at,by});}catch(err){return{pass:false,status:'PENDING_TRANSITION_REJECTED',errors:[error('PENDING_TRANSITION_INVALID',err.message,{pendingId,nextStatus})]};}
+  try{transitioned=transitionPending(store.pending[index],nextStatus,{evidenceIds,technicalFactIds,ruleIds,resolutionNote,at,by});}catch(err){return{pass:false,status:'PENDING_TRANSITION_REJECTED',errors:[error('PENDING_TRANSITION_INVALID',err.message,{pendingId,nextStatus})]};}
   const pending=[...store.pending];
   pending[index]=transitioned;
   const nextStore={...store,updatedAt:at,pending};
