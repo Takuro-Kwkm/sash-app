@@ -18,14 +18,23 @@ export const THERMOSL_PRIMARY_SIZE_SOURCE={
 export const THERMOSL_CANONICAL_STANDARD_SIZE_RECORDS=THERMOSL_SOURCE.sizes.map((row)=>({
   id:row.id,productId:THERMOSL_PRODUCT_ID,windowTypeId:row.window,
   specificationId:row.spec&&row.spec!=='*'?row.spec:null,construction:row.construction,
-  sizeCode:row.callCode,selectable:Boolean(row.active),
-  canonicalStatus:row.state??null,sourcePrintedPage:row.page??null,sourceRow:row.sourceRow??null
+  sizeCode:row.callCode,callW:row.callW,callH:row.callH,actualW:row.actualW,actualH:row.actualH,
+  windowClass:row.windowClass??null,selectable:Boolean(row.active),status:row.active?'ACTIVE':'INACTIVE',
+  canonicalStatus:row.state??null,sourcePrintedPage:row.page??null,sourceRow:row.sourceRow??null,
+  glassSymbol:row.glassSymbol??null,glassState:row.glassState??null
+}));
+
+export const THERMOSL_CANONICAL_SIZE_GLASS_CONDITIONS=THERMOSL_SOURCE.sizes.map((row)=>({
+  id:`GSC-SL-${String(row.id).replace('SZ-SL-','')}`,sizeId:row.id,productId:THERMOSL_PRODUCT_ID,
+  windowTypeId:row.window,specificationId:row.spec&&row.spec!=='*'?row.spec:null,sizeCode:row.callCode,
+  selectable:Boolean(row.active),sourcePrintedPage:row.page??null,glassSymbol:row.glassSymbol??null,
+  glassState:row.glassState??null
 }));
 
 export const THERMOSL_PRODUCT_MASTER_WORKFLOW={
   workflowSchemaVersion:'1.0',recordType:'PRODUCT_MASTER_WORKFLOW_PROFILE',productId:THERMOSL_PRODUCT_ID,status:'ACTIVE',
   capabilities:{
-    evidenceRoundTrip:false,technicalFacts:false,standardSizeSourceAudit:true,
+    evidenceRoundTrip:false,technicalFacts:false,standardSizeSourceAudit:true,standardSizeGapProposal:true,
     formalWorkbookMutation:false,runtimeAutoWrite:false
   },
   formalMaster:THERMOSL_FORMAL_MASTER,
@@ -35,5 +44,14 @@ export const THERMOSL_PRODUCT_MASTER_WORKFLOW={
     canonicalRecords:THERMOSL_CANONICAL_STANDARD_SIZE_RECORDS,
     sourceScope:THERMOSL_MANUAL_SHUTTER_STANDARD_SIZE_SOURCE_SCOPE,
     sourceScopeLabel:'THERMOS_L_SHUTTER_MANUAL_STANDARD__PRINTED_P54_P61'
+  },
+  standardSizeGapProposal:{
+    existingSizeGlassConditions:THERMOSL_CANONICAL_SIZE_GLASS_CONDITIONS,
+    sizeIdPrefix:'SZ-SL-',glassConditionIdPrefix:'GSC-SL-',
+    evidenceIdPrefix:'EV-LIX-SAMOSL-SHUT-MSTD',
+    sourceBatchId:'DIRECT-PDF-LIX-SAMOSL-SHUT-MSTD-20260902',
+    proposalId:'PMCP-LIX-SAMOSL-SHUT-MSTD-SIZE-GAP-20260902-001',
+    proposalCreatedAt:'2026-09-02T09:49:00Z',
+    sourceUrl:'https://drive.google.com/file/d/1YUN-mtWYs48YBUHJk0C3vJXnhjyZFHyf/view'
   }
 };
