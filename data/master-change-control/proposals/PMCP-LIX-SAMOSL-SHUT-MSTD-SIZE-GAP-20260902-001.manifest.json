@@ -1,0 +1,51 @@
+{
+  "manifestSchemaVersion": "1.0",
+  "recordType": "PRODUCT_MASTER_CHANGE_PROPOSAL_MANIFEST",
+  "proposalId": "PMCP-LIX-SAMOSL-SHUT-MSTD-SIZE-GAP-20260902-001",
+  "productId": "SER-LIX-SAMOSL",
+  "status": "PROPOSED",
+  "approvalPolicy": "HUMAN_REQUIRED",
+  "proposalFingerprint": "sha256:2dbccd2d22edd6b00d516fbadfc2788c2089f693f06112f4b2b6c811d3a34063",
+  "baseMasterFingerprint": "sha256:77bd5043684ae0e55852b9728d5369336744fec7a233e2cf82042ba079b0461a",
+  "proposalCreatedAt": "2026-09-02T09:49:00Z",
+  "proposalCreatedBy": "CHATGPT",
+  "source": {
+    "type": "OFFICIAL_PDF",
+    "driveFileId": "1YUN-mtWYs48YBUHJk0C3vJXnhjyZFHyf",
+    "title": "202604_LIXIL_サーモスＬ_業務用資料集_完成品価格表.pdf",
+    "printedPages": [54,55,56,57,58,59,60,61],
+    "pdfPages": [56,57,58,59,60,61,62,63],
+    "extractionMode": "CHATGPT_DIRECT_PDF_EXPLICIT_CELL",
+    "cartesianGenerationPerformed": false
+  },
+  "coverage": {
+    "before": {"officialAvailable":97,"match":12,"missingInCanonical":85,"canonicalInactive":0,"extraInCanonical":0,"duplicateCanonicalKeys":0},
+    "projected": {"officialAvailable":97,"match":97,"missingInCanonical":0,"canonicalInactive":0,"extraInCanonical":0,"duplicateCanonicalKeys":0}
+  },
+  "changes": {
+    "verifiedEvidenceAdditions": 8,
+    "standardSizeRecordAdditions": 85,
+    "sizeGlassConditionAdditions": 85,
+    "total": 178,
+    "firstNewSizeId": "SZ-SL-001560",
+    "lastNewSizeId": "SZ-SL-001644"
+  },
+  "ciEvidence": {
+    "workflow": "V2 Recovery CI",
+    "runNumber": 344,
+    "runId": 33620908871,
+    "headSha": "3431aaa1fdca267f9011a6c1d8555fc81b5babe1",
+    "artifactId": 9842852053,
+    "artifactName": "product-master-size-gap-proposal-v16-thermosl",
+    "artifactDigest": "sha256:fea63e7b7d301aedc817573e53ffb275bf55879751139de12bdb847841d3fa78",
+    "proposalJsonSha256": "d894e68a6915525e3f743e5d5c832f1740f5d689c0cd6b1413f9f42afb285bce",
+    "reportJsonSha256": "8afc7b27555c05a51a0230ec00c9954fae2b6bc578ef97640c4fee7e535216fa"
+  },
+  "reproduction": {
+    "command": "npm run master:workflow -- SER-LIX-SAMOSL size-gap-proposal artifacts/product-master-workflow-v16/thermosl",
+    "requireFingerprintMatchBeforeApproval": true
+  },
+  "formalWorkbookWritePerformed": false,
+  "runtimeWritePerformed": false,
+  "humanApprovalRecorded": false
+}
