@@ -179,10 +179,10 @@ test("47 pet net obeys actual W <= 780 and roll forms exclude it",()=>{
   assert.equal(values({window_type:"WT-SL-YOKO-SUBERI",handle_type:"SP-SL-YOKO-CAM",screen_presence:"あり",screen_form:"横引きロール網戸"},"screen_net").includes("ペットネット"),false);
 });
 
-test("48 function glass remains CONFIRM_REQUIRED",()=>{
-  const result=stabilizeSelection(catalog,productId,{window_type:"WT-SL-HIKICHIGAI",glass_function:"GL-SL-FUNC-GREEN"});
+test("48 special glass remains CONFIRM_REQUIRED after sales presentation cleanup",()=>{
+  const result=stabilizeSelection(catalog,productId,{window_type:"WT-SL-HIKICHIGAI",glass_function:"GL-SL-OPT-SAFE"});
   assert.ok(result.manualWarnings.some((message)=>message.includes("CONFIRM_REQUIRED")));
-  const candidate=field({window_type:"WT-SL-HIKICHIGAI"},"glass_function").values.find((row)=>row.value==="GL-SL-FUNC-GREEN");
+  const candidate=field({window_type:"WT-SL-HIKICHIGAI"},"glass_function").values.find((row)=>row.value==="GL-SL-OPT-SAFE");
   assert.equal(candidate.manualCheck,true);
 });
 
