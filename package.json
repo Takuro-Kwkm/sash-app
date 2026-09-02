@@ -10,7 +10,9 @@
     "test:product-master-core": "node --test test/08-product-master-core.test.mjs",
     "validate:product-master-core": "node scripts/validate-product-master-core.mjs",
     "test:product-master-core:v02": "node --test test/09-product-master-core-v02-evidence.test.mjs",
-    "validate:product-master-core:v02": "node scripts/validate-product-master-core-v02.mjs"
+    "validate:product-master-core:v02": "node scripts/validate-product-master-core-v02.mjs",
+    "test:product-master-core:v03": "node --test test/10-product-master-core-v03-gemini-inbox.test.mjs",
+    "validate:product-master-core:v03": "node scripts/validate-product-master-core-v03.mjs"
   },
   "engines": { "node": ">=22" }
 }
