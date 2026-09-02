@@ -17,8 +17,10 @@ export const PRODUCTION_MATCH_CLASSES=new Set([
 
 function corePreviewPayload(preview){
   const copy=clone(preview);
+  delete copy.status;
   delete copy.previewFingerprint;
   delete copy.productionApproval;
+  delete copy.finalization;
   return copy;
 }
 export const productionPreviewFingerprint=(preview)=>`sha256:${sha256(corePreviewPayload(preview))}`;
