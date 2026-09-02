@@ -1,0 +1,41 @@
+{
+  "snapshotSchemaVersion": "1.0",
+  "recordType": "FORMAL_PRODUCT_MASTER_READ_SNAPSHOT",
+  "productId": "SER-LIX-SAMOSL",
+  "readDate": "2026-09-02",
+  "driveFile": {
+    "id": "17lVzBZ1hp4RVcGv0yNdnrKt25SFO2FhL",
+    "title": "サーモスL_商品マスター_v0.7_特注寸法発注アプリ投入完成版_QA確定.xlsx",
+    "revisionId": "0B1PsqngSohhlZ0dycXFVYTVFY3JzQWJLLzNkVGFVcFhsNHQ0PQ",
+    "modifiedTime": "2026-08-30T09:28:18.039Z",
+    "sizeBytes": 666560
+  },
+  "sheets": {
+    "06_サイズ": {
+      "dataRows": 1559,
+      "headerColumns": 22,
+      "lastRecordId": "SZ-SL-001559",
+      "lastDataIndex": 1560,
+      "nextExcelRow": 1562,
+      "appendColumns": "A:V"
+    },
+    "08A_サイズ別ガラス条件": {
+      "dataRows": 1559,
+      "headerColumns": 14,
+      "lastRecordId": "GSC-SL-001559",
+      "lastDataIndex": 1560,
+      "nextExcelRow": 1562,
+      "appendColumns": "A:N"
+    }
+  },
+  "sourceInventory": {
+    "standardSizeRows": 1559,
+    "selectableSizeRows": 1410
+  },
+  "verification": {
+    "driveRevisionRead": true,
+    "workbookTextRead": true,
+    "tailRecordRead": true,
+    "formalWorkbookWritePerformed": false
+  }
+}
