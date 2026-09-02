@@ -15,7 +15,7 @@ const webFiles=await Promise.all(["index.html","app.js","size-presentation.js","
 const web=Object.fromEntries(webFiles);
 const buildId=`RECOVERY-${createHash("sha256").update(JSON.stringify(catalog)).update(webFiles.map(([,body])=>body).join("\n")).digest("hex").slice(0,12)}`;
 const buildTimestamp=new Date().toISOString();
-const catalogVersion="V4.5 SIZE-MASTER-FORMAL + CONCORD-S30";
+const catalogVersion="V4.6 SALES-UI-R2 + CONCORD-S30";
 const inventory=catalogInventory(catalog);
 const sizeProductIds=new Set(catalog.standardSizeRecords.map((row)=>row.productId));
 const previewProducts=catalog.products.filter((product)=>sizeProductIds.has(product.id));
@@ -25,6 +25,7 @@ const moduleFiles=[
   "src/catalog/selector-ops.mjs",
   "src/catalog/selector.mjs",
   "src/catalog/size-resolver.mjs",
+  "src/catalog/size-availability.mjs",
   "src/catalog/resolver-values.mjs",
   "src/catalog/resolver-auto.mjs",
   "src/catalog/resolver-fields.mjs",
@@ -77,7 +78,7 @@ const appSource=${jsonForScript(web["app.js"])}.replace('from"/size-presentation
 await import(URL.createObjectURL(new Blob([appSource],{type:"text/javascript"})));
 `;
 
-const reviewBanner=`<section class="card compact review-build-note"><h2>Size UI R2 Review Build</h2><p class="lead"><strong>REVIEW IN PROGRESS</strong> — 正式Catalog / Resolver / Dynamic UIをこのHTML内で直接実行しています。保存・外部API通信は行いません。</p></section>`;
+const reviewBanner=`<section class="card compact review-build-note"><h2>営業見積UI R2 Review Build</h2><p class="lead"><strong>REVIEW IN PROGRESS</strong> — 正式Catalog / Resolver / Dimension Resolver / Dynamic UIをこのHTML内で直接実行しています。保存・外部API通信は行いません。</p></section>`;
 let html=web["index.html"]
   .replace('<link rel="stylesheet" href="/styles.css">',`<style>${web["styles.css"]}</style>`)
   .replace('<link rel="stylesheet" href="/styles-wave3.css">',`<style>${web["styles-wave3.css"]}.review-build-note strong{color:#9b6210}</style>`)

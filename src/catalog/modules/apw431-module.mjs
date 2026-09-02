@@ -22,6 +22,9 @@ const constructionValues=unique(source.sizes,(row)=>`${JSON.stringify(upstream(r
 const frameValues=unique(source.sizes,(row)=>`${JSON.stringify(upstream(row,'frame_type'))}|${row.frameType}`).map((row,index)=>allowed('frame_type',row.frameType,row.frameType,index+1,upstream(row,'frame_type')));
 const floorValues=unique(source.sizes,(row)=>`${JSON.stringify(upstream(row,'floor_type'))}|${row.floorType}`).map((row,index)=>allowed('floor_type',row.floorType,row.floorType,index+1,upstream(row,'floor_type')));
 const sizeModeValues=[allowed('size_mode','STANDARD','規格サイズ',1),allowed('size_mode','CUSTOM','特注寸法',2)];
+const sizeVariantsByWindow=new Map(source.windows.map((window)=>[window.id,new Set(source.sizes.filter((row)=>row.windowId===window.id).map((row)=>row.variant))]));
+const customVariantWindows=new Set(source.windows.filter((window)=>source.rules.some((rule)=>rule.windowId===window.id&&!sizeVariantsByWindow.get(window.id)?.has(rule.variant))).map((window)=>window.id));
+const customVariantValues=unique(source.rules.filter((row)=>customVariantWindows.has(row.windowId)),(row)=>`${row.windowId}|${row.variant}`).map((row,index)=>allowed('custom_variant',row.variant,row.variant,index+1,{size_mode:'CUSTOM',window_type:row.windowId}));
 
 const standardSizeRecords=source.sizes.map((row)=>({
   id:row.id,baseSizeId:row.baseSizeId,productId:PRODUCT_ID,windowTypeId:row.windowId,
@@ -40,7 +43,8 @@ const dimensionType=(row)=>{
 };
 const dimensionRules=source.rules.map((row)=>({
   id:row.id,productId:PRODUCT_ID,type:dimensionType(row),automatic:['AUTO_RECT','AUTO_RATIO'].includes(dimensionType(row)),
-  selector:{size_mode:'CUSTOM',window_type:row.windowId,region:row.region,construction:row.construction,configuration:row.configuration,variant:row.variant},
+  selector:{size_mode:'CUSTOM',window_type:row.windowId,region:row.region,construction:row.construction,configuration:row.configuration,
+    ...(customVariantWindows.has(row.windowId)?{custom_variant:row.variant}:(sizeVariantsByWindow.get(row.windowId)?.has(row.variant)?{variant:row.variant}:{}))},
   bounds:{minW:row.minW,maxW:row.maxW,minH:row.minH,maxH:row.maxH},
   ...(row.ratio!==null?{ratio:row.ratio,intercept:row.intercept??0}:{}),
   formula:row.formula,specialCondition:row.specialCondition,sourcePage:row.sourcePage,sourceUrl:row.sourceUrl,note:row.note,evidenceIds
@@ -52,6 +56,7 @@ const definitions=[
   definition('shutter_type','シャッター種類',40,{window_type:'W431-002'}),definition('construction','工法',50,{},'ENUM',{autoSelectSingle:true}),
   definition('frame_type','枠仕様',55,{},'ENUM',{autoSelectSingle:true}),definition('floor_type','床仕様',60,{},'ENUM',{autoSelectSingle:true}),
   definition('size_mode','サイズ方式',70),definition('size','規格サイズ',80,{size_mode:'STANDARD'}),
+  definition('custom_variant','オーダー仕様',75,{size_mode:'CUSTOM',window_type:{$in:[...customVariantWindows]}},'ENUM',{autoSelectSingle:true}),
   definition('custom_width','特注W（mm）',80,{size_mode:'CUSTOM'},'NUMBER'),definition('custom_height','特注H（mm）',90,{size_mode:'CUSTOM'},'NUMBER')
 ];
 const requiredFieldRules=definitions.map((row)=>({id:`${PRODUCT_ID}:required:${row.key}`,productId:PRODUCT_ID,specificationKey:row.key,required:true,selector:row.selector??{},priority:row.displayOrder,evidenceIds}));
@@ -59,7 +64,7 @@ const requiredFieldRules=definitions.map((row)=>({id:`${PRODUCT_ID}:required:${r
 export const APW431_MODULE={
   product:{id:PRODUCT_ID,manufacturer:'YKK AP',displayName:'APW 431',category:'サッシ',status:'ACTIVE',recoveryStatus:'SIZE_MASTER_FORMAL',sizeFormalPass:true,source:source.master,sourceInventory:source.sourceInventory},
   specificationDefinitions:definitions,
-  allowedValues:[...windowValues,...regionValues,...configurationValues,...variantValues,...shutterValues,...constructionValues,...frameValues,...floorValues,...sizeModeValues],
+  allowedValues:[...windowValues,...regionValues,...configurationValues,...variantValues,...shutterValues,...constructionValues,...frameValues,...floorValues,...sizeModeValues,...customVariantValues],
   standardSizeRecords,requiredFieldRules,
   ruleSets:[
     {id:`${PRODUCT_ID}:size-master`,productId:PRODUCT_ID,type:'STANDARD_SIZE_MASTER',status:'ACTIVE',selector:{},payload:{sourceSheet:'26_統合候補マスター',baseRows:332,selectableRows:538},evidenceIds},

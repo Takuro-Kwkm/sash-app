@@ -211,6 +211,25 @@ const glassDetailValues=source.glass.filter((row)=>row.base!=="追加機能"&&!g
     lowE:row.lowE,appearance:row.appearance,gas:row.gas,spacer:row.spacer,state:row.state
   })
 }));
+const formalGlassDetails=source.glass.filter((row)=>row.base!=="追加機能"&&!gatedGlassIds.has(row.id));
+const thermosLSpacers=(row)=>[
+  ...(String(row.spacer).includes("アルミ")?[["ALUMINUM","アルミスペーサー"]]:[]),
+  ...(String(row.spacer).includes("樹脂")?[["RESIN","樹脂スペーサー"]]:[])
+];
+const thermosLAirLayers=(row)=>[
+  ...(String(row.gas).includes("乾燥空気")?[["DRY_AIR","乾燥空気"]]:[]),
+  ...(String(row.gas).includes("アルゴン")?[["ARGON","アルゴンガス"]]:[])
+];
+const glassSpacerValues=formalGlassDetails.flatMap((row)=>thermosLSpacers(row).map(([raw,label],index)=>value("glass_spacer",raw,label,index+1,{
+  idSuffix:`${row.id}-${raw}`,selector:{glass_detail:row.id},evidenceIds:ev("EV-SL-GLASS"),
+  metadata:sourceMeta("08_ガラス",row.sourceRow,{formalGlassId:row.id})
+})));
+const glassAirLayerValues=formalGlassDetails.flatMap((row)=>thermosLSpacers(row).flatMap(([spacer])=>thermosLAirLayers(row)
+  .filter(([airLayer])=>spacer!=="RESIN"||airLayer==="ARGON")
+  .map(([raw,label],index)=>value("glass_air_layer",raw,label,index+1,{
+    idSuffix:`${row.id}-${spacer}-${raw}`,selector:{glass_detail:row.id,glass_spacer:spacer},evidenceIds:ev("EV-SL-GLASS"),
+    metadata:sourceMeta("08_ガラス",row.sourceRow,{formalGlassId:row.id})
+  }))));
 const glassFunctionValues=[
   value("glass_function","NONE","なし",1,{evidenceIds:ev("EV-SL-GLASS")}),
   ...source.glassGates.map((row,index)=>value("glass_function",row.glassId,row.function,index+2,{
@@ -291,10 +310,12 @@ const definitions=[
   definition("screen_midrail","網戸中桟",110,"SCREEN","ENUM",{selector:{screen_form:{$in:["引違い網戸","開き網戸"]}},autoSelectSingle:true}),
   definition("screen_net","網戸ネット",120,"SCREEN_NET","ENUM",{selector:{screen_presence:"あり"},autoSelectSingle:true}),
   definition("glass_base","ガラス",130,"GLASS"),
-  definition("glass_type","ガラス種",140,"GLASS"),
-  definition("glass_detail","ガラス構成",150,"GLASS"),
-  definition("glass_function","機能ガラス",160,"GLASS_LIMIT","ENUM",{autoSelectSingle:true}),
-  definition("options","その他オプション",170,"OPTIONS","MULTI_ENUM")
+  definition("glass_detail","ガラス詳細",140,"GLASS"),
+  definition("glass_spacer","スペーサー",150,"GLASS","ENUM",{autoSelectSingle:true}),
+  definition("glass_air_layer","中空層",160,"GLASS","ENUM",{autoSelectSingle:true}),
+  definition("glass_type","ガラス種",170,"GLASS"),
+  definition("glass_function","機能ガラス",180,"GLASS_LIMIT","ENUM",{autoSelectSingle:true}),
+  definition("options","その他オプション",190,"OPTIONS","MULTI_ENUM")
 ];
 const optionalKeys=new Set(["options","glass_function"]);
 const requiredFieldRules=definitions.filter((row)=>!optionalKeys.has(row.key)).map((row)=>({
@@ -327,7 +348,7 @@ export const THERMOSL_MODULE={
     ...windowValues,...specValues,...handingValues,...sizeModeValues,
     ...standardConstructionValues,...customConstructionValues,...leafValues,...sizeValues,
     ...exteriorValues,...interiorValues,...screenPresenceValues,...screenFormValues,...screenMidrailValues,...screenNetValues,
-    ...glassBaseValues,...glassTypeValues,...glassDetailValues,...glassFunctionValues,...optionValues
+    ...glassBaseValues,...glassDetailValues,...glassSpacerValues,...glassAirLayerValues,...glassTypeValues,...glassFunctionValues,...optionValues
   ],
   standardSizeRecords,
   requiredFieldRules,

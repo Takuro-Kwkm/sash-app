@@ -1,4 +1,5 @@
 import { buildCatalogContext, selectorMatches } from "./selector.mjs";
+import { dimensionRules } from "./size-availability.mjs";
 
 const AUTO_TYPES=new Set(["AUTO_RECT","AUTO_RATIO","AUTO_PIECEWISE","AUTO_POLYGON"]);
 const REVIEW_TYPES=new Set(["SOURCE_GRAPH_GATE","COMPOUND_GATE"]);
@@ -28,10 +29,6 @@ const autoPass=(rule,w,h)=>{
   if(rule.type==="AUTO_POLYGON")return inPolygon(Number(w),Number(h),rule.points);
   return false;
 };
-const dimensionRules=(catalog,productId)=>catalog.ruleSets
-  .filter((row)=>row.productId===productId&&row.type==="DIMENSION_RULES"&&row.status!=="INACTIVE")
-  .flatMap((row)=>Array.isArray(row.payload)?row.payload:(row.payload?.rules??[]));
-
 export function evaluateDimension(catalog,productId,selection={}){
   if(selection.size_mode!=="CUSTOM")return null;
   const width=selection.custom_width,height=selection.custom_height;

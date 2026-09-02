@@ -40,7 +40,7 @@ jobs:
             sleep 0.5
           done
           cat /tmp/health.json
-          node -e 'const h=require("/tmp/health.json"); const expected={"SER-LIX-SAMOS2H":2131,"SER-LIX-SAMOSL":1410,"SER-YKK-APW430":718,"SER-YKK-APW431":538}; const sash=h.inventory.filter(x=>expected[x.productId]!==undefined); const concord=h.inventory.find(x=>x.productId==="SER-YKK-CONCORD-S30"); if(!h.ok || h.catalogVersion!=="V4.5 SIZE-MASTER-FORMAL + CONCORD-S30" || h.inventory.length!==5 || !concord || sash.length!==4 || sash.some(x=>x.sizeCoverage!==1 || x.missingSizeRows!==0 || x.extraSizeRows!==0 || expected[x.productId]!==x.selectableSizeRows)) process.exit(1)'
+          node -e 'const h=require("/tmp/health.json"); const expected={"SER-LIX-SAMOS2H":2131,"SER-LIX-SAMOSL":1410,"SER-YKK-APW430":718,"SER-YKK-APW431":538}; const sash=h.inventory.filter(x=>expected[x.productId]!==undefined); const concord=h.inventory.find(x=>x.productId==="SER-YKK-CONCORD-S30"); if(!h.ok || h.catalogVersion!=="V4.6 SALES-UI-R2 + CONCORD-S30" || h.inventory.length!==5 || !concord || sash.length!==4 || sash.some(x=>x.sizeCoverage!==1 || x.missingSizeRows!==0 || x.extraSizeRows!==0 || expected[x.productId]!==x.selectableSizeRows)) process.exit(1)'
 
   concord_regression:
     runs-on: ubuntu-latest
@@ -69,7 +69,7 @@ jobs:
             sleep 0.5
           done
           cat /tmp/health.json
-          node -e 'const h=require("/tmp/health.json"); const expected={"SER-LIX-SAMOS2H":2131,"SER-LIX-SAMOSL":1410,"SER-YKK-APW430":718,"SER-YKK-APW431":538}; const sash=h.inventory.filter(x=>expected[x.productId]!==undefined); const concord=h.inventory.find(x=>x.productId==="SER-YKK-CONCORD-S30"); if(!h.ok || h.catalogVersion!=="V4.5 SIZE-MASTER-FORMAL + CONCORD-S30" || h.inventory.length!==5 || !concord || sash.length!==4 || sash.some(x=>x.sizeCoverage!==1 || x.missingSizeRows!==0 || x.extraSizeRows!==0 || expected[x.productId]!==x.selectableSizeRows)) process.exit(1)'
+          node -e 'const h=require("/tmp/health.json"); const expected={"SER-LIX-SAMOS2H":2131,"SER-LIX-SAMOSL":1410,"SER-YKK-APW430":718,"SER-YKK-APW431":538}; const sash=h.inventory.filter(x=>expected[x.productId]!==undefined); const concord=h.inventory.find(x=>x.productId==="SER-YKK-CONCORD-S30"); if(!h.ok || h.catalogVersion!=="V4.6 SALES-UI-R2 + CONCORD-S30" || h.inventory.length!==5 || !concord || sash.length!==4 || sash.some(x=>x.sizeCoverage!==1 || x.missingSizeRows!==0 || x.extraSizeRows!==0 || expected[x.productId]!==x.selectableSizeRows)) process.exit(1)'
 
   browser_qa:
     runs-on: ubuntu-latest
@@ -96,6 +96,10 @@ jobs:
         run: node test/browser/concords30-browser-qa.mjs
       - name: Formal Size UI PC and Smartphone Browser QA
         run: node test/browser/size-ui-browser-qa.mjs
+      - name: Sales UI R2 glass, shutter size and CUSTOM Browser QA
+        run: node test/browser/sales-ui-r2-browser-qa.mjs
+      - name: Export CUSTOM availability matrix
+        run: node scripts/report-custom-availability.mjs
       - name: Build exact Runtime-derived Size UI Review Preview
         run: node scripts/build-size-ui-review-preview.mjs artifacts/size-ui-review-r2/index.html
       - name: Size UI Review Preview PC and Smartphone QA
@@ -110,6 +114,7 @@ jobs:
             artifacts/size-ui-browser-qa
             artifacts/size-ui-review-r2
             artifacts/size-ui-review-r2-qa
+            artifacts/sales-ui-r2
             runtime-qa.log
       - name: Stop Runtime
         if: always()
