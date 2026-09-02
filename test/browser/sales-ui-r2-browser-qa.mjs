@@ -26,9 +26,15 @@ async function candidateCount(page){return Number((await page.locator('[data-siz
 
 async function verifyS2HGlass(page){
   await openProduct(page,'LIXIL','SER-LIX-SAMOS2H');
-  const order=await fieldOrder(page);
-  assert.ok(order.indexOf('glass_detail')<order.indexOf('glass_spacer'));assert.ok(order.indexOf('glass_spacer')<order.indexOf('glass_gas'));
-  await select(page,'glass_base','LOWE');await select(page,'glass_detail','GL-S2H-LOWE-CLEAR');await select(page,'glass_spacer','ALUMINUM');await select(page,'glass_gas','DRY_AIR');
+  await select(page,'glass_base','LOWE');
+  assert.equal(await page.locator('[data-spec-key="glass_detail"]').count(),1);
+  await select(page,'glass_detail','GL-S2H-LOWE-CLEAR');
+  let order=await fieldOrder(page);
+  assert.ok(order.indexOf('glass_detail')>=0&&order.indexOf('glass_spacer')>=0);assert.ok(order.indexOf('glass_detail')<order.indexOf('glass_spacer'));
+  await select(page,'glass_spacer','ALUMINUM');
+  order=await fieldOrder(page);
+  assert.ok(order.indexOf('glass_spacer')>=0&&order.indexOf('glass_gas')>=0);assert.ok(order.indexOf('glass_detail')<order.indexOf('glass_spacer'));assert.ok(order.indexOf('glass_spacer')<order.indexOf('glass_gas'));
+  await select(page,'glass_gas','DRY_AIR');
   await select(page,'glass_spacer','RESIN');
   assert.deepEqual(await options(page,'glass_gas'),['ARGON']);assert.equal(await page.locator('[data-spec-key="glass_gas"]').inputValue(),'ARGON');
   report.glass.push({series:'サーモスⅡ-H',order:['glass_base','glass_detail','glass_spacer','glass_gas'],resinAirLayer:['ARGON'],staleDryAirCleared:true,status:'PASS'});
@@ -36,9 +42,10 @@ async function verifyS2HGlass(page){
 async function verifyThermosLGlass(page){
   await openProduct(page,'LIXIL','SER-LIX-SAMOSL');
   await select(page,'window_type','WT-SL-HIKICHIGAI');
-  const order=await fieldOrder(page);
-  assert.ok(order.indexOf('glass_detail')<order.indexOf('glass_spacer'));assert.ok(order.indexOf('glass_spacer')<order.indexOf('glass_air_layer'));assert.ok(order.indexOf('glass_air_layer')<order.indexOf('glass_type'));
   await select(page,'glass_base','LOWE');await select(page,'glass_detail','GL-SL-001');await select(page,'glass_spacer','RESIN');
+  const order=await fieldOrder(page);
+  assert.ok(order.indexOf('glass_detail')>=0&&order.indexOf('glass_spacer')>=0&&order.indexOf('glass_air_layer')>=0&&order.indexOf('glass_type')>=0);
+  assert.ok(order.indexOf('glass_detail')<order.indexOf('glass_spacer'));assert.ok(order.indexOf('glass_spacer')<order.indexOf('glass_air_layer'));assert.ok(order.indexOf('glass_air_layer')<order.indexOf('glass_type'));
   assert.deepEqual(await options(page,'glass_air_layer'),['ARGON']);assert.equal(await page.locator('[data-spec-key="glass_air_layer"]').inputValue(),'ARGON');
   report.glass.push({series:'サーモスL',order:['glass_base','glass_detail','glass_spacer','glass_air_layer','glass_type'],resinAirLayer:['ARGON'],status:'PASS'});
 }
