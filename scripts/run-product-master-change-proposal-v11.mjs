@@ -16,8 +16,10 @@ const baseMaster=structuredClone(APW430_OFFICIAL_EVIDENCE_POC);
 const acceptedEvidence=live.state.canonicalEvidence;
 const changes=acceptedEvidence.map((record)=>({operation:'ADD_RECORD',collection:'evidence',record}));
 const evidenceIds=acceptedEvidence.map((row)=>row.id);
+const createdAt=new Date().toISOString();
+const proposalId=`PMCP-YKK-APW430-FIX-LIVE-${createdAt.replace(/\D/g,'').slice(0,14)}`;
 const proposalResult=createProductMasterChangeProposal({
-  id:'PMCP-YKK-APW430-FIX-LIVE-20260902-001',
+  id:proposalId,
   productId:'SER-YKK-APW430',
   baseMaster,
   changes,
@@ -25,7 +27,7 @@ const proposalResult=createProductMasterChangeProposal({
   sourceBatchIds:[live.report.batchId],
   openBlockingPending:live.report.transportIssues.blocking,
   createdBy:'CHATGPT',
-  at:'2026-09-02T06:30:00Z',
+  at:createdAt,
   summary:'Add 9 adjudicated APW430 FIX Canonical Evidence records from the real NotebookLM LIVE_EXTERNAL V3 batch. No Rule, size, Runtime, or production Product Master mutation is included.'
 });
 if(!proposalResult.pass)throw new Error(JSON.stringify(proposalResult.errors));
