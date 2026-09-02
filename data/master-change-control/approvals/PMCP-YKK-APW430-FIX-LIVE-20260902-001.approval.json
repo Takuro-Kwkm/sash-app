@@ -1,0 +1,19 @@
+{
+  "approvalSchemaVersion": "1.0",
+  "recordType": "PRODUCT_MASTER_CHANGE_APPROVAL",
+  "proposalId": "PMCP-YKK-APW430-FIX-LIVE-20260902-001",
+  "proposalFingerprint": "sha256:0f71567249ed2e2d5f7f02a3704cdbf969c016160f0b3dccb3448686b1cc56d9",
+  "baseMasterFingerprint": "sha256:efb2c2e694dab840a44ff403b19d9e06568d282f328bce086b24408e5164dfa6",
+  "approverType": "HUMAN",
+  "approvedBy": "HUMAN_USER_EXPLICIT_APPROVAL",
+  "approvedAt": "2026-09-02T05:49:05Z",
+  "approvalSource": "CHAT_CONVERSATION_EXPLICIT_COMMAND",
+  "scope": "APPROVE_AND_STAGE_ONLY",
+  "productionApproval": false,
+  "requestedAction": "PMCP-YKK-APW430-FIX-LIVE-20260902-001 を承認してステージング反映して",
+  "auditNotes": [
+    "The approved Proposal fingerprint is the exact v1.1 CI Proposal fingerprint from Run #231.",
+    "The Proposal createdAt field is a deterministic test timestamp (2026-09-02T06:30:00Z) that is later than the real approval time. The Proposal content and fingerprint are intentionally not rewritten after approval; this timestamp anomaly is retained as audit evidence.",
+    "Approval scope ends at STAGING. Formal Product Master and Runtime production writes remain forbidden."
+  ]
+}
