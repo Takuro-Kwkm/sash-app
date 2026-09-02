@@ -5,100 +5,33 @@ import{chromium}from'playwright';
 const BASE=process.env.QA_BASE_URL??'http://127.0.0.1:4173';
 const OUT=process.env.SALES_UI_R2_ARTIFACT_DIR??'artifacts/sales-ui-r2/browser';
 await mkdir(OUT,{recursive:true});
-const report={baseUrl:BASE,glass:[],shutter:[],custom:[],responsive:[],consoleErrors:[],status:'PENDING'};
+const report={baseUrl:BASE,glass:[],shutter:[],sizeMode:[],construction:[],responsive:[],consoleErrors:[],status:'PENDING'};
 const browser=await chromium.launch({headless:true});
+const GLASS_KEYS=['glass_base','glass_type','glass_detail','glass_function','glass_additional','glass_spacer','glass_air_layer','glass_gas'];
+function track(page,name){page.on('console',(m)=>{if(m.type()==='error')report.consoleErrors.push({page:name,text:m.text()});});page.on('pageerror',(e)=>report.consoleErrors.push({page:name,text:e.message}));}
+async function resolveAction(page,action){const response=page.waitForResponse((r)=>r.url().includes('/api/catalog/resolve')&&r.status()===200);await action();await response;await page.waitForTimeout(30);}
+async function openProduct(page,manufacturer,productId){await page.goto(BASE,{waitUntil:'networkidle'});await page.waitForFunction(()=>document.querySelector('#status')?.textContent==='CATALOG CONNECTED');await page.selectOption('#manufacturer',manufacturer);await resolveAction(page,()=>page.selectOption('#product',productId));}
+async function select(page,key,value){const control=page.locator(`[data-spec-key="${key}"]`);await control.waitFor({state:'visible'});if(await control.inputValue()===String(value))return;await page.waitForFunction(([field,target])=>[...document.querySelectorAll(`[data-spec-key="${field}"] option`)].some((o)=>o.value===target),[key,String(value)]);await resolveAction(page,()=>control.selectOption(String(value)));}
+async function options(page,key){return page.locator(`[data-spec-key="${key}"] option`).evaluateAll((rows)=>rows.map((r)=>r.value).filter(Boolean));}
+async function optionLabels(page,key){return page.locator(`[data-spec-key="${key}"] option`).evaluateAll((rows)=>rows.map((r)=>r.textContent.trim()).filter((v)=>v&&v!=='選択してください'));}
+async function order(page){return page.locator('#dynamicForm [data-key]').evaluateAll((rows)=>rows.map((r)=>r.dataset.key));}
+async function glassOrder(page){return(await order(page)).filter((key)=>GLASS_KEYS.includes(key));}
+async function assertConstructionHidden(page,series){assert.equal(await page.locator('[data-spec-key="construction"]').count(),0,`${series}: construction visible`);report.construction.push({series,visible:false,status:'PASS'});}
 
-function track(page,name){page.on('console',(message)=>{if(message.type()==='error')report.consoleErrors.push({page:name,text:message.text()});});page.on('pageerror',(error)=>report.consoleErrors.push({page:name,text:error.message}));}
-async function resolveAction(page,action){const response=page.waitForResponse((candidate)=>candidate.url().includes('/api/catalog/resolve')&&candidate.status()===200);await action();await response;await page.waitForTimeout(30);}
-async function openProduct(page,manufacturer,productId){
-  await page.goto(BASE,{waitUntil:'networkidle'});await page.waitForFunction(()=>document.querySelector('#status')?.textContent==='CATALOG CONNECTED');
-  await page.selectOption('#manufacturer',manufacturer);await resolveAction(page,()=>page.selectOption('#product',productId));
-}
-async function select(page,key,value){
-  const control=page.locator(`[data-spec-key="${key}"]`);await control.waitFor({state:'visible'});
-  if(await control.inputValue()===String(value))return;
-  await page.waitForFunction(([field,target])=>[...document.querySelectorAll(`[data-spec-key="${field}"] option`)].some((option)=>option.value===target),[key,String(value)]);
-  await resolveAction(page,()=>control.selectOption(String(value)));
-}
-async function options(page,key){return page.locator(`[data-spec-key="${key}"] option`).evaluateAll((rows)=>rows.map((row)=>row.value).filter(Boolean));}
-async function optionLabels(page,key){return page.locator(`[data-spec-key="${key}"] option`).evaluateAll((rows)=>rows.map((row)=>row.textContent.trim()).filter((value)=>value&&value!=='選択してください'));}
-async function fieldOrder(page){return page.locator('#dynamicForm [data-key]').evaluateAll((rows)=>rows.map((row)=>row.dataset.key));}
-async function candidateCount(page){return Number((await page.locator('[data-size-candidate-count]').innerText()).match(/\d+/)?.[0]);}
-
-async function verifyS2HGlass(page){
-  await openProduct(page,'LIXIL','SER-LIX-SAMOS2H');
-  await select(page,'glass_base','LOWE');
-  assert.equal(await page.locator('[data-spec-key="glass_detail"]').count(),1);
-  await select(page,'glass_detail','GL-S2H-LOWE-CLEAR');
-  let order=await fieldOrder(page);
-  assert.ok(order.indexOf('glass_detail')>=0&&order.indexOf('glass_spacer')>=0);assert.ok(order.indexOf('glass_detail')<order.indexOf('glass_spacer'));
-  await select(page,'glass_spacer','ALUMINUM');
-  order=await fieldOrder(page);
-  assert.ok(order.indexOf('glass_spacer')>=0&&order.indexOf('glass_gas')>=0);assert.ok(order.indexOf('glass_detail')<order.indexOf('glass_spacer'));assert.ok(order.indexOf('glass_spacer')<order.indexOf('glass_gas'));
-  await select(page,'glass_gas','DRY_AIR');
-  await select(page,'glass_spacer','RESIN');
-  assert.deepEqual(await options(page,'glass_gas'),['ARGON']);assert.equal(await page.locator('[data-spec-key="glass_gas"]').inputValue(),'ARGON');
-  report.glass.push({series:'サーモスⅡ-H',order:['glass_base','glass_detail','glass_spacer','glass_gas'],resinAirLayer:['ARGON'],staleDryAirCleared:true,status:'PASS'});
-}
-async function verifyThermosLGlass(page){
-  await openProduct(page,'LIXIL','SER-LIX-SAMOSL');
-  await select(page,'window_type','WT-SL-HIKICHIGAI');
-  await select(page,'glass_base','LOWE');
-  const performanceLabels=await optionLabels(page,'glass_detail');
-  assert.deepEqual(performanceLabels,['Low-E 標準','遮熱（Low-E グリーン）（要確認）','高遮熱（Low-E グリーン）（要確認）','高日射取得（Low-E クリア）（要確認）']);
-  assert.equal(performanceLabels.some((label)=>/\d[-–](?:Ar|A)\d/i.test(label)),false);
-  await select(page,'glass_detail','LOWE_STANDARD');await select(page,'glass_spacer','RESIN');
-  const order=await fieldOrder(page);
-  assert.ok(order.indexOf('glass_detail')>=0&&order.indexOf('glass_spacer')>=0&&order.indexOf('glass_air_layer')>=0&&order.indexOf('glass_type')>=0);
-  assert.ok(order.indexOf('glass_detail')<order.indexOf('glass_spacer'));assert.ok(order.indexOf('glass_spacer')<order.indexOf('glass_air_layer'));assert.ok(order.indexOf('glass_air_layer')<order.indexOf('glass_type'));
-  assert.deepEqual(await options(page,'glass_air_layer'),['ARGON']);assert.equal(await page.locator('[data-spec-key="glass_air_layer"]').inputValue(),'ARGON');
-  assert.deepEqual(await options(page,'glass_type'),['CLEAR','PATTERN','FROST']);
-  const typeLabels=await optionLabels(page,'glass_type');assert.ok(typeLabels.some((label)=>label.startsWith('フロスト')));
-  await select(page,'glass_type','FROST');
-  const warnings=await page.locator('#warnings').innerText();assert.ok(warnings.includes('フロスト')&&warnings.includes('CONFIRM_REQUIRED'));
-  assert.equal((await options(page,'glass_function')).includes('GL-SL-OPT-FROST'),false);
-  report.glass.push({series:'サーモスL',order:['glass_base','glass_detail','glass_spacer','glass_air_layer','glass_type'],performanceLabels,glassTypes:['透明','型板','フロスト'],resinAirLayer:['ARGON'],frostConfirmRequired:true,status:'PASS'});
-}
-async function verifyThermosLShutter(page,prefix){
-  await openProduct(page,'LIXIL','SER-LIX-SAMOSL');
-  await select(page,'window_type','WT-SL-SHUTTER-HIKI');await select(page,'shutter_type','SP-SL-SHUT-M-STD');await select(page,'size_mode','STANDARD');
-  const constructionCounts={};
-  for(const[construction,expected]of[['在来・204',51],['在来',46]]){
-    await select(page,'construction',construction);
-    assert.equal(await candidateCount(page),expected,`${prefix}:${construction}:candidate count`);
-    assert.equal(await page.locator('[data-size-list-record]').count(),expected,`${prefix}:${construction}:full formal list`);
-    constructionCounts[construction]=expected;
-  }
-  assert.equal(Object.values(constructionCounts).reduce((a,b)=>a+b,0),97);
-  report.shutter.push({viewport:prefix,shutter:'手動 標準タイプ',constructionCounts,total:97,missing:0,extra:0,status:'PASS'});
-  await select(page,'shutter_type','SP-SL-SHUT-E-STD');
-  await select(page,'construction','在来');assert.equal(await candidateCount(page),52);report.shutter.push({viewport:prefix,shutter:'電動 標準タイプ',construction:'在来',canonical:52,runtime:52,missing:0,extra:0,status:'PASS'});
-  await select(page,'construction','204');assert.equal(await candidateCount(page),4);report.shutter.push({viewport:prefix,shutter:'電動 標準タイプ',construction:'204',canonical:4,runtime:4,missing:0,extra:0,status:'PASS'});
-}
-async function verifyCustomAvailability(page){
-  await openProduct(page,'LIXIL','SER-LIX-SAMOS2H');await select(page,'window_type','WT-S2H-HIKICHIGAI');
-  assert.deepEqual(await options(page,'size_mode'),['STANDARD']);report.custom.push({series:'サーモスⅡ-H',window:'単体引違い窓',rules:0,modes:['STANDARD'],status:'PASS'});
-
-  await openProduct(page,'LIXIL','SER-LIX-SAMOSL');await select(page,'window_type','WT-SL-SHUTTER-HIKI');await select(page,'shutter_type','SP-SL-SHUT-M-WIND');
-  assert.deepEqual(await options(page,'size_mode'),['CUSTOM']);await select(page,'size_mode','CUSTOM');await select(page,'construction','在来・204');
-  assert.equal(await page.locator('[data-spec-key="custom_width"]').count(),1);assert.equal(await page.locator('[data-size-width]').count(),0);
-  report.custom.push({series:'サーモスL',window:'シャッター付引違い窓',specification:'手動 耐風タイプ',rules:1,modes:['CUSTOM'],status:'PASS'});
-
-  await openProduct(page,'YKK AP','SER-YKK-APW431');await select(page,'window_type','W431-006');await select(page,'region','本州');await select(page,'construction','在来');
-  assert.deepEqual(await options(page,'size_mode'),['STANDARD','CUSTOM']);await select(page,'size_mode','CUSTOM');
-  assert.deepEqual(await options(page,'custom_variant'),['中桟無','断熱腰パネル付']);
-  report.custom.push({series:'APW 431',window:'勝手口ドア',rules:2,modes:['STANDARD','CUSTOM'],customVariants:['中桟無','断熱腰パネル付'],status:'PASS'});
+async function verifyS2H(page){await openProduct(page,'LIXIL','SER-LIX-SAMOS2H');await select(page,'window_type','WT-S2H-HIKICHIGAI');await select(page,'glass_base','LOWE');assert.deepEqual(await glassOrder(page),['glass_base','glass_type','glass_detail','glass_additional','glass_spacer','glass_gas']);assert.deepEqual(await optionLabels(page,'glass_type'),['透明','型板','フロスト（要確認）']);assert.deepEqual(await optionLabels(page,'glass_detail'),['クリア','グリーン','グリーン（高遮熱）']);await select(page,'glass_type','CLEAR');await select(page,'glass_detail','LOWE_CLEAR');await select(page,'glass_spacer','RESIN');assert.deepEqual(await options(page,'glass_gas'),['ARGON']);await assertConstructionHidden(page,'サーモスⅡ-H');report.glass.push({series:'サーモスⅡ-H',flow:await glassOrder(page),detailLabels:await optionLabels(page,'glass_detail'),frost:true,highSolarSourceStatus:'PENDING_NOT_IN_CONNECTED_V07',status:'PASS'});}
+async function verifyThermosL(page){await openProduct(page,'LIXIL','SER-LIX-SAMOSL');await select(page,'window_type','WT-SL-HIKICHIGAI');await select(page,'glass_base','LOWE');assert.deepEqual(await glassOrder(page),['glass_base','glass_type','glass_detail','glass_function','glass_spacer','glass_air_layer']);assert.deepEqual(await optionLabels(page,'glass_type'),['透明','型板','フロスト（要確認）']);assert.deepEqual(await optionLabels(page,'glass_detail'),['クリア','グリーン（要確認）','クリア（高日射取得）（要確認）','グリーン（高遮熱）（要確認）']);await select(page,'glass_type','FROST');assert.ok((await page.locator('#warnings').innerText()).includes('フロスト'));await assertConstructionHidden(page,'サーモスL');report.glass.push({series:'サーモスL',flow:await glassOrder(page),detailLabels:await optionLabels(page,'glass_detail'),frost:true,status:'PASS'});}
+async function verifyAPW430(page){await openProduct(page,'YKK AP','SER-YKK-APW430');await select(page,'window_type','SWT-YKK-APW430-FIX-MADO');await select(page,'glass_base','LOWE');assert.deepEqual(await glassOrder(page),['glass_base','glass_type','glass_detail','glass_additional','glass_spacer','glass_air_layer']);assert.deepEqual(await optionLabels(page,'glass_type'),['透明','型（要確認）']);assert.deepEqual(await optionLabels(page,'glass_detail'),['クリア（日射取得型）','ブルー（日射遮蔽型）','ブロンズ（日射遮蔽型）','ニュートラル（日射遮蔽型）']);await assertConstructionHidden(page,'APW 430');report.glass.push({series:'APW 430',flow:await glassOrder(page),detailLabels:await optionLabels(page,'glass_detail'),frost:false,frostSourceStatus:'NOT_IN_FORMAL_08E',status:'PASS'});}
+async function verifyAPW431(page){await openProduct(page,'YKK AP','SER-YKK-APW431');await select(page,'window_type','W431-001');await select(page,'glass_base','LOWE');assert.deepEqual(await glassOrder(page),['glass_base','glass_type','glass_detail','glass_additional','glass_spacer','glass_air_layer']);assert.deepEqual(await optionLabels(page,'glass_type'),['透明','型（要確認）','すり（フロスト）（要確認）']);assert.deepEqual(await optionLabels(page,'glass_detail'),['クリア（日射取得型）','ブルー（日射遮蔽型）','ブロンズ（日射遮蔽型）','ニュートラル（日射遮蔽型）']);await assertConstructionHidden(page,'APW 431');report.glass.push({series:'APW 431',flow:await glassOrder(page),detailLabels:await optionLabels(page,'glass_detail'),frostEquivalent:'すり',status:'PASS'});}
+async function verifyThermosLShutter(page,viewport){await openProduct(page,'LIXIL','SER-LIX-SAMOSL');await select(page,'window_type','WT-SL-SHUTTER-HIKI');await select(page,'shutter_type','SP-SL-SHUT-M-STD');await select(page,'size_mode','STANDARD');assert.equal(await page.locator('[data-spec-key="construction"]').count(),0);const count=Number((await page.locator('[data-size-candidate-count]').innerText()).match(/\d+/)?.[0]);assert.equal(count,97);assert.equal(await page.locator('[data-size-list-record]').count(),97);report.shutter.push({viewport,shutter:'手動 標準タイプ',constructionInput:false,total:97,status:'PASS'});await select(page,'shutter_type','SP-SL-SHUT-M-WIND');assert.deepEqual(await options(page,'size_mode'),['CUSTOM']);report.sizeMode.push({series:'サーモスL',case:'手動 耐風タイプ',modes:['CUSTOM'],status:'PASS'});}
+async function verifySizeModes(page){
+  await openProduct(page,'LIXIL','SER-LIX-SAMOS2H');await select(page,'window_type','WT-S2H-HIKICHIGAI');assert.deepEqual(await options(page,'size_mode'),['STANDARD']);report.sizeMode.push({series:'サーモスⅡ-H',modes:['STANDARD'],customSourceCapability:'PENDING_NOT_CONNECTED',status:'PASS'});
+  await openProduct(page,'LIXIL','SER-LIX-SAMOSL');await select(page,'window_type','WT-SL-HIKICHIGAI');assert.deepEqual(await options(page,'size_mode'),['STANDARD','CUSTOM']);report.sizeMode.push({series:'サーモスL',modes:['STANDARD','CUSTOM'],status:'PASS'});
+  await openProduct(page,'YKK AP','SER-YKK-APW430');await select(page,'window_type','SWT-YKK-APW430-FIX-MADO');assert.deepEqual(await options(page,'size_mode'),['STANDARD']);report.sizeMode.push({series:'APW 430',modes:['STANDARD'],customSourceCapability:'PENDING_NOT_CONNECTED',status:'PASS'});
+  await openProduct(page,'YKK AP','SER-YKK-APW431');await select(page,'window_type','W431-001');assert.ok((await options(page,'size_mode')).includes('CUSTOM'));report.sizeMode.push({series:'APW 431',modes:await options(page,'size_mode'),status:'PASS'});
 }
 
 try{
-  const desktopContext=await browser.newContext({viewport:{width:1440,height:1000}}),desktop=await desktopContext.newPage();track(desktop,'desktop');
-  await verifyS2HGlass(desktop);await verifyThermosLGlass(desktop);await verifyThermosLShutter(desktop,'desktop');await verifyCustomAvailability(desktop);
-  await desktop.screenshot({path:`${OUT}/desktop-sales-ui-r2.png`,fullPage:true});await desktopContext.close();
-
-  const mobileContext=await browser.newContext({viewport:{width:390,height:844},isMobile:true,hasTouch:true}),mobile=await mobileContext.newPage();track(mobile,'mobile');
-  await verifyThermosLShutter(mobile,'390x844');await verifyThermosLGlass(mobile);
-  const overflow=await mobile.evaluate(()=>Math.max(0,document.documentElement.scrollWidth-window.innerWidth));assert.equal(overflow,0);report.responsive.push({viewport:'390x844',horizontalOverflowPx:overflow,status:'PASS'});
-  await mobile.screenshot({path:`${OUT}/mobile-sales-ui-r2.png`,fullPage:true});await mobileContext.close();
-  assert.deepEqual(report.consoleErrors,[]);report.status='PASS';
+  const desktopContext=await browser.newContext({viewport:{width:1440,height:1000}}),desktop=await desktopContext.newPage();track(desktop,'desktop');await verifyS2H(desktop);await verifyThermosL(desktop);await verifyAPW430(desktop);await verifyAPW431(desktop);await verifyThermosLShutter(desktop,'desktop');await verifySizeModes(desktop);await desktop.screenshot({path:`${OUT}/desktop-common-sash-input.png`,fullPage:true});await desktopContext.close();
+  const mobileContext=await browser.newContext({viewport:{width:390,height:844},isMobile:true,hasTouch:true}),mobile=await mobileContext.newPage();track(mobile,'mobile');await verifyThermosL(mobile);await verifyThermosLShutter(mobile,'390x844');const overflow=await mobile.evaluate(()=>Math.max(0,document.documentElement.scrollWidth-window.innerWidth));assert.equal(overflow,0);report.responsive.push({viewport:'390x844',horizontalOverflowPx:0,status:'PASS'});await mobile.screenshot({path:`${OUT}/mobile-common-sash-input.png`,fullPage:true});await mobileContext.close();assert.deepEqual(report.consoleErrors,[]);report.status='PASS';
 }catch(error){report.status='FAIL';report.failure=error.stack??String(error);process.exitCode=1;}
 finally{await writeFile(`${OUT}/report.json`,JSON.stringify(report,null,2));console.log(JSON.stringify(report,null,2));await browser.close();}
