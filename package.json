@@ -14,6 +14,7 @@
     "test:product-master-core:v03": "node --test test/10-product-master-core-v03-gemini-inbox.test.mjs",
     "validate:product-master-core:v03": "node scripts/validate-product-master-core-v03.mjs",
     "test:product-master-core:v04": "node --test test/11-product-master-core-v04-gemini-transport.test.mjs",
+    "test:product-master-core:v08": "node --test test/12-product-master-core-v08-persistent-inbox.test.mjs",
     "import:gemini-evidence": "node scripts/import-gemini-evidence-transport.mjs"
   },
   "engines": { "node": ">=22" }
