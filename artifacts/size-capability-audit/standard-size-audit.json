@@ -1,0 +1,86 @@
+{
+  "schemaVersion": "1.0",
+  "recordType": "OFFICIAL_STANDARD_SIZE_SOURCE_AUDIT",
+  "status": "PARTIAL_PASS",
+  "rule": "Canonical-to-Runtime equality is not sufficient for Official Source coverage. Official Manufacturer Source -> Canonical -> Runtime must be audited.",
+  "products": [
+    {
+      "productId": "SER-LIX-SAMOS2H",
+      "series": "サーモスⅡ-H",
+      "canonicalSelectable": 2131,
+      "runtimeSelectable": 2131,
+      "canonicalRuntimeMatch": 2131,
+      "missingInRuntime": 0,
+      "extraInRuntime": 0,
+      "officialAvailable": null,
+      "officialEnumeration": "PENDING",
+      "classification": "PENDING_FULL_OFFICIAL_ENUMERATION",
+      "officialSources": [
+        {"driveFileId":"1x4lovMcyfkyFzulYiQIv8OE5dpq6wDor","title":"202604_LIXIL_サーモスⅡ－Ｈ_業務用資料集_完成品価格表.pdf"}
+      ]
+    },
+    {
+      "productId": "SER-LIX-SAMOSL",
+      "series": "サーモスL",
+      "canonicalSelectable": 1495,
+      "runtimeSelectable": 1495,
+      "canonicalRuntimeMatch": 1495,
+      "missingInRuntime": 0,
+      "extraInRuntime": 0,
+      "officialAvailable": null,
+      "officialEnumeration": "PARTIAL",
+      "verifiedSlices": [
+        {
+          "selectorScope": "WT-SL-SHUTTER-HIKI / SP-SL-SHUT-M-STD",
+          "officialAvailable": 97,
+          "canonicalMatch": 97,
+          "canonicalInactive": 0,
+          "missingInCanonical": 0,
+          "extraInCanonical": 0,
+          "runtimeMatch": 97,
+          "missingInRuntime": 0,
+          "extraInRuntime": 0,
+          "status": "PASS"
+        }
+      ],
+      "classification": "PARTIAL_PASS_FULL_ENUMERATION_PENDING",
+      "officialSources": [
+        {"driveFileId":"1YUN-mtWYs48YBUHJk0C3vJXnhjyZFHyf","title":"202604_LIXIL_サーモスＬ_業務用資料集_完成品価格表.pdf"}
+      ]
+    },
+    {
+      "productId": "SER-YKK-APW430",
+      "series": "APW 430",
+      "canonicalSelectable": 718,
+      "runtimeSelectable": 718,
+      "canonicalRuntimeMatch": 718,
+      "missingInRuntime": 0,
+      "extraInRuntime": 0,
+      "officialAvailable": null,
+      "officialEnumeration": "PENDING",
+      "classification": "PENDING_FULL_OFFICIAL_ENUMERATION",
+      "officialSources": [
+        {"driveFileId":"1j9PtW8yoKBZ4Nodm58wU3QtOCvxlEja9","title":"202607_YKKAP_APW430_商品カタログ.pdf"},
+        {"driveFileId":"1GZRfXqRKZKti-LreyNgW9-wegAF-HzaK","title":"202608_YKKAP_APW430_業務用資料集.pdf"}
+      ]
+    },
+    {
+      "productId": "SER-YKK-APW431",
+      "series": "APW 431",
+      "canonicalSelectable": 538,
+      "runtimeSelectable": 538,
+      "canonicalRuntimeMatch": 538,
+      "missingInRuntime": 0,
+      "extraInRuntime": 0,
+      "officialAvailable": null,
+      "officialEnumeration": "PENDING",
+      "classification": "PENDING_FULL_OFFICIAL_ENUMERATION",
+      "officialSources": [
+        {"driveFileId":"1j9PtW8yoKBZ4Nodm58wU3QtOCvxlEja9","title":"202607_YKKAP_APW430_商品カタログ.pdf"},
+        {"driveFileId":"1GZRfXqRKZKti-LreyNgW9-wegAF-HzaK","title":"202608_YKKAP_APW430_業務用資料集.pdf"}
+      ]
+    }
+  ],
+  "formalMasterWritePerformed": false,
+  "runtimeManufacturerDataWritePerformed": false
+}
