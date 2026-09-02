@@ -151,6 +151,22 @@ jobs:
           name: product-master-technical-facts-v13-apw430
           path: artifacts/product-master-technical-facts-v13
 
+  product_master_generic_workflow_v14:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Run APW430 through product-agnostic Product Master workflow
+        run: npm run master:workflow -- SER-YKK-APW430 technical-facts artifacts/product-master-workflow-v14/apw430
+      - name: Upload generic Product Master workflow evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: product-master-generic-workflow-v14-apw430
+          path: artifacts/product-master-workflow-v14/apw430
+
   browser_qa:
     runs-on: ubuntu-latest
     steps:
