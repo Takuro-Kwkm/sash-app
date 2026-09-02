@@ -21,6 +21,7 @@ async function select(page,key,value){
   await resolveAction(page,()=>control.selectOption(String(value)));
 }
 async function options(page,key){return page.locator(`[data-spec-key="${key}"] option`).evaluateAll((rows)=>rows.map((row)=>row.value).filter(Boolean));}
+async function optionLabels(page,key){return page.locator(`[data-spec-key="${key}"] option`).evaluateAll((rows)=>rows.map((row)=>row.textContent.trim()).filter((value)=>value&&value!=='選択してください'));}
 async function fieldOrder(page){return page.locator('#dynamicForm [data-key]').evaluateAll((rows)=>rows.map((row)=>row.dataset.key));}
 async function candidateCount(page){return Number((await page.locator('[data-size-candidate-count]').innerText()).match(/\d+/)?.[0]);}
 
@@ -42,12 +43,21 @@ async function verifyS2HGlass(page){
 async function verifyThermosLGlass(page){
   await openProduct(page,'LIXIL','SER-LIX-SAMOSL');
   await select(page,'window_type','WT-SL-HIKICHIGAI');
-  await select(page,'glass_base','LOWE');await select(page,'glass_detail','GL-SL-001');await select(page,'glass_spacer','RESIN');
+  await select(page,'glass_base','LOWE');
+  const performanceLabels=await optionLabels(page,'glass_detail');
+  assert.deepEqual(performanceLabels,['Low-E 標準','遮熱（Low-E グリーン）（要確認）','高遮熱（Low-E グリーン）（要確認）','高日射取得（Low-E クリア）（要確認）']);
+  assert.equal(performanceLabels.some((label)=>/\d[-–](?:Ar|A)\d/i.test(label)),false);
+  await select(page,'glass_detail','LOWE_STANDARD');await select(page,'glass_spacer','RESIN');
   const order=await fieldOrder(page);
   assert.ok(order.indexOf('glass_detail')>=0&&order.indexOf('glass_spacer')>=0&&order.indexOf('glass_air_layer')>=0&&order.indexOf('glass_type')>=0);
   assert.ok(order.indexOf('glass_detail')<order.indexOf('glass_spacer'));assert.ok(order.indexOf('glass_spacer')<order.indexOf('glass_air_layer'));assert.ok(order.indexOf('glass_air_layer')<order.indexOf('glass_type'));
   assert.deepEqual(await options(page,'glass_air_layer'),['ARGON']);assert.equal(await page.locator('[data-spec-key="glass_air_layer"]').inputValue(),'ARGON');
-  report.glass.push({series:'サーモスL',order:['glass_base','glass_detail','glass_spacer','glass_air_layer','glass_type'],resinAirLayer:['ARGON'],status:'PASS'});
+  assert.deepEqual(await options(page,'glass_type'),['CLEAR','PATTERN','FROST']);
+  const typeLabels=await optionLabels(page,'glass_type');assert.ok(typeLabels.some((label)=>label.startsWith('フロスト')));
+  await select(page,'glass_type','FROST');
+  const warnings=await page.locator('#warnings').innerText();assert.ok(warnings.includes('フロスト')&&warnings.includes('CONFIRM_REQUIRED'));
+  assert.equal((await options(page,'glass_function')).includes('GL-SL-OPT-FROST'),false);
+  report.glass.push({series:'サーモスL',order:['glass_base','glass_detail','glass_spacer','glass_air_layer','glass_type'],performanceLabels,glassTypes:['透明','型板','フロスト'],resinAirLayer:['ARGON'],frostConfirmRequired:true,status:'PASS'});
 }
 async function verifyThermosLShutter(page,prefix){
   await openProduct(page,'LIXIL','SER-LIX-SAMOSL');
