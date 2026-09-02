@@ -1,0 +1,69 @@
+{
+  "schemaVersion": "1.0",
+  "recordType": "SIZE_CAPABILITY_PENDING_REGISTER",
+  "blocking": true,
+  "items": [
+    {
+      "id": "PEND-S2H-STANDARD-FULL-SOURCE",
+      "productId": "SER-LIX-SAMOS2H",
+      "area": "STANDARD",
+      "severity": "BLOCKING_FOR_PRODUCT_FORMAL_PASS",
+      "issue": "Full official standard-size enumeration has not yet been compared against all 2,131 selectable Canonical rows."
+    },
+    {
+      "id": "PEND-S2H-CUSTOM-RULE-EXTRACTION",
+      "productId": "SER-LIX-SAMOS2H",
+      "area": "CUSTOM",
+      "severity": "BLOCKING_FOR_CUSTOM_RUNTIME",
+      "issue": "Official LIXIL source confirms dimensional special-order ranges, but exact selector-specific Dimension Rules have not yet been extracted/adjudicated."
+    },
+    {
+      "id": "PEND-SL-STANDARD-FULL-SOURCE",
+      "productId": "SER-LIX-SAMOSL",
+      "area": "STANDARD",
+      "severity": "BLOCKING_FOR_PRODUCT_FORMAL_PASS",
+      "issue": "Manual-standard shutter slice is verified 97/97, but the full 1,495 selectable standard-size corpus has not yet been independently enumerated from official source."
+    },
+    {
+      "id": "PEND-SL-CUSTOM-RULE-AUDIT",
+      "productId": "SER-LIX-SAMOSL",
+      "area": "CUSTOM",
+      "severity": "BLOCKING_FOR_PRODUCT_FORMAL_PASS",
+      "issue": "50 existing Dimension Rules require rule-by-rule official-source verification."
+    },
+    {
+      "id": "PEND-APW430-STANDARD-FULL-SOURCE",
+      "productId": "SER-YKK-APW430",
+      "area": "STANDARD",
+      "severity": "BLOCKING_FOR_PRODUCT_FORMAL_PASS",
+      "issue": "Full official standard-size enumeration has not yet been compared against all 718 Canonical rows."
+    },
+    {
+      "id": "PEND-APW430-CUSTOM-RULE-EXTRACTION",
+      "productId": "SER-YKK-APW430",
+      "area": "CUSTOM",
+      "severity": "BLOCKING_FOR_CUSTOM_RUNTIME",
+      "issue": "Official 2026.08 production-range source confirms CUSTOM capability for APW430 categories, but Runtime contains zero Dimension Rules. Exact p.2-p.8 rules must be extracted before proposal."
+    },
+    {
+      "id": "PEND-APW431-STANDARD-FULL-SOURCE",
+      "productId": "SER-YKK-APW431",
+      "area": "STANDARD",
+      "severity": "BLOCKING_FOR_PRODUCT_FORMAL_PASS",
+      "issue": "Full official standard-size enumeration has not yet been compared against all 538 Runtime candidates."
+    },
+    {
+      "id": "PEND-APW431-CUSTOM-RULE-AUDIT",
+      "productId": "SER-YKK-APW431",
+      "area": "CUSTOM",
+      "severity": "BLOCKING_FOR_PRODUCT_FORMAL_PASS",
+      "issue": "29 existing Dimension Rules require official p.6-p.13 rule-by-rule verification, including SOURCE_GRAPH_GATE and COMPOUND_GATE records."
+    }
+  ],
+  "proposalGate": {
+    "status": "CLOSED_FOR_UNEXTRACTED_RULES",
+    "reason": "Do not generate manufacturer-data Change Proposals until exact source-backed row/rule payloads are available."
+  },
+  "formalMasterWritePerformed": false,
+  "runtimeManufacturerDataWritePerformed": false
+}
