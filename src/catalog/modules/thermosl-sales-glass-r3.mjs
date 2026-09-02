@@ -13,8 +13,8 @@ const specific=(spec)=>spec&&spec!=='*'?{specific_spec:spec}:{};
 const makeValue=(key,raw,label,order,{idSuffix,selector={},manualCheck=false,metadata={}}={})=>({
   id:`${PRODUCT_ID}:${key}:${raw}:${idSuffix??order}`,
   productId:PRODUCT_ID,specificationKey:key,value:raw,displayLabel:label,displayOrder:order,
-  status:manualCheck?'MANUAL_CHECK':'ACTIVE',selector,evidenceIds:['EV-SL-GLASS'],manualCheck,
-  metadata
+  status:manualCheck?'MANUAL_CHECK':'ACTIVE',selector,evidenceIds:['EV-SL-GLASS'],
+  metadata:{...metadata,manualCheck}
 });
 const sourceMeta=(sheet,row,extra={})=>({sourceFile:source.master.title,sourceSheet:sheet,sourceRow:row,...extra});
 const scopeFor=(row)=>({window_type:row.window,...specific(row.spec)});
