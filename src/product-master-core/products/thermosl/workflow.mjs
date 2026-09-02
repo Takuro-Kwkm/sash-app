@@ -15,7 +15,15 @@ export const THERMOSL_PRIMARY_SIZE_SOURCE={
   title:'202604_LIXIL_サーモスＬ_業務用資料集_完成品価格表.pdf',version:'202604'
 };
 
-export const THERMOSL_CANONICAL_STANDARD_SIZE_RECORDS=THERMOSL_SOURCE.sizes.map((row)=>({
+// v1.5-v1.7 are immutable historical lifecycle regressions. They must reproduce the
+// exact pre-production 1,559-row Canonical baseline even after v1.8 Runtime regeneration.
+export const THERMOSL_PRE_PRODUCTION_SIZES=THERMOSL_SOURCE.sizes.filter((row)=>{
+  const match=String(row.id).match(/^SZ-SL-(\d{6})$/);
+  return match&&Number(match[1])<=1559;
+});
+if(THERMOSL_PRE_PRODUCTION_SIZES.length!==1559||THERMOSL_PRE_PRODUCTION_SIZES.filter((row)=>row.active).length!==1410)throw new Error('Thermos L historical pre-production baseline drift');
+
+export const THERMOSL_CANONICAL_STANDARD_SIZE_RECORDS=THERMOSL_PRE_PRODUCTION_SIZES.map((row)=>({
   id:row.id,productId:THERMOSL_PRODUCT_ID,windowTypeId:row.window,
   specificationId:row.spec&&row.spec!=='*'?row.spec:null,construction:row.construction,
   sizeCode:row.callCode,callW:row.callW,callH:row.callH,actualW:row.actualW,actualH:row.actualH,
@@ -24,7 +32,7 @@ export const THERMOSL_CANONICAL_STANDARD_SIZE_RECORDS=THERMOSL_SOURCE.sizes.map(
   glassSymbol:row.glassSymbol??null,glassState:row.glassState??null
 }));
 
-export const THERMOSL_CANONICAL_SIZE_GLASS_CONDITIONS=THERMOSL_SOURCE.sizes.map((row)=>({
+export const THERMOSL_CANONICAL_SIZE_GLASS_CONDITIONS=THERMOSL_PRE_PRODUCTION_SIZES.map((row)=>({
   id:`GSC-SL-${String(row.id).replace('SZ-SL-','')}`,sizeId:row.id,productId:THERMOSL_PRODUCT_ID,
   windowTypeId:row.window,specificationId:row.spec&&row.spec!=='*'?row.spec:null,sizeCode:row.callCode,
   selectable:Boolean(row.active),sourcePrintedPage:row.page??null,glassSymbol:row.glassSymbol??null,
