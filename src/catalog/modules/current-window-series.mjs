@@ -1,5 +1,5 @@
 import { SAMOS2H_MODULE } from "./samos2h-module.mjs";
-import { THERMOSL_MODULE } from "./thermosl-module.mjs";
+import { THERMOSL_MODULE } from "./thermosl-sales-glass-r3.mjs";
 import { APW430_MODULE } from "./apw430-module.mjs";
 import { APW431_MODULE } from "./apw431-module.mjs";
 
