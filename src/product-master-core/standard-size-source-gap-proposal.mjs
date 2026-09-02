@@ -35,12 +35,13 @@ function buildPageEvidence(sourceRecords,{evidenceIdPrefix}){
   return[...groups.entries()].sort(([a],[b])=>a-b).map(([printedPage,rows])=>{
     const first=rows[0];
     const codes=rows.map((row)=>row.sizeCode);
+    const region=first.source.locatorText.split(' / 呼称 ')[0];
     return{
       schemaVersion:'1.0',id:`${evidenceIdPrefix}-P${printedPage}`,productId:first.productId,
-      status:'VERIFIED',strength:'EXPLICIT',title:`サーモスL シャッター付引違い窓 手動標準タイプ 規格サイズ p.${printedPage}`,
+      status:'VERIFIED',strength:'EXPLICIT',title:`公式規格サイズ Evidence p.${printedPage}`,
       subjectField:'size',
-      claim:`公式価格表 p.${printedPage} の手動・標準タイプ表に規格呼称 ${codes.join(', ')} が明示される。`,
-      source:{...first.source,locatorText:`${first.source.locatorText.split(' / 呼称 ')[0]} / 標準タイプ規格サイズ表`},
+      claim:`公式資料 p.${printedPage} の対象規格表に呼称 ${codes.join(', ')} が明示される。`,
+      source:{...first.source,locatorText:`${region} / 規格サイズ表`},
       adjudication:{extractedBy:'CHATGPT_DIRECT_PDF',adjudicatedBy:'CHATGPT',status:'ACCEPTED'}
     };
   });
@@ -109,7 +110,7 @@ export function createStandardSizeSourceGapChangeProposal({
   const proposalResult=createProductMasterChangeProposal({
     id:proposalId,productId,baseMaster,changes,evidenceIds:pageEvidence.map((row)=>row.id),sourceBatchIds:[sourceBatchId],
     openBlockingPending:0,createdBy:'CHATGPT',at:proposalCreatedAt,
-    summary:`公式PDFで確認済みの規格サイズ ${auditBefore.counts.missingInCanonical} 件を正式Size Masterへ追加し、対応するサイズ別ガラス条件を同時追加する。`
+    summary:`公式資料で確認済みの規格サイズ ${auditBefore.counts.missingInCanonical} 件を正式Size Masterへ追加し、対応するサイズ別ガラス条件を同時追加する。`
   });
   if(!proposalResult.pass)return{pass:false,status:'SIZE_GAP_PROPOSAL_REJECTED',auditBefore,errors:proposalResult.errors};
 
