@@ -166,7 +166,8 @@ GitHub Actions Run #175:
 - new v0.8 tests: **7/7 PASS**
 - runtime_smoke: **SUCCESS**
 - concord_regression: **SUCCESS**
-- browser_qa: pending at document creation time
+- browser_qa: **SUCCESS**
+- workflow conclusion: **SUCCESS**
 
 ## Gate
 
@@ -181,8 +182,16 @@ CANONICAL_AUTO_WRITE                 0
 CHATGPT_OR_HUMAN_ADJUDICATION        REQUIRED
 V0.4_REGRESSION                      PASS
 FULL_NPM_TEST                         157/157 PASS
-BROWSER_QA                            PENDING
+RUNTIME_SMOKE                         PASS
+BROWSER_QA                            PASS
+GITHUB_ACTIONS_RUN_175                SUCCESS
 ```
+
+## v0.8 decision
+
+`Product Master Core v0.8 Persistent Evidence Inbox = PASS`
+
+The feature remains EXPERIMENTAL / NON-CANONICAL because persistence itself does not authorize Canonical promotion.
 
 ## Next work
 
