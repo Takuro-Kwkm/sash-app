@@ -34,7 +34,7 @@ function loadExternalCanonical(file){
 }
 function emit(result){
   console.log(JSON.stringify(result,null,2));
-  if(result?.pass===false)process.exit(1);
+  process.exit(result?.pass===false?1:0);
 }
 
 if(!command)fail('Usage: npm run evidence:adjudicate -- <review|adjudicate|pending|summary> ...');
