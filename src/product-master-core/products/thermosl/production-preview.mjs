@@ -22,6 +22,13 @@ function glassRow(record){
   ];
 }
 
+function assertAppendBoundary(sheet,{dataRows,lastRecordId,lastExcelRow,nextExcelRow}){
+  if(sheet.dataRows!==dataRows||sheet.lastRecordId!==lastRecordId)throw new Error('Formal workbook tail drift');
+  if(sheet.lastExcelRow!==lastExcelRow||sheet.nextExcelRow!==nextExcelRow||sheet.nextExcelRow!==sheet.lastExcelRow+1){
+    throw new Error('Formal workbook append-row boundary drift');
+  }
+}
+
 export function buildThermosLProductionPreview({snapshot,proposalBuild,approval,stagingResultFingerprint}={}){
   if(!snapshot||snapshot.productId!=='SER-LIX-SAMOSL')throw new Error('Invalid Thermos L formal snapshot');
   if(!proposalBuild?.pass||!proposalBuild.proposal)throw new Error('Valid staged Proposal build is required');
@@ -35,7 +42,8 @@ export function buildThermosLProductionPreview({snapshot,proposalBuild,approval,
   const glassRows=proposalBuild.glassConditions.map(glassRow);
   const sizeSheet=snapshot.sheets['06_サイズ'];
   const glassSheet=snapshot.sheets['08A_サイズ別ガラス条件'];
-  if(sizeSheet.dataRows!==1559||sizeSheet.lastRecordId!=='SZ-SL-001559'||glassSheet.dataRows!==1559||glassSheet.lastRecordId!=='GSC-SL-001559')throw new Error('Formal workbook tail drift');
+  assertAppendBoundary(sizeSheet,{dataRows:1559,lastRecordId:'SZ-SL-001559',lastExcelRow:1562,nextExcelRow:1563});
+  assertAppendBoundary(glassSheet,{dataRows:1559,lastRecordId:'GSC-SL-001559',lastExcelRow:1562,nextExcelRow:1563});
   const sizeEnd=sizeSheet.nextExcelRow+sizeRows.length-1;
   const glassEnd=glassSheet.nextExcelRow+glassRows.length-1;
   const writes=[
@@ -51,14 +59,15 @@ export function buildThermosLProductionPreview({snapshot,proposalBuild,approval,
     }
   ];
   const preview={
-    previewSchemaVersion:'1.0',recordType:'PRODUCT_MASTER_PRODUCTION_PREVIEW',status:'PRODUCTION_WRITE_PREVIEW_READY',
+    previewSchemaVersion:'1.1',recordType:'PRODUCT_MASTER_PRODUCTION_PREVIEW',status:'PRODUCTION_WRITE_PREVIEW_READY',
     productId:'SER-LIX-SAMOSL',proposalId:proposal.id,proposalFingerprint:proposal.proposalFingerprint,
     approvedStagingResultFingerprint:stagingResultFingerprint,
     formalTarget:{...snapshot.driveFile,expectedRevisionId:snapshot.driveFile.revisionId},
     writePlan:{writes,formalWorkbookRowAdditions:170,controlPlaneEvidenceAdditions:8,runtimeChanges:0},
     projectedInventory:{standardSizeRows:1644,selectableSizeRows:1495,sizeGlassConditionRows:1644},
     productionApproval:{required:true,status:'PENDING',scopeRequired:'APPROVE_PRODUCTION_WRITE_ONLY'},
-    safety:{backupRequired:true,revisionRecheckRequired:true,tailRecheckRequired:true,atomicWorkbookReplacementOrEquivalentRequired:true,postWriteReadbackRequired:true,runtimeRegenerationDeferred:true},
+    safety:{backupRequired:true,revisionRecheckRequired:true,tailRecheckRequired:true,appendBoundaryRecheckRequired:true,atomicWorkbookReplacementOrEquivalentRequired:true,postWriteReadbackRequired:true,runtimeRegenerationDeferred:true},
+    correction:{supersedesPreviewFingerprint:'sha256:a057d745c8a3a93b06aebc20c98fba99dd121804d35985d074ed5764bdab9168',reason:'Post-write readback detected one-row-early append in superseded preview.'},
     formalWorkbookWritePerformed:false,runtimeWritePerformed:false
   };
   return{...preview,previewFingerprint:hash(preview)};
