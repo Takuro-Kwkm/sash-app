@@ -203,6 +203,24 @@ jobs:
           name: product-master-size-gap-proposal-v16-thermosl
           path: artifacts/product-master-workflow-v16/thermosl
 
+  product_master_size_gap_staging_v16:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Apply human-approved Thermos L Size Master gap proposal to STAGING
+        run: npm run master:staging-apply:v16 -- artifacts/product-master-staging-v16/thermosl
+      - name: Enforce exact approved STAGING result
+        run: node -e 'const r=require("./artifacts/product-master-staging-v16/thermosl/staging-apply-report.json"); if(r.status!=="STAGING_APPLY_COMPLETE"||r.proposalId!=="PMCP-LIX-SAMOSL-SHUT-MSTD-SIZE-GAP-20260902-001"||r.proposalStatus!=="APPLIED"||r.stagingChangesApplied!==178||r.stagingStandardSizeBefore!==1559||r.stagingStandardSizeAfter!==1644||r.stagingSizeGlassConditionsBefore!==1559||r.stagingSizeGlassConditionsAfter!==1644||r.stagingEvidenceAfter!==8||r.newSizeCount!==85||r.sourceCoverage.match!==97||r.sourceCoverage.missingInCanonical!==0||r.openBlockingPending!==0||r.productionMasterWritePerformed||r.runtimeWritePerformed) process.exit(1)'
+      - name: Upload approved Thermos L STAGING Master evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: product-master-staging-v16-thermosl
+          path: artifacts/product-master-staging-v16/thermosl
+
   browser_qa:
     runs-on: ubuntu-latest
     steps:
