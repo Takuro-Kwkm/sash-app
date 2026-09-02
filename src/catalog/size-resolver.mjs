@@ -1,4 +1,4 @@
-import{selectorMatches,buildCatalogContext}from'./selector.mjs';
+import{selectorMatchesWithInternalDefaults,buildCatalogContext}from'./selector.mjs';
 
 const active=(row)=>row.selectable!==false&&row.status!=='INACTIVE';
 const label=(row)=>row.displayLabel??`${row.sizeCode??`${row.nominalW??''}${row.nominalH??''}`} ｜ ${row.actualW??'?'}×${row.actualH??'?'}mm`;
@@ -10,7 +10,7 @@ export function standardSizeRecords(catalog,productId,{includeInactive=false}={}
 }
 
 export function resolveStandardSizes(catalog,productId,selection={},context=buildCatalogContext(catalog,productId)){
-  return standardSizeRecords(catalog,productId).filter((row)=>selectorMatches(row.selector??{},selection,context)).sort(order);
+  return standardSizeRecords(catalog,productId).filter((row)=>selectorMatchesWithInternalDefaults(row.selector??{},selection,context)).sort(order);
 }
 
 export function sizeAllowedValues(catalog,productId,selection={},context=buildCatalogContext(catalog,productId)){
