@@ -97,7 +97,7 @@ const report={
     OPEN_BLOCKING_PENDING:0,PRODUCTION_MASTER_WRITE:'0',RUNTIME_WRITE:'0'
   }
 };
-const pass=Object.values(report.gates).every((value)=>value==='PASS'||value===0)&&
+const pass=Object.values(report.gates).every((value)=>value==='PASS'||value===0||value==='0')&&
   proposal.proposalFingerprint===approval.proposalFingerprint&&proposal.target.baseMasterFingerprint===approval.baseMasterFingerprint;
 fs.writeFileSync(path.join(artifactDir,'staging-apply-report.json'),`${JSON.stringify(report,null,2)}\n`,'utf8');
 fs.writeFileSync(path.join(artifactDir,'approval-record.json'),`${JSON.stringify(approval,null,2)}\n`,'utf8');
