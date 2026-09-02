@@ -18,6 +18,7 @@ Use this prompt in NotebookLM / Gemini when extracting Evidence Candidates for t
 8. 相反する記述を見つけた場合は一方を選ばず `SOURCE_CONFLICT` として `issues` へ入れてください。
 9. 出力は**純粋なJSONのみ**。Markdown、```json、前置き、説明文、後書きは禁止です。
 10. 自分で `VERIFIED`、`ACCEPT`、`PASS` を宣言してはいけません。
+11. `batchId` は毎回グローバルに一意な値にし、Candidate / Issueの `id` には同じbatch namespaceを必ず含めてください。過去の出力で使ったCandidate ID / Issue IDを再利用してはいけません。
 
 ## 今回の入力コンテキスト
 
@@ -32,6 +33,18 @@ Use this prompt in NotebookLM / Gemini when extracting Evidence Candidates for t
 - 対象Product Node IDs: {{PRODUCT_NODE_IDS}}
 - 調査テーマ: {{EXTRACTION_SCOPE}}
 
+## IDルール
+
+1つの出力で、まず一意なbatch namespaceを決めてください。
+
+例:
+
+- `batchId = BATCH-GEMINI-APW430-FIX-20260902T043858Z`
+- `candidate id = CAND-GEMINI-APW430-FIX-20260902T043858Z-001`
+- `issue id = ISSUE-GEMINI-APW430-FIX-20260902T043858Z-001`
+
+Candidate / Issueの連番部分以外は、同じbatch namespaceを使ってください。
+
 ## 出力Schema
 
 次の形を厳密に守ってください。
@@ -39,7 +52,7 @@ Use this prompt in NotebookLM / Gemini when extracting Evidence Candidates for t
 {
   "transportSchemaVersion": "1.0",
   "transportType": "EVIDENCE_CANDIDATE_BATCH",
-  "batchId": "BATCH-<一意なID>",
+  "batchId": "BATCH-<PRODUCT_TOKEN>-<YYYYMMDDTHHMMSSZ>",
   "generatedAt": "<ISO-8601>",
   "producer": {
     "system": "GEMINI_NOTEBOOKLM",
@@ -56,7 +69,7 @@ Use this prompt in NotebookLM / Gemini when extracting Evidence Candidates for t
     {
       "recordType": "EVIDENCE_CANDIDATE",
       "candidateSchemaVersion": "1.0",
-      "id": "CAND-GEMINI-<一意なID>",
+      "id": "CAND-<同じBATCH_NAMESPACE>-001",
       "sourceSystem": "GEMINI_NOTEBOOKLM",
       "producerMode": "LIVE_EXTERNAL",
       "status": "SUBMITTED",
@@ -79,7 +92,7 @@ Use this prompt in NotebookLM / Gemini when extracting Evidence Candidates for t
   ],
   "issues": [
     {
-      "id": "ISSUE-GEMINI-<一意なID>",
+      "id": "ISSUE-<同じBATCH_NAMESPACE>-001",
       "type": "SOURCE_AMBIGUOUS",
       "subjectField": "<対象Field。特定不能なら省略可>",
       "question": "<なぜEvidence Candidateへ昇格できなかったか>",
@@ -119,6 +132,7 @@ Use this prompt in NotebookLM / Gemini when extracting Evidence Candidates for t
 - printedPage / pdfPageを混同していないか
 - locatorTextだけで人間が再確認できるか
 - 同じ事実を重複Candidate化していないか
+- Candidate / Issue IDが今回のbatch namespaceを含み、過去IDを再利用していないか
 - 不明点を無理にCandidate化せずissuesへ送ったか
 
 最終出力はJSONオブジェクト1個だけにしてください。
