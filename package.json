@@ -28,6 +28,7 @@
     "master:staging-apply:v11": "node scripts/run-approved-product-master-staging-v11.mjs",
     "master:staging-apply:v16": "node scripts/run-approved-thermosl-size-gap-staging-v16.mjs",
     "master:production-preview:v12": "node scripts/run-product-master-production-preview-v12.mjs",
+    "master:production-preview:v17": "node scripts/run-thermosl-production-preview-v17.mjs",
     "master:technical-facts:v13": "node scripts/run-apw430-technical-fact-resolution-v13.mjs",
     "master:workflow": "node scripts/run-product-master-workflow.mjs"
   },
