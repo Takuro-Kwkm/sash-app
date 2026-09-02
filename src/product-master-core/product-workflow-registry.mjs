@@ -13,6 +13,10 @@ export function validateProductWorkflowProfile(profile){
     if(!round?.rawPath||!round?.knownFields||!round?.nodeIds||!round?.adjudicationPlan)errors.push(error('WORKFLOW_EVIDENCE_ROUNDTRIP_INVALID','Evidence round-trip capability requires rawPath, knownFields, nodeIds and adjudicationPlan'));
   }
   if(profile.capabilities?.technicalFacts&&!Array.isArray(profile.technicalFacts))errors.push(error('WORKFLOW_TECHNICAL_FACTS_INVALID','Technical Fact capability requires technicalFacts array'));
+  if(profile.capabilities?.standardSizeSourceAudit){
+    const audit=profile.standardSizeSourceAudit;
+    if(!Array.isArray(audit?.sourceRecords)||audit.sourceRecords.length===0||!Array.isArray(audit?.canonicalRecords))errors.push(error('WORKFLOW_STANDARD_SIZE_SOURCE_AUDIT_INVALID','Standard-size source audit requires sourceRecords and canonicalRecords arrays'));
+  }
   if(profile.capabilities?.formalWorkbookMutation===true)errors.push(error('WORKFLOW_AUTO_WORKBOOK_MUTATION_FORBIDDEN','Workflow profile cannot enable automatic formal Workbook mutation'));
   if(profile.capabilities?.runtimeAutoWrite===true)errors.push(error('WORKFLOW_RUNTIME_AUTO_WRITE_FORBIDDEN','Workflow profile cannot enable automatic Runtime writes'));
   return{pass:errors.length===0,errors};
