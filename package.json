@@ -17,9 +17,11 @@
     "test:product-master-core:v08": "node --test test/12-product-master-core-v08-persistent-inbox.test.mjs",
     "test:product-master-core:v09": "node --test test/13-product-master-core-v09-persistent-adjudication.test.mjs",
     "test:product-master-core:v10": "node --test test/15-product-master-core-v10-live-roundtrip.test.mjs",
+    "test:product-master-core:v11": "node --test test/16-product-master-core-v11-change-control.test.mjs",
     "import:gemini-evidence": "node scripts/import-gemini-evidence-transport.mjs",
     "evidence:adjudicate": "node scripts/adjudicate-evidence-candidate.mjs",
-    "evidence:live-v1": "node scripts/run-product-master-live-v1.mjs"
+    "evidence:live-v1": "node scripts/run-product-master-live-v1.mjs",
+    "master:change-proposal:v11": "node scripts/run-product-master-change-proposal-v11.mjs"
   },
   "engines": { "node": ">=22" }
 }
