@@ -182,12 +182,56 @@ function writeAtomic(filePath,content){
   fs.renameSync(temp,filePath);
 }
 
+function proposalPath(rootDir,proposalId){
+  return path.join(path.resolve(rootDir),'proposals',`${proposalId}.json`);
+}
+
 export function persistProductMasterChangeProposal(proposal,{rootDir=path.resolve('data/master-change-control')}={}){
   if(!proposal?.id)throw new Error('Proposal id is required');
-  const filePath=path.join(path.resolve(rootDir),'proposals',`${proposal.id}.json`);
+  const filePath=proposalPath(rootDir,proposal.id);
   if(fs.existsSync(filePath))throw new Error(`Product Master Change Proposal already exists: ${proposal.id}`);
   writeAtomic(filePath,`${JSON.stringify(proposal,null,2)}\n`);
   return filePath;
+}
+
+export function loadPersistedProductMasterChangeProposal(proposalId,{rootDir=path.resolve('data/master-change-control')}={}){
+  const filePath=proposalPath(rootDir,proposalId);
+  if(!fs.existsSync(filePath))return{pass:false,status:'PROPOSAL_NOT_FOUND',errors:[err('MASTER_CHANGE_PROPOSAL_NOT_FOUND',`Product Master Change Proposal not found: ${proposalId}`)]};
+  try{
+    const proposal=JSON.parse(fs.readFileSync(filePath,'utf8'));
+    return{pass:true,status:'PROPOSAL_LOADED',proposal,filePath,errors:[]};
+  }catch(cause){
+    return{pass:false,status:'PROPOSAL_LOAD_REJECTED',errors:[err('MASTER_CHANGE_PROPOSAL_JSON_INVALID',cause.message)]};
+  }
+}
+
+function overwritePersistedProposal(proposal,{rootDir}){
+  const filePath=proposalPath(rootDir,proposal.id);
+  if(!fs.existsSync(filePath))throw new Error(`Product Master Change Proposal not found: ${proposal.id}`);
+  writeAtomic(filePath,`${JSON.stringify(proposal,null,2)}\n`);
+  return filePath;
+}
+
+export function approvePersistedProductMasterChangeProposal({
+  proposalId,rootDir=path.resolve('data/master-change-control'),approverType,approvedBy,note='',at=new Date().toISOString(),expectedProposalFingerprint=null
+}={}){
+  const loaded=loadPersistedProductMasterChangeProposal(proposalId,{rootDir});
+  if(!loaded.pass)return loaded;
+  const approved=approveProductMasterChangeProposal(loaded.proposal,{approverType,approvedBy,note,at,expectedProposalFingerprint});
+  if(!approved.pass)return approved;
+  const filePath=overwritePersistedProposal(approved.proposal,{rootDir});
+  return{...approved,filePath};
+}
+
+export function rejectPersistedProductMasterChangeProposal({
+  proposalId,rootDir=path.resolve('data/master-change-control'),rejectedBy,reason,at=new Date().toISOString()
+}={}){
+  const loaded=loadPersistedProductMasterChangeProposal(proposalId,{rootDir});
+  if(!loaded.pass)return loaded;
+  const rejected=rejectProductMasterChangeProposal(loaded.proposal,{rejectedBy,reason,at});
+  if(!rejected.pass)return rejected;
+  const filePath=overwritePersistedProposal(rejected.proposal,{rootDir});
+  return{...rejected,filePath};
 }
 
 export function persistAppliedStagingMaster({proposal,appliedMaster},{rootDir=path.resolve('data/master-change-control')}={}){
@@ -195,4 +239,17 @@ export function persistAppliedStagingMaster({proposal,appliedMaster},{rootDir=pa
   const filePath=path.join(path.resolve(rootDir),'staging',`${proposal.id}.master.json`);
   writeAtomic(filePath,`${JSON.stringify(appliedMaster,null,2)}\n`);
   return filePath;
+}
+
+export function applyPersistedProductMasterChangeProposal({
+  proposalId,rootDir=path.resolve('data/master-change-control'),baseMaster,openBlockingPending=null,
+  validateMaster=null,mode='STAGING',at=new Date().toISOString(),appliedBy='SYSTEM'
+}={}){
+  const loaded=loadPersistedProductMasterChangeProposal(proposalId,{rootDir});
+  if(!loaded.pass)return loaded;
+  const applied=applyApprovedProductMasterChangeProposal({proposal:loaded.proposal,baseMaster,openBlockingPending,validateMaster,mode,at,appliedBy});
+  if(!applied.pass)return applied;
+  const stagingMasterPath=persistAppliedStagingMaster(applied,{rootDir});
+  const proposalFilePath=overwritePersistedProposal(applied.proposal,{rootDir});
+  return{...applied,stagingMasterPath,proposalFilePath};
 }
