@@ -43,9 +43,9 @@ const gates={
 };
 const pass=Object.values(gates).every((v)=>v==='PASS');
 const report={
-  reportVersion:'1.7-R1',status:pass?'PRODUCTION_WRITE_PREVIEW_READY':'PRODUCTION_WRITE_PREVIEW_FAILED',productId:PRODUCT_ID,
+  reportVersion:'1.7-R2',status:pass?'PRODUCTION_WRITE_PREVIEW_READY':'PRODUCTION_WRITE_PREVIEW_FAILED',productId:PRODUCT_ID,
   proposalId:PROPOSAL_ID,proposalFingerprint:preview.proposalFingerprint,previewFingerprint:preview.previewFingerprint,
-  supersedesPreviewFingerprint:preview.correction.supersedesPreviewFingerprint,
+  supersedesPreviewFingerprints:preview.correction.supersedesPreviewFingerprints,
   formalTarget:preview.formalTarget,writeSummary:{
     sizeSheet:preview.writePlan.writes[0].sheet,sizeRange:preview.writePlan.writes[0].range,sizeRows:85,
     glassSheet:preview.writePlan.writes[1].sheet,glassRange:preview.writePlan.writes[1].range,glassRows:85,
