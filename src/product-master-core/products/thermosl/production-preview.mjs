@@ -1,7 +1,6 @@
-import{createHash}from'node:crypto';
-import{stableStringify}from'../../master-change-control.mjs';
+import{sha256}from'../../master-change-control.mjs';
 
-const hash=(value)=>`sha256:${createHash('sha256').update(stableStringify(value)).digest('hex')}`;
+const hash=(value)=>`sha256:${sha256(value)}`;
 const windowNameMap=new Map([
   ['WT-SL-SHUTTER-HIKI','シャッター付引違い窓']
 ]);
