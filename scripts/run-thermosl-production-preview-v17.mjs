@@ -29,10 +29,12 @@ const gates={
   STAGING_RESULT_BOUND:preview.approvedStagingResultFingerprint===STAGING_RESULT_FINGERPRINT?'PASS':'FAIL',
   FORMAL_DRIVE_FILE_BOUND:preview.formalTarget.id==='17lVzBZ1hp4RVcGv0yNdnrKt25SFO2FhL'?'PASS':'FAIL',
   FORMAL_REVISION_BOUND:preview.formalTarget.expectedRevisionId===snapshot.driveFile.revisionId?'PASS':'FAIL',
+  APPEND_BOUNDARY_SIZE:snapshot.sheets['06_サイズ'].lastExcelRow===1562&&snapshot.sheets['06_サイズ'].nextExcelRow===1563?'PASS':'FAIL',
+  APPEND_BOUNDARY_GLASS:snapshot.sheets['08A_サイズ別ガラス条件'].lastExcelRow===1562&&snapshot.sheets['08A_サイズ別ガラス条件'].nextExcelRow===1563?'PASS':'FAIL',
   SIZE_WRITE_ROWS:preview.writePlan.writes[0].addRows===85?'PASS':'FAIL',
   GLASS_WRITE_ROWS:preview.writePlan.writes[1].addRows===85?'PASS':'FAIL',
-  SIZE_RANGE:preview.writePlan.writes[0].range==='A1562:V1646'?'PASS':'FAIL',
-  GLASS_RANGE:preview.writePlan.writes[1].range==='A1562:N1646'?'PASS':'FAIL',
+  SIZE_RANGE:preview.writePlan.writes[0].range==='A1563:V1647'?'PASS':'FAIL',
+  GLASS_RANGE:preview.writePlan.writes[1].range==='A1563:N1647'?'PASS':'FAIL',
   PROJECTED_STANDARD_SIZE_ROWS:preview.projectedInventory.standardSizeRows===1644?'PASS':'FAIL',
   PROJECTED_SELECTABLE_SIZE_ROWS:preview.projectedInventory.selectableSizeRows===1495?'PASS':'FAIL',
   PRODUCTION_APPROVAL_REQUIRED:preview.productionApproval.required&&preview.productionApproval.status==='PENDING'?'PASS':'FAIL',
@@ -41,8 +43,9 @@ const gates={
 };
 const pass=Object.values(gates).every((v)=>v==='PASS');
 const report={
-  reportVersion:'1.7',status:pass?'PRODUCTION_WRITE_PREVIEW_READY':'PRODUCTION_WRITE_PREVIEW_FAILED',productId:PRODUCT_ID,
+  reportVersion:'1.7-R1',status:pass?'PRODUCTION_WRITE_PREVIEW_READY':'PRODUCTION_WRITE_PREVIEW_FAILED',productId:PRODUCT_ID,
   proposalId:PROPOSAL_ID,proposalFingerprint:preview.proposalFingerprint,previewFingerprint:preview.previewFingerprint,
+  supersedesPreviewFingerprint:preview.correction.supersedesPreviewFingerprint,
   formalTarget:preview.formalTarget,writeSummary:{
     sizeSheet:preview.writePlan.writes[0].sheet,sizeRange:preview.writePlan.writes[0].range,sizeRows:85,
     glassSheet:preview.writePlan.writes[1].sheet,glassRange:preview.writePlan.writes[1].range,glassRows:85,
