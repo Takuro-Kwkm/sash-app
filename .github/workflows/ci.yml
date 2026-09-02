@@ -119,6 +119,22 @@ jobs:
           name: product-master-staging-v11-apw430
           path: artifacts/product-master-staging-v11
 
+  product_master_production_preview_v12:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Build APW430 formal Product Master production diff preview
+        run: npm run master:production-preview:v12 -- artifacts/product-master-production-preview-v12
+      - name: Upload Product Master production preview evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: product-master-production-preview-v12-apw430
+          path: artifacts/product-master-production-preview-v12
+
   browser_qa:
     runs-on: ubuntu-latest
     steps:
