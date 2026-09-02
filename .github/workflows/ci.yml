@@ -103,6 +103,22 @@ jobs:
           name: product-master-change-v11-apw430
           path: artifacts/product-master-change-v11
 
+  product_master_staging_v11:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Apply explicitly approved APW430 Product Master proposal to STAGING
+        run: npm run master:staging-apply:v11 -- artifacts/product-master-staging-v11
+      - name: Upload approved STAGING Master evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: product-master-staging-v11-apw430
+          path: artifacts/product-master-staging-v11
+
   browser_qa:
     runs-on: ubuntu-latest
     steps:
