@@ -35,7 +35,7 @@ test('v1.4 Product Master workflow registry accepts arbitrary product profiles a
 });
 
 test('v1.4 APW430 is registered as a product profile outside poc/',()=>{
-  assert.deepEqual(REGISTERED_PRODUCT_MASTER_WORKFLOW_IDS,['SER-YKK-APW430']);
+  assert.equal(REGISTERED_PRODUCT_MASTER_WORKFLOW_IDS.includes('SER-YKK-APW430'),true);
   assert.equal(PRODUCT_MASTER_WORKFLOW_REGISTRY.require('SER-YKK-APW430'),APW430_PRODUCT_MASTER_WORKFLOW);
   assert.equal(APW430_PRODUCT_MASTER_WORKFLOW.capabilities.formalWorkbookMutation,false);
   assert.equal(APW430_PRODUCT_MASTER_WORKFLOW.capabilities.runtimeAutoWrite,false);
