@@ -52,6 +52,8 @@ export const THERMOSL_PRODUCT_MASTER_WORKFLOW={
     sourceBatchId:'DIRECT-PDF-LIX-SAMOSL-SHUT-MSTD-20260902',
     proposalId:'PMCP-LIX-SAMOSL-SHUT-MSTD-SIZE-GAP-20260902-001',
     proposalCreatedAt:'2026-09-02T09:49:00Z',
-    sourceUrl:'https://drive.google.com/file/d/1YUN-mtWYs48YBUHJk0C3vJXnhjyZFHyf/view'
+    sourceUrl:'https://drive.google.com/file/d/1YUN-mtWYs48YBUHJk0C3vJXnhjyZFHyf/view',
+    expectedOfficialAvailable:97,expectedCurrentMatch:12,expectedCurrentMissing:85,
+    expectedEvidenceAdditions:8,expectedSizeAdditions:85,expectedGlassConditionAdditions:85
   }
 };
