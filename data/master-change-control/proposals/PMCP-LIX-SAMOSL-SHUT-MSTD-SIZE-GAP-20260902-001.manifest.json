@@ -1,12 +1,14 @@
 {
-  "manifestSchemaVersion": "1.0",
+  "manifestSchemaVersion": "1.1",
   "recordType": "PRODUCT_MASTER_CHANGE_PROPOSAL_MANIFEST",
   "proposalId": "PMCP-LIX-SAMOSL-SHUT-MSTD-SIZE-GAP-20260902-001",
   "productId": "SER-LIX-SAMOSL",
-  "status": "PROPOSED",
+  "status": "APPLIED",
+  "appliedMode": "STAGING",
   "approvalPolicy": "HUMAN_REQUIRED",
   "proposalFingerprint": "sha256:2dbccd2d22edd6b00d516fbadfc2788c2089f693f06112f4b2b6c811d3a34063",
   "baseMasterFingerprint": "sha256:77bd5043684ae0e55852b9728d5369336744fec7a233e2cf82042ba079b0461a",
+  "resultMasterFingerprint": "sha256:668abb7e3bf1f7db248449cbdbf058a9e837b09b9e02e9c95ded8296b5337d76",
   "proposalCreatedAt": "2026-09-02T09:49:00Z",
   "proposalCreatedBy": "CHATGPT",
   "source": {
@@ -20,7 +22,7 @@
   },
   "coverage": {
     "before": {"officialAvailable":97,"match":12,"missingInCanonical":85,"canonicalInactive":0,"extraInCanonical":0,"duplicateCanonicalKeys":0},
-    "projected": {"officialAvailable":97,"match":97,"missingInCanonical":0,"canonicalInactive":0,"extraInCanonical":0,"duplicateCanonicalKeys":0}
+    "stagingAfter": {"officialAvailable":97,"match":97,"missingInCanonical":0,"canonicalInactive":0,"extraInCanonical":0,"duplicateCanonicalKeys":0,"canonicalInCoveredScope":97}
   },
   "changes": {
     "verifiedEvidenceAdditions": 8,
@@ -30,7 +32,35 @@
     "firstNewSizeId": "SZ-SL-001560",
     "lastNewSizeId": "SZ-SL-001644"
   },
-  "ciEvidence": {
+  "approval": {
+    "humanApprovalRecorded": true,
+    "approvedBy": "USER",
+    "approvedAt": "2026-09-02T20:20:00+09:00",
+    "scope": "APPROVE_AND_STAGE_ONLY",
+    "productionApproval": false,
+    "approvalRecordPath": "data/master-change-control/approvals/PMCP-LIX-SAMOSL-SHUT-MSTD-SIZE-GAP-20260902-001.approval.json"
+  },
+  "stagingApply": {
+    "status": "PASS",
+    "appliedAt": "2026-09-02T11:24:39.673Z",
+    "stagingStandardSizeBefore": 1559,
+    "stagingStandardSizeAfter": 1644,
+    "stagingSizeGlassConditionsBefore": 1559,
+    "stagingSizeGlassConditionsAfter": 1644,
+    "stagingEvidenceBefore": 0,
+    "stagingEvidenceAfter": 8,
+    "openBlockingPending": 0,
+    "productionMasterWritePerformed": false,
+    "runtimeWritePerformed": false,
+    "workflow": "V2 Recovery CI",
+    "runNumber": 358,
+    "runId": 33624429304,
+    "headSha": "95fd797de6e026cfeb3d4132690144c8dff3f6ff",
+    "artifactId": 9844196420,
+    "artifactName": "product-master-staging-v16-thermosl",
+    "artifactDigest": "sha256:f9a0a794259bb8d2ab7a5b97fe284f7a2022b19cb76cf2d116470c95bc6f93c8"
+  },
+  "proposalGenerationEvidence": {
     "workflow": "V2 Recovery CI",
     "runNumber": 344,
     "runId": 33620908871,
@@ -42,10 +72,11 @@
     "reportJsonSha256": "8afc7b27555c05a51a0230ec00c9954fae2b6bc578ef97640c4fee7e535216fa"
   },
   "reproduction": {
-    "command": "npm run master:workflow -- SER-LIX-SAMOSL size-gap-proposal artifacts/product-master-workflow-v16/thermosl",
+    "proposalCommand": "npm run master:workflow -- SER-LIX-SAMOSL size-gap-proposal artifacts/product-master-workflow-v16/thermosl",
+    "stagingCommand": "npm run master:staging-apply:v16 -- artifacts/product-master-staging-v16/thermosl",
     "requireFingerprintMatchBeforeApproval": true
   },
   "formalWorkbookWritePerformed": false,
   "runtimeWritePerformed": false,
-  "humanApprovalRecorded": false
+  "productionApprovalRecorded": false
 }
