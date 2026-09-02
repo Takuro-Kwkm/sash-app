@@ -39,19 +39,23 @@ test('124 changing spacer clears an invalid air layer and stabilizes to the vali
   assert.equal(sl.fields.find((row)=>row.key==='glass_air_layer').values.length,1);
 });
 
-test('125 Thermos L manual standard conventional shutter sizes are canonically six and runtime-exact',()=>{
-  const canonical=THERMOSL_SOURCE.sizes.filter((row)=>row.active&&row.window==='WT-SL-SHUTTER-HIKI'&&row.spec==='SP-SL-SHUT-M-STD'&&row.construction==='在来');
-  assert.equal(canonical.length,6);
-  assert.deepEqual(canonical.map((row)=>row.callCode),['17818','17820','17822','18318','18320','18322']);
-  const runtime=field(ids.sl,{window_type:'WT-SL-SHUTTER-HIKI',shutter_type:'SP-SL-SHUT-M-STD',size_mode:'STANDARD',construction:'在来'},'size').values;
-  assert.equal(runtime.length,canonical.length);
-  assert.deepEqual(new Set(runtime.map((row)=>row.value)),new Set(canonical.map((row)=>row.id)));
-  assert.deepEqual(new Set(runtime.map((row)=>row.metadata.callW)),new Set(['178','183']));
-  for(const width of['178','183'])assert.deepEqual(runtime.filter((row)=>row.metadata.callW===width).map((row)=>row.metadata.callH),['18','20','22']);
+test('125 Thermos L manual standard shutter sizes are 97 and runtime-exact',()=>{
+  const canonical=THERMOSL_SOURCE.sizes.filter((row)=>row.active&&row.window==='WT-SL-SHUTTER-HIKI'&&row.spec==='SP-SL-SHUT-M-STD');
+  assert.equal(canonical.length,97);
+  assert.equal(canonical.filter((row)=>row.construction==='在来・204').length,51);
+  assert.equal(canonical.filter((row)=>row.construction==='在来').length,46);
+  assert.equal(new Set(canonical.map((row)=>row.id)).size,97);
+  assert.equal(new Set(canonical.map((row)=>`${row.construction}|${row.callCode}`)).size,97);
+  for(const[construction,count]of[['在来・204',51],['在来',46]]){
+    const sourceRows=canonical.filter((row)=>row.construction===construction);
+    const runtime=field(ids.sl,{window_type:'WT-SL-SHUTTER-HIKI',shutter_type:'SP-SL-SHUT-M-STD',size_mode:'STANDARD',construction},'size').values;
+    assert.equal(runtime.length,count,construction);
+    assert.deepEqual(new Set(runtime.map((row)=>row.value)),new Set(sourceRows.map((row)=>row.id)),construction);
+  }
 });
 
 test('126 Thermos L shutter type and construction each re-evaluate exact canonical records',()=>{
-  const scenarios=[['SP-SL-SHUT-M-STD','在来・204',6],['SP-SL-SHUT-E-STD','在来',52],['SP-SL-SHUT-E-VENT','在来',40],['SP-SL-SHUT-E-WIND','204',3]];
+  const scenarios=[['SP-SL-SHUT-M-STD','在来・204',51],['SP-SL-SHUT-M-STD','在来',46],['SP-SL-SHUT-E-STD','在来',52],['SP-SL-SHUT-E-VENT','在来',40],['SP-SL-SHUT-E-WIND','204',3]];
   for(const[shutter,construction,count]of scenarios){
     const canonical=THERMOSL_SOURCE.sizes.filter((row)=>row.active&&row.window==='WT-SL-SHUTTER-HIKI'&&row.spec===shutter&&row.construction===construction);
     const runtime=field(ids.sl,{window_type:'WT-SL-SHUTTER-HIKI',shutter_type:shutter,size_mode:'STANDARD',construction},'size').values;
@@ -104,9 +108,9 @@ test('129 STANDARD and CUSTOM clear mutually exclusive values',()=>{
   assert.equal(custom.selection.size,undefined);assert.equal(custom.selection.custom_width,1000);assert.equal(custom.selection.custom_height,1000);
 });
 
-test('130 formal Size Master coverage remains unchanged',()=>{
+test('130 formal Size Master coverage matches current production Master',()=>{
   const inventory=new Map(catalogInventory(catalog).map((row)=>[row.productId,row]));
-  for(const[productId,count]of Object.entries({[ids.s2h]:2131,[ids.sl]:1410,[ids.a430]:718,[ids.a431]:538})){
+  for(const[productId,count]of Object.entries({[ids.s2h]:2131,[ids.sl]:1495,[ids.a430]:718,[ids.a431]:538})){
     const row=inventory.get(productId);
     assert.equal(row.selectableSizeRows,count,productId);
     assert.equal(row.sizeCoverage,1,productId);assert.equal(row.missingSizeRows,0,productId);assert.equal(row.extraSizeRows,0,productId);
