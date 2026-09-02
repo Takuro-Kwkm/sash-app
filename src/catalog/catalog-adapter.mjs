@@ -1,11 +1,13 @@
 import{COLLECTIONS,ROLE_ALIASES,resolveSheetRole}from'./catalog-roles.mjs';
 import{validateCatalogModule,validateCatalog}from'./catalog-validation.mjs';
 import{sizeCoverage}from'./size-resolver.mjs';
+import{applySashSalesInputContract}from'./sash-sales-input-contract.mjs';
 
 export function installCatalogModule(module,catalog){
   validateCatalogModule(module);
-  catalog.products.push(module.product);
-  for(const key of COLLECTIONS)catalog[key].push(...(module[key]??[]));
+  const installed=applySashSalesInputContract(module);
+  catalog.products.push(installed.product);
+  for(const key of COLLECTIONS)catalog[key].push(...(installed[key]??[]));
   return catalog;
 }
 
