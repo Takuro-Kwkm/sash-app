@@ -7,7 +7,7 @@ const read=(relative)=>JSON.parse(fs.readFileSync(new URL(`../${relative}`,impor
 const proposalId='PMCP-YKK-APW430-CUSTOM-DIMENSION-RULESET-20260903-001';
 const fingerprint='sha256:894ca2e99cfd482b0093bfbc1d1763383a8e01c5c8614d75ac1560938ae5eb78';
 
-test('APW430 CUSTOM classifies all 25 active Product Nodes from current source without interpolation',()=>{
+test('APW430 CUSTOM historical extraction classifies all 25 active Product Nodes without interpolation',()=>{
   const extraction=read('artifacts/size-capability-audit/dimension-rule-extraction-apw430.json');
   assert.equal(extraction.productId,'SER-YKK-APW430');
   assert.equal(extraction.activeProductNodeCount,25);
@@ -30,7 +30,7 @@ test('APW430 CUSTOM evidence covers 25 nodes and remains non-interpolating',()=>
   assert.ok(evidence.records.every((row)=>row.noInterpolation===true));
 });
 
-test('APW430 Product Master proposal is immutable, human-gated and fingerprint-valid',()=>{
+test('APW430 Product Master proposal remains immutable after external HUMAN application',()=>{
   const proposal=read(`data/master-change-control/proposals/${proposalId}.manifest.json`);
   assert.deepEqual(validateChangeProposalDocument(proposal),[]);
   assert.equal(proposal.proposalId,proposalId);
@@ -51,23 +51,56 @@ test('APW430 Product Master proposal is immutable, human-gated and fingerprint-v
   assert.equal(proposal.autoApprovalPerformed,false);
 });
 
-test('APW430 extraction resolves extraction PENDING while proposal remains the only human gate',()=>{
+test('APW430 external HUMAN approval, STAGING, Production and Runtime are bound to exact proposal',()=>{
+  const approval=read(`data/master-change-control/approvals/${proposalId}.approval.json`);
+  const staging=read(`data/master-change-control/applied/${proposalId}.staging.json`);
+  const prodApproval=read(`data/master-change-control/production-approvals/${proposalId}.production-approval.json`);
+  const preview=read(`data/master-change-control/production-previews/${proposalId}.production-preview.json`);
+  const production=read(`data/master-change-control/production/${proposalId}.applied.json`);
+  const runtime=read('data/master-change-control/runtime/APW430_CUSTOM_RUNTIME_REGENERATION_V10.json');
+  for(const row of [approval,staging,prodApproval,preview,production,runtime])assert.equal(row.proposalId,proposalId);
+  assert.equal(approval.approverType,'HUMAN');
+  assert.equal(approval.proposalFingerprint,fingerprint);
+  assert.equal(staging.proposalStatus,'APPLIED');
+  assert.equal(staging.after.formalRows,25);
+  assert.equal(staging.after.automaticTrue,0);
+  assert.equal(prodApproval.productionApproval,true);
+  assert.equal(production.status,'PRODUCTION_APPLY_COMPLETE');
+  assert.equal(production.formalTarget.postWriteDriveRevisionId,'13');
+  assert.equal(production.postWriteReadback.dimensionRuleCount,25);
+  assert.equal(production.postWriteReadback.exactRuleExtracted,20);
+  assert.equal(production.postWriteReadback.sourceGraphReviewRequired,5);
+  assert.equal(production.postWriteReadback.unexpectedChangedExistingSheets,0);
+  assert.equal(production.postWriteReadback.semanticFingerprint,'sha256:1940a1ce7b768ccd2cc0fa1f44ebc1e3ba65e26c40089d618b0b837607ae6966');
+  assert.equal(runtime.status,'RUNTIME_REGENERATION_COMMITTED');
+  assert.equal(runtime.runtimeVersion,'v1.0');
+  assert.equal(runtime.sourceOfTruth,'FORMAL_PRODUCT_MASTER');
+  assert.equal(runtime.runtimeProjection.dimensionRuleCount,25);
+  assert.equal(runtime.runtimeProjection.dimensionAuto,0);
+  assert.equal(runtime.runtimeProjection.dimensionReview,25);
+  assert.equal(runtime.runtimeProjection.directManufacturerValueEditToGenericCore,false);
+});
+
+test('APW430 extraction PENDING stays resolved and current proposal gate is closed',()=>{
   const pending=read('artifacts/size-capability-audit/pending.json');
   const summary=read('artifacts/size-capability-audit/summary.json');
   const gate=read('artifacts/size-capability-audit/gate-report.json');
   assert.equal(pending.blockingCount,7);
   assert.ok(pending.resolved.some((row)=>row.id==='PEND-SIZE-APW430-CUSTOM-001'));
   assert.equal(pending.items.some((row)=>row.id==='PEND-SIZE-APW430-CUSTOM-001'),false);
-  assert.deepEqual(summary.productMasterChangeProposals,[proposalId]);
+  assert.deepEqual(summary.productMasterChangeProposals,[]);
+  assert.ok(summary.appliedProductMasterChangeProposals.includes(proposalId));
+  assert.equal(summary.apw430CustomExtraction.status,'FORMAL_MASTER_APPLIED_RUNTIME_REGENERATED');
   assert.equal(summary.apw430CustomExtraction.activeProductNodes,25);
   assert.equal(summary.apw430CustomExtraction.exactRuleExtracted,20);
   assert.equal(summary.apw430CustomExtraction.sourceGraphReviewRequired,5);
   assert.equal(summary.apw430CustomExtraction.pending,0);
-  assert.equal(summary.apw430CustomExtraction.formalMasterWrite,false);
+  assert.equal(summary.apw430CustomExtraction.formalMasterWrite,true);
   assert.equal(summary.apw430CustomExtraction.runtimeDirectWrite,false);
+  assert.equal(summary.apw430CustomExtraction.runtimeDimensionRules,25);
   assert.equal(gate.status,'PARTIAL_PASS');
   assert.equal(gate.integrityGate,'PASS');
   assert.equal(gate.blockingPending,7);
-  assert.equal(gate.proposalCount,1);
-  assert.equal(gate.proposalApprovalGate,'HUMAN_APPROVAL_PENDING');
+  assert.equal(gate.proposalCount,0);
+  assert.equal(gate.proposalApprovalGate,'NO_PROPOSAL_PENDING');
 });
