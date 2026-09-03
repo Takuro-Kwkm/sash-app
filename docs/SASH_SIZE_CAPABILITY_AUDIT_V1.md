@@ -5,12 +5,13 @@
 - Common Sash Sales Input Contract v1.0: **FORMAL PASS**
 - Size Capability Audit v1: **PARTIAL PASS**
 - Generic Audit Core integrity: **PASS**
-- Managed blocking PENDING: **9**
-- Active Product Master Change Proposal awaiting Human Approval: **0**
+- Managed blocking PENDING: **8**
+- Active Product Master Change Proposal awaiting Human Approval: **1**
+- S2H CUSTOM extraction: **17/17 classified**
 - CR-SL-036 Change Control: **FORMAL MASTER APPLIED / RUNTIME REGENERATED v1.9**
 - Audit process automatic mutation: **0**
 
-The audit artifacts themselves remain non-mutating. The approved Product Master change was executed through the separate Change Control records and is referenced by the audit as an external controlled application.
+The audit artifacts remain non-mutating. Manufacturer data reaches a Formal Product Master only through Change Control and HUMAN Approval.
 
 ## 2. Scope
 
@@ -18,7 +19,7 @@ Only these four current residential sash series are in scope.
 
 | Product | Active nodes | Canonical STANDARD | Runtime STANDARD | CUSTOM |
 | --- | ---: | ---: | ---: | --- |
-| LIXIL サーモスⅡ-H | 17 | 2,131 | 2,131 | source confirmed / exact rules pending |
+| LIXIL サーモスⅡ-H | 17 | 2,131 | 2,131 | 17/17 classified; Proposal pending |
 | LIXIL サーモスL | 17 | 1,495 | 1,495 | 50 rules audited |
 | YKK AP APW430 | 25 | 718 | 718 | source confirmed / exact rules pending |
 | YKK AP APW431 | 6 | 538 | 538 | 29 rules audited |
@@ -35,17 +36,9 @@ Controlled manufacturer-data change path:
 
 `Official Source → Evidence → Adjudication → Product Master Change Proposal → HUMAN Approval → STAGING → Production Preview → Formal Product Master → Runtime Regeneration`
 
-Official manufacturer documents are the primary evidence. Canonical workbooks are comparison and production targets; Canonical↔Runtime equality alone never creates Official Source PASS.
-
-Generic audit and Runtime cores remain product-agnostic. Manufacturer-specific dimensions live in Product Master / Evidence / product-specific projection records, not product-name branches in generic Runtime code.
+Canonical↔Runtime equality alone never creates Official Source PASS. Generic audit and Runtime cores remain product-agnostic.
 
 ## 4. STANDARD Audit
-
-STANDARD is checked independently at three layers:
-
-1. Official manufacturer setting
-2. Canonical STANDARD Size Master
-3. Runtime STANDARD inventory
 
 Current Canonical→Runtime equality remains:
 
@@ -56,38 +49,108 @@ Current Canonical→Runtime equality remains:
 
 Full Official Source selector-state enumeration is still incomplete, therefore the overall audit stays `PARTIAL_PASS`.
 
-### Thermos L verified slice
-
-`シャッター付引違い窓 / 手動 / 標準タイプ / printed p.54–61`
-
-- Official: **97**
-- Canonical: **97**
-- Runtime: **97**
-- Missing: **0**
-- Extra: **0**
-
-This is a slice PASS, not full-series STANDARD PASS.
+Thermos L verified STANDARD slice remains `シャッター付引違い窓 / 手動 / 標準タイプ`: Official 97 / Canonical 97 / Runtime 97.
 
 ## 5. Construction-Hidden Policy
 
-`construction` is an internal selector and stays hidden from sales UI. STANDARD candidate output is the union of valid internal construction records after dependency filtering.
-
-For CUSTOM, if hidden construction or another internal condition prevents a unique safe result, Runtime returns `REVIEW_REQUIRED`; it must not silently choose a construction-dependent PASS.
+`construction` is an internal selector and stays hidden from sales UI. If a hidden construction or another internal condition prevents a unique safe CUSTOM result, Runtime returns `REVIEW_REQUIRED`; it must not silently choose a construction-dependent PASS.
 
 ## 6. CUSTOM Audit and REVIEW Policy
 
-A missing Runtime Dimension Rule never means `CUSTOM_NOT_APPLICABLE` unless the official source proves non-applicability.
-
-Extraction states include:
+Extraction states:
 
 - `EXACT_RULE_EXTRACTED`
 - `SOURCE_GRAPH_REVIEW_REQUIRED`
 - `SOURCE_INSUFFICIENT`
 - `PENDING`
 
-Complex graph, diagonal, glass, weight, wind-pressure, emergency, or compound restrictions are not guessed into simple rectangular rules. Unresolved final conditions stay `REVIEW_REQUIRED` / `PENDING`.
+Complex graph, diagonal, glass, weight, wind-pressure, emergency, or compound restrictions are not guessed into simple rectangular rules. Source graphs are never converted into interpolated polygons without source-confirmed vertices.
 
-## 7. Thermos L — 50 Dimension Rules
+## 7. サーモスⅡ-H CUSTOM — 17/17 Classification Complete
+
+Current 2026 continuity was revalidated against the project copy of the 444-page SM3100 catalog and LIXIL's current catalog listing. The official web catalog metadata retains `SM3100 / 2022-10` as the source-lineage base date; the current project PDF is a 2026 revised issue of that lineage.
+
+Formal Product Master used for diff:
+
+- Drive file ID: `1kTRcb7UdghZl7h3lYdmnZuB7fUVUAduU`
+- Title: `サーモスⅡH_商品マスター_v0.9_納まりアンカー追補_GoldenTest版.xlsx`
+- SHA-256: `8dea8b2ecec1715445db74255f591b4f2bcf404027f0006f168a585365df29d6`
+
+The current v0.9 workbook has no CUSTOM Dimension Rule sheet. `06C` is already used for `面格子設定可否`, therefore the proposal target is a new `06E_特注寸法範囲`; **no workbook write has occurred**.
+
+Node-level result:
+
+- Active Product Nodes: **17 / 17**
+- Official Source coverage: **17 / 17**
+- `EXACT_RULE_EXTRACTED`: **7**
+- `SOURCE_GRAPH_REVIEW_REQUIRED`: **10**
+- `SOURCE_INSUFFICIENT`: **0**
+- `PENDING`: **0**
+- Runtime Dimension Rules written: **0**
+- Formal Product Master writes: **0**
+
+Exact W/H geometry was extracted for:
+
+- 縦すべり出し窓
+- 横すべり出し窓
+- 高所用横すべり出し窓
+- 上げ下げ窓FS
+- 内倒し窓
+- 外倒し窓
+- 採風勝手口ドアFS
+
+The following remain source-graph review gates rather than guessed geometry:
+
+- 単体引違い窓
+- シャッター付引違い窓
+- 雨戸付引違い窓
+- 面格子付引違い窓
+- 面格子付上げ下げ窓FS
+- FIX窓（外押縁タイプ）
+- FIX窓（内押縁タイプ）
+- 装飾引違い窓
+- テラスドア
+- 勝手口ドア
+
+### S2H-specific grille confirmation
+
+The current official common H/L catalog confirms `高強度縦格子` and `目隠し可動ルーバー` as S2H/L grille variations. Their P144/P199 graph labels are not fully safe for mechanical numeric extraction, so this audit records them as `SOURCE_GRAPH_REVIEW_REQUIRED`, not guessed AUTO rules.
+
+### S2H inner-tilt safety
+
+The common-source P221 boundary is retained with source-confirmed vertices only:
+
+`(240,350) → (240,943) → (815,943) → (815,755) → (870,755) → (870,500) → (1690,500) → (1690,350)`
+
+Safe W/H geometry:
+
+- `240<=W<=815: 350<=H<=943`
+- `815<W<=870: 350<=H<=755`
+- `870<W<=1690: 350<=H<=500`
+
+Because the 3-A-3 / glass-composition condition remains, the proposed final rule is `COMPOUND_GATE`, `automatic=false`, `RUNTIME_SAFETY_REVIEW_REQUIRED`.
+
+## 8. S2H Product Master Change Proposal
+
+Proposal:
+
+- ID: `PMCP-LIX-SAMOS2H-CUSTOM-DIMENSION-RULESET-20260903-001`
+- Fingerprint: `sha256:bd5900002f8d54d322fb7c50bb0b4b121f54a81ece7ec0e60baaffe6914df08e`
+- Status: `PROPOSED`
+- Approval policy: `HUMAN_REQUIRED`
+- Approval status: `PENDING`
+- Operation: `ADD_DIMENSION_RULESET`
+- Target: `06E_特注寸法範囲 / CR-S2H-CUSTOM-RULESET-001`
+- Formal workbook write: **false**
+- Runtime write: **false**
+- Auto approval: **false**
+- Source-boundary interpolation added: **false**
+
+`PEND-SIZE-S2H-CUSTOM-001` is resolved as an **extraction/classification pending** because every one of the 17 nodes now has a definitive Exact/Review state. Formal application is a separate gated action and has not been performed.
+
+Final gate for this task: **PROPOSAL_READY / HUMAN_APPROVAL_PENDING**.
+
+## 9. Thermos L — 50 Dimension Rules
 
 Current audit after CR-SL-036 controlled application:
 
@@ -96,109 +159,11 @@ Current audit after CR-SL-036 controlled application:
 - RULE_MISMATCH: **0**
 - Total: **50 / 50**
 
-### CR-SL-036 / 内倒し窓
+CR-SL-036 remains formally applied and Runtime v1.9 remains the current Thermos L baseline. Its historical proposal manifest remains immutable; Human Approval/Application are represented by separate Change Control records.
 
-Target selector:
+## 10. Runtime Integrity
 
-- `window_type = WT-SL-UCHIDAOSHI`
-- `specific_spec = *`
-- `construction = 在来 / 204`
-- `leaf_configuration = 単窓`
-- unit: `mm`
-
-Old rule:
-
-- `240<=W<=870: 350<=H<=943`
-- `870<W<=1690: 350<=H<=500`
-
-Approved W/H safe boundary:
-
-- `240<=W<=815: 350<=H<=943`
-- `815<W<=870: 350<=H<=755`
-- `870<W<=1690: 350<=H<=500`
-
-Only the source-readable P221 vertices are used:
-
-`(240,350) → (240,943) → (815,943) → (815,755) → (870,755) → (870,500) → (1690,500) → (1690,350)`
-
-No interpolated point was added.
-
-P221 also contains a 3-A-3-only / glass-composition condition. Therefore the final Runtime rule is `COMPOUND_GATE`, `automatic=false`, and `RUNTIME_SAFETY_REVIEW_REQUIRED`. W/H alone does not produce final AUTO PASS.
-
-## 8. CR-SL-036 Change Control Completion
-
-Proposal identity remains immutable:
-
-- Proposal ID: `PMCP-LIX-SAMOSL-INNER-TILT-RANGE-20260903-001`
-- Proposal fingerprint: `sha256:bf89762cd1cf88be8620b93599d2987c23d50fcb335e6c2b525f5a14175184ee`
-- Payload integrity fingerprint: `sha256:14eb2445bca8165c29311bdcc37ec3bdb69eafea0d1a79fe82327212ddfd8b68`
-
-The historical Proposal manifest remains `PROPOSED / HUMAN_REQUIRED / PENDING` because it is an immutable proposal artifact. Human approval, STAGING, Production approval, Production readback, and Runtime regeneration are persisted as separate Change Control records.
-
-### STAGING
-
-- status: **PASS**
-- target: `06C_特注寸法範囲 / CR-SL-036 / Excel row 39`
-- changed rules: **1**
-- other Dimension Rules changed: **0**
-- STANDARD Master changed: **false**
-- other Product Nodes changed: **0**
-- other series changed: **0**
-
-### Production Preview
-
-Preview fingerprint:
-
-`sha256:41d91b6079ddc1a469ff7995bfadc3e51df0e57a35d54f9ca0c82ed5300116e4`
-
-Approved write cells:
-
-- `G39`
-- `L39`
-- `M39`
-- `N39`
-- `O39`
-- `V39`
-
-Expected and read-back unexpected changed cells: **0**.
-
-### Formal Product Master
-
-Drive target:
-
-`17lVzBZ1hp4RVcGv0yNdnrKt25SFO2FhL`
-
-Pre-write SHA-256:
-
-`664a51bd5b9ded22e19780b1ce339338cba45f292438221b0a60fc3974e1abf9`
-
-Post-write SHA-256:
-
-`cd6844218fcf0150a16cbbfa947f391aa08f5449b82ba6fc2249ccdb6894c3d3`
-
-Post-write revision:
-
-`0B1PsqngSohhlZVhYaTVRdUNPRFp4ZVB5Y05IdnJNYXI4YTlZPQ`
-
-Backup before Production:
-
-`1PQsjvO3lRRbFN1xX0NmfzHck4TU2vAnJ`
-
-Readback confirmed exactly six changed cells in `06C_特注寸法範囲` and no value changes on the other sheets/rules.
-
-## 9. Runtime Regeneration v1.9
-
-Runtime was not patched by inserting the manufacturer values into generic code or the large legacy encoded data part.
-
-Instead, the formal Master change is projected through:
-
-`src/catalog/modules/thermosl-runtime-formal-dimension-delta-v19.mjs`
-
-and loaded by:
-
-`src/catalog/modules/thermosl-source.mjs`
-
-The adapter validates that the legacy source still contains the expected old CR-SL-036 before overlaying the one formally approved rule. Dimension Rule count remains **50**.
+No S2H manufacturer CUSTOM values were written directly to Runtime or Generic Core.
 
 Runtime STANDARD inventory must remain:
 
@@ -207,39 +172,33 @@ Runtime STANDARD inventory must remain:
 - APW430: **718**
 - APW431: **538**
 
-Boundary regression explicitly covers W=815 / 816 / 870 / 871 / 1690 / 1691 and H=943 / 755 / 500 boundary cases. Within the CR-SL-036 outer range the final result remains `REVIEW_REQUIRED` until the glass/composition condition can also be resolved; values outside the outer range are `BLOCK`.
+The S2H proposal may only reach Runtime after HUMAN Approval, STAGING, Production Preview, Formal Master write/readback, and Runtime regeneration.
 
-## 10. Remaining Thermos L PENDING
+## 11. Remaining Blocking PENDING
 
-Resolved:
+Resolved in this step:
 
-- `PEND-SIZE-SL-RULE-036`
+- `PEND-SIZE-S2H-CUSTOM-001`
 
 Still open:
 
+- `PEND-SIZE-S2H-STANDARD-001`
 - `PEND-SIZE-SL-STANDARD-001`
 - `PEND-SIZE-SL-GRILLE-001`
 - `PEND-SIZE-SL-AUTO-SAFETY`
+- `PEND-SIZE-APW430-STANDARD-001`
+- `PEND-SIZE-APW430-CUSTOM-001`
+- `PEND-SIZE-APW431-STANDARD-001`
+- `PEND-SIZE-APW431-AUTO-SAFETY`
 
-`高強度縦格子` and `目隠し可動ルーバー` remain PENDING until current setting, Thermos L applicability, Product Node vs Selector modeling, STANDARD sizes, CUSTOM range, and Canonical omission are all source-confirmed.
+Blocking count: **8**.
 
-## 11. APW431
+## 12. APW431
 
 - MATCH: **21**
 - SOURCE_GRAPH_REVIEW_REQUIRED: **8**
 - RULE_MISMATCH: **0**
 - Total: **29 / 29**
-
-Graph/compound restrictions remain REVIEW where wind pressure, glass, weight, or other manufacturer conditions are not fully automatable.
-
-## 12. サーモスⅡ-H CUSTOM
-
-- Active Product Nodes: **17**
-- Source Capability: **CONFIRMED**
-- Exact Runtime rules: **0 / 17**
-- PENDING: **17**
-
-Official source sections are mapped, but exact payload extraction and current-2026 continuity remain open.
 
 ## 13. APW430 CUSTOM
 
@@ -248,37 +207,34 @@ Official source sections are mapped, but exact payload extraction and current-20
 - Exact Runtime rules: **0 / 25**
 - PENDING: **25**
 
-Official manufacturing-range pages are mapped; exact selector/rule extraction remains PENDING.
+This remains the next recommended CUSTOM extraction target after the S2H proposal is dispositioned.
 
 ## 14. Generic Gate / CI
 
 The Generic Core distinguishes `FORMAL_PASS`, `PARTIAL_PASS`, and `FAIL`.
 
-Managed PENDING is allowed while integrity defects fail CI. CI checks include:
+Current expected gate:
 
-- Generic audit tests
-- immutable proposal fingerprint / payload integrity
-- applied Human Approval / STAGING / Production records
-- formal Master readback SHA record
-- Runtime regeneration record
-- exact Runtime STANDARD inventories
-- deterministic `gate-report.json`
-- full repository tests / runtime smoke / browser QA through V2 Recovery CI
+- `status = PARTIAL_PASS`
+- `integrityGate = PASS`
+- `blockingPending = 8`
+- `proposalCount = 1`
+- `proposalApprovalGate = HUMAN_APPROVAL_PENDING`
+- manufacturer-data mutation by audit = **false**
 
-The proposal is no longer an **active pending proposal** in `summary.json`; it is retained under `appliedProductMasterChangeProposals` and all immutable proposal artifacts remain auditable.
+CI enforces deterministic `gate-report.json`, Product Master Change Proposal fingerprint integrity, Runtime inventory preservation, repository tests, Runtime smoke and Browser QA.
 
 ## 15. Browser QA Acceptance
 
-Latest-head CI must confirm:
+Latest-head V2 Recovery CI must confirm existing UI behavior remains green:
 
 - Desktop: PASS
 - 390×844: PASS
 - horizontalOverflowPx: 0
-- construction UI: 0
+- construction UI hidden
 - consoleErrors: 0
-- pageErrors: 0 or no page-error failure in the existing QA harness
 
-No new UI design is required.
+Only report `pageErrors = 0` if the harness explicitly exposes that metric; otherwise report `no page-error failure observed`.
 
 ## 16. Final Gate
 
@@ -286,16 +242,16 @@ No new UI design is required.
 | --- | --- |
 | Common Sales Input Contract | FORMAL PASS |
 | Generic Size Capability Audit Core | PASS |
+| S2H CUSTOM Source Coverage | 17 / 17 |
+| S2H CUSTOM Classification | 7 EXACT / 10 REVIEW / 0 PENDING |
+| S2H Formal Master | NOT WRITTEN |
+| S2H Runtime CUSTOM | NOT WRITTEN |
+| S2H Change Proposal | HUMAN APPROVAL PENDING |
 | Thermos L Rule Audit | 38 MATCH / 12 REVIEW / 0 MISMATCH |
-| CR-SL-036 Human Approval | APPROVED |
-| CR-SL-036 STAGING | PASS |
-| CR-SL-036 Production Preview | PASS |
-| CR-SL-036 Formal Master | APPLIED / READBACK PASS |
-| CR-SL-036 Runtime | REGENERATED v1.9 |
+| CR-SL-036 Formal Master / Runtime | APPLIED / v1.9 |
 | APW431 Rule Audit | PASS |
-| S2H CUSTOM | PARTIAL_PASS / extraction pending |
 | APW430 CUSTOM | PARTIAL_PASS / extraction pending |
 | 4-Series STANDARD Official Source | PARTIAL_PASS / managed PENDING |
-| Remaining blocking PENDING | 9 |
+| Remaining blocking PENDING | 8 |
 
-Overall Size Capability Audit v1 remains **PARTIAL_PASS** because nine managed source/safety items are still open. CR-SL-036 itself is no longer a blocking mismatch.
+Overall Size Capability Audit v1 remains **PARTIAL_PASS**. The S2H CUSTOM extraction phase itself is complete and has reached **PROPOSAL_READY / HUMAN_APPROVAL_PENDING**.

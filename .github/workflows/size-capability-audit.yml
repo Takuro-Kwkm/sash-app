@@ -21,7 +21,7 @@ jobs:
       - name: Run managed Size Capability Audit
         run: npm run audit:size-capability
 
-      - name: Enforce audit integrity and applied CR-SL-036 Change Control
+      - name: Enforce audit integrity, S2H proposal gate, and applied CR-SL-036 Change Control
         run: |
           node - <<'NODE'
           const fs=require('node:fs');
@@ -29,11 +29,13 @@ jobs:
             'summary.json','standard-size-audit.json','custom-capability-audit.json','pending.json',
             'dimension-rule-audit-thermosl.json','dimension-rule-audit-apw431.json',
             'dimension-rule-extraction-apw430.json','dimension-rule-extraction-samos2h.json',
-            'source-manifest.json','gate-report.json'
+            'evidence-samos2h-custom.json','source-manifest.json','gate-report.json'
           ];
           for(const name of required)if(!fs.existsSync(`artifacts/size-capability-audit/${name}`))process.exit(1);
           const gate=JSON.parse(fs.readFileSync('artifacts/size-capability-audit/gate-report.json','utf8'));
           const summary=JSON.parse(fs.readFileSync('artifacts/size-capability-audit/summary.json','utf8'));
+          const s2hExtraction=JSON.parse(fs.readFileSync('artifacts/size-capability-audit/dimension-rule-extraction-samos2h.json','utf8'));
+          const s2hProposal=JSON.parse(fs.readFileSync('data/master-change-control/proposals/PMCP-LIX-SAMOS2H-CUSTOM-DIMENSION-RULESET-20260903-001.manifest.json','utf8'));
           const proposal=JSON.parse(fs.readFileSync('data/master-change-control/proposals/PMCP-LIX-SAMOSL-INNER-TILT-RANGE-20260903-001.manifest.json','utf8'));
           const approval=JSON.parse(fs.readFileSync('data/master-change-control/approvals/PMCP-LIX-SAMOSL-INNER-TILT-RANGE-20260903-001.approval.json','utf8'));
           const staging=JSON.parse(fs.readFileSync('data/master-change-control/applied/PMCP-LIX-SAMOSL-INNER-TILT-RANGE-20260903-001.staging.json','utf8'));
@@ -41,11 +43,15 @@ jobs:
           const production=JSON.parse(fs.readFileSync('data/master-change-control/production/PMCP-LIX-SAMOSL-INNER-TILT-RANGE-20260903-001.applied.json','utf8'));
           const runtime=JSON.parse(fs.readFileSync('data/master-change-control/runtime/THERMOSL_CR_SL_036_RUNTIME_REGENERATION_V19.json','utf8'));
           if(gate.integrityGate!=='PASS'||gate.status!=='PARTIAL_PASS')process.exit(1);
-          if(gate.blockingPending!==9)process.exit(1);
-          if(gate.proposalCount!==0||gate.proposalApprovalGate!=='NO_PROPOSAL_PENDING')process.exit(1);
+          if(gate.blockingPending!==8)process.exit(1);
+          if(gate.proposalCount!==1||gate.proposalApprovalGate!=='HUMAN_APPROVAL_PENDING')process.exit(1);
           if(gate.formalMasterWritePerformed||gate.runtimeManufacturerDataWritePerformed||gate.autoMutationPerformed)process.exit(1);
           if(summary.formalMasterWritePerformed||summary.runtimeManufacturerDataWritePerformed||summary.autoMutationPerformed)process.exit(1);
-          if(summary.productMasterChangeProposals.length!==0||summary.appliedProductMasterChangeProposals?.[0]!=='PMCP-LIX-SAMOSL-INNER-TILT-RANGE-20260903-001')process.exit(1);
+          if(summary.productMasterChangeProposals.length!==1||summary.productMasterChangeProposals[0]!=='PMCP-LIX-SAMOS2H-CUSTOM-DIMENSION-RULESET-20260903-001')process.exit(1);
+          if(summary.appliedProductMasterChangeProposals?.[0]!=='PMCP-LIX-SAMOSL-INNER-TILT-RANGE-20260903-001')process.exit(1);
+          if(s2hExtraction.records.length!==17||s2hExtraction.summary.EXACT_RULE_EXTRACTED!==7||s2hExtraction.summary.SOURCE_GRAPH_REVIEW_REQUIRED!==10||s2hExtraction.summary.PENDING!==0)process.exit(1);
+          if(s2hProposal.proposalFingerprint!=='sha256:bd5900002f8d54d322fb7c50bb0b4b121f54a81ece7ec0e60baaffe6914df08e'||s2hProposal.status!=='PROPOSED'||s2hProposal.approvalPolicy!=='HUMAN_REQUIRED'||s2hProposal.approvalStatus!=='PENDING')process.exit(1);
+          if(s2hProposal.formalWorkbookWritePerformed||s2hProposal.runtimeWritePerformed||s2hProposal.autoApprovalPerformed)process.exit(1);
           if(proposal.proposalId!=='PMCP-LIX-SAMOSL-INNER-TILT-RANGE-20260903-001')process.exit(1);
           if(proposal.proposalFingerprint!=='sha256:bf89762cd1cf88be8620b93599d2987c23d50fcb335e6c2b525f5a14175184ee')process.exit(1);
           if(proposal.status!=='PROPOSED'||proposal.approvalPolicy!=='HUMAN_REQUIRED'||proposal.approvalStatus!=='PENDING')process.exit(1);
@@ -90,6 +96,7 @@ jobs:
           name: size-capability-audit-v1
           path: |
             artifacts/size-capability-audit
+            data/master-change-control/proposals/PMCP-LIX-SAMOS2H-CUSTOM-DIMENSION-RULESET-20260903-001.manifest.json
             data/master-change-control/proposals/PMCP-LIX-SAMOSL-INNER-TILT-RANGE-20260903-001.manifest.json
             data/master-change-control/approvals/PMCP-LIX-SAMOSL-INNER-TILT-RANGE-20260903-001.approval.json
             data/master-change-control/applied/PMCP-LIX-SAMOSL-INNER-TILT-RANGE-20260903-001.staging.json

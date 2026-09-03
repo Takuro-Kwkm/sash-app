@@ -1,14 +1,1 @@
-{
-  "schemaVersion": "1.1",
-  "recordType": "SASH_SIZE_CAPABILITY_AUDIT_GATE",
-  "status": "PARTIAL_PASS",
-  "integrityGate": "PASS",
-  "managedPendingGate": "OPEN_MANAGED",
-  "blockingPending": 9,
-  "proposalCount": 0,
-  "proposalApprovalGate": "NO_PROPOSAL_PENDING",
-  "errors": [],
-  "formalMasterWritePerformed": false,
-  "runtimeManufacturerDataWritePerformed": false,
-  "autoMutationPerformed": false
-}
+{"schemaVersion":"1.1","recordType":"SASH_SIZE_CAPABILITY_AUDIT_GATE","status":"PARTIAL_PASS","integrityGate":"PASS","managedPendingGate":"OPEN_MANAGED","blockingPending":8,"proposalCount":1,"proposalApprovalGate":"HUMAN_APPROVAL_PENDING","errors":[],"formalMasterWritePerformed":false,"runtimeManufacturerDataWritePerformed":false,"autoMutationPerformed":false}
