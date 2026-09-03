@@ -138,13 +138,16 @@ Construction remains an internal Product Master attribute and is not shown to sa
 Generated:
 
 - `PMCP-LIX-SAMOSL-INNER-TILT-GLASS-GATE-20260903-002`
-  - fingerprint: `sha256:5874c5584bff5a937fc1d36134735c834f84612bbda4530daa64e7ab238bc117`
+  - fingerprint: `sha256:af42cd7f3d804b26f2f9ff607aeac59f3dbfe759bbbeb227615f82ac8ac9c268`
   - operation: `UPDATE_DIMENSION_RULE`
   - target: `06C_特注寸法範囲 / CR-SL-036`
   - change: `AUTO_PIECEWISE` → `COMPOUND_GATE` (glass-condition source review required)
   - approval: `HUMAN_REQUIRED`
+  - approval status: `PENDING`
   - formal write: false
   - runtime write: false
+
+The proposal record explicitly contains `baseMasterFingerprint`, `targetEntity`, `targetRuleId`, `before`, `after`, `sourceEvidenceIds`, `sourceFile`, `printedPage`, `pdfPage`, and `sourceLocator`. CI recomputes the UTF-8 canonical SHA-256 fingerprint rather than trusting the stored string.
 
 Superseded draft fingerprint `sha256:bf89762cd1cf88be8620b93599d2987c23d50fcb335e6c2b525f5a14175184ee` was not formalized because it treated the P221 hatch as a hard dimensional exclusion.
 
@@ -160,7 +163,11 @@ No proposal was generated for incomplete source payloads.
 - managed PENDING counts
 - mutation boundary
 - Official Source PENDING not hidden by Canonical↔Runtime equality
-- HUMAN_REQUIRED proposal status / non-mutation boundary / fingerprint stability
+- HUMAN_REQUIRED proposal status
+- explicit proposal source/target payload
+- base Master fingerprint
+- proposal fingerprint stability
+- summary ↔ loaded proposal identity consistency
 
 The Generic Audit Core contains no current product IDs or names. Future sash products can use the same gate without adding product-specific branches to the common audit engine.
 
