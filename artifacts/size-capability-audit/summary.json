@@ -18,7 +18,7 @@
     "supersededDraftProposalId": "PMCP-LIX-SAMOSL-INNER-TILT-RANGE-20260903-001",
     "supersededDraftFingerprint": "sha256:bf89762cd1cf88be8620b93599d2987c23d50fcb335e6c2b525f5a14175184ee",
     "formalizedProposalId": "PMCP-LIX-SAMOSL-INNER-TILT-GLASS-GATE-20260903-002",
-    "formalizedProposalFingerprint": "sha256:5874c5584bff5a937fc1d36134735c834f84612bbda4530daa64e7ab238bc117",
+    "formalizedProposalFingerprint": "sha256:af42cd7f3d804b26f2f9ff607aeac59f3dbfe759bbbeb227615f82ac8ac9c268",
     "reason": "P221ハッチ部は寸法不可境界ではなく3-A-3限定/ガラス構成依存領域のため、AUTO_POLYGON案を破棄しCOMPOUND_GATE案へ再確定。"
   }
 }
