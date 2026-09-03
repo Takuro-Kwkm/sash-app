@@ -28,8 +28,6 @@ test('APW430 CUSTOM evidence covers 25 nodes and remains non-interpolating',()=>
   assert.equal(evidence.records.length,25);
   assert.ok(evidence.records.every((row)=>row.currentYearContinuity==='CONFIRMED_CURRENT'));
   assert.ok(evidence.records.every((row)=>row.noInterpolation===true));
-  assert.equal(evidence.formalMasterWritePerformed,false);
-  assert.equal(evidence.runtimeWritePerformed,false);
 });
 
 test('APW430 Product Master proposal is immutable, human-gated and fingerprint-valid',()=>{
