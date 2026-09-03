@@ -2,10 +2,12 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {SAMOS2H_MODULE,SAMOS2H_DIMENSION_RULES} from '../src/catalog/modules/samos2h-assembly.mjs';
 
-test('Samos2H v1.0 Runtime is regenerated from formal 06E CUSTOM rules',()=>{
-  assert.equal(SAMOS2H_MODULE.product.source.id,'1kTRcb7UdghZl7h3lYdmnZuB7fUVUAduU');
-  assert.equal(SAMOS2H_MODULE.product.source.sha256,'7ca8f5cca19187bfb841bc3f3393fb29de591dc554714627faf3a652130cd8a7');
+test('Samos2H v1.0 Runtime is regenerated from formal 06E CUSTOM rules while retaining v0.7 base lineage',()=>{
+  assert.equal(SAMOS2H_MODULE.product.source.id,'1zHi-XsMqJp0MKH-sDoTcnTqkLMGcuRdo');
+  assert.equal(SAMOS2H_MODULE.product.source.version,'v0.7');
   assert.equal(SAMOS2H_MODULE.runtimeRegeneration.version,'v1.0');
+  assert.equal(SAMOS2H_MODULE.runtimeRegeneration.formalMaster.driveFileId,'1kTRcb7UdghZl7h3lYdmnZuB7fUVUAduU');
+  assert.equal(SAMOS2H_MODULE.runtimeRegeneration.formalMaster.sha256,'7ca8f5cca19187bfb841bc3f3393fb29de591dc554714627faf3a652130cd8a7');
   assert.equal(SAMOS2H_DIMENSION_RULES.length,17);
   assert.equal(SAMOS2H_DIMENSION_RULES.filter((r)=>r.type==='COMPOUND_GATE').length,7);
   assert.equal(SAMOS2H_DIMENSION_RULES.filter((r)=>r.type==='SOURCE_GRAPH_GATE').length,10);
