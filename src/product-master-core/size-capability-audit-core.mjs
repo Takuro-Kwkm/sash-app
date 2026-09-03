@@ -1,3 +1,4 @@
+import { createHash } from 'node:crypto';
 export const RULE_AUDIT_STATUSES=Object.freeze(new Set([
   'MATCH','RULE_MISMATCH','SOURCE_GRAPH_REVIEW_REQUIRED','SOURCE_MISSING','SELECTOR_MISMATCH','PENDING'
 ]));
@@ -57,13 +58,39 @@ export function validatePendingDocument(document){
   return errors;
 }
 
-export function buildSizeCapabilityAuditGate({summary,standardAudit,customAudit,pending,ruleAudits=[]}){
+const stable=(value)=>{
+  if(Array.isArray(value))return `[${value.map(stable).join(',')}]`;
+  if(value&&typeof value==='object')return `{${Object.keys(value).sort().map((key)=>`${JSON.stringify(key)}:${stable(value[key])}`).join(',')}}`;
+  return JSON.stringify(value);
+};
+
+export function computeProposalFingerprint(document){
+  const payload=structuredClone(document??{});
+  delete payload.proposalFingerprint;
+  return `sha256:${createHash('sha256').update(stable(payload)).digest('hex')}`;
+}
+
+export function validateChangeProposalDocument(document){
+  const errors=[];
+  if(!document||typeof document!=='object')return['change proposal missing'];
+  if(!document.proposalId)errors.push('proposalId missing');
+  if(document.status!=='PROPOSED')errors.push(`proposal ${document.proposalId??'?'} status must be PROPOSED`);
+  if(document.approvalPolicy!=='HUMAN_REQUIRED')errors.push(`proposal ${document.proposalId??'?'} approvalPolicy must be HUMAN_REQUIRED`);
+  if(document.approvalStatus!=='PENDING')errors.push(`proposal ${document.proposalId??'?'} approvalStatus must be PENDING`);
+  if(writesDetected(document)||document.autoApprovalPerformed)errors.push(`proposal ${document.proposalId??'?'} must be non-mutating and unapproved`);
+  const expected=computeProposalFingerprint(document);
+  if(document.proposalFingerprint!==expected)errors.push(`proposal ${document.proposalId??'?'} fingerprint mismatch`);
+  return errors;
+}
+
+export function buildSizeCapabilityAuditGate({summary,standardAudit,customAudit,pending,ruleAudits=[],proposals=[]}){
   const errors=[];
   if(summary?.commonSalesInputContract!=='FORMAL_PASS')errors.push('Common Sash Sales Input Contract is not FORMAL_PASS');
   if(writesDetected(summary)||writesDetected(customAudit))errors.push('manufacturer data mutation detected inside audit scope');
   errors.push(...validateStandardAuditDocument(standardAudit));
   errors.push(...validatePendingDocument(pending));
   for(const document of ruleAudits)errors.push(...validateRuleAuditDocument(document));
+  for(const document of proposals)errors.push(...validateChangeProposalDocument(document));
   const blockingPending=pending?.items?.filter((row)=>row.blocking).length??0;
   const managedPending=blockingPending>0;
   const status=errors.length?'FAIL':managedPending?'PARTIAL_PASS':'FORMAL_PASS';
