@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import {buildSizeCapabilityAuditGate,validateRuleAuditDocument} from '../src/product-master-core/size-capability-audit-core.mjs';
+import {buildSizeCapabilityAuditGate,validateRuleAuditDocument,validateChangeProposalDocument} from '../src/product-master-core/size-capability-audit-core.mjs';
 
 const read=(name)=>JSON.parse(fs.readFileSync(new URL(`../artifacts/size-capability-audit/${name}`,import.meta.url),'utf8'));
 
@@ -42,4 +42,13 @@ test('audit never upgrades Canonical↔Runtime equality to Official Source PASS 
 test('generic audit core contains no current product token',()=>{
   const source=fs.readFileSync(new URL('../src/product-master-core/size-capability-audit-core.mjs',import.meta.url),'utf8');
   for(const token of ['SER-LIX-SAMOS2H','SER-LIX-SAMOSL','SER-YKK-APW430','SER-YKK-APW431','サーモス','APW 430','APW 431'])assert.equal(source.includes(token),false);
+});
+
+test('formalized Size Capability proposal is HUMAN_REQUIRED, pending and fingerprint-stable',()=>{
+  const proposal=JSON.parse(fs.readFileSync(new URL('../data/master-change-control/proposals/PMCP-LIX-SAMOSL-INNER-TILT-GLASS-GATE-20260903-002.manifest.json',import.meta.url),'utf8'));
+  assert.deepEqual(validateChangeProposalDocument(proposal),[]);
+  assert.equal(proposal.approvalPolicy,'HUMAN_REQUIRED');
+  assert.equal(proposal.approvalStatus,'PENDING');
+  assert.equal(proposal.formalWorkbookWritePerformed,false);
+  assert.equal(proposal.runtimeWritePerformed,false);
 });
