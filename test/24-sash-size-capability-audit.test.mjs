@@ -1,21 +1,28 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import {buildSizeCapabilityAuditGate,validateRuleAuditDocument,validateChangeProposalDocument} from '../src/product-master-core/size-capability-audit-core.mjs';
+import {
+  buildSizeCapabilityAuditGate,
+  computeProposalFingerprint,
+  validateRuleAuditDocument,
+  validateChangeProposalDocument
+} from '../src/product-master-core/size-capability-audit-core.mjs';
 
 const read=(name)=>JSON.parse(fs.readFileSync(new URL(`../artifacts/size-capability-audit/${name}`,import.meta.url),'utf8'));
 
 test('generic Size Capability Audit accepts managed PENDING without hiding it',()=>{
   const gate=buildSizeCapabilityAuditGate({
-    summary:{commonSalesInputContract:'FORMAL_PASS',formalMasterWritePerformed:false},
+    summary:{commonSalesInputContract:'FORMAL_PASS',formalMasterWritePerformed:false,productMasterChangeProposals:[]},
     standardAudit:{records:[{product_id:'SER-TEST-FUTURE',product_node:'NODE-1',coverage_status:'PENDING'}],formalMasterWritePerformed:false},
     customAudit:{formalMasterWritePerformed:false},
     pending:{blockingCount:1,items:[{id:'P-1',blocking:true}]},
-    ruleAudits:[{expectedRuleCount:1,auditedRuleCount:1,records:[{rule_id:'R-1',audit_status:'MATCH'}],formalMasterWritePerformed:false}]
+    ruleAudits:[{expectedRuleCount:1,auditedRuleCount:1,records:[{rule_id:'R-1',audit_status:'MATCH'}],formalMasterWritePerformed:false}],
+    proposals:[]
   });
   assert.equal(gate.integrityGate,'PASS');
   assert.equal(gate.status,'PARTIAL_PASS');
   assert.equal(gate.blockingPending,1);
+  assert.equal(gate.proposalCount,0);
 });
 
 test('current Thermos L and APW431 rule audits are complete and non-mutating',()=>{
@@ -44,11 +51,34 @@ test('generic audit core contains no current product token',()=>{
   for(const token of ['SER-LIX-SAMOS2H','SER-LIX-SAMOSL','SER-YKK-APW430','SER-YKK-APW431','サーモス','APW 430','APW 431'])assert.equal(source.includes(token),false);
 });
 
-test('formalized Size Capability proposal is HUMAN_REQUIRED, pending and fingerprint-stable',()=>{
+test('formalized Size Capability proposal is HUMAN_REQUIRED, pending, complete and fingerprint-stable',()=>{
   const proposal=JSON.parse(fs.readFileSync(new URL('../data/master-change-control/proposals/PMCP-LIX-SAMOSL-INNER-TILT-GLASS-GATE-20260903-002.manifest.json',import.meta.url),'utf8'));
   assert.deepEqual(validateChangeProposalDocument(proposal),[]);
   assert.equal(proposal.approvalPolicy,'HUMAN_REQUIRED');
   assert.equal(proposal.approvalStatus,'PENDING');
   assert.equal(proposal.formalWorkbookWritePerformed,false);
   assert.equal(proposal.runtimeWritePerformed,false);
+  assert.equal(proposal.baseMasterFingerprint,`sha256:${proposal.baseMaster.sha256}`);
+  assert.equal(proposal.targetEntity,'06C_特注寸法範囲');
+  assert.equal(proposal.targetRuleId,'CR-SL-036');
+  assert.deepEqual(proposal.sourceEvidenceIds,['EV-SL-CUSTOM-P221-INNER-TILT']);
+  assert.equal(proposal.proposalFingerprint,computeProposalFingerprint(proposal));
+});
+
+test('full current gate loads the exact proposal declared by summary',()=>{
+  const summary=read('summary.json');
+  const proposal=JSON.parse(fs.readFileSync(new URL('../data/master-change-control/proposals/PMCP-LIX-SAMOSL-INNER-TILT-GLASS-GATE-20260903-002.manifest.json',import.meta.url),'utf8'));
+  const gate=buildSizeCapabilityAuditGate({
+    summary,
+    standardAudit:read('standard-size-audit.json'),
+    customAudit:read('custom-capability-audit.json'),
+    pending:read('pending.json'),
+    ruleAudits:[read('dimension-rule-audit-thermosl.json'),read('dimension-rule-audit-apw431.json')],
+    proposals:[proposal]
+  });
+  assert.equal(gate.integrityGate,'PASS');
+  assert.equal(gate.status,'PARTIAL_PASS');
+  assert.equal(gate.blockingPending,10);
+  assert.equal(gate.proposalCount,1);
+  assert.equal(gate.proposalApprovalGate,'HUMAN_APPROVAL_PENDING');
 });
