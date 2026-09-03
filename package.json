@@ -30,7 +30,8 @@
     "master:production-preview:v12": "node scripts/run-product-master-production-preview-v12.mjs",
     "master:production-preview:v17": "node scripts/run-thermosl-production-preview-v17.mjs",
     "master:technical-facts:v13": "node scripts/run-apw430-technical-fact-resolution-v13.mjs",
-    "master:workflow": "node scripts/run-product-master-workflow.mjs"
+    "master:workflow": "node scripts/run-product-master-workflow.mjs",
+    "audit:size-capability": "node scripts/run-sash-size-capability-audit.mjs artifacts/size-capability-audit data/master-change-control/proposals"
   },
   "engines": { "node": ">=22" }
 }
