@@ -1,69 +1,18 @@
 {
-  "schemaVersion": "1.0",
-  "recordType": "SIZE_CAPABILITY_PENDING_REGISTER",
-  "blocking": true,
+  "schemaVersion": "1.1",
+  "recordType": "SASH_SIZE_CAPABILITY_PENDING",
+  "status": "OPEN",
+  "blockingCount": 10,
   "items": [
-    {
-      "id": "PEND-S2H-STANDARD-FULL-SOURCE",
-      "productId": "SER-LIX-SAMOS2H",
-      "area": "STANDARD",
-      "severity": "BLOCKING_FOR_PRODUCT_FORMAL_PASS",
-      "issue": "Full official standard-size enumeration has not yet been compared against all 2,131 selectable Canonical rows."
-    },
-    {
-      "id": "PEND-S2H-CUSTOM-RULE-EXTRACTION",
-      "productId": "SER-LIX-SAMOS2H",
-      "area": "CUSTOM",
-      "severity": "BLOCKING_FOR_CUSTOM_RUNTIME",
-      "issue": "Official LIXIL source confirms dimensional special-order ranges, but exact selector-specific Dimension Rules have not yet been extracted/adjudicated."
-    },
-    {
-      "id": "PEND-SL-STANDARD-FULL-SOURCE",
-      "productId": "SER-LIX-SAMOSL",
-      "area": "STANDARD",
-      "severity": "BLOCKING_FOR_PRODUCT_FORMAL_PASS",
-      "issue": "Manual-standard shutter slice is verified 97/97, but the full 1,495 selectable standard-size corpus has not yet been independently enumerated from official source."
-    },
-    {
-      "id": "PEND-SL-CUSTOM-RULE-AUDIT",
-      "productId": "SER-LIX-SAMOSL",
-      "area": "CUSTOM",
-      "severity": "BLOCKING_FOR_PRODUCT_FORMAL_PASS",
-      "issue": "50 existing Dimension Rules require rule-by-rule official-source verification."
-    },
-    {
-      "id": "PEND-APW430-STANDARD-FULL-SOURCE",
-      "productId": "SER-YKK-APW430",
-      "area": "STANDARD",
-      "severity": "BLOCKING_FOR_PRODUCT_FORMAL_PASS",
-      "issue": "Full official standard-size enumeration has not yet been compared against all 718 Canonical rows."
-    },
-    {
-      "id": "PEND-APW430-CUSTOM-RULE-EXTRACTION",
-      "productId": "SER-YKK-APW430",
-      "area": "CUSTOM",
-      "severity": "BLOCKING_FOR_CUSTOM_RUNTIME",
-      "issue": "Official 2026.08 production-range source confirms CUSTOM capability for APW430 categories, but Runtime contains zero Dimension Rules. Exact p.2-p.8 rules must be extracted before proposal."
-    },
-    {
-      "id": "PEND-APW431-STANDARD-FULL-SOURCE",
-      "productId": "SER-YKK-APW431",
-      "area": "STANDARD",
-      "severity": "BLOCKING_FOR_PRODUCT_FORMAL_PASS",
-      "issue": "Full official standard-size enumeration has not yet been compared against all 538 Runtime candidates."
-    },
-    {
-      "id": "PEND-APW431-CUSTOM-RULE-AUDIT",
-      "productId": "SER-YKK-APW431",
-      "area": "CUSTOM",
-      "severity": "BLOCKING_FOR_PRODUCT_FORMAL_PASS",
-      "issue": "29 existing Dimension Rules require official p.6-p.13 rule-by-rule verification, including SOURCE_GRAPH_GATE and COMPOUND_GATE records."
-    }
-  ],
-  "proposalGate": {
-    "status": "CLOSED_FOR_UNEXTRACTED_RULES",
-    "reason": "Do not generate manufacturer-data Change Proposals until exact source-backed row/rule payloads are available."
-  },
-  "formalMasterWritePerformed": false,
-  "runtimeManufacturerDataWritePerformed": false
+    {"id":"PEND-SIZE-S2H-STANDARD-001","productId":"SER-LIX-SAMOS2H","blocking":true,"category":"STANDARD_SOURCE_ENUMERATION","detail":"17 Product NodeのOfficial STANDARD全Selector State列挙未完了。"},
+    {"id":"PEND-SIZE-S2H-CUSTOM-001","productId":"SER-LIX-SAMOS2H","blocking":true,"category":"CUSTOM_RULE_EXTRACTION","detail":"寸法特注範囲Sourceは確認済みだがexact Rule payloadと2026継続性照合未完了。"},
+    {"id":"PEND-SIZE-SL-STANDARD-001","productId":"SER-LIX-SAMOSL","blocking":true,"category":"STANDARD_SOURCE_ENUMERATION","detail":"手動標準97件以外のOfficial STANDARD全Selector State列挙未完了。"},
+    {"id":"PEND-SIZE-SL-GRILLE-001","productId":"SER-LIX-SAMOSL","blocking":true,"category":"PRODUCT_NODE_SELECTOR_GAP","detail":"2026価格資料/公式カタログに高強度縦格子・目隠し可動ルーバー設定あり。現行CanonicalのSelector/Dimension Rule/Standard Size完全payload未確定。"},
+    {"id":"PEND-SIZE-SL-RULE-036","productId":"SER-LIX-SAMOSL","blocking":true,"category":"DIMENSION_RULE_MISMATCH","detail":"CR-SL-036はP221のガラス条件付きハッチ領域をW/HのみのAUTO_PIECEWISEで自動PASSし得る。旧AUTO_POLYGON Draftはハッチを寸法不可と誤読するため破棄し、COMPOUND_GATE Change ProposalをHuman Approval待ちで固定。","proposalId":"PMCP-LIX-SAMOSL-INNER-TILT-GLASS-GATE-20260903-002"},
+    {"id":"PEND-SIZE-SL-AUTO-SAFETY","productId":"SER-LIX-SAMOSL","blocking":true,"category":"RUNTIME_DIMENSION_SAFETY","detail":"複数AUTO Ruleで公式Sourceにガラス構成/障子重量条件があるが、Dimension ResolverはW/H幾何条件のみ評価。Product Master値は変更せずRuntime安全接続を別Gateで要検討。"},
+    {"id":"PEND-SIZE-APW430-STANDARD-001","productId":"SER-YKK-APW430","blocking":true,"category":"STANDARD_SOURCE_ENUMERATION","detail":"25 Product NodeのOfficial STANDARD全Selector State列挙未完了。"},
+    {"id":"PEND-SIZE-APW430-CUSTOM-001","productId":"SER-YKK-APW430","blocking":true,"category":"CUSTOM_RULE_EXTRACTION","detail":"公式製作範囲P2-P8は確認済みだがexact Dimension Rule payload未抽出。"},
+    {"id":"PEND-SIZE-APW431-STANDARD-001","productId":"SER-YKK-APW431","blocking":true,"category":"STANDARD_SOURCE_ENUMERATION","detail":"6 Product NodeのOfficial STANDARD全Selector State列挙未完了。"},
+    {"id":"PEND-SIZE-APW431-AUTO-SAFETY","productId":"SER-YKK-APW431","blocking":true,"category":"RUNTIME_DIMENSION_SAFETY","detail":"P6-P13のガラス重量/耐風圧/障子条件はMasterに注記されるが、Dimension Resolver単独では評価されない。幾何Rule自体は監査済み。"}
+  ]
 }
