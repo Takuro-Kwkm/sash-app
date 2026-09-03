@@ -35,7 +35,7 @@ async function verifyThermosLShutter(page,viewport){await openProduct(page,'LIXI
 async function verifySizeModes(page){
   await openProduct(page,'LIXIL','SER-LIX-SAMOS2H');await select(page,'window_type','WT-S2H-HIKICHIGAI');assert.deepEqual(await options(page,'size_mode'),['STANDARD','CUSTOM']);await assertConstructionHidden(page,'サーモスⅡ-H CUSTOM');report.sizeMode.push({series:'サーモスⅡ-H',modes:['STANDARD','CUSTOM'],customSourceCapability:'FORMAL_MASTER_CONNECTED',runtimeVersion:'v1.0',status:'PASS'});
   await openProduct(page,'LIXIL','SER-LIX-SAMOSL');await select(page,'window_type','WT-SL-HIKICHIGAI');assert.deepEqual(await options(page,'size_mode'),['STANDARD','CUSTOM']);report.sizeMode.push({series:'サーモスL',modes:['STANDARD','CUSTOM'],status:'PASS'});
-  await openProduct(page,'YKK AP','SER-YKK-APW430');await select(page,'window_type','SWT-YKK-APW430-FIX-MADO');assert.deepEqual(await options(page,'size_mode'),['STANDARD']);report.sizeMode.push({series:'APW 430',modes:['STANDARD'],customSourceCapability:'PENDING_NOT_CONNECTED',status:'PASS'});
+  await openProduct(page,'YKK AP','SER-YKK-APW430');await select(page,'window_type','SWT-YKK-APW430-FIX-MADO');assert.deepEqual(await options(page,'size_mode'),['STANDARD','CUSTOM']);report.sizeMode.push({series:'APW 430',modes:['STANDARD','CUSTOM'],customSourceCapability:'FORMAL_MASTER_CONNECTED',runtimeVersion:'v1.0',status:'PASS'});
   await openProduct(page,'YKK AP','SER-YKK-APW431');await select(page,'window_type','W431-001');assert.ok((await options(page,'size_mode')).includes('CUSTOM'));report.sizeMode.push({series:'APW 431',modes:await options(page,'size_mode'),status:'PASS'});
 }
 
