@@ -1,4 +1,4 @@
-name: Size Capability Audit
+name: Size Capability Audit v1
 
 on:
   push:
@@ -14,11 +14,14 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Generic Size Capability Audit tests
+
+      - name: Generic Size Capability Audit core tests
         run: node --test test/24-sash-size-capability-audit.test.mjs
-      - name: Run Size Capability Audit
+
+      - name: Run managed Size Capability Audit
         run: npm run audit:size-capability
-      - name: Enforce audit integrity and non-mutation boundary
+
+      - name: Enforce audit integrity without hiding managed PENDING
         run: |
           node - <<'NODE'
           const fs=require('node:fs');
@@ -29,11 +32,46 @@ jobs:
             'source-manifest.json','gate-report.json'
           ];
           for(const name of required)if(!fs.existsSync(`artifacts/size-capability-audit/${name}`))process.exit(1);
-          const gate=require('./artifacts/size-capability-audit/gate-report.json');
-          if(gate.integrityGate!=='PASS'||gate.status!=='PARTIAL_PASS'||gate.blockingPending!==10||gate.formalMasterWritePerformed||gate.runtimeManufacturerDataWritePerformed||gate.autoMutationPerformed)process.exit(1);
-          const proposal=require('./data/master-change-control/proposals/PMCP-LIX-SAMOSL-INNER-TILT-GLASS-GATE-20260903-002.manifest.json');
-          if(proposal.status!=='PROPOSED'||proposal.approvalPolicy!=='HUMAN_REQUIRED'||proposal.approvalStatus!=='PENDING'||proposal.formalWorkbookWritePerformed||proposal.runtimeWritePerformed||proposal.autoApprovalPerformed)process.exit(1);
+          const gate=JSON.parse(fs.readFileSync('artifacts/size-capability-audit/gate-report.json','utf8'));
+          const summary=JSON.parse(fs.readFileSync('artifacts/size-capability-audit/summary.json','utf8'));
+          const proposal=JSON.parse(fs.readFileSync('data/master-change-control/proposals/PMCP-LIX-SAMOSL-INNER-TILT-GLASS-GATE-20260903-002.manifest.json','utf8'));
+          if(gate.integrityGate!=='PASS')process.exit(1);
+          if(gate.status!=='PARTIAL_PASS')process.exit(1);
+          if(gate.blockingPending!==10)process.exit(1);
+          if(gate.proposalCount!==1||gate.proposalApprovalGate!=='HUMAN_APPROVAL_PENDING')process.exit(1);
+          if(gate.formalMasterWritePerformed||gate.runtimeManufacturerDataWritePerformed||gate.autoMutationPerformed)process.exit(1);
+          if(summary.formalMasterWritePerformed||summary.runtimeManufacturerDataWritePerformed||summary.autoMutationPerformed)process.exit(1);
+          if(proposal.status!=='PROPOSED'||proposal.approvalPolicy!=='HUMAN_REQUIRED'||proposal.approvalStatus!=='PENDING')process.exit(1);
+          if(proposal.formalWorkbookWritePerformed||proposal.runtimeWritePerformed||proposal.autoApprovalPerformed)process.exit(1);
           NODE
+
+      - name: Enforce Runtime inventory unchanged
+        run: |
+          npm run start:qa > /tmp/sash-size-audit-runtime.log 2>&1 &
+          PID=$!
+          trap 'kill $PID || true' EXIT
+          for i in {1..20}; do
+            if curl -fsS http://127.0.0.1:4173/api/health > /tmp/size-audit-health.json; then break; fi
+            sleep 0.5
+          done
+          cat /tmp/size-audit-health.json
+          node - <<'NODE'
+          const h=require('/tmp/size-audit-health.json');
+          const expected={
+            'SER-LIX-SAMOS2H':2131,
+            'SER-LIX-SAMOSL':1495,
+            'SER-YKK-APW430':718,
+            'SER-YKK-APW431':538
+          };
+          for(const [id,count] of Object.entries(expected)){
+            const row=h.inventory.find((item)=>item.productId===id);
+            if(!row||row.selectableSizeRows!==count||row.missingSizeRows!==0||row.extraSizeRows!==0||row.sizeCoverage!==1)process.exit(1);
+          }
+          NODE
+
+      - name: Ensure audit runner output is committed and deterministic
+        run: git diff --exit-code -- artifacts/size-capability-audit/gate-report.json
+
       - name: Upload Size Capability Audit evidence
         if: always()
         uses: actions/upload-artifact@v4
