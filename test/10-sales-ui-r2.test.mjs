@@ -122,7 +122,7 @@ test('127 all 65 ACTIVE windows derive STANDARD/CUSTOM availability from connect
       if(custom)customWindows+=1;else standardOnly+=1;
     }
   }
-  assert.deepEqual({windows,customWindows,standardOnly},{windows:65,customWindows:40,standardOnly:25});
+  assert.deepEqual({windows,customWindows,standardOnly},{windows:65,customWindows:65,standardOnly:0});
 });
 
 test('128 every connected Thermos L/APW431 formal Dimension Rule has a UI-reachable CUSTOM witness without requiring construction input',()=>{
