@@ -39,7 +39,7 @@ test('v1.9 size modes are generated from connected formal capabilities rather th
   assert.deepEqual(getAllowedValues(catalog,'SER-LIX-SAMOSL','size_mode',{window_type:'WT-SL-HIKICHIGAI'}).map((row)=>row.value),['STANDARD','CUSTOM']);
   assert.ok(getAllowedValues(catalog,'SER-YKK-APW431','size_mode',{window_type:'W431-001'}).map((row)=>row.value).includes('CUSTOM'));
   assert.deepEqual(getAllowedValues(catalog,'SER-LIX-SAMOS2H','size_mode',{window_type:'WT-S2H-HIKICHIGAI'}).map((row)=>row.value),['STANDARD','CUSTOM']);
-  assert.deepEqual(getAllowedValues(catalog,'SER-YKK-APW430','size_mode',{window_type:'SWT-YKK-APW430-FIX-MADO'}).map((row)=>row.value),['STANDARD']);
+  assert.deepEqual(getAllowedValues(catalog,'SER-YKK-APW430','size_mode',{window_type:'SWT-YKK-APW430-FIX-MADO'}).map((row)=>row.value),['STANDARD','CUSTOM']);
 });
 
 test('v1.9 future sash modules inherit field order and hidden construction without manufacturer branches',async()=>{
