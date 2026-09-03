@@ -1,0 +1,12 @@
+{
+  "schemaVersion": "1.0",
+  "recordType": "SASH_SIZE_CAPABILITY_AUDIT_GATE",
+  "status": "PARTIAL_PASS",
+  "integrityGate": "PASS",
+  "managedPendingGate": "OPEN_MANAGED",
+  "blockingPending": 10,
+  "errors": [],
+  "formalMasterWritePerformed": false,
+  "runtimeManufacturerDataWritePerformed": false,
+  "autoMutationPerformed": false
+}
