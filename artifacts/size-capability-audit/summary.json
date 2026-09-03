@@ -1,24 +1,70 @@
 {
-  "schemaVersion": "1.1",
+  "schemaVersion": "1.2",
   "recordType": "SASH_SIZE_CAPABILITY_AUDIT_SUMMARY",
   "status": "PARTIAL_PASS",
   "commonSalesInputContract": "FORMAL_PASS",
   "products": [
-    {"productId":"SER-LIX-SAMOS2H","series":"サーモスⅡ-H","STANDARD":"PENDING","CUSTOM":"AVAILABLE_SOURCE_CONFIRMED","officialStandardSourceCoverage":"PENDING/2131","canonicalRuntimeCoverage":"2131/2131","customSourceCoverage":"17/17 source sections located; exact rules 0/17","dimensionRules":{"MATCH":0,"MISSING":17,"REVIEW_REQUIRED":0,"PENDING":17},"blockingPending":2,"changeProposal":"NONE"},
-    {"productId":"SER-LIX-SAMOSL","series":"サーモスL","STANDARD":"PENDING","CUSTOM":"AVAILABLE","officialStandardSourceCoverage":"97/97 verified slice; full series PENDING","canonicalRuntimeCoverage":"1495/1495","customSourceCoverage":"50/50 rule records audited","dimensionRules":{"MATCH":37,"MISSING":0,"REVIEW_REQUIRED":12,"PENDING":0,"RULE_MISMATCH":1},"blockingPending":4,"changeProposal":"PMCP-LIX-SAMOSL-INNER-TILT-GLASS-GATE-20260903-002"},
-    {"productId":"SER-YKK-APW430","series":"APW 430","STANDARD":"PENDING","CUSTOM":"AVAILABLE_SOURCE_CONFIRMED","officialStandardSourceCoverage":"PENDING/718","canonicalRuntimeCoverage":"718/718","customSourceCoverage":"25/25 source pages mapped; exact rules 0/25","dimensionRules":{"MATCH":0,"MISSING":25,"REVIEW_REQUIRED":0,"PENDING":25},"blockingPending":2,"changeProposal":"NONE"},
-    {"productId":"SER-YKK-APW431","series":"APW 431","STANDARD":"PENDING","CUSTOM":"AVAILABLE","officialStandardSourceCoverage":"PENDING/538","canonicalRuntimeCoverage":"538/538","customSourceCoverage":"29/29 rule records audited","dimensionRules":{"MATCH":21,"MISSING":0,"REVIEW_REQUIRED":8,"PENDING":0},"blockingPending":2,"changeProposal":"NONE"}
+    {
+      "productId": "SER-LIX-SAMOS2H",
+      "series": "サーモスⅡ-H",
+      "STANDARD": "PENDING",
+      "CUSTOM": "AVAILABLE_SOURCE_CONFIRMED",
+      "officialStandardSourceCoverage": "PENDING/2131",
+      "canonicalRuntimeCoverage": "2131/2131",
+      "customSourceCoverage": "17/17 source sections located; exact rules 0/17",
+      "dimensionRules": {"EXACT_RULE_EXTRACTED": 0, "SOURCE_GRAPH_REVIEW_REQUIRED": 0, "SOURCE_INSUFFICIENT": 0, "PENDING": 17},
+      "blockingPending": 2,
+      "changeProposal": "NONE"
+    },
+    {
+      "productId": "SER-LIX-SAMOSL",
+      "series": "サーモスL",
+      "STANDARD": "PARTIAL_PASS",
+      "CUSTOM": "AVAILABLE",
+      "officialStandardSourceCoverage": "97/97 verified slice; full series PENDING",
+      "canonicalRuntimeCoverage": "1495/1495",
+      "customSourceCoverage": "50/50 rule records audited",
+      "dimensionRules": {"MATCH": 37, "SOURCE_GRAPH_REVIEW_REQUIRED": 12, "RULE_MISMATCH": 1, "PENDING": 0},
+      "blockingPending": 4,
+      "changeProposal": "PMCP-LIX-SAMOSL-INNER-TILT-RANGE-20260903-001"
+    },
+    {
+      "productId": "SER-YKK-APW430",
+      "series": "APW 430",
+      "STANDARD": "PENDING",
+      "CUSTOM": "AVAILABLE_SOURCE_CONFIRMED",
+      "officialStandardSourceCoverage": "PENDING/718",
+      "canonicalRuntimeCoverage": "718/718",
+      "customSourceCoverage": "25/25 source pages mapped; exact rules 0/25",
+      "dimensionRules": {"EXACT_RULE_EXTRACTED": 0, "SOURCE_GRAPH_REVIEW_REQUIRED": 0, "SOURCE_INSUFFICIENT": 0, "PENDING": 25},
+      "blockingPending": 2,
+      "changeProposal": "NONE"
+    },
+    {
+      "productId": "SER-YKK-APW431",
+      "series": "APW 431",
+      "STANDARD": "PENDING",
+      "CUSTOM": "AVAILABLE",
+      "officialStandardSourceCoverage": "PENDING/538",
+      "canonicalRuntimeCoverage": "538/538",
+      "customSourceCoverage": "29/29 rule records audited",
+      "dimensionRules": {"MATCH": 21, "SOURCE_GRAPH_REVIEW_REQUIRED": 8, "RULE_MISMATCH": 0, "PENDING": 0},
+      "blockingPending": 2,
+      "changeProposal": "NONE"
+    }
   ],
   "blockingPendingCount": 10,
-  "productMasterChangeProposals": ["PMCP-LIX-SAMOSL-INNER-TILT-GLASS-GATE-20260903-002"],
+  "productMasterChangeProposals": ["PMCP-LIX-SAMOSL-INNER-TILT-RANGE-20260903-001"],
   "formalMasterWritePerformed": false,
   "runtimeManufacturerDataWritePerformed": false,
   "autoMutationPerformed": false,
   "proposalRevalidation": {
-    "supersededDraftProposalId": "PMCP-LIX-SAMOSL-INNER-TILT-RANGE-20260903-001",
-    "supersededDraftFingerprint": "sha256:bf89762cd1cf88be8620b93599d2987c23d50fcb335e6c2b525f5a14175184ee",
-    "formalizedProposalId": "PMCP-LIX-SAMOSL-INNER-TILT-GLASS-GATE-20260903-002",
-    "formalizedProposalFingerprint": "sha256:af42cd7f3d804b26f2f9ff607aeac59f3dbfe759bbbeb227615f82ac8ac9c268",
-    "reason": "P221ハッチ部は寸法不可境界ではなく3-A-3限定/ガラス構成依存領域のため、AUTO_POLYGON案を破棄しCOMPOUND_GATE案へ再確定。"
+    "proposalId": "PMCP-LIX-SAMOSL-INNER-TILT-RANGE-20260903-001",
+    "proposalFingerprint": "sha256:bf89762cd1cf88be8620b93599d2987c23d50fcb335e6c2b525f5a14175184ee",
+    "result": "CONFIRMED",
+    "targetRuleId": "CR-SL-036",
+    "sourceBoundaryPoints": [[240,350],[240,943],[815,943],[815,755],[870,755],[870,500],[1690,500],[1690,350]],
+    "interpolatedPointsAdded": false,
+    "runtimeSafetySeparation": "3-A-3限定・ガラス構成条件はRUNTIME_SAFETY_REVIEW_REQUIREDとして別管理"
   }
 }

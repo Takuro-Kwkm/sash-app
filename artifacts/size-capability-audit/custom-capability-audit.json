@@ -1,12 +1,12 @@
 {
-  "schemaVersion": "1.1",
+  "schemaVersion": "1.2",
   "recordType": "SASH_CUSTOM_CAPABILITY_AUDIT",
   "status": "PARTIAL_PASS",
   "products": [
-    {"productId":"SER-LIX-SAMOS2H","customCapability":"AVAILABLE_SOURCE_CONFIRMED","runtimeDimensionRules":0,"ruleAuditStatus":"ALL_PRODUCT_NODES_EXPLICIT_PENDING","productNodeCount":17,"source":"SRC-LIX-SAMOS-HL-CATALOG-202211"},
-    {"productId":"SER-LIX-SAMOSL","customCapability":"AVAILABLE","runtimeDimensionRules":50,"ruleAuditStatus":"COMPLETE","ruleAuditSummary":{"SOURCE_GRAPH_REVIEW_REQUIRED":12,"MATCH":37,"RULE_MISMATCH":1},"changeProposalIds":["PMCP-LIX-SAMOSL-INNER-TILT-GLASS-GATE-20260903-002"]},
-    {"productId":"SER-YKK-APW430","customCapability":"AVAILABLE_SOURCE_CONFIRMED","runtimeDimensionRules":0,"ruleAuditStatus":"ALL_PRODUCT_NODES_EXPLICIT_PENDING","productNodeCount":25,"source":"SRC-YKK-APW430-BUSINESS-202608"},
-    {"productId":"SER-YKK-APW431","customCapability":"AVAILABLE","runtimeDimensionRules":29,"ruleAuditStatus":"COMPLETE","ruleAuditSummary":{"MATCH":21,"SOURCE_GRAPH_REVIEW_REQUIRED":8}}
+    {"productId":"SER-LIX-SAMOS2H","customCapability":"AVAILABLE_SOURCE_CONFIRMED","runtimeDimensionRules":0,"ruleAuditStatus":"RULE_EXTRACTION_PENDING","productNodeCount":17,"extraction":{"EXACT_RULE_EXTRACTED":0,"SOURCE_GRAPH_REVIEW_REQUIRED":0,"SOURCE_INSUFFICIENT":0,"PENDING":17},"source":"SRC-LIX-SAMOS-HL-CATALOG-202211"},
+    {"productId":"SER-LIX-SAMOSL","customCapability":"AVAILABLE","runtimeDimensionRules":50,"ruleAuditStatus":"COMPLETE_WITH_CHANGE_PROPOSAL","ruleAuditSummary":{"SOURCE_GRAPH_REVIEW_REQUIRED":12,"MATCH":37,"RULE_MISMATCH":1},"changeProposalIds":["PMCP-LIX-SAMOSL-INNER-TILT-RANGE-20260903-001"]},
+    {"productId":"SER-YKK-APW430","customCapability":"AVAILABLE_SOURCE_CONFIRMED","runtimeDimensionRules":0,"ruleAuditStatus":"RULE_EXTRACTION_PENDING","productNodeCount":25,"extraction":{"EXACT_RULE_EXTRACTED":0,"SOURCE_GRAPH_REVIEW_REQUIRED":0,"SOURCE_INSUFFICIENT":0,"PENDING":25},"source":"SRC-YKK-APW430-BUSINESS-202608"},
+    {"productId":"SER-YKK-APW431","customCapability":"AVAILABLE","runtimeDimensionRules":29,"ruleAuditStatus":"COMPLETE","ruleAuditSummary":{"MATCH":21,"SOURCE_GRAPH_REVIEW_REQUIRED":8,"RULE_MISMATCH":0}}
   ],
   "formalWorkbookWritePerformed": false,
   "runtimeManufacturerDataWritePerformed": false

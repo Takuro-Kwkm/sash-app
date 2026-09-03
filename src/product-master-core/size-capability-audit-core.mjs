@@ -74,6 +74,7 @@ const stable=(value)=>{
 export function computeProposalFingerprint(document){
   const payload=structuredClone(document??{});
   delete payload.proposalFingerprint;
+  delete payload.payloadIntegrityFingerprint;
   return `sha256:${createHash('sha256').update(stable(payload),'utf8').digest('hex')}`;
 }
 
@@ -95,8 +96,12 @@ export function validateChangeProposalDocument(document){
   if(document.approvalStatus!=='PENDING')errors.push(`proposal ${document.proposalId??'?'} approvalStatus must be PENDING`);
   if(writesDetected(document)||document.autoApprovalPerformed)errors.push(`proposal ${document.proposalId??'?'} must be non-mutating and unapproved`);
   if(document.baseMaster?.sha256&&document.baseMasterFingerprint!==`sha256:${document.baseMaster.sha256}`)errors.push(`proposal ${document.proposalId??'?'} baseMasterFingerprint mismatch`);
+
   const expected=computeProposalFingerprint(document);
-  if(document.proposalFingerprint!==expected)errors.push(`proposal ${document.proposalId??'?'} fingerprint mismatch`);
+  if(document.proposalFingerprintPolicy==='PRESERVED_LEGACY_PROPOSAL_SHA256'){
+    if(!/^sha256:[a-f0-9]{64}$/.test(document.proposalFingerprint))errors.push(`proposal ${document.proposalId??'?'} legacy fingerprint format invalid`);
+    if(typeof document.payloadIntegrityFingerprint!=='string'||document.payloadIntegrityFingerprint!==expected)errors.push(`proposal ${document.proposalId??'?'} payload integrity fingerprint mismatch`);
+  } else if(document.proposalFingerprint!==expected)errors.push(`proposal ${document.proposalId??'?'} fingerprint mismatch`);
   return errors;
 }
 
