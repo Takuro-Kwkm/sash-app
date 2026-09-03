@@ -1,9 +1,9 @@
 {
-  "schemaVersion": "1.1",
+  "schemaVersion": "1.2",
   "productId": "SER-LIX-SAMOSL",
   "expectedRuleCount": 50,
   "auditedRuleCount": 50,
-  "summary": {"SOURCE_GRAPH_REVIEW_REQUIRED": 12, "MATCH": 37, "RULE_MISMATCH": 1},
+  "summary": {"SOURCE_GRAPH_REVIEW_REQUIRED": 12, "MATCH": 38, "RULE_MISMATCH": 0},
   "records": [
     {"rule_id":"CR-SL-001","product_node":"WT-SL-HIKICHIGAI","audit_status":"SOURCE_GRAPH_REVIEW_REQUIRED","printed_page":"P70"},
     {"rule_id":"CR-SL-002","product_node":"WT-SL-SHUTTER-HIKI","audit_status":"SOURCE_GRAPH_REVIEW_REQUIRED","printed_page":"P102"},
@@ -43,7 +43,7 @@
     {
       "rule_id":"CR-SL-036",
       "product_node":"WT-SL-UCHIDAOSHI",
-      "audit_status":"RULE_MISMATCH",
+      "audit_status":"MATCH",
       "printed_page":"P221",
       "selector_state":{"window_type":"WT-SL-UCHIDAOSHI","specific_spec":"*","construction":"在来/204","leaf_configuration":"単窓"},
       "unit":"mm",
@@ -51,13 +51,21 @@
       "W_max":1690,
       "H_min":350,
       "H_max":943,
-      "current_W_H_dependency":"240<=W<=870:350<=H<=943; 870<W<=1690:350<=H<=500",
+      "current_evaluation_type":"COMPOUND_GATE",
+      "current_automatic":false,
+      "current_W_H_dependency":"240<=W<=815:350<=H<=943; 815<W<=870:350<=H<=755; 870<W<=1690:350<=H<=500",
       "official_safe_auto_boundary":"240<=W<=815:350<=H<=943; 815<W<=870:350<=H<=755; 870<W<=1690:350<=H<=500",
+      "current_boundary_points":[[240,350],[240,943],[815,943],[815,755],[870,755],[870,500],[1690,500],[1690,350]],
       "official_boundary_points":[[240,350],[240,943],[815,943],[815,755],[870,755],[870,500],[1690,500],[1690,350]],
       "inclusivity":{"W_815_left":"inclusive","W_815_right":"exclusive","W_870_left":"inclusive","W_870_right":"exclusive","H_upper_bound":"inclusive"},
       "special_condition":"P221注記領域はガラス厚3-A-3のみ対応可能。ガラス構成によって製作できない場合がある。",
       "automatic_judgement_safe":false,
-      "audit_detail":"現行AUTO_PIECEWISEはW=815～870の一部でH<=943をW/HだけでAUTO PASSし得る。P221で読取可能な安全側境界はH=755であり過許容。境界修正はChange Proposalへ分離し、3-A-3限定・ガラス構成条件はRUNTIME_SAFETY_REVIEW_REQUIREDとして別管理する。",
+      "runtime_safety":"RUNTIME_SAFETY_REVIEW_REQUIRED",
+      "change_control_status":"FORMAL_MASTER_APPLIED_RUNTIME_REGENERATED",
+      "proposal_id":"PMCP-LIX-SAMOSL-INNER-TILT-RANGE-20260903-001",
+      "formal_master_sha256":"cd6844218fcf0150a16cbbfa947f391aa08f5449b82ba6fc2249ccdb6894c3d3",
+      "runtime_regeneration_version":"v1.9",
+      "audit_detail":"P221で確認した8頂点のみを使用してFormal Product Masterの過許容を修正済み。RuntimeはFormal Master由来v1.9 deltaでCR-SL-036だけをCOMPOUND_GATEへ追従し、W/Hだけの最終AUTO PASSを禁止した。3-A-3限定・ガラス構成条件は別PENDINGとして継続する。",
       "pdf_page":223,
       "source_file":"202211_LIXIL_サーモスⅡ－Ｈ／Ｌ　防火戸ＦＧ－Ｈ／Ｌ_商品カタログ.pdf",
       "source_locator":"P221 寸法特注範囲 SAMOSⅡ H/L｜内倒し窓"
@@ -78,5 +86,10 @@
     {"rule_id":"CR-SL-050","product_node":"WT-SL-KATTEGUCHI","audit_status":"MATCH","printed_page":"P269"}
   ],
   "formalMasterWritePerformed": false,
-  "runtimeWritePerformed": false
+  "runtimeWritePerformed": false,
+  "externalChangeControl": {
+    "formalMasterWritePerformed": true,
+    "runtimeRegenerationCommitted": true,
+    "runtimeDirectManufacturerWrite": false
+  }
 }

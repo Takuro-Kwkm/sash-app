@@ -9,8 +9,9 @@ import {
 } from '../src/product-master-core/size-capability-audit-core.mjs';
 
 const read=(name)=>JSON.parse(fs.readFileSync(new URL(`../artifacts/size-capability-audit/${name}`,import.meta.url),'utf8'));
-const proposalPath='../data/master-change-control/proposals/PMCP-LIX-SAMOSL-INNER-TILT-RANGE-20260903-001.manifest.json';
-const readProposal=()=>JSON.parse(fs.readFileSync(new URL(proposalPath,import.meta.url),'utf8'));
+const readJson=(relative)=>JSON.parse(fs.readFileSync(new URL(`../${relative}`,import.meta.url),'utf8'));
+const proposalPath='data/master-change-control/proposals/PMCP-LIX-SAMOSL-INNER-TILT-RANGE-20260903-001.manifest.json';
+const readProposal=()=>readJson(proposalPath);
 
 test('generic Size Capability Audit accepts managed PENDING without hiding it',()=>{
   const gate=buildSizeCapabilityAuditGate({
@@ -34,25 +35,26 @@ test('current Thermos L and APW431 rule audits are complete and non-mutating',()
   assert.deepEqual(validateRuleAuditDocument(apw431),[]);
   assert.equal(thermos.expectedRuleCount,50);
   assert.equal(apw431.expectedRuleCount,29);
-  assert.equal(thermos.summary.MATCH,37);
+  assert.equal(thermos.summary.MATCH,38);
   assert.equal(thermos.summary.SOURCE_GRAPH_REVIEW_REQUIRED,12);
-  assert.equal(thermos.summary.RULE_MISMATCH,1);
+  assert.equal(thermos.summary.RULE_MISMATCH,0);
   assert.equal(apw431.summary.MATCH,21);
   assert.equal(apw431.summary.SOURCE_GRAPH_REVIEW_REQUIRED,8);
   assert.equal(apw431.summary.RULE_MISMATCH??0,0);
 });
 
-test('CR-SL-036 mismatch retains only source-confirmed boundary points',()=>{
+test('CR-SL-036 applied audit uses only source-confirmed boundary points and keeps safety review',()=>{
   const thermos=read('dimension-rule-audit-thermosl.json');
   const row=thermos.records.find((item)=>item.rule_id==='CR-SL-036');
-  assert.equal(row.audit_status,'RULE_MISMATCH');
-  assert.deepEqual(row.selector_state,{
-    window_type:'WT-SL-UCHIDAOSHI',specific_spec:'*',construction:'在来/204',leaf_configuration:'単窓'
-  });
+  assert.equal(row.audit_status,'MATCH');
+  assert.deepEqual(row.selector_state,{window_type:'WT-SL-UCHIDAOSHI',specific_spec:'*',construction:'在来/204',leaf_configuration:'単窓'});
   assert.equal(row.unit,'mm');
-  assert.deepEqual(row.official_boundary_points,[
-    [240,350],[240,943],[815,943],[815,755],[870,755],[870,500],[1690,500],[1690,350]
-  ]);
+  assert.equal(row.current_evaluation_type,'COMPOUND_GATE');
+  assert.equal(row.current_automatic,false);
+  assert.equal(row.current_W_H_dependency,'240<=W<=815:350<=H<=943; 815<W<=870:350<=H<=755; 870<W<=1690:350<=H<=500');
+  assert.deepEqual(row.current_boundary_points,[[240,350],[240,943],[815,943],[815,755],[870,755],[870,500],[1690,500],[1690,350]]);
+  assert.deepEqual(row.current_boundary_points,row.official_boundary_points);
+  assert.equal(row.runtime_safety,'RUNTIME_SAFETY_REVIEW_REQUIRED');
   assert.equal(row.automatic_judgement_safe,false);
 });
 
@@ -71,7 +73,7 @@ test('generic audit core contains no current product token',()=>{
   for(const token of ['SER-LIX-SAMOS2H','SER-LIX-SAMOSL','SER-YKK-APW430','SER-YKK-APW431','サーモス','APW 430','APW 431'])assert.equal(source.includes(token),false);
 });
 
-test('formalized CR-SL-036 range proposal preserves legacy proposal fingerprint and validates current payload integrity',()=>{
+test('historical CR-SL-036 proposal remains immutable and payload-integrity valid after external Change Control',()=>{
   const proposal=readProposal();
   assert.deepEqual(validateChangeProposalDocument(proposal),[]);
   assert.equal(proposal.proposalId,'PMCP-LIX-SAMOSL-INNER-TILT-RANGE-20260903-001');
@@ -84,12 +86,7 @@ test('formalized CR-SL-036 range proposal preserves legacy proposal fingerprint 
   assert.equal(proposal.runtimeWritePerformed,false);
   assert.equal(proposal.autoApprovalPerformed,false);
   assert.equal(proposal.baseMasterFingerprint,`sha256:${proposal.baseMaster.sha256}`);
-  assert.equal(proposal.targetEntity,'06C_特注寸法範囲');
-  assert.equal(proposal.targetRuleId,'CR-SL-036');
-  assert.deepEqual(proposal.sourceEvidenceIds,['EV-SL-CUSTOM-P221-INNER-TILT']);
-  assert.deepEqual(proposal.after.safeAutoPolygon,[
-    [240,350],[240,943],[815,943],[815,755],[870,755],[870,500],[1690,500],[1690,350]
-  ]);
+  assert.deepEqual(proposal.after.safeAutoPolygon,[[240,350],[240,943],[815,943],[815,755],[870,755],[870,500],[1690,500],[1690,350]]);
 });
 
 test('legacy proposal payload tampering is detected independently of preserved proposal identity fingerprint',()=>{
@@ -98,20 +95,40 @@ test('legacy proposal payload tampering is detected independently of preserved p
   assert.ok(validateChangeProposalDocument(proposal).some((error)=>error.includes('payload integrity fingerprint mismatch')));
 });
 
-test('full current gate loads the exact proposal declared by summary',()=>{
+test('external HUMAN approval, STAGING, Production and Runtime regeneration are bound to the exact proposal',()=>{
+  const id='PMCP-LIX-SAMOSL-INNER-TILT-RANGE-20260903-001';
+  const approval=readJson(`data/master-change-control/approvals/${id}.approval.json`);
+  const staging=readJson(`data/master-change-control/applied/${id}.staging.json`);
+  const prodApproval=readJson(`data/master-change-control/production-approvals/${id}.production-approval.json`);
+  const production=readJson(`data/master-change-control/production/${id}.applied.json`);
+  const runtime=readJson('data/master-change-control/runtime/THERMOSL_CR_SL_036_RUNTIME_REGENERATION_V19.json');
+  for(const row of [approval,staging,prodApproval,production,runtime])assert.equal(row.proposalId,id);
+  assert.equal(approval.approverType,'HUMAN');
+  assert.equal(staging.proposalStatus,'APPLIED');
+  assert.equal(prodApproval.productionApproval,true);
+  assert.equal(production.status,'PRODUCTION_APPLY_COMPLETE');
+  assert.equal(production.postWriteReadback.unexpectedChangedCells,0);
+  assert.equal(production.formalTarget.postWriteSha256,'cd6844218fcf0150a16cbbfa947f391aa08f5449b82ba6fc2249ccdb6894c3d3');
+  assert.equal(runtime.status,'RUNTIME_REGENERATION_COMMITTED');
+  assert.equal(runtime.runtimeVersion,'v1.9');
+  assert.equal(runtime.runtimeProjection.directManufacturerValueEditToGenericCore,false);
+});
+
+test('full current gate has nine managed blocking PENDING and no active Human Approval proposal',()=>{
   const summary=read('summary.json');
-  const proposal=readProposal();
+  assert.deepEqual(summary.productMasterChangeProposals,[]);
+  assert.deepEqual(summary.appliedProductMasterChangeProposals,['PMCP-LIX-SAMOSL-INNER-TILT-RANGE-20260903-001']);
   const gate=buildSizeCapabilityAuditGate({
     summary,
     standardAudit:read('standard-size-audit.json'),
     customAudit:read('custom-capability-audit.json'),
     pending:read('pending.json'),
     ruleAudits:[read('dimension-rule-audit-thermosl.json'),read('dimension-rule-audit-apw431.json')],
-    proposals:[proposal]
+    proposals:[]
   });
   assert.equal(gate.integrityGate,'PASS');
   assert.equal(gate.status,'PARTIAL_PASS');
-  assert.equal(gate.blockingPending,10);
-  assert.equal(gate.proposalCount,1);
-  assert.equal(gate.proposalApprovalGate,'HUMAN_APPROVAL_PENDING');
+  assert.equal(gate.blockingPending,9);
+  assert.equal(gate.proposalCount,0);
+  assert.equal(gate.proposalApprovalGate,'NO_PROPOSAL_PENDING');
 });
