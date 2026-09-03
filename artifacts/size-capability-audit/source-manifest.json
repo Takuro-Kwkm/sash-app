@@ -1,0 +1,18 @@
+{
+  "schemaVersion": "1.0",
+  "recordType": "SASH_SIZE_CAPABILITY_SOURCE_MANIFEST",
+  "generatedAt": "2026-09-03",
+  "sources": [
+    {"sourceId":"SRC-LIX-SAMOSL-PRICE-202604","productIds":["SER-LIX-SAMOSL"],"manufacturer":"LIXIL","title":"202604_LIXIL_サーモスＬ_業務用資料集_完成品価格表.pdf","driveFileId":"1YUN-mtWYs48YBUHJk0C3vJXnhjyZFHyf","role":["STANDARD","CURRENT_PRODUCT_SETTING"],"status":"OFFICIAL"},
+    {"sourceId":"SRC-LIX-SAMOS-HL-CATALOG-202211","productIds":["SER-LIX-SAMOS2H","SER-LIX-SAMOSL"],"manufacturer":"LIXIL","title":"202211_LIXIL_サーモスⅡ－Ｈ／Ｌ　防火戸ＦＧ－Ｈ／Ｌ_商品カタログ.pdf","driveFileId":"1UXmP4gyH3Hurw_uxU0djon19rpxDZaef","role":["CUSTOM_DIMENSION","PRODUCT_STRUCTURE"],"status":"OFFICIAL","note":"現行Masterの06Cが参照するSAMOSⅡ H/L寸法特注範囲。現行2026価格資料との商品継続性を別途照合する。"},
+    {"sourceId":"SRC-LIX-SAMOS2H-PRICE-202604","productIds":["SER-LIX-SAMOS2H"],"manufacturer":"LIXIL","title":"202604_LIXIL_サーモスⅡ－Ｈ_業務用資料集_完成品価格表.pdf","driveFileId":"1x4lovMcyfkyFzulYiQIv8OE5dpq6wDor","role":["STANDARD","CURRENT_PRODUCT_SETTING"],"status":"OFFICIAL"},
+    {"sourceId":"SRC-YKK-APW430-BUSINESS-202608","productIds":["SER-YKK-APW430","SER-YKK-APW431"],"manufacturer":"YKK AP","title":"202608_YKKAP_APW430_業務用資料集.pdf","driveFileId":"1GZRfXqRKZKti-LreyNgW9-wegAF-HzaK","role":["CUSTOM_DIMENSION","STANDARD_REFERENCE"],"status":"OFFICIAL","printedPages":"2-13"},
+    {"sourceId":"SRC-YKK-APW430-CATALOG-202607","productIds":["SER-YKK-APW430","SER-YKK-APW431"],"manufacturer":"YKK AP","title":"202607_YKKAP_APW430_商品カタログ.pdf","driveFileId":"1j9PtW8yoKBZ4Nodm58wU3QtOCvxlEja9","role":["STANDARD","PRODUCT_STRUCTURE"],"status":"OFFICIAL"},
+    {"sourceId":"SRC-MASTER-SAMOS2H-V07","productIds":["SER-LIX-SAMOS2H"],"title":"サーモスⅡH_商品マスター_v0.7_完全完成版.xlsx","driveFileId":"1zHi-XsMqJp0MKH-sDoTcnTqkLMGcuRdo","role":["CANONICAL_MASTER"],"status":"FORMAL"},
+    {"sourceId":"SRC-MASTER-SAMOSL-V07","productIds":["SER-LIX-SAMOSL"],"title":"サーモスL_商品マスター_v0.7_特注寸法発注アプリ投入完成版_QA確定.xlsx","driveFileId":"17lVzBZ1hp4RVcGv0yNdnrKt25SFO2FhL","role":["CANONICAL_MASTER"],"status":"FORMAL","sha256":"664a51bd5b9ded22e19780b1ce339338cba45f292438221b0a60fc3974e1abf9"},
+    {"sourceId":"SRC-MASTER-APW430-20260830","productIds":["SER-YKK-APW430"],"title":"20260830_YKKAP_APW430_商品マスター_正本","driveFileId":"1QDocQ7yoXE6TAnzHtfsyKwwK6YB5_mgk90Bw1hm4iPo","role":["CANONICAL_MASTER"],"status":"FORMAL"},
+    {"sourceId":"SRC-MASTER-APW431-V10","productIds":["SER-YKK-APW431"],"title":"APW431_商品マスター_v1.0_最終QA正式固定版.xlsx","driveFileId":"1TBEn2tTbFjBLeIOeDs0fR3iIDcLEn3jI","role":["CANONICAL_MASTER"],"status":"FORMAL"}
+  ],
+  "formalWorkbookWritePerformed": false,
+  "runtimeManufacturerDataWritePerformed": false
+}
