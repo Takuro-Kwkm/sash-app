@@ -53,7 +53,8 @@
     "unexpectedChangedExistingSheets": 0,
     "semanticFingerprint": "sha256:1940a1ce7b768ccd2cc0fa1f44ebc1e3ba65e26c40089d618b0b837607ae6966"
   },
-  "runtimeRegenerationStatus": "PENDING_FROM_FORMAL_MASTER",
+  "runtimeRegenerationStatus": "COMMITTED_FROM_FORMAL_MASTER_V1_0",
+  "runtimeRegenerationRecord": "data/master-change-control/runtime/APW430_CUSTOM_RUNTIME_REGENERATION_V10.json",
   "runtimeDirectWritePerformed": false,
   "rollbackRequired": false
 }
