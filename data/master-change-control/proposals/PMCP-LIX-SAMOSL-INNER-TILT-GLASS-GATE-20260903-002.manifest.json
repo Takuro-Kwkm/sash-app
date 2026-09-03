@@ -1,0 +1,25 @@
+{
+  "schemaVersion": "1.1",
+  "proposalId": "PMCP-LIX-SAMOSL-INNER-TILT-GLASS-GATE-20260903-002",
+  "productId": "SER-LIX-SAMOSL",
+  "status": "PROPOSED",
+  "approvalPolicy": "HUMAN_REQUIRED",
+  "approvalStatus": "PENDING",
+  "baseMaster": {
+    "driveFileId": "17lVzBZ1hp4RVcGv0yNdnrKt25SFO2FhL",
+    "title": "サーモスL_商品マスター_v0.7_特注寸法発注アプリ投入完成版_QA確定.xlsx",
+    "sha256": "664a51bd5b9ded22e19780b1ce339338cba45f292438221b0a60fc3974e1abf9"
+  },
+  "operation": "UPDATE_DIMENSION_RULE",
+  "target": {"sheet":"06C_特注寸法範囲","entityId":"CR-SL-036","productNode":"WT-SL-UCHIDAOSHI"},
+  "current": {"判定方式":"AUTO_PIECEWISE","automatic":true,"W_MIN":240,"W_MAX":1690,"H_MIN":350,"H_MAX":943,"条件式/境界":"240<=W<=870:350<=H<=943; 870<W<=1690:350<=H<=500","特殊条件":"一部3-A-3限定ゾーンは08A/08Dで安全側評価"},
+  "proposed": {"判定方式":"COMPOUND_GATE","automatic":false,"W_MIN":240,"W_MAX":1690,"H_MIN":350,"H_MAX":943,"条件式/境界":"240<=W<=870:350<=H<=943; 870<W<=1690:350<=H<=500","sourceGraphReviewRequired":true,"specialCondition":"P221のハッチ部はガラス厚3-A-3のみ対応。さらにガラス構成によって製作できない場合があるため、現行RuntimeのW/H幾何判定だけでは安全なAUTO PASSにできない。"},
+  "evidence": [{"evidenceId":"EV-SL-CUSTOM-P221-INNER-TILT","sourceFile":"202211_LIXIL_サーモスⅡ－Ｈ／Ｌ　防火戸ＦＧ－Ｈ／Ｌ_商品カタログ.pdf","printedPage":221,"pdfPage":223,"sourceLocator":"P221 寸法特注範囲 SAMOSⅡ H/L"}],
+  "revalidation": {"result":"SUPERSEDES_UNSAFE_DRAFT_INTERPRETATION","supersededDraftProposalId":"PMCP-LIX-SAMOSL-INNER-TILT-RANGE-20260903-001","supersededDraftFingerprint":"sha256:bf89762cd1cf88be8620b93599d2987c23d50fcb335e6c2b525f5a14175184ee","reason":"P221の斜線/ハッチ部は寸法不可境界ではなく「ガラス厚3-A-3のみ対応」の条件領域。AUTO_POLYGONで切り落とす旧Draftは有効組合せまでBLOCKするため正式固定しない。"},
+  "pendingCount": 0,
+  "conflictCount": 0,
+  "formalWorkbookWritePerformed": false,
+  "runtimeWritePerformed": false,
+  "autoApprovalPerformed": false,
+  "proposalFingerprint": "sha256:5874c5584bff5a937fc1d36134735c834f84612bbda4530daa64e7ab238bc117"
+}
