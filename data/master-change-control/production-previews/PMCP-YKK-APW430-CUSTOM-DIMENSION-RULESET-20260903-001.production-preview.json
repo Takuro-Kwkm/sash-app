@@ -1,0 +1,56 @@
+{
+  "previewSchemaVersion": "1.1",
+  "recordType": "PRODUCT_MASTER_PRODUCTION_PREVIEW",
+  "status": "PRODUCTION_WRITE_PREVIEW_READY",
+  "generatedAt": "2026-09-03T21:38:00+09:00",
+  "productId": "SER-YKK-APW430",
+  "proposalId": "PMCP-YKK-APW430-CUSTOM-DIMENSION-RULESET-20260903-001",
+  "proposalFingerprint": "sha256:894ca2e99cfd482b0093bfbc1d1763383a8e01c5c8614d75ac1560938ae5eb78",
+  "approvedStagingSemanticFingerprint": "sha256:1940a1ce7b768ccd2cc0fa1f44ebc1e3ba65e26c40089d618b0b837607ae6966",
+  "formalTarget": {
+    "driveFileId": "1QDocQ7yoXE6TAnzHtfsyKwwK6YB5_mgk90Bw1hm4iPo",
+    "title": "20260830_YKKAP_APW430_商品マスター_正本",
+    "expectedDriveRevisionId": "11",
+    "expectedModifiedTime": "2026-08-30T11:39:41.909Z",
+    "baseMasterProposalSha256": "b149cc61ea2a2ddf119286ce39b4c03737ad789e7cbab2cec9e414f1dcffccd9",
+    "concurrencyPolicy": "DRIVE_REVISION_AND_SHEET_STATE"
+  },
+  "writePlan": {
+    "operation": "ADD_SHEET",
+    "sheet": "06C_特注寸法範囲",
+    "rows": 25,
+    "dataColumns": 20,
+    "changedExistingSheets": 0,
+    "newSheetsAdded": 1,
+    "unexpectedChangedExistingSheets": 0,
+    "dimensionRuleRecords": 25,
+    "classificationSummary": {
+      "EXACT_RULE_EXTRACTED": 20,
+      "SOURCE_GRAPH_REVIEW_REQUIRED": 5
+    },
+    "automaticTrue": 0,
+    "automaticFalse": 25
+  },
+  "projectedInventory": {
+    "s2hStandard": 2131,
+    "thermosLStandard": 1495,
+    "apw430Standard": 718,
+    "apw431Standard": 538
+  },
+  "productionApproval": {
+    "required": true,
+    "status": "APPROVED_BY_CURRENT_USER_MESSAGE",
+    "scope": "APPROVE_PRODUCTION_WRITE_ONLY"
+  },
+  "safety": {
+    "backupDriveFileId": "1xx4HQJKbMTYpJK7QBe7i2sNioIHsqP1bkVFORndzKhw",
+    "stagingDriveFileId": "1XVB3uGSL63_Ru0lHeUOllQArz4RHTLA6N8yYx-WnaEU",
+    "driveRevisionRecheckRequired": true,
+    "postWriteReadbackRequired": true,
+    "runtimeRegenerationFromFormalMasterRequired": true,
+    "interpolationAdded": false
+  },
+  "formalWorkbookWritePerformed": false,
+  "runtimeWritePerformed": false,
+  "previewFingerprint": "sha256:681879789d0098fbca2a15089f2bb219e43f4c08c270ae6051805df0a6b6e3f5"
+}
