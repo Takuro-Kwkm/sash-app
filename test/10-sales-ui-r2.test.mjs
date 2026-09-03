@@ -122,10 +122,10 @@ test('127 all 65 ACTIVE windows derive STANDARD/CUSTOM availability from connect
       if(custom)customWindows+=1;else standardOnly+=1;
     }
   }
-  assert.deepEqual({windows,customWindows,standardOnly},{windows:65,customWindows:23,standardOnly:42});
+  assert.deepEqual({windows,customWindows,standardOnly},{windows:65,customWindows:40,standardOnly:25});
 });
 
-test('128 every formal Dimension Rule has a UI-reachable CUSTOM witness without requiring construction input',()=>{
+test('128 every connected Thermos L/APW431 formal Dimension Rule has a UI-reachable CUSTOM witness without requiring construction input',()=>{
   for(const productId of[ids.sl,ids.a431]){
     const rules=catalog.ruleSets.filter((row)=>row.productId===productId&&row.type==='DIMENSION_RULES').flatMap((row)=>row.payload);
     for(const rule of rules){
