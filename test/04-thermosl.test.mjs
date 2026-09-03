@@ -15,23 +15,26 @@ const field=(selection,key)=>stabilizeSelection(catalog,productId,selection).fie
 const values=(selection,key)=>field(selection,key)?.values.map((row)=>row.value)??[];
 const dimension=(selection)=>evaluateDimension(catalog,productId,selection);
 
-test("25 Thermos L canonical source is 01_正本",()=>{
+test("25 Thermos L canonical source is current 01_正本",()=>{
   assert.equal(THERMOSL_SOURCE.master.id,"17lVzBZ1hp4RVcGv0yNdnrKt25SFO2FhL");
   assert.equal(THERMOSL_SOURCE.master.folder,"01_正本");
   assert.equal(THERMOSL_SOURCE.master.version,"v0.7");
-  assert.equal(THERMOSL_SOURCE.master.revisionId,"0B1PsqngSohhlRDByanJSNkxtSlpqdVo0WXBRT01MNDIzM2tNPQ");
+  assert.equal(THERMOSL_SOURCE.master.revisionId,"0B1PsqngSohhlZVhYaTVRdUNPRFp4ZVB5Y05IdnJNYXI4YTlZPQ");
+  assert.equal(THERMOSL_SOURCE.master.sha256,"cd6844218fcf0150a16cbbfa947f391aa08f5449b82ba6fc2249ccdb6894c3d3");
 });
 
-test("26 Thermos L source inventory is exact after formal v1.8 regeneration",()=>{
+test("26 Thermos L source inventory is exact after formal v1.9 regeneration",()=>{
   assert.deepEqual(THERMOSL_SOURCE.sourceInventory,{
     activeWindows:17,masterSizeRows:1644,selectableSizeRows:1495,dimensionRules:50,
-    dimensionAuto:29,dimensionReview:21,highOperationRows:144,appControls:17,goldenTests:29
+    dimensionAuto:28,dimensionReview:22,highOperationRows:144,appControls:17,goldenTests:29
   });
   assert.equal(THERMOSL_SOURCE.windows.length,17);
   assert.equal(THERMOSL_SOURCE.sizes.length,1644);
   assert.equal(THERMOSL_SOURCE.sizes.filter((row)=>row.active).length,1495);
-  assert.equal(THERMOSL_SOURCE.runtimeRegeneration.version,"v1.8");
+  assert.equal(THERMOSL_SOURCE.runtimeRegeneration.version,"v1.9");
   assert.equal(THERMOSL_SOURCE.runtimeRegeneration.addedSizeRows,85);
+  assert.equal(THERMOSL_SOURCE.runtimeRegeneration.dimensionRuleUpdates,1);
+  assert.equal(THERMOSL_SOURCE.runtimeRegeneration.targetRuleId,"CR-SL-036");
 });
 
 test("27 normalized catalog exposes 17 active window types",()=>{
@@ -44,13 +47,13 @@ test("28 selectable size source ids are exactly 1495",()=>{
   assert.equal(new Set(rows.map((row)=>row.metadata.sourceSizeId)).size,1495);
 });
 
-test("29 dimension inventory is 50 / AUTO29 / REVIEW21",()=>{
+test("29 dimension inventory is 50 / AUTO28 / REVIEW22 after CR-SL-036 formal regeneration",()=>{
   const rows=THERMOSL_MODULE.ruleSets.find((row)=>row.type==="DIMENSION_RULES").payload;
   assert.equal(rows.length,50);
-  assert.equal(rows.filter((row)=>row.automatic).length,29);
-  assert.equal(rows.filter((row)=>!row.automatic).length,21);
+  assert.equal(rows.filter((row)=>row.automatic).length,28);
+  assert.equal(rows.filter((row)=>!row.automatic).length,22);
   assert.deepEqual(Object.fromEntries(["AUTO_RECT","AUTO_RATIO","AUTO_PIECEWISE","AUTO_POLYGON","SOURCE_GRAPH_GATE","COMPOUND_GATE"].map((type)=>[type,rows.filter((row)=>row.type===type).length])),{
-    AUTO_RECT:9,AUTO_RATIO:8,AUTO_PIECEWISE:6,AUTO_POLYGON:6,SOURCE_GRAPH_GATE:12,COMPOUND_GATE:9
+    AUTO_RECT:9,AUTO_RATIO:8,AUTO_PIECEWISE:5,AUTO_POLYGON:6,SOURCE_GRAPH_GATE:12,COMPOUND_GATE:10
   });
 });
 

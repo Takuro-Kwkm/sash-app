@@ -25,6 +25,9 @@ const previousDimensionRule=base.dimensionRules.find((row)=>row.id===dimensionDe
 if(!previousDimensionRule||previousDimensionRule.type!=='AUTO_PIECEWISE'||previousDimensionRule.condition!=='240<=W<=870:350<=H<=943; 870<W<=1690:350<=H<=500')throw new Error('Thermos L CR-SL-036 base rule drift before v1.9 regeneration');
 const mergedDimensionRules=base.dimensionRules.map((row)=>row.id===dimensionDelta.targetRuleId?{...row,...dimensionDelta.rule}:row);
 if(mergedDimensionRules.length!==dimensionDelta.expectedRuleCount||mergedDimensionRules.filter((row)=>row.id===dimensionDelta.targetRuleId).length!==1)throw new Error('Thermos L v1.9 dimension rule regeneration drift');
+const dimensionAuto=mergedDimensionRules.filter((row)=>row.automatic).length;
+const dimensionReview=mergedDimensionRules.length-dimensionAuto;
+if(dimensionAuto!==28||dimensionReview!==22)throw new Error('Thermos L v1.9 dimension AUTO/REVIEW inventory drift');
 
 export const THERMOSL_SOURCE={
   ...base,
@@ -35,7 +38,14 @@ export const THERMOSL_SOURCE={
     revisionId:dimensionDelta.formalMaster.revisionId,
     sha256:dimensionDelta.formalMaster.sha256
   },
-  sourceInventory:{...base.sourceInventory,masterSizeRows:delta.expectedAfter.masterSizeRows,selectableSizeRows:delta.expectedAfter.selectableSizeRows},
+  sourceInventory:{
+    ...base.sourceInventory,
+    masterSizeRows:delta.expectedAfter.masterSizeRows,
+    selectableSizeRows:delta.expectedAfter.selectableSizeRows,
+    dimensionRules:mergedDimensionRules.length,
+    dimensionAuto,
+    dimensionReview
+  },
   sizes:mergedSizes,
   dimensionRules:mergedDimensionRules,
   runtimeRegeneration:{
