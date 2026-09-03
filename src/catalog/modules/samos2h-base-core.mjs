@@ -1,6 +1,6 @@
 import { SAMOS2H_SOURCE as source } from './samos2h-source.mjs';
 export const PRODUCT_ID='SER-LIX-SAMOS2H';
-export const master={id:'1kTRcb7UdghZl7h3lYdmnZuB7fUVUAduU',title:'サーモスⅡH_商品マスター_v0.9_納まりアンカー追補_GoldenTest版.xlsx',version:'v1.0',folder:'01_正本',modifiedTime:'2026-09-03T10:21:49.128Z',sizeBytes:557373,sha256:'7ca8f5cca19187bfb841bc3f3393fb29de591dc554714627faf3a652130cd8a7'};
+export const master={id:'1zHi-XsMqJp0MKH-sDoTcnTqkLMGcuRdo',title:'サーモスⅡH_商品マスター_v0.7_完全完成版.xlsx',version:'v0.7',folder:'01_正本'};
 export const ev=id=>[id];
 export const definition=(key,displayLabel,displayOrder,sourceRole,dataType='ENUM',extra={})=>({id:`${PRODUCT_ID}:def:${key}`,productId:PRODUCT_ID,key,displayLabel,description:`${displayLabel}を正本商品マスターから選択`,dataType,category:'estimate',applicability:'SELECTOR_DRIVEN',displayOrder,evidenceIds:ev('EV-S2H-001'),version:master.version,status:'ACTIVE',sourceRole,...extra});
 export const value=(key,raw,label,order,extra={})=>{const{idSuffix,...rest}=extra;return{id:`${PRODUCT_ID}:${key}:${raw}:${idSuffix??order}`,productId:PRODUCT_ID,specificationKey:key,value:raw,displayLabel:label,displayOrder:order,status:'ACTIVE',...rest};};
