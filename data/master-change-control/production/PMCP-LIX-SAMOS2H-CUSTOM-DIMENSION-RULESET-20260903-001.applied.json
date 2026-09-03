@@ -1,0 +1,23 @@
+{
+  "schemaVersion": "1.0",
+  "recordType": "PRODUCT_MASTER_PRODUCTION_APPLICATION",
+  "proposalId": "PMCP-LIX-SAMOS2H-CUSTOM-DIMENSION-RULESET-20260903-001",
+  "productId": "SER-LIX-SAMOS2H",
+  "proposalFingerprint": "sha256:bd5900002f8d54d322fb7c50bb0b4b121f54a81ece7ec0e60baaffe6914df08e",
+  "status": "PRODUCTION_APPLY_COMPLETE",
+  "formalTarget": {
+    "driveFileId": "1kTRcb7UdghZl7h3lYdmnZuB7fUVUAduU",
+    "title": "サーモスⅡH_商品マスター_v0.9_納まりアンカー追補_GoldenTest版.xlsx",
+    "preWriteSha256": "8dea8b2ecec1715445db74255f591b4f2bcf404027f0006f168a585365df29d6",
+    "postWriteSha256": "7ca8f5cca19187bfb841bc3f3393fb29de591dc554714627faf3a652130cd8a7",
+    "modifiedTime": "2026-09-03T10:21:49.128Z",
+    "sizeBytes": 557373,
+    "backupDriveFileId": "16ZywYmiuVOp7iUsKroJIlQ76vQ8fSOCZ"
+  },
+  "write": {"operation":"ADD_SHEET","sheet":"06E_特注寸法範囲","dimensionRuleRecords":17,"existingSheetChanges":0,"newSheetsAdded":1},
+  "postWriteReadback": {"sha256":"7ca8f5cca19187bfb841bc3f3393fb29de591dc554714627faf3a652130cd8a7","sizeBytes":557373,"sheetPresent":true,"dimensionRuleCount":17,"unexpectedChangedCells":0,"unexpectedChangedExistingSheets":0},
+  "classificationSummary": {"EXACT_RULE_EXTRACTED":7,"SOURCE_GRAPH_REVIEW_REQUIRED":10,"SOURCE_INSUFFICIENT":0,"PENDING":0},
+  "standardSizeMasterChanged": false,
+  "runtimeDirectWritePerformed": false,
+  "runtimeRegenerationStatus": "COMMITTED_FROM_FORMAL_MASTER_V1_0"
+}
