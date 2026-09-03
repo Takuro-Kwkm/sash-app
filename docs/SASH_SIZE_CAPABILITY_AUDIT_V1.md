@@ -5,11 +5,11 @@
 - Common Sash Sales Input Contract v1.0: **FORMAL PASS**
 - Size Capability Audit v1: **PARTIAL PASS**
 - Generic Audit Core integrity: **PASS**
-- Managed blocking PENDING: **8**
-- Active Product Master Change Proposal awaiting Human Approval: **0**
-- S2H CUSTOM extraction: **17/17 classified**
-- S2H CUSTOM Change Control: **FORMAL MASTER APPLIED / RUNTIME REGENERATED v1.0**
-- Thermos L CR-SL-036 Change Control: **FORMAL MASTER APPLIED / RUNTIME REGENERATED v1.9**
+- Managed blocking PENDING: **7**
+- Active Product Master Change Proposal awaiting Human Approval: **1**
+- S2H CUSTOM extraction: **17/17 classified / Formal Master applied / Runtime v1.0**
+- Thermos L CR-SL-036: **Formal Master applied / Runtime v1.9**
+- APW430 CUSTOM extraction: **25/25 classified / Proposal ready / Human Approval pending**
 
 The audit itself remains non-mutating. Manufacturer data reaches a Formal Product Master only through explicit Change Control and HUMAN Approval.
 
@@ -21,7 +21,7 @@ Only these four current residential sash series are in scope.
 | --- | ---: | ---: | ---: | --- |
 | LIXIL サーモスⅡ-H | 17 | 2,131 | 2,131 | 17 formal rules connected; 7 exact / 10 review |
 | LIXIL サーモスL | 17 | 1,495 | 1,495 | 50 rules audited |
-| YKK AP APW430 | 25 | 718 | 718 | source confirmed / exact rules pending |
+| YKK AP APW430 | 25 | 718 | 718 | 25/25 classified; 20 exact / 5 review; proposal pending |
 | YKK AP APW431 | 6 | 538 | 538 | 29 rules audited |
 
 No new series, branch, PR, or sales-UI-specific manufacturer branch is introduced by this audit.
@@ -59,8 +59,6 @@ Thermos L verified STANDARD slice remains `シャッター付引違い窓 / 手�
 
 Current 2026 continuity was revalidated against the project copy of the 444-page SM3100 catalog and LIXIL current catalog lineage. No source graph was converted into invented/interpolated geometry.
 
-Node-level result:
-
 - Active Product Nodes: **17 / 17**
 - Official Source coverage: **17 / 17**
 - `EXACT_RULE_EXTRACTED`: **7**
@@ -71,69 +69,11 @@ Node-level result:
 - Runtime final AUTO rules: **0**
 - Runtime REVIEW rules: **17**
 
-Exact W/H geometry was extracted for:
-
-- 縦すべり出し窓
-- 横すべり出し窓
-- 高所用横すべり出し窓
-- 上げ下げ窓FS
-- 内倒し窓
-- 外倒し窓
-- 採風勝手口ドアFS
-
-The remaining ten nodes stay `SOURCE_GRAPH_GATE` / review rather than guessed geometry.
-
-### S2H inner-tilt safety
-
-Source-confirmed vertices only:
-
-`(240,350) → (240,943) → (815,943) → (815,755) → (870,755) → (870,500) → (1690,500) → (1690,350)`
-
-Safe W/H geometry:
-
-- `240<=W<=815: 350<=H<=943`
-- `815<W<=870: 350<=H<=755`
-- `870<W<=1690: 350<=H<=500`
-
-Because the 3-A-3 / glass-composition condition remains, the final rule is `COMPOUND_GATE`, `automatic=false`, `RUNTIME_SAFETY_REVIEW_REQUIRED`.
-
-## 7. S2H Product Master Change Control
-
-Proposal identity remains immutable:
-
-- ID: `PMCP-LIX-SAMOS2H-CUSTOM-DIMENSION-RULESET-20260903-001`
-- Fingerprint: `sha256:bd5900002f8d54d322fb7c50bb0b4b121f54a81ece7ec0e60baaffe6914df08e`
-- Historical proposal manifest: `PROPOSED / HUMAN_REQUIRED / PENDING`
-
-Approval/application state is represented by separate Change Control records.
-
-Formal target:
-
-- Drive file ID: `1kTRcb7UdghZl7h3lYdmnZuB7fUVUAduU`
-- Title: `サーモスⅡH_商品マスター_v0.9_納まりアンカー追補_GoldenTest版.xlsx`
-- Pre-write SHA-256: `8dea8b2ecec1715445db74255f591b4f2bcf404027f0006f168a585365df29d6`
-- Post-write/readback SHA-256: `7ca8f5cca19187bfb841bc3f3393fb29de591dc554714627faf3a652130cd8a7`
-- Backup Drive file ID: `16ZywYmiuVOp7iUsKroJIlQ76vQ8fSOCZ`
-- Added sheet: `06E_特注寸法範囲`
-- Added rule records: **17**
-- Unexpected changes to existing sheets: **0**
-- STANDARD Size Master changed: **false**
-
-Runtime regeneration:
-
-- Runtime version: **v1.0**
-- Source of truth: **FORMAL_PRODUCT_MASTER**
-- Dimension Rules: **17**
-- `dimensionAuto`: **0**
-- `dimensionReview`: **17**
-- Generic Core manufacturer-value write: **false**
-- Legacy compressed base-source direct edit: **false**
-
-The historical S2H v0.7 base-source lineage remains preserved separately from the newly applied v1.0 CUSTOM formal delta.
+Proposal `PMCP-LIX-SAMOS2H-CUSTOM-DIMENSION-RULESET-20260903-001` was applied through external HUMAN Change Control. Formal target `06E_特注寸法範囲` contains 17 rules, post-write SHA-256 is `7ca8f5cca19187bfb841bc3f3393fb29de591dc554714627faf3a652130cd8a7`, and Runtime was regenerated from the Formal Product Master as v1.0.
 
 `PEND-SIZE-S2H-CUSTOM-001` is resolved.
 
-## 8. Thermos L — 50 Dimension Rules
+## 7. Thermos L — 50 Dimension Rules
 
 Current audit after CR-SL-036 controlled application:
 
@@ -144,7 +84,72 @@ Current audit after CR-SL-036 controlled application:
 
 CR-SL-036 remains formally applied and Runtime v1.9 remains the current Thermos L baseline.
 
-## 9. Remaining Blocking PENDING
+## 8. APW430 CUSTOM — Extraction Complete / Human Approval Gate
+
+Current official source set:
+
+- `202608_YKKAP_APW430_業務用資料集.pdf`
+  - Source ID: `SRC-YKK-APW430-BUSINESS-202608`
+  - Catalog code: `XAAAA-H26-075S1`
+  - Issue: `2026-08`
+  - CUSTOM printed pages: **P2–P8**
+  - Current continuity: **CONFIRMED_CURRENT**
+- `202607_YKKAP_APW430_商品カタログ.pdf`
+  - Source ID: `SRC-YKK-APW430-CATALOG-202607`
+  - Catalog code: `XAAAA-H26-074-1`
+  - Issue: `2026-07`
+  - Current continuity: **CONFIRMED_CURRENT**
+
+Node-level result:
+
+- Active Product Nodes: **25 / 25**
+- Official Source coverage: **25 / 25**
+- `EXACT_RULE_EXTRACTED`: **20**
+- `SOURCE_GRAPH_REVIEW_REQUIRED`: **5**
+- `SOURCE_INSUFFICIENT`: **0**
+- `PENDING`: **0**
+- Source-interpolated points added: **0**
+- Formal Product Master write: **false**
+- Runtime direct manufacturer write: **false**
+- Runtime Dimension Rules remain: **0** until approved Formal Master application
+
+All extracted rules remain safety-side. Even when source geometry is exact, glass weight, glass composition, wind-pressure, component, or other conditions prevent a W/H-only final AUTO PASS; these are represented as `COMPOUND_GATE / automatic=false / RUNTIME_SAFETY_REVIEW_REQUIRED` where applicable.
+
+Five nodes remain Source Graph review rather than guessed geometry:
+
+- 高所用すべり出し窓（端部操作仕様）単窓
+- シャッター付引違い窓
+- FIX窓 窓タイプ
+- FIX窓 テラスタイプ（在来）
+- FIX窓 テラスタイプ（2×4）
+
+The current APW430 Formal Product Master has no CUSTOM Dimension Rule sheet. A controlled addition is proposed as `06C_特注寸法範囲`.
+
+### APW430 Product Master Change Proposal
+
+- Proposal ID: `PMCP-YKK-APW430-CUSTOM-DIMENSION-RULESET-20260903-001`
+- Fingerprint: `sha256:894ca2e99cfd482b0093bfbc1d1763383a8e01c5c8614d75ac1560938ae5eb78`
+- Base Formal Master Drive file ID: `1QDocQ7yoXE6TAnzHtfsyKwwK6YB5_mgk90Bw1hm4iPo`
+- Base XLSX snapshot SHA-256: `b149cc61ea2a2ddf119286ce39b4c03737ad789e7cbab2cec9e414f1dcffccd9`
+- Target sheet: `06C_特注寸法範囲`
+- Operation: `ADD_DIMENSION_RULESET`
+- Status: `PROPOSED`
+- Approval policy: `HUMAN_REQUIRED`
+- Approval status: `PENDING`
+- Formal workbook write performed: **false**
+- Runtime write performed: **false**
+- Auto approval performed: **false**
+
+`PEND-SIZE-APW430-CUSTOM-001` is resolved as an extraction PENDING. Formal Master application is represented separately by this Human Approval gate.
+
+## 9. APW431
+
+- MATCH: **21**
+- SOURCE_GRAPH_REVIEW_REQUIRED: **8**
+- RULE_MISMATCH: **0**
+- Total: **29 / 29**
+
+## 10. Remaining Blocking PENDING
 
 Still open:
 
@@ -153,42 +158,31 @@ Still open:
 - `PEND-SIZE-SL-GRILLE-001`
 - `PEND-SIZE-SL-AUTO-SAFETY`
 - `PEND-SIZE-APW430-STANDARD-001`
-- `PEND-SIZE-APW430-CUSTOM-001`
 - `PEND-SIZE-APW431-STANDARD-001`
 - `PEND-SIZE-APW431-AUTO-SAFETY`
 
-Blocking count: **8**.
+Blocking count: **7**.
 
-## 10. APW431
+Resolved extraction/control items include:
 
-- MATCH: **21**
-- SOURCE_GRAPH_REVIEW_REQUIRED: **8**
-- RULE_MISMATCH: **0**
-- Total: **29 / 29**
+- `PEND-SIZE-SL-RULE-036`
+- `PEND-SIZE-S2H-CUSTOM-001`
+- `PEND-SIZE-APW430-CUSTOM-001`
 
-## 11. APW430 CUSTOM
-
-- Active Product Nodes: **25**
-- Source Capability: **CONFIRMED**
-- Exact Runtime rules: **0 / 25**
-- PENDING: **25**
-
-This is the next recommended CUSTOM extraction target.
-
-## 12. Generic Gate / CI
+## 11. Generic Gate / CI
 
 Current expected gate:
 
 - `status = PARTIAL_PASS`
 - `integrityGate = PASS`
-- `blockingPending = 8`
-- `proposalCount = 0`
-- `proposalApprovalGate = NO_PROPOSAL_PENDING`
+- `blockingPending = 7`
+- `proposalCount = 1`
+- `proposalApprovalGate = HUMAN_APPROVAL_PENDING`
 - manufacturer-data mutation by generic audit = **false**
 
-CI enforces deterministic `gate-report.json`, Change Control integrity, Runtime inventory preservation, repository tests, Runtime smoke and Browser QA.
+CI enforces deterministic `gate-report.json`, Change Control integrity, APW430 proposal immutability/fingerprint, Runtime inventory preservation, repository tests, Runtime smoke and Browser QA.
 
-## 13. Browser QA Acceptance
+## 12. Browser QA Acceptance
 
 Latest-head V2 Recovery CI must confirm:
 
@@ -197,26 +191,24 @@ Latest-head V2 Recovery CI must confirm:
 - horizontalOverflowPx: 0
 - construction UI hidden
 - consoleErrors: 0
-- S2H size mode: `STANDARD / CUSTOM`
 
 Only report `pageErrors = 0` if the harness explicitly exposes that metric; otherwise report `no page-error failure observed`.
 
-## 14. Current Gate
+## 13. Current Gate
 
 | Gate | Status |
 | --- | --- |
 | Common Sales Input Contract | FORMAL PASS |
 | Generic Size Capability Audit Core | PASS |
-| S2H CUSTOM Source Coverage | 17 / 17 |
-| S2H CUSTOM Classification | 7 EXACT / 10 REVIEW / 0 PENDING |
-| S2H Formal Master | APPLIED / READBACK PASS |
-| S2H Runtime CUSTOM | REGENERATED v1.0 / 17 REVIEW |
-| S2H Change Proposal | APPLIED via external HUMAN Change Control |
-| Thermos L Rule Audit | 38 MATCH / 12 REVIEW / 0 MISMATCH |
-| CR-SL-036 Formal Master / Runtime | APPLIED / v1.9 |
+| S2H CUSTOM | FORMAL MASTER APPLIED / Runtime v1.0 |
+| Thermos L CR-SL-036 | FORMAL MASTER APPLIED / Runtime v1.9 |
+| APW430 CUSTOM Source Coverage | 25 / 25 |
+| APW430 CUSTOM Classification | 20 EXACT / 5 REVIEW / 0 PENDING |
+| APW430 Formal Master | NOT WRITTEN |
+| APW430 Runtime CUSTOM | NOT WRITTEN / 0 rules |
+| APW430 Change Proposal | HUMAN_APPROVAL_PENDING |
 | APW431 Rule Audit | PASS |
-| APW430 CUSTOM | PARTIAL_PASS / extraction pending |
 | 4-Series STANDARD Official Source | PARTIAL_PASS / managed PENDING |
-| Remaining blocking PENDING | 8 |
+| Remaining blocking PENDING | 7 |
 
-Overall Size Capability Audit v1 remains **PARTIAL_PASS**. S2H CUSTOM is formally applied and no longer an active proposal gate.
+Overall Size Capability Audit v1 remains **PARTIAL_PASS**. APW430 CUSTOM extraction is complete and the current controlled stop point is `PROPOSAL_READY / HUMAN_APPROVAL_PENDING`.
