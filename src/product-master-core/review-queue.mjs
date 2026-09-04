@@ -78,7 +78,7 @@ function evidenceQueueItems(evidenceInboxDir){
         queueId:`RQ:EVIDENCE:${batch.batchId}:${candidate.id}`,kind:'EVIDENCE_CANDIDATE',
         productId:candidate.productId??envelope.productId??batch.productId??null,sourceId:candidate.id,
         sourceStatus:stateRow?.status??candidate.status??'SUBMITTED',sourceDecision:audit?.decision??null,
-        reviewStatus:mapped.reviewStatus,actionable:ACTIONABLE_STATUSES.has(mapped.reviewStatus),authority:mapped.authority,
+        reviewStatus:mapped.reviewStatus,actionable:mapped.nextAction!=='NONE',authority:mapped.authority,
         nextAction:mapped.nextAction,queueReason:pending?.question??candidate.claim??candidate.title??null,
         refs:{batchId:batch.batchId,candidateId:candidate.id,pendingId:pending?.id??null,adjudicationId:audit?.id??null,relativePath:batch.relativePath}
       });
