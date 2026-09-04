@@ -6,6 +6,7 @@ import {computeProposalFingerprint,validateChangeProposalDocument} from '../src/
 const read=(relative)=>JSON.parse(fs.readFileSync(new URL(`../${relative}`,import.meta.url),'utf8'));
 const proposalId='PMCP-YKK-APW430-CUSTOM-DIMENSION-RULESET-20260903-001';
 const fingerprint='sha256:894ca2e99cfd482b0093bfbc1d1763383a8e01c5c8614d75ac1560938ae5eb78';
+const s2hStandardProposalId='PMCP-LIX-SAMOS2H-STANDARD-SOURCE-CORRECTION-20260904-001';
 
 test('APW430 CUSTOM historical extraction classifies all 25 active Product Nodes without interpolation',()=>{
   const extraction=read('artifacts/size-capability-audit/dimension-rule-extraction-apw430.json');
@@ -81,14 +82,14 @@ test('APW430 external HUMAN approval, STAGING, Production and Runtime are bound 
   assert.equal(runtime.runtimeProjection.directManufacturerValueEditToGenericCore,false);
 });
 
-test('APW430 extraction PENDING stays resolved and current proposal gate is closed',()=>{
+test('APW430 extraction remains resolved while S2H STANDARD Human proposal is the current gate',()=>{
   const pending=read('artifacts/size-capability-audit/pending.json');
   const summary=read('artifacts/size-capability-audit/summary.json');
   const gate=read('artifacts/size-capability-audit/gate-report.json');
-  assert.equal(pending.blockingCount,7);
+  assert.equal(pending.blockingCount,6);
   assert.ok(pending.resolved.some((row)=>row.id==='PEND-SIZE-APW430-CUSTOM-001'));
   assert.equal(pending.items.some((row)=>row.id==='PEND-SIZE-APW430-CUSTOM-001'),false);
-  assert.deepEqual(summary.productMasterChangeProposals,[]);
+  assert.deepEqual(summary.productMasterChangeProposals,[s2hStandardProposalId]);
   assert.ok(summary.appliedProductMasterChangeProposals.includes(proposalId));
   assert.equal(summary.apw430CustomExtraction.status,'FORMAL_MASTER_APPLIED_RUNTIME_REGENERATED');
   assert.equal(summary.apw430CustomExtraction.activeProductNodes,25);
@@ -100,7 +101,7 @@ test('APW430 extraction PENDING stays resolved and current proposal gate is clos
   assert.equal(summary.apw430CustomExtraction.runtimeDimensionRules,25);
   assert.equal(gate.status,'PARTIAL_PASS');
   assert.equal(gate.integrityGate,'PASS');
-  assert.equal(gate.blockingPending,7);
-  assert.equal(gate.proposalCount,0);
-  assert.equal(gate.proposalApprovalGate,'NO_PROPOSAL_PENDING');
+  assert.equal(gate.blockingPending,6);
+  assert.equal(gate.proposalCount,1);
+  assert.equal(gate.proposalApprovalGate,'HUMAN_APPROVAL_PENDING');
 });
