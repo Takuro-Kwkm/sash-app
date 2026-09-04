@@ -6,7 +6,7 @@ This revision closes the source-attachment gap between a Drive-fetched official 
 
 The controlled path is:
 
-`Drive official PDF -> local authenticated fetch -> SHA-256 verification -> Gemini Files API -> Gemini file URI -> generateContent -> Transport validation -> Evidence Inbox -> Unified Review Queue`
+`Drive official PDF -> local authenticated fetch -> SHA-256 verification -> Gemini Files API -> ACTIVE state verification -> Gemini file URI -> generateContent -> Transport validation -> Evidence Inbox -> Unified Review Queue`
 
 Gemini never writes Canonical Product Master, Runtime, or Production data.
 
@@ -57,8 +57,9 @@ The APW430 runner refuses a local source whose SHA-256 does not match this finge
 3. Compute and verify SHA-256.
 4. Start resumable upload with `x-goog-api-key` in the request header.
 5. Upload/finalize the file bytes.
-6. Capture only non-secret file metadata and the returned Gemini file URI.
-7. Pass the file URI into the existing `generateContent` bridge.
+6. If the provider reports `PROCESSING`, poll `files.get` until the file reaches `ACTIVE`; fail closed on `FAILED`, status error, or processing timeout.
+7. Capture only non-secret file metadata and the returned Gemini file URI.
+8. Pass the ACTIVE file URI into the existing `generateContent` bridge.
 
 Provider errors are recursively redacted against the supplied API key before returning from the bridge.
 
@@ -80,6 +81,7 @@ Only a validated batch is persisted to the Evidence Candidate Inbox. Review Queu
 `test/35-product-master-core-v21-gemini-live-attachment.test.mjs` covers:
 
 - Files API upload success
+- `PROCESSING -> ACTIVE` status polling before inference handoff
 - SHA-256 source mismatch rejection
 - unavailable source rejection
 - LIVE upload -> generateContent -> Transport -> Inbox -> Review Queue
