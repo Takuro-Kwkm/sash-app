@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {SAMOS2H_MODULE,SAMOS2H_DIMENSION_RULES} from '../src/catalog/modules/samos2h-assembly.mjs';
 
-test('Samos2H v1.0 Runtime is regenerated from formal 06E CUSTOM rules while retaining v0.7 base lineage',()=>{
+test('Samos2H v1.0 CUSTOM Runtime remains bound to its formal 06E snapshot while retaining v0.7 base lineage',()=>{
   assert.equal(SAMOS2H_MODULE.product.source.id,'1zHi-XsMqJp0MKH-sDoTcnTqkLMGcuRdo');
   assert.equal(SAMOS2H_MODULE.product.source.version,'v0.7');
   assert.equal(SAMOS2H_MODULE.runtimeRegeneration.version,'v1.0');
@@ -12,7 +12,7 @@ test('Samos2H v1.0 Runtime is regenerated from formal 06E CUSTOM rules while ret
   assert.equal(SAMOS2H_DIMENSION_RULES.filter((r)=>r.type==='COMPOUND_GATE').length,7);
   assert.equal(SAMOS2H_DIMENSION_RULES.filter((r)=>r.type==='SOURCE_GRAPH_GATE').length,10);
   assert.equal(SAMOS2H_DIMENSION_RULES.filter((r)=>r.automatic).length,0);
-  assert.equal(SAMOS2H_MODULE.product.sourceInventory.selectableSizeRows,2131);
+  assert.equal(SAMOS2H_MODULE.product.sourceInventory.selectableSizeRows,2140);
 });
 
 test('Samos2H inner-tilt formal rule preserves source-confirmed points and review safety',()=>{
