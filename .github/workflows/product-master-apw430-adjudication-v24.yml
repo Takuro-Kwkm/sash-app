@@ -2,6 +2,17 @@ name: APW430 Evidence Adjudication v24
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - feat/catalog-recovery-v2
+    paths:
+      - '.github/workflows/product-master-apw430-adjudication-v24.yml'
+      - 'src/product-master-core/live-evidence-adjudication-v24.mjs'
+      - 'scripts/run-apw430-live-evidence-adjudication-v24.mjs'
+      - 'test/38-product-master-core-v24-live-evidence-adjudication.test.mjs'
+      - 'docs/notebooklm/live/BATCH-GEMINI-APW430-LIVE-20260904-E2E.json'
+      - 'data/master-change-control/audits/APW430_LIVE_EVIDENCE_FORMAL_COVERAGE_20260904.json'
+      - 'package.json'
 
 jobs:
   apw430_evidence_adjudication_v24:
