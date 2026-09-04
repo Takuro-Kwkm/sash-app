@@ -1,0 +1,42 @@
+name: Gemini LIVE APW430 Evidence Retry
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  live_external_retry:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+      GEMINI_MODEL: ${{ vars.GEMINI_MODEL }}
+      GEMINI_FILE_URI: ${{ secrets.GEMINI_APW430_FILE_URI }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install
+        run: npm ci --ignore-scripts
+
+      - name: Credential and source preflight
+        run: npm run gemini:preflight:v22
+
+      - name: APW430 LIVE_EXTERNAL retry
+        run: npm run gemini:live:apw430:v22 -- --artifact-dir=artifacts/gemini-live-v22/apw430
+
+      - name: Upload non-secret audit artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gemini-live-apw430-v22-audit
+          path: artifacts/gemini-live-v22/apw430
+          if-no-files-found: ignore
+          retention-days: 7
