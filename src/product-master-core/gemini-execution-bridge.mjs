@@ -16,12 +16,19 @@ const safeClone=(value)=>structuredClone(value);
 
 function makeError(code,message,details={}){return{code,message,...details};}
 function transition(status,at=nowIso(),details={}){return{status,at,...details};}
-function safeJobId(){
-  return`GJOB-${crypto.randomUUID().replaceAll('-','').slice(0,20).toUpperCase()}`;
+function safeJobId(){return`GJOB-${crypto.randomUUID().replaceAll('-','').slice(0,20).toUpperCase()}`;}
+function normalizeSourceAttachment(input){
+  if(input===null||input===undefined)return null;
+  if(!isObject(input))return input;
+  return{
+    geminiFileUri:input.gemini_file_uri??input.geminiFileUri??null,
+    mimeType:input.mime_type??input.mimeType??'application/pdf'
+  };
 }
 
 export function createGeminiJob(input={}, {requestedAt=nowIso()}={}){
   const sourceContext=input.source_context??input.sourceContext??{};
+  const sourceAttachmentInput=input.source_attachment??input.sourceAttachment??null;
   const job={
     jobSchemaVersion:GEMINI_JOB_SCHEMA_VERSION,
     recordType:'GEMINI_PRODUCT_MASTER_JOB',
@@ -45,7 +52,7 @@ export function createGeminiJob(input={}, {requestedAt=nowIso()}={}){
     canonicalFieldScope:safeClone(input.canonical_field_scope??input.canonicalFieldScope??[]),
     productNodeIds:safeClone(input.product_node_ids??input.productNodeIds??[]),
     evidenceRequirements:safeClone(input.evidence_requirements??input.evidenceRequirements??null),
-    sourceAttachment:safeClone(input.source_attachment??input.sourceAttachment??null),
+    sourceAttachment:safeClone(normalizeSourceAttachment(sourceAttachmentInput)),
     metadata:safeClone(input.metadata??{}),
     status:'CREATED',
     transitions:[transition('CREATED',input.requested_at??input.requestedAt??requestedAt)]
@@ -58,6 +65,12 @@ export function createGeminiJob(input={}, {requestedAt=nowIso()}={}){
   if(!job.task)errors.push(makeError('GEMINI_JOB_TASK_MISSING','task is required'));
   if(!job.prompt)errors.push(makeError('GEMINI_JOB_PROMPT_MISSING','prompt is required'));
   if(!isObject(job.sourceContext))errors.push(makeError('GEMINI_JOB_SOURCE_CONTEXT_INVALID','source_context must be an object'));
+  else{
+    if(!job.sourceContext.type)errors.push(makeError('GEMINI_JOB_SOURCE_TYPE_MISSING','source_context.type is required'));
+    if(!job.sourceContext.driveFileId)errors.push(makeError('GEMINI_JOB_SOURCE_FILE_ID_MISSING','source_context.driveFileId is required'));
+    if(!job.sourceContext.title)errors.push(makeError('GEMINI_JOB_SOURCE_TITLE_MISSING','source_context.title is required'));
+  }
+  if(job.sourceAttachment!==null&&!isObject(job.sourceAttachment))errors.push(makeError('GEMINI_JOB_SOURCE_ATTACHMENT_INVALID','source_attachment must be an object when supplied'));
   if(!GEMINI_JOB_EXECUTION_MODES.has(job.executionMode))errors.push(makeError('GEMINI_JOB_EXECUTION_MODE_INVALID',`Unsupported execution mode: ${job.executionMode}`));
   return{pass:errors.length===0,job:errors.length?null:job,errors};
 }
@@ -83,12 +96,8 @@ export function validateBridgeTransport(raw,job,options={}){
   if(!parsed.pass)return{pass:false,envelope:null,errors:parsed.errors};
   const errors=[];
   const envelope=parsed.envelope;
-  if(envelope.transportType!==job.expectedTransportType){
-    errors.push(makeError('BRIDGE_TRANSPORT_TYPE_MISMATCH',`Expected ${job.expectedTransportType}, received ${envelope.transportType}`));
-  }
-  if(envelope.transportSchemaVersion!==job.expectedSchemaVersion){
-    errors.push(makeError('BRIDGE_TRANSPORT_SCHEMA_MISMATCH',`Expected schema ${job.expectedSchemaVersion}, received ${envelope.transportSchemaVersion}`));
-  }
+  if(envelope.transportType!==job.expectedTransportType)errors.push(makeError('BRIDGE_TRANSPORT_TYPE_MISMATCH',`Expected ${job.expectedTransportType}, received ${envelope.transportType}`));
+  if(envelope.transportSchemaVersion!==job.expectedSchemaVersion)errors.push(makeError('BRIDGE_TRANSPORT_SCHEMA_MISMATCH',`Expected schema ${job.expectedSchemaVersion}, received ${envelope.transportSchemaVersion}`));
   const expectedSource=job.sourceContext??{};
   const actualSource=envelope.sourceContext??{};
   for(const key of['type','driveFileId','title']){
@@ -96,45 +105,26 @@ export function validateBridgeTransport(raw,job,options={}){
       errors.push(makeError('BRIDGE_SOURCE_CONTEXT_MISMATCH',`sourceContext.${key} does not match Gemini Job`,{field:key,expected:expectedSource[key],actual:actualSource[key]??null}));
     }
   }
-  if(expectedSource.version&&actualSource.version!==expectedSource.version){
-    errors.push(makeError('BRIDGE_SOURCE_CONTEXT_MISMATCH','sourceContext.version does not match Gemini Job',{field:'version',expected:expectedSource.version,actual:actualSource.version??null}));
-  }
+  if(expectedSource.version&&actualSource.version!==expectedSource.version)errors.push(makeError('BRIDGE_SOURCE_CONTEXT_MISMATCH','sourceContext.version does not match Gemini Job',{field:'version',expected:expectedSource.version,actual:actualSource.version??null}));
   return{pass:errors.length===0,envelope:errors.length?null:envelope,errors};
 }
 
 function liveBlockReason(job,{apiKey,model}){
   if(!apiKey)return makeError('GEMINI_API_KEY_UNAVAILABLE','GEMINI_API_KEY is not available');
   if(!model)return makeError('GEMINI_MODEL_UNAVAILABLE','GEMINI_MODEL or job.model is required for LIVE_EXTERNAL');
-  if(job.sourceContext?.type==='OFFICIAL_PDF'&&!job.sourceAttachment?.geminiFileUri){
-    return makeError('GEMINI_SOURCE_ATTACHMENT_UNAVAILABLE','LIVE_EXTERNAL OFFICIAL_PDF extraction requires source_attachment.gemini_file_uri; Drive fileId is provenance only');
-  }
+  if(job.sourceContext?.type==='OFFICIAL_PDF'&&!job.sourceAttachment?.geminiFileUri)return makeError('GEMINI_SOURCE_ATTACHMENT_UNAVAILABLE','LIVE_EXTERNAL OFFICIAL_PDF extraction requires source_attachment.gemini_file_uri; Drive fileId is provenance only');
   return null;
 }
 
 function liveParts(job){
-  const contract=[
-    job.prompt,
-    '',
-    'Return only one pure JSON object.',
-    `transportType must be ${job.expectedTransportType}.`,
-    `transportSchemaVersion must be ${job.expectedSchemaVersion}.`,
-    `productId must be ${job.productId}.`,
-    'Do not use Markdown code fences.'
-  ].join('\n');
+  const contract=[job.prompt,'','Return only one pure JSON object.',`transportType must be ${job.expectedTransportType}.`,`transportSchemaVersion must be ${job.expectedSchemaVersion}.`,`productId must be ${job.productId}.`,'Do not use Markdown code fences.'].join('\n');
   const parts=[{text:contract}];
-  if(job.sourceAttachment?.geminiFileUri){
-    parts.push({fileData:{mimeType:job.sourceAttachment.mimeType??'application/pdf',fileUri:job.sourceAttachment.geminiFileUri}});
-  }
+  if(job.sourceAttachment?.geminiFileUri)parts.push({fileData:{mimeType:job.sourceAttachment.mimeType??'application/pdf',fileUri:job.sourceAttachment.geminiFileUri}});
   return parts;
 }
 
 export async function executeGeminiJob(job,{
-  mockResponse=null,
-  replayResponse=null,
-  apiKey=process.env.GEMINI_API_KEY??null,
-  model=job?.model??process.env.GEMINI_MODEL??null,
-  fetchImpl=globalThis.fetch,
-  timeoutMs=60000
+  mockResponse=null,replayResponse=null,apiKey=process.env.GEMINI_API_KEY??null,model=job?.model??process.env.GEMINI_MODEL??null,fetchImpl=globalThis.fetch,timeoutMs=60000
 }={}){
   let working=withTransition(job,'QUEUED');
   working=withTransition(working,'RUNNING');
@@ -153,15 +143,7 @@ export async function executeGeminiJob(job,{
   const timer=setTimeout(()=>controller.abort(),timeoutMs);
   try{
     const url=`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent`;
-    const response=await fetchImpl(url,{
-      method:'POST',
-      headers:{'content-type':'application/json','x-goog-api-key':apiKey},
-      signal:controller.signal,
-      body:JSON.stringify({
-        contents:[{role:'user',parts:liveParts(working)}],
-        generationConfig:{responseMimeType:'application/json'}
-      })
-    });
+    const response=await fetchImpl(url,{method:'POST',headers:{'content-type':'application/json','x-goog-api-key':apiKey},signal:controller.signal,body:JSON.stringify({contents:[{role:'user',parts:liveParts(working)}],generationConfig:{responseMimeType:'application/json'}})});
     const providerResponse=await response.json().catch(()=>null);
     if(!response.ok){
       const message=providerResponse?.error?.message??`Gemini API HTTP ${response.status}`;
@@ -173,18 +155,11 @@ export async function executeGeminiJob(job,{
   }catch(cause){
     const code=cause?.name==='AbortError'?'GEMINI_TIMEOUT':'GEMINI_EXECUTION_FAILED';
     return{pass:false,job:withTransition(working,'FAILED',{reason:code}),rawResponse:null,errors:[makeError(code,cause?.message??String(cause))]};
-  }finally{
-    clearTimeout(timer);
-  }
+  }finally{clearTimeout(timer);}
 }
 
 export async function runGeminiProductMasterBridge(job,{
-  evidenceInboxDir='data/evidence-inbox',
-  changeControlDir='data/master-change-control',
-  transportOptions={},
-  allowDuplicateClaims=false,
-  importedAt=nowIso(),
-  ...executionOptions
+  evidenceInboxDir='data/evidence-inbox',changeControlDir='data/master-change-control',transportOptions={},allowDuplicateClaims=false,importedAt=nowIso(),...executionOptions
 }={}){
   const execution=await executeGeminiJob(job,executionOptions);
   const safety={canonicalWritePerformed:false,runtimeWritePerformed:false,productionWritePerformed:false};
@@ -204,9 +179,5 @@ export async function runGeminiProductMasterBridge(job,{
   }
   const imported=withTransition(execution.job,'IMPORTED',{rawResponseSha256,batchId:inboxImport.batch.id});
   const reviewQueue=buildProductMasterReviewQueue({evidenceInboxDir,changeControlDir,productId:imported.productId});
-  return{
-    pass:true,status:'IMPORTED',job:imported,rawResponseSha256,
-    responseReceivedAt:importedAt,normalizedBatchId:inboxImport.batch.id,
-    transportValidation,inboxImport,reviewQueue,...safety,errors:[]
-  };
+  return{pass:true,status:'IMPORTED',job:imported,rawResponseSha256,responseReceivedAt:importedAt,normalizedBatchId:inboxImport.batch.id,transportValidation,inboxImport,reviewQueue,...safety,errors:[]};
 }

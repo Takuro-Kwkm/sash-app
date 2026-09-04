@@ -24,6 +24,16 @@ test('v2.0 creates a generic Gemini Job with explicit lifecycle and authority-ne
   assert.deepEqual(created.job.transitions.map((row)=>row.status),['CREATED']);
 });
 
+test('v2.0 Job requires traceable source context and normalizes snake_case source_attachment',()=>{
+  const invalid=createGeminiJob({...jobInput(),source_context:{}});
+  assert.equal(invalid.pass,false);
+  assert.equal(invalid.errors.some((row)=>row.code==='GEMINI_JOB_SOURCE_FILE_ID_MISSING'),true);
+  const live=createGeminiJob({...jobInput('LIVE_EXTERNAL'),source_attachment:{gemini_file_uri:'files/test-pdf',mime_type:'application/pdf'}});
+  assert.equal(live.pass,true);
+  assert.equal(live.job.sourceAttachment.geminiFileUri,'files/test-pdf');
+  assert.equal(live.job.sourceAttachment.mimeType,'application/pdf');
+});
+
 test('v2.0 MOCK round trip imports valid Transport into Evidence Inbox and Review Queue without Master writes',async t=>{
   const root=fixtureRoot(t),evidence=path.join(root,'evidence'),change=path.join(root,'change');
   const created=createGeminiJob(jobInput()).job;
@@ -69,15 +79,27 @@ test('v2.0 LIVE_EXTERNAL fails closed when credentials or source attachment are 
   assert.equal(noAttachment.errors[0].code,'GEMINI_SOURCE_ATTACHMENT_UNAVAILABLE');
 });
 
+test('v2.0 LIVE_EXTERNAL timeout fails safely without Product Master writes',async()=>{
+  const job=createGeminiJob({...jobInput('LIVE_EXTERNAL'),source_attachment:{gemini_file_uri:'files/test-pdf',mime_type:'application/pdf'}}).job;
+  const fetchImpl=async(_url,{signal})=>new Promise((_resolve,reject)=>{
+    const abort=()=>{const error=new Error('aborted');error.name='AbortError';reject(error);};
+    if(signal.aborted)abort();else signal.addEventListener('abort',abort,{once:true});
+  });
+  const result=await executeGeminiJob(job,{apiKey:'not-a-real-secret',model:'gemini-test',fetchImpl,timeoutMs:1});
+  assert.equal(result.pass,false);
+  assert.equal(result.job.status,'FAILED');
+  assert.equal(result.errors[0].code,'GEMINI_TIMEOUT');
+});
+
 test('v2.0 Replay of stored APW430 LIVE Evidence reaches Review Queue and stays non-authoritative',async t=>{
   const root=fixtureRoot(t);
   const replayPath=path.resolve('docs/notebooklm/live/BATCH-GEMINI-APW430-FIX-20260901213858.json');
   const replay=fs.readFileSync(replayPath,'utf8');
   const envelope=JSON.parse(replay);
   const created=createGeminiJob({
-    job_id:'GJOB-APW430-REPLAY-20260904',job_type:'EVIDENCE_EXTRACTION',manufacturer:'YKK AP',series:'APW430',
-    product_id:'SER-YKK-APW430',task:'Replay existing Gemini Evidence',prompt:'Replay existing validated Gemini Evidence.',
-    source_context:envelope.sourceContext,expected_transport_type:'EVIDENCE_CANDIDATE_BATCH',expected_schema_version:'1.0',execution_mode:'REPLAY',requested_by:'CHATGPT'
+    job_id:'GJOB-APW430-REPLAY-20260904',job_type:'EVIDENCE_EXTRACTION',manufacturer:'YKK AP',series:'APW430',product_id:'SER-YKK-APW430',
+    task:'Replay existing Gemini Evidence',prompt:'Replay existing validated Gemini Evidence.',source_context:envelope.sourceContext,
+    expected_transport_type:'EVIDENCE_CANDIDATE_BATCH',expected_schema_version:'1.0',execution_mode:'REPLAY',requested_by:'CHATGPT'
   }).job;
   const result=await runGeminiProductMasterBridge(created,{evidenceInboxDir:path.join(root,'evidence'),changeControlDir:path.join(root,'change'),replayResponse:replay,importedAt:'2026-09-04T05:02:00Z'});
   assert.equal(result.pass,true);
