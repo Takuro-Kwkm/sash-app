@@ -261,8 +261,6 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Install
-        run: npm ci --ignore-scripts
       - name: Detect Gemini secure inputs without printing values
         id: gemini_gate
         shell: bash
@@ -326,7 +324,7 @@ jobs:
           exit 1
       - name: Concord S30 PC and Smartphone Browser QA
         run: node test/browser/concords30-browser-qa.mjs
-      - name: Formal Size UI PC and Smartphone QA
+      - name: Formal Size UI PC and Smartphone Browser QA
         run: node test/browser/size-ui-browser-qa.mjs
       - name: Sales UI R2 glass, shutter size and CUSTOM Browser QA
         run: node test/browser/sales-ui-r2-browser-qa.mjs
