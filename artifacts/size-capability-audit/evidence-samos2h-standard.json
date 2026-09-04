@@ -1,0 +1,83 @@
+{
+  "schemaVersion": "1.2",
+  "recordType": "SAMOS2H_STANDARD_OFFICIAL_SOURCE_EVIDENCE",
+  "productId": "SER-LIX-SAMOS2H",
+  "generatedAt": "2026-09-04",
+  "source": {
+    "sourceId": "SRC-LIX-SAMOS2H-PRICE-202604",
+    "manufacturer": "LIXIL",
+    "title": "202604_LIXIL_サーモスⅡ－Ｈ_業務用資料集_完成品価格表.pdf",
+    "driveFileId": "1x4lovMcyfkyFzulYiQIv8OE5dpq6wDor",
+    "issueLabel": "2026年5月価格掲載版",
+    "currentContinuity": "CONFIRMED_CURRENT",
+    "url": "https://drive.google.com/file/d/1x4lovMcyfkyFzulYiQIv8OE5dpq6wDor/view"
+  },
+  "verification": {
+    "activeProductNodes": 17,
+    "canonicalRowsReviewed": 2297,
+    "canonicalCallCodesSourceLocated": 2297,
+    "callCodeSourceLocatorFailures": 0,
+    "cartesianGenerationPerformed": false,
+    "inferredSourceCells": 0,
+    "officialExplicitRecords": 2309,
+    "current2026Continuity": "CONFIRMED_CURRENT"
+  },
+  "evidenceRecords": [
+    {
+      "evidenceId": "EV-S2H-STANDARD-H-DIMENSIONS-20260904",
+      "classification": "VALUE_MISMATCH",
+      "affectedCount": 310,
+      "affectedSizeIdsSha256": "sha256:a08ae7d11409cc1f123a42e5a2287dd943c4d6f1595fd072722372efeb03e4db",
+      "sourcePages": [18,19,20,21,50,51,52,53,54,55,56,57,86,87,88,89,118,119,188,196,232,233,238,239,252,253,258,259,269,276,277,280,281,282,283,285,286,288,289],
+      "correctionGroups": [
+        {"predicate":"construction=204 AND window_section!=テラス単純段差","recordCount":136,"deltaMm":15,"officialFormula":"H=呼称H×100+45"},
+        {"predicate":"construction=204 AND window_section=テラス単純段差","recordCount":132,"deltaMm":30,"officialFormula":"H=呼称H×100+60"},
+        {"predicate":"construction=在来・204 AND current H=呼称H×100+30","recordCount":42,"deltaMm":40,"officialFormula":"H=呼称H×100+70"}
+      ],
+      "interpretation": "公式価格表の基本寸法H列と現行Masterをrecord-level照合。対象310件は+15mm 136件 / +30mm 132件 / +40mm 42件。W×Hクロス積・呼称からの寸法推測は未使用。"
+    },
+    {
+      "evidenceId": "EV-S2H-STANDARD-FIX-16524-20260904",
+      "classification": "VALUE_MISMATCH",
+      "affectedCount": 2,
+      "records": [
+        {"size_id":"SZ-S2H-01892","product_node":"WT-S2H-FIX-OUT","call_code":"16524","source_printed_page":236,"before_active":true,"after_active":false,"before_active_numeric":1,"after_active_numeric":0,"after_registration_state":"公式製作不可／選択不可","reason":"公式価格表注記：16524サイズは製作不可","companion_08A_current_active_before":true,"companion_08A_current_active_after":false},
+        {"size_id":"SZ-S2H-02010","product_node":"WT-S2H-FIX-IN","call_code":"16524","source_printed_page":256,"before_active":true,"after_active":false,"before_active_numeric":1,"after_active_numeric":0,"after_registration_state":"公式製作不可／選択不可","reason":"公式価格表注記：16524サイズは製作不可","companion_08A_current_active_before":true,"companion_08A_current_active_after":false}
+      ],
+      "interpretation": "FIX外押縁/内押縁の16524について公式価格表注記「16524サイズは製作不可」を確認。"
+    },
+    {
+      "evidenceId": "EV-S2H-STANDARD-AMADO-MISSING-20260904",
+      "classification": "MISSING_IN_MASTER",
+      "affectedCount": 12,
+      "officialCallCodes": ["15011","16011","25618-4","34718"],
+      "selectorStates": ["SP-S2H-AMADO-ADJ","SP-S2H-AMADO-DAN","SP-S2H-AMADO-LOUVER"],
+      "projectedSizeIds": ["SZ-S2H-02298","SZ-S2H-02299","SZ-S2H-02300","SZ-S2H-02301","SZ-S2H-02302","SZ-S2H-02303","SZ-S2H-02304","SZ-S2H-02305","SZ-S2H-02306","SZ-S2H-02307","SZ-S2H-02308","SZ-S2H-02309"],
+      "sourcePrintedPages": [103,117,313],
+      "availabilityResolution": {
+        "SP-S2H-AMADO-ADJ": {"15011":"不可","16011":"可","25618-4":"可","34718":"可"},
+        "SP-S2H-AMADO-DAN": "4/4 可",
+        "SP-S2H-AMADO-LOUVER": "4/4 可"
+      },
+      "interpretation": "価格表の明示セルとP313適用表を照合。欠落12 selector-state recordsを完全分類。"
+    }
+  ],
+  "summary": {
+    "officialExplicitRecords": 2309,
+    "MATCH": 1985,
+    "VALUE_MISMATCH": 312,
+    "MISSING_IN_MASTER": 12,
+    "EXTRA_IN_MASTER": 0,
+    "SELECTOR_MISMATCH": 0,
+    "SOURCE_SYMBOL_REVIEW_REQUIRED": 0,
+    "SOURCE_INSUFFICIENT": 0,
+    "currentCanonicalRows": 2297,
+    "currentSelectable": 2131,
+    "currentInactive": 166,
+    "projectedRowsAfterApproval": 2309,
+    "projectedSelectableAfterApproval": 2140,
+    "projectedInactiveAfterApproval": 169
+  },
+  "formalMasterWritePerformed": false,
+  "runtimeWritePerformed": false
+}
