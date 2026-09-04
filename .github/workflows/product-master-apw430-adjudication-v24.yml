@@ -8,6 +8,7 @@ on:
     paths:
       - '.github/workflows/product-master-apw430-adjudication-v24.yml'
       - 'src/product-master-core/live-evidence-adjudication-v24.mjs'
+      - 'src/product-master-core/review-queue.mjs'
       - 'scripts/run-apw430-live-evidence-adjudication-v24.mjs'
       - 'test/38-product-master-core-v24-live-evidence-adjudication.test.mjs'
       - 'docs/notebooklm/live/BATCH-GEMINI-APW430-LIVE-20260904-E2E.json'
