@@ -1,0 +1,135 @@
+{
+  "transportSchemaVersion": "1.0",
+  "transportType": "EVIDENCE_CANDIDATE_BATCH",
+  "batchId": "BATCH-202607-APW430-P69-71",
+  "generatedAt": "2026-04-01T00:00:00Z",
+  "producer": {
+    "system": "GEMINI_NOTEBOOKLM",
+    "mode": "LIVE_EXTERNAL"
+  },
+  "productId": "SER-YKK-APW430",
+  "sourceContext": {
+    "type": "OFFICIAL_PDF",
+    "driveFileId": "1j9PtW8yoKBZ4Nodm58wU3QtOCvxlEja9",
+    "title": "202607_YKKAP_APW430_商品カタログ.pdf",
+    "version": "202607"
+  },
+  "candidates": [
+    {
+      "recordType": "EVIDENCE_CANDIDATE",
+      "candidateSchemaVersion": "1.0",
+      "id": "EC-APW430-FIX-001",
+      "sourceSystem": "GEMINI_NOTEBOOKLM",
+      "producerMode": "LIVE_EXTERNAL",
+      "status": "SUBMITTED",
+      "productId": "SER-YKK-APW430",
+      "subjectField": "window_type",
+      "claim": "APW 430 FIX窓の商品体系には「窓タイプ」および「テラスタイプ」が設定されている。",
+      "proposedStrength": "EXPLICIT",
+      "productNodeIds": ["APW430-FIX"],
+      "source": {
+        "type": "OFFICIAL_PDF",
+        "driveFileId": "1j9PtW8yoKBZ4Nodm58wU3QtOCvxlEja9",
+        "title": "202607_YKKAP_APW430_商品カタログ.pdf",
+        "version": "202607",
+        "printedPage": 69,
+        "pdfPage": 71,
+        "locatorText": "■ 商品体系 FIX窓 窓タイプ テラスタイプ"
+      },
+      "title": "FIX窓商品体系"
+    },
+    {
+      "recordType": "EVIDENCE_CANDIDATE",
+      "candidateSchemaVersion": "1.0",
+      "id": "EC-APW430-FIX-002",
+      "sourceSystem": "GEMINI_NOTEBOOKLM",
+      "producerMode": "LIVE_EXTERNAL",
+      "status": "SUBMITTED",
+      "productId": "SER-YKK-APW430",
+      "subjectField": "construction",
+      "claim": "APW 430 FIX窓の対応工法として、窓タイプは在来工法、テラスタイプは在来工法および2×4工法に対応している。",
+      "proposedStrength": "EXPLICIT",
+      "productNodeIds": ["APW430-FIX"],
+      "source": {
+        "type": "OFFICIAL_PDF",
+        "driveFileId": "1j9PtW8yoKBZ4Nodm58wU3QtOCvxlEja9",
+        "title": "202607_YKKAP_APW430_商品カタログ.pdf",
+        "version": "202607",
+        "printedPage": 69,
+        "pdfPage": 71,
+        "locatorText": "窓タイプ 在来工法 テラスタイプ 在来工法 2×4工法"
+      },
+      "title": "FIX窓の工法対応"
+    },
+    {
+      "recordType": "EVIDENCE_CANDIDATE",
+      "candidateSchemaVersion": "1.0",
+      "id": "EC-APW430-FIX-003",
+      "sourceSystem": "GEMINI_NOTEBOOKLM",
+      "producerMode": "LIVE_EXTERNAL",
+      "status": "SUBMITTED",
+      "productId": "SER-YKK-APW430",
+      "subjectField": "configuration",
+      "claim": "APW 430 FIX窓のテラスタイプはアングル付枠のみの設定である。",
+      "proposedStrength": "EXPLICIT",
+      "productNodeIds": ["APW430-FIX-TERRACE"],
+      "source": {
+        "type": "OFFICIAL_PDF",
+        "driveFileId": "1j9PtW8yoKBZ4Nodm58wU3QtOCvxlEja9",
+        "title": "202607_YKKAP_APW430_商品カタログ.pdf",
+        "version": "202607",
+        "printedPage": 70,
+        "pdfPage": 72,
+        "locatorText": "テラスタイプはアングル付枠のみの設定となります。"
+      },
+      "title": "FIX窓テラスタイプのアングル枠制約"
+    },
+    {
+      "recordType": "EVIDENCE_CANDIDATE",
+      "candidateSchemaVersion": "1.0",
+      "id": "EC-APW430-FIX-004",
+      "sourceSystem": "GEMINI_NOTEBOOKLM",
+      "producerMode": "LIVE_EXTERNAL",
+      "status": "SUBMITTED",
+      "productId": "SER-YKK-APW430",
+      "subjectField": "specific_spec",
+      "claim": "APW 430 FIX窓の仕様において、枠見込み寸法は115㎜（出幅65㎜＋50㎜かかり代）、ガラス使用可能総厚は45ミリである。",
+      "proposedStrength": "EXPLICIT",
+      "productNodeIds": ["APW430-FIX"],
+      "source": {
+        "type": "OFFICIAL_PDF",
+        "driveFileId": "1j9PtW8yoKBZ4Nodm58wU3QtOCvxlEja9",
+        "title": "202607_YKKAP_APW430_商品カタログ.pdf",
+        "version": "202607",
+        "printedPage": 71,
+        "pdfPage": 73,
+        "locatorText": "納まり：枠見込み寸法 115㎜（出幅65㎜＋50㎜かかり代） ガラス：使用可能総厚 45ミリ"
+      },
+      "title": "FIX窓仕様（納まり・ガラス使用可能総厚）"
+    },
+    {
+      "recordType": "EVIDENCE_CANDIDATE",
+      "candidateSchemaVersion": "1.0",
+      "id": "EC-APW430-FIX-005",
+      "sourceSystem": "GEMINI_NOTEBOOKLM",
+      "producerMode": "LIVE_EXTERNAL",
+      "status": "SUBMITTED",
+      "productId": "SER-YKK-APW430",
+      "subjectField": "size",
+      "claim": "APW 430 FIX窓テラスタイプ（在来）の規格サイズとして、サッシH呼称24（サッシH 2,430mm）が設定されている。",
+      "proposedStrength": "EXPLICIT",
+      "productNodeIds": ["APW430-FIX-TERRACE"],
+      "source": {
+        "type": "OFFICIAL_PDF",
+        "driveFileId": "1j9PtW8yoKBZ4Nodm58wU3QtOCvxlEja9",
+        "title": "202607_YKKAP_APW430_商品カタログ.pdf",
+        "version": "202607",
+        "printedPage": 71,
+        "pdfPage": 73,
+        "locatorText": "テラスタイプ 在来 24 2,430 03624 06024 07424 08324 11924 16024 16524"
+      },
+      "title": "FIX窓テラスタイプ規格サイズH24"
+    }
+  ],
+  "issues": []
+}
