@@ -153,7 +153,7 @@ test('129 STANDARD and CUSTOM clear mutually exclusive values',()=>{
 
 test('130 formal Size Master coverage matches current production Master',()=>{
   const inventory=new Map(catalogInventory(catalog).map((row)=>[row.productId,row]));
-  for(const[productId,count]of Object.entries({[ids.s2h]:2131,[ids.sl]:1495,[ids.a430]:718,[ids.a431]:538})){
+  for(const[productId,count]of Object.entries({[ids.s2h]:2140,[ids.sl]:1495,[ids.a430]:718,[ids.a431]:538})){
     const row=inventory.get(productId);
     assert.equal(row.selectableSizeRows,count,productId);
     assert.equal(row.sizeCoverage,1,productId);assert.equal(row.missingSizeRows,0,productId);assert.equal(row.extraSizeRows,0,productId);
