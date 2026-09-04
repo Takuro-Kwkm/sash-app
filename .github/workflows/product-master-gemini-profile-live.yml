@@ -5,18 +5,17 @@ on:
     branches: [feat/catalog-recovery-v2]
     paths:
       - '.github/workflows/product-master-gemini-profile-live.yml'
-      - 'src/product-master-core/product-profile.mjs'
-      - 'src/product-master-core/gemini-execution-bridge.mjs'
-      - 'src/product-master-core/gemini-live-verified-runner.mjs'
-      - 'scripts/run-gemini-product-master-job.mjs'
       - 'config/product-master-profiles/**'
-      - 'test/39-product-master-core-v25-product-profile-repro.test.mjs'
   workflow_dispatch:
     inputs:
       profile_path:
         description: Product Master Profile JSON path
         required: true
         default: config/product-master-profiles/lixil-thermosl.v1.json
+
+concurrency:
+  group: product-master-gemini-live
+  cancel-in-progress: false
 
 permissions:
   contents: read
