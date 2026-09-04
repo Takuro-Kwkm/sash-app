@@ -3,6 +3,7 @@ import{redactGeminiSecrets}from'./gemini-file-upload.mjs';
 const makeError=(code,message,details={})=>({code,message,...details});
 const sleep=(ms)=>new Promise((resolve)=>setTimeout(resolve,ms));
 const nonBlank=(value)=>typeof value==='string'&&value.trim().length>0;
+const SHA256_HEX_RE=/^[a-f0-9]{64}$/i;
 
 function providerNameFromUri(uri){
   if(!nonBlank(uri))return null;
@@ -15,9 +16,17 @@ function providerNameFromUri(uri){
   }catch{return null;}
 }
 
-function sha256HexToBase64(hex){
-  if(!/^[a-f0-9]{64}$/i.test(String(hex??'')))return null;
-  return Buffer.from(hex,'hex').toString('base64');
+function normalizeSha256ToHex(value){
+  const raw=String(value??'').trim();
+  if(SHA256_HEX_RE.test(raw))return raw.toLowerCase();
+  if(!raw)return null;
+  try{
+    const normalized=raw.replaceAll('-','+').replaceAll('_','/');
+    const padded=normalized+'='.repeat((4-(normalized.length%4))%4);
+    const bytes=Buffer.from(padded,'base64');
+    if(bytes.length!==32)return null;
+    return bytes.toString('hex');
+  }catch{return null;}
 }
 
 async function responseJson(response){return response?.json?response.json().catch(()=>null):null;}
@@ -42,8 +51,8 @@ export async function verifyGeminiFileAttachment({
   if(typeof fetchImpl!=='function')return{pass:false,status:'BLOCKED',audit:null,errors:[makeError('FETCH_UNAVAILABLE','No fetch implementation is available for Gemini Files API verification')]};
   const providerFileName=providerNameFromUri(geminiFileUri);
   if(!providerFileName)return{pass:false,status:'BLOCKED',audit:null,errors:[makeError('GEMINI_FILE_URI_INVALID','Gemini file URI does not resolve to files/{id}')]};
-  const expectedBase64=sha256HexToBase64(expectedSha256);
-  if(!expectedBase64)return{pass:false,status:'BLOCKED',audit:{providerFileName},errors:[makeError('GEMINI_EXPECTED_SHA256_INVALID','A 64-character hexadecimal source SHA-256 is required to verify a preuploaded Gemini file')]};
+  const expectedHex=normalizeSha256ToHex(expectedSha256);
+  if(!expectedHex)return{pass:false,status:'BLOCKED',audit:{providerFileName},errors:[makeError('GEMINI_EXPECTED_SHA256_INVALID','A 64-character hexadecimal source SHA-256 is required to verify a preuploaded Gemini file')]};
 
   const started=Date.now();
   let polls=0;
@@ -66,7 +75,9 @@ export async function verifyGeminiFileAttachment({
       if(state==='FAILED')return{pass:false,status:'FAILED',audit:{providerFileName,statusPolls:polls,providerState:state},errors:[makeError('GEMINI_FILE_PROCESSING_FAILED','Gemini file processing failed',{providerFileName})]};
       if(state!=='ACTIVE')return{pass:false,status:'BLOCKED',audit:{providerFileName,statusPolls:polls,providerState:state},errors:[makeError('GEMINI_FILE_NOT_ACTIVE',`Gemini file must be ACTIVE before inference; received ${state??'UNKNOWN'}`,{providerFileName})]};
       if(!file.sha256Hash)return{pass:false,status:'BLOCKED',audit:{providerFileName,statusPolls:polls,providerState:state},errors:[makeError('GEMINI_FILE_SHA256_MISSING','Gemini Files API metadata did not include sha256Hash',{providerFileName})]};
-      if(file.sha256Hash!==expectedBase64)return{pass:false,status:'BLOCKED',audit:{providerFileName,statusPolls:polls,providerState:state,sha256Verified:false},errors:[makeError('GEMINI_FILE_SHA256_MISMATCH','Preuploaded Gemini file bytes do not match the Drive-fetched source fingerprint',{providerFileName})]};
+      const providerHex=normalizeSha256ToHex(file.sha256Hash);
+      if(!providerHex)return{pass:false,status:'BLOCKED',audit:{providerFileName,statusPolls:polls,providerState:state,expectedSha256Hex:expectedHex},errors:[makeError('GEMINI_FILE_SHA256_INVALID','Gemini Files API sha256Hash was not a valid 32-byte SHA-256 value',{providerFileName})]};
+      if(providerHex!==expectedHex)return{pass:false,status:'BLOCKED',audit:{providerFileName,statusPolls:polls,providerState:state,sha256Verified:false,expectedSha256Hex:expectedHex,providerSha256Hex:providerHex},errors:[makeError('GEMINI_FILE_SHA256_MISMATCH','Preuploaded Gemini file bytes do not match the Drive-fetched source fingerprint',{providerFileName})]};
       return{
         pass:true,status:'VERIFIED',
         audit:{
@@ -76,7 +87,9 @@ export async function verifyGeminiFileAttachment({
           mimeType:file.mimeType??file.mime_type??null,
           fileSizeBytes:file.sizeBytes??file.size_bytes??null,
           statusPolls:polls,
-          sha256Verified:true
+          sha256Verified:true,
+          expectedSha256Hex:expectedHex,
+          providerSha256Hex:providerHex
         },
         errors:[]
       };
