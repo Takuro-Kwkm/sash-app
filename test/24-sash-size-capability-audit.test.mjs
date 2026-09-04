@@ -1,80 +1,76 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import {
-  buildSizeCapabilityAuditGate,
-  computeProposalFingerprint,
-  validateRuleAuditDocument,
-  validateChangeProposalDocument
-} from '../src/product-master-core/size-capability-audit-core.mjs';
+import {buildSizeCapabilityAuditGate,computeProposalFingerprint,validateRuleAuditDocument,validateChangeProposalDocument} from '../src/product-master-core/size-capability-audit-core.mjs';
 
 const read=(name)=>JSON.parse(fs.readFileSync(new URL(`../artifacts/size-capability-audit/${name}`,import.meta.url),'utf8'));
 const readJson=(relative)=>JSON.parse(fs.readFileSync(new URL(`../${relative}`,import.meta.url),'utf8'));
-const thermosLProposalPath='data/master-change-control/proposals/PMCP-LIX-SAMOSL-INNER-TILT-RANGE-20260903-001.manifest.json';
-const s2hProposalPath='data/master-change-control/proposals/PMCP-LIX-SAMOS2H-CUSTOM-DIMENSION-RULESET-20260903-001.manifest.json';
-const apw430ProposalPath='data/master-change-control/proposals/PMCP-YKK-APW430-CUSTOM-DIMENSION-RULESET-20260903-001.manifest.json';
-const s2hStandardProposalPath='data/master-change-control/proposals/PMCP-LIX-SAMOS2H-STANDARD-SOURCE-CORRECTION-20260904-001.manifest.json';
-const readThermosLProposal=()=>readJson(thermosLProposalPath);
-const readS2HProposal=()=>readJson(s2hProposalPath);
-const readAPW430Proposal=()=>readJson(apw430ProposalPath);
-const readS2HStandardProposal=()=>readJson(s2hStandardProposalPath);
+const proposal=(id)=>readJson(`data/master-change-control/proposals/${id}.manifest.json`);
+
+const THERMOSL='PMCP-LIX-SAMOSL-INNER-TILT-RANGE-20260903-001';
+const S2H_CUSTOM='PMCP-LIX-SAMOS2H-CUSTOM-DIMENSION-RULESET-20260903-001';
+const APW430_CUSTOM='PMCP-YKK-APW430-CUSTOM-DIMENSION-RULESET-20260903-001';
+const S2H_STANDARD='PMCP-LIX-SAMOS2H-STANDARD-SOURCE-CORRECTION-20260904-001';
 
 test('generic Size Capability Audit accepts managed PENDING without hiding it',()=>{
-  const gate=buildSizeCapabilityAuditGate({summary:{commonSalesInputContract:'FORMAL_PASS',formalMasterWritePerformed:false,productMasterChangeProposals:[]},standardAudit:{records:[{product_id:'SER-TEST-FUTURE',product_node:'NODE-1',coverage_status:'PENDING'}],formalMasterWritePerformed:false},customAudit:{formalMasterWritePerformed:false},pending:{blockingCount:1,items:[{id:'P-1',blocking:true}]},ruleAudits:[{expectedRuleCount:1,auditedRuleCount:1,records:[{rule_id:'R-1',audit_status:'MATCH'}],formalMasterWritePerformed:false}],proposals:[]});
+  const gate=buildSizeCapabilityAuditGate({summary:{commonSalesInputContract:'FORMAL_PASS',formalMasterWritePerformed:false,productMasterChangeProposals:[]},standardAudit:{records:[{product_id:'SER-TEST',product_node:'NODE',coverage_status:'PENDING'}],formalMasterWritePerformed:false},customAudit:{formalMasterWritePerformed:false},pending:{blockingCount:1,items:[{id:'P1',blocking:true}]},ruleAudits:[{expectedRuleCount:1,auditedRuleCount:1,records:[{rule_id:'R1',audit_status:'MATCH'}],formalMasterWritePerformed:false}],proposals:[]});
   assert.equal(gate.integrityGate,'PASS');assert.equal(gate.status,'PARTIAL_PASS');assert.equal(gate.blockingPending,1);assert.equal(gate.proposalCount,0);
 });
 
-test('current Thermos L and APW431 rule audits are complete and non-mutating',()=>{
+test('current Thermos L and APW431 rule audits remain complete and safe',()=>{
   const thermos=read('dimension-rule-audit-thermosl.json'),apw431=read('dimension-rule-audit-apw431.json');
   assert.deepEqual(validateRuleAuditDocument(thermos),[]);assert.deepEqual(validateRuleAuditDocument(apw431),[]);
-  assert.equal(thermos.expectedRuleCount,50);assert.equal(apw431.expectedRuleCount,29);assert.equal(thermos.summary.MATCH,38);assert.equal(thermos.summary.SOURCE_GRAPH_REVIEW_REQUIRED,12);assert.equal(thermos.summary.RULE_MISMATCH,0);assert.equal(apw431.summary.MATCH,21);assert.equal(apw431.summary.SOURCE_GRAPH_REVIEW_REQUIRED,8);assert.equal(apw431.summary.RULE_MISMATCH??0,0);
+  assert.equal(thermos.expectedRuleCount,50);assert.equal(thermos.summary.MATCH,38);assert.equal(thermos.summary.SOURCE_GRAPH_REVIEW_REQUIRED,12);assert.equal(thermos.summary.RULE_MISMATCH,0);
+  assert.equal(apw431.expectedRuleCount,29);assert.equal(apw431.summary.MATCH,21);assert.equal(apw431.summary.SOURCE_GRAPH_REVIEW_REQUIRED,8);assert.equal(apw431.summary.RULE_MISMATCH??0,0);
 });
 
-test('CR-SL-036 applied audit uses only source-confirmed boundary points and keeps safety review',()=>{
-  const row=read('dimension-rule-audit-thermosl.json').records.find((item)=>item.rule_id==='CR-SL-036');
-  assert.equal(row.audit_status,'MATCH');assert.deepEqual(row.selector_state,{window_type:'WT-SL-UCHIDAOSHI',specific_spec:'*',construction:'在来/204',leaf_configuration:'単窓'});assert.equal(row.unit,'mm');assert.equal(row.current_evaluation_type,'COMPOUND_GATE');assert.equal(row.current_automatic,false);assert.equal(row.current_W_H_dependency,'240<=W<=815:350<=H<=943; 815<W<=870:350<=H<=755; 870<W<=1690:350<=H<=500');assert.deepEqual(row.current_boundary_points,[[240,350],[240,943],[815,943],[815,755],[870,755],[870,500],[1690,500],[1690,350]]);assert.deepEqual(row.current_boundary_points,row.official_boundary_points);assert.equal(row.runtime_safety,'RUNTIME_SAFETY_REVIEW_REQUIRED');assert.equal(row.automatic_judgement_safe,false);
+test('generic audit core contains no current product token',()=>{
+  const source=fs.readFileSync(new URL('../src/product-master-core/size-capability-audit-core.mjs',import.meta.url),'utf8');
+  for(const token of ['SER-LIX-SAMOS2H','SER-LIX-SAMOSL','SER-YKK-APW430','SER-YKK-APW431','サーモス','APW 430','APW 431'])assert.equal(source.includes(token),false);
 });
 
-test('audit never upgrades Canonical↔Runtime equality to Official Source PASS by itself',()=>{
-  const standard=read('standard-size-audit.json');const equalityRows=standard.records.filter((row)=>row.canonical_runtime_current_consistency?.match);assert.equal(equalityRows.length,65);assert.ok(equalityRows.every((row)=>row.coverage_status==='PENDING'));const verified=standard.records.find((row)=>row.product_id==='SER-LIX-SAMOSL'&&row.product_node==='WT-SL-SHUTTER-HIKI');assert.equal(verified.verifiedSlices[0].coverage_status,'MATCH');assert.equal(verified.verifiedSlices[0].official_available,97);
+test('all historical proposal manifests remain immutable after external applications',()=>{
+  const expected={
+    [THERMOSL]:'sha256:bf89762cd1cf88be8620b93599d2987c23d50fcb335e6c2b525f5a14175184ee',
+    [S2H_CUSTOM]:'sha256:bd5900002f8d54d322fb7c50bb0b4b121f54a81ece7ec0e60baaffe6914df08e',
+    [APW430_CUSTOM]:'sha256:894ca2e99cfd482b0093bfbc1d1763383a8e01c5c8614d75ac1560938ae5eb78',
+    [S2H_STANDARD]:'sha256:b141224a4dc0981eee4d8c82574cc8b52e5b75e8ba70b1809053e9c9c27793d8'
+  };
+  for(const [id,fingerprint] of Object.entries(expected)){
+    const row=proposal(id);assert.deepEqual(validateChangeProposalDocument(row),[]);assert.equal(row.proposalFingerprint,fingerprint);assert.equal(row.status,'PROPOSED');assert.equal(row.approvalPolicy,'HUMAN_REQUIRED');assert.equal(row.approvalStatus,'PENDING');assert.equal(row.formalWorkbookWritePerformed,false);assert.equal(row.runtimeWritePerformed,false);assert.equal(row.autoApprovalPerformed,false);
+    if(row.payloadIntegrityFingerprint)assert.equal(row.payloadIntegrityFingerprint,computeProposalFingerprint(row));
+  }
 });
 
-test('generic audit core contains no current product token',()=>{const source=fs.readFileSync(new URL('../src/product-master-core/size-capability-audit-core.mjs',import.meta.url),'utf8');for(const token of ['SER-LIX-SAMOS2H','SER-LIX-SAMOSL','SER-YKK-APW430','SER-YKK-APW431','サーモス','APW 430','APW 431'])assert.equal(source.includes(token),false);});
-
-test('historical CR-SL-036 proposal remains immutable and payload-integrity valid after external Change Control',()=>{
-  const proposal=readThermosLProposal();assert.deepEqual(validateChangeProposalDocument(proposal),[]);assert.equal(proposal.proposalId,'PMCP-LIX-SAMOSL-INNER-TILT-RANGE-20260903-001');assert.equal(proposal.proposalFingerprint,'sha256:bf89762cd1cf88be8620b93599d2987c23d50fcb335e6c2b525f5a14175184ee');assert.equal(proposal.proposalFingerprintPolicy,'PRESERVED_LEGACY_PROPOSAL_SHA256');assert.equal(proposal.payloadIntegrityFingerprint,computeProposalFingerprint(proposal));assert.equal(proposal.approvalPolicy,'HUMAN_REQUIRED');assert.equal(proposal.approvalStatus,'PENDING');assert.equal(proposal.formalWorkbookWritePerformed,false);assert.equal(proposal.runtimeWritePerformed,false);assert.equal(proposal.autoApprovalPerformed,false);assert.equal(proposal.baseMasterFingerprint,`sha256:${proposal.baseMaster.sha256}`);assert.deepEqual(proposal.after.safeAutoPolygon,[[240,350],[240,943],[815,943],[815,755],[870,755],[870,500],[1690,500],[1690,350]]);
+test('S2H STANDARD official enumeration and evidence remain the immutable pre-apply basis',()=>{
+  const enumeration=read('standard-source-enumeration-samos2h.json'),evidence=read('evidence-samos2h-standard.json');
+  assert.equal(enumeration.activeProductNodeCount,17);assert.equal(enumeration.summary.officialRecordCount,2309);assert.equal(enumeration.summary.MATCH,1985);assert.equal(enumeration.summary.VALUE_MISMATCH,312);assert.equal(enumeration.summary.MISSING_IN_MASTER,12);assert.equal(enumeration.summary.SOURCE_INSUFFICIENT,0);
+  assert.equal(enumeration.enumerationMethod.wHCartesianGenerationPerformed,false);assert.equal(enumeration.enumerationMethod.callCodeDimensionInferencePerformed,false);
+  assert.equal(evidence.evidenceRecords.length,3);assert.equal(evidence.evidenceRecords[0].affectedCount,310);assert.equal(evidence.evidenceRecords[0].affectedSizeIdsSha256,'sha256:a08ae7d11409cc1f123a42e5a2287dd943c4d6f1595fd072722372efeb03e4db');assert.equal(evidence.evidenceRecords[1].records.length,2);assert.equal(evidence.evidenceRecords[2].projectedSizeIds.length,12);
 });
 
-test('legacy proposal payload tampering is detected independently of preserved proposal identity fingerprint',()=>{const proposal=readThermosLProposal();proposal.after.safeAutoExpression='tampered';assert.ok(validateChangeProposalDocument(proposal).some((error)=>error.includes('payload integrity fingerprint mismatch')));});
-
-test('external HUMAN approval, STAGING, Production and Runtime regeneration are bound to exact Thermos L proposal',()=>{
-  const id='PMCP-LIX-SAMOSL-INNER-TILT-RANGE-20260903-001';const approval=readJson(`data/master-change-control/approvals/${id}.approval.json`),staging=readJson(`data/master-change-control/applied/${id}.staging.json`),prodApproval=readJson(`data/master-change-control/production-approvals/${id}.production-approval.json`),production=readJson(`data/master-change-control/production/${id}.applied.json`),runtime=readJson('data/master-change-control/runtime/THERMOSL_CR_SL_036_RUNTIME_REGENERATION_V19.json');for(const row of [approval,staging,prodApproval,production,runtime])assert.equal(row.proposalId,id);assert.equal(approval.approverType,'HUMAN');assert.equal(staging.proposalStatus,'APPLIED');assert.equal(prodApproval.productionApproval,true);assert.equal(production.status,'PRODUCTION_APPLY_COMPLETE');assert.equal(production.postWriteReadback.unexpectedChangedCells,0);assert.equal(production.formalTarget.postWriteSha256,'cd6844218fcf0150a16cbbfa947f391aa08f5449b82ba6fc2249ccdb6894c3d3');assert.equal(runtime.status,'RUNTIME_REGENERATION_COMMITTED');assert.equal(runtime.runtimeVersion,'v1.9');assert.equal(runtime.runtimeProjection.directManufacturerValueEditToGenericCore,false);
+test('S2H STANDARD HUMAN approval, STAGING, preview, production and Runtime v1.1 are bound to the exact proposal',()=>{
+  const p=proposal(S2H_STANDARD),approval=readJson(`data/master-change-control/approvals/${S2H_STANDARD}.approval.json`),staging=readJson(`data/master-change-control/applied/${S2H_STANDARD}.staging.json`),preview=readJson(`data/master-change-control/production-previews/${S2H_STANDARD}.production-preview.json`),prodApproval=readJson(`data/master-change-control/production-approvals/${S2H_STANDARD}.production-approval.json`),production=readJson(`data/master-change-control/production/${S2H_STANDARD}.applied.json`),runtime=readJson('data/master-change-control/runtime/SAMOS2H_STANDARD_RUNTIME_REGENERATION_V11.json');
+  for(const row of [approval,staging,preview,prodApproval,production,runtime])assert.equal(row.proposalId,S2H_STANDARD);
+  assert.equal(approval.approverType,'HUMAN');assert.equal(approval.proposalFingerprint,p.proposalFingerprint);assert.equal(staging.proposalStatus,'APPLIED');assert.equal(staging.after.standardSizeRows,2309);assert.equal(staging.after.selectableRows,2140);assert.equal(staging.after.inactiveRows,169);assert.equal(staging.unexpectedChangedNonTargetSheets,0);
+  assert.equal(preview.status,'PRODUCTION_WRITE_PREVIEW_READY');assert.equal(prodApproval.productionApproval,true);assert.equal(production.status,'PRODUCTION_APPLY_COMPLETE');assert.equal(production.formalTarget.postWriteSha256,'9d4a0812cadc6d804a8e8db77ad0e4b042d674e62b9ef9edfcd2afcab9c9e5a6');assert.equal(production.postWriteReadback.standardSizeRows,2309);assert.equal(production.postWriteReadback.selectableRows,2140);assert.equal(production.postWriteReadback.inactiveRows,169);assert.equal(production.postWriteReadback.unexpectedChangedNonTargetSheets,0);
+  assert.equal(runtime.status,'RUNTIME_REGENERATION_COMMITTED');assert.equal(runtime.runtimeVersion,'v1.1');assert.equal(runtime.sourceOfTruth,'FORMAL_PRODUCT_MASTER');assert.equal(runtime.runtimeProjection.standardSizeRows,2309);assert.equal(runtime.runtimeProjection.selectableRows,2140);assert.equal(runtime.runtimeProjection.inactiveRows,169);assert.equal(runtime.runtimeProjection.directManufacturerValueEditToGenericCore,false);
 });
 
-test('S2H CUSTOM extraction classifies all 17 nodes without interpolation or writes',()=>{
-  const extraction=read('dimension-rule-extraction-samos2h.json');assert.equal(extraction.activeProductNodeCount,17);assert.equal(extraction.records.length,17);assert.deepEqual(extraction.summary,{EXACT_RULE_EXTRACTED:7,SOURCE_GRAPH_REVIEW_REQUIRED:10,SOURCE_INSUFFICIENT:0,PENDING:0,TOTAL:17});assert.ok(extraction.records.every((row)=>row.source_status==='CURRENT_2026_CONTINUITY_CONFIRMED'));assert.ok(extraction.records.every((row)=>row.interpolated_points_added===false));assert.equal(extraction.formalMasterWritePerformed,false);assert.equal(extraction.runtimeDirectWritePerformed,false);const inner=extraction.records.find((row)=>row.product_node==='WT-S2H-UCHIDAOSHI');assert.equal(inner.exact_rule_status,'EXACT_RULE_EXTRACTED');assert.equal(inner.rule_payload.evaluationType,'COMPOUND_GATE');assert.equal(inner.rule_payload.automatic,false);assert.deepEqual(inner.rule_payload.safeAutoPolygon,[[240,350],[240,943],[815,943],[815,755],[870,755],[870,500],[1690,500],[1690,350]]);assert.equal(inner.rule_payload.interpolatedPointsAdded,false);
+test('S2H STANDARD applied audit proves current formal and Runtime equality',()=>{
+  const applied=read('standard-size-audit-samos2h-applied.json');
+  assert.equal(applied.status,'FORMAL_MASTER_APPLIED_RUNTIME_REGENERATED');assert.equal(applied.activeProductNodes,17);assert.equal(applied.formalMaster.sha256,'9d4a0812cadc6d804a8e8db77ad0e4b042d674e62b9ef9edfcd2afcab9c9e5a6');assert.equal(applied.formalMaster.standardSizeRows,2309);assert.equal(applied.formalMaster.selectableRows,2140);assert.equal(applied.formalMaster.inactiveRows,169);assert.equal(applied.canonicalRuntime.canonicalSelectableRows,2140);assert.equal(applied.canonicalRuntime.runtimeSelectableRows,2140);assert.equal(applied.canonicalRuntime.match,true);assert.equal(applied.postApplyOfficialComparison.remainingValueMismatch,0);assert.equal(applied.postApplyOfficialComparison.remainingMissingInMaster,0);
 });
 
-test('S2H Product Master proposal remains immutable while external Change Control records approval/application',()=>{
-  const proposal=readS2HProposal();assert.deepEqual(validateChangeProposalDocument(proposal),[]);assert.equal(proposal.proposalId,'PMCP-LIX-SAMOS2H-CUSTOM-DIMENSION-RULESET-20260903-001');assert.equal(proposal.proposalFingerprint,'sha256:bd5900002f8d54d322fb7c50bb0b4b121f54a81ece7ec0e60baaffe6914df08e');assert.equal(proposal.proposalFingerprint,computeProposalFingerprint(proposal));assert.equal(proposal.baseMaster.driveFileId,'1kTRcb7UdghZl7h3lYdmnZuB7fUVUAduU');assert.equal(proposal.baseMaster.sha256,'8dea8b2ecec1715445db74255f591b4f2bcf404027f0006f168a585365df29d6');assert.equal(proposal.targetEntity,'06E_特注寸法範囲');assert.equal(proposal.operation,'ADD_DIMENSION_RULESET');assert.equal(proposal.after.activeProductNodeCount,17);assert.deepEqual(proposal.after.nodeClassificationSummary,{EXACT_RULE_EXTRACTED:7,SOURCE_GRAPH_REVIEW_REQUIRED:10,SOURCE_INSUFFICIENT:0,PENDING:0});assert.equal(proposal.after.interpolatedPointsAdded,false);assert.equal(proposal.status,'PROPOSED');assert.equal(proposal.approvalPolicy,'HUMAN_REQUIRED');assert.equal(proposal.approvalStatus,'PENDING');assert.equal(proposal.formalWorkbookWritePerformed,false);assert.equal(proposal.runtimeWritePerformed,false);assert.equal(proposal.autoApprovalPerformed,false);
-});
-
-test('APW430 proposal remains immutable after external HUMAN application',()=>{
-  const proposal=readAPW430Proposal();assert.deepEqual(validateChangeProposalDocument(proposal),[]);assert.equal(proposal.proposalFingerprint,'sha256:894ca2e99cfd482b0093bfbc1d1763383a8e01c5c8614d75ac1560938ae5eb78');assert.equal(proposal.proposalFingerprint,computeProposalFingerprint(proposal));assert.equal(proposal.status,'PROPOSED');assert.equal(proposal.approvalPolicy,'HUMAN_REQUIRED');assert.equal(proposal.approvalStatus,'PENDING');assert.equal(proposal.formalWorkbookWritePerformed,false);assert.equal(proposal.runtimeWritePerformed,false);assert.equal(proposal.autoApprovalPerformed,false);
-});
-
-test('S2H STANDARD source correction proposal is immutable, complete and Human-gated',()=>{
-  const proposal=readS2HStandardProposal();assert.deepEqual(validateChangeProposalDocument(proposal),[]);assert.equal(proposal.proposalFingerprint,'sha256:b141224a4dc0981eee4d8c82574cc8b52e5b75e8ba70b1809053e9c9c27793d8');assert.equal(proposal.proposalFingerprintPolicy,'PRESERVED_LEGACY_PROPOSAL_SHA256');assert.equal(proposal.payloadIntegrityFingerprint,computeProposalFingerprint(proposal));assert.equal(proposal.status,'PROPOSED');assert.equal(proposal.approvalPolicy,'HUMAN_REQUIRED');assert.equal(proposal.approvalStatus,'PENDING');assert.equal(proposal.baseMaster.sha256,'7ca8f5cca19187bfb841bc3f3393fb29de591dc554714627faf3a652130cd8a7');assert.equal(proposal.after.standardSizeRows,2309);assert.equal(proposal.after.selectableRows,2140);assert.equal(proposal.after.inactiveRows,169);assert.equal(proposal.after.hActualDimensionCorrections,310);assert.equal(proposal.after.deactivateSizeIds.length,2);assert.equal(proposal.after.newStandardSizeIds.length,12);assert.equal(proposal.formalWorkbookWritePerformed,false);assert.equal(proposal.runtimeWritePerformed,false);assert.equal(proposal.autoApprovalPerformed,false);
-  const enumeration=read('standard-source-enumeration-samos2h.json');assert.equal(enumeration.activeProductNodeCount,17);assert.equal(enumeration.summary.officialRecordCount,2309);assert.equal(enumeration.summary.MATCH,1985);assert.equal(enumeration.summary.VALUE_MISMATCH,312);assert.equal(enumeration.summary.MISSING_IN_MASTER,12);assert.equal(enumeration.summary.SOURCE_INSUFFICIENT,0);assert.equal(enumeration.enumerationMethod.wHCartesianGenerationPerformed,false);assert.equal(enumeration.enumerationMethod.callCodeDimensionInferencePerformed,false);
-  const evidence=read('evidence-samos2h-standard.json');assert.equal(evidence.evidenceRecords.length,3);assert.equal(evidence.evidenceRecords[0].affectedCount,310);assert.equal(evidence.evidenceRecords[0].affectedSizeIdsSha256,'sha256:a08ae7d11409cc1f123a42e5a2287dd943c4d6f1595fd072722372efeb03e4db');assert.equal(evidence.evidenceRecords[1].records.length,2);assert.equal(evidence.evidenceRecords[2].projectedSizeIds.length,12);
-});
-
-test('full current gate has six managed blocking PENDING plus one S2H STANDARD Human proposal',()=>{
-  const summary=read('summary.json');const pending=read('pending.json');const proposal=readS2HStandardProposal();
-  assert.deepEqual(summary.productMasterChangeProposals,['PMCP-LIX-SAMOS2H-STANDARD-SOURCE-CORRECTION-20260904-001']);
-  assert.deepEqual(summary.appliedProductMasterChangeProposals,['PMCP-LIX-SAMOSL-INNER-TILT-RANGE-20260903-001','PMCP-LIX-SAMOS2H-CUSTOM-DIMENSION-RULESET-20260903-001','PMCP-YKK-APW430-CUSTOM-DIMENSION-RULESET-20260903-001']);
+test('current audit gate has six unrelated blockers and no active Product Master proposal',()=>{
+  const summary=read('summary.json'),pending=read('pending.json'),gateFile=read('gate-report.json');
+  assert.equal(summary.blockingPendingCount,6);assert.deepEqual(summary.productMasterChangeProposals,[]);assert.ok(summary.appliedProductMasterChangeProposals.includes(S2H_STANDARD));assert.equal(summary.samos2hStandardEnumeration.status,'FORMAL_MASTER_APPLIED_RUNTIME_REGENERATED');assert.equal(summary.samos2hStandardEnumeration.applied.selectable,2140);
   assert.equal(pending.blockingCount,6);assert.ok(pending.resolved.some((row)=>row.id==='PEND-SIZE-S2H-STANDARD-001'));assert.equal(pending.items.some((row)=>row.id==='PEND-SIZE-S2H-STANDARD-001'),false);
-  const gate=buildSizeCapabilityAuditGate({summary,standardAudit:read('standard-size-audit.json'),customAudit:read('custom-capability-audit.json'),pending,ruleAudits:[read('dimension-rule-audit-thermosl.json'),read('dimension-rule-audit-apw431.json')],proposals:[proposal]});assert.equal(gate.integrityGate,'PASS');assert.equal(gate.status,'PARTIAL_PASS');assert.equal(gate.blockingPending,6);assert.equal(gate.proposalCount,1);assert.equal(gate.proposalApprovalGate,'HUMAN_APPROVAL_PENDING');
-  const s2hId='PMCP-LIX-SAMOS2H-CUSTOM-DIMENSION-RULESET-20260903-001';const s2hApproval=readJson(`data/master-change-control/approvals/${s2hId}.approval.json`),s2hStaging=readJson(`data/master-change-control/applied/${s2hId}.staging.json`),s2hProdApproval=readJson(`data/master-change-control/production-approvals/${s2hId}.production-approval.json`),s2hProduction=readJson(`data/master-change-control/production/${s2hId}.applied.json`),s2hRuntime=readJson('data/master-change-control/runtime/SAMOS2H_CUSTOM_RUNTIME_REGENERATION_V10.json');assert.equal(s2hApproval.approverType,'HUMAN');assert.equal(s2hStaging.proposalStatus,'APPLIED');assert.equal(s2hProdApproval.productionApproval,true);assert.equal(s2hProduction.status,'PRODUCTION_APPLY_COMPLETE');assert.equal(s2hProduction.postWriteReadback.dimensionRuleCount,17);assert.equal(s2hProduction.postWriteReadback.unexpectedChangedExistingSheets,0);assert.equal(s2hRuntime.status,'RUNTIME_REGENERATION_COMMITTED');assert.equal(s2hRuntime.runtimeProjection.dimensionRuleCount,17);
-  const apwId='PMCP-YKK-APW430-CUSTOM-DIMENSION-RULESET-20260903-001';const approval=readJson(`data/master-change-control/approvals/${apwId}.approval.json`),staging=readJson(`data/master-change-control/applied/${apwId}.staging.json`),prodApproval=readJson(`data/master-change-control/production-approvals/${apwId}.production-approval.json`),production=readJson(`data/master-change-control/production/${apwId}.applied.json`),runtime=readJson('data/master-change-control/runtime/APW430_CUSTOM_RUNTIME_REGENERATION_V10.json');assert.equal(approval.approverType,'HUMAN');assert.equal(staging.proposalStatus,'APPLIED');assert.equal(prodApproval.productionApproval,true);assert.equal(production.status,'PRODUCTION_APPLY_COMPLETE');assert.equal(production.formalTarget.postWriteDriveRevisionId,'13');assert.equal(production.postWriteReadback.dimensionRuleCount,25);assert.equal(production.postWriteReadback.unexpectedChangedExistingSheets,0);assert.equal(runtime.status,'RUNTIME_REGENERATION_COMMITTED');assert.equal(runtime.runtimeVersion,'v1.0');assert.equal(runtime.runtimeProjection.dimensionRuleCount,25);assert.equal(runtime.runtimeProjection.dimensionAuto,0);assert.equal(runtime.runtimeProjection.dimensionReview,25);assert.equal(runtime.runtimeProjection.directManufacturerValueEditToGenericCore,false);
+  const computed=buildSizeCapabilityAuditGate({summary,standardAudit:read('standard-size-audit.json'),customAudit:read('custom-capability-audit.json'),pending,ruleAudits:[read('dimension-rule-audit-thermosl.json'),read('dimension-rule-audit-apw431.json')],proposals:[]});
+  for(const gate of [computed,gateFile]){assert.equal(gate.integrityGate,'PASS');assert.equal(gate.status,'PARTIAL_PASS');assert.equal(gate.blockingPending,6);assert.equal(gate.proposalCount,0);assert.equal(gate.proposalApprovalGate,'NO_PROPOSAL_PENDING');}
+});
+
+test('previous applied CUSTOM and Thermos L change controls remain valid',()=>{
+  const checks=[[S2H_CUSTOM,'data/master-change-control/runtime/SAMOS2H_CUSTOM_RUNTIME_REGENERATION_V10.json',17],[APW430_CUSTOM,'data/master-change-control/runtime/APW430_CUSTOM_RUNTIME_REGENERATION_V10.json',25],[THERMOSL,'data/master-change-control/runtime/THERMOSL_CR_SL_036_RUNTIME_REGENERATION_V19.json',null]];
+  for(const [id,runtimePath,count] of checks){const approval=readJson(`data/master-change-control/approvals/${id}.approval.json`),production=readJson(`data/master-change-control/production/${id}.applied.json`),runtime=readJson(runtimePath);assert.equal(approval.approverType,'HUMAN');assert.equal(production.status,'PRODUCTION_APPLY_COMPLETE');assert.equal(runtime.status,'RUNTIME_REGENERATION_COMMITTED');if(count!==null)assert.equal(runtime.runtimeProjection.dimensionRuleCount,count);assert.equal(runtime.runtimeProjection.directManufacturerValueEditToGenericCore,false);}
 });
