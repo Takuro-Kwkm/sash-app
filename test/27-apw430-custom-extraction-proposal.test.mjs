@@ -82,26 +82,23 @@ test('APW430 external HUMAN approval, STAGING, Production and Runtime are bound 
   assert.equal(runtime.runtimeProjection.directManufacturerValueEditToGenericCore,false);
 });
 
-test('APW430 extraction remains resolved while S2H STANDARD Human proposal is the current gate',()=>{
+test('APW430 remains resolved after S2H STANDARD proposal is formally applied',()=>{
   const pending=read('artifacts/size-capability-audit/pending.json');
   const summary=read('artifacts/size-capability-audit/summary.json');
   const gate=read('artifacts/size-capability-audit/gate-report.json');
   assert.equal(pending.blockingCount,6);
   assert.ok(pending.resolved.some((row)=>row.id==='PEND-SIZE-APW430-CUSTOM-001'));
-  assert.equal(pending.items.some((row)=>row.id==='PEND-SIZE-APW430-CUSTOM-001'),false);
-  assert.deepEqual(summary.productMasterChangeProposals,[s2hStandardProposalId]);
+  assert.ok(pending.resolved.some((row)=>row.id==='PEND-SIZE-S2H-STANDARD-001'));
+  assert.deepEqual(summary.productMasterChangeProposals,[]);
   assert.ok(summary.appliedProductMasterChangeProposals.includes(proposalId));
+  assert.ok(summary.appliedProductMasterChangeProposals.includes(s2hStandardProposalId));
   assert.equal(summary.apw430CustomExtraction.status,'FORMAL_MASTER_APPLIED_RUNTIME_REGENERATED');
-  assert.equal(summary.apw430CustomExtraction.activeProductNodes,25);
-  assert.equal(summary.apw430CustomExtraction.exactRuleExtracted,20);
-  assert.equal(summary.apw430CustomExtraction.sourceGraphReviewRequired,5);
-  assert.equal(summary.apw430CustomExtraction.pending,0);
-  assert.equal(summary.apw430CustomExtraction.formalMasterWrite,true);
-  assert.equal(summary.apw430CustomExtraction.runtimeDirectWrite,false);
   assert.equal(summary.apw430CustomExtraction.runtimeDimensionRules,25);
+  assert.equal(summary.samos2hStandardEnumeration.status,'FORMAL_MASTER_APPLIED_RUNTIME_REGENERATED');
+  assert.equal(summary.samos2hStandardEnumeration.applied.selectable,2140);
   assert.equal(gate.status,'PARTIAL_PASS');
   assert.equal(gate.integrityGate,'PASS');
   assert.equal(gate.blockingPending,6);
-  assert.equal(gate.proposalCount,1);
-  assert.equal(gate.proposalApprovalGate,'HUMAN_APPROVAL_PENDING');
+  assert.equal(gate.proposalCount,0);
+  assert.equal(gate.proposalApprovalGate,'NO_PROPOSAL_PENDING');
 });
