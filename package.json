@@ -41,7 +41,7 @@
     "gemini:preflight:v22": "node scripts/run-gemini-live-preflight-v22.mjs",
     "gemini:live:apw430:v22": "node scripts/run-apw430-gemini-live-v21.mjs",
     "test:product-master-core:v23": "node --test test/33-product-master-core-v20-gemini-execution-bridge.test.mjs test/34-product-master-core-v20-review-surface.test.mjs test/35-product-master-core-v21-gemini-live-attachment.test.mjs test/36-product-master-core-v22-gemini-credential-retry.test.mjs test/37-product-master-core-v23-source-equivalence.test.mjs",
-    "gemini:live:apw430:v23": "node scripts/run-apw430-gemini-live-v25.mjs"
+    "gemini:live:apw430:v23": "node scripts/run-apw430-gemini-live-v26.mjs"
   },
   "engines": {
     "node": ">=22"
