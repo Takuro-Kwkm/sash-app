@@ -32,8 +32,26 @@ test('v2.1 Gemini Files API upload preserves fingerprint and returns URI without
   assert.equal(result.pass,true);
   assert.equal(result.attachment.geminiFileUri,'https://generativelanguage.googleapis.com/v1beta/files/APW430');
   assert.equal(result.audit.sourceSha256,expected);
+  assert.equal(result.audit.providerState,'ACTIVE');
   assert.equal(calls[0].options.headers['x-goog-api-key'],'SECRET-KEY-V21');
   assert.equal(JSON.stringify(result).includes('SECRET-KEY-V21'),false);
+});
+
+test('v2.1 PROCESSING Gemini file is polled until ACTIVE before inference handoff',async t=>{
+  const root=fixtureRoot(t),file=makePdf(root),expected=sha256File(file),calls=[];
+  const fetchImpl=async(url,options)=>{
+    calls.push({url,options});
+    if(calls.length===1)return okJson({}, {'x-goog-upload-url':'https://upload.example/session'});
+    if(calls.length===2)return okJson({file:{uri:'files/APW430-processing',mimeType:'application/pdf',name:'files/APW430-processing',state:'PROCESSING'}});
+    return okJson({name:'files/APW430-processing',uri:'files/APW430-processing',mimeType:'application/pdf',state:'ACTIVE'});
+  };
+  const result=await uploadGeminiFileFromPath({filePath:file,apiKey:'SECRET-POLL-V21',expectedSha256:expected,fetchImpl,pollIntervalMs:0});
+  assert.equal(result.pass,true);
+  assert.equal(result.audit.providerState,'ACTIVE');
+  assert.equal(result.audit.statusPolls,1);
+  assert.equal(calls[2].url,'https://generativelanguage.googleapis.com/v1beta/files/APW430-processing');
+  assert.equal(calls[2].options.headers['x-goog-api-key'],'SECRET-POLL-V21');
+  assert.equal(JSON.stringify(result).includes('SECRET-POLL-V21'),false);
 });
 
 test('v2.1 wrong Drive-fetched source fingerprint blocks before upload',async t=>{
