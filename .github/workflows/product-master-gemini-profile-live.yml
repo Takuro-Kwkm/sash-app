@@ -1,170 +1,22 @@
-name: Product Master Gemini Profile LIVE
+name: Product Master Gemini API Profile LIVE (Legacy Disabled)
 
 on:
-  push:
-    branches: [feat/catalog-recovery-v2]
-    paths:
-      - '.github/workflows/product-master-gemini-profile-live.yml'
-      - 'config/product-master-profiles/**'
   workflow_dispatch:
     inputs:
       profile_path:
-        description: Product Master Profile JSON path
-        required: true
+        description: Legacy Gemini API path is disabled; use Antigravity profile LIVE workflow
+        required: false
         default: config/product-master-profiles/lixil-thermosl.v1.json
-
-concurrency:
-  group: product-master-gemini-live
-  cancel-in-progress: false
 
 permissions:
   contents: read
 
 jobs:
-  profile_live:
+  legacy_disabled:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
-    env:
-      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-      PROFILE_PATH: ${{ github.event.inputs.profile_path || 'config/product-master-profiles/lixil-thermosl.v1.json' }}
-      ARTIFACT_DIR: artifacts/product-master-profile-live
     steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-
-      - name: Verify profile contract and cross-manufacturer tests
-        run: npm run test:product-master-core:v25
-
-      - name: Resolve profile source without exposing credentials
-        id: profile
-        shell: bash
+      - name: Legacy API worker disabled
         run: |
-          set -euo pipefail
-          mkdir -p "$ARTIFACT_DIR"
-          test -f "$PROFILE_PATH"
-          manufacturer=$(jq -r '.manufacturer' "$PROFILE_PATH")
-          series=$(jq -r '.series' "$PROFILE_PATH")
-          product_id=$(jq -r '.productId' "$PROFILE_PATH")
-          source_url=$(jq -r '.source.officialDownloadUrl' "$PROFILE_PATH")
-          detail_url=$(jq -r '.source.officialDetailUrl' "$PROFILE_PATH")
-          expected_sha=$(jq -r '.source.authoritativeSha256' "$PROFILE_PATH")
-          source_title=$(jq -r '.source.title' "$PROFILE_PATH")
-          source_drive_file_id=$(jq -r '.source.driveFileId' "$PROFILE_PATH")
-          api_key_present=0
-          [[ -n "${GEMINI_API_KEY:-}" ]] && api_key_present=1
-          echo "manufacturer=$manufacturer" >> "$GITHUB_OUTPUT"
-          echo "series=$series" >> "$GITHUB_OUTPUT"
-          echo "product_id=$product_id" >> "$GITHUB_OUTPUT"
-          echo "source_url=$source_url" >> "$GITHUB_OUTPUT"
-          echo "detail_url=$detail_url" >> "$GITHUB_OUTPUT"
-          echo "expected_sha=$expected_sha" >> "$GITHUB_OUTPUT"
-          echo "source_title=$source_title" >> "$GITHUB_OUTPUT"
-          echo "source_drive_file_id=$source_drive_file_id" >> "$GITHUB_OUTPUT"
-          echo "api_key_present=$api_key_present" >> "$GITHUB_OUTPUT"
-          jq '{profileSchemaVersion,recordType,manufacturer,series,registrySeriesKey,productId,source:{type:.source.type,driveFileId:.source.driveFileId,title:.source.title,version:.source.version,authoritativeSha256:.source.authoritativeSha256,pageCount:.source.pageCount},extraction:{pageScope:.extraction.pageScope,printedPageScope:.extraction.printedPageScope,canonicalFieldScope:.extraction.canonicalFieldScope}}' "$PROFILE_PATH" > "$ARTIFACT_DIR/profile-audit.json"
-          echo "profile=$PROFILE_PATH"
-          echo "manufacturer=$manufacturer"
-          echo "series=$series"
-          echo "product_id=$product_id"
-          echo "api_key_present=$api_key_present"
-
-      - name: Acquire official source and require exact authoritative SHA-256
-        id: source
-        shell: bash
-        run: |
-          set -euo pipefail
-          source_ready=0
-          curl_exit=0
-          curl --fail --location --retry 2 --retry-delay 2 \
-            --connect-timeout 20 --max-time 240 \
-            --user-agent 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/152 Safari/537.36' \
-            --referer '${{ steps.profile.outputs.detail_url }}' \
-            --output /tmp/product-master-source.pdf '${{ steps.profile.outputs.source_url }}' || curl_exit=$?
-
-          if [[ "$curl_exit" == "0" && -s /tmp/product-master-source.pdf ]]; then
-            size_bytes=$(wc -c < /tmp/product-master-source.pdf | tr -d ' ')
-            mime_type=$(file -b --mime-type /tmp/product-master-source.pdf || true)
-            magic=$(head -c 5 /tmp/product-master-source.pdf || true)
-            actual_sha=$(sha256sum /tmp/product-master-source.pdf | awk '{print $1}')
-            if [[ "$mime_type" == "application/pdf" && "$magic" == "%PDF-" && "$actual_sha" == '${{ steps.profile.outputs.expected_sha }}' ]]; then
-              source_ready=1
-            fi
-          else
-            size_bytes=0
-            mime_type="UNAVAILABLE"
-            magic=""
-            actual_sha=""
-          fi
-
-          cat > "$ARTIFACT_DIR/source-acquisition-audit.json" <<EOF
-          {
-            "source_ready": $source_ready,
-            "curl_exit": $curl_exit,
-            "mime_type": "$mime_type",
-            "size_bytes": $size_bytes,
-            "expected_sha256": "${{ steps.profile.outputs.expected_sha }}",
-            "actual_sha256": "$actual_sha",
-            "exact_sha256_match": $([[ "$actual_sha" == '${{ steps.profile.outputs.expected_sha }}' ]] && echo true || echo false),
-            "source_drive_file_id": "${{ steps.profile.outputs.source_drive_file_id }}",
-            "source_title": "${{ steps.profile.outputs.source_title }}"
-          }
-          EOF
-          echo "source_ready=$source_ready" >> "$GITHUB_OUTPUT"
-          echo "actual_sha=$actual_sha" >> "$GITHUB_OUTPUT"
-          echo "source_ready=$source_ready"
-          echo "mime_type=$mime_type"
-          echo "size_bytes=$size_bytes"
-          echo "actual_sha256=$actual_sha"
-          if [[ "$source_ready" != "1" ]]; then
-            echo 'GEMINI_JOB=BLOCKED: official source acquisition did not match authoritative Drive SHA-256.'
-            exit 3
-          fi
-
-      - name: Run generic LIVE Gemini product-master bridge
-        if: steps.source.outputs.source_ready == '1' && steps.profile.outputs.api_key_present == '1'
-        shell: bash
-        run: |
-          set -euo pipefail
-          mkdir -p "$ARTIFACT_DIR/evidence-inbox" "$ARTIFACT_DIR/change-control" "$ARTIFACT_DIR/jobs"
-          set +e
-          node scripts/run-gemini-product-master-job.mjs \
-            --profile="$PROFILE_PATH" \
-            --source-file=/tmp/product-master-source.pdf \
-            --evidence-inbox="$ARTIFACT_DIR/evidence-inbox" \
-            --change-control="$ARTIFACT_DIR/change-control" \
-            --audit-dir="$ARTIFACT_DIR/jobs" \
-            2>&1 | tee "$ARTIFACT_DIR/runner-console.log"
-          runner_status=${PIPESTATUS[0]}
-          set -e
-          echo "runner_exit_code=$runner_status" > "$ARTIFACT_DIR/runner-status.txt"
-          exit "$runner_status"
-
-      - name: Record credential blocker
-        if: steps.source.outputs.source_ready == '1' && steps.profile.outputs.api_key_present != '1'
-        shell: bash
-        run: |
-          cat > "$ARTIFACT_DIR/gemini-live-blocker.json" <<EOF
-          {
-            "gate": "BLOCKED",
-            "reason": "GEMINI_API_KEY_MISSING",
-            "gemini_job": "BLOCKED",
-            "live_request_executed": false,
-            "canonical_write_performed": false,
-            "runtime_write_performed": false,
-            "production_write_performed": false
-          }
-          EOF
-          echo 'GEMINI_JOB=BLOCKED: GEMINI_API_KEY_MISSING'
+          echo 'GEMINI_API_PROFILE_LIVE=DISABLED'
+          echo 'Use .github/workflows/product-master-antigravity-profile-live.yml on the self-hosted gemini-worker runner.'
           exit 3
-
-      - name: Upload non-secret Phase 7 audit
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: product-master-profile-live-phase7-audit
-          path: artifacts/product-master-profile-live
-          if-no-files-found: error
-          retention-days: 7
