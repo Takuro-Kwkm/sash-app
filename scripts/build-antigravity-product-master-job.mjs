@@ -25,6 +25,8 @@ const profile=JSON.parse(fs.readFileSync(profilePath,'utf8'));
 const expectedSha=profile?.source?.authoritativeSha256??null;
 const actualSha=sha256File(sourcePdfPath);
 if(!expectedSha||actualSha!==expectedSha)throw new Error(`Source SHA mismatch: expected=${expectedSha} actual=${actualSha}`);
+const sourceScopeTextContent=fs.readFileSync(sourceScopeTextPath,'utf8');
+if(!sourceScopeTextContent.trim())throw new Error('Scoped source text is empty');
 
 const runSuffix=safe(process.env.GITHUB_RUN_ID??crypto.randomUUID().slice(0,8));
 const attempt=safe(process.env.GITHUB_RUN_ATTEMPT??'1');
@@ -46,9 +48,7 @@ const job=created.job;
 
 const schema=buildAntigravityTransportSchema(job);
 const prompt=buildAntigravityWorkerPrompt(job,{
-  sourcePdfPath:path.relative(process.cwd(),sourcePdfPath),
-  sourceScopeTextPath:path.relative(process.cwd(),sourceScopeTextPath),
-  sourceScopeImageDir:sourceScopeImageDir?path.relative(process.cwd(),sourceScopeImageDir):null,
+  sourceScopeTextContent,
   sourceSha256:actualSha
 });
 
@@ -61,7 +61,7 @@ fs.writeFileSync(schemaPath,`${JSON.stringify(schema,null,2)}\n`,'utf8');
 fs.writeFileSync(promptPath,`${prompt}\n`,'utf8');
 const manifest={
   recordType:'ANTIGRAVITY_PRODUCT_MASTER_WORKER_MANIFEST',
-  schemaVersion:'1.0',
+  schemaVersion:'1.1',
   jobId:job.jobId,
   manufacturer:job.manufacturer,
   series:job.series,
@@ -70,12 +70,14 @@ const manifest={
   producerSystem:ANTIGRAVITY_PRODUCER_SYSTEM,
   authenticationMode:'GOOGLE_AI_PRO_OAUTH',
   executionMode:'HEADLESS_STRUCTURED_OUTPUT_TO_REPLAY_TRANSPORT',
+  evidenceDeliveryMode:'INLINE_VERIFIED_PAGE_SCOPED_TEXT',
   source:{
     driveFileId:job.sourceContext.driveFileId,
     title:job.sourceContext.title,
     authoritativeSha256:expectedSha,
     localVerifiedSha256:actualSha,
     scopeTextSha256:sha256File(sourceScopeTextPath),
+    scopeTextBytes:Buffer.byteLength(sourceScopeTextContent,'utf8'),
     pageScope:job.pageScope,
     printedPageScope:job.printedPageScope
   },
@@ -86,7 +88,8 @@ const manifest={
     promptSha256:sha256Text(prompt),
     schemaSha256:sha256Text(JSON.stringify(schema))
   },
+  modelToolAuthority:'NONE',
   mutationAuthority:'NONE'
 };
 fs.writeFileSync(manifestPath,`${JSON.stringify(manifest,null,2)}\n`,'utf8');
-console.log(JSON.stringify({pass:true,jobId:job.jobId,jobPath,schemaPath,promptPath,manifestPath,sourceSha256:actualSha,producerSystem:ANTIGRAVITY_PRODUCER_SYSTEM},null,2));
+console.log(JSON.stringify({pass:true,jobId:job.jobId,jobPath,schemaPath,promptPath,manifestPath,sourceSha256:actualSha,scopeTextSha256:manifest.source.scopeTextSha256,evidenceDeliveryMode:manifest.evidenceDeliveryMode,producerSystem:ANTIGRAVITY_PRODUCER_SYSTEM},null,2));
