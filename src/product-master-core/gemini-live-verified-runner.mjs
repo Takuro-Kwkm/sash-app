@@ -5,6 +5,20 @@ import{verifyGeminiFileAttachment}from'./gemini-file-verify.mjs';
 const safeClone=(value)=>structuredClone(value);
 const safety=()=>({canonicalWritePerformed:false,runtimeWritePerformed:false,productionWritePerformed:false});
 const nonBlank=(value)=>typeof value==='string'&&value.trim().length>0;
+const sleep=(ms)=>new Promise((resolve)=>setTimeout(resolve,ms));
+
+function transientProviderError(result){
+  const errors=Array.isArray(result?.errors)?result.errors:[];
+  return errors.find((row)=>row?.code==='GEMINI_API_ERROR'&&[429,500,502,503,504].includes(Number(row?.httpStatus)))??null;
+}
+
+function retryDelayMs(error,{attempt=0,maxRetryDelayMs=70000}={}){
+  const message=String(error?.message??'');
+  const secondsMatch=message.match(/retry\s+in\s+([0-9]+(?:\.[0-9]+)?)s/i);
+  const providerDelay=secondsMatch?Math.ceil(Number(secondsMatch[1])*1000)+750:null;
+  const fallback=Math.min(2000*(2**attempt),15000);
+  return Math.min(providerDelay??fallback,maxRetryDelayMs);
+}
 
 export async function runVerifiedGeminiLiveJob(job,{
   argv=[],
@@ -13,11 +27,15 @@ export async function runVerifiedGeminiLiveJob(job,{
   geminiFileUri=process.env.GEMINI_FILE_URI??null,
   sourceFilePath=process.env.GEMINI_SOURCE_FILE??null,
   sourceVerifyImpl=verifyGeminiFileAttachment,
+  bridgeImpl=runGeminiProductMasterBridge,
+  sleepImpl=sleep,
+  maxTransientRetries=2,
+  maxRetryDelayMs=70000,
   fetchImpl=globalThis.fetch,
   timeoutMs=60000,
   ...bridgeOptions
 }={}){
-  const workingJob=safeClone(job);
+  let workingJob=safeClone(job);
   if(workingJob?.sourceContext?.type==='OFFICIAL_PDF'&&!workingJob?.sourceAttachment?.geminiFileUri&&nonBlank(geminiFileUri)){
     workingJob.sourceAttachment={...(workingJob.sourceAttachment??{}),geminiFileUri:geminiFileUri.trim(),mimeType:workingJob.sourceAttachment?.mimeType??'application/pdf'};
   }
@@ -36,10 +54,28 @@ export async function runVerifiedGeminiLiveJob(job,{
     if(!verify.pass)return{pass:false,status:verify.status==='BLOCKED'?'BLOCKED':'FAILED',job:workingJob,credentialPreflight:preflight,sourceAttachmentAudit,transportValidation:null,inboxImport:null,reviewQueue:null,...safety(),errors:verify.errors??[]};
   }
 
-  const result=await runGeminiProductMasterBridge(workingJob,{...bridgeOptions,apiKey,model,sourceFilePath,fetchImpl,timeoutMs});
+  const retryAudit=[];
+  let result=null;
+  for(let attempt=0;attempt<=maxTransientRetries;attempt+=1){
+    result=await bridgeImpl(workingJob,{...bridgeOptions,apiKey,model,sourceFilePath,fetchImpl,timeoutMs});
+    sourceAttachmentAudit=result.sourceAttachmentAudit??sourceAttachmentAudit;
+    const transient=transientProviderError(result);
+    if(result.pass||!transient||attempt>=maxTransientRetries)break;
+
+    const delayMs=retryDelayMs(transient,{attempt,maxRetryDelayMs});
+    retryAudit.push({attempt:attempt+1,httpStatus:Number(transient.httpStatus),delayMs,reason:transient.code});
+
+    // The failed execution job retains the verified Gemini file attachment. Reuse it so a transient
+    // provider retry does not re-upload the official PDF or alter source provenance.
+    workingJob=safeClone(result.job??workingJob);
+    await sleepImpl(delayMs);
+  }
+
   return{
     ...result,
     credentialPreflight:preflight,
-    sourceAttachmentAudit:result.sourceAttachmentAudit??sourceAttachmentAudit
+    sourceAttachmentAudit,
+    transientRetryAudit:retryAudit,
+    transientRetryCount:retryAudit.length
   };
 }
