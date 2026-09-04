@@ -24,10 +24,16 @@ function deriveValue(spec,selection){
  }
  return undefined;
 }
-export function applyAuto(catalog,productId,selection,context,notices){let changed=false;for(const d of catalog.dependencies.filter(x=>x.productId===productId&&depMode(x)==='AUTO').sort((a,b)=>(a.priority??9999)-(b.priority??9999))){if(!selectorMatches(d.when,selection,context))continue;const a=depAction(d);if(['force_value','FORCE_CANDIDATE'].includes(a)){const key=d.effect?.key??d.targetField,val=d.effect?.value??d.targetValue,allowed=getAllowedValues(catalog,productId,key,selection,context);if(allowed.some(x=>x.value===val)&&selection[key]!==val){selection[key]=val;changed=true;}}else if(a==='clear_value'){const key=d.effect?.key;if(key&&selection[key]!==undefined){delete selection[key];changed=true;}}else if(a==='derive_value'){
- const key=d.effect?.key??d.targetField;if(!key)continue;
- if(d.effect?.allowOverride&&selection[key]!==undefined)continue;
+function applyDerivedRule(d,selection){
+ const key=d.effect?.key??d.targetField;if(!key)return false;
+ if(d.effect?.allowOverride&&selection[key]!==undefined)return false;
  const proposed=deriveValue(d.effect?.formula,selection);
- if(proposed===undefined){if(d.effect?.clearWhenUnavailable&&selection[key]!==undefined){delete selection[key];changed=true;}}
- else if(selection[key]!==proposed){selection[key]=proposed;changed=true;}
- }else if(a==='notice'&&d.effect?.message)notices.push(d.effect.message);}return changed;}
+ if(proposed===undefined){
+  if(d.effect?.clearWhenUnavailable&&selection[key]!==undefined){delete selection[key];return true;}
+  return false;
+ }
+ if(selection[key]!==proposed){selection[key]=proposed;return true;}
+ return false;
+}
+export function applyDerivedAuto(catalog,productId,selection,context){let changed=false;for(const d of catalog.dependencies.filter(x=>x.productId===productId&&depMode(x)==='AUTO'&&depAction(x)==='derive_value').sort((a,b)=>(a.priority??9999)-(b.priority??9999))){if(!selectorMatches(d.when,selection,context))continue;if(applyDerivedRule(d,selection))changed=true;}return changed;}
+export function applyAuto(catalog,productId,selection,context,notices){let changed=false;for(const d of catalog.dependencies.filter(x=>x.productId===productId&&depMode(x)==='AUTO').sort((a,b)=>(a.priority??9999)-(b.priority??9999))){if(!selectorMatches(d.when,selection,context))continue;const a=depAction(d);if(['force_value','FORCE_CANDIDATE'].includes(a)){const key=d.effect?.key??d.targetField,val=d.effect?.value??d.targetValue,allowed=getAllowedValues(catalog,productId,key,selection,context);if(allowed.some(x=>x.value===val)&&selection[key]!==val){selection[key]=val;changed=true;}}else if(a==='clear_value'){const key=d.effect?.key;if(key&&selection[key]!==undefined){delete selection[key];changed=true;}}else if(a==='derive_value'){if(applyDerivedRule(d,selection))changed=true;}else if(a==='notice'&&d.effect?.message)notices.push(d.effect.message);}return changed;}
