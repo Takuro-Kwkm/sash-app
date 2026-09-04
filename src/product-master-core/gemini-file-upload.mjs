@@ -6,6 +6,7 @@ export const GEMINI_PDF_MAX_BYTES=50*1024*1024;
 
 const makeError=(code,message,details={})=>({code,message,...details});
 const isObject=(value)=>Boolean(value)&&typeof value==='object'&&!Array.isArray(value);
+const sleep=(ms)=>new Promise((resolve)=>setTimeout(resolve,ms));
 
 export function redactGeminiSecrets(value,secrets=[]){
   const active=secrets.filter((secret)=>typeof secret==='string'&&secret.length>0);
@@ -37,6 +38,30 @@ async function fetchWithTimeout(fetchImpl,url,options,timeoutMs){
   finally{clearTimeout(timer);}
 }
 
+async function waitForActiveGeminiFile(file,{
+  apiKey,fetchImpl,timeoutMs,pollIntervalMs,processingTimeoutMs,filesBaseUrl
+}){
+  let current=file??{};
+  const started=Date.now();
+  let polls=0;
+  while(current.state==='PROCESSING'){
+    if(!current.name)return{pass:false,file:current,polls,errors:[makeError('GEMINI_FILE_NAME_MISSING','Gemini file is PROCESSING but file.name is unavailable for status polling')]};
+    if(Date.now()-started>=processingTimeoutMs)return{pass:false,file:current,polls,errors:[makeError('GEMINI_FILE_PROCESSING_TIMEOUT','Gemini file did not become ACTIVE before the processing timeout',{providerFileName:current.name,processingTimeoutMs})]};
+    if(pollIntervalMs>0)await sleep(pollIntervalMs);
+    const name=String(current.name).replace(/^\/+/, '');
+    const response=await fetchWithTimeout(fetchImpl,`${filesBaseUrl}/${name}`,{method:'GET',headers:{'x-goog-api-key':apiKey}},timeoutMs);
+    const payload=redactGeminiSecrets(await responseJson(response),[apiKey]);
+    if(!response?.ok){
+      const message=redactGeminiSecrets(payload?.error?.message??`Gemini Files API get HTTP ${response?.status??'UNKNOWN'}`,[apiKey]);
+      return{pass:false,file:current,polls,errors:[makeError('GEMINI_FILE_STATUS_FAILED',message,{httpStatus:response?.status??null,providerFileName:current.name})]};
+    }
+    current=payload?.file??payload??{};
+    polls+=1;
+  }
+  if(current.state==='FAILED')return{pass:false,file:current,polls,errors:[makeError('GEMINI_FILE_PROCESSING_FAILED','Gemini file processing failed',{providerFileName:current.name??file?.name??null})]};
+  return{pass:true,file:current,polls,errors:[]};
+}
+
 export async function uploadGeminiFileFromPath({
   filePath,
   apiKey=process.env.GEMINI_API_KEY??null,
@@ -45,7 +70,10 @@ export async function uploadGeminiFileFromPath({
   expectedSha256=null,
   fetchImpl=globalThis.fetch,
   timeoutMs=60000,
+  processingTimeoutMs=120000,
+  pollIntervalMs=1000,
   uploadBaseUrl='https://generativelanguage.googleapis.com/upload/v1beta/files',
+  filesBaseUrl='https://generativelanguage.googleapis.com/v1beta',
   maxPdfBytes=GEMINI_PDF_MAX_BYTES
 }={}){
   if(!apiKey)return{pass:false,status:'BLOCKED',attachment:null,audit:null,errors:[makeError('GEMINI_API_KEY_UNAVAILABLE','GEMINI_API_KEY is not available')]};
@@ -94,12 +122,15 @@ export async function uploadGeminiFileFromPath({
       const message=redactGeminiSecrets(uploadPayload?.error?.message??`Gemini Files API upload HTTP ${uploadResponse?.status??'UNKNOWN'}`,[apiKey]);
       return{pass:false,status:'FAILED',attachment:null,audit,errors:[makeError('GEMINI_FILE_UPLOAD_FAILED',message,{httpStatus:uploadResponse?.status??null})]};
     }
-    const file=uploadPayload?.file??{};
-    if(!file.uri)return{pass:false,status:'FAILED',attachment:null,audit,errors:[makeError('GEMINI_FILE_URI_MISSING','Gemini Files API response did not contain file.uri')]};
+    const uploadedFile=uploadPayload?.file??{};
+    if(!uploadedFile.uri)return{pass:false,status:'FAILED',attachment:null,audit,errors:[makeError('GEMINI_FILE_URI_MISSING','Gemini Files API response did not contain file.uri')]};
+    const ready=await waitForActiveGeminiFile(uploadedFile,{apiKey,fetchImpl,timeoutMs,pollIntervalMs,processingTimeoutMs,filesBaseUrl});
+    if(!ready.pass)return{pass:false,status:'FAILED',attachment:null,audit:{...audit,providerFileName:uploadedFile.name??null,geminiFileUri:uploadedFile.uri,providerState:ready.file?.state??uploadedFile.state??null,statusPolls:ready.polls},errors:ready.errors};
+    const file=ready.file;
     return{
       pass:true,status:'UPLOADED',
-      attachment:{geminiFileUri:file.uri,mimeType:file.mimeType??file.mime_type??mimeType,providerFileName:file.name??null,displayName:file.displayName??file.display_name??displayName,sourceSha256},
-      audit:{...audit,providerFileName:file.name??null,geminiFileUri:file.uri,providerState:file.state??null},
+      attachment:{geminiFileUri:file.uri??uploadedFile.uri,mimeType:file.mimeType??file.mime_type??uploadedFile.mimeType??uploadedFile.mime_type??mimeType,providerFileName:file.name??uploadedFile.name??null,displayName:file.displayName??file.display_name??uploadedFile.displayName??uploadedFile.display_name??displayName,sourceSha256},
+      audit:{...audit,providerFileName:file.name??uploadedFile.name??null,geminiFileUri:file.uri??uploadedFile.uri,providerState:file.state??uploadedFile.state??null,statusPolls:ready.polls},
       errors:[]
     };
   }catch(cause){
