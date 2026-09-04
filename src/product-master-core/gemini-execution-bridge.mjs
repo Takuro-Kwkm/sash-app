@@ -2,6 +2,7 @@ import crypto from'node:crypto';
 import{parseGeminiTransportJson}from'./gemini-transport.mjs';
 import{persistGeminiTransport}from'./evidence-inbox-store.mjs';
 import{buildProductMasterReviewQueue}from'./review-queue.mjs';
+import{uploadGeminiFileFromPath,redactGeminiSecrets}from'./gemini-file-upload.mjs';
 
 export const GEMINI_JOB_SCHEMA_VERSION='1.0';
 export const GEMINI_JOB_EXECUTION_MODES=new Set(['MOCK','LIVE_EXTERNAL','REPLAY']);
@@ -22,7 +23,8 @@ function normalizeSourceAttachment(input){
   if(!isObject(input))return input;
   return{
     geminiFileUri:input.gemini_file_uri??input.geminiFileUri??null,
-    mimeType:input.mime_type??input.mimeType??'application/pdf'
+    mimeType:input.mime_type??input.mimeType??'application/pdf',
+    sourceSha256:input.source_sha256??input.sourceSha256??null
   };
 }
 
@@ -109,10 +111,10 @@ export function validateBridgeTransport(raw,job,options={}){
   return{pass:errors.length===0,envelope:errors.length?null:envelope,errors};
 }
 
-function liveBlockReason(job,{apiKey,model}){
+function liveBlockReason(job,{apiKey,model,sourceFilePath}){
   if(!apiKey)return makeError('GEMINI_API_KEY_UNAVAILABLE','GEMINI_API_KEY is not available');
   if(!model)return makeError('GEMINI_MODEL_UNAVAILABLE','GEMINI_MODEL or job.model is required for LIVE_EXTERNAL');
-  if(job.sourceContext?.type==='OFFICIAL_PDF'&&!job.sourceAttachment?.geminiFileUri)return makeError('GEMINI_SOURCE_ATTACHMENT_UNAVAILABLE','LIVE_EXTERNAL OFFICIAL_PDF extraction requires source_attachment.gemini_file_uri; Drive fileId is provenance only');
+  if(job.sourceContext?.type==='OFFICIAL_PDF'&&!job.sourceAttachment?.geminiFileUri&&!sourceFilePath)return makeError('GEMINI_SOURCE_ATTACHMENT_UNAVAILABLE','LIVE_EXTERNAL OFFICIAL_PDF extraction requires source_attachment.gemini_file_uri or a Drive-fetched local source file path');
   return null;
 }
 
@@ -124,37 +126,50 @@ function liveParts(job){
 }
 
 export async function executeGeminiJob(job,{
-  mockResponse=null,replayResponse=null,apiKey=process.env.GEMINI_API_KEY??null,model=job?.model??process.env.GEMINI_MODEL??null,fetchImpl=globalThis.fetch,timeoutMs=60000
+  mockResponse=null,replayResponse=null,apiKey=process.env.GEMINI_API_KEY??null,model=job?.model??process.env.GEMINI_MODEL??null,
+  sourceFilePath=process.env.GEMINI_SOURCE_FILE??null,sourceUploadImpl=uploadGeminiFileFromPath,fetchImpl=globalThis.fetch,timeoutMs=60000
 }={}){
   let working=withTransition(job,'QUEUED');
   working=withTransition(working,'RUNNING');
   if(working.executionMode==='MOCK'){
-    if(typeof mockResponse!=='string')return{pass:false,job:withTransition(working,'BLOCKED',{reason:'MOCK_RESPONSE_REQUIRED'}),rawResponse:null,errors:[makeError('MOCK_RESPONSE_REQUIRED','MOCK execution requires mockResponse string')]};
-    return{pass:true,job:withTransition(working,'SUCCEEDED'),rawResponse:mockResponse,providerResponse:null,errors:[]};
+    if(typeof mockResponse!=='string')return{pass:false,job:withTransition(working,'BLOCKED',{reason:'MOCK_RESPONSE_REQUIRED'}),rawResponse:null,sourceAttachmentAudit:null,errors:[makeError('MOCK_RESPONSE_REQUIRED','MOCK execution requires mockResponse string')]};
+    return{pass:true,job:withTransition(working,'SUCCEEDED'),rawResponse:mockResponse,providerResponse:null,sourceAttachmentAudit:null,errors:[]};
   }
   if(working.executionMode==='REPLAY'){
-    if(typeof replayResponse!=='string')return{pass:false,job:withTransition(working,'BLOCKED',{reason:'REPLAY_RESPONSE_REQUIRED'}),rawResponse:null,errors:[makeError('REPLAY_RESPONSE_REQUIRED','REPLAY execution requires replayResponse string')]};
-    return{pass:true,job:withTransition(working,'SUCCEEDED'),rawResponse:replayResponse,providerResponse:null,errors:[]};
+    if(typeof replayResponse!=='string')return{pass:false,job:withTransition(working,'BLOCKED',{reason:'REPLAY_RESPONSE_REQUIRED'}),rawResponse:null,sourceAttachmentAudit:null,errors:[makeError('REPLAY_RESPONSE_REQUIRED','REPLAY execution requires replayResponse string')]};
+    return{pass:true,job:withTransition(working,'SUCCEEDED'),rawResponse:replayResponse,providerResponse:null,sourceAttachmentAudit:null,errors:[]};
   }
-  const blocked=liveBlockReason(working,{apiKey,model});
-  if(blocked)return{pass:false,job:withTransition(working,'BLOCKED',{reason:blocked.code}),rawResponse:null,errors:[blocked]};
-  if(typeof fetchImpl!=='function')return{pass:false,job:withTransition(working,'BLOCKED',{reason:'FETCH_UNAVAILABLE'}),rawResponse:null,errors:[makeError('FETCH_UNAVAILABLE','No fetch implementation is available for LIVE_EXTERNAL')]};
+  const blocked=liveBlockReason(working,{apiKey,model,sourceFilePath});
+  if(blocked)return{pass:false,job:withTransition(working,'BLOCKED',{reason:blocked.code}),rawResponse:null,sourceAttachmentAudit:null,errors:[blocked]};
+  if(typeof fetchImpl!=='function')return{pass:false,job:withTransition(working,'BLOCKED',{reason:'FETCH_UNAVAILABLE'}),rawResponse:null,sourceAttachmentAudit:null,errors:[makeError('FETCH_UNAVAILABLE','No fetch implementation is available for LIVE_EXTERNAL')]};
+  let sourceAttachmentAudit=null;
+  if(working.sourceContext?.type==='OFFICIAL_PDF'&&!working.sourceAttachment?.geminiFileUri){
+    const upload=await sourceUploadImpl({
+      filePath:sourceFilePath,apiKey,mimeType:working.sourceAttachment?.mimeType??'application/pdf',expectedSha256:working.sourceAttachment?.sourceSha256??null,fetchImpl,timeoutMs
+    });
+    sourceAttachmentAudit=upload.audit??null;
+    if(!upload.pass){
+      const status=upload.status==='BLOCKED'?'BLOCKED':'FAILED';
+      return{pass:false,job:withTransition(working,status,{reason:upload.errors?.[0]?.code??'GEMINI_FILE_UPLOAD_FAILED'}),rawResponse:null,sourceAttachmentAudit,errors:upload.errors??[]};
+    }
+    working.sourceAttachment={...(working.sourceAttachment??{}),...upload.attachment};
+  }
   const controller=new AbortController();
   const timer=setTimeout(()=>controller.abort(),timeoutMs);
   try{
     const url=`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent`;
     const response=await fetchImpl(url,{method:'POST',headers:{'content-type':'application/json','x-goog-api-key':apiKey},signal:controller.signal,body:JSON.stringify({contents:[{role:'user',parts:liveParts(working)}],generationConfig:{responseMimeType:'application/json'}})});
-    const providerResponse=await response.json().catch(()=>null);
+    const providerResponse=redactGeminiSecrets(await response.json().catch(()=>null),[apiKey]);
     if(!response.ok){
-      const message=providerResponse?.error?.message??`Gemini API HTTP ${response.status}`;
-      return{pass:false,job:withTransition(working,'FAILED',{reason:'GEMINI_API_ERROR'}),rawResponse:null,providerResponse,errors:[makeError('GEMINI_API_ERROR',message,{httpStatus:response.status})]};
+      const message=redactGeminiSecrets(providerResponse?.error?.message??`Gemini API HTTP ${response.status}`,[apiKey]);
+      return{pass:false,job:withTransition(working,'FAILED',{reason:'GEMINI_API_ERROR'}),rawResponse:null,providerResponse,sourceAttachmentAudit,errors:[makeError('GEMINI_API_ERROR',message,{httpStatus:response.status})]};
     }
     const rawResponse=extractGeminiResponseText(providerResponse);
-    if(!rawResponse)return{pass:false,job:withTransition(working,'FAILED',{reason:'GEMINI_RESPONSE_TEXT_MISSING'}),rawResponse:null,providerResponse,errors:[makeError('GEMINI_RESPONSE_TEXT_MISSING','Gemini response did not contain text output')]};
-    return{pass:true,job:withTransition(working,'SUCCEEDED'),rawResponse,providerResponse,errors:[]};
+    if(!rawResponse)return{pass:false,job:withTransition(working,'FAILED',{reason:'GEMINI_RESPONSE_TEXT_MISSING'}),rawResponse:null,providerResponse,sourceAttachmentAudit,errors:[makeError('GEMINI_RESPONSE_TEXT_MISSING','Gemini response did not contain text output')]};
+    return{pass:true,job:withTransition(working,'SUCCEEDED'),rawResponse,providerResponse,sourceAttachmentAudit,errors:[]};
   }catch(cause){
     const code=cause?.name==='AbortError'?'GEMINI_TIMEOUT':'GEMINI_EXECUTION_FAILED';
-    return{pass:false,job:withTransition(working,'FAILED',{reason:code}),rawResponse:null,errors:[makeError(code,cause?.message??String(cause))]};
+    return{pass:false,job:withTransition(working,'FAILED',{reason:code}),rawResponse:null,sourceAttachmentAudit,errors:[makeError(code,redactGeminiSecrets(cause?.message??String(cause),[apiKey]))]};
   }finally{clearTimeout(timer);}
 }
 
@@ -163,21 +178,21 @@ export async function runGeminiProductMasterBridge(job,{
 }={}){
   const execution=await executeGeminiJob(job,executionOptions);
   const safety={canonicalWritePerformed:false,runtimeWritePerformed:false,productionWritePerformed:false};
-  if(!execution.pass)return{pass:false,status:execution.job.status,job:execution.job,rawResponseSha256:null,transportValidation:null,inboxImport:null,reviewQueue:null,...safety,errors:execution.errors};
+  if(!execution.pass)return{pass:false,status:execution.job.status,job:execution.job,rawResponseSha256:null,sourceAttachmentAudit:execution.sourceAttachmentAudit??null,transportValidation:null,inboxImport:null,reviewQueue:null,...safety,errors:execution.errors};
   const raw=execution.rawResponse;
   const rawResponseSha256=sha256(raw);
   const transportValidation=validateBridgeTransport(raw,execution.job,transportOptions);
   if(!transportValidation.pass){
     const rejected=withTransition(execution.job,'REJECTED_AT_TRANSPORT',{rawResponseSha256});
-    return{pass:false,status:'REJECTED_AT_TRANSPORT',job:rejected,rawResponseSha256,transportValidation,inboxImport:null,reviewQueue:null,...safety,errors:transportValidation.errors};
+    return{pass:false,status:'REJECTED_AT_TRANSPORT',job:rejected,rawResponseSha256,sourceAttachmentAudit:execution.sourceAttachmentAudit??null,transportValidation,inboxImport:null,reviewQueue:null,...safety,errors:transportValidation.errors};
   }
   const inboxImport=persistGeminiTransport(raw,{rootDir:evidenceInboxDir,allowDuplicateClaims,importedAt,...transportOptions,expectedProductId:execution.job.productId});
   if(!inboxImport.pass){
     const rejectedStatus=inboxImport.status==='REJECTED_AT_TRANSPORT_BOUNDARY'?'REJECTED_AT_TRANSPORT':'REJECTED_AT_INBOX';
     const rejected=withTransition(execution.job,rejectedStatus,{rawResponseSha256,inboxStatus:inboxImport.status});
-    return{pass:false,status:rejectedStatus,job:rejected,rawResponseSha256,transportValidation,inboxImport,reviewQueue:null,...safety,errors:inboxImport.errors};
+    return{pass:false,status:rejectedStatus,job:rejected,rawResponseSha256,sourceAttachmentAudit:execution.sourceAttachmentAudit??null,transportValidation,inboxImport,reviewQueue:null,...safety,errors:inboxImport.errors};
   }
   const imported=withTransition(execution.job,'IMPORTED',{rawResponseSha256,batchId:inboxImport.batch.id});
   const reviewQueue=buildProductMasterReviewQueue({evidenceInboxDir,changeControlDir,productId:imported.productId});
-  return{pass:true,status:'IMPORTED',job:imported,rawResponseSha256,responseReceivedAt:importedAt,normalizedBatchId:inboxImport.batch.id,transportValidation,inboxImport,reviewQueue,...safety,errors:[]};
+  return{pass:true,status:'IMPORTED',job:imported,rawResponseSha256,responseReceivedAt:importedAt,normalizedBatchId:inboxImport.batch.id,sourceAttachmentAudit:execution.sourceAttachmentAudit??null,transportValidation,inboxImport,reviewQueue,...safety,errors:[]};
 }
