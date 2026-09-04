@@ -5,7 +5,7 @@ import os from'node:os';
 import path from'node:path';
 import{validateProductProfile,buildGeminiJobInputFromProductProfile}from'../src/product-master-core/product-profile.mjs';
 import{createGeminiJob,runGeminiProductMasterBridge}from'../src/product-master-core/gemini-execution-bridge.mjs';
-import{runVerifiedGeminiLiveJob}from'../src/product-master-core/gemini-live-verified-runner.mjs';
+import{runVerifiedGeminiLiveJob,createGeminiSchemaCompatFetch}from'../src/product-master-core/gemini-live-verified-runner.mjs';
 
 const PROFILE_PATH=path.resolve('config/product-master-profiles/lixil-thermosl.v1.json');
 const loadProfile=()=>JSON.parse(fs.readFileSync(PROFILE_PATH,'utf8'));
@@ -126,6 +126,30 @@ test('v2.5 verified LIVE runner retries transient 429 without widening write aut
   assert.equal(result.canonicalWritePerformed,false);
   assert.equal(result.runtimeWritePerformed,false);
   assert.equal(result.productionWritePerformed,false);
+});
+
+test('v2.5 verified LIVE runner converts JSON Schema request to proven Gemini responseSchema contract',async()=>{
+  let captured=null;
+  const providerFetch=async(input,init)=>{captured={input,payload:JSON.parse(init.body)};return{ok:true,status:200,json:async()=>({})};};
+  const compat=createGeminiSchemaCompatFetch(providerFetch);
+  await compat('https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent',{
+    method:'POST',body:JSON.stringify({generationConfig:{responseMimeType:'application/json',responseJsonSchema:{
+      type:'object',additionalProperties:false,required:['name','rows'],properties:{
+        name:{type:'string',enum:['THERMOSL']},
+        rows:{type:'array',minItems:1,maxItems:8,items:{type:'object',additionalProperties:false,required:['count'],properties:{count:{type:'integer',minimum:1}}}}
+      }
+    }}})
+  });
+  const config=captured.payload.generationConfig;
+  assert.equal('responseJsonSchema'in config,false);
+  assert.equal(config.responseMimeType,'application/json');
+  assert.equal(config.responseSchema.type,'OBJECT');
+  assert.equal(config.responseSchema.properties.name.type,'STRING');
+  assert.equal(config.responseSchema.properties.rows.type,'ARRAY');
+  assert.equal(config.responseSchema.properties.rows.items.type,'OBJECT');
+  assert.equal(config.responseSchema.properties.rows.items.properties.count.type,'INTEGER');
+  assert.equal(config.responseSchema.additionalProperties,undefined);
+  assert.equal(config.responseSchema.properties.rows.items.additionalProperties,undefined);
 });
 
 test('v2.5 common Gemini pipeline core contains no APW430 or YKK AP product literal',()=>{
