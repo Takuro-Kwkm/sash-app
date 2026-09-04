@@ -1,0 +1,282 @@
+name: Product Master Antigravity Profile LIVE
+
+on:
+  push:
+    branches: [feat/catalog-recovery-v2]
+    paths:
+      - '.github/workflows/product-master-antigravity-profile-live.yml'
+  workflow_dispatch:
+    inputs:
+      profile_path:
+        description: Product Master Profile JSON path
+        required: true
+        default: config/product-master-profiles/lixil-thermosl.v1.json
+
+concurrency:
+  group: product-master-gemini-live
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  profile_live:
+    name: Antigravity Google AI Pro Product Master worker
+    runs-on: [self-hosted, macOS, ARM64, gemini-worker]
+    timeout-minutes: 30
+    env:
+      PATH: /Users/takuro/.local/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin
+      PROFILE_PATH: ${{ github.event.inputs.profile_path || 'config/product-master-profiles/lixil-thermosl.v1.json' }}
+      ARTIFACT_DIR: artifacts/product-master-antigravity-live
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Verify Product Master startup-independent core contracts
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --test test/39-product-master-core-v25-product-profile-repro.test.mjs test/40-product-master-core-v26-antigravity-worker.test.mjs
+
+      - name: Verify Antigravity Google AI Pro worker session
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$ARTIFACT_DIR"
+          command -v agy
+          agy --version | tee "$ARTIFACT_DIR/antigravity-version.txt"
+          agy -p "Return exactly: PRODUCT_MASTER_ANTIGRAVITY_PREFLIGHT_OK" --output-format json --print-timeout 2m | tee "$ARTIFACT_DIR/antigravity-preflight.json"
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          p=json.loads(Path('artifacts/product-master-antigravity-live/antigravity-preflight.json').read_text())
+          assert p.get('status')=='SUCCESS',p
+          assert p.get('response','').strip()=='PRODUCT_MASTER_ANTIGRAVITY_PREFLIGHT_OK',p
+          print('ANTIGRAVITY_AUTH_GATE=PASS')
+          PY
+
+      - name: Resolve Product Profile
+        id: profile
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f "$PROFILE_PATH"
+          python3 - <<'PY'
+          import json, os
+          from pathlib import Path
+          p=json.loads(Path(os.environ['PROFILE_PATH']).read_text())
+          required=['manufacturer','series','productId']
+          for k in required:
+              assert p.get(k),k
+          s=p['source']
+          out=Path(os.environ['GITHUB_OUTPUT'])
+          values={
+              'manufacturer':p['manufacturer'],
+              'series':p['series'],
+              'product_id':p['productId'],
+              'source_url':s['officialDownloadUrl'],
+              'detail_url':s['officialDetailUrl'],
+              'expected_sha':s['authoritativeSha256'],
+              'source_title':s['title'],
+              'source_drive_file_id':s['driveFileId'],
+              'page_scope':' '.join(str(x) for x in p['extraction']['pageScope'])
+          }
+          with out.open('a') as f:
+              for k,v in values.items(): f.write(f'{k}={v}\n')
+          audit={
+              'profileSchemaVersion':p.get('profileSchemaVersion'),
+              'manufacturer':p['manufacturer'],'series':p['series'],'productId':p['productId'],
+              'workerProvider':p.get('metadata',{}).get('workerProvider'),
+              'producerSystem':p.get('metadata',{}).get('producerSystem'),
+              'authenticationMode':p.get('metadata',{}).get('authenticationMode'),
+              'source':{'driveFileId':s['driveFileId'],'title':s['title'],'version':s['version'],'authoritativeSha256':s['authoritativeSha256']},
+              'extraction':p['extraction']
+          }
+          Path(os.environ['ARTIFACT_DIR']).mkdir(parents=True,exist_ok=True)
+          Path(os.environ['ARTIFACT_DIR'],'profile-audit.json').write_text(json.dumps(audit,ensure_ascii=False,indent=2)+'\n')
+          PY
+
+      - name: Acquire official source and require exact authoritative SHA-256
+        id: source
+        shell: bash
+        run: |
+          set -euo pipefail
+          SOURCE_DIR="$ARTIFACT_DIR/source"
+          mkdir -p "$SOURCE_DIR"
+          SOURCE_PDF="$SOURCE_DIR/official-source.pdf"
+          curl --fail --location --retry 2 --retry-delay 2 \
+            --connect-timeout 20 --max-time 240 \
+            --user-agent 'Mozilla/5.0 (Macintosh; Apple Silicon Mac OS X) AppleWebKit/537.36 Chrome/152 Safari/537.36' \
+            --referer '${{ steps.profile.outputs.detail_url }}' \
+            --output "$SOURCE_PDF" '${{ steps.profile.outputs.source_url }}'
+          size_bytes=$(wc -c < "$SOURCE_PDF" | tr -d ' ')
+          mime_type=$(file -b --mime-type "$SOURCE_PDF")
+          magic=$(head -c 5 "$SOURCE_PDF")
+          actual_sha=$(shasum -a 256 "$SOURCE_PDF" | awk '{print $1}')
+          test "$mime_type" = 'application/pdf'
+          test "$magic" = '%PDF-'
+          test "$actual_sha" = '${{ steps.profile.outputs.expected_sha }}'
+          python3 - <<PY
+          import json
+          from pathlib import Path
+          payload={
+            'source_ready':True,
+            'mime_type':'$mime_type',
+            'size_bytes':$size_bytes,
+            'expected_sha256':'${{ steps.profile.outputs.expected_sha }}',
+            'actual_sha256':'$actual_sha',
+            'exact_sha256_match':True,
+            'source_drive_file_id':'${{ steps.profile.outputs.source_drive_file_id }}',
+            'source_title':'${{ steps.profile.outputs.source_title }}'
+          }
+          Path('$ARTIFACT_DIR/source-acquisition-audit.json').write_text(json.dumps(payload,ensure_ascii=False,indent=2)+'\n')
+          PY
+          echo "source_pdf=$SOURCE_PDF" >> "$GITHUB_OUTPUT"
+          echo "actual_sha=$actual_sha" >> "$GITHUB_OUTPUT"
+          echo 'SOURCE_EXACT_SHA_GATE=PASS'
+
+      - name: Derive page-scoped text and renderings from verified PDF
+        id: scope
+        shell: bash
+        run: |
+          set -euo pipefail
+          if ! command -v pdftotext >/dev/null 2>&1 || ! command -v pdftoppm >/dev/null 2>&1; then
+            command -v brew >/dev/null 2>&1
+            brew install poppler
+          fi
+          SCOPE_DIR="$ARTIFACT_DIR/source-scope"
+          IMG_DIR="$SCOPE_DIR/pages"
+          SCOPE_TXT="$SCOPE_DIR/source-scope.txt"
+          mkdir -p "$IMG_DIR"
+          : > "$SCOPE_TXT"
+          for page in ${{ steps.profile.outputs.page_scope }}; do
+            echo "===== PDF_PAGE $page =====" >> "$SCOPE_TXT"
+            pdftotext -f "$page" -l "$page" -layout '${{ steps.source.outputs.source_pdf }}' - >> "$SCOPE_TXT"
+            echo >> "$SCOPE_TXT"
+            pdftoppm -f "$page" -l "$page" -singlefile -png -r 144 '${{ steps.source.outputs.source_pdf }}' "$IMG_DIR/pdf-page-$page" >/dev/null 2>&1
+          done
+          test -s "$SCOPE_TXT"
+          shasum -a 256 "$SCOPE_TXT" > "$SCOPE_DIR/source-scope.sha256"
+          for image in "$IMG_DIR"/*.png; do shasum -a 256 "$image"; done > "$SCOPE_DIR/rendered-pages.sha256"
+          echo "scope_text=$SCOPE_TXT" >> "$GITHUB_OUTPUT"
+          echo "scope_image_dir=$IMG_DIR" >> "$GITHUB_OUTPUT"
+          echo 'SCOPED_CONTENT_DERIVATION_GATE=PASS'
+
+      - name: Build Antigravity Job, prompt and structured-output schema
+        id: adapter
+        shell: bash
+        run: |
+          set -euo pipefail
+          ADAPTER_DIR="$ARTIFACT_DIR/adapter"
+          node scripts/build-antigravity-product-master-job.mjs \
+            --profile="$PROFILE_PATH" \
+            --source-pdf='${{ steps.source.outputs.source_pdf }}' \
+            --source-scope-text='${{ steps.scope.outputs.scope_text }}' \
+            --source-scope-image-dir='${{ steps.scope.outputs.scope_image_dir }}' \
+            --out-dir="$ADAPTER_DIR" | tee "$ARTIFACT_DIR/adapter-build.json"
+          echo "adapter_dir=$ADAPTER_DIR" >> "$GITHUB_OUTPUT"
+
+      - name: Run Gemini Worker through Antigravity structured headless mode
+        shell: bash
+        run: |
+          set -euo pipefail
+          ADAPTER_DIR='${{ steps.adapter.outputs.adapter_dir }}'
+          agy -p "$(cat "$ADAPTER_DIR/worker-prompt.txt")" \
+            --output-format json \
+            --json-schema "$ADAPTER_DIR/transport-schema.json" \
+            --effort high \
+            --print-timeout 10m \
+            | tee "$ADAPTER_DIR/antigravity-envelope.json"
+          python3 - <<'PY'
+          import hashlib, json, os
+          from pathlib import Path
+          d=Path(os.environ['ARTIFACT_DIR'])/'adapter'
+          payload=json.loads((d/'antigravity-envelope.json').read_text())
+          assert payload.get('status')=='SUCCESS',payload
+          structured=payload.get('structured_output')
+          assert isinstance(structured,dict),payload
+          raw=json.dumps(structured,ensure_ascii=False,separators=(',',':'))+'\n'
+          (d/'raw-transport.json').write_text(raw)
+          audit={
+            'status':payload.get('status'),
+            'conversation_id':payload.get('conversation_id'),
+            'duration_seconds':payload.get('duration_seconds'),
+            'num_turns':payload.get('num_turns'),
+            'usage':payload.get('usage'),
+            'structured_output_sha256':hashlib.sha256(raw.encode()).hexdigest(),
+            'authenticationMode':'GOOGLE_AI_PRO_OAUTH',
+            'producerSystem':'GEMINI_ANTIGRAVITY',
+            'canonicalWritePerformed':False,
+            'runtimeWritePerformed':False,
+            'productionWritePerformed':False
+          }
+          (d/'antigravity-execution-audit.json').write_text(json.dumps(audit,ensure_ascii=False,indent=2)+'\n')
+          print('ANTIGRAVITY_LIVE_EXECUTION_GATE=PASS')
+          PY
+
+      - name: Replay structured output through governed Transport and Evidence Inbox
+        shell: bash
+        run: |
+          set -euo pipefail
+          ADAPTER_DIR='${{ steps.adapter.outputs.adapter_dir }}'
+          mkdir -p "$ARTIFACT_DIR/evidence-inbox" "$ARTIFACT_DIR/change-control" "$ARTIFACT_DIR/jobs"
+          node scripts/run-gemini-product-master-job.mjs \
+            --job="$ADAPTER_DIR/replay-job.json" \
+            --replay-response="$ADAPTER_DIR/raw-transport.json" \
+            --evidence-inbox="$ARTIFACT_DIR/evidence-inbox" \
+            --change-control="$ARTIFACT_DIR/change-control" \
+            --audit-dir="$ARTIFACT_DIR/jobs" \
+            | tee "$ARTIFACT_DIR/governed-replay-console.log"
+
+      - name: Enforce no-authoritative-write and Review Queue gates
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os
+          from pathlib import Path
+          root=Path(os.environ['ARTIFACT_DIR'])
+          jobs=sorted((root/'jobs').glob('*.json'),key=lambda p:p.stat().st_mtime,reverse=True)
+          assert jobs,'No governed job audit found'
+          audit=json.loads(jobs[0].read_text())
+          raw=json.loads((root/'adapter'/'raw-transport.json').read_text())
+          assert audit.get('pass') is True,audit
+          assert audit.get('status')=='IMPORTED',audit
+          assert audit.get('canonicalWritePerformed') is False,audit
+          assert audit.get('runtimeWritePerformed') is False,audit
+          assert audit.get('productionWritePerformed') is False,audit
+          assert raw.get('producer',{}).get('system')=='GEMINI_ANTIGRAVITY',raw
+          assert audit.get('transportValidation',{}).get('pass') is True,audit
+          assert audit.get('inboxImport',{}).get('pass') is True,audit
+          rq=audit.get('reviewQueue')
+          assert isinstance(rq,dict),audit
+          gates={
+            'ANTIGRAVITY_LIVE_EXECUTION_GATE':'PASS',
+            'TRANSPORT_GATE':'PASS',
+            'EVIDENCE_INBOX_GATE':'PASS',
+            'REVIEW_QUEUE_GATE':'PASS',
+            'HUMAN_APPROVAL_GATE':'NOT_OPENED',
+            'MASTER_CHANGE_GATE':'CLOSED',
+            'canonicalWritePerformed':False,
+            'runtimeWritePerformed':False,
+            'productionWritePerformed':False,
+            'producerSystem':'GEMINI_ANTIGRAVITY'
+          }
+          (root/'phase7-antigravity-gates.json').write_text(json.dumps(gates,ensure_ascii=False,indent=2)+'\n')
+          print('TRANSPORT_GATE=PASS')
+          print('EVIDENCE_INBOX_GATE=PASS')
+          print('REVIEW_QUEUE_GATE=PASS')
+          print('MASTER_CHANGE_GATE=CLOSED')
+          PY
+
+      - name: Upload non-secret Phase 7 Antigravity audit
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: product-master-antigravity-profile-live-phase7-audit
+          path: artifacts/product-master-antigravity-live
+          if-no-files-found: error
+          retention-days: 7
