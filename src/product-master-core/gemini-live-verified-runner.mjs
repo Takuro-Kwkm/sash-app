@@ -6,6 +6,9 @@ const safeClone=(value)=>structuredClone(value);
 const safety=()=>({canonicalWritePerformed:false,runtimeWritePerformed:false,productionWritePerformed:false});
 const nonBlank=(value)=>typeof value==='string'&&value.trim().length>0;
 const sleep=(ms)=>new Promise((resolve)=>setTimeout(resolve,ms));
+const TYPE_MAP=new Map([
+  ['object','OBJECT'],['array','ARRAY'],['string','STRING'],['integer','INTEGER'],['number','NUMBER'],['boolean','BOOLEAN']
+]);
 
 function transientProviderError(result){
   const errors=Array.isArray(result?.errors)?result.errors:[];
@@ -18,6 +21,39 @@ function retryDelayMs(error,{attempt=0,maxRetryDelayMs=70000}={}){
   const providerDelay=secondsMatch?Math.ceil(Number(secondsMatch[1])*1000)+750:null;
   const fallback=Math.min(2000*(2**attempt),15000);
   return Math.min(providerDelay??fallback,maxRetryDelayMs);
+}
+
+export function toGeminiResponseSchema(jsonSchema){
+  if(Array.isArray(jsonSchema))return jsonSchema.map(toGeminiResponseSchema);
+  if(!jsonSchema||typeof jsonSchema!=='object')return jsonSchema;
+  const out={};
+  if(typeof jsonSchema.type==='string')out.type=TYPE_MAP.get(jsonSchema.type.toLowerCase())??jsonSchema.type.toUpperCase();
+  for(const key of['title','description','format'])if(jsonSchema[key]!==undefined)out[key]=jsonSchema[key];
+  if(Array.isArray(jsonSchema.enum))out.enum=[...jsonSchema.enum];
+  for(const key of['minItems','maxItems','minimum','maximum'])if(jsonSchema[key]!==undefined)out[key]=jsonSchema[key];
+  if(Array.isArray(jsonSchema.required))out.required=[...jsonSchema.required];
+  if(jsonSchema.items!==undefined)out.items=toGeminiResponseSchema(jsonSchema.items);
+  if(Array.isArray(jsonSchema.anyOf))out.anyOf=jsonSchema.anyOf.map(toGeminiResponseSchema);
+  if(jsonSchema.properties&&typeof jsonSchema.properties==='object'){
+    out.properties=Object.fromEntries(Object.entries(jsonSchema.properties).map(([key,value])=>[key,toGeminiResponseSchema(value)]));
+  }
+  return out;
+}
+
+export function createGeminiSchemaCompatFetch(fetchImpl=globalThis.fetch){
+  return async(input,init={})=>{
+    if(typeof fetchImpl!=='function')throw new TypeError('fetchImpl must be a function');
+    const url=String(input??'');
+    if(!url.includes(':generateContent')||typeof init?.body!=='string')return fetchImpl(input,init);
+    let payload=null;
+    try{payload=JSON.parse(init.body);}catch{return fetchImpl(input,init);}
+    const config=payload?.generationConfig;
+    if(!config?.responseJsonSchema||config?.responseSchema)return fetchImpl(input,init);
+    const nextPayload=safeClone(payload);
+    nextPayload.generationConfig.responseSchema=toGeminiResponseSchema(config.responseJsonSchema);
+    delete nextPayload.generationConfig.responseJsonSchema;
+    return fetchImpl(input,{...init,body:JSON.stringify(nextPayload)});
+  };
 }
 
 export async function runVerifiedGeminiLiveJob(job,{
@@ -43,6 +79,7 @@ export async function runVerifiedGeminiLiveJob(job,{
   const preflight=inspectGeminiLivePreflight({env,argv,jobModel:model,sourceFilePath,sourceAttachment:workingJob?.sourceAttachment,requireSource:workingJob?.sourceContext?.type==='OFFICIAL_PDF'});
   if(!preflight.pass)return{pass:false,status:'BLOCKED',job:workingJob,credentialPreflight:preflight,sourceAttachmentAudit:null,transportValidation:null,inboxImport:null,reviewQueue:null,...safety(),errors:preflight.errors};
 
+  const providerFetch=createGeminiSchemaCompatFetch(fetchImpl);
   let sourceAttachmentAudit=null;
   if(workingJob?.sourceContext?.type==='OFFICIAL_PDF'&&workingJob?.sourceAttachment?.geminiFileUri){
     const verify=await sourceVerifyImpl({
@@ -57,7 +94,7 @@ export async function runVerifiedGeminiLiveJob(job,{
   const retryAudit=[];
   let result=null;
   for(let attempt=0;attempt<=maxTransientRetries;attempt+=1){
-    result=await bridgeImpl(workingJob,{...bridgeOptions,apiKey,model,sourceFilePath,fetchImpl,timeoutMs});
+    result=await bridgeImpl(workingJob,{...bridgeOptions,apiKey,model,sourceFilePath,fetchImpl:providerFetch,timeoutMs});
     sourceAttachmentAudit=result.sourceAttachmentAudit??sourceAttachmentAudit;
     const transient=transientProviderError(result);
     if(result.pass||!transient||attempt>=maxTransientRetries)break;
