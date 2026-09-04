@@ -1,0 +1,54 @@
+{
+  "schema_version": "product-master-runtime-lock/1.0",
+  "manufacturer": "YKK AP",
+  "series": "APW430",
+  "product_id": "SER-YKK-APW430",
+  "package_version": "20260830",
+  "authoring_file_id": "1QDocQ7yoXE6TAnzHtfsyKwwK6YB5_mgk90Bw1hm4iPo",
+  "authoring_export_sha256": "90a900a37c1c23e1b356d7484adcb12f9530d55c564a5f84b0b1ff7c6c58fbcf",
+  "runtime_manifest_sha256": "953b63224e3b11ceb24638b7e2697ece65758c83c4dd707e7fc7240b89e7cdff",
+  "runtime_file_sha256": {
+    "apw430_core_20260830.json": "76ff42f0d0325becc06c549e485e483d62a0fe57c9c76fb18d11da6fcbc3f84b",
+    "apw430_dimensions_20260830.json": "fcb8a99b78b19f9bfa4d0a7d94c8e2f477647fab190365fbbf4a1291761ce90e",
+    "apw430_options_20260830.json": "c0ad37db972a3cb8159d5dbcdf4206d2a206ae21401eb01401e6d736dfc4a8db"
+  },
+  "qa_report_sha256": "6870722b75779872a8141fac58dc4838e9470e1e15e72a5f2ebec49ce4e77209",
+  "parity_digests": {
+    "active_series_window_ids_sha256": "4cd67a4a24ac4ea2a9b3f92edd262f566d06eb50504146bd3d881df36807711e",
+    "standard_size_ids_sha256": "9517939d75f7ccd800a4e7dcbb3ed1afc0c02e6d3345d6ee663bf65c63850a73",
+    "custom_dimension_rule_ids_sha256": "76636f140c8ade46a0f92afe1995663c082e20703d34755ed54a4dd86e9f1144"
+  },
+  "record_counts": {
+    "series": 1,
+    "windows_common": 8,
+    "series_windows": 26,
+    "active_series_windows": 25,
+    "specific_specs": 12,
+    "relations": 12,
+    "dimension_dictionary": 151,
+    "standard_sizes": 718,
+    "custom_dimension_rules": 25,
+    "colors": 5,
+    "color_rules": 3,
+    "glass": 4,
+    "glass_applicability": 25,
+    "glass_size_rules": 718,
+    "glass_additional_options": 3,
+    "glass_appearances": 2,
+    "screens": 12,
+    "screen_forms": 36,
+    "screen_size_rules": 140,
+    "options": 2,
+    "option_dependencies": 4,
+    "spec_size_rules": 15,
+    "special_spec_rules": 3,
+    "golden_tests": 17
+  },
+  "custom_safety": {
+    "compound_gate": 20,
+    "source_graph_gate": 5,
+    "automatic_true": 0
+  },
+  "formal_package_gate": "BLOCKED",
+  "reason": "Runtime candidate generated and QA-passed; formal Artifact/Storage/Registry promotion not yet executed."
+}
