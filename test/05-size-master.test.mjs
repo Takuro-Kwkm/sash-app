@@ -45,7 +45,7 @@ const windowCounts=(productId)=>Object.fromEntries([...new Set(rows(productId,tr
 
 const expectedWindowCounts={
   [ids.s2h]:{
-    "WT-S2H-AGE-SAGE-FS":24,"WT-S2H-AMADO-HIKI":220,"WT-S2H-FIX-IN":118,"WT-S2H-FIX-OUT":118,
+    "WT-S2H-AGE-SAGE-FS":24,"WT-S2H-AMADO-HIKI":231,"WT-S2H-FIX-IN":117,"WT-S2H-FIX-OUT":117,
     "WT-S2H-HIKICHIGAI":197,"WT-S2H-KATTEGUCHI":42,"WT-S2H-KATTEGUCHI-VENT-FS":21,"WT-S2H-KAZARI-HIKI":94,
     "WT-S2H-KOSHO-YOKO":48,"WT-S2H-MENKOSHI-AGE-FS":115,"WT-S2H-MENKOSHI-HIKI":377,"WT-S2H-SHUTTER-HIKI":531,
     "WT-S2H-SOTODAOSHI":16,"WT-S2H-TATE-SUBERI":138,"WT-S2H-TERRACE-DOOR":28,"WT-S2H-UCHIDAOSHI":14,"WT-S2H-YOKO-SUBERI":30
@@ -87,7 +87,7 @@ test("53 canonical Drive sources and release states are exact",()=>{
 
 test("54 product size coverage is exactly 100 percent",()=>{
   const expected={
-    [ids.s2h]:{standardSizeRows:2297,selectableSizeRows:2131,inactiveSizeRows:166,canonicalSelectableRows:2131,missing:0,extra:0,coverage:1},
+    [ids.s2h]:{standardSizeRows:2309,selectableSizeRows:2140,inactiveSizeRows:169,canonicalSelectableRows:2140,missing:0,extra:0,coverage:1},
     [ids.sl]:{standardSizeRows:1644,selectableSizeRows:1495,inactiveSizeRows:149,canonicalSelectableRows:1495,missing:0,extra:0,coverage:1},
     [ids.a430]:{standardSizeRows:718,selectableSizeRows:718,inactiveSizeRows:0,canonicalSelectableRows:718,missing:0,extra:0,coverage:1},
     [ids.a431]:{standardSizeRows:332,selectableSizeRows:538,inactiveSizeRows:0,canonicalSelectableRows:538,missing:0,extra:0,coverage:1}
@@ -233,7 +233,7 @@ test("69 health inventory exposes formal size metrics for every product",()=>{
   const inventory=catalogInventory(catalog);
   assert.equal(inventory.length,4);
   assert.equal(inventory.every((row)=>row.sizeCoverage===1&&row.missingSizeRows===0&&row.extraSizeRows===0),true);
-  assert.deepEqual(inventory.map((row)=>[row.productId,row.selectableSizeRows]),[[ids.s2h,2131],[ids.sl,1495],[ids.a430,718],[ids.a431,538]]);
+  assert.deepEqual(inventory.map((row)=>[row.productId,row.selectableSizeRows]),[[ids.s2h,2140],[ids.sl,1495],[ids.a430,718],[ids.a431,538]]);
 });
 
 test("70 common Size Resolver and UI contain no product/window name branches",async()=>{
