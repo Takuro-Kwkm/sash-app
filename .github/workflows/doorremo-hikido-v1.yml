@@ -18,10 +18,11 @@ jobs:
         run: |
           node --check src/catalog/modules/doorremo-hikido-master.mjs
           node --check src/catalog/modules/doorremo-hikido-module.mjs
+          node --check src/catalog/modules/doorremo-hikido-v1.mjs
           node --check src/catalog/resolver-auto.mjs
           node --check scripts/start-step8-ui.mjs
-      - name: Doorremo v1.0 regression
-        run: node --test test/29-doorremo-hikido-v1.test.mjs
+      - name: Doorremo v1.0 regression and canonical parity
+        run: node --test test/29-doorremo-hikido-v1.test.mjs test/31-doorremo-hikido-canonical-v1.test.mjs
       - name: Existing product regression
         run: node --test test/01-core.test.mjs test/02-lr.test.mjs test/03-features.test.mjs test/04-thermosl.test.mjs test/05-concords30.test.mjs
       - name: Full npm test
