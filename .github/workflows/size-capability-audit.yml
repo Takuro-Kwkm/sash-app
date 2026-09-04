@@ -16,85 +16,35 @@ jobs:
           node-version: 22
 
       - name: Generic Size Capability Audit core tests
-        run: node --test test/24-sash-size-capability-audit.test.mjs test/25-thermosl-cr-sl-036-formal-regeneration.test.mjs test/26-samos2h-custom-formal-regeneration.test.mjs test/27-apw430-custom-extraction-proposal.test.mjs test/28-apw430-custom-formal-regeneration.test.mjs
+        run: node --test test/24-sash-size-capability-audit.test.mjs test/25-thermosl-cr-sl-036-formal-regeneration.test.mjs test/26-samos2h-custom-formal-regeneration.test.mjs test/27-apw430-custom-extraction-proposal.test.mjs test/28-apw430-custom-formal-regeneration.test.mjs test/29-samos2h-standard-formal-regeneration.test.mjs
 
       - name: Run managed Size Capability Audit
         run: npm run audit:size-capability
 
-      - name: Enforce audit integrity and S2H STANDARD Human-gated proposal
+      - name: Enforce audit integrity and applied S2H STANDARD change control
         run: |
           node - <<'NODE'
           const fs=require('node:fs');
-          const required=[
-            'summary.json','standard-size-audit.json','custom-capability-audit.json','pending.json',
-            'dimension-rule-audit-thermosl.json','dimension-rule-audit-apw431.json',
-            'dimension-rule-extraction-apw430.json','dimension-rule-extraction-samos2h.json',
-            'evidence-samos2h-custom.json','evidence-apw430-custom.json',
-            'standard-source-enumeration-samos2h.json','evidence-samos2h-standard.json',
-            'source-manifest.json','gate-report.json'
-          ];
-          for(const name of required)if(!fs.existsSync(`artifacts/size-capability-audit/${name}`))process.exit(1);
-          const gate=JSON.parse(fs.readFileSync('artifacts/size-capability-audit/gate-report.json','utf8'));
-          const summary=JSON.parse(fs.readFileSync('artifacts/size-capability-audit/summary.json','utf8'));
-          const s2hExtraction=JSON.parse(fs.readFileSync('artifacts/size-capability-audit/dimension-rule-extraction-samos2h.json','utf8'));
-          const apwExtraction=JSON.parse(fs.readFileSync('artifacts/size-capability-audit/dimension-rule-extraction-apw430.json','utf8'));
-          const s2hStandard=JSON.parse(fs.readFileSync('artifacts/size-capability-audit/standard-source-enumeration-samos2h.json','utf8'));
-          const s2hStandardEvidence=JSON.parse(fs.readFileSync('artifacts/size-capability-audit/evidence-samos2h-standard.json','utf8'));
-          const s2hStandardId='PMCP-LIX-SAMOS2H-STANDARD-SOURCE-CORRECTION-20260904-001';
-          const s2hStandardProposal=JSON.parse(fs.readFileSync(`data/master-change-control/proposals/${s2hStandardId}.manifest.json`,'utf8'));
-
-          if(gate.integrityGate!=='PASS'||gate.status!=='PARTIAL_PASS'||gate.blockingPending!==6)process.exit(1);
-          if(gate.proposalCount!==1||gate.proposalApprovalGate!=='HUMAN_APPROVAL_PENDING')process.exit(1);
-          if(JSON.stringify(summary.productMasterChangeProposals)!==JSON.stringify([s2hStandardId]))process.exit(1);
-          if(s2hStandardProposal.proposalFingerprint!=='sha256:b141224a4dc0981eee4d8c82574cc8b52e5b75e8ba70b1809053e9c9c27793d8')process.exit(1);
-          if(s2hStandardProposal.status!=='PROPOSED'||s2hStandardProposal.approvalPolicy!=='HUMAN_REQUIRED'||s2hStandardProposal.approvalStatus!=='PENDING')process.exit(1);
-          if(s2hStandardProposal.formalWorkbookWritePerformed||s2hStandardProposal.runtimeWritePerformed||s2hStandardProposal.autoApprovalPerformed)process.exit(1);
-          if(s2hStandard.summary.officialRecordCount!==2309||s2hStandard.summary.MATCH!==1985||s2hStandard.summary.VALUE_MISMATCH!==312||s2hStandard.summary.MISSING_IN_MASTER!==12||s2hStandard.summary.SOURCE_INSUFFICIENT!==0)process.exit(1);
-          if(s2hStandard.enumerationMethod.wHCartesianGenerationPerformed||s2hStandard.enumerationMethod.callCodeDimensionInferencePerformed)process.exit(1);
-          if(s2hStandardEvidence.evidenceRecords.length!==3)process.exit(1);
-          if(s2hStandardEvidence.evidenceRecords[0].affectedCount!==310||s2hStandardEvidence.evidenceRecords[0].affectedSizeIdsSha256!=='sha256:a08ae7d11409cc1f123a42e5a2287dd943c4d6f1595fd072722372efeb03e4db')process.exit(1);
-          if(s2hStandardEvidence.evidenceRecords[1].records.length!==2||s2hStandardEvidence.evidenceRecords[2].projectedSizeIds.length!==12)process.exit(1);
-          if(s2hStandardEvidence.summary.projectedSelectableAfterApproval!==2140||s2hStandardEvidence.summary.projectedInactiveAfterApproval!==169)process.exit(1);
-
-          const s2hId='PMCP-LIX-SAMOS2H-CUSTOM-DIMENSION-RULESET-20260903-001';
-          const s2hProposal=JSON.parse(fs.readFileSync(`data/master-change-control/proposals/${s2hId}.manifest.json`,'utf8'));
-          const s2hApproval=JSON.parse(fs.readFileSync(`data/master-change-control/approvals/${s2hId}.approval.json`,'utf8'));
-          const s2hStaging=JSON.parse(fs.readFileSync(`data/master-change-control/applied/${s2hId}.staging.json`,'utf8'));
-          const s2hProdApproval=JSON.parse(fs.readFileSync(`data/master-change-control/production-approvals/${s2hId}.production-approval.json`,'utf8'));
-          const s2hProduction=JSON.parse(fs.readFileSync(`data/master-change-control/production/${s2hId}.applied.json`,'utf8'));
-          const s2hRuntime=JSON.parse(fs.readFileSync('data/master-change-control/runtime/SAMOS2H_CUSTOM_RUNTIME_REGENERATION_V10.json','utf8'));
-          if(!summary.appliedProductMasterChangeProposals.includes(s2hId))process.exit(1);
-          if(s2hExtraction.records.length!==17||s2hExtraction.summary.EXACT_RULE_EXTRACTED!==7||s2hExtraction.summary.SOURCE_GRAPH_REVIEW_REQUIRED!==10||s2hExtraction.summary.PENDING!==0)process.exit(1);
-          if(s2hProposal.proposalFingerprint!=='sha256:bd5900002f8d54d322fb7c50bb0b4b121f54a81ece7ec0e60baaffe6914df08e'||s2hProposal.status!=='PROPOSED'||s2hProposal.approvalStatus!=='PENDING')process.exit(1);
-          if(s2hApproval.approverType!=='HUMAN'||s2hStaging.proposalStatus!=='APPLIED'||s2hProdApproval.productionApproval!==true)process.exit(1);
-          if(s2hProduction.status!=='PRODUCTION_APPLY_COMPLETE'||s2hProduction.postWriteReadback.dimensionRuleCount!==17||s2hProduction.postWriteReadback.unexpectedChangedExistingSheets!==0)process.exit(1);
-          if(s2hRuntime.status!=='RUNTIME_REGENERATION_COMMITTED'||s2hRuntime.runtimeVersion!=='v1.0'||s2hRuntime.runtimeProjection.dimensionRuleCount!==17)process.exit(1);
-          if(s2hRuntime.runtimeProjection.directManufacturerValueEditToGenericCore)process.exit(1);
-
-          const apwId='PMCP-YKK-APW430-CUSTOM-DIMENSION-RULESET-20260903-001';
-          const apwProposal=JSON.parse(fs.readFileSync(`data/master-change-control/proposals/${apwId}.manifest.json`,'utf8'));
-          const apwApproval=JSON.parse(fs.readFileSync(`data/master-change-control/approvals/${apwId}.approval.json`,'utf8'));
-          const apwStaging=JSON.parse(fs.readFileSync(`data/master-change-control/applied/${apwId}.staging.json`,'utf8'));
-          const apwProdApproval=JSON.parse(fs.readFileSync(`data/master-change-control/production-approvals/${apwId}.production-approval.json`,'utf8'));
-          const apwPreview=JSON.parse(fs.readFileSync(`data/master-change-control/production-previews/${apwId}.production-preview.json`,'utf8'));
-          const apwProduction=JSON.parse(fs.readFileSync(`data/master-change-control/production/${apwId}.applied.json`,'utf8'));
-          const apwRuntime=JSON.parse(fs.readFileSync('data/master-change-control/runtime/APW430_CUSTOM_RUNTIME_REGENERATION_V10.json','utf8'));
-          if(!summary.appliedProductMasterChangeProposals.includes(apwId))process.exit(1);
-          if(apwExtraction.records.length!==25||apwExtraction.summary.EXACT_RULE_EXTRACTED!==20||apwExtraction.summary.SOURCE_GRAPH_REVIEW_REQUIRED!==5||apwExtraction.summary.SOURCE_INSUFFICIENT!==0||apwExtraction.summary.PENDING!==0)process.exit(1);
-          if(apwExtraction.interpolatedPointsAdded!==false||apwExtraction.formalMasterWritePerformed!==false||apwExtraction.runtimeDirectWritePerformed!==false)process.exit(1);
-          if(apwProposal.proposalFingerprint!=='sha256:894ca2e99cfd482b0093bfbc1d1763383a8e01c5c8614d75ac1560938ae5eb78'||apwProposal.status!=='PROPOSED'||apwProposal.approvalStatus!=='PENDING')process.exit(1);
-          if(apwApproval.approverType!=='HUMAN'||apwApproval.proposalFingerprint!==apwProposal.proposalFingerprint)process.exit(1);
-          if(apwStaging.proposalStatus!=='APPLIED'||apwStaging.after.formalRows!==25||apwStaging.after.automaticTrue!==0)process.exit(1);
-          if(apwProdApproval.productionApproval!==true||apwPreview.status!=='PRODUCTION_WRITE_PREVIEW_READY')process.exit(1);
-          if(apwProduction.status!=='PRODUCTION_APPLY_COMPLETE'||apwProduction.formalTarget.postWriteDriveRevisionId!=='13')process.exit(1);
-          if(apwProduction.postWriteReadback.dimensionRuleCount!==25||apwProduction.postWriteReadback.exactRuleExtracted!==20||apwProduction.postWriteReadback.sourceGraphReviewRequired!==5||apwProduction.postWriteReadback.unexpectedChangedExistingSheets!==0)process.exit(1);
-          if(apwProduction.postWriteReadback.semanticFingerprint!=='sha256:1940a1ce7b768ccd2cc0fa1f44ebc1e3ba65e26c40089d618b0b837607ae6966')process.exit(1);
-          if(apwRuntime.status!=='RUNTIME_REGENERATION_COMMITTED'||apwRuntime.runtimeVersion!=='v1.0'||apwRuntime.sourceOfTruth!=='FORMAL_PRODUCT_MASTER')process.exit(1);
-          if(apwRuntime.runtimeProjection.dimensionRuleCount!==25||apwRuntime.runtimeProjection.dimensionAuto!==0||apwRuntime.runtimeProjection.dimensionReview!==25)process.exit(1);
-          if(apwRuntime.runtimeProjection.directManufacturerValueEditToGenericCore||apwRuntime.runtimeProjection.interpolatedPointsAdded)process.exit(1);
+          const dir='artifacts/size-capability-audit';
+          const required=['summary.json','standard-size-audit.json','standard-size-audit-samos2h-applied.json','custom-capability-audit.json','pending.json','standard-source-enumeration-samos2h.json','evidence-samos2h-standard.json','source-manifest.json','gate-report.json'];
+          for(const name of required)if(!fs.existsSync(`${dir}/${name}`))process.exit(1);
+          const read=(p)=>JSON.parse(fs.readFileSync(p,'utf8'));
+          const summary=read(`${dir}/summary.json`),pending=read(`${dir}/pending.json`),gate=read(`${dir}/gate-report.json`),applied=read(`${dir}/standard-size-audit-samos2h-applied.json`);
+          const id='PMCP-LIX-SAMOS2H-STANDARD-SOURCE-CORRECTION-20260904-001';
+          const proposal=read(`data/master-change-control/proposals/${id}.manifest.json`),approval=read(`data/master-change-control/approvals/${id}.approval.json`),staging=read(`data/master-change-control/applied/${id}.staging.json`),preview=read(`data/master-change-control/production-previews/${id}.production-preview.json`),prodApproval=read(`data/master-change-control/production-approvals/${id}.production-approval.json`),production=read(`data/master-change-control/production/${id}.applied.json`),runtime=read('data/master-change-control/runtime/SAMOS2H_STANDARD_RUNTIME_REGENERATION_V11.json');
+          if(gate.integrityGate!=='PASS'||gate.status!=='PARTIAL_PASS'||gate.blockingPending!==6||gate.proposalCount!==0||gate.proposalApprovalGate!=='NO_PROPOSAL_PENDING')process.exit(1);
+          if(summary.productMasterChangeProposals.length!==0||!summary.appliedProductMasterChangeProposals.includes(id))process.exit(1);
+          if(pending.blockingCount!==6||!pending.resolved.some(r=>r.id==='PEND-SIZE-S2H-STANDARD-001'))process.exit(1);
+          if(proposal.proposalFingerprint!=='sha256:b141224a4dc0981eee4d8c82574cc8b52e5b75e8ba70b1809053e9c9c27793d8'||proposal.status!=='PROPOSED'||proposal.approvalStatus!=='PENDING')process.exit(1);
+          if(proposal.formalWorkbookWritePerformed||proposal.runtimeWritePerformed||proposal.autoApprovalPerformed)process.exit(1);
+          if(approval.approverType!=='HUMAN'||approval.proposalFingerprint!==proposal.proposalFingerprint||staging.proposalStatus!=='APPLIED'||preview.status!=='PRODUCTION_WRITE_PREVIEW_READY'||prodApproval.productionApproval!==true)process.exit(1);
+          if(production.status!=='PRODUCTION_APPLY_COMPLETE'||production.formalTarget.postWriteSha256!=='9d4a0812cadc6d804a8e8db77ad0e4b042d674e62b9ef9edfcd2afcab9c9e5a6')process.exit(1);
+          if(production.postWriteReadback.standardSizeRows!==2309||production.postWriteReadback.selectableRows!==2140||production.postWriteReadback.inactiveRows!==169||production.postWriteReadback.unexpectedChangedNonTargetSheets!==0)process.exit(1);
+          if(runtime.status!=='RUNTIME_REGENERATION_COMMITTED'||runtime.runtimeVersion!=='v1.1'||runtime.runtimeProjection.standardSizeRows!==2309||runtime.runtimeProjection.selectableRows!==2140||runtime.runtimeProjection.inactiveRows!==169||runtime.runtimeProjection.directManufacturerValueEditToGenericCore)process.exit(1);
+          if(applied.status!=='FORMAL_MASTER_APPLIED_RUNTIME_REGENERATED'||applied.formalMaster.selectableRows!==2140||applied.canonicalRuntime.runtimeSelectableRows!==2140||!applied.canonicalRuntime.match||applied.postApplyOfficialComparison.remainingValueMismatch!==0||applied.postApplyOfficialComparison.remainingMissingInMaster!==0)process.exit(1);
           NODE
 
-      - name: Enforce Runtime inventory unchanged before S2H STANDARD Human approval
+      - name: Enforce current Runtime inventory after approved S2H STANDARD apply
         run: |
           npm run start:qa > /tmp/sash-size-audit-runtime.log 2>&1 &
           PID=$!
@@ -106,12 +56,7 @@ jobs:
           cat /tmp/size-audit-health.json
           node - <<'NODE'
           const h=require('/tmp/size-audit-health.json');
-          const expected={
-            'SER-LIX-SAMOS2H':2131,
-            'SER-LIX-SAMOSL':1495,
-            'SER-YKK-APW430':718,
-            'SER-YKK-APW431':538
-          };
+          const expected={'SER-LIX-SAMOS2H':2140,'SER-LIX-SAMOSL':1495,'SER-YKK-APW430':718,'SER-YKK-APW431':538};
           for(const [id,count] of Object.entries(expected)){
             const row=h.inventory.find((item)=>item.productId===id);
             if(!row||row.selectableSizeRows!==count||row.missingSizeRows!==0||row.extraSizeRows!==0||row.sizeCoverage!==1)process.exit(1);
@@ -129,25 +74,20 @@ jobs:
           path: |
             artifacts/size-capability-audit
             data/master-change-control/proposals/PMCP-LIX-SAMOS2H-STANDARD-SOURCE-CORRECTION-20260904-001.manifest.json
-            data/master-change-control/proposals/PMCP-YKK-APW430-CUSTOM-DIMENSION-RULESET-20260903-001.manifest.json
-            data/master-change-control/approvals/PMCP-YKK-APW430-CUSTOM-DIMENSION-RULESET-20260903-001.approval.json
-            data/master-change-control/applied/PMCP-YKK-APW430-CUSTOM-DIMENSION-RULESET-20260903-001.staging.json
-            data/master-change-control/production-approvals/PMCP-YKK-APW430-CUSTOM-DIMENSION-RULESET-20260903-001.production-approval.json
-            data/master-change-control/production-previews/PMCP-YKK-APW430-CUSTOM-DIMENSION-RULESET-20260903-001.production-preview.json
-            data/master-change-control/production/PMCP-YKK-APW430-CUSTOM-DIMENSION-RULESET-20260903-001.applied.json
-            data/master-change-control/runtime/APW430_CUSTOM_RUNTIME_REGENERATION_V10.json
+            data/master-change-control/approvals/PMCP-LIX-SAMOS2H-STANDARD-SOURCE-CORRECTION-20260904-001.approval.json
+            data/master-change-control/applied/PMCP-LIX-SAMOS2H-STANDARD-SOURCE-CORRECTION-20260904-001.staging.json
+            data/master-change-control/production-previews/PMCP-LIX-SAMOS2H-STANDARD-SOURCE-CORRECTION-20260904-001.production-preview.json
+            data/master-change-control/production-approvals/PMCP-LIX-SAMOS2H-STANDARD-SOURCE-CORRECTION-20260904-001.production-approval.json
+            data/master-change-control/production/PMCP-LIX-SAMOS2H-STANDARD-SOURCE-CORRECTION-20260904-001.applied.json
+            data/master-change-control/runtime/SAMOS2H_STANDARD_RUNTIME_REGENERATION_V11.json
             data/master-change-control/proposals/PMCP-LIX-SAMOS2H-CUSTOM-DIMENSION-RULESET-20260903-001.manifest.json
             data/master-change-control/approvals/PMCP-LIX-SAMOS2H-CUSTOM-DIMENSION-RULESET-20260903-001.approval.json
-            data/master-change-control/applied/PMCP-LIX-SAMOS2H-CUSTOM-DIMENSION-RULESET-20260903-001.staging.json
-            data/master-change-control/production-approvals/PMCP-LIX-SAMOS2H-CUSTOM-DIMENSION-RULESET-20260903-001.production-approval.json
-            data/master-change-control/production-previews/PMCP-LIX-SAMOS2H-CUSTOM-DIMENSION-RULESET-20260903-001.production-preview.json
             data/master-change-control/production/PMCP-LIX-SAMOS2H-CUSTOM-DIMENSION-RULESET-20260903-001.applied.json
             data/master-change-control/runtime/SAMOS2H_CUSTOM_RUNTIME_REGENERATION_V10.json
+            data/master-change-control/proposals/PMCP-YKK-APW430-CUSTOM-DIMENSION-RULESET-20260903-001.manifest.json
+            data/master-change-control/production/PMCP-YKK-APW430-CUSTOM-DIMENSION-RULESET-20260903-001.applied.json
+            data/master-change-control/runtime/APW430_CUSTOM_RUNTIME_REGENERATION_V10.json
             data/master-change-control/proposals/PMCP-LIX-SAMOSL-INNER-TILT-RANGE-20260903-001.manifest.json
-            data/master-change-control/approvals/PMCP-LIX-SAMOSL-INNER-TILT-RANGE-20260903-001.approval.json
-            data/master-change-control/applied/PMCP-LIX-SAMOSL-INNER-TILT-RANGE-20260903-001.staging.json
-            data/master-change-control/production-approvals/PMCP-LIX-SAMOSL-INNER-TILT-RANGE-20260903-001.production-approval.json
-            data/master-change-control/production-previews/PMCP-LIX-SAMOSL-INNER-TILT-RANGE-20260903-001.production-preview.json
             data/master-change-control/production/PMCP-LIX-SAMOSL-INNER-TILT-RANGE-20260903-001.applied.json
             data/master-change-control/runtime/THERMOSL_CR_SL_036_RUNTIME_REGENERATION_V19.json
             docs/SASH_SIZE_CAPABILITY_AUDIT_V1.md
