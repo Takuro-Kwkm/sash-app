@@ -203,7 +203,7 @@ jobs:
             --out-dir="$ADAPTER_DIR" | tee "$ARTIFACT_DIR/adapter-build.json"
           echo "adapter_dir=$ADAPTER_DIR" >> "$GITHUB_OUTPUT"
 
-      - name: Run Gemini Worker through scoped read-only Antigravity headless mode
+      - name: Run Gemini Worker through tool-less inline-evidence Antigravity headless mode
         shell: bash
         run: |
           set -euo pipefail
@@ -225,11 +225,10 @@ jobs:
           }
           trap restore_antigravity_settings EXIT
 
-          SETTINGS="$SETTINGS" WORKSPACE="$GITHUB_WORKSPACE" PERMISSION_AUDIT="$ADAPTER_DIR/antigravity-permission-policy.json" python3 - <<'PY'
+          SETTINGS="$SETTINGS" PERMISSION_AUDIT="$ADAPTER_DIR/antigravity-permission-policy.json" python3 - <<'PY'
           import json, os
           from pathlib import Path
           settings_path=Path(os.environ['SETTINGS'])
-          workspace=str(Path(os.environ['WORKSPACE']).resolve())
           if settings_path.exists():
               try:
                   settings=json.loads(settings_path.read_text())
@@ -238,16 +237,17 @@ jobs:
           else:
               settings={}
           temporary_permissions={
-              'allow':[f'read_file({workspace})'],
-              'deny':['write_file(*)','command(*)','unsandboxed(*)','read_url(*)','execute_url(*)','mcp(*)'],
+              'allow':[],
+              'deny':['read_file(*)','write_file(*)','command(*)','unsandboxed(*)','read_url(*)','execute_url(*)','mcp(*)'],
               'ask':[]
           }
           settings['permissions']=temporary_permissions
           settings_path.write_text(json.dumps(settings,ensure_ascii=False,indent=2)+'\n')
           audit={
               'scope':'TEMPORARY_RUN_ONLY',
-              'workspace':workspace,
+              'evidenceDeliveryMode':'INLINE_VERIFIED_PAGE_SCOPED_TEXT',
               'permissions':temporary_permissions,
+              'modelToolAuthority':'NONE',
               'dangerouslySkipPermissions':False,
               'restoration':'TRAP_RESTORE_ORIGINAL_SETTINGS'
           }
@@ -281,6 +281,8 @@ jobs:
             'structured_output_sha256':hashlib.sha256(raw.encode()).hexdigest(),
             'authenticationMode':'GOOGLE_AI_PRO_OAUTH',
             'producerSystem':'GEMINI_ANTIGRAVITY',
+            'evidenceDeliveryMode':'INLINE_VERIFIED_PAGE_SCOPED_TEXT',
+            'modelToolAuthority':'NONE',
             'permissionDeniedActions':denied,
             'canonicalWritePerformed':False,
             'runtimeWritePerformed':False,
