@@ -40,7 +40,7 @@ jobs:
             sleep 0.5
           done
           cat /tmp/health.json
-          node -e 'const h=require("/tmp/health.json"); const expected={"SER-LIX-SAMOS2H":2131,"SER-LIX-SAMOSL":1495,"SER-YKK-APW430":718,"SER-YKK-APW431":538}; const sash=h.inventory.filter(x=>expected[x.productId]!==undefined); const concord=h.inventory.find(x=>x.productId==="SER-YKK-CONCORD-S30"); if(!h.ok || h.catalogVersion!=="V4.6 SALES-UI-R2 + CONCORD-S30" || h.inventory.length!==5 || !concord || sash.length!==4 || sash.some(x=>x.sizeCoverage!==1 || x.missingSizeRows!==0 || x.extraSizeRows!==0 || expected[x.productId]!==x.selectableSizeRows)) process.exit(1)'
+          node -e 'const h=require("/tmp/health.json"); const expected={"SER-LIX-SAMOS2H":2140,"SER-LIX-SAMOSL":1495,"SER-YKK-APW430":718,"SER-YKK-APW431":538}; const sash=h.inventory.filter(x=>expected[x.productId]!==undefined); const concord=h.inventory.find(x=>x.productId==="SER-YKK-CONCORD-S30"); if(!h.ok || h.catalogVersion!=="V4.6 SALES-UI-R2 + CONCORD-S30" || h.inventory.length!==5 || !concord || sash.length!==4 || sash.some(x=>x.sizeCoverage!==1 || x.missingSizeRows!==0 || x.extraSizeRows!==0 || expected[x.productId]!==x.selectableSizeRows)) process.exit(1)'
 
   concord_regression:
     runs-on: ubuntu-latest
@@ -69,7 +69,7 @@ jobs:
             sleep 0.5
           done
           cat /tmp/health.json
-          node -e 'const h=require("/tmp/health.json"); const expected={"SER-LIX-SAMOS2H":2131,"SER-LIX-SAMOSL":1495,"SER-YKK-APW430":718,"SER-YKK-APW431":538}; const sash=h.inventory.filter(x=>expected[x.productId]!==undefined); const concord=h.inventory.find(x=>x.productId==="SER-YKK-CONCORD-S30"); if(!h.ok || h.catalogVersion!=="V4.6 SALES-UI-R2 + CONCORD-S30" || h.inventory.length!==5 || !concord || sash.length!==4 || sash.some(x=>x.sizeCoverage!==1 || x.missingSizeRows!==0 || x.extraSizeRows!==0 || expected[x.productId]!==x.selectableSizeRows)) process.exit(1)'
+          node -e 'const h=require("/tmp/health.json"); const expected={"SER-LIX-SAMOS2H":2140,"SER-LIX-SAMOSL":1495,"SER-YKK-APW430":718,"SER-YKK-APW431":538}; const sash=h.inventory.filter(x=>expected[x.productId]!==undefined); const concord=h.inventory.find(x=>x.productId==="SER-YKK-CONCORD-S30"); if(!h.ok || h.catalogVersion!=="V4.6 SALES-UI-R2 + CONCORD-S30" || h.inventory.length!==5 || !concord || sash.length!==4 || sash.some(x=>x.sizeCoverage!==1 || x.missingSizeRows!==0 || x.extraSizeRows!==0 || expected[x.productId]!==x.selectableSizeRows)) process.exit(1)'
 
   product_master_live_v1:
     runs-on: ubuntu-latest
