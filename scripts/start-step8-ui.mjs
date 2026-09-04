@@ -8,19 +8,21 @@ import { stabilizeSelection } from "../src/catalog/catalog-resolver.mjs";
 import { CURRENT_WINDOW_SERIES_MODULES } from "../src/catalog/modules/current-window-series.mjs";
 import { CONCORDS30_MODULE } from "../src/catalog/modules/concords30-module.mjs";
 import { DOORREMO_HIKIDO_MODULE } from "../src/catalog/modules/doorremo-hikido-v1.mjs";
+import { LIXIL_REFORM_SHUTTER_MODULE } from "../src/catalog/modules/lixil-reform-shutter-v1.mjs";
 
 const __dirname=dirname(fileURLToPath(import.meta.url));
 const root=join(__dirname,"..");
 const webRoot=join(root,"src","ui","web");
-const catalog=createCatalog([...CURRENT_WINDOW_SERIES_MODULES,CONCORDS30_MODULE,DOORREMO_HIKIDO_MODULE]);
+const catalog=createCatalog([...CURRENT_WINDOW_SERIES_MODULES,CONCORDS30_MODULE,DOORREMO_HIKIDO_MODULE,LIXIL_REFORM_SHUTTER_MODULE]);
 const buildTimestamp=new Date().toISOString();
 const uiIdentity=(await Promise.all(["index.html","app.js","size-presentation.js","styles.css","styles-wave3.css"].map((name)=>readFile(join(webRoot,name))))).map((body)=>body.toString("utf8")).join("\n");
 const buildId=`RECOVERY-${createHash("sha256").update(JSON.stringify(catalog)).update(uiIdentity).digest("hex").slice(0,12)}`;
-// Keep the established health contract stable for existing Wave/Concord QA while exposing the expanded runtime separately.
+// Keep the established health contract stable for existing Wave/Concord QA while exposing expanded runtimes separately.
 const catalogVersion="V4.6 SALES-UI-R2 + CONCORD-S30";
-const runtimeCatalogVersion="V4.7 SALES-UI-R2 + CONCORD-S30 + DOORREMO-HIKIDO-v1.0";
+const runtimeCatalogVersion="V4.8 SALES-UI-R2 + CONCORD-S30 + DOORREMO-HIKIDO-v1.0 + LIXIL-REFORM-SHUTTER-v1.0";
 const fullInventory=catalogInventory(catalog);
-const legacyInventory=fullInventory.filter((row)=>row.productId!==DOORREMO_HIKIDO_MODULE.product.id);
+const expandedProductIds=new Set([DOORREMO_HIKIDO_MODULE.product.id,LIXIL_REFORM_SHUTTER_MODULE.product.id]);
+const legacyInventory=fullInventory.filter((row)=>!expandedProductIds.has(row.productId));
 
 const json=(res,status,body)=>{
   res.writeHead(status,{"content-type":"application/json; charset=utf-8","cache-control":"no-store","x-sash-build-id":buildId});
@@ -48,7 +50,8 @@ const server=createServer(async(req,res)=>{
       backend:"node:http recovery server",databasePath:process.env.SASH_UI_DATABASE??"data/runtime/sash-v2.sqlite",
       inventory:legacyInventory,
       fullInventory,
-      doorremoInventory:fullInventory.find((row)=>row.productId===DOORREMO_HIKIDO_MODULE.product.id)??null
+      doorremoInventory:fullInventory.find((row)=>row.productId===DOORREMO_HIKIDO_MODULE.product.id)??null,
+      reformShutterInventory:fullInventory.find((row)=>row.productId===LIXIL_REFORM_SHUTTER_MODULE.product.id)??null
     });
   }
   if(url.pathname==="/api/catalog/products") return json(res,200,catalog.products);

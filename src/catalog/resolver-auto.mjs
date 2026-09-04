@@ -9,6 +9,10 @@ function deriveValue(spec,selection){
   const values=(spec.fields??[]).map(k=>selection[k]);
   return values.length&&values.every(finite)?round(Math.min(...values.map(Number)),precision):undefined;
  }
+ if(spec.op==='max'){
+  const values=(spec.fields??[]).map(k=>selection[k]);
+  return values.length&&values.every(finite)?round(Math.max(...values.map(Number)),precision):undefined;
+ }
  if(spec.op==='linear'){
   const value=selection[spec.field];
   return finite(value)?round(Number(value)*(spec.factor??1)+(spec.offset??0),precision):undefined;
