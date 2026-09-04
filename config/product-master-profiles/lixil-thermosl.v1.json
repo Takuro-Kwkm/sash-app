@@ -32,6 +32,12 @@
   "metadata": {
     "phase": "PHASE_7_REPRODUCIBILITY",
     "authoringMasterVersion": "v0.7",
-    "authoringMasterDriveFileId": "17lVzBZ1hp4RVcGv0yNdnrKt25SFO2FhL"
+    "authoringMasterDriveFileId": "17lVzBZ1hp4RVcGv0yNdnrKt25SFO2FhL",
+    "workerProvider": "ANTIGRAVITY_CLI",
+    "producerSystem": "GEMINI_ANTIGRAVITY",
+    "authenticationMode": "GOOGLE_AI_PRO_OAUTH",
+    "workerExecution": "SELF_HOSTED_GITHUB_ACTIONS",
+    "antigravityModelMode": "ACCOUNT_DEFAULT",
+    "antigravityEffort": "high"
   }
 }
