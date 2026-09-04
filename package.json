@@ -34,7 +34,9 @@
     "audit:size-capability": "node scripts/run-sash-size-capability-audit.mjs artifacts/size-capability-audit data/master-change-control/proposals",
     "test:product-master-core:v20": "node --test test/33-product-master-core-v20-gemini-execution-bridge.test.mjs test/34-product-master-core-v20-review-surface.test.mjs",
     "gemini:job:v20": "node scripts/run-gemini-product-master-job.mjs",
-    "review:surface:v20": "node scripts/build-product-master-review-surface.mjs"
+    "review:surface:v20": "node scripts/build-product-master-review-surface.mjs",
+    "test:product-master-core:v21": "node --test test/33-product-master-core-v20-gemini-execution-bridge.test.mjs test/34-product-master-core-v20-review-surface.test.mjs test/35-product-master-core-v21-gemini-live-attachment.test.mjs",
+    "gemini:live:apw430:v21": "node scripts/run-apw430-gemini-live-v21.mjs"
   },
   "engines": {
     "node": ">=22"
