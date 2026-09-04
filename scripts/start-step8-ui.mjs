@@ -7,7 +7,7 @@ import { createCatalog, catalogInventory } from "../src/catalog/catalog-adapter.
 import { stabilizeSelection } from "../src/catalog/catalog-resolver.mjs";
 import { CURRENT_WINDOW_SERIES_MODULES } from "../src/catalog/modules/current-window-series.mjs";
 import { CONCORDS30_MODULE } from "../src/catalog/modules/concords30-module.mjs";
-import { DOORREMO_HIKIDO_MODULE } from "../src/catalog/modules/doorremo-hikido-module.mjs";
+import { DOORREMO_HIKIDO_MODULE } from "../src/catalog/modules/doorremo-hikido-v1.mjs";
 
 const __dirname=dirname(fileURLToPath(import.meta.url));
 const root=join(__dirname,"..");
