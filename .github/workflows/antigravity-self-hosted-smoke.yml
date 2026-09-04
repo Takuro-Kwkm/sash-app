@@ -1,0 +1,44 @@
+name: Antigravity Self-Hosted Smoke Test
+
+on:
+  push:
+    branches:
+      - feat/catalog-recovery-v2
+    paths:
+      - '.github/workflows/antigravity-self-hosted-smoke.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: antigravity-self-hosted-smoke
+  cancel-in-progress: false
+
+jobs:
+  smoke:
+    name: Verify Antigravity Google AI Pro worker
+    runs-on: [self-hosted, macOS, ARM64, gemini-worker]
+    timeout-minutes: 5
+    env:
+      PATH: /Users/takuro/.local/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin
+    steps:
+      - name: Verify runner and Antigravity CLI
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "runner_name=${RUNNER_NAME}"
+          command -v agy
+          agy --version
+
+      - name: Verify headless Google AI Pro session
+        shell: bash
+        run: |
+          set -euo pipefail
+          agy -p "Return exactly: ANTIGRAVITY_RUNNER_OK" --output-format json | tee antigravity-smoke.json
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          payload = json.loads(Path('antigravity-smoke.json').read_text())
+          assert payload.get('status') == 'SUCCESS', payload
+          assert payload.get('response', '').strip() == 'ANTIGRAVITY_RUNNER_OK', payload
+          print('ANTIGRAVITY_SELF_HOSTED_GATE=PASS')
+          PY
