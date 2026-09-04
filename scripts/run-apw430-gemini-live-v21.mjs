@@ -1,5 +1,6 @@
 import path from'node:path';
-import{createGeminiJob,runGeminiProductMasterBridge}from'../src/product-master-core/gemini-execution-bridge.mjs';
+import{createGeminiJob}from'../src/product-master-core/gemini-execution-bridge.mjs';
+import{runVerifiedGeminiLiveJob}from'../src/product-master-core/gemini-live-verified-runner.mjs';
 
 const SOURCE={type:'OFFICIAL_PDF',driveFileId:'1j9PtW8yoKBZ4Nodm58wU3QtOCvxlEja9',title:'202607_YKKAP_APW430_商品カタログ.pdf',version:'202607'};
 const SOURCE_SHA256='a3b130d2227af07808c36d74528592ab76f52b122057d831d5fef5aa34b246be';
@@ -10,6 +11,7 @@ const artifactDir=path.resolve(value('artifact-dir')??'artifacts/gemini-live-v21
 const evidenceInboxDir=path.join(artifactDir,'evidence-inbox');
 const changeControlDir=path.resolve('data/master-change-control');
 const model=process.env.GEMINI_MODEL??null;
+const geminiFileUri=process.env.GEMINI_FILE_URI??null;
 const created=createGeminiJob({
   job_id:`GJOB-APW430-LIVE-${new Date().toISOString().replace(/[-:.TZ]/g,'').slice(0,14)}`,
   job_type:'EVIDENCE_EXTRACTION',manufacturer:'YKK AP',series:'APW430',product_id:'SER-YKK-APW430',
@@ -23,15 +25,15 @@ const created=createGeminiJob({
     'Do not approve Product Master changes, do not write Canonical data, and do not generate Runtime data.'
   ].join(' '),
   source_context:SOURCE,source_drive_file_ids:[SOURCE.driveFileId],printed_page_scope:[69,70,71],
-  source_attachment:{mime_type:'application/pdf',source_sha256:SOURCE_SHA256},
+  source_attachment:{gemini_file_uri:geminiFileUri,mime_type:'application/pdf',source_sha256:SOURCE_SHA256},
   expected_transport_type:'EVIDENCE_CANDIDATE_BATCH',expected_schema_version:'1.0',execution_mode:'LIVE_EXTERNAL',model,requested_by:'CHATGPT'
 });
 if(!created.pass){console.log(JSON.stringify({pass:false,status:'JOB_INVALID',errors:created.errors},null,2));process.exitCode=2;}
 else{
-  const result=await runGeminiProductMasterBridge(created.job,{evidenceInboxDir,changeControlDir,sourceFilePath:sourceFile?path.resolve(sourceFile):null});
+  const result=await runVerifiedGeminiLiveJob(created.job,{argv:args,evidenceInboxDir,changeControlDir,sourceFilePath:sourceFile?path.resolve(sourceFile):null});
   console.log(JSON.stringify({
     pass:result.pass,status:result.status,jobId:created.job.jobId,model:model??'BLOCKED',source:SOURCE,sourceSha256:SOURCE_SHA256,
-    sourceAttachmentAudit:result.sourceAttachmentAudit??null,rawResponseSha256:result.rawResponseSha256??null,normalizedBatchId:result.normalizedBatchId??null,
+    credentialPreflight:result.credentialPreflight??null,sourceAttachmentAudit:result.sourceAttachmentAudit??null,rawResponseSha256:result.rawResponseSha256??null,normalizedBatchId:result.normalizedBatchId??null,
     transportGate:result.transportValidation?.pass===true?'PASS':result.status==='BLOCKED'?'BLOCKED':'FAIL',
     evidenceInboxGate:result.inboxImport?.pass===true?'PASS':result.status==='BLOCKED'?'BLOCKED':'FAIL',
     queueVisible:Boolean(result.reviewQueue?.records?.length),canonicalWritePerformed:result.canonicalWritePerformed,runtimeWritePerformed:result.runtimeWritePerformed,productionWritePerformed:result.productionWritePerformed,errors:result.errors
