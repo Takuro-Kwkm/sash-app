@@ -39,12 +39,12 @@ test('CR-SL-036 never auto-passes W/H alone after formal regeneration',()=>{
   for(const [w,h] of [[1691,500],[815,944]])assert.equal(evaluateDimension(catalog,PRODUCT_ID,selection(w,h)).status,'BLOCK',`${w}x${h}`);
 });
 
-test('Runtime STANDARD inventory remains unchanged by CR-SL-036 regeneration',()=>{
+test('Runtime STANDARD inventory reflects separately approved S2H source correction while other series remain unchanged',()=>{
   const counts=Object.fromEntries(catalog.products.map((product)=>[
     product.id,catalog.standardSizeRecords.filter((row)=>row.productId===product.id&&row.selectable!==false&&row.status!=='INACTIVE').length
   ]));
   assert.deepEqual(counts,{
-    'SER-LIX-SAMOS2H':2131,
+    'SER-LIX-SAMOS2H':2140,
     'SER-LIX-SAMOSL':1495,
     'SER-YKK-APW430':718,
     'SER-YKK-APW431':538
