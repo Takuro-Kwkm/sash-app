@@ -203,11 +203,57 @@ jobs:
             --out-dir="$ADAPTER_DIR" | tee "$ARTIFACT_DIR/adapter-build.json"
           echo "adapter_dir=$ADAPTER_DIR" >> "$GITHUB_OUTPUT"
 
-      - name: Run Gemini Worker through Antigravity structured headless mode
+      - name: Run Gemini Worker through scoped read-only Antigravity headless mode
         shell: bash
         run: |
           set -euo pipefail
           ADAPTER_DIR='${{ steps.adapter.outputs.adapter_dir }}'
+          SETTINGS="$HOME/.gemini/antigravity-cli/settings.json"
+          BACKUP="$RUNNER_TEMP/antigravity-settings-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}.json"
+          ORIGINAL_EXISTED=0
+          mkdir -p "$(dirname "$SETTINGS")"
+          if [ -f "$SETTINGS" ]; then
+            cp "$SETTINGS" "$BACKUP"
+            ORIGINAL_EXISTED=1
+          fi
+          restore_antigravity_settings() {
+            if [ "$ORIGINAL_EXISTED" = '1' ]; then
+              cp "$BACKUP" "$SETTINGS"
+            else
+              rm -f "$SETTINGS"
+            fi
+          }
+          trap restore_antigravity_settings EXIT
+
+          SETTINGS="$SETTINGS" WORKSPACE="$GITHUB_WORKSPACE" PERMISSION_AUDIT="$ADAPTER_DIR/antigravity-permission-policy.json" python3 - <<'PY'
+          import json, os
+          from pathlib import Path
+          settings_path=Path(os.environ['SETTINGS'])
+          workspace=str(Path(os.environ['WORKSPACE']).resolve())
+          if settings_path.exists():
+              try:
+                  settings=json.loads(settings_path.read_text())
+              except Exception as exc:
+                  raise RuntimeError(f'Cannot parse existing Antigravity settings: {exc}')
+          else:
+              settings={}
+          temporary_permissions={
+              'allow':[f'read_file({workspace})'],
+              'deny':['write_file(*)','command(*)','unsandboxed(*)','read_url(*)','execute_url(*)','mcp(*)'],
+              'ask':[]
+          }
+          settings['permissions']=temporary_permissions
+          settings_path.write_text(json.dumps(settings,ensure_ascii=False,indent=2)+'\n')
+          audit={
+              'scope':'TEMPORARY_RUN_ONLY',
+              'workspace':workspace,
+              'permissions':temporary_permissions,
+              'dangerouslySkipPermissions':False,
+              'restoration':'TRAP_RESTORE_ORIGINAL_SETTINGS'
+          }
+          Path(os.environ['PERMISSION_AUDIT']).write_text(json.dumps(audit,ensure_ascii=False,indent=2)+'\n')
+          PY
+
           agy -p "$(cat "$ADAPTER_DIR/worker-prompt.txt")" \
             --output-format json \
             --json-schema "$ADAPTER_DIR/transport-schema.json" \
@@ -220,6 +266,8 @@ jobs:
           d=Path(os.environ['ARTIFACT_DIR'])/'adapter'
           payload=json.loads((d/'antigravity-envelope.json').read_text())
           assert payload.get('status')=='SUCCESS',payload
+          denied=payload.get('denied_actions') or []
+          assert denied==[],f'Antigravity attempted denied actions: {denied}'
           structured=payload.get('structured_output')
           assert isinstance(structured,dict),payload
           raw=json.dumps(structured,ensure_ascii=False,separators=(',',':'))+'\n'
@@ -233,6 +281,7 @@ jobs:
             'structured_output_sha256':hashlib.sha256(raw.encode()).hexdigest(),
             'authenticationMode':'GOOGLE_AI_PRO_OAUTH',
             'producerSystem':'GEMINI_ANTIGRAVITY',
+            'permissionDeniedActions':denied,
             'canonicalWritePerformed':False,
             'runtimeWritePerformed':False,
             'productionWritePerformed':False
