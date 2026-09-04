@@ -11,7 +11,7 @@
     "title": "202604_LIXIL_サーモスＬ_業務用資料集_完成品価格表.pdf",
     "version": "202604",
     "officialDetailUrl": "https://webcatalog.lixil.co.jp/iportal/CatalogDetail.do?catalogID=18032870000&designID=newinter&method=initial_screen&volumeID=LXL13001",
-    "officialDownloadUrl": "https://webcatalog.lixil.co.jp/iportal/CatalogDownload.do?method=downloadPdfCatalog&type=downloadPdfCatalog&volumeID=LXL13001&catalogID=18032870000&applicationPdf=true",
+    "officialDownloadUrl": "https://webcatalog.lixil.co.jp/iportal/CatalogDownload.do?method=downloadPdfCatalog&type=downloadPdfCatalog&volumeID=LXL13001&categoryID=&catalogID=18032870000&catalogCategoryID=&pageGroupID=&pageID=&applicationPdf=true&designID=newinter",
     "authoritativeSha256": "e3cd40bfd85bdeac0de253afa4d5187059bab71c164ccc266d2125e655114960",
     "pageCount": 300
   },
