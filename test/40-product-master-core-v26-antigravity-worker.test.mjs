@@ -53,7 +53,7 @@ test('v2.6 transport accepts Antigravity producer identity and rejects candidate
   assert.ok(report.errors.some((row)=>row.code==='TRANSPORT_CANDIDATE_SOURCE_SYSTEM_INVALID'));
 });
 
-test('v2.6 Antigravity schema and prompt preserve Product Profile scope and fail-closed authority',()=>{
+test('v2.6 Antigravity schema and file-scoped prompt preserve Product Profile scope and fail-closed authority',()=>{
   const job=replayJob();
   const schema=buildAntigravityTransportSchema(job);
   assert.deepEqual(schema.properties.producer.properties.system.enum,[ANTIGRAVITY_PRODUCER_SYSTEM]);
@@ -69,6 +69,23 @@ test('v2.6 Antigravity schema and prompt preserve Product Profile scope and fail
   assert.ok(prompt.includes('Do not browse the web.'));
   assert.ok(prompt.includes('Do not modify any Product Master'));
   assert.ok(prompt.includes(ANTIGRAVITY_PRODUCER_SYSTEM));
+});
+
+test('v2.6 Antigravity inline-evidence prompt requires no model tools or workspace file reads',()=>{
+  const job=replayJob();
+  const evidence='===== PDF_PAGE 8 =====\n引違い窓｜単体引違い窓\n';
+  const prompt=buildAntigravityWorkerPrompt(job,{
+    sourcePdfPath:'artifacts/source/official-source.pdf',
+    sourceScopeTextPath:'artifacts/source/scope.txt',
+    sourceScopeTextContent:evidence,
+    sourceSha256:loadProfile().source.authoritativeSha256
+  });
+  assert.ok(prompt.includes('Do not call tools.'));
+  assert.ok(prompt.includes('BEGIN_SCOPED_EVIDENCE'));
+  assert.ok(prompt.includes(evidence.trim()));
+  assert.ok(prompt.includes('END_SCOPED_EVIDENCE'));
+  assert.ok(!prompt.includes('Primary scoped text evidence file:'));
+  assert.ok(!prompt.includes('Full verified PDF workspace path'));
 });
 
 test('v2.6 Antigravity structured output can replay through Transport, Evidence Inbox and Review Queue without authoritative writes',async t=>{
