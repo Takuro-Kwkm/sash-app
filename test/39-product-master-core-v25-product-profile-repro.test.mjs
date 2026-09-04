@@ -5,6 +5,7 @@ import os from'node:os';
 import path from'node:path';
 import{validateProductProfile,buildGeminiJobInputFromProductProfile}from'../src/product-master-core/product-profile.mjs';
 import{createGeminiJob,runGeminiProductMasterBridge}from'../src/product-master-core/gemini-execution-bridge.mjs';
+import{runVerifiedGeminiLiveJob}from'../src/product-master-core/gemini-live-verified-runner.mjs';
 
 const PROFILE_PATH=path.resolve('config/product-master-profiles/lixil-thermosl.v1.json');
 const loadProfile=()=>JSON.parse(fs.readFileSync(PROFILE_PATH,'utf8'));
@@ -22,7 +23,7 @@ function transportFor(job){
     candidates:[{
       recordType:'EVIDENCE_CANDIDATE',candidateSchemaVersion:'1.0',id:'CAND-LIXIL-THERMOSL-PHASE7-001',
       sourceSystem:'GEMINI_NOTEBOOKLM',producerMode:'SIMULATED_FIXTURE',status:'SUBMITTED',productId:job.productId,
-      title:'単体引違い窓',subjectField:'window_type',claim:'Printed page 6 explicitly identifies a 单体引違い窓 section.',
+      title:'単体引違い窓',subjectField:'window_type',claim:'Printed page 6 explicitly identifies a 単体引違い窓 section.',
       proposedStrength:'EXPLICIT',productNodeIds:[],
       source:{...job.sourceContext,printedPage:6,pdfPage:8,locatorText:'引違い窓｜単体引違い窓'}
     }],
@@ -85,6 +86,43 @@ test('v2.5 Thermos L profile MOCK round trip reaches Evidence Inbox and Review Q
   assert.equal(result.inboxImport.status,'PERSISTED_TO_EVIDENCE_INBOX');
   assert.equal(result.reviewQueue.summary.byKind.EVIDENCE_CANDIDATE,1);
   assert.equal(result.reviewQueue.authorityBoundary.masterChangeApproval,'HUMAN_REQUIRED');
+  assert.equal(result.canonicalWritePerformed,false);
+  assert.equal(result.runtimeWritePerformed,false);
+  assert.equal(result.productionWritePerformed,false);
+});
+
+test('v2.5 verified LIVE runner retries transient 429 without widening write authority',async()=>{
+  const profile=loadProfile();
+  const built=buildGeminiJobInputFromProductProfile(profile,{execution_mode:'LIVE_EXTERNAL',job_id:'GJOB-LIXIL-THERMOSL-PHASE7-RETRY-TEST'});
+  const created=createGeminiJob(built.jobInput);
+  assert.equal(created.pass,true);
+  const job=created.job;
+  job.sourceAttachment={...job.sourceAttachment,geminiFileUri:'https://generativelanguage.googleapis.com/v1beta/files/test-file'};
+
+  let calls=0;
+  const bridgeImpl=async(currentJob)=>{
+    calls+=1;
+    if(calls===1)return{
+      pass:false,status:'FAILED',job:currentJob,sourceAttachmentAudit:{sourceSha256:profile.source.authoritativeSha256},
+      canonicalWritePerformed:false,runtimeWritePerformed:false,productionWritePerformed:false,
+      errors:[{code:'GEMINI_API_ERROR',message:'Quota exceeded. Please retry in 0.001s.',httpStatus:429}]
+    };
+    return{
+      pass:true,status:'IMPORTED',job:currentJob,sourceAttachmentAudit:null,transportValidation:{pass:true},inboxImport:{status:'PERSISTED_TO_EVIDENCE_INBOX'},
+      reviewQueue:{summary:{byKind:{EVIDENCE_CANDIDATE:1}}},canonicalWritePerformed:false,runtimeWritePerformed:false,productionWritePerformed:false,errors:[]
+    };
+  };
+  const delays=[];
+  const result=await runVerifiedGeminiLiveJob(job,{
+    apiKey:'test-key',model:'gemini-3.8-flash',bridgeImpl,
+    sourceVerifyImpl:async()=>({pass:true,audit:{sourceSha256:profile.source.authoritativeSha256},errors:[]}),
+    sleepImpl:async(ms)=>{delays.push(ms);},maxTransientRetries:2
+  });
+  assert.equal(result.pass,true);
+  assert.equal(calls,2);
+  assert.equal(result.transientRetryCount,1);
+  assert.equal(result.transientRetryAudit[0].httpStatus,429);
+  assert.equal(delays.length,1);
   assert.equal(result.canonicalWritePerformed,false);
   assert.equal(result.runtimeWritePerformed,false);
   assert.equal(result.productionWritePerformed,false);
