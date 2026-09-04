@@ -1,0 +1,226 @@
+{
+  "proposalSchemaVersion": "1.0",
+  "recordType": "PRODUCT_MASTER_CHANGE_PROPOSAL",
+  "id": "PMCP-YKK-APW430-LIVE-EVIDENCE-20260904-001",
+  "status": "PROPOSED",
+  "productId": "SER-YKK-APW430",
+  "target": {
+    "baseMasterFingerprint": "sha256:efb2c2e694dab840a44ff403b19d9e06568d282f328bce086b24408e5164dfa6"
+  },
+  "summary": "Add 5 ChatGPT-adjudicated APW430 LIVE Gemini Canonical Evidence records to the Control Plane Product Master only. Current formal workbook coverage was separately verified; this proposal does not authorize formal workbook, Runtime, or Production writes.",
+  "changes": [
+    {
+      "operation": "ADD_RECORD",
+      "collection": "evidence",
+      "record": {
+        "schemaVersion": "1.0",
+        "id": "EV-APW430-LIVE-20260904-FIX-001",
+        "productId": "SER-YKK-APW430",
+        "status": "VERIFIED",
+        "strength": "EXPLICIT",
+        "title": "FIX窓商品体系",
+        "subjectField": "window_type",
+        "claim": "APW 430 FIX窓の商品体系には「窓タイプ」および「テラスタイプ」が設定されている。",
+        "productNodeIds": [
+          "APW430-FIX"
+        ],
+        "source": {
+          "type": "OFFICIAL_PDF",
+          "driveFileId": "1j9PtW8yoKBZ4Nodm58wU3QtOCvxlEja9",
+          "title": "202607_YKKAP_APW430_商品カタログ.pdf",
+          "version": "202607",
+          "printedPage": 69,
+          "pdfPage": 71,
+          "locatorText": "■ 商品体系 FIX窓 窓タイプ テラスタイプ"
+        },
+        "adjudication": {
+          "extractedBy": "GEMINI_NOTEBOOKLM",
+          "adjudicatedBy": "CHATGPT",
+          "status": "ACCEPTED",
+          "reason": "Official YKK AP APW430 catalog PDF p.71 (printed p.69) visibly confirms the FIX window taxonomy: window type and terrace type.",
+          "sourceCandidateId": "EC-APW430-FIX-001",
+          "adjudicatorType": "CHATGPT"
+        },
+        "provenance": {
+          "candidateId": "EC-APW430-FIX-001",
+          "candidateSourceSystem": "GEMINI_NOTEBOOKLM",
+          "producerMode": "LIVE_EXTERNAL"
+        }
+      }
+    },
+    {
+      "operation": "ADD_RECORD",
+      "collection": "evidence",
+      "record": {
+        "schemaVersion": "1.0",
+        "id": "EV-APW430-LIVE-20260904-FIX-002",
+        "productId": "SER-YKK-APW430",
+        "status": "VERIFIED",
+        "strength": "EXPLICIT",
+        "title": "FIX窓の工法対応",
+        "subjectField": "construction",
+        "claim": "APW 430 FIX窓の対応工法として、窓タイプは在来工法、テラスタイプは在来工法および2×4工法に対応している。",
+        "productNodeIds": [
+          "APW430-FIX"
+        ],
+        "source": {
+          "type": "OFFICIAL_PDF",
+          "driveFileId": "1j9PtW8yoKBZ4Nodm58wU3QtOCvxlEja9",
+          "title": "202607_YKKAP_APW430_商品カタログ.pdf",
+          "version": "202607",
+          "printedPage": 69,
+          "pdfPage": 71,
+          "locatorText": "窓タイプ 在来工法 テラスタイプ 在来工法 2×4工法"
+        },
+        "adjudication": {
+          "extractedBy": "GEMINI_NOTEBOOKLM",
+          "adjudicatedBy": "CHATGPT",
+          "status": "ACCEPTED",
+          "reason": "Official YKK AP APW430 catalog PDF p.71 (printed p.69) visibly confirms window type=conventional and terrace type=conventional/2x4 construction.",
+          "sourceCandidateId": "EC-APW430-FIX-002",
+          "adjudicatorType": "CHATGPT"
+        },
+        "provenance": {
+          "candidateId": "EC-APW430-FIX-002",
+          "candidateSourceSystem": "GEMINI_NOTEBOOKLM",
+          "producerMode": "LIVE_EXTERNAL"
+        }
+      }
+    },
+    {
+      "operation": "ADD_RECORD",
+      "collection": "evidence",
+      "record": {
+        "schemaVersion": "1.0",
+        "id": "EV-APW430-LIVE-20260904-FIX-003",
+        "productId": "SER-YKK-APW430",
+        "status": "VERIFIED",
+        "strength": "EXPLICIT",
+        "title": "FIX窓テラスタイプのアングル枠制約",
+        "subjectField": "configuration",
+        "claim": "APW 430 FIX窓のテラスタイプはアングル付枠のみの設定である。",
+        "productNodeIds": [
+          "APW430-FIX-TERRACE"
+        ],
+        "source": {
+          "type": "OFFICIAL_PDF",
+          "driveFileId": "1j9PtW8yoKBZ4Nodm58wU3QtOCvxlEja9",
+          "title": "202607_YKKAP_APW430_商品カタログ.pdf",
+          "version": "202607",
+          "printedPage": 70,
+          "pdfPage": 72,
+          "locatorText": "テラスタイプはアングル付枠のみの設定となります。"
+        },
+        "adjudication": {
+          "extractedBy": "GEMINI_NOTEBOOKLM",
+          "adjudicatedBy": "CHATGPT",
+          "status": "ACCEPTED",
+          "reason": "Official YKK AP APW430 catalog PDF p.72 (printed p.70) explicitly states that the terrace type is angle-frame only.",
+          "sourceCandidateId": "EC-APW430-FIX-003",
+          "adjudicatorType": "CHATGPT"
+        },
+        "provenance": {
+          "candidateId": "EC-APW430-FIX-003",
+          "candidateSourceSystem": "GEMINI_NOTEBOOKLM",
+          "producerMode": "LIVE_EXTERNAL"
+        }
+      }
+    },
+    {
+      "operation": "ADD_RECORD",
+      "collection": "evidence",
+      "record": {
+        "schemaVersion": "1.0",
+        "id": "EV-APW430-LIVE-20260904-FIX-004",
+        "productId": "SER-YKK-APW430",
+        "status": "VERIFIED",
+        "strength": "EXPLICIT",
+        "title": "FIX窓仕様（納まり・ガラス使用可能総厚）",
+        "subjectField": "specific_spec",
+        "claim": "APW 430 FIX窓の仕様において、枠見込み寸法は115㎜（出幅65㎜＋50㎜かかり代）、ガラス使用可能総厚は45ミリである。",
+        "productNodeIds": [
+          "APW430-FIX"
+        ],
+        "source": {
+          "type": "OFFICIAL_PDF",
+          "driveFileId": "1j9PtW8yoKBZ4Nodm58wU3QtOCvxlEja9",
+          "title": "202607_YKKAP_APW430_商品カタログ.pdf",
+          "version": "202607",
+          "printedPage": 71,
+          "pdfPage": 73,
+          "locatorText": "納まり：枠見込み寸法 115㎜（出幅65㎜＋50㎜かかり代） ガラス：使用可能総厚 45ミリ"
+        },
+        "adjudication": {
+          "extractedBy": "GEMINI_NOTEBOOKLM",
+          "adjudicatedBy": "CHATGPT",
+          "status": "ACCEPTED",
+          "reason": "Official YKK AP APW430 catalog PDF p.73 (printed p.71) explicitly states frame depth 115 mm (65+50) and usable total glass thickness 45 mm.",
+          "sourceCandidateId": "EC-APW430-FIX-004",
+          "adjudicatorType": "CHATGPT"
+        },
+        "provenance": {
+          "candidateId": "EC-APW430-FIX-004",
+          "candidateSourceSystem": "GEMINI_NOTEBOOKLM",
+          "producerMode": "LIVE_EXTERNAL"
+        }
+      }
+    },
+    {
+      "operation": "ADD_RECORD",
+      "collection": "evidence",
+      "record": {
+        "schemaVersion": "1.0",
+        "id": "EV-APW430-LIVE-20260904-FIX-005",
+        "productId": "SER-YKK-APW430",
+        "status": "VERIFIED",
+        "strength": "EXPLICIT",
+        "title": "FIX窓テラスタイプ規格サイズH24",
+        "subjectField": "size",
+        "claim": "APW 430 FIX窓テラスタイプ（在来）の規格サイズとして、サッシH呼称24（サッシH 2,430mm）が設定されている。",
+        "productNodeIds": [
+          "APW430-FIX-TERRACE"
+        ],
+        "source": {
+          "type": "OFFICIAL_PDF",
+          "driveFileId": "1j9PtW8yoKBZ4Nodm58wU3QtOCvxlEja9",
+          "title": "202607_YKKAP_APW430_商品カタログ.pdf",
+          "version": "202607",
+          "printedPage": 71,
+          "pdfPage": 73,
+          "locatorText": "テラスタイプ 在来 24 2,430 03624 06024 07424 08324 11924 16024 16524"
+        },
+        "adjudication": {
+          "extractedBy": "GEMINI_NOTEBOOKLM",
+          "adjudicatedBy": "CHATGPT",
+          "status": "ACCEPTED",
+          "reason": "Official YKK AP APW430 catalog PDF p.73 (printed p.71) shows conventional terrace H call 24 / sash H 2430 mm and the seven listed standard widths.",
+          "sourceCandidateId": "EC-APW430-FIX-005",
+          "adjudicatorType": "CHATGPT"
+        },
+        "provenance": {
+          "candidateId": "EC-APW430-FIX-005",
+          "candidateSourceSystem": "GEMINI_NOTEBOOKLM",
+          "producerMode": "LIVE_EXTERNAL"
+        }
+      }
+    }
+  ],
+  "evidenceIds": [
+    "EV-APW430-LIVE-20260904-FIX-001",
+    "EV-APW430-LIVE-20260904-FIX-002",
+    "EV-APW430-LIVE-20260904-FIX-003",
+    "EV-APW430-LIVE-20260904-FIX-004",
+    "EV-APW430-LIVE-20260904-FIX-005"
+  ],
+  "sourceBatchIds": [
+    "BATCH-202607-APW430-P69-71"
+  ],
+  "gateSnapshot": {
+    "openBlockingPending": 0
+  },
+  "riskLevel": "MEDIUM",
+  "approvalPolicy": "HUMAN_REQUIRED",
+  "createdAt": "2026-09-04T11:42:29.900Z",
+  "createdBy": "CHATGPT",
+  "proposalFingerprint": "sha256:165445843ce09b2f68ab3b48f23aaf03dda8f637f2c3de225ca19a99b582402c"
+}

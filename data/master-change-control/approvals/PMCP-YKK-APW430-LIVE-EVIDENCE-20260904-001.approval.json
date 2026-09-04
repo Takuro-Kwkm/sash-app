@@ -1,0 +1,29 @@
+{
+  "approvalSchemaVersion": "1.0",
+  "recordType": "PRODUCT_MASTER_CHANGE_APPROVAL",
+  "proposalId": "PMCP-YKK-APW430-LIVE-EVIDENCE-20260904-001",
+  "productId": "SER-YKK-APW430",
+  "status": "APPROVED",
+  "approverType": "HUMAN",
+  "approvedBy": "USER",
+  "approvedAt": "2026-09-04T21:02:00+09:00",
+  "approvalSource": "User explicitly stated: 「承認」 after being asked to explicitly approve PMCP-YKK-APW430-LIVE-EVIDENCE-20260904-001.",
+  "scope": "CONTROL_PLANE_EVIDENCE_ONLY",
+  "productionApproval": false,
+  "proposalFingerprint": "sha256:165445843ce09b2f68ab3b48f23aaf03dda8f637f2c3de225ca19a99b582402c",
+  "baseMasterFingerprint": "sha256:efb2c2e694dab840a44ff403b19d9e06568d282f328bce086b24408e5164dfa6",
+  "formalMutationRequired": 0,
+  "authorizedWrites": {
+    "controlPlaneEvidence": true,
+    "formalProductMaster": false,
+    "runtime": false,
+    "production": false,
+    "canonicalRegistry": false
+  },
+  "auditNotes": [
+    "Approval is limited to this exact Proposal ID and proposal fingerprint.",
+    "Approval authorizes the five adjudicated Canonical Evidence additions in the Control Plane only.",
+    "No formal workbook mutation is authorized because Phase 4 formal coverage assessment found formalMutationRequired=0.",
+    "Runtime, Production, Canonical Registry, canonical folder, and old folder mutations are not authorized by this approval."
+  ]
+}
