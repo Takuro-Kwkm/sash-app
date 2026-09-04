@@ -6,7 +6,7 @@
   "package_version": "20260830",
   "authoring_file_id": "1QDocQ7yoXE6TAnzHtfsyKwwK6YB5_mgk90Bw1hm4iPo",
   "authoring_export_sha256": "90a900a37c1c23e1b356d7484adcb12f9530d55c564a5f84b0b1ff7c6c58fbcf",
-  "runtime_manifest_sha256": "c514e2ff3f23e80f0166dadf5bfeb6bb660b7f89762123a60c21346200d3b8c5",
+  "runtime_manifest_sha256": "31b9d2b079c96cc16540c7d9091654298002a257197276bbd44860339342f2f4",
   "runtime_file_sha256": {
     "apw430_core_20260830.json": "76ff42f0d0325becc06c549e485e483d62a0fe57c9c76fb18d11da6fcbc3f84b",
     "apw430_dimensions_20260830.json": "fcb8a99b78b19f9bfa4d0a7d94c8e2f477647fab190365fbbf4a1291761ce90e",
@@ -51,6 +51,8 @@
   },
   "formal_package_gate": "BLOCKED",
   "reason": "Runtime candidate generated and QA-passed; formal Artifact/Storage/Registry promotion not yet executed.",
-  "verification_revision": "Phase5-R1",
-  "drive_roundtrip_verified": true
+  "verification_revision": "Phase6-R1",
+  "drive_roundtrip_verified": true,
+  "documentation_file_id": "1vTYHte1JxJgL2MC5_OE4PAl9Aq15w9GU",
+  "documentation_sha256": "fea82a0da147e1f50f090c767d4a51c17b5adebf87a7ded418df376c97c88ff1"
 }
