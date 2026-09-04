@@ -18,7 +18,13 @@ test('v3.0 APW430 formal Runtime lock is bound to current Authoring Master', () 
   assert.equal(lock.product_id, 'SER-YKK-APW430');
   assert.equal(lock.package_version, '20260830');
   assert.equal(lock.authoring_file_id, '1QDocQ7yoXE6TAnzHtfsyKwwK6YB5_mgk90Bw1hm4iPo');
-  assert.equal(lock.formal_package_gate, 'BLOCKED');
+  assert.equal(lock.formal_package_gate, 'PASS');
+  assert.equal(lock.storage_gate, 'PASS');
+  assert.equal(lock.registry_gate, 'PASS');
+  assert.equal(lock.duplicate_check, 'PASS');
+  assert.equal(lock.runtime_manifest_sha256, '5398df3f6d9d07ddfac1d555497e802947bf7bbd0116ac99df4873dbadd05827');
+  assert.equal(lock.documentation_file_id, '1vTYHte1JxJgL2MC5_OE4PAl9Aq15w9GU');
+  assert.equal(lock.documentation_sha256, 'd0e7c356d89ad1e2a7c50c04ed7b2e4337f3132e8cde97e5132dc9c86c8e27ca');
 });
 
 test('v3.0 APW430 active window ID digest matches existing Runtime module exactly', () => {
