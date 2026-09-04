@@ -2,6 +2,21 @@ name: Gemini LIVE APW430 Evidence Retry
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - feat/catalog-recovery-v2
+    paths:
+      - '.github/workflows/gemini-live-apw430-retry.yml'
+      - 'src/product-master-core/gemini-live-preflight.mjs'
+      - 'src/product-master-core/gemini-file-verify.mjs'
+      - 'src/product-master-core/gemini-live-verified-runner.mjs'
+      - 'src/product-master-core/gemini-file-upload.mjs'
+      - 'src/product-master-core/gemini-execution-bridge.mjs'
+      - 'scripts/run-gemini-live-preflight-v22.mjs'
+      - 'scripts/run-gemini-product-master-job.mjs'
+      - 'scripts/run-apw430-gemini-live-v21.mjs'
+      - 'test/36-product-master-core-v22-gemini-credential-retry.test.mjs'
+      - 'package.json'
 
 permissions:
   contents: read
@@ -26,11 +41,47 @@ jobs:
       - name: Install
         run: npm ci --ignore-scripts
 
+      - name: Detect secure retry inputs without printing values
+        id: retry_gate
+        shell: bash
+        run: |
+          api_key_present=0
+          model_present=0
+          file_uri_present=0
+          [[ -n "$GEMINI_API_KEY" ]] && api_key_present=1
+          [[ -n "$GEMINI_MODEL" ]] && model_present=1
+          [[ -n "$GEMINI_FILE_URI" ]] && file_uri_present=1
+          ready=0
+          [[ "$api_key_present" == "1" && "$model_present" == "1" && "$file_uri_present" == "1" ]] && ready=1
+          echo "api_key_present=$api_key_present" >> "$GITHUB_OUTPUT"
+          echo "model_present=$model_present" >> "$GITHUB_OUTPUT"
+          echo "file_uri_present=$file_uri_present" >> "$GITHUB_OUTPUT"
+          echo "ready=$ready" >> "$GITHUB_OUTPUT"
+          {
+            echo "### Gemini LIVE APW430 Retry Gate"
+            echo "- GEMINI_API_KEY present: $api_key_present"
+            echo "- GEMINI_MODEL present: $model_present"
+            echo "- GEMINI_APW430_FILE_URI present: $file_uri_present"
+            if [[ "$ready" == "1" ]]; then
+              echo "- Credential/source gate: READY"
+            else
+              echo "- Credential/source gate: BLOCKED"
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+
       - name: Credential and source preflight
+        if: steps.retry_gate.outputs.ready == '1'
         run: npm run gemini:preflight:v22
 
       - name: APW430 LIVE_EXTERNAL retry
+        if: steps.retry_gate.outputs.ready == '1'
         run: npm run gemini:live:apw430:v22 -- --artifact-dir=artifacts/gemini-live-v22/apw430
+
+      - name: Record blocked gate when secure inputs are incomplete
+        if: steps.retry_gate.outputs.ready != '1'
+        run: |
+          echo "GEMINI_LIVE_EXECUTION_GATE=BLOCKED"
+          echo "Reason: secure credential/model/source inputs are incomplete. Values were not printed."
 
       - name: Upload non-secret audit artifacts
         if: always()
