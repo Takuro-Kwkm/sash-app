@@ -16,8 +16,10 @@ const created=createGeminiJob({
   task:'Run one APW430 LIVE_EXTERNAL evidence extraction through the controlled bridge.',
   prompt:[
     'Read the attached YKK AP APW430 official product catalog and extract a small, auditable set of atomic evidence candidates from printed pages 69-71 only.',
-    'Return only EVIDENCE_CANDIDATE_BATCH JSON schema 1.0 for SER-YKK-APW430.',
-    'Each candidate must cite the attached OFFICIAL_PDF using the exact Drive provenance in sourceContext and include printedPage, pdfPage and locatorText.',
+    'Return exactly one pure JSON EVIDENCE_CANDIDATE_BATCH using transportSchemaVersion 1.0 and productId SER-YKK-APW430.',
+    'Set producer.system to GEMINI_NOTEBOOKLM and producer.mode to LIVE_EXTERNAL. Every candidate must use sourceSystem GEMINI_NOTEBOOKLM and producerMode LIVE_EXTERNAL.',
+    `Use sourceContext exactly as type=${SOURCE.type}, driveFileId=${SOURCE.driveFileId}, title=${SOURCE.title}, version=${SOURCE.version}.`,
+    'Each candidate must cite that OFFICIAL_PDF and include printedPage, pdfPage and locatorText.',
     'Do not approve Product Master changes, do not write Canonical data, and do not generate Runtime data.'
   ].join(' '),
   source_context:SOURCE,source_drive_file_ids:[SOURCE.driveFileId],printed_page_scope:[69,70,71],
