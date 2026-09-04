@@ -31,7 +31,12 @@
     "master:production-preview:v17": "node scripts/run-thermosl-production-preview-v17.mjs",
     "master:technical-facts:v13": "node scripts/run-apw430-technical-fact-resolution-v13.mjs",
     "master:workflow": "node scripts/run-product-master-workflow.mjs",
-    "audit:size-capability": "node scripts/run-sash-size-capability-audit.mjs artifacts/size-capability-audit data/master-change-control/proposals"
+    "audit:size-capability": "node scripts/run-sash-size-capability-audit.mjs artifacts/size-capability-audit data/master-change-control/proposals",
+    "test:product-master-core:v20": "node --test test/33-product-master-core-v20-gemini-execution-bridge.test.mjs test/34-product-master-core-v20-review-surface.test.mjs",
+    "gemini:job:v20": "node scripts/run-gemini-product-master-job.mjs",
+    "review:surface:v20": "node scripts/build-product-master-review-surface.mjs"
   },
-  "engines": { "node": ">=22" }
+  "engines": {
+    "node": ">=22"
+  }
 }
