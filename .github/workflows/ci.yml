@@ -249,6 +249,60 @@ jobs:
       - name: Verify Thermos L runtime regeneration from current formal Master
         run: node --test test/23-product-master-core-v18-thermosl-runtime-regeneration.test.mjs
 
+  gemini_live_readiness_v22:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+      GEMINI_MODEL: ${{ vars.GEMINI_MODEL }}
+      GEMINI_FILE_URI: ${{ secrets.GEMINI_APW430_FILE_URI }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install
+        run: npm ci --ignore-scripts
+      - name: Detect Gemini secure inputs without printing values
+        id: gemini_gate
+        shell: bash
+        run: |
+          api_key_present=0
+          model_present=0
+          file_uri_present=0
+          [[ -n "$GEMINI_API_KEY" ]] && api_key_present=1
+          [[ -n "$GEMINI_MODEL" ]] && model_present=1
+          [[ -n "$GEMINI_FILE_URI" ]] && file_uri_present=1
+          ready=0
+          [[ "$api_key_present" == "1" && "$model_present" == "1" && "$file_uri_present" == "1" ]] && ready=1
+          echo "api_key_present=$api_key_present"
+          echo "model_present=$model_present"
+          echo "file_uri_present=$file_uri_present"
+          echo "ready=$ready"
+          echo "api_key_present=$api_key_present" >> "$GITHUB_OUTPUT"
+          echo "model_present=$model_present" >> "$GITHUB_OUTPUT"
+          echo "file_uri_present=$file_uri_present" >> "$GITHUB_OUTPUT"
+          echo "ready=$ready" >> "$GITHUB_OUTPUT"
+      - name: Gemini Credential and source preflight
+        if: steps.gemini_gate.outputs.ready == '1'
+        run: npm run gemini:preflight:v22
+      - name: APW430 Real Gemini LIVE_EXTERNAL
+        if: steps.gemini_gate.outputs.ready == '1'
+        run: npm run gemini:live:apw430:v22 -- --artifact-dir=artifacts/gemini-live-v22/apw430
+      - name: Record blocked root cause
+        if: steps.gemini_gate.outputs.ready != '1'
+        run: |
+          echo "GEMINI_LIVE_EXECUTION_GATE=BLOCKED"
+          echo "Reason: one or more secure inputs are missing; secret values were not printed."
+      - name: Upload non-secret Gemini audit
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gemini-live-readiness-v22-audit
+          path: artifacts/gemini-live-v22/apw430
+          if-no-files-found: ignore
+          retention-days: 7
+
   browser_qa:
     runs-on: ubuntu-latest
     steps:
@@ -272,7 +326,7 @@ jobs:
           exit 1
       - name: Concord S30 PC and Smartphone Browser QA
         run: node test/browser/concords30-browser-qa.mjs
-      - name: Formal Size UI PC and Smartphone Browser QA
+      - name: Formal Size UI PC and Smartphone QA
         run: node test/browser/size-ui-browser-qa.mjs
       - name: Sales UI R2 glass, shutter size and CUSTOM Browser QA
         run: node test/browser/sales-ui-r2-browser-qa.mjs
