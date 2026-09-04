@@ -24,8 +24,10 @@ function normalizeSha256ToHex(value){
     const normalized=raw.replaceAll('-','+').replaceAll('_','/');
     const padded=normalized+'='.repeat((4-(normalized.length%4))%4);
     const bytes=Buffer.from(padded,'base64');
-    if(bytes.length!==32)return null;
-    return bytes.toString('hex');
+    if(bytes.length===32)return bytes.toString('hex');
+    const decodedAscii=bytes.toString('ascii');
+    if(bytes.length===64&&SHA256_HEX_RE.test(decodedAscii))return decodedAscii.toLowerCase();
+    return null;
   }catch{return null;}
 }
 
@@ -52,7 +54,7 @@ export async function verifyGeminiFileAttachment({
   const providerFileName=providerNameFromUri(geminiFileUri);
   if(!providerFileName)return{pass:false,status:'BLOCKED',audit:null,errors:[makeError('GEMINI_FILE_URI_INVALID','Gemini file URI does not resolve to files/{id}')]};
   const expectedHex=normalizeSha256ToHex(expectedSha256);
-  if(!expectedHex)return{pass:false,status:'BLOCKED',audit:{providerFileName},errors:[makeError('GEMINI_EXPECTED_SHA256_INVALID','A 64-character hexadecimal source SHA-256 is required to verify a preuploaded Gemini file')]};
+  if(!expectedHex)return{pass:false,status:'BLOCKED',audit:{providerFileName},errors:[makeError('GEMINI_EXPECTED_SHA256_INVALID','A valid SHA-256 source fingerprint is required to verify a preuploaded Gemini file')]};
 
   const started=Date.now();
   let polls=0;
@@ -76,8 +78,8 @@ export async function verifyGeminiFileAttachment({
       if(state!=='ACTIVE')return{pass:false,status:'BLOCKED',audit:{providerFileName,statusPolls:polls,providerState:state},errors:[makeError('GEMINI_FILE_NOT_ACTIVE',`Gemini file must be ACTIVE before inference; received ${state??'UNKNOWN'}`,{providerFileName})]};
       if(!file.sha256Hash)return{pass:false,status:'BLOCKED',audit:{providerFileName,statusPolls:polls,providerState:state},errors:[makeError('GEMINI_FILE_SHA256_MISSING','Gemini Files API metadata did not include sha256Hash',{providerFileName})]};
       const providerHex=normalizeSha256ToHex(file.sha256Hash);
-      if(!providerHex)return{pass:false,status:'BLOCKED',audit:{providerFileName,statusPolls:polls,providerState:state,expectedSha256Hex:expectedHex},errors:[makeError('GEMINI_FILE_SHA256_INVALID','Gemini Files API sha256Hash was not a valid 32-byte SHA-256 value',{providerFileName})]};
-      if(providerHex!==expectedHex)return{pass:false,status:'BLOCKED',audit:{providerFileName,statusPolls:polls,providerState:state,sha256Verified:false,expectedSha256Hex:expectedHex,providerSha256Hex:providerHex},errors:[makeError('GEMINI_FILE_SHA256_MISMATCH','Preuploaded Gemini file bytes do not match the Drive-fetched source fingerprint',{providerFileName})]};
+      if(!providerHex)return{pass:false,status:'BLOCKED',audit:{providerFileName,statusPolls:polls,providerState:state,expectedSha256Hex:expectedHex},errors:[makeError('GEMINI_FILE_SHA256_INVALID','Gemini Files API sha256Hash could not be normalized to a SHA-256 hex fingerprint',{providerFileName})]};
+      if(providerHex!==expectedHex)return{pass:false,status:'BLOCKED',audit:{providerFileName,statusPolls:polls,providerState:state,sha256Verified:false,expectedSha256Hex:expectedHex,providerSha256Hex:providerHex},errors:[makeError('GEMINI_FILE_SHA256_MISMATCH','Preuploaded Gemini file bytes do not match the fetched source fingerprint',{providerFileName})]};
       return{
         pass:true,status:'VERIFIED',
         audit:{
