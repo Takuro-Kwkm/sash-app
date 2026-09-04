@@ -23,12 +23,12 @@ const makeJob=()=>createGeminiJob({
 }).job;
 const okJson=(payload)=>({ok:true,status:200,json:async()=>payload});
 
-test('v2.2 preflight blocks missing credential and never returns a secret value',()=>{
+test('v2.2 preflight blocks missing credential and never returns a secret field',()=>{
   const result=inspectGeminiLivePreflight({env:{GEMINI_MODEL:'gemini-test',GEMINI_FILE_URI:'files/APW430'},argv:[],jobModel:'gemini-test',sourceAttachment:{gemini_file_uri:'files/APW430'}});
   assert.equal(result.pass,false);
   assert.equal(result.status,'BLOCKED');
   assert.equal(result.credential.apiKeyPresent,false);
-  assert.equal(JSON.stringify(result).includes('apiKeyValue'),false);
+  assert.equal(Object.prototype.hasOwnProperty.call(result.credential,'apiKey'),false);
   assert.equal(result.errors.some((row)=>row.code==='GEMINI_API_KEY_UNAVAILABLE'),true);
 });
 
