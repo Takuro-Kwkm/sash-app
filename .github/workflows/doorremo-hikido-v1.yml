@@ -45,10 +45,10 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Install Chromium QA runtime
+      - name: Install lightweight Chromium QA runtime
         run: |
-          npm install --no-save --package-lock=false playwright@1.55.0
-          npx playwright install --with-deps chromium
+          npm install --no-save --package-lock=false playwright@npm:playwright-core@1.55.0
+          node node_modules/playwright/cli.js install chromium
       - name: Start actual sales Runtime
         run: |
           npm run start:qa > runtime-doorremo-browser.log 2>&1 &
