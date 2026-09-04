@@ -3,6 +3,7 @@ import{parseGeminiTransportJson}from'./gemini-transport.mjs';
 import{persistGeminiTransport}from'./evidence-inbox-store.mjs';
 import{buildProductMasterReviewQueue}from'./review-queue.mjs';
 import{uploadGeminiFileFromPath,redactGeminiSecrets}from'./gemini-file-upload.mjs';
+import{CANONICAL_FIELD_NAMES}from'./canonical-fields.mjs';
 
 export const GEMINI_JOB_SCHEMA_VERSION='1.0';
 export const GEMINI_JOB_EXECUTION_MODES=new Set(['MOCK','LIVE_EXTERNAL','REPLAY']);
@@ -119,10 +120,84 @@ function liveBlockReason(job,{apiKey,model,sourceFilePath}){
 }
 
 function liveParts(job){
-  const contract=[job.prompt,'','Return only one pure JSON object.',`transportType must be ${job.expectedTransportType}.`,`transportSchemaVersion must be ${job.expectedSchemaVersion}.`,`productId must be ${job.productId}.`,'Do not use Markdown code fences.'].join('\n');
+  const contract=[
+    job.prompt,'',
+    'Return exactly one object matching the response JSON schema supplied by the API request.',
+    `transportType must be ${job.expectedTransportType}.`,
+    `transportSchemaVersion must be ${job.expectedSchemaVersion}.`,
+    `productId must be ${job.productId}.`,
+    `sourceContext.type must be ${job.sourceContext?.type}.`,
+    `sourceContext.driveFileId must be ${job.sourceContext?.driveFileId}.`,
+    `sourceContext.title must be ${job.sourceContext?.title}.`,
+    job.sourceContext?.version?`sourceContext.version must be ${job.sourceContext.version}.`:null,
+    'Every candidate must use recordType=EVIDENCE_CANDIDATE, candidateSchemaVersion=1.0, sourceSystem=GEMINI_NOTEBOOKLM, producerMode=LIVE_EXTERNAL, status=SUBMITTED.',
+    'Do not rename schema fields. Do not use aliases. Do not omit required envelope or candidate fields.',
+    'Do not use Markdown code fences.'
+  ].filter(Boolean).join('\n');
   const parts=[{text:contract}];
   if(job.sourceAttachment?.geminiFileUri)parts.push({fileData:{mimeType:job.sourceAttachment.mimeType??'application/pdf',fileUri:job.sourceAttachment.geminiFileUri}});
   return parts;
+}
+
+export function buildGeminiTransportResponseJsonSchema(job){
+  const source=job.sourceContext??{};
+  const subjectFieldValues=(job.canonicalFieldScope?.length?job.canonicalFieldScope:[...CANONICAL_FIELD_NAMES]).filter((value)=>typeof value==='string'&&value.length>0);
+  const sourceProperties={
+    type:{type:'string',enum:[source.type??'OFFICIAL_PDF']},
+    driveFileId:{type:'string',enum:[source.driveFileId]},
+    title:{type:'string',enum:[source.title]}
+  };
+  const sourceRequired=['type','driveFileId','title'];
+  if(source.version){sourceProperties.version={type:'string',enum:[source.version]};sourceRequired.push('version');}
+  const candidateSourceProperties={
+    ...sourceProperties,
+    printedPage:{type:'integer',minimum:1},
+    pdfPage:{type:'integer',minimum:1},
+    locatorText:{type:'string'}
+  };
+  const issueProperties={
+    id:{type:'string'},
+    type:{type:'string',enum:['SOURCE_AMBIGUOUS','LOCATOR_UNRESOLVED','CLAIM_TOO_BROAD','SOURCE_CONFLICT','OTHER']},
+    question:{type:'string'}
+  };
+  if(subjectFieldValues.length)issueProperties.subjectField={type:'string',enum:subjectFieldValues};
+  return{
+    type:'object',
+    additionalProperties:false,
+    required:['transportSchemaVersion','transportType','batchId','generatedAt','producer','productId','sourceContext','candidates','issues'],
+    properties:{
+      transportSchemaVersion:{type:'string',enum:[job.expectedSchemaVersion]},
+      transportType:{type:'string',enum:[job.expectedTransportType]},
+      batchId:{type:'string',description:'Unique batch identifier beginning with BATCH-'},
+      generatedAt:{type:'string',format:'date-time',description:'ISO 8601 generation timestamp'},
+      producer:{type:'object',additionalProperties:false,required:['system','mode'],properties:{system:{type:'string',enum:['GEMINI_NOTEBOOKLM']},mode:{type:'string',enum:['LIVE_EXTERNAL']}}},
+      productId:{type:'string',enum:[job.productId]},
+      sourceContext:{type:'object',additionalProperties:false,required:sourceRequired,properties:sourceProperties},
+      candidates:{
+        type:'array',minItems:1,maxItems:8,
+        items:{
+          type:'object',additionalProperties:false,
+          required:['recordType','candidateSchemaVersion','id','sourceSystem','producerMode','status','productId','subjectField','claim','proposedStrength','productNodeIds','source'],
+          properties:{
+            recordType:{type:'string',enum:['EVIDENCE_CANDIDATE']},
+            candidateSchemaVersion:{type:'string',enum:['1.0']},
+            id:{type:'string',description:'Unique candidate identifier beginning with CAND-'},
+            sourceSystem:{type:'string',enum:['GEMINI_NOTEBOOKLM']},
+            producerMode:{type:'string',enum:['LIVE_EXTERNAL']},
+            status:{type:'string',enum:['SUBMITTED']},
+            productId:{type:'string',enum:[job.productId]},
+            title:{type:'string'},
+            subjectField:{type:'string',enum:subjectFieldValues},
+            claim:{type:'string'},
+            proposedStrength:{type:'string',enum:['EXPLICIT','DERIVED','SUPPORTING']},
+            productNodeIds:{type:'array',items:{type:'string'},maxItems:20},
+            source:{type:'object',additionalProperties:false,required:[...sourceRequired,'printedPage','pdfPage','locatorText'],properties:candidateSourceProperties}
+          }
+        }
+      },
+      issues:{type:'array',maxItems:8,items:{type:'object',additionalProperties:false,required:['id','type','question'],properties:issueProperties}}
+    }
+  };
 }
 
 export async function executeGeminiJob(job,{
@@ -158,7 +233,8 @@ export async function executeGeminiJob(job,{
   const timer=setTimeout(()=>controller.abort(),timeoutMs);
   try{
     const url=`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent`;
-    const response=await fetchImpl(url,{method:'POST',headers:{'content-type':'application/json','x-goog-api-key':apiKey},signal:controller.signal,body:JSON.stringify({contents:[{role:'user',parts:liveParts(working)}],generationConfig:{responseMimeType:'application/json'}})});
+    const responseJsonSchema=buildGeminiTransportResponseJsonSchema(working);
+    const response=await fetchImpl(url,{method:'POST',headers:{'content-type':'application/json','x-goog-api-key':apiKey},signal:controller.signal,body:JSON.stringify({contents:[{role:'user',parts:liveParts(working)}],generationConfig:{responseMimeType:'application/json',responseJsonSchema}})});
     const providerResponse=redactGeminiSecrets(await response.json().catch(()=>null),[apiKey]);
     if(!response.ok){
       const message=redactGeminiSecrets(providerResponse?.error?.message??`Gemini API HTTP ${response.status}`,[apiKey]);
