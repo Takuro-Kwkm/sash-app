@@ -21,7 +21,7 @@ jobs:
       - name: Run managed Size Capability Audit
         run: npm run audit:size-capability
 
-      - name: Enforce audit integrity and applied S2H / Thermos L / APW430 Change Control
+      - name: Enforce audit integrity and S2H STANDARD Human-gated proposal
         run: |
           node - <<'NODE'
           const fs=require('node:fs');
@@ -29,17 +29,32 @@ jobs:
             'summary.json','standard-size-audit.json','custom-capability-audit.json','pending.json',
             'dimension-rule-audit-thermosl.json','dimension-rule-audit-apw431.json',
             'dimension-rule-extraction-apw430.json','dimension-rule-extraction-samos2h.json',
-            'evidence-samos2h-custom.json','evidence-apw430-custom.json','source-manifest.json','gate-report.json'
+            'evidence-samos2h-custom.json','evidence-apw430-custom.json',
+            'standard-source-enumeration-samos2h.json','evidence-samos2h-standard.json',
+            'source-manifest.json','gate-report.json'
           ];
           for(const name of required)if(!fs.existsSync(`artifacts/size-capability-audit/${name}`))process.exit(1);
           const gate=JSON.parse(fs.readFileSync('artifacts/size-capability-audit/gate-report.json','utf8'));
           const summary=JSON.parse(fs.readFileSync('artifacts/size-capability-audit/summary.json','utf8'));
           const s2hExtraction=JSON.parse(fs.readFileSync('artifacts/size-capability-audit/dimension-rule-extraction-samos2h.json','utf8'));
           const apwExtraction=JSON.parse(fs.readFileSync('artifacts/size-capability-audit/dimension-rule-extraction-apw430.json','utf8'));
+          const s2hStandard=JSON.parse(fs.readFileSync('artifacts/size-capability-audit/standard-source-enumeration-samos2h.json','utf8'));
+          const s2hStandardEvidence=JSON.parse(fs.readFileSync('artifacts/size-capability-audit/evidence-samos2h-standard.json','utf8'));
+          const s2hStandardId='PMCP-LIX-SAMOS2H-STANDARD-SOURCE-CORRECTION-20260904-001';
+          const s2hStandardProposal=JSON.parse(fs.readFileSync(`data/master-change-control/proposals/${s2hStandardId}.manifest.json`,'utf8'));
 
-          if(gate.integrityGate!=='PASS'||gate.status!=='PARTIAL_PASS'||gate.blockingPending!==7)process.exit(1);
-          if(gate.proposalCount!==0||gate.proposalApprovalGate!=='NO_PROPOSAL_PENDING')process.exit(1);
-          if(summary.productMasterChangeProposals.length!==0)process.exit(1);
+          if(gate.integrityGate!=='PASS'||gate.status!=='PARTIAL_PASS'||gate.blockingPending!==6)process.exit(1);
+          if(gate.proposalCount!==1||gate.proposalApprovalGate!=='HUMAN_APPROVAL_PENDING')process.exit(1);
+          if(JSON.stringify(summary.productMasterChangeProposals)!==JSON.stringify([s2hStandardId]))process.exit(1);
+          if(s2hStandardProposal.proposalFingerprint!=='sha256:b141224a4dc0981eee4d8c82574cc8b52e5b75e8ba70b1809053e9c9c27793d8')process.exit(1);
+          if(s2hStandardProposal.status!=='PROPOSED'||s2hStandardProposal.approvalPolicy!=='HUMAN_REQUIRED'||s2hStandardProposal.approvalStatus!=='PENDING')process.exit(1);
+          if(s2hStandardProposal.formalWorkbookWritePerformed||s2hStandardProposal.runtimeWritePerformed||s2hStandardProposal.autoApprovalPerformed)process.exit(1);
+          if(s2hStandard.summary.officialRecordCount!==2309||s2hStandard.summary.MATCH!==1985||s2hStandard.summary.VALUE_MISMATCH!==312||s2hStandard.summary.MISSING_IN_MASTER!==12||s2hStandard.summary.SOURCE_INSUFFICIENT!==0)process.exit(1);
+          if(s2hStandard.enumerationMethod.wHCartesianGenerationPerformed||s2hStandard.enumerationMethod.callCodeDimensionInferencePerformed)process.exit(1);
+          if(s2hStandardEvidence.evidenceRecords.length!==3)process.exit(1);
+          if(s2hStandardEvidence.evidenceRecords[0].affectedCount!==310||s2hStandardEvidence.evidenceRecords[0].affectedSizeIdsSha256!=='sha256:a08ae7d11409cc1f123a42e5a2287dd943c4d6f1595fd072722372efeb03e4db')process.exit(1);
+          if(s2hStandardEvidence.evidenceRecords[1].records.length!==2||s2hStandardEvidence.evidenceRecords[2].projectedSizeIds.length!==12)process.exit(1);
+          if(s2hStandardEvidence.summary.projectedSelectableAfterApproval!==2140||s2hStandardEvidence.summary.projectedInactiveAfterApproval!==169)process.exit(1);
 
           const s2hId='PMCP-LIX-SAMOS2H-CUSTOM-DIMENSION-RULESET-20260903-001';
           const s2hProposal=JSON.parse(fs.readFileSync(`data/master-change-control/proposals/${s2hId}.manifest.json`,'utf8'));
@@ -79,7 +94,7 @@ jobs:
           if(apwRuntime.runtimeProjection.directManufacturerValueEditToGenericCore||apwRuntime.runtimeProjection.interpolatedPointsAdded)process.exit(1);
           NODE
 
-      - name: Enforce Runtime inventory unchanged
+      - name: Enforce Runtime inventory unchanged before S2H STANDARD Human approval
         run: |
           npm run start:qa > /tmp/sash-size-audit-runtime.log 2>&1 &
           PID=$!
@@ -113,6 +128,7 @@ jobs:
           name: size-capability-audit-v1
           path: |
             artifacts/size-capability-audit
+            data/master-change-control/proposals/PMCP-LIX-SAMOS2H-STANDARD-SOURCE-CORRECTION-20260904-001.manifest.json
             data/master-change-control/proposals/PMCP-YKK-APW430-CUSTOM-DIMENSION-RULESET-20260903-001.manifest.json
             data/master-change-control/approvals/PMCP-YKK-APW430-CUSTOM-DIMENSION-RULESET-20260903-001.approval.json
             data/master-change-control/applied/PMCP-YKK-APW430-CUSTOM-DIMENSION-RULESET-20260903-001.staging.json
