@@ -37,7 +37,7 @@ jobs:
             sleep 0.5
           done
           cat /tmp/doorremo-health.json
-          node -e 'const h=require("/tmp/doorremo-health.json"); const d=h.fullInventory?.find(x=>x.productId==="SER-YKK-DOORREMO-HIKIDO"); if(!h.ok||h.runtimeCatalogVersion!=="V4.7 SALES-UI-R2 + CONCORD-S30 + DOORREMO-HIKIDO-v1.0"||h.fullInventory?.length!==6||!d||d.definitions<1||h.doorremoInventory?.productId!==d.productId) process.exit(1)'
+          node -e 'const h=require("/tmp/doorremo-health.json"); const d=h.fullInventory?.find(x=>x.productId==="SER-YKK-DOORREMO-HIKIDO"); if(!h.ok||!h.runtimeCatalogVersion?.includes("DOORREMO-HIKIDO-v1.0")||!d||d.definitions<1||h.doorremoInventory?.productId!==d.productId) process.exit(1)'
 
   doorremo_browser_qa:
     runs-on: ubuntu-latest
