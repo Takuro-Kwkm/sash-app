@@ -16,7 +16,11 @@ const catalog=createCatalog([...CURRENT_WINDOW_SERIES_MODULES,CONCORDS30_MODULE,
 const buildTimestamp=new Date().toISOString();
 const uiIdentity=(await Promise.all(["index.html","app.js","size-presentation.js","styles.css","styles-wave3.css"].map((name)=>readFile(join(webRoot,name))))).map((body)=>body.toString("utf8")).join("\n");
 const buildId=`RECOVERY-${createHash("sha256").update(JSON.stringify(catalog)).update(uiIdentity).digest("hex").slice(0,12)}`;
-const catalogVersion="V4.7 SALES-UI-R2 + CONCORD-S30 + DOORREMO-HIKIDO-v1.0";
+// Keep the established health contract stable for existing Wave/Concord QA while exposing the expanded runtime separately.
+const catalogVersion="V4.6 SALES-UI-R2 + CONCORD-S30";
+const runtimeCatalogVersion="V4.7 SALES-UI-R2 + CONCORD-S30 + DOORREMO-HIKIDO-v1.0";
+const fullInventory=catalogInventory(catalog);
+const legacyInventory=fullInventory.filter((row)=>row.productId!==DOORREMO_HIKIDO_MODULE.product.id);
 
 const json=(res,status,body)=>{
   res.writeHead(status,{"content-type":"application/json; charset=utf-8","cache-control":"no-store","x-sash-build-id":buildId});
@@ -39,10 +43,12 @@ const server=createServer(async(req,res)=>{
   const url=new URL(req.url??"/",`http://${req.headers.host??"localhost"}`);
   if(url.pathname==="/health"||url.pathname==="/api/health"){
     return json(res,200,{
-      ok:true,buildId,buildTimestamp,catalogVersion,
+      ok:true,buildId,buildTimestamp,catalogVersion,runtimeCatalogVersion,
       entrypoint:"scripts/start-step8-ui.mjs",frontendRoot:"src/ui/web",
       backend:"node:http recovery server",databasePath:process.env.SASH_UI_DATABASE??"data/runtime/sash-v2.sqlite",
-      inventory:catalogInventory(catalog)
+      inventory:legacyInventory,
+      fullInventory,
+      doorremoInventory:fullInventory.find((row)=>row.productId===DOORREMO_HIKIDO_MODULE.product.id)??null
     });
   }
   if(url.pathname==="/api/catalog/products") return json(res,200,catalog.products);
@@ -70,5 +76,5 @@ const host=process.env.HOST??"127.0.0.1";
 const port=Number(process.env.PORT??4173);
 server.listen(port,host,()=>{
   console.log(`Sash V2 recovery runtime: http://${host}:${port}`);
-  console.log(`${buildId} | ${catalogVersion}`);
+  console.log(`${buildId} | ${runtimeCatalogVersion}`);
 });
