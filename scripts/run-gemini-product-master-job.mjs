@@ -1,6 +1,7 @@
 import fs from'node:fs';
 import path from'node:path';
 import{createGeminiJob,runGeminiProductMasterBridge}from'../src/product-master-core/gemini-execution-bridge.mjs';
+import{runVerifiedGeminiLiveJob}from'../src/product-master-core/gemini-live-verified-runner.mjs';
 
 const args=process.argv.slice(2);
 const value=(name)=>args.find((arg)=>arg.startsWith(`--${name}=`))?.slice(name.length+3)??null;
@@ -18,11 +19,14 @@ if(!created.pass){console.log(JSON.stringify({pass:false,status:'JOB_INVALID',er
 else{
   const mockResponse=mockFile?fs.readFileSync(path.resolve(mockFile),'utf8'):null;
   const replayResponse=replayFile?fs.readFileSync(path.resolve(replayFile),'utf8'):null;
-  const result=await runGeminiProductMasterBridge(created.job,{evidenceInboxDir,changeControlDir,mockResponse,replayResponse,sourceFilePath:sourceFile?path.resolve(sourceFile):null});
+  const common={evidenceInboxDir,changeControlDir,mockResponse,replayResponse,sourceFilePath:sourceFile?path.resolve(sourceFile):null};
+  const result=created.job.executionMode==='LIVE_EXTERNAL'
+    ?await runVerifiedGeminiLiveJob(created.job,{...common,argv:args})
+    :await runGeminiProductMasterBridge(created.job,common);
   fs.mkdirSync(path.resolve(auditDir),{recursive:true});
   const auditPath=path.resolve(auditDir,`${created.job.jobId}.json`);
   const audit={...result,rawResponse:undefined,providerResponse:undefined};
   fs.writeFileSync(auditPath,`${JSON.stringify(audit,null,2)}\n`,'utf8');
-  console.log(JSON.stringify({pass:result.pass,status:result.status,jobId:created.job.jobId,rawResponseSha256:result.rawResponseSha256,normalizedBatchId:result.normalizedBatchId??null,sourceAttachmentAudit:result.sourceAttachmentAudit??null,auditPath,canonicalWritePerformed:result.canonicalWritePerformed,runtimeWritePerformed:result.runtimeWritePerformed,productionWritePerformed:result.productionWritePerformed,errors:result.errors},null,2));
-  if(!result.pass)process.exitCode=1;
+  console.log(JSON.stringify({pass:result.pass,status:result.status,jobId:created.job.jobId,credentialPreflight:result.credentialPreflight??null,rawResponseSha256:result.rawResponseSha256??null,normalizedBatchId:result.normalizedBatchId??null,sourceAttachmentAudit:result.sourceAttachmentAudit??null,auditPath,canonicalWritePerformed:result.canonicalWritePerformed,runtimeWritePerformed:result.runtimeWritePerformed,productionWritePerformed:result.productionWritePerformed,errors:result.errors},null,2));
+  if(!result.pass)process.exitCode=result.status==='BLOCKED'?3:1;
 }
