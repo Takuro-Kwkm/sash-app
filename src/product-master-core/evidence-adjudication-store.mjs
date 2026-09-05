@@ -4,6 +4,7 @@ import{CANONICAL_FIELD_NAMES}from'./canonical-fields.mjs';
 import{adjudicateEvidenceCandidate}from'./evidence-adjudication.mjs';
 import{markCandidateUnderReview}from'./evidence-inbox.mjs';
 import{evidenceClaimFingerprint,loadEvidenceInboxManifest}from'./evidence-inbox-store.mjs';
+import{buildEvidenceReviewProvenance,validateEvidenceReviewProvenance}from'./evidence-review-provenance.mjs';
 import{validateEvidenceRecord}from'./evidence-schema.mjs';
 import{transitionPending}from'./pending-lifecycle.mjs';
 
@@ -93,6 +94,20 @@ function canonicalConflictReport(evidence,store,{existingCanonicalEvidence=[]}={
   return{pass:conflicts.length===0,conflicts,fingerprint};
 }
 
+function reviewProvenanceFor(loaded,candidate,currentState=null){
+  const built=buildEvidenceReviewProvenance({batch:loaded.batch,candidate});
+  if(!built.pass)return built;
+  if(currentState?.reviewProvenance){
+    const existing=validateEvidenceReviewProvenance(currentState.reviewProvenance,{batch:loaded.batch,candidate});
+    if(!existing.pass)return{pass:false,record:null,errors:existing.errors};
+    const keys=['status','governed','batchId','candidateId','candidateFingerprint','batchRawSha256','executionChannel','executionReference'];
+    for(const key of keys){
+      if((currentState.reviewProvenance[key]??null)!==(built.record[key]??null))return{pass:false,record:null,errors:[error('REVIEW_PROVENANCE_STATE_DRIFT',`Persisted review provenance ${key} no longer matches Inbox provenance`,{field:key,expected:built.record[key]??null,actual:currentState.reviewProvenance[key]??null})]};
+    }
+  }
+  return built;
+}
+
 export function persistCandidateUnderReview({
   rootDir=path.resolve('data/evidence-inbox'),batchId,candidateId,
   at=new Date().toISOString(),by='CHATGPT'
@@ -103,13 +118,15 @@ export function persistCandidateUnderReview({
   try{store=loadEvidenceAdjudicationStore(rootDir);}catch(err){return{pass:false,status:'REVIEW_TRANSITION_REJECTED',errors:[error('ADJUDICATION_STORE_INVALID',err.message)]};}
   const currentState=candidateStateFor(store,batchId,candidateId);
   const candidate=effectiveCandidate(loaded.candidate,currentState);
+  const provenance=reviewProvenanceFor(loaded,candidate,currentState);
+  if(!provenance.pass)return{pass:false,status:'REVIEW_PROVENANCE_BLOCKED',errors:provenance.errors};
   let reviewed;
   try{reviewed=markCandidateUnderReview(candidate,{at,by});}catch(err){return{pass:false,status:'REVIEW_TRANSITION_REJECTED',errors:[error('CANDIDATE_REVIEW_TRANSITION_INVALID',err.message,{batchId,candidateId})]};}
   const history=[...(currentState?.history??[]),{from:candidate.status,to:'UNDER_REVIEW',at,by}];
-  const nextState={batchId,candidateId,status:'UNDER_REVIEW',review:reviewed.review,history};
+  const nextState={batchId,candidateId,status:'UNDER_REVIEW',review:reviewed.review,reviewProvenance:provenance.record,history};
   const nextStore=upsertCandidateState({...store,updatedAt:at},nextState);
   const storePath=saveStore(rootDir,nextStore);
-  return{pass:true,status:'CANDIDATE_UNDER_REVIEW',batchId,candidateId,candidateStatus:'UNDER_REVIEW',storePath,canonicalWritePerformed:false,errors:[]};
+  return{pass:true,status:'CANDIDATE_UNDER_REVIEW',batchId,candidateId,candidateStatus:'UNDER_REVIEW',reviewProvenance:provenance.record,storePath,canonicalWritePerformed:false,errors:[]};
 }
 
 export function adjudicatePersistedCandidate({
@@ -125,9 +142,11 @@ export function adjudicatePersistedCandidate({
   try{store=loadEvidenceAdjudicationStore(rootDir);}catch(err){return{pass:false,status:'ADJUDICATION_REJECTED',errors:[error('ADJUDICATION_STORE_INVALID',err.message)]};}
   const currentState=candidateStateFor(store,batchId,candidateId);
   const candidate=effectiveCandidate(loaded.candidate,currentState);
+  const provenance=reviewProvenanceFor(loaded,candidate,currentState);
+  if(!provenance.pass)return{pass:false,status:'ADJUDICATION_PROVENANCE_BLOCKED',errors:provenance.errors};
   let outcome;
   try{
-    outcome=adjudicateEvidenceCandidate(candidate,decision,{adjudicatorType,adjudicatedBy,reason,canonicalEvidenceId,pendingId,pendingSeverity,pendingQuestion,at});
+    outcome=adjudicateEvidenceCandidate(candidate,decision,{adjudicatorType,adjudicatedBy,reason,canonicalEvidenceId,pendingId,pendingSeverity,pendingQuestion,reviewProvenance:provenance.record,at});
   }catch(err){return{pass:false,status:'ADJUDICATION_REJECTED',errors:[error('ADJUDICATION_DECISION_INVALID',err.message,{batchId,candidateId,decision})]};}
 
   if(outcome.evidence){
@@ -142,7 +161,7 @@ export function adjudicatePersistedCandidate({
   if(store.adjudications.some((row)=>row.id===outcome.audit.id))return{pass:false,status:'ADJUDICATION_REJECTED',errors:[error('ADJUDICATION_ID_CONFLICT',`Adjudication id already exists: ${outcome.audit.id}`,{adjudicationId:outcome.audit.id})]};
 
   const history=[...(currentState?.history??[]),{from:candidate.status,to:'ADJUDICATED',at,by:adjudicatedBy,decision}];
-  const nextCandidateState={batchId,candidateId,status:'ADJUDICATED',adjudicationId:outcome.audit.id,history};
+  const nextCandidateState={batchId,candidateId,status:'ADJUDICATED',adjudicationId:outcome.audit.id,reviewProvenance:provenance.record,history};
   let nextStore=upsertCandidateState(store,nextCandidateState);
   nextStore={
     ...nextStore,
@@ -157,6 +176,7 @@ export function adjudicatePersistedCandidate({
     status:decision==='ACCEPT'?'CANONICAL_EVIDENCE_PROMOTED':decision==='PENDING'?'PENDING_LINKED':'CANDIDATE_REJECTED_WITH_AUDIT',
     batchId,candidateId,decision,candidateStatus:'ADJUDICATED',
     adjudicationId:outcome.audit.id,
+    reviewProvenance:provenance.record,
     canonicalEvidence:outcome.evidence??null,
     pending:outcome.pending??null,
     storePath,
