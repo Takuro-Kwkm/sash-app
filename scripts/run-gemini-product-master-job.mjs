@@ -1,3 +1,4 @@
+import crypto from'node:crypto';
 import fs from'node:fs';
 import path from'node:path';
 import{createGeminiJob,runGeminiProductMasterBridge}from'../src/product-master-core/gemini-execution-bridge.mjs';
@@ -7,11 +8,14 @@ import{validateSourceAcquisitionRecord}from'../src/product-master-core/source-ac
 import{persistSourceAcquisitionForBatch}from'../src/product-master-core/source-acquisition-store.mjs';
 import{buildGeminiApiAttachmentDelivery,validateSourceDeliveryRecord}from'../src/product-master-core/source-delivery-contract.mjs';
 import{persistSourceDeliveryForBatch}from'../src/product-master-core/source-delivery-store.mjs';
+import{buildApiGeminiExecutionAudit,validateGeminiExecutionAudit}from'../src/product-master-core/gemini-execution-contract.mjs';
+import{persistGeminiExecutionForBatch}from'../src/product-master-core/gemini-execution-store.mjs';
 import{buildProductMasterReviewQueue}from'../src/product-master-core/review-queue.mjs';
 
 const args=process.argv.slice(2);
 const value=(name)=>args.find((arg)=>arg.startsWith(`--${name}=`))?.slice(name.length+3)??null;
 const boolValue=(name)=>{const raw=value(name);if(raw===null)return undefined;if(raw==='true')return true;if(raw==='false')return false;throw new Error(`--${name} must be true or false`);};
+const sha256Text=(value)=>crypto.createHash('sha256').update(String(value??'')).digest('hex');
 const jobFile=value('job');
 const profileFile=value('profile');
 const executionMode=value('execution-mode');
@@ -28,6 +32,7 @@ const externalFile=value('external-response');
 const sourceFile=value('source-file')??process.env.GEMINI_SOURCE_FILE??null;
 const sourceAcquisitionAuditFile=value('source-acquisition-audit');
 const sourceDeliveryAuditFile=value('source-delivery-audit');
+const geminiExecutionAuditFile=value('gemini-execution-audit');
 const evidenceInboxDir=value('evidence-inbox')??'data/evidence-inbox';
 const changeControlDir=value('change-control')??'data/master-change-control';
 const auditDir=value('audit-dir')??'artifacts/gemini-bridge/jobs';
@@ -67,10 +72,11 @@ if(profileFile){
   }
 }else input=JSON.parse(fs.readFileSync(path.resolve(jobFile),'utf8'));
 
-function writeBlockedAudit({job,profile,sourceAcquisitionContext,sourceAcquisitionValidation,sourceDeliveryContext,sourceDeliveryValidation,errors}){
+function writeBlockedAudit({job,profile,sourceAcquisitionContext,sourceAcquisitionValidation,sourceDeliveryContext,sourceDeliveryValidation,geminiExecutionContext,geminiExecutionValidation,errors}){
   const blocked={
     pass:false,status:'BLOCKED',job,profile,
     sourceAcquisitionContext,sourceAcquisitionValidation,sourceDeliveryContext,sourceDeliveryValidation,
+    geminiExecutionContext,geminiExecutionValidation,
     canonicalWritePerformed:false,runtimeWritePerformed:false,productionWritePerformed:false,errors
   };
   fs.mkdirSync(path.resolve(auditDir),{recursive:true});
@@ -87,12 +93,14 @@ if(input){
     let sourceAcquisitionValidation=null;
     let sourceDeliveryContext=null;
     let sourceDeliveryValidation=null;
+    let geminiExecutionContext=null;
+    let geminiExecutionValidation=null;
     if(sourceAcquisitionAuditFile){
       sourceAcquisitionContext=JSON.parse(fs.readFileSync(path.resolve(sourceAcquisitionAuditFile),'utf8'));
       sourceAcquisitionValidation=validateSourceAcquisitionRecord(sourceAcquisitionContext,{job:created.job});
       if(!sourceAcquisitionValidation.pass){
-        const auditPath=writeBlockedAudit({job:created.job,profile:profileAudit,sourceAcquisitionContext,sourceAcquisitionValidation,sourceDeliveryContext:null,sourceDeliveryValidation:null,errors:sourceAcquisitionValidation.errors});
-        console.log(JSON.stringify({pass:false,status:'BLOCKED',jobId:created.job.jobId,sourceAcquisitionGate:'BLOCKED',sourceDeliveryGate:'NOT_OPENED',auditPath,errors:sourceAcquisitionValidation.errors},null,2));
+        const auditPath=writeBlockedAudit({job:created.job,profile:profileAudit,sourceAcquisitionContext,sourceAcquisitionValidation,sourceDeliveryContext:null,sourceDeliveryValidation:null,geminiExecutionContext:null,geminiExecutionValidation:null,errors:sourceAcquisitionValidation.errors});
+        console.log(JSON.stringify({pass:false,status:'BLOCKED',jobId:created.job.jobId,sourceAcquisitionGate:'BLOCKED',sourceDeliveryGate:'NOT_OPENED',geminiExecutionGate:'NOT_OPENED',auditPath,errors:sourceAcquisitionValidation.errors},null,2));
         process.exitCode=3;
       }
     }
@@ -100,27 +108,48 @@ if(input){
       sourceDeliveryContext=JSON.parse(fs.readFileSync(path.resolve(sourceDeliveryAuditFile),'utf8'));
       sourceDeliveryValidation=validateSourceDeliveryRecord(sourceDeliveryContext,{job:created.job,sourceAcquisition:sourceAcquisitionContext});
       if(!sourceDeliveryValidation.pass){
-        const auditPath=writeBlockedAudit({job:created.job,profile:profileAudit,sourceAcquisitionContext,sourceAcquisitionValidation,sourceDeliveryContext,sourceDeliveryValidation,errors:sourceDeliveryValidation.errors});
-        console.log(JSON.stringify({pass:false,status:'BLOCKED',jobId:created.job.jobId,sourceAcquisitionGate:sourceAcquisitionContext?'PASS':'NOT_SUPPLIED',sourceDeliveryGate:'BLOCKED',auditPath,errors:sourceDeliveryValidation.errors},null,2));
+        const auditPath=writeBlockedAudit({job:created.job,profile:profileAudit,sourceAcquisitionContext,sourceAcquisitionValidation,sourceDeliveryContext,sourceDeliveryValidation,geminiExecutionContext:null,geminiExecutionValidation:null,errors:sourceDeliveryValidation.errors});
+        console.log(JSON.stringify({pass:false,status:'BLOCKED',jobId:created.job.jobId,sourceAcquisitionGate:sourceAcquisitionContext?'PASS':'NOT_SUPPLIED',sourceDeliveryGate:'BLOCKED',geminiExecutionGate:'NOT_OPENED',auditPath,errors:sourceDeliveryValidation.errors},null,2));
         process.exitCode=3;
       }
     }
     if((process.exitCode===undefined||process.exitCode===0)&&created.job.workerContractVersion==='1.1'&&created.job.executionMode==='LIVE_EXTERNAL'&&created.job.executionChannel==='GEMINI_AI_PRO'&&sourceAcquisitionContext&&!sourceDeliveryContext){
       const errors=[{code:'SOURCE_DELIVERY_AUDIT_REQUIRED',message:'GEMINI_AI_PRO LIVE job with Source Acquisition requires a validated source delivery audit before Worker execution'}];
-      const auditPath=writeBlockedAudit({job:created.job,profile:profileAudit,sourceAcquisitionContext,sourceAcquisitionValidation,sourceDeliveryContext:null,sourceDeliveryValidation:null,errors});
-      console.log(JSON.stringify({pass:false,status:'BLOCKED',jobId:created.job.jobId,sourceAcquisitionGate:'PASS',sourceDeliveryGate:'BLOCKED',auditPath,errors},null,2));
+      const auditPath=writeBlockedAudit({job:created.job,profile:profileAudit,sourceAcquisitionContext,sourceAcquisitionValidation,sourceDeliveryContext:null,sourceDeliveryValidation:null,geminiExecutionContext:null,geminiExecutionValidation:null,errors});
+      console.log(JSON.stringify({pass:false,status:'BLOCKED',jobId:created.job.jobId,sourceAcquisitionGate:'PASS',sourceDeliveryGate:'BLOCKED',geminiExecutionGate:'NOT_OPENED',auditPath,errors},null,2));
+      process.exitCode=3;
+    }
+
+    const mockResponse=mockFile?fs.readFileSync(path.resolve(mockFile),'utf8'):null;
+    const replayResponse=replayFile?fs.readFileSync(path.resolve(replayFile),'utf8'):null;
+    const externalResponse=externalFile?fs.readFileSync(path.resolve(externalFile),'utf8'):null;
+    const aiProLegacyHandoff=created.job.executionMode==='LIVE_EXTERNAL'&&created.job.executionChannel==='GEMINI_AI_PRO'?replayResponse:null;
+    const governedExternalResponse=externalResponse??aiProLegacyHandoff;
+
+    if((process.exitCode===undefined||process.exitCode===0)&&geminiExecutionAuditFile){
+      geminiExecutionContext=JSON.parse(fs.readFileSync(path.resolve(geminiExecutionAuditFile),'utf8'));
+      geminiExecutionValidation=validateGeminiExecutionAudit(geminiExecutionContext,{
+        job:created.job,sourceAcquisition:sourceAcquisitionContext,sourceDelivery:sourceDeliveryContext,
+        rawResponseSha256:governedExternalResponse?sha256Text(governedExternalResponse):null
+      });
+      if(!geminiExecutionValidation.pass){
+        const auditPath=writeBlockedAudit({job:created.job,profile:profileAudit,sourceAcquisitionContext,sourceAcquisitionValidation,sourceDeliveryContext,sourceDeliveryValidation,geminiExecutionContext,geminiExecutionValidation,errors:geminiExecutionValidation.errors});
+        console.log(JSON.stringify({pass:false,status:'BLOCKED',jobId:created.job.jobId,sourceAcquisitionGate:sourceAcquisitionContext?'PASS':'NOT_SUPPLIED',sourceDeliveryGate:sourceDeliveryContext?'PASS':'NOT_SUPPLIED',geminiExecutionGate:'BLOCKED',auditPath,errors:geminiExecutionValidation.errors},null,2));
+        process.exitCode=3;
+      }
+    }
+    if((process.exitCode===undefined||process.exitCode===0)&&created.job.workerContractVersion==='1.1'&&created.job.executionMode==='LIVE_EXTERNAL'&&created.job.executionChannel==='GEMINI_AI_PRO'&&sourceDeliveryContext&&!geminiExecutionContext){
+      const errors=[{code:'GEMINI_EXECUTION_AUDIT_REQUIRED',message:'GEMINI_AI_PRO LIVE handoff with Source Delivery requires a normalized Gemini execution audit before Transport import'}];
+      const auditPath=writeBlockedAudit({job:created.job,profile:profileAudit,sourceAcquisitionContext,sourceAcquisitionValidation,sourceDeliveryContext,sourceDeliveryValidation,geminiExecutionContext:null,geminiExecutionValidation:null,errors});
+      console.log(JSON.stringify({pass:false,status:'BLOCKED',jobId:created.job.jobId,sourceAcquisitionGate:sourceAcquisitionContext?'PASS':'NOT_SUPPLIED',sourceDeliveryGate:'PASS',geminiExecutionGate:'BLOCKED',auditPath,errors},null,2));
       process.exitCode=3;
     }
 
     if(process.exitCode===undefined||process.exitCode===0){
-      const mockResponse=mockFile?fs.readFileSync(path.resolve(mockFile),'utf8'):null;
-      const replayResponse=replayFile?fs.readFileSync(path.resolve(replayFile),'utf8'):null;
-      const externalResponse=externalFile?fs.readFileSync(path.resolve(externalFile),'utf8'):null;
-      const aiProLegacyHandoff=created.job.executionMode==='LIVE_EXTERNAL'&&created.job.executionChannel==='GEMINI_AI_PRO'?replayResponse:null;
       const common={
         evidenceInboxDir,changeControlDir,mockResponse,
         replayResponse:created.job.executionMode==='REPLAY'?replayResponse:null,
-        externalResponse:externalResponse??aiProLegacyHandoff,
+        externalResponse:governedExternalResponse,
         sourceFilePath:sourceFile?path.resolve(sourceFile):null
       };
       let result=created.job.executionMode==='LIVE_EXTERNAL'&&created.job.executionChannel==='GEMINI_API'
@@ -139,8 +168,22 @@ if(input){
         else sourceDeliveryContext=builtDelivery.record;
       }
 
+      if(result.pass&&sourceAcquisitionContext&&sourceDeliveryContext&&created.job.executionChannel==='GEMINI_API'&&!geminiExecutionContext){
+        const builtExecution=buildApiGeminiExecutionAudit({job:result.job??created.job,sourceAcquisition:sourceAcquisitionContext,sourceDelivery:sourceDeliveryContext,result});
+        geminiExecutionValidation={pass:builtExecution.pass,errors:builtExecution.errors};
+        if(!builtExecution.pass)result={...result,pass:false,status:'BLOCKED',errors:builtExecution.errors};
+        else geminiExecutionContext=builtExecution.record;
+      }
+      if(result.pass&&geminiExecutionContext){
+        geminiExecutionValidation=validateGeminiExecutionAudit(geminiExecutionContext,{
+          job:result.job??created.job,sourceAcquisition:sourceAcquisitionContext,sourceDelivery:sourceDeliveryContext,rawResponseSha256:result.rawResponseSha256??null
+        });
+        if(!geminiExecutionValidation.pass)result={...result,pass:false,status:'BLOCKED',errors:geminiExecutionValidation.errors};
+      }
+
       let sourceAcquisitionPersistence=null;
       let sourceDeliveryPersistence=null;
+      let geminiExecutionPersistence=null;
       if(result.pass&&sourceAcquisitionContext&&result.normalizedBatchId){
         sourceAcquisitionPersistence=persistSourceAcquisitionForBatch({
           evidenceInboxDir,batchId:result.normalizedBatchId,record:sourceAcquisitionContext,job:result.job
@@ -153,15 +196,38 @@ if(input){
         });
         if(!sourceDeliveryPersistence.pass)result={...result,pass:false,status:'BLOCKED',sourceDeliveryPersistence,errors:sourceDeliveryPersistence.errors};
       }
-      if(result.pass&&(sourceAcquisitionPersistence?.pass||sourceDeliveryPersistence?.pass)){
-        result.executionContext={...(result.executionContext??{}),...(sourceAcquisitionContext?{sourceAcquisition:sourceAcquisitionContext}:{}),...(sourceDeliveryContext?{sourceDelivery:sourceDeliveryContext}:{})};
-        if(result.inboxImport?.batch?.executionContext)result.inboxImport.batch.executionContext={...result.inboxImport.batch.executionContext,...(sourceAcquisitionContext?{sourceAcquisition:sourceAcquisitionContext}:{}),...(sourceDeliveryContext?{sourceDelivery:sourceDeliveryContext}:{})};
+      if(result.pass&&geminiExecutionContext&&result.normalizedBatchId){
+        geminiExecutionPersistence=persistGeminiExecutionForBatch({
+          evidenceInboxDir,batchId:result.normalizedBatchId,record:geminiExecutionContext,job:result.job,
+          sourceAcquisition:sourceAcquisitionContext,sourceDelivery:sourceDeliveryContext,rawResponseSha256:result.rawResponseSha256
+        });
+        if(!geminiExecutionPersistence.pass)result={...result,pass:false,status:'BLOCKED',geminiExecutionPersistence,errors:geminiExecutionPersistence.errors};
+      }
+      if(result.pass&&(sourceAcquisitionPersistence?.pass||sourceDeliveryPersistence?.pass||geminiExecutionPersistence?.pass)){
+        result.executionContext={
+          ...(result.executionContext??{}),
+          ...(sourceAcquisitionContext?{sourceAcquisition:sourceAcquisitionContext}:{}),
+          ...(sourceDeliveryContext?{sourceDelivery:sourceDeliveryContext}:{}),
+          ...(geminiExecutionContext?{geminiExecution:geminiExecutionContext}:{})
+        };
+        if(result.inboxImport?.batch?.executionContext)result.inboxImport.batch.executionContext={
+          ...result.inboxImport.batch.executionContext,
+          ...(sourceAcquisitionContext?{sourceAcquisition:sourceAcquisitionContext}:{}),
+          ...(sourceDeliveryContext?{sourceDelivery:sourceDeliveryContext}:{}),
+          ...(geminiExecutionContext?{geminiExecution:geminiExecutionContext}:{})
+        };
         result.reviewQueue=buildProductMasterReviewQueue({evidenceInboxDir,changeControlDir,productId:result.job.productId});
       }
 
       fs.mkdirSync(path.resolve(auditDir),{recursive:true});
       const auditPath=path.resolve(auditDir,`${created.job.jobId}.json`);
-      const audit={...result,profile:profileAudit,sourceAcquisitionContext,sourceAcquisitionValidation,sourceAcquisitionPersistence,sourceDeliveryContext,sourceDeliveryValidation,sourceDeliveryPersistence,rawResponse:undefined,providerResponse:undefined};
+      const audit={
+        ...result,profile:profileAudit,
+        sourceAcquisitionContext,sourceAcquisitionValidation,sourceAcquisitionPersistence,
+        sourceDeliveryContext,sourceDeliveryValidation,sourceDeliveryPersistence,
+        geminiExecutionContext,geminiExecutionValidation,geminiExecutionPersistence,
+        rawResponse:undefined,providerResponse:undefined
+      };
       fs.writeFileSync(auditPath,`${JSON.stringify(audit,null,2)}\n`,'utf8');
       console.log(JSON.stringify({
         pass:result.pass,status:result.status,jobId:created.job.jobId,profile:profileAudit,
@@ -174,6 +240,9 @@ if(input){
         sourceIdentityMode:sourceAcquisitionContext?.identity?.mode??null,
         sourceDeliveryGate:sourceDeliveryContext?(sourceDeliveryPersistence?.pass?'PASS':result.pass?'PASS':'BLOCKED'):'NOT_SUPPLIED',
         sourceDeliveryMethod:sourceDeliveryContext?.delivery?.method??null,
+        geminiExecutionGate:geminiExecutionContext?(geminiExecutionPersistence?.pass?'PASS':result.pass?'PASS':'BLOCKED'):'NOT_SUPPLIED',
+        geminiExecutionSurface:geminiExecutionContext?.surface?.id??null,
+        model:geminiExecutionContext?.surface?.model??result.job?.model??created.job.model??null,
         credentialPreflight:result.credentialPreflight??null,rawResponseSha256:result.rawResponseSha256??null,
         normalizedBatchId:result.normalizedBatchId??null,sourceAttachmentAudit:result.sourceAttachmentAudit??null,
         auditPath,canonicalWritePerformed:result.canonicalWritePerformed,runtimeWritePerformed:result.runtimeWritePerformed,
