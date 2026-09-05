@@ -20,7 +20,7 @@ jobs:
     env:
       PATH: /Users/takuro/.local/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin
     steps:
-      - name: Verify runner and Antigravity CLI
+      - name: Verify runner, Antigravity CLI, and user keychain visibility
         shell: bash
         run: |
           set -euo pipefail
@@ -28,18 +28,19 @@ jobs:
           echo "runner_user=$(id -un)"
           echo "runner_uid=$(id -u)"
           echo "home=${HOME}"
-          echo "python_home=$(python3 - <<'PY'
-          from pathlib import Path
-          print(Path.home())
-          PY
-          )"
           command -v agy
           agy --version
+          echo '--- user keychain visibility (paths only; no item contents) ---'
+          security default-keychain -d user || true
+          security list-keychains -d user || true
+          if security show-keychain-info "$HOME/Library/Keychains/login.keychain-db" >/dev/null 2>&1; then
+            echo 'login_keychain_access=AVAILABLE'
+          else
+            echo 'login_keychain_access=UNAVAILABLE_OR_LOCKED'
+          fi
           echo "gemini_dir_exists=$(test -d \"$HOME/.gemini\" && echo yes || echo no)"
           echo "antigravity_cli_dir_exists=$(test -d \"$HOME/.gemini/antigravity-cli\" && echo yes || echo no)"
           echo "settings_exists=$(test -f \"$HOME/.gemini/antigravity-cli/settings.json\" && echo yes || echo no)"
-          echo '--- agy help (non-sensitive) ---'
-          agy --help | head -n 120
 
       - name: Verify headless Google AI Pro session
         shell: bash
