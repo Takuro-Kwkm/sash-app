@@ -1,7 +1,15 @@
+import{
+  WORKER_EXECUTION_CONTRACT_VERSION,
+  DEFAULT_PREFERRED_EXECUTION_CHANNEL,
+  DEFAULT_FALLBACK_EXECUTION_CHANNEL,
+  normalizeWorkerExecutionContract
+}from'./worker-execution-contract.mjs';
+
 const isObject=(value)=>Boolean(value)&&typeof value==='object'&&!Array.isArray(value);
 const clone=(value)=>structuredClone(value);
 
-export const PRODUCT_MASTER_PROFILE_SCHEMA_VERSION='1.0';
+export const PRODUCT_MASTER_PROFILE_SCHEMA_VERSION='1.1';
+export const PRODUCT_MASTER_PROFILE_SCHEMA_VERSIONS=new Set(['1.0','1.1']);
 export const PRODUCT_MASTER_PROFILE_RECORD_TYPE='PRODUCT_MASTER_PROFILE';
 
 const FORBIDDEN_STORAGE_KEYS=new Set([
@@ -25,10 +33,16 @@ function forbiddenStorageKeys(value,path='profile',found=[]){
   return found;
 }
 
+function validateV11ProfileExtensions(profile,errors){
+  if(!nonBlank(profile.schemaAdapter))errors.push(error('PROFILE_SCHEMA_ADAPTER_MISSING','schemaAdapter is required for profileSchemaVersion 1.1'));
+  if(!isObject(profile.runtimePartitionPolicy))errors.push(error('PROFILE_RUNTIME_PARTITION_POLICY_INVALID','runtimePartitionPolicy must be an object for profileSchemaVersion 1.1'));
+  if(!Array.isArray(profile.dependencyHooks)||!profile.dependencyHooks.every(nonBlank))errors.push(error('PROFILE_DEPENDENCY_HOOKS_INVALID','dependencyHooks must be an array of non-empty hook identifiers for profileSchemaVersion 1.1'));
+}
+
 export function validateProductProfile(input={}){
   const profile=clone(input);
   const errors=[];
-  if(profile.profileSchemaVersion!==PRODUCT_MASTER_PROFILE_SCHEMA_VERSION)errors.push(error('PROFILE_SCHEMA_VERSION_INVALID',`profileSchemaVersion must be ${PRODUCT_MASTER_PROFILE_SCHEMA_VERSION}`));
+  if(!PRODUCT_MASTER_PROFILE_SCHEMA_VERSIONS.has(profile.profileSchemaVersion))errors.push(error('PROFILE_SCHEMA_VERSION_INVALID',`profileSchemaVersion must be one of ${[...PRODUCT_MASTER_PROFILE_SCHEMA_VERSIONS].join(', ')}`));
   if(profile.recordType!==PRODUCT_MASTER_PROFILE_RECORD_TYPE)errors.push(error('PROFILE_RECORD_TYPE_INVALID',`recordType must be ${PRODUCT_MASTER_PROFILE_RECORD_TYPE}`));
   for(const key of['manufacturer','series','registrySeriesKey','productId'])if(!nonBlank(profile[key]))errors.push(error('PROFILE_IDENTITY_MISSING',`${key} is required`,{field:key}));
 
@@ -51,6 +65,7 @@ export function validateProductProfile(input={}){
     if(!Array.isArray(profile.extraction.canonicalFieldScope)||!profile.extraction.canonicalFieldScope.length||!profile.extraction.canonicalFieldScope.every(nonBlank))errors.push(error('PROFILE_CANONICAL_FIELD_SCOPE_INVALID','extraction.canonicalFieldScope must be a non-empty string array'));
   }
 
+  if(profile.profileSchemaVersion==='1.1')validateV11ProfileExtensions(profile,errors);
   return{pass:errors.length===0,profile:errors.length?null:profile,errors};
 }
 
@@ -60,6 +75,20 @@ export function buildGeminiJobInputFromProductProfile(input={},overrides={}){
   const profile=validated.profile;
   const source=profile.source;
   const extraction=profile.extraction;
+  const executionMode=overrides.execution_mode??overrides.executionMode??'LIVE_EXTERNAL';
+  const preferredExecutionChannel=overrides.preferred_execution_channel??overrides.preferredExecutionChannel??DEFAULT_PREFERRED_EXECUTION_CHANNEL;
+  const executionChannel=overrides.execution_channel??overrides.executionChannel??(executionMode==='LIVE_EXTERNAL'?preferredExecutionChannel:null);
+  const worker=normalizeWorkerExecutionContract({
+    execution_mode:executionMode,
+    execution_channel:executionChannel,
+    preferred_execution_channel:preferredExecutionChannel,
+    fallback_execution_channel:overrides.fallback_execution_channel??overrides.fallbackExecutionChannel??DEFAULT_FALLBACK_EXECUTION_CHANNEL,
+    fallback_allowed:overrides.fallback_allowed??overrides.fallbackAllowed??false,
+    transport_method:overrides.transport_method??overrides.transportMethod,
+    execution_reference:overrides.execution_reference??overrides.executionReference
+  },{requireLiveChannel:true});
+  if(!worker.pass)return{pass:false,jobInput:null,errors:worker.errors};
+  const contract=worker.contract;
   const jobInput={
     job_id:overrides.job_id??overrides.jobId,
     job_type:overrides.job_type??overrides.jobType??extraction.jobType??'EVIDENCE_EXTRACTION',
@@ -77,12 +106,22 @@ export function buildGeminiJobInputFromProductProfile(input={},overrides={}){
     source_attachment:{mime_type:'application/pdf',source_sha256:source.authoritativeSha256},
     expected_transport_type:'EVIDENCE_CANDIDATE_BATCH',
     expected_schema_version:'1.0',
-    execution_mode:overrides.execution_mode??overrides.executionMode??'LIVE_EXTERNAL',
+    worker_contract_version:WORKER_EXECUTION_CONTRACT_VERSION,
+    execution_mode:executionMode,
+    execution_channel:contract.executionChannel,
+    preferred_execution_channel:contract.preferredExecutionChannel,
+    fallback_execution_channel:contract.fallbackExecutionChannel,
+    fallback_allowed:contract.fallbackAllowed,
+    transport_method:contract.transportMethod,
+    execution_reference:contract.executionReference,
     model:overrides.model??profile.modelDefault??null,
     requested_by:overrides.requested_by??overrides.requestedBy??'CHATGPT',
     metadata:{
       profileSchemaVersion:profile.profileSchemaVersion,
       registrySeriesKey:profile.registrySeriesKey,
+      schemaAdapter:profile.schemaAdapter??null,
+      runtimePartitionPolicy:clone(profile.runtimePartitionPolicy??null),
+      dependencyHooks:clone(profile.dependencyHooks??[]),
       sourcePageCount:source.pageCount,
       officialDetailUrl:source.officialDetailUrl,
       officialDownloadUrl:source.officialDownloadUrl,
