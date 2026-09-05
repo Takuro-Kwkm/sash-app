@@ -1,4 +1,4 @@
-name: Antigravity LaunchAgent GUI Session Diagnostic
+name: Antigravity LaunchAgent Security Session Diagnostic
 
 on:
   push:
@@ -12,42 +12,24 @@ concurrency:
 
 jobs:
   diagnostic:
-    name: Verify Antigravity through launchctl asuser
+    name: Inspect runner launchd security session
     runs-on: [self-hosted, macOS, ARM64, gemini-worker]
     timeout-minutes: 5
     env:
       PATH: /Users/takuro/.local/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin
       HOME: /Users/takuro
     steps:
-      - name: Verify service runner context
+      - name: Inspect launchd plist security-session keys
         shell: bash
         run: |
           set -euo pipefail
-          echo "runner_name=${RUNNER_NAME}"
-          echo "runner_user=$(id -un)"
-          echo "home=${HOME}"
-          echo "uid=$(id -u)"
-          command -v agy
-          agy --version
-
-      - name: Verify Antigravity in GUI login bootstrap
-        shell: bash
-        run: |
-          set -euo pipefail
-          UID_VALUE="$(id -u)"
-          /bin/launchctl asuser "$UID_VALUE" /usr/bin/env \
-            HOME="$HOME" \
-            PATH="$PATH" \
-            /Users/takuro/.local/bin/agy \
-            -p "Return exactly: ANTIGRAVITY_ASUSER_OK" \
-            --output-format json \
-            | tee antigravity-asuser-smoke.json
-          python3 - <<'PY'
-          import json
-          from pathlib import Path
-
-          payload = json.loads(Path('antigravity-asuser-smoke.json').read_text())
-          assert payload.get('status') == 'SUCCESS', payload
-          assert payload.get('response', '').strip() == 'ANTIGRAVITY_ASUSER_OK', payload
-          print('ANTIGRAVITY_ASUSER_GATE=PASS')
-          PY
+          PLIST="$HOME/Library/LaunchAgents/actions.runner.Takuro-Kwkm-sash-app.sash-gemini-worker-mac.plist"
+          test -f "$PLIST"
+          echo "plist_present=PASS"
+          for KEY in SessionCreate ProcessType LimitLoadToSessionType RunAtLoad; do
+            if VALUE="$(/usr/libexec/PlistBuddy -c "Print :$KEY" "$PLIST" 2>/dev/null)"; then
+              echo "$KEY=$VALUE"
+            else
+              echo "$KEY=ABSENT"
+            fi
+          done
