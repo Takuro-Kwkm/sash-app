@@ -57,6 +57,30 @@ test('v2.7 both LIVE worker surfaces use the shared Source Acquisition contract'
   }
 });
 
+test('v2.7 AI Pro validates scoped Source Delivery before Worker execution',()=>{
+  const text=read(aiProPath);
+  const deliveryPos=text.indexOf('Validate Source Delivery contract before AI Pro execution');
+  const workerPos=text.indexOf('Run Gemini Worker through tool-less inline-evidence Antigravity headless mode');
+  assert.ok(deliveryPos>=0);
+  assert.ok(workerPos>deliveryPos);
+  assert.ok(text.includes('node scripts/build-product-master-source-delivery.mjs'));
+  assert.ok(text.includes('--source-delivery-audit="$ARTIFACT_DIR/source-delivery-audit.json"'));
+  assert.ok(text.includes("assert delivery.get('recordType')=='PRODUCT_MASTER_SOURCE_DELIVERY'"));
+  assert.ok(text.includes("assert delivery.get('executionChannel')=='GEMINI_AI_PRO'"));
+  assert.ok(text.includes("assert delivery.get('delivery',{}).get('method')=='INLINE_VERIFIED_PAGE_SCOPED_TEXT'"));
+  assert.ok(text.includes("'SOURCE_DELIVERY_GATE':'PASS'"));
+});
+
+test('v2.7 Gemini API records verified File attachment as Source Delivery provenance',()=>{
+  const text=read(apiPath);
+  assert.ok(text.includes("assert delivery.get('recordType')=='PRODUCT_MASTER_SOURCE_DELIVERY'"));
+  assert.ok(text.includes("assert delivery.get('executionChannel')=='GEMINI_API'"));
+  assert.ok(text.includes("assert delivery.get('delivery',{}).get('method')=='GEMINI_FILE_ATTACHMENT'"));
+  assert.ok(text.includes("assert delivery.get('providerAttachmentReference')"));
+  assert.ok(text.includes("assert (qctx.get('sourceDelivery') or {}).get('status')=='PASS'"));
+  assert.ok(text.includes("'SOURCE_DELIVERY_GATE':'PASS'"));
+});
+
 test('v2.7 worker surfaces keep authority closed after Evidence import',()=>{
   for(const file of[aiProPath,apiPath]){
     const text=read(file);
