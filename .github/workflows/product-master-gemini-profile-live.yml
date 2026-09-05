@@ -144,7 +144,7 @@ jobs:
             --audit-dir="$ARTIFACT_DIR/jobs" \
             | tee "$ARTIFACT_DIR/governed-api-live-console.log"
 
-      - name: Enforce API Worker, Source Acquisition, Source Delivery and Evidence provenance gates
+      - name: Enforce API Worker, Source, Gemini Execution and Evidence provenance gates
         shell: bash
         run: |
           set -euo pipefail
@@ -199,6 +199,26 @@ jobs:
           assert delivery.get('delivery',{}).get('method')=='GEMINI_FILE_ATTACHMENT',delivery
           assert delivery.get('providerAttachmentReference'),delivery
           assert delivery.get('credentialMaterialPersisted') is False,delivery
+          execution=ctx.get('geminiExecution') or {}
+          assert execution.get('schemaVersion')=='1.1',execution
+          assert execution.get('recordType')=='PRODUCT_MASTER_GEMINI_EXECUTION',execution
+          assert execution.get('status')=='SUCCEEDED',execution
+          assert execution.get('executionChannel')=='GEMINI_API',execution
+          assert execution.get('executionReference')==expected_ref,execution
+          assert execution.get('surface',{}).get('id')=='GOOGLE_GEMINI_API',execution
+          assert execution.get('surface',{}).get('authenticationMode')=='GEMINI_API_KEY',execution
+          assert execution.get('surface',{}).get('model')==job.get('model'),execution
+          assert execution.get('surface',{}).get('modelKnown') is True,execution
+          assert execution.get('preflight',{}).get('status')=='PASS',execution
+          assert execution.get('preflight',{}).get('credentialPresent') is True,execution
+          assert execution.get('preflight',{}).get('credentialValuePersisted') is False,execution
+          assert execution.get('result',{}).get('rawResponseSha256')==audit.get('rawResponseSha256'),execution
+          assert execution.get('source',{}).get('acquisition',{}).get('acquiredSha256')==source.get('retrieval',{}).get('acquiredSha256'),execution
+          assert execution.get('source',{}).get('delivery',{}).get('providerAttachmentReference')==delivery.get('providerAttachmentReference'),execution
+          assert execution.get('credentialMaterialPersisted') is False,execution
+          assert execution.get('authority',{}).get('canonicalWritePerformed') is False,execution
+          assert execution.get('authority',{}).get('runtimeWritePerformed') is False,execution
+          assert execution.get('authority',{}).get('productionWritePerformed') is False,execution
           rq=audit.get('reviewQueue') or {}
           for item in rq.get('items',[]):
               if item.get('kind')!='EVIDENCE_CANDIDATE': continue
@@ -207,11 +227,13 @@ jobs:
               assert qctx.get('executionReference')==expected_ref,item
               assert (qctx.get('sourceAcquisition') or {}).get('status')=='PASS',item
               assert (qctx.get('sourceDelivery') or {}).get('status')=='PASS',item
+              assert (qctx.get('geminiExecution') or {}).get('status')=='SUCCEEDED',item
           gates={
               'WORKER_EXECUTION_CONTRACT_GATE':'PASS',
               'GEMINI_API_CREDENTIAL_GATE':'PASS',
               'SOURCE_ACQUISITION_GATE':'PASS',
               'SOURCE_DELIVERY_GATE':'PASS',
+              'GEMINI_EXECUTION_GATE':'PASS',
               'GEMINI_API_LIVE_EXECUTION_GATE':'PASS',
               'TRANSPORT_GATE':'PASS',
               'EVIDENCE_INBOX_GATE':'PASS',
@@ -221,6 +243,8 @@ jobs:
               'MASTER_CHANGE_GATE':'CLOSED',
               'sourceIdentityMode':source.get('identity',{}).get('mode'),
               'sourceDeliveryMethod':delivery.get('delivery',{}).get('method'),
+              'geminiExecutionSurface':execution.get('surface',{}).get('id'),
+              'model':execution.get('surface',{}).get('model'),
               'executionChannel':'GEMINI_API',
               'transportMethod':'GEMINI_API_DIRECT_RESPONSE',
               'executionReference':expected_ref,
@@ -232,6 +256,7 @@ jobs:
           print('WORKER_EXECUTION_CONTRACT_GATE=PASS')
           print('SOURCE_ACQUISITION_GATE=PASS')
           print('SOURCE_DELIVERY_GATE=PASS')
+          print('GEMINI_EXECUTION_GATE=PASS')
           print('GEMINI_API_LIVE_EXECUTION_GATE=PASS')
           print('EXECUTION_PROVENANCE_GATE=PASS')
           PY
