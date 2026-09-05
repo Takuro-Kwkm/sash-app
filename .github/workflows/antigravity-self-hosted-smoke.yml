@@ -2,10 +2,6 @@ name: Antigravity Self-Hosted Smoke Test
 
 on:
   workflow_dispatch:
-  push:
-    branches: [feat/catalog-recovery-v2]
-    paths:
-      - .github/workflows/antigravity-self-hosted-smoke.yml
 
 concurrency:
   group: antigravity-self-hosted-smoke
@@ -24,32 +20,8 @@ jobs:
         run: |
           set -euo pipefail
           echo "runner_name=${RUNNER_NAME}"
-          echo "runner_user=$(id -un)"
-          echo "home=${HOME}"
           command -v agy
           agy --version
-          file "$(command -v agy)"
-
-      - name: Diagnose keychain access without exposing credentials
-        shell: bash
-        run: |
-          set -u
-          echo '--- keychain diagnostics (no secret output) ---'
-          if /usr/bin/security find-generic-password -s gemini -a antigravity >/dev/null 2>&1; then
-            echo 'keychain_item_lookup=PASS'
-          else
-            echo 'keychain_item_lookup=FAIL'
-          fi
-          if /usr/bin/security find-generic-password -s gemini -a antigravity -w >/dev/null 2>&1; then
-            echo 'keychain_secret_read=PASS'
-          else
-            echo 'keychain_secret_read=FAIL'
-          fi
-          if /usr/bin/security show-keychain-info "$HOME/Library/Keychains/login.keychain-db" >/dev/null 2>&1; then
-            echo 'login_keychain_info=PASS'
-          else
-            echo 'login_keychain_info=FAIL'
-          fi
 
       - name: Verify headless Google AI Pro session
         shell: bash
