@@ -6,6 +6,7 @@ import path from'node:path';
 const read=(p)=>fs.readFileSync(path.resolve(p),'utf8');
 const aiProPath='.github/workflows/product-master-antigravity-profile-live.yml';
 const apiPath='.github/workflows/product-master-gemini-profile-live.yml';
+const governedCliPath='scripts/run-gemini-product-master-job-v11.mjs';
 const legacyPaths=[
   '.github/workflows/gemini-live-apw430-retry.yml',
   '.github/workflows/gemini-apw430-one-secret-live.yml'
@@ -110,6 +111,32 @@ test('v2.7 Gemini API normalizes actual model, preflight and response fingerprin
   assert.ok(text.includes("assert execution.get('result',{}).get('rawResponseSha256')==audit.get('rawResponseSha256')"));
   assert.ok(text.includes("assert (qctx.get('geminiExecution') or {}).get('status')=='SUCCEEDED'"));
   assert.ok(text.includes("'GEMINI_EXECUTION_GATE':'PASS'"));
+});
+
+test('v2.7 both LIVE worker surfaces use governed v1.1 Pre-Inbox Guard and Transport Provenance',()=>{
+  for(const [file,channel,producer] of[[aiProPath,'GEMINI_AI_PRO','GEMINI_ANTIGRAVITY'],[apiPath,'GEMINI_API','GEMINI_NOTEBOOKLM']]){
+    const text=read(file);
+    assert.ok(text.includes('node scripts/run-gemini-product-master-job-v11.mjs'),file);
+    assert.equal(text.includes('node scripts/run-gemini-product-master-job.mjs \\'),false,file);
+    assert.ok(text.includes("assert guard.get('status')=='PASS'"),file);
+    assert.ok(text.includes("assert (guard.get('record') or {}).get('evidenceInboxWriteAllowed') is True"),file);
+    assert.ok(text.includes("assert provenance.get('recordType')=='PRODUCT_MASTER_TRANSPORT_PROVENANCE'"),file);
+    assert.ok(text.includes(`assert provenance.get('executionChannel')=='${channel}'`),file);
+    assert.ok(text.includes(`assert provenance.get('transport',{}).get('producer',{}).get('system')=='${producer}'`),file);
+    assert.ok(text.includes("assert provenance.get('executionBinding',{}).get('rawResponseSha256')==audit.get('rawResponseSha256')"),file);
+    assert.ok(text.includes("assert (qctx.get('transportProvenance') or {}).get('status')=='PASS'"),file);
+    assert.ok(text.includes("'TRANSPORT_PROVENANCE_GATE':'PASS'"),file);
+    assert.ok(text.includes("'PRE_INBOX_GUARD':'PASS'"),file);
+  }
+});
+
+test('v2.7 governed v1.1 CLI delegates persistence authority to guarded runner',()=>{
+  const text=read(governedCliPath);
+  assert.ok(text.includes("import{runGovernedGeminiV11}from'../src/product-master-core/governed-gemini-v11-runner.mjs'"));
+  assert.ok(text.includes('const result=await runGovernedGeminiV11(job,{'));
+  assert.ok(text.includes("preInboxGuard:result.preInboxGuard?.status??'NOT_REACHED'"));
+  assert.ok(text.includes("evidenceInboxGate:result.inboxImport?.pass===true?'PASS':'NOT_WRITTEN'"));
+  assert.equal(text.includes('persistGeminiTransport('),false);
 });
 
 test('v2.7 worker surfaces keep authority closed after Evidence import',()=>{
