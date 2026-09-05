@@ -4,6 +4,7 @@ import{
   createProductMasterChangeProposal,proposalFingerprint,productMasterFingerprint
 }from'../src/product-master-core/master-change-control.mjs';
 import{buildHumanApprovalProvenance,validateHumanApprovalProvenance}from'../src/product-master-core/human-approval-provenance.mjs';
+import{buildHumanApprovalReviewGateBinding}from'../src/product-master-core/human-approval-review-gate-binding.mjs';
 import{
   openGovernedChangeControl,validateGovernedChangeControlEntry,applyGovernedApprovedProductMasterChangeProposal
 }from'../src/product-master-core/change-control-entry-gate.mjs';
@@ -45,6 +46,11 @@ function fixture(){
     }],
     authorityBoundary:{evidenceAdjudication:'CHATGPT_OR_HUMAN',transportIssueResolution:'CHATGPT_OR_HUMAN',geminiAdjudicationAllowed:false,masterChangeApproval:'HUMAN_REQUIRED',queueMutationAuthority:'NONE',productionMasterAutoWrite:false,runtimeAutoWrite:false}
   };
+  const reviewQueueValidations=[{
+    schemaVersion:'1.1',recordType:'PRODUCT_MASTER_REVIEW_QUEUE_VALIDATION',status:'PASS',jobId:'GJOB-HUMAN-001',productId:'SER-HUMAN-001',batchId:'BATCH-HUMAN-001',
+    candidateCount:1,transportIssueCount:0,evidenceQueueItemCount:1,
+    authority:{evidenceAdjudication:'CHATGPT_OR_HUMAN',transportIssueResolution:'CHATGPT_OR_HUMAN',geminiAdjudicationAllowed:false,masterChangeApproval:'HUMAN_REQUIRED',queueMutationAuthority:'NONE',productionMasterAutoWrite:false,runtimeAutoWrite:false}
+  }];
   const approval={
     approvalSchemaVersion:'1.1',recordType:'PRODUCT_MASTER_CHANGE_APPROVAL',proposalId:proposal.id,
     proposalFingerprint:proposal.proposalFingerprint,baseMasterFingerprint:proposal.target.baseMasterFingerprint,
@@ -52,7 +58,15 @@ function fixture(){
     approvalSource:'CHAT_CONVERSATION_EXPLICIT_COMMAND',approvalReference:'User explicitly approved PMCP-HUMAN-001 for staging.',
     scope:'APPROVE_AND_STAGE_ONLY',productionApproval:false
   };
-  return{baseMaster,canonicalEvidence,proposal,reviewQueue,adjudicationStore,approval};
+  return{baseMaster,canonicalEvidence,proposal,reviewQueue,reviewQueueValidations,adjudicationStore,approval};
+}
+
+function approvalPackage(f){
+  const human=buildHumanApprovalProvenance(f);
+  assert.equal(human.pass,true,human.errors?.[0]?.message);
+  const reviewBinding=buildHumanApprovalReviewGateBinding({proposal:f.proposal,humanApprovalProvenance:human.record,reviewQueueValidations:f.reviewQueueValidations});
+  assert.equal(reviewBinding.pass,true,reviewBinding.errors?.[0]?.message);
+  return{human:human.record,reviewBinding:reviewBinding.record};
 }
 
 test('v2.7 Human Approval Provenance binds Proposal, Canonical Evidence, adjudication and Review provenance',()=>{
@@ -98,47 +112,69 @@ test('v2.7 Human approval cannot bind a stale or blocked Review Queue',()=>{
   assert.ok(validation.errors.some((row)=>['HUMAN_APPROVAL_REVIEW_ITEM_NOT_APPROVED','HUMAN_APPROVAL_REVIEW_BATCH_BLOCKED','HUMAN_APPROVAL_PROVENANCE_REVIEW_STALE'].includes(row.code)));
 });
 
-test('v2.7 explicit Human approval opens Change Control and is fingerprint-bound',()=>{
+test('v2.7 every Proposal source batch requires exactly one PASS Review Queue Gate before Change Control',()=>{
   const f=fixture();
-  const built=buildHumanApprovalProvenance(f);
-  assert.equal(built.pass,true);
-  const opened=openGovernedChangeControl({...f,humanApprovalProvenance:built.record});
+  const human=buildHumanApprovalProvenance(f);
+  assert.equal(human.pass,true);
+  const missing=buildHumanApprovalReviewGateBinding({proposal:f.proposal,humanApprovalProvenance:human.record,reviewQueueValidations:[]});
+  assert.equal(missing.pass,false);
+  assert.ok(missing.errors.some((row)=>row.code==='HUMAN_APPROVAL_REVIEW_GATE_MISSING'));
+
+  const failedValidation=structuredClone(f.reviewQueueValidations);
+  failedValidation[0].status='BLOCKED';
+  const failed=buildHumanApprovalReviewGateBinding({proposal:f.proposal,humanApprovalProvenance:human.record,reviewQueueValidations:failedValidation});
+  assert.equal(failed.pass,false);
+  assert.ok(failed.errors.some((row)=>row.code==='HUMAN_APPROVAL_REVIEW_GATE_NOT_PASS'));
+});
+
+test('v2.7 explicit Human approval plus Review Queue Gate set opens Change Control and is fingerprint-bound',()=>{
+  const f=fixture();
+  const pkg=approvalPackage(f);
+  const opened=openGovernedChangeControl({...f,humanApprovalProvenance:pkg.human,humanApprovalReviewGateBinding:pkg.reviewBinding});
   assert.equal(opened.pass,true,opened.errors?.[0]?.message);
   assert.equal(opened.status,'CHANGE_CONTROL_OPEN');
   assert.equal(opened.humanApprovalGate.status,'PASS');
+  assert.equal(opened.humanApprovalGate.authority.reviewQueueGateRequired,true);
   assert.equal(opened.approvedProposal.status,'APPROVED');
   assert.equal(opened.approvedProposal.approval.approverType,'HUMAN');
   assert.equal(opened.approvedProposal.approval.approvalSource,'CHAT_CONVERSATION_EXPLICIT_COMMAND');
   assert.equal(opened.approvedProposal.approval.productionApproval,false);
   assert.ok(opened.approvedProposal.approval.humanApprovalProvenanceFingerprint.startsWith('sha256:'));
+  assert.ok(opened.approvedProposal.approval.humanApprovalReviewGateBindingFingerprint.startsWith('sha256:'));
 });
 
-test('v2.7 Proposal or Base Master drift after approval closes Change Control',()=>{
+test('v2.7 Proposal, Base Master or Review Gate drift after approval closes Change Control',()=>{
   const f=fixture();
-  const built=buildHumanApprovalProvenance(f);
-  const opened=openGovernedChangeControl({...f,humanApprovalProvenance:built.record});
+  const pkg=approvalPackage(f);
+  const opened=openGovernedChangeControl({...f,humanApprovalProvenance:pkg.human,humanApprovalReviewGateBinding:pkg.reviewBinding});
   assert.equal(opened.pass,true);
 
   const staleProposal=structuredClone(opened.approvedProposal);
   staleProposal.summary='Changed after approval';
-  const proposalGate=validateGovernedChangeControlEntry({...f,approvedProposal:staleProposal,humanApprovalProvenance:built.record,humanApprovalGate:opened.humanApprovalGate});
+  const proposalGate=validateGovernedChangeControlEntry({...f,approvedProposal:staleProposal,humanApprovalProvenance:pkg.human,humanApprovalReviewGateBinding:pkg.reviewBinding,humanApprovalGate:opened.humanApprovalGate});
   assert.equal(proposalGate.pass,false);
-  assert.ok(proposalGate.errors.some((row)=>['HUMAN_APPROVAL_PROVENANCE_PROPOSAL_STALE','CHANGE_CONTROL_GATE_PROPOSAL_STALE'].includes(row.code)));
+  assert.ok(proposalGate.errors.some((row)=>['HUMAN_APPROVAL_PROVENANCE_PROPOSAL_STALE','CHANGE_CONTROL_GATE_PROPOSAL_STALE','HUMAN_APPROVAL_REVIEW_BINDING_PROPOSAL_STALE'].includes(row.code)));
 
   const staleMaster=structuredClone(f.baseMaster);
   staleMaster.fields.push({id:'FIELD-DRIFT'});
-  const baseGate=validateGovernedChangeControlEntry({...f,baseMaster:staleMaster,approvedProposal:opened.approvedProposal,humanApprovalProvenance:built.record,humanApprovalGate:opened.humanApprovalGate});
+  const baseGate=validateGovernedChangeControlEntry({...f,baseMaster:staleMaster,approvedProposal:opened.approvedProposal,humanApprovalProvenance:pkg.human,humanApprovalReviewGateBinding:pkg.reviewBinding,humanApprovalGate:opened.humanApprovalGate});
   assert.equal(baseGate.pass,false);
   assert.ok(baseGate.errors.some((row)=>['HUMAN_APPROVAL_PROVENANCE_BASE_MASTER_DRIFT','CHANGE_CONTROL_GATE_BASE_MASTER_STALE'].includes(row.code)));
+
+  const changedReviewGate=structuredClone(f.reviewQueueValidations);
+  changedReviewGate[0].jobId='GJOB-HUMAN-CHANGED';
+  const reviewGate=validateGovernedChangeControlEntry({...f,reviewQueueValidations:changedReviewGate,approvedProposal:opened.approvedProposal,humanApprovalProvenance:pkg.human,humanApprovalReviewGateBinding:pkg.reviewBinding,humanApprovalGate:opened.humanApprovalGate});
+  assert.equal(reviewGate.pass,false);
+  assert.ok(reviewGate.errors.some((row)=>row.code==='HUMAN_APPROVAL_REVIEW_BINDING_GATE_SET_STALE'));
 });
 
 test('v2.7 governed Human approval permits STAGING only and never Production or Runtime auto-write',()=>{
   const f=fixture();
-  const built=buildHumanApprovalProvenance(f);
-  const opened=openGovernedChangeControl({...f,humanApprovalProvenance:built.record});
+  const pkg=approvalPackage(f);
+  const opened=openGovernedChangeControl({...f,humanApprovalProvenance:pkg.human,humanApprovalReviewGateBinding:pkg.reviewBinding});
   assert.equal(opened.pass,true);
   const applied=applyGovernedApprovedProductMasterChangeProposal({
-    ...f,approvedProposal:opened.approvedProposal,humanApprovalProvenance:built.record,humanApprovalGate:opened.humanApprovalGate,
+    ...f,approvedProposal:opened.approvedProposal,humanApprovalProvenance:pkg.human,humanApprovalReviewGateBinding:pkg.reviewBinding,humanApprovalGate:opened.humanApprovalGate,
     mode:'STAGING',openBlockingPending:0,at:'2026-09-05T11:03:00Z',validateMaster:(master)=>({pass:master.evidence.some((row)=>row.id==='EVID-HUMAN-001')})
   });
   assert.equal(applied.pass,true,applied.errors?.[0]?.message);
@@ -149,7 +185,7 @@ test('v2.7 governed Human approval permits STAGING only and never Production or 
   assert.equal(applied.runtimeWritePerformed,false);
 
   const production=applyGovernedApprovedProductMasterChangeProposal({
-    ...f,approvedProposal:opened.approvedProposal,humanApprovalProvenance:built.record,humanApprovalGate:opened.humanApprovalGate,mode:'PRODUCTION'
+    ...f,approvedProposal:opened.approvedProposal,humanApprovalProvenance:pkg.human,humanApprovalReviewGateBinding:pkg.reviewBinding,humanApprovalGate:opened.humanApprovalGate,mode:'PRODUCTION'
   });
   assert.equal(production.pass,false);
   assert.ok(production.errors.some((row)=>row.code==='CHANGE_CONTROL_STAGING_ONLY'));
