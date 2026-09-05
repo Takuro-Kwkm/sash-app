@@ -30,9 +30,19 @@ if(!sourceScopeTextContent.trim())throw new Error('Scoped source text is empty')
 
 const runSuffix=safe(process.env.GITHUB_RUN_ID??crypto.randomUUID().slice(0,8));
 const attempt=safe(process.env.GITHUB_RUN_ATTEMPT??'1');
+const repository=safe(process.env.GITHUB_REPOSITORY??'LOCAL');
 const jobId=`GJOB-${safe(profile.manufacturer)}-${safe(profile.series)}-AGY-${runSuffix}-${attempt}`;
+const executionReference=process.env.GITHUB_RUN_ID
+  ?`GITHUB_ACTIONS_RUN:${process.env.GITHUB_REPOSITORY??'UNKNOWN'}:${process.env.GITHUB_RUN_ID}:${process.env.GITHUB_RUN_ATTEMPT??'1'}`
+  :`ANTIGRAVITY_LOCAL:${runSuffix}:${attempt}`;
 const built=buildGeminiJobInputFromProductProfile(profile,{
-  execution_mode:'REPLAY',
+  execution_mode:'LIVE_EXTERNAL',
+  execution_channel:'GEMINI_AI_PRO',
+  preferred_execution_channel:'GEMINI_AI_PRO',
+  fallback_execution_channel:'GEMINI_API',
+  fallback_allowed:false,
+  transport_method:'GEMINI_AI_PRO_STRUCTURED_HANDOFF',
+  execution_reference:executionReference,
   job_id:jobId,
   metadata:{
     workerProvider:ANTIGRAVITY_WORKER_PROVIDER,
@@ -52,7 +62,7 @@ const prompt=buildAntigravityWorkerPrompt(job,{
   sourceSha256:actualSha
 });
 
-const jobPath=path.join(outDir,'replay-job.json');
+const jobPath=path.join(outDir,'live-job.json');
 const schemaPath=path.join(outDir,'transport-schema.json');
 const promptPath=path.join(outDir,'worker-prompt.txt');
 const manifestPath=path.join(outDir,'antigravity-adapter-manifest.json');
@@ -69,7 +79,13 @@ const manifest={
   workerProvider:ANTIGRAVITY_WORKER_PROVIDER,
   producerSystem:ANTIGRAVITY_PRODUCER_SYSTEM,
   authenticationMode:'GOOGLE_AI_PRO_OAUTH',
-  executionMode:'HEADLESS_STRUCTURED_OUTPUT_TO_REPLAY_TRANSPORT',
+  executionMode:job.executionMode,
+  executionChannel:job.executionChannel,
+  preferredExecutionChannel:job.preferredExecutionChannel,
+  fallbackExecutionChannel:job.fallbackExecutionChannel,
+  fallbackAllowed:job.fallbackAllowed,
+  transportMethod:job.transportMethod,
+  executionReference:job.executionReference,
   evidenceDeliveryMode:'INLINE_VERIFIED_PAGE_SCOPED_TEXT',
   source:{
     driveFileId:job.sourceContext.driveFileId,
@@ -82,14 +98,15 @@ const manifest={
     printedPageScope:job.printedPageScope
   },
   artifacts:{
-    replayJob:path.basename(jobPath),
+    liveJob:path.basename(jobPath),
     transportSchema:path.basename(schemaPath),
     workerPrompt:path.basename(promptPath),
     promptSha256:sha256Text(prompt),
     schemaSha256:sha256Text(JSON.stringify(schema))
   },
+  runner:{repository,runId:runSuffix,attempt},
   modelToolAuthority:'NONE',
   mutationAuthority:'NONE'
 };
 fs.writeFileSync(manifestPath,`${JSON.stringify(manifest,null,2)}\n`,'utf8');
-console.log(JSON.stringify({pass:true,jobId:job.jobId,jobPath,schemaPath,promptPath,manifestPath,sourceSha256:actualSha,scopeTextSha256:manifest.source.scopeTextSha256,evidenceDeliveryMode:manifest.evidenceDeliveryMode,producerSystem:ANTIGRAVITY_PRODUCER_SYSTEM},null,2));
+console.log(JSON.stringify({pass:true,jobId:job.jobId,jobPath,schemaPath,promptPath,manifestPath,sourceSha256:actualSha,scopeTextSha256:manifest.source.scopeTextSha256,evidenceDeliveryMode:manifest.evidenceDeliveryMode,producerSystem:ANTIGRAVITY_PRODUCER_SYSTEM,executionChannel:job.executionChannel,transportMethod:job.transportMethod,executionReference:job.executionReference},null,2));
