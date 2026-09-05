@@ -40,6 +40,23 @@ test('v2.7 Gemini API workflow is manual-only and explicitly records API executi
   assert.ok(text.includes("'EXECUTION_PROVENANCE_GATE':'PASS'"));
 });
 
+test('v2.7 both LIVE worker surfaces use the shared Source Acquisition contract',()=>{
+  for(const [file,channel] of[[aiProPath,'GEMINI_AI_PRO'],[apiPath,'GEMINI_API']]){
+    const text=read(file);
+    assert.ok(text.includes('node scripts/acquire-product-master-source.mjs'),file);
+    assert.ok(text.includes(`--execution-channel=${channel}`),file);
+    assert.ok(text.includes('--audit="$ARTIFACT_DIR/source-acquisition-audit.json"'),file);
+    assert.ok(text.includes('--source-acquisition-audit="$ARTIFACT_DIR/source-acquisition-audit.json"'),file);
+    assert.ok(text.includes("assert source.get('schemaVersion')=='1.1'"),file);
+    assert.ok(text.includes("assert source.get('recordType')=='PRODUCT_MASTER_SOURCE_ACQUISITION'"),file);
+    assert.ok(text.includes("assert source.get('status')=='PASS'"),file);
+    assert.ok(text.includes(`assert source.get('executionChannel')=='${channel}'`),file);
+    assert.ok(text.includes("assert source.get('identity',{}).get('mode') in {'FULL_BYTE_IDENTITY','SCOPED_CONTENT_EQUIVALENCE'}"),file);
+    assert.ok(text.includes("assert source.get('credentialMaterialPersisted') is False"),file);
+    assert.ok(text.includes("'SOURCE_ACQUISITION_GATE':'PASS'"),file);
+  }
+});
+
 test('v2.7 worker surfaces keep authority closed after Evidence import',()=>{
   for(const file of[aiProPath,apiPath]){
     const text=read(file);
