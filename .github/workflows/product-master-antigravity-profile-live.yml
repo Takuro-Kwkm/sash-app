@@ -77,9 +77,6 @@ jobs:
               'manufacturer':p['manufacturer'],
               'series':p['series'],
               'product_id':p['productId'],
-              'source_url':s['officialDownloadUrl'],
-              'detail_url':s['officialDetailUrl'],
-              'expected_sha':s['authoritativeSha256'],
               'source_title':s['title'],
               'source_drive_file_id':s['driveFileId'],
               'page_scope':' '.join(str(x) for x in p['extraction']['pageScope'])
@@ -99,44 +96,21 @@ jobs:
           Path(os.environ['ARTIFACT_DIR'],'profile-audit.json').write_text(json.dumps(audit,ensure_ascii=False,indent=2)+'\n')
           PY
 
-      - name: Acquire official source and require exact authoritative SHA-256
+      - name: Acquire official source through common Source Acquisition contract
         id: source
         shell: bash
         run: |
           set -euo pipefail
           SOURCE_DIR="$ARTIFACT_DIR/source"
           mkdir -p "$SOURCE_DIR"
-          SOURCE_PDF="$SOURCE_DIR/official-source.pdf"
-          curl --fail --location --retry 2 --retry-delay 2 \
-            --connect-timeout 20 --max-time 240 \
-            --user-agent 'Mozilla/5.0 (Macintosh; Apple Silicon Mac OS X) AppleWebKit/537.36 Chrome/152 Safari/537.36' \
-            --referer '${{ steps.profile.outputs.detail_url }}' \
-            --output "$SOURCE_PDF" '${{ steps.profile.outputs.source_url }}'
-          size_bytes=$(wc -c < "$SOURCE_PDF" | tr -d ' ')
-          mime_type=$(file -b --mime-type "$SOURCE_PDF")
-          magic=$(head -c 5 "$SOURCE_PDF")
-          actual_sha=$(shasum -a 256 "$SOURCE_PDF" | awk '{print $1}')
-          test "$mime_type" = 'application/pdf'
-          test "$magic" = '%PDF-'
-          test "$actual_sha" = '${{ steps.profile.outputs.expected_sha }}'
-          python3 - <<PY
-          import json
-          from pathlib import Path
-          payload={
-            'source_ready':True,
-            'mime_type':'$mime_type',
-            'size_bytes':$size_bytes,
-            'expected_sha256':'${{ steps.profile.outputs.expected_sha }}',
-            'actual_sha256':'$actual_sha',
-            'exact_sha256_match':True,
-            'source_drive_file_id':'${{ steps.profile.outputs.source_drive_file_id }}',
-            'source_title':'${{ steps.profile.outputs.source_title }}'
-          }
-          Path('$ARTIFACT_DIR/source-acquisition-audit.json').write_text(json.dumps(payload,ensure_ascii=False,indent=2)+'\n')
-          PY
-          echo "source_pdf=$SOURCE_PDF" >> "$GITHUB_OUTPUT"
-          echo "actual_sha=$actual_sha" >> "$GITHUB_OUTPUT"
-          echo 'SOURCE_EXACT_SHA_GATE=PASS'
+          node scripts/acquire-product-master-source.mjs \
+            --profile="$PROFILE_PATH" \
+            --execution-channel=GEMINI_AI_PRO \
+            --output="$SOURCE_DIR/official-source.pdf" \
+            --audit="$ARTIFACT_DIR/source-acquisition-audit.json" \
+            --github-output="$GITHUB_OUTPUT" \
+            | tee "$ARTIFACT_DIR/source-acquisition-console.log"
+          echo 'SOURCE_ACQUISITION_GATE=PASS'
 
       - name: Derive page-scoped text from verified PDF in isolated Python environment
         id: scope
@@ -301,12 +275,13 @@ jobs:
           node scripts/run-gemini-product-master-job.mjs \
             --job="$ADAPTER_DIR/replay-job.json" \
             --external-response="$ADAPTER_DIR/raw-transport.json" \
+            --source-acquisition-audit="$ARTIFACT_DIR/source-acquisition-audit.json" \
             --evidence-inbox="$ARTIFACT_DIR/evidence-inbox" \
             --change-control="$ARTIFACT_DIR/change-control" \
             --audit-dir="$ARTIFACT_DIR/jobs" \
             | tee "$ARTIFACT_DIR/governed-live-handoff-console.log"
 
-      - name: Enforce Worker Contract, no-authoritative-write and Review Queue gates
+      - name: Enforce Worker, Source Acquisition, no-authoritative-write and Review Queue gates
         shell: bash
         run: |
           set -euo pipefail
@@ -345,6 +320,14 @@ jobs:
           assert ctx.get('executionChannel')=='GEMINI_AI_PRO',ctx
           assert ctx.get('transportMethod')=='GEMINI_AI_PRO_STRUCTURED_HANDOFF',ctx
           assert ctx.get('executionReference')==job.get('executionReference'),(ctx,job)
+          source=ctx.get('sourceAcquisition') or {}
+          assert source.get('schemaVersion')=='1.1',source
+          assert source.get('recordType')=='PRODUCT_MASTER_SOURCE_ACQUISITION',source
+          assert source.get('status')=='PASS',source
+          assert source.get('executionChannel')=='GEMINI_AI_PRO',source
+          assert source.get('source',{}).get('driveFileId')=='${{ steps.profile.outputs.source_drive_file_id }}',source
+          assert source.get('identity',{}).get('mode') in {'FULL_BYTE_IDENTITY','SCOPED_CONTENT_EQUIVALENCE'},source
+          assert source.get('credentialMaterialPersisted') is False,source
           rq=audit.get('reviewQueue')
           assert isinstance(rq,dict),audit
           evidence_items=[x for x in rq.get('items',[]) if x.get('kind')=='EVIDENCE_CANDIDATE']
@@ -352,8 +335,10 @@ jobs:
               qctx=(item.get('refs') or {}).get('executionContext') or {}
               assert qctx.get('executionChannel')=='GEMINI_AI_PRO',item
               assert qctx.get('executionReference')==job.get('executionReference'),item
+              assert (qctx.get('sourceAcquisition') or {}).get('status')=='PASS',item
           gates={
             'WORKER_EXECUTION_CONTRACT_GATE':'PASS',
+            'SOURCE_ACQUISITION_GATE':'PASS',
             'ANTIGRAVITY_LIVE_EXECUTION_GATE':'PASS',
             'TRANSPORT_GATE':'PASS',
             'EVIDENCE_INBOX_GATE':'PASS',
@@ -361,6 +346,7 @@ jobs:
             'REVIEW_QUEUE_GATE':'PASS',
             'HUMAN_APPROVAL_GATE':'NOT_OPENED',
             'MASTER_CHANGE_GATE':'CLOSED',
+            'sourceIdentityMode':source.get('identity',{}).get('mode'),
             'canonicalWritePerformed':False,
             'runtimeWritePerformed':False,
             'productionWritePerformed':False,
@@ -371,6 +357,7 @@ jobs:
           }
           (root/'phase7-antigravity-gates.json').write_text(json.dumps(gates,ensure_ascii=False,indent=2)+'\n')
           print('WORKER_EXECUTION_CONTRACT_GATE=PASS')
+          print('SOURCE_ACQUISITION_GATE=PASS')
           print('TRANSPORT_GATE=PASS')
           print('EVIDENCE_INBOX_GATE=PASS')
           print('EXECUTION_PROVENANCE_GATE=PASS')
