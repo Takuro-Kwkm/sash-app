@@ -1,10 +1,15 @@
 {
-  "profileSchemaVersion": "1.0",
+  "profileSchemaVersion": "1.1",
   "recordType": "PRODUCT_MASTER_PROFILE",
   "manufacturer": "LIXIL",
   "series": "サーモスL",
   "registrySeriesKey": "LIXIL::サーモスL",
   "productId": "SER-LIXIL-THERMOSL",
+  "schemaAdapter": "GENERIC_EVIDENCE_CANDIDATE_V1",
+  "runtimePartitionPolicy": {
+    "mode": "NOT_USED_FOR_EVIDENCE_ONLY_JOB"
+  },
+  "dependencyHooks": [],
   "source": {
     "type": "OFFICIAL_PDF",
     "driveFileId": "1YUN-mtWYs48YBUHJk0C3vJXnhjyZFHyf",
