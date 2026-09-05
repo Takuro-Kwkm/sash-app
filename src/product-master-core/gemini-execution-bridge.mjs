@@ -4,6 +4,12 @@ import{persistGeminiTransport}from'./evidence-inbox-store.mjs';
 import{buildProductMasterReviewQueue}from'./review-queue.mjs';
 import{uploadGeminiFileFromPath,redactGeminiSecrets}from'./gemini-file-upload.mjs';
 import{CANONICAL_FIELD_NAMES}from'./canonical-fields.mjs';
+import{
+  WORKER_EXECUTION_CONTRACT_VERSION,
+  normalizeWorkerExecutionContract,
+  buildWorkerExecutionContext,
+  applyGeminiApiFallback
+}from'./worker-execution-contract.mjs';
 
 export const GEMINI_JOB_SCHEMA_VERSION='1.0';
 export const GEMINI_JOB_EXECUTION_MODES=new Set(['MOCK','LIVE_EXTERNAL','REPLAY']);
@@ -32,6 +38,22 @@ function normalizeSourceAttachment(input){
 export function createGeminiJob(input={}, {requestedAt=nowIso()}={}){
   const sourceContext=input.source_context??input.sourceContext??{};
   const sourceAttachmentInput=input.source_attachment??input.sourceAttachment??null;
+  const workerContractVersion=input.worker_contract_version??input.workerContractVersion??null;
+  const worker=workerContractVersion===WORKER_EXECUTION_CONTRACT_VERSION
+    ?normalizeWorkerExecutionContract(input,{requireLiveChannel:true})
+    :{pass:true,contract:{
+      workerContractVersion:null,
+      executionChannel:input.execution_channel??input.executionChannel??null,
+      preferredExecutionChannel:input.preferred_execution_channel??input.preferredExecutionChannel??null,
+      fallbackExecutionChannel:input.fallback_execution_channel??input.fallbackExecutionChannel??null,
+      fallbackAllowed:input.fallback_allowed??input.fallbackAllowed??false,
+      transportMethod:input.transport_method??input.transportMethod??null,
+      executionReference:input.execution_reference??input.executionReference??null,
+      fallbackFrom:input.fallback_from??input.fallbackFrom??null,
+      fallbackReason:input.fallback_reason??input.fallbackReason??null
+    },errors:[]};
+  if(!worker.pass)return{pass:false,job:null,errors:worker.errors};
+  const contract=worker.contract;
   const job={
     jobSchemaVersion:GEMINI_JOB_SCHEMA_VERSION,
     recordType:'GEMINI_PRODUCT_MASTER_JOB',
@@ -47,7 +69,16 @@ export function createGeminiJob(input={}, {requestedAt=nowIso()}={}){
     expectedSchemaVersion:input.expected_schema_version??input.expectedSchemaVersion??'1.0',
     requestedAt:input.requested_at??input.requestedAt??requestedAt,
     requestedBy:input.requested_by??input.requestedBy??'CHATGPT',
+    workerContractVersion:contract.workerContractVersion,
     executionMode:input.execution_mode??input.executionMode??'MOCK',
+    executionChannel:contract.executionChannel,
+    preferredExecutionChannel:contract.preferredExecutionChannel,
+    fallbackExecutionChannel:contract.fallbackExecutionChannel,
+    fallbackAllowed:contract.fallbackAllowed,
+    fallbackFrom:contract.fallbackFrom,
+    fallbackReason:contract.fallbackReason,
+    transportMethod:contract.transportMethod,
+    executionReference:contract.executionReference,
     model:input.model??null,
     sourceDriveFileIds:safeClone(input.source_drive_file_ids??input.sourceDriveFileIds??[]),
     pageScope:safeClone(input.page_scope??input.pageScope??null),
@@ -201,7 +232,7 @@ export function buildGeminiTransportResponseJsonSchema(job){
 }
 
 export async function executeGeminiJob(job,{
-  mockResponse=null,replayResponse=null,apiKey=process.env.GEMINI_API_KEY??null,model=job?.model??process.env.GEMINI_MODEL??null,
+  mockResponse=null,replayResponse=null,externalResponse=null,apiKey=process.env.GEMINI_API_KEY??null,model=job?.model??process.env.GEMINI_MODEL??null,
   sourceFilePath=process.env.GEMINI_SOURCE_FILE??null,sourceUploadImpl=uploadGeminiFileFromPath,fetchImpl=globalThis.fetch,timeoutMs=60000
 }={}){
   let working=withTransition(job,'QUEUED');
@@ -214,9 +245,23 @@ export async function executeGeminiJob(job,{
     if(typeof replayResponse!=='string')return{pass:false,job:withTransition(working,'BLOCKED',{reason:'REPLAY_RESPONSE_REQUIRED'}),rawResponse:null,sourceAttachmentAudit:null,errors:[makeError('REPLAY_RESPONSE_REQUIRED','REPLAY execution requires replayResponse string')]};
     return{pass:true,job:withTransition(working,'SUCCEEDED'),rawResponse:replayResponse,providerResponse:null,sourceAttachmentAudit:null,errors:[]};
   }
+
+  if(working.workerContractVersion===WORKER_EXECUTION_CONTRACT_VERSION&&working.executionChannel==='GEMINI_AI_PRO'){
+    if(typeof externalResponse==='string'){
+      if(!working.executionReference)return{pass:false,job:withTransition(working,'BLOCKED',{reason:'GEMINI_AI_PRO_EXECUTION_REFERENCE_MISSING'}),rawResponse:null,sourceAttachmentAudit:null,errors:[makeError('GEMINI_AI_PRO_EXECUTION_REFERENCE_MISSING','GEMINI_AI_PRO external handoff requires execution_reference')]};
+      return{pass:true,job:withTransition(working,'SUCCEEDED'),rawResponse:externalResponse,providerResponse:null,sourceAttachmentAudit:null,errors:[]};
+    }
+    if(!working.fallbackAllowed)return{pass:false,job:withTransition(working,'BLOCKED',{reason:'GEMINI_AI_PRO_EXECUTION_SURFACE_UNAVAILABLE'}),rawResponse:null,sourceAttachmentAudit:null,errors:[makeError('GEMINI_AI_PRO_EXECUTION_SURFACE_UNAVAILABLE','No GEMINI_AI_PRO external response was supplied and fallback_allowed is false')]};
+    const fallback=applyGeminiApiFallback(working,'GEMINI_AI_PRO_EXECUTION_SURFACE_UNAVAILABLE');
+    if(!fallback.pass)return{pass:false,job:withTransition(working,'BLOCKED',{reason:fallback.errors[0]?.code??'WORKER_FALLBACK_FAILED'}),rawResponse:null,sourceAttachmentAudit:null,errors:fallback.errors};
+    working=withTransition(fallback.job,'RUNNING',{fallbackFrom:fallback.job.fallbackFrom,fallbackReason:fallback.job.fallbackReason,executionChannel:'GEMINI_API'});
+  }
+
   const blocked=liveBlockReason(working,{apiKey,model,sourceFilePath});
   if(blocked)return{pass:false,job:withTransition(working,'BLOCKED',{reason:blocked.code}),rawResponse:null,sourceAttachmentAudit:null,errors:[blocked]};
   if(typeof fetchImpl!=='function')return{pass:false,job:withTransition(working,'BLOCKED',{reason:'FETCH_UNAVAILABLE'}),rawResponse:null,sourceAttachmentAudit:null,errors:[makeError('FETCH_UNAVAILABLE','No fetch implementation is available for LIVE_EXTERNAL')]};
+  if(working.workerContractVersion===WORKER_EXECUTION_CONTRACT_VERSION&&working.executionChannel!=='GEMINI_API')return{pass:false,job:withTransition(working,'BLOCKED',{reason:'GEMINI_API_EXECUTION_CHANNEL_REQUIRED'}),rawResponse:null,sourceAttachmentAudit:null,errors:[makeError('GEMINI_API_EXECUTION_CHANNEL_REQUIRED',`Direct Gemini API execution requires execution_channel=GEMINI_API, received ${working.executionChannel??'null'}`)]};
+  if(working.workerContractVersion===WORKER_EXECUTION_CONTRACT_VERSION&&!working.executionReference)working.executionReference=`GEMINI_API_JOB:${working.jobId}`;
   let sourceAttachmentAudit=null;
   if(working.sourceContext?.type==='OFFICIAL_PDF'&&!working.sourceAttachment?.geminiFileUri){
     const upload=await sourceUploadImpl({
@@ -262,7 +307,8 @@ export async function runGeminiProductMasterBridge(job,{
     const rejected=withTransition(execution.job,'REJECTED_AT_TRANSPORT',{rawResponseSha256});
     return{pass:false,status:'REJECTED_AT_TRANSPORT',job:rejected,rawResponseSha256,sourceAttachmentAudit:execution.sourceAttachmentAudit??null,transportValidation,inboxImport:null,reviewQueue:null,...safety,errors:transportValidation.errors};
   }
-  const inboxImport=persistGeminiTransport(raw,{rootDir:evidenceInboxDir,allowDuplicateClaims,importedAt,...transportOptions,expectedProductId:execution.job.productId});
+  const executionContext=buildWorkerExecutionContext(execution.job);
+  const inboxImport=persistGeminiTransport(raw,{rootDir:evidenceInboxDir,allowDuplicateClaims,importedAt,executionContext,...transportOptions,expectedProductId:execution.job.productId});
   if(!inboxImport.pass){
     const rejectedStatus=inboxImport.status==='REJECTED_AT_TRANSPORT_BOUNDARY'?'REJECTED_AT_TRANSPORT':'REJECTED_AT_INBOX';
     const rejected=withTransition(execution.job,rejectedStatus,{rawResponseSha256,inboxStatus:inboxImport.status});
@@ -270,5 +316,5 @@ export async function runGeminiProductMasterBridge(job,{
   }
   const imported=withTransition(execution.job,'IMPORTED',{rawResponseSha256,batchId:inboxImport.batch.id});
   const reviewQueue=buildProductMasterReviewQueue({evidenceInboxDir,changeControlDir,productId:imported.productId});
-  return{pass:true,status:'IMPORTED',job:imported,rawResponseSha256,responseReceivedAt:importedAt,normalizedBatchId:inboxImport.batch.id,sourceAttachmentAudit:execution.sourceAttachmentAudit??null,transportValidation,inboxImport,reviewQueue,...safety,errors:[]};
+  return{pass:true,status:'IMPORTED',job:imported,executionContext,rawResponseSha256,responseReceivedAt:importedAt,normalizedBatchId:inboxImport.batch.id,sourceAttachmentAudit:execution.sourceAttachmentAudit??null,transportValidation,inboxImport,reviewQueue,...safety,errors:[]};
 }
