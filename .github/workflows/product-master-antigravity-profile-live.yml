@@ -39,7 +39,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          node --test test/39-product-master-core-v25-product-profile-repro.test.mjs test/40-product-master-core-v26-antigravity-worker.test.mjs
+          npm run test:product-master-core:v27
 
       - name: Verify Antigravity Google AI Pro worker session
         shell: bash
@@ -292,7 +292,7 @@ jobs:
           print('ANTIGRAVITY_LIVE_EXECUTION_GATE=PASS')
           PY
 
-      - name: Replay structured output through governed Transport and Evidence Inbox
+      - name: Import structured output through governed Transport and Evidence Inbox
         shell: bash
         run: |
           set -euo pipefail
@@ -300,13 +300,13 @@ jobs:
           mkdir -p "$ARTIFACT_DIR/evidence-inbox" "$ARTIFACT_DIR/change-control" "$ARTIFACT_DIR/jobs"
           node scripts/run-gemini-product-master-job.mjs \
             --job="$ADAPTER_DIR/replay-job.json" \
-            --replay-response="$ADAPTER_DIR/raw-transport.json" \
+            --external-response="$ADAPTER_DIR/raw-transport.json" \
             --evidence-inbox="$ARTIFACT_DIR/evidence-inbox" \
             --change-control="$ARTIFACT_DIR/change-control" \
             --audit-dir="$ARTIFACT_DIR/jobs" \
-            | tee "$ARTIFACT_DIR/governed-replay-console.log"
+            | tee "$ARTIFACT_DIR/governed-live-handoff-console.log"
 
-      - name: Enforce no-authoritative-write and Review Queue gates
+      - name: Enforce Worker Contract, no-authoritative-write and Review Queue gates
         shell: bash
         run: |
           set -euo pipefail
@@ -318,6 +318,7 @@ jobs:
           assert jobs,'No governed job audit found'
           audit=json.loads(jobs[0].read_text())
           raw=json.loads((root/'adapter'/'raw-transport.json').read_text())
+          inbox=json.loads((root/'evidence-inbox'/'manifest.json').read_text())
           assert audit.get('pass') is True,audit
           assert audit.get('status')=='IMPORTED',audit
           assert audit.get('canonicalWritePerformed') is False,audit
@@ -326,23 +327,53 @@ jobs:
           assert raw.get('producer',{}).get('system')=='GEMINI_ANTIGRAVITY',raw
           assert audit.get('transportValidation',{}).get('pass') is True,audit
           assert audit.get('inboxImport',{}).get('pass') is True,audit
+          job=audit.get('job') or {}
+          assert job.get('workerContractVersion')=='1.1',job
+          assert job.get('executionMode')=='LIVE_EXTERNAL',job
+          assert job.get('executionChannel')=='GEMINI_AI_PRO',job
+          assert job.get('preferredExecutionChannel')=='GEMINI_AI_PRO',job
+          assert job.get('fallbackExecutionChannel')=='GEMINI_API',job
+          assert job.get('fallbackAllowed') is False,job
+          assert job.get('fallbackFrom') is None,job
+          assert job.get('transportMethod')=='GEMINI_AI_PRO_STRUCTURED_HANDOFF',job
+          assert str(job.get('executionReference','')).startswith('GITHUB_ACTIONS_RUN:'),job
+          batches=inbox.get('batches') or []
+          assert len(batches)==1,inbox
+          ctx=batches[0].get('executionContext') or {}
+          assert ctx.get('workerContractVersion')=='1.1',ctx
+          assert ctx.get('executionMode')=='LIVE_EXTERNAL',ctx
+          assert ctx.get('executionChannel')=='GEMINI_AI_PRO',ctx
+          assert ctx.get('transportMethod')=='GEMINI_AI_PRO_STRUCTURED_HANDOFF',ctx
+          assert ctx.get('executionReference')==job.get('executionReference'),(ctx,job)
           rq=audit.get('reviewQueue')
           assert isinstance(rq,dict),audit
+          evidence_items=[x for x in rq.get('items',[]) if x.get('kind')=='EVIDENCE_CANDIDATE']
+          for item in evidence_items:
+              qctx=(item.get('refs') or {}).get('executionContext') or {}
+              assert qctx.get('executionChannel')=='GEMINI_AI_PRO',item
+              assert qctx.get('executionReference')==job.get('executionReference'),item
           gates={
+            'WORKER_EXECUTION_CONTRACT_GATE':'PASS',
             'ANTIGRAVITY_LIVE_EXECUTION_GATE':'PASS',
             'TRANSPORT_GATE':'PASS',
             'EVIDENCE_INBOX_GATE':'PASS',
+            'EXECUTION_PROVENANCE_GATE':'PASS',
             'REVIEW_QUEUE_GATE':'PASS',
             'HUMAN_APPROVAL_GATE':'NOT_OPENED',
             'MASTER_CHANGE_GATE':'CLOSED',
             'canonicalWritePerformed':False,
             'runtimeWritePerformed':False,
             'productionWritePerformed':False,
-            'producerSystem':'GEMINI_ANTIGRAVITY'
+            'producerSystem':'GEMINI_ANTIGRAVITY',
+            'executionChannel':'GEMINI_AI_PRO',
+            'transportMethod':'GEMINI_AI_PRO_STRUCTURED_HANDOFF',
+            'executionReference':job.get('executionReference')
           }
           (root/'phase7-antigravity-gates.json').write_text(json.dumps(gates,ensure_ascii=False,indent=2)+'\n')
+          print('WORKER_EXECUTION_CONTRACT_GATE=PASS')
           print('TRANSPORT_GATE=PASS')
           print('EVIDENCE_INBOX_GATE=PASS')
+          print('EXECUTION_PROVENANCE_GATE=PASS')
           print('REVIEW_QUEUE_GATE=PASS')
           print('MASTER_CHANGE_GATE=CLOSED')
           PY
