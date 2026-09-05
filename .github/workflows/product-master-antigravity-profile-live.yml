@@ -5,6 +5,7 @@ on:
     branches: [feat/catalog-recovery-v2]
     paths:
       - '.github/workflows/product-master-antigravity-profile-live.yml'
+      - 'config/product-master-profiles/lixil-thermosl.v1.json'
   workflow_dispatch:
     inputs:
       profile_path:
@@ -28,6 +29,7 @@ jobs:
       PATH: /Users/takuro/.local/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin
       PROFILE_PATH: ${{ github.event.inputs.profile_path || 'config/product-master-profiles/lixil-thermosl.v1.json' }}
       ARTIFACT_DIR: artifacts/product-master-antigravity-live
+      VALIDATION_PHASE: PHASE9_R2_CURRENT_HEAD_LIVE
     steps:
       - uses: actions/checkout@v4
 
@@ -353,13 +355,14 @@ jobs:
               assert (qctx.get('geminiExecution') or {}).get('status')=='SUCCEEDED',item
               assert (qctx.get('transportProvenance') or {}).get('status')=='PASS',item
           gates={
+            'VALIDATION_PHASE':os.environ.get('VALIDATION_PHASE'),
             'WORKER_EXECUTION_CONTRACT_GATE':'PASS','SOURCE_ACQUISITION_GATE':'PASS','SOURCE_DELIVERY_GATE':'PASS','GEMINI_EXECUTION_GATE':'PASS',
             'ANTIGRAVITY_LIVE_EXECUTION_GATE':'PASS','TRANSPORT_GATE':'PASS','TRANSPORT_PROVENANCE_GATE':'PASS','PRE_INBOX_GUARD':'PASS','EVIDENCE_INBOX_GATE':'PASS',
             'EXECUTION_PROVENANCE_GATE':'PASS','REVIEW_QUEUE_GATE':'PASS','HUMAN_APPROVAL_GATE':'NOT_OPENED','MASTER_CHANGE_GATE':'CLOSED',
             'sourceIdentityMode':source.get('identity',{}).get('mode'),'sourceDeliveryMethod':delivery.get('delivery',{}).get('method'),'geminiExecutionSurface':execution.get('surface',{}).get('id'),
             'canonicalWritePerformed':False,'runtimeWritePerformed':False,'productionWritePerformed':False,'producerSystem':'GEMINI_ANTIGRAVITY','executionChannel':'GEMINI_AI_PRO','transportMethod':'GEMINI_AI_PRO_STRUCTURED_HANDOFF','executionReference':job.get('executionReference')
           }
-          (root/'phase7-antigravity-gates.json').write_text(json.dumps(gates,ensure_ascii=False,indent=2)+'\n')
+          (root/'phase9-r2-antigravity-gates.json').write_text(json.dumps(gates,ensure_ascii=False,indent=2)+'\n')
           print('WORKER_EXECUTION_CONTRACT_GATE=PASS')
           print('SOURCE_ACQUISITION_GATE=PASS')
           print('SOURCE_DELIVERY_GATE=PASS')
@@ -371,11 +374,11 @@ jobs:
           print('MASTER_CHANGE_GATE=CLOSED')
           PY
 
-      - name: Upload non-secret Phase 7 Antigravity audit
+      - name: Upload non-secret Phase 9-R2 Antigravity audit
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: product-master-antigravity-profile-live-phase7-audit
+          name: product-master-antigravity-profile-live-phase9-r2-audit
           path: artifacts/product-master-antigravity-live
           if-no-files-found: error
           retention-days: 7
