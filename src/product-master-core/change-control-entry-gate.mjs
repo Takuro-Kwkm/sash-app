@@ -1,6 +1,7 @@
 import{approveProductMasterChangeProposal,applyApprovedProductMasterChangeProposal,proposalFingerprint,productMasterFingerprint,stableJson,sha256}from'./master-change-control.mjs';
 import{validateHumanApprovalProvenance}from'./human-approval-provenance.mjs';
 import{validateHumanApprovalReviewGateBinding}from'./human-approval-review-gate-binding.mjs';
+import{buildAuthoringStagingProvenance}from'./authoring-staging-provenance.mjs';
 
 export const CHANGE_CONTROL_ENTRY_GATE_SCHEMA_VERSION='1.1';
 export const CHANGE_CONTROL_ENTRY_GATE_RECORD_TYPE='PRODUCT_MASTER_CHANGE_CONTROL_ENTRY_GATE';
@@ -96,11 +97,19 @@ export function applyGovernedApprovedProductMasterChangeProposal({
   openBlockingPending=null,validateMaster=null,mode='STAGING',at=new Date().toISOString(),appliedBy='CHATGPT_CONTROL_PLANE'
 }={}){
   const gate=validateGovernedChangeControlEntry({approvedProposal,approval,humanApprovalProvenance,humanApprovalReviewGateBinding,reviewQueueValidations,humanApprovalGate,reviewQueue,adjudicationStore,baseMaster});
-  if(!gate.pass)return{pass:false,status:'MASTER_APPLY_REJECTED',humanApprovalGate:'BLOCKED',changeControlGate:'BLOCKED',productionMasterWritePerformed:false,runtimeWritePerformed:false,errors:gate.errors};
-  if(mode!=='STAGING')return{pass:false,status:'MASTER_APPLY_REJECTED',humanApprovalGate:'PASS',changeControlGate:'BLOCKED',productionMasterWritePerformed:false,runtimeWritePerformed:false,errors:[error('CHANGE_CONTROL_STAGING_ONLY','Governed common Change Control entry only permits STAGING; Production requires the later Production/Formal gate')]};
-  if(!stageAllowed(humanApprovalProvenance?.approval?.scope))return{pass:false,status:'MASTER_APPLY_REJECTED',humanApprovalGate:'PASS',changeControlGate:'BLOCKED',productionMasterWritePerformed:false,runtimeWritePerformed:false,errors:[error('CHANGE_CONTROL_STAGE_SCOPE_MISSING','Explicit Human approval scope does not permit STAGING',{scope:humanApprovalProvenance?.approval?.scope??null})]};
+  if(!gate.pass)return{pass:false,status:'MASTER_APPLY_REJECTED',humanApprovalGate:'BLOCKED',changeControlGate:'BLOCKED',authoringStagingGate:'NOT_REACHED',productionMasterWritePerformed:false,runtimeWritePerformed:false,errors:gate.errors};
+  if(mode!=='STAGING')return{pass:false,status:'MASTER_APPLY_REJECTED',humanApprovalGate:'PASS',changeControlGate:'BLOCKED',authoringStagingGate:'NOT_REACHED',productionMasterWritePerformed:false,runtimeWritePerformed:false,errors:[error('CHANGE_CONTROL_STAGING_ONLY','Governed common Change Control entry only permits STAGING; Production requires the later Production/Formal gate')]};
+  if(!stageAllowed(humanApprovalProvenance?.approval?.scope))return{pass:false,status:'MASTER_APPLY_REJECTED',humanApprovalGate:'PASS',changeControlGate:'BLOCKED',authoringStagingGate:'NOT_REACHED',productionMasterWritePerformed:false,runtimeWritePerformed:false,errors:[error('CHANGE_CONTROL_STAGE_SCOPE_MISSING','Explicit Human approval scope does not permit STAGING',{scope:humanApprovalProvenance?.approval?.scope??null})]};
   const blocking=openBlockingPending??0;
   const applied=applyApprovedProductMasterChangeProposal({proposal:approvedProposal,baseMaster,openBlockingPending:blocking,validateMaster,mode,at,appliedBy});
-  if(!applied.pass)return{...applied,humanApprovalGate:'PASS',changeControlGate:'BLOCKED',runtimeWritePerformed:false};
-  return{...applied,humanApprovalGate:'PASS',changeControlGate:'PASS',runtimeWritePerformed:false};
+  if(!applied.pass)return{...applied,humanApprovalGate:'PASS',changeControlGate:'BLOCKED',authoringStagingGate:'NOT_REACHED',runtimeWritePerformed:false};
+  const stagingProvenance=buildAuthoringStagingProvenance({
+    appliedProposal:applied.proposal,baseMaster,appliedMaster:applied.appliedMaster,humanApprovalProvenance,humanApprovalReviewGateBinding,humanApprovalGate,
+    validation:{pass:true},at,appliedBy
+  });
+  if(!stagingProvenance.pass)return{
+    pass:false,status:'AUTHORING_STAGING_PROVENANCE_BLOCKED',proposal:applied.proposal,appliedMaster:applied.appliedMaster,
+    humanApprovalGate:'PASS',changeControlGate:'PASS',authoringStagingGate:'BLOCKED',productionMasterWritePerformed:false,runtimeWritePerformed:false,errors:stagingProvenance.errors
+  };
+  return{...applied,humanApprovalGate:'PASS',changeControlGate:'PASS',authoringStagingGate:'PASS',authoringStagingProvenance:stagingProvenance.record,runtimeWritePerformed:false};
 }
