@@ -27,7 +27,7 @@ const executionContext={
   workerContractVersion:'1.1',executionMode:'LIVE_EXTERNAL',executionChannel:'GEMINI_AI_PRO',
   preferredExecutionChannel:'GEMINI_AI_PRO',fallbackExecutionChannel:'GEMINI_API',fallbackAllowed:false,
   fallbackFrom:null,fallbackReason:null,transportMethod:'GEMINI_AI_PRO_STRUCTURED_HANDOFF',
-  executionReference:'GITHUB_ACTIONS_RUN:Takuro-Kwkm/sash-app:456:1',model:'account-default'
+  executionReference:'GITHUB_ACTIONS_RUN:Takuro-Kwkm/sash-app:456:1',model:null
 };
 
 test('v2.7 Evidence Inbox manifest persists normalized worker execution context without changing raw transport',t=>{
@@ -65,6 +65,7 @@ test('v2.7 Review Queue exposes execution provenance on Evidence Candidate refs'
   assert.equal(item.refs.executionContext.transportMethod,'GEMINI_AI_PRO_STRUCTURED_HANDOFF');
   assert.equal(item.refs.executionContext.executionReference,'GITHUB_ACTIONS_RUN:Takuro-Kwkm/sash-app:456:1');
   assert.equal(item.refs.executionContext.fallbackFrom,null);
+  assert.equal(item.refs.executionContext.model,null);
 });
 
 test('v2.7 legacy Evidence Inbox batch stays readable and does not invent execution provenance',t=>{
@@ -83,14 +84,15 @@ test('v2.7 legacy Evidence Inbox batch stays readable and does not invent execut
   assert.equal(queue.items[0].refs.executionContext,undefined);
 });
 
-test('v2.7 allowed AI Pro to API fallback persists actual channel, fallback_from and API execution reference',async t=>{
+test('v2.7 allowed AI Pro to API fallback persists actual channel, resolved API model, fallback_from and API execution reference',async t=>{
   const profile=loadProfile();
   const built=buildGeminiJobInputFromProductProfile(profile,{
     execution_mode:'LIVE_EXTERNAL',execution_channel:'GEMINI_AI_PRO',fallback_allowed:true,
-    execution_reference:'AIPRO:PRIMARY',model:'gemini-test',job_id:'GJOB-V27-FALLBACK-INBOX'
+    execution_reference:'AIPRO:PRIMARY',job_id:'GJOB-V27-FALLBACK-INBOX'
   });
   assert.equal(built.pass,true);
   const job=createGeminiJob(built.jobInput).job;
+  assert.equal(job.model,null);
   job.sourceAttachment={...job.sourceAttachment,geminiFileUri:'files/already-uploaded'};
   const apiTransport=JSON.stringify({
     transportSchemaVersion:'1.0',transportType:'EVIDENCE_CANDIDATE_BATCH',batchId:'BATCH-V27-FALLBACK-INBOX',generatedAt:'2026-09-05T05:05:00Z',
@@ -105,10 +107,12 @@ test('v2.7 allowed AI Pro to API fallback persists actual channel, fallback_from
   });
   assert.equal(result.pass,true);
   assert.equal(result.job.executionChannel,'GEMINI_API');
+  assert.equal(result.job.model,profile.modelDefault);
   assert.equal(result.job.fallbackFrom,'GEMINI_AI_PRO');
   const manifest=loadEvidenceInboxManifest(inbox);
   const context=manifest.batches[0].executionContext;
   assert.equal(context.executionChannel,'GEMINI_API');
+  assert.equal(context.model,profile.modelDefault);
   assert.equal(context.fallbackFrom,'GEMINI_AI_PRO');
   assert.equal(context.fallbackReason,'GEMINI_AI_PRO_EXECUTION_SURFACE_UNAVAILABLE');
   assert.equal(context.transportMethod,'GEMINI_API_DIRECT_RESPONSE');
