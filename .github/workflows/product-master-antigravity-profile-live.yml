@@ -333,7 +333,7 @@ jobs:
           assert execution.get('result',{}).get('rawResponseSha256')==audit.get('rawResponseSha256'),execution
           assert execution.get('credentialMaterialPersisted') is False,execution
           provenance=ctx.get('transportProvenance') or {}
-          assert provenance.get('schemaVersion')=='1.0',provenance
+          assert provenance.get('schemaVersion')=='1.1',provenance
           assert provenance.get('recordType')=='PRODUCT_MASTER_TRANSPORT_PROVENANCE',provenance
           assert provenance.get('status')=='PASS',provenance
           assert provenance.get('executionChannel')=='GEMINI_AI_PRO',provenance
