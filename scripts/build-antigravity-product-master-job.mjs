@@ -62,7 +62,9 @@ const prompt=buildAntigravityWorkerPrompt(job,{
   sourceSha256:actualSha
 });
 
-const jobPath=path.join(outDir,'live-job.json');
+// Keep the historical filename so the existing workflow remains compatible.
+// The record itself is now a LIVE_EXTERNAL / GEMINI_AI_PRO Job, not a REPLAY Job.
+const jobPath=path.join(outDir,'replay-job.json');
 const schemaPath=path.join(outDir,'transport-schema.json');
 const promptPath=path.join(outDir,'worker-prompt.txt');
 const manifestPath=path.join(outDir,'antigravity-adapter-manifest.json');
