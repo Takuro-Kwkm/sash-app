@@ -1,6 +1,14 @@
 name: Thermos L Runtime Package v0.7
 
 on:
+  push:
+    branches: [feat/catalog-recovery-v2]
+    paths:
+      - '.github/workflows/product-master-thermosl-runtime-package-v07.yml'
+      - 'scripts/build-thermosl-runtime-package-v07.mjs'
+      - 'test/41-product-master-thermosl-runtime-package-v07.test.mjs'
+      - 'src/catalog/modules/thermosl-*.mjs'
+      - 'src/catalog/modules/thermosl-data/**'
   workflow_dispatch:
 
 permissions:
