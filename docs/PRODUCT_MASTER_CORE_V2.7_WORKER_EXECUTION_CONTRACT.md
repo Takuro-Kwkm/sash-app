@@ -90,9 +90,23 @@ The Antigravity self-hosted worker is treated as a Gemini AI Pro execution surfa
 
 The historical `replay-job.json` filename is temporarily retained for workflow compatibility, but the Job record itself is no longer modeled as REPLAY.
 
+The v1.1 workflow was verified with an actual self-hosted Antigravity Google AI Pro run on 2026-09-05. Worker Contract validation, source SHA verification, structured worker output, governed Transport import, Evidence Inbox execution provenance, Review Queue propagation, and the no-authoritative-write boundary all passed.
+
 ## 8. Gemini API surface
 
 The direct Gemini API runner explicitly selects `GEMINI_API` for LIVE API execution. Credential/model/source preflight remains fail-closed.
+
+`.github/workflows/product-master-gemini-profile-live.yml` is the generic v1.1 API execution surface. It is `workflow_dispatch` only: repository pushes do not automatically consume Gemini API capacity. The workflow explicitly records:
+
+- `execution_mode = LIVE_EXTERNAL`
+- `execution_channel = GEMINI_API`
+- `preferred_execution_channel = GEMINI_AI_PRO`
+- `fallback_execution_channel = GEMINI_API`
+- `fallback_allowed = false`
+- `transport_method = GEMINI_API_DIRECT_RESPONSE`
+- `execution_reference = GITHUB_ACTIONS_RUN:<repository>:<run_id>:<attempt>`
+
+Missing `GEMINI_API_KEY`, missing model/source, or authoritative source SHA mismatch blocks before model execution. Secret values are not persisted in audit artifacts.
 
 ## 9. Evidence Inbox execution provenance
 
@@ -136,3 +150,5 @@ v2.7 tests lock the following behavior:
 8. Evidence Inbox persists normalized execution provenance separately from raw Transport JSON.
 9. Review Queue exposes that provenance for Evidence review.
 10. Legacy Inbox batches remain readable without invented execution metadata.
+11. AI Pro and API workflow surfaces both declare their execution channel and transport method explicitly.
+12. API Profile LIVE remains manual-only and keeps Human Approval / Master Change authority closed.
