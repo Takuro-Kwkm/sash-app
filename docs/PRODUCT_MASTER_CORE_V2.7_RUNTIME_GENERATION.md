@@ -111,6 +111,37 @@ On load, the store:
 5. re-hashes the manifest and file set,
 6. validates the complete provenance chain.
 
+## Operator surface
+
+A series-specific generator can write its JSON output first and then hand it to the common Runtime candidate control plane.
+
+The CLI reads the already persisted Authoring STAGING pair for the same Proposal, so an operator cannot silently substitute a different Authoring Master path.
+
+```bash
+npm run master:runtime-candidate:v27 -- \
+  --proposal-id=<proposalId> \
+  --change-control-root=<control-plane-root> \
+  --runtime-root=<control-plane-root> \
+  --spec=<runtime-candidate-spec.json>
+```
+
+The spec is series-agnostic:
+
+```json
+{
+  "generator": {"id": "SERIES_RUNTIME_GENERATOR", "version": "1.0.0"},
+  "validation": {"pass": true},
+  "runtimeFiles": [
+    {"role": "RUNTIME_PRODUCT", "name": "product.json", "sourcePath": "./generated/product.json"},
+    {"role": "RUNTIME_RULES", "name": "rules.json", "sourcePath": "./generated/rules.json"}
+  ]
+}
+```
+
+`runtimeFiles` may alternatively provide inline JSON `content`. Relative `sourcePath` values resolve from the spec file directory.
+
+If Authoring loading, Runtime validation, provenance generation, or persistence fails, the CLI exits fail-closed and does not report a Runtime candidate as ready.
+
 ## Authority boundary
 
 A PASS Runtime Generation Provenance record means only that a controlled Runtime candidate was generated.
