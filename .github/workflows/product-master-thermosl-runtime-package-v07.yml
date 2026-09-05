@@ -1,0 +1,65 @@
+name: Thermos L Runtime Package v0.7
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  runtime_package:
+    name: Build and QA Thermos L Runtime JSON package
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      OUT_DIR: artifacts/thermosl-runtime-package-v07
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Verify formal Runtime package contract
+        run: |
+          set -euo pipefail
+          node --test test/41-product-master-thermosl-runtime-package-v07.test.mjs
+
+      - name: Run existing Thermos L Runtime regression gates
+        run: |
+          set -euo pipefail
+          node --test \
+            test/04-thermosl.test.mjs \
+            test/05-size-master.test.mjs \
+            test/23-product-master-core-v18-thermosl-runtime-regeneration.test.mjs \
+            test/25-thermosl-cr-sl-036-formal-regeneration.test.mjs
+
+      - name: Build formal Runtime JSON package snapshot
+        run: |
+          set -euo pipefail
+          node scripts/build-thermosl-runtime-package-v07.mjs --out-dir="$OUT_DIR" | tee "$OUT_DIR-build.log"
+          test -s "$OUT_DIR/LIXIL_サーモスL_runtime_v0.7.json"
+          test -s "$OUT_DIR/thermosl_runtime_package.schema.json"
+          test -s "$OUT_DIR/runtime_package_qa.json"
+          sha256sum "$OUT_DIR/LIXIL_サーモスL_runtime_v0.7.json" "$OUT_DIR/thermosl_runtime_package.schema.json" > "$OUT_DIR/runtime_files.sha256"
+
+      - name: Verify generated package QA is PASS
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import {readFileSync} from 'node:fs';
+          const qa=JSON.parse(readFileSync('artifacts/thermosl-runtime-package-v07/runtime_package_qa.json','utf8'));
+          if(qa.status!=='PASS')throw new Error('Runtime package QA is not PASS');
+          if(qa.runtime_file_count!==2)throw new Error('Runtime file count must be 2');
+          if(qa.authoring_sha256!=='cd6844218fcf0150a16cbbfa947f391aa08f5449b82ba6fc2249ccdb6894c3d3')throw new Error('Authoring SHA drift');
+          console.log('THERMOSL_RUNTIME_PACKAGE_QA_GATE=PASS');
+          NODE
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: thermosl-runtime-package-v07-working
+          path: |
+            artifacts/thermosl-runtime-package-v07
+            artifacts/thermosl-runtime-package-v07-build.log
+          if-no-files-found: error
+          retention-days: 14
