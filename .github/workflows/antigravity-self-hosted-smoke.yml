@@ -25,8 +25,21 @@ jobs:
         run: |
           set -euo pipefail
           echo "runner_name=${RUNNER_NAME}"
+          echo "runner_user=$(id -un)"
+          echo "runner_uid=$(id -u)"
+          echo "home=${HOME}"
+          echo "python_home=$(python3 - <<'PY'
+          from pathlib import Path
+          print(Path.home())
+          PY
+          )"
           command -v agy
           agy --version
+          echo "gemini_dir_exists=$(test -d \"$HOME/.gemini\" && echo yes || echo no)"
+          echo "antigravity_cli_dir_exists=$(test -d \"$HOME/.gemini/antigravity-cli\" && echo yes || echo no)"
+          echo "settings_exists=$(test -f \"$HOME/.gemini/antigravity-cli/settings.json\" && echo yes || echo no)"
+          echo '--- agy help (non-sensitive) ---'
+          agy --help | head -n 120
 
       - name: Verify headless Google AI Pro session
         shell: bash
