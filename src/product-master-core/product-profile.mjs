@@ -7,6 +7,7 @@ import{
 
 const isObject=(value)=>Boolean(value)&&typeof value==='object'&&!Array.isArray(value);
 const clone=(value)=>structuredClone(value);
+const hasOwn=(value,key)=>Object.prototype.hasOwnProperty.call(value,key);
 
 export const PRODUCT_MASTER_PROFILE_SCHEMA_VERSION='1.1';
 export const PRODUCT_MASTER_PROFILE_SCHEMA_VERSIONS=new Set(['1.0','1.1']);
@@ -89,6 +90,10 @@ export function buildGeminiJobInputFromProductProfile(input={},overrides={}){
   },{requireLiveChannel:true});
   if(!worker.pass)return{pass:false,jobInput:null,errors:worker.errors};
   const contract=worker.contract;
+  const explicitModel=hasOwn(overrides,'model')?overrides.model:undefined;
+  const model=explicitModel!==undefined
+    ?explicitModel
+    :(contract.executionChannel==='GEMINI_API'?profile.modelDefault??null:null);
   const jobInput={
     job_id:overrides.job_id??overrides.jobId,
     job_type:overrides.job_type??overrides.jobType??extraction.jobType??'EVIDENCE_EXTRACTION',
@@ -114,7 +119,7 @@ export function buildGeminiJobInputFromProductProfile(input={},overrides={}){
     fallback_allowed:contract.fallbackAllowed,
     transport_method:contract.transportMethod,
     execution_reference:contract.executionReference,
-    model:overrides.model??profile.modelDefault??null,
+    model,
     requested_by:overrides.requested_by??overrides.requestedBy??'CHATGPT',
     metadata:{
       profileSchemaVersion:profile.profileSchemaVersion,
