@@ -71,8 +71,8 @@ test('v2.7 governed Transport Issue is visible, provenance-bound, linked to PEND
   assert.equal(item.refs.pendingId,'PEND-ISSUE-REVIEW-001');
   assert.equal(item.refs.reviewProvenance.status,'PASS');
 
-  const resolved=transitionPersistedPending({rootDir:inbox,pendingId:'PEND-ISSUE-REVIEW-001',nextStatus:'RESOLVED',resolutionNote:'Verified by an independent official source review.',at:'2026-09-05T10:03:00Z',by:'CHATGPT'});
-  assert.equal(resolved.pass,true);
+  const resolved=transitionPersistedPending({rootDir:inbox,pendingId:'PEND-ISSUE-REVIEW-001',nextStatus:'RESOLVED',technicalFactIds:['TF-ISSUE-REVIEW-001'],externalTechnicalFactIds:['TF-ISSUE-REVIEW-001'],resolutionNote:'Verified by an independent official source review.',at:'2026-09-05T10:03:00Z',by:'CHATGPT'});
+  assert.equal(resolved.pass,true,resolved.errors?.[0]?.message);
   queue=buildProductMasterReviewQueue({evidenceInboxDir:inbox,changeControlDir:change,productId:'SER-LIXIL-ISSUE-TEST'});
   item=queue.items.find((row)=>row.kind==='EVIDENCE_TRANSPORT_ISSUE');
   assert.equal(item.reviewStatus,'RESOLVED');
