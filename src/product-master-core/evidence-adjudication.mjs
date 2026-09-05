@@ -7,6 +7,7 @@ export const EVIDENCE_ADJUDICATOR_TYPES=new Set(['CHATGPT','HUMAN']);
 export function adjudicateEvidenceCandidate(candidate,decision,{
   adjudicatorType='CHATGPT',adjudicatedBy='CHATGPT',reason,
   canonicalEvidenceId=null,pendingId=null,pendingSeverity='NON_BLOCKING',pendingQuestion=null,
+  reviewProvenance=null,
   at=new Date().toISOString()
 }={}){
   const validation=validateEvidenceCandidate(candidate);
@@ -19,7 +20,8 @@ export function adjudicateEvidenceCandidate(candidate,decision,{
 
   const audit={
     id:`ADJ-${candidate.id}`,recordType:'EVIDENCE_ADJUDICATION',candidateId:candidate.id,decision,
-    adjudicatorType,adjudicatedBy,reason,adjudicatedAt:at
+    adjudicatorType,adjudicatedBy,reason,adjudicatedAt:at,
+    ...(reviewProvenance?{reviewProvenance:structuredClone(reviewProvenance)}:{})
   };
   const updatedCandidate={...candidate,status:'ADJUDICATED',adjudicationId:audit.id};
 
@@ -33,7 +35,10 @@ export function adjudicateEvidenceCandidate(candidate,decision,{
         extractedBy:candidate.sourceSystem,adjudicatedBy,status:'ACCEPTED',reason,
         sourceCandidateId:candidate.id,adjudicatorType
       },
-      provenance:{candidateId:candidate.id,candidateSourceSystem:candidate.sourceSystem,producerMode:candidate.producerMode??'UNKNOWN'}
+      provenance:{
+        candidateId:candidate.id,candidateSourceSystem:candidate.sourceSystem,producerMode:candidate.producerMode??'UNKNOWN',
+        ...(reviewProvenance?{reviewProvenance:structuredClone(reviewProvenance)}:{})
+      }
     };
     return{candidate:updatedCandidate,audit,evidence,pending:null};
   }
@@ -44,7 +49,9 @@ export function adjudicateEvidenceCandidate(candidate,decision,{
       id:pendingId,status:'OPEN',severity:pendingSeverity,type:'EVIDENCE_CANDIDATE_REVIEW',field:candidate.subjectField,
       productNodeId:candidate.productNodeIds?.[0]??null,sourceCandidateId:candidate.id,
       question:pendingQuestion??`Evidence Candidate requires further verification: ${candidate.claim}`,
-      reviewReason:reason,history:[{from:null,to:'OPEN',at,by:adjudicatedBy}]
+      reviewReason:reason,
+      ...(reviewProvenance?{reviewProvenance:structuredClone(reviewProvenance)}:{}),
+      history:[{from:null,to:'OPEN',at,by:adjudicatedBy}]
     };
     return{candidate:updatedCandidate,audit,evidence:null,pending};
   }
