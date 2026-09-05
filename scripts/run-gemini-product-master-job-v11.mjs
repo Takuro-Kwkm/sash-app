@@ -48,10 +48,16 @@ function scrubSecrets(value,secrets){
   return JSON.parse(replace(JSON.stringify(value)));
 }
 
+function validateCreatedJob(input){
+  const created=createGeminiJob(input);
+  if(!created.pass)throw new Error(`Gemini Job validation failed: ${JSON.stringify(created.errors)}`);
+  return created.job;
+}
+
 function buildJob(args){
   if(args.job){
-    const job=readJson(args.job,'Gemini Job');
-    return{job,profile:null};
+    const input=readJson(args.job,'Gemini Job');
+    return{job:validateCreatedJob(input),profile:null};
   }
   if(!args.profile)throw new Error('Either --job or --profile is required');
   const profile=readJson(args.profile,'Product Profile');
@@ -67,9 +73,7 @@ function buildJob(args){
   };
   const built=buildGeminiJobInputFromProductProfile(profile,overrides);
   if(!built.pass)throw new Error(`Product Profile could not build Gemini Job: ${JSON.stringify(built.errors)}`);
-  const created=createGeminiJob(built.jobInput);
-  if(!created.pass)throw new Error(`Gemini Job validation failed: ${JSON.stringify(created.errors)}`);
-  return{job:created.job,profile};
+  return{job:validateCreatedJob(built.jobInput),profile};
 }
 
 async function main(){
