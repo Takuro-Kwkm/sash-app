@@ -123,7 +123,11 @@ export function persistCandidateUnderReview({
   let reviewed;
   try{reviewed=markCandidateUnderReview(candidate,{at,by});}catch(err){return{pass:false,status:'REVIEW_TRANSITION_REJECTED',errors:[error('CANDIDATE_REVIEW_TRANSITION_INVALID',err.message,{batchId,candidateId})]};}
   const history=[...(currentState?.history??[]),{from:candidate.status,to:'UNDER_REVIEW',at,by}];
-  const nextState={batchId,candidateId,status:'UNDER_REVIEW',review:reviewed.review,reviewProvenance:provenance.record,history};
+  const nextState={
+    batchId,candidateId,status:'UNDER_REVIEW',review:reviewed.review,
+    ...(provenance.record.governed?{reviewProvenance:provenance.record}:{}),
+    history
+  };
   const nextStore=upsertCandidateState({...store,updatedAt:at},nextState);
   const storePath=saveStore(rootDir,nextStore);
   return{pass:true,status:'CANDIDATE_UNDER_REVIEW',batchId,candidateId,candidateStatus:'UNDER_REVIEW',reviewProvenance:provenance.record,storePath,canonicalWritePerformed:false,errors:[]};
@@ -144,9 +148,10 @@ export function adjudicatePersistedCandidate({
   const candidate=effectiveCandidate(loaded.candidate,currentState);
   const provenance=reviewProvenanceFor(loaded,candidate,currentState);
   if(!provenance.pass)return{pass:false,status:'ADJUDICATION_PROVENANCE_BLOCKED',errors:provenance.errors};
+  const governedReviewProvenance=provenance.record.governed?provenance.record:null;
   let outcome;
   try{
-    outcome=adjudicateEvidenceCandidate(candidate,decision,{adjudicatorType,adjudicatedBy,reason,canonicalEvidenceId,pendingId,pendingSeverity,pendingQuestion,reviewProvenance:provenance.record,at});
+    outcome=adjudicateEvidenceCandidate(candidate,decision,{adjudicatorType,adjudicatedBy,reason,canonicalEvidenceId,pendingId,pendingSeverity,pendingQuestion,reviewProvenance:governedReviewProvenance,at});
   }catch(err){return{pass:false,status:'ADJUDICATION_REJECTED',errors:[error('ADJUDICATION_DECISION_INVALID',err.message,{batchId,candidateId,decision})]};}
 
   if(outcome.evidence){
@@ -161,7 +166,11 @@ export function adjudicatePersistedCandidate({
   if(store.adjudications.some((row)=>row.id===outcome.audit.id))return{pass:false,status:'ADJUDICATION_REJECTED',errors:[error('ADJUDICATION_ID_CONFLICT',`Adjudication id already exists: ${outcome.audit.id}`,{adjudicationId:outcome.audit.id})]};
 
   const history=[...(currentState?.history??[]),{from:candidate.status,to:'ADJUDICATED',at,by:adjudicatedBy,decision}];
-  const nextCandidateState={batchId,candidateId,status:'ADJUDICATED',adjudicationId:outcome.audit.id,reviewProvenance:provenance.record,history};
+  const nextCandidateState={
+    batchId,candidateId,status:'ADJUDICATED',adjudicationId:outcome.audit.id,
+    ...(governedReviewProvenance?{reviewProvenance:governedReviewProvenance}:{}),
+    history
+  };
   let nextStore=upsertCandidateState(store,nextCandidateState);
   nextStore={
     ...nextStore,
