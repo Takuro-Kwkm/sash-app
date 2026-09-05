@@ -7,9 +7,9 @@ import{CANONICAL_FIELD_NAMES}from'./canonical-fields.mjs';
 import{
   WORKER_EXECUTION_CONTRACT_VERSION,
   normalizeWorkerExecutionContract,
-  buildWorkerExecutionContext,
-  applyGeminiApiFallback
+  buildWorkerExecutionContext
 }from'./worker-execution-contract.mjs';
+import{routeGeminiExecutionChannel}from'./execution-channel-router.mjs';
 
 export const GEMINI_JOB_SCHEMA_VERSION='1.0';
 export const GEMINI_JOB_EXECUTION_MODES=new Set(['MOCK','LIVE_EXTERNAL','REPLAY']);
@@ -238,31 +238,36 @@ export async function executeGeminiJob(job,{
   let working=withTransition(job,'QUEUED');
   working=withTransition(working,'RUNNING');
   if(working.executionMode==='MOCK'){
-    if(typeof mockResponse!=='string')return{pass:false,job:withTransition(working,'BLOCKED',{reason:'MOCK_RESPONSE_REQUIRED'}),rawResponse:null,sourceAttachmentAudit:null,errors:[makeError('MOCK_RESPONSE_REQUIRED','MOCK execution requires mockResponse string')]};
-    return{pass:true,job:withTransition(working,'SUCCEEDED'),rawResponse:mockResponse,providerResponse:null,sourceAttachmentAudit:null,errors:[]};
+    if(typeof mockResponse!=='string')return{pass:false,job:withTransition(working,'BLOCKED',{reason:'MOCK_RESPONSE_REQUIRED'}),routeDecision:null,rawResponse:null,sourceAttachmentAudit:null,errors:[makeError('MOCK_RESPONSE_REQUIRED','MOCK execution requires mockResponse string')]};
+    return{pass:true,job:withTransition(working,'SUCCEEDED'),routeDecision:null,rawResponse:mockResponse,providerResponse:null,sourceAttachmentAudit:null,errors:[]};
   }
   if(working.executionMode==='REPLAY'){
-    if(typeof replayResponse!=='string')return{pass:false,job:withTransition(working,'BLOCKED',{reason:'REPLAY_RESPONSE_REQUIRED'}),rawResponse:null,sourceAttachmentAudit:null,errors:[makeError('REPLAY_RESPONSE_REQUIRED','REPLAY execution requires replayResponse string')]};
-    return{pass:true,job:withTransition(working,'SUCCEEDED'),rawResponse:replayResponse,providerResponse:null,sourceAttachmentAudit:null,errors:[]};
+    if(typeof replayResponse!=='string')return{pass:false,job:withTransition(working,'BLOCKED',{reason:'REPLAY_RESPONSE_REQUIRED'}),routeDecision:null,rawResponse:null,sourceAttachmentAudit:null,errors:[makeError('REPLAY_RESPONSE_REQUIRED','REPLAY execution requires replayResponse string')]};
+    return{pass:true,job:withTransition(working,'SUCCEEDED'),routeDecision:null,rawResponse:replayResponse,providerResponse:null,sourceAttachmentAudit:null,errors:[]};
   }
+
+  let route=routeGeminiExecutionChannel(working);
+  if(!route.pass)return{pass:false,job:withTransition(route.job,'BLOCKED',{reason:route.errors?.[0]?.code??'EXECUTION_CHANNEL_ROUTER_BLOCKED'}),routeDecision:route.decision,rawResponse:null,sourceAttachmentAudit:null,errors:route.errors};
+  working=route.job;
+  let routeDecision=route.decision;
 
   if(working.workerContractVersion===WORKER_EXECUTION_CONTRACT_VERSION&&working.executionChannel==='GEMINI_AI_PRO'){
     if(typeof externalResponse==='string'){
-      if(!working.executionReference)return{pass:false,job:withTransition(working,'BLOCKED',{reason:'GEMINI_AI_PRO_EXECUTION_REFERENCE_MISSING'}),rawResponse:null,sourceAttachmentAudit:null,errors:[makeError('GEMINI_AI_PRO_EXECUTION_REFERENCE_MISSING','GEMINI_AI_PRO external handoff requires execution_reference')]};
-      return{pass:true,job:withTransition(working,'SUCCEEDED'),rawResponse:externalResponse,providerResponse:null,sourceAttachmentAudit:null,errors:[]};
+      if(!working.executionReference)return{pass:false,job:withTransition(working,'BLOCKED',{reason:'GEMINI_AI_PRO_EXECUTION_REFERENCE_MISSING'}),routeDecision,rawResponse:null,sourceAttachmentAudit:null,errors:[makeError('GEMINI_AI_PRO_EXECUTION_REFERENCE_MISSING','GEMINI_AI_PRO external handoff requires execution_reference')]};
+      return{pass:true,job:withTransition(working,'SUCCEEDED'),routeDecision,rawResponse:externalResponse,providerResponse:null,sourceAttachmentAudit:null,errors:[]};
     }
-    if(!working.fallbackAllowed)return{pass:false,job:withTransition(working,'BLOCKED',{reason:'GEMINI_AI_PRO_EXECUTION_SURFACE_UNAVAILABLE'}),rawResponse:null,sourceAttachmentAudit:null,errors:[makeError('GEMINI_AI_PRO_EXECUTION_SURFACE_UNAVAILABLE','No GEMINI_AI_PRO external response was supplied and fallback_allowed is false')]};
-    const fallback=applyGeminiApiFallback(working,'GEMINI_AI_PRO_EXECUTION_SURFACE_UNAVAILABLE');
-    if(!fallback.pass)return{pass:false,job:withTransition(working,'BLOCKED',{reason:fallback.errors[0]?.code??'WORKER_FALLBACK_FAILED'}),rawResponse:null,sourceAttachmentAudit:null,errors:fallback.errors};
-    working=withTransition(fallback.job,'RUNNING',{fallbackFrom:fallback.job.fallbackFrom,fallbackReason:fallback.job.fallbackReason,executionChannel:'GEMINI_API'});
+    route=routeGeminiExecutionChannel(working,{unavailableChannel:'GEMINI_AI_PRO',reason:'GEMINI_AI_PRO_EXECUTION_SURFACE_UNAVAILABLE'});
+    routeDecision=route.decision;
+    if(!route.pass)return{pass:false,job:withTransition(route.job,'BLOCKED',{reason:route.errors?.[0]?.code??'EXECUTION_CHANNEL_ROUTER_BLOCKED',routeDecision}),routeDecision,rawResponse:null,sourceAttachmentAudit:null,errors:route.errors};
+    working=withTransition(route.job,'RUNNING',{fallbackFrom:route.job.fallbackFrom,fallbackReason:route.job.fallbackReason,executionChannel:route.job.executionChannel,routeDecision});
   }
 
   const executionModel=working.model??model??null;
   if(executionModel&&!working.model)working.model=executionModel;
   const blocked=liveBlockReason(working,{apiKey,model:executionModel,sourceFilePath});
-  if(blocked)return{pass:false,job:withTransition(working,'BLOCKED',{reason:blocked.code}),rawResponse:null,sourceAttachmentAudit:null,errors:[blocked]};
-  if(typeof fetchImpl!=='function')return{pass:false,job:withTransition(working,'BLOCKED',{reason:'FETCH_UNAVAILABLE'}),rawResponse:null,sourceAttachmentAudit:null,errors:[makeError('FETCH_UNAVAILABLE','No fetch implementation is available for LIVE_EXTERNAL')]};
-  if(working.workerContractVersion===WORKER_EXECUTION_CONTRACT_VERSION&&working.executionChannel!=='GEMINI_API')return{pass:false,job:withTransition(working,'BLOCKED',{reason:'GEMINI_API_EXECUTION_CHANNEL_REQUIRED'}),rawResponse:null,sourceAttachmentAudit:null,errors:[makeError('GEMINI_API_EXECUTION_CHANNEL_REQUIRED',`Direct Gemini API execution requires execution_channel=GEMINI_API, received ${working.executionChannel??'null'}`)]};
+  if(blocked)return{pass:false,job:withTransition(working,'BLOCKED',{reason:blocked.code}),routeDecision,rawResponse:null,sourceAttachmentAudit:null,errors:[blocked]};
+  if(typeof fetchImpl!=='function')return{pass:false,job:withTransition(working,'BLOCKED',{reason:'FETCH_UNAVAILABLE'}),routeDecision,rawResponse:null,sourceAttachmentAudit:null,errors:[makeError('FETCH_UNAVAILABLE','No fetch implementation is available for LIVE_EXTERNAL')]};
+  if(working.workerContractVersion===WORKER_EXECUTION_CONTRACT_VERSION&&working.executionChannel!=='GEMINI_API')return{pass:false,job:withTransition(working,'BLOCKED',{reason:'GEMINI_API_EXECUTION_CHANNEL_REQUIRED'}),routeDecision,rawResponse:null,sourceAttachmentAudit:null,errors:[makeError('GEMINI_API_EXECUTION_CHANNEL_REQUIRED',`Direct Gemini API execution requires execution_channel=GEMINI_API, received ${working.executionChannel??'null'}`)]};
   if(working.workerContractVersion===WORKER_EXECUTION_CONTRACT_VERSION&&!working.executionReference)working.executionReference=`GEMINI_API_JOB:${working.jobId}`;
   let sourceAttachmentAudit=null;
   if(working.sourceContext?.type==='OFFICIAL_PDF'&&!working.sourceAttachment?.geminiFileUri){
@@ -272,7 +277,7 @@ export async function executeGeminiJob(job,{
     sourceAttachmentAudit=upload.audit??null;
     if(!upload.pass){
       const status=upload.status==='BLOCKED'?'BLOCKED':'FAILED';
-      return{pass:false,job:withTransition(working,status,{reason:upload.errors?.[0]?.code??'GEMINI_FILE_UPLOAD_FAILED'}),rawResponse:null,sourceAttachmentAudit,errors:upload.errors??[]};
+      return{pass:false,job:withTransition(working,status,{reason:upload.errors?.[0]?.code??'GEMINI_FILE_UPLOAD_FAILED'}),routeDecision,rawResponse:null,sourceAttachmentAudit,errors:upload.errors??[]};
     }
     working.sourceAttachment={...(working.sourceAttachment??{}),...upload.attachment};
   }
@@ -285,14 +290,14 @@ export async function executeGeminiJob(job,{
     const providerResponse=redactGeminiSecrets(await response.json().catch(()=>null),[apiKey]);
     if(!response.ok){
       const message=redactGeminiSecrets(providerResponse?.error?.message??`Gemini API HTTP ${response.status}`,[apiKey]);
-      return{pass:false,job:withTransition(working,'FAILED',{reason:'GEMINI_API_ERROR'}),rawResponse:null,providerResponse,sourceAttachmentAudit,errors:[makeError('GEMINI_API_ERROR',message,{httpStatus:response.status})]};
+      return{pass:false,job:withTransition(working,'FAILED',{reason:'GEMINI_API_ERROR'}),routeDecision,rawResponse:null,providerResponse,sourceAttachmentAudit,errors:[makeError('GEMINI_API_ERROR',message,{httpStatus:response.status})]};
     }
     const rawResponse=extractGeminiResponseText(providerResponse);
-    if(!rawResponse)return{pass:false,job:withTransition(working,'FAILED',{reason:'GEMINI_RESPONSE_TEXT_MISSING'}),rawResponse:null,providerResponse,sourceAttachmentAudit,errors:[makeError('GEMINI_RESPONSE_TEXT_MISSING','Gemini response did not contain text output')]};
-    return{pass:true,job:withTransition(working,'SUCCEEDED'),rawResponse,providerResponse,sourceAttachmentAudit,errors:[]};
+    if(!rawResponse)return{pass:false,job:withTransition(working,'FAILED',{reason:'GEMINI_RESPONSE_TEXT_MISSING'}),routeDecision,rawResponse:null,providerResponse,sourceAttachmentAudit,errors:[makeError('GEMINI_RESPONSE_TEXT_MISSING','Gemini response did not contain text output')]};
+    return{pass:true,job:withTransition(working,'SUCCEEDED'),routeDecision,rawResponse,providerResponse,sourceAttachmentAudit,errors:[]};
   }catch(cause){
     const code=cause?.name==='AbortError'?'GEMINI_TIMEOUT':'GEMINI_EXECUTION_FAILED';
-    return{pass:false,job:withTransition(working,'FAILED',{reason:code}),rawResponse:null,sourceAttachmentAudit,errors:[makeError(code,redactGeminiSecrets(cause?.message??String(cause),[apiKey]))]};
+    return{pass:false,job:withTransition(working,'FAILED',{reason:code}),routeDecision,rawResponse:null,sourceAttachmentAudit,errors:[makeError(code,redactGeminiSecrets(cause?.message??String(cause),[apiKey]))]};
   }finally{clearTimeout(timer);}
 }
 
@@ -301,22 +306,22 @@ export async function runGeminiProductMasterBridge(job,{
 }={}){
   const execution=await executeGeminiJob(job,executionOptions);
   const safety={canonicalWritePerformed:false,runtimeWritePerformed:false,productionWritePerformed:false};
-  if(!execution.pass)return{pass:false,status:execution.job.status,job:execution.job,rawResponseSha256:null,sourceAttachmentAudit:execution.sourceAttachmentAudit??null,transportValidation:null,inboxImport:null,reviewQueue:null,...safety,errors:execution.errors};
+  if(!execution.pass)return{pass:false,status:execution.job.status,job:execution.job,routeDecision:execution.routeDecision??null,rawResponseSha256:null,sourceAttachmentAudit:execution.sourceAttachmentAudit??null,transportValidation:null,inboxImport:null,reviewQueue:null,...safety,errors:execution.errors};
   const raw=execution.rawResponse;
   const rawResponseSha256=sha256(raw);
   const transportValidation=validateBridgeTransport(raw,execution.job,transportOptions);
   if(!transportValidation.pass){
     const rejected=withTransition(execution.job,'REJECTED_AT_TRANSPORT',{rawResponseSha256});
-    return{pass:false,status:'REJECTED_AT_TRANSPORT',job:rejected,rawResponseSha256,sourceAttachmentAudit:execution.sourceAttachmentAudit??null,transportValidation,inboxImport:null,reviewQueue:null,...safety,errors:transportValidation.errors};
+    return{pass:false,status:'REJECTED_AT_TRANSPORT',job:rejected,routeDecision:execution.routeDecision??null,rawResponseSha256,sourceAttachmentAudit:execution.sourceAttachmentAudit??null,transportValidation,inboxImport:null,reviewQueue:null,...safety,errors:transportValidation.errors};
   }
   const executionContext=buildWorkerExecutionContext(execution.job);
   const inboxImport=persistGeminiTransport(raw,{rootDir:evidenceInboxDir,allowDuplicateClaims,importedAt,executionContext,...transportOptions,expectedProductId:execution.job.productId});
   if(!inboxImport.pass){
     const rejectedStatus=inboxImport.status==='REJECTED_AT_TRANSPORT_BOUNDARY'?'REJECTED_AT_TRANSPORT':'REJECTED_AT_INBOX';
     const rejected=withTransition(execution.job,rejectedStatus,{rawResponseSha256,inboxStatus:inboxImport.status});
-    return{pass:false,status:rejectedStatus,job:rejected,rawResponseSha256,sourceAttachmentAudit:execution.sourceAttachmentAudit??null,transportValidation,inboxImport,reviewQueue:null,...safety,errors:inboxImport.errors};
+    return{pass:false,status:rejectedStatus,job:rejected,routeDecision:execution.routeDecision??null,rawResponseSha256,sourceAttachmentAudit:execution.sourceAttachmentAudit??null,transportValidation,inboxImport,reviewQueue:null,...safety,errors:inboxImport.errors};
   }
   const imported=withTransition(execution.job,'IMPORTED',{rawResponseSha256,batchId:inboxImport.batch.id});
   const reviewQueue=buildProductMasterReviewQueue({evidenceInboxDir,changeControlDir,productId:imported.productId});
-  return{pass:true,status:'IMPORTED',job:imported,executionContext,rawResponseSha256,responseReceivedAt:importedAt,normalizedBatchId:inboxImport.batch.id,sourceAttachmentAudit:execution.sourceAttachmentAudit??null,transportValidation,inboxImport,reviewQueue,...safety,errors:[]};
+  return{pass:true,status:'IMPORTED',job:imported,routeDecision:execution.routeDecision??null,executionContext,rawResponseSha256,responseReceivedAt:importedAt,normalizedBatchId:inboxImport.batch.id,sourceAttachmentAudit:execution.sourceAttachmentAudit??null,transportValidation,inboxImport,reviewQueue,...safety,errors:[]};
 }
