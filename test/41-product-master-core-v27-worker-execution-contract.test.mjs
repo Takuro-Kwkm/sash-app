@@ -45,6 +45,17 @@ test('v2.7 new LIVE job defaults to Gemini AI Pro primary with API fallback disa
   assert.equal(built.jobInput.fallback_allowed,false);
   assert.equal(built.jobInput.transport_method,'GEMINI_AI_PRO_STRUCTURED_HANDOFF');
   assert.equal(built.jobInput.execution_reference,null);
+  assert.equal(built.jobInput.model,null);
+});
+
+test('v2.7 API channel uses Profile model default while AI Pro only records an explicitly known model',()=>{
+  const profile=loadProfile();
+  const api=buildGeminiJobInputFromProductProfile(profile,{execution_mode:'LIVE_EXTERNAL',execution_channel:'GEMINI_API',job_id:'GJOB-WORKER-V27-API-MODEL'});
+  assert.equal(api.pass,true);
+  assert.equal(api.jobInput.model,profile.modelDefault);
+  const aiProKnown=buildGeminiJobInputFromProductProfile(profile,{execution_mode:'LIVE_EXTERNAL',execution_channel:'GEMINI_AI_PRO',model:'explicit-ai-pro-model',job_id:'GJOB-WORKER-V27-AIPRO-MODEL'});
+  assert.equal(aiProKnown.pass,true);
+  assert.equal(aiProKnown.jobInput.model,'explicit-ai-pro-model');
 });
 
 test('v2.7 new LIVE v1.1 job rejects missing execution_channel while legacy artifact is not guessed',()=>{
@@ -81,9 +92,11 @@ test('v2.7 Gemini AI Pro handoff imports as LIVE_EXTERNAL and preserves executio
   assert.equal(result.status,'IMPORTED');
   assert.equal(result.job.executionMode,'LIVE_EXTERNAL');
   assert.equal(result.job.executionChannel,'GEMINI_AI_PRO');
+  assert.equal(result.job.model,null);
   assert.equal(result.executionContext.executionChannel,'GEMINI_AI_PRO');
   assert.equal(result.executionContext.transportMethod,'GEMINI_AI_PRO_STRUCTURED_HANDOFF');
   assert.equal(result.executionContext.executionReference,'GITHUB_ACTIONS_RUN:Takuro-Kwkm/sash-app:123:1');
+  assert.equal(result.executionContext.model,null);
   assert.equal(result.canonicalWritePerformed,false);
 });
 
