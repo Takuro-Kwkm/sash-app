@@ -127,6 +127,7 @@ export function buildGeminiJobInputFromProductProfile(input={},overrides={}){
       schemaAdapter:profile.schemaAdapter??null,
       runtimePartitionPolicy:clone(profile.runtimePartitionPolicy??null),
       dependencyHooks:clone(profile.dependencyHooks??[]),
+      geminiApiModelDefault:profile.modelDefault??null,
       sourcePageCount:source.pageCount,
       officialDetailUrl:source.officialDetailUrl,
       officialDownloadUrl:source.officialDownloadUrl,
