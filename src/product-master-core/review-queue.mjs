@@ -1,6 +1,7 @@
 import fs from'node:fs';
 import path from'node:path';
 import{buildEvidenceReviewProvenance,validateEvidenceReviewProvenance}from'./evidence-review-provenance.mjs';
+import{buildTransportIssueReviewProvenance,validateTransportIssueReviewProvenance}from'./transport-issue-review-provenance.mjs';
 
 export const PRODUCT_MASTER_REVIEW_QUEUE_SCHEMA_VERSION='1.0';
 export const PRODUCT_MASTER_REVIEW_STATUSES=new Set([
@@ -50,6 +51,14 @@ function candidateReviewStatus({candidate,state,audit,pending}){
   return{reviewStatus:'BLOCKED',nextAction:'INSPECT_MISSING_ADJUDICATION',authority:'CHATGPT_OR_HUMAN'};
 }
 
+function transportIssueReviewStatus({pending}){
+  if(!pending)return{sourceStatus:'UNLINKED',reviewStatus:'NEEDS_REVIEW',nextAction:'LINK_TRANSPORT_ISSUE_TO_PENDING',authority:'CHATGPT_OR_HUMAN'};
+  if(['OPEN','INVESTIGATING'].includes(pending.status))return{sourceStatus:pending.status,reviewStatus:'NEEDS_REVIEW',nextAction:'RESOLVE_TRANSPORT_ISSUE_PENDING',authority:'CHATGPT_OR_HUMAN'};
+  if(pending.status==='RESOLVED')return{sourceStatus:'RESOLVED',reviewStatus:'RESOLVED',nextAction:'NONE',authority:null};
+  if(pending.status==='REJECTED')return{sourceStatus:'REJECTED',reviewStatus:'REJECTED',nextAction:'NONE',authority:null};
+  return{sourceStatus:pending.status??'UNKNOWN',reviewStatus:'BLOCKED',nextAction:'INSPECT_TRANSPORT_ISSUE_STATE',authority:'CHATGPT_OR_HUMAN'};
+}
+
 function candidateProvenanceStatus({batch,candidate,state,audit}){
   const built=buildEvidenceReviewProvenance({batch,candidate});
   if(!built.pass)return{pass:false,record:null,errors:built.errors};
@@ -60,6 +69,21 @@ function candidateProvenanceStatus({batch,candidate,state,audit}){
     const keys=['status','governed','batchId','candidateId','candidateFingerprint','batchRawSha256','executionChannel','executionReference'];
     for(const key of keys){
       if((persisted[key]??null)!==(built.record[key]??null))return{pass:false,record:persisted,errors:[{code:'REVIEW_QUEUE_PROVENANCE_STATE_DRIFT',message:`Persisted review provenance ${key} no longer matches Inbox provenance`,field:key,expected:built.record[key]??null,actual:persisted[key]??null}]};
+    }
+  }
+  return{pass:true,record:persisted??built.record,errors:[]};
+}
+
+function transportIssueProvenanceStatus({batch,issue,pending}){
+  const built=buildTransportIssueReviewProvenance({batch,issue});
+  if(!built.pass)return{pass:false,record:null,errors:built.errors};
+  const persisted=pending?.reviewProvenance??null;
+  if(persisted){
+    const validation=validateTransportIssueReviewProvenance(persisted,{batch,issue});
+    if(!validation.pass)return{pass:false,record:persisted,errors:validation.errors};
+    const keys=['status','governed','batchId','issueId','issueFingerprint','batchRawSha256','executionChannel','executionReference'];
+    for(const key of keys){
+      if((persisted[key]??null)!==(built.record[key]??null))return{pass:false,record:persisted,errors:[{code:'TRANSPORT_ISSUE_REVIEW_QUEUE_PROVENANCE_STATE_DRIFT',message:`Persisted Transport Issue provenance ${key} no longer matches Inbox provenance`,field:key,expected:built.record[key]??null,actual:persisted[key]??null}]};
     }
   }
   return{pass:true,record:persisted??built.record,errors:[]};
@@ -105,6 +129,27 @@ function evidenceQueueItems(evidenceInboxDir){
         nextAction:mapped.nextAction,queueReason,
         refs:{
           batchId:batch.batchId,candidateId:candidate.id,pendingId:pending?.id??null,adjudicationId:audit?.id??null,relativePath:batch.relativePath,
+          reviewProvenance:provenance.record??null,
+          provenanceErrors:provenance.pass?[]:provenance.errors,
+          ...(executionContext?{executionContext}:{})
+        }
+      });
+    }
+    for(const issue of safeArray(envelope.issues)){
+      const pending=safeArray(state.pending).find((row)=>row.sourceBatchId===batch.batchId&&row.sourceIssueId===issue.id)??null;
+      let mapped=transportIssueReviewStatus({pending});
+      const provenance=transportIssueProvenanceStatus({batch,issue,pending});
+      let queueReason=pending?.question??issue.question??issue.type??null;
+      if(!provenance.pass){
+        mapped={sourceStatus:pending?.status??'PROVENANCE_BLOCKED',reviewStatus:'BLOCKED',nextAction:'INSPECT_EVIDENCE_PROVENANCE',authority:'CHATGPT_OR_HUMAN'};
+        queueReason=provenance.errors.map((row)=>`${row.code}: ${row.message}`).join('; ');
+      }
+      items.push({
+        queueId:`RQ:TRANSPORT_ISSUE:${batch.batchId}:${issue.id}`,kind:'EVIDENCE_TRANSPORT_ISSUE',
+        productId:envelope.productId??batch.productId??null,sourceId:issue.id,sourceStatus:mapped.sourceStatus,sourceDecision:null,
+        reviewStatus:mapped.reviewStatus,actionable:mapped.nextAction!=='NONE',authority:mapped.authority,nextAction:mapped.nextAction,queueReason,
+        refs:{
+          batchId:batch.batchId,issueId:issue.id,pendingId:pending?.id??null,relativePath:batch.relativePath,
           reviewProvenance:provenance.record??null,
           provenanceErrors:provenance.pass?[]:provenance.errors,
           ...(executionContext?{executionContext}:{})
@@ -186,7 +231,7 @@ export function buildProductMasterReviewQueue({
   if(actionableOnly)items=items.filter((row)=>row.actionable);
   items.sort((a,b)=>`${a.productId??''}|${a.kind}|${a.sourceId}`.localeCompare(`${b.productId??''}|${b.kind}|${b.sourceId}`));
   const byStatus=Object.fromEntries([...PRODUCT_MASTER_REVIEW_STATUSES].map((key)=>[key,0]));
-  const byKind={EVIDENCE_CANDIDATE:0,EVIDENCE_BATCH:0,MASTER_CHANGE_PROPOSAL:0};
+  const byKind={EVIDENCE_CANDIDATE:0,EVIDENCE_TRANSPORT_ISSUE:0,EVIDENCE_BATCH:0,MASTER_CHANGE_PROPOSAL:0};
   for(const item of items){
     if(byStatus[item.reviewStatus]!==undefined)byStatus[item.reviewStatus]+=1;
     byKind[item.kind]=(byKind[item.kind]??0)+1;
@@ -198,7 +243,7 @@ export function buildProductMasterReviewQueue({
     summary:{total:items.length,actionable:items.filter((row)=>row.actionable).length,byStatus,byKind},
     items,
     authorityBoundary:{
-      evidenceAdjudication:'CHATGPT_OR_HUMAN',geminiAdjudicationAllowed:false,masterChangeApproval:'HUMAN_REQUIRED',
+      evidenceAdjudication:'CHATGPT_OR_HUMAN',geminiAdjudicationAllowed:false,transportIssueResolution:'CHATGPT_OR_HUMAN',masterChangeApproval:'HUMAN_REQUIRED',
       queueMutationAuthority:'NONE',productionMasterAutoWrite:false,runtimeAutoWrite:false
     }
   };
