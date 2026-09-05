@@ -16,35 +16,49 @@ function sameSource(expected={},actual={}){
   return mismatches;
 }
 
+function legacyRecord(batch,candidate,executionContext=null){
+  return{
+    schemaVersion:EVIDENCE_REVIEW_PROVENANCE_SCHEMA_VERSION,
+    recordType:EVIDENCE_REVIEW_PROVENANCE_RECORD_TYPE,
+    status:'LEGACY_COMPATIBLE',
+    governed:false,
+    batchId:batch.batchId,
+    candidateId:candidate.id,
+    productId:candidate.productId??batch.productId??null,
+    candidateFingerprint:evidenceClaimFingerprint(candidate),
+    batchRawSha256:normalizeSha(batch.rawSha256),
+    sourceContext:structuredClone(batch.sourceContext??candidate.source??{}),
+    workerContractVersion:executionContext?.workerContractVersion??null,
+    executionChannel:executionContext?.executionChannel??null,
+    executionReference:executionContext?.executionReference??null,
+    transportProvenance:null,
+    legacyReason:executionContext?'BATCH_PREDATES_GOVERNED_TRANSPORT_PROVENANCE':'BATCH_PREDATES_EXECUTION_PROVENANCE'
+  };
+}
+
 export function buildEvidenceReviewProvenance({batch,candidate}={}){
   const errors=[];
   if(!isObject(batch)||!batch.batchId)errors.push(error('REVIEW_PROVENANCE_BATCH_INVALID','Evidence review provenance requires a persisted Inbox batch'));
   if(!isObject(candidate)||!candidate.id)errors.push(error('REVIEW_PROVENANCE_CANDIDATE_INVALID','Evidence review provenance requires a candidate'));
   if(errors.length)return{pass:false,record:null,errors};
-  if(!(batch.candidateIds??[]).includes(candidate.id))errors.push(error('REVIEW_PROVENANCE_CANDIDATE_NOT_REGISTERED','Candidate is not registered in the Inbox batch',{batchId:batch.batchId,candidateId:candidate.id}));
+
+  const executionContext=batch.executionContext??null;
+  const hasGovernedTransport=isObject(executionContext?.transportProvenance);
+
+  if(!hasGovernedTransport){
+    if(Array.isArray(batch.candidateIds)&&batch.candidateIds.length>0&&!batch.candidateIds.includes(candidate.id))errors.push(error('REVIEW_PROVENANCE_CANDIDATE_NOT_REGISTERED','Candidate is not registered in the Inbox batch',{batchId:batch.batchId,candidateId:candidate.id}));
+    if(batch.productId&&candidate.productId&&candidate.productId!==batch.productId)errors.push(error('REVIEW_PROVENANCE_PRODUCT_MISMATCH','Candidate productId does not match Inbox batch',{expected:batch.productId,actual:candidate.productId??null}));
+    if(batch.sourceContext){
+      const sourceMismatches=sameSource(batch.sourceContext,candidate.source);
+      for(const mismatch of sourceMismatches)errors.push(error('REVIEW_PROVENANCE_SOURCE_MISMATCH',`Candidate source.${mismatch.field} does not match Inbox batch sourceContext`,mismatch));
+    }
+    return errors.length?{pass:false,record:null,errors}:{pass:true,record:legacyRecord(batch,candidate,executionContext),errors:[]};
+  }
+
+  if(!(batch.candidateIds??[]).includes(candidate.id))errors.push(error('REVIEW_PROVENANCE_CANDIDATE_NOT_REGISTERED','Candidate is not registered in the governed Inbox batch',{batchId:batch.batchId,candidateId:candidate.id}));
   if(batch.productId&&candidate.productId!==batch.productId)errors.push(error('REVIEW_PROVENANCE_PRODUCT_MISMATCH','Candidate productId does not match Inbox batch',{expected:batch.productId,actual:candidate.productId??null}));
   const sourceMismatches=sameSource(batch.sourceContext,candidate.source);
   for(const mismatch of sourceMismatches)errors.push(error('REVIEW_PROVENANCE_SOURCE_MISMATCH',`Candidate source.${mismatch.field} does not match Inbox batch sourceContext`,mismatch));
-  if(errors.length)return{pass:false,record:null,errors};
-
-  const executionContext=batch.executionContext??null;
-  const common={
-    schemaVersion:EVIDENCE_REVIEW_PROVENANCE_SCHEMA_VERSION,
-    recordType:EVIDENCE_REVIEW_PROVENANCE_RECORD_TYPE,
-    batchId:batch.batchId,
-    candidateId:candidate.id,
-    productId:candidate.productId,
-    candidateFingerprint:evidenceClaimFingerprint(candidate),
-    batchRawSha256:normalizeSha(batch.rawSha256),
-    sourceContext:structuredClone(batch.sourceContext??candidate.source??{})
-  };
-
-  if(!executionContext){
-    return{pass:true,record:{
-      ...common,status:'LEGACY_COMPATIBLE',governed:false,workerContractVersion:null,executionChannel:null,executionReference:null,
-      transportProvenance:null,legacyReason:'BATCH_PREDATES_EXECUTION_PROVENANCE'
-    },errors:[]};
-  }
 
   if(executionContext.workerContractVersion!=='1.1')errors.push(error('REVIEW_PROVENANCE_WORKER_CONTRACT_INVALID','Governed Evidence review requires workerContractVersion=1.1',{actual:executionContext.workerContractVersion??null}));
   if(!['GEMINI_AI_PRO','GEMINI_API'].includes(executionContext.executionChannel))errors.push(error('REVIEW_PROVENANCE_EXECUTION_CHANNEL_INVALID','Governed Evidence review requires a known Gemini execution channel',{actual:executionContext.executionChannel??null}));
@@ -65,7 +79,12 @@ export function buildEvidenceReviewProvenance({batch,candidate}={}){
   if(errors.length)return{pass:false,record:null,errors};
 
   return{pass:true,record:{
-    ...common,status:'PASS',governed:true,workerContractVersion:'1.1',executionChannel:executionContext.executionChannel,executionReference:executionContext.executionReference,
+    schemaVersion:EVIDENCE_REVIEW_PROVENANCE_SCHEMA_VERSION,
+    recordType:EVIDENCE_REVIEW_PROVENANCE_RECORD_TYPE,
+    status:'PASS',governed:true,
+    batchId:batch.batchId,candidateId:candidate.id,productId:candidate.productId,candidateFingerprint:evidenceClaimFingerprint(candidate),
+    batchRawSha256:batchSha,sourceContext:structuredClone(batch.sourceContext??candidate.source??{}),
+    workerContractVersion:'1.1',executionChannel:executionContext.executionChannel,executionReference:executionContext.executionReference,
     transportProvenance:{
       schemaVersion:transport.schemaVersion,
       rawResponseSha256:transport.rawResponseSha256,
