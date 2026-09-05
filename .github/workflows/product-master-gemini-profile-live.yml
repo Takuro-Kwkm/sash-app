@@ -61,9 +61,6 @@ jobs:
               'manufacturer':p['manufacturer'],
               'series':p['series'],
               'product_id':p['productId'],
-              'source_url':source['officialDownloadUrl'],
-              'detail_url':source['officialDetailUrl'],
-              'expected_sha':source['authoritativeSha256'],
               'source_drive_file_id':source['driveFileId'],
               'source_title':source['title'],
               'model':model
@@ -106,41 +103,21 @@ jobs:
           fi
           echo 'GEMINI_API_CREDENTIAL_GATE=PASS'
 
-      - name: Acquire official source and require exact authoritative SHA-256
+      - name: Acquire official source through common Source Acquisition contract
         id: source
         shell: bash
         run: |
           set -euo pipefail
           SOURCE_DIR="$ARTIFACT_DIR/source"
           mkdir -p "$SOURCE_DIR"
-          SOURCE_PDF="$SOURCE_DIR/official-source.pdf"
-          curl --fail --location --retry 2 --retry-delay 2 \
-            --connect-timeout 20 --max-time 240 \
-            --user-agent 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/152 Safari/537.36' \
-            --referer '${{ steps.profile.outputs.detail_url }}' \
-            --output "$SOURCE_PDF" '${{ steps.profile.outputs.source_url }}'
-          mime_type=$(file -b --mime-type "$SOURCE_PDF")
-          magic=$(head -c 5 "$SOURCE_PDF")
-          actual_sha=$(sha256sum "$SOURCE_PDF" | awk '{print $1}')
-          test "$mime_type" = 'application/pdf'
-          test "$magic" = '%PDF-'
-          test "$actual_sha" = '${{ steps.profile.outputs.expected_sha }}'
-          SOURCE_PDF="$SOURCE_PDF" ACTUAL_SHA="$actual_sha" ARTIFACT_DIR="$ARTIFACT_DIR" python3 - <<'PY'
-          import json, os
-          from pathlib import Path
-          source=Path(os.environ['SOURCE_PDF'])
-          payload={
-              'sourceReady':True,
-              'bytes':source.stat().st_size,
-              'actualSha256':os.environ['ACTUAL_SHA'],
-              'exactAuthoritativeSha256Match':True,
-              'driveFileId':'${{ steps.profile.outputs.source_drive_file_id }}',
-              'title':'${{ steps.profile.outputs.source_title }}'
-          }
-          Path(os.environ['ARTIFACT_DIR'],'source-acquisition-audit.json').write_text(json.dumps(payload,ensure_ascii=False,indent=2)+'\n')
-          PY
-          echo "source_pdf=$SOURCE_PDF" >> "$GITHUB_OUTPUT"
-          echo 'SOURCE_EXACT_SHA_GATE=PASS'
+          node scripts/acquire-product-master-source.mjs \
+            --profile="$PROFILE_PATH" \
+            --execution-channel=GEMINI_API \
+            --output="$SOURCE_DIR/official-source.pdf" \
+            --audit="$ARTIFACT_DIR/source-acquisition-audit.json" \
+            --github-output="$GITHUB_OUTPUT" \
+            | tee "$ARTIFACT_DIR/source-acquisition-console.log"
+          echo 'SOURCE_ACQUISITION_GATE=PASS'
 
       - name: Execute governed Gemini API LIVE job
         shell: bash
@@ -161,12 +138,13 @@ jobs:
             --execution-reference="$execution_reference" \
             --model='${{ steps.profile.outputs.model }}' \
             --source-file='${{ steps.source.outputs.source_pdf }}' \
+            --source-acquisition-audit="$ARTIFACT_DIR/source-acquisition-audit.json" \
             --evidence-inbox="$ARTIFACT_DIR/evidence-inbox" \
             --change-control="$ARTIFACT_DIR/change-control" \
             --audit-dir="$ARTIFACT_DIR/jobs" \
             | tee "$ARTIFACT_DIR/governed-api-live-console.log"
 
-      - name: Enforce API Worker Contract and Evidence provenance gates
+      - name: Enforce API Worker Contract, Source Acquisition and Evidence provenance gates
         shell: bash
         run: |
           set -euo pipefail
@@ -201,16 +179,25 @@ jobs:
           assert ctx.get('transportMethod')=='GEMINI_API_DIRECT_RESPONSE',ctx
           assert ctx.get('executionReference')==expected_ref,ctx
           assert ctx.get('fallbackFrom') is None,ctx
+          source=ctx.get('sourceAcquisition') or {}
+          assert source.get('schemaVersion')=='1.1',source
+          assert source.get('recordType')=='PRODUCT_MASTER_SOURCE_ACQUISITION',source
+          assert source.get('status')=='PASS',source
+          assert source.get('executionChannel')=='GEMINI_API',source
+          assert source.get('source',{}).get('driveFileId')=='${{ steps.profile.outputs.source_drive_file_id }}',source
+          assert source.get('identity',{}).get('mode') in {'FULL_BYTE_IDENTITY','SCOPED_CONTENT_EQUIVALENCE'},source
+          assert source.get('credentialMaterialPersisted') is False,source
           rq=audit.get('reviewQueue') or {}
           for item in rq.get('items',[]):
               if item.get('kind')!='EVIDENCE_CANDIDATE': continue
               qctx=(item.get('refs') or {}).get('executionContext') or {}
               assert qctx.get('executionChannel')=='GEMINI_API',item
               assert qctx.get('executionReference')==expected_ref,item
+              assert (qctx.get('sourceAcquisition') or {}).get('status')=='PASS',item
           gates={
               'WORKER_EXECUTION_CONTRACT_GATE':'PASS',
               'GEMINI_API_CREDENTIAL_GATE':'PASS',
-              'SOURCE_EXACT_SHA_GATE':'PASS',
+              'SOURCE_ACQUISITION_GATE':'PASS',
               'GEMINI_API_LIVE_EXECUTION_GATE':'PASS',
               'TRANSPORT_GATE':'PASS',
               'EVIDENCE_INBOX_GATE':'PASS',
@@ -218,6 +205,7 @@ jobs:
               'REVIEW_QUEUE_GATE':'PASS',
               'HUMAN_APPROVAL_GATE':'NOT_OPENED',
               'MASTER_CHANGE_GATE':'CLOSED',
+              'sourceIdentityMode':source.get('identity',{}).get('mode'),
               'executionChannel':'GEMINI_API',
               'transportMethod':'GEMINI_API_DIRECT_RESPONSE',
               'executionReference':expected_ref,
@@ -227,6 +215,7 @@ jobs:
           }
           (root/'gemini-api-v11-gates.json').write_text(json.dumps(gates,ensure_ascii=False,indent=2)+'\n')
           print('WORKER_EXECUTION_CONTRACT_GATE=PASS')
+          print('SOURCE_ACQUISITION_GATE=PASS')
           print('GEMINI_API_LIVE_EXECUTION_GATE=PASS')
           print('EXECUTION_PROVENANCE_GATE=PASS')
           PY
