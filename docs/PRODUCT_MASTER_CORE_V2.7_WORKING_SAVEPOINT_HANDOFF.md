@@ -97,6 +97,32 @@ It is append-only and cannot overwrite an existing handoff.
 
 This file is **not** a Product Master Drive SAVEPOINT. It is only the immutable input descriptor that the later Product Master task should consume after its own Startup Gate resolves the authoritative series folder ids.
 
+## Operator surface
+
+After the Authoring STAGING package and Runtime candidate package are present in the same control-plane root, the common CLI can build the immutable handoff descriptor:
+
+```bash
+npm run master:savepoint-handoff:v27 -- \
+  --proposal-id=<proposalId> \
+  --root=<control-plane-root> \
+  --manufacturer=<informational-label> \
+  --series=<informational-label>
+```
+
+The CLI loads both packages by `proposalId`; it does not accept arbitrary replacement Authoring or Runtime file paths.
+
+Successful output still reports:
+
+```text
+WORKING_SAVEPOINT_GATE = NOT_EVALUATED
+NEXT_PHASE_GATE = CLOSED
+driveWritePerformed = false
+formalPass = false
+appIntegrationReady = false
+```
+
+The manufacturer/series flags are informational only. They are not authority for Drive folder ids. The later Product Master Startup Gate must fetch current canonical Registry data and resolve `working_folder_id` independently.
+
 ## Task classification
 
 Creating or maintaining this common contract is a NON-PRODUCT-MASTER TASK because no specific series Master data or formal package is being changed.
