@@ -45,6 +45,8 @@
     "test:product-master-core:v24": "node --test test/38-product-master-core-v24-live-evidence-adjudication.test.mjs",
     "evidence:live-adjudicate:apw430:v24": "node scripts/run-apw430-live-evidence-adjudication-v24.mjs",
     "test:product-master-core:v25": "node --test test/39-product-master-core-v25-product-profile-repro.test.mjs",
+    "test:product-master-core:v26": "node --test test/39-product-master-core-v25-product-profile-repro.test.mjs test/40-product-master-core-v26-antigravity-worker.test.mjs",
+    "test:product-master-core:v27": "node --test test/39-product-master-core-v25-product-profile-repro.test.mjs test/40-product-master-core-v26-antigravity-worker.test.mjs test/41-product-master-core-v27-worker-execution-contract.test.mjs test/42-product-master-core-v27-evidence-execution-provenance.test.mjs",
     "gemini:job:profile:v25": "node scripts/run-gemini-product-master-job.mjs"
   },
   "engines": {
