@@ -1,0 +1,48 @@
+import test from'node:test';
+import assert from'node:assert/strict';
+import fs from'node:fs';
+import path from'node:path';
+
+const read=(p)=>fs.readFileSync(path.resolve(p),'utf8');
+const aiProPath='.github/workflows/product-master-antigravity-profile-live.yml';
+const apiPath='.github/workflows/product-master-gemini-profile-live.yml';
+
+test('v2.7 Gemini AI Pro workflow uses LIVE handoff rather than REPLAY semantics',()=>{
+  const text=read(aiProPath);
+  assert.ok(text.includes('npm run test:product-master-core:v27'));
+  assert.ok(text.includes('--external-response="$ADAPTER_DIR/raw-transport.json"'));
+  assert.equal(text.includes('--replay-response="$ADAPTER_DIR/raw-transport.json"'),false);
+  assert.ok(text.includes("assert job.get('executionMode')=='LIVE_EXTERNAL'"));
+  assert.ok(text.includes("assert job.get('executionChannel')=='GEMINI_AI_PRO'"));
+  assert.ok(text.includes("assert job.get('transportMethod')=='GEMINI_AI_PRO_STRUCTURED_HANDOFF'"));
+  assert.ok(text.includes("assert ctx.get('executionChannel')=='GEMINI_AI_PRO'"));
+  assert.ok(text.includes("'EXECUTION_PROVENANCE_GATE':'PASS'"));
+});
+
+test('v2.7 Gemini API workflow is manual-only and explicitly records API execution contract',()=>{
+  const text=read(apiPath);
+  assert.ok(text.includes('workflow_dispatch:'));
+  assert.equal(/^\s*push:/m.test(text),false);
+  assert.ok(text.includes('GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}'));
+  assert.ok(text.includes('--execution-mode=LIVE_EXTERNAL'));
+  assert.ok(text.includes('--execution-channel=GEMINI_API'));
+  assert.ok(text.includes('--preferred-execution-channel=GEMINI_AI_PRO'));
+  assert.ok(text.includes('--fallback-execution-channel=GEMINI_API'));
+  assert.ok(text.includes('--fallback-allowed=false'));
+  assert.ok(text.includes('--transport-method=GEMINI_API_DIRECT_RESPONSE'));
+  assert.ok(text.includes('--execution-reference="$execution_reference"'));
+  assert.ok(text.includes("assert job.get('executionChannel')=='GEMINI_API'"));
+  assert.ok(text.includes("assert ctx.get('executionChannel')=='GEMINI_API'"));
+  assert.ok(text.includes("'EXECUTION_PROVENANCE_GATE':'PASS'"));
+});
+
+test('v2.7 worker surfaces keep authority closed after Evidence import',()=>{
+  for(const file of[aiProPath,apiPath]){
+    const text=read(file);
+    assert.ok(text.includes("'HUMAN_APPROVAL_GATE':'NOT_OPENED'"),file);
+    assert.ok(text.includes("'MASTER_CHANGE_GATE':'CLOSED'"),file);
+    assert.ok(text.includes("'canonicalWritePerformed':False"),file);
+    assert.ok(text.includes("'runtimeWritePerformed':False"),file);
+    assert.ok(text.includes("'productionWritePerformed':False"),file);
+  }
+});
