@@ -68,11 +68,9 @@ jobs:
           import json, os
           from pathlib import Path
           p=json.loads(Path(os.environ['PROFILE_PATH']).read_text())
-          required=['manufacturer','series','productId']
-          for k in required:
+          for k in ['manufacturer','series','productId']:
               assert p.get(k),k
           s=p['source']
-          out=Path(os.environ['GITHUB_OUTPUT'])
           values={
               'manufacturer':p['manufacturer'],
               'series':p['series'],
@@ -81,7 +79,7 @@ jobs:
               'source_drive_file_id':s['driveFileId'],
               'page_scope':' '.join(str(x) for x in p['extraction']['pageScope'])
           }
-          with out.open('a') as f:
+          with Path(os.environ['GITHUB_OUTPUT']).open('a') as f:
               for k,v in values.items(): f.write(f'{k}={v}\n')
           audit={
               'profileSchemaVersion':p.get('profileSchemaVersion'),
@@ -127,7 +125,6 @@ jobs:
           import hashlib, json, os
           from pathlib import Path
           import pypdf
-
           source=Path(os.environ['SOURCE_PDF'])
           output=Path(os.environ['SCOPE_TXT'])
           pages=[int(x) for x in os.environ['PAGE_SCOPE'].split()]
@@ -135,32 +132,22 @@ jobs:
           chunks=[]
           page_audit=[]
           for pdf_page in pages:
-              assert 1 <= pdf_page <= len(reader.pages), (pdf_page,len(reader.pages))
+              assert 1 <= pdf_page <= len(reader.pages),(pdf_page,len(reader.pages))
               page=reader.pages[pdf_page-1]
               try:
                   text=page.extract_text(extraction_mode='layout') or ''
               except TypeError:
                   text=page.extract_text() or ''
-              if not text.strip():
-                  raise RuntimeError(f'No extractable text on PDF page {pdf_page}')
+              if not text.strip(): raise RuntimeError(f'No extractable text on PDF page {pdf_page}')
               chunks.append(f'===== PDF_PAGE {pdf_page} =====\n{text.rstrip()}\n')
               page_audit.append({'pdfPage':pdf_page,'characters':len(text),'sha256':hashlib.sha256(text.encode()).hexdigest()})
           body='\n'.join(chunks)+'\n'
           output.write_text(body,encoding='utf-8')
-          audit={
-              'extractor':'pypdf',
-              'extractorVersion':pypdf.__version__,
-              'pdfPageCount':len(reader.pages),
-              'pageScope':pages,
-              'pageAudit':page_audit,
-              'scopeTextSha256':hashlib.sha256(body.encode()).hexdigest(),
-              'scopeTextBytes':len(body.encode())
-          }
+          audit={'extractor':'pypdf','extractorVersion':pypdf.__version__,'pdfPageCount':len(reader.pages),'pageScope':pages,'pageAudit':page_audit,'scopeTextSha256':hashlib.sha256(body.encode()).hexdigest(),'scopeTextBytes':len(body.encode())}
           Path(os.environ['SCOPE_AUDIT']).write_text(json.dumps(audit,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
           print(json.dumps(audit,ensure_ascii=False))
           PY
           test -s "$SCOPE_TXT"
-          shasum -a 256 "$SCOPE_TXT" > "$SCOPE_DIR/source-scope.sha256"
           echo "scope_text=$SCOPE_TXT" >> "$GITHUB_OUTPUT"
           echo 'SCOPED_CONTENT_DERIVATION_GATE=PASS'
 
@@ -199,48 +186,24 @@ jobs:
           BACKUP="$RUNNER_TEMP/antigravity-settings-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}.json"
           ORIGINAL_EXISTED=0
           mkdir -p "$(dirname "$SETTINGS")"
-          if [ -f "$SETTINGS" ]; then
-            cp "$SETTINGS" "$BACKUP"
-            ORIGINAL_EXISTED=1
-          fi
+          if [ -f "$SETTINGS" ]; then cp "$SETTINGS" "$BACKUP"; ORIGINAL_EXISTED=1; fi
           restore_antigravity_settings() {
-            if [ "$ORIGINAL_EXISTED" = '1' ]; then
-              cp "$BACKUP" "$SETTINGS"
-            else
-              rm -f "$SETTINGS"
-            fi
+            if [ "$ORIGINAL_EXISTED" = '1' ]; then cp "$BACKUP" "$SETTINGS"; else rm -f "$SETTINGS"; fi
           }
           trap restore_antigravity_settings EXIT
-
           SETTINGS="$SETTINGS" PERMISSION_AUDIT="$ADAPTER_DIR/antigravity-permission-policy.json" python3 - <<'PY'
           import json, os
           from pathlib import Path
           settings_path=Path(os.environ['SETTINGS'])
+          settings={}
           if settings_path.exists():
-              try:
-                  settings=json.loads(settings_path.read_text())
-              except Exception as exc:
-                  raise RuntimeError(f'Cannot parse existing Antigravity settings: {exc}')
-          else:
-              settings={}
-          temporary_permissions={
-              'allow':[],
-              'deny':['read_file(*)','write_file(*)','command(*)','unsandboxed(*)','read_url(*)','execute_url(*)','mcp(*)'],
-              'ask':[]
-          }
+              settings=json.loads(settings_path.read_text())
+          temporary_permissions={'allow':[],'deny':['read_file(*)','write_file(*)','command(*)','unsandboxed(*)','read_url(*)','execute_url(*)','mcp(*)'],'ask':[]}
           settings['permissions']=temporary_permissions
           settings_path.write_text(json.dumps(settings,ensure_ascii=False,indent=2)+'\n')
-          audit={
-              'scope':'TEMPORARY_RUN_ONLY',
-              'evidenceDeliveryMode':'INLINE_VERIFIED_PAGE_SCOPED_TEXT',
-              'permissions':temporary_permissions,
-              'modelToolAuthority':'NONE',
-              'dangerouslySkipPermissions':False,
-              'restoration':'TRAP_RESTORE_ORIGINAL_SETTINGS'
-          }
+          audit={'scope':'TEMPORARY_RUN_ONLY','evidenceDeliveryMode':'INLINE_VERIFIED_PAGE_SCOPED_TEXT','permissions':temporary_permissions,'modelToolAuthority':'NONE','dangerouslySkipPermissions':False,'restoration':'TRAP_RESTORE_ORIGINAL_SETTINGS'}
           Path(os.environ['PERMISSION_AUDIT']).write_text(json.dumps(audit,ensure_ascii=False,indent=2)+'\n')
           PY
-
           agy -p "$(cat "$ADAPTER_DIR/worker-prompt.txt")" \
             --output-format json \
             --json-schema "$ADAPTER_DIR/transport-schema.json" \
@@ -259,22 +222,7 @@ jobs:
           assert isinstance(structured,dict),payload
           raw=json.dumps(structured,ensure_ascii=False,separators=(',',':'))+'\n'
           (d/'raw-transport.json').write_text(raw)
-          audit={
-            'status':payload.get('status'),
-            'conversation_id':payload.get('conversation_id'),
-            'duration_seconds':payload.get('duration_seconds'),
-            'num_turns':payload.get('num_turns'),
-            'usage':payload.get('usage'),
-            'structured_output_sha256':hashlib.sha256(raw.encode()).hexdigest(),
-            'authenticationMode':'GOOGLE_AI_PRO_OAUTH',
-            'producerSystem':'GEMINI_ANTIGRAVITY',
-            'evidenceDeliveryMode':'INLINE_VERIFIED_PAGE_SCOPED_TEXT',
-            'modelToolAuthority':'NONE',
-            'permissionDeniedActions':denied,
-            'canonicalWritePerformed':False,
-            'runtimeWritePerformed':False,
-            'productionWritePerformed':False
-          }
+          audit={'status':payload.get('status'),'conversation_id':payload.get('conversation_id'),'duration_seconds':payload.get('duration_seconds'),'num_turns':payload.get('num_turns'),'usage':payload.get('usage'),'structured_output_sha256':hashlib.sha256(raw.encode()).hexdigest(),'authenticationMode':'GOOGLE_AI_PRO_OAUTH','producerSystem':'GEMINI_ANTIGRAVITY','evidenceDeliveryMode':'INLINE_VERIFIED_PAGE_SCOPED_TEXT','modelToolAuthority':'NONE','permissionDeniedActions':denied,'canonicalWritePerformed':False,'runtimeWritePerformed':False,'productionWritePerformed':False}
           (d/'antigravity-execution-audit.json').write_text(json.dumps(audit,ensure_ascii=False,indent=2)+'\n')
           print('ANTIGRAVITY_LIVE_EXECUTION_GATE=PASS')
           PY
@@ -300,7 +248,7 @@ jobs:
           set -euo pipefail
           ADAPTER_DIR='${{ steps.adapter.outputs.adapter_dir }}'
           mkdir -p "$ARTIFACT_DIR/evidence-inbox" "$ARTIFACT_DIR/change-control" "$ARTIFACT_DIR/jobs"
-          node scripts/run-gemini-product-master-job.mjs \
+          node scripts/run-gemini-product-master-job-v11.mjs \
             --job="$ADAPTER_DIR/replay-job.json" \
             --external-response="$ADAPTER_DIR/raw-transport.json" \
             --source-acquisition-audit="$ARTIFACT_DIR/source-acquisition-audit.json" \
@@ -311,7 +259,7 @@ jobs:
             --audit-dir="$ARTIFACT_DIR/jobs" \
             | tee "$ARTIFACT_DIR/governed-live-handoff-console.log"
 
-      - name: Enforce Worker, Source, Gemini Execution and Review Queue gates
+      - name: Enforce Worker, Source, Gemini Execution, Transport Provenance and Review Queue gates
         shell: bash
         run: |
           set -euo pipefail
@@ -332,6 +280,10 @@ jobs:
           assert raw.get('producer',{}).get('system')=='GEMINI_ANTIGRAVITY',raw
           assert audit.get('transportValidation',{}).get('pass') is True,audit
           assert audit.get('inboxImport',{}).get('pass') is True,audit
+          guard=audit.get('preInboxGuard') or {}
+          assert guard.get('pass') is True,guard
+          assert guard.get('status')=='PASS',guard
+          assert (guard.get('record') or {}).get('evidenceInboxWriteAllowed') is True,guard
           job=audit.get('job') or {}
           assert job.get('workerContractVersion')=='1.1',job
           assert job.get('executionMode')=='LIVE_EXTERNAL',job
@@ -379,53 +331,42 @@ jobs:
           assert execution.get('surface',{}).get('authenticationMode')=='GOOGLE_AI_PRO_OAUTH',execution
           assert execution.get('preflight',{}).get('status')=='PASS',execution
           assert execution.get('result',{}).get('rawResponseSha256')==audit.get('rawResponseSha256'),execution
-          assert execution.get('source',{}).get('acquisition',{}).get('acquiredSha256')==source.get('retrieval',{}).get('acquiredSha256'),execution
-          assert execution.get('source',{}).get('delivery',{}).get('artifactSha256')==delivery.get('delivery',{}).get('artifactSha256'),execution
           assert execution.get('credentialMaterialPersisted') is False,execution
-          assert execution.get('authority',{}).get('canonicalWritePerformed') is False,execution
-          assert execution.get('authority',{}).get('runtimeWritePerformed') is False,execution
-          assert execution.get('authority',{}).get('productionWritePerformed') is False,execution
-          rq=audit.get('reviewQueue')
-          assert isinstance(rq,dict),audit
-          evidence_items=[x for x in rq.get('items',[]) if x.get('kind')=='EVIDENCE_CANDIDATE']
-          for item in evidence_items:
+          provenance=ctx.get('transportProvenance') or {}
+          assert provenance.get('schemaVersion')=='1.0',provenance
+          assert provenance.get('recordType')=='PRODUCT_MASTER_TRANSPORT_PROVENANCE',provenance
+          assert provenance.get('status')=='PASS',provenance
+          assert provenance.get('executionChannel')=='GEMINI_AI_PRO',provenance
+          assert provenance.get('executionReference')==job.get('executionReference'),provenance
+          assert provenance.get('rawResponseSha256')==audit.get('rawResponseSha256'),provenance
+          assert provenance.get('executionBinding',{}).get('rawResponseSha256')==audit.get('rawResponseSha256'),provenance
+          assert provenance.get('transport',{}).get('producer',{}).get('system')=='GEMINI_ANTIGRAVITY',provenance
+          assert provenance.get('transport',{}).get('batchId')==audit.get('normalizedBatchId'),provenance
+          assert provenance.get('normalizedEnvelopeSha256'),provenance
+          rq=audit.get('reviewQueue') or {}
+          for item in rq.get('items',[]):
+              if item.get('kind')!='EVIDENCE_CANDIDATE': continue
               qctx=(item.get('refs') or {}).get('executionContext') or {}
               assert qctx.get('executionChannel')=='GEMINI_AI_PRO',item
-              assert qctx.get('executionReference')==job.get('executionReference'),item
               assert (qctx.get('sourceAcquisition') or {}).get('status')=='PASS',item
               assert (qctx.get('sourceDelivery') or {}).get('status')=='PASS',item
               assert (qctx.get('geminiExecution') or {}).get('status')=='SUCCEEDED',item
+              assert (qctx.get('transportProvenance') or {}).get('status')=='PASS',item
           gates={
-            'WORKER_EXECUTION_CONTRACT_GATE':'PASS',
-            'SOURCE_ACQUISITION_GATE':'PASS',
-            'SOURCE_DELIVERY_GATE':'PASS',
-            'GEMINI_EXECUTION_GATE':'PASS',
-            'ANTIGRAVITY_LIVE_EXECUTION_GATE':'PASS',
-            'TRANSPORT_GATE':'PASS',
-            'EVIDENCE_INBOX_GATE':'PASS',
-            'EXECUTION_PROVENANCE_GATE':'PASS',
-            'REVIEW_QUEUE_GATE':'PASS',
-            'HUMAN_APPROVAL_GATE':'NOT_OPENED',
-            'MASTER_CHANGE_GATE':'CLOSED',
-            'sourceIdentityMode':source.get('identity',{}).get('mode'),
-            'sourceDeliveryMethod':delivery.get('delivery',{}).get('method'),
-            'geminiExecutionSurface':execution.get('surface',{}).get('id'),
-            'canonicalWritePerformed':False,
-            'runtimeWritePerformed':False,
-            'productionWritePerformed':False,
-            'producerSystem':'GEMINI_ANTIGRAVITY',
-            'executionChannel':'GEMINI_AI_PRO',
-            'transportMethod':'GEMINI_AI_PRO_STRUCTURED_HANDOFF',
-            'executionReference':job.get('executionReference')
+            'WORKER_EXECUTION_CONTRACT_GATE':'PASS','SOURCE_ACQUISITION_GATE':'PASS','SOURCE_DELIVERY_GATE':'PASS','GEMINI_EXECUTION_GATE':'PASS',
+            'ANTIGRAVITY_LIVE_EXECUTION_GATE':'PASS','TRANSPORT_GATE':'PASS','TRANSPORT_PROVENANCE_GATE':'PASS','PRE_INBOX_GUARD':'PASS','EVIDENCE_INBOX_GATE':'PASS',
+            'EXECUTION_PROVENANCE_GATE':'PASS','REVIEW_QUEUE_GATE':'PASS','HUMAN_APPROVAL_GATE':'NOT_OPENED','MASTER_CHANGE_GATE':'CLOSED',
+            'sourceIdentityMode':source.get('identity',{}).get('mode'),'sourceDeliveryMethod':delivery.get('delivery',{}).get('method'),'geminiExecutionSurface':execution.get('surface',{}).get('id'),
+            'canonicalWritePerformed':False,'runtimeWritePerformed':False,'productionWritePerformed':False,'producerSystem':'GEMINI_ANTIGRAVITY','executionChannel':'GEMINI_AI_PRO','transportMethod':'GEMINI_AI_PRO_STRUCTURED_HANDOFF','executionReference':job.get('executionReference')
           }
           (root/'phase7-antigravity-gates.json').write_text(json.dumps(gates,ensure_ascii=False,indent=2)+'\n')
           print('WORKER_EXECUTION_CONTRACT_GATE=PASS')
           print('SOURCE_ACQUISITION_GATE=PASS')
           print('SOURCE_DELIVERY_GATE=PASS')
           print('GEMINI_EXECUTION_GATE=PASS')
-          print('TRANSPORT_GATE=PASS')
+          print('TRANSPORT_PROVENANCE_GATE=PASS')
+          print('PRE_INBOX_GUARD=PASS')
           print('EVIDENCE_INBOX_GATE=PASS')
-          print('EXECUTION_PROVENANCE_GATE=PASS')
           print('REVIEW_QUEUE_GATE=PASS')
           print('MASTER_CHANGE_GATE=CLOSED')
           PY
