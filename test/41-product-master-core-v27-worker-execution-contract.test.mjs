@@ -114,12 +114,14 @@ test('v2.7 Gemini AI Pro surface absence blocks when fallback is not allowed',as
   assert.equal(result.job.fallbackFrom,null);
 });
 
-test('v2.7 fallback_allowed=true changes actual channel to API and records fallback_from and reason',async()=>{
-  const built=buildGeminiJobInputFromProductProfile(loadProfile(),{
+test('v2.7 fallback_allowed=true changes actual channel to API, resolves API model and records fallback provenance',async()=>{
+  const profile=loadProfile();
+  const built=buildGeminiJobInputFromProductProfile(profile,{
     execution_mode:'LIVE_EXTERNAL',execution_channel:'GEMINI_AI_PRO',fallback_allowed:true,
-    execution_reference:'AIPRO:PRIMARY',model:'gemini-test',job_id:'GJOB-WORKER-V27-FALLBACK'
+    execution_reference:'AIPRO:PRIMARY',job_id:'GJOB-WORKER-V27-FALLBACK'
   });
   const job=createGeminiJob(built.jobInput).job;
+  assert.equal(job.model,null);
   job.sourceAttachment={...job.sourceAttachment,geminiFileUri:'files/already-uploaded'};
   const apiTransport=JSON.stringify({
     transportSchemaVersion:'1.0',transportType:'EVIDENCE_CANDIDATE_BATCH',batchId:'BATCH-WORKER-V27-API',generatedAt:'2026-09-05T04:02:00Z',
@@ -129,6 +131,7 @@ test('v2.7 fallback_allowed=true changes actual channel to API and records fallb
   const result=await executeGeminiJob(job,{apiKey:'test-key',fetchImpl});
   assert.equal(result.pass,true);
   assert.equal(result.job.executionChannel,'GEMINI_API');
+  assert.equal(result.job.model,profile.modelDefault);
   assert.equal(result.job.fallbackFrom,'GEMINI_AI_PRO');
   assert.equal(result.job.fallbackReason,'GEMINI_AI_PRO_EXECUTION_SURFACE_UNAVAILABLE');
   assert.equal(result.job.transportMethod,'GEMINI_API_DIRECT_RESPONSE');
