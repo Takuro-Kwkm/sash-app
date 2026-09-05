@@ -279,6 +279,21 @@ jobs:
           print('ANTIGRAVITY_LIVE_EXECUTION_GATE=PASS')
           PY
 
+      - name: Normalize and validate Gemini Execution contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          ADAPTER_DIR='${{ steps.adapter.outputs.adapter_dir }}'
+          node scripts/build-product-master-gemini-execution.mjs \
+            --job="$ADAPTER_DIR/replay-job.json" \
+            --source-acquisition-audit="$ARTIFACT_DIR/source-acquisition-audit.json" \
+            --source-delivery-audit="$ARTIFACT_DIR/source-delivery-audit.json" \
+            --surface-audit="$ADAPTER_DIR/antigravity-execution-audit.json" \
+            --raw-response="$ADAPTER_DIR/raw-transport.json" \
+            --output="$ARTIFACT_DIR/gemini-execution-audit.json" \
+            | tee "$ARTIFACT_DIR/gemini-execution-console.log"
+          echo 'GEMINI_EXECUTION_GATE=PASS'
+
       - name: Import structured output through governed Transport and Evidence Inbox
         shell: bash
         run: |
@@ -290,12 +305,13 @@ jobs:
             --external-response="$ADAPTER_DIR/raw-transport.json" \
             --source-acquisition-audit="$ARTIFACT_DIR/source-acquisition-audit.json" \
             --source-delivery-audit="$ARTIFACT_DIR/source-delivery-audit.json" \
+            --gemini-execution-audit="$ARTIFACT_DIR/gemini-execution-audit.json" \
             --evidence-inbox="$ARTIFACT_DIR/evidence-inbox" \
             --change-control="$ARTIFACT_DIR/change-control" \
             --audit-dir="$ARTIFACT_DIR/jobs" \
             | tee "$ARTIFACT_DIR/governed-live-handoff-console.log"
 
-      - name: Enforce Worker, Source Acquisition, Source Delivery and Review Queue gates
+      - name: Enforce Worker, Source, Gemini Execution and Review Queue gates
         shell: bash
         run: |
           set -euo pipefail
@@ -353,6 +369,22 @@ jobs:
           assert delivery.get('scope',{}).get('pdfPages')==source.get('scope',{}).get('pdfPages'),delivery
           assert delivery.get('delivery',{}).get('method')=='INLINE_VERIFIED_PAGE_SCOPED_TEXT',delivery
           assert delivery.get('credentialMaterialPersisted') is False,delivery
+          execution=ctx.get('geminiExecution') or {}
+          assert execution.get('schemaVersion')=='1.1',execution
+          assert execution.get('recordType')=='PRODUCT_MASTER_GEMINI_EXECUTION',execution
+          assert execution.get('status')=='SUCCEEDED',execution
+          assert execution.get('executionChannel')=='GEMINI_AI_PRO',execution
+          assert execution.get('executionReference')==job.get('executionReference'),execution
+          assert execution.get('surface',{}).get('id')=='ANTIGRAVITY_CLI',execution
+          assert execution.get('surface',{}).get('authenticationMode')=='GOOGLE_AI_PRO_OAUTH',execution
+          assert execution.get('preflight',{}).get('status')=='PASS',execution
+          assert execution.get('result',{}).get('rawResponseSha256')==audit.get('rawResponseSha256'),execution
+          assert execution.get('source',{}).get('acquisition',{}).get('acquiredSha256')==source.get('retrieval',{}).get('acquiredSha256'),execution
+          assert execution.get('source',{}).get('delivery',{}).get('artifactSha256')==delivery.get('delivery',{}).get('artifactSha256'),execution
+          assert execution.get('credentialMaterialPersisted') is False,execution
+          assert execution.get('authority',{}).get('canonicalWritePerformed') is False,execution
+          assert execution.get('authority',{}).get('runtimeWritePerformed') is False,execution
+          assert execution.get('authority',{}).get('productionWritePerformed') is False,execution
           rq=audit.get('reviewQueue')
           assert isinstance(rq,dict),audit
           evidence_items=[x for x in rq.get('items',[]) if x.get('kind')=='EVIDENCE_CANDIDATE']
@@ -362,10 +394,12 @@ jobs:
               assert qctx.get('executionReference')==job.get('executionReference'),item
               assert (qctx.get('sourceAcquisition') or {}).get('status')=='PASS',item
               assert (qctx.get('sourceDelivery') or {}).get('status')=='PASS',item
+              assert (qctx.get('geminiExecution') or {}).get('status')=='SUCCEEDED',item
           gates={
             'WORKER_EXECUTION_CONTRACT_GATE':'PASS',
             'SOURCE_ACQUISITION_GATE':'PASS',
             'SOURCE_DELIVERY_GATE':'PASS',
+            'GEMINI_EXECUTION_GATE':'PASS',
             'ANTIGRAVITY_LIVE_EXECUTION_GATE':'PASS',
             'TRANSPORT_GATE':'PASS',
             'EVIDENCE_INBOX_GATE':'PASS',
@@ -375,6 +409,7 @@ jobs:
             'MASTER_CHANGE_GATE':'CLOSED',
             'sourceIdentityMode':source.get('identity',{}).get('mode'),
             'sourceDeliveryMethod':delivery.get('delivery',{}).get('method'),
+            'geminiExecutionSurface':execution.get('surface',{}).get('id'),
             'canonicalWritePerformed':False,
             'runtimeWritePerformed':False,
             'productionWritePerformed':False,
@@ -387,6 +422,7 @@ jobs:
           print('WORKER_EXECUTION_CONTRACT_GATE=PASS')
           print('SOURCE_ACQUISITION_GATE=PASS')
           print('SOURCE_DELIVERY_GATE=PASS')
+          print('GEMINI_EXECUTION_GATE=PASS')
           print('TRANSPORT_GATE=PASS')
           print('EVIDENCE_INBOX_GATE=PASS')
           print('EXECUTION_PROVENANCE_GATE=PASS')
