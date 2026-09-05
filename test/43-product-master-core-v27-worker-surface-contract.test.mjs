@@ -6,6 +6,10 @@ import path from'node:path';
 const read=(p)=>fs.readFileSync(path.resolve(p),'utf8');
 const aiProPath='.github/workflows/product-master-antigravity-profile-live.yml';
 const apiPath='.github/workflows/product-master-gemini-profile-live.yml';
+const legacyPaths=[
+  '.github/workflows/gemini-live-apw430-retry.yml',
+  '.github/workflows/gemini-apw430-one-secret-live.yml'
+];
 
 test('v2.7 Gemini AI Pro workflow uses LIVE handoff rather than REPLAY semantics',()=>{
   const text=read(aiProPath);
@@ -44,5 +48,18 @@ test('v2.7 worker surfaces keep authority closed after Evidence import',()=>{
     assert.ok(text.includes("'canonicalWritePerformed':False"),file);
     assert.ok(text.includes("'runtimeWritePerformed':False"),file);
     assert.ok(text.includes("'productionWritePerformed':False"),file);
+  }
+});
+
+test('v2.7 legacy APW430 LIVE workflow surfaces cannot create new uncontracted LIVE jobs',()=>{
+  for(const file of legacyPaths){
+    const text=read(file);
+    assert.ok(text.includes('Legacy Disabled'),file);
+    assert.ok(text.includes('workflow_dispatch:'),file);
+    assert.equal(/^\s*push:/m.test(text),false,file);
+    assert.ok(text.includes('DISABLED'),file);
+    assert.ok(text.includes('product-master-antigravity-profile-live.yml'),file);
+    assert.ok(text.includes('product-master-gemini-profile-live.yml'),file);
+    assert.equal(text.includes('GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}'),false,file);
   }
 });
