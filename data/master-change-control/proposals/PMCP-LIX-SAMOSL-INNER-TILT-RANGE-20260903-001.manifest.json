@@ -1,0 +1,90 @@
+{
+  "schemaVersion": "1.2",
+  "recordType": "PRODUCT_MASTER_CHANGE_PROPOSAL",
+  "proposalId": "PMCP-LIX-SAMOSL-INNER-TILT-RANGE-20260903-001",
+  "productId": "SER-LIX-SAMOSL",
+  "status": "PROPOSED",
+  "approvalPolicy": "HUMAN_REQUIRED",
+  "approvalStatus": "PENDING",
+  "baseMaster": {
+    "driveFileId": "17lVzBZ1hp4RVcGv0yNdnrKt25SFO2FhL",
+    "title": "サーモスL_商品マスター_v0.7_特注寸法発注アプリ投入完成版_QA確定.xlsx",
+    "sha256": "664a51bd5b9ded22e19780b1ce339338cba45f292438221b0a60fc3974e1abf9"
+  },
+  "baseMasterFingerprint": "sha256:664a51bd5b9ded22e19780b1ce339338cba45f292438221b0a60fc3974e1abf9",
+  "targetEntity": "06C_特注寸法範囲",
+  "targetRuleId": "CR-SL-036",
+  "target": {
+    "sheet": "06C_特注寸法範囲",
+    "entityId": "CR-SL-036",
+    "productNode": "WT-SL-UCHIDAOSHI"
+  },
+  "operation": "UPDATE_DIMENSION_RULE",
+  "before": {
+    "evaluationType": "AUTO_PIECEWISE",
+    "automatic": true,
+    "selector": {
+      "window_type": "WT-SL-UCHIDAOSHI",
+      "specific_spec": "*",
+      "construction": ["在来", "204"],
+      "leaf_configuration": "単窓"
+    },
+    "unit": "mm",
+    "bounds": {"minW": 240, "maxW": 1690, "minH": 350, "maxH": 943},
+    "expression": "240<=W<=870:350<=H<=943; 870<W<=1690:350<=H<=500",
+    "inclusivity": {
+      "W_min": "inclusive",
+      "W_870_left": "inclusive",
+      "W_870_right": "exclusive",
+      "W_max": "inclusive",
+      "H_min": "inclusive",
+      "H_max": "inclusive"
+    }
+  },
+  "after": {
+    "evaluationType": "COMPOUND_GATE",
+    "automatic": false,
+    "selector": {
+      "window_type": "WT-SL-UCHIDAOSHI",
+      "specific_spec": "*",
+      "construction": ["在来", "204"],
+      "leaf_configuration": "単窓"
+    },
+    "unit": "mm",
+    "outerBounds": {"minW": 240, "maxW": 1690, "minH": 350, "maxH": 943},
+    "safeAutoPolygon": [[240,350],[240,943],[815,943],[815,755],[870,755],[870,500],[1690,500],[1690,350]],
+    "safeAutoExpression": "240<=W<=815:350<=H<=943; 815<W<=870:350<=H<=755; 870<W<=1690:350<=H<=500",
+    "inclusivity": {
+      "W_min": "inclusive",
+      "W_815_left": "inclusive",
+      "W_815_right": "exclusive",
+      "W_870_left": "inclusive",
+      "W_870_right": "exclusive",
+      "W_max": "inclusive",
+      "H_min": "inclusive",
+      "H_upper_bound": "inclusive"
+    },
+    "conditionalRegionHandling": "RUNTIME_SAFETY_REVIEW_REQUIRED",
+    "conditionalRegionReason": "P221の注記領域はガラス厚3-A-3限定かつガラス構成依存。W/HだけではAUTO PASSしない。",
+    "sourceBoundaryPointsOnly": true
+  },
+  "sourceEvidenceIds": ["EV-SL-CUSTOM-P221-INNER-TILT"],
+  "sourceFile": "202211_LIXIL_サーモスⅡ－Ｈ／Ｌ　防火戸ＦＧ－Ｈ／Ｌ_商品カタログ.pdf",
+  "printedPage": 221,
+  "pdfPage": 223,
+  "sourceLocator": "P221 寸法特注範囲 SAMOSⅡ H/L｜内倒し窓",
+  "revalidation": {
+    "result": "CONFIRMED",
+    "sourceBoundaryValues": {"W": [240,815,870,1690], "H": [350,500,755,943]},
+    "boundaryPointsUsed": [[240,350],[240,943],[815,943],[815,755],[870,755],[870,500],[1690,500],[1690,350]],
+    "interpolatedPointsAdded": false,
+    "dimensionMismatch": "現行AUTO_PIECEWISEはW=815～870の一部でH<=943をAUTO PASSし得るが、安全側自動判定境界はH<=755。",
+    "runtimeSafetySeparation": "3-A-3限定・ガラス構成条件はサイズ境界修正と分離し、RUNTIME_SAFETY_REVIEW_REQUIREDとして管理する。"
+  },
+  "proposalFingerprintPolicy": "PRESERVED_LEGACY_PROPOSAL_SHA256",
+  "proposalFingerprint": "sha256:bf89762cd1cf88be8620b93599d2987c23d50fcb335e6c2b525f5a14175184ee",
+  "formalWorkbookWritePerformed": false,
+  "runtimeWritePerformed": false,
+  "autoApprovalPerformed": false,
+  "payloadIntegrityFingerprint": "sha256:14eb2445bca8165c29311bdcc37ec3bdb69eafea0d1a79fe82327212ddfd8b68"
+}

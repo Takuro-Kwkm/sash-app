@@ -1,0 +1,93 @@
+name: Size Capability Audit v1
+
+on:
+  push:
+    branches: [main, feat/catalog-recovery-v2]
+  pull_request:
+    branches: [main]
+
+jobs:
+  size_capability_audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Generic Size Capability Audit core tests
+        run: node --test test/24-sash-size-capability-audit.test.mjs test/25-thermosl-cr-sl-036-formal-regeneration.test.mjs test/26-samos2h-custom-formal-regeneration.test.mjs test/27-apw430-custom-extraction-proposal.test.mjs test/28-apw430-custom-formal-regeneration.test.mjs test/29-samos2h-standard-formal-regeneration.test.mjs
+
+      - name: Run managed Size Capability Audit
+        run: npm run audit:size-capability
+
+      - name: Enforce audit integrity and applied S2H STANDARD change control
+        run: |
+          node - <<'NODE'
+          const fs=require('node:fs');
+          const dir='artifacts/size-capability-audit';
+          const required=['summary.json','standard-size-audit.json','standard-size-audit-samos2h-applied.json','custom-capability-audit.json','pending.json','standard-source-enumeration-samos2h.json','evidence-samos2h-standard.json','source-manifest.json','gate-report.json'];
+          for(const name of required)if(!fs.existsSync(`${dir}/${name}`))process.exit(1);
+          const read=(p)=>JSON.parse(fs.readFileSync(p,'utf8'));
+          const summary=read(`${dir}/summary.json`),pending=read(`${dir}/pending.json`),gate=read(`${dir}/gate-report.json`),applied=read(`${dir}/standard-size-audit-samos2h-applied.json`);
+          const id='PMCP-LIX-SAMOS2H-STANDARD-SOURCE-CORRECTION-20260904-001';
+          const proposal=read(`data/master-change-control/proposals/${id}.manifest.json`),approval=read(`data/master-change-control/approvals/${id}.approval.json`),staging=read(`data/master-change-control/applied/${id}.staging.json`),preview=read(`data/master-change-control/production-previews/${id}.production-preview.json`),prodApproval=read(`data/master-change-control/production-approvals/${id}.production-approval.json`),production=read(`data/master-change-control/production/${id}.applied.json`),runtime=read('data/master-change-control/runtime/SAMOS2H_STANDARD_RUNTIME_REGENERATION_V11.json');
+          if(gate.integrityGate!=='PASS'||gate.status!=='PARTIAL_PASS'||gate.blockingPending!==6||gate.proposalCount!==0||gate.proposalApprovalGate!=='NO_PROPOSAL_PENDING')process.exit(1);
+          if(summary.productMasterChangeProposals.length!==0||!summary.appliedProductMasterChangeProposals.includes(id))process.exit(1);
+          if(pending.blockingCount!==6||!pending.resolved.some(r=>r.id==='PEND-SIZE-S2H-STANDARD-001'))process.exit(1);
+          if(proposal.proposalFingerprint!=='sha256:b141224a4dc0981eee4d8c82574cc8b52e5b75e8ba70b1809053e9c9c27793d8'||proposal.status!=='PROPOSED'||proposal.approvalStatus!=='PENDING')process.exit(1);
+          if(proposal.formalWorkbookWritePerformed||proposal.runtimeWritePerformed||proposal.autoApprovalPerformed)process.exit(1);
+          if(approval.approverType!=='HUMAN'||approval.proposalFingerprint!==proposal.proposalFingerprint||staging.proposalStatus!=='APPLIED'||preview.status!=='PRODUCTION_WRITE_PREVIEW_READY'||prodApproval.productionApproval!==true)process.exit(1);
+          if(production.status!=='PRODUCTION_APPLY_COMPLETE'||production.formalTarget.postWriteSha256!=='9d4a0812cadc6d804a8e8db77ad0e4b042d674e62b9ef9edfcd2afcab9c9e5a6')process.exit(1);
+          if(production.postWriteReadback.standardSizeRows!==2309||production.postWriteReadback.selectableRows!==2140||production.postWriteReadback.inactiveRows!==169||production.postWriteReadback.unexpectedChangedNonTargetSheets!==0)process.exit(1);
+          if(runtime.status!=='RUNTIME_REGENERATION_COMMITTED'||runtime.runtimeVersion!=='v1.1'||runtime.runtimeProjection.standardSizeRows!==2309||runtime.runtimeProjection.selectableRows!==2140||runtime.runtimeProjection.inactiveRows!==169||runtime.runtimeProjection.directManufacturerValueEditToGenericCore)process.exit(1);
+          if(applied.status!=='FORMAL_MASTER_APPLIED_RUNTIME_REGENERATED'||applied.formalMaster.selectableRows!==2140||applied.canonicalRuntime.runtimeSelectableRows!==2140||!applied.canonicalRuntime.match||applied.postApplyOfficialComparison.remainingValueMismatch!==0||applied.postApplyOfficialComparison.remainingMissingInMaster!==0)process.exit(1);
+          NODE
+
+      - name: Enforce current Runtime inventory after approved S2H STANDARD apply
+        run: |
+          npm run start:qa > /tmp/sash-size-audit-runtime.log 2>&1 &
+          PID=$!
+          trap 'kill $PID || true' EXIT
+          for i in {1..20}; do
+            if curl -fsS http://127.0.0.1:4173/api/health > /tmp/size-audit-health.json; then break; fi
+            sleep 0.5
+          done
+          cat /tmp/size-audit-health.json
+          node - <<'NODE'
+          const h=require('/tmp/size-audit-health.json');
+          const expected={'SER-LIX-SAMOS2H':2140,'SER-LIX-SAMOSL':1495,'SER-YKK-APW430':718,'SER-YKK-APW431':538};
+          for(const [id,count] of Object.entries(expected)){
+            const row=h.inventory.find((item)=>item.productId===id);
+            if(!row||row.selectableSizeRows!==count||row.missingSizeRows!==0||row.extraSizeRows!==0||row.sizeCoverage!==1)process.exit(1);
+          }
+          NODE
+
+      - name: Ensure audit runner output is committed and deterministic
+        run: git diff --exit-code -- artifacts/size-capability-audit/gate-report.json
+
+      - name: Upload Size Capability Audit evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: size-capability-audit-v1
+          path: |
+            artifacts/size-capability-audit
+            data/master-change-control/proposals/PMCP-LIX-SAMOS2H-STANDARD-SOURCE-CORRECTION-20260904-001.manifest.json
+            data/master-change-control/approvals/PMCP-LIX-SAMOS2H-STANDARD-SOURCE-CORRECTION-20260904-001.approval.json
+            data/master-change-control/applied/PMCP-LIX-SAMOS2H-STANDARD-SOURCE-CORRECTION-20260904-001.staging.json
+            data/master-change-control/production-previews/PMCP-LIX-SAMOS2H-STANDARD-SOURCE-CORRECTION-20260904-001.production-preview.json
+            data/master-change-control/production-approvals/PMCP-LIX-SAMOS2H-STANDARD-SOURCE-CORRECTION-20260904-001.production-approval.json
+            data/master-change-control/production/PMCP-LIX-SAMOS2H-STANDARD-SOURCE-CORRECTION-20260904-001.applied.json
+            data/master-change-control/runtime/SAMOS2H_STANDARD_RUNTIME_REGENERATION_V11.json
+            data/master-change-control/proposals/PMCP-LIX-SAMOS2H-CUSTOM-DIMENSION-RULESET-20260903-001.manifest.json
+            data/master-change-control/approvals/PMCP-LIX-SAMOS2H-CUSTOM-DIMENSION-RULESET-20260903-001.approval.json
+            data/master-change-control/production/PMCP-LIX-SAMOS2H-CUSTOM-DIMENSION-RULESET-20260903-001.applied.json
+            data/master-change-control/runtime/SAMOS2H_CUSTOM_RUNTIME_REGENERATION_V10.json
+            data/master-change-control/proposals/PMCP-YKK-APW430-CUSTOM-DIMENSION-RULESET-20260903-001.manifest.json
+            data/master-change-control/production/PMCP-YKK-APW430-CUSTOM-DIMENSION-RULESET-20260903-001.applied.json
+            data/master-change-control/runtime/APW430_CUSTOM_RUNTIME_REGENERATION_V10.json
+            data/master-change-control/proposals/PMCP-LIX-SAMOSL-INNER-TILT-RANGE-20260903-001.manifest.json
+            data/master-change-control/production/PMCP-LIX-SAMOSL-INNER-TILT-RANGE-20260903-001.applied.json
+            data/master-change-control/runtime/THERMOSL_CR_SL_036_RUNTIME_REGENERATION_V19.json
+            docs/SASH_SIZE_CAPABILITY_AUDIT_V1.md

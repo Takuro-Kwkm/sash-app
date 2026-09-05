@@ -1,0 +1,74 @@
+{
+  "recordSchemaVersion": "1.0",
+  "recordType": "PRODUCT_MASTER_PRODUCTION_APPLY",
+  "productId": "SER-LIX-SAMOSL",
+  "proposalId": "PMCP-LIX-SAMOSL-SHUT-MSTD-SIZE-GAP-20260902-001",
+  "status": "PRODUCTION_APPLY_COMPLETE",
+  "proposalFingerprint": "sha256:2dbccd2d22edd6b00d516fbadfc2788c2089f693f06112f4b2b6c811d3a34063",
+  "previewFingerprint": "sha256:095880ed441afd4925fdcbe4c7933be92190a08d9120155d27f7a00d1ed11613",
+  "productionApproval": {
+    "approverType": "HUMAN",
+    "scope": "APPROVE_PRODUCTION_WRITE_ONLY",
+    "approvalSource": "Chat conversation explicit instruction: サーモスL v1.7-R2 Production Preview を承認して正式Masterへ反映して",
+    "approvalRecord": "data/master-change-control/production-approvals/PMCP-LIX-SAMOSL-SHUT-MSTD-SIZE-GAP-20260902-001.v17-r2.approval.json"
+  },
+  "formalTarget": {
+    "driveFileId": "17lVzBZ1hp4RVcGv0yNdnrKt25SFO2FhL",
+    "title": "サーモスL_商品マスター_v0.7_特注寸法発注アプリ投入完成版_QA確定.xlsx",
+    "preWriteRevisionId": "0B1PsqngSohhldjYycXpvcXp5VVlLSDQyUlBBUmJPTFZxbU1nPQ",
+    "postWriteRevisionId": "0B1PsqngSohhlRDByanJSNkxtSlpqdVo0WXBRT01MNDIzM2tNPQ",
+    "postWriteModifiedTime": "2026-09-02T12:17:29.703Z",
+    "postWriteSizeBytes": 678729,
+    "postWriteSha256": "664a51bd5b9ded22e19780b1ce339338cba45f292438221b0a60fc3974e1abf9"
+  },
+  "writes": [
+    {
+      "sheet": "06_サイズ",
+      "range": "A1563:V1647",
+      "rows": 85,
+      "firstNewId": "SZ-SL-001560",
+      "lastNewId": "SZ-SL-001644"
+    },
+    {
+      "sheet": "08A_サイズ別ガラス条件",
+      "range": "A1563:N1647",
+      "rows": 85,
+      "firstNewId": "GSC-SL-001560",
+      "lastNewId": "GSC-SL-001644"
+    }
+  ],
+  "postWriteReadback": {
+    "driveBytesMatchGeneratedArtifact": true,
+    "generatedAndDriveSha256": "664a51bd5b9ded22e19780b1ce339338cba45f292438221b0a60fc3974e1abf9",
+    "standardSizeRows": 1644,
+    "selectableSizeRows": 1495,
+    "sizeGlassConditionRows": 1644,
+    "sizeTailSequence": ["SZ-SL-001559", "SZ-SL-001560", "SZ-SL-001644"],
+    "glassTailSequence": ["GSC-SL-001559", "GSC-SL-001560", "GSC-SL-001644"],
+    "sizeDuplicateIds": 0,
+    "glassDuplicateIds": 0,
+    "manualStandardShutterSliceRecords": 97,
+    "officialSourceCoverage": "97/97",
+    "missingInCanonical": 0,
+    "gate": "PASS"
+  },
+  "backup": {
+    "driveFileId": "1MCTEU3ATdr9iZPwl6sEEY06ScrN18yyn",
+    "title": "BACKUP_20260902_サーモスL_商品マスター_v0.7_Production前",
+    "sha256": "eec989d1fd2e1ad4fc025e08c8b122c522e7811840b075f5b9eff2567ea4d4ac"
+  },
+  "previewCi": {
+    "workflow": "V2 Recovery CI",
+    "runNumber": 400,
+    "runId": 33627479229,
+    "conclusion": "SUCCESS",
+    "artifactId": 9845385299,
+    "artifactDigest": "sha256:bb2d1fe5abec3c35edc295ca9b1d9f2285da072a7a4141d95d0f3576a05ffd95"
+  },
+  "runtimeWritePerformed": false,
+  "runtimeRegenerationStatus": "PENDING_SEPARATE_GATE",
+  "previousFailedWrite": {
+    "status": "ROLLED_BACK",
+    "auditRecord": "data/master-change-control/production-rollbacks/PMCP-LIX-SAMOSL-SHUT-MSTD-SIZE-GAP-20260902-001.v17-rollback.json"
+  }
+}

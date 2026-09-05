@@ -1,0 +1,62 @@
+{
+  "recordType": "PRODUCT_MASTER_STAGING_APPLICATION",
+  "recordVersion": "1.0",
+  "proposalId": "PMCP-LIX-SAMOS2H-CUSTOM-DIMENSION-RULESET-20260903-001",
+  "proposalStatus": "APPLIED",
+  "productId": "SER-LIX-SAMOS2H",
+  "proposalFingerprint": "sha256:bd5900002f8d54d322fb7c50bb0b4b121f54a81ece7ec0e60baaffe6914df08e",
+  "baseMasterFingerprint": "sha256:8dea8b2ecec1715445db74255f591b4f2bcf404027f0006f168a585365df29d6",
+  "approvedBy": "USER",
+  "approvedAt": "2026-09-03T19:13:27+09:00",
+  "appliedAt": "2026-09-03T19:14:00+09:00",
+  "mode": "STAGING",
+  "target": {
+    "sheet": "06E_特注寸法範囲",
+    "ruleSetId": "CR-S2H-CUSTOM-RULESET-001",
+    "productNode": "MULTI:17"
+  },
+  "before": {
+    "sheetExists": false,
+    "dimensionRuleCount": 0,
+    "activeProductNodeCount": 17,
+    "runtimeDimensionRuleCount": 0
+  },
+  "after": {
+    "sheetExists": true,
+    "formalRows": 17,
+    "activeProductNodeCount": 17,
+    "classificationSummary": {
+      "EXACT_RULE_EXTRACTED": 7,
+      "SOURCE_GRAPH_REVIEW_REQUIRED": 10,
+      "SOURCE_INSUFFICIENT": 0,
+      "PENDING": 0
+    },
+    "evaluationSummary": {
+      "COMPOUND_GATE": 7,
+      "SOURCE_GRAPH_GATE": 10
+    },
+    "automaticTrue": 0,
+    "automaticFalse": 17,
+    "runtimeSafety": "RUNTIME_SAFETY_REVIEW_REQUIRED"
+  },
+  "stagingWorkbookSha256": "sha256:7ca8f5cca19187bfb841bc3f3393fb29de591dc554714627faf3a652130cd8a7",
+  "stagingWorkbookSizeBytes": 557373,
+  "existingSheetsChanged": 0,
+  "newSheetsAdded": 1,
+  "standardSizeMasterChanged": false,
+  "otherSeriesChanged": 0,
+  "productionMasterWritePerformed": false,
+  "runtimeWritePerformed": false,
+  "gates": {
+    "EXPLICIT_HUMAN_APPROVAL": "PASS",
+    "PROPOSAL_FINGERPRINT_MATCH": "PASS",
+    "BASE_MASTER_FINGERPRINT_MATCH": "PASS",
+    "NEW_SHEET_ONLY": "PASS",
+    "17_PRODUCT_NODES_PRESENT": "PASS",
+    "EXACT_7_REVIEW_10": "PASS",
+    "INTERPOLATION_ADDED": "PASS_FALSE",
+    "STANDARD_SIZE_MASTER_UNCHANGED": "PASS",
+    "OTHER_SERIES_UNCHANGED": "PASS"
+  },
+  "stagingResultFingerprint": "sha256:d9a418325a5d31581e98a6eb9e0053c29eb28c6cc17f00d8e7e89883114c1133"
+}

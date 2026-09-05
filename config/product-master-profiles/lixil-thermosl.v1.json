@@ -1,0 +1,48 @@
+{
+  "profileSchemaVersion": "1.1",
+  "recordType": "PRODUCT_MASTER_PROFILE",
+  "manufacturer": "LIXIL",
+  "series": "サーモスL",
+  "registrySeriesKey": "LIXIL::サーモスL",
+  "productId": "SER-LIXIL-THERMOSL",
+  "schemaAdapter": "GENERIC_EVIDENCE_CANDIDATE_V1",
+  "runtimePartitionPolicy": {
+    "mode": "NOT_USED_FOR_EVIDENCE_ONLY_JOB"
+  },
+  "dependencyHooks": [],
+  "source": {
+    "type": "OFFICIAL_PDF",
+    "driveFileId": "1YUN-mtWYs48YBUHJk0C3vJXnhjyZFHyf",
+    "title": "202604_LIXIL_サーモスＬ_業務用資料集_完成品価格表.pdf",
+    "version": "202604",
+    "officialDetailUrl": "https://webcatalog.lixil.co.jp/iportal/CatalogDetail.do?catalogID=18032870000&designID=newinter&method=initial_screen&volumeID=LXL13001",
+    "officialDownloadUrl": "https://webcatalog.lixil.co.jp/iportal/CatalogDownload.do?method=downloadPdfCatalog&type=downloadPdfCatalog&volumeID=LXL13001&categoryID=&catalogID=18032870000&catalogCategoryID=&pageGroupID=&pageID=&applicationPdf=true&designID=newinter",
+    "authoritativeSha256": "e3cd40bfd85bdeac0de253afa4d5187059bab71c164ccc266d2125e655114960",
+    "pageCount": 300
+  },
+  "extraction": {
+    "jobType": "EVIDENCE_EXTRACTION",
+    "task": "Run LIXIL Thermos L Phase 7 cross-manufacturer reproducibility evidence extraction through the generic product-master bridge.",
+    "prompt": "Read only printed pages 4-6, corresponding to PDF pages 6-8, of the attached official LIXIL Thermos L business-use completed-product price-list PDF. Extract a small, auditable set of atomic evidence candidates mapped only to window_type, configuration, construction, or size. Prefer claims that are explicit in the cited page and already representable by the current canonical field schema. Keep each claim narrow and include an exact locatorText. Do not create noncanonical fields for color, price, product code, or other attributes outside this scope. Do not infer missing conditions. If a claim cannot be made atomically from the source, return an issue instead. Do not approve Product Master changes. Do not write Authoring Master, Canonical, Runtime, Production, Registry, or Drive canonical folders.",
+    "pageScope": [6, 7, 8],
+    "printedPageScope": [4, 5, 6],
+    "canonicalFieldScope": ["window_type", "configuration", "construction", "size"],
+    "evidenceRequirements": {
+      "atomic": true,
+      "maxCandidates": 6,
+      "failOnInference": true
+    }
+  },
+  "modelDefault": "gemini-3.8-flash",
+  "metadata": {
+    "phase": "PHASE_7_REPRODUCIBILITY",
+    "authoringMasterVersion": "v0.7",
+    "authoringMasterDriveFileId": "17lVzBZ1hp4RVcGv0yNdnrKt25SFO2FhL",
+    "workerProvider": "ANTIGRAVITY_CLI",
+    "producerSystem": "GEMINI_ANTIGRAVITY",
+    "authenticationMode": "GOOGLE_AI_PRO_OAUTH",
+    "workerExecution": "SELF_HOSTED_GITHUB_ACTIONS",
+    "antigravityModelMode": "ACCOUNT_DEFAULT",
+    "antigravityEffort": "high"
+  }
+}

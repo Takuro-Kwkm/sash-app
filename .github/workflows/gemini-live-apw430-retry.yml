@@ -1,0 +1,20 @@
+name: Gemini LIVE APW430 Evidence Retry (Legacy Disabled)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  legacy_disabled:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Legacy APW430 retry worker disabled
+        run: |
+          echo 'LEGACY_APW430_GEMINI_RETRY=DISABLED'
+          echo 'New LIVE jobs must use the Worker Contract v1.1 execution surfaces.'
+          echo 'Gemini AI Pro: .github/workflows/product-master-antigravity-profile-live.yml'
+          echo 'Gemini API: .github/workflows/product-master-gemini-profile-live.yml'
+          echo 'Legacy artifacts remain readable; this workflow no longer creates new LIVE artifacts.'
+          exit 3

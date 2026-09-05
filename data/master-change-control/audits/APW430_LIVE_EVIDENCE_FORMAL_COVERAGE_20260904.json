@@ -1,0 +1,78 @@
+{
+  "schemaVersion": "1.0",
+  "recordType": "PRODUCT_MASTER_FORMAL_COVERAGE_ASSESSMENT",
+  "assessmentId": "PMFCA-YKK-APW430-LIVE-EVIDENCE-20260904-001",
+  "manufacturer": "YKK AP",
+  "series": "APW430",
+  "productId": "SER-YKK-APW430",
+  "capturedAt": "2026-09-04T11:24:00Z",
+  "capturedBy": "CHATGPT",
+  "basis": "LIVE_GOOGLE_DRIVE_READ_PLUS_OFFICIAL_PDF_VISUAL_VERIFICATION",
+  "formalMaster": {
+    "driveFileId": "1QDocQ7yoXE6TAnzHtfsyKwwK6YB5_mgk90Bw1hm4iPo",
+    "title": "20260830_YKKAP_APW430_商品マスター_正本",
+    "version": "20260830",
+    "folder": "01_正本"
+  },
+  "officialSource": {
+    "driveFileId": "1j9PtW8yoKBZ4Nodm58wU3QtOCvxlEja9",
+    "title": "202607_YKKAP_APW430_商品カタログ.pdf",
+    "version": "202607",
+    "verifiedPdfPages": [71, 72, 73],
+    "verifiedPrintedPages": [69, 70, 71]
+  },
+  "candidateCoverage": [
+    {
+      "candidateId": "EC-APW430-FIX-001",
+      "decision": "ACCEPT",
+      "formalDisposition": "FORMAL_ALREADY_REPRESENTED",
+      "formalRefs": ["03A_シリーズ窓種設定!63:65"],
+      "reason": "FIX窓の窓タイプ／テラスタイプ分割は現行正式Masterの3行に既に存在する。"
+    },
+    {
+      "candidateId": "EC-APW430-FIX-002",
+      "decision": "ACCEPT",
+      "formalDisposition": "FORMAL_ALREADY_REPRESENTED",
+      "formalRefs": ["03A_シリーズ窓種設定!63:65"],
+      "reason": "窓タイプ=在来、テラスタイプ=在来／2×4の体系は現行正式Masterの分割行に既に表現されている。"
+    },
+    {
+      "candidateId": "EC-APW430-FIX-003",
+      "decision": "ACCEPT",
+      "formalDisposition": "FORMAL_ALREADY_REPRESENTED",
+      "formalRefs": ["03A_シリーズ窓種設定!64:65"],
+      "reason": "テラスタイプの「アングル付のみ」は現行正式Master備考に既に存在する。"
+    },
+    {
+      "candidateId": "EC-APW430-FIX-004",
+      "decision": "ACCEPT",
+      "formalDisposition": "FORMAL_SCHEMA_GAP_NON_MUTATING",
+      "formalRefs": [
+        "04_窓種固有仕様: no atomic 115mm/45mm row found",
+        "05_設定可否関係: no atomic 115mm row found",
+        "05C_特殊仕様適用条件: no atomic 45mm row found"
+      ],
+      "reason": "公式Evidenceとしては成立するが、現行正式Workbookに枠見込み115mm／ガラス総厚45mmを安全に格納する既存原子Fieldを確認できない。Phase 4では新規Fieldを推測生成せずEvidenceのみ保持する。"
+    },
+    {
+      "candidateId": "EC-APW430-FIX-005",
+      "decision": "ACCEPT",
+      "formalDisposition": "FORMAL_ALREADY_REPRESENTED",
+      "formalRefs": ["06_サイズ!1919:1925"],
+      "reason": "在来テラスタイプ H呼称24／サッシH2430mmの7規格サイズが現行正式Masterに既に存在する。"
+    }
+  ],
+  "summary": {
+    "candidateCount": 5,
+    "acceptCount": 5,
+    "formalAlreadyRepresented": 4,
+    "formalSchemaGapNonMutating": 1,
+    "formalMutationRequired": 0
+  },
+  "safety": {
+    "formalWorkbookWritePerformed": false,
+    "runtimeWritePerformed": false,
+    "productionWritePerformed": false,
+    "newFormalFieldInvented": false
+  }
+}

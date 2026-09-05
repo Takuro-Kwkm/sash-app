@@ -1,0 +1,45 @@
+{
+  "approvalSchemaVersion": "1.0",
+  "recordType": "PRODUCT_MASTER_PRODUCTION_APPROVAL",
+  "proposalId": "PMCP-LIX-SAMOS2H-CUSTOM-DIMENSION-RULESET-20260903-001",
+  "productId": "SER-LIX-SAMOS2H",
+  "approverType": "HUMAN",
+  "approvedBy": "USER",
+  "approvedAt": "2026-09-03T19:14:02+09:00",
+  "approvalSource": "The user's explicit approval of the exact S2H proposal authorizes the previously described full controlled flow through Formal Master and Runtime regeneration after zero-unexpected STAGING/Preview.",
+  "scope": "APPROVE_PRODUCTION_WRITE_ONLY",
+  "productionApproval": true,
+  "proposalFingerprint": "sha256:bd5900002f8d54d322fb7c50bb0b4b121f54a81ece7ec0e60baaffe6914df08e",
+  "previewFingerprint": "sha256:c5ac22d023b1788a21576fc44492dc6c0caf9095cf38861d95a6efdf1b8ca4ac",
+  "formalDriveFileId": "1kTRcb7UdghZl7h3lYdmnZuB7fUVUAduU",
+  "requiredContentSha256": "8dea8b2ecec1715445db74255f591b4f2bcf404027f0006f168a585365df29d6",
+  "requiredModifiedTime": "2026-09-01T02:33:05.041Z",
+  "approvedWrites": [
+    {
+      "operation": "ADD_SHEET",
+      "sheet": "06E_特注寸法範囲",
+      "dimensionRuleRecords": 17,
+      "existingSheetChanges": 0
+    }
+  ],
+  "expectedPostWrite": {
+    "dimensionRuleCount": 17,
+    "activeProductNodes": 17,
+    "changedExistingSheets": 0,
+    "newSheetsAdded": 1,
+    "runtimeStandardInventory": {
+      "SER-LIX-SAMOS2H": 2131,
+      "SER-LIX-SAMOSL": 1495,
+      "SER-YKK-APW430": 718,
+      "SER-YKK-APW431": 538
+    }
+  },
+  "runtimeApproval": true,
+  "runtimeScope": "REGENERATE_FROM_FORMAL_MASTER_ONLY",
+  "auditNotes": [
+    "Approval bound to exact Proposal and Preview fingerprints.",
+    "Any formal Master SHA/modified-time drift before write invalidates approval.",
+    "Post-write readback is mandatory.",
+    "Runtime manufacturer-value direct edits are forbidden."
+  ]
+}

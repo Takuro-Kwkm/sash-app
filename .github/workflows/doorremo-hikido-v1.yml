@@ -1,0 +1,76 @@
+name: Doorremo Hikido v1.0 Runtime
+
+on:
+  push:
+    branches: [main, feat/catalog-recovery-v2]
+  pull_request:
+    branches: [main]
+
+jobs:
+  doorremo_runtime:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Syntax and generic engine checks
+        run: |
+          node --check src/catalog/modules/doorremo-hikido-master.mjs
+          node --check src/catalog/modules/doorremo-hikido-module.mjs
+          node --check src/catalog/modules/doorremo-hikido-v1.mjs
+          node --check src/catalog/resolver-auto.mjs
+          node --check scripts/start-step8-ui.mjs
+      - name: Doorremo v1.0 regression and canonical parity
+        run: node --test test/29-doorremo-hikido-v1.test.mjs test/31-doorremo-hikido-canonical-v1.test.mjs
+      - name: Existing product regression
+        run: node --test test/01-core.test.mjs test/02-lr.test.mjs test/03-features.test.mjs test/04-thermosl.test.mjs test/05-concords30.test.mjs
+      - name: Full npm test
+        run: npm test
+      - name: Runtime build smoke and expanded inventory
+        run: |
+          npm run start:qa > runtime-doorremo.log 2>&1 &
+          PID=$!
+          trap 'kill $PID || true' EXIT
+          for i in {1..30}; do
+            if curl -fsS http://127.0.0.1:4173/api/health > /tmp/doorremo-health.json; then break; fi
+            sleep 0.5
+          done
+          cat /tmp/doorremo-health.json
+          node -e 'const h=require("/tmp/doorremo-health.json"); const d=h.fullInventory?.find(x=>x.productId==="SER-YKK-DOORREMO-HIKIDO"); if(!h.ok||!h.runtimeCatalogVersion?.includes("DOORREMO-HIKIDO-v1.0")||!d||d.definitions<1||h.doorremoInventory?.productId!==d.productId) process.exit(1)'
+
+  doorremo_browser_qa:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install lightweight Chromium QA runtime
+        run: |
+          npm install --no-save --package-lock=false playwright@npm:playwright-core@1.55.0
+          node node_modules/playwright/cli.js install chromium
+      - name: Start actual sales Runtime
+        run: |
+          npm run start:qa > runtime-doorremo-browser.log 2>&1 &
+          echo $! > runtime-doorremo-browser.pid
+          for i in {1..30}; do
+            if curl -fsS http://127.0.0.1:4173/api/health > /tmp/doorremo-browser-health.json; then exit 0; fi
+            sleep 0.5
+          done
+          cat runtime-doorremo-browser.log
+          exit 1
+      - name: Doorremo desktop and smartphone Browser QA
+        run: node test/browser/doorremo-hikido-browser-qa.mjs
+      - name: Upload Doorremo Browser QA evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: doorremo-hikido-browser-qa
+          path: |
+            artifacts/doorremo-hikido-browser-qa
+            runtime-doorremo-browser.log
+      - name: Stop Runtime
+        if: always()
+        run: |
+          if [ -f runtime-doorremo-browser.pid ]; then kill "$(cat runtime-doorremo-browser.pid)" || true; fi

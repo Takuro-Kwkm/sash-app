@@ -1,0 +1,66 @@
+name: Antigravity Self-Hosted Smoke Test
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: antigravity-self-hosted-smoke
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    name: Verify Antigravity Google AI Pro worker
+    runs-on: [self-hosted, macOS, ARM64, gemini-worker]
+    timeout-minutes: 5
+    env:
+      HOME: /Users/takuro
+      PATH: /Users/takuro/.local/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin
+    steps:
+      - name: Verify runner and Antigravity CLI
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "runner_name=${RUNNER_NAME}"
+          echo "runner_user=$(id -un)"
+          echo "home=${HOME}"
+          command -v agy
+          agy --version
+          file "$(command -v agy)"
+
+      - name: Verify macOS LaunchAgent and Keychain gates
+        shell: bash
+        run: |
+          set -euo pipefail
+          PLIST="$HOME/Library/LaunchAgents/actions.runner.Takuro-Kwkm-sash-app.sash-gemini-worker-mac.plist"
+          test -f "$PLIST"
+
+          session_create="$(/usr/libexec/PlistBuddy -c 'Print :SessionCreate' "$PLIST")"
+          session_type="$(/usr/libexec/PlistBuddy -c 'Print :LimitLoadToSessionType' "$PLIST")"
+          test "$session_create" = 'false'
+          test "$session_type" = 'Aqua'
+          echo 'MACOS_RUNNER_SECURITY_SESSION_GATE=PASS'
+
+          /usr/bin/security find-generic-password -s gemini -a antigravity >/dev/null 2>&1
+          echo 'KEYCHAIN_ITEM_LOOKUP_GATE=PASS'
+          /usr/bin/security find-generic-password -s gemini -a antigravity -w >/dev/null 2>&1
+          echo 'KEYCHAIN_SECRET_READ_GATE=PASS'
+          /usr/bin/security show-keychain-info "$HOME/Library/Keychains/login.keychain-db" >/dev/null 2>&1
+          echo 'LOGIN_KEYCHAIN_GATE=PASS'
+
+      - name: Verify headless Google AI Pro session
+        shell: bash
+        run: |
+          set -euo pipefail
+          agy -p "Return exactly: ANTIGRAVITY_RUNNER_OK" --output-format json | tee antigravity-smoke.json
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          payload = json.loads(Path('antigravity-smoke.json').read_text())
+          assert payload.get('status') == 'SUCCESS', payload
+          assert payload.get('response', '').strip() == 'ANTIGRAVITY_RUNNER_OK', payload
+          print('ANTIGRAVITY_SELF_HOSTED_GATE=PASS')
+          PY

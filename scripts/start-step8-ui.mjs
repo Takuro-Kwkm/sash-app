@@ -1,0 +1,83 @@
+import { createServer } from "node:http";
+import { readFile } from "node:fs/promises";
+import { createHash } from "node:crypto";
+import { fileURLToPath } from "node:url";
+import { dirname, join } from "node:path";
+import { createCatalog, catalogInventory } from "../src/catalog/catalog-adapter.mjs";
+import { stabilizeSelection } from "../src/catalog/catalog-resolver.mjs";
+import { CURRENT_WINDOW_SERIES_MODULES } from "../src/catalog/modules/current-window-series.mjs";
+import { CONCORDS30_MODULE } from "../src/catalog/modules/concords30-module.mjs";
+import { DOORREMO_HIKIDO_MODULE } from "../src/catalog/modules/doorremo-hikido-v1.mjs";
+import { LIXIL_REFORM_SHUTTER_MODULE } from "../src/catalog/modules/lixil-reform-shutter-v1.mjs";
+
+const __dirname=dirname(fileURLToPath(import.meta.url));
+const root=join(__dirname,"..");
+const webRoot=join(root,"src","ui","web");
+const catalog=createCatalog([...CURRENT_WINDOW_SERIES_MODULES,CONCORDS30_MODULE,DOORREMO_HIKIDO_MODULE,LIXIL_REFORM_SHUTTER_MODULE]);
+const buildTimestamp=new Date().toISOString();
+const uiIdentity=(await Promise.all(["index.html","app.js","size-presentation.js","styles.css","styles-wave3.css"].map((name)=>readFile(join(webRoot,name))))).map((body)=>body.toString("utf8")).join("\n");
+const buildId=`RECOVERY-${createHash("sha256").update(JSON.stringify(catalog)).update(uiIdentity).digest("hex").slice(0,12)}`;
+// Keep the established health contract stable for existing Wave/Concord QA while exposing expanded runtimes separately.
+const catalogVersion="V4.6 SALES-UI-R2 + CONCORD-S30";
+const runtimeCatalogVersion="V4.8 SALES-UI-R2 + CONCORD-S30 + DOORREMO-HIKIDO-v1.0 + LIXIL-REFORM-SHUTTER-v1.0";
+const fullInventory=catalogInventory(catalog);
+const expandedProductIds=new Set([DOORREMO_HIKIDO_MODULE.product.id,LIXIL_REFORM_SHUTTER_MODULE.product.id]);
+const legacyInventory=fullInventory.filter((row)=>!expandedProductIds.has(row.productId));
+
+const json=(res,status,body)=>{
+  res.writeHead(status,{"content-type":"application/json; charset=utf-8","cache-control":"no-store","x-sash-build-id":buildId});
+  res.end(JSON.stringify(body));
+};
+const staticFile=async(res,name,type)=>{
+  try{
+    const body=await readFile(join(webRoot,name));
+    res.writeHead(200,{"content-type":type,"cache-control":"no-store","x-sash-build-id":buildId});
+    res.end(body);
+  }catch{res.writeHead(404);res.end("Not found");}
+};
+const parseSelection=(url)=>{
+  const raw=url.searchParams.get("selection");
+  if(!raw) return {};
+  try{return JSON.parse(raw);}catch{return {};}
+};
+
+const server=createServer(async(req,res)=>{
+  const url=new URL(req.url??"/",`http://${req.headers.host??"localhost"}`);
+  if(url.pathname==="/health"||url.pathname==="/api/health"){
+    return json(res,200,{
+      ok:true,buildId,buildTimestamp,catalogVersion,runtimeCatalogVersion,
+      entrypoint:"scripts/start-step8-ui.mjs",frontendRoot:"src/ui/web",
+      backend:"node:http recovery server",databasePath:process.env.SASH_UI_DATABASE??"data/runtime/sash-v2.sqlite",
+      inventory:legacyInventory,
+      fullInventory,
+      doorremoInventory:fullInventory.find((row)=>row.productId===DOORREMO_HIKIDO_MODULE.product.id)??null,
+      reformShutterInventory:fullInventory.find((row)=>row.productId===LIXIL_REFORM_SHUTTER_MODULE.product.id)??null
+    });
+  }
+  if(url.pathname==="/api/catalog/products") return json(res,200,catalog.products);
+  if(url.pathname==="/api/catalog/fields"){
+    const productId=url.searchParams.get("productId");
+    return json(res,200,catalog.specificationDefinitions.filter((x)=>!productId||x.productId===productId));
+  }
+  if(url.pathname==="/api/catalog/allowed-values"){
+    const productId=url.searchParams.get("productId"), key=url.searchParams.get("key");
+    return json(res,200,catalog.allowedValues.filter((x)=>(!productId||x.productId===productId)&&(!key||x.specificationKey===key)));
+  }
+  if(url.pathname==="/api/catalog/resolve"){
+    const productId=url.searchParams.get("productId");
+    if(!productId) return json(res,400,{error:"productId required"});
+    return json(res,200,stabilizeSelection(catalog,productId,parseSelection(url)));
+  }
+  if(url.pathname==="/api/catalog") return json(res,200,catalog);
+  if(url.pathname==="/app.js") return staticFile(res,"app.js","text/javascript; charset=utf-8");
+  if(url.pathname==="/size-presentation.js") return staticFile(res,"size-presentation.js","text/javascript; charset=utf-8");
+  if(url.pathname==="/styles.css") return staticFile(res,"styles.css","text/css; charset=utf-8");
+  if(url.pathname==="/styles-wave3.css") return staticFile(res,"styles-wave3.css","text/css; charset=utf-8");
+  return staticFile(res,"index.html","text/html; charset=utf-8");
+});
+const host=process.env.HOST??"127.0.0.1";
+const port=Number(process.env.PORT??4173);
+server.listen(port,host,()=>{
+  console.log(`Sash V2 recovery runtime: http://${host}:${port}`);
+  console.log(`${buildId} | ${runtimeCatalogVersion}`);
+});

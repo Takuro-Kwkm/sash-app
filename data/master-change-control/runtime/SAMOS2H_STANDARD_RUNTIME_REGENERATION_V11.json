@@ -1,0 +1,38 @@
+{
+  "schemaVersion": "1.0",
+  "recordType": "SAMOS2H_STANDARD_RUNTIME_REGENERATION",
+  "proposalId": "PMCP-LIX-SAMOS2H-STANDARD-SOURCE-CORRECTION-20260904-001",
+  "productId": "SER-LIX-SAMOS2H",
+  "status": "RUNTIME_REGENERATION_COMMITTED",
+  "runtimeVersion": "v1.1",
+  "sourceOfTruth": "FORMAL_PRODUCT_MASTER",
+  "formalMaster": {
+    "driveFileId": "1kTRcb7UdghZl7h3lYdmnZuB7fUVUAduU",
+    "sha256": "9d4a0812cadc6d804a8e8db77ad0e4b042d674e62b9ef9edfcd2afcab9c9e5a6",
+    "modifiedTime": "2026-09-04T03:19:46.374Z",
+    "sizeBytes": 560895,
+    "sheets": ["06_サイズ", "06B_雨戸設定可否", "08A_サイズ別ガラス条件"],
+    "backupDriveFileId": "13bczVZHqXR9mWS-sP5-YrQzAZHq_Y9y5"
+  },
+  "runtimeProjection": {
+    "standardSizeRows": 2309,
+    "selectableRows": 2140,
+    "inactiveRows": 169,
+    "hActualDimensionCorrections": 310,
+    "deactivatedRows": 2,
+    "newStandardRows": 12,
+    "directManufacturerValueEditToGenericCore": false,
+    "directEditToLegacyCompressedSource": false
+  },
+  "standardInventoryExpected": {
+    "SER-LIX-SAMOS2H": 2140,
+    "SER-LIX-SAMOSL": 1495,
+    "SER-YKK-APW430": 718,
+    "SER-YKK-APW431": 538
+  },
+  "safety": {
+    "constructionHidden": true,
+    "customRuntimeVersionRetained": "v1.0",
+    "baseLineageRetained": true
+  }
+}

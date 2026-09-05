@@ -1,0 +1,46 @@
+{
+  "approvalSchemaVersion": "1.1",
+  "recordType": "PRODUCT_MASTER_PRODUCTION_APPROVAL",
+  "proposalId": "PMCP-YKK-APW430-CUSTOM-DIMENSION-RULESET-20260903-001",
+  "productId": "SER-YKK-APW430",
+  "approverType": "HUMAN",
+  "approvedBy": "USER",
+  "approvedAt": "2026-09-03T21:39:00+09:00",
+  "approvalSource": "The user's explicit approval of the exact APW430 proposal authorizes the previously described full controlled flow through Formal Master and Runtime regeneration after zero-unexpected STAGING/Preview.",
+  "scope": "APPROVE_PRODUCTION_WRITE_ONLY",
+  "productionApproval": true,
+  "proposalFingerprint": "sha256:894ca2e99cfd482b0093bfbc1d1763383a8e01c5c8614d75ac1560938ae5eb78",
+  "previewFingerprint": "sha256:681879789d0098fbca2a15089f2bb219e43f4c08c270ae6051805df0a6b6e3f5",
+  "formalDriveFileId": "1QDocQ7yoXE6TAnzHtfsyKwwK6YB5_mgk90Bw1hm4iPo",
+  "requiredDriveRevisionId": "11",
+  "requiredModifiedTime": "2026-08-30T11:39:41.909Z",
+  "approvedWrites": [
+    {
+      "operation": "ADD_SHEET",
+      "sheet": "06C_特注寸法範囲",
+      "dimensionRuleRecords": 25,
+      "existingSheetChanges": 0
+    }
+  ],
+  "expectedPostWrite": {
+    "dimensionRuleCount": 25,
+    "activeProductNodes": 25,
+    "changedExistingSheets": 0,
+    "newSheetsAdded": 1,
+    "runtimeStandardInventory": {
+      "SER-LIX-SAMOS2H": 2131,
+      "SER-LIX-SAMOSL": 1495,
+      "SER-YKK-APW430": 718,
+      "SER-YKK-APW431": 538
+    }
+  },
+  "runtimeApproval": true,
+  "runtimeScope": "REGENERATE_FROM_FORMAL_MASTER_ONLY",
+  "auditNotes": [
+    "Approval bound to exact Proposal and Preview fingerprints.",
+    "Any Drive revision/modified-time or pre-write sheet-state drift before write invalidates approval.",
+    "Native Google Sheet XLSX export bytes are not used as the concurrency token because repeated unchanged exports are nondeterministic.",
+    "Post-write readback is mandatory.",
+    "Runtime manufacturer-value direct edits are forbidden."
+  ]
+}

@@ -1,0 +1,352 @@
+name: V2 Recovery CI
+
+on:
+  push:
+    branches: [main, feat/catalog-recovery-v2]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: npm test
+        id: npm_test
+        continue-on-error: true
+        shell: bash
+        run: |
+          set -o pipefail
+          npm test 2>&1 | tee npm-test.log
+      - name: Upload npm test log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: npm-test-log
+          path: npm-test.log
+      - name: Enforce npm test result
+        if: steps.npm_test.outcome != 'success'
+        run: exit 1
+      - name: Runtime smoke
+        run: |
+          npm run start:qa > /tmp/sash-v2.log 2>&1 &
+          PID=$!
+          trap 'kill $PID || true' EXIT
+          for i in {1..20}; do
+            if curl -fsS http://127.0.0.1:4173/api/health > /tmp/health.json; then break; fi
+            sleep 0.5
+          done
+          cat /tmp/health.json
+          node -e 'const h=require("/tmp/health.json"); const expected={"SER-LIX-SAMOS2H":2140,"SER-LIX-SAMOSL":1495,"SER-YKK-APW430":718,"SER-YKK-APW431":538}; const sash=h.inventory.filter(x=>expected[x.productId]!==undefined); const concord=h.inventory.find(x=>x.productId==="SER-YKK-CONCORD-S30"); if(!h.ok || h.catalogVersion!=="V4.6 SALES-UI-R2 + CONCORD-S30" || h.inventory.length!==5 || !concord || sash.length!==4 || sash.some(x=>x.sizeCoverage!==1 || x.missingSizeRows!==0 || x.extraSizeRows!==0 || expected[x.productId]!==x.selectableSizeRows)) process.exit(1)'
+
+  concord_regression:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Existing four series plus Concord regression
+        run: node --test test/01-core.test.mjs test/02-lr.test.mjs test/03-features.test.mjs test/04-thermosl.test.mjs test/05-concords30.test.mjs
+
+  runtime_smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Runtime smoke
+        run: |
+          npm run start:qa > runtime-smoke.log 2>&1 &
+          PID=$!
+          trap 'kill $PID || true' EXIT
+          for i in {1..20}; do
+            if curl -fsS http://127.0.0.1:4173/api/health > /tmp/health.json; then break; fi
+            sleep 0.5
+          done
+          cat /tmp/health.json
+          node -e 'const h=require("/tmp/health.json"); const expected={"SER-LIX-SAMOS2H":2140,"SER-LIX-SAMOSL":1495,"SER-YKK-APW430":718,"SER-YKK-APW431":538}; const sash=h.inventory.filter(x=>expected[x.productId]!==undefined); const concord=h.inventory.find(x=>x.productId==="SER-YKK-CONCORD-S30"); if(!h.ok || h.catalogVersion!=="V4.6 SALES-UI-R2 + CONCORD-S30" || h.inventory.length!==5 || !concord || sash.length!==4 || sash.some(x=>x.sizeCoverage!==1 || x.missingSizeRows!==0 || x.extraSizeRows!==0 || expected[x.productId]!==x.selectableSizeRows)) process.exit(1)'
+
+  product_master_live_v1:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Run actual APW430 LIVE_EXTERNAL Evidence round trip
+        run: npm run evidence:live-v1 -- artifacts/product-master-live-v1
+      - name: Upload live Evidence round-trip artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: product-master-live-v1-apw430
+          path: artifacts/product-master-live-v1
+
+  product_master_change_v11:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Generate controlled Product Master Change Proposal from LIVE Evidence
+        run: npm run master:change-proposal:v11 -- artifacts/product-master-change-v11
+      - name: Upload Product Master Change Proposal evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: product-master-change-v11-apw430
+          path: artifacts/product-master-change-v11
+
+  product_master_staging_v11:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Apply explicitly approved APW430 Product Master proposal to STAGING
+        run: npm run master:staging-apply:v11 -- artifacts/product-master-staging-v11
+      - name: Upload approved STAGING Master evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: product-master-staging-v11-apw430
+          path: artifacts/product-master-staging-v11
+
+  product_master_production_preview_v12:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Build APW430 formal Product Master production diff preview
+        run: npm run master:production-preview:v12 -- artifacts/product-master-production-preview-v12
+      - name: Upload Product Master production preview evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: product-master-production-preview-v12-apw430
+          path: artifacts/product-master-production-preview-v12
+
+  product_master_technical_facts_v13:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Resolve APW430 dimension formula issues as Control Plane Technical Facts
+        run: npm run master:technical-facts:v13 -- artifacts/product-master-technical-facts-v13
+      - name: Upload Technical Fact resolution evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: product-master-technical-facts-v13-apw430
+          path: artifacts/product-master-technical-facts-v13
+
+  product_master_generic_workflow_v14:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Run APW430 through product-agnostic Product Master workflow
+        run: npm run master:workflow -- SER-YKK-APW430 technical-facts artifacts/product-master-workflow-v14/apw430
+      - name: Upload generic Product Master workflow evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: product-master-generic-workflow-v14-apw430
+          path: artifacts/product-master-workflow-v14/apw430
+
+  product_master_standard_size_source_v15:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Reproduce historical Thermos L pre-production source gap
+        run: npm run master:workflow -- SER-LIX-SAMOSL size-source-audit artifacts/product-master-workflow-v15/thermosl
+      - name: Enforce historical calibrated source-gap detection
+        run: node -e 'const r=require("./artifacts/product-master-workflow-v15/thermosl/standard-size-source-audit-report.json"); if(r.status!=="SOURCE_COVERAGE_GAP_DETECTED"||r.officialSourceAvailable!==97||r.canonicalMatch!==12||r.missingInCanonical!==85||r.canonicalInactive!==0||r.extraInCanonical!==0||r.gates.OFFICIAL_SOURCE_SIZE_COVERAGE!=="FAIL"||r.formalWorkbookWritePerformed||r.runtimeWritePerformed) process.exit(1)'
+      - name: Upload historical Thermos L source coverage audit
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: product-master-standard-size-source-v15-thermosl
+          path: artifacts/product-master-workflow-v15/thermosl
+
+  product_master_size_gap_proposal_v16:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Reproduce historical Thermos L Size Master gap proposal
+        run: npm run master:workflow -- SER-LIX-SAMOSL size-gap-proposal artifacts/product-master-workflow-v16/thermosl
+      - name: Enforce historical proposal and projected source coverage
+        run: node -e 'const r=require("./artifacts/product-master-workflow-v16/thermosl/report.json"); if(r.gate!=="PASS"||r.currentCoverage.officialAvailable!==97||r.currentCoverage.match!==12||r.currentCoverage.missingInCanonical!==85||r.projectedCoverage.match!==97||r.projectedCoverage.missingInCanonical!==0||r.additions.evidenceAdditions!==8||r.additions.sizeAdditions!==85||r.additions.glassConditionAdditions!==85||r.additions.totalChanges!==178||r.proposal.status!=="PROPOSED"||r.proposal.approvalPolicy!=="HUMAN_REQUIRED"||r.formalWorkbookWritePerformed||r.runtimeWritePerformed) process.exit(1)'
+      - name: Upload historical Thermos L Size Master proposal evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: product-master-size-gap-proposal-v16-thermosl
+          path: artifacts/product-master-workflow-v16/thermosl
+
+  product_master_size_gap_staging_v16:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Reproduce human-approved historical Thermos L STAGING apply
+        run: npm run master:staging-apply:v16 -- artifacts/product-master-staging-v16/thermosl
+      - name: Enforce exact historical STAGING result
+        run: node -e 'const r=require("./artifacts/product-master-staging-v16/thermosl/staging-apply-report.json"); if(r.status!=="STAGING_APPLY_COMPLETE"||r.proposalId!=="PMCP-LIX-SAMOSL-SHUT-MSTD-SIZE-GAP-20260902-001"||r.proposalStatus!=="APPLIED"||r.stagingChangesApplied!==178||r.stagingStandardSizeBefore!==1559||r.stagingStandardSizeAfter!==1644||r.stagingSizeGlassConditionsBefore!==1559||r.stagingSizeGlassConditionsAfter!==1644||r.stagingEvidenceAfter!==8||r.newSizeCount!==85||r.sourceCoverage.match!==97||r.sourceCoverage.missingInCanonical!==0||r.openBlockingPending!==0||r.productionMasterWritePerformed||r.runtimeWritePerformed) process.exit(1)'
+      - name: Upload historical approved Thermos L STAGING evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: product-master-staging-v16-thermosl
+          path: artifacts/product-master-staging-v16/thermosl
+
+  product_master_production_preview_v17:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Reproduce corrected historical Thermos L production preview
+        run: npm run master:production-preview:v17 -- artifacts/product-master-production-preview-v17/thermosl
+      - name: Enforce corrected historical formal workbook write plan
+        run: node -e 'const r=require("./artifacts/product-master-production-preview-v17/thermosl/production-preview-report.json"); if(r.status!=="PRODUCTION_WRITE_PREVIEW_READY"||r.writeSummary.sizeSheet!=="06_サイズ"||r.writeSummary.sizeRange!=="A1563:V1647"||r.writeSummary.sizeRows!==85||r.writeSummary.glassSheet!=="08A_サイズ別ガラス条件"||r.writeSummary.glassRange!=="A1563:N1647"||r.writeSummary.glassRows!==85||r.projectedInventory.standardSizeRows!==1644||r.projectedInventory.selectableSizeRows!==1495||r.projectedInventory.sizeGlassConditionRows!==1644||!r.productionApproval.required||r.productionApproval.status!=="PENDING"||r.formalWorkbookWritePerformed||r.runtimeWritePerformed) process.exit(1)'
+      - name: Upload historical Thermos L production preview evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: product-master-production-preview-v17-thermosl
+          path: artifacts/product-master-production-preview-v17/thermosl
+
+  product_master_thermosl_runtime_v18:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Verify Thermos L runtime regeneration from current formal Master
+        run: node --test test/23-product-master-core-v18-thermosl-runtime-regeneration.test.mjs
+
+  gemini_live_readiness_v22:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+      GEMINI_MODEL: ${{ vars.GEMINI_MODEL }}
+      GEMINI_FILE_URI: ${{ secrets.GEMINI_APW430_FILE_URI }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Detect Gemini secure inputs without printing values
+        id: gemini_gate
+        shell: bash
+        run: |
+          api_key_present=0
+          model_present=0
+          file_uri_present=0
+          [[ -n "$GEMINI_API_KEY" ]] && api_key_present=1
+          [[ -n "$GEMINI_MODEL" ]] && model_present=1
+          [[ -n "$GEMINI_FILE_URI" ]] && file_uri_present=1
+          ready=0
+          [[ "$api_key_present" == "1" && "$model_present" == "1" && "$file_uri_present" == "1" ]] && ready=1
+          echo "api_key_present=$api_key_present"
+          echo "model_present=$model_present"
+          echo "file_uri_present=$file_uri_present"
+          echo "ready=$ready"
+          echo "api_key_present=$api_key_present" >> "$GITHUB_OUTPUT"
+          echo "model_present=$model_present" >> "$GITHUB_OUTPUT"
+          echo "file_uri_present=$file_uri_present" >> "$GITHUB_OUTPUT"
+          echo "ready=$ready" >> "$GITHUB_OUTPUT"
+      - name: Gemini Credential and source preflight
+        if: steps.gemini_gate.outputs.ready == '1'
+        run: npm run gemini:preflight:v22
+      - name: APW430 Real Gemini LIVE_EXTERNAL
+        if: steps.gemini_gate.outputs.ready == '1'
+        run: npm run gemini:live:apw430:v22 -- --artifact-dir=artifacts/gemini-live-v22/apw430
+      - name: Record blocked root cause
+        if: steps.gemini_gate.outputs.ready != '1'
+        run: |
+          echo "GEMINI_LIVE_EXECUTION_GATE=BLOCKED"
+          echo "Reason: one or more secure inputs are missing; secret values were not printed."
+      - name: Upload non-secret Gemini audit
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gemini-live-readiness-v22-audit
+          path: artifacts/gemini-live-v22/apw430
+          if-no-files-found: ignore
+          retention-days: 7
+
+  browser_qa:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install Chromium QA runtime
+        run: |
+          npm install --no-save --package-lock=false playwright@1.55.0
+          npx playwright install --with-deps chromium
+      - name: Start actual Runtime
+        run: |
+          npm run start:qa > runtime-qa.log 2>&1 &
+          echo $! > runtime-qa.pid
+          for i in {1..30}; do
+            if curl -fsS http://127.0.0.1:4173/api/health > /tmp/browser-health.json; then exit 0; fi
+            sleep 0.5
+          done
+          cat runtime-qa.log
+          exit 1
+      - name: Concord S30 PC and Smartphone Browser QA
+        run: node test/browser/concords30-browser-qa.mjs
+      - name: Formal Size UI PC and Smartphone Browser QA
+        run: node test/browser/size-ui-browser-qa.mjs
+      - name: Sales UI R2 glass, shutter size and CUSTOM Browser QA
+        run: node test/browser/sales-ui-r2-browser-qa.mjs
+      - name: Export CUSTOM availability matrix
+        run: node scripts/report-custom-availability.mjs
+      - name: Build exact Runtime-derived Size UI Review Preview
+        run: node scripts/build-size-ui-review-preview.mjs artifacts/size-ui-review-r2/index.html
+      - name: Size UI Review Preview PC and Smartphone QA
+        run: node test/browser/size-ui-review-preview-qa.mjs
+      - name: Upload Browser QA evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: concord-s30-browser-qa
+          path: |
+            artifacts/concord-browser-qa
+            artifacts/size-ui-browser-qa
+            artifacts/size-ui-review-r2
+            artifacts/size-ui-review-r2-qa
+            artifacts/sales-ui-r2
+            runtime-qa.log
+      - name: Stop Runtime
+        if: always()
+        run: |
+          if [ -f runtime-qa.pid ]; then kill "$(cat runtime-qa.pid)" || true; fi
