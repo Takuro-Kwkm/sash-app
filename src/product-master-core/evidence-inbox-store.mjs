@@ -111,6 +111,7 @@ export function persistGeminiTransport(raw,{
   rootDir=path.resolve('data/evidence-inbox'),
   allowDuplicateClaims=false,
   importedAt=new Date().toISOString(),
+  executionContext=null,
   ...transportOptions
 }={}){
   let manifest;
@@ -132,6 +133,7 @@ export function persistGeminiTransport(raw,{
   fs.mkdirSync(batchesDir,{recursive:true});
 
   const candidateFingerprints=imported.candidates.map((candidate)=>({candidateId:candidate.id,fingerprint:evidenceClaimFingerprint(candidate)}));
+  const normalizedExecutionContext=executionContext?structuredClone(executionContext):null;
   const manifestEntry={
     batchId:imported.batch.id,
     importedAt,
@@ -139,6 +141,7 @@ export function persistGeminiTransport(raw,{
     producer:{...imported.batch.producer},
     productId:imported.batch.productId,
     sourceContext:{...imported.batch.sourceContext},
+    ...(normalizedExecutionContext?{executionContext:normalizedExecutionContext}:{}),
     relativePath:path.posix.join('batches',fileName),
     rawSha256:sha256(raw),
     candidateIds:imported.candidates.map((row)=>row.id),
@@ -158,7 +161,7 @@ export function persistGeminiTransport(raw,{
     pass:true,
     status:'PERSISTED_TO_EVIDENCE_INBOX',
     canonicalWritePerformed:false,
-    batch:imported.batch,
+    batch:{...imported.batch,...(normalizedExecutionContext?{executionContext:normalizedExecutionContext}:{})},
     candidateCount:imported.candidates.length,
     issueCount:imported.issues.length,
     batchPath,
