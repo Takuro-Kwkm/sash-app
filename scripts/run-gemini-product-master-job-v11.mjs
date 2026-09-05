@@ -118,6 +118,7 @@ async function main(){
     preInboxGuard:result.preInboxGuard?.status??'NOT_REACHED',
     transportProvenanceGate:result.transportProvenance?.status??result.preInboxGuard?.record?.transportProvenance?.status??'NOT_REACHED',
     evidenceInboxGate:result.inboxImport?.pass===true?'PASS':'NOT_WRITTEN',
+    reviewQueueGate:result.reviewQueueValidation?.pass===true?'PASS':result.reviewQueue?'BLOCKED':'NOT_REACHED',
     canonicalWritePerformed:result.canonicalWritePerformed===true,
     runtimeWritePerformed:result.runtimeWritePerformed===true,
     productionWritePerformed:result.productionWritePerformed===true,
