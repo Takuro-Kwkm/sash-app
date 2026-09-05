@@ -5,8 +5,12 @@ import os from'node:os';
 import path from'node:path';
 import{persistGeminiTransport,loadEvidenceInboxManifest}from'../src/product-master-core/evidence-inbox-store.mjs';
 import{buildProductMasterReviewQueue}from'../src/product-master-core/review-queue.mjs';
+import{buildGeminiJobInputFromProductProfile}from'../src/product-master-core/product-profile.mjs';
+import{createGeminiJob,runGeminiProductMasterBridge}from'../src/product-master-core/gemini-execution-bridge.mjs';
 
 const fixtureRoot=(t)=>{const root=fs.mkdtempSync(path.join(os.tmpdir(),'evidence-provenance-v27-'));t.after(()=>fs.rmSync(root,{recursive:true,force:true}));return root;};
+const profilePath=path.resolve('config/product-master-profiles/lixil-thermosl.v1.json');
+const loadProfile=()=>JSON.parse(fs.readFileSync(profilePath,'utf8'));
 
 const source={type:'OFFICIAL_PDF',driveFileId:'DRIVE-V27',title:'official-v27.pdf',version:'202609'};
 const envelope=(batchId,candidateId)=>JSON.stringify({
@@ -77,4 +81,36 @@ test('v2.7 legacy Evidence Inbox batch stays readable and does not invent execut
   assert.equal(manifest.batches[0].executionContext,undefined);
   const queue=buildProductMasterReviewQueue({evidenceInboxDir:inbox,changeControlDir:change,productId:'SER-V27'});
   assert.equal(queue.items[0].refs.executionContext,undefined);
+});
+
+test('v2.7 allowed AI Pro to API fallback persists actual channel, fallback_from and API execution reference',async t=>{
+  const profile=loadProfile();
+  const built=buildGeminiJobInputFromProductProfile(profile,{
+    execution_mode:'LIVE_EXTERNAL',execution_channel:'GEMINI_AI_PRO',fallback_allowed:true,
+    execution_reference:'AIPRO:PRIMARY',model:'gemini-test',job_id:'GJOB-V27-FALLBACK-INBOX'
+  });
+  assert.equal(built.pass,true);
+  const job=createGeminiJob(built.jobInput).job;
+  job.sourceAttachment={...job.sourceAttachment,geminiFileUri:'files/already-uploaded'};
+  const apiTransport=JSON.stringify({
+    transportSchemaVersion:'1.0',transportType:'EVIDENCE_CANDIDATE_BATCH',batchId:'BATCH-V27-FALLBACK-INBOX',generatedAt:'2026-09-05T05:05:00Z',
+    producer:{system:'GEMINI_NOTEBOOKLM',mode:'LIVE_EXTERNAL'},productId:job.productId,sourceContext:job.sourceContext,
+    candidates:[],issues:[{id:'ISSUE-V27-FALLBACK-INBOX',type:'OTHER',question:'fallback provenance integration test'}]
+  });
+  const fetchImpl=async()=>({ok:true,status:200,json:async()=>({candidates:[{content:{parts:[{text:apiTransport}]}}]})});
+  const root=fixtureRoot(t);
+  const inbox=path.join(root,'inbox');
+  const result=await runGeminiProductMasterBridge(job,{
+    apiKey:'test-key',fetchImpl,evidenceInboxDir:inbox,changeControlDir:path.join(root,'change'),importedAt:'2026-09-05T05:06:00Z'
+  });
+  assert.equal(result.pass,true);
+  assert.equal(result.job.executionChannel,'GEMINI_API');
+  assert.equal(result.job.fallbackFrom,'GEMINI_AI_PRO');
+  const manifest=loadEvidenceInboxManifest(inbox);
+  const context=manifest.batches[0].executionContext;
+  assert.equal(context.executionChannel,'GEMINI_API');
+  assert.equal(context.fallbackFrom,'GEMINI_AI_PRO');
+  assert.equal(context.fallbackReason,'GEMINI_AI_PRO_EXECUTION_SURFACE_UNAVAILABLE');
+  assert.equal(context.transportMethod,'GEMINI_API_DIRECT_RESPONSE');
+  assert.equal(context.executionReference,'GEMINI_API_JOB:GJOB-V27-FALLBACK-INBOX');
 });
