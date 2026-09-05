@@ -144,7 +144,7 @@ jobs:
             --audit-dir="$ARTIFACT_DIR/jobs" \
             | tee "$ARTIFACT_DIR/governed-api-live-console.log"
 
-      - name: Enforce API Worker Contract, Source Acquisition and Evidence provenance gates
+      - name: Enforce API Worker, Source Acquisition, Source Delivery and Evidence provenance gates
         shell: bash
         run: |
           set -euo pipefail
@@ -187,6 +187,18 @@ jobs:
           assert source.get('source',{}).get('driveFileId')=='${{ steps.profile.outputs.source_drive_file_id }}',source
           assert source.get('identity',{}).get('mode') in {'FULL_BYTE_IDENTITY','SCOPED_CONTENT_EQUIVALENCE'},source
           assert source.get('credentialMaterialPersisted') is False,source
+          delivery=ctx.get('sourceDelivery') or {}
+          assert delivery.get('schemaVersion')=='1.1',delivery
+          assert delivery.get('recordType')=='PRODUCT_MASTER_SOURCE_DELIVERY',delivery
+          assert delivery.get('status')=='PASS',delivery
+          assert delivery.get('executionChannel')=='GEMINI_API',delivery
+          assert delivery.get('executionReference')==expected_ref,delivery
+          assert delivery.get('source',{}).get('driveFileId')==source.get('source',{}).get('driveFileId'),delivery
+          assert delivery.get('source',{}).get('acquiredSha256')==source.get('retrieval',{}).get('acquiredSha256'),delivery
+          assert delivery.get('scope',{}).get('pdfPages')==source.get('scope',{}).get('pdfPages'),delivery
+          assert delivery.get('delivery',{}).get('method')=='GEMINI_FILE_ATTACHMENT',delivery
+          assert delivery.get('providerAttachmentReference'),delivery
+          assert delivery.get('credentialMaterialPersisted') is False,delivery
           rq=audit.get('reviewQueue') or {}
           for item in rq.get('items',[]):
               if item.get('kind')!='EVIDENCE_CANDIDATE': continue
@@ -194,10 +206,12 @@ jobs:
               assert qctx.get('executionChannel')=='GEMINI_API',item
               assert qctx.get('executionReference')==expected_ref,item
               assert (qctx.get('sourceAcquisition') or {}).get('status')=='PASS',item
+              assert (qctx.get('sourceDelivery') or {}).get('status')=='PASS',item
           gates={
               'WORKER_EXECUTION_CONTRACT_GATE':'PASS',
               'GEMINI_API_CREDENTIAL_GATE':'PASS',
               'SOURCE_ACQUISITION_GATE':'PASS',
+              'SOURCE_DELIVERY_GATE':'PASS',
               'GEMINI_API_LIVE_EXECUTION_GATE':'PASS',
               'TRANSPORT_GATE':'PASS',
               'EVIDENCE_INBOX_GATE':'PASS',
@@ -206,6 +220,7 @@ jobs:
               'HUMAN_APPROVAL_GATE':'NOT_OPENED',
               'MASTER_CHANGE_GATE':'CLOSED',
               'sourceIdentityMode':source.get('identity',{}).get('mode'),
+              'sourceDeliveryMethod':delivery.get('delivery',{}).get('method'),
               'executionChannel':'GEMINI_API',
               'transportMethod':'GEMINI_API_DIRECT_RESPONSE',
               'executionReference':expected_ref,
@@ -216,6 +231,7 @@ jobs:
           (root/'gemini-api-v11-gates.json').write_text(json.dumps(gates,ensure_ascii=False,indent=2)+'\n')
           print('WORKER_EXECUTION_CONTRACT_GATE=PASS')
           print('SOURCE_ACQUISITION_GATE=PASS')
+          print('SOURCE_DELIVERY_GATE=PASS')
           print('GEMINI_API_LIVE_EXECUTION_GATE=PASS')
           print('EXECUTION_PROVENANCE_GATE=PASS')
           PY
