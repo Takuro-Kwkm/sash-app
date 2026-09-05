@@ -94,13 +94,35 @@ The historical `replay-job.json` filename is temporarily retained for workflow c
 
 The direct Gemini API runner explicitly selects `GEMINI_API` for LIVE API execution. Credential/model/source preflight remains fail-closed.
 
-## 9. Authority boundary
+## 9. Evidence Inbox execution provenance
+
+The raw Transport envelope remains schema-compatible and does not gain Worker execution fields.
+
+At the governed import boundary, the Orchestrator builds a normalized `executionContext` from the completed Job and stores it on the Evidence Inbox manifest batch entry. The Review Queue carries the same context in Evidence Candidate references so reviewers can trace the actual execution surface without changing the Evidence Candidate schema.
+
+The normalized context includes:
+
+- `workerContractVersion`
+- `executionMode`
+- `executionChannel`
+- `preferredExecutionChannel`
+- `fallbackExecutionChannel`
+- `fallbackAllowed`
+- `fallbackFrom`
+- `fallbackReason`
+- `transportMethod`
+- `executionReference`
+- `model`
+
+Legacy Evidence Inbox batches without execution context remain valid. The system must not infer or backfill a channel for those batches.
+
+## 10. Authority boundary
 
 Worker output remains Evidence Candidate material only. Worker Contract v1.1 does not grant authority to write Authoring Master, Runtime, Registry, Production, or canonical Drive folders.
 
 Transport Schema v1.0 and Evidence Candidate schema remain unchanged. Execution-channel differences are kept outside Product Master schema so AI Pro/API implementation details do not leak into canonical product data.
 
-## 10. Reproducibility acceptance checks
+## 11. Reproducibility acceptance checks
 
 v2.7 tests lock the following behavior:
 
@@ -111,3 +133,6 @@ v2.7 tests lock the following behavior:
 5. Gemini AI Pro structured handoff remains `LIVE_EXTERNAL` and preserves execution provenance.
 6. Missing AI Pro surface blocks when fallback is not allowed.
 7. API fallback occurs only when explicitly allowed and records `fallback_from` and reason.
+8. Evidence Inbox persists normalized execution provenance separately from raw Transport JSON.
+9. Review Queue exposes that provenance for Evidence review.
+10. Legacy Inbox batches remain readable without invented execution metadata.
