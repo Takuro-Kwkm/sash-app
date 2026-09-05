@@ -7,6 +7,7 @@ import{validateGeminiExecutionAudit}from'./gemini-execution-contract.mjs';
 import{buildApiGeminiExecutionAuditPreInbox}from'./gemini-execution-pre-inbox.mjs';
 import{persistGeminiTransportAfterPreInboxGuard}from'./transport-pre-inbox-guard.mjs';
 import{buildProductMasterReviewQueue}from'./review-queue.mjs';
+import{validateGovernedReviewQueue}from'./review-queue-contract.mjs';
 
 const sha256=(value)=>crypto.createHash('sha256').update(String(value??'')).digest('hex');
 const safety=()=>({canonicalWritePerformed:false,runtimeWritePerformed:false,productionWritePerformed:false});
@@ -54,12 +55,12 @@ export async function runGovernedGeminiV11(job,{
   ...executionOptions
 }={}){
   if(job?.workerContractVersion!=='1.1'||job?.executionMode!=='LIVE_EXTERNAL')return{
-    pass:false,status:'BLOCKED',job,sourceAcquisitionValidation:null,sourceDeliveryValidation:null,geminiExecutionValidation:null,preInboxGuard:null,inboxImport:null,reviewQueue:null,...safety(),
+    pass:false,status:'BLOCKED',job,sourceAcquisitionValidation:null,sourceDeliveryValidation:null,geminiExecutionValidation:null,preInboxGuard:null,inboxImport:null,reviewQueue:null,reviewQueueValidation:null,...safety(),
     errors:[makeError('GOVERNED_V11_LIVE_JOB_REQUIRED','Governed v1.1 runner requires workerContractVersion=1.1 and executionMode=LIVE_EXTERNAL')]
   };
   const sourceAcquisitionValidation=validateSourceAcquisitionRecord(sourceAcquisition,{job});
   if(!sourceAcquisitionValidation.pass)return{
-    pass:false,status:'BLOCKED',job,sourceAcquisitionValidation,sourceDeliveryValidation:null,geminiExecutionValidation:null,preInboxGuard:null,inboxImport:null,reviewQueue:null,...safety(),errors:sourceAcquisitionValidation.errors
+    pass:false,status:'BLOCKED',job,sourceAcquisitionValidation,sourceDeliveryValidation:null,geminiExecutionValidation:null,preInboxGuard:null,inboxImport:null,reviewQueue:null,reviewQueueValidation:null,...safety(),errors:sourceAcquisitionValidation.errors
   };
 
   let preResult;
@@ -71,7 +72,7 @@ export async function runGovernedGeminiV11(job,{
   if(job.executionChannel==='GEMINI_API'){
     preResult=await runVerifiedGeminiLiveJob(job,{...executionOptions,argv,bridgeImpl:executeGeminiTransportBoundary});
     if(!preResult.pass)return{
-      ...preResult,sourceAcquisitionValidation,sourceDeliveryValidation:null,geminiExecutionValidation:null,preInboxGuard:null,inboxImport:null,reviewQueue:null
+      ...preResult,sourceAcquisitionValidation,sourceDeliveryValidation:null,geminiExecutionValidation:null,preInboxGuard:null,inboxImport:null,reviewQueue:null,reviewQueueValidation:null
     };
     const builtDelivery=buildGeminiApiAttachmentDelivery({
       sourceAcquisition,
@@ -82,7 +83,7 @@ export async function runGovernedGeminiV11(job,{
     sourceDeliveryValidation={pass:builtDelivery.pass,errors:builtDelivery.errors};
     if(!builtDelivery.pass)return{
       pass:false,status:'BLOCKED',job:preResult.job,rawResponseSha256:preResult.rawResponseSha256,transportValidation:preResult.transportValidation,
-      sourceAcquisitionValidation,sourceDeliveryValidation,geminiExecutionValidation:null,preInboxGuard:null,inboxImport:null,reviewQueue:null,...safety(),errors:builtDelivery.errors
+      sourceAcquisitionValidation,sourceDeliveryValidation,geminiExecutionValidation:null,preInboxGuard:null,inboxImport:null,reviewQueue:null,reviewQueueValidation:null,...safety(),errors:builtDelivery.errors
     };
     resolvedDelivery=builtDelivery.record;
     const builtExecution=buildApiGeminiExecutionAuditPreInbox({
@@ -91,31 +92,31 @@ export async function runGovernedGeminiV11(job,{
     geminiExecutionValidation={pass:builtExecution.pass,errors:builtExecution.errors};
     if(!builtExecution.pass)return{
       pass:false,status:'BLOCKED',job:preResult.job,rawResponseSha256:preResult.rawResponseSha256,transportValidation:preResult.transportValidation,
-      sourceAcquisitionValidation,sourceDeliveryValidation,geminiExecutionValidation,preInboxGuard:null,inboxImport:null,reviewQueue:null,...safety(),errors:builtExecution.errors
+      sourceAcquisitionValidation,sourceDeliveryValidation,geminiExecutionValidation,preInboxGuard:null,inboxImport:null,reviewQueue:null,reviewQueueValidation:null,...safety(),errors:builtExecution.errors
     };
     resolvedExecution=builtExecution.record;
   }else if(job.executionChannel==='GEMINI_AI_PRO'){
     sourceDeliveryValidation=validateSourceDeliveryRecord(resolvedDelivery,{job,sourceAcquisition});
     if(!sourceDeliveryValidation.pass)return{
-      pass:false,status:'BLOCKED',job,sourceAcquisitionValidation,sourceDeliveryValidation,geminiExecutionValidation:null,preInboxGuard:null,inboxImport:null,reviewQueue:null,...safety(),errors:sourceDeliveryValidation.errors
+      pass:false,status:'BLOCKED',job,sourceAcquisitionValidation,sourceDeliveryValidation,geminiExecutionValidation:null,preInboxGuard:null,inboxImport:null,reviewQueue:null,reviewQueueValidation:null,...safety(),errors:sourceDeliveryValidation.errors
     };
     if(!resolvedExecution)return{
-      pass:false,status:'BLOCKED',job,sourceAcquisitionValidation,sourceDeliveryValidation,geminiExecutionValidation:null,preInboxGuard:null,inboxImport:null,reviewQueue:null,...safety(),
+      pass:false,status:'BLOCKED',job,sourceAcquisitionValidation,sourceDeliveryValidation,geminiExecutionValidation:null,preInboxGuard:null,inboxImport:null,reviewQueue:null,reviewQueueValidation:null,...safety(),
       errors:[makeError('GEMINI_EXECUTION_AUDIT_REQUIRED','AI Pro governed handoff requires Gemini Execution Audit before Transport import')]
     };
     preResult=await executeGeminiTransportBoundary(job,executionOptions);
     if(!preResult.pass)return{
-      ...preResult,sourceAcquisitionValidation,sourceDeliveryValidation,geminiExecutionValidation:null,preInboxGuard:null,inboxImport:null,reviewQueue:null
+      ...preResult,sourceAcquisitionValidation,sourceDeliveryValidation,geminiExecutionValidation:null,preInboxGuard:null,inboxImport:null,reviewQueue:null,reviewQueueValidation:null
     };
     geminiExecutionValidation=validateGeminiExecutionAudit(resolvedExecution,{
       job:preResult.job,sourceAcquisition,sourceDelivery:resolvedDelivery,rawResponseSha256:preResult.rawResponseSha256
     });
     if(!geminiExecutionValidation.pass)return{
       pass:false,status:'BLOCKED',job:preResult.job,rawResponseSha256:preResult.rawResponseSha256,transportValidation:preResult.transportValidation,
-      sourceAcquisitionValidation,sourceDeliveryValidation,geminiExecutionValidation,preInboxGuard:null,inboxImport:null,reviewQueue:null,...safety(),errors:geminiExecutionValidation.errors
+      sourceAcquisitionValidation,sourceDeliveryValidation,geminiExecutionValidation,preInboxGuard:null,inboxImport:null,reviewQueue:null,reviewQueueValidation:null,...safety(),errors:geminiExecutionValidation.errors
     };
   }else return{
-    pass:false,status:'BLOCKED',job,sourceAcquisitionValidation,sourceDeliveryValidation:null,geminiExecutionValidation:null,preInboxGuard:null,inboxImport:null,reviewQueue:null,...safety(),
+    pass:false,status:'BLOCKED',job,sourceAcquisitionValidation,sourceDeliveryValidation:null,geminiExecutionValidation:null,preInboxGuard:null,inboxImport:null,reviewQueue:null,reviewQueueValidation:null,...safety(),
     errors:[makeError('GOVERNED_V11_CHANNEL_INVALID',`Unsupported executionChannel ${job.executionChannel??'null'}`)]
   };
 
@@ -126,16 +127,25 @@ export async function runGovernedGeminiV11(job,{
   if(!persisted.pass)return{
     pass:false,status:persisted.status,job:preResult.job,rawResponseSha256:preResult.rawResponseSha256,transportValidation:preResult.transportValidation,
     sourceAcquisitionValidation,sourceDeliveryContext:resolvedDelivery,sourceDeliveryValidation,geminiExecutionContext:resolvedExecution,geminiExecutionValidation,
-    preInboxGuard:persisted.preInboxGuard,inboxImport:persisted.inboxImport,reviewQueue:null,...safety(),errors:persisted.errors
+    preInboxGuard:persisted.preInboxGuard,inboxImport:persisted.inboxImport,reviewQueue:null,reviewQueueValidation:null,...safety(),errors:persisted.errors
   };
   const finalJob=importedJob(preResult.job,persisted.normalizedBatchId,persisted.rawResponseSha256);
   const reviewQueue=buildProductMasterReviewQueue({evidenceInboxDir,changeControlDir,productId:finalJob.productId});
+  const reviewQueueValidation=validateGovernedReviewQueue(reviewQueue,{job:finalJob,transportValidation:preResult.transportValidation});
+  if(!reviewQueueValidation.pass)return{
+    pass:false,status:'BLOCKED_AT_REVIEW_QUEUE',job:finalJob,routeDecision:preResult.routeDecision??null,rawResponseSha256:persisted.rawResponseSha256,
+    responseReceivedAt:importedAt,normalizedBatchId:persisted.normalizedBatchId,sourceAttachmentAudit:preResult.sourceAttachmentAudit??null,
+    transportValidation:preResult.transportValidation,sourceAcquisitionContext:sourceAcquisition,sourceAcquisitionValidation,
+    sourceDeliveryContext:resolvedDelivery,sourceDeliveryValidation,geminiExecutionContext:resolvedExecution,geminiExecutionValidation,
+    transportProvenance:persisted.transportProvenance,preInboxGuard:persisted.preInboxGuard,inboxImport:persisted.inboxImport,
+    executionContext:persisted.executionContext,reviewQueue,reviewQueueValidation,...safety(),errors:reviewQueueValidation.errors
+  };
   return{
     pass:true,status:'IMPORTED',job:finalJob,routeDecision:preResult.routeDecision??null,rawResponseSha256:persisted.rawResponseSha256,
     responseReceivedAt:importedAt,normalizedBatchId:persisted.normalizedBatchId,sourceAttachmentAudit:preResult.sourceAttachmentAudit??null,
     transportValidation:preResult.transportValidation,sourceAcquisitionContext:sourceAcquisition,sourceAcquisitionValidation,
     sourceDeliveryContext:resolvedDelivery,sourceDeliveryValidation,geminiExecutionContext:resolvedExecution,geminiExecutionValidation,
     transportProvenance:persisted.transportProvenance,preInboxGuard:persisted.preInboxGuard,inboxImport:persisted.inboxImport,
-    executionContext:persisted.executionContext,reviewQueue,...safety(),errors:[]
+    executionContext:persisted.executionContext,reviewQueue,reviewQueueValidation,...safety(),errors:[]
   };
 }
