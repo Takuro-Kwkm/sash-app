@@ -164,6 +164,19 @@ jobs:
           echo "scope_text=$SCOPE_TXT" >> "$GITHUB_OUTPUT"
           echo 'SCOPED_CONTENT_DERIVATION_GATE=PASS'
 
+      - name: Validate Source Delivery contract before AI Pro execution
+        shell: bash
+        run: |
+          set -euo pipefail
+          execution_reference="GITHUB_ACTIONS_RUN:${GITHUB_REPOSITORY}:${GITHUB_RUN_ID}:${GITHUB_RUN_ATTEMPT}"
+          node scripts/build-product-master-source-delivery.mjs \
+            --source-acquisition-audit="$ARTIFACT_DIR/source-acquisition-audit.json" \
+            --scope-audit="$ARTIFACT_DIR/source-scope/source-scope-audit.json" \
+            --execution-reference="$execution_reference" \
+            --output="$ARTIFACT_DIR/source-delivery-audit.json" \
+            | tee "$ARTIFACT_DIR/source-delivery-console.log"
+          echo 'SOURCE_DELIVERY_GATE=PASS'
+
       - name: Build Antigravity Job, prompt and structured-output schema
         id: adapter
         shell: bash
@@ -276,12 +289,13 @@ jobs:
             --job="$ADAPTER_DIR/replay-job.json" \
             --external-response="$ADAPTER_DIR/raw-transport.json" \
             --source-acquisition-audit="$ARTIFACT_DIR/source-acquisition-audit.json" \
+            --source-delivery-audit="$ARTIFACT_DIR/source-delivery-audit.json" \
             --evidence-inbox="$ARTIFACT_DIR/evidence-inbox" \
             --change-control="$ARTIFACT_DIR/change-control" \
             --audit-dir="$ARTIFACT_DIR/jobs" \
             | tee "$ARTIFACT_DIR/governed-live-handoff-console.log"
 
-      - name: Enforce Worker, Source Acquisition, no-authoritative-write and Review Queue gates
+      - name: Enforce Worker, Source Acquisition, Source Delivery and Review Queue gates
         shell: bash
         run: |
           set -euo pipefail
@@ -328,6 +342,17 @@ jobs:
           assert source.get('source',{}).get('driveFileId')=='${{ steps.profile.outputs.source_drive_file_id }}',source
           assert source.get('identity',{}).get('mode') in {'FULL_BYTE_IDENTITY','SCOPED_CONTENT_EQUIVALENCE'},source
           assert source.get('credentialMaterialPersisted') is False,source
+          delivery=ctx.get('sourceDelivery') or {}
+          assert delivery.get('schemaVersion')=='1.1',delivery
+          assert delivery.get('recordType')=='PRODUCT_MASTER_SOURCE_DELIVERY',delivery
+          assert delivery.get('status')=='PASS',delivery
+          assert delivery.get('executionChannel')=='GEMINI_AI_PRO',delivery
+          assert delivery.get('executionReference')==job.get('executionReference'),delivery
+          assert delivery.get('source',{}).get('driveFileId')==source.get('source',{}).get('driveFileId'),delivery
+          assert delivery.get('source',{}).get('acquiredSha256')==source.get('retrieval',{}).get('acquiredSha256'),delivery
+          assert delivery.get('scope',{}).get('pdfPages')==source.get('scope',{}).get('pdfPages'),delivery
+          assert delivery.get('delivery',{}).get('method')=='INLINE_VERIFIED_PAGE_SCOPED_TEXT',delivery
+          assert delivery.get('credentialMaterialPersisted') is False,delivery
           rq=audit.get('reviewQueue')
           assert isinstance(rq,dict),audit
           evidence_items=[x for x in rq.get('items',[]) if x.get('kind')=='EVIDENCE_CANDIDATE']
@@ -336,9 +361,11 @@ jobs:
               assert qctx.get('executionChannel')=='GEMINI_AI_PRO',item
               assert qctx.get('executionReference')==job.get('executionReference'),item
               assert (qctx.get('sourceAcquisition') or {}).get('status')=='PASS',item
+              assert (qctx.get('sourceDelivery') or {}).get('status')=='PASS',item
           gates={
             'WORKER_EXECUTION_CONTRACT_GATE':'PASS',
             'SOURCE_ACQUISITION_GATE':'PASS',
+            'SOURCE_DELIVERY_GATE':'PASS',
             'ANTIGRAVITY_LIVE_EXECUTION_GATE':'PASS',
             'TRANSPORT_GATE':'PASS',
             'EVIDENCE_INBOX_GATE':'PASS',
@@ -347,6 +374,7 @@ jobs:
             'HUMAN_APPROVAL_GATE':'NOT_OPENED',
             'MASTER_CHANGE_GATE':'CLOSED',
             'sourceIdentityMode':source.get('identity',{}).get('mode'),
+            'sourceDeliveryMethod':delivery.get('delivery',{}).get('method'),
             'canonicalWritePerformed':False,
             'runtimeWritePerformed':False,
             'productionWritePerformed':False,
@@ -358,6 +386,7 @@ jobs:
           (root/'phase7-antigravity-gates.json').write_text(json.dumps(gates,ensure_ascii=False,indent=2)+'\n')
           print('WORKER_EXECUTION_CONTRACT_GATE=PASS')
           print('SOURCE_ACQUISITION_GATE=PASS')
+          print('SOURCE_DELIVERY_GATE=PASS')
           print('TRANSPORT_GATE=PASS')
           print('EVIDENCE_INBOX_GATE=PASS')
           print('EXECUTION_PROVENANCE_GATE=PASS')
