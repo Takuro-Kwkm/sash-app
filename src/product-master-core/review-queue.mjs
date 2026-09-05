@@ -58,13 +58,14 @@ function evidenceQueueItems(evidenceInboxDir){
   const items=[];
   for(const batch of safeArray(manifest.batches)){
     if(!batch?.batchId||!batch?.relativePath)continue;
+    const executionContext=batch.executionContext?structuredClone(batch.executionContext):null;
     const batchPath=path.resolve(evidenceInboxDir,batch.relativePath);
     if(!exists(batchPath)){
       items.push({
         queueId:`RQ:EVIDENCE_BATCH:${batch.batchId}`,kind:'EVIDENCE_BATCH',productId:batch.productId??null,
         sourceId:batch.batchId,sourceStatus:'RAW_BATCH_MISSING',reviewStatus:'BLOCKED',actionable:true,
         authority:'CHATGPT_OR_HUMAN',nextAction:'RESTORE_RAW_EVIDENCE_BATCH',queueReason:`Raw Evidence batch is missing: ${batch.relativePath}`,
-        refs:{batchId:batch.batchId,relativePath:batch.relativePath}
+        refs:{batchId:batch.batchId,relativePath:batch.relativePath,...(executionContext?{executionContext}:{})}
       });
       continue;
     }
@@ -80,7 +81,7 @@ function evidenceQueueItems(evidenceInboxDir){
         sourceStatus:stateRow?.status??candidate.status??'SUBMITTED',sourceDecision:audit?.decision??null,
         reviewStatus:mapped.reviewStatus,actionable:mapped.nextAction!=='NONE',authority:mapped.authority,
         nextAction:mapped.nextAction,queueReason:pending?.question??candidate.claim??candidate.title??null,
-        refs:{batchId:batch.batchId,candidateId:candidate.id,pendingId:pending?.id??null,adjudicationId:audit?.id??null,relativePath:batch.relativePath}
+        refs:{batchId:batch.batchId,candidateId:candidate.id,pendingId:pending?.id??null,adjudicationId:audit?.id??null,relativePath:batch.relativePath,...(executionContext?{executionContext}:{})}
       });
     }
   }
