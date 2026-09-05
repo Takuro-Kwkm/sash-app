@@ -83,5 +83,6 @@ export function applyGeminiApiFallback(job,reason){
   next.executionChannel='GEMINI_API';
   next.transportMethod='GEMINI_API_DIRECT_RESPONSE';
   next.executionReference=null;
+  if(!next.model)next.model=job.metadata?.geminiApiModelDefault??null;
   return{pass:true,job:next,errors:[]};
 }
