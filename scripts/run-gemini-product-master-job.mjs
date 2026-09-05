@@ -67,7 +67,13 @@ if(input){
     const mockResponse=mockFile?fs.readFileSync(path.resolve(mockFile),'utf8'):null;
     const replayResponse=replayFile?fs.readFileSync(path.resolve(replayFile),'utf8'):null;
     const externalResponse=externalFile?fs.readFileSync(path.resolve(externalFile),'utf8'):null;
-    const common={evidenceInboxDir,changeControlDir,mockResponse,replayResponse,externalResponse,sourceFilePath:sourceFile?path.resolve(sourceFile):null};
+    const aiProLegacyHandoff=created.job.executionMode==='LIVE_EXTERNAL'&&created.job.executionChannel==='GEMINI_AI_PRO'?replayResponse:null;
+    const common={
+      evidenceInboxDir,changeControlDir,mockResponse,
+      replayResponse:created.job.executionMode==='REPLAY'?replayResponse:null,
+      externalResponse:externalResponse??aiProLegacyHandoff,
+      sourceFilePath:sourceFile?path.resolve(sourceFile):null
+    };
     const result=created.job.executionMode==='LIVE_EXTERNAL'&&created.job.executionChannel==='GEMINI_API'
       ?await runVerifiedGeminiLiveJob(created.job,{...common,argv:args})
       :await runGeminiProductMasterBridge(created.job,common);
