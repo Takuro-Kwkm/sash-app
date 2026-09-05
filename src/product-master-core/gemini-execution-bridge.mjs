@@ -257,7 +257,9 @@ export async function executeGeminiJob(job,{
     working=withTransition(fallback.job,'RUNNING',{fallbackFrom:fallback.job.fallbackFrom,fallbackReason:fallback.job.fallbackReason,executionChannel:'GEMINI_API'});
   }
 
-  const blocked=liveBlockReason(working,{apiKey,model,sourceFilePath});
+  const executionModel=working.model??model??null;
+  if(executionModel&&!working.model)working.model=executionModel;
+  const blocked=liveBlockReason(working,{apiKey,model:executionModel,sourceFilePath});
   if(blocked)return{pass:false,job:withTransition(working,'BLOCKED',{reason:blocked.code}),rawResponse:null,sourceAttachmentAudit:null,errors:[blocked]};
   if(typeof fetchImpl!=='function')return{pass:false,job:withTransition(working,'BLOCKED',{reason:'FETCH_UNAVAILABLE'}),rawResponse:null,sourceAttachmentAudit:null,errors:[makeError('FETCH_UNAVAILABLE','No fetch implementation is available for LIVE_EXTERNAL')]};
   if(working.workerContractVersion===WORKER_EXECUTION_CONTRACT_VERSION&&working.executionChannel!=='GEMINI_API')return{pass:false,job:withTransition(working,'BLOCKED',{reason:'GEMINI_API_EXECUTION_CHANNEL_REQUIRED'}),rawResponse:null,sourceAttachmentAudit:null,errors:[makeError('GEMINI_API_EXECUTION_CHANNEL_REQUIRED',`Direct Gemini API execution requires execution_channel=GEMINI_API, received ${working.executionChannel??'null'}`)]};
@@ -277,7 +279,7 @@ export async function executeGeminiJob(job,{
   const controller=new AbortController();
   const timer=setTimeout(()=>controller.abort(),timeoutMs);
   try{
-    const url=`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent`;
+    const url=`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(executionModel)}:generateContent`;
     const responseJsonSchema=buildGeminiTransportResponseJsonSchema(working);
     const response=await fetchImpl(url,{method:'POST',headers:{'content-type':'application/json','x-goog-api-key':apiKey},signal:controller.signal,body:JSON.stringify({contents:[{role:'user',parts:liveParts(working)}],generationConfig:{responseMimeType:'application/json',responseJsonSchema}})});
     const providerResponse=redactGeminiSecrets(await response.json().catch(()=>null),[apiKey]);
