@@ -81,6 +81,37 @@ test('v2.7 Gemini API records verified File attachment as Source Delivery proven
   assert.ok(text.includes("'SOURCE_DELIVERY_GATE':'PASS'"));
 });
 
+test('v2.7 AI Pro normalizes surface execution and checks response fingerprint before Transport handoff',()=>{
+  const text=read(aiProPath);
+  const workerPos=text.indexOf('Run Gemini Worker through tool-less inline-evidence Antigravity headless mode');
+  const executionPos=text.indexOf('Normalize and validate Gemini Execution contract');
+  const importPos=text.indexOf('Import structured output through governed Transport and Evidence Inbox');
+  assert.ok(workerPos>=0);
+  assert.ok(executionPos>workerPos);
+  assert.ok(importPos>executionPos);
+  assert.ok(text.includes('node scripts/build-product-master-gemini-execution.mjs'));
+  assert.ok(text.includes('--surface-audit="$ADAPTER_DIR/antigravity-execution-audit.json"'));
+  assert.ok(text.includes('--raw-response="$ADAPTER_DIR/raw-transport.json"'));
+  assert.ok(text.includes('--gemini-execution-audit="$ARTIFACT_DIR/gemini-execution-audit.json"'));
+  assert.ok(text.includes("assert execution.get('recordType')=='PRODUCT_MASTER_GEMINI_EXECUTION'"));
+  assert.ok(text.includes("assert execution.get('surface',{}).get('id')=='ANTIGRAVITY_CLI'"));
+  assert.ok(text.includes("assert execution.get('result',{}).get('rawResponseSha256')==audit.get('rawResponseSha256')"));
+  assert.ok(text.includes("assert (qctx.get('geminiExecution') or {}).get('status')=='SUCCEEDED'"));
+  assert.ok(text.includes("'GEMINI_EXECUTION_GATE':'PASS'"));
+});
+
+test('v2.7 Gemini API normalizes actual model, preflight and response fingerprint as execution provenance',()=>{
+  const text=read(apiPath);
+  assert.ok(text.includes("assert execution.get('recordType')=='PRODUCT_MASTER_GEMINI_EXECUTION'"));
+  assert.ok(text.includes("assert execution.get('surface',{}).get('id')=='GOOGLE_GEMINI_API'"));
+  assert.ok(text.includes("assert execution.get('surface',{}).get('authenticationMode')=='GEMINI_API_KEY'"));
+  assert.ok(text.includes("assert execution.get('surface',{}).get('model')==job.get('model')"));
+  assert.ok(text.includes("assert execution.get('preflight',{}).get('credentialValuePersisted') is False"));
+  assert.ok(text.includes("assert execution.get('result',{}).get('rawResponseSha256')==audit.get('rawResponseSha256')"));
+  assert.ok(text.includes("assert (qctx.get('geminiExecution') or {}).get('status')=='SUCCEEDED'"));
+  assert.ok(text.includes("'GEMINI_EXECUTION_GATE':'PASS'"));
+});
+
 test('v2.7 worker surfaces keep authority closed after Evidence import',()=>{
   for(const file of[aiProPath,apiPath]){
     const text=read(file);
