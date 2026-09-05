@@ -1,22 +1,241 @@
-name: Product Master Gemini API Profile LIVE (Legacy Disabled)
+name: Product Master Gemini API Profile LIVE
 
 on:
   workflow_dispatch:
     inputs:
       profile_path:
-        description: Legacy Gemini API path is disabled; use Antigravity profile LIVE workflow
-        required: false
+        description: Product Master Profile JSON path
+        required: true
         default: config/product-master-profiles/lixil-thermosl.v1.json
+
+concurrency:
+  group: product-master-gemini-api-live
+  cancel-in-progress: false
 
 permissions:
   contents: read
 
 jobs:
-  legacy_disabled:
+  profile_api_live:
+    name: Gemini API Product Master worker
     runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      PROFILE_PATH: ${{ github.event.inputs.profile_path || 'config/product-master-profiles/lixil-thermosl.v1.json' }}
+      ARTIFACT_DIR: artifacts/product-master-gemini-api-live
+      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+      GEMINI_MODEL_OVERRIDE: ${{ vars.GEMINI_MODEL }}
     steps:
-      - name: Legacy API worker disabled
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Verify Product Master startup-independent core contracts
+        shell: bash
         run: |
-          echo 'GEMINI_API_PROFILE_LIVE=DISABLED'
-          echo 'Use .github/workflows/product-master-antigravity-profile-live.yml on the self-hosted gemini-worker runner.'
-          exit 3
+          set -euo pipefail
+          npm run test:product-master-core:v27
+
+      - name: Resolve Profile and API execution contract
+        id: profile
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$ARTIFACT_DIR"
+          test -f "$PROFILE_PATH"
+          PROFILE_PATH="$PROFILE_PATH" ARTIFACT_DIR="$ARTIFACT_DIR" GITHUB_OUTPUT="$GITHUB_OUTPUT" python3 - <<'PY'
+          import json, os
+          from pathlib import Path
+          p=json.loads(Path(os.environ['PROFILE_PATH']).read_text())
+          assert p.get('profileSchemaVersion') in {'1.0','1.1'},p.get('profileSchemaVersion')
+          for key in ['manufacturer','series','productId']:
+              assert p.get(key),key
+          source=p.get('source') or {}
+          for key in ['officialDownloadUrl','officialDetailUrl','authoritativeSha256','driveFileId','title']:
+              assert source.get(key),f'source.{key}'
+          model=(os.environ.get('GEMINI_MODEL_OVERRIDE') or p.get('modelDefault') or '').strip()
+          assert model,'Gemini API model is required'
+          values={
+              'manufacturer':p['manufacturer'],
+              'series':p['series'],
+              'product_id':p['productId'],
+              'source_url':source['officialDownloadUrl'],
+              'detail_url':source['officialDetailUrl'],
+              'expected_sha':source['authoritativeSha256'],
+              'source_drive_file_id':source['driveFileId'],
+              'source_title':source['title'],
+              'model':model
+          }
+          with Path(os.environ['GITHUB_OUTPUT']).open('a') as f:
+              for k,v in values.items(): f.write(f'{k}={v}\n')
+          audit={
+              'profileSchemaVersion':p.get('profileSchemaVersion'),
+              'manufacturer':p['manufacturer'],
+              'series':p['series'],
+              'productId':p['productId'],
+              'executionMode':'LIVE_EXTERNAL',
+              'executionChannel':'GEMINI_API',
+              'preferredExecutionChannel':'GEMINI_AI_PRO',
+              'fallbackExecutionChannel':'GEMINI_API',
+              'fallbackAllowed':False,
+              'transportMethod':'GEMINI_API_DIRECT_RESPONSE',
+              'executionReference':f"GITHUB_ACTIONS_RUN:{os.environ.get('GITHUB_REPOSITORY','UNKNOWN')}:{os.environ.get('GITHUB_RUN_ID','UNKNOWN')}:{os.environ.get('GITHUB_RUN_ATTEMPT','1')}",
+              'model':model,
+              'source':{
+                  'driveFileId':source['driveFileId'],
+                  'title':source['title'],
+                  'version':source.get('version'),
+                  'authoritativeSha256':source['authoritativeSha256']
+              }
+          }
+          Path(os.environ['ARTIFACT_DIR'],'profile-api-audit.json').write_text(json.dumps(audit,ensure_ascii=False,indent=2)+'\n')
+          PY
+
+      - name: Fail closed when Gemini API credential is unavailable
+        shell: bash
+        run: |
+          set -euo pipefail
+          api_key_present=0
+          if [[ -n "${GEMINI_API_KEY:-}" ]]; then api_key_present=1; fi
+          printf '{\n  "credential": "GEMINI_API_KEY",\n  "present": %s,\n  "secretValuePersisted": false\n}\n' "$([[ "$api_key_present" == "1" ]] && echo true || echo false)" > "$ARTIFACT_DIR/credential-preflight.json"
+          if [[ "$api_key_present" != "1" ]]; then
+            echo 'GEMINI_API_CREDENTIAL_GATE=BLOCKED'
+            exit 3
+          fi
+          echo 'GEMINI_API_CREDENTIAL_GATE=PASS'
+
+      - name: Acquire official source and require exact authoritative SHA-256
+        id: source
+        shell: bash
+        run: |
+          set -euo pipefail
+          SOURCE_DIR="$ARTIFACT_DIR/source"
+          mkdir -p "$SOURCE_DIR"
+          SOURCE_PDF="$SOURCE_DIR/official-source.pdf"
+          curl --fail --location --retry 2 --retry-delay 2 \
+            --connect-timeout 20 --max-time 240 \
+            --user-agent 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/152 Safari/537.36' \
+            --referer '${{ steps.profile.outputs.detail_url }}' \
+            --output "$SOURCE_PDF" '${{ steps.profile.outputs.source_url }}'
+          mime_type=$(file -b --mime-type "$SOURCE_PDF")
+          magic=$(head -c 5 "$SOURCE_PDF")
+          actual_sha=$(sha256sum "$SOURCE_PDF" | awk '{print $1}')
+          test "$mime_type" = 'application/pdf'
+          test "$magic" = '%PDF-'
+          test "$actual_sha" = '${{ steps.profile.outputs.expected_sha }}'
+          SOURCE_PDF="$SOURCE_PDF" ACTUAL_SHA="$actual_sha" ARTIFACT_DIR="$ARTIFACT_DIR" python3 - <<'PY'
+          import json, os
+          from pathlib import Path
+          source=Path(os.environ['SOURCE_PDF'])
+          payload={
+              'sourceReady':True,
+              'bytes':source.stat().st_size,
+              'actualSha256':os.environ['ACTUAL_SHA'],
+              'exactAuthoritativeSha256Match':True,
+              'driveFileId':'${{ steps.profile.outputs.source_drive_file_id }}',
+              'title':'${{ steps.profile.outputs.source_title }}'
+          }
+          Path(os.environ['ARTIFACT_DIR'],'source-acquisition-audit.json').write_text(json.dumps(payload,ensure_ascii=False,indent=2)+'\n')
+          PY
+          echo "source_pdf=$SOURCE_PDF" >> "$GITHUB_OUTPUT"
+          echo 'SOURCE_EXACT_SHA_GATE=PASS'
+
+      - name: Execute governed Gemini API LIVE job
+        shell: bash
+        env:
+          GEMINI_MODEL: ${{ steps.profile.outputs.model }}
+        run: |
+          set -euo pipefail
+          mkdir -p "$ARTIFACT_DIR/evidence-inbox" "$ARTIFACT_DIR/change-control" "$ARTIFACT_DIR/jobs"
+          execution_reference="GITHUB_ACTIONS_RUN:${GITHUB_REPOSITORY}:${GITHUB_RUN_ID}:${GITHUB_RUN_ATTEMPT}"
+          node scripts/run-gemini-product-master-job.mjs \
+            --profile="$PROFILE_PATH" \
+            --execution-mode=LIVE_EXTERNAL \
+            --execution-channel=GEMINI_API \
+            --preferred-execution-channel=GEMINI_AI_PRO \
+            --fallback-execution-channel=GEMINI_API \
+            --fallback-allowed=false \
+            --transport-method=GEMINI_API_DIRECT_RESPONSE \
+            --execution-reference="$execution_reference" \
+            --model='${{ steps.profile.outputs.model }}' \
+            --source-file='${{ steps.source.outputs.source_pdf }}' \
+            --evidence-inbox="$ARTIFACT_DIR/evidence-inbox" \
+            --change-control="$ARTIFACT_DIR/change-control" \
+            --audit-dir="$ARTIFACT_DIR/jobs" \
+            | tee "$ARTIFACT_DIR/governed-api-live-console.log"
+
+      - name: Enforce API Worker Contract and Evidence provenance gates
+        shell: bash
+        run: |
+          set -euo pipefail
+          ARTIFACT_DIR="$ARTIFACT_DIR" python3 - <<'PY'
+          import json, os
+          from pathlib import Path
+          root=Path(os.environ['ARTIFACT_DIR'])
+          jobs=sorted((root/'jobs').glob('*.json'),key=lambda p:p.stat().st_mtime,reverse=True)
+          assert jobs,'No governed Gemini API job audit found'
+          audit=json.loads(jobs[0].read_text())
+          assert audit.get('pass') is True,audit
+          assert audit.get('status')=='IMPORTED',audit
+          assert audit.get('canonicalWritePerformed') is False,audit
+          assert audit.get('runtimeWritePerformed') is False,audit
+          assert audit.get('productionWritePerformed') is False,audit
+          job=audit.get('job') or {}
+          assert job.get('workerContractVersion')=='1.1',job
+          assert job.get('executionMode')=='LIVE_EXTERNAL',job
+          assert job.get('executionChannel')=='GEMINI_API',job
+          assert job.get('preferredExecutionChannel')=='GEMINI_AI_PRO',job
+          assert job.get('fallbackExecutionChannel')=='GEMINI_API',job
+          assert job.get('fallbackAllowed') is False,job
+          assert job.get('fallbackFrom') is None,job
+          assert job.get('transportMethod')=='GEMINI_API_DIRECT_RESPONSE',job
+          expected_ref=f"GITHUB_ACTIONS_RUN:{os.environ.get('GITHUB_REPOSITORY','UNKNOWN')}:{os.environ.get('GITHUB_RUN_ID','UNKNOWN')}:{os.environ.get('GITHUB_RUN_ATTEMPT','1')}"
+          assert job.get('executionReference')==expected_ref,(job.get('executionReference'),expected_ref)
+          inbox=json.loads((root/'evidence-inbox'/'manifest.json').read_text())
+          batches=inbox.get('batches') or []
+          assert len(batches)==1,inbox
+          ctx=batches[0].get('executionContext') or {}
+          assert ctx.get('executionChannel')=='GEMINI_API',ctx
+          assert ctx.get('transportMethod')=='GEMINI_API_DIRECT_RESPONSE',ctx
+          assert ctx.get('executionReference')==expected_ref,ctx
+          assert ctx.get('fallbackFrom') is None,ctx
+          rq=audit.get('reviewQueue') or {}
+          for item in rq.get('items',[]):
+              if item.get('kind')!='EVIDENCE_CANDIDATE': continue
+              qctx=(item.get('refs') or {}).get('executionContext') or {}
+              assert qctx.get('executionChannel')=='GEMINI_API',item
+              assert qctx.get('executionReference')==expected_ref,item
+          gates={
+              'WORKER_EXECUTION_CONTRACT_GATE':'PASS',
+              'GEMINI_API_CREDENTIAL_GATE':'PASS',
+              'SOURCE_EXACT_SHA_GATE':'PASS',
+              'GEMINI_API_LIVE_EXECUTION_GATE':'PASS',
+              'TRANSPORT_GATE':'PASS',
+              'EVIDENCE_INBOX_GATE':'PASS',
+              'EXECUTION_PROVENANCE_GATE':'PASS',
+              'REVIEW_QUEUE_GATE':'PASS',
+              'HUMAN_APPROVAL_GATE':'NOT_OPENED',
+              'MASTER_CHANGE_GATE':'CLOSED',
+              'executionChannel':'GEMINI_API',
+              'transportMethod':'GEMINI_API_DIRECT_RESPONSE',
+              'executionReference':expected_ref,
+              'canonicalWritePerformed':False,
+              'runtimeWritePerformed':False,
+              'productionWritePerformed':False
+          }
+          (root/'gemini-api-v11-gates.json').write_text(json.dumps(gates,ensure_ascii=False,indent=2)+'\n')
+          print('WORKER_EXECUTION_CONTRACT_GATE=PASS')
+          print('GEMINI_API_LIVE_EXECUTION_GATE=PASS')
+          print('EXECUTION_PROVENANCE_GATE=PASS')
+          PY
+
+      - name: Upload non-secret Gemini API audit
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: product-master-gemini-api-profile-live-audit
+          path: artifacts/product-master-gemini-api-live
+          if-no-files-found: warn
+          retention-days: 7
