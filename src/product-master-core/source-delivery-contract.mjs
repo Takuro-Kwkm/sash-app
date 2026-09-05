@@ -9,6 +9,11 @@ const nonBlank=(value)=>typeof value==='string'&&value.trim().length>0;
 const isObject=(value)=>Boolean(value)&&typeof value==='object'&&!Array.isArray(value);
 const makeError=(code,message,details={})=>({code,message,...details});
 const sameArray=(a,b)=>Array.isArray(a)&&Array.isArray(b)&&a.length===b.length&&a.every((v,i)=>v===b[i]);
+const normalizeSha=(value)=>SHA256_RE.test(String(value??'').trim())?String(value).trim().toLowerCase():null;
+const normalizePositiveInteger=(value)=>{
+  const number=typeof value==='string'&&value.trim()?Number(value):value;
+  return Number.isSafeInteger(number)&&number>0?number:null;
+};
 
 function commonSource(acquisition){
   return{
@@ -54,7 +59,7 @@ export function buildAiProScopedTextDelivery({sourceAcquisition,scopeAudit,execu
     delivery:{
       method:'INLINE_VERIFIED_PAGE_SCOPED_TEXT',
       evidenceDeliveryMode:'INLINE_VERIFIED_PAGE_SCOPED_TEXT',
-      artifactSha256:scopeAudit.scopeTextSha256,
+      artifactSha256:String(scopeAudit.scopeTextSha256).toLowerCase(),
       artifactBytes:scopeAudit.scopeTextBytes,
       pageAudit:structuredClone(scopeAudit.pageAudit),
       extractor:scopeAudit.extractor??null,
@@ -69,13 +74,20 @@ export function buildGeminiApiAttachmentDelivery({sourceAcquisition,sourceAttach
   const acquisitionValidation=validateSourceAcquisitionRecord(sourceAcquisition);
   const errors=[...acquisitionValidation.errors];
   if(sourceAcquisition?.executionChannel!=='GEMINI_API')errors.push(makeError('SOURCE_DELIVERY_CHANNEL_MISMATCH','Gemini File attachment delivery requires GEMINI_API Source Acquisition'));
+  let attachmentSha=null;
+  let attachmentSize=null;
+  let attachmentMime=null;
   if(!isObject(sourceAttachmentAudit))errors.push(makeError('SOURCE_DELIVERY_ATTACHMENT_AUDIT_INVALID','Gemini API sourceAttachmentAudit must be an object'));
   else{
-    const expectedSha=sourceAcquisition?.retrieval?.acquiredSha256??null;
-    if(sourceAttachmentAudit.sourceSha256!==expectedSha)errors.push(makeError('SOURCE_DELIVERY_ATTACHMENT_SHA_MISMATCH','Gemini API uploaded source SHA must match Source Acquisition acquired SHA',{expected:expectedSha,actual:sourceAttachmentAudit.sourceSha256??null}));
-    if(sourceAttachmentAudit.mimeType!=='application/pdf')errors.push(makeError('SOURCE_DELIVERY_ATTACHMENT_MIME_INVALID','Gemini API attachment must be application/pdf',{actual:sourceAttachmentAudit.mimeType??null}));
-    if(!Number.isInteger(sourceAttachmentAudit.fileSizeBytes)||sourceAttachmentAudit.fileSizeBytes<1)errors.push(makeError('SOURCE_DELIVERY_ATTACHMENT_SIZE_INVALID','Gemini API attachment fileSizeBytes must be positive'));
-    if(sourceAcquisition?.retrieval?.sizeBytes&&sourceAttachmentAudit.fileSizeBytes!==sourceAcquisition.retrieval.sizeBytes)errors.push(makeError('SOURCE_DELIVERY_ATTACHMENT_SIZE_MISMATCH','Gemini API attachment byte size must match Source Acquisition',{expected:sourceAcquisition.retrieval.sizeBytes,actual:sourceAttachmentAudit.fileSizeBytes}));
+    const expectedSha=normalizeSha(sourceAcquisition?.retrieval?.acquiredSha256);
+    attachmentSha=normalizeSha(sourceAttachmentAudit.sourceSha256??sourceAttachmentAudit.providerSha256Hex??sourceAttachmentAudit.expectedSha256Hex);
+    if(!attachmentSha||attachmentSha!==expectedSha)errors.push(makeError('SOURCE_DELIVERY_ATTACHMENT_SHA_MISMATCH','Gemini API uploaded source SHA must match Source Acquisition acquired SHA',{expected:expectedSha,actual:attachmentSha}));
+    attachmentMime=sourceAttachmentAudit.mimeType??sourceAttachment?.mimeType??null;
+    if(attachmentMime!=='application/pdf')errors.push(makeError('SOURCE_DELIVERY_ATTACHMENT_MIME_INVALID','Gemini API attachment must be application/pdf',{actual:attachmentMime}));
+    attachmentSize=normalizePositiveInteger(sourceAttachmentAudit.fileSizeBytes);
+    if(!attachmentSize)errors.push(makeError('SOURCE_DELIVERY_ATTACHMENT_SIZE_INVALID','Gemini API attachment fileSizeBytes must be positive'));
+    const acquiredSize=normalizePositiveInteger(sourceAcquisition?.retrieval?.sizeBytes);
+    if(acquiredSize&&attachmentSize&&attachmentSize!==acquiredSize)errors.push(makeError('SOURCE_DELIVERY_ATTACHMENT_SIZE_MISMATCH','Gemini API attachment byte size must match Source Acquisition',{expected:acquiredSize,actual:attachmentSize}));
   }
   const uri=sourceAttachment?.geminiFileUri??sourceAttachmentAudit?.geminiFileUri??null;
   if(!nonBlank(uri))errors.push(makeError('SOURCE_DELIVERY_ATTACHMENT_REFERENCE_MISSING','Gemini API attachment URI is required'));
@@ -96,9 +108,9 @@ export function buildGeminiApiAttachmentDelivery({sourceAcquisition,sourceAttach
     delivery:{
       method:'GEMINI_FILE_ATTACHMENT',
       evidenceDeliveryMode:'VERIFIED_PDF_FILE_ATTACHMENT_WITH_SCOPED_PROMPT',
-      sourceSha256:sourceAttachmentAudit.sourceSha256,
-      fileSizeBytes:sourceAttachmentAudit.fileSizeBytes,
-      mimeType:sourceAttachmentAudit.mimeType,
+      sourceSha256:attachmentSha,
+      fileSizeBytes:attachmentSize,
+      mimeType:attachmentMime,
       providerFileName:sourceAttachment?.providerFileName??sourceAttachmentAudit.providerFileName??null,
       providerState:sourceAttachmentAudit.providerState??null
     },
