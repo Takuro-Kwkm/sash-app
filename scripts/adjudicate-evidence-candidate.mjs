@@ -4,6 +4,7 @@ import{
   adjudicatePersistedCandidate,evidenceAdjudicationSummary,
   persistCandidateUnderReview,transitionPersistedPending
 }from'../src/product-master-core/evidence-adjudication-store.mjs';
+import{registerPersistedTransportIssue}from'../src/product-master-core/transport-issue-lifecycle.mjs';
 
 const rootDir=path.resolve(process.env.EVIDENCE_INBOX_DIR??'data/evidence-inbox');
 const argv=process.argv.slice(2);
@@ -37,7 +38,7 @@ function emit(result){
   process.exit(result?.pass===false?1:0);
 }
 
-if(!command)fail('Usage: npm run evidence:adjudicate -- <review|adjudicate|pending|summary> ...');
+if(!command)fail('Usage: npm run evidence:adjudicate -- <review|adjudicate|issue|pending|summary> ...');
 
 if(command==='summary')emit({pass:true,status:'EVIDENCE_ADJUDICATION_SUMMARY',rootDir,summary:evidenceAdjudicationSummary(rootDir)});
 
@@ -71,6 +72,19 @@ if(command==='adjudicate'){
   }));
 }
 
+if(command==='issue'){
+  const batchId=argv.shift();
+  const issueId=argv.shift();
+  const pendingId=argv.shift();
+  if(!batchId||!issueId||!pendingId)fail('Usage: ... issue <batchId> <issueId> <pendingId> [--severity=NON_BLOCKING|BLOCKING] [--by=CHATGPT]');
+  const opts=parseOptions(argv);
+  emit(registerPersistedTransportIssue({
+    rootDir,batchId,issueId,pendingId,
+    severity:opts.severity??'NON_BLOCKING',
+    by:opts.by??'CHATGPT'
+  }));
+}
+
 if(command==='pending'){
   const pendingId=argv.shift();
   const nextStatus=argv.shift();
@@ -79,9 +93,11 @@ if(command==='pending'){
   emit(transitionPersistedPending({
     rootDir,pendingId,nextStatus,
     evidenceIds:arrayValue(opts.evidenceId),
+    technicalFactIds:arrayValue(opts.technicalFactId),
     ruleIds:arrayValue(opts.ruleId),
     resolutionNote:opts.resolutionNote??null,
     externalCanonicalEvidenceIds:arrayValue(opts.externalEvidenceId),
+    externalTechnicalFactIds:arrayValue(opts.externalTechnicalFactId),
     by:opts.by??'CHATGPT'
   }));
 }
