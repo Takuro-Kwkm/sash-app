@@ -120,6 +120,7 @@ test('v2.7 both LIVE worker surfaces use governed v1.1 Pre-Inbox Guard and Trans
     assert.equal(text.includes('node scripts/run-gemini-product-master-job.mjs \\'),false,file);
     assert.ok(text.includes("assert guard.get('status')=='PASS'"),file);
     assert.ok(text.includes("assert (guard.get('record') or {}).get('evidenceInboxWriteAllowed') is True"),file);
+    assert.ok(text.includes("assert provenance.get('schemaVersion')=='1.1'"),file);
     assert.ok(text.includes("assert provenance.get('recordType')=='PRODUCT_MASTER_TRANSPORT_PROVENANCE'"),file);
     assert.ok(text.includes(`assert provenance.get('executionChannel')=='${channel}'`),file);
     assert.ok(text.includes(`assert provenance.get('transport',{}).get('producer',{}).get('system')=='${producer}'`),file);
