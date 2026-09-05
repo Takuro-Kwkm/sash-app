@@ -1,11 +1,6 @@
 name: Antigravity Self-Hosted Smoke Test
 
 on:
-  push:
-    branches:
-      - feat/catalog-recovery-v2
-    paths:
-      - '.github/workflows/antigravity-self-hosted-smoke.yml'
   workflow_dispatch:
 
 concurrency:
