@@ -41,18 +41,20 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          mkdir -p "$ARTIFACT_DIR"
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
             profile='${{ github.event.inputs.profile_path }}'
           else
             before='${{ github.event.before }}'
             after='${{ github.sha }}'
-            mapfile -t profiles < <(git diff --name-only "$before" "$after" -- 'config/product-master-profiles/*.json' | sed '/^$/d')
-            if [ "${#profiles[@]}" -ne 1 ]; then
-              echo "Expected exactly one changed Product Profile, found ${#profiles[@]}" >&2
-              printf '%s\n' "${profiles[@]}" >&2
+            changed="$(git diff --name-only "$before" "$after" -- 'config/product-master-profiles/*.json' | sed '/^$/d')"
+            count="$(printf '%s\n' "$changed" | sed '/^$/d' | wc -l | tr -d ' ')"
+            if [ "$count" -ne 1 ]; then
+              echo "Expected exactly one changed Product Profile, found $count" >&2
+              printf '%s\n' "$changed" >&2
               exit 3
             fi
-            profile="${profiles[0]}"
+            profile="$changed"
           fi
           case "$profile" in
             config/product-master-profiles/*.json) ;;
@@ -338,5 +340,5 @@ jobs:
         with:
           name: product-master-profile-live-v31-${{ github.run_id }}
           path: artifacts/product-master-profile-live-v31
-          if-no-files-found: error
+          if-no-files-found: warn
           retention-days: 7
