@@ -6,16 +6,16 @@ import{
 
 const $=(id)=>document.getElementById(id);
 const emptySizeDraft=()=>({width:"",height:"",query:""});
-const state={products:[],productId:null,selection:{},resolved:null,sizeDraft:emptySizeDraft(),resolveRevision:0};
+const state={products:[],productId:null,productSource:"CATALOG",selection:{},resolved:null,sizeDraft:emptySizeDraft(),resolveRevision:0};
 
-async function getJson(url){const r=await fetch(url,{cache:"no-store"});if(!r.ok)throw new Error(`${r.status} ${url}`);return r.json();}
+async function getJson(url){const r=await fetch(url,{cache:"no-store"});if(!r.ok){const body=await r.json().catch(()=>null);throw new Error(body?.error??`${r.status} ${url}`);}return r.json();}
 function esc(v){return String(v??"").replace(/[&<>'\"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'\"':"&quot;"}[c]));}
 function has(v){return v!==undefined&&v!==null&&v!=="";}
 function fill(select,rows,placeholder="選択してください"){
   const current=select.value;
-  select.innerHTML=`<option value="">${placeholder}</option>`+rows.map(x=>`<option value="${esc(x.value)}">${esc(x.label)}</option>`).join("");
+  select.innerHTML=`<option value="">${placeholder}</option>`+rows.map(x=>`<option value="${esc(x.value)}"${x.disabled?" disabled":""}${x.title?` title="${esc(x.title)}"`:""}>${esc(x.label)}</option>`).join("");
   select.disabled=rows.length===0;
-  if(rows.some(x=>x.value===current))select.value=current;
+  if(rows.some(x=>x.value===current&&!x.disabled))select.value=current;
 }
 function inventoryStats(x){
   const selectable=Number(x.selectableSizeRows??0),inactive=Number(x.inactiveSizeRows??0),coverage=Number(x.sizeCoverage);
@@ -23,7 +23,9 @@ function inventoryStats(x){
   return `${x.definitions} fields / ${x.allowedValues} values / ${x.dependencies} deps`;
 }
 function renderInventory(health){
-  $("inventory").innerHTML=health.inventory.map(x=>`<div class="inventory-row"><div><strong>${esc(x.manufacturer)} ${esc(x.series)}</strong><small>${esc(x.productId)}</small></div><div>${esc(inventoryStats(x))}</div></div>`).join("");
+  const catalogRows=health.inventory.map(x=>`<div class="inventory-row"><div><strong>${esc(x.manufacturer)} ${esc(x.series)}</strong><small>${esc(x.productId)}</small></div><div>${esc(inventoryStats(x))}</div></div>`).join("");
+  const runtimeRows=(health.runtimeMasterIntegrations??[]).map(x=>`<div class="inventory-row"><div><strong>${esc(x.manufacturer)} ${esc(x.series)}</strong><small>${esc(x.id)} · Runtime Master</small></div><div>${esc(x.status)}${x.blockReason?`<small>${esc(x.blockReason)}</small>`:""}</div></div>`).join("");
+  $("inventory").innerHTML=catalogRows+runtimeRows;
   $("build").textContent=`${health.buildId} · ${health.buildTimestamp} · ${health.catalogVersion}`;
   $("status").textContent="CATALOG CONNECTED";$("status").classList.add("ok");
 }
@@ -89,19 +91,24 @@ function renderSizeField(field,result){
 
 function renderField(field,result){
   const required=field.required?'<span class="required">必須</span>':"";
-  if(field.key==="size")return renderSizeField(field,result);
+  if(field.key==="size"&&state.productSource!=="RUNTIME_MASTER")return renderSizeField(field,result);
   if(field.dataType==="NUMBER"){
+    const value=state.selection[field.key]??"",unit=field.unit??(state.productSource==="RUNTIME_MASTER"?"":"mm");
+    return `<div class="field" data-key="${esc(field.key)}"><label>${esc(field.displayLabel)}${required}</label><div class="number-input"><input type="number" inputmode="numeric" step="1" data-spec-key="${esc(field.key)}" value="${esc(value)}" placeholder="数値を入力">${unit?`<span>${esc(unit)}</span>`:""}</div></div>`;
+  }
+  if(field.dataType==="TEXT"){
     const value=state.selection[field.key]??"";
-    return `<div class="field" data-key="${esc(field.key)}"><label>${esc(field.displayLabel)}${required}</label><div class="number-input"><input type="number" inputmode="numeric" step="1" data-spec-key="${esc(field.key)}" value="${esc(value)}" placeholder="mm単位で入力"><span>mm</span></div></div>`;
+    return `<div class="field" data-key="${esc(field.key)}"><label>${esc(field.displayLabel)}${required}</label><input type="text" data-spec-key="${esc(field.key)}" value="${esc(value)}" placeholder="入力してください"></div>`;
   }
   const selectedValues=Array.isArray(state.selection[field.key])?state.selection[field.key]:[state.selection[field.key]];
-  const options=field.values.map(v=>`<option value="${esc(v.value)}"${selectedValues.includes(v.value)?" selected":""}>${esc(v.displayLabel)}${v.manualCheck?"（要確認）":""}</option>`).join("");
+  const options=field.values.map(v=>`<option value="${esc(v.value)}"${selectedValues.some((one)=>String(one)===String(v.value))?" selected":""}>${esc(v.displayLabel)}${v.manualCheck?"（要確認）":""}</option>`).join("");
   const multi=field.dataType==="MULTI_ENUM",disabled=field.values.length===0?" disabled":"";
   const activeCount=field.key==="window_type"?`<small class="field-help window-count" data-window-count>窓種：${field.values.length}種類（ACTIVE）</small>`:"";
   return `<div class="field" data-key="${esc(field.key)}"><label>${esc(field.displayLabel)}${required}</label><select data-spec-key="${esc(field.key)}"${multi?' multiple size="5"':""}${disabled}>${multi?"":'<option value="">選択してください</option>'}${options}</select>${activeCount}${multi?'<small class="field-help">複数選択できます</small>':""}</div>`;
 }
 
 function sizeUpstreamChanged(result,key){
+  if(state.productSource==="RUNTIME_MASTER")return false;
   if(key==="size_mode")return true;
   const changed=result.fields.find((field)=>field.key===key),size=result.fields.find((field)=>field.key==="size");
   return Boolean(changed&&size&&changed.displayOrder<size.displayOrder);
@@ -158,30 +165,42 @@ async function resolve(){
   if(!state.productId){$("dynamicForm").innerHTML="";return;}
   const revision=++state.resolveRevision,productId=state.productId;
   const q=new URLSearchParams({productId,selection:JSON.stringify(state.selection)});
-  const result=await getJson(`/api/catalog/resolve?${q}`);
+  const endpoint=state.productSource==="RUNTIME_MASTER"?"/api/runtime-master/resolve":"/api/catalog/resolve";
+  const result=await getJson(`${endpoint}?${q}`);
   if(revision!==state.resolveRevision||productId!==state.productId)return;
   state.selection=result.selection;state.resolved=result;
   $("dynamicForm").innerHTML=result.fields.map((field)=>renderField(field,result)).join("");
   bindGenericFields(result);
-  const sizeField=result.fields.find((field)=>field.key==="size");
+  const sizeField=state.productSource==="RUNTIME_MASTER"?null:result.fields.find((field)=>field.key==="size");
   if(sizeField)bindSizePresentation(sizeField);else state.sizeDraft=emptySizeDraft();
   renderWarnings(result);renderSummary(result);
 }
 
 async function init(){
-  const [products,health]=await Promise.all([getJson("/api/catalog/products"),getJson("/api/health")]);
-  state.products=products;
-  const manufacturers=[...new Set(products.map(x=>x.manufacturer))].sort();
+  const [catalogProducts,runtimeProducts,health]=await Promise.all([getJson("/api/catalog/products"),getJson("/api/runtime-master/integrations"),getJson("/api/health")]);
+  state.products=[
+    ...catalogProducts.map((product)=>({...product,source:"CATALOG",selectable:true,status:"READY"})),
+    ...runtimeProducts.map((product)=>({...product,source:"RUNTIME_MASTER"})),
+  ];
+  const manufacturers=[...new Set(state.products.map(x=>x.manufacturer))].sort();
   fill($("manufacturer"),manufacturers.map(x=>({value:x,label:x})));
   renderInventory(health);
 }
 $("manufacturer").addEventListener("change",()=>{
-  state.resolveRevision+=1;state.productId=null;state.selection={};state.resolved=null;state.sizeDraft=emptySizeDraft();
+  state.resolveRevision+=1;state.productId=null;state.productSource="CATALOG";state.selection={};state.resolved=null;state.sizeDraft=emptySizeDraft();
   const manufacturer=$("manufacturer").value;
-  fill($("product"),state.products.filter(x=>x.manufacturer===manufacturer).map(x=>({value:x.id,label:x.displayName})));
-  $("dynamicForm").innerHTML="";$("selectionSummary").textContent="シリーズを選択してください。";
+  const products=state.products.filter(x=>x.manufacturer===manufacturer);
+  fill($("product"),products.map(x=>({
+    value:x.id,
+    label:x.source==="RUNTIME_MASTER"?(x.selectable?`${x.displayName} [Runtime]`:`${x.displayName}（正式Runtime未登録）`):x.displayName,
+    disabled:x.selectable===false,
+    title:x.blockReason??"",
+  })));
+  $("dynamicForm").innerHTML="";$("warnings").innerHTML="";$("selectionSummary").textContent="シリーズを選択してください。";
 });
 $("product").addEventListener("change",async()=>{
-  state.resolveRevision+=1;state.productId=$("product").value||null;state.selection={};state.sizeDraft=emptySizeDraft();await resolve();
+  state.resolveRevision+=1;state.productId=$("product").value||null;
+  const product=state.products.find((row)=>row.id===state.productId);
+  state.productSource=product?.source??"CATALOG";state.selection={};state.sizeDraft=emptySizeDraft();await resolve();
 });
 init().catch(e=>{$("status").textContent="CATALOG ERROR";$("build").textContent=e.message;});
