@@ -27,7 +27,13 @@ fs.mkdirSync(path.dirname(path.resolve(auditPath)),{recursive:true});
 const audit=result.record??{
   schemaVersion:'1.1',recordType:'PRODUCT_MASTER_SOURCE_ACQUISITION',status:result.status,
   manufacturer:profile.manufacturer??null,series:profile.series??null,productId:profile.productId??null,
-  executionChannel,credentialMaterialPersisted:false,errors:result.errors??[]
+  executionChannel,
+  attemptedRetrieval:{
+    officialDownloadUrl:profile?.source?.officialDownloadUrl??null,
+    authoritativeSha256:profile?.source?.authoritativeSha256??null,
+    acquiredSha256:result.actualSha256??null
+  },
+  credentialMaterialPersisted:false,errors:result.errors??[]
 };
 fs.writeFileSync(path.resolve(auditPath),`${JSON.stringify(audit,null,2)}\n`,'utf8');
 
@@ -54,6 +60,10 @@ if(result.pass){
     },null,2));
   }
 }else{
-  console.log(JSON.stringify({pass:false,status:result.status,auditPath:path.resolve(auditPath),errors:result.errors??[]},null,2));
+  console.log(JSON.stringify({
+    pass:false,status:result.status,
+    acquiredSha256:result.actualSha256??null,
+    auditPath:path.resolve(auditPath),errors:result.errors??[]
+  },null,2));
   process.exitCode=result.status==='BLOCKED'?3:1;
 }
