@@ -5,7 +5,8 @@ export const CANONICAL_FIELD_REGISTRY=Object.freeze([
   {id:'FIELD-handing',canonicalName:'handing',labelJa:'開き勝手',dataType:'ENUM',scope:'PRODUCT_SELECTION',status:'ACTIVE'},
   {id:'FIELD-construction',canonicalName:'construction',labelJa:'工法・枠区分',dataType:'ENUM',scope:'PRODUCT_SELECTION',status:'ACTIVE'},
   {id:'FIELD-size_mode',canonicalName:'size_mode',labelJa:'サイズ方式',dataType:'ENUM',scope:'SIZE',status:'ACTIVE'},
-  {id:'FIELD-size',canonicalName:'size',labelJa:'規格サイズ',dataType:'REFERENCE',scope:'SIZE',status:'ACTIVE'}
+  {id:'FIELD-size',canonicalName:'size',labelJa:'規格サイズ',dataType:'REFERENCE',scope:'SIZE',status:'ACTIVE'},
+  {id:'FIELD-official_option_code',canonicalName:'official_option_code',labelJa:'公式オプション・発注コード',dataType:'STRING',scope:'OPTION_ORDERING',status:'ACTIVE'}
 ]);
 
 export const CANONICAL_FIELD_NAMES=new Set(CANONICAL_FIELD_REGISTRY.map((row)=>row.canonicalName));
