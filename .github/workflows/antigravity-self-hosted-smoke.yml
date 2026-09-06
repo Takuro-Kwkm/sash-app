@@ -10,10 +10,12 @@ on:
       - 'src/product-master-core/worker-readiness.mjs'
       - 'scripts/check-antigravity-runner-readiness-macos.mjs'
       - 'test/62-product-master-core-v31-worker-readiness.test.mjs'
+  schedule:
+    - cron: '5 * * * *'
 
 concurrency:
   group: antigravity-self-hosted-smoke
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 permissions:
   contents: read
@@ -95,3 +97,33 @@ jobs:
           assert payload['fallbackPolicy']['silentFallbackAllowed'] is False, payload
           print('WORKER_READINESS_SECRET_SAFETY_GATE=PASS')
           PY
+
+      - name: Publish readiness summary
+        if: always()
+        shell: bash
+        run: |
+          if [ -f antigravity-worker-readiness.json ]; then
+            python3 - <<'PY' >> "$GITHUB_STEP_SUMMARY"
+          import json
+          from pathlib import Path
+          data=json.loads(Path('antigravity-worker-readiness.json').read_text())
+          power=(data.get('powerPolicy') or {}).get('ac') or {}
+          print('## Antigravity Worker Readiness')
+          print(f"- Gate: `{data.get('runnerReadinessGate')}`")
+          print(f"- Status: `{data.get('status')}` / `{data.get('readinessLevel')}`")
+          print(f"- Runner service: `{(data.get('runnerService') or {}).get('running')}`")
+          print(f"- Machine sleep: `{power.get('machineSleepMinutes')}` minutes")
+          print(f"- Display sleep: `{power.get('displaySleepMinutes')}` minutes")
+          print(f"- AI Pro auth: `{(data.get('authPreflight') or {}).get('status')}`")
+          print(f"- Blockers: `{', '.join(data.get('blockers') or []) or 'NONE'}`")
+          PY
+          fi
+
+      - name: Upload readiness audit
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: antigravity-worker-readiness-v31
+          path: antigravity-worker-readiness.json
+          if-no-files-found: warn
+          retention-days: 14
