@@ -17,8 +17,8 @@ const runnerDir=getArg('--runner-dir')||path.join(home,'actions-runner');
 const plist=getArg('--plist')||path.join(home,'Library/LaunchAgents/actions.runner.Takuro-Kwkm-sash-app.sash-gemini-worker-mac.plist');
 
 const execText=(file,argv=[])=>execFileSync(file,argv,{encoding:'utf8',stdio:['ignore','pipe','pipe']}).trim();
-const safeExec=(file,argv=[])=>{
-  const result=spawnSync(file,argv,{encoding:'utf8'});
+const safeExec=(file,argv=[],options={})=>{
+  const result=spawnSync(file,argv,{encoding:'utf8',...options});
   return{ok:result.status===0,status:result.status,stdout:(result.stdout||'').trim(),stderr:(result.stderr||'').trim()};
 };
 const parseBool=(value)=>String(value).trim().toLowerCase()==='true';
@@ -40,7 +40,7 @@ function parsePmsetCustom(text){
 const platform=execText('/usr/bin/uname',['-s']);
 const arch=execText('/usr/bin/uname',['-m']);
 const svcPath=path.join(runnerDir,'svc.sh');
-const runnerStatus=fs.existsSync(svcPath)?safeExec(svcPath,['status']):{ok:false,status:null,stdout:'',stderr:'svc.sh missing'};
+const runnerStatus=fs.existsSync(svcPath)?safeExec(svcPath,['status'],{cwd:runnerDir}):{ok:false,status:null,stdout:'',stderr:'svc.sh missing'};
 
 const agyLookup=safeExec('/bin/bash',['-lc','command -v agy']);
 let agyVersion=null;
