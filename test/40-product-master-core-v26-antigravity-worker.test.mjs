@@ -105,3 +105,20 @@ test('v2.6 Antigravity structured output can replay through Transport, Evidence 
   assert.equal(result.runtimeWritePerformed,false);
   assert.equal(result.productionWritePerformed,false);
 });
+
+test('v3.1 Antigravity schema can enforce existing Master claim-id whitelist and profile maxCandidates',()=>{
+  const job=replayJob();
+  job.canonicalFieldScope=['official_option_code'];
+  job.evidenceRequirements={
+    maxCandidates:16,
+    allowedClaimEntityIds:['GST2_OPT_ELOCK_BUTTON','GST2_OPT_SECRET_SWITCH']
+  };
+  const schema=buildAntigravityTransportSchema(job);
+  assert.equal(schema.properties.candidates.maxItems,16);
+  assert.equal(schema.properties.issues.maxItems,16);
+  const claimSchema=schema.properties.candidates.items.properties.claim;
+  assert.equal(claimSchema.pattern,'^(?:GST2_OPT_ELOCK_BUTTON|GST2_OPT_SECRET_SWITCH)\\s+official_option_code\\s*=\\s*\\S');
+  const prompt=buildAntigravityWorkerPrompt(job,{sourceScopeTextContent:'===== PDF_PAGE 1 =====\nZ-304-DVBB\n'});
+  assert.ok(prompt.includes('Allowed existing Master entity IDs for candidate claim prefixes: GST2_OPT_ELOCK_BUTTON, GST2_OPT_SECRET_SWITCH.'));
+  assert.ok(prompt.includes('return an issue instead of inventing or renaming an ID'));
+});
