@@ -4,7 +4,7 @@
 
 This report records the second-series reproducibility verification of the common Product Master pipeline using LIXIL サーモスL as the non-YKK manufacturer target.
 
-It distinguishes historical real Gemini AI Pro execution from the current-stack deterministic E2E regression. It does not represent a new Product Master formalization or a new Human approval.
+The verification now contains both deterministic current-stack E2E regression and a fresh real Gemini AI Pro LIVE run on the same current HEAD. It does not represent a new Product Master formalization or a new Human approval.
 
 ## Governing Product Master state
 
@@ -17,52 +17,38 @@ It distinguishes historical real Gemini AI Pro execution from the current-stack 
 - Current canonical Runtime manifest id: `1FSt_7IDffvgnDfxmNeBhJ9R-XNV_8o0C`
 - Current canonical documentation id: `1c7yP81WZcUgGqDn7zFtXOUl8ihS4SIda`
 
-The current canonical package is not modified by this E2E regression.
+The current canonical package was not modified by this verification.
 
-## Startup Gate
+## Startup Gate used for the product-specific proof
 
-The following Drive governance artifacts were re-read before the second-series validation:
+Before the fresh product-specific LIVE run was accepted, Drive governance was re-read:
 
 - `サッシ商品マスター_成果物パッケージ・保管・完了ゲート仕様書_v2.0`
 - `PRODUCT_MASTER_COMPLETION_POLICY_v2.0.json`
 - `PRODUCT_MASTER_CANONICAL_REGISTRY_v2.0`
 - `ChatGPT_Gemini_商品マスターパイプライン共通仕様書_v1.1_WORKING`
 
-Policy and Registry resolve the same folder ids for サーモスL:
+Policy and Registry resolved the same folder ids for サーモスL:
 
 - series folder: `1ZgoCNo_kzlrljYN_SyiFIbPnI4QU1SyW`
 - canonical folder / `01_正本`: `1H83njk7Gww0RJOZKntYBp5VxdaJD9Jc4`
 - old folder / `00_旧版`: `1LFQOkjIm_INOIu2muWyw6iCN3hqX9c7g`
 - working folder / `90_作業中`: `1PqgX6VbCBmdz121DgLG2xF-Z7aK-pbah`
 
-Drive folder readback confirmed these folders are children of the same series folder.
-
 `PRODUCT_MASTER_STARTUP_GATE = PASS`
 
 ## Historical real Gemini AI Pro evidence
 
-A prior real Gemini AI Pro / Antigravity execution exists and is retained without rewriting historical evidence:
+The earlier Phase 7-R9 real run remains historical evidence and is not rewritten:
 
-- Phase: `Phase 7-R9`
-- GitHub Run ID: `33931410581`
-- GitHub Job ID: `101210585330`
-- historical head SHA: `e42ba10c66706762f21bbb4e4fc594e8c5a1f9b8`
-- Gemini job id: `GJOB-LIXIL-L-AGY-33931410581-1`
-- worker: Antigravity CLI 1.1.26
-- authentication: `GOOGLE_AI_PRO_OAUTH`
-- producer: `GEMINI_ANTIGRAVITY`
-- execution outcome: PASS through Source / Gemini execution / Transport / Evidence Inbox / Review Queue / ChatGPT Review
-- Human Approval: NOT_OPENED
-- Authoring mutation: NONE
-- Change Control: NOT_REQUIRED
+- GitHub Run `33931410581`
+- historical HEAD `e42ba10c66706762f21bbb4e4fc594e8c5a1f9b8`
+- Gemini Job `GJOB-LIXIL-L-AGY-33931410581-1`
+- Antigravity CLI 1.1.26
+- authentication `GOOGLE_AI_PRO_OAUTH`
+- producer `GEMINI_ANTIGRAVITY`
 
-Historical Drive working artifacts include:
-
-- `1YY_2nlPqvOHE4CvqGVyNT9vF334mcwzR`
-- `1n2Z17eI4EWbcONjysgDHneV5AO7t8E1P`
-- `1HM0tMxbDzcs6RVKlAFUYH5fp16xSIM11jekUmME7caw`
-
-This historical real LIVE run predates the latest Human Approval / Authoring STAGING / Runtime Candidate / Working Savepoint Handoff common contracts. It is therefore not claimed as a fresh current-HEAD real LIVE execution.
+That run predated the latest v2.7 contracts, so it is retained only as historical proof.
 
 ## Current-stack deterministic E2E regression
 
@@ -70,58 +56,113 @@ Test:
 
 `test/61-product-master-core-v27-thermosl-second-series-e2e.test.mjs`
 
-Initial test commit:
-
-`7b177404845480177be54c201301853384b790b2`
-
-V2 Recovery CI Run:
-
-`33965329761`
-
-Verified outcomes on that commit:
-
-- `npm test`: SUCCESS
-- Runtime smoke: SUCCESS
-- historical Thermos L source-gap regression: SUCCESS
-- historical Thermos L staging regression: SUCCESS
-- Thermos L Runtime regeneration regression: SUCCESS
-- Product Master generic workflow regression: SUCCESS
-
-The test loads the actual `config/product-master-profiles/lixil-thermosl.v1.json` and traverses the current common contracts:
+The test loads the actual `config/product-master-profiles/lixil-thermosl.v1.json` and traverses:
 
 `Product Profile -> GEMINI_AI_PRO Job -> Source Acquisition -> Source Delivery -> Gemini Execution Audit -> governed Transport -> Evidence Inbox -> Review Queue Gate -> synthetic adjudication fixture -> synthetic Human Approval fixture -> Change Control -> Authoring STAGING -> Runtime Candidate -> Working Savepoint Handoff`
 
-### Synthetic approval boundary
+The synthetic Human Approval is a CI fixture only. It cannot authorize a real Product Master mutation.
 
-The Human Approval used inside test61 is a deterministic CI fixture only. It is explicitly marked non-authoritative and is not the user's approval of any real Product Master change.
+The current common v2.7 suite passed `99/99` during the fresh LIVE run.
 
-It exists solely to prove that the common Human Approval and Change Control contracts can be traversed by a LIXIL Product Profile.
+## Fresh current-HEAD Gemini AI Pro LIVE proof
 
-No real Product Master change proposal is approved by this test.
+After the dedicated self-hosted worker became available, the previously queued/pending validation executed successfully.
 
-## Authority result
+- Workflow: `Product Master Antigravity Profile LIVE`
+- Run ID: `33966494545`
+- Job ID: `101428460432`
+- HEAD: `02a0884b49f7de88c5bae0221fe3e5aeba9e979a`
+- Runner: `sash-gemini-worker-mac`
+- Machine: `kawakamitakumiryuunoMacBook-Air-2`
+- Gemini Job: `GJOB-LIXIL-L-AGY-33966494545-1`
+- execution mode: `LIVE_EXTERNAL`
+- execution channel: `GEMINI_AI_PRO`
+- preferred channel: `GEMINI_AI_PRO`
+- fallback channel: `GEMINI_API`
+- fallback allowed: `false`
+- fallback from: `null`
+- authentication: `GOOGLE_AI_PRO_OAUTH`
+- producer: `GEMINI_ANTIGRAVITY`
+- transport: `GEMINI_AI_PRO_STRUCTURED_HANDOFF`
+- model: unknown / not inferred
 
-The current-stack E2E regression enforces:
+Fresh LIVE gates:
 
-- canonical Product Master write: false
-- production Product Master write: false
-- canonical Runtime write: false
-- Registry write: false
-- Drive Product Master write from the synthetic handoff: false
-- Working Savepoint Gate in the synthetic handoff: `NOT_EVALUATED`
-- Next Phase Gate in the synthetic handoff: `CLOSED`
-- Formal Pass from the synthetic chain: false
-- App Integration Ready from the synthetic chain: false
+- Worker Execution Contract: PASS
+- Source Acquisition: PASS
+- Source Delivery: PASS
+- Antigravity LIVE Execution: PASS
+- Gemini Execution: PASS
+- Transport: PASS
+- Transport Provenance: PASS
+- Pre-Inbox Guard: PASS
+- Evidence Inbox: PASS
+- Execution Provenance: PASS
+- Review Queue: PASS
 
-Therefore the test cannot mutate or promote the current canonical v0.7 package.
+No API fallback occurred.
 
-## Cross-manufacturer reproducibility finding
+## Source identity
 
-The present common stack accepts the LIXIL サーモスL Product Profile without requiring an APW430/YKK-specific branch in the tested chain. The same execution-channel, Transport, Evidence, Human authority, Authoring STAGING, Runtime Candidate, and Savepoint Handoff contracts are exercised.
+- Drive File ID: `1YUN-mtWYs48YBUHJk0C3vJXnhjyZFHyf`
+- title: `202604_LIXIL_サーモスＬ_業務用資料集_完成品価格表.pdf`
+- PDF pages: 6, 7, 8
+- printed pages: 4, 5, 6
+- identity mode: `FULL_BYTE_IDENTITY`
+- source SHA-256: `e3cd40bfd85bdeac0de253afa4d5187059bab71c164ccc266d2125e655114960`
+- scope text SHA-256: `cf80b896460ffc3a293942f1b769d3955142021dc733b19026d14c923d7276c7`
 
-This is a code-level current-stack reproducibility PASS for the deterministic E2E boundary.
+GitHub audit artifact:
 
-A fresh real Gemini AI Pro LIVE execution on the current HEAD remains a separate verification item and must not be inferred from the historical Phase 7-R9 LIVE run.
+- artifact ID: `9983371575`
+- name: `product-master-antigravity-profile-live-phase9-r2-audit`
+- SHA-256: `a6db2a89f18fc6eff6bbf68801edbd2f73f8449c2f0466b4b3572b774d25dd2c`
+
+## Evidence adjudication result
+
+Batch `BATCH-SER-LIXIL-THERMOSL-20260906-001` produced 5 candidates and 1 source ambiguity.
+
+- `CAND-001` 単体引違い窓 H1 -> `FORMAL_ALREADY_REPRESENTED`
+- `CAND-002` 縦すべり出し窓（カムラッチ）VT2 -> `FORMAL_ALREADY_REPRESENTED`
+- `CAND-003` フレームイン構造 -> `FORMAL_SCHEMA_GAP_NON_MUTATING`
+- `CAND-004` `w = W - 40mm` -> `FORMAL_SCHEMA_GAP_NON_MUTATING`
+- `CAND-005` アングル付枠 -> `FORMAL_SCHEMA_GAP_NON_MUTATING`
+- height text-extraction ambiguity -> `NON_MUTATING_SOURCE_EXTRACTION_LIMITATION`
+
+Formal mutation required: `0`.
+
+Therefore:
+
+- Human Approval: NOT_OPENED
+- Authoring mutation: NONE
+- Runtime mutation: NONE
+- Registry mutation: NONE
+- Canonical mutation: NONE
+- Master Change Gate: `CLOSED_NO_MUTATION_REQUIRED`
+
+## Second-series reproducibility result
+
+The common stack has now been verified at both code and real LIVE execution boundaries with a LIXIL Product Profile.
+
+The verification demonstrates that the non-YKK series can use the same:
+
+- execution-channel contract;
+- Source Acquisition and Source Delivery contracts;
+- Gemini Execution contract;
+- governed Transport / Pre-Inbox Guard;
+- Evidence Inbox and Review Queue;
+- Fail Closed semantics;
+- Human / Master authority separation.
+
+`SECOND_SERIES_REPRODUCIBILITY = PASS`
+
+The result does not claim that every future product can be added without a Product Profile or Adapter. Product-specific differences remain isolated in those extension points.
+
+## Worker availability lesson
+
+The fresh run also verified an operational dependency: when the matching self-hosted `macOS / ARM64 / gemini-worker` surface is unavailable, a GitHub job may remain queued or pending. After `sash-gemini-worker-mac` returned, the same current-HEAD run completed successfully.
+
+This behavior is now normalized by the v3.1 Worker Readiness contract. Display sleep is allowed; machine sleep is not.
 
 ## Product Master mutation status
 
@@ -131,4 +172,4 @@ A fresh real Gemini AI Pro LIVE execution on the current HEAD remains a separate
 - Human approval for real mutation: NOT_OPENED
 - new formalization: NOT_EXECUTED
 
-The product-specific Phase 9-R1 audit must be saved to the Policy-derived `working_folder_id` and re-read before this validation revision can open its next Product Master phase.
+The product-specific success artifacts were stored in the Policy-derived working folder during Phase9-R2-R1. This document records the common-core verification only and is not itself a Product Master package artifact.
