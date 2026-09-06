@@ -1,0 +1,12 @@
+{
+  "manufacturer": "LIXIL",
+  "series": "ジエスタ2",
+  "catalogCode": "IG3500",
+  "publicationDate": "2026-04",
+  "title": "玄関ドア受発注資料集",
+  "officialDetailUrl": "https://webcatalog.lixil.co.jp/iportal/CatalogDetail.do?catalogID=18054070000&categoryID=1760000&designID=newinter&method=initial_screen&position=26&type=mc&volumeID=LXL13001",
+  "officialDownloadUrl": "https://webcatalog.lixil.co.jp/iportal/CatalogDownload.do?method=downloadPdfCatalog&type=downloadPdfCatalog&volumeID=LXL13001&categoryID=&catalogID=18054070000&catalogCategoryID=&pageGroupID=&pageID=&applicationPdf=true&designID=newinter",
+  "expectedPageCount": 320,
+  "targetPrintedLabels": ["g6", "g7", "g8", "g9", "g10", "g11", "g12", "g13", "g72", "g73", "g74", "g75", "g76", "g77"],
+  "purpose": "Resolve Phase7-R2D blockers P7-B01 and P7-B02 with exact current official order-code page evidence."
+}
