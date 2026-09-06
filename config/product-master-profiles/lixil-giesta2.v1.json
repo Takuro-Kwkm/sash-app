@@ -41,6 +41,7 @@
     "originalCatalogDriveFileId": "13QMGG4L4cjyXEWePMZANN_Brmz2IRjLs",
     "splitSourceFolderId": "1GX6HeN-pTMqSDgfH6cZ5J_7rWoyMAgrT",
     "catalogCode": "DK9900",
+    "sourceIdentityProbe": "FULL_CATALOG_SHA_DISCOVERY_1",
     "workerProvider": "ANTIGRAVITY_CLI",
     "producerSystem": "GEMINI_ANTIGRAVITY",
     "authenticationMode": "GOOGLE_AI_PRO_OAUTH",
