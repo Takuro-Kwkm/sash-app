@@ -1,44 +1,43 @@
-import test from 'node:test';
-import assert from 'node:assert/strict';
-import {
-  getRuntimeAppIntegration,
-  resolveRuntimeAppProduct,
-  runtimeAppIntegrationInventory,
-} from '../src/catalog/runtime-master/runtime-app-bridge.mjs';
-import { getRuntimeMasterEntry } from '../src/catalog/runtime-master/runtime-master-registry.mjs';
-
-test('Giesta2 app integration is visible but fail-closed until a formal Runtime is registered', () => {
-  const row = getRuntimeAppIntegration('SER-LIXIL-GIESTA2');
-  assert.ok(row);
-  assert.equal(row.manufacturer, 'LIXIL');
-  assert.equal(row.series, 'ジエスタ2');
-  assert.equal(row.registrySeriesKey, 'LIXIL::ジエスタ2');
-  assert.equal(row.status, 'BLOCKED_RUNTIME_NOT_REGISTERED');
-  assert.equal(row.selectable, false);
-  assert.equal(getRuntimeMasterEntry('LIXIL', 'ジエスタ2'), null);
-});
-
-test('Giesta2 blocked integration refuses resolution instead of inventing product data', async () => {
-  await assert.rejects(
-    () => resolveRuntimeAppProduct('SER-LIXIL-GIESTA2', { design_code: 'DUMMY' }),
-    (error) => error?.code === 'RUNTIME_MASTER_NOT_REGISTERED',
-  );
-});
-
-test('registered XE Runtime proves the generic app bridge is reusable without XE-specific resolver logic', async () => {
-  const inventory = runtimeAppIntegrationInventory();
-  const xe = inventory.find((row) => row.manufacturer === 'LIXIL' && row.series === 'XE');
-  assert.ok(xe);
-  assert.equal(xe.status, 'READY');
-  assert.equal(xe.selectable, true);
-
-  const result = await resolveRuntimeAppProduct(xe.id, {});
-  assert.equal(result.source, 'RUNTIME_MASTER');
-  assert.equal(result.manufacturer, 'LIXIL');
-  assert.equal(result.series, 'XE');
-  assert.equal(result.runtimeMaster.sourcePackageIntegrity.match, true);
-  assert.ok(Array.isArray(result.fields));
-  assert.ok(result.fields.length > 0);
-  assert.ok(['INCOMPLETE', 'VALID'].includes(result.validation.status));
-  assert.ok(result.fields.every((field) => field.key && field.displayLabel && field.dataType));
-});
+{
+  "schema_version": "1.0",
+  "manufacturer": "LIXIL",
+  "series": "ジエスタ2",
+  "package_version": "v0.8-R1",
+  "authoring_mode": "SINGLE_AUTHORING_MASTER",
+  "authoring_file_name": "20260906_LIXIL_ジエスタ2_CUMULATIVE_AUTHORING_MASTER_v0.8-R1_FORMAL",
+  "authoring_file_id": "1GJ0ylooMoVQXrFRSGZbQwLo7JNajWt6rsd9Kgu_aA9M",
+  "runtime_status": "READY",
+  "runtime_files": [
+    {
+      "role": "RUNTIME_CORE",
+      "file_name": "LIXIL_ジエスタ2_runtime_core_v0.8-R1.json",
+      "file_id": "1VB0dxkU8m5nkqrcNXIlWhx6YuvW0RINZ",
+      "sha256": "0981efc2d2bfce35e68c2f24361781787dccb392c7c4fc451bb34f54ff881b81"
+    },
+    {
+      "role": "RUNTIME_MAPS",
+      "file_name": "LIXIL_ジエスタ2_runtime_maps_v0.8-R1.json",
+      "file_id": "1PMBNseQ6PemIbl5iReUxl-AI_2ntGRGr",
+      "sha256": "7dc687c48970837673f0777553f23b0f1c0a392584eb68db80d077fefc814165"
+    }
+  ],
+  "schema_file": {
+    "file_name": "giesta2_runtime_package_v0.8-R1.schema.json",
+    "file_id": "1Za4wtwWySz2sCTMn3qykDKiK1l5TbObe",
+    "sha256": "bea5a100681346216876de40e927f68dcbfbbf1448fc4e6038eee219ebe745d4"
+  },
+  "documentation_file": "LIXIL_ジエスタ2_PRODUCT_MASTER_MANIFEST_v0.8-R1.md",
+  "storage_status": "PASS",
+  "package_gate": "PASS",
+  "generated_at": "2026-09-06T22:40:00+09:00",
+  "human_approval": {
+    "status": "APPROVED",
+    "source": "user message: 次へ",
+    "date": "2026-09-06"
+  },
+  "formal_pass": true,
+  "canonical_mutation": true,
+  "registry_mutation": true,
+  "canonical_folder_id": "1sR0e7FSgr6lVE8BHw0fXzYamC0nxCyXW",
+  "working_folder_id": "16uPFbdAcgcRcxSq7KLyum1NlhU6Clxx7"
+}

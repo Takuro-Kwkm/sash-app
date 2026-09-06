@@ -1,19 +1,10 @@
 import { evaluateConfiguration } from './generic-rule-engine.mjs';
 import { getRuntimeMasterEntry, loadRegisteredRuntime, runtimeMasterInventory } from './runtime-master-registry.mjs';
-
-const CANDIDATES = Object.freeze([
-  Object.freeze({
-    id: 'SER-LIXIL-GIESTA2',
-    manufacturer: 'LIXIL',
-    series: 'ジエスタ2',
-    displayName: 'ジエスタ2',
-    registrySeriesKey: 'LIXIL::ジエスタ2',
-  }),
-]);
+import { appRuntimeIntegrationRegistry } from './app-runtime-integration-registry.mjs';
 
 const integrationKey = (manufacturer, series) => `${manufacturer}::${series}`;
 const generatedProductId = (manufacturer, series) => `RUNTIME-${manufacturer}-${series}`.replace(/[^A-Za-z0-9._-]+/g, '-');
-const candidateByKey = new Map(CANDIDATES.map((row) => [integrationKey(row.manufacturer, row.series), row]));
+const metadataByKey = new Map(appRuntimeIntegrationRegistry.map((row) => [integrationKey(row.manufacturer, row.series), row]));
 
 function labelFrom(row, fallback) {
   if (!row || typeof row !== 'object') return fallback;
@@ -28,39 +19,42 @@ function humanizeFieldName(name) {
 }
 
 function registeredIntegration(entry) {
-  const candidate = candidateByKey.get(integrationKey(entry.manufacturer, entry.series));
+  const metadata = metadataByKey.get(integrationKey(entry.manufacturer, entry.series));
   return Object.freeze({
-    id: candidate?.id ?? generatedProductId(entry.manufacturer, entry.series),
+    id: metadata?.id ?? generatedProductId(entry.manufacturer, entry.series),
     manufacturer: entry.manufacturer,
     series: entry.series,
-    displayName: candidate?.displayName ?? entry.series,
-    registrySeriesKey: candidate?.registrySeriesKey ?? integrationKey(entry.manufacturer, entry.series),
+    displayName: metadata?.displayName ?? entry.series,
+    registrySeriesKey: metadata?.registrySeriesKey ?? integrationKey(entry.manufacturer, entry.series),
     source: 'RUNTIME_MASTER',
     status: 'READY',
     selectable: true,
     blockReason: null,
     masterVersion: entry.masterVersion,
+    packageVersion: metadata?.packageVersion ?? entry.masterVersion,
     schemaVersion: entry.schemaVersion,
+    sourceHash: metadata?.sourceHash ?? entry.sourceZipSha256 ?? entry.runtimeManifestSha256 ?? null,
+    adapterType: metadata?.adapterType ?? entry.adapterType ?? 'XE_ZIP_V1',
+    canonicalRuntimeReference: metadata?.canonicalRuntimeReference ?? null,
   });
 }
 
-function blockedCandidate(candidate) {
+function blockedCandidate(metadata) {
   return Object.freeze({
-    ...candidate,
+    ...metadata,
     source: 'RUNTIME_MASTER',
     status: 'BLOCKED_RUNTIME_NOT_REGISTERED',
     selectable: false,
     blockReason: '正式Runtime packageがRuntime Master Registryに未登録のため選択できません。',
     masterVersion: null,
-    schemaVersion: null,
   });
 }
 
 export function runtimeAppIntegrationInventory() {
   const rows = runtimeMasterInventory.map(registeredIntegration);
   const registeredKeys = new Set(runtimeMasterInventory.map((entry) => integrationKey(entry.manufacturer, entry.series)));
-  for (const candidate of CANDIDATES) {
-    if (!registeredKeys.has(integrationKey(candidate.manufacturer, candidate.series))) rows.push(blockedCandidate(candidate));
+  for (const metadata of appRuntimeIntegrationRegistry) {
+    if (!registeredKeys.has(integrationKey(metadata.manufacturer, metadata.series))) rows.push(blockedCandidate(metadata));
   }
   return rows.sort((a, b) => a.manufacturer.localeCompare(b.manufacturer, 'ja') || a.series.localeCompare(b.series, 'ja'));
 }
@@ -70,7 +64,7 @@ export function getRuntimeAppIntegration(productId) {
 }
 
 function valueRowsFor(master, fieldName) {
-  return master.values.filter((row) => row.field_name === fieldName && row.status === 'CURRENT');
+  return master.values.filter((row) => row.field_name === fieldName && row.status === 'CURRENT' && row.runtime_selectable !== false);
 }
 
 function coerceScalar(def, raw, candidates = []) {
@@ -116,15 +110,23 @@ function dataTypeFor(def) {
 
 function choicesFor(master, def, fieldState) {
   if (def.data_type === 'boolean') return [
-    { value: true, displayLabel: 'はい', manualCheck: false },
-    { value: false, displayLabel: 'いいえ', manualCheck: false },
+    { value: true, displayLabel: 'はい', manualCheck: false, disabled: false },
+    { value: false, displayLabel: 'いいえ', manualCheck: false, disabled: false },
   ];
-  if (def.data_type !== 'enum') return [];
+  if (!['enum','array'].includes(def.data_type)) return [];
   const rows = valueRowsFor(master, def.field_name);
   const byValue = new Map(rows.map((row) => [JSON.stringify(row.canonical_value), row]));
-  return (fieldState.allowed_values ?? []).map((value) => {
+  return (fieldState.allowed_values ?? []).filter((value) => {
     const row = byValue.get(JSON.stringify(value));
-    return { value, displayLabel: labelFrom(row, String(value)), manualCheck: Boolean(row?.manual_check ?? row?.manualCheck) };
+    return row?.user_selectable !== false;
+  }).map((value) => {
+    const row = byValue.get(JSON.stringify(value));
+    return {
+      value,
+      displayLabel: labelFrom(row, String(value)),
+      manualCheck: Boolean(row?.manual_check ?? row?.manualCheck),
+      disabled: row?.user_selectable === false,
+    };
   });
 }
 
@@ -157,7 +159,12 @@ export function toRuntimeUiResult(master, state, integration, sourcePackageInteg
   const visibleKeys = new Set(visible.map((field) => field.key));
   const selection = Object.fromEntries(Object.entries(state.fields)
     .filter(([name, fieldState]) => visibleKeys.has(name) && fieldState.value !== null && fieldState.value !== undefined)
-    .map(([name, fieldState]) => [name, fieldState.value]));
+    .map(([name, fieldState]) => {
+      if (!Array.isArray(fieldState.value)) return [name, fieldState.value];
+      const selectable = new Set(valueRowsFor(master, name).filter((row) => row.user_selectable !== false).map((row) => row.canonical_value));
+      return [name, fieldState.value.filter((value) => selectable.has(value))];
+    })
+    .filter(([, value]) => !Array.isArray(value) || value.length));
   const errors = (state.errors ?? []).map((error) => ({
     errorCode: error.code ?? 'RUNTIME_VALIDATION_ERROR',
     field: error.field ?? null,
@@ -171,7 +178,10 @@ export function toRuntimeUiResult(master, state, integration, sourcePackageInteg
     status: integration.status,
     selection,
     fields: visible,
-    notices: (state.warnings ?? []).map(warningText),
+    notices: [
+      ...(state.warnings ?? []).map(warningText),
+      ...((state.derived_options ?? []).length ? [`自動適用オプション: ${(state.derived_options ?? []).map((id) => labelFrom(master.values.find((row) => row.field_name === 'option' && row.canonical_value === id), id)).join('、')}`] : []),
+    ],
     manualWarnings: (state.matched_invalid_rules ?? []).map((ruleId) => `成立不可Rule: ${ruleId}`),
     validation: {
       status: state.status,
@@ -179,13 +189,22 @@ export function toRuntimeUiResult(master, state, integration, sourcePackageInteg
       missingRequiredFields: [...(state.missing_required_fields ?? [])],
     },
     derivedComponents: [...(state.derived_components ?? [])].sort(),
+    derivedOptions: [...(state.derived_options ?? [])].sort(),
+    clearedFields: [...(state.cleared_fields ?? [])],
+    runtimeCapabilities: master.capabilities ?? null,
     runtimeMaster: {
       masterVersion: integration.masterVersion,
+      packageVersion: integration.packageVersion,
       schemaVersion: integration.schemaVersion,
+      adapterType: integration.adapterType,
+      sourceHash: integration.sourceHash,
+      canonicalRuntimeReference: integration.canonicalRuntimeReference,
       sourcePackageIntegrity: sourcePackageIntegrity ? {
         expected: sourcePackageIntegrity.expected,
         actual: sourcePackageIntegrity.actual,
         match: sourcePackageIntegrity.match,
+        manifestDriveFileId: sourcePackageIntegrity.manifestDriveFileId ?? null,
+        files: sourcePackageIntegrity.files ?? null,
       } : null,
     },
   };
@@ -217,6 +236,6 @@ export async function resolveRuntimeAppProduct(productId, selection = {}) {
     throw error;
   }
   const normalized = normalizeRuntimeSelection(runtime.master, selection);
-  const state = evaluateConfiguration(runtime.master, normalized);
+  const state = runtime.resolver ? runtime.resolver(normalized) : evaluateConfiguration(runtime.master, normalized);
   return toRuntimeUiResult(runtime.master, state, integration, runtime.sourcePackageIntegrity);
 }
