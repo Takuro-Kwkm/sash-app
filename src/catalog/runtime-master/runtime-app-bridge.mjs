@@ -179,6 +179,7 @@ export function toRuntimeUiResult(master, state, integration, sourcePackageInteg
     source: 'RUNTIME_MASTER',
     status: integration.status,
     selection,
+    dependencyFields: master.fields.map((def) => ({ key: def.field_name, parentFields: def.parent_fields ?? [] })),
     fields: visible,
     notices: [
       ...(state.warnings ?? []).map(warningText),

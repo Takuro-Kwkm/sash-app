@@ -83,6 +83,7 @@ test('formal Runtime fields follow the common door UI order', async () => {
   assert.equal(keys.at(-1), 'option');
   assert.deepEqual(result.fields.find((field) => field.key === 'handle_color').values.map((row) => row.value), ['GST2_HCOL_BS', 'GST2_HCOL_SMB', 'GST2_HCOL_DBR']);
   assert.equal(result.selection.credential_package, 'GST2_PKG_FAM_TAG_R0');
+  assert.ok(result.dependencyFields.some((field) => field.key === 'credential_package' && field.parentFields.includes('remote_count')));
 });
 
 test('card and tag keys each resolve remote counts 0, 1 and 2 to the formal package IDs', async () => {

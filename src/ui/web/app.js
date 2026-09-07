@@ -154,7 +154,8 @@ function bindGenericFields(result){
     const canonicalValue=(value)=>field?.values?.find((choice)=>String(choice.value)===value)?.value??value;
     if(state.productSource === 'RUNTIME_MASTER'){
       const cleared = new Set([key]);
-      for(let i=0;i<result.fields.length;i++)for(const field of result.fields){
+      const dependencyFields=result.dependencyFields??result.fields;
+      for(let i=0;i<dependencyFields.length;i++)for(const field of dependencyFields){
         if((field.parentFields??[]).some(parent=>cleared.has(parent))){cleared.add(field.key);delete state.selection[field.key];}
       }
     }
