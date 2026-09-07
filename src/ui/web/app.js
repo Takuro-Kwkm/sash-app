@@ -150,6 +150,8 @@ function bindSizePresentation(field){
 function bindGenericFields(result){
   document.querySelectorAll("[data-spec-key]").forEach((el)=>el.addEventListener("change",async()=>{
     const key=el.dataset.specKey;
+    const field=result.fields.find((one)=>one.key===key);
+    const canonicalValue=(value)=>field?.values?.find((choice)=>String(choice.value)===value)?.value??value;
     if(state.productSource === 'RUNTIME_MASTER'){
       const cleared = new Set([key]);
       for(let i=0;i<result.fields.length;i++)for(const field of result.fields){
@@ -160,9 +162,9 @@ function bindGenericFields(result){
     if(el.type==="number"){
       if(el.value!=="")state.selection[key]=Number(el.value);else delete state.selection[key];
     }else if(el.multiple){
-      const values=[...el.selectedOptions].map(option=>option.value);
+      const values=[...el.selectedOptions].map(option=>canonicalValue(option.value));
       if(values.length)state.selection[key]=values;else delete state.selection[key];
-    }else if(el.value)state.selection[key]=el.value;else delete state.selection[key];
+    }else if(el.value)state.selection[key]=canonicalValue(el.value);else delete state.selection[key];
     await resolve();
   }));
 }
