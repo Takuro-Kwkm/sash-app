@@ -73,6 +73,8 @@ jobs:
           exit 1
       - name: Giesta2 Runtime Desktop and Smartphone Browser QA
         run: node test/browser/giesta2-runtime-browser-qa.mjs
+      - name: Existing sales UI Desktop and Smartphone regression QA
+        run: node test/browser/sales-ui-r2-browser-qa.mjs
       - name: Upload Browser QA evidence
         if: always()
         uses: actions/upload-artifact@v4
@@ -80,6 +82,7 @@ jobs:
           name: giesta2-runtime-browser-qa
           path: |
             artifacts/giesta2-runtime-browser-qa
+            artifacts/sales-ui-r2/browser
             runtime-qa.log
       - name: Stop Runtime
         if: always()
