@@ -27,6 +27,20 @@ test('v1.9 glass input flow is common across all four current sash series',()=>{
   assert.deepEqual(glassOrder('SER-YKK-APW431',{window_type:'W431-001'}),['glass_base','glass_type','glass_detail','glass_additional','glass_spacer','glass_air_layer']);
 });
 
+test('screen net remains with screen configuration before the contiguous glass block',()=>{
+  const thermosLFields=stabilizeSelection(catalog,'SER-LIX-SAMOSL',{
+    window_type:'WT-SL-HIKICHIGAI',screen_presence:'あり',screen_form:'引違い網戸'
+  }).fields.map((row)=>row.key);
+  assert.ok(thermosLFields.indexOf('screen_net')>thermosLFields.indexOf('screen_midrail'));
+  assert.ok(thermosLFields.indexOf('screen_net')<thermosLFields.indexOf('glass_base'));
+
+  const samos2hFields=stabilizeSelection(catalog,'SER-LIX-SAMOS2H',{
+    window_type:'WT-S2H-HIKICHIGAI',screen_presence:'あり',screen_form:'引違い網戸'
+  }).fields.map((row)=>row.key);
+  assert.ok(samos2hFields.indexOf('screen_net')>samos2hFields.indexOf('screen_midrail'));
+  assert.ok(samos2hFields.indexOf('screen_net')<samos2hFields.indexOf('glass_base'));
+});
+
 test('v1.9 manufacturer-native glass labels are source-backed and no unavailable value is fabricated',()=>{
   const labels=(productId,key,selection={})=>getAllowedValues(catalog,productId,key,selection).map((row)=>row.displayLabel);
   assert.deepEqual(labels('SER-LIX-SAMOSL','glass_detail',{window_type:'WT-SL-HIKICHIGAI',glass_base:'LOWE'}),['クリア','グリーン','クリア（高日射取得）','グリーン（高遮熱）']);
@@ -45,6 +59,7 @@ test('v1.9 size modes are generated from connected formal capabilities rather th
 test('v1.9 future sash modules inherit field order and hidden construction without manufacturer branches',async()=>{
   const synthetic={product:{id:'SER-FUTURE-001',category:'サッシ'},specificationDefinitions:[
     {key:'construction',displayLabel:'工法',displayOrder:15},
+    {key:'screen_net',displayLabel:'網戸ネット',displayOrder:120},
     {key:'glass_spacer',displayLabel:'old spacer',displayOrder:30},
     {key:'glass_detail',displayLabel:'old detail',displayOrder:40},
     {key:'glass_base',displayLabel:'old base',displayOrder:50},
@@ -55,6 +70,7 @@ test('v1.9 future sash modules inherit field order and hidden construction witho
   const normalized=applySashSalesInputContract(synthetic);
   const map=new Map(normalized.specificationDefinitions.map((row)=>[row.key,row]));
   assert.equal(map.get('construction').presentationHidden,true);
+  assert.equal(map.get('screen_net').displayOrder,119);
   assert.deepEqual(['glass_base','glass_type','glass_detail','glass_additional','glass_spacer','glass_air_layer'].map((key)=>[map.get(key).displayLabel,map.get(key).displayOrder]),[
     ['ガラス',120],['ガラス種',130],['ガラス詳細',140],['ガラス追加機能',150],['スペーサー',160],['中空層',170]
   ]);
