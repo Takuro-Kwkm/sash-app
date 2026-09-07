@@ -66,6 +66,10 @@ window.fetch=(input)=>{
   const url=new URL(typeof input==="string"?input:input.url,location.href);
   if(url.pathname==="/api/health"||url.pathname==="/health")return reply(health);
   if(url.pathname==="/api/catalog/products")return reply(products);
+  // This self-contained preview embeds catalog-backed window products only.
+  // The production UI now always requests Runtime integrations during init,
+  // so return an explicit empty inventory instead of a 404 response.
+  if(url.pathname==="/api/runtime-master/integrations")return reply([]);
   if(url.pathname==="/api/catalog/resolve"){
     const productId=url.searchParams.get("productId");
     if(!productId)return reply({error:"productId required"},400);
