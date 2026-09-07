@@ -48,11 +48,11 @@ export const runtimeMasterInventory = Object.freeze([
     packageRoot: EW_ROOT,
     runtimeManifestPath: join(EW_ROOT, 'runtime_manifest.json'),
     runtimeManifestDriveFileId: '139c0atou5LFz7EIHIdD7ZTYWddfSHf5_',
-    runtimeManifestSha256: '8646bfd5f4a3d2184f2dbcb5b28f6e7dca995c9e11d53ec273a158588b5cdbed',
+    runtimeManifestSha256: '57a2ec75959ab5cd9dff75754778a08ef226fbc82bb536291f2b247af0c045df',
     materializedFiles: Object.freeze({
       '1soPPTqP9LNKWFS1wxWhN8Lux6p9ZdyYf': Object.freeze({
         codec: 'brotli',
-        paths: Object.freeze(['part-00','part-01'].map((name) => join(EW_ROOT, `LIXIL_EW_runtime_v1.1.json.br.b64.parts/${name}`))),
+        paths: Object.freeze(['part-00','part-01','part-02'].map((name) => join(EW_ROOT, `LIXIL_EW_runtime_v1.1.json.br.b64.parts/${name}`))),
       }),
     }),
   }),
