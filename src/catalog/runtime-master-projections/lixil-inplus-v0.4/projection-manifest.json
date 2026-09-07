@@ -18,7 +18,8 @@
   "files": [
     {"role":"CORE_PROJECTION","path":"core.json","git_blob_sha":"28724a020ba15272ac9fc4066a0541e443491a4b"},
     {"role":"SIZE_PROJECTION","path":"size.json","git_blob_sha":"84cded16a9ea9ef62250a49d6c36452f38df0e35"},
-    {"role":"INSTALLATION_PROJECTION","path":"installation.json","git_blob_sha":"33c04cc2802132004bef939e20e139da41256698"}
+    {"role":"INSTALLATION_PROJECTION","path":"installation.json","git_blob_sha":"33c04cc2802132004bef939e20e139da41256698"},
+    {"role":"GLASS_TAXONOMY_PROJECTION","path":"glass-taxonomy.json","git_blob_sha":"6989fdf2cad5d0a79f23861ad1e1a2784dbbcf26"}
   ],
   "policy": {
     "product_master_mutation": 0,
