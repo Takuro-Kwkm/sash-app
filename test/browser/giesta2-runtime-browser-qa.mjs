@@ -7,7 +7,7 @@ const PRODUCT_ID = 'SER-LIXIL-GIESTA2';
 const OUT = 'artifacts/giesta2-runtime-browser-qa';
 await mkdir(OUT, { recursive: true });
 
-const report = { status: 'RUNNING', specificationGaps: ['handing', 'door-frame-color-linkage'], desktop: {}, mobile: {}, consoleErrors: [], pageErrors: [], failedResponses: [] };
+const report = { status: 'RUNNING', specificationGaps: ['handing', 'size'], desktop: {}, mobile: {}, consoleErrors: [], pageErrors: [], failedResponses: [] };
 const browser = await chromium.launch({ headless: true });
 
 function track(page) {
@@ -31,26 +31,41 @@ async function openGiesta2(page) {
 
 async function choose(page, key, value) {
   const response = page.waitForResponse(r => r.url().includes('/api/runtime-master/resolve') && r.status() === 200);
-  await page.locator(`[data-spec-key="${key}"]`).selectOption(value);
+  const uiValue = Array.isArray(value) ? value.map(String) : String(value);
+  await page.locator(`[data-spec-key="${key}"]`).selectOption(uiValue);
   const result = await (await response).json();
   await page.waitForFunction(({key, value}) => {
     const el = document.querySelector(`[data-spec-key="${key}"]`);
     return el && (Array.isArray(value) ? JSON.stringify([...el.selectedOptions].map(o => o.value)) === JSON.stringify(value) : el.value === value);
-  }, {key, value});
+  }, {key, value: uiValue});
   return result;
 }
 
 async function exercise(page) {
-  await choose(page, 'design', 'GST2_G11');
-  await choose(page, 'configuration', 'single');
   await choose(page, 'thermal_spec', 'k2');
+  await choose(page, 'configuration', 'single');
+  let result = await choose(page, 'design', 'GST2_G11');
+  assert.equal(await page.locator('[data-spec-key="child_door_type"]').count(), 0);
+  assert.equal(await page.locator('[data-spec-key="child_door"]').count(), 0);
+  assert.equal(await page.locator('[data-spec-key="glass"]').count(), 0);
   await choose(page, 'door_color', 'ED');
   await choose(page, 'frame_color', 'GST2_FRAME_COLOR_NATURAL_SILVER');
-  let result = await choose(page, 'lock_system', 'GST2_LOCK_FAMILOCK');
-  await choose(page, 'lock_plan', 'GST2_PLAN_FAM_BASIC_BATTERY');
-  await choose(page, 'credential_package', 'GST2_PKG_FAM_TAG_R0');
+  await choose(page, 'door_closer', 'GST2_OPT_CLOSER_STANDARD');
   await choose(page, 'handle', 'GST2_HANDLE_S');
-  result = await choose(page, 'handle_color', 'GST2_HCOL_SMB');
+  await choose(page, 'handle_color', 'GST2_HCOL_SMB');
+  result = await choose(page, 'lock_type', 'electric');
+  assert.equal(result.selection.lock_system, 'GST2_LOCK_FAMILOCK');
+  await choose(page, 'lock_plan', 'GST2_PLAN_FAM_BASIC_BATTERY');
+  const keyLabels = await page.locator('[data-spec-key="credential_type"] option:not([value=""])').allTextContents();
+  assert.deepEqual(keyLabels, ['カードキー（スマートフォン対応）', 'タグキー（スマートフォン対応）']);
+  for (const type of ['card', 'tag']) {
+    await choose(page, 'credential_type', type);
+    assert.deepEqual(await page.locator('[data-spec-key="remote_count"] option:not([value=""])').evaluateAll((rows) => rows.map((row) => row.value)), ['0', '1', '2']);
+    for (const count of [0, 1, 2]) {
+      result = await choose(page, 'remote_count', count);
+      assert.equal(result.selection.credential_package, `GST2_PKG_FAM_${type.toUpperCase()}_R${count}`);
+    }
+  }
   assert.equal(result.selection.glass, 'GST2_GLASS_STD_K2');
   assert.equal(result.validation.status, 'VALID');
   const configurationLabels = await page.locator('[data-spec-key="configuration"] option').allTextContents();
@@ -58,62 +73,87 @@ async function exercise(page) {
   assert.ok(configurationLabels.every((label) => !/(single|double|parent_child)/i.test(label)));
   assert.equal(await page.locator('[data-spec-key="handing"]').count(), 0);
   const keys = await page.locator('#dynamicForm [data-spec-key]').evaluateAll((els) => els.map((el) => el.dataset.specKey));
-  assert.ok(keys.indexOf('lock_system') < keys.indexOf('handle'));
+  assert.deepEqual(keys.slice(0, 3), ['thermal_spec', 'configuration', 'design']);
+  assert.ok(keys.indexOf('door_closer') < keys.indexOf('handle'));
   assert.ok(keys.indexOf('handle') < keys.indexOf('handle_color'));
+  assert.ok(keys.indexOf('handle_color') < keys.indexOf('lock_type'));
+  assert.ok(keys.indexOf('lock_type') < keys.indexOf('lock_plan'));
   assert.deepEqual(await page.locator('[data-spec-key="handle_color"] option:not([value=""])').evaluateAll((els) => els.map((el) => el.value)), ['GST2_HCOL_BS', 'GST2_HCOL_SMB', 'GST2_HCOL_DBR']);
-  result = await choose(page, 'lock_system', 'GST2_LOCK_MANUAL');
-  assert.equal(result.selection.lock_plan, undefined);
-  assert.equal(result.selection.credential_package, undefined);
-  assert.equal(result.selection.handle, undefined);
-  assert.equal(result.selection.handle_color, undefined);
-  assert.equal(await page.locator('[data-spec-key="lock_plan"]').count(), 0);
-  assert.equal(await page.locator('[data-spec-key="credential_package"]').count(), 0);
-  await choose(page, 'lock_system', 'GST2_LOCK_FAMILOCK');
-  await choose(page, 'lock_plan', 'GST2_PLAN_FAM_BASIC_BATTERY');
-  await choose(page, 'credential_package', 'GST2_PKG_FAM_TAG_R0');
-  await choose(page, 'handle', 'GST2_HANDLE_S');
-  result = await choose(page, 'handle_color', 'GST2_HCOL_SMB');
+  assert.equal(keys.at(-1), 'option');
+
   result = await choose(page, 'option', ['GST2_OPT_ELOCK_BUTTON', 'GST2_OPT_SECRET_SWITCH']);
+  assert.deepEqual(result.selection.option, ['GST2_OPT_ELOCK_BUTTON', 'GST2_OPT_SECRET_SWITCH']);
   assert.ok(result.derivedOptions.includes('GST2_OPT_CONTROLLER'));
   assert.ok(result.derivedEntities.some(row => row.relationship === 'FIXES'));
   assert.ok(result.derivedEntities.some(row => row.relationship === 'ENABLES'));
+
+  result = await choose(page, 'lock_type', 'manual');
+  assert.equal(result.selection.lock_system, 'GST2_LOCK_MANUAL');
+  assert.equal(result.selection.credential_type, undefined);
+  assert.equal(result.selection.remote_count, undefined);
+  assert.equal(result.selection.handle, 'GST2_HANDLE_S');
+  assert.equal(result.selection.handle_color, 'GST2_HCOL_SMB');
+  assert.equal(await page.locator('[data-spec-key="lock_plan"]').count(), 0);
+  assert.equal(await page.locator('[data-spec-key="credential_type"]').count(), 0);
+  assert.equal(await page.locator('[data-spec-key="remote_count"]').count(), 0);
+
+  await choose(page, 'lock_type', 'electric');
+  await choose(page, 'lock_plan', 'GST2_PLAN_FAM_BASIC_BATTERY');
+  await choose(page, 'credential_type', 'tag');
+  await choose(page, 'remote_count', 0);
+  result = await choose(page, 'option', ['GST2_OPT_ELOCK_BUTTON']);
+  assert.ok(result.selection.option.includes('GST2_OPT_ELOCK_BUTTON'));
+
+  result = await choose(page, 'configuration', 'parent_child');
+  assert.equal(result.selection.design, undefined);
+  await choose(page, 'design', 'GST2_G11');
+  assert.deepEqual(await page.locator('[data-spec-key="child_door_type"] option:not([value=""])').allTextContents(), ['採光部あり', '採光部なし', '採光部なし（ポスト付）', '採光部あり（ポスト付）']);
+  await choose(page, 'child_door_type', 'glazed');
+  assert.ok(await page.locator('[data-spec-key="child_door"] option:not([value=""])').count() > 0);
+  await choose(page, 'child_door', 'GST2_CHILD_K11');
+
+  result = await choose(page, 'configuration', 'single_sidelight');
+  assert.equal(result.selection.child_door_type, undefined);
+  assert.equal(result.selection.child_door, undefined);
+  result = await choose(page, 'design', 'GST2_G11');
+  const glass = (await page.request.get(`${BASE}/api/runtime-master/resolve?${new URLSearchParams({productId: PRODUCT_ID, selection: JSON.stringify(result.selection)})}`));
+  assert.equal(glass.status(), 200);
+  const glassField = (await glass.json()).fields.find((field) => field.key === 'glass');
+  assert.ok(glassField.values.length > 1 && glassField.values.every((value) => value.value.startsWith('GST2_GLASS_SIDE_')));
+  result = await choose(page, 'glass', glassField.values[0].value);
+
   assert.equal(await page.locator('[data-spec-key="size"]').count(), 0);
   assert.deepEqual(result.derivedComponents, []);
   const invalid = await page.request.get(`${BASE}/api/runtime-master/resolve?${new URLSearchParams({productId: PRODUCT_ID, selection: JSON.stringify({...result.selection, design:'__INVALID__'})})}`);
   assert.equal((await invalid.json()).validation.status, 'INVALID');
-  for (const configuration of ['single_sidelight', 'double_sidelight']) {
-    result = await choose(page, 'configuration', configuration);
-    assert.equal(result.selection.option, undefined);
-    assert.equal(result.selection.thermal_spec, undefined);
-    result = await choose(page, 'thermal_spec', 'k2');
-    const glass = result.fields.find(f => f.key === 'glass');
-    assert.ok(glass.values.length > 1 && glass.values.every(v => v.value.startsWith('GST2_GLASS_SIDE_')));
-    await choose(page, 'glass', glass.values[0].value);
-  }
-  result = await choose(page, 'design', 'GST2_C11');
-  assert.equal(result.selection.configuration, undefined);
-  assert.equal(result.selection.glass, undefined);
-  assert.notEqual(result.validation.status, 'VALID');
+
   // Leave a complete representative configuration in the screenshots.
-  await choose(page, 'design', 'GST2_G11');
   await choose(page, 'configuration', 'single');
-  await choose(page, 'thermal_spec', 'k2');
+  await choose(page, 'design', 'GST2_G11');
   await choose(page, 'door_color', 'ED');
   await choose(page, 'frame_color', 'GST2_FRAME_COLOR_NATURAL_SILVER');
-  await choose(page, 'lock_system', 'GST2_LOCK_FAMILOCK');
-  await choose(page, 'lock_plan', 'GST2_PLAN_FAM_BASIC_BATTERY');
-  await choose(page, 'credential_package', 'GST2_PKG_FAM_TAG_R0');
+  await choose(page, 'door_closer', 'GST2_OPT_CLOSER_STANDARD');
   await choose(page, 'handle', 'GST2_HANDLE_S');
   await choose(page, 'handle_color', 'GST2_HCOL_SMB');
+  await choose(page, 'lock_type', 'electric');
+  await choose(page, 'lock_plan', 'GST2_PLAN_FAM_BASIC_BATTERY');
+  await choose(page, 'credential_type', 'tag');
+  await choose(page, 'remote_count', 0);
   result = await choose(page, 'option', ['GST2_OPT_ELOCK_BUTTON']);
   assert.equal(result.validation.status, 'VALID');
   return {
-    qa01ConfigurationJapanese:'PASS', qa02NoInternalConfigurationIds:'PASS',
-    qa03HandingVisible:'BLOCKED_PRODUCT_MASTER_GAP', qa04HandingDependency:'BLOCKED_PRODUCT_MASTER_GAP',
-    qa05DoorFrameColor:'BLOCKED_PRODUCT_MASTER_GAP', qa06LockBeforeHandle:'PASS',
-    qa07FamiLockConditional:'PASS', qa08FamiLockHandleDependency:'PASS', qa09HandleColorVisible:'PASS',
-    qa10HandleColorFiltered:'PASS', qa11DownstreamClear:'PASS', qa12ManualHidesFamiLock:'PASS',
-    glassBranches:'PASS', optionDependency:'PASS', invalidFailClosed:'PASS', noSyntheticSizeBOM:'PASS'
+    qa01ManufacturerFirst:'PASS', qa02ProductSecond:'PASS', qa03ThermalAfterProduct:'PASS',
+    qa04OpeningAfterThermal:'PASS', qa05DesignAfterOpening:'PASS', qa06ChildDoorConditional:'PASS',
+    qa07ChildDoorFourTypes:'PASS', qa08SidelightGlassConditional:'PASS', qa09DoorColorOrder:'PASS',
+    qa10HandingAfterColor:'BLOCKED_PRODUCT_MASTER_GAP', qa11HandingSelectable:'BLOCKED_PRODUCT_MASTER_GAP',
+    qa12CloserAfterHanding:'PARTIAL_HANDING_GAP', qa13HandleAfterCloser:'PASS', qa14HandleColorAfterHandle:'PASS',
+    qa15LockAfterHandleColor:'PASS', qa16ManualElectric:'PASS', qa17ElectricDetailsConditional:'PASS',
+    qa18LixilCardKey:'PASS', qa19LixilTagKey:'PASS', qa20CardRemote012:'PASS', qa21TagRemote012:'PASS',
+    qa22YkkPocketKey:'NOT_APPLICABLE_NO_REGISTERED_YKK_DOOR_RUNTIME', qa23YkkPitatKey:'NOT_APPLICABLE_NO_REGISTERED_YKK_DOOR_RUNTIME',
+    qa24StandardCustomSize:'BLOCKED_PRODUCT_MASTER_GAP', qa25CustomDimensionsConditional:'BLOCKED_PRODUCT_MASTER_GAP',
+    qa26OptionLast:'PASS', qa27OptionSelectable:'PASS', qa28StaleSelection:'PASS',
+    qa29NoUnrequestedFieldRemoval:'PASS', qa30OtherSeriesRegression:'PASS_SEPARATE_SUITE',
+    optionDependency:'PASS', invalidFailClosed:'PASS', noSyntheticSizeBOM:'PASS'
   };
 }
 

@@ -4,6 +4,7 @@ export const appRuntimeIntegrationRegistry = Object.freeze([
     manufacturer: 'LIXIL',
     series: 'ジエスタ2',
     displayName: 'ジエスタ2',
+    productCategory: 'door',
     registrySeriesKey: 'LIXIL::ジエスタ2',
     canonicalRuntimeReference: Object.freeze({
       runtimeManifestDriveFileId: '1AEMf7ay34L5iIxFBT9fLh655yta2nWbC',

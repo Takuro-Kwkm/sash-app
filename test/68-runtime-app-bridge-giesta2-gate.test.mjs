@@ -12,6 +12,7 @@ test('Giesta2 app integration becomes selectable only through its registered for
   assert.ok(row);
   assert.equal(row.manufacturer, 'LIXIL');
   assert.equal(row.series, 'ジエスタ2');
+  assert.equal(row.productCategory, 'door');
   assert.equal(row.registrySeriesKey, 'LIXIL::ジエスタ2');
   assert.equal(row.status, 'READY');
   assert.equal(row.selectable, true);
