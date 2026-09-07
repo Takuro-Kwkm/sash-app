@@ -1,7 +1,6 @@
 import { createHash } from 'node:crypto';
 import { readFile } from 'node:fs/promises';
-import { join } from 'node:path';
-import { gunzipSync } from 'node:zlib';
+import { brotliDecompressSync, gunzipSync } from 'node:zlib';
 import { validateJsonSchema } from './runtime-master-loader.mjs';
 
 const sha256 = (bytes) => createHash('sha256').update(bytes).digest('hex');
@@ -59,16 +58,35 @@ export function normalizeRuntimeManifest(raw) {
   return deepFreeze(normalized);
 }
 
+function normalizeTransportSpec(entry, fileId) {
+  const raw = entry.materializedFiles?.[fileId];
+  if (Array.isArray(raw)) return { codec: 'gzip', paths: raw };
+  if (raw && typeof raw === 'object' && Array.isArray(raw.paths)) {
+    return { codec: raw.codec ?? 'gzip', paths: raw.paths };
+  }
+  return null;
+}
+
+function decodeTransport(encoded, codec, fileName) {
+  const packed = Buffer.from(encoded.replace(/\s+/g, ''), 'base64');
+  try {
+    if (codec === 'gzip') return gunzipSync(packed);
+    if (codec === 'brotli' || codec === 'br') return brotliDecompressSync(packed);
+    if (codec === 'identity') return packed;
+  } catch (cause) {
+    fail('RUNTIME_MANIFEST_TRANSPORT_INVALID', `Materialized Runtime transport is invalid: ${fileName}`, { cause, fileName, codec });
+  }
+  fail('RUNTIME_MANIFEST_TRANSPORT_CODEC_UNSUPPORTED', `Unsupported materialized Runtime transport codec: ${codec}`, { fileName, codec });
+}
+
 async function readMaterializedCanonicalFile(entry, manifestRow) {
   const { fileName, fileId, sha256: expectedSha256 } = manifestRow;
-  const transportPaths = entry.materializedFiles?.[fileId];
-  if (!Array.isArray(transportPaths) || !transportPaths.length) fail('RUNTIME_MANIFEST_FILE_MISSING', `Manifest-listed Runtime file has no explicit app materialization mapping: ${fileName}`, { fileName, fileId });
+  const transport = normalizeTransportSpec(entry, fileId);
+  if (!transport?.paths?.length) fail('RUNTIME_MANIFEST_FILE_MISSING', `Manifest-listed Runtime file has no explicit app materialization mapping: ${fileName}`, { fileName, fileId });
   let encoded;
-  try { encoded = (await Promise.all(transportPaths.map((transportPath) => readFile(transportPath, 'utf8')))).join(''); }
+  try { encoded = (await Promise.all(transport.paths.map((transportPath) => readFile(transportPath, 'utf8')))).join(''); }
   catch (cause) { fail('RUNTIME_MANIFEST_FILE_MISSING', `Manifest-listed Runtime file is not materialized: ${fileName}`, { cause, fileName, fileId }); }
-  let bytes;
-  try { bytes = gunzipSync(Buffer.from(encoded.replace(/\s+/g, ''), 'base64')); }
-  catch (cause) { fail('RUNTIME_MANIFEST_TRANSPORT_INVALID', `Materialized Runtime transport is invalid: ${fileName}`, { cause, fileName }); }
+  const bytes = decodeTransport(encoded, transport.codec, fileName);
   const actualSha256 = sha256(bytes);
   if (actualSha256 !== expectedSha256) {
     fail('RUNTIME_MANIFEST_FILE_SHA_MISMATCH', `Manifest-listed Runtime file SHA-256 mismatch: ${fileName}`, {
@@ -78,7 +96,7 @@ async function readMaterializedCanonicalFile(entry, manifestRow) {
   let json;
   try { json = JSON.parse(bytes.toString('utf8')); }
   catch (cause) { fail('RUNTIME_MANIFEST_FILE_JSON_INVALID', `Manifest-listed Runtime file is not valid JSON: ${fileName}`, { cause, fileName }); }
-  return { fileName, bytes: bytes.length, expectedSha256, actualSha256, json };
+  return { fileName, bytes: bytes.length, expectedSha256, actualSha256, codec: transport.codec, json };
 }
 
 export async function loadManifestRuntimePackage(entry) {
@@ -114,7 +132,7 @@ export async function loadManifestRuntimePackage(entry) {
   for (const row of manifest.runtimeFiles) {
     const loaded = await readMaterializedCanonicalFile(entry, row);
     loadedByRole.set(row.role, loaded.json);
-    fileIntegrity.push({ role: row.role, fileName: row.fileName, fileId: row.fileId, expected: row.sha256, actual: loaded.actualSha256, match: true, bytes: loaded.bytes });
+    fileIntegrity.push({ role: row.role, fileName: row.fileName, fileId: row.fileId, expected: row.sha256, actual: loaded.actualSha256, match: true, bytes: loaded.bytes, codec: loaded.codec });
   }
   const schema = schemaLoaded.json;
   const schemaErrors = [];
@@ -139,7 +157,7 @@ export async function loadManifestRuntimePackage(entry) {
       manifestDriveFileId: entry.runtimeManifestDriveFileId ?? null,
       files: [...fileIntegrity, {
         role: 'RUNTIME_SCHEMA', fileName: manifest.schemaFile.fileName, fileId: manifest.schemaFile.fileId,
-        expected: manifest.schemaFile.sha256, actual: schemaLoaded.actualSha256, match: true, bytes: schemaLoaded.bytes,
+        expected: manifest.schemaFile.sha256, actual: schemaLoaded.actualSha256, match: true, bytes: schemaLoaded.bytes, codec: schemaLoaded.codec,
       }],
     },
   });
