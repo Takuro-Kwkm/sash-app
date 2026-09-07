@@ -102,7 +102,7 @@ function renderField(field,result){
   }
   const selectedValues=Array.isArray(state.selection[field.key])?state.selection[field.key]:[state.selection[field.key]];
   const options=field.values.map(v=>`<option value="${esc(v.value)}"${selectedValues.some((one)=>String(one)===String(v.value))?" selected":""}>${esc(v.displayLabel)}${v.manualCheck?"（要確認）":""}</option>`).join("");
-  const multi=field.dataType==="MULTI_ENUM",disabled=field.values.length===0?" disabled":"";
+  const multi=field.dataType==="MULTI_ENUM",disabled=field.readOnly||field.values.length===0?" disabled":"";
   const activeCount=field.key==="window_type"?`<small class="field-help window-count" data-window-count>窓種：${field.values.length}種類（ACTIVE）</small>`:"";
   return `<div class="field" data-key="${esc(field.key)}"><label>${esc(field.displayLabel)}${required}</label><select data-spec-key="${esc(field.key)}"${multi?' multiple size="5"':""}${disabled}>${multi?"":'<option value="">選択してください</option>'}${options}</select>${activeCount}${multi?'<small class="field-help">複数選択できます</small>':""}</div>`;
 }
@@ -150,6 +150,12 @@ function bindSizePresentation(field){
 function bindGenericFields(result){
   document.querySelectorAll("[data-spec-key]").forEach((el)=>el.addEventListener("change",async()=>{
     const key=el.dataset.specKey;
+    if(state.productSource === 'RUNTIME_MASTER'){
+      const cleared = new Set([key]);
+      for(let i=0;i<result.fields.length;i++)for(const field of result.fields){
+        if((field.parentFields??[]).some(parent=>cleared.has(parent))){cleared.add(field.key);delete state.selection[field.key];}
+      }
+    }
     if(sizeUpstreamChanged(result,key))state.sizeDraft=emptySizeDraft();
     if(el.type==="number"){
       if(el.value!=="")state.selection[key]=Number(el.value);else delete state.selection[key];
