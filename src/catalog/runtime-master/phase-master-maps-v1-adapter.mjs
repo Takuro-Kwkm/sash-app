@@ -59,7 +59,7 @@ function valueRow(fieldName, value, label, source = {}) {
     field_name: fieldName,
     canonical_value: value,
     display_label: label ?? String(value),
-    status: 'CURRENT',
+    status: ACTIVE.has(source.status) ? 'CURRENT' : source.status,
     manual_check: source.manual_check === true || source.manualCheck === true,
     user_selectable: fieldName !== 'option' || !['FIXED_BY_RULE','REQUIRED_BY_SELECTION'].includes(optionSelectionType),
     runtime_selectable: fieldName !== 'option' || !['post_purchase','after_sales'].includes(optionUsage),
@@ -211,6 +211,7 @@ export function adaptPhaseMasterMapsV1(runtimePackage) {
   const idFieldToFlow = new Map(Object.entries(FLOW_SPECS).map(([flowName, spec]) => [spec.idField, flowName]));
   const exclusionRules = parseSimpleExclusions(mapDoc.maps, idFieldToFlow);
   const optionValues = new Set(values.filter((row) => row.field_name === 'option').map((row) => row.canonical_value));
+  const entities = Object.values(core.masters).flat().filter(row => row && typeof row === 'object').flatMap(row => Object.entries(row).filter(([key]) => key.endsWith('_id') && !['source_id', 'series_id'].includes(key)).map(([, id]) => ({ id, label: row.official_name ?? row.official_option_name ?? id })));
   const optionDependencies = activeRows(mapDoc.maps.P7_option_dependency_map ?? []).map((row, index) => ({
     ruleId: `OPTION:${index + 1}`,
     sourceOption: row.source_option_id,
@@ -231,7 +232,9 @@ export function adaptPhaseMasterMapsV1(runtimePackage) {
     relations,
     exclusionRules,
     optionDependencies,
+    entities,
     capabilities: Object.freeze({
+      target: 'SALES_PRODUCT_SELECTION',
       dependency: 'RELATIONAL_MAPS',
       size: 'NOT_PROVIDED_BY_RUNTIME',
       option: flow.includes('option') ? 'RELATIONAL_MAPS' : 'NOT_PROVIDED_BY_RUNTIME',

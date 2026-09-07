@@ -152,7 +152,8 @@ export function toRuntimeUiResult(master, state, integration, sourcePackageInteg
       values: choicesFor(master, def, fieldState),
       selectionMode: def.selection_mode,
       runtimeState: fieldState.state,
-      readOnly: false,
+      readOnly: def.selection_mode === 'AUTO_RESOLVE' && fieldState.allowed_values?.length === 1,
+      parentFields: def.parent_fields ?? [],
     });
   }
   visible.sort((a, b) => a.displayOrder - b.displayOrder || a.key.localeCompare(b.key));
@@ -180,6 +181,7 @@ export function toRuntimeUiResult(master, state, integration, sourcePackageInteg
     fields: visible,
     notices: [
       ...(state.warnings ?? []).map(warningText),
+      ...(state.derived_entities ?? []).map(row => `${({ REQUIRES: '必要', ENABLES: '有効', FIXES: '固定' })[row.relationship]}: ${row.displayLabel}${row.note ? `（${row.note}）` : ''}`),
       ...((state.derived_options ?? []).length ? [`自動適用オプション: ${(state.derived_options ?? []).map((id) => labelFrom(master.values.find((row) => row.field_name === 'option' && row.canonical_value === id), id)).join('、')}`] : []),
     ],
     manualWarnings: (state.matched_invalid_rules ?? []).map((ruleId) => `成立不可Rule: ${ruleId}`),
@@ -188,6 +190,7 @@ export function toRuntimeUiResult(master, state, integration, sourcePackageInteg
       errors,
       missingRequiredFields: [...(state.missing_required_fields ?? [])],
     },
+    derivedEntities: state.derived_entities ?? [],
     derivedComponents: [...(state.derived_components ?? [])].sort(),
     derivedOptions: [...(state.derived_options ?? [])].sort(),
     clearedFields: [...(state.cleared_fields ?? [])],

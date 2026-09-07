@@ -124,11 +124,12 @@ function reconcileSelection(master, inputSelection) {
       }
     }
 
+    dependencyErrors.length = 0;
     const optionDef = fieldDef(master, 'option');
     if (optionDef && Array.isArray(selection.option)) {
       const optionAllowed = new Set(allowedByField.get('option') ?? []);
       for (const dep of master.optionDependencies ?? []) {
-        if (dep.relationship !== 'REQUIRES' || !selection.option.includes(dep.sourceOption) || !dep.targetIsOption) continue;
+        if (!['REQUIRES', 'FIXES'].includes(dep.relationship) || !selection.option.includes(dep.sourceOption) || !dep.targetIsOption) continue;
         if (!optionAllowed.has(dep.targetEntity)) {
           dependencyErrors.push({ code: 'REQUIRED_OPTION_NOT_AVAILABLE', field: 'option', ruleId: dep.ruleId, sourceOption: dep.sourceOption, targetOption: dep.targetEntity });
           continue;
@@ -191,6 +192,7 @@ function explicitInputErrors(master, inputSelection, resolved) {
       errors.push({ code: 'SELECTION_NOT_ALLOWED', field: def.field_name, value: raw });
     }
   }
+  for (const row of resolved.cleared) if (row.reason === 'DEPENDENCY') errors.push({ code: 'SELECTION_INCOMPATIBLE', field: row.field, value: row.removed });
   return [...errors, ...resolved.dependencyErrors];
 }
 
@@ -206,10 +208,16 @@ export function evaluateRelationalRuntime(master, inputSelection = {}) {
     const isSelected = Array.isArray(selected) ? selected.includes(row.canonical_value) : same(selected, row.canonical_value);
     if (isSelected && row.source?.blocking_note) warnings.push({ code: 'SALES_LEVEL_DETAIL', message: row.source.blocking_note });
   }
-  const status = errors.length ? 'INVALID' : missing.length ? 'INCOMPLETE' : 'VALID';
+  const derivedEntities = (master.optionDependencies ?? []).filter(dep =>
+    ['REQUIRES', 'ENABLES', 'FIXES'].includes(dep.relationship) && resolved.selection.option?.includes(dep.sourceOption)
+  ).map(dep => ({ ...dep, displayLabel: master.entities?.find(row => row.id === dep.targetEntity)?.label ?? dep.targetEntity }));
+  const manualCheck = master.values.some(row => row.manual_check &&
+    (Array.isArray(fields[row.field_name]?.value) ? fields[row.field_name].value.includes(row.canonical_value) : same(fields[row.field_name]?.value, row.canonical_value)));
+  const status = errors.length ? 'INVALID' : missing.length ? 'INCOMPLETE' : manualCheck ? 'MANUAL_CHECK' : 'VALID';
   return {
     fields,
     derived_components: new Set(),
+    derived_entities: derivedEntities,
     derived_options: [...resolved.autoResolved].filter((item) => item.startsWith('option:')).map((item) => item.slice(7)),
     warnings,
     matched_invalid_rules: errors.filter((row) => row.ruleId).map((row) => row.ruleId),

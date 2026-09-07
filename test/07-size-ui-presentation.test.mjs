@@ -180,7 +180,7 @@ test("94 all 65 ACTIVE windows reach at least one formal Size Record through dyn
 
 test("95 Runtime UI exposes registry hierarchy, window counts, upstream context and full formal list",async()=>{
   const source=await readFile(new URL("../src/ui/web/app.js",import.meta.url),"utf8");
-  assert.match(source,/new Set\(products\.map\(x=>x\.manufacturer\)\)/);
+  assert.match(source,/new Set\(state\.products\.map\(x=>x\.manufacturer\)\)/);
   assert.match(source,/data-window-count/);
   assert.match(source,/data-size-context/);
   assert.match(source,/data-size-candidate-count/);
