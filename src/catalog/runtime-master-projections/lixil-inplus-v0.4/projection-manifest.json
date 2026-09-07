@@ -1,0 +1,28 @@
+{
+  "projection_version": "semantic-table-bundle-v2/1.0",
+  "manufacturer": "LIXIL",
+  "series": "インプラス",
+  "package_version": "v0.4",
+  "source_runtime_manifest": {
+    "drive_file_id": "1z-FQwjdDLyFdpAsD-JDI-jGEwkHxNwH6",
+    "sha256": "cfb33c43745daf32e83aee65a38532afa5c843d7c854b45b94e08bc2bbca14e6"
+  },
+  "source_runtime_json": {
+    "drive_file_id": "11Ut3FKYNzijNgTrQFMnrNQPdxMNsmTDx",
+    "sha256": "dad3f0956e11ce11050f9158812d496e14ac70e51023f6f9e83fa4a660d0fb5d"
+  },
+  "source_schema": {
+    "drive_file_id": "1J-Jj52av8AJ_WirZQeiZWzc0GPzrOWVY",
+    "sha256": "7763d3f33c33dcb1c0418a2f7974ed38a3685a830b009771f4de751d54e85e59"
+  },
+  "files": [
+    {"role":"CORE_PROJECTION","path":"core.json","git_blob_sha":"28724a020ba15272ac9fc4066a0541e443491a4b"},
+    {"role":"SIZE_PROJECTION","path":"size.json","git_blob_sha":"84cded16a9ea9ef62250a49d6c36452f38df0e35"},
+    {"role":"INSTALLATION_PROJECTION","path":"installation.json","git_blob_sha":"33c04cc2802132004bef939e20e139da41256698"}
+  ],
+  "policy": {
+    "product_master_mutation": 0,
+    "canonical_runtime_read_only": true,
+    "unsupported_semantics": "FAIL_CLOSED_OR_MANUAL_CHECK"
+  }
+}
