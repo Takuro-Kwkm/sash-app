@@ -167,14 +167,16 @@ function buildFieldState(master, resolved, inputSelection) {
     const na = resolved.notApplicable.has(name);
     const value = name in resolved.selection ? clone(resolved.selection[name]) : null;
     const isResolved = resolved.autoResolved.has(name) || (name === 'option' && Array.isArray(value) && value.some((one) => resolved.autoResolved.has(`option:${one}`)));
+    const allowed = [...(resolved.allowedByField.get(name) ?? [])];
+    const hideSingleton = def.hide_when_singleton === true && allowed.length === 1 && (def.parent_fields ?? []).every((parent) => has(resolved.selection[parent]));
     fields[name] = {
       value,
       state: na ? 'NOT_APPLICABLE' : isResolved ? 'RESOLVED' : name in resolved.selection ? 'SELECTED' : 'UNSET',
       resolved_by_rule: isResolved ? 'RUNTIME_RELATION_AUTO_RESOLVE' : null,
       derived_by_rule: null,
-      visibility: na ? 'HIDE' : 'SHOW',
+      visibility: na || hideSingleton ? 'HIDE' : 'SHOW',
       required: !na && def.required_mode === 'REQUIRED',
-      allowed_values: na ? [] : [...(resolved.allowedByField.get(name) ?? [])],
+      allowed_values: na ? [] : allowed,
     };
   }
   return fields;

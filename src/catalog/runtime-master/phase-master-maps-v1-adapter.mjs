@@ -4,8 +4,11 @@ const FLOW_SPECS = Object.freeze({
   thermal_spec: { label: '断熱仕様', dataType: 'enum', idField: 'thermal_spec_id', parentFields: ['design','configuration'], selectionMode: 'USER_SELECTABLE' },
   door_color: { label: '本体色', dataType: 'enum', idField: 'color_code', parentFields: ['design','configuration','thermal_spec'], selectionMode: 'USER_SELECTABLE' },
   frame_color: { label: '枠色', dataType: 'enum', idField: 'frame_color_id', parentFields: ['design','configuration','door_color'], selectionMode: 'USER_SELECTABLE' },
-  handle: { label: 'ハンドル', dataType: 'enum', idField: 'handle_id', parentFields: ['design','configuration','door_color'], selectionMode: 'USER_SELECTABLE' },
-  lock_system: { label: '錠仕様', dataType: 'enum', idField: 'lock_system_id', parentFields: ['design','configuration','handle'], selectionMode: 'USER_SELECTABLE' },
+  lock_system: { label: '錠仕様', dataType: 'enum', idField: 'lock_system_id', parentFields: ['design','configuration'], selectionMode: 'USER_SELECTABLE' },
+  lock_plan: { label: 'FamiLock電源・プラン', dataType: 'enum', idField: 'lock_plan_id', parentFields: ['lock_system'], selectionMode: 'AUTO_RESOLVE', hideWhenSingleton: true },
+  credential_package: { label: 'FamiLockキーセット', dataType: 'enum', idField: 'credential_package_id', parentFields: ['lock_system'], selectionMode: 'AUTO_RESOLVE', hideWhenSingleton: true },
+  handle: { label: 'ハンドル', dataType: 'enum', idField: 'handle_id', parentFields: ['design','configuration','door_color','lock_system'], selectionMode: 'USER_SELECTABLE' },
+  handle_color: { label: 'ハンドル色', dataType: 'enum', idField: 'handle_color_id', parentFields: ['handle'], selectionMode: 'USER_SELECTABLE' },
   glass: { label: 'ガラス', dataType: 'enum', idField: 'glass_id', parentFields: ['design','configuration','thermal_spec'], selectionMode: 'AUTO_RESOLVE' },
   option: { label: 'オプション', dataType: 'array', idField: 'option_id', parentFields: ['design','configuration','door_color','handle','lock_system','glass'], selectionMode: 'USER_SELECTABLE', optional: true },
 });
@@ -14,7 +17,10 @@ const MASTER_VALUE_SPECS = Object.freeze({
   door_color: { master: 'P3_09_color_master', value: 'official_color_code', label: 'official_color_name' },
   frame_color: { master: 'P3_11_frame_color_master', value: 'frame_color_id', label: 'official_color_name' },
   handle: { master: 'P4_handle_family_master', value: 'handle_id', label: 'official_handle_name' },
+  handle_color: { master: 'P4_handle_color_master', value: 'handle_color_id', label: 'official_color_name' },
   lock_system: { master: 'P5_lock_system_master', value: 'lock_system_id', label: 'official_name' },
+  lock_plan: { master: 'P5_lock_plan_master', value: 'lock_plan_id', label: 'official_name' },
+  credential_package: { master: 'P5_credential_package_master', value: 'credential_package_id', label: 'official_name', smartphoneLabel: true },
   glass: { master: 'P6_glass_master', value: 'glass_id', label: 'official_glass_name' },
   option: { master: 'P7_option_master', value: 'option_id', label: 'official_option_name' },
 });
@@ -28,7 +34,10 @@ const RELATION_SPECS = Object.freeze([
   { map: 'P4_high_size_handle_map', sources: { design: 'design_id' }, target: { field: 'handle', column: 'handle_id' } },
   { map: 'P5_design_lock_map', sources: { design: 'design_id' }, target: { field: 'lock_system', column: 'lock_system_id' } },
   { map: 'P5_configuration_lock_map', sources: { configuration: 'door_configuration_id' }, target: { field: 'lock_system', column: 'lock_system_id' } },
-  { map: 'P5_handle_lock_map', sources: { handle: 'handle_id' }, target: { field: 'lock_system', column: 'lock_system_id' } },
+  { map: 'P5_handle_lock_map', sources: { lock_system: 'lock_system_id' }, target: { field: 'handle', column: 'handle_id' } },
+  { master: 'P5_lock_plan_master', sources: { lock_system: 'lock_system_id' }, target: { field: 'lock_plan', column: 'lock_plan_id' } },
+  { map: 'P5_lock_credential_package_map', sources: { lock_system: 'lock_system_id' }, target: { field: 'credential_package', column: 'credential_package_id' } },
+  { map: 'P4_handle_color_map', sources: { handle: 'handle_id' }, target: { field: 'handle_color', column: 'handle_color_id' } },
   { map: 'P5_high_size_lock_map', sources: { design: 'design_id' }, target: { field: 'lock_system', column: 'lock_system_id' } },
   { map: 'P6_glass_thermal_map', sources: { thermal_spec: 'thermal_spec_id' }, target: { field: 'glass', column: 'glass_id' }, mode: 'FILTER' },
   { map: 'P6_design_glass_map', sources: { design: 'design_id', thermal_spec: 'thermal_spec_id' }, target: { field: 'glass', column: 'glass_id' }, mode: 'BRANCH', priority: 10 },
@@ -44,6 +53,14 @@ const ACTIVE = new Set(['ACTIVE','CURRENT',undefined,null]);
 const normalizeToken = (value) => String(value ?? '').normalize('NFKC').toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '');
 const unique = (values) => [...new Set(values.filter((value) => value !== undefined && value !== null && value !== ''))];
 const humanize = (value) => String(value).replaceAll('_', ' ').replace(/\b\w/g, (c) => c.toUpperCase());
+const CONFIGURATION_LABELS = Object.freeze({
+  single: '片開き',
+  parent_child: '親子',
+  parent_child_corner: '親子入隅',
+  single_sidelight: '片袖',
+  double_sidelight: '両袖',
+  double_door: '両開き',
+});
 
 function rowsOf(container, key) {
   const rows = container?.[key];
@@ -79,7 +96,7 @@ function buildValues(flow, masters, maps) {
   }
   if (flow.includes('configuration')) {
     const rows = activeRows(rowsOf(maps, 'P3_color_config_map')).filter((row) => row.availability === 'AVAILABLE');
-    for (const value of unique(rows.map((row) => row.door_configuration_id)).sort()) values.push(valueRow('configuration', value, humanize(value), {}));
+    for (const value of unique(rows.map((row) => row.door_configuration_id)).sort()) values.push(valueRow('configuration', value, CONFIGURATION_LABELS[value] ?? humanize(value), {}));
   }
   if (flow.includes('thermal_spec')) {
     const rows = activeRows(rowsOf(maps, 'P6_glass_thermal_map')).filter((row) => row.availability === 'AVAILABLE');
@@ -91,7 +108,10 @@ function buildValues(flow, masters, maps) {
     for (const row of activeRows(rowsOf(masters, spec.master))) {
       if (fieldName === 'option' && ['post_purchase','after_sales'].includes(row.usage_scope)) continue;
       const value = row[spec.value];
-      if (value !== undefined && value !== null && value !== '') values.push(valueRow(fieldName, value, row[spec.label] ?? value, row));
+      if (value !== undefined && value !== null && value !== '') {
+        const suffix = spec.smartphoneLabel && row.includes_smartphone_capability === true ? '（スマートフォン対応）' : '';
+        values.push(valueRow(fieldName, value, `${row[spec.label] ?? value}${suffix}`, row));
+      }
     }
   }
   const dedup = new Map();
@@ -168,9 +188,15 @@ export function adaptPhaseMasterMapsV1(runtimePackage) {
   if (!core?.selection_contract || !core?.masters || !mapDoc?.maps) {
     throw Object.assign(new Error('PHASE_MASTER_MAPS_V1 requires RUNTIME_CORE.selection_contract/masters and RUNTIME_MAPS.maps'), { code: 'RUNTIME_ADAPTER_SCHEMA_MISMATCH' });
   }
-  const flow = core.selection_contract.flow;
-  if (!Array.isArray(flow) || !flow.length) throw Object.assign(new Error('selection_contract.flow must be non-empty'), { code: 'RUNTIME_ADAPTER_SCHEMA_MISMATCH' });
-  for (const field of flow) if (!FLOW_SPECS[field]) throw Object.assign(new Error(`Unsupported selection_contract.flow field: ${field}`), { code: 'RUNTIME_ADAPTER_UNSUPPORTED_FLOW', field });
+  const declaredFlow = core.selection_contract.flow;
+  if (!Array.isArray(declaredFlow) || !declaredFlow.length) throw Object.assign(new Error('selection_contract.flow must be non-empty'), { code: 'RUNTIME_ADAPTER_SCHEMA_MISMATCH' });
+  for (const field of declaredFlow) if (!FLOW_SPECS[field]) throw Object.assign(new Error(`Unsupported selection_contract.flow field: ${field}`), { code: 'RUNTIME_ADAPTER_UNSUPPORTED_FLOW', field });
+  const projected = [...declaredFlow];
+  if (declaredFlow.includes('lock_system') && Array.isArray(core.masters.P5_lock_plan_master)) projected.push('lock_plan');
+  if (declaredFlow.includes('lock_system') && Array.isArray(core.masters.P5_credential_package_master) && Array.isArray(mapDoc.maps.P5_lock_credential_package_map)) projected.push('credential_package');
+  if (declaredFlow.includes('handle') && Array.isArray(core.masters.P4_handle_color_master) && Array.isArray(mapDoc.maps.P4_handle_color_map)) projected.push('handle_color');
+  const presentationOrder = ['design','configuration','thermal_spec','door_color','frame_color','lock_system','lock_plan','credential_package','handle','handle_color','glass','option'];
+  const flow = unique(projected).sort((a, b) => presentationOrder.indexOf(a) - presentationOrder.indexOf(b));
 
   const fields = flow.map((fieldName, index) => {
     const spec = FLOW_SPECS[fieldName];
@@ -184,6 +210,7 @@ export function adaptPhaseMasterMapsV1(runtimePackage) {
       required_mode: spec.optional ? 'OPTIONAL' : 'REQUIRED',
       visibility_mode: 'SHOW',
       runtime_included: true,
+      hide_when_singleton: spec.hideWhenSingleton === true,
       parent_fields: spec.parentFields.filter((parent) => flow.includes(parent)),
     };
   });
@@ -192,7 +219,7 @@ export function adaptPhaseMasterMapsV1(runtimePackage) {
   const relations = [];
   for (const spec of RELATION_SPECS) {
     if (!flow.includes(spec.target.field) || Object.keys(spec.sources).some((field) => !flow.includes(field))) continue;
-    const rows = mapDoc.maps[spec.map];
+    const rows = spec.master ? core.masters[spec.master] : mapDoc.maps[spec.map];
     if (!Array.isArray(rows)) continue;
     const normalizedRows = normalizeRelationRows(spec, rows, aliases);
     if (!normalizedRows.length) continue;

@@ -7,7 +7,7 @@ const PRODUCT_ID = 'SER-LIXIL-GIESTA2';
 const OUT = 'artifacts/giesta2-runtime-browser-qa';
 await mkdir(OUT, { recursive: true });
 
-const report = { status: 'RUNNING', desktop: {}, mobile: {}, consoleErrors: [], pageErrors: [], failedResponses: [] };
+const report = { status: 'RUNNING', specificationGaps: ['handing', 'door-frame-color-linkage'], desktop: {}, mobile: {}, consoleErrors: [], pageErrors: [], failedResponses: [] };
 const browser = await chromium.launch({ headless: true });
 
 function track(page) {
@@ -46,10 +46,33 @@ async function exercise(page) {
   await choose(page, 'thermal_spec', 'k2');
   await choose(page, 'door_color', 'ED');
   await choose(page, 'frame_color', 'GST2_FRAME_COLOR_NATURAL_SILVER');
-  await choose(page, 'handle', 'GST2_HANDLE_S');
   let result = await choose(page, 'lock_system', 'GST2_LOCK_FAMILOCK');
+  await choose(page, 'lock_plan', 'GST2_PLAN_FAM_BASIC_BATTERY');
+  await choose(page, 'credential_package', 'GST2_PKG_FAM_TAG_R0');
+  await choose(page, 'handle', 'GST2_HANDLE_S');
+  result = await choose(page, 'handle_color', 'GST2_HCOL_SMB');
   assert.equal(result.selection.glass, 'GST2_GLASS_STD_K2');
   assert.equal(result.validation.status, 'VALID');
+  const configurationLabels = await page.locator('[data-spec-key="configuration"] option').allTextContents();
+  assert.ok(configurationLabels.includes('片開き') && configurationLabels.includes('親子'));
+  assert.ok(configurationLabels.every((label) => !/(single|double|parent_child)/i.test(label)));
+  assert.equal(await page.locator('[data-spec-key="handing"]').count(), 0);
+  const keys = await page.locator('#dynamicForm [data-spec-key]').evaluateAll((els) => els.map((el) => el.dataset.specKey));
+  assert.ok(keys.indexOf('lock_system') < keys.indexOf('handle'));
+  assert.ok(keys.indexOf('handle') < keys.indexOf('handle_color'));
+  assert.deepEqual(await page.locator('[data-spec-key="handle_color"] option:not([value=""])').evaluateAll((els) => els.map((el) => el.value)), ['GST2_HCOL_BS', 'GST2_HCOL_SMB', 'GST2_HCOL_DBR']);
+  result = await choose(page, 'lock_system', 'GST2_LOCK_MANUAL');
+  assert.equal(result.selection.lock_plan, undefined);
+  assert.equal(result.selection.credential_package, undefined);
+  assert.equal(result.selection.handle, undefined);
+  assert.equal(result.selection.handle_color, undefined);
+  assert.equal(await page.locator('[data-spec-key="lock_plan"]').count(), 0);
+  assert.equal(await page.locator('[data-spec-key="credential_package"]').count(), 0);
+  await choose(page, 'lock_system', 'GST2_LOCK_FAMILOCK');
+  await choose(page, 'lock_plan', 'GST2_PLAN_FAM_BASIC_BATTERY');
+  await choose(page, 'credential_package', 'GST2_PKG_FAM_TAG_R0');
+  await choose(page, 'handle', 'GST2_HANDLE_S');
+  result = await choose(page, 'handle_color', 'GST2_HCOL_SMB');
   result = await choose(page, 'option', ['GST2_OPT_ELOCK_BUTTON', 'GST2_OPT_SECRET_SWITCH']);
   assert.ok(result.derivedOptions.includes('GST2_OPT_CONTROLLER'));
   assert.ok(result.derivedEntities.some(row => row.relationship === 'FIXES'));
@@ -77,11 +100,21 @@ async function exercise(page) {
   await choose(page, 'thermal_spec', 'k2');
   await choose(page, 'door_color', 'ED');
   await choose(page, 'frame_color', 'GST2_FRAME_COLOR_NATURAL_SILVER');
-  await choose(page, 'handle', 'GST2_HANDLE_S');
   await choose(page, 'lock_system', 'GST2_LOCK_FAMILOCK');
+  await choose(page, 'lock_plan', 'GST2_PLAN_FAM_BASIC_BATTERY');
+  await choose(page, 'credential_package', 'GST2_PKG_FAM_TAG_R0');
+  await choose(page, 'handle', 'GST2_HANDLE_S');
+  await choose(page, 'handle_color', 'GST2_HCOL_SMB');
   result = await choose(page, 'option', ['GST2_OPT_ELOCK_BUTTON']);
   assert.equal(result.validation.status, 'VALID');
-  return {selectionFlow:'PASS', glassBranches:'PASS', optionDependency:'PASS', downstreamClear:'PASS', invalidFailClosed:'PASS', noSyntheticSizeBOM:'PASS'};
+  return {
+    qa01ConfigurationJapanese:'PASS', qa02NoInternalConfigurationIds:'PASS',
+    qa03HandingVisible:'BLOCKED_PRODUCT_MASTER_GAP', qa04HandingDependency:'BLOCKED_PRODUCT_MASTER_GAP',
+    qa05DoorFrameColor:'BLOCKED_PRODUCT_MASTER_GAP', qa06LockBeforeHandle:'PASS',
+    qa07FamiLockConditional:'PASS', qa08FamiLockHandleDependency:'PASS', qa09HandleColorVisible:'PASS',
+    qa10HandleColorFiltered:'PASS', qa11DownstreamClear:'PASS', qa12ManualHidesFamiLock:'PASS',
+    glassBranches:'PASS', optionDependency:'PASS', invalidFailClosed:'PASS', noSyntheticSizeBOM:'PASS'
+  };
 }
 
 try {

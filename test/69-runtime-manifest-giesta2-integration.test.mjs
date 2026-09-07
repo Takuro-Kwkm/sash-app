@@ -29,6 +29,12 @@ test('Giesta2 normalized Runtime contains generic fields, values and relations',
   assert.ok(Array.isArray(runtime.master.relations));
   assert.ok(Array.isArray(runtime.master.optionDependencies));
   assert.ok(runtime.master.fields.every((row) => row.field_name));
+  assert.deepEqual(runtime.master.fields.map((row) => row.field_name), [
+    'design', 'configuration', 'thermal_spec', 'door_color', 'frame_color', 'lock_system',
+    'lock_plan', 'credential_package', 'handle', 'handle_color', 'glass', 'option',
+  ]);
+  const labels = Object.fromEntries(runtime.master.values.filter((row) => row.field_name === 'configuration').map((row) => [row.canonical_value, row.display_label]));
+  assert.deepEqual(labels, { double_door: '両開き', double_sidelight: '両袖', parent_child: '親子', parent_child_corner: '親子入隅', single: '片開き', single_sidelight: '片袖' });
 });
 
 test('Giesta2 Runtime resolution is deterministic for the same selection', async () => {
@@ -48,7 +54,36 @@ test('Giesta2 invalid explicit selection fails closed instead of inventing a val
   assert.ok(result.validation.errors.some((row) => row.errorCode === 'SELECTION_NOT_ALLOWED' && row.field === target.field_name));
 });
 
-const example = { design: 'GST2_G11', configuration: 'single', thermal_spec: 'k2', door_color: 'ED', frame_color: 'GST2_FRAME_COLOR_NATURAL_SILVER', handle: 'GST2_HANDLE_S', lock_system: 'GST2_LOCK_FAMILOCK' };
+const example = {
+  design: 'GST2_G11', configuration: 'single', thermal_spec: 'k2', door_color: 'ED',
+  frame_color: 'GST2_FRAME_COLOR_NATURAL_SILVER', lock_system: 'GST2_LOCK_FAMILOCK',
+  lock_plan: 'GST2_PLAN_FAM_BASIC_BATTERY', credential_package: 'GST2_PKG_FAM_TAG_R0',
+  handle: 'GST2_HANDLE_S', handle_color: 'GST2_HCOL_SMB',
+};
+test('formal lock, key package, handle and handle-color maps drive the reordered UI flow', async () => {
+  const result = await resolveRuntimeAppProduct('SER-LIXIL-GIESTA2', example);
+  assert.equal(result.validation.status, 'VALID');
+  const keys = result.fields.map((field) => field.key);
+  assert.ok(keys.indexOf('lock_system') < keys.indexOf('lock_plan'));
+  assert.ok(keys.indexOf('lock_plan') < keys.indexOf('credential_package'));
+  assert.ok(keys.indexOf('credential_package') < keys.indexOf('handle'));
+  assert.ok(keys.indexOf('handle') < keys.indexOf('handle_color'));
+  assert.deepEqual(result.fields.find((field) => field.key === 'handle_color').values.map((row) => row.value), ['GST2_HCOL_BS', 'GST2_HCOL_SMB', 'GST2_HCOL_DBR']);
+  assert.ok(result.fields.find((field) => field.key === 'credential_package').values.every((row) => row.displayLabel.includes('スマートフォン対応')));
+});
+
+test('changing lock system clears stale FamiLock, handle and handle-color selections', async () => {
+  const { evaluateRelationalRuntime, applyRelationalSelection } = await import('../src/catalog/runtime-master/relational-runtime-engine.mjs');
+  const runtime = await loadRegisteredRuntime('LIXIL', 'ジエスタ2');
+  const state = evaluateRelationalRuntime(runtime.master, example);
+  const changed = applyRelationalSelection(runtime.master, state, 'lock_system', 'GST2_LOCK_MANUAL');
+  assert.equal(changed.fields.lock_plan.visibility, 'HIDE');
+  assert.equal(changed.fields.credential_package.visibility, 'HIDE');
+  assert.equal(changed.fields.lock_plan.value, 'GST2_PLAN_MANUAL_STANDARD');
+  assert.equal(changed.fields.credential_package.value, 'GST2_PKG_MANUAL_STANDARD');
+  assert.equal(changed.fields.handle.value, null);
+  assert.equal(changed.fields.handle_color.value, null);
+});
 test('formal glass branches resolve main glass and offer only sidelight glass in both sidelight configurations', async () => {
   const main = await resolveRuntimeAppProduct('SER-LIXIL-GIESTA2', example);
   assert.equal(main.selection.glass, 'GST2_GLASS_STD_K2');
