@@ -105,7 +105,7 @@ async function exercise(page) {
   assert.ok(result.selection.option.includes('GST2_OPT_ELOCK_BUTTON'));
 
   result = await choose(page, 'configuration', 'parent_child');
-  assert.equal(result.selection.design, undefined);
+  assert.equal(result.selection.design, 'GST2_G11');
   await choose(page, 'design', 'GST2_G11');
   assert.deepEqual(await page.locator('[data-spec-key="child_door_type"] option:not([value=""])').allTextContents(), ['採光部あり', '採光部なし', '採光部なし（ポスト付）', '採光部あり（ポスト付）']);
   await choose(page, 'child_door_type', 'glazed');
