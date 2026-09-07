@@ -31,8 +31,8 @@ const valueRow = (field, value, label, source = {}, { manualCheck = false } = {}
   runtime_selectable: true,
   source,
 });
-const fieldDef = (field_name, display_label, display_order, data_type = 'enum', parent_fields = [], required_mode = 'OPTIONAL', selection_mode = 'USER_SELECTABLE') => ({
-  field_name, display_label, display_order, data_type, parent_fields, required_mode, selection_mode, runtime_included: true,
+const fieldDef = (field_name, display_label, display_order, data_type = 'enum', parent_fields = [], required_mode = 'OPTIONAL', selection_mode = 'USER_SELECTABLE', extra = {}) => ({
+  field_name, display_label, display_order, data_type, parent_fields, required_mode, selection_mode, runtime_included: true, ...extra,
 });
 const meaningfulHanding = (raw) => {
   if (!has(raw)) return [];
@@ -65,6 +65,7 @@ function createModel(document) {
   const designColors = normalizeTable(sourceTables, '07B_EWforDesign色', 'color_relation_id').filter(ACTIVE);
   const glassDetails = normalizeTable(sourceTables, '08B_ガラス詳細', 'glass_detail_id').filter(ACTIVE);
   const glassFeatures = normalizeTable(sourceTables, '08C_ガラス追加機能', 'feature_id').filter(ACTIVE);
+  const screenNetSpecs = normalizeTable(sourceTables, '09B_網戸ネット仕様', 'net_spec_id').filter(ACTIVE);
   const screenRules = normalizeTable(sourceTables, '09C_網戸適用ルール', 'rule_id').filter(ACTIVE);
   const screenOrderRules = normalizeTable(sourceTables, '09F_機能性ネット発注条件', 'rule_id').filter(ACTIVE);
   const validationRules = normalizeTable(sourceTables, '15_Validation', 'validation_code').filter(ACTIVE);
@@ -113,8 +114,8 @@ function createModel(document) {
     fieldDef('handing','開き勝手（吊元）',50,'enum',['window_type','window_spec'],'OPTIONAL'),
     fieldDef('size_mode','サイズ方式',60,'enum',['window_type','window_spec'],'REQUIRED'),
     fieldDef('size','サイズ',80,'enum',['window_type','window_spec','size_mode'],'OPTIONAL'),
-    fieldDef('custom_w','特注W',81,'number',['window_type','window_spec','size_mode'],'OPTIONAL'),
-    fieldDef('custom_h','特注H',82,'number',['window_type','window_spec','size_mode'],'OPTIONAL'),
+    fieldDef('custom_w','特注W',81,'number',['window_type','window_spec','size_mode'],'OPTIONAL','USER_SELECTABLE',{unit:'mm'}),
+    fieldDef('custom_h','特注H',82,'number',['window_type','window_spec','size_mode'],'OPTIONAL','USER_SELECTABLE',{unit:'mm'}),
     fieldDef('exterior_color','外観色',90,'enum',['window_type','window_spec'],'REQUIRED'),
     fieldDef('interior_color','内観色',100,'enum',['exterior_color'],'REQUIRED'),
     fieldDef('screen_presence','網戸',110,'enum',['window_type'],'OPTIONAL'),
@@ -176,7 +177,8 @@ function createModel(document) {
     values.push(valueRow('screen_midrail',row.midrail,row.midrail,row));
   }
   for (const row of uniq(screens.filter((row) => has(row.mesh) && row.mesh !== '対象外'), (row) => row.mesh)) {
-    const manualCheck = row.unconfirmed_state === 'NEEDS_MFR_CONFIRMATION' || String(row.status ?? '').includes('メーカー確認');
+    const manualCheck = row.unconfirmed_state === 'NEEDS_MFR_CONFIRMATION' || String(row.status ?? '').includes('メーカー確認') ||
+      screenOrderRules.some((rule) => rule['ネット種類'] === row.mesh && rule['未確認時アプリ状態'] === 'NEEDS_MFR_CONFIRMATION');
     values.push(valueRow('screen_net',row.mesh,row.mesh,row,{manualCheck}));
   }
   for (const row of glasses) values.push(valueRow('glass_base',row.id,row.category ?? row['ガラス大分類'] ?? row.label ?? row.id,row));
@@ -193,7 +195,7 @@ function createModel(document) {
   return {
     document, provider, sourceTables,
     windows, specs, customRanges, variants, variantRelations, variantExclusions, designVariantIds, standardVariant,
-    colors: allColorRows, screens, glasses, glassDetails, glassFeatures, screenRules, screenOrderRules, validationRules,
+    colors: allColorRows, screens, screenNetSpecs, glasses, glassDetails, glassFeatures, screenRules, screenOrderRules, validationRules,
     options, optionApplicability, normalizedSizes, fields, values,
   };
 }
