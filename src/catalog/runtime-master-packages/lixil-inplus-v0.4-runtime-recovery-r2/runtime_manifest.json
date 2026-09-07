@@ -1,0 +1,61 @@
+{
+  "schema_version": "2.0",
+  "manufacturer": "LIXIL",
+  "series": "インプラス",
+  "package_version": "v0.4",
+  "package_revision": "RuntimeRecovery_R2_FORMAL",
+  "authoring_mode": "STANDALONE",
+  "authoring_file_name": "LIXIL_インプラス_商品マスター_v0.4_RuntimeRecovery_R2_FORMAL.xlsx",
+  "authoring_file_id": "1Qa7dkDYGpUzSCUkQsuHJDxxcCs9AGlil",
+  "authoring_sha256": "a19c4df4cd3628b39cd3a9597660a984acece3395dc1c292151e6e653fc21b80",
+  "runtime_status": "READY",
+  "runtime_files": [
+    {
+      "role": "RUNTIME_JSON_PACKAGE",
+      "file_name": "LIXIL_インプラス_runtime_v0.4_RuntimeRecovery_R2_FORMAL.json",
+      "file_id": "11Ut3FKYNzijNgTrQFMnrNQPdxMNsmTDx",
+      "sha256": "dad3f0956e11ce11050f9158812d496e14ac70e51023f6f9e83fa4a660d0fb5d"
+    }
+  ],
+  "schema_file": {
+    "file_name": "LIXIL_インプラス_runtime_v0.4_RuntimeRecovery_R2_FORMAL.schema.json",
+    "file_id": "1J-Jj52av8AJ_WirZQeiZWzc0GPzrOWVY",
+    "sha256": "7763d3f33c33dcb1c0418a2f7974ed38a3685a830b009771f4de751d54e85e59"
+  },
+  "qa_files": [
+    {
+      "role": "SEMANTIC_RUNTIME_QA",
+      "file_name": "LIXIL_インプラス_RuntimeRecovery_R2_FORMAL_SEMANTIC_QA_20260907.json",
+      "file_id": "1oQVytej2i4v5-zzPA7czHhY9Amj3r4Ar",
+      "sha256": "c7c23fde2e27bc01a4ab91c653de2c99e28c85605b559daeaa96fd0fe83f6e89",
+      "status": "PASS"
+    }
+  ],
+  "documentation_file": {
+    "file_name": "LIXIL_インプラス_PRODUCT_MASTER_MANIFEST_v0.4_RuntimeRecovery_R2_FORMAL.md",
+    "file_id": "1IWnK3kNbIX090uomSFHlUT9QE6XA5Ocv"
+  },
+  "storage_status": "CANONICAL",
+  "package_gate": "PASS",
+  "blocking_items": [],
+  "manual_check": [
+    "SZ-SL3W: 3枚建（障子W指定）の製作範囲",
+    "ND-01..ND-06: 特殊ガラスND製作範囲",
+    "GL-ORD-004: 障子重量によるアルミレール枠対象寸法",
+    "FK-SA09: 特殊/不明納まり",
+    "FK-R08: 『ふかし枠補助部材』正規item_id未マッピング",
+    "FK-R14/FK-R15/FK-R18/FK-R19: 補強一体ふかし枠の製作範囲"
+  ],
+  "human_approval": "APPROVED",
+  "human_approval_record_file_id": "1VXnqPvL2XnsE5yQLgOfGoi6p1AExB26l0smtNCTG0cs",
+  "formal_pass": true,
+  "canonical_mutation": true,
+  "registry_mutation": true,
+  "canonical_folder_id": "1NPW7cUbaC1JRvIaJrltFkoYUiLyPwJa1",
+  "working_folder_id": "1D4ei5PpcM5wGkb6AuXr2QBUmU1tPey92",
+  "old_folder_id": "1N-wPfze9_HKbMJhNMzC-aP4JSlbyjVZp",
+  "generated_at": "2026-09-07T12:58:00+09:00",
+  "governing_spec": "PRODUCT_MASTER_PACKAGE_STORAGE_COMPLETION_GATE_v2.0",
+  "updated_at": "2026-09-07T13:09:00+09:00",
+  "registry_file_id": "1HMMZ8JdsbJPtL_8LjQfxMF8P_Zb4-LReqvPMFn1pJks"
+}
