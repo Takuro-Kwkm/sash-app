@@ -1,0 +1,36 @@
+{
+  "schema_version": "2.0",
+  "manufacturer": "LIXIL",
+  "series": "EW",
+  "package_version": "v1.1",
+  "authoring_mode": "STANDALONE",
+  "authoring_file_name": "LIXIL_EW_商品マスター_v1.1.xlsx",
+  "authoring_file_id": "10hw0YcDnNPDASv32Zrxm9ZaSjh8TVHa0",
+  "authoring_files": [
+    {
+      "name": "LIXIL_EW_商品マスター_v1.1.xlsx",
+      "id": "10hw0YcDnNPDASv32Zrxm9ZaSjh8TVHa0",
+      "sha256": "bc3dd759447105d5f5a56acabb5e70c0f63c09cc03ba62f7a77edfa51d31e8b8"
+    }
+  ],
+  "runtime_status": "READY",
+  "runtime_files": [
+    {
+      "name": "LIXIL_EW_runtime_v1.1.json",
+      "id": "1soPPTqP9LNKWFS1wxWhN8Lux6p9ZdyYf",
+      "role": "runtime_master",
+      "sha256": "082442f82f51c4a81050d8e16d5fe3b9cb142004deb371a3e2bbb21384ca37dd"
+    }
+  ],
+  "documentation_file": "LIXIL_EW_PRODUCT_MASTER_MANIFEST_v1.1.md",
+  "documentation_file_id": "10EOalrf9_FIKYbzRLEMMdvkPTDaLvqi2",
+  "storage_status": "DRIVE_CANONICAL",
+  "package_gate": "PASS",
+  "storage_gate": "PASS",
+  "registry_gate": "PASS",
+  "blocking_items": [],
+  "manual_check": [],
+  "formalization_status": "FORMAL_PASS",
+  "generated_at": "2026-09-07T17:45:00+09:00",
+  "spec_version": "PRODUCT_MASTER_PACKAGE_STORAGE_GATE_v2.0"
+}
