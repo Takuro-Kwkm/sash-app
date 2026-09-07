@@ -29,6 +29,18 @@ for (const file of files) {
       .filter(([key]) => !['projection_version', 'source', 'field_order', 'fixed_identity'].includes(key))
       .map(([name, value]) => summarizeSection(name, value)),
   };
+  if (file === 'core.json') {
+    report[file].fixedIdentity = document.fixed_identity ?? null;
+    report[file].supportedActions = document.supported_actions ?? [];
+    report[file].dependencyRules = document.dependency_rules ?? [];
+    report[file].manualChecks = document.manual_checks ?? [];
+    report[file].uiContract = document.ui_contract ?? null;
+    report[file].windowTypeRows = document.window_types ?? null;
+    report[file].bodyColorRows = document.body_colors ?? null;
+    report[file].frameInstallationRows = document.frame_installation ?? null;
+    report[file].optionRows = document.options ?? null;
+    report[file].glassConfigColumns = document.glass_configs?.columns ?? [];
+  }
 }
 
 console.log(JSON.stringify(report, null, 2));
