@@ -25,9 +25,18 @@ export const runtimeMasterInventory = Object.freeze([
     runtimeManifestDriveFileId: '1AEMf7ay34L5iIxFBT9fLh655yta2nWbC',
     runtimeManifestSha256: '9df554d2f4e2edc86c09db59646c56daabf5897751772a4ba1c0ccdff711d19c',
     materializedFiles: Object.freeze({
-      '1VB0dxkU8m5nkqrcNXIlWhx6YuvW0RINZ': Object.freeze([join(GIESTA2_ROOT, 'LIXIL_ジエスタ2_runtime_core_v0.8-R1.json.gz.b64')]),
-      '1PMBNseQ6PemIbl5iReUxl-AI_2ntGRGr': Object.freeze([0,1,2,3].map((index) => join(GIESTA2_ROOT, `LIXIL_ジエスタ2_runtime_maps_v0.8-R1.json.gz.b64.parts/part-${String(index).padStart(2,'0')}`))),
-      '1Za4wtwWySz2sCTMn3qykDKiK1l5TbObe': Object.freeze([join(GIESTA2_ROOT, 'giesta2_runtime_package_v0.8-R1.schema.json.gz.b64')]),
+      '1VB0dxkU8m5nkqrcNXIlWhx6YuvW0RINZ': Object.freeze({
+        codec: 'gzip',
+        paths: Object.freeze([join(GIESTA2_ROOT, 'LIXIL_ジエスタ2_runtime_core_v0.8-R1.json.gz.b64')]),
+      }),
+      '1PMBNseQ6PemIbl5iReUxl-AI_2ntGRGr': Object.freeze({
+        codec: 'brotli',
+        paths: Object.freeze(['part-00','part-01','part-02'].map((name) => join(GIESTA2_ROOT, `LIXIL_ジエスタ2_runtime_maps_v0.8-R1.json.br.b64.parts/${name}`))),
+      }),
+      '1Za4wtwWySz2sCTMn3qykDKiK1l5TbObe': Object.freeze({
+        codec: 'gzip',
+        paths: Object.freeze([join(GIESTA2_ROOT, 'giesta2_runtime_package_v0.8-R1.schema.json.gz.b64')]),
+      }),
     }),
   }),
 ]);
