@@ -1,9 +1,52 @@
 import { ACTIVE, has, uniq, clone, same, meaningfulHanding, selectedOne, selectedMany, sourceSpecId, sourceWindowId, sourceGlassId, createModel, baseValueRows, labelsToValues, findSize } from './canonical-workbook-reference-v1-model.mjs';
 
+const isAvailable = (value) => value === true || value === '○' || value === '可';
+const screenFormOf = (row) => row.screen_type ?? row.label;
+const splitTargets = (value) => String(value ?? '').split(/[・、,]/).map((part) => part.trim()).filter(Boolean);
+
+function targetContainsForm(raw, form) {
+  return splitTargets(raw).some((target) => target === form || String(form).includes(target) || target.includes(String(form)));
+}
+
+function screenOrderRule(model, form, mesh) {
+  if (!has(form) || !has(mesh)) return null;
+  const exact = model.screenOrderRules.find((row) => row['網戸タイプ'] === form && row['ネット種類'] === mesh);
+  if (exact) return exact;
+  const netSpec = model.screenNetSpecs.find((row) => row['ネット種類'] === mesh && targetContainsForm(row['対象網戸'], form));
+  if (!netSpec) return null;
+  return model.screenOrderRules.find((row) => row['網戸タイプ'] === netSpec['タイプ'] && row['ネット種類'] === mesh) ?? null;
+}
+
+function screenCandidateAllowed(model, form, mesh) {
+  const rule = screenOrderRule(model, form, mesh);
+  if (!rule) return true;
+  return rule['商品候補表示'] !== '非表示' && rule['見積確定可否'] !== '不可' && rule['未確認時アプリ状態'] !== 'ERROR';
+}
+
+function windowIdMatches(raw, windowId) {
+  return String(raw ?? '').split('/').map((part) => part.trim()).includes(windowId);
+}
+
+function fixedMidrailRule(model, windowId, form) {
+  return model.screenRules.find((row) =>
+    windowIdMatches(row['窓種ID'], windowId) && row['網戸形式'] === form && ['固定','継承'].includes(row['判定'])
+  ) ?? null;
+}
+
+function customRangeMatches(row, selection) {
+  const w = Number(selection.custom_w), h = Number(selection.custom_h);
+  if (!Number.isFinite(w) || !Number.isFinite(h)) return true;
+  return w >= Number(row['W_MIN(mm)']) && w <= Number(row['W_MAX(mm)']) &&
+    h >= Number(row['H_MIN(mm)']) && h <= Number(row['H_MAX(mm)']);
+}
+
 function allowedByField(model, selection) {
   const allowed = new Map(model.fields.map((def) => [def.field_name, []]));
   const visible = new Set(['window_type']);
   const required = new Set(['window_type']);
+  const readOnly = new Set();
+  const labels = new Map();
+  const autoValues = new Map();
   const windowId = selectedOne(selection,'window_type');
   const specId = selectedOne(selection,'window_spec');
   const variant = selectedOne(selection,'variant');
@@ -17,23 +60,34 @@ function allowedByField(model, selection) {
 
   const window = model.windows.find((row) => row.id === windowId);
   if (window) {
-    visible.add('window_spec'); required.add('window_spec');
     const specRows = model.specs.filter((row) => sourceWindowId(row) === windowId);
-    allowed.set('window_spec', specRows.map((row) => row.spec_id));
+    if (specRows.length) {
+      visible.add('window_spec'); required.add('window_spec');
+      labels.set('window_spec', window.spec_type || '窓種固有仕様');
+      allowed.set('window_spec', specRows.map((row) => row.spec_id));
+      if (specRows.length === 1 && String(window.spec_required ?? '').includes('不要')) {
+        autoValues.set('window_spec', specRows[0].spec_id);
+        readOnly.add('window_spec');
+      }
+    }
 
     if (specId && specRows.some((row) => row.spec_id === specId)) {
-      const variantPossible = model.variantRelations.some((row) =>
+      const eligibleVariants = uniq(model.variantRelations.filter((row) =>
         row['選択可否'] === '可' && sourceWindowId(row) === windowId && sourceSpecId(row) === specId
-      );
-      if (variantPossible && model.variants.length > 1) {
+      ).map((row) => row.variant_id).filter(has), (row) => row);
+      const variantIds = uniq([model.standardVariant, ...eligibleVariants].filter(has), (row) => row);
+      const variantPossible = variantIds.length > 1;
+      if (variantPossible) {
         visible.add('variant');
-        allowed.set('variant', model.variants.filter((row) => row.variant_id === model.standardVariant || model.designVariantIds.has(row.variant_id)).map((row) => row.variant_id));
+        allowed.set('variant', variantIds.filter((id) => model.variants.some((row) => row.variant_id === id)));
       }
 
       const sizeRows = model.normalizedSizes.filter((row) => row.window_id === windowId && row.spec_id === specId);
       const customRows = model.customRanges.filter((row) => sourceWindowId(row) === windowId && sourceSpecId(row) === specId);
       const handings = uniq(sizeRows.flatMap((row) => meaningfulHanding(row.handing)), (row) => row);
-      if (handings.length) { visible.add('handing'); allowed.set('handing', handings); }
+      if (handings.length) {
+        visible.add('handing'); required.add('handing'); allowed.set('handing', handings);
+      }
 
       visible.add('size_mode'); required.add('size_mode');
       const modes = [];
@@ -50,29 +104,35 @@ function allowedByField(model, selection) {
 
       const effectiveVariant = variant || (!variantPossible ? model.standardVariant : null);
       if (!variantPossible || effectiveVariant) {
-        const colorRows = model.colors.filter((row) => row.variant_id === effectiveVariant && (row.available === true || row.available === '○' || row.available === '可'));
-        visible.add('exterior_color'); required.add('exterior_color');
-        allowed.set('exterior_color', uniq(colorRows.map((row) => row.exterior_id), (row) => row));
-        const ext = selectedOne(selection,'exterior_color');
-        if (ext) {
-          visible.add('interior_color'); required.add('interior_color');
-          allowed.set('interior_color', uniq(colorRows.filter((row) => row.exterior_id === ext).map((row) => row.interior_id), (row) => row));
+        const colorRows = model.colors.filter((row) => row.variant_id === effectiveVariant && isAvailable(row.available));
+        if (colorRows.length) {
+          visible.add('exterior_color'); required.add('exterior_color');
+          allowed.set('exterior_color', uniq(colorRows.map((row) => row.exterior_id), (row) => row));
+          const ext = selectedOne(selection,'exterior_color');
+          if (ext) {
+            visible.add('interior_color'); required.add('interior_color');
+            allowed.set('interior_color', uniq(colorRows.filter((row) => row.exterior_id === ext).map((row) => row.interior_id), (row) => row));
+          }
         }
       }
 
-      if (window.screen !== 'なし') {
+      const windowScreenCandidates = model.screens.filter((row) => row.window_id === windowId && row.presence === 'あり');
+      if (windowScreenCandidates.length) {
         visible.add('screen_presence');
         allowed.set('screen_presence',['なし','あり']);
         if (screenPresence === 'あり') {
-          const candidates = model.screens.filter((row) => row.window_id === windowId && row.presence === 'あり');
-          const forms = uniq(candidates.map((row) => row.screen_type ?? row.label).filter(has),(row)=>row);
+          const forms = uniq(windowScreenCandidates.map(screenFormOf).filter(has),(row)=>row);
           if (forms.length) { visible.add('screen_form'); allowed.set('screen_form',forms); }
-          const formCandidates = candidates.filter((row) => !screenForm || (row.screen_type ?? row.label) === screenForm);
-          const midrails = uniq(formCandidates.map((row) => row.midrail).filter((value) => has(value) && !['対象外','なし（固定）'].includes(value)),(row)=>row);
-          if (midrails.length) { visible.add('screen_midrail'); allowed.set('screen_midrail',midrails); }
+          const formCandidates = windowScreenCandidates.filter((row) => !screenForm || screenFormOf(row) === screenForm);
           if (screenForm || forms.length === 1) {
-            const meshes = uniq(formCandidates.map((row) => row.mesh).filter((value)=>has(value) && value !== '対象外'),(row)=>row);
+            const effectiveForm = screenForm || forms[0];
+            const meshes = uniq(formCandidates.map((row) => row.mesh).filter((value)=>
+              has(value) && value !== '対象外' && screenCandidateAllowed(model, effectiveForm, value)
+            ),(row)=>row);
             if (meshes.length) { visible.add('screen_net'); allowed.set('screen_net',meshes); }
+            const fixedRule = fixedMidrailRule(model, windowId, effectiveForm);
+            const midrails = uniq(formCandidates.map((row) => row.midrail).filter((value) => has(value) && !['対象外','なし（固定）'].includes(value)),(row)=>row);
+            if (!fixedRule && midrails.length) { visible.add('screen_midrail'); allowed.set('screen_midrail',midrails); }
           }
         }
       }
@@ -81,7 +141,8 @@ function allowedByField(model, selection) {
       if (sizeMode === 'STANDARD' && sizeId) {
         glassIds = findSize(model,sizeId)?.glass_ids ?? [];
       } else if (sizeMode === 'CUSTOM') {
-        glassIds = uniq(customRows.map((row) => sourceGlassId(row)).filter(has),(row)=>row);
+        const rangeRows = customRows.filter((row) => customRangeMatches(row, selection));
+        glassIds = uniq((rangeRows.length ? rangeRows : customRows).map((row) => sourceGlassId(row)).filter(has),(row)=>row);
       } else {
         glassIds = uniq([...sizeRows.flatMap((row)=>row.glass_ids), ...customRows.map((row)=>sourceGlassId(row))].filter(has),(row)=>row);
       }
@@ -113,8 +174,8 @@ function allowedByField(model, selection) {
         const glass = model.glasses.find((row) => row.id === glassId);
         const spacer = selectedDetail?.['スペーサー'] ?? glass?.spacer ?? glass?.['スペーサー'];
         const gas = selectedDetail?.['ガス'] ?? glass?.gas ?? glass?.['基本ガス'];
-        if (has(spacer)) { visible.add('glass_spacer'); allowed.set('glass_spacer',[spacer]); }
-        if (has(gas)) { visible.add('glass_air_layer'); allowed.set('glass_air_layer',[gas]); }
+        if (has(spacer)) { visible.add('glass_spacer'); readOnly.add('glass_spacer'); allowed.set('glass_spacer',[spacer]); }
+        if (has(gas)) { visible.add('glass_air_layer'); readOnly.add('glass_air_layer'); allowed.set('glass_air_layer',[gas]); }
       }
 
       visible.add('option');
@@ -133,7 +194,7 @@ function allowedByField(model, selection) {
       allowed.set('option',uniq(optionIds,(row)=>row));
     }
   }
-  return {allowed, visible, required};
+  return {allowed, visible, required, readOnly, labels, autoValues};
 }
 
 function normalizeArrays(model, selection) {
@@ -149,16 +210,36 @@ function normalizeArrays(model, selection) {
   return out;
 }
 
+function explicitUnknownErrors(model, inputSelection) {
+  const errors = [];
+  for (const def of model.fields) {
+    if (!(def.field_name in (inputSelection ?? {})) || !['enum','array'].includes(def.data_type)) continue;
+    const base = baseValueRows(model, def.field_name).map((row) => row.canonical_value);
+    const raw = def.data_type === 'array'
+      ? (Array.isArray(inputSelection[def.field_name]) ? inputSelection[def.field_name] : [inputSelection[def.field_name]])
+      : [inputSelection[def.field_name]];
+    for (const value of raw.filter(has)) {
+      if (!base.some((candidate) => same(candidate,value) || String(candidate) === String(value))) {
+        errors.push({code:'SELECTION_NOT_ALLOWED',field:def.field_name,value});
+      }
+    }
+  }
+  return errors;
+}
+
 function resolveModel(model, inputSelection = {}) {
   const selection = normalizeArrays(model,inputSelection);
   const cleared = [];
-  const errors = [];
+  const errors = explicitUnknownErrors(model,inputSelection);
   let allowedState;
 
   for (let iteration=0; iteration<16; iteration++) {
     const before = JSON.stringify(selection);
     allowedState = allowedByField(model,selection);
 
+    for (const [key,value] of allowedState.autoValues.entries()) {
+      if (!has(selection[key])) selection[key] = value;
+    }
     if (allowedState.visible.has('variant') && !has(selection.variant) && model.standardVariant &&
         (allowedState.allowed.get('variant') ?? []).includes(model.standardVariant)) {
       selection.variant = model.standardVariant;
@@ -174,17 +255,25 @@ function resolveModel(model, inputSelection = {}) {
       if (def.data_type === 'array') {
         const permitted = new Set(allowedState.allowed.get(key) ?? []);
         const next = selection[key].filter((value)=>permitted.has(value));
-        if (next.length !== selection[key].length) cleared.push({field:key,reason:'DEPENDENCY',removed:selection[key].filter((value)=>!next.includes(value))});
+        if (next.length !== selection[key].length) {
+          const removed = selection[key].filter((value)=>!next.includes(value));
+          cleared.push({field:key,reason:'DEPENDENCY',removed});
+          errors.push({code:'SELECTION_INCOMPATIBLE',field:key,value:removed});
+        }
         if (next.length) selection[key]=next; else delete selection[key];
-      } else if (['enum'].includes(def.data_type)) {
+      } else if (def.data_type === 'enum') {
         const permitted = allowedState.allowed.get(key) ?? [];
         if (has(selection[key]) && !permitted.some((value)=>same(value,selection[key]))) {
           const removed=selection[key]; delete selection[key]; cleared.push({field:key,reason:'DEPENDENCY',removed});
+          errors.push({code:'SELECTION_INCOMPATIBLE',field:key,value:removed});
         }
       }
     }
 
     allowedState = allowedByField(model,selection);
+    for (const [key,value] of allowedState.autoValues.entries()) {
+      if (!has(selection[key])) selection[key] = value;
+    }
     for (const key of ['glass_spacer','glass_air_layer']) {
       if (!has(selection[key]) && allowedState.visible.has(key) && (allowedState.allowed.get(key) ?? []).length === 1) {
         selection[key] = allowedState.allowed.get(key)[0];
@@ -207,9 +296,7 @@ function resolveModel(model, inputSelection = {}) {
     if (has(selection.custom_h) && !Number.isFinite(h)) errors.push({code:'CUSTOM_SIZE_INVALID_NUMBER',field:'custom_h'});
     if (Number.isFinite(w) && Number.isFinite(h)) {
       const matches = model.customRanges.filter((row) =>
-        sourceWindowId(row) === selection.window_type && sourceSpecId(row) === selection.window_spec &&
-        w >= Number(row['W_MIN(mm)']) && w <= Number(row['W_MAX(mm)']) &&
-        h >= Number(row['H_MIN(mm)']) && h <= Number(row['H_MAX(mm)'])
+        sourceWindowId(row) === selection.window_type && sourceSpecId(row) === selection.window_spec && customRangeMatches(row,selection)
       );
       if (!matches.length) errors.push({code:'CUSTOM_SIZE_OUT_OF_RANGE',field:'size',message:'入力寸法は正式Runtimeの特注製作範囲外です。'});
     }
@@ -220,12 +307,18 @@ function resolveModel(model, inputSelection = {}) {
   if (selection.screen_presence === 'あり' && has(selection.screen_net)) {
     const candidates = model.screens.filter((row) =>
       row.window_id === selection.window_type && row.presence === 'あり' &&
-      (!has(selection.screen_form) || (row.screen_type ?? row.label) === selection.screen_form) &&
+      (!has(selection.screen_form) || screenFormOf(row) === selection.screen_form) &&
       row.mesh === selection.screen_net
     );
-    if (candidates.some((row)=>row.unconfirmed_state === 'NEEDS_MFR_CONFIRMATION' || row.estimate_finalization === 'MANUFACTURER_CONFIRMATION_REQUIRED')) {
+    const orderRule = screenOrderRule(model, selection.screen_form || screenFormOf(candidates[0]), selection.screen_net);
+    if (candidates.some((row)=>row.unconfirmed_state === 'NEEDS_MFR_CONFIRMATION' || row.estimate_finalization === 'MANUFACTURER_CONFIRMATION_REQUIRED') ||
+        orderRule?.['未確認時アプリ状態'] === 'NEEDS_MFR_CONFIRMATION') {
       manualCheck = true;
-      warnings.push({code:'NEEDS_MFR_CONFIRMATION',message:'この機能性ネットはサイズにより対応できない場合があります。見積確定前にメーカー確認が必要です。'});
+      warnings.push({
+        code:'NEEDS_MFR_CONFIRMATION',
+        message:'この機能性ネットはサイズにより対応できない場合があります。見積確定前にメーカー確認が必要です。',
+        ruleId:orderRule?.rule_id ?? null,
+      });
     }
   }
 
@@ -234,24 +327,29 @@ function resolveModel(model, inputSelection = {}) {
     const isVisible = allowedState.visible.has(def.field_name);
     const allowed = allowedState.allowed.get(def.field_name) ?? [];
     const value = def.field_name in selection ? clone(selection[def.field_name]) : null;
+    const resolved = isVisible && has(value) && (allowedState.readOnly.has(def.field_name) || ['glass_spacer','glass_air_layer'].includes(def.field_name));
     fields[def.field_name] = {
       value,
-      state: !isVisible ? 'NOT_APPLICABLE' : value === null ? 'UNSET' : ['glass_spacer','glass_air_layer'].includes(def.field_name) ? 'RESOLVED' : 'SELECTED',
+      state: !isVisible ? 'NOT_APPLICABLE' : value === null ? 'UNSET' : resolved ? 'RESOLVED' : 'SELECTED',
       visibility: isVisible ? 'SHOW' : 'HIDE',
       required: isVisible && allowedState.required.has(def.field_name),
       allowed_values: allowed,
+      readOnly: isVisible && allowedState.readOnly.has(def.field_name),
+      display_label: allowedState.labels.get(def.field_name) ?? null,
+      unit:def.unit ?? null,
     };
   }
   const missing = Object.entries(fields).filter(([,state]) => state.required && state.visibility === 'SHOW' && !has(state.value)).map(([name])=>name);
-  const status = errors.length ? 'INVALID' : missing.length ? 'INCOMPLETE' : manualCheck ? 'MANUAL_CHECK' : 'VALID';
+  const uniqueErrors = uniq(errors, (row) => JSON.stringify([row.code,row.field,row.value,row.message]));
+  const status = uniqueErrors.length ? 'INVALID' : missing.length ? 'INCOMPLETE' : manualCheck ? 'MANUAL_CHECK' : 'VALID';
   return {
     fields,
     derived_components:new Set(),
     derived_entities:[],
     derived_options:[],
     warnings,
-    matched_invalid_rules:[],
-    errors,
+    matched_invalid_rules:uniqueErrors.filter((row)=>row.ruleId).map((row)=>row.ruleId),
+    errors:uniqueErrors,
     status,
     missing_required_fields:missing,
     cleared_fields:cleared,
