@@ -15,11 +15,14 @@ export const SASH_GLASS_FIELD_SEQUENCE=Object.freeze([
 
 const GLASS_META=new Map(SASH_GLASS_FIELD_SEQUENCE.map((row)=>[row.key,row]));
 const GLASS_KEYS=new Set(GLASS_META.keys());
+const PRE_GLASS_ORDER=119;
 
 function normalizeDefinition(row){
   const glass=GLASS_META.get(row.key);
   if(glass)return{...row,displayLabel:glass.label,displayOrder:glass.order};
   if(SASH_INTERNAL_INPUT_KEYS.includes(row.key))return{...row,presentationHidden:true};
+  // Screen configuration belongs together. Keep the net selector immediately before the glass block.
+  if(row.key==='screen_net')return{...row,displayOrder:Math.min(Number(row.displayOrder) || PRE_GLASS_ORDER,PRE_GLASS_ORDER)};
   // Keep the six glass inputs contiguous. Existing later fields move behind the glass block.
   if(Number(row.displayOrder)>=120)return{...row,displayOrder:Number(row.displayOrder)+100};
   return row;
