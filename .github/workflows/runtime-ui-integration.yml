@@ -1,0 +1,83 @@
+name: Runtime UI Integration CI
+
+on:
+  pull_request:
+    branches: [feat/catalog-recovery-v2]
+  workflow_dispatch:
+
+jobs:
+  automated_test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Giesta2 Runtime targeted tests
+        run: node --test test/68-runtime-app-bridge-giesta2-gate.test.mjs test/69-runtime-manifest-giesta2-integration.test.mjs
+      - name: Full repository regression
+        run: npm test
+
+  runtime_smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Start Runtime and verify Giesta2 integration inventory
+        shell: bash
+        run: |
+          npm run start:qa > runtime-smoke.log 2>&1 &
+          PID=$!
+          trap 'kill $PID || true' EXIT
+          for i in {1..30}; do
+            if curl -fsS http://127.0.0.1:4173/api/health > /tmp/health.json && curl -fsS http://127.0.0.1:4173/api/runtime-master/integrations > /tmp/integrations.json; then break; fi
+            sleep 0.5
+          done
+          cat /tmp/health.json
+          cat /tmp/integrations.json
+          node -e 'const fs=require("fs");const h=JSON.parse(fs.readFileSync("/tmp/health.json","utf8"));const rows=JSON.parse(fs.readFileSync("/tmp/integrations.json","utf8"));const g=rows.find(x=>x.id==="SER-LIXIL-GIESTA2");if(!h.ok||!g||g.status!=="READY"||g.selectable!==true||g.packageVersion!=="v0.8-R1"||g.schemaVersion!=="1.0")process.exit(1)'
+      - name: Upload Runtime smoke log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: giesta2-runtime-smoke
+          path: runtime-smoke.log
+
+  browser_qa:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install Chromium QA runtime
+        run: |
+          npm install --no-save --package-lock=false playwright@1.55.0
+          npx playwright install --with-deps chromium
+      - name: Start actual Runtime
+        shell: bash
+        run: |
+          npm run start:qa > runtime-qa.log 2>&1 &
+          echo $! > runtime-qa.pid
+          for i in {1..30}; do
+            if curl -fsS http://127.0.0.1:4173/api/health > /tmp/browser-health.json; then exit 0; fi
+            sleep 0.5
+          done
+          cat runtime-qa.log
+          exit 1
+      - name: Giesta2 Runtime Desktop and Smartphone Browser QA
+        run: node test/browser/giesta2-runtime-browser-qa.mjs
+      - name: Upload Browser QA evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: giesta2-runtime-browser-qa
+          path: |
+            artifacts/giesta2-runtime-browser-qa
+            runtime-qa.log
+      - name: Stop Runtime
+        if: always()
+        run: |
+          if [ -f runtime-qa.pid ]; then kill "$(cat runtime-qa.pid)" || true; fi
