@@ -6,6 +6,21 @@ on:
   workflow_dispatch:
 
 jobs:
+  projection_audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Inplus deterministic projection audit
+        run: node scripts/inplus-projection-audit.mjs | tee inplus-projection-audit.log
+      - name: Upload Inplus projection audit
+        uses: actions/upload-artifact@v4
+        with:
+          name: inplus-projection-audit
+          path: inplus-projection-audit.log
+
   automated_test:
     runs-on: ubuntu-latest
     steps:
