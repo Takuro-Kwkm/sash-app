@@ -30,9 +30,12 @@ async function openGiesta2(page) {
 }
 
 try {
-  const integrationsResponse = await (await browser.newPage()).request.get(`${BASE}/api/runtime-master/integrations`);
+  const preflightContext = await browser.newContext();
+  const preflightPage = await preflightContext.newPage();
+  const integrationsResponse = await preflightPage.request.get(`${BASE}/api/runtime-master/integrations`);
   assert.equal(integrationsResponse.status(), 200);
   const integrations = await integrationsResponse.json();
+  await preflightContext.close();
   const giesta2 = integrations.find((row) => row.id === PRODUCT_ID);
   assert.ok(giesta2, 'Giesta2 Runtime integration must be listed');
   assert.equal(giesta2.status, 'READY');
