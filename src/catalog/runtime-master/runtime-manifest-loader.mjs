@@ -99,6 +99,16 @@ async function readMaterializedCanonicalFile(entry, manifestRow) {
   return { fileName, bytes: bytes.length, expectedSha256, actualSha256, codec: transport.codec, json };
 }
 
+function documentIdentity(document) {
+  if (!document || typeof document !== 'object') return {};
+  const source = document.metadata && typeof document.metadata === 'object' ? document.metadata : document;
+  return {
+    manufacturer: source.manufacturer,
+    series: source.series,
+    package_version: source.package_version ?? source.packageVersion,
+  };
+}
+
 export async function loadManifestRuntimePackage(entry) {
   const manifestBytes = await readFile(entry.runtimeManifestPath);
   const manifestActualSha256 = sha256(manifestBytes);
@@ -122,7 +132,9 @@ export async function loadManifestRuntimePackage(entry) {
   for (const [name, expected, actual] of identityPairs) {
     if (String(expected) !== String(actual)) fail('RUNTIME_MANIFEST_IDENTITY_MISMATCH', `${name} mismatch: expected ${expected}, got ${actual}`, { name, expected, actual });
   }
-  const storageReady = manifest.storageStatus === 'PASS' || (manifest.storageStatus === 'DRIVE_CANONICAL' && manifest.storageGate === 'PASS');
+  const storageReady = manifest.storageStatus === 'PASS'
+    || manifest.storageStatus === 'CANONICAL'
+    || (manifest.storageStatus === 'DRIVE_CANONICAL' && manifest.storageGate === 'PASS');
   if (!manifest.formalPass || manifest.runtimeStatus !== 'READY' || !storageReady || manifest.packageGate !== 'PASS' || (manifest.registryGate && manifest.registryGate !== 'PASS')) {
     fail('RUNTIME_MANIFEST_NOT_FORMAL_READY', 'Canonical Runtime manifest is not formally READY', { manifest });
   }
@@ -139,9 +151,9 @@ export async function loadManifestRuntimePackage(entry) {
   const schemaErrors = [];
   for (const [role, document] of loadedByRole.entries()) {
     if (schema) schemaErrors.push(...validateJsonSchema(document, schema, `$.${role}`));
-    const meta = document?.metadata ?? document ?? {};
+    const identity = documentIdentity(document);
     for (const [name, expected] of [['manufacturer', manifest.manufacturer], ['series', manifest.series], ['package_version', manifest.packageVersion]]) {
-      if (String(meta[name]) !== String(expected)) schemaErrors.push(`$.${role}.metadata.${name}: expected ${expected}, got ${meta[name]}`);
+      if (String(identity[name]) !== String(expected)) schemaErrors.push(`$.${role}.${name}: expected ${expected}, got ${identity[name]}`);
     }
   }
   if (schemaErrors.length) fail('RUNTIME_MANIFEST_SCHEMA_FAILED', `Runtime schema/identity validation failed (${schemaErrors.length})`, { schemaErrors });
