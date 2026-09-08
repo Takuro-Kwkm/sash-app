@@ -4,12 +4,16 @@ import { loadCanonicalWorkbookRuntimePackage } from './canonical-runtime-manifes
 import { adaptCanonicalWorkbookReferenceV1 } from './canonical-workbook-reference-v1-adapter.mjs';
 import { loadManifestRuntimePackage } from './runtime-manifest-loader.mjs';
 import { adaptTwCanonicalWorkbookReferenceV1 } from './tw-canonical-workbook-reference-v1-adapter.mjs';
+import { adaptSemanticTableBundleV2 } from './semantic-table-bundle-v2-adapter.mjs';
 import { evaluateCanonicalWorkbookRuntime } from './canonical-workbook-runtime-engine.mjs';
+import { evaluateSemanticTableBundleV2 } from './semantic-table-bundle-v2-engine.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const EW_ROOT = join(HERE, '../runtime-master-packages/lixil-ew-v1.1');
 const EW_RUNTIME_SEGMENTS = ['seg-00','seg-01','seg-02','seg-03','seg-04','seg-05','seg-06','seg-07','seg-08a','seg-08b','seg-08c','seg-08d'];
 const TW_ROOT = join(HERE, '../runtime-master-packages/lixil-tw-integrated-v0.2');
+const INPLUS_ROOT = join(HERE, '../runtime-master-packages/lixil-inplus-v0.4-r1');
+const INPLUS_RUNTIME_PARTS = ['part-00a','part-00b','part-01','part-02','part-03'];
 
 export const runtimeMasterInventory = Object.freeze([
   Object.freeze({
@@ -40,6 +44,24 @@ export const runtimeMasterInventory = Object.freeze([
       }),
     }),
   }),
+  Object.freeze({
+    manufacturer: 'LIXIL', series: 'インプラス', masterVersion: 'v0.4-R1', schemaVersion: '2.0',
+    packageType: 'RUNTIME_MANIFEST_V1', adapterType: 'SEMANTIC_TABLE_BUNDLE_V2',
+    packageRoot: INPLUS_ROOT,
+    runtimeManifestPath: join(INPLUS_ROOT, 'runtime_manifest.json'),
+    runtimeManifestDriveFileId: '1iPSLxyziMGXUN71-cSvQO8SRfudx80Qf',
+    runtimeManifestSha256: '39017746404c98b59a3238890bfece9f46acb122870def6a1361472dad5390ed',
+    materializedFiles: Object.freeze({
+      '1VREtyCeLgiGD4ereIDGLLPfsea3d-ac5': Object.freeze({
+        codec: 'gzip',
+        paths: Object.freeze(INPLUS_RUNTIME_PARTS.map((name) => join(INPLUS_ROOT, `LIXIL_インプラス_runtime_v0.4-R1.json.gz.b64.parts/${name}`))),
+      }),
+      '1re25pGC5Zo0ytwD2snL0OPsfYSW6Ymqc': Object.freeze({
+        codec: 'gzip',
+        paths: Object.freeze([join(INPLUS_ROOT, 'LIXIL_インプラス_runtime_v0.4-R1.schema.json.gz.b64')]),
+      }),
+    }),
+  }),
 ]);
 
 export function getRuntimeMasterEntry(manufacturer, series) {
@@ -58,6 +80,10 @@ async function loadRuntime(entry) {
     runtimePackage = await loadManifestRuntimePackage(entry);
     const master = adaptTwCanonicalWorkbookReferenceV1(runtimePackage);
     adapted = { master, resolver: (selection) => evaluateCanonicalWorkbookRuntime(master, selection) };
+  } else if (entry.packageType === 'RUNTIME_MANIFEST_V1' && entry.adapterType === 'SEMANTIC_TABLE_BUNDLE_V2') {
+    runtimePackage = await loadManifestRuntimePackage(entry);
+    const master = adaptSemanticTableBundleV2(runtimePackage);
+    adapted = { master, resolver: (selection) => evaluateSemanticTableBundleV2(master, selection) };
   } else {
     const error = new Error(`Unsupported release Runtime package: ${entry.packageType}/${entry.adapterType}`);
     error.code = 'RUNTIME_ADAPTER_NOT_REGISTERED';
