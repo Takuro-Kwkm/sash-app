@@ -14,6 +14,7 @@ const XE_B64 = XE_PARTS.map((name) => join(HERE, `../runtime-master-packages/lix
 const XE_SHA256 = 'e2e5974e730508f4588afde5811df73032443c0cfc9b2f039ec44f61838653aa';
 const GIESTA2_ROOT = join(HERE, '../runtime-master-packages/lixil-giesta2-v0.8-r1');
 const EW_ROOT = join(HERE, '../runtime-master-packages/lixil-ew-v1.1');
+const EW_RUNTIME_SEGMENTS = ['seg-00','seg-01','seg-02','seg-03','seg-04','seg-05','seg-06','seg-07','seg-08a','seg-08b','seg-08c','seg-08d'];
 
 export const runtimeMasterInventory = Object.freeze([
   Object.freeze({
@@ -48,11 +49,11 @@ export const runtimeMasterInventory = Object.freeze([
     packageRoot: EW_ROOT,
     runtimeManifestPath: join(EW_ROOT, 'runtime_manifest.json'),
     runtimeManifestDriveFileId: '139c0atou5LFz7EIHIdD7ZTYWddfSHf5_',
-    runtimeManifestSha256: '57a2ec75959ab5cd9dff75754778a08ef226fbc82bb536291f2b247af0c045df',
+    runtimeManifestSha256: '8646bfd5f4a3d2184f2dbcb5b28f6e7dca995c9e11d53ec273a158588b5cdbed',
     materializedFiles: Object.freeze({
       '1soPPTqP9LNKWFS1wxWhN8Lux6p9ZdyYf': Object.freeze({
         codec: 'brotli',
-        paths: Object.freeze(['part-00','part-01','part-02'].map((name) => join(EW_ROOT, `LIXIL_EW_runtime_v1.1.json.br.b64.parts/${name}`))),
+        paths: Object.freeze(EW_RUNTIME_SEGMENTS.map((name) => join(EW_ROOT, `LIXIL_EW_runtime_v1.1.json.br.b64.segments/${name}`))),
       }),
     }),
   }),
@@ -76,7 +77,7 @@ function adaptManifestPackage(entry, runtimePackage) {
 }
 
 export async function loadRegisteredRuntime(manufacturer, series) {
-  const entry = getRuntimeMasterEntry(manufacturer, series);
+  const entry = getRuntimeMasterEntry(integration.manufacturer, integration.series);
   if (!entry) return null;
   if (entry.packageType === 'RUNTIME_MANIFEST_V1' || entry.packageType === 'RUNTIME_MANIFEST_V2') {
     const runtimePackage = entry.packageType === 'RUNTIME_MANIFEST_V2'
