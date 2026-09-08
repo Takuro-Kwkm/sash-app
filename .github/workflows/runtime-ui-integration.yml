@@ -13,8 +13,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Giesta2 Runtime targeted tests
-        run: node --test test/68-runtime-app-bridge-giesta2-gate.test.mjs test/69-runtime-manifest-giesta2-integration.test.mjs test/70-giesta2-runtime-candidate-integrity.test.mjs
+      - name: Runtime targeted tests
+        run: node --test test/68-runtime-app-bridge-giesta2-gate.test.mjs test/69-runtime-manifest-giesta2-integration.test.mjs test/70-giesta2-runtime-candidate-integrity.test.mjs test/70-runtime-manifest-ew-integration.test.mjs
       - name: Full repository regression
         run: npm test
 
@@ -25,7 +25,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Start Runtime and verify Giesta2 integration inventory
+      - name: Start Runtime and verify registered Runtime integrations
         shell: bash
         run: |
           npm run start:qa > runtime-smoke.log 2>&1 &
@@ -38,12 +38,12 @@ jobs:
           node scripts/giesta2-runtime-smoke.mjs
           cat /tmp/health.json
           cat /tmp/integrations.json
-          node -e 'const fs=require("fs");const h=JSON.parse(fs.readFileSync("/tmp/health.json","utf8"));const rows=JSON.parse(fs.readFileSync("/tmp/integrations.json","utf8"));const g=rows.find(x=>x.id==="SER-LIXIL-GIESTA2");if(!h.ok||!g||g.status!=="READY"||g.selectable!==true||g.packageVersion!=="v0.8-R1"||g.schemaVersion!=="1.0")process.exit(1)'
+          node -e 'const fs=require("fs");const h=JSON.parse(fs.readFileSync("/tmp/health.json","utf8"));const rows=JSON.parse(fs.readFileSync("/tmp/integrations.json","utf8"));const g=rows.find(x=>x.id==="SER-LIXIL-GIESTA2");const ew=rows.find(x=>x.id==="SER-LIX-EW");if(!h.ok||!g||g.status!=="READY"||g.selectable!==true||g.packageVersion!=="v0.8-R1"||g.schemaVersion!=="1.0"||!ew||ew.status!=="READY"||ew.selectable!==true||ew.packageVersion!=="v1.1"||ew.schemaVersion!=="2.0"||ew.sourceHash!=="082442f82f51c4a81050d8e16d5fe3b9cb142004deb371a3e2bbb21384ca37dd")process.exit(1)'
       - name: Upload Runtime smoke log
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: giesta2-runtime-smoke
+          name: runtime-integration-smoke
           path: |
             runtime-smoke.log
             artifacts/giesta2-runtime-smoke
@@ -71,7 +71,9 @@ jobs:
           done
           cat runtime-qa.log
           exit 1
-      - name: Giesta2 Runtime Desktop and Smartphone Browser QA
+      - name: EW Runtime Desktop and Smartphone Browser QA
+        run: node test/browser/ew-runtime-browser-qa.mjs
+      - name: Giesta2 Runtime Desktop and Smartphone Browser regression QA
         run: node test/browser/giesta2-runtime-browser-qa.mjs
       - name: Giesta2 Runtime candidate parity QA
         run: node test/browser/giesta2-runtime-candidate-parity-qa.mjs
@@ -81,8 +83,9 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: giesta2-runtime-browser-qa
+          name: runtime-ui-browser-qa
           path: |
+            artifacts/ew-runtime-browser-qa
             artifacts/giesta2-runtime-browser-qa
             artifacts/sales-ui-r2/browser
             runtime-qa.log

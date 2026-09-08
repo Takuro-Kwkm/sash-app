@@ -1,6 +1,7 @@
 import { evaluateConfiguration } from './generic-rule-engine.mjs';
 import { getRuntimeMasterEntry, loadRegisteredRuntime, runtimeMasterInventory } from './runtime-master-registry.mjs';
 import { appRuntimeIntegrationRegistry } from './app-runtime-integration-registry.mjs';
+import { applyRuntimeUiCategoryOrder } from './new-construction-sash-runtime-ui-contract.mjs';
 
 const integrationKey = (manufacturer, series) => `${manufacturer}::${series}`;
 const generatedProductId = (manufacturer, series) => `RUNTIME-${manufacturer}-${series}`.replace(/[^A-Za-z0-9._-]+/g, '-');
@@ -26,6 +27,7 @@ function registeredIntegration(entry) {
     series: entry.series,
     displayName: metadata?.displayName ?? entry.series,
     productCategory: metadata?.productCategory ?? null,
+    uiCategory: metadata?.uiCategory ?? null,
     registrySeriesKey: metadata?.registrySeriesKey ?? integrationKey(entry.manufacturer, entry.series),
     source: 'RUNTIME_MASTER',
     status: 'READY',
@@ -146,19 +148,19 @@ export function toRuntimeUiResult(master, state, integration, sourcePackageInteg
     if (def.selection_mode === 'DERIVED' || def.selection_mode === 'FIXED') continue;
     visible.push({
       key: def.field_name,
-      displayLabel: labelFrom(def, humanizeFieldName(def.field_name)),
+      displayLabel: fieldState.display_label ?? labelFrom(def, humanizeFieldName(def.field_name)),
       displayOrder: Number(def.display_order ?? def.displayOrder ?? index + 1),
       dataType: dataTypeFor(def),
+      unit: fieldState.unit ?? def.unit ?? null,
       required: Boolean(fieldState.required),
       values: choicesFor(master, def, fieldState),
       selectionMode: def.selection_mode,
       runtimeState: fieldState.state,
-      readOnly: def.selection_mode === 'AUTO_RESOLVE' && fieldState.allowed_values?.length === 1,
+      readOnly: Boolean(fieldState.readOnly) || (def.selection_mode === 'AUTO_RESOLVE' && fieldState.allowed_values?.length === 1),
       parentFields: def.parent_fields ?? [],
     });
   }
-  visible.sort((a, b) => a.displayOrder - b.displayOrder || a.key.localeCompare(b.key));
-  const visibleKeys = new Set(visible.map((field) => field.key));
+  const orderedVisible = applyRuntimeUiCategoryOrder(visible, integration);
   const selection = Object.fromEntries(Object.entries(state.fields)
     .filter(([, fieldState]) => fieldState.value !== null && fieldState.value !== undefined)
     .map(([name, fieldState]) => {
@@ -170,7 +172,7 @@ export function toRuntimeUiResult(master, state, integration, sourcePackageInteg
   const errors = (state.errors ?? []).map((error) => ({
     errorCode: error.code ?? 'RUNTIME_VALIDATION_ERROR',
     field: error.field ?? null,
-    message: error.field ? `${error.field}: ${error.code ?? '入力値が成立しません'}` : warningText(error),
+    message: error.message ?? (error.field ? `${error.field}: ${error.code ?? '入力値が成立しません'}` : warningText(error)),
   }));
   return {
     productId: integration.id,
@@ -180,7 +182,7 @@ export function toRuntimeUiResult(master, state, integration, sourcePackageInteg
     status: integration.status,
     selection,
     dependencyFields: master.fields.map((def) => ({ key: def.field_name, parentFields: def.parent_fields ?? [] })),
-    fields: visible,
+    fields: orderedVisible,
     notices: [
       ...(state.warnings ?? []).map(warningText),
       ...(state.derived_entities ?? []).map(row => `${({ REQUIRES: '必要', ENABLES: '有効', FIXES: '固定' })[row.relationship]}: ${row.displayLabel}${row.note ? `（${row.note}）` : ''}`),
