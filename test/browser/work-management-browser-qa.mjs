@@ -76,6 +76,7 @@ try{
   assert.equal(await page.locator('.opening-card').count(),11);
   await page.locator('.opening-card').last().getByRole('button',{name:'編集'}).click();
   await page.locator('[data-opening-field="opening_name"]').fill('掃き出し窓 サイズ変更');
+  await page.waitForFunction(()=>document.querySelectorAll('[data-spec-key="size"] option:not([value=""])').length>1);
   const sizeOptions=page.locator('[data-spec-key="size"] option:not([value=""])');
   assert.ok(await sizeOptions.count()>1);const secondSize=await sizeOptions.nth(1).getAttribute('value');await choose('size',secondSize);
   await page.getByRole('button',{name:'この開口部を保存'}).click();await page.waitForURL(estimateUrl);
