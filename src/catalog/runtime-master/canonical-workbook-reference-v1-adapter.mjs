@@ -245,6 +245,10 @@ function resolveModel(model, inputSelection = {}) {
       selection.variant = model.standardVariant;
     }
 
+    // Auto-resolved parents can expose valid downstream fields in the same request.
+    // Re-evaluate before pruning so a child supplied with an omitted default parent is not discarded.
+    allowedState = allowedByField(model,selection);
+
     for (const def of model.fields) {
       const key = def.field_name;
       if (!allowedState.visible.has(key)) {
