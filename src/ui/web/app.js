@@ -35,6 +35,15 @@ function renderSummary(result){
   $("selectionSummary").classList.toggle("muted",rows.length===0);
   $("selectionSummary").innerHTML=rows.length?rows.join(""):"項目を選択してください。";
 }
+function renderProductCodes(result){
+  const rows=result.optionCodeResults??[],card=$("productCodeCard"),target=$("productCodeResults");
+  card.hidden=rows.length===0;
+  target.innerHTML=rows.map((row)=>{
+    const status={RESOLVED:"確定",SPECIAL_ORDER_NO_STANDARD_SKU:"特注",SOURCE_LIMITATION:"要確認",CONDITION_CONFIRMATION_REQUIRED:"条件確認"}[row.status]??row.status;
+    const value=row.productCode??row.codeTemplates?.join(" / ")??"品番未確定";
+    return `<div data-option-code-status="${esc(row.status)}"><span>${esc(row.label)}<small>${esc(status)}</small></span><strong>${esc(value)}</strong>${row.message?`<small>${esc(row.message)}</small>`:""}</div>`;
+  }).join("");
+}
 function renderField(field){
   const required=field.required?'<span class="required">必須</span>':"";
   if(field.dataType==="NUMBER"){
@@ -52,12 +61,12 @@ function renderField(field){
   return `<div class="field" data-key="${esc(field.key)}"><label>${esc(field.displayLabel)}${required}</label><select data-spec-key="${esc(field.key)}"${multi?' multiple size="5"':""}${disabled}>${multi?"":'<option value="">選択してください</option>'}${options}</select>${multi?'<small class="field-help">複数選択できます</small>':""}</div>`;
 }
 async function resolve(){
-  const revision=++state.resolveRevision;
-  if(!state.productId){$("dynamicForm").innerHTML="";return;}
-  const q=new URLSearchParams({productId:state.productId,selection:JSON.stringify(state.selection)});
+  const revision=++state.resolveRevision,productId=state.productId;
+  if(!productId){$("dynamicForm").innerHTML="";$("productCodeCard").hidden=true;$("productCodeResults").innerHTML="";return;}
+  const q=new URLSearchParams({productId,selection:JSON.stringify(state.selection)});
   const endpoint=state.productSource==="RUNTIME_MASTER"?"/api/runtime-master/resolve":"/api/catalog/resolve";
   const result=await getJson(`${endpoint}?${q}`);
-  if(revision!==state.resolveRevision)return;
+  if(revision!==state.resolveRevision||productId!==state.productId)return;
   state.selection=result.selection;state.resolved=result;
   $("dynamicForm").innerHTML=result.fields.map(renderField).join("");
   document.querySelectorAll("[data-spec-key]").forEach(el=>el.addEventListener("change",async()=>{
@@ -71,6 +80,7 @@ async function resolve(){
     await resolve();
   }));
   renderWarnings(result);renderSummary(result);
+  renderProductCodes(result);
 }
 async function init(){
   const [catalogProducts,runtimeProducts,health]=await Promise.all([getJson("/api/catalog/products"),getJson("/api/runtime-master/integrations"),getJson("/api/health")]);
@@ -83,10 +93,16 @@ async function init(){
   renderInventory(health);
 }
 $("manufacturer").addEventListener("change",()=>{
-  state.productId=null;state.productSource="CATALOG";state.selection={};state.resolved=null;
-  const m=$("manufacturer").value;
-  fill($("product"),state.products.filter(x=>x.manufacturer===m).map(x=>({value:x.id,label:x.displayName,disabled:x.selectable===false})));
-  $("dynamicForm").innerHTML="";$("warnings").innerHTML="";$("selectionSummary").textContent="シリーズを選択してください。";
+  state.resolveRevision+=1;state.productId=null;state.productSource="CATALOG";state.selection={};state.resolved=null;
+  const manufacturer=$("manufacturer").value;
+  const products=state.products.filter(x=>x.manufacturer===manufacturer);
+  fill($("product"),products.map(x=>({
+    value:x.id,
+    label:x.source==="RUNTIME_MASTER"?(x.selectable?`${x.displayName} [Runtime]`:`${x.displayName}（正式Runtime未登録）`):x.displayName,
+    disabled:x.selectable===false,
+    title:x.blockReason??"",
+  })));
+  $("dynamicForm").innerHTML="";$("warnings").innerHTML="";$("selectionSummary").textContent="シリーズを選択してください。";$("productCodeCard").hidden=true;$("productCodeResults").innerHTML="";
 });
 $("product").addEventListener("change",async()=>{
   state.productId=$("product").value||null;state.selection={};state.resolved=null;

@@ -18,6 +18,25 @@ export const appRuntimeIntegrationRegistry = Object.freeze([
     adapterType: 'CANONICAL_WORKBOOK_REFERENCE_V1',
     uiStandardSpec: 'サッシ情報管理アプリ_UI実装標準仕様書_v1.5',
   }),
+  Object.freeze({
+    id: 'SER-LIXIL-TW',
+    manufacturer: 'LIXIL',
+    series: 'TW',
+    displayName: 'TW',
+    productCategory: 'sash',
+    uiCategory: 'NEW_CONSTRUCTION_EXTERIOR_WINDOW',
+    registrySeriesKey: 'LIXIL::TW',
+    canonicalRuntimeReference: Object.freeze({
+      runtimeManifestDriveFileId: '1f9ogJ2pS0HmrUuXG1Qy431lG0mgxN9pw',
+      runtimeJsonDriveFileId: '1yt4ADBqoK4-5Xqt6bJ593Q4thi81IRzI',
+      canonicalFolderId: '1oLex2SCEIKoH5mDMGtbMasJXglPF-n-a',
+    }),
+    packageVersion: 'integrated-v0.2',
+    schemaVersion: '2.0',
+    sourceHash: '52af3e462f940df67c267de5f715250290136afdd67a70611e684fcc3d5d064e',
+    adapterType: 'TW_CANONICAL_WORKBOOK_REFERENCE_V1',
+    uiStandardSpec: 'サッシ情報管理アプリ_UI実装標準仕様書_v1.5',
+  }),
 ]);
 
 export function getAppRuntimeIntegrationMetadata(manufacturer, series) {

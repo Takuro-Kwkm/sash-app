@@ -1,0 +1,154 @@
+name: LIXIL TW integrated-v0.2 Production Finalize
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  finalize_tw_production:
+    if: startsWith(github.event.head_commit.message, 'release LIXIL TW integrated-v0.2 production')
+    runs-on: ubuntu-latest
+    environment: production
+    env:
+      VERCEL_ORG_ID: team_AkuHacuJlCl8LuvaFpCzFmbv
+      VERCEL_PROJECT_ID: prj_4z0zqW6yKyPuFINODfGX8LPBuJRP
+      VERCEL_PROJECT_NAME: sash-app-wave3-preview
+      VERCEL_TOKEN_PRIMARY: ${{ secrets.VERCEL_TOKEN }}
+      VERCEL_TOKEN_FALLBACK: ${{ secrets.VERCEL_ACCESS_TOKEN }}
+      RELEASE_SERIES: LIXIL TW
+      RELEASE_PACKAGE_VERSION: integrated-v0.2
+      EXPECTED_TW_MANIFEST_SHA: 52af3e462f940df67c267de5f715250290136afdd67a70611e684fcc3d5d064e
+      EXPECTED_TW_RUNTIME_SHA: 358d8ee5f6e13a294a20b3bb69dd07fac6f21ec20da0c43c7e00d6fb8fa0237f
+      PRODUCTION_URL: https://sash-app-wave3-preview.vercel.app
+      PRODUCTION_HOST: sash-app-wave3-preview.vercel.app
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Initialize release audit
+        run: |
+          mkdir -p artifacts/tw-production-finalize
+          printf 'release_merge_sha=%s\nrepository=%s\nref=%s\nproduct_master_mutation=0\n' "$GITHUB_SHA" "$GITHUB_REPOSITORY" "$GITHUB_REF" > artifacts/tw-production-finalize/release.txt
+
+      - name: Install, lint, typecheck, build and full tests
+        run: |
+          npm install --ignore-scripts
+          npm run lint
+          npm run typecheck
+          npm run build
+          npm test
+          printf 'repository_gate=PASS\nautomated_test_gate=PASS\nbuild_gate=PASS\n' >> artifacts/tw-production-finalize/release.txt
+
+      - name: Local Runtime smoke
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm run start:qa > /tmp/sash-tw-finalize.log 2>&1 &
+          PID=$!
+          trap 'kill $PID || true' EXIT
+          for i in {1..40}; do
+            if curl -fsS http://127.0.0.1:4173/api/health > artifacts/tw-production-finalize/local-health.json; then break; fi
+            sleep 0.5
+          done
+          node scripts/tw-runtime-smoke.mjs
+          node -e 'const h=require("./artifacts/tw-production-finalize/local-health.json"); const tw=h.runtimeMasterIntegrations?.find(x=>x.id==="SER-LIXIL-TW"); if(!h.ok||!tw||!tw.selectable||tw.status!=="READY"||tw.sourceHash!==process.env.EXPECTED_TW_MANIFEST_SHA) process.exit(1)'
+          printf 'canonical_runtime_gate=PASS\nruntime_adapter_gate=PASS\n' >> artifacts/tw-production-finalize/release.txt
+
+      - name: Install browser QA dependencies
+        run: |
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+
+      - name: Local TW/EW browser and regression QA
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm run start:qa > /tmp/sash-tw-finalize-browser.log 2>&1 &
+          PID=$!
+          trap 'kill $PID || true' EXIT
+          for i in {1..40}; do
+            if curl -fsS http://127.0.0.1:4173/api/health >/dev/null; then break; fi
+            sleep 0.5
+          done
+          node test/browser/tw-runtime-browser-qa.mjs
+          node test/browser/ew-runtime-browser-qa.mjs
+          node test/browser/release-regression-browser-qa.mjs
+          printf 'browser_qa_gate=PASS\nregression_gate=PASS\n' >> artifacts/tw-production-finalize/release.txt
+
+      - name: Credential, project and rollback preflight
+        shell: bash
+        run: |
+          set -euo pipefail
+          [[ "$(git rev-parse HEAD)" == "$GITHUB_SHA" ]] || exit 41
+          token="${VERCEL_TOKEN_PRIMARY:-${VERCEL_TOKEN_FALLBACK:-}}"
+          [[ -n "$token" ]] || { echo 'VERCEL_CREDENTIAL_GATE=BLOCKED'; exit 42; }
+          echo "VERCEL_TOKEN_EFFECTIVE=$token" >> "$GITHUB_ENV"
+          project_status="$(curl -sS -o /tmp/vercel-project.json -w '%{http_code}' -H "Authorization: Bearer $token" "https://api.vercel.com/v9/projects/$VERCEL_PROJECT_ID")"
+          [[ "$project_status" == 200 ]] || exit 46
+          node -e 'const p=require("/tmp/vercel-project.json"); if(p.id!==process.env.VERCEL_PROJECT_ID||p.accountId!==process.env.VERCEL_ORG_ID) process.exit(1)'
+          deployments_status="$(curl -sS -o artifacts/tw-production-finalize/previous-production.json -w '%{http_code}' -H "Authorization: Bearer $token" "https://api.vercel.com/v6/deployments?projectId=$VERCEL_PROJECT_ID&target=production&state=READY&limit=1&teamId=$VERCEL_ORG_ID")"
+          [[ "$deployments_status" == 200 ]] || exit 47
+          node -e 'const fs=require("fs"); const x=require("./artifacts/tw-production-finalize/previous-production.json"); const d=x.deployments?.[0]; if(!d?.uid||!d?.url) process.exit(1); fs.appendFileSync(process.env.GITHUB_ENV,`ROLLBACK_DEPLOY_ID=${d.uid}\nROLLBACK_DEPLOY_URL=https://${d.url}\nROLLBACK_COMMIT_SHA=${d.meta?.releaseCommitSha??d.meta?.githubCommitSha??"UNKNOWN"}\n`)'
+          printf 'credential_gate=PASS\nproject_access_gate=PASS\nrollback_readiness=PASS\n' >> artifacts/tw-production-finalize/release.txt
+
+      - name: Deploy fixed merge SHA to Preview
+        run: node scripts/vercel-rest-deploy.mjs preview artifacts/tw-production-finalize/preview-deployment.json
+
+      - name: Preview smoke and browser QA
+        shell: bash
+        run: |
+          set -euo pipefail
+          node -e 'const d=require("./artifacts/tw-production-finalize/preview-deployment.json"); if(d.readyState!=="READY"||d.githubSha!==process.env.GITHUB_SHA||d.mode!=="preview") process.exit(1)'
+          curl -fsS "$DEPLOY_URL/api/health" > artifacts/tw-production-finalize/preview-health.json
+          node -e 'const h=require("./artifacts/tw-production-finalize/preview-health.json"); const tw=h.runtimeMasterIntegrations?.find(x=>x.id==="SER-LIXIL-TW"); if(!h.ok||tw?.sourceHash!==process.env.EXPECTED_TW_MANIFEST_SHA) process.exit(1)'
+          QA_BASE_URL="$DEPLOY_URL" node test/browser/tw-runtime-browser-qa.mjs
+          QA_BASE_URL="$DEPLOY_URL" node test/browser/ew-runtime-browser-qa.mjs
+          QA_BASE_URL="$DEPLOY_URL" node test/browser/release-regression-browser-qa.mjs
+          printf 'preview_deployment=PASS\npreview_browser_qa=PASS\npreview_url=%s\n' "$DEPLOY_URL" >> artifacts/tw-production-finalize/release.txt
+
+      - name: Deploy fixed merge SHA to Production
+        run: node scripts/vercel-rest-deploy.mjs production artifacts/tw-production-finalize/production-deployment.json
+
+      - name: Verify Production identity and canonical alias
+        shell: bash
+        run: |
+          set -euo pipefail
+          node -e 'const d=require("./artifacts/tw-production-finalize/production-deployment.json"); if(d.readyState!=="READY"||d.githubSha!==process.env.GITHUB_SHA||d.mode!=="production"||d.projectId!==process.env.VERCEL_PROJECT_ID||d.teamId!==process.env.VERCEL_ORG_ID) process.exit(1)'
+          status="$(curl -sS -o artifacts/tw-production-finalize/vercel-deployment.json -w '%{http_code}' -H "Authorization: Bearer $VERCEL_TOKEN_EFFECTIVE" "https://api.vercel.com/v13/deployments/$DEPLOY_ID?teamId=$VERCEL_ORG_ID")"
+          [[ "$status" == 200 ]] || exit 48
+          node -e 'const d=require("./artifacts/tw-production-finalize/vercel-deployment.json"); if(d.readyState!=="READY"||d.target!=="production"||d.meta?.releaseCommitSha!==process.env.GITHUB_SHA||d.meta?.releaseSeries!==process.env.RELEASE_SERIES||!d.alias?.includes(process.env.PRODUCTION_HOST)) process.exit(1)'
+
+      - name: Production root, Runtime and browser smoke
+        env:
+          QA_BASE_URL: ${{ env.PRODUCTION_URL }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          for i in {1..60}; do
+            if curl -fsS "$PRODUCTION_URL/api/health" > artifacts/tw-production-finalize/production-health.json && node -e 'const h=require("./artifacts/tw-production-finalize/production-health.json"); const tw=h.runtimeMasterIntegrations?.find(x=>x.id==="SER-LIXIL-TW"); if(!h.ok||tw?.sourceHash!==process.env.EXPECTED_TW_MANIFEST_SHA) process.exit(1)'; then break; fi
+            sleep 1
+          done
+          curl -fsS "$PRODUCTION_URL/" > artifacts/tw-production-finalize/production-index.html
+          curl -fsS "$PRODUCTION_URL/api/runtime-master/integrations" > artifacts/tw-production-finalize/production-integrations.json
+          node scripts/tw-runtime-smoke.mjs
+          node test/browser/tw-runtime-browser-qa.mjs
+          node test/browser/ew-runtime-browser-qa.mjs
+          node test/browser/release-regression-browser-qa.mjs
+          printf 'production_smoke=PASS\nproduction_browser_qa=PASS\nproduction_ready=TRUE\nreleased=TRUE\nproduction_deployment_id=%s\nproduction_url=%s\nrollback_deployment_id=%s\nrollback_deployment_url=%s\nrollback_commit_sha=%s\n' "$DEPLOY_ID" "$PRODUCTION_URL" "$ROLLBACK_DEPLOY_ID" "$ROLLBACK_DEPLOY_URL" "$ROLLBACK_COMMIT_SHA" >> artifacts/tw-production-finalize/release.txt
+
+      - name: Roll back on Production verification failure
+        if: failure() && env.DEPLOY_ID != '' && env.ROLLBACK_DEPLOY_URL != ''
+        shell: bash
+        run: |
+          npx --yes vercel@50 rollback "$ROLLBACK_DEPLOY_URL" --yes --token "$VERCEL_TOKEN_EFFECTIVE" --scope "$VERCEL_ORG_ID"
+          printf 'rolled_back=TRUE\nrollback_target=%s\n' "$ROLLBACK_DEPLOY_URL" >> artifacts/tw-production-finalize/release.txt
+
+      - name: Upload Production finalization audit
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: tw-production-finalization-audit
+          path: artifacts/
+          if-no-files-found: warn
