@@ -77,7 +77,7 @@ function adaptManifestPackage(entry, runtimePackage) {
 }
 
 export async function loadRegisteredRuntime(manufacturer, series) {
-  const entry = getRuntimeMasterEntry(integration.manufacturer, integration.series);
+  const entry = getRuntimeMasterEntry(manufacturer, series);
   if (!entry) return null;
   if (entry.packageType === 'RUNTIME_MANIFEST_V1' || entry.packageType === 'RUNTIME_MANIFEST_V2') {
     const runtimePackage = entry.packageType === 'RUNTIME_MANIFEST_V2'
