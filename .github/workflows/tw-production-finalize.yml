@@ -37,7 +37,7 @@ jobs:
           npm install --ignore-scripts
           npm run lint
           npm run typecheck
-          npm run build
+          npm run build:release
           npm test
           printf 'repository_gate=PASS\nautomated_test_gate=PASS\nbuild_gate=PASS\n' >> artifacts/tw-production-finalize/release.txt
 
