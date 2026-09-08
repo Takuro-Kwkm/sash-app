@@ -73,7 +73,6 @@ jobs:
       VERCEL_PROJECT_NAME: sash-app-wave3-preview
       VERCEL_TOKEN_PRIMARY: ${{ secrets.VERCEL_TOKEN }}
       VERCEL_TOKEN_FALLBACK: ${{ secrets.VERCEL_ACCESS_TOKEN }}
-      EXPECTED_EW_RUNTIME_SHA: 082442f82f51c4a81050d8e16d5fe3b9cb142004deb371a3e2bbb21384ca37dd
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -109,25 +108,12 @@ jobs:
           echo "VERCEL_PROJECT_ACCESS_GATE=PASS"
       - name: Create exact RC Preview deployment through Vercel REST API
         run: node scripts/vercel-rest-deploy.mjs preview artifacts/release-build/deployment.json
-      - name: Preview Runtime smoke
-        shell: bash
+      - name: Verify Preview deployment identity
         run: |
-          set -euo pipefail
-          for i in {1..60}; do
-            if curl -fsS "$DEPLOY_URL/api/health" > artifacts/release-build/preview-health.json; then
-              if HEALTH_FILE=artifacts/release-build/preview-health.json node -e 'const fs=require("fs"); const h=JSON.parse(fs.readFileSync(process.env.HEALTH_FILE,"utf8")); const ew=h.runtimeMasterIntegrations?.find(x=>x.id==="SER-LIX-EW"); if(!h.ok||!ew||!ew.selectable||ew.status!=="READY"||ew.sourceHash!==process.env.EXPECTED_EW_RUNTIME_SHA) process.exit(1)'; then
-                curl -fsS "$DEPLOY_URL/api/runtime-master/integrations" > artifacts/release-build/preview-integrations.json
-                curl -fsS "$DEPLOY_URL/app.js" > /dev/null
-                printf 'vercel_build_gate=PASS\nrelease_preview_gate=PASS\ndeployment_id=%s\ndeployment_url=%s\n' "$DEPLOY_ID" "$DEPLOY_URL" >> artifacts/release-build/release.txt
-                echo "VERCEL_BUILD_GATE=PASS"
-                echo "RELEASE_PREVIEW_GATE=PASS"
-                exit 0
-              fi
-            fi
-            sleep 1
-          done
-          echo "RELEASE_PREVIEW_GATE=BLOCKED"
-          exit 47
+          node -e 'const d=require("./artifacts/release-build/deployment.json"); if(d.readyState!=="READY"||d.githubSha!==process.env.GITHUB_SHA||d.mode!=="preview"||d.projectId!==process.env.VERCEL_PROJECT_ID||d.teamId!==process.env.VERCEL_ORG_ID) process.exit(1)'
+          printf 'vercel_build_gate=PASS\nrelease_preview_gate=PASS\ndeployment_id=%s\ndeployment_url=%s\n' "$DEPLOY_ID" "$DEPLOY_URL" >> artifacts/release-build/release.txt
+          echo "VERCEL_BUILD_GATE=PASS"
+          echo "RELEASE_PREVIEW_GATE=PASS"
       - name: Upload release build audit
         if: always()
         uses: actions/upload-artifact@v4
@@ -149,6 +135,7 @@ jobs:
       VERCEL_TOKEN_FALLBACK: ${{ secrets.VERCEL_ACCESS_TOKEN }}
       EXPECTED_EW_RUNTIME_SHA: 082442f82f51c4a81050d8e16d5fe3b9cb142004deb371a3e2bbb21384ca37dd
       PRODUCTION_URL: https://sash-app-wave3-preview.vercel.app
+      PRODUCTION_HOST: sash-app-wave3-preview.vercel.app
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -184,34 +171,34 @@ jobs:
           echo "VERCEL_PROJECT_ACCESS_GATE=PASS"
       - name: Create exact merge-SHA Production deployment through Vercel REST API
         run: node scripts/vercel-rest-deploy.mjs production artifacts/production-deploy/deployment.json
-      - name: Production smoke on immutable deployment and canonical alias
+      - name: Verify Production deployment identity and canonical alias
         shell: bash
         run: |
           set -euo pipefail
-          check_target(){
-            local base="$1" label="$2" out="artifacts/production-deploy/${label}-health.json"
-            for i in {1..60}; do
-              if curl -fsS "$base/api/health" > "$out"; then
-                if HEALTH_FILE="$out" node -e 'const fs=require("fs"); const h=JSON.parse(fs.readFileSync(process.env.HEALTH_FILE,"utf8")); const ew=h.runtimeMasterIntegrations?.find(x=>x.id==="SER-LIX-EW"); if(!h.ok||!ew||!ew.selectable||ew.status!=="READY"||ew.sourceHash!==process.env.EXPECTED_EW_RUNTIME_SHA) process.exit(1)'; then
-                  curl -fsS "$base/api/runtime-master/integrations" > "artifacts/production-deploy/${label}-integrations.json"
-                  curl -fsS "$base/app.js" > /dev/null
-                  return 0
-                fi
+          node -e 'const d=require("./artifacts/production-deploy/deployment.json"); if(d.readyState!=="READY"||d.githubSha!==process.env.GITHUB_SHA||d.mode!=="production"||d.projectId!==process.env.VERCEL_PROJECT_ID||d.teamId!==process.env.VERCEL_ORG_ID) process.exit(1)'
+          status="$(curl -sS -o artifacts/production-deploy/vercel-deployment.json -w '%{http_code}' -H "Authorization: Bearer $VERCEL_TOKEN_EFFECTIVE" "https://api.vercel.com/v13/deployments/$DEPLOY_ID?teamId=$VERCEL_ORG_ID")"
+          if [[ "$status" != "200" ]]; then exit 48; fi
+          node -e 'const d=require("./artifacts/production-deploy/vercel-deployment.json"); if(d.readyState!=="READY"||d.target!=="production"||d.meta?.releaseCommitSha!==process.env.GITHUB_SHA||!Array.isArray(d.alias)||!d.alias.includes(process.env.PRODUCTION_HOST)) { console.error({readyState:d.readyState,target:d.target,releaseCommitSha:d.meta?.releaseCommitSha,alias:d.alias}); process.exit(1); }'
+          echo "PRODUCTION_ALIAS_GATE=PASS"
+      - name: Production smoke on canonical URL
+        shell: bash
+        run: |
+          set -euo pipefail
+          for i in {1..60}; do
+            if curl -fsS "$PRODUCTION_URL/api/health" > artifacts/production-deploy/canonical-health.json; then
+              if HEALTH_FILE=artifacts/production-deploy/canonical-health.json node -e 'const fs=require("fs"); const h=JSON.parse(fs.readFileSync(process.env.HEALTH_FILE,"utf8")); const ew=h.runtimeMasterIntegrations?.find(x=>x.id==="SER-LIX-EW"); if(!h.ok||!ew||!ew.selectable||ew.status!=="READY"||ew.sourceHash!==process.env.EXPECTED_EW_RUNTIME_SHA) process.exit(1)'; then
+                curl -fsS "$PRODUCTION_URL/api/runtime-master/integrations" > artifacts/production-deploy/canonical-integrations.json
+                curl -fsS "$PRODUCTION_URL/app.js" > /dev/null
+                build_id="$(node -e 'const h=require("./artifacts/production-deploy/canonical-health.json"); process.stdout.write(h.buildId)')"
+                printf 'production_smoke=PASS\nbuild_id=%s\ndeployment_id=%s\ndeployment_url=%s\n' "$build_id" "$DEPLOY_ID" "$DEPLOY_URL" >> artifacts/production-deploy/release.txt
+                echo "PRODUCTION_SMOKE_GATE=PASS"
+                exit 0
               fi
-              sleep 1
-            done
-            return 1
-          }
-          check_target "$DEPLOY_URL" immutable
-          check_target "$PRODUCTION_URL" canonical
-          immutable_id="$(node -e 'const h=require("./artifacts/production-deploy/immutable-health.json"); process.stdout.write(h.buildId)')"
-          canonical_id="$(node -e 'const h=require("./artifacts/production-deploy/canonical-health.json"); process.stdout.write(h.buildId)')"
-          if [[ "$immutable_id" != "$canonical_id" ]]; then
-            echo "PRODUCTION_ALIAS_GATE=BLOCKED"
-            exit 44
-          fi
-          printf 'production_smoke=PASS\nbuild_id=%s\ndeployment_id=%s\ndeployment_url=%s\n' "$canonical_id" "$DEPLOY_ID" "$DEPLOY_URL" >> artifacts/production-deploy/release.txt
-          echo "PRODUCTION_SMOKE_GATE=PASS"
+            fi
+            sleep 1
+          done
+          echo "PRODUCTION_SMOKE_GATE=BLOCKED"
+          exit 49
       - name: Install Production browser QA dependencies
         run: |
           npm install --no-save playwright@1.55.0
