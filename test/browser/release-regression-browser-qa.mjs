@@ -52,8 +52,16 @@ try {
   const runtime=await context.request.get(`${BASE}/api/runtime-master/integrations`);
   assert.equal(runtime.status(),200);
   const integrations=await runtime.json();
-  assert.equal(integrations.length,2);
-  assert.deepEqual(new Set(integrations.map((row)=>row.id)),new Set(['SER-LIX-EW','SER-LIXIL-TW']));
+  assert.equal(integrations.length,3);
+  const byId=new Map(integrations.map((row)=>[row.id,row]));
+  assert.deepEqual(new Set(byId.keys()),new Set(['SER-LIX-EW','SER-LIXIL-TW','SER-LIXIL-INPLUS']));
+  assert.equal(byId.get('SER-LIX-EW').sourceHash,'082442f82f51c4a81050d8e16d5fe3b9cb142004deb371a3e2bbb21384ca37dd');
+  assert.equal(byId.get('SER-LIXIL-TW').sourceHash,'52af3e462f940df67c267de5f715250290136afdd67a70611e684fcc3d5d064e');
+  const inplus=byId.get('SER-LIXIL-INPLUS');
+  assert.equal(inplus.sourceHash,'39017746404c98b59a3238890bfece9f46acb122870def6a1361472dad5390ed');
+  assert.equal(inplus.packageVersion,'v0.4-R1');
+  assert.equal(inplus.schemaVersion,'2.0');
+  assert.equal(inplus.uiTemplate,'INPLUS_V04R1');
   assert.ok(integrations.every((row)=>row.selectable&&row.status==='READY'));
   assert.deepEqual(report.consoleErrors,[]);
   assert.deepEqual(report.pageErrors,[]);
