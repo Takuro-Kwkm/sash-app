@@ -2,6 +2,7 @@ import { evaluateConfiguration } from './generic-rule-engine.mjs';
 import { getRuntimeMasterEntry, loadRegisteredRuntime, runtimeMasterInventory } from './runtime-master-registry.mjs';
 import { appRuntimeIntegrationRegistry } from './app-runtime-integration-registry.mjs';
 import { applyRuntimeUiCategoryOrder } from './new-construction-sash-runtime-ui-contract.mjs';
+import { auditRuntimeUiGrouping, buildRuntimeUiSections, projectRuntimeUiFields } from './runtime-ui-template.mjs';
 
 const integrationKey = (manufacturer, series) => `${manufacturer}::${series}`;
 const generatedProductId = (manufacturer, series) => `RUNTIME-${manufacturer}-${series}`.replace(/[^A-Za-z0-9._-]+/g, '-');
@@ -28,6 +29,8 @@ function registeredIntegration(entry) {
     displayName: metadata?.displayName ?? entry.series,
     productCategory: metadata?.productCategory ?? null,
     uiCategory: metadata?.uiCategory ?? null,
+    uiTemplate: metadata?.uiTemplate ?? null,
+    uiContractSource: metadata?.uiContractSource ?? null,
     registrySeriesKey: metadata?.registrySeriesKey ?? integrationKey(entry.manufacturer, entry.series),
     source: 'RUNTIME_MASTER',
     status: 'READY',
@@ -116,7 +119,7 @@ function choicesFor(master, def, fieldState) {
     { value: true, displayLabel: 'はい', manualCheck: false, disabled: false },
     { value: false, displayLabel: 'いいえ', manualCheck: false, disabled: false },
   ];
-  if (!['enum','array'].includes(def.data_type)) return [];
+  if (!['enum', 'array'].includes(def.data_type)) return [];
   const rows = valueRowsFor(master, def.field_name);
   const byValue = new Map(rows.map((row) => [JSON.stringify(row.canonical_value), row]));
   return (fieldState.allowed_values ?? []).filter((value) => {
@@ -145,7 +148,8 @@ export function toRuntimeUiResult(master, state, integration, sourcePackageInteg
   for (const [index, def] of master.fields.entries()) {
     const fieldState = state.fields[def.field_name];
     if (!fieldState || fieldState.visibility === 'HIDE' || def.runtime_included === false) continue;
-    if (def.selection_mode === 'DERIVED' || def.selection_mode === 'FIXED') continue;
+    if (def.selection_mode === 'FIXED') continue;
+    if (!integration.uiTemplate && def.selection_mode === 'DERIVED') continue;
     visible.push({
       key: def.field_name,
       displayLabel: fieldState.display_label ?? labelFrom(def, humanizeFieldName(def.field_name)),
@@ -156,36 +160,54 @@ export function toRuntimeUiResult(master, state, integration, sourcePackageInteg
       values: choicesFor(master, def, fieldState),
       selectionMode: def.selection_mode,
       runtimeState: fieldState.state,
-      readOnly: Boolean(fieldState.readOnly) || (def.selection_mode === 'AUTO_RESOLVE' && fieldState.allowed_values?.length === 1),
+      readOnly: Boolean(fieldState.readOnly)
+        || Boolean(fieldState.derived_by_rule || fieldState.resolved_by_rule)
+        || (def.selection_mode === 'AUTO_RESOLVE' && fieldState.allowed_values?.length === 1),
       parentFields: def.parent_fields ?? [],
     });
   }
-  const orderedVisible = applyRuntimeUiCategoryOrder(visible, integration);
+
+  visible.sort((a, b) => a.displayOrder - b.displayOrder || a.key.localeCompare(b.key));
+  const orderedVisible = integration.uiTemplate
+    ? projectRuntimeUiFields(integration.uiTemplate, visible, state)
+    : applyRuntimeUiCategoryOrder(visible, integration);
+  const visibleKeys = new Set(orderedVisible.map((field) => field.key));
   const selection = Object.fromEntries(Object.entries(state.fields)
-    .filter(([, fieldState]) => fieldState.value !== null && fieldState.value !== undefined)
+    .filter(([name, fieldState]) => (!integration.uiTemplate || visibleKeys.has(name)) && fieldState.value !== null && fieldState.value !== undefined)
     .map(([name, fieldState]) => {
       if (!Array.isArray(fieldState.value)) return [name, fieldState.value];
       const selectable = new Set(valueRowsFor(master, name).filter((row) => row.user_selectable !== false).map((row) => row.canonical_value));
       return [name, fieldState.value.filter((value) => selectable.has(value))];
     })
     .filter(([, value]) => !Array.isArray(value) || value.length));
+
   const errors = (state.errors ?? []).map((error) => ({
     errorCode: error.code ?? 'RUNTIME_VALIDATION_ERROR',
     field: error.field ?? null,
     message: error.message ?? (error.field ? `${error.field}: ${error.code ?? '入力値が成立しません'}` : warningText(error)),
   }));
+  const ui = integration.uiTemplate
+    ? buildRuntimeUiSections({ templateId: integration.uiTemplate, fields: orderedVisible, master })
+    : { templateId: null, sections: [], gapAudit: null };
+  const groupingAudit = integration.uiTemplate ? auditRuntimeUiGrouping(integration.uiTemplate, orderedVisible) : null;
+
   return {
     productId: integration.id,
     manufacturer: integration.manufacturer,
     series: integration.series,
     source: 'RUNTIME_MASTER',
     status: integration.status,
+    uiTemplate: ui.templateId,
+    uiContractSource: integration.uiContractSource,
+    uiSections: ui.sections,
+    uiStandardRuntimeGap: ui.gapAudit,
+    uiGroupingAudit: groupingAudit,
     selection,
     dependencyFields: master.fields.map((def) => ({ key: def.field_name, parentFields: def.parent_fields ?? [] })),
     fields: orderedVisible,
     notices: [
       ...(state.warnings ?? []).map(warningText),
-      ...(state.derived_entities ?? []).map(row => `${({ REQUIRES: '必要', ENABLES: '有効', FIXES: '固定' })[row.relationship]}: ${row.displayLabel}${row.note ? `（${row.note}）` : ''}`),
+      ...(state.derived_entities ?? []).map((row) => `${({ REQUIRES: '必要', ENABLES: '有効', FIXES: '固定' })[row.relationship]}: ${row.displayLabel}${row.note ? `（${row.note}）` : ''}`),
       ...((state.derived_options ?? []).length ? [`自動適用オプション: ${(state.derived_options ?? []).map((id) => labelFrom(master.values.find((row) => row.field_name === 'option' && row.canonical_value === id), id)).join('、')}`] : []),
     ],
     manualWarnings: (state.matched_invalid_rules ?? []).map((ruleId) => `成立不可Rule: ${ruleId}`),
@@ -194,6 +216,7 @@ export function toRuntimeUiResult(master, state, integration, sourcePackageInteg
       errors,
       missingRequiredFields: [...(state.missing_required_fields ?? [])],
     },
+    dimensionResult: state.dimension_result ?? null,
     derivedEntities: state.derived_entities ?? [],
     derivedComponents: [...(state.derived_components ?? [])].sort(),
     derivedOptions: [...(state.derived_options ?? [])].sort(),
@@ -206,6 +229,8 @@ export function toRuntimeUiResult(master, state, integration, sourcePackageInteg
       packageVersion: integration.packageVersion,
       schemaVersion: integration.schemaVersion,
       adapterType: integration.adapterType,
+      uiTemplate: integration.uiTemplate,
+      uiContractSource: integration.uiContractSource,
       sourceHash: integration.sourceHash,
       canonicalRuntimeReference: integration.canonicalRuntimeReference,
       sourcePackageIntegrity: sourcePackageIntegrity ? {

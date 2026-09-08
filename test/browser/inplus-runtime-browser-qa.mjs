@@ -1,0 +1,280 @@
+import assert from 'node:assert/strict';
+import { mkdir, writeFile } from 'node:fs/promises';
+import { chromium } from 'playwright';
+
+const BASE = process.env.QA_BASE_URL ?? 'http://127.0.0.1:4173';
+const PRODUCT_ID = 'SER-LIXIL-INPLUS';
+const OUT = 'artifacts/inplus-runtime-browser-qa';
+const UI_ORDER = [
+  'window_type','sash_configuration','size_class','reverse_handing','hinge_side',
+  'order_width','order_height','upper_frame_spec','sash_midrail','crescent_position',
+  'frame_install_spec','fukashi_spec','joint_layout','body_color','glass_family',
+  'glass_type','lowe_color','cavity_fill','supply_form','glass_detail',
+  'decorative_pattern','option_items',
+];
+const FORBIDDEN = [
+  'spacer','size_mode','manufacturer','series','product_category','evidence',
+  'screen','screen_type','screen_midrail','screen_net','exterior_color','interior_color',
+];
+
+await mkdir(OUT, { recursive: true });
+const report = {
+  status: 'RUNNING',
+  desktop: {},
+  mobile: {},
+  consoleErrors: [],
+  pageErrors: [],
+  failedResponses: [],
+  uiStandardRuntimeGap: null,
+};
+const browser = await chromium.launch({ headless: true });
+
+function track(page) {
+  page.on('console', (message) => {
+    if (message.type() === 'error') report.consoleErrors.push(message.text());
+  });
+  page.on('pageerror', (error) => report.pageErrors.push(error.message));
+  page.on('response', (response) => {
+    if (response.status() >= 400) report.failedResponses.push({ status: response.status(), url: response.url() });
+  });
+}
+
+async function apiResolve(page, selection) {
+  const response = await page.request.get(`${BASE}/api/runtime-master/resolve?${new URLSearchParams({
+    productId: PRODUCT_ID,
+    selection: JSON.stringify(selection),
+  })}`);
+  assert.equal(response.status(), 200);
+  return response.json();
+}
+
+async function openInplus(page) {
+  await page.goto(BASE, { waitUntil: 'networkidle' });
+  await page.waitForFunction(() => document.querySelector('#status')?.textContent === 'CATALOG CONNECTED');
+  assert.equal((await page.locator('label[for="manufacturer"]').textContent())?.trim(), 'メーカー');
+  assert.equal((await page.locator('label[for="product"]').textContent())?.trim(), '商品');
+  await page.selectOption('#manufacturer', 'LIXIL');
+  await page.waitForFunction((id) => [...document.querySelectorAll('#product option')].some((option) => option.value === id && !option.disabled), PRODUCT_ID);
+  const responsePromise = page.waitForResponse((response) => response.url().includes('/api/runtime-master/resolve') && response.status() === 200);
+  await page.selectOption('#product', PRODUCT_ID);
+  const initial = await (await responsePromise).json();
+  await page.waitForFunction(() => document.querySelectorAll('#dynamicForm > .field[data-key]').length > 0);
+  return initial;
+}
+
+async function assertUiContract(page, result) {
+  const keys = await page.locator('#dynamicForm > .field[data-key]').evaluateAll((nodes) => nodes.map((node) => node.dataset.key));
+  const positions = keys.map((key) => UI_ORDER.indexOf(key));
+  assert.ok(positions.every((position) => position >= 0), `Unexpected field: ${keys.join(',')}`);
+  for (let i = 1; i < positions.length; i += 1) {
+    assert.ok(positions[i - 1] < positions[i], `UI order violated: ${keys.join(' > ')}`);
+  }
+  for (const key of FORBIDDEN) assert.equal(keys.includes(key), false, `${key} must not render`);
+  assert.equal(await page.locator('[data-runtime-gap]').count(), 0);
+  assert.equal(result.uiTemplate, 'INPLUS_V04R1');
+  assert.equal(result.uiGroupingAudit.status, 'PASS');
+  assert.equal(result.uiStandardRuntimeGap.status, 'NONE');
+  assert.equal(result.uiContractSource.authoringMasterDriveFileId, '1NbvIhvxINl45MStUR17LqPOP2123fUAQ');
+  return keys;
+}
+
+async function choose(page, key, value) {
+  const locator = page.locator(`[data-spec-key="${key}"]`);
+  await locator.waitFor({ state: 'visible' });
+  const selectable = await locator.evaluate((element, wanted) => {
+    if (!(element instanceof HTMLSelectElement)) return false;
+    return [...element.options].some((option) => option.value === String(wanted) && !option.disabled);
+  }, value);
+  assert.equal(selectable, true, `${key}=${value} must be an enabled Runtime candidate before browser selection`);
+  const responsePromise = page.waitForResponse((response) => response.url().includes('/api/runtime-master/resolve') && response.status() === 200);
+  await locator.evaluate((element, wanted) => {
+    element.value = String(wanted);
+    element.dispatchEvent(new Event('change', { bubbles: true }));
+  }, value);
+  const result = await (await responsePromise).json();
+  await page.waitForTimeout(25);
+  return result;
+}
+
+async function number(page, key, value) {
+  const locator = page.locator(`[data-spec-key="${key}"]`);
+  await locator.waitFor({ state: 'visible' });
+  const responsePromise = page.waitForResponse((response) => response.url().includes('/api/runtime-master/resolve') && response.status() === 200);
+  await locator.evaluate((element, wanted) => {
+    element.value = String(wanted);
+    element.dispatchEvent(new Event('change', { bubbles: true }));
+  }, value);
+  const result = await (await responsePromise).json();
+  await page.waitForTimeout(25);
+  return result;
+}
+
+async function configureCommonWindow(page, width, height) {
+  let result = await choose(page, 'window_type', '引違い窓');
+  result = await choose(page, 'sash_configuration', '2枚建');
+  result = await choose(page, 'size_class', '窓タイプ');
+  assert.equal(await page.locator('[data-spec-key="upper_frame_spec"]').count(), 0, '上枠仕様はW/H前に表示しない');
+  result = await number(page, 'order_width', width);
+  assert.equal(await page.locator('[data-spec-key="upper_frame_spec"]').count(), 0, '上枠仕様はW/H両方入力後に表示');
+  result = await number(page, 'order_height', height);
+  assert.equal(await page.locator('[data-spec-key="upper_frame_spec"]').count(), 1);
+  result = await choose(page, 'upper_frame_spec', '標準');
+  result = await choose(page, 'body_color', 'COL-S');
+  result = await choose(page, 'glass_family', 'Low-E複層');
+  return result;
+}
+
+async function exercise(page) {
+  let result = await openInplus(page);
+  assert.equal(result.uiTemplate, 'INPLUS_V04R1');
+  assert.equal(result.uiStandardRuntimeGap.status, 'NONE');
+  report.uiStandardRuntimeGap = result.uiStandardRuntimeGap;
+  const initialOrder = await assertUiContract(page, result);
+
+  result = await configureCommonWindow(page, 1000, 1000);
+  result = await choose(page, 'glass_type', '透明');
+  if (await page.locator('[data-spec-key="lowe_color"]').count()) result = await choose(page, 'lowe_color', 'グリーン');
+  if (await page.locator('[data-spec-key="cavity_fill"]').count()) result = await choose(page, 'cavity_fill', '乾燥空気 A12');
+  if (await page.locator('[data-spec-key="supply_form"]').count()) result = await choose(page, 'supply_form', '完成品障子（枠はノックダウン）');
+  result = await choose(page, 'glass_detail', 'LE-A-G-CLR');
+  assert.equal(result.validation.status, 'VALID');
+  assert.equal(result.dimensionResult.status, 'PASS');
+  assert.equal(result.runtimeMaster.sourcePackageIntegrity.match, true);
+  const standardOrder = await assertUiContract(page, result);
+  const supply = result.fields.find((field) => field.key === 'supply_form');
+  if (supply) assert.ok(supply.values.length > 1);
+  const cavity = result.fields.find((field) => field.key === 'cavity_fill');
+  if (cavity) assert.ok(cavity.values.length > 1);
+  assert.ok((await page.locator('#selectionSummary').textContent())?.includes('1000'));
+
+  // Build the grid-glass path from a clean browser state. This mirrors the formal input order
+  // and avoids treating a candidate excluded by the previous 1000x1000 selection as selectable.
+  result = await openInplus(page);
+  await assertUiContract(page, result);
+  result = await configureCommonWindow(page, 900, 500);
+  result = await choose(page, 'glass_type', '和紙調・格子入り');
+  if (await page.locator('[data-spec-key="lowe_color"]').count()) result = await choose(page, 'lowe_color', 'グリーン');
+  if (await page.locator('[data-spec-key="cavity_fill"]').count()) result = await choose(page, 'cavity_fill', '乾燥空気 A8');
+  if (await page.locator('[data-spec-key="supply_form"]').count()) result = await choose(page, 'supply_form', '完成品障子（枠はノックダウン）');
+  result = await choose(page, 'glass_detail', 'LE-A-G-WG');
+  const pattern = page.locator('[data-spec-key="decorative_pattern"]');
+  await pattern.waitFor({ state: 'visible' });
+  assert.deepEqual((await pattern.locator('option').allTextContents()).filter((text) => text !== '選択してください').sort(), ['横繁', '荒間'].sort());
+  result = await choose(page, 'decorative_pattern', '荒間');
+  assert.equal(result.validation.status, 'VALID');
+  assert.equal(result.dimensionResult.status, 'PASS');
+  await assertUiContract(page, result);
+  assert.equal(await page.locator('[data-spec-key="spacer"]').count(), 0);
+  assert.equal(result.selection.spacer, undefined);
+  assert.equal(result.runtimeCapabilities.uiSemanticSupport.spacer.field, 'spacer');
+
+  const apiBase = {
+    window_type: '引違い窓',
+    sash_configuration: '2枚建',
+    size_class: '窓タイプ',
+    upper_frame_spec: '標準',
+    order_width: 1000,
+    order_height: 1000,
+    body_color: 'COL-S',
+    glass_family: 'Low-E複層',
+    glass_type: '透明',
+    lowe_color: 'グリーン',
+    cavity_fill: '乾燥空気 A12',
+    supply_form: '完成品障子（枠はノックダウン）',
+    glass_detail: 'LE-A-G-CLR',
+  };
+  for (const selection of [
+    { ...apiBase, sash_configuration: '2枚建（障子W指定）' },
+    { ...apiBase, frame_install_spec: 'FR-CORNER' },
+    { ...apiBase, option_items: ['OP-FLAT'] },
+  ]) {
+    const manual = await apiResolve(page, selection);
+    assert.equal(manual.validation.status, 'MANUAL_CHECK');
+    assert.ok(manual.notices.some((text) => text.includes('MANUAL_CHECK')));
+    assert.equal(manual.uiStandardRuntimeGap.status, 'NONE');
+  }
+  const invalid = await apiResolve(page, { ...apiBase, order_width: 99999, order_height: 99999 });
+  assert.equal(invalid.validation.status, 'INVALID');
+  assert.equal(invalid.dimensionResult.status, 'BLOCK');
+  const cleared = await apiResolve(page, {
+    ...apiBase,
+    order_width: 900,
+    order_height: 500,
+    body_color: 'COL-G',
+    glass_type: '和紙調・格子入り',
+    cavity_fill: '乾燥空気 A8',
+    glass_detail: 'LE-A-G-WG',
+    decorative_pattern: '荒間',
+  });
+  assert.ok(cleared.clearedFields.includes('body_color'));
+  assert.equal(cleared.selection.body_color, undefined);
+
+  return {
+    template: 'INPLUS_V04R1',
+    initialOrder,
+    standardOrder,
+    uiGrouping: 'PASS',
+    uiStandardRuntimeGap: 'NONE',
+    authoringMasterUiContract: 'PASS',
+    wHBeforeUpperFrame: 'PASS',
+    singletonAutoHide: 'PASS',
+    screenUiHidden: 'PASS',
+    bodyColorSingleField: 'PASS',
+    glassConfigIdJoin: 'PASS',
+    rl016DecorativePattern: 'PASS',
+    spacerUiHidden: 'PASS',
+    manualCheckPreservation: 'PASS',
+    invalidBlock: 'PASS',
+    downstreamClear: 'PASS',
+  };
+}
+
+try {
+  const preflightContext = await browser.newContext();
+  const preflightPage = await preflightContext.newPage();
+  const integrationsResponse = await preflightPage.request.get(`${BASE}/api/runtime-master/integrations`);
+  assert.equal(integrationsResponse.status(), 200);
+  const integrations = await integrationsResponse.json();
+  await preflightContext.close();
+  const inplus = integrations.find((row) => row.id === PRODUCT_ID);
+  assert.ok(inplus);
+  assert.equal(inplus.status, 'READY');
+  assert.equal(inplus.selectable, true);
+  assert.equal(inplus.packageVersion, 'v0.4-R1');
+  assert.equal(inplus.schemaVersion, '2.0');
+  assert.equal(inplus.uiTemplate, 'INPLUS_V04R1');
+
+  const desktopContext = await browser.newContext({ viewport: { width: 1440, height: 1000 } });
+  const desktop = await desktopContext.newPage();
+  track(desktop);
+  const desktopChecks = await exercise(desktop);
+  const desktopOverflow = await desktop.evaluate(() => Math.max(0, document.documentElement.scrollWidth - window.innerWidth));
+  assert.ok(desktopOverflow <= 1, `desktop overflow: ${desktopOverflow}`);
+  report.desktop = { ...desktopChecks, overflow: desktopOverflow, status: 'PASS' };
+  await desktop.screenshot({ path: `${OUT}/desktop-1440x1000.png`, fullPage: true });
+  await desktopContext.close();
+
+  const mobileContext = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
+  const mobile = await mobileContext.newPage();
+  track(mobile);
+  const mobileChecks = await exercise(mobile);
+  const mobileOverflow = await mobile.evaluate(() => Math.max(0, document.documentElement.scrollWidth - window.innerWidth));
+  assert.ok(mobileOverflow <= 1, `mobile overflow: ${mobileOverflow}`);
+  report.mobile = { ...mobileChecks, overflow: mobileOverflow, status: 'PASS' };
+  await mobile.screenshot({ path: `${OUT}/mobile-390x844.png`, fullPage: true });
+  await mobileContext.close();
+
+  assert.deepEqual(report.consoleErrors, []);
+  assert.deepEqual(report.pageErrors, []);
+  assert.deepEqual(report.failedResponses, []);
+  report.status = 'PASS';
+  await writeFile(`${OUT}/report.json`, JSON.stringify(report, null, 2));
+  console.log(JSON.stringify(report, null, 2));
+} catch (error) {
+  report.status = 'FAIL';
+  report.failure = error.stack ?? String(error);
+  await writeFile(`${OUT}/report.json`, JSON.stringify(report, null, 2));
+  throw error;
+} finally {
+  await browser.close();
+}

@@ -2,7 +2,7 @@ name: V2 Recovery CI
 
 on:
   push:
-    branches: [main, feat/catalog-recovery-v2, 'release/lixil-ew-v1.1-production-20260908']
+    branches: [main, feat/catalog-recovery-v2, 'release/lixil-ew-v1.1-production-20260908', 'release/lixil-inplus-v0.4-r1-production-20260908']
   pull_request:
     branches: [main]
 
@@ -20,11 +20,17 @@ jobs:
         run: |
           node --check scripts/start-step8-ui.mjs
           node --check scripts/vercel-rest-deploy.mjs
+          node --check scripts/inplus-runtime-smoke.mjs
           node --check api/index.mjs
           node --check src/server/recovery-app.mjs
           node --check src/ui/web/app.js
           node --check src/catalog/runtime-master/runtime-app-bridge.mjs
+          node --check src/catalog/runtime-master/runtime-manifest-loader.mjs
           node --check src/catalog/runtime-master/runtime-master-registry.mjs
+          node --check src/catalog/runtime-master/runtime-ui-template.mjs
+          node --check src/catalog/runtime-master/semantic-table-bundle-v2-adapter.mjs
+          node --check src/catalog/runtime-master/semantic-table-bundle-v2-engine-core.mjs
+          node --check src/catalog/runtime-master/semantic-table-bundle-v2-engine.mjs
       - name: Full repository tests
         run: npm test
       - name: Runtime smoke
@@ -37,15 +43,17 @@ jobs:
             sleep 0.5
           done
           cat /tmp/health.json
-          node -e 'const h=require("/tmp/health.json"); const ids=new Set(h.runtimeMasterIntegrations.map(x=>x.id)); if(!h.ok || h.inventory.length!==4 || ids.size!==2 || !ids.has("SER-LIX-EW") || !ids.has("SER-LIXIL-TW")) process.exit(1)'
+          node -e 'const h=require("/tmp/health.json"); const ids=new Set(h.runtimeMasterIntegrations.map(x=>x.id)); if(!h.ok || h.inventory.length!==4 || ids.size!==3 || !ids.has("SER-LIX-EW") || !ids.has("SER-LIXIL-TW") || !ids.has("SER-LIXIL-INPLUS")) process.exit(1)'
           curl -fsS http://127.0.0.1:4173/api/runtime-master/integrations > /tmp/integrations.json
           node -e 'const r=require("/tmp/integrations.json"); const ew=r.find(x=>x.id==="SER-LIX-EW"); if(!ew || !ew.selectable || ew.status!=="READY" || ew.sourceHash!=="082442f82f51c4a81050d8e16d5fe3b9cb142004deb371a3e2bbb21384ca37dd") process.exit(1)'
           node -e 'const r=require("/tmp/integrations.json"); const tw=r.find(x=>x.id==="SER-LIXIL-TW"); if(!tw || !tw.selectable || tw.status!=="READY" || tw.sourceHash!=="52af3e462f940df67c267de5f715250290136afdd67a70611e684fcc3d5d064e") process.exit(1)'
+          node -e 'const r=require("/tmp/integrations.json"); const ip=r.find(x=>x.id==="SER-LIXIL-INPLUS"); if(!ip || !ip.selectable || ip.status!=="READY" || ip.packageVersion!=="v0.4-R1" || ip.schemaVersion!=="2.0" || ip.sourceHash!=="39017746404c98b59a3238890bfece9f46acb122870def6a1361472dad5390ed" || ip.uiTemplate!=="INPLUS_V04R1") process.exit(1)'
+          node scripts/inplus-runtime-smoke.mjs
       - name: Install browser QA dependencies
         run: |
           npm install --no-save playwright@1.55.0
           npx playwright install --with-deps chromium
-      - name: EW/TW desktop/mobile browser QA and existing-series regression
+      - name: EW/TW/Inplus desktop/mobile browser QA and existing-series regression
         run: |
           npm run start:qa > /tmp/sash-v2-browser.log 2>&1 &
           PID=$!
@@ -56,12 +64,13 @@ jobs:
           done
           node test/browser/ew-runtime-browser-qa.mjs
           node test/browser/tw-runtime-browser-qa.mjs
+          node test/browser/inplus-runtime-browser-qa.mjs
           node test/browser/release-regression-browser-qa.mjs
       - name: Upload browser QA artifacts
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: ew-release-browser-qa
+          name: runtime-release-browser-qa
           path: artifacts/
 
   release_build_preflight:

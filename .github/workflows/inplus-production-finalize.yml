@@ -1,0 +1,219 @@
+name: LIXIL Inplus v0.4-R1 Production Finalize
+
+on:
+  push:
+    branches:
+      - main
+      - release/lixil-inplus-v0.4-r1-production-20260908
+
+concurrency:
+  group: inplus-v0.4-r1-production
+  cancel-in-progress: false
+
+env:
+  VERCEL_ORG_ID: team_AkuHacuJlCl8LuvaFpCzFmbv
+  VERCEL_PROJECT_ID: prj_4z0zqW6yKyPuFINODfGX8LPBuJRP
+  VERCEL_PROJECT_NAME: sash-app-wave3-preview
+  VERCEL_TOKEN_PRIMARY: ${{ secrets.VERCEL_TOKEN }}
+  VERCEL_TOKEN_FALLBACK: ${{ secrets.VERCEL_ACCESS_TOKEN }}
+  RELEASE_SERIES: LIXIL インプラス
+  RELEASE_PACKAGE_VERSION: v0.4-R1
+  EXPECTED_INPLUS_MANIFEST_SHA: 39017746404c98b59a3238890bfece9f46acb122870def6a1361472dad5390ed
+  EXPECTED_INPLUS_RUNTIME_SHA: 3f8468bfd089d6077489311aab6f8c5664eec096e41298fa4325d36cf2cc6c71
+  EXPECTED_INPLUS_SCHEMA_SHA: e6de5896b3e39c1e77df72a89f499735a045748b7744d84072dc5057c403c3ec
+  EXPECTED_EW_MANIFEST_SHA: 082442f82f51c4a81050d8e16d5fe3b9cb142004deb371a3e2bbb21384ca37dd
+  EXPECTED_TW_MANIFEST_SHA: 52af3e462f940df67c267de5f715250290136afdd67a70611e684fcc3d5d064e
+  PRODUCTION_URL: https://sash-app-wave3-preview.vercel.app
+  PRODUCTION_HOST: sash-app-wave3-preview.vercel.app
+
+jobs:
+  prevalidate_inplus_preview:
+    if: github.ref == 'refs/heads/release/lixil-inplus-v0.4-r1-production-20260908'
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Initialize Preview audit
+        run: |
+          mkdir -p artifacts/inplus-preview-handoff
+          printf 'release_candidate_sha=%s\nrepository=%s\nref=%s\nproduct_master_mutation=0\n' "$GITHUB_SHA" "$GITHUB_REPOSITORY" "$GITHUB_REF" > artifacts/inplus-preview-handoff/release.txt
+      - name: Install, lint, typecheck, build and full tests
+        run: |
+          npm install --ignore-scripts
+          npm run lint
+          npm run typecheck
+          npm run build:release
+          npm test
+          printf 'repository_gate=PASS\nautomated_test_gate=PASS\nbuild_gate=PASS\n' >> artifacts/inplus-preview-handoff/release.txt
+      - name: Local Runtime and browser preflight
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+          npm run start:qa > /tmp/sash-inplus-preview.log 2>&1 &
+          PID=$!
+          trap 'kill $PID || true' EXIT
+          for i in {1..40}; do
+            if curl -fsS http://127.0.0.1:4173/api/health > artifacts/inplus-preview-handoff/local-health.json; then break; fi
+            sleep 0.5
+          done
+          node scripts/inplus-runtime-smoke.mjs
+          node test/browser/inplus-runtime-browser-qa.mjs
+          node test/browser/ew-runtime-browser-qa.mjs
+          node test/browser/tw-runtime-browser-qa.mjs
+          node test/browser/release-regression-browser-qa.mjs
+          printf 'local_runtime_smoke=PASS\nlocal_browser_qa=PASS\nregression_gate=PASS\n' >> artifacts/inplus-preview-handoff/release.txt
+      - name: Credential and project preflight
+        shell: bash
+        run: |
+          set -euo pipefail
+          [[ "$(git rev-parse HEAD)" == "$GITHUB_SHA" ]] || exit 41
+          token="${VERCEL_TOKEN_PRIMARY:-${VERCEL_TOKEN_FALLBACK:-}}"
+          [[ -n "$token" ]] || { echo 'VERCEL_CREDENTIAL_GATE=BLOCKED'; exit 42; }
+          echo "VERCEL_TOKEN_EFFECTIVE=$token" >> "$GITHUB_ENV"
+          status="$(curl -sS -o /tmp/vercel-project.json -w '%{http_code}' -H "Authorization: Bearer $token" "https://api.vercel.com/v9/projects/$VERCEL_PROJECT_ID")"
+          [[ "$status" == 200 ]] || exit 46
+          node -e 'const p=require("/tmp/vercel-project.json"); if(p.id!==process.env.VERCEL_PROJECT_ID||p.accountId!==process.env.VERCEL_ORG_ID) process.exit(1)'
+          printf 'credential_gate=PASS\nproject_access_gate=PASS\n' >> artifacts/inplus-preview-handoff/release.txt
+      - name: Deploy exact release SHA to protected Preview
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/vercel-rest-deploy.mjs preview artifacts/inplus-preview-handoff/deployment.json
+          node -e 'const fs=require("fs"); const d=require("./artifacts/inplus-preview-handoff/deployment.json"); if(d.readyState!=="READY"||d.githubSha!==process.env.GITHUB_SHA||d.mode!=="preview"||d.projectId!==process.env.VERCEL_PROJECT_ID||d.teamId!==process.env.VERCEL_ORG_ID) process.exit(1); fs.appendFileSync(process.env.GITHUB_ENV,`PREVIEW_URL=${d.deploymentUrl}\nPREVIEW_DEPLOY_ID=${d.deploymentId}\n`)'
+      - name: Record protected Preview handoff
+        shell: bash
+        run: |
+          set -euo pipefail
+          node -e 'const d=require("./artifacts/inplus-preview-handoff/deployment.json"); if(d.readyState!=="READY"||d.githubSha!==process.env.GITHUB_SHA||d.deploymentId!==process.env.PREVIEW_DEPLOY_ID||d.deploymentUrl!==process.env.PREVIEW_URL) process.exit(1)'
+          printf 'preview_deployment=PASS\npreview_live_access=PROTECTED_NOT_REQUIRED\npreview_runtime_smoke=LOCAL_SAME_SHA_PASS\npreview_browser_qa=LOCAL_SAME_SHA_PASS\npreview_deployment_id=%s\npreview_url=%s\npreview_source_sha=%s\n' "$PREVIEW_DEPLOY_ID" "$PREVIEW_URL" "$GITHUB_SHA" >> artifacts/inplus-preview-handoff/release.txt
+          echo "PREVIEW_HANDOFF_GATE=PASS"
+      - name: Upload Preview handoff evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: inplus-preview-handoff-audit
+          path: artifacts/
+          if-no-files-found: warn
+
+  finalize_inplus_production:
+    if: github.ref == 'refs/heads/main' && startsWith(github.event.head_commit.message, 'release LIXIL Inplus v0.4-R1 production')
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Initialize release audit
+        run: |
+          mkdir -p artifacts/inplus-production-finalize
+          printf 'release_merge_sha=%s\nrepository=%s\nref=%s\nproduct_master_mutation=0\n' "$GITHUB_SHA" "$GITHUB_REPOSITORY" "$GITHUB_REF" > artifacts/inplus-production-finalize/release.txt
+      - name: Install, lint, typecheck, build and full tests
+        run: |
+          npm install --ignore-scripts
+          npm run lint
+          npm run typecheck
+          npm run build:release
+          npm test
+          printf 'repository_gate=PASS\nautomated_test_gate=PASS\nbuild_gate=PASS\n' >> artifacts/inplus-production-finalize/release.txt
+      - name: Local Runtime smoke
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm run start:qa > /tmp/sash-inplus-finalize.log 2>&1 &
+          PID=$!
+          trap 'kill $PID || true' EXIT
+          for i in {1..40}; do
+            if curl -fsS http://127.0.0.1:4173/api/health > artifacts/inplus-production-finalize/local-health.json; then break; fi
+            sleep 0.5
+          done
+          node scripts/inplus-runtime-smoke.mjs
+          node -e 'const h=require("./artifacts/inplus-production-finalize/local-health.json"); const rows=h.runtimeMasterIntegrations??[]; const ip=rows.find(x=>x.id==="SER-LIXIL-INPLUS"); const ew=rows.find(x=>x.id==="SER-LIX-EW"); const tw=rows.find(x=>x.id==="SER-LIXIL-TW"); if(!h.ok||!ip||ip.sourceHash!==process.env.EXPECTED_INPLUS_MANIFEST_SHA||ip.uiTemplate!=="INPLUS_V04R1"||!ew||ew.sourceHash!==process.env.EXPECTED_EW_MANIFEST_SHA||!tw||tw.sourceHash!==process.env.EXPECTED_TW_MANIFEST_SHA) process.exit(1)'
+          printf 'canonical_runtime_gate=PASS\nruntime_adapter_gate=PASS\n' >> artifacts/inplus-production-finalize/release.txt
+      - name: Install browser QA dependencies
+        run: |
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+      - name: Local Inplus/EW/TW browser and regression QA
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm run start:qa > /tmp/sash-inplus-finalize-browser.log 2>&1 &
+          PID=$!
+          trap 'kill $PID || true' EXIT
+          for i in {1..40}; do
+            if curl -fsS http://127.0.0.1:4173/api/health >/dev/null; then break; fi
+            sleep 0.5
+          done
+          node test/browser/inplus-runtime-browser-qa.mjs
+          node test/browser/ew-runtime-browser-qa.mjs
+          node test/browser/tw-runtime-browser-qa.mjs
+          node test/browser/release-regression-browser-qa.mjs
+          printf 'browser_qa_gate=PASS\nregression_gate=PASS\n' >> artifacts/inplus-production-finalize/release.txt
+      - name: Credential, project and rollback preflight
+        shell: bash
+        run: |
+          set -euo pipefail
+          [[ "$(git rev-parse HEAD)" == "$GITHUB_SHA" ]] || exit 41
+          token="${VERCEL_TOKEN_PRIMARY:-${VERCEL_TOKEN_FALLBACK:-}}"
+          [[ -n "$token" ]] || { echo 'VERCEL_CREDENTIAL_GATE=BLOCKED'; exit 42; }
+          echo "VERCEL_TOKEN_EFFECTIVE=$token" >> "$GITHUB_ENV"
+          project_status="$(curl -sS -o /tmp/vercel-project.json -w '%{http_code}' -H "Authorization: Bearer $token" "https://api.vercel.com/v9/projects/$VERCEL_PROJECT_ID")"
+          [[ "$project_status" == 200 ]] || exit 46
+          node -e 'const p=require("/tmp/vercel-project.json"); if(p.id!==process.env.VERCEL_PROJECT_ID||p.accountId!==process.env.VERCEL_ORG_ID) process.exit(1)'
+          deployments_status="$(curl -sS -o artifacts/inplus-production-finalize/previous-production.json -w '%{http_code}' -H "Authorization: Bearer $token" "https://api.vercel.com/v6/deployments?projectId=$VERCEL_PROJECT_ID&target=production&state=READY&limit=1&teamId=$VERCEL_ORG_ID")"
+          [[ "$deployments_status" == 200 ]] || exit 47
+          node -e 'const fs=require("fs"); const x=require("./artifacts/inplus-production-finalize/previous-production.json"); const d=x.deployments?.[0]; if(!d?.uid||!d?.url) process.exit(1); fs.appendFileSync(process.env.GITHUB_ENV,`ROLLBACK_DEPLOY_ID=${d.uid}\nROLLBACK_DEPLOY_URL=https://${d.url}\nROLLBACK_COMMIT_SHA=${d.meta?.releaseCommitSha??d.meta?.githubCommitSha??"UNKNOWN"}\n`)'
+          printf 'credential_gate=PASS\nproject_access_gate=PASS\nrollback_readiness=PASS\n' >> artifacts/inplus-production-finalize/release.txt
+      - name: Deploy fixed merge SHA to Production
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/vercel-rest-deploy.mjs production artifacts/inplus-production-finalize/production-deployment.json
+          node -e 'const fs=require("fs"); const d=require("./artifacts/inplus-production-finalize/production-deployment.json"); fs.appendFileSync(process.env.GITHUB_ENV,`PRODUCTION_DEPLOY_ID=${d.deploymentId}\n`)'
+      - name: Verify Production identity and canonical alias
+        shell: bash
+        run: |
+          set -euo pipefail
+          node -e 'const d=require("./artifacts/inplus-production-finalize/production-deployment.json"); if(d.readyState!=="READY"||d.githubSha!==process.env.GITHUB_SHA||d.mode!=="production"||d.projectId!==process.env.VERCEL_PROJECT_ID||d.teamId!==process.env.VERCEL_ORG_ID) process.exit(1)'
+          status="$(curl -sS -o artifacts/inplus-production-finalize/vercel-deployment.json -w '%{http_code}' -H "Authorization: Bearer $VERCEL_TOKEN_EFFECTIVE" "https://api.vercel.com/v13/deployments/$DEPLOY_ID?teamId=$VERCEL_ORG_ID")"
+          [[ "$status" == 200 ]] || exit 48
+          node -e 'const d=require("./artifacts/inplus-production-finalize/vercel-deployment.json"); if(d.readyState!=="READY"||d.target!=="production"||d.meta?.releaseCommitSha!==process.env.GITHUB_SHA||d.meta?.releaseSeries!==process.env.RELEASE_SERIES||d.meta?.releasePackageVersion!==process.env.RELEASE_PACKAGE_VERSION||!d.alias?.includes(process.env.PRODUCTION_HOST)) process.exit(1)'
+          printf 'production_identity_gate=PASS\nproduction_alias_gate=PASS\n' >> artifacts/inplus-production-finalize/release.txt
+      - name: Production root, Runtime and browser smoke
+        env:
+          QA_BASE_URL: ${{ env.PRODUCTION_URL }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          for i in {1..60}; do
+            if curl -fsS "$PRODUCTION_URL/api/health" > artifacts/inplus-production-finalize/production-health.json && node -e 'const h=require("./artifacts/inplus-production-finalize/production-health.json"); const rows=h.runtimeMasterIntegrations??[]; const ip=rows.find(x=>x.id==="SER-LIXIL-INPLUS"); const ew=rows.find(x=>x.id==="SER-LIX-EW"); const tw=rows.find(x=>x.id==="SER-LIXIL-TW"); if(!h.ok||ip?.sourceHash!==process.env.EXPECTED_INPLUS_MANIFEST_SHA||ip?.packageVersion!=="v0.4-R1"||ip?.schemaVersion!=="2.0"||ip?.uiTemplate!=="INPLUS_V04R1"||ew?.sourceHash!==process.env.EXPECTED_EW_MANIFEST_SHA||tw?.sourceHash!==process.env.EXPECTED_TW_MANIFEST_SHA) process.exit(1)'; then break; fi
+            sleep 1
+          done
+          curl -fsS "$PRODUCTION_URL/" > artifacts/inplus-production-finalize/production-index.html
+          curl -fsS "$PRODUCTION_URL/api/runtime-master/integrations" > artifacts/inplus-production-finalize/production-integrations.json
+          node scripts/inplus-runtime-smoke.mjs
+          node test/browser/inplus-runtime-browser-qa.mjs
+          node test/browser/ew-runtime-browser-qa.mjs
+          node test/browser/tw-runtime-browser-qa.mjs
+          node test/browser/release-regression-browser-qa.mjs
+          printf 'production_smoke=PASS\nproduction_browser_qa=PASS\nproduction_ready=TRUE\nreleased=TRUE\nproduction_deployment_id=%s\nproduction_source_sha=%s\nproduction_url=%s\nrollback_deployment_id=%s\nrollback_deployment_url=%s\nrollback_commit_sha=%s\n' "$DEPLOY_ID" "$GITHUB_SHA" "$PRODUCTION_URL" "$ROLLBACK_DEPLOY_ID" "$ROLLBACK_DEPLOY_URL" "$ROLLBACK_COMMIT_SHA" >> artifacts/inplus-production-finalize/release.txt
+      - name: Roll back on Production verification failure
+        if: failure() && env.PRODUCTION_DEPLOY_ID != '' && env.ROLLBACK_DEPLOY_URL != ''
+        shell: bash
+        run: |
+          status="$(curl -sS -o artifacts/inplus-production-finalize/rollback.json -w '%{http_code}' -X POST -H "Authorization: Bearer $VERCEL_TOKEN_EFFECTIVE" "https://api.vercel.com/v10/projects/$VERCEL_PROJECT_ID/promote/$ROLLBACK_DEPLOY_ID?teamId=$VERCEL_ORG_ID")"
+          [[ "$status" == 201 || "$status" == 202 ]]
+          printf 'rolled_back=TRUE\nrollback_target=%s\n' "$ROLLBACK_DEPLOY_URL" >> artifacts/inplus-production-finalize/release.txt
+      - name: Upload Production finalization audit
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: inplus-production-finalization-audit
+          path: artifacts/
+          if-no-files-found: warn
