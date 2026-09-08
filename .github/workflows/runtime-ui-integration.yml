@@ -2,7 +2,7 @@ name: Runtime UI Integration CI
 
 on:
   pull_request:
-    branches: [feat/catalog-recovery-v2, feat/runtime-ui-giesta2-improvements-v1]
+    branches: [feat/catalog-recovery-v2]
   workflow_dispatch:
 
 jobs:
@@ -14,7 +14,7 @@ jobs:
         with:
           node-version: 22
       - name: Runtime targeted tests
-        run: node --test test/68-runtime-app-bridge-giesta2-gate.test.mjs test/69-runtime-manifest-giesta2-integration.test.mjs test/70-runtime-manifest-ew-integration.test.mjs
+        run: node --test test/68-runtime-app-bridge-giesta2-gate.test.mjs test/69-runtime-manifest-giesta2-integration.test.mjs test/70-giesta2-runtime-candidate-integrity.test.mjs test/70-runtime-manifest-ew-integration.test.mjs
       - name: Full repository regression
         run: npm test
 
@@ -75,6 +75,8 @@ jobs:
         run: node test/browser/ew-runtime-browser-qa.mjs
       - name: Giesta2 Runtime Desktop and Smartphone Browser regression QA
         run: node test/browser/giesta2-runtime-browser-qa.mjs
+      - name: Giesta2 Runtime candidate parity QA
+        run: node test/browser/giesta2-runtime-candidate-parity-qa.mjs
       - name: Existing sales UI Desktop and Smartphone regression QA
         run: node test/browser/sales-ui-r2-browser-qa.mjs
       - name: Upload Browser QA evidence
