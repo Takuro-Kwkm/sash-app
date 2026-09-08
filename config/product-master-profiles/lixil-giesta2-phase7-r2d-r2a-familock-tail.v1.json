@@ -1,0 +1,59 @@
+{
+  "profileSchemaVersion": "1.1",
+  "recordType": "PRODUCT_MASTER_PROFILE",
+  "manufacturer": "LIXIL",
+  "series": "ジエスタ2",
+  "registrySeriesKey": "LIXIL::ジエスタ2",
+  "productId": "SER-LIXIL-GIESTA2",
+  "schemaAdapter": "GENERIC_EVIDENCE_CANDIDATE_V1",
+  "runtimePartitionPolicy": {"mode": "NOT_USED_FOR_EVIDENCE_ONLY_JOB"},
+  "dependencyHooks": [],
+  "source": {
+    "type": "OFFICIAL_PDF",
+    "driveFileId": "1DQp9sH77ho37ft7BaCCdqFXOQG3GnGUm",
+    "title": "202604_LIXIL_玄関ドア受発注資料集_完成品価格表.pdf",
+    "version": "IG3500_2026-04",
+    "officialDetailUrl": "https://webcatalog.lixil.co.jp/iportal/CatalogDetail.do?catalogID=18054070000&categoryID=1760000&designID=newinter&method=initial_screen&position=26&type=mc&volumeID=LXL13001",
+    "officialDownloadUrl": "https://webcatalog.lixil.co.jp/iportal/CatalogDownload.do?method=downloadPdfCatalog&type=downloadPdfCatalog&volumeID=LXL13001&categoryID=&catalogID=18054070000&catalogCategoryID=&pageGroupID=&pageID=&applicationPdf=true&designID=newinter",
+    "authoritativeSha256": "ffb267fa2736c58e57af1e9655702a82ddc545b3b867e47437dafa93ef7472e3",
+    "pageCount": 320
+  },
+  "extraction": {
+    "jobType": "EVIDENCE_EXTRACTION",
+    "task": "Resolve the remaining Giesta2 Phase7 P7-B02 FamiLock official_option_code evidence from IG3500 printed pages g12-g13 only.",
+    "prompt": "Read only printed pages g12-g13, corresponding to PDF pages 156-157, of verified LIXIL IG3500 2026-04. Extract narrow atomic Evidence Candidates only where an exact LIXIL product/order code is explicitly printed and uniquely maps to one allowed existing Phase7 Option Master option_id. Never invent or rename option_id. Candidate claim must be '<allowed option_id> official_option_code = <exact source code or exact source template>'. Prefer LIXIL product/order codes over separately printed supplier/device model numbers. Preserve any code template or variant structure exactly. If a row has no independent order code, is bundled, or cannot be uniquely mapped, return an issue. Do not evaluate g6-g11 again, do not evaluate g72-g77, and do not evaluate High-size P7-B03. No Master, Runtime, Registry, Canonical or Production writes.",
+    "pageScope": [156, 157],
+    "printedPageScope": [12, 13],
+    "canonicalFieldScope": ["official_option_code"],
+    "evidenceRequirements": {
+      "atomic": true,
+      "maxCandidates": 12,
+      "failOnInference": true,
+      "allowedClaimEntityIds": [
+        "GST2_OPT_CONTROLLER_CABLE_20",
+        "GST2_OPT_ELOCK_BUTTON",
+        "GST2_OPT_SECRET_SWITCH",
+        "GST2_OPT_INTERCOM_SVE710",
+        "GST2_OPT_INTERCOM_SWE710",
+        "GST2_OPT_FAMILOCK_LINK"
+      ]
+    }
+  },
+  "modelDefault": "gemini-3.8-flash",
+  "metadata": {
+    "phase": "PHASE_7_R2D_R2A_FAMILOCK_TAIL_SPLIT",
+    "baseWorkingMasterVersion": "Phase7_v0.2_BLOCKED",
+    "baseWorkingMasterDriveFileId": "1KWhVw081CAYArszawsDzKKW0UVQNmONu",
+    "previousLiveRunId": "34024100147",
+    "targetBlocker": "P7-B02",
+    "catalogCode": "IG3500",
+    "sourceIdentity": "FULL_BYTE_IDENTITY_VERIFIED_20260906",
+    "workerProvider": "ANTIGRAVITY_CLI",
+    "producerSystem": "GEMINI_ANTIGRAVITY",
+    "authenticationMode": "GOOGLE_AI_PRO_OAUTH",
+    "workerExecution": "SELF_HOSTED_GITHUB_ACTIONS",
+    "antigravityModelMode": "ACCOUNT_DEFAULT",
+    "antigravityEffort": "high",
+    "claimEntityAuthority": "EXISTING_PHASE7_OPTION_MASTER_ID_WHITELIST_ONLY"
+  }
+}

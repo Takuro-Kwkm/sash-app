@@ -1,0 +1,28 @@
+{
+  "approvalSchemaVersion": "1.0",
+  "recordType": "PRODUCT_MASTER_CHANGE_APPROVAL",
+  "proposalId": "PMCP-LIX-SAMOS2H-CUSTOM-DIMENSION-RULESET-20260903-001",
+  "productId": "SER-LIX-SAMOS2H",
+  "approverType": "HUMAN",
+  "approvedBy": "USER",
+  "approvedAt": "2026-09-03T19:13:27+09:00",
+  "approvalSource": "User explicitly stated: 「PMCP-LIX-SAMOS2H-CUSTOM-DIMENSION-RULESET-20260903-001 を承認します」.",
+  "scope": "APPROVE_FULL_CONTROLLED_FLOW",
+  "productionApproval": true,
+  "proposalFingerprint": "sha256:bd5900002f8d54d322fb7c50bb0b4b121f54a81ece7ec0e60baaffe6914df08e",
+  "baseMasterFingerprint": "sha256:8dea8b2ecec1715445db74255f591b4f2bcf404027f0006f168a585365df29d6",
+  "expectedChanges": {
+    "operation": "ADD_DIMENSION_RULESET",
+    "targetSheet": "06E_特注寸法範囲",
+    "activeProductNodes": 17,
+    "exactRuleExtracted": 7,
+    "sourceGraphReviewRequired": 10,
+    "unexpectedChangedExistingSheets": 0
+  },
+  "auditNotes": [
+    "Approval is limited to this exact Proposal ID/fingerprint.",
+    "17 Product Nodes only; interpolation remains forbidden.",
+    "All rules remain final REVIEW_REQUIRED unless future formal safety dependencies are resolved.",
+    "Formal write must occur only after STAGING and zero-unexpected Production Preview."
+  ]
+}

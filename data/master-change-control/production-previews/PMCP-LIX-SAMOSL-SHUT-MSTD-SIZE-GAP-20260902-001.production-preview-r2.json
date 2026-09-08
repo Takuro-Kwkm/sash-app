@@ -1,0 +1,69 @@
+{
+  "manifestSchemaVersion": "1.0",
+  "recordType": "PRODUCT_MASTER_PRODUCTION_PREVIEW_MANIFEST",
+  "status": "PRODUCTION_WRITE_PREVIEW_READY",
+  "productId": "SER-LIX-SAMOSL",
+  "proposalId": "PMCP-LIX-SAMOSL-SHUT-MSTD-SIZE-GAP-20260902-001",
+  "proposalFingerprint": "sha256:2dbccd2d22edd6b00d516fbadfc2788c2089f693f06112f4b2b6c811d3a34063",
+  "stagingResultFingerprint": "sha256:668abb7e3bf1f7db248449cbdbf058a9e837b09b9e02e9c95ded8296b5337d76",
+  "previewVersion": "1.7-R2",
+  "previewFingerprint": "sha256:095880ed441afd4925fdcbe4c7933be92190a08d9120155d27f7a00d1ed11613",
+  "supersedesPreviewFingerprints": [
+    "sha256:a057d745c8a3a93b06aebc20c98fba99dd121804d35985d074ed5764bdab9168",
+    "sha256:47cda6534569bbd2c1deb5fb34ce62083e091db19ae26e1e6c941329dd286c3b"
+  ],
+  "formalTarget": {
+    "driveFileId": "17lVzBZ1hp4RVcGv0yNdnrKt25SFO2FhL",
+    "title": "サーモスL_商品マスター_v0.7_特注寸法発注アプリ投入完成版_QA確定.xlsx",
+    "expectedRevisionId": "0B1PsqngSohhldjYycXpvcXp5VVlLSDQyUlBBUmJPTFZxbU1nPQ",
+    "modifiedTime": "2026-09-02T11:49:26.018Z",
+    "sizeBytes": 666560,
+    "contentSha256": "eec989d1fd2e1ad4fc025e08c8b122c522e7811840b075f5b9eff2567ea4d4ac"
+  },
+  "writePlan": [
+    {
+      "operation": "APPEND_ROWS",
+      "sheet": "06_サイズ",
+      "range": "A1563:V1647",
+      "addRows": 85,
+      "tailBefore": "SZ-SL-001559",
+      "tailAfter": "SZ-SL-001644"
+    },
+    {
+      "operation": "APPEND_ROWS",
+      "sheet": "08A_サイズ別ガラス条件",
+      "range": "A1563:N1647",
+      "addRows": 85,
+      "tailBefore": "GSC-SL-001559",
+      "tailAfter": "GSC-SL-001644"
+    }
+  ],
+  "projectedInventory": {
+    "standardSizeRows": 1644,
+    "selectableSizeRows": 1495,
+    "sizeGlassConditionRows": 1644,
+    "officialSourceCoverage": "97/97",
+    "missingInCanonical": 0
+  },
+  "productionApproval": {
+    "required": true,
+    "status": "PENDING",
+    "scopeRequired": "APPROVE_PRODUCTION_WRITE_ONLY",
+    "priorApprovalStatus": "INVALIDATED_BY_POST_WRITE_READBACK",
+    "freshApprovalRequiredForThisFingerprint": true
+  },
+  "ciEvidence": {
+    "workflow": "V2 Recovery CI",
+    "runNumber": 400,
+    "runId": 33627479229,
+    "headSha": "e0afdef434551106dcb7fedf0984256bd9b614a3",
+    "conclusion": "SUCCESS",
+    "productionPreviewJob": "SUCCESS",
+    "browserQa": "SUCCESS",
+    "artifactId": 9845385299,
+    "artifactName": "product-master-production-preview-v17-thermosl",
+    "artifactDigest": "sha256:bb2d1fe5abec3c35edc295ca9b1d9f2285da072a7a4141d95d0f3576a05ffd95"
+  },
+  "formalWorkbookWritePerformed": false,
+  "runtimeWritePerformed": false
+}

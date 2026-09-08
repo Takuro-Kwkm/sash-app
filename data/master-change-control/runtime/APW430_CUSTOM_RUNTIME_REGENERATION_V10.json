@@ -1,0 +1,46 @@
+{
+  "recordType": "PRODUCT_MASTER_RUNTIME_REGENERATION",
+  "recordVersion": "1.0",
+  "proposalId": "PMCP-YKK-APW430-CUSTOM-DIMENSION-RULESET-20260903-001",
+  "productId": "SER-YKK-APW430",
+  "status": "RUNTIME_REGENERATION_COMMITTED",
+  "runtimeVersion": "v1.0",
+  "sourceOfTruth": "FORMAL_PRODUCT_MASTER",
+  "proposalFingerprint": "sha256:894ca2e99cfd482b0093bfbc1d1763383a8e01c5c8614d75ac1560938ae5eb78",
+  "formalMaster": {
+    "driveFileId": "1QDocQ7yoXE6TAnzHtfsyKwwK6YB5_mgk90Bw1hm4iPo",
+    "title": "20260830_YKKAP_APW430_商品マスター_正本",
+    "sheet": "06C_特注寸法範囲",
+    "driveRevisionId": "13",
+    "modifiedTime": "2026-09-03T12:55:43.206Z",
+    "semanticFingerprint": "sha256:1940a1ce7b768ccd2cc0fa1f44ebc1e3ba65e26c40089d618b0b837607ae6966"
+  },
+  "runtimeProjection": {
+    "dimensionRuleCount": 25,
+    "exactGeometryClassified": 20,
+    "sourceGraphReviewRequired": 5,
+    "dimensionAuto": 0,
+    "dimensionReview": 25,
+    "automaticTrue": 0,
+    "automaticFalse": 25,
+    "finalAutoPassAllowed": false,
+    "allCustomRulesFinalReviewRequired": true,
+    "constructionHidden": true,
+    "interpolatedPointsAdded": false,
+    "directManufacturerValueEditToGenericCore": false,
+    "runtimeSourceModule": "src/catalog/modules/apw430-runtime-formal-dimension-delta-v10.mjs",
+    "runtimeConsumerModule": "src/catalog/modules/apw430-module.mjs"
+  },
+  "standardInventory": {
+    "SER-LIX-SAMOS2H": 2131,
+    "SER-LIX-SAMOSL": 1495,
+    "SER-YKK-APW430": 718,
+    "SER-YKK-APW431": 538
+  },
+  "safety": {
+    "formalReadbackRequiredAndPassed": true,
+    "genericCoreProductSpecificBranchAdded": false,
+    "standardSizeMasterChanged": false,
+    "otherSeriesChanged": false
+  }
+}

@@ -1,0 +1,65 @@
+{
+  "manifestSchemaVersion": "1.0",
+  "recordType": "PRODUCT_MASTER_PRODUCTION_PREVIEW_MANIFEST",
+  "productId": "SER-LIX-SAMOSL",
+  "proposalId": "PMCP-LIX-SAMOSL-SHUT-MSTD-SIZE-GAP-20260902-001",
+  "proposalFingerprint": "sha256:2dbccd2d22edd6b00d516fbadfc2788c2089f693f06112f4b2b6c811d3a34063",
+  "stagingResultFingerprint": "sha256:668abb7e3bf1f7db248449cbdbf058a9e837b09b9e02e9c95ded8296b5337d76",
+  "previewFingerprint": "sha256:a057d745c8a3a93b06aebc20c98fba99dd121804d35985d074ed5764bdab9168",
+  "status": "PRODUCTION_WRITE_PREVIEW_READY",
+  "formalTarget": {
+    "driveFileId": "17lVzBZ1hp4RVcGv0yNdnrKt25SFO2FhL",
+    "title": "サーモスL_商品マスター_v0.7_特注寸法発注アプリ投入完成版_QA確定.xlsx",
+    "expectedRevisionId": "0B1PsqngSohhlZ0dycXFVYTVFY3JzQWJLLzNkVGFVcFhsNHQ0PQ",
+    "modifiedTime": "2026-08-30T09:28:18.039Z",
+    "sizeBytes": 666560
+  },
+  "writePlan": [
+    {
+      "sheet": "06_サイズ",
+      "operation": "APPEND_ROWS",
+      "range": "A1562:V1646",
+      "rows": 85,
+      "expectedTailBefore": "SZ-SL-001559",
+      "expectedTailAfter": "SZ-SL-001644"
+    },
+    {
+      "sheet": "08A_サイズ別ガラス条件",
+      "operation": "APPEND_ROWS",
+      "range": "A1562:N1646",
+      "rows": 85,
+      "expectedTailBefore": "GSC-SL-001559",
+      "expectedTailAfter": "GSC-SL-001644"
+    }
+  ],
+  "projectedInventory": {
+    "standardSizeRows": 1644,
+    "selectableSizeRows": 1495,
+    "sizeGlassConditionRows": 1644
+  },
+  "productionApproval": {
+    "required": true,
+    "status": "PENDING",
+    "scopeRequired": "APPROVE_PRODUCTION_WRITE_ONLY"
+  },
+  "safety": {
+    "revisionRecheckRequiredImmediatelyBeforeWrite": true,
+    "tailRecheckRequiredImmediatelyBeforeWrite": true,
+    "backupRequired": true,
+    "postWriteReadbackRequired": true,
+    "runtimeRegenerationDeferredUntilFormalMasterPass": true
+  },
+  "ciEvidence": {
+    "workflow": "V2 Recovery CI",
+    "runNumber": 376,
+    "runId": 33625567911,
+    "headSha": "04b74201b76224b3d72afae413290b0539852474",
+    "job": "product_master_production_preview_v17",
+    "jobConclusion": "SUCCESS",
+    "artifactId": 9844628349,
+    "artifactName": "product-master-production-preview-v17-thermosl",
+    "artifactDigest": "sha256:d543dff3cb0cde21aa622117d61ee19bcfb55f4cbe7c6fafd36c0e53daa63af0"
+  },
+  "formalWorkbookWritePerformed": false,
+  "runtimeWritePerformed": false
+}

@@ -1,0 +1,129 @@
+name: Antigravity Self-Hosted Smoke Test
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - feat/catalog-recovery-v2
+    paths:
+      - '.github/workflows/antigravity-self-hosted-smoke.yml'
+      - 'src/product-master-core/worker-readiness.mjs'
+      - 'scripts/check-antigravity-runner-readiness-macos.mjs'
+      - 'test/62-product-master-core-v31-worker-readiness.test.mjs'
+  schedule:
+    - cron: '5 * * * *'
+
+concurrency:
+  group: antigravity-self-hosted-smoke
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    name: Verify Antigravity Google AI Pro worker
+    runs-on: [self-hosted, macOS, ARM64, gemini-worker]
+    timeout-minutes: 5
+    env:
+      HOME: /Users/takuro
+      PATH: /Users/takuro/.local/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin
+    steps:
+      - name: Checkout current branch
+        uses: actions/checkout@v4
+
+      - name: Set up Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Verify v3.1 common readiness contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --test test/62-product-master-core-v31-worker-readiness.test.mjs
+
+      - name: Evaluate dedicated worker readiness with AI Pro preflight
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/check-antigravity-runner-readiness-macos.mjs \
+            --live-auth \
+            --output=antigravity-worker-readiness.json
+          cat antigravity-worker-readiness.json
+          node - <<'NODE'
+          const fs=require('node:fs');
+          const audit=JSON.parse(fs.readFileSync('antigravity-worker-readiness.json','utf8'));
+          if(audit.status!=='PASS'||audit.readinessLevel!=='LIVE'||audit.runnerReadinessGate!=='PASS_LIVE'){
+            throw new Error(`Worker readiness failed: ${JSON.stringify(audit.blockers)}`);
+          }
+          if(audit.authority?.canonicalWriteAllowed!==false||audit.authority?.runtimeWriteAllowed!==false||audit.authority?.registryWriteAllowed!==false){
+            throw new Error('Readiness diagnostic widened Product Master authority');
+          }
+          console.log('WORKER_READINESS_GATE=PASS_LIVE');
+          NODE
+
+      - name: Verify macOS LaunchAgent and Keychain gates
+        shell: bash
+        run: |
+          set -euo pipefail
+          PLIST="$HOME/Library/LaunchAgents/actions.runner.Takuro-Kwkm-sash-app.sash-gemini-worker-mac.plist"
+          test -f "$PLIST"
+
+          session_create="$(/usr/libexec/PlistBuddy -c 'Print :SessionCreate' "$PLIST")"
+          session_type="$(/usr/libexec/PlistBuddy -c 'Print :LimitLoadToSessionType' "$PLIST")"
+          test "$session_create" = 'false'
+          test "$session_type" = 'Aqua'
+          echo 'MACOS_RUNNER_SECURITY_SESSION_GATE=PASS'
+
+          /usr/bin/security find-generic-password -s gemini -a antigravity >/dev/null 2>&1
+          echo 'KEYCHAIN_ITEM_LOOKUP_GATE=PASS'
+          /usr/bin/security find-generic-password -s gemini -a antigravity -w >/dev/null 2>&1
+          echo 'KEYCHAIN_SECRET_READ_GATE=PASS'
+          /usr/bin/security show-keychain-info "$HOME/Library/Keychains/login.keychain-db" >/dev/null 2>&1
+          echo 'LOGIN_KEYCHAIN_GATE=PASS'
+
+      - name: Confirm readiness artifact contains no credential material
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          payload = json.loads(Path('antigravity-worker-readiness.json').read_text())
+          assert payload['authPreflight']['credentialMaterialPersisted'] is False, payload
+          assert payload['failClosed'] is True, payload
+          assert payload['fallbackPolicy']['silentFallbackAllowed'] is False, payload
+          print('WORKER_READINESS_SECRET_SAFETY_GATE=PASS')
+          PY
+
+      - name: Publish readiness summary
+        if: always()
+        shell: bash
+        run: |
+          if [ -f antigravity-worker-readiness.json ]; then
+            python3 - <<'PY' >> "$GITHUB_STEP_SUMMARY"
+          import json
+          from pathlib import Path
+          data=json.loads(Path('antigravity-worker-readiness.json').read_text())
+          power=(data.get('powerPolicy') or {}).get('ac') or {}
+          print('## Antigravity Worker Readiness')
+          print(f"- Gate: `{data.get('runnerReadinessGate')}`")
+          print(f"- Status: `{data.get('status')}` / `{data.get('readinessLevel')}`")
+          print(f"- Runner service: `{(data.get('runnerService') or {}).get('running')}`")
+          print(f"- Machine sleep: `{power.get('machineSleepMinutes')}` minutes")
+          print(f"- Display sleep: `{power.get('displaySleepMinutes')}` minutes")
+          print(f"- AI Pro auth: `{(data.get('authPreflight') or {}).get('status')}`")
+          print(f"- Blockers: `{', '.join(data.get('blockers') or []) or 'NONE'}`")
+          PY
+          fi
+
+      - name: Upload readiness audit
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: antigravity-worker-readiness-v31
+          path: antigravity-worker-readiness.json
+          if-no-files-found: warn
+          retention-days: 14

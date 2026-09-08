@@ -1,0 +1,88 @@
+{
+  "recordType": "PRODUCT_MASTER_TECHNICAL_FACT_AUDIT",
+  "recordVersion": "1.0",
+  "status": "TECHNICAL_FACT_BOUNDARY_PASS",
+  "productId": "SER-YKK-APW430",
+  "architectureDecision": "FORMAL_WORKBOOK_SELECTION_DATA_ONLY__TECHNICAL_PROVENANCE_IN_GITHUB_CONTROL_PLANE",
+  "source": {
+    "type": "OFFICIAL_PDF",
+    "driveFileId": "1j9PtW8yoKBZ4Nodm58wU3QtOCvxlEja9",
+    "title": "202607_YKKAP_APW430_商品カタログ.pdf",
+    "version": "202607",
+    "printedPage": 70,
+    "pdfPage": 72
+  },
+  "technicalFacts": [
+    {
+      "id": "TF-YKK-APW430-FIX-MADO-ANGLE-DIMENSION-P70",
+      "factType": "DIMENSION_FORMULA",
+      "canonicalField": null,
+      "productNodeIds": ["NODE-YKK-APW430-FIX-MADO"],
+      "applicability": {"windowType": "FIX窓 窓タイプ", "frame": "アングル付枠"},
+      "formula": {"w": "sash_w - 60mm", "h": "sash_h - 60mm"},
+      "sourceIssueId": "ISSUE-GEMINI-APW430-FIX-001",
+      "resolvedPendingId": "PEND-GEMINI-APW430-FIX-20260901213858-ISSUE-001"
+    },
+    {
+      "id": "TF-YKK-APW430-FIX-TR-ZAIRAI-ANGLE-DIMENSION-P70",
+      "factType": "DIMENSION_FORMULA",
+      "canonicalField": null,
+      "productNodeIds": ["NODE-YKK-APW430-FIX-TR-ZAIRAI"],
+      "applicability": {"windowType": "FIX窓 テラスタイプ", "construction": "在来工法", "frame": "アングル付枠"},
+      "formula": {"w": "sash_w - 60mm", "h": "sash_h - 30mm"},
+      "sourceIssueId": "ISSUE-GEMINI-APW430-FIX-002",
+      "resolvedPendingId": "PEND-GEMINI-APW430-FIX-20260901213858-ISSUE-002"
+    },
+    {
+      "id": "TF-YKK-APW430-FIX-TR-204-ANGLE-DIMENSION-P70",
+      "factType": "DIMENSION_FORMULA",
+      "canonicalField": null,
+      "productNodeIds": ["NODE-YKK-APW430-FIX-TR-204"],
+      "applicability": {"windowType": "FIX窓 テラスタイプ", "construction": "2×4工法", "frame": "アングル付枠"},
+      "formula": {"w": "sash_w - 60mm", "h": "sash_h - 45mm"},
+      "sourceIssueId": "ISSUE-GEMINI-APW430-FIX-003",
+      "resolvedPendingId": "PEND-GEMINI-APW430-FIX-20260901213858-ISSUE-003"
+    },
+    {
+      "id": "TF-YKK-APW430-FIX-MADO-NOANGLE-DIMENSION-P70",
+      "factType": "DIMENSION_FORMULA",
+      "canonicalField": null,
+      "productNodeIds": ["NODE-YKK-APW430-FIX-MADO"],
+      "applicability": {"windowType": "FIX窓 窓タイプ", "frame": "アングル無枠"},
+      "formula": {"w": "sash_w - 40mm", "h": "sash_h - 70mm"},
+      "sourceIssueId": "ISSUE-GEMINI-APW430-FIX-004",
+      "resolvedPendingId": "PEND-GEMINI-APW430-FIX-20260901213858-ISSUE-004"
+    }
+  ],
+  "lifecycleResult": {
+    "openPendingBefore": 4,
+    "openPendingAfter": 0,
+    "resolvedByTechnicalFact": 4
+  },
+  "boundaries": {
+    "canonicalFieldAdded": false,
+    "formalWorkbookSchemaMutation": false,
+    "formalWorkbookWritePerformed": false,
+    "runtimeAutoConsumption": false,
+    "runtimeWritePerformed": false,
+    "formalWorkbookPolicy": "CONTROL_PLANE_ONLY",
+    "runtimePolicy": "REFERENCE_ONLY_NOT_CONSUMED"
+  },
+  "ciEvidence": {
+    "workflow": "V2 Recovery CI",
+    "runNumber": 279,
+    "runId": 33600568539,
+    "headSha": "401c07b95f58584b86cfb4a9d46c83026d1e2c81",
+    "npmTests": "188/188 PASS",
+    "technicalFactJob": "SUCCESS",
+    "artifactName": "product-master-technical-facts-v13-apw430",
+    "artifactId": 9835006798,
+    "artifactSha256": "b116f0398d68697d823727ead4bf1aa589e22cda777d45381948c347f27c608a"
+  },
+  "auditNotes": [
+    "Dimension formulas are official technical facts but are not user-selectable Canonical Fields.",
+    "The formulas are intentionally excluded from size_mode and from the formal Workbook schema.",
+    "A future Runtime feature may consume a Technical Fact only through an explicit adapter and its own approval and regression gate.",
+    "The formal Google Sheets Product Master remains the authority for product selection, applicability, dependencies and selectable sizes."
+  ]
+}

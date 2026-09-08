@@ -1,0 +1,59 @@
+{
+"transportSchemaVersion": "1.0",
+"transportType": "EVIDENCE_CANDIDATE_BATCH",
+"batchId": "BATCH-GEMINI-APW430-FIX-20260901212236",
+"generatedAt": "2026-09-02T04:22:36Z",
+"producer": {
+"system": "GEMINI_NOTEBOOKLM",
+"mode": "LIVE_EXTERNAL"
+},
+"productId": "SER-YKK-APW430",
+"sourceContext": {
+"type": "OFFICIAL_PDF",
+"driveFileId": "1j9PtW8yoKBZ4Nodm58wU3QtOCvxlEja9",
+"title": "202607_YKKAP_APW430_商品カタログ.pdf",
+"version": "202607"
+},
+"candidates": [
+{
+"recordType": "EVIDENCE_CANDIDATE",
+"candidateSchemaVersion": "1.0",
+"id": "CAND-GEMINI-APW430-FIX-001",
+"sourceSystem": "GEMINI_NOTEBOOKLM",
+"producerMode": "LIVE_EXTERNAL",
+"status": "SUBMITTED",
+"productId": "SER-YKK-APW430",
+"title": "FIX窓の商品体系における窓・テラスタイプの設定",
+"subjectField": "window_type",
+"claim": "FIX窓の商品体系として「窓タイプ」と「テラスタイプ」の2つの商品タイプが設定されている。",
+"proposedStrength": "EXPLICIT",
+"productNodeIds": ["NODE-YKK-APW430-FIX-MADO","NODE-YKK-APW430-FIX-TR-ZAIRAI","NODE-YKK-APW430-FIX-TR-204"],
+"source": {"type":"OFFICIAL_PDF","driveFileId":"1j9PtW8yoKBZ4Nodm58wU3QtOCvxlEja9","title":"202607_YKKAP_APW430_商品カタログ.pdf","version":"202607","printedPage":69,"pdfPage":71,"locatorText":"商品体系"}
+},
+{
+"recordType":"EVIDENCE_CANDIDATE","candidateSchemaVersion":"1.0","id":"CAND-GEMINI-APW430-FIX-002","sourceSystem":"GEMINI_NOTEBOOKLM","producerMode":"LIVE_EXTERNAL","status":"SUBMITTED","productId":"SER-YKK-APW430","title":"窓タイプの在来工法対応","subjectField":"construction","claim":"FIX窓の「窓タイプ」は、工法として「在来工法」に対応している。","proposedStrength":"EXPLICIT","productNodeIds":["NODE-YKK-APW430-FIX-MADO"],"source":{"type":"OFFICIAL_PDF","driveFileId":"1j9PtW8yoKBZ4Nodm58wU3QtOCvxlEja9","title":"202607_YKKAP_APW430_商品カタログ.pdf","version":"202607","printedPage":69,"pdfPage":71,"locatorText":"商品体系"}
+},
+{
+"recordType":"EVIDENCE_CANDIDATE","candidateSchemaVersion":"1.0","id":"CAND-GEMINI-APW430-FIX-003","sourceSystem":"GEMINI_NOTEBOOKLM","producerMode":"LIVE_EXTERNAL","status":"SUBMITTED","productId":"SER-YKK-APW430","title":"テラスタイプの在来工法・2×4工法対応","subjectField":"construction","claim":"FIX窓の「テラスタイプ」は、工法として「在来工法」および「2×4工法」に対応している。","proposedStrength":"EXPLICIT","productNodeIds":["NODE-YKK-APW430-FIX-TR-ZAIRAI","NODE-YKK-APW430-FIX-TR-204"],"source":{"type":"OFFICIAL_PDF","driveFileId":"1j9PtW8yoKBZ4Nodm58wU3QtOCvxlEja9","title":"202607_YKKAP_APW430_商品カタログ.pdf","version":"202607","printedPage":69,"pdfPage":71,"locatorText":"商品体系"}
+},
+{
+"recordType":"EVIDENCE_CANDIDATE","candidateSchemaVersion":"1.0","id":"CAND-GEMINI-APW430-FIX-004","sourceSystem":"GEMINI_NOTEBOOKLM","producerMode":"LIVE_EXTERNAL","status":"SUBMITTED","productId":"SER-YKK-APW430","title":"テラスタイプのアングル付枠設定","subjectField":"construction","claim":"FIX窓の「テラスタイプ」はアングル付枠のみの設定であり、アングル無枠の設定は存在しない。","proposedStrength":"EXPLICIT","productNodeIds":["NODE-YKK-APW430-FIX-TR-ZAIRAI","NODE-YKK-APW430-FIX-TR-204"],"source":{"type":"OFFICIAL_PDF","driveFileId":"1j9PtW8yoKBZ4Nodm58wU3QtOCvxlEja9","title":"202607_YKKAP_APW430_商品カタログ.pdf","version":"202607","printedPage":69,"pdfPage":71,"locatorText":"規格サイズ一覧"}
+},
+{
+"recordType":"EVIDENCE_CANDIDATE","candidateSchemaVersion":"1.0","id":"CAND-GEMINI-APW430-FIX-005","sourceSystem":"GEMINI_NOTEBOOKLM","producerMode":"LIVE_EXTERNAL","status":"SUBMITTED","productId":"SER-YKK-APW430","title":"テラスタイプ在来工法のH24規格サイズ設定","subjectField":"size","claim":"FIX窓テラスタイプ（在来工法）のH24（サッシH=2,430mm）規格サイズは 03624, 06024, 07424, 08324, 11924, 16024, 16524 が設定されている。","proposedStrength":"EXPLICIT","productNodeIds":["NODE-YKK-APW430-FIX-TR-ZAIRAI"],"source":{"type":"OFFICIAL_PDF","driveFileId":"1j9PtW8yoKBZ4Nodm58wU3QtOCvxlEja9","title":"202607_YKKAP_APW430_商品カタログ.pdf","version":"202607","printedPage":70,"pdfPage":72,"locatorText":"テラスタイプ"}
+},
+{
+"recordType":"EVIDENCE_CANDIDATE","candidateSchemaVersion":"1.0","id":"CAND-GEMINI-APW430-FIX-006","sourceSystem":"GEMINI_NOTEBOOKLM","producerMode":"LIVE_EXTERNAL","status":"SUBMITTED","productId":"SER-YKK-APW430","title":"テラスタイプ2×4工法のH24規格サイズ設定","subjectField":"size","claim":"FIX窓テラスタイプ（2×4工法）のH24（サッシH=2,445mm）規格サイズは 03624, 06024, 06924, 16024 が設定されている。","proposedStrength":"EXPLICIT","productNodeIds":["NODE-YKK-APW430-FIX-TR-204"],"source":{"type":"OFFICIAL_PDF","driveFileId":"1j9PtW8yoKBZ4Nodm58wU3QtOCvxlEja9","title":"202607_YKKAP_APW430_商品カタログ.pdf","version":"202607","printedPage":70,"pdfPage":72,"locatorText":"テラスタイプ"}
+},
+{
+"recordType":"EVIDENCE_CANDIDATE","candidateSchemaVersion":"1.0","id":"CAND-GEMINI-APW430-FIX-007","sourceSystem":"GEMINI_NOTEBOOKLM","producerMode":"LIVE_EXTERNAL","status":"SUBMITTED","productId":"SER-YKK-APW430","title":"FIX窓の規格サイズ方式設定","subjectField":"size_mode","claim":"FIX窓には規格サイズに基づく商品体系（規格サイズ一覧）が設定されている。","proposedStrength":"EXPLICIT","productNodeIds":["NODE-YKK-APW430-FIX-MADO","NODE-YKK-APW430-FIX-TR-ZAIRAI","NODE-YKK-APW430-FIX-TR-204"],"source":{"type":"OFFICIAL_PDF","driveFileId":"1j9PtW8yoKBZ4Nodm58wU3QtOCvxlEja9","title":"202607_YKKAP_APW430_商品カタログ.pdf","version":"202607","printedPage":69,"pdfPage":71,"locatorText":"規格サイズ一覧"}
+}
+],
+"issues": [
+{"id":"ISSUE-GEMINI-APW430-FIX-001","type":"SOURCE_AMBIGUOUS","subjectField":"size","question":"テラスタイプ（在来工法）の規格サイズ一覧において、W方向の呼称ヘッダーに「069（サッシW=730mm）」が記載されているが、H=1,830mm、H=2,030mm、H=2,230mm、H=2,430mmのすべての行において、069に対応する規格サイズコード（06918, 06920, 06922, 06924）のセルが空欄であり、設定が存在するかどうかが不明確。","sourceHint":{"printedPage":70,"pdfPage":72,"locatorText":"テラスタイプ 在来"}},
+{"id":"ISSUE-GEMINI-APW430-FIX-002","type":"OTHER","subjectField":"size_mode","question":"寸法式用Canonical Fieldが必要。資料p.70（PDF p.72）にアングル付枠窓タイプの内法計算式『w=サッシW-60mm / h=サッシH-60mm』が明示されているが、格納すべきCanonical FieldがないためCandidate化を保留。","sourceHint":{"printedPage":70,"pdfPage":72,"locatorText":"規格サイズ一覧"}},
+{"id":"ISSUE-GEMINI-APW430-FIX-003","type":"OTHER","subjectField":"size_mode","question":"寸法式用Canonical Fieldが必要。資料p.70（PDF p.72）にアングル付枠テラスタイプ（在来工法）の内法計算式『w=サッシW-60mm / h=サッシH-30mm』が明示されているが、格納すべきCanonical FieldがないためCandidate化を保留。","sourceHint":{"printedPage":70,"pdfPage":72,"locatorText":"規格サイズ一覧"}},
+{"id":"ISSUE-GEMINI-APW430-FIX-004","type":"OTHER","subjectField":"size_mode","question":"寸法式用Canonical Fieldが必要。資料p.70（PDF p.72）にアングル付枠テラスタイプ（2×4工法）の内法計算式『w=サッシW-60mm / h=サッシH-45mm』が明示されているが、格納すべきCanonical FieldがないためCandidate化を保留。","sourceHint":{"printedPage":70,"pdfPage":72,"locatorText":"規格サイズ一覧"}},
+{"id":"ISSUE-GEMINI-APW430-FIX-005","type":"OTHER","subjectField":"size_mode","question":"寸法式用Canonical Fieldが必要。資料p.70（PDF p.72）にアングル無枠窓タイプの内法計算式『w=サッシW-40mm / h=サッシH-70mm』が明示されているが、格納すべきCanonical FieldがないためCandidate化を保留。","sourceHint":{"printedPage":70,"pdfPage":72,"locatorText":"規格サイズ一覧"}}
+]
+}

@@ -1,0 +1,32 @@
+{
+  "previewSchemaVersion": "1.0",
+  "recordType": "PRODUCT_MASTER_PRODUCTION_PREVIEW",
+  "status": "PRODUCTION_WRITE_PREVIEW_READY",
+  "generatedAt": "2026-09-04T12:07:30+09:00",
+  "productId": "SER-LIX-SAMOS2H",
+  "proposalId": "PMCP-LIX-SAMOS2H-STANDARD-SOURCE-CORRECTION-20260904-001",
+  "proposalFingerprint": "sha256:b141224a4dc0981eee4d8c82574cc8b52e5b75e8ba70b1809053e9c9c27793d8",
+  "approvedStagingResultFingerprint": "sha256:77762fc11420fe94064682a3fa476e54cb18e5bf3f94db39bd2ff79e107b7a38",
+  "formalTarget": {
+    "driveFileId":"1kTRcb7UdghZl7h3lYdmnZuB7fUVUAduU",
+    "title":"サーモスⅡH_商品マスター_v0.9_納まりアンカー追補_GoldenTest版.xlsx",
+    "expectedContentSha256":"7ca8f5cca19187bfb841bc3f3393fb29de591dc554714627faf3a652130cd8a7",
+    "expectedModifiedTime":"2026-09-03T10:21:49.128Z",
+    "expectedSizeBytes":557373
+  },
+  "writePlan": {
+    "operation":"REPLACE_APPROVED_TARGET_SHEETS_IN_FORMAL_XLSX",
+    "targetSheets":["06_サイズ","06B_雨戸設定可否","08A_サイズ別ガラス条件"],
+    "hActualDimensionCorrections":310,"deactivatedRows":2,"newStandardRows":12,"newGlassRows":12,"newRainAvailabilityRows":12,
+    "preexistingTargetCellChanges":321,"changedExistingSheets":3,"newSheetsAdded":0,"unexpectedChangedExistingSheets":0,"unexpectedChangedNonTargetSheets":0
+  },
+  "projectedInventory":{"s2hStandard":2140,"thermosLStandard":1495,"apw430Standard":718,"apw431Standard":538},
+  "productionApproval":{"required":true,"status":"APPROVED_BY_CURRENT_USER_MESSAGE","scope":"APPROVE_PRODUCTION_WRITE_AND_RUNTIME_REGENERATION"},
+  "safety": {
+    "backupDriveFileId":"13bczVZHqXR9mWS-sP5-YrQzAZHq_Y9y5",
+    "contentSha256RecheckRequired":true,"postWriteReadbackRequired":true,"runtimeRegenerationFromFormalMasterRequired":true,"rollbackOnReadbackMismatch":true
+  },
+  "formalWorkbookWritePerformed": false,
+  "runtimeWritePerformed": false,
+  "previewFingerprint": "sha256:693539d517d64e3304c4d2711ba4e207499d9638d16dde65d250c17fc332d184"
+}

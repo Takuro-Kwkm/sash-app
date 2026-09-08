@@ -1,0 +1,35 @@
+{
+  "approvalSchemaVersion": "1.0",
+  "recordType": "PRODUCT_MASTER_PRODUCTION_APPROVAL",
+  "proposalId": "PMCP-LIX-SAMOSL-SHUT-MSTD-SIZE-GAP-20260902-001",
+  "productId": "SER-LIX-SAMOSL",
+  "approverType": "HUMAN",
+  "approvedBy": "USER",
+  "approvedAt": "2026-09-02T21:10:49+09:00",
+  "approvalSource": "Chat conversation explicit instruction: サーモスL v1.7-R2 Production Preview を承認して正式Masterへ反映して",
+  "scope": "APPROVE_PRODUCTION_WRITE_ONLY",
+  "productionApproval": true,
+  "proposalFingerprint": "sha256:2dbccd2d22edd6b00d516fbadfc2788c2089f693f06112f4b2b6c811d3a34063",
+  "previewFingerprint": "sha256:095880ed441afd4925fdcbe4c7933be92190a08d9120155d27f7a00d1ed11613",
+  "formalDriveFileId": "17lVzBZ1hp4RVcGv0yNdnrKt25SFO2FhL",
+  "requiredRevisionId": "0B1PsqngSohhldjYycXpvcXp5VVlLSDQyUlBBUmJPTFZxbU1nPQ",
+  "approvedWrites": [
+    {"sheet": "06_サイズ", "range": "A1563:V1647", "rows": 85},
+    {"sheet": "08A_サイズ別ガラス条件", "range": "A1563:N1647", "rows": 85}
+  ],
+  "expectedPostWrite": {
+    "standardSizeRows": 1644,
+    "selectableSizeRows": 1495,
+    "sizeGlassConditionRows": 1644,
+    "officialSourceAvailable": 97,
+    "officialSourceMatch": 97,
+    "missingInCanonical": 0
+  },
+  "runtimeApproval": false,
+  "auditNotes": [
+    "Approval is bound to the exact v1.7-R2 Preview fingerprint.",
+    "Any Drive revision drift before write invalidates this approval.",
+    "Post-write readback is mandatory; any mismatch requires immediate rollback.",
+    "Runtime mutation or regeneration is not authorized by this approval."
+  ]
+}

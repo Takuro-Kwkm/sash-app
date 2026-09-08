@@ -1,0 +1,13 @@
+{
+  "schemaVersion": "1.0",
+  "recordType": "SAMOS2H_RUNTIME_REGENERATION",
+  "proposalId": "PMCP-LIX-SAMOS2H-CUSTOM-DIMENSION-RULESET-20260903-001",
+  "productId": "SER-LIX-SAMOS2H",
+  "status": "RUNTIME_REGENERATION_COMMITTED",
+  "runtimeVersion": "v1.0",
+  "sourceOfTruth": "FORMAL_PRODUCT_MASTER",
+  "formalMaster": {"driveFileId":"1kTRcb7UdghZl7h3lYdmnZuB7fUVUAduU","sha256":"7ca8f5cca19187bfb841bc3f3393fb29de591dc554714627faf3a652130cd8a7","modifiedTime":"2026-09-03T10:21:49.128Z","sizeBytes":557373,"sheet":"06E_特注寸法範囲"},
+  "runtimeProjection": {"dimensionRuleCount":17,"dimensionAuto":0,"dimensionReview":17,"directManufacturerValueEditToGenericCore":false,"directEditToLegacyCompressedSource":false,"finalAutoPassAllowed":false},
+  "standardInventoryExpected": {"SER-LIX-SAMOS2H":2131,"SER-LIX-SAMOSL":1495,"SER-YKK-APW430":718,"SER-YKK-APW431":538},
+  "safety": {"constructionHidden":true,"interpolatedPointsAdded":false,"allCustomRulesFinalReviewRequired":true}
+}

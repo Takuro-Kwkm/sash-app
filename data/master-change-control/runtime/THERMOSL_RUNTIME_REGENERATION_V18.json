@@ -1,0 +1,82 @@
+{
+  "recordSchemaVersion": "1.0",
+  "recordType": "PRODUCT_MASTER_RUNTIME_REGENERATION_AUDIT",
+  "status": "FORMAL_PASS",
+  "productId": "SER-LIX-SAMOSL",
+  "runtimeRegenerationVersion": "v1.8",
+  "formalMaster": {
+    "driveFileId": "17lVzBZ1hp4RVcGv0yNdnrKt25SFO2FhL",
+    "revisionId": "0B1PsqngSohhlRDByanJSNkxtSlpqdVo0WXBRT01MNDIzM2tNPQ",
+    "modifiedTime": "2026-09-02T12:17:29.703Z",
+    "sizeBytes": 678729,
+    "sha256": "664a51bd5b9ded22e19780b1ce339338cba45f292438221b0a60fc3974e1abf9"
+  },
+  "runtimeInventory": {
+    "standardSizeRows": 1644,
+    "selectableSizeRows": 1495,
+    "inactiveSizeRows": 149,
+    "missingSizeRows": 0,
+    "extraSizeRows": 0,
+    "sizeCoverage": 1,
+    "approvedSizeAdditions": 85,
+    "firstAddedSizeId": "SZ-SL-001560",
+    "lastAddedSizeId": "SZ-SL-001644"
+  },
+  "manualStandardShutterGate": {
+    "windowTypeId": "WT-SL-SHUTTER-HIKI",
+    "specificationId": "SP-SL-SHUT-M-STD",
+    "officialSourceRecords": 97,
+    "runtimeRecords": 97,
+    "constructionCounts": {
+      "在来・204": 51,
+      "在来": 46
+    },
+    "missing": 0,
+    "extra": 0,
+    "officialSourceToRuntimeSetEquality": true,
+    "cartesianGenerationPerformed": false
+  },
+  "browserQA": {
+    "desktop": {
+      "constructionCounts": {"在来・204": 51, "在来": 46},
+      "total": 97,
+      "missing": 0,
+      "extra": 0,
+      "status": "PASS"
+    },
+    "mobile390x844": {
+      "constructionCounts": {"在来・204": 51, "在来": 46},
+      "total": 97,
+      "missing": 0,
+      "extra": 0,
+      "horizontalOverflowPx": 0,
+      "status": "PASS"
+    },
+    "consoleErrors": 0,
+    "artifactId": 9848468000,
+    "artifactDigest": "sha256:6a4c449a0d34ad4d55eac6f6b1f6db472e9e67f54990d00a27a266eaa0512785"
+  },
+  "tests": {
+    "npmTest": {"pass": 218, "fail": 0},
+    "runtimeSmoke": "PASS",
+    "dedicatedV18Gate": "PASS",
+    "npmTestArtifactId": 9848422402,
+    "npmTestArtifactDigest": "sha256:b5379083aad88712c2d51e0c742cc0ffabede8b5e956d7f13ba6ccfd7d1b508b"
+  },
+  "historicalLifecycleIsolation": {
+    "preProductionBaselineRows": 1559,
+    "preProductionSelectableRows": 1410,
+    "v15ToV17HistoricalReproduction": "PASS",
+    "reason": "Historical source-gap/proposal/staging/preview audits remain reproducible while current Runtime consumes the post-production formal Master."
+  },
+  "ci": {
+    "workflow": "V2 Recovery CI",
+    "runNumber": 432,
+    "runId": 33635062152,
+    "headSha": "1b28c96c19e1a4dd39c14d3cb98232e806dca1df",
+    "conclusion": "SUCCESS"
+  },
+  "runtimeWritePerformed": true,
+  "formalWorkbookWritePerformedInV18": false,
+  "otherProductRuntimeMutation": false
+}

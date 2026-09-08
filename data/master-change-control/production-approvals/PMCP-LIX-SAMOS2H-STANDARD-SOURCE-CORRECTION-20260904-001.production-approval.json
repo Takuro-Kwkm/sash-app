@@ -1,0 +1,34 @@
+{
+  "approvalSchemaVersion": "1.0",
+  "recordType": "PRODUCT_MASTER_PRODUCTION_APPROVAL",
+  "proposalId": "PMCP-LIX-SAMOS2H-STANDARD-SOURCE-CORRECTION-20260904-001",
+  "productId": "SER-LIX-SAMOS2H",
+  "approverType": "HUMAN",
+  "approvedBy": "USER",
+  "approvedAt": "2026-09-04T12:07:31+09:00",
+  "approvalSource": "The user's explicit approval of the exact S2H STANDARD source-correction proposal authorizes the described full controlled flow through Formal Master and Runtime regeneration after zero-unexpected STAGING/Preview.",
+  "scope": "APPROVE_PRODUCTION_WRITE_AND_RUNTIME_REGENERATION",
+  "productionApproval": true,
+  "proposalFingerprint": "sha256:b141224a4dc0981eee4d8c82574cc8b52e5b75e8ba70b1809053e9c9c27793d8",
+  "previewFingerprint": "sha256:693539d517d64e3304c4d2711ba4e207499d9638d16dde65d250c17fc332d184",
+  "formalDriveFileId": "1kTRcb7UdghZl7h3lYdmnZuB7fUVUAduU",
+  "requiredContentSha256": "7ca8f5cca19187bfb841bc3f3393fb29de591dc554714627faf3a652130cd8a7",
+  "requiredModifiedTime": "2026-09-03T10:21:49.128Z",
+  "approvedWrites": [{
+    "operation":"CORRECT_STANDARD_SIZE_SOURCE_GAPS",
+    "targetSheets":["06_サイズ","06B_雨戸設定可否","08A_サイズ別ガラス条件"],
+    "hActualDimensionCorrections":310,"deactivatedRows":2,"newStandardRows":12,"newGlassRows":12,"newRainAvailabilityRows":12
+  }],
+  "expectedPostWrite": {
+    "standardSizeRows":2309,"selectableRows":2140,"inactiveRows":169,"sizeGlassRows":2309,"rainAvailabilityRows":264,
+    "runtimeStandardInventory":{"SER-LIX-SAMOS2H":2140,"SER-LIX-SAMOSL":1495,"SER-YKK-APW430":718,"SER-YKK-APW431":538}
+  },
+  "runtimeApproval": true,
+  "runtimeScope": "REGENERATE_FROM_FORMAL_MASTER_ONLY",
+  "auditNotes": [
+    "Approval bound to exact Proposal and Preview fingerprints.",
+    "Any formal Master SHA/modified-time drift before write invalidates approval.",
+    "Post-write readback is mandatory and must match the staged workbook content.",
+    "Runtime manufacturer-value direct edits to generic core are forbidden."
+  ]
+}

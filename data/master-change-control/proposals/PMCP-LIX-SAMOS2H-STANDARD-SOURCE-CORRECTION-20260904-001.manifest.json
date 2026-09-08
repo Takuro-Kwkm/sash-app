@@ -1,0 +1,69 @@
+{
+  "schemaVersion": "1.1",
+  "recordType": "PRODUCT_MASTER_CHANGE_PROPOSAL",
+  "proposalId": "PMCP-LIX-SAMOS2H-STANDARD-SOURCE-CORRECTION-20260904-001",
+  "productId": "SER-LIX-SAMOS2H",
+  "status": "PROPOSED",
+  "approvalPolicy": "HUMAN_REQUIRED",
+  "approvalStatus": "PENDING",
+  "proposalCreatedAt": "2026-09-04T02:05:00Z",
+  "proposalCreatedBy": "CHATGPT",
+  "baseMaster": {
+    "driveFileId": "1kTRcb7UdghZl7h3lYdmnZuB7fUVUAduU",
+    "title": "サーモスⅡH_商品マスター_v0.9_納まりアンカー追補_GoldenTest版.xlsx",
+    "sha256": "7ca8f5cca19187bfb841bc3f3393fb29de591dc554714627faf3a652130cd8a7",
+    "driveRevisionId": "0B1PsqngSohhlMnF3SHRHUm80TTlYR0hvb2VuS3dsK0dZeEJRPQ",
+    "modifiedTime": "2026-09-03T10:21:49.128Z"
+  },
+  "baseMasterFingerprint": "sha256:7ca8f5cca19187bfb841bc3f3393fb29de591dc554714627faf3a652130cd8a7",
+  "operation": "CORRECT_STANDARD_SIZE_SOURCE_GAPS",
+  "targetEntity": "06_サイズ+06B_雨戸設定可否+08A_サイズ別ガラス条件",
+  "targetRuleId": "S2H-STANDARD-SOURCE-CORRECTION-001",
+  "sourceFile": "202604_LIXIL_サーモスⅡ－Ｈ_業務用資料集_完成品価格表.pdf",
+  "sourceLocator": "P18-P289 plus P313; exact record locators and affected IDs in evidence-samos2h-standard.json",
+  "printedPage": 18,
+  "pdfPage": 20,
+  "sourceEvidenceIds": [
+    "EV-S2H-STANDARD-H-DIMENSIONS-20260904",
+    "EV-S2H-STANDARD-AMADO-MISSING-20260904",
+    "EV-S2H-STANDARD-FIX-16524-20260904"
+  ],
+  "before": {
+    "standardSizeRows": 2297,
+    "selectableRows": 2131,
+    "inactiveRows": 166,
+    "sizeGlassRows": 2297,
+    "rainAvailabilityRows": 252,
+    "officialSourceClassification": {"MATCH":1985,"VALUE_MISMATCH":312,"MISSING_IN_MASTER":12}
+  },
+  "after": {
+    "standardSizeRows": 2309,
+    "selectableRows": 2140,
+    "inactiveRows": 169,
+    "sizeGlassRows": 2309,
+    "rainAvailabilityRows": 264,
+    "hActualDimensionCorrections": 310,
+    "hCorrectionGroups": [
+      {"predicate":"construction=204 AND window_section!=テラス単純段差","recordCount":136,"deltaMm":15,"officialFormula":"H=呼称H×100+45"},
+      {"predicate":"construction=204 AND window_section=テラス単純段差","recordCount":132,"deltaMm":30,"officialFormula":"H=呼称H×100+60"},
+      {"predicate":"construction=在来・204 AND current H=呼称H×100+30","recordCount":42,"deltaMm":40,"officialFormula":"H=呼称H×100+70"}
+    ],
+    "deactivateSizeIds": ["SZ-S2H-01892","SZ-S2H-02010"],
+    "deactivationReason": "official note: 16524サイズは製作不可",
+    "newStandardSizeIds": ["SZ-S2H-02298","SZ-S2H-02299","SZ-S2H-02300","SZ-S2H-02301","SZ-S2H-02302","SZ-S2H-02303","SZ-S2H-02304","SZ-S2H-02305","SZ-S2H-02306","SZ-S2H-02307","SZ-S2H-02308","SZ-S2H-02309"],
+    "evidenceArtifact": "artifacts/size-capability-audit/evidence-samos2h-standard.json",
+    "enumerationArtifact": "artifacts/size-capability-audit/standard-source-enumeration-samos2h.json"
+  },
+  "projectionSafety": {
+    "formalMasterWritePerformed": false,
+    "runtimeWritePerformed": false,
+    "standardInventoryCurrentlyUnchanged": {"S2H":2131,"SL":1495,"APW430":718,"APW431":538},
+    "projectedS2HSelectableOnlyAfterHumanApprovedFormalApply": 2140
+  },
+  "formalWorkbookWritePerformed": false,
+  "runtimeWritePerformed": false,
+  "autoApprovalPerformed": false,
+  "proposalFingerprint": "sha256:b141224a4dc0981eee4d8c82574cc8b52e5b75e8ba70b1809053e9c9c27793d8",
+  "proposalFingerprintPolicy": "PRESERVED_LEGACY_PROPOSAL_SHA256",
+  "payloadIntegrityFingerprint": "sha256:90d67ceb8bdbf8a5a2f447e8e50f1de5c0a8635b83aadae48e1a36bfc58c6d89"
+}

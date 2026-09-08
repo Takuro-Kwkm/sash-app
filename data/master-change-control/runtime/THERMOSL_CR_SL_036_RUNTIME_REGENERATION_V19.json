@@ -1,0 +1,46 @@
+{
+  "recordSchemaVersion": "1.0",
+  "recordType": "PRODUCT_MASTER_RUNTIME_REGENERATION",
+  "productId": "SER-LIX-SAMOSL",
+  "proposalId": "PMCP-LIX-SAMOSL-INNER-TILT-RANGE-20260903-001",
+  "status": "RUNTIME_REGENERATION_COMMITTED",
+  "runtimeVersion": "v1.9",
+  "sourceOfTruth": "FORMAL_PRODUCT_MASTER",
+  "formalMaster": {
+    "driveFileId": "17lVzBZ1hp4RVcGv0yNdnrKt25SFO2FhL",
+    "revisionId": "0B1PsqngSohhlZVhYaTVRdUNPRFp4ZVB5Y05IdnJNYXI4YTlZPQ",
+    "sha256": "cd6844218fcf0150a16cbbfa947f391aa08f5449b82ba6fc2249ccdb6894c3d3",
+    "modifiedTime": "2026-09-03T07:23:33.441Z",
+    "sizeBytes": 678886
+  },
+  "runtimeProjection": {
+    "adapter": "src/catalog/modules/thermosl-runtime-formal-dimension-delta-v19.mjs",
+    "loader": "src/catalog/modules/thermosl-source.mjs",
+    "targetRuleId": "CR-SL-036",
+    "dimensionRuleUpdates": 1,
+    "dimensionRuleCount": 50,
+    "directManufacturerValueEditToGenericCore": false,
+    "directEditToLegacyPart14": false,
+    "rule": {
+      "type": "COMPOUND_GATE",
+      "automatic": false,
+      "bounds": {"minW":240,"maxW":1690,"minH":350,"maxH":943},
+      "safeAutoExpression": "240<=W<=815:350<=H<=943; 815<W<=870:350<=H<=755; 870<W<=1690:350<=H<=500",
+      "safeAutoPolygon": [[240,350],[240,943],[815,943],[815,755],[870,755],[870,500],[1690,500],[1690,350]],
+      "conditionalRegionHandling": "RUNTIME_SAFETY_REVIEW_REQUIRED"
+    }
+  },
+  "expectedStandardInventory": {
+    "SER-LIX-SAMOS2H": 2131,
+    "SER-LIX-SAMOSL": 1495,
+    "SER-YKK-APW430": 718,
+    "SER-YKK-APW431": 538
+  },
+  "safety": {
+    "sourceConfirmedVerticesOnly": true,
+    "interpolatedPointsAdded": false,
+    "wHOnlyFinalAutoPass": false,
+    "glassConditionPendingPreserved": true
+  },
+  "verificationStatus": "LATEST_HEAD_CI_REQUIRED"
+}

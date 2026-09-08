@@ -1,0 +1,127 @@
+name: Product Master Official PDF Source Probe
+
+on:
+  push:
+    branches: [feat/catalog-recovery-v2]
+    paths:
+      - 'config/product-master-source-probes/*.json'
+
+permissions:
+  contents: read
+
+jobs:
+  source_probe:
+    name: Official PDF source identity probe
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Resolve exactly one source probe request
+        shell: bash
+        run: |
+          set -euo pipefail
+          before='${{ github.event.before }}'
+          after='${{ github.sha }}'
+          changed="$(git diff --name-only "$before" "$after" -- 'config/product-master-source-probes/*.json' | sed '/^$/d')"
+          count="$(printf '%s\n' "$changed" | sed '/^$/d' | wc -l | tr -d ' ')"
+          if [ "$count" -ne 1 ]; then
+            echo "Expected exactly one changed source probe request, found $count" >&2
+            printf '%s\n' "$changed" >&2
+            exit 3
+          fi
+          echo "PROBE_REQUEST=$changed" >> "$GITHUB_ENV"
+          mkdir -p artifacts/product-master-source-probe
+
+      - name: Install PDF reader
+        run: python -m pip install --disable-pip-version-check --quiet pypdf
+
+      - name: Download official PDF and build identity audit
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib, json, os, re, urllib.request
+          from pathlib import Path
+          from pypdf import PdfReader
+
+          req = json.loads(Path(os.environ['PROBE_REQUEST']).read_text(encoding='utf-8'))
+          out = Path('artifacts/product-master-source-probe')
+          out.mkdir(parents=True, exist_ok=True)
+          pdf_path = out / 'official-source.pdf'
+
+          request = urllib.request.Request(
+              req['officialDownloadUrl'],
+              headers={
+                  'User-Agent': 'Mozilla/5.0 ProductMasterSourceProbe/1.0',
+                  'Referer': req['officialDetailUrl'],
+                  'Accept': 'application/pdf,*/*;q=0.8',
+              },
+          )
+          with urllib.request.urlopen(request, timeout=240) as response:
+              data = response.read()
+              resolved = response.geturl()
+              content_type = response.headers.get_content_type()
+
+          if not data.startswith(b'%PDF-'):
+              raise RuntimeError(f'Official download is not PDF: content-type={content_type} size={len(data)}')
+          pdf_path.write_bytes(data)
+          sha = hashlib.sha256(data).hexdigest()
+
+          reader = PdfReader(str(pdf_path))
+          labels = [str(x) for x in req.get('targetPrintedLabels', [])]
+          wanted = set(labels)
+          mapping = {label: [] for label in labels}
+          page_audit = []
+          for idx, page in enumerate(reader.pages, start=1):
+              text = page.extract_text() or ''
+              compact = re.sub(r'\s+', ' ', text)
+              for label in labels:
+                  # Prefer a standalone footer/page-label hit; retain candidates for human/ChatGPT verification.
+                  if re.search(rf'(?<![A-Za-z0-9]){re.escape(label)}(?![A-Za-z0-9])', text, flags=re.I):
+                      mapping[label].append(idx)
+              if any(mapping[label] and mapping[label][-1] == idx for label in labels):
+                  page_audit.append({
+                      'pdfPage': idx,
+                      'textSha256': hashlib.sha256(text.encode('utf-8')).hexdigest(),
+                      'preview': compact[:500],
+                  })
+
+          audit = {
+              'schemaVersion': '1.0',
+              'recordType': 'PRODUCT_MASTER_OFFICIAL_PDF_SOURCE_IDENTITY_PROBE',
+              'status': 'PASS',
+              'manufacturer': req['manufacturer'],
+              'series': req['series'],
+              'catalogCode': req['catalogCode'],
+              'publicationDate': req['publicationDate'],
+              'title': req['title'],
+              'officialDetailUrl': req['officialDetailUrl'],
+              'officialDownloadUrl': req['officialDownloadUrl'],
+              'resolvedUrl': resolved,
+              'contentType': content_type,
+              'sizeBytes': len(data),
+              'sha256': sha,
+              'pageCount': len(reader.pages),
+              'targetPrintedLabels': labels,
+              'labelCandidatePdfPages': mapping,
+              'candidatePageAudit': page_audit,
+              'credentialMaterialPersisted': False,
+          }
+          (out / 'source-identity-audit.json').write_text(json.dumps(audit, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+          print(json.dumps({'status':'PASS','sha256':sha,'pageCount':len(reader.pages),'labelCandidatePdfPages':mapping}, ensure_ascii=False))
+          PY
+
+      - name: Upload source probe artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: product-master-official-pdf-source-probe-${{ github.run_id }}
+          path: artifacts/product-master-source-probe
+          if-no-files-found: error
+          retention-days: 7

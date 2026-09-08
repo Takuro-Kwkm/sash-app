@@ -1,0 +1,58 @@
+{
+  "recordSchemaVersion": "1.0",
+  "recordType": "PRODUCT_MASTER_PRODUCTION_APPLY",
+  "productId": "SER-LIX-SAMOSL",
+  "proposalId": "PMCP-LIX-SAMOSL-INNER-TILT-RANGE-20260903-001",
+  "status": "PRODUCTION_APPLY_COMPLETE",
+  "proposalFingerprint": "sha256:bf89762cd1cf88be8620b93599d2987c23d50fcb335e6c2b525f5a14175184ee",
+  "payloadIntegrityFingerprint": "sha256:14eb2445bca8165c29311bdcc37ec3bdb69eafea0d1a79fe82327212ddfd8b68",
+  "previewFingerprint": "sha256:41d91b6079ddc1a469ff7995bfadc3e51df0e57a35d54f9ca0c82ed5300116e4",
+  "productionApproval": {
+    "approverType": "HUMAN",
+    "approvedBy": "USER",
+    "scope": "APPROVE_PRODUCTION_WRITE_ONLY",
+    "approvalRecord": "data/master-change-control/production-approvals/PMCP-LIX-SAMOSL-INNER-TILT-RANGE-20260903-001.production-approval.json"
+  },
+  "formalTarget": {
+    "driveFileId": "17lVzBZ1hp4RVcGv0yNdnrKt25SFO2FhL",
+    "title": "サーモスL_商品マスター_v0.7_特注寸法発注アプリ投入完成版_QA確定.xlsx",
+    "preWriteRevisionId": "0B1PsqngSohhlRDByanJSNkxtSlpqdVo0WXBRT01MNDIzM2tNPQ",
+    "preWriteSha256": "664a51bd5b9ded22e19780b1ce339338cba45f292438221b0a60fc3974e1abf9",
+    "postWriteRevisionId": "0B1PsqngSohhlZVhYaTVRdUNPRFp4ZVB5Y05IdnJNYXI4YTlZPQ",
+    "postWriteModifiedTime": "2026-09-03T07:23:33.441Z",
+    "postWriteSizeBytes": 678886,
+    "postWriteSha256": "cd6844218fcf0150a16cbbfa947f391aa08f5449b82ba6fc2249ccdb6894c3d3"
+  },
+  "writes": [
+    {
+      "operation": "UPDATE_CELLS",
+      "sheet": "06C_特注寸法範囲",
+      "ruleId": "CR-SL-036",
+      "excelRow": 39,
+      "cells": ["G39","L39","M39","N39","O39","V39"],
+      "changedCellCount": 6
+    }
+  ],
+  "postWriteReadback": {
+    "dimensionRuleCount": 50,
+    "targetRuleId": "CR-SL-036",
+    "targetEvaluationType": "COMPOUND_GATE",
+    "targetAutomatic": false,
+    "safeAutoExpression": "240<=W<=815:350<=H<=943; 815<W<=870:350<=H<=755; 870<W<=1690:350<=H<=500",
+    "sourceConfirmedBoundaryPoints": [[240,350],[240,943],[815,943],[815,755],[870,755],[870,500],[1690,500],[1690,350]],
+    "interpolatedPointsAdded": false,
+    "conditionalRegionHandling": "RUNTIME_SAFETY_REVIEW_REQUIRED",
+    "changedCells": 6,
+    "unexpectedChangedCells": 0,
+    "otherSheetsChanged": 0,
+    "otherDimensionRulesChanged": 0,
+    "gate": "PASS"
+  },
+  "backup": {
+    "driveFileId": "1PQsjvO3lRRbFN1xX0NmfzHck4TU2vAnJ",
+    "title": "BACKUP_20260903_サーモスL_商品マスター_v0.7_CR-SL-036_Production前.xlsx",
+    "sha256": "664a51bd5b9ded22e19780b1ce339338cba45f292438221b0a60fc3974e1abf9"
+  },
+  "runtimeDirectWritePerformed": false,
+  "runtimeRegenerationStatus": "COMMITTED_FROM_FORMAL_MASTER_V1_9"
+}

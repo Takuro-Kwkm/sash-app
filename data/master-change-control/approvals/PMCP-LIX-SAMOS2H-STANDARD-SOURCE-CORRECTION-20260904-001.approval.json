@@ -1,0 +1,33 @@
+{
+  "approvalSchemaVersion": "1.0",
+  "recordType": "PRODUCT_MASTER_CHANGE_APPROVAL",
+  "proposalId": "PMCP-LIX-SAMOS2H-STANDARD-SOURCE-CORRECTION-20260904-001",
+  "productId": "SER-LIX-SAMOS2H",
+  "approverType": "HUMAN",
+  "approvedBy": "USER",
+  "approvedAt": "2026-09-04T12:06:00+09:00",
+  "approvalSource": "User explicitly stated: 「PMCP-LIX-SAMOS2H-STANDARD-SOURCE-CORRECTION-20260904-001 を承認します」.",
+  "scope": "APPROVE_FULL_CONTROLLED_FLOW",
+  "productionApproval": true,
+  "proposalFingerprint": "sha256:b141224a4dc0981eee4d8c82574cc8b52e5b75e8ba70b1809053e9c9c27793d8",
+  "baseMasterFingerprint": "sha256:7ca8f5cca19187bfb841bc3f3393fb29de591dc554714627faf3a652130cd8a7",
+  "expectedChanges": {
+    "operation": "CORRECT_STANDARD_SIZE_SOURCE_GAPS",
+    "targetSheets": ["06_サイズ", "06B_雨戸設定可否", "08A_サイズ別ガラス条件"],
+    "hActualDimensionCorrections": 310,
+    "deactivateSizeIds": ["SZ-S2H-01892", "SZ-S2H-02010"],
+    "newStandardSizeRows": 12,
+    "newGlassRows": 12,
+    "newRainAvailabilityRows": 12,
+    "projectedStandardRows": 2309,
+    "projectedSelectableRows": 2140,
+    "projectedInactiveRows": 169,
+    "unexpectedChangedNonTargetSheets": 0
+  },
+  "auditNotes": [
+    "Approval is limited to this exact Proposal ID/fingerprint.",
+    "Formal write must occur only after backup, base SHA revalidation, STAGING verification, and zero-unexpected Production Preview.",
+    "Runtime manufacturer-value direct edits to generic core are forbidden; Runtime must be regenerated from the approved Formal Product Master.",
+    "Other series inventories must remain Thermos L 1495 / APW430 718 / APW431 538."
+  ]
+}

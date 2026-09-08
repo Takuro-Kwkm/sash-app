@@ -1,0 +1,51 @@
+{
+  "previewSchemaVersion": "1.0",
+  "recordType": "PRODUCT_MASTER_PRODUCTION_PREVIEW",
+  "status": "PRODUCTION_WRITE_PREVIEW_READY",
+  "generatedAt": "2026-09-03T19:14:01+09:00",
+  "productId": "SER-LIX-SAMOS2H",
+  "proposalId": "PMCP-LIX-SAMOS2H-CUSTOM-DIMENSION-RULESET-20260903-001",
+  "proposalFingerprint": "sha256:bd5900002f8d54d322fb7c50bb0b4b121f54a81ece7ec0e60baaffe6914df08e",
+  "approvedStagingResultFingerprint": "sha256:d9a418325a5d31581e98a6eb9e0053c29eb28c6cc17f00d8e7e89883114c1133",
+  "formalTarget": {
+    "driveFileId": "1kTRcb7UdghZl7h3lYdmnZuB7fUVUAduU",
+    "title": "サーモスⅡH_商品マスター_v0.9_納まりアンカー追補_GoldenTest版.xlsx",
+    "expectedContentSha256": "8dea8b2ecec1715445db74255f591b4f2bcf404027f0006f168a585365df29d6",
+    "expectedModifiedTime": "2026-09-01T02:33:05.041Z",
+    "expectedSizeBytes": 551564
+  },
+  "writePlan": {
+    "operation": "ADD_SHEET",
+    "sheet": "06E_特注寸法範囲",
+    "rows": 17,
+    "columns": 23,
+    "changedExistingSheets": 0,
+    "newSheetsAdded": 1,
+    "unexpectedChangedExistingSheets": 0,
+    "dimensionRuleRecords": 17,
+    "classificationSummary": {
+      "EXACT_RULE_EXTRACTED": 7,
+      "SOURCE_GRAPH_REVIEW_REQUIRED": 10
+    }
+  },
+  "projectedInventory": {
+    "s2hStandard": 2131,
+    "thermosLStandard": 1495,
+    "apw430Standard": 718,
+    "apw431Standard": 538
+  },
+  "productionApproval": {
+    "required": true,
+    "status": "APPROVED_BY_CURRENT_USER_MESSAGE",
+    "scope": "APPROVE_PRODUCTION_WRITE_ONLY"
+  },
+  "safety": {
+    "backupDriveFileId": "1_Lx7_4WD-mmUTYlTihNpmZT79_R6OdFt",
+    "contentSha256RecheckRequired": true,
+    "postWriteReadbackRequired": true,
+    "runtimeRegenerationFromFormalMasterRequired": true
+  },
+  "formalWorkbookWritePerformed": false,
+  "runtimeWritePerformed": false,
+  "previewFingerprint": "sha256:c5ac22d023b1788a21576fc44492dc6c0caf9095cf38861d95a6efdf1b8ca4ac"
+}

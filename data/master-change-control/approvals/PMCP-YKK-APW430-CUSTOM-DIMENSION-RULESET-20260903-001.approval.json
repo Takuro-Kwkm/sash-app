@@ -1,0 +1,36 @@
+{
+  "approvalSchemaVersion": "1.0",
+  "recordType": "PRODUCT_MASTER_CHANGE_APPROVAL",
+  "proposalId": "PMCP-YKK-APW430-CUSTOM-DIMENSION-RULESET-20260903-001",
+  "productId": "SER-YKK-APW430",
+  "approverType": "HUMAN",
+  "approvedBy": "USER",
+  "approvedAt": "2026-09-03T21:32:00+09:00",
+  "approvalSource": "User explicitly stated: 「PMCP-YKK-APW430-CUSTOM-DIMENSION-RULESET-20260903-001 を承認します」.",
+  "scope": "APPROVE_FULL_CONTROLLED_FLOW",
+  "productionApproval": true,
+  "proposalFingerprint": "sha256:894ca2e99cfd482b0093bfbc1d1763383a8e01c5c8614d75ac1560938ae5eb78",
+  "baseMasterFingerprint": "sha256:b149cc61ea2a2ddf119286ce39b4c03737ad789e7cbab2cec9e414f1dcffccd9",
+  "baseMasterConcurrency": {
+    "driveFileId": "1QDocQ7yoXE6TAnzHtfsyKwwK6YB5_mgk90Bw1hm4iPo",
+    "expectedDriveRevisionId": "11",
+    "expectedModifiedTime": "2026-08-30T11:39:41.909Z",
+    "xlsxExportFingerprintPolicy": "NONDETERMINISTIC_EXPORT_BYTES_NOT_USED_AS_CONCURRENCY_TOKEN",
+    "note": "Repeated exports of the unchanged native Google Sheet produced different XLSX bytes while Drive revisionId and modifiedTime remained unchanged. Proposal identity remains bound to the approved immutable proposal fingerprint; production concurrency is bound to Drive revisionId/modifiedTime plus pre-write sheet-state checks."
+  },
+  "expectedChanges": {
+    "operation": "ADD_DIMENSION_RULESET",
+    "targetSheet": "06C_特注寸法範囲",
+    "activeProductNodes": 25,
+    "exactRuleExtracted": 20,
+    "sourceGraphReviewRequired": 5,
+    "unexpectedChangedExistingSheets": 0
+  },
+  "auditNotes": [
+    "Approval is limited to this exact Proposal ID/fingerprint.",
+    "25 Product Nodes only; interpolation remains forbidden.",
+    "All rules remain final REVIEW_REQUIRED because the approved proposal keeps automatic=false.",
+    "Formal write must occur only after backup, STAGING readback and zero-unexpected Production Preview.",
+    "Runtime must be regenerated from the Formal Product Master only; Generic Core manufacturer-value writes are forbidden."
+  ]
+}

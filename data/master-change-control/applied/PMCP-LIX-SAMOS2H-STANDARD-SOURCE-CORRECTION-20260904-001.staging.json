@@ -1,0 +1,39 @@
+{
+  "recordType": "PRODUCT_MASTER_STAGING_APPLICATION",
+  "recordVersion": "1.0",
+  "proposalId": "PMCP-LIX-SAMOS2H-STANDARD-SOURCE-CORRECTION-20260904-001",
+  "proposalStatus": "APPLIED",
+  "productId": "SER-LIX-SAMOS2H",
+  "proposalFingerprint": "sha256:b141224a4dc0981eee4d8c82574cc8b52e5b75e8ba70b1809053e9c9c27793d8",
+  "baseMasterFingerprint": "sha256:7ca8f5cca19187bfb841bc3f3393fb29de591dc554714627faf3a652130cd8a7",
+  "approvedBy": "USER",
+  "approvedAt": "2026-09-04T12:06:00+09:00",
+  "appliedAt": "2026-09-04T12:07:00+09:00",
+  "mode": "STAGING",
+  "target": {
+    "sheets": ["06_サイズ", "06B_雨戸設定可否", "08A_サイズ別ガラス条件"],
+    "ruleSetId": "S2H-STANDARD-SOURCE-CORRECTION-001",
+    "productNode": "MULTI:17"
+  },
+  "before": {"standardSizeRows":2297,"selectableRows":2131,"inactiveRows":166,"sizeGlassRows":2297,"rainAvailabilityRows":252},
+  "after": {
+    "standardSizeRows":2309,"selectableRows":2140,"inactiveRows":169,"sizeGlassRows":2309,"rainAvailabilityRows":264,
+    "hActualDimensionCorrections":310,"deactivatedRows":2,"newStandardRows":12,"newGlassRows":12,"newRainAvailabilityRows":12
+  },
+  "stagingWorkbookSha256": "sha256:9d4a0812cadc6d804a8e8db77ad0e4b042d674e62b9ef9edfcd2afcab9c9e5a6",
+  "stagingWorkbookSizeBytes": 560895,
+  "preexistingTargetCellChanges": 321,
+  "changedExistingSheets": 3,
+  "unexpectedChangedExistingSheets": 0,
+  "unexpectedChangedNonTargetSheets": 0,
+  "newSheetsAdded": 0,
+  "otherSeriesChanged": 0,
+  "productionMasterWritePerformed": false,
+  "runtimeWritePerformed": false,
+  "gates": {
+    "EXPLICIT_HUMAN_APPROVAL":"PASS","PROPOSAL_FINGERPRINT_MATCH":"PASS","BASE_MASTER_FINGERPRINT_MATCH":"PASS",
+    "H_CORRECTIONS_310":"PASS","DEACTIVATIONS_2":"PASS","NEW_STANDARD_ROWS_12":"PASS","NEW_GLASS_ROWS_12":"PASS",
+    "NEW_RAIN_ROWS_12":"PASS","PROJECTED_2309_2140_169":"PASS","NON_TARGET_SHEETS_UNCHANGED":"PASS"
+  },
+  "stagingResultFingerprint": "sha256:77762fc11420fe94064682a3fa476e54cb18e5bf3f94db39bd2ff79e107b7a38"
+}

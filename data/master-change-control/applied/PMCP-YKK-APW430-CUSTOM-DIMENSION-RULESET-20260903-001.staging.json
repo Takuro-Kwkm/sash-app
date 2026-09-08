@@ -1,0 +1,65 @@
+{
+  "recordType": "PRODUCT_MASTER_STAGING_APPLICATION",
+  "recordVersion": "1.0",
+  "proposalId": "PMCP-YKK-APW430-CUSTOM-DIMENSION-RULESET-20260903-001",
+  "proposalStatus": "APPLIED",
+  "productId": "SER-YKK-APW430",
+  "proposalFingerprint": "sha256:894ca2e99cfd482b0093bfbc1d1763383a8e01c5c8614d75ac1560938ae5eb78",
+  "baseMasterFingerprint": "sha256:b149cc61ea2a2ddf119286ce39b4c03737ad789e7cbab2cec9e414f1dcffccd9",
+  "approvedBy": "USER",
+  "approvedAt": "2026-09-03T21:32:00+09:00",
+  "appliedAt": "2026-09-03T21:36:00+09:00",
+  "mode": "STAGING",
+  "stagingDriveFileId": "1XVB3uGSL63_Ru0lHeUOllQArz4RHTLA6N8yYx-WnaEU",
+  "backupDriveFileId": "1xx4HQJKbMTYpJK7QBe7i2sNioIHsqP1bkVFORndzKhw",
+  "target": {
+    "sheet": "06C_特注寸法範囲",
+    "ruleSetId": "CR-APW430-CUSTOM-RULESET-001",
+    "productNode": "MULTI:25"
+  },
+  "before": {
+    "sheetExists": false,
+    "dimensionRuleCount": 0,
+    "activeProductNodeCount": 25,
+    "runtimeDimensionRuleCount": 0,
+    "formalDriveRevisionId": "11",
+    "formalModifiedTime": "2026-08-30T11:39:41.909Z"
+  },
+  "after": {
+    "sheetExists": true,
+    "formalRows": 25,
+    "activeProductNodeCount": 25,
+    "classificationSummary": {
+      "EXACT_RULE_EXTRACTED": 20,
+      "SOURCE_GRAPH_REVIEW_REQUIRED": 5,
+      "SOURCE_INSUFFICIENT": 0,
+      "PENDING": 0
+    },
+    "evaluationSummary": {
+      "COMPOUND_GATE": 20,
+      "SOURCE_GRAPH_GATE": 5
+    },
+    "automaticTrue": 0,
+    "automaticFalse": 25,
+    "runtimeSafety": "RUNTIME_SAFETY_REVIEW_REQUIRED"
+  },
+  "stagingSemanticFingerprint": "sha256:1940a1ce7b768ccd2cc0fa1f44ebc1e3ba65e26c40089d618b0b837607ae6966",
+  "existingSheetsChanged": 0,
+  "newSheetsAdded": 1,
+  "standardSizeMasterChanged": false,
+  "otherSeriesChanged": 0,
+  "productionMasterWritePerformed": false,
+  "runtimeWritePerformed": false,
+  "gates": {
+    "EXPLICIT_HUMAN_APPROVAL": "PASS",
+    "PROPOSAL_FINGERPRINT_MATCH": "PASS",
+    "BASE_MASTER_REVISION_MATCH": "PASS",
+    "NEW_SHEET_ONLY": "PASS",
+    "25_PRODUCT_NODES_PRESENT": "PASS",
+    "EXACT_20_REVIEW_5": "PASS",
+    "AUTOMATIC_TRUE_COUNT": "PASS_0",
+    "INTERPOLATION_ADDED": "PASS_FALSE",
+    "STANDARD_SIZE_MASTER_UNCHANGED": "PASS",
+    "OTHER_SERIES_UNCHANGED": "PASS"
+  }
+}

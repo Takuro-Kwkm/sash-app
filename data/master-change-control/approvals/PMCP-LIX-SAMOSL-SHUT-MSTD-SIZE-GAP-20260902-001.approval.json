@@ -1,0 +1,34 @@
+{
+  "approvalSchemaVersion": "1.0",
+  "recordType": "PRODUCT_MASTER_CHANGE_APPROVAL",
+  "proposalId": "PMCP-LIX-SAMOSL-SHUT-MSTD-SIZE-GAP-20260902-001",
+  "productId": "SER-LIX-SAMOSL",
+  "approverType": "HUMAN",
+  "approvedBy": "USER",
+  "approvedAt": "2026-09-02T20:20:00+09:00",
+  "approvalSource": "Chat conversation explicit instruction: PMCP-LIX-SAMOSL-SHUT-MSTD-SIZE-GAP-20260902-001 を承認してステージング反映して",
+  "scope": "APPROVE_AND_STAGE_ONLY",
+  "productionApproval": false,
+  "proposalFingerprint": "sha256:2dbccd2d22edd6b00d516fbadfc2788c2089f693f06112f4b2b6c811d3a34063",
+  "baseMasterFingerprint": "sha256:77bd5043684ae0e55852b9728d5369336744fec7a233e2cf82042ba079b0461a",
+  "expectedChanges": {
+    "verifiedEvidenceAdditions": 8,
+    "standardSizeRecordAdditions": 85,
+    "sizeGlassConditionAdditions": 85,
+    "total": 178
+  },
+  "expectedProjectedCoverage": {
+    "officialAvailable": 97,
+    "match": 97,
+    "missingInCanonical": 0,
+    "canonicalInactive": 0,
+    "extraInCanonical": 0,
+    "duplicateCanonicalKeys": 0
+  },
+  "auditNotes": [
+    "Approval is limited to STAGING apply of this exact proposal fingerprint.",
+    "No formal Google Drive Product Master Workbook write is authorized.",
+    "No Runtime mutation or regeneration is authorized by this approval.",
+    "Any proposal fingerprint or base Master fingerprint drift invalidates this approval."
+  ]
+}

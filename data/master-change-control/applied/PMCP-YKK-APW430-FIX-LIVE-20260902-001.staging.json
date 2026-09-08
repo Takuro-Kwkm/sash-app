@@ -1,0 +1,37 @@
+{
+  "recordType": "PRODUCT_MASTER_STAGING_APPLICATION",
+  "recordVersion": "1.0",
+  "proposalId": "PMCP-YKK-APW430-FIX-LIVE-20260902-001",
+  "proposalStatus": "APPLIED",
+  "productId": "SER-YKK-APW430",
+  "proposalFingerprint": "sha256:0f71567249ed2e2d5f7f02a3704cdbf969c016160f0b3dccb3448686b1cc56d9",
+  "baseMasterFingerprint": "sha256:efb2c2e694dab840a44ff403b19d9e06568d282f328bce086b24408e5164dfa6",
+  "resultMasterFingerprint": "sha256:36b71fdabfc58a8690e10b9dec8ac89afd180c0a53355fcdfa2874b6961292e0",
+  "approvedBy": "HUMAN_USER_EXPLICIT_APPROVAL",
+  "approvedAt": "2026-09-02T05:49:05Z",
+  "appliedAt": "2026-09-02T05:54:16.725Z",
+  "mode": "STAGING",
+  "stagingChangesApplied": 9,
+  "stagingEvidenceBefore": 2,
+  "stagingEvidenceAfter": 11,
+  "openBlockingPending": 0,
+  "openNonBlockingPending": 4,
+  "productionMasterWritePerformed": false,
+  "runtimeWritePerformed": false,
+  "ciEvidence": {
+    "workflow": "V2 Recovery CI",
+    "runNumber": 243,
+    "runId": 33596562055,
+    "headSha": "df713a66fba2d1142458b0c2883ebdfdd436c9cf",
+    "job": "product_master_staging_v11",
+    "jobStatus": "SUCCESS",
+    "artifactName": "product-master-staging-v11-apw430",
+    "artifactId": 9833590620,
+    "artifactSha256": "09cd76ad5ca5447e8abb48626d1954d48e2612914e2255b28fee0ffa7d122439"
+  },
+  "auditNotes": [
+    "The historical Proposal createdAt used a deterministic test timestamp later than the actual approval time. That exact approved Proposal fingerprint was preserved and the anomaly is retained in the staging artifact audit report.",
+    "Future proposal generation now uses real current timestamps and unique Proposal IDs.",
+    "This record proves STAGING application only. Formal Product Master and Runtime production state remain unchanged."
+  ]
+}

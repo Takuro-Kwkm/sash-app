@@ -1,0 +1,52 @@
+{
+  "profileSchemaVersion": "1.1",
+  "recordType": "PRODUCT_MASTER_PROFILE",
+  "manufacturer": "LIXIL",
+  "series": "ジエスタ2",
+  "registrySeriesKey": "LIXIL::ジエスタ2",
+  "productId": "SER-LIXIL-GIESTA2",
+  "schemaAdapter": "GENERIC_EVIDENCE_CANDIDATE_V1",
+  "runtimePartitionPolicy": {
+    "mode": "NOT_USED_FOR_EVIDENCE_ONLY_JOB"
+  },
+  "dependencyHooks": [],
+  "source": {
+    "type": "OFFICIAL_PDF",
+    "driveFileId": "13QMGG4L4cjyXEWePMZANN_Brmz2IRjLs",
+    "title": "202604_LIXIL_ジエスタ2・ジエスタ2防火戸_商品カタログ.pdf",
+    "version": "DK9900_2026-04_FULL",
+    "officialDetailUrl": "https://webcatalog.lixil.co.jp/iportal/CatalogDetail.do?catalogID=18063480000&designID=newinter&method=initial_screen&volumeID=LXL13001",
+    "officialDownloadUrl": "https://webcatalog.lixil.co.jp/iportal/CatalogDownload.do?method=downloadPdfCatalog&type=downloadPdfCatalog&volumeID=LXL13001&categoryID=&catalogID=18063480000&catalogCategoryID=&pageGroupID=&pageID=&applicationPdf=true&designID=newinter",
+    "authoritativeSha256": "6ea8521eb55e902423989844d6c481bc7addd04bcbdc7605ebd4810b180a33af",
+    "pageCount": 304
+  },
+  "extraction": {
+    "jobType": "EVIDENCE_EXTRACTION",
+    "task": "Run LIXIL Giesta2 third-series category reproducibility evidence extraction through the common Product Master pipeline without Product Master mutation.",
+    "prompt": "Read only printed pages 44-57, corresponding to PDF pages 48-61, of the verified official LIXIL Giesta2 / Giesta2 fire-rated catalog. Extract a small auditable set of atomic evidence candidates only about explicitly labeled product/spec groupings such as k2, k2 with sill/plinth, k4, interior/exterior same-taste specification, fire-rated k2, fire-rated k4, and fire-rated interior/exterior same-taste specification. Map only to specific_spec, configuration, or construction when the wording on the cited page directly supports that mapping. Do not extract prices, colors, design IDs, or order codes. Do not infer hidden compatibility or absence. If a claim cannot be mapped atomically to the allowed canonical field scope, return an issue instead. Do not approve or write Product Master, Authoring, Runtime, Registry, Production, or Canonical files.",
+    "pageScope": [48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61],
+    "printedPageScope": [44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57],
+    "canonicalFieldScope": ["specific_spec", "configuration", "construction"],
+    "evidenceRequirements": {
+      "atomic": true,
+      "maxCandidates": 8,
+      "failOnInference": true
+    }
+  },
+  "modelDefault": "gemini-3.8-flash",
+  "metadata": {
+    "phase": "PHASE_7_R2C_THIRD_SERIES_ONBOARDING_PROBE",
+    "baseWorkingMasterVersion": "Phase7_v0.2_BLOCKED",
+    "baseWorkingMasterDriveFileId": "1KWhVw081CAYArszawsDzKKW0UVQNmONu",
+    "originalCatalogDriveFileId": "13QMGG4L4cjyXEWePMZANN_Brmz2IRjLs",
+    "splitSourceFolderId": "1GX6HeN-pTMqSDgfH6cZ5J_7rWoyMAgrT",
+    "catalogCode": "DK9900",
+    "sourceIdentityProbe": "FULL_CATALOG_IDENTITY_VERIFIED_FROM_DRIVE_20260906",
+    "workerProvider": "ANTIGRAVITY_CLI",
+    "producerSystem": "GEMINI_ANTIGRAVITY",
+    "authenticationMode": "GOOGLE_AI_PRO_OAUTH",
+    "workerExecution": "SELF_HOSTED_GITHUB_ACTIONS",
+    "antigravityModelMode": "ACCOUNT_DEFAULT",
+    "antigravityEffort": "high"
+  }
+}

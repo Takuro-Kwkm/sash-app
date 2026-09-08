@@ -1,0 +1,50 @@
+{
+  "recordSchemaVersion": "1.0",
+  "recordType": "PRODUCT_MASTER_PRODUCTION_ROLLBACK",
+  "productId": "SER-LIX-SAMOSL",
+  "proposalId": "PMCP-LIX-SAMOSL-SHUT-MSTD-SIZE-GAP-20260902-001",
+  "status": "ROLLBACK_COMPLETE",
+  "userProductionApprovalCommand": "サーモスL v1.7 Production Preview を承認して正式Masterへ反映して",
+  "approvedPreviewFingerprint": "sha256:a057d745c8a3a93b06aebc20c98fba99dd121804d35985d074ed5764bdab9168",
+  "approvalStatus": "INVALIDATED_BY_POST_WRITE_READBACK",
+  "formalTarget": {
+    "driveFileId": "17lVzBZ1hp4RVcGv0yNdnrKt25SFO2FhL",
+    "preWriteRevisionId": "0B1PsqngSohhlZ0dycXFVYTVFY3JzQWJLLzNkVGFVcFhsNHQ0PQ",
+    "failedWriteRevisionId": "0B1PsqngSohhlWWQ3cG5GTFc0M0dhdnRxdDJVMTFjcG02a2I0PQ",
+    "rollbackRevisionId": "0B1PsqngSohhldjYycXpvcXp5VVlLSDQyUlBBUmJPTFZxbU1nPQ"
+  },
+  "failedWrite": {
+    "previewSizeRange": "06_サイズ!A1562:V1646",
+    "previewGlassRange": "08A_サイズ別ガラス条件!A1562:N1646",
+    "rootCause": "OFF_BY_ONE_APPEND_START",
+    "overwrittenSizeRecordId": "SZ-SL-001559",
+    "overwrittenGlassConditionId": "GSC-SL-001559",
+    "readbackStandardSizeRows": 1643,
+    "readbackSelectableSizeRows": 1494,
+    "readbackSizeGlassConditionRows": 1643,
+    "expectedStandardSizeRows": 1644,
+    "expectedSelectableSizeRows": 1495,
+    "expectedSizeGlassConditionRows": 1644,
+    "postWriteGate": "FAIL"
+  },
+  "rollback": {
+    "backupDriveFileId": "1MCTEU3ATdr9iZPwl6sEEY06ScrN18yyn",
+    "backupTitle": "BACKUP_20260902_サーモスL_商品マスター_v0.7_Production前",
+    "backupSizeBytes": 666560,
+    "rollbackSizeBytes": 666560,
+    "backupAndRollbackSha256": "eec989d1fd2e1ad4fc025e08c8b122c522e7811840b075f5b9eff2567ea4d4ac",
+    "byteForByteMatch": true,
+    "tailAfterRollback": {
+      "size": "SZ-SL-001559",
+      "glassCondition": "GSC-SL-001559"
+    }
+  },
+  "correction": {
+    "correctSizeRange": "06_サイズ!A1563:V1647",
+    "correctGlassRange": "08A_サイズ別ガラス条件!A1563:N1647",
+    "correctAppendStartExcelRow": 1563,
+    "freshProductionApprovalRequired": true
+  },
+  "runtimeWritePerformed": false,
+  "formalMasterCurrentState": "RESTORED_TO_PRE_PRODUCTION_CONTENT"
+}

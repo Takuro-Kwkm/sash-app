@@ -1,0 +1,49 @@
+name: APW430 Evidence Adjudication v24
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - feat/catalog-recovery-v2
+    paths:
+      - '.github/workflows/product-master-apw430-adjudication-v24.yml'
+      - 'src/product-master-core/live-evidence-adjudication-v24.mjs'
+      - 'src/product-master-core/review-queue.mjs'
+      - 'scripts/run-apw430-live-evidence-adjudication-v24.mjs'
+      - 'test/38-product-master-core-v24-live-evidence-adjudication.test.mjs'
+      - 'docs/notebooklm/live/BATCH-GEMINI-APW430-LIVE-20260904-E2E.json'
+      - 'data/master-change-control/audits/APW430_LIVE_EVIDENCE_FORMAL_COVERAGE_20260904.json'
+      - 'package.json'
+
+jobs:
+  apw430_evidence_adjudication_v24:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Run APW430 LIVE Evidence adjudication
+        run: npm run evidence:live-adjudicate:apw430:v24 -- --artifact-dir=artifacts/product-master-v24/apw430
+      - name: Enforce Phase 4 gates
+        shell: bash
+        run: |
+          set -euo pipefail
+          report=artifacts/product-master-v24/apw430/phase4-report.json
+          test -f "$report"
+          test "$(jq -r '.acceptedCanonicalEvidence' "$report")" = "5"
+          test "$(jq -r '.proposal.status' "$report")" = "PROPOSED"
+          test "$(jq -r '.proposal.approvalPolicy' "$report")" = "HUMAN_REQUIRED"
+          test "$(jq -r '.formalCoverageAssessment.formalMutationRequired' "$report")" = "0"
+          test "$(jq -r '.negativeControls.chatgptSelfApprovalBlocked' "$report")" = "true"
+          test "$(jq -r '.negativeControls.unapprovedApplyBlocked' "$report")" = "true"
+          test "$(jq -r '.writes.formalProductMasterWritePerformed' "$report")" = "false"
+          test "$(jq -r '.writes.runtimeWritePerformed' "$report")" = "false"
+          test "$(jq -r '.writes.productionWritePerformed' "$report")" = "false"
+      - name: Upload Phase 4 non-secret audit
+        uses: actions/upload-artifact@v4
+        with:
+          name: apw430-live-evidence-adjudication-v24
+          path: artifacts/product-master-v24/apw430
+          if-no-files-found: error
+          retention-days: 14
