@@ -5,10 +5,11 @@ import { loadManifestRuntimePackage } from './runtime-manifest-loader.mjs';
 import { adaptPhaseMasterMapsV1 } from './phase-master-maps-v1-adapter.mjs';
 import { evaluateRelationalRuntime } from './relational-runtime-engine.mjs';
 import { runtimeApi } from './generic-rule-engine.mjs';
-import { adaptSemanticTableBundleV2, evaluateSemanticTableBundleV2 } from './semantic-table-bundle-v2-adapter.mjs';
+import { adaptSemanticTableBundleV2 } from './semantic-table-bundle-v2-adapter.mjs';
+import { evaluateSemanticTableBundleV2 } from './semantic-table-bundle-v2-engine.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
-const XE_PARTS = ['part-00','part-01','part-02a1','part-02a2a','part-02b','part-03','part-04','part-05'];
+const XE_PARTS = ['part-00','part-01','part-02a1','part-02a2a','part-03','part-04','part-05'];
 const XE_B64 = XE_PARTS.map((name) => join(HERE, `../runtime-master-packages/lixil-xe/XE_V1_0_RC.source.zip.b64.parts/${name}`));
 const XE_SHA256 = 'e2e5974e730508f4588afde5811df73032443c0cfc9b2f039ec44f61838653aa';
 const GIESTA2_ROOT = join(HERE, '../runtime-master-packages/lixil-giesta2-v0.8-r1');
