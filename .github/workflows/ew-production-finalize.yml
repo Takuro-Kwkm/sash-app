@@ -1,0 +1,143 @@
+name: LIXIL EW v1.1 Production Finalize
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  finalize_ew_production:
+    if: startsWith(github.event.head_commit.message, 'release LIXIL EW v1.1 production')
+    runs-on: ubuntu-latest
+    environment: production
+    env:
+      VERCEL_ORG_ID: team_AkuHacuJlCl8LuvaFpCzFmbv
+      VERCEL_PROJECT_ID: prj_4z0zqW6yKyPuFINODfGX8LPBuJRP
+      VERCEL_PROJECT_NAME: sash-app-wave3-preview
+      VERCEL_TOKEN_PRIMARY: ${{ secrets.VERCEL_TOKEN }}
+      VERCEL_TOKEN_FALLBACK: ${{ secrets.VERCEL_ACCESS_TOKEN }}
+      EXPECTED_EW_RUNTIME_SHA: 082442f82f51c4a81050d8e16d5fe3b9cb142004deb371a3e2bbb21384ca37dd
+      PRODUCTION_URL: https://sash-app-wave3-preview.vercel.app
+      PRODUCTION_HOST: sash-app-wave3-preview.vercel.app
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Initialize audit
+        run: |
+          mkdir -p artifacts/production-finalize
+          printf 'release_merge_sha=%s\nrepository=%s\nref=%s\n' "$GITHUB_SHA" "$GITHUB_REPOSITORY" "$GITHUB_REF" > artifacts/production-finalize/release.txt
+
+      - name: Install and repository tests
+        run: |
+          npm install --ignore-scripts
+          npm test
+
+      - name: Runtime smoke before deploy
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm run start:qa > /tmp/sash-ew-finalize.log 2>&1 &
+          PID=$!
+          trap 'kill $PID || true' EXIT
+          for i in {1..40}; do
+            if curl -fsS http://127.0.0.1:4173/api/health > /tmp/health.json; then break; fi
+            sleep 0.5
+          done
+          node -e 'const h=require("/tmp/health.json"); const ew=h.runtimeMasterIntegrations?.find(x=>x.id==="SER-LIX-EW"); if(!h.ok||!ew||!ew.selectable||ew.status!=="READY"||ew.sourceHash!==process.env.EXPECTED_EW_RUNTIME_SHA) process.exit(1)'
+
+      - name: Install browser QA dependencies
+        run: |
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+
+      - name: Local EW desktop/mobile and regression QA
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm run start:qa > /tmp/sash-ew-finalize-browser.log 2>&1 &
+          PID=$!
+          trap 'kill $PID || true' EXIT
+          for i in {1..40}; do
+            if curl -fsS http://127.0.0.1:4173/api/health >/dev/null; then break; fi
+            sleep 0.5
+          done
+          node test/browser/ew-runtime-browser-qa.mjs
+          node test/browser/release-regression-browser-qa.mjs
+          printf 'local_browser_qa=PASS\n' >> artifacts/production-finalize/release.txt
+
+      - name: Secure credential, SHA and project preflight
+        shell: bash
+        run: |
+          set -euo pipefail
+          actual_sha="$(git rev-parse HEAD)"
+          if [[ "$actual_sha" != "$GITHUB_SHA" ]]; then
+            echo "DEPLOY_SHA_GATE=BLOCKED"
+            exit 41
+          fi
+          token="${VERCEL_TOKEN_PRIMARY:-${VERCEL_TOKEN_FALLBACK:-}}"
+          if [[ -z "$token" ]]; then
+            echo "VERCEL_CREDENTIAL_GATE=BLOCKED"
+            exit 42
+          fi
+          echo "VERCEL_TOKEN_EFFECTIVE=$token" >> "$GITHUB_ENV"
+          status="$(curl -sS -o /tmp/vercel-project.json -w '%{http_code}' -H "Authorization: Bearer $token" "https://api.vercel.com/v9/projects/$VERCEL_PROJECT_ID")"
+          if [[ "$status" != "200" ]]; then
+            echo "VERCEL_PROJECT_ACCESS_GATE=BLOCKED status=$status"
+            exit 46
+          fi
+          node -e 'const p=require("/tmp/vercel-project.json"); if(p.id!==process.env.VERCEL_PROJECT_ID||p.accountId!==process.env.VERCEL_ORG_ID) process.exit(1)'
+          printf 'credential_gate=PASS\nproject_access_gate=PASS\n' >> artifacts/production-finalize/release.txt
+          echo "VERCEL_CREDENTIAL_GATE=PASS"
+          echo "VERCEL_PROJECT_ACCESS_GATE=PASS"
+
+      - name: Deploy exact merge SHA to Production
+        run: node scripts/vercel-rest-deploy.mjs production artifacts/production-finalize/deployment.json
+
+      - name: Verify Production deployment identity and canonical alias
+        shell: bash
+        run: |
+          set -euo pipefail
+          node -e 'const d=require("./artifacts/production-finalize/deployment.json"); if(d.readyState!=="READY"||d.githubSha!==process.env.GITHUB_SHA||d.mode!=="production"||d.projectId!==process.env.VERCEL_PROJECT_ID||d.teamId!==process.env.VERCEL_ORG_ID) process.exit(1)'
+          status="$(curl -sS -o artifacts/production-finalize/vercel-deployment.json -w '%{http_code}' -H "Authorization: Bearer $VERCEL_TOKEN_EFFECTIVE" "https://api.vercel.com/v13/deployments/$DEPLOY_ID?teamId=$VERCEL_ORG_ID")"
+          if [[ "$status" != "200" ]]; then exit 48; fi
+          node -e 'const d=require("./artifacts/production-finalize/vercel-deployment.json"); if(d.readyState!=="READY"||d.target!=="production"||d.meta?.releaseCommitSha!==process.env.GITHUB_SHA||!Array.isArray(d.alias)||!d.alias.includes(process.env.PRODUCTION_HOST)) process.exit(1)'
+          printf 'deployment_identity=PASS\ndeployment_id=%s\ndeployment_url=%s\n' "$DEPLOY_ID" "$DEPLOY_URL" >> artifacts/production-finalize/release.txt
+          echo "PRODUCTION_ALIAS_GATE=PASS"
+
+      - name: Production root and Runtime smoke
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -fsS "$PRODUCTION_URL/" > artifacts/production-finalize/index.html
+          for i in {1..60}; do
+            if curl -fsS "$PRODUCTION_URL/api/health" > artifacts/production-finalize/health.json; then
+              if HEALTH_FILE=artifacts/production-finalize/health.json node -e 'const fs=require("fs"); const h=JSON.parse(fs.readFileSync(process.env.HEALTH_FILE,"utf8")); const ew=h.runtimeMasterIntegrations?.find(x=>x.id==="SER-LIX-EW"); if(!h.ok||!ew||!ew.selectable||ew.status!=="READY"||ew.sourceHash!==process.env.EXPECTED_EW_RUNTIME_SHA) process.exit(1)'; then
+                curl -fsS "$PRODUCTION_URL/api/runtime-master/integrations" > artifacts/production-finalize/integrations.json
+                printf 'production_root=PASS\nproduction_runtime_smoke=PASS\n' >> artifacts/production-finalize/release.txt
+                echo "PRODUCTION_SMOKE_GATE=PASS"
+                exit 0
+              fi
+            fi
+            sleep 1
+          done
+          echo "PRODUCTION_SMOKE_GATE=BLOCKED"
+          exit 49
+
+      - name: Production EW desktop/mobile and existing-series regression QA
+        env:
+          QA_BASE_URL: ${{ env.PRODUCTION_URL }}
+        run: |
+          node test/browser/ew-runtime-browser-qa.mjs
+          node test/browser/release-regression-browser-qa.mjs
+          printf 'production_browser_qa=PASS\n' >> artifacts/production-finalize/release.txt
+          echo "PRODUCTION_BROWSER_QA_GATE=PASS"
+
+      - name: Upload Production finalization audit
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ew-production-finalization-audit
+          path: artifacts/
+          if-no-files-found: warn
