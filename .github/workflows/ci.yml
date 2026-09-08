@@ -61,9 +61,65 @@ jobs:
           name: ew-release-browser-qa
           path: artifacts/
 
-  deploy_production:
+  release_build_preflight:
     needs: test
     if: github.event_name == 'push' && github.ref == 'refs/heads/release/lixil-ew-v1.1-production-20260908'
+    runs-on: ubuntu-latest
+    environment: production
+    env:
+      VERCEL_ORG_ID: team_AkuHacuJlCl8LuvaFpCzFmbv
+      VERCEL_PROJECT_ID: prj_4z0zqW6yKyPuFINODfGX8LPBuJRP
+      VERCEL_TOKEN_PRIMARY: ${{ secrets.VERCEL_TOKEN }}
+      VERCEL_TOKEN_FALLBACK: ${{ secrets.VERCEL_ACCESS_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Initialize release build audit
+        run: |
+          mkdir -p artifacts/release-build
+          printf 'release_candidate_sha=%s\nrepository=%s\nref=%s\n' "$GITHUB_SHA" "$GITHUB_REPOSITORY" "$GITHUB_REF" > artifacts/release-build/release.txt
+      - name: Secure credential and SHA preflight
+        shell: bash
+        run: |
+          set -euo pipefail
+          actual_sha="$(git rev-parse HEAD)"
+          if [[ "$actual_sha" != "$GITHUB_SHA" ]]; then
+            echo "RELEASE_BUILD_SHA_GATE=BLOCKED"
+            exit 41
+          fi
+          token="${VERCEL_TOKEN_PRIMARY:-${VERCEL_TOKEN_FALLBACK:-}}"
+          if [[ -z "$token" ]]; then
+            echo "VERCEL_CREDENTIAL_GATE=BLOCKED"
+            printf 'credential_gate=BLOCKED\n' >> artifacts/release-build/release.txt
+            exit 42
+          fi
+          echo "VERCEL_CREDENTIAL_GATE=PASS"
+          printf 'credential_gate=PASS\n' >> artifacts/release-build/release.txt
+          echo "VERCEL_TOKEN_EFFECTIVE=$token" >> "$GITHUB_ENV"
+      - name: Install Vercel CLI
+        run: npm install --global vercel@59.3.0
+      - name: Pull exact Production project settings
+        run: |
+          vercel pull --yes --environment=production --token="$VERCEL_TOKEN_EFFECTIVE"
+          node -e 'const p=require("./.vercel/project.json"); if(p.orgId!==process.env.VERCEL_ORG_ID||p.projectId!==process.env.VERCEL_PROJECT_ID){console.error(p);process.exit(1)}'
+      - name: Vercel Production build preflight
+        run: |
+          vercel build --prod --token="$VERCEL_TOKEN_EFFECTIVE"
+          printf 'vercel_build_gate=PASS\n' >> artifacts/release-build/release.txt
+          echo "VERCEL_BUILD_GATE=PASS"
+      - name: Upload release build audit
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ew-release-build-audit
+          path: artifacts/release-build/
+          if-no-files-found: warn
+
+  deploy_production:
+    needs: test
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && startsWith(github.event.head_commit.message, 'release: LIXIL EW v1.1 production')
     runs-on: ubuntu-latest
     environment: production
     env:
@@ -81,7 +137,7 @@ jobs:
       - name: Initialize deployment audit
         run: |
           mkdir -p artifacts/production-deploy
-          printf 'release_sha=%s\nrepository=%s\nref=%s\n' "$GITHUB_SHA" "$GITHUB_REPOSITORY" "$GITHUB_REF" > artifacts/production-deploy/release.txt
+          printf 'release_merge_sha=%s\nrepository=%s\nref=%s\ncommit_message=%s\n' "$GITHUB_SHA" "$GITHUB_REPOSITORY" "$GITHUB_REF" "${{ github.event.head_commit.message }}" > artifacts/production-deploy/release.txt
       - name: Secure deployment preflight
         shell: bash
         run: |
@@ -89,13 +145,12 @@ jobs:
           actual_sha="$(git rev-parse HEAD)"
           if [[ "$actual_sha" != "$GITHUB_SHA" ]]; then
             echo "DEPLOY_SHA_GATE=BLOCKED"
-            echo "checkout SHA does not match GitHub event SHA"
+            echo "checkout SHA does not match GitHub merge SHA"
             exit 41
           fi
           token="${VERCEL_TOKEN_PRIMARY:-${VERCEL_TOKEN_FALLBACK:-}}"
           if [[ -z "$token" ]]; then
             echo "VERCEL_CREDENTIAL_GATE=BLOCKED"
-            echo "Required GitHub secret VERCEL_TOKEN (or VERCEL_ACCESS_TOKEN) is not configured; no secret value was printed."
             printf 'credential_gate=BLOCKED\n' >> artifacts/production-deploy/release.txt
             exit 42
           fi
@@ -110,7 +165,7 @@ jobs:
           node -e 'const p=require("./.vercel/project.json"); if(p.orgId!==process.env.VERCEL_ORG_ID||p.projectId!==process.env.VERCEL_PROJECT_ID){console.error(p);process.exit(1)}'
       - name: Vercel Production build
         run: vercel build --prod --token="$VERCEL_TOKEN_EFFECTIVE"
-      - name: Deploy exact prebuilt Release SHA to Production
+      - name: Deploy exact prebuilt merge SHA to Production
         shell: bash
         run: |
           set -euo pipefail
@@ -151,10 +206,22 @@ jobs:
           fi
           printf 'production_smoke=PASS\nbuild_id=%s\n' "$canonical_id" >> artifacts/production-deploy/release.txt
           echo "PRODUCTION_SMOKE_GATE=PASS"
+      - name: Install Production browser QA dependencies
+        run: |
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+      - name: Production EW desktop/mobile browser QA and existing-series regression
+        env:
+          QA_BASE_URL: ${{ env.PRODUCTION_URL }}
+        run: |
+          node test/browser/ew-runtime-browser-qa.mjs
+          node test/browser/release-regression-browser-qa.mjs
+          printf 'production_browser_qa=PASS\n' >> artifacts/production-deploy/release.txt
+          echo "PRODUCTION_BROWSER_QA_GATE=PASS"
       - name: Upload Production deployment audit
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: ew-production-deploy-audit
-          path: artifacts/production-deploy/
+          path: artifacts/
           if-no-files-found: warn
