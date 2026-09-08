@@ -8,5 +8,5 @@
     "start:qa": "HOST=0.0.0.0 node scripts/start-step8-ui.mjs",
     "test": "node --test test/*.test.mjs"
   },
-  "engines": { "node": ">=22" }
+  "engines": { "node": "24.x" }
 }
