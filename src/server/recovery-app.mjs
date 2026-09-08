@@ -6,6 +6,7 @@ import { createCatalog, catalogInventory } from "../catalog/catalog-adapter.mjs"
 import { stabilizeSelection } from "../catalog/catalog-resolver.mjs";
 import { CURRENT_WINDOW_SERIES_MODULES } from "../catalog/modules/current-window-series.mjs";
 import { resolveRuntimeAppProduct, runtimeAppIntegrationInventory } from "../catalog/runtime-master/runtime-app-bridge.mjs";
+import { WORK_SCHEMA_VERSION } from "../work-management/domain.mjs";
 
 const HERE=dirname(fileURLToPath(import.meta.url));
 const root=join(HERE,"../..");
@@ -13,8 +14,8 @@ const webRoot=join(root,"src","ui","web");
 const catalog=createCatalog(CURRENT_WINDOW_SERIES_MODULES);
 const runtimeMasterIntegrations=runtimeAppIntegrationInventory();
 const buildTimestamp=new Date().toISOString();
-const buildIdentity={catalog,runtimeMasterIntegrations:runtimeMasterIntegrations.map(({id,packageVersion,sourceHash,status,selectable})=>({id,packageVersion,sourceHash,status,selectable}))};
-const buildId=`RECOVERY-TW-${createHash("sha256").update(JSON.stringify(buildIdentity)).digest("hex").slice(0,12)}`;
+const buildIdentity={appVersion:"work-management-v1.0",workSchemaVersion:WORK_SCHEMA_VERSION,catalog,runtimeMasterIntegrations:runtimeMasterIntegrations.map(({id,packageVersion,sourceHash,status,selectable})=>({id,packageVersion,sourceHash,status,selectable}))};
+const buildId=`SASH-WORK-V1-${createHash("sha256").update(JSON.stringify(buildIdentity)).digest("hex").slice(0,12)}`;
 const catalogVersion="V4.3 RECOVERY + WAVE3-1 THERMOS-L + LIXIL EW v1.1 + LIXIL TW integrated-v0.2";
 
 export const releaseBuildMetadata=Object.freeze({buildId,buildTimestamp,catalogVersion});
@@ -24,9 +25,9 @@ const json=(res,status,body)=>{
   res.end(JSON.stringify(body));
 };
 
-const staticFile=async(res,name,type)=>{
+const staticFileAt=async(res,path,type)=>{
   try{
-    const body=await readFile(join(webRoot,name));
+    const body=await readFile(path);
     res.writeHead(200,{"content-type":type,"cache-control":"no-store","x-sash-build-id":buildId});
     res.end(body);
   }catch{
@@ -34,6 +35,7 @@ const staticFile=async(res,name,type)=>{
     res.end("Not found");
   }
 };
+const staticFile=(res,name,type)=>staticFileAt(res,join(webRoot,name),type);
 
 const requestUrl=(req)=>{
   const url=new URL(req.url??"/",`http://${req.headers?.host??"localhost"}`);
@@ -58,7 +60,8 @@ export function createRecoveryRequestHandler({backend="node:http recovery server
       return json(res,200,{
         ok:true,buildId,buildTimestamp,catalogVersion,
         entrypoint,frontendRoot:"src/ui/web",backend,
-        databasePath:process.env.SASH_UI_DATABASE??"data/runtime/sash-v2.sqlite",
+        persistence:{type:"BROWSER_LOCAL_STORAGE",schemaVersion:WORK_SCHEMA_VERSION,key:"sash.work-management.v1",multiDevice:false},
+        databasePath:null,
         inventory:catalogInventory(catalog),runtimeMasterIntegrations
       });
     }
@@ -85,8 +88,12 @@ export function createRecoveryRequestHandler({backend="node:http recovery server
     }
     if(url.pathname==="/api/catalog") return json(res,200,catalog);
     if(url.pathname==="/app.js") return staticFile(res,"app.js","text/javascript; charset=utf-8");
+    if(url.pathname==="/product-configuration-editor.mjs") return staticFile(res,"product-configuration-editor.mjs","text/javascript; charset=utf-8");
     if(url.pathname==="/styles.css") return staticFile(res,"styles.css","text/css; charset=utf-8");
     if(url.pathname==="/styles-wave3.css") return staticFile(res,"styles-wave3.css","text/css; charset=utf-8");
+    if(url.pathname==="/work-management.css") return staticFile(res,"work-management.css","text/css; charset=utf-8");
+    const workModule=url.pathname.match(/^\/work-management\/(domain|storage|repositories|service)\.mjs$/)?.[1];
+    if(workModule)return staticFileAt(res,join(root,"src","work-management",`${workModule}.mjs`),"text/javascript; charset=utf-8");
     return staticFile(res,"index.html","text/html; charset=utf-8");
   };
 }

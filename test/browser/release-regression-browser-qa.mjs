@@ -24,7 +24,7 @@ try {
   assert.deepEqual(new Set(products.map((row)=>row.displayName??row.series)),expected);
 
   for(const product of products){
-    await page.goto(BASE,{waitUntil:'networkidle'});
+    await page.goto(`${BASE}/runtime-lab`,{waitUntil:'networkidle'});
     await page.waitForFunction(()=>document.querySelector('#status')?.textContent==='CATALOG CONNECTED');
     await page.selectOption('#manufacturer',product.manufacturer);
     await page.waitForFunction((id)=>[...document.querySelectorAll('#product option')].some((option)=>option.value===id&&!option.disabled),product.id);

@@ -9,11 +9,17 @@ const files = [
   'src/catalog/runtime-master/runtime-manifest-loader.mjs',
   'src/catalog/runtime-master/runtime-master-registry.mjs',
   'src/ui/web/app.js',
+  'src/ui/web/product-configuration-editor.mjs',
+  'src/work-management/domain.mjs',
+  'src/work-management/storage.mjs',
+  'src/work-management/repositories.mjs',
+  'src/work-management/service.mjs',
   'scripts/build-tw-runtime-review-preview.mjs',
   'scripts/tw-runtime-smoke.mjs',
   'test/70-runtime-manifest-tw-integration.test.mjs',
   'test/71-runtime-ui-tw-gate.test.mjs',
   'test/browser/tw-runtime-browser-qa.mjs',
+  'test/browser/work-management-browser-qa.mjs',
 ];
 for (const file of files) {
   const result = spawnSync(process.execPath, ['--check', file], { stdio:'inherit' });

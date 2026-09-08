@@ -23,6 +23,11 @@ jobs:
           node --check api/index.mjs
           node --check src/server/recovery-app.mjs
           node --check src/ui/web/app.js
+          node --check src/ui/web/product-configuration-editor.mjs
+          node --check src/work-management/domain.mjs
+          node --check src/work-management/storage.mjs
+          node --check src/work-management/repositories.mjs
+          node --check src/work-management/service.mjs
           node --check src/catalog/runtime-master/runtime-app-bridge.mjs
           node --check src/catalog/runtime-master/runtime-master-registry.mjs
       - name: Full repository tests
@@ -57,11 +62,12 @@ jobs:
           node test/browser/ew-runtime-browser-qa.mjs
           node test/browser/tw-runtime-browser-qa.mjs
           node test/browser/release-regression-browser-qa.mjs
+          node test/browser/work-management-browser-qa.mjs
       - name: Upload browser QA artifacts
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: ew-release-browser-qa
+          name: runtime-and-work-management-browser-qa
           path: artifacts/
 
   release_build_preflight:
