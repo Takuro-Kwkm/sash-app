@@ -2,7 +2,7 @@ name: V2 Recovery CI
 
 on:
   push:
-    branches: [main, feat/catalog-recovery-v2]
+    branches: [main, feat/catalog-recovery-v2, 'release/lixil-ew-v1.1-production-20260908']
   pull_request:
     branches: [main]
 
@@ -14,15 +14,47 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - run: npm test
+      - name: Install
+        run: npm install --ignore-scripts
+      - name: Syntax checks
+        run: |
+          node --check scripts/start-step8-ui.mjs
+          node --check src/ui/web/app.js
+          node --check src/catalog/runtime-master/runtime-app-bridge.mjs
+          node --check src/catalog/runtime-master/runtime-master-registry.mjs
+      - name: Full repository tests
+        run: npm test
       - name: Runtime smoke
         run: |
           npm run start:qa > /tmp/sash-v2.log 2>&1 &
           PID=$!
           trap 'kill $PID || true' EXIT
-          for i in {1..20}; do
+          for i in {1..40}; do
             if curl -fsS http://127.0.0.1:4173/api/health > /tmp/health.json; then break; fi
             sleep 0.5
           done
           cat /tmp/health.json
-          node -e 'const h=require("/tmp/health.json"); if(!h.ok || h.inventory.length!==4) process.exit(1)'
+          node -e 'const h=require("/tmp/health.json"); if(!h.ok || h.inventory.length!==4 || h.runtimeMasterIntegrations.length!==1 || h.runtimeMasterIntegrations[0].id!=="SER-LIX-EW") process.exit(1)'
+          curl -fsS http://127.0.0.1:4173/api/runtime-master/integrations > /tmp/integrations.json
+          node -e 'const r=require("/tmp/integrations.json"); const ew=r.find(x=>x.id==="SER-LIX-EW"); if(!ew || !ew.selectable || ew.status!=="READY" || ew.sourceHash!=="082442f82f51c4a81050d8e16d5fe3b9cb142004deb371a3e2bbb21384ca37dd") process.exit(1)'
+      - name: Install browser QA dependencies
+        run: |
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+      - name: EW desktop/mobile browser QA and existing-series regression
+        run: |
+          npm run start:qa > /tmp/sash-v2-browser.log 2>&1 &
+          PID=$!
+          trap 'kill $PID || true' EXIT
+          for i in {1..40}; do
+            if curl -fsS http://127.0.0.1:4173/api/health >/dev/null; then break; fi
+            sleep 0.5
+          done
+          node test/browser/ew-runtime-browser-qa.mjs
+          node test/browser/release-regression-browser-qa.mjs
+      - name: Upload browser QA artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ew-release-browser-qa
+          path: artifacts/
