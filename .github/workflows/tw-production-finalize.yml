@@ -4,10 +4,6 @@ on:
   push:
     branches: [main]
 
-permissions:
-  contents: read
-  id-token: write
-
 jobs:
   finalize_tw_production:
     if: startsWith(github.event.head_commit.message, 'release LIXIL TW integrated-v0.2 production')
@@ -100,20 +96,24 @@ jobs:
       - name: Deploy fixed merge SHA to Preview
         run: node scripts/vercel-rest-deploy.mjs preview artifacts/tw-production-finalize/preview-deployment.json
 
-      - name: Obtain short-lived GitHub OIDC token for protected Preview QA
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const token = await core.getIDToken();
-            core.setSecret(token);
-            core.exportVariable('VERCEL_TRUSTED_OIDC_TOKEN', token);
+      - name: Create one-hour share link for protected Preview QA
+        shell: bash
+        run: |
+          set -euo pipefail
+          status="$(curl -sS -o /tmp/vercel-share.json -w '%{http_code}' -X PATCH \
+            -H "Authorization: Bearer $VERCEL_TOKEN_EFFECTIVE" \
+            -H 'Content-Type: application/json' \
+            -d '{"ttl":3600}' \
+            "https://api.vercel.com/aliases/$DEPLOY_ID/protection-bypass?teamId=$VERCEL_ORG_ID")"
+          [[ "$status" == 200 ]] || exit 49
+          node -e 'const fs=require("fs"); const x=require("/tmp/vercel-share.json"); if(!x.value) process.exit(1); fs.appendFileSync(process.env.GITHUB_ENV,`VERCEL_SHARE_TOKEN=${x.value}\n`)'
 
       - name: Preview smoke and browser QA
         shell: bash
         run: |
           set -euo pipefail
           node -e 'const d=require("./artifacts/tw-production-finalize/preview-deployment.json"); if(d.readyState!=="READY"||d.githubSha!==process.env.GITHUB_SHA||d.mode!=="preview") process.exit(1)'
-          curl -fsS -H "x-vercel-trusted-oidc-idp-token: $VERCEL_TRUSTED_OIDC_TOKEN" "$DEPLOY_URL/api/health" > artifacts/tw-production-finalize/preview-health.json
+          curl -fsSL -c /tmp/vercel-preview-cookies.txt -b /tmp/vercel-preview-cookies.txt "$DEPLOY_URL/api/health?_vercel_share=$VERCEL_SHARE_TOKEN" > artifacts/tw-production-finalize/preview-health.json
           node -e 'const h=require("./artifacts/tw-production-finalize/preview-health.json"); const tw=h.runtimeMasterIntegrations?.find(x=>x.id==="SER-LIXIL-TW"); if(!h.ok||tw?.sourceHash!==process.env.EXPECTED_TW_MANIFEST_SHA) process.exit(1)'
           QA_BASE_URL="$DEPLOY_URL" node test/browser/tw-runtime-browser-qa.mjs
           QA_BASE_URL="$DEPLOY_URL" node test/browser/ew-runtime-browser-qa.mjs
@@ -121,7 +121,10 @@ jobs:
           printf 'preview_deployment=PASS\npreview_browser_qa=PASS\npreview_url=%s\n' "$DEPLOY_URL" >> artifacts/tw-production-finalize/release.txt
 
       - name: Deploy fixed merge SHA to Production
-        run: node scripts/vercel-rest-deploy.mjs production artifacts/tw-production-finalize/production-deployment.json
+        shell: bash
+        run: |
+          node scripts/vercel-rest-deploy.mjs production artifacts/tw-production-finalize/production-deployment.json
+          node -e 'const fs=require("fs"); const d=require("./artifacts/tw-production-finalize/production-deployment.json"); fs.appendFileSync(process.env.GITHUB_ENV,`PRODUCTION_DEPLOY_ID=${d.deploymentId}\n`)'
 
       - name: Verify Production identity and canonical alias
         shell: bash
@@ -151,7 +154,7 @@ jobs:
           printf 'production_smoke=PASS\nproduction_browser_qa=PASS\nproduction_ready=TRUE\nreleased=TRUE\nproduction_deployment_id=%s\nproduction_url=%s\nrollback_deployment_id=%s\nrollback_deployment_url=%s\nrollback_commit_sha=%s\n' "$DEPLOY_ID" "$PRODUCTION_URL" "$ROLLBACK_DEPLOY_ID" "$ROLLBACK_DEPLOY_URL" "$ROLLBACK_COMMIT_SHA" >> artifacts/tw-production-finalize/release.txt
 
       - name: Roll back on Production verification failure
-        if: failure() && env.DEPLOY_ID != '' && env.ROLLBACK_DEPLOY_URL != ''
+        if: failure() && env.PRODUCTION_DEPLOY_ID != '' && env.ROLLBACK_DEPLOY_URL != ''
         shell: bash
         run: |
           npx --yes vercel@50 rollback "$ROLLBACK_DEPLOY_URL" --yes --token "$VERCEL_TOKEN_EFFECTIVE" --scope "$VERCEL_ORG_ID"
