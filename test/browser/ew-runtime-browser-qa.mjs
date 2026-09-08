@@ -16,6 +16,38 @@ function track(page){
   page.on('response',(response)=>{if(response.status()>=400)report.failedResponses.push({status:response.status(),url:response.url()});});
 }
 
+function sameSelectionValue(actual,expected){
+  if(Array.isArray(expected)){
+    if(!Array.isArray(actual)||actual.length!==expected.length)return false;
+    return actual.map(String).every((value,index)=>value===String(expected[index]));
+  }
+  if(typeof expected==='number')return Number(actual)===expected;
+  return String(actual)===String(expected);
+}
+
+function matchesRuntimeSelection(response,key,value){
+  if(response.status()!==200||!response.url().includes('/api/runtime-master/resolve'))return false;
+  try{
+    const url=new URL(response.url());
+    const raw=url.searchParams.get('selection');
+    if(!raw)return false;
+    const selection=JSON.parse(raw);
+    return sameSelectionValue(selection[key],value);
+  }catch{return false;}
+}
+
+async function waitForAppliedSelection(page,key,value){
+  await page.waitForFunction(({key,value})=>{
+    const el=document.querySelector(`[data-spec-key="${key}"]`);
+    if(!el)return false;
+    if(el.multiple){
+      const actual=[...el.selectedOptions].map((option)=>option.value);
+      return Array.isArray(value)&&actual.length===value.length&&actual.every((one,index)=>one===String(value[index]));
+    }
+    return String(el.value)===String(value);
+  },{key,value});
+}
+
 async function openEW(page){
   await page.goto(BASE,{waitUntil:'networkidle'});
   await page.waitForFunction(()=>document.querySelector('#status')?.textContent==='CATALOG CONNECTED');
@@ -30,10 +62,10 @@ async function openEW(page){
 async function choose(page,key,value){
   const locator=page.locator(`[data-spec-key="${key}"]`);
   await locator.waitFor();
-  const response=page.waitForResponse((r)=>r.url().includes('/api/runtime-master/resolve')&&r.status()===200);
+  const response=page.waitForResponse((r)=>matchesRuntimeSelection(r,key,value));
   await locator.selectOption(Array.isArray(value)?value.map(String):String(value));
   const result=await(await response).json();
-  await page.waitForTimeout(20);
+  await waitForAppliedSelection(page,key,value);
   return result;
 }
 
@@ -46,10 +78,12 @@ async function chooseFirst(page,key){
 async function chooseNumber(page,key,value){
   const locator=page.locator(`[data-spec-key="${key}"]`);
   await locator.waitFor();
-  const response=page.waitForResponse((r)=>r.url().includes('/api/runtime-master/resolve')&&r.status()===200);
+  const response=page.waitForResponse((r)=>matchesRuntimeSelection(r,key,value));
   await locator.fill(String(value));
   await locator.dispatchEvent('change');
-  return (await response).json();
+  const result=await(await response).json();
+  await waitForAppliedSelection(page,key,value);
+  return result;
 }
 
 const dynamicKeys=(page)=>page.locator('#dynamicForm [data-spec-key]').evaluateAll((els)=>els.map((el)=>el.dataset.specKey));
