@@ -25,6 +25,7 @@ function registeredIntegration(entry) {
     manufacturer: entry.manufacturer,
     series: entry.series,
     displayName: metadata?.displayName ?? entry.series,
+    productCategory: metadata?.productCategory ?? null,
     registrySeriesKey: metadata?.registrySeriesKey ?? integrationKey(entry.manufacturer, entry.series),
     source: 'RUNTIME_MASTER',
     status: 'READY',
@@ -159,7 +160,7 @@ export function toRuntimeUiResult(master, state, integration, sourcePackageInteg
   visible.sort((a, b) => a.displayOrder - b.displayOrder || a.key.localeCompare(b.key));
   const visibleKeys = new Set(visible.map((field) => field.key));
   const selection = Object.fromEntries(Object.entries(state.fields)
-    .filter(([name, fieldState]) => visibleKeys.has(name) && fieldState.value !== null && fieldState.value !== undefined)
+    .filter(([, fieldState]) => fieldState.value !== null && fieldState.value !== undefined)
     .map(([name, fieldState]) => {
       if (!Array.isArray(fieldState.value)) return [name, fieldState.value];
       const selectable = new Set(valueRowsFor(master, name).filter((row) => row.user_selectable !== false).map((row) => row.canonical_value));
@@ -178,6 +179,7 @@ export function toRuntimeUiResult(master, state, integration, sourcePackageInteg
     source: 'RUNTIME_MASTER',
     status: integration.status,
     selection,
+    dependencyFields: master.fields.map((def) => ({ key: def.field_name, parentFields: def.parent_fields ?? [] })),
     fields: visible,
     notices: [
       ...(state.warnings ?? []).map(warningText),

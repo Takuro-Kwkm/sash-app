@@ -14,7 +14,7 @@ jobs:
         with:
           node-version: 22
       - name: Giesta2 Runtime targeted tests
-        run: node --test test/68-runtime-app-bridge-giesta2-gate.test.mjs test/69-runtime-manifest-giesta2-integration.test.mjs
+        run: node --test test/68-runtime-app-bridge-giesta2-gate.test.mjs test/69-runtime-manifest-giesta2-integration.test.mjs test/70-giesta2-runtime-candidate-integrity.test.mjs
       - name: Full repository regression
         run: npm test
 
@@ -73,6 +73,10 @@ jobs:
           exit 1
       - name: Giesta2 Runtime Desktop and Smartphone Browser QA
         run: node test/browser/giesta2-runtime-browser-qa.mjs
+      - name: Giesta2 Runtime candidate parity QA
+        run: node test/browser/giesta2-runtime-candidate-parity-qa.mjs
+      - name: Existing sales UI Desktop and Smartphone regression QA
+        run: node test/browser/sales-ui-r2-browser-qa.mjs
       - name: Upload Browser QA evidence
         if: always()
         uses: actions/upload-artifact@v4
@@ -80,6 +84,7 @@ jobs:
           name: giesta2-runtime-browser-qa
           path: |
             artifacts/giesta2-runtime-browser-qa
+            artifacts/sales-ui-r2/browser
             runtime-qa.log
       - name: Stop Runtime
         if: always()

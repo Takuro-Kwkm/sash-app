@@ -47,6 +47,11 @@ function applyExclusions(master, selection, allowedByField) {
 function computeAllowed(master, selection) {
   const allowedByField = new Map(master.fields.map((def) => [def.field_name, baseValues(master, def.field_name)]));
   const notApplicable = new Set();
+  for (const def of master.fields) {
+    if (Object.entries(def.applicable_values ?? {}).some(([parent, values]) => has(selection[parent]) && !values.some((value) => same(value, selection[parent])))) {
+      notApplicable.add(def.field_name);
+    }
+  }
   const branchTargets = new Map();
   for (const relation of master.relations ?? []) {
     if (relation.mode !== 'BRANCH') continue;
@@ -167,14 +172,19 @@ function buildFieldState(master, resolved, inputSelection) {
     const na = resolved.notApplicable.has(name);
     const value = name in resolved.selection ? clone(resolved.selection[name]) : null;
     const isResolved = resolved.autoResolved.has(name) || (name === 'option' && Array.isArray(value) && value.some((one) => resolved.autoResolved.has(`option:${one}`)));
+    const allowed = [...(resolved.allowedByField.get(name) ?? [])];
+    const hideSingleton = def.hide_when_singleton === true && allowed.length === 1 && (def.parent_fields ?? []).every((parent) => has(resolved.selection[parent]));
+    const waitingForParent = def.hide_until_parents_selected === true && (def.parent_fields ?? []).some((parent) => !has(resolved.selection[parent]));
+    const outsideApplicability = Object.entries(def.applicable_values ?? {}).some(([parent, values]) => has(resolved.selection[parent]) && !values.some((value) => same(value, resolved.selection[parent])));
+    const hidden = na || def.hide_always === true || waitingForParent || outsideApplicability || hideSingleton;
     fields[name] = {
       value,
       state: na ? 'NOT_APPLICABLE' : isResolved ? 'RESOLVED' : name in resolved.selection ? 'SELECTED' : 'UNSET',
       resolved_by_rule: isResolved ? 'RUNTIME_RELATION_AUTO_RESOLVE' : null,
       derived_by_rule: null,
-      visibility: na ? 'HIDE' : 'SHOW',
-      required: !na && def.required_mode === 'REQUIRED',
-      allowed_values: na ? [] : [...(resolved.allowedByField.get(name) ?? [])],
+      visibility: hidden ? 'HIDE' : 'SHOW',
+      required: !hidden && def.required_mode === 'REQUIRED',
+      allowed_values: na ? [] : allowed,
     };
   }
   return fields;
