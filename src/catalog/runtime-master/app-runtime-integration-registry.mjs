@@ -13,6 +13,23 @@ export const appRuntimeIntegrationRegistry = Object.freeze([
     schemaVersion: '1.0',
     sourceHash: '9df554d2f4e2edc86c09db59646c56daabf5897751772a4ba1c0ccdff711d19c',
     adapterType: 'PHASE_MASTER_MAPS_V1',
+    uiTemplate: null,
+  }),
+  Object.freeze({
+    id: 'SER-LIXIL-INPLUS',
+    manufacturer: 'LIXIL',
+    series: 'インプラス',
+    displayName: 'インプラス',
+    registrySeriesKey: 'LIXIL::インプラス',
+    canonicalRuntimeReference: Object.freeze({
+      runtimeManifestDriveFileId: '1iPSLxyziMGXUN71-cSvQO8SRfudx80Qf',
+      canonicalFolderId: '1NPW7cUbaC1JRvIaJrltFkoYUiLyPwJa1',
+    }),
+    packageVersion: 'v0.4-R1',
+    schemaVersion: '2.0',
+    sourceHash: '39017746404c98b59a3238890bfece9f46acb122870def6a1361472dad5390ed',
+    adapterType: 'SEMANTIC_TABLE_BUNDLE_V2',
+    uiTemplate: 'INNER_WINDOW',
   }),
 ]);
 
