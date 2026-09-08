@@ -104,8 +104,8 @@ const payload = {
   },
   meta: {
     releaseCommitSha: githubSha,
-    releaseSeries: 'LIXIL EW',
-    releasePackageVersion: 'v1.1',
+    releaseSeries: process.env.RELEASE_SERIES ?? 'LIXIL EW',
+    releasePackageVersion: process.env.RELEASE_PACKAGE_VERSION ?? 'v1.1',
     releaseMode: mode,
   },
 };

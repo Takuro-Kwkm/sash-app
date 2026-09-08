@@ -14,23 +14,24 @@ function invoke(url){
   });
 }
 
-test('Vercel repository adapter preserves rewritten health path and EW identity', async()=>{
+test('Vercel repository adapter preserves rewritten health path and Runtime identities', async()=>{
   const response=await invoke('/api/index.mjs?__path=api/health');
   assert.equal(response.status,200);
   const health=JSON.parse(response.body);
   assert.equal(health.ok,true);
   assert.equal(health.entrypoint,'api/index.mjs');
   assert.match(health.backend,/repository Vercel adapter/);
-  assert.equal(health.runtimeMasterIntegrations.length,1);
-  assert.equal(health.runtimeMasterIntegrations[0].id,'SER-LIX-EW');
-  assert.equal(health.runtimeMasterIntegrations[0].sourceHash,'082442f82f51c4a81050d8e16d5fe3b9cb142004deb371a3e2bbb21384ca37dd');
+  assert.equal(health.runtimeMasterIntegrations.length,2);
+  const byId=new Map(health.runtimeMasterIntegrations.map((row)=>[row.id,row]));
+  assert.equal(byId.get('SER-LIX-EW').sourceHash,'082442f82f51c4a81050d8e16d5fe3b9cb142004deb371a3e2bbb21384ca37dd');
+  assert.equal(byId.get('SER-LIXIL-TW').sourceHash,'52af3e462f940df67c267de5f715250290136afdd67a70611e684fcc3d5d064e');
 });
 
 test('Vercel repository adapter preserves rewritten Runtime integration route', async()=>{
   const response=await invoke('/api/index.mjs?__path=api/runtime-master/integrations');
   assert.equal(response.status,200);
   const rows=JSON.parse(response.body);
-  assert.equal(rows.length,1);
-  assert.equal(rows[0].id,'SER-LIX-EW');
-  assert.equal(rows[0].selectable,true);
+  assert.equal(rows.length,2);
+  assert.deepEqual(new Set(rows.map((row)=>row.id)),new Set(['SER-LIX-EW','SER-LIXIL-TW']));
+  assert.ok(rows.every((row)=>row.selectable));
 });

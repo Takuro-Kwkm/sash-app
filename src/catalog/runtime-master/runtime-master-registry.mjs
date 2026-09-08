@@ -2,10 +2,14 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { loadCanonicalWorkbookRuntimePackage } from './canonical-runtime-manifest-loader.mjs';
 import { adaptCanonicalWorkbookReferenceV1 } from './canonical-workbook-reference-v1-adapter.mjs';
+import { loadManifestRuntimePackage } from './runtime-manifest-loader.mjs';
+import { adaptTwCanonicalWorkbookReferenceV1 } from './tw-canonical-workbook-reference-v1-adapter.mjs';
+import { evaluateCanonicalWorkbookRuntime } from './canonical-workbook-runtime-engine.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const EW_ROOT = join(HERE, '../runtime-master-packages/lixil-ew-v1.1');
 const EW_RUNTIME_SEGMENTS = ['seg-00','seg-01','seg-02','seg-03','seg-04','seg-05','seg-06','seg-07','seg-08a','seg-08b','seg-08c','seg-08d'];
+const TW_ROOT = join(HERE, '../runtime-master-packages/lixil-tw-integrated-v0.2');
 
 export const runtimeMasterInventory = Object.freeze([
   Object.freeze({
@@ -22,17 +26,43 @@ export const runtimeMasterInventory = Object.freeze([
       }),
     }),
   }),
+  Object.freeze({
+    manufacturer: 'LIXIL', series: 'TW', masterVersion: 'integrated-v0.2', schemaVersion: '2.0',
+    packageType: 'RUNTIME_MANIFEST_V1', adapterType: 'TW_CANONICAL_WORKBOOK_REFERENCE_V1',
+    packageRoot: TW_ROOT,
+    runtimeManifestPath: join(TW_ROOT, 'runtime_manifest.json'),
+    runtimeManifestDriveFileId: '1f9ogJ2pS0HmrUuXG1Qy431lG0mgxN9pw',
+    runtimeManifestSha256: '52af3e462f940df67c267de5f715250290136afdd67a70611e684fcc3d5d064e',
+    materializedFiles: Object.freeze({
+      '1yt4ADBqoK4-5Xqt6bJ593Q4thi81IRzI': Object.freeze({
+        codec: 'brotli',
+        paths: Object.freeze([join(TW_ROOT, 'LIXIL_TW_runtime_integrated-v0.2.json.br.b64.parts/part-00')]),
+      }),
+    }),
+  }),
 ]);
 
 export function getRuntimeMasterEntry(manufacturer, series) {
   return runtimeMasterInventory.find((x) => x.manufacturer === manufacturer && x.series === series) ?? null;
 }
 
-let ewRuntimePromise = null;
+const runtimePromises = new Map();
 
-async function loadEwRuntime(entry) {
-  const runtimePackage = await loadCanonicalWorkbookRuntimePackage(entry);
-  const adapted = adaptCanonicalWorkbookReferenceV1(runtimePackage);
+async function loadRuntime(entry) {
+  let runtimePackage;
+  let adapted;
+  if (entry.packageType === 'RUNTIME_MANIFEST_V2' && entry.adapterType === 'CANONICAL_WORKBOOK_REFERENCE_V1') {
+    runtimePackage = await loadCanonicalWorkbookRuntimePackage(entry);
+    adapted = adaptCanonicalWorkbookReferenceV1(runtimePackage);
+  } else if (entry.packageType === 'RUNTIME_MANIFEST_V1' && entry.adapterType === 'TW_CANONICAL_WORKBOOK_REFERENCE_V1') {
+    runtimePackage = await loadManifestRuntimePackage(entry);
+    const master = adaptTwCanonicalWorkbookReferenceV1(runtimePackage);
+    adapted = { master, resolver: (selection) => evaluateCanonicalWorkbookRuntime(master, selection) };
+  } else {
+    const error = new Error(`Unsupported release Runtime package: ${entry.packageType}/${entry.adapterType}`);
+    error.code = 'RUNTIME_ADAPTER_NOT_REGISTERED';
+    throw error;
+  }
   return Object.freeze({
     entry,
     master: adapted.master,
@@ -46,11 +76,12 @@ async function loadEwRuntime(entry) {
 export async function loadRegisteredRuntime(manufacturer, series) {
   const entry = getRuntimeMasterEntry(manufacturer, series);
   if (!entry) return null;
-  if (entry.packageType !== 'RUNTIME_MANIFEST_V2' || entry.adapterType !== 'CANONICAL_WORKBOOK_REFERENCE_V1') {
-    const error = new Error(`Unsupported release Runtime package: ${entry.packageType}/${entry.adapterType}`);
-    error.code = 'RUNTIME_ADAPTER_NOT_REGISTERED';
-    throw error;
+  const key = `${manufacturer}/${series}`;
+  if (!runtimePromises.has(key)) {
+    runtimePromises.set(key, loadRuntime(entry).catch((error) => {
+      runtimePromises.delete(key);
+      throw error;
+    }));
   }
-  if (!ewRuntimePromise) ewRuntimePromise = loadEwRuntime(entry).catch((error) => { ewRuntimePromise = null; throw error; });
-  return ewRuntimePromise;
+  return runtimePromises.get(key);
 }

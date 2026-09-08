@@ -1,0 +1,42 @@
+{
+  "schema_version": "2.0",
+  "manufacturer": "LIXIL",
+  "series": "TW",
+  "package_version": "integrated-v0.2",
+  "authoring_mode": "INTEGRATED_REFERENCE",
+  "authoring_file_name": "サッシ商品マスター_v0.2",
+  "authoring_file_id": "1cmMo1vF-rbeGRiQ3n1Zw1bTLwFCgHwWNVB2ngz1dnRk",
+  "runtime_status": "READY",
+  "runtime_files": [
+    {
+      "name": "LIXIL_TW_runtime_integrated-v0.2.json",
+      "id": "1yt4ADBqoK4-5Xqt6bJ593Q4thi81IRzI",
+      "role": "runtime_master",
+      "sha256": "358d8ee5f6e13a294a20b3bb69dd07fac6f21ec20da0c43c7e00d6fb8fa0237f"
+    }
+  ],
+  "documentation_file": "LIXIL_TW_PRODUCT_MASTER_MANIFEST_integrated-v0.2.md",
+  "storage_status": "DRIVE_CANONICAL",
+  "package_gate": "PASS",
+  "storage_gate": "PASS",
+  "human_approval": "PASS_APR_TW_01_TO_05",
+  "known_source_limitations": [
+    "OP-LIX-TW-CAT-28322",
+    "OP-LIX-TW-CAT-28323"
+  ],
+  "manual_checks": [],
+  "generated_at": "2026-09-07T15:44:23+09:00",
+  "spec_version": "PRODUCT_MASTER_PACKAGE_STORAGE_GATE_v2.0",
+  "change_control": {
+    "change_id": "LIXIL-TW-OPCODE-CC-R1",
+    "active_rule_count": 196,
+    "superseded_excluded": 6,
+    "tw_28509_flat_scope": "APPLIED_HUMAN_APPROVED",
+    "authoring_revision": "9"
+  },
+  "registry_gate": "PASS",
+  "master_status": "FORMAL_PASS",
+  "registry_file_id": "1HMMZ8JdsbJPtL_8LjQfxMF8P_Zb4-LReqvPMFn1pJks",
+  "canonical_folder_id": "1oLex2SCEIKoH5mDMGtbMasJXglPF-n-a",
+  "old_folder_id": "1K_fgs055I9_Psx6Co5Qn1F1B-Ujpv25L"
+}
