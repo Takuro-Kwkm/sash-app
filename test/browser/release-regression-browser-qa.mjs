@@ -3,20 +3,19 @@ import { mkdir, writeFile } from 'node:fs/promises';
 import { chromium } from 'playwright';
 
 const BASE=process.env.QA_BASE_URL??'http://127.0.0.1:4173';
-const extraHTTPHeaders=process.env.VERCEL_TRUSTED_OIDC_TOKEN
-  ?{'x-vercel-trusted-oidc-idp-token':process.env.VERCEL_TRUSTED_OIDC_TOKEN}
-  :{};
+const SHARE_TOKEN=process.env.VERCEL_SHARE_TOKEN;
 const OUT='artifacts/release-regression-browser-qa';
 await mkdir(OUT,{recursive:true});
 const report={status:'RUNNING',products:[],consoleErrors:[],pageErrors:[],failedResponses:[]};
 const browser=await chromium.launch({headless:true});
-const context=await browser.newContext({viewport:{width:1440,height:1000},extraHTTPHeaders});
+const context=await browser.newContext({viewport:{width:1440,height:1000}});
 const page=await context.newPage();
 page.on('console',(message)=>{if(message.type()==='error')report.consoleErrors.push(message.text());});
 page.on('pageerror',(error)=>report.pageErrors.push(error.message));
 page.on('response',(response)=>{if(response.status()>=400)report.failedResponses.push({status:response.status(),url:response.url()});});
 
 try {
+  if(SHARE_TOKEN)await page.goto(`${BASE}/?_vercel_share=${encodeURIComponent(SHARE_TOKEN)}`,{waitUntil:'networkidle'});
   const api=await context.request.get(`${BASE}/api/catalog/products`);
   assert.equal(api.status(),200);
   const products=await api.json();

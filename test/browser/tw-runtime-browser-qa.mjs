@@ -3,9 +3,7 @@ import { mkdir, writeFile } from 'node:fs/promises';
 import { chromium } from 'playwright';
 
 const BASE = process.env.QA_BASE_URL ?? 'http://127.0.0.1:4173';
-const extraHTTPHeaders = process.env.VERCEL_TRUSTED_OIDC_TOKEN
-  ? { 'x-vercel-trusted-oidc-idp-token': process.env.VERCEL_TRUSTED_OIDC_TOKEN }
-  : {};
+const SHARE_TOKEN = process.env.VERCEL_SHARE_TOKEN;
 const PRODUCT_ID = 'SER-LIXIL-TW';
 const OUT = 'artifacts/tw-runtime-browser-qa';
 await mkdir(OUT, { recursive:true });
@@ -18,7 +16,8 @@ function track(page) {
   page.on('response', (response) => { if (response.status() >= 400) report.failedResponses.push({ status:response.status(), url:response.url() }); });
 }
 async function openTw(page) {
-  await page.goto(BASE, { waitUntil:'networkidle' });
+  const entry = SHARE_TOKEN ? `${BASE}/?_vercel_share=${encodeURIComponent(SHARE_TOKEN)}` : BASE;
+  await page.goto(entry, { waitUntil:'networkidle' });
   await page.waitForFunction(() => document.querySelector('#status')?.textContent === 'CATALOG CONNECTED');
   await page.selectOption('#manufacturer', 'LIXIL');
   await page.waitForFunction((id) => [...document.querySelectorAll('#product option')].some((option) => option.value === id && !option.disabled), PRODUCT_ID);
@@ -73,7 +72,7 @@ try {
     { key:'desktop', viewport:{ width:1440, height:1000 }, mobile:false },
     { key:'mobile', viewport:{ width:390, height:844 }, mobile:true },
   ]) {
-    const context = await browser.newContext({ viewport:config.viewport, isMobile:config.mobile, hasTouch:config.mobile, extraHTTPHeaders });
+    const context = await browser.newContext({ viewport:config.viewport, isMobile:config.mobile, hasTouch:config.mobile });
     const page = await context.newPage(); track(page); await openTw(page);
     const checks = await exercise(page);
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
