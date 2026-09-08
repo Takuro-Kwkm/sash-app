@@ -100,11 +100,12 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          deploy_host="${DEPLOY_URL#https://}"
           status="$(curl -sS -o /tmp/vercel-share.json -w '%{http_code}' -X PATCH \
             -H "Authorization: Bearer $VERCEL_TOKEN_EFFECTIVE" \
             -H 'Content-Type: application/json' \
             -d '{"ttl":3600}' \
-            "https://api.vercel.com/aliases/$DEPLOY_ID/protection-bypass?teamId=$VERCEL_ORG_ID")"
+            "https://api.vercel.com/aliases/$deploy_host/protection-bypass?teamId=$VERCEL_ORG_ID")"
           [[ "$status" == 200 ]] || exit 49
           node -e 'const fs=require("fs"); const x=require("/tmp/vercel-share.json"); if(!x.value) process.exit(1); fs.appendFileSync(process.env.GITHUB_ENV,`VERCEL_SHARE_TOKEN=${x.value}\n`)'
 
