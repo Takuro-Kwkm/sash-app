@@ -1,0 +1,66 @@
+{
+  "schema_version": "2.0",
+  "manufacturer": "LIXIL",
+  "series": "インプラス",
+  "package_version": "v0.4-R1",
+  "package_revision": "RuntimeJoinRecovery_R1_FORMAL",
+  "authoring_mode": "STANDALONE",
+  "authoring_file_name": "LIXIL_インプラス_商品マスター_v0.4-R1_RuntimeJoinRecovery_R1_FORMAL.xlsx",
+  "authoring_file_id": "1NbvIhvxINl45MStUR17LqPOP2123fUAQ",
+  "authoring_sha256": "6597ffcc39ebbb28584745edfbff72d107e26cec08f64f8c42612a4027314f6a",
+  "runtime_status": "READY",
+  "runtime_files": [
+    {
+      "role": "RUNTIME_JSON_PACKAGE",
+      "file_name": "LIXIL_インプラス_runtime_v0.4-R1_RuntimeJoinRecovery_R1_FORMAL.json",
+      "file_id": "1VREtyCeLgiGD4ereIDGLLPfsea3d-ac5",
+      "sha256": "3f8468bfd089d6077489311aab6f8c5664eec096e41298fa4325d36cf2cc6c71"
+    }
+  ],
+  "schema_file": {
+    "file_name": "LIXIL_インプラス_runtime_v0.4-R1_RuntimeJoinRecovery_R1_FORMAL.schema.json",
+    "file_id": "1re25pGC5Zo0ytwD2snL0OPsfYSW6Ymqc",
+    "sha256": "e6de5896b3e39c1e77df72a89f499735a045748b7744d84072dc5057c403c3ec"
+  },
+  "qa_files": [
+    {
+      "role": "SEMANTIC_RUNTIME_QA",
+      "file_name": "LIXIL_インプラス_RuntimeJoinRecovery_R1_SEMANTIC_QA_20260907.json",
+      "file_id": "10tlCC-CSM8Is7ewknSzw4PpuNGTzkHVS",
+      "sha256": "ebd4af7f4adbcb1173af596d2983333fbf59bf229fef4030352f825a0231ca88",
+      "status": "PASS"
+    }
+  ],
+  "documentation_file": {
+    "file_name": "LIXIL_インプラス_PRODUCT_MASTER_MANIFEST_v0.4-R1_RuntimeJoinRecovery_R1_FORMAL.md",
+    "file_id": "1nFQ_2ziIsmeA3VdautbQpByMhJ7perqZ"
+  },
+  "content_status": "PASS",
+  "dependency_status": "PASS",
+  "qa_status": "PASS",
+  "package_gate": "PASS",
+  "storage_status": "CANONICAL",
+  "blocking_items": [],
+  "manual_check": [
+    "SZ-SL3W: 3枚建（障子W指定）の製作範囲",
+    "ND-01..ND-06: 特殊ガラスND製作範囲",
+    "GL-ORD-004: 障子重量によるアルミレール枠対象寸法",
+    "FK-SA09: 特殊/不明納まり",
+    "FK-R08: ふかし枠補助部材の正規item_id未確定",
+    "FK-R14/FK-R15/FK-R18/FK-R19: 補強一体ふかし枠の製作範囲",
+    "fabrication_selector_join: 2W/4W equivalent range selector rows",
+    "installability_id_join: FR-CORNER / FR-AUX / OP-FLAT"
+  ],
+  "human_approval": "APPROVED",
+  "human_approval_record_file_id": "1NBxbJJkfG3YIBUlecwI3cRSVklBbDLyN",
+  "formal_pass": true,
+  "canonical_mutation": true,
+  "registry_mutation": true,
+  "canonical_folder_id": "1NPW7cUbaC1JRvIaJrltFkoYUiLyPwJa1",
+  "working_folder_id": "1D4ei5PpcM5wGkb6AuXr2QBUmU1tPey92",
+  "old_folder_id": "1N-wPfze9_HKbMJhNMzC-aP4JSlbyjVZp",
+  "governing_spec": "PRODUCT_MASTER_PACKAGE_STORAGE_COMPLETION_GATE_v2.0",
+  "registry_file_id": "1HMMZ8JdsbJPtL_8LjQfxMF8P_Zb4-LReqvPMFn1pJks",
+  "generated_at": "2026-09-07T15:08:00+09:00",
+  "updated_at": "2026-09-07T15:20:00+09:00"
+}
