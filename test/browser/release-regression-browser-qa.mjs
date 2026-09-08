@@ -18,7 +18,7 @@ try {
   assert.equal(api.status(),200);
   const products=await api.json();
   assert.equal(products.length,4,'production catalog inventory must remain at four pre-existing series');
-  const expected=new Set(['サーモスⅡ-H','サーモスL','APW430','APW431']);
+  const expected=new Set(['サーモスⅡ-H','サーモスL','APW 430','APW 431']);
   assert.deepEqual(new Set(products.map((row)=>row.displayName??row.series)),expected);
 
   for(const product of products){
