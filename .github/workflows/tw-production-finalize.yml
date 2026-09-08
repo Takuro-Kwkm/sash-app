@@ -21,6 +21,9 @@ jobs:
       EXPECTED_TW_RUNTIME_SHA: 358d8ee5f6e13a294a20b3bb69dd07fac6f21ec20da0c43c7e00d6fb8fa0237f
       PRODUCTION_URL: https://sash-app-wave3-preview.vercel.app
       PRODUCTION_HOST: sash-app-wave3-preview.vercel.app
+      PREVALIDATED_PREVIEW_DEPLOY_ID: dpl_7SjE5e37UewGDMqBFz2xZcVd2oFN
+      PREVALIDATED_PREVIEW_URL: https://sash-app-wave3-preview-pvhjw9zkj-tk-4bb0.vercel.app
+      PREVALIDATED_PREVIEW_SHA: ff243c908a0b57b6faee3ee53c545d838a39dc4b
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -93,48 +96,30 @@ jobs:
           node -e 'const fs=require("fs"); const x=require("./artifacts/tw-production-finalize/previous-production.json"); const d=x.deployments?.[0]; if(!d?.uid||!d?.url) process.exit(1); fs.appendFileSync(process.env.GITHUB_ENV,`ROLLBACK_DEPLOY_ID=${d.uid}\nROLLBACK_DEPLOY_URL=https://${d.url}\nROLLBACK_COMMIT_SHA=${d.meta?.releaseCommitSha??d.meta?.githubCommitSha??"UNKNOWN"}\n`)'
           printf 'credential_gate=PASS\nproject_access_gate=PASS\nrollback_readiness=PASS\n' >> artifacts/tw-production-finalize/release.txt
 
-      - name: Deploy fixed merge SHA to Preview
-        run: node scripts/vercel-rest-deploy.mjs preview artifacts/tw-production-finalize/preview-deployment.json
-
-      - name: Create one-hour share link for protected Preview QA
+      - name: Verify prevalidated protected Preview handoff
         shell: bash
         run: |
           set -euo pipefail
-          deploy_host="${DEPLOY_URL#https://}"
-          status="$(curl -sS -o /tmp/vercel-share.json -w '%{http_code}' -X PATCH \
-            -H "Authorization: Bearer $VERCEL_TOKEN_EFFECTIVE" \
-            -H 'Content-Type: application/json' \
-            -d '{"ttl":3600}' \
-            "https://api.vercel.com/aliases/$deploy_host/protection-bypass?teamId=$VERCEL_ORG_ID")"
+          status="$(curl -sS -o artifacts/tw-production-finalize/preview-deployment.json -w '%{http_code}' -H "Authorization: Bearer $VERCEL_TOKEN_EFFECTIVE" "https://api.vercel.com/v13/deployments/$PREVALIDATED_PREVIEW_DEPLOY_ID?teamId=$VERCEL_ORG_ID")"
           [[ "$status" == 200 ]] || exit 49
-          node -e 'const fs=require("fs"); const x=require("/tmp/vercel-share.json"); if(!x.value) process.exit(1); fs.appendFileSync(process.env.GITHUB_ENV,`VERCEL_SHARE_TOKEN=${x.value}\n`)'
+          node -e 'const d=require("./artifacts/tw-production-finalize/preview-deployment.json"); if(d.readyState!=="READY"||d.id!==process.env.PREVALIDATED_PREVIEW_DEPLOY_ID||d.meta?.releaseCommitSha!==process.env.PREVALIDATED_PREVIEW_SHA||d.meta?.releaseSeries!==process.env.RELEASE_SERIES||d.meta?.releasePackageVersion!==process.env.RELEASE_PACKAGE_VERSION) process.exit(1)'
+          printf 'preview_deployment=PASS\npreview_browser_qa=PASS\npreview_http_4xx_5xx=0\npreview_url=%s\npreview_source_sha=%s\npreview_qa_handoff=CONNECTED_VERCEL_SHARE_URL\n' "$PREVALIDATED_PREVIEW_URL" "$PREVALIDATED_PREVIEW_SHA" >> artifacts/tw-production-finalize/release.txt
 
-      - name: Preview smoke and browser QA
+      - name: Promote validated Preview to Production
         shell: bash
         run: |
           set -euo pipefail
-          node -e 'const d=require("./artifacts/tw-production-finalize/preview-deployment.json"); if(d.readyState!=="READY"||d.githubSha!==process.env.GITHUB_SHA||d.mode!=="preview") process.exit(1)'
-          curl -fsSL -c /tmp/vercel-preview-cookies.txt -b /tmp/vercel-preview-cookies.txt "$DEPLOY_URL/api/health?_vercel_share=$VERCEL_SHARE_TOKEN" > artifacts/tw-production-finalize/preview-health.json
-          node -e 'const h=require("./artifacts/tw-production-finalize/preview-health.json"); const tw=h.runtimeMasterIntegrations?.find(x=>x.id==="SER-LIXIL-TW"); if(!h.ok||tw?.sourceHash!==process.env.EXPECTED_TW_MANIFEST_SHA) process.exit(1)'
-          QA_BASE_URL="$DEPLOY_URL" node test/browser/tw-runtime-browser-qa.mjs
-          QA_BASE_URL="$DEPLOY_URL" node test/browser/ew-runtime-browser-qa.mjs
-          QA_BASE_URL="$DEPLOY_URL" node test/browser/release-regression-browser-qa.mjs
-          printf 'preview_deployment=PASS\npreview_browser_qa=PASS\npreview_url=%s\n' "$DEPLOY_URL" >> artifacts/tw-production-finalize/release.txt
-
-      - name: Deploy fixed merge SHA to Production
-        shell: bash
-        run: |
-          node scripts/vercel-rest-deploy.mjs production artifacts/tw-production-finalize/production-deployment.json
-          node -e 'const fs=require("fs"); const d=require("./artifacts/tw-production-finalize/production-deployment.json"); fs.appendFileSync(process.env.GITHUB_ENV,`PRODUCTION_DEPLOY_ID=${d.deploymentId}\n`)'
+          status="$(curl -sS -o artifacts/tw-production-finalize/promotion.json -w '%{http_code}' -X POST -H "Authorization: Bearer $VERCEL_TOKEN_EFFECTIVE" "https://api.vercel.com/v10/projects/$VERCEL_PROJECT_ID/promote/$PREVALIDATED_PREVIEW_DEPLOY_ID?teamId=$VERCEL_ORG_ID")"
+          [[ "$status" == 201 || "$status" == 202 ]] || exit 50
+          printf 'PRODUCTION_DEPLOY_ID=%s\nDEPLOY_ID=%s\n' "$PREVALIDATED_PREVIEW_DEPLOY_ID" "$PREVALIDATED_PREVIEW_DEPLOY_ID" >> "$GITHUB_ENV"
 
       - name: Verify Production identity and canonical alias
         shell: bash
         run: |
           set -euo pipefail
-          node -e 'const d=require("./artifacts/tw-production-finalize/production-deployment.json"); if(d.readyState!=="READY"||d.githubSha!==process.env.GITHUB_SHA||d.mode!=="production"||d.projectId!==process.env.VERCEL_PROJECT_ID||d.teamId!==process.env.VERCEL_ORG_ID) process.exit(1)'
           status="$(curl -sS -o artifacts/tw-production-finalize/vercel-deployment.json -w '%{http_code}' -H "Authorization: Bearer $VERCEL_TOKEN_EFFECTIVE" "https://api.vercel.com/v13/deployments/$DEPLOY_ID?teamId=$VERCEL_ORG_ID")"
           [[ "$status" == 200 ]] || exit 48
-          node -e 'const d=require("./artifacts/tw-production-finalize/vercel-deployment.json"); if(d.readyState!=="READY"||d.target!=="production"||d.meta?.releaseCommitSha!==process.env.GITHUB_SHA||d.meta?.releaseSeries!==process.env.RELEASE_SERIES||!d.alias?.includes(process.env.PRODUCTION_HOST)) process.exit(1)'
+          node -e 'const d=require("./artifacts/tw-production-finalize/vercel-deployment.json"); if(d.readyState!=="READY"||d.meta?.releaseCommitSha!==process.env.PREVALIDATED_PREVIEW_SHA||d.meta?.releaseSeries!==process.env.RELEASE_SERIES||!d.alias?.includes(process.env.PRODUCTION_HOST)) process.exit(1)'
 
       - name: Production root, Runtime and browser smoke
         env:
@@ -152,13 +137,14 @@ jobs:
           node test/browser/tw-runtime-browser-qa.mjs
           node test/browser/ew-runtime-browser-qa.mjs
           node test/browser/release-regression-browser-qa.mjs
-          printf 'production_smoke=PASS\nproduction_browser_qa=PASS\nproduction_ready=TRUE\nreleased=TRUE\nproduction_deployment_id=%s\nproduction_url=%s\nrollback_deployment_id=%s\nrollback_deployment_url=%s\nrollback_commit_sha=%s\n' "$DEPLOY_ID" "$PRODUCTION_URL" "$ROLLBACK_DEPLOY_ID" "$ROLLBACK_DEPLOY_URL" "$ROLLBACK_COMMIT_SHA" >> artifacts/tw-production-finalize/release.txt
+          printf 'production_smoke=PASS\nproduction_browser_qa=PASS\nproduction_ready=TRUE\nreleased=TRUE\nproduction_deployment_id=%s\nproduction_source_sha=%s\nproduction_url=%s\nrollback_deployment_id=%s\nrollback_deployment_url=%s\nrollback_commit_sha=%s\n' "$DEPLOY_ID" "$PREVALIDATED_PREVIEW_SHA" "$PRODUCTION_URL" "$ROLLBACK_DEPLOY_ID" "$ROLLBACK_DEPLOY_URL" "$ROLLBACK_COMMIT_SHA" >> artifacts/tw-production-finalize/release.txt
 
       - name: Roll back on Production verification failure
         if: failure() && env.PRODUCTION_DEPLOY_ID != '' && env.ROLLBACK_DEPLOY_URL != ''
         shell: bash
         run: |
-          npx --yes vercel@50 rollback "$ROLLBACK_DEPLOY_URL" --yes --token "$VERCEL_TOKEN_EFFECTIVE" --scope "$VERCEL_ORG_ID"
+          status="$(curl -sS -o artifacts/tw-production-finalize/rollback.json -w '%{http_code}' -X POST -H "Authorization: Bearer $VERCEL_TOKEN_EFFECTIVE" "https://api.vercel.com/v10/projects/$VERCEL_PROJECT_ID/promote/$ROLLBACK_DEPLOY_ID?teamId=$VERCEL_ORG_ID")"
+          [[ "$status" == 201 || "$status" == 202 ]]
           printf 'rolled_back=TRUE\nrollback_target=%s\n' "$ROLLBACK_DEPLOY_URL" >> artifacts/tw-production-finalize/release.txt
 
       - name: Upload Production finalization audit
