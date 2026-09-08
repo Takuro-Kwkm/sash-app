@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>サッシ情報管理アプリ V2 Recovery</title>
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/styles-wave3.css">
+</head>
+<body>
+<header class="topbar">
+  <div><strong>サッシ情報管理アプリ V2</strong><span class="sub">共通Catalog / Dynamic UI</span></div>
+  <span id="status" class="badge">loading</span>
+</header>
+<main>
+  <section class="card">
+    <h1>見積商品選択</h1>
+    <p class="lead">商品専用Formを使用せず、CatalogのDefinition / Selector / Dependencyから入力項目を生成します。</p>
+    <div class="field"><label for="manufacturer">メーカー</label><select id="manufacturer"><option value="">選択してください</option></select></div>
+    <div class="field"><label for="product">シリーズ</label><select id="product" disabled><option value="">選択してください</option></select></div>
+    <div id="dynamicForm"></div>
+    <div id="warnings"></div>
+  </section>
+  <section class="card compact">
+    <h2>選択内容</h2>
+    <div id="selectionSummary" class="summary muted">シリーズを選択してください。</div>
+  </section>
+  <section class="card compact">
+    <h2>Runtime Catalog</h2>
+    <div id="inventory"></div>
+  </section>
+</main>
+<footer id="build">Build identity loading...</footer>
+<script type="module" src="/app.js"></script>
+</body>
+</html>

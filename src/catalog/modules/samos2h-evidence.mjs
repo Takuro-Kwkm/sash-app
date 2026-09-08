@@ -1,0 +1,1 @@
+import{EVIDENCE_A}from'./samos2h-evidence-a.mjs';import{EVIDENCE_B}from'./samos2h-evidence-b.mjs';import{EVIDENCE_C}from'./samos2h-evidence-c.mjs';export const S2H_EVIDENCE=[...EVIDENCE_A,...EVIDENCE_B,...EVIDENCE_C];
