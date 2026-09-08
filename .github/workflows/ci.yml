@@ -115,7 +115,7 @@ jobs:
           set -euo pipefail
           for i in {1..60}; do
             if curl -fsS "$DEPLOY_URL/api/health" > artifacts/release-build/preview-health.json; then
-              if HEALTH_FILE=artifacts/release-build/preview-health.json node -e 'const h=require(process.env.HEALTH_FILE); const ew=h.runtimeMasterIntegrations?.find(x=>x.id==="SER-LIX-EW"); if(!h.ok||!ew||!ew.selectable||ew.status!=="READY"||ew.sourceHash!==process.env.EXPECTED_EW_RUNTIME_SHA) process.exit(1)'; then
+              if HEALTH_FILE=artifacts/release-build/preview-health.json node -e 'const fs=require("fs"); const h=JSON.parse(fs.readFileSync(process.env.HEALTH_FILE,"utf8")); const ew=h.runtimeMasterIntegrations?.find(x=>x.id==="SER-LIX-EW"); if(!h.ok||!ew||!ew.selectable||ew.status!=="READY"||ew.sourceHash!==process.env.EXPECTED_EW_RUNTIME_SHA) process.exit(1)'; then
                 curl -fsS "$DEPLOY_URL/api/runtime-master/integrations" > artifacts/release-build/preview-integrations.json
                 curl -fsS "$DEPLOY_URL/app.js" > /dev/null
                 printf 'vercel_build_gate=PASS\nrelease_preview_gate=PASS\ndeployment_id=%s\ndeployment_url=%s\n' "$DEPLOY_ID" "$DEPLOY_URL" >> artifacts/release-build/release.txt
@@ -192,7 +192,7 @@ jobs:
             local base="$1" label="$2" out="artifacts/production-deploy/${label}-health.json"
             for i in {1..60}; do
               if curl -fsS "$base/api/health" > "$out"; then
-                if HEALTH_FILE="$out" node -e 'const h=require(process.env.HEALTH_FILE); const ew=h.runtimeMasterIntegrations?.find(x=>x.id==="SER-LIX-EW"); if(!h.ok||!ew||!ew.selectable||ew.status!=="READY"||ew.sourceHash!==process.env.EXPECTED_EW_RUNTIME_SHA) process.exit(1)'; then
+                if HEALTH_FILE="$out" node -e 'const fs=require("fs"); const h=JSON.parse(fs.readFileSync(process.env.HEALTH_FILE,"utf8")); const ew=h.runtimeMasterIntegrations?.find(x=>x.id==="SER-LIX-EW"); if(!h.ok||!ew||!ew.selectable||ew.status!=="READY"||ew.sourceHash!==process.env.EXPECTED_EW_RUNTIME_SHA) process.exit(1)'; then
                   curl -fsS "$base/api/runtime-master/integrations" > "artifacts/production-deploy/${label}-integrations.json"
                   curl -fsS "$base/app.js" > /dev/null
                   return 0
