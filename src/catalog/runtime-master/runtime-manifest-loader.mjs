@@ -23,8 +23,8 @@ export function normalizeRuntimeManifest(raw) {
   if (!raw || typeof raw !== 'object') fail('RUNTIME_MANIFEST_INVALID', 'runtime_manifest.json must be a JSON object');
   const runtimeFiles = Array.isArray(raw.runtime_files) ? raw.runtime_files.map((row) => ({
     role: row.role,
-    fileName: row.file_name,
-    fileId: row.file_id,
+    fileName: row.file_name ?? row.name,
+    fileId: row.file_id ?? row.id,
     sha256: row.sha256,
   })) : [];
   const schemaFile = raw.schema_file ? {
@@ -41,9 +41,11 @@ export function normalizeRuntimeManifest(raw) {
     runtimeStatus: raw.runtime_status,
     runtimeFiles,
     schemaFile,
-    formalPass: raw.formal_pass === true,
+    formalPass: raw.formal_pass === true || raw.master_status === 'FORMAL_PASS',
     storageStatus: raw.storage_status,
     packageGate: raw.package_gate,
+    storageGate: raw.storage_gate ?? null,
+    registryGate: raw.registry_gate ?? null,
     canonicalFolderId: raw.canonical_folder_id ?? null,
   };
   for (const key of ['schemaVersion','manufacturer','series','packageVersion','runtimeStatus']) {
@@ -52,9 +54,7 @@ export function normalizeRuntimeManifest(raw) {
   if (!runtimeFiles.length || runtimeFiles.some((row) => !row.role || !row.fileName || !row.fileId || !row.sha256)) {
     fail('RUNTIME_MANIFEST_INVALID', 'runtime_manifest.json runtime_files must explicitly list role, file_name, file_id and sha256');
   }
-  if (!schemaFile?.fileName || !schemaFile.fileId || !schemaFile.sha256) {
-    fail('RUNTIME_MANIFEST_INVALID', 'runtime_manifest.json must explicitly list schema_file');
-  }
+  if (raw.schema_file && (!schemaFile?.fileName || !schemaFile.fileId || !schemaFile.sha256)) fail('RUNTIME_MANIFEST_INVALID', 'runtime_manifest.json schema_file is incomplete');
   return deepFreeze(normalized);
 }
 
@@ -122,11 +122,12 @@ export async function loadManifestRuntimePackage(entry) {
   for (const [name, expected, actual] of identityPairs) {
     if (String(expected) !== String(actual)) fail('RUNTIME_MANIFEST_IDENTITY_MISMATCH', `${name} mismatch: expected ${expected}, got ${actual}`, { name, expected, actual });
   }
-  if (!manifest.formalPass || manifest.runtimeStatus !== 'READY' || manifest.storageStatus !== 'PASS' || manifest.packageGate !== 'PASS') {
+  const storageReady = manifest.storageStatus === 'PASS' || (manifest.storageStatus === 'DRIVE_CANONICAL' && manifest.storageGate === 'PASS');
+  if (!manifest.formalPass || manifest.runtimeStatus !== 'READY' || !storageReady || manifest.packageGate !== 'PASS' || (manifest.registryGate && manifest.registryGate !== 'PASS')) {
     fail('RUNTIME_MANIFEST_NOT_FORMAL_READY', 'Canonical Runtime manifest is not formally READY', { manifest });
   }
 
-  const schemaLoaded = await readMaterializedCanonicalFile(entry, manifest.schemaFile);
+  const schemaLoaded = manifest.schemaFile ? await readMaterializedCanonicalFile(entry, manifest.schemaFile) : null;
   const loadedByRole = new Map();
   const fileIntegrity = [];
   for (const row of manifest.runtimeFiles) {
@@ -134,11 +135,11 @@ export async function loadManifestRuntimePackage(entry) {
     loadedByRole.set(row.role, loaded.json);
     fileIntegrity.push({ role: row.role, fileName: row.fileName, fileId: row.fileId, expected: row.sha256, actual: loaded.actualSha256, match: true, bytes: loaded.bytes, codec: loaded.codec });
   }
-  const schema = schemaLoaded.json;
+  const schema = schemaLoaded?.json ?? null;
   const schemaErrors = [];
   for (const [role, document] of loadedByRole.entries()) {
-    schemaErrors.push(...validateJsonSchema(document, schema, `$.${role}`));
-    const meta = document?.metadata ?? {};
+    if (schema) schemaErrors.push(...validateJsonSchema(document, schema, `$.${role}`));
+    const meta = document?.metadata ?? document ?? {};
     for (const [name, expected] of [['manufacturer', manifest.manufacturer], ['series', manifest.series], ['package_version', manifest.packageVersion]]) {
       if (String(meta[name]) !== String(expected)) schemaErrors.push(`$.${role}.metadata.${name}: expected ${expected}, got ${meta[name]}`);
     }
@@ -155,10 +156,10 @@ export async function loadManifestRuntimePackage(entry) {
       actual: manifestActualSha256,
       match: !entry.runtimeManifestSha256 || entry.runtimeManifestSha256 === manifestActualSha256,
       manifestDriveFileId: entry.runtimeManifestDriveFileId ?? null,
-      files: [...fileIntegrity, {
+      files: [...fileIntegrity, ...(schemaLoaded ? [{
         role: 'RUNTIME_SCHEMA', fileName: manifest.schemaFile.fileName, fileId: manifest.schemaFile.fileId,
         expected: manifest.schemaFile.sha256, actual: schemaLoaded.actualSha256, match: true, bytes: schemaLoaded.bytes, codec: schemaLoaded.codec,
-      }],
+      }] : [])],
     },
   });
 }

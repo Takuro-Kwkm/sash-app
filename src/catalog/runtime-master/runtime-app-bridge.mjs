@@ -198,6 +198,8 @@ export function toRuntimeUiResult(master, state, integration, sourcePackageInteg
     derivedComponents: [...(state.derived_components ?? [])].sort(),
     derivedOptions: [...(state.derived_options ?? [])].sort(),
     clearedFields: [...(state.cleared_fields ?? [])],
+    optionCodeResults: state.option_code_results ?? [],
+    optionCodeLinkageCount: state.option_code_linkage_count ?? 0,
     runtimeCapabilities: master.capabilities ?? null,
     runtimeMaster: {
       masterVersion: integration.masterVersion,

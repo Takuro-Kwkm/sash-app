@@ -13,10 +13,16 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Runtime targeted tests
-        run: node --test test/68-runtime-app-bridge-giesta2-gate.test.mjs test/69-runtime-manifest-giesta2-integration.test.mjs test/70-giesta2-runtime-candidate-integrity.test.mjs test/70-runtime-manifest-ew-integration.test.mjs
+      - name: Lint Runtime UI sources
+        run: npm run lint
+      - name: Typecheck Runtime UI contracts
+        run: npm run typecheck
+      - name: Registered Runtime targeted tests
+        run: node --test test/68-runtime-app-bridge-giesta2-gate.test.mjs test/69-runtime-manifest-giesta2-integration.test.mjs test/70-giesta2-runtime-candidate-integrity.test.mjs test/70-runtime-manifest-ew-integration.test.mjs test/70-runtime-manifest-tw-integration.test.mjs test/71-runtime-ui-tw-gate.test.mjs
       - name: Full repository regression
         run: npm test
+      - name: Build self-contained Runtime UI review preview
+        run: npm run build
 
   runtime_smoke:
     runs-on: ubuntu-latest
@@ -36,9 +42,10 @@ jobs:
             sleep 0.5
           done
           node scripts/giesta2-runtime-smoke.mjs
+          node scripts/tw-runtime-smoke.mjs
           cat /tmp/health.json
           cat /tmp/integrations.json
-          node -e 'const fs=require("fs");const h=JSON.parse(fs.readFileSync("/tmp/health.json","utf8"));const rows=JSON.parse(fs.readFileSync("/tmp/integrations.json","utf8"));const g=rows.find(x=>x.id==="SER-LIXIL-GIESTA2");const ew=rows.find(x=>x.id==="SER-LIX-EW");if(!h.ok||!g||g.status!=="READY"||g.selectable!==true||g.packageVersion!=="v0.8-R1"||g.schemaVersion!=="1.0"||!ew||ew.status!=="READY"||ew.selectable!==true||ew.packageVersion!=="v1.1"||ew.schemaVersion!=="2.0"||ew.sourceHash!=="082442f82f51c4a81050d8e16d5fe3b9cb142004deb371a3e2bbb21384ca37dd")process.exit(1)'
+          node -e 'const fs=require("fs");const h=JSON.parse(fs.readFileSync("/tmp/health.json","utf8"));const rows=JSON.parse(fs.readFileSync("/tmp/integrations.json","utf8"));const g=rows.find(x=>x.id==="SER-LIXIL-GIESTA2");const ew=rows.find(x=>x.id==="SER-LIX-EW");const t=rows.find(x=>x.id==="SER-LIXIL-TW");if(!h.ok||!g||g.status!=="READY"||g.selectable!==true||g.packageVersion!=="v0.8-R1"||g.schemaVersion!=="1.0"||!ew||ew.status!=="READY"||ew.selectable!==true||ew.packageVersion!=="v1.1"||ew.schemaVersion!=="2.0"||ew.sourceHash!=="082442f82f51c4a81050d8e16d5fe3b9cb142004deb371a3e2bbb21384ca37dd"||!t||t.status!=="READY"||t.selectable!==true||t.packageVersion!=="integrated-v0.2"||t.schemaVersion!=="2.0")process.exit(1)'
       - name: Upload Runtime smoke log
         if: always()
         uses: actions/upload-artifact@v4
@@ -47,6 +54,7 @@ jobs:
           path: |
             runtime-smoke.log
             artifacts/giesta2-runtime-smoke
+            artifacts/tw-runtime-smoke
 
   browser_qa:
     runs-on: ubuntu-latest
@@ -75,6 +83,8 @@ jobs:
         run: node test/browser/ew-runtime-browser-qa.mjs
       - name: Giesta2 Runtime Desktop and Smartphone Browser regression QA
         run: node test/browser/giesta2-runtime-browser-qa.mjs
+      - name: TW Runtime Desktop and Smartphone Browser QA
+        run: node test/browser/tw-runtime-browser-qa.mjs
       - name: Giesta2 Runtime candidate parity QA
         run: node test/browser/giesta2-runtime-candidate-parity-qa.mjs
       - name: Existing sales UI Desktop and Smartphone regression QA
@@ -88,6 +98,7 @@ jobs:
             artifacts/ew-runtime-browser-qa
             artifacts/giesta2-runtime-browser-qa
             artifacts/sales-ui-r2/browser
+            artifacts/tw-runtime-browser-qa
             runtime-qa.log
       - name: Stop Runtime
         if: always()
