@@ -119,7 +119,7 @@ jobs:
 
   deploy_production:
     needs: test
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && startsWith(github.event.head_commit.message, 'release: LIXIL EW v1.1 production')
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && github.event.head_commit.message == 'release LIXIL EW v1.1 production'
     runs-on: ubuntu-latest
     environment: production
     env:
@@ -137,7 +137,7 @@ jobs:
       - name: Initialize deployment audit
         run: |
           mkdir -p artifacts/production-deploy
-          printf 'release_merge_sha=%s\nrepository=%s\nref=%s\ncommit_message=%s\n' "$GITHUB_SHA" "$GITHUB_REPOSITORY" "$GITHUB_REF" "${{ github.event.head_commit.message }}" > artifacts/production-deploy/release.txt
+          printf 'release_merge_sha=%s\nrepository=%s\nref=%s\n' "$GITHUB_SHA" "$GITHUB_REPOSITORY" "$GITHUB_REF" > artifacts/production-deploy/release.txt
       - name: Secure deployment preflight
         shell: bash
         run: |
