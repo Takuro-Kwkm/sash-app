@@ -165,10 +165,10 @@ test('partial installability mappings FR-CORNER / FR-AUX / OP-FLAT never auto-pa
   }
 });
 
-test('runtime inventory keeps latest base integrations available alongside Inplus', () => {
+test('runtime inventory preserves production EW/TW integrations alongside Inplus', () => {
   const inventory = runtimeAppIntegrationInventory();
+  assert.deepEqual(new Set(inventory.map((row) => row.id)), new Set(['SER-LIX-EW','SER-LIXIL-TW',PRODUCT_ID]));
   assert.ok(inventory.some((row) => row.id === PRODUCT_ID && row.selectable));
-  assert.ok(inventory.some((row) => row.id === 'SER-LIXIL-GIESTA2' && row.selectable));
+  assert.ok(inventory.some((row) => row.id === 'SER-LIX-EW' && row.selectable));
   assert.ok(inventory.some((row) => row.id === 'SER-LIXIL-TW' && row.selectable));
-  assert.ok(inventory.some((row) => row.manufacturer === 'LIXIL' && row.series === 'XE' && row.selectable));
 });
