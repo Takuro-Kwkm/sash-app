@@ -5,7 +5,9 @@ import { loadManifestRuntimePackage } from './runtime-manifest-loader.mjs';
 import { loadCanonicalWorkbookRuntimePackage } from './canonical-runtime-manifest-loader.mjs';
 import { adaptPhaseMasterMapsV1 } from './phase-master-maps-v1-adapter.mjs';
 import { adaptCanonicalWorkbookReferenceV1 } from './canonical-workbook-reference-v1-adapter.mjs';
+import { adaptTwCanonicalWorkbookReferenceV1 } from './tw-canonical-workbook-reference-v1-adapter.mjs';
 import { evaluateRelationalRuntime } from './relational-runtime-engine.mjs';
+import { evaluateCanonicalWorkbookRuntime } from './canonical-workbook-runtime-engine.mjs';
 import { runtimeApi } from './generic-rule-engine.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -15,6 +17,7 @@ const XE_SHA256 = 'e2e5974e730508f4588afde5811df73032443c0cfc9b2f039ec44f6183865
 const GIESTA2_ROOT = join(HERE, '../runtime-master-packages/lixil-giesta2-v0.8-r1');
 const EW_ROOT = join(HERE, '../runtime-master-packages/lixil-ew-v1.1');
 const EW_RUNTIME_SEGMENTS = ['seg-00','seg-01','seg-02','seg-03','seg-04','seg-05','seg-06','seg-07','seg-08a','seg-08b','seg-08c','seg-08d'];
+const TW_ROOT = join(HERE, '../runtime-master-packages/lixil-tw-integrated-v0.2');
 
 export const runtimeMasterInventory = Object.freeze([
   Object.freeze({
@@ -57,6 +60,20 @@ export const runtimeMasterInventory = Object.freeze([
       }),
     }),
   }),
+  Object.freeze({
+    manufacturer: 'LIXIL', series: 'TW', masterVersion: 'integrated-v0.2', schemaVersion: '2.0',
+    packageType: 'RUNTIME_MANIFEST_V1', adapterType: 'TW_CANONICAL_WORKBOOK_REFERENCE_V1',
+    packageRoot: TW_ROOT,
+    runtimeManifestPath: join(TW_ROOT, 'runtime_manifest.json'),
+    runtimeManifestDriveFileId: '1f9ogJ2pS0HmrUuXG1Qy431lG0mgxN9pw',
+    runtimeManifestSha256: '52af3e462f940df67c267de5f715250290136afdd67a70611e684fcc3d5d064e',
+    materializedFiles: Object.freeze({
+      '1yt4ADBqoK4-5Xqt6bJ593Q4thi81IRzI': Object.freeze({
+        codec: 'brotli',
+        paths: Object.freeze([join(TW_ROOT, 'LIXIL_TW_runtime_integrated-v0.2.json.br.b64.parts/part-00')]),
+      }),
+    }),
+  }),
 ]);
 
 export function getRuntimeMasterEntry(manufacturer, series) {
@@ -70,6 +87,10 @@ function adaptManifestPackage(entry, runtimePackage) {
   }
   if (entry.adapterType === 'CANONICAL_WORKBOOK_REFERENCE_V1') {
     return adaptCanonicalWorkbookReferenceV1(runtimePackage);
+  }
+  if (entry.adapterType === 'TW_CANONICAL_WORKBOOK_REFERENCE_V1') {
+    const master = adaptTwCanonicalWorkbookReferenceV1(runtimePackage);
+    return { master, resolver: (selection) => evaluateCanonicalWorkbookRuntime(master, selection) };
   }
   const error = new Error(`Unsupported Runtime adapter type: ${entry.adapterType}`);
   error.code = 'RUNTIME_ADAPTER_NOT_REGISTERED';

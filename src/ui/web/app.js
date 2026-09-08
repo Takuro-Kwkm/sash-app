@@ -49,6 +49,15 @@ function renderSummary(result){
   $("selectionSummary").classList.toggle("muted",rows.length===0);
   $("selectionSummary").innerHTML=rows.length?rows.join(""):"項目を選択してください。";
 }
+function renderProductCodes(result){
+  const rows=result.optionCodeResults??[],card=$("productCodeCard"),target=$("productCodeResults");
+  card.hidden=rows.length===0;
+  target.innerHTML=rows.map((row)=>{
+    const status={RESOLVED:"確定",SPECIAL_ORDER_NO_STANDARD_SKU:"特注",SOURCE_LIMITATION:"要確認",CONDITION_CONFIRMATION_REQUIRED:"条件確認"}[row.status]??row.status;
+    const value=row.productCode??row.codeTemplates?.join(" / ")??"品番未確定";
+    return `<div data-option-code-status="${esc(row.status)}"><span>${esc(row.label)}<small>${esc(status)}</small></span><strong>${esc(value)}</strong>${row.message?`<small>${esc(row.message)}</small>`:""}</div>`;
+  }).join("");
+}
 
 const selected=(value,current)=>String(value)===String(current)?" selected":"";
 const sizeRecordLabel=(record)=>`${record.sizeCode||record.label}${has(record.actualW)&&has(record.actualH)?` ｜ ${record.actualW}×${record.actualH}mm`:""}`;
@@ -171,7 +180,7 @@ function bindGenericFields(result){
 }
 
 async function resolve(){
-  if(!state.productId){$("dynamicForm").innerHTML="";return;}
+  if(!state.productId){$("dynamicForm").innerHTML="";$("productCodeCard").hidden=true;$("productCodeResults").innerHTML="";return;}
   const revision=++state.resolveRevision,productId=state.productId;
   const q=new URLSearchParams({productId,selection:JSON.stringify(state.selection)});
   const endpoint=state.productSource==="RUNTIME_MASTER"?"/api/runtime-master/resolve":"/api/catalog/resolve";
@@ -183,6 +192,7 @@ async function resolve(){
   const sizeField=state.productSource==="RUNTIME_MASTER"?null:result.fields.find((field)=>field.key==="size");
   if(sizeField)bindSizePresentation(sizeField);else state.sizeDraft=emptySizeDraft();
   renderWarnings(result);renderSummary(result);
+  renderProductCodes(result);
 }
 
 async function init(){
@@ -205,7 +215,7 @@ $("manufacturer").addEventListener("change",()=>{
     disabled:x.selectable===false,
     title:x.blockReason??"",
   })));
-  $("dynamicForm").innerHTML="";$("warnings").innerHTML="";$("selectionSummary").textContent="シリーズを選択してください。";
+  $("dynamicForm").innerHTML="";$("warnings").innerHTML="";$("selectionSummary").textContent="シリーズを選択してください。";$("productCodeCard").hidden=true;$("productCodeResults").innerHTML="";
 });
 $("product").addEventListener("change",async()=>{
   state.resolveRevision+=1;state.productId=$("product").value||null;
