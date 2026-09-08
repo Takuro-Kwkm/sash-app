@@ -3,6 +3,9 @@ import { mkdir, writeFile } from 'node:fs/promises';
 import { chromium } from 'playwright';
 
 const BASE=process.env.QA_BASE_URL??'http://127.0.0.1:4173';
+const extraHTTPHeaders=process.env.VERCEL_TRUSTED_OIDC_TOKEN
+  ?{'x-vercel-trusted-oidc-idp-token':process.env.VERCEL_TRUSTED_OIDC_TOKEN}
+  :{};
 const PRODUCT_ID='SER-LIX-EW';
 const OUT='artifacts/ew-runtime-browser-qa';
 await mkdir(OUT,{recursive:true});
@@ -212,7 +215,7 @@ async function exercise(page){
 }
 
 try{
-  const preflight=await browser.newContext();
+  const preflight=await browser.newContext({extraHTTPHeaders});
   const response=await preflight.request.get(`${BASE}/api/runtime-master/integrations`);
   assert.equal(response.status(),200);
   const integrations=await response.json();
@@ -225,7 +228,7 @@ try{
   assert.equal(ew.sourceHash,'082442f82f51c4a81050d8e16d5fe3b9cb142004deb371a3e2bbb21384ca37dd');
   await preflight.close();
 
-  const desktopContext=await browser.newContext({viewport:{width:1440,height:1000}});
+  const desktopContext=await browser.newContext({viewport:{width:1440,height:1000},extraHTTPHeaders});
   const desktop=await desktopContext.newPage();track(desktop);await openEW(desktop);
   const desktopChecks=await exercise(desktop);
   const desktopOverflow=await desktop.evaluate(()=>document.documentElement.scrollWidth-window.innerWidth);
@@ -234,7 +237,7 @@ try{
   await desktop.screenshot({path:`${OUT}/desktop-1440x1000.png`,fullPage:true});
   await desktopContext.close();
 
-  const mobileContext=await browser.newContext({viewport:{width:390,height:844},isMobile:true,hasTouch:true});
+  const mobileContext=await browser.newContext({viewport:{width:390,height:844},isMobile:true,hasTouch:true,extraHTTPHeaders});
   const mobile=await mobileContext.newPage();track(mobile);await openEW(mobile);
   const mobileChecks=await exercise(mobile);
   const mobileOverflow=await mobile.evaluate(()=>document.documentElement.scrollWidth-window.innerWidth);

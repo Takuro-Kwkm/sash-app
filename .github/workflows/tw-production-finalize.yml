@@ -4,6 +4,10 @@ on:
   push:
     branches: [main]
 
+permissions:
+  contents: read
+  id-token: write
+
 jobs:
   finalize_tw_production:
     if: startsWith(github.event.head_commit.message, 'release LIXIL TW integrated-v0.2 production')
@@ -96,12 +100,20 @@ jobs:
       - name: Deploy fixed merge SHA to Preview
         run: node scripts/vercel-rest-deploy.mjs preview artifacts/tw-production-finalize/preview-deployment.json
 
+      - name: Obtain short-lived GitHub OIDC token for protected Preview QA
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const token = await core.getIDToken();
+            core.setSecret(token);
+            core.exportVariable('VERCEL_TRUSTED_OIDC_TOKEN', token);
+
       - name: Preview smoke and browser QA
         shell: bash
         run: |
           set -euo pipefail
           node -e 'const d=require("./artifacts/tw-production-finalize/preview-deployment.json"); if(d.readyState!=="READY"||d.githubSha!==process.env.GITHUB_SHA||d.mode!=="preview") process.exit(1)'
-          curl -fsS "$DEPLOY_URL/api/health" > artifacts/tw-production-finalize/preview-health.json
+          curl -fsS -H "x-vercel-trusted-oidc-idp-token: $VERCEL_TRUSTED_OIDC_TOKEN" "$DEPLOY_URL/api/health" > artifacts/tw-production-finalize/preview-health.json
           node -e 'const h=require("./artifacts/tw-production-finalize/preview-health.json"); const tw=h.runtimeMasterIntegrations?.find(x=>x.id==="SER-LIXIL-TW"); if(!h.ok||tw?.sourceHash!==process.env.EXPECTED_TW_MANIFEST_SHA) process.exit(1)'
           QA_BASE_URL="$DEPLOY_URL" node test/browser/tw-runtime-browser-qa.mjs
           QA_BASE_URL="$DEPLOY_URL" node test/browser/ew-runtime-browser-qa.mjs
