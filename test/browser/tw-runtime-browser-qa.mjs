@@ -3,6 +3,9 @@ import { mkdir, writeFile } from 'node:fs/promises';
 import { chromium } from 'playwright';
 
 const BASE = process.env.QA_BASE_URL ?? 'http://127.0.0.1:4173';
+const extraHTTPHeaders = process.env.VERCEL_TRUSTED_OIDC_TOKEN
+  ? { 'x-vercel-trusted-oidc-idp-token': process.env.VERCEL_TRUSTED_OIDC_TOKEN }
+  : {};
 const PRODUCT_ID = 'SER-LIXIL-TW';
 const OUT = 'artifacts/tw-runtime-browser-qa';
 await mkdir(OUT, { recursive:true });
@@ -70,7 +73,7 @@ try {
     { key:'desktop', viewport:{ width:1440, height:1000 }, mobile:false },
     { key:'mobile', viewport:{ width:390, height:844 }, mobile:true },
   ]) {
-    const context = await browser.newContext({ viewport:config.viewport, isMobile:config.mobile, hasTouch:config.mobile });
+    const context = await browser.newContext({ viewport:config.viewport, isMobile:config.mobile, hasTouch:config.mobile, extraHTTPHeaders });
     const page = await context.newPage(); track(page); await openTw(page);
     const checks = await exercise(page);
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
