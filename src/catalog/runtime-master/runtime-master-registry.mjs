@@ -5,12 +5,14 @@ import { loadManifestRuntimePackage } from './runtime-manifest-loader.mjs';
 import { adaptPhaseMasterMapsV1 } from './phase-master-maps-v1-adapter.mjs';
 import { evaluateRelationalRuntime } from './relational-runtime-engine.mjs';
 import { runtimeApi } from './generic-rule-engine.mjs';
+import { adaptSemanticTableBundleV2, evaluateSemanticTableBundleV2 } from './semantic-table-bundle-v2-adapter.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const XE_PARTS = ['part-00','part-01','part-02a1','part-02a2a','part-02b','part-03','part-04','part-05'];
 const XE_B64 = XE_PARTS.map((name) => join(HERE, `../runtime-master-packages/lixil-xe/XE_V1_0_RC.source.zip.b64.parts/${name}`));
 const XE_SHA256 = 'e2e5974e730508f4588afde5811df73032443c0cfc9b2f039ec44f61838653aa';
 const GIESTA2_ROOT = join(HERE, '../runtime-master-packages/lixil-giesta2-v0.8-r1');
+const INPLUS_ROOT = join(HERE, '../runtime-master-packages/lixil-inplus-v0.4-r1');
 
 export const runtimeMasterInventory = Object.freeze([
   Object.freeze({
@@ -39,6 +41,29 @@ export const runtimeMasterInventory = Object.freeze([
       }),
     }),
   }),
+  Object.freeze({
+    manufacturer: 'LIXIL', series: 'インプラス', masterVersion: 'v0.4-R1', schemaVersion: '2.0',
+    packageType: 'RUNTIME_MANIFEST_V1', adapterType: 'SEMANTIC_TABLE_BUNDLE_V2',
+    packageRoot: INPLUS_ROOT,
+    runtimeManifestPath: join(INPLUS_ROOT, 'runtime_manifest.json'),
+    runtimeManifestDriveFileId: '1iPSLxyziMGXUN71-cSvQO8SRfudx80Qf',
+    runtimeManifestSha256: '39017746404c98b59a3238890bfece9f46acb122870def6a1361472dad5390ed',
+    materializedFiles: Object.freeze({
+      '1VREtyCeLgiGD4ereIDGLLPfsea3d-ac5': Object.freeze({
+        codec: 'gzip',
+        paths: Object.freeze([
+          join(INPLUS_ROOT, 'LIXIL_インプラス_runtime_v0.4-R1.json.gz.b64.parts/part-00'),
+          join(INPLUS_ROOT, 'LIXIL_インプラス_runtime_v0.4-R1.json.gz.b64.parts/part-01'),
+          join(INPLUS_ROOT, 'LIXIL_インプラス_runtime_v0.4-R1.json.gz.b64.parts/part-02'),
+          join(INPLUS_ROOT, 'LIXIL_インプラス_runtime_v0.4-R1.json.gz.b64.parts/part-03'),
+        ]),
+      }),
+      '1re25pGC5Zo0ytwD2snL0OPsfYSW6Ymqc': Object.freeze({
+        codec: 'gzip',
+        paths: Object.freeze([join(INPLUS_ROOT, 'LIXIL_インプラス_runtime_v0.4-R1.schema.json.gz.b64')]),
+      }),
+    }),
+  }),
 ]);
 
 export function getRuntimeMasterEntry(manufacturer, series) {
@@ -47,6 +72,7 @@ export function getRuntimeMasterEntry(manufacturer, series) {
 
 function adaptManifestPackage(entry, runtimePackage) {
   if (entry.adapterType === 'PHASE_MASTER_MAPS_V1') return adaptPhaseMasterMapsV1(runtimePackage);
+  if (entry.adapterType === 'SEMANTIC_TABLE_BUNDLE_V2') return adaptSemanticTableBundleV2(runtimePackage);
   const error = new Error(`Unsupported Runtime adapter type: ${entry.adapterType}`);
   error.code = 'RUNTIME_ADAPTER_NOT_REGISTERED';
   throw error;
@@ -58,11 +84,14 @@ export async function loadRegisteredRuntime(manufacturer, series) {
   if (entry.packageType === 'RUNTIME_MANIFEST_V1') {
     const runtimePackage = await loadManifestRuntimePackage(entry);
     const master = adaptManifestPackage(entry, runtimePackage);
+    const resolver = entry.adapterType === 'SEMANTIC_TABLE_BUNDLE_V2'
+      ? (selection) => evaluateSemanticTableBundleV2(master, selection)
+      : (selection) => evaluateRelationalRuntime(master, selection);
     return Object.freeze({
       entry,
       master,
       api: null,
-      resolver: (selection) => evaluateRelationalRuntime(master, selection),
+      resolver,
       sourcePackageIntegrity: runtimePackage.integrity,
       normalizedManifest: runtimePackage.manifest,
     });
