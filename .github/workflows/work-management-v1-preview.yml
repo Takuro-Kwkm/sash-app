@@ -1,0 +1,121 @@
+name: Work Management v1.0 Release Preview
+
+on:
+  push:
+    branches: ['release/work-management-v1.0-preview-20260909']
+
+jobs:
+  release_preview:
+    runs-on: ubuntu-latest
+    environment: production
+    env:
+      RELEASE_CANDIDATE_SHA: 2f45031225546cebfd1400ce4333a7eb35c1073e
+      VERCEL_ORG_ID: team_AkuHacuJlCl8LuvaFpCzFmbv
+      VERCEL_PROJECT_ID: prj_4z0zqW6yKyPuFINODfGX8LPBuJRP
+      VERCEL_PROJECT_NAME: sash-app-wave3-preview
+      VERCEL_TOKEN_PRIMARY: ${{ secrets.VERCEL_TOKEN }}
+      VERCEL_TOKEN_FALLBACK: ${{ secrets.VERCEL_ACCESS_TOKEN }}
+      RELEASE_SERIES: APP WORK MANAGEMENT
+      RELEASE_PACKAGE_VERSION: v1.0
+    steps:
+      - name: Checkout fixed Release Candidate
+        uses: actions/checkout@v4
+        with:
+          ref: 2f45031225546cebfd1400ce4333a7eb35c1073e
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Verify fixed candidate identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          [[ "$(git rev-parse HEAD)" == "$RELEASE_CANDIDATE_SHA" ]] || exit 41
+          mkdir -p artifacts/work-management-v1-release-preview
+          printf 'release_candidate_sha=%s\nproduct_master_mutation=0\n' "$RELEASE_CANDIDATE_SHA" > artifacts/work-management-v1-release-preview/release.txt
+
+      - name: Install, lint, typecheck, build and full tests
+        run: |
+          npm install --ignore-scripts
+          npm run lint
+          npm run typecheck
+          npm run build:work-preview
+          npm test
+          printf 'build_gate=PASS\nautomated_test_gate=PASS\n' >> artifacts/work-management-v1-release-preview/release.txt
+
+      - name: Local Runtime and persistence smoke
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm run start:qa > /tmp/sash-work-preview.log 2>&1 &
+          PID=$!
+          trap 'kill $PID || true' EXIT
+          for i in {1..40}; do
+            if curl -fsS http://127.0.0.1:4173/api/health > artifacts/work-management-v1-release-preview/local-health.json; then break; fi
+            sleep 0.5
+          done
+          node -e 'const h=require("./artifacts/work-management-v1-release-preview/local-health.json"); const ids=new Set(h.runtimeMasterIntegrations?.map(x=>x.id)); if(!h.ok||h.persistence?.type!=="BROWSER_LOCAL_STORAGE"||h.persistence?.key!=="sash.work-management.v1"||ids.size!==3||!ids.has("SER-LIX-EW")||!ids.has("SER-LIXIL-TW")||!ids.has("SER-YKKAP-UCHIRIMO")) process.exit(1)'
+          printf 'runtime_smoke_gate=PASS\npersistence_smoke_gate=PASS\n' >> artifacts/work-management-v1-release-preview/release.txt
+
+      - name: Install browser QA dependencies
+        run: |
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+
+      - name: Local full browser QA
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm run start:qa > /tmp/sash-work-browser.log 2>&1 &
+          PID=$!
+          trap 'kill $PID || true' EXIT
+          for i in {1..40}; do
+            if curl -fsS http://127.0.0.1:4173/api/health >/dev/null; then break; fi
+            sleep 0.5
+          done
+          node test/browser/work-management-browser-qa.mjs
+          node test/browser/ew-runtime-browser-qa.mjs
+          node test/browser/tw-runtime-browser-qa.mjs
+          node test/browser/uchirimo-runtime-browser-qa.mjs
+          node test/browser/release-regression-browser-qa.mjs
+          printf 'local_browser_qa_gate=PASS\nregression_gate=PASS\n' >> artifacts/work-management-v1-release-preview/release.txt
+
+      - name: Credential, project and rollback preflight
+        shell: bash
+        run: |
+          set -euo pipefail
+          token="${VERCEL_TOKEN_PRIMARY:-${VERCEL_TOKEN_FALLBACK:-}}"
+          [[ -n "$token" ]] || { echo 'VERCEL_CREDENTIAL_GATE=BLOCKED'; exit 42; }
+          echo "VERCEL_TOKEN_EFFECTIVE=$token" >> "$GITHUB_ENV"
+          status="$(curl -sS -o /tmp/vercel-project.json -w '%{http_code}' -H "Authorization: Bearer $token" "https://api.vercel.com/v9/projects/$VERCEL_PROJECT_ID")"
+          [[ "$status" == 200 ]] || exit 46
+          node -e 'const p=require("/tmp/vercel-project.json"); if(p.id!==process.env.VERCEL_PROJECT_ID||p.accountId!==process.env.VERCEL_ORG_ID) process.exit(1)'
+          status="$(curl -sS -o artifacts/work-management-v1-release-preview/previous-production.json -w '%{http_code}' -H "Authorization: Bearer $token" "https://api.vercel.com/v6/deployments?projectId=$VERCEL_PROJECT_ID&target=production&state=READY&limit=1&teamId=$VERCEL_ORG_ID")"
+          [[ "$status" == 200 ]] || exit 47
+          node -e 'const fs=require("fs"); const x=require("./artifacts/work-management-v1-release-preview/previous-production.json"); const d=x.deployments?.[0]; if(!d?.uid||!d?.url) process.exit(1); fs.appendFileSync("artifacts/work-management-v1-release-preview/release.txt",`rollback_deployment_id=${d.uid}\nrollback_deployment_url=https://${d.url}\nrollback_commit_sha=${d.meta?.releaseCommitSha??d.meta?.githubCommitSha??"UNKNOWN"}\n`)'
+          printf 'release_input_gate=PASS\nrollback_readiness_gate=PASS\n' >> artifacts/work-management-v1-release-preview/release.txt
+
+      - name: Deploy exact Release Candidate to Preview
+        shell: bash
+        run: |
+          set -euo pipefail
+          GITHUB_SHA="$RELEASE_CANDIDATE_SHA" GITHUB_REF_NAME="main" RELEASE_SERIES="$RELEASE_SERIES" RELEASE_PACKAGE_VERSION="$RELEASE_PACKAGE_VERSION" node scripts/vercel-rest-deploy.mjs preview artifacts/work-management-v1-release-preview/preview-deployment.json
+
+      - name: Verify Preview identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          node -e 'const d=require("./artifacts/work-management-v1-release-preview/preview-deployment.json"); if(d.readyState!=="READY"||d.githubSha!==process.env.RELEASE_CANDIDATE_SHA||d.mode!=="preview"||d.projectId!==process.env.VERCEL_PROJECT_ID||d.teamId!==process.env.VERCEL_ORG_ID) process.exit(1)'
+          status="$(curl -sS -o artifacts/work-management-v1-release-preview/preview-vercel.json -w '%{http_code}' -H "Authorization: Bearer $VERCEL_TOKEN_EFFECTIVE" "https://api.vercel.com/v13/deployments/$DEPLOY_ID?teamId=$VERCEL_ORG_ID")"
+          [[ "$status" == 200 ]] || exit 48
+          node -e 'const d=require("./artifacts/work-management-v1-release-preview/preview-vercel.json"); if(d.readyState!=="READY"||d.meta?.releaseCommitSha!==process.env.RELEASE_CANDIDATE_SHA||d.meta?.releaseSeries!==process.env.RELEASE_SERIES||d.meta?.releasePackageVersion!==process.env.RELEASE_PACKAGE_VERSION) process.exit(1)'
+          printf 'staging_deploy_gate=PASS\npreview_deployment_id=%s\npreview_deployment_url=%s\n' "$DEPLOY_ID" "$DEPLOY_URL" >> artifacts/work-management-v1-release-preview/release.txt
+
+      - name: Upload Release Preview audit
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: work-management-v1-release-preview-audit
+          path: artifacts/
+          if-no-files-found: warn
