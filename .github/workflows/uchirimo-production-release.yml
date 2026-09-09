@@ -61,11 +61,21 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          status="$(curl -sS -o /tmp/share.json -w '%{http_code}' -X PATCH \
-            -H "Authorization: Bearer $VERCEL_TOKEN_EFFECTIVE" \
-            -H 'Content-Type: application/json' \
-            "https://api.vercel.com/aliases/$PREVIEW_HOST/protection-bypass?teamId=$VERCEL_ORG_ID" \
-            --data '{"ttl":1800}')"
+          endpoint="https://api.vercel.com/aliases/$PREVIEW_HOST/protection-bypass?teamId=$VERCEL_ORG_ID"
+          create_share() {
+            curl -sS -o /tmp/share.json -w '%{http_code}' -X PATCH \
+              -H "Authorization: Bearer $VERCEL_TOKEN_EFFECTIVE" \
+              -H 'Content-Type: application/json' \
+              "$endpoint" --data '{"ttl":1800}'
+          }
+          status="$(create_share)"
+          if [[ "$status" == "409" ]]; then
+            code="$(node -e 'const r=require("/tmp/share.json"); process.stdout.write(String(r.error?.code??r.code??""))')"
+            if [[ "$code" == "protection_bypass_conflict" ]]; then
+              curl -sS -X PATCH -H "Authorization: Bearer $VERCEL_TOKEN_EFFECTIVE" -H 'Content-Type: application/json' "$endpoint" --data '{"revoke":{}}' >/dev/null
+              status="$(create_share)"
+            fi
+          fi
           if [[ "$status" != "200" ]]; then
             echo "PREVIEW_BROWSER_ACCESS_GATE=BLOCKED status=$status"
             node -e 'const r=require("/tmp/share.json"); console.error({error:r.error?.code??r.code??"unknown",message:r.error?.message??r.message??"unknown"})'
