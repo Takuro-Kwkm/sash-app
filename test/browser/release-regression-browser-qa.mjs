@@ -52,8 +52,8 @@ try {
   const runtime=await context.request.get(`${BASE}/api/runtime-master/integrations`);
   assert.equal(runtime.status(),200);
   const integrations=await runtime.json();
-  assert.equal(integrations.length,2);
-  assert.deepEqual(new Set(integrations.map((row)=>row.id)),new Set(['SER-LIX-EW','SER-LIXIL-TW']));
+  assert.equal(integrations.length,3);
+  assert.deepEqual(new Set(integrations.map((row)=>row.id)),new Set(['SER-LIX-EW','SER-LIXIL-TW','SER-YKKAP-UCHIRIMO']));
   assert.ok(integrations.every((row)=>row.selectable&&row.status==='READY'));
   assert.deepEqual(report.consoleErrors,[]);
   assert.deepEqual(report.pageErrors,[]);

@@ -121,7 +121,7 @@ function choicesFor(master, def, fieldState) {
   const byValue = new Map(rows.map((row) => [JSON.stringify(row.canonical_value), row]));
   return (fieldState.allowed_values ?? []).filter((value) => {
     const row = byValue.get(JSON.stringify(value));
-    return row?.user_selectable !== false;
+    return row?.user_selectable !== false || fieldState.readOnly || def.show_read_only === true;
   }).map((value) => {
     const row = byValue.get(JSON.stringify(value));
     return {
@@ -145,7 +145,7 @@ export function toRuntimeUiResult(master, state, integration, sourcePackageInteg
   for (const [index, def] of master.fields.entries()) {
     const fieldState = state.fields[def.field_name];
     if (!fieldState || fieldState.visibility === 'HIDE' || def.runtime_included === false) continue;
-    if (def.selection_mode === 'DERIVED' || def.selection_mode === 'FIXED') continue;
+    if ((def.selection_mode === 'DERIVED' || def.selection_mode === 'FIXED') && def.show_read_only !== true) continue;
     visible.push({
       key: def.field_name,
       displayLabel: fieldState.display_label ?? labelFrom(def, humanizeFieldName(def.field_name)),
@@ -184,11 +184,16 @@ export function toRuntimeUiResult(master, state, integration, sourcePackageInteg
     dependencyFields: master.fields.map((def) => ({ key: def.field_name, parentFields: def.parent_fields ?? [] })),
     fields: orderedVisible,
     notices: [
+      ...((state.order_ready ?? master.capabilities?.orderReady) === false
+        ? ['ORDER_READY = false：営業見積入力用です。発注確定にはメーカー確認が必要です。'] : []),
       ...(state.warnings ?? []).map(warningText),
       ...(state.derived_entities ?? []).map(row => `${({ REQUIRES: '必要', ENABLES: '有効', FIXES: '固定' })[row.relationship]}: ${row.displayLabel}${row.note ? `（${row.note}）` : ''}`),
       ...((state.derived_options ?? []).length ? [`自動適用オプション: ${(state.derived_options ?? []).map((id) => labelFrom(master.values.find((row) => row.field_name === 'option' && row.canonical_value === id), id)).join('、')}`] : []),
     ],
-    manualWarnings: (state.matched_invalid_rules ?? []).map((ruleId) => `成立不可Rule: ${ruleId}`),
+    manualWarnings: [
+      ...(state.manual_warnings ?? []),
+      ...(state.matched_invalid_rules ?? []).map((ruleId) => `成立不可Rule: ${ruleId}`),
+    ],
     validation: {
       status: state.status,
       errors,
@@ -201,6 +206,8 @@ export function toRuntimeUiResult(master, state, integration, sourcePackageInteg
     optionCodeResults: state.option_code_results ?? [],
     optionCodeLinkageCount: state.option_code_linkage_count ?? 0,
     runtimeCapabilities: master.capabilities ?? null,
+    dimensionResult: state.dimension_result ?? null,
+    orderReady: state.order_ready ?? master.capabilities?.orderReady ?? null,
     runtimeMaster: {
       masterVersion: integration.masterVersion,
       packageVersion: integration.packageVersion,

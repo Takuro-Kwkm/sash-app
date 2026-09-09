@@ -1,4 +1,5 @@
 export const NEW_CONSTRUCTION_EXTERIOR_WINDOW_UI_CATEGORY = 'NEW_CONSTRUCTION_EXTERIOR_WINDOW';
+import { INNER_WINDOW_UI_CATEGORY, applyInnerWindowUiOrder } from './inner-window-runtime-ui-contract.mjs';
 
 // UI実装標準仕様書 v1.5 §15.1 / §15.4 / §15.5.
 // Runtime owns existence, values and dependencies. This contract owns only the fixed presentation slots.
@@ -64,6 +65,7 @@ export function applyNewConstructionSashUiOrder(fields = []) {
 }
 
 export function applyRuntimeUiCategoryOrder(fields = [], integration = {}) {
+  if (integration.uiCategory === INNER_WINDOW_UI_CATEGORY) return applyInnerWindowUiOrder(fields);
   if (integration.uiCategory === NEW_CONSTRUCTION_EXTERIOR_WINDOW_UI_CATEGORY) {
     return applyNewConstructionSashUiOrder(fields);
   }

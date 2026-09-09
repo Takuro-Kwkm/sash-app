@@ -37,6 +37,24 @@ export const appRuntimeIntegrationRegistry = Object.freeze([
     adapterType: 'TW_CANONICAL_WORKBOOK_REFERENCE_V1',
     uiStandardSpec: 'サッシ情報管理アプリ_UI実装標準仕様書_v1.5',
   }),
+  Object.freeze({
+    id: 'SER-YKKAP-UCHIRIMO',
+    manufacturer: 'YKK AP',
+    series: 'ウチリモ 内窓',
+    displayName: 'ウチリモ 内窓',
+    productCategory: 'sash',
+    uiCategory: 'INNER_WINDOW',
+    registrySeriesKey: 'YKK AP::ウチリモ 内窓',
+    canonicalRuntimeReference: Object.freeze({
+      runtimeManifestDriveFileId: '1119yamXn21wLZd3C8LvamNWsTAx_1dt2',
+      canonicalFolderId: '1-flyN0KX2zdqXbebX2kVF4VRW0jTSrQu',
+    }),
+    packageVersion: 'v1.0-P7R1-R2',
+    schemaVersion: '2.0',
+    sourceHash: 'be4f1f77727424dc06ddf9de947201f33d4aee5219b182e37d0f178e1fb7147d',
+    adapterType: 'UCHIRIMO_TABULAR_V1',
+    uiStandardSpec: 'サッシ情報管理アプリ_UI実装標準仕様書_v1.6',
+  }),
 ]);
 
 export function getAppRuntimeIntegrationMetadata(manufacturer, series) {
