@@ -16,7 +16,7 @@ function track(page) {
   page.on('response', (response) => { if (response.status() >= 400) report.failedResponses.push({ status:response.status(), url:response.url() }); });
 }
 async function openTw(page) {
-  const entry = SHARE_TOKEN ? `${BASE}/?_vercel_share=${encodeURIComponent(SHARE_TOKEN)}` : BASE;
+  const entry = SHARE_TOKEN ? `${BASE}/runtime-lab?_vercel_share=${encodeURIComponent(SHARE_TOKEN)}` : `${BASE}/runtime-lab`;
   await page.goto(entry, { waitUntil:'networkidle' });
   await page.waitForFunction(() => document.querySelector('#status')?.textContent === 'CATALOG CONNECTED');
   await page.selectOption('#manufacturer', 'LIXIL');

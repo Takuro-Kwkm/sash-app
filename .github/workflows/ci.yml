@@ -23,6 +23,11 @@ jobs:
           node --check api/index.mjs
           node --check src/server/recovery-app.mjs
           node --check src/ui/web/app.js
+          node --check src/ui/web/product-configuration-editor.mjs
+          node --check src/work-management/domain.mjs
+          node --check src/work-management/storage.mjs
+          node --check src/work-management/repositories.mjs
+          node --check src/work-management/service.mjs
           node --check src/catalog/runtime-master/runtime-app-bridge.mjs
           node --check src/catalog/runtime-master/runtime-master-registry.mjs
       - name: Full repository tests
@@ -46,7 +51,7 @@ jobs:
         run: |
           npm install --no-save playwright@1.55.0
           npx playwright install --with-deps chromium
-      - name: Uchirimo/EW/TW desktop/mobile browser QA and existing-series regression
+      - name: Uchirimo/EW/TW desktop/mobile browser QA, work-management QA and existing-series regression
         run: |
           npm run start:qa > /tmp/sash-v2-browser.log 2>&1 &
           PID=$!
@@ -59,11 +64,12 @@ jobs:
           node test/browser/tw-runtime-browser-qa.mjs
           node test/browser/uchirimo-runtime-browser-qa.mjs
           node test/browser/release-regression-browser-qa.mjs
+          node test/browser/work-management-browser-qa.mjs
       - name: Upload browser QA artifacts
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: runtime-ui-browser-qa
+          name: runtime-and-work-management-browser-qa
           path: artifacts/
 
   release_build_preflight:
@@ -165,10 +171,7 @@ jobs:
           fi
           echo "VERCEL_TOKEN_EFFECTIVE=$token" >> "$GITHUB_ENV"
           status="$(curl -sS -o /tmp/vercel-project.json -w '%{http_code}' -H "Authorization: Bearer $token" "https://api.vercel.com/v9/projects/$VERCEL_PROJECT_ID")"
-          if [[ "$status" != "200" ]]; then
-            echo "VERCEL_PROJECT_ACCESS_GATE=BLOCKED status=$status"
-            exit 46
-          fi
+          if [[ "$status" != "200" ]]; then exit 46; fi
           node -e 'const p=require("/tmp/vercel-project.json"); if(p.id!==process.env.VERCEL_PROJECT_ID||p.accountId!==process.env.VERCEL_ORG_ID) process.exit(1)'
           printf 'credential_gate=PASS\nproject_access_gate=PASS\n' >> artifacts/production-deploy/release.txt
           echo "VERCEL_CREDENTIAL_GATE=PASS"

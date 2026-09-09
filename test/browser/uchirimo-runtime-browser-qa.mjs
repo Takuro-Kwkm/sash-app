@@ -20,12 +20,14 @@ function matchesRuntimeSelection(response, key, value) {
   if (response.status() !== 200 || !response.url().includes('/api/runtime-master/resolve')) return false;
   try {
     const selection = JSON.parse(new URL(response.url()).searchParams.get('selection') ?? '{}');
-    return typeof value === 'number' ? Number(selection[key]) === value : String(selection[key]) === String(value);
+    const actual = selection[key];
+    if (Array.isArray(actual)) return actual.some((one) => String(one) === String(value));
+    return typeof value === 'number' ? Number(actual) === value : String(actual) === String(value);
   } catch { return false; }
 }
 
 async function openUchirimo(page) {
-  const entry = SHARE_TOKEN ? `${BASE}/?_vercel_share=${encodeURIComponent(SHARE_TOKEN)}` : BASE;
+  const entry = SHARE_TOKEN ? `${BASE}/runtime-lab?_vercel_share=${encodeURIComponent(SHARE_TOKEN)}` : `${BASE}/runtime-lab`;
   await page.goto(entry, { waitUntil:'networkidle' });
   await page.waitForFunction(() => document.querySelector('#status')?.textContent === 'CATALOG CONNECTED');
   await page.selectOption('#manufacturer', 'YKK AP');
@@ -37,15 +39,29 @@ async function openUchirimo(page) {
   return result;
 }
 
-async function choose(page, key, value) {
-  const locator = page.locator(`[data-spec-key="${key}"]`);
-  await locator.waitFor();
-  const response = page.waitForResponse((row) => matchesRuntimeSelection(row, key, value));
+async function triggerChoice(locator, value) {
   if (typeof value === 'number') {
     await locator.fill(String(value));
     await locator.dispatchEvent('change');
-  } else await locator.selectOption(String(value));
-  return (await response).json();
+  } else {
+    await locator.selectOption(String(value));
+  }
+}
+
+async function choose(page, key, value) {
+  const locator = page.locator(`[data-spec-key="${key}"]`);
+  await locator.waitFor();
+  for (let attempt = 1; attempt <= 2; attempt += 1) {
+    const response = page.waitForResponse((row) => matchesRuntimeSelection(row, key, value), { timeout:15000 });
+    await triggerChoice(locator, value);
+    try {
+      return await (await response).json();
+    } catch (error) {
+      if (attempt === 2) throw new Error(`runtime response timeout for ${key}=${String(value)} after retry`, { cause:error });
+      await page.waitForTimeout(100);
+    }
+  }
+  throw new Error(`unreachable choose failure for ${key}`);
 }
 
 async function chooseIfAvailable(page, result, key, preferred) {
