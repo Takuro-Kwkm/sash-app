@@ -418,8 +418,8 @@ function buildState(model, input = {}) {
     };
   }
   const missing = [...required].filter((field) => !has(selection[field]));
-  let status = errors.length ? 'INVALID' : missing.length ? 'PENDING' : dimension.status === 'BLOCK' ? 'BLOCKED' : dimension.status === 'REVIEW_REQUIRED' ? 'MANUAL_CHECK' : 'VALID';
-  if (!errors.length && exceptions.some((row) => ['MANUAL_CHECK', 'MANUAL_CHECK_REQUIRED', 'SPECIAL_CHECK_REQUIRED'].includes(row.status))) status = 'MANUAL_CHECK';
+  let status = errors.length ? 'INVALID' : dimension.status === 'BLOCK' ? 'BLOCKED' : missing.length ? 'PENDING' : dimension.status === 'REVIEW_REQUIRED' ? 'MANUAL_CHECK' : 'VALID';
+  if (status !== 'INVALID' && status !== 'BLOCKED' && exceptions.some((row) => ['MANUAL_CHECK', 'MANUAL_CHECK_REQUIRED', 'SPECIAL_CHECK_REQUIRED'].includes(row.status))) status = 'MANUAL_CHECK';
   return {
     fields, warnings: notices, manual_warnings: manualWarnings, errors,
     missing_required_fields: missing, status, cleared_fields: unique(cleared),

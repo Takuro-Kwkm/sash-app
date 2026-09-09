@@ -106,6 +106,9 @@ test('manual and special-check routes remain non-PASS while ORDER_READY stays fa
   let result = await resolveRuntimeAppProduct(PRODUCT, { ...baseNode, ...semantic(pick('GSC-SG-W3')), size_w: 500, size_h: 500 });
   assert.equal(result.validation.status, 'MANUAL_CHECK');
   assert.ok(result.manualWarnings.some((message) => message.includes('メーカー見積')));
+  result = await resolveRuntimeAppProduct(PRODUCT, { ...baseNode, ...semantic(pick('GSC-SG-W3')), size_w: 100, size_h: 500 });
+  assert.equal(result.dimensionResult.status, 'BLOCK');
+  assert.equal(result.validation.status, 'BLOCKED', 'dimension BLOCK must take precedence over MANUAL_CHECK');
   result = await resolveRuntimeAppProduct(PRODUCT, { room_specification: 'residential', window_type: 'sliding_window', sash_configuration: 'two_panel', size_class: 'window', ...semantic(pick('GSC-IGU-P5P3')), size_w: 800, size_h: 800 });
   assert.equal(result.validation.status, 'MANUAL_CHECK');
   assert.ok(result.manualWarnings.some((message) => message.includes('P5-UCH-117')));
