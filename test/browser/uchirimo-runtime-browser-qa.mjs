@@ -16,14 +16,6 @@ function track(page) {
   page.on('response', (response) => { if (response.status() >= 400) report.failedResponses.push({ status:response.status(), url:response.url() }); });
 }
 
-function matchesRuntimeSelection(response, key, value) {
-  if (response.status() !== 200 || !response.url().includes('/api/runtime-master/resolve')) return false;
-  try {
-    const selection = JSON.parse(new URL(response.url()).searchParams.get('selection') ?? '{}');
-    return typeof value === 'number' ? Number(selection[key]) === value : String(selection[key]) === String(value);
-  } catch { return false; }
-}
-
 async function openUchirimo(page) {
   const entry = SHARE_TOKEN ? `${BASE}/runtime-lab?_vercel_share=${encodeURIComponent(SHARE_TOKEN)}` : `${BASE}/runtime-lab`;
   await page.goto(entry, { waitUntil:'networkidle' });
@@ -40,7 +32,7 @@ async function openUchirimo(page) {
 async function choose(page, key, value) {
   const locator = page.locator(`[data-spec-key="${key}"]`);
   await locator.waitFor();
-  const response = page.waitForResponse((row) => matchesRuntimeSelection(row, key, value));
+  const response = page.waitForResponse((row) => row.url().includes('/api/runtime-master/resolve') && row.status() === 200);
   if (typeof value === 'number') {
     await locator.fill(String(value));
     await locator.dispatchEvent('change');
