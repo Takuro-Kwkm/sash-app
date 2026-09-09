@@ -1,9 +1,11 @@
-name: YKK AP Uchirimo v1.0-P7R1-R2 Production Deploy
+name: YKK AP Uchirimo v1.0-P7R1-R2 Production Smoke
 
 on:
   push:
     branches:
       - release/ykkap-uchirimo-v1.0-p7r1-r2-production-20260909
+    paths:
+      - .github/workflows/uchirimo-production-release.yml
 
 permissions:
   contents: read
@@ -14,15 +16,15 @@ env:
   EXPECTED_MANIFEST_FILE_ID: 1119yamXn21wLZd3C8LvamNWsTAx_1dt2
   VERCEL_ORG_ID: team_AkuHacuJlCl8LuvaFpCzFmbv
   VERCEL_PROJECT_ID: prj_4z0zqW6yKyPuFINODfGX8LPBuJRP
-  VERCEL_PROJECT_NAME: sash-app-wave3-preview
   PRODUCTION_URL: https://sash-app-wave3-preview.vercel.app
+  PRODUCTION_DEPLOYMENT_ID: dpl_2JJ4x8rdn3nxmogV7x8AgMda4G8e
   RELEASE_SERIES: YKK AP ウチリモ 内窓
   RELEASE_PACKAGE_VERSION: v1.0-P7R1-R2
   ROLLBACK_DEPLOYMENT_ID: dpl_3rJDZtmuhRdnafYj1rrPF7oPaaXd
   ROLLBACK_COMMIT_SHA: 1d4438783f07c0affb681954498a0c3e67752c81
 
 jobs:
-  production_deploy:
+  production_smoke:
     runs-on: ubuntu-latest
     environment: production
     env:
@@ -40,7 +42,7 @@ jobs:
         with:
           node-version: 24
 
-      - name: Release input and rollback readiness preflight
+      - name: Production identity and rollback readiness preflight
         shell: bash
         working-directory: rc
         run: |
@@ -50,96 +52,144 @@ jobs:
           test -n "$token"
           echo "VERCEL_TOKEN_EFFECTIVE=$token" >> "$GITHUB_ENV"
 
-          status="$(curl -sS -o /tmp/project.json -w '%{http_code}' \
-            -H "Authorization: Bearer $token" \
-            "https://api.vercel.com/v9/projects/$VERCEL_PROJECT_ID?teamId=$VERCEL_ORG_ID")"
-          test "$status" = "200"
-          node -e 'const p=require("/tmp/project.json"); if(p.id!==process.env.VERCEL_PROJECT_ID||p.accountId!==process.env.VERCEL_ORG_ID) process.exit(1)'
-
-          status="$(curl -sS -o /tmp/rollback.json -w '%{http_code}' \
-            -H "Authorization: Bearer $token" \
-            "https://api.vercel.com/v13/deployments/$ROLLBACK_DEPLOYMENT_ID?teamId=$VERCEL_ORG_ID")"
-          test "$status" = "200"
-          node -e 'const d=require("/tmp/rollback.json"); if(d.readyState!=="READY"||d.target!=="production"||d.meta?.releaseCommitSha!==process.env.ROLLBACK_COMMIT_SHA) process.exit(1)'
-          echo "RELEASE_INPUT_GATE=PASS"
-          echo "ROLLBACK_TARGET_PREFLIGHT=PASS"
-
-      - name: Revalidate exact RC build before production
-        working-directory: rc
-        run: |
-          npm install --ignore-scripts
-          npm run lint
-          npm run typecheck
-          npm test
-          npm run build:uchirimo-review
-          echo "BUILD_GATE=PASS"
-
-      - name: Deploy exact RC to Production
-        id: deploy
-        shell: bash
-        working-directory: rc
-        run: |
-          set -euo pipefail
-          mkdir -p artifacts/uchirimo-release-production
-          env -u GITHUB_SHA node scripts/vercel-rest-deploy.mjs production artifacts/uchirimo-release-production/production-deployment.json
-          node - <<'NODE'
-          const fs=require('fs');
-          const d=JSON.parse(fs.readFileSync('artifacts/uchirimo-release-production/production-deployment.json','utf8'));
-          if(d.readyState!=='READY'||d.githubSha!==process.env.RELEASE_CANDIDATE_SHA||d.mode!=='production'||d.projectId!==process.env.VERCEL_PROJECT_ID||d.teamId!==process.env.VERCEL_ORG_ID) process.exit(1);
-          fs.appendFileSync(process.env.GITHUB_ENV,`PRODUCTION_DEPLOYMENT_ID=${d.deploymentId}\nPRODUCTION_DEPLOYMENT_URL=${d.deploymentUrl}\n`);
-          console.log(JSON.stringify({deploymentId:d.deploymentId,deploymentUrl:d.deploymentUrl,readyState:d.readyState,githubSha:d.githubSha,mode:d.mode,fileCount:d.fileCount,totalBytes:d.totalBytes},null,2));
-          NODE
-
-      - name: Verify Production deployment identity via Vercel API
-        shell: bash
-        run: |
-          set -euo pipefail
           status="$(curl -sS -o /tmp/prod.json -w '%{http_code}' \
-            -H "Authorization: Bearer $VERCEL_TOKEN_EFFECTIVE" \
+            -H "Authorization: Bearer $token" \
             "https://api.vercel.com/v13/deployments/$PRODUCTION_DEPLOYMENT_ID?teamId=$VERCEL_ORG_ID")"
           test "$status" = "200"
           node - <<'NODE'
           const fs=require('fs');
           const d=JSON.parse(fs.readFileSync('/tmp/prod.json','utf8'));
           const ok=d.readyState==='READY' && d.target==='production' && d.meta?.releaseCommitSha===process.env.RELEASE_CANDIDATE_SHA && d.meta?.releaseSeries===process.env.RELEASE_SERIES && d.meta?.releasePackageVersion===process.env.RELEASE_PACKAGE_VERSION && d.meta?.releaseMode==='production';
-          if(!ok){console.error({readyState:d.readyState,target:d.target,releaseCommitSha:d.meta?.releaseCommitSha,releaseSeries:d.meta?.releaseSeries,releasePackageVersion:d.meta?.releasePackageVersion,releaseMode:d.meta?.releaseMode});process.exit(1)}
-          console.log(JSON.stringify({id:d.id,url:d.url,readyState:d.readyState,target:d.target,releaseCommitSha:d.meta.releaseCommitSha,releaseSeries:d.meta.releaseSeries,releasePackageVersion:d.meta.releasePackageVersion},null,2));
+          if(!ok) process.exit(1);
           NODE
 
-      - name: Verify canonical Production URL and Runtime identity
+          status="$(curl -sS -o /tmp/rollback.json -w '%{http_code}' \
+            -H "Authorization: Bearer $token" \
+            "https://api.vercel.com/v13/deployments/$ROLLBACK_DEPLOYMENT_ID?teamId=$VERCEL_ORG_ID")"
+          test "$status" = "200"
+          node -e 'const d=require("/tmp/rollback.json"); if(d.readyState!=="READY"||d.target!=="production"||d.meta?.releaseCommitSha!==process.env.ROLLBACK_COMMIT_SHA) process.exit(1)'
+          echo "PRODUCTION_IDENTITY_GATE=PASS"
+          echo "ROLLBACK_TARGET_PREFLIGHT=PASS"
+
+      - name: Verify canonical Production Runtime identity
         shell: bash
         working-directory: rc
         run: |
           set -euo pipefail
-          ok=0
-          for i in {1..30}; do
-            if curl -fsS "$PRODUCTION_URL/api/health" -o artifacts/uchirimo-release-production/production-health.json; then
-              if node - <<'NODE'
-          const fs=require('fs');
-          const h=JSON.parse(fs.readFileSync('artifacts/uchirimo-release-production/production-health.json','utf8'));
-          const u=h.runtimeMasterIntegrations?.find(x=>x.id==='SER-YKKAP-UCHIRIMO');
-          const ew=h.runtimeMasterIntegrations?.find(x=>x.id==='SER-LIX-EW');
-          const tw=h.runtimeMasterIntegrations?.find(x=>x.id==='SER-LIXIL-TW');
-          if(!h.ok||!u||u.status!=='READY'||!u.selectable||u.packageVersion!==process.env.RELEASE_PACKAGE_VERSION||u.sourceHash!==process.env.EXPECTED_UCHIRIMO_RUNTIME_SHA||u.canonicalRuntimeReference?.runtimeManifestDriveFileId!==process.env.EXPECTED_MANIFEST_FILE_ID||!ew||!tw) process.exit(1);
-          console.log(JSON.stringify({buildId:h.buildId,packageVersion:u.packageVersion,sourceHash:u.sourceHash,runtimeManifestDriveFileId:u.canonicalRuntimeReference.runtimeManifestDriveFileId,ew:ew.status,tw:tw.status},null,2));
-          NODE
-              then ok=1; break; fi
-            fi
-            sleep 2
-          done
-          test "$ok" = "1"
+          mkdir -p artifacts/uchirimo-release-production-smoke
+          curl -fsS "$PRODUCTION_URL/api/health" -o artifacts/uchirimo-release-production-smoke/production-health.json
+          curl -fsS "$PRODUCTION_URL/api/runtime-master/integrations" -o artifacts/uchirimo-release-production-smoke/runtime-integrations.json
+          curl -fsS "$PRODUCTION_URL/api/catalog/products" -o artifacts/uchirimo-release-production-smoke/catalog-products.json
           node - <<'NODE'
           const fs=require('fs');
-          const h=JSON.parse(fs.readFileSync('artifacts/uchirimo-release-production/production-health.json','utf8'));
-          fs.writeFileSync('artifacts/uchirimo-release-production/deploy-gate-summary.json',JSON.stringify({releaseCandidateSha:process.env.RELEASE_CANDIDATE_SHA,productionDeploymentId:process.env.PRODUCTION_DEPLOYMENT_ID,productionDeploymentUrl:process.env.PRODUCTION_DEPLOYMENT_URL,productionUrl:process.env.PRODUCTION_URL,buildId:h.buildId,rollbackDeploymentId:process.env.ROLLBACK_DEPLOYMENT_ID,rollbackCommitSha:process.env.ROLLBACK_COMMIT_SHA,productionDeployGate:'PASS',deployed:true},null,2));
+          const h=JSON.parse(fs.readFileSync('artifacts/uchirimo-release-production-smoke/production-health.json','utf8'));
+          const r=JSON.parse(fs.readFileSync('artifacts/uchirimo-release-production-smoke/runtime-integrations.json','utf8'));
+          const c=JSON.parse(fs.readFileSync('artifacts/uchirimo-release-production-smoke/catalog-products.json','utf8'));
+          const u=r.find(x=>x.id==='SER-YKKAP-UCHIRIMO');
+          const ew=r.find(x=>x.id==='SER-LIX-EW');
+          const tw=r.find(x=>x.id==='SER-LIXIL-TW');
+          if(!h.ok||!u||!u.selectable||u.status!=='READY'||u.packageVersion!==process.env.RELEASE_PACKAGE_VERSION||u.sourceHash!==process.env.EXPECTED_UCHIRIMO_RUNTIME_SHA||u.canonicalRuntimeReference?.runtimeManifestDriveFileId!==process.env.EXPECTED_MANIFEST_FILE_ID||!ew||ew.status!=='READY'||!tw||tw.status!=='READY'||!Array.isArray(c)||c.length!==4) process.exit(1);
+          console.log(JSON.stringify({buildId:h.buildId,uchirimo:u.status,packageVersion:u.packageVersion,sourceHash:u.sourceHash,manifestFileId:u.canonicalRuntimeReference.runtimeManifestDriveFileId,ew:ew.status,tw:tw.status,catalogCount:c.length},null,2));
           NODE
-          echo "PRODUCTION_DEPLOY_GATE=PASS"
-          echo "DEPLOYED=TRUE"
+          echo "PRODUCTION_RUNTIME_GATE=PASS"
 
-      - name: Upload Production deploy evidence
+      - name: Install real-browser QA dependencies
+        working-directory: rc
+        run: |
+          npm install --ignore-scripts
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+
+      - name: Production Uchirimo desktop/mobile Browser Smoke
+        working-directory: rc
+        env:
+          QA_BASE_URL: ${{ env.PRODUCTION_URL }}
+        run: node test/browser/uchirimo-runtime-browser-qa.mjs
+
+      - name: Production EW regression Browser Smoke
+        working-directory: rc
+        env:
+          QA_BASE_URL: ${{ env.PRODUCTION_URL }}
+        run: node test/browser/ew-runtime-browser-qa.mjs
+
+      - name: Production TW regression Browser Smoke
+        working-directory: rc
+        env:
+          QA_BASE_URL: ${{ env.PRODUCTION_URL }}
+        run: node test/browser/tw-runtime-browser-qa.mjs
+
+      - name: Production existing catalog regression Browser Smoke
+        working-directory: rc
+        env:
+          QA_BASE_URL: ${{ env.PRODUCTION_URL }}
+        run: node test/browser/release-regression-browser-qa.mjs
+
+      - name: Production unhandled rejection and network sentinel
+        shell: bash
+        working-directory: rc
+        run: |
+          set -euo pipefail
+          cat > /tmp/production-sentinel.mjs <<'NODE'
+          import { chromium } from 'playwright';
+          import { writeFile } from 'node:fs/promises';
+          const base=process.env.PRODUCTION_URL;
+          const report={status:'RUNNING',consoleErrors:[],pageErrors:[],failedResponses:[],requestFailures:[],unhandledRejections:[],desktop:null,mobile:null};
+          const browser=await chromium.launch({headless:true});
+          try {
+            for(const [name,viewport] of Object.entries({desktop:{width:1440,height:1000},mobile:{width:390,height:844}})){
+              const context=await browser.newContext({viewport});
+              await context.addInitScript(()=>{window.__releaseUnhandled=[];window.addEventListener('unhandledrejection',e=>window.__releaseUnhandled.push(String(e.reason?.message??e.reason??'unknown')));});
+              const page=await context.newPage();
+              page.on('console',m=>{if(m.type()==='error')report.consoleErrors.push({surface:name,text:m.text()});});
+              page.on('pageerror',e=>report.pageErrors.push({surface:name,text:e.message}));
+              page.on('requestfailed',r=>report.requestFailures.push({surface:name,url:r.url(),failure:r.failure()?.errorText??'unknown'}));
+              page.on('response',r=>{if(r.status()>=400)report.failedResponses.push({surface:name,status:r.status(),url:r.url()});});
+              await page.goto(base,{waitUntil:'networkidle'});
+              await page.waitForFunction(()=>document.querySelector('#status')?.textContent==='CATALOG CONNECTED');
+              const bodyWidth=await page.evaluate(()=>({scrollWidth:document.documentElement.scrollWidth,clientWidth:document.documentElement.clientWidth}));
+              const unhandled=await page.evaluate(()=>window.__releaseUnhandled??[]);
+              report.unhandledRejections.push(...unhandled.map(text=>({surface:name,text})));
+              report[name]={status:'PASS',overflow:Math.max(0,bodyWidth.scrollWidth-bodyWidth.clientWidth)};
+              await context.close();
+            }
+            if(report.consoleErrors.length||report.pageErrors.length||report.failedResponses.length||report.requestFailures.length||report.unhandledRejections.length||report.desktop.overflow||report.mobile.overflow) throw new Error('production sentinel found release-blocking browser/network errors');
+            report.status='PASS';
+          } catch(e) { report.status='FAIL'; report.failure=e.stack??String(e); }
+          finally { await browser.close(); }
+          await writeFile('artifacts/uchirimo-release-production-smoke/sentinel.json',JSON.stringify(report,null,2));
+          console.log(JSON.stringify(report,null,2));
+          if(report.status!=='PASS') process.exit(1);
+          NODE
+          PRODUCTION_URL="$PRODUCTION_URL" node /tmp/production-sentinel.mjs
+
+      - name: Consolidate Production Smoke and Rollback Readiness evidence
+        shell: bash
+        working-directory: rc
+        run: |
+          set -euo pipefail
+          node - <<'NODE'
+          const fs=require('fs');
+          const paths={uchirimo:'artifacts/uchirimo-runtime-browser-qa/report.json',ew:'artifacts/ew-runtime-browser-qa/report.json',tw:'artifacts/tw-runtime-browser-qa/report.json',catalog:'artifacts/release-regression-browser-qa/report.json',sentinel:'artifacts/uchirimo-release-production-smoke/sentinel.json'};
+          const r=Object.fromEntries(Object.entries(paths).map(([k,p])=>[k,JSON.parse(fs.readFileSync(p,'utf8'))]));
+          if(Object.values(r).some(x=>x.status!=='PASS')) process.exit(1);
+          const consoleErrorCount=r.uchirimo.consoleErrors.length+r.ew.consoleErrors.length+r.tw.consoleErrors.length+r.catalog.consoleErrors.length+r.sentinel.consoleErrors.length;
+          const pageErrorCount=r.uchirimo.pageErrors.length+r.ew.pageErrors.length+r.tw.pageErrors.length+r.catalog.pageErrors.length+r.sentinel.pageErrors.length;
+          const unexpected4xx5xxCount=r.uchirimo.failedResponses.length+r.ew.failedResponses.length+r.tw.failedResponses.length+r.catalog.failedResponses.length+r.sentinel.failedResponses.length;
+          const requestFailureCount=r.sentinel.requestFailures.length;
+          const unhandledRejectionCount=r.sentinel.unhandledRejections.length;
+          const summary={releaseCandidateSha:process.env.RELEASE_CANDIDATE_SHA,productionDeploymentId:process.env.PRODUCTION_DEPLOYMENT_ID,productionUrl:process.env.PRODUCTION_URL,packageVersion:process.env.RELEASE_PACKAGE_VERSION,runtimeSha:process.env.EXPECTED_UCHIRIMO_RUNTIME_SHA,runtimeManifestDriveFileId:process.env.EXPECTED_MANIFEST_FILE_ID,browserExecution:'GitHub Actions Playwright Chromium against canonical Production URL',uchirimo:'PASS',desktop:r.uchirimo.desktop,mobile:r.uchirimo.mobile,ewRegression:'PASS',twRegression:'PASS',existingCatalogRegression:'PASS',consoleErrorCount,pageErrorCount,unexpected4xx5xxCount,requestFailureCount,unhandledRejectionCount,orderReady:false,rollbackTarget:{deploymentId:process.env.ROLLBACK_DEPLOYMENT_ID,commitSha:process.env.ROLLBACK_COMMIT_SHA,method:`POST /v1/projects/${process.env.VERCEL_PROJECT_ID}/rollback/${process.env.ROLLBACK_DEPLOYMENT_ID}?teamId=${process.env.VERCEL_ORG_ID}`,postRollbackSmoke:'rerun Production Uchirimo/EW/TW/catalog Browser Smoke and sentinel'},productionSmokeGate:'PASS',rollbackReadinessGate:'PASS',productionReady:true};
+          fs.writeFileSync('artifacts/uchirimo-release-production-smoke/summary.json',JSON.stringify(summary,null,2));
+          console.log(JSON.stringify(summary,null,2));
+          if(consoleErrorCount||pageErrorCount||unexpected4xx5xxCount||requestFailureCount||unhandledRejectionCount) process.exit(1);
+          NODE
+          echo "PRODUCTION_SMOKE_GATE=PASS"
+          echo "ROLLBACK_READINESS_GATE=PASS"
+          echo "PRODUCTION_READY=TRUE"
+
+      - name: Upload Production Smoke evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: uchirimo-production-deploy-evidence
-          path: rc/artifacts/uchirimo-release-production/
+          name: uchirimo-production-smoke-evidence
+          path: rc/artifacts/
           if-no-files-found: warn
