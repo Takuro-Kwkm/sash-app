@@ -129,7 +129,7 @@ jobs:
         working-directory: rc
         run: |
           set -euo pipefail
-          cat > /tmp/production-sentinel.mjs <<'NODE'
+          cat > artifacts/uchirimo-release-production-smoke/production-sentinel.mjs <<'NODE'
           import { chromium } from 'playwright';
           import { writeFile } from 'node:fs/promises';
           const base=process.env.PRODUCTION_URL;
@@ -160,7 +160,7 @@ jobs:
           console.log(JSON.stringify(report,null,2));
           if(report.status!=='PASS') process.exit(1);
           NODE
-          PRODUCTION_URL="$PRODUCTION_URL" node /tmp/production-sentinel.mjs
+          PRODUCTION_URL="$PRODUCTION_URL" node artifacts/uchirimo-release-production-smoke/production-sentinel.mjs
 
       - name: Consolidate Production Smoke and Rollback Readiness evidence
         shell: bash
