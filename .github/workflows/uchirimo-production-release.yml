@@ -14,6 +14,7 @@ env:
   VERCEL_ORG_ID: team_AkuHacuJlCl8LuvaFpCzFmbv
   VERCEL_PROJECT_ID: prj_4z0zqW6yKyPuFINODfGX8LPBuJRP
   PREVIEW_DEPLOYMENT_ID: dpl_F34bGLpRkQZqKt9BJ9nurau7aM3d
+  PREVIEW_HOST: sash-app-wave3-preview-7rc62jowp-tk-4bb0.vercel.app
   PREVIEW_URL: https://sash-app-wave3-preview-7rc62jowp-tk-4bb0.vercel.app
 
 jobs:
@@ -63,9 +64,13 @@ jobs:
           status="$(curl -sS -o /tmp/share.json -w '%{http_code}' -X PATCH \
             -H "Authorization: Bearer $VERCEL_TOKEN_EFFECTIVE" \
             -H 'Content-Type: application/json' \
-            "https://api.vercel.com/aliases/$PREVIEW_DEPLOYMENT_ID/protection-bypass?teamId=$VERCEL_ORG_ID" \
+            "https://api.vercel.com/aliases/$PREVIEW_HOST/protection-bypass?teamId=$VERCEL_ORG_ID" \
             --data '{"ttl":1800}')"
-          test "$status" = "200"
+          if [[ "$status" != "200" ]]; then
+            echo "PREVIEW_BROWSER_ACCESS_GATE=BLOCKED status=$status"
+            node -e 'const r=require("/tmp/share.json"); console.error({error:r.error?.code??r.code??"unknown",message:r.error?.message??r.message??"unknown"})'
+            exit 51
+          fi
           share="$(node -e 'const r=require("/tmp/share.json"); process.stdout.write(String(r.value??r.protectionBypass?.value??""))')"
           test -n "$share"
           echo "::add-mask::$share"
@@ -119,27 +124,10 @@ jobs:
           mkdir -p artifacts/uchirimo-release-staging
           node - <<'NODE'
           const fs=require('fs');
-          const paths={
-            uchirimo:'artifacts/uchirimo-runtime-browser-qa/report.json',
-            ew:'artifacts/ew-runtime-browser-qa/report.json',
-            tw:'artifacts/tw-runtime-browser-qa/report.json',
-            catalog:'artifacts/release-regression-browser-qa/report.json',
-          };
+          const paths={uchirimo:'artifacts/uchirimo-runtime-browser-qa/report.json',ew:'artifacts/ew-runtime-browser-qa/report.json',tw:'artifacts/tw-runtime-browser-qa/report.json',catalog:'artifacts/release-regression-browser-qa/report.json'};
           const r=Object.fromEntries(Object.entries(paths).map(([k,p])=>[k,JSON.parse(fs.readFileSync(p,'utf8'))]));
           if(Object.values(r).some(x=>x.status!=='PASS')) process.exit(1);
-          const summary={
-            releaseCandidateSha:process.env.RELEASE_CANDIDATE_SHA,
-            previewDeploymentId:process.env.PREVIEW_DEPLOYMENT_ID,
-            previewUrl:process.env.PREVIEW_URL,
-            browserExecution:'GitHub Actions Playwright Chromium (browser-required fallback; target exact RC Preview)',
-            desktop:r.uchirimo.desktop,
-            mobile:r.uchirimo.mobile,
-            consoleErrorCount:r.uchirimo.consoleErrors.length+r.ew.consoleErrors.length+r.tw.consoleErrors.length+r.catalog.consoleErrors.length,
-            pageErrorCount:r.uchirimo.pageErrors.length+r.ew.pageErrors.length+r.tw.pageErrors.length+r.catalog.pageErrors.length,
-            unexpected4xx5xxCount:r.uchirimo.failedResponses.length+r.ew.failedResponses.length+r.tw.failedResponses.length+r.catalog.failedResponses.length,
-            uchirimo:'PASS', ewRegression:'PASS', twRegression:'PASS', existingCatalogRegression:'PASS', orderReady:false,
-            stagingSmokeGate:'PASS'
-          };
+          const summary={releaseCandidateSha:process.env.RELEASE_CANDIDATE_SHA,previewDeploymentId:process.env.PREVIEW_DEPLOYMENT_ID,previewUrl:process.env.PREVIEW_URL,browserExecution:'GitHub Actions Playwright Chromium (browser-required fallback; target exact RC Preview)',desktop:r.uchirimo.desktop,mobile:r.uchirimo.mobile,consoleErrorCount:r.uchirimo.consoleErrors.length+r.ew.consoleErrors.length+r.tw.consoleErrors.length+r.catalog.consoleErrors.length,pageErrorCount:r.uchirimo.pageErrors.length+r.ew.pageErrors.length+r.tw.pageErrors.length+r.catalog.pageErrors.length,unexpected4xx5xxCount:r.uchirimo.failedResponses.length+r.ew.failedResponses.length+r.tw.failedResponses.length+r.catalog.failedResponses.length,uchirimo:'PASS',ewRegression:'PASS',twRegression:'PASS',existingCatalogRegression:'PASS',orderReady:false,stagingSmokeGate:'PASS'};
           fs.writeFileSync('artifacts/uchirimo-release-staging/summary.json',JSON.stringify(summary,null,2));
           console.log(JSON.stringify(summary,null,2));
           if(summary.consoleErrorCount||summary.pageErrorCount||summary.unexpected4xx5xxCount) process.exit(1);
@@ -154,7 +142,7 @@ jobs:
           curl -sS -X PATCH \
             -H "Authorization: Bearer ${VERCEL_TOKEN_EFFECTIVE:-}" \
             -H 'Content-Type: application/json' \
-            "https://api.vercel.com/aliases/$PREVIEW_DEPLOYMENT_ID/protection-bypass?teamId=$VERCEL_ORG_ID" \
+            "https://api.vercel.com/aliases/$PREVIEW_HOST/protection-bypass?teamId=$VERCEL_ORG_ID" \
             --data '{"revoke":{}}' >/dev/null || true
 
       - name: Upload Staging Browser Smoke evidence
