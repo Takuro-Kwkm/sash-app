@@ -13,9 +13,9 @@ env:
   EXPECTED_UCHIRIMO_RUNTIME_SHA: be4f1f77727424dc06ddf9de947201f33d4aee5219b182e37d0f178e1fb7147d
   VERCEL_ORG_ID: team_AkuHacuJlCl8LuvaFpCzFmbv
   VERCEL_PROJECT_ID: prj_4z0zqW6yKyPuFINODfGX8LPBuJRP
-  PREVIEW_DEPLOYMENT_ID: dpl_F34bGLpRkQZqKt9BJ9nurau7aM3d
-  PREVIEW_HOST: sash-app-wave3-preview-7rc62jowp-tk-4bb0.vercel.app
-  PREVIEW_URL: https://sash-app-wave3-preview-7rc62jowp-tk-4bb0.vercel.app
+  VERCEL_PROJECT_NAME: sash-app-wave3-preview
+  RELEASE_SERIES: YKK AP ウチリモ 内窓
+  RELEASE_PACKAGE_VERSION: v1.0-P7R1-R2
 
 jobs:
   staging_smoke:
@@ -36,7 +36,7 @@ jobs:
         with:
           node-version: 24
 
-      - name: Fixed SHA and Preview identity gate
+      - name: Fixed SHA and Vercel credential gate
         shell: bash
         working-directory: rc
         run: |
@@ -45,10 +45,48 @@ jobs:
           token="${VERCEL_TOKEN_PRIMARY:-${VERCEL_TOKEN_FALLBACK:-}}"
           test -n "$token"
           echo "VERCEL_TOKEN_EFFECTIVE=$token" >> "$GITHUB_ENV"
-          status="$(curl -sS -o /tmp/deployment.json -w '%{http_code}' -H "Authorization: Bearer $token" "https://api.vercel.com/v13/deployments/$PREVIEW_DEPLOYMENT_ID?teamId=$VERCEL_ORG_ID")"
+          status="$(curl -sS -o /tmp/project.json -w '%{http_code}' -H "Authorization: Bearer $token" "https://api.vercel.com/v9/projects/$VERCEL_PROJECT_ID?teamId=$VERCEL_ORG_ID")"
           test "$status" = "200"
-          node -e 'const d=require("/tmp/deployment.json"); if(d.readyState!=="READY"||d.target!==null||d.meta?.releaseCommitSha!==process.env.RELEASE_CANDIDATE_SHA||d.meta?.releaseSeries!=="YKK AP ウチリモ 内窓"||d.meta?.releasePackageVersion!=="v1.0-P7R1-R2") { console.error({readyState:d.readyState,target:d.target,releaseCommitSha:d.meta?.releaseCommitSha,series:d.meta?.releaseSeries,version:d.meta?.releasePackageVersion}); process.exit(1); }'
-          echo "PREVIEW_IDENTITY_GATE=PASS"
+          node -e 'const p=require("/tmp/project.json"); if(p.id!==process.env.VERCEL_PROJECT_ID||p.accountId!==process.env.VERCEL_ORG_ID) process.exit(1)'
+          echo "RELEASE_INPUT_SHA_GATE=PASS"
+          echo "VERCEL_PROJECT_ACCESS_GATE=PASS"
+
+      - name: Create fresh exact-RC Staging Preview
+        shell: bash
+        working-directory: rc
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts/uchirimo-release-staging
+          env -u GITHUB_SHA node scripts/vercel-rest-deploy.mjs preview artifacts/uchirimo-release-staging/preview-deployment.json
+          node - <<'NODE'
+          const fs=require('fs');
+          const d=JSON.parse(fs.readFileSync('artifacts/uchirimo-release-staging/preview-deployment.json','utf8'));
+          if(d.readyState!=='READY'||d.githubSha!==process.env.RELEASE_CANDIDATE_SHA||d.mode!=='preview'||d.projectId!==process.env.VERCEL_PROJECT_ID||d.teamId!==process.env.VERCEL_ORG_ID) process.exit(1);
+          const host=new URL(d.deploymentUrl).host;
+          fs.appendFileSync(process.env.GITHUB_ENV,`STAGING_DEPLOYMENT_ID=${d.deploymentId}\nSTAGING_URL=${d.deploymentUrl}\nSTAGING_HOST=${host}\n`);
+          console.log(JSON.stringify({deploymentId:d.deploymentId,deploymentUrl:d.deploymentUrl,readyState:d.readyState,githubSha:d.githubSha,mode:d.mode},null,2));
+          NODE
+          echo "STAGING_DEPLOY_GATE=PASS"
+
+      - name: Create temporary Staging share access
+        shell: bash
+        run: |
+          set -euo pipefail
+          endpoint="https://api.vercel.com/aliases/$STAGING_HOST/protection-bypass?teamId=$VERCEL_ORG_ID"
+          status="$(curl -sS -o /tmp/share.json -w '%{http_code}' -X PATCH \
+            -H "Authorization: Bearer $VERCEL_TOKEN_EFFECTIVE" \
+            -H 'Content-Type: application/json' \
+            "$endpoint" --data '{"ttl":1800}')"
+          if [[ "$status" != "200" ]]; then
+            echo "STAGING_BROWSER_ACCESS_GATE=BLOCKED status=$status"
+            node -e 'const r=require("/tmp/share.json"); console.error({error:r.error?.code??r.code??"unknown",message:r.error?.message??r.message??"unknown"})'
+            exit 51
+          fi
+          share="$(node -e 'const r=require("/tmp/share.json"); process.stdout.write(String(r.value??r.protectionBypass?.value??""))')"
+          test -n "$share"
+          echo "::add-mask::$share"
+          echo "VERCEL_SHARE_TOKEN=$share" >> "$GITHUB_ENV"
+          echo "STAGING_BROWSER_ACCESS_GATE=PASS"
 
       - name: Install real-browser QA dependencies
         working-directory: rc
@@ -57,37 +95,7 @@ jobs:
           npm install --no-save playwright@1.55.0
           npx playwright install --with-deps chromium
 
-      - name: Create temporary protected-Preview share access
-        shell: bash
-        run: |
-          set -euo pipefail
-          endpoint="https://api.vercel.com/aliases/$PREVIEW_HOST/protection-bypass?teamId=$VERCEL_ORG_ID"
-          create_share() {
-            curl -sS -o /tmp/share.json -w '%{http_code}' -X PATCH \
-              -H "Authorization: Bearer $VERCEL_TOKEN_EFFECTIVE" \
-              -H 'Content-Type: application/json' \
-              "$endpoint" --data '{"ttl":1800}'
-          }
-          status="$(create_share)"
-          if [[ "$status" == "409" ]]; then
-            code="$(node -e 'const r=require("/tmp/share.json"); process.stdout.write(String(r.error?.code??r.code??""))')"
-            if [[ "$code" == "protection_bypass_conflict" ]]; then
-              curl -sS -X PATCH -H "Authorization: Bearer $VERCEL_TOKEN_EFFECTIVE" -H 'Content-Type: application/json' "$endpoint" --data '{"revoke":{}}' >/dev/null
-              status="$(create_share)"
-            fi
-          fi
-          if [[ "$status" != "200" ]]; then
-            echo "PREVIEW_BROWSER_ACCESS_GATE=BLOCKED status=$status"
-            node -e 'const r=require("/tmp/share.json"); console.error({error:r.error?.code??r.code??"unknown",message:r.error?.message??r.message??"unknown"})'
-            exit 51
-          fi
-          share="$(node -e 'const r=require("/tmp/share.json"); process.stdout.write(String(r.value??r.protectionBypass?.value??""))')"
-          test -n "$share"
-          echo "::add-mask::$share"
-          echo "VERCEL_SHARE_TOKEN=$share" >> "$GITHUB_ENV"
-          echo "PREVIEW_BROWSER_ACCESS_GATE=PASS"
-
-      - name: Patch Uchirimo test harness for protected preflight only
+      - name: Patch Uchirimo protected-preview preflight in ephemeral checkout
         shell: bash
         working-directory: rc
         run: |
@@ -105,25 +113,25 @@ jobs:
       - name: Staging Uchirimo desktop/mobile Browser Smoke
         working-directory: rc
         env:
-          QA_BASE_URL: ${{ env.PREVIEW_URL }}
+          QA_BASE_URL: ${{ env.STAGING_URL }}
         run: node test/browser/uchirimo-runtime-browser-qa.mjs
 
       - name: Staging EW regression Browser Smoke
         working-directory: rc
         env:
-          QA_BASE_URL: ${{ env.PREVIEW_URL }}
+          QA_BASE_URL: ${{ env.STAGING_URL }}
         run: node test/browser/ew-runtime-browser-qa.mjs
 
       - name: Staging TW regression Browser Smoke
         working-directory: rc
         env:
-          QA_BASE_URL: ${{ env.PREVIEW_URL }}
+          QA_BASE_URL: ${{ env.STAGING_URL }}
         run: node test/browser/tw-runtime-browser-qa.mjs
 
       - name: Staging existing catalog regression Browser Smoke
         working-directory: rc
         env:
-          QA_BASE_URL: ${{ env.PREVIEW_URL }}
+          QA_BASE_URL: ${{ env.STAGING_URL }}
         run: node test/browser/release-regression-browser-qa.mjs
 
       - name: Consolidate Staging Smoke evidence
@@ -131,13 +139,13 @@ jobs:
         working-directory: rc
         run: |
           set -euo pipefail
-          mkdir -p artifacts/uchirimo-release-staging
           node - <<'NODE'
           const fs=require('fs');
           const paths={uchirimo:'artifacts/uchirimo-runtime-browser-qa/report.json',ew:'artifacts/ew-runtime-browser-qa/report.json',tw:'artifacts/tw-runtime-browser-qa/report.json',catalog:'artifacts/release-regression-browser-qa/report.json'};
           const r=Object.fromEntries(Object.entries(paths).map(([k,p])=>[k,JSON.parse(fs.readFileSync(p,'utf8'))]));
           if(Object.values(r).some(x=>x.status!=='PASS')) process.exit(1);
-          const summary={releaseCandidateSha:process.env.RELEASE_CANDIDATE_SHA,previewDeploymentId:process.env.PREVIEW_DEPLOYMENT_ID,previewUrl:process.env.PREVIEW_URL,browserExecution:'GitHub Actions Playwright Chromium (browser-required fallback; target exact RC Preview)',desktop:r.uchirimo.desktop,mobile:r.uchirimo.mobile,consoleErrorCount:r.uchirimo.consoleErrors.length+r.ew.consoleErrors.length+r.tw.consoleErrors.length+r.catalog.consoleErrors.length,pageErrorCount:r.uchirimo.pageErrors.length+r.ew.pageErrors.length+r.tw.pageErrors.length+r.catalog.pageErrors.length,unexpected4xx5xxCount:r.uchirimo.failedResponses.length+r.ew.failedResponses.length+r.tw.failedResponses.length+r.catalog.failedResponses.length,uchirimo:'PASS',ewRegression:'PASS',twRegression:'PASS',existingCatalogRegression:'PASS',orderReady:false,stagingSmokeGate:'PASS'};
+          const deployment=JSON.parse(fs.readFileSync('artifacts/uchirimo-release-staging/preview-deployment.json','utf8'));
+          const summary={releaseCandidateSha:process.env.RELEASE_CANDIDATE_SHA,previewDeploymentId:deployment.deploymentId,previewUrl:deployment.deploymentUrl,browserExecution:'GitHub Actions Playwright Chromium (browser-required fallback; exact-RC fresh Preview)',desktop:r.uchirimo.desktop,mobile:r.uchirimo.mobile,consoleErrorCount:r.uchirimo.consoleErrors.length+r.ew.consoleErrors.length+r.tw.consoleErrors.length+r.catalog.consoleErrors.length,pageErrorCount:r.uchirimo.pageErrors.length+r.ew.pageErrors.length+r.tw.pageErrors.length+r.catalog.pageErrors.length,unexpected4xx5xxCount:r.uchirimo.failedResponses.length+r.ew.failedResponses.length+r.tw.failedResponses.length+r.catalog.failedResponses.length,uchirimo:'PASS',ewRegression:'PASS',twRegression:'PASS',existingCatalogRegression:'PASS',orderReady:false,stagingSmokeGate:'PASS'};
           fs.writeFileSync('artifacts/uchirimo-release-staging/summary.json',JSON.stringify(summary,null,2));
           console.log(JSON.stringify(summary,null,2));
           if(summary.consoleErrorCount||summary.pageErrorCount||summary.unexpected4xx5xxCount) process.exit(1);
@@ -145,15 +153,18 @@ jobs:
           echo "STAGING_SMOKE_GATE=PASS"
           echo "DEPLOYMENT_READY=TRUE"
 
-      - name: Revoke temporary Preview share access
+      - name: Revoke temporary Staging share access
         if: always()
         shell: bash
         run: |
-          curl -sS -X PATCH \
-            -H "Authorization: Bearer ${VERCEL_TOKEN_EFFECTIVE:-}" \
-            -H 'Content-Type: application/json' \
-            "https://api.vercel.com/aliases/$PREVIEW_HOST/protection-bypass?teamId=$VERCEL_ORG_ID" \
-            --data '{"revoke":{}}' >/dev/null || true
+          if [[ -n "${VERCEL_SHARE_TOKEN:-}" && -n "${STAGING_HOST:-}" && -n "${VERCEL_TOKEN_EFFECTIVE:-}" ]]; then
+            body="$(node -e 'process.stdout.write(JSON.stringify({revoke:{secret:process.env.VERCEL_SHARE_TOKEN,regenerate:false}}))')"
+            curl -sS -X PATCH \
+              -H "Authorization: Bearer $VERCEL_TOKEN_EFFECTIVE" \
+              -H 'Content-Type: application/json' \
+              "https://api.vercel.com/aliases/$STAGING_HOST/protection-bypass?teamId=$VERCEL_ORG_ID" \
+              --data "$body" >/dev/null || true
+          fi
 
       - name: Upload Staging Browser Smoke evidence
         if: always()
