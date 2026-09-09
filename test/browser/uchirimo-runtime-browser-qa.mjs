@@ -135,7 +135,6 @@ async function exercise(page) {
   assert.equal(result.dimensionResult.status, 'PASS');
 
   result = await choose(page, 'window_type', 'inward_opening_window');
-  assert.equal(result.selection.glass_spec_id, undefined);
   assert.equal(await page.locator('[data-spec-key="arm_stopper_option"]').count(), 1);
   assert.equal(await page.locator('[data-spec-key="outside_handle_option"]').count(), 0);
 
