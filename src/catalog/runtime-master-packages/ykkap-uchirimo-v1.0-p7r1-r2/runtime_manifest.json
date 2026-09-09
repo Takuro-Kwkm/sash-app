@@ -1,0 +1,95 @@
+{
+  "schema_version": "2.0",
+  "manufacturer": "YKK AP",
+  "series": "ウチリモ 内窓",
+  "package_version": "v1.0-P7R1-R2",
+  "authoring_mode": "FILE",
+  "authoring_file_name": "YKKAP_ウチリモ内窓_商品マスター_v1.0-P7R1-R2.xlsx",
+  "authoring_file_id": "11p2SkAXYNAAJwWYGBjmWOTVO6rZquyJf",
+  "authoring_source_version": "v1.0-P7R1-R2-WORKING",
+  "authoring_alignment_status": "PASS",
+  "runtime_status": "READY",
+  "runtime_readiness_detail": "SALES_LEVEL_WITH_MANUAL_CHECK",
+  "runtime_files": [
+    {
+      "name": "YKKAP_ウチリモ内窓_Canonical_Master_v1.0-P7R1-R2.json",
+      "id": "1iX6-TuR7B7tUKqtGnd76IzVJzq9OH2zK",
+      "role": "canonical_runtime",
+      "version": "v1.0-P7R1-R2",
+      "sha256": "bfff447f48dc44f988e2d3982a79f7278f64011bf6ca093654983fd734861afa"
+    },
+    {
+      "name": "YKKAP_ウチリモ内窓_Size_Installation_Dependency_Master_v1.0-P7R1-R2.json",
+      "id": "1c6hmvMgSLhESgmMJTRW7DN_opa1HhYlZ",
+      "role": "support_component",
+      "version": "v1.0-P7R1-R2",
+      "sha256": "6dc916ed34051496bb2144cfdf391ec334ea5f9ab24ae8a060886fc2c267fe15"
+    },
+    {
+      "name": "YKKAP_ウチリモ内窓_Vacuum_Glass_Curve_Master_v1.0-P7R1-R2.json",
+      "id": "1TJn2-e6Sa6LcIv6FxNt0ahGSWlcgclJZ",
+      "role": "support_component",
+      "version": "v1.0-P7R1-R2",
+      "sha256": "940a33525afca49be49d4a6291e1f8b0bd4a0bae364db0d7ea3afee19a9719ff"
+    },
+    {
+      "name": "YKKAP_ウチリモ内窓_Judgment_Engine_v1.0-P7R1-R2.json",
+      "id": "1fNUukTQaDJT2iWbNk6F8gcLLt22Sg32z",
+      "role": "judgment_engine",
+      "version": "v1.0-P7R1-R2",
+      "sha256": "361ff4f37ad4290f944f7b0e525982c69a9571049c90d05b402f750dd250914d"
+    }
+  ],
+  "runtime_file_count": 4,
+  "documentation_file": "YKKAP_ウチリモ内窓_PRODUCT_MASTER_MANIFEST_v1.0-P7R1-R2.md",
+  "documentation_file_id": "1-Y3kRuZHf7STeOGlurZrUU-eL66Gqyyk",
+  "storage_status": "PASS_CANONICAL",
+  "working_folder_id": "1ToOa_3UStpMJfUzW5Dl0Ah_Q-kkX88n3",
+  "canonical_folder_id": "1-flyN0KX2zdqXbebX2kVF4VRW0jTSrQu",
+  "old_folder_id": "1ujE3U_EMGAhbhh5_Q8asnEsbw9Ols7iL",
+  "runtime_package_gate": "PASS",
+  "package_gate": "PASS",
+  "blocking_items": [],
+  "manual_check": {
+    "count": 4,
+    "status": "PRESERVED_HUMAN_APPROVED",
+    "ids": [
+      "P5R1G-MC-01",
+      "P5R1G-MC-02",
+      "P5R1G-MC-03",
+      "P5R1G-MC-04"
+    ],
+    "manufacturer_quote_recheck_required": true
+  },
+  "special_checks": [
+    "GSC-IGU-P5P3",
+    "GSC-IGU-G5P3",
+    "FIX_WIND_PRESSURE",
+    "INSTALLATION_UNKNOWN_INPUT"
+  ],
+  "order_ready": false,
+  "judgment_engine_status": "READY_FAIL_CLOSED",
+  "repository_integration": "READY_FOR_RUNTIME_UI_INTEGRATION",
+  "human_approval": "PASS",
+  "human_approval_basis": "User explicit approval of Phase9-R2 changes on 2026-09-08",
+  "formalization_status": "FORMAL_PASS",
+  "generated_at": "2026-09-08T20:24:28+09:00",
+  "spec_version": "PRODUCT_MASTER_PACKAGE_STORAGE_COMPLETION_GATE_v2.0",
+  "runtime_manifest_file_id": "1119yamXn21wLZd3C8LvamNWsTAx_1dt2",
+  "working_savepoint_gate": "PASS",
+  "source_working_savepoint": {
+    "package_version": "v1.0-P7R1-R2-WORKING",
+    "authoring_file_id": "12or5pqss-Kn97VFAR0ipkcLCGKOnAkAq",
+    "runtime_manifest_file_id": "1eTR_MscV3Dkd923AZIJs36q02gMMrQRC",
+    "working_folder_id": "1ToOa_3UStpMJfUzW5Dl0Ah_Q-kkX88n3",
+    "parent_verification": "PASS"
+  },
+  "registry_gate": "PASS",
+  "canonical_parent_verification": "PASS",
+  "updated_at": "2026-09-08T20:34:37+09:00",
+  "app_integration_ready": true,
+  "duplicate_check": "PASS",
+  "manufacturer_material_residual_check": "PASS",
+  "formal_pass": true,
+  "finalized_at": "2026-09-08T20:39:14+09:00"
+}

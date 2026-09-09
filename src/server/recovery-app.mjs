@@ -14,8 +14,8 @@ const catalog=createCatalog(CURRENT_WINDOW_SERIES_MODULES);
 const runtimeMasterIntegrations=runtimeAppIntegrationInventory();
 const buildTimestamp=new Date().toISOString();
 const buildIdentity={catalog,runtimeMasterIntegrations:runtimeMasterIntegrations.map(({id,packageVersion,sourceHash,status,selectable})=>({id,packageVersion,sourceHash,status,selectable}))};
-const buildId=`RECOVERY-TW-${createHash("sha256").update(JSON.stringify(buildIdentity)).digest("hex").slice(0,12)}`;
-const catalogVersion="V4.3 RECOVERY + WAVE3-1 THERMOS-L + LIXIL EW v1.1 + LIXIL TW integrated-v0.2";
+const buildId=`RECOVERY-UCHIRIMO-${createHash("sha256").update(JSON.stringify(buildIdentity)).digest("hex").slice(0,12)}`;
+const catalogVersion="V4.3 RECOVERY + WAVE3-1 THERMOS-L + LIXIL EW v1.1 + LIXIL TW integrated-v0.2 + YKK AP ウチリモ v1.0-P7R1-R2";
 
 export const releaseBuildMetadata=Object.freeze({buildId,buildTimestamp,catalogVersion});
 

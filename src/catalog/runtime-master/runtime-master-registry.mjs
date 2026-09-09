@@ -5,11 +5,13 @@ import { adaptCanonicalWorkbookReferenceV1 } from './canonical-workbook-referenc
 import { loadManifestRuntimePackage } from './runtime-manifest-loader.mjs';
 import { adaptTwCanonicalWorkbookReferenceV1 } from './tw-canonical-workbook-reference-v1-adapter.mjs';
 import { evaluateCanonicalWorkbookRuntime } from './canonical-workbook-runtime-engine.mjs';
+import { adaptUchirimoTabularV1 } from './uchirimo-tabular-v1-adapter.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const EW_ROOT = join(HERE, '../runtime-master-packages/lixil-ew-v1.1');
 const EW_RUNTIME_SEGMENTS = ['seg-00','seg-01','seg-02','seg-03','seg-04','seg-05','seg-06','seg-07','seg-08a','seg-08b','seg-08c','seg-08d'];
 const TW_ROOT = join(HERE, '../runtime-master-packages/lixil-tw-integrated-v0.2');
+const UCHIRIMO_ROOT = join(HERE, '../runtime-master-packages/ykkap-uchirimo-v1.0-p7r1-r2');
 
 export const runtimeMasterInventory = Object.freeze([
   Object.freeze({
@@ -24,6 +26,20 @@ export const runtimeMasterInventory = Object.freeze([
         codec: 'brotli',
         paths: Object.freeze(EW_RUNTIME_SEGMENTS.map((name) => join(EW_ROOT, `LIXIL_EW_runtime_v1.1.json.br.b64.segments/${name}`))),
       }),
+    }),
+  }),
+  Object.freeze({
+    manufacturer: 'YKK AP', series: 'ウチリモ 内窓', masterVersion: 'v1.0-P7R1-R2', schemaVersion: '2.0',
+    packageType: 'RUNTIME_MANIFEST_V2', adapterType: 'UCHIRIMO_TABULAR_V1', requireRuntimeContract: false, enforceComponentSchemaVersion: false,
+    packageRoot: UCHIRIMO_ROOT,
+    runtimeManifestPath: join(UCHIRIMO_ROOT, 'runtime_manifest.json'),
+    runtimeManifestDriveFileId: '1119yamXn21wLZd3C8LvamNWsTAx_1dt2',
+    runtimeManifestSha256: 'be4f1f77727424dc06ddf9de947201f33d4aee5219b182e37d0f178e1fb7147d',
+    materializedFiles: Object.freeze({
+      '1iX6-TuR7B7tUKqtGnd76IzVJzq9OH2zK': Object.freeze({ codec: 'brotli', paths: Object.freeze([join(UCHIRIMO_ROOT, 'canonical.json.br.b64.parts/part-00')]) }),
+      '1c6hmvMgSLhESgmMJTRW7DN_opa1HhYlZ': Object.freeze({ codec: 'brotli', paths: Object.freeze([join(UCHIRIMO_ROOT, 'size-installation.json.br.b64.parts/part-00')]) }),
+      '1TJn2-e6Sa6LcIv6FxNt0ahGSWlcgclJZ': Object.freeze({ codec: 'brotli', paths: Object.freeze([join(UCHIRIMO_ROOT, 'vacuum-glass.json.br.b64.parts/part-00')]) }),
+      '1fNUukTQaDJT2iWbNk6F8gcLLt22Sg32z': Object.freeze({ codec: 'brotli', paths: Object.freeze([join(UCHIRIMO_ROOT, 'judgment-engine.json.br.b64.parts/part-00')]) }),
     }),
   }),
   Object.freeze({
@@ -54,6 +70,9 @@ async function loadRuntime(entry) {
   if (entry.packageType === 'RUNTIME_MANIFEST_V2' && entry.adapterType === 'CANONICAL_WORKBOOK_REFERENCE_V1') {
     runtimePackage = await loadCanonicalWorkbookRuntimePackage(entry);
     adapted = adaptCanonicalWorkbookReferenceV1(runtimePackage);
+  } else if (entry.packageType === 'RUNTIME_MANIFEST_V2' && entry.adapterType === 'UCHIRIMO_TABULAR_V1') {
+    runtimePackage = await loadCanonicalWorkbookRuntimePackage(entry);
+    adapted = adaptUchirimoTabularV1(runtimePackage);
   } else if (entry.packageType === 'RUNTIME_MANIFEST_V1' && entry.adapterType === 'TW_CANONICAL_WORKBOOK_REFERENCE_V1') {
     runtimePackage = await loadManifestRuntimePackage(entry);
     const master = adaptTwCanonicalWorkbookReferenceV1(runtimePackage);
