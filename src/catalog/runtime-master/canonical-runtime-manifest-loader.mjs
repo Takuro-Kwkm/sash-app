@@ -93,19 +93,21 @@ async function readMaterializedFile(entry, row) {
   return { ...row, json, bytes: bytes.length, actualSha256, codec: transport.codec };
 }
 
-function verifyDocumentIdentity(document, manifest, role) {
+function verifyDocumentIdentity(document, manifest, role, { requireRuntimeContract = true, enforceSchemaVersion = true } = {}) {
+  const identity = document?.metadata ?? document?.meta ?? document;
   const pairs = [
-    ['schema_version', manifest.schemaVersion, document?.schema_version],
-    ['manufacturer', manifest.manufacturer, document?.manufacturer],
-    ['series', manifest.series, document?.series],
-    ['package_version', manifest.packageVersion, document?.package_version],
+    ['schema_version', manifest.schemaVersion, identity?.schema_version],
+    ['manufacturer', manifest.manufacturer, identity?.manufacturer],
+    ['series', manifest.series, identity?.series],
+    ['package_version', manifest.packageVersion, identity?.package_version ?? identity?.version ?? identity?.source_package_version],
   ];
   for (const [name, expected, actual] of pairs) {
-    if (String(expected) !== String(actual)) {
+    if (name === 'schema_version' && !enforceSchemaVersion) continue;
+    if (actual !== undefined && actual !== null && String(expected) !== String(actual)) {
       fail('RUNTIME_MANIFEST_IDENTITY_MISMATCH', `${role}.${name} mismatch: expected ${expected}, got ${actual}`, { role, name, expected, actual });
     }
   }
-  if (!document?.runtime_contract) {
+  if (requireRuntimeContract && !document?.runtime_contract) {
     fail('RUNTIME_MANIFEST_DOCUMENT_CONTRACT_MISSING', `${role}.runtime_contract is required for schema-less canonical Runtime packages`, { role });
   }
 }
@@ -137,7 +139,8 @@ export async function loadCanonicalWorkbookRuntimePackage(entry) {
     }
   }
 
-  const storageReady = manifest.storageStatus === 'DRIVE_CANONICAL' && manifest.storageGate === 'PASS';
+  const storageReady = manifest.storageStatus === 'PASS_CANONICAL' ||
+    (manifest.storageStatus === 'DRIVE_CANONICAL' && manifest.storageGate === 'PASS');
   if (!manifest.formalPass || manifest.runtimeStatus !== 'READY' || !storageReady ||
       manifest.packageGate !== 'PASS' || manifest.registryGate !== 'PASS') {
     fail('RUNTIME_MANIFEST_NOT_FORMAL_READY', 'Canonical Runtime manifest is not formally READY', { manifest });
@@ -147,7 +150,10 @@ export async function loadCanonicalWorkbookRuntimePackage(entry) {
   const files = [];
   for (const row of manifest.runtimeFiles) {
     const loaded = await readMaterializedFile(entry, row);
-    verifyDocumentIdentity(loaded.json, manifest, row.role);
+    verifyDocumentIdentity(loaded.json, manifest, row.role, {
+      requireRuntimeContract: entry.requireRuntimeContract !== false,
+      enforceSchemaVersion: entry.enforceComponentSchemaVersion !== false,
+    });
     loadedByRole.set(row.role, loaded.json);
     files.push({
       role: row.role, fileName: row.fileName, fileId: row.fileId,
