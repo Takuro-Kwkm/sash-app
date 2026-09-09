@@ -84,7 +84,9 @@ test('CUSTOM dimension states preserve PASS, BLOCK, PENDING and REVIEW_REQUIRED'
 });
 
 test('upstream changes remove invalid downstream values', async () => {
-  const result = await resolveRuntimeAppProduct(PRODUCT, { room_specification: 'residential', window_type: 'sliding_window', sash_configuration: 'three_panel', size_class: 'window', three_panel_layout: 'meeting_outer_inner_inner', reverse_handing: 'standard', size_w: 1200, size_h: 800 });
+  let result = await resolveRuntimeAppProduct(PRODUCT, { room_specification: 'residential', window_type: 'sliding_window', sash_configuration: 'three_panel', size_class: 'window' });
+  assert.ok(values(result, 'window_type').includes('fix_window'), 'downstream selections must not hide an alternative parent choice');
+  result = await resolveRuntimeAppProduct(PRODUCT, { room_specification: 'residential', window_type: 'sliding_window', sash_configuration: 'three_panel', size_class: 'window', three_panel_layout: 'meeting_outer_inner_inner', reverse_handing: 'standard', size_w: 1200, size_h: 800 });
   assert.equal(result.selection.reverse_handing, undefined);
   assert.ok(result.clearedFields.some((row) => row.field === 'reverse_handing'));
   assert.ok(field(result, 'three_panel_layout'));

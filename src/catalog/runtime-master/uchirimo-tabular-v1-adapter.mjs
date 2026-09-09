@@ -184,16 +184,13 @@ function ruleMatches(rule, selection) {
   return (rule.conditions ?? []).every((condition) => conditionMatches(condition, selection));
 }
 
-function filterNodeCandidates(nodes, selection, skipField = null) {
-  return nodes.filter((node) => NODE_AXES.every((field) => field === skipField || !has(selection[field]) || same(node[field === 'room_specification' ? 'room' : field], selection[field])));
-}
-
 function configureNodeAxes(model, selection, visible, required, allowed) {
   let candidates = model.canonical.product_nodes;
   for (const field of NODE_AXES) {
     const source = field === 'room_specification' ? 'room' : field;
-    const scoped = filterNodeCandidates(candidates, selection, field);
-    const choices = unique(scoped.map((row) => row[source]).filter(has));
+    // A parent selector is constrained only by axes that precede it. Stale
+    // downstream values must never remove alternative parent choices from UI.
+    const choices = unique(candidates.map((row) => row[source]).filter(has));
     allowed.set(field, choices);
     const shouldShow = field === 'room_specification' || field === 'window_type' ||
       (field === 'sash_configuration' && selection.window_type === 'sliding_window') ||
