@@ -25,7 +25,7 @@ function matchesRuntimeSelection(response, key, value) {
 }
 
 async function openUchirimo(page) {
-  const entry = SHARE_TOKEN ? `${BASE}/?_vercel_share=${encodeURIComponent(SHARE_TOKEN)}` : BASE;
+  const entry = SHARE_TOKEN ? `${BASE}/runtime-lab?_vercel_share=${encodeURIComponent(SHARE_TOKEN)}` : `${BASE}/runtime-lab`;
   await page.goto(entry, { waitUntil:'networkidle' });
   await page.waitForFunction(() => document.querySelector('#status')?.textContent === 'CATALOG CONNECTED');
   await page.selectOption('#manufacturer', 'YKK AP');
