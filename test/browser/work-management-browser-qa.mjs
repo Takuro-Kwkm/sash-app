@@ -3,6 +3,7 @@ import { mkdir, writeFile } from 'node:fs/promises';
 import { chromium } from 'playwright';
 
 const BASE=process.env.QA_BASE_URL??'http://127.0.0.1:4173';
+const SHARE_TOKEN=process.env.VERCEL_SHARE_TOKEN;
 const OUT='artifacts/work-management-browser-qa';
 await mkdir(OUT,{recursive:true});
 const report={status:'RUNNING',scenarios:{},consoleErrors:[],pageErrors:[],failedResponses:[]};
@@ -44,7 +45,8 @@ async function createOpening(index,product){
 }
 
 try{
-  await page.goto(BASE,{waitUntil:'networkidle'});await page.evaluate(()=>localStorage.clear());await page.reload({waitUntil:'networkidle'});
+  const entry=SHARE_TOKEN?`${BASE}/?_vercel_share=${encodeURIComponent(SHARE_TOKEN)}`:BASE;
+  await page.goto(entry,{waitUntil:'networkidle'});await page.evaluate(()=>localStorage.clear());await page.goto(BASE,{waitUntil:'networkidle'});
   await page.getByRole('button',{name:'新しい案件'}).first().click();
   await page.locator('[name="project_name"]').fill('熊本中央区モデルハウス');
   await page.locator('[name="request_company"]').fill('青空工務店');
@@ -102,6 +104,29 @@ try{
   assert.equal(await page.locator('[data-opening-field="memo"]').inputValue(),'保存失敗後も保持される入力');
   await page.evaluate(()=>window.__sashWorkApp.setPersistenceFailure(false));await page.getByRole('button',{name:'再試行'}).click();
   await page.waitForFunction(()=>document.querySelector('.save-status')?.textContent==='保存済み');report.scenarios.G='PASS';
+
+  const raceConsoleStart=report.consoleErrors.length;const racePageStart=report.pageErrors.length;
+  const raceMemo='DOM破棄後もEmergency Draftに保持される入力';
+  const raceDraftKey=await page.evaluate(()=>`sash.work-draft.${location.pathname.split('/').at(-1)}`);
+  await page.locator('[data-opening-field="memo"]').fill(raceMemo);
+  await page.evaluate(()=>{
+    window.__sashWorkApp.setPersistenceFailure(true);
+    document.querySelector('#status').textContent='NEXT SCREEN';
+    document.querySelector('#appMain').innerHTML='<section id="nextScreenSentinel">NEXT SCREEN DOM</section>';
+  });
+  await page.waitForTimeout(1200);
+  assert.equal(await page.locator('#nextScreenSentinel').innerText(),'NEXT SCREEN DOM');
+  assert.equal(await page.locator('#status').innerText(),'NEXT SCREEN');
+  const emergency=await page.evaluate((key)=>JSON.parse(localStorage.getItem(key)),raceDraftKey);
+  assert.equal(emergency.payload.memo,raceMemo);
+  assert.equal(report.consoleErrors.length,raceConsoleStart);
+  assert.equal(report.pageErrors.length,racePageStart);
+  await page.evaluate(()=>window.__sashWorkApp.setPersistenceFailure(false));
+  await page.reload({waitUntil:'networkidle'});
+  await page.waitForSelector('[data-opening-field="memo"]');
+  assert.equal(await page.locator('[data-opening-field="memo"]').inputValue(),raceMemo);
+  await page.waitForFunction(()=>document.querySelector('.save-status')?.textContent==='保存済み',{timeout:5000});
+  report.scenarios.SAVE_NAVIGATION_RACE='PASS';
 
   const openingPath=new URL(page.url()).pathname;
   await page.evaluate(()=>{const key=window.__sashWorkApp.storageKey;const db=JSON.parse(localStorage.getItem(key));const opening=db.openings.find((row)=>row.product_configuration_snapshot?.source_mode==='CANONICAL_RUNTIME');opening.product_configuration_snapshot.runtime_manifest_identity='old-manifest';localStorage.setItem(key,JSON.stringify(db));});
