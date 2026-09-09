@@ -85,18 +85,18 @@ jobs:
           share="$(node - <<'NODE'
           const fs=require('fs');
           const r=JSON.parse(fs.readFileSync('/tmp/share.json','utf8'));
-          const direct=[r.value,r.secret,r.protectionBypass?.value,r.protectionBypass?.secret].filter(v=>typeof v==='string'&&v.length>0);
+          const direct=[r.value,r.secret,r.protectionBypass?.value,r.protectionBypass?.secret].filter(v=>typeof v==='string'&&/^[A-Za-z0-9]{32}$/.test(v));
           if(direct.length){process.stdout.write(direct[0]);process.exit(0)}
           const candidates=[];
           const walk=(v)=>{
             if(typeof v==='string'){
-              if(/^[A-Za-z0-9_-]{20,128}$/.test(v)) candidates.push(v);
+              if(/^[A-Za-z0-9]{32}$/.test(v)) candidates.push(v);
               return;
             }
             if(Array.isArray(v)){for(const x of v) walk(x);return;}
             if(v&&typeof v==='object'){
               for(const [k,x] of Object.entries(v)){
-                if(/^[A-Za-z0-9_-]{20,128}$/.test(k)) candidates.push(k);
+                if(/^[A-Za-z0-9]{32}$/.test(k)) candidates.push(k);
                 walk(x);
               }
             }
