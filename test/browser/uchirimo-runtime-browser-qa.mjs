@@ -96,6 +96,10 @@ async function exercise(page) {
   result = await choose(page, 'frame_color', 'greige');
   result = await choose(page, 'frame_installation_mode', 'frame_projection');
   assert.equal(await page.locator('[data-spec-key="frame_projection"]').count(), 1);
+  result = await choose(page, 'window_type', 'sliding_window');
+  result = await chooseIfAvailable(page, result, 'sash_configuration', 'two_panel');
+  result = await chooseIfAvailable(page, result, 'size_class', 'window');
+  result = await choose(page, 'frame_color', 'greige');
   result = await choose(page, 'room_specification', 'bathroom');
   assert.equal(result.selection.frame_color, undefined);
   assert.ok(result.clearedFields.some((row) => row.field === 'frame_color'));
