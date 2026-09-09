@@ -1,0 +1,113 @@
+name: YKK AP Uchirimo v1.0-P7R1-R2 Release Preview
+
+on:
+  push:
+    branches:
+      - release/ykkap-uchirimo-v1.0-p7r1-r2-production-20260909
+
+permissions:
+  contents: read
+
+env:
+  RELEASE_CANDIDATE_SHA: 92ee5c5c92e8cb6a5227047fa670e220e25fec6c
+  EXPECTED_UCHIRIMO_RUNTIME_SHA: be4f1f77727424dc06ddf9de947201f33d4aee5219b182e37d0f178e1fb7147d
+  VERCEL_ORG_ID: team_AkuHacuJlCl8LuvaFpCzFmbv
+  VERCEL_PROJECT_ID: prj_4z0zqW6yKyPuFINODfGX8LPBuJRP
+  VERCEL_PROJECT_NAME: sash-app-wave3-preview
+  RELEASE_SERIES: YKK AP ウチリモ 内窓
+  RELEASE_PACKAGE_VERSION: v1.0-P7R1-R2
+
+jobs:
+  preview_gate:
+    runs-on: ubuntu-latest
+    environment: production
+    env:
+      VERCEL_TOKEN_PRIMARY: ${{ secrets.VERCEL_TOKEN }}
+      VERCEL_TOKEN_FALLBACK: ${{ secrets.VERCEL_ACCESS_TOKEN }}
+    steps:
+      - name: Checkout exact release candidate
+        uses: actions/checkout@v4
+        with:
+          ref: 92ee5c5c92e8cb6a5227047fa670e220e25fec6c
+          path: rc
+          fetch-depth: 1
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Fixed SHA identity gate
+        shell: bash
+        working-directory: rc
+        run: |
+          set -euo pipefail
+          actual="$(git rev-parse HEAD)"
+          test "$actual" = "$RELEASE_CANDIDATE_SHA"
+          echo "RELEASE_INPUT_SHA_GATE=PASS"
+
+      - name: Install, lint, typecheck and tests
+        working-directory: rc
+        run: |
+          npm install --ignore-scripts
+          npm run lint
+          npm run typecheck
+          npm test
+
+      - name: Uchirimo release review build
+        working-directory: rc
+        run: npm run build:uchirimo-review
+
+      - name: Runtime integration smoke
+        shell: bash
+        working-directory: rc
+        run: |
+          set -euo pipefail
+          npm run start:qa > /tmp/uchirimo-release-preview.log 2>&1 &
+          PID=$!
+          trap 'kill $PID || true' EXIT
+          for i in {1..40}; do
+            if curl -fsS http://127.0.0.1:4173/api/health > /tmp/health.json; then break; fi
+            sleep 0.5
+          done
+          node -e 'const h=require("/tmp/health.json"); const u=h.runtimeMasterIntegrations?.find(x=>x.id==="SER-YKKAP-UCHIRIMO"); const ew=h.runtimeMasterIntegrations?.find(x=>x.id==="SER-LIX-EW"); const tw=h.runtimeMasterIntegrations?.find(x=>x.id==="SER-LIXIL-TW"); if(!h.ok||!u||u.status!=="READY"||!u.selectable||u.sourceHash!==process.env.EXPECTED_UCHIRIMO_RUNTIME_SHA||!ew||!tw) process.exit(1)'
+          curl -fsS http://127.0.0.1:4173/api/runtime-master/integrations > /tmp/integrations.json
+          echo "RUNTIME_LOAD_GATE=PASS"
+
+      - name: Secure Vercel credential and project preflight
+        shell: bash
+        run: |
+          set -euo pipefail
+          token="${VERCEL_TOKEN_PRIMARY:-${VERCEL_TOKEN_FALLBACK:-}}"
+          if [[ -z "$token" ]]; then
+            echo "VERCEL_CREDENTIAL_GATE=BLOCKED"
+            exit 42
+          fi
+          echo "VERCEL_TOKEN_EFFECTIVE=$token" >> "$GITHUB_ENV"
+          status="$(curl -sS -o /tmp/vercel-project.json -w '%{http_code}' -H "Authorization: Bearer $token" "https://api.vercel.com/v9/projects/$VERCEL_PROJECT_ID")"
+          test "$status" = "200"
+          node -e 'const p=require("/tmp/vercel-project.json"); if(p.id!==process.env.VERCEL_PROJECT_ID||p.accountId!==process.env.VERCEL_ORG_ID) process.exit(1)'
+          echo "VERCEL_CREDENTIAL_GATE=PASS"
+          echo "VERCEL_PROJECT_ACCESS_GATE=PASS"
+
+      - name: Create exact RC Preview deployment
+        shell: bash
+        working-directory: rc
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts/uchirimo-release
+          env -u GITHUB_SHA node scripts/vercel-rest-deploy.mjs preview artifacts/uchirimo-release/preview-deployment.json
+
+      - name: Verify Preview deployment identity
+        working-directory: rc
+        run: |
+          node -e 'const d=require("./artifacts/uchirimo-release/preview-deployment.json"); if(d.readyState!=="READY"||d.githubSha!==process.env.RELEASE_CANDIDATE_SHA||d.mode!=="preview"||d.projectId!==process.env.VERCEL_PROJECT_ID||d.teamId!==process.env.VERCEL_ORG_ID) process.exit(1); console.log(JSON.stringify(d,null,2))'
+          echo "BUILD_GATE=PASS"
+          echo "STAGING_DEPLOY_GATE=PASS"
+
+      - name: Upload release preview audit
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: uchirimo-release-preview-audit
+          path: rc/artifacts/uchirimo-release/
+          if-no-files-found: warn
