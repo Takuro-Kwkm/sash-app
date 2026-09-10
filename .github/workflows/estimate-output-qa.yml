@@ -7,6 +7,12 @@ on:
 jobs:
   estimate_output:
     runs-on: ubuntu-latest
+    env:
+      VERCEL_ORG_ID: team_AkuHacuJlCl8LuvaFpCzFmbv
+      VERCEL_PROJECT_ID: prj_4z0zqW6yKyPuFINODfGX8LPBuJRP
+      VERCEL_PROJECT_NAME: sash-app-wave3-preview
+      RELEASE_SERIES: ESTIMATE_OUTPUT
+      RELEASE_PACKAGE_VERSION: v1.0
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -30,6 +36,33 @@ jobs:
             sleep 0.5
           done
           npm run test:browser:estimate-output
+      - name: Vercel credential and project preflight
+        env:
+          VERCEL_TOKEN_PRIMARY: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_TOKEN_FALLBACK: ${{ secrets.VERCEL_ACCESS_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          token="${VERCEL_TOKEN_PRIMARY:-${VERCEL_TOKEN_FALLBACK:-}}"
+          if [[ -z "$token" ]]; then
+            echo "VERCEL_CREDENTIAL_GATE=BLOCKED"
+            exit 42
+          fi
+          echo "VERCEL_TOKEN_EFFECTIVE=$token" >> "$GITHUB_ENV"
+          status="$(curl -sS -o /tmp/vercel-project.json -w '%{http_code}' -H "Authorization: Bearer $token" "https://api.vercel.com/v9/projects/$VERCEL_PROJECT_ID")"
+          if [[ "$status" != "200" ]]; then
+            echo "VERCEL_PROJECT_ACCESS_GATE=BLOCKED status=$status"
+            exit 46
+          fi
+          node -e 'const p=require("/tmp/vercel-project.json"); if(p.id!==process.env.VERCEL_PROJECT_ID||p.accountId!==process.env.VERCEL_ORG_ID) process.exit(1)'
+          echo "VERCEL_CREDENTIAL_GATE=PASS"
+          echo "VERCEL_PROJECT_ACCESS_GATE=PASS"
+      - name: Deploy exact PR SHA Preview
+        run: node scripts/vercel-rest-deploy.mjs preview artifacts/estimate-output-browser-qa/deployment.json
+      - name: Verify Preview identity
+        run: |
+          node -e 'const d=require("./artifacts/estimate-output-browser-qa/deployment.json"); if(d.readyState!=="READY"||d.githubSha!==process.env.GITHUB_SHA||d.mode!=="preview"||d.projectId!==process.env.VERCEL_PROJECT_ID||d.teamId!==process.env.VERCEL_ORG_ID) process.exit(1)'
+          echo "PREVIEW_DEPLOYMENT_GATE=PASS"
       - name: Upload estimate output QA artifacts
         if: always()
         uses: actions/upload-artifact@v4
