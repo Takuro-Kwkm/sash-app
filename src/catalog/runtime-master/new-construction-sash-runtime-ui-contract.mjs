@@ -7,7 +7,7 @@ export const NEW_CONSTRUCTION_SASH_UI_STANDARD_ORDER = Object.freeze([
   'manufacturer',
   'product',
   'window_type',
-  'window_specific_spec',
+  'window_spec',
   'handing',
   'size_mode',
   'panel_leaf',
@@ -35,18 +35,18 @@ const ALIAS_TO_SLOT = Object.freeze({
   series: 'product',
   window_type: 'window_type',
 
-  window_spec: 'window_specific_spec',
-  shutter_type: 'window_specific_spec',
-  rain_shutter_type: 'window_specific_spec',
-  grille_type: 'window_specific_spec',
-  operation_type: 'window_specific_spec',
-  operation_method: 'window_specific_spec',
-  operator_position: 'window_specific_spec',
-  handle_type: 'window_specific_spec',
-  handle_configuration: 'window_specific_spec',
-  composition_type: 'window_specific_spec',
-  configuration: 'window_specific_spec',
-  variant: 'window_specific_spec',
+  window_spec: 'window_spec',
+  shutter_type: 'window_spec',
+  rain_shutter_type: 'window_spec',
+  grille_type: 'window_spec',
+  operation_type: 'window_spec',
+  operation_method: 'window_spec',
+  operator_position: 'window_spec',
+  handle_type: 'window_spec',
+  handle_configuration: 'window_spec',
+  composition_type: 'window_spec',
+  configuration: 'window_spec',
+  variant: 'window_spec',
 
   handing: 'handing',
   size_mode: 'size_mode',
@@ -84,75 +84,34 @@ const ALIAS_TO_SLOT = Object.freeze({
 });
 
 const COMMON_LABELS = Object.freeze({
-  manufacturer: 'メーカー',
-  product: '商品',
-  window_type: '窓種類',
-  handing: '開き勝手（吊元）',
-  size_mode: 'サイズ方式',
-  panel_leaf: '建具・枚数',
-  size: 'サイズ',
-  exterior_color: '外観色',
-  interior_color: '内観色',
-  screen_presence: '網戸',
-  screen_form: '網戸形式',
-  screen_midrail: '網戸中桟',
-  screen_net: '網戸ネット',
-  glass_base: 'ガラス',
-  glass_type: 'ガラス種',
-  glass_detail: 'ガラス詳細',
-  glass_function: 'ガラス追加機能',
-  glass_spacer: 'スペーサー',
-  glass_air_layer: '中空層',
-  option: 'その他オプション',
+  manufacturer: 'メーカー', product: '商品', window_type: '窓種類', handing: '開き勝手（吊元）',
+  size_mode: 'サイズ方式', panel_leaf: '建具・枚数', size: 'サイズ', exterior_color: '外観色', interior_color: '内観色',
+  screen_presence: '網戸', screen_form: '網戸形式', screen_midrail: '網戸中桟', screen_net: '網戸ネット',
+  glass_base: 'ガラス', glass_type: 'ガラス種', glass_detail: 'ガラス詳細', glass_function: 'ガラス追加機能',
+  glass_spacer: 'スペーサー', glass_air_layer: '中空層', option: 'その他オプション',
 });
 
 const INTERNAL_FIELDS = Object.freeze(new Set([
-  'construction',
-  'internal_provider_id',
-  'provider_id',
-  'source_id',
-  'dependency_only_selector',
-  'actual_w',
-  'actual_h',
-  'runtime_technical_state',
-  'internal_normalized_id',
-  'common_window_id',
+  'construction','internal_provider_id','provider_id','source_id','dependency_only_selector','actual_w','actual_h',
+  'runtime_technical_state','internal_normalized_id','common_window_id',
 ]));
 
-export function semanticSlotForRuntimeField(fieldKey) {
-  return ALIAS_TO_SLOT[fieldKey] ?? null;
-}
-
-export function isInternalRuntimeUiField(fieldKey) {
-  return INTERNAL_FIELDS.has(fieldKey);
-}
-
+export function semanticSlotForRuntimeField(fieldKey) { return ALIAS_TO_SLOT[fieldKey] ?? null; }
+export function isInternalRuntimeUiField(fieldKey) { return INTERNAL_FIELDS.has(fieldKey); }
 export function commonLabelForRuntimeField(fieldKey, fallback = null) {
   const slot = semanticSlotForRuntimeField(fieldKey);
   return (slot && COMMON_LABELS[slot]) || fallback;
 }
-
 export function normalizeNewConstructionSashUiField(field, index = 0) {
   const slot = semanticSlotForRuntimeField(field.key);
-  return {
-    ...field,
-    semanticSlot: slot,
-    displayLabel: commonLabelForRuntimeField(field.key, field.displayLabel),
-    displayOrder: slot ? SLOT_ORDER[slot] : Number(field.displayOrder ?? 1000 + index),
-  };
+  return { ...field, semanticSlot: slot, displayLabel: commonLabelForRuntimeField(field.key, field.displayLabel), displayOrder: slot ? SLOT_ORDER[slot] : Number(field.displayOrder ?? 1000 + index) };
 }
-
 export function applyNewConstructionSashUiOrder(fields = []) {
-  return fields
-    .filter((field) => !isInternalRuntimeUiField(field.key))
-    .map(normalizeNewConstructionSashUiField)
+  return fields.filter((field) => !isInternalRuntimeUiField(field.key)).map(normalizeNewConstructionSashUiField)
     .sort((a, b) => a.displayOrder - b.displayOrder || a.key.localeCompare(b.key, 'ja'));
 }
-
 export function applyRuntimeUiCategoryOrder(fields = [], integration = {}) {
   if (integration.uiCategory === INNER_WINDOW_UI_CATEGORY) return applyInnerWindowUiOrder(fields);
-  if (integration.uiCategory === NEW_CONSTRUCTION_EXTERIOR_WINDOW_UI_CATEGORY) {
-    return applyNewConstructionSashUiOrder(fields);
-  }
+  if (integration.uiCategory === NEW_CONSTRUCTION_EXTERIOR_WINDOW_UI_CATEGORY) return applyNewConstructionSashUiOrder(fields);
   return [...fields].sort((a, b) => a.displayOrder - b.displayOrder || a.key.localeCompare(b.key, 'ja'));
 }
