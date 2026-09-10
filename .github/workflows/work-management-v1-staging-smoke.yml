@@ -1,0 +1,96 @@
+name: Work Management v1.0 Staging Smoke
+
+on:
+  push:
+    branches: ['fix/work-management-save-navigation-race']
+
+jobs:
+  staging_smoke:
+    runs-on: ubuntu-latest
+    env:
+      RELEASE_CANDIDATE_SHA: e9918cd75430262bd2bf3debc1abf24bc614236e
+      STAGING_URL: https://sash-app-wave3-preview-c91mxuc3r-tk-4bb0.vercel.app
+      VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
+    steps:
+      - name: Checkout exact Release Candidate test harness
+        uses: actions/checkout@v4
+        with:
+          ref: e9918cd75430262bd2bf3debc1abf24bc614236e
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Verify candidate and secret presence
+        shell: bash
+        run: |
+          set -euo pipefail
+          [[ "$(git rev-parse HEAD)" == "$RELEASE_CANDIDATE_SHA" ]] || exit 41
+          [[ -n "${VERCEL_AUTOMATION_BYPASS_SECRET:-}" ]] || { echo 'AUTOMATION_BYPASS_SECRET_GATE=BLOCKED'; exit 42; }
+          mkdir -p artifacts/staging-work-management-v1
+          printf 'release_candidate_sha=%s\nstaging_url=%s\nproduct_master_mutation=0\n' "$RELEASE_CANDIDATE_SHA" "$STAGING_URL" > artifacts/staging-work-management-v1/release.txt
+          echo 'AUTOMATION_BYPASS_SECRET_GATE=PASS'
+
+      - name: Protected Preview HTTP preflight
+        shell: bash
+        run: |
+          set -euo pipefail
+          status="$(curl -sS -o artifacts/staging-work-management-v1/health.json -w '%{http_code}' -H "x-vercel-protection-bypass: $VERCEL_AUTOMATION_BYPASS_SECRET" "$STAGING_URL/api/health")"
+          [[ "$status" == 200 ]] || { echo "STAGING_HTTP_GATE=BLOCKED status=$status"; exit 43; }
+          node -e 'const h=require("./artifacts/staging-work-management-v1/health.json"); const ids=new Set(h.runtimeMasterIntegrations?.map(x=>x.id)); if(!h.ok||ids.size!==3||!ids.has("SER-LIX-EW")||!ids.has("SER-LIXIL-TW")||!ids.has("SER-YKKAP-UCHIRIMO")) process.exit(1)'
+          printf 'staging_http_gate=PASS\n' >> artifacts/staging-work-management-v1/release.txt
+          echo 'STAGING_HTTP_GATE=PASS'
+
+      - name: Install Playwright
+        run: |
+          npm install --ignore-scripts
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+
+      - name: Inject protected-preview header into existing browser QA harness
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('test/browser/work-management-browser-qa.mjs')
+          s=p.read_text()
+          old="const context=await browser.newContext({viewport:{width:1440,height:1000}});"
+          new="const context=await browser.newContext({viewport:{width:1440,height:1000},extraHTTPHeaders:{'x-vercel-protection-bypass':process.env.VERCEL_AUTOMATION_BYPASS_SECRET}});"
+          if old not in s:
+              raise SystemExit('browser context marker not found')
+          p.write_text(s.replace(old,new,1))
+          PY
+          node --check test/browser/work-management-browser-qa.mjs
+
+      - name: Run full work-management staging browser QA
+        env:
+          QA_BASE_URL: ${{ env.STAGING_URL }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          node test/browser/work-management-browser-qa.mjs | tee artifacts/staging-work-management-v1/browser-qa.log
+          cp artifacts/work-management-browser-qa/report.json artifacts/staging-work-management-v1/report.json
+          node - <<'NODE'
+          const fs=require('fs');
+          const r=require('./artifacts/staging-work-management-v1/report.json');
+          const required=['A','B','C','D','E','F','G','H','I'];
+          if(r.status!=='PASS') process.exit(51);
+          for(const key of required) if(r.scenarios?.[key]!=='PASS') process.exit(52);
+          if((r.consoleErrors??[]).length) process.exit(53);
+          if((r.pageErrors??[]).length) process.exit(54);
+          if((r.failedResponses??[]).length) process.exit(55);
+          fs.appendFileSync('artifacts/staging-work-management-v1/release.txt',
+            'scenario_a_i=PASS\nscenario_f_soft_delete=PASS\nsave_failure_retry=PASS\nmobile_390x844=PASS\nconsole_error=0\npage_error=0\nunexpected_4xx_5xx=0\nstaging_browser_smoke_gate=PASS\ndeployment_ready=TRUE\n');
+          NODE
+          echo 'STAGING_BROWSER_SMOKE_GATE=PASS'
+          echo 'DEPLOYMENT_READY=TRUE'
+
+      - name: Upload staging smoke audit
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: work-management-v1-staging-smoke-e9918cd
+          path: artifacts/
+          if-no-files-found: warn
