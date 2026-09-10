@@ -70,8 +70,8 @@ test('provider errors are sanitized to bounded application errors',async()=>{
 test('Data API requires auth and validates tenant UUID before sending requests',async()=>{
   const client=new SupabaseDataApiClient({url:'https://sample.supabase.co',publishableKey:'sb_publishable_test',fetchImpl:async()=>{throw new Error('should not fetch');}});
   await assert.rejects(()=>client.listWorkspaces(),{code:'AUTH_REQUIRED'});
-  await assert.rejects(()=>client.listProjects('token','not-a-uuid'),{code:'DATA_SCOPE_INVALID'});
-  await assert.rejects(()=>client.createProject('token','11111111-1111-4111-8111-111111111111',{workspace_id:'22222222-2222-4222-8222-222222222222'}),{code:'RESOURCE_WORKSPACE_DENIED'});
+  assert.throws(()=>client.listProjects('token','not-a-uuid'),{code:'DATA_SCOPE_INVALID'});
+  assert.throws(()=>client.createProject('token','11111111-1111-4111-8111-111111111111',{workspace_id:'22222222-2222-4222-8222-222222222222'}),{code:'RESOURCE_WORKSPACE_DENIED'});
 });
 
 test('Data API project reads carry explicit workspace filter in addition to RLS',async()=>{
@@ -81,7 +81,7 @@ test('Data API project reads carry explicit workspace filter in addition to RLS'
     fetchImpl:async(url)=>{calledUrl=url;return jsonResponse(200,[]);},
   });
   await client.listProjects('token','11111111-1111-4111-8111-111111111111');
-  assert.match(calledUrl,/workspace_id=eq%2E11111111-1111-4111-8111-111111111111/);
+  assert.match(calledUrl,/workspace_id=eq\.11111111-1111-4111-8111-111111111111/);
 });
 
 test('Supabase migration enforces RLS, least privilege, verified onboarding and tenant FK consistency',async()=>{
