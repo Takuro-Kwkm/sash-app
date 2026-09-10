@@ -11,10 +11,11 @@ import { WORK_SCHEMA_VERSION } from "../work-management/domain.mjs";
 const HERE=dirname(fileURLToPath(import.meta.url));
 const root=join(HERE,"../..");
 const webRoot=join(root,"src","ui","web");
+const estimateOutputRoot=join(root,"src","estimate-output");
 const catalog=createCatalog(CURRENT_WINDOW_SERIES_MODULES);
 const runtimeMasterIntegrations=runtimeAppIntegrationInventory();
 const buildTimestamp=new Date().toISOString();
-const buildIdentity={appVersion:"work-management-v1.0",workSchemaVersion:WORK_SCHEMA_VERSION,catalog,runtimeMasterIntegrations:runtimeMasterIntegrations.map(({id,packageVersion,sourceHash,status,selectable})=>({id,packageVersion,sourceHash,status,selectable}))};
+const buildIdentity={appVersion:"work-management-v1.0+estimate-output-v1.0",workSchemaVersion:WORK_SCHEMA_VERSION,catalog,runtimeMasterIntegrations:runtimeMasterIntegrations.map(({id,packageVersion,sourceHash,status,selectable})=>({id,packageVersion,sourceHash,status,selectable}))};
 const buildId=`SASH-WORK-V1-${createHash("sha256").update(JSON.stringify(buildIdentity)).digest("hex").slice(0,12)}`;
 const catalogVersion="V4.3 RECOVERY + WAVE3-1 THERMOS-L + LIXIL EW v1.1 + LIXIL TW integrated-v0.2 + YKK AP ウチリモ v1.0-P7R1-R2";
 
@@ -60,6 +61,7 @@ export function createRecoveryRequestHandler({backend="node:http recovery server
       return json(res,200,{
         ok:true,buildId,buildTimestamp,catalogVersion,
         entrypoint,frontendRoot:"src/ui/web",backend,
+        features:{estimateOutput:"1.0"},
         persistence:{type:"BROWSER_LOCAL_STORAGE",schemaVersion:WORK_SCHEMA_VERSION,key:"sash.work-management.v1",multiDevice:false},
         databasePath:null,
         inventory:catalogInventory(catalog),runtimeMasterIntegrations
@@ -89,11 +91,14 @@ export function createRecoveryRequestHandler({backend="node:http recovery server
     if(url.pathname==="/api/catalog") return json(res,200,catalog);
     if(url.pathname==="/app.js") return staticFile(res,"app.js","text/javascript; charset=utf-8");
     if(url.pathname==="/product-configuration-editor.mjs") return staticFile(res,"product-configuration-editor.mjs","text/javascript; charset=utf-8");
+    if(url.pathname==="/estimate-output-integration.mjs") return staticFile(res,"estimate-output-integration.mjs","text/javascript; charset=utf-8");
     if(url.pathname==="/styles.css") return staticFile(res,"styles.css","text/css; charset=utf-8");
     if(url.pathname==="/styles-wave3.css") return staticFile(res,"styles-wave3.css","text/css; charset=utf-8");
     if(url.pathname==="/work-management.css") return staticFile(res,"work-management.css","text/css; charset=utf-8");
     const workModule=url.pathname.match(/^\/work-management\/(domain|storage|repositories|service)\.mjs$/)?.[1];
     if(workModule)return staticFileAt(res,join(root,"src","work-management",`${workModule}.mjs`),"text/javascript; charset=utf-8");
+    const estimateModule=url.pathname.match(/^\/estimate-output\/(model|pdf-renderer|xlsx-renderer)\.mjs$/)?.[1];
+    if(estimateModule)return staticFileAt(res,join(estimateOutputRoot,`${estimateModule}.mjs`),"text/javascript; charset=utf-8");
     return staticFile(res,"index.html","text/html; charset=utf-8");
   };
 }
