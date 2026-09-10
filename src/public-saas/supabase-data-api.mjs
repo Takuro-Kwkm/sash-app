@@ -8,6 +8,24 @@ function assertUuid(value,name){
   return String(value);
 }
 
+function assertId(value,name){
+  const normalized=trim(value);
+  if(!normalized)throw new PublicSaaSError('DATA_ID_REQUIRED',`${name} is required.`);
+  return normalized;
+}
+
+function assertWorkspaceMatch(resource,workspaceId,resourceName){
+  if(resource?.workspace_id&&resource.workspace_id!==workspaceId){
+    throw new PublicSaaSError('RESOURCE_WORKSPACE_DENIED',`${resourceName} workspace_id does not match active workspace.`);
+  }
+}
+
+function mutablePatch(patch,identityKeys){
+  const next={...(patch??{})};
+  for(const key of identityKeys)delete next[key];
+  return next;
+}
+
 export class SupabaseDataApiClient {
   constructor({url,publishableKey,fetchImpl=globalThis.fetch}={}){
     this.url=trim(url).replace(/\/+$/,'');
@@ -58,17 +76,110 @@ export class SupabaseDataApiClient {
     return this.#request('/rpc/create_workspace_with_owner',{method:'POST',accessToken,body:{workspace_name:normalized}});
   }
 
-  listProjects(accessToken,workspaceId){
+  listProjects(accessToken,workspaceId,{includeDeleted=false}={}){
     const id=assertUuid(workspaceId,'workspace_id');
-    const query=new URLSearchParams({
-      select:'*',workspace_id:`eq.${id}`,deleted_at:'is.null',order:'updated_at.desc',
-    });
+    const query=new URLSearchParams({select:'*',workspace_id:`eq.${id}`,order:'updated_at.desc'});
+    if(!includeDeleted)query.set('deleted_at','is.null');
     return this.#request(`/projects?${query}`,{accessToken});
+  }
+
+  async getProject(accessToken,workspaceId,projectId,{includeDeleted=false}={}){
+    const id=assertUuid(workspaceId,'workspace_id');
+    const project=assertId(projectId,'project_id');
+    const query=new URLSearchParams({select:'*',workspace_id:`eq.${id}`,project_id:`eq.${project}`,limit:'1'});
+    if(!includeDeleted)query.set('deleted_at','is.null');
+    const rows=await this.#request(`/projects?${query}`,{accessToken});
+    return rows?.[0]??null;
   }
 
   createProject(accessToken,workspaceId,project){
     const id=assertUuid(workspaceId,'workspace_id');
-    if(project?.workspace_id&&project.workspace_id!==id)throw new PublicSaaSError('RESOURCE_WORKSPACE_DENIED','Project workspace_id does not match active workspace.');
+    assertWorkspaceMatch(project,id,'Project');
     return this.#request('/projects',{method:'POST',accessToken,prefer:'return=representation',body:{...project,workspace_id:id}});
+  }
+
+  async updateProject(accessToken,workspaceId,projectId,patch,{expectedUpdatedAt}={}){
+    const id=assertUuid(workspaceId,'workspace_id');
+    const project=assertId(projectId,'project_id');
+    assertWorkspaceMatch(patch,id,'Project');
+    const query=new URLSearchParams({workspace_id:`eq.${id}`,project_id:`eq.${project}`});
+    if(expectedUpdatedAt)query.set('updated_at',`eq.${expectedUpdatedAt}`);
+    const rows=await this.#request(`/projects?${query}`,{
+      method:'PATCH',accessToken,prefer:'return=representation',
+      body:mutablePatch(patch,['project_id','workspace_id']),
+    });
+    return rows?.[0]??null;
+  }
+
+  listEstimatesByProject(accessToken,workspaceId,projectId,{includeDeleted=false}={}){
+    const id=assertUuid(workspaceId,'workspace_id');
+    const project=assertId(projectId,'project_id');
+    const query=new URLSearchParams({select:'*',workspace_id:`eq.${id}`,project_id:`eq.${project}`,order:'estimate_no.asc,revision_no.asc'});
+    if(!includeDeleted)query.set('deleted_at','is.null');
+    return this.#request(`/estimates?${query}`,{accessToken});
+  }
+
+  async getEstimate(accessToken,workspaceId,estimateId,{includeDeleted=false}={}){
+    const id=assertUuid(workspaceId,'workspace_id');
+    const estimate=assertId(estimateId,'estimate_id');
+    const query=new URLSearchParams({select:'*',workspace_id:`eq.${id}`,estimate_id:`eq.${estimate}`,limit:'1'});
+    if(!includeDeleted)query.set('deleted_at','is.null');
+    const rows=await this.#request(`/estimates?${query}`,{accessToken});
+    return rows?.[0]??null;
+  }
+
+  createEstimate(accessToken,workspaceId,estimate){
+    const id=assertUuid(workspaceId,'workspace_id');
+    assertWorkspaceMatch(estimate,id,'Estimate');
+    return this.#request('/estimates',{method:'POST',accessToken,prefer:'return=representation',body:{...estimate,workspace_id:id}});
+  }
+
+  async updateEstimate(accessToken,workspaceId,estimateId,patch,{expectedUpdatedAt}={}){
+    const id=assertUuid(workspaceId,'workspace_id');
+    const estimate=assertId(estimateId,'estimate_id');
+    assertWorkspaceMatch(patch,id,'Estimate');
+    const query=new URLSearchParams({workspace_id:`eq.${id}`,estimate_id:`eq.${estimate}`});
+    if(expectedUpdatedAt)query.set('updated_at',`eq.${expectedUpdatedAt}`);
+    const rows=await this.#request(`/estimates?${query}`,{
+      method:'PATCH',accessToken,prefer:'return=representation',
+      body:mutablePatch(patch,['estimate_id','workspace_id']),
+    });
+    return rows?.[0]??null;
+  }
+
+  listOpeningsByEstimate(accessToken,workspaceId,estimateId,{includeDeleted=false}={}){
+    const id=assertUuid(workspaceId,'workspace_id');
+    const estimate=assertId(estimateId,'estimate_id');
+    const query=new URLSearchParams({select:'*',workspace_id:`eq.${id}`,estimate_id:`eq.${estimate}`,order:'sort_order.asc,opening_no.asc'});
+    if(!includeDeleted)query.set('deleted_at','is.null');
+    return this.#request(`/openings?${query}`,{accessToken});
+  }
+
+  async getOpening(accessToken,workspaceId,openingId,{includeDeleted=false}={}){
+    const id=assertUuid(workspaceId,'workspace_id');
+    const opening=assertId(openingId,'opening_id');
+    const query=new URLSearchParams({select:'*',workspace_id:`eq.${id}`,opening_id:`eq.${opening}`,limit:'1'});
+    if(!includeDeleted)query.set('deleted_at','is.null');
+    const rows=await this.#request(`/openings?${query}`,{accessToken});
+    return rows?.[0]??null;
+  }
+
+  createOpening(accessToken,workspaceId,opening){
+    const id=assertUuid(workspaceId,'workspace_id');
+    assertWorkspaceMatch(opening,id,'Opening');
+    return this.#request('/openings',{method:'POST',accessToken,prefer:'return=representation',body:{...opening,workspace_id:id}});
+  }
+
+  async updateOpening(accessToken,workspaceId,openingId,patch,{expectedUpdatedAt}={}){
+    const id=assertUuid(workspaceId,'workspace_id');
+    const opening=assertId(openingId,'opening_id');
+    assertWorkspaceMatch(patch,id,'Opening');
+    const query=new URLSearchParams({workspace_id:`eq.${id}`,opening_id:`eq.${opening}`});
+    if(expectedUpdatedAt)query.set('updated_at',`eq.${expectedUpdatedAt}`);
+    const rows=await this.#request(`/openings?${query}`,{
+      method:'PATCH',accessToken,prefer:'return=representation',
+      body:mutablePatch(patch,['opening_id','workspace_id']),
+    });
+    return rows?.[0]??null;
   }
 }
