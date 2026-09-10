@@ -1,0 +1,116 @@
+name: Estimate Output QA
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  estimate_output:
+    runs-on: ubuntu-latest
+    env:
+      VERCEL_ORG_ID: team_AkuHacuJlCl8LuvaFpCzFmbv
+      VERCEL_PROJECT_ID: prj_4z0zqW6yKyPuFINODfGX8LPBuJRP
+      VERCEL_PROJECT_NAME: sash-app-wave3-preview
+      RELEASE_SERIES: ESTIMATE_OUTPUT
+      RELEASE_PACKAGE_VERSION: v1.0
+      PRODUCTION_URL: https://sash-app-wave3-preview.vercel.app
+      PRODUCTION_HOST: sash-app-wave3-preview.vercel.app
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Install
+        run: npm install --ignore-scripts
+      - name: Unit and route tests
+        run: npm test
+      - name: Install Chromium
+        run: |
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+      - name: Estimate output browser QA
+        run: |
+          npm run start:qa > /tmp/sash-estimate-output.log 2>&1 &
+          PID=$!
+          trap 'kill $PID || true' EXIT
+          for i in {1..40}; do
+            if curl -fsS http://127.0.0.1:4173/api/health >/dev/null; then break; fi
+            sleep 0.5
+          done
+          npm run test:browser:estimate-output
+      - name: Vercel credential and project preflight
+        if: ${{ github.event_name == 'pull_request' || (github.event_name == 'push' && startsWith(github.event.head_commit.message, 'release: 見積出力 v1.0')) }}
+        env:
+          VERCEL_TOKEN_PRIMARY: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_TOKEN_FALLBACK: ${{ secrets.VERCEL_ACCESS_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          token="${VERCEL_TOKEN_PRIMARY:-${VERCEL_TOKEN_FALLBACK:-}}"
+          if [[ -z "$token" ]]; then
+            echo "VERCEL_CREDENTIAL_GATE=BLOCKED"
+            exit 42
+          fi
+          echo "VERCEL_TOKEN_EFFECTIVE=$token" >> "$GITHUB_ENV"
+          status="$(curl -sS -o /tmp/vercel-project.json -w '%{http_code}' -H "Authorization: Bearer $token" "https://api.vercel.com/v9/projects/$VERCEL_PROJECT_ID")"
+          if [[ "$status" != "200" ]]; then
+            echo "VERCEL_PROJECT_ACCESS_GATE=BLOCKED status=$status"
+            exit 46
+          fi
+          node -e 'const p=require("/tmp/vercel-project.json"); if(p.id!==process.env.VERCEL_PROJECT_ID||p.accountId!==process.env.VERCEL_ORG_ID) process.exit(1)'
+          echo "VERCEL_CREDENTIAL_GATE=PASS"
+          echo "VERCEL_PROJECT_ACCESS_GATE=PASS"
+      - name: Deploy PR merge SHA Preview
+        if: ${{ github.event_name == 'pull_request' }}
+        run: node scripts/vercel-rest-deploy.mjs preview artifacts/estimate-output-browser-qa/deployment.json
+      - name: Verify Preview identity
+        if: ${{ github.event_name == 'pull_request' }}
+        run: |
+          node -e 'const d=require("./artifacts/estimate-output-browser-qa/deployment.json"); if(d.readyState!=="READY"||d.githubSha!==process.env.GITHUB_SHA||d.mode!=="preview"||d.projectId!==process.env.VERCEL_PROJECT_ID||d.teamId!==process.env.VERCEL_ORG_ID) process.exit(1)'
+          echo "PREVIEW_DEPLOYMENT_GATE=PASS"
+      - name: Deploy exact main SHA Production
+        if: ${{ github.event_name == 'push' && startsWith(github.event.head_commit.message, 'release: 見積出力 v1.0') }}
+        run: node scripts/vercel-rest-deploy.mjs production artifacts/estimate-output-browser-qa/production-deployment.json
+      - name: Verify Production identity and canonical alias
+        if: ${{ github.event_name == 'push' && startsWith(github.event.head_commit.message, 'release: 見積出力 v1.0') }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          node -e 'const d=require("./artifacts/estimate-output-browser-qa/production-deployment.json"); if(d.readyState!=="READY"||d.githubSha!==process.env.GITHUB_SHA||d.mode!=="production"||d.projectId!==process.env.VERCEL_PROJECT_ID||d.teamId!==process.env.VERCEL_ORG_ID) process.exit(1)'
+          deploy_id="$(node -e 'const d=require("./artifacts/estimate-output-browser-qa/production-deployment.json"); process.stdout.write(d.deploymentId)')"
+          status="$(curl -sS -o artifacts/estimate-output-browser-qa/vercel-production.json -w '%{http_code}' -H "Authorization: Bearer $VERCEL_TOKEN_EFFECTIVE" "https://api.vercel.com/v13/deployments/$deploy_id?teamId=$VERCEL_ORG_ID")"
+          if [[ "$status" != "200" ]]; then exit 48; fi
+          node -e 'const d=require("./artifacts/estimate-output-browser-qa/vercel-production.json"); if(d.readyState!=="READY"||d.target!=="production"||d.meta?.releaseCommitSha!==process.env.GITHUB_SHA||!Array.isArray(d.alias)||!d.alias.includes(process.env.PRODUCTION_HOST)) { console.error({readyState:d.readyState,target:d.target,releaseCommitSha:d.meta?.releaseCommitSha,alias:d.alias}); process.exit(1); }'
+          echo "PRODUCTION_DEPLOYMENT_GATE=PASS"
+      - name: Production smoke
+        if: ${{ github.event_name == 'push' && startsWith(github.event.head_commit.message, 'release: 見積出力 v1.0') }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          for i in {1..60}; do
+            if curl -fsS "$PRODUCTION_URL/api/health" > artifacts/estimate-output-browser-qa/production-health.json; then
+              if node -e 'const h=require("./artifacts/estimate-output-browser-qa/production-health.json"); if(!h.ok || h.runtimeMasterIntegrations?.length!==3) process.exit(1)'; then
+                curl -fsS "$PRODUCTION_URL/app.js" >/dev/null
+                curl -fsS "$PRODUCTION_URL/estimate-output/model.mjs" >/dev/null
+                echo "PRODUCTION_SMOKE_GATE=PASS"
+                exit 0
+              fi
+            fi
+            sleep 1
+          done
+          echo "PRODUCTION_SMOKE_GATE=BLOCKED"
+          exit 49
+      - name: Production estimate-output browser QA
+        if: ${{ github.event_name == 'push' && startsWith(github.event.head_commit.message, 'release: 見積出力 v1.0') }}
+        env:
+          QA_BASE_URL: ${{ env.PRODUCTION_URL }}
+        run: npm run test:browser:estimate-output
+      - name: Upload estimate output QA artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: estimate-output-browser-qa
+          path: artifacts/estimate-output-browser-qa/
+          if-no-files-found: warn
