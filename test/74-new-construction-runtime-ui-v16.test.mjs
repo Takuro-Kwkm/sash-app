@@ -9,8 +9,8 @@ import {
 import { runtimeAppIntegrationInventory } from '../src/catalog/runtime-master/runtime-app-bridge.mjs';
 
 test('v1.6 semantic aliases normalize without embedding product business rules', () => {
-  assert.equal(semanticSlotForRuntimeField('shutter_type'), 'window_specific_spec');
-  assert.equal(semanticSlotForRuntimeField('operation_type'), 'window_specific_spec');
+  assert.equal(semanticSlotForRuntimeField('shutter_type'), 'window_spec');
+  assert.equal(semanticSlotForRuntimeField('operation_type'), 'window_spec');
   assert.equal(semanticSlotForRuntimeField('leaf_configuration'), 'panel_leaf');
   assert.equal(semanticSlotForRuntimeField('screen_type'), 'screen_form');
   assert.equal(semanticSlotForRuntimeField('glass_additional'), 'glass_function');
@@ -38,9 +38,7 @@ test('window-specific aliases stay after window type and screen/glass blocks kee
     { key: 'glass_spacer', displayLabel: 'x', displayOrder: 5 },
     { key: 'construction', displayLabel: '技術項目', displayOrder: 0 },
   ]);
-  assert.deepEqual(ordered.map((field) => field.key), [
-    'window_type','operator_position','interior_color','screen_type','screen_net','glass_base','glass_spacer',
-  ]);
+  assert.deepEqual(ordered.map((field) => field.key), ['window_type','operator_position','interior_color','screen_type','screen_net','glass_base','glass_spacer']);
 });
 
 test('all six new-construction target series are declared and missing Runtime packages fail closed', () => {
