@@ -48,7 +48,8 @@ function outputMarkup(model){
 
 function sync(){
   const route=identity();if(!route)return;
-  if(new URL(location.href).searchParams.get('estimateOutput')==='1'){renderOutput(route);return;}
+  const outputMode=new URL(location.href).searchParams.get('estimateOutput')==='1';
+  if(outputMode){if(!document.querySelector('#estimateOutputPdf'))renderOutput(route);return;}
   if(document.querySelector('#estimateOutputLaunch'))return;
   const actions=document.querySelector('.page-heading > .button-row');if(!actions)return;
   const button=document.createElement('button');button.type='button';button.className='button';button.id='estimateOutputLaunch';button.textContent='見積出力';
