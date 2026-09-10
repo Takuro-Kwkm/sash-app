@@ -43,11 +43,12 @@ test('workspace access fails closed without authentication, membership, or suffi
   assert.throws(()=>resolveWorkspaceContext({principal,workspace_id:'wsp_kumamoto',memberships:[{...membership,status:MembershipStatus.SUSPENDED}],clock}),{code:'WORKSPACE_ACCESS_DENIED'});
 });
 
-test('expired and unverified sessions are rejected when required',()=>{
+test('expired, invalid, and unverified sessions are rejected when required',()=>{
   const {membership,principal}=fixture();
-  const expired={...principal,expires_at:'2026-09-10T04:19:59.000Z'};
-  assert.throws(()=>resolveWorkspaceContext({principal:expired,workspace_id:'wsp_kumamoto',memberships:[membership],clock}),{code:'SESSION_EXPIRED'});
-  assert.throws(()=>resolveWorkspaceContext({principal:{...principal,email_verified_at:null},workspace_id:'wsp_kumamoto',memberships:[membership],require_verified_email:true,clock}),{code:'EMAIL_VERIFICATION_REQUIRED'});
+  const args={workspace_id:'wsp_kumamoto',memberships:[membership],clock};
+  assert.throws(()=>resolveWorkspaceContext({principal:{...principal,expires_at:'2026-09-10T04:19:59.000Z'},...args}),{code:'SESSION_EXPIRED'});
+  assert.throws(()=>resolveWorkspaceContext({principal:{...principal,expires_at:'not-a-date'},...args}),{code:'SESSION_EXPIRED'});
+  assert.throws(()=>resolveWorkspaceContext({principal:{...principal,email_verified_at:null},...args,require_verified_email:true}),{code:'EMAIL_VERIFICATION_REQUIRED'});
 });
 
 test('resource access rejects legacy-unscoped and cross-workspace rows',()=>{
