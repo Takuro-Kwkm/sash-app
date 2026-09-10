@@ -14,7 +14,7 @@ function invoke(url){
   });
 }
 
-test('Vercel repository adapter preserves rewritten health path and Runtime identities', async()=>{
+test('Vercel repository adapter preserves rewritten health path and loaded Runtime identities', async()=>{
   const response=await invoke('/api/index.mjs?__path=api/health');
   assert.equal(response.status,200);
   const health=JSON.parse(response.body);
@@ -28,11 +28,14 @@ test('Vercel repository adapter preserves rewritten health path and Runtime iden
   assert.equal(byId.get('SER-YKKAP-UCHIRIMO').sourceHash,'be4f1f77727424dc06ddf9de947201f33d4aee5219b182e37d0f178e1fb7147d');
 });
 
-test('Vercel repository adapter preserves rewritten Runtime integration route', async()=>{
+test('Vercel repository adapter exposes loaded, pending-integration and Runtime-not-ready declarations', async()=>{
   const response=await invoke('/api/index.mjs?__path=api/runtime-master/integrations');
   assert.equal(response.status,200);
   const rows=JSON.parse(response.body);
-  assert.equal(rows.length,3);
-  assert.deepEqual(new Set(rows.map((row)=>row.id)),new Set(['SER-LIX-EW','SER-LIXIL-TW','SER-YKKAP-UCHIRIMO']));
-  assert.ok(rows.every((row)=>row.selectable));
+  assert.equal(rows.length,7);
+  const byId=new Map(rows.map((row)=>[row.id,row]));
+  for(const id of ['SER-LIX-EW','SER-LIXIL-TW','SER-YKKAP-UCHIRIMO']) assert.equal(byId.get(id).selectable,true,id);
+  for(const id of ['SER-LIX-THERMOSL','SER-LIX-SAMOS2H','SER-YKK-APW430','SER-YKK-APW431']) assert.equal(byId.get(id).selectable,false,id);
+  assert.equal(byId.get('SER-LIX-SAMOS2H').status,'RUNTIME_NOT_READY');
+  assert.equal(byId.get('SER-YKK-APW431').status,'RUNTIME_NOT_READY');
 });

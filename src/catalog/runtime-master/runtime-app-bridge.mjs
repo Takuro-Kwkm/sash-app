@@ -31,6 +31,7 @@ function registeredIntegration(entry) {
     registrySeriesKey: metadata?.registrySeriesKey ?? integrationKey(entry.manufacturer, entry.series),
     source: 'RUNTIME_MASTER',
     status: 'READY',
+    runtimeStatus: metadata?.runtimeStatus ?? 'READY',
     selectable: true,
     blockReason: null,
     masterVersion: entry.masterVersion,
@@ -38,18 +39,22 @@ function registeredIntegration(entry) {
     schemaVersion: entry.schemaVersion,
     sourceHash: metadata?.sourceHash ?? entry.sourceZipSha256 ?? entry.runtimeManifestSha256 ?? null,
     adapterType: metadata?.adapterType ?? entry.adapterType ?? 'XE_ZIP_V1',
+    activeWindowCount: metadata?.activeWindowCount ?? null,
     canonicalRuntimeReference: metadata?.canonicalRuntimeReference ?? null,
   });
 }
 
 function blockedCandidate(metadata) {
+  const runtimeMissing = metadata.runtimeStatus && metadata.runtimeStatus !== 'READY';
   return Object.freeze({
     ...metadata,
     source: 'RUNTIME_MASTER',
-    status: 'BLOCKED_RUNTIME_NOT_REGISTERED',
+    status: runtimeMissing ? 'RUNTIME_NOT_READY' : 'RUNTIME_NOT_INTEGRATED',
     selectable: false,
-    blockReason: '正式Runtime packageがRuntime Master Registryに未登録のため選択できません。',
-    masterVersion: null,
+    blockReason: metadata.blockReason ?? (runtimeMissing
+      ? `正式Runtime packageがREADYではありません（${metadata.runtimeStatus}）。`
+      : '正式Runtime packageは存在しますが、App Runtime Registryへの統合が未完了です。'),
+    masterVersion: metadata.packageVersion ?? null,
   });
 }
 
@@ -178,14 +183,11 @@ export function toRuntimeUiResult(master, state, integration, sourcePackageInteg
     productId: integration.id,
     manufacturer: integration.manufacturer,
     series: integration.series,
-    source: 'RUNTIME_MASTER',
-    status: integration.status,
-    selection,
+    source: 'RUNTIME_MASTER', status: integration.status, selection,
     dependencyFields: master.fields.map((def) => ({ key: def.field_name, parentFields: def.parent_fields ?? [] })),
     fields: orderedVisible,
     notices: [
-      ...((state.order_ready ?? master.capabilities?.orderReady) === false
-        ? ['ORDER_READY = false：営業見積入力用です。発注確定にはメーカー確認が必要です。'] : []),
+      ...((state.order_ready ?? master.capabilities?.orderReady) === false ? ['ORDER_READY = false：営業見積入力用です。発注確定にはメーカー確認が必要です。'] : []),
       ...(state.warnings ?? []).map(warningText),
       ...(state.derived_entities ?? []).map(row => `${({ REQUIRES: '必要', ENABLES: '有効', FIXES: '固定' })[row.relationship]}: ${row.displayLabel}${row.note ? `（${row.note}）` : ''}`),
       ...((state.derived_options ?? []).length ? [`自動適用オプション: ${(state.derived_options ?? []).map((id) => labelFrom(master.values.find((row) => row.field_name === 'option' && row.canonical_value === id), id)).join('、')}`] : []),
@@ -194,63 +196,30 @@ export function toRuntimeUiResult(master, state, integration, sourcePackageInteg
       ...(state.manual_warnings ?? []),
       ...(state.matched_invalid_rules ?? []).map((ruleId) => `成立不可Rule: ${ruleId}`),
     ],
-    validation: {
-      status: state.status,
-      errors,
-      missingRequiredFields: [...(state.missing_required_fields ?? [])],
-    },
+    validation: { status: state.status, errors, missingRequiredFields: [...(state.missing_required_fields ?? [])] },
     derivedEntities: state.derived_entities ?? [],
     derivedComponents: [...(state.derived_components ?? [])].sort(),
     derivedOptions: [...(state.derived_options ?? [])].sort(),
     clearedFields: [...(state.cleared_fields ?? [])],
-    optionCodeResults: state.option_code_results ?? [],
-    optionCodeLinkageCount: state.option_code_linkage_count ?? 0,
-    runtimeCapabilities: master.capabilities ?? null,
-    dimensionResult: state.dimension_result ?? null,
+    optionCodeResults: state.option_code_results ?? [], optionCodeLinkageCount: state.option_code_linkage_count ?? 0,
+    runtimeCapabilities: master.capabilities ?? null, dimensionResult: state.dimension_result ?? null,
     orderReady: state.order_ready ?? master.capabilities?.orderReady ?? null,
     runtimeMaster: {
-      masterVersion: integration.masterVersion,
-      packageVersion: integration.packageVersion,
-      schemaVersion: integration.schemaVersion,
-      adapterType: integration.adapterType,
-      sourceHash: integration.sourceHash,
-      canonicalRuntimeReference: integration.canonicalRuntimeReference,
-      sourcePackageIntegrity: sourcePackageIntegrity ? {
-        expected: sourcePackageIntegrity.expected,
-        actual: sourcePackageIntegrity.actual,
-        match: sourcePackageIntegrity.match,
-        manifestDriveFileId: sourcePackageIntegrity.manifestDriveFileId ?? null,
-        files: sourcePackageIntegrity.files ?? null,
-      } : null,
+      masterVersion: integration.masterVersion, packageVersion: integration.packageVersion, schemaVersion: integration.schemaVersion,
+      adapterType: integration.adapterType, sourceHash: integration.sourceHash, canonicalRuntimeReference: integration.canonicalRuntimeReference,
+      sourcePackageIntegrity: sourcePackageIntegrity ? { expected: sourcePackageIntegrity.expected, actual: sourcePackageIntegrity.actual, match: sourcePackageIntegrity.match, manifestDriveFileId: sourcePackageIntegrity.manifestDriveFileId ?? null, files: sourcePackageIntegrity.files ?? null } : null,
     },
   };
 }
 
 export async function resolveRuntimeAppProduct(productId, selection = {}) {
   const integration = getRuntimeAppIntegration(productId);
-  if (!integration) {
-    const error = new Error(`Unknown Runtime app product: ${productId}`);
-    error.code = 'RUNTIME_APP_PRODUCT_NOT_FOUND';
-    throw error;
-  }
-  if (!integration.selectable) {
-    const error = new Error(integration.blockReason ?? `Runtime app product is blocked: ${productId}`);
-    error.code = 'RUNTIME_MASTER_NOT_REGISTERED';
-    error.integration = integration;
-    throw error;
-  }
+  if (!integration) { const error = new Error(`Unknown Runtime app product: ${productId}`); error.code = 'RUNTIME_APP_PRODUCT_NOT_FOUND'; throw error; }
+  if (!integration.selectable) { const error = new Error(integration.blockReason ?? `Runtime app product is blocked: ${productId}`); error.code = integration.status; error.integration = integration; throw error; }
   const entry = getRuntimeMasterEntry(integration.manufacturer, integration.series);
-  if (!entry) {
-    const error = new Error(`Runtime Master Registry entry disappeared: ${integration.manufacturer}/${integration.series}`);
-    error.code = 'RUNTIME_MASTER_NOT_REGISTERED';
-    throw error;
-  }
+  if (!entry) { const error = new Error(`Runtime Master Registry entry disappeared: ${integration.manufacturer}/${integration.series}`); error.code = 'RUNTIME_MASTER_NOT_REGISTERED'; throw error; }
   const runtime = await loadRegisteredRuntime(integration.manufacturer, integration.series);
-  if (!runtime) {
-    const error = new Error(`Runtime Master could not be loaded: ${integration.manufacturer}/${integration.series}`);
-    error.code = 'RUNTIME_MASTER_LOAD_FAILED';
-    throw error;
-  }
+  if (!runtime) { const error = new Error(`Runtime Master could not be loaded: ${integration.manufacturer}/${integration.series}`); error.code = 'RUNTIME_MASTER_LOAD_FAILED'; throw error; }
   const normalized = normalizeRuntimeSelection(runtime.master, selection);
   const state = runtime.resolver ? runtime.resolver(normalized) : evaluateConfiguration(runtime.master, normalized);
   return toRuntimeUiResult(runtime.master, state, integration, runtime.sourcePackageIntegrity);
