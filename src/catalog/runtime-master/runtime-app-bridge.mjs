@@ -1,7 +1,11 @@
 import { evaluateConfiguration } from './generic-rule-engine.mjs';
 import { getRuntimeMasterEntry, loadRegisteredRuntime, runtimeMasterInventory } from './runtime-master-registry.mjs';
 import { appRuntimeIntegrationRegistry } from './app-runtime-integration-registry.mjs';
-import { applyRuntimeUiCategoryOrder } from './new-construction-sash-runtime-ui-contract.mjs';
+import {
+  NEW_CONSTRUCTION_EXTERIOR_WINDOW_UI_CATEGORY,
+  applyRuntimeUiCategoryOrder,
+  formatAndSortStandardSizeChoices,
+} from './new-construction-sash-runtime-ui-contract.mjs';
 
 const integrationKey = (manufacturer, series) => `${manufacturer}::${series}`;
 const generatedProductId = (manufacturer, series) => `RUNTIME-${manufacturer}-${series}`.replace(/[^A-Za-z0-9._-]+/g, '-');
@@ -48,7 +52,7 @@ function blockedCandidate(metadata) {
     source: 'RUNTIME_MASTER',
     status: 'BLOCKED_RUNTIME_NOT_REGISTERED',
     selectable: false,
-    blockReason: '正式Runtime packageがRuntime Master Registryに未登録のため選択できません。',
+    blockReason: metadata.blockReason ?? '正式Runtime packageがRuntime Master Registryに未登録のため選択できません。',
     masterVersion: null,
   });
 }
@@ -111,7 +115,7 @@ function dataTypeFor(def) {
   return 'ENUM';
 }
 
-function choicesFor(master, def, fieldState) {
+function choicesFor(master, def, fieldState, integration) {
   if (def.data_type === 'boolean') return [
     { value: true, displayLabel: 'はい', manualCheck: false, disabled: false },
     { value: false, displayLabel: 'いいえ', manualCheck: false, disabled: false },
@@ -119,7 +123,7 @@ function choicesFor(master, def, fieldState) {
   if (!['enum','array'].includes(def.data_type)) return [];
   const rows = valueRowsFor(master, def.field_name);
   const byValue = new Map(rows.map((row) => [JSON.stringify(row.canonical_value), row]));
-  return (fieldState.allowed_values ?? []).filter((value) => {
+  const choices = (fieldState.allowed_values ?? []).filter((value) => {
     const row = byValue.get(JSON.stringify(value));
     return row?.user_selectable !== false || fieldState.readOnly || def.show_read_only === true;
   }).map((value) => {
@@ -129,8 +133,13 @@ function choicesFor(master, def, fieldState) {
       displayLabel: labelFrom(row, String(value)),
       manualCheck: Boolean(row?.manual_check ?? row?.manualCheck),
       disabled: row?.user_selectable === false,
+      runtimeValueRow: row,
     };
   });
+  if (integration.uiCategory === NEW_CONSTRUCTION_EXTERIOR_WINDOW_UI_CATEGORY && def.field_name === 'size') {
+    return formatAndSortStandardSizeChoices(choices);
+  }
+  return choices.map(({ runtimeValueRow, ...choice }) => choice);
 }
 
 function warningText(value) {
@@ -153,7 +162,7 @@ export function toRuntimeUiResult(master, state, integration, sourcePackageInteg
       dataType: dataTypeFor(def),
       unit: fieldState.unit ?? def.unit ?? null,
       required: Boolean(fieldState.required),
-      values: choicesFor(master, def, fieldState),
+      values: choicesFor(master, def, fieldState, integration),
       selectionMode: def.selection_mode,
       runtimeState: fieldState.state,
       readOnly: Boolean(fieldState.readOnly) || (def.selection_mode === 'AUTO_RESOLVE' && fieldState.allowed_values?.length === 1),

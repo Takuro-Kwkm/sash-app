@@ -1,0 +1,99 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { loadRegisteredRuntime } from '../src/catalog/runtime-master/runtime-master-registry.mjs';
+import { resolveRuntimeAppProduct, runtimeAppIntegrationInventory } from '../src/catalog/runtime-master/runtime-app-bridge.mjs';
+import {
+  NEW_CONSTRUCTION_SASH_UI_STANDARD_ORDER,
+  applyNewConstructionSashUiOrder,
+  formatAndSortStandardSizeChoices,
+} from '../src/catalog/runtime-master/new-construction-sash-runtime-ui-contract.mjs';
+
+const slotIndex = new Map(NEW_CONSTRUCTION_SASH_UI_STANDARD_ORDER.map((slot,index)=>[slot,index]));
+const technical = new Set(['construction','actual_w','actual_h','runtime_technical_state','dependency_only_selector','provider_id','source_id']);
+
+function assertSemanticOrder(result){
+  let prior=-1;
+  for(const field of result.fields){
+    assert.ok(!technical.has(field.key),`technical field leaked: ${field.key}`);
+    const index=slotIndex.get(field.semanticSlot)??NEW_CONSTRUCTION_SASH_UI_STANDARD_ORDER.length;
+    assert.ok(index>=prior,`semantic order regressed at ${field.key}: ${field.semanticSlot}`);
+    prior=index;
+  }
+}
+
+function assertSizeUi(values){
+  assert.ok(values.length>0);
+  for(const row of values) assert.match(row.displayLabel,/^\S+ ｜ W \d+ × H \d+$/u);
+  for(let i=1;i<values.length;i+=1){
+    const a=values[i-1].sizeMetadata,b=values[i].sizeMetadata;
+    assert.ok(a.actualW<b.actualW || (a.actualW===b.actualW && a.actualH<=b.actualH),`size sort violation: ${a.actualW}x${a.actualH} -> ${b.actualW}x${b.actualH}`);
+  }
+}
+
+test('v1.6 semantic aliases fix field order, common labels and internal-field exposure',()=>{
+  const result=applyNewConstructionSashUiOrder([
+    {key:'glass_base',displayLabel:'glass',displayOrder:1},
+    {key:'construction',displayLabel:'工法',displayOrder:2},
+    {key:'shutter_type',displayLabel:'シャッター種類',displayOrder:3},
+    {key:'window_type',displayLabel:'窓種',displayOrder:99},
+    {key:'screen_type',displayLabel:'screen type',displayOrder:4},
+    {key:'handing',displayLabel:'handing',displayOrder:5},
+    {key:'panel_count',displayLabel:'panel',displayOrder:6},
+    {key:'option',displayLabel:'option',displayOrder:7},
+  ]);
+  assert.deepEqual(result.map((row)=>row.key),['window_type','shutter_type','handing','panel_count','screen_type','glass_base','option']);
+  assert.equal(result.find((row)=>row.key==='window_type').displayLabel,'窓種類');
+  assert.equal(result.find((row)=>row.key==='handing').displayLabel,'開き勝手（吊元）');
+  assert.equal(result.find((row)=>row.key==='panel_count').displayLabel,'建具・枚数');
+  assert.equal(result.find((row)=>row.key==='screen_type').displayLabel,'網戸形式');
+  assert.equal(result.find((row)=>row.key==='option').displayLabel,'その他オプション');
+});
+
+test('v1.6 size formatter uses Runtime metadata only and sorts actualW then actualH',()=>{
+  const result=formatAndSortStandardSizeChoices([
+    {value:'c',runtimeValueRow:{metadata:{callCode:'06907',actualW:730,actualH:770}}},
+    {value:'a',runtimeValueRow:{source:{nominal_w:'060',nominal_h:'09',actual_w:640,actual_h:970}}},
+    {value:'b',runtimeValueRow:{metadata:{callCode:'06005',actualW:640,actualH:570}}},
+  ]);
+  assert.deepEqual(result.map((row)=>row.value),['b','a','c']);
+  assert.deepEqual(result.map((row)=>row.displayLabel),[
+    '06005 ｜ W 640 × H 570','06009 ｜ W 640 × H 970','06907 ｜ W 730 × H 770',
+  ]);
+  assert.throws(()=>formatAndSortStandardSizeChoices([{value:'bad',runtimeValueRow:{metadata:{callCode:'06005',actualW:640}}}]),(error)=>error.code==='RUNTIME_SIZE_DISPLAY_DATA_MISSING');
+});
+
+test('all currently registered EW/TW window types obey v1.6 semantic order',async()=>{
+  for(const [manufacturer,series,productId] of [['LIXIL','EW','SER-LIX-EW'],['LIXIL','TW','SER-LIXIL-TW']]){
+    const runtime=await loadRegisteredRuntime(manufacturer,series);
+    const windows=runtime.master.values.filter((row)=>row.field_name==='window_type'&&row.status==='CURRENT'&&row.runtime_selectable!==false);
+    assert.equal(windows.length,series==='EW'?15:25);
+    for(const window of windows){
+      const result=await resolveRuntimeAppProduct(productId,{window_type:window.canonical_value});
+      assertSemanticOrder(result);
+      assert.equal(result.fields[0]?.key,'window_type');
+    }
+  }
+});
+
+test('EW/TW standard-size choices use v1.6 display format and deterministic sort',async()=>{
+  const ew=await resolveRuntimeAppProduct('SER-LIX-EW',{
+    window_type:'WT-EW-TATE-SUBERI',window_spec:'SP-EW-TATE-T',handing:'L',size_mode:'STANDARD',
+  });
+  assertSizeUi(ew.fields.find((row)=>row.key==='size').values);
+
+  const tw=await resolveRuntimeAppProduct('SER-LIXIL-TW',{
+    window_type:'SWT-LIX-TW-UNIT-HIKI',size_mode:'STANDARD',panel_count:'2枚建',
+  });
+  assertSizeUi(tw.fields.find((row)=>row.key==='size').values);
+});
+
+test('known Product Master Runtime/UI gaps fail closed instead of exposing legacy/skeleton as READY',()=>{
+  const inventory=runtimeAppIntegrationInventory();
+  for(const id of ['SER-LIX-SAMOS2H','SER-LIX-SAMOSL','SER-YKK-APW430','SER-YKK-APW431']){
+    const row=inventory.find((item)=>item.id===id);
+    assert.ok(row,`missing integration identity: ${id}`);
+    assert.equal(row.status,'BLOCKED_RUNTIME_NOT_REGISTERED');
+    assert.equal(row.selectable,false);
+    assert.ok(row.blockReason.includes('PRODUCT_MASTER_GAP'));
+  }
+});
