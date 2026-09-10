@@ -80,20 +80,40 @@ jobs:
           echo "PREVIEW_SHA_MATCH_GATE=PASS"
           deployment_id="$(node -p 'require("./artifacts/stage-a-preview/deployment.json").deploymentId || require("./artifacts/stage-a-preview/deployment.json").id')"
           test -n "$deployment_id"
-          status="$(curl -sS -o artifacts/stage-a-preview/share-link.json -w '%{http_code}' \
+          short_sha="${HEAD_SHA:0:12}"
+          qa_alias="stage-a-${short_sha}-${GITHUB_RUN_ID}.vercel.app"
+          alias_status="$(curl -sS -o artifacts/stage-a-preview/qa-alias.json -w '%{http_code}' \
+            -X POST \
+            -H "Authorization: Bearer $VERCEL_TOKEN_EFFECTIVE" \
+            -H 'Content-Type: application/json' \
+            --data "{\"alias\":\"$qa_alias\"}" \
+            "https://api.vercel.com/v2/deployments/$deployment_id/aliases?teamId=$VERCEL_ORG_ID")"
+          test "$alias_status" = "200"
+          alias_uid="$(node -p 'require("./artifacts/stage-a-preview/qa-alias.json").uid || ""')"
+          resolved_alias="$(node -p 'require("./artifacts/stage-a-preview/qa-alias.json").alias || ""')"
+          test -n "$alias_uid"
+          test -n "$resolved_alias"
+          bypass_status="$(curl -sS -o artifacts/stage-a-preview/share-link.json -w '%{http_code}' \
             -X PATCH \
             -H "Authorization: Bearer $VERCEL_TOKEN_EFFECTIVE" \
             -H 'Content-Type: application/json' \
             --data '{"ttl":86400}' \
-            "https://api.vercel.com/aliases/$deployment_id/protection-bypass?teamId=$VERCEL_ORG_ID")"
-          test "$status" = "200"
-          share_url="$(node -p 'require("./artifacts/stage-a-preview/share-link.json").protectionBypassUrl || ""')"
-          test -n "$share_url"
-          share_token="$(SHARE_URL="$share_url" node -p 'new URL(process.env.SHARE_URL).searchParams.get("_vercel_share") || ""')"
+            "https://api.vercel.com/aliases/$alias_uid/protection-bypass?teamId=$VERCEL_ORG_ID")"
+          test "$bypass_status" = "200"
+          share_payload="$(node -p 'const p=require("./artifacts/stage-a-preview/share-link.json"); p.protectionBypassUrl || p.value || ""')"
+          test -n "$share_payload"
+          if [[ "$share_payload" == http* ]]; then
+            share_url="$share_payload"
+            share_token="$(SHARE_URL="$share_url" node -p 'new URL(process.env.SHARE_URL).searchParams.get("_vercel_share") || ""')"
+          else
+            share_token="$share_payload"
+            share_url="https://$resolved_alias/?_vercel_share=$share_token"
+          fi
           test -n "$share_token"
           echo "::add-mask::$share_token"
           echo "VERCEL_SHARE_TOKEN=$share_token" >> "$GITHUB_ENV"
-          curl -fsS "$DEPLOY_URL/api/health?_vercel_share=$share_token" > artifacts/stage-a-preview/health.json
+          echo "QA_BASE_URL=https://$resolved_alias" >> "$GITHUB_ENV"
+          curl -fsS "https://$resolved_alias/api/health?_vercel_share=$share_token" > artifacts/stage-a-preview/health.json
           echo "PREVIEW_BROWSER_ACCESS_GATE=PASS"
 
       - name: Install Browser QA dependencies
@@ -103,7 +123,7 @@ jobs:
 
       - name: Exact Preview desktop/mobile Browser QA
         env:
-          QA_BASE_URL: ${{ env.DEPLOY_URL }}
+          QA_BASE_URL: ${{ env.QA_BASE_URL }}
           VERCEL_SHARE_TOKEN: ${{ env.VERCEL_SHARE_TOKEN }}
         shell: bash
         run: |
