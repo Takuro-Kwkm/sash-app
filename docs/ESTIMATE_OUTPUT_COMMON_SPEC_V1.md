@@ -118,3 +118,7 @@ OOXML `.xlsx` として出力する。最低限以下を含む。
 6. Release Handoff更新済み
 
 本仕様はProduction deployを自動的に許可するものではない。Production Releaseは別Gateで管理する。
+
+## 12. Production Release Gate
+
+正式Releaseでは、mainへ採用されたMerge SHAそのものをVercel Productionへデプロイし、Deployment identity、canonical alias、`/api/health`、`/app.js`、`/estimate-output/model.mjs`、見積出力Browser QAを再確認する。これらがすべてPASSした場合のみ `PRODUCTION_READY=TRUE` および `RELEASED=TRUE` とする。
