@@ -15,7 +15,8 @@ export function createSessionPrincipal({user_id,session_id,expires_at,email_veri
 
 export function resolveWorkspaceContext({principal,workspace_id,memberships=[],required_role=MembershipRole.MEMBER,require_verified_email=false,clock=()=>new Date()}={}){
   if(!principal?.user_id)throw new PublicSaaSError('AUTH_REQUIRED','Authentication is required.');
-  if(!principal.expires_at||asDate(principal.expires_at)<=clock())throw new PublicSaaSError('SESSION_EXPIRED','Session has expired.');
+  const expiresAt=asDate(principal.expires_at);
+  if(!principal.expires_at||!Number.isFinite(expiresAt.getTime())||expiresAt<=clock())throw new PublicSaaSError('SESSION_EXPIRED','Session has expired or is invalid.');
   if(require_verified_email&&!principal.email_verified_at)throw new PublicSaaSError('EMAIL_VERIFICATION_REQUIRED','Verified email is required.');
   if(!workspace_id)throw new PublicSaaSError('WORKSPACE_REQUIRED','workspace_id is required.');
   if(!(required_role in ROLE_RANK))throw new PublicSaaSError('ROLE_INVALID',`Unknown required role: ${required_role}`);
