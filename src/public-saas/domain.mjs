@@ -25,7 +25,11 @@ const text=(value)=>String(value??'').trim();
 const normalizeEmail=(value)=>text(value).toLowerCase();
 const now=(clock=()=>new Date())=>clock().toISOString();
 const fallbackId=(prefix)=>`${prefix}_${Date.now().toString(36)}_${Math.random().toString(36).slice(2,12)}`;
-const idFor=(prefix,id)=>id??globalThis.crypto?.randomUUID?.()&&`${prefix}_${globalThis.crypto.randomUUID()}`??fallbackId(prefix);
+function idFor(prefix,id){
+  if(id)return id;
+  const uuid=globalThis.crypto?.randomUUID?.();
+  return uuid?`${prefix}_${uuid}`:fallbackId(prefix);
+}
 
 function assertRole(role){
   if(!Object.values(MembershipRole).includes(role))throw new PublicSaaSValidationError(`Unknown membership role: ${role}`,{field:'role'});
