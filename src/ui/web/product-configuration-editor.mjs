@@ -21,6 +21,19 @@ function identityFor(product){
     ??(!canonical?product.source?.id??null:null);
 }
 
+function normalizeSeriesName(value){
+  return String(value??'').replace(/[\s・-]/g,'').replace('ⅡH','ⅡH').toUpperCase();
+}
+
+function preferCanonicalRuntimeProducts(catalogProducts,runtimeProducts){
+  const runtimeKeys=new Set(runtimeProducts.map((row)=>`${row.manufacturer}::${normalizeSeriesName(row.series??row.displayName)}`));
+  const legacy=catalogProducts.filter((row)=>!runtimeKeys.has(`${row.manufacturer}::${normalizeSeriesName(row.series??row.displayName)}`));
+  return [
+    ...legacy.map((row)=>({...row,sourceType:'CATALOG'})),
+    ...runtimeProducts.map((row)=>({...row,sourceType:'RUNTIME_MASTER'})),
+  ];
+}
+
 export class ProductConfigurationEditor {
   constructor(root,{initialSnapshot=null,onSnapshot=()=>{},showInventory=false}={}){
     this.root=root;this.initialSnapshot=initialSnapshot;this.onSnapshot=onSnapshot;this.showInventory=showInventory;
@@ -32,13 +45,13 @@ export class ProductConfigurationEditor {
   async mount(){
     this.root.innerHTML=`
       <section class="card runtime-editor">
-        <div class="section-heading"><div><h2>商品仕様</h2><p class="lead">正式Runtime / 既存共通Catalogから商品設定を入力します。</p></div><span id="runtimeVersionBadge" class="version-badge" hidden></span></div>
+        <div class="section-heading"><div><h2>商品仕様</h2><p class="lead">正式Runtimeを優先し、未統合・未生成の商品は安全に選択不可とします。</p></div><span id="runtimeVersionBadge" class="version-badge" hidden></span></div>
         <div id="runtimeStaleNotice"></div>
         <div class="field"><label for="manufacturer">メーカー</label><select id="manufacturer"><option value="">選択してください</option></select></div>
         <div class="field"><label for="product">商品</label><select id="product" disabled><option value="">選択してください</option></select></div>
         <div id="dynamicForm"></div><div id="warnings"></div>
       </section>
-      <section class="card compact"><h2>選択内容</h2><div id="selectionSummary" class="summary muted">シリーズを選択してください。</div></section>
+      <section class="card compact"><h2>選択内容</h2><div id="selectionSummary" class="summary muted">商品を選択してください。</div></section>
       <section id="productCodeCard" class="card compact" hidden><h2>品番結果</h2><div id="productCodeResults" class="summary"></div></section>
       ${this.showInventory?'<section class="card compact"><h2>Runtime Catalog</h2><div id="inventory"></div></section>':''}`;
     this.root.addEventListener('change',this.boundChange);
@@ -46,10 +59,7 @@ export class ProductConfigurationEditor {
     const [catalogProducts,runtimeProducts,health]=await Promise.all([
       getJson('/api/catalog/products'),getJson('/api/runtime-master/integrations'),getJson('/api/health'),
     ]);
-    this.state.products=[
-      ...catalogProducts.map((row)=>({...row,sourceType:'CATALOG'})),
-      ...runtimeProducts.map((row)=>({...row,sourceType:'RUNTIME_MASTER'})),
-    ];
+    this.state.products=preferCanonicalRuntimeProducts(catalogProducts,runtimeProducts);
     const manufacturers=[...new Set(this.state.products.map((row)=>row.manufacturer))].sort((a,b)=>a.localeCompare(b,'ja'));
     fill(this.root.querySelector('#manufacturer'),manufacturers.map((value)=>({value,label:value})));
     if(this.showInventory)this.renderInventory(health);
@@ -67,7 +77,7 @@ export class ProductConfigurationEditor {
   selectManufacturer(manufacturer){
     this.root.querySelector('#manufacturer').value=manufacturer??'';
     fill(this.root.querySelector('#product'),this.productsForManufacturer(manufacturer).map((row)=>({
-      value:row.id,label:row.sourceType==='RUNTIME_MASTER'?(row.selectable===false?`${row.displayName??row.series}（正式Runtime未登録）`:`${row.displayName??row.series} [Runtime]`):(row.displayName??row.series),
+      value:row.id,label:row.sourceType==='RUNTIME_MASTER'?(row.selectable===false?`${row.displayName??row.series}（${row.status==='RUNTIME_NOT_READY'?'正式Runtime未準備':'Runtime未統合'}）`:`${row.displayName??row.series} [Runtime]`):(row.displayName??row.series),
       disabled:row.selectable===false,
     })));
   }
@@ -105,7 +115,7 @@ export class ProductConfigurationEditor {
       this.state.resolveRevision+=1;this.state.productId=null;this.state.selection={};this.state.resolved=null;this.state.snapshot=null;this.state.stale=false;
       this.selectManufacturer(target.value);
       this.root.querySelector('#dynamicForm').innerHTML='';this.root.querySelector('#warnings').innerHTML='';
-      this.root.querySelector('#selectionSummary').textContent='シリーズを選択してください。';this.root.querySelector('#productCodeCard').hidden=true;
+      this.root.querySelector('#selectionSummary').textContent='商品を選択してください。';this.root.querySelector('#productCodeCard').hidden=true;
       this.onSnapshot(null);return;
     }
     if(target.id==='product'){
