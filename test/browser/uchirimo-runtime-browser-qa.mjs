@@ -164,7 +164,8 @@ async function exercise(page) {
 
 try {
   const preflight = await browser.newContext();
-  const response = await preflight.request.get(`${BASE}/api/runtime-master/integrations`);
+  const preflightUrl = SHARE_TOKEN ? `${BASE}/api/runtime-master/integrations?_vercel_share=${encodeURIComponent(SHARE_TOKEN)}` : `${BASE}/api/runtime-master/integrations`;
+  const response = await preflight.request.get(preflightUrl);
   assert.equal(response.status(), 200);
   const integration = (await response.json()).find((row) => row.id === PRODUCT_ID);
   assert.ok(integration);
