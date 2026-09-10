@@ -8,7 +8,6 @@ on:
 
 jobs:
   estimate_output:
-    if: ${{ github.event_name == 'pull_request' || startsWith(github.event.head_commit.message, 'release: 見積出力 v1.0') }}
     runs-on: ubuntu-latest
     env:
       VERCEL_ORG_ID: team_AkuHacuJlCl8LuvaFpCzFmbv
@@ -42,6 +41,7 @@ jobs:
           done
           npm run test:browser:estimate-output
       - name: Vercel credential and project preflight
+        if: ${{ github.event_name == 'pull_request' || (github.event_name == 'push' && startsWith(github.event.head_commit.message, 'release: 見積出力 v1.0')) }}
         env:
           VERCEL_TOKEN_PRIMARY: ${{ secrets.VERCEL_TOKEN }}
           VERCEL_TOKEN_FALLBACK: ${{ secrets.VERCEL_ACCESS_TOKEN }}
@@ -71,10 +71,10 @@ jobs:
           node -e 'const d=require("./artifacts/estimate-output-browser-qa/deployment.json"); if(d.readyState!=="READY"||d.githubSha!==process.env.GITHUB_SHA||d.mode!=="preview"||d.projectId!==process.env.VERCEL_PROJECT_ID||d.teamId!==process.env.VERCEL_ORG_ID) process.exit(1)'
           echo "PREVIEW_DEPLOYMENT_GATE=PASS"
       - name: Deploy exact main SHA Production
-        if: ${{ github.event_name == 'push' }}
+        if: ${{ github.event_name == 'push' && startsWith(github.event.head_commit.message, 'release: 見積出力 v1.0') }}
         run: node scripts/vercel-rest-deploy.mjs production artifacts/estimate-output-browser-qa/production-deployment.json
       - name: Verify Production identity and canonical alias
-        if: ${{ github.event_name == 'push' }}
+        if: ${{ github.event_name == 'push' && startsWith(github.event.head_commit.message, 'release: 見積出力 v1.0') }}
         shell: bash
         run: |
           set -euo pipefail
@@ -85,7 +85,7 @@ jobs:
           node -e 'const d=require("./artifacts/estimate-output-browser-qa/vercel-production.json"); if(d.readyState!=="READY"||d.target!=="production"||d.meta?.releaseCommitSha!==process.env.GITHUB_SHA||!Array.isArray(d.alias)||!d.alias.includes(process.env.PRODUCTION_HOST)) { console.error({readyState:d.readyState,target:d.target,releaseCommitSha:d.meta?.releaseCommitSha,alias:d.alias}); process.exit(1); }'
           echo "PRODUCTION_DEPLOYMENT_GATE=PASS"
       - name: Production smoke
-        if: ${{ github.event_name == 'push' }}
+        if: ${{ github.event_name == 'push' && startsWith(github.event.head_commit.message, 'release: 見積出力 v1.0') }}
         shell: bash
         run: |
           set -euo pipefail
@@ -103,7 +103,7 @@ jobs:
           echo "PRODUCTION_SMOKE_GATE=BLOCKED"
           exit 49
       - name: Production estimate-output browser QA
-        if: ${{ github.event_name == 'push' }}
+        if: ${{ github.event_name == 'push' && startsWith(github.event.head_commit.message, 'release: 見積出力 v1.0') }}
         env:
           QA_BASE_URL: ${{ env.PRODUCTION_URL }}
         run: npm run test:browser:estimate-output
