@@ -100,15 +100,7 @@ jobs:
             --data '{"ttl":86400}' \
             "https://api.vercel.com/aliases/$alias_uid/protection-bypass?teamId=$VERCEL_ORG_ID")"
           test "$bypass_status" = "200"
-          share_payload="$(node -p 'const p=require("./artifacts/stage-a-preview/share-link.json"); p.protectionBypassUrl || p.value || ""')"
-          test -n "$share_payload"
-          if [[ "$share_payload" == http* ]]; then
-            share_url="$share_payload"
-            share_token="$(SHARE_URL="$share_url" node -p 'new URL(process.env.SHARE_URL).searchParams.get("_vercel_share") || ""')"
-          else
-            share_token="$share_payload"
-            share_url="https://$resolved_alias/?_vercel_share=$share_token"
-          fi
+          share_token="$(node -p 'const p=require("./artifacts/stage-a-preview/share-link.json"); p.protectionBypassUrl ? new URL(p.protectionBypassUrl).searchParams.get("_vercel_share") : p.value || Object.keys(p.protectionBypass || {})[0] || ""')"
           test -n "$share_token"
           echo "::add-mask::$share_token"
           echo "VERCEL_SHARE_TOKEN=$share_token" >> "$GITHUB_ENV"
