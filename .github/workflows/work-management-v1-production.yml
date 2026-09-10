@@ -1,0 +1,193 @@
+name: Work Management v1.0 Production Release
+
+on:
+  push:
+    branches: ['release/work-management-v1.0-production-20260910']
+
+jobs:
+  production_release:
+    runs-on: ubuntu-latest
+    environment: production
+    env:
+      RELEASE_CANDIDATE_SHA: e9918cd75430262bd2bf3debc1abf24bc614236e
+      STAGING_RUN_ID: '34428475365'
+      STAGING_ARTIFACT_NAME: work-management-v1-staging-smoke-e9918cd
+      VERCEL_ORG_ID: team_AkuHacuJlCl8LuvaFpCzFmbv
+      VERCEL_PROJECT_ID: prj_4z0zqW6yKyPuFINODfGX8LPBuJRP
+      VERCEL_PROJECT_NAME: sash-app-wave3-preview
+      VERCEL_TOKEN_PRIMARY: ${{ secrets.VERCEL_TOKEN }}
+      VERCEL_TOKEN_FALLBACK: ${{ secrets.VERCEL_ACCESS_TOKEN }}
+      RELEASE_SERIES: APP WORK MANAGEMENT
+      RELEASE_PACKAGE_VERSION: v1.0
+      PRODUCTION_URL: https://sash-app-wave3-preview.vercel.app
+      PRODUCTION_HOST: sash-app-wave3-preview.vercel.app
+      EXPECTED_ROLLBACK_DEPLOYMENT_ID: dpl_2JJ4x8rdn3nxmogV7x8AgMda4G8e
+      EXPECTED_ROLLBACK_SHA: 92ee5c5c92e8cb6a5227047fa670e220e25fec6c
+    steps:
+      - name: Checkout exact Release Candidate
+        uses: actions/checkout@v4
+        with:
+          ref: e9918cd75430262bd2bf3debc1abf24bc614236e
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Download approved Staging evidence
+        uses: actions/download-artifact@v4
+        with:
+          name: work-management-v1-staging-smoke-e9918cd
+          path: staging-evidence
+          github-token: ${{ github.token }}
+          run-id: 34428475365
+
+      - name: Release input and Staging gate verification
+        shell: bash
+        run: |
+          set -euo pipefail
+          [[ "$(git rev-parse HEAD)" == "$RELEASE_CANDIDATE_SHA" ]] || exit 41
+          evidence="staging-evidence/staging-work-management-v1/release.txt"
+          [[ -f "$evidence" ]] || { echo 'STAGING_EVIDENCE_GATE=BLOCKED'; find staging-evidence -maxdepth 3 -type f -print; exit 42; }
+          grep -Fx "release_candidate_sha=$RELEASE_CANDIDATE_SHA" "$evidence"
+          grep -Fx 'staging_browser_smoke_gate=PASS' "$evidence"
+          grep -Fx 'deployment_ready=TRUE' "$evidence"
+          grep -Fx 'scenario_f_soft_delete=PASS' "$evidence"
+          grep -Fx 'save_failure_retry=PASS' "$evidence"
+          grep -Fx 'mobile_390x844=PASS' "$evidence"
+          grep -Fx 'console_error=0' "$evidence"
+          grep -Fx 'page_error=0' "$evidence"
+          grep -Fx 'unexpected_4xx_5xx=0' "$evidence"
+          mkdir -p artifacts/work-management-v1-production
+          printf 'release_candidate_sha=%s\nstaging_run_id=%s\nstaging_evidence_gate=PASS\ndeployment_ready=TRUE\nproduct_master_mutation=0\n' "$RELEASE_CANDIDATE_SHA" "$STAGING_RUN_ID" > artifacts/work-management-v1-production/release.txt
+          echo 'RELEASE_INPUT_GATE=PASS'
+          echo 'STAGING_EVIDENCE_GATE=PASS'
+
+      - name: Credential, project and rollback preflight
+        shell: bash
+        run: |
+          set -euo pipefail
+          token="${VERCEL_TOKEN_PRIMARY:-${VERCEL_TOKEN_FALLBACK:-}}"
+          [[ -n "$token" ]] || { echo 'VERCEL_CREDENTIAL_GATE=BLOCKED'; exit 43; }
+          echo "VERCEL_TOKEN_EFFECTIVE=$token" >> "$GITHUB_ENV"
+          status="$(curl -sS -o artifacts/work-management-v1-production/vercel-project.json -w '%{http_code}' -H "Authorization: Bearer $token" "https://api.vercel.com/v9/projects/$VERCEL_PROJECT_ID")"
+          [[ "$status" == 200 ]] || { echo "VERCEL_PROJECT_ACCESS_GATE=BLOCKED status=$status"; exit 44; }
+          node -e 'const p=require("./artifacts/work-management-v1-production/vercel-project.json"); if(p.id!==process.env.VERCEL_PROJECT_ID||p.accountId!==process.env.VERCEL_ORG_ID) process.exit(1)'
+          status="$(curl -sS -o artifacts/work-management-v1-production/previous-production.json -w '%{http_code}' -H "Authorization: Bearer $token" "https://api.vercel.com/v6/deployments?projectId=$VERCEL_PROJECT_ID&target=production&state=READY&limit=1&teamId=$VERCEL_ORG_ID")"
+          [[ "$status" == 200 ]] || exit 45
+          node - <<'NODE'
+          const fs=require('fs');
+          const x=require('./artifacts/work-management-v1-production/previous-production.json');
+          const d=x.deployments?.[0];
+          if(!d?.uid||!d?.url) process.exit(1);
+          if(d.uid!==process.env.EXPECTED_ROLLBACK_DEPLOYMENT_ID) {
+            console.error('Rollback deployment changed', {actual:d.uid, expected:process.env.EXPECTED_ROLLBACK_DEPLOYMENT_ID});
+            process.exit(2);
+          }
+          const sha=d.meta?.releaseCommitSha??d.meta?.githubCommitSha??'UNKNOWN';
+          if(sha!==process.env.EXPECTED_ROLLBACK_SHA) {
+            console.error('Rollback SHA changed', {actual:sha, expected:process.env.EXPECTED_ROLLBACK_SHA});
+            process.exit(3);
+          }
+          fs.appendFileSync('artifacts/work-management-v1-production/release.txt',`rollback_deployment_id=${d.uid}\nrollback_deployment_url=https://${d.url}\nrollback_commit_sha=${sha}\nrollback_readiness_gate=PASS\n`);
+          NODE
+          echo 'VERCEL_CREDENTIAL_GATE=PASS'
+          echo 'VERCEL_PROJECT_ACCESS_GATE=PASS'
+          echo 'ROLLBACK_READINESS_GATE=PASS'
+
+      - name: Deploy exact approved Candidate to Production
+        shell: bash
+        run: |
+          set -euo pipefail
+          GITHUB_SHA="$RELEASE_CANDIDATE_SHA" \
+          GITHUB_REF_NAME="main" \
+          RELEASE_SERIES="$RELEASE_SERIES" \
+          RELEASE_PACKAGE_VERSION="$RELEASE_PACKAGE_VERSION" \
+          node scripts/vercel-rest-deploy.mjs production artifacts/work-management-v1-production/production-deployment.json
+
+      - name: Verify Production identity and canonical alias
+        shell: bash
+        run: |
+          set -euo pipefail
+          node -e 'const d=require("./artifacts/work-management-v1-production/production-deployment.json"); if(d.readyState!=="READY"||d.githubSha!==process.env.RELEASE_CANDIDATE_SHA||d.mode!=="production"||d.projectId!==process.env.VERCEL_PROJECT_ID||d.teamId!==process.env.VERCEL_ORG_ID) process.exit(1)'
+          for i in {1..60}; do
+            status="$(curl -sS -o artifacts/work-management-v1-production/vercel-deployment.json -w '%{http_code}' -H "Authorization: Bearer $VERCEL_TOKEN_EFFECTIVE" "https://api.vercel.com/v13/deployments/$DEPLOY_ID?teamId=$VERCEL_ORG_ID")"
+            if [[ "$status" == 200 ]] && node - <<'NODE'
+          const d=require('./artifacts/work-management-v1-production/vercel-deployment.json');
+          if(d.readyState!=='READY'||d.target!=='production'||d.meta?.releaseCommitSha!==process.env.RELEASE_CANDIDATE_SHA||d.meta?.releaseSeries!==process.env.RELEASE_SERIES||d.meta?.releasePackageVersion!==process.env.RELEASE_PACKAGE_VERSION||!Array.isArray(d.alias)||!d.alias.includes(process.env.PRODUCTION_HOST)) process.exit(1);
+          NODE
+            then
+              printf 'production_deploy_gate=PASS\nproduction_deployment_id=%s\nproduction_deployment_url=%s\nproduction_commit_sha=%s\n' "$DEPLOY_ID" "$DEPLOY_URL" "$RELEASE_CANDIDATE_SHA" >> artifacts/work-management-v1-production/release.txt
+              echo 'PRODUCTION_DEPLOY_GATE=PASS'
+              exit 0
+            fi
+            sleep 1
+          done
+          echo 'PRODUCTION_DEPLOY_GATE=BLOCKED'
+          exit 46
+
+      - name: Canonical Production HTTP smoke
+        shell: bash
+        run: |
+          set -euo pipefail
+          for i in {1..60}; do
+            if curl -fsS "$PRODUCTION_URL/api/health" > artifacts/work-management-v1-production/canonical-health.json; then
+              if node - <<'NODE'
+          const h=require('./artifacts/work-management-v1-production/canonical-health.json');
+          const ids=new Set(h.runtimeMasterIntegrations?.map(x=>x.id));
+          if(!h.ok||ids.size!==3||!ids.has('SER-LIX-EW')||!ids.has('SER-LIXIL-TW')||!ids.has('SER-YKKAP-UCHIRIMO')) process.exit(1);
+          NODE
+              then
+                curl -fsS "$PRODUCTION_URL/api/runtime-master/integrations" > artifacts/work-management-v1-production/canonical-integrations.json
+                curl -fsS "$PRODUCTION_URL/app.js" > /dev/null
+                printf 'production_http_smoke=PASS\n' >> artifacts/work-management-v1-production/release.txt
+                echo 'PRODUCTION_HTTP_SMOKE=PASS'
+                exit 0
+              fi
+            fi
+            sleep 1
+          done
+          echo 'PRODUCTION_HTTP_SMOKE=BLOCKED'
+          exit 47
+
+      - name: Install Production browser QA dependencies
+        run: |
+          npm install --ignore-scripts
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+
+      - name: Production Desktop/390px work-management and Runtime browser smoke
+        env:
+          QA_BASE_URL: ${{ env.PRODUCTION_URL }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          node test/browser/work-management-browser-qa.mjs | tee artifacts/work-management-v1-production/work-management-browser.log
+          node test/browser/ew-runtime-browser-qa.mjs | tee artifacts/work-management-v1-production/ew-browser.log
+          node test/browser/tw-runtime-browser-qa.mjs | tee artifacts/work-management-v1-production/tw-browser.log
+          node test/browser/uchirimo-runtime-browser-qa.mjs | tee artifacts/work-management-v1-production/uchirimo-browser.log
+          node test/browser/release-regression-browser-qa.mjs | tee artifacts/work-management-v1-production/regression-browser.log
+          cp artifacts/work-management-browser-qa/report.json artifacts/work-management-v1-production/work-management-report.json
+          node - <<'NODE'
+          const fs=require('fs');
+          const r=require('./artifacts/work-management-v1-production/work-management-report.json');
+          const required=['A','B','C','D','E','F','G','H','I'];
+          if(r.status!=='PASS') process.exit(51);
+          for(const k of required) if(r.scenarios?.[k]!=='PASS') process.exit(52);
+          if(r.scenarios?.SAVE_NAVIGATION_RACE!=='PASS') process.exit(53);
+          if((r.consoleErrors??[]).length) process.exit(54);
+          if((r.pageErrors??[]).length) process.exit(55);
+          if((r.failedResponses??[]).length) process.exit(56);
+          fs.appendFileSync('artifacts/work-management-v1-production/release.txt',
+            'scenario_a_i=PASS\nscenario_f_soft_delete=PASS\nsave_failure_retry=PASS\nsave_navigation_race=PASS\ndesktop_browser=PASS\nsmartphone_390x844=PASS\new_runtime=PASS\ntw_runtime=PASS\nuchirimo_runtime=PASS\nexisting_series_regression=PASS\nconsole_error=0\npage_error=0\nunexpected_4xx_5xx=0\nunhandled_rejection=0\nproduction_smoke_gate=PASS\nproduction_ready=TRUE\n');
+          NODE
+          echo 'PRODUCTION_SMOKE_GATE=PASS'
+          echo 'PRODUCTION_READY=TRUE'
+
+      - name: Upload Production Release audit
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: work-management-v1-production-release-e9918cd
+          path: artifacts/
+          if-no-files-found: warn
