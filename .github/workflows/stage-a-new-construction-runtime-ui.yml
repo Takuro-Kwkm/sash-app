@@ -72,13 +72,29 @@ jobs:
           mkdir -p artifacts/stage-a-preview
           GITHUB_SHA="$HEAD_SHA" GITHUB_REF_NAME="$HEAD_REF" RELEASE_SERIES="NEW CONSTRUCTION EXTERIOR WINDOWS" RELEASE_PACKAGE_VERSION="UI-v1.6" node scripts/vercel-rest-deploy.mjs preview artifacts/stage-a-preview/deployment.json
 
-      - name: Verify Preview identity
+      - name: Verify Preview identity and create temporary browser access
         shell: bash
         run: |
           set -euo pipefail
           node -e 'const d=require("./artifacts/stage-a-preview/deployment.json"); if(d.readyState!=="READY"||d.githubSha!==process.env.HEAD_SHA||d.mode!=="preview"||d.projectId!==process.env.VERCEL_PROJECT_ID||d.teamId!==process.env.VERCEL_ORG_ID) { console.error(d); process.exit(1); }'
           echo "PREVIEW_SHA_MATCH_GATE=PASS"
-          curl -fsS "$DEPLOY_URL/api/health" > artifacts/stage-a-preview/health.json
+          deployment_id="$(node -p 'require("./artifacts/stage-a-preview/deployment.json").deploymentId || require("./artifacts/stage-a-preview/deployment.json").id')"
+          test -n "$deployment_id"
+          status="$(curl -sS -o artifacts/stage-a-preview/share-link.json -w '%{http_code}' \
+            -X PATCH \
+            -H "Authorization: Bearer $VERCEL_TOKEN_EFFECTIVE" \
+            -H 'Content-Type: application/json' \
+            --data '{"ttl":86400}' \
+            "https://api.vercel.com/aliases/$deployment_id/protection-bypass?teamId=$VERCEL_ORG_ID")"
+          test "$status" = "200"
+          share_url="$(node -p 'require("./artifacts/stage-a-preview/share-link.json").protectionBypassUrl || ""')"
+          test -n "$share_url"
+          share_token="$(SHARE_URL="$share_url" node -p 'new URL(process.env.SHARE_URL).searchParams.get("_vercel_share") || ""')"
+          test -n "$share_token"
+          echo "::add-mask::$share_token"
+          echo "VERCEL_SHARE_TOKEN=$share_token" >> "$GITHUB_ENV"
+          curl -fsS "$DEPLOY_URL/api/health?_vercel_share=$share_token" > artifacts/stage-a-preview/health.json
+          echo "PREVIEW_BROWSER_ACCESS_GATE=PASS"
 
       - name: Install Browser QA dependencies
         run: |
@@ -88,6 +104,7 @@ jobs:
       - name: Exact Preview desktop/mobile Browser QA
         env:
           QA_BASE_URL: ${{ env.DEPLOY_URL }}
+          VERCEL_SHARE_TOKEN: ${{ env.VERCEL_SHARE_TOKEN }}
         shell: bash
         run: |
           set -euo pipefail
