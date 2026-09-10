@@ -35,6 +35,12 @@ export function normalizeCanonicalRuntimeManifest(raw) {
     storageGate: raw.storage_gate,
     registryGate: raw.registry_gate,
     packageGate: raw.package_gate,
+    contentStatus: raw.content_status,
+    dependencyStatus: raw.dependency_status,
+    qaStatus: raw.qa_status,
+    humanApproval: raw.human_approval,
+    canonicalFolderId: raw.canonical_folder_id ?? null,
+    blockingItems: Array.isArray(raw.blocking_items) ? raw.blocking_items : [],
     formalizationStatus: raw.formalization_status,
     documentationFileId: raw.documentation_file_id ?? null,
   };
@@ -112,6 +118,32 @@ function verifyDocumentIdentity(document, manifest, role, { requireRuntimeContra
   }
 }
 
+function assertFormalReadiness(entry, manifest) {
+  if (entry.formalReadinessProfile === 'CANONICAL_STATUS_EXTERNAL_REGISTRY_V1') {
+    const ready = manifest.formalPass
+      && manifest.runtimeStatus === 'READY'
+      && manifest.storageStatus === 'CANONICAL'
+      && manifest.packageGate === 'PASS'
+      && manifest.contentStatus === 'PASS'
+      && manifest.dependencyStatus === 'PASS'
+      && manifest.qaStatus === 'PASS'
+      && manifest.humanApproval === 'APPROVED'
+      && manifest.blockingItems.length === 0
+      && Boolean(entry.canonicalFolderId)
+      && manifest.canonicalFolderId === entry.canonicalFolderId
+      && entry.externalRegistryGate === 'PASS'
+      && Boolean(entry.externalRegistryFileId);
+    if (!ready) fail('RUNTIME_MANIFEST_NOT_FORMAL_READY', 'Canonical Runtime manifest is not formally READY under external Registry profile', { manifest });
+    return;
+  }
+  const storageReady = manifest.storageStatus === 'PASS_CANONICAL' ||
+    (manifest.storageStatus === 'DRIVE_CANONICAL' && manifest.storageGate === 'PASS');
+  if (!manifest.formalPass || manifest.runtimeStatus !== 'READY' || !storageReady ||
+      manifest.packageGate !== 'PASS' || manifest.registryGate !== 'PASS') {
+    fail('RUNTIME_MANIFEST_NOT_FORMAL_READY', 'Canonical Runtime manifest is not formally READY', { manifest });
+  }
+}
+
 export async function loadCanonicalWorkbookRuntimePackage(entry) {
   const manifestBytes = await readFile(entry.runtimeManifestPath);
   const manifestActualSha256 = sha256(manifestBytes);
@@ -139,12 +171,7 @@ export async function loadCanonicalWorkbookRuntimePackage(entry) {
     }
   }
 
-  const storageReady = manifest.storageStatus === 'PASS_CANONICAL' ||
-    (manifest.storageStatus === 'DRIVE_CANONICAL' && manifest.storageGate === 'PASS');
-  if (!manifest.formalPass || manifest.runtimeStatus !== 'READY' || !storageReady ||
-      manifest.packageGate !== 'PASS' || manifest.registryGate !== 'PASS') {
-    fail('RUNTIME_MANIFEST_NOT_FORMAL_READY', 'Canonical Runtime manifest is not formally READY', { manifest });
-  }
+  assertFormalReadiness(entry, manifest);
 
   const loadedByRole = new Map();
   const files = [];
