@@ -74,7 +74,7 @@ try{
 
   await page.evaluate(()=>{window.__estimatePrintCalled=false;window.print=()=>{window.__estimatePrintCalled=true;};});
   await page.click('#estimateOutputPrint');assert.equal(await page.evaluate(()=>window.__estimatePrintCalled),true);
-  await page.emulateMedia({media:'print'});assert.equal(await page.locator('#estimateOutputPrint').evaluate((element)=>getComputedStyle(element).display),'none');
+  await page.emulateMedia({media:'print'});assert.equal(await page.locator('.estimate-output-actions').evaluate((element)=>getComputedStyle(element).display),'none');
   await page.emulateMedia({media:'screen'});report.checks.print_action_and_styles='PASS';
 
   await page.screenshot({path:`${OUT}/desktop-1440x1000.png`,fullPage:true});
