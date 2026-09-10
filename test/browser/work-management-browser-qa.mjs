@@ -31,7 +31,7 @@ async function createOpening(index,product){
   await page.locator('[data-opening-field="location"]').fill(index%2===0?'南面':'北面');
   await page.locator('[data-opening-field="opening_name"]').fill(index===0?'掃き出し窓':`開口${index+1}`);
   await page.selectOption('#manufacturer',product.manufacturer);
-  const initial=page.waitForResponse((row)=>row.url().includes('/resolve')&&row.status()===200);
+  const initial=page.waitForResponse((row)=>row.url().includes('/api/runtime-master/resolve')&&row.status()===200);
   await page.selectOption('#product',product.id);await initial;
   if(index===0){
     await choose('window_type','SWT-LIX-TW-SHUT-HIKI-FLAT');
@@ -63,9 +63,10 @@ try{
   const projectUrl=page.url();
   await page.getByRole('button',{name:'見積を開く'}).click();
   const estimateUrl=page.url();
-  const catalogResponse=await context.request.get(`${BASE}/api/catalog/products`);const catalog=await catalogResponse.json();
+  // Work-management regression must use products that are actually selectable under the
+  // current canonical Runtime policy. Do not bypass a blocked Runtime through Legacy Catalog.
   const tw={id:'SER-LIXIL-TW',manufacturer:'LIXIL'};
-  const ykk=catalog.find((row)=>row.manufacturer==='YKK AP');assert.ok(ykk);
+  const ykk={id:'SER-YKKAP-UCHIRIMO',manufacturer:'YKK AP'};
   for(let index=0;index<10;index++)await createOpening(index,index%2===0?tw:ykk);
   assert.equal(await page.locator('.opening-card').count(),10);
   const database=await page.evaluate(()=>window.__sashWorkApp.readDatabase());
