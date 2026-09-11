@@ -13,6 +13,21 @@ function normalizeBaseUrl(value){
   return raw;
 }
 
+function normalizeRedirectUrl(value){
+  const raw=trim(value);
+  if(!raw)return null;
+  let parsed;
+  try{parsed=new URL(raw);}catch{throw new PublicSaaSError('AUTH_REDIRECT_INVALID','Authentication redirect URL is invalid.');}
+  const local=parsed.hostname==='localhost'||parsed.hostname==='127.0.0.1';
+  if(parsed.protocol!=='https:'&&!local)throw new PublicSaaSError('AUTH_REDIRECT_INVALID','Authentication redirect URL must use HTTPS outside local development.');
+  return parsed.toString();
+}
+
+function withRedirect(path,redirectTo){
+  const redirect=normalizeRedirectUrl(redirectTo);
+  return redirect?`${path}?redirect_to=${encodeURIComponent(redirect)}`:path;
+}
+
 export function readSupabasePublicConfig(env=process.env){
   const url=normalizeBaseUrl(env.SUPABASE_URL??env.NEXT_PUBLIC_SUPABASE_URL??null);
   const publishableKey=trim(env.SUPABASE_PUBLISHABLE_KEY??env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY??env.SUPABASE_ANON_KEY??'')||null;
@@ -65,9 +80,12 @@ export class SupabaseAuthAdapter {
     return payload;
   }
 
-  signUpWithPassword({email,password,metadata={}}={}){
+  signUpWithPassword({email,password,metadata={},redirectTo=null}={}){
     if(!trim(email)||!password)throw new PublicSaaSError('AUTH_CREDENTIALS_REQUIRED','Email and password are required.');
-    return this.#request('/auth/v1/signup',{method:'POST',body:{email:trim(email).toLowerCase(),password,data:metadata}});
+    return this.#request(withRedirect('/auth/v1/signup',redirectTo),{
+      method:'POST',
+      body:{email:trim(email).toLowerCase(),password,data:metadata},
+    });
   }
 
   signInWithPassword({email,password}={}){
@@ -99,9 +117,18 @@ export class SupabaseAuthAdapter {
     return this.#request('/auth/v1/logout',{method:'POST',accessToken});
   }
 
-  requestPasswordReset(email){
+  requestPasswordReset(email,{redirectTo=null}={}){
     if(!trim(email))throw new PublicSaaSError('AUTH_EMAIL_REQUIRED','Email is required.');
-    return this.#request('/auth/v1/recover',{method:'POST',body:{email:trim(email).toLowerCase()}});
+    return this.#request(withRedirect('/auth/v1/recover',redirectTo),{
+      method:'POST',
+      body:{email:trim(email).toLowerCase()},
+    });
+  }
+
+  updatePassword(accessToken,password){
+    if(!accessToken)throw new PublicSaaSError('AUTH_REQUIRED','Access token is required.');
+    if(typeof password!=='string'||password.length<8)throw new PublicSaaSError('AUTH_PASSWORD_INVALID','Password must be at least 8 characters.');
+    return this.#request('/auth/v1/user',{method:'PUT',accessToken,body:{password}});
   }
 }
 
