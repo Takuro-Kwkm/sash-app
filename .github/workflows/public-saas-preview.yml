@@ -11,8 +11,9 @@ on:
       - 'scripts/vercel-rest-deploy.mjs'
       - 'test/75-public-saas-foundation.test.mjs'
       - 'test/76-public-saas-supabase-adapter.test.mjs'
-      - 'test/77-public-saas-supabase-repositories.test.mjs'
+      - 'test/77-public-saas-supabase-work-repositories.test.mjs'
       - 'test/78-public-saas-http-handler.test.mjs'
+      - 'test/79-public-saas-ui-safari-event-lifecycle.test.mjs'
       - 'docs/PUBLIC_SAAS_**'
       - '.github/workflows/public-saas-preview.yml'
   pull_request:
@@ -25,8 +26,9 @@ on:
       - 'scripts/vercel-rest-deploy.mjs'
       - 'test/75-public-saas-foundation.test.mjs'
       - 'test/76-public-saas-supabase-adapter.test.mjs'
-      - 'test/77-public-saas-supabase-repositories.test.mjs'
+      - 'test/77-public-saas-supabase-work-repositories.test.mjs'
       - 'test/78-public-saas-http-handler.test.mjs'
+      - 'test/79-public-saas-ui-safari-event-lifecycle.test.mjs'
       - 'docs/PUBLIC_SAAS_**'
       - '.github/workflows/public-saas-preview.yml'
 
@@ -70,8 +72,9 @@ jobs:
           node --test \
             test/75-public-saas-foundation.test.mjs \
             test/76-public-saas-supabase-adapter.test.mjs \
-            test/77-public-saas-supabase-repositories.test.mjs \
-            test/78-public-saas-http-handler.test.mjs
+            test/77-public-saas-supabase-work-repositories.test.mjs \
+            test/78-public-saas-http-handler.test.mjs \
+            test/79-public-saas-ui-safari-event-lifecycle.test.mjs
 
       - name: Vercel credential and project preflight
         shell: bash
