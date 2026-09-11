@@ -1,0 +1,102 @@
+name: Public SaaS Preview
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'src/public-saas/**'
+      - 'supabase/**'
+      - 'api/index.mjs'
+      - 'scripts/start-step8-ui.mjs'
+      - 'scripts/vercel-rest-deploy.mjs'
+      - 'test/75-public-saas-foundation.test.mjs'
+      - 'test/76-public-saas-supabase-adapter.test.mjs'
+      - 'test/77-public-saas-supabase-repositories.test.mjs'
+      - 'test/78-public-saas-http-handler.test.mjs'
+      - 'docs/PUBLIC_SAAS_**'
+      - '.github/workflows/public-saas-preview.yml'
+
+jobs:
+  preview:
+    if: github.event.pull_request.head.ref == 'feat/public-saas-foundation-a1'
+    runs-on: ubuntu-latest
+    # Existing Vercel credential is scoped through this GitHub Environment.
+    # The Vercel deployment target below remains Preview (target is intentionally omitted).
+    environment: production
+    env:
+      VERCEL_ORG_ID: team_AkuHacuJlCl8LuvaFpCzFmbv
+      VERCEL_PROJECT_ID: prj_4z0zqW6yKyPuFINODfGX8LPBuJRP
+      VERCEL_PROJECT_NAME: sash-app-wave3-preview
+      VERCEL_TOKEN_PRIMARY: ${{ secrets.VERCEL_TOKEN }}
+      VERCEL_TOKEN_FALLBACK: ${{ secrets.VERCEL_ACCESS_TOKEN }}
+      RELEASE_SERIES: PUBLIC_SAAS
+      RELEASE_PACKAGE_VERSION: STAGE_A2
+    steps:
+      - name: Checkout exact PR HEAD
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 1
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Install
+        run: npm install --ignore-scripts
+
+      - name: Exact HEAD and focused Public SaaS tests
+        shell: bash
+        env:
+          EXPECTED_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+          actual_sha="$(git rev-parse HEAD)"
+          test "$actual_sha" = "$EXPECTED_HEAD_SHA"
+          node --test \
+            test/75-public-saas-foundation.test.mjs \
+            test/76-public-saas-supabase-adapter.test.mjs \
+            test/77-public-saas-supabase-repositories.test.mjs \
+            test/78-public-saas-http-handler.test.mjs
+
+      - name: Vercel credential and project preflight
+        shell: bash
+        run: |
+          set -euo pipefail
+          token="${VERCEL_TOKEN_PRIMARY:-${VERCEL_TOKEN_FALLBACK:-}}"
+          if [[ -z "$token" ]]; then
+            echo "VERCEL_CREDENTIAL_GATE=BLOCKED"
+            exit 42
+          fi
+          echo "VERCEL_TOKEN_EFFECTIVE=$token" >> "$GITHUB_ENV"
+          status="$(curl -sS -o /tmp/vercel-project.json -w '%{http_code}' \
+            -H "Authorization: Bearer $token" \
+            "https://api.vercel.com/v9/projects/$VERCEL_PROJECT_ID?teamId=$VERCEL_ORG_ID")"
+          test "$status" = "200"
+          node -e 'const p=require("/tmp/vercel-project.json"); if(p.id!==process.env.VERCEL_PROJECT_ID||p.accountId!==process.env.VERCEL_ORG_ID) process.exit(1)'
+          echo "VERCEL_PROJECT_ACCESS_GATE=PASS"
+
+      - name: Create exact-head Preview deployment
+        shell: bash
+        env:
+          GITHUB_SHA: ${{ github.event.pull_request.head.sha }}
+          GITHUB_REF_NAME: ${{ github.event.pull_request.head.ref }}
+        run: |
+          mkdir -p artifacts/public-saas-preview
+          node scripts/vercel-rest-deploy.mjs preview artifacts/public-saas-preview/deployment.json
+
+      - name: Verify Preview identity
+        shell: bash
+        env:
+          EXPECTED_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          node -e 'const d=require("./artifacts/public-saas-preview/deployment.json"); if(d.readyState!=="READY"||d.mode!=="preview"||d.githubSha!==process.env.EXPECTED_HEAD_SHA||d.projectId!==process.env.VERCEL_PROJECT_ID||d.teamId!==process.env.VERCEL_ORG_ID) process.exit(1)'
+          echo "PUBLIC_SAAS_PREVIEW_DEPLOY_GATE=PASS"
+
+      - name: Upload Preview deployment evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: public-saas-preview-deployment
+          path: artifacts/public-saas-preview/
+          if-no-files-found: warn
