@@ -56,7 +56,7 @@ test('signup and recovery requests pass only validated HTTPS redirect_to values 
   assert.equal(signupUrl.searchParams.get('redirect_to'),'https://preview.example.com/public-saas');
   assert.equal(recoveryUrl.pathname,'/auth/v1/recover');
   assert.equal(recoveryUrl.searchParams.get('redirect_to'),'https://preview.example.com/public-saas?recovery=1');
-  await assert.rejects(()=>adapter.requestPasswordReset('user@example.com',{redirectTo:'http://evil.example/reset'}),{code:'AUTH_REDIRECT_INVALID'});
+  assert.throws(()=>adapter.requestPasswordReset('user@example.com',{redirectTo:'http://evil.example/reset'}),{code:'AUTH_REDIRECT_INVALID'});
 });
 
 test('authenticated password update uses the user endpoint and bearer access token',async()=>{
@@ -70,7 +70,7 @@ test('authenticated password update uses the user endpoint and bearer access tok
   assert.equal(calls[0].options.method,'PUT');
   assert.equal(calls[0].options.headers.Authorization,'Bearer access-token');
   assert.deepEqual(JSON.parse(calls[0].options.body),{password:'new-password-123'});
-  await assert.rejects(()=>adapter.updatePassword('access-token','short'),{code:'AUTH_PASSWORD_INVALID'});
+  assert.throws(()=>adapter.updatePassword('access-token','short'),{code:'AUTH_PASSWORD_INVALID'});
 });
 
 test('verified Supabase access token becomes provider-independent principal',async()=>{
