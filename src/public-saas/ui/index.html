@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>サッシ情報管理アプリ｜Public SaaS Preview</title>
+  <link rel="stylesheet" href="/public-saas/styles.css">
+  <script type="module" src="/public-saas/app.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <div>
+      <p class="eyebrow">DEVELOPMENT / PREVIEW</p>
+      <h1>サッシ情報管理アプリ</h1>
+      <p class="subtitle">Public SaaS Foundation</p>
+    </div>
+    <span id="providerStatus" class="pill">確認中</span>
+  </header>
+
+  <main class="shell">
+    <div id="notice" class="notice" hidden></div>
+
+    <section class="card" id="authCard">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">STEP 1</p>
+          <h2>ログイン</h2>
+        </div>
+        <span id="sessionBadge" class="pill muted">未ログイン</span>
+      </div>
+
+      <div id="signedOutPanel" class="auth-grid">
+        <form id="signInForm" class="stack">
+          <h3>ログイン</h3>
+          <label>メールアドレス<input name="email" type="email" autocomplete="email" required></label>
+          <label>パスワード<input name="password" type="password" autocomplete="current-password" minlength="8" required></label>
+          <button class="primary" type="submit">ログイン</button>
+        </form>
+
+        <form id="signUpForm" class="stack">
+          <h3>初回登録</h3>
+          <label>表示名<input name="display_name" autocomplete="name"></label>
+          <label>メールアドレス<input name="email" type="email" autocomplete="email" required></label>
+          <label>パスワード<input name="password" type="password" autocomplete="new-password" minlength="8" required></label>
+          <button type="submit">アカウント作成</button>
+          <small>メール確認が有効な場合は、届いた確認メールから認証後にログインします。</small>
+        </form>
+      </div>
+
+      <div id="signedInPanel" class="signed-in" hidden>
+        <div>
+          <strong id="sessionUser">—</strong>
+          <p>Supabase AuthのSessionはHttpOnly Cookieで保持します。</p>
+        </div>
+        <button id="signOutButton" type="button">ログアウト</button>
+      </div>
+    </section>
+
+    <section class="card" id="workspaceCard" hidden>
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">STEP 2</p>
+          <h2>Workspace</h2>
+        </div>
+        <button id="reloadWorkspaceButton" type="button" class="quiet">再読込</button>
+      </div>
+
+      <div class="workspace-grid">
+        <label>使用するWorkspace
+          <select id="workspaceSelect"></select>
+        </label>
+        <form id="workspaceForm" class="inline-form">
+          <label>新しいWorkspace<input name="name" maxlength="120" placeholder="例：熊本営業チーム" required></label>
+          <button type="submit">作成</button>
+        </form>
+      </div>
+      <p id="workspaceMeta" class="meta">—</p>
+    </section>
+
+    <section class="card" id="workCard" hidden>
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">STEP 3</p>
+          <h2>Supabase永続化テスト</h2>
+          <p>Project → Estimate → Opening をWorkspace単位で保存します。</p>
+        </div>
+        <button id="reloadDataButton" type="button" class="quiet">DB再読込</button>
+      </div>
+
+      <div class="work-grid">
+        <form id="projectForm" class="stack">
+          <h3>案件を作成</h3>
+          <label>物件名<input name="project_name" maxlength="160" required></label>
+          <label>依頼会社<input name="request_company" maxlength="160"></label>
+          <label>施主名<input name="customer_name" maxlength="160"></label>
+          <button class="primary" type="submit">案件＋初回見積を保存</button>
+        </form>
+
+        <form id="openingForm" class="stack">
+          <h3>開口部を追加</h3>
+          <label>見積<select id="estimateSelect" name="estimate_id" required></select></label>
+          <label>部屋名<input name="room_name" maxlength="120" placeholder="例：LDK"></label>
+          <label>開口名<input name="opening_name" maxlength="120" placeholder="例：南面掃き出し"></label>
+          <button type="submit">開口部を保存</button>
+        </form>
+      </div>
+
+      <div class="db-summary" id="dbSummary">DB未読込</div>
+      <div id="projectList" class="project-list"></div>
+    </section>
+
+    <section class="card subtle">
+      <p class="eyebrow">SECURITY</p>
+      <p>このPreview画面はService Role / Secret Keyをブラウザへ配布しません。DBアクセスはログインSessionとRLSで制限されます。</p>
+    </section>
+  </main>
+</body>
+</html>
