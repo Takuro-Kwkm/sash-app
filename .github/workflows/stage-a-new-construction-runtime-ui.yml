@@ -123,6 +123,7 @@ jobs:
           node test/browser/ew-runtime-browser-qa.mjs
           node test/browser/tw-runtime-browser-qa.mjs
           node test/browser/uchirimo-runtime-browser-qa.mjs
+          node test/browser/formal-runtime-resync-browser-qa.mjs
           node test/browser/release-regression-browser-qa.mjs
           echo "BROWSER_QA_GATE=PASS"
 
