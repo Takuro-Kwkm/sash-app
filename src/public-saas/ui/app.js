@@ -27,6 +27,10 @@ function setFormBusy(form,busy){
     if(element.matches?.('button, input[type="submit"]'))element.disabled=Boolean(busy);
   }
 }
+function clearRecoveryState(){
+  state.recoveryMode=false;
+  sessionStorage.removeItem('sash.public-saas.recovery-mode');
+}
 
 async function api(path,{method='GET',body}={}){
   const response=await fetch(path,{
@@ -63,6 +67,7 @@ async function consumeAuthRedirect(){
   const hash=new URLSearchParams(location.hash.replace(/^#/,''));
   const providerError=hash.get('error_description')||hash.get('error');
   if(providerError){
+    clearRecoveryState();
     clearAuthFragment();
     showNotice(providerError,'error');
     return;
@@ -80,6 +85,7 @@ async function consumeAuthRedirect(){
     clearAuthFragment();
     showNotice(recovery?'本人確認が完了しました。新しいパスワードを設定してください。':'メール認証が完了し、ログインしました。','success');
   }catch(error){
+    clearRecoveryState();
     clearAuthFragment();
     showNotice(error.message,'error');
   }
@@ -201,12 +207,17 @@ async function boot(){
     renderAuth();
     await loadWorkspaces();
   }catch(error){
-    if(error.status!==401)showNotice(error.message,'error');
+    const staleRecovery=state.recoveryMode;
+    if(error.status===401)clearRecoveryState();
+    else showNotice(error.message,'error');
     state.principal=null;
     state.workspaces=[];
     state.memberships=[];
     state.database={projects:[],estimates:[],openings:[]};
     renderAuth();
+    if(error.status===401&&staleRecovery){
+      showNotice('パスワード再設定の本人確認Sessionが切れています。ログイン欄にメールアドレスを入力し、「パスワードを忘れた方」から再設定メールを送り直してください。','error');
+    }
   }
 }
 
@@ -218,8 +229,7 @@ $('#signInForm').addEventListener('submit',async(event)=>{
   try{
     await api('/api/public-saas/auth/sign-in',{method:'POST',body:data});
     form.reset();
-    state.recoveryMode=false;
-    sessionStorage.removeItem('sash.public-saas.recovery-mode');
+    clearRecoveryState();
     showNotice('ログインしました。','success');
     await boot();
   }catch(error){showNotice(error.message,'error');}
@@ -251,8 +261,9 @@ $('#passwordResetRequestButton').addEventListener('click',async(event)=>{
   if(!email){showNotice('ログイン欄にメールアドレスを入力してください。','error');return;}
   button.disabled=true;
   try{
+    clearRecoveryState();
     await api('/api/public-saas/auth/password-reset-request',{method:'POST',body:{email}});
-    showNotice('パスワード再設定メールを送信しました。メールが届いた場合はリンクを開いてください。','success');
+    showNotice('パスワード再設定メールを送信しました。届いた最新メールのリンクを開いてください。','success');
   }catch(error){showNotice(error.message,'error');}
   finally{button.disabled=false;}
 });
@@ -267,27 +278,36 @@ $('#updatePasswordButton').addEventListener('click',async(event)=>{
   button.disabled=true;
   try{
     await api('/api/public-saas/auth/update-password',{method:'POST',body:{password}});
-    state.recoveryMode=false;
+    clearRecoveryState();
     state.principal=null;
     state.workspaces=[];
     state.memberships=[];
     state.database={projects:[],estimates:[],openings:[]};
-    sessionStorage.removeItem('sash.public-saas.recovery-mode');
     $('#newPassword').value='';
     $('#newPasswordConfirm').value='';
     renderAuth();
     showNotice('パスワードを更新しました。新しいパスワードでログインしてください。','success');
-  }catch(error){showNotice(error.message,'error');}
-  finally{button.disabled=false;}
+  }catch(error){
+    if(error.status===401){
+      clearRecoveryState();
+      state.principal=null;
+      state.workspaces=[];
+      state.memberships=[];
+      state.database={projects:[],estimates:[],openings:[]};
+      renderAuth();
+      showNotice('パスワード再設定の本人確認Sessionが無効または期限切れです。「パスワードを忘れた方」から最新の再設定メールを送り直してください。','error');
+    }else{
+      showNotice(error.message,'error');
+    }
+  }finally{button.disabled=false;}
 });
 
 $('#signOutButton').addEventListener('click',async()=>{
   clearNotice();
   try{await api('/api/public-saas/auth/sign-out',{method:'POST'});}catch{}
-  state.principal=null;state.workspaces=[];state.memberships=[];state.workspaceId=null;state.recoveryMode=false;
+  state.principal=null;state.workspaces=[];state.memberships=[];state.workspaceId=null;clearRecoveryState();
   state.database={projects:[],estimates:[],openings:[]};
   sessionStorage.removeItem('sash.public-saas.workspace-id');
-  sessionStorage.removeItem('sash.public-saas.recovery-mode');
   renderAuth();
   showNotice('ログアウトしました。','success');
 });
