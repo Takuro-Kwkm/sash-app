@@ -14,6 +14,7 @@ on:
       - 'test/77-public-saas-supabase-work-repositories.test.mjs'
       - 'test/78-public-saas-http-handler.test.mjs'
       - 'test/79-public-saas-ui-safari-event-lifecycle.test.mjs'
+      - 'test/80-public-saas-tenant-isolation-e2e-ui.test.mjs'
       - 'docs/PUBLIC_SAAS_**'
       - '.github/workflows/public-saas-preview.yml'
   pull_request:
@@ -29,6 +30,7 @@ on:
       - 'test/77-public-saas-supabase-work-repositories.test.mjs'
       - 'test/78-public-saas-http-handler.test.mjs'
       - 'test/79-public-saas-ui-safari-event-lifecycle.test.mjs'
+      - 'test/80-public-saas-tenant-isolation-e2e-ui.test.mjs'
       - 'docs/PUBLIC_SAAS_**'
       - '.github/workflows/public-saas-preview.yml'
 
@@ -36,8 +38,6 @@ jobs:
   preview:
     if: github.event_name == 'push' || github.event.pull_request.head.ref == 'feat/public-saas-foundation-a1'
     runs-on: ubuntu-latest
-    # Existing Vercel credential is scoped through this GitHub Environment.
-    # The Vercel deployment target below remains Preview (target is intentionally omitted).
     environment: production
     env:
       VERCEL_ORG_ID: team_AkuHacuJlCl8LuvaFpCzFmbv
@@ -74,7 +74,8 @@ jobs:
             test/76-public-saas-supabase-adapter.test.mjs \
             test/77-public-saas-supabase-work-repositories.test.mjs \
             test/78-public-saas-http-handler.test.mjs \
-            test/79-public-saas-ui-safari-event-lifecycle.test.mjs
+            test/79-public-saas-ui-safari-event-lifecycle.test.mjs \
+            test/80-public-saas-tenant-isolation-e2e-ui.test.mjs
 
       - name: Vercel credential and project preflight
         shell: bash
