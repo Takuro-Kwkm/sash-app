@@ -26,14 +26,6 @@ if (actualSha !== githubSha) {
   throw new Error(`Git SHA mismatch: checkout=${actualSha} event=${githubSha}`);
 }
 
-const files = execFileSync('git', ['ls-files', '-z'], { encoding: 'buffer' })
-  .toString('utf8')
-  .split('\0')
-  .filter(Boolean)
-  .sort();
-
-if (!files.length) throw new Error('No tracked files found for deployment');
-
 const api = async (url, init = {}) => {
   const response = await fetch(url, {
     ...init,
@@ -45,49 +37,60 @@ const api = async (url, init = {}) => {
   return response;
 };
 
-const uploadOne = async (file) => {
-  const data = await readFile(file);
-  const sha = createHash('sha1').update(data).digest('hex');
-  const url = `https://api.vercel.com/v2/files?teamId=${encodeURIComponent(teamId)}`;
-  const response = await api(url, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/octet-stream',
-      'Content-Length': String(data.byteLength),
-      'x-Vercel-Digest': sha,
-      'x-Now-Digest': sha,
-      'x-Now-Size': String(data.byteLength),
-    },
-    body: data,
-  });
-  if (!response.ok) {
-    const body = await response.text();
-    throw new Error(`Vercel file upload failed (${response.status}) for ${file}: ${body.slice(0, 500)}`);
-  }
-  return { file, sha, size: data.byteLength };
-};
-
-const uploaded = [];
-const concurrency = 8;
-let cursor = 0;
-const workers = Array.from({ length: Math.min(concurrency, files.length) }, async () => {
-  while (true) {
-    const index = cursor++;
-    if (index >= files.length) return;
-    uploaded[index] = await uploadOne(files[index]);
-  }
-});
-await Promise.all(workers);
-
 const commitMessage = execFileSync('git', ['log', '-1', '--format=%s'], { encoding: 'utf8' }).trim();
 const authorName = execFileSync('git', ['log', '-1', '--format=%an'], { encoding: 'utf8' }).trim();
 const authorEmail = execFileSync('git', ['log', '-1', '--format=%ae'], { encoding: 'utf8' }).trim();
-const [owner] = repository.split('/');
+const [owner, repoName] = repository.split('/');
+const useGitSource = mode === 'preview' && process.env.VERCEL_DEPLOY_SOURCE !== 'files';
+
+let uploaded = [];
+if (!useGitSource) {
+  const files = execFileSync('git', ['ls-files', '-z'], { encoding: 'buffer' })
+    .toString('utf8')
+    .split('\0')
+    .filter(Boolean)
+    .sort();
+
+  if (!files.length) throw new Error('No tracked files found for deployment');
+
+  const uploadOne = async (file) => {
+    const data = await readFile(file);
+    const sha = createHash('sha1').update(data).digest('hex');
+    const url = `https://api.vercel.com/v2/files?teamId=${encodeURIComponent(teamId)}`;
+    const response = await api(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/octet-stream',
+        'Content-Length': String(data.byteLength),
+        'x-Vercel-Digest': sha,
+        'x-Now-Digest': sha,
+        'x-Now-Size': String(data.byteLength),
+      },
+      body: data,
+    });
+    if (!response.ok) {
+      const body = await response.text();
+      throw new Error(`Vercel file upload failed (${response.status}) for ${file}: ${body.slice(0, 500)}`);
+    }
+    return { file, sha, size: data.byteLength };
+  };
+
+  uploaded = new Array(files.length);
+  const concurrency = 8;
+  let cursor = 0;
+  const workers = Array.from({ length: Math.min(concurrency, files.length) }, async () => {
+    while (true) {
+      const index = cursor++;
+      if (index >= files.length) return;
+      uploaded[index] = await uploadOne(files[index]);
+    }
+  });
+  await Promise.all(workers);
+}
 
 const payload = {
   name: projectName,
   project: projectId,
-  files: uploaded,
   gitMetadata: {
     remoteUrl: `https://github.com/${repository}.git`,
     commitAuthorName: authorName,
@@ -109,6 +112,19 @@ const payload = {
     releaseMode: mode,
   },
 };
+
+if (useGitSource) {
+  payload.gitSource = {
+    type: 'github',
+    org: owner,
+    repo: repoName,
+    ref: githubRefName,
+    sha: githubSha,
+  };
+  payload.withLatestCommit = false;
+} else {
+  payload.files = uploaded;
+}
 if (mode === 'production') payload.target = 'production';
 
 const createUrl = `https://api.vercel.com/v13/deployments?forceNew=1&skipAutoDetectionConfirmation=1&teamId=${encodeURIComponent(teamId)}`;
@@ -147,6 +163,11 @@ if (finalState !== 'READY') {
   throw new Error(`Vercel deployment did not become READY: ${JSON.stringify({ id: deploymentId, state: finalState })}`);
 }
 
+const deploymentGitSha = deployment.meta?.githubCommitSha ?? created.meta?.githubCommitSha ?? null;
+if (useGitSource && deploymentGitSha !== githubSha) {
+  throw new Error(`Vercel Git source SHA mismatch: deployment=${deploymentGitSha ?? 'missing'} expected=${githubSha}`);
+}
+
 const deploymentUrl = deployment.url ? `https://${deployment.url}` : created.url ? `https://${created.url}` : null;
 if (!deploymentUrl) throw new Error('READY deployment has no URL');
 
@@ -157,6 +178,8 @@ const result = {
   readyState: finalState,
   githubSha,
   githubRefName,
+  deploymentGitSha,
+  deploySource: useGitSource ? 'gitSource' : 'files',
   projectId,
   teamId,
   fileCount: uploaded.length,
