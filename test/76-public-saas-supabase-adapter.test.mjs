@@ -36,6 +36,43 @@ test('password login uses publishable key and does not require a service-role se
   assert.deepEqual(JSON.parse(calls[0].options.body),{email:'user@example.com',password:'secret'});
 });
 
+test('signup and recovery requests pass only validated HTTPS redirect_to values to Supabase',async()=>{
+  const calls=[];
+  const adapter=new SupabaseAuthAdapter({
+    url:'https://sample.supabase.co',publishableKey:'sb_publishable_test',
+    fetchImpl:async(url,options)=>{calls.push({url,options});return jsonResponse(200,{});},
+  });
+  await adapter.signUpWithPassword({
+    email:'user@example.com',password:'password-123',
+    redirectTo:'https://preview.example.com/public-saas',
+  });
+  await adapter.requestPasswordReset('user@example.com',{
+    redirectTo:'https://preview.example.com/public-saas?recovery=1',
+  });
+
+  const signupUrl=new URL(calls[0].url);
+  const recoveryUrl=new URL(calls[1].url);
+  assert.equal(signupUrl.pathname,'/auth/v1/signup');
+  assert.equal(signupUrl.searchParams.get('redirect_to'),'https://preview.example.com/public-saas');
+  assert.equal(recoveryUrl.pathname,'/auth/v1/recover');
+  assert.equal(recoveryUrl.searchParams.get('redirect_to'),'https://preview.example.com/public-saas?recovery=1');
+  await assert.rejects(()=>adapter.requestPasswordReset('user@example.com',{redirectTo:'http://evil.example/reset'}),{code:'AUTH_REDIRECT_INVALID'});
+});
+
+test('authenticated password update uses the user endpoint and bearer access token',async()=>{
+  const calls=[];
+  const adapter=new SupabaseAuthAdapter({
+    url:'https://sample.supabase.co',publishableKey:'sb_publishable_test',
+    fetchImpl:async(url,options)=>{calls.push({url,options});return jsonResponse(200,{id:'user-1'});},
+  });
+  await adapter.updatePassword('access-token','new-password-123');
+  assert.equal(calls[0].url,'https://sample.supabase.co/auth/v1/user');
+  assert.equal(calls[0].options.method,'PUT');
+  assert.equal(calls[0].options.headers.Authorization,'Bearer access-token');
+  assert.deepEqual(JSON.parse(calls[0].options.body),{password:'new-password-123'});
+  await assert.rejects(()=>adapter.updatePassword('access-token','short'),{code:'AUTH_PASSWORD_INVALID'});
+});
+
 test('verified Supabase access token becomes provider-independent principal',async()=>{
   const accessToken=jwt({sub:'11111111-1111-4111-8111-111111111111',session_id:'session-1',iat:1789010000,exp:1789017200});
   const adapter=new SupabaseAuthAdapter({
