@@ -169,20 +169,24 @@ async function boot(){
 }
 
 $('#signInForm').addEventListener('submit',async(event)=>{
-  event.preventDefault();clearNotice();setFormBusy(event.currentTarget,true);
-  const data=Object.fromEntries(new FormData(event.currentTarget));
+  event.preventDefault();
+  const form=event.currentTarget;
+  clearNotice();setFormBusy(form,true);
+  const data=Object.fromEntries(new FormData(form));
   try{
     await api('/api/public-saas/auth/sign-in',{method:'POST',body:data});
-    event.currentTarget.reset();
+    form.reset();
     showNotice('ログインしました。','success');
     await boot();
   }catch(error){showNotice(error.message,'error');}
-  finally{setFormBusy(event.currentTarget,false);}
+  finally{setFormBusy(form,false);}
 });
 
 $('#signUpForm').addEventListener('submit',async(event)=>{
-  event.preventDefault();clearNotice();setFormBusy(event.currentTarget,true);
-  const data=Object.fromEntries(new FormData(event.currentTarget));
+  event.preventDefault();
+  const form=event.currentTarget;
+  clearNotice();setFormBusy(form,true);
+  const data=Object.fromEntries(new FormData(form));
   try{
     const result=await api('/api/public-saas/auth/sign-up',{method:'POST',body:data});
     if(result.email_confirmation_required){
@@ -191,9 +195,9 @@ $('#signUpForm').addEventListener('submit',async(event)=>{
       showNotice('アカウントを作成し、ログインしました。','success');
       await boot();
     }
-    event.currentTarget.reset();
+    form.reset();
   }catch(error){showNotice(error.message,'error');}
-  finally{setFormBusy(event.currentTarget,false);}
+  finally{setFormBusy(form,false);}
 });
 
 $('#signOutButton').addEventListener('click',async()=>{
@@ -221,11 +225,13 @@ $('#workspaceSelect').addEventListener('change',async(event)=>{
 });
 
 $('#workspaceForm').addEventListener('submit',async(event)=>{
-  event.preventDefault();clearNotice();setFormBusy(event.currentTarget,true);
-  const data=Object.fromEntries(new FormData(event.currentTarget));
+  event.preventDefault();
+  const form=event.currentTarget;
+  clearNotice();setFormBusy(form,true);
+  const data=Object.fromEntries(new FormData(form));
   try{
     await api('/api/public-saas/workspaces',{method:'POST',body:{name:data.name}});
-    event.currentTarget.reset();
+    form.reset();
     await loadWorkspaces();
     state.workspaceId=state.workspaces.at(-1)?.workspace_id??state.workspaceId;
     if(state.workspaceId)sessionStorage.setItem('sash.public-saas.workspace-id',state.workspaceId);
@@ -233,7 +239,7 @@ $('#workspaceForm').addEventListener('submit',async(event)=>{
     if(state.workspaceId)await loadDatabase();
     showNotice('Workspaceを作成しました。','success');
   }catch(error){showNotice(error.message,'error');}
-  finally{setFormBusy(event.currentTarget,false);}
+  finally{setFormBusy(form,false);}
 });
 
 $('#reloadDataButton').addEventListener('click',async()=>{
@@ -243,22 +249,26 @@ $('#reloadDataButton').addEventListener('click',async()=>{
 });
 
 $('#projectForm').addEventListener('submit',async(event)=>{
-  event.preventDefault();clearNotice();setFormBusy(event.currentTarget,true);
-  const project=Object.fromEntries(new FormData(event.currentTarget));
+  event.preventDefault();
+  const form=event.currentTarget;
+  clearNotice();setFormBusy(form,true);
+  const project=Object.fromEntries(new FormData(form));
   try{
     await api('/api/public-saas/work/projects',{method:'POST',body:{workspace_id:state.workspaceId,project}});
-    event.currentTarget.reset();
+    form.reset();
     await loadDatabase();
     showNotice('案件と初回見積をSupabaseへ保存しました。','success');
   }catch(error){showNotice(error.message,'error');}
-  finally{setFormBusy(event.currentTarget,false);}
+  finally{setFormBusy(form,false);}
 });
 
 $('#openingForm').addEventListener('submit',async(event)=>{
-  event.preventDefault();clearNotice();setFormBusy(event.currentTarget,true);
-  const values=Object.fromEntries(new FormData(event.currentTarget));
+  event.preventDefault();
+  const form=event.currentTarget;
+  clearNotice();setFormBusy(form,true);
+  const values=Object.fromEntries(new FormData(form));
   const estimate=state.database.estimates.find((row)=>row.estimate_id===values.estimate_id);
-  if(!estimate){showNotice('保存先の見積が見つかりません。','error');setFormBusy(event.currentTarget,false);return;}
+  if(!estimate){showNotice('保存先の見積が見つかりません。','error');setFormBusy(form,false);return;}
   try{
     await api('/api/public-saas/work/openings',{method:'POST',body:{
       workspace_id:state.workspaceId,
@@ -266,11 +276,11 @@ $('#openingForm').addEventListener('submit',async(event)=>{
       estimate_id:estimate.estimate_id,
       opening:{room_name:values.room_name,opening_name:values.opening_name},
     }});
-    event.currentTarget.reset();
+    form.reset();
     await loadDatabase();
     showNotice('開口部をSupabaseへ保存しました。','success');
   }catch(error){showNotice(error.message,'error');}
-  finally{setFormBusy(event.currentTarget,false);}
+  finally{setFormBusy(form,false);}
 });
 
 boot();
