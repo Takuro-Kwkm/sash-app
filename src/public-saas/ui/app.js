@@ -21,7 +21,10 @@ function showNotice(message,type='info'){
 }
 function clearNotice(){const node=$('#notice');node.hidden=true;node.textContent='';}
 function setFormBusy(form,busy){
-  for(const element of form.elements)element.disabled=Boolean(busy);
+  form.setAttribute('aria-busy',String(Boolean(busy)));
+  for(const element of form.elements){
+    if(element.matches?.('button, input[type="submit"]'))element.disabled=Boolean(busy);
+  }
 }
 
 async function api(path,{method='GET',body}={}){
