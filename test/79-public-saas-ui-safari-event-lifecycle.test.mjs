@@ -57,6 +57,17 @@ test('Public SaaS async submit handlers retain a stable form reference across aw
   assert.doesNotMatch(source,/setFormBusy\(event\.currentTarget,false\)/);
 });
 
+test('stale recovery mode is cleared when authenticated session is missing or password update returns 401',()=>{
+  assert.match(source,/function clearRecoveryState\(\)/);
+  assert.match(source,/if\(error\.status===401\)clearRecoveryState\(\)/);
+  const updateStart=source.indexOf("$('#updatePasswordButton').addEventListener('click',async(event)=>{");
+  assert.notEqual(updateStart,-1);
+  const updateWindow=source.slice(updateStart,updateStart+1800);
+  assert.match(updateWindow,/if\(error\.status===401\)\{/);
+  assert.match(updateWindow,/clearRecoveryState\(\)/);
+  assert.match(updateWindow,/再設定メールを送り直してください/);
+});
+
 test('signup redirect is derived from the same-origin Preview host and ignores client redirect input',async()=>{
   let seen=null;
   const auth=fakeAuth({async signUpWithPassword(input){seen=input;return {user:{id:USER_ID}};}});
