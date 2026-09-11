@@ -71,6 +71,26 @@ function isSecureRequest(req){
   return Boolean(host&&!host.startsWith('localhost')&&!host.startsWith('127.0.0.1'));
 }
 
+function publicSaaSRedirectUrl(req,{recovery=false}={}){
+  const host=String(req.headers?.host??'').trim().toLowerCase();
+  if(!host||/[\s/\\]/.test(host))throw new PublicSaaSError('AUTH_REDIRECT_INVALID','Request host is invalid.',{status:400});
+
+  let origin;
+  const originHeader=req.headers?.origin;
+  if(originHeader){
+    let parsed;
+    try{parsed=new URL(String(originHeader));}catch{throw new PublicSaaSError('AUTH_REDIRECT_INVALID','Request origin is invalid.',{status:400});}
+    if(parsed.host.toLowerCase()!==host)throw new PublicSaaSError('CSRF_REJECTED','Cross-origin authentication redirect rejected.',{status:403});
+    origin=parsed.origin;
+  }else{
+    origin=`${isSecureRequest(req)?'https':'http'}://${host}`;
+  }
+
+  const target=new URL('/public-saas',origin);
+  if(recovery)target.searchParams.set('recovery','1');
+  return target.toString();
+}
+
 function sessionCookie(name,value,{maxAge,secure}){
   const parts=[`${name}=${encodeURIComponent(value)}`,'Path=/','HttpOnly','SameSite=Lax'];
   if(Number.isFinite(maxAge))parts.push(`Max-Age=${Math.max(0,Math.floor(maxAge))}`);
@@ -234,6 +254,7 @@ export function createPublicSaaSRequestHandler({
           email:body.email,
           password:body.password,
           metadata:{display_name:String(body.display_name??'').trim()||undefined},
+          redirectTo:publicSaaSRedirectUrl(req),
         });
         const session=result?.session??(result?.access_token?result:null);
         const response={ok:true,email_confirmation_required:!session,user_id:result?.user?.id??session?.user?.id??null};
@@ -244,6 +265,29 @@ export function createPublicSaaSRequestHandler({
         const body=await readJson(req);
         const session=await authAdapter.signInWithPassword({email:body.email,password:body.password});
         return json(res,200,{ok:true,user_id:session?.user?.id??null},{cookies:cookiesForSession(req,session)});
+      }
+
+      if(url.pathname==='/api/public-saas/auth/password-reset-request'&&method==='POST'){
+        const body=await readJson(req);
+        await authAdapter.requestPasswordReset(body.email,{redirectTo:publicSaaSRedirectUrl(req,{recovery:true})});
+        return json(res,200,{ok:true,message:'If the account can receive recovery mail, a reset link has been sent.'});
+      }
+
+      if(url.pathname==='/api/public-saas/auth/adopt-session'&&method==='POST'){
+        const body=await readJson(req);
+        if(!body.refresh_token)throw new PublicSaaSError('AUTH_REFRESH_TOKEN_REQUIRED','Refresh token is required.',{status:400});
+        const session=await authAdapter.refreshSession(body.refresh_token);
+        const principal=await authAdapter.verifyAccessToken(session.access_token);
+        if(!principal.email_verified_at)throw new PublicSaaSError('EMAIL_VERIFICATION_REQUIRED','Verified email is required.',{status:403});
+        return json(res,200,{ok:true,user_id:principal.user_id},{cookies:cookiesForSession(req,session)});
+      }
+
+      if(url.pathname==='/api/public-saas/auth/update-password'&&method==='POST'){
+        const {accessToken}=await resolvePrincipal(req,res,authAdapter);
+        const body=await readJson(req);
+        await authAdapter.updatePassword(accessToken,body.password);
+        try{await authAdapter.signOut(accessToken);}catch{/* password change still clears local session */}
+        return json(res,200,{ok:true},{cookies:clearSessionCookies(req)});
       }
 
       if(url.pathname==='/api/public-saas/auth/sign-out'&&method==='POST'){
