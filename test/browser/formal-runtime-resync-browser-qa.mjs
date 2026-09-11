@@ -9,6 +9,7 @@ const PRODUCTS=[
   {manufacturer:'LIXIL',id:'SER-LIX-SAMOS2H',version:'v0.9-R1',windows:17},
   {manufacturer:'LIXIL',id:'SER-LIX-SAMOSL',version:'v0.7-R1',windows:17},
   {manufacturer:'YKK AP',id:'SER-YKK-APW430',version:'20260830-R1',windows:25},
+  {manufacturer:'YKK AP',id:'SER-YKK-APW431',version:'v1.0',windows:6},
 ];
 await mkdir(OUT,{recursive:true});
 const report={status:'RUNNING',desktop:{},mobile:{},consoleErrors:[],pageErrors:[],failedResponses:[]};
@@ -80,7 +81,6 @@ try{
   for(const product of PRODUCTS){
     const row=inventory.find((item)=>item.id===product.id);assert.ok(row);assert.equal(row.status,'READY');assert.equal(row.selectable,true);assert.equal(row.packageVersion,product.version);
   }
-  const apw431=inventory.find((item)=>item.id==='SER-YKK-APW431');assert.ok(apw431);assert.equal(apw431.selectable,false);
   await preflight.close();
 
   for(const config of [
