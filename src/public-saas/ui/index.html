@@ -36,6 +36,8 @@
           <label>メールアドレス<input name="email" type="email" autocomplete="email" required></label>
           <label>パスワード<input name="password" type="password" autocomplete="current-password" minlength="8" required></label>
           <button class="primary" type="submit">ログイン</button>
+          <button id="passwordResetRequestButton" class="quiet" type="button">パスワードを忘れた方</button>
+          <small>再設定メールは、上のメールアドレス宛に送信します。</small>
         </form>
 
         <form id="signUpForm" class="stack">
@@ -44,7 +46,7 @@
           <label>メールアドレス<input name="email" type="email" autocomplete="email" required></label>
           <label>パスワード<input name="password" type="password" autocomplete="new-password" minlength="8" required></label>
           <button type="submit">アカウント作成</button>
-          <small>メール確認が有効な場合は、届いた確認メールから認証後にログインします。</small>
+          <small>確認メールのリンクを開くと、このPreviewへ戻って認証を完了します。</small>
         </form>
       </div>
 
@@ -54,6 +56,14 @@
           <p>Supabase AuthのSessionはHttpOnly Cookieで保持します。</p>
         </div>
         <button id="signOutButton" type="button">ログアウト</button>
+      </div>
+
+      <div id="recoveryUpdatePanel" class="stack" hidden>
+        <h3>新しいパスワードを設定</h3>
+        <p>再設定メールから本人確認が完了しました。新しいパスワードを8文字以上で入力してください。</p>
+        <label>新しいパスワード<input id="newPassword" type="password" autocomplete="new-password" minlength="8"></label>
+        <label>新しいパスワード（確認）<input id="newPasswordConfirm" type="password" autocomplete="new-password" minlength="8"></label>
+        <button id="updatePasswordButton" class="primary" type="button">パスワードを更新</button>
       </div>
     </section>
 
