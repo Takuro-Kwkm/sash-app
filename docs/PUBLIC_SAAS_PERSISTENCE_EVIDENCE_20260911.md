@@ -32,11 +32,23 @@ A server-side readback of the non-production Supabase project confirmed the late
 - Openings: 1
 - Active memberships: 1
 
+## Deployment continuity evidence
+
+After the records above had already been created, a new exact-head Vercel Preview deployment was generated from commit `2a545177264b3fe01a099b45e486a476d76720a7`.
+
+The authenticated user then opened the new deployment, logged in, selected the existing Workspace and confirmed the same Project / Estimate / Opening were still present.
+
+Result:
+
+- NEW_DEPLOYMENT_RESTORE = PASS
+- PERSISTENCE_DEPLOY_CONTINUITY_SUBGATE = PASS
+
 No Product Master artifact was modified.
 
 ## Gate status
 
 - PERSISTENCE_RELOAD_RELOGIN_SUBGATE = PASS
-- S3_PERSISTENT_DB = IN_PROGRESS
+- PERSISTENCE_DEPLOY_CONTINUITY_SUBGATE = PASS
+- S3_PERSISTENT_DB = PASS
 
-S3 remains IN_PROGRESS until the same data is confirmed after a new application deployment, per the governing Public SaaS specification.
+This PASS applies to the Development / Preview persistent database gate only. It does not imply Authentication, Tenant Isolation E2E, Security, Backup/Restore, Monitoring, Staging or Private Alpha gates are complete.
