@@ -70,8 +70,8 @@ try {
   assert.equal(integrations.length,7);
   const ready=new Set(integrations.filter((row)=>row.selectable&&row.status==='READY').map((row)=>row.id));
   const blocked=new Set(integrations.filter((row)=>!row.selectable).map((row)=>row.id));
-  assert.deepEqual(ready,new Set(['SER-LIX-EW','SER-LIX-SAMOS2H','SER-LIX-SAMOSL','SER-LIXIL-TW','SER-YKK-APW430','SER-YKKAP-UCHIRIMO']));
-  assert.deepEqual(blocked,new Set(['SER-YKK-APW431']));
+  assert.deepEqual(ready,new Set(['SER-LIX-EW','SER-LIX-SAMOS2H','SER-LIX-SAMOSL','SER-LIXIL-TW','SER-YKK-APW430','SER-YKK-APW431','SER-YKKAP-UCHIRIMO']));
+  assert.deepEqual(blocked,new Set());
   report.runtimeIntegrations=integrations.map(({id,status,selectable,blockReason})=>({id,status,selectable,blockReason}));
 
   assert.deepEqual(report.consoleErrors,[]);
