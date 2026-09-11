@@ -1,0 +1,89 @@
+{
+  "schema_version": "product-master-runtime-manifest/1.0",
+  "manufacturer": "YKK AP",
+  "series": "APW430",
+  "product_id": "SER-YKK-APW430",
+  "package_version": "20260830-R1",
+  "authoring_mode": "DIRECT_AUTHORING_MASTER",
+  "authoring_file_name": "YKKAP_APW430_AUTHORING_MASTER_20260830-R1",
+  "authoring_file_id": "1PTw6zXWoErpRQIdL9Md3yAd2thxnyaN4va1Wo6sEzWE",
+  "authoring_export_sha256": "920894565efe6b676a0824b7f5dfa2b4b1a1a854e396dd020a0fd27a40245440",
+  "runtime_status": "READY",
+  "runtime_files": [
+    {
+      "role": "CORE",
+      "file_name": "apw430_core_20260830-R1.json",
+      "file_id": "1WZcYi7N1sc8yX1NH2aP6tdBVc9vpmXGr",
+      "sha256": "6c3267aa045553677e85ccb22dd0da402655d7c36849401286ac3348e0f3123c",
+      "bytes": 61635
+    },
+    {
+      "role": "DIMENSIONS",
+      "file_name": "apw430_dimensions_20260830-R1.json",
+      "file_id": "10CqTBQMvvo67S7GDprRQNtNvrah2SjeH",
+      "sha256": "987b721dd1ea1cebfd5e57609c600b1bf346af00219e242f22537267264c2c88",
+      "bytes": 791226
+    },
+    {
+      "role": "OPTIONS",
+      "file_name": "apw430_options_20260830-R1.json",
+      "file_id": "1iNdn4g59M52mmU2N9VoM7NJIQUPP6qQ_",
+      "sha256": "e1b76f6da200adf51152dd71f3aa46c1885e488d1dda467639f5d8b1811353b7",
+      "bytes": 805526
+    }
+  ],
+  "documentation_file": {
+    "file_name": "PRODUCT_MASTER_MANIFEST.md",
+    "file_id": "1WzCyxtZ6JIasOGdywITflM5yTcpq8sN0",
+    "status": "FORMAL_PASS"
+  },
+  "storage_status": "CANONICAL",
+  "package_gate": "PASS",
+  "generated_at": "2026-09-10T17:15:09+09:00",
+  "working_folder_id": "1aPJlt5dTFHKqS5Koaino9PLqaH4DUB7m",
+  "canonical_folder_id": "1Cd4_yiAB0Zy6Yb1xo_7ihB4KA44wtUkY",
+  "old_folder_id": "1s3T__4JWrX7TrVVTAPaozordvIWzlGzj",
+  "qa_report": {
+    "file_name": "YKKAP_APW430_RUNTIME_QA_20260830-R1.md",
+    "file_id": "1khSS87BIv9Nid1HZ1_UUuQ2aOnpMxE-A",
+    "status": "PASS"
+  },
+  "record_counts": {
+    "series": 1,
+    "windows_common": 8,
+    "series_windows": 26,
+    "active_series_windows": 25,
+    "specific_specs": 12,
+    "relations": 12,
+    "dimension_dictionary": 151,
+    "standard_sizes": 718,
+    "custom_dimension_rules": 25,
+    "colors": 5,
+    "color_rules": 3,
+    "glass": 4,
+    "glass_applicability": 25,
+    "glass_size_rules": 718,
+    "glass_additional_options": 3,
+    "glass_appearances": 2,
+    "screens": 12,
+    "screen_forms": 36,
+    "screen_size_rules": 140,
+    "options": 2,
+    "option_dependencies": 4,
+    "spec_size_rules": 15,
+    "special_spec_rules": 3,
+    "golden_tests": 17
+  },
+  "blocking_items": [],
+  "verification_revision": "20260830-R1-CONSTRUCTION-SEMANTIC-SPLIT",
+  "drive_roundtrip_verified": true,
+  "formalized_at": "2026-09-10T17:42:36+09:00",
+  "canonical_storage_verified": true,
+  "registry_gate": "PASS",
+  "ui_contract": {
+    "standard": "サッシ情報管理アプリ_UI実装標準仕様書_v1.6",
+    "construction": "INTERNAL_TECHNICAL_KEY",
+    "panel_count": "USER_VISIBLE_WHEN_APPLICABLE",
+    "window_configuration": "USER_VISIBLE_WHEN_APPLICABLE"
+  }
+}

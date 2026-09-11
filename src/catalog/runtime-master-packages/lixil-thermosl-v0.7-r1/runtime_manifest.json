@@ -1,0 +1,68 @@
+{
+  "schema_version": "2.0",
+  "manufacturer": "LIXIL",
+  "series": "サーモスL",
+  "package_version": "v0.7-R1",
+  "authoring_mode": "STANDALONE",
+  "authoring_file_name": "LIXIL_サーモスL_AUTHORING_MASTER_v0.7-R1.xlsx",
+  "authoring_file_id": "1SsENkYWBj11zf9wqhy_nIV9ShZNVbfrj",
+  "authoring_files": [
+    {
+      "name": "LIXIL_サーモスL_AUTHORING_MASTER_v0.7-R1.xlsx",
+      "id": "1SsENkYWBj11zf9wqhy_nIV9ShZNVbfrj",
+      "role": "AUTHORING_MASTER",
+      "revision_id": "0B1PsqngSohhlTG1rNTFzMXVNQVN2Tjd4VWUyS2xMckhNZnp3PQ",
+      "sha256": "ca05acbe96aa3612981d74e104c7a08850a388fad847dc249260c1b604191995",
+      "size_bytes": 680129
+    }
+  ],
+  "runtime_status": "READY",
+  "runtime_files": [
+    {
+      "name": "LIXIL_サーモスL_runtime_v0.7-R1.json",
+      "id": "1b1gVeIVqMM9v0vTT4ZR7SbSdGdDqVS1r",
+      "role": "runtime_master",
+      "sha256": "7dde8d1d08e21abe87b2a2db55048fa7d6cfc69e95e4e736926ac9846b1dc494",
+      "size_bytes": 4726009
+    },
+    {
+      "name": "thermosl_runtime_package_v0.7-R1.schema.json",
+      "id": "1CAMYza5l9KHXwvohe5B6p4ltHJ3qAR2z",
+      "role": "schema",
+      "sha256": "be4bb6d72d64fb5e8259d16f9ee580ce9d4846bdc13282c4a8b5a9b6a32da8b6",
+      "size_bytes": 3307
+    }
+  ],
+  "runtime_file_count": 2,
+  "documentation_file": "LIXIL_サーモスL_PRODUCT_MASTER_MANIFEST_v0.7-R1.md",
+  "documentation_file_id": "1MqXJdnx5T5rmGnjAxduyRQSuIzWh96cb",
+  "qa_file": "LIXIL_サーモスL_RUNTIME_QA_v0.7-R1.md",
+  "qa_file_id": "1zp-HpEX2Yj86ivU9S9fkkkNmvfREx5FD",
+  "storage_status": "DRIVE_CANONICAL",
+  "package_gate": "PASS",
+  "blocking_items": [],
+  "manual_check": [
+    "機能ガラス最終組合せはCONFIRM_REQUIREDを維持",
+    "曲線・複合特注グラフはREVIEW_REQUIREDを維持",
+    "CUSTOMで複数construction候補が成立する場合はREVIEW_REQUIRED_CONSTRUCTION_AMBIGUOUS"
+  ],
+  "qa": {
+    "runtime_package_qa": "PASS",
+    "schema_validation": "PASS",
+    "construction_contract_checks": "11/11 PASS",
+    "active_window_types": 17,
+    "standard_size_rows": 1644,
+    "selectable_size_rows": 1495,
+    "custom_dimension_rules": 50,
+    "golden_tests": "34/34 PASS",
+    "standard_construction_unique_rows": "1644/1644",
+    "ambiguous_custom_construction_window_types": 3,
+    "compound_and_source_graph_rules_fail_closed": true
+  },
+  "generated_at": "2026-09-10",
+  "spec_version": "PRODUCT_MASTER_PACKAGE_STORAGE_COMPLETION_GATE_v2.0",
+  "ui_contract_reference": "サッシ情報管理アプリ_UI実装標準仕様書_v1.6 §15.6",
+  "canonical_folder_id": "1H83njk7Gww0RJOZKntYBp5VxdaJD9Jc4",
+  "storage_gate": "PASS",
+  "registry_gate": "PASS"
+}
