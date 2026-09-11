@@ -5,6 +5,7 @@ const state={
   workspaces:[],
   memberships:[],
   workspaceId:sessionStorage.getItem('sash.public-saas.workspace-id')||null,
+  recoveryMode:sessionStorage.getItem('sash.public-saas.recovery-mode')==='1',
   database:{projects:[],estimates:[],openings:[]},
 };
 
@@ -51,20 +52,55 @@ async function api(path,{method='GET',body}={}){
   return payload;
 }
 
+function clearAuthFragment(){
+  const clean=new URL(location.href);
+  clean.hash='';
+  clean.searchParams.delete('recovery');
+  history.replaceState(null,'',`${clean.pathname}${clean.search}`);
+}
+
+async function consumeAuthRedirect(){
+  const hash=new URLSearchParams(location.hash.replace(/^#/,''));
+  const providerError=hash.get('error_description')||hash.get('error');
+  if(providerError){
+    clearAuthFragment();
+    showNotice(providerError,'error');
+    return;
+  }
+
+  const refreshToken=hash.get('refresh_token');
+  if(!refreshToken)return;
+  const type=hash.get('type')||'';
+  const recovery=type==='recovery'||new URL(location.href).searchParams.get('recovery')==='1';
+  try{
+    await api('/api/public-saas/auth/adopt-session',{method:'POST',body:{refresh_token:refreshToken}});
+    state.recoveryMode=recovery;
+    if(recovery)sessionStorage.setItem('sash.public-saas.recovery-mode','1');
+    else sessionStorage.removeItem('sash.public-saas.recovery-mode');
+    clearAuthFragment();
+    showNotice(recovery?'本人確認が完了しました。新しいパスワードを設定してください。':'メール認証が完了し、ログインしました。','success');
+  }catch(error){
+    clearAuthFragment();
+    showNotice(error.message,'error');
+  }
+}
+
 function renderAuth(){
   const signedIn=Boolean(state.principal?.user_id);
   $('#signedOutPanel').hidden=signedIn;
   $('#signedInPanel').hidden=!signedIn;
-  $('#workspaceCard').hidden=!signedIn;
+  $('#recoveryUpdatePanel').hidden=!(signedIn&&state.recoveryMode);
+  $('#workspaceCard').hidden=!signedIn||state.recoveryMode;
   if(!signedIn){
     $('#workCard').hidden=true;
     $('#sessionBadge').textContent='未ログイン';
     $('#sessionBadge').className='pill muted';
     return;
   }
-  $('#sessionBadge').textContent='ログイン中';
+  $('#sessionBadge').textContent=state.recoveryMode?'本人確認済み':'ログイン中';
   $('#sessionBadge').className='pill ok';
   $('#sessionUser').textContent=`User ${short(state.principal.user_id)}`;
+  if(state.recoveryMode)$('#workCard').hidden=true;
 }
 
 function activeMembership(){
@@ -72,6 +108,10 @@ function activeMembership(){
 }
 
 function renderWorkspaces(){
+  if(state.recoveryMode){
+    $('#workCard').hidden=true;
+    return;
+  }
   const select=$('#workspaceSelect');
   if(!state.workspaces.length){
     select.innerHTML='<option value="">Workspaceを作成してください</option>';
@@ -116,7 +156,7 @@ function renderDatabase(){
 }
 
 async function loadDatabase(){
-  if(!state.workspaceId)return;
+  if(!state.workspaceId||state.recoveryMode)return;
   const payload=await api(`/api/public-saas/work/database?workspace_id=${encodeURIComponent(state.workspaceId)}`);
   state.database={
     projects:payload.projects??[],
@@ -137,11 +177,13 @@ async function loadWorkspaces(){
   else sessionStorage.removeItem('sash.public-saas.workspace-id');
   renderAuth();
   renderWorkspaces();
-  if(state.workspaceId)await loadDatabase();
+  if(state.workspaceId&&!state.recoveryMode)await loadDatabase();
 }
 
 async function boot(){
   clearNotice();
+  await consumeAuthRedirect();
+
   try{
     const health=await api('/api/public-saas/health');
     state.health=health;
@@ -176,6 +218,8 @@ $('#signInForm').addEventListener('submit',async(event)=>{
   try{
     await api('/api/public-saas/auth/sign-in',{method:'POST',body:data});
     form.reset();
+    state.recoveryMode=false;
+    sessionStorage.removeItem('sash.public-saas.recovery-mode');
     showNotice('ログインしました。','success');
     await boot();
   }catch(error){showNotice(error.message,'error');}
@@ -190,7 +234,7 @@ $('#signUpForm').addEventListener('submit',async(event)=>{
   try{
     const result=await api('/api/public-saas/auth/sign-up',{method:'POST',body:data});
     if(result.email_confirmation_required){
-      showNotice('アカウントを作成しました。確認メールのリンクを開いてからログインしてください。','success');
+      showNotice('アカウントを作成しました。確認メールのリンクを開くと、このPreviewへ戻ります。','success');
     }else{
       showNotice('アカウントを作成し、ログインしました。','success');
       await boot();
@@ -200,12 +244,50 @@ $('#signUpForm').addEventListener('submit',async(event)=>{
   finally{setFormBusy(form,false);}
 });
 
+$('#passwordResetRequestButton').addEventListener('click',async(event)=>{
+  clearNotice();
+  const button=event.currentTarget;
+  const email=$('#signInForm [name="email"]').value.trim();
+  if(!email){showNotice('ログイン欄にメールアドレスを入力してください。','error');return;}
+  button.disabled=true;
+  try{
+    await api('/api/public-saas/auth/password-reset-request',{method:'POST',body:{email}});
+    showNotice('パスワード再設定メールを送信しました。メールが届いた場合はリンクを開いてください。','success');
+  }catch(error){showNotice(error.message,'error');}
+  finally{button.disabled=false;}
+});
+
+$('#updatePasswordButton').addEventListener('click',async(event)=>{
+  clearNotice();
+  const button=event.currentTarget;
+  const password=$('#newPassword').value;
+  const confirm=$('#newPasswordConfirm').value;
+  if(password.length<8){showNotice('新しいパスワードは8文字以上にしてください。','error');return;}
+  if(password!==confirm){showNotice('確認用パスワードが一致しません。','error');return;}
+  button.disabled=true;
+  try{
+    await api('/api/public-saas/auth/update-password',{method:'POST',body:{password}});
+    state.recoveryMode=false;
+    state.principal=null;
+    state.workspaces=[];
+    state.memberships=[];
+    state.database={projects:[],estimates:[],openings:[]};
+    sessionStorage.removeItem('sash.public-saas.recovery-mode');
+    $('#newPassword').value='';
+    $('#newPasswordConfirm').value='';
+    renderAuth();
+    showNotice('パスワードを更新しました。新しいパスワードでログインしてください。','success');
+  }catch(error){showNotice(error.message,'error');}
+  finally{button.disabled=false;}
+});
+
 $('#signOutButton').addEventListener('click',async()=>{
   clearNotice();
   try{await api('/api/public-saas/auth/sign-out',{method:'POST'});}catch{}
-  state.principal=null;state.workspaces=[];state.memberships=[];state.workspaceId=null;
+  state.principal=null;state.workspaces=[];state.memberships=[];state.workspaceId=null;state.recoveryMode=false;
   state.database={projects:[],estimates:[],openings:[]};
   sessionStorage.removeItem('sash.public-saas.workspace-id');
+  sessionStorage.removeItem('sash.public-saas.recovery-mode');
   renderAuth();
   showNotice('ログアウトしました。','success');
 });
