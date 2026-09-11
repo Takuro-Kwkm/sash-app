@@ -1,11 +1,19 @@
+import { readFile } from 'node:fs/promises';
+import { dirname,join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { createRecoveryRequestHandler } from '../server/recovery-app.mjs';
+import { WorkManagementService } from '../work-management/service.mjs';
+import { resolveWorkspaceContext } from './authorization.mjs';
 import { PublicSaaSError } from './domain.mjs';
 import { createSupabaseAuthAdapterFromEnv, readSupabasePublicConfig } from './supabase-auth-adapter.mjs';
 import { SupabaseDataApiClient } from './supabase-data-api.mjs';
+import { createSupabaseRepositoryBundle } from './supabase-work-repositories.mjs';
 
 const ACCESS_COOKIE='sash_ps_access';
 const REFRESH_COOKIE='sash_ps_refresh';
 const MAX_BODY_BYTES=64*1024;
+const HERE=dirname(fileURLToPath(import.meta.url));
+const UI_ROOT=join(HERE,'ui');
 
 function requestUrl(req){
   const url=new URL(req.url??'/',`http://${req.headers?.host??'localhost'}`);
@@ -27,6 +35,19 @@ function json(res,status,body,{cookies=[]}={}){
   if(cookies.length)res.setHeader?.('set-cookie',cookies);
   if(typeof res.writeHead==='function')res.writeHead(status);
   res.end(JSON.stringify(body));
+}
+
+async function staticUi(res,fileName,contentType,method='GET'){
+  try{
+    const body=await readFile(join(UI_ROOT,fileName));
+    res.setHeader?.('content-type',contentType);
+    res.setHeader?.('cache-control','no-store');
+    res.setHeader?.('x-content-type-options','nosniff');
+    if(typeof res.writeHead==='function')res.writeHead(200);
+    res.end(method==='HEAD'?'':body);
+  }catch{
+    json(res,404,{error:'Public SaaS Preview asset not found.',code:'NOT_FOUND'});
+  }
 }
 
 function parseCookies(req){
@@ -105,10 +126,13 @@ function assertSameOrigin(req){
 }
 
 function publicError(error){
-  const status=Number(error?.status)||(
-    error?.code==='AUTH_REQUIRED'?401:
-    error?.code==='WORKSPACE_REQUIRED'?400:
-    error?.code==='CSRF_REJECTED'?403:
+  const explicit=Number(error?.status);
+  const code=error?.code??'PUBLIC_SAAS_REQUEST_FAILED';
+  const status=explicit||(
+    ['AUTH_REQUIRED','SESSION_EXPIRED','AUTH_SESSION_INVALID'].includes(code)?401:
+    ['CSRF_REJECTED','EMAIL_VERIFICATION_REQUIRED','WORKSPACE_ACCESS_DENIED','WORKSPACE_ROLE_DENIED','RESOURCE_WORKSPACE_DENIED','RESOURCE_OWNER_DENIED'].includes(code)?403:
+    code==='NOT_FOUND'?404:
+    code==='UPDATE_CONFLICT'?409:
     400
   );
   const safeStatus=status>=400&&status<=599?status:500;
@@ -117,7 +141,7 @@ function publicError(error){
     status:safeStatus,
     body:{
       error:expose?(error?.message??'Request failed.'):'Internal request failure.',
-      code:error?.code??'PUBLIC_SAAS_REQUEST_FAILED',
+      code,
     },
   };
 }
@@ -138,6 +162,25 @@ async function resolvePrincipal(req,res,auth){
   const nextCookies=cookiesForSession(req,session);
   res.setHeader?.('set-cookie',nextCookies);
   return {principal,accessToken:session.access_token};
+}
+
+async function resolveWorkService(req,res,auth,data,workspaceId){
+  const {principal,accessToken}=await resolvePrincipal(req,res,auth);
+  const memberships=await data.listMemberships(accessToken);
+  const workspace=resolveWorkspaceContext({
+    principal,
+    workspace_id:workspaceId,
+    memberships,
+    require_verified_email:true,
+  });
+  const requestContext={
+    accessToken,
+    workspaceId:workspace.workspace_id,
+    userId:principal.user_id,
+  };
+  const repositories=createSupabaseRepositoryBundle(data,()=>requestContext);
+  const service=new WorkManagementService(repositories);
+  return {principal,workspace,repositories,service};
 }
 
 function createDefaultDependencies(env=process.env){
@@ -165,16 +208,27 @@ export function createPublicSaaSRequestHandler({
 
   return async function publicSaaSRequestHandler(req,res){
     const url=requestUrl(req);
+    const method=String(req.method??'GET').toUpperCase();
+
+    if((url.pathname==='/public-saas'||url.pathname==='/public-saas/')&&['GET','HEAD'].includes(method)){
+      return staticUi(res,'index.html','text/html; charset=utf-8',method);
+    }
+    if(url.pathname==='/public-saas/app.js'&&['GET','HEAD'].includes(method)){
+      return staticUi(res,'app.js','text/javascript; charset=utf-8',method);
+    }
+    if(url.pathname==='/public-saas/styles.css'&&['GET','HEAD'].includes(method)){
+      return staticUi(res,'styles.css','text/css; charset=utf-8',method);
+    }
     if(!url.pathname.startsWith('/api/public-saas/'))return delegate(req,res);
 
     try{
       assertSameOrigin(req);
 
-      if(url.pathname==='/api/public-saas/health'&&String(req.method??'GET').toUpperCase()==='GET'){
+      if(url.pathname==='/api/public-saas/health'&&method==='GET'){
         return json(res,200,{ok:true,provider:'SUPABASE',configured});
       }
 
-      if(url.pathname==='/api/public-saas/auth/sign-up'&&req.method==='POST'){
+      if(url.pathname==='/api/public-saas/auth/sign-up'&&method==='POST'){
         const body=await readJson(req);
         const result=await authAdapter.signUpWithPassword({
           email:body.email,
@@ -186,13 +240,13 @@ export function createPublicSaaSRequestHandler({
         return json(res,200,response,{cookies:session?cookiesForSession(req,session):[]});
       }
 
-      if(url.pathname==='/api/public-saas/auth/sign-in'&&req.method==='POST'){
+      if(url.pathname==='/api/public-saas/auth/sign-in'&&method==='POST'){
         const body=await readJson(req);
         const session=await authAdapter.signInWithPassword({email:body.email,password:body.password});
         return json(res,200,{ok:true,user_id:session?.user?.id??null},{cookies:cookiesForSession(req,session)});
       }
 
-      if(url.pathname==='/api/public-saas/auth/sign-out'&&req.method==='POST'){
+      if(url.pathname==='/api/public-saas/auth/sign-out'&&method==='POST'){
         const cookies=parseCookies(req);
         const accessToken=cookies[ACCESS_COOKIE]??null;
         if(accessToken){
@@ -201,12 +255,12 @@ export function createPublicSaaSRequestHandler({
         return json(res,200,{ok:true},{cookies:clearSessionCookies(req)});
       }
 
-      if(url.pathname==='/api/public-saas/session'&&req.method==='GET'){
+      if(url.pathname==='/api/public-saas/session'&&method==='GET'){
         const {principal}=await resolvePrincipal(req,res,authAdapter);
         return json(res,200,{ok:true,principal});
       }
 
-      if(url.pathname==='/api/public-saas/workspaces'&&req.method==='GET'){
+      if(url.pathname==='/api/public-saas/workspaces'&&method==='GET'){
         const {principal,accessToken}=await resolvePrincipal(req,res,authAdapter);
         const [workspaces,memberships]=await Promise.all([
           dataClient.listWorkspaces(accessToken),
@@ -215,11 +269,49 @@ export function createPublicSaaSRequestHandler({
         return json(res,200,{ok:true,principal,workspaces,memberships});
       }
 
-      if(url.pathname==='/api/public-saas/workspaces'&&req.method==='POST'){
+      if(url.pathname==='/api/public-saas/workspaces'&&method==='POST'){
         const {accessToken}=await resolvePrincipal(req,res,authAdapter);
         const body=await readJson(req);
         const workspace=await dataClient.createWorkspaceWithOwner(accessToken,body.name);
         return json(res,201,{ok:true,workspace});
+      }
+
+      if(url.pathname==='/api/public-saas/work/database'&&method==='GET'){
+        const workspaceId=url.searchParams.get('workspace_id');
+        const {workspace,repositories}=await resolveWorkService(req,res,authAdapter,dataClient,workspaceId);
+        const [projects,estimates,openings]=await Promise.all([
+          repositories.projects.list(),
+          repositories.estimates.list(),
+          repositories.openings.list(),
+        ]);
+        return json(res,200,{ok:true,workspace_id:workspace.workspace_id,projects,estimates,openings});
+      }
+
+      if(url.pathname==='/api/public-saas/work/projects'&&method==='POST'){
+        const body=await readJson(req);
+        const {workspace,repositories,service}=await resolveWorkService(req,res,authAdapter,dataClient,body.workspace_id);
+        const created=await service.createProject(body.project??{});
+        const [project,estimate]=await Promise.all([
+          repositories.projects.require(created.project.project_id),
+          repositories.estimates.require(created.estimate.estimate_id),
+        ]);
+        return json(res,201,{ok:true,workspace_id:workspace.workspace_id,project,estimate});
+      }
+
+      if(url.pathname==='/api/public-saas/work/estimates'&&method==='POST'){
+        const body=await readJson(req);
+        const {workspace,repositories,service}=await resolveWorkService(req,res,authAdapter,dataClient,body.workspace_id);
+        const created=await service.createEstimate(body.project_id,body.estimate??{});
+        const estimate=await repositories.estimates.require(created.estimate_id);
+        return json(res,201,{ok:true,workspace_id:workspace.workspace_id,estimate});
+      }
+
+      if(url.pathname==='/api/public-saas/work/openings'&&method==='POST'){
+        const body=await readJson(req);
+        const {workspace,repositories,service}=await resolveWorkService(req,res,authAdapter,dataClient,body.workspace_id);
+        const created=await service.createOpening(body.project_id,body.estimate_id,body.opening??{});
+        const opening=await repositories.openings.require(created.opening_id);
+        return json(res,201,{ok:true,workspace_id:workspace.workspace_id,opening});
       }
 
       return json(res,404,{error:'Public SaaS endpoint not found.',code:'NOT_FOUND'});
