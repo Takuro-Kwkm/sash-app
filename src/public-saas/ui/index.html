@@ -120,6 +120,31 @@
       <div id="projectList" class="project-list"></div>
     </section>
 
+    <section class="card" id="tenantIsolationCard" hidden>
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">STEP 4 / SECURITY E2E</p>
+          <h2>Tenant Isolation テスト</h2>
+          <p>別ユーザーのWorkspaceに対して、読取・書込が403で拒否されることを確認します。</p>
+        </div>
+      </div>
+      <div class="stack">
+        <label>現在のWorkspace ID
+          <input id="currentWorkspaceId" readonly>
+        </label>
+        <button id="copyWorkspaceIdButton" type="button" class="quiet">現在のWorkspace IDをコピー</button>
+        <label>相手Workspace ID
+          <input id="targetWorkspaceId" inputmode="text" autocomplete="off" placeholder="00000000-0000-0000-0000-000000000000">
+        </label>
+        <div class="workspace-grid">
+          <button id="tenantReadTestButton" type="button">読取テスト</button>
+          <button id="tenantWriteTestButton" type="button">書込テスト</button>
+        </div>
+        <div id="tenantIsolationResult" class="db-summary">未実行</div>
+        <small>期待結果は403 DENIEDです。200系になった場合は重大FAILとして作業を停止します。</small>
+      </div>
+    </section>
+
     <section class="card subtle">
       <p class="eyebrow">SECURITY</p>
       <p>このPreview画面はService Role / Secret Keyをブラウザへ配布しません。DBアクセスはログインSessionとRLSで制限されます。</p>
