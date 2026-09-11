@@ -10,9 +10,10 @@ const state={
 };
 
 const esc=(value)=>String(value??'').replace(/[&<>"']/g,(character)=>({
-  '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;',
+  '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot',"'":'&#39;',
 })[character]);
 const short=(value)=>value?`${String(value).slice(0,8)}…`:'—';
+const UUID_RE=/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
 function showNotice(message,type='info'){
   const node=$('#notice');
@@ -30,6 +31,11 @@ function setFormBusy(form,busy){
 function clearRecoveryState(){
   state.recoveryMode=false;
   sessionStorage.removeItem('sash.public-saas.recovery-mode');
+}
+function setTenantResult(message,type='info'){
+  const node=$('#tenantIsolationResult');
+  node.textContent=message;
+  node.className=`db-summary${type==='info'?'':` ${type}`}`;
 }
 
 async function api(path,{method='GET',body}={}){
@@ -97,10 +103,13 @@ function renderAuth(){
   $('#signedInPanel').hidden=!signedIn;
   $('#recoveryUpdatePanel').hidden=!(signedIn&&state.recoveryMode);
   $('#workspaceCard').hidden=!signedIn||state.recoveryMode;
+  $('#tenantIsolationCard').hidden=!signedIn||state.recoveryMode;
   if(!signedIn){
     $('#workCard').hidden=true;
     $('#sessionBadge').textContent='未ログイン';
     $('#sessionBadge').className='pill muted';
+    $('#currentWorkspaceId').value='';
+    setTenantResult('未実行');
     return;
   }
   $('#sessionBadge').textContent=state.recoveryMode?'本人確認済み':'ログイン中';
@@ -116,6 +125,7 @@ function activeMembership(){
 function renderWorkspaces(){
   if(state.recoveryMode){
     $('#workCard').hidden=true;
+    $('#currentWorkspaceId').value='';
     return;
   }
   const select=$('#workspaceSelect');
@@ -124,6 +134,7 @@ function renderWorkspaces(){
     select.disabled=true;
     $('#workspaceMeta').textContent='利用可能なWorkspaceはありません。';
     $('#workCard').hidden=true;
+    $('#currentWorkspaceId').value='';
     return;
   }
   select.disabled=false;
@@ -132,6 +143,7 @@ function renderWorkspaces(){
   const membership=activeMembership();
   $('#workspaceMeta').textContent=workspace?`${workspace.name} · ${membership?.role??'MEMBER'} · ${short(workspace.workspace_id)}`:'Workspaceを選択してください。';
   $('#workCard').hidden=!workspace;
+  $('#currentWorkspaceId').value=workspace?.workspace_id??'';
 }
 
 function renderDatabase(){
@@ -384,5 +396,52 @@ $('#openingForm').addEventListener('submit',async(event)=>{
   }catch(error){showNotice(error.message,'error');}
   finally{setFormBusy(form,false);}
 });
+
+$('#copyWorkspaceIdButton').addEventListener('click',async()=>{
+  clearNotice();
+  const value=$('#currentWorkspaceId').value.trim();
+  if(!UUID_RE.test(value)){showNotice('コピーできるWorkspace IDがありません。','error');return;}
+  try{
+    await navigator.clipboard.writeText(value);
+    showNotice('現在のWorkspace IDをコピーしました。','success');
+  }catch{
+    showNotice('コピーできませんでした。表示されているWorkspace IDを手動でコピーしてください。','error');
+  }
+});
+
+async function runTenantIsolationTest(kind){
+  clearNotice();
+  const target=$('#targetWorkspaceId').value.trim();
+  const current=state.workspaceId;
+  if(!UUID_RE.test(target)){setTenantResult('入力エラー: 相手Workspace IDをUUID形式で入力してください。','error');return;}
+  if(!UUID_RE.test(current??'')){setTenantResult('入力エラー: 現在のWorkspaceが選択されていません。','error');return;}
+  if(target===current){setTenantResult('入力エラー: 自分のWorkspaceではなく、相手Workspace IDを入力してください。','error');return;}
+
+  const label=kind==='read'?'READ':'WRITE';
+  setTenantResult(`${label} テスト実行中…`);
+  try{
+    if(kind==='read'){
+      await api(`/api/public-saas/work/database?workspace_id=${encodeURIComponent(target)}`);
+    }else{
+      await api('/api/public-saas/work/projects',{method:'POST',body:{
+        workspace_id:target,
+        project:{project_name:'S4_NEGATIVE_TEST_SHOULD_NOT_PERSIST',request_company:'TENANT_ISOLATION_E2E'},
+      }});
+    }
+    setTenantResult(`${label} = FAIL / 200系で成立してしまいました。作業停止。`,'error');
+    showNotice('重大FAIL: 別Workspaceへのアクセスが成立しました。S4を閉じずに調査が必要です。','error');
+  }catch(error){
+    if(error.status===403){
+      setTenantResult(`${label} = PASS / 403 DENIED (${error.code})`,'success');
+      showNotice(`${label}越境テストは403で拒否されました。`,'success');
+    }else{
+      setTenantResult(`${label} = INCONCLUSIVE / ${error.status??'network'} ${error.code??'UNKNOWN'}`,'error');
+      showNotice('期待した403以外の結果でした。PASSにはしません。','error');
+    }
+  }
+}
+
+$('#tenantReadTestButton').addEventListener('click',()=>runTenantIsolationTest('read'));
+$('#tenantWriteTestButton').addEventListener('click',()=>runTenantIsolationTest('write'));
 
 boot();
