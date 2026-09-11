@@ -93,8 +93,8 @@ jobs:
       - name: Create exact-head Preview deployment
         shell: bash
         env:
-          GITHUB_SHA: ${{ env.PUBLIC_SAAS_HEAD_SHA }}
-          GITHUB_REF_NAME: ${{ env.PUBLIC_SAAS_HEAD_REF }}
+          VERCEL_DEPLOY_GITHUB_SHA: ${{ env.PUBLIC_SAAS_HEAD_SHA }}
+          VERCEL_DEPLOY_GITHUB_REF_NAME: ${{ env.PUBLIC_SAAS_HEAD_REF }}
         run: |
           mkdir -p artifacts/public-saas-preview
           node scripts/vercel-rest-deploy.mjs preview artifacts/public-saas-preview/deployment.json
