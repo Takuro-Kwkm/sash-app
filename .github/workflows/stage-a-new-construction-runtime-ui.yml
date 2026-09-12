@@ -55,6 +55,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          mkdir -p artifacts/stage-a-full-coverage
           node scripts/stage-a-full-coverage-audit.mjs | tee artifacts/stage-a-full-coverage/run.log
           node -e 'const s=require("./artifacts/stage-a-full-coverage/summary.json"); if(s.base_window_count!==105||s.failed_qa_case_count!==0) { console.error(s); process.exit(1); } console.log(`FULL_COVERAGE_MATRIX_GATE=PASS cases=${s.qa_case_count} verified=${s.verified_qa_case_count} unverified=${s.unverified_qa_case_count}`)'
 
@@ -132,6 +133,7 @@ jobs:
           node test/browser/tw-runtime-browser-qa.mjs
           node test/browser/uchirimo-runtime-browser-qa.mjs
           node test/browser/formal-runtime-resync-browser-qa.mjs
+          node test/browser/stage-a-full-window-browser-qa.mjs
           node test/browser/release-regression-browser-qa.mjs
           echo "BROWSER_QA_GATE=PASS"
 
