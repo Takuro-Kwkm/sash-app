@@ -74,6 +74,35 @@ try{
   report.scenarios.IPAD_PORTRAIT_HOME='PASS';
   await homePortrait.close();
 
+  await page.locator('#themeSelect').selectOption('light');
+  await page.getByRole('link',{name:'すべて見る'}).click();
+  await page.waitForURL(/\/design-preview\/notifications$/);
+  assert.equal(await page.locator('.notification-row').count(),6);
+  assert.ok(await page.locator('#notificationDetail').isVisible());
+  assert.match(await page.locator('#notificationDetail').innerText(),/Sample Data/);
+  await page.getByRole('button',{name:'商品マスター'}).click();
+  assert.equal(await page.locator('.notification-row').count(),1);
+  assert.match(await page.locator('#notificationDetail').innerText(),/商品仕様・商品マスター更新/);
+  await page.getByRole('button',{name:'すべて'}).click();
+  assert.equal(await page.locator('.notification-row').count(),6);
+  await page.locator('.notification-row').nth(2).click();
+  assert.match(await page.locator('#notificationDetail h2').innerText(),/廃番・販売終了情報/);
+  await assertNoOverflow(page,'desktop notifications');
+  await page.screenshot({path:`${OUT}/desktop-notifications-light-1440x1000.png`,fullPage:true});
+  report.scenarios.NOTIFICATIONS_DESKTOP='PASS';
+  report.scenarios.NOTIFICATION_FILTER_AND_DETAIL='PASS';
+
+  const notificationPortrait=await context.newPage();track(notificationPortrait);await notificationPortrait.setViewportSize({width:768,height:1024});
+  await goto(notificationPortrait,'/design-preview/notifications');
+  await notificationPortrait.locator('#themeSelect').selectOption('light');
+  const notificationListBox=await notificationPortrait.locator('.notification-panel').boundingBox();
+  const notificationDetailBox=await notificationPortrait.locator('.notification-detail').boundingBox();
+  assert.ok(notificationListBox&&notificationDetailBox&&notificationDetailBox.y>notificationListBox.y,'iPad portrait should stack notification detail below list');
+  await assertNoOverflow(notificationPortrait,'iPad portrait notifications');
+  await notificationPortrait.screenshot({path:`${OUT}/ipad-portrait-notifications-768x1024.png`,fullPage:true});
+  report.scenarios.IPAD_PORTRAIT_NOTIFICATIONS='PASS';
+  await notificationPortrait.close();
+
   await page.getByRole('link',{name:'商品選定'}).first().click();
   await page.waitForURL(/\/design-preview\/product$/);
   await page.waitForSelector('#manufacturer');
@@ -87,7 +116,7 @@ try{
   assert.notEqual(await page.locator('#previewProductTitle').innerText(),'商品を選択してください');
   assert.ok(await page.locator('.preview-window').isVisible());
   await assertNoOverflow(page,'desktop product');
-  await page.screenshot({path:`${OUT}/desktop-product-dark-1440x1000.png`,fullPage:true});
+  await page.screenshot({path:`${OUT}/desktop-product-light-1440x1000.png`,fullPage:true});
   report.scenarios.PRODUCT_SELECTION_RUNTIME='PASS';
 
   const landscape=await context.newPage();track(landscape);await landscape.setViewportSize({width:1024,height:768});
