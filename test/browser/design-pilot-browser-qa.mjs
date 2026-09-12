@@ -18,9 +18,9 @@ function track(target){
 }
 track(page);
 
-async function goto(path){
+async function goto(target,path){
   const suffix=SHARE_TOKEN?`${path}${path.includes('?')?'&':'?'}_vercel_share=${encodeURIComponent(SHARE_TOKEN)}`:path;
-  await page.goto(`${BASE}${suffix}`,{waitUntil:'networkidle'});
+  await target.goto(`${BASE}${suffix}`,{waitUntil:'networkidle'});
 }
 
 async function assertNoOverflow(target,label){
@@ -29,20 +29,49 @@ async function assertNoOverflow(target,label){
 }
 
 try{
-  await goto('/design-preview');
-  assert.equal(await page.locator('h1').innerText(),'ホーム');
+  await goto(page,'/design-preview');
+  assert.equal(await page.locator('#homeHeroTitle').innerText(),'暮らしをつくる、マドとトビラで。');
+  assert.equal(await page.locator('.home-hero-kicker').innerText(),'サッシ業務を、もっと分かりやすく。');
   assert.ok(await page.locator('.design-sidebar').isVisible());
+  assert.ok(await page.locator('.hero-architecture-svg').isVisible());
   assert.match(await page.locator('body').evaluate((node)=>getComputedStyle(node).fontFamily),/Noto Sans JP/);
-  assert.ok(await page.locator('.notice-item').count()>=4);
+  assert.equal(await page.locator('.announcement-item').count(),3);
+  assert.equal(await page.getByRole('link',{name:/案件を新規作成/}).first().innerText(),'＋案件を新規作成');
+  assert.equal(await page.getByRole('link',{name:'前回の続き'}).count(),0);
+  const heroTitleSize=Number.parseFloat(await page.locator('#homeHeroTitle').evaluate((node)=>getComputedStyle(node).fontSize));
+  assert.ok(heroTitleSize<=32,'hero title should remain a medium-sized heading');
   await assertNoOverflow(page,'desktop home');
   await page.screenshot({path:`${OUT}/desktop-home-light-1440x1000.png`,fullPage:true});
   report.scenarios.DESKTOP_HOME_LIGHT='PASS';
+  report.scenarios.HERO_READABILITY_AND_CTA='PASS';
+  report.scenarios.ANNOUNCEMENTS='PASS';
 
   await page.locator('#themeSelect').selectOption('dark');
   assert.equal(await page.evaluate(()=>document.documentElement.dataset.theme),'dark');
   assert.equal(await page.evaluate(()=>localStorage.getItem('sash.ui-theme')),'dark');
   await page.screenshot({path:`${OUT}/desktop-home-dark-1440x1000.png`,fullPage:true});
-  report.scenarios.DARK_THEME='PASS';
+  report.scenarios.DESKTOP_HOME_DARK='PASS';
+
+  const homeLandscape=await context.newPage();track(homeLandscape);await homeLandscape.setViewportSize({width:1024,height:768});
+  await goto(homeLandscape,'/design-preview');
+  await homeLandscape.locator('#themeSelect').selectOption('light');
+  assert.ok(await homeLandscape.locator('.hero-architecture-svg').isVisible());
+  assert.equal(await homeLandscape.locator('.announcement-item').count(),3);
+  await assertNoOverflow(homeLandscape,'iPad landscape home');
+  await homeLandscape.screenshot({path:`${OUT}/ipad-landscape-home-1024x768.png`,fullPage:true});
+  report.scenarios.IPAD_LANDSCAPE_HOME='PASS';
+  await homeLandscape.close();
+
+  const homePortrait=await context.newPage();track(homePortrait);await homePortrait.setViewportSize({width:768,height:1024});
+  await goto(homePortrait,'/design-preview');
+  await homePortrait.locator('#themeSelect').selectOption('light');
+  const portraitHero=await homePortrait.locator('.home-hero').boundingBox();
+  const portraitImage=await homePortrait.locator('.hero-architecture').boundingBox();
+  assert.ok(portraitHero&&portraitImage&&portraitImage.y>portraitHero.y+portraitHero.height*0.35,'iPad portrait hero image should sit below the copy region');
+  await assertNoOverflow(homePortrait,'iPad portrait home');
+  await homePortrait.screenshot({path:`${OUT}/ipad-portrait-home-768x1024.png`,fullPage:true});
+  report.scenarios.IPAD_PORTRAIT_HOME='PASS';
+  await homePortrait.close();
 
   await page.getByRole('link',{name:'商品選定'}).first().click();
   await page.waitForURL(/\/design-preview\/product$/);
@@ -61,25 +90,25 @@ try{
   report.scenarios.PRODUCT_SELECTION_RUNTIME='PASS';
 
   const landscape=await context.newPage();track(landscape);await landscape.setViewportSize({width:1024,height:768});
-  await landscape.goto(`${BASE}/design-preview/product`,{waitUntil:'networkidle'});
+  await goto(landscape,'/design-preview/product');
   await landscape.locator('#themeSelect').selectOption('light');
   const formBox=await landscape.locator('.product-form-stack').boundingBox();
   const previewBox=await landscape.locator('.product-preview').boundingBox();
   assert.ok(formBox&&previewBox&&previewBox.x>formBox.x,'iPad landscape should keep two-column product layout');
-  await assertNoOverflow(landscape,'iPad landscape');
+  await assertNoOverflow(landscape,'iPad landscape product');
   await landscape.screenshot({path:`${OUT}/ipad-landscape-product-1024x768.png`,fullPage:true});
-  report.scenarios.IPAD_LANDSCAPE='PASS';
+  report.scenarios.IPAD_LANDSCAPE_PRODUCT='PASS';
   await landscape.close();
 
   const portrait=await context.newPage();track(portrait);await portrait.setViewportSize({width:768,height:1024});
-  await portrait.goto(`${BASE}/design-preview/product`,{waitUntil:'networkidle'});
+  await goto(portrait,'/design-preview/product');
   const portraitForm=await portrait.locator('.product-form-stack').boundingBox();
   const portraitPreview=await portrait.locator('.product-preview').boundingBox();
   assert.ok(portraitForm&&portraitPreview&&portraitPreview.y>portraitForm.y,'iPad portrait should stack preview below form');
   assert.ok(await portrait.locator('#manufacturer').evaluate((node)=>getComputedStyle(node).minHeight==='44px'));
-  await assertNoOverflow(portrait,'iPad portrait');
+  await assertNoOverflow(portrait,'iPad portrait product');
   await portrait.screenshot({path:`${OUT}/ipad-portrait-product-768x1024.png`,fullPage:true});
-  report.scenarios.IPAD_PORTRAIT='PASS';
+  report.scenarios.IPAD_PORTRAIT_PRODUCT='PASS';
   await portrait.close();
 
   assert.deepEqual(report.consoleErrors,[]);
