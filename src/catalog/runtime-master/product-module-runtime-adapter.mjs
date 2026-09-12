@@ -37,6 +37,45 @@ function constructionFromSelector(selector, fallback = null) {
   return fallback;
 }
 
+function globRegex(pattern) {
+  return new RegExp(`^${String(pattern).replace(/[.+?^${}()|[\]\\]/g, '\\$&').replace(/\*/g, '.*')}$`);
+}
+
+function formalSpecificSpecs(module) {
+  return [...new Set((module.allowedValues ?? []).flatMap((row) => {
+    const metadataSpec = row.metadata?.specific_spec;
+    const values = [];
+    if (has(metadataSpec)) values.push(String(metadataSpec));
+    if (String(row.value ?? '').startsWith('SP-')) values.push(String(row.value));
+    return values;
+  }))];
+}
+
+function expandFormalSpecToken(module, token) {
+  const known = formalSpecificSpecs(module);
+  if (known.includes(token)) return [token];
+
+  const patterns = [];
+  if (token.includes('/') && token.includes('*')) {
+    const slash = token.indexOf('/');
+    const left = token.slice(0, slash);
+    const right = token.slice(slash + 1);
+    const dash = left.lastIndexOf('-');
+    if (dash >= 0) {
+      const base = left.slice(0, dash + 1);
+      const leftVariant = left.slice(dash + 1);
+      patterns.push(`${base}${leftVariant}-*`, `${base}${right}`);
+    }
+  }
+  if (!patterns.length && token.includes('*')) patterns.push(token);
+
+  const expanded = [...new Set(patterns.flatMap((pattern) => {
+    const regex = globRegex(pattern);
+    return known.filter((value) => regex.test(value));
+  }))];
+  return expanded.length ? expanded : [token];
+}
+
 function prepareModuleForInternalConstruction(sourceModule) {
   const module = clone(sourceModule);
   const constructionDef = module.specificationDefinitions?.find((def) => def.key === 'construction');
@@ -62,11 +101,14 @@ function prepareModuleForInternalConstruction(sourceModule) {
   if (!hasDimensionRules) {
     const sourceSet = (module.ruleSets ?? []).find((set) => set.type === 'CUSTOM_DIMENSION_RULE_TABLE' && set.status !== 'INACTIVE');
     if (sourceSet) {
+      const knownSpecs = new Set(formalSpecificSpecs(module));
       const converted = (sourceSet.payload ?? []).filter((row) => row['有効'] !== false).map((row) => {
         const selector = { window_type: row['窓種ID'] };
-        const specs = String(row['固有仕様ID'] ?? '').split('|').map((value) => value.trim()).filter((value) => value && value !== '*');
+        const rawSpecs = String(row['固有仕様ID'] ?? '').split('|').map((value) => value.trim()).filter((value) => value && value !== '*');
+        const specs = [...new Set(rawSpecs.flatMap((value) => expandFormalSpecToken(module, value)))];
         if (specs.length === 1) selector.specific_spec = specs[0];
         else if (specs.length > 1) selector.specific_spec = { $in: specs };
+        const unresolvedFormalSpecs = specs.filter((value) => !knownSpecs.has(value));
         return {
           id: row.range_id,
           type: row['判定方式'],
@@ -74,6 +116,7 @@ function prepareModuleForInternalConstruction(sourceModule) {
           selector,
           result: row.APP結果 ?? 'REVIEW_REQUIRED',
           source: row,
+          ...(unresolvedFormalSpecs.length ? { unresolvedFormalSpecs } : {}),
         };
       });
       module.ruleSets.push({
@@ -150,11 +193,18 @@ export function adaptProductModuleRuntimeV1(runtimePackage, entry) {
     delete original.construction;
     delete original.internal_construction;
     let working = { ...original };
+
+    // Derive the hidden construction from the selected formal STANDARD size before stabilization.
+    // Otherwise construction-dependent downstream values can be cleared by the first resolver pass
+    // even though the selected size already carries the authoritative construction metadata.
+    const preDerivedConstruction = deriveStandardConstruction(module, working, constructionDefault);
+    if (preDerivedConstruction) working.construction = preDerivedConstruction;
+
     let result = stabilizeSelection(catalog, productId, working);
     let dimensionOverride = null;
     const manualWarnings = [...(result.manualWarnings ?? [])];
 
-    let derivedConstruction = deriveStandardConstruction(module, result.selection, constructionDefault);
+    let derivedConstruction = preDerivedConstruction ?? deriveStandardConstruction(module, result.selection, constructionDefault);
     if (!derivedConstruction && customConstructionResolutionEnabled && result.selection.size_mode === 'CUSTOM' && finite(result.selection.custom_width) && finite(result.selection.custom_height)) {
       const candidates = customConstructionCandidates(module, catalog, productId, result.selection);
       if (candidates.length === 1) derivedConstruction = candidates[0];
@@ -176,7 +226,7 @@ export function adaptProductModuleRuntimeV1(runtimePackage, entry) {
       }
     }
 
-    if (derivedConstruction) {
+    if (derivedConstruction && result.selection.construction !== derivedConstruction) {
       working = { ...result.selection, construction: derivedConstruction };
       result = stabilizeSelection(catalog, productId, working);
     }
