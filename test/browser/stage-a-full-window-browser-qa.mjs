@@ -20,9 +20,33 @@ const matrix=JSON.parse(await readFile(MATRIX_PATH,'utf8'));
 const matrixSummary=JSON.parse(await readFile(SUMMARY_PATH,'utf8'));
 await mkdir(OUT,{recursive:true});
 
+const keyOf=(productId,windowValue)=>`${productId}::${windowValue}`;
+const customCapabilityWindows=new Set(matrix
+  .filter((row)=>row.case_type==='CUSTOM_CAPABILITY'&&row.status==='VERIFIED'&&row.supported===true)
+  .map((row)=>keyOf(row.product_id,row.window_type)));
+const customPositiveWindows=new Set(matrix
+  .filter((row)=>row.case_type==='CUSTOM_IN_RANGE_OR_REVIEW'&&row.status==='VERIFIED')
+  .map((row)=>keyOf(row.product_id,row.window_type)));
+const blockedCustomWindows=new Set([...customCapabilityWindows].filter((key)=>!customPositiveWindows.has(key)));
+const blockedCustomRoutes=matrix.filter((row)=>row.case_type==='CUSTOM_ROUTE'&&row.status==='UNVERIFIED');
+
+assert.equal(customCapabilityWindows.size,matrixSummary.custom_window_count,'matrix custom capability count drifted');
+assert.equal(blockedCustomWindows.size,1,'expected exactly one custom-capable window blocked by Product Master defect');
+for(const key of blockedCustomWindows){
+  const [productId,windowValue]=key.split('::');
+  assert.ok(blockedCustomRoutes.some((row)=>row.product_id===productId&&row.window_type===windowValue),`${key}: blocked custom window has no explicit matrix blocker`);
+}
+
 const report={
   status:'RUNNING',baseWindowCount:0,desktop:null,mobile:null,
+  fullBrowserQaGate:'RUNNING',appIntegrationReady:false,
   consoleErrors:[],pageErrors:[],failedResponses:[],matrixSummary,
+  customCoverage:{
+    capabilityWindows:customCapabilityWindows.size,
+    browserVerifiablePositiveWindows:customPositiveWindows.size,
+    productMasterBlockedWindows:blockedCustomWindows.size,
+    blockedWindows:[...blockedCustomWindows],
+  },
 };
 const browser=await chromium.launch({headless:true});
 
@@ -139,20 +163,28 @@ function rowsFor(productId,windowValue,type){return matrix.filter((row)=>row.pro
 function matchingOutRow(productId,windowValue,inRow){
   return rowsFor(productId,windowValue,'CUSTOM_OUT_OF_RANGE').find((row)=>stable(row.selector_frontier)===stable(inRow.selector_frontier))??null;
 }
+function blockedRouteFor(productId,windowValue){
+  return blockedCustomRoutes.find((row)=>row.product_id===productId&&row.window_type===windowValue)??null;
+}
 async function assertTechnicalHidden(page){
   for(const key of TECHNICAL)assert.equal(await page.locator(`[data-spec-key="${key}"]`).count(),0,`technical field leaked: ${key}`);
 }
 async function exerciseViewport(config){
   const context=await browser.newContext({viewport:config.viewport,isMobile:config.mobile,hasTouch:config.mobile});
   const page=await context.newPage();track(page);await openLab(page);
-  const stats={status:'RUNNING',baseWindows:0,standardWindows:0,customWindows:0,customBlockedChecks:0,summaryChecks:0,overflowFailures:0,products:{}};
+  const stats={
+    status:'RUNNING',baseWindows:0,standardWindows:0,
+    customCapabilityWindows:0,customVerifiedWindows:0,customMasterBlockedWindows:0,
+    customBlockedChecks:0,summaryChecks:0,overflowFailures:0,products:{},
+  };
   for(const product of PRODUCTS){
     let result=await openProduct(page,product);
     const window=result.fields.find((field)=>field.key==='window_type');
     assert.equal(window?.values?.length,product.windows,`${config.key}/${product.id}: window count mismatch`);
-    stats.products[product.id]={windows:window.values.length,standard:0,custom:0};
+    stats.products[product.id]={windows:window.values.length,standard:0,customCapability:0,customVerified:0,customMasterBlocked:0};
     for(const windowChoice of window.values){
       const windowValue=windowChoice.value;
+      const windowKey=keyOf(product.id,windowValue);
       result=await choose(page,product.id,result,'window_type',windowValue);
       stats.baseWindows+=1;
       await assertTechnicalHidden(page);
@@ -166,26 +198,40 @@ async function exerciseViewport(config){
       }
 
       const customRow=rowsFor(product.id,windowValue,'CUSTOM_IN_RANGE_OR_REVIEW')[0]??null;
-      if(customRow){
-        result=await choose(page,product.id,result,'window_type',windowValue);
-        result=await applyTarget(page,product.id,result,customRow.browser_selection,[customRow.custom_width_key,customRow.custom_height_key]);
-        const status=dimensionStatus(result);
-        assert.ok(['PASS','VALID','INCOMPLETE','ACCEPTED','REVIEW_REQUIRED'].includes(status),`${config.key}/${product.id}/${windowValue}: unexpected custom positive ${status}`);
-        stats.customWindows+=1;stats.products[product.id].custom+=1;
+      if(customCapabilityWindows.has(windowKey)){
+        stats.customCapabilityWindows+=1;stats.products[product.id].customCapability+=1;
+        if(customRow){
+          result=await choose(page,product.id,result,'window_type',windowValue);
+          result=await applyTarget(page,product.id,result,customRow.browser_selection,[customRow.custom_width_key,customRow.custom_height_key]);
+          const status=dimensionStatus(result);
+          assert.ok(['PASS','VALID','INCOMPLETE','ACCEPTED','REVIEW_REQUIRED'].includes(status),`${config.key}/${product.id}/${windowValue}: unexpected custom positive ${status}`);
+          stats.customVerifiedWindows+=1;stats.products[product.id].customVerified+=1;
 
-        const out=matchingOutRow(product.id,windowValue,customRow);
-        if(out){
-          result=await choose(page,product.id,result,customRow.custom_width_key,out.width);
-          result=await choose(page,product.id,result,customRow.custom_height_key,out.height);
-          assert.equal(dimensionStatus(result),'BLOCK',`${config.key}/${product.id}/${windowValue}: out-of-range custom must block`);
-          stats.customBlockedChecks+=1;
-        }
+          const out=matchingOutRow(product.id,windowValue,customRow);
+          if(out){
+            result=await choose(page,product.id,result,customRow.custom_width_key,out.width);
+            result=await choose(page,product.id,result,customRow.custom_height_key,out.height);
+            assert.equal(dimensionStatus(result),'BLOCK',`${config.key}/${product.id}/${windowValue}: out-of-range custom must block`);
+            stats.customBlockedChecks+=1;
+          }
 
-        const mode=result.fields.find((field)=>field.key==='size_mode');
-        if(standardRow&&mode?.values?.some((choice)=>String(choice.value)==='STANDARD')){
-          result=await choose(page,product.id,result,'size_mode','STANDARD');
-          assert.equal(await page.locator('[data-spec-key="custom_width"],[data-spec-key="custom_w"]').count(),0);
-          assert.equal(await page.locator('[data-spec-key="custom_height"],[data-spec-key="custom_h"]').count(),0);
+          const mode=result.fields.find((field)=>field.key==='size_mode');
+          if(standardRow&&mode?.values?.some((choice)=>String(choice.value)==='STANDARD')){
+            result=await choose(page,product.id,result,'size_mode','STANDARD');
+            assert.equal(await page.locator('[data-spec-key="custom_width"],[data-spec-key="custom_w"]').count(),0);
+            assert.equal(await page.locator('[data-spec-key="custom_height"],[data-spec-key="custom_h"]').count(),0);
+          }
+        }else{
+          const blocker=blockedRouteFor(product.id,windowValue);
+          assert.ok(blocker,`${config.key}/${product.id}/${windowValue}: custom capability lacks positive case and explicit Product Master blocker`);
+          result=await choose(page,product.id,result,'window_type',windowValue);
+          const target={...blocker.selector_frontier};
+          const terminalKeys=Object.keys(target).filter((key)=>key!=='window_type');
+          result=await applyTarget(page,product.id,result,target,terminalKeys);
+          assert.equal(String(result.selection?.size_mode),'CUSTOM',`${config.key}/${product.id}/${windowValue}: blocked custom route must still expose CUSTOM mode`);
+          assert.equal(await page.locator('[data-spec-key="custom_width"],[data-spec-key="custom_w"]').count(),1,`${config.key}/${product.id}/${windowValue}: blocked custom W input missing`);
+          assert.equal(await page.locator('[data-spec-key="custom_height"],[data-spec-key="custom_h"]').count(),1,`${config.key}/${product.id}/${windowValue}: blocked custom H input missing`);
+          stats.customMasterBlockedWindows+=1;stats.products[product.id].customMasterBlocked+=1;
         }
       }
 
@@ -200,7 +246,10 @@ async function exerciseViewport(config){
   }
   assert.equal(stats.baseWindows,105,`${config.key}: BASE_WINDOW_COUNT`);
   assert.equal(stats.standardWindows,matrixSummary.standard_window_count,`${config.key}: STANDARD coverage mismatch`);
-  assert.equal(stats.customWindows,matrixSummary.custom_window_count,`${config.key}: CUSTOM coverage mismatch`);
+  assert.equal(stats.customCapabilityWindows,matrixSummary.custom_window_count,`${config.key}: CUSTOM capability coverage mismatch`);
+  assert.equal(stats.customVerifiedWindows,customPositiveWindows.size,`${config.key}: browser-verifiable CUSTOM coverage mismatch`);
+  assert.equal(stats.customMasterBlockedWindows,blockedCustomWindows.size,`${config.key}: Product Master blocked CUSTOM coverage mismatch`);
+  assert.equal(stats.customVerifiedWindows+stats.customMasterBlockedWindows,stats.customCapabilityWindows,`${config.key}: CUSTOM coverage partition mismatch`);
   assert.equal(stats.summaryChecks,105,`${config.key}: summary coverage mismatch`);
   assert.equal(stats.overflowFailures,0,`${config.key}: overflow failures`);
   stats.status='PASS';
@@ -223,6 +272,8 @@ try{
   assert.deepEqual(report.consoleErrors,[]);
   assert.deepEqual(report.pageErrors,[]);
   assert.deepEqual(report.failedResponses,[]);
+  report.fullBrowserQaGate=matrixSummary.unverified_qa_case_count===0?'PASS':'BLOCKED_PRODUCT_MASTER';
+  report.appIntegrationReady=report.fullBrowserQaGate==='PASS'&&matrixSummary.gates?.custom_size_coverage_gate==='PASS';
   report.status='PASS';
   await writeFile(`${OUT}/report.json`,`${JSON.stringify(report,null,2)}\n`,'utf8');
   console.log(JSON.stringify(report,null,2));
