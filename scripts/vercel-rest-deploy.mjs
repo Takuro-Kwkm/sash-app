@@ -110,7 +110,6 @@ if (useGitSource) {
     repoId: numericRepositoryId,
     ref: githubRefName,
   };
-  payload.withLatestCommit = true;
 } else {
   payload.files = uploaded;
   payload.gitMetadata = {
