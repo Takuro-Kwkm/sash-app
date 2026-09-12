@@ -53,3 +53,43 @@ jobs:
           name: ui-design-pilot-browser-qa
           path: artifacts/design-pilot-browser-qa/
           if-no-files-found: warn
+
+  deploy_preview:
+    needs: browser_qa
+    if: github.event_name == 'push' && github.ref == 'refs/heads/feat/ui-design-pilot-20260912'
+    runs-on: ubuntu-latest
+    env:
+      VERCEL_ORG_ID: team_AkuHacuJlCl8LuvaFpCzFmbv
+      VERCEL_PROJECT_ID: prj_4z0zqW6yKyPuFINODfGX8LPBuJRP
+      VERCEL_PROJECT_NAME: sash-app-wave3-preview
+      VERCEL_TOKEN_PRIMARY: ${{ secrets.VERCEL_TOKEN }}
+      VERCEL_TOKEN_FALLBACK: ${{ secrets.VERCEL_ACCESS_TOKEN }}
+      RELEASE_SERIES: UI_DESIGN_PILOT
+      RELEASE_PACKAGE_VERSION: v0.1
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Exact-head and credential preflight
+        shell: bash
+        run: |
+          set -euo pipefail
+          actual_sha="$(git rev-parse HEAD)"
+          [[ "$actual_sha" == "$GITHUB_SHA" ]]
+          token="${VERCEL_TOKEN_PRIMARY:-${VERCEL_TOKEN_FALLBACK:-}}"
+          [[ -n "$token" ]]
+          echo "VERCEL_TOKEN_EFFECTIVE=$token" >> "$GITHUB_ENV"
+      - name: Deploy exact Pilot SHA to Vercel Preview
+        run: node scripts/vercel-rest-deploy.mjs preview artifacts/ui-design-pilot-deployment.json
+      - name: Verify deployment identity
+        run: |
+          node -e 'const d=require("./artifacts/ui-design-pilot-deployment.json"); if(d.readyState!=="READY"||d.githubSha!==process.env.GITHUB_SHA||d.mode!=="preview"||d.projectId!==process.env.VERCEL_PROJECT_ID||d.teamId!==process.env.VERCEL_ORG_ID) process.exit(1)'
+          echo "UI_DESIGN_PILOT_PREVIEW_GATE=PASS"
+      - name: Upload deployment record
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ui-design-pilot-vercel-preview
+          path: artifacts/ui-design-pilot-deployment.json
+          if-no-files-found: warn
