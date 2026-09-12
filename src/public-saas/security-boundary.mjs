@@ -1,4 +1,5 @@
 import { createPublicSaaSRequestHandler } from './http-handler.mjs';
+import { wrapPublicSaaSMonitoringBoundary } from './monitoring-boundary.mjs';
 
 const SAFE_METHODS=new Set(['GET','HEAD','OPTIONS']);
 const CSP=[
@@ -99,7 +100,9 @@ export function wrapPublicSaaSSecurityBoundary(handler){
 }
 
 export function createSecurePublicSaaSRequestHandler(options={}){
-  return wrapPublicSaaSSecurityBoundary(createPublicSaaSRequestHandler(options));
+  const app=createPublicSaaSRequestHandler(options);
+  const secured=wrapPublicSaaSSecurityBoundary(app);
+  return wrapPublicSaaSMonitoringBoundary(secured);
 }
 
 export const publicSaaSSecurityPolicy=Object.freeze({contentSecurityPolicy:CSP});
