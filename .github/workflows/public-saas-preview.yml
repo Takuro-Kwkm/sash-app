@@ -75,4 +75,50 @@ jobs:
           test "$actual_sha" = "$PUBLIC_SAAS_HEAD_SHA"
           node --test \
             test/75-public-saas-foundation.test.mjs \
-            test/76-public-saas-adapter.test.mjs
+            test/76-public-saas-supabase-adapter.test.mjs \
+            test/77-public-saas-supabase-work-repositories.test.mjs \
+            test/78-public-saas-http-handler.test.mjs \
+            test/79-public-saas-ui-safari-event-lifecycle.test.mjs \
+            test/80-public-saas-tenant-isolation-e2e-ui.test.mjs \
+            test/81-public-saas-security-baseline-migration.test.mjs \
+            test/82-public-saas-monitoring-boundary.test.mjs
+
+      - name: Vercel credential and project preflight
+        shell: bash
+        run: |
+          set -euo pipefail
+          token="${VERCEL_TOKEN_PRIMARY:-${VERCEL_TOKEN_FALLBACK:-}}"
+          if [[ -z "$token" ]]; then
+            echo "VERCEL_CREDENTIAL_GATE=BLOCKED"
+            exit 42
+          fi
+          echo "VERCEL_TOKEN_EFFECTIVE=$token" >> "$GITHUB_ENV"
+          status="$(curl -sS -o /tmp/vercel-project.json -w '%{http_code}' \
+            -H "Authorization: Bearer $token" \
+            "https://api.vercel.com/v9/projects/$VERCEL_PROJECT_ID?teamId=$VERCEL_ORG_ID")"
+          test "$status" = "200"
+          node -e 'const p=require("/tmp/vercel-project.json"); if(p.id!==process.env.VERCEL_PROJECT_ID||p.accountId!==process.env.VERCEL_ORG_ID) process.exit(1)'
+          echo "VERCEL_PROJECT_ACCESS_GATE=PASS"
+
+      - name: Create exact-head Preview deployment
+        shell: bash
+        env:
+          VERCEL_DEPLOY_GITHUB_SHA: ${{ env.PUBLIC_SAAS_HEAD_SHA }}
+          VERCEL_DEPLOY_GITHUB_REF_NAME: ${{ env.PUBLIC_SAAS_HEAD_REF }}
+        run: |
+          mkdir -p artifacts/public-saas-preview
+          node scripts/vercel-rest-deploy.mjs preview artifacts/public-saas-preview/deployment.json
+
+      - name: Verify Preview identity
+        shell: bash
+        run: |
+          node -e 'const d=require("./artifacts/public-saas-preview/deployment.json"); if(d.readyState!=="READY"||d.mode!=="preview"||d.githubSha!==process.env.PUBLIC_SAAS_HEAD_SHA||d.projectId!==process.env.VERCEL_PROJECT_ID||d.teamId!==process.env.VERCEL_ORG_ID) process.exit(1)'
+          echo "PUBLIC_SAAS_PREVIEW_DEPLOY_GATE=PASS"
+
+      - name: Upload Preview deployment evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: public-saas-preview-deployment
+          path: artifacts/public-saas-preview/
+          if-no-files-found: warn
