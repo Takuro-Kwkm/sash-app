@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { resolveRuntimeAppProduct } from '../src/catalog/runtime-master/runtime-app-bridge.mjs';
+import { loadRegisteredRuntime } from '../src/catalog/runtime-master/runtime-master-registry.mjs';
 
 const OUT = 'artifacts/stage-a-full-coverage';
 const PRODUCTS = [
@@ -115,6 +116,26 @@ async function discoverFrontiers(product, windowValue, mode) {
       queue.push({ ...result.selection, size_mode: mode });
       continue;
     }
+    if (modeSelector && availableModes.length && !availableModes.includes(mode)) {
+      deadEnds.push({
+        selection:{...result.selection},
+        reason:mode === 'STANDARD' ? 'STANDARD_NOT_EXPOSED_IN_RUNTIME' : 'CUSTOM_NOT_EXPOSED_IN_RUNTIME',
+        available_modes:availableModes,
+      });
+      continue;
+    }
+
+    // Do not treat the dimension control itself as the frontier while an upstream
+    // Runtime selector remains unresolved. UI semantic ordering keeps all selectors
+    // that can affect size viability ahead of the size/custom controls.
+    const upstream = nextPreDimensionField(result,mode);
+    if (upstream) {
+      for (const value of choiceValues(upstream)) {
+        queue.push({ ...result.selection, [upstream.key]:normalizeValue(upstream,value) });
+      }
+      continue;
+    }
+
     if (mode === 'STANDARD') {
       const size = sizeField(result);
       if (size?.values?.length) {
@@ -127,17 +148,9 @@ async function discoverFrontiers(product, windowValue, mode) {
         frontiers.push({ selection:{...result.selection}, result });
         continue;
       }
-      if (modeSelector && !availableModes.includes('CUSTOM')) {
-        deadEnds.push({ selection:{...result.selection}, reason:'CUSTOM_NOT_EXPOSED' });
-        continue;
-      }
     }
-    const field = nextPreDimensionField(result,mode);
-    if (!field) {
-      deadEnds.push({ selection:{...result.selection}, reason:'NO_DIMENSION_TERMINAL' });
-      continue;
-    }
-    for (const value of choiceValues(field)) queue.push({ ...result.selection, [field.key]:normalizeValue(field,value) });
+
+    deadEnds.push({ selection:{...result.selection}, reason:'NO_DIMENSION_TERMINAL' });
   }
   const dedup = new Map(frontiers.map((frontier) => [selectionKey(frontier.selection),frontier]));
   return { frontiers:[...dedup.values()], deadEnds, explored:visited.size };
@@ -171,12 +184,18 @@ async function auditDownstreamChoices(product, windowValue, baseResult) {
   }
 }
 
-async function auditStandard(product, windowValue, frontiers, windowDims) {
+async function auditStandard(product, windowValue, discovery, windowDims) {
+  const { frontiers, deadEnds } = discovery;
   if (!frontiers.length) {
-    addRow(product,windowValue,'STANDARD_CAPABILITY','FAILED',{reason:'NO_REACHABLE_STANDARD_FRONTIER'});
+    const explicitlyUnsupported = deadEnds.length > 0 && deadEnds.every((row) => row.reason === 'STANDARD_NOT_EXPOSED_IN_RUNTIME');
+    addRow(product,windowValue,'STANDARD_CAPABILITY',explicitlyUnsupported?'VERIFIED':'FAILED',{
+      supported:false,
+      reason:explicitlyUnsupported?'FORMAL_RUNTIME_DOES_NOT_EXPOSE_STANDARD':'NO_REACHABLE_STANDARD_FRONTIER',
+      dead_end_count:deadEnds.length,
+    });
     return;
   }
-  addRow(product,windowValue,'STANDARD_CAPABILITY','VERIFIED',{frontier_count:frontiers.length});
+  addRow(product,windowValue,'STANDARD_CAPABILITY','VERIFIED',{supported:true,frontier_count:frontiers.length});
   for (const frontier of frontiers) {
     const field = sizeField(frontier.result);
     const dims = parseSizeDimensions(field);
@@ -197,20 +216,66 @@ async function auditStandard(product, windowValue, frontiers, windowDims) {
   }
 }
 
-function customProbeInputs(frontier, windowDims) {
-  const dims = sampledDimensions(windowDims,12);
-  const around = dims.flatMap(([w,h]) => [[w,h],[Math.max(1,w-1),h],[w,Math.max(1,h-1)]]);
-  return [...new Map([...around,...GENERIC_PROBES].map((pair) => [`${pair[0]}:${pair[1]}`,pair])).values()];
+const firstFinite = (row, keys) => {
+  for (const key of keys) {
+    const value = Number(row?.[key]);
+    if (Number.isFinite(value)) return value;
+  }
+  return null;
+};
+
+function formalRangeProbes(runtime, windowValue, frontier) {
+  const ranges = runtime?.master?.canonicalWorkbook?.customRanges ?? [];
+  const spec = frontier.selection?.window_spec;
+  const relevant = ranges.filter((row) => {
+    const rowWindow = row?.['窓種ID'] ?? row?.window_id;
+    const rowSpec = row?.['固有仕様ID'] ?? row?.spec_id;
+    return String(rowWindow) === String(windowValue) && (!present(spec) || String(rowSpec) === String(spec));
+  });
+  const probes = [];
+  for (const row of relevant) {
+    const minW = firstFinite(row,['W_MIN(mm)','W_MIN','minW','W_min']);
+    const maxW = firstFinite(row,['W_MAX(mm)','W_MAX','maxW','W_max']);
+    const minH = firstFinite(row,['H_MIN(mm)','H_MIN','minH','H_min']);
+    const maxH = firstFinite(row,['H_MAX(mm)','H_MAX','maxH','H_max']);
+    if (![minW,maxW,minH,maxH].every(Number.isFinite)) continue;
+    const midW = Math.round((minW + maxW) / 2);
+    const midH = Math.round((minH + maxH) / 2);
+    probes.push(
+      [minW,minH],[midW,midH],[maxW,maxH],
+      [Math.max(1,minW-1),midH],[maxW+1,midH],
+      [midW,Math.max(1,minH-1)],[midW,maxH+1],
+    );
+  }
+  return probes;
 }
 
-async function auditCustom(product, windowValue, frontiers, windowDims) {
-  if (!frontiers.length) return { exposed:false, verifiedRoutes:0, unverifiedRoutes:0 };
+function customProbeInputs(runtime, windowValue, frontier, windowDims) {
+  const formal = formalRangeProbes(runtime,windowValue,frontier);
+  const dims = sampledDimensions(windowDims,12);
+  const around = dims.flatMap(([w,h]) => [[w,h],[Math.max(1,w-1),h],[w,Math.max(1,h-1)]]);
+  return [...new Map([...formal,...around,...GENERIC_PROBES].map((pair) => [`${pair[0]}:${pair[1]}`,pair])).values()];
+}
+
+async function auditCustom(product, windowValue, discovery, windowDims, runtime) {
+  const { frontiers, deadEnds } = discovery;
+  if (!frontiers.length) {
+    const explicitlyUnsupported = deadEnds.length > 0 && deadEnds.every((row) => row.reason === 'CUSTOM_NOT_EXPOSED_IN_RUNTIME');
+    if (explicitlyUnsupported && product.id !== 'SER-LIXIL-TW') {
+      addRow(product,windowValue,'CUSTOM_CAPABILITY','VERIFIED',{
+        supported:false,
+        reason:'FORMAL_RUNTIME_DOES_NOT_EXPOSE_CUSTOM',
+        dead_end_count:deadEnds.length,
+      });
+    }
+    return { exposed:false, verifiedRoutes:0, unverifiedRoutes:0 };
+  }
   let verifiedRoutes = 0;
   let unverifiedRoutes = 0;
-  addRow(product,windowValue,'CUSTOM_CAPABILITY','VERIFIED',{frontier_count:frontiers.length});
+  addRow(product,windowValue,'CUSTOM_CAPABILITY','VERIFIED',{supported:true,frontier_count:frontiers.length});
   for (const frontier of frontiers) {
     const keys = customKeys(frontier.result);
-    const probes = customProbeInputs(frontier,windowDims);
+    const probes = customProbeInputs(runtime,windowValue,frontier,windowDims);
     let accepted = null;
     let blocked = null;
     let reviewOnly = null;
@@ -270,6 +335,7 @@ async function auditCustom(product, windowValue, frontiers, windowDims) {
 }
 
 for (const product of PRODUCTS) {
+  const runtime = await loadRegisteredRuntime(product.manufacturer,product.series);
   const root = await resolveRuntimeAppProduct(product.id,{});
   assert.equal(root.runtimeMaster?.sourcePackageIntegrity?.match,true,`${product.id}: canonical Runtime integrity mismatch`);
   const windows = windowField(root);
@@ -285,12 +351,12 @@ for (const product of PRODUCTS) {
     const standard = await discoverFrontiers(product,windowValue,'STANDARD');
     summary.standard_frontiers += standard.frontiers.length;
     if (standard.frontiers.length) summary.standard_windows += 1;
-    await auditStandard(product,windowValue,standard.frontiers,windowDims);
+    await auditStandard(product,windowValue,standard,windowDims);
 
     const custom = await discoverFrontiers(product,windowValue,'CUSTOM');
     summary.custom_frontiers += custom.frontiers.length;
     if (custom.frontiers.length) summary.custom_windows += 1;
-    await auditCustom(product,windowValue,custom.frontiers,windowDims);
+    await auditCustom(product,windowValue,custom,windowDims,runtime);
   }
 
   if (product.id === 'SER-LIXIL-TW') {
