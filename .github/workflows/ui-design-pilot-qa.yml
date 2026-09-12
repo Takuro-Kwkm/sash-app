@@ -1,0 +1,55 @@
+name: UI Design Pilot QA
+
+on:
+  push:
+    branches: ['feat/ui-design-pilot-20260912']
+  pull_request:
+    branches: [main]
+    paths:
+      - 'src/ui/web/design-preview.html'
+      - 'src/ui/web/design-preview.css'
+      - 'src/ui/web/design-preview.mjs'
+      - 'src/server/recovery-app.mjs'
+      - 'test/browser/design-pilot-browser-qa.mjs'
+      - '.github/workflows/ui-design-pilot-qa.yml'
+
+jobs:
+  browser_qa:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Install
+        run: npm install --ignore-scripts
+      - name: Syntax checks
+        run: |
+          node --check src/server/recovery-app.mjs
+          node --check src/ui/web/design-preview.mjs
+          node --check test/browser/design-pilot-browser-qa.mjs
+      - name: Repository regression tests
+        run: npm test
+      - name: Install browser QA dependencies
+        run: |
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+      - name: Start app and run UI design pilot QA
+        run: |
+          npm run start:qa > /tmp/sash-design-pilot.log 2>&1 &
+          PID=$!
+          trap 'kill $PID || true' EXIT
+          for i in {1..40}; do
+            if curl -fsS http://127.0.0.1:4173/api/health >/dev/null; then break; fi
+            sleep 0.5
+          done
+          curl -fsS http://127.0.0.1:4173/design-preview >/dev/null
+          curl -fsS http://127.0.0.1:4173/design-preview/product >/dev/null
+          node test/browser/design-pilot-browser-qa.mjs
+      - name: Upload UI QA artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ui-design-pilot-browser-qa
+          path: artifacts/design-pilot-browser-qa/
+          if-no-files-found: warn
