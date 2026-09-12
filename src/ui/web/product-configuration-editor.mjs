@@ -38,7 +38,7 @@ export class ProductConfigurationEditor {
         <div class="field"><label for="product">商品</label><select id="product" disabled><option value="">選択してください</option></select></div>
         <div id="dynamicForm"></div><div id="warnings"></div>
       </section>
-      <section class="card compact"><h2>選択内容</h2><div id="selectionSummary" class="summary muted">シリーズを選択してください。</div></section>
+      <section class="card compact"><h2>選択内容</h2><div id="selectionSummary" class="summary muted">商品を選択してください。</div></section>
       <section id="productCodeCard" class="card compact" hidden><h2>品番結果</h2><div id="productCodeResults" class="summary"></div></section>
       ${this.showInventory?'<section class="card compact"><h2>Runtime Catalog</h2><div id="inventory"></div></section>':''}`;
     this.root.addEventListener('change',this.boundChange);
@@ -46,8 +46,11 @@ export class ProductConfigurationEditor {
     const [catalogProducts,runtimeProducts,health]=await Promise.all([
       getJson('/api/catalog/products'),getJson('/api/runtime-master/integrations'),getJson('/api/health'),
     ]);
+    // If the App Runtime Integration Registry knows a product, never expose a legacy/skeleton
+    // Catalog row for the same app product id. READY or BLOCKED Runtime identity is authoritative.
+    const runtimeIds=new Set(runtimeProducts.map((row)=>row.id));
     this.state.products=[
-      ...catalogProducts.map((row)=>({...row,sourceType:'CATALOG'})),
+      ...catalogProducts.filter((row)=>!runtimeIds.has(row.id)).map((row)=>({...row,sourceType:'CATALOG'})),
       ...runtimeProducts.map((row)=>({...row,sourceType:'RUNTIME_MASTER'})),
     ];
     const manufacturers=[...new Set(this.state.products.map((row)=>row.manufacturer))].sort((a,b)=>a.localeCompare(b,'ja'));
@@ -67,7 +70,10 @@ export class ProductConfigurationEditor {
   selectManufacturer(manufacturer){
     this.root.querySelector('#manufacturer').value=manufacturer??'';
     fill(this.root.querySelector('#product'),this.productsForManufacturer(manufacturer).map((row)=>({
-      value:row.id,label:row.sourceType==='RUNTIME_MASTER'?(row.selectable===false?`${row.displayName??row.series}（正式Runtime未登録）`:`${row.displayName??row.series} [Runtime]`):(row.displayName??row.series),
+      value:row.id,
+      label:row.sourceType==='RUNTIME_MASTER'
+        ?(row.selectable===false?`${row.displayName??row.series}（利用不可）`:`${row.displayName??row.series} [Runtime]`)
+        :(row.displayName??row.series),
       disabled:row.selectable===false,
     })));
   }
@@ -99,13 +105,31 @@ export class ProductConfigurationEditor {
     await this.resolve({notify:true});
   }
 
+  clearRuntimeDescendants(key){
+    const rows=this.state.resolved?.dependencyFields??[];
+    const children=new Map();
+    for(const row of rows){
+      for(const parent of row.parentFields??[]){
+        if(!children.has(parent))children.set(parent,new Set());
+        children.get(parent).add(row.key);
+      }
+    }
+    const queue=[...(children.get(key)??[])],seen=new Set();
+    while(queue.length){
+      const child=queue.shift();
+      if(seen.has(child))continue;
+      seen.add(child);delete this.state.selection[child];
+      queue.push(...(children.get(child)??[]));
+    }
+  }
+
   async handleChange(event){
     const target=event.target;
     if(target.id==='manufacturer'){
       this.state.resolveRevision+=1;this.state.productId=null;this.state.selection={};this.state.resolved=null;this.state.snapshot=null;this.state.stale=false;
       this.selectManufacturer(target.value);
       this.root.querySelector('#dynamicForm').innerHTML='';this.root.querySelector('#warnings').innerHTML='';
-      this.root.querySelector('#selectionSummary').textContent='シリーズを選択してください。';this.root.querySelector('#productCodeCard').hidden=true;
+      this.root.querySelector('#selectionSummary').textContent='商品を選択してください。';this.root.querySelector('#productCodeCard').hidden=true;
       this.onSnapshot(null);return;
     }
     if(target.id==='product'){
@@ -115,6 +139,7 @@ export class ProductConfigurationEditor {
     }
     if(!target.matches('[data-spec-key]'))return;
     const key=target.dataset.specKey;
+    if(this.state.productSource==='RUNTIME_MASTER')this.clearRuntimeDescendants(key);
     if(target.type==='number'){
       if(target.value!=='')this.state.selection[key]=Number(target.value);else delete this.state.selection[key];
     }else if(target.multiple){

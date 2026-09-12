@@ -30,6 +30,9 @@ jobs:
           node --check src/work-management/service.mjs
           node --check src/catalog/runtime-master/runtime-app-bridge.mjs
           node --check src/catalog/runtime-master/runtime-master-registry.mjs
+          node --check src/catalog/runtime-master/formal-product-runtime-loader.mjs
+          node --check src/catalog/runtime-master/apw430-formal-split-v1-adapter.mjs
+          node --check src/catalog/runtime-master/apw431-formal-split-v1-adapter.mjs
       - name: Full repository tests
         run: npm test
       - name: Runtime smoke
@@ -42,16 +45,17 @@ jobs:
             sleep 0.5
           done
           cat /tmp/health.json
-          node -e 'const h=require("/tmp/health.json"); const ids=new Set(h.runtimeMasterIntegrations.map(x=>x.id)); if(!h.ok || h.inventory.length!==4 || ids.size!==3 || !ids.has("SER-LIX-EW") || !ids.has("SER-LIXIL-TW") || !ids.has("SER-YKKAP-UCHIRIMO")) process.exit(1)'
+          node -e 'const h=require("/tmp/health.json"); const ids=new Set(h.runtimeMasterIntegrations.map(x=>x.id)); const expected=["SER-LIX-EW","SER-LIX-SAMOS2H","SER-LIX-SAMOSL","SER-LIXIL-TW","SER-YKK-APW430","SER-YKK-APW431","SER-YKKAP-UCHIRIMO"]; if(!h.ok || h.inventory.length!==4 || ids.size!==expected.length || expected.some(id=>!ids.has(id))) process.exit(1)'
           curl -fsS http://127.0.0.1:4173/api/runtime-master/integrations > /tmp/integrations.json
           node -e 'const r=require("/tmp/integrations.json"); const ew=r.find(x=>x.id==="SER-LIX-EW"); if(!ew || !ew.selectable || ew.status!=="READY" || ew.sourceHash!=="082442f82f51c4a81050d8e16d5fe3b9cb142004deb371a3e2bbb21384ca37dd") process.exit(1)'
           node -e 'const r=require("/tmp/integrations.json"); const tw=r.find(x=>x.id==="SER-LIXIL-TW"); if(!tw || !tw.selectable || tw.status!=="READY" || tw.sourceHash!=="52af3e462f940df67c267de5f715250290136afdd67a70611e684fcc3d5d064e") process.exit(1)'
+          node -e 'const r=require("/tmp/integrations.json"); const a=r.find(x=>x.id==="SER-YKK-APW431"); if(!a || !a.selectable || a.status!=="READY" || a.packageVersion!=="v1.0" || a.sourceHash!=="f83998aa540ff39907627089adbe84eae32ba9850b36fa8ad7f40a30e2502511") process.exit(1)'
           node -e 'const r=require("/tmp/integrations.json"); const u=r.find(x=>x.id==="SER-YKKAP-UCHIRIMO"); if(!u || !u.selectable || u.status!=="READY" || u.sourceHash!=="be4f1f77727424dc06ddf9de947201f33d4aee5219b182e37d0f178e1fb7147d") process.exit(1)'
       - name: Install browser QA dependencies
         run: |
           npm install --no-save playwright@1.55.0
           npx playwright install --with-deps chromium
-      - name: Uchirimo/EW/TW desktop/mobile browser QA, work-management QA and existing-series regression
+      - name: Runtime desktop/mobile browser QA, work-management QA and existing-series regression
         run: |
           npm run start:qa > /tmp/sash-v2-browser.log 2>&1 &
           PID=$!
@@ -63,6 +67,7 @@ jobs:
           node test/browser/ew-runtime-browser-qa.mjs
           node test/browser/tw-runtime-browser-qa.mjs
           node test/browser/uchirimo-runtime-browser-qa.mjs
+          node test/browser/formal-runtime-resync-browser-qa.mjs
           node test/browser/release-regression-browser-qa.mjs
           node test/browser/work-management-browser-qa.mjs
       - name: Upload browser QA artifacts

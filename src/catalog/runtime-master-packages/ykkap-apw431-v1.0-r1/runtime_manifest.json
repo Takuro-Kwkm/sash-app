@@ -1,0 +1,97 @@
+{
+  "schema_version": "product-master-runtime-manifest/1.0",
+  "manufacturer": "YKK AP",
+  "series": "APW431",
+  "product_id": "SER-YKK-APW431",
+  "package_version": "v1.0",
+  "verification_revision": "20260911-R1",
+  "authoring_mode": "DIRECT_AUTHORING_MASTER",
+  "authoring_file_name": "APW431_商品マスター_v1.0_最終QA正式固定版.xlsx",
+  "authoring_file_id": "1TBEn2tTbFjBLeIOeDs0fR3iIDcLEn3jI",
+  "authoring_export_sha256": "2dc67a247e56efd98bd9e5437b410eca02fd3ef0b4f62009216c964d673e922a",
+  "runtime_status": "READY",
+  "runtime_files": [
+    {
+      "role": "CORE",
+      "file_name": "apw431_core_v1.0-R1.json",
+      "file_id": "1dr36iQgt_jtKnU6o_EoTpSteBHQNoOLT",
+      "sha256": "76b1b46e49ba47036c9b17575f087cf8ffdec862a9dcb483f0cc3bbc98914f9c",
+      "bytes": 57971
+    },
+    {
+      "role": "DIMENSIONS",
+      "file_name": "apw431_dimensions_v1.0-R1.json",
+      "file_id": "1bccODZ46DhHzv5maVZN07QymZxhb817V",
+      "sha256": "a3587f3b711a42b1011bc836d05622d7dddd2b76a664ff3c8f1004ffea29fe7f",
+      "bytes": 1684977
+    },
+    {
+      "role": "OPTIONS",
+      "file_name": "apw431_options_v1.0-R1.json",
+      "file_id": "1xLBrfHUrgPgc_aCIXS0w6oiSbZ2FiCBi",
+      "sha256": "20f7fa485c681af005fbc9d3448fb0566bbe6c9f7cdc949f00d53776a28cc449",
+      "bytes": 115384
+    }
+  ],
+  "documentation_file": {
+    "file_name": "PRODUCT_MASTER_MANIFEST.md",
+    "file_id": "1mBeDxXwjMlhoZE1UcvO7ye9wLysJszZ_",
+    "status": "FORMAL_PASS"
+  },
+  "qa_report": {
+    "file_name": "YKKAP_APW431_RUNTIME_QA_v1.0-R1.md",
+    "file_id": "1VHP338-fzT8oox17Z_LCn4aIAre4d7_d",
+    "status": "PASS"
+  },
+  "storage_status": "CANONICAL",
+  "package_gate": "PASS",
+  "generated_at": "2026-09-11T21:24:00+09:00",
+  "working_folder_id": "12-asRdFp58GmOSJqYXhVPfg4PKQ9afOq",
+  "canonical_folder_id": "16SO5cC-ix7F_vwGLqAyrr62zwDRjXBCB",
+  "old_folder_id": "1VElfoWdIXoXS1wK6qQ6NolSObKHkm6nq",
+  "record_counts": {
+    "series": 1,
+    "active_series_windows": 6,
+    "specific_specs": 41,
+    "standard_sizes": 332,
+    "integrated_candidates": 538,
+    "custom_dimension_rules": 29,
+    "exterior_colors": 4,
+    "interior_colors": 2,
+    "color_combinations": 5,
+    "screen_records": 9,
+    "glass_master": 4,
+    "glass_details": 7,
+    "other_options": 3,
+    "glass_applicability_rules": 19,
+    "shutter_types": 5,
+    "glass_wind_pressure": 31,
+    "operation_component_positions": 22,
+    "shutter_special_conditions": 10,
+    "heavy_and_special_glass_rules": 14,
+    "judgement_accuracy_classes": 3,
+    "shutter_candidate_filters": 10,
+    "golden_tests": 14
+  },
+  "blocking_items": [],
+  "accepted_limits": [
+    "Large-opening wind-pressure boundary curves remain SOURCE_GRAPH/manual checks where manufacturer formulas are not public.",
+    "Some heavy-glass shaded regions remain PARTIAL/manual checks as frozen in Authoring v1.0."
+  ],
+  "ui_contract": {
+    "standard": "サッシ情報管理アプリ_UI実装標準仕様書_v1.6",
+    "series_window_count": 6,
+    "standard_size_route": "STANDARD_EXACT_CANDIDATE",
+    "standard_condition_ng_no_custom_fallback": true,
+    "custom_rule_count": 29,
+    "fail_closed": true
+  },
+  "drive_roundtrip_verified": true,
+  "canonical_storage_verified": true,
+  "registry_gate": "PASS",
+  "formal_status": "FORMAL_PASS",
+  "formalized_at": "2026-09-11",
+  "storage_gate": "PASS",
+  "duplicate_check": "PASS",
+  "version_check": "PASS"
+}

@@ -13,9 +13,10 @@ const root=join(HERE,"../..");
 const webRoot=join(root,"src","ui","web");
 const estimateOutputRoot=join(root,"src","estimate-output");
 const catalog=createCatalog(CURRENT_WINDOW_SERIES_MODULES);
-const runtimeMasterIntegrations=runtimeAppIntegrationInventory();
+const runtimeIntegrationDeclarations=runtimeAppIntegrationInventory();
+const runtimeMasterIntegrations=runtimeIntegrationDeclarations.filter((row)=>row.status==='READY'&&row.selectable);
 const buildTimestamp=new Date().toISOString();
-const buildIdentity={appVersion:"work-management-v1.0+estimate-output-v1.0",workSchemaVersion:WORK_SCHEMA_VERSION,catalog,runtimeMasterIntegrations:runtimeMasterIntegrations.map(({id,packageVersion,sourceHash,status,selectable})=>({id,packageVersion,sourceHash,status,selectable}))};
+const buildIdentity={appVersion:"work-management-v1.0+estimate-output-v1.0",workSchemaVersion:WORK_SCHEMA_VERSION,catalog,runtimeMasterIntegrations:runtimeIntegrationDeclarations.map(({id,packageVersion,sourceHash,status,selectable})=>({id,packageVersion,sourceHash,status,selectable}))};
 const buildId=`SASH-WORK-V1-${createHash("sha256").update(JSON.stringify(buildIdentity)).digest("hex").slice(0,12)}`;
 const catalogVersion="V4.3 RECOVERY + WAVE3-1 THERMOS-L + LIXIL EW v1.1 + LIXIL TW integrated-v0.2 + YKK AP ウチリモ v1.0-P7R1-R2";
 
@@ -27,64 +28,42 @@ const json=(res,status,body)=>{
 };
 
 const staticFileAt=async(res,path,type)=>{
-  try{
-    const body=await readFile(path);
-    res.writeHead(200,{"content-type":type,"cache-control":"no-store","x-sash-build-id":buildId});
-    res.end(body);
-  }catch{
-    res.writeHead(404,{"cache-control":"no-store","x-sash-build-id":buildId});
-    res.end("Not found");
-  }
+  try{const body=await readFile(path);res.writeHead(200,{"content-type":type,"cache-control":"no-store","x-sash-build-id":buildId});res.end(body);}
+  catch{res.writeHead(404,{"cache-control":"no-store","x-sash-build-id":buildId});res.end("Not found");}
 };
 const staticFile=(res,name,type)=>staticFileAt(res,join(webRoot,name),type);
 
 const requestUrl=(req)=>{
   const url=new URL(req.url??"/",`http://${req.headers?.host??"localhost"}`);
   const rewrittenPath=url.searchParams.get("__path");
-  if(rewrittenPath!==null){
-    url.pathname=`/${rewrittenPath}`;
-    url.searchParams.delete("__path");
-  }
+  if(rewrittenPath!==null){url.pathname=`/${rewrittenPath}`;url.searchParams.delete("__path");}
   return url;
 };
-
-const parseSelection=(url)=>{
-  const raw=url.searchParams.get("selection");
-  if(!raw) return {};
-  try{return JSON.parse(raw);}catch{return {};}
-};
+const parseSelection=(url)=>{const raw=url.searchParams.get("selection");if(!raw)return {};try{return JSON.parse(raw);}catch{return {};}};
 
 export function createRecoveryRequestHandler({backend="node:http recovery server",entrypoint="scripts/start-step8-ui.mjs"}={}){
   return async function recoveryRequestHandler(req,res){
     const url=requestUrl(req);
     if(url.pathname==="/health"||url.pathname==="/api/health"){
-      return json(res,200,{
-        ok:true,buildId,buildTimestamp,catalogVersion,
-        entrypoint,frontendRoot:"src/ui/web",backend,
-        features:{estimateOutput:"1.0"},
-        persistence:{type:"BROWSER_LOCAL_STORAGE",schemaVersion:WORK_SCHEMA_VERSION,key:"sash.work-management.v1",multiDevice:false},
-        databasePath:null,
-        inventory:catalogInventory(catalog),runtimeMasterIntegrations
-      });
+      return json(res,200,{ok:true,buildId,buildTimestamp,catalogVersion,entrypoint,frontendRoot:"src/ui/web",backend,
+        features:{estimateOutput:"1.0"},persistence:{type:"BROWSER_LOCAL_STORAGE",schemaVersion:WORK_SCHEMA_VERSION,key:"sash.work-management.v1",multiDevice:false},databasePath:null,
+        inventory:catalogInventory(catalog),runtimeMasterIntegrations});
     }
     if(url.pathname==="/api/catalog/products") return json(res,200,catalog.products);
     if(url.pathname==="/api/catalog/fields"){
-      const productId=url.searchParams.get("productId");
-      return json(res,200,catalog.specificationDefinitions.filter((x)=>!productId||x.productId===productId));
+      const productId=url.searchParams.get("productId");return json(res,200,catalog.specificationDefinitions.filter((x)=>!productId||x.productId===productId));
     }
     if(url.pathname==="/api/catalog/allowed-values"){
       const productId=url.searchParams.get("productId"),key=url.searchParams.get("key");
       return json(res,200,catalog.allowedValues.filter((x)=>(!productId||x.productId===productId)&&(!key||x.specificationKey===key)));
     }
     if(url.pathname==="/api/catalog/resolve"){
-      const productId=url.searchParams.get("productId");
-      if(!productId) return json(res,400,{error:"productId required"});
+      const productId=url.searchParams.get("productId");if(!productId)return json(res,400,{error:"productId required"});
       return json(res,200,stabilizeSelection(catalog,productId,parseSelection(url)));
     }
-    if(url.pathname==="/api/runtime-master/integrations") return json(res,200,runtimeMasterIntegrations);
+    if(url.pathname==="/api/runtime-master/integrations") return json(res,200,runtimeIntegrationDeclarations);
     if(url.pathname==="/api/runtime-master/resolve"){
-      const productId=url.searchParams.get("productId");
-      if(!productId) return json(res,400,{error:"productId required"});
+      const productId=url.searchParams.get("productId");if(!productId)return json(res,400,{error:"productId required"});
       try{return json(res,200,await resolveRuntimeAppProduct(productId,parseSelection(url)));}
       catch(error){return json(res,400,{error:error?.message??String(error),code:error?.code??"RUNTIME_RESOLVE_FAILED"});}
     }

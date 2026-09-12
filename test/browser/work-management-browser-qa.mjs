@@ -63,9 +63,8 @@ try{
   const projectUrl=page.url();
   await page.getByRole('button',{name:'見積を開く'}).click();
   const estimateUrl=page.url();
-  const catalogResponse=await context.request.get(`${BASE}/api/catalog/products`);const catalog=await catalogResponse.json();
   const tw={id:'SER-LIXIL-TW',manufacturer:'LIXIL'};
-  const ykk=catalog.find((row)=>row.manufacturer==='YKK AP');assert.ok(ykk);
+  const ykk={id:'SER-YKKAP-UCHIRIMO',manufacturer:'YKK AP'};
   for(let index=0;index<10;index++)await createOpening(index,index%2===0?tw:ykk);
   assert.equal(await page.locator('.opening-card').count(),10);
   const database=await page.evaluate(()=>window.__sashWorkApp.readDatabase());

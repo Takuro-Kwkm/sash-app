@@ -1,0 +1,146 @@
+name: Stage A New Construction Runtime UI
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'src/catalog/runtime-master/**'
+      - 'src/ui/web/**'
+      - 'src/server/**'
+      - 'test/**'
+      - 'scripts/stage-a-full-coverage-audit.mjs'
+      - 'scripts/vercel-rest-deploy.mjs'
+      - '.github/workflows/stage-a-new-construction-runtime-ui.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  exact_head_preview_qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+      HEAD_REF: ${{ github.event.pull_request.head.ref }}
+      VERCEL_ORG_ID: team_AkuHacuJlCl8LuvaFpCzFmbv
+      VERCEL_PROJECT_ID: prj_4z0zqW6yKyPuFINODfGX8LPBuJRP
+      VERCEL_PROJECT_NAME: sash-app-wave3-preview
+      VERCEL_TOKEN_PRIMARY: ${{ secrets.VERCEL_TOKEN }}
+      VERCEL_TOKEN_FALLBACK: ${{ secrets.VERCEL_ACCESS_TOKEN }}
+    steps:
+      - name: Checkout exact PR HEAD
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 1
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Exact SHA gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          actual="$(git rev-parse HEAD)"
+          test "$actual" = "$HEAD_SHA"
+          echo "PREVIEW_SHA_GATE=PASS sha=$actual"
+
+      - name: Install and exact-head automated contract audit
+        run: |
+          npm install --ignore-scripts
+          npm test
+
+      - name: Stage A full coverage matrix audit
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts/stage-a-full-coverage
+          node scripts/stage-a-full-coverage-audit.mjs | tee artifacts/stage-a-full-coverage/run.log
+          node -e 'const s=require("./artifacts/stage-a-full-coverage/summary.json"); if(s.base_window_count!==105||s.failed_qa_case_count!==0) { console.error(s); process.exit(1); } console.log(`FULL_COVERAGE_MATRIX_GATE=PASS cases=${s.qa_case_count} verified=${s.verified_qa_case_count} unverified=${s.unverified_qa_case_count}`)'
+
+      - name: Vercel credential and project preflight
+        shell: bash
+        run: |
+          set -euo pipefail
+          token="${VERCEL_TOKEN_PRIMARY:-${VERCEL_TOKEN_FALLBACK:-}}"
+          if [[ -z "$token" ]]; then
+            echo "PREVIEW_CREDENTIAL_GATE=BLOCKED"
+            exit 42
+          fi
+          echo "VERCEL_TOKEN_EFFECTIVE=$token" >> "$GITHUB_ENV"
+          status="$(curl -sS -o /tmp/vercel-project.json -w '%{http_code}' -H "Authorization: Bearer $token" "https://api.vercel.com/v9/projects/$VERCEL_PROJECT_ID")"
+          test "$status" = "200"
+          node -e 'const p=require("/tmp/vercel-project.json"); if(p.id!==process.env.VERCEL_PROJECT_ID||p.accountId!==process.env.VERCEL_ORG_ID) process.exit(1)'
+          echo "PREVIEW_PROJECT_GATE=PASS"
+
+      - name: Deploy exact PR HEAD Preview
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts/stage-a-preview
+          GITHUB_SHA="$HEAD_SHA" GITHUB_REF_NAME="$HEAD_REF" RELEASE_SERIES="NEW CONSTRUCTION EXTERIOR WINDOWS" RELEASE_PACKAGE_VERSION="UI-v1.7" node scripts/vercel-rest-deploy.mjs preview artifacts/stage-a-preview/deployment.json
+
+      - name: Verify Preview identity and create temporary browser access
+        shell: bash
+        run: |
+          set -euo pipefail
+          node -e 'const d=require("./artifacts/stage-a-preview/deployment.json"); if(d.readyState!=="READY"||d.githubSha!==process.env.HEAD_SHA||d.mode!=="preview"||d.projectId!==process.env.VERCEL_PROJECT_ID||d.teamId!==process.env.VERCEL_ORG_ID) { console.error(d); process.exit(1); }'
+          echo "PREVIEW_SHA_MATCH_GATE=PASS"
+          deployment_id="$(node -p 'require("./artifacts/stage-a-preview/deployment.json").deploymentId || require("./artifacts/stage-a-preview/deployment.json").id')"
+          test -n "$deployment_id"
+          short_sha="${HEAD_SHA:0:12}"
+          qa_alias="stage-a-${short_sha}-${GITHUB_RUN_ID}.vercel.app"
+          alias_status="$(curl -sS -o artifacts/stage-a-preview/qa-alias.json -w '%{http_code}' \
+            -X POST \
+            -H "Authorization: Bearer $VERCEL_TOKEN_EFFECTIVE" \
+            -H 'Content-Type: application/json' \
+            --data "{\"alias\":\"$qa_alias\"}" \
+            "https://api.vercel.com/v2/deployments/$deployment_id/aliases?teamId=$VERCEL_ORG_ID")"
+          test "$alias_status" = "200"
+          alias_uid="$(node -p 'require("./artifacts/stage-a-preview/qa-alias.json").uid || ""')"
+          resolved_alias="$(node -p 'require("./artifacts/stage-a-preview/qa-alias.json").alias || ""')"
+          test -n "$alias_uid"
+          test -n "$resolved_alias"
+          bypass_status="$(curl -sS -o artifacts/stage-a-preview/share-link.json -w '%{http_code}' \
+            -X PATCH \
+            -H "Authorization: Bearer $VERCEL_TOKEN_EFFECTIVE" \
+            -H 'Content-Type: application/json' \
+            --data '{"ttl":86400}' \
+            "https://api.vercel.com/aliases/$alias_uid/protection-bypass?teamId=$VERCEL_ORG_ID")"
+          test "$bypass_status" = "200"
+          share_token="$(node -p 'const p=require("./artifacts/stage-a-preview/share-link.json"); p.protectionBypassUrl ? new URL(p.protectionBypassUrl).searchParams.get("_vercel_share") : p.value || Object.keys(p.protectionBypass || {})[0] || ""')"
+          test -n "$share_token"
+          echo "::add-mask::$share_token"
+          echo "VERCEL_SHARE_TOKEN=$share_token" >> "$GITHUB_ENV"
+          echo "QA_BASE_URL=https://$resolved_alias" >> "$GITHUB_ENV"
+          curl -fsS "https://$resolved_alias/api/health?_vercel_share=$share_token" > artifacts/stage-a-preview/health.json
+          echo "PREVIEW_BROWSER_ACCESS_GATE=PASS"
+
+      - name: Install Browser QA dependencies
+        run: |
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+
+      - name: Exact Preview desktop/mobile Browser QA
+        env:
+          QA_BASE_URL: ${{ env.QA_BASE_URL }}
+          VERCEL_SHARE_TOKEN: ${{ env.VERCEL_SHARE_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          node test/browser/ew-runtime-browser-qa.mjs
+          node test/browser/tw-runtime-browser-qa.mjs
+          node test/browser/uchirimo-runtime-browser-qa.mjs
+          node test/browser/formal-runtime-resync-browser-qa.mjs
+          node test/browser/stage-a-full-window-browser-qa.mjs
+          node test/browser/release-regression-browser-qa.mjs
+          echo "BROWSER_QA_GATE=PASS"
+
+      - name: Upload Stage A Preview audit
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: stage-a-new-construction-preview-qa
+          path: artifacts/
+          if-no-files-found: warn
