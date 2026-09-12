@@ -97,8 +97,9 @@ export function createRecoveryRequestHandler({backend="node:http recovery server
     if(url.pathname==="/work-management.css") return staticFile(res,"work-management.css","text/css; charset=utf-8");
     if(url.pathname==="/estimate-output.css") return staticFile(res,"estimate-output.css","text/css; charset=utf-8");
     if(url.pathname==="/design-preview.css") return staticFile(res,"design-preview.css","text/css; charset=utf-8");
+    if(url.pathname==="/design-preview-notifications.css") return staticFile(res,"design-preview-notifications.css","text/css; charset=utf-8");
     if(url.pathname==="/design-preview.mjs") return staticFile(res,"design-preview.mjs","text/javascript; charset=utf-8");
-    if(url.pathname==="/design-preview"||url.pathname==="/design-preview/"||url.pathname==="/design-preview/product") return staticFile(res,"design-preview.html","text/html; charset=utf-8");
+    if(url.pathname==="/design-preview"||url.pathname==="/design-preview/"||url.pathname==="/design-preview/product"||url.pathname==="/design-preview/notifications") return staticFile(res,"design-preview.html","text/html; charset=utf-8");
     const workModule=url.pathname.match(/^\/work-management\/(domain|storage|repositories|service)\.mjs$/)?.[1];
     if(workModule)return staticFileAt(res,join(root,"src","work-management",`${workModule}.mjs`),"text/javascript; charset=utf-8");
     const estimateModule=url.pathname.match(/^\/estimate-output\/(model|pdf-renderer|xlsx-renderer)\.mjs$/)?.[1];
