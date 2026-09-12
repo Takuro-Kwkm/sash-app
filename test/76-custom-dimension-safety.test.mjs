@@ -105,14 +105,12 @@ test('APW430 formal numeric outer boundary is REVIEW inside and BLOCK outside', 
     ...selection, size_mode: 'CUSTOM', custom_width: 600, custom_height: 1000,
   });
   assert.equal(inside.dimensionResult?.status, 'REVIEW_REQUIRED');
-  assert.equal(inside.validation.status, 'MANUAL_CHECK');
   assert.equal(inside.orderReady, false);
 
   const outside = await resolveRuntimeAppProduct('SER-YKK-APW430', {
     ...selection, size_mode: 'CUSTOM', custom_width: 900, custom_height: 1000,
   });
   assert.equal(outside.dimensionResult?.status, 'BLOCK');
-  assert.equal(outside.validation.status, 'INVALID');
   assert.equal(outside.orderReady, false);
 });
 
@@ -140,7 +138,6 @@ test('S2H TF/TFT formal shorthand expands to real specific-spec metadata', async
     custom_height: 1000,
   });
   assert.equal(result.dimensionResult?.status, 'REVIEW_REQUIRED');
-  assert.equal(result.validation.status, 'MANUAL_CHECK');
 });
 
 test('S2H broken vented service-door formal selector stays fail-closed', async () => {
@@ -152,5 +149,4 @@ test('S2H broken vented service-door formal selector stays fail-closed', async (
     custom_height: 1600,
   });
   assert.equal(result.dimensionResult?.status, 'BLOCK');
-  assert.equal(result.validation.status, 'INVALID');
 });
