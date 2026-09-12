@@ -16,6 +16,7 @@ const projectName = process.env.VERCEL_PROJECT_NAME ?? 'sash-app-wave3-preview';
 const githubSha = process.env.GITHUB_SHA ?? execFileSync('git', ['rev-parse', 'HEAD'], { encoding: 'utf8' }).trim();
 const githubRefName = process.env.GITHUB_REF_NAME ?? execFileSync('git', ['branch', '--show-current'], { encoding: 'utf8' }).trim();
 const repository = process.env.GITHUB_REPOSITORY ?? 'Takuro-Kwkm/sash-app';
+const repositoryId = process.env.GITHUB_REPOSITORY_ID ?? '1351370514';
 
 for (const [name, value] of Object.entries({ token, teamId, projectId, projectName, githubSha })) {
   if (!value) throw new Error(`Missing required value: ${name}`);
@@ -40,7 +41,7 @@ const api = async (url, init = {}) => {
 const commitMessage = execFileSync('git', ['log', '-1', '--format=%s'], { encoding: 'utf8' }).trim();
 const authorName = execFileSync('git', ['log', '-1', '--format=%an'], { encoding: 'utf8' }).trim();
 const authorEmail = execFileSync('git', ['log', '-1', '--format=%ae'], { encoding: 'utf8' }).trim();
-const [owner, repoName] = repository.split('/');
+const [owner] = repository.split('/');
 const useGitSource = mode === 'preview' && process.env.VERCEL_DEPLOY_SOURCE !== 'files';
 
 let uploaded = [];
@@ -91,7 +92,28 @@ if (!useGitSource) {
 const payload = {
   name: projectName,
   project: projectId,
-  gitMetadata: {
+  meta: {
+    releaseCommitSha: githubSha,
+    releaseSeries: process.env.RELEASE_SERIES ?? 'LIXIL EW',
+    releasePackageVersion: process.env.RELEASE_PACKAGE_VERSION ?? 'v1.1',
+    releaseMode: mode,
+  },
+};
+
+if (useGitSource) {
+  const numericRepositoryId = Number(repositoryId);
+  if (!Number.isSafeInteger(numericRepositoryId) || numericRepositoryId <= 0) {
+    throw new Error(`Invalid GitHub repository id: ${repositoryId}`);
+  }
+  payload.gitSource = {
+    type: 'github',
+    repoId: numericRepositoryId,
+    ref: githubRefName,
+  };
+  payload.withLatestCommit = true;
+} else {
+  payload.files = uploaded;
+  payload.gitMetadata = {
     remoteUrl: `https://github.com/${repository}.git`,
     commitAuthorName: authorName,
     commitAuthorEmail: authorEmail,
@@ -104,26 +126,7 @@ const payload = {
     ciGitProviderUsername: owner,
     ciGitRepoVisibility: 'public',
     rootDirectory: '',
-  },
-  meta: {
-    releaseCommitSha: githubSha,
-    releaseSeries: process.env.RELEASE_SERIES ?? 'LIXIL EW',
-    releasePackageVersion: process.env.RELEASE_PACKAGE_VERSION ?? 'v1.1',
-    releaseMode: mode,
-  },
-};
-
-if (useGitSource) {
-  payload.gitSource = {
-    type: 'github',
-    org: owner,
-    repo: repoName,
-    ref: githubRefName,
-    sha: githubSha,
   };
-  payload.withLatestCommit = false;
-} else {
-  payload.files = uploaded;
 }
 if (mode === 'production') payload.target = 'production';
 
