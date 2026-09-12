@@ -1,8 +1,8 @@
 import { createServer } from "node:http";
 import { createRecoveryRequestHandler, releaseBuildMetadata } from "../src/server/recovery-app.mjs";
-import { createPublicSaaSRequestHandler } from "../src/public-saas/http-handler.mjs";
+import { createSecurePublicSaaSRequestHandler } from "../src/public-saas/security-boundary.mjs";
 
-const server=createServer(createPublicSaaSRequestHandler({
+const server=createServer(createSecurePublicSaaSRequestHandler({
   delegate:createRecoveryRequestHandler({
     backend:"node:http recovery server",
     entrypoint:"scripts/start-step8-ui.mjs",
