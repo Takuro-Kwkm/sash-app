@@ -8,6 +8,7 @@ on:
       - 'src/ui/web/**'
       - 'src/server/**'
       - 'test/**'
+      - 'scripts/stage-a-full-coverage-audit.mjs'
       - 'scripts/vercel-rest-deploy.mjs'
       - '.github/workflows/stage-a-new-construction-runtime-ui.yml'
 
@@ -50,6 +51,13 @@ jobs:
           npm install --ignore-scripts
           npm test
 
+      - name: Stage A full coverage matrix audit
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/stage-a-full-coverage-audit.mjs | tee artifacts/stage-a-full-coverage/run.log
+          node -e 'const s=require("./artifacts/stage-a-full-coverage/summary.json"); if(s.base_window_count!==105||s.failed_qa_case_count!==0) { console.error(s); process.exit(1); } console.log(`FULL_COVERAGE_MATRIX_GATE=PASS cases=${s.qa_case_count} verified=${s.verified_qa_case_count} unverified=${s.unverified_qa_case_count}`)'
+
       - name: Vercel credential and project preflight
         shell: bash
         run: |
@@ -70,7 +78,7 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p artifacts/stage-a-preview
-          GITHUB_SHA="$HEAD_SHA" GITHUB_REF_NAME="$HEAD_REF" RELEASE_SERIES="NEW CONSTRUCTION EXTERIOR WINDOWS" RELEASE_PACKAGE_VERSION="UI-v1.6" node scripts/vercel-rest-deploy.mjs preview artifacts/stage-a-preview/deployment.json
+          GITHUB_SHA="$HEAD_SHA" GITHUB_REF_NAME="$HEAD_REF" RELEASE_SERIES="NEW CONSTRUCTION EXTERIOR WINDOWS" RELEASE_PACKAGE_VERSION="UI-v1.7" node scripts/vercel-rest-deploy.mjs preview artifacts/stage-a-preview/deployment.json
 
       - name: Verify Preview identity and create temporary browser access
         shell: bash
