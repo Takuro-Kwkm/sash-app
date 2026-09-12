@@ -11,6 +11,17 @@ const store=new BrowserStorageDocumentStore(localStorage);
 const repositories=createRepositoryBundle(store);
 const service=new WorkManagementService(repositories);
 let productEditor=null;
+let activeNotificationFilter='all';
+let selectedNotificationId='price-update';
+
+const notificationItems=[
+  {id:'price-update',group:'maker',type:'価格改定',className:'price',title:'メーカー価格改定情報を更新',summary:'見積前に確認したい価格改定情報を、業務の入口で見落とさないための表示例。',date:'09/12',source:'メーカー情報',priority:'重要',body:'正式運用では、対象メーカー・シリーズ・改定日・影響範囲を明示し、見積開始前に確認できる情報面へ接続する。',action:'商品選定へ',href:'/design-preview/product'},
+  {id:'master-update',group:'master',type:'仕様変更',className:'spec',title:'商品仕様・商品マスター更新',summary:'Runtimeや商品選定条件の変更を、利用者が日々の業務の中で把握するための表示例。',date:'09/12',source:'商品マスター',priority:'重要',body:'正式運用では、更新されたシリーズ、変更点、適用開始日、影響する選定条件をEvidence付きで確認できる構造を想定する。',action:'商品選定へ',href:'/design-preview/product'},
+  {id:'discontinued',group:'maker',type:'廃番',className:'retired',title:'廃番・販売終了情報',summary:'販売終了や代替品確認が必要な情報を、見積着手前に気づけるようにする表示例。',date:'09/11',source:'メーカー情報',priority:'要確認',body:'正式データ接続後は、対象商品・終了時期・代替候補・既存案件への影響をまとめて確認できるようにする。',action:'ホームへ戻る',href:'/design-preview'},
+  {id:'catalog-update',group:'maker',type:'カタログ',className:'catalog',title:'カタログ更新情報',summary:'新しいカタログや技術資料が追加されたことを知らせる表示例。',date:'09/11',source:'カタログ',priority:'通常',body:'正式運用では、改訂版カタログ・技術資料・差し替えページへの導線を持たせ、古い資料の参照を減らす。',action:'ホームへ戻る',href:'/design-preview'},
+  {id:'estimate-task',group:'work',type:'未完了',className:'task',title:'見積未完了の案件があります',summary:'途中保存された案件や期限が近い見積を、再開しやすくする業務通知の表示例。',date:'09/10',source:'案件・見積',priority:'要対応',body:'正式運用ではユーザー自身の案件データを参照し、期限、最終更新、入力不足などを条件に通知する。',action:'案件・見積へ',href:'/'},
+  {id:'survey-task',group:'work',type:'現場調査',className:'task',title:'現場調査の入力が未完了です',summary:'採寸や写真、現場条件に不足がある案件を知らせる業務通知の表示例。',date:'09/10',source:'現場調査',priority:'要対応',body:'正式運用では入力必須項目や写真不足を判定し、該当案件の未完了箇所へ直接戻れるようにする。',action:'案件・見積へ',href:'/'}
+];
 
 function setTheme(value){
   const theme=['system','light','dark'].includes(value)?value:'system';
@@ -115,7 +126,7 @@ async function renderHome(){
     </section>
 
     <section class="announcement-strip panel" aria-labelledby="announcementTitle">
-      <div class="section-head announcement-head"><div><span class="eyebrow">UPDATE</span><h2 id="announcementTitle">お知らせ</h2></div><a href="#">すべて見る</a></div>
+      <div class="section-head announcement-head"><div><span class="eyebrow">UPDATE</span><h2 id="announcementTitle">お知らせ</h2></div><a href="/design-preview/notifications" data-design-nav="/design-preview/notifications">すべて見る</a></div>
       <div class="announcement-grid">
         <article class="announcement-item"><span class="notice-type price">価格改定</span><div><strong>メーカー価格改定情報を更新</strong><p>見積前に最新の価格情報を確認してね。</p></div><time>09/12</time></article>
         <article class="announcement-item"><span class="notice-type spec">仕様変更</span><div><strong>商品仕様・商品マスター更新</strong><p>選定条件と最新Runtimeの変更点を反映。</p></div><time>09/12</time></article>
@@ -137,6 +148,45 @@ async function renderHome(){
         <a class="shortcut" href="/"><strong>⌖</strong><span>現行UIへ戻る</span></a>
       </div></div>
     </section>`;
+}
+
+function visibleNotifications(){
+  return activeNotificationFilter==='all'?notificationItems:notificationItems.filter((item)=>item.group===activeNotificationFilter);
+}
+
+function notificationRows(){
+  return visibleNotifications().map((item)=>`<button class="notification-row${item.id===selectedNotificationId?' active':''}" type="button" data-notice-id="${esc(item.id)}"><span class="notice-type ${esc(item.className)}">${esc(item.type)}</span><span class="notification-row-main"><strong>${esc(item.title)}</strong><p>${esc(item.summary)}</p><small>${esc(item.source)} · ${esc(item.priority)}</small></span><time>${esc(item.date)}</time></button>`).join('');
+}
+
+function renderNotificationDetail(){
+  const item=notificationItems.find((entry)=>entry.id===selectedNotificationId)??visibleNotifications()[0]??notificationItems[0];
+  selectedNotificationId=item.id;
+  const detail=$('#notificationDetail');
+  if(!detail)return;
+  detail.innerHTML=`<div class="notification-detail-head"><span class="notice-type ${esc(item.className)}">${esc(item.type)}</span><span class="sample-data-note">Sample Data</span></div><h2>${esc(item.title)}</h2><p class="detail-summary">${esc(item.summary)}</p><div class="notification-meta"><div><span>SOURCE</span><strong>${esc(item.source)}</strong></div><div><span>PRIORITY</span><strong>${esc(item.priority)}</strong></div><div><span>UPDATED</span><strong>${esc(item.date)}</strong></div><div><span>STATUS</span><strong>Pilot表示</strong></div></div><div class="notification-body"><h3>この通知で確認すること</h3><p>${esc(item.body)}</p><h3>正式運用について</h3><p>現在はUI確認用のサンプル。メーカー公式情報、商品マスター、案件データ等の正式ソースへ接続するまでは実業務の更新情報として扱わない。</p></div><div class="notification-actions"><a href="${esc(item.href)}"${item.href.startsWith('/design-preview')?` data-design-nav="${esc(item.href)}"`:''}>${esc(item.action)}</a><button type="button" disabled>正式データ接続前</button></div>`;
+}
+
+function syncNotificationView(){
+  const visible=visibleNotifications();
+  if(!visible.some((item)=>item.id===selectedNotificationId))selectedNotificationId=visible[0]?.id??notificationItems[0].id;
+  const list=$('#notificationList');if(list)list.innerHTML=notificationRows();
+  const count=$('#notificationCount');if(count)count.textContent=`${visible.length}件を表示`;
+  document.querySelectorAll('[data-notice-filter]').forEach((button)=>button.classList.toggle('active',button.dataset.noticeFilter===activeNotificationFilter));
+  renderNotificationDetail();
+}
+
+function renderNotifications(){
+  setActiveNav('notifications');
+  $('#designMain').innerHTML=`
+    <div class="page-head"><div><div class="eyebrow">Design Pilot / Notifications</div><h1>お知らせ</h1><p class="lead">メーカー変更・商品マスター更新・業務上の未完了を、ひとつの情報面で確認する。</p></div><span class="sample-data-note">Sample Data / UI確認用</span></div>
+    <section class="notification-layout">
+      <div class="panel notification-panel">
+        <div class="notification-toolbar"><div class="notification-filters" aria-label="お知らせ種別"><button class="notification-filter active" type="button" data-notice-filter="all">すべて</button><button class="notification-filter" type="button" data-notice-filter="maker">メーカー・資料</button><button class="notification-filter" type="button" data-notice-filter="master">商品マスター</button><button class="notification-filter" type="button" data-notice-filter="work">案件・現場</button></div><span id="notificationCount" class="notification-count"></span></div>
+        <div id="notificationList" class="notification-list"></div>
+      </div>
+      <aside id="notificationDetail" class="panel notification-detail" aria-live="polite"></aside>
+    </section>`;
+  syncNotificationView();
 }
 
 function updateProductPreview(snapshot){
@@ -172,6 +222,7 @@ async function renderProduct(){
 
 async function renderRoute(){
   const path=location.pathname.replace(/\/+$/,'')||'/design-preview';
+  if(path==='/design-preview/notifications')return renderNotifications();
   if(path==='/design-preview/product')return renderProduct();
   return renderHome();
 }
@@ -179,6 +230,10 @@ async function renderRoute(){
 const savedTheme=localStorage.getItem('sash.ui-theme')??'system';setTheme(savedTheme);
 $('#themeSelect').addEventListener('change',(event)=>setTheme(event.target.value));
 document.addEventListener('click',(event)=>{
+  const filter=event.target.closest('[data-notice-filter]');
+  if(filter){activeNotificationFilter=filter.dataset.noticeFilter??'all';syncNotificationView();return;}
+  const notice=event.target.closest('[data-notice-id]');
+  if(notice){selectedNotificationId=notice.dataset.noticeId;syncNotificationView();return;}
   const link=event.target.closest('[data-design-nav]');if(!link)return;
   event.preventDefault();navigate(link.getAttribute('href'));
 });
