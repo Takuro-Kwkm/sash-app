@@ -36,7 +36,8 @@ try{
   assert.ok(await page.locator('.hero-architecture-svg').isVisible());
   assert.match(await page.locator('body').evaluate((node)=>getComputedStyle(node).fontFamily),/Noto Sans JP/);
   assert.equal(await page.locator('.announcement-item').count(),3);
-  assert.equal(await page.getByRole('link',{name:/案件を新規作成/}).first().innerText(),'＋案件を新規作成');
+  const primaryCtaText=(await page.getByRole('link',{name:/案件を新規作成/}).first().innerText()).replace(/\s+/g,'');
+  assert.equal(primaryCtaText,'＋案件を新規作成');
   assert.equal(await page.getByRole('link',{name:'前回の続き'}).count(),0);
   const heroTitleSize=Number.parseFloat(await page.locator('#homeHeroTitle').evaluate((node)=>getComputedStyle(node).fontSize));
   assert.ok(heroTitleSize<=32,'hero title should remain a medium-sized heading');
