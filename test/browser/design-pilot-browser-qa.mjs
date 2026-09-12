@@ -80,10 +80,10 @@ try{
   assert.equal(await page.locator('.notification-row').count(),6);
   assert.ok(await page.locator('#notificationDetail').isVisible());
   assert.match(await page.locator('#notificationDetail').innerText(),/Sample Data/);
-  await page.getByRole('button',{name:'商品マスター'}).click();
+  await page.getByRole('button',{name:'商品マスター',exact:true}).click();
   assert.equal(await page.locator('.notification-row').count(),1);
   assert.match(await page.locator('#notificationDetail').innerText(),/商品仕様・商品マスター更新/);
-  await page.getByRole('button',{name:'すべて'}).click();
+  await page.getByRole('button',{name:'すべて',exact:true}).click();
   assert.equal(await page.locator('.notification-row').count(),6);
   await page.locator('.notification-row').nth(2).click();
   assert.match(await page.locator('#notificationDetail h2').innerText(),/廃番・販売終了情報/);
