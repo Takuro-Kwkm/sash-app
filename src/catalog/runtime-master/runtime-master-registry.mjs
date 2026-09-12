@@ -10,6 +10,7 @@ import { loadFormalProductRuntimePackage } from './formal-product-runtime-loader
 import { adaptProductModuleRuntimeV1 } from './product-module-runtime-adapter.mjs';
 import { adaptApw430FormalSplitV1 } from './apw430-formal-split-v1-adapter.mjs';
 import { adaptApw431FormalSplitV1 } from './apw431-formal-split-v1-adapter.mjs';
+import { guardFormalCustomDimensionUiResolver } from './formal-custom-dimension-safety.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const EW_ROOT = join(HERE, '../runtime-master-packages/lixil-ew-v1.1');
@@ -103,10 +104,10 @@ async function loadRuntime(entry) {
     adapted = adaptProductModuleRuntimeV1(runtimePackage, entry);
   } else if (entry.packageType === 'FORMAL_PRODUCT_RUNTIME' && entry.adapterType === 'APW430_FORMAL_SPLIT_V1') {
     runtimePackage = await loadFormalProductRuntimePackage(entry);
-    adapted = adaptApw430FormalSplitV1(runtimePackage, entry);
+    adapted = guardFormalCustomDimensionUiResolver(adaptApw430FormalSplitV1(runtimePackage, entry), runtimePackage);
   } else if (entry.packageType === 'FORMAL_PRODUCT_RUNTIME' && entry.adapterType === 'APW431_FORMAL_SPLIT_V1') {
     runtimePackage = await loadFormalProductRuntimePackage(entry);
-    adapted = adaptApw431FormalSplitV1(runtimePackage, entry);
+    adapted = guardFormalCustomDimensionUiResolver(adaptApw431FormalSplitV1(runtimePackage, entry), runtimePackage);
   } else {
     const error = new Error(`Unsupported release Runtime package: ${entry.packageType}/${entry.adapterType}`);
     error.code = 'RUNTIME_ADAPTER_NOT_REGISTERED';
