@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
+  createTemporaryPreviewShare,
   evaluateHealthPayload,
   PublicSaaSMonitorError,
   runPublicSaaSHealthMonitor,
@@ -33,11 +34,34 @@ test('health payload requires Supabase configured and ok',()=>{
   assert.throws(()=>evaluateHealthPayload({ok:false,configured:true,provider:'SUPABASE'},200),(error)=>error.code==='HEALTH_NOT_OK'&&error.severity==='P0');
 });
 
-test('monitor uses Vercel API and validates health plus UI without leaking bearer token',async()=>{
+test('temporary Preview access is scoped to the exact deployment and bounded TTL',async()=>{
   const calls=[];
   const fetchImpl=async(url,init={})=>{
     calls.push({url:String(url),init});
-    if(String(url).startsWith('https://api.vercel.com/')){
+    return new Response(JSON.stringify({value:'share_value_test_123'}),{status:200,headers:{'content-type':'application/json'}});
+  };
+  const share=await createTemporaryPreviewShare({
+    token:'vercel-token',
+    teamId:'team_test',
+    deploymentId:'dpl_test',
+    ttlSeconds:900,
+    fetchImpl,
+  });
+  assert.equal(share,'share_value_test_123');
+  assert.match(calls[0].url,/\/aliases\/dpl_test\/protection-bypass\?teamId=team_test$/);
+  assert.equal(calls[0].init.method,'PATCH');
+  assert.equal(calls[0].init.headers.authorization,'Bearer vercel-token');
+  assert.deepEqual(JSON.parse(calls[0].init.body),{ttl:900});
+});
+
+test('monitor uses Vercel API plus temporary protected Preview access without leaking secrets',async()=>{
+  const calls=[];
+  const share='share_value_test_456';
+  const fetchImpl=async(url,init={})=>{
+    const href=String(url);
+    const parsed=new URL(href);
+    calls.push({url:href,init});
+    if(parsed.hostname==='api.vercel.com'&&parsed.pathname==='/v6/deployments'){
       return new Response(JSON.stringify({deployments:[{
         id:'dpl_test',
         readyState:'READY',
@@ -47,17 +71,23 @@ test('monitor uses Vercel API and validates health plus UI without leaking beare
         meta:{githubCommitRef:'feat/public-saas-foundation-a1',githubCommitSha:'abcdef'},
       }]}),{status:200,headers:{'content-type':'application/json'}});
     }
-    if(String(url).endsWith('/api/public-saas/health'))return new Response(JSON.stringify({ok:true,configured:true,provider:'SUPABASE'}),{status:200,headers:{'content-type':'application/json'}});
-    if(String(url).endsWith('/api/public-saas/monitoring/status'))return new Response(JSON.stringify({ok:true,configured:true,provider:'POSTHOG',environment:'preview'}),{status:200,headers:{'content-type':'application/json'}});
-    if(String(url).endsWith('/public-saas'))return new Response('<title>Public SaaS Foundation</title>',{status:200,headers:{'content-type':'text/html'}});
-    throw new Error('unexpected URL');
+    if(parsed.hostname==='api.vercel.com'&&parsed.pathname==='/aliases/dpl_test/protection-bypass'){
+      return new Response(JSON.stringify({value:share}),{status:200,headers:{'content-type':'application/json'}});
+    }
+    if(parsed.hostname==='preview.vercel.app'&&parsed.pathname==='/api/public-saas/health')return new Response(JSON.stringify({ok:true,configured:true,provider:'SUPABASE'}),{status:200,headers:{'content-type':'application/json'}});
+    if(parsed.hostname==='preview.vercel.app'&&parsed.pathname==='/api/public-saas/monitoring/status')return new Response(JSON.stringify({ok:true,configured:true,provider:'POSTHOG',environment:'preview'}),{status:200,headers:{'content-type':'application/json'}});
+    if(parsed.hostname==='preview.vercel.app'&&parsed.pathname==='/public-saas')return new Response('<title>Public SaaS Foundation</title>',{status:200,headers:{'content-type':'text/html'}});
+    throw new Error(`unexpected URL ${href}`);
   };
   const token='vercel-secret-never-in-evidence';
   const result=await runPublicSaaSHealthMonitor({token,teamId:'team_test',projectId:'prj_test',branch:'feat/public-saas-foundation-a1',expectedSha:'abcdef',fetchImpl});
   assert.equal(result.ok,true);
   assert.equal(result.deploymentId,'dpl_test');
+  assert.equal(result.previewProtection,'TEMPORARY_SHARE');
   assert.equal(JSON.stringify(result).includes(token),false);
+  assert.equal(JSON.stringify(result).includes(share),false);
   assert.equal(calls[0].init.headers.authorization,`Bearer ${token}`);
+  assert.equal(calls.some((call)=>call.url.includes(`_vercel_share=${share}`)),true);
 });
 
 test('GitHub alert body contains only safe monitor metadata',()=>{
@@ -105,12 +135,14 @@ test('GitHub alert route creates an issue without exposing the GitHub token',asy
 });
 
 test('monitor fails closed when PostHog Preview configuration is missing',async()=>{
-  const fetchImpl=async(url)=>{
+  const fetchImpl=async(url,init={})=>{
     const href=String(url);
-    if(href.startsWith('https://api.vercel.com/'))return new Response(JSON.stringify({deployments:[{id:'dpl_test',readyState:'READY',target:null,url:'preview.vercel.app',createdAt:123,meta:{githubCommitRef:'feat/public-saas-foundation-a1',githubCommitSha:'abcdef'}}]}),{status:200,headers:{'content-type':'application/json'}});
-    if(href.endsWith('/api/public-saas/health'))return new Response(JSON.stringify({ok:true,configured:true,provider:'SUPABASE'}),{status:200,headers:{'content-type':'application/json'}});
-    if(href.endsWith('/api/public-saas/monitoring/status'))return new Response(JSON.stringify({ok:true,configured:false,provider:'POSTHOG',environment:'preview'}),{status:200,headers:{'content-type':'application/json'}});
-    throw new Error('unexpected URL');
+    const parsed=new URL(href);
+    if(parsed.hostname==='api.vercel.com'&&parsed.pathname==='/v6/deployments')return new Response(JSON.stringify({deployments:[{id:'dpl_test',readyState:'READY',target:null,url:'preview.vercel.app',createdAt:123,meta:{githubCommitRef:'feat/public-saas-foundation-a1',githubCommitSha:'abcdef'}}]}),{status:200,headers:{'content-type':'application/json'}});
+    if(parsed.hostname==='api.vercel.com'&&parsed.pathname==='/aliases/dpl_test/protection-bypass')return new Response(JSON.stringify({value:'share_value_missing_posthog'}),{status:200,headers:{'content-type':'application/json'}});
+    if(parsed.hostname==='preview.vercel.app'&&parsed.pathname==='/api/public-saas/health')return new Response(JSON.stringify({ok:true,configured:true,provider:'SUPABASE'}),{status:200,headers:{'content-type':'application/json'}});
+    if(parsed.hostname==='preview.vercel.app'&&parsed.pathname==='/api/public-saas/monitoring/status')return new Response(JSON.stringify({ok:true,configured:false,provider:'POSTHOG',environment:'preview'}),{status:200,headers:{'content-type':'application/json'}});
+    throw new Error(`unexpected URL ${href} ${init.method??'GET'}`);
   };
   await assert.rejects(
     ()=>runPublicSaaSHealthMonitor({token:'token',teamId:'team',projectId:'project',branch:'feat/public-saas-foundation-a1',expectedSha:'abcdef',fetchImpl}),
