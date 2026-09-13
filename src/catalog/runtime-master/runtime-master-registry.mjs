@@ -17,19 +17,24 @@ const EW_ROOT = join(HERE, '../runtime-master-packages/lixil-ew-v1.1');
 const EW_RUNTIME_SEGMENTS = ['seg-00','seg-01','seg-02','seg-03','seg-04','seg-05','seg-06','seg-07','seg-08a','seg-08b','seg-08c','seg-08d'];
 const TW_ROOT = join(HERE, '../runtime-master-packages/lixil-tw-integrated-v0.2');
 const UCHIRIMO_ROOT = join(HERE, '../runtime-master-packages/ykkap-uchirimo-v1.0-p7r1-r2');
-const SAMOS2H_ROOT = join(HERE, '../runtime-master-packages/lixil-samos2h-v0.9-r1');
+const SAMOS2H_R1_ROOT = join(HERE, '../runtime-master-packages/lixil-samos2h-v0.9-r1');
+const SAMOS2H_ROOT = join(HERE, '../runtime-master-packages/lixil-samos2h-v0.9-r2');
 const THERMOSL_ROOT = join(HERE, '../runtime-master-packages/lixil-thermosl-v0.7-r1');
 const APW430_ROOT = join(HERE, '../runtime-master-packages/ykkap-apw430-20260830-r1');
 const APW431_ROOT = join(HERE, '../runtime-master-packages/ykkap-apw431-v1.0-r1');
 
 export const runtimeMasterInventory = Object.freeze([
   Object.freeze({
-    manufacturer: 'LIXIL', series: 'サーモスⅡ-H', manifestSeries: 'サーモスⅡH', productId: 'SER-LIX-SAMOS2H', masterVersion: 'v0.9-R1', schemaVersion: '2.0',
-    packageType: 'FORMAL_PRODUCT_RUNTIME', adapterType: 'PRODUCT_MODULE_RUNTIME_V1', productModuleRole: 'RUNTIME_JSON_PACKAGE', packageRoot: SAMOS2H_ROOT,
-    runtimeManifestPath: join(SAMOS2H_ROOT, 'runtime_manifest.json'), runtimeManifestDriveFileId: '1TkMSmr5dC8TDO6tmAL1gs0bHZrgvHuug', runtimeManifestSha256: '4e912379d05395d2f96403040c2eaa1b68c4124f4af2116a5b2fae53c004efd9',
-    materializedFiles: Object.freeze({
-      '1HF5t9xodqUmAbtiQW5AjHT14WfC9Kki0': Object.freeze({ codec:'brotli', paths:Object.freeze([join(SAMOS2H_ROOT,'LIXIL_サーモスⅡH_runtime_v0.9-R1.json.br.b64.parts/part-00')]) }),
-      '1Mfrc15i9Pa0-tRihbpT74zPzalFb2JW_': Object.freeze({ codec:'brotli', paths:Object.freeze([join(SAMOS2H_ROOT,'samos2h_runtime_package_v0.9-R1.schema.json.br.b64.parts/part-00')]) }),
+    manufacturer:'LIXIL', series:'サーモスⅡ-H', manifestSeries:'サーモスⅡH', productId:'SER-LIX-SAMOS2H', masterVersion:'v0.9-R2', schemaVersion:'2.0',
+    packageType:'FORMAL_PRODUCT_RUNTIME', adapterType:'PRODUCT_MODULE_RUNTIME_V1', productModuleRole:'RUNTIME_JSON_PACKAGE', packageRoot:SAMOS2H_ROOT,
+    runtimeManifestPath:join(SAMOS2H_ROOT,'runtime_manifest.json'), runtimeManifestDriveFileId:'19uYt-ORAp-pfbGwVsSW_Qnhgsx2I1EWu', runtimeManifestSha256:'8b9b991e0c4949adffa8d63ed20124ac0a4e8c5d243e30740b0bc84122718120',
+    materializedFiles:Object.freeze({
+      '1-t_UOhuGffPrxzr5mu11rJlT1uFfu_nn':Object.freeze({
+        codec:'json-transform-v1',
+        base:Object.freeze({codec:'brotli',paths:Object.freeze([join(SAMOS2H_R1_ROOT,'LIXIL_サーモスⅡH_runtime_v0.9-R1.json.br.b64.parts/part-00')])}),
+        transformPath:join(SAMOS2H_ROOT,'runtime_transform.json'),
+      }),
+      '1tBFGzHIHpZNn2nAEO4N61Tj4iNeVZzPL':Object.freeze({codec:'brotli',paths:Object.freeze([join(SAMOS2H_ROOT,'samos2h_runtime_package_v0.9-R2.schema.json.br.b64.parts/part-00')])}),
     }),
   }),
   Object.freeze({
