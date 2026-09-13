@@ -11,7 +11,7 @@ function uiField(master, runtimeField) { return master.aliasRuntimeToUi.get(runt
 function runtimeValue(master, state, runtimeField) { return state.fields[uiField(master, runtimeField)]?.value; }
 function conditionMatches(master, state, condition) {
   if (!condition || typeof condition !== 'object') return false;
-  if (Array.isArray(condition.all)) return condition.all.every((part) => conditionMatches(master, state, part));;
+  if (Array.isArray(condition.all)) return condition.all.every((part) => conditionMatches(master, state, part));
   if (Array.isArray(condition.any)) return condition.any.some((part) => conditionMatches(master, state, part));
   if (!condition.field) return false;
   const value = runtimeValue(master, state, condition.field);
@@ -102,6 +102,10 @@ function applySizeMode(master, state) {
     else if (target.state === 'NOT_APPLICABLE') target.state = present(target.value) ? 'SELECTED' : 'UNSET';
   }
 }
+function selectedConstraint(state, field) {
+  const target = state.fields[field];
+  return target?.state === 'SELECTED' ? target.value : null;
+}
 export function populateCandidates(master, state) {
   applySizeMode(master, state);
   const selectedWindow = state.fields.window_type?.value;
@@ -137,9 +141,9 @@ export function populateCandidates(master, state) {
   } else {
     for (const field of ['lowe_color','cavity_fill','supply_form']) if (state.fields[field]) { state.fields[field].allowed_values = []; state.fields[field].visibility = 'HIDE'; }
   }
-  const lowe = state.fields.lowe_color?.value; if (lowe) configs = configs.filter((row) => row['Low-E色'] === lowe);
-  const cavity = state.fields.cavity_fill?.value; if (cavity) configs = configs.filter((row) => row['中空層'] === cavity);
-  const supply = state.fields.supply_form?.value; if (supply) configs = configs.filter((row) => row['供給形態'] === supply);
+  const lowe = selectedConstraint(state, 'lowe_color'); if (present(lowe)) configs = configs.filter((row) => row['Low-E色'] === lowe);
+  const cavity = selectedConstraint(state, 'cavity_fill'); if (present(cavity)) configs = configs.filter((row) => row['中空層'] === cavity);
+  const supply = selectedConstraint(state, 'supply_form'); if (present(supply)) configs = configs.filter((row) => row['供給形態'] === supply);
   if (family && glassType) setAllowed(state, 'glass_detail', configs.map((row) => row.glass_config_id));
   else if (state.fields.glass_detail) { state.fields.glass_detail.allowed_values = []; state.fields.glass_detail.visibility = 'HIDE'; }
   for (const field of ['lowe_color','cavity_fill','supply_form']) {
