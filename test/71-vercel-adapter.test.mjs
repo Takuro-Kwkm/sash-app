@@ -28,7 +28,7 @@ test('Vercel repository adapter health preserves loaded READY Runtime identities
   assert.deepEqual(new Set(health.runtimeMasterIntegrations.map((row)=>row.id)),READY_IDS);
   const byId=new Map(health.runtimeMasterIntegrations.map((row)=>[row.id,row]));
   assert.equal(byId.get('SER-LIX-EW').sourceHash,'082442f82f51c4a81050d8e16d5fe3b9cb142004deb371a3e2bbb21384ca37dd');
-  assert.equal(byId.get('SER-LIX-SAMOS2H').sourceHash,'4e912379d05395d2f96403040c2eaa1b68c4124f4af2116a5b2fae53c004efd9');
+  assert.equal(byId.get('SER-LIX-SAMOS2H').sourceHash,'8b9b991e0c4949adffa8d63ed20124ac0a4e8c5d243e30740b0bc84122718120');
   assert.equal(byId.get('SER-LIX-SAMOSL').sourceHash,'29d1ef4725d7b277b468034cba07bfaba1202d8bf62e5180d4e38ec2fd4a64cd');
   assert.equal(byId.get('SER-LIXIL-TW').sourceHash,'52af3e462f940df67c267de5f715250290136afdd67a70611e684fcc3d5d064e');
   assert.equal(byId.get('SER-YKK-APW430').sourceHash,'08f3ad4bef73e32b00e9a69af7e0278539bc8899d64713c8f903924cd43de78b');
