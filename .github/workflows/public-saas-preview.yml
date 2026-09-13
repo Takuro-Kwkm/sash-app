@@ -117,6 +117,8 @@ jobs:
           echo "VERCEL_PROJECT_ACCESS_GATE=PASS"
 
       - name: Create exact-head Preview deployment
+        id: exact_deploy
+        continue-on-error: true
         shell: bash
         env:
           VERCEL_DEPLOY_GITHUB_SHA: ${{ env.PUBLIC_SAAS_HEAD_SHA }}
@@ -125,11 +127,41 @@ jobs:
           mkdir -p artifacts/public-saas-preview
           node scripts/vercel-rest-deploy.mjs preview artifacts/public-saas-preview/deployment.json
 
-      - name: Verify Preview identity
+      - name: Verify exact-head Preview identity
+        if: steps.exact_deploy.outcome == 'success'
         shell: bash
         run: |
           node -e 'const d=require("./artifacts/public-saas-preview/deployment.json"); if(d.readyState!=="READY"||d.mode!=="preview"||d.githubSha!==process.env.PUBLIC_SAAS_HEAD_SHA||d.projectId!==process.env.VERCEL_PROJECT_ID||d.teamId!==process.env.VERCEL_ORG_ID) process.exit(1)'
           echo "PUBLIC_SAAS_PREVIEW_DEPLOY_GATE=PASS"
+          echo "PUBLIC_SAAS_MONITOR_EXPECTED_SHA=$PUBLIC_SAAS_HEAD_SHA" >> "$GITHUB_ENV"
+
+      - name: Resolve existing monitoring-capable Preview fallback
+        if: steps.exact_deploy.outcome == 'failure'
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -fsS \
+            -H "Authorization: Bearer $VERCEL_TOKEN_EFFECTIVE" \
+            "https://api.vercel.com/v6/deployments?projectId=$VERCEL_PROJECT_ID&teamId=$VERCEL_ORG_ID&limit=20" \
+            -o /tmp/public-saas-deployments.json
+          node <<'NODE'
+          const fs=require('node:fs');
+          const payload=JSON.parse(fs.readFileSync('/tmp/public-saas-deployments.json','utf8'));
+          const branch=process.env.PUBLIC_SAAS_HEAD_REF;
+          const candidates=(payload.deployments||[])
+            .filter((d)=>String(d.readyState||d.state||'').toUpperCase()==='READY')
+            .filter((d)=>String(d.target||'').toLowerCase()!=='production')
+            .filter((d)=>String(d.meta?.githubCommitRef||d.gitSource?.ref||'')===branch)
+            .sort((a,b)=>Number(b.createdAt||b.created||0)-Number(a.createdAt||a.created||0));
+          const d=candidates[0];
+          if(!d)process.exit(2);
+          const id=String(d.uid||d.id||'');
+          const url=String(d.url||'');
+          const sha=String(d.meta?.githubCommitSha||d.meta?.releaseCommitSha||d.gitSource?.sha||'');
+          if(!id||!url||!sha)process.exit(3);
+          fs.appendFileSync(process.env.GITHUB_ENV,`DEPLOY_ID=${id}\nDEPLOY_URL=${url.startsWith('http')?url:`https://${url}`}\nPUBLIC_SAAS_MONITOR_EXPECTED_SHA=${sha}\n`);
+          console.log(`PUBLIC_SAAS_MONITORING_FALLBACK=READY sha=${sha.slice(0,12)}`);
+          NODE
 
       - name: Create temporary protected Preview access
         shell: bash
@@ -167,7 +199,7 @@ jobs:
         continue-on-error: true
         shell: bash
         env:
-          PUBLIC_SAAS_EXPECTED_SHA: ${{ env.PUBLIC_SAAS_HEAD_SHA }}
+          PUBLIC_SAAS_EXPECTED_SHA: ${{ env.PUBLIC_SAAS_MONITOR_EXPECTED_SHA }}
         run: |
           mkdir -p artifacts/public-saas-health
           node scripts/public-saas-health-monitor.mjs artifacts/public-saas-health/health.json
@@ -187,6 +219,12 @@ jobs:
       - name: Enforce health monitor gate
         if: steps.public_saas_health.outcome == 'failure'
         run: exit 1
+
+      - name: Enforce exact-head Preview deployment gate
+        if: steps.exact_deploy.outcome == 'failure'
+        run: |
+          echo "EXACT_HEAD_PREVIEW_DEPLOY_GATE=BLOCKED"
+          exit 1
 
       - name: Upload Preview deployment and monitoring evidence
         if: always()
