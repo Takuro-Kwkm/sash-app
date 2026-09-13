@@ -6,6 +6,7 @@ const BASE = process.env.QA_BASE_URL ?? 'http://127.0.0.1:4173';
 const SHARE_TOKEN = process.env.VERCEL_SHARE_TOKEN;
 const PRODUCT_ID = 'SER-YKKAP-UCHIRIMO';
 const OUT = 'artifacts/uchirimo-runtime-browser-qa';
+const TECHNICAL_UI_TOKEN = /ORDER_READY\s*=|\b(?:BLOCK|BLOCKED|REVIEW_REQUIRED|MANUAL_CHECK|INVALID)\b/;
 await mkdir(OUT, { recursive:true });
 const report = { status:'RUNNING', desktop:{}, mobile:{}, consoleErrors:[], pageErrors:[], failedResponses:[] };
 const browser = await chromium.launch({ headless:true });
@@ -141,12 +142,15 @@ async function exercise(page) {
   assert.equal(result.orderReady, false);
   assert.ok(result.manualWarnings.some((message) => message.includes('メーカー見積')));
   assert.equal(result.dimensionResult.status, 'PASS');
-  assert.ok((await page.locator('#warnings').innerText()).includes('ORDER_READY = false'));
+  const warningText = await page.locator('#warnings').innerText();
+  assert.match(warningText, /メーカー見積/);
+  assert.doesNotMatch(warningText, TECHNICAL_UI_TOKEN);
   assert.ok((await page.locator('#selectionSummary').innerText()).includes('和紙調'));
 
   result = await choose(page, 'size_w', 100);
   assert.equal(result.dimensionResult.status, 'BLOCK');
   assert.equal(result.validation.status, 'BLOCKED');
+  assert.doesNotMatch(await page.locator('#warnings').innerText(), TECHNICAL_UI_TOKEN);
   result = await choose(page, 'size_w', 500);
   assert.equal(result.dimensionResult.status, 'PASS');
 
@@ -159,7 +163,7 @@ async function exercise(page) {
     return rect.left < -1 || rect.right > window.innerWidth + 1;
   }).length);
   assert.equal(outOfViewport, 0);
-  return { manufacturerSelection:'PASS', seriesSelection:'PASS', dynamicFields:'PASS', dependency:'PASS', downstreamClear:'PASS', customSize:'PASS', options:'PASS', manualConfirmation:'PASS', invalidConfiguration:'PASS', summary:'PASS', inputOverflow:outOfViewport };
+  return { manufacturerSelection:'PASS', seriesSelection:'PASS', dynamicFields:'PASS', dependency:'PASS', downstreamClear:'PASS', customSize:'PASS', options:'PASS', manualConfirmation:'PASS', userFacingValidation:'PASS', invalidConfiguration:'PASS', summary:'PASS', inputOverflow:outOfViewport };
 }
 
 try {
