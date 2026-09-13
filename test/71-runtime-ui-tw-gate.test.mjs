@@ -16,7 +16,7 @@ async function complete(windowType, overrides = {}) {
   throw new Error('representative TW selection did not converge');
 }
 
-test('TW starts with manufacturer/product/window context and follows the UI Standard v1.5 order', async () => {
+test('TW starts with manufacturer/product/window context and exposes formal STANDARD/CUSTOM size modes in UI Standard order', async () => {
   const initial = await resolveRuntimeAppProduct(PRODUCT, {});
   assert.deepEqual(initial.fields.map((field) => field.key), ['window_type']);
   assert.equal(initial.fields[0].values.length, 25);
@@ -28,10 +28,38 @@ test('TW starts with manufacturer/product/window context and follows the UI Stan
   for (const internal of ['construction','configuration','common_window_id','actual_w','actual_h']) assert.ok(!keys.includes(internal));
   const optionValues = result.fields.find((field) => field.key === 'option').values.map((row) => row.value);
   assert.ok(!optionValues.some((value) => value.startsWith('SCR-')));
-  assert.deepEqual(result.fields.find((field) => field.key === 'size_mode').values.map((row) => row.value), ['STANDARD']);
+  assert.deepEqual(result.fields.find((field) => field.key === 'size_mode').values.map((row) => row.value), ['STANDARD','CUSTOM']);
   assert.ok(!result.fields.some((field) => ['custom_width','custom_height'].includes(field.key)));
   assert.equal(result.fields.find((field) => field.key === 'exterior_color').values.length, 6);
   assert.equal(result.fields.find((field) => field.key === 'interior_color').values.length, 5);
+});
+
+test('TW formal CUSTOM outer envelope is REVIEW_REQUIRED inside, BLOCK outside, and mode switching clears stale dimensions', async () => {
+  const completeResult = await complete('SWT-LIX-TW-UNIT-HIKI', { glass_base: 'Low-E複層ガラス' });
+  let result = await resolveRuntimeAppProduct(PRODUCT, { ...completeResult.selection, size_mode: 'CUSTOM' });
+  const keys = result.fields.map((field) => field.key);
+  assert.ok(keys.includes('custom_width'));
+  assert.ok(keys.includes('custom_height'));
+  assert.ok(!keys.includes('size'));
+  assert.equal(result.selection.size, undefined);
+  assert.ok(result.clearedFields.some((row) => row.field === 'size'));
+
+  result = await resolveRuntimeAppProduct(PRODUCT, { ...result.selection, custom_width: 1000, custom_height: 1000 });
+  assert.equal(result.dimensionResult.status, 'REVIEW_REQUIRED');
+  assert.equal(result.dimensionResult.automatic, false);
+  assert.equal(result.validation.status, 'MANUAL_CHECK');
+  assert.equal(result.orderReady, false);
+
+  result = await resolveRuntimeAppProduct(PRODUCT, { ...completeResult.selection, size_mode: 'CUSTOM', custom_width: 629, custom_height: 1000 });
+  assert.equal(result.dimensionResult.status, 'BLOCK');
+  assert.equal(result.validation.status, 'INVALID');
+  assert.ok(result.validation.errors.some((row) => row.errorCode === 'TW_CUSTOM_SIZE_OUTSIDE_VERIFIED_OUTER_ENVELOPE'));
+
+  result = await resolveRuntimeAppProduct(PRODUCT, { ...completeResult.selection, size_mode: 'STANDARD', custom_width: 1000, custom_height: 1000 });
+  assert.equal(result.selection.custom_width, undefined);
+  assert.equal(result.selection.custom_height, undefined);
+  assert.ok(result.clearedFields.some((row) => row.field === 'custom_width'));
+  assert.ok(result.clearedFields.some((row) => row.field === 'custom_height'));
 });
 
 test('formal window-specific fields, handing and size-only specification rules are enforced', async () => {

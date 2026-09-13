@@ -4,7 +4,6 @@ import { loadCanonicalWorkbookRuntimePackage } from './canonical-runtime-manifes
 import { adaptCanonicalWorkbookReferenceV1 } from './canonical-workbook-reference-v1-adapter.mjs';
 import { loadManifestRuntimePackage } from './runtime-manifest-loader.mjs';
 import { adaptTwCanonicalWorkbookReferenceV2 } from './tw-canonical-workbook-reference-v2-adapter.mjs';
-import { evaluateCanonicalWorkbookRuntime } from './canonical-workbook-runtime-engine.mjs';
 import { evaluateTwCanonicalWorkbookRuntimeV2 } from './tw-canonical-workbook-runtime-engine-v2.mjs';
 import { adaptUchirimoTabularV1 } from './uchirimo-tabular-v1-adapter.mjs';
 import { loadFormalProductRuntimePackage } from './formal-product-runtime-loader.mjs';
@@ -17,6 +16,8 @@ const HERE = dirname(fileURLToPath(import.meta.url));
 const EW_ROOT = join(HERE, '../runtime-master-packages/lixil-ew-v1.1');
 const EW_RUNTIME_SEGMENTS = ['seg-00','seg-01','seg-02','seg-03','seg-04','seg-05','seg-06','seg-07','seg-08a','seg-08b','seg-08c','seg-08d'];
 const TW_ROOT = join(HERE, '../runtime-master-packages/lixil-tw-integrated-v0.3');
+const TW_V02_ROOT = join(HERE, '../runtime-master-packages/lixil-tw-integrated-v0.2');
+const TW_TRANSFORM_PARTS = Object.freeze(Array.from({ length: 19 }, (_, index) => `part-${String(index).padStart(2,'0')}`));
 const UCHIRIMO_ROOT = join(HERE, '../runtime-master-packages/ykkap-uchirimo-v1.0-p7r1-r2');
 const SAMOS2H_R1_ROOT = join(HERE, '../runtime-master-packages/lixil-samos2h-v0.9-r1');
 const SAMOS2H_ROOT = join(HERE, '../runtime-master-packages/lixil-samos2h-v0.9-r2');
@@ -82,10 +83,11 @@ export const runtimeMasterInventory = Object.freeze([
   Object.freeze({
     manufacturer:'LIXIL', series:'TW', masterVersion:'integrated-v0.3', schemaVersion:'2.0', packageType:'RUNTIME_MANIFEST_V1', adapterType:'TW_CANONICAL_WORKBOOK_REFERENCE_V2', packageRoot:TW_ROOT,
     runtimeManifestPath:join(TW_ROOT,'runtime_manifest.json'), runtimeManifestDriveFileId:'1f_RL37UoveSoQYtWZQf3NzIG4jUwzlcb', runtimeManifestSha256:'c4980f45fdf57afe1512f2ca42da0eca53d9facc1f555734f7d89b347a808ee0',
-    materializedFiles:Object.freeze({'1i_rfZwRcPJCDj3bn-QH1OldX_sbogc2A':Object.freeze({codec:'brotli',paths:Object.freeze([
-      join(TW_ROOT,'LIXIL_TW_runtime_integrated-v0.3.json.br.b64.parts/part-00'),
-      join(TW_ROOT,'LIXIL_TW_runtime_integrated-v0.3.json.br.b64.parts/part-01'),
-    ])})}),
+    materializedFiles:Object.freeze({'1i_rfZwRcPJCDj3bn-QH1OldX_sbogc2A':Object.freeze({
+      codec:'json-transform-v1',
+      base:Object.freeze({codec:'brotli',paths:Object.freeze([join(TW_V02_ROOT,'LIXIL_TW_runtime_integrated-v0.2.json.br.b64.parts/part-00')])}),
+      transformPaths:Object.freeze(TW_TRANSFORM_PARTS.map((name)=>join(TW_ROOT,`runtime_transform.json.parts/${name}`))),
+    })}),
   }),
 ]);
 

@@ -261,7 +261,7 @@ async function auditCustom(product, windowValue, discovery, windowDims, runtime)
   const { frontiers, deadEnds } = discovery;
   if (!frontiers.length) {
     const explicitlyUnsupported = deadEnds.length > 0 && deadEnds.every((row) => row.reason === 'CUSTOM_NOT_EXPOSED_IN_RUNTIME');
-    if (explicitlyUnsupported && product.id !== 'SER-LIXIL-TW') {
+    if (explicitlyUnsupported) {
       addRow(product,windowValue,'CUSTOM_CAPABILITY','VERIFIED',{
         supported:false,
         reason:'FORMAL_RUNTIME_DOES_NOT_EXPOSE_CUSTOM',
@@ -344,6 +344,7 @@ for (const product of PRODUCTS) {
   const summary = seriesSummary[product.id] = {
     manufacturer:product.manufacturer,series:product.series,base_window_count:windows.values.length,
     standard_windows:0,custom_windows:0,standard_frontiers:0,custom_frontiers:0,
+    custom_verified_routes:0,custom_unverified_routes:0,
   };
   for (const windowChoice of windows.values) {
     const windowValue = windowChoice.value;
@@ -356,14 +357,9 @@ for (const product of PRODUCTS) {
     const custom = await discoverFrontiers(product,windowValue,'CUSTOM');
     summary.custom_frontiers += custom.frontiers.length;
     if (custom.frontiers.length) summary.custom_windows += 1;
-    await auditCustom(product,windowValue,custom,windowDims,runtime);
-  }
-
-  if (product.id === 'SER-LIXIL-TW') {
-    addRow(product,null,'PRODUCT_MASTER_GAP','UNVERIFIED',{
-      reason:'TW_FORMAL_RUNTIME_HAS_NO_MACHINE_READABLE_CUSTOM_DIMENSION_RULE_FAMILY',
-      scope:'SERIES_CUSTOM_CAPABILITY',
-    });
+    const customAudit = await auditCustom(product,windowValue,custom,windowDims,runtime);
+    summary.custom_verified_routes += customAudit.verifiedRoutes;
+    summary.custom_unverified_routes += customAudit.unverifiedRoutes;
   }
 }
 
