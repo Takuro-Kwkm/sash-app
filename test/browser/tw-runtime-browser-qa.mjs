@@ -36,6 +36,8 @@ async function exercise(page) {
   assert.deepEqual(result.fields.find((field) => field.key === 'shutter_type').values.map((row) => row.value), ['SP-TW-SHUT-MAN-STD','SP-TW-SHUT-ELE-STD']);
   assert.ok(!result.fields.some((field) => field.key === 'handing'));
   result = await choose(page, 'shutter_type', 'SP-TW-SHUT-MAN-STD');
+  assert.deepEqual(result.fields.find((field) => field.key === 'size_mode').values.map((row) => row.value), ['STANDARD','CUSTOM']);
+  result = await choose(page, 'size_mode', 'STANDARD');
   assert.equal(result.selection.size_mode, 'STANDARD');
   await choose(page, 'panel_count', '2枚建');
   await choose(page, 'size', 'SZ-LIX-TW-SHUT-FLAT-Z-11918');
@@ -62,9 +64,16 @@ async function exercise(page) {
   assert.equal(result.selection.option, undefined);
   assert.ok(!result.fields.some((field) => field.key.startsWith('screen_')));
   assert.ok(!result.fields.some((field) => ['construction','configuration'].includes(field.key)));
+  assert.deepEqual(result.fields.find((field) => field.key === 'size_mode').values.map((row) => row.value), ['STANDARD','CUSTOM']);
+
+  result = await choose(page, 'size_mode', 'CUSTOM');
+  assert.ok(result.fields.some((field) => field.key === 'custom_width'));
+  assert.ok(result.fields.some((field) => field.key === 'custom_height'));
+  assert.ok(!result.fields.some((field) => field.key === 'size'));
+
   await page.reload({ waitUntil:'networkidle' });
   await openTw(page);
-  return { formalRuntime:'PASS', fieldOrder:'PASS', conditionalFields:'PASS', screenBeforeGlass:'PASS', productCodes:'PASS', downstreamReset:'PASS', reloadReset:'PASS' };
+  return { formalRuntime:'PASS', fieldOrder:'PASS', conditionalFields:'PASS', sizeMode:'PASS', customRoute:'PASS', screenBeforeGlass:'PASS', productCodes:'PASS', downstreamReset:'PASS', reloadReset:'PASS' };
 }
 
 try {
