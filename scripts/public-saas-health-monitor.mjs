@@ -64,6 +64,29 @@ function boundedShareValue(value){
   return text;
 }
 
+export function extractTemporaryPreviewShareValue(payload){
+  const direct=boundedShareValue(payload?.value)??boundedShareValue(payload?.secret);
+  if(direct)return direct;
+  const nested=boundedShareValue(payload?.protectionBypass?.value)??boundedShareValue(payload?.protectionBypass?.secret);
+  if(nested)return nested;
+  for(const candidate of [payload?.protectionBypassUrl,payload?.shareableUrl]){
+    if(typeof candidate!=='string'||!candidate.trim())continue;
+    try{
+      const url=new URL(candidate);
+      const queryValue=boundedShareValue(url.searchParams.get('_vercel_share'));
+      if(queryValue)return queryValue;
+      if(url.hostname.toLowerCase()==='vercel.sh'){
+        const parts=url.pathname.split('/').filter(Boolean);
+        if(parts.length===2&&parts[0]==='s'){
+          const pathValue=boundedShareValue(parts[1]);
+          if(pathValue)return pathValue;
+        }
+      }
+    }catch{}
+  }
+  return null;
+}
+
 export async function createTemporaryPreviewShare({token,teamId,deploymentId,ttlSeconds=900,fetchImpl=globalThis.fetch}={}){
   if(!token||!teamId||!deploymentId)throw new PublicSaaSMonitorError('PREVIEW_SHARE_CONFIGURATION_MISSING','P1','Temporary Preview access configuration is incomplete.');
   if(typeof fetchImpl!=='function')throw new PublicSaaSMonitorError('MONITOR_FETCH_MISSING','P1','Temporary Preview access fetch implementation is unavailable.');
@@ -81,8 +104,8 @@ export async function createTemporaryPreviewShare({token,teamId,deploymentId,ttl
   }
   if(!response?.ok)throw new PublicSaaSMonitorError('PREVIEW_SHARE_API_REJECTED','P1',`Vercel temporary Preview access API returned HTTP ${response?.status??0}.`);
   const payload=await parseJsonResponse(response);
-  const value=boundedShareValue(payload?.value);
-  if(!value)throw new PublicSaaSMonitorError('PREVIEW_SHARE_VALUE_INVALID','P1','Vercel temporary Preview access API returned an invalid share value.');
+  const value=extractTemporaryPreviewShareValue(payload);
+  if(!value)throw new PublicSaaSMonitorError('PREVIEW_SHARE_VALUE_INVALID','P1','Vercel temporary Preview access API returned an unsupported share response shape.');
   return value;
 }
 
