@@ -68,4 +68,5 @@ document.addEventListener('click',(event)=>{
   if(item){selectedEstimateId=item.dataset.estimateItem;renderEstimateContent();}
 });
 
-renderEstimatePilot();
+if(document.readyState==='complete')renderEstimatePilot();
+else window.addEventListener('load',renderEstimatePilot,{once:true});
