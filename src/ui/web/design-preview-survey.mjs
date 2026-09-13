@@ -92,3 +92,32 @@ document.addEventListener('input',(event)=>{
 const rootObserver=new MutationObserver(()=>mountSurvey());
 const start=()=>{const main=document.querySelector('#designMain');if(main)rootObserver.observe(main,{childList:true});mountSurvey();};
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
+
+function approvedHeroSource(){
+  const style=document.querySelector('#approved-hero-photo');
+  if(!style)return '';
+  const match=style.textContent.match(/url\("([\s\S]*?)"\)/);
+  return match?.[1]??'';
+}
+
+function mountApprovedHeroPhoto(){
+  const host=document.querySelector('.hero-architecture');
+  if(!host||host.querySelector('img[data-approved-hero-photo]'))return;
+  const src=approvedHeroSource();
+  if(!src)return;
+  const img=document.createElement('img');
+  img.className='hero-architecture-svg';
+  img.dataset.approvedHeroPhoto='true';
+  img.alt='';
+  img.setAttribute('aria-hidden','true');
+  img.src=src;
+  host.replaceChildren(img);
+}
+
+const heroPhotoObserver=new MutationObserver(()=>mountApprovedHeroPhoto());
+const startHeroPhoto=()=>{
+  const main=document.querySelector('#designMain');
+  if(main)heroPhotoObserver.observe(main,{childList:true,subtree:true});
+  mountApprovedHeroPhoto();
+};
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',startHeroPhoto,{once:true});else startHeroPhoto();
