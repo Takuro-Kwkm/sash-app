@@ -6,6 +6,7 @@ const BASE = process.env.QA_BASE_URL ?? 'http://127.0.0.1:4173';
 const SHARE_TOKEN = process.env.VERCEL_SHARE_TOKEN;
 const PRODUCT_ID = 'SER-LIXIL-TW';
 const OUT = 'artifacts/tw-runtime-browser-qa';
+const TECHNICAL_UI_TOKEN = /CUSTOM_DIMENSION_|ORDER_READY\s*=|成立不可Rule|\b(?:BLOCK|BLOCKED|REVIEW_REQUIRED|MANUAL_CHECK|INVALID)\b/;
 await mkdir(OUT, { recursive:true });
 const report = { status:'RUNNING', desktop:{}, mobile:{}, consoleErrors:[], pageErrors:[], failedResponses:[] };
 const browser = await chromium.launch({ headless:true });
@@ -30,6 +31,18 @@ async function choose(page, key, value) {
   const response = page.waitForResponse((r) => r.url().includes('/api/runtime-master/resolve') && r.status() === 200);
   await page.locator(`[data-spec-key="${key}"]`).selectOption(value);
   return (await response).json();
+}
+async function enterNumber(page, key, value) {
+  const response = page.waitForResponse((r) => r.url().includes('/api/runtime-master/resolve') && r.status() === 200);
+  const input = page.locator(`[data-spec-key="${key}"]`);
+  await input.fill(String(value));
+  await input.dispatchEvent('change');
+  return (await response).json();
+}
+async function assertUserFacingWarnings(page, context) {
+  const text = await page.locator('#warnings').innerText();
+  assert.doesNotMatch(text, TECHNICAL_UI_TOKEN, `${context}: technical Runtime token leaked into UI: ${text}`);
+  return text;
 }
 async function exercise(page) {
   let result = await choose(page, 'window_type', 'SWT-LIX-TW-SHUT-HIKI-FLAT');
@@ -71,9 +84,30 @@ async function exercise(page) {
   assert.ok(result.fields.some((field) => field.key === 'custom_height'));
   assert.ok(!result.fields.some((field) => field.key === 'size'));
 
+  // Regression for the real iPhone report: TW 面格子付引違い窓 / 縦格子 / CUSTOM 1200×1500.
+  // Runtime diagnostics remain machine-readable in the API, but the user-visible UI must never expose
+  // raw internal codes/status tokens such as CUSTOM_DIMENSION_* or BLOCK.
+  result = await choose(page, 'window_type', 'SWT-LIX-TW-GRILLE-HIKI');
+  const grilleField = result.fields.find((field) => (field.values ?? []).some((row) => row.value === 'SP-TW-GRILLE-VERT'));
+  assert.ok(grilleField, 'TW grille-specific selector must expose formal vertical grille');
+  result = await choose(page, grilleField.key, 'SP-TW-GRILLE-VERT');
+  assert.deepEqual(result.fields.find((field) => field.key === 'size_mode').values.map((row) => row.value), ['STANDARD','CUSTOM']);
+  result = await choose(page, 'size_mode', 'CUSTOM');
+  result = await enterNumber(page, 'custom_width', 1200);
+  result = await enterNumber(page, 'custom_height', 1200);
+  assert.equal(result.dimensionResult?.status, 'REVIEW_REQUIRED');
+  let warningText = await assertUserFacingWarnings(page, 'TW vertical grille in-range CUSTOM');
+  assert.match(warningText, /要確認/);
+
+  result = await enterNumber(page, 'custom_height', 1500);
+  assert.equal(result.dimensionResult?.status, 'BLOCK');
+  warningText = await assertUserFacingWarnings(page, 'TW vertical grille 1200x1500 out-of-range CUSTOM');
+  assert.match(warningText, /製作範囲外/);
+  assert.match(warningText, /W・Hを変更してください/);
+
   await page.reload({ waitUntil:'networkidle' });
   await openTw(page);
-  return { formalRuntime:'PASS', fieldOrder:'PASS', conditionalFields:'PASS', sizeMode:'PASS', customRoute:'PASS', screenBeforeGlass:'PASS', productCodes:'PASS', downstreamReset:'PASS', reloadReset:'PASS' };
+  return { formalRuntime:'PASS', fieldOrder:'PASS', conditionalFields:'PASS', sizeMode:'PASS', customRoute:'PASS', userFacingValidation:'PASS', screenBeforeGlass:'PASS', productCodes:'PASS', downstreamReset:'PASS', reloadReset:'PASS' };
 }
 
 try {
