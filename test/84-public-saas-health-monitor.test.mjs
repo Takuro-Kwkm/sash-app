@@ -90,6 +90,27 @@ test('monitor uses Vercel API plus temporary protected Preview access without le
   assert.equal(calls.some((call)=>call.url.includes(`_vercel_share=${share}`)),true);
 });
 
+test('monitor reuses an existing bounded Preview share without issuing a second PATCH',async()=>{
+  const calls=[];
+  const share='share_value_existing_789';
+  const fetchImpl=async(url,init={})=>{
+    const href=String(url);
+    const parsed=new URL(href);
+    calls.push({url:href,init});
+    if(parsed.hostname==='api.vercel.com'&&parsed.pathname==='/v6/deployments')return new Response(JSON.stringify({deployments:[{id:'dpl_test',readyState:'READY',target:null,url:'preview.vercel.app',createdAt:123,meta:{githubCommitRef:'feat/public-saas-foundation-a1',githubCommitSha:'abcdef'}}]}),{status:200,headers:{'content-type':'application/json'}});
+    if(parsed.hostname==='api.vercel.com'&&parsed.pathname.includes('/protection-bypass'))throw new Error('second share PATCH must not occur');
+    if(parsed.hostname==='preview.vercel.app'&&parsed.pathname==='/api/public-saas/health')return new Response(JSON.stringify({ok:true,configured:true,provider:'SUPABASE'}),{status:200,headers:{'content-type':'application/json'}});
+    if(parsed.hostname==='preview.vercel.app'&&parsed.pathname==='/api/public-saas/monitoring/status')return new Response(JSON.stringify({ok:true,configured:true,provider:'POSTHOG',environment:'preview'}),{status:200,headers:{'content-type':'application/json'}});
+    if(parsed.hostname==='preview.vercel.app'&&parsed.pathname==='/public-saas')return new Response('<title>Public SaaS Foundation</title>',{status:200,headers:{'content-type':'text/html'}});
+    throw new Error(`unexpected URL ${href}`);
+  };
+  const result=await runPublicSaaSHealthMonitor({token:'vercel-token',teamId:'team_test',projectId:'prj_test',branch:'feat/public-saas-foundation-a1',expectedSha:'abcdef',shareValue:share,fetchImpl});
+  assert.equal(result.ok,true);
+  assert.equal(calls.filter((call)=>new URL(call.url).pathname.includes('/protection-bypass')).length,0);
+  assert.equal(calls.some((call)=>call.url.includes(`_vercel_share=${share}`)),true);
+  assert.equal(JSON.stringify(result).includes(share),false);
+});
+
 test('GitHub alert body contains only safe monitor metadata',()=>{
   const evidence={
     severity:'P1',
