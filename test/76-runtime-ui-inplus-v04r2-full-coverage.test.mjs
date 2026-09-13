@@ -58,6 +58,15 @@ function nominalDimensions(master, selector, join) {
   return { order_width:width, order_height:Math.max(Number(base.H_min), overrideMinH) };
 }
 
+async function resolveCase(caseId, phase, selection) {
+  try {
+    return await resolveRuntimeAppProduct(PRODUCT_ID, selection);
+  } catch (error) {
+    const detail = `${caseId} [${phase}]: resolver threw ${error.code ?? error.name}: ${error.message}; selection=${JSON.stringify(selection)}`;
+    throw new Error(detail, { cause:error });
+  }
+}
+
 function assertCustomUi(result, caseId) {
   const mode = result.fields.find((field) => field.key === 'size_mode');
   assert.ok(mode, `${caseId}: size_mode missing`);
@@ -130,7 +139,7 @@ test('Inplus Full Coverage executes all 995 size/glass selector cases fail-close
 
     if (selector.evaluation_policy !== 'AUTO' || !selector.base_range_id) {
       selection = { ...selection, order_width:1000, order_height:1000 };
-      const result = await resolveRuntimeAppProduct(PRODUCT_ID, selection);
+      const result = await resolveCase(id, 'manual-selector', selection);
       assertCustomUi(result, id);
       assert.ok(
         result.dimensionResult?.status === 'REVIEW_REQUIRED' || result.validation.status === 'MANUAL_CHECK',
@@ -141,7 +150,7 @@ test('Inplus Full Coverage executes all 995 size/glass selector cases fail-close
     }
 
     selection = { ...selection, ...nominalDimensions(master, selector, expectedJoin) };
-    const result = await resolveRuntimeAppProduct(PRODUCT_ID, selection);
+    const result = await resolveCase(id, 'nominal', selection);
     assertCustomUi(result, id);
 
     if (expectedJoin) {
@@ -157,11 +166,12 @@ test('Inplus Full Coverage executes all 995 size/glass selector cases fail-close
     }
 
     const base = master.baseRangeById.get(selector.base_range_id);
-    const outside = await resolveRuntimeAppProduct(PRODUCT_ID, {
+    const outsideSelection = {
       ...selection,
       order_width:Number(base.W_max) + 1,
       order_height:Number(base.H_min),
-    });
+    };
+    const outside = await resolveCase(id, 'outside', outsideSelection);
     assert.equal(outside.dimensionResult?.status, 'BLOCKED', `${id}: out-of-range CUSTOM must BLOCK`);
     assert.equal(outside.validation.status, 'INVALID', `${id}: out-of-range CUSTOM must be INVALID`);
     summary.blockedChecks += 1;
