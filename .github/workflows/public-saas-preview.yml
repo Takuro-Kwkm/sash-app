@@ -1,0 +1,237 @@
+name: Public SaaS Preview
+
+on:
+  push:
+    branches: [feat/public-saas-foundation-a1]
+    paths:
+      - 'src/public-saas/**'
+      - 'supabase/**'
+      - 'api/index.mjs'
+      - 'scripts/start-step8-ui.mjs'
+      - 'scripts/vercel-rest-deploy.mjs'
+      - 'scripts/public-saas-health-monitor.mjs'
+      - 'scripts/public-saas-github-alert.mjs'
+      - 'test/75-public-saas-foundation.test.mjs'
+      - 'test/76-public-saas-supabase-adapter.test.mjs'
+      - 'test/77-public-saas-supabase-work-repositories.test.mjs'
+      - 'test/78-public-saas-http-handler.test.mjs'
+      - 'test/79-public-saas-ui-safari-event-lifecycle.test.mjs'
+      - 'test/80-public-saas-tenant-isolation-e2e-ui.test.mjs'
+      - 'test/81-public-saas-security-baseline-migration.test.mjs'
+      - 'test/82-public-saas-monitoring-boundary.test.mjs'
+      - 'test/83-public-saas-client-monitoring.test.mjs'
+      - 'test/84-public-saas-health-monitor.test.mjs'
+      - 'docs/PUBLIC_SAAS_**'
+      - '.github/workflows/public-saas-preview.yml'
+      - '.github/workflows/public-saas-health-monitor.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'src/public-saas/**'
+      - 'supabase/**'
+      - 'api/index.mjs'
+      - 'scripts/start-step8-ui.mjs'
+      - 'scripts/vercel-rest-deploy.mjs'
+      - 'scripts/public-saas-health-monitor.mjs'
+      - 'scripts/public-saas-github-alert.mjs'
+      - 'test/75-public-saas-foundation.test.mjs'
+      - 'test/76-public-saas-supabase-adapter.test.mjs'
+      - 'test/77-public-saas-supabase-work-repositories.test.mjs'
+      - 'test/78-public-saas-http-handler.test.mjs'
+      - 'test/79-public-saas-ui-safari-event-lifecycle.test.mjs'
+      - 'test/80-public-saas-tenant-isolation-e2e-ui.test.mjs'
+      - 'test/81-public-saas-security-baseline-migration.test.mjs'
+      - 'test/82-public-saas-monitoring-boundary.test.mjs'
+      - 'test/83-public-saas-client-monitoring.test.mjs'
+      - 'test/84-public-saas-health-monitor.test.mjs'
+      - 'docs/PUBLIC_SAAS_**'
+      - '.github/workflows/public-saas-preview.yml'
+      - '.github/workflows/public-saas-health-monitor.yml'
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  preview:
+    if: github.event_name == 'push' || github.event.pull_request.head.ref == 'feat/public-saas-foundation-a1'
+    runs-on: ubuntu-latest
+    environment: production
+    env:
+      VERCEL_ORG_ID: team_AkuHacuJlCl8LuvaFpCzFmbv
+      VERCEL_PROJECT_ID: prj_4z0zqW6yKyPuFINODfGX8LPBuJRP
+      VERCEL_PROJECT_NAME: sash-app-wave3-preview
+      VERCEL_TOKEN_PRIMARY: ${{ secrets.VERCEL_TOKEN }}
+      VERCEL_TOKEN_FALLBACK: ${{ secrets.VERCEL_ACCESS_TOKEN }}
+      RELEASE_SERIES: PUBLIC_SAAS
+      RELEASE_PACKAGE_VERSION: STAGE_A2
+      PUBLIC_SAAS_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      PUBLIC_SAAS_HEAD_REF: ${{ github.event.pull_request.head.ref || github.ref_name }}
+    steps:
+      - name: Checkout exact branch HEAD
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.PUBLIC_SAAS_HEAD_SHA }}
+          fetch-depth: 1
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Install
+        run: npm install --ignore-scripts
+
+      - name: Exact HEAD and focused Public SaaS tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          actual_sha="$(git rev-parse HEAD)"
+          test "$actual_sha" = "$PUBLIC_SAAS_HEAD_SHA"
+          node --test \
+            test/75-public-saas-foundation.test.mjs \
+            test/76-public-saas-supabase-adapter.test.mjs \
+            test/77-public-saas-supabase-work-repositories.test.mjs \
+            test/78-public-saas-http-handler.test.mjs \
+            test/79-public-saas-ui-safari-event-lifecycle.test.mjs \
+            test/80-public-saas-tenant-isolation-e2e-ui.test.mjs \
+            test/81-public-saas-security-baseline-migration.test.mjs \
+            test/82-public-saas-monitoring-boundary.test.mjs \
+            test/83-public-saas-client-monitoring.test.mjs \
+            test/84-public-saas-health-monitor.test.mjs
+
+      - name: Vercel credential and project preflight
+        shell: bash
+        run: |
+          set -euo pipefail
+          token="${VERCEL_TOKEN_PRIMARY:-${VERCEL_TOKEN_FALLBACK:-}}"
+          if [[ -z "$token" ]]; then
+            echo "VERCEL_CREDENTIAL_GATE=BLOCKED"
+            exit 42
+          fi
+          echo "VERCEL_TOKEN_EFFECTIVE=$token" >> "$GITHUB_ENV"
+          status="$(curl -sS -o /tmp/vercel-project.json -w '%{http_code}' \
+            -H "Authorization: Bearer $token" \
+            "https://api.vercel.com/v9/projects/$VERCEL_PROJECT_ID?teamId=$VERCEL_ORG_ID")"
+          test "$status" = "200"
+          node -e 'const p=require("/tmp/vercel-project.json"); if(p.id!==process.env.VERCEL_PROJECT_ID||p.accountId!==process.env.VERCEL_ORG_ID) process.exit(1)'
+          echo "VERCEL_PROJECT_ACCESS_GATE=PASS"
+
+      - name: Create exact-head Preview deployment
+        id: exact_deploy
+        continue-on-error: true
+        shell: bash
+        env:
+          VERCEL_DEPLOY_GITHUB_SHA: ${{ env.PUBLIC_SAAS_HEAD_SHA }}
+          VERCEL_DEPLOY_GITHUB_REF_NAME: ${{ env.PUBLIC_SAAS_HEAD_REF }}
+        run: |
+          mkdir -p artifacts/public-saas-preview
+          node scripts/vercel-rest-deploy.mjs preview artifacts/public-saas-preview/deployment.json
+
+      - name: Verify exact-head Preview identity
+        if: steps.exact_deploy.outcome == 'success'
+        shell: bash
+        run: |
+          node -e 'const d=require("./artifacts/public-saas-preview/deployment.json"); if(d.readyState!=="READY"||d.mode!=="preview"||d.githubSha!==process.env.PUBLIC_SAAS_HEAD_SHA||d.projectId!==process.env.VERCEL_PROJECT_ID||d.teamId!==process.env.VERCEL_ORG_ID) process.exit(1)'
+          echo "PUBLIC_SAAS_PREVIEW_DEPLOY_GATE=PASS"
+          echo "PUBLIC_SAAS_MONITOR_EXPECTED_SHA=$PUBLIC_SAAS_HEAD_SHA" >> "$GITHUB_ENV"
+
+      - name: Resolve existing monitoring-capable Preview fallback
+        if: steps.exact_deploy.outcome == 'failure'
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -fsS \
+            -H "Authorization: Bearer $VERCEL_TOKEN_EFFECTIVE" \
+            "https://api.vercel.com/v6/deployments?projectId=$VERCEL_PROJECT_ID&teamId=$VERCEL_ORG_ID&limit=20" \
+            -o /tmp/public-saas-deployments.json
+          node <<'NODE'
+          const fs=require('node:fs');
+          const payload=JSON.parse(fs.readFileSync('/tmp/public-saas-deployments.json','utf8'));
+          const branch=process.env.PUBLIC_SAAS_HEAD_REF;
+          const candidates=(payload.deployments||[])
+            .filter((d)=>String(d.readyState||d.state||'').toUpperCase()==='READY')
+            .filter((d)=>String(d.target||'').toLowerCase()!=='production')
+            .filter((d)=>String(d.meta?.githubCommitRef||d.gitSource?.ref||'')===branch)
+            .sort((a,b)=>Number(b.createdAt||b.created||0)-Number(a.createdAt||a.created||0));
+          const d=candidates[0];
+          if(!d)process.exit(2);
+          const id=String(d.uid||d.id||'');
+          const url=String(d.url||'');
+          const sha=String(d.meta?.githubCommitSha||d.meta?.releaseCommitSha||d.gitSource?.sha||'');
+          if(!id||!url||!sha)process.exit(3);
+          fs.appendFileSync(process.env.GITHUB_ENV,`DEPLOY_ID=${id}\nDEPLOY_URL=${url.startsWith('http')?url:`https://${url}`}\nPUBLIC_SAAS_MONITOR_EXPECTED_SHA=${sha}\n`);
+          console.log(`PUBLIC_SAAS_MONITORING_FALLBACK=READY sha=${sha.slice(0,12)}`);
+          NODE
+
+      - name: Create temporary protected Preview access
+        shell: bash
+        run: node scripts/public-saas-health-monitor.mjs --export-share
+
+      - name: Trigger intentional client JavaScript monitoring probe
+        shell: bash
+        run: |
+          set -euo pipefail
+          chrome="$(command -v google-chrome-stable || command -v google-chrome || command -v chromium || true)"
+          if [[ -z "$chrome" ]]; then
+            echo "CLIENT_MONITORING_BROWSER_PROBE=BLOCKED_NO_CHROME"
+            exit 43
+          fi
+          profile="$(mktemp -d)"
+          trap 'rm -rf "$profile"' EXIT
+          probe_url="${VERCEL_SHARE_URL}&monitoring_probe=1"
+          "$chrome" \
+            --headless=new \
+            --no-sandbox \
+            --disable-gpu \
+            --disable-dev-shm-usage \
+            --user-data-dir="$profile" \
+            --virtual-time-budget=5000 \
+            --dump-dom \
+            "$probe_url" \
+            > /tmp/public-saas-monitoring-probe.html \
+            2> /tmp/public-saas-monitoring-probe.stderr || true
+          grep -q 'Public SaaS Foundation' /tmp/public-saas-monitoring-probe.html
+          grep -q 'data-public-saas-monitoring-probe="attempted"' /tmp/public-saas-monitoring-probe.html
+          echo "CLIENT_MONITORING_BROWSER_PROBE=PASS"
+
+      - name: Health-check latest READY Public SaaS Preview
+        id: public_saas_health
+        continue-on-error: true
+        shell: bash
+        env:
+          PUBLIC_SAAS_EXPECTED_SHA: ${{ env.PUBLIC_SAAS_MONITOR_EXPECTED_SHA }}
+        run: |
+          mkdir -p artifacts/public-saas-health
+          node scripts/public-saas-health-monitor.mjs artifacts/public-saas-health/health.json
+
+      - name: Route P0/P1 health alert to GitHub Issue
+        if: steps.public_saas_health.outcome == 'failure'
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: node scripts/public-saas-github-alert.mjs failure artifacts/public-saas-health/health.json
+
+      - name: Close recovered Public SaaS monitor issue
+        if: steps.public_saas_health.outcome == 'success'
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: node scripts/public-saas-github-alert.mjs recovery artifacts/public-saas-health/health.json
+
+      - name: Enforce health monitor gate
+        if: steps.public_saas_health.outcome == 'failure'
+        run: exit 1
+
+      - name: Enforce exact-head Preview deployment gate
+        if: steps.exact_deploy.outcome == 'failure'
+        run: |
+          echo "EXACT_HEAD_PREVIEW_DEPLOY_GATE=BLOCKED"
+          exit 1
+
+      - name: Upload Preview deployment and monitoring evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: public-saas-preview-deployment
+          path: |
+            artifacts/public-saas-preview/
+            artifacts/public-saas-health/
+          if-no-files-found: warn
