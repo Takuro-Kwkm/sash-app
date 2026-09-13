@@ -1,0 +1,113 @@
+name: UI Design Pilot QA
+
+on:
+  push:
+    branches: ['feat/ui-design-pilot-20260912']
+  pull_request:
+    branches: [main]
+    paths:
+      - 'src/ui/web/design-preview.html'
+      - 'src/ui/web/design-preview.css'
+      - 'src/ui/web/design-preview-notifications.css'
+      - 'src/ui/web/design-preview-estimate.css'
+      - 'src/ui/web/design-preview-guide.css'
+      - 'src/ui/web/design-preview.mjs'
+      - 'src/ui/web/design-preview-estimate.mjs'
+      - 'src/ui/web/design-preview-guide.mjs'
+      - 'src/server/recovery-app.mjs'
+      - 'test/browser/design-pilot-browser-qa.mjs'
+      - 'test/browser/design-pilot-estimate-qa.mjs'
+      - 'test/browser/design-pilot-guide-qa.mjs'
+      - '.github/workflows/ui-design-pilot-qa.yml'
+
+jobs:
+  browser_qa:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Install
+        run: npm install --ignore-scripts
+      - name: Syntax checks
+        run: |
+          node --check src/server/recovery-app.mjs
+          node --check src/ui/web/design-preview.mjs
+          node --check src/ui/web/design-preview-estimate.mjs
+          node --check src/ui/web/design-preview-guide.mjs
+          node --check test/browser/design-pilot-browser-qa.mjs
+          node --check test/browser/design-pilot-estimate-qa.mjs
+          node --check test/browser/design-pilot-guide-qa.mjs
+      - name: Repository regression tests
+        run: npm test
+      - name: Install browser QA dependencies
+        run: |
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+      - name: Start app and run UI design pilot QA
+        run: |
+          npm run start:qa > /tmp/sash-design-pilot.log 2>&1 &
+          PID=$!
+          trap 'kill $PID || true' EXIT
+          for i in {1..40}; do
+            if curl -fsS http://127.0.0.1:4173/api/health >/dev/null; then break; fi
+            sleep 0.5
+          done
+          curl -fsS http://127.0.0.1:4173/design-preview >/dev/null
+          curl -fsS http://127.0.0.1:4173/design-preview/product >/dev/null
+          curl -fsS 'http://127.0.0.1:4173/design-preview?view=estimate' >/dev/null
+          curl -fsS 'http://127.0.0.1:4173/design-preview?view=guide' >/dev/null
+          node test/browser/design-pilot-browser-qa.mjs
+          node test/browser/design-pilot-estimate-qa.mjs
+          node test/browser/design-pilot-guide-qa.mjs
+      - name: Upload UI QA artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ui-design-pilot-browser-qa
+          path: |
+            artifacts/design-pilot-browser-qa/
+            artifacts/design-pilot-estimate-qa/
+            artifacts/design-pilot-guide-qa/
+          if-no-files-found: warn
+
+  deploy_preview:
+    needs: browser_qa
+    if: github.event_name == 'push' && github.ref == 'refs/heads/feat/ui-design-pilot-20260912'
+    runs-on: ubuntu-latest
+    env:
+      VERCEL_ORG_ID: team_AkuHacuJlCl8LuvaFpCzFmbv
+      VERCEL_PROJECT_ID: prj_4z0zqW6yKyPuFINODfGX8LPBuJRP
+      VERCEL_PROJECT_NAME: sash-app-wave3-preview
+      VERCEL_TOKEN_PRIMARY: ${{ secrets.VERCEL_TOKEN }}
+      VERCEL_TOKEN_FALLBACK: ${{ secrets.VERCEL_ACCESS_TOKEN }}
+      RELEASE_SERIES: UI_DESIGN_PILOT
+      RELEASE_PACKAGE_VERSION: v0.1
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Exact-head and credential preflight
+        shell: bash
+        run: |
+          set -euo pipefail
+          actual_sha="$(git rev-parse HEAD)"
+          [[ "$actual_sha" == "$GITHUB_SHA" ]]
+          token="${VERCEL_TOKEN_PRIMARY:-${VERCEL_TOKEN_FALLBACK:-}}"
+          [[ -n "$token" ]]
+          echo "VERCEL_TOKEN_EFFECTIVE=$token" >> "$GITHUB_ENV"
+      - name: Deploy exact Pilot SHA to Vercel Preview
+        run: node scripts/vercel-rest-deploy.mjs preview artifacts/ui-design-pilot-deployment.json
+      - name: Verify deployment identity
+        run: |
+          node -e 'const d=require("./artifacts/ui-design-pilot-deployment.json"); if(d.readyState!=="READY"||d.githubSha!==process.env.GITHUB_SHA||d.mode!=="preview"||d.projectId!==process.env.VERCEL_PROJECT_ID||d.teamId!==process.env.VERCEL_ORG_ID) process.exit(1)'
+          echo "UI_DESIGN_PILOT_PREVIEW_GATE=PASS"
+      - name: Upload deployment record
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ui-design-pilot-vercel-preview
+          path: artifacts/ui-design-pilot-deployment.json
+          if-no-files-found: warn
