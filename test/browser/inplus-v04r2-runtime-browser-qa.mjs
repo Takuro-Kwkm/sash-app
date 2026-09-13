@@ -137,6 +137,8 @@ async function configureBase(page) {
   result = await choose(page, 'window_type', '引違い窓');
   result = await choose(page, 'sash_configuration', '2枚建');
   result = await choose(page, 'size_class', '窓タイプ');
+  // upper_frame_spec is dimension-affecting upstream state. Select it before entering CUSTOM dimensions.
+  result = await chooseIfVisible(page, result, 'upper_frame_spec', '標準');
   result = await choose(page, 'size_mode', 'CUSTOM');
   const width = page.locator('[data-spec-key="order_width"]');
   const height = page.locator('[data-spec-key="order_height"]');
@@ -146,7 +148,6 @@ async function configureBase(page) {
   assert.equal(await height.getAttribute('step'), '1');
   result = await choose(page, 'order_width', 1000);
   result = await choose(page, 'order_height', 1000);
-  result = await chooseIfVisible(page, result, 'upper_frame_spec', '標準');
   return result;
 }
 
