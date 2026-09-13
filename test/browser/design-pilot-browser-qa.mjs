@@ -34,8 +34,9 @@ try{
   assert.equal(await page.locator('#referenceHeroTitle').innerText(),'暮らしをつくる、マドとトビラで。');
   assert.equal(await page.locator('.reference-hero-kicker').innerText(),'サッシ業務を、もっと分かりやすく。');
   assert.ok(await page.locator('.design-sidebar').isVisible());
-  assert.ok(await page.locator('.reference-hero-photo').isVisible());
-  assert.ok(await page.locator('.reference-hero-photo').evaluate((node)=>node.complete&&node.naturalWidth>0),'approved reference hero image must decode');
+  assert.ok(await page.locator('.reference-hero').isVisible());
+  const heroBackground=await page.locator('.reference-hero').evaluate((node)=>getComputedStyle(node).backgroundImage);
+  assert.match(heroBackground,/design-preview-reference-hero\.svg/,'approved reference hero asset must be mounted as the HOME background');
   assert.match(await page.locator('body').evaluate((node)=>getComputedStyle(node).fontFamily),/Noto Sans JP/);
   assert.equal(await page.locator('.reference-notice-card').count(),3);
   assert.equal(await page.locator('.reference-feature-card').count(),4);
@@ -66,7 +67,8 @@ try{
   await goto(homeLandscape,'/design-preview');
   await homeLandscape.locator('#themeSelect').selectOption('light');
   await homeLandscape.waitForSelector('[data-reference-home="1"]');
-  assert.ok(await homeLandscape.locator('.reference-hero-photo').isVisible());
+  assert.ok(await homeLandscape.locator('.reference-hero').isVisible());
+  assert.match(await homeLandscape.locator('.reference-hero').evaluate((node)=>getComputedStyle(node).backgroundImage),/design-preview-reference-hero\.svg/);
   assert.equal(await homeLandscape.locator('.reference-notice-card').count(),3);
   assert.equal(await homeLandscape.locator('.reference-feature-card').count(),4);
   await assertNoOverflow(homeLandscape,'iPad landscape home');
@@ -78,7 +80,7 @@ try{
   await goto(homePortrait,'/design-preview');
   await homePortrait.locator('#themeSelect').selectOption('light');
   await homePortrait.waitForSelector('[data-reference-home="1"]');
-  assert.ok(await homePortrait.locator('.reference-hero-photo').isVisible());
+  assert.ok(await homePortrait.locator('.reference-hero').isVisible());
   assert.ok(!(await homePortrait.locator('.design-sidebar').isVisible()),'iPad portrait should collapse the desktop sidebar');
   assert.equal(await homePortrait.locator('.reference-feature-card').count(),4);
   await assertNoOverflow(homePortrait,'iPad portrait home');
