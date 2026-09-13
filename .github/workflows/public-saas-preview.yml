@@ -56,7 +56,6 @@ jobs:
   preview:
     if: github.event_name == 'push' || github.event.pull_request.head.ref == 'feat/public-saas-foundation-a1'
     runs-on: ubuntu-latest
-    environment: production
     env:
       VERCEL_ORG_ID: team_AkuHacuJlCl8LuvaFpCzFmbv
       VERCEL_PROJECT_ID: prj_4z0zqW6yKyPuFINODfGX8LPBuJRP
