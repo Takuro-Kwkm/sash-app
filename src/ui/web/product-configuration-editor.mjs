@@ -1,6 +1,45 @@
 import { createProductConfigurationSnapshot } from '/work-management/domain.mjs';
 
 const esc=(value)=>String(value??'').replace(/[&<>'\"]/g,(character)=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'\"':"&quot;"})[character]);
+const TECHNICAL_TOKEN=/\b(?:CUSTOM_DIMENSION|RUNTIME|ORDER_READY|[A-Z][A-Z0-9]+(?:_[A-Z0-9]+){1,})\b/;
+const STATUS_LABELS=Object.freeze({
+  BLOCK:'製作範囲外',BLOCKED:'選択できません',REVIEW_REQUIRED:'要確認',MANUAL_CHECK:'要確認',
+  PENDING:'確認待ち',INCOMPLETE:'入力が必要です',INVALID:'入力内容を確認してください',
+  PASS:'入力可能',VALID:'入力可能',ACCEPTED:'入力可能',
+});
+
+function runtimeFieldLabel(result,key){
+  return result.fields?.find((field)=>field.key===key)?.displayLabel
+    ??({custom_width:'特注W',custom_height:'特注H',size_mode:'サイズ方式',size:'規格サイズ'})[key]
+    ??'入力内容';
+}
+function runtimeErrorCode(error){return String(error?.errorCode??error?.code??'');}
+function friendlyValidationError(error,result){
+  const code=runtimeErrorCode(error);
+  if(code==='CUSTOM_DIMENSION_OUT_OF_FORMAL_OUTER_BOUNDS')return '入力した特注サイズは、この仕様の製作範囲外です。W・Hを変更してください。';
+  if(code==='CUSTOM_DIMENSION_FORMAL_RULE_MISSING')return 'この仕様の特注サイズは自動判定できません。メーカーへの確認が必要です。';
+  const message=String(error?.message??'').trim();
+  if(message&&!TECHNICAL_TOKEN.test(message))return message;
+  return `${runtimeFieldLabel(result,error?.field)}の入力内容を確認してください。`;
+}
+function friendlyDimension(dimension){
+  const code=String(dimension?.code??'');
+  if(code==='CUSTOM_DIMENSION_OUT_OF_FORMAL_OUTER_BOUNDS')return {status:'製作範囲外',message:'入力した特注サイズは、この仕様の製作範囲外です。W・Hを変更してください。'};
+  if(code==='CUSTOM_DIMENSION_FORMAL_REVIEW_REQUIRED')return {status:'要確認',message:'入力した特注サイズは外枠範囲内ですが、原本グラフ・ガラス構成・耐風圧などはメーカー一次資料で確認してください。'};
+  if(code==='CUSTOM_DIMENSION_FORMAL_RULE_MISSING')return {status:'確認が必要です',message:'この仕様の特注サイズは自動判定できません。メーカーへの確認が必要です。'};
+  const rawStatus=String(dimension?.status??'');
+  const rawMessage=String(dimension?.message??'').trim();
+  return {status:STATUS_LABELS[rawStatus]??'確認が必要です',message:rawMessage&&!TECHNICAL_TOKEN.test(rawMessage)?rawMessage:''};
+}
+function friendlyNotice(value){
+  const text=String(typeof value==='string'?value:value?.message??value?.code??'').trim();
+  if(!text)return'';
+  if(/^ORDER_READY\s*=\s*false\s*[:：]?/i.test(text))return text.replace(/^ORDER_READY\s*=\s*false\s*[:：]?\s*/i,'');
+  if(/^成立不可Rule\s*[:：]/.test(text))return 'この組み合わせは成立しません。';
+  if(TECHNICAL_TOKEN.test(text))return 'この内容は追加確認が必要です。';
+  return text;
+}
+function uniqueFriendlyNotices(values){return [...new Set(values.map(friendlyNotice).filter(Boolean))];}
 
 async function getJson(url){
   const response=await fetch(url,{cache:'no-store'});
@@ -177,9 +216,13 @@ export class ProductConfigurationEditor {
 
   renderWarnings(result){
     const errors=result.validation?.errors??[];const dimension=result.dimensionResult;
-    this.root.querySelector('#warnings').innerHTML=(errors.length?`<div class="notice error"><strong>入力内容を確認してください</strong>${errors.map((error)=>`<span>${esc(error.message)}</span>`).join('')}</div>`:'')
-      +(dimension?`<div class="notice dimension ${esc(String(dimension.status).toLowerCase())}"><strong>${esc(dimension.status)}</strong><span>${esc(dimension.message)}</span></div>`:'')
-      +([...(result.notices??[]),...(result.manualWarnings??[])].length?`<div class="notice warning">${[...(result.notices??[]),...(result.manualWarnings??[])].map(esc).join('<br>')}</div>`:'');
+    const dimensionCode=String(dimension?.code??'');
+    const visibleErrors=dimensionCode?errors.filter((error)=>runtimeErrorCode(error)!==dimensionCode):errors;
+    const friendly=dimension?friendlyDimension(dimension):null;
+    const notices=uniqueFriendlyNotices([...(result.notices??[]),...(result.manualWarnings??[])]);
+    this.root.querySelector('#warnings').innerHTML=(visibleErrors.length?`<div class="notice error"><strong>入力内容を確認してください</strong>${visibleErrors.map((error)=>`<span>${esc(friendlyValidationError(error,result))}</span>`).join('')}</div>`:'')
+      +(dimension?`<div class="notice dimension ${esc(String(dimension.status).toLowerCase())}"><strong>${esc(friendly.status)}</strong>${friendly.message?`<span>${esc(friendly.message)}</span>`:''}</div>`:'')
+      +(notices.length?`<div class="notice warning">${notices.map(esc).join('<br>')}</div>`:'');
   }
 
   renderSummary(result){
