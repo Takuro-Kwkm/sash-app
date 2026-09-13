@@ -158,26 +158,11 @@ jobs:
           rm -f /tmp/vercel-env-list.json
 
           if [[ -n "${POSTHOG_EXISTING_ENV_ID:-}" ]]; then
-            node <<'NODE'
-            const fs=require('node:fs');
-            fs.writeFileSync('/tmp/posthog-preview-env-request.json',JSON.stringify({
-              value:process.env.POSTHOG_PROJECT_TOKEN,
-              comment:'Public SaaS S7 sanitized browser exception monitoring',
-            }));
-            NODE
+            node -e 'const fs=require("node:fs");fs.writeFileSync("/tmp/posthog-preview-env-request.json",JSON.stringify({value:process.env.POSTHOG_PROJECT_TOKEN,comment:"Public SaaS S7 sanitized browser exception monitoring"}))'
             method=PATCH
             endpoint="https://api.vercel.com/v9/projects/$VERCEL_PROJECT_ID/env/$POSTHOG_EXISTING_ENV_ID?teamId=$VERCEL_ORG_ID"
           else
-            node <<'NODE'
-            const fs=require('node:fs');
-            fs.writeFileSync('/tmp/posthog-preview-env-request.json',JSON.stringify({
-              key:'POSTHOG_PROJECT_TOKEN',
-              value:process.env.POSTHOG_PROJECT_TOKEN,
-              type:'sensitive',
-              target:['preview'],
-              comment:'Public SaaS S7 sanitized browser exception monitoring',
-            }));
-            NODE
+            node -e 'const fs=require("node:fs");fs.writeFileSync("/tmp/posthog-preview-env-request.json",JSON.stringify({key:"POSTHOG_PROJECT_TOKEN",value:process.env.POSTHOG_PROJECT_TOKEN,type:"sensitive",target:["preview"],comment:"Public SaaS S7 sanitized browser exception monitoring"}))'
             method=POST
             endpoint="https://api.vercel.com/v10/projects/$VERCEL_PROJECT_ID/env?teamId=$VERCEL_ORG_ID"
           fi
