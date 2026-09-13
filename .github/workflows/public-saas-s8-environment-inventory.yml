@@ -1,0 +1,35 @@
+name: Public SaaS S8 Environment Inventory
+
+on:
+  push:
+    branches: [feat/public-saas-foundation-a1]
+    paths:
+      - '.github/workflows/public-saas-s8-environment-inventory.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  inventory:
+    runs-on: ubuntu-latest
+    env:
+      VERCEL_ORG_ID: team_AkuHacuJlCl8LuvaFpCzFmbv
+      VERCEL_PROJECT_ID: prj_4z0zqW6yKyPuFINODfGX8LPBuJRP
+      VERCEL_TOKEN_PRIMARY: ${{ secrets.VERCEL_TOKEN }}
+      VERCEL_TOKEN_FALLBACK: ${{ secrets.VERCEL_ACCESS_TOKEN }}
+    steps:
+      - name: Inspect custom environment capacity
+        shell: bash
+        run: |
+          set -euo pipefail
+          token="${VERCEL_TOKEN_PRIMARY:-${VERCEL_TOKEN_FALLBACK:-}}"
+          test -n "$token"
+          status="$(curl -sS -o /tmp/custom-envs.json -w '%{http_code}' \
+            -H "Authorization: Bearer $token" \
+            "https://api.vercel.com/v9/projects/$VERCEL_PROJECT_ID/custom-environments?teamId=$VERCEL_ORG_ID")"
+          echo "VERCEL_CUSTOM_ENV_API_HTTP=$status"
+          if [[ "$status" != "200" ]]; then
+            node -e 'const fs=require("node:fs");let p={};try{p=JSON.parse(fs.readFileSync("/tmp/custom-envs.json","utf8"));}catch{};const e=p?.error??p??{};console.log(`VERCEL_CUSTOM_ENV_GATE=BLOCKED code=${String(e.code??"unknown")} message=${String(e.message??"unknown").slice(0,200)}`)'
+            exit 2
+          fi
+          node -e 'const fs=require("node:fs");const p=JSON.parse(fs.readFileSync("/tmp/custom-envs.json","utf8"));const envs=Array.isArray(p.environments)?p.environments:[];console.log(`VERCEL_CUSTOM_ENV_LIMIT=${p?.accountLimit?.total??"unknown"}`);console.log(`VERCEL_CUSTOM_ENV_COUNT=${envs.length}`);console.log(`VERCEL_STAGING_EXISTS=${envs.some(e=>e.slug==="staging")?"YES":"NO"}`);for(const e of envs)console.log(`CUSTOM_ENV slug=${e.slug} id=${e.id} type=${e.type}`);'
