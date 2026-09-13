@@ -80,6 +80,18 @@ function selectedValue(result, field, id) {
   const value = result.selection[field];
   return Array.isArray(value) ? value.includes(id) : value === id;
 }
+function dependencyDebug(result, field) {
+  const uiField = result.fields.find((row) => row.key === field);
+  const jointField = result.fields.find((row) => row.key === 'joint_layout');
+  return JSON.stringify({
+    selection:result.selection,
+    clearedFields:result.clearedFields,
+    manualWarnings:result.manualWarnings,
+    validation:result.validation,
+    field:{ key:field, values:uiField?.values?.map((row) => row.value), runtimeState:uiField?.runtimeState, required:uiField?.required },
+    joint:{ values:jointField?.values?.map((row) => row.value), runtimeState:jointField?.runtimeState, required:jointField?.required },
+  });
+}
 
 test('Inplus installability coverage expands all Formal scope/item/delegate branches to 153 cases', async () => {
   const runtime = await loadRegisteredRuntime('LIXIL','インプラス');
@@ -110,24 +122,25 @@ test('Inplus installability executes all 153 Formal dependency cases fail-closed
     if (jointJoin) selection.joint_layout = jointJoin.canonical_id_or_value;
 
     const result = await resolveCase(caseId, selection);
+    const debug = dependencyDebug(result, field);
     assert.equal(result.runtimeMaster.packageVersion, 'v0.4-R2', `${caseId}: package identity`);
     assert.equal(result.runtimeMaster.sourcePackageIntegrity.match, true, `${caseId}: runtime integrity`);
 
     if (expected === 'CLEARED') {
-      assert.ok(result.clearedFields.includes(field), `${caseId}: denied/not-applicable selection must clear`);
-      assert.equal(selectedValue(result, field, id), false, `${caseId}: cleared selection must not survive`);
+      assert.ok(result.clearedFields.includes(field), `${caseId}: denied/not-applicable selection must clear; ${debug}`);
+      assert.equal(selectedValue(result, field, id), false, `${caseId}: cleared selection must not survive; ${debug}`);
       summary.cleared += 1;
       continue;
     }
 
-    assert.equal(selectedValue(result, field, id), true, `${caseId}: allowed/manual selection must survive`);
+    assert.equal(selectedValue(result, field, id), true, `${caseId}: allowed/manual selection must survive; ${debug}`);
     if (expected === 'MANUAL_CHECK') {
-      assert.ok(result.manualWarnings.some((warning) => warning.includes(id)), `${caseId}: manual state must remain explicit`);
-      assert.equal(result.validation.status === 'INVALID', false, `${caseId}: manual is not invalid`);
+      assert.ok(result.manualWarnings.some((warning) => warning.includes(id)), `${caseId}: manual state must remain explicit; ${debug}`);
+      assert.equal(result.validation.status === 'INVALID', false, `${caseId}: manual is not invalid; ${debug}`);
       summary.manual += 1;
     } else {
-      assert.equal(result.manualWarnings.some((warning) => warning.includes(id)), false, `${caseId}: explicit allow must not become manual`);
-      assert.equal(result.validation.status === 'INVALID', false, `${caseId}: explicit allow must not be invalid`);
+      assert.equal(result.manualWarnings.some((warning) => warning.includes(id)), false, `${caseId}: explicit allow must not become manual; ${debug}`);
+      assert.equal(result.validation.status === 'INVALID', false, `${caseId}: explicit allow must not be invalid; ${debug}`);
       summary.allow += 1;
     }
   }
