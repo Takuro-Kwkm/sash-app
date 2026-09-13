@@ -11,11 +11,24 @@ function typeMatches(value, type) {
   if (type === 'object') return value !== null && typeof value === 'object' && !Array.isArray(value);
   return typeof value === type;
 }
+function jsonValueEquals(left, right) {
+  if (Object.is(left, right)) return true;
+  if (Array.isArray(left) || Array.isArray(right)) {
+    return Array.isArray(left) && Array.isArray(right) && left.length === right.length
+      && left.every((value, index) => jsonValueEquals(value, right[index]));
+  }
+  if (left && right && typeof left === 'object' && typeof right === 'object') {
+    const leftKeys = Object.keys(left), rightKeys = Object.keys(right);
+    return leftKeys.length === rightKeys.length
+      && leftKeys.every((key) => Object.prototype.hasOwnProperty.call(right, key) && jsonValueEquals(left[key], right[key]));
+  }
+  return false;
+}
 function validateJsonSchema(value, schema, path = '$') {
   const errors = [];
   if (!schema || typeof schema !== 'object') return errors;
-  if ('const' in schema && value !== schema.const) errors.push(`${path}: expected const ${JSON.stringify(schema.const)}`);
-  if (schema.enum && !schema.enum.some((candidate) => Object.is(candidate, value))) errors.push(`${path}: not in enum`);
+  if ('const' in schema && !jsonValueEquals(value, schema.const)) errors.push(`${path}: expected const ${JSON.stringify(schema.const)}`);
+  if (schema.enum && !schema.enum.some((candidate) => jsonValueEquals(candidate, value))) errors.push(`${path}: not in enum`);
   if (schema.type) {
     const types = Array.isArray(schema.type) ? schema.type : [schema.type];
     if (!types.some((type) => typeMatches(value, type))) return [...errors, `${path}: expected ${types.join('|')}`];
@@ -119,6 +132,6 @@ export async function loadManifestRuntimePackage(entry) {
   return deepFreeze({ manifest, rawManifest, documents: Object.fromEntries(loadedByRole), schema, integrity: {
     expected: entry.runtimeManifestSha256 ?? manifestActualSha256, actual: manifestActualSha256, match: !entry.runtimeManifestSha256 || entry.runtimeManifestSha256 === manifestActualSha256,
     manifestDriveFileId: entry.runtimeManifestDriveFileId ?? null,
-    files: [...fileIntegrity, ...(schemaLoaded ? [{ role: 'RUNTIME_SCHEMA', fileName: manifest.schemaFile.fileName, fileId: manifest.schemaFile.fileId, expected: manifest.schemaFile.sha256, actual: schemaLoaded.actualSha256, match: true, bytes: schemaLoaded.bytes, codec: schemaLoaded.codec }] : [])],
+    files: [...fileIntegrity, ...(schemaLoaded ? [{ role: 'RUNTIME_SCHEMA', fileName: manifest.schemaFile.file_name, fileId: manifest.schemaFile.file_id, expected: manifest.schemaFile.sha256, actual: schemaLoaded.actualSha256, match: true, bytes: schemaLoaded.bytes, codec: schemaLoaded.codec }] : [])],
   }});
 }
