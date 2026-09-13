@@ -49,6 +49,10 @@ function probeRequested(win){
   }
 }
 
+function markProbe(win,status){
+  win.document?.documentElement?.setAttribute?.('data-public-saas-monitoring-probe',status);
+}
+
 export function installClientErrorMonitoring({win=globalThis.window,fetchImpl=globalThis.fetch,now=()=>Date.now()}={}){
   if(!win||typeof win.addEventListener!=='function'||typeof fetchImpl!=='function')return {installed:false};
   if(win.__PUBLIC_SAAS_MONITORING_INSTALLED__)return {installed:true,duplicate:true};
@@ -64,31 +68,39 @@ export function installClientErrorMonitoring({win=globalThis.window,fetchImpl=gl
     return true;
   };
 
-  const send=(input)=>{
-    if(!withinBudget())return;
+  const send=async(input)=>{
+    if(!withinBudget())return false;
     const payload=sanitizeClientErrorPayload(input,origin);
-    void Promise.resolve(fetchImpl(MONITORING_ENDPOINT,{
-      method:'POST',
-      credentials:'same-origin',
-      keepalive:true,
-      headers:{'content-type':'application/json'},
-      body:JSON.stringify(payload),
-    })).catch(()=>{});
+    try{
+      const response=await fetchImpl(MONITORING_ENDPOINT,{
+        method:'POST',
+        credentials:'same-origin',
+        keepalive:true,
+        headers:{'content-type':'application/json'},
+        body:JSON.stringify(payload),
+      });
+      return response?.status===202;
+    }catch{
+      return false;
+    }
   };
 
   win.addEventListener('error',(event)=>{
     const isProbe=event?.error?.message===MONITORING_PROBE_MESSAGE;
-    if(isProbe)win.document?.documentElement?.setAttribute?.('data-public-saas-monitoring-probe','attempted');
-    send({
+    if(isProbe)markProbe(win,'attempted');
+    const delivery=send({
       kind:isProbe?'monitoring_probe':'window_error',
       source:event?.filename,
       line:event?.lineno,
       column:event?.colno,
     });
+    if(isProbe){
+      void delivery.then((delivered)=>markProbe(win,delivered?'delivered':'failed'));
+    }
   });
 
   win.addEventListener('unhandledrejection',()=>{
-    send({kind:'unhandled_rejection',source:'unhandled-promise',line:0,column:0});
+    void send({kind:'unhandled_rejection',source:'unhandled-promise',line:0,column:0});
   });
 
   win.__PUBLIC_SAAS_MONITORING_READY__=true;
