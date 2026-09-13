@@ -30,22 +30,31 @@ async function assertNoOverflow(target,label){
 
 try{
   await goto(page,'/design-preview');
-  assert.equal(await page.locator('#homeHeroTitle').innerText(),'暮らしをつくる、マドとトビラで。');
-  assert.equal(await page.locator('.home-hero-kicker').innerText(),'サッシ業務を、もっと分かりやすく。');
+  await page.waitForSelector('[data-reference-home="1"]');
+  assert.equal(await page.locator('#referenceHeroTitle').innerText(),'暮らしをつくる、マドとトビラで。');
+  assert.equal(await page.locator('.reference-hero-kicker').innerText(),'サッシ業務を、もっと分かりやすく。');
   assert.ok(await page.locator('.design-sidebar').isVisible());
-  assert.ok(await page.locator('.hero-architecture-svg').isVisible());
+  assert.ok(await page.locator('.reference-hero-photo').isVisible());
+  assert.ok(await page.locator('.reference-hero-photo').evaluate((node)=>node.complete&&node.naturalWidth>0),'approved reference hero image must decode');
   assert.match(await page.locator('body').evaluate((node)=>getComputedStyle(node).fontFamily),/Noto Sans JP/);
-  assert.equal(await page.locator('.announcement-item').count(),3);
+  assert.equal(await page.locator('.reference-notice-card').count(),3);
+  assert.equal(await page.locator('.reference-feature-card').count(),4);
+  assert.equal(await page.locator('.reference-table tbody tr').count(),5);
   const primaryCtaText=(await page.getByRole('link',{name:/案件を新規作成/}).first().innerText()).replace(/\s+/g,'');
   assert.equal(primaryCtaText,'＋案件を新規作成');
-  assert.equal(await page.getByRole('link',{name:'前回の続き'}).count(),0);
-  const heroTitleSize=Number.parseFloat(await page.locator('#homeHeroTitle').evaluate((node)=>getComputedStyle(node).fontSize));
+  assert.equal(await page.getByRole('link',{name:'前回の続き'}).count(),1);
+  const heroTitleSize=Number.parseFloat(await page.locator('#referenceHeroTitle').evaluate((node)=>getComputedStyle(node).fontSize));
   assert.ok(heroTitleSize<=32,'hero title should remain a medium-sized heading');
+  const sidebarBackground=await page.locator('.design-sidebar').evaluate((node)=>getComputedStyle(node).backgroundColor);
+  assert.match(sidebarBackground,/rgb\(255, 255, 255\)/,'desktop sidebar should use approved white shell');
   await assertNoOverflow(page,'desktop home');
   await page.screenshot({path:`${OUT}/desktop-home-light-1440x1000.png`,fullPage:true});
   report.scenarios.DESKTOP_HOME_LIGHT='PASS';
+  report.scenarios.HOME_REFERENCE_LAYOUT='PASS';
   report.scenarios.HERO_READABILITY_AND_CTA='PASS';
   report.scenarios.ANNOUNCEMENTS='PASS';
+  report.scenarios.FREQUENT_ACTIONS='PASS';
+  report.scenarios.RECENT_PROJECT_TABLE='PASS';
 
   await page.locator('#themeSelect').selectOption('dark');
   assert.equal(await page.evaluate(()=>document.documentElement.dataset.theme),'dark');
@@ -56,8 +65,10 @@ try{
   const homeLandscape=await context.newPage();track(homeLandscape);await homeLandscape.setViewportSize({width:1024,height:768});
   await goto(homeLandscape,'/design-preview');
   await homeLandscape.locator('#themeSelect').selectOption('light');
-  assert.ok(await homeLandscape.locator('.hero-architecture-svg').isVisible());
-  assert.equal(await homeLandscape.locator('.announcement-item').count(),3);
+  await homeLandscape.waitForSelector('[data-reference-home="1"]');
+  assert.ok(await homeLandscape.locator('.reference-hero-photo').isVisible());
+  assert.equal(await homeLandscape.locator('.reference-notice-card').count(),3);
+  assert.equal(await homeLandscape.locator('.reference-feature-card').count(),4);
   await assertNoOverflow(homeLandscape,'iPad landscape home');
   await homeLandscape.screenshot({path:`${OUT}/ipad-landscape-home-1024x768.png`,fullPage:true});
   report.scenarios.IPAD_LANDSCAPE_HOME='PASS';
@@ -66,16 +77,17 @@ try{
   const homePortrait=await context.newPage();track(homePortrait);await homePortrait.setViewportSize({width:768,height:1024});
   await goto(homePortrait,'/design-preview');
   await homePortrait.locator('#themeSelect').selectOption('light');
-  const portraitHero=await homePortrait.locator('.home-hero').boundingBox();
-  const portraitImage=await homePortrait.locator('.hero-architecture').boundingBox();
-  assert.ok(portraitHero&&portraitImage&&portraitImage.y>portraitHero.y+portraitHero.height*0.35,'iPad portrait hero image should sit below the copy region');
+  await homePortrait.waitForSelector('[data-reference-home="1"]');
+  assert.ok(await homePortrait.locator('.reference-hero-photo').isVisible());
+  assert.ok(!(await homePortrait.locator('.design-sidebar').isVisible()),'iPad portrait should collapse the desktop sidebar');
+  assert.equal(await homePortrait.locator('.reference-feature-card').count(),4);
   await assertNoOverflow(homePortrait,'iPad portrait home');
   await homePortrait.screenshot({path:`${OUT}/ipad-portrait-home-768x1024.png`,fullPage:true});
   report.scenarios.IPAD_PORTRAIT_HOME='PASS';
   await homePortrait.close();
 
   await page.locator('#themeSelect').selectOption('light');
-  await page.getByRole('link',{name:'すべて見る'}).click();
+  await page.getByRole('link',{name:/すべて見る/}).first().click();
   await page.waitForURL(/\/design-preview\/notifications$/);
   assert.equal(await page.locator('.notification-row').count(),6);
   assert.ok(await page.locator('#notificationDetail').isVisible());
@@ -103,7 +115,7 @@ try{
   report.scenarios.IPAD_PORTRAIT_NOTIFICATIONS='PASS';
   await notificationPortrait.close();
 
-  await page.getByRole('link',{name:'商品選定'}).first().click();
+  await page.getByRole('link',{name:'商品を選ぶ'}).first().click();
   await page.waitForURL(/\/design-preview\/product$/);
   await page.waitForSelector('#manufacturer');
   await page.locator('#manufacturer').selectOption('LIXIL');
