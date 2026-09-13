@@ -106,6 +106,43 @@ function selectedConstraint(state, field) {
   const target = state.fields[field];
   return target?.state === 'SELECTED' ? target.value : null;
 }
+function applyDelegatedInstallabilityCandidates(master, state) {
+  const selectedWindow = state.fields.window_type?.value;
+  const delegates = master.installabilityIdJoin.filter((row) =>
+    row.evaluation_policy === 'DELEGATE' && String(row.matrix_key ?? '').startsWith('DELEGATE:')
+  );
+  const delegatedFields = unique(delegates.map((row) => String(row.matrix_key).slice('DELEGATE:'.length)));
+  for (const delegatedField of delegatedFields) {
+    const target = state.fields[delegatedField];
+    if (!target) continue;
+    const active = delegates.filter((row) =>
+      (!row.context_window_type || row.context_window_type === selectedWindow)
+      && Object.is(state.fields[row.selection_field]?.value, row.canonical_id_or_value)
+    );
+    if (active.length === 1) {
+      const values = master.installabilityIdJoin
+        .filter((row) => row.selection_field === delegatedField && (!row.context_window_type || row.context_window_type === selectedWindow) && row.evaluation_policy !== 'NOT_APPLICABLE')
+        .map((row) => row.canonical_id_or_value);
+      setAllowed(state, delegatedField, values);
+      target.required = true;
+      target.visibility = 'SHOW';
+      continue;
+    }
+    if (active.length > 1) {
+      target.allowed_values = [];
+      target.required = true;
+      target.visibility = 'SHOW';
+      manual(master, state, 'INSTALLABILITY_DELEGATE_AMBIGUOUS', `DELEGATE先 ${delegatedField} を一意に解決できません。`, 'installability_id_join');
+      continue;
+    }
+    if (!target.resolved_by_rule && !target.derived_by_rule) {
+      target.allowed_values = [];
+      target.required = false;
+      target.visibility = 'HIDE';
+      if (!present(target.value)) target.state = 'NOT_APPLICABLE';
+    }
+  }
+}
 export function populateCandidates(master, state) {
   applySizeMode(master, state);
   const selectedWindow = state.fields.window_type?.value;
@@ -159,6 +196,7 @@ export function populateCandidates(master, state) {
   } else {
     for (const field of ['frame_install_spec','option_items']) if (state.fields[field]) { state.fields[field].allowed_values = []; state.fields[field].visibility = 'HIDE'; }
   }
+  applyDelegatedInstallabilityCandidates(master, state);
   applySizeMode(master, state);
 }
 export function manual(master, state, id, fallback, source = null) {
