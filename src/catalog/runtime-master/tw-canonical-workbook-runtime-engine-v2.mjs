@@ -38,12 +38,34 @@ function without(input, keys) {
   return result;
 }
 
+function exposeFormalCustomMode(master, fields, windowType) {
+  const rule = customRule(master, windowType);
+  if (!rule || !fields.size_mode) return fields;
+  return {
+    ...fields,
+    size_mode: {
+      ...fields.size_mode,
+      allowed_values: ['STANDARD','CUSTOM'],
+      resolved_by_rule: null,
+    },
+  };
+}
+
+function dimensionMetadata(rule) {
+  if (!rule) return {};
+  return {
+    automatic: rule.automatic === true,
+    ruleTypes: [rule.evaluationType ?? rule.geometryType ?? 'SOURCE_GRAPH_GATE'],
+  };
+}
+
 export function evaluateTwCanonicalWorkbookRuntimeV2(master, input = {}) {
   const mode = input.size_mode === 'CUSTOM' ? 'CUSTOM' : 'STANDARD';
   if (mode === 'STANDARD') {
     const base = evaluateCanonicalWorkbookRuntime(master, without(input, ['custom_width','custom_height']));
     return {
       ...base,
+      fields: exposeFormalCustomMode(master, { ...base.fields }, input.window_type),
       cleared_fields: [...(base.cleared_fields ?? []), ...clearedFromModeSwitch(input, 'STANDARD')],
     };
   }
@@ -80,17 +102,26 @@ export function evaluateTwCanonicalWorkbookRuntimeV2(master, input = {}) {
     const rule = customRule(master, input.window_type);
     const bounds = boundsFor(rule);
     if (!rule || !bounds) {
-      dimensionResult = { status:'BLOCK', code:'CUSTOM_DIMENSION_FORMAL_RULE_MISSING', matchedRuleIds:rule?.id ? [rule.id] : [] };
+      dimensionResult = {
+        status:'BLOCK', code:'CUSTOM_DIMENSION_FORMAL_RULE_MISSING',
+        matchedRuleIds:rule?.id ? [rule.id] : [],
+        ...dimensionMetadata(rule),
+      };
       errors.push({ code:'CUSTOM_DIMENSION_FORMAL_RULE_MISSING', field:'size_mode' });
       status = 'INVALID';
     } else if (!inside(width, height, bounds)) {
-      dimensionResult = { status:'BLOCK', code:'CUSTOM_DIMENSION_OUT_OF_FORMAL_OUTER_BOUNDS', matchedRuleIds:[rule.id].filter(Boolean) };
+      dimensionResult = {
+        status:'BLOCK', code:'CUSTOM_DIMENSION_OUT_OF_FORMAL_OUTER_BOUNDS',
+        matchedRuleIds:[rule.id].filter(Boolean),
+        ...dimensionMetadata(rule),
+      };
       errors.push({ code:'CUSTOM_DIMENSION_OUT_OF_FORMAL_OUTER_BOUNDS', field:'custom_width' });
       status = 'INVALID';
     } else {
       dimensionResult = {
         status:'REVIEW_REQUIRED', code:'CUSTOM_DIMENSION_FORMAL_REVIEW_REQUIRED',
-        matchedRuleIds:[rule.id].filter(Boolean), ruleTypes:[rule.evaluationType ?? 'SOURCE_GRAPH_GATE'],
+        matchedRuleIds:[rule.id].filter(Boolean),
+        ...dimensionMetadata(rule),
       };
       manualWarnings.push('正式Runtimeの特注寸法外枠範囲内。原本グラフ・ガラス構成・耐風圧・各仕様条件はメーカー一次資料で最終確認。');
       status = missing.length ? 'INCOMPLETE' : 'MANUAL_CHECK';
