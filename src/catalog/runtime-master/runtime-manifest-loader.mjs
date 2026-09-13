@@ -1,6 +1,7 @@
 import { createHash } from 'node:crypto';
 import { readFile } from 'node:fs/promises';
 import { brotliDecompressSync, gunzipSync } from 'node:zlib';
+import { applyFormalRuntimeJsonTransform } from './formal-runtime-json-transform.mjs';
 
 const sha256 = (bytes) => createHash('sha256').update(bytes).digest('hex');
 
@@ -99,6 +100,9 @@ export function normalizeRuntimeManifest(raw) {
 function normalizeTransportSpec(entry, fileId) {
   const raw = entry.materializedFiles?.[fileId];
   if (Array.isArray(raw)) return { codec: 'gzip', paths: raw };
+  if (raw && typeof raw === 'object' && raw.codec === 'json-transform-v1' && raw.base && (raw.transformPath || raw.transformPaths?.length)) {
+    return { codec: 'json-transform-v1', base: raw.base, transformPath: raw.transformPath ?? null, transformPaths: raw.transformPaths ?? null };
+  }
   if (raw && typeof raw === 'object' && Array.isArray(raw.paths)) {
     return { codec: raw.codec ?? 'gzip', paths: raw.paths };
   }
@@ -117,14 +121,35 @@ function decodeTransport(encoded, codec, fileName) {
   fail('RUNTIME_MANIFEST_TRANSPORT_CODEC_UNSUPPORTED', `Unsupported materialized Runtime transport codec: ${codec}`, { fileName, codec });
 }
 
+async function readPackedTransport(transport, fileName) {
+  if (!transport?.paths?.length) fail('RUNTIME_MANIFEST_FILE_MISSING', `Materialized Runtime transport has no explicit paths: ${fileName}`, { fileName, transport });
+  let encoded;
+  try { encoded = (await Promise.all(transport.paths.map((transportPath) => readFile(transportPath, 'utf8')))).join(''); }
+  catch (cause) { fail('RUNTIME_MANIFEST_FILE_MISSING', `Manifest-listed Runtime file is not materialized: ${fileName}`, { cause, fileName }); }
+  return decodeTransport(encoded, transport.codec ?? 'gzip', fileName);
+}
+
+async function readTransformBytes(transport, fileName) {
+  const paths = transport.transformPaths?.length ? transport.transformPaths : [transport.transformPath].filter(Boolean);
+  if (!paths.length) fail('RUNTIME_MANIFEST_FILE_MISSING', `Runtime transform has no path: ${fileName}`, { fileName });
+  try { return Buffer.from((await Promise.all(paths.map((path) => readFile(path, 'utf8')))).join(''), 'utf8'); }
+  catch (cause) { fail('RUNTIME_MANIFEST_FILE_MISSING', `Runtime transform is not materialized: ${fileName}`, { cause, fileName }); }
+}
+
 async function readMaterializedCanonicalFile(entry, manifestRow) {
   const { fileName, fileId, sha256: expectedSha256 } = manifestRow;
   const transport = normalizeTransportSpec(entry, fileId);
-  if (!transport?.paths?.length) fail('RUNTIME_MANIFEST_FILE_MISSING', `Manifest-listed Runtime file has no explicit app materialization mapping: ${fileName}`, { fileName, fileId });
-  let encoded;
-  try { encoded = (await Promise.all(transport.paths.map((transportPath) => readFile(transportPath, 'utf8')))).join(''); }
-  catch (cause) { fail('RUNTIME_MANIFEST_FILE_MISSING', `Manifest-listed Runtime file is not materialized: ${fileName}`, { cause, fileName, fileId }); }
-  const bytes = decodeTransport(encoded, transport.codec, fileName);
+  if (!transport) fail('RUNTIME_MANIFEST_FILE_MISSING', `Manifest-listed Runtime file has no explicit app materialization mapping: ${fileName}`, { fileName, fileId });
+
+  let bytes;
+  if (transport.codec === 'json-transform-v1') {
+    const baseBytes = await readPackedTransport(transport.base, `${fileName}#transform-source`);
+    const transformBytes = await readTransformBytes(transport, fileName);
+    bytes = applyFormalRuntimeJsonTransform(baseBytes, transformBytes);
+  } else {
+    bytes = await readPackedTransport(transport, fileName);
+  }
+
   const actualSha256 = sha256(bytes);
   if (actualSha256 !== expectedSha256) {
     fail('RUNTIME_MANIFEST_FILE_SHA_MISMATCH', `Manifest-listed Runtime file SHA-256 mismatch: ${fileName}`, {
