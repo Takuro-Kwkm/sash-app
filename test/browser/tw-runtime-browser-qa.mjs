@@ -89,22 +89,26 @@ async function exercise(page) {
   assert.ok(result.fields.some((field) => field.key === 'custom_height'));
   assert.ok(!result.fields.some((field) => field.key === 'size'));
 
-  // Regression for the real iPhone report: TW 面格子付引違い窓 / 縦格子 / CUSTOM 1200×1500.
-  // Runtime diagnostics remain machine-readable in the API, but the user-visible UI must never expose
-  // raw internal codes/status tokens such as CUSTOM_DIMENSION_* or BLOCK.
+  // Regression from the iPhone report: machine-readable diagnostics may stay in the API,
+  // but raw Runtime status/code tokens must never appear in the user-facing warning region.
+  // Probe values are taken from the selector-expanded Stage A matrix for this exact formal frontier.
   result = await choose(page, 'window_type', 'SWT-LIX-TW-GRILLE-HIKI');
   const grilleField = result.fields.find((field) => (field.values ?? []).some((row) => row.value === 'SP-TW-GRILLE-VERT'));
   assert.ok(grilleField, 'TW grille-specific selector must expose formal vertical grille');
   result = await choose(page, grilleField.key, 'SP-TW-GRILLE-VERT');
   assert.deepEqual(result.fields.find((field) => field.key === 'size_mode').values.map((row) => row.value), ['STANDARD','CUSTOM']);
   result = await choose(page, 'size_mode', 'CUSTOM');
-  result = await enterNumber(page, 'custom_width', 1200);
-  result = await enterNumber(page, 'custom_height', 1200);
-  await assertUserFacingWarnings(page, 'TW vertical grille incomplete/in-range CUSTOM state');
 
-  result = await enterNumber(page, 'custom_height', 1500);
-  assert.equal(hasOutOfRangeDiagnostic(result), true, 'TW vertical grille 1200x1500 must remain a formal out-of-range diagnostic');
-  const warningText = await assertUserFacingWarnings(page, 'TW vertical grille 1200x1500 out-of-range CUSTOM');
+  result = await enterNumber(page, 'custom_width', 630);
+  result = await enterNumber(page, 'custom_height', 350);
+  assert.equal(result.dimensionResult?.status, 'REVIEW_REQUIRED');
+  let warningText = await assertUserFacingWarnings(page, 'TW vertical grille formal REVIEW_REQUIRED probe');
+  assert.match(warningText, /要確認/);
+
+  result = await enterNumber(page, 'custom_width', 629);
+  result = await enterNumber(page, 'custom_height', 887);
+  assert.equal(hasOutOfRangeDiagnostic(result), true, 'TW vertical grille formal out-of-range probe must remain blocked');
+  warningText = await assertUserFacingWarnings(page, 'TW vertical grille formal BLOCK probe');
   assert.match(warningText, /製作範囲外/);
   assert.match(warningText, /W・Hを変更してください/);
 
