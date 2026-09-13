@@ -83,7 +83,7 @@ function evaluateOnce(master, input) {
   populateCandidates(master, state); exactGlass(master, state); applyRules(master, state); populateCandidates(master, state); exactGlass(master, state); applyRules(master, state); populateCandidates(master, state); filterInstallability(master, state);
   for (const def of master.fields) {
     const target = state.fields[def.field_name];
-    if (!target || target.visibility === 'HIDE' || def.selection_mode === 'FIXED' || !present(target.value) || !target.allowed_values.length) continue;
+    if (!target || target.state !== 'SELECTED' || target.visibility === 'HIDE' || def.selection_mode === 'FIXED' || !present(target.value) || !target.allowed_values.length) continue;
     const selected = Array.isArray(target.value) ? target.value : [target.value];
     if (!selected.every((value) => target.allowed_values.some((candidate) => Object.is(candidate, value)))) state.errors.push({ code: 'SELECTION_NOT_ALLOWED', field: def.field_name, message: `${def.field_name}: Runtime allowed valuesに含まれない選択です。` });
   }
@@ -107,7 +107,7 @@ export function evaluateSemanticTableBundleV2(master, inputSelection = {}) {
       if (!target || !def || def.selection_mode === 'FIXED') continue;
       if (target.visibility === 'HIDE' && !target.resolved_by_rule && !target.derived_by_rule) stale.add(key);
     }
-    for (const error of state.errors) if (error.code === 'SELECTION_NOT_ALLOWED' && error.field) stale.add(error.field);
+    for (const error of state.errors) if (error.code === 'SELECTION_NOT_ALLOWED' && error.field && Object.hasOwn(selection, error.field)) stale.add(error.field);
     if (!stale.size) break;
     for (const key of stale) { delete selection[key]; cleared.add(key); }
     if (iteration === 7) fail('SEMANTIC_BUNDLE_CONVERGENCE_FAILED', 'Runtime selection did not converge after downstream clear.');
