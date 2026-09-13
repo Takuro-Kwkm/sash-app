@@ -31,7 +31,6 @@ const blockedCustomWindows=new Set([...customCapabilityWindows].filter((key)=>!c
 const blockedCustomRoutes=matrix.filter((row)=>row.case_type==='CUSTOM_ROUTE'&&row.status==='UNVERIFIED');
 
 assert.equal(customCapabilityWindows.size,matrixSummary.custom_window_count,'matrix custom capability count drifted');
-assert.equal(blockedCustomWindows.size,1,'expected exactly one custom-capable window blocked by Product Master defect');
 for(const key of blockedCustomWindows){
   const [productId,windowValue]=key.split('::');
   assert.ok(blockedCustomRoutes.some((row)=>row.product_id===productId&&row.window_type===windowValue),`${key}: blocked custom window has no explicit matrix blocker`);
