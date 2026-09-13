@@ -12,6 +12,8 @@ const HERE=dirname(fileURLToPath(import.meta.url));
 const root=join(HERE,"../..");
 const webRoot=join(root,"src","ui","web");
 const estimateOutputRoot=join(root,"src","estimate-output");
+const heroAssetRoot=join(webRoot,"assets","design-preview-hero");
+const heroPartPaths=Array.from({length:8},(_,index)=>join(heroAssetRoot,`part-${String(index).padStart(2,"0")}.bin`));
 const catalog=createCatalog(CURRENT_WINDOW_SERIES_MODULES);
 const runtimeMasterIntegrations=runtimeAppIntegrationInventory();
 const buildTimestamp=new Date().toISOString();
@@ -37,6 +39,18 @@ const staticFileAt=async(res,path,type)=>{
   }
 };
 const staticFile=(res,name,type)=>staticFileAt(res,join(webRoot,name),type);
+
+const heroPhoto=async(res)=>{
+  try{
+    const parts=await Promise.all(heroPartPaths.map((path)=>readFile(path)));
+    const body=Buffer.concat(parts);
+    res.writeHead(200,{"content-type":"image/webp","cache-control":"no-store","x-sash-build-id":buildId});
+    res.end(body);
+  }catch{
+    res.writeHead(404,{"cache-control":"no-store","x-sash-build-id":buildId});
+    res.end("Not found");
+  }
+};
 
 const requestUrl=(req)=>{
   const url=new URL(req.url??"/",`http://${req.headers?.host??"localhost"}`);
@@ -89,6 +103,7 @@ export function createRecoveryRequestHandler({backend="node:http recovery server
       catch(error){return json(res,400,{error:error?.message??String(error),code:error?.code??"RUNTIME_RESOLVE_FAILED"});}
     }
     if(url.pathname==="/api/catalog") return json(res,200,catalog);
+    if(url.pathname==="/design-preview-hero.webp") return heroPhoto(res);
     if(url.pathname==="/app.js") return staticFile(res,"app.js","text/javascript; charset=utf-8");
     if(url.pathname==="/product-configuration-editor.mjs") return staticFile(res,"product-configuration-editor.mjs","text/javascript; charset=utf-8");
     if(url.pathname==="/estimate-output-integration.mjs") return staticFile(res,"estimate-output-integration.mjs","text/javascript; charset=utf-8");
