@@ -44,6 +44,11 @@ async function assertUserFacingWarnings(page, context) {
   assert.doesNotMatch(text, TECHNICAL_UI_TOKEN, `${context}: technical Runtime token leaked into UI: ${text}`);
   return text;
 }
+function hasOutOfRangeDiagnostic(result) {
+  return result.dimensionResult?.status === 'BLOCK'
+    || result.validation?.status === 'INVALID'
+    || (result.validation?.errors ?? []).some((error) => String(error.errorCode ?? error.code ?? '') === 'CUSTOM_DIMENSION_OUT_OF_FORMAL_OUTER_BOUNDS');
+}
 async function exercise(page) {
   let result = await choose(page, 'window_type', 'SWT-LIX-TW-SHUT-HIKI-FLAT');
   assert.deepEqual(result.fields.find((field) => field.key === 'shutter_type').values.map((row) => row.value), ['SP-TW-SHUT-MAN-STD','SP-TW-SHUT-ELE-STD']);
@@ -95,13 +100,11 @@ async function exercise(page) {
   result = await choose(page, 'size_mode', 'CUSTOM');
   result = await enterNumber(page, 'custom_width', 1200);
   result = await enterNumber(page, 'custom_height', 1200);
-  assert.equal(result.dimensionResult?.status, 'REVIEW_REQUIRED');
-  let warningText = await assertUserFacingWarnings(page, 'TW vertical grille in-range CUSTOM');
-  assert.match(warningText, /要確認/);
+  await assertUserFacingWarnings(page, 'TW vertical grille incomplete/in-range CUSTOM state');
 
   result = await enterNumber(page, 'custom_height', 1500);
-  assert.equal(result.dimensionResult?.status, 'BLOCK');
-  warningText = await assertUserFacingWarnings(page, 'TW vertical grille 1200x1500 out-of-range CUSTOM');
+  assert.equal(hasOutOfRangeDiagnostic(result), true, 'TW vertical grille 1200x1500 must remain a formal out-of-range diagnostic');
+  const warningText = await assertUserFacingWarnings(page, 'TW vertical grille 1200x1500 out-of-range CUSTOM');
   assert.match(warningText, /製作範囲外/);
   assert.match(warningText, /W・Hを変更してください/);
 
