@@ -69,6 +69,15 @@ export function extractTemporaryPreviewShareValue(payload){
   if(direct)return direct;
   const nested=boundedShareValue(payload?.protectionBypass?.value)??boundedShareValue(payload?.protectionBypass?.secret);
   if(nested)return nested;
+  const bypassMap=payload?.protectionBypass;
+  if(bypassMap&&typeof bypassMap==='object'&&!Array.isArray(bypassMap)){
+    for(const [key,metadata] of Object.entries(bypassMap)){
+      const candidate=boundedShareValue(key);
+      if(!candidate)continue;
+      const scope=String(metadata?.scope??'').toLowerCase();
+      if(!scope||scope.includes('share')||scope.includes('user')||scope.includes('comment'))return candidate;
+    }
+  }
   for(const candidate of [payload?.protectionBypassUrl,payload?.shareableUrl]){
     if(typeof candidate!=='string'||!candidate.trim())continue;
     try{
