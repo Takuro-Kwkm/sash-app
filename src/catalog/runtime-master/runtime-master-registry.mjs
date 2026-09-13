@@ -41,7 +41,12 @@ export const runtimeMasterInventory = Object.freeze([
     manufacturer: 'LIXIL', series: 'インプラス', masterVersion: 'v0.4-R2', schemaVersion: '2.0', packageType: 'RUNTIME_MANIFEST_V1', adapterType: 'SEMANTIC_TABLE_BUNDLE_V2',
     packageRoot: INPLUS_ROOT, runtimeManifestPath: join(INPLUS_ROOT, 'runtime_manifest.json'), runtimeManifestDriveFileId: '1TokjIpcipm8TPxwrSO0FjyPxxvhCq5iZ', runtimeManifestSha256: 'cbbdb6ba315c985f7d27f75a237e861be8ce635962ce1cd5a746d7f152c8e1f8',
     materializedFiles: Object.freeze({
-      '16dqUaVFp0YW3PqJ-A9tR0fAV0KT7WZML': Object.freeze({ codec: 'gzip', paths: Object.freeze(['part-00','part-01','part-02','part-03'].map((name) => join(INPLUS_ROOT, `LIXIL_インプラス_runtime_v0.4-R2.json.gz.b64.parts/${name}`))) }),
+      '16dqUaVFp0YW3PqJ-A9tR0fAV0KT7WZML': Object.freeze({
+        codec: 'gzip',
+        paths: Object.freeze([
+          'part-00a','part-00b','part-00c','part-01','part-02a','part-02b','part-02c','part-03',
+        ].map((name) => join(INPLUS_ROOT, `LIXIL_インプラス_runtime_v0.4-R2.json.gz.b64.parts/${name}`))),
+      }),
       '1Qov5w3pNrU9om40OLJikJv7B8klK1RNz': Object.freeze({ codec: 'gzip', paths: Object.freeze([join(INPLUS_ROOT, 'LIXIL_インプラス_runtime_v0.4-R2.schema.json.gz.b64')]) }),
     }),
   }),
