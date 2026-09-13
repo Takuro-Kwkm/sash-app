@@ -115,6 +115,48 @@ jobs:
           node -e 'const p=require("/tmp/vercel-project.json"); if(p.id!==process.env.VERCEL_PROJECT_ID||p.accountId!==process.env.VERCEL_ORG_ID) process.exit(1)'
           echo "VERCEL_PROJECT_ACCESS_GATE=PASS"
 
+      - name: Configure PostHog for branch Preview
+        shell: bash
+        env:
+          POSTHOG_PROJECT_TOKEN: ${{ secrets.POSTHOG_PROJECT_TOKEN }}
+        run: |
+          set -euo pipefail
+          if [[ -z "${POSTHOG_PROJECT_TOKEN:-}" ]]; then
+            echo "POSTHOG_PREVIEW_CONFIG_GATE=BLOCKED_MISSING_GITHUB_SECRET"
+            exit 44
+          fi
+          node <<'NODE'
+          const fs=require('node:fs');
+          fs.writeFileSync('/tmp/posthog-preview-env-request.json',JSON.stringify([{
+            key:'POSTHOG_PROJECT_TOKEN',
+            value:process.env.POSTHOG_PROJECT_TOKEN,
+            type:'sensitive',
+            target:['preview'],
+            gitBranch:process.env.PUBLIC_SAAS_HEAD_REF,
+            comment:'Public SaaS S7 sanitized browser exception monitoring',
+          }]));
+          NODE
+          status="$(curl -sS -o /tmp/posthog-preview-env-response.json -w '%{http_code}' \
+            -X POST \
+            -H "Authorization: Bearer $VERCEL_TOKEN_EFFECTIVE" \
+            -H 'Content-Type: application/json' \
+            --data-binary @/tmp/posthog-preview-env-request.json \
+            "https://api.vercel.com/v10/projects/$VERCEL_PROJECT_ID/env?upsert=true&teamId=$VERCEL_ORG_ID")"
+          rm -f /tmp/posthog-preview-env-request.json
+          if [[ "$status" != "200" && "$status" != "201" ]]; then
+            echo "POSTHOG_PREVIEW_CONFIG_GATE=BLOCKED_VERCEL_ENV_API status=$status"
+            rm -f /tmp/posthog-preview-env-response.json
+            exit 45
+          fi
+          node <<'NODE'
+          const fs=require('node:fs');
+          const p=JSON.parse(fs.readFileSync('/tmp/posthog-preview-env-response.json','utf8'));
+          const failed=Array.isArray(p?.failed)?p.failed:[];
+          if(failed.length)process.exit(1);
+          NODE
+          rm -f /tmp/posthog-preview-env-response.json
+          echo "POSTHOG_PREVIEW_CONFIG_GATE=PASS"
+
       - name: Create exact-head Preview deployment
         id: exact_deploy
         continue-on-error: true
@@ -134,7 +176,7 @@ jobs:
           echo "PUBLIC_SAAS_PREVIEW_DEPLOY_GATE=PASS"
           echo "PUBLIC_SAAS_MONITOR_EXPECTED_SHA=$PUBLIC_SAAS_HEAD_SHA" >> "$GITHUB_ENV"
 
-      - name: Resolve existing monitoring-capable Preview fallback
+      - name: Resolve existing exact-head Preview after deploy failure
         if: steps.exact_deploy.outcome == 'failure'
         shell: bash
         run: |
@@ -147,19 +189,23 @@ jobs:
           const fs=require('node:fs');
           const payload=JSON.parse(fs.readFileSync('/tmp/public-saas-deployments.json','utf8'));
           const branch=process.env.PUBLIC_SAAS_HEAD_REF;
+          const expectedSha=process.env.PUBLIC_SAAS_HEAD_SHA;
           const candidates=(payload.deployments||[])
             .filter((d)=>String(d.readyState||d.state||'').toUpperCase()==='READY')
             .filter((d)=>String(d.target||'').toLowerCase()!=='production')
             .filter((d)=>String(d.meta?.githubCommitRef||d.gitSource?.ref||'')===branch)
+            .filter((d)=>String(d.meta?.githubCommitSha||d.meta?.releaseCommitSha||d.gitSource?.sha||'')===expectedSha)
             .sort((a,b)=>Number(b.createdAt||b.created||0)-Number(a.createdAt||a.created||0));
           const d=candidates[0];
-          if(!d)process.exit(2);
+          if(!d){
+            console.error('PUBLIC_SAAS_EXACT_HEAD_FALLBACK=BLOCKED_NO_READY_EXACT_SHA');
+            process.exit(2);
+          }
           const id=String(d.uid||d.id||'');
           const url=String(d.url||'');
-          const sha=String(d.meta?.githubCommitSha||d.meta?.releaseCommitSha||d.gitSource?.sha||'');
-          if(!id||!url||!sha)process.exit(3);
-          fs.appendFileSync(process.env.GITHUB_ENV,`DEPLOY_ID=${id}\nDEPLOY_URL=${url.startsWith('http')?url:`https://${url}`}\nPUBLIC_SAAS_MONITOR_EXPECTED_SHA=${sha}\n`);
-          console.log(`PUBLIC_SAAS_MONITORING_FALLBACK=READY sha=${sha.slice(0,12)}`);
+          if(!id||!url)process.exit(3);
+          fs.appendFileSync(process.env.GITHUB_ENV,`DEPLOY_ID=${id}\nDEPLOY_URL=${url.startsWith('http')?url:`https://${url}`}\nPUBLIC_SAAS_MONITOR_EXPECTED_SHA=${expectedSha}\n`);
+          console.log(`PUBLIC_SAAS_EXACT_HEAD_FALLBACK=READY sha=${expectedSha.slice(0,12)}`);
           NODE
 
       - name: Create temporary protected Preview access
@@ -190,7 +236,7 @@ jobs:
             > /tmp/public-saas-monitoring-probe.html \
             2> /tmp/public-saas-monitoring-probe.stderr || true
           grep -q 'Public SaaS Foundation' /tmp/public-saas-monitoring-probe.html
-          grep -q 'data-public-saas-monitoring-probe="attempted"' /tmp/public-saas-monitoring-probe.html
+          grep -q 'data-public-saas-monitoring-probe="delivered"' /tmp/public-saas-monitoring-probe.html
           echo "CLIENT_MONITORING_BROWSER_PROBE=PASS"
 
       - name: Health-check latest READY Public SaaS Preview
