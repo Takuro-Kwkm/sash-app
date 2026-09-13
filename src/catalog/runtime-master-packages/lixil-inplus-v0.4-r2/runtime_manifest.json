@@ -57,9 +57,26 @@
   ],
   "size_mode_capability": {
     "field_id": "size_mode",
-    "standard": { "supported": false, "candidate_source": null, "candidate_count": 0 },
-    "custom": { "supported": true, "dimension_fields": ["order_width", "order_height"], "unit": "mm", "step_mm": 1 },
-    "validation_results": ["PASS", "BLOCKED", "REVIEW_REQUIRED", "MANUAL_CHECK"],
+    "standard": {
+      "supported": false,
+      "candidate_source": null,
+      "candidate_count": 0
+    },
+    "custom": {
+      "supported": true,
+      "dimension_fields": [
+        "order_width",
+        "order_height"
+      ],
+      "unit": "mm",
+      "step_mm": 1
+    },
+    "validation_results": [
+      "PASS",
+      "BLOCKED",
+      "REVIEW_REQUIRED",
+      "MANUAL_CHECK"
+    ],
     "clear_rule": "CLEAR_INVALID_DOWNSTREAM_AND_REEVALUATE"
   },
   "canonical_folder_id": "1NPW7cUbaC1JRvIaJrltFkoYUiLyPwJa1",
