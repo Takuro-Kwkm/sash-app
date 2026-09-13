@@ -213,6 +213,7 @@ export async function runPublicSaaSHealthMonitor({
   projectId,
   branch='feat/public-saas-foundation-a1',
   expectedSha='',
+  shareValue='',
   fetchImpl=globalThis.fetch,
 }={}){
   if(!token||!teamId||!projectId)throw new PublicSaaSMonitorError('MONITOR_CONFIGURATION_MISSING','P1','Vercel monitor configuration is incomplete.');
@@ -232,8 +233,9 @@ export async function runPublicSaaSHealthMonitor({
   if(!listResponse.ok)throw new PublicSaaSMonitorError('VERCEL_API_REJECTED','P0',`Vercel deployment API returned HTTP ${listResponse.status}.`);
   const listPayload=await parseJsonResponse(listResponse);
   const deployment=selectLatestReadyPreview(listPayload?.deployments,{branch,expectedSha:expectedSha||undefined});
-  const shareValue=await createTemporaryPreviewShare({token,teamId,deploymentId:deployment.id,fetchImpl});
-  const protectedFetch=createShareAuthenticatedFetch({deploymentUrl:deployment.url,shareValue,fetchImpl});
+  const reusableShare=boundedShareValue(shareValue);
+  const effectiveShareValue=reusableShare??await createTemporaryPreviewShare({token,teamId,deploymentId:deployment.id,fetchImpl});
+  const protectedFetch=createShareAuthenticatedFetch({deploymentUrl:deployment.url,shareValue:effectiveShareValue,fetchImpl});
 
   let healthResponse;
   try{healthResponse=await protectedFetch('/api/public-saas/health',{headers:{accept:'application/json'}});}catch(error){
@@ -296,7 +298,7 @@ async function exportTemporaryShareToGitHubEnv(){
   const url=new URL('/public-saas',deploymentUrl);
   url.searchParams.set('_vercel_share',shareValue);
   process.stdout.write(`::add-mask::${shareValue}\n`);
-  await appendFile(githubEnv,`VERCEL_SHARE_URL=${url.toString()}\n`,'utf8');
+  await appendFile(githubEnv,`VERCEL_SHARE_VALUE=${shareValue}\nVERCEL_SHARE_URL=${url.toString()}\n`,'utf8');
   console.log('PUBLIC_SAAS_TEMPORARY_PREVIEW_ACCESS=PASS');
 }
 
@@ -310,6 +312,7 @@ async function main(){
       projectId:process.env.VERCEL_PROJECT_ID,
       branch:process.env.PUBLIC_SAAS_HEAD_REF??'feat/public-saas-foundation-a1',
       expectedSha:process.env.PUBLIC_SAAS_EXPECTED_SHA??'',
+      shareValue:process.env.VERCEL_SHARE_VALUE??'',
     });
     await writeEvidence(outputPath,result);
     console.log(JSON.stringify(result,null,2));
