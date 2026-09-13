@@ -70,14 +70,13 @@ export function toRuntimeUiResult(master, state, integration, sourcePackageInteg
   for (const [index, def] of master.fields.entries()) {
     const fieldState = state.fields[def.field_name];
     if (!fieldState || fieldState.visibility === 'HIDE' || def.runtime_included === false) continue;
-    if (def.selection_mode === 'FIXED') continue;
-    if (!integration.uiTemplate && def.selection_mode === 'DERIVED' && def.show_read_only !== true) continue;
+    if ((def.selection_mode === 'DERIVED' || def.selection_mode === 'FIXED') && def.show_read_only !== true) continue;
     visible.push({
       key: def.field_name, displayLabel: fieldState.display_label ?? labelFrom(def, humanizeFieldName(def.field_name)), displayOrder: Number(def.display_order ?? def.displayOrder ?? index + 1),
       dataType: dataTypeFor(def), unit: fieldState.unit ?? def.unit ?? ((customSize?.dimensionFields ?? []).includes(def.field_name) ? customSize.unit : null),
       step: fieldState.step ?? ((customSize?.dimensionFields ?? []).includes(def.field_name) ? customSize.stepMm : null), required: Boolean(fieldState.required),
       values: choicesFor(master, def, fieldState), selectionMode: def.selection_mode, runtimeState: fieldState.state,
-      readOnly: Boolean(fieldState.readOnly) || Boolean(fieldState.derived_by_rule || fieldState.resolved_by_rule) || (def.selection_mode === 'AUTO_RESOLVE' && fieldState.allowed_values?.length === 1), parentFields: def.parent_fields ?? [],
+      readOnly: Boolean(fieldState.readOnly) || (integration.uiTemplate && Boolean(fieldState.derived_by_rule || fieldState.resolved_by_rule)) || (def.selection_mode === 'AUTO_RESOLVE' && fieldState.allowed_values?.length === 1), parentFields: def.parent_fields ?? [],
     });
   }
   visible.sort((a, b) => a.displayOrder - b.displayOrder || a.key.localeCompare(b.key));
