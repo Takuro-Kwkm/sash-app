@@ -56,7 +56,7 @@ function renderEstimatePilot(){
   document.querySelectorAll('.design-nav a').forEach((link)=>link.classList.toggle('active',link.dataset.section==='estimate'));
   const main=document.querySelector('#designMain');
   if(!main)return;
-  main.innerHTML=`<div class="page-head"><div><div class="eyebrow">Design Pilot / Estimate & Proposal Visual</div><h1>見積確認・顧客提案</h1><p class="lead">商品画像と仕様をセットで確認し、そのまま顧客へ見せやすい提案表現へ切り替える。</p></div><div class="estimate-head-actions"><span class="estimate-sample-note">Sample / Placeholder</span><div class="estimate-mode-switch" role="group" aria-label="表示モード"><button type="button" class="active" data-estimate-mode="estimate">見積確認</button><button type="button" data-estimate-mode="proposal">顧客提案プレビュー</button></div></div></div><div id="estimateVisualContent"></div>`;
+  main.innerHTML=`<div data-estimate-pilot-root><div class="page-head"><div><div class="eyebrow">Design Pilot / Estimate & Proposal Visual</div><h1>見積確認・顧客提案</h1><p class="lead">商品画像と仕様をセットで確認し、そのまま顧客へ見せやすい提案表現へ切り替える。</p></div><div class="estimate-head-actions"><span class="estimate-sample-note">Sample / Placeholder</span><div class="estimate-mode-switch" role="group" aria-label="表示モード"><button type="button" class="active" data-estimate-mode="estimate">見積確認</button><button type="button" data-estimate-mode="proposal">顧客提案プレビュー</button></div></div></div><div id="estimateVisualContent"></div></div>`;
   renderEstimateContent();
 }
 
@@ -68,5 +68,12 @@ document.addEventListener('click',(event)=>{
   if(item){selectedEstimateId=item.dataset.estimateItem;renderEstimateContent();}
 });
 
-if(document.readyState==='complete')renderEstimatePilot();
-else window.addEventListener('load',renderEstimatePilot,{once:true});
+const main=document.querySelector('#designMain');
+if(main){
+  const ensureEstimatePilot=()=>{
+    if(isEstimateView()&&!main.querySelector('[data-estimate-pilot-root]'))renderEstimatePilot();
+  };
+  const observer=new MutationObserver(ensureEstimatePilot);
+  observer.observe(main,{childList:true});
+  ensureEstimatePilot();
+}
