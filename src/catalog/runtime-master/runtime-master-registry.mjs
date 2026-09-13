@@ -3,8 +3,9 @@ import { fileURLToPath } from 'node:url';
 import { loadCanonicalWorkbookRuntimePackage } from './canonical-runtime-manifest-loader.mjs';
 import { adaptCanonicalWorkbookReferenceV1 } from './canonical-workbook-reference-v1-adapter.mjs';
 import { loadManifestRuntimePackage } from './runtime-manifest-loader.mjs';
-import { adaptTwCanonicalWorkbookReferenceV1 } from './tw-canonical-workbook-reference-v1-adapter.mjs';
+import { adaptTwCanonicalWorkbookReferenceV2 } from './tw-canonical-workbook-reference-v2-adapter.mjs';
 import { evaluateCanonicalWorkbookRuntime } from './canonical-workbook-runtime-engine.mjs';
+import { evaluateTwCanonicalWorkbookRuntimeV2 } from './tw-canonical-workbook-runtime-engine-v2.mjs';
 import { adaptUchirimoTabularV1 } from './uchirimo-tabular-v1-adapter.mjs';
 import { loadFormalProductRuntimePackage } from './formal-product-runtime-loader.mjs';
 import { adaptProductModuleRuntimeV1 } from './product-module-runtime-adapter.mjs';
@@ -15,7 +16,7 @@ import { guardFormalCustomDimensionUiResolver } from './formal-custom-dimension-
 const HERE = dirname(fileURLToPath(import.meta.url));
 const EW_ROOT = join(HERE, '../runtime-master-packages/lixil-ew-v1.1');
 const EW_RUNTIME_SEGMENTS = ['seg-00','seg-01','seg-02','seg-03','seg-04','seg-05','seg-06','seg-07','seg-08a','seg-08b','seg-08c','seg-08d'];
-const TW_ROOT = join(HERE, '../runtime-master-packages/lixil-tw-integrated-v0.2');
+const TW_ROOT = join(HERE, '../runtime-master-packages/lixil-tw-integrated-v0.3');
 const UCHIRIMO_ROOT = join(HERE, '../runtime-master-packages/ykkap-uchirimo-v1.0-p7r1-r2');
 const SAMOS2H_R1_ROOT = join(HERE, '../runtime-master-packages/lixil-samos2h-v0.9-r1');
 const SAMOS2H_ROOT = join(HERE, '../runtime-master-packages/lixil-samos2h-v0.9-r2');
@@ -79,9 +80,12 @@ export const runtimeMasterInventory = Object.freeze([
     }),
   }),
   Object.freeze({
-    manufacturer:'LIXIL', series:'TW', masterVersion:'integrated-v0.2', schemaVersion:'2.0', packageType:'RUNTIME_MANIFEST_V1', adapterType:'TW_CANONICAL_WORKBOOK_REFERENCE_V1', packageRoot:TW_ROOT,
-    runtimeManifestPath:join(TW_ROOT,'runtime_manifest.json'), runtimeManifestDriveFileId:'1f9ogJ2pS0HmrUuXG1Qy431lG0mgxN9pw', runtimeManifestSha256:'52af3e462f940df67c267de5f715250290136afdd67a70611e684fcc3d5d064e',
-    materializedFiles:Object.freeze({'1yt4ADBqoK4-5Xqt6bJ593Q4thi81IRzI':Object.freeze({codec:'brotli',paths:Object.freeze([join(TW_ROOT,'LIXIL_TW_runtime_integrated-v0.2.json.br.b64.parts/part-00')])})}),
+    manufacturer:'LIXIL', series:'TW', masterVersion:'integrated-v0.3', schemaVersion:'2.0', packageType:'RUNTIME_MANIFEST_V1', adapterType:'TW_CANONICAL_WORKBOOK_REFERENCE_V2', packageRoot:TW_ROOT,
+    runtimeManifestPath:join(TW_ROOT,'runtime_manifest.json'), runtimeManifestDriveFileId:'1f_RL37UoveSoQYtWZQf3NzIG4jUwzlcb', runtimeManifestSha256:'c4980f45fdf57afe1512f2ca42da0eca53d9facc1f555734f7d89b347a808ee0',
+    materializedFiles:Object.freeze({'1i_rfZwRcPJCDj3bn-QH1OldX_sbogc2A':Object.freeze({codec:'brotli',paths:Object.freeze([
+      join(TW_ROOT,'LIXIL_TW_runtime_integrated-v0.3.json.br.b64.parts/part-00'),
+      join(TW_ROOT,'LIXIL_TW_runtime_integrated-v0.3.json.br.b64.parts/part-01'),
+    ])})}),
   }),
 ]);
 
@@ -100,10 +104,10 @@ async function loadRuntime(entry) {
   } else if (entry.packageType === 'RUNTIME_MANIFEST_V2' && entry.adapterType === 'UCHIRIMO_TABULAR_V1') {
     runtimePackage = await loadCanonicalWorkbookRuntimePackage(entry);
     adapted = adaptUchirimoTabularV1(runtimePackage);
-  } else if (entry.packageType === 'RUNTIME_MANIFEST_V1' && entry.adapterType === 'TW_CANONICAL_WORKBOOK_REFERENCE_V1') {
+  } else if (entry.packageType === 'RUNTIME_MANIFEST_V1' && entry.adapterType === 'TW_CANONICAL_WORKBOOK_REFERENCE_V2') {
     runtimePackage = await loadManifestRuntimePackage(entry);
-    const master = adaptTwCanonicalWorkbookReferenceV1(runtimePackage);
-    adapted = { master, resolver: (selection) => evaluateCanonicalWorkbookRuntime(master, selection) };
+    const master = adaptTwCanonicalWorkbookReferenceV2(runtimePackage);
+    adapted = { master, resolver: (selection) => evaluateTwCanonicalWorkbookRuntimeV2(master, selection) };
   } else if (entry.packageType === 'FORMAL_PRODUCT_RUNTIME' && entry.adapterType === 'PRODUCT_MODULE_RUNTIME_V1') {
     runtimePackage = await loadFormalProductRuntimePackage(entry);
     adapted = adaptProductModuleRuntimeV1(runtimePackage, entry);
