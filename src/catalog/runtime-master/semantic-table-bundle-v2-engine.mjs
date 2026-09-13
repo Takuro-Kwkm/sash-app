@@ -4,10 +4,37 @@ import {
 } from './semantic-table-bundle-v2-engine-core.mjs';
 
 function baseHMax(expression, width, fallback) {
-  if (!expression) return Number(fallback);
-  const match = /^MIN\(\s*([0-9.]+)\s*,\s*([0-9.]+)\s*\*\s*W\s*\)$/.exec(String(expression));
-  if (!match) fail('SEMANTIC_BUNDLE_DIMENSION_EXPRESSION_UNSUPPORTED', `Unsupported dimension expression: ${expression}`);
-  return Math.min(Number(match[1]), Number(match[2]) * width);
+  if (!present(expression)) return Number(fallback);
+  const source = String(expression).trim();
+  const literal = Number(source);
+  if (Number.isFinite(literal)) return literal;
+
+  const min = /^MIN\(\s*([0-9.]+)\s*,\s*([0-9.]+)\s*\*\s*W\s*\)$/.exec(source);
+  if (min) return Math.min(Number(min[1]), Number(min[2]) * width);
+
+  const linear = /^W<=([0-9.]+):([0-9.]+)\s*\/\s*([0-9.]+)<W<=([0-9.]+):([0-9.]+)-([0-9.]+)\*\(W-([0-9.]+)\)$/.exec(source);
+  if (linear) {
+    const firstThreshold = Number(linear[1]), firstH = Number(linear[2]);
+    const secondStart = Number(linear[3]), secondEnd = Number(linear[4]), secondH = Number(linear[5]);
+    const slope = Number(linear[6]), offset = Number(linear[7]);
+    if (firstThreshold !== secondStart || firstThreshold !== offset) fail('SEMANTIC_BUNDLE_DIMENSION_EXPRESSION_INVALID', `Inconsistent piecewise dimension expression: ${expression}`);
+    if (width <= firstThreshold) return firstH;
+    if (width <= secondEnd) return secondH - slope * (width - offset);
+    return secondH - slope * (width - offset);
+  }
+
+  const ratio = /^W<=([0-9.]+):([0-9.]+)\s*\/\s*([0-9.]+)<W<=([0-9.]+):([0-9.]+)-\(W-([0-9.]+)\)\*\(([0-9.]+)\/([0-9.]+)\)$/.exec(source);
+  if (ratio) {
+    const firstThreshold = Number(ratio[1]), firstH = Number(ratio[2]);
+    const secondStart = Number(ratio[3]), secondEnd = Number(ratio[4]), secondH = Number(ratio[5]);
+    const offset = Number(ratio[6]), numerator = Number(ratio[7]), denominator = Number(ratio[8]);
+    if (firstThreshold !== secondStart || firstThreshold !== offset || !(denominator > 0)) fail('SEMANTIC_BUNDLE_DIMENSION_EXPRESSION_INVALID', `Inconsistent piecewise dimension expression: ${expression}`);
+    if (width <= firstThreshold) return firstH;
+    if (width <= secondEnd) return secondH - (width - offset) * (numerator / denominator);
+    return secondH - (width - offset) * (numerator / denominator);
+  }
+
+  fail('SEMANTIC_BUNDLE_DIMENSION_EXPRESSION_UNSUPPORTED', `Unsupported dimension expression: ${expression}`);
 }
 function geometryPoints(chain) {
   if (!chain) return [];
