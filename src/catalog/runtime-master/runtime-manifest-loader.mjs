@@ -132,6 +132,6 @@ export async function loadManifestRuntimePackage(entry) {
   return deepFreeze({ manifest, rawManifest, documents: Object.fromEntries(loadedByRole), schema, integrity: {
     expected: entry.runtimeManifestSha256 ?? manifestActualSha256, actual: manifestActualSha256, match: !entry.runtimeManifestSha256 || entry.runtimeManifestSha256 === manifestActualSha256,
     manifestDriveFileId: entry.runtimeManifestDriveFileId ?? null,
-    files: [...fileIntegrity, ...(schemaLoaded ? [{ role: 'RUNTIME_SCHEMA', fileName: manifest.schemaFile.file_name, fileId: manifest.schemaFile.file_id, expected: manifest.schemaFile.sha256, actual: schemaLoaded.actualSha256, match: true, bytes: schemaLoaded.bytes, codec: schemaLoaded.codec }] : [])],
+    files: [...fileIntegrity, ...(schemaLoaded ? [{ role: 'RUNTIME_SCHEMA', fileName: manifest.schemaFile.fileName, fileId: manifest.schemaFile.fileId, expected: manifest.schemaFile.sha256, actual: schemaLoaded.actualSha256, match: true, bytes: schemaLoaded.bytes, codec: schemaLoaded.codec }] : [])],
   }});
 }
