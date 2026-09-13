@@ -23,6 +23,38 @@ function withinGeometry(x, y, points) {
   const t = (x - x1) / (x2 - x1 || Number.EPSILON);
   return y <= y1 + t * (y2 - y1);
 }
+function hiddenPatternToken(family) {
+  const domain = family?.decorative_pattern_domain;
+  if (domain === 'なし') return 'なし';
+  if (domain === '非適用') return '非適用';
+  return null;
+}
+function resolveGlassLimitJoin(master, baseRangeId, family, pattern) {
+  const exact = master.glassLimitFamily.filter((row) =>
+    row.base_range_id === baseRangeId
+      && row.limit_family_id === family.limit_family_id
+      && row.decorative_pattern === pattern
+  );
+  if (exact.length === 1) return { status:'MATCH', join:exact[0], policy:'EXACT' };
+  if (exact.length > 1) return { status:'AMBIGUOUS', joins:exact, policy:'EXACT' };
+
+  const any = master.glassLimitFamily.filter((row) =>
+    row.base_range_id === baseRangeId
+      && row.limit_family_id === family.limit_family_id
+      && row.decorative_pattern === 'ANY'
+  );
+  if (any.length === 1) return { status:'MATCH', join:any[0], policy:'ANY' };
+  if (any.length > 1) return { status:'AMBIGUOUS', joins:any, policy:'ANY' };
+
+  const special = master.glassLimitFamily.filter((row) =>
+    row.base_range_id === baseRangeId
+      && row.decorative_pattern === 'SPECIAL'
+      && String(row.special_allowed_families ?? '').split('|').includes(family.limit_family_id)
+  );
+  if (special.length === 1) return { status:'MATCH', join:special[0], policy:'SPECIAL' };
+  if (special.length > 1) return { status:'AMBIGUOUS', joins:special, policy:'SPECIAL' };
+  return { status:'MISSING', joins:[], policy:null };
+}
 function evaluateDimension(master, state) {
   const cap = master.capabilities?.uiSemanticSupport?.customSize;
   const modeField = cap?.modeField ?? master.document.semantic_contract.dimension_validation?.size_mode_field;
@@ -61,15 +93,18 @@ function evaluateDimension(master, state) {
   if (!family) { manual(master, state, configId, 'glass_config ID joinが見つかりません。'); return { status: 'REVIEW_REQUIRED', message: 'glass_config ID joinの確認が必要です。', matchedRuleIds: [selector.base_range_id] }; }
   const patternField = state.fields.decorative_pattern;
   if (patternField?.visibility === 'SHOW' && patternField.required && !present(patternField.value)) return { status: 'PENDING', message: '格子・組子デザインを選択してください。', matchedRuleIds: [selector.base_range_id] };
-  const pattern = patternField?.visibility === 'SHOW' && present(patternField.value) ? patternField.value : '非適用';
-  const joins = master.glassLimitFamily.filter((row) => row.base_range_id === selector.base_range_id && row.limit_family_id === family.limit_family_id && row.decorative_pattern === pattern);
-  if (joins.length !== 1) { manual(master, state, 'GLASS_LIMIT_FAMILY_JOIN', 'glass fabrication range joinを一意に解決できません。'); return { status: 'REVIEW_REQUIRED', message: 'ガラス別製作範囲joinの確認が必要です。', matchedRuleIds: [selector.base_range_id] }; }
-  const join = joins[0], limit = master.glassLimitById.get(`${join.base_range_id}::${join.limit_id}`);
+  const pattern = patternField?.visibility === 'SHOW' && present(patternField.value)
+    ? patternField.value
+    : hiddenPatternToken(family);
+  if (!pattern) { manual(master, state, 'GLASS_LIMIT_FAMILY_JOIN', 'decorative pattern domainを明示解決できません。'); return { status:'REVIEW_REQUIRED', message:'ガラス別製作範囲joinの確認が必要です。', matchedRuleIds:[selector.base_range_id] }; }
+  const joinResult = resolveGlassLimitJoin(master, selector.base_range_id, family, pattern);
+  if (joinResult.status !== 'MATCH') { manual(master, state, 'GLASS_LIMIT_FAMILY_JOIN', 'glass fabrication range joinを一意に解決できません。'); return { status: 'REVIEW_REQUIRED', message: 'ガラス別製作範囲joinの確認が必要です。', matchedRuleIds: [selector.base_range_id] }; }
+  const join = joinResult.join, limit = master.glassLimitById.get(`${join.base_range_id}::${join.limit_id}`);
   if (!limit || limit['状態'] !== 'VERIFIED') { manual(master, state, join.limit_id, 'ガラス別製作範囲が確定していません。'); return { status: 'REVIEW_REQUIRED', message: 'ガラス別製作範囲の確認が必要です。', matchedRuleIds: [selector.base_range_id, join.limit_id] }; }
   const minH = present(limit['H_min上書']) ? Math.max(Number(base.H_min), Number(limit['H_min上書'])) : Number(base.H_min);
   const maxW = present(limit['W_max上書']) ? Math.min(Number(base.W_max), Number(limit['W_max上書'])) : Number(base.W_max);
   if (h < minH || w > maxW || !withinGeometry(w, h, geometryPoints(limit['境界点チェーン']))) return { status: 'BLOCKED', message: '発注寸法がガラス別製作範囲外です。', matchedRuleIds: [selector.base_range_id, join.limit_id] };
-  return { status: 'PASS', message: '正式Runtimeの基本範囲とガラス別製作範囲を満たします。', matchedRuleIds: [selector.base_range_id, join.limit_id] };
+  return { status: 'PASS', message: `正式Runtimeの基本範囲とガラス別製作範囲を満たします。(${joinResult.policy})`, matchedRuleIds: [selector.base_range_id, join.limit_id] };
 }
 function evaluateOnce(master, input) {
   const state = { fields: {}, warnings: [], errors: [], manual_checks: [], matched_invalid_rules: [], missing_required_fields: [], derived_entities: [], derived_components: [], derived_options: [], derived_values: {}, cleared_fields: [], status: 'INCOMPLETE', dimension_result: null };
