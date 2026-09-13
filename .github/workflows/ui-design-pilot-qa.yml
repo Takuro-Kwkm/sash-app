@@ -8,9 +8,13 @@ on:
     paths:
       - 'src/ui/web/design-preview.html'
       - 'src/ui/web/design-preview.css'
+      - 'src/ui/web/design-preview-notifications.css'
+      - 'src/ui/web/design-preview-estimate.css'
       - 'src/ui/web/design-preview.mjs'
+      - 'src/ui/web/design-preview-estimate.mjs'
       - 'src/server/recovery-app.mjs'
       - 'test/browser/design-pilot-browser-qa.mjs'
+      - 'test/browser/design-pilot-estimate-qa.mjs'
       - '.github/workflows/ui-design-pilot-qa.yml'
 
 jobs:
@@ -27,7 +31,9 @@ jobs:
         run: |
           node --check src/server/recovery-app.mjs
           node --check src/ui/web/design-preview.mjs
+          node --check src/ui/web/design-preview-estimate.mjs
           node --check test/browser/design-pilot-browser-qa.mjs
+          node --check test/browser/design-pilot-estimate-qa.mjs
       - name: Repository regression tests
         run: npm test
       - name: Install browser QA dependencies
@@ -45,13 +51,17 @@ jobs:
           done
           curl -fsS http://127.0.0.1:4173/design-preview >/dev/null
           curl -fsS http://127.0.0.1:4173/design-preview/product >/dev/null
+          curl -fsS 'http://127.0.0.1:4173/design-preview?view=estimate' >/dev/null
           node test/browser/design-pilot-browser-qa.mjs
+          node test/browser/design-pilot-estimate-qa.mjs
       - name: Upload UI QA artifacts
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: ui-design-pilot-browser-qa
-          path: artifacts/design-pilot-browser-qa/
+          path: |
+            artifacts/design-pilot-browser-qa/
+            artifacts/design-pilot-estimate-qa/
           if-no-files-found: warn
 
   deploy_preview:
