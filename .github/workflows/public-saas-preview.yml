@@ -131,6 +131,10 @@ jobs:
           node -e 'const d=require("./artifacts/public-saas-preview/deployment.json"); if(d.readyState!=="READY"||d.mode!=="preview"||d.githubSha!==process.env.PUBLIC_SAAS_HEAD_SHA||d.projectId!==process.env.VERCEL_PROJECT_ID||d.teamId!==process.env.VERCEL_ORG_ID) process.exit(1)'
           echo "PUBLIC_SAAS_PREVIEW_DEPLOY_GATE=PASS"
 
+      - name: Create temporary protected Preview access
+        shell: bash
+        run: node scripts/public-saas-health-monitor.mjs --export-share
+
       - name: Trigger intentional client JavaScript monitoring probe
         shell: bash
         run: |
@@ -140,11 +144,15 @@ jobs:
             echo "CLIENT_MONITORING_BROWSER_PROBE=BLOCKED_NO_CHROME"
             exit 43
           fi
-          probe_url="${DEPLOY_URL}/public-saas?monitoring_probe=1"
+          profile="$(mktemp -d)"
+          trap 'rm -rf "$profile"' EXIT
+          probe_url="${VERCEL_SHARE_URL}&monitoring_probe=1"
           "$chrome" \
             --headless=new \
             --no-sandbox \
             --disable-gpu \
+            --disable-dev-shm-usage \
+            --user-data-dir="$profile" \
             --virtual-time-budget=5000 \
             --dump-dom \
             "$probe_url" \
