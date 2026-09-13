@@ -61,17 +61,15 @@
     (()=>{
       const mountApprovedHero=()=>{
         document.querySelectorAll('.hero-architecture').forEach((host)=>{
-          if(!host.querySelector('.hero-approved-photo')){
-            const img=document.createElement('img');
-            img.className='hero-approved-photo';
-            img.src='/design-preview-hero.webp';
-            img.alt='';
-            img.setAttribute('aria-hidden','true');
-            img.decoding='async';
-            host.prepend(img);
-          }
+          if(host.querySelector('.hero-approved-photo'))return;
+          const img=document.createElement('img');
+          img.className='hero-approved-photo';
+          img.src='/design-preview-hero.webp';
+          img.alt='';
+          img.setAttribute('aria-hidden','true');
+          img.decoding='async';
+          host.prepend(img);
         });
-        document.querySelectorAll('.concept-label').forEach((label)=>{label.textContent='DESIGN PILOT HERO';});
       };
       const main=document.querySelector('#designMain');
       if(main)new MutationObserver(mountApprovedHero).observe(main,{childList:true,subtree:true});
