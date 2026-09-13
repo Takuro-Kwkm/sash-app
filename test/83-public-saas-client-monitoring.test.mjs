@@ -30,6 +30,21 @@ function responseRecorder(){
   };
 }
 
+function probeWindow(){
+  const handlers=new Map();
+  const attributes=new Map();
+  return {
+    handlers,
+    attributes,
+    win:{
+      location:{origin:'https://preview.example.test',href:'https://preview.example.test/public-saas'},
+      addEventListener(type,handler){handlers.set(type,handler);},
+      setTimeout,
+      document:{documentElement:{setAttribute(name,value){attributes.set(name,value);}}},
+    },
+  };
+}
+
 test('client source strips query/hash and rejects external locations',()=>{
   const origin='https://preview.example.test';
   assert.equal(
@@ -90,6 +105,23 @@ test('browser monitoring never forwards raw error/rejection content',async()=>{
     assert.equal(serialized.includes('message'),false);
     assert.equal(serialized.includes('reason'),false);
   }
+});
+
+test('monitoring probe is delivered only after the proxy returns 202',async()=>{
+  const {win,handlers,attributes}=probeWindow();
+  installClientErrorMonitoring({win,fetchImpl:async()=>({ok:true,status:202}),now:()=>2_000});
+  handlers.get('error')({error:new Error('PUBLIC_SAAS_MONITORING_PROBE'),filename:'https://preview.example.test/public-saas/app.js',lineno:1,colno:1});
+  assert.equal(attributes.get('data-public-saas-monitoring-probe'),'attempted');
+  await new Promise((resolve)=>setImmediate(resolve));
+  assert.equal(attributes.get('data-public-saas-monitoring-probe'),'delivered');
+});
+
+test('monitoring probe is failed when the proxy is not configured',async()=>{
+  const {win,handlers,attributes}=probeWindow();
+  installClientErrorMonitoring({win,fetchImpl:async()=>({ok:false,status:503}),now:()=>3_000});
+  handlers.get('error')({error:new Error('PUBLIC_SAAS_MONITORING_PROBE'),filename:'https://preview.example.test/public-saas/app.js',lineno:1,colno:1});
+  await new Promise((resolve)=>setImmediate(resolve));
+  assert.equal(attributes.get('data-public-saas-monitoring-probe'),'failed');
 });
 
 test('server sanitizer and PostHog properties contain no application secret fields',()=>{
