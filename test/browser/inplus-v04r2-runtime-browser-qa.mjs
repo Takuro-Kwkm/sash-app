@@ -16,14 +16,7 @@ const FORBIDDEN_FIELDS = [
 ];
 
 await mkdir(OUT, { recursive:true });
-const report = {
-  status:'RUNNING',
-  desktop:{},
-  mobile:{},
-  consoleErrors:[],
-  pageErrors:[],
-  failedResponses:[],
-};
+const report = { status:'RUNNING', desktop:{}, mobile:{}, consoleErrors:[], pageErrors:[], failedResponses:[] };
 const browser = await chromium.launch({ headless:true });
 
 function track(page) {
@@ -40,17 +33,13 @@ function runtimeSelectionFromUrl(url) {
 }
 function matchesSelection(response, key, value) {
   if (response.status() !== 200 || !response.url().includes('/api/runtime-master/resolve')) return false;
-  const selection = runtimeSelectionFromUrl(response.url());
-  const actual = selection[key];
+  const actual = runtimeSelectionFromUrl(response.url())[key];
   if (Array.isArray(actual)) return actual.some((one) => String(one) === String(value));
   return typeof value === 'number' ? Number(actual) === value : String(actual) === String(value);
 }
 
 async function apiResolve(page, selection) {
-  const response = await page.request.get(`${BASE}/api/runtime-master/resolve?${new URLSearchParams({
-    productId:PRODUCT_ID,
-    selection:JSON.stringify(selection),
-  })}`);
+  const response = await page.request.get(`${BASE}/api/runtime-master/resolve?${new URLSearchParams({ productId:PRODUCT_ID, selection:JSON.stringify(selection) })}`);
   assert.equal(response.status(), 200);
   return response.json();
 }
@@ -74,21 +63,14 @@ async function choose(page, key, value) {
   const locator = page.locator(`[data-spec-key="${key}"]`);
   await locator.waitFor({ state:'visible' });
   const tag = await locator.evaluate((element) => element.tagName);
-  for (let attempt = 1; attempt <= 2; attempt += 1) {
-    const response = page.waitForResponse((row) => matchesSelection(row, key, value), { timeout:15000 });
-    if (tag === 'INPUT') {
-      await locator.fill(String(value));
-      await locator.dispatchEvent('change');
-    } else {
-      await locator.selectOption(String(value));
-    }
-    try { return await (await response).json(); }
-    catch (error) {
-      if (attempt === 2) throw new Error(`runtime response timeout for ${key}=${String(value)}`, { cause:error });
-      await page.waitForTimeout(100);
-    }
+  const response = page.waitForResponse((row) => matchesSelection(row, key, value), { timeout:15000 });
+  if (tag === 'INPUT') {
+    await locator.fill(String(value));
+    await locator.dispatchEvent('change');
+  } else {
+    await locator.selectOption(String(value));
   }
-  throw new Error(`unreachable choose failure for ${key}`);
+  return (await response).json();
 }
 
 async function chooseIfVisible(page, result, key, preferred = null) {
@@ -99,8 +81,7 @@ async function chooseIfVisible(page, result, key, preferred = null) {
   const value = preferred !== null && field.values?.some((row) => String(row.value) === String(preferred))
     ? preferred
     : field.values?.[0]?.value;
-  if (value === undefined) return result;
-  return choose(page, key, value);
+  return value === undefined ? result : choose(page, key, value);
 }
 
 async function assertUiContract(page, result) {
@@ -128,17 +109,25 @@ async function assertUiContract(page, result) {
   return { domSections, fieldKeys };
 }
 
-async function configureBase(page) {
+async function configureValidCase(page) {
   let result = await openInplus(page);
   await assertUiContract(page, result);
-  assert.equal(await page.locator('[data-spec-key="order_width"]').count(), 0, 'W must be hidden before CUSTOM');
-  assert.equal(await page.locator('[data-spec-key="order_height"]').count(), 0, 'H must be hidden before CUSTOM');
+  assert.equal(await page.locator('[data-spec-key="order_width"]').count(), 0);
+  assert.equal(await page.locator('[data-spec-key="order_height"]').count(), 0);
 
+  // Follow the formal UI order: establish every dimension-affecting upstream selector first.
   result = await choose(page, 'window_type', '引違い窓');
   result = await choose(page, 'sash_configuration', '2枚建');
   result = await choose(page, 'size_class', '窓タイプ');
-  // upper_frame_spec is dimension-affecting upstream state. Select it before entering CUSTOM dimensions.
+  result = await chooseIfVisible(page, result, 'glass_family', 'Low-E複層');
+  result = await chooseIfVisible(page, result, 'glass_type', '透明');
+  result = await chooseIfVisible(page, result, 'lowe_color', 'グリーン');
+  result = await chooseIfVisible(page, result, 'cavity_fill', '乾燥空気 A12');
+  result = await chooseIfVisible(page, result, 'supply_form', '完成品障子（枠はノックダウン）');
+  result = await chooseIfVisible(page, result, 'glass_detail', 'LE-A-G-CLR');
+  result = await chooseIfVisible(page, result, 'body_color', 'COL-S');
   result = await chooseIfVisible(page, result, 'upper_frame_spec', '標準');
+
   result = await choose(page, 'size_mode', 'CUSTOM');
   const width = page.locator('[data-spec-key="order_width"]');
   const height = page.locator('[data-spec-key="order_height"]');
@@ -148,20 +137,12 @@ async function configureBase(page) {
   assert.equal(await height.getAttribute('step'), '1');
   result = await choose(page, 'order_width', 1000);
   result = await choose(page, 'order_height', 1000);
+  assert.equal(result.dimensionResult.status, 'PASS');
   return result;
 }
 
 async function exercise(page) {
-  let result = await configureBase(page);
-  assert.equal(result.dimensionResult.status, 'PASS');
-
-  result = await chooseIfVisible(page, result, 'body_color', 'COL-S');
-  result = await chooseIfVisible(page, result, 'glass_family', 'Low-E複層');
-  result = await chooseIfVisible(page, result, 'glass_type', '透明');
-  result = await chooseIfVisible(page, result, 'lowe_color', 'グリーン');
-  result = await chooseIfVisible(page, result, 'cavity_fill', '乾燥空気 A12');
-  result = await chooseIfVisible(page, result, 'supply_form', '完成品障子（枠はノックダウン）');
-  result = await chooseIfVisible(page, result, 'glass_detail', 'LE-A-G-CLR');
+  let result = await configureValidCase(page);
   assert.notEqual(result.validation.status, 'INVALID');
   assert.equal(result.runtimeMaster.packageVersion, 'v0.4-R2');
   assert.equal(result.runtimeMaster.sourcePackageIntegrity.match, true);
@@ -180,9 +161,9 @@ async function exercise(page) {
   });
   assert.ok(manual.validation.status === 'MANUAL_CHECK' || manual.dimensionResult?.status === 'REVIEW_REQUIRED');
 
-  // UI clear contract: a dimension-affecting upstream selector change clears stale W/H before reevaluation.
-  const beforeChange = await page.locator('[data-spec-key="order_width"]').inputValue();
-  assert.equal(beforeChange, '1000');
+  // Formal clear contract: dimension-affecting upstream selector changes clear stale W/H.
+  assert.equal(await page.locator('[data-spec-key="order_width"]').inputValue(), '1000');
+  assert.equal(await page.locator('[data-spec-key="order_height"]').inputValue(), '1000');
   result = await choose(page, 'window_type', 'FIX窓');
   assert.equal(result.selection.order_width, undefined);
   assert.equal(result.selection.order_height, undefined);
@@ -191,16 +172,10 @@ async function exercise(page) {
 
   const sectionResult = await assertUiContract(page, result);
   return {
-    sectionOrder:'PASS',
-    visibleSections:sectionResult.domSections,
-    sizeModeCustomOnly:'PASS',
-    customDimensionsConditional:'PASS',
-    customStep1mm:'PASS',
-    inRange:'PASS',
-    outOfRangeBlocked:'PASS',
-    manualReviewPreserved:'PASS',
-    upstreamDimensionClear:'PASS',
-    runtimeIntegrity:'PASS',
+    sectionOrder:'PASS', visibleSections:sectionResult.domSections,
+    sizeModeCustomOnly:'PASS', customDimensionsConditional:'PASS', customStep1mm:'PASS',
+    inRange:'PASS', outOfRangeBlocked:'PASS', manualReviewPreserved:'PASS',
+    upstreamDimensionClear:'PASS', runtimeIntegrity:'PASS',
   };
 }
 
