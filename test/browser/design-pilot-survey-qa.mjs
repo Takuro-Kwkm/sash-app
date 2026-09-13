@@ -42,7 +42,7 @@ try{
   assert.equal(await page.locator('.survey-opening-button').count(),3);
   assert.match(await page.locator('.survey-footer-note').innerText(),/Sample only/);
   assert.equal(await page.locator('.survey-diagram').getAttribute('data-active'),'w');
-  assert.match(await page.locator('.dimension-text-w').innerText(),/W 1690 mm/);
+  assert.match(await page.locator('.dimension-text-w').textContent(),/W 1690 mm/);
   await assertNoOverflow(page,'desktop survey initial');
   await page.screenshot({path:`${OUT}/desktop-survey-light-1440x1000.png`,fullPage:true});
   report.scenarios.SURVEY_DESKTOP_LIGHT='PASS';
@@ -53,7 +53,7 @@ try{
   report.scenarios.MEASUREMENT_FOCUS_LINK='PASS';
 
   await page.locator('#surveyWidth').fill('1720');
-  assert.match(await page.locator('.dimension-text-w').innerText(),/W 1720 mm/);
+  assert.match(await page.locator('.dimension-text-w').textContent(),/W 1720 mm/);
   report.scenarios.MEASUREMENT_VALUE_LINK='PASS';
 
   await page.locator('.survey-opening-button').nth(1).click();
