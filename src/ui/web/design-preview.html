@@ -13,6 +13,7 @@
   <link rel="stylesheet" href="/design-preview-guide.css">
   <link rel="stylesheet" href="/design-preview-survey.css">
   <style>@media(max-width:900px){.runtime-editor-shell input,.runtime-editor-shell select{min-height:44px;font-size:16px}}@media(min-width:1181px){.home-hero h1{font-size:28px}}</style>
+  <style>.hero-approved-photo{position:absolute;inset:0;width:100%;height:100%;display:block;object-fit:cover;object-position:center center;z-index:1}.hero-architecture-svg{opacity:0}.home-hero-shade,.home-hero-copy,.concept-label{z-index:2}</style>
 </head>
 <body>
   <div class="design-shell">
@@ -56,6 +57,27 @@
       <footer id="build" class="design-build">UI Design Pilot</footer>
     </div>
   </div>
+  <script>
+    (()=>{
+      const mountApprovedHero=()=>{
+        document.querySelectorAll('.hero-architecture').forEach((host)=>{
+          if(!host.querySelector('.hero-approved-photo')){
+            const img=document.createElement('img');
+            img.className='hero-approved-photo';
+            img.src='/design-preview-hero.webp';
+            img.alt='';
+            img.setAttribute('aria-hidden','true');
+            img.decoding='async';
+            host.prepend(img);
+          }
+        });
+        document.querySelectorAll('.concept-label').forEach((label)=>{label.textContent='DESIGN PILOT HERO';});
+      };
+      const main=document.querySelector('#designMain');
+      if(main)new MutationObserver(mountApprovedHero).observe(main,{childList:true,subtree:true});
+      mountApprovedHero();
+    })();
+  </script>
   <script type="module" src="/design-preview.mjs"></script>
   <script type="module" src="/design-preview-estimate.mjs"></script>
   <script type="module" src="/design-preview-guide.mjs"></script>
