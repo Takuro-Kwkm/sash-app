@@ -104,6 +104,7 @@ export function createRecoveryRequestHandler({backend="node:http recovery server
     }
     if(url.pathname==="/api/catalog") return json(res,200,catalog);
     if(url.pathname==="/design-preview-hero.webp") return heroPhoto(res);
+    if(url.pathname==="/design-preview-reference-hero.svg") return staticFile(res,"design-preview-reference-hero.svg","image/svg+xml; charset=utf-8");
     if(url.pathname==="/app.js") return staticFile(res,"app.js","text/javascript; charset=utf-8");
     if(url.pathname==="/product-configuration-editor.mjs") return staticFile(res,"product-configuration-editor.mjs","text/javascript; charset=utf-8");
     if(url.pathname==="/estimate-output-integration.mjs") return staticFile(res,"estimate-output-integration.mjs","text/javascript; charset=utf-8");
