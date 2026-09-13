@@ -90,15 +90,7 @@ jobs:
           rm -f /tmp/posthog-env-body.json
 
           if [[ "$status" != "200" && "$status" != "201" ]]; then
-            STATUS="$status" node <<'NODE'
-            const fs=require('node:fs');
-            let p={};
-            try{p=JSON.parse(fs.readFileSync('/tmp/posthog-env-response.json','utf8'));}catch{}
-            const e=p?.error??p??{};
-            const secret=String(process.env.POSTHOG_PROJECT_TOKEN??'');
-            const sanitize=(v)=>String(v??'unknown').replaceAll(secret,'[REDACTED]').replace(/phc_[A-Za-z0-9_-]+/g,'[REDACTED]');
-            console.error(`POSTHOG_PREVIEW_CONFIG_GATE=BLOCKED_VERCEL_ENV_API status=${process.env.STATUS} code=${sanitize(e.code)} message=${sanitize(e.message)}`);
-            NODE
+            STATUS="$status" node -e 'const fs=require("node:fs");let p={};try{p=JSON.parse(fs.readFileSync("/tmp/posthog-env-response.json","utf8"));}catch{}const e=p?.error??p??{};const secret=String(process.env.POSTHOG_PROJECT_TOKEN??"");const sanitize=(v)=>String(v??"unknown").replaceAll(secret,"[REDACTED]").replace(/phc_[A-Za-z0-9_-]+/g,"[REDACTED]");console.error(`POSTHOG_PREVIEW_CONFIG_GATE=BLOCKED_VERCEL_ENV_API status=${process.env.STATUS} code=${sanitize(e.code)} message=${sanitize(e.message)}`);'
             rm -f /tmp/posthog-env-response.json
             exit 45
           fi
