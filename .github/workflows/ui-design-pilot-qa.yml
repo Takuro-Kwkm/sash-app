@@ -11,13 +11,16 @@ on:
       - 'src/ui/web/design-preview-notifications.css'
       - 'src/ui/web/design-preview-estimate.css'
       - 'src/ui/web/design-preview-guide.css'
+      - 'src/ui/web/design-preview-survey.css'
       - 'src/ui/web/design-preview.mjs'
       - 'src/ui/web/design-preview-estimate.mjs'
       - 'src/ui/web/design-preview-guide.mjs'
+      - 'src/ui/web/design-preview-survey.mjs'
       - 'src/server/recovery-app.mjs'
       - 'test/browser/design-pilot-browser-qa.mjs'
       - 'test/browser/design-pilot-estimate-qa.mjs'
       - 'test/browser/design-pilot-guide-qa.mjs'
+      - 'test/browser/design-pilot-survey-qa.mjs'
       - '.github/workflows/ui-design-pilot-qa.yml'
 
 jobs:
@@ -36,9 +39,11 @@ jobs:
           node --check src/ui/web/design-preview.mjs
           node --check src/ui/web/design-preview-estimate.mjs
           node --check src/ui/web/design-preview-guide.mjs
+          node --check src/ui/web/design-preview-survey.mjs
           node --check test/browser/design-pilot-browser-qa.mjs
           node --check test/browser/design-pilot-estimate-qa.mjs
           node --check test/browser/design-pilot-guide-qa.mjs
+          node --check test/browser/design-pilot-survey-qa.mjs
       - name: Repository regression tests
         run: npm test
       - name: Install browser QA dependencies
@@ -58,9 +63,11 @@ jobs:
           curl -fsS http://127.0.0.1:4173/design-preview/product >/dev/null
           curl -fsS 'http://127.0.0.1:4173/design-preview?view=estimate' >/dev/null
           curl -fsS 'http://127.0.0.1:4173/design-preview?view=guide' >/dev/null
+          curl -fsS 'http://127.0.0.1:4173/design-preview?view=survey' >/dev/null
           node test/browser/design-pilot-browser-qa.mjs
           node test/browser/design-pilot-estimate-qa.mjs
           node test/browser/design-pilot-guide-qa.mjs
+          node test/browser/design-pilot-survey-qa.mjs
       - name: Upload UI QA artifacts
         if: always()
         uses: actions/upload-artifact@v4
@@ -70,6 +77,7 @@ jobs:
             artifacts/design-pilot-browser-qa/
             artifacts/design-pilot-estimate-qa/
             artifacts/design-pilot-guide-qa/
+            artifacts/design-pilot-survey-qa/
           if-no-files-found: warn
 
   deploy_preview:
