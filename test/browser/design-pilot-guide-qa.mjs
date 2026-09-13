@@ -68,8 +68,22 @@ try{
   await page.locator('#themeSelect').selectOption('dark');
   assert.equal(await page.evaluate(()=>document.documentElement.dataset.theme),'dark');
   await page.getByRole('button',{name:'スペーサーの説明を開く',exact:true}).click();
+  const darkTokens=await page.evaluate(()=>{
+    const style=(selector)=>getComputedStyle(document.querySelector(selector));
+    return {
+      valueBg:style('.guide-value').backgroundColor,
+      controlBg:style('.guide-control').backgroundColor,
+      detailBg:style('[data-guide-detail-panel]').backgroundColor,
+      guideBg:style('.context-guide-panel').backgroundColor
+    };
+  });
+  for(const [name,value] of Object.entries(darkTokens)){
+    assert.notEqual(value,'rgb(255, 255, 255)',`${name} must not remain white in Dark theme`);
+    assert.notEqual(value,'rgba(0, 0, 0, 0)',`${name} must have an explicit themed surface`);
+  }
   await page.screenshot({path:`${OUT}/desktop-guide-dark-1440x1000.png`,fullPage:true});
   report.scenarios.GUIDE_DESKTOP_DARK='PASS';
+  report.scenarios.DARK_THEME_TOKEN_INTEGRITY='PASS';
 
   const portrait=await context.newPage();track(portrait);await portrait.setViewportSize({width:768,height:1024});
   await goto(portrait,'/design-preview?view=guide');
