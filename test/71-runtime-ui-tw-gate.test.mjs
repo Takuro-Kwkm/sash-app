@@ -47,13 +47,16 @@ test('TW formal CUSTOM outer envelope is REVIEW_REQUIRED inside, BLOCK outside, 
   result = await resolveRuntimeAppProduct(PRODUCT, { ...result.selection, custom_width: 1000, custom_height: 1000 });
   assert.equal(result.dimensionResult.status, 'REVIEW_REQUIRED');
   assert.equal(result.dimensionResult.automatic, false);
+  assert.deepEqual(result.dimensionResult.ruleTypes, ['SOURCE_GRAPH_GATE']);
   assert.equal(result.validation.status, 'MANUAL_CHECK');
   assert.equal(result.orderReady, false);
 
   result = await resolveRuntimeAppProduct(PRODUCT, { ...completeResult.selection, size_mode: 'CUSTOM', custom_width: 629, custom_height: 1000 });
   assert.equal(result.dimensionResult.status, 'BLOCK');
+  assert.equal(result.dimensionResult.automatic, false);
+  assert.equal(result.dimensionResult.code, 'CUSTOM_DIMENSION_OUT_OF_FORMAL_OUTER_BOUNDS');
   assert.equal(result.validation.status, 'INVALID');
-  assert.ok(result.validation.errors.some((row) => row.errorCode === 'TW_CUSTOM_SIZE_OUTSIDE_VERIFIED_OUTER_ENVELOPE'));
+  assert.ok(result.validation.errors.some((row) => row.errorCode === 'CUSTOM_DIMENSION_OUT_OF_FORMAL_OUTER_BOUNDS'));
 
   result = await resolveRuntimeAppProduct(PRODUCT, { ...completeResult.selection, size_mode: 'STANDARD', custom_width: 1000, custom_height: 1000 });
   assert.equal(result.selection.custom_width, undefined);
