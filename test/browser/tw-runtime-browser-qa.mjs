@@ -16,6 +16,22 @@ function track(page) {
   page.on('pageerror', (error) => report.pageErrors.push(error.message));
   page.on('response', (response) => { if (response.status() >= 400) report.failedResponses.push({ status:response.status(), url:response.url() }); });
 }
+function resolveSelection(response) {
+  if (response.status() !== 200 || !response.url().includes('/api/runtime-master/resolve')) return null;
+  try {
+    const url = new URL(response.url());
+    if (url.searchParams.get('productId') !== PRODUCT_ID) return null;
+    return JSON.parse(url.searchParams.get('selection') ?? '{}');
+  } catch { return null; }
+}
+function sameValue(actual, expected) {
+  if (Array.isArray(expected)) return Array.isArray(actual) && actual.length === expected.length && actual.every((value,index) => String(value) === String(expected[index]));
+  return String(actual) === String(expected);
+}
+function responseHasSelection(response, key, value) {
+  const selection = resolveSelection(response);
+  return selection && sameValue(selection[key], value);
+}
 async function openTw(page) {
   const entry = SHARE_TOKEN ? `${BASE}/runtime-lab?_vercel_share=${encodeURIComponent(SHARE_TOKEN)}` : `${BASE}/runtime-lab`;
   await page.goto(entry, { waitUntil:'networkidle' });
@@ -28,12 +44,12 @@ async function openTw(page) {
   await page.waitForSelector('[data-spec-key="window_type"]');
 }
 async function choose(page, key, value) {
-  const response = page.waitForResponse((r) => r.url().includes('/api/runtime-master/resolve') && r.status() === 200);
+  const response = page.waitForResponse((r) => responseHasSelection(r,key,value));
   await page.locator(`[data-spec-key="${key}"]`).selectOption(value);
   return (await response).json();
 }
 async function enterNumber(page, key, value) {
-  const response = page.waitForResponse((r) => r.url().includes('/api/runtime-master/resolve') && r.status() === 200);
+  const response = page.waitForResponse((r) => responseHasSelection(r,key,value));
   const input = page.locator(`[data-spec-key="${key}"]`);
   await input.fill(String(value));
   await input.dispatchEvent('change');
