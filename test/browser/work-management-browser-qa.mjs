@@ -18,10 +18,37 @@ function track(target){
 }
 track(page);
 
+function resolveSelection(response){
+  if(response.status()!==200||!response.url().includes('/resolve'))return null;
+  try{return JSON.parse(new URL(response.url()).searchParams.get('selection')??'{}');}catch{return null;}
+}
+function sameValue(actual,expected){
+  if(Array.isArray(expected))return Array.isArray(actual)&&actual.length===expected.length&&actual.every((value,index)=>String(value)===String(expected[index]));
+  return String(actual)===String(expected);
+}
 async function choose(key,value){
-  const response=page.waitForResponse((row)=>row.url().includes('/resolve')&&row.status()===200);
-  await page.locator(`[data-spec-key="${key}"]`).selectOption(String(value));
-  await response;
+  const response=page.waitForResponse((row)=>{const selection=resolveSelection(row);return selection&&sameValue(selection[key],value);});
+  await page.locator(`[data-spec-key="${key}"]`).selectOption(value);return (await response).json();
+}
+async function enterNumber(key,value){
+  const response=page.waitForResponse((row)=>{const selection=resolveSelection(row);return selection&&sameValue(selection[key],value);});
+  const input=page.locator(`[data-spec-key="${key}"]`);await input.fill(String(value));await input.dispatchEvent('change');return (await response).json();
+}
+async function chooseFirst(key,{prefer=null}={}){
+  const locator=page.locator(`[data-spec-key="${key}"]`);
+  const options=await locator.locator('option:not([value=""])').evaluateAll((rows)=>rows.map((row)=>({value:row.value,disabled:row.disabled})).filter((row)=>!row.disabled));
+  assert.ok(options.length,`${key} must have at least one selectable option`);
+  const value=prefer&&options.some((row)=>row.value===prefer)?prefer:options[0].value;
+  return choose(key,value);
+}
+async function completeVisibleRequiredSelects(result){
+  for(let pass=0;pass<30;pass++){
+    const missing=result.fields.find((field)=>field.required&&field.dataType!=='NUMBER'&&field.values?.length&&result.selection[field.key]===undefined);
+    if(!missing)return result;
+    const preferred=missing.key==='screen_presence'&&missing.values.some((row)=>row.value==='NONE')?'NONE':missing.values[0].value;
+    result=await choose(missing.key,preferred);
+  }
+  throw new Error('visible required Runtime fields did not converge');
 }
 
 async function createOpening(index,product){
@@ -32,13 +59,23 @@ async function createOpening(index,product){
   await page.locator('[data-opening-field="opening_name"]').fill(index===0?'掃き出し窓':`開口${index+1}`);
   await page.selectOption('#manufacturer',product.manufacturer);
   const initial=page.waitForResponse((row)=>row.url().includes('/resolve')&&row.status()===200);
-  await page.selectOption('#product',product.id);await initial;
+  await page.selectOption('#product',product.id);let result=await (await initial).json();
   if(index===0){
-    await choose('window_type','SWT-LIX-TW-SHUT-HIKI-FLAT');
-    await choose('shutter_type','SP-TW-SHUT-MAN-STD');
-    await choose('panel_count','2枚建');
-    const firstSize=await page.locator('[data-spec-key="size"] option:not([value=""])').first().getAttribute('value');
-    assert.ok(firstSize);await choose('size',firstSize);
+    result=await choose('window_type','SWT-LIX-TW-GRILLE-HIKI');
+    result=await choose('grille_type','SP-TW-GRILLE-VERT');
+    result=await choose('size_mode','CUSTOM');
+    result=await enterNumber('custom_width',630);
+    result=await enterNumber('custom_height',350);
+    assert.equal(result.dimensionResult?.status,'REVIEW_REQUIRED');
+    assert.ok(result.fields.some((field)=>field.key==='exterior_color'));
+    result=await chooseFirst('exterior_color');
+    result=await chooseFirst('interior_color');
+    if(result.fields.some((field)=>field.key==='screen_presence'))result=await chooseFirst('screen_presence',{prefer:'NONE'});
+    result=await chooseFirst('glass_base');
+    result=await completeVisibleRequiredSelects(result);
+    assert.equal(result.dimensionResult?.status,'REVIEW_REQUIRED');
+    assert.equal(result.orderReady,false);
+    assert.ok(result.fields.some((field)=>field.key==='option'));
   }
   await page.getByRole('button',{name:'この開口部を保存'}).click();
   await page.waitForURL(/\/estimates\/est_/);
@@ -71,12 +108,23 @@ try{
   const estimateId=new URL(estimateUrl).pathname.split('/').at(-1);
   const active=database.openings.filter((row)=>row.estimate_id===estimateId&&!row.deleted_at);
   assert.equal(active.length,10);assert.deepEqual(new Set(active.map((row)=>row.product_configuration_snapshot.manufacturer)),new Set(['LIXIL','YKK AP']));
-  report.scenarios.B='PASS';
+  const savedCustomTw=active.find((row)=>row.product_configuration_snapshot?.product_id==='SER-LIXIL-TW'&&row.product_configuration_snapshot?.configuration?.size_mode==='CUSTOM');
+  assert.ok(savedCustomTw,'a valid TW CUSTOM opening must be persisted');
+  assert.equal(savedCustomTw.product_configuration_snapshot.configuration.custom_width,630);
+  assert.equal(savedCustomTw.product_configuration_snapshot.configuration.custom_height,350);
+  assert.equal(savedCustomTw.product_configuration_snapshot.validation_state,'VALID');
+  assert.equal(savedCustomTw.product_configuration_snapshot.configuration.size,undefined);
+  report.scenarios.B='PASS';report.scenarios.TW_CUSTOM_CONTINUE_AND_SAVE='PASS';
 
   await page.locator('.opening-card').first().getByRole('button',{name:'複製'}).click();
   assert.equal(await page.locator('.opening-card').count(),11);
   await page.locator('.opening-card').last().getByRole('button',{name:'編集'}).click();
   await page.locator('[data-opening-field="opening_name"]').fill('掃き出し窓 サイズ変更');
+  const sizeMode=page.locator('[data-spec-key="size_mode"]');
+  if(await sizeMode.count()&&await sizeMode.inputValue()==='CUSTOM'){
+    await choose('size_mode','STANDARD');
+    if(await page.locator('[data-spec-key="panel_count"]').count())await chooseFirst('panel_count');
+  }
   await page.waitForFunction(()=>document.querySelectorAll('[data-spec-key="size"] option:not([value=""])').length>1);
   const sizeOptions=page.locator('[data-spec-key="size"] option:not([value=""])');
   assert.ok(await sizeOptions.count()>1);const secondSize=await sizeOptions.nth(1).getAttribute('value');await choose('size',secondSize);
