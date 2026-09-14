@@ -1,0 +1,93 @@
+name: Stage A MULTI_ENUM Browser Equivalence Candidate
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/stage-a-multienum-browser-equivalence-candidate.yml'
+      - 'test/browser/stage-a-multienum-browser-equivalence-candidate.mjs'
+      - 'scripts/stage-a-multienum-symbolic-proof-candidate.mjs'
+      - 'src/ui/web/product-configuration-editor.mjs'
+      - 'src/work-management/domain.mjs'
+      - 'src/catalog/runtime-master/**'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: stage-a-multienum-browser-equivalence-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  browser_equivalence_candidate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+      STAGE_A_BROWSER_EQ_OUT: artifacts/stage-a-multienum-browser-equivalence-candidate
+    steps:
+      - name: Checkout exact PR HEAD
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 1
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Exact SHA gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          actual="$(git rev-parse HEAD)"
+          test "$actual" = "$HEAD_SHA"
+          echo "EXACT_HEAD_GATE=PASS sha=$actual"
+
+      - name: Install app dependencies
+        run: npm install --ignore-scripts
+
+      - name: Install Chromium QA dependency
+        run: |
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+
+      - name: Start exact-head local Runtime UI
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm run start:qa > /tmp/stage-a-browser-equivalence.log 2>&1 &
+          echo $! > /tmp/stage-a-browser-equivalence.pid
+          for i in {1..60}; do
+            if curl -fsS http://127.0.0.1:4173/api/health > artifacts-health.json; then
+              cat artifacts-health.json
+              exit 0
+            fi
+            sleep 0.5
+          done
+          cat /tmp/stage-a-browser-equivalence.log || true
+          exit 1
+
+      - name: Run non-governing Desktop / Smartphone equivalence candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          node test/browser/stage-a-multienum-browser-equivalence-candidate.mjs | tee /tmp/stage-a-browser-equivalence-candidate.log
+
+      - name: Stop local Runtime UI
+        if: always()
+        shell: bash
+        run: |
+          if [[ -f /tmp/stage-a-browser-equivalence.pid ]]; then
+            kill "$(cat /tmp/stage-a-browser-equivalence.pid)" 2>/dev/null || true
+          fi
+
+      - name: Upload browser equivalence candidate evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: stage-a-multienum-browser-equivalence-candidate
+          path: |
+            artifacts/stage-a-multienum-browser-equivalence-candidate/
+            /tmp/stage-a-browser-equivalence-candidate.log
+          if-no-files-found: warn
