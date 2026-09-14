@@ -121,16 +121,37 @@ async function exercise(page) {
   let warningText = await assertUserFacingWarnings(page, 'TW vertical grille formal REVIEW_REQUIRED probe');
   assert.match(warningText, /要確認/);
 
+  // REVIEW_REQUIRED means "continue sales-estimate input, confirm before order".
+  // A formally in-range CUSTOM size must unlock the ordinary downstream selectors.
+  let field = result.fields.find((row) => row.key === 'exterior_color');
+  assert.ok(field, 'in-range CUSTOM must continue to exterior color');
+  result = await choose(page, 'exterior_color', field.values[0].value);
+  field = result.fields.find((row) => row.key === 'interior_color');
+  assert.ok(field, 'in-range CUSTOM must continue to interior color');
+  result = await choose(page, 'interior_color', field.values[0].value);
+  assert.ok(result.fields.some((row) => row.key === 'screen_presence'));
+  field = result.fields.find((row) => row.key === 'glass_base');
+  assert.ok(field, 'in-range CUSTOM must continue to glass');
+  result = await choose(page, 'glass_base', field.values[0].value);
+  assert.ok(result.fields.some((row) => row.key === 'option'), 'in-range CUSTOM must continue to options');
+  assert.equal(result.dimensionResult?.status, 'REVIEW_REQUIRED');
+
+  // Once the entered CUSTOM size becomes invalid, the downstream path must close and stale
+  // selections must be removed. The user can continue only after returning to an allowed size.
   result = await enterNumber(page, 'custom_width', 629);
   result = await enterNumber(page, 'custom_height', 887);
   assert.equal(hasOutOfRangeDiagnostic(result), true, 'TW vertical grille formal out-of-range probe must remain blocked');
+  for (const key of ['exterior_color','interior_color','screen_presence','screen_type','glass_base','glass_type','option']) {
+    assert.equal(result.selection[key], undefined, `${key} must clear after CUSTOM becomes out-of-range`);
+    assert.ok(!result.fields.some((row) => row.key === key), `${key} must be hidden while CUSTOM is out-of-range`);
+  }
   warningText = await assertUserFacingWarnings(page, 'TW vertical grille formal BLOCK probe');
   assert.match(warningText, /製作範囲外/);
   assert.match(warningText, /W・Hを変更してください/);
 
   await page.reload({ waitUntil:'networkidle' });
   await openTw(page);
-  return { formalRuntime:'PASS', fieldOrder:'PASS', conditionalFields:'PASS', sizeMode:'PASS', customRoute:'PASS', userFacingValidation:'PASS', screenBeforeGlass:'PASS', productCodes:'PASS', downstreamReset:'PASS', reloadReset:'PASS' };
+  return { formalRuntime:'PASS', fieldOrder:'PASS', conditionalFields:'PASS', sizeMode:'PASS', customRoute:'PASS', customContinuation:'PASS', blockedContinuation:'PASS', userFacingValidation:'PASS', screenBeforeGlass:'PASS', productCodes:'PASS', downstreamReset:'PASS', reloadReset:'PASS' };
 }
 
 try {
