@@ -184,13 +184,15 @@ try{
     assert.ok(runtimeSize?.values?.length,'STANDARD transition must expose at least one formal size');
     if(standardResult.selection.size!==undefined){
       assert.ok(runtimeSize.values.some((row)=>String(row.value)===String(standardResult.selection.size)),'auto-resolved STANDARD size must be a formal Runtime candidate');
+    }else{
+      const sizeControl=page.locator('[data-spec-key="size"]');
+      assert.equal(await sizeControl.count(),1,'STANDARD transition must render exactly one size control');
+      const renderedValues=await sizeControl.locator('option:not([value=""])').evaluateAll((rows)=>rows.map((row)=>row.value));
+      const formalValues=runtimeSize.values.map((row)=>String(row.value));
+      assert.deepEqual(renderedValues,formalValues,'rendered STANDARD size candidates must exactly match synchronized formal Runtime candidates');
+      const targetSize=runtimeSize.values[runtimeSize.values.length>1?1:0].value;
+      await choose('size',targetSize);
     }
-  }
-  if(standardResult?.selection?.size===undefined){
-    await page.waitForFunction(()=>document.querySelectorAll('[data-spec-key="size"] option:not([value=""])').length>0,undefined,{timeout:5000});
-    const sizeOptions=page.locator('[data-spec-key="size"] option:not([value=""])');
-    const sizeCount=await sizeOptions.count();
-    assert.ok(sizeCount>0);const targetSize=await sizeOptions.nth(sizeCount>1?1:0).getAttribute('value');await choose('size',targetSize);
   }
   await page.getByRole('button',{name:'この開口部を保存'}).click();await page.waitForURL(estimateUrl);
   assert.match(await page.locator('.opening-card').last().innerText(),/サイズ変更/);
