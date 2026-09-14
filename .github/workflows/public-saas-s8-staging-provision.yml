@@ -40,7 +40,7 @@ jobs:
             "https://api.vercel.com/v9/projects/$STAGING_PROJECT_NAME?teamId=$VERCEL_ORG_ID")"
 
           if [[ "$status" == "404" ]]; then
-            node -e 'require("node:fs").writeFileSync("/tmp/create-project.json",JSON.stringify({name:process.env.STAGING_PROJECT_NAME,framework:null,skipGitConnectDuringLink:true}))'
+            node -e 'require("node:fs").writeFileSync("/tmp/create-project.json",JSON.stringify({name:process.env.STAGING_PROJECT_NAME}))'
             status="$(curl -sS -o /tmp/staging-project.json -w '%{http_code}' \
               -X POST \
               -H "Authorization: Bearer $VERCEL_TOKEN_EFFECTIVE" \
@@ -48,9 +48,11 @@ jobs:
               --data-binary @/tmp/create-project.json \
               "https://api.vercel.com/v11/projects?teamId=$VERCEL_ORG_ID")"
             rm -f /tmp/create-project.json
-            [[ "$status" == "200" || "$status" == "201" ]]
-          else
-            [[ "$status" == "200" ]]
+          fi
+
+          if [[ "$status" != "200" && "$status" != "201" ]]; then
+            STATUS="$status" node -e 'const fs=require("node:fs");let p={};try{p=JSON.parse(fs.readFileSync("/tmp/staging-project.json","utf8"));}catch{};const e=p?.error??p??{};console.error(`S8_VERCEL_STAGING_PROJECT_GATE=BLOCKED status=${process.env.STATUS} code=${String(e.code??"unknown")} message=${String(e.message??"unknown").slice(0,240)}`)'
+            exit 43
           fi
 
           node -e 'const fs=require("node:fs");const p=JSON.parse(fs.readFileSync("/tmp/staging-project.json","utf8"));if(!p.id||p.name!==process.env.STAGING_PROJECT_NAME||p.accountId!==process.env.VERCEL_ORG_ID)process.exit(1);fs.appendFileSync(process.env.GITHUB_ENV,`STAGING_VERCEL_PROJECT_ID=${p.id}\n`);console.log(`S8_VERCEL_STAGING_PROJECT_GATE=PASS project=${p.name} id=${p.id}`)'
