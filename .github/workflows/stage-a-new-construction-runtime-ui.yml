@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - 'scripts/stage-a-multienum-population-preflight.mjs'
+      - 'scripts/stage-a-multienum-symbolic-proof-candidate.mjs'
       - 'scripts/stage-a-exhaustive-selector-state-graph.mjs'
       - '.github/workflows/stage-a-new-construction-runtime-ui.yml'
 
@@ -53,6 +54,47 @@ jobs:
         with:
           name: stage-a-multienum-population-preflight
           path: artifacts/stage-a-multienum-preflight/
+          if-no-files-found: error
+
+  multienum_symbolic_candidate:
+    needs: multienum_population_preflight
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+    steps:
+      - name: Checkout exact PR HEAD
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 1
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Exact SHA gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          actual="$(git rev-parse HEAD)"
+          test "$actual" = "$HEAD_SHA"
+          echo "EXACT_HEAD_GATE=PASS sha=$actual"
+
+      - name: Non-sampling symbolic proof candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts/stage-a-multienum-symbolic-candidate
+          node scripts/stage-a-multienum-symbolic-proof-candidate.mjs | tee artifacts/stage-a-multienum-symbolic-candidate/run.log
+
+      - name: Upload symbolic proof candidate evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: stage-a-multienum-symbolic-proof-candidate
+          path: artifacts/stage-a-multienum-symbolic-candidate/
           if-no-files-found: error
 
   exhaustive_state_graph_shard:
