@@ -30,6 +30,7 @@ const present = (value) => value !== undefined && value !== null && value !== ''
 const same = (actual, expected) => Array.isArray(expected)
   ? Array.isArray(actual) && expected.every((value) => actual.map(String).includes(String(value)))
   : String(actual) === String(expected);
+const subsetCount = (count) => (1n << BigInt(count)).toString();
 
 await mkdir(OUT, { recursive:true });
 const witnesses = [];
@@ -46,9 +47,27 @@ for (const witness of WITNESSES) {
   assert.ok(field, `${witness.product_id}/${witness.window_type}: ${witness.field} field missing`);
   assert.equal(field.dataType, 'MULTI_ENUM', `${witness.product_id}/${witness.window_type}: ${witness.field} must be MULTI_ENUM`);
   const enabled = (field.values ?? []).filter((choice) => choice.disabled !== true);
-  const candidateCount = enabled.length;
-  const rawSubsetCount = 1n << BigInt(candidateCount);
-  const exceedsExplicitLimit = candidateCount > MAX_EXPLICIT_MULTI_ENUM_VALUES;
+  const candidateValues = enabled.map((choice) => choice.value);
+  const candidateCount = candidateValues.length;
+
+  const allSelectedResult = await resolveRuntimeAppProduct(witness.product_id, {
+    ...witness.selection,
+    [witness.field]: candidateValues,
+  });
+  const jointlySurvivingValues = Array.isArray(allSelectedResult.selection?.[witness.field])
+    ? allSelectedResult.selection[witness.field].filter((value) => candidateValues.map(String).includes(String(value)))
+    : [];
+  const jointlySurvivingCount = jointlySurvivingValues.length;
+  assert.ok(jointlySurvivingCount > 0, `${witness.product_id}/${witness.window_type}: no jointly surviving ${witness.field} values`);
+  const jointResult = await resolveRuntimeAppProduct(witness.product_id, {
+    ...witness.selection,
+    [witness.field]: jointlySurvivingValues,
+  });
+  assert.ok(same(jointResult.selection?.[witness.field], jointlySurvivingValues), `${witness.product_id}/${witness.window_type}: jointly surviving set is not stable`);
+
+  const rawSubsetCount = subsetCount(candidateCount);
+  const compatibleSubsetLowerBound = subsetCount(jointlySurvivingCount);
+  const exceedsExplicitLimit = candidateCount > MAX_EXPLICIT_MULTI_ENUM_VALUES || jointlySurvivingCount > MAX_EXPLICIT_MULTI_ENUM_VALUES;
   if (exceedsExplicitLimit) blockerCount += 1;
   witnesses.push({
     manufacturer:witness.manufacturer,
@@ -58,12 +77,17 @@ for (const witness of WITNESSES) {
     field:witness.field,
     data_type:field.dataType,
     candidate_count:candidateCount,
-    raw_subset_count:rawSubsetCount.toString(),
+    raw_subset_count:rawSubsetCount,
+    jointly_surviving_count:jointlySurvivingCount,
+    compatible_subset_lower_bound:compatibleSubsetLowerBound,
     max_explicit_multi_enum_values:MAX_EXPLICIT_MULTI_ENUM_VALUES,
     exceeds_explicit_limit:exceedsExplicitLimit,
-    candidate_values:enabled.map((choice) => choice.value),
+    candidate_values:candidateValues,
+    jointly_surviving_values:jointlySurvivingValues,
     current_selection:result.selection,
+    all_selected_cleared_fields:allSelectedResult.clearedFields ?? [],
     evidence_head_sha:witness.evidence_head_sha,
+    monotonicity_basis:'TW canonical Runtime option availability only adds deny conditions when selected trigger options are present; removing options from a stable jointly-surviving set cannot create a new trigger-based deny for another survivor.',
   });
 }
 
@@ -81,13 +105,13 @@ const report = {
   app_integration_ready:false,
   release_input_gate:'BLOCKED',
   note:blockerCount
-    ? 'Sampling is prohibited. This preflight does not prune valid subsets; it fails closed before spending CI on an explicit power-set traversal that exceeds the configured safe enumeration bound.'
+    ? 'Sampling is prohibited. The witness contains a stable jointly-surviving MULTI_ENUM set whose subset population alone exceeds the configured explicit-enumeration bound. Heavy exhaustive shards are therefore fail-closed.'
     : 'No configured explicit-enumeration blocker was found by the current witnesses.',
 };
 await writeFile(`${OUT}/report.json`, `${JSON.stringify(report,null,2)}\n`, 'utf8');
 
 for (const row of witnesses) {
-  console.log(`MULTI_ENUM_WITNESS product=${row.product_id} window=${row.window_type} field=${row.field} candidates=${row.candidate_count} raw_subsets=${row.raw_subset_count}`);
+  console.log(`MULTI_ENUM_WITNESS product=${row.product_id} window=${row.window_type} field=${row.field} candidates=${row.candidate_count} raw_subsets=${row.raw_subset_count} jointly_surviving=${row.jointly_surviving_count} compatible_subset_lower_bound=${row.compatible_subset_lower_bound}`);
 }
 console.log(`MULTI_ENUM_BLOCKER_COUNT=${blockerCount}`);
 console.log(`EXHAUSTIVE_STATE_GRAPH_GATE=${report.exhaustive_state_graph_gate}`);
