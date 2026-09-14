@@ -36,7 +36,7 @@ try{
   assert.ok(await page.locator('.design-sidebar').isVisible());
   assert.ok(await page.locator('.reference-hero').isVisible());
   const heroBackground=await page.locator('.reference-hero').evaluate((node)=>getComputedStyle(node).backgroundImage);
-  assert.match(heroBackground,/design-preview-reference-hero\.svg/,'approved reference hero asset must be mounted as the HOME background');
+  assert.match(heroBackground,/design-preview-reference-hero\.jpg/,'approved reference hero asset must be mounted as the HOME background');
   assert.match(await page.locator('body').evaluate((node)=>getComputedStyle(node).fontFamily),/Noto Sans JP/);
   assert.equal(await page.locator('.reference-notice-card').count(),3);
   assert.equal(await page.locator('.reference-feature-card').count(),4);
@@ -68,7 +68,7 @@ try{
   await homeLandscape.locator('#themeSelect').selectOption('light');
   await homeLandscape.waitForSelector('[data-reference-home="1"]');
   assert.ok(await homeLandscape.locator('.reference-hero').isVisible());
-  assert.match(await homeLandscape.locator('.reference-hero').evaluate((node)=>getComputedStyle(node).backgroundImage),/design-preview-reference-hero\.svg/);
+  assert.match(await homeLandscape.locator('.reference-hero').evaluate((node)=>getComputedStyle(node).backgroundImage),/design-preview-reference-hero\.jpg/);
   assert.equal(await homeLandscape.locator('.reference-notice-card').count(),3);
   assert.equal(await homeLandscape.locator('.reference-feature-card').count(),4);
   await assertNoOverflow(homeLandscape,'iPad landscape home');
