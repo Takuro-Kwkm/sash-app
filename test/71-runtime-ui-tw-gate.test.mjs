@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { resolveRuntimeAppProduct } from '../src/catalog/runtime-master/runtime-app-bridge.mjs';
+import { loadRegisteredRuntime } from '../src/catalog/runtime-master/runtime-master-registry.mjs';
 
 const PRODUCT = 'SER-LIXIL-TW';
 
@@ -14,6 +15,14 @@ async function complete(windowType, overrides = {}) {
       ? 'NONE' : missing.values[0].value;
   }
   throw new Error('representative TW selection did not converge');
+}
+
+function formalBounds(rule) {
+  const raw = rule?.geometryRule?.bounds ?? rule?.bounds ?? {};
+  return {
+    minW:Number(raw.minW ?? raw.W_min), maxW:Number(raw.maxW ?? raw.W_max),
+    minH:Number(raw.minH ?? raw.H_min), maxH:Number(raw.maxH ?? raw.H_max),
+  };
 }
 
 test('TW starts with manufacturer/product/window context and exposes formal STANDARD/CUSTOM size modes in UI Standard order', async () => {
@@ -92,6 +101,32 @@ test('TW CUSTOM continues downstream only when the entered dimensions are inside
   for (const key of ['exterior_color','interior_color','screen_presence','screen_type','glass_base','glass_type','option']) {
     assert.equal(result.selection[key], undefined, `${key} must clear when CUSTOM dimensions become invalid`);
     assert.ok(!result.fields.some((field) => field.key === key), `${key} must not remain visible after a blocked CUSTOM size`);
+  }
+});
+
+test('all 25 TW formal CUSTOM rules continue in-range and stop out-of-range', async () => {
+  const runtime = await loadRegisteredRuntime('LIXIL','TW');
+  const rules = runtime.master.customDimensionRules;
+  assert.equal(rules.length, 25);
+  for (const rule of rules) {
+    const windowType = String(rule.productNode ?? rule.windowId ?? rule.selector?.window_type ?? '');
+    const bounds = formalBounds(rule);
+    assert.ok(windowType);
+    assert.ok(Object.values(bounds).every(Number.isFinite), `${windowType} must have finite formal outer bounds`);
+    const width = Math.round((bounds.minW + bounds.maxW) / 2);
+    const height = Math.round((bounds.minH + bounds.maxH) / 2);
+    let result = await resolveRuntimeAppProduct(PRODUCT, {
+      window_type:windowType, size_mode:'CUSTOM', custom_width:width, custom_height:height,
+    });
+    assert.equal(result.dimensionResult?.status, 'REVIEW_REQUIRED', `${windowType} in-range CUSTOM must remain review-required`);
+    assert.ok(result.fields.some((field) => field.key === 'exterior_color'), `${windowType} in-range CUSTOM must expose downstream color`);
+    assert.ok(!result.fields.some((field) => field.key === 'size'), `${windowType} must not expose runtime-only context size`);
+
+    result = await resolveRuntimeAppProduct(PRODUCT, {
+      window_type:windowType, size_mode:'CUSTOM', custom_width:bounds.minW - 1, custom_height:height,
+    });
+    assert.equal(result.dimensionResult?.status, 'BLOCK', `${windowType} out-of-range CUSTOM must block`);
+    assert.ok(!result.fields.some((field) => field.key === 'exterior_color'), `${windowType} out-of-range CUSTOM must not expose downstream color`);
   }
 });
 
