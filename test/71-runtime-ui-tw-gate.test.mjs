@@ -25,6 +25,21 @@ function formalBounds(rule) {
   };
 }
 
+async function completeCustomUpstream(windowType) {
+  let selection = { window_type:windowType, size_mode:'CUSTOM' };
+  for (let pass = 0; pass < 30; pass += 1) {
+    const result = await resolveRuntimeAppProduct(PRODUCT, selection);
+    const missing = result.fields.find((field) =>
+      field.required && !['custom_width','custom_height'].includes(field.key) &&
+      selection[field.key] === undefined && field.values.length);
+    if (!missing) return { result, selection:result.selection };
+    const value = missing.key === 'screen_presence' && missing.values.some((row) => row.value === 'NONE')
+      ? 'NONE' : missing.values[0].value;
+    selection = { ...result.selection, [missing.key]:value };
+  }
+  throw new Error(`TW CUSTOM upstream frontier did not converge: ${windowType}`);
+}
+
 test('TW starts with manufacturer/product/window context and exposes formal STANDARD/CUSTOM size modes in UI Standard order', async () => {
   const initial = await resolveRuntimeAppProduct(PRODUCT, {});
   assert.deepEqual(initial.fields.map((field) => field.key), ['window_type']);
@@ -113,17 +128,18 @@ test('all 25 TW formal CUSTOM rules continue in-range and stop out-of-range', as
     const bounds = formalBounds(rule);
     assert.ok(windowType);
     assert.ok(Object.values(bounds).every(Number.isFinite), `${windowType} must have finite formal outer bounds`);
+    const frontier = await completeCustomUpstream(windowType);
     const width = Math.round((bounds.minW + bounds.maxW) / 2);
     const height = Math.round((bounds.minH + bounds.maxH) / 2);
     let result = await resolveRuntimeAppProduct(PRODUCT, {
-      window_type:windowType, size_mode:'CUSTOM', custom_width:width, custom_height:height,
+      ...frontier.selection, custom_width:width, custom_height:height,
     });
     assert.equal(result.dimensionResult?.status, 'REVIEW_REQUIRED', `${windowType} in-range CUSTOM must remain review-required`);
     assert.ok(result.fields.some((field) => field.key === 'exterior_color'), `${windowType} in-range CUSTOM must expose downstream color`);
     assert.ok(!result.fields.some((field) => field.key === 'size'), `${windowType} must not expose runtime-only context size`);
 
     result = await resolveRuntimeAppProduct(PRODUCT, {
-      window_type:windowType, size_mode:'CUSTOM', custom_width:bounds.minW - 1, custom_height:height,
+      ...frontier.selection, custom_width:bounds.minW - 1, custom_height:height,
     });
     assert.equal(result.dimensionResult?.status, 'BLOCK', `${windowType} out-of-range CUSTOM must block`);
     assert.ok(!result.fields.some((field) => field.key === 'exterior_color'), `${windowType} out-of-range CUSTOM must not expose downstream color`);
