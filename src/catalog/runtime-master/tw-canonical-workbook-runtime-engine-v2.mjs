@@ -3,6 +3,7 @@ import { evaluateCanonicalWorkbookRuntime } from './canonical-workbook-runtime-e
 const CUSTOM_CONTEXT_SIZE_ID = '__TW_CUSTOM_DIMENSION_CONTEXT__';
 const present = (value) => value !== undefined && value !== null && value !== '';
 const clone = (value) => structuredClone(value);
+const referencedSizeIdsCache = new WeakMap();
 
 function customRule(master, windowType) {
   return (master.customDimensionRules ?? []).find((rule) =>
@@ -63,6 +64,103 @@ function dimensionMetadata(rule) {
 function panelCount(row) {
   if (String(row.configuration ?? '').includes('4枚建') || /-4(?:$|\D)/.test(String(row.nominal_w ?? ''))) return '4枚建';
   return '2枚建';
+}
+
+function formalSizeCode(row) {
+  const id = String(row?.id ?? '');
+  const five = id.match(/(?:^|[-_])(\d{5})$/);
+  if (five) return five[1];
+  const w = present(row?.nominal_w) ? String(row.nominal_w).trim() : '';
+  const h = present(row?.nominal_h) ? String(row.nominal_h).trim() : '';
+  if (w.includes('-') && h) return `${w}-${h}`;
+  if (w && h && (id === `${w}-${h}` || id.endsWith(`-${w}-${h}`))) return `${w}-${h}`;
+  if (typeof row?.nominal_w === 'string' && typeof row?.nominal_h === 'string' && w && h) return `${w}${h}`;
+  return null;
+}
+
+function standardSizeEquivalenceKey(row) {
+  const callCode = formalSizeCode(row);
+  if (!callCode) return null;
+  return JSON.stringify([
+    callCode,
+    Number(row.actual_w), Number(row.actual_h),
+    String(row.configuration ?? ''),
+    Boolean(row.direction_required),
+    String(row.direction_options ?? ''),
+    String(row.direction_type ?? ''),
+    panelCount(row),
+  ]);
+}
+
+function collectExactSizeRefs(value, knownIds, refs) {
+  if (typeof value === 'string') {
+    if (knownIds.has(value)) refs.add(value);
+    return;
+  }
+  if (Array.isArray(value)) {
+    for (const item of value) collectExactSizeRefs(item, knownIds, refs);
+    return;
+  }
+  if (!value || typeof value !== 'object') return;
+  for (const item of Object.values(value)) collectExactSizeRefs(item, knownIds, refs);
+}
+
+function referencedSizeIds(master) {
+  if (referencedSizeIdsCache.has(master)) return referencedSizeIdsCache.get(master);
+  const knownIds = new Set((master.provider?.sizes ?? []).map((row) => row.id));
+  const refs = new Set();
+  collectExactSizeRefs(master.sourceRows ?? {}, knownIds, refs);
+  referencedSizeIdsCache.set(master, refs);
+  return refs;
+}
+
+function equivalentStandardRows(master, row) {
+  const key = standardSizeEquivalenceKey(row);
+  if (!key) return [row];
+  const refs = referencedSizeIds(master);
+  const rows = (master.provider?.sizes ?? []).filter((candidate) =>
+    candidate.active !== false &&
+    candidate.window_id === row.window_id &&
+    standardSizeEquivalenceKey(candidate) === key);
+  if (rows.length < 2 || rows.some((candidate) => refs.has(candidate.id))) return [row];
+  return rows;
+}
+
+function canonicalizeStandardInput(master, input) {
+  const result = { ...(input ?? {}) };
+  if (!present(result.size)) return { input:result, canonicalized:null };
+  const selected = (master.provider?.sizes ?? []).find((row) => row.id === result.size);
+  if (!selected) return { input:result, canonicalized:null };
+  const group = equivalentStandardRows(master, selected);
+  const representative = group[0]?.id;
+  if (!representative || representative === result.size) return { input:result, canonicalized:null };
+  const previous = result.size;
+  result.size = representative;
+  return { input:result, canonicalized:{ field:'size', reason:'EQUIVALENT_FORMAL_SIZE_CANONICALIZED', removed:previous, replacement:representative } };
+}
+
+function dedupeStandardSizeField(master, fields) {
+  const field = fields.size;
+  if (!field || !Array.isArray(field.allowed_values) || field.allowed_values.length < 2) return fields;
+  const sourceById = new Map((master.provider?.sizes ?? []).map((row) => [row.id, row]));
+  const refs = referencedSizeIds(master);
+  const grouped = new Map();
+  for (const id of field.allowed_values) {
+    const row = sourceById.get(id);
+    const key = row ? standardSizeEquivalenceKey(row) : null;
+    const groupKey = key ?? `__UNIQUE__:${id}`;
+    if (!grouped.has(groupKey)) grouped.set(groupKey, []);
+    grouped.get(groupKey).push(id);
+  }
+  const keep = new Set();
+  for (const ids of grouped.values()) {
+    const canCollapse = ids.length > 1 && !ids.some((id) => refs.has(id));
+    if (canCollapse) keep.add(ids[0]);
+    else for (const id of ids) keep.add(id);
+  }
+  const allowedValues = field.allowed_values.filter((id) => keep.has(id));
+  if (allowedValues.length === field.allowed_values.length) return fields;
+  return { ...fields, size:{ ...field, allowed_values:allowedValues } };
 }
 
 function customConfiguration(master, input) {
@@ -131,11 +229,17 @@ function clearContextSize(fields) {
 export function evaluateTwCanonicalWorkbookRuntimeV2(master, input = {}) {
   const mode = input.size_mode === 'CUSTOM' ? 'CUSTOM' : 'STANDARD';
   if (mode === 'STANDARD') {
-    const base = evaluateCanonicalWorkbookRuntime(master, without(input, ['custom_width','custom_height']));
+    const normalized = canonicalizeStandardInput(master, without(input, ['custom_width','custom_height']));
+    const base = evaluateCanonicalWorkbookRuntime(master, normalized.input);
+    const sizeFields = dedupeStandardSizeField(master, { ...base.fields });
     return {
       ...base,
-      fields: exposeFormalCustomMode(master, { ...base.fields }, input.window_type),
-      cleared_fields: [...(base.cleared_fields ?? []), ...clearedFromModeSwitch(input, 'STANDARD')],
+      fields: exposeFormalCustomMode(master, sizeFields, normalized.input.window_type),
+      cleared_fields: [
+        ...(base.cleared_fields ?? []),
+        ...(normalized.canonicalized ? [normalized.canonicalized] : []),
+        ...clearedFromModeSwitch(input, 'STANDARD'),
+      ],
     };
   }
 
