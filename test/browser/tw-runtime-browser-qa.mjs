@@ -119,7 +119,7 @@ async function exercise(page) {
   result = await enterNumber(page, 'custom_height', 350);
   assert.equal(result.dimensionResult?.status, 'REVIEW_REQUIRED');
   let warningText = await assertUserFacingWarnings(page, 'TW vertical grille formal REVIEW_REQUIRED probe');
-  assert.match(warningText, /要確認/);
+  assert.match(warningText, /メーカー確認が必要/);
 
   // REVIEW_REQUIRED means "continue sales-estimate input, confirm before order".
   // A formally in-range CUSTOM size must unlock the ordinary downstream selectors.
