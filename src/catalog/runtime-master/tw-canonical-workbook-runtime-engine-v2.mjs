@@ -1,5 +1,6 @@
 import { evaluateCanonicalWorkbookRuntime } from './canonical-workbook-runtime-engine.mjs';
 
+const CUSTOM_CONTEXT_SIZE_ID = '__TW_CUSTOM_DIMENSION_CONTEXT__';
 const present = (value) => value !== undefined && value !== null && value !== '';
 const clone = (value) => structuredClone(value);
 
@@ -59,6 +60,74 @@ function dimensionMetadata(rule) {
   };
 }
 
+function panelCount(row) {
+  if (String(row.configuration ?? '').includes('4枚建') || /-4(?:$|\D)/.test(String(row.nominal_w ?? ''))) return '4枚建';
+  return '2枚建';
+}
+
+function customConfiguration(master, input) {
+  const rows = (master.provider?.sizes ?? []).filter((row) => row.active !== false && row.window_id === input.window_type &&
+    (!input.panel_count || panelCount(row) === input.panel_count));
+  const families = [...new Set(rows.map((row) => {
+    const configuration = String(row.configuration ?? '');
+    if (configuration.includes('テラス')) return 'テラス';
+    if (configuration.includes('マド')) return 'マド';
+    return null;
+  }).filter(Boolean))];
+  const family = families.length === 1 ? families[0] : null;
+  return [family, input.panel_count].filter(Boolean).join('・') || null;
+}
+
+function continuationMaster(master, input, width, height) {
+  const contextSize = {
+    id: CUSTOM_CONTEXT_SIZE_ID,
+    active: true,
+    window_id: input.window_type,
+    actual_w: width,
+    actual_h: height,
+    nominal_w: String(width),
+    nominal_h: String(height),
+    configuration: customConfiguration(master, input),
+    runtime_context_only: true,
+  };
+  const contextValue = {
+    value_id: `size:${CUSTOM_CONTEXT_SIZE_ID}`,
+    field_name: 'size',
+    canonical_value: CUSTOM_CONTEXT_SIZE_ID,
+    display_label: '特注寸法評価コンテキスト',
+    status: 'CURRENT',
+    runtime_selectable: true,
+    user_selectable: true,
+    source: { runtimeContextOnly:true },
+  };
+  return {
+    ...master,
+    provider: { ...master.provider, sizes:[...(master.provider?.sizes ?? []), contextSize] },
+    values: [...master.values, contextValue],
+  };
+}
+
+function customBaseInput(input) {
+  return without(input, ['size_mode','size','custom_width','custom_height']);
+}
+
+function evaluateCustomContinuation(master, input, width, height) {
+  const contextMaster = continuationMaster(master, input, width, height);
+  return evaluateCanonicalWorkbookRuntime(contextMaster, {
+    ...customBaseInput(input),
+    size_mode: 'STANDARD',
+    size: CUSTOM_CONTEXT_SIZE_ID,
+  });
+}
+
+function clearContextSize(fields) {
+  if (!fields.size) return fields;
+  return {
+    ...fields,
+    size: { ...fields.size, value:null, state:'NOT_APPLICABLE', visibility:'HIDE', required:false, allowed_values:[] },
+  };
+}
+
 export function evaluateTwCanonicalWorkbookRuntimeV2(master, input = {}) {
   const mode = input.size_mode === 'CUSTOM' ? 'CUSTOM' : 'STANDARD';
   if (mode === 'STANDARD') {
@@ -70,17 +139,25 @@ export function evaluateTwCanonicalWorkbookRuntimeV2(master, input = {}) {
     };
   }
 
-  const baseInput = without(input, ['size_mode','size','custom_width','custom_height']);
-  const base = evaluateCanonicalWorkbookRuntime(master, baseInput);
-  const fields = { ...base.fields };
   const width = present(input.custom_width) ? Number(input.custom_width) : null;
   const height = present(input.custom_height) ? Number(input.custom_height) : null;
+  const rule = customRule(master, input.window_type);
+  const bounds = boundsFor(rule);
+  const dimensionComplete = Number.isFinite(width) && Number.isFinite(height);
+  const dimensionInside = dimensionComplete && Boolean(rule) && Boolean(bounds) && inside(width, height, bounds);
+
+  // CUSTOM is allowed to continue through the ordinary dependency graph only after the
+  // formal outer-envelope check succeeds. The context size is evaluation-only and is
+  // never exposed or persisted as a standard-size selection.
+  const base = dimensionInside
+    ? evaluateCustomContinuation(master, input, width, height)
+    : evaluateCanonicalWorkbookRuntime(master, customBaseInput(input));
+  let fields = clearContextSize({ ...base.fields });
 
   fields.size_mode = {
     ...(fields.size_mode ?? {}), value:'CUSTOM', state:'SELECTED', visibility:'SHOW', required:true,
     allowed_values:['STANDARD','CUSTOM'], resolved_by_rule:null,
   };
-  if (fields.size) fields.size = { ...fields.size, value:null, state:'NOT_APPLICABLE', visibility:'HIDE', required:false, allowed_values:[] };
   fields.custom_width = {
     ...(fields.custom_width ?? {}), value:Number.isFinite(width) ? width : null,
     state:Number.isFinite(width) ? 'SELECTED' : 'UNSET', visibility:'SHOW', required:true, allowed_values:[], unit:'mm',
@@ -97,10 +174,8 @@ export function evaluateTwCanonicalWorkbookRuntimeV2(master, input = {}) {
   let dimensionResult = null;
   let status = (base.errors ?? []).length ? 'INVALID' : missing.length ? 'INCOMPLETE' : 'MANUAL_CHECK';
   const manualWarnings = [...(base.manual_warnings ?? [])];
-  const errors = [...(base.errors ?? [])];
-  if (Number.isFinite(width) && Number.isFinite(height)) {
-    const rule = customRule(master, input.window_type);
-    const bounds = boundsFor(rule);
+  const errors = [...(base.errors ?? [])].filter((error) => error?.value !== CUSTOM_CONTEXT_SIZE_ID);
+  if (dimensionComplete) {
     if (!rule || !bounds) {
       dimensionResult = {
         status:'BLOCK', code:'CUSTOM_DIMENSION_FORMAL_RULE_MISSING',
@@ -109,7 +184,7 @@ export function evaluateTwCanonicalWorkbookRuntimeV2(master, input = {}) {
       };
       errors.push({ code:'CUSTOM_DIMENSION_FORMAL_RULE_MISSING', field:'size_mode' });
       status = 'INVALID';
-    } else if (!inside(width, height, bounds)) {
+    } else if (!dimensionInside) {
       dimensionResult = {
         status:'BLOCK', code:'CUSTOM_DIMENSION_OUT_OF_FORMAL_OUTER_BOUNDS',
         matchedRuleIds:[rule.id].filter(Boolean),
@@ -123,7 +198,7 @@ export function evaluateTwCanonicalWorkbookRuntimeV2(master, input = {}) {
         matchedRuleIds:[rule.id].filter(Boolean),
         ...dimensionMetadata(rule),
       };
-      manualWarnings.push('正式Runtimeの特注寸法外枠範囲内。原本グラフ・ガラス構成・耐風圧・各仕様条件はメーカー一次資料で最終確認。');
+      manualWarnings.push('正式Runtimeの特注寸法外枠範囲内。営業見積入力は継続可能。原本グラフ・ガラス構成・耐風圧・各仕様条件はメーカー一次資料で最終確認。');
       status = missing.length ? 'INCOMPLETE' : 'MANUAL_CHECK';
     }
   }
@@ -134,7 +209,7 @@ export function evaluateTwCanonicalWorkbookRuntimeV2(master, input = {}) {
     errors,
     status,
     missing_required_fields:[...new Set(missing)],
-    cleared_fields:[...(base.cleared_fields ?? []), ...clearedFromModeSwitch(input, 'CUSTOM')],
+    cleared_fields:[...(base.cleared_fields ?? []).filter((row) => row?.removed !== CUSTOM_CONTEXT_SIZE_ID), ...clearedFromModeSwitch(input, 'CUSTOM')],
     manual_warnings:[...new Set(manualWarnings)],
     dimension_result:dimensionResult,
     order_ready:false,
