@@ -46,6 +46,25 @@ export function selectLatestReadyPreview(deployments,{branch,expectedSha}={}){
   });
 }
 
+export function selectReadyPreviewById(deployments,{deploymentId,branch,expectedSha,expectedUrl}={}){
+  const match=(Array.isArray(deployments)?deployments:[]).find((deployment)=>String(deployment?.uid??deployment?.id??'')===String(deploymentId??''));
+  if(!match)throw new PublicSaaSMonitorError('EXPECTED_PREVIEW_NOT_FOUND','P0','The expected Preview deployment was not returned by Vercel.');
+  const state=String(match?.readyState??match?.state??'').toUpperCase();
+  if(state!=='READY')throw new PublicSaaSMonitorError('EXPECTED_PREVIEW_NOT_READY','P0','The expected Preview deployment is not READY.');
+  if(String(match?.target??'').toLowerCase()==='production')throw new PublicSaaSMonitorError('EXPECTED_PREVIEW_IS_PRODUCTION','P0','The expected Preview deployment unexpectedly targets production.');
+  const sha=deploymentSha(match);
+  const ref=deploymentRef(match);
+  if(branch&&ref!==branch)throw new PublicSaaSMonitorError('PREVIEW_REF_MISMATCH','P1','The expected Preview deployment does not match the Public SaaS branch.');
+  if(expectedSha&&sha!==expectedSha)throw new PublicSaaSMonitorError('PREVIEW_SHA_MISMATCH','P1','The expected Preview deployment does not match the expected GitHub SHA.');
+  const rawUrl=String(match?.url??'').trim();
+  if(!rawUrl)throw new PublicSaaSMonitorError('PREVIEW_URL_MISSING','P0','READY Preview deployment has no URL.');
+  const url=rawUrl.startsWith('http')?rawUrl:`https://${rawUrl}`;
+  if(expectedUrl&&new URL(url).origin!==new URL(String(expectedUrl)).origin){
+    throw new PublicSaaSMonitorError('PREVIEW_URL_MISMATCH','P0','The expected Preview deployment URL does not match the deployed artifact.');
+  }
+  return Object.freeze({id:String(match?.uid??match?.id??''),url,sha,ref,createdAt:match?.createdAt??match?.created??null});
+}
+
 export function evaluateHealthPayload(payload,status,{expectedEnvironmentRole='',expectedSupabaseProjectRef=''}={}){
   if(status!==200)throw new PublicSaaSMonitorError('HEALTH_HTTP_FAILURE','P0',`Public SaaS health endpoint returned HTTP ${status}.`);
   if(!payload||payload.ok!==true)throw new PublicSaaSMonitorError('HEALTH_NOT_OK','P0','Public SaaS health endpoint did not report ok=true.');
@@ -219,6 +238,8 @@ export async function runPublicSaaSHealthMonitor({
   projectId,
   branch='feat/public-saas-foundation-a1',
   expectedSha='',
+  expectedDeploymentId='',
+  expectedDeploymentUrl='',
   expectedEnvironmentRole='',
   expectedSupabaseProjectRef='',
   shareValue='',
@@ -240,7 +261,9 @@ export async function runPublicSaaSHealthMonitor({
   }
   if(!listResponse.ok)throw new PublicSaaSMonitorError('VERCEL_API_REJECTED','P0',`Vercel deployment API returned HTTP ${listResponse.status}.`);
   const listPayload=await parseJsonResponse(listResponse);
-  const deployment=selectLatestReadyPreview(listPayload?.deployments,{branch,expectedSha:expectedSha||undefined});
+  const deployment=expectedDeploymentId
+    ?selectReadyPreviewById(listPayload?.deployments,{deploymentId:expectedDeploymentId,branch,expectedSha:expectedSha||undefined,expectedUrl:expectedDeploymentUrl||undefined})
+    :selectLatestReadyPreview(listPayload?.deployments,{branch,expectedSha:expectedSha||undefined});
   const reusableShare=boundedShareValue(shareValue);
   const effectiveShareValue=reusableShare??await createTemporaryPreviewShare({token,teamId,deploymentId:deployment.id,fetchImpl});
   const protectedFetch=createShareAuthenticatedFetch({deploymentUrl:deployment.url,shareValue:effectiveShareValue,fetchImpl});
@@ -322,6 +345,8 @@ async function main(){
       projectId:process.env.VERCEL_PROJECT_ID,
       branch:process.env.PUBLIC_SAAS_HEAD_REF??'feat/public-saas-foundation-a1',
       expectedSha:process.env.PUBLIC_SAAS_EXPECTED_SHA??'',
+      expectedDeploymentId:process.env.DEPLOY_ID??'',
+      expectedDeploymentUrl:process.env.DEPLOY_URL??'',
       expectedEnvironmentRole:process.env.PUBLIC_SAAS_EXPECTED_ENVIRONMENT_ROLE??'',
       expectedSupabaseProjectRef:process.env.PUBLIC_SAAS_EXPECTED_SUPABASE_PROJECT_REF??'',
       shareValue:process.env.VERCEL_SHARE_VALUE??'',

@@ -6,6 +6,7 @@ import {
   PublicSaaSMonitorError,
   runPublicSaaSHealthMonitor,
   selectLatestReadyPreview,
+  selectReadyPreviewById,
 } from '../scripts/public-saas-health-monitor.mjs';
 import { buildAlertBody, findOpenMonitorIssue, routePublicSaaSAlert } from '../scripts/public-saas-github-alert.mjs';
 
@@ -26,6 +27,21 @@ test('expected SHA mismatch is P1',()=>{
     ()=>selectLatestReadyPreview([{id:'d1',readyState:'READY',url:'preview.vercel.app',createdAt:1,meta:{githubCommitRef:'feat/public-saas-foundation-a1',githubCommitSha:'aaa'}}],{branch:'feat/public-saas-foundation-a1',expectedSha:'bbb'}),
     (error)=>error instanceof PublicSaaSMonitorError&&error.code==='PREVIEW_SHA_MISMATCH'&&error.severity==='P1',
   );
+});
+
+test('exact deployment selection does not drift to a competing newer Preview',()=>{
+  const deployments=[
+    {id:'expected',readyState:'READY',target:null,url:'expected.vercel.app',createdAt:100,meta:{githubCommitRef:'feat/public-saas-foundation-a1',githubCommitSha:'same-sha'}},
+    {id:'newer',readyState:'READY',target:null,url:'newer.vercel.app',createdAt:200,meta:{githubCommitRef:'feat/public-saas-foundation-a1',githubCommitSha:'same-sha'}},
+  ];
+  const selected=selectReadyPreviewById(deployments,{
+    deploymentId:'expected',
+    branch:'feat/public-saas-foundation-a1',
+    expectedSha:'same-sha',
+    expectedUrl:'https://expected.vercel.app',
+  });
+  assert.equal(selected.id,'expected');
+  assert.equal(selected.url,'https://expected.vercel.app');
 });
 
 test('health payload requires Supabase configured and ok',()=>{
@@ -118,15 +134,19 @@ test('monitor reuses an existing bounded Preview share without issuing a second 
     const href=String(url);
     const parsed=new URL(href);
     calls.push({url:href,init});
-    if(parsed.hostname==='api.vercel.com'&&parsed.pathname==='/v6/deployments')return new Response(JSON.stringify({deployments:[{id:'dpl_test',readyState:'READY',target:null,url:'preview.vercel.app',createdAt:123,meta:{githubCommitRef:'feat/public-saas-foundation-a1',githubCommitSha:'abcdef'}}]}),{status:200,headers:{'content-type':'application/json'}});
+    if(parsed.hostname==='api.vercel.com'&&parsed.pathname==='/v6/deployments')return new Response(JSON.stringify({deployments:[
+      {id:'dpl_competing',readyState:'READY',target:null,url:'competing.vercel.app',createdAt:456,meta:{githubCommitRef:'feat/public-saas-foundation-a1',githubCommitSha:'abcdef'}},
+      {id:'dpl_test',readyState:'READY',target:null,url:'preview.vercel.app',createdAt:123,meta:{githubCommitRef:'feat/public-saas-foundation-a1',githubCommitSha:'abcdef'}},
+    ]}),{status:200,headers:{'content-type':'application/json'}});
     if(parsed.hostname==='api.vercel.com'&&parsed.pathname.includes('/protection-bypass'))throw new Error('second share PATCH must not occur');
     if(parsed.hostname==='preview.vercel.app'&&parsed.pathname==='/api/public-saas/health')return new Response(JSON.stringify({ok:true,configured:true,provider:'SUPABASE'}),{status:200,headers:{'content-type':'application/json'}});
     if(parsed.hostname==='preview.vercel.app'&&parsed.pathname==='/api/public-saas/monitoring/status')return new Response(JSON.stringify({ok:true,configured:true,provider:'POSTHOG',environment:'preview'}),{status:200,headers:{'content-type':'application/json'}});
     if(parsed.hostname==='preview.vercel.app'&&parsed.pathname==='/public-saas')return new Response('<title>Public SaaS Foundation</title>',{status:200,headers:{'content-type':'text/html'}});
     throw new Error(`unexpected URL ${href}`);
   };
-  const result=await runPublicSaaSHealthMonitor({token:'vercel-token',teamId:'team_test',projectId:'prj_test',branch:'feat/public-saas-foundation-a1',expectedSha:'abcdef',shareValue:share,fetchImpl});
+  const result=await runPublicSaaSHealthMonitor({token:'vercel-token',teamId:'team_test',projectId:'prj_test',branch:'feat/public-saas-foundation-a1',expectedSha:'abcdef',expectedDeploymentId:'dpl_test',expectedDeploymentUrl:'https://preview.vercel.app',shareValue:share,fetchImpl});
   assert.equal(result.ok,true);
+  assert.equal(result.deploymentId,'dpl_test');
   assert.equal(calls.filter((call)=>new URL(call.url).pathname.includes('/protection-bypass')).length,0);
   assert.equal(calls.some((call)=>call.url.includes(`_vercel_share=${share}`)),true);
   assert.equal(JSON.stringify(result).includes(share),false);
