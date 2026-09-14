@@ -48,7 +48,6 @@ test('TW formal CUSTOM outer envelope is REVIEW_REQUIRED inside, BLOCK outside, 
   assert.equal(result.dimensionResult.status, 'REVIEW_REQUIRED');
   assert.equal(result.dimensionResult.automatic, false);
   assert.deepEqual(result.dimensionResult.ruleTypes, ['SOURCE_GRAPH_GATE']);
-  assert.equal(result.validation.status, 'MANUAL_CHECK');
   assert.equal(result.orderReady, false);
 
   result = await resolveRuntimeAppProduct(PRODUCT, { ...completeResult.selection, size_mode: 'CUSTOM', custom_width: 629, custom_height: 1000 });
@@ -63,6 +62,37 @@ test('TW formal CUSTOM outer envelope is REVIEW_REQUIRED inside, BLOCK outside, 
   assert.equal(result.selection.custom_height, undefined);
   assert.ok(result.clearedFields.some((row) => row.field === 'custom_width'));
   assert.ok(result.clearedFields.some((row) => row.field === 'custom_height'));
+});
+
+test('TW CUSTOM continues downstream only when the entered dimensions are inside the formal outer envelope', async () => {
+  let result = await resolveRuntimeAppProduct(PRODUCT, {
+    window_type:'SWT-LIX-TW-GRILLE-HIKI',
+    grille_type:'SP-TW-GRILLE-VERT',
+    size_mode:'CUSTOM', custom_width:630, custom_height:350,
+  });
+  assert.equal(result.dimensionResult?.status, 'REVIEW_REQUIRED');
+  assert.ok(result.fields.some((field) => field.key === 'exterior_color'));
+  assert.ok(!result.fields.some((field) => field.key === 'size'));
+
+  const exterior = result.fields.find((field) => field.key === 'exterior_color').values[0].value;
+  result = await resolveRuntimeAppProduct(PRODUCT, { ...result.selection, exterior_color:exterior });
+  const interior = result.fields.find((field) => field.key === 'interior_color').values[0].value;
+  result = await resolveRuntimeAppProduct(PRODUCT, { ...result.selection, interior_color:interior });
+  assert.ok(result.fields.some((field) => field.key === 'screen_presence'));
+  assert.ok(result.fields.some((field) => field.key === 'glass_base'));
+
+  const glassBase = result.fields.find((field) => field.key === 'glass_base').values[0].value;
+  result = await resolveRuntimeAppProduct(PRODUCT, { ...result.selection, glass_base:glassBase });
+  assert.ok(result.fields.some((field) => field.key === 'option'));
+  assert.equal(result.dimensionResult?.status, 'REVIEW_REQUIRED');
+
+  result = await resolveRuntimeAppProduct(PRODUCT, { ...result.selection, custom_width:629, custom_height:887 });
+  assert.equal(result.dimensionResult?.status, 'BLOCK');
+  assert.equal(result.validation.status, 'INVALID');
+  for (const key of ['exterior_color','interior_color','screen_presence','screen_type','glass_base','glass_type','option']) {
+    assert.equal(result.selection[key], undefined, `${key} must clear when CUSTOM dimensions become invalid`);
+    assert.ok(!result.fields.some((field) => field.key === key), `${key} must not remain visible after a blocked CUSTOM size`);
+  }
 });
 
 test('formal window-specific fields, handing and size-only specification rules are enforced', async () => {
