@@ -26,13 +26,57 @@ function sameValue(actual,expected){
   if(Array.isArray(expected))return Array.isArray(actual)&&actual.length===expected.length&&actual.every((value,index)=>String(value)===String(expected[index]));
   return String(actual)===String(expected);
 }
+function runtimeRenderExpectations(result){
+  return (result.fields??[]).map((field)=>({
+    key:field.key,
+    values:(field.values??[]).map((row)=>String(row.value)),
+    selected:result.selection?.[field.key]===undefined?null:(Array.isArray(result.selection[field.key])?result.selection[field.key].map(String):String(result.selection[field.key])),
+    hasSelection:result.selection?.[field.key]!==undefined,
+  }));
+}
+async function waitForRenderedRuntime(result){
+  const expected=runtimeRenderExpectations(result);
+  try{
+    await page.waitForFunction((rows)=>rows.every((row)=>{
+      const control=document.querySelector(`[data-spec-key="${row.key}"]`);
+      if(!control)return false;
+      if(control.tagName==='SELECT'){
+        const actual=[...control.options].filter((option)=>option.value!=='').map((option)=>option.value);
+        if(actual.length!==row.values.length||actual.some((value,index)=>value!==row.values[index]))return false;
+        if(row.hasSelection){
+          if(Array.isArray(row.selected)){
+            const selected=[...control.selectedOptions].map((option)=>option.value);
+            if(selected.length!==row.selected.length||selected.some((value,index)=>value!==row.selected[index]))return false;
+          }else if(String(control.value)!==String(row.selected))return false;
+        }
+      }else if(row.hasSelection&&String(control.value)!==String(row.selected))return false;
+      return true;
+    }),expected,{timeout:5000});
+  }catch(error){
+    const actual=await page.evaluate(()=>[...document.querySelectorAll('[data-spec-key]')].map((control)=>({
+      key:control.dataset.specKey,
+      tag:control.tagName,
+      value:control.value,
+      values:control.tagName==='SELECT'?[...control.options].filter((option)=>option.value!=='').map((option)=>option.value):[],
+      disabled:control.disabled,
+    })));
+    console.log('WORK_RUNTIME_RENDER_MISMATCH='+JSON.stringify({expected,actual}));
+    throw error;
+  }
+}
 async function choose(key,value){
   const response=page.waitForResponse((row)=>{const selection=resolveSelection(row);return selection&&sameValue(selection[key],value);});
-  await page.locator(`[data-spec-key="${key}"]`).selectOption(value);return (await response).json();
+  await page.locator(`[data-spec-key="${key}"]`).selectOption(value);
+  const result=await (await response).json();
+  await waitForRenderedRuntime(result);
+  return result;
 }
 async function enterNumber(key,value){
   const response=page.waitForResponse((row)=>{const selection=resolveSelection(row);return selection&&sameValue(selection[key],value);});
-  const input=page.locator(`[data-spec-key="${key}"]`);await input.fill(String(value));await input.dispatchEvent('change');return (await response).json();
+  const input=page.locator(`[data-spec-key="${key}"]`);await input.fill(String(value));await input.dispatchEvent('change');
+  const result=await (await response).json();
+  await waitForRenderedRuntime(result);
+  return result;
 }
 async function chooseFirst(key,{prefer=null}={}){
   const locator=page.locator(`[data-spec-key="${key}"]`);
@@ -69,6 +113,7 @@ async function createOpening(index,product){
   await page.selectOption('#manufacturer',product.manufacturer);
   const initial=page.waitForResponse((row)=>row.url().includes('/resolve')&&row.status()===200);
   await page.selectOption('#product',product.id);let result=await (await initial).json();
+  await waitForRenderedRuntime(result);
   if(index===0){
     result=await choose('window_type','SWT-LIX-TW-GRILLE-HIKI');
     result=await choose('grille_type','SP-TW-GRILLE-VERT');
@@ -134,6 +179,7 @@ try{
   if(await sizeMode.count()&&await sizeMode.inputValue()==='CUSTOM'){
     standardResult=await choose('size_mode','STANDARD');
     standardResult=await completeRequiredBeforeSize(standardResult);
+    await waitForRenderedRuntime(standardResult);
     const runtimeSize=standardResult.fields.find((field)=>field.key==='size');
     assert.ok(runtimeSize?.values?.length,'STANDARD transition must expose at least one formal size');
     if(standardResult.selection.size!==undefined){
@@ -141,7 +187,7 @@ try{
     }
   }
   if(standardResult?.selection?.size===undefined){
-    await page.waitForFunction(()=>document.querySelectorAll('[data-spec-key="size"] option:not([value=""])').length>0,{timeout:5000});
+    await page.waitForFunction(()=>document.querySelectorAll('[data-spec-key="size"] option:not([value=""])').length>0,undefined,{timeout:5000});
     const sizeOptions=page.locator('[data-spec-key="size"] option:not([value=""])');
     const sizeCount=await sizeOptions.count();
     assert.ok(sizeCount>0);const targetSize=await sizeOptions.nth(sizeCount>1?1:0).getAttribute('value');await choose('size',targetSize);
@@ -165,7 +211,7 @@ try{
   await page.locator('.opening-card').first().getByRole('button',{name:'編集'}).click();
   await page.evaluate(()=>window.__sashWorkApp.setPersistenceFailure(true));
   await page.locator('[data-opening-field="memo"]').fill('保存失敗後も保持される入力');
-  await page.waitForFunction(()=>document.querySelector('.save-status')?.textContent==='保存失敗',{timeout:5000});
+  await page.waitForFunction(()=>document.querySelector('.save-status')?.textContent==='保存失敗',undefined,{timeout:5000});
   assert.equal(await page.locator('[data-opening-field="memo"]').inputValue(),'保存失敗後も保持される入力');
   await page.evaluate(()=>window.__sashWorkApp.setPersistenceFailure(false));await page.getByRole('button',{name:'再試行'}).click();
   await page.waitForFunction(()=>document.querySelector('.save-status')?.textContent==='保存済み');report.scenarios.G='PASS';
@@ -190,7 +236,7 @@ try{
   await page.reload({waitUntil:'networkidle'});
   await page.waitForSelector('[data-opening-field="memo"]');
   assert.equal(await page.locator('[data-opening-field="memo"]').inputValue(),raceMemo);
-  await page.waitForFunction(()=>document.querySelector('.save-status')?.textContent==='保存済み',{timeout:5000});
+  await page.waitForFunction(()=>document.querySelector('.save-status')?.textContent==='保存済み',undefined,{timeout:5000});
   report.scenarios.SAVE_NAVIGATION_RACE='PASS';
 
   const openingPath=new URL(page.url()).pathname;
@@ -199,7 +245,7 @@ try{
   const frozen=await page.evaluate(()=>window.__sashWorkApp.readDatabase().openings.find((row)=>row.product_configuration_snapshot?.runtime_manifest_identity==='old-manifest')?.product_configuration_snapshot.runtime_manifest_identity);
   assert.equal(frozen,'old-manifest');
   const revalidate=page.waitForResponse((row)=>row.url().includes('/api/runtime-master/resolve')&&row.status()===200);await page.click('[data-runtime-action="revalidate"]');await revalidate;
-  await page.waitForFunction(()=>document.querySelector('.save-status')?.textContent==='保存済み',{timeout:5000});report.scenarios.H='PASS';
+  await page.waitForFunction(()=>document.querySelector('.save-status')?.textContent==='保存済み',undefined,{timeout:5000});report.scenarios.H='PASS';
 
   await page.goto(BASE,{waitUntil:'networkidle'});await page.getByRole('button',{name:'新しい案件'}).click();await page.locator('[name="project_name"]').fill('別案件');await page.locator('#projectForm button[type="submit"]').click();await page.waitForURL(/\/projects\/prj_/);
   await page.getByRole('button',{name:'見積を開く'}).click();assert.equal(await page.locator('.opening-card').count(),0);report.scenarios.I='PASS';
