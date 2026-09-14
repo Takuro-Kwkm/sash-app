@@ -1,0 +1,134 @@
+name: Stage A Symbolic Frontier Discovery Candidate
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/stage-a-symbolic-frontier-discovery-candidate.yml'
+      - 'scripts/stage-a-symbolic-frontier-discovery-candidate.mjs'
+      - 'src/catalog/runtime-master/**'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: stage-a-symbolic-frontier-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [0,1,2,3,4,5,6,7,8,9,10,11]
+    env:
+      HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+      STAGE_A_SHARD_TOTAL: 12
+      STAGE_A_SHARD_INDEX: ${{ matrix.shard }}
+      STAGE_A_SYMBOLIC_FRONTIER_OUT: artifacts/stage-a-symbolic-frontier-discovery/shard-${{ matrix.shard }}
+    steps:
+      - name: Checkout exact PR HEAD
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 1
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Exact SHA gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          actual="$(git rev-parse HEAD)"
+          test "$actual" = "$HEAD_SHA"
+          echo "EXACT_HEAD_GATE=PASS sha=$actual shard=$STAGE_A_SHARD_INDEX/$STAGE_A_SHARD_TOTAL"
+
+      - name: Discover symbolic frontiers without power-set expansion
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/stage-a-symbolic-frontier-discovery-candidate.mjs | tee /tmp/stage-a-symbolic-frontier-${STAGE_A_SHARD_INDEX}.log
+
+      - name: Upload shard evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: stage-a-symbolic-frontier-discovery-${{ matrix.shard }}
+          path: |
+            artifacts/stage-a-symbolic-frontier-discovery/shard-${{ matrix.shard }}/report.json
+            /tmp/stage-a-symbolic-frontier-${{ matrix.shard }}.log
+          if-no-files-found: warn
+
+  aggregate:
+    needs: scan
+    if: always() && needs.scan.result == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+    steps:
+      - name: Download all shard evidence
+        uses: actions/download-artifact@v4
+        with:
+          pattern: stage-a-symbolic-frontier-discovery-*
+          path: artifacts/shards
+
+      - name: Aggregate candidate evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts/stage-a-symbolic-frontier-discovery
+          node - <<'NODE'
+          const fs=require('fs'),path=require('path');
+          const walk=(dir)=>fs.readdirSync(dir,{withFileTypes:true}).flatMap((entry)=>entry.isDirectory()?walk(path.join(dir,entry.name)):[path.join(dir,entry.name)]);
+          const files=walk('artifacts/shards').filter((file)=>file.endsWith('/report.json')).sort();
+          if(files.length!==12)throw new Error(`expected 12 reports, got ${files.length}`);
+          const shards=files.map((file)=>JSON.parse(fs.readFileSync(file,'utf8'))).sort((a,b)=>a.shard_index-b.shard_index);
+          const indices=shards.map((row)=>row.shard_index);if(indices.some((value,index)=>value!==index))throw new Error(`invalid shard indexes: ${indices}`);
+          const sum=(key)=>shards.reduce((total,row)=>total+Number(row[key]??0),0);
+          const bigSum=(key)=>shards.reduce((total,row)=>total+BigInt(row[key]??'0'),0n);
+          const report={
+            exact_head_sha:process.env.HEAD_SHA,
+            task_classification:'NON-PRODUCT-MASTER',product_master_mutation:0,
+            proof_status:'CANDIDATE_PROOF_NOT_GOVERNING',
+            shard_total:12,
+            base_window_count:sum('base_window_count'),
+            total_visited_state_count:sum('total_visited_state_count'),
+            explicit_terminal_frontier_count:sum('explicit_terminal_frontier_count'),
+            custom_pending_frontier_count:sum('custom_pending_frontier_count'),
+            pruned_transition_count:sum('pruned_transition_count'),
+            oversized_frontier_count:sum('oversized_frontier_count'),
+            symbolic_frontier_count:sum('symbolic_frontier_count'),
+            symbolic_standard_terminal_frontier_count:sum('symbolic_standard_terminal_frontier_count'),
+            symbolic_custom_downstream_frontier_count:sum('symbolic_custom_downstream_frontier_count'),
+            unsupported_symbolic_frontier_count:sum('unsupported_symbolic_frontier_count'),
+            exact_symbolic_standard_terminal_population:bigSum('exact_symbolic_standard_terminal_population').toString(),
+            windows:shards.flatMap((row)=>row.windows),
+            symbolic_frontiers:shards.flatMap((row)=>row.symbolic_frontiers),
+            unsupported_frontiers:shards.flatMap((row)=>row.unsupported_frontiers),
+          };
+          if(report.base_window_count!==105)throw new Error(`BASE_WINDOW_COUNT=${report.base_window_count}`);
+          report.next_blocker=report.unsupported_symbolic_frontier_count>0?'UNSUPPORTED_SYMBOLIC_MODEL':report.symbolic_custom_downstream_frontier_count>0?'DOWNSTREAM_CUSTOM_EQUIVALENCE':'GOVERNANCE_ADOPTION_ONLY';
+          report.gate_status={exhaustive_state_graph_gate:'BLOCKED_PENDING_GOVERNANCE_ADOPTION',qa_population_gate:'BLOCKED_PENDING_GOVERNANCE_ADOPTION',full_browser_qa_gate:'NOT_STARTED',app_integration_ready:false,release_input_gate:'BLOCKED'};
+          fs.writeFileSync('artifacts/stage-a-symbolic-frontier-discovery/report.json',JSON.stringify(report,null,2)+'\n');
+          console.log(`BASE_WINDOW_COUNT=${report.base_window_count}`);
+          console.log(`OVERSIZED_FRONTIER_COUNT=${report.oversized_frontier_count}`);
+          console.log(`SYMBOLIC_STANDARD_TERMINAL_FRONTIERS=${report.symbolic_standard_terminal_frontier_count}`);
+          console.log(`SYMBOLIC_CUSTOM_DOWNSTREAM_FRONTIERS=${report.symbolic_custom_downstream_frontier_count}`);
+          console.log(`UNSUPPORTED_SYMBOLIC_FRONTIERS=${report.unsupported_symbolic_frontier_count}`);
+          console.log(`EXACT_SYMBOLIC_STANDARD_TERMINAL_POPULATION=${report.exact_symbolic_standard_terminal_population}`);
+          console.log(`NEXT_BLOCKER=${report.next_blocker}`);
+          console.log('APP_INTEGRATION_READY=false');
+          console.log('RELEASE_INPUT_GATE=BLOCKED');
+          NODE
+
+      - name: Upload aggregate evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: stage-a-symbolic-frontier-discovery-summary
+          path: artifacts/stage-a-symbolic-frontier-discovery/report.json
+          if-no-files-found: error
