@@ -13,7 +13,13 @@ const root=join(HERE,"../..");
 const webRoot=join(root,"src","ui","web");
 const estimateOutputRoot=join(root,"src","estimate-output");
 const heroAssetRoot=join(webRoot,"assets","design-preview-hero");
-const heroPartPaths=Array.from({length:8},(_,index)=>join(heroAssetRoot,`part-${String(index).padStart(2,"0")}.bin`));
+const heroPartPaths=[
+  "part-00.bin","part-01.bin",
+  "part-02a.bin","part-02b.bin","part-02c.bin","part-02d.bin",
+  "part-03.bin","part-04.bin","part-05.bin",
+  "part-06a.bin","part-06b.bin","part-06c.bin","part-06d.bin",
+  "part-07.bin"
+].map((name)=>join(heroAssetRoot,name));
 const catalog=createCatalog(CURRENT_WINDOW_SERIES_MODULES);
 const runtimeMasterIntegrations=runtimeAppIntegrationInventory();
 const buildTimestamp=new Date().toISOString();
@@ -44,7 +50,7 @@ const heroPhoto=async(res)=>{
   try{
     const parts=await Promise.all(heroPartPaths.map((path)=>readFile(path)));
     const body=Buffer.concat(parts);
-    res.writeHead(200,{"content-type":"image/webp","cache-control":"no-store","x-sash-build-id":buildId});
+    res.writeHead(200,{"content-type":"image/jpeg","content-length":String(body.length),"cache-control":"no-store","x-sash-build-id":buildId});
     res.end(body);
   }catch{
     res.writeHead(404,{"cache-control":"no-store","x-sash-build-id":buildId});
@@ -103,9 +109,8 @@ export function createRecoveryRequestHandler({backend="node:http recovery server
       catch(error){return json(res,400,{error:error?.message??String(error),code:error?.code??"RUNTIME_RESOLVE_FAILED"});}
     }
     if(url.pathname==="/api/catalog") return json(res,200,catalog);
-    if(url.pathname==="/design-preview-hero.webp") return heroPhoto(res);
+    if(url.pathname==="/design-preview-reference-hero.jpg") return heroPhoto(res);
     if(url.pathname==="/design-preview-reference-hero.svg") return staticFile(res,"design-preview-reference-hero.svg","image/svg+xml; charset=utf-8");
-    if(url.pathname==="/design-preview-reference-hero.jpg") return staticFile(res,"design-preview-reference-hero.jpg","image/jpeg");
     if(url.pathname==="/app.js") return staticFile(res,"app.js","text/javascript; charset=utf-8");
     if(url.pathname==="/product-configuration-editor.mjs") return staticFile(res,"product-configuration-editor.mjs","text/javascript; charset=utf-8");
     if(url.pathname==="/estimate-output-integration.mjs") return staticFile(res,"estimate-output-integration.mjs","text/javascript; charset=utf-8");
