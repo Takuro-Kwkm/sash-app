@@ -212,6 +212,17 @@ function createDefaultDependencies(env=process.env){
   };
 }
 
+function publicEnvironmentIdentity(env=process.env){
+  const environmentRole=String(env.PUBLIC_SAAS_ENVIRONMENT_ROLE??'development').trim().toLowerCase()||'development';
+  let supabaseProjectRef=null;
+  try{
+    const hostname=new URL(String(env.SUPABASE_URL??'')).hostname.toLowerCase();
+    const match=hostname.match(/^([a-z0-9-]+)\.supabase\.co$/);
+    supabaseProjectRef=match?.[1]??null;
+  }catch{}
+  return Object.freeze({environmentRole,supabaseProjectRef});
+}
+
 export function createPublicSaaSRequestHandler({
   env=process.env,
   auth,
@@ -225,6 +236,7 @@ export function createPublicSaaSRequestHandler({
   const authAdapter=auth??defaults.auth;
   const dataClient=data??defaults.data;
   const configured=defaults?defaults.configured:Boolean(authAdapter?.configured&&dataClient?.configured);
+  const {environmentRole,supabaseProjectRef}=publicEnvironmentIdentity(env);
 
   return async function publicSaaSRequestHandler(req,res){
     const url=requestUrl(req);
@@ -245,7 +257,13 @@ export function createPublicSaaSRequestHandler({
       assertSameOrigin(req);
 
       if(url.pathname==='/api/public-saas/health'&&method==='GET'){
-        return json(res,200,{ok:true,provider:'SUPABASE',configured});
+        return json(res,200,{
+          ok:true,
+          provider:'SUPABASE',
+          configured,
+          environment_role:environmentRole,
+          supabase_project_ref:supabaseProjectRef,
+        });
       }
 
       if(url.pathname==='/api/public-saas/auth/sign-up'&&method==='POST'){

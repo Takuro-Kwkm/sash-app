@@ -34,6 +34,25 @@ test('health payload requires Supabase configured and ok',()=>{
   assert.throws(()=>evaluateHealthPayload({ok:false,configured:true,provider:'SUPABASE'},200),(error)=>error.code==='HEALTH_NOT_OK'&&error.severity==='P0');
 });
 
+test('health payload fails closed on Staging role or Supabase project mismatch',()=>{
+  const payload={
+    ok:true,
+    configured:true,
+    provider:'SUPABASE',
+    environment_role:'staging',
+    supabase_project_ref:'staging-ref',
+  };
+  assert.equal(evaluateHealthPayload(payload,200,{expectedEnvironmentRole:'staging',expectedSupabaseProjectRef:'staging-ref'}),true);
+  assert.throws(
+    ()=>evaluateHealthPayload(payload,200,{expectedEnvironmentRole:'production'}),
+    (error)=>error.code==='HEALTH_ENVIRONMENT_ROLE_MISMATCH'&&error.severity==='P0',
+  );
+  assert.throws(
+    ()=>evaluateHealthPayload(payload,200,{expectedSupabaseProjectRef:'production-ref'}),
+    (error)=>error.code==='HEALTH_SUPABASE_PROJECT_MISMATCH'&&error.severity==='P0',
+  );
+});
+
 test('temporary Preview access is scoped to the exact deployment and bounded TTL',async()=>{
   const calls=[];
   const fetchImpl=async(url,init={})=>{
@@ -74,16 +93,18 @@ test('monitor uses Vercel API plus temporary protected Preview access without le
     if(parsed.hostname==='api.vercel.com'&&parsed.pathname==='/aliases/dpl_test/protection-bypass'){
       return new Response(JSON.stringify({value:share}),{status:200,headers:{'content-type':'application/json'}});
     }
-    if(parsed.hostname==='preview.vercel.app'&&parsed.pathname==='/api/public-saas/health')return new Response(JSON.stringify({ok:true,configured:true,provider:'SUPABASE'}),{status:200,headers:{'content-type':'application/json'}});
+    if(parsed.hostname==='preview.vercel.app'&&parsed.pathname==='/api/public-saas/health')return new Response(JSON.stringify({ok:true,configured:true,provider:'SUPABASE',environment_role:'staging',supabase_project_ref:'staging-ref'}),{status:200,headers:{'content-type':'application/json'}});
     if(parsed.hostname==='preview.vercel.app'&&parsed.pathname==='/api/public-saas/monitoring/status')return new Response(JSON.stringify({ok:true,configured:true,provider:'POSTHOG',environment:'preview'}),{status:200,headers:{'content-type':'application/json'}});
     if(parsed.hostname==='preview.vercel.app'&&parsed.pathname==='/public-saas')return new Response('<title>Public SaaS Foundation</title>',{status:200,headers:{'content-type':'text/html'}});
     throw new Error(`unexpected URL ${href}`);
   };
   const token='vercel-secret-never-in-evidence';
-  const result=await runPublicSaaSHealthMonitor({token,teamId:'team_test',projectId:'prj_test',branch:'feat/public-saas-foundation-a1',expectedSha:'abcdef',fetchImpl});
+  const result=await runPublicSaaSHealthMonitor({token,teamId:'team_test',projectId:'prj_test',branch:'feat/public-saas-foundation-a1',expectedSha:'abcdef',expectedEnvironmentRole:'staging',expectedSupabaseProjectRef:'staging-ref',fetchImpl});
   assert.equal(result.ok,true);
   assert.equal(result.deploymentId,'dpl_test');
   assert.equal(result.previewProtection,'TEMPORARY_SHARE');
+  assert.equal(result.environmentRole,'staging');
+  assert.equal(result.supabaseProjectRef,'staging-ref');
   assert.equal(JSON.stringify(result).includes(token),false);
   assert.equal(JSON.stringify(result).includes(share),false);
   assert.equal(calls[0].init.headers.authorization,`Bearer ${token}`);

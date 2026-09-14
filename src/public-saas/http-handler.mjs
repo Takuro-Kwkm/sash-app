@@ -53,6 +53,7 @@ export function createPublicSaaSRequestHandler(options={}){
         provider:'POSTHOG',
         configured:Boolean(monitoringProjectToken??monitoringEnv.POSTHOG_PROJECT_TOKEN),
         environment:String(monitoringEnv.VERCEL_ENV??'development').toLowerCase(),
+        environment_role:String(monitoringEnv.PUBLIC_SAAS_ENVIRONMENT_ROLE??'development').trim().toLowerCase()||'development',
       }));
     }
     if(pathname==='/api/public-saas/monitoring/client-error')return monitoring(req,res);

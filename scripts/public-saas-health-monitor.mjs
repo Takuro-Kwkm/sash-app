@@ -46,11 +46,17 @@ export function selectLatestReadyPreview(deployments,{branch,expectedSha}={}){
   });
 }
 
-export function evaluateHealthPayload(payload,status){
+export function evaluateHealthPayload(payload,status,{expectedEnvironmentRole='',expectedSupabaseProjectRef=''}={}){
   if(status!==200)throw new PublicSaaSMonitorError('HEALTH_HTTP_FAILURE','P0',`Public SaaS health endpoint returned HTTP ${status}.`);
   if(!payload||payload.ok!==true)throw new PublicSaaSMonitorError('HEALTH_NOT_OK','P0','Public SaaS health endpoint did not report ok=true.');
   if(payload.configured!==true)throw new PublicSaaSMonitorError('HEALTH_PROVIDER_UNCONFIGURED','P1','Public SaaS persistence provider is not configured.');
   if(String(payload.provider??'').toUpperCase()!=='SUPABASE')throw new PublicSaaSMonitorError('HEALTH_PROVIDER_MISMATCH','P1','Public SaaS health provider is not SUPABASE.');
+  if(expectedEnvironmentRole&&String(payload.environment_role??'').toLowerCase()!==String(expectedEnvironmentRole).toLowerCase()){
+    throw new PublicSaaSMonitorError('HEALTH_ENVIRONMENT_ROLE_MISMATCH','P0','Public SaaS environment role does not match the expected deployment lane.');
+  }
+  if(expectedSupabaseProjectRef&&String(payload.supabase_project_ref??'')!==String(expectedSupabaseProjectRef)){
+    throw new PublicSaaSMonitorError('HEALTH_SUPABASE_PROJECT_MISMATCH','P0','Public SaaS is connected to an unexpected Supabase project.');
+  }
   return true;
 }
 
@@ -213,6 +219,8 @@ export async function runPublicSaaSHealthMonitor({
   projectId,
   branch='feat/public-saas-foundation-a1',
   expectedSha='',
+  expectedEnvironmentRole='',
+  expectedSupabaseProjectRef='',
   shareValue='',
   fetchImpl=globalThis.fetch,
 }={}){
@@ -243,7 +251,7 @@ export async function runPublicSaaSHealthMonitor({
     throw new PublicSaaSMonitorError('HEALTH_ENDPOINT_UNREACHABLE','P0','Public SaaS health endpoint could not be reached.');
   }
   const healthPayload=await parseJsonResponse(healthResponse);
-  evaluateHealthPayload(healthPayload,healthResponse.status);
+  evaluateHealthPayload(healthPayload,healthResponse.status,{expectedEnvironmentRole,expectedSupabaseProjectRef});
 
   let monitoringResponse;
   try{monitoringResponse=await protectedFetch('/api/public-saas/monitoring/status',{headers:{accept:'application/json'}});}catch(error){
@@ -270,6 +278,8 @@ export async function runPublicSaaSHealthMonitor({
     githubSha:deployment.sha,
     githubRef:deployment.ref,
     provider:'SUPABASE',
+    environmentRole:String(healthPayload?.environment_role??''),
+    supabaseProjectRef:String(healthPayload?.supabase_project_ref??''),
     healthStatus:healthResponse.status,
     monitoringStatus:monitoringResponse.status,
     monitoringProvider:'POSTHOG',
@@ -312,6 +322,8 @@ async function main(){
       projectId:process.env.VERCEL_PROJECT_ID,
       branch:process.env.PUBLIC_SAAS_HEAD_REF??'feat/public-saas-foundation-a1',
       expectedSha:process.env.PUBLIC_SAAS_EXPECTED_SHA??'',
+      expectedEnvironmentRole:process.env.PUBLIC_SAAS_EXPECTED_ENVIRONMENT_ROLE??'',
+      expectedSupabaseProjectRef:process.env.PUBLIC_SAAS_EXPECTED_SUPABASE_PROJECT_REF??'',
       shareValue:process.env.VERCEL_SHARE_VALUE??'',
     });
     await writeEvidence(outputPath,result);

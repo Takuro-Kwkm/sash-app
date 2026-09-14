@@ -93,13 +93,24 @@ function fakeAuth(overrides={}){
 }
 
 test('Public SaaS health exposes provider state but never credentials',async()=>{
-  const handler=createPublicSaaSRequestHandler({auth:fakeAuth(),data:fakeData(),delegate:()=>{throw new Error('delegate not expected');}});
+  const env={
+    PUBLIC_SAAS_ENVIRONMENT_ROLE:'staging',
+    SUPABASE_URL:'https://stagingprojectref.supabase.co',
+  };
+  const handler=createPublicSaaSRequestHandler({env,auth:fakeAuth(),data:fakeData(),delegate:()=>{throw new Error('delegate not expected');}});
   const req=request({url:'/api/public-saas/health'}),res=response();
   await handler(req,res);
   assert.equal(res.statusCode,200);
-  assert.deepEqual(parse(res),{ok:true,provider:'SUPABASE',configured:true});
+  assert.deepEqual(parse(res),{
+    ok:true,
+    provider:'SUPABASE',
+    configured:true,
+    environment_role:'staging',
+    supabase_project_ref:'stagingprojectref',
+  });
   assert.equal(res.body.includes('access-'),false);
   assert.equal(res.body.includes('refresh-'),false);
+  assert.equal(res.body.includes('SUPABASE_URL'),false);
 });
 
 test('Public SaaS Preview shell is isolated from the recovery UI and served without credentials',async()=>{
