@@ -99,12 +99,19 @@ export function adaptApw431FormalSplitV1(runtimePackage) {
       if (selection.panel_count) rows = rows.filter((row)=>same(row.panelCountLabel,selection.panel_count));
     }
 
-    if (window.id === 'W431-003') {
-      const configurations = unique(rows.map((row)=>row.windowConfiguration));
-      fields.push(field('window_configuration','連窓構成',configurations.map((value)=>choice(value,value)),{required:configurations.length>1,readOnly:configurations.length===1}));
-      selection.window_configuration = validOriginal(original,configurations,'window_configuration') ?? (configurations.length===1 ? configurations[0] : undefined);
-      if (!selection.window_configuration && configurations.length>1) return finalize();
-      if (selection.window_configuration) rows = rows.filter((row)=>same(row.windowConfiguration,selection.window_configuration));
+    // Formal Runtime may contain multiple standard-size records with the same visible
+    // call code and actual dimensions but different windowConfiguration semantics.
+    // The configuration changes glass/screen/effective-opening capabilities, so it
+    // must be resolved before size. Never collapse these records by display label.
+    const configurations = unique(rows.map((row)=>row.windowConfiguration));
+    if (configurations.length === 1) {
+      selection.window_configuration = configurations[0];
+      rows = rows.filter((row)=>same(row.windowConfiguration,selection.window_configuration));
+    } else if (configurations.length > 1) {
+      fields.push(field('window_configuration','連窓構成',configurations.map((value)=>choice(value,value)),{required:true}));
+      selection.window_configuration = validOriginal(original,configurations,'window_configuration') ?? undefined;
+      if (!selection.window_configuration) return finalize();
+      rows = rows.filter((row)=>same(row.windowConfiguration,selection.window_configuration));
     }
 
     let candidateRows = (dimensions.integrated_candidates ?? []).filter(active).filter((row)=>row.windowId===window.id);
