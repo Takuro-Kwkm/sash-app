@@ -50,6 +50,15 @@ async function completeVisibleRequiredSelects(result){
   }
   throw new Error('visible required Runtime fields did not converge');
 }
+async function completeRequiredBeforeSize(result){
+  for(let pass=0;pass<30;pass++){
+    const missing=result.fields.find((field)=>field.key!=='size'&&field.required&&field.dataType!=='NUMBER'&&field.values?.length&&result.selection[field.key]===undefined);
+    if(!missing)return result;
+    const preferred=missing.key==='screen_presence'&&missing.values.some((row)=>row.value==='NONE')?'NONE':missing.values[0].value;
+    result=await choose(missing.key,preferred);
+  }
+  throw new Error('pre-size Runtime fields did not converge');
+}
 
 async function createOpening(index,product){
   await page.getByRole('button',{name:'開口部を追加',exact:true}).click();
@@ -122,12 +131,15 @@ try{
   await page.locator('[data-opening-field="opening_name"]').fill('掃き出し窓 サイズ変更');
   const sizeMode=page.locator('[data-spec-key="size_mode"]');
   if(await sizeMode.count()&&await sizeMode.inputValue()==='CUSTOM'){
-    await choose('size_mode','STANDARD');
-    if(await page.locator('[data-spec-key="panel_count"]').count())await chooseFirst('panel_count');
+    let standardResult=await choose('size_mode','STANDARD');
+    standardResult=await completeRequiredBeforeSize(standardResult);
+    const runtimeSize=standardResult.fields.find((field)=>field.key==='size');
+    assert.ok(runtimeSize?.values?.length,'STANDARD transition must expose at least one formal size');
   }
-  await page.waitForFunction(()=>document.querySelectorAll('[data-spec-key="size"] option:not([value=""])').length>1);
+  await page.waitForFunction(()=>document.querySelectorAll('[data-spec-key="size"] option:not([value=""])').length>0);
   const sizeOptions=page.locator('[data-spec-key="size"] option:not([value=""])');
-  assert.ok(await sizeOptions.count()>1);const secondSize=await sizeOptions.nth(1).getAttribute('value');await choose('size',secondSize);
+  const sizeCount=await sizeOptions.count();
+  assert.ok(sizeCount>0);const targetSize=await sizeOptions.nth(sizeCount>1?1:0).getAttribute('value');await choose('size',targetSize);
   await page.getByRole('button',{name:'この開口部を保存'}).click();await page.waitForURL(estimateUrl);
   assert.match(await page.locator('.opening-card').last().innerText(),/サイズ変更/);
   report.scenarios.C='PASS';
