@@ -15,11 +15,17 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  exhaustive_state_graph:
+  exhaustive_state_graph_shard:
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [0,1,2,3,4,5,6,7,8,9,10,11]
     env:
       HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+      STAGE_A_SHARD_TOTAL: 12
+      STAGE_A_SHARD_INDEX: ${{ matrix.shard }}
     steps:
       - name: Checkout exact PR HEAD
         uses: actions/checkout@v4
@@ -37,45 +43,107 @@ jobs:
           set -euo pipefail
           actual="$(git rev-parse HEAD)"
           test "$actual" = "$HEAD_SHA"
-          echo "EXACT_HEAD_GATE=PASS sha=$actual"
+          echo "EXACT_HEAD_GATE=PASS sha=$actual shard=$STAGE_A_SHARD_INDEX/$STAGE_A_SHARD_TOTAL"
 
-      - name: Exhaustive selector-state graph and QA population
+      - name: Exhaustive selector-state shard
         shell: bash
         run: |
           set -euo pipefail
-          mkdir -p artifacts/stage-a-exhaustive-selector-state
-          node scripts/stage-a-exhaustive-selector-state-graph.mjs | tee artifacts/stage-a-exhaustive-selector-state/run.log
-          node - <<'NODE'
-          const s=require('./artifacts/stage-a-exhaustive-selector-state/summary.json');
-          if(s.base_window_count!==105) throw new Error(`BASE_WINDOW_COUNT=${s.base_window_count}`);
+          out="artifacts/stage-a-exhaustive-selector-state/shard-${STAGE_A_SHARD_INDEX}"
+          STAGE_A_EXHAUSTIVE_OUT="$out" node scripts/stage-a-exhaustive-selector-state-graph.mjs | tee "${out}.log"
+          node - "$out/summary.json" <<'NODE'
+          const s=require(process.argv[2].startsWith('/')?process.argv[2]:`./${process.argv[2]}`);
+          if(s.base_window_count!==s.expected_base_window_count) throw new Error(`shard window mismatch ${s.base_window_count}/${s.expected_base_window_count}`);
           if(s.required_state_count!==s.generated_state_count) throw new Error('Required State != Generated State');
           if(s.required_qa_case_count!==s.generated_qa_case_count || s.generated_qa_case_count!==s.qa_case_count) throw new Error('QA population mismatch');
           if(s.unexpanded_branch_count!==0) throw new Error(`unexpanded branches=${s.unexpanded_branch_count}`);
           if(s.dead_end_state_count!==0) throw new Error(`dead ends=${s.dead_end_state_count}`);
           if(s.technical_leak_count!==0) throw new Error(`technical leaks=${s.technical_leak_count}`);
-          if(s.exhaustive_state_graph_gate!=='PASS'||s.qa_population_gate!=='PASS') throw new Error(`gates=${s.exhaustive_state_graph_gate}/${s.qa_population_gate}`);
-          console.log(`EXHAUSTIVE_STATE_GRAPH_GATE=PASS states=${s.total_state_count} terminal=${s.terminal_state_count} pruned=${s.invalid_pruned_state_count}`);
-          console.log(`QA_POPULATION_GATE=PASS cases=${s.qa_case_count}`);
+          if(s.shard_state_graph_gate!=='PASS'||s.qa_population_gate!=='PASS') throw new Error(`gates=${s.shard_state_graph_gate}/${s.qa_population_gate}`);
+          console.log(`SHARD_STATE_GRAPH_GATE=PASS shard=${s.shard_index}/${s.shard_total} windows=${s.base_window_count} states=${s.total_state_count} qa=${s.qa_case_count}`);
           NODE
 
       - name: Determinism replay
         shell: bash
         run: |
           set -euo pipefail
-          STAGE_A_EXHAUSTIVE_OUT=/tmp/stage-a-exhaustive-repeat node scripts/stage-a-exhaustive-selector-state-graph.mjs > /tmp/stage-a-exhaustive-repeat.log
-          node - <<'NODE'
-          const a=require('./artifacts/stage-a-exhaustive-selector-state/summary.json');
-          const b=require('/tmp/stage-a-exhaustive-repeat/summary.json');
+          primary="artifacts/stage-a-exhaustive-selector-state/shard-${STAGE_A_SHARD_INDEX}/summary.json"
+          repeat="/tmp/stage-a-exhaustive-repeat-${STAGE_A_SHARD_INDEX}"
+          STAGE_A_EXHAUSTIVE_OUT="$repeat" node scripts/stage-a-exhaustive-selector-state-graph.mjs > "/tmp/stage-a-exhaustive-repeat-${STAGE_A_SHARD_INDEX}.log"
+          node - "$primary" "$repeat/summary.json" <<'NODE'
+          const a=require(process.argv[2].startsWith('/')?process.argv[2]:`./${process.argv[2]}`);
+          const b=require(process.argv[3]);
           const keys=['base_window_count','total_state_count','valid_state_count','invalid_pruned_state_count','terminal_state_count','duplicate_state_count','dead_end_state_count','required_qa_case_count','generated_qa_case_count','qa_case_count','expected_branch_count','attempted_branch_count','determinism_digest'];
           for(const key of keys){ if(JSON.stringify(a[key])!==JSON.stringify(b[key])) throw new Error(`determinism mismatch ${key}: ${a[key]} != ${b[key]}`); }
-          console.log(`STATE_GRAPH_DETERMINISM_GATE=PASS digest=${a.determinism_digest}`);
+          console.log(`STATE_GRAPH_DETERMINISM_GATE=PASS shard=${a.shard_index}/${a.shard_total} digest=${a.determinism_digest}`);
           NODE
-          rm -rf /tmp/stage-a-exhaustive-repeat
+          rm -rf "$repeat"
 
-      - name: Upload exhaustive population evidence
+      - name: Upload shard evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: stage-a-exhaustive-selector-state-graph
-          path: artifacts/stage-a-exhaustive-selector-state/
+          name: stage-a-exhaustive-selector-state-graph-${{ matrix.shard }}
+          path: |
+            artifacts/stage-a-exhaustive-selector-state/shard-${{ matrix.shard }}/
+            artifacts/stage-a-exhaustive-selector-state/shard-${{ matrix.shard }}.log
           if-no-files-found: warn
+
+  exhaustive_state_graph_aggregate:
+    needs: exhaustive_state_graph_shard
+    if: always() && needs.exhaustive_state_graph_shard.result == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+    steps:
+      - name: Download shard evidence
+        uses: actions/download-artifact@v4
+        with:
+          pattern: stage-a-exhaustive-selector-state-graph-*
+          path: artifacts/shards
+
+      - name: Aggregate required population
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts/stage-a-exhaustive-selector-state
+          node - <<'NODE'
+          const fs=require('fs'); const path=require('path');
+          function walk(dir){return fs.readdirSync(dir,{withFileTypes:true}).flatMap((entry)=>entry.isDirectory()?walk(path.join(dir,entry.name)):[path.join(dir,entry.name)]);}
+          const files=walk('artifacts/shards').filter((file)=>file.endsWith('/summary.json')).sort();
+          if(files.length!==12) throw new Error(`expected 12 shard summaries, got ${files.length}`);
+          const shards=files.map((file)=>JSON.parse(fs.readFileSync(file,'utf8'))).sort((a,b)=>a.shard_index-b.shard_index);
+          const indices=shards.map((s)=>s.shard_index); if(new Set(indices).size!==12||indices.some((v,i)=>v!==i)) throw new Error(`invalid shard indices ${indices}`);
+          for(const s of shards){if(s.shard_total!==12||s.shard_state_graph_gate!=='PASS'||s.qa_population_gate!=='PASS'||s.failed_qa_case_count!==0||s.unverified_qa_case_count!==0) throw new Error(`shard ${s.shard_index} not PASS`);}
+          const sum=(key)=>shards.reduce((n,s)=>n+Number(s[key]??0),0);
+          const summary={
+            exact_head_sha:process.env.HEAD_SHA,
+            shard_total:12,
+            task_classification:'NON-PRODUCT-MASTER',product_master_mutation:0,
+            base_window_count:sum('base_window_count'),
+            total_state_count:sum('total_state_count'),valid_state_count:sum('valid_state_count'),invalid_pruned_state_count:sum('invalid_pruned_state_count'),terminal_state_count:sum('terminal_state_count'),duplicate_state_count:sum('duplicate_state_count'),dead_end_state_count:sum('dead_end_state_count'),
+            required_state_count:sum('required_state_count'),generated_state_count:sum('generated_state_count'),
+            required_qa_case_count:sum('required_qa_case_count'),generated_qa_case_count:sum('generated_qa_case_count'),qa_case_count:sum('qa_case_count'),verified_qa_case_count:sum('verified_qa_case_count'),failed_qa_case_count:sum('failed_qa_case_count'),unverified_qa_case_count:sum('unverified_qa_case_count'),
+            standard_window_count:sum('standard_window_count'),custom_window_count:sum('custom_window_count'),expected_branch_count:sum('expected_branch_count'),attempted_branch_count:sum('attempted_branch_count'),unexpanded_branch_count:sum('unexpanded_branch_count'),custom_frontier_count:sum('custom_frontier_count'),custom_positive_frontier_count:sum('custom_positive_frontier_count'),technical_leak_count:sum('technical_leak_count'),
+            series:[],windows:shards.flatMap((s)=>s.windows).sort((a,b)=>`${a.product_id}/${a.window_type}`.localeCompare(`${b.product_id}/${b.window_type}`)),
+            shard_digests:shards.map((s)=>({shard_index:s.shard_index,digest:s.determinism_digest})),
+          };
+          const seriesMap=new Map();
+          for(const s of shards)for(const row of s.series){const key=row.product_id;const out=seriesMap.get(key)??{manufacturer:row.manufacturer,series:row.series,product_id:key,base_window_count:0,total_state_count:0,qa_case_count:0,dead_end_state_count:0,invalid_pruned_state_count:0,standard_window_count:0,custom_window_count:0};for(const k of ['base_window_count','total_state_count','qa_case_count','dead_end_state_count','invalid_pruned_state_count','standard_window_count','custom_window_count'])out[k]+=Number(row[k]??0);seriesMap.set(key,out);} summary.series=[...seriesMap.values()];
+          if(summary.base_window_count!==105) throw new Error(`BASE_WINDOW_COUNT=${summary.base_window_count}`);
+          if(summary.required_state_count!==summary.generated_state_count) throw new Error('Required State != Generated State');
+          if(summary.required_qa_case_count!==summary.generated_qa_case_count||summary.generated_qa_case_count!==summary.qa_case_count) throw new Error('QA population mismatch');
+          if(summary.failed_qa_case_count!==0||summary.unverified_qa_case_count!==0||summary.dead_end_state_count!==0||summary.unexpanded_branch_count!==0||summary.technical_leak_count!==0) throw new Error('aggregate contains failures/unverified/dead ends');
+          summary.exhaustive_state_graph_gate='PASS'; summary.qa_population_gate='PASS'; summary.app_integration_ready=false; summary.release_input_gate='BLOCKED';
+          fs.writeFileSync('artifacts/stage-a-exhaustive-selector-state/summary.json',JSON.stringify(summary,null,2)+'\n');
+          console.log(`EXHAUSTIVE_STATE_GRAPH_GATE=PASS states=${summary.total_state_count} terminal=${summary.terminal_state_count} pruned=${summary.invalid_pruned_state_count}`);
+          console.log(`QA_POPULATION_GATE=PASS required=${summary.required_qa_case_count} generated=${summary.generated_qa_case_count}`);
+          NODE
+
+      - name: Upload aggregate evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: stage-a-exhaustive-selector-state-graph-summary
+          path: artifacts/stage-a-exhaustive-selector-state/summary.json
+          if-no-files-found: error
