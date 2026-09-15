@@ -32,7 +32,10 @@ jobs:
           node --check src/catalog/runtime-master/semantic-table-bundle-v2-engine.mjs
           node --check src/ui/web/product-configuration-editor.mjs
           node --check test/75-runtime-ui-inplus-v04r2-gate.test.mjs
+          node --check test/76-runtime-ui-inplus-v04r2-full-coverage.test.mjs
+          node --check test/77-runtime-ui-inplus-v04r2-installability-coverage.test.mjs
           node --check test/browser/inplus-v04r2-runtime-browser-qa.mjs
+          node --check test/browser/inplus-v04r2-full-coverage-browser-qa.mjs
 
       - name: Full repository automated tests
         run: npm test
@@ -78,6 +81,19 @@ jobs:
             sleep 0.5
           done
           node test/browser/inplus-v04r2-runtime-browser-qa.mjs
+
+      - name: Inplus Full Coverage Browser QA
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm run start:qa > /tmp/sash-inplus-v04r2-full-browser.log 2>&1 &
+          PID=$!
+          trap 'kill $PID || true' EXIT
+          for i in {1..40}; do
+            if curl -fsS http://127.0.0.1:4173/api/health >/dev/null; then break; fi
+            sleep 0.5
+          done
+          node test/browser/inplus-v04r2-full-coverage-browser-qa.mjs
 
       - name: Existing-series browser regression
         shell: bash
