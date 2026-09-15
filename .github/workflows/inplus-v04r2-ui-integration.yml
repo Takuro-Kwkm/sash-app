@@ -151,32 +151,46 @@ jobs:
           node -e 'const d=require("./artifacts/inplus-v04r2-ui-integration/exact-head-deployment.json"); if(d.readyState!=="READY"||d.githubSha!==process.env.GITHUB_SHA||d.mode!=="preview"||d.projectId!==process.env.VERCEL_PROJECT_ID||d.teamId!==process.env.VERCEL_ORG_ID) process.exit(1)'
           echo "EXACT_HEAD_PREVIEW_DEPLOYMENT_GATE=PASS"
 
+      - name: Create temporary Preview share bypass
+        if: ${{ github.event_name == 'push' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          status="$(curl -sS -o /tmp/vercel-share.json -w '%{http_code}' -X PATCH \
+            -H "Authorization: Bearer $VERCEL_TOKEN_EFFECTIVE" \
+            -H 'Content-Type: application/json' \
+            --data '{"ttl":900}' \
+            "https://api.vercel.com/aliases/$DEPLOY_ID/protection-bypass?teamId=$VERCEL_ORG_ID")"
+          if [[ "$status" != "200" ]]; then
+            echo "EXACT_HEAD_PREVIEW_SHARE_BYPASS_GATE=BLOCKED status=$status"
+            exit 49
+          fi
+          share_token="$(node -e 'const d=require("/tmp/vercel-share.json"); if(!d.value) process.exit(1); process.stdout.write(d.value)')"
+          echo "::add-mask::$share_token"
+          echo "VERCEL_SHARE_TOKEN=$share_token" >> "$GITHUB_ENV"
+          echo "EXACT_HEAD_PREVIEW_SHARE_BYPASS_GATE=PASS"
+
       - name: Exact-head Preview health
         if: ${{ github.event_name == 'push' }}
         shell: bash
         run: |
           set -euo pipefail
-          for i in {1..60}; do
-            status="$(curl -sS -o artifacts/inplus-v04r2-ui-integration/preview-health.json -w '%{http_code}' "$DEPLOY_URL/api/health" || true)"
-            if [[ "$status" == "200" ]] && node -e 'const h=require("./artifacts/inplus-v04r2-ui-integration/preview-health.json"); const p=h.runtimeMasterIntegrations?.find(x=>x.id==="SER-LIXIL-INPLUS"); if(!h.ok||!p||p.packageVersion!=="v0.4-R2"||p.sourceHash!=="cbbdb6ba315c985f7d27f75a237e861be8ce635962ce1cd5a746d7f152c8e1f8") process.exit(1)'; then
-              echo "EXACT_HEAD_PREVIEW_HEALTH_GATE=PASS"
-              exit 0
-            fi
-            if [[ "$status" == "401" || "$status" == "403" ]]; then
-              echo "EXACT_HEAD_PREVIEW_AUTH_GATE=BLOCKED status=$status"
-              exit 47
-            fi
-            sleep 1
-          done
-          echo "EXACT_HEAD_PREVIEW_HEALTH_GATE=BLOCKED"
-          exit 48
+          status="$(curl -sS -L -c /tmp/vercel-share-cookie -b /tmp/vercel-share-cookie \
+            -o artifacts/inplus-v04r2-ui-integration/preview-health.json -w '%{http_code}' \
+            "$DEPLOY_URL/api/health?_vercel_share=$VERCEL_SHARE_TOKEN")"
+          if [[ "$status" != "200" ]]; then
+            echo "EXACT_HEAD_PREVIEW_HEALTH_GATE=BLOCKED status=$status"
+            exit 48
+          fi
+          node -e 'const h=require("./artifacts/inplus-v04r2-ui-integration/preview-health.json"); const p=h.runtimeMasterIntegrations?.find(x=>x.id==="SER-LIXIL-INPLUS"); if(!h.ok||!p||p.packageVersion!=="v0.4-R2"||p.sourceHash!=="cbbdb6ba315c985f7d27f75a237e861be8ce635962ce1cd5a746d7f152c8e1f8") process.exit(1)'
+          echo "EXACT_HEAD_PREVIEW_HEALTH_GATE=PASS"
 
       - name: Exact-head Preview Full Coverage Browser QA
         if: ${{ github.event_name == 'push' }}
         shell: bash
         run: |
           set -euo pipefail
-          QA_BASE_URL="$DEPLOY_URL" node test/browser/inplus-v04r2-full-coverage-browser-qa.mjs
+          QA_BASE_URL="$DEPLOY_URL" VERCEL_SHARE_TOKEN="$VERCEL_SHARE_TOKEN" node test/browser/inplus-v04r2-full-coverage-browser-qa.mjs
 
       - name: Upload integration evidence
         if: always()
