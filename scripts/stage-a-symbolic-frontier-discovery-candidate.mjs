@@ -8,7 +8,7 @@ const HEAD_SHA=process.env.HEAD_SHA??null;
 const SHARD_TOTAL=Number(process.env.STAGE_A_SHARD_TOTAL??12);
 const SHARD_INDEX=Number(process.env.STAGE_A_SHARD_INDEX??0);
 const MAX_EXPLICIT_MULTI_ENUM_VALUES=Number(process.env.STAGE_A_MAX_EXPLICIT_MULTI_ENUM_VALUES??18);
-const MAX_TRAVERSAL_PER_WINDOW=Number(process.env.STAGE_A_MAX_TRAVERSAL_PER_WINDOW??25000);
+const MAX_TRAVERSAL_PER_WINDOW=Number(process.env.STAGE_A_MAX_TRAVERSAL_PER_WINDOW??1000);
 assert.ok(Number.isInteger(SHARD_TOTAL)&&SHARD_TOTAL>=1);
 assert.ok(Number.isInteger(SHARD_INDEX)&&SHARD_INDEX>=0&&SHARD_INDEX<SHARD_TOTAL);
 assert.ok(Number.isInteger(MAX_TRAVERSAL_PER_WINDOW)&&MAX_TRAVERSAL_PER_WINDOW>=1);
@@ -91,15 +91,15 @@ for(const product of PRODUCTS){for(const windowType of await inventoryWindows(pr
 assert.equal(inventory.length,105);
 const assigned=inventory.filter((row)=>row.globalWindowIndex%SHARD_TOTAL===SHARD_INDEX);
 const windows=[];const symbolicFrontiers=[];const unsupportedFrontiers=[];const traversalLimitFrontiers=[];
-let totalVisited=0,explicitTerminalFrontiers=0,customPendingFrontiers=0,prunedTransitions=0;
+let totalVisited=0,explicitTerminalFrontiers=0,customPendingFrontiers=0,prunedTransitions=0,shortCircuitedWindows=0;
 
 for(const row of assigned){
   const root=await resolveRuntimeAppProduct(row.id,{window_type:row.windowType});
   assert.equal(String(root.selection?.window_type),row.windowType,`${row.id}/${row.windowType}: window did not survive`);
-  const visited=new Set();let windowVisited=0;let stoppedByTraversalLimit=false;
+  const visited=new Set();let windowVisited=0;let stopped=false;let stopReason=null;
 
   async function visit(result,finalized,depth){
-    if(stoppedByTraversalLimit)return;
+    if(stopped)return;
     const fp=fingerprint(result,finalized);if(visited.has(fp))return;visited.add(fp);windowVisited+=1;totalVisited+=1;
     if(windowVisited>MAX_TRAVERSAL_PER_WINDOW){
       const field=nextDiscreteField(result,finalized);
@@ -110,7 +110,7 @@ for(const row of assigned){
         parent_selection:stable(result.selection??{}),custom_pending:customPending(result),depth,
         visited_state_count:windowVisited,status:'EXPLICIT_TRAVERSAL_LIMIT_REACHED',
       });
-      stoppedByTraversalLimit=true;return;
+      stopped=true;stopReason='TRAVERSAL_LIMIT_REACHED';return;
     }
     const field=nextDiscreteField(result,finalized);
     if(!field){if(customPending(result))customPendingFrontiers+=1;else explicitTerminalFrontiers+=1;return;}
@@ -122,14 +122,16 @@ for(const row of assigned){
         const proof=await symbolicOptionPopulation(row,result,field);
         const frontier={...base,...proof,proof_model:'TW_SINGLE_TRIGGER_DENY_PAIRWISE_INDEPENDENT_SET',terminal_without_custom:!base.custom_pending,status:base.custom_pending?'BLOCKED_BY_DOWNSTREAM_CUSTOM_EQUIVALENCE':'SYMBOLIC_TERMINAL_CANDIDATE'};
         symbolicFrontiers.push(frontier);
+        stopReason=frontier.status;
       }else{
         unsupportedFrontiers.push({...base,status:'UNSUPPORTED_SYMBOLIC_MODEL'});
+        stopReason='UNSUPPORTED_SYMBOLIC_MODEL';
       }
-      return;
+      stopped=true;return;
     }
     const branches=field.dataType==='MULTI_ENUM'?explicitMultiBranches(field):scalarBranches(field);
     for(const branch of branches){
-      if(stoppedByTraversalLimit)break;
+      if(stopped)break;
       const resolved=await resolveRuntimeAppProduct(row.id,applyBranch(result.selection,field,branch));
       if(!survives(resolved,field,branch)||invalid(resolved)){prunedTransitions+=1;continue;}
       await visit(resolved,childFinalized(finalized,field.key,resolved),depth+1);
@@ -137,17 +139,19 @@ for(const row of assigned){
   }
 
   await visit(root,new Set(['window_type']),0);
-  windows.push({manufacturer:row.manufacturer,series:row.series,product_id:row.id,window_type:row.windowType,visited_state_count:visited.size,status:stoppedByTraversalLimit?'TRAVERSAL_LIMIT_REACHED':'DISCOVERY_COMPLETE'});
-  console.log(`WINDOW_DONE shard=${SHARD_INDEX}/${SHARD_TOTAL} product=${row.id} window=${row.windowType} visited=${visited.size} status=${stoppedByTraversalLimit?'TRAVERSAL_LIMIT_REACHED':'DISCOVERY_COMPLETE'}`);
+  if(stopped)shortCircuitedWindows+=1;
+  windows.push({manufacturer:row.manufacturer,series:row.series,product_id:row.id,window_type:row.windowType,visited_state_count:visited.size,status:stopReason??'DISCOVERY_COMPLETE'});
+  console.log(`WINDOW_DONE shard=${SHARD_INDEX}/${SHARD_TOTAL} product=${row.id} window=${row.windowType} visited=${visited.size} status=${stopReason??'DISCOVERY_COMPLETE'}`);
 }
 
 const symbolicStandard=symbolicFrontiers.filter((row)=>row.status==='SYMBOLIC_TERMINAL_CANDIDATE');
 const symbolicCustom=symbolicFrontiers.filter((row)=>row.status==='BLOCKED_BY_DOWNSTREAM_CUSTOM_EQUIVALENCE');
-const exactSymbolicStandardTerminalPopulation=symbolicStandard.reduce((sum,row)=>sum+BigInt(row.exact_compatible_subset_count),0n);
+const observedExactSymbolicPopulation=symbolicStandard.reduce((sum,row)=>sum+BigInt(row.exact_compatible_subset_count),0n);
 const report={
   exact_head_sha:HEAD_SHA,
   task_classification:'NON-PRODUCT-MASTER',product_master_mutation:0,
-  proof_status:'CANDIDATE_PROOF_NOT_GOVERNING',
+  proof_status:'DISCOVERY_CANDIDATE_NOT_GOVERNING',
+  discovery_semantics:'FIRST_SYMBOLIC_REQUIRED_FRONTIER_PER_WINDOW_OR_EXPLICIT_TRAVERSAL_LIMIT',
   shard_index:SHARD_INDEX,shard_total:SHARD_TOTAL,
   max_traversal_per_window:MAX_TRAVERSAL_PER_WINDOW,
   base_window_count:assigned.length,
@@ -155,13 +159,15 @@ const report={
   explicit_terminal_frontier_count:explicitTerminalFrontiers,
   custom_pending_frontier_count:customPendingFrontiers,
   pruned_transition_count:prunedTransitions,
+  short_circuited_window_count:shortCircuitedWindows,
   traversal_limit_frontier_count:traversalLimitFrontiers.length,
   oversized_frontier_count:symbolicFrontiers.length+unsupportedFrontiers.length,
   symbolic_frontier_count:symbolicFrontiers.length,
   symbolic_standard_terminal_frontier_count:symbolicStandard.length,
   symbolic_custom_downstream_frontier_count:symbolicCustom.length,
   unsupported_symbolic_frontier_count:unsupportedFrontiers.length,
-  exact_symbolic_standard_terminal_population:exactSymbolicStandardTerminalPopulation.toString(),
+  observed_exact_symbolic_standard_population:observedExactSymbolicPopulation.toString(),
+  exact_symbolic_standard_terminal_population:observedExactSymbolicPopulation.toString(),
   windows,symbolic_frontiers:symbolicFrontiers,unsupported_frontiers:unsupportedFrontiers,traversal_limit_frontiers:traversalLimitFrontiers,
   gate_status:{
     exhaustive_state_graph_gate:'BLOCKED_PENDING_GOVERNANCE_ADOPTION',
@@ -169,16 +175,17 @@ const report={
     full_browser_qa_gate:'NOT_STARTED',
     app_integration_ready:false,release_input_gate:'BLOCKED',
   },
-  note:'Discovery candidate only. Ordinary scalar/small-MULTI_ENUM paths are traversed depth-first with streaming branch generation and SHA-256 state digests so processed Runtime result objects are not retained. Oversized TW option frontiers are never power-set expanded; every singleton and unordered pair is resolved and compatible subsets are counted exactly under the separately-proven TW single-trigger-deny model. A window that exceeds the explicit traversal budget is intentionally stopped and emitted as EXPLICIT_TRAVERSAL_LIMIT_REACHED, proving that a broader symbolic model is required rather than consuming CI until OOM. A frontier with unresolved CUSTOM dimensions is intentionally marked BLOCKED_BY_DOWNSTREAM_CUSTOM_EQUIVALENCE.',
+  note:'Discovery only, never a population-completion proof. Each window stops at the first oversized symbolic-required frontier, unsupported symbolic frontier, or explicit traversal budget. This intentionally maps where formal symbolic proof is required without enumerating or sampling away any unresolved states. Ordinary paths before that frontier are traversed exactly. A TW oversized option frontier, when reached, is proven with every singleton and unordered pair under the separately-established TW pairwise independent-set model. The observed symbolic population is only for discovered STANDARD frontiers and MUST NOT be presented as the Stage A total QA population.',
 };
 await writeFile(`${OUT}/report.json`,`${JSON.stringify(report,null,2)}\n`,'utf8');
 console.log(`SYMBOLIC_FRONTIER_DISCOVERY_STATUS=${report.proof_status}`);
 console.log(`BASE_WINDOW_COUNT=${report.base_window_count}`);
+console.log(`SHORT_CIRCUITED_WINDOWS=${report.short_circuited_window_count}`);
 console.log(`TRAVERSAL_LIMIT_FRONTIERS=${report.traversal_limit_frontier_count}`);
 console.log(`OVERSIZED_FRONTIER_COUNT=${report.oversized_frontier_count}`);
 console.log(`SYMBOLIC_STANDARD_TERMINAL_FRONTIERS=${report.symbolic_standard_terminal_frontier_count}`);
 console.log(`SYMBOLIC_CUSTOM_DOWNSTREAM_FRONTIERS=${report.symbolic_custom_downstream_frontier_count}`);
 console.log(`UNSUPPORTED_SYMBOLIC_FRONTIERS=${report.unsupported_symbolic_frontier_count}`);
-console.log(`EXACT_SYMBOLIC_STANDARD_TERMINAL_POPULATION=${report.exact_symbolic_standard_terminal_population}`);
+console.log(`OBSERVED_EXACT_SYMBOLIC_STANDARD_POPULATION=${report.observed_exact_symbolic_standard_population}`);
 console.log('APP_INTEGRATION_READY=false');
 console.log('RELEASE_INPUT_GATE=BLOCKED');
