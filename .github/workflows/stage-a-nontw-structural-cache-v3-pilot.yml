@@ -1,0 +1,130 @@
+name: Stage A Non-TW Structural Audit Cache V3 Pilot
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/stage-a-nontw-structural-cache-v3-pilot.yml'
+      - 'scripts/stage-a-nontw-discrete-exact-runner.mjs'
+      - 'scripts/stage-a-resolver-derived-contract-v2-pilot.mjs'
+      - 'src/catalog/runtime-master/product-module-runtime-adapter.mjs'
+      - 'src/catalog/runtime-master/canonical-workbook-reference-v1-adapter.mjs'
+      - 'src/catalog/runtime-master/runtime-app-bridge.mjs'
+      - 'src/catalog/runtime-master/runtime-master-registry.mjs'
+      - 'src/catalog/catalog-resolver.mjs'
+      - 'src/catalog/resolver-values.mjs'
+      - 'src/catalog/resolver-auto.mjs'
+      - 'src/catalog/selector.mjs'
+      - 'src/catalog/selector-ops.mjs'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: stage-a-nontw-structural-cache-v3-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  pilot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    strategy:
+      fail-fast: false
+      max-parallel: 3
+      matrix:
+        window_type:
+          - WT-S2H-MENKOSHI-HIKI
+          - WT-SL-HIKICHIGAI
+          - WT-EW-HIKICHIGAI
+    env:
+      HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+      STAGE_A_TARGET_WINDOWS: ${{ matrix.window_type }}
+      STAGE_A_MAX_MEMO_STATES_PER_WINDOW: 12000
+      STAGE_A_MAX_RESOLVER_CALLS_PER_WINDOW: 80000
+      STAGE_A_MAX_EXPLICIT_MULTI_ENUM_VALUES: 18
+      STAGE_A_MAX_TERMINAL_BFS_STATES: 4096
+      STAGE_A_CONTRACT_V2_OUT: artifacts/stage-a-nontw-structural-cache-v3/${{ matrix.window_type }}
+    steps:
+      - name: Checkout exact PR HEAD
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 1
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Exact SHA gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          actual="$(git rev-parse HEAD)"
+          test "$actual" = "$HEAD_SHA"
+          echo "EXACT_HEAD_GATE=PASS sha=$actual window=$STAGE_A_TARGET_WINDOWS"
+      - name: Run structural audit cache V3 proof
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check scripts/stage-a-nontw-discrete-exact-runner.mjs
+          node scripts/stage-a-nontw-discrete-exact-runner.mjs
+      - name: Upload V3 per-window evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: stage-a-nontw-structural-cache-v3-${{ matrix.window_type }}
+          path: artifacts/stage-a-nontw-structural-cache-v3/${{ matrix.window_type }}/report.json
+          if-no-files-found: warn
+      - name: Fail-closed V3 pilot gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import { readFileSync } from 'node:fs';
+          const path=`artifacts/stage-a-nontw-structural-cache-v3/${process.env.STAGE_A_TARGET_WINDOWS}/report.json`;
+          const report=JSON.parse(readFileSync(path,'utf8'));
+          if(report.exact_head_sha!==process.env.HEAD_SHA)throw new Error('exact head mismatch');
+          if(report.windows?.length!==1)throw new Error('expected one window report');
+          const row=report.windows[0];
+          if(row.proof_model_version!=='RUNTIME_UI_SYMBOLIC_FULL_COVERAGE_V1')throw new Error(`unexpected proof model ${row.proof_model_version}`);
+          if(row.count_model_version!=='NONTW_RESOLVER_DERIVED_CONTRACT_V2_TERMINAL_STRUCTURAL_CACHE_V3')throw new Error(`unexpected count model ${row.count_model_version}`);
+          if(row.status!=='COUNTED_CANDIDATE'||row.blocker||(row.symbolic_frontiers??[]).length)throw new Error(`V3 blocked: ${JSON.stringify(row.blocker)}`);
+          if(!row.runtime_manifest_sha256)throw new Error('runtime identity missing');
+          console.log(`NONTW_STRUCTURAL_CACHE_V3_GATE=PASS series=${row.series} window=${row.window_type} terminal=${row.exact_discrete_terminal_context_count} calls=${row.resolver_call_count} audit_cache_size=${row.structural_audit_cache_size} audit_hits=${row.structural_audit_cache_hits}`);
+          NODE
+
+  aggregate:
+    if: always()
+    needs: pilot
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    env:
+      HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: stage-a-nontw-structural-cache-v3-*
+          path: artifacts/collected
+      - name: Aggregate V3 pilot
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import { createHash } from 'node:crypto';
+          import { readdirSync,readFileSync,statSync,mkdirSync,writeFileSync } from 'node:fs';
+          import { join } from 'node:path';
+          const files=[];const walk=(dir)=>{for(const name of readdirSync(dir)){const p=join(dir,name);if(statSync(p).isDirectory())walk(p);else if(name==='report.json')files.push(p);}};walk('artifacts/collected');
+          const rows=[];for(const p of files){const report=JSON.parse(readFileSync(p,'utf8'));if(report.exact_head_sha!==process.env.HEAD_SHA)throw new Error(`head mismatch ${p}`);if(report.windows?.length===1)rows.push(report.windows[0]);}
+          rows.sort((a,b)=>String(a.window_type).localeCompare(String(b.window_type)));
+          const counted=rows.filter((r)=>r.status==='COUNTED_CANDIDATE'&&!r.blocker&&!(r.symbolic_frontiers??[]).length);
+          const complete=rows.length===3&&new Set(rows.map((r)=>r.window_type)).size===3&&counted.length===3;
+          const digest=createHash('sha256').update(JSON.stringify(rows.map((r)=>({window:r.window_type,status:r.status,terminal:r.exact_discrete_terminal_context_count,runtime:r.runtime_manifest_sha256,contract:r.contract_digest,multi:r.terminal_multi_proof_digest,auditSize:r.structural_audit_cache_size,auditHits:r.structural_audit_cache_hits})))).digest('hex');
+          const out={exact_head_sha:process.env.HEAD_SHA,task_classification:'NON-PRODUCT-MASTER',product_master_mutation:0,proof_model_version:'RUNTIME_UI_SYMBOLIC_FULL_COVERAGE_V1',count_model_version:'NONTW_RESOLVER_DERIVED_CONTRACT_V2_TERMINAL_STRUCTURAL_CACHE_V3',expected_window_count:3,report_count:rows.length,counted_window_count:counted.length,unverified_window_count:3-counted.length,evidence_digest:digest,status:complete?'PILOT_PASS':'BLOCKED',windows:rows,gate_status:{nontw_discrete_population_gate:'BLOCKED_PILOT_ONLY',custom_size_coverage_gate:'BLOCKED_CONTINUOUS_PARTITION_NOT_PROVEN',app_integration_ready:false,release_input_gate:'BLOCKED'}};
+          mkdirSync('artifacts/stage-a-nontw-structural-cache-v3-aggregate',{recursive:true});writeFileSync('artifacts/stage-a-nontw-structural-cache-v3-aggregate/report.json',JSON.stringify(out,null,2)+'\n');
+          console.log(`V3_PILOT_STATUS=${out.status}`);console.log(`REPORT_COUNT=${out.report_count}`);console.log(`COUNTED_WINDOW_COUNT=${out.counted_window_count}`);console.log(`UNVERIFIED_WINDOW_COUNT=${out.unverified_window_count}`);console.log(`EVIDENCE_DIGEST=${out.evidence_digest}`);console.log('APP_INTEGRATION_READY=false');console.log('RELEASE_INPUT_GATE=BLOCKED');if(!complete)process.exitCode=1;
+          NODE
+      - name: Upload V3 aggregate
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: stage-a-nontw-structural-cache-v3-aggregate
+          path: artifacts/stage-a-nontw-structural-cache-v3-aggregate/report.json
+          if-no-files-found: warn
