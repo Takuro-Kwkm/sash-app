@@ -17,46 +17,21 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  pilot:
+  superseded_gate:
     runs-on: ubuntu-latest
-    timeout-minutes: 12
-    env:
-      HEAD_SHA: ${{ github.event.pull_request.head.sha }}
-      STAGE_A_MAX_CONCRETE_STATES_PER_WINDOW: 12000
-      STAGE_A_MAX_RESOLVER_CALLS_PER_WINDOW: 50000
-      STAGE_A_TARGET_WINDOWS: WT-S2H-MENKOSHI-AGE-FS,WT-SL-TERRACE-DOOR,WT-EW-AGE-SAGE-FS,SWT-LIX-TW-TATE-GREMON-TF,SWT-YKK-APW430-TATE-GREMON-WINDCATCH,W431-006
-      STAGE_A_SEMANTIC_DAG_OUT: artifacts/stage-a-semantic-continuation-dag-pilot
+    timeout-minutes: 2
     steps:
-      - name: Checkout exact PR HEAD
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}
-          fetch-depth: 1
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 24
-
-      - name: Exact SHA gate
+      - name: Close superseded semantic DAG v1 pilot
         shell: bash
         run: |
           set -euo pipefail
-          actual="$(git rev-parse HEAD)"
-          test "$actual" = "$HEAD_SHA"
-          echo "EXACT_HEAD_GATE=PASS sha=$actual"
-
-      - name: Run semantic continuation DAG pilot
-        shell: bash
-        run: |
-          set -euo pipefail
-          node scripts/stage-a-semantic-continuation-dag-pilot.mjs | tee /tmp/stage-a-semantic-dag-pilot.log
-
-      - name: Upload pilot evidence
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: stage-a-semantic-continuation-dag-pilot
-          path: |
-            artifacts/stage-a-semantic-continuation-dag-pilot/report.json
-            /tmp/stage-a-semantic-dag-pilot.log
-          if-no-files-found: warn
+          echo "SEMANTIC_DAG_V1_PILOT_PATH=CLOSED"
+          echo "CLOSE_REASON=CLASS_REUSE_DETECTED_BUT_CONCRETE_STATE_ENUMERATION_REMAINED"
+          echo "EVIDENCE_RUN=34917584133"
+          echo "EVIDENCE_CONCRETE_STATE_COUNT=72000"
+          echo "EVIDENCE_SEMANTIC_CLASS_COUNT=75"
+          echo "EVIDENCE_CLASS_REUSE_COUNT=67260"
+          echo "SUPERSEDED_BY=RESOLVER_DERIVED_CONTRACT_V2_PILOT"
+          echo "RETRY_AUTHORIZED=false"
+          echo "APP_INTEGRATION_READY=false"
+          echo "RELEASE_INPUT_GATE=BLOCKED"
