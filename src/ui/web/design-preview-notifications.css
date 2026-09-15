@@ -3,3 +3,4 @@
 @media(max-width:1100px){.reference-shell .reference-hero{background-size:76% 100%!important}}
 @media(max-width:900px){.notification-layout{grid-template-columns:1fr}.notification-detail{position:static}.notification-toolbar{align-items:flex-start;flex-direction:column}.notification-meta{grid-template-columns:1fr 1fr}}
 @media(max-width:800px){.reference-shell.design-shell{display:block!important}.reference-shell .design-sidebar{display:none!important}.reference-shell .reference-hero{background-size:100% 100%!important}.notification-row{grid-template-columns:auto minmax(0,1fr)}.notification-row time{grid-column:2}.notification-meta{grid-template-columns:1fr}}
+/* preview refresh: verified HOME reference */
