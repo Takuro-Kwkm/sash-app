@@ -7,7 +7,7 @@ export const NEW_CONSTRUCTION_EXTERIOR_WINDOW_UI_CATEGORY = 'NEW_CONSTRUCTION_EX
 // Runtime owns existence, values, dependencies and validity. The Global Window
 // Selection Flow owns presentation order and semantic stage normalization.
 export const NEW_CONSTRUCTION_SASH_UI_STANDARD_ORDER = Object.freeze([
-  'manufacturer','product','window_type','window_spec','handing','panel_count','size_mode','size',
+  'manufacturer','product','window_type','window_spec','handing','size_mode','panel_count','size',
   'exterior_color','interior_color','screen_presence','screen_form','screen_midrail','screen_net',
   'glass_base','glass_type','glass_detail','glass_function','glass_spacer','glass_air_layer','option',
 ]);
@@ -29,8 +29,8 @@ const SLOT_ALIASES = Object.freeze({
 });
 
 const PRODUCT_SLOTS = new Set(['manufacturer','product']);
-const CONFIGURATION_SLOTS = new Set(['window_spec','handing','panel_count']);
-const SIZE_SLOTS = new Set(['size_mode','size']);
+const CONFIGURATION_SLOTS = new Set(['window_spec','handing']);
+const SIZE_SLOTS = new Set(['size_mode','panel_count','size']);
 const FINISH_SLOTS = new Set(['exterior_color','interior_color']);
 const SCREEN_SLOTS = new Set(['screen_presence','screen_form','screen_midrail','screen_net']);
 const GLAZING_SLOTS = new Set(['glass_base','glass_type','glass_detail','glass_function','glass_spacer','glass_air_layer']);
