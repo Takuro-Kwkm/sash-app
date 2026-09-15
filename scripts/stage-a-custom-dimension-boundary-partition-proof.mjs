@@ -39,7 +39,7 @@ function canonicalLine(a,b,c,source){
 const vertical=(x,source)=>canonicalLine(1,0,-Number(x),source);
 const horizontal=(y,source)=>canonicalLine(0,1,-Number(y),source);
 function lineFromPoints(p,q,source){const [x1,y1]=p,[x2,y2]=q;return canonicalLine(y2-y1,x1-x2,x2*y1-x1*y2,source);}
-function lineKey(l)=>`${l.a}|${l.b}|${l.c}`;
+const lineKey=(l)=>`${l.a}|${l.b}|${l.c}`;
 function addLine(map,line){const key=lineKey(line);const old=map.get(key);if(old){old.sources.push(...line.sources);return old;}map.set(key,line);return line;}
 function addBounds(map,bounds,source){
   if(finite(bounds?.minW))addLine(map,vertical(bounds.minW,`${source}:minW`));
@@ -110,7 +110,7 @@ for(const s of shape.series){
       }
     }
     const triplets=boundaryTriplets(lines);if(triplets.invalid_boundary_triplet_count)throw new Error(`BOUNDARY_TRIPLET_INVARIANCE_FAIL ${s.series}/${windowId} count=${triplets.invalid_boundary_triplet_count}`);
-    const lineCoverage=lines.map((l)=>{const signs=new Set();for(const [sig] of proofBySignature){const idx=lines.indexOf(l);signs.add(sig[idx]);}return{line:lineKey(l),sources:l.sources,signs:[...signs].sort()};});
+    const lineCoverage=lines.map((l,idx)=>{const signs=new Set();for(const [sig] of proofBySignature)signs.add(sig[idx]);return{line:lineKey(l),sources:l.sources,signs:[...signs].sort()};});
     const incomplete=lineCoverage.filter((r)=>!(r.signs.includes('-')&&r.signs.includes('0')&&r.signs.includes('+')));
     if(incomplete.length)throw new Error(`BOUNDARY_SIDE_COVERAGE_FAIL ${s.series}/${windowId} ${JSON.stringify(incomplete)}`);
     windowReports.push({manufacturer:s.manufacturer,series:s.series,window_id:windowId,rule_count:rules.length,selector_signature_count:new Set(rules.map((r)=>JSON.stringify(stable(r.selector??{})))).size,line_count:lines.length,intersection_count:uniqueIntersections.length,raw_probe_count:rawProbeCount,arrangement_proof_class_count:proofBySignature.size,interior_probe_count:interiorProbeCount,boundary_probe_count:boundaryProbeCount,vertex_probe_count:vertexProbeCount,...triplets,line_digest:hash(lines),proof_class_digest:hash([...proofBySignature.entries()].sort()),boundary_requirements:boundaryRequirements});
