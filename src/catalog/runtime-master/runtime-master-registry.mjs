@@ -67,7 +67,7 @@ export const runtimeMasterInventory = Object.freeze([
     runtimeManifestDriveFileId: '1oVKdg3j2YlNEWhBZSqGJl0S7kD5tayox',
     runtimeManifestSha256: '6f47677023212228d1132407c9fce8ccd9d407c65fd19cbb9e1507f1845b287d',
     runtimePackageDriveFileId: '1x1PosnI6EAhNI46mIDLlaFZKf1q9I4mz',
-    materializedBundleSegments: Object.freeze(Array.from({length:12},(_,index)=>join(INNOVEST_ROOT,`materialized-runtime.br.b64.json.parts/part-${String(index).padStart(2,'0')}`))),
+    materializedBundleSegments: Object.freeze(Array.from({length:13},(_,index)=>join(INNOVEST_ROOT,`materialized-runtime.br.b64.json.parts/part-${String(index).padStart(2,'0')}`))),
   }),
 ]);
 
