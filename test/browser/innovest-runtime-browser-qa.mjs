@@ -112,8 +112,8 @@ async function exerciseCore(page){
   result=await choose(page,'door_color',color);
   result=await choose(page,'handing','RIGHT');
   result=await choose(page,'frame_installation_type','FLAT');
-  result=await choose(page,'lock_type','ELECTRIC');
-  result=await choose(page,'lock_system','FACE_RECOGNITION');
+  result=await chooseIfNeeded(page,result,'lock_type','ELECTRIC');
+  result=await chooseIfNeeded(page,result,'lock_system','FACE_RECOGNITION');
   result=await chooseIfNeeded(page,result,'handle','SMART_STRAIGHT');
   result=await chooseIfNeeded(page,result,'handle_color','SILVER');
   result=await chooseIfNeeded(page,result,'size_mode','STANDARD');
