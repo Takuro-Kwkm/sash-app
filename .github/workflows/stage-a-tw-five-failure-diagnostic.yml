@@ -1,0 +1,60 @@
+name: Stage A TW Five-Failure Diagnostic
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/stage-a-tw-five-failure-diagnostic.yml'
+      - 'scripts/stage-a-tw-five-failure-diagnostic.mjs'
+      - 'src/catalog/runtime-master/**'
+      - 'src/catalog/**'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: stage-a-tw-five-failure-diagnostic-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  diagnostic:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    env:
+      HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+      STAGE_A_TW_FAILURE_DIAGNOSTIC_OUT: artifacts/stage-a-tw-five-failure-diagnostic
+    steps:
+      - name: Checkout exact PR HEAD
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 1
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Exact SHA gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          actual="$(git rev-parse HEAD)"
+          test "$actual" = "$HEAD_SHA"
+          echo "EXACT_HEAD_GATE=PASS sha=$actual"
+
+      - name: Run exact five-failure diagnostic
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check scripts/stage-a-tw-five-failure-diagnostic.mjs
+          node scripts/stage-a-tw-five-failure-diagnostic.mjs | tee /tmp/stage-a-tw-five-failure-diagnostic.log
+
+      - name: Upload diagnostic evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: stage-a-tw-five-failure-diagnostic
+          path: |
+            artifacts/stage-a-tw-five-failure-diagnostic/report.json
+            /tmp/stage-a-tw-five-failure-diagnostic.log
+          if-no-files-found: warn
