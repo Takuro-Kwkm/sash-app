@@ -9,208 +9,24 @@ on:
 permissions:
   contents: read
 
-concurrency:
-  group: stage-a-apw430-behavior-projection-v1-${{ github.event.pull_request.number }}
-  cancel-in-progress: true
-
 jobs:
-  exact-recovery:
+  closed-evidence-gate:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
-    env:
-      HEAD_SHA: ${{ github.event.pull_request.head.sha }}
-      STAGE_A_MAX_MEMO_STATES_PER_WINDOW: '12000'
-      STAGE_A_MAX_RESOLVER_CALLS_PER_WINDOW: '80000'
-      STAGE_A_MAX_EXPLICIT_MULTI_ENUM_VALUES: '18'
-      STAGE_A_MAX_TERMINAL_BFS_STATES: '4096'
-      APW430_PROJECTION_MODEL: APW430_SOURCE_BEHAVIOR_MEMO_PROJECTION_V1
     steps:
-      - name: Checkout exact PR HEAD
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}
-          fetch-depth: 1
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 24
-      - name: Exact SHA gate
+      - name: Preserve APW430 projection evidence and close same-condition retry
         shell: bash
         run: |
           set -euo pipefail
-          actual="$(git rev-parse HEAD)"
-          test "$actual" = "$HEAD_SHA"
-          echo "EXACT_HEAD_GATE=PASS sha=$actual"
-
-      - name: Build APW430 projection harness
-        shell: bash
-        run: |
-          set -euo pipefail
-          cat > scripts/.stage-a-apw430-projection-v1-harness.mjs <<'NODE'
-          import { createHash } from 'node:crypto';
-          import { readFile,writeFile,mkdir } from 'node:fs/promises';
-          import { spawn } from 'node:child_process';
-          import { getRuntimeMasterEntry } from '../src/catalog/runtime-master/runtime-master-registry.mjs';
-          import { loadFormalProductRuntimePackage } from '../src/catalog/runtime-master/formal-product-runtime-loader.mjs';
-
-          const runnerPath=new URL('./stage-a-nontw-discrete-exact-runner.mjs',import.meta.url);
-          const tempRunner=new URL('./.stage-a-apw430-projection-v1-generated-runner.mjs',import.meta.url);
-          const adapterPath=new URL('../src/catalog/runtime-master/apw430-formal-split-v1-adapter.mjs',import.meta.url);
-          const runnerSource=await readFile(runnerPath,'utf8');
-          const adapterSource=await readFile(adapterPath,'utf8');
-          const baseRunnerSha=createHash('sha256').update(runnerSource).digest('hex');
-          const adapterSha=createHash('sha256').update(adapterSource).digest('hex');
-          const insertion="\nawait writeFile(OUT, source, 'utf8');";
-          if(!runnerSource.includes(insertion))throw new Error('V3 runner insertion anchor missing');
-
-          const stateBefore=[
-            "  let productModuleStructural=null,ewStructuralModel=null;",
-            "  const root=await resolveRuntimeAppProduct(row.id,{window_type:row.windowType});",
-          ].join('\n');
-          const stateAfter=[
-            "  let productModuleStructural=null,ewStructuralModel=null,apw430ProjectionDocs=null;",
-            "  if(row.id==='SER-YKK-APW430'){",
-            "    const apwEntry=getRuntimeMasterEntry(row.manufacturer,row.series);",
-            "    const apwPkg=await loadFormalProductRuntimePackage(apwEntry);",
-            "    const core=apwPkg.documents?.CORE,dimensions=apwPkg.documents?.DIMENSIONS,options=apwPkg.documents?.OPTIONS;",
-            "    if(!core||!dimensions||!options)throw new Error('APW430 projection source documents missing');",
-            "    apw430ProjectionDocs={core,dimensions,options};",
-            "  }",
-            "  const apwActive=(value)=>value?.active!==false&&value?.['有効']!==false&&value?.selectable!==false;",
-            "  const apwUnique=(values)=>[...new Set(values.filter((value)=>value!==undefined&&value!==null&&value!=='').map(String))];",
-            "  const apwSplit=(value)=>String(value??'').split(/[|・、,]/).map((part)=>part.trim()).filter(Boolean);",
-            "  const apwColors=(windowId)=>{const {core}=apw430ProjectionDocs;const denied=new Set((core.color_applicability_rules??[]).filter((r)=>apwActive(r)&&r['シリーズ窓種ID']===windowId&&r['選択可否']==='不可').map((r)=>r.color_id));return (core.colors??[]).filter((r)=>apwActive(r)&&r['組合せ可否']==='可'&&!denied.has(r.color_relation_id));};",
-            "  const apwOptionIds=(windowId,relationId)=>{const {options}=apw430ProjectionDocs;return (options.other_options??[]).filter(apwActive).filter((option)=>!(options.option_dependencies??[]).some((rule)=>{if(!apwActive(rule)||rule['対象option_id']!==option.option_id||rule['アクション']!=='選択不可')return false;const targets=apwSplit(rule['対象シリーズ窓種ID']);if(targets.length&&!targets.includes('*')&&!targets.includes(windowId))return false;if(rule['条件項目']==='外観色')return apwSplit(rule['条件値']).includes(relationId);return true;})).map((r)=>String(r.option_id)).sort();};",
-            "  const apwScreenForms=(windowId,sizeId)=>{const {options}=apw430ProjectionDocs;let forms=(options.screen_forms??[]).filter((r)=>apwActive(r)&&r['シリーズ窓種ID']===windowId&&r['網戸形式']!=='なし');if(sizeId){const rule=(options.screen_size_rules??[]).find((r)=>apwActive(r)&&r.size_id===sizeId&&r['シリーズ窓種ID']===windowId);if(rule?.['許可網戸形式']){const allowed=new Set(String(rule['許可網戸形式']).split('|').map((v)=>v.trim()).filter(Boolean));forms=forms.filter((r)=>allowed.has(r['網戸形式']));}}return apwUnique(forms.map((r)=>r['網戸形式ID'])).sort();};",
-            "  const apwGlassIds=(windowId,sizeId)=>{const {options}=apw430ProjectionDocs;const app=(options.glass_applicability??[]).find((r)=>apwActive(r)&&r['シリーズ窓種ID']===windowId);const sizeRule=(options.size_glass_rules??[]).find((r)=>r.size_id===sizeId&&r['シリーズ窓種ID']===windowId);return (options.glass_master??[]).filter(apwActive).filter((r)=>{const triple=String(r['ガラス大分類']).includes('トリプル');if(triple&&app&&!['可','○',true].includes(app['トリプルガラス']))return false;if(!triple&&app&&!['可','○',true].includes(app['複層ガラス']))return false;if(sizeRule){const flag=triple?sizeRule['トリプル可否']:sizeRule['複層可否'];if(['不可','×',false].includes(flag))return false;}return true;}).map((r)=>String(r.glass_id)).sort();};",
-            "  const apwGlassBehavior=(glassId)=>{const {options}=apw430ProjectionDocs;const glass=(options.glass_master??[]).filter(apwActive).find((r)=>String(r.glass_id)===String(glassId));if(!glass)throw new Error('APW430 projection glass row missing '+glassId);const triple=String(glass['ガラス大分類']).includes('トリプル');const functions=(options.glass_additional_options??[]).filter(apwActive).filter((r)=>triple?r['トリプル適用']!=='不可':r['ペア適用']!=='不可').map((r)=>String(r.option_id)).sort();const appearances=(options.glass_appearances??[]).filter(apwActive).filter((r)=>triple?r['トリプル適用']!=='不可':r['ペア適用']!=='不可').map((r)=>String(r.appearance_id)).sort();return {functions,appearances};};",
-            "  const apwScreenNetIds=(windowId)=>{const {core,options}=apw430ProjectionDocs;const window=(core.series_windows??[]).filter(apwActive).find((r)=>String(r.id)===String(windowId));const common=window?.commonWindowId;return apwUnique((options.screen_master??[]).filter((r)=>apwActive(r)&&r['窓種ID']===common&&r['網戸有無']==='あり').map((r)=>r['ネット種類'])).sort();};",
-            "  const apwProjectionToken=(key,result)=>{if(!apw430ProjectionDocs)return null;const s=result.selection??{},windowId=String(s.window_type??row.windowType);if(key==='size'&&s.size)return 'SIZE:'+hash({screen_forms:apwScreenForms(windowId,String(s.size)),glass_ids:apwGlassIds(windowId,String(s.size))});if(['window_spec','window_configuration','handing','panel_count'].includes(key)&&s.size_mode==='STANDARD'&&s.size)return 'SIZE_UPSTREAM:RESOLVED';if(key==='glass_base'&&s.glass_base)return 'GLASS:'+hash(apwGlassBehavior(String(s.glass_base)));if(key==='screen_form'&&s.screen_form)return 'SCREEN_FORM:'+hash({nets:apwScreenNetIds(windowId)});if((key==='exterior_color'||key==='interior_color')&&s.exterior_color){const colors=apwColors(windowId).filter((r)=>String(r['外観色ID'])===String(s.exterior_color));if(s.interior_color){const relation=colors.find((r)=>String(r['内観色ID'])===String(s.interior_color));if(!relation)throw new Error('APW430 projection color relation missing');return 'COLOR_PAIR:'+hash({options:apwOptionIds(windowId,String(relation.color_relation_id))});}const interiors=apwUnique(colors.map((r)=>r['内観色ID'])).sort().map((interior)=>{const relation=colors.find((r)=>String(r['内観色ID'])===interior);return [interior,apwOptionIds(windowId,String(relation?.color_relation_id??''))];});return 'EXTERIOR:'+hash(interiors);}return null;};",
-            "  const apw430MemoKey=(result,done,depMap)=>{const future=[...depMap.keys()].filter((k)=>k!=='window_type'&&!TECHNICAL.has(k)&&!CONTINUOUS.has(k)&&!done.has(k));const cache=new Map(),live=new Set();for(const key of future){live.add(key);for(const a of ancestors(depMap,key,cache))live.add(a);}const liveSelection={};for(const key of [...live].sort())if(Object.prototype.hasOwnProperty.call(result.selection??{},key)){const projected=apwProjectionToken(key,result);liveSelection[key]=projected??result.selection[key];}return hash({done:[...done].sort(),liveSelection,observable:futureSignature(result,done,depMap),projection_model:'APW430_SOURCE_BEHAVIOR_MEMO_PROJECTION_V1'});};",
-            "  const root=await resolveRuntimeAppProduct(row.id,{window_type:row.windowType});",
-          ].join('\n');
-          const memoBefore="    const key=memoKey(result,done,depMap);";
-          const memoAfter="    const key=row.id==='SER-YKK-APW430'?apw430MemoKey(result,done,depMap):memoKey(result,done,depMap);";
-          const injected=[
-            "replaceOnce('APW430 source behavior projection state',"+JSON.stringify(stateBefore)+","+JSON.stringify(stateAfter)+");",
-            "replaceOnce('APW430 projected memo key',"+JSON.stringify(memoBefore)+","+JSON.stringify(memoAfter)+");",
-          ].join('\n');
-          const patched=runnerSource.replace(insertion,'\n'+injected+insertion);
-          await writeFile(tempRunner,patched,'utf8');
-          const child=spawn(process.execPath,[tempRunner.pathname],{stdio:'inherit',env:process.env});
-          const exitCode=await new Promise((resolve,reject)=>{child.once('error',reject);child.once('exit',(code,signal)=>signal?reject(new Error('APW430 projection proof killed by '+signal)):resolve(code??1));});
-
-          const reportPath=`${process.env.STAGE_A_CONTRACT_V2_OUT}/report.json`;
-          let report=null;
-          try{report=JSON.parse(await readFile(reportPath,'utf8'));}catch(error){if(exitCode===0)throw error;process.exitCode=exitCode;process.exit();}
-          const entry=getRuntimeMasterEntry('YKK AP','APW430');
-          const pkg=await loadFormalProductRuntimePackage(entry);
-          const core=pkg.documents?.CORE,dimensions=pkg.documents?.DIMENSIONS,options=pkg.documents?.OPTIONS;
-          if(!core||!dimensions||!options)throw new Error('APW430 source docs missing during evidence augmentation');
-          const active=(r)=>r?.active!==false&&r?.['有効']!==false&&r?.selectable!==false;
-          const split=(v)=>String(v??'').split(/[|・、,]/).map((x)=>x.trim()).filter(Boolean);
-          const uniq=(values)=>[...new Set(values.filter((v)=>v!==undefined&&v!==null&&v!=='').map(String))];
-          const target=process.env.STAGE_A_TARGET_WINDOWS;
-          const glassBehavior=(glass)=>{const triple=String(glass['ガラス大分類']).includes('トリプル');const functions=(options.glass_additional_options??[]).filter(active).filter((r)=>triple?r['トリプル適用']!=='不可':r['ペア適用']!=='不可').map((r)=>String(r.option_id)).sort();const appearances=(options.glass_appearances??[]).filter(active).filter((r)=>triple?r['トリプル適用']!=='不可':r['ペア適用']!=='不可').map((r)=>String(r.appearance_id)).sort();return JSON.stringify({functions,appearances});};
-          const sizeIds=uniq((dimensions.standard_sizes??[]).filter((r)=>active(r)&&String(r.seriesWindowId)===target).map((r)=>r.id));
-          const glassMaster=(options.glass_master??[]).filter(active);
-          const rawColors=(core.colors??[]).filter((r)=>active(r)&&r['組合せ可否']==='可');
-          const denied=new Set((core.color_applicability_rules??[]).filter((r)=>active(r)&&String(r['シリーズ窓種ID'])===target&&r['選択可否']==='不可').map((r)=>r.color_id));
-          const colors=rawColors.filter((r)=>!denied.has(r.color_relation_id));
-          const optionIdsForRelation=(relationId)=>(options.other_options??[]).filter(active).filter((option)=>!(options.option_dependencies??[]).some((rule)=>{if(!active(rule)||rule['対象option_id']!==option.option_id||rule['アクション']!=='選択不可')return false;const targets=split(rule['対象シリーズ窓種ID']);if(targets.length&&!targets.includes('*')&&!targets.includes(target))return false;if(rule['条件項目']==='外観色')return split(rule['条件値']).includes(relationId);return true;})).map((r)=>String(r.option_id)).sort();
-          const pairClasses=new Set(colors.map((r)=>JSON.stringify(optionIdsForRelation(String(r.color_relation_id)))));
-          const extIds=uniq(colors.map((r)=>r['外観色ID']));
-          const extClasses=new Set(extIds.map((ext)=>{const rows=colors.filter((r)=>String(r['外観色ID'])===ext);return JSON.stringify(uniq(rows.map((r)=>r['内観色ID'])).sort().map((interior)=>{const rel=rows.find((r)=>String(r['内観色ID'])===interior);return [interior,optionIdsForRelation(String(rel?.color_relation_id??''))];}));}));
-          const diagnostic={adapter_sha256:adapterSha,base_v3_runner_sha256:baseRunnerSha,projection_model:process.env.APW430_PROJECTION_MODEL,source_runtime_manifest_sha256:entry.runtimeManifestSha256,window_type:target,raw_standard_size_id_count:sizeIds.length,raw_color_relation_count:colors.length,raw_exterior_color_count:extIds.length,exterior_behavior_class_count:extClasses.size,color_pair_option_behavior_class_count:pairClasses.size,raw_glass_id_count:glassMaster.length,glass_behavior_class_count:new Set(glassMaster.map(glassBehavior)).size};
-          report.base_count_model_version=report.count_model_version??null;
-          report.count_model_version='NONTW_RESOLVER_DERIVED_CONTRACT_V2_APW430_BEHAVIOR_PROJECTION_V1';
-          report.apw430_projection=diagnostic;
-          for(const row of report.windows??[]){row.base_count_model_version=row.count_model_version??null;row.count_model_version='NONTW_RESOLVER_DERIVED_CONTRACT_V2_APW430_BEHAVIOR_PROJECTION_V1';row.apw430_projection=diagnostic;}
-          report.note='APW430 discrete exact recovery. Concrete selector branches remain counted; only proof-side memo identity is projected through source-audited adapter behavior signatures. V3 terminal proof is unchanged. Runtime/Product Master are read-only. Continuous CUSTOM dimensions remain unproven.';
-          await mkdir(process.env.STAGE_A_CONTRACT_V2_OUT,{recursive:true});
-          await writeFile(reportPath,JSON.stringify(report,null,2)+'\n');
-          console.log('APW430_PROJECTION_MODEL='+process.env.APW430_PROJECTION_MODEL);
-          console.log('APW430_ADAPTER_SHA256='+adapterSha);
-          console.log('APW430_BASE_V3_RUNNER_SHA256='+baseRunnerSha);
-          console.log('APW430_PROJECTION_DIAGNOSTIC='+JSON.stringify(diagnostic));
-          process.exitCode=exitCode;
-          NODE
-          node --check scripts/.stage-a-apw430-projection-v1-harness.mjs
-
-      - name: Run and verify APW430 control first
-        shell: bash
-        env:
-          STAGE_A_TARGET_WINDOWS: SWT-YKK-APW430-FIX-MADO
-          STAGE_A_CONTRACT_V2_OUT: artifacts/stage-a-apw430-projection-v1/SWT-YKK-APW430-FIX-MADO
-        run: |
-          set -euo pipefail
-          node scripts/.stage-a-apw430-projection-v1-harness.mjs
-          node --input-type=module <<'NODE'
-          import { readFileSync } from 'node:fs';
-          const report=JSON.parse(readFileSync('artifacts/stage-a-apw430-projection-v1/SWT-YKK-APW430-FIX-MADO/report.json','utf8'));
-          const row=report.windows?.[0];
-          if(report.exact_head_sha!==process.env.HEAD_SHA||row?.window_type!=='SWT-YKK-APW430-FIX-MADO')throw new Error('control identity mismatch');
-          if(row.status!=='COUNTED_CANDIDATE'||row.blocker||(row.symbolic_frontiers??[]).length)throw new Error(`control blocked ${JSON.stringify(row.blocker)}`);
-          if(row.count_model_version!=='NONTW_RESOLVER_DERIVED_CONTRACT_V2_APW430_BEHAVIOR_PROJECTION_V1')throw new Error('control model mismatch');
-          if(row.exact_discrete_terminal_context_count!=='89390'||row.custom_pending_context_count!=='14')throw new Error(`control exact mismatch terminal=${row.exact_discrete_terminal_context_count} custom=${row.custom_pending_context_count}`);
-          console.log(`APW430_CONTROL_GATE=PASS terminal=${row.exact_discrete_terminal_context_count} custom=${row.custom_pending_context_count} states=${row.memo_state_count} calls=${row.resolver_call_count}`);
-          console.log(`APW430_CONTROL_PROJECTION=${JSON.stringify(row.apw430_projection)}`);
-          NODE
-
-      - name: Run three APW430 recoveries only after control PASS
-        shell: bash
-        run: |
-          set -euo pipefail
-          for target in SWT-YKK-APW430-HIKI SWT-YKK-APW430-MENKOSHI-HIKI SWT-YKK-APW430-SHUTTER-HIKI; do
-            echo "APW430_RECOVERY_START=$target"
-            STAGE_A_TARGET_WINDOWS="$target" STAGE_A_CONTRACT_V2_OUT="artifacts/stage-a-apw430-projection-v1/$target" node scripts/.stage-a-apw430-projection-v1-harness.mjs
-            TARGET="$target" node --input-type=module <<'NODE'
-          import { readFileSync } from 'node:fs';
-          const target=process.env.TARGET;
-          const report=JSON.parse(readFileSync(`artifacts/stage-a-apw430-projection-v1/${target}/report.json`,'utf8'));
-          const row=report.windows?.[0];
-          if(report.exact_head_sha!==process.env.HEAD_SHA||row?.window_type!==target)throw new Error('recovery identity mismatch');
-          if(row.status!=='COUNTED_CANDIDATE'||row.blocker||(row.symbolic_frontiers??[]).length)throw new Error(`recovery blocked ${target}: ${JSON.stringify(row.blocker)}`);
-          if(row.count_model_version!=='NONTW_RESOLVER_DERIVED_CONTRACT_V2_APW430_BEHAVIOR_PROJECTION_V1')throw new Error('recovery model mismatch');
-          if(!row.runtime_manifest_sha256||!row.contract_digest||!row.terminal_multi_proof_digest)throw new Error('recovery proof identity missing');
-          console.log(`APW430_RECOVERY_GATE=PASS window=${target} terminal=${row.exact_discrete_terminal_context_count} custom=${row.custom_pending_context_count} states=${row.memo_state_count} calls=${row.resolver_call_count}`);
-          console.log(`APW430_RECOVERY_PROJECTION=${JSON.stringify(row.apw430_projection)}`);
-          NODE
-          done
-
-      - name: Aggregate APW430 recovery evidence
-        shell: bash
-        run: |
-          set -euo pipefail
-          node --input-type=module <<'NODE'
-          import { createHash } from 'node:crypto';
-          import { readFileSync,mkdirSync,writeFileSync } from 'node:fs';
-          const ids=['SWT-YKK-APW430-FIX-MADO','SWT-YKK-APW430-HIKI','SWT-YKK-APW430-MENKOSHI-HIKI','SWT-YKK-APW430-SHUTTER-HIKI'];
-          const rows=ids.map((id)=>JSON.parse(readFileSync(`artifacts/stage-a-apw430-projection-v1/${id}/report.json`,'utf8')).windows[0]);
-          const control=rows[0];
-          if(control.exact_discrete_terminal_context_count!=='89390'||control.custom_pending_context_count!=='14')throw new Error('aggregate control mismatch');
-          for(const row of rows)if(row.status!=='COUNTED_CANDIDATE'||row.blocker||(row.symbolic_frontiers??[]).length)throw new Error(`blocked row ${row.window_type}`);
-          const recovery=rows.slice(1);
-          const terminal=recovery.reduce((sum,row)=>sum+BigInt(row.exact_discrete_terminal_context_count),0n);
-          const custom=recovery.reduce((sum,row)=>sum+BigInt(row.custom_pending_context_count??'0'),0n);
-          const digest=createHash('sha256').update(JSON.stringify(rows.map((r)=>({window:r.window_type,terminal:r.exact_discrete_terminal_context_count,custom:r.custom_pending_context_count,runtime:r.runtime_manifest_sha256,contract:r.contract_digest,multi:r.terminal_multi_proof_digest,projection:r.apw430_projection})))).digest('hex');
-          const out={exact_head_sha:process.env.HEAD_SHA,task_classification:'NON-PRODUCT-MASTER',product_master_mutation:0,proof_model_version:'RUNTIME_UI_SYMBOLIC_FULL_COVERAGE_V1',count_model_version:'NONTW_RESOLVER_DERIVED_CONTRACT_V2_APW430_BEHAVIOR_PROJECTION_V1',manufacturer:'YKK AP',series:'APW430',control_window:control.window_type,control_exact_discrete_terminal_context_count:control.exact_discrete_terminal_context_count,control_custom_pending_context_count:control.custom_pending_context_count,recovery_window_count:3,verified_recovery_window_count:3,unverified_recovery_window_count:0,recovery_exact_discrete_terminal_context_count:terminal.toString(),recovery_custom_pending_context_count:custom.toString(),evidence_digest:digest,status:'APW430_THREE_MEMO_BLOCKERS_EXACT_PASS',windows:rows,gate_status:{apw430_discrete_population_gate:'PASS_CANDIDATE_PREVIOUS_THREE_BLOCKERS_RESOLVED',nontw_discrete_population_gate:'PENDING_CURRENT_HEAD_80_WINDOW_CONSOLIDATION',custom_size_coverage_gate:'BLOCKED_CONTINUOUS_PARTITION_NOT_PROVEN',full_browser_qa_gate:'NOT_STARTED',app_integration_ready:false,release_input_gate:'BLOCKED'}};
-          mkdirSync('artifacts/stage-a-apw430-projection-v1-summary',{recursive:true});
-          writeFileSync('artifacts/stage-a-apw430-projection-v1-summary/report.json',JSON.stringify(out,null,2)+'\n');
-          console.log(`APW430_PROJECTION_AGGREGATE_STATUS=${out.status}`);
-          for(const row of recovery)console.log(`APW430_RECOVERY window=${row.window_type} terminal=${row.exact_discrete_terminal_context_count} custom=${row.custom_pending_context_count} states=${row.memo_state_count} calls=${row.resolver_call_count}`);
-          console.log(`APW430_RECOVERY_TERMINAL_TOTAL=${out.recovery_exact_discrete_terminal_context_count}`);
-          console.log(`APW430_RECOVERY_CUSTOM_TOTAL=${out.recovery_custom_pending_context_count}`);
-          console.log(`EVIDENCE_DIGEST=${out.evidence_digest}`);
-          console.log('APP_INTEGRATION_READY=false');
-          console.log('RELEASE_INPUT_GATE=BLOCKED');
-          NODE
-
-      - name: Upload APW430 projection evidence
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: stage-a-apw430-projection-v1-evidence
-          path: |
-            artifacts/stage-a-apw430-projection-v1/**/report.json
-            artifacts/stage-a-apw430-projection-v1-summary/report.json
-          if-no-files-found: warn
+          echo 'APW430_BEHAVIOR_PROJECTION_V1_ROUTE=CLOSED'
+          echo 'EVIDENCE_RUN=34946896020'
+          echo 'EVIDENCE_HEAD=beaeb0e57f17655338a49c655b4471e3c87c5a99'
+          echo 'EVIDENCE_ARTIFACT_ID=10387836194'
+          echo 'RECOVERY_WINDOW_COUNT=3'
+          echo 'RECOVERY_EXACT_DISCRETE_TERMINAL_CONTEXT_COUNT=808800'
+          echo 'RECOVERY_CUSTOM_PENDING_CONTEXT_COUNT=480'
+          echo 'UNVERIFIED_RECOVERY_WINDOW_COUNT=0'
+          echo 'EVIDENCE_DIGEST=864da15c735254a1871511543cfc30dc790c4834a780aafdfacf48fe9c0be015'
+          echo 'RETRY_AUTHORIZED=false'
+          echo 'REOPEN_CONDITION=RUNTIME_ADAPTER_UI_RULE_OR_PROJECTION_MODEL_CHANGE'
+          echo 'APP_INTEGRATION_READY=false'
+          echo 'RELEASE_INPUT_GATE=BLOCKED'

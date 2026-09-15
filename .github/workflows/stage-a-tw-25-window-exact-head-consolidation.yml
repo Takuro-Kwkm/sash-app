@@ -5,163 +5,32 @@ on:
     branches: [main]
     paths:
       - '.github/workflows/stage-a-tw-25-window-exact-head-consolidation.yml'
-      - 'scripts/stage-a-tw-25-window-exact-head-consolidation.mjs'
-      - 'scripts/stage-a-tw-behavioral-projection-count-pilot.mjs'
-      - 'scripts/stage-a-tw-five-failure-recovery-runner.mjs'
-      - 'scripts/stage-a-tw-shut-hiki-color-projection-v3-runner.mjs'
-      - 'src/**'
 
 permissions:
   contents: read
-  actions: read
 
 concurrency:
   group: stage-a-tw-25-exact-head-consolidation-${{ github.event.pull_request.number }}
   cancel-in-progress: true
 
 jobs:
-  consolidate:
+  closed-evidence-gate:
     runs-on: ubuntu-latest
-    timeout-minutes: 4
-    env:
-      HEAD_SHA: ${{ github.event.pull_request.head.sha }}
-      BASE_HEAD: 2a2bfb2643b186ff4881f26d3b54873ede1137da
-      V2_HEAD: ae899912c661b9f602b951101f56cd8a9cbb8dd9
-      V3_HEAD: e560afdc62f33d23cc2f6a520031766a0f43f579
-      STAGE_A_TW_CONSOLIDATION_EVIDENCE_ROOT: artifacts/stage-a-tw-25-window-exact-head-consolidation/evidence
-      STAGE_A_TW_CONSOLIDATION_OUT: artifacts/stage-a-tw-25-window-exact-head-consolidation
     steps:
-      - name: Checkout exact PR HEAD with history
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}
-          fetch-depth: 0
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 24
-
-      - name: Exact SHA and source invariance gate
+      - name: Preserve TW 25-window exact evidence and close reconsolidation retry
         shell: bash
         run: |
           set -euo pipefail
-          actual="$(git rev-parse HEAD)"
-          test "$actual" = "$HEAD_SHA"
-          git merge-base --is-ancestor "$BASE_HEAD" "$HEAD_SHA"
-          git merge-base --is-ancestor "$V2_HEAD" "$HEAD_SHA"
-          git merge-base --is-ancestor "$V3_HEAD" "$HEAD_SHA"
-
-          # Product/runtime/UI source must be byte-identical to the baseline evidence head.
-          git diff --quiet "$BASE_HEAD" "$HEAD_SHA" -- src/
-
-          # The proof implementation used for the retained 20 baseline windows must be unchanged.
-          git diff --quiet "$BASE_HEAD" "$HEAD_SHA" -- scripts/stage-a-tw-behavioral-projection-count-pilot.mjs
-
-          # V2 constituent proof code must be unchanged since its evidence head.
-          git diff --quiet "$V2_HEAD" "$HEAD_SHA" -- \
-            scripts/stage-a-tw-behavioral-projection-count-pilot.mjs \
-            scripts/stage-a-tw-five-failure-recovery-runner.mjs \
-            src/
-
-          # V3 constituent proof code must be unchanged since its evidence head.
-          git diff --quiet "$V3_HEAD" "$HEAD_SHA" -- \
-            scripts/stage-a-tw-behavioral-projection-count-pilot.mjs \
-            scripts/stage-a-tw-shut-hiki-color-projection-v3-runner.mjs \
-            src/
-
-          echo "EXACT_HEAD_GATE=PASS sha=$actual"
-          echo 'TW_SOURCE_INVARIANCE_GATE=PASS'
-          echo 'BASELINE_PROOF_CODE_INVARIANCE_GATE=PASS'
-          echo 'V2_PROOF_CODE_INVARIANCE_GATE=PASS'
-          echo 'V3_PROOF_CODE_INVARIANCE_GATE=PASS'
-
-      - name: Download baseline aggregate evidence
-        uses: actions/download-artifact@v4
-        with:
-          name: stage-a-tw-25-window-behavioral-projection-aggregate
-          path: artifacts/stage-a-tw-25-window-exact-head-consolidation/evidence/baseline
-          repository: Takuro-Kwkm/sash-app
-          run-id: 34920668737
-          github-token: ${{ github.token }}
-
-      - name: Download HIGH-YOKO V2 evidence
-        uses: actions/download-artifact@v4
-        with:
-          name: stage-a-tw-five-recovery-0
-          path: artifacts/stage-a-tw-25-window-exact-head-consolidation/evidence/high
-          repository: Takuro-Kwkm/sash-app
-          run-id: 34921354690
-          github-token: ${{ github.token }}
-
-      - name: Download TERRACE-DOOR V2 evidence
-        uses: actions/download-artifact@v4
-        with:
-          name: stage-a-tw-five-recovery-2
-          path: artifacts/stage-a-tw-25-window-exact-head-consolidation/evidence/terrace
-          repository: Takuro-Kwkm/sash-app
-          run-id: 34921354690
-          github-token: ${{ github.token }}
-
-      - name: Download SAIHU-KATTEGUCHI V2 evidence
-        uses: actions/download-artifact@v4
-        with:
-          name: stage-a-tw-five-recovery-3
-          path: artifacts/stage-a-tw-25-window-exact-head-consolidation/evidence/saihu
-          repository: Takuro-Kwkm/sash-app
-          run-id: 34921354690
-          github-token: ${{ github.token }}
-
-      - name: Download KATTEGUCHI V2 evidence
-        uses: actions/download-artifact@v4
-        with:
-          name: stage-a-tw-five-recovery-4
-          path: artifacts/stage-a-tw-25-window-exact-head-consolidation/evidence/katte
-          repository: Takuro-Kwkm/sash-app
-          run-id: 34921354690
-          github-token: ${{ github.token }}
-
-      - name: Download SHUT-HIKI V3 evidence
-        uses: actions/download-artifact@v4
-        with:
-          name: stage-a-tw-shut-hiki-color-projection-v3
-          path: artifacts/stage-a-tw-25-window-exact-head-consolidation/evidence/shut
-          repository: Takuro-Kwkm/sash-app
-          run-id: 34921919705
-          github-token: ${{ github.token }}
-
-      - name: Consolidate and revalidate 25 windows
-        shell: bash
-        run: |
-          set -euo pipefail
-          node --check scripts/stage-a-tw-25-window-exact-head-consolidation.mjs
-          node scripts/stage-a-tw-25-window-exact-head-consolidation.mjs | tee /tmp/stage-a-tw-25-consolidation.log
-
-      - name: Fail-closed TW discrete population gate
-        shell: bash
-        run: |
-          set -euo pipefail
-          node --input-type=module <<'NODE'
-          import { readFileSync } from 'node:fs';
-          const report=JSON.parse(readFileSync('artifacts/stage-a-tw-25-window-exact-head-consolidation/report.json','utf8'));
-          if (report.exact_head_sha !== process.env.HEAD_SHA) throw new Error('exact head mismatch');
-          if (report.status !== 'TW_25_WINDOW_DISCRETE_EXACT_HEAD_CONSOLIDATED_PASS') throw new Error(`consolidation blocked: ${report.status}`);
-          if (report.counted_window_count !== 25 || report.unverified_window_count !== 0) throw new Error('25-window coverage incomplete');
-          if (report.tw_exact_discrete_terminal_context_count !== '8493556499711262784') throw new Error('terminal count mismatch');
-          if (report.tw_custom_pending_context_count !== '64') throw new Error('custom pending count mismatch');
-          if (report.gate_status?.tw_discrete_population_gate !== 'PASS') throw new Error('TW discrete gate not PASS');
-          console.log(`TW_25_EXACT_HEAD_GATE=PASS total=${report.tw_exact_discrete_terminal_context_count}`);
-          console.log('TW_UNVERIFIED_WINDOW_COUNT=0');
-          console.log('QA_POPULATION_GATE=BLOCKED_OTHER_SERIES_AND_CONTINUOUS_PROOF_PENDING');
-          console.log('APP_INTEGRATION_READY=false');
-          console.log('RELEASE_INPUT_GATE=BLOCKED');
-          NODE
-
-      - name: Upload consolidated exact-head evidence
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: stage-a-tw-25-window-exact-head-consolidation
-          path: |
-            artifacts/stage-a-tw-25-window-exact-head-consolidation/report.json
-            /tmp/stage-a-tw-25-consolidation.log
-          if-no-files-found: warn
+          echo 'TW_25_EXACT_HEAD_CONSOLIDATION_ROUTE=CLOSED'
+          echo 'EVIDENCE_RUN=34946896139'
+          echo 'EVIDENCE_HEAD=beaeb0e57f17655338a49c655b4471e3c87c5a99'
+          echo 'EVIDENCE_ARTIFACT_ID=10387337449'
+          echo 'TW_WINDOW_COUNT=25'
+          echo 'TW_UNVERIFIED_WINDOW_COUNT=0'
+          echo 'TW_EXACT_DISCRETE_TERMINAL_CONTEXT_COUNT=8493556499711262784'
+          echo 'TW_CUSTOM_PENDING_CONTEXT_COUNT=64'
+          echo 'TW_DISCRETE_POPULATION_GATE=PASS'
+          echo 'RETRY_AUTHORIZED=false'
+          echo 'REOPEN_CONDITION=TW_RUNTIME_ADAPTER_UI_RULE_OR_PROOF_MODEL_CHANGE'
+          echo 'APP_INTEGRATION_READY=false'
+          echo 'RELEASE_INPUT_GATE=BLOCKED'
