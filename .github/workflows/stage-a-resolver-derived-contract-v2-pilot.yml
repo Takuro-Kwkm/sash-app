@@ -17,63 +17,22 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  pilot:
+  superseded_gate:
     runs-on: ubuntu-latest
-    timeout-minutes: 4
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - slot: 0
-            window: WT-S2H-MENKOSHI-AGE-FS
-          - slot: 1
-            window: WT-SL-TERRACE-DOOR
-          - slot: 2
-            window: WT-EW-AGE-SAGE-FS
-          - slot: 3
-            window: SWT-LIX-TW-TATE-GREMON-TF
-          - slot: 4
-            window: SWT-YKK-APW430-TATE-GREMON-WINDCATCH
-          - slot: 5
-            window: W431-006
-    env:
-      HEAD_SHA: ${{ github.event.pull_request.head.sha }}
-      STAGE_A_MAX_MEMO_STATES_PER_WINDOW: 12000
-      STAGE_A_MAX_RESOLVER_CALLS_PER_WINDOW: 80000
-      STAGE_A_MAX_EXPLICIT_MULTI_ENUM_VALUES: 18
-      STAGE_A_TARGET_WINDOWS: ${{ matrix.window }}
-      STAGE_A_CONTRACT_V2_OUT: artifacts/stage-a-resolver-derived-contract-v2-pilot/slot-${{ matrix.slot }}
+    timeout-minutes: 2
     steps:
-      - name: Checkout exact PR HEAD
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}
-          fetch-depth: 1
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 24
-
-      - name: Exact SHA gate
+      - name: Close completed resolver-derived contract v2 pilot route
         shell: bash
         run: |
           set -euo pipefail
-          actual="$(git rev-parse HEAD)"
-          test "$actual" = "$HEAD_SHA"
-          echo "EXACT_HEAD_GATE=PASS sha=$actual slot=${{ matrix.slot }} window=${{ matrix.window }}"
-
-      - name: Run resolver-derived contract v2 window pilot
-        shell: bash
-        run: |
-          set -euo pipefail
-          node scripts/stage-a-resolver-derived-contract-v2-pilot.mjs | tee /tmp/stage-a-contract-v2-pilot-${{ matrix.slot }}.log
-
-      - name: Upload window evidence
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: stage-a-resolver-derived-contract-v2-pilot-${{ matrix.slot }}
-          path: |
-            artifacts/stage-a-resolver-derived-contract-v2-pilot/slot-${{ matrix.slot }}/report.json
-            /tmp/stage-a-contract-v2-pilot-${{ matrix.slot }}.log
-          if-no-files-found: warn
+          echo "RESOLVER_DERIVED_CONTRACT_V2_PILOT_PATH=CLOSED"
+          echo "EVIDENCE_RUN=34919112040"
+          echo "EVIDENCE_HEAD=82062e0c5802d27ab0b891a2206bd0900230eb5a"
+          echo "CONTRACT_INCONSISTENCY_COUNT=0_FOR_ALL_SIX_PILOT_WINDOWS"
+          echo "COUNTED_EXAMPLES=SAMOS2H,SAMOSL,APW430,APW431"
+          echo "EW_BLOCKER=TERMINAL_MULTI_ENUM_RESOLVER_CALL_EXPLOSION"
+          echo "TW_BLOCKER=UPSTREAM_CONTEXT_PLUS_TERMINAL_MULTI_ENUM_SYMBOLIC_COMPOSITION"
+          echo "SUPERSEDED_BY=TERMINAL_MULTI_ENUM_EXACT_PROOF_PILOT"
+          echo "RETRY_AUTHORIZED=false"
+          echo "APP_INTEGRATION_READY=false"
+          echo "RELEASE_INPUT_GATE=BLOCKED"
