@@ -13,8 +13,8 @@ const token = process.env.VERCEL_TOKEN_EFFECTIVE;
 const teamId = process.env.VERCEL_ORG_ID;
 const projectId = process.env.VERCEL_PROJECT_ID;
 const projectName = process.env.VERCEL_PROJECT_NAME ?? 'sash-app-wave3-preview';
-const githubSha = process.env.GITHUB_SHA ?? execFileSync('git', ['rev-parse', 'HEAD'], { encoding: 'utf8' }).trim();
-const githubRefName = process.env.GITHUB_REF_NAME ?? execFileSync('git', ['branch', '--show-current'], { encoding: 'utf8' }).trim();
+const githubSha = process.env.VERCEL_DEPLOY_GITHUB_SHA ?? process.env.GITHUB_SHA ?? execFileSync('git', ['rev-parse', 'HEAD'], { encoding: 'utf8' }).trim();
+const githubRefName = process.env.VERCEL_DEPLOY_GITHUB_REF_NAME ?? process.env.GITHUB_REF_NAME ?? execFileSync('git', ['branch', '--show-current'], { encoding: 'utf8' }).trim();
 const repository = process.env.GITHUB_REPOSITORY ?? 'Takuro-Kwkm/sash-app';
 
 for (const [name, value] of Object.entries({ token, teamId, projectId, projectName, githubSha })) {
