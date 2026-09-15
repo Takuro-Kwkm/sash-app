@@ -70,7 +70,10 @@ jobs:
           npm run lint
           npm run typecheck
 
-      - name: Full repository tests including global flow gate
+      - name: Global flow unit gate
+        run: node --test test/79-global-window-selection-flow.test.mjs
+
+      - name: Full repository regression tests
         run: npm test
 
       - name: Runtime smoke
