@@ -11,6 +11,12 @@ on:
 jobs:
   inplus_ui_integration:
     runs-on: ubuntu-latest
+    env:
+      VERCEL_ORG_ID: team_AkuHacuJlCl8LuvaFpCzFmbv
+      VERCEL_PROJECT_ID: prj_4z0zqW6yKyPuFINODfGX8LPBuJRP
+      VERCEL_PROJECT_NAME: sash-app-wave3-preview
+      RELEASE_SERIES: LIXIL_INPLUS_UI_INTEGRATION
+      RELEASE_PACKAGE_VERSION: v0.4-R2
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -36,6 +42,7 @@ jobs:
           node --check test/77-runtime-ui-inplus-v04r2-installability-coverage.test.mjs
           node --check test/browser/inplus-v04r2-runtime-browser-qa.mjs
           node --check test/browser/inplus-v04r2-full-coverage-browser-qa.mjs
+          node --check scripts/vercel-rest-deploy.mjs
 
       - name: Full repository automated tests
         run: npm test
@@ -111,6 +118,64 @@ jobs:
           node test/browser/uchirimo-runtime-browser-qa.mjs
           node test/browser/release-regression-browser-qa.mjs
           node test/browser/work-management-browser-qa.mjs
+
+      - name: Vercel credential and project preflight
+        if: ${{ github.event_name == 'push' }}
+        env:
+          VERCEL_TOKEN_PRIMARY: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_TOKEN_FALLBACK: ${{ secrets.VERCEL_ACCESS_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          token="${VERCEL_TOKEN_PRIMARY:-${VERCEL_TOKEN_FALLBACK:-}}"
+          if [[ -z "$token" ]]; then
+            echo "VERCEL_CREDENTIAL_GATE=BLOCKED"
+            exit 42
+          fi
+          status="$(curl -sS -o /tmp/vercel-project.json -w '%{http_code}' -H "Authorization: Bearer $token" "https://api.vercel.com/v9/projects/$VERCEL_PROJECT_ID?teamId=$VERCEL_ORG_ID")"
+          if [[ "$status" != "200" ]]; then
+            echo "VERCEL_PROJECT_ACCESS_GATE=BLOCKED status=$status"
+            exit 46
+          fi
+          node -e 'const p=require("/tmp/vercel-project.json"); if(p.id!==process.env.VERCEL_PROJECT_ID||p.accountId!==process.env.VERCEL_ORG_ID) process.exit(1)'
+          echo "VERCEL_TOKEN_EFFECTIVE=$token" >> "$GITHUB_ENV"
+          echo "VERCEL_CREDENTIAL_GATE=PASS"
+          echo "VERCEL_PROJECT_ACCESS_GATE=PASS"
+
+      - name: Deploy exact branch HEAD Preview
+        if: ${{ github.event_name == 'push' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/vercel-rest-deploy.mjs preview artifacts/inplus-v04r2-ui-integration/exact-head-deployment.json
+          node -e 'const d=require("./artifacts/inplus-v04r2-ui-integration/exact-head-deployment.json"); if(d.readyState!=="READY"||d.githubSha!==process.env.GITHUB_SHA||d.mode!=="preview"||d.projectId!==process.env.VERCEL_PROJECT_ID||d.teamId!==process.env.VERCEL_ORG_ID) process.exit(1)'
+          echo "EXACT_HEAD_PREVIEW_DEPLOYMENT_GATE=PASS"
+
+      - name: Exact-head Preview health
+        if: ${{ github.event_name == 'push' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          for i in {1..60}; do
+            status="$(curl -sS -o artifacts/inplus-v04r2-ui-integration/preview-health.json -w '%{http_code}' "$DEPLOY_URL/api/health" || true)"
+            if [[ "$status" == "200" ]] && node -e 'const h=require("./artifacts/inplus-v04r2-ui-integration/preview-health.json"); const p=h.runtimeMasterIntegrations?.find(x=>x.id==="SER-LIXIL-INPLUS"); if(!h.ok||!p||p.packageVersion!=="v0.4-R2"||p.sourceHash!=="cbbdb6ba315c985f7d27f75a237e861be8ce635962ce1cd5a746d7f152c8e1f8") process.exit(1)'; then
+              echo "EXACT_HEAD_PREVIEW_HEALTH_GATE=PASS"
+              exit 0
+            fi
+            if [[ "$status" == "401" || "$status" == "403" ]]; then
+              echo "EXACT_HEAD_PREVIEW_AUTH_GATE=BLOCKED status=$status"
+              exit 47
+            fi
+            sleep 1
+          done
+          echo "EXACT_HEAD_PREVIEW_HEALTH_GATE=BLOCKED"
+          exit 48
+
+      - name: Exact-head Preview Full Coverage Browser QA
+        if: ${{ github.event_name == 'push' }}
+        env:
+          QA_BASE_URL: ${{ env.DEPLOY_URL }}
+        run: node test/browser/inplus-v04r2-full-coverage-browser-qa.mjs
 
       - name: Upload integration evidence
         if: always()
