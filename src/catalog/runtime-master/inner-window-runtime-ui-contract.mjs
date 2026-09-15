@@ -1,7 +1,9 @@
+import { applyGlobalWindowSelectionFlow } from './global-window-selection-flow-engine.mjs';
+
 export const INNER_WINDOW_UI_CATEGORY = 'INNER_WINDOW';
 
-// UI実装標準仕様書 v1.6 §4. Runtime owns values and dependencies; this map
-// only places canonical fields into the fixed inner-window presentation slots.
+// Legacy adapter-facing order remains available for Runtime model construction.
+// Final presentation order is owned by Global Window Selection Flow.
 const ORDER = Object.freeze({
   room_specification: 25,
   window_type: 30,
@@ -50,9 +52,47 @@ export function innerWindowDisplayOrder(field, index = 0) {
   return 109 + index / 1000;
 }
 
+export const INNER_WINDOW_UI_STANDARD_ORDER = Object.freeze([
+  'window_type',
+  'room_specification', 'sash_configuration', 'reverse_handing', 'three_panel_layout', 'hinge_side',
+  'size_class', 'size_mode', 'size_w', 'size_h', 'sash_width_allocation', 'sash_w1', 'sash_w2', 'sash_w3', 'sash_w4',
+  'frame_color',
+  'glass_family', 'glass_structure', 'low_e_type', 'glass_coating_color', 'glass_surface_type', 'safety_treatment',
+  'grille_type', 'grille_material', 'muntin_type', 'vacuum_glass_product', 'spacer_type', 'gas_fill', 'cavity_thickness_mm',
+  'frame_installation_mode', 'frame_projection', 'extension_frame_type', 'extension_frame_reinforcement', 'bathroom_installation_type',
+]);
+
+const CONFIGURATION_SLOTS = new Set(['room_specification', 'sash_configuration', 'reverse_handing', 'three_panel_layout', 'hinge_side']);
+const SIZE_SLOTS = new Set(['size_class', 'size_mode', 'size_w', 'size_h', 'sash_width_allocation', 'sash_w1', 'sash_w2', 'sash_w3', 'sash_w4']);
+const GLAZING_SLOTS = new Set(['glass_family', 'glass_structure', 'low_e_type', 'glass_coating_color', 'glass_surface_type', 'safety_treatment', 'grille_type', 'grille_material', 'muntin_type', 'vacuum_glass_product', 'spacer_type', 'gas_fill', 'cavity_thickness_mm']);
+const INSTALLATION_SLOTS = new Set(['frame_installation_mode', 'frame_projection', 'extension_frame_type', 'extension_frame_reinforcement', 'bathroom_installation_type']);
+
+export function semanticSlotForInnerWindowField(key) {
+  return INNER_WINDOW_UI_STANDARD_ORDER.includes(key) ? key : null;
+}
+
+export function semanticStageForInnerWindowSlot(slot) {
+  if (slot === 'window_type') return 'OPENING';
+  if (CONFIGURATION_SLOTS.has(slot)) return 'CONFIGURATION';
+  if (SIZE_SLOTS.has(slot)) return 'SIZE';
+  if (slot === 'frame_color') return 'FINISH';
+  if (GLAZING_SLOTS.has(slot)) return 'GLAZING';
+  if (INSTALLATION_SLOTS.has(slot)) return 'INSTALLATION_SURVEY';
+  return null;
+}
+
+function approvedInnerWindowExtension(key, field = {}) {
+  if (field.domain === 'INSTALLATION') return { slot: `extension:installation:${key}`, stage: 'INSTALLATION_SURVEY', order: field.displayOrder };
+  if (OPTION_DOMAINS.has(field.domain)) return { slot: `extension:option:${key}`, stage: 'OPTION', order: field.displayOrder };
+  return null;
+}
+
 export function applyInnerWindowUiOrder(fields = []) {
-  return fields.map((field, index) => ({
-    ...field,
-    displayOrder: ORDER[field.key] ?? Number(field.displayOrder ?? 1000 + index),
-  })).sort((a, b) => a.displayOrder - b.displayOrder || a.key.localeCompare(b.key, 'ja'));
+  return applyGlobalWindowSelectionFlow(fields, {
+    uiCategory: INNER_WINDOW_UI_CATEGORY,
+    canonicalSlotOrder: INNER_WINDOW_UI_STANDARD_ORDER,
+    semanticSlotForField: semanticSlotForInnerWindowField,
+    semanticStageForSlot: semanticStageForInnerWindowSlot,
+    approvedExtensionForField: approvedInnerWindowExtension,
+  });
 }
