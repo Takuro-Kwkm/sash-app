@@ -84,7 +84,7 @@ function predicateModelV62(module){
       for(const atomic of collectAtomicPredicatesV62(row.selector,key)){
         const signature=stableJson({key,expected:atomic.expected});
         const existing=map.get(signature)??{id:hash(signature).slice(0,16),key,expected:atomic.expected,consumer_paths:[]};
-        existing.consumer_paths.push(\`${row.path}:${atomic.path}\`);
+        existing.consumer_paths.push(String(row.path)+':'+String(atomic.path));
         map.set(signature,existing);
       }
     }
