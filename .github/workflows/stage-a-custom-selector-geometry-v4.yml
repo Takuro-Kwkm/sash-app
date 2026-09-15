@@ -8,6 +8,7 @@ on:
       - '.github/workflows/stage-a-custom-selector-geometry-v4.yml'
       - 'scripts/stage-a-custom-selector-reachability-v4.mjs'
       - 'scripts/stage-a-custom-runtime-geometry-equivalence-v2.mjs'
+      - 'scripts/stage-a-custom-runtime-geometry-equivalence-v3.mjs'
       - 'src/catalog/runtime-master/apw431-formal-split-v1-adapter.mjs'
 
 permissions:
@@ -51,6 +52,7 @@ jobs:
           test "$actual" = "$HEAD_SHA"
           node --check scripts/stage-a-custom-selector-reachability-v4.mjs
           node --check scripts/stage-a-custom-runtime-geometry-equivalence-v2.mjs
+          node --check scripts/stage-a-custom-runtime-geometry-equivalence-v3.mjs
           node --check src/catalog/runtime-master/apw431-formal-split-v1-adapter.mjs
           echo "EXACT_HEAD_GATE=PASS sha=$actual"
           echo 'CUSTOM_V4_SCRIPT_SYNTAX_GATE=PASS'
@@ -103,22 +105,23 @@ jobs:
           console.log(`CUSTOM_SELECTOR_REACHABILITY_V4_DIGEST=${r.evidence_digest}`);
           NODE
 
-      - name: Prove full CUSTOM Runtime geometry equivalence V2
+      - name: Prove full CUSTOM Runtime geometry equivalence V3
         shell: bash
         run: |
           set -euo pipefail
-          node scripts/stage-a-custom-runtime-geometry-equivalence-v2.mjs
+          node scripts/stage-a-custom-runtime-geometry-equivalence-v3.mjs
           node --input-type=module <<'NODE'
           import { readFileSync } from 'node:fs';
           const r=JSON.parse(readFileSync(`${process.env.STAGE_A_CUSTOM_GEOMETRY_EQ_OUT}/report.json`,'utf8'));
           if(r.exact_head_sha!==process.env.HEAD_SHA)throw new Error('CUSTOM_V4_GEOMETRY_HEAD_MISMATCH');
-          if(r.model_version!=='CUSTOM_RUNTIME_GEOMETRY_EQUIVALENCE_FULL_ARRANGEMENT_V2_RUNTIME_SEMANTICS')throw new Error(`CUSTOM_V4_GEOMETRY_MODEL_UNEXPECTED ${r.model_version}`);
-          if(r.source_rule_count!==152||r.window_count!==92)throw new Error(`CUSTOM_V4_GEOMETRY_CARDINALITY_DRIFT rules=${r.source_rule_count} windows=${r.window_count}`);
+          if(r.model_version!=='CUSTOM_RUNTIME_GEOMETRY_EQUIVALENCE_FULL_ARRANGEMENT_V3_FORMAL_GUARD_SEMANTICS')throw new Error(`CUSTOM_V4_GEOMETRY_MODEL_UNEXPECTED ${r.model_version}`);
+          if(r.source_rule_count!==152||r.window_count!==92||r.selector_context_count!==137)throw new Error(`CUSTOM_V4_GEOMETRY_CARDINALITY_DRIFT rules=${r.source_rule_count} windows=${r.window_count} contexts=${r.selector_context_count}`);
+          if(r.arrangement_proof_class_count!==4268||r.boundary_triplet_count!==2088)throw new Error(`CUSTOM_V4_GEOMETRY_PARTITION_DRIFT classes=${r.arrangement_proof_class_count} triplets=${r.boundary_triplet_count}`);
           if(r.mismatch_count!==0||r.status!=='PASS')throw new Error(`CUSTOM_V4_GEOMETRY_MISMATCHES=${r.mismatch_count} status=${r.status}`);
           if(!r.evidence_digest)throw new Error('CUSTOM_V4_GEOMETRY_DIGEST_MISSING');
           if((r.contexts??[]).some((c)=>!c.positive_witness))throw new Error('CUSTOM_V4_POSITIVE_WITNESS_MISSING');
-          console.log(`CUSTOM_RUNTIME_GEOMETRY_EQUIVALENCE_V2_GATE=PASS windows=${r.window_count} contexts=${r.selector_context_count} rules=${r.source_rule_count} classes=${r.arrangement_proof_class_count} triplets=${r.boundary_triplet_count} witnesses=${r.witness_evaluation_count} calls=${r.resolver_call_count}`);
-          console.log(`CUSTOM_RUNTIME_GEOMETRY_EQUIVALENCE_V2_DIGEST=${r.evidence_digest}`);
+          console.log(`CUSTOM_RUNTIME_GEOMETRY_EQUIVALENCE_V3_GATE=PASS windows=${r.window_count} contexts=${r.selector_context_count} rules=${r.source_rule_count} classes=${r.arrangement_proof_class_count} triplets=${r.boundary_triplet_count} witnesses=${r.witness_evaluation_count} calls=${r.resolver_call_count}`);
+          console.log(`CUSTOM_RUNTIME_GEOMETRY_EQUIVALENCE_V3_DIGEST=${r.evidence_digest}`);
           console.log('CUSTOM_SIZE_COVERAGE_GATE=PASS_GEOMETRY_EQUIVALENCE_ONLY_TRANSITION_PROOF_PENDING');
           console.log('APP_INTEGRATION_READY=false');
           console.log('RELEASE_INPUT_GATE=BLOCKED');
@@ -135,4 +138,5 @@ jobs:
             artifacts/stage-a-custom-dimension-boundary-partition/
             artifacts/stage-a-custom-selector-reachability/
             artifacts/stage-a-custom-runtime-geometry-equivalence/
+            artifacts/stage-a-custom-runtime-geometry-equivalence-v3-generated/
           if-no-files-found: error
