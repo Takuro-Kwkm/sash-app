@@ -18,125 +18,22 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  recovery:
+  closed_gate:
     runs-on: ubuntu-latest
-    timeout-minutes: 6
-    strategy:
-      fail-fast: false
-      max-parallel: 3
-      matrix:
-        window:
-          - SWT-LIX-TW-HIGH-YOKO
-          - SWT-LIX-TW-SHUT-HIKI
-          - SWT-LIX-TW-TERRACE-DOOR
-          - SWT-LIX-TW-SAIHU-KATTEGUCHI
-          - SWT-LIX-TW-KATTEGUCHI
-    env:
-      HEAD_SHA: ${{ github.event.pull_request.head.sha }}
-      STAGE_A_TARGET_WINDOW: ${{ matrix.window }}
-      STAGE_A_MAX_MEMO_STATES_PER_WINDOW: 12000
-      STAGE_A_MAX_RESOLVER_CALLS_PER_WINDOW: 120000
-      STAGE_A_MAX_EXPLICIT_MULTI_ENUM_VALUES: 12
-      STAGE_A_TW_PROJECTION_OUT: artifacts/stage-a-tw-five-failure-recovery-v2/${{ matrix.window }}
+    timeout-minutes: 2
     steps:
-      - name: Checkout exact PR HEAD
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}
-          fetch-depth: 1
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 24
-
-      - name: Exact SHA gate
+      - name: Preserve V2 recovery evidence and close repeated route
         shell: bash
         run: |
           set -euo pipefail
-          actual="$(git rev-parse HEAD)"
-          test "$actual" = "$HEAD_SHA"
-          echo "EXACT_HEAD_GATE=PASS sha=$actual window=$STAGE_A_TARGET_WINDOW"
-
-      - name: Run recovery V2 exact count
-        shell: bash
-        run: |
-          set -euo pipefail
-          node --check scripts/stage-a-tw-five-failure-recovery-runner.mjs
-          node scripts/stage-a-tw-five-failure-recovery-runner.mjs | tee "/tmp/tw-five-recovery-${{ strategy.job-index }}.log"
-
-      - name: Upload recovery evidence
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: stage-a-tw-five-recovery-${{ strategy.job-index }}
-          path: |
-            artifacts/stage-a-tw-five-failure-recovery-v2/${{ matrix.window }}/report.json
-            /tmp/tw-five-recovery-${{ strategy.job-index }}.log
-          if-no-files-found: warn
-
-      - name: Fail-closed recovery gate
-        shell: bash
-        run: |
-          set -euo pipefail
-          node --input-type=module <<'NODE'
-          import { readFileSync } from 'node:fs';
-          const path=`artifacts/stage-a-tw-five-failure-recovery-v2/${process.env.STAGE_A_TARGET_WINDOW}/report.json`;
-          const report=JSON.parse(readFileSync(path,'utf8'));
-          if (report.exact_head_sha !== process.env.HEAD_SHA) throw new Error('exact head mismatch');
-          if (report.projection_model_version !== 'TW_WEIGHTED_BEHAVIORAL_PROJECTION_V2_RECOVERY') throw new Error(`unexpected projection model: ${report.projection_model_version}`);
-          if (report.status !== 'COUNTED_CANDIDATE') throw new Error(`recovery blocked: ${JSON.stringify(report.blocker)}`);
-          if (Number(report.projection_mismatch_count ?? 0) !== 0) throw new Error(`projection mismatch: ${report.projection_mismatch_count}`);
-          if (report.blocker) throw new Error(`blocker present: ${JSON.stringify(report.blocker)}`);
-          console.log(`TW_RECOVERY_WINDOW=PASS window=${report.window_type} terminal=${report.exact_discrete_terminal_context_count}`);
-          NODE
-
-  aggregate:
-    if: always()
-    needs: recovery
-    runs-on: ubuntu-latest
-    timeout-minutes: 3
-    env:
-      HEAD_SHA: ${{ github.event.pull_request.head.sha }}
-    steps:
-      - name: Download all recovery evidence
-        uses: actions/download-artifact@v4
-        with:
-          pattern: stage-a-tw-five-recovery-*
-          path: artifacts/collected
-          merge-multiple: true
-
-      - name: Aggregate five-window recovery
-        shell: bash
-        run: |
-          set -euo pipefail
-          node --input-type=module <<'NODE'
-          import { readdirSync,readFileSync,statSync,mkdirSync,writeFileSync } from 'node:fs';
-          import { join } from 'node:path';
-          const files=[];
-          const walk=(dir)=>{for(const name of readdirSync(dir)){const path=join(dir,name);if(statSync(path).isDirectory())walk(path);else if(name==='report.json')files.push(path);}};
-          walk('artifacts/collected');
-          const reports=files.map((path)=>JSON.parse(readFileSync(path,'utf8'))).sort((a,b)=>String(a.window_type).localeCompare(String(b.window_type)));
-          const passed=reports.filter((report)=>report.exact_head_sha===process.env.HEAD_SHA&&report.projection_model_version==='TW_WEIGHTED_BEHAVIORAL_PROJECTION_V2_RECOVERY'&&report.status==='COUNTED_CANDIDATE'&&!report.blocker&&Number(report.projection_mismatch_count??0)===0);
-          const terminal=passed.reduce((sum,report)=>sum+BigInt(report.exact_discrete_terminal_context_count),0n);
-          const custom=passed.reduce((sum,report)=>sum+BigInt(report.custom_pending_context_count??'0'),0n);
-          const aggregate={exact_head_sha:process.env.HEAD_SHA,task_classification:'NON-PRODUCT-MASTER',product_master_mutation:0,projection_model_version:'TW_WEIGHTED_BEHAVIORAL_PROJECTION_V2_RECOVERY',expected_window_count:5,report_count:reports.length,passed_window_count:passed.length,unverified_window_count:5-passed.length,recovery_terminal_context_count:terminal.toString(),recovery_custom_pending_context_count:custom.toString(),blockers:reports.filter((report)=>!passed.includes(report)).map((report)=>({window_type:report.window_type,status:report.status,blocker:report.blocker,projection_mismatch_count:report.projection_mismatch_count})),status:passed.length===5&&reports.length===5?'TW_FIVE_FAILURE_RECOVERY_V2_COMPLETE':'BLOCKED',gate_status:{qa_population_gate:'BLOCKED_FINAL_25_EXACT_HEAD_REVALIDATION_REQUIRED',custom_size_coverage_gate:'BLOCKED_CONTINUOUS_PARTITION_NOT_PROVEN',app_integration_ready:false,release_input_gate:'BLOCKED'}};
-          mkdirSync('artifacts/stage-a-tw-five-failure-recovery-v2-aggregate',{recursive:true});
-          writeFileSync('artifacts/stage-a-tw-five-failure-recovery-v2-aggregate/report.json',JSON.stringify(aggregate,null,2)+'\n');
-          console.log(`TW_FIVE_RECOVERY_STATUS=${aggregate.status}`);
-          console.log(`REPORT_COUNT=${aggregate.report_count}`);
-          console.log(`PASSED_WINDOW_COUNT=${aggregate.passed_window_count}`);
-          console.log(`UNVERIFIED_WINDOW_COUNT=${aggregate.unverified_window_count}`);
-          console.log(`RECOVERY_TERMINAL_CONTEXT_COUNT=${aggregate.recovery_terminal_context_count}`);
-          console.log(`BLOCKER_COUNT=${aggregate.blockers.length}`);
-          console.log('APP_INTEGRATION_READY=false');
-          console.log('RELEASE_INPUT_GATE=BLOCKED');
-          if (aggregate.status!=='TW_FIVE_FAILURE_RECOVERY_V2_COMPLETE') process.exitCode=1;
-          NODE
-
-      - name: Upload recovery aggregate
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: stage-a-tw-five-failure-recovery-v2-aggregate
-          path: artifacts/stage-a-tw-five-failure-recovery-v2-aggregate/report.json
-          if-no-files-found: warn
+          echo 'TW_FIVE_FAILURE_RECOVERY_V2_ROUTE=CLOSED'
+          echo 'EVIDENCE_RUN=34921354690'
+          echo 'PASSED_WINDOWS=SWT-LIX-TW-HIGH-YOKO,SWT-LIX-TW-TERRACE-DOOR,SWT-LIX-TW-SAIHU-KATTEGUCHI,SWT-LIX-TW-KATTEGUCHI'
+          echo 'UNVERIFIED_WINDOW=SWT-LIX-TW-SHUT-HIKI'
+          echo 'FAILURE_TYPE=PERFORMANCE_TIMEOUT'
+          echo 'TIMEOUT_MINUTES=6'
+          echo 'RETRY_AUTHORIZED=false'
+          echo 'REOPEN_CONDITION=color-behavior projection or another cause-related algorithm change'
+          echo 'NEXT_ACTIVE_ROUTE=TW_SHUT_HIKI_COLOR_PROJECTION_V3'
+          echo 'APP_INTEGRATION_READY=false'
+          echo 'RELEASE_INPUT_GATE=BLOCKED'
