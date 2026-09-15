@@ -7,7 +7,7 @@ const OUT=process.env.STAGE_A_WEIGHTED_COUNT_OUT??'artifacts/stage-a-dependency-
 const HEAD_SHA=process.env.HEAD_SHA??null;
 const SHARD_TOTAL=Number(process.env.STAGE_A_SHARD_TOTAL??12);
 const SHARD_INDEX=Number(process.env.STAGE_A_SHARD_INDEX??0);
-const MAX_EXPLICIT_MULTI_ENUM_VALUES=Number(process.env.STAGE_A_MAX_EXPLICIT_MULTI_ENUM_VALUES??12);
+const MAX_EXPLICIT_MULTI_ENUM_VALUES=Number(process.env.STAGE_A_MAX_EXPLICIT_MULTI_ENUM_VALUES??18);
 const MAX_MEMO_STATES_PER_WINDOW=Number(process.env.STAGE_A_MAX_MEMO_STATES_PER_WINDOW??50000);
 assert.ok(Number.isInteger(SHARD_TOTAL)&&SHARD_TOTAL>=1);
 assert.ok(Number.isInteger(SHARD_INDEX)&&SHARD_INDEX>=0&&SHARD_INDEX<SHARD_TOTAL);
@@ -22,6 +22,7 @@ const PRODUCTS=[
 ];
 const CONTINUOUS_KEYS=new Set(['custom_width','custom_w','order_width','custom_height','custom_h','order_height']);
 const TECHNICAL_KEYS=new Set(['construction','legacyConstruction','legacyConfiguration','internal_construction']);
+const TW_OPTION_CONTEXT_KEYS=['window_type','size','panel_count','glass_base','shutter_type','operation_type'];
 const present=(value)=>value!==undefined&&value!==null&&value!==''&&(!Array.isArray(value)||value.length>0);
 const enabled=(field)=>(field?.values??[]).filter((choice)=>choice.disabled!==true);
 const stable=(value)=>{if(Array.isArray(value))return value.map(stable);if(!value||typeof value!=='object')return value;return Object.fromEntries(Object.entries(value).sort(([a],[b])=>a.localeCompare(b)).map(([key,child])=>[key,stable(child)]));};
@@ -82,7 +83,18 @@ function memoKeyFor(result,finalized){
   return hash({finalized:[...finalized].sort(),liveSelection,fields,validation:result.validation?.status??null,dimensionResult:result.dimensionResult??null});
 }
 
+const twProofCache=new Map();
+let twProofCacheHits=0,twProofCacheMisses=0,twProofPairChecksExecuted=0,twProofSingletonChecksExecuted=0;
+function twOptionContextKey(product,result,field){
+  const context={};
+  for(const key of TW_OPTION_CONTEXT_KEYS)context[key]=result.selection?.[key]??null;
+  return hash({product_id:product.id,field:field.key,required:Boolean(field.required),context,candidates:enabled(field).map((choice)=>String(choice.value)).sort()});
+}
 async function symbolicTwTerminalPopulation(product,result,field){
+  const contextKey=twOptionContextKey(product,result,field);
+  const cached=twProofCache.get(contextKey);
+  if(cached){twProofCacheHits+=1;return{...cached,cacheHit:true,contextKey,resolverCallsAdded:0};}
+  twProofCacheMisses+=1;
   const candidates=enabled(field).map((choice)=>String(choice.value));
   const adjacency=new Map(candidates.map((value)=>[value,new Set()]));
   let singletonChecks=0,pairChecks=0;
@@ -91,18 +103,21 @@ async function symbolicTwTerminalPopulation(product,result,field){
     const singleton=await resolveRuntimeAppProduct(product.id,{...(result.selection??{}),[field.key]:[a]});
     const singletonSelected=new Set((Array.isArray(singleton.selection?.[field.key])?singleton.selection[field.key]:[]).map(String));
     if(!singletonSelected.has(a))throw new Error(`${product.id}/${result.selection?.window_type}: symbolic singleton failed ${a}`);
-    singletonChecks+=1;
+    singletonChecks+=1;twProofSingletonChecksExecuted+=1;
     for(let j=i+1;j<candidates.length;j++){
       const b=candidates[j];
       const pair=await resolveRuntimeAppProduct(product.id,{...(result.selection??{}),[field.key]:[a,b]});
       const selected=new Set((Array.isArray(pair.selection?.[field.key])?pair.selection[field.key]:[]).map(String));
       if(!(selected.has(a)&&selected.has(b))){adjacency.get(a).add(b);adjacency.get(b).add(a);}
-      pairChecks+=1;
+      pairChecks+=1;twProofPairChecksExecuted+=1;
     }
   }
   let count=exactIndependentSetCount(adjacency);if(field.required)count-=1n;
-  let edgeCount=0;for(let i=0;i<candidates.length;i++)for(let j=i+1;j<candidates.length;j++)if(adjacency.get(candidates[i]).has(candidates[j]))edgeCount+=1;
-  return{count,candidateCount:candidates.length,singletonChecks,pairChecks,edgeCount};
+  let edgeCount=0;const conflicts=[];
+  for(let i=0;i<candidates.length;i++)for(let j=i+1;j<candidates.length;j++)if(adjacency.get(candidates[i]).has(candidates[j])){edgeCount+=1;conflicts.push([candidates[i],candidates[j]]);}
+  const proof={count,candidateCount:candidates.length,singletonChecks,pairChecks,edgeCount,conflictDigest:hash(conflicts)};
+  twProofCache.set(contextKey,proof);
+  return{...proof,cacheHit:false,contextKey,resolverCallsAdded:singletonChecks+pairChecks};
 }
 
 async function inventoryWindows(product){
@@ -166,9 +181,9 @@ for(const row of assigned){
     if(field.dataType==='MULTI_ENUM'&&enabled(field).length>MAX_EXPLICIT_MULTI_ENUM_VALUES){
       if(row.id==='SER-LIXIL-TW'&&field.key==='option'&&remaining.length===1){
         const proof=await symbolicTwTerminalPopulation(row,result,field);
-        resolverCalls+=proof.singletonChecks+proof.pairChecks;
+        resolverCalls+=proof.resolverCallsAdded;
         symbolicTerminalCount+=1;
-        symbolicFrontiers.push({manufacturer:row.manufacturer,series:row.series,product_id:row.id,window_type:row.windowType,field:field.key,parent_selection:stable(result.selection??{}),candidate_count:proof.candidateCount,pair_checks:proof.pairChecks,conflict_edge_count:proof.edgeCount,exact_terminal_count:proof.count.toString(),status:'SYMBOLIC_TERMINAL_COUNTED'});
+        symbolicFrontiers.push({manufacturer:row.manufacturer,series:row.series,product_id:row.id,window_type:row.windowType,field:field.key,parent_selection:stable(result.selection??{}),context_key:proof.contextKey,cache_hit:proof.cacheHit,candidate_count:proof.candidateCount,pair_checks_logical:proof.pairChecks,pair_checks_executed:proof.cacheHit?0:proof.pairChecks,conflict_edge_count:proof.edgeCount,conflict_digest:proof.conflictDigest,exact_terminal_count:proof.count.toString(),status:'SYMBOLIC_TERMINAL_COUNTED'});
         const value={terminal:proof.count,custom:0n};memo.set(key,value);return value;
       }
       blocked={manufacturer:row.manufacturer,series:row.series,product_id:row.id,window_type:row.windowType,field:field.key,candidate_count:enabled(field).length,status:'UNSUPPORTED_OVERSIZED_MULTI_ENUM'};blockers.push(blocked);return ZERO();
@@ -198,6 +213,7 @@ const report={
   task_classification:'NON-PRODUCT-MASTER',product_master_mutation:0,
   proof_status:blockers.length||metadataInconsistencies.length?'CANDIDATE_BLOCKED':'DEPENDENCY_WEIGHTED_COUNT_CANDIDATE',
   proof_basis:'DECLARED_PARENT_FIELDS_LIVENESS_PLUS_EXACT_RUNTIME_BRANCH_RESOLUTION',
+  performance_model:'TW_RULE_SENSITIVE_CONTEXT_CACHE_V1',
   shard_index:SHARD_INDEX,shard_total:SHARD_TOTAL,base_window_count:assigned.length,
   counted_window_count:windows.filter((row)=>row.status==='COUNTED_CANDIDATE').length,
   blocked_window_count:windows.filter((row)=>row.status==='BLOCKED').length,
@@ -206,9 +222,10 @@ const report={
   memo_state_count:totalMemoStates,memo_hit_count:totalMemoHits,compression_collision_count:totalCompressionCollisions,resolver_call_count:totalResolverCalls,
   symbolic_terminal_frontier_count:symbolicFrontiers.length,
   parent_metadata_inconsistency_count:metadataInconsistencies.length,
+  tw_proof_cache:{context_keys:twProofCache.size,hit_count:twProofCacheHits,miss_count:twProofCacheMisses,singleton_checks_executed:twProofSingletonChecksExecuted,pair_checks_executed:twProofPairChecksExecuted,context_key_fields:[...TW_OPTION_CONTEXT_KEYS,'candidate_set','required']},
   windows,blockers,parent_metadata_inconsistencies:metadataInconsistencies,symbolic_frontiers:symbolicFrontiers,
-  gate_status:{exhaustive_state_graph_gate:'BLOCKED_PENDING_GOVERNANCE_ADOPTION',qa_population_gate:'BLOCKED_PENDING_GOVERNANCE_ADOPTION',full_browser_qa_gate:'NOT_STARTED',app_integration_ready:false,release_input_gate:'BLOCKED'},
-  note:'NON-GOVERNING candidate. The counter reuses a continuation only after projecting selection to transitive declared parent_fields for all unresolved fields and including the current visible-field signature. Runtime branches are still resolved exactly. Memo collisions mean distinct full selections compressed to one declared-dependency continuation; they are evidence of compression, not sampling. Any declared-parent inconsistency, unsupported oversized MULTI_ENUM, or memo limit fails closed. CUSTOM continuous dimensions are counted only as pending discrete contexts; boundary-probe multiplication is not yet applied.',
+  gate_status:{exhaustive_state_graph_gate:'BLOCKED_PENDING_GOVERNING_PROMOTION',qa_population_gate:'BLOCKED_PENDING_GOVERNING_PROMOTION',full_browser_qa_gate:'NOT_STARTED',app_integration_ready:false,release_input_gate:'BLOCKED'},
+  note:'NON-GOVERNING candidate v2. Continuations are memoized only from Runtime-declared parent_fields. TW oversized option exact pair proofs are reused only under a rule-sensitive context signature containing window_type, size, panel_count, glass_base, shutter_type, operation_type, candidate set and required state. Runtime branches are still resolved exactly. CUSTOM continuous dimensions remain pending proof contexts.',
 };
 await writeFile(`${OUT}/report.json`,`${JSON.stringify(report,null,2)}\n`,'utf8');
 console.log(`DEPENDENCY_WEIGHTED_COUNT_STATUS=${report.proof_status}`);
@@ -222,5 +239,8 @@ console.log(`MEMO_STATE_COUNT=${report.memo_state_count}`);
 console.log(`MEMO_HIT_COUNT=${report.memo_hit_count}`);
 console.log(`COMPRESSION_COLLISION_COUNT=${report.compression_collision_count}`);
 console.log(`RESOLVER_CALL_COUNT=${report.resolver_call_count}`);
+console.log(`TW_PROOF_CACHE_HITS=${report.tw_proof_cache.hit_count}`);
+console.log(`TW_PROOF_CACHE_MISSES=${report.tw_proof_cache.miss_count}`);
+console.log(`TW_PAIR_CHECKS_EXECUTED=${report.tw_proof_cache.pair_checks_executed}`);
 console.log('APP_INTEGRATION_READY=false');
 console.log('RELEASE_INPUT_GATE=BLOCKED');
