@@ -1,0 +1,90 @@
+name: Stage A Exact-Head Preview
+
+on:
+  push:
+    branches: ['ops/stage-a-preview-20260915']
+    paths: ['.github/workflows/stage-a-preview-exact-head.yml']
+
+permissions:
+  contents: read
+
+jobs:
+  preview:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      TARGET_SHA: 9bea9cf19ed4e6167991c6289292cd65a4524ca4
+      TARGET_REF: feat/new-construction-runtime-ui-v16-20260910
+      VERCEL_ORG_ID: team_AkuHacuJlCl8LuvaFpCzFmbv
+      VERCEL_PROJECT_ID: prj_4z0zqW6yKyPuFINODfGX8LPBuJRP
+      VERCEL_PROJECT_NAME: sash-app-wave3-preview
+      VERCEL_TOKEN_PRIMARY: ${{ secrets.VERCEL_TOKEN }}
+      VERCEL_TOKEN_FALLBACK: ${{ secrets.VERCEL_ACCESS_TOKEN }}
+      VERCEL_DEPLOY_SOURCE: inline
+      RELEASE_SERIES: Stage A New Construction Runtime UI
+      RELEASE_PACKAGE_VERSION: stage-a-ready-20260915
+    steps:
+      - name: Checkout exact Stage A HEAD
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.TARGET_SHA }}
+          fetch-depth: 1
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Exact-head and Vercel access preflight
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          token="${VERCEL_TOKEN_PRIMARY:-${VERCEL_TOKEN_FALLBACK:-}}"
+          if [[ -z "$token" ]]; then
+            echo 'VERCEL_CREDENTIAL_GATE=BLOCKED'
+            exit 42
+          fi
+          echo "VERCEL_TOKEN_EFFECTIVE=$token" >> "$GITHUB_ENV"
+          status="$(curl -sS -o /tmp/vercel-project.json -w '%{http_code}' -H "Authorization: Bearer $token" "https://api.vercel.com/v9/projects/$VERCEL_PROJECT_ID?teamId=$VERCEL_ORG_ID")"
+          if [[ "$status" != "200" ]]; then
+            echo "VERCEL_PROJECT_ACCESS_GATE=BLOCKED status=$status"
+            exit 46
+          fi
+          PROJECT_FILE=/tmp/vercel-project.json node --input-type=module <<'NODE'
+          import {readFileSync} from 'node:fs';
+          const p=JSON.parse(readFileSync(process.env.PROJECT_FILE,'utf8'));
+          if(p.id!==process.env.VERCEL_PROJECT_ID||p.accountId!==process.env.VERCEL_ORG_ID) process.exit(1);
+          NODE
+          echo 'EXACT_HEAD_GATE=PASS'
+          echo 'VERCEL_CREDENTIAL_GATE=PASS'
+          echo 'VERCEL_PROJECT_ACCESS_GATE=PASS'
+
+      - name: Create Preview deployment from exact Stage A HEAD
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts/stage-a-preview
+          GITHUB_SHA="$TARGET_SHA" \
+          GITHUB_REF_NAME="$TARGET_REF" \
+          node scripts/vercel-rest-deploy.mjs preview artifacts/stage-a-preview/deployment.json
+
+      - name: Verify Preview identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          DEPLOY_FILE=artifacts/stage-a-preview/deployment.json node --input-type=module <<'NODE'
+          import {readFileSync} from 'node:fs';
+          const d=JSON.parse(readFileSync(process.env.DEPLOY_FILE,'utf8'));
+          if(d.mode!=='preview'||d.readyState!=='READY'||d.githubSha!==process.env.TARGET_SHA||d.releaseCommitSha!==process.env.TARGET_SHA) process.exit(1);
+          if(d.projectId!==process.env.VERCEL_PROJECT_ID||d.teamId!==process.env.VERCEL_ORG_ID) process.exit(1);
+          console.log(`PREVIEW_DEPLOYMENT_ID=${d.deploymentId}`);
+          console.log(`PREVIEW_URL=${d.deploymentUrl}`);
+          console.log('PREVIEW_EXACT_HEAD_GATE=PASS');
+          NODE
+
+      - name: Upload Preview evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: stage-a-exact-head-preview
+          path: artifacts/stage-a-preview/
+          if-no-files-found: error
