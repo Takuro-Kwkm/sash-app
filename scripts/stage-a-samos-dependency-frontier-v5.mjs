@@ -64,12 +64,6 @@ replaceOnce(
   "    field_order_model:'DEPENDENCY_FRONTIER_MIN_DESCENDANTS_MRV_V1',contract_digest:hash(Object.fromEntries([...depMap.entries()])),source_shape_digest:hash(conflictShape),terminal_proof_digest:hash(proofs.map((proof)=>({...proof,terminal:proof.terminal.toString(),custom:proof.custom.toString()}))),",
 );
 
-replaceOnce(
-  'report ordering metadata',
-  "  proof_model_version:'RUNTIME_UI_SYMBOLIC_FULL_COVERAGE_V1',count_model_version:'SAMOS_RESOLVER_CONTRACT_DEPENDENCY_FRONTIER_V5',",
-  "  proof_model_version:'RUNTIME_UI_SYMBOLIC_FULL_COVERAGE_V1',count_model_version:'SAMOS_RESOLVER_CONTRACT_DEPENDENCY_FRONTIER_V5',field_order_model:'DEPENDENCY_FRONTIER_MIN_DESCENDANTS_MRV_V1',",
-);
-
 await writeFile(GENERATED, source, 'utf8');
 const child = spawn(process.execPath, [GENERATED.pathname], { stdio: 'inherit', env: process.env });
 const exitCode = await new Promise((resolve,reject) => {
