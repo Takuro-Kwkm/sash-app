@@ -1,5 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { appRuntimeIntegrationRegistry } from '../src/catalog/runtime-master/app-runtime-integration-registry.mjs';
+import { resolveRuntimeAppProduct } from '../src/catalog/runtime-master/runtime-app-bridge.mjs';
 import {
   NEW_CONSTRUCTION_EXTERIOR_WINDOW_UI_CATEGORY,
   applyNewConstructionSashUiOrder,
@@ -9,8 +11,22 @@ import {
   applyInnerWindowUiOrder,
 } from '../src/catalog/runtime-master/inner-window-runtime-ui-contract.mjs';
 
+const STAGE_ORDER = ['PRODUCT','OPENING','CONFIGURATION','SIZE','FINISH','SCREEN','GLAZING','INSTALLATION_SURVEY','OPTION'];
+const STAGE_INDEX = new Map(STAGE_ORDER.map((stage,index)=>[stage,index]));
 const stages = (rows) => rows.map((row) => row.semanticStage);
 const keys = (rows) => rows.map((row) => row.key);
+
+function assertCanonicalStageOrder(rows, label) {
+  let previous = -1;
+  for (const field of rows) {
+    assert.ok(field.semanticSlot, `${label}:${field.key} missing semanticSlot`);
+    assert.ok(field.semanticStage, `${label}:${field.key} missing semanticStage`);
+    const current = STAGE_INDEX.get(field.semanticStage);
+    assert.notEqual(current, undefined, `${label}:${field.key} unknown stage ${field.semanticStage}`);
+    assert.ok(current >= previous, `${label}:${field.key} stage order regressed`);
+    previous = current;
+  }
+}
 
 test('new-construction fields use the single global stage sequence', () => {
   const rows = applyNewConstructionSashUiOrder([
@@ -69,4 +85,15 @@ test('explicit installation and option domains are approved category extensions'
   assert.deepEqual(stages(rows), ['INSTALLATION_SURVEY', 'OPTION']);
   assert.match(rows[0].semanticSlot, /^extension:installation:/);
   assert.match(rows[1].semanticSlot, /^extension:option:/);
+});
+
+test('all registered window integrations point to UI standard v1.8 and resolve through canonical stages', async () => {
+  assert.ok(appRuntimeIntegrationRegistry.length > 0);
+  for (const integration of appRuntimeIntegrationRegistry) {
+    assert.equal(integration.uiStandardSpec, 'サッシ情報管理アプリ_UI実装標準仕様書_v1.8', integration.id);
+    const result = await resolveRuntimeAppProduct(integration.id, {});
+    assert.equal(result.productId, integration.id);
+    assertCanonicalStageOrder(result.fields, integration.id);
+    assert.equal(result.fields.some((field)=>String(field.semanticSlot).startsWith('other:')), false, `${integration.id}:other:*`);
+  }
 });
