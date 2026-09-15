@@ -1,14 +1,6 @@
-export const GLOBAL_WINDOW_STAGE_ORDER = Object.freeze([
-  'PRODUCT',
-  'OPENING',
-  'CONFIGURATION',
-  'SIZE',
-  'FINISH',
-  'SCREEN',
-  'GLAZING',
-  'INSTALLATION_SURVEY',
-  'OPTION',
-]);
+import { GLOBAL_WINDOW_STAGE_ORDER } from './canonical-window-semantic-schema.mjs';
+
+export { GLOBAL_WINDOW_STAGE_ORDER } from './canonical-window-semantic-schema.mjs';
 
 const STAGE_INDEX = new Map(GLOBAL_WINDOW_STAGE_ORDER.map((stage, index) => [stage, index]));
 
