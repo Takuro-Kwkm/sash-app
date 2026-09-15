@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - 'scripts/stage-a-custom-dimension-source-shape-diagnostic.mjs'
+      - 'scripts/stage-a-formal-split-custom-guard-shape-diagnostic.mjs'
       - '.github/workflows/stage-a-custom-dimension-source-shape-diagnostic.yml'
       - 'src/catalog/runtime-master/**'
       - 'src/catalog/runtime-master-packages/**'
@@ -23,6 +24,7 @@ jobs:
     env:
       HEAD_SHA: ${{ github.event.pull_request.head.sha }}
       STAGE_A_CUSTOM_SHAPE_OUT: artifacts/stage-a-custom-dimension-source-shape
+      STAGE_A_CUSTOM_GUARD_OUT: artifacts/stage-a-formal-split-custom-guard-shape
     steps:
       - name: Checkout exact PR HEAD
         uses: actions/checkout@v4
@@ -44,20 +46,29 @@ jobs:
         run: |
           set -euo pipefail
           node scripts/stage-a-custom-dimension-source-shape-diagnostic.mjs
-      - name: Validate source-shape evidence
+      - name: Inventory formal split safety-guard boundaries
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/stage-a-formal-split-custom-guard-shape-diagnostic.mjs
+      - name: Validate source and guard shape evidence
         shell: bash
         run: |
           set -euo pipefail
           node --input-type=module <<'NODE'
           import { readFileSync } from 'node:fs';
           const r=JSON.parse(readFileSync(`${process.env.STAGE_A_CUSTOM_SHAPE_OUT}/report.json`,'utf8'));
-          if(r.exact_head_sha!==process.env.HEAD_SHA)throw new Error('exact head mismatch');
+          const g=JSON.parse(readFileSync(`${process.env.STAGE_A_CUSTOM_GUARD_OUT}/report.json`,'utf8'));
+          if(r.exact_head_sha!==process.env.HEAD_SHA||g.exact_head_sha!==process.env.HEAD_SHA)throw new Error('exact head mismatch');
           if(r.series_count!==6)throw new Error(`series_count=${r.series_count}`);
           if(r.unsupported_count!==0)throw new Error(`unsupported custom rule shapes=${r.unsupported_count}`);
           if(r.source_shape_status!=='CUSTOM_SOURCE_SHAPE_INVENTORIED')throw new Error(`shape status=${r.source_shape_status}`);
-          if(!r.evidence_digest)throw new Error('evidence digest missing');
+          if(g.status!=='PASS'||g.rule_count!==54)throw new Error(`guard shape=${g.status} rules=${g.rule_count}`);
+          if(!r.evidence_digest||!g.evidence_digest)throw new Error('evidence digest missing');
           console.log(`CUSTOM_SOURCE_SHAPE_GATE=PASS rules=${r.total_custom_rule_count} explicit_windows=${r.total_explicit_custom_window_id_count}`);
+          console.log(`FORMAL_SPLIT_CUSTOM_GUARD_SHAPE_GATE=PASS rules=${g.rule_count} components=${g.component_count} unbounded_review=${g.unbounded_review_rule_count}`);
           console.log(`CUSTOM_SHAPE_EVIDENCE_DIGEST=${r.evidence_digest}`);
+          console.log(`CUSTOM_GUARD_SHAPE_EVIDENCE_DIGEST=${g.evidence_digest}`);
           console.log('CUSTOM_SIZE_COVERAGE_GATE=BLOCKED_PARTITION_PROOF_NOT_YET_RUN');
           console.log('APP_INTEGRATION_READY=false');
           console.log('RELEASE_INPUT_GATE=BLOCKED');
@@ -67,5 +78,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: stage-a-custom-dimension-source-shape
-          path: artifacts/stage-a-custom-dimension-source-shape/
+          path: |
+            artifacts/stage-a-custom-dimension-source-shape/
+            artifacts/stage-a-formal-split-custom-guard-shape/
           if-no-files-found: error
