@@ -1,0 +1,153 @@
+name: Stage A Full Browser QA
+
+on:
+  push:
+    branches: [feat/new-construction-runtime-ui-v16-20260910]
+    paths:
+      - '.github/workflows/stage-a-full-browser-qa.yml'
+      - 'test/browser/stage-a-full-browser-qa.mjs'
+      - 'src/ui/web/product-configuration-editor.mjs'
+      - 'src/work-management/domain.mjs'
+      - 'src/catalog/runtime-master/**'
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  full-browser-qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      HEAD_SHA: ${{ github.sha }}
+      CUSTOM_EVIDENCE_HEAD: 6fe783310cd0334f449e55573d534fa8abaed5b2
+      CUSTOM_EVIDENCE_RUN: '34971232430'
+      TRANSITION_EVIDENCE_RUN: '34972570655'
+      DISCRETE_EVIDENCE_HEAD: cf38b3857cc3d0dd3f345e0a86dfafe01fbefcfd
+      DISCRETE_EVIDENCE_RUN: '34971888802'
+      MULTI_BROWSER_HEAD: de6dadf0dd9aa3fa46df55afdfbe7c37d0d15b1a
+      MULTI_BROWSER_RUN: '34913709414'
+      STAGE_A_FULL_BROWSER_OUT: artifacts/stage-a-full-browser-qa
+    steps:
+      - name: Checkout exact push HEAD with history
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Exact-head evidence invalidation gates
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$HEAD_SHA"
+          git merge-base --is-ancestor "$CUSTOM_EVIDENCE_HEAD" "$HEAD_SHA"
+          git diff --quiet "$CUSTOM_EVIDENCE_HEAD" "$HEAD_SHA" -- src/
+          git merge-base --is-ancestor "$DISCRETE_EVIDENCE_HEAD" "$HEAD_SHA"
+          git diff --quiet "$DISCRETE_EVIDENCE_HEAD" "$HEAD_SHA" -- src/
+          git merge-base --is-ancestor "$MULTI_BROWSER_HEAD" "$HEAD_SHA"
+          git diff --quiet "$MULTI_BROWSER_HEAD" "$HEAD_SHA" -- src/ui/web/product-configuration-editor.mjs src/work-management/domain.mjs
+          node --check test/browser/stage-a-full-browser-qa.mjs
+          echo 'FULL_BROWSER_EVIDENCE_INVALIDATION_GATE=PASS'
+
+      - name: Download CUSTOM selector and geometry evidence
+        uses: actions/download-artifact@v4
+        with:
+          name: stage-a-custom-selector-geometry-v5
+          path: artifacts/evidence/custom
+          repository: Takuro-Kwkm/sash-app
+          run-id: ${{ env.CUSTOM_EVIDENCE_RUN }}
+          github-token: ${{ github.token }}
+
+      - name: Download CUSTOM transition evidence
+        uses: actions/download-artifact@v4
+        with:
+          name: stage-a-custom-transition-proof-v4
+          path: artifacts/evidence/transition
+          repository: Takuro-Kwkm/sash-app
+          run-id: ${{ env.TRANSITION_EVIDENCE_RUN }}
+          github-token: ${{ github.token }}
+
+      - name: Download current-head discrete evidence
+        uses: actions/download-artifact@v4
+        with:
+          name: stage-a-105-window-discrete-exact-head-consolidation-v3
+          path: artifacts/evidence/discrete
+          repository: Takuro-Kwkm/sash-app
+          run-id: ${{ env.DISCRETE_EVIDENCE_RUN }}
+          github-token: ${{ github.token }}
+
+      - name: Download invariant MULTI_ENUM browser evidence
+        uses: actions/download-artifact@v4
+        with:
+          name: stage-a-multienum-browser-equivalence-candidate
+          path: artifacts/evidence/multienum
+          repository: Takuro-Kwkm/sash-app
+          run-id: ${{ env.MULTI_BROWSER_RUN }}
+          github-token: ${{ github.token }}
+
+      - name: Install app dependencies and Chromium
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm install --ignore-scripts
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+
+      - name: Resolve evidence paths
+        shell: bash
+        run: |
+          set -euo pipefail
+          reach="$(find artifacts/evidence/custom -path '*stage-a-custom-selector-reachability/report.json' -print -quit)"
+          transition="$(find artifacts/evidence/transition -name report.json -print -quit)"
+          discrete="$(find artifacts/evidence/discrete -name report.json -print -quit)"
+          multi="$(find artifacts/evidence/multienum -name report.json -print -quit)"
+          test -n "$reach" && test -n "$transition" && test -n "$discrete" && test -n "$multi"
+          echo "STAGE_A_REACHABILITY_REPORT=$reach" >> "$GITHUB_ENV"
+          echo "STAGE_A_TRANSITION_REPORT=$transition" >> "$GITHUB_ENV"
+          echo "STAGE_A_DISCRETE_REPORT=$discrete" >> "$GITHUB_ENV"
+          echo "STAGE_A_MULTI_BROWSER_REPORT=$multi" >> "$GITHUB_ENV"
+
+      - name: Start exact-head local Runtime UI
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm run start:qa > /tmp/stage-a-full-browser-server.log 2>&1 &
+          echo $! > /tmp/stage-a-full-browser-server.pid
+          for i in {1..80}; do
+            if curl -fsS http://127.0.0.1:4173/api/health >/tmp/stage-a-health.json; then
+              cat /tmp/stage-a-health.json
+              exit 0
+            fi
+            sleep 0.5
+          done
+          cat /tmp/stage-a-full-browser-server.log || true
+          exit 1
+
+      - name: Run Desktop and Smartphone Full Browser QA
+        shell: bash
+        run: |
+          set -euo pipefail
+          node test/browser/stage-a-full-browser-qa.mjs | tee /tmp/stage-a-full-browser-qa.log
+
+      - name: Stop local Runtime UI
+        if: always()
+        shell: bash
+        run: |
+          if [[ -f /tmp/stage-a-full-browser-server.pid ]]; then
+            kill "$(cat /tmp/stage-a-full-browser-server.pid)" 2>/dev/null || true
+          fi
+
+      - name: Upload full browser evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: stage-a-full-browser-qa
+          path: |
+            artifacts/stage-a-full-browser-qa/
+            /tmp/stage-a-full-browser-qa.log
+            /tmp/stage-a-full-browser-server.log
+          if-no-files-found: warn
