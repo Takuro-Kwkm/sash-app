@@ -70,7 +70,7 @@ const designPreviewCss=async(res)=>{
     const responsive=`
 @media (min-width:821px) and (max-width:1100px){
   .reference-hero{height:820px!important;background:#eef8fd!important}
-  .reference-hero-photo{content:url("/design-preview-reference-hero.jpg")!important;left:0!important;right:0!important;top:auto!important;bottom:0!important;width:100%!important;height:530px!important;max-width:none!important;object-fit:cover!important;object-position:left center!important;opacity:1!important;transform:none!important}
+  .reference-hero-photo{content:url("/design-preview-reference-hero.jpg")!important;left:0!important;right:0!important;top:auto!important;bottom:0!important;width:100%!important;height:530px!important;max-width:none!important;object-fit:cover!important;object-position:left top!important;opacity:1!important;transform:none!important}
   .reference-hero:after{top:0!important;left:0!important;right:0!important;bottom:auto!important;height:290px!important;background:#eef8fd!important}
   .reference-hero-copy{width:100%!important;max-width:690px!important;padding:38px 0 0 28px!important}
   html[data-theme="dark"] .reference-hero:after{background:#121d27!important}
@@ -78,7 +78,7 @@ const designPreviewCss=async(res)=>{
 @media (min-width:821px) and (max-width:1100px) and (prefers-color-scheme:dark){html[data-theme="system"] .reference-hero:after{background:#121d27!important}}
 @media (min-width:700px) and (max-width:820px){
   .reference-hero{height:835px!important;background:#eef8fd!important}
-  .reference-hero-photo{content:url("/design-preview-reference-hero.jpg")!important;left:0!important;right:0!important;top:auto!important;bottom:0!important;width:100%!important;height:500px!important;max-width:none!important;object-fit:cover!important;object-position:left center!important;opacity:1!important;transform:none!important}
+  .reference-hero-photo{content:url("/design-preview-reference-hero.jpg")!important;left:0!important;right:0!important;top:auto!important;bottom:0!important;width:100%!important;height:500px!important;max-width:none!important;object-fit:cover!important;object-position:left top!important;opacity:1!important;transform:none!important}
   .reference-hero:after{top:0!important;left:0!important;right:0!important;bottom:auto!important;height:335px!important;background:#eef8fd!important}
   .reference-hero-copy{width:100%!important;max-width:none!important;padding:34px 22px 0!important}
   html[data-theme="dark"] .reference-hero:after{background:#121d27!important}
