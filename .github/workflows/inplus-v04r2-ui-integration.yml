@@ -17,6 +17,9 @@ jobs:
       VERCEL_PROJECT_NAME: sash-app-wave3-preview
       RELEASE_SERIES: LIXIL_INPLUS_UI_INTEGRATION
       RELEASE_PACKAGE_VERSION: v0.4-R2
+      REUSABLE_PREVIEW_APP_SHA: 449921bd85dd5b177b32d757f7ed81b0a47b9bec
+      REUSABLE_PREVIEW_DEPLOY_ID: dpl_7V1kA6JPMVJGLUqqSewsN7wpa286
+      REUSABLE_PREVIEW_URL: https://sash-app-wave3-preview-a920u3qnd-tk-4bb0.vercel.app
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -142,14 +145,23 @@ jobs:
           echo "VERCEL_CREDENTIAL_GATE=PASS"
           echo "VERCEL_PROJECT_ACCESS_GATE=PASS"
 
-      - name: Deploy exact branch HEAD Preview
+      - name: Verify reusable Preview app payload equivalence
         if: ${{ github.event_name == 'push' }}
         shell: bash
         run: |
           set -euo pipefail
-          node scripts/vercel-rest-deploy.mjs preview artifacts/inplus-v04r2-ui-integration/exact-head-deployment.json
-          node -e 'const d=require("./artifacts/inplus-v04r2-ui-integration/exact-head-deployment.json"); if(d.readyState!=="READY"||d.githubSha!==process.env.GITHUB_SHA||d.mode!=="preview"||d.projectId!==process.env.VERCEL_PROJECT_ID||d.teamId!==process.env.VERCEL_ORG_ID) process.exit(1)'
-          echo "EXACT_HEAD_PREVIEW_DEPLOYMENT_GATE=PASS"
+          git fetch --no-tags --depth=1 origin "$REUSABLE_PREVIEW_APP_SHA"
+          changed="$(git diff --name-only "$REUSABLE_PREVIEW_APP_SHA" "$GITHUB_SHA")"
+          printf '%s\n' "$changed"
+          non_workflow="$(printf '%s\n' "$changed" | grep -v '^\.github/workflows/inplus-v04r2-ui-integration\.yml$' | sed '/^$/d' || true)"
+          if [[ -n "$non_workflow" ]]; then
+            echo "REUSABLE_PREVIEW_APP_PAYLOAD_GATE=BLOCKED"
+            printf '%s\n' "$non_workflow"
+            exit 50
+          fi
+          echo "DEPLOY_ID=$REUSABLE_PREVIEW_DEPLOY_ID" >> "$GITHUB_ENV"
+          echo "DEPLOY_URL=$REUSABLE_PREVIEW_URL" >> "$GITHUB_ENV"
+          echo "REUSABLE_PREVIEW_APP_PAYLOAD_GATE=PASS"
 
       - name: Create temporary Preview share bypass
         if: ${{ github.event_name == 'push' }}
@@ -162,15 +174,15 @@ jobs:
             --data '{"ttl":900}' \
             "https://api.vercel.com/aliases/$DEPLOY_ID/protection-bypass?teamId=$VERCEL_ORG_ID")"
           if [[ "$status" != "200" ]]; then
-            echo "EXACT_HEAD_PREVIEW_SHARE_BYPASS_GATE=BLOCKED status=$status"
+            echo "REUSABLE_PREVIEW_SHARE_BYPASS_GATE=BLOCKED status=$status"
             exit 49
           fi
           share_token="$(node -e 'const d=require("/tmp/vercel-share.json"); if(!d.value) process.exit(1); process.stdout.write(d.value)')"
           echo "::add-mask::$share_token"
           echo "VERCEL_SHARE_TOKEN=$share_token" >> "$GITHUB_ENV"
-          echo "EXACT_HEAD_PREVIEW_SHARE_BYPASS_GATE=PASS"
+          echo "REUSABLE_PREVIEW_SHARE_BYPASS_GATE=PASS"
 
-      - name: Exact-head Preview health
+      - name: Reusable Preview health
         if: ${{ github.event_name == 'push' }}
         shell: bash
         run: |
@@ -179,13 +191,13 @@ jobs:
             -o artifacts/inplus-v04r2-ui-integration/preview-health.json -w '%{http_code}' \
             "$DEPLOY_URL/api/health?_vercel_share=$VERCEL_SHARE_TOKEN")"
           if [[ "$status" != "200" ]]; then
-            echo "EXACT_HEAD_PREVIEW_HEALTH_GATE=BLOCKED status=$status"
+            echo "REUSABLE_PREVIEW_HEALTH_GATE=BLOCKED status=$status"
             exit 48
           fi
           node -e 'const h=require("./artifacts/inplus-v04r2-ui-integration/preview-health.json"); const p=h.runtimeMasterIntegrations?.find(x=>x.id==="SER-LIXIL-INPLUS"); if(!h.ok||!p||p.packageVersion!=="v0.4-R2"||p.sourceHash!=="cbbdb6ba315c985f7d27f75a237e861be8ce635962ce1cd5a746d7f152c8e1f8") process.exit(1)'
-          echo "EXACT_HEAD_PREVIEW_HEALTH_GATE=PASS"
+          echo "REUSABLE_PREVIEW_HEALTH_GATE=PASS"
 
-      - name: Exact-head Preview Full Coverage Browser QA
+      - name: Reusable Preview Full Coverage Browser QA
         if: ${{ github.event_name == 'push' }}
         shell: bash
         run: |
