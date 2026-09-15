@@ -27,7 +27,7 @@ jobs:
       HEAD_SHA: ${{ github.event.pull_request.head.sha }}
       STAGE_A_SHARD_TOTAL: 12
       STAGE_A_SHARD_INDEX: ${{ matrix.shard }}
-      STAGE_A_MAX_TRAVERSAL_PER_WINDOW: 5000
+      STAGE_A_MAX_TRAVERSAL_PER_WINDOW: 1000
       STAGE_A_SYMBOLIC_FRONTIER_OUT: artifacts/stage-a-symbolic-frontier-discovery/shard-${{ matrix.shard }}
     steps:
       - name: Checkout exact PR HEAD
@@ -48,7 +48,7 @@ jobs:
           test "$actual" = "$HEAD_SHA"
           echo "EXACT_HEAD_GATE=PASS sha=$actual shard=$STAGE_A_SHARD_INDEX/$STAGE_A_SHARD_TOTAL"
 
-      - name: Discover symbolic frontiers without power-set expansion
+      - name: Discover first symbolic-required frontier per window
         shell: bash
         run: |
           set -euo pipefail
@@ -95,7 +95,8 @@ jobs:
           const report={
             exact_head_sha:process.env.HEAD_SHA,
             task_classification:'NON-PRODUCT-MASTER',product_master_mutation:0,
-            proof_status:'CANDIDATE_PROOF_NOT_GOVERNING',
+            proof_status:'DISCOVERY_CANDIDATE_NOT_GOVERNING',
+            discovery_semantics:'FIRST_SYMBOLIC_REQUIRED_FRONTIER_PER_WINDOW_OR_EXPLICIT_TRAVERSAL_LIMIT',
             shard_total:12,
             max_traversal_per_window:shards[0]?.max_traversal_per_window??null,
             base_window_count:sum('base_window_count'),
@@ -103,29 +104,35 @@ jobs:
             explicit_terminal_frontier_count:sum('explicit_terminal_frontier_count'),
             custom_pending_frontier_count:sum('custom_pending_frontier_count'),
             pruned_transition_count:sum('pruned_transition_count'),
+            short_circuited_window_count:sum('short_circuited_window_count'),
             traversal_limit_frontier_count:sum('traversal_limit_frontier_count'),
             oversized_frontier_count:sum('oversized_frontier_count'),
             symbolic_frontier_count:sum('symbolic_frontier_count'),
             symbolic_standard_terminal_frontier_count:sum('symbolic_standard_terminal_frontier_count'),
             symbolic_custom_downstream_frontier_count:sum('symbolic_custom_downstream_frontier_count'),
             unsupported_symbolic_frontier_count:sum('unsupported_symbolic_frontier_count'),
-            exact_symbolic_standard_terminal_population:bigSum('exact_symbolic_standard_terminal_population').toString(),
+            observed_exact_symbolic_standard_population:bigSum('observed_exact_symbolic_standard_population').toString(),
             windows:shards.flatMap((row)=>row.windows),
             symbolic_frontiers:shards.flatMap((row)=>row.symbolic_frontiers),
             unsupported_frontiers:shards.flatMap((row)=>row.unsupported_frontiers),
             traversal_limit_frontiers:shards.flatMap((row)=>row.traversal_limit_frontiers??[]),
           };
           if(report.base_window_count!==105)throw new Error(`BASE_WINDOW_COUNT=${report.base_window_count}`);
-          report.next_blocker=report.traversal_limit_frontier_count>0?'GENERAL_SYMBOLIC_MODEL_REQUIRED':report.unsupported_symbolic_frontier_count>0?'UNSUPPORTED_SYMBOLIC_MODEL':report.symbolic_custom_downstream_frontier_count>0?'DOWNSTREAM_CUSTOM_EQUIVALENCE':'GOVERNANCE_ADOPTION_ONLY';
+          const statusCounts=Object.fromEntries([...new Set(report.windows.map((row)=>row.status))].sort().map((status)=>[status,report.windows.filter((row)=>row.status===status).length]));
+          report.window_status_counts=statusCounts;
+          report.next_blocker=report.traversal_limit_frontier_count>0?'GENERAL_SYMBOLIC_MODEL_REQUIRED':report.unsupported_symbolic_frontier_count>0?'UNSUPPORTED_SYMBOLIC_MODEL':report.symbolic_custom_downstream_frontier_count>0?'DOWNSTREAM_CUSTOM_EQUIVALENCE':report.symbolic_frontier_count>0?'GOVERNANCE_ADOPTION_AND_FULL_SYMBOLIC_PROOF':'GOVERNANCE_ADOPTION_ONLY';
           report.gate_status={exhaustive_state_graph_gate:'BLOCKED_PENDING_GOVERNANCE_ADOPTION',qa_population_gate:'BLOCKED_PENDING_GOVERNANCE_ADOPTION',full_browser_qa_gate:'NOT_STARTED',app_integration_ready:false,release_input_gate:'BLOCKED'};
+          report.note='Discovery only. Counts describe the first unresolved symbolic-required frontier reached per window, not the Stage A total population. No unresolved state is treated as verified or sampled away.';
           fs.writeFileSync('artifacts/stage-a-symbolic-frontier-discovery/report.json',JSON.stringify(report,null,2)+'\n');
           console.log(`BASE_WINDOW_COUNT=${report.base_window_count}`);
+          console.log(`SHORT_CIRCUITED_WINDOWS=${report.short_circuited_window_count}`);
           console.log(`TRAVERSAL_LIMIT_FRONTIERS=${report.traversal_limit_frontier_count}`);
           console.log(`OVERSIZED_FRONTIER_COUNT=${report.oversized_frontier_count}`);
           console.log(`SYMBOLIC_STANDARD_TERMINAL_FRONTIERS=${report.symbolic_standard_terminal_frontier_count}`);
           console.log(`SYMBOLIC_CUSTOM_DOWNSTREAM_FRONTIERS=${report.symbolic_custom_downstream_frontier_count}`);
           console.log(`UNSUPPORTED_SYMBOLIC_FRONTIERS=${report.unsupported_symbolic_frontier_count}`);
-          console.log(`EXACT_SYMBOLIC_STANDARD_TERMINAL_POPULATION=${report.exact_symbolic_standard_terminal_population}`);
+          console.log(`OBSERVED_EXACT_SYMBOLIC_STANDARD_POPULATION=${report.observed_exact_symbolic_standard_population}`);
+          console.log(`WINDOW_STATUS_COUNTS=${JSON.stringify(report.window_status_counts)}`);
           console.log(`NEXT_BLOCKER=${report.next_blocker}`);
           console.log('APP_INTEGRATION_READY=false');
           console.log('RELEASE_INPUT_GATE=BLOCKED');
