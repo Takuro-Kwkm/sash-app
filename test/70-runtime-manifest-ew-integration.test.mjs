@@ -79,7 +79,7 @@ test('EW canonical adapter preserves all source counts without inventing formal 
 });
 
 test('v1.8 global UI slots keep configuration before size, screen before glass and options last',async()=>{
-  assert.deepEqual(NEW_CONSTRUCTION_SASH_UI_STANDARD_ORDER.slice(0,7),['manufacturer','product','window_type','window_spec','handing','panel_count','size_mode']);
+  assert.deepEqual(NEW_CONSTRUCTION_SASH_UI_STANDARD_ORDER.slice(0,7),['manufacturer','product','window_type','window_spec','handing','size_mode','panel_count']);
   const {selection}=await targetStandardSelection();
   const result=await resolveRuntimeAppProduct(PRODUCT_ID,{...selection,screen_presence:'あり'});
   const form=values(result,'screen_form')[0];
