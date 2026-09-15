@@ -1,0 +1,153 @@
+name: Stage A EW Option Prerequisite Shape Diagnostic
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/stage-a-ew-option-prerequisite-shape-diagnostic.yml'
+      - 'src/catalog/runtime-master/canonical-workbook-reference-v1-adapter.mjs'
+      - 'src/catalog/runtime-master/canonical-workbook-reference-v1-model.mjs'
+      - 'src/catalog/runtime-master/runtime-master-registry.mjs'
+      - 'src/catalog/runtime-master/runtime-app-bridge.mjs'
+      - 'src/catalog/runtime-master-packages/lixil-ew-v1.1/**'
+
+permissions:
+  contents: read
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    env:
+      HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+    steps:
+      - name: Checkout exact PR HEAD
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 1
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Exact SHA gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          actual="$(git rev-parse HEAD)"
+          test "$actual" = "$HEAD_SHA"
+          echo "EXACT_HEAD_GATE=PASS sha=$actual"
+      - name: Audit EW option prerequisite source shape
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import { createHash } from 'node:crypto';
+          import { mkdirSync,writeFileSync } from 'node:fs';
+          import { loadRegisteredRuntime } from './src/catalog/runtime-master/runtime-master-registry.mjs';
+          import { resolveRuntimeAppProduct } from './src/catalog/runtime-master/runtime-app-bridge.mjs';
+
+          const TARGETS=['WT-EW-HIKICHIGAI','WT-EW-KOSHO-YOKO'];
+          const hash=(value)=>createHash('sha256').update(JSON.stringify(value)).digest('hex');
+          const runtime=await loadRegisteredRuntime('LIXIL','EW');
+          if(!runtime?.master)throw new Error('EW canonical master missing');
+          if(runtime.sourcePackageIntegrity?.match!==true)throw new Error('EW canonical package integrity mismatch');
+          const model=runtime.master;
+          const root=await resolveRuntimeAppProduct('RUNTIME-LIXIL-EW',{}).catch(async()=>{
+            const inventory=(await import('./src/catalog/runtime-master/runtime-app-bridge.mjs')).runtimeAppIntegrationInventory();
+            const row=inventory.find((x)=>x.manufacturer==='LIXIL'&&x.series==='EW');
+            if(!row)throw new Error('EW app integration missing');
+            return resolveRuntimeAppProduct(row.id,{});
+          });
+          const windowField=(root.fields??[]).find((f)=>f.key==='window_type');
+          const allWindows=new Set((windowField?.values??[]).filter((x)=>x.disabled!==true).map((x)=>String(x.value)));
+          for(const target of TARGETS)if(!allWindows.has(target))throw new Error(`target window missing ${target}`);
+
+          const applicability=(model.optionApplicability??[]).map((row)=>({
+            window_id:String(row.window_id??''),
+            option_id:String(row.option_id??''),
+            applicability:String(row.applicability??''),
+            dependency_option_id:row.dependency_option_id===undefined||row.dependency_option_id===null||row.dependency_option_id===''?null:String(row.dependency_option_id),
+            raw:row,
+          }));
+          const options=(model.options??[]).map((row)=>({id:String(row.id??''),window_id:String(row.window_id??''),spec_id:row['固有仕様ID']??row.spec_id??null,label:row.label??row['表示名']??null}));
+          const knownOptionIds=new Set(options.map((row)=>row.id));
+          const reports=[];
+          for(const windowId of TARGETS){
+            const rows=applicability.filter((row)=>row.window_id===windowId);
+            const byOption=new Map();
+            for(const row of rows){const arr=byOption.get(row.option_id)??[];arr.push(row);byOption.set(row.option_id,arr);}
+            const conditional=rows.filter((row)=>row.applicability==='CONDITIONAL_APPLICABLE');
+            const nonApplicable=rows.filter((row)=>row.applicability==='NON_APPLICABLE');
+            const other=rows.filter((row)=>!['CONDITIONAL_APPLICABLE','NON_APPLICABLE','APPLICABLE'].includes(row.applicability));
+            const duplicateOptionRows=[...byOption.entries()].filter(([,arr])=>arr.length>1).map(([option_id,arr])=>({option_id,count:arr.length,rows:arr}));
+            const missingDependency=conditional.filter((row)=>!row.dependency_option_id||!knownOptionIds.has(row.dependency_option_id));
+            const selfDependency=conditional.filter((row)=>row.dependency_option_id===row.option_id);
+            const adjacency=new Map();
+            for(const row of conditional){if(!row.dependency_option_id)continue;const arr=adjacency.get(row.option_id)??new Set();arr.add(row.dependency_option_id);adjacency.set(row.option_id,arr);}
+            const nodes=new Set([...adjacency.keys(),...[...adjacency.values()].flatMap((s)=>[...s])]);
+            const visit=new Map(),stack=[],cycles=[];
+            const dfs=(node)=>{
+              const state=visit.get(node)??0;
+              if(state===1){const at=stack.indexOf(node);cycles.push([...stack.slice(at),node]);return;}
+              if(state===2)return;
+              visit.set(node,1);stack.push(node);
+              for(const next of adjacency.get(node)??[])dfs(next);
+              stack.pop();visit.set(node,2);
+            };
+            for(const node of nodes)dfs(node);
+            const windowOptions=options.filter((row)=>row.window_id==='*'||row.window_id===windowId);
+            const conditionalIds=new Set(conditional.map((row)=>row.option_id));
+            const baseApplicable=windowOptions.filter((row)=>{
+              const rel=rows.find((one)=>one.option_id===row.id);
+              return rel?.applicability!=='NON_APPLICABLE'&&rel?.applicability!=='CONDITIONAL_APPLICABLE';
+            });
+            const latentConditional=windowOptions.filter((row)=>conditionalIds.has(row.id));
+            const prerequisiteTargets=[...new Set(conditional.map((row)=>row.dependency_option_id).filter(Boolean))];
+            const maxPrerequisiteCount=Math.max(0,...[...adjacency.values()].map((s)=>s.size));
+            const report={window_id:windowId,option_source_row_count:windowOptions.length,applicability_row_count:rows.length,applicable_count:rows.filter((r)=>r.applicability==='APPLICABLE').length,conditional_count:conditional.length,non_applicable_count:nonApplicable.length,other_applicability_count:other.length,base_option_count:baseApplicable.length,latent_conditional_option_count:latentConditional.length,prerequisite_target_count:prerequisiteTargets.length,max_prerequisite_count_per_option:maxPrerequisiteCount,duplicate_option_row_count:duplicateOptionRows.length,missing_dependency_count:missingDependency.length,self_dependency_count:selfDependency.length,cycle_count:cycles.length,conditional_edges:conditional.map((r)=>[r.option_id,r.dependency_option_id]),cycles,duplicates:duplicateOptionRows,missing_dependencies:missingDependency,other_applicability:other};
+            reports.push(report);
+            console.log(`EW_OPTION_SHAPE window=${windowId} source_options=${report.option_source_row_count} applicability=${report.applicability_row_count} base=${report.base_option_count} conditional=${report.conditional_count} non_applicable=${report.non_applicable_count} prereq_targets=${report.prerequisite_target_count} max_prereq=${report.max_prerequisite_count_per_option} duplicates=${report.duplicate_option_row_count} missing=${report.missing_dependency_count} self=${report.self_dependency_count} cycles=${report.cycle_count} other=${report.other_applicability_count}`);
+            console.log(`EW_OPTION_EDGES window=${windowId} ${JSON.stringify(report.conditional_edges)}`);
+          }
+          const unsupported=reports.flatMap((row)=>[
+            ...(row.max_prerequisite_count_per_option>1?[`${row.window_id}:MULTI_PREREQUISITE`]:[]),
+            ...(row.duplicate_option_row_count?[`${row.window_id}:DUPLICATE_APPLICABILITY_ROWS`]:[]),
+            ...(row.missing_dependency_count?[`${row.window_id}:MISSING_PREREQUISITE`]:[]),
+            ...(row.self_dependency_count?[`${row.window_id}:SELF_DEPENDENCY`]:[]),
+            ...(row.cycle_count?[`${row.window_id}:CYCLE`]:[]),
+            ...(row.other_applicability_count?[`${row.window_id}:UNKNOWN_APPLICABILITY`]:[]),
+          ]);
+          const shape={exact_head_sha:process.env.HEAD_SHA,task_classification:'NON-PRODUCT-MASTER',product_master_mutation:0,proof_role:'EW_OPTION_PREREQUISITE_SHAPE_DIAGNOSTIC',runtime_manifest_sha256:runtime.entry.runtimeManifestSha256??null,target_count:reports.length,reports,unsupported,source_shape_status:unsupported.length?'BLOCKED':'SINGLE_PREREQUISITE_DAG_CANDIDATE',shape_digest:null,gate_status:{ew_discrete_population_gate:'BLOCKED_DIAGNOSTIC_ONLY',nontw_discrete_population_gate:'BLOCKED',custom_size_coverage_gate:'BLOCKED',app_integration_ready:false,release_input_gate:'BLOCKED'}};
+          shape.shape_digest=hash({runtime:shape.runtime_manifest_sha256,reports:reports.map((r)=>({window:r.window_id,edges:r.conditional_edges,non_applicable:r.non_applicable_count,base:r.base_option_count,conditional:r.conditional_count}))});
+          mkdirSync('artifacts/stage-a-ew-option-prerequisite-shape',{recursive:true});
+          writeFileSync('artifacts/stage-a-ew-option-prerequisite-shape/report.json',JSON.stringify(shape,null,2)+'\n');
+          console.log(`EW_OPTION_SOURCE_SHAPE_STATUS=${shape.source_shape_status}`);
+          console.log(`EW_OPTION_SOURCE_SHAPE_DIGEST=${shape.shape_digest}`);
+          console.log(`UNSUPPORTED_COUNT=${unsupported.length}`);
+          console.log('DIAGNOSTIC_ONLY=true');
+          console.log('APP_INTEGRATION_READY=false');
+          console.log('RELEASE_INPUT_GATE=BLOCKED');
+          NODE
+      - name: Validate diagnostic evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import { readFileSync } from 'node:fs';
+          const report=JSON.parse(readFileSync('artifacts/stage-a-ew-option-prerequisite-shape/report.json','utf8'));
+          if(report.exact_head_sha!==process.env.HEAD_SHA)throw new Error('exact head mismatch');
+          if(report.target_count!==2)throw new Error('expected two EW target reports');
+          if(!report.shape_digest)throw new Error('shape digest missing');
+          if(report.unsupported?.length)throw new Error(`unsupported EW option shape: ${JSON.stringify(report.unsupported)}`);
+          if(report.source_shape_status!=='SINGLE_PREREQUISITE_DAG_CANDIDATE')throw new Error(`unexpected shape status ${report.source_shape_status}`);
+          console.log('EW_OPTION_SHAPE_DIAGNOSTIC_GATE=PASS');
+          console.log('APP_INTEGRATION_READY=false');
+          console.log('RELEASE_INPUT_GATE=BLOCKED');
+          NODE
+      - name: Upload EW option shape evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: stage-a-ew-option-prerequisite-shape
+          path: artifacts/stage-a-ew-option-prerequisite-shape/report.json
+          if-no-files-found: error
