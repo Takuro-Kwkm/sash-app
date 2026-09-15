@@ -1,5 +1,4 @@
-import { readFile, writeFile, mkdir } from 'node:fs/promises';
-import { pathToFileURL } from 'node:url';
+import { readFile, writeFile } from 'node:fs/promises';
 
 const sourcePath=new URL('./stage-a-custom-runtime-geometry-equivalence-v2.mjs',import.meta.url);
 let source=await readFile(sourcePath,'utf8');
@@ -88,8 +87,7 @@ const newModel="CUSTOM_RUNTIME_GEOMETRY_EQUIVALENCE_FULL_ARRANGEMENT_V3_FORMAL_G
 if(!source.includes(oldModel))throw new Error('CUSTOM_GEOMETRY_EQ_V3_PATCH_TARGET_MISSING_MODEL');
 source=source.replaceAll(oldModel,newModel).replaceAll('CUSTOM_RUNTIME_GEOMETRY_EQUIVALENCE_V2_GATE','CUSTOM_RUNTIME_GEOMETRY_EQUIVALENCE_V3_GATE').replaceAll('CUSTOM_RUNTIME_GEOMETRY_EQUIVALENCE_V2_DIGEST','CUSTOM_RUNTIME_GEOMETRY_EQUIVALENCE_V3_DIGEST');
 
-const generatedDir=new URL('../artifacts/stage-a-custom-runtime-geometry-equivalence-v3-generated/',import.meta.url);
-await mkdir(generatedDir,{recursive:true});
-const generated=new URL('runner.mjs',generatedDir);
+// Keep the generated module in the same directory as the source proof so its ../src imports resolve identically.
+const generated=new URL('./.stage-a-custom-runtime-geometry-equivalence-v3-generated.mjs',import.meta.url);
 await writeFile(generated,source,'utf8');
-await import(`${pathToFileURL(generated.pathname).href}?head=${encodeURIComponent(process.env.HEAD_SHA??'')}`);
+await import(`${generated.href}?head=${encodeURIComponent(process.env.HEAD_SHA??'')}`);
