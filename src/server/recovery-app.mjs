@@ -69,17 +69,21 @@ const designPreviewCss=async(res)=>{
     const base=await readFile(join(webRoot,"design-preview.css"),"utf8");
     const responsive=`
 @media (min-width:821px) and (max-width:1100px){
-  .reference-hero{height:560px!important;background:#eef8fd!important}
-  .reference-hero-photo{content:url("/design-preview-reference-hero.jpg")!important;left:0!important;right:0!important;top:auto!important;bottom:0!important;width:100%!important;height:49%!important;max-width:none!important;object-fit:cover!important;object-position:center 52%!important;opacity:1!important;transform:none!important}
-  .reference-hero:after{background:linear-gradient(180deg,rgba(238,248,253,1) 0%,rgba(238,248,253,1) 48%,rgba(238,248,253,.92) 54%,rgba(238,248,253,.38) 63%,rgba(238,248,253,0) 75%)!important}
-  .reference-hero-copy{width:100%!important;max-width:690px!important;padding:44px 0 0 28px!important}
+  .reference-hero{height:690px!important;background:#eef8fd!important}
+  .reference-hero-photo{content:url("/design-preview-reference-hero.jpg")!important;left:0!important;right:0!important;top:auto!important;bottom:0!important;width:100%!important;height:445px!important;max-width:none!important;object-fit:cover!important;object-position:left center!important;opacity:1!important;transform:none!important}
+  .reference-hero:after{background:linear-gradient(180deg,rgba(238,248,253,1) 0%,rgba(238,248,253,1) 34%,rgba(238,248,253,.92) 38%,rgba(238,248,253,.52) 44%,rgba(238,248,253,.16) 49%,rgba(238,248,253,0) 56%)!important}
+  .reference-hero-copy{width:100%!important;max-width:690px!important;padding:38px 0 0 28px!important}
+  html[data-theme="dark"] .reference-hero:after{background:linear-gradient(180deg,rgba(18,29,39,1) 0%,rgba(18,29,39,1) 34%,rgba(18,29,39,.92) 38%,rgba(18,29,39,.56) 44%,rgba(18,29,39,.18) 49%,rgba(18,29,39,0) 56%)!important}
 }
+@media (min-width:821px) and (max-width:1100px) and (prefers-color-scheme:dark){html[data-theme="system"] .reference-hero:after{background:linear-gradient(180deg,rgba(18,29,39,1) 0%,rgba(18,29,39,1) 34%,rgba(18,29,39,.92) 38%,rgba(18,29,39,.56) 44%,rgba(18,29,39,.18) 49%,rgba(18,29,39,0) 56%)!important}}
 @media (min-width:700px) and (max-width:820px){
-  .reference-hero{height:600px!important;background:#eef8fd!important}
-  .reference-hero-photo{content:url("/design-preview-reference-hero-portrait.jpg")!important;left:0!important;right:0!important;top:auto!important;bottom:0!important;width:100%!important;height:49%!important;max-width:none!important;object-fit:cover!important;object-position:center 48%!important;opacity:1!important;transform:none!important}
-  .reference-hero:after{background:linear-gradient(180deg,rgba(238,248,253,1) 0%,rgba(238,248,253,1) 49%,rgba(238,248,253,.93) 55%,rgba(238,248,253,.38) 64%,rgba(238,248,253,0) 76%)!important}
-  .reference-hero-copy{width:100%!important;max-width:none!important;padding:38px 22px 0!important}
+  .reference-hero{height:700px!important;background:#eef8fd!important}
+  .reference-hero-photo{content:url("/design-preview-reference-hero.jpg")!important;left:0!important;right:0!important;top:auto!important;bottom:0!important;width:100%!important;height:438px!important;max-width:none!important;object-fit:cover!important;object-position:left center!important;opacity:1!important;transform:none!important}
+  .reference-hero:after{background:linear-gradient(180deg,rgba(238,248,253,1) 0%,rgba(238,248,253,1) 36%,rgba(238,248,253,.93) 40%,rgba(238,248,253,.52) 46%,rgba(238,248,253,.16) 51%,rgba(238,248,253,0) 58%)!important}
+  .reference-hero-copy{width:100%!important;max-width:none!important;padding:34px 22px 0!important}
+  html[data-theme="dark"] .reference-hero:after{background:linear-gradient(180deg,rgba(18,29,39,1) 0%,rgba(18,29,39,1) 36%,rgba(18,29,39,.93) 40%,rgba(18,29,39,.58) 46%,rgba(18,29,39,.18) 51%,rgba(18,29,39,0) 58%)!important}
 }
+@media (min-width:700px) and (max-width:820px) and (prefers-color-scheme:dark){html[data-theme="system"] .reference-hero:after{background:linear-gradient(180deg,rgba(18,29,39,1) 0%,rgba(18,29,39,1) 36%,rgba(18,29,39,.93) 40%,rgba(18,29,39,.58) 46%,rgba(18,29,39,.18) 51%,rgba(18,29,39,0) 58%)!important}}
 @media(max-width:699px){.reference-hero-photo{content:url("/design-preview-reference-hero-portrait.jpg")!important;object-position:center center!important}}
 `;
     const body=`${base}${responsive}`;
