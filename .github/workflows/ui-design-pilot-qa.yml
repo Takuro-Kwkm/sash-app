@@ -80,9 +80,11 @@ jobs:
             artifacts/design-pilot-survey-qa/
           if-no-files-found: warn
 
+  # RETRY GOVERNANCE: keep this path closed until Vercel's daily deployment
+  # limit has a verified state change. Browser QA remains fully enabled above.
   deploy_preview:
     needs: browser_qa
-    if: github.event_name == 'push' && github.ref == 'refs/heads/feat/ui-design-pilot-20260912'
+    if: ${{ false }}
     runs-on: ubuntu-latest
     env:
       VERCEL_ORG_ID: team_AkuHacuJlCl8LuvaFpCzFmbv
