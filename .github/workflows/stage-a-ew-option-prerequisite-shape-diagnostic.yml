@@ -51,7 +51,9 @@ jobs:
           const runtime=await loadRegisteredRuntime('LIXIL','EW');
           if(!runtime?.master)throw new Error('EW canonical master missing');
           if(runtime.sourcePackageIntegrity?.match!==true)throw new Error('EW canonical package integrity mismatch');
-          const model=runtime.master;
+          const model=runtime.master.canonicalWorkbook;
+          if(!model)throw new Error('EW canonicalWorkbook source model missing');
+          if(!(model.options??[]).length)throw new Error('EW canonicalWorkbook option source rows missing');
           const root=await resolveRuntimeAppProduct('RUNTIME-LIXIL-EW',{}).catch(async()=>{
             const inventory=(await import('./src/catalog/runtime-master/runtime-app-bridge.mjs')).runtimeAppIntegrationInventory();
             const row=inventory.find((x)=>x.manufacturer==='LIXIL'&&x.series==='EW');
@@ -96,6 +98,7 @@ jobs:
             };
             for(const node of nodes)dfs(node);
             const windowOptions=options.filter((row)=>row.window_id==='*'||row.window_id===windowId);
+            if(!windowOptions.length)throw new Error(`EW option source rows missing for ${windowId}`);
             const conditionalIds=new Set(conditional.map((row)=>row.option_id));
             const baseApplicable=windowOptions.filter((row)=>{
               const rel=rows.find((one)=>one.option_id===row.id);
@@ -138,6 +141,7 @@ jobs:
           if(report.exact_head_sha!==process.env.HEAD_SHA)throw new Error('exact head mismatch');
           if(report.target_count!==2)throw new Error('expected two EW target reports');
           if(!report.shape_digest)throw new Error('shape digest missing');
+          for(const row of report.reports??[])if(Number(row.option_source_row_count)<=0)throw new Error(`empty EW option source ${row.window_id}`);
           if(report.unsupported?.length)throw new Error(`unsupported EW option shape: ${JSON.stringify(report.unsupported)}`);
           if(report.source_shape_status!=='SINGLE_PREREQUISITE_DAG_CANDIDATE')throw new Error(`unexpected shape status ${report.source_shape_status}`);
           console.log('EW_OPTION_SHAPE_DIAGNOSTIC_GATE=PASS');
