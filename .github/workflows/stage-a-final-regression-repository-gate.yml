@@ -5,6 +5,7 @@ on:
     branches: [feat/new-construction-runtime-ui-v16-20260910]
     paths:
       - '.github/workflows/stage-a-final-regression-repository-gate.yml'
+      - 'scripts/check-runtime-ui-contracts.mjs'
 
 permissions:
   contents: read
