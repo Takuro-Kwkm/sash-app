@@ -6,6 +6,7 @@
   .reference-shell.reference-shell .reference-hero .reference-hero-copy{padding-top:18px!important;padding-bottom:16px!important}
 }
 @media (min-width:700px) and (max-width:820px){
+  .reference-shell.reference-shell .reference-home .reference-hero{margin-top:28px!important}
   .reference-shell.reference-shell .reference-hero .reference-hero-photo{width:108%!important;flex:0 0 auto!important;align-self:flex-start!important}
   .reference-shell.reference-shell .reference-hero .reference-hero-copy{padding-top:16px!important;padding-bottom:14px!important}
 }
