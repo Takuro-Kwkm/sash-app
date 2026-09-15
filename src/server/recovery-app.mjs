@@ -69,21 +69,21 @@ const designPreviewCss=async(res)=>{
     const base=await readFile(join(webRoot,"design-preview.css"),"utf8");
     const responsive=`
 @media (min-width:821px) and (max-width:1100px){
-  .reference-hero{height:790px!important;background:#eef8fd!important}
-  .reference-hero-photo{content:url("/design-preview-reference-hero.jpg")!important;left:0!important;right:0!important;top:auto!important;bottom:0!important;width:100%!important;height:500px!important;max-width:none!important;object-fit:cover!important;object-position:left center!important;opacity:1!important;transform:none!important}
-  .reference-hero:after{background:linear-gradient(180deg,rgba(238,248,253,1) 0%,rgba(238,248,253,1) 32%,rgba(238,248,253,.92) 33%,rgba(238,248,253,.35) 35%,rgba(238,248,253,0) 37%)!important}
+  .reference-hero{height:820px!important;background:#eef8fd!important}
+  .reference-hero-photo{content:url("/design-preview-reference-hero.jpg")!important;left:0!important;right:0!important;top:auto!important;bottom:0!important;width:100%!important;height:530px!important;max-width:none!important;object-fit:cover!important;object-position:left center!important;opacity:1!important;transform:none!important}
+  .reference-hero:after{top:0!important;left:0!important;right:0!important;bottom:auto!important;height:290px!important;background:#eef8fd!important}
   .reference-hero-copy{width:100%!important;max-width:690px!important;padding:38px 0 0 28px!important}
-  html[data-theme="dark"] .reference-hero:after{background:linear-gradient(180deg,rgba(18,29,39,1) 0%,rgba(18,29,39,1) 32%,rgba(18,29,39,.92) 33%,rgba(18,29,39,.38) 35%,rgba(18,29,39,0) 37%)!important}
+  html[data-theme="dark"] .reference-hero:after{background:#121d27!important}
 }
-@media (min-width:821px) and (max-width:1100px) and (prefers-color-scheme:dark){html[data-theme="system"] .reference-hero:after{background:linear-gradient(180deg,rgba(18,29,39,1) 0%,rgba(18,29,39,1) 32%,rgba(18,29,39,.92) 33%,rgba(18,29,39,.38) 35%,rgba(18,29,39,0) 37%)!important}}
+@media (min-width:821px) and (max-width:1100px) and (prefers-color-scheme:dark){html[data-theme="system"] .reference-hero:after{background:#121d27!important}}
 @media (min-width:700px) and (max-width:820px){
-  .reference-hero{height:790px!important;background:#eef8fd!important}
-  .reference-hero-photo{content:url("/design-preview-reference-hero.jpg")!important;left:0!important;right:0!important;top:auto!important;bottom:0!important;width:100%!important;height:455px!important;max-width:none!important;object-fit:cover!important;object-position:left center!important;opacity:1!important;transform:none!important}
-  .reference-hero:after{background:linear-gradient(180deg,rgba(238,248,253,1) 0%,rgba(238,248,253,1) 38%,rgba(238,248,253,.92) 39%,rgba(238,248,253,.35) 41%,rgba(238,248,253,0) 42.5%)!important}
+  .reference-hero{height:835px!important;background:#eef8fd!important}
+  .reference-hero-photo{content:url("/design-preview-reference-hero.jpg")!important;left:0!important;right:0!important;top:auto!important;bottom:0!important;width:100%!important;height:500px!important;max-width:none!important;object-fit:cover!important;object-position:left center!important;opacity:1!important;transform:none!important}
+  .reference-hero:after{top:0!important;left:0!important;right:0!important;bottom:auto!important;height:335px!important;background:#eef8fd!important}
   .reference-hero-copy{width:100%!important;max-width:none!important;padding:34px 22px 0!important}
-  html[data-theme="dark"] .reference-hero:after{background:linear-gradient(180deg,rgba(18,29,39,1) 0%,rgba(18,29,39,1) 38%,rgba(18,29,39,.93) 39%,rgba(18,29,39,.38) 41%,rgba(18,29,39,0) 42.5%)!important}
+  html[data-theme="dark"] .reference-hero:after{background:#121d27!important}
 }
-@media (min-width:700px) and (max-width:820px) and (prefers-color-scheme:dark){html[data-theme="system"] .reference-hero:after{background:linear-gradient(180deg,rgba(18,29,39,1) 0%,rgba(18,29,39,1) 38%,rgba(18,29,39,.93) 39%,rgba(18,29,39,.38) 41%,rgba(18,29,39,0) 42.5%)!important}}
+@media (min-width:700px) and (max-width:820px) and (prefers-color-scheme:dark){html[data-theme="system"] .reference-hero:after{background:#121d27!important}}
 @media(max-width:699px){.reference-hero-photo{content:url("/design-preview-reference-hero-portrait.jpg")!important;object-position:center center!important}}
 `;
     const body=`${base}${responsive}`;
