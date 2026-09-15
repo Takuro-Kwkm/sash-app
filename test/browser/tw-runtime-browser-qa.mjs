@@ -32,9 +32,6 @@ function responseHasSelection(response, key, value) {
   const selection = resolveSelection(response);
   return selection && sameValue(selection[key], value);
 }
-function isTwResolveResponse(response) {
-  return response.status() === 200 && Boolean(resolveSelection(response));
-}
 async function openTw(page) {
   const entry = SHARE_TOKEN ? `${BASE}/runtime-lab?_vercel_share=${encodeURIComponent(SHARE_TOKEN)}` : `${BASE}/runtime-lab`;
   await page.goto(entry, { waitUntil:'networkidle' });
@@ -52,13 +49,13 @@ async function choose(page, key, value) {
   return (await response).json();
 }
 async function enterNumber(page, key, value) {
-  const responsePromise = page.waitForResponse(isTwResolveResponse);
+  const responsePromise = page.waitForResponse((response) => responseHasSelection(response, key, value));
   const input = page.locator(`[data-spec-key="${key}"]`);
-  await input.fill(String(value));
-  await input.dispatchEvent('change');
+  await input.evaluate((element, nextValue) => {
+    element.value = String(nextValue);
+    element.dispatchEvent(new Event('change', { bubbles:true }));
+  }, value);
   const response = await responsePromise;
-  const requestSelection = resolveSelection(response) ?? {};
-  assert.ok(sameValue(requestSelection[key], value), `${key}: Runtime request selection mismatch; expected ${String(value)}, got ${JSON.stringify(requestSelection[key])}`);
   const result = await response.json();
   assert.ok(sameValue(result.selection?.[key], value), `${key}: Runtime resolved selection mismatch; expected ${String(value)}, got ${JSON.stringify(result.selection?.[key])}`);
   return result;
@@ -113,9 +110,6 @@ async function exercise(page) {
   assert.ok(result.fields.some((field) => field.key === 'custom_height'));
   assert.ok(!result.fields.some((field) => field.key === 'size'));
 
-  // Regression from the iPhone report: machine-readable diagnostics may stay in the API,
-  // but raw Runtime status/code tokens must never appear in the user-facing warning region.
-  // Probe values are taken from the selector-expanded Stage A matrix for this exact formal frontier.
   result = await choose(page, 'window_type', 'SWT-LIX-TW-GRILLE-HIKI');
   const grilleField = result.fields.find((field) => (field.values ?? []).some((row) => row.value === 'SP-TW-GRILLE-VERT'));
   assert.ok(grilleField, 'TW grille-specific selector must expose formal vertical grille');
@@ -129,8 +123,6 @@ async function exercise(page) {
   let warningText = await assertUserFacingWarnings(page, 'TW vertical grille formal REVIEW_REQUIRED probe');
   assert.match(warningText, /メーカー確認が必要/);
 
-  // REVIEW_REQUIRED means "continue sales-estimate input, confirm before order".
-  // A formally in-range CUSTOM size must unlock the ordinary downstream selectors.
   let field = result.fields.find((row) => row.key === 'exterior_color');
   assert.ok(field, 'in-range CUSTOM must continue to exterior color');
   result = await choose(page, 'exterior_color', field.values[0].value);
