@@ -68,6 +68,14 @@ async function chooseIfNeeded(page,result,key,preferred=null){
   if(current!==undefined&&current!==null&&current!=='')return result;
   const candidate=preferred!==null&&hasValue(result,key,preferred)?preferred:firstValue(result,key);
   if(candidate===undefined)return result;
+  const locator=page.locator(`[data-spec-key="${key}"]`);
+  await locator.waitFor();
+  const domValue=await locator.inputValue();
+  if(String(domValue)===String(candidate)){
+    const response=page.waitForResponse((row)=>matchesSelection(row,key,candidate),{timeout:15000});
+    await locator.dispatchEvent('change');
+    return (await response).json();
+  }
   return choose(page,key,candidate);
 }
 
