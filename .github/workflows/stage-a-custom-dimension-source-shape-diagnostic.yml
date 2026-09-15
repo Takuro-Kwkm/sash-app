@@ -8,9 +8,11 @@ on:
       - 'scripts/stage-a-formal-split-custom-guard-shape-diagnostic.mjs'
       - 'scripts/stage-a-custom-dimension-boundary-partition-proof.mjs'
       - 'scripts/stage-a-custom-selector-reachability-diagnostic.mjs'
+      - 'scripts/stage-a-custom-runtime-geometry-equivalence.mjs'
       - '.github/workflows/stage-a-custom-dimension-source-shape-diagnostic.yml'
       - 'src/catalog/runtime-master/**'
       - 'src/catalog/runtime-master-packages/**'
+      - 'src/catalog/dimension-resolver.mjs'
 
 permissions:
   contents: read
@@ -22,7 +24,7 @@ concurrency:
 jobs:
   diagnose:
     runs-on: ubuntu-latest
-    timeout-minutes: 8
+    timeout-minutes: 25
     env:
       HEAD_SHA: ${{ github.event.pull_request.head.sha }}
       STAGE_A_CUSTOM_SHAPE_OUT: artifacts/stage-a-custom-dimension-source-shape
@@ -30,7 +32,10 @@ jobs:
       STAGE_A_CUSTOM_SHAPE_INPUT: artifacts/stage-a-custom-dimension-source-shape/report.json
       STAGE_A_CUSTOM_GUARD_INPUT: artifacts/stage-a-formal-split-custom-guard-shape/report.json
       STAGE_A_CUSTOM_PARTITION_OUT: artifacts/stage-a-custom-dimension-boundary-partition
+      STAGE_A_CUSTOM_PARTITION_INPUT: artifacts/stage-a-custom-dimension-boundary-partition/report.json
       STAGE_A_CUSTOM_REACHABILITY_OUT: artifacts/stage-a-custom-selector-reachability
+      STAGE_A_CUSTOM_REACHABILITY_INPUT: artifacts/stage-a-custom-selector-reachability/report.json
+      STAGE_A_CUSTOM_GEOMETRY_EQ_OUT: artifacts/stage-a-custom-runtime-geometry-equivalence
     steps:
       - name: Checkout exact PR HEAD
         uses: actions/checkout@v4
@@ -55,6 +60,7 @@ jobs:
           node --check scripts/stage-a-formal-split-custom-guard-shape-diagnostic.mjs
           node --check scripts/stage-a-custom-dimension-boundary-partition-proof.mjs
           node --check scripts/stage-a-custom-selector-reachability-diagnostic.mjs
+          node --check scripts/stage-a-custom-runtime-geometry-equivalence.mjs
           echo 'CUSTOM_PROOF_SCRIPT_SYNTAX_GATE=PASS'
       - name: Inventory formal CUSTOM dimension rule shapes
         shell: bash
@@ -80,8 +86,11 @@ jobs:
           if(r.source_shape_status!=='CUSTOM_SOURCE_SHAPE_INVENTORIED')throw new Error(`shape status=${r.source_shape_status}`);
           if(g.status!=='PASS'||g.rule_count!==54)throw new Error(`guard shape=${g.status} rules=${g.rule_count}`);
           if(!r.evidence_digest||!g.evidence_digest)throw new Error('evidence digest missing');
+          const unpartitioned=(r.series??[]).flatMap(s=>(s.rules??[]).filter(x=>['POLYGON','PIECEWISE'].includes(x.type)).map(x=>`${s.series}:${x.id}:${x.type}`));
+          if(unpartitioned.length)throw new Error(`CURRENT_PARTITION_MODEL_MISSING_INTERNAL_BOUNDARIES ${JSON.stringify(unpartitioned)}`);
           console.log(`CUSTOM_SOURCE_SHAPE_GATE=PASS rules=${r.total_custom_rule_count} explicit_windows=${r.total_explicit_custom_window_id_count}`);
           console.log(`FORMAL_SPLIT_CUSTOM_GUARD_SHAPE_GATE=PASS rules=${g.rule_count} components=${g.component_count} unbounded_review=${g.unbounded_review_rule_count}`);
+          console.log('CUSTOM_PARTITION_INTERNAL_TYPE_GATE=PASS');
           NODE
       - name: Build exact CUSTOM boundary partition
         shell: bash
@@ -124,7 +133,26 @@ jobs:
           if(!r.evidence_digest)throw new Error('reachability digest missing');
           console.log(`CUSTOM_SELECTOR_REACHABILITY_GATE=PASS contexts=${r.unique_context_count} rules=${memberships}`);
           console.log(`CUSTOM_SELECTOR_REACHABILITY_DIGEST=${r.evidence_digest}`);
-          console.log('CUSTOM_SIZE_COVERAGE_GATE=BLOCKED_RUNTIME_GEOMETRY_EQUIVALENCE_PENDING');
+          NODE
+      - name: Prove full Runtime geometry equivalence
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/stage-a-custom-runtime-geometry-equivalence.mjs
+      - name: Validate Runtime geometry equivalence evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import { readFileSync } from 'node:fs';
+          const r=JSON.parse(readFileSync(`${process.env.STAGE_A_CUSTOM_GEOMETRY_EQ_OUT}/report.json`,'utf8'));
+          if(r.exact_head_sha!==process.env.HEAD_SHA)throw new Error('geometry exact head mismatch');
+          if(r.source_rule_count!==152||r.window_count!==92)throw new Error(`geometry cardinality drift rules=${r.source_rule_count} windows=${r.window_count}`);
+          if(r.mismatch_count!==0||r.status!=='PASS')throw new Error(`runtime geometry mismatches=${r.mismatch_count}`);
+          if(!r.evidence_digest)throw new Error('geometry evidence digest missing');
+          console.log(`CUSTOM_RUNTIME_GEOMETRY_EQUIVALENCE_GATE=PASS windows=${r.window_count} contexts=${r.selector_context_count} rules=${r.source_rule_count} classes=${r.arrangement_proof_class_count} triplets=${r.boundary_triplet_count} witnesses=${r.witness_evaluation_count} calls=${r.resolver_call_count}`);
+          console.log(`CUSTOM_RUNTIME_GEOMETRY_EQUIVALENCE_DIGEST=${r.evidence_digest}`);
+          console.log('CUSTOM_SIZE_COVERAGE_GATE=PASS_GEOMETRY_EQUIVALENCE_ONLY_TRANSITION_PROOF_PENDING');
           console.log('APP_INTEGRATION_READY=false');
           console.log('RELEASE_INPUT_GATE=BLOCKED');
           NODE
@@ -138,4 +166,5 @@ jobs:
             artifacts/stage-a-formal-split-custom-guard-shape/
             artifacts/stage-a-custom-dimension-boundary-partition/
             artifacts/stage-a-custom-selector-reachability/
+            artifacts/stage-a-custom-runtime-geometry-equivalence/
           if-no-files-found: error
