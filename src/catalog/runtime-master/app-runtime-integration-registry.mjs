@@ -55,6 +55,25 @@ export const appRuntimeIntegrationRegistry = Object.freeze([
     adapterType: 'UCHIRIMO_TABULAR_V1',
     uiStandardSpec: 'サッシ情報管理アプリ_UI実装標準仕様書_v1.6',
   }),
+  Object.freeze({
+    id: 'SER-YKKAP-INNOVEST',
+    manufacturer: 'YKK AP',
+    series: 'イノベスト',
+    displayName: 'イノベスト',
+    productCategory: 'door',
+    uiCategory: 'NEW_CONSTRUCTION_ENTRY_DOOR',
+    registrySeriesKey: 'YKK AP::イノベスト',
+    canonicalRuntimeReference: Object.freeze({
+      runtimeManifestDriveFileId: '1oVKdg3j2YlNEWhBZSqGJl0S7kD5tayox',
+      runtimePackageDriveFileId: '1x1PosnI6EAhNI46mIDLlaFZKf1q9I4mz',
+      canonicalFolderId: '16LcZTr2SOSMWA8SG6-YJbGcj2Egn19Df',
+    }),
+    packageVersion: 'v1.0.1',
+    schemaVersion: '1.0',
+    sourceHash: '6f47677023212228d1132407c9fce8ccd9d407c65fd19cbb9e1507f1845b287d',
+    adapterType: 'INNOVEST_FLAT_JSON_V1',
+    uiStandardSpec: 'サッシ情報管理アプリ_UI実装標準仕様書_v1.7',
+  }),
 ]);
 
 export function getAppRuntimeIntegrationMetadata(manufacturer, series) {

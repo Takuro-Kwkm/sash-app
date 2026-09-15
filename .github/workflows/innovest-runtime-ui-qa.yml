@@ -1,0 +1,55 @@
+name: Innovest Runtime UI QA
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'src/catalog/runtime-master/**'
+      - 'src/runtime-master-packages/ykkap-innovest-v1.0.1/**'
+      - 'src/ui/web/**'
+      - 'src/server/**'
+      - 'test/76*-innovest*.test.mjs'
+      - 'test/browser/innovest-runtime-browser-qa.mjs'
+      - '.github/workflows/innovest-runtime-ui-qa.yml'
+
+jobs:
+  innovest_runtime_ui_qa:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Install
+        run: npm install --ignore-scripts
+      - name: Syntax checks
+        run: |
+          node --check src/catalog/runtime-master/formal-flat-json-runtime-loader.mjs
+          node --check src/catalog/runtime-master/innovest-flat-json-v1-adapter.mjs
+          node --check src/catalog/runtime-master/innovest-flat-json-v1-model.mjs
+          node --check src/catalog/runtime-master/innovest-flat-json-v1-resolver.mjs
+          node --check src/catalog/runtime-master/innovest-option-requirement-resolver.mjs
+          node --check test/browser/innovest-runtime-browser-qa.mjs
+      - name: Innovest targeted integration gate
+        run: node --test test/76-runtime-ui-innovest-gate.test.mjs test/76b-innovest-option-requirements.test.mjs
+      - name: Install browser QA dependencies
+        run: |
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+      - name: Innovest Desktop and Smartphone browser QA
+        run: |
+          npm run start:qa > /tmp/sash-innovest-browser.log 2>&1 &
+          PID=$!
+          trap 'kill $PID || true' EXIT
+          for i in {1..40}; do
+            if curl -fsS http://127.0.0.1:4173/api/health >/dev/null; then break; fi
+            sleep 0.5
+          done
+          node test/browser/innovest-runtime-browser-qa.mjs
+      - name: Upload Innovest QA artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: innovest-runtime-ui-qa
+          path: artifacts/innovest-runtime-browser-qa/
+          if-no-files-found: warn

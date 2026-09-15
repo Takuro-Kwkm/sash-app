@@ -1,0 +1,198 @@
+{
+  "schema": "product-master-runtime-manifest/v1",
+  "manufacturer": "YKK AP",
+  "series": "イノベスト",
+  "registry_series_key": "YKK AP::イノベスト",
+  "package_version": "v1.0.1",
+  "runtime_status": "FORMAL_RUNTIME_PASS",
+  "generated_at": "2026-09-15T04:58:00Z",
+  "source_authoring_file": "YKKAP_イノベスト_AUTHORING_MASTER_v1.0.1_FORMAL.xlsx",
+  "source_authoring_sha256": "dc3f1ae42cdd2421aa680e71edf25df5d836d41e00d18454fdf81e450345bd80",
+  "required_capabilities": [
+    "selectors",
+    "visibility",
+    "required",
+    "allowed_values",
+    "dependency",
+    "standard_size",
+    "custom_size",
+    "invalid_conditions",
+    "derived_values",
+    "manual_check",
+    "review_required",
+    "price",
+    "lifecycle",
+    "structured_option_predicates"
+  ],
+  "entrypoints": {
+    "selectors": "selectors.json",
+    "master_data": "master_data.json",
+    "dependencies": "dependencies.json",
+    "order_code_rules": "order_code_rules.json",
+    "prices": "prices.json",
+    "options": "options.json",
+    "evidence": "evidence.json",
+    "qa": "qa.json",
+    "authoring_snapshot": "authoring_snapshot.json"
+  },
+  "files": [
+    {
+      "name": "selectors.json",
+      "sha256": "e77e99df776ad581e2c7e4c18509b72350bfc8cefb0473cb66f01a9ac54659e6",
+      "size_bytes": 28652
+    },
+    {
+      "name": "master_data.json",
+      "sha256": "94ff25e62382bba5e592766a121477b8bf252eef9b0782617761c4bdadb8562f",
+      "size_bytes": 837418
+    },
+    {
+      "name": "dependencies.json",
+      "sha256": "da71879edf760a34ab66fedaa351b1c1301f00150e877e5721bbd382d14f81be",
+      "size_bytes": 29234
+    },
+    {
+      "name": "order_code_rules.json",
+      "sha256": "0352fb6d522a63c4e230bfc056020c9fcfb3ae06a0bb608a6491a6648a325dab",
+      "size_bytes": 6209
+    },
+    {
+      "name": "prices.json",
+      "sha256": "87989a7e043a0a8ac965aa22a828a6a7e01248c24438e29c0dbdf5458a9a5c6f",
+      "size_bytes": 115870
+    },
+    {
+      "name": "options.json",
+      "sha256": "b2208e734c84e1acee06b75e8ba803e5400d74cfda124cec57aaa1bedcdaeca7",
+      "size_bytes": 136849
+    },
+    {
+      "name": "evidence.json",
+      "sha256": "237ab8c4f40645e3a15d8aa3cbd02de136f09f2b8fcc1ae2242a0a5f4d8cc915",
+      "size_bytes": 10136
+    },
+    {
+      "name": "qa.json",
+      "sha256": "1cd1cf3c6ab202c8454fe6e4da574aaa43f6e167fc249c09e990a45efcb29622",
+      "size_bytes": 24711
+    },
+    {
+      "name": "authoring_snapshot.json",
+      "sha256": "ac4f69740bcd175a2a0a2651a0dab160bb8eec39fb8b102f3ef2907456661490",
+      "size_bytes": 1182966
+    }
+  ],
+  "file_count_excluding_manifest": 9,
+  "gates": {
+    "CONTENT": "PASS",
+    "DEPENDENCY": "PASS",
+    "QA": "PASS",
+    "ARTIFACT_PACKAGE": "PASS",
+    "STORAGE": "PASS",
+    "REGISTRY": "PASS"
+  },
+  "review_required": [
+    {
+      "field": "lifecycle.N66N.order_deadline",
+      "reason": "YKK AP official source does not publish an order deadline or successor as of 2026-09-15",
+      "blocking": false
+    },
+    {
+      "field": "options.OPT-005.PARENT_CHILD_RECESSED",
+      "reason": "p48 provides nominal 4.5尺 and cut-to-size note but does not explicitly name the recessed-parent-child opening",
+      "blocking": false
+    },
+    {
+      "field": "option component colors for unmapped new/fire colors",
+      "reason": "p48-49/p53 tables do not provide every current frame-color-to-component-color mapping",
+      "blocking": false
+    }
+  ],
+  "optional_capabilities": [
+    "order_code_partial"
+  ],
+  "revision_reason": "GitHub issue #36 product-master defect corrected; R2 symbolic QA 78/78 runtime-selectable options reachable",
+  "schema_version": "1.0",
+  "master_status": "FORMAL_PASS",
+  "formal_pass": true,
+  "authoring_mode": "AUTHORING_MASTER",
+  "authoring_file_name": "YKKAP_イノベスト_AUTHORING_MASTER_v1.0.1_FORMAL.xlsx",
+  "authoring_file_id": "13SxHylQ50JJiPXOQ7_qpmQkkvHyYBt7t",
+  "runtime_package_file_name": "YKKAP_イノベスト_RUNTIME_PACKAGE_v1.0.1.zip",
+  "runtime_package_file_id": "1x1PosnI6EAhNI46mIDLlaFZKf1q9I4mz",
+  "documentation_file": {
+    "file_name": "PRODUCT_MASTER_MANIFEST.md",
+    "file_id": "1_ZR7KAavUh2_S3TwbToEKdLh8eYCOfgt"
+  },
+  "documentation_file_id": "1_ZR7KAavUh2_S3TwbToEKdLh8eYCOfgt",
+  "storage_status": "DRIVE_CANONICAL",
+  "package_gate": "PASS",
+  "storage_gate": "PASS",
+  "registry_gate": "PASS",
+  "canonical_folder_id": "16LcZTr2SOSMWA8SG6-YJbGcj2Egn19Df",
+  "runtime_files": [
+    {
+      "role": "SELECTORS",
+      "file_name": "selectors.json",
+      "package_member": true,
+      "sha256": "e77e99df776ad581e2c7e4c18509b72350bfc8cefb0473cb66f01a9ac54659e6",
+      "size_bytes": 28652
+    },
+    {
+      "role": "MASTER_DATA",
+      "file_name": "master_data.json",
+      "package_member": true,
+      "sha256": "94ff25e62382bba5e592766a121477b8bf252eef9b0782617761c4bdadb8562f",
+      "size_bytes": 837418
+    },
+    {
+      "role": "DEPENDENCIES",
+      "file_name": "dependencies.json",
+      "package_member": true,
+      "sha256": "da71879edf760a34ab66fedaa351b1c1301f00150e877e5721bbd382d14f81be",
+      "size_bytes": 29234
+    },
+    {
+      "role": "ORDER_CODE_RULES",
+      "file_name": "order_code_rules.json",
+      "package_member": true,
+      "sha256": "0352fb6d522a63c4e230bfc056020c9fcfb3ae06a0bb608a6491a6648a325dab",
+      "size_bytes": 6209
+    },
+    {
+      "role": "PRICES",
+      "file_name": "prices.json",
+      "package_member": true,
+      "sha256": "87989a7e043a0a8ac965aa22a828a6a7e01248c24438e29c0dbdf5458a9a5c6f",
+      "size_bytes": 115870
+    },
+    {
+      "role": "OPTIONS",
+      "file_name": "options.json",
+      "package_member": true,
+      "sha256": "b2208e734c84e1acee06b75e8ba803e5400d74cfda124cec57aaa1bedcdaeca7",
+      "size_bytes": 136849
+    },
+    {
+      "role": "EVIDENCE",
+      "file_name": "evidence.json",
+      "package_member": true,
+      "sha256": "237ab8c4f40645e3a15d8aa3cbd02de136f09f2b8fcc1ae2242a0a5f4d8cc915",
+      "size_bytes": 10136
+    },
+    {
+      "role": "QA",
+      "file_name": "qa.json",
+      "package_member": true,
+      "sha256": "1cd1cf3c6ab202c8454fe6e4da574aaa43f6e167fc249c09e990a45efcb29622",
+      "size_bytes": 24711
+    },
+    {
+      "role": "AUTHORING_SNAPSHOT",
+      "file_name": "authoring_snapshot.json",
+      "package_member": true,
+      "sha256": "ac4f69740bcd175a2a0a2651a0dab160bb8eec39fb8b102f3ef2907456661490",
+      "size_bytes": 1182966
+    }
+  ]
+}
