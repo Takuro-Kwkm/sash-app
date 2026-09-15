@@ -49,18 +49,24 @@ function normalizedRule(rule,sourceKind){
   const bounds=boundsOf(rule);
   const points=collectPoints(rule);
   const regions=collectRegions(rule);
-  const type=typeOf(rule,sourceKind);
+  const sourceJudgeCode=typeOf(rule,sourceKind);
+  const type=sourceKind==='APW431_FORMAL_SPLIT_V1'?'APW431_AFFINE_BOUNDS':sourceJudgeCode;
   const geometryKeys=Object.keys(rule?.geometryRule??{}).sort();
   const ratio=num(rule?.ratio??rule?.geometryRule?.ratio);
+  const upperA=sourceKind==='APW431_FORMAL_SPLIT_V1'?num(rule?.bounds?.H_upper_a):null;
+  const upperB=sourceKind==='APW431_FORMAL_SPLIT_V1'?num(rule?.bounds?.H_upper_b):null;
   const axisConstants=uniq([bounds.minW,bounds.maxW,bounds.minH,bounds.maxH,...regions.flat(),...points.flat()]).filter(Number.isFinite).sort((a,b)=>a-b);
   return {
-    id:String(rule?.id??rule?.range_id??rule?.rule_id??`${sourceKind}:${windowIdOf(rule)}:${type}`),
+    id:String(rule?.id??rule?.range_id??rule?.rule_id??`${sourceKind}:${windowIdOf(rule)}:${sourceJudgeCode}`),
     source_kind:sourceKind,
     window_id:String(windowIdOf(rule)),
     type,
+    source_judge_code:sourceKind==='APW431_FORMAL_SPLIT_V1'?sourceJudgeCode:null,
     selector:selectorSummary(rule),
     bounds,
     ratio,
+    upper_a:upperA,
+    upper_b:upperB,
     regions,
     points,
     geometry_keys:geometryKeys,
@@ -124,21 +130,27 @@ async function extractSeries(manufacturer,series){
     rules=(runtime?.master?.customDimensionRules??[]).filter(active).map((r)=>normalizedRule(r,'TW_CUSTOM_DIMENSION_RULES'));
   }else throw new Error(`Unsupported adapter for CUSTOM shape ${entry.adapterType}`);
 
-  const supportedTypes=new Set(['AUTO_RECT','AUTO_RATIO','AUTO_PIECEWISE','AUTO_POLYGON','SOURCE_GRAPH_GATE','COMPOUND_GATE','RECT_RANGE','REVIEW_REQUIRED','SOURCE_GRAPH','POLYGON','PIECEWISE']);
+  const supportedTypes=new Set(['AUTO_RECT','AUTO_RATIO','AUTO_PIECEWISE','AUTO_POLYGON','SOURCE_GRAPH_GATE','COMPOUND_GATE','RECT_RANGE','REVIEW_REQUIRED','SOURCE_GRAPH','POLYGON','PIECEWISE','APW431_AFFINE_BOUNDS']);
   const unsupported=[];
   for(const r of rules){
     if(!supportedTypes.has(r.type))unsupported.push({rule_id:r.id,reason:'UNKNOWN_RULE_TYPE',type:r.type});
     if(['AUTO_RECT','AUTO_RATIO','AUTO_PIECEWISE'].includes(r.type)&&![r.bounds.minW,r.bounds.maxW,r.bounds.minH,r.bounds.maxH].some(Number.isFinite)&&!r.regions.length)unsupported.push({rule_id:r.id,reason:'MISSING_NUMERIC_BOUNDARY'});
     if(r.type==='AUTO_POLYGON'&&!r.points.length)unsupported.push({rule_id:r.id,reason:'POLYGON_POINTS_MISSING'});
     if(r.type==='AUTO_RATIO'&&!Number.isFinite(r.ratio))unsupported.push({rule_id:r.id,reason:'RATIO_MISSING'});
+    if(r.type==='APW431_AFFINE_BOUNDS'){
+      if(![r.bounds.minW,r.bounds.maxW,r.bounds.minH,r.bounds.maxH].every(Number.isFinite))unsupported.push({rule_id:r.id,reason:'APW431_RECT_BOUNDS_INCOMPLETE',bounds:r.bounds,judge_code:r.source_judge_code});
+      const hasA=Number.isFinite(r.upper_a),hasB=Number.isFinite(r.upper_b);
+      if(hasA!==hasB)unsupported.push({rule_id:r.id,reason:'AFFINE_COEFFICIENT_PAIR_INCOMPLETE',upper_a:r.upper_a,upper_b:r.upper_b,judge_code:r.source_judge_code});
+    }
   }
   const typeCounts={};for(const r of rules)typeCounts[r.type]=(typeCounts[r.type]??0)+1;
+  const sourceJudgeCounts={};for(const r of rules)if(r.source_judge_code)sourceJudgeCounts[r.source_judge_code]=(sourceJudgeCounts[r.source_judge_code]??0)+1;
   const windowIds=uniq(rules.map((r)=>r.window_id)).sort();
   const boundaryConstants=uniq(rules.flatMap((r)=>r.axis_constants)).filter(Number.isFinite).sort((a,b)=>a-b);
   return {
     manufacturer,series,adapter_type:entry.adapterType,manifest_sha256:entry.runtimeManifestSha256??null,
     custom_rule_count:rules.length,custom_window_id_count:windowIds.length,custom_window_ids:windowIds,
-    type_counts:typeCounts,boundary_constant_count:boundaryConstants.length,boundary_constants:boundaryConstants,
+    type_counts:typeCounts,source_judge_code_counts:sourceJudgeCounts,boundary_constant_count:boundaryConstants.length,boundary_constants:boundaryConstants,
     unsupported_count:unsupported.length,unsupported,rules,
     series_shape_digest:hash({manifest:entry.runtimeManifestSha256,rules}),
   };
@@ -149,7 +161,7 @@ const series=[];for(const [m,s] of TARGETS)series.push(await extractSeries(m,s))
 const unsupported=series.flatMap((s)=>s.unsupported.map((u)=>({series:s.series,...u})));
 const report={
   exact_head_sha:HEAD_SHA,task_classification:'NON-PRODUCT-MASTER',product_master_mutation:0,
-  proof_model_version:'RUNTIME_UI_SYMBOLIC_FULL_COVERAGE_V1',diagnostic_model_version:'STAGE_A_CUSTOM_DIMENSION_SOURCE_SHAPE_V1',
+  proof_model_version:'RUNTIME_UI_SYMBOLIC_FULL_COVERAGE_V1',diagnostic_model_version:'STAGE_A_CUSTOM_DIMENSION_SOURCE_SHAPE_V2_APW431_AFFINE',
   series_count:series.length,total_custom_rule_count:series.reduce((n,s)=>n+s.custom_rule_count,0),
   total_explicit_custom_window_id_count:new Set(series.flatMap((s)=>s.custom_window_ids.map((w)=>`${s.series}:${w}`))).size,
   unsupported_count:unsupported.length,unsupported,series,
@@ -158,7 +170,7 @@ const report={
 report.evidence_digest=hash({head:HEAD_SHA,series:series.map((s)=>({series:s.series,manifest:s.manifest_sha256,digest:s.series_shape_digest}))});
 report.gate_status={discrete_population_gate:'PASS_EVIDENCE_EXTERNAL',custom_size_coverage_gate:'BLOCKED_PARTITION_PROOF_NOT_YET_RUN',qa_population_gate:'BLOCKED_CONTINUOUS_CUSTOM_PROOF_PENDING',app_integration_ready:false,release_input_gate:'BLOCKED'};
 await writeFile(`${OUT}/report.json`,JSON.stringify(report,null,2)+'\n','utf8');
-for(const s of series)console.log(`CUSTOM_SHAPE series=${s.series} adapter=${s.adapter_type} rules=${s.custom_rule_count} windows=${s.custom_window_id_count} types=${JSON.stringify(s.type_counts)} boundaries=${s.boundary_constant_count} unsupported=${s.unsupported_count}`);
+for(const s of series)console.log(`CUSTOM_SHAPE series=${s.series} adapter=${s.adapter_type} rules=${s.custom_rule_count} windows=${s.custom_window_id_count} types=${JSON.stringify(s.type_counts)} judge_codes=${JSON.stringify(s.source_judge_code_counts)} boundaries=${s.boundary_constant_count} unsupported=${s.unsupported_count}`);
 console.log(`CUSTOM_SOURCE_SHAPE_STATUS=${report.source_shape_status}`);
 console.log(`TOTAL_CUSTOM_RULE_COUNT=${report.total_custom_rule_count}`);
 console.log(`TOTAL_EXPLICIT_CUSTOM_WINDOW_ID_COUNT=${report.total_explicit_custom_window_id_count}`);
