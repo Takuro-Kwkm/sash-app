@@ -20,9 +20,9 @@ async function complete(seed, preferences = {}) {
   throw new Error('Uchirimo representative configuration did not converge');
 }
 
-test('initial inner-window flow starts with semantic fields and fixed custom-size state', async () => {
+test('initial inner-window flow follows v1.8 global OPENING then CONFIGURATION stage order', async () => {
   const result = await resolveRuntimeAppProduct(PRODUCT, {});
-  assert.deepEqual(result.fields.map((row) => row.key), ['room_specification', 'window_type', 'size_mode']);
+  assert.deepEqual(result.fields.map((row) => row.key), ['window_type', 'room_specification', 'size_mode']);
   assert.deepEqual(values(result, 'room_specification'), ['residential', 'bathroom']);
   assert.deepEqual(values(result, 'window_type'), ['sliding_window', 'fix_window', 'inward_opening_window', 'opening_window_terrace']);
   assert.deepEqual(values(result, 'size_mode'), ['custom']);
@@ -52,10 +52,10 @@ test('Low-E block, spacer and cavity are separate Runtime dependencies', async (
   assert.equal(field(result, 'gas_fill'), undefined);
 });
 
-test('v1.6 anchor order remains glass, Low-E, spacer, cavity, color, frame and custom size', async () => {
+test('v1.8 global order keeps configuration and size before finish/glazing/installation', async () => {
   const result = await resolveRuntimeAppProduct(PRODUCT, { ...baseNode, glass_family: 'insulating_glass', glass_structure: 'P3P3', low_e_type: 'insulating' });
   const order = result.fields.map((row) => row.key);
-  for (const [a, b] of [['window_type','glass_family'],['glass_family','low_e_type'],['low_e_type','spacer_type'],['spacer_type','gas_fill'],['gas_fill','frame_color'],['frame_color','frame_installation_mode'],['frame_installation_mode','size_mode']]) assert.ok(order.indexOf(a) < order.indexOf(b), `${a} before ${b}`);
+  for (const [a, b] of [['window_type','room_specification'],['room_specification','size_mode'],['size_mode','frame_color'],['frame_color','glass_family'],['glass_family','low_e_type'],['low_e_type','spacer_type'],['spacer_type','gas_fill'],['gas_fill','frame_installation_mode']]) assert.ok(order.indexOf(a) < order.indexOf(b), `${a} before ${b}`);
 });
 
 test('bathroom dependency exposes only formal colors and clears stale residential color', async () => {
