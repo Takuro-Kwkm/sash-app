@@ -17,140 +17,18 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  count:
+  superseded_gate:
     runs-on: ubuntu-latest
-    timeout-minutes: 12
-    strategy:
-      fail-fast: false
-      matrix:
-        shard: [0,1,2,3,4,5,6,7,8,9,10,11]
-    env:
-      HEAD_SHA: ${{ github.event.pull_request.head.sha }}
-      STAGE_A_SHARD_TOTAL: 12
-      STAGE_A_SHARD_INDEX: ${{ matrix.shard }}
-      STAGE_A_MAX_MEMO_STATES_PER_WINDOW: 5000
-      STAGE_A_RULE_SENSITIVE_OUT: artifacts/stage-a-rule-sensitive-weighted-state-count/shard-${{ matrix.shard }}
+    timeout-minutes: 2
     steps:
-      - name: Checkout exact PR HEAD
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}
-          fetch-depth: 1
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 24
-
-      - name: Exact SHA gate
+      - name: Close superseded rule-sensitive route
         shell: bash
         run: |
           set -euo pipefail
-          actual="$(git rev-parse HEAD)"
-          test "$actual" = "$HEAD_SHA"
-          echo "EXACT_HEAD_GATE=PASS sha=$actual shard=$STAGE_A_SHARD_INDEX/$STAGE_A_SHARD_TOTAL"
-
-      - name: Count with rule-sensitive dependency closure
-        shell: bash
-        run: |
-          set -euo pipefail
-          echo "DIAGNOSTIC_MEMO_STATE_LIMIT=$STAGE_A_MAX_MEMO_STATES_PER_WINDOW"
-          node scripts/stage-a-rule-sensitive-weighted-state-count-candidate.mjs | tee /tmp/stage-a-rule-sensitive-${STAGE_A_SHARD_INDEX}.log
-
-      - name: Upload shard evidence
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: stage-a-rule-sensitive-weighted-state-count-${{ matrix.shard }}
-          path: |
-            artifacts/stage-a-rule-sensitive-weighted-state-count/shard-${{ matrix.shard }}/report.json
-            /tmp/stage-a-rule-sensitive-${{ matrix.shard }}.log
-          if-no-files-found: warn
-
-  aggregate:
-    needs: count
-    if: always() && needs.count.result == 'success'
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    env:
-      HEAD_SHA: ${{ github.event.pull_request.head.sha }}
-      DIAGNOSTIC_MEMO_STATE_LIMIT: 5000
-    steps:
-      - uses: actions/download-artifact@v4
-        with:
-          pattern: stage-a-rule-sensitive-weighted-state-count-*
-          path: artifacts/shards
-
-      - name: Aggregate rule-sensitive candidate evidence
-        shell: bash
-        run: |
-          set -euo pipefail
-          mkdir -p artifacts/stage-a-rule-sensitive-weighted-state-count
-          node - <<'NODE'
-          const fs=require('fs'),path=require('path');
-          const walk=(dir)=>fs.readdirSync(dir,{withFileTypes:true}).flatMap((entry)=>entry.isDirectory()?walk(path.join(dir,entry.name)):[path.join(dir,entry.name)]);
-          const files=walk('artifacts/shards').filter((file)=>file.endsWith('/report.json')).sort();
-          if(files.length!==12)throw new Error(`expected 12 reports, got ${files.length}`);
-          const shards=files.map((file)=>JSON.parse(fs.readFileSync(file,'utf8'))).sort((a,b)=>a.shard_index-b.shard_index);
-          for(let i=0;i<12;i++){
-            if(shards[i].shard_index!==i)throw new Error(`missing shard ${i}`);
-            if(shards[i].exact_head_sha!==process.env.HEAD_SHA)throw new Error(`head mismatch shard ${i}`);
-          }
-          const sum=(key)=>shards.reduce((n,row)=>n+Number(row[key]??0),0);
-          const nestedSum=(parent,key)=>shards.reduce((n,row)=>n+Number(row[parent]?.[key]??0),0);
-          const bigSumNullable=(key)=>shards.some((row)=>row[key]===null||row[key]===undefined)?null:shards.reduce((n,row)=>n+BigInt(row[key]),0n).toString();
-          const report={
-            exact_head_sha:process.env.HEAD_SHA,
-            task_classification:'NON-PRODUCT-MASTER',product_master_mutation:0,
-            proof_status:shards.every((row)=>row.proof_status==='RULE_SENSITIVE_WEIGHTED_COUNT_CANDIDATE')?'RULE_SENSITIVE_WEIGHTED_COUNT_CANDIDATE':'CANDIDATE_BLOCKED',
-            proof_basis:'SOURCE_RULE_SELECTOR_CLOSURE_PLUS_EXACT_RUNTIME_BRANCH_RESOLUTION',
-            diagnostic_memo_state_limit:Number(process.env.DIAGNOSTIC_MEMO_STATE_LIMIT),
-            shard_total:12,
-            base_window_count:sum('base_window_count'),
-            counted_window_count:sum('counted_window_count'),
-            blocked_window_count:sum('blocked_window_count'),
-            contract_inconsistency_count:sum('contract_inconsistency_count'),
-            exact_discrete_terminal_context_count:bigSumNullable('exact_discrete_terminal_context_count'),
-            custom_pending_context_count:bigSumNullable('custom_pending_context_count'),
-            memo_state_count:sum('memo_state_count'),memo_hit_count:sum('memo_hit_count'),compression_collision_count:sum('compression_collision_count'),resolver_call_count:sum('resolver_call_count'),
-            tw_proof_cache:{context_keys:nestedSum('tw_proof_cache','context_keys'),hit_count:nestedSum('tw_proof_cache','hit_count'),miss_count:nestedSum('tw_proof_cache','miss_count'),pair_checks_executed:nestedSum('tw_proof_cache','pair_checks_executed')},
-            windows:shards.flatMap((row)=>row.windows),
-            blockers:shards.flatMap((row)=>row.blockers??[]),
-            contract_inconsistencies:shards.flatMap((row)=>row.contract_inconsistencies??[]),
-            symbolic_frontiers:shards.flatMap((row)=>row.symbolic_frontiers??[]),
-          };
-          if(report.base_window_count!==105)throw new Error(`BASE_WINDOW_COUNT=${report.base_window_count}`);
-          const bySeries={};
-          for(const row of report.windows){
-            bySeries[row.series]??={windows:0,counted:0,blocked:0,terminal:'0',custom:'0',memo_limit_blocked:0,contract_inconsistent:0};
-            const t=bySeries[row.series];t.windows+=1;
-            if(row.status==='COUNTED_CANDIDATE'){
-              t.counted+=1;
-              t.terminal=(BigInt(t.terminal)+BigInt(row.exact_discrete_terminal_context_count)).toString();
-              t.custom=(BigInt(t.custom)+BigInt(row.custom_pending_context_count)).toString();
-            } else {
-              t.blocked+=1;
-              if(row.blocker?.status==='MEMO_STATE_LIMIT_REACHED')t.memo_limit_blocked+=1;
-              if(row.blocker?.status==='RULE_SENSITIVE_CONTRACT_INCONSISTENT')t.contract_inconsistent+=1;
-            }
-          }
-          report.series_summary=bySeries;
-          report.next_blocker=report.contract_inconsistency_count>0?'RULE_SENSITIVE_CONTRACT_INCONSISTENT':report.blockers.some((row)=>row.status==='MEMO_STATE_LIMIT_REACHED')?'RULE_SENSITIVE_COMPRESSION_MODEL_REQUIRED':report.blocked_window_count>0?'RULE_SENSITIVE_COUNTER_BLOCKERS_REMAIN':report.custom_pending_context_count!=='0'?'CUSTOM_CONTINUOUS_PARTITION_PROOF_REQUIRED':'GOVERNING_PROMOTION_AND_BROWSER_EQUIVALENCE';
-          report.gate_status={exhaustive_state_graph_gate:'BLOCKED_DIAGNOSTIC_ONLY',qa_population_gate:'BLOCKED_DIAGNOSTIC_ONLY',full_browser_qa_gate:'NOT_STARTED',app_integration_ready:false,release_input_gate:'BLOCKED'};
-          fs.writeFileSync('artifacts/stage-a-rule-sensitive-weighted-state-count/report.json',JSON.stringify(report,null,2)+'\n');
-          console.log(`RULE_SENSITIVE_COUNT_STATUS=${report.proof_status}`);
-          console.log(`BASE_WINDOW_COUNT=${report.base_window_count}`);
-          console.log(`COUNTED_WINDOW_COUNT=${report.counted_window_count}`);
-          console.log(`BLOCKED_WINDOW_COUNT=${report.blocked_window_count}`);
-          console.log(`CONTRACT_INCONSISTENCY_COUNT=${report.contract_inconsistency_count}`);
-          console.log(`DIAGNOSTIC_MEMO_STATE_LIMIT=${report.diagnostic_memo_state_limit}`);
-          console.log(`SERIES_SUMMARY=${JSON.stringify(report.series_summary)}`);
-          console.log(`NEXT_BLOCKER=${report.next_blocker}`);
-          console.log('APP_INTEGRATION_READY=false');
-          console.log('RELEASE_INPUT_GATE=BLOCKED');
-          NODE
-
-      - uses: actions/upload-artifact@v4
-        with:
-          name: stage-a-rule-sensitive-weighted-state-count-summary
-          path: artifacts/stage-a-rule-sensitive-weighted-state-count/report.json
-          if-no-files-found: error
+          echo "RULE_SENSITIVE_WEIGHTED_PATH=CLOSED"
+          echo "CLOSE_REASON=DEPENDENCY_CONTRACT_FALSE_INCONSISTENCIES_AND_12_MINUTE_SHARD_TIMEOUTS"
+          echo "DIAGNOSTIC_EVIDENCE_RUN=34916607742"
+          echo "SUPERSEDED_BY=SEMANTIC_CONTINUATION_DAG"
+          echo "RETRY_AUTHORIZED=false"
+          echo "APP_INTEGRATION_READY=false"
+          echo "RELEASE_INPUT_GATE=BLOCKED"
