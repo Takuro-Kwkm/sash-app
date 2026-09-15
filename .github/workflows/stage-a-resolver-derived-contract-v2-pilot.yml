@@ -19,14 +19,30 @@ concurrency:
 jobs:
   pilot:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 4
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - slot: 0
+            window: WT-S2H-MENKOSHI-AGE-FS
+          - slot: 1
+            window: WT-SL-TERRACE-DOOR
+          - slot: 2
+            window: WT-EW-AGE-SAGE-FS
+          - slot: 3
+            window: SWT-LIX-TW-TATE-GREMON-TF
+          - slot: 4
+            window: SWT-YKK-APW430-TATE-GREMON-WINDCATCH
+          - slot: 5
+            window: W431-006
     env:
       HEAD_SHA: ${{ github.event.pull_request.head.sha }}
       STAGE_A_MAX_MEMO_STATES_PER_WINDOW: 12000
       STAGE_A_MAX_RESOLVER_CALLS_PER_WINDOW: 80000
       STAGE_A_MAX_EXPLICIT_MULTI_ENUM_VALUES: 18
-      STAGE_A_TARGET_WINDOWS: WT-S2H-MENKOSHI-AGE-FS,WT-SL-TERRACE-DOOR,WT-EW-AGE-SAGE-FS,SWT-LIX-TW-TATE-GREMON-TF,SWT-YKK-APW430-TATE-GREMON-WINDCATCH,W431-006
-      STAGE_A_CONTRACT_V2_OUT: artifacts/stage-a-resolver-derived-contract-v2-pilot
+      STAGE_A_TARGET_WINDOWS: ${{ matrix.window }}
+      STAGE_A_CONTRACT_V2_OUT: artifacts/stage-a-resolver-derived-contract-v2-pilot/slot-${{ matrix.slot }}
     steps:
       - name: Checkout exact PR HEAD
         uses: actions/checkout@v4
@@ -44,20 +60,20 @@ jobs:
           set -euo pipefail
           actual="$(git rev-parse HEAD)"
           test "$actual" = "$HEAD_SHA"
-          echo "EXACT_HEAD_GATE=PASS sha=$actual"
+          echo "EXACT_HEAD_GATE=PASS sha=$actual slot=${{ matrix.slot }} window=${{ matrix.window }}"
 
-      - name: Run resolver-derived contract v2 pilot
+      - name: Run resolver-derived contract v2 window pilot
         shell: bash
         run: |
           set -euo pipefail
-          node scripts/stage-a-resolver-derived-contract-v2-pilot.mjs | tee /tmp/stage-a-contract-v2-pilot.log
+          node scripts/stage-a-resolver-derived-contract-v2-pilot.mjs | tee /tmp/stage-a-contract-v2-pilot-${{ matrix.slot }}.log
 
-      - name: Upload pilot evidence
+      - name: Upload window evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: stage-a-resolver-derived-contract-v2-pilot
+          name: stage-a-resolver-derived-contract-v2-pilot-${{ matrix.slot }}
           path: |
-            artifacts/stage-a-resolver-derived-contract-v2-pilot/report.json
-            /tmp/stage-a-contract-v2-pilot.log
+            artifacts/stage-a-resolver-derived-contract-v2-pilot/slot-${{ matrix.slot }}/report.json
+            /tmp/stage-a-contract-v2-pilot-${{ matrix.slot }}.log
           if-no-files-found: warn
