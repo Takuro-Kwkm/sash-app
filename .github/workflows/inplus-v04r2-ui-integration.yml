@@ -173,9 +173,10 @@ jobs:
 
       - name: Exact-head Preview Full Coverage Browser QA
         if: ${{ github.event_name == 'push' }}
-        env:
-          QA_BASE_URL: ${{ env.DEPLOY_URL }}
-        run: node test/browser/inplus-v04r2-full-coverage-browser-qa.mjs
+        shell: bash
+        run: |
+          set -euo pipefail
+          QA_BASE_URL="$DEPLOY_URL" node test/browser/inplus-v04r2-full-coverage-browser-qa.mjs
 
       - name: Upload integration evidence
         if: always()
