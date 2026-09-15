@@ -1,0 +1,64 @@
+name: Stage A TW Behavioral Projection Count Pilot
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/stage-a-tw-behavioral-projection-count-pilot.yml'
+      - 'scripts/stage-a-tw-behavioral-projection-count-pilot.mjs'
+      - 'src/catalog/runtime-master/**'
+      - 'src/catalog/**'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: stage-a-tw-behavioral-projection-count-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  pilot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    env:
+      HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+      STAGE_A_TARGET_WINDOW: SWT-LIX-TW-TATE-GREMON-TF
+      STAGE_A_MAX_MEMO_STATES_PER_WINDOW: 12000
+      STAGE_A_MAX_RESOLVER_CALLS_PER_WINDOW: 120000
+      STAGE_A_MAX_EXPLICIT_MULTI_ENUM_VALUES: 12
+      STAGE_A_TW_PROJECTION_OUT: artifacts/stage-a-tw-behavioral-projection-count-pilot
+    steps:
+      - name: Checkout exact PR HEAD
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 1
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Exact SHA gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          actual="$(git rev-parse HEAD)"
+          test "$actual" = "$HEAD_SHA"
+          echo "EXACT_HEAD_GATE=PASS sha=$actual"
+
+      - name: Run TW behavioral projection exact-count pilot
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check scripts/stage-a-tw-behavioral-projection-count-pilot.mjs
+          node scripts/stage-a-tw-behavioral-projection-count-pilot.mjs | tee /tmp/stage-a-tw-behavioral-projection-count.log
+
+      - name: Upload pilot evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: stage-a-tw-behavioral-projection-count-pilot
+          path: |
+            artifacts/stage-a-tw-behavioral-projection-count-pilot/report.json
+            /tmp/stage-a-tw-behavioral-projection-count.log
+          if-no-files-found: warn
