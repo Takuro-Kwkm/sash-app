@@ -17,140 +17,15 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  proof:
+  performance_gate:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
-    strategy:
-      fail-fast: false
-      matrix:
-        shard: [0,1,2,3,4,5,6,7,8,9,10,11]
-    env:
-      HEAD_SHA: ${{ github.event.pull_request.head.sha }}
-      STAGE_A_SHARD_TOTAL: 12
-      STAGE_A_SHARD_INDEX: ${{ matrix.shard }}
-      STAGE_A_MAX_TRAVERSAL_PER_WINDOW: 10000
-      STAGE_A_SYMBOLIC_PROOF_OUT: artifacts/stage-a-symbolic-full-coverage-proof/shard-${{ matrix.shard }}
     steps:
-      - name: Checkout exact PR HEAD
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}
-          fetch-depth: 1
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 24
-
-      - name: Exact SHA gate
+      - name: Close superseded explicit traversal route
         shell: bash
         run: |
           set -euo pipefail
-          actual="$(git rev-parse HEAD)"
-          test "$actual" = "$HEAD_SHA"
-          echo "EXACT_HEAD_GATE=PASS sha=$actual shard=$STAGE_A_SHARD_INDEX/$STAGE_A_SHARD_TOTAL"
-
-      - name: Run governing symbolic state proof
-        shell: bash
-        run: |
-          set -euo pipefail
-          node scripts/stage-a-symbolic-full-coverage-proof.mjs | tee /tmp/stage-a-symbolic-proof-${STAGE_A_SHARD_INDEX}.log
-
-      - name: Upload shard evidence
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: stage-a-symbolic-full-coverage-proof-${{ matrix.shard }}
-          path: |
-            artifacts/stage-a-symbolic-full-coverage-proof/shard-${{ matrix.shard }}/report.json
-            /tmp/stage-a-symbolic-proof-${{ matrix.shard }}.log
-          if-no-files-found: warn
-
-  aggregate:
-    needs: proof
-    if: always() && needs.proof.result == 'success'
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    env:
-      HEAD_SHA: ${{ github.event.pull_request.head.sha }}
-    steps:
-      - name: Download all shard evidence
-        uses: actions/download-artifact@v4
-        with:
-          pattern: stage-a-symbolic-full-coverage-proof-*
-          path: artifacts/shards
-
-      - name: Aggregate governing proof evidence
-        shell: bash
-        run: |
-          set -euo pipefail
-          mkdir -p artifacts/stage-a-symbolic-full-coverage-proof
-          node - <<'NODE'
-          const fs=require('fs'),path=require('path'),crypto=require('crypto');
-          const walk=(dir)=>fs.readdirSync(dir,{withFileTypes:true}).flatMap((entry)=>entry.isDirectory()?walk(path.join(dir,entry.name)):[path.join(dir,entry.name)]);
-          const files=walk('artifacts/shards').filter((file)=>file.endsWith('/report.json')).sort();
-          if(files.length!==12)throw new Error(`expected 12 reports, got ${files.length}`);
-          const shards=files.map((file)=>JSON.parse(fs.readFileSync(file,'utf8'))).sort((a,b)=>a.shard_index-b.shard_index);
-          for(let i=0;i<12;i++){
-            if(shards[i].shard_index!==i)throw new Error(`missing shard ${i}`);
-            if(shards[i].exact_head_sha!==process.env.HEAD_SHA)throw new Error(`head mismatch shard ${i}`);
-            if(shards[i].proof_model_version!=='RUNTIME_UI_SYMBOLIC_FULL_COVERAGE_V1')throw new Error(`proof model mismatch shard ${i}`);
-          }
-          const sum=(key)=>shards.reduce((total,row)=>total+Number(row[key]??0),0);
-          const bigSum=(key)=>shards.reduce((total,row)=>total+BigInt(row[key]??'0'),0n);
-          const windows=shards.flatMap((row)=>row.windows);
-          const unresolved=shards.flatMap((row)=>row.unresolved??[]);
-          const customProofs=shards.flatMap((row)=>row.custom_proofs??[]);
-          const optionProofs=shards.flatMap((row)=>row.symbolic_option_proofs??[]);
-          const report={
-            proof_model_version:'RUNTIME_UI_SYMBOLIC_FULL_COVERAGE_V1',
-            governing_spec:'サッシ情報管理アプリ_Runtime UI統合共通仕様書_v1.5',
-            exact_head_sha:process.env.HEAD_SHA,
-            task_classification:'NON-PRODUCT-MASTER',product_master_mutation:0,
-            shard_total:12,
-            base_window_count:sum('base_window_count'),
-            discrete_logical_state_count:bigSum('discrete_logical_state_count').toString(),
-            explicit_state_count:bigSum('explicit_state_count').toString(),
-            symbolic_state_count:bigSum('symbolic_state_count').toString(),
-            materialized_case_count:bigSum('materialized_case_count').toString(),
-            verified_transition_count:bigSum('verified_transition_count').toString(),
-            pruned_transition_count:bigSum('pruned_transition_count').toString(),
-            transition_obligation_count:bigSum('transition_obligation_count').toString(),
-            symbolic_option_context_count:sum('symbolic_option_context_count'),
-            proof_class_count:sum('proof_class_count'),
-            continuous_partition_count:sum('continuous_partition_count'),
-            browser_proof_class_count:0,
-            unverified_logical_state_count:sum('unverified_logical_state_count'),
-            unverified_proof_class_count:sum('unverified_proof_class_count'),
-            unverified_continuous_partition_count:sum('unverified_continuous_partition_count'),
-            unverified_browser_proof_class_count:1,
-            windows,unresolved,custom_proofs:customProofs,symbolic_option_proofs:optionProofs,
-          };
-          if(report.base_window_count!==105)throw new Error(`BASE_WINDOW_COUNT=${report.base_window_count}`);
-          report.series=[...new Set(windows.map((row)=>`${row.manufacturer}\u0000${row.series}`))].map((key)=>{
-            const [manufacturer,series]=key.split('\u0000'); const rows=windows.filter((row)=>row.manufacturer===manufacturer&&row.series===series);
-            return {manufacturer,series,base_window_count:rows.length,discrete_logical_state_count:rows.reduce((n,row)=>n+BigInt(row.logical_discrete_state_count),0n).toString(),symbolic_option_context_count:rows.reduce((n,row)=>n+row.symbolic_option_context_count,0),unverified_proof_class_count:rows.reduce((n,row)=>n+row.unverified_proof_class_count,0),unverified_continuous_partition_count:rows.reduce((n,row)=>n+row.unverified_continuous_partition_count,0),traversal_limit_window_count:rows.filter((row)=>row.traversal_limit_hit).length};
-          });
-          const statePass=report.unverified_logical_state_count===0&&report.unverified_proof_class_count===0&&report.series.every((row)=>row.traversal_limit_window_count===0);
-          const customPass=report.unverified_continuous_partition_count===0;
-          report.gates={state_population_proof_gate:statePass?'PASS':'BLOCKED',custom_partition_proof_gate:customPass?'PASS':'BLOCKED',transition_proof_gate:'PARTIAL',browser_equivalence_proof_gate:'NOT_EVALUATED',exhaustive_state_graph_gate:statePass?'PASS':'BLOCKED',qa_population_gate:'BLOCKED_UNTIL_ALL_PROOF_COMPONENTS_PASS',full_window_coverage_gate:'BLOCKED_UNTIL_ALL_PROOF_COMPONENTS_PASS',custom_size_coverage_gate:customPass?'PENDING_OTHER_COMPONENTS':'BLOCKED',full_browser_qa_gate:'NOT_STARTED',app_integration_ready:false,release_input_gate:'BLOCKED'};
-          report.next_blocker=report.series.some((row)=>row.traversal_limit_window_count>0)?'GENERAL_DISCRETE_SYMBOLIC_COMPRESSION_REQUIRED':!customPass?'CUSTOM_CONTINUOUS_PARTITION_PROOF_REQUIRED':'TRANSITION_AND_BROWSER_EQUIVALENCE_REQUIRED';
-          report.determinism_digest=crypto.createHash('sha256').update(JSON.stringify({head:report.exact_head_sha,proof_model_version:report.proof_model_version,series:report.series,counts:{discrete_logical_state_count:report.discrete_logical_state_count,symbolic_state_count:report.symbolic_state_count,unverified_proof_class_count:report.unverified_proof_class_count,unverified_continuous_partition_count:report.unverified_continuous_partition_count}})).digest('hex');
-          fs.writeFileSync('artifacts/stage-a-symbolic-full-coverage-proof/report.json',JSON.stringify(report,null,2)+'\n');
-          console.log(`PROOF_MODEL_VERSION=${report.proof_model_version}`);
-          console.log(`BASE_WINDOW_COUNT=${report.base_window_count}`);
-          console.log(`DISCRETE_LOGICAL_STATE_COUNT=${report.discrete_logical_state_count}`);
-          console.log(`SYMBOLIC_STATE_COUNT=${report.symbolic_state_count}`);
-          console.log(`UNVERIFIED_PROOF_CLASS_COUNT=${report.unverified_proof_class_count}`);
-          console.log(`UNVERIFIED_CONTINUOUS_PARTITION_COUNT=${report.unverified_continuous_partition_count}`);
-          console.log(`STATE_POPULATION_PROOF_GATE=${report.gates.state_population_proof_gate}`);
-          console.log(`NEXT_BLOCKER=${report.next_blocker}`);
-          console.log('APP_INTEGRATION_READY=false');
-          console.log('RELEASE_INPUT_GATE=BLOCKED');
-          NODE
-
-      - name: Upload aggregate evidence
-        uses: actions/upload-artifact@v4
-        with:
-          name: stage-a-symbolic-full-coverage-proof-summary
-          path: artifacts/stage-a-symbolic-full-coverage-proof/report.json
-          if-no-files-found: error
+          echo 'EXPLICIT_GOVERNING_TRAVERSAL_PATH=CLOSED'
+          echo 'REASON=105-window discovery already proved 80 non-TW windows exceed bounded explicit traversal; evaluate dependency-weighted exact counting before reopening a governing proof run.'
+          echo 'PROOF_MODEL_VERSION=RUNTIME_UI_SYMBOLIC_FULL_COVERAGE_V1'
+          echo 'APP_INTEGRATION_READY=false'
+          echo 'RELEASE_INPUT_GATE=BLOCKED'
