@@ -1,0 +1,76 @@
+name: Stage A Terminal MULTI_ENUM Exact Proof Pilot
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/stage-a-terminal-multi-enum-proof-pilot.yml'
+      - 'scripts/stage-a-terminal-multi-enum-proof-pilot.mjs'
+      - 'src/catalog/runtime-master/**'
+      - 'src/catalog/**'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: stage-a-terminal-multi-enum-pilot-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  pilot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - slot: ew
+            window: WT-EW-AGE-SAGE-FS
+            max_states: 12000
+            max_calls: 100000
+          - slot: tw
+            window: SWT-LIX-TW-TATE-GREMON-TF
+            max_states: 30000
+            max_calls: 200000
+    env:
+      HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+      STAGE_A_TARGET_WINDOW: ${{ matrix.window }}
+      STAGE_A_MAX_MEMO_STATES_PER_WINDOW: ${{ matrix.max_states }}
+      STAGE_A_MAX_RESOLVER_CALLS_PER_WINDOW: ${{ matrix.max_calls }}
+      STAGE_A_MAX_EXPLICIT_MULTI_ENUM_VALUES: 12
+      STAGE_A_MAX_TERMINAL_BFS_SUBSETS: 4096
+      STAGE_A_TERMINAL_MULTI_OUT: artifacts/stage-a-terminal-multi-enum-proof-pilot/${{ matrix.slot }}
+    steps:
+      - name: Checkout exact PR HEAD
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 1
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Exact SHA gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          actual="$(git rev-parse HEAD)"
+          test "$actual" = "$HEAD_SHA"
+          echo "EXACT_HEAD_GATE=PASS sha=$actual slot=${{ matrix.slot }} window=${{ matrix.window }}"
+
+      - name: Run terminal MULTI_ENUM exact proof pilot
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/stage-a-terminal-multi-enum-proof-pilot.mjs | tee /tmp/stage-a-terminal-multi-${{ matrix.slot }}.log
+
+      - name: Upload window evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: stage-a-terminal-multi-enum-proof-pilot-${{ matrix.slot }}
+          path: |
+            artifacts/stage-a-terminal-multi-enum-proof-pilot/${{ matrix.slot }}/report.json
+            /tmp/stage-a-terminal-multi-${{ matrix.slot }}.log
+          if-no-files-found: warn
