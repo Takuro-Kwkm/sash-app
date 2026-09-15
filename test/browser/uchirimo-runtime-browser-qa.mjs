@@ -88,7 +88,7 @@ const keys = (page) => page.locator('#dynamicForm [data-spec-key]').evaluateAll(
 
 async function exercise(page) {
   let result = await openUchirimo(page);
-  assert.deepEqual(await keys(page), ['room_specification','window_type','size_mode']);
+  assert.deepEqual(await keys(page), ['window_type','room_specification','size_mode']);
   assert.equal(await page.locator('[data-spec-key="size_mode"]').isDisabled(), true);
   assert.equal(await page.locator('[data-spec-key="size_mode"]').inputValue(), 'custom');
 
@@ -113,9 +113,13 @@ async function exercise(page) {
   result = await chooseIfAvailable(page, result, 'muntin_type', 'none');
 
   const ordered = await keys(page);
-  for (const [before, after] of [['window_type','glass_family'],['glass_family','frame_color'],['frame_color','frame_installation_mode'],['frame_installation_mode','size_mode']]) {
-    assert.ok(ordered.indexOf(before) < ordered.indexOf(after), `${before} must precede ${after}`);
-  }
+  for (const [before, after] of [
+    ['window_type','room_specification'],
+    ['room_specification','size_mode'],
+    ['size_mode','frame_color'],
+    ['frame_color','glass_family'],
+    ['glass_family','frame_installation_mode'],
+  ]) assert.ok(ordered.indexOf(before) < ordered.indexOf(after), `${before} must precede ${after}`);
   assert.equal(ordered.includes('glass_spec_id'), false);
 
   result = await choose(page, 'frame_color', 'greige');
