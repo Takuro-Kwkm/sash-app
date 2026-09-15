@@ -73,6 +73,24 @@ jobs:
       - name: Global flow unit gate
         run: node --test test/79-global-window-selection-flow.test.mjs
 
+      - name: Legacy core regression partition
+        run: node --test test/01-core.test.mjs test/02-lr.test.mjs test/03-features.test.mjs test/04-thermosl.test.mjs test/61-vercel-route-contract.test.mjs
+
+      - name: Runtime package regression partition
+        run: node --test test/70-runtime-manifest-ew-integration.test.mjs test/70-runtime-manifest-tw-integration.test.mjs test/71-vercel-adapter.test.mjs
+
+      - name: TW UI regression partition
+        run: node --test test/71-runtime-ui-tw-gate.test.mjs
+
+      - name: Uchirimo UI regression partition
+        run: node --test test/72-runtime-manifest-uchirimo-integration.test.mjs test/73-runtime-ui-uchirimo-gate.test.mjs
+
+      - name: New-construction UI regression partition
+        run: node --test test/74-new-construction-ui-v16.test.mjs test/75-stage-a-size-display-full-coverage.test.mjs test/76-custom-dimension-safety.test.mjs
+
+      - name: App integration regression partition
+        run: node --test test/72-work-management.test.mjs test/74-estimate-output.test.mjs test/75-formal-runtime-resync.test.mjs
+
       - name: Full repository regression tests
         run: npm test
 
