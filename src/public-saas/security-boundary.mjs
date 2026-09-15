@@ -81,8 +81,9 @@ function csrfFailure(req){
 }
 
 function rejectCsrf(res,message){
-  if(typeof res.writeHead==='function')res.writeHead(403);
   res.setHeader?.('content-type','application/json; charset=utf-8');
+  if(typeof res.writeHead==='function')res.writeHead(403);
+  else res.statusCode=403;
   res.end(JSON.stringify({error:message,code:'CSRF_REJECTED'}));
 }
 
