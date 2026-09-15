@@ -1,0 +1,257 @@
+name: Stage A Non-TW 80-Window Exact-Head Consolidation
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/stage-a-nontw-80-exact-head-consolidation.yml'
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: stage-a-nontw-80-exact-head-consolidation-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  consolidate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+      BROAD_HEAD: dd93b7325f2efe6784bb713a8c8e0609ec0d1cdf
+      EW_HEAD: 4999a36fcec02d36fe308d677bc6455fcc9bcc3d
+      CURRENT_EVIDENCE_HEAD: beaeb0e57f17655338a49c655b4471e3c87c5a99
+      OUT_DIR: artifacts/stage-a-nontw-80-exact-head-consolidation
+    steps:
+      - name: Checkout exact PR HEAD with history
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Exact SHA and constituent invariance gates
+        shell: bash
+        run: |
+          set -euo pipefail
+          actual="$(git rev-parse HEAD)"
+          test "$actual" = "$HEAD_SHA"
+          git merge-base --is-ancestor "$BROAD_HEAD" "$HEAD_SHA"
+          git merge-base --is-ancestor "$EW_HEAD" "$HEAD_SHA"
+          git merge-base --is-ancestor "$CURRENT_EVIDENCE_HEAD" "$HEAD_SHA"
+
+          # Runtime / adapter / UI source is byte-identical to the retained broad evidence head.
+          git diff --quiet "$BROAD_HEAD" "$HEAD_SHA" -- src/
+          # EW targeted V3 evidence is retained only while Runtime / adapter / UI source is unchanged.
+          git diff --quiet "$EW_HEAD" "$HEAD_SHA" -- src/
+          # Current-head constituent proof implementations must remain unchanged after their evidence run.
+          git diff --quiet "$CURRENT_EVIDENCE_HEAD" "$HEAD_SHA" -- \
+            src/ \
+            scripts/stage-a-samos2h-size-predicate-outcome-projection-v6-2.mjs \
+            scripts/stage-a-samos-conflict-graph-v4.mjs \
+            scripts/stage-a-nontw-discrete-exact-runner.mjs \
+            .github/workflows/stage-a-samos2h-v6-2-17-window-expansion.yml \
+            .github/workflows/stage-a-samosl-v4-17-window-exact-expansion.yml \
+            .github/workflows/stage-a-apw430-behavior-projection-v1.yml
+
+          echo "EXACT_HEAD_GATE=PASS sha=$actual"
+          echo 'BROAD_RUNTIME_SOURCE_INVARIANCE_GATE=PASS'
+          echo 'EW_RUNTIME_SOURCE_INVARIANCE_GATE=PASS'
+          echo 'CURRENT_CONSTITUENT_PROOF_INVARIANCE_GATE=PASS'
+
+      - name: Download retained broad 80-window aggregate
+        uses: actions/download-artifact@v4
+        with:
+          name: stage-a-nontw-80-window-discrete-exact-aggregate
+          path: artifacts/evidence/broad
+          repository: Takuro-Kwkm/sash-app
+          run-id: 34922705391
+          github-token: ${{ github.token }}
+
+      - name: Download Samos2H 17-window V6.2 summary
+        uses: actions/download-artifact@v4
+        with:
+          name: stage-a-samos2h-v6-2-17-window-summary
+          path: artifacts/evidence/samos2h
+          repository: Takuro-Kwkm/sash-app
+          run-id: 34946896060
+          github-token: ${{ github.token }}
+
+      - name: Download SamosL 17-window V4 summary
+        uses: actions/download-artifact@v4
+        with:
+          name: stage-a-samosl-v4-17-window-summary
+          path: artifacts/evidence/samosl
+          repository: Takuro-Kwkm/sash-app
+          run-id: 34946896069
+          github-token: ${{ github.token }}
+
+      - name: Download EW targeted V3 summary
+        uses: actions/download-artifact@v4
+        with:
+          name: stage-a-ew-v3-targeted-summary
+          path: artifacts/evidence/ew
+          repository: Takuro-Kwkm/sash-app
+          run-id: 34945748228
+          github-token: ${{ github.token }}
+
+      - name: Download APW430 projection V1 evidence
+        uses: actions/download-artifact@v4
+        with:
+          name: stage-a-apw430-projection-v1-evidence
+          path: artifacts/evidence/apw430
+          repository: Takuro-Kwkm/sash-app
+          run-id: 34946896020
+          github-token: ${{ github.token }}
+
+      - name: Consolidate 80 exact windows
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import { createHash } from 'node:crypto';
+          import { readdirSync,readFileSync,statSync,mkdirSync,writeFileSync } from 'node:fs';
+          import { join } from 'node:path';
+          import { getRuntimeMasterEntry } from './src/catalog/runtime-master/runtime-master-registry.mjs';
+
+          const readReports=(root)=>{
+            const files=[];
+            const walk=(dir)=>{for(const name of readdirSync(dir)){const p=join(dir,name);if(statSync(p).isDirectory())walk(p);else if(name==='report.json')files.push(p);}};
+            walk(root);
+            return files.map((path)=>({path,report:JSON.parse(readFileSync(path,'utf8'))}));
+          };
+          const one=(root,predicate,label)=>{
+            const matches=readReports(root).filter(({report})=>predicate(report));
+            if(matches.length!==1)throw new Error(`${label}: expected one report, got ${matches.length}`);
+            return matches[0].report;
+          };
+          const broad=one('artifacts/evidence/broad',(r)=>r.expected_window_count===80,'broad');
+          const s2h=one('artifacts/evidence/samos2h',(r)=>r.status==='SAMOS2H_V6_2_17_WINDOW_PASS','s2h');
+          const sl=one('artifacts/evidence/samosl',(r)=>r.status==='SAMOSL_V4_17_WINDOW_PASS','samosl');
+          const ew=one('artifacts/evidence/ew',(r)=>r.status==='EW_V3_TWO_BLOCKER_WINDOWS_EXACT_PASS','ew');
+          const apw=one('artifacts/evidence/apw430',(r)=>r.status==='APW430_THREE_MEMO_BLOCKERS_EXACT_PASS','apw430');
+
+          if(broad.exact_head_sha!==process.env.BROAD_HEAD)throw new Error('broad evidence head mismatch');
+          if(broad.counted_window_count!==60||broad.unverified_window_count!==20)throw new Error('broad evidence population mismatch');
+          if(s2h.exact_head_sha!==process.env.CURRENT_EVIDENCE_HEAD||s2h.verified_window_count!==17||s2h.unverified_window_count!==0)throw new Error('Samos2H evidence mismatch');
+          if(s2h.total_exact_discrete_terminal_context_count!=='3867730371648'||s2h.total_custom_pending_context_count!=='31500480960')throw new Error('Samos2H total mismatch');
+          if(sl.exact_head_sha!==process.env.CURRENT_EVIDENCE_HEAD||sl.verified_window_count!==17||sl.unverified_window_count!==0)throw new Error('SamosL evidence mismatch');
+          if(sl.total_exact_discrete_terminal_context_count!=='435606073344'||sl.total_custom_pending_context_count!=='3249762048')throw new Error('SamosL total mismatch');
+          if(ew.exact_head_sha!==process.env.EW_HEAD||ew.verified_window_count!==2||ew.unverified_window_count!==0)throw new Error('EW evidence mismatch');
+          if(ew.control_exact_discrete_terminal_context_count!=='3140812800'||ew.candidate_exact_discrete_terminal_context_count!=='45298483200'||ew.total_exact_discrete_terminal_context_count!=='48439296000'||ew.total_custom_pending_context_count!=='0')throw new Error('EW targeted total mismatch');
+          if(ew.evidence_digest!=='17f4d41b09805ca6a454df7fe3dfbf2d218e4e589c2cb661ba8163e10eed0a20')throw new Error('EW evidence digest mismatch');
+          if(apw.exact_head_sha!==process.env.CURRENT_EVIDENCE_HEAD||apw.verified_recovery_window_count!==3||apw.unverified_recovery_window_count!==0)throw new Error('APW430 evidence mismatch');
+          if(apw.recovery_exact_discrete_terminal_context_count!=='808800'||apw.recovery_custom_pending_context_count!=='480')throw new Error('APW430 recovery total mismatch');
+          if(apw.evidence_digest!=='864da15c735254a1871511543cfc30dc790c4834a780aafdfacf48fe9c0be015')throw new Error('APW430 evidence digest mismatch');
+
+          const ewTargets=new Set(['WT-EW-HIKICHIGAI','WT-EW-KOSHO-YOKO']);
+          const apwTargets=new Set(['SWT-YKK-APW430-HIKI','SWT-YKK-APW430-MENKOSHI-HIKI','SWT-YKK-APW430-SHUTTER-HIKI']);
+          const retained=(broad.windows??[]).filter((row)=>
+            (row.product_id==='SER-LIX-EW'&&!ewTargets.has(row.window_type))||
+            (row.product_id==='SER-YKK-APW430'&&!apwTargets.has(row.window_type))||
+            row.product_id==='SER-YKK-APW431'
+          );
+          if(retained.length!==41)throw new Error(`retained broad exact rows ${retained.length} != 41`);
+          for(const row of retained){
+            if(row.status!=='COUNTED_CANDIDATE'||row.blocker||(row.symbolic_frontiers??[]).length||!row.exact_discrete_terminal_context_count)throw new Error(`retained broad row is not exact ${row.window_type}`);
+            if(row.proof_model_version!=='RUNTIME_UI_SYMBOLIC_FULL_COVERAGE_V1')throw new Error(`retained proof model mismatch ${row.window_type}`);
+            if(row.count_model_version!=='NONTW_RESOLVER_DERIVED_CONTRACT_V2_TERMINAL_MULTI_BFS_V1')throw new Error(`retained count model mismatch ${row.window_type}`);
+          }
+
+          const apwRecovery=(apw.windows??[]).filter((row)=>apwTargets.has(row.window_type));
+          if(apwRecovery.length!==3)throw new Error(`APW430 recovery rows ${apwRecovery.length} != 3`);
+          const finalRows=[...retained,...(s2h.windows??[]),...(sl.windows??[]),...(ew.windows??[]),...apwRecovery];
+          finalRows.sort((a,b)=>String(a.window_type).localeCompare(String(b.window_type)));
+
+          const seriesKey=(row)=>row.product_id==='SER-LIX-SAMOS2H'?'SAMOS2H':row.product_id==='SER-LIX-SAMOSL'?'SAMOSL':row.product_id==='SER-LIX-EW'?'EW':row.product_id==='SER-YKK-APW430'?'APW430':row.product_id==='SER-YKK-APW431'?'APW431':'UNKNOWN';
+          const expected={SAMOS2H:17,SAMOSL:17,EW:15,APW430:25,APW431:6};
+          const counts={};for(const row of finalRows)counts[seriesKey(row)]=(counts[seriesKey(row)]??0)+1;
+          if(finalRows.length!==80||new Set(finalRows.map((r)=>r.window_type)).size!==80)throw new Error('80-window identity gate failed');
+          for(const [key,n] of Object.entries(expected))if(counts[key]!==n)throw new Error(`series count ${key}=${counts[key]} expected ${n}`);
+          if(counts.UNKNOWN)throw new Error('unknown series rows present');
+          for(const row of finalRows){
+            if(row.status!=='COUNTED_CANDIDATE'||row.blocker||(row.symbolic_frontiers??[]).length||!row.exact_discrete_terminal_context_count)throw new Error(`unverified final row ${row.window_type}`);
+          }
+
+          const registryByProduct={
+            'SER-LIX-SAMOS2H':getRuntimeMasterEntry('LIXIL','サーモスⅡ-H'),
+            'SER-LIX-SAMOSL':getRuntimeMasterEntry('LIXIL','サーモスL'),
+            'SER-LIX-EW':getRuntimeMasterEntry('LIXIL','EW'),
+            'SER-YKK-APW430':getRuntimeMasterEntry('YKK AP','APW430'),
+            'SER-YKK-APW431':getRuntimeMasterEntry('YKK AP','APW431'),
+          };
+          for(const row of finalRows){
+            const entry=registryByProduct[row.product_id];
+            if(!entry?.runtimeManifestSha256)throw new Error(`current runtime registry missing ${row.product_id}`);
+            if(row.runtime_manifest_sha256!==entry.runtimeManifestSha256)throw new Error(`runtime identity drift ${row.window_type}`);
+          }
+
+          const terminal=finalRows.reduce((sum,row)=>sum+BigInt(row.exact_discrete_terminal_context_count),0n);
+          const custom=finalRows.reduce((sum,row)=>sum+BigInt(row.custom_pending_context_count??'0'),0n);
+          const evidenceSources={
+            retained_broad:{run_id:34922705391,head:process.env.BROAD_HEAD,artifact_id:10378848514,retained_window_count:41},
+            samos2h:{run_id:34946896060,head:process.env.CURRENT_EVIDENCE_HEAD,artifact_id:10387890824,window_count:17},
+            samosl:{run_id:34946896069,head:process.env.CURRENT_EVIDENCE_HEAD,artifact_id:10387941272,window_count:17},
+            ew:{run_id:34945748228,head:process.env.EW_HEAD,artifact_id:10387720979,window_count:2,evidence_digest:ew.evidence_digest},
+            apw430:{run_id:34946896020,head:process.env.CURRENT_EVIDENCE_HEAD,artifact_id:10387836194,window_count:3,evidence_digest:apw.evidence_digest},
+          };
+          const evidenceDigest=createHash('sha256').update(JSON.stringify({sources:evidenceSources,rows:finalRows.map((r)=>({product:r.product_id,window:r.window_type,terminal:r.exact_discrete_terminal_context_count,custom:r.custom_pending_context_count,runtime:r.runtime_manifest_sha256,proof:r.proof_model_version,model:r.count_model_version,contract:r.contract_digest??null,terminal_proof:r.terminal_multi_proof_digest??r.terminal_proof_digest??null,status:r.status}))})).digest('hex');
+          const out={
+            exact_head_sha:process.env.HEAD_SHA,
+            task_classification:'NON-PRODUCT-MASTER',product_master_mutation:0,
+            proof_model_version:'RUNTIME_UI_SYMBOLIC_FULL_COVERAGE_V1',
+            count_model_version:'NONTW_80_MIXED_EXACT_MODELS_CURRENT_HEAD_CONSOLIDATION_V1',
+            expected_window_count:80,report_count:80,unique_window_count:80,
+            series_window_counts:counts,expected_series_window_counts:expected,
+            retained_broad_exact_window_count:41,replacement_window_count:39,
+            counted_window_count:80,unverified_window_count:0,
+            exact_discrete_terminal_context_count:terminal.toString(),
+            custom_pending_context_count:custom.toString(),
+            evidence_sources:evidenceSources,evidence_digest:evidenceDigest,
+            status:'NONTW_80_WINDOW_EXACT_HEAD_CONSOLIDATED_PASS',
+            gate_status:{nontw_discrete_population_gate:'PASS',qa_population_gate:'BLOCKED_105_WINDOW_CONSOLIDATION_AND_CONTINUOUS_PROOF_PENDING',custom_size_coverage_gate:'BLOCKED_CONTINUOUS_PARTITION_NOT_PROVEN',full_browser_qa_gate:'NOT_STARTED',app_integration_ready:false,release_input_gate:'BLOCKED'},
+            windows:finalRows,
+          };
+          mkdirSync(process.env.OUT_DIR,{recursive:true});
+          writeFileSync(join(process.env.OUT_DIR,'report.json'),JSON.stringify(out,null,2)+'\n');
+          console.log(`NONTW_80_CONSOLIDATION_STATUS=${out.status}`);
+          console.log(`NONTW_80_EXACT_DISCRETE_TERMINAL_CONTEXT_COUNT=${out.exact_discrete_terminal_context_count}`);
+          console.log(`NONTW_80_CUSTOM_PENDING_CONTEXT_COUNT=${out.custom_pending_context_count}`);
+          console.log(`NONTW_80_EVIDENCE_DIGEST=${out.evidence_digest}`);
+          console.log('NONTW_UNVERIFIED_WINDOW_COUNT=0');
+          console.log('APP_INTEGRATION_READY=false');
+          console.log('RELEASE_INPUT_GATE=BLOCKED');
+          NODE
+
+      - name: Fail-closed Non-TW discrete population gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import { readFileSync } from 'node:fs';
+          const r=JSON.parse(readFileSync(`${process.env.OUT_DIR}/report.json`,'utf8'));
+          if(r.exact_head_sha!==process.env.HEAD_SHA)throw new Error('exact head mismatch');
+          if(r.status!=='NONTW_80_WINDOW_EXACT_HEAD_CONSOLIDATED_PASS')throw new Error(`status ${r.status}`);
+          if(r.report_count!==80||r.unique_window_count!==80||r.counted_window_count!==80||r.unverified_window_count!==0)throw new Error('80-window coverage incomplete');
+          if(r.retained_broad_exact_window_count!==41||r.replacement_window_count!==39)throw new Error('constituent population mismatch');
+          if(r.gate_status?.nontw_discrete_population_gate!=='PASS')throw new Error('Non-TW discrete gate not PASS');
+          if(!r.exact_discrete_terminal_context_count||!r.evidence_digest)throw new Error('aggregate evidence incomplete');
+          console.log(`NONTW_80_EXACT_HEAD_GATE=PASS total=${r.exact_discrete_terminal_context_count}`);
+          console.log('NONTW_UNVERIFIED_WINDOW_COUNT=0');
+          console.log('QA_POPULATION_GATE=BLOCKED_105_WINDOW_CONSOLIDATION_AND_CONTINUOUS_PROOF_PENDING');
+          console.log('APP_INTEGRATION_READY=false');
+          console.log('RELEASE_INPUT_GATE=BLOCKED');
+          NODE
+
+      - name: Upload Non-TW 80 exact-head consolidation
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: stage-a-nontw-80-exact-head-consolidation
+          path: artifacts/stage-a-nontw-80-exact-head-consolidation/report.json
+          if-no-files-found: error
