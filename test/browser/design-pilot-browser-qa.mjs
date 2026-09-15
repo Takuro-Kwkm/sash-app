@@ -28,6 +28,20 @@ async function assertNoOverflow(target,label){
   assert.ok(overflow<=1,`${label} overflow ${overflow}`);
 }
 
+async function assertIntrinsicHeroRatio(target,label){
+  const metrics=await target.locator('.reference-hero-photo').evaluate((node)=>{
+    const box=node.getBoundingClientRect();
+    const style=getComputedStyle(node);
+    return {naturalWidth:node.naturalWidth,naturalHeight:node.naturalHeight,width:box.width,height:box.height,objectFit:style.objectFit};
+  });
+  assert.equal(metrics.naturalWidth,640,`${label} hero source width`);
+  assert.equal(metrics.naturalHeight,340,`${label} hero source height`);
+  const naturalRatio=metrics.naturalWidth/metrics.naturalHeight;
+  const renderedRatio=metrics.width/metrics.height;
+  assert.ok(Math.abs(renderedRatio-naturalRatio)<0.01,`${label} hero must preserve intrinsic aspect ratio: ${renderedRatio} vs ${naturalRatio}`);
+  assert.equal(metrics.objectFit,'contain',`${label} hero must not use a stretching fit mode`);
+}
+
 try{
   await goto(page,'/design-preview');
   await page.waitForSelector('[data-reference-home="1"]');
@@ -68,12 +82,13 @@ try{
   await homeLandscape.locator('#themeSelect').selectOption('light');
   await homeLandscape.waitForSelector('[data-reference-home="1"]');
   assert.ok(await homeLandscape.locator('.reference-hero').isVisible());
-  assert.match(await homeLandscape.locator('.reference-hero').evaluate((node)=>getComputedStyle(node).backgroundImage),/design-preview-reference-hero\.jpg/);
+  await assertIntrinsicHeroRatio(homeLandscape,'iPad landscape');
   assert.equal(await homeLandscape.locator('.reference-notice-card').count(),3);
   assert.equal(await homeLandscape.locator('.reference-feature-card').count(),4);
   await assertNoOverflow(homeLandscape,'iPad landscape home');
   await homeLandscape.screenshot({path:`${OUT}/ipad-landscape-home-1024x768.png`,fullPage:true});
   report.scenarios.IPAD_LANDSCAPE_HOME='PASS';
+  report.scenarios.IPAD_LANDSCAPE_HERO_INTRINSIC_RATIO='PASS';
   await homeLandscape.close();
 
   const homePortrait=await context.newPage();track(homePortrait);await homePortrait.setViewportSize({width:768,height:1024});
@@ -81,20 +96,14 @@ try{
   await homePortrait.locator('#themeSelect').selectOption('light');
   await homePortrait.waitForSelector('[data-reference-home="1"]');
   assert.ok(await homePortrait.locator('.reference-hero').isVisible());
+  await assertIntrinsicHeroRatio(homePortrait,'iPad portrait');
   assert.ok(!(await homePortrait.locator('.design-sidebar').isVisible()),'iPad portrait should collapse the desktop sidebar');
   assert.equal(await homePortrait.locator('.reference-feature-card').count(),4);
   await assertNoOverflow(homePortrait,'iPad portrait home');
   await homePortrait.screenshot({path:`${OUT}/ipad-portrait-home-768x1024.png`,fullPage:true});
   report.scenarios.IPAD_PORTRAIT_HOME='PASS';
+  report.scenarios.IPAD_PORTRAIT_HERO_INTRINSIC_RATIO='PASS';
   await homePortrait.close();
-
-  const heroSource=await context.newPage();track(heroSource);await heroSource.setViewportSize({width:1000,height:800});
-  await goto(heroSource,'/design-preview-reference-hero.jpg');
-  await heroSource.locator('img').screenshot({path:`${OUT}/approved-hero-source-wide.png`});
-  await goto(heroSource,'/design-preview-reference-hero-portrait.jpg');
-  await heroSource.locator('img').screenshot({path:`${OUT}/approved-hero-source-portrait.png`});
-  report.scenarios.HERO_SOURCE_ASSETS_CAPTURED='PASS';
-  await heroSource.close();
 
   await page.locator('#themeSelect').selectOption('light');
   await page.getByRole('link',{name:/すべて見る/}).first().click();
