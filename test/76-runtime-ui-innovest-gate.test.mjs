@@ -83,3 +83,12 @@ test('upstream changes clear incompatible downstream values instead of preservin
   const state=resolve({...completeD70(),thermal_spec:'D50',fire_classification:'FIRE',frame_system:'EXTRUDED_THERMAL'});
   assert.ok(state.cleared_fields.some((row)=>['design','door_color','handle'].includes(row.field)));
 });
+
+test('resolved angle state survives the next Runtime resolve without throwing',()=>{
+  const first=resolve(completeD70());
+  assert.equal(first.fields.angle_attached_frame.value,false);
+  assert.doesNotThrow(()=>resolve({...completeD70(),angle_attached_frame:false}));
+  const second=resolve({...completeD70(),angle_attached_frame:false});
+  assert.equal(second.fields.angle_attached_frame.value,false);
+  assert.equal(second.status,'VALID');
+});
