@@ -18,6 +18,7 @@ const SLOT_ALIASES = Object.freeze({
   window_spec:'window_spec',shutter_type:'window_spec',rain_shutter_type:'window_spec',grille_type:'window_spec',door_grille_type:'window_spec',
   operation_type:'window_spec',operation_method:'window_spec',operator_position:'window_spec',handle_type:'window_spec',handle_configuration:'window_spec',
   composition_type:'window_spec',configuration:'window_spec',window_configuration:'window_spec',variant:'window_spec',joinery_configuration:'window_spec',door_type:'window_spec',
+  region_standard:'window_spec',door_installation:'window_spec',
   handing:'handing',
   sash_count:'panel_count',panel_count:'panel_count',leaf_configuration:'panel_count',
   size_mode:'size_mode',size:'size',standard_size:'size',size_id:'size',custom_width:'size',custom_height:'size',custom_w:'size',custom_h:'size',
@@ -36,7 +37,7 @@ const SCREEN_SLOTS = new Set(['screen_presence','screen_form','screen_midrail','
 const GLAZING_SLOTS = new Set(['glass_base','glass_type','glass_detail','glass_function','glass_spacer','glass_air_layer']);
 
 const STANDARD_LABELS = Object.freeze({
-  window_type:'窓種類',window_configuration:'連窓構成',
+  window_type:'窓種類',window_configuration:'連窓構成',region_standard:'地域規格',door_installation:'ドア納まり',
   handing:'開き勝手（吊元）',size_mode:'サイズ方式',sash_count:'建具・枚数',panel_count:'建具・枚数',leaf_configuration:'建具・枚数',size:'サイズ',standard_size:'サイズ',
   custom_width:'特注W（mm）',custom_height:'特注H（mm）',custom_w:'特注W（mm）',custom_h:'特注H（mm）',
   exterior_color:'外観色',interior_color:'内観色',screen:'網戸',screen_presence:'網戸',screen_type:'網戸形式',screen_form:'網戸形式',screen_midrail:'網戸中桟',screen_net:'網戸ネット',
