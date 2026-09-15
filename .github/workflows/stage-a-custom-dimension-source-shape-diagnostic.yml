@@ -7,6 +7,7 @@ on:
       - 'scripts/stage-a-custom-dimension-source-shape-diagnostic.mjs'
       - 'scripts/stage-a-formal-split-custom-guard-shape-diagnostic.mjs'
       - 'scripts/stage-a-custom-dimension-boundary-partition-proof.mjs'
+      - 'scripts/stage-a-custom-selector-reachability-diagnostic.mjs'
       - '.github/workflows/stage-a-custom-dimension-source-shape-diagnostic.yml'
       - 'src/catalog/runtime-master/**'
       - 'src/catalog/runtime-master-packages/**'
@@ -21,7 +22,7 @@ concurrency:
 jobs:
   diagnose:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 8
     env:
       HEAD_SHA: ${{ github.event.pull_request.head.sha }}
       STAGE_A_CUSTOM_SHAPE_OUT: artifacts/stage-a-custom-dimension-source-shape
@@ -29,6 +30,7 @@ jobs:
       STAGE_A_CUSTOM_SHAPE_INPUT: artifacts/stage-a-custom-dimension-source-shape/report.json
       STAGE_A_CUSTOM_GUARD_INPUT: artifacts/stage-a-formal-split-custom-guard-shape/report.json
       STAGE_A_CUSTOM_PARTITION_OUT: artifacts/stage-a-custom-dimension-boundary-partition
+      STAGE_A_CUSTOM_REACHABILITY_OUT: artifacts/stage-a-custom-selector-reachability
     steps:
       - name: Checkout exact PR HEAD
         uses: actions/checkout@v4
@@ -45,6 +47,15 @@ jobs:
           actual="$(git rev-parse HEAD)"
           test "$actual" = "$HEAD_SHA"
           echo "EXACT_HEAD_GATE=PASS sha=$actual"
+      - name: Syntax gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check scripts/stage-a-custom-dimension-source-shape-diagnostic.mjs
+          node --check scripts/stage-a-formal-split-custom-guard-shape-diagnostic.mjs
+          node --check scripts/stage-a-custom-dimension-boundary-partition-proof.mjs
+          node --check scripts/stage-a-custom-selector-reachability-diagnostic.mjs
+          echo 'CUSTOM_PROOF_SCRIPT_SYNTAX_GATE=PASS'
       - name: Inventory formal CUSTOM dimension rule shapes
         shell: bash
         run: |
@@ -92,11 +103,32 @@ jobs:
           if(p.status!=='GEOMETRY_PARTITION_PASS_RUNTIME_EQUIVALENCE_PENDING')throw new Error(`partition status=${p.status}`);
           console.log(`CUSTOM_GEOMETRY_PARTITION_GATE=PASS windows=${p.window_count} rules=${p.rule_count} classes=${p.arrangement_proof_class_count} triplets=${p.boundary_triplet_count}`);
           console.log(`CUSTOM_PARTITION_EVIDENCE_DIGEST=${p.evidence_digest}`);
-          console.log('CUSTOM_SIZE_COVERAGE_GATE=BLOCKED_RUNTIME_EQUIVALENCE_WITNESS_PENDING');
+          NODE
+      - name: Prove CUSTOM selector UI reachability
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/stage-a-custom-selector-reachability-diagnostic.mjs
+      - name: Validate selector reachability evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import { readFileSync } from 'node:fs';
+          const r=JSON.parse(readFileSync(`${process.env.STAGE_A_CUSTOM_REACHABILITY_OUT}/report.json`,'utf8'));
+          if(r.exact_head_sha!==process.env.HEAD_SHA)throw new Error('reachability exact head mismatch');
+          if(r.source_rule_count!==152)throw new Error(`source_rule_count=${r.source_rule_count}`);
+          const memberships=(r.contexts??[]).reduce((n,c)=>n+(c.rule_ids??[]).length,0);
+          if(memberships!==152)throw new Error(`rule membership coverage=${memberships}`);
+          if(r.unreachable_context_count!==0||r.status!=='PASS')throw new Error(`unreachable contexts=${r.unreachable_context_count}`);
+          if(!r.evidence_digest)throw new Error('reachability digest missing');
+          console.log(`CUSTOM_SELECTOR_REACHABILITY_GATE=PASS contexts=${r.unique_context_count} rules=${memberships}`);
+          console.log(`CUSTOM_SELECTOR_REACHABILITY_DIGEST=${r.evidence_digest}`);
+          console.log('CUSTOM_SIZE_COVERAGE_GATE=BLOCKED_RUNTIME_GEOMETRY_EQUIVALENCE_PENDING');
           console.log('APP_INTEGRATION_READY=false');
           console.log('RELEASE_INPUT_GATE=BLOCKED');
           NODE
-      - name: Upload CUSTOM shape and partition evidence
+      - name: Upload CUSTOM proof evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
@@ -105,4 +137,5 @@ jobs:
             artifacts/stage-a-custom-dimension-source-shape/
             artifacts/stage-a-formal-split-custom-guard-shape/
             artifacts/stage-a-custom-dimension-boundary-partition/
+            artifacts/stage-a-custom-selector-reachability/
           if-no-files-found: error
