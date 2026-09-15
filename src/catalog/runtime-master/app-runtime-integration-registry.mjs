@@ -55,6 +55,32 @@ export const appRuntimeIntegrationRegistry = Object.freeze([
     adapterType: 'UCHIRIMO_TABULAR_V1',
     uiStandardSpec: 'サッシ情報管理アプリ_UI実装標準仕様書_v1.6',
   }),
+  Object.freeze({
+    id: 'SER-LIXIL-INPLUS',
+    manufacturer: 'LIXIL',
+    series: 'インプラス',
+    displayName: 'インプラス',
+    productCategory: 'sash',
+    uiCategory: 'INNER_WINDOW',
+    registrySeriesKey: 'LIXIL::インプラス',
+    canonicalRuntimeReference: Object.freeze({
+      runtimeManifestDriveFileId: '1TokjIpcipm8TPxwrSO0FjyPxxvhCq5iZ',
+      runtimeJsonDriveFileId: '16dqUaVFp0YW3PqJ-A9tR0fAV0KT7WZML',
+      runtimeSchemaDriveFileId: '1Qov5w3pNrU9om40OLJikJv7B8klK1RNz',
+      canonicalFolderId: '1NPW7cUbaC1JRvIaJrltFkoYUiLyPwJa1',
+    }),
+    packageVersion: 'v0.4-R2',
+    schemaVersion: '2.0',
+    sourceHash: 'cbbdb6ba315c985f7d27f75a237e861be8ce635962ce1cd5a746d7f152c8e1f8',
+    adapterType: 'SEMANTIC_TABLE_BUNDLE_V2',
+    uiStandardSpec: 'サッシ情報管理アプリ_UI実装標準仕様書_v1.7',
+    uiTemplate: 'INPLUS_V04R2',
+    uiContractSource: Object.freeze({
+      uiStandardDriveFileId: '1tHPcGmN4a6BdhhozgFAFsF-KOB2R3Y4y',
+      runtimeManifestDriveFileId: '1TokjIpcipm8TPxwrSO0FjyPxxvhCq5iZ',
+      packageVersion: 'v0.4-R2',
+    }),
+  }),
 ]);
 
 export function getAppRuntimeIntegrationMetadata(manufacturer, series) {

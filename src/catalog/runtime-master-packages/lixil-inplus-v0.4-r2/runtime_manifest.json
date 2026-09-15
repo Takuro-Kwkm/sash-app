@@ -1,0 +1,90 @@
+{
+  "schema_version": "2.0",
+  "manufacturer": "LIXIL",
+  "series": "インプラス",
+  "package_version": "v0.4-R2",
+  "package_revision": "SizeCapability_R1",
+  "authoring_mode": "STANDALONE",
+  "authoring_file_name": "LIXIL_インプラス_商品マスター_v0.4-R2_SizeCapability_R1_FORMAL.xlsx",
+  "authoring_file_id": "11TytloLYF2xrojuPK3q7kPbGl3F09Xth",
+  "authoring_sha256": "977935f1c708db3fee96339adb164e4a0ad83995511d3a04404e01c5f9155fee",
+  "runtime_status": "READY",
+  "runtime_files": [
+    {
+      "role": "RUNTIME_JSON_PACKAGE",
+      "file_name": "LIXIL_インプラス_runtime_v0.4-R2_SizeCapability_R1_FORMAL.json",
+      "file_id": "16dqUaVFp0YW3PqJ-A9tR0fAV0KT7WZML",
+      "sha256": "6b225c76cbec1364473da2f8b74ca9b738d70f74baf4151f574c25415ca5fae9"
+    }
+  ],
+  "schema_file": {
+    "file_name": "LIXIL_インプラス_runtime_v0.4-R2_SizeCapability_R1_FORMAL.schema.json",
+    "file_id": "1Qov5w3pNrU9om40OLJikJv7B8klK1RNz",
+    "sha256": "75a6a775229d48e2338a529b7d9b4fee2cb90fb4fe9809ff941151d90bb7154c"
+  },
+  "qa_files": [
+    {
+      "role": "SEMANTIC_RUNTIME_QA",
+      "file_name": "LIXIL_インプラス_SizeCapability_R1_SEMANTIC_QA_20260913_FORMAL.json",
+      "file_id": "1NLX28EJQVNyOctjCQ7HbAOBuw7Gohq49",
+      "sha256": "ad40a8d42b9fade346f1d892f84bb0ce74004af01b5614fc564c38f7f0b97778",
+      "status": "PASS"
+    }
+  ],
+  "human_approval_record_file_id": "11WFRFiRrJq4LL3gQj3miMKRPTPzahjHz",
+  "documentation_file": {
+    "file_name": "LIXIL_インプラス_PRODUCT_MASTER_MANIFEST_v0.4-R2_SizeCapability_R1_FORMAL.md",
+    "file_id": "1mZ7gReHYjbG0jX-lP3wNhdgzvsuZsr7h"
+  },
+  "content_status": "PASS",
+  "dependency_status": "PASS",
+  "qa_status": "PASS",
+  "package_gate": "PASS",
+  "storage_status": "CANONICAL",
+  "registry_status": "PASS",
+  "blocking_items": [],
+  "manual_check": [
+    "SZ-SL3W",
+    "ND-01..ND-06",
+    "GL-ORD-004",
+    "FK-SA09",
+    "FK-R08",
+    "FK-R14/FK-R15/FK-R18/FK-R19",
+    "FR-CORNER",
+    "FR-AUX",
+    "OP-FLAT",
+    "2W/4W specified mapping areas"
+  ],
+  "size_mode_capability": {
+    "field_id": "size_mode",
+    "standard": {
+      "supported": false,
+      "candidate_source": null,
+      "candidate_count": 0
+    },
+    "custom": {
+      "supported": true,
+      "dimension_fields": [
+        "order_width",
+        "order_height"
+      ],
+      "unit": "mm",
+      "step_mm": 1
+    },
+    "validation_results": [
+      "PASS",
+      "BLOCKED",
+      "REVIEW_REQUIRED",
+      "MANUAL_CHECK"
+    ],
+    "clear_rule": "CLEAR_INVALID_DOWNSTREAM_AND_REEVALUATE"
+  },
+  "canonical_folder_id": "1NPW7cUbaC1JRvIaJrltFkoYUiLyPwJa1",
+  "working_folder_id": "1D4ei5PpcM5wGkb6AuXr2QBUmU1tPey92",
+  "old_folder_id": "1N-wPfze9_HKbMJhNMzC-aP4JSlbyjVZp",
+  "governing_spec": "PRODUCT_MASTER_PACKAGE_STORAGE_COMPLETION_GATE_v2.0",
+  "registry_file_id": "1HMMZ8JdsbJPtL_8LjQfxMF8P_Zb4-LReqvPMFn1pJks",
+  "generated_at": "2026-09-13T20:33:45+09:00",
+  "updated_at": "2026-09-13T20:36:50+09:00",
+  "formal_pass": true
+}

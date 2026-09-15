@@ -1,0 +1,121 @@
+name: Inplus v0.4-R2 UI Integration
+
+on:
+  push:
+    branches:
+      - feat/inplus-v0.4-r2-ui-integration-20260913
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  inplus_ui_integration:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Install
+        run: npm install --ignore-scripts
+
+      - name: Syntax checks
+        run: |
+          node --check src/catalog/runtime-master/runtime-manifest-loader.mjs
+          node --check src/catalog/runtime-master/runtime-master-registry.mjs
+          node --check src/catalog/runtime-master/app-runtime-integration-registry.mjs
+          node --check src/catalog/runtime-master/runtime-ui-template.mjs
+          node --check src/catalog/runtime-master/runtime-app-bridge.mjs
+          node --check src/catalog/runtime-master/semantic-table-bundle-v2-adapter.mjs
+          node --check src/catalog/runtime-master/semantic-table-bundle-v2-engine-core.mjs
+          node --check src/catalog/runtime-master/semantic-table-bundle-v2-engine.mjs
+          node --check src/ui/web/product-configuration-editor.mjs
+          node --check test/75-runtime-ui-inplus-v04r2-gate.test.mjs
+          node --check test/76-runtime-ui-inplus-v04r2-full-coverage.test.mjs
+          node --check test/77-runtime-ui-inplus-v04r2-installability-coverage.test.mjs
+          node --check test/browser/inplus-v04r2-runtime-browser-qa.mjs
+          node --check test/browser/inplus-v04r2-full-coverage-browser-qa.mjs
+
+      - name: Full repository automated tests
+        run: npm test
+
+      - name: Runtime integration smoke
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm run start:qa > /tmp/sash-inplus-v04r2.log 2>&1 &
+          PID=$!
+          trap 'kill $PID || true' EXIT
+          for i in {1..40}; do
+            if curl -fsS http://127.0.0.1:4173/api/health > /tmp/health.json; then break; fi
+            sleep 0.5
+          done
+          cat /tmp/health.json
+          node - <<'NODE'
+          const fs = require('fs');
+          const h = JSON.parse(fs.readFileSync('/tmp/health.json','utf8'));
+          const ids = new Set((h.runtimeMasterIntegrations ?? []).map((row) => row.id));
+          for (const id of ['SER-LIX-EW','SER-LIXIL-TW','SER-YKKAP-UCHIRIMO','SER-LIXIL-INPLUS']) {
+            if (!ids.has(id)) throw new Error(`missing Runtime integration ${id}`);
+          }
+          const inplus = h.runtimeMasterIntegrations.find((row) => row.id === 'SER-LIXIL-INPLUS');
+          if (!h.ok || !inplus || !inplus.selectable || inplus.status !== 'READY' || inplus.packageVersion !== 'v0.4-R2') process.exit(1);
+          if (inplus.sourceHash !== 'cbbdb6ba315c985f7d27f75a237e861be8ce635962ce1cd5a746d7f152c8e1f8') process.exit(1);
+          NODE
+
+      - name: Install browser QA dependencies
+        run: |
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+
+      - name: Inplus desktop and smartphone Browser QA
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm run start:qa > /tmp/sash-inplus-v04r2-browser.log 2>&1 &
+          PID=$!
+          trap 'kill $PID || true' EXIT
+          for i in {1..40}; do
+            if curl -fsS http://127.0.0.1:4173/api/health >/dev/null; then break; fi
+            sleep 0.5
+          done
+          node test/browser/inplus-v04r2-runtime-browser-qa.mjs
+
+      - name: Inplus Full Coverage Browser QA
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm run start:qa > /tmp/sash-inplus-v04r2-full-browser.log 2>&1 &
+          PID=$!
+          trap 'kill $PID || true' EXIT
+          for i in {1..40}; do
+            if curl -fsS http://127.0.0.1:4173/api/health >/dev/null; then break; fi
+            sleep 0.5
+          done
+          node test/browser/inplus-v04r2-full-coverage-browser-qa.mjs
+
+      - name: Existing-series browser regression
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm run start:qa > /tmp/sash-inplus-regression.log 2>&1 &
+          PID=$!
+          trap 'kill $PID || true' EXIT
+          for i in {1..40}; do
+            if curl -fsS http://127.0.0.1:4173/api/health >/dev/null; then break; fi
+            sleep 0.5
+          done
+          node test/browser/ew-runtime-browser-qa.mjs
+          node test/browser/tw-runtime-browser-qa.mjs
+          node test/browser/uchirimo-runtime-browser-qa.mjs
+          node test/browser/release-regression-browser-qa.mjs
+          node test/browser/work-management-browser-qa.mjs
+
+      - name: Upload integration evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: inplus-v04r2-ui-integration-evidence
+          path: artifacts/
+          if-no-files-found: warn
