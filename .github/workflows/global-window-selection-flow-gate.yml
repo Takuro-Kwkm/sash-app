@@ -49,21 +49,23 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          node --check src/catalog/runtime-master/canonical-window-semantic-schema.mjs
           node --check src/catalog/runtime-master/global-window-selection-flow-engine.mjs
           node --check src/catalog/runtime-master/new-construction-sash-runtime-ui-contract.mjs
           node --check src/catalog/runtime-master/inner-window-runtime-ui-contract.mjs
           node --check src/catalog/runtime-master/runtime-app-bridge.mjs
           node --check test/79-global-window-selection-flow.test.mjs
+          node --check test/80-canonical-window-semantic-schema.test.mjs
           if grep -REn "other:\$\{String\(key\)|other:" src/catalog/runtime-master/new-construction-sash-runtime-ui-contract.mjs src/catalog/runtime-master/inner-window-runtime-ui-contract.mjs; then
             echo 'FLOW_SCHEMA_UNMAPPED_FIELD_GATE=FAIL legacy other:* fallback remains'
             exit 31
           fi
-          if grep -REn "if[[:space:]]*\([^)]*(series|manufacturer|productId)[[:space:]]*={2,3}" src/catalog/runtime-master/global-window-selection-flow-engine.mjs; then
+          if grep -REn "if[[:space:]]*\([^)]*(series|manufacturer|productId)[[:space:]]*={2,3}" src/catalog/runtime-master/global-window-selection-flow-engine.mjs src/catalog/runtime-master/canonical-window-semantic-schema.mjs; then
             echo 'SERIES_OVERRIDE_ELIMINATION_GATE=FAIL'
             exit 32
           fi
-          echo 'SINGLE_FLOW_ENGINE_GATE=PASS'
-          echo 'SERIES_OVERRIDE_ELIMINATION_GATE=PASS'
+          echo 'SINGLE_FLOW_ENGINE_GATE=PASS_CODE'
+          echo 'SERIES_OVERRIDE_ELIMINATION_GATE=PASS_CODE'
 
       - name: Runtime source lint and UI contract typecheck
         run: |
@@ -71,7 +73,7 @@ jobs:
           npm run typecheck
 
       - name: Global flow unit gate
-        run: node --test test/79-global-window-selection-flow.test.mjs
+        run: node --test test/79-global-window-selection-flow.test.mjs test/80-canonical-window-semantic-schema.test.mjs
 
       - name: Legacy core regression partition
         run: node --test test/01-core.test.mjs test/02-lr.test.mjs test/03-features.test.mjs test/04-thermosl.test.mjs test/61-vercel-route-contract.test.mjs
@@ -107,9 +109,9 @@ jobs:
           done
           cat /tmp/health.json
           node -e 'const h=require("/tmp/health.json"); if(!h.ok) process.exit(1); const ids=new Set(h.runtimeMasterIntegrations.map(x=>x.id)); const expected=["SER-LIX-EW","SER-LIX-SAMOS2H","SER-LIX-SAMOSL","SER-LIXIL-TW","SER-YKK-APW430","SER-YKK-APW431","SER-YKKAP-UCHIRIMO"]; if(expected.some(id=>!ids.has(id))) process.exit(1)'
-          echo 'WINDOW_FLOW_BASELINE_GATE=PASS'
-          echo 'CANONICAL_SLOT_SCHEMA_GATE=PASS_INITIAL_RESOLUTION'
-          echo 'FLOW_SCHEMA_UNMAPPED_FIELD_GATE=PASS_INITIAL_RESOLUTION'
+          echo 'WINDOW_FLOW_BASELINE_GATE=PASS_RUNTIME_SMOKE'
+          echo 'CANONICAL_SLOT_SCHEMA_GATE=PASS_UNIT_SCHEMA_ONLY'
+          echo 'FLOW_SCHEMA_UNMAPPED_FIELD_GATE=PASS_INITIAL_RESOLUTION_ONLY'
 
       - name: Install browser QA dependencies
         run: |
@@ -132,10 +134,13 @@ jobs:
           node test/browser/uchirimo-runtime-browser-qa.mjs
           node test/browser/formal-runtime-resync-browser-qa.mjs
           node test/browser/release-regression-browser-qa.mjs
-          echo 'FULL_BROWSER_FLOW_QA_GATE=PASS_REGRESSION_SET'
+          echo 'FULL_BROWSER_FLOW_QA_GATE=PARTIAL_EXISTING_REGRESSION_SET_ONLY'
 
       - name: Gate summary
         run: |
-          echo 'GLOBAL_WINDOW_SELECTION_FLOW_CODE_GATE=PASS'
-          echo 'FLOW_REGRESSION_GATE=PASS'
-          echo 'GLOBAL_WINDOW_SELECTION_FLOW_GATE=PASS_CODE_AND_EXISTING_BROWSER_SET'
+          echo 'GLOBAL_WINDOW_SELECTION_FLOW_FOUNDATION_CODE_GATE=PASS'
+          echo 'FLOW_REGRESSION_GATE=PASS_EXISTING_SET'
+          echo 'GLOBAL_WINDOW_SELECTION_FLOW_READY=FALSE'
+          echo 'REMAINING=FULL_FLOW_SIGNATURE_COVERAGE,FLOW_TRANSITION,FULL_BROWSER_FLOW_QA'
+          echo 'APP_INTEGRATION_READY=FALSE'
+          echo 'RELEASE_INPUT_GATE=BLOCKED'
