@@ -22,6 +22,7 @@ const present=(v)=>v!==undefined&&v!==null&&v!==''&&(!Array.isArray(v)||v.length
 const enabled=(f)=>(f?.values??[]).filter((c)=>c.disabled!==true);
 const stable=(v)=>Array.isArray(v)?v.map(stable):(!v||typeof v!=='object'?v:Object.fromEntries(Object.entries(v).sort(([a],[b])=>a.localeCompare(b)).map(([k,x])=>[k,stable(x)])));
 const stableJson=(v)=>JSON.stringify(stable(v));
+const jsonStringify=(v)=>JSON.stringify(v,(_key,value)=>typeof value==='bigint'?value.toString():value,2);
 const hash=(v)=>createHash('sha256').update(typeof v==='string'?v:stableJson(v)).digest('hex');
 const normalizeMulti=(values)=>[...new Map(values.map((v)=>[String(v),v])).values()].sort((a,b)=>String(a).localeCompare(String(b)));
 const invalid=(r)=>['INVALID','BLOCKED','BLOCK'].includes(String(r.validation?.status??r.status??''));
@@ -65,8 +66,25 @@ let resolverCalls=0;
 const terminalProofCache=new Map();
 let terminalCacheHits=0,terminalCacheMisses=0,terminalTransitionChecks=0;
 let twShapeAudit=null;
-async function auditTwPairwiseShape(){if(twShapeAudit)return twShapeAudit;const runtime=await loadRegisteredRuntime('LIXIL','TW');const rows=runtime?.master?.sourceRows?.optionDependencies??[];const unsupported=[];for(const row of rows){if(row?.active===false)continue;const action=String(row['アクション']??'');const trigger=String(row['トリガーoption_id']??'');if(action&&action!=='選択不可')unsupported.push({reason:'ACTION',action});if(/[|,、]/.test(trigger))unsupported.push({reason:'MULTI_TRIGGER',trigger});const key=String(row['条件項目']??'');if(key&&!['窓種適用','建て方/区分','障子枚数','実寸W(mm)','ガラス大分類','電動仕様','選択状態'].includes(key))unsupported.push({reason:'CONDITION_KEY',key});}
-twShapeAudit={row_count:rows.length,unsupported_count:unsupported.length,unsupported,digest:hash(rows)};return twShapeAudit;}
+async function auditTwPairwiseShape(){
+  if(twShapeAudit)return twShapeAudit;
+  const runtime=await loadRegisteredRuntime('LIXIL','TW');
+  const rows=runtime?.master?.sourceRows?.optionDependencies??[];
+  const supportedConditions=new Set(['窓種適用','建て方/区分','障子枚数','実寸W(mm)','ガラス大分類','電動仕様','選択状態']);
+  const effective=rows.filter((row)=>{
+    if(row?.active===false)return false;
+    if(String(row['アクション']??'')!=='選択不可')return false;
+    const condition=String(row['条件項目']??'');
+    return !condition||supportedConditions.has(condition);
+  });
+  const unsupported=[];
+  for(const row of effective){
+    const trigger=row['トリガーoption_id'];
+    if(Array.isArray(trigger)||(trigger&&typeof trigger==='object'))unsupported.push({reason:'NON_SCALAR_TRIGGER'});
+  }
+  twShapeAudit={row_count:rows.length,effective_row_count:effective.length,ignored_row_count:rows.length-effective.length,unsupported_count:unsupported.length,unsupported,digest:hash(effective)};
+  return twShapeAudit;
+}
 async function resolve(product,selection){if(resolverCalls>=MAX_CALLS)throw Object.assign(new Error('resolver call limit'),{code:'RESOLVER_CALL_LIMIT'});resolverCalls++;return resolveRuntimeAppProduct(product.id,selection);}
 async function exactTerminalBfs(product,result,field,contextKey){const bySubset=new Map();const queue=[];const canonical=(r)=>normalizeMulti(Array.isArray(r.selection?.[field.key])?r.selection[field.key]:[]).map(String);const put=(r)=>{const subset=canonical(r);const key=stableJson(subset);if(bySubset.has(key))return;bySubset.set(key,r);queue.push(key);};put(result);while(queue.length){if(bySubset.size>MAX_BFS_SUBSETS)throw Object.assign(new Error('terminal bfs subset limit'),{code:'TERMINAL_BFS_SUBSET_LIMIT'});const key=queue.shift(),state=bySubset.get(key),subset=canonical(state);const currentField=(state.fields??[]).find((f)=>f.key===field.key);if(!currentField)throw Object.assign(new Error('terminal multi field hidden during BFS'),{code:'TERMINAL_MULTI_FIELD_HIDDEN'});const allowed=enabled(currentField).map((c)=>String(c.value));const desired=[];for(const c of allowed)if(!subset.includes(c))desired.push(normalizeMulti([...subset,c]));for(const c of subset)desired.push(normalizeMulti(subset.filter((x)=>x!==c)));for(const nextSubset of desired){const nextSel={...(state.selection??{})};if(nextSubset.length)nextSel[field.key]=nextSubset;else delete nextSel[field.key];const child=await resolve(product,nextSel);terminalTransitionChecks++;if(invalid(child))continue;put(child);}}
 return{count:BigInt(bySubset.size),proof_type:'EXACT_UI_REACHABLE_SUBSET_BFS',context_key:contextKey,reachable_subset_count:bySubset.size};}
@@ -103,5 +121,5 @@ async function count(result,done,depth=0){
 const counts=await count(root,new Set(['window_type']));
 const proofs=[...memo.values()].map((v)=>v.terminal_multi_proof).filter(Boolean);
 const report={exact_head_sha:HEAD_SHA,task_classification:'NON-PRODUCT-MASTER',product_master_mutation:0,pilot_only:true,manufacturer:product.manufacturer,series:product.series,product_id:product.id,window_type:TARGET,status:blocker?'BLOCKED':'COUNTED_CANDIDATE',exact_discrete_terminal_context_count:counts?.terminal?.toString()??null,custom_pending_context_count:counts?.custom?.toString()??null,memo_state_count:states,memo_hit_count:hits,resolver_call_count:resolverCalls,max_depth:maxDepth,terminal_multi_proof_context_count:terminalProofCache.size,terminal_multi_cache_hits:terminalCacheHits,terminal_multi_cache_misses:terminalCacheMisses,terminal_transition_checks:terminalTransitionChecks,terminal_multi_proofs:proofs,blocker,gate_status:{qa_population_gate:'BLOCKED_PILOT_ONLY',custom_size_coverage_gate:'BLOCKED_CONTINUOUS_PARTITION_NOT_PROVEN',app_integration_ready:false,release_input_gate:'BLOCKED'},note:'Pilot only. Terminal MULTI_ENUM is counted exactly: EW by UI-reachable subset graph closure; TW by source-shape-audited pairwise conflict graph and exact independent-set counting. Empty optional selection is included. No Product Master mutation.'};
-await writeFile(`${OUT}/report.json`,`${JSON.stringify(report,null,2)}\n`,'utf8');
+await writeFile(`${OUT}/report.json`,`${jsonStringify(report)}\n`,'utf8');
 console.log(`TERMINAL_MULTI_PILOT_STATUS=${report.status}`);console.log(`SERIES=${report.series}`);console.log(`WINDOW=${report.window_type}`);console.log(`EXACT_DISCRETE_TERMINAL_CONTEXT_COUNT=${report.exact_discrete_terminal_context_count??'BLOCKED'}`);console.log(`CUSTOM_PENDING_CONTEXT_COUNT=${report.custom_pending_context_count??'BLOCKED'}`);console.log(`MEMO_STATE_COUNT=${states}`);console.log(`MEMO_HIT_COUNT=${hits}`);console.log(`RESOLVER_CALL_COUNT=${resolverCalls}`);console.log(`TERMINAL_MULTI_PROOF_CONTEXT_COUNT=${terminalProofCache.size}`);console.log(`TERMINAL_MULTI_CACHE_HITS=${terminalCacheHits}`);console.log(`TERMINAL_TRANSITION_CHECKS=${terminalTransitionChecks}`);console.log(`BLOCKER=${blocker?JSON.stringify(blocker):'NONE'}`);console.log('APP_INTEGRATION_READY=false');console.log('RELEASE_INPUT_GATE=BLOCKED');
