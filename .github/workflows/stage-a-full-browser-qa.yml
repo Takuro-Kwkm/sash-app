@@ -21,12 +21,12 @@ jobs:
     env:
       HEAD_SHA: ${{ github.sha }}
       CUSTOM_EVIDENCE_HEAD: 6fe783310cd0334f449e55573d534fa8abaed5b2
-      CUSTOM_EVIDENCE_RUN: '34971232430'
-      TRANSITION_EVIDENCE_RUN: '34972570655'
+      CUSTOM_ARTIFACT_ID: '10395604814'
+      TRANSITION_ARTIFACT_ID: '10397070916'
       DISCRETE_EVIDENCE_HEAD: cf38b3857cc3d0dd3f345e0a86dfafe01fbefcfd
-      DISCRETE_EVIDENCE_RUN: '34971888802'
+      DISCRETE_ARTIFACT_ID: '10397413935'
       MULTI_BROWSER_HEAD: de6dadf0dd9aa3fa46df55afdfbe7c37d0d15b1a
-      MULTI_BROWSER_RUN: '34913709414'
+      MULTI_BROWSER_ARTIFACT_ID: '10375282202'
       STAGE_A_FULL_BROWSER_OUT: artifacts/stage-a-full-browser-qa
     steps:
       - name: Checkout exact push HEAD with history
@@ -53,41 +53,28 @@ jobs:
           node --check test/browser/stage-a-full-browser-qa.mjs
           echo 'FULL_BROWSER_EVIDENCE_INVALIDATION_GATE=PASS'
 
-      - name: Download CUSTOM selector and geometry evidence
-        uses: actions/download-artifact@v4
-        with:
-          name: stage-a-custom-selector-geometry-v5
-          path: artifacts/evidence/custom
-          repository: Takuro-Kwkm/sash-app
-          run-id: ${{ env.CUSTOM_EVIDENCE_RUN }}
-          github-token: ${{ github.token }}
-
-      - name: Download CUSTOM transition evidence
-        uses: actions/download-artifact@v4
-        with:
-          name: stage-a-custom-transition-proof-v4
-          path: artifacts/evidence/transition
-          repository: Takuro-Kwkm/sash-app
-          run-id: ${{ env.TRANSITION_EVIDENCE_RUN }}
-          github-token: ${{ github.token }}
-
-      - name: Download current-head discrete evidence
-        uses: actions/download-artifact@v4
-        with:
-          name: stage-a-105-window-discrete-exact-head-consolidation-v3
-          path: artifacts/evidence/discrete
-          repository: Takuro-Kwkm/sash-app
-          run-id: ${{ env.DISCRETE_EVIDENCE_RUN }}
-          github-token: ${{ github.token }}
-
-      - name: Download invariant MULTI_ENUM browser evidence
-        uses: actions/download-artifact@v4
-        with:
-          name: stage-a-multienum-browser-equivalence-candidate
-          path: artifacts/evidence/multienum
-          repository: Takuro-Kwkm/sash-app
-          run-id: ${{ env.MULTI_BROWSER_RUN }}
-          github-token: ${{ github.token }}
+      - name: Download pinned evidence artifacts
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          download_artifact(){
+            local id="$1" out="$2"
+            mkdir -p "$out"
+            curl -fL --retry 2 --retry-all-errors \
+              -H "Authorization: Bearer $GH_TOKEN" \
+              -H 'Accept: application/vnd.github+json' \
+              -H 'X-GitHub-Api-Version: 2022-11-28' \
+              "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/artifacts/${id}/zip" \
+              -o "/tmp/artifact-${id}.zip"
+            unzip -q "/tmp/artifact-${id}.zip" -d "$out"
+          }
+          download_artifact "$CUSTOM_ARTIFACT_ID" artifacts/evidence/custom
+          download_artifact "$TRANSITION_ARTIFACT_ID" artifacts/evidence/transition
+          download_artifact "$DISCRETE_ARTIFACT_ID" artifacts/evidence/discrete
+          download_artifact "$MULTI_BROWSER_ARTIFACT_ID" artifacts/evidence/multienum
+          echo 'PINNED_EVIDENCE_DOWNLOAD_GATE=PASS'
 
       - name: Install app dependencies and Chromium
         shell: bash
