@@ -20,6 +20,10 @@ const heroPartPaths=[
   "part-06a.bin","part-06b.bin","part-06c.bin","part-06d.bin",
   "part-07.bin"
 ].map((name)=>join(heroAssetRoot,name));
+const heroPortraitAssetRoot=join(webRoot,"assets","design-preview-hero-portrait");
+const heroPortraitPartPaths=[
+  "part-00.bin","part-01.bin","part-02.bin","part-03.bin"
+].map((name)=>join(heroPortraitAssetRoot,name));
 const catalog=createCatalog(CURRENT_WINDOW_SERIES_MODULES);
 const runtimeMasterIntegrations=runtimeAppIntegrationInventory();
 const buildTimestamp=new Date().toISOString();
@@ -46,11 +50,26 @@ const staticFileAt=async(res,path,type)=>{
 };
 const staticFile=(res,name,type)=>staticFileAt(res,join(webRoot,name),type);
 
-const heroPhoto=async(res)=>{
+const photoFromParts=async(res,paths)=>{
   try{
-    const parts=await Promise.all(heroPartPaths.map((path)=>readFile(path)));
+    const parts=await Promise.all(paths.map((path)=>readFile(path)));
     const body=Buffer.concat(parts);
     res.writeHead(200,{"content-type":"image/jpeg","content-length":String(body.length),"cache-control":"no-store","x-sash-build-id":buildId});
+    res.end(body);
+  }catch{
+    res.writeHead(404,{"cache-control":"no-store","x-sash-build-id":buildId});
+    res.end("Not found");
+  }
+};
+const heroPhoto=(res)=>photoFromParts(res,heroPartPaths);
+const heroPortraitPhoto=(res)=>photoFromParts(res,heroPortraitPartPaths);
+
+const designPreviewCss=async(res)=>{
+  try{
+    const base=await readFile(join(webRoot,"design-preview.css"),"utf8");
+    const responsive='\n@media(max-width:760px){.reference-hero-photo{content:url("/design-preview-reference-hero-portrait.jpg")!important;object-position:center center!important}}\n';
+    const body=`${base}${responsive}`;
+    res.writeHead(200,{"content-type":"text/css; charset=utf-8","content-length":String(Buffer.byteLength(body)),"cache-control":"no-store","x-sash-build-id":buildId});
     res.end(body);
   }catch{
     res.writeHead(404,{"cache-control":"no-store","x-sash-build-id":buildId});
@@ -110,6 +129,7 @@ export function createRecoveryRequestHandler({backend="node:http recovery server
     }
     if(url.pathname==="/api/catalog") return json(res,200,catalog);
     if(url.pathname==="/design-preview-reference-hero.jpg") return heroPhoto(res);
+    if(url.pathname==="/design-preview-reference-hero-portrait.jpg") return heroPortraitPhoto(res);
     if(url.pathname==="/design-preview-reference-hero.svg") return staticFile(res,"design-preview-reference-hero.svg","image/svg+xml; charset=utf-8");
     if(url.pathname==="/app.js") return staticFile(res,"app.js","text/javascript; charset=utf-8");
     if(url.pathname==="/product-configuration-editor.mjs") return staticFile(res,"product-configuration-editor.mjs","text/javascript; charset=utf-8");
@@ -118,7 +138,7 @@ export function createRecoveryRequestHandler({backend="node:http recovery server
     if(url.pathname==="/styles-wave3.css") return staticFile(res,"styles-wave3.css","text/css; charset=utf-8");
     if(url.pathname==="/work-management.css") return staticFile(res,"work-management.css","text/css; charset=utf-8");
     if(url.pathname==="/estimate-output.css") return staticFile(res,"estimate-output.css","text/css; charset=utf-8");
-    if(url.pathname==="/design-preview.css") return staticFile(res,"design-preview.css","text/css; charset=utf-8");
+    if(url.pathname==="/design-preview.css") return designPreviewCss(res);
     if(url.pathname==="/design-preview-notifications.css") return staticFile(res,"design-preview-notifications.css","text/css; charset=utf-8");
     if(url.pathname==="/design-preview-estimate.css") return staticFile(res,"design-preview-estimate.css","text/css; charset=utf-8");
     if(url.pathname==="/design-preview-guide.css") return staticFile(res,"design-preview-guide.css","text/css; charset=utf-8");
