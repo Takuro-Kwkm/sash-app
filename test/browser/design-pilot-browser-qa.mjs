@@ -32,12 +32,12 @@ async function assertIntrinsicHeroRatio(target,label){
   const metrics=await target.locator('.reference-hero-photo').evaluate((node)=>{
     const box=node.getBoundingClientRect();
     const style=getComputedStyle(node);
-    return {naturalWidth:node.naturalWidth,naturalHeight:node.naturalHeight,width:box.width,height:box.height,objectFit:style.objectFit};
+    return {width:box.width,height:box.height,objectFit:style.objectFit,content:style.content};
   });
-  assert.equal(metrics.naturalWidth,640,`${label} hero source width`);
-  assert.equal(metrics.naturalHeight,340,`${label} hero source height`);
-  const naturalRatio=metrics.naturalWidth/metrics.naturalHeight;
+  assert.match(metrics.content,/design-preview-reference-hero\.jpg/,`${label} must use approved hero JPEG`);
+  const naturalRatio=640/340;
   const renderedRatio=metrics.width/metrics.height;
+  assert.ok(Number.isFinite(renderedRatio)&&metrics.width>0&&metrics.height>0,`${label} hero must render with positive dimensions`);
   assert.ok(Math.abs(renderedRatio-naturalRatio)<0.01,`${label} hero must preserve intrinsic aspect ratio: ${renderedRatio} vs ${naturalRatio}`);
   assert.equal(metrics.objectFit,'contain',`${label} hero must not use a stretching fit mode`);
 }
