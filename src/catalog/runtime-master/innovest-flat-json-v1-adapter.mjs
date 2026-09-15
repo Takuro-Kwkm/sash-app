@@ -1,5 +1,6 @@
 import { FIELD_DEFS, normalizedValues } from './innovest-flat-json-v1-model.mjs';
 import { createInnovestResolver } from './innovest-flat-json-v1-resolver.mjs';
+import { createInnovestOptionRequirementAwareResolver } from './innovest-option-requirement-resolver.mjs';
 
 export function adaptInnovestFlatJsonV1(runtimePackage) {
   const selectors = runtimePackage.files['selectors.json'];
@@ -20,6 +21,7 @@ export function adaptInnovestFlatJsonV1(runtimePackage) {
       orderReady: false,
       packageVersion: runtimePackage.manifest.package_version,
       structuredOptionPredicates: true,
+      structuredOptionRequirements: true,
       customSize: true,
       standardSize: true,
       reviewRequired: true,
@@ -28,5 +30,6 @@ export function adaptInnovestFlatJsonV1(runtimePackage) {
     }),
     source: data,
   });
-  return Object.freeze({ master, resolver: createInnovestResolver(data) });
+  const resolver=createInnovestOptionRequirementAwareResolver(data,createInnovestResolver);
+  return Object.freeze({ master, resolver });
 }
