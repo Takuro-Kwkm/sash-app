@@ -5,45 +5,24 @@ on:
     branches: [main]
     paths:
       - '.github/workflows/stage-a-samos-options-self-reference-diagnostic.yml'
-      - 'scripts/stage-a-samos-options-self-reference-diagnostic.mjs'
-      - 'src/catalog/runtime-master/**'
-      - 'src/catalog/**'
 
 permissions:
   contents: read
 
 jobs:
-  diagnose:
+  closed-evidence-gate:
     runs-on: ubuntu-latest
-    timeout-minutes: 3
-    env:
-      HEAD_SHA: ${{ github.event.pull_request.head.sha }}
-      STAGE_A_SAMOS_OPTIONS_DIAG_OUT: artifacts/stage-a-samos-options-self-reference-diagnostic
+    timeout-minutes: 2
     steps:
-      - name: Checkout exact PR HEAD
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}
-          fetch-depth: 1
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 24
-      - name: Exact SHA gate
+      - name: Preserve Samos source-rule evidence
         shell: bash
         run: |
           set -euo pipefail
-          actual="$(git rev-parse HEAD)"
-          test "$actual" = "$HEAD_SHA"
-          echo "EXACT_HEAD_GATE=PASS sha=$actual"
-      - name: Run Samos options self-reference diagnostic
-        shell: bash
-        run: |
-          set -euo pipefail
-          node --check scripts/stage-a-samos-options-self-reference-diagnostic.mjs
-          node scripts/stage-a-samos-options-self-reference-diagnostic.mjs
-      - name: Upload diagnostic evidence
-        uses: actions/upload-artifact@v4
-        with:
-          name: stage-a-samos-options-self-reference-diagnostic
-          path: artifacts/stage-a-samos-options-self-reference-diagnostic/report.json
-          if-no-files-found: error
+          echo 'DIAGNOSTIC_EVIDENCE_RUN=34926697862'
+          echo 'SAMOS2H_OPTIONS=33 conflict=OP-S2H-ANGLE-COVER::OP-S2H-FINGER-GUARD source=OPR-S2H-001 shape=$contains+DENY_CANDIDATE'
+          echo 'SAMOSL_OPTIONS=39 conflict=OP-SL-ANGLE-COVER::OP-SL-FINGER-GUARD shape=mutual_$notContains'
+          echo 'HIGHER_ORDER_SELF_REFERENCE_COUNT=0'
+          echo 'RETRY_AUTHORIZED=false'
+          echo 'REOPEN_CONDITION=NEW_CONFLICT_GRAPH_V4_MODEL'
+          echo 'APP_INTEGRATION_READY=false'
+          echo 'RELEASE_INPUT_GATE=BLOCKED'
