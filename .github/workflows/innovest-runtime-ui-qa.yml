@@ -8,7 +8,7 @@ on:
       - 'src/runtime-master-packages/ykkap-innovest-v1.0.1/**'
       - 'src/ui/web/**'
       - 'src/server/**'
-      - 'test/76-runtime-ui-innovest-gate.test.mjs'
+      - 'test/76*-innovest*.test.mjs'
       - 'test/browser/innovest-runtime-browser-qa.mjs'
       - '.github/workflows/innovest-runtime-ui-qa.yml'
 
@@ -28,9 +28,10 @@ jobs:
           node --check src/catalog/runtime-master/innovest-flat-json-v1-adapter.mjs
           node --check src/catalog/runtime-master/innovest-flat-json-v1-model.mjs
           node --check src/catalog/runtime-master/innovest-flat-json-v1-resolver.mjs
+          node --check src/catalog/runtime-master/innovest-option-requirement-resolver.mjs
           node --check test/browser/innovest-runtime-browser-qa.mjs
       - name: Innovest targeted integration gate
-        run: node --test test/76-runtime-ui-innovest-gate.test.mjs
+        run: node --test test/76-runtime-ui-innovest-gate.test.mjs test/76b-innovest-option-requirements.test.mjs
       - name: Install browser QA dependencies
         run: |
           npm install --no-save playwright@1.55.0
