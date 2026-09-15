@@ -88,6 +88,14 @@ try{
   report.scenarios.IPAD_PORTRAIT_HOME='PASS';
   await homePortrait.close();
 
+  const heroSource=await context.newPage();track(heroSource);await heroSource.setViewportSize({width:1000,height:800});
+  await goto(heroSource,'/design-preview-reference-hero.jpg');
+  await heroSource.locator('img').screenshot({path:`${OUT}/approved-hero-source-wide.png`});
+  await goto(heroSource,'/design-preview-reference-hero-portrait.jpg');
+  await heroSource.locator('img').screenshot({path:`${OUT}/approved-hero-source-portrait.png`});
+  report.scenarios.HERO_SOURCE_ASSETS_CAPTURED='PASS';
+  await heroSource.close();
+
   await page.locator('#themeSelect').selectOption('light');
   await page.getByRole('link',{name:/すべて見る/}).first().click();
   await page.waitForURL(/\/design-preview\/notifications$/);
