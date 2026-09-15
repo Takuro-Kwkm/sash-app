@@ -102,7 +102,7 @@ export function createInnovestResolver(data) {
     const installationAllowed = uniq(installRowsBase.map((row) => row.frame_installation_type));
     retainIfAllowed(selection, 'frame_installation_type', installationAllowed, cleared);
     const angleAllowed = uniq(installRowsBase.filter((row) => !selection.frame_installation_type || row.frame_installation_type === selection.frame_installation_type).map((row) => Boolean(row.angle_attached_frame)));
-    if (has(selection.angle_attached_frame) && !angleAllowed.some((candidate) => eq(candidate, selection.angle_attached_frame))) {
+    if (has(selection.angle_attached_frame) && !angleAllowed.some((candidate) => Object.is(candidate, selection.angle_attached_frame) || String(candidate) === String(selection.angle_attached_frame))) {
       cleared.push({ field: 'angle_attached_frame', reason: 'DEPENDENCY', removed: selection.angle_attached_frame }); delete selection.angle_attached_frame;
     }
     if (!has(selection.angle_attached_frame) && angleAllowed.length === 1 && selection.frame_installation_type) selection.angle_attached_frame = angleAllowed[0];
