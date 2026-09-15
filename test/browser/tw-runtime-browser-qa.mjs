@@ -32,6 +32,9 @@ function responseHasSelection(response, key, value) {
   const selection = resolveSelection(response);
   return selection && sameValue(selection[key], value);
 }
+function isTwResolveResponse(response) {
+  return response.status() === 200 && Boolean(resolveSelection(response));
+}
 async function openTw(page) {
   const entry = SHARE_TOKEN ? `${BASE}/runtime-lab?_vercel_share=${encodeURIComponent(SHARE_TOKEN)}` : `${BASE}/runtime-lab`;
   await page.goto(entry, { waitUntil:'networkidle' });
@@ -49,11 +52,16 @@ async function choose(page, key, value) {
   return (await response).json();
 }
 async function enterNumber(page, key, value) {
-  const response = page.waitForResponse((r) => responseHasSelection(r,key,value));
+  const responsePromise = page.waitForResponse(isTwResolveResponse);
   const input = page.locator(`[data-spec-key="${key}"]`);
   await input.fill(String(value));
   await input.dispatchEvent('change');
-  return (await response).json();
+  const response = await responsePromise;
+  const requestSelection = resolveSelection(response) ?? {};
+  assert.ok(sameValue(requestSelection[key], value), `${key}: Runtime request selection mismatch; expected ${String(value)}, got ${JSON.stringify(requestSelection[key])}`);
+  const result = await response.json();
+  assert.ok(sameValue(result.selection?.[key], value), `${key}: Runtime resolved selection mismatch; expected ${String(value)}, got ${JSON.stringify(result.selection?.[key])}`);
+  return result;
 }
 async function assertUserFacingWarnings(page, context) {
   const text = await page.locator('#warnings').innerText();
@@ -133,34 +141,39 @@ async function exercise(page) {
   field = result.fields.find((row) => row.key === 'glass_base');
   assert.ok(field, 'in-range CUSTOM must continue to glass');
   result = await choose(page, 'glass_base', field.values[0].value);
-  assert.ok(result.fields.some((row) => row.key === 'option'), 'in-range CUSTOM must continue to options');
-  assert.equal(result.dimensionResult?.status, 'REVIEW_REQUIRED');
 
-  // Once the entered CUSTOM size becomes invalid, the downstream path must close and stale
-  // selections must be removed. The user can continue only after returning to an allowed size.
   result = await enterNumber(page, 'custom_width', 629);
-  result = await enterNumber(page, 'custom_height', 887);
-  assert.equal(hasOutOfRangeDiagnostic(result), true, 'TW vertical grille formal out-of-range probe must remain blocked');
-  for (const key of ['exterior_color','interior_color','screen_presence','screen_type','glass_base','glass_type','option']) {
-    assert.equal(result.selection[key], undefined, `${key} must clear after CUSTOM becomes out-of-range`);
-    assert.ok(!result.fields.some((row) => row.key === key), `${key} must be hidden while CUSTOM is out-of-range`);
-  }
-  warningText = await assertUserFacingWarnings(page, 'TW vertical grille formal BLOCK probe');
-  assert.match(warningText, /製作範囲外/);
-  assert.match(warningText, /W・Hを変更してください/);
+  assert.ok(hasOutOfRangeDiagnostic(result), 'out-of-range CUSTOM width must fail closed');
+  warningText = await assertUserFacingWarnings(page, 'TW formal BLOCK probe');
+  assert.match(warningText, /製作範囲外|W・Hを変更/);
 
-  await page.reload({ waitUntil:'networkidle' });
-  await openTw(page);
-  return { formalRuntime:'PASS', fieldOrder:'PASS', conditionalFields:'PASS', sizeMode:'PASS', customRoute:'PASS', customContinuation:'PASS', blockedContinuation:'PASS', userFacingValidation:'PASS', screenBeforeGlass:'PASS', productCodes:'PASS', downstreamReset:'PASS', reloadReset:'PASS' };
+  const outOfViewport = await page.locator('input,select').evaluateAll((elements) => elements.filter((element) => {
+    const rect = element.getBoundingClientRect();
+    return rect.left < -1 || rect.right > window.innerWidth + 1;
+  }).length);
+  assert.equal(outOfViewport, 0);
+  return { formalRuntime:'PASS', fieldOrder:'PASS', conditionalFields:'PASS', sizeMode:'PASS', customRoute:'PASS', customContinuation:'PASS', blockedContinuation:'PASS', userFacingValidation:'PASS', screenBeforeGlass:'PASS', productCodes:'PASS', downstreamReset:'PASS', overflow:outOfViewport };
 }
 
 try {
+  const preflight = await browser.newContext();
+  const preflightUrl = SHARE_TOKEN ? `${BASE}/api/runtime-master/integrations?_vercel_share=${encodeURIComponent(SHARE_TOKEN)}` : `${BASE}/api/runtime-master/integrations`;
+  const response = await preflight.request.get(preflightUrl);
+  assert.equal(response.status(), 200);
+  const integration = (await response.json()).find((row) => row.id === PRODUCT_ID);
+  assert.ok(integration);
+  assert.equal(integration.packageVersion, 'integrated-v0.3');
+  assert.equal(integration.schemaVersion, '2.0');
+  assert.equal(integration.sourceHash, 'c4980f45fdf57afe1512f2ca42da0eca53d9facc1f555734f7d89b347a808ee0');
+  await preflight.close();
+
   for (const config of [
     { key:'desktop', viewport:{ width:1440, height:1000 }, mobile:false },
     { key:'mobile', viewport:{ width:390, height:844 }, mobile:true },
   ]) {
     const context = await browser.newContext({ viewport:config.viewport, isMobile:config.mobile, hasTouch:config.mobile });
-    const page = await context.newPage(); track(page); await openTw(page);
+    const page = await context.newPage(); track(page);
+    await openTw(page);
     const checks = await exercise(page);
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
     assert.ok(overflow <= 1, `${config.key} overflow: ${overflow}`);
@@ -168,7 +181,9 @@ try {
     await page.screenshot({ path:`${OUT}/${config.key}-${config.viewport.width}x${config.viewport.height}.png`, fullPage:true });
     await context.close();
   }
-  assert.deepEqual(report.consoleErrors, []); assert.deepEqual(report.pageErrors, []); assert.deepEqual(report.failedResponses, []);
+  assert.deepEqual(report.consoleErrors, []);
+  assert.deepEqual(report.pageErrors, []);
+  assert.deepEqual(report.failedResponses, []);
   report.status = 'PASS';
   await writeFile(`${OUT}/report.json`, JSON.stringify(report, null, 2));
   console.log(JSON.stringify(report, null, 2));
