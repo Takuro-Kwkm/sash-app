@@ -1,4 +1,4 @@
-name: Stage A 105-Window Discrete Exact-Head Consolidation V2
+name: Stage A 105-Window Discrete Exact-Head Consolidation V3
 
 on:
   push:
@@ -21,7 +21,7 @@ jobs:
       OLD_NONTW_RUN: '34948462528'
       APW431_REPROOF_HEAD: df4e6e2a86f70a0635c7156775d0cb28bb1ca7c8
       APW431_REPROOF_RUN: '34971484492'
-      OUT: artifacts/stage-a-105-window-discrete-exact-head-consolidation-v2
+      OUT: artifacts/stage-a-105-window-discrete-exact-head-consolidation-v3
     steps:
       - name: Checkout exact push HEAD with history
         uses: actions/checkout@v4
@@ -87,8 +87,8 @@ jobs:
           const newPath=execFileSync('bash',['-lc',"find artifacts/evidence/apw431-reproof -name consolidated-report.json -print -quit"],{encoding:'utf8'}).trim();
           if(!newPath)throw new Error('APW431_REPROOF_REPORT_MISSING');
           const fresh=read(newPath);
-          if(old105.exact_head_sha!==process.env.OLD_105_HEAD||old105.status!=='PASS'||old105.base_window_count!==105||old105.unverified_window_count!==0)throw new Error('OLD_105_EVIDENCE_INVALID');
-          if(old80.status!=='PASS'||old80.counted_window_count!==80||old80.unverified_window_count!==0)throw new Error('OLD_NONTW_EVIDENCE_INVALID');
+          if(old105.exact_head_sha!==process.env.OLD_105_HEAD||old105.status!=='STAGE_A_105_WINDOW_DISCRETE_EXACT_HEAD_CONSOLIDATED_PASS'||old105.gate_status?.discrete_population_gate!=='PASS'||old105.base_window_count!==105||old105.unverified_window_count!==0)throw new Error('OLD_105_EVIDENCE_INVALID');
+          if(old80.status!=='NONTW_80_WINDOW_EXACT_HEAD_CONSOLIDATED_PASS'||old80.gate_status?.nontw_discrete_population_gate!=='PASS'||old80.counted_window_count!==80||old80.unverified_window_count!==0)throw new Error('OLD_NONTW_EVIDENCE_INVALID');
           if(fresh.exact_head_sha!==process.env.APW431_REPROOF_HEAD||fresh.status!=='PASS'||fresh.window_count!==6)throw new Error('APW431_REPROOF_EVIDENCE_INVALID');
           const oldApw=(old80.windows??[]).filter(x=>x.product_id==='SER-YKK-APW431');
           if(oldApw.length!==6)throw new Error(`OLD_APW431_WINDOW_COUNT ${oldApw.length}`);
@@ -105,7 +105,7 @@ jobs:
             exact_head_sha:process.env.HEAD_SHA,
             task_classification:'NON-PRODUCT-MASTER',product_master_mutation:0,
             proof_model_version:'RUNTIME_UI_SYMBOLIC_FULL_COVERAGE_V1',
-            consolidation_model_version:'STAGE_A_105_WINDOW_DISCRETE_EXACT_HEAD_CONSOLIDATION_V2_SCOPED_REPROOF',
+            consolidation_model_version:'STAGE_A_105_WINDOW_DISCRETE_EXACT_HEAD_CONSOLIDATION_V3_SCOPED_REPROOF',
             base_window_count:105,counted_window_count:105,unverified_window_count:0,
             series_window_counts:{SAMOS2H:17,SAMOSL:17,EW:15,TW:25,APW430:25,APW431:6},
             exact_discrete_terminal_context_count:terminal.toString(),custom_pending_context_count:custom.toString(),
@@ -127,6 +127,6 @@ jobs:
       - name: Upload current-head 105-window discrete evidence
         uses: actions/upload-artifact@v4
         with:
-          name: stage-a-105-window-discrete-exact-head-consolidation-v2
+          name: stage-a-105-window-discrete-exact-head-consolidation-v3
           path: ${{ env.OUT }}/
           if-no-files-found: error
