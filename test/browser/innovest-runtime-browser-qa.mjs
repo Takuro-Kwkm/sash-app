@@ -25,15 +25,20 @@ function track(page){
   page.on('response',(response)=>{if(response.status()>=400)report.failedResponses.push({status:response.status(),url:response.url()});});
 }
 
-function matchesSelection(response,key,value){
+function isRuntimeResolution(response){
   if(response.status()!==200||!response.url().includes('/api/runtime-master/resolve'))return false;
-  try{
-    const selection=JSON.parse(new URL(response.url()).searchParams.get('selection')??'{}');
-    const actual=selection[key];
-    if(Array.isArray(value))return Array.isArray(actual)&&value.every((one)=>actual.map(String).includes(String(one)));
-    if(typeof value==='number')return Number(actual)===value;
-    return String(actual)===String(value);
-  }catch{return false;}
+  try{return new URL(response.url()).searchParams.get('productId')===PRODUCT_ID;}catch{return false;}
+}
+
+function assertResolvedSelection(result,key,value){
+  const actual=result.selection[key];
+  if(Array.isArray(value)){
+    assert.ok(Array.isArray(actual),`${key} must resolve to a multi-value selection`);
+    for(const one of value)assert.ok(actual.map(String).includes(String(one)),`${key} must include ${String(one)}`);
+    return;
+  }
+  if(typeof value==='number')assert.equal(Number(actual),value,`${key} must resolve to ${value}`);
+  else assert.equal(String(actual),String(value),`${key} must resolve to ${String(value)}`);
 }
 
 async function openInnovest(page){
@@ -41,26 +46,34 @@ async function openInnovest(page){
   await page.waitForFunction(()=>document.querySelector('#status')?.textContent==='CATALOG CONNECTED');
   await page.selectOption('#manufacturer','YKK AP');
   await page.waitForFunction((id)=>[...document.querySelectorAll('#product option')].some((option)=>option.value===id&&!option.disabled),PRODUCT_ID);
-  const response=page.waitForResponse((row)=>row.url().includes('/api/runtime-master/resolve')&&row.status()===200);
+  const response=page.waitForResponse(isRuntimeResolution,{timeout:15000});
   await page.selectOption('#product',PRODUCT_ID);
   const result=await(await response).json();
   await page.waitForSelector('[data-spec-key="thermal_spec"]');
   return result;
 }
 
+async function performAndResolve(page,key,value,action){
+  const response=page.waitForResponse(isRuntimeResolution,{timeout:15000});
+  await action();
+  const result=await(await response).json();
+  assertResolvedSelection(result,key,value);
+  return result;
+}
+
 async function choose(page,key,value){
   const locator=page.locator(`[data-spec-key="${key}"]`);
   await locator.waitFor();
-  const response=page.waitForResponse((row)=>matchesSelection(row,key,value),{timeout:15000});
-  if(typeof value==='number'){
-    await locator.fill(String(value));
-    await locator.dispatchEvent('change');
-  }else if(Array.isArray(value)){
-    await locator.selectOption(value.map(String));
-  }else{
-    await locator.selectOption(String(value));
-  }
-  return (await response).json();
+  return performAndResolve(page,key,value,async()=>{
+    if(typeof value==='number'){
+      await locator.fill(String(value));
+      await locator.dispatchEvent('change');
+    }else if(Array.isArray(value)){
+      await locator.selectOption(value.map(String));
+    }else{
+      await locator.selectOption(String(value));
+    }
+  });
 }
 
 async function chooseIfNeeded(page,result,key,preferred=null){
@@ -72,9 +85,7 @@ async function chooseIfNeeded(page,result,key,preferred=null){
   await locator.waitFor();
   const domValue=await locator.inputValue();
   if(String(domValue)===String(candidate)){
-    const response=page.waitForResponse((row)=>matchesSelection(row,key,candidate),{timeout:15000});
-    await locator.dispatchEvent('change');
-    return (await response).json();
+    return performAndResolve(page,key,candidate,()=>locator.dispatchEvent('change'));
   }
   return choose(page,key,candidate);
 }
