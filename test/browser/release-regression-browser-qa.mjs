@@ -52,9 +52,12 @@ try {
   const runtime=await context.request.get(`${BASE}/api/runtime-master/integrations`);
   assert.equal(runtime.status(),200);
   const integrations=await runtime.json();
-  assert.equal(integrations.length,3);
-  assert.deepEqual(new Set(integrations.map((row)=>row.id)),new Set(['SER-LIX-EW','SER-LIXIL-TW','SER-YKKAP-UCHIRIMO']));
+  const expectedRuntimeIds=new Set(['SER-LIX-EW','SER-LIXIL-TW','SER-YKKAP-UCHIRIMO','SER-YKKAP-INNOVEST']);
+  assert.equal(integrations.length,expectedRuntimeIds.size);
+  assert.deepEqual(new Set(integrations.map((row)=>row.id)),expectedRuntimeIds);
   assert.ok(integrations.every((row)=>row.selectable&&row.status==='READY'));
+  const innovest=integrations.find((row)=>row.id==='SER-YKKAP-INNOVEST');
+  assert.equal(innovest?.sourceHash,'6f47677023212228d1132407c9fce8ccd9d407c65fd19cbb9e1507f1845b287d');
   assert.deepEqual(report.consoleErrors,[]);
   assert.deepEqual(report.pageErrors,[]);
   assert.deepEqual(report.failedResponses,[]);
