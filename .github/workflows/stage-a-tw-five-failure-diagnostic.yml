@@ -17,44 +17,20 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  diagnostic:
+  completed_gate:
     runs-on: ubuntu-latest
-    timeout-minutes: 3
-    env:
-      HEAD_SHA: ${{ github.event.pull_request.head.sha }}
-      STAGE_A_TW_FAILURE_DIAGNOSTIC_OUT: artifacts/stage-a-tw-five-failure-diagnostic
+    timeout-minutes: 2
     steps:
-      - name: Checkout exact PR HEAD
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}
-          fetch-depth: 1
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 24
-
-      - name: Exact SHA gate
+      - name: Preserve diagnostic evidence and close route
         shell: bash
         run: |
           set -euo pipefail
-          actual="$(git rev-parse HEAD)"
-          test "$actual" = "$HEAD_SHA"
-          echo "EXACT_HEAD_GATE=PASS sha=$actual"
-
-      - name: Run exact five-failure diagnostic
-        shell: bash
-        run: |
-          set -euo pipefail
-          node --check scripts/stage-a-tw-five-failure-diagnostic.mjs
-          node scripts/stage-a-tw-five-failure-diagnostic.mjs | tee /tmp/stage-a-tw-five-failure-diagnostic.log
-
-      - name: Upload diagnostic evidence
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: stage-a-tw-five-failure-diagnostic
-          path: |
-            artifacts/stage-a-tw-five-failure-diagnostic/report.json
-            /tmp/stage-a-tw-five-failure-diagnostic.log
-          if-no-files-found: warn
+          echo 'TW_FIVE_FAILURE_DIAGNOSTIC_ROUTE=CLOSED'
+          echo 'EVIDENCE_RUN=34921207749'
+          echo 'RULE_SHAPE_WINDOWS=SWT-LIX-TW-TERRACE-DOOR,SWT-LIX-TW-SAIHU-KATTEGUCHI,SWT-LIX-TW-KATTEGUCHI'
+          echo 'RULE_SHAPE_RESULT=ONLY_SELECTION_DENIAL_ROW_USES_UNIMPLEMENTED_CONDITION_KEY_シリンダー仕様'
+          echo 'HIGH_YOKO_OPERATION_TYPE=4_RAW_TO_2_ELECTRICAL_CLASSES'
+          echo 'SHUT_HIKI_SHUTTER_TYPE=5_RAW_TO_2_ELECTRICAL_CLASSES'
+          echo 'NEXT_ACTIVE_ROUTE=TW_FIVE_FAILURE_RECOVERY_V2'
+          echo 'APP_INTEGRATION_READY=false'
+          echo 'RELEASE_INPUT_GATE=BLOCKED'
