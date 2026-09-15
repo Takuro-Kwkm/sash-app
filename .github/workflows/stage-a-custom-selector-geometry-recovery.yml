@@ -6,6 +6,8 @@ on:
       - feat/new-construction-runtime-ui-v16-20260910
     paths:
       - '.github/workflows/stage-a-custom-selector-geometry-recovery.yml'
+      - 'scripts/stage-a-custom-selector-reachability-diagnostic.mjs'
+      - 'scripts/stage-a-custom-runtime-geometry-equivalence.mjs'
 
 permissions:
   contents: read
@@ -87,7 +89,7 @@ jobs:
           console.log(`CUSTOM_GEOMETRY_PARTITION_GATE=PASS windows=${p.window_count} rules=${p.rule_count} classes=${p.arrangement_proof_class_count} triplets=${p.boundary_triplet_count}`);
           NODE
 
-      - name: Prove CUSTOM selector UI reachability V2 one-of
+      - name: Prove CUSTOM selector UI reachability V3 normalized directed
         shell: bash
         run: |
           set -euo pipefail
@@ -97,10 +99,10 @@ jobs:
           const r=JSON.parse(readFileSync(`${process.env.STAGE_A_CUSTOM_REACHABILITY_OUT}/report.json`,'utf8'));
           if(r.exact_head_sha!==process.env.HEAD_SHA)throw new Error('reachability exact head mismatch');
           const memberships=(r.contexts??[]).reduce((n,c)=>n+(c.rule_ids??[]).length,0);
-          if(r.model_version!=='CUSTOM_SELECTOR_UI_REACHABILITY_EXHAUSTIVE_BFS_V2_ONE_OF')throw new Error(`unexpected reachability model ${r.model_version}`);
+          if(r.model_version!=='CUSTOM_SELECTOR_UI_REACHABILITY_DIRECTED_V3_NORMALIZED')throw new Error(`unexpected reachability model ${r.model_version}`);
           if(r.source_rule_count!==152||memberships!==152||r.unreachable_context_count!==0||r.status!=='PASS')throw new Error(`CUSTOM reachability invalid rules=${r.source_rule_count} memberships=${memberships} unreachable=${r.unreachable_context_count} status=${r.status}`);
           if(!r.evidence_digest)throw new Error('reachability digest missing');
-          console.log(`CUSTOM_SELECTOR_REACHABILITY_GATE=PASS contexts=${r.unique_context_count} rules=${memberships} calls=${r.total_resolver_call_count}`);
+          console.log(`CUSTOM_SELECTOR_REACHABILITY_GATE=PASS contexts=${r.unique_context_count} rules=${memberships} calls=${r.total_resolver_call_count} implicit_geometry_inert=${r.implicit_geometry_inert_selector_count}`);
           console.log(`CUSTOM_SELECTOR_REACHABILITY_DIGEST=${r.evidence_digest}`);
           NODE
 
