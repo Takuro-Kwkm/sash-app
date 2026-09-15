@@ -14,7 +14,7 @@ const EW_ROOT = join(HERE, '../runtime-master-packages/lixil-ew-v1.1');
 const EW_RUNTIME_SEGMENTS = ['seg-00','seg-01','seg-02','seg-03','seg-04','seg-05','seg-06','seg-07','seg-08a','seg-08b','seg-08c','seg-08d'];
 const TW_ROOT = join(HERE, '../runtime-master-packages/lixil-tw-integrated-v0.2');
 const UCHIRIMO_ROOT = join(HERE, '../runtime-master-packages/ykkap-uchirimo-v1.0-p7r1-r2');
-const INNOVEST_ROOT = join(HERE, '../runtime-master-packages/ykkap-innovest-v1.0.1');
+const INNOVEST_ROOT = join(HERE, '../../runtime-master-packages/ykkap-innovest-v1.0.1');
 
 export const runtimeMasterInventory = Object.freeze([
   Object.freeze({
