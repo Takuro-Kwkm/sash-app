@@ -1,0 +1,109 @@
+name: Stage A Glass Grille Diagnostic
+
+on:
+  push:
+    branches: [ops/stage-a-preview-20260915]
+    paths: ['.github/workflows/stage-a-glass-grille-diagnostic.yml']
+
+permissions:
+  contents: read
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      TARGET_SHA: 9bea9cf19ed4e6167991c6289292cd65a4524ca4
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.TARGET_SHA }}
+          fetch-depth: 1
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Diagnose exact Runtime projections
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          mkdir -p artifacts/stage-a-glass-grille-diagnostic
+          node --input-type=module <<'NODE'
+          import { writeFileSync } from 'node:fs';
+          import { resolveRuntimeAppProduct } from './src/catalog/runtime-master/runtime-app-bridge.mjs';
+          import { getRuntimeMasterEntry, loadRegisteredRuntime } from './src/catalog/runtime-master/runtime-master-registry.mjs';
+          import { loadFormalProductRuntimePackage } from './src/catalog/runtime-master/formal-product-runtime-loader.mjs';
+          import { loadManifestRuntimePackage } from './src/catalog/runtime-master/runtime-manifest-loader.mjs';
+
+          const products=[
+            {id:'SER-LIX-SAMOS2H', manufacturer:'LIXIL', series:'サーモスⅡ-H'},
+            {id:'SER-LIX-SAMOSL', manufacturer:'LIXIL', series:'サーモスL'},
+            {id:'SER-LIXIL-TW', manufacturer:'LIXIL', series:'TW'},
+          ];
+          const semantic=/(格子|グリル|grille|glass|ガラス|Low[-‐‑–— ]?E|low[-_ ]?e|クリア|透明|型|フロスト|中空|argon|アルゴン|スペーサ)/i;
+          const targetWindow=/(採風.*勝手口|勝手口.*採風)/;
+          const slim=(f)=>({key:f.key,label:f.displayLabel,required:f.required,dataType:f.dataType,values:(f.values??[]).map(v=>({value:v.value,label:v.displayLabel}))});
+          const fieldSemantic=(f)=>semantic.test(`${f.key} ${f.displayLabel}`);
+
+          async function initialWindow(productId){
+            const r=await resolveRuntimeAppProduct(productId,{});
+            const f=r.fields.find(x=>x.key==='window_type');
+            return {field:f?slim(f):null, targets:(f?.values??[]).filter(v=>targetWindow.test(String(v.displayLabel??v.value))).map(v=>({value:v.value,label:v.displayLabel}))};
+          }
+
+          async function tracePath(productId, windowValue){
+            let selection={window_type:windowValue};
+            const snapshots=[];
+            const seen=new Set();
+            for(let step=0;step<40;step++){
+              const r=await resolveRuntimeAppProduct(productId,selection);
+              const sem=r.fields.filter(fieldSemantic).map(slim);
+              snapshots.push({step,selection:{...r.selection},semanticFields:sem,visibleFieldKeys:r.fields.map(f=>f.key),validation:r.validation});
+              const sig=JSON.stringify(r.selection);
+              if(seen.has(sig)) break;
+              seen.add(sig);
+              const next=r.fields.find(f=>f.required && (r.selection[f.key]===undefined || r.selection[f.key]===null || r.selection[f.key]==='' || (Array.isArray(r.selection[f.key])&&r.selection[f.key].length===0)) && (f.values??[]).length>0);
+              if(!next) break;
+              selection={...r.selection,[next.key]:next.dataType==='MULTI_ENUM'?[next.values[0].value]:next.values[0].value};
+            }
+            return snapshots;
+          }
+
+          async function rawSemantic(product){
+            const entry=getRuntimeMasterEntry(product.manufacturer,product.series);
+            const runtime=await loadRegisteredRuntime(product.manufacturer,product.series);
+            const out={adapterType:entry.adapterType, adaptedFields:[], adaptedValues:[]};
+            if(runtime.master){
+              out.adaptedFields=runtime.master.fields.filter(f=>semantic.test(`${f.field_name} ${f.display_label??''}`)).map(f=>({field_name:f.field_name,display_label:f.display_label,data_type:f.data_type,parent_fields:f.parent_fields,selection_mode:f.selection_mode}));
+              out.adaptedValues=runtime.master.values.filter(v=>semantic.test(`${v.field_name} ${v.display_label??''} ${v.canonical_value??''}`)).slice(0,500).map(v=>({field_name:v.field_name,canonical_value:v.canonical_value,display_label:v.display_label,status:v.status,selector:v.selector??v.conditions??null}));
+            }
+            let pkg=null;
+            if(entry.packageType==='FORMAL_PRODUCT_RUNTIME') pkg=await loadFormalProductRuntimePackage(entry);
+            else if(entry.packageType==='RUNTIME_MANIFEST_V1') pkg=await loadManifestRuntimePackage(entry);
+            if(pkg){
+              const docs=Object.entries(pkg.documents??{});
+              out.documentRoles=docs.map(([role])=>role);
+              const pm=docs.map(([,d])=>d?.product_module).find(Boolean);
+              if(pm){
+                out.sourceDefinitions=(pm.specificationDefinitions??[]).filter(d=>semantic.test(`${d.key} ${d.displayLabel??d.display_label??''}`)).map(d=>({key:d.key,displayLabel:d.displayLabel??d.display_label,dataType:d.dataType??d.data_type,parents:d.parentFields??d.parent_fields,selectionMode:d.selectionMode??d.selection_mode}));
+                out.sourceAllowed=(pm.allowedValues??[]).filter(v=>semantic.test(`${v.specificationKey} ${v.displayLabel??v.display_label??''} ${v.value??''}`)).slice(0,700).map(v=>({key:v.specificationKey,value:v.value,label:v.displayLabel??v.display_label,selector:v.selector??null,userSelectable:v.userSelectable,runtimeSelectable:v.runtimeSelectable,metadata:v.metadata??null}));
+              }
+            }
+            return out;
+          }
+
+          const report={exact_head_sha:process.env.TARGET_SHA,products:[]};
+          for(const p of products){
+            const windows=await initialWindow(p.id);
+            const traces=[];
+            for(const w of windows.targets) traces.push({window:w, snapshots:await tracePath(p.id,w.value)});
+            report.products.push({...p,windows,traces,raw:await rawSemantic(p)});
+          }
+          writeFileSync('artifacts/stage-a-glass-grille-diagnostic/report.json',JSON.stringify(report,null,2)+'\n');
+          console.log(JSON.stringify(report,null,2));
+          NODE
+      - uses: actions/upload-artifact@v4
+        with:
+          name: stage-a-glass-grille-diagnostic
+          path: artifacts/stage-a-glass-grille-diagnostic/report.json
+          if-no-files-found: error
