@@ -37,8 +37,10 @@ function normalizeDesired(selector={}){
     if(value===undefined||value===null||value===''||value==='*'){ignored.push({key,value,reason:'WILDCARD_OR_EMPTY'});continue;}
     if(hiddenKeys.has(key)){hidden.push({key,value});continue;}
     if(identityKeys.has(key)){ignored.push({key,value,reason:'WINDOW_IDENTITY'});continue;}
-    if(value&&typeof value==='object')throw new Error(`CUSTOM_REACHABILITY_OPERATOR_SELECTOR_UNEXPECTED key=${key}`);
-    exposed.push({source_key:key,value,aliases:fieldAliases(key)});
+    if(value&&typeof value==='object'&&!Array.isArray(value))throw new Error(`CUSTOM_REACHABILITY_OPERATOR_SELECTOR_UNEXPECTED key=${key}`);
+    const values=Array.isArray(value)?[...value]:[value];
+    if(values.some((candidate)=>candidate&&typeof candidate==='object'))throw new Error(`CUSTOM_REACHABILITY_NESTED_OPERATOR_SELECTOR_UNEXPECTED key=${key}`);
+    exposed.push({source_key:key,values,aliases:fieldAliases(key)});
   }
   return{exposed,hidden,ignored};
 }
@@ -53,11 +55,12 @@ function desiredStatus(result,desired){
   const visible=new Map((result.fields??[]).map((f)=>[f.key,f]));
   const states=[];
   for(const item of desired){
-    const selectedAlias=item.aliases.find((key)=>selected(result.selection,key)&&same(result.selection[key],item.value));
-    if(selectedAlias){states.push({...item,status:'SATISFIED',field:selectedAlias});continue;}
-    const candidateFields=item.aliases.filter((key)=>visible.has(key)).map((key)=>({key,field:visible.get(key),matches:enabled(visible.get(key)).filter((v)=>same(v.value,item.value))}));
+    const accepted=item.values??[];
+    const selectedAlias=item.aliases.find((key)=>selected(result.selection,key)&&accepted.some((value)=>same(result.selection[key],value)));
+    if(selectedAlias){states.push({...item,status:'SATISFIED',field:selectedAlias,selected_value:result.selection[selectedAlias]});continue;}
+    const candidateFields=item.aliases.filter((key)=>visible.has(key)).map((key)=>({key,field:visible.get(key),matches:enabled(visible.get(key)).filter((v)=>accepted.some((value)=>same(v.value,value)))}));
     const satisfiableVisible=candidateFields.filter((row)=>row.matches.length);
-    states.push({...item,status:satisfiableVisible.length?'VISIBLE_SELECTABLE':'NOT_YET_SELECTABLE',candidate_fields:candidateFields.map((r)=>({key:r.key,value_count:enabled(r.field).length,matching_count:r.matches.length}))});
+    states.push({...item,status:satisfiableVisible.length?'VISIBLE_SELECTABLE':'NOT_YET_SELECTABLE',candidate_fields:candidateFields.map((r)=>({key:r.key,value_count:enabled(r.field).length,matching_count:r.matches.length,matching_values:r.matches.map((v)=>v.value)}))});
   }
   return states;
 }
@@ -78,7 +81,13 @@ async function findReachable(productId,windowId,desired){
     const statuses=desiredStatus(result,desired);
     const desiredBranches=[];
     for(const item of statuses.filter((x)=>x.status==='VISIBLE_SELECTABLE')){
-      for(const alias of item.aliases){const f=fields.get(alias);if(!f)continue;for(const choice of enabled(f).filter((v)=>same(v.value,item.value)))desiredBranches.push({selection:branchValue(canonical,alias,choice.value),trace:[...state.trace,`${alias}=${choice.value} [selector:${item.source_key}]`]});}
+      const accepted=item.values??[];
+      for(const alias of item.aliases){
+        const f=fields.get(alias);if(!f)continue;
+        for(const choice of enabled(f).filter((v)=>accepted.some((value)=>same(v.value,value)))){
+          desiredBranches.push({selection:f.dataType==='MULTI_ENUM'?branchMultiValue(canonical,alias,choice.value):branchValue(canonical,alias,choice.value),trace:[...state.trace,`${alias}=${choice.value} [selector:${item.source_key}:one-of]`]});
+        }
+      }
       if(desiredBranches.length)break;
     }
     if(desiredBranches.length){queue.push(...desiredBranches);continue;}
@@ -134,7 +143,7 @@ for(const row of contextMap.values()){
 }
 const unreachable=contexts.filter((r)=>!r.reachable);
 const coveredRuleIds=new Set(contexts.flatMap((r)=>r.rule_ids));
-const report={exact_head_sha:HEAD_SHA,task_classification:'NON-PRODUCT-MASTER',product_master_mutation:0,model_version:'CUSTOM_SELECTOR_UI_REACHABILITY_EXHAUSTIVE_BFS_V1',source_shape_digest:shape.evidence_digest,source_rule_count:sourceRuleCount,covered_rule_count:coveredRuleIds.size,unique_context_count:contexts.length,reachable_context_count:contexts.length-unreachable.length,unreachable_context_count:unreachable.length,total_visited_state_count:contexts.reduce((n,r)=>n+r.visited_state_count,0),total_resolver_call_count:contexts.reduce((n,r)=>n+r.resolver_call_count,0),contexts,status:unreachable.length?'BLOCKED_UNREACHABLE_CUSTOM_SELECTOR_CONTEXT':'PASS'};
+const report={exact_head_sha:HEAD_SHA,task_classification:'NON-PRODUCT-MASTER',product_master_mutation:0,model_version:'CUSTOM_SELECTOR_UI_REACHABILITY_EXHAUSTIVE_BFS_V2_ONE_OF',source_shape_digest:shape.evidence_digest,source_rule_count:sourceRuleCount,covered_rule_count:coveredRuleIds.size,unique_context_count:contexts.length,reachable_context_count:contexts.length-unreachable.length,unreachable_context_count:unreachable.length,total_visited_state_count:contexts.reduce((n,r)=>n+r.visited_state_count,0),total_resolver_call_count:contexts.reduce((n,r)=>n+r.resolver_call_count,0),contexts,status:unreachable.length?'BLOCKED_UNREACHABLE_CUSTOM_SELECTOR_CONTEXT':'PASS'};
 report.evidence_digest=hash({head:HEAD_SHA,source:shape.evidence_digest,contexts:contexts.map((r)=>({series:r.series,window:r.window_id,exposed:r.exposed_selector,rules:r.rule_ids,hidden:r.hidden_constraints,reachable:r.reachable,selection:r.selection_prefix??null,trace:r.trace??null,reason:r.reason??null}))});
 report.gate_status={custom_geometry_partition_gate:'PASS_EVIDENCE_EXTERNAL',custom_selector_reachability_gate:unreachable.length?'BLOCKED':'PASS',custom_size_coverage_gate:'BLOCKED_RUNTIME_GEOMETRY_EQUIVALENCE_PENDING',qa_population_gate:'BLOCKED_CONTINUOUS_CUSTOM_RUNTIME_EQUIVALENCE_PENDING',app_integration_ready:false,release_input_gate:'BLOCKED'};
 await mkdir(OUT,{recursive:true});await writeFile(`${OUT}/report.json`,JSON.stringify(report,null,2)+'\n','utf8');
