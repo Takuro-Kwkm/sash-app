@@ -35,16 +35,6 @@ function colorCombos(options, window) {
 function screenFor(options, windowId) {
   return (options.screen_master ?? []).filter(active).filter((row)=>row['対象window_id']===windowId);
 }
-function customRuleMatches(rule, selection, window) {
-  if (!active(rule) || rule.windowId !== window.id) return false;
-  const selector = rule.selector ?? {};
-  if (selector.regionStandard && selection.region_standard && selector.regionStandard !== selection.region_standard) return false;
-  const panel = selector.panelOrConfiguration;
-  if (panel && panel !== '*' && selection.panel_count && panel !== selection.panel_count && panel !== selection.window_configuration) return false;
-  const type = selector.typeOrSpec;
-  if (type && type !== '*' && selection.window_configuration && type !== selection.window_configuration) return false;
-  return true;
-}
 function customRuleAllows(rule, width, height) {
   const b = rule.bounds ?? {};
   if (!Number.isFinite(width) || !Number.isFinite(height)) return false;
@@ -62,6 +52,31 @@ export function adaptApw431FormalSplitV1(runtimePackage) {
     .sort((a,b)=>Number(a.displayOrder ?? 9999)-Number(b.displayOrder ?? 9999));
   const windowById = new Map(windows.map((row)=>[row.id,row]));
   const sizeById = new Map((dimensions.standard_sizes ?? []).filter(active).map((row)=>[row.id,row]));
+
+  function customRuleMatches(rule, selection, window) {
+    if (!active(rule) || rule.windowId !== window.id) return false;
+    const selector = rule.selector ?? {};
+    if (selector.regionStandard && selection.region_standard && !same(selector.regionStandard,selection.region_standard)) return false;
+    const panel = selector.panelOrConfiguration;
+    if (panel && panel !== '*' && selection.panel_count && !same(panel,selection.panel_count) && !same(panel,selection.window_configuration)) return false;
+    const type = selector.typeOrSpec;
+    if (type && type !== '*' && selection.window_configuration) {
+      const peerTypes = new Set((dimensions.custom_dimension_rules ?? []).filter(active)
+        .filter((candidate)=>candidate.windowId===window.id)
+        .filter((candidate)=>{
+          const candidateSelector=candidate.selector??{};
+          if (candidateSelector.regionStandard && selection.region_standard && !same(candidateSelector.regionStandard,selection.region_standard)) return false;
+          const candidatePanel=candidateSelector.panelOrConfiguration;
+          if (candidatePanel && candidatePanel!=='*' && selection.panel_count && !same(candidatePanel,selection.panel_count) && !same(candidatePanel,selection.window_configuration)) return false;
+          return true;
+        })
+        .map((candidate)=>candidate.selector?.typeOrSpec)
+        .filter((value)=>value!==undefined&&value!==null&&value!==''&&value!=='*')
+        .map(String));
+      if (peerTypes.has(String(selection.window_configuration)) && !same(type,selection.window_configuration)) return false;
+    }
+    return true;
+  }
 
   function resolveUi(inputSelection = {}) {
     const original = { ...(inputSelection ?? {}) };
@@ -99,10 +114,6 @@ export function adaptApw431FormalSplitV1(runtimePackage) {
       if (selection.panel_count) rows = rows.filter((row)=>same(row.panelCountLabel,selection.panel_count));
     }
 
-    // Formal Runtime may contain multiple standard-size records with the same visible
-    // call code and actual dimensions but different windowConfiguration semantics.
-    // The configuration changes glass/screen/effective-opening capabilities, so it
-    // must be resolved before size. Never collapse these records by display label.
     const configurations = unique(rows.map((row)=>row.windowConfiguration));
     if (configurations.length === 1) {
       selection.window_configuration = configurations[0];
@@ -149,7 +160,7 @@ export function adaptApw431FormalSplitV1(runtimePackage) {
         const matches = (dimensions.custom_dimension_rules ?? []).filter((rule)=>customRuleMatches(rule,selection,window)).filter((rule)=>customRuleAllows(rule,width,height));
         if (matches.length === 1) {
           const matched = matches[0];
-          dimensionResult = { status:'PASS', code:'CUSTOM_RULE_MATCH', ruleId:matched.id, derivedConstruction:matched.selector?.construction ?? null };
+          dimensionResult = { status:'REVIEW_REQUIRED', code:'CUSTOM_RULE_MATCH_REVIEW_REQUIRED', candidateRuleIds:[matched.id], derivedConstruction:matched.selector?.construction ?? null };
           manualWarnings.push('APW431特注寸法は正式Runtimeの製作範囲ルールで一次判定しています。SOURCE_GRAPH指定の耐風圧境界等はメーカー資料で最終確認してください。');
         } else if (matches.length > 1) {
           dimensionResult = { status:'REVIEW_REQUIRED', code:'REVIEW_REQUIRED_CONSTRUCTION_AMBIGUOUS', candidateRuleIds:matches.map((row)=>row.id) };
