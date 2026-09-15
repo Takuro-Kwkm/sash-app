@@ -6,12 +6,15 @@ import { loadManifestRuntimePackage } from './runtime-manifest-loader.mjs';
 import { adaptTwCanonicalWorkbookReferenceV1 } from './tw-canonical-workbook-reference-v1-adapter.mjs';
 import { evaluateCanonicalWorkbookRuntime } from './canonical-workbook-runtime-engine.mjs';
 import { adaptUchirimoTabularV1 } from './uchirimo-tabular-v1-adapter.mjs';
+import { loadFormalFlatJsonRuntimePackage } from './formal-flat-json-runtime-loader.mjs';
+import { adaptInnovestFlatJsonV1 } from './innovest-flat-json-v1-adapter.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const EW_ROOT = join(HERE, '../runtime-master-packages/lixil-ew-v1.1');
 const EW_RUNTIME_SEGMENTS = ['seg-00','seg-01','seg-02','seg-03','seg-04','seg-05','seg-06','seg-07','seg-08a','seg-08b','seg-08c','seg-08d'];
 const TW_ROOT = join(HERE, '../runtime-master-packages/lixil-tw-integrated-v0.2');
 const UCHIRIMO_ROOT = join(HERE, '../runtime-master-packages/ykkap-uchirimo-v1.0-p7r1-r2');
+const INNOVEST_ROOT = join(HERE, '../runtime-master-packages/ykkap-innovest-v1.0.1');
 
 export const runtimeMasterInventory = Object.freeze([
   Object.freeze({
@@ -56,6 +59,16 @@ export const runtimeMasterInventory = Object.freeze([
       }),
     }),
   }),
+  Object.freeze({
+    manufacturer: 'YKK AP', series: 'イノベスト', masterVersion: 'v1.0.1', schemaVersion: '1.0',
+    packageType: 'FORMAL_FLAT_JSON_V1', adapterType: 'INNOVEST_FLAT_JSON_V1',
+    packageRoot: INNOVEST_ROOT,
+    runtimeManifestPath: join(INNOVEST_ROOT, 'runtime_manifest.json'),
+    runtimeManifestDriveFileId: '1oVKdg3j2YlNEWhBZSqGJl0S7kD5tayox',
+    runtimeManifestSha256: '6f47677023212228d1132407c9fce8ccd9d407c65fd19cbb9e1507f1845b287d',
+    runtimePackageDriveFileId: '1x1PosnI6EAhNI46mIDLlaFZKf1q9I4mz',
+    materializedBundleSegments: Object.freeze(Array.from({length:12},(_,index)=>join(INNOVEST_ROOT,`materialized-runtime.br.b64.json.parts/part-${String(index).padStart(2,'0')}`))),
+  }),
 ]);
 
 export function getRuntimeMasterEntry(manufacturer, series) {
@@ -77,6 +90,9 @@ async function loadRuntime(entry) {
     runtimePackage = await loadManifestRuntimePackage(entry);
     const master = adaptTwCanonicalWorkbookReferenceV1(runtimePackage);
     adapted = { master, resolver: (selection) => evaluateCanonicalWorkbookRuntime(master, selection) };
+  } else if (entry.packageType === 'FORMAL_FLAT_JSON_V1' && entry.adapterType === 'INNOVEST_FLAT_JSON_V1') {
+    runtimePackage = await loadFormalFlatJsonRuntimePackage(entry);
+    adapted = adaptInnovestFlatJsonV1(runtimePackage);
   } else {
     const error = new Error(`Unsupported release Runtime package: ${entry.packageType}/${entry.adapterType}`);
     error.code = 'RUNTIME_ADAPTER_NOT_REGISTERED';
