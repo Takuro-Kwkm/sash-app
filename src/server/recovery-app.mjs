@@ -67,7 +67,21 @@ const heroPortraitPhoto=(res)=>photoFromParts(res,heroPortraitPartPaths);
 const designPreviewCss=async(res)=>{
   try{
     const base=await readFile(join(webRoot,"design-preview.css"),"utf8");
-    const responsive='\n@media(max-width:760px){.reference-hero-photo{content:url("/design-preview-reference-hero-portrait.jpg")!important;object-position:center center!important}}\n';
+    const responsive=`
+@media (min-width:821px) and (max-width:1100px){
+  .reference-hero{height:560px!important;background:#eef8fd!important}
+  .reference-hero-photo{content:url("/design-preview-reference-hero.jpg")!important;left:0!important;right:0!important;top:auto!important;bottom:0!important;width:100%!important;height:49%!important;max-width:none!important;object-fit:cover!important;object-position:center 52%!important;opacity:1!important;transform:none!important}
+  .reference-hero:after{background:linear-gradient(180deg,rgba(238,248,253,1) 0%,rgba(238,248,253,1) 48%,rgba(238,248,253,.92) 54%,rgba(238,248,253,.38) 63%,rgba(238,248,253,0) 75%)!important}
+  .reference-hero-copy{width:100%!important;max-width:690px!important;padding:44px 0 0 28px!important}
+}
+@media (min-width:700px) and (max-width:820px){
+  .reference-hero{height:600px!important;background:#eef8fd!important}
+  .reference-hero-photo{content:url("/design-preview-reference-hero-portrait.jpg")!important;left:0!important;right:0!important;top:auto!important;bottom:0!important;width:100%!important;height:49%!important;max-width:none!important;object-fit:cover!important;object-position:center 48%!important;opacity:1!important;transform:none!important}
+  .reference-hero:after{background:linear-gradient(180deg,rgba(238,248,253,1) 0%,rgba(238,248,253,1) 49%,rgba(238,248,253,.93) 55%,rgba(238,248,253,.38) 64%,rgba(238,248,253,0) 76%)!important}
+  .reference-hero-copy{width:100%!important;max-width:none!important;padding:38px 22px 0!important}
+}
+@media(max-width:699px){.reference-hero-photo{content:url("/design-preview-reference-hero-portrait.jpg")!important;object-position:center center!important}}
+`;
     const body=`${base}${responsive}`;
     res.writeHead(200,{"content-type":"text/css; charset=utf-8","content-length":String(Buffer.byteLength(body)),"cache-control":"no-store","x-sash-build-id":buildId});
     res.end(body);
