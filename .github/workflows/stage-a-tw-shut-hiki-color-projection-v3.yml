@@ -1,0 +1,80 @@
+name: Stage A TW SHUT-HIKI Color Projection V3
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/stage-a-tw-shut-hiki-color-projection-v3.yml'
+      - 'scripts/stage-a-tw-shut-hiki-color-projection-v3-runner.mjs'
+      - 'scripts/stage-a-tw-behavioral-projection-count-pilot.mjs'
+      - 'src/catalog/runtime-master/**'
+      - 'src/catalog/**'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: stage-a-tw-shut-hiki-color-v3-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  recovery:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    env:
+      HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+      STAGE_A_TARGET_WINDOW: SWT-LIX-TW-SHUT-HIKI
+      STAGE_A_MAX_MEMO_STATES_PER_WINDOW: 12000
+      STAGE_A_MAX_RESOLVER_CALLS_PER_WINDOW: 120000
+      STAGE_A_MAX_EXPLICIT_MULTI_ENUM_VALUES: 12
+      STAGE_A_TW_PROJECTION_OUT: artifacts/stage-a-tw-shut-hiki-color-projection-v3
+    steps:
+      - name: Checkout exact PR HEAD
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 1
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Exact SHA gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          actual="$(git rev-parse HEAD)"
+          test "$actual" = "$HEAD_SHA"
+          echo "EXACT_HEAD_GATE=PASS sha=$actual window=$STAGE_A_TARGET_WINDOW"
+
+      - name: Run SHUT-HIKI color projection V3
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check scripts/stage-a-tw-shut-hiki-color-projection-v3-runner.mjs
+          node scripts/stage-a-tw-shut-hiki-color-projection-v3-runner.mjs | tee /tmp/tw-shut-hiki-color-v3.log
+
+      - name: Upload V3 evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: stage-a-tw-shut-hiki-color-projection-v3
+          path: |
+            artifacts/stage-a-tw-shut-hiki-color-projection-v3/report.json
+            /tmp/tw-shut-hiki-color-v3.log
+          if-no-files-found: warn
+
+      - name: Fail-closed V3 gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import { readFileSync } from 'node:fs';
+          const report=JSON.parse(readFileSync('artifacts/stage-a-tw-shut-hiki-color-projection-v3/report.json','utf8'));
+          if (report.exact_head_sha !== process.env.HEAD_SHA) throw new Error('exact head mismatch');
+          if (report.projection_model_version !== 'TW_WEIGHTED_BEHAVIORAL_PROJECTION_V3_COLOR_RECOVERY') throw new Error(`unexpected model ${report.projection_model_version}`);
+          if (report.status !== 'COUNTED_CANDIDATE') throw new Error(`V3 blocked: ${JSON.stringify(report.blocker)}`);
+          if (Number(report.projection_mismatch_count ?? 0) !== 0) throw new Error(`projection mismatch ${report.projection_mismatch_count}`);
+          if (report.blocker) throw new Error(`blocker present: ${JSON.stringify(report.blocker)}`);
+          console.log(`TW_SHUT_HIKI_V3=PASS terminal=${report.exact_discrete_terminal_context_count}`);
+          NODE
