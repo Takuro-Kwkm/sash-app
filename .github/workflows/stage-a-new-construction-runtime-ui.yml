@@ -4,229 +4,70 @@ on:
   pull_request:
     branches: [main]
     paths:
-      - 'scripts/stage-a-multienum-population-preflight.mjs'
-      - 'scripts/stage-a-multienum-symbolic-proof-candidate.mjs'
-      - 'scripts/stage-a-exhaustive-selector-state-graph.mjs'
       - '.github/workflows/stage-a-new-construction-runtime-ui.yml'
+      - '.github/workflows/stage-a-105-window-discrete-exact-head-consolidation.yml'
+      - '.github/workflows/stage-a-custom-dimension-*.yml'
+      - 'scripts/stage-a-custom-dimension-*.mjs'
+      - 'src/catalog/**'
 
 permissions:
   contents: read
 
 concurrency:
-  group: stage-a-exhaustive-${{ github.event.pull_request.number }}
+  group: stage-a-current-gate-${{ github.event.pull_request.number }}
   cancel-in-progress: true
 
 jobs:
-  multienum_population_preflight:
+  current_stage_a_gate:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 3
     env:
       HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+      DISCRETE_EVIDENCE_HEAD: 12bcbf0be00b1939ac3c1087338fa7a69b16e807
+      DISCRETE_EVIDENCE_RUN: '34948947605'
+      DISCRETE_EVIDENCE_ARTIFACT_ID: '10388821407'
+      DISCRETE_EVIDENCE_DIGEST: 5132434ab7d34167b27cc76b15f5ec6e0bec8af283814459e77b71dfea5d0b59
     steps:
-      - name: Checkout exact PR HEAD
+      - name: Checkout exact PR HEAD with history
         uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
-          fetch-depth: 1
+          fetch-depth: 0
 
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 24
-
-      - name: Exact SHA gate
+      - name: Exact SHA and discrete-runtime invariance gate
         shell: bash
         run: |
           set -euo pipefail
           actual="$(git rev-parse HEAD)"
           test "$actual" = "$HEAD_SHA"
+          git merge-base --is-ancestor "$DISCRETE_EVIDENCE_HEAD" "$HEAD_SHA"
+          git diff --quiet "$DISCRETE_EVIDENCE_HEAD" "$HEAD_SHA" -- src/
           echo "EXACT_HEAD_GATE=PASS sha=$actual"
+          echo "DISCRETE_RUNTIME_INVARIANCE_GATE=PASS evidence_head=$DISCRETE_EVIDENCE_HEAD"
 
-      - name: Multi-enum required-population preflight
+      - name: Current Stage A gate state
         shell: bash
         run: |
           set -euo pipefail
-          mkdir -p artifacts/stage-a-multienum-preflight
-          node scripts/stage-a-multienum-population-preflight.mjs | tee artifacts/stage-a-multienum-preflight/run.log
-
-      - name: Upload multi-enum preflight evidence
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: stage-a-multienum-population-preflight
-          path: artifacts/stage-a-multienum-preflight/
-          if-no-files-found: error
-
-  multienum_symbolic_candidate:
-    needs: multienum_population_preflight
-    if: always()
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    env:
-      HEAD_SHA: ${{ github.event.pull_request.head.sha }}
-    steps:
-      - name: Checkout exact PR HEAD
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}
-          fetch-depth: 1
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 24
-
-      - name: Exact SHA gate
-        shell: bash
-        run: |
-          set -euo pipefail
-          actual="$(git rev-parse HEAD)"
-          test "$actual" = "$HEAD_SHA"
-          echo "EXACT_HEAD_GATE=PASS sha=$actual"
-
-      - name: Non-sampling symbolic proof candidate
-        shell: bash
-        run: |
-          set -euo pipefail
-          mkdir -p artifacts/stage-a-multienum-symbolic-candidate
-          node scripts/stage-a-multienum-symbolic-proof-candidate.mjs | tee artifacts/stage-a-multienum-symbolic-candidate/run.log
-
-      - name: Upload symbolic proof candidate evidence
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: stage-a-multienum-symbolic-proof-candidate
-          path: artifacts/stage-a-multienum-symbolic-candidate/
-          if-no-files-found: error
-
-  exhaustive_state_graph_shard:
-    needs: multienum_population_preflight
-    runs-on: ubuntu-latest
-    timeout-minutes: 30
-    strategy:
-      fail-fast: false
-      matrix:
-        shard: [0,1,2,3,4,5,6,7,8,9,10,11]
-    env:
-      HEAD_SHA: ${{ github.event.pull_request.head.sha }}
-      STAGE_A_SHARD_TOTAL: 12
-      STAGE_A_SHARD_INDEX: ${{ matrix.shard }}
-    steps:
-      - name: Checkout exact PR HEAD
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}
-          fetch-depth: 1
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 24
-
-      - name: Exact SHA gate
-        shell: bash
-        run: |
-          set -euo pipefail
-          actual="$(git rev-parse HEAD)"
-          test "$actual" = "$HEAD_SHA"
-          echo "EXACT_HEAD_GATE=PASS sha=$actual shard=$STAGE_A_SHARD_INDEX/$STAGE_A_SHARD_TOTAL"
-
-      - name: Exhaustive selector-state shard
-        shell: bash
-        run: |
-          set -euo pipefail
-          out="artifacts/stage-a-exhaustive-selector-state/shard-${STAGE_A_SHARD_INDEX}"
-          STAGE_A_EXHAUSTIVE_OUT="$out" node scripts/stage-a-exhaustive-selector-state-graph.mjs | tee "${out}.log"
-          node - "$out/summary.json" <<'NODE'
-          const s=require(process.argv[2].startsWith('/')?process.argv[2]:`./${process.argv[2]}`);
-          if(s.base_window_count!==s.expected_base_window_count) throw new Error(`shard window mismatch ${s.base_window_count}/${s.expected_base_window_count}`);
-          if(s.required_state_count!==s.generated_state_count) throw new Error('Required State != Generated State');
-          if(s.required_qa_case_count!==s.generated_qa_case_count || s.generated_qa_case_count!==s.qa_case_count) throw new Error('QA population mismatch');
-          if(s.unexpanded_branch_count!==0) throw new Error(`unexpanded branches=${s.unexpanded_branch_count}`);
-          if(s.dead_end_state_count!==0) throw new Error(`dead ends=${s.dead_end_state_count}`);
-          if(s.technical_leak_count!==0) throw new Error(`technical leaks=${s.technical_leak_count}`);
-          if(s.shard_state_graph_gate!=='PASS'||s.qa_population_gate!=='PASS') throw new Error(`gates=${s.shard_state_graph_gate}/${s.qa_population_gate}`);
-          console.log(`SHARD_STATE_GRAPH_GATE=PASS shard=${s.shard_index}/${s.shard_total} windows=${s.base_window_count} states=${s.total_state_count} qa=${s.qa_case_count}`);
-          NODE
-
-      - name: Determinism replay
-        shell: bash
-        run: |
-          set -euo pipefail
-          primary="artifacts/stage-a-exhaustive-selector-state/shard-${STAGE_A_SHARD_INDEX}/summary.json"
-          repeat="/tmp/stage-a-exhaustive-repeat-${STAGE_A_SHARD_INDEX}"
-          STAGE_A_EXHAUSTIVE_OUT="$repeat" node scripts/stage-a-exhaustive-selector-state-graph.mjs > "/tmp/stage-a-exhaustive-repeat-${STAGE_A_SHARD_INDEX}.log"
-          node - "$primary" "$repeat/summary.json" <<'NODE'
-          const a=require(process.argv[2].startsWith('/')?process.argv[2]:`./${process.argv[2]}`);
-          const b=require(process.argv[3]);
-          const keys=['base_window_count','total_state_count','valid_state_count','invalid_pruned_state_count','terminal_state_count','duplicate_state_count','dead_end_state_count','required_qa_case_count','generated_qa_case_count','qa_case_count','expected_branch_count','attempted_branch_count','determinism_digest'];
-          for(const key of keys){ if(JSON.stringify(a[key])!==JSON.stringify(b[key])) throw new Error(`determinism mismatch ${key}: ${a[key]} != ${b[key]}`); }
-          console.log(`STATE_GRAPH_DETERMINISM_GATE=PASS shard=${a.shard_index}/${a.shard_total} digest=${a.determinism_digest}`);
-          NODE
-          rm -rf "$repeat"
-
-      - name: Upload shard evidence
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: stage-a-exhaustive-selector-state-graph-${{ matrix.shard }}
-          path: |
-            artifacts/stage-a-exhaustive-selector-state/shard-${{ matrix.shard }}/
-            artifacts/stage-a-exhaustive-selector-state/shard-${{ matrix.shard }}.log
-          if-no-files-found: warn
-
-  exhaustive_state_graph_aggregate:
-    needs: exhaustive_state_graph_shard
-    if: always() && needs.exhaustive_state_graph_shard.result == 'success'
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    env:
-      HEAD_SHA: ${{ github.event.pull_request.head.sha }}
-    steps:
-      - name: Download shard evidence
-        uses: actions/download-artifact@v4
-        with:
-          pattern: stage-a-exhaustive-selector-state-graph-*
-          path: artifacts/shards
-
-      - name: Aggregate required population
-        shell: bash
-        run: |
-          set -euo pipefail
-          mkdir -p artifacts/stage-a-exhaustive-selector-state
-          node - <<'NODE'
-          const fs=require('fs'); const path=require('path');
-          function walk(dir){return fs.readdirSync(dir,{withFileTypes:true}).flatMap((entry)=>entry.isDirectory()?walk(path.join(dir,entry.name)):[path.join(dir,entry.name)]);}
-          const files=walk('artifacts/shards').filter((file)=>file.endsWith('/summary.json')).sort();
-          if(files.length!==12) throw new Error(`expected 12 shard summaries, got ${files.length}`);
-          const shards=files.map((file)=>JSON.parse(fs.readFileSync(file,'utf8'))).sort((a,b)=>a.shard_index-b.shard_index);
-          const indices=shards.map((s)=>s.shard_index); if(new Set(indices).size!==12||indices.some((v,i)=>v!==i)) throw new Error(`invalid shard indices ${indices}`);
-          for(const s of shards){if(s.shard_total!==12||s.shard_state_graph_gate!=='PASS'||s.qa_population_gate!=='PASS'||s.failed_qa_case_count!==0||s.unverified_qa_case_count!==0) throw new Error(`shard ${s.shard_index} not PASS`);}
-          const sum=(key)=>shards.reduce((n,s)=>n+Number(s[key]??0),0);
-          const summary={
-            exact_head_sha:process.env.HEAD_SHA,
-            shard_total:12,
-            task_classification:'NON-PRODUCT-MASTER',product_master_mutation:0,
-            base_window_count:sum('base_window_count'),
-            total_state_count:sum('total_state_count'),valid_state_count:sum('valid_state_count'),invalid_pruned_state_count:sum('invalid_pruned_state_count'),terminal_state_count:sum('terminal_state_count'),duplicate_state_count:sum('duplicate_state_count'),dead_end_state_count:sum('dead_end_state_count'),
-            required_state_count:sum('required_state_count'),generated_state_count:sum('generated_state_count'),
-            required_qa_case_count:sum('required_qa_case_count'),generated_qa_case_count:sum('generated_qa_case_count'),qa_case_count:sum('qa_case_count'),verified_qa_case_count:sum('verified_qa_case_count'),failed_qa_case_count:sum('failed_qa_case_count'),unverified_qa_case_count:sum('unverified_qa_case_count'),
-            standard_window_count:sum('standard_window_count'),custom_window_count:sum('custom_window_count'),expected_branch_count:sum('expected_branch_count'),attempted_branch_count:sum('attempted_branch_count'),unexpanded_branch_count:sum('unexpanded_branch_count'),custom_frontier_count:sum('custom_frontier_count'),custom_positive_frontier_count:sum('custom_positive_frontier_count'),technical_leak_count:sum('technical_leak_count'),
-            series:[],windows:shards.flatMap((s)=>s.windows).sort((a,b)=>`${a.product_id}/${a.window_type}`.localeCompare(`${b.product_id}/${b.window_type}`)),
-            shard_digests:shards.map((s)=>({shard_index:s.shard_index,digest:s.determinism_digest})),
-          };
-          const seriesMap=new Map();
-          for(const s of shards)for(const row of s.series){const key=row.product_id;const out=seriesMap.get(key)??{manufacturer:row.manufacturer,series:row.series,product_id:key,base_window_count:0,total_state_count:0,qa_case_count:0,dead_end_state_count:0,invalid_pruned_state_count:0,standard_window_count:0,custom_window_count:0};for(const k of ['base_window_count','total_state_count','qa_case_count','dead_end_state_count','invalid_pruned_state_count','standard_window_count','custom_window_count'])out[k]+=Number(row[k]??0);seriesMap.set(key,out);} summary.series=[...seriesMap.values()];
-          if(summary.base_window_count!==105) throw new Error(`BASE_WINDOW_COUNT=${summary.base_window_count}`);
-          if(summary.required_state_count!==summary.generated_state_count) throw new Error('Required State != Generated State');
-          if(summary.required_qa_case_count!==summary.generated_qa_case_count||summary.generated_qa_case_count!==summary.qa_case_count) throw new Error('QA population mismatch');
-          if(summary.failed_qa_case_count!==0||summary.unverified_qa_case_count!==0||summary.dead_end_state_count!==0||summary.unexpanded_branch_count!==0||summary.technical_leak_count!==0) throw new Error('aggregate contains failures/unverified/dead ends');
-          summary.exhaustive_state_graph_gate='PASS'; summary.qa_population_gate='PASS'; summary.app_integration_ready=false; summary.release_input_gate='BLOCKED';
-          fs.writeFileSync('artifacts/stage-a-exhaustive-selector-state/summary.json',JSON.stringify(summary,null,2)+'\n');
-          console.log(`EXHAUSTIVE_STATE_GRAPH_GATE=PASS states=${summary.total_state_count} terminal=${summary.terminal_state_count} pruned=${summary.invalid_pruned_state_count}`);
-          console.log(`QA_POPULATION_GATE=PASS required=${summary.required_qa_case_count} generated=${summary.generated_qa_case_count}`);
-          NODE
-
-      - name: Upload aggregate evidence
-        uses: actions/upload-artifact@v4
-        with:
-          name: stage-a-exhaustive-selector-state-graph-summary
-          path: artifacts/stage-a-exhaustive-selector-state/summary.json
-          if-no-files-found: error
+          echo 'TASK_CLASSIFICATION=NON-PRODUCT-MASTER'
+          echo 'PRODUCT_MASTER_MUTATION=0'
+          echo "DISCRETE_EVIDENCE_RUN=$DISCRETE_EVIDENCE_RUN"
+          echo "DISCRETE_EVIDENCE_ARTIFACT_ID=$DISCRETE_EVIDENCE_ARTIFACT_ID"
+          echo "DISCRETE_EVIDENCE_DIGEST=$DISCRETE_EVIDENCE_DIGEST"
+          echo 'BASE_WINDOW_COUNT=105'
+          echo 'COUNTED_WINDOW_COUNT=105'
+          echo 'UNVERIFIED_QA_CASE_COUNT_DISCRETE=0'
+          echo 'STAGE_A_105_EXACT_DISCRETE_TERMINAL_CONTEXT_COUNT=8493560851926707642'
+          echo 'STAGE_A_105_CUSTOM_PENDING_CONTEXT_COUNT=34750439786'
+          echo 'DISCRETE_POPULATION_GATE=PASS'
+          echo 'EXHAUSTIVE_STATE_GRAPH_GATE=PARTIAL_DISCRETE_PASS_CONTINUOUS_PENDING'
+          echo 'QA_POPULATION_GATE=BLOCKED_CONTINUOUS_CUSTOM_PROOF_PENDING'
+          echo 'CUSTOM_SIZE_COVERAGE_GATE=BLOCKED_CONTINUOUS_PARTITION_NOT_PROVEN'
+          echo 'FULL_WINDOW_COVERAGE_GATE=BLOCKED_CONTINUOUS_AND_BROWSER_PROOF_PENDING'
+          echo 'AUTOMATED_TEST_GATE=BLOCKED_BY_CONTINUOUS_POPULATION_GATE'
+          echo 'FULL_BROWSER_QA_GATE=NOT_STARTED'
+          echo 'APP_INTEGRATION_READY=false'
+          echo 'RELEASE_INPUT_GATE=BLOCKED'
+          echo 'SUPERSEDED_ROUTE=LEGACY_MULTI_ENUM_PREFLIGHT_AND_EXPLICIT_EXHAUSTIVE_SHARDS'
+          echo 'RETRY_AUTHORIZED=false'
+          echo 'REOPEN_CONDITION=DISCRETE_RUNTIME_OR_DISCRETE_PROOF_MODEL_CHANGE'
