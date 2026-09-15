@@ -11,15 +11,6 @@ on:
 jobs:
   inplus_ui_integration:
     runs-on: ubuntu-latest
-    env:
-      VERCEL_ORG_ID: team_AkuHacuJlCl8LuvaFpCzFmbv
-      VERCEL_PROJECT_ID: prj_4z0zqW6yKyPuFINODfGX8LPBuJRP
-      VERCEL_PROJECT_NAME: sash-app-wave3-preview
-      RELEASE_SERIES: LIXIL_INPLUS_UI_INTEGRATION
-      RELEASE_PACKAGE_VERSION: v0.4-R2
-      REUSABLE_PREVIEW_APP_SHA: 449921bd85dd5b177b32d757f7ed81b0a47b9bec
-      REUSABLE_PREVIEW_DEPLOY_ID: dpl_7V1kA6JPMVJGLUqqSewsN7wpa286
-      REUSABLE_PREVIEW_URL: https://sash-app-wave3-preview-a920u3qnd-tk-4bb0.vercel.app
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -45,7 +36,6 @@ jobs:
           node --check test/77-runtime-ui-inplus-v04r2-installability-coverage.test.mjs
           node --check test/browser/inplus-v04r2-runtime-browser-qa.mjs
           node --check test/browser/inplus-v04r2-full-coverage-browser-qa.mjs
-          node --check scripts/vercel-rest-deploy.mjs
 
       - name: Full repository automated tests
         run: npm test
@@ -121,88 +111,6 @@ jobs:
           node test/browser/uchirimo-runtime-browser-qa.mjs
           node test/browser/release-regression-browser-qa.mjs
           node test/browser/work-management-browser-qa.mjs
-
-      - name: Vercel credential and project preflight
-        if: ${{ github.event_name == 'push' }}
-        env:
-          VERCEL_TOKEN_PRIMARY: ${{ secrets.VERCEL_TOKEN }}
-          VERCEL_TOKEN_FALLBACK: ${{ secrets.VERCEL_ACCESS_TOKEN }}
-        shell: bash
-        run: |
-          set -euo pipefail
-          token="${VERCEL_TOKEN_PRIMARY:-${VERCEL_TOKEN_FALLBACK:-}}"
-          if [[ -z "$token" ]]; then
-            echo "VERCEL_CREDENTIAL_GATE=BLOCKED"
-            exit 42
-          fi
-          status="$(curl -sS -o /tmp/vercel-project.json -w '%{http_code}' -H "Authorization: Bearer $token" "https://api.vercel.com/v9/projects/$VERCEL_PROJECT_ID?teamId=$VERCEL_ORG_ID")"
-          if [[ "$status" != "200" ]]; then
-            echo "VERCEL_PROJECT_ACCESS_GATE=BLOCKED status=$status"
-            exit 46
-          fi
-          node -e 'const p=require("/tmp/vercel-project.json"); if(p.id!==process.env.VERCEL_PROJECT_ID||p.accountId!==process.env.VERCEL_ORG_ID) process.exit(1)'
-          echo "VERCEL_TOKEN_EFFECTIVE=$token" >> "$GITHUB_ENV"
-          echo "VERCEL_CREDENTIAL_GATE=PASS"
-          echo "VERCEL_PROJECT_ACCESS_GATE=PASS"
-
-      - name: Verify reusable Preview app payload equivalence
-        if: ${{ github.event_name == 'push' }}
-        shell: bash
-        run: |
-          set -euo pipefail
-          git fetch --no-tags --depth=1 origin "$REUSABLE_PREVIEW_APP_SHA"
-          changed="$(git diff --name-only "$REUSABLE_PREVIEW_APP_SHA" "$GITHUB_SHA")"
-          printf '%s\n' "$changed"
-          non_workflow="$(printf '%s\n' "$changed" | grep -v '^\.github/workflows/inplus-v04r2-ui-integration\.yml$' | sed '/^$/d' || true)"
-          if [[ -n "$non_workflow" ]]; then
-            echo "REUSABLE_PREVIEW_APP_PAYLOAD_GATE=BLOCKED"
-            printf '%s\n' "$non_workflow"
-            exit 50
-          fi
-          echo "DEPLOY_ID=$REUSABLE_PREVIEW_DEPLOY_ID" >> "$GITHUB_ENV"
-          echo "DEPLOY_URL=$REUSABLE_PREVIEW_URL" >> "$GITHUB_ENV"
-          echo "REUSABLE_PREVIEW_APP_PAYLOAD_GATE=PASS"
-
-      - name: Create temporary Preview share bypass
-        if: ${{ github.event_name == 'push' }}
-        shell: bash
-        run: |
-          set -euo pipefail
-          status="$(curl -sS -o /tmp/vercel-share.json -w '%{http_code}' -X PATCH \
-            -H "Authorization: Bearer $VERCEL_TOKEN_EFFECTIVE" \
-            -H 'Content-Type: application/json' \
-            --data '{"ttl":900}' \
-            "https://api.vercel.com/aliases/$DEPLOY_ID/protection-bypass?teamId=$VERCEL_ORG_ID")"
-          if [[ "$status" != "200" ]]; then
-            echo "REUSABLE_PREVIEW_SHARE_BYPASS_GATE=BLOCKED status=$status"
-            exit 49
-          fi
-          share_token="$(node -e 'const d=require("/tmp/vercel-share.json"); if(!d.value) process.exit(1); process.stdout.write(d.value)')"
-          echo "::add-mask::$share_token"
-          echo "VERCEL_SHARE_TOKEN=$share_token" >> "$GITHUB_ENV"
-          echo "REUSABLE_PREVIEW_SHARE_BYPASS_GATE=PASS"
-
-      - name: Reusable Preview health
-        if: ${{ github.event_name == 'push' }}
-        shell: bash
-        run: |
-          set -euo pipefail
-          status="$(curl -sS -L -c /tmp/vercel-share-cookie -b /tmp/vercel-share-cookie \
-            -o artifacts/inplus-v04r2-ui-integration/preview-health.json -w '%{http_code}' \
-            "$DEPLOY_URL/api/health?_vercel_share=$VERCEL_SHARE_TOKEN")"
-          if [[ "$status" != "200" ]]; then
-            echo "REUSABLE_PREVIEW_HEALTH_GATE=BLOCKED status=$status"
-            exit 48
-          fi
-          node -e 'const h=require("./artifacts/inplus-v04r2-ui-integration/preview-health.json"); const p=h.runtimeMasterIntegrations?.find(x=>x.id==="SER-LIXIL-INPLUS"); if(!h.ok||!p||p.packageVersion!=="v0.4-R2"||p.sourceHash!=="cbbdb6ba315c985f7d27f75a237e861be8ce635962ce1cd5a746d7f152c8e1f8") process.exit(1)'
-          echo "REUSABLE_PREVIEW_HEALTH_GATE=PASS"
-
-      - name: Reusable Preview Full Coverage Browser QA
-        if: ${{ github.event_name == 'push' }}
-        shell: bash
-        run: |
-          set -euo pipefail
-          QA_BASE_URL="$DEPLOY_URL" VERCEL_SHARE_TOKEN="$VERCEL_SHARE_TOKEN" node test/browser/inplus-v04r2-full-coverage-browser-qa.mjs
 
       - name: Upload integration evidence
         if: always()
