@@ -27,6 +27,7 @@ jobs:
       HEAD_SHA: ${{ github.event.pull_request.head.sha }}
       STAGE_A_SHARD_TOTAL: 12
       STAGE_A_SHARD_INDEX: ${{ matrix.shard }}
+      STAGE_A_MAX_TRAVERSAL_PER_WINDOW: 5000
       STAGE_A_SYMBOLIC_FRONTIER_OUT: artifacts/stage-a-symbolic-frontier-discovery/shard-${{ matrix.shard }}
     steps:
       - name: Checkout exact PR HEAD
