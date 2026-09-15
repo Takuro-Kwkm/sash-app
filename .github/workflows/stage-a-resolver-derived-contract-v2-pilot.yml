@@ -1,0 +1,63 @@
+name: Stage A Resolver-Derived Contract v2 Pilot
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/stage-a-resolver-derived-contract-v2-pilot.yml'
+      - 'scripts/stage-a-resolver-derived-contract-v2-pilot.mjs'
+      - 'src/catalog/runtime-master/**'
+      - 'src/catalog/**'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: stage-a-resolver-derived-contract-v2-pilot-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  pilot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+      STAGE_A_MAX_MEMO_STATES_PER_WINDOW: 12000
+      STAGE_A_MAX_RESOLVER_CALLS_PER_WINDOW: 80000
+      STAGE_A_MAX_EXPLICIT_MULTI_ENUM_VALUES: 18
+      STAGE_A_TARGET_WINDOWS: WT-S2H-MENKOSHI-AGE-FS,WT-SL-TERRACE-DOOR,WT-EW-AGE-SAGE-FS,SWT-LIX-TW-TATE-GREMON-TF,SWT-YKK-APW430-TATE-GREMON-WINDCATCH,W431-006
+      STAGE_A_CONTRACT_V2_OUT: artifacts/stage-a-resolver-derived-contract-v2-pilot
+    steps:
+      - name: Checkout exact PR HEAD
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 1
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Exact SHA gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          actual="$(git rev-parse HEAD)"
+          test "$actual" = "$HEAD_SHA"
+          echo "EXACT_HEAD_GATE=PASS sha=$actual"
+
+      - name: Run resolver-derived contract v2 pilot
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/stage-a-resolver-derived-contract-v2-pilot.mjs | tee /tmp/stage-a-contract-v2-pilot.log
+
+      - name: Upload pilot evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: stage-a-resolver-derived-contract-v2-pilot
+          path: |
+            artifacts/stage-a-resolver-derived-contract-v2-pilot/report.json
+            /tmp/stage-a-contract-v2-pilot.log
+          if-no-files-found: warn
