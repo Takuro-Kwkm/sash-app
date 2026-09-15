@@ -61,7 +61,12 @@ export async function loadFormalFlatJsonRuntimePackage(entry) {
 
   const files = {};
   const integrityFiles = [];
-  const bundle = entry.materializedBundlePath ? JSON.parse(await readFile(entry.materializedBundlePath, 'utf8')) : null;
+  let bundle = null;
+  if (entry.materializedBundleSegments?.length) {
+    bundle = JSON.parse((await Promise.all(entry.materializedBundleSegments.map((path) => readFile(path, 'utf8')))).join(''));
+  } else if (entry.materializedBundlePath) {
+    bundle = JSON.parse(await readFile(entry.materializedBundlePath, 'utf8'));
+  }
   for (const descriptor of manifest.files ?? []) {
     const loaded = await loadMaterializedJson(entry, descriptor, bundle);
     files[descriptor.name] = loaded.value;
