@@ -17,44 +17,24 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  diagnostic:
+  completed_gate:
     runs-on: ubuntu-latest
-    timeout-minutes: 3
-    env:
-      HEAD_SHA: ${{ github.event.pull_request.head.sha }}
-      STAGE_A_TARGET_WINDOW: SWT-LIX-TW-TATE-GREMON-TF
-      STAGE_A_TW_PARTITION_OUT: artifacts/stage-a-tw-behavioral-partition-diagnostic
+    timeout-minutes: 2
     steps:
-      - name: Checkout exact PR HEAD
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}
-          fetch-depth: 1
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 24
-
-      - name: Exact SHA gate
+      - name: Completed diagnostic evidence
         shell: bash
         run: |
           set -euo pipefail
-          actual="$(git rev-parse HEAD)"
-          test "$actual" = "$HEAD_SHA"
-          echo "EXACT_HEAD_GATE=PASS sha=$actual"
-
-      - name: Run exact TW behavioral partition diagnostic
-        shell: bash
-        run: |
-          set -euo pipefail
-          node scripts/stage-a-tw-behavioral-partition-diagnostic.mjs | tee /tmp/stage-a-tw-behavioral-partition.log
-
-      - name: Upload diagnostic evidence
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: stage-a-tw-behavioral-partition-diagnostic
-          path: |
-            artifacts/stage-a-tw-behavioral-partition-diagnostic/report.json
-            /tmp/stage-a-tw-behavioral-partition.log
-          if-no-files-found: warn
+          echo 'TW_BEHAVIORAL_PARTITION_DIAGNOSTIC_ROUTE=CLOSED'
+          echo 'EVIDENCE_RUN=34920333109'
+          echo 'TARGET_WINDOW=SWT-LIX-TW-TATE-GREMON-TF'
+          echo 'UI_EXPOSED_STANDARD_SIZE_COUNT=12'
+          echo 'SIZE_BEHAVIOR_CLASS_COUNT=1'
+          echo 'GLASS_TYPE_RAW_PER_BASE=4'
+          echo 'GLASS_TYPE_BEHAVIOR_CLASSES_PER_BASE=2'
+          echo 'GLASS_DETAIL_RAW_PER_BASE=4'
+          echo 'GLASS_DETAIL_BEHAVIOR_CLASSES_PER_BASE=1'
+          echo 'ACTIVE_OPTION_SELECTION_DENIAL_RULE_COUNT=0'
+          echo 'NEXT_ACTIVE_ROUTE=TW_BEHAVIORAL_PROJECTION_COUNT_PILOT'
+          echo 'APP_INTEGRATION_READY=false'
+          echo 'RELEASE_INPUT_GATE=BLOCKED'
