@@ -1,0 +1,109 @@
+name: Stage A User Review Diagnostic
+
+on:
+  push:
+    branches: ['ops/stage-a-preview-20260915']
+    paths: ['.github/workflows/stage-a-user-review-diagnostic.yml']
+
+permissions:
+  contents: read
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      TARGET_SHA: 9bea9cf19ed4e6167991c6289292cd65a4524ca4
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.TARGET_SHA }}
+          fetch-depth: 1
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Diagnose glass grille and CUSTOM visibility
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts/stage-a-user-review-diagnostic
+          node --input-type=module <<'NODE' > artifacts/stage-a-user-review-diagnostic/report.json
+          import { resolveRuntimeAppProduct } from './src/catalog/runtime-master/runtime-app-bridge.mjs';
+
+          const products = [
+            {id:'SER-LIX-SAMOS2H', series:'サーモスⅡ-H'},
+            {id:'SER-LIX-SAMOSL', series:'サーモスL'},
+            {id:'SER-LIXIL-TW', series:'TW'},
+            {id:'SER-LIX-EW', series:'EW'},
+          ];
+          const relevant = /glass|ガラス|grille|格子|size_mode|custom_|low|spacer|中空|遮熱|断熱|クリア|グリーン/i;
+
+          function compactField(field){
+            return {
+              key:field.key,
+              label:field.displayLabel,
+              semanticSlot:field.semanticSlot ?? null,
+              required:Boolean(field.required),
+              dataType:field.dataType,
+              values:(field.values??[]).map(v=>({value:v.value,label:v.displayLabel,disabled:Boolean(v.disabled),manualCheck:Boolean(v.manualCheck)})),
+            };
+          }
+
+          async function walk(id, windowChoice){
+            let selection={window_type:windowChoice.value};
+            const observed=new Map();
+            let last=null;
+            for(let step=0;step<32;step++){
+              const result=await resolveRuntimeAppProduct(id,selection);
+              last=result;
+              for(const field of result.fields){
+                if(relevant.test(`${field.key} ${field.displayLabel??''}`)) observed.set(field.key,compactField(field));
+              }
+              const selectable=result.fields
+                .filter(f=>selection[f.key]===undefined && Array.isArray(f.values) && f.values.length)
+                .sort((a,b)=>(a.displayOrder??0)-(b.displayOrder??0));
+              if(!selectable.length) break;
+              let next=selectable.find(f=>f.required) ?? selectable[0];
+              let choice;
+              if(next.key==='size_mode') choice=next.values.find(v=>v.value==='STANDARD') ?? next.values[0];
+              else if(next.key==='screen_presence') choice=next.values.find(v=>['NONE','なし'].includes(v.value)) ?? next.values[0];
+              else choice=next.values.find(v=>!v.disabled) ?? next.values[0];
+              if(!choice) break;
+              selection={...selection,[next.key]:choice.value};
+            }
+            return {
+              window:{value:windowChoice.value,label:windowChoice.displayLabel},
+              finalSelection:selection,
+              validation:last?.validation??null,
+              observed:[...observed.values()],
+            };
+          }
+
+          const report={exact_head_sha:process.env.TARGET_SHA,products:{}};
+          for(const product of products){
+            const initial=await resolveRuntimeAppProduct(product.id,{});
+            const wf=initial.fields.find(f=>f.key==='window_type');
+            const windows=wf?.values??[];
+            const targetDoors=windows.filter(v=>String(v.displayLabel).includes('採風') && String(v.displayLabel).includes('勝手口'));
+            const selectedTargets=targetDoors.length?targetDoors:windows.filter(v=>String(v.displayLabel).includes('勝手口'));
+            const targetResults=[];
+            for(const w of selectedTargets) targetResults.push(await walk(product.id,w));
+            const ewMatrix=[];
+            if(product.series==='EW'){
+              for(const w of windows){
+                const r=await walk(product.id,w);
+                const mode=r.observed.find(f=>f.key==='size_mode');
+                const glass=r.observed.filter(f=>String(f.key).includes('glass'));
+                ewMatrix.push({window:r.window,sizeModes:mode?.values??[],glassFields:glass});
+              }
+            }
+            report.products[product.series]={windowCount:windows.length,targetDoors:targetResults,ewMatrix};
+          }
+          console.log(JSON.stringify(report,null,2));
+          NODE
+          cat artifacts/stage-a-user-review-diagnostic/report.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: stage-a-user-review-diagnostic
+          path: artifacts/stage-a-user-review-diagnostic/
+          if-no-files-found: error
