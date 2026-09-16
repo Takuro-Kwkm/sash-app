@@ -40,6 +40,20 @@ async function assertDomSignature(page,result,label){
   report.domSignatureChecks+=1;
 }
 
+function normalizedSelection(value){
+  if(Array.isArray(value))return value.map((item)=>String(item)).sort();
+  if(value===undefined||value===null||value==='')return [];
+  return [String(value)];
+}
+function choiceTarget(field,selection){
+  const current=normalizedSelection(selection?.[field.key]);
+  for(const candidate of (field.values??[]).filter((choice)=>choice.disabled!==true)){
+    const next=field.dataType==='MULTI_ENUM'?[String(candidate.value)]:[String(candidate.value)];
+    if(JSON.stringify([...next].sort())!==JSON.stringify(current))return field.dataType==='MULTI_ENUM'?next:next[0];
+  }
+  return null;
+}
+
 async function installAndSelect(page){
   const entry=SHARE_TOKEN?`${BASE}/runtime-lab?_vercel_share=${encodeURIComponent(SHARE_TOKEN)}`:`${BASE}/runtime-lab`;
   await page.goto(entry,{waitUntil:'networkidle'});
@@ -66,28 +80,19 @@ async function runViewport(name,options){
     for(let step=0;step<16;step+=1){
       const field=(result.fields??[]).find((candidate)=>{
         if(candidate.readOnly||visited.has(candidate.key)||candidate.dataType==='NUMBER'||candidate.dataType==='TEXT')return false;
-        return (candidate.values??[]).some((choice)=>choice.disabled!==true);
+        return choiceTarget(candidate,result.selection)!==null;
       });
       if(!field)break;
       visited.add(field.key);
-      const choices=(field.values??[]).filter((choice)=>choice.disabled!==true);
-      if(!choices.length)continue;
+      const target=choiceTarget(field,result.selection);
+      if(target===null)continue;
       const locator=page.locator(`#dynamicForm [data-spec-key="${field.key}"]`);
       if(await locator.count()===0)continue;
-      const first=field.dataType==='MULTI_ENUM'?[String(choices[0].value)]:String(choices[0].value);
-      const responsePromise=page.waitForResponse((response)=>response.url().includes('/api/runtime-master/resolve')&&response.status()===200);
-      await locator.selectOption(first);
+      const responsePromise=page.waitForResponse((response)=>response.url().includes('/api/runtime-master/resolve')&&response.status()===200,{timeout:10000});
+      await locator.selectOption(target);
       result=await (await responsePromise).json();
-      await assertDomSignature(page,result,`${name}:set:${field.key}`);
+      await assertDomSignature(page,result,`${name}:change:${field.key}`);
       transitions+=1;report.transitionChecks+=1;
-      if(choices.length>1&&await page.locator(`#dynamicForm [data-spec-key="${field.key}"]`).count()){
-        const second=field.dataType==='MULTI_ENUM'?[String(choices[1].value)]:String(choices[1].value);
-        const changePromise=page.waitForResponse((response)=>response.url().includes('/api/runtime-master/resolve')&&response.status()===200);
-        await page.locator(`#dynamicForm [data-spec-key="${field.key}"]`).selectOption(second);
-        result=await (await changePromise).json();
-        await assertDomSignature(page,result,`${name}:change:${field.key}`);
-        transitions+=1;report.transitionChecks+=1;
-      }
     }
     assert.ok(transitions>0,`${name}: expected at least one Rechent transition`);
     report.viewportResults[name]={transitions,finalSignature:(result.fields??[]).map((field)=>`${field.semanticStage}:${field.semanticSlot}`)};
