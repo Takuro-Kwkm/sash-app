@@ -1,6 +1,7 @@
 name: Global Window Selection Flow Gate
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - feat/new-construction-runtime-ui-v16-20260910
