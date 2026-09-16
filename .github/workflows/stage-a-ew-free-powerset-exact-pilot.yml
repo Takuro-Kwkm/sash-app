@@ -5,34 +5,141 @@ on:
     branches: [main]
     paths:
       - '.github/workflows/stage-a-ew-free-powerset-exact-pilot.yml'
+      - 'scripts/stage-a-nontw-discrete-exact-runner.mjs'
+      - 'scripts/stage-a-resolver-derived-contract-v2-pilot.mjs'
+      - 'src/catalog/runtime-master/**'
+      - 'src/catalog/**'
 
 permissions:
   contents: read
 
+concurrency:
+  group: stage-a-ew-v3-targeted-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
 jobs:
-  closed-evidence-gate:
+  count:
     runs-on: ubuntu-latest
-    timeout-minutes: 1
+    timeout-minutes: 5
+    strategy:
+      fail-fast: false
+      max-parallel: 2
+      matrix:
+        include:
+          - target: WT-EW-HIKICHIGAI
+          - target: WT-EW-KOSHO-YOKO
+    env:
+      HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+      STAGE_A_TARGET_WINDOWS: ${{ matrix.target }}
+      STAGE_A_MAX_MEMO_STATES_PER_WINDOW: '12000'
+      STAGE_A_MAX_RESOLVER_CALLS_PER_WINDOW: '80000'
+      STAGE_A_MAX_EXPLICIT_MULTI_ENUM_VALUES: '18'
+      STAGE_A_MAX_TERMINAL_BFS_STATES: '4096'
+      STAGE_A_CONTRACT_V2_OUT: artifacts/stage-a-ew-v3-targeted/${{ matrix.target }}
     steps:
-      - name: Preserve EW targeted V3 evidence and close retry route
+      - name: Checkout exact PR HEAD
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 1
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Reopen and exact SHA gate
         shell: bash
         run: |
           set -euo pipefail
-          echo 'TASK_CLASSIFICATION=NON-PRODUCT-MASTER'
-          echo 'PRODUCT_MASTER_MUTATION=0'
-          echo 'EW_TARGETED_V3_EVIDENCE_RUN=34945748228'
-          echo 'EW_TARGETED_V3_EVIDENCE_HEAD=4999a36fcec02d36fe308d677bc6455fcc9bcc3d'
-          echo 'EW_WT-EW-HIKICHIGAI=PASS terminal=3140812800'
-          echo 'EW_WT-EW-KOSHO-YOKO=PASS terminal=45298483200'
-          echo 'EW_TWO_WINDOW_TERMINAL_TOTAL=48439296000'
-          echo 'EW_TWO_WINDOW_CUSTOM_PENDING_TOTAL=0'
-          echo 'EW_EVIDENCE_DIGEST=17f4d41b09805ca6a454df7fe3dfbf2d218e4e589c2cb661ba8163e10eed0a20'
-          echo 'EW_AGGREGATE_ARTIFACT_ID=10387720979'
-          echo 'COUNT_MODEL=NONTW_RESOLVER_DERIVED_CONTRACT_V2_TERMINAL_STRUCTURAL_CACHE_V3'
-          echo 'EW_TARGETED_V3_RETRY_GATE=CLOSED'
-          echo 'RETRY_AUTHORIZED=false'
+          actual="$(git rev-parse HEAD)"
+          test "$actual" = "$HEAD_SHA"
           echo 'REOPEN_CONDITION=EW_RUNTIME_OR_ADAPTER_OR_PROOF_MODEL_CHANGE_REQUIRING_REVALIDATION'
-          echo 'SUPERSEDED_INVALID_UPSTREAM_MODEL=stage-a-ew-free-powerset-exact-runner.mjs'
-          echo 'SUPERSEDED_NON_GOVERNING_KOSHO_COUNT=48318382080'
-          echo 'APP_INTEGRATION_READY=false'
-          echo 'RELEASE_INPUT_GATE=BLOCKED'
+          echo 'STATE_CHANGE=EW_V1_2_ADAPTER_AND_FORMAL_GLAZING_SEMANTIC_PROJECTION'
+          echo 'RETRY_AUTHORIZED=true'
+          echo "EXACT_HEAD_GATE=PASS sha=$actual target=$STAGE_A_TARGET_WINDOWS"
+      - name: Run Resolver-Derived Contract V2 + Structural Cache V3
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check scripts/stage-a-nontw-discrete-exact-runner.mjs
+          node scripts/stage-a-nontw-discrete-exact-runner.mjs
+      - name: Validate per-window fresh exact evidence
+        shell: bash
+        env:
+          EXPECTED_TARGET: ${{ matrix.target }}
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import { readFileSync } from 'node:fs';
+          const path=`artifacts/stage-a-ew-v3-targeted/${process.env.EXPECTED_TARGET}/report.json`;
+          const report=JSON.parse(readFileSync(path,'utf8'));
+          if(report.exact_head_sha!==process.env.HEAD_SHA)throw new Error('exact head mismatch');
+          if(report.windows?.length!==1)throw new Error('expected one window report');
+          const row=report.windows[0];
+          if(row.series!=='EW'||row.window_type!==process.env.EXPECTED_TARGET)throw new Error('wrong EW target');
+          if(row.proof_model_version!=='RUNTIME_UI_SYMBOLIC_FULL_COVERAGE_V1')throw new Error(`unexpected proof model ${row.proof_model_version}`);
+          if(row.count_model_version!=='NONTW_RESOLVER_DERIVED_CONTRACT_V2_TERMINAL_STRUCTURAL_CACHE_V3')throw new Error(`unexpected count model ${row.count_model_version}`);
+          if(row.status!=='COUNTED_CANDIDATE'||row.blocker||(row.symbolic_frontiers??[]).length)throw new Error(`V3 blocked: ${JSON.stringify(row.blocker)}`);
+          if(!row.runtime_manifest_sha256||!row.contract_digest||!row.terminal_multi_proof_digest)throw new Error('identity/proof digest missing');
+          if(!(Number(row.structural_audit_cache_size)>0))throw new Error('structural audit cache missing');
+          console.log(`EW_V3_FRESH_TARGET_GATE=PASS window=${row.window_type} terminal=${row.exact_discrete_terminal_context_count} custom=${row.custom_pending_context_count} calls=${row.resolver_call_count} audit_cache=${row.structural_audit_cache_size} audit_hits=${row.structural_audit_cache_hits}`);
+          console.log('APP_INTEGRATION_READY=false');
+          console.log('RELEASE_INPUT_GATE=BLOCKED');
+          NODE
+      - name: Upload per-window fresh V3 evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: stage-a-ew-v3-targeted-${{ matrix.target }}
+          path: artifacts/stage-a-ew-v3-targeted/${{ matrix.target }}/report.json
+          if-no-files-found: error
+
+  aggregate:
+    if: always()
+    needs: count
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    env:
+      HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: stage-a-ew-v3-targeted-*
+          path: artifacts/collected
+      - name: Aggregate fresh targeted EW V3 evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import { createHash } from 'node:crypto';
+          import { readdirSync,readFileSync,statSync,mkdirSync,writeFileSync } from 'node:fs';
+          import { join } from 'node:path';
+          const files=[];const walk=(dir)=>{for(const name of readdirSync(dir)){const p=join(dir,name);if(statSync(p).isDirectory())walk(p);else if(name==='report.json')files.push(p);}};walk('artifacts/collected');
+          const rows=[];for(const p of files){const report=JSON.parse(readFileSync(p,'utf8'));if(report.exact_head_sha!==process.env.HEAD_SHA)throw new Error(`head mismatch ${p}`);if(report.windows?.length===1)rows.push(report.windows[0]);}
+          rows.sort((a,b)=>String(a.window_type).localeCompare(String(b.window_type)));
+          if(rows.length!==2||new Set(rows.map((r)=>r.window_type)).size!==2)throw new Error(`expected two unique EW reports, got ${rows.length}`);
+          for(const row of rows){if(row.status!=='COUNTED_CANDIDATE'||row.blocker||(row.symbolic_frontiers??[]).length)throw new Error(`blocked EW row ${row.window_type}`);if(row.count_model_version!=='NONTW_RESOLVER_DERIVED_CONTRACT_V2_TERMINAL_STRUCTURAL_CACHE_V3')throw new Error(`count model mismatch ${row.window_type}`);}
+          const hiki=rows.find((r)=>r.window_type==='WT-EW-HIKICHIGAI');
+          const kosho=rows.find((r)=>r.window_type==='WT-EW-KOSHO-YOKO');
+          if(!hiki||!kosho)throw new Error('EW target missing');
+          const terminal=rows.reduce((sum,row)=>sum+BigInt(row.exact_discrete_terminal_context_count),0n);
+          const custom=rows.reduce((sum,row)=>sum+BigInt(row.custom_pending_context_count??'0'),0n);
+          const digest=createHash('sha256').update(JSON.stringify(rows.map((r)=>({window:r.window_type,terminal:r.exact_discrete_terminal_context_count,custom:r.custom_pending_context_count,runtime:r.runtime_manifest_sha256,contract:r.contract_digest,multi:r.terminal_multi_proof_digest,auditSize:r.structural_audit_cache_size,auditHits:r.structural_audit_cache_hits})))).digest('hex');
+          const out={exact_head_sha:process.env.HEAD_SHA,task_classification:'NON-PRODUCT-MASTER',product_master_mutation:0,proof_model_version:'RUNTIME_UI_SYMBOLIC_FULL_COVERAGE_V1',count_model_version:'NONTW_RESOLVER_DERIVED_CONTRACT_V2_TERMINAL_STRUCTURAL_CACHE_V3',manufacturer:'LIXIL',series:'EW',target_window_count:2,verified_window_count:2,unverified_window_count:0,hikichigai_exact_discrete_terminal_context_count:hiki.exact_discrete_terminal_context_count,kosho_yoko_exact_discrete_terminal_context_count:kosho.exact_discrete_terminal_context_count,total_exact_discrete_terminal_context_count:terminal.toString(),total_custom_pending_context_count:custom.toString(),evidence_digest:digest,status:'EW_V3_TWO_TARGET_WINDOWS_FRESH_EXACT_PASS',windows:rows,gate_status:{ew_discrete_population_gate:'PASS_FRESH_CURRENT_HEAD',nontw_discrete_population_gate:'BLOCKED_PENDING_80_WINDOW_RECONSOLIDATION',custom_size_coverage_gate:'BLOCKED_CONTINUOUS_PARTITION_NOT_PROVEN',full_browser_qa_gate:'NOT_STARTED',app_integration_ready:false,release_input_gate:'BLOCKED'}};
+          mkdirSync('artifacts/stage-a-ew-v3-targeted-summary',{recursive:true});writeFileSync('artifacts/stage-a-ew-v3-targeted-summary/report.json',JSON.stringify(out,null,2)+'\n');
+          console.log(`EW_V3_FRESH_AGGREGATE_STATUS=${out.status}`);
+          console.log(`EW_HIKICHIGAI_TERMINAL=${out.hikichigai_exact_discrete_terminal_context_count}`);
+          console.log(`EW_KOSHO_YOKO_TERMINAL=${out.kosho_yoko_exact_discrete_terminal_context_count}`);
+          console.log(`EW_TWO_WINDOW_TERMINAL_TOTAL=${out.total_exact_discrete_terminal_context_count}`);
+          console.log(`EW_TWO_WINDOW_CUSTOM_PENDING_TOTAL=${out.total_custom_pending_context_count}`);
+          console.log(`EVIDENCE_DIGEST=${out.evidence_digest}`);
+          console.log('RETRY_AUTHORIZED=false');
+          console.log('REOPEN_CONDITION=EW_RUNTIME_OR_ADAPTER_OR_PROOF_MODEL_CHANGE_REQUIRING_REVALIDATION');
+          console.log('APP_INTEGRATION_READY=false');
+          console.log('RELEASE_INPUT_GATE=BLOCKED');
+          NODE
+      - name: Upload targeted EW V3 aggregate
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: stage-a-ew-v3-targeted-summary
+          path: artifacts/stage-a-ew-v3-targeted-summary/report.json
+          if-no-files-found: error
