@@ -82,6 +82,7 @@ export function normalizeRuntimeManifest(raw) {
     schemaFile,
     formalPass: raw.formal_pass === true || raw.master_status === 'FORMAL_PASS',
     storageStatus: raw.storage_status,
+    registryStatus: raw.registry_status ?? null,
     packageGate: raw.package_gate,
     storageGate: raw.storage_gate ?? null,
     registryGate: raw.registry_gate ?? null,
@@ -185,8 +186,19 @@ export async function loadManifestRuntimePackage(entry) {
   for (const [name, expected, actual] of identityPairs) {
     if (String(expected) !== String(actual)) fail('RUNTIME_MANIFEST_IDENTITY_MISMATCH', `${name} mismatch: expected ${expected}, got ${actual}`, { name, expected, actual });
   }
-  const storageReady = manifest.storageStatus === 'PASS' || (manifest.storageStatus === 'DRIVE_CANONICAL' && manifest.storageGate === 'PASS');
-  if (!manifest.formalPass || manifest.runtimeStatus !== 'READY' || !storageReady || manifest.packageGate !== 'PASS' || (manifest.registryGate && manifest.registryGate !== 'PASS')) {
+
+  // Formal manifests exist in multiple governance generations. Some v1 packages
+  // express Storage/Registry completion as status fields rather than *_gate.
+  // Accept only explicit PASS/CANONICAL evidence; never infer readiness from file
+  // location or package name.
+  const storageReady = manifest.storageStatus === 'PASS'
+    || manifest.storageStatus === 'CANONICAL'
+    || (manifest.storageStatus === 'DRIVE_CANONICAL' && manifest.storageGate === 'PASS');
+  const registryReady = manifest.registryGate
+    ? manifest.registryGate === 'PASS'
+    : (manifest.registryStatus ? manifest.registryStatus === 'PASS' : true);
+
+  if (!manifest.formalPass || manifest.runtimeStatus !== 'READY' || !storageReady || manifest.packageGate !== 'PASS' || !registryReady) {
     fail('RUNTIME_MANIFEST_NOT_FORMAL_READY', 'Canonical Runtime manifest is not formally READY', { manifest });
   }
 
