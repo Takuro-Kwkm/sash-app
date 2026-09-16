@@ -8,6 +8,7 @@ on:
       - '.github/workflows/global-window-selection-flow-gate.yml'
       - 'src/catalog/runtime-master/**'
       - 'src/ui/web/**'
+      - 'scripts/global-window-flow-*.mjs'
       - 'test/**'
       - 'package.json'
   pull_request:
@@ -17,6 +18,7 @@ on:
       - '.github/workflows/global-window-selection-flow-gate.yml'
       - 'src/catalog/runtime-master/**'
       - 'src/ui/web/**'
+      - 'scripts/global-window-flow-*.mjs'
       - 'test/**'
       - 'package.json'
 
@@ -54,6 +56,7 @@ jobs:
           node --check src/catalog/runtime-master/new-construction-sash-runtime-ui-contract.mjs
           node --check src/catalog/runtime-master/inner-window-runtime-ui-contract.mjs
           node --check src/catalog/runtime-master/runtime-app-bridge.mjs
+          node --check scripts/global-window-flow-field-inventory.mjs
           node --check test/79-global-window-selection-flow.test.mjs
           node --check test/80-canonical-window-semantic-schema.test.mjs
           if grep -REn "other:\$\{String\(key\)|other:" src/catalog/runtime-master/new-construction-sash-runtime-ui-contract.mjs src/catalog/runtime-master/inner-window-runtime-ui-contract.mjs; then
@@ -74,6 +77,9 @@ jobs:
 
       - name: Global flow unit gate
         run: node --test test/79-global-window-selection-flow.test.mjs test/80-canonical-window-semantic-schema.test.mjs
+
+      - name: Full Runtime field inventory
+        run: node scripts/global-window-flow-field-inventory.mjs
 
       - name: Legacy core regression partition
         run: node --test test/01-core.test.mjs test/02-lr.test.mjs test/03-features.test.mjs test/04-thermosl.test.mjs test/61-vercel-route-contract.test.mjs
@@ -108,7 +114,7 @@ jobs:
             sleep 0.5
           done
           cat /tmp/health.json
-          node -e 'const h=require("/tmp/health.json"); if(!h.ok) process.exit(1); const ids=new Set(h.runtimeMasterIntegrations.map(x=>x.id)); const expected=["SER-LIX-EW","SER-LIX-SAMOS2H","SER-LIX-SAMOSL","SER-LIXIL-TW","SER-YKK-APW430","SER-YKK-APW431","SER-YKKAP-UCHIRIMO"]; if(expected.some(id=>!ids.has(id))) process.exit(1)'
+          node -e 'const h=require("/tmp/health.json"); if(!h.ok) process.exit(1); const ids=new Set(h.runtimeMasterIntegrations.map(x=>x.id)); const expected=["SER-LIX-EW","SER-LIX-SAMOS2H","SER-LIX-SAMOSL","SER-LIXIL-TW","SER-LIXIL-INPLUS","SER-YKK-APW430","SER-YKK-APW431","SER-YKKAP-UCHIRIMO"]; if(expected.some(id=>!ids.has(id))) process.exit(1)'
           echo 'WINDOW_FLOW_BASELINE_GATE=PASS_RUNTIME_SMOKE'
           echo 'CANONICAL_SLOT_SCHEMA_GATE=PASS_UNIT_SCHEMA_ONLY'
           echo 'FLOW_SCHEMA_UNMAPPED_FIELD_GATE=PASS_INITIAL_RESOLUTION_ONLY'
