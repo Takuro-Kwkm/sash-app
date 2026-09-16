@@ -12,21 +12,74 @@
   "entry_point": "runtime_manifest.json",
   "runtime_file_count": 8,
   "runtime_files": [
-    {"file_name":"canonical_fields.json","sha256":"046ac6bc7c7cca2d5f85164836a49771c0d8ec8dccd19834e896b4bad508cd33","role":"RUNTIME_JSON","package_version":"v0.8-R7","drive_file_id":"108R0Z930JszTM4mfARfSGw4bw6F6310V"},
-    {"file_name":"product_rules.json","sha256":"6806cb7aacf6f3418d721890af2abc2cefa2abe33ac6c7344b1d3c662c2e956d","role":"RUNTIME_JSON","package_version":"v0.8-R7","drive_file_id":"1Cfkm1zJmHJnR20m991b_etJL5qBbntvY"},
-    {"file_name":"hardware_rules.json","sha256":"4e88ed78677b6fb9d77fc81f8eb87c7e3c96fdc21f48bcf83a99d3d3d807348b","role":"RUNTIME_JSON","package_version":"v0.8-R7","drive_file_id":"10S2KNvbPO1d-LrbA03r4l-PRoOQgRUJY"},
-    {"file_name":"installation_rules.json","sha256":"edd803b465f9cbe3c905c59d7c74c36e6463dab3e7180c6ac7bd270176c40beb","role":"RUNTIME_JSON","package_version":"v0.8-R7","drive_file_id":"1pDEugu7eI7Jp8wJekUbdsCS8q67m-jmI"},
-    {"file_name":"option_order_rules.json","sha256":"be41471db4363a9b39106cbb9e651cc908b2e401ee78f03ed20e3217693ba01d","role":"RUNTIME_JSON","package_version":"v0.8-R7","drive_file_id":"1wTEwz9htm8lbeBTLln0vZI0g26G1-DZr"},
-    {"file_name":"dependency_rules.json","sha256":"86096e4f763edbeacabdad6cb6e13a327c408c06e08383064f962a4a4d67d70a","role":"RUNTIME_JSON","package_version":"v0.8-R7","drive_file_id":"1nshH_nznz5RRl4s7Ttbubd3WCcKlzu3e"},
-    {"file_name":"evidence_manual_checks.json","sha256":"cd389d1c2aa78e693b1faf43dd2c1fac3b6b15ed1b7e89ae0e916e276a11a719","role":"RUNTIME_JSON","package_version":"v0.8-R7","drive_file_id":"121e7h1Vn3m0hj4qLOwS5I1BbthyO-60N"},
-    {"file_name":"runtime_qa.json","sha256":"e18f8df5c1459801304a748a77b67bedb0237380fece9279ae3a60ca790cbb01","role":"RUNTIME_QA","package_version":"v0.8-R7","drive_file_id":"1NcP_BF6t1i4b2mcKefw6DC6Ue2sUfKFd"}
+    {
+      "file_name": "canonical_fields.json",
+      "sha256": "046ac6bc7c7cca2d5f85164836a49771c0d8ec8dccd19834e896b4bad508cd33",
+      "role": "RUNTIME_JSON",
+      "package_version": "v0.8-R7",
+      "drive_file_id": "108R0Z930JszTM4mfARfSGw4bw6F6310V"
+    },
+    {
+      "file_name": "product_rules.json",
+      "sha256": "6806cb7aacf6f3418d721890af2abc2cefa2abe33ac6c7344b1d3c662c2e956d",
+      "role": "RUNTIME_JSON",
+      "package_version": "v0.8-R7",
+      "drive_file_id": "1Cfkm1zJmHJnR20m991b_etJL5qBbntvY"
+    },
+    {
+      "file_name": "hardware_rules.json",
+      "sha256": "4e88ed78677b6fb9d77fc81f8eb87c7e3c96fdc21f48bcf83a99d3d3d807348b",
+      "role": "RUNTIME_JSON",
+      "package_version": "v0.8-R7",
+      "drive_file_id": "10S2KNvbPO1d-LrbA03r4l-PRoOQgRUJY"
+    },
+    {
+      "file_name": "installation_rules.json",
+      "sha256": "edd803b465f9cbe3c905c59d7c74c36e6463dab3e7180c6ac7bd270176c40beb",
+      "role": "RUNTIME_JSON",
+      "package_version": "v0.8-R7",
+      "drive_file_id": "1pDEugu7eI7Jp8wJekUbdsCS8q67m-jmI"
+    },
+    {
+      "file_name": "option_order_rules.json",
+      "sha256": "be41471db4363a9b39106cbb9e651cc908b2e401ee78f03ed20e3217693ba01d",
+      "role": "RUNTIME_JSON",
+      "package_version": "v0.8-R7",
+      "drive_file_id": "1wTEwz9htm8lbeBTLln0vZI0g26G1-DZr"
+    },
+    {
+      "file_name": "dependency_rules.json",
+      "sha256": "86096e4f763edbeacabdad6cb6e13a327c408c06e08383064f962a4a4d67d70a",
+      "role": "RUNTIME_JSON",
+      "package_version": "v0.8-R7",
+      "drive_file_id": "1nshH_nznz5RRl4s7Ttbubd3WCcKlzu3e"
+    },
+    {
+      "file_name": "evidence_manual_checks.json",
+      "sha256": "cd389d1c2aa78e693b1faf43dd2c1fac3b6b15ed1b7e89ae0e916e276a11a719",
+      "role": "RUNTIME_JSON",
+      "package_version": "v0.8-R7",
+      "drive_file_id": "121e7h1Vn3m0hj4qLOwS5I1BbthyO-60N"
+    },
+    {
+      "file_name": "runtime_qa.json",
+      "sha256": "e18f8df5c1459801304a748a77b67bedb0237380fece9279ae3a60ca790cbb01",
+      "role": "RUNTIME_QA",
+      "package_version": "v0.8-R7",
+      "drive_file_id": "1NcP_BF6t1i4b2mcKefw6DC6Ue2sUfKFd"
+    }
   ],
   "documentation_file": "PRODUCT_MASTER_MANIFEST.md",
   "storage_status": "CANONICAL_01_正本",
   "package_gate": "PASS",
   "generated_at": "2026-09-16T11:08:56+09:00",
   "presentation_order_authority": "GLOBAL_WINDOW_SELECTION_FLOW_ENGINE",
-  "manual_check_policy": {"G12_G15_HIGH_SIZE_DOUBLE_secondary_door_range":"MANUAL_CHECK_REQUIRED","blocking":false,"automatic_orderability":false,"numeric_range_inferred":false},
+  "manual_check_policy": {
+    "G12_G15_HIGH_SIZE_DOUBLE_secondary_door_range": "MANUAL_CHECK_REQUIRED",
+    "blocking": false,
+    "automatic_orderability": false,
+    "numeric_range_inferred": false
+  },
   "canonical_folder_id": "1wNyL_JFz4wMFfV4zRbcahqCbU24K-n_G",
   "runtime_manifest_file_id": "11P1jHLQs4KO9ZiHxF7ofvqDcwtuoNxbU",
   "registry_status": "PASS",
