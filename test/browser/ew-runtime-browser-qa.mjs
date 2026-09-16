@@ -227,9 +227,9 @@ try{
   assert.ok(ew);
   assert.equal(ew.status,'READY');
   assert.equal(ew.selectable,true);
-  assert.equal(ew.packageVersion,'v1.1');
+  assert.equal(ew.packageVersion,'v1.2');
   assert.equal(ew.schemaVersion,'2.0');
-  assert.equal(ew.sourceHash,'082442f82f51c4a81050d8e16d5fe3b9cb142004deb371a3e2bbb21384ca37dd');
+  assert.equal(ew.sourceHash,'85fce07a07ab938b27d8a8e0178f5b5e2d3779926e6bd10c75d38e4e78699cea');
   await preflight.close();
 
   const desktopContext=await browser.newContext({viewport:{width:1440,height:1000}});
