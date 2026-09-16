@@ -36,7 +36,12 @@ function storageReady(raw) {
 }
 
 function formalReady(raw) {
-  if (raw.runtime_status !== 'READY' || raw.package_gate !== 'PASS' || !storageReady(raw)) return false;
+  const packageGateReady = raw.package_gate === 'PASS'
+    || (raw.package_gate === 'PASS_CONTENT_DEPENDENCY_QA'
+      && raw.formal_pass === true
+      && raw.formal_storage_gate === 'PASS'
+      && raw.registry_gate === 'PASS');
+  if (raw.runtime_status !== 'READY' || !packageGateReady || !storageReady(raw)) return false;
   if (Array.isArray(raw.blocking_items) && raw.blocking_items.length) return false;
   if ('formal_pass' in raw && raw.formal_pass !== true) return false;
   if ('formal_status' in raw && raw.formal_status !== 'FORMAL_PASS') return false;

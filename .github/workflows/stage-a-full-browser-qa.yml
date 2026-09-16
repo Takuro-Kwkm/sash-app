@@ -6,6 +6,12 @@ on:
     paths:
       - '.github/workflows/stage-a-full-browser-qa.yml'
       - 'test/browser/stage-a-full-browser-qa.mjs'
+      - 'scripts/stage-a-custom-dimension-source-shape-diagnostic.mjs'
+      - 'scripts/stage-a-formal-split-custom-guard-shape-diagnostic.mjs'
+      - 'scripts/stage-a-custom-dimension-boundary-partition-proof-v2.mjs'
+      - 'scripts/stage-a-custom-selector-reachability-v4.mjs'
+      - 'scripts/stage-a-custom-runtime-geometry-equivalence-v4.mjs'
+      - 'scripts/stage-a-custom-transition-proof-v4.mjs'
       - 'src/ui/web/product-configuration-editor.mjs'
       - 'src/work-management/domain.mjs'
       - 'src/catalog/runtime-master/**'
@@ -17,16 +23,21 @@ permissions:
 jobs:
   full-browser-qa:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 60
     env:
       HEAD_SHA: ${{ github.sha }}
-      CUSTOM_EVIDENCE_HEAD: 6fe783310cd0334f449e55573d534fa8abaed5b2
-      CUSTOM_ARTIFACT_ID: '10395604814'
-      TRANSITION_ARTIFACT_ID: '10397070916'
-      DISCRETE_EVIDENCE_HEAD: cf38b3857cc3d0dd3f345e0a86dfafe01fbefcfd
-      DISCRETE_ARTIFACT_ID: '10397413935'
-      MULTI_BROWSER_HEAD: de6dadf0dd9aa3fa46df55afdfbe7c37d0d15b1a
-      MULTI_BROWSER_ARTIFACT_ID: '10375282202'
+      CUSTOM_GEOMETRY_EVIDENCE_HEAD: ${{ github.sha }}
+      STAGE_A_CUSTOM_SHAPE_OUT: artifacts/current-head/custom-source-shape
+      STAGE_A_CUSTOM_GUARD_OUT: artifacts/current-head/custom-guard-shape
+      STAGE_A_CUSTOM_SHAPE_INPUT: artifacts/current-head/custom-source-shape/report.json
+      STAGE_A_CUSTOM_GUARD_INPUT: artifacts/current-head/custom-guard-shape/report.json
+      STAGE_A_CUSTOM_PARTITION_OUT: artifacts/current-head/custom-boundary-partition
+      STAGE_A_CUSTOM_PARTITION_INPUT: artifacts/current-head/custom-boundary-partition/report.json
+      STAGE_A_CUSTOM_REACHABILITY_OUT: artifacts/current-head/custom-selector-reachability
+      STAGE_A_CUSTOM_REACHABILITY_INPUT: artifacts/current-head/custom-selector-reachability/report.json
+      STAGE_A_CUSTOM_GEOMETRY_EQ_OUT: artifacts/current-head/custom-runtime-geometry-equivalence
+      STAGE_A_CUSTOM_GEOMETRY_EQ_INPUT: artifacts/current-head/custom-runtime-geometry-equivalence/report.json
+      STAGE_A_CUSTOM_TRANSITION_OUT: artifacts/current-head/custom-transition-proof
       STAGE_A_FULL_BROWSER_OUT: artifacts/stage-a-full-browser-qa
     steps:
       - name: Checkout exact push HEAD with history
@@ -39,42 +50,17 @@ jobs:
         with:
           node-version: 24
 
-      - name: Exact-head evidence invalidation gates
+      - name: Exact-head source gate
         shell: bash
         run: |
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$HEAD_SHA"
-          git merge-base --is-ancestor "$CUSTOM_EVIDENCE_HEAD" "$HEAD_SHA"
-          git diff --quiet "$CUSTOM_EVIDENCE_HEAD" "$HEAD_SHA" -- src/
-          git merge-base --is-ancestor "$DISCRETE_EVIDENCE_HEAD" "$HEAD_SHA"
-          git diff --quiet "$DISCRETE_EVIDENCE_HEAD" "$HEAD_SHA" -- src/
-          git merge-base --is-ancestor "$MULTI_BROWSER_HEAD" "$HEAD_SHA"
-          git diff --quiet "$MULTI_BROWSER_HEAD" "$HEAD_SHA" -- src/ui/web/product-configuration-editor.mjs src/work-management/domain.mjs
+          node --check scripts/stage-a-custom-dimension-boundary-partition-proof-v2.mjs
+          node --check scripts/stage-a-custom-selector-reachability-v4.mjs
+          node --check scripts/stage-a-custom-runtime-geometry-equivalence-v4.mjs
+          node --check scripts/stage-a-custom-transition-proof-v4.mjs
           node --check test/browser/stage-a-full-browser-qa.mjs
-          echo 'FULL_BROWSER_EVIDENCE_INVALIDATION_GATE=PASS'
-
-      - name: Download pinned evidence artifacts
-        shell: bash
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          set -euo pipefail
-          download_artifact(){
-            local id="$1" out="$2"
-            mkdir -p "$out"
-            curl -fL --retry 2 --retry-all-errors \
-              -H "Authorization: Bearer $GH_TOKEN" \
-              -H 'Accept: application/vnd.github+json' \
-              -H 'X-GitHub-Api-Version: 2022-11-28' \
-              "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/artifacts/${id}/zip" \
-              -o "/tmp/artifact-${id}.zip"
-            unzip -q "/tmp/artifact-${id}.zip" -d "$out"
-          }
-          download_artifact "$CUSTOM_ARTIFACT_ID" artifacts/evidence/custom
-          download_artifact "$TRANSITION_ARTIFACT_ID" artifacts/evidence/transition
-          download_artifact "$DISCRETE_ARTIFACT_ID" artifacts/evidence/discrete
-          download_artifact "$MULTI_BROWSER_ARTIFACT_ID" artifacts/evidence/multienum
-          echo 'PINNED_EVIDENCE_DOWNLOAD_GATE=PASS'
+          echo 'FULL_BROWSER_EXACT_HEAD_SOURCE_GATE=PASS'
 
       - name: Install app dependencies and Chromium
         shell: bash
@@ -84,19 +70,28 @@ jobs:
           npm install --no-save playwright@1.55.0
           npx playwright install --with-deps chromium
 
-      - name: Resolve evidence paths
+      - name: Regenerate exact-head CUSTOM proof chain
         shell: bash
         run: |
           set -euo pipefail
-          reach="$(find artifacts/evidence/custom -path '*stage-a-custom-selector-reachability/report.json' -print -quit)"
-          transition="$(find artifacts/evidence/transition -name report.json -print -quit)"
-          discrete="$(find artifacts/evidence/discrete -name report.json -print -quit)"
-          multi="$(find artifacts/evidence/multienum -name report.json -print -quit)"
-          test -n "$reach" && test -n "$transition" && test -n "$discrete" && test -n "$multi"
-          echo "STAGE_A_REACHABILITY_REPORT=$reach" >> "$GITHUB_ENV"
-          echo "STAGE_A_TRANSITION_REPORT=$transition" >> "$GITHUB_ENV"
-          echo "STAGE_A_DISCRETE_REPORT=$discrete" >> "$GITHUB_ENV"
-          echo "STAGE_A_MULTI_BROWSER_REPORT=$multi" >> "$GITHUB_ENV"
+          node scripts/stage-a-custom-dimension-source-shape-diagnostic.mjs
+          node scripts/stage-a-formal-split-custom-guard-shape-diagnostic.mjs
+          node scripts/stage-a-custom-dimension-boundary-partition-proof-v2.mjs
+          node scripts/stage-a-custom-selector-reachability-v4.mjs
+          node scripts/stage-a-custom-runtime-geometry-equivalence-v4.mjs
+          node scripts/stage-a-custom-transition-proof-v4.mjs
+          echo "STAGE_A_REACHABILITY_REPORT=$STAGE_A_CUSTOM_REACHABILITY_INPUT" >> "$GITHUB_ENV"
+          echo "STAGE_A_GEOMETRY_REPORT=$STAGE_A_CUSTOM_GEOMETRY_EQ_INPUT" >> "$GITHUB_ENV"
+          echo "STAGE_A_TRANSITION_REPORT=$STAGE_A_CUSTOM_TRANSITION_OUT/report.json" >> "$GITHUB_ENV"
+          node --input-type=module <<'NODE'
+          import { readFileSync } from 'node:fs';
+          const paths=[process.env.STAGE_A_CUSTOM_REACHABILITY_INPUT,process.env.STAGE_A_CUSTOM_GEOMETRY_EQ_INPUT,`${process.env.STAGE_A_CUSTOM_TRANSITION_OUT}/report.json`];
+          const [reach,geometry,transition]=paths.map((path)=>JSON.parse(readFileSync(path,'utf8')));
+          if(paths.some((_,index)=>[reach,geometry,transition][index].exact_head_sha!==process.env.HEAD_SHA))throw new Error('CURRENT_HEAD_CUSTOM_EVIDENCE_MISMATCH');
+          if(reach.status!=='PASS'||geometry.status!=='PASS'||transition.status!=='PASS')throw new Error('CURRENT_HEAD_CUSTOM_PROOF_NOT_PASS');
+          if(reach.unique_context_count!==137||reach.source_rule_count!==152||geometry.mismatch_count!==0||transition.selector_context_count!==137)throw new Error('CURRENT_HEAD_CUSTOM_CARDINALITY_DRIFT');
+          console.log('CUSTOM_SIZE_COVERAGE_GATE=PASS_CURRENT_HEAD_FULL_PROOF_CHAIN');
+          NODE
 
       - name: Start exact-head local Runtime UI
         shell: bash
@@ -134,6 +129,7 @@ jobs:
         with:
           name: stage-a-full-browser-qa
           path: |
+            artifacts/current-head/
             artifacts/stage-a-full-browser-qa/
             /tmp/stage-a-full-browser-qa.log
             /tmp/stage-a-full-browser-server.log

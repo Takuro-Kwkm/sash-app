@@ -29,8 +29,8 @@ test('Vercel repository adapter health preserves loaded READY Runtime identities
   assert.deepEqual(new Set(health.runtimeMasterIntegrations.map((row)=>row.id)),READY_IDS);
   const byId=new Map(health.runtimeMasterIntegrations.map((row)=>[row.id,row]));
   assert.equal(byId.get('SER-LIX-EW').sourceHash,'85fce07a07ab938b27d8a8e0178f5b5e2d3779926e6bd10c75d38e4e78699cea');
-  assert.equal(byId.get('SER-LIX-SAMOS2H').sourceHash,'8b9b991e0c4949adffa8d63ed20124ac0a4e8c5d243e30740b0bc84122718120');
-  assert.equal(byId.get('SER-LIX-SAMOSL').sourceHash,'29d1ef4725d7b277b468034cba07bfaba1202d8bf62e5180d4e38ec2fd4a64cd');
+  assert.equal(byId.get('SER-LIX-SAMOS2H').sourceHash,'cfc55020035df809b83c0f4a25dc0e0b717854344fdb815be8e9a848c2d889c8');
+  assert.equal(byId.get('SER-LIX-SAMOSL').sourceHash,'4cf2a4b1572f68288fa108ccd33d30cc80d5170f2f5303864ca56ca67c34cec3');
   assert.equal(byId.get('SER-LIXIL-TW').sourceHash,'c4980f45fdf57afe1512f2ca42da0eca53d9facc1f555734f7d89b347a808ee0');
   assert.equal(byId.get('SER-LIXIL-INPLUS').sourceHash,'cbbdb6ba315c985f7d27f75a237e861be8ce635962ce1cd5a746d7f152c8e1f8');
   assert.equal(byId.get('SER-YKK-APW430').sourceHash,'08f3ad4bef73e32b00e9a69af7e0278539bc8899d64713c8f903924cd43de78b');

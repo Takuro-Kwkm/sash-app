@@ -8,5 +8,8 @@ test('actual formal new-construction Runtime semantic audit covers all six integ
   assert.equal(report.productMasterMutation, 0);
   assert.equal(report.integrationCount, 6);
   assert.deepEqual(report.integrations.map((row) => row.series).sort((a,b)=>a.localeCompare(b,'ja')), ['APW430','APW431','EW','TW','サーモスL','サーモスⅡ-H'].sort((a,b)=>a.localeCompare(b,'ja')));
+  assert.equal(report.issueCount, 0);
+  assert.equal(report.gate, 'CANONICAL_SLOT_SCHEMA_GATE=PASS_RUNTIME_SEMANTICS');
+  assert.ok(report.integrations.every((row) => row.status === 'PASS'));
   console.log(`GLOBAL_WINDOW_RUNTIME_SEMANTIC_AUDIT=${JSON.stringify(report)}`);
 });

@@ -6,6 +6,7 @@ import {
   semanticSlotForNewConstructionField,
 } from '../src/catalog/runtime-master/new-construction-sash-runtime-ui-contract.mjs';
 import { auditCanonicalGlazingField } from '../src/catalog/runtime-master/canonical-window-semantic-schema.mjs';
+import { createProductModuleGlazingBridge } from '../src/catalog/runtime-master/product-module-glazing-normalizer.mjs';
 
 const TARGET_SLOTS = new Set(['glass_type','glass_detail','glass_function']);
 const active = (row) => row?.active !== false && row?.['有効'] !== false && row?.status !== 'INACTIVE' && row?.runtime_selectable !== false && row?.runtimeSelectable !== false && row?.user_selectable !== false && row?.userSelectable !== false;
@@ -62,12 +63,19 @@ async function productModuleFields(entry) {
     ?? runtimePackage.documents.RUNTIME_MASTER;
   const module = document?.product_module;
   if (!module?.specificationDefinitions || !module?.allowedValues) return null;
-  return module.specificationDefinitions.map((definition) => {
+  const fields = module.specificationDefinitions.map((definition) => {
     const key = definition.key;
     const semanticSlot = semanticSlotForNewConstructionField(key);
     const rows = module.allowedValues.filter((row) => active(row) && row.specificationKey === key);
-    return { key, semanticSlot, values:dedupeChoices(rows) };
+    return { key, semanticSlot, values:dedupeChoices(rows).map((choice) => ({
+      ...choice,
+      runtimeValueRow: rows.find((row) => Object.is(row.canonical_value ?? row.value ?? row.option_id ?? row.appearance_id ?? labelOf(row), choice.value)),
+    })) };
   });
+  return createProductModuleGlazingBridge(module).normalizeFields(fields).map((field) => ({
+    ...field,
+    semanticSlot:semanticSlotForNewConstructionField(field.key),
+  }));
 }
 
 async function apwSplitFields(entry) {

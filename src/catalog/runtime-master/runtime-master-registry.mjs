@@ -31,29 +31,27 @@ const TW_V02_ROOT = join(HERE, '../runtime-master-packages/lixil-tw-integrated-v
 const TW_TRANSFORM_PARTS = Object.freeze(Array.from({ length: 19 }, (_, index) => `part-${String(index).padStart(2,'0')}`));
 const UCHIRIMO_ROOT = join(HERE, '../runtime-master-packages/ykkap-uchirimo-v1.0-p7r1-r2');
 const INPLUS_ROOT = join(HERE, '../runtime-master-packages/lixil-inplus-v0.4-r2');
-const SAMOS2H_R1_ROOT = join(HERE, '../runtime-master-packages/lixil-samos2h-v0.9-r1');
-const SAMOS2H_ROOT = join(HERE, '../runtime-master-packages/lixil-samos2h-v0.9-r2');
-const THERMOSL_ROOT = join(HERE, '../runtime-master-packages/lixil-thermosl-v0.7-r1');
+const SAMOS2H_ROOT = join(HERE, '../runtime-master-packages/lixil-samos2h-v0.9-r3');
+const THERMOSL_ROOT = join(HERE, '../runtime-master-packages/lixil-thermosl-v0.7-r2');
 const RECHENT_ROOT = join(HERE, '../runtime-master-packages/lixil-rechent-door3-nonfire-v0.8-r7');
 const APW430_ROOT = join(HERE, '../runtime-master-packages/ykkap-apw430-20260830-r1');
 const APW431_ROOT = join(HERE, '../runtime-master-packages/ykkap-apw431-v1.0-r1');
 
 export const runtimeMasterInventory = Object.freeze([
   Object.freeze({
-    manufacturer:'LIXIL', series:'サーモスⅡ-H', manifestSeries:'サーモスⅡH', productId:'SER-LIX-SAMOS2H', masterVersion:'v0.9-R2', schemaVersion:'2.0',
+    manufacturer:'LIXIL', series:'サーモスⅡ-H', manifestSeries:'サーモスⅡH', productId:'SER-LIX-SAMOS2H', masterVersion:'v0.9-R3', schemaVersion:'2.0',
     packageType:'FORMAL_PRODUCT_RUNTIME', adapterType:'PRODUCT_MODULE_RUNTIME_V1', productModuleRole:'RUNTIME_JSON_PACKAGE', packageRoot:SAMOS2H_ROOT,
-    runtimeManifestPath:join(SAMOS2H_ROOT,'runtime_manifest.json'), runtimeManifestDriveFileId:'19uYt-ORAp-pfbGwVsSW_Qnhgsx2I1EWu', runtimeManifestSha256:'8b9b991e0c4949adffa8d63ed20124ac0a4e8c5d243e30740b0bc84122718120',
+    runtimeManifestPath:join(SAMOS2H_ROOT,'runtime_manifest.json'), runtimeManifestDriveFileId:'1xnVkGtwoN488zgjoi-FOF9drnaUP-jal', runtimeManifestSha256:'cfc55020035df809b83c0f4a25dc0e0b717854344fdb815be8e9a848c2d889c8',
     materializedFiles:Object.freeze({
-      '1-t_UOhuGffPrxzr5mu11rJlT1uFfu_nn':Object.freeze({ codec:'json-transform-v1', base:Object.freeze({codec:'brotli',paths:Object.freeze([join(SAMOS2H_R1_ROOT,'LIXIL_サーモスⅡH_runtime_v0.9-R1.json.br.b64.parts/part-00')])}), transformPath:join(SAMOS2H_ROOT,'runtime_transform.json') }),
-      '1tBFGzHIHpZNn2nAEO4N61Tj4iNeVZzPL':Object.freeze({codec:'brotli',paths:Object.freeze([join(SAMOS2H_ROOT,'samos2h_runtime_package_v0.9-R2.schema.json.br.b64.parts/part-00')])}),
+      '1c-w0-fYEBZubfN6KCy5BfG1Sp41xsKdu':Object.freeze({codec:'brotli',paths:Object.freeze([join(SAMOS2H_ROOT,'LIXIL_サーモスⅡH_runtime_v0.9-R3.json.br.b64.parts/part-00')])}),
+      '1LMmXrVfap_xXZXTPoXcos1gWvZqZKtj1':Object.freeze({codec:'brotli',paths:Object.freeze([join(SAMOS2H_ROOT,'samos2h_runtime_package_v0.9-R3.schema.json.br.b64.parts/part-00')])}),
     }),
   }),
   Object.freeze({
-    manufacturer:'LIXIL', series:'サーモスL', productId:'SER-LIX-SAMOSL', masterVersion:'v0.7-R1', schemaVersion:'2.0', packageType:'FORMAL_PRODUCT_RUNTIME', adapterType:'PRODUCT_MODULE_RUNTIME_V1', productModuleRole:'runtime_master', packageRoot:THERMOSL_ROOT,
-    runtimeManifestPath:join(THERMOSL_ROOT,'runtime_manifest.json'), runtimeManifestDriveFileId:'1UKh-RS97d6l1xELaxoy-X-0HJgPXuSL2', runtimeManifestSha256:'29d1ef4725d7b277b468034cba07bfaba1202d8bf62e5180d4e38ec2fd4a64cd',
+    manufacturer:'LIXIL', series:'サーモスL', productId:'SER-LIX-SAMOSL', masterVersion:'v0.7-R2', schemaVersion:'2.0', packageType:'FORMAL_PRODUCT_RUNTIME', adapterType:'PRODUCT_MODULE_RUNTIME_V1', productModuleRole:'RUNTIME_JSON_PACKAGE', packageRoot:THERMOSL_ROOT,
+    runtimeManifestPath:join(THERMOSL_ROOT,'runtime_manifest.json'), runtimeManifestDriveFileId:'1c-VIgwTqPDTkas0apYqx30AN3PVa71p1', runtimeManifestSha256:'4cf2a4b1572f68288fa108ccd33d30cc80d5170f2f5303864ca56ca67c34cec3',
     materializedFiles:Object.freeze({
-      '1b1gVeIVqMM9v0vTT4ZR7SbSdGdDqVS1r':Object.freeze({codec:'brotli',paths:Object.freeze([join(THERMOSL_ROOT,'LIXIL_サーモスL_runtime_v0.7-R1.json.br.b64.parts/part-00')])}),
-      '1CAMYza5l9KHXwvohe5B6p4ltHJ3qAR2z':Object.freeze({codec:'brotli',paths:Object.freeze([join(THERMOSL_ROOT,'thermosl_runtime_package_v0.7-R1.schema.json.br.b64.parts/part-00')])}),
+      '12G_Edo55NWgu38gJjTGcqDZ7HsdpAH2I':Object.freeze({codec:'brotli',paths:Object.freeze([join(THERMOSL_ROOT,'LIXIL_サーモスL_runtime_v0.7-R2.json.br.b64.parts/part-00')])}),
     }),
   }),
   Object.freeze({

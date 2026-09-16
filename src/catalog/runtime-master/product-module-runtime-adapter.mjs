@@ -1,6 +1,8 @@
 import { createCatalog } from '../catalog-adapter.mjs';
 import { stabilizeSelection } from '../catalog-resolver.mjs';
 import { buildCatalogContext, selectorMatches } from '../selector.mjs';
+import { createProductModuleGlazingBridge } from './product-module-glazing-normalizer.mjs';
+import { createProductModuleGlassManufacturability } from './product-module-glass-manufacturability.mjs';
 
 const has = (value) => value !== undefined && value !== null && value !== '';
 const same = (a, b) => Object.is(a, b) || String(a) === String(b);
@@ -78,6 +80,12 @@ function expandFormalSpecToken(module, token) {
 
 function prepareModuleForInternalConstruction(sourceModule) {
   const module = clone(sourceModule);
+  const manualOnlyFields = new Set((module.allowedValues ?? [])
+    .filter((row) => row.status === 'ESTIMATE_CONFIRM_REQUIRED' || row.metadata?.manualCheck === true || row.metadata?.automaticActivation === false)
+    .map((row) => row.specificationKey));
+  for (const definition of module.specificationDefinitions ?? []) {
+    if (manualOnlyFields.has(definition.key)) definition.autoSelectSingle = false;
+  }
   const constructionDef = module.specificationDefinitions?.find((def) => def.key === 'construction');
   const formalDefault = constructionDef?.defaultValue ?? null;
   for (const row of module.allowedValues ?? []) {
@@ -187,12 +195,14 @@ export function adaptProductModuleRuntimeV1(runtimePackage, entry) {
   const customConstructionResolutionEnabled = constructionResolution?.payload?.custom?.mode === 'DERIVE_FROM_APPLICABLE_DIMENSION_RULES';
   const catalog = createCatalog([module]);
   const productId = module.product.id;
+  const glazingBridge = createProductModuleGlazingBridge(module);
+  const glassManufacturability = createProductModuleGlassManufacturability(module, catalog);
 
   function resolveUi(inputSelection = {}) {
     const original = { ...(inputSelection ?? {}) };
     delete original.construction;
     delete original.internal_construction;
-    let working = { ...original };
+    let working = glazingBridge.toSourceSelection(original);
 
     // Derive the hidden construction from the selected formal STANDARD size before stabilization.
     // Otherwise construction-dependent downstream values can be cleared by the first resolver pass
@@ -233,38 +243,55 @@ export function adaptProductModuleRuntimeV1(runtimePackage, entry) {
 
     const resolved = { ...result.selection };
     const context = buildCatalogContext(catalog, productId);
-    const fields = result.fields.map((field) => ({
+    const fields = glazingBridge.normalizeFields(result.fields.map((field) => ({
       ...field,
       values: field.values.map((choice) => {
         const row = allowedRowFor(catalog, productId, field.key, choice.value, resolved, context);
         return {
           ...choice,
           ...(row ? { runtimeValueRow: row } : {}),
-          disabled: row?.userSelectable === false || row?.runtimeSelectable === false,
+          disabled: row?.userSelectable === false || row?.runtimeSelectable === false || !glassManufacturability.candidateSelectable(row, resolved),
         };
       }).filter((choice) => !choice.disabled || internalDefinition(module.specificationDefinitions.find((def) => def.key === field.key))),
-    }));
+    })), resolved);
 
-    const missingRequiredFields = fields.filter((field) => field.required && isEmpty(resolved[field.key])).map((field) => field.key);
-    const clearedFields = Object.keys(original).filter((key) => !Object.prototype.hasOwnProperty.call(resolved, key));
-    const publicSelection = { ...resolved };
+    const publicSelection = glazingBridge.toCanonicalSelection(resolved);
     delete publicSelection.construction;
     delete publicSelection.internal_construction;
+    const missingRequiredFields = fields.filter((field) => {
+      const definition = module.specificationDefinitions.find((def) => def.key === field.key);
+      return !internalDefinition(definition) && field.required && isEmpty(publicSelection[field.key]);
+    }).map((field) => field.key);
+    const clearedFields = Object.keys(original).filter((key) => !Object.prototype.hasOwnProperty.call(publicSelection, key));
     const dimensionResult = dimensionOverride ?? result.dimensionResult ?? null;
+    const glassResult = glassManufacturability.evaluate(resolved);
+    if (glassResult?.status === 'ALLOWED') {
+      const selected = module.allowedValues.find((row) => row.specificationKey === 'glass_function' && same(row.value, resolved.glass_function));
+      if (selected?.displayLabel) {
+        for (let index = manualWarnings.length - 1; index >= 0; index -= 1) if (manualWarnings[index].includes(selected.displayLabel)) manualWarnings.splice(index, 1);
+      }
+    } else if (glassResult?.status === 'ESTIMATE_CONFIRM_REQUIRED' && glassResult.message && !manualWarnings.includes(glassResult.message)) {
+      manualWarnings.push(glassResult.message);
+    }
+    const validationErrors = glassResult?.status === 'BLOCK'
+      ? [{ errorCode:'GLASS_MANUFACTURABILITY_BLOCK', field:'glass_function', message:glassResult.message, ruleIds:glassResult.ruleIds }]
+      : [];
     const validationStatus = missingRequiredFields.length ? 'INCOMPLETE'
+      : glassResult?.status === 'BLOCK' ? 'INVALID'
       : dimensionResult?.status === 'BLOCK' ? 'INVALID'
-      : dimensionResult?.status === 'REVIEW_REQUIRED' ? 'MANUAL_CHECK'
+      : dimensionResult?.status === 'REVIEW_REQUIRED' || glassResult?.status === 'ESTIMATE_CONFIRM_REQUIRED' || manualWarnings.length ? 'MANUAL_CHECK'
       : 'VALID';
 
     return {
       selection: publicSelection,
       internalSelection: resolved,
       fields,
-      notices: result.notices ?? [],
+      notices: [...(result.notices ?? []), ...(glassResult?.status === 'ESTIMATE_CONFIRM_REQUIRED' && glassResult.message ? [glassResult.message] : [])],
       manualWarnings,
       dimensionResult,
+      glassManufacturability: glassResult,
       clearedFields,
-      validation: { status: validationStatus, errors: [], missingRequiredFields },
+      validation: { status: validationStatus, errors: validationErrors, missingRequiredFields },
       orderReady: false,
     };
   }
