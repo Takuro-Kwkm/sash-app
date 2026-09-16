@@ -6,6 +6,7 @@ on:
   pull_request:
     branches: [main]
     paths:
+      - 'src/ui/web/index.html'
       - 'src/ui/web/design-preview.html'
       - 'src/ui/web/design-preview.css'
       - 'src/ui/web/design-preview-notifications.css'
@@ -17,6 +18,7 @@ on:
       - 'src/ui/web/design-preview-guide.mjs'
       - 'src/ui/web/design-preview-survey.mjs'
       - 'src/server/recovery-app.mjs'
+      - 'test/browser/home-hero-browser-qa.mjs'
       - 'test/browser/design-pilot-browser-qa.mjs'
       - 'test/browser/design-pilot-estimate-qa.mjs'
       - 'test/browser/design-pilot-guide-qa.mjs'
@@ -40,6 +42,7 @@ jobs:
           node --check src/ui/web/design-preview-estimate.mjs
           node --check src/ui/web/design-preview-guide.mjs
           node --check src/ui/web/design-preview-survey.mjs
+          node --check test/browser/home-hero-browser-qa.mjs
           node --check test/browser/design-pilot-browser-qa.mjs
           node --check test/browser/design-pilot-estimate-qa.mjs
           node --check test/browser/design-pilot-guide-qa.mjs
@@ -59,11 +62,13 @@ jobs:
             if curl -fsS http://127.0.0.1:4173/api/health >/dev/null; then break; fi
             sleep 0.5
           done
+          curl -fsS http://127.0.0.1:4173/ >/dev/null
           curl -fsS http://127.0.0.1:4173/design-preview >/dev/null
           curl -fsS http://127.0.0.1:4173/design-preview/product >/dev/null
           curl -fsS 'http://127.0.0.1:4173/design-preview?view=estimate' >/dev/null
           curl -fsS 'http://127.0.0.1:4173/design-preview?view=guide' >/dev/null
           curl -fsS 'http://127.0.0.1:4173/design-preview?view=survey' >/dev/null
+          node test/browser/home-hero-browser-qa.mjs
           node test/browser/design-pilot-browser-qa.mjs
           node test/browser/design-pilot-estimate-qa.mjs
           node test/browser/design-pilot-guide-qa.mjs
@@ -74,6 +79,7 @@ jobs:
         with:
           name: ui-design-pilot-browser-qa
           path: |
+            artifacts/home-hero-browser-qa/
             artifacts/design-pilot-browser-qa/
             artifacts/design-pilot-estimate-qa/
             artifacts/design-pilot-guide-qa/
