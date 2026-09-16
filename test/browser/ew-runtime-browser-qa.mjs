@@ -175,8 +175,13 @@ async function exercise(page){
   assert.equal(result.validation.errors.some((error)=>error.errorCode==='CUSTOM_SIZE_OUT_OF_RANGE'),false);
   await chooseFirst(page,'exterior_color');
   await chooseFirst(page,'interior_color');
+  const customGlassValues=await page.locator('[data-spec-key="glass_base"] option:not([value=""])').evaluateAll((rows)=>rows.map((row)=>row.value));
+  assert.deepEqual(customGlassValues,['GL-EW-LOWE-PG','GL-EW-PG']);
+  assert.equal(customGlassValues.includes('GL-EW-TG'),false);
   result=(await chooseFirst(page,'glass_base')).result;
-  assert.equal(result.validation.status,'VALID');
+  assert.equal(result.validation.status,'MANUAL_CHECK');
+  assert.deepEqual(result.validation.errors,[]);
+  assert.ok(result.notices.some((message)=>message.includes('manufacturer estimate')));
   result=await chooseNumber(page,'custom_w',499);
   assert.equal(result.validation.status,'INVALID');
   assert.ok(result.validation.errors.some((error)=>error.errorCode==='CUSTOM_SIZE_OUT_OF_RANGE'));
