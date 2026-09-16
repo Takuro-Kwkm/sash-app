@@ -28,8 +28,9 @@ async function assertIPadHero(page,label){
   const metrics=await page.locator('.app-home-hero-photo').evaluate((node)=>{
     const image=node.getBoundingClientRect();
     const hero=node.closest('.app-home-hero').getBoundingClientRect();
+    const footer=document.querySelector('#build').getBoundingClientRect();
     const style=getComputedStyle(node);
-    return {width:image.width,height:image.height,heroWidth:hero.width,imageRight:image.right,heroRight:hero.right,objectFit:style.objectFit,naturalWidth:node.naturalWidth,naturalHeight:node.naturalHeight};
+    return {width:image.width,height:image.height,heroWidth:hero.width,imageRight:image.right,heroRight:hero.right,imageBottom:image.bottom,heroBottom:hero.bottom,footerTop:footer.top,objectFit:style.objectFit,naturalWidth:node.naturalWidth,naturalHeight:node.naturalHeight};
   });
   assert.equal(metrics.naturalWidth,640,`${label} must use approved 640px source`);
   assert.equal(metrics.naturalHeight,340,`${label} must use approved 340px source`);
@@ -39,6 +40,8 @@ async function assertIPadHero(page,label){
   assert.ok(Math.abs(rendered-expected)<0.01,`${label} ratio mismatch ${rendered} vs ${expected}`);
   assert.ok(metrics.width>metrics.heroWidth,`${label} should uniformly scale the photo for right-edge crop`);
   assert.ok(metrics.imageRight>metrics.heroRight,`${label} should clip only the photo overflow at the Hero boundary`);
+  assert.ok(metrics.imageBottom<=metrics.footerTop+1,`${label} full approved photo must fit above fixed footer: ${JSON.stringify(metrics)}`);
+  assert.ok(metrics.heroBottom<=metrics.footerTop+1,`${label} full Hero must fit above fixed footer: ${JSON.stringify(metrics)}`);
   const overflow=await page.evaluate(()=>document.documentElement.scrollWidth-window.innerWidth);
   assert.ok(overflow<=1,`${label} document overflow ${overflow}`);
 }
@@ -64,6 +67,7 @@ try{
   await landscape.page.screenshot({path:`${OUT}/ipad-landscape-home-1024x768.png`,fullPage:false});
   report.scenarios.IPAD_LANDSCAPE_HOME_HERO='PASS';
   report.scenarios.IPAD_LANDSCAPE_HERO_INTRINSIC_RATIO='PASS';
+  report.scenarios.IPAD_LANDSCAPE_FULL_PHOTO_VISIBLE='PASS';
   await landscape.context.close();
 
   const portrait=await openAt(768,1024);
@@ -77,6 +81,7 @@ try{
   await portrait.page.screenshot({path:`${OUT}/ipad-portrait-home-768x1024.png`,fullPage:false});
   report.scenarios.IPAD_PORTRAIT_HOME_HERO='PASS';
   report.scenarios.IPAD_PORTRAIT_HERO_INTRINSIC_RATIO='PASS';
+  report.scenarios.IPAD_PORTRAIT_FULL_PHOTO_VISIBLE='PASS';
   report.scenarios.IPAD_PORTRAIT_HEADER_CLEARANCE='PASS';
   await portrait.context.close();
 
