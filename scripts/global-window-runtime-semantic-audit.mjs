@@ -1,11 +1,16 @@
 import { loadFormalProductRuntimePackage } from '../src/catalog/runtime-master/formal-product-runtime-loader.mjs';
 import { loadRegisteredRuntime, runtimeMasterInventory } from '../src/catalog/runtime-master/runtime-master-registry.mjs';
-import { semanticSlotForNewConstructionField } from '../src/catalog/runtime-master/new-construction-sash-runtime-ui-contract.mjs';
+import { appRuntimeIntegrationRegistry } from '../src/catalog/runtime-master/app-runtime-integration-registry.mjs';
+import {
+  NEW_CONSTRUCTION_EXTERIOR_WINDOW_UI_CATEGORY,
+  semanticSlotForNewConstructionField,
+} from '../src/catalog/runtime-master/new-construction-sash-runtime-ui-contract.mjs';
 import { auditCanonicalGlazingField } from '../src/catalog/runtime-master/canonical-window-semantic-schema.mjs';
 
 const TARGET_SLOTS = new Set(['glass_type','glass_detail','glass_function']);
 const active = (row) => row?.active !== false && row?.['有効'] !== false && row?.status !== 'INACTIVE' && row?.runtime_selectable !== false && row?.runtimeSelectable !== false && row?.user_selectable !== false && row?.userSelectable !== false;
 const labelOf = (row) => String(row?.display_label ?? row?.displayLabel ?? row?.['表示名'] ?? row?.label ?? row?.metadata?.displayLabel ?? row?.canonical_value ?? row?.value ?? row?.option_id ?? row?.appearance_id ?? '').trim();
+const integrationKey = (manufacturer, series) => `${manufacturer}::${series}`;
 
 function dedupeChoices(rows = []) {
   const seen = new Set();
@@ -87,7 +92,15 @@ async function fieldsForEntry(entry) {
 }
 
 export async function runGlobalWindowRuntimeSemanticAudit() {
-  const entries = runtimeMasterInventory.filter((entry) => entry.series !== 'ウチリモ 内窓');
+  // Select the audit population declaratively from the UI integration registry.
+  // INNER_WINDOW products such as Uchirimo/Inplus must never enter the
+  // new-construction glazing semantic audit merely because of a series-name filter.
+  const newConstructionKeys = new Set(
+    appRuntimeIntegrationRegistry
+      .filter((row) => row.uiCategory === NEW_CONSTRUCTION_EXTERIOR_WINDOW_UI_CATEGORY)
+      .map((row) => integrationKey(row.manufacturer, row.series)),
+  );
+  const entries = runtimeMasterInventory.filter((entry) => newConstructionKeys.has(integrationKey(entry.manufacturer, entry.series)));
   const integrations = [];
   let issueCount = 0;
   for (const entry of entries) {
