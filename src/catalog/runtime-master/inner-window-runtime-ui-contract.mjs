@@ -43,6 +43,13 @@ const GLAZING_SLOTS = new Set(['glass_family','glass_structure','glass_type','su
 const INSTALLATION_SLOTS = new Set(['frame_installation_mode','frame_projection','extension_frame_type','extension_frame_reinforcement','bathroom_installation_type','upper_frame_spec','sash_midrail','crescent_position','frame_install_spec','fukashi_spec','joint_layout']);
 const OPTION_SLOTS = new Set(['option_items']);
 
+// Category differences are declarative extensions, never a domain-based fallback.
+// Adding a new user-facing field requires an explicit approved entry here.
+const APPROVED_INNER_WINDOW_EXTENSIONS = Object.freeze({
+  runtime_install_extension: Object.freeze({ slot:'extension:installation:runtime_install_extension', stage:'INSTALLATION_SURVEY', order:91 }),
+  runtime_option_extension: Object.freeze({ slot:'extension:option:runtime_option_extension', stage:'OPTION', order:111 }),
+});
+
 export function semanticSlotForInnerWindowField(key) {
   return INNER_WINDOW_UI_STANDARD_ORDER.includes(key) ? key : null;
 }
@@ -69,13 +76,17 @@ function standardLabelForInnerWindowField(key, fallback) {
   return STANDARD_LABELS[key] ?? fallback;
 }
 
+function approvedInnerWindowExtensionForField(key) {
+  return APPROVED_INNER_WINDOW_EXTENSIONS[key] ?? null;
+}
+
 export function applyInnerWindowUiOrder(fields = []) {
   return applyGlobalWindowSelectionFlow(fields, {
     uiCategory: INNER_WINDOW_UI_CATEGORY,
     canonicalSlotOrder: INNER_WINDOW_UI_STANDARD_ORDER,
     semanticSlotForField: semanticSlotForInnerWindowField,
     semanticStageForSlot: semanticStageForInnerWindowSlot,
-    approvedExtensionForField: () => null,
+    approvedExtensionForField: approvedInnerWindowExtensionForField,
     standardLabelForField: standardLabelForInnerWindowField,
   });
 }
