@@ -27,7 +27,7 @@ permissions:
 
 concurrency:
   group: global-window-selection-flow-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   global-flow:
