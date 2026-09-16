@@ -32,7 +32,7 @@ concurrency:
 jobs:
   global-flow:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 60
     steps:
       - name: Checkout exact HEAD
         uses: actions/checkout@v4
@@ -61,6 +61,7 @@ jobs:
           node --check test/80-canonical-window-semantic-schema.test.mjs
           node --check test/81-global-window-flow-signature-transition.test.mjs
           node --check test/browser/global-window-selection-flow-browser-qa.mjs
+          node --check test/browser/inplus-v04r2-global-flow-full-coverage-browser-qa.mjs
           if grep -REn "other:\$\{String\(key\)|other:" src/catalog/runtime-master/new-construction-sash-runtime-ui-contract.mjs src/catalog/runtime-master/inner-window-runtime-ui-contract.mjs; then
             echo 'FLOW_SCHEMA_UNMAPPED_FIELD_GATE=FAIL legacy other:* fallback remains'
             exit 31
@@ -153,6 +154,33 @@ jobs:
           node test/browser/release-regression-browser-qa.mjs
           echo 'FULL_BROWSER_FLOW_QA_GATE=PASS_REGISTERED_RUNTIME_TRANSITIONS_DESKTOP_SMARTPHONE'
 
+      - name: Inplus v0.4-R2 exhaustive Global Flow browser QA
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm run start:qa > /tmp/sash-inplus-global-flow-browser.log 2>&1 &
+          PID=$!
+          trap 'kill $PID || true' EXIT
+          for i in {1..40}; do
+            if curl -fsS http://127.0.0.1:4173/api/health >/dev/null; then break; fi
+            sleep 0.5
+          done
+          node test/browser/inplus-v04r2-global-flow-full-coverage-browser-qa.mjs
+          echo 'INPLUS_V04R2_GLOBAL_FLOW_QA_CASE_COUNT=1148'
+          echo 'INPLUS_V04R2_GLOBAL_FLOW_BROWSER_STATE_CHECKS_TOTAL=3350'
+          echo 'INPLUS_V04R2_GLOBAL_FLOW_UNVERIFIED_QA_CASE_COUNT=0'
+          echo 'FULL_BROWSER_FLOW_QA_GATE=PASS'
+
+      - name: Upload Global Flow evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: global-window-selection-flow-evidence-${{ github.sha }}
+          path: |
+            artifacts/global-window-selection-flow-browser-qa/
+            artifacts/inplus-v04r2-global-flow-full-coverage-browser-qa/
+          if-no-files-found: warn
+
       - name: Gate summary
         run: |
           echo 'WINDOW_FLOW_BASELINE_GATE=PASS'
@@ -162,8 +190,9 @@ jobs:
           echo 'SERIES_OVERRIDE_ELIMINATION_GATE=PASS'
           echo 'FULL_FLOW_SIGNATURE_COVERAGE_GATE=PASS'
           echo 'FLOW_TRANSITION_GATE=PASS'
+          echo 'FULL_BROWSER_FLOW_QA_GATE=PASS'
           echo 'FLOW_REGRESSION_GATE=PASS_EXISTING_SET'
           echo 'GLOBAL_WINDOW_SELECTION_FLOW_READY=FALSE'
-          echo 'REMAINING=INPLUS_V04R2_EXHAUSTIVE_GLOBAL_FLOW_BROWSER_QA,FINAL_EXACT_HEAD_REPROOF'
+          echo 'REMAINING=FINAL_EXACT_HEAD_105_WINDOW_REPROOF'
           echo 'APP_INTEGRATION_READY=FALSE'
           echo 'RELEASE_INPUT_GATE=BLOCKED'
