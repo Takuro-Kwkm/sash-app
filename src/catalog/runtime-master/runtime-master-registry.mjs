@@ -9,9 +9,11 @@ import { adaptUchirimoTabularV1 } from './uchirimo-tabular-v1-adapter.mjs';
 import { adaptSemanticTableBundleV2 } from './semantic-table-bundle-v2-adapter.mjs';
 import { evaluateSemanticTableBundleV2 } from './semantic-table-bundle-v2-engine.mjs';
 import { loadFormalProductRuntimePackage } from './formal-product-runtime-loader.mjs';
+import { loadFormalProductRuntimeV2Package } from './formal-product-runtime-v2-loader.mjs';
 import { adaptProductModuleRuntimeV1 } from './product-module-runtime-adapter.mjs';
 import { adaptApw430FormalSplitV1 } from './apw430-formal-split-v1-adapter.mjs';
 import { adaptApw431FormalSplitV1 } from './apw431-formal-split-v1-adapter.mjs';
+import { adaptRechentDoor3NonFireV1 } from './rechent-door3-nonfire-v1-adapter.mjs';
 import { guardFormalCustomDimensionUiResolver } from './formal-custom-dimension-safety.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -25,6 +27,7 @@ const INPLUS_ROOT = join(HERE, '../runtime-master-packages/lixil-inplus-v0.4-r2'
 const SAMOS2H_R1_ROOT = join(HERE, '../runtime-master-packages/lixil-samos2h-v0.9-r1');
 const SAMOS2H_ROOT = join(HERE, '../runtime-master-packages/lixil-samos2h-v0.9-r2');
 const THERMOSL_ROOT = join(HERE, '../runtime-master-packages/lixil-thermosl-v0.7-r1');
+const RECHENT_ROOT = join(HERE, '../runtime-master-packages/lixil-rechent-door3-nonfire-v0.8-r7');
 const APW430_ROOT = join(HERE, '../runtime-master-packages/ykkap-apw430-20260830-r1');
 const APW431_ROOT = join(HERE, '../runtime-master-packages/ykkap-apw431-v1.0-r1');
 
@@ -50,6 +53,20 @@ export const runtimeMasterInventory = Object.freeze([
     manufacturer:'LIXIL', series:'EW', masterVersion:'v1.1', schemaVersion:'2.0', packageType:'RUNTIME_MANIFEST_V2', adapterType:'CANONICAL_WORKBOOK_REFERENCE_V1', packageRoot:EW_ROOT,
     runtimeManifestPath:join(EW_ROOT,'runtime_manifest.json'), runtimeManifestDriveFileId:'139c0atou5LFz7EIHIdD7ZTYWddfSHf5_', runtimeManifestSha256:'8646bfd5f4a3d2184f2dbcb5b28f6e7dca995c9e11d53ec273a158588b5cdbed',
     materializedFiles:Object.freeze({'1soPPTqP9LNKWFS1wxWhN8Lux6p9ZdyYf':Object.freeze({codec:'brotli',paths:Object.freeze(EW_RUNTIME_SEGMENTS.map((name)=>join(EW_ROOT,`LIXIL_EW_runtime_v1.1.json.br.b64.segments/${name}`)))})}),
+  }),
+  Object.freeze({
+    manufacturer:'LIXIL', series:'リシェント玄関ドア3 非防火', productId:'SER-LIXIL-RECHENT-D3-NF', masterVersion:'v0.8-R7', schemaVersion:'PRODUCT_MASTER_RUNTIME_v2.0', packageType:'FORMAL_PRODUCT_RUNTIME', adapterType:'RECHENT_DOOR3_NONFIRE_V1', packageRoot:RECHENT_ROOT,
+    runtimeManifestPath:join(RECHENT_ROOT,'runtime_manifest.json'), runtimeManifestDriveFileId:'11P1jHLQs4KO9ZiHxF7ofvqDcwtuoNxbU', runtimeManifestSha256:'6c189dff2197ab095168c308fb6733bd1a0f5a2f336a3352a39ce536ee08230d',
+    materializedFiles:Object.freeze({
+      '108R0Z930JszTM4mfARfSGw4bw6F6310V':Object.freeze({codec:'brotli',paths:Object.freeze([join(RECHENT_ROOT,'canonical_fields.json.br.b64')])}),
+      '1Cfkm1zJmHJnR20m991b_etJL5qBbntvY':Object.freeze({codec:'brotli',paths:Object.freeze([join(RECHENT_ROOT,'product_rules.json.br.b64')])}),
+      '10S2KNvbPO1d-LrbA03r4l-PRoOQgRUJY':Object.freeze({codec:'brotli',paths:Object.freeze([join(RECHENT_ROOT,'hardware_rules.json.br.b64')])}),
+      '1pDEugu7eI7Jp8wJekUbdsCS8q67m-jmI':Object.freeze({codec:'brotli',paths:Object.freeze([join(RECHENT_ROOT,'installation_rules.json.br.b64')])}),
+      '1wTEwz9htm8lbeBTLln0vZI0g26G1-DZr':Object.freeze({codec:'brotli',paths:Object.freeze([join(RECHENT_ROOT,'option_order_rules.json.br.b64')])}),
+      '1nshH_nznz5RRl4s7Ttbubd3WCcKlzu3e':Object.freeze({codec:'brotli',paths:Object.freeze([join(RECHENT_ROOT,'dependency_rules.json.br.b64')])}),
+      '121e7h1Vn3m0hj4qLOwS5I1BbthyO-60N':Object.freeze({codec:'brotli',paths:Object.freeze([join(RECHENT_ROOT,'evidence_manual_checks.json.br.b64')])}),
+      '1NcP_BF6t1i4b2mcKefw6DC6Ue2sUfKFd':Object.freeze({codec:'brotli',paths:Object.freeze([join(RECHENT_ROOT,'runtime_qa.json.br.b64')])}),
+    }),
   }),
   Object.freeze({
     manufacturer:'YKK AP', series:'APW430', productId:'SER-YKK-APW430', masterVersion:'20260830-R1', schemaVersion:'product-master-runtime-manifest/1.0', packageType:'FORMAL_PRODUCT_RUNTIME', adapterType:'APW430_FORMAL_SPLIT_V1', packageRoot:APW430_ROOT,
@@ -117,6 +134,9 @@ async function loadRuntime(entry) {
     runtimePackage = await loadManifestRuntimePackage(entry);
     const master = adaptSemanticTableBundleV2(runtimePackage);
     adapted = { master, resolver: (selection) => evaluateSemanticTableBundleV2(master, selection) };
+  } else if (entry.packageType === 'FORMAL_PRODUCT_RUNTIME' && entry.adapterType === 'RECHENT_DOOR3_NONFIRE_V1') {
+    runtimePackage = await loadFormalProductRuntimeV2Package(entry);
+    adapted = adaptRechentDoor3NonFireV1(runtimePackage, entry);
   } else if (entry.packageType === 'FORMAL_PRODUCT_RUNTIME' && entry.adapterType === 'PRODUCT_MODULE_RUNTIME_V1') {
     runtimePackage = await loadFormalProductRuntimePackage(entry);
     adapted = adaptProductModuleRuntimeV1(runtimePackage, entry);
