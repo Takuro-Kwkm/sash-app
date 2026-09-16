@@ -51,7 +51,7 @@ const isInternalKey=(key)=>{const token=String(key??'').trim();if(!token)return 
 
 // Approved declarative extension slots for formal Runtime fields which are
 // configuration selectors but are not part of the base canonical slot set.
-// Exact-key only: no series/manufacturer fallback and no other:* escape hatch.
+// Exact-key only: no series/manufacturer fallback and no generic escape hatch.
 const APPROVED_NEW_CONSTRUCTION_EXTENSIONS = Object.freeze({
   glass_configuration:Object.freeze({slot:'ext.glass_configuration',stage:'CONFIGURATION',order:41}),
   profile:Object.freeze({slot:'ext.profile',stage:'CONFIGURATION',order:42}),
