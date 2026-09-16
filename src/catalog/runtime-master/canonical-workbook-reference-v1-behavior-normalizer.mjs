@@ -8,6 +8,9 @@ const sourceSpecId=(row)=>row?.['固有仕様ID']??row?.spec_id;
 const screenFormOf=(row)=>row?.screen_type??row?.label;
 const splitTargets=(value)=>String(value??'').split(/[・、,]/).map((part)=>part.trim()).filter(Boolean);
 const windowIdMatches=(raw,windowId)=>String(raw??'').split('/').map((part)=>part.trim()).includes(windowId);
+const GLAZING_SEMANTIC_SLOTS=Object.freeze(['glass_type','glass_detail','glass_function']);
+const GLAZING_SEMANTIC_LABEL=Object.freeze({glass_type:'ガラス種別',glass_detail:'ガラス詳細',glass_function:'ガラス追加機能'});
+const GLAZING_SEMANTIC_ORDER=Object.freeze({glass_type:130,glass_detail:140,glass_function:150});
 
 function meaningfulHanding(raw){
   if(!has(raw))return[];
@@ -47,6 +50,101 @@ function formalRuleSpec(rule){
   const selector=formalRuleSelector(rule);
   return selector.specific_spec??selector.window_spec??null;
 }
+function normalizeTable(sourceTables,name,headerKey){
+  const values=sourceTables?.[name]?.values??[];
+  const headerIndex=values.findIndex((row)=>row?.[0]===headerKey);
+  if(headerIndex<0)return[];
+  const headers=values[headerIndex];
+  return values.slice(headerIndex+1)
+    .filter((row)=>row?.some((cell)=>has(cell)))
+    .map((row)=>Object.fromEntries(headers.map((header,index)=>[header,row[index]])));
+}
+function formalGlazingSemanticRows(model){
+  const declared=model.document?.working_extensions?.glazing_semantic;
+  if(!declared)return[];
+  const sourceName=declared.source_sheet??'08D_UIガラスSemantic';
+  return normalizeTable(model.sourceTables,sourceName,'semantic_id').filter((row)=>
+    GLAZING_SEMANTIC_SLOTS.includes(row.semantic_slot)&&row['有効']!==false&&row['UI表示']!=='非表示'&&has(row.canonical_value)
+  );
+}
+function glazingTargetMatches(raw,glassBase){
+  if(!has(raw)||raw==='*')return true;
+  return String(raw).split(/[\/、,]/).map((value)=>value.trim()).filter(Boolean).some((value)=>same(value,glassBase));
+}
+function semanticRowsFor(rows,slot,glassBase){
+  return rows.filter((row)=>row.semantic_slot===slot&&glazingTargetMatches(row.glass_base,glassBase));
+}
+function semanticStatusManual(row){return has(row?.['適用状態'])&&row['適用状態']!=='ACTIVE';}
+function semanticMasterValue(row){
+  return Object.freeze({
+    value_id:row.semantic_id??`${row.semantic_slot}:${row.canonical_value}`,
+    field_name:row.semantic_slot,
+    canonical_value:row.canonical_value,
+    display_label:row['表示名']??String(row.canonical_value),
+    status:'CURRENT',
+    manual_check:semanticStatusManual(row),
+    user_selectable:true,
+    runtime_selectable:true,
+    source:Object.freeze({...row,formalGlazingSemantic:true}),
+  });
+}
+function withFormalGlazingSemanticMaster(master,model,rows){
+  if(!rows.length)return master;
+  const presentSlots=new Set(rows.map((row)=>row.semantic_slot));
+  const existingByKey=new Map((master.fields??[]).map((field)=>[field.field_name,field]));
+  const fields=(master.fields??[]).filter((field)=>!presentSlots.has(field.field_name)).map((field)=>field);
+  for(const slot of GLAZING_SEMANTIC_SLOTS){
+    if(!presentSlots.has(slot))continue;
+    const existing=existingByKey.get(slot);
+    fields.push(Object.freeze({
+      ...(existing??{}),
+      field_name:slot,
+      display_label:existing?.display_label??GLAZING_SEMANTIC_LABEL[slot],
+      display_order:GLAZING_SEMANTIC_ORDER[slot],
+      data_type:slot==='glass_function'?'array':'enum',
+      parent_fields:['glass_base'],
+      required_mode:existing?.required_mode??'OPTIONAL',
+      selection_mode:existing?.selection_mode??'USER_SELECTABLE',
+      runtime_included:true,
+    }));
+  }
+  const values=(master.values??[]).filter((row)=>!presentSlots.has(row.field_name)).map((row)=>row);
+  const seen=new Set();
+  for(const row of rows){
+    const key=JSON.stringify([row.semantic_slot,row.canonical_value,row.glass_base]);
+    if(seen.has(key))continue;
+    seen.add(key);
+    values.push(semanticMasterValue(row));
+  }
+  return Object.freeze({...master,fields:Object.freeze(fields),values:Object.freeze(values)});
+}
+function applyFormalGlazingSemantic(state,inputSelection,rows){
+  if(!rows.length)return;
+  const glassBase=inputSelection.glass_base;
+  for(const slot of GLAZING_SEMANTIC_SLOTS){
+    const candidates=has(glassBase)?semanticRowsFor(rows,slot,glassBase):[];
+    if(!has(glassBase)||!candidates.length){hideField(state,slot);continue;}
+    const allowed=uniq(candidates.map((row)=>row.canonical_value));
+    const raw=inputSelection[slot];
+    const selected=slot==='glass_function'?(Array.isArray(raw)?raw:has(raw)?[raw]:[]):has(raw)?[raw]:[];
+    const invalid=selected.filter((value)=>!allowed.some((candidate)=>same(candidate,value)));
+    if(invalid.length){
+      for(const value of invalid)appendError(state,{code:'SELECTION_INCOMPATIBLE',field:slot,value});
+      appendCleared(state,slot,'DEPENDENCY',slot==='glass_function'?selected:raw);
+    }
+    const accepted=selected.filter((value)=>allowed.some((candidate)=>same(candidate,value)));
+    const value=slot==='glass_function'?(accepted.length?accepted:null):(accepted[0]??null);
+    showField(state,slot,{value,allowed,required:false,readOnly:false,label:GLAZING_SEMANTIC_LABEL[slot]});
+    for(const chosen of accepted){
+      const row=candidates.find((candidate)=>same(candidate.canonical_value,chosen));
+      if(row&&semanticStatusManual(row)){
+        const notice=row['備考']??`${row['表示名']??chosen} はメーカー確認が必要です。`;
+        state.warnings??=[];
+        if(!state.warnings.includes(notice))state.warnings.push(notice);
+      }
+    }
+  }
+}
 function enumUniverse(master,field){
   return (master.values??[]).filter((row)=>row.field_name===field).map((row)=>row.canonical_value);
 }
@@ -83,6 +181,8 @@ export function withCanonicalWorkbookReferenceV1Behavior(adapted){
   if(!master||typeof baseResolver!=='function')return adapted;
   const model=master.canonicalWorkbook;
   if(!model)return adapted;
+  const glazingSemanticRows=formalGlazingSemanticRows(model);
+  const normalizedMaster=withFormalGlazingSemanticMaster(master,model,glazingSemanticRows);
 
   const resolver=(inputSelection={})=>{
     const input=structuredClone(inputSelection??{});
@@ -91,12 +191,14 @@ export function withCanonicalWorkbookReferenceV1Behavior(adapted){
     const specs=(model.specs??[]).filter((row)=>same(sourceWindowId(row),windowId));
     if(window&&!has(input.window_spec)&&specs.length===1&&String(window.spec_required??'').includes('不要'))input.window_spec=specs[0].spec_id;
 
-    const state=baseResolver(input);
+    const legacyInput=structuredClone(input);
+    for(const slot of GLAZING_SEMANTIC_SLOTS)delete legacyInput[slot];
+    const state=baseResolver(legacyInput);
     state.errors??=[]; state.cleared_fields??=[]; state.warnings??=[];
 
-    for(const def of master.fields??[]){
+    for(const def of normalizedMaster.fields??[]){
       if(!(def.field_name in inputSelection)||!['enum','array'].includes(def.data_type))continue;
-      const universe=enumUniverse(master,def.field_name);
+      const universe=enumUniverse(normalizedMaster,def.field_name);
       const raw=def.data_type==='array'?(Array.isArray(inputSelection[def.field_name])?inputSelection[def.field_name]:[inputSelection[def.field_name]]):[inputSelection[def.field_name]];
       for(const value of raw.filter(has))if(!universe.some((candidate)=>same(candidate,value)))appendError(state,{code:'SELECTION_NOT_ALLOWED',field:def.field_name,value});
     }
@@ -148,6 +250,8 @@ export function withCanonicalWorkbookReferenceV1Behavior(adapted){
       }
     }
 
+    applyFormalGlazingSemantic(state,inputSelection,glazingSemanticRows);
+
     if(window&&validSpec){
       const selectedOptions=new Set(Array.isArray(input.option)?input.option:has(input.option)?[input.option]:[]);
       const optionRows=(model.options??[]).filter((row)=>(row.window_id==='*'||same(row.window_id,windowId))&&(!has(row['固有仕様ID'])||row['固有仕様ID']==='*'||same(row['固有仕様ID'],specId)));
@@ -164,5 +268,5 @@ export function withCanonicalWorkbookReferenceV1Behavior(adapted){
     if(!window&&has(windowId))appendError(state,{code:'SELECTION_NOT_ALLOWED',field:'window_type',value:windowId});
     return recompute(state);
   };
-  return withCanonicalWorkbookReferenceV1FormalGeometry(Object.freeze({...adapted,resolver}));
+  return withCanonicalWorkbookReferenceV1FormalGeometry(Object.freeze({...adapted,master:normalizedMaster,resolver}));
 }
