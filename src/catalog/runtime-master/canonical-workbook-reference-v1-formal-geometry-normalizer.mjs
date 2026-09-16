@@ -8,6 +8,7 @@ const windowOf=(rule)=>{
   const node=rule?.product_node??rule?.productNode??rule?.windowId;
   return has(node)?String(node).split('::')[0]:null;
 };
+const specOf=(rule)=>selectorOf(rule)?.specific_spec??selectorOf(rule)?.window_spec??null;
 const uiSelectorKey=(rawKey)=>rawKey==='variant'?'configuration_variant':rawKey;
 const rawSelectorValue=(rawKey,value)=>{
   if(rawKey==='panel_count'&&value==='NULL(HKK)')return null;
@@ -78,6 +79,30 @@ function evaluateGeometry(geometry,w,h){
   if(type==='AUTO_POLYGON')return pointInPolygon(geometry.points,w,h);
   return null;
 }
+function formalCustomGlassRules(model,selection){
+  return (model.document?.working_extensions?.custom_dimension_rules?.rules??[]).filter((rule)=>{
+    if(!same(windowOf(rule),selection.window_type))return false;
+    const spec=specOf(rule);
+    if(has(selection.window_spec)&&has(spec)&&!same(spec,selection.window_spec))return false;
+    const selector=selectorOf(rule);
+    return has(selector.glass_base);
+  });
+}
+function constrainFormalCustomGlassCandidates(state,model,selection){
+  if(selection.size_mode!=='CUSTOM')return;
+  const field=state.fields?.glass_base;
+  if(!field||field.visibility!=='SHOW')return;
+  const rules=formalCustomGlassRules(model,selection);
+  if(!rules.length)return;
+  const w=Number(selection.custom_w),h=Number(selection.custom_h);
+  const haveDimensions=Number.isFinite(w)&&Number.isFinite(h);
+  const applicable=haveDimensions?rules.filter((rule)=>evaluateGeometry(geometryOf(rule),w,h)!==false):rules;
+  const allowed=new Set(applicable.flatMap((rule)=>{
+    const raw=selectorOf(rule).glass_base;
+    return Array.isArray(raw)?raw:[raw];
+  }).filter(has));
+  field.allowed_values=(field.allowed_values??[]).filter((value)=>allowed.has(value));
+}
 function contextFor(shutterEntry,combo){
   const contexts=shutterEntry?.contexts??shutterEntry;
   if(!contexts||typeof contexts!=='object')return null;
@@ -120,6 +145,7 @@ export function withCanonicalWorkbookReferenceV1FormalGeometry(adapted){
   if(!model||typeof baseResolver!=='function')return adapted;
   const resolver=(selection={})=>{
     const state=baseResolver(selection);
+    constrainFormalCustomGlassCandidates(state,model,selection);
     if(selection.size_mode!=='CUSTOM'||!has(selection.custom_w)||!has(selection.custom_h))return state;
     for(const rule of compositeRules(model,selection)){
       const result=evaluateComposite(model,selection,rule);
