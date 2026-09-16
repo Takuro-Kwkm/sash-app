@@ -43,11 +43,70 @@ const GLAZING_SLOTS = new Set(['glass_family','glass_structure','glass_type','su
 const INSTALLATION_SLOTS = new Set(['frame_installation_mode','frame_projection','extension_frame_type','extension_frame_reinforcement','bathroom_installation_type','upper_frame_spec','sash_midrail','crescent_position','frame_install_spec','fukashi_spec','joint_layout']);
 const OPTION_SLOTS = new Set(['option_items']);
 
+const installationExtension = (key, order) => Object.freeze({ slot:`extension:installation:${key}`, stage:'INSTALLATION_SURVEY', order });
+const optionExtension = (key, order) => Object.freeze({ slot:`extension:option:${key}`, stage:'OPTION', order });
+
 // Category differences are declarative extensions, never a domain-based fallback.
-// Adding a new user-facing field requires an explicit approved entry here.
+// These keys are the current formal Uchirimo user-facing measurement/installation
+// and hardware/option fields. Any new key requires an explicit code review entry.
 const APPROVED_INNER_WINDOW_EXTENSIONS = Object.freeze({
-  runtime_install_extension: Object.freeze({ slot:'extension:installation:runtime_install_extension', stage:'INSTALLATION_SURVEY', order:91 }),
-  runtime_option_extension: Object.freeze({ slot:'extension:option:runtime_option_extension', stage:'OPTION', order:111 }),
+  opening_w_top: installationExtension('opening_w_top', 200),
+  opening_w_middle: installationExtension('opening_w_middle', 201),
+  opening_w_bottom: installationExtension('opening_w_bottom', 202),
+  opening_h_left: installationExtension('opening_h_left', 203),
+  opening_h_middle: installationExtension('opening_h_middle', 204),
+  opening_h_right: installationExtension('opening_h_right', 205),
+  diagonal_1: installationExtension('diagonal_1', 206),
+  diagonal_2: installationExtension('diagonal_2', 207),
+  available_mounting_depth: installationExtension('available_mounting_depth', 208),
+  existing_window_interference: installationExtension('existing_window_interference', 209),
+  existing_hardware_interference: installationExtension('existing_hardware_interference', 210),
+  structural_support_condition: installationExtension('structural_support_condition', 211),
+  floor_support_condition: installationExtension('floor_support_condition', 212),
+  construction: installationExtension('construction', 213),
+  jamb_projection_a_mm: installationExtension('jamb_projection_a_mm', 214),
+  jamb_face_b_mm: installationExtension('jamb_face_b_mm', 215),
+  jamb_height_h_mm: installationExtension('jamb_height_h_mm', 216),
+  jamb_height_h1_mm: installationExtension('jamb_height_h1_mm', 217),
+  jamb_height_h2_mm: installationExtension('jamb_height_h2_mm', 218),
+  jamb_height_h3_mm: installationExtension('jamb_height_h3_mm', 219),
+  sill_upper_c_mm: installationExtension('sill_upper_c_mm', 220),
+  sill_lower_d_mm: installationExtension('sill_lower_d_mm', 221),
+  wall_surface_for_reinforcement_available: installationExtension('wall_surface_for_reinforcement_available', 222),
+  substrate_present: installationExtension('substrate_present', 223),
+  substrate_wall_gap_present: installationExtension('substrate_wall_gap_present', 224),
+  substrate_or_structure_present: installationExtension('substrate_or_structure_present', 225),
+  substrate_or_structure_wall_gap_present: installationExtension('substrate_or_structure_wall_gap_present', 226),
+  stud_spacing_condition_met: installationExtension('stud_spacing_condition_met', 227),
+  tool_floor_interference: installationExtension('tool_floor_interference', 228),
+  floor_supports_load: installationExtension('floor_supports_load', 229),
+  floor_screw_holding: installationExtension('floor_screw_holding', 230),
+  baseboard_interference: installationExtension('baseboard_interference', 231),
+  vertical_horizontal_jamb_step_e_mm: installationExtension('vertical_horizontal_jamb_step_e_mm', 232),
+  lower_mounting_surface_horizontal_or_adjustable: installationExtension('lower_mounting_surface_horizontal_or_adjustable', 233),
+  mounting_surface_flat: installationExtension('mounting_surface_flat', 234),
+  mounting_surface_damage_protection: installationExtension('mounting_surface_damage_protection', 235),
+  resin_jamb_face_screw_fixed: installationExtension('resin_jamb_face_screw_fixed', 236),
+  lower_resin_jamb_space_mm: installationExtension('lower_resin_jamb_space_mm', 237),
+  existing_lower_jamb_angle_present: installationExtension('existing_lower_jamb_angle_present', 238),
+  lower_jamb_a_mm: installationExtension('lower_jamb_a_mm', 239),
+  lower_jamb_a_prime_mm: installationExtension('lower_jamb_a_prime_mm', 240),
+  hardware_tip_mounting_depth_A_mm: installationExtension('hardware_tip_mounting_depth_A_mm', 241),
+  existing_angle_height_mm: installationExtension('existing_angle_height_mm', 242),
+  existing_angle_tip_mm: installationExtension('existing_angle_tip_mm', 243),
+  system_bath_component_screw_interference: installationExtension('system_bath_component_screw_interference', 244),
+  existing_window_to_jamb_step_large: installationExtension('existing_window_to_jamb_step_large', 245),
+  crescent_presence: optionExtension('crescent_presence', 300),
+  crescent_type: optionExtension('crescent_type', 301),
+  pull_handle_type: optionExtension('pull_handle_type', 302),
+  pull_handle_position: optionExtension('pull_handle_position', 303),
+  operating_handle_type: optionExtension('operating_handle_type', 304),
+  middle_rail_option: optionExtension('middle_rail_option', 305),
+  middle_rail_position: optionExtension('middle_rail_position', 306),
+  ventilator_option: optionExtension('ventilator_option', 307),
+  bottom_rail_type: optionExtension('bottom_rail_type', 308),
+  arm_stopper_option: optionExtension('arm_stopper_option', 309),
+  outside_handle_option: optionExtension('outside_handle_option', 310),
 });
 
 export function semanticSlotForInnerWindowField(key) {
@@ -76,7 +135,7 @@ function standardLabelForInnerWindowField(key, fallback) {
   return STANDARD_LABELS[key] ?? fallback;
 }
 
-function approvedInnerWindowExtensionForField(key) {
+export function approvedInnerWindowExtensionForField(key) {
   return APPROVED_INNER_WINDOW_EXTENSIONS[key] ?? null;
 }
 
