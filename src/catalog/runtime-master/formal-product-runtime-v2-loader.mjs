@@ -46,12 +46,33 @@ function decodeTransport(encoded,codec,fileName){
   }catch(cause){fail('FORMAL_RUNTIME_TRANSPORT_INVALID',`Formal Runtime transport is invalid: ${fileName}`,{cause,fileName,codec});}
   fail('FORMAL_RUNTIME_TRANSPORT_CODEC_UNSUPPORTED',`Unsupported Formal Runtime transport codec: ${codec}`,{fileName,codec});
 }
+async function readSiblingPartTransport(singlePath){
+  const parts=[];
+  for(let index=0;index<100;index+=1){
+    const path=`${singlePath}.parts/part-${String(index).padStart(2,'0')}`;
+    try{parts.push(await readFile(path,'utf8'));}
+    catch(cause){
+      if(index===0)return null;
+      break;
+    }
+  }
+  return parts.length?parts.join(''):null;
+}
 async function readPackedTransport(transport,fileName){
   if(!transport?.paths?.length)fail('FORMAL_RUNTIME_FILE_MISSING',`Formal Runtime transport has no paths: ${fileName}`,{fileName,transport});
   let encoded;
   try{encoded=(await Promise.all(transport.paths.map((path)=>readFile(path,'utf8')))).join('');}
   catch(cause){fail('FORMAL_RUNTIME_FILE_MISSING',`Formal Runtime transport is not materialized: ${fileName}`,{cause,fileName,transport});}
-  return decodeTransport(encoded,transport.codec??'gzip',fileName);
+  try{return decodeTransport(encoded,transport.codec??'gzip',fileName);}
+  catch(primaryError){
+    if(primaryError?.code!=='FORMAL_RUNTIME_TRANSPORT_INVALID'||transport.paths.length!==1)throw primaryError;
+    const recovered=await readSiblingPartTransport(transport.paths[0]);
+    if(recovered===null)throw primaryError;
+    try{return decodeTransport(recovered,transport.codec??'gzip',`${fileName}#parts-recovery`);}
+    catch(recoveryError){
+      fail('FORMAL_RUNTIME_TRANSPORT_INVALID',`Formal Runtime transport and sibling parts are invalid: ${fileName}`,{cause:recoveryError,fileName,codec:transport.codec??'gzip',primaryError});
+    }
+  }
 }
 async function materialize(entry,row){
   const transport=normalizeTransport(entry,row.fileId);
