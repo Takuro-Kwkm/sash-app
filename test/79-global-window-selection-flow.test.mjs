@@ -51,7 +51,7 @@ test('new-construction fields use the single global stage sequence', () => {
   assert.equal(NEW_CONSTRUCTION_EXTERIOR_WINDOW_UI_CATEGORY, 'NEW_CONSTRUCTION_EXTERIOR_WINDOW');
 });
 
-test('inner-window fields use the same global stage sequence with category extensions', () => {
+test('inner-window fields use the same global stage sequence', () => {
   const rows = applyInnerWindowUiOrder([
     { key: 'frame_installation_mode', field_name: 'frame_installation_mode', domain: 'INSTALLATION', displayOrder: 90 },
     { key: 'glass_family', field_name: 'glass_family', domain: 'GLASS', displayOrder: 40 },
@@ -70,21 +70,25 @@ test('inner-window fields use the same global stage sequence with category exten
   assert.equal(INNER_WINDOW_UI_CATEGORY, 'INNER_WINDOW');
 });
 
-test('unknown user-facing fields fail closed instead of falling through as other:*', () => {
+test('unknown user-facing fields fail closed even when they carry a familiar domain', () => {
   assert.throws(
-    () => applyNewConstructionSashUiOrder([{ key: 'mystery_user_field', displayOrder: 10 }]),
+    () => applyNewConstructionSashUiOrder([{ key: 'mystery_user_field', domain:'INSTALLATION', displayOrder: 10 }]),
+    { code: 'WINDOW_UI_FIELD_UNMAPPED' },
+  );
+  assert.throws(
+    () => applyInnerWindowUiOrder([{ key: 'mystery_inner_option', field_name:'mystery_inner_option', domain:'OPTION', displayOrder: 10 }]),
     { code: 'WINDOW_UI_FIELD_UNMAPPED' },
   );
 });
 
-test('explicit installation and option domains are approved category extensions', () => {
+test('approved category extensions are exact declarative Uchirimo fields', () => {
   const rows = applyInnerWindowUiOrder([
-    { key: 'runtime_install_extension', field_name: 'runtime_install_extension', domain: 'INSTALLATION', displayOrder: 91 },
-    { key: 'runtime_option_extension', field_name: 'runtime_option_extension', domain: 'OPTION', displayOrder: 111 },
+    { key: 'opening_w_top', field_name: 'opening_w_top', domain: 'MEASUREMENT', displayOrder: 200 },
+    { key: 'arm_stopper_option', field_name: 'arm_stopper_option', domain: 'OPTION', displayOrder: 309 },
   ]);
   assert.deepEqual(stages(rows), ['INSTALLATION_SURVEY', 'OPTION']);
-  assert.match(rows[0].semanticSlot, /^extension:installation:/);
-  assert.match(rows[1].semanticSlot, /^extension:option:/);
+  assert.equal(rows[0].semanticSlot, 'extension:installation:opening_w_top');
+  assert.equal(rows[1].semanticSlot, 'extension:option:arm_stopper_option');
 });
 
 test('all registered window integrations point to UI standard v1.8 and resolve through canonical stages', async () => {
