@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import handler from '../api/index.mjs';
+import { appRuntimeIntegrationRegistry } from '../src/catalog/runtime-master/app-runtime-integration-registry.mjs';
 
 function invoke(url){
   return new Promise((resolve,reject)=>{
@@ -14,7 +15,7 @@ function invoke(url){
   });
 }
 
-const READY_IDS=new Set(['SER-LIX-EW','SER-LIX-SAMOS2H','SER-LIX-SAMOSL','SER-LIXIL-TW','SER-LIXIL-INPLUS','SER-YKK-APW430','SER-YKK-APW431','SER-YKKAP-UCHIRIMO']);
+const READY_IDS=new Set(appRuntimeIntegrationRegistry.map((row)=>row.id));
 const BLOCKED_IDS=new Set();
 
 test('Vercel repository adapter health preserves loaded READY Runtime identities', async()=>{
@@ -24,7 +25,7 @@ test('Vercel repository adapter health preserves loaded READY Runtime identities
   assert.equal(health.ok,true);
   assert.equal(health.entrypoint,'api/index.mjs');
   assert.match(health.backend,/repository Vercel adapter/);
-  assert.equal(health.runtimeMasterIntegrations.length,8);
+  assert.equal(health.runtimeMasterIntegrations.length,READY_IDS.size);
   assert.deepEqual(new Set(health.runtimeMasterIntegrations.map((row)=>row.id)),READY_IDS);
   const byId=new Map(health.runtimeMasterIntegrations.map((row)=>[row.id,row]));
   assert.equal(byId.get('SER-LIX-EW').sourceHash,'082442f82f51c4a81050d8e16d5fe3b9cb142004deb371a3e2bbb21384ca37dd');
@@ -41,7 +42,7 @@ test('Vercel Runtime integration route includes all registered READY identities'
   const response=await invoke('/api/index.mjs?__path=api/runtime-master/integrations');
   assert.equal(response.status,200);
   const rows=JSON.parse(response.body);
-  assert.equal(rows.length,8);
+  assert.equal(rows.length,READY_IDS.size);
   const ready=rows.filter((row)=>row.selectable).map((row)=>row.id);
   const blocked=rows.filter((row)=>!row.selectable).map((row)=>row.id);
   assert.deepEqual(new Set(ready),READY_IDS);
