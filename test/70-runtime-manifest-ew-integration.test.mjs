@@ -7,7 +7,8 @@ import { NEW_CONSTRUCTION_SASH_UI_STANDARD_ORDER } from '../src/catalog/runtime-
 const PRODUCT_ID='SER-LIX-EW';
 const TARGET_WINDOW='WT-EW-TATE-SUBERI';
 const TARGET_SPEC='SP-EW-TATE-T';
-const RUNTIME_SHA='082442f82f51c4a81050d8e16d5fe3b9cb142004deb371a3e2bbb21384ca37dd';
+const RUNTIME_SHA='85fce07a07ab938b27d8a8e0178f5b5e2d3779926e6bd10c75d38e4e78699cea';
+const MANIFEST_ID='1D-n_dwXfl8M6BjHQqIO6QV7u9FjjRUuU';
 
 const field=(result,key)=>result.fields.find((row)=>row.key===key);
 const values=(result,key)=>field(result,key)?.values?.map((row)=>row.value)??[];
@@ -30,12 +31,12 @@ async function targetStandardSelection(){
   return {selection:{...base,size,exterior_color:exterior,interior_color:interior,glass_base:glass},result};
 }
 
-test('EW v1.1 canonical manifest and Runtime bytes load read-only with exact identity and SHA',async()=>{
+test('EW v1.2 canonical manifest and Runtime bytes load read-only with exact identity and SHA',async()=>{
   const runtime=await loadRegisteredRuntime('LIXIL','EW');
   assert.ok(runtime);
   assert.equal(runtime.normalizedManifest.manufacturer,'LIXIL');
   assert.equal(runtime.normalizedManifest.series,'EW');
-  assert.equal(runtime.normalizedManifest.packageVersion,'v1.1');
+  assert.equal(runtime.normalizedManifest.packageVersion,'v1.2');
   assert.equal(runtime.normalizedManifest.schemaVersion,'2.0');
   assert.equal(runtime.normalizedManifest.runtimeStatus,'READY');
   assert.equal(runtime.normalizedManifest.formalPass,true);
@@ -44,7 +45,7 @@ test('EW v1.1 canonical manifest and Runtime bytes load read-only with exact ide
   assert.equal(runtime.normalizedManifest.storageGate,'PASS');
   assert.equal(runtime.normalizedManifest.registryGate,'PASS');
   assert.equal(runtime.sourcePackageIntegrity.match,true);
-  assert.equal(runtime.sourcePackageIntegrity.manifestDriveFileId,'139c0atou5LFz7EIHIdD7ZTYWddfSHf5_');
+  assert.equal(runtime.sourcePackageIntegrity.manifestDriveFileId,MANIFEST_ID);
   assert.equal(runtime.sourcePackageIntegrity.files.length,1);
   assert.equal(runtime.sourcePackageIntegrity.files[0].expected,RUNTIME_SHA);
   assert.equal(runtime.sourcePackageIntegrity.files[0].actual,RUNTIME_SHA);
@@ -58,20 +59,20 @@ test('EW is registered declaratively as a ready new-construction exterior-window
   assert.equal(ew.selectable,true);
   assert.equal(ew.manufacturer,'LIXIL');
   assert.equal(ew.series,'EW');
-  assert.equal(ew.packageVersion,'v1.1');
+  assert.equal(ew.packageVersion,'v1.2');
   assert.equal(ew.schemaVersion,'2.0');
   assert.equal(ew.uiCategory,'NEW_CONSTRUCTION_EXTERIOR_WINDOW');
   assert.equal(ew.adapterType,'CANONICAL_WORKBOOK_REFERENCE_V1');
   assert.equal(ew.sourceHash,RUNTIME_SHA);
 });
 
-test('EW canonical adapter preserves all source counts without inventing formal size records',async()=>{
+test('EW canonical adapter preserves formal v1.2 source counts without inventing standard size records',async()=>{
   const runtime=await loadRegisteredRuntime('LIXIL','EW');
   assert.equal(runtime.master.capabilities.runtimeContract,'canonical_workbook_reference_v1');
   assert.equal(runtime.master.capabilities.sourceStandardSizeRows,1721);
   assert.equal(runtime.master.capabilities.standardSizeRecords,1039);
   assert.equal(runtime.master.capabilities.targetWindowSizeRows[TARGET_WINDOW],162);
-  assert.equal(runtime.master.capabilities.customDimensionRules,6);
+  assert.equal(runtime.master.capabilities.customDimensionRules,70);
   assert.equal(runtime.master.canonicalWorkbook.windows.length,15);
   assert.equal(runtime.master.canonicalWorkbook.screens.length,32);
   assert.equal(runtime.master.canonicalWorkbook.glasses.length,3);
