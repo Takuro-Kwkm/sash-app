@@ -17,8 +17,14 @@ import { adaptRechentDoor3NonFireV1 } from './rechent-door3-nonfire-v1-adapter.m
 import { guardFormalCustomDimensionUiResolver } from './formal-custom-dimension-safety.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
-const EW_ROOT = join(HERE, '../runtime-master-packages/lixil-ew-v1.1');
-const EW_RUNTIME_SEGMENTS = ['seg-00','seg-01','seg-02','seg-03','seg-04','seg-05','seg-06','seg-07','seg-08a','seg-08b','seg-08c','seg-08d'];
+const EW_ROOT = join(HERE, '../runtime-master-packages/lixil-ew-v1.2');
+const EW_RUNTIME_PARTS = Object.freeze([
+  'part-00',
+  ...Array.from({ length: 12 }, (_, index) => `canonical-01-${String(index).padStart(2,'0')}`),
+  'part-02',
+  ...Array.from({ length: 37 }, (_, index) => `canonical-02-${String(index).padStart(2,'0')}`),
+  'part-03',
+]);
 const TW_ROOT = join(HERE, '../runtime-master-packages/lixil-tw-integrated-v0.3');
 const TW_V02_ROOT = join(HERE, '../runtime-master-packages/lixil-tw-integrated-v0.2');
 const TW_TRANSFORM_PARTS = Object.freeze(Array.from({ length: 19 }, (_, index) => `part-${String(index).padStart(2,'0')}`));
@@ -50,9 +56,11 @@ export const runtimeMasterInventory = Object.freeze([
     }),
   }),
   Object.freeze({
-    manufacturer:'LIXIL', series:'EW', masterVersion:'v1.1', schemaVersion:'2.0', packageType:'RUNTIME_MANIFEST_V2', adapterType:'CANONICAL_WORKBOOK_REFERENCE_V1', packageRoot:EW_ROOT,
-    runtimeManifestPath:join(EW_ROOT,'runtime_manifest.json'), runtimeManifestDriveFileId:'139c0atou5LFz7EIHIdD7ZTYWddfSHf5_', runtimeManifestSha256:'8646bfd5f4a3d2184f2dbcb5b28f6e7dca995c9e11d53ec273a158588b5cdbed',
-    materializedFiles:Object.freeze({'1soPPTqP9LNKWFS1wxWhN8Lux6p9ZdyYf':Object.freeze({codec:'brotli',paths:Object.freeze(EW_RUNTIME_SEGMENTS.map((name)=>join(EW_ROOT,`LIXIL_EW_runtime_v1.1.json.br.b64.segments/${name}`)))})}),
+    manufacturer:'LIXIL', series:'EW', masterVersion:'v1.2', schemaVersion:'2.0', packageType:'RUNTIME_MANIFEST_V2', adapterType:'CANONICAL_WORKBOOK_REFERENCE_V1', packageRoot:EW_ROOT,
+    runtimeManifestPath:join(EW_ROOT,'runtime_manifest.json'), runtimeManifestDriveFileId:'1D-n_dwXfl8M6BjHQqIO6QV7u9FjjRUuU', runtimeManifestSha256:'d24c5175b1635dd3215294076a18a5adc0e7149f0c9790082a28df9ea115c68c',
+    materializedFiles:Object.freeze({
+      '1tHWCWnS-f_R6-IvT0KgA7l1smPQm6dd8':Object.freeze({codec:'brotli',paths:Object.freeze(EW_RUNTIME_PARTS.map((name)=>join(EW_ROOT,`LIXIL_EW_runtime_v1.2.json.br.b64.parts/${name}`)))}),
+    }),
   }),
   Object.freeze({
     manufacturer:'LIXIL', series:'リシェント玄関ドア3 非防火', productId:'SER-LIXIL-RECHENT-D3-NF', masterVersion:'v0.8-R7', schemaVersion:'PRODUCT_MASTER_RUNTIME_v2.0', packageType:'FORMAL_PRODUCT_RUNTIME', adapterType:'RECHENT_DOOR3_NONFIRE_V1', packageRoot:RECHENT_ROOT,
