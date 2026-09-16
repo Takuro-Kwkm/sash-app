@@ -15,6 +15,8 @@ import {
 import { GLOBAL_WINDOW_STAGE_ORDER } from '../src/catalog/runtime-master/global-window-selection-flow-engine.mjs';
 
 const stageIndex = new Map(GLOBAL_WINDOW_STAGE_ORDER.map((stage,index)=>[stage,index]));
+const WINDOW_UI_CATEGORIES = new Set([NEW_CONSTRUCTION_EXTERIOR_WINDOW_UI_CATEGORY, INNER_WINDOW_UI_CATEGORY]);
+const windowIntegrations = () => appRuntimeIntegrationRegistry.filter((row) => WINDOW_UI_CATEGORIES.has(row.uiCategory));
 
 function normalizedField(definition,index){
   const key=definition.field_name??definition.key;
@@ -64,7 +66,9 @@ function relativeOrder(rows,a,b){
 test('FULL_FLOW_SIGNATURE_COVERAGE: every registered user-facing field universe is closed and pairwise order is input-order invariant',async()=>{
   let fieldCount=0;
   let pairCount=0;
-  for(const integration of appRuntimeIntegrationRegistry){
+  const integrations=windowIntegrations();
+  assert.equal(integrations.length,8,'Global Window Flow population must remain the eight registered window integrations');
+  for(const integration of integrations){
     const runtime=await loadRegisteredRuntime(integration.manufacturer,integration.series);
     const universe=(runtime?.master?.fields??[]).map(normalizedField).filter((field)=>exposed(integration,field));
     assert.equal(new Set(universe.map((field)=>field.key)).size,universe.length,`${integration.id}:duplicate-user-facing-key`);
@@ -88,14 +92,15 @@ test('FULL_FLOW_SIGNATURE_COVERAGE: every registered user-facing field universe 
       }
     }
   }
-  assert.equal(appRuntimeIntegrationRegistry.length,8);
   assert.ok(fieldCount>0);
   assert.ok(pairCount>0);
 });
 
 test('FLOW_TRANSITION: actual resolver state changes preserve canonical stage order',async()=>{
   let transitions=0;
-  for(const integration of appRuntimeIntegrationRegistry){
+  const integrations=windowIntegrations();
+  assert.equal(integrations.length,8,'Global Window Flow transition population must remain eight registered window integrations');
+  for(const integration of integrations){
     let result=await resolveRuntimeAppProduct(integration.id,{});
     assertCanonical(result.fields??[],`${integration.id}:initial`);
     const visited=new Set();
@@ -124,5 +129,5 @@ test('FLOW_TRANSITION: actual resolver state changes preserve canonical stage or
       }
     }
   }
-  assert.ok(transitions>=8,`expected transitions across all integrations, got ${transitions}`);
+  assert.ok(transitions>=8,`expected transitions across all window integrations, got ${transitions}`);
 });
