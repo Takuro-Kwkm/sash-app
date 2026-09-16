@@ -1,5 +1,6 @@
 import { applyGlobalWindowSelectionFlow } from './global-window-selection-flow-engine.mjs';
 import { INNER_WINDOW_UI_CATEGORY, applyInnerWindowUiOrder } from './inner-window-runtime-ui-contract.mjs';
+import { ENTRY_DOOR_COVER_UI_CATEGORY, applyEntryDoorCoverUiOrder } from './entry-door-cover-runtime-ui-contract.mjs';
 
 export const NEW_CONSTRUCTION_EXTERIOR_WINDOW_UI_CATEGORY = 'NEW_CONSTRUCTION_EXTERIOR_WINDOW';
 
@@ -64,4 +65,11 @@ const exactCallCodeFromFormalSizeId=(objects,callW,callH)=>{for(const object of 
 export function standardSizeMetadataFromRuntimeValue(row={}){const objects=[row.sizeMetadata,row.metadata,row.source?.metadata,row.source,row];let callCode=firstPresent(objects,['callCode','call_code','sizeCode','size_code','呼称寸法']);const callW=firstPresent(objects,['callW','call_w','nominalW','nominal_w','呼称W']);const callH=firstPresent(objects,['callH','call_h','nominalH','nominal_h','呼称H']);if(callCode===null||callCode==='')callCode=exactCallCodeFromFormalSizeId(objects,callW,callH);const actualWRaw=firstPresent(objects,['actualW','actual_w','実寸W']);const actualHRaw=firstPresent(objects,['actualH','actual_h','実寸H']);if((callCode===null||callCode==='')&&typeof callW==='string'&&callW.includes('-')&&callH!==null&&callH!==undefined&&String(callH).trim())callCode=`${callW.trim()}-${String(callH).trim()}`;if((callCode===null||callCode==='')&&typeof callW==='string'&&typeof callH==='string'&&callW.trim()&&callH.trim())callCode=`${callW.trim()}${callH.trim()}`;if(callCode===null||callCode===''||actualWRaw===null||actualHRaw===null)return null;const actualW=Number(actualWRaw),actualH=Number(actualHRaw);if(!Number.isInteger(actualW)||!Number.isInteger(actualH))return null;return Object.freeze({callCode:String(callCode),actualW,actualH});}
 export function formatStandardSizeLabel(metadata){if(!metadata){const error=new Error('Standard size display requires formal Runtime callCode/nominal dimensions and actualW/actualH.');error.code='RUNTIME_SIZE_DISPLAY_DATA_MISSING';throw error;}return `${metadata.callCode} ｜ W ${metadata.actualW} × H ${metadata.actualH}`;}
 export function formatAndSortStandardSizeChoices(choices=[]){return choices.map((choice,index)=>{const metadata=standardSizeMetadataFromRuntimeValue(choice.runtimeValueRow??choice);return{...choice,displayLabel:formatStandardSizeLabel(metadata),sizeMetadata:metadata,__stableIndex:index};}).sort((a,b)=>a.sizeMetadata.actualW-b.sizeMetadata.actualW||a.sizeMetadata.actualH-b.sizeMetadata.actualH||a.__stableIndex-b.__stableIndex).map(({runtimeValueRow,__stableIndex,...choice})=>choice);}
-export function applyRuntimeUiCategoryOrder(fields=[],integration={}){if(integration.uiCategory===INNER_WINDOW_UI_CATEGORY)return applyInnerWindowUiOrder(fields);if(integration.uiCategory===NEW_CONSTRUCTION_EXTERIOR_WINDOW_UI_CATEGORY)return applyNewConstructionSashUiOrder(fields);return[...fields].sort((a,b)=>a.displayOrder-b.displayOrder||a.key.localeCompare(b.key,'ja'));}
+export function applyRuntimeUiCategoryOrder(fields=[],integration={}){
+  if(integration.uiCategory===INNER_WINDOW_UI_CATEGORY)return applyInnerWindowUiOrder(fields);
+  if(integration.uiCategory===NEW_CONSTRUCTION_EXTERIOR_WINDOW_UI_CATEGORY)return applyNewConstructionSashUiOrder(fields);
+  if(integration.uiCategory===ENTRY_DOOR_COVER_UI_CATEGORY)return applyEntryDoorCoverUiOrder(fields);
+  const error=new Error(`Runtime UI category is not mapped to the Global Window Selection Flow: ${integration.uiCategory??'UNKNOWN'}`);
+  error.code='WINDOW_UI_CATEGORY_UNMAPPED';
+  throw error;
+}
