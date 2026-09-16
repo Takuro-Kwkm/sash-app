@@ -6,6 +6,8 @@ import { loadManifestRuntimePackage } from './runtime-manifest-loader.mjs';
 import { adaptTwCanonicalWorkbookReferenceV2 } from './tw-canonical-workbook-reference-v2-adapter.mjs';
 import { evaluateTwCanonicalWorkbookRuntimeV2 } from './tw-canonical-workbook-runtime-engine-v2.mjs';
 import { adaptUchirimoTabularV1 } from './uchirimo-tabular-v1-adapter.mjs';
+import { adaptSemanticTableBundleV2 } from './semantic-table-bundle-v2-adapter.mjs';
+import { evaluateSemanticTableBundleV2 } from './semantic-table-bundle-v2-engine.mjs';
 import { loadFormalProductRuntimePackage } from './formal-product-runtime-loader.mjs';
 import { adaptProductModuleRuntimeV1 } from './product-module-runtime-adapter.mjs';
 import { adaptApw430FormalSplitV1 } from './apw430-formal-split-v1-adapter.mjs';
@@ -19,6 +21,7 @@ const TW_ROOT = join(HERE, '../runtime-master-packages/lixil-tw-integrated-v0.3'
 const TW_V02_ROOT = join(HERE, '../runtime-master-packages/lixil-tw-integrated-v0.2');
 const TW_TRANSFORM_PARTS = Object.freeze(Array.from({ length: 19 }, (_, index) => `part-${String(index).padStart(2,'0')}`));
 const UCHIRIMO_ROOT = join(HERE, '../runtime-master-packages/ykkap-uchirimo-v1.0-p7r1-r2');
+const INPLUS_ROOT = join(HERE, '../runtime-master-packages/lixil-inplus-v0.4-r2');
 const SAMOS2H_R1_ROOT = join(HERE, '../runtime-master-packages/lixil-samos2h-v0.9-r1');
 const SAMOS2H_ROOT = join(HERE, '../runtime-master-packages/lixil-samos2h-v0.9-r2');
 const THERMOSL_ROOT = join(HERE, '../runtime-master-packages/lixil-thermosl-v0.7-r1');
@@ -31,11 +34,7 @@ export const runtimeMasterInventory = Object.freeze([
     packageType:'FORMAL_PRODUCT_RUNTIME', adapterType:'PRODUCT_MODULE_RUNTIME_V1', productModuleRole:'RUNTIME_JSON_PACKAGE', packageRoot:SAMOS2H_ROOT,
     runtimeManifestPath:join(SAMOS2H_ROOT,'runtime_manifest.json'), runtimeManifestDriveFileId:'19uYt-ORAp-pfbGwVsSW_Qnhgsx2I1EWu', runtimeManifestSha256:'8b9b991e0c4949adffa8d63ed20124ac0a4e8c5d243e30740b0bc84122718120',
     materializedFiles:Object.freeze({
-      '1-t_UOhuGffPrxzr5mu11rJlT1uFfu_nn':Object.freeze({
-        codec:'json-transform-v1',
-        base:Object.freeze({codec:'brotli',paths:Object.freeze([join(SAMOS2H_R1_ROOT,'LIXIL_サーモスⅡH_runtime_v0.9-R1.json.br.b64.parts/part-00')])}),
-        transformPath:join(SAMOS2H_ROOT,'runtime_transform.json'),
-      }),
+      '1-t_UOhuGffPrxzr5mu11rJlT1uFfu_nn':Object.freeze({ codec:'json-transform-v1', base:Object.freeze({codec:'brotli',paths:Object.freeze([join(SAMOS2H_R1_ROOT,'LIXIL_サーモスⅡH_runtime_v0.9-R1.json.br.b64.parts/part-00')])}), transformPath:join(SAMOS2H_ROOT,'runtime_transform.json') }),
       '1tBFGzHIHpZNn2nAEO4N61Tj4iNeVZzPL':Object.freeze({codec:'brotli',paths:Object.freeze([join(SAMOS2H_ROOT,'samos2h_runtime_package_v0.9-R2.schema.json.br.b64.parts/part-00')])}),
     }),
   }),
@@ -81,13 +80,17 @@ export const runtimeMasterInventory = Object.freeze([
     }),
   }),
   Object.freeze({
+    manufacturer:'LIXIL', series:'インプラス', masterVersion:'v0.4-R2', schemaVersion:'2.0', packageType:'RUNTIME_MANIFEST_V1', adapterType:'SEMANTIC_TABLE_BUNDLE_V2', packageRoot:INPLUS_ROOT,
+    runtimeManifestPath:join(INPLUS_ROOT,'runtime_manifest.json'), runtimeManifestDriveFileId:'1TokjIpcipm8TPxwrSO0FjyPxxvhCq5iZ', runtimeManifestSha256:'cbbdb6ba315c985f7d27f75a237e861be8ce635962ce1cd5a746d7f152c8e1f8',
+    materializedFiles:Object.freeze({
+      '16dqUaVFp0YW3PqJ-A9tR0fAV0KT7WZML':Object.freeze({ codec:'gzip', paths:Object.freeze(['part-00a','part-00b','part-00c','part-01','part-02a','part-02b','part-02c','part-03'].map((name)=>join(INPLUS_ROOT,`LIXIL_インプラス_runtime_v0.4-R2.json.gz.b64.parts/${name}`))) }),
+      '1Qov5w3pNrU9om40OLJikJv7B8klK1RNz':Object.freeze({codec:'gzip',paths:Object.freeze([join(INPLUS_ROOT,'LIXIL_インプラス_runtime_v0.4-R2.schema.json.gz.b64')])}),
+    }),
+  }),
+  Object.freeze({
     manufacturer:'LIXIL', series:'TW', masterVersion:'integrated-v0.3', schemaVersion:'2.0', packageType:'RUNTIME_MANIFEST_V1', adapterType:'TW_CANONICAL_WORKBOOK_REFERENCE_V2', packageRoot:TW_ROOT,
     runtimeManifestPath:join(TW_ROOT,'runtime_manifest.json'), runtimeManifestDriveFileId:'1f_RL37UoveSoQYtWZQf3NzIG4jUwzlcb', runtimeManifestSha256:'c4980f45fdf57afe1512f2ca42da0eca53d9facc1f555734f7d89b347a808ee0',
-    materializedFiles:Object.freeze({'1i_rfZwRcPJCDj3bn-QH1OldX_sbogc2A':Object.freeze({
-      codec:'json-transform-v1',
-      base:Object.freeze({codec:'brotli',paths:Object.freeze([join(TW_V02_ROOT,'LIXIL_TW_runtime_integrated-v0.2.json.br.b64.parts/part-00')])}),
-      transformPaths:Object.freeze(TW_TRANSFORM_PARTS.map((name)=>join(TW_ROOT,`runtime_transform.json.parts/${name}`))),
-    })}),
+    materializedFiles:Object.freeze({'1i_rfZwRcPJCDj3bn-QH1OldX_sbogc2A':Object.freeze({ codec:'json-transform-v1', base:Object.freeze({codec:'brotli',paths:Object.freeze([join(TW_V02_ROOT,'LIXIL_TW_runtime_integrated-v0.2.json.br.b64.parts/part-00')])}), transformPaths:Object.freeze(TW_TRANSFORM_PARTS.map((name)=>join(TW_ROOT,`runtime_transform.json.parts/${name}`))) })}),
   }),
 ]);
 
@@ -110,6 +113,10 @@ async function loadRuntime(entry) {
     runtimePackage = await loadManifestRuntimePackage(entry);
     const master = adaptTwCanonicalWorkbookReferenceV2(runtimePackage);
     adapted = { master, resolver: (selection) => evaluateTwCanonicalWorkbookRuntimeV2(master, selection) };
+  } else if (entry.packageType === 'RUNTIME_MANIFEST_V1' && entry.adapterType === 'SEMANTIC_TABLE_BUNDLE_V2') {
+    runtimePackage = await loadManifestRuntimePackage(entry);
+    const master = adaptSemanticTableBundleV2(runtimePackage);
+    adapted = { master, resolver: (selection) => evaluateSemanticTableBundleV2(master, selection) };
   } else if (entry.packageType === 'FORMAL_PRODUCT_RUNTIME' && entry.adapterType === 'PRODUCT_MODULE_RUNTIME_V1') {
     runtimePackage = await loadFormalProductRuntimePackage(entry);
     adapted = adaptProductModuleRuntimeV1(runtimePackage, entry);
