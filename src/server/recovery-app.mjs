@@ -12,6 +12,18 @@ const HERE=dirname(fileURLToPath(import.meta.url));
 const root=join(HERE,"../..");
 const webRoot=join(root,"src","ui","web");
 const estimateOutputRoot=join(root,"src","estimate-output");
+const heroAssetRoot=join(webRoot,"assets","design-preview-hero");
+const heroPartPaths=[
+  "part-00.bin","part-01.bin",
+  "part-02a.bin","part-02b.bin","part-02c.bin","part-02d.bin",
+  "part-03.bin","part-04.bin","part-05.bin",
+  "part-06a.bin","part-06b.bin","part-06c.bin","part-06d.bin",
+  "part-07.bin"
+].map((name)=>join(heroAssetRoot,name));
+const heroPortraitAssetRoot=join(webRoot,"assets","design-preview-hero-portrait");
+const heroPortraitPartPaths=[
+  "part-00.bin","part-01.bin","part-02.bin","part-03.bin"
+].map((name)=>join(heroPortraitAssetRoot,name));
 const catalog=createCatalog(CURRENT_WINDOW_SERIES_MODULES);
 const runtimeMasterIntegrations=runtimeAppIntegrationInventory();
 const buildTimestamp=new Date().toISOString();
@@ -38,6 +50,51 @@ const staticFileAt=async(res,path,type)=>{
 };
 const staticFile=(res,name,type)=>staticFileAt(res,join(webRoot,name),type);
 
+const photoFromParts=async(res,paths)=>{
+  try{
+    const parts=await Promise.all(paths.map((path)=>readFile(path)));
+    const body=Buffer.concat(parts);
+    res.writeHead(200,{"content-type":"image/jpeg","content-length":String(body.length),"cache-control":"no-store","x-sash-build-id":buildId});
+    res.end(body);
+  }catch{
+    res.writeHead(404,{"cache-control":"no-store","x-sash-build-id":buildId});
+    res.end("Not found");
+  }
+};
+const heroPhoto=(res)=>photoFromParts(res,heroPartPaths);
+const heroPortraitPhoto=(res)=>photoFromParts(res,heroPortraitPartPaths);
+
+const designPreviewCss=async(res)=>{
+  try{
+    const base=await readFile(join(webRoot,"design-preview.css"),"utf8");
+    const responsive=`
+@media (min-width:821px) and (max-width:1100px){
+  .reference-hero{height:820px!important;background:#eef8fd!important}
+  .reference-hero-photo{content:url("/design-preview-reference-hero.jpg")!important;left:0!important;right:0!important;top:auto!important;bottom:0!important;width:100%!important;height:530px!important;max-width:none!important;object-fit:cover!important;object-position:left top!important;opacity:1!important;transform:none!important}
+  .reference-hero:after{top:0!important;left:0!important;right:0!important;bottom:auto!important;height:290px!important;background:#eef8fd!important}
+  .reference-hero-copy{width:100%!important;max-width:690px!important;padding:38px 0 0 28px!important}
+  html[data-theme="dark"] .reference-hero:after{background:#121d27!important}
+}
+@media (min-width:821px) and (max-width:1100px) and (prefers-color-scheme:dark){html[data-theme="system"] .reference-hero:after{background:#121d27!important}}
+@media (min-width:700px) and (max-width:820px){
+  .reference-hero{height:835px!important;background:#eef8fd!important}
+  .reference-hero-photo{content:url("/design-preview-reference-hero.jpg")!important;left:0!important;right:0!important;top:auto!important;bottom:0!important;width:100%!important;height:500px!important;max-width:none!important;object-fit:cover!important;object-position:left top!important;opacity:1!important;transform:none!important}
+  .reference-hero:after{top:0!important;left:0!important;right:0!important;bottom:auto!important;height:335px!important;background:#eef8fd!important}
+  .reference-hero-copy{width:100%!important;max-width:none!important;padding:34px 22px 0!important}
+  html[data-theme="dark"] .reference-hero:after{background:#121d27!important}
+}
+@media (min-width:700px) and (max-width:820px) and (prefers-color-scheme:dark){html[data-theme="system"] .reference-hero:after{background:#121d27!important}}
+@media(max-width:699px){.reference-hero-photo{content:url("/design-preview-reference-hero-portrait.jpg")!important;object-position:center center!important}}
+`;
+    const body=`${base}${responsive}`;
+    res.writeHead(200,{"content-type":"text/css; charset=utf-8","content-length":String(Buffer.byteLength(body)),"cache-control":"no-store","x-sash-build-id":buildId});
+    res.end(body);
+  }catch{
+    res.writeHead(404,{"cache-control":"no-store","x-sash-build-id":buildId});
+    res.end("Not found");
+  }
+};
+
 const requestUrl=(req)=>{
   const url=new URL(req.url??"/",`http://${req.headers?.host??"localhost"}`);
   const rewrittenPath=url.searchParams.get("__path");
@@ -61,7 +118,7 @@ export function createRecoveryRequestHandler({backend="node:http recovery server
       return json(res,200,{
         ok:true,buildId,buildTimestamp,catalogVersion,
         entrypoint,frontendRoot:"src/ui/web",backend,
-        features:{estimateOutput:"1.0"},
+        features:{estimateOutput:"1.0",designPilot:"0.1"},
         persistence:{type:"BROWSER_LOCAL_STORAGE",schemaVersion:WORK_SCHEMA_VERSION,key:"sash.work-management.v1",multiDevice:false},
         databasePath:null,
         inventory:catalogInventory(catalog),runtimeMasterIntegrations
@@ -89,6 +146,9 @@ export function createRecoveryRequestHandler({backend="node:http recovery server
       catch(error){return json(res,400,{error:error?.message??String(error),code:error?.code??"RUNTIME_RESOLVE_FAILED"});}
     }
     if(url.pathname==="/api/catalog") return json(res,200,catalog);
+    if(url.pathname==="/design-preview-reference-hero.jpg") return heroPhoto(res);
+    if(url.pathname==="/design-preview-reference-hero-portrait.jpg") return heroPortraitPhoto(res);
+    if(url.pathname==="/design-preview-reference-hero.svg") return staticFile(res,"design-preview-reference-hero.svg","image/svg+xml; charset=utf-8");
     if(url.pathname==="/app.js") return staticFile(res,"app.js","text/javascript; charset=utf-8");
     if(url.pathname==="/product-configuration-editor.mjs") return staticFile(res,"product-configuration-editor.mjs","text/javascript; charset=utf-8");
     if(url.pathname==="/estimate-output-integration.mjs") return staticFile(res,"estimate-output-integration.mjs","text/javascript; charset=utf-8");
@@ -96,6 +156,16 @@ export function createRecoveryRequestHandler({backend="node:http recovery server
     if(url.pathname==="/styles-wave3.css") return staticFile(res,"styles-wave3.css","text/css; charset=utf-8");
     if(url.pathname==="/work-management.css") return staticFile(res,"work-management.css","text/css; charset=utf-8");
     if(url.pathname==="/estimate-output.css") return staticFile(res,"estimate-output.css","text/css; charset=utf-8");
+    if(url.pathname==="/design-preview.css") return designPreviewCss(res);
+    if(url.pathname==="/design-preview-notifications.css") return staticFile(res,"design-preview-notifications.css","text/css; charset=utf-8");
+    if(url.pathname==="/design-preview-estimate.css") return staticFile(res,"design-preview-estimate.css","text/css; charset=utf-8");
+    if(url.pathname==="/design-preview-guide.css") return staticFile(res,"design-preview-guide.css","text/css; charset=utf-8");
+    if(url.pathname==="/design-preview-survey.css") return staticFile(res,"design-preview-survey.css","text/css; charset=utf-8");
+    if(url.pathname==="/design-preview.mjs") return staticFile(res,"design-preview.mjs","text/javascript; charset=utf-8");
+    if(url.pathname==="/design-preview-estimate.mjs") return staticFile(res,"design-preview-estimate.mjs","text/javascript; charset=utf-8");
+    if(url.pathname==="/design-preview-guide.mjs") return staticFile(res,"design-preview-guide.mjs","text/javascript; charset=utf-8");
+    if(url.pathname==="/design-preview-survey.mjs") return staticFile(res,"design-preview-survey.mjs","text/javascript; charset=utf-8");
+    if(url.pathname==="/design-preview"||url.pathname==="/design-preview/"||url.pathname==="/design-preview/product"||url.pathname==="/design-preview/notifications") return staticFile(res,"design-preview.html","text/html; charset=utf-8");
     const workModule=url.pathname.match(/^\/work-management\/(domain|storage|repositories|service)\.mjs$/)?.[1];
     if(workModule)return staticFileAt(res,join(root,"src","work-management",`${workModule}.mjs`),"text/javascript; charset=utf-8");
     const estimateModule=url.pathname.match(/^\/estimate-output\/(model|pdf-renderer|xlsx-renderer)\.mjs$/)?.[1];
