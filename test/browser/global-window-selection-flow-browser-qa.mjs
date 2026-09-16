@@ -7,6 +7,7 @@ const SHARE_TOKEN=process.env.VERCEL_SHARE_TOKEN;
 const OUT='artifacts/global-window-selection-flow-browser-qa';
 const STAGES=['PRODUCT','OPENING','CONFIGURATION','SIZE','FINISH','SCREEN','GLAZING','INSTALLATION_SURVEY','OPTION'];
 const STAGE_INDEX=new Map(STAGES.map((stage,index)=>[stage,index]));
+const WINDOW_UI_CATEGORIES=new Set(['NEW_CONSTRUCTION_EXTERIOR_WINDOW','INNER_WINDOW']);
 const VIEWPORTS={
   desktop:{viewport:{width:1440,height:1000}},
   smartphone:{viewport:{width:390,height:844},isMobile:true,hasTouch:true},
@@ -103,9 +104,9 @@ try{
   const requestContext=await browser.newContext();
   const integrationsResponse=await requestContext.request.get(`${BASE}/api/runtime-master/integrations`);
   assert.equal(integrationsResponse.status(),200);
-  const integrations=(await integrationsResponse.json()).filter((row)=>row.selectable&&row.status==='READY');
+  const integrations=(await integrationsResponse.json()).filter((row)=>row.selectable&&row.status==='READY'&&WINDOW_UI_CATEGORIES.has(row.uiCategory));
   await requestContext.close();
-  assert.equal(integrations.length,8,'all eight registered Runtime integrations must be READY');
+  assert.equal(integrations.length,8,'Global Window Flow must cover exactly eight READY window Runtime integrations');
   report.integrationCount=integrations.length;
 
   for(const [name,options] of Object.entries(VIEWPORTS))await runViewport(name,options,integrations);
@@ -113,7 +114,7 @@ try{
   assert.deepEqual(report.consoleErrors,[]);
   assert.deepEqual(report.pageErrors,[]);
   assert.deepEqual(report.failedResponses,[]);
-  assert.ok(report.transitionChecks>=16,`expected at least one transition per integration per viewport, got ${report.transitionChecks}`);
+  assert.ok(report.transitionChecks>=16,`expected at least one transition per window integration per viewport, got ${report.transitionChecks}`);
   assert.ok(report.domSignatureChecks>=32,`expected initial+transition signature checks, got ${report.domSignatureChecks}`);
   report.status='PASS';
   await writeFile(`${OUT}/report.json`,JSON.stringify(report,null,2));
