@@ -109,6 +109,10 @@ const APPROVED_INNER_WINDOW_EXTENSIONS = Object.freeze({
   outside_handle_option: optionExtension('outside_handle_option', 310),
 });
 
+const INNER_WINDOW_TECHNICAL_EXACT = new Set([
+  'glass_structure_code','glass_spec_id','glass_size_constraint_group',
+]);
+
 export function semanticSlotForInnerWindowField(key) {
   return INNER_WINDOW_UI_STANDARD_ORDER.includes(key) ? key : null;
 }
@@ -139,6 +143,19 @@ export function approvedInnerWindowExtensionForField(key) {
   return APPROVED_INNER_WINDOW_EXTENSIONS[key] ?? null;
 }
 
+export function shouldExposeInnerWindowRuntimeField(field = {}) {
+  const key = String(field.key ?? field.field_name ?? '').trim();
+  if (!key || INNER_WINDOW_TECHNICAL_EXACT.has(key)) return false;
+  if (field.runtimeIncluded === false || field.runtime_included === false) return false;
+  if (field.technical === true || field.internal === true) return false;
+  const visibility = field.visibilityMode ?? field.visibility_mode ?? field.initialVisibility ?? field.initial_visibility ?? null;
+  const selectionMode = field.selectionMode ?? field.selection_mode ?? null;
+  const showReadOnly = field.showReadOnly === true || field.show_read_only === true;
+  if ((visibility === 'HIDDEN' || visibility === 'HIDE') && !showReadOnly) return false;
+  if (selectionMode === 'FIXED' && (visibility === 'HIDDEN' || visibility === 'HIDE') && !showReadOnly) return false;
+  return true;
+}
+
 export function applyInnerWindowUiOrder(fields = []) {
   return applyGlobalWindowSelectionFlow(fields, {
     uiCategory: INNER_WINDOW_UI_CATEGORY,
@@ -146,6 +163,7 @@ export function applyInnerWindowUiOrder(fields = []) {
     semanticSlotForField: semanticSlotForInnerWindowField,
     semanticStageForSlot: semanticStageForInnerWindowSlot,
     approvedExtensionForField: approvedInnerWindowExtensionForField,
+    shouldExposeField: shouldExposeInnerWindowRuntimeField,
     standardLabelForField: standardLabelForInnerWindowField,
   });
 }
