@@ -20,7 +20,7 @@ concurrency:
 jobs:
   count:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 10
     strategy:
       fail-fast: false
       max-parallel: 2
@@ -31,8 +31,8 @@ jobs:
     env:
       HEAD_SHA: ${{ github.event.pull_request.head.sha }}
       STAGE_A_TARGET_WINDOWS: ${{ matrix.target }}
-      STAGE_A_MAX_MEMO_STATES_PER_WINDOW: '12000'
-      STAGE_A_MAX_RESOLVER_CALLS_PER_WINDOW: '80000'
+      STAGE_A_MAX_MEMO_STATES_PER_WINDOW: '24000'
+      STAGE_A_MAX_RESOLVER_CALLS_PER_WINDOW: '180000'
       STAGE_A_MAX_EXPLICIT_MULTI_ENUM_VALUES: '18'
       STAGE_A_MAX_TERMINAL_BFS_STATES: '4096'
       STAGE_A_CONTRACT_V2_OUT: artifacts/stage-a-ew-v3-targeted/${{ matrix.target }}
@@ -52,7 +52,7 @@ jobs:
           actual="$(git rev-parse HEAD)"
           test "$actual" = "$HEAD_SHA"
           echo 'REOPEN_CONDITION=EW_RUNTIME_OR_ADAPTER_OR_PROOF_MODEL_CHANGE_REQUIRING_REVALIDATION'
-          echo 'STATE_CHANGE=EW_V1_2_ADAPTER_AND_FORMAL_GLAZING_SEMANTIC_PROJECTION'
+          echo 'STATE_CHANGE=EW_EXACT_PROOF_LIMITS_RAISED_AFTER_OBSERVED_MEMO_AND_CALL_LIMITS'
           echo 'RETRY_AUTHORIZED=true'
           echo "EXACT_HEAD_GATE=PASS sha=$actual target=$STAGE_A_TARGET_WINDOWS"
       - name: Run Resolver-Derived Contract V2 + Structural Cache V3
