@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { chromium } from 'playwright';
+import { appRuntimeIntegrationRegistry } from '../../src/catalog/runtime-master/app-runtime-integration-registry.mjs';
 
 const BASE=process.env.QA_BASE_URL??'http://127.0.0.1:4173';
 const SHARE_TOKEN=process.env.VERCEL_SHARE_TOKEN;
@@ -67,10 +68,12 @@ try {
     report.products.push({id:product.id,manufacturer:product.manufacturer,series:product.displayName??product.series,status:'LEGACY_COMPATIBILITY_PASS'});
   }
 
-  assert.equal(integrations.length,8);
+  const expectedRuntimeIds=new Set(appRuntimeIntegrationRegistry.map((row)=>row.id));
+  assert.equal(integrations.length,expectedRuntimeIds.size,'Runtime API inventory must match App Runtime Integration Registry');
+  assert.deepEqual(new Set(integrations.map((row)=>row.id)),expectedRuntimeIds);
   const ready=new Set(integrations.filter((row)=>row.selectable&&row.status==='READY').map((row)=>row.id));
   const blocked=new Set(integrations.filter((row)=>!row.selectable).map((row)=>row.id));
-  assert.deepEqual(ready,new Set(['SER-LIX-EW','SER-LIX-SAMOS2H','SER-LIX-SAMOSL','SER-LIXIL-TW','SER-LIXIL-INPLUS','SER-YKK-APW430','SER-YKK-APW431','SER-YKKAP-UCHIRIMO']));
+  assert.deepEqual(ready,expectedRuntimeIds);
   assert.deepEqual(blocked,new Set());
   report.runtimeIntegrations=integrations.map(({id,status,selectable,blockReason})=>({id,status,selectable,blockReason}));
 
