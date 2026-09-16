@@ -13,14 +13,27 @@ import {
   semanticStageForInnerWindowSlot,
   shouldExposeInnerWindowRuntimeField,
 } from '../src/catalog/runtime-master/inner-window-runtime-ui-contract.mjs';
+import {
+  ENTRY_DOOR_COVER_UI_CATEGORY,
+  ENTRY_DOOR_COVER_UI_STANDARD_ORDER,
+  semanticSlotForEntryDoorCoverField,
+  semanticStageForEntryDoorCoverSlot,
+} from '../src/catalog/runtime-master/entry-door-cover-runtime-ui-contract.mjs';
 
-const WINDOW_UI_CATEGORIES = new Set([NEW_CONSTRUCTION_EXTERIOR_WINDOW_UI_CATEGORY, INNER_WINDOW_UI_CATEGORY]);
-const integrations = appRuntimeIntegrationRegistry.filter((row) => WINDOW_UI_CATEGORIES.has(row.uiCategory));
-const report = { model:'GLOBAL_WINDOW_FLOW_FIELD_INVENTORY_V2', integrations:[], unmapped:[], extensionResolved:[], excluded:[] };
+const FLOW_UI_CATEGORIES = new Set([NEW_CONSTRUCTION_EXTERIOR_WINDOW_UI_CATEGORY, INNER_WINDOW_UI_CATEGORY, ENTRY_DOOR_COVER_UI_CATEGORY]);
+const integrations = appRuntimeIntegrationRegistry.filter((row) => FLOW_UI_CATEGORIES.has(row.uiCategory));
+const report = { model:'GLOBAL_WINDOW_FLOW_FIELD_INVENTORY_V3', integrations:[], unmapped:[], extensionResolved:[], excluded:[] };
+
+function definitionsFor(integration,runtime){
+  if(integration.uiCategory===ENTRY_DOOR_COVER_UI_CATEGORY){
+    return ENTRY_DOOR_COVER_UI_STANDARD_ORDER.map((key,index)=>({field_name:key,display_order:index+1,runtime_included:true}));
+  }
+  return runtime?.master?.fields ?? [];
+}
 
 for (const integration of integrations) {
   const runtime = await loadRegisteredRuntime(integration.manufacturer, integration.series);
-  const definitions = runtime?.master?.fields ?? [];
+  const definitions = definitionsFor(integration,runtime);
   const rows = [];
   for (const [index, definition] of definitions.entries()) {
     const key = definition.field_name ?? definition.key;
@@ -47,7 +60,7 @@ for (const integration of integrations) {
       ? shouldExposeNewConstructionRuntimeField(field)
       : integration.uiCategory === INNER_WINDOW_UI_CATEGORY
         ? shouldExposeInnerWindowRuntimeField(field)
-        : false;
+        : integration.uiCategory === ENTRY_DOOR_COVER_UI_CATEGORY;
     if (!exposed) {
       report.excluded.push({ id:integration.id, key, reason:'NON_USER_FACING_RUNTIME_FIELD' });
       continue;
@@ -61,6 +74,9 @@ for (const integration of integrations) {
     } else if (integration.uiCategory === INNER_WINDOW_UI_CATEGORY) {
       slot = semanticSlotForInnerWindowField(key);
       stage = slot ? semanticStageForInnerWindowSlot(slot) : null;
+    } else if (integration.uiCategory === ENTRY_DOOR_COVER_UI_CATEGORY) {
+      slot = semanticSlotForEntryDoorCoverField(key);
+      stage = slot ? semanticStageForEntryDoorCoverSlot(slot) : null;
     }
 
     if (!slot || !stage) {
@@ -88,5 +104,5 @@ report.unmappedCount = report.unmapped.length;
 report.extensionResolvedCount = report.extensionResolved.length;
 report.excludedCount = report.excluded.length;
 console.log(JSON.stringify(report, null, 2));
-if (report.integrationCount !== 8) process.exitCode = 32;
+if (report.integrationCount !== 9) process.exitCode = 32;
 else if (report.unmappedCount) process.exitCode = 31;
