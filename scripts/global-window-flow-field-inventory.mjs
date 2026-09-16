@@ -14,9 +14,11 @@ import {
   shouldExposeInnerWindowRuntimeField,
 } from '../src/catalog/runtime-master/inner-window-runtime-ui-contract.mjs';
 
+const WINDOW_UI_CATEGORIES = new Set([NEW_CONSTRUCTION_EXTERIOR_WINDOW_UI_CATEGORY, INNER_WINDOW_UI_CATEGORY]);
+const integrations = appRuntimeIntegrationRegistry.filter((row) => WINDOW_UI_CATEGORIES.has(row.uiCategory));
 const report = { model:'GLOBAL_WINDOW_FLOW_FIELD_INVENTORY_V2', integrations:[], unmapped:[], extensionResolved:[], excluded:[] };
 
-for (const integration of appRuntimeIntegrationRegistry) {
+for (const integration of integrations) {
   const runtime = await loadRegisteredRuntime(integration.manufacturer, integration.series);
   const definitions = runtime?.master?.fields ?? [];
   const rows = [];
@@ -86,4 +88,5 @@ report.unmappedCount = report.unmapped.length;
 report.extensionResolvedCount = report.extensionResolved.length;
 report.excludedCount = report.excluded.length;
 console.log(JSON.stringify(report, null, 2));
-if (report.unmappedCount) process.exitCode = 31;
+if (report.integrationCount !== 8) process.exitCode = 32;
+else if (report.unmappedCount) process.exitCode = 31;
