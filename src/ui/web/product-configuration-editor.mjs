@@ -196,7 +196,9 @@ export class ProductConfigurationEditor {
     const result=await getJson(`${endpoint}?${query}`);
     if(revision!==this.state.resolveRevision||productId!==this.state.productId)return;
     this.state.selection=result.selection;this.state.resolved=result;
-    this.root.querySelector('#dynamicForm').innerHTML=result.fields.map((field)=>this.renderField(field)).join('');
+    const dynamicForm=this.root.querySelector('#dynamicForm');
+    dynamicForm.innerHTML=result.fields.map((field)=>this.renderField(field)).join('');
+    dynamicForm.dataset.resolveRevision=String(revision);
     this.renderWarnings(result);this.renderSummary(result);this.renderProductCodes(result);
     const product=this.state.products.find((row)=>row.id===productId);
     this.state.snapshot=createProductConfigurationSnapshot({product,result});

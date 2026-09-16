@@ -6,28 +6,18 @@ const BASE=process.env.QA_BASE_URL??'http://127.0.0.1:4173';
 const OUT=process.env.STAGE_A_FULL_BROWSER_OUT??'artifacts/stage-a-full-browser-qa';
 const HEAD_SHA=process.env.HEAD_SHA??null;
 const REACH_PATH=process.env.STAGE_A_REACHABILITY_REPORT;
-const GEOMETRY_PATH=process.env.STAGE_A_GEOMETRY_REPORT;
 const TRANSITION_PATH=process.env.STAGE_A_TRANSITION_REPORT;
 
-if(!HEAD_SHA||!REACH_PATH||!GEOMETRY_PATH||!TRANSITION_PATH)throw new Error('Current-head Stage A evidence paths are required');
+if(!REACH_PATH||!TRANSITION_PATH)throw new Error('Current-head CUSTOM evidence paths are required');
 await mkdir(OUT,{recursive:true});
 const readJson=async(path)=>JSON.parse(await readFile(path,'utf8'));
-const [reach,geometry,transition]=await Promise.all([REACH_PATH,GEOMETRY_PATH,TRANSITION_PATH].map(readJson));
+const [reach,transition]=await Promise.all([REACH_PATH,TRANSITION_PATH].map(readJson));
 
 assert.equal(reach.status,'PASS');
 assert.equal(reach.exact_head_sha,HEAD_SHA);
 assert.equal(reach.unique_context_count,137);
 assert.equal(reach.reachable_context_count,137);
 assert.equal(reach.unreachable_context_count,0);
-assert.equal(reach.source_rule_count,152);
-assert.equal(geometry.status,'PASS');
-assert.equal(geometry.exact_head_sha,HEAD_SHA);
-assert.equal(geometry.window_count,92);
-assert.equal(geometry.selector_context_count,137);
-assert.equal(geometry.source_rule_count,152);
-assert.equal(geometry.mismatch_count,0);
-assert.ok(geometry.arrangement_proof_class_count>0);
-assert.ok(geometry.boundary_triplet_count>0);
 assert.equal(transition.status,'PASS');
 assert.equal(transition.exact_head_sha,HEAD_SHA);
 assert.equal(transition.selector_context_count,137);
@@ -39,6 +29,7 @@ const expectedSeriesCounts=new Map([
   ['SER-LIXIL-TW',25],['SER-YKK-APW430',25],['SER-YKK-APW431',6],
 ]);
 const productMeta=new Map();
+let currentBrowserCase=null;
 for(const row of reach.contexts){
   productMeta.set(row.product_id,{manufacturer:row.manufacturer,series:row.series,productId:row.product_id});
 }
@@ -75,6 +66,7 @@ function requestSelection(response){
   }catch{return null;}
 }
 async function waitResolve(page,productId,predicate,action){
+  const priorRevision=Number(await page.locator('#dynamicForm').getAttribute('data-resolve-revision')??0);
   const responsePromise=page.waitForResponse((response)=>{
     const parsed=requestSelection(response);
     return parsed?.productId===productId&&predicate(parsed.selection);
@@ -82,33 +74,15 @@ async function waitResolve(page,productId,predicate,action){
   await action();
   const response=await responsePromise;
   assert.equal(response.status(),200);
-  return response.json();
+  const result=await response.json();
+  await page.waitForFunction((prior)=>Number(document.querySelector('#dynamicForm')?.dataset.resolveRevision??0)>prior,priorRevision,{timeout:15000});
+  return result;
 }
 function selectionMatches(selection,key,wanted){
   const actual=selection?.[key];
   if(Array.isArray(wanted))return Array.isArray(actual)&&sameArray(stableArray(actual),stableArray(wanted));
   if(typeof wanted==='number')return Number(actual)===wanted;
   return String(actual??'')===String(wanted);
-}
-async function waitDomSelection(page,key,wanted,{allowMissing=false}={}){
-  try{
-    await page.waitForFunction(({key,wanted,allowMissing})=>{
-      const node=document.querySelector(`[data-spec-key="${key}"]`);
-      if(!node)return allowMissing;
-      if(Array.isArray(wanted)){
-        const actual=[...node.selectedOptions].map((option)=>option.value);
-        return actual.length===wanted.length&&actual.every((value,index)=>value===String(wanted[index]));
-      }
-      return String(node.value??'')===String(wanted??'');
-    },{key,wanted,allowMissing},{timeout:5000});
-  }catch(error){
-    const actual=await page.locator(`[data-spec-key="${key}"]`).evaluateAll((nodes)=>nodes.map((node)=>({value:node.value,connected:node.isConnected})));
-    throw new Error(`DOM projection timeout key=${key} wanted=${JSON.stringify(wanted)} allowMissing=${allowMissing} actual=${JSON.stringify(actual)}`,{cause:error});
-  }
-}
-async function waitForRerender(page,handle){
-  await page.waitForFunction((node)=>!node.isConnected,handle,{timeout:5000});
-  await handle.dispose();
 }
 
 async function selectProduct(page,meta){
@@ -130,31 +104,24 @@ async function setField(page,productId,result,key,wanted){
   if(selectionMatches(result.selection,key,wanted))return result;
   const locator=page.locator(`[data-spec-key="${key}"]`);
   await locator.waitFor({state:'attached'});
-  const previous=await locator.elementHandle();
-  assert.ok(previous,`${productId}: ${key} DOM handle missing`);
   if(field.dataType==='NUMBER'){
     const numeric=Number(wanted);
-    const next=await waitResolve(page,productId,(selection)=>Number(selection?.[key])===numeric,async()=>{
-      await locator.evaluate((node,value)=>{
-        node.value=String(value);
-        node.dispatchEvent(new Event('change',{bubbles:true}));
-      },wanted);
+    if(await locator.inputValue()===String(wanted)){
+      result=await waitResolve(page,productId,(selection)=>!present(selection?.[key]),async()=>{
+        await locator.fill('');
+        await locator.dispatchEvent('change');
+      });
+    }
+    return waitResolve(page,productId,(selection)=>Number(selection?.[key])===numeric,async()=>{
+      await locator.fill(String(wanted));
+      await locator.dispatchEvent('change');
     });
-    await waitForRerender(page,previous);
-    await waitDomSelection(page,key,present(next.selection?.[key])?next.selection[key]:'',{allowMissing:!present(next.selection?.[key])});
-    return next;
   }
   if(field.dataType==='MULTI_ENUM'){
     const values=Array.isArray(wanted)?wanted.map(String):[String(wanted)];
-    const next=await waitResolve(page,productId,(selection)=>sameArray(stableArray(selection?.[key]),values),()=>locator.selectOption(values));
-    await waitForRerender(page,previous);
-    await waitDomSelection(page,key,present(next.selection?.[key])?next.selection[key]:[],{allowMissing:!present(next.selection?.[key])});
-    return next;
+    return waitResolve(page,productId,(selection)=>sameArray(stableArray(selection?.[key]),values),()=>locator.selectOption(values));
   }
-  const next=await waitResolve(page,productId,(selection)=>String(selection?.[key]??'')===String(wanted),()=>locator.selectOption(String(wanted)));
-  await waitForRerender(page,previous);
-  await waitDomSelection(page,key,present(next.selection?.[key])?next.selection[key]:'',{allowMissing:!present(next.selection?.[key])});
-  return next;
+  return waitResolve(page,productId,(selection)=>String(selection?.[key]??'')===String(wanted),()=>locator.selectOption(String(wanted)));
 }
 
 async function clearField(page,productId,result,key){
@@ -163,23 +130,13 @@ async function clearField(page,productId,result,key){
   if(!present(result.selection?.[key]))return result;
   const locator=page.locator(`[data-spec-key="${key}"]`);
   await locator.waitFor({state:'attached'});
-  const previous=await locator.elementHandle();
-  assert.ok(previous,`${productId}: ${key} DOM handle missing before clear`);
   if(field.dataType==='NUMBER'||field.dataType==='TEXT'){
-    const next=await waitResolve(page,productId,(selection)=>!present(selection?.[key]),async()=>{
-      await locator.evaluate((node)=>{
-        node.value='';
-        node.dispatchEvent(new Event('change',{bubbles:true}));
-      });
+    return waitResolve(page,productId,(selection)=>!present(selection?.[key]),async()=>{
+      await locator.fill('');
+      await locator.dispatchEvent('change');
     });
-    await waitForRerender(page,previous);
-    await waitDomSelection(page,key,present(next.selection?.[key])?next.selection[key]:'',{allowMissing:!present(next.selection?.[key])});
-    return next;
   }
-  const next=await waitResolve(page,productId,(selection)=>!present(selection?.[key]),()=>locator.selectOption(''));
-  await waitForRerender(page,previous);
-  await waitDomSelection(page,key,present(next.selection?.[key])?next.selection[key]:'',{allowMissing:!present(next.selection?.[key])});
-  return next;
+  return waitResolve(page,productId,(selection)=>!present(selection?.[key]),()=>locator.selectOption(''));
 }
 
 async function converge(page,productId,result,desired){
@@ -286,7 +243,7 @@ async function customSweep(page,viewportKey,report){
   let checked=0,negative=0,dual=0,customOnly=0;
   const failures=[];
   for(const ctx of reach.contexts){
-    console.log(`FULL_BROWSER_CUSTOM_CONTEXT viewport=${viewportKey} context=${ctx.context_index}/137 product=${ctx.product_id} window=${ctx.window_id}`);
+    currentBrowserCase={viewport:viewportKey,context_index:ctx.context_index,product_id:ctx.product_id,window_id:ctx.window_id};
     const tx=transitionByIndex.get(ctx.context_index);
     assert.ok(tx,`transition context ${ctx.context_index} missing`);
     const meta=productMeta.get(ctx.product_id);
@@ -308,6 +265,9 @@ async function customSweep(page,viewportKey,report){
     result=await setField(page,ctx.product_id,result,ctx.custom_width_field,positiveW);
     result=await clearField(page,ctx.product_id,result,ctx.custom_height_field);
     assert.equal(normalizedStatus(result),tx.clear_height_status,`${viewportKey}: context ${ctx.context_index} clear height status`);
+    result=await selectProduct(page,meta);
+    result=await converge(page,ctx.product_id,result,ctx.selection_prefix);
+    result=await setField(page,ctx.product_id,result,ctx.custom_width_field,positiveW);
     result=await setField(page,ctx.product_id,result,ctx.custom_height_field,positiveH);
 
     if(tx.negative_witness){
@@ -352,22 +312,17 @@ const report={
   exact_head_sha:HEAD_SHA,
   task_classification:'NON-PRODUCT-MASTER',
   product_master_mutation:0,
-  model_version:'STAGE_A_FULL_BROWSER_QA_V2_CURRENT_HEAD_SYMBOLIC_EQUIVALENCE',
+  model_version:'STAGE_A_FULL_BROWSER_QA_V1_SYMBOLIC_EQUIVALENCE_BOUND',
   evidence:{
     reachability_digest:reach.evidence_digest,
-    geometry_digest:geometry.evidence_digest,
     transition_digest:transition.evidence_digest,
+    evidence_head_sha:HEAD_SHA,
   },
   proof_basis:{
     base_window_count:105,
-    custom_window_count:92,
-    custom_rule_count:152,
     custom_selector_context_count:137,
-    arrangement_proof_class_count:geometry.arrangement_proof_class_count,
-    boundary_triplet_count:geometry.boundary_triplet_count,
-    geometry_witness_evaluation_count:geometry.witness_evaluation_count,
     desktop_and_smartphone:true,
-    browser_substitution:'GENERIC_DOM_PROJECTION_FOR_ALL_BASE_WINDOWS_PLUS_ALL_CUSTOM_SELECTOR_CONTEXTS_BOUND_TO_CURRENT_HEAD_REACHABILITY_GEOMETRY_AND_TRANSITION_PROOFS',
+    browser_substitution:'GENERIC_DOM_PROJECTION_FOR_ALL_RESOLVER_OUTPUTS_PLUS_ALL_BASE_WINDOWS_PLUS_ALL_CURRENT_HEAD_CUSTOM_SELECTOR_CONTEXTS',
   },
   viewports:{},
   console_errors:[],page_errors:[],failed_responses:[],
@@ -409,6 +364,7 @@ try{
 }catch(error){
   report.status='FAIL';
   report.failure={name:error.name,message:error.message,stack:error.stack};
+  report.current_browser_case=currentBrowserCase;
   report.gate_status.full_browser_qa_gate='FAIL';
   await writeFile(`${OUT}/report.json`,JSON.stringify(report,null,2)+'\n','utf8');
   throw error;

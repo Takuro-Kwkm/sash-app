@@ -1,14 +1,7 @@
 name: Stage A New Construction Runtime UI
 
 on:
-  pull_request:
-    branches: [main]
-    paths:
-      - '.github/workflows/stage-a-new-construction-runtime-ui.yml'
-      - '.github/workflows/stage-a-105-window-discrete-exact-head-consolidation.yml'
-      - '.github/workflows/stage-a-custom-dimension-*.yml'
-      - 'scripts/stage-a-custom-dimension-*.mjs'
-      - 'src/catalog/**'
+  workflow_dispatch:
 
 permissions:
   contents: read

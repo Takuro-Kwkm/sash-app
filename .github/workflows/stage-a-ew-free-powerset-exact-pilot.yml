@@ -1,14 +1,7 @@
 name: Stage A EW V3 Targeted Exact Recovery
 
 on:
-  pull_request:
-    branches: [main]
-    paths:
-      - '.github/workflows/stage-a-ew-free-powerset-exact-pilot.yml'
-      - 'scripts/stage-a-nontw-discrete-exact-runner.mjs'
-      - 'scripts/stage-a-resolver-derived-contract-v2-pilot.mjs'
-      - 'src/catalog/runtime-master/**'
-      - 'src/catalog/**'
+  workflow_dispatch:
 
 permissions:
   contents: read

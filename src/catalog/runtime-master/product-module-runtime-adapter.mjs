@@ -80,12 +80,6 @@ function expandFormalSpecToken(module, token) {
 
 function prepareModuleForInternalConstruction(sourceModule) {
   const module = clone(sourceModule);
-  const manualOnlyFields = new Set((module.allowedValues ?? [])
-    .filter((row) => row.status === 'ESTIMATE_CONFIRM_REQUIRED' || row.metadata?.manualCheck === true || row.metadata?.automaticActivation === false)
-    .map((row) => row.specificationKey));
-  for (const definition of module.specificationDefinitions ?? []) {
-    if (manualOnlyFields.has(definition.key)) definition.autoSelectSingle = false;
-  }
   const constructionDef = module.specificationDefinitions?.find((def) => def.key === 'construction');
   const formalDefault = constructionDef?.defaultValue ?? null;
   for (const row of module.allowedValues ?? []) {

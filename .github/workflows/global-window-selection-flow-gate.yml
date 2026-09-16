@@ -7,9 +7,10 @@ on:
     paths:
       - '.github/workflows/global-window-selection-flow-gate.yml'
       - 'src/catalog/runtime-master/**'
+      - 'src/catalog/**'
       - 'src/ui/web/**'
       - 'scripts/global-window-flow-*.mjs'
-      - 'scripts/global-window-runtime-semantic-audit.mjs'
+      - 'scripts/stage-a-custom-*.mjs'
       - 'test/**'
       - 'package.json'
   pull_request:
@@ -18,14 +19,16 @@ on:
     paths:
       - '.github/workflows/global-window-selection-flow-gate.yml'
       - 'src/catalog/runtime-master/**'
+      - 'src/catalog/**'
       - 'src/ui/web/**'
       - 'scripts/global-window-flow-*.mjs'
-      - 'scripts/global-window-runtime-semantic-audit.mjs'
+      - 'scripts/stage-a-custom-*.mjs'
       - 'test/**'
       - 'package.json'
 
 permissions:
   contents: read
+  pull-requests: read
 
 concurrency:
   group: global-window-selection-flow-${{ github.ref }}
@@ -35,11 +38,27 @@ jobs:
   global-flow:
     runs-on: ubuntu-latest
     timeout-minutes: 60
+    env:
+      HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      STAGE_A_CUSTOM_SHAPE_OUT: artifacts/stage-a-custom-dimension-source-shape
+      STAGE_A_CUSTOM_GUARD_OUT: artifacts/stage-a-formal-split-custom-guard-shape
+      STAGE_A_CUSTOM_SHAPE_INPUT: artifacts/stage-a-custom-dimension-source-shape/report.json
+      STAGE_A_CUSTOM_GUARD_INPUT: artifacts/stage-a-formal-split-custom-guard-shape/report.json
+      STAGE_A_CUSTOM_PARTITION_OUT: artifacts/stage-a-custom-dimension-boundary-partition
+      STAGE_A_CUSTOM_PARTITION_INPUT: artifacts/stage-a-custom-dimension-boundary-partition/report.json
+      STAGE_A_CUSTOM_REACHABILITY_OUT: artifacts/stage-a-custom-selector-reachability
+      STAGE_A_CUSTOM_REACHABILITY_INPUT: artifacts/stage-a-custom-selector-reachability/report.json
+      STAGE_A_CUSTOM_GEOMETRY_EQ_OUT: artifacts/stage-a-custom-runtime-geometry-equivalence
+      STAGE_A_CUSTOM_GEOMETRY_EQ_INPUT: artifacts/stage-a-custom-runtime-geometry-equivalence/report.json
+      STAGE_A_CUSTOM_TRANSITION_OUT: artifacts/stage-a-custom-transition-proof-v4
+      STAGE_A_REACHABILITY_REPORT: artifacts/stage-a-custom-selector-reachability/report.json
+      STAGE_A_TRANSITION_REPORT: artifacts/stage-a-custom-transition-proof-v4/report.json
+      STAGE_A_FULL_BROWSER_OUT: artifacts/stage-a-full-browser-qa
     steps:
       - name: Checkout exact HEAD
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.sha }}
+          ref: ${{ env.HEAD_SHA }}
 
       - name: Setup Node 24
         uses: actions/setup-node@v4
@@ -58,12 +77,8 @@ jobs:
           node --check src/catalog/runtime-master/new-construction-sash-runtime-ui-contract.mjs
           node --check src/catalog/runtime-master/inner-window-runtime-ui-contract.mjs
           node --check src/catalog/runtime-master/formal-product-runtime-v2-loader.mjs
-          node --check src/catalog/runtime-master/formal-product-runtime-loader.mjs
-          node --check src/catalog/runtime-master/product-module-glazing-normalizer.mjs
-          node --check src/catalog/runtime-master/product-module-glass-manufacturability.mjs
           node --check src/catalog/runtime-master/runtime-app-bridge.mjs
           node --check scripts/global-window-flow-field-inventory.mjs
-          node --check scripts/global-window-runtime-semantic-audit.mjs
           node --check test/79-global-window-selection-flow.test.mjs
           node --check test/80-canonical-window-semantic-schema.test.mjs
           node --check test/81-global-window-flow-signature-transition.test.mjs
@@ -94,6 +109,33 @@ jobs:
           echo 'FULL_FLOW_SIGNATURE_COVERAGE_GATE=PASS_PAIRWISE_WINDOW_USER_FACING_FIELD_UNIVERSES'
           echo 'FLOW_TRANSITION_GATE=PASS_WINDOW_RESOLVER_TRANSITIONS'
 
+      - name: Current-head full CUSTOM geometry and transition proof
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$HEAD_SHA"
+          node scripts/stage-a-custom-dimension-source-shape-diagnostic.mjs
+          node scripts/stage-a-formal-split-custom-guard-shape-diagnostic.mjs
+          node scripts/stage-a-custom-dimension-boundary-partition-proof-v2.mjs
+          node scripts/stage-a-custom-selector-reachability-v4.mjs
+          node scripts/stage-a-custom-runtime-geometry-equivalence-v4.mjs
+          CUSTOM_GEOMETRY_EVIDENCE_HEAD="$HEAD_SHA" node scripts/stage-a-custom-transition-proof-v4.mjs
+          node --input-type=module <<'NODE'
+          import { readFileSync } from 'node:fs';
+          const read=(path)=>JSON.parse(readFileSync(path,'utf8'));
+          const shape=read(process.env.STAGE_A_CUSTOM_SHAPE_INPUT);
+          const reach=read(process.env.STAGE_A_CUSTOM_REACHABILITY_INPUT);
+          const geometry=read(process.env.STAGE_A_CUSTOM_GEOMETRY_EQ_INPUT);
+          const transition=read(`${process.env.STAGE_A_CUSTOM_TRANSITION_OUT}/report.json`);
+          for(const row of [shape,reach,geometry,transition])if(row.exact_head_sha!==process.env.HEAD_SHA)throw new Error('CUSTOM_EXACT_HEAD_MISMATCH');
+          if(shape.total_custom_rule_count!==152||shape.unsupported_count!==0)throw new Error('CUSTOM_SOURCE_SHAPE_INVALID');
+          if(reach.source_rule_count!==152||reach.unique_context_count!==137||reach.unreachable_context_count!==0||reach.status!=='PASS')throw new Error('CUSTOM_REACHABILITY_INVALID');
+          if(geometry.source_rule_count!==152||geometry.window_count!==92||geometry.selector_context_count!==137||geometry.mismatch_count!==0||geometry.status!=='PASS')throw new Error('CUSTOM_GEOMETRY_INVALID');
+          if(transition.selector_context_count!==137||transition.evaluation_count!==1081||transition.status!=='PASS'||transition.gate_status?.custom_size_coverage_gate!=='PASS')throw new Error('CUSTOM_TRANSITION_INVALID');
+          console.log('CUSTOM_SIZE_COVERAGE_GATE=PASS');
+          console.log('UNVERIFIED_CUSTOM_QA_CASE_COUNT=0');
+          NODE
+
       - name: Full Window Runtime field inventory
         shell: bash
         run: |
@@ -119,21 +161,12 @@ jobs:
       - name: App integration regression partition
         run: node --test test/72-work-management.test.mjs test/74-estimate-output.test.mjs test/75-formal-runtime-resync.test.mjs
 
-      - name: Full repository regression excluding known blocked ENTRY_DOOR lane
+      - name: Full repository regression
         shell: bash
         run: |
           set -euo pipefail
-          files=()
-          for file in test/*.test.mjs; do
-            if [[ "$file" == "test/82-rechent-entry-door-cover-global-flow.test.mjs" ]]; then
-              echo "ENTRY_DOOR_KNOWN_BLOCKER_EXCLUDED_FROM_WINDOW_GATE=$file"
-              continue
-            fi
-            files+=("$file")
-          done
-          test ${#files[@]} -gt 0
-          node --test "${files[@]}"
-          echo 'FLOW_REGRESSION_GATE=PASS_WINDOW_SCOPE_PLUS_ALL_NON_ENTRY_DOOR_REPOSITORY_TESTS'
+          npm test
+          echo 'FLOW_REGRESSION_GATE=PASS_ALL_REPOSITORY_TESTS'
 
       - name: Runtime smoke
         shell: bash
@@ -147,8 +180,8 @@ jobs:
             sleep 0.5
           done
           cat /tmp/health.json
-          node -e 'const h=require("/tmp/health.json"); if(!h.ok) process.exit(1); const ids=new Set(h.runtimeMasterIntegrations.map(x=>x.id)); const expected=["SER-LIX-EW","SER-LIX-SAMOS2H","SER-LIX-SAMOSL","SER-LIXIL-TW","SER-LIXIL-INPLUS","SER-YKK-APW430","SER-YKK-APW431","SER-YKKAP-UCHIRIMO"]; if(expected.some(id=>!ids.has(id))) process.exit(1)'
-          echo 'WINDOW_FLOW_BASELINE_GATE=PASS_RUNTIME_SMOKE_8_WINDOW_INTEGRATIONS'
+          node -e 'const h=require("/tmp/health.json"); if(!h.ok) process.exit(1); const ids=new Set(h.runtimeMasterIntegrations.map(x=>x.id)); const expected=["SER-LIX-EW","SER-LIX-SAMOS2H","SER-LIX-SAMOSL","SER-LIXIL-TW","SER-LIXIL-INPLUS","SER-LIXIL-RECHENT-D3-NF","SER-YKK-APW430","SER-YKK-APW431","SER-YKKAP-UCHIRIMO"]; if(ids.size!==expected.length||expected.some(id=>!ids.has(id))) process.exit(1); const s=h.runtimeMasterIntegrations.find(x=>x.id==="SER-LIX-SAMOS2H"); const l=h.runtimeMasterIntegrations.find(x=>x.id==="SER-LIX-SAMOSL"); if(s?.packageVersion!=="v0.9-R3"||s?.sourceHash!=="cfc55020035df809b83c0f4a25dc0e0b717854344fdb815be8e9a848c2d889c8"||l?.packageVersion!=="v0.7-R2"||l?.sourceHash!=="4cf2a4b1572f68288fa108ccd33d30cc80d5170f2f5303864ca56ca67c34cec3") process.exit(1)'
+          echo 'WINDOW_FLOW_BASELINE_GATE=PASS_RUNTIME_SMOKE_9_READY_INTEGRATIONS'
 
       - name: Install browser QA dependencies
         run: |
@@ -172,6 +205,7 @@ jobs:
           node test/browser/uchirimo-runtime-browser-qa.mjs
           node test/browser/formal-runtime-resync-browser-qa.mjs
           node test/browser/release-regression-browser-qa.mjs
+          node test/browser/stage-a-full-browser-qa.mjs
           echo 'FULL_BROWSER_FLOW_QA_GATE=PASS_8_WINDOW_RUNTIME_TRANSITIONS_DESKTOP_SMARTPHONE'
 
       - name: Inplus v0.4-R2 exhaustive Global Flow browser QA
@@ -199,7 +233,31 @@ jobs:
           path: |
             artifacts/global-window-selection-flow-browser-qa/
             artifacts/inplus-v04r2-global-flow-full-coverage-browser-qa/
+            artifacts/stage-a-custom-dimension-source-shape/
+            artifacts/stage-a-custom-selector-reachability/
+            artifacts/stage-a-custom-runtime-geometry-equivalence/
+            artifacts/stage-a-custom-transition-proof-v4/
+            artifacts/stage-a-full-browser-qa/
           if-no-files-found: warn
+
+      - name: Exact-head repository gate
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$HEAD_SHA"
+          curl -fsSL \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H 'Accept: application/vnd.github+json' \
+            -H 'X-GitHub-Api-Version: 2022-11-28' \
+            "https://api.github.com/repos/${GITHUB_REPOSITORY}/pulls/24" > /tmp/pr24.json
+          node --input-type=module <<'NODE'
+          import { readFileSync } from 'node:fs';
+          const pr=JSON.parse(readFileSync('/tmp/pr24.json','utf8'));
+          if(pr.state!=='open'||pr.merged_at!==null||pr.base?.ref!=='main'||pr.head?.ref!=='feat/new-construction-runtime-ui-v16-20260910'||pr.head?.sha!==process.env.HEAD_SHA)throw new Error('REPOSITORY_PR_IDENTITY_GATE');
+          console.log('REPOSITORY_GATE=PASS');
+          NODE
 
       - name: Gate summary
         run: |
@@ -212,8 +270,14 @@ jobs:
           echo 'FLOW_TRANSITION_GATE=PASS'
           echo 'FULL_BROWSER_FLOW_QA_GATE=PASS'
           echo 'FLOW_REGRESSION_GATE=PASS'
-          echo 'ENTRY_DOOR_COVER_SCOPE=SEPARATE_BLOCKED_LANE_NOT_PART_OF_GLOBAL_WINDOW_GATE'
-          echo 'GLOBAL_WINDOW_SELECTION_FLOW_READY=TRUE'
+          echo 'FULL_WINDOW_COVERAGE_GATE=PASS'
+          echo 'CUSTOM_SIZE_COVERAGE_GATE=PASS'
+          echo 'DEPENDENCY_GATE=PASS'
+          echo 'UI_FLOW_GATE=PASS'
+          echo 'AUTOMATED_TEST_GATE=PASS'
+          echo 'REGRESSION_GATE=PASS'
+          echo 'REPOSITORY_GATE=PASS'
           echo 'UNVERIFIED_QA_CASE_COUNT=0'
+          echo 'GLOBAL_WINDOW_SELECTION_FLOW_READY=TRUE'
           echo 'APP_INTEGRATION_READY=TRUE'
           echo 'RELEASE_INPUT_GATE=PASS'

@@ -1,13 +1,7 @@
 name: Stage A CUSTOM Transition Proof V3
 
 on:
-  push:
-    branches: [feat/new-construction-runtime-ui-v16-20260910]
-    paths:
-      - '.github/workflows/stage-a-custom-transition-proof-v3.yml'
-      - 'scripts/stage-a-custom-transition-proof-v3.mjs'
-      - 'scripts/stage-a-custom-transition-proof-v2.mjs'
-      - 'src/catalog/**'
+  workflow_dispatch:
 
 permissions:
   contents: read

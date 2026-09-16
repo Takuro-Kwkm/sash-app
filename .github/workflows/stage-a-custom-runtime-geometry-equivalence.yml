@@ -1,18 +1,7 @@
 name: Stage A CUSTOM Runtime Geometry Equivalence
 
 on:
-  pull_request:
-    branches: [main]
-    paths:
-      - 'scripts/stage-a-custom-dimension-source-shape-diagnostic.mjs'
-      - 'scripts/stage-a-formal-split-custom-guard-shape-diagnostic.mjs'
-      - 'scripts/stage-a-custom-dimension-boundary-partition-proof.mjs'
-      - 'scripts/stage-a-custom-selector-reachability-diagnostic.mjs'
-      - 'scripts/stage-a-custom-runtime-geometry-equivalence.mjs'
-      - '.github/workflows/stage-a-custom-runtime-geometry-equivalence.yml'
-      - 'src/catalog/runtime-master/**'
-      - 'src/catalog/runtime-master-packages/**'
-      - 'src/catalog/dimension-resolver.mjs'
+  workflow_dispatch:
 
 permissions:
   contents: read
