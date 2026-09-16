@@ -5,6 +5,23 @@ import { applyFormalRuntimeJsonTransform } from './formal-runtime-json-transform
 
 const sha256 = (bytes) => createHash('sha256').update(bytes).digest('hex');
 
+function jsonStructurallyEqual(left, right) {
+  if (Object.is(left, right)) return true;
+  if (Array.isArray(left) || Array.isArray(right)) {
+    return Array.isArray(left)
+      && Array.isArray(right)
+      && left.length === right.length
+      && left.every((value, index) => jsonStructurallyEqual(value, right[index]));
+  }
+  if (left && right && typeof left === 'object' && typeof right === 'object') {
+    const leftKeys = Object.keys(left).sort();
+    const rightKeys = Object.keys(right).sort();
+    return leftKeys.length === rightKeys.length
+      && leftKeys.every((key, index) => key === rightKeys[index] && jsonStructurallyEqual(left[key], right[key]));
+  }
+  return false;
+}
+
 function typeMatches(value, type) {
   if (type === 'null') return value === null;
   if (type === 'array') return Array.isArray(value);
@@ -17,8 +34,8 @@ function typeMatches(value, type) {
 function validateJsonSchema(value, schema, path = '$') {
   const errors = [];
   if (!schema || typeof schema !== 'object') return errors;
-  if ('const' in schema && value !== schema.const) errors.push(`${path}: expected const ${JSON.stringify(schema.const)}`);
-  if (schema.enum && !schema.enum.some((candidate) => Object.is(candidate, value))) errors.push(`${path}: not in enum`);
+  if ('const' in schema && !jsonStructurallyEqual(value, schema.const)) errors.push(`${path}: expected const ${JSON.stringify(schema.const)}`);
+  if (schema.enum && !schema.enum.some((candidate) => jsonStructurallyEqual(candidate, value))) errors.push(`${path}: not in enum`);
   if (schema.type) {
     const types = Array.isArray(schema.type) ? schema.type : [schema.type];
     if (!types.some((type) => typeMatches(value, type))) return [...errors, `${path}: expected ${types.join('|')}`];
