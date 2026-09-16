@@ -1,0 +1,164 @@
+name: Entry Door Cover Global Flow Gate
+
+on:
+  push:
+    branches:
+      - feat/new-construction-runtime-ui-v16-20260910
+    paths:
+      - '.github/workflows/entry-door-cover-global-flow-gate.yml'
+      - 'src/catalog/runtime-master/entry-door-cover-runtime-ui-contract.mjs'
+      - 'src/catalog/runtime-master/formal-product-runtime-v2-loader.mjs'
+      - 'src/catalog/runtime-master/rechent-door3-nonfire-v1-adapter.mjs'
+      - 'src/catalog/runtime-master/runtime-master-registry.mjs'
+      - 'src/catalog/runtime-master/app-runtime-integration-registry.mjs'
+      - 'src/catalog/runtime-master/runtime-app-bridge.mjs'
+      - 'src/catalog/runtime-master/new-construction-sash-runtime-ui-contract.mjs'
+      - 'src/catalog/runtime-master/global-window-selection-flow-engine.mjs'
+      - 'src/catalog/runtime-master-packages/lixil-rechent-door3-nonfire-v0.8-r7/**'
+      - 'test/82-rechent-entry-door-cover-global-flow.test.mjs'
+      - 'test/browser/rechent-entry-door-cover-global-flow-browser-qa.mjs'
+      - 'src/ui/web/**'
+      - 'package.json'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/entry-door-cover-global-flow-gate.yml'
+      - 'src/catalog/runtime-master/entry-door-cover-runtime-ui-contract.mjs'
+      - 'src/catalog/runtime-master/formal-product-runtime-v2-loader.mjs'
+      - 'src/catalog/runtime-master/rechent-door3-nonfire-v1-adapter.mjs'
+      - 'src/catalog/runtime-master/runtime-master-registry.mjs'
+      - 'src/catalog/runtime-master/app-runtime-integration-registry.mjs'
+      - 'src/catalog/runtime-master/runtime-app-bridge.mjs'
+      - 'src/catalog/runtime-master/new-construction-sash-runtime-ui-contract.mjs'
+      - 'src/catalog/runtime-master/global-window-selection-flow-engine.mjs'
+      - 'src/catalog/runtime-master-packages/lixil-rechent-door3-nonfire-v0.8-r7/**'
+      - 'test/82-rechent-entry-door-cover-global-flow.test.mjs'
+      - 'test/browser/rechent-entry-door-cover-global-flow-browser-qa.mjs'
+      - 'src/ui/web/**'
+      - 'package.json'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: entry-door-cover-global-flow-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  rechent-entry-door-cover:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      EXACT_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+    steps:
+      - name: Checkout exact branch HEAD
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.EXACT_HEAD }}
+
+      - name: Prove checkout SHA
+        shell: bash
+        run: |
+          set -euo pipefail
+          actual="$(git rev-parse HEAD)"
+          echo "ENTRY_DOOR_COVER_EXACT_HEAD=$actual"
+          test "$actual" = "$EXACT_HEAD"
+
+      - name: Setup Node 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Install
+        run: npm install --ignore-scripts
+
+      - name: Source and single-engine gates
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check src/catalog/runtime-master/entry-door-cover-runtime-ui-contract.mjs
+          node --check src/catalog/runtime-master/formal-product-runtime-v2-loader.mjs
+          node --check src/catalog/runtime-master/rechent-door3-nonfire-v1-adapter.mjs
+          node --check src/catalog/runtime-master/runtime-master-registry.mjs
+          node --check src/catalog/runtime-master/runtime-app-bridge.mjs
+          node --check test/82-rechent-entry-door-cover-global-flow.test.mjs
+          node --check test/browser/rechent-entry-door-cover-global-flow-browser-qa.mjs
+          if grep -En "other:" src/catalog/runtime-master/entry-door-cover-runtime-ui-contract.mjs; then
+            echo 'FLOW_SCHEMA_UNMAPPED_FIELD_GATE=FAIL'
+            exit 31
+          fi
+          if grep -En "if[[:space:]]*\([^)]*(series|manufacturer|productId)[[:space:]]*={2,3}" src/catalog/runtime-master/entry-door-cover-runtime-ui-contract.mjs src/catalog/runtime-master/global-window-selection-flow-engine.mjs; then
+            echo 'SERIES_OVERRIDE_ELIMINATION_GATE=FAIL'
+            exit 32
+          fi
+          echo 'SINGLE_FLOW_ENGINE_GATE=PASS_ENTRY_DOOR_COVER'
+          echo 'SERIES_OVERRIDE_ELIMINATION_GATE=PASS_ENTRY_DOOR_COVER'
+
+      - name: Runtime UI lint and typecheck
+        run: |
+          npm run lint
+          npm run typecheck
+
+      - name: Formal runtime integrity and semantic flow proof
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --test test/82-rechent-entry-door-cover-global-flow.test.mjs
+          echo 'RECHENT_FORMAL_RUNTIME_INTEGRITY_GATE=PASS'
+          echo 'CANONICAL_SLOT_SCHEMA_GATE=PASS_ENTRY_DOOR_COVER'
+          echo 'FLOW_SCHEMA_UNMAPPED_FIELD_GATE=PASS_ENTRY_DOOR_COVER'
+          echo 'FULL_FLOW_SIGNATURE_COVERAGE_GATE=PASS_ENTRY_DOOR_COVER_PAIRWISE'
+          echo 'FLOW_TRANSITION_GATE=PASS_ENTRY_DOOR_COVER_RESOLVER'
+          echo 'SURVEY_LAYER_VALUE_SOURCE_GATE=BLOCKED_FAIL_CLOSED_EXPECTED'
+
+      - name: Runtime API smoke
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm run start:qa > /tmp/rechent-entry-door.log 2>&1 &
+          PID=$!
+          trap 'kill $PID || true' EXIT
+          for i in {1..40}; do
+            if curl -fsS http://127.0.0.1:4173/api/health >/tmp/health.json; then break; fi
+            sleep 0.5
+          done
+          cat /tmp/health.json
+          node -e 'const h=require("/tmp/health.json"); if(!h.ok) process.exit(1); const x=h.runtimeMasterIntegrations.find(x=>x.id==="SER-LIXIL-RECHENT-D3-NF"); if(!x||x.status!=="READY"||x.selectable!==true||x.uiCategory!=="ENTRY_DOOR_COVER") process.exit(1)'
+          echo 'RUNTIME_ADAPTER_GATE=PASS_RECHENT'
+
+      - name: Install Chromium
+        run: |
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+
+      - name: Desktop and smartphone browser flow QA
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm run start:qa > /tmp/rechent-entry-door-browser.log 2>&1 &
+          PID=$!
+          trap 'kill $PID || true' EXIT
+          for i in {1..40}; do
+            if curl -fsS http://127.0.0.1:4173/api/health >/dev/null; then break; fi
+            sleep 0.5
+          done
+          node test/browser/rechent-entry-door-cover-global-flow-browser-qa.mjs
+          echo 'FULL_BROWSER_FLOW_QA_GATE=PASS_RECHENT_DESKTOP_SMARTPHONE'
+
+      - name: Upload exact-head evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: rechent-entry-door-cover-global-flow-${{ env.EXACT_HEAD }}
+          path: artifacts/rechent-entry-door-cover-global-flow-browser-qa/
+          if-no-files-found: warn
+
+      - name: Gate summary
+        run: |
+          echo "ENTRY_DOOR_COVER_EXACT_HEAD=$EXACT_HEAD"
+          echo 'RECHENT_ENTRY_DOOR_COVER_GLOBAL_FLOW_GATE=PASS_PRODUCT_SELECTION_SCOPE'
+          echo 'PRODUCT_MASTER_MUTATION=0'
+          echo 'SURVEY_LAYER_VALUE_SOURCE_GATE=BLOCKED'
+          echo 'APP_INTEGRATION_READY=FALSE'
+          echo 'RELEASE_INPUT_GATE=BLOCKED'
