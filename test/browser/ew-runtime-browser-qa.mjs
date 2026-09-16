@@ -206,7 +206,9 @@ async function exercise(page){
   await choose(page,'screen_form','横引きロール網戸');
   await choose(page,'screen_net','標準ネット');
   result=(await chooseFirst(page,'glass_base')).result;
-  assert.equal(result.validation.status,'VALID');
+  assert.equal(result.validation.status,'MANUAL_CHECK');
+  assert.deepEqual(result.validation.errors,[]);
+  assert.ok(result.notices.some((message)=>message.includes('manufacturer estimate')));
   const summary=await page.locator('#selectionSummary').innerText();
   assert.ok(summary.includes('縦すべり出し窓'));
 
