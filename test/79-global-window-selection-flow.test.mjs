@@ -13,6 +13,8 @@ import {
 
 const STAGE_ORDER = ['PRODUCT','OPENING','CONFIGURATION','SIZE','FINISH','SCREEN','GLAZING','INSTALLATION_SURVEY','OPTION'];
 const STAGE_INDEX = new Map(STAGE_ORDER.map((stage,index)=>[stage,index]));
+const WINDOW_UI_CATEGORIES = new Set([NEW_CONSTRUCTION_EXTERIOR_WINDOW_UI_CATEGORY, INNER_WINDOW_UI_CATEGORY]);
+const windowIntegrations = () => appRuntimeIntegrationRegistry.filter((row) => WINDOW_UI_CATEGORIES.has(row.uiCategory));
 const stages = (rows) => rows.map((row) => row.semanticStage);
 const keys = (rows) => rows.map((row) => row.key);
 
@@ -92,8 +94,9 @@ test('approved category extensions are exact declarative Uchirimo fields', () =>
 });
 
 test('all registered window integrations point to UI standard v1.8 and resolve through canonical stages', async () => {
-  assert.ok(appRuntimeIntegrationRegistry.length > 0);
-  for (const integration of appRuntimeIntegrationRegistry) {
+  const integrations = windowIntegrations();
+  assert.equal(integrations.length, 8, 'Global Window Flow population must remain the eight registered window integrations');
+  for (const integration of integrations) {
     assert.equal(integration.uiStandardSpec, 'サッシ情報管理アプリ_UI実装標準仕様書_v1.8', integration.id);
     const result = await resolveRuntimeAppProduct(integration.id, {});
     assert.equal(result.productId, integration.id);
