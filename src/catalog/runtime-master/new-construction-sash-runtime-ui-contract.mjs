@@ -49,9 +49,16 @@ const STANDARD_LABELS = Object.freeze({
 const INTERNAL_EXACT = new Set(['construction','actual_w','actual_h','runtime_technical_state','dependency_only_selector','internal_provider_id','provider_id','source_id','internal_normalized_id','normalized_internal_id','legacyConstruction','legacyConfiguration']);
 const isInternalKey=(key)=>{const token=String(key??'').trim();if(!token)return true;return INTERNAL_EXACT.has(token)||token.startsWith('_')||token.startsWith('internal_')||token.startsWith('runtime_internal_')||token.startsWith('dependency_only_')||token.startsWith('legacy_');};
 
-// No domain-based extension fallback is permitted. A future category-specific
-// user-facing field must be explicitly approved here by exact key.
-const APPROVED_NEW_CONSTRUCTION_EXTENSIONS = Object.freeze({});
+// Approved declarative extension slots for formal Runtime fields which are
+// configuration selectors but are not part of the base canonical slot set.
+// Exact-key only: no series/manufacturer fallback and no other:* escape hatch.
+const APPROVED_NEW_CONSTRUCTION_EXTENSIONS = Object.freeze({
+  glass_configuration:Object.freeze({slot:'ext.glass_configuration',stage:'CONFIGURATION',order:41}),
+  profile:Object.freeze({slot:'ext.profile',stage:'CONFIGURATION',order:42}),
+  opening_class:Object.freeze({slot:'ext.opening_class',stage:'CONFIGURATION',order:43}),
+  sill:Object.freeze({slot:'ext.sill',stage:'CONFIGURATION',order:44}),
+  wall_finish:Object.freeze({slot:'ext.wall_finish',stage:'CONFIGURATION',order:45}),
+});
 
 export function semanticSlotForNewConstructionField(key){return SLOT_ALIASES[key]??null;}
 export function semanticStageForNewConstructionSlot(slot){if(PRODUCT_SLOTS.has(slot))return'PRODUCT';if(slot==='window_type')return'OPENING';if(CONFIGURATION_SLOTS.has(slot))return'CONFIGURATION';if(SIZE_SLOTS.has(slot))return'SIZE';if(FINISH_SLOTS.has(slot))return'FINISH';if(SCREEN_SLOTS.has(slot))return'SCREEN';if(GLAZING_SLOTS.has(slot))return'GLAZING';if(slot==='option')return'OPTION';return null;}
