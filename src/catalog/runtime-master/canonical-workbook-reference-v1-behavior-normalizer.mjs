@@ -1,3 +1,5 @@
+import { withCanonicalWorkbookReferenceV1FormalGeometry } from './canonical-workbook-reference-v1-formal-geometry-normalizer.mjs';
+
 const has=(value)=>value!==undefined&&value!==null&&value!=='';
 const same=(a,b)=>Object.is(a,b)||String(a)===String(b);
 const uniq=(values)=>[...new Set(values.filter(has))];
@@ -162,5 +164,5 @@ export function withCanonicalWorkbookReferenceV1Behavior(adapted){
     if(!window&&has(windowId))appendError(state,{code:'SELECTION_NOT_ALLOWED',field:'window_type',value:windowId});
     return recompute(state);
   };
-  return Object.freeze({...adapted,resolver});
+  return withCanonicalWorkbookReferenceV1FormalGeometry(Object.freeze({...adapted,resolver}));
 }
