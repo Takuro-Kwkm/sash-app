@@ -2,6 +2,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { loadCanonicalWorkbookRuntimePackage } from './canonical-runtime-manifest-loader.mjs';
 import { adaptCanonicalWorkbookReferenceV1 } from './canonical-workbook-reference-v1-adapter.mjs';
+import { withCanonicalWorkbookReferenceV1Behavior } from './canonical-workbook-reference-v1-behavior-normalizer.mjs';
 import { loadManifestRuntimePackage } from './runtime-manifest-loader.mjs';
 import { adaptTwCanonicalWorkbookReferenceV2 } from './tw-canonical-workbook-reference-v2-adapter.mjs';
 import { evaluateTwCanonicalWorkbookRuntimeV2 } from './tw-canonical-workbook-runtime-engine-v2.mjs';
@@ -130,7 +131,7 @@ async function loadRuntime(entry) {
   let adapted;
   if (entry.packageType === 'RUNTIME_MANIFEST_V2' && entry.adapterType === 'CANONICAL_WORKBOOK_REFERENCE_V1') {
     runtimePackage = await loadCanonicalWorkbookRuntimePackage(entry);
-    adapted = adaptCanonicalWorkbookReferenceV1(runtimePackage);
+    adapted = withCanonicalWorkbookReferenceV1Behavior(adaptCanonicalWorkbookReferenceV1(runtimePackage));
   } else if (entry.packageType === 'RUNTIME_MANIFEST_V2' && entry.adapterType === 'UCHIRIMO_TABULAR_V1') {
     runtimePackage = await loadCanonicalWorkbookRuntimePackage(entry);
     adapted = adaptUchirimoTabularV1(runtimePackage);
