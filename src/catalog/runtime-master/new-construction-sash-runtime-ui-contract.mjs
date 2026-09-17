@@ -47,6 +47,7 @@ const STANDARD_LABELS = Object.freeze({
 });
 
 const INTERNAL_EXACT = new Set(['construction','actual_w','actual_h','runtime_technical_state','dependency_only_selector','internal_provider_id','provider_id','source_id','internal_normalized_id','normalized_internal_id','legacyConstruction','legacyConfiguration']);
+const TECHNICAL_NON_UI_FIELDS = new Set(['glass_air_layer','glass_gas','glass_thickness','glass_makeup','glass_composition']);
 const isInternalKey=(key)=>{const token=String(key??'').trim();if(!token)return true;return INTERNAL_EXACT.has(token)||token.startsWith('_')||token.startsWith('internal_')||token.startsWith('runtime_internal_')||token.startsWith('dependency_only_')||token.startsWith('legacy_');};
 
 // Approved declarative extension slots for formal Runtime fields which are
@@ -63,7 +64,7 @@ const APPROVED_NEW_CONSTRUCTION_EXTENSIONS = Object.freeze({
 export function semanticSlotForNewConstructionField(key){return SLOT_ALIASES[key]??null;}
 export function semanticStageForNewConstructionSlot(slot){if(PRODUCT_SLOTS.has(slot))return'PRODUCT';if(slot==='window_type')return'OPENING';if(CONFIGURATION_SLOTS.has(slot))return'CONFIGURATION';if(SIZE_SLOTS.has(slot))return'SIZE';if(FINISH_SLOTS.has(slot))return'FINISH';if(SCREEN_SLOTS.has(slot))return'SCREEN';if(GLAZING_SLOTS.has(slot))return'GLAZING';if(slot==='option')return'OPTION';return null;}
 export function standardLabelForNewConstructionField(key,fallback){return STANDARD_LABELS[key]??fallback;}
-export function shouldExposeNewConstructionRuntimeField(field={}){const key=field.key??field.field_name;if(isInternalKey(key))return false;if(field.runtimeIncluded===false||field.runtime_included===false)return false;if(field.technical===true||field.internal===true)return false;return true;}
+export function shouldExposeNewConstructionRuntimeField(field={}){const key=field.key??field.field_name;if(isInternalKey(key)||TECHNICAL_NON_UI_FIELDS.has(String(key??'').trim()))return false;if(field.runtimeIncluded===false||field.runtime_included===false)return false;if(field.technical===true||field.internal===true)return false;return true;}
 export function approvedNewConstructionExtensionForField(key){return APPROVED_NEW_CONSTRUCTION_EXTENSIONS[key]??null;}
 export function applyNewConstructionSashUiOrder(fields=[]){return applyGlobalWindowSelectionFlow(fields,{uiCategory:NEW_CONSTRUCTION_EXTERIOR_WINDOW_UI_CATEGORY,canonicalSlotOrder:NEW_CONSTRUCTION_SASH_UI_STANDARD_ORDER,semanticSlotForField:semanticSlotForNewConstructionField,semanticStageForSlot:semanticStageForNewConstructionSlot,approvedExtensionForField:approvedNewConstructionExtensionForField,shouldExposeField:shouldExposeNewConstructionRuntimeField,standardLabelForField:standardLabelForNewConstructionField});}
 
