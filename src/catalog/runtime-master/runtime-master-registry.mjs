@@ -114,7 +114,7 @@ export const runtimeMasterInventory = Object.freeze([
   }),
   Object.freeze({
     manufacturer:'LIXIL', series:'TW', masterVersion:'integrated-v0.4', schemaVersion:'2.0', packageType:'RUNTIME_MANIFEST_V1', adapterType:'TW_CANONICAL_WORKBOOK_REFERENCE_V2', packageRoot:TW_ROOT,
-    runtimeManifestPath:join(TW_ROOT,'runtime_manifest.json'), runtimeManifestDriveFileId:'13doEdTkUlQNu4Dm-SNwkeUg8RkrjS5G0', runtimeManifestSha256:'95380f5cab261edf03bf868e0f2120b9d57e941d6618b4543afe7a6ffd00c68e',
+    runtimeManifestPath:join(TW_ROOT,'runtime_manifest.json'), runtimeManifestDriveFileId:'13doEdTkUlQNu4Dm-SNwkeUg8RkrjS5G0', runtimeManifestSha256:'4ca87f7fc327f798da9ac0e39d4aa7ba4e8bda1e5635cc91959fe241059aa7d7',
     materializedFiles:Object.freeze({
       '1hWy1coHWTsuXYXGLRxZ0a2vJEmSIvg5p':Object.freeze({
         codec:'json-transform-chain-v1',
