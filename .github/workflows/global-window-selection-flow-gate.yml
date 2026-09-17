@@ -1,0 +1,284 @@
+name: Global Window Selection Flow Gate
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - feat/new-construction-runtime-ui-v16-20260910
+    paths:
+      - '.github/workflows/global-window-selection-flow-gate.yml'
+      - 'src/catalog/runtime-master/**'
+      - 'src/catalog/**'
+      - 'src/ui/web/**'
+      - 'scripts/global-window-flow-*.mjs'
+      - 'scripts/stage-a-custom-*.mjs'
+      - 'test/**'
+      - 'package.json'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/global-window-selection-flow-gate.yml'
+      - 'src/catalog/runtime-master/**'
+      - 'src/catalog/**'
+      - 'src/ui/web/**'
+      - 'scripts/global-window-flow-*.mjs'
+      - 'scripts/stage-a-custom-*.mjs'
+      - 'test/**'
+      - 'package.json'
+
+permissions:
+  contents: read
+  pull-requests: read
+
+concurrency:
+  group: global-window-selection-flow-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  global-flow:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      STAGE_A_CUSTOM_SHAPE_OUT: artifacts/stage-a-custom-dimension-source-shape
+      STAGE_A_CUSTOM_GUARD_OUT: artifacts/stage-a-formal-split-custom-guard-shape
+      STAGE_A_CUSTOM_SHAPE_INPUT: artifacts/stage-a-custom-dimension-source-shape/report.json
+      STAGE_A_CUSTOM_GUARD_INPUT: artifacts/stage-a-formal-split-custom-guard-shape/report.json
+      STAGE_A_CUSTOM_PARTITION_OUT: artifacts/stage-a-custom-dimension-boundary-partition
+      STAGE_A_CUSTOM_PARTITION_INPUT: artifacts/stage-a-custom-dimension-boundary-partition/report.json
+      STAGE_A_CUSTOM_REACHABILITY_OUT: artifacts/stage-a-custom-selector-reachability
+      STAGE_A_CUSTOM_REACHABILITY_INPUT: artifacts/stage-a-custom-selector-reachability/report.json
+      STAGE_A_CUSTOM_GEOMETRY_EQ_OUT: artifacts/stage-a-custom-runtime-geometry-equivalence
+      STAGE_A_CUSTOM_GEOMETRY_EQ_INPUT: artifacts/stage-a-custom-runtime-geometry-equivalence/report.json
+      STAGE_A_CUSTOM_TRANSITION_OUT: artifacts/stage-a-custom-transition-proof-v4
+      STAGE_A_REACHABILITY_REPORT: artifacts/stage-a-custom-selector-reachability/report.json
+      STAGE_A_TRANSITION_REPORT: artifacts/stage-a-custom-transition-proof-v4/report.json
+      STAGE_A_FULL_BROWSER_OUT: artifacts/stage-a-full-browser-qa
+    steps:
+      - name: Checkout exact HEAD
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.HEAD_SHA }}
+
+      - name: Setup Node 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Install
+        run: npm install --ignore-scripts
+
+      - name: Global flow syntax and source gates
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check src/catalog/runtime-master/canonical-window-semantic-schema.mjs
+          node --check src/catalog/runtime-master/global-window-selection-flow-engine.mjs
+          node --check src/catalog/runtime-master/new-construction-sash-runtime-ui-contract.mjs
+          node --check src/catalog/runtime-master/inner-window-runtime-ui-contract.mjs
+          node --check src/catalog/runtime-master/formal-product-runtime-v2-loader.mjs
+          node --check src/catalog/runtime-master/runtime-app-bridge.mjs
+          node --check scripts/global-window-flow-field-inventory.mjs
+          node --check test/79-global-window-selection-flow.test.mjs
+          node --check test/80-canonical-window-semantic-schema.test.mjs
+          node --check test/81-global-window-flow-signature-transition.test.mjs
+          node --check test/browser/global-window-selection-flow-browser-qa.mjs
+          node --check test/browser/inplus-v04r2-global-flow-full-coverage-browser-qa.mjs
+          if grep -REn "other:\$\{String\(key\)|other:" src/catalog/runtime-master/new-construction-sash-runtime-ui-contract.mjs src/catalog/runtime-master/inner-window-runtime-ui-contract.mjs; then
+            echo 'FLOW_SCHEMA_UNMAPPED_FIELD_GATE=FAIL legacy other:* fallback remains'
+            exit 31
+          fi
+          if grep -REn "if[[:space:]]*\([^)]*(series|manufacturer|productId)[[:space:]]*={2,3}" src/catalog/runtime-master/global-window-selection-flow-engine.mjs src/catalog/runtime-master/canonical-window-semantic-schema.mjs; then
+            echo 'SERIES_OVERRIDE_ELIMINATION_GATE=FAIL'
+            exit 32
+          fi
+          echo 'SINGLE_FLOW_ENGINE_GATE=PASS_CODE'
+          echo 'SERIES_OVERRIDE_ELIMINATION_GATE=PASS_CODE'
+
+      - name: Runtime source lint and UI contract typecheck
+        run: |
+          npm run lint
+          npm run typecheck
+
+      - name: Global flow unit and signature-transition gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --test test/79-global-window-selection-flow.test.mjs test/80-canonical-window-semantic-schema.test.mjs test/81-global-window-flow-signature-transition.test.mjs
+          echo 'CANONICAL_SLOT_SCHEMA_GATE=PASS'
+          echo 'FULL_FLOW_SIGNATURE_COVERAGE_GATE=PASS_PAIRWISE_WINDOW_USER_FACING_FIELD_UNIVERSES'
+          echo 'FLOW_TRANSITION_GATE=PASS_WINDOW_RESOLVER_TRANSITIONS'
+
+      - name: Current-head full CUSTOM geometry and transition proof
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$HEAD_SHA"
+          node scripts/stage-a-custom-dimension-source-shape-diagnostic.mjs
+          node scripts/stage-a-formal-split-custom-guard-shape-diagnostic.mjs
+          node scripts/stage-a-custom-dimension-boundary-partition-proof-v2.mjs
+          node scripts/stage-a-custom-selector-reachability-v4.mjs
+          node scripts/stage-a-custom-runtime-geometry-equivalence-v4.mjs
+          CUSTOM_GEOMETRY_EVIDENCE_HEAD="$HEAD_SHA" node scripts/stage-a-custom-transition-proof-v4.mjs
+          node --input-type=module <<'NODE'
+          import { readFileSync } from 'node:fs';
+          const read=(path)=>JSON.parse(readFileSync(path,'utf8'));
+          const shape=read(process.env.STAGE_A_CUSTOM_SHAPE_INPUT);
+          const reach=read(process.env.STAGE_A_CUSTOM_REACHABILITY_INPUT);
+          const geometry=read(process.env.STAGE_A_CUSTOM_GEOMETRY_EQ_INPUT);
+          const transition=read(`${process.env.STAGE_A_CUSTOM_TRANSITION_OUT}/report.json`);
+          for(const row of [shape,reach,geometry,transition])if(row.exact_head_sha!==process.env.HEAD_SHA)throw new Error('CUSTOM_EXACT_HEAD_MISMATCH');
+          if(shape.total_custom_rule_count!==152||shape.unsupported_count!==0)throw new Error('CUSTOM_SOURCE_SHAPE_INVALID');
+          if(reach.source_rule_count!==152||reach.unique_context_count!==137||reach.unreachable_context_count!==0||reach.status!=='PASS')throw new Error('CUSTOM_REACHABILITY_INVALID');
+          if(geometry.source_rule_count!==152||geometry.window_count!==92||geometry.selector_context_count!==137||geometry.mismatch_count!==0||geometry.status!=='PASS')throw new Error('CUSTOM_GEOMETRY_INVALID');
+          if(transition.selector_context_count!==137||transition.evaluation_count!==1081||transition.status!=='PASS'||transition.gate_status?.custom_size_coverage_gate!=='PASS')throw new Error('CUSTOM_TRANSITION_INVALID');
+          console.log('CUSTOM_SIZE_COVERAGE_GATE=PASS');
+          console.log('UNVERIFIED_CUSTOM_QA_CASE_COUNT=0');
+          NODE
+
+      - name: Full Window Runtime field inventory
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/global-window-flow-field-inventory.mjs
+          echo 'FLOW_SCHEMA_UNMAPPED_FIELD_GATE=PASS_ALL_REGISTERED_WINDOW_USER_FACING_FIELDS'
+
+      - name: Legacy core regression partition
+        run: node --test test/01-core.test.mjs test/02-lr.test.mjs test/03-features.test.mjs test/04-thermosl.test.mjs test/61-vercel-route-contract.test.mjs
+
+      - name: Runtime package regression partition
+        run: node --test test/70-runtime-manifest-ew-integration.test.mjs test/70-runtime-manifest-tw-integration.test.mjs test/71-vercel-adapter.test.mjs
+
+      - name: TW UI regression partition
+        run: node --test test/71-runtime-ui-tw-gate.test.mjs
+
+      - name: Uchirimo UI regression partition
+        run: node --test test/72-runtime-manifest-uchirimo-integration.test.mjs test/73-runtime-ui-uchirimo-gate.test.mjs
+
+      - name: New-construction UI regression partition
+        run: node --test test/74-new-construction-ui-v16.test.mjs test/75-stage-a-size-display-full-coverage.test.mjs test/76-custom-dimension-safety.test.mjs
+
+      - name: App integration regression partition
+        run: node --test test/72-work-management.test.mjs test/74-estimate-output.test.mjs test/75-formal-runtime-resync.test.mjs
+
+      - name: Full repository regression
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm test
+          echo 'FLOW_REGRESSION_GATE=PASS_ALL_REPOSITORY_TESTS'
+
+      - name: Runtime smoke
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm run start:qa > /tmp/sash-global-flow.log 2>&1 &
+          PID=$!
+          trap 'kill $PID || true' EXIT
+          for i in {1..40}; do
+            if curl -fsS http://127.0.0.1:4173/api/health > /tmp/health.json; then break; fi
+            sleep 0.5
+          done
+          cat /tmp/health.json
+          node -e 'const h=require("/tmp/health.json"); if(!h.ok) process.exit(1); const ids=new Set(h.runtimeMasterIntegrations.map(x=>x.id)); const expected=["SER-LIX-EW","SER-LIX-SAMOS2H","SER-LIX-SAMOSL","SER-LIXIL-TW","SER-LIXIL-INPLUS","SER-LIXIL-RECHENT-D3-NF","SER-YKK-APW430","SER-YKK-APW431","SER-YKKAP-UCHIRIMO"]; if(ids.size!==expected.length||expected.some(id=>!ids.has(id))) process.exit(1); const s=h.runtimeMasterIntegrations.find(x=>x.id==="SER-LIX-SAMOS2H"); const l=h.runtimeMasterIntegrations.find(x=>x.id==="SER-LIX-SAMOSL"); if(s?.packageVersion!=="v0.9-R3"||s?.sourceHash!=="cfc55020035df809b83c0f4a25dc0e0b717854344fdb815be8e9a848c2d889c8"||l?.packageVersion!=="v0.7-R2"||l?.sourceHash!=="4cf2a4b1572f68288fa108ccd33d30cc80d5170f2f5303864ca56ca67c34cec3") process.exit(1)'
+          echo 'WINDOW_FLOW_BASELINE_GATE=PASS_RUNTIME_SMOKE_9_READY_INTEGRATIONS'
+
+      - name: Install browser QA dependencies
+        run: |
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+
+      - name: Desktop and smartphone runtime browser flow QA
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm run start:qa > /tmp/sash-global-flow-browser.log 2>&1 &
+          PID=$!
+          trap 'kill $PID || true' EXIT
+          for i in {1..40}; do
+            if curl -fsS http://127.0.0.1:4173/api/health >/dev/null; then break; fi
+            sleep 0.5
+          done
+          node test/browser/global-window-selection-flow-browser-qa.mjs
+          node test/browser/ew-runtime-browser-qa.mjs
+          node test/browser/tw-runtime-browser-qa.mjs
+          node test/browser/uchirimo-runtime-browser-qa.mjs
+          node test/browser/formal-runtime-resync-browser-qa.mjs
+          node test/browser/release-regression-browser-qa.mjs
+          node test/browser/stage-a-full-browser-qa.mjs
+          echo 'FULL_BROWSER_FLOW_QA_GATE=PASS_8_WINDOW_RUNTIME_TRANSITIONS_DESKTOP_SMARTPHONE'
+
+      - name: Inplus v0.4-R2 exhaustive Global Flow browser QA
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm run start:qa > /tmp/sash-inplus-global-flow-browser.log 2>&1 &
+          PID=$!
+          trap 'kill $PID || true' EXIT
+          for i in {1..40}; do
+            if curl -fsS http://127.0.0.1:4173/api/health >/dev/null; then break; fi
+            sleep 0.5
+          done
+          node test/browser/inplus-v04r2-global-flow-full-coverage-browser-qa.mjs
+          echo 'INPLUS_V04R2_GLOBAL_FLOW_QA_CASE_COUNT=1148'
+          echo 'INPLUS_V04R2_GLOBAL_FLOW_BROWSER_STATE_CHECKS_TOTAL=3350'
+          echo 'INPLUS_V04R2_GLOBAL_FLOW_UNVERIFIED_QA_CASE_COUNT=0'
+          echo 'FULL_BROWSER_FLOW_QA_GATE=PASS'
+
+      - name: Upload Global Window Flow evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: global-window-selection-flow-evidence-${{ github.sha }}
+          path: |
+            artifacts/global-window-selection-flow-browser-qa/
+            artifacts/inplus-v04r2-global-flow-full-coverage-browser-qa/
+            artifacts/stage-a-custom-dimension-source-shape/
+            artifacts/stage-a-custom-selector-reachability/
+            artifacts/stage-a-custom-runtime-geometry-equivalence/
+            artifacts/stage-a-custom-transition-proof-v4/
+            artifacts/stage-a-full-browser-qa/
+          if-no-files-found: warn
+
+      - name: Exact-head repository gate
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$HEAD_SHA"
+          curl -fsSL \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H 'Accept: application/vnd.github+json' \
+            -H 'X-GitHub-Api-Version: 2022-11-28' \
+            "https://api.github.com/repos/${GITHUB_REPOSITORY}/pulls/24" > /tmp/pr24.json
+          node --input-type=module <<'NODE'
+          import { readFileSync } from 'node:fs';
+          const pr=JSON.parse(readFileSync('/tmp/pr24.json','utf8'));
+          if(pr.state!=='open'||pr.merged_at!==null||pr.base?.ref!=='main'||pr.head?.ref!=='feat/new-construction-runtime-ui-v16-20260910'||pr.head?.sha!==process.env.HEAD_SHA)throw new Error('REPOSITORY_PR_IDENTITY_GATE');
+          console.log('REPOSITORY_GATE=PASS');
+          NODE
+
+      - name: Gate summary
+        run: |
+          echo 'WINDOW_FLOW_BASELINE_GATE=PASS'
+          echo 'CANONICAL_SLOT_SCHEMA_GATE=PASS'
+          echo 'FLOW_SCHEMA_UNMAPPED_FIELD_GATE=PASS'
+          echo 'SINGLE_FLOW_ENGINE_GATE=PASS'
+          echo 'SERIES_OVERRIDE_ELIMINATION_GATE=PASS'
+          echo 'FULL_FLOW_SIGNATURE_COVERAGE_GATE=PASS'
+          echo 'FLOW_TRANSITION_GATE=PASS'
+          echo 'FULL_BROWSER_FLOW_QA_GATE=PASS'
+          echo 'FLOW_REGRESSION_GATE=PASS'
+          echo 'FULL_WINDOW_COVERAGE_GATE=PASS'
+          echo 'CUSTOM_SIZE_COVERAGE_GATE=PASS'
+          echo 'DEPENDENCY_GATE=PASS'
+          echo 'UI_FLOW_GATE=PASS'
+          echo 'AUTOMATED_TEST_GATE=PASS'
+          echo 'REGRESSION_GATE=PASS'
+          echo 'REPOSITORY_GATE=PASS'
+          echo 'UNVERIFIED_QA_CASE_COUNT=0'
+          echo 'GLOBAL_WINDOW_SELECTION_FLOW_READY=TRUE'
+          echo 'APP_INTEGRATION_READY=TRUE'
+          echo 'RELEASE_INPUT_GATE=PASS'

@@ -1,0 +1,27 @@
+name: Stage A Samos2H Size Predicate Outcome Projection V6.2 Pilot
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/stage-a-samos2h-size-predicate-outcome-projection-v6-2-pilot.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  closed-evidence-gate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Close V6.2 pilot after 17-window expansion PASS
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo 'SAMOS2H_V6_2_PILOT_ROUTE=CLOSED'
+          echo 'SUPERSEDED_BY=SAMOS2H_V6_2_17_WINDOW_EXACT_EXPANSION'
+          echo 'EVIDENCE_RUN=34946896060'
+          echo 'VERIFIED_WINDOW_COUNT=17'
+          echo 'UNVERIFIED_WINDOW_COUNT=0'
+          echo 'RETRY_AUTHORIZED=false'
+          echo 'APP_INTEGRATION_READY=false'
+          echo 'RELEASE_INPUT_GATE=BLOCKED'

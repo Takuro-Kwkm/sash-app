@@ -1,0 +1,67 @@
+name: Stage A Samos2H Source Behavior Shape
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/stage-a-samos2h-source-behavior-shape.yml'
+      - 'scripts/stage-a-samos2h-source-behavior-shape.mjs'
+      - 'src/catalog/runtime-master/**'
+      - 'src/catalog/runtime-master-packages/lixil-samos2h-*/**'
+
+permissions:
+  contents: read
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    env:
+      HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+      STAGE_A_TARGET_WINDOWS: WT-S2H-SHUTTER-HIKI,WT-S2H-HIKICHIGAI
+      STAGE_A_SAMOS_SOURCE_SHAPE_OUT: artifacts/stage-a-samos2h-source-behavior-shape
+    steps:
+      - name: Checkout exact PR HEAD
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 1
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Exact SHA gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          actual="$(git rev-parse HEAD)"
+          test "$actual" = "$HEAD_SHA"
+          echo "EXACT_HEAD_GATE=PASS sha=$actual"
+      - name: Analyze Formal Product Module source shape
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check scripts/stage-a-samos2h-source-behavior-shape.mjs
+          node scripts/stage-a-samos2h-source-behavior-shape.mjs
+      - name: Summarize projection candidates
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import { readFileSync } from 'node:fs';
+          const report=JSON.parse(readFileSync('artifacts/stage-a-samos2h-source-behavior-shape/report.json','utf8'));
+          if(report.exact_head_sha!==process.env.HEAD_SHA)throw new Error('exact head mismatch');
+          for(const window of report.windows??[]){
+            const ranked=[...(window.fields??[])].sort((a,b)=>b.conservative_projection_weight-a.conservative_projection_weight||b.candidate_count-a.candidate_count);
+            console.log(`PROJECTION_CANDIDATES window=${window.window_type} ${JSON.stringify(ranked.slice(0,10).map((r)=>({field:r.field,candidates:r.candidate_count,influence:r.influence_record_count,mentioned:r.mentioned_candidate_count,unmentioned:r.unmentioned_candidate_count,weight:r.conservative_projection_weight,operators:r.operator_set,downstream:r.downstream_target_fields})))}`);
+          }
+          console.log(`PRODUCT_MODULE_DIGEST=${report.product_module_digest}`);
+          console.log('SOURCE_STATIC_DIAGNOSTIC=PASS');
+          console.log('APP_INTEGRATION_READY=false');
+          console.log('RELEASE_INPUT_GATE=BLOCKED');
+          NODE
+      - name: Upload source-shape evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: stage-a-samos2h-source-behavior-shape
+          path: artifacts/stage-a-samos2h-source-behavior-shape/report.json
+          if-no-files-found: error

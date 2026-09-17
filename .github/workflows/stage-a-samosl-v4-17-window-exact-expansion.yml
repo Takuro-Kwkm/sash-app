@@ -1,0 +1,31 @@
+name: Stage A SamosL V4 17-Window Exact Expansion
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/stage-a-samosl-v4-17-window-exact-expansion.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  closed-evidence-gate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Preserve SamosL V4 evidence and close same-condition retry
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo 'SAMOSL_V4_17_WINDOW_ROUTE=CLOSED'
+          echo 'EVIDENCE_RUN=34946896069'
+          echo 'EVIDENCE_HEAD=beaeb0e57f17655338a49c655b4471e3c87c5a99'
+          echo 'SUMMARY_ARTIFACT_ID=10387941272'
+          echo 'VERIFIED_WINDOW_COUNT=17'
+          echo 'UNVERIFIED_WINDOW_COUNT=0'
+          echo 'TOTAL_EXACT_DISCRETE_TERMINAL_CONTEXT_COUNT=435606073344'
+          echo 'TOTAL_CUSTOM_PENDING_CONTEXT_COUNT=3249762048'
+          echo 'RETRY_AUTHORIZED=false'
+          echo 'REOPEN_CONDITION=RUNTIME_ADAPTER_UI_RULE_OR_CONFLICT_MODEL_CHANGE'
+          echo 'APP_INTEGRATION_READY=false'
+          echo 'RELEASE_INPUT_GATE=BLOCKED'

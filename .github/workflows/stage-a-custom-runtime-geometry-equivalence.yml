@@ -1,0 +1,132 @@
+name: Stage A CUSTOM Runtime Geometry Equivalence
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: stage-a-custom-runtime-geometry-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  runtime-geometry-equivalence:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+      STAGE_A_CUSTOM_SHAPE_OUT: artifacts/stage-a-custom-dimension-source-shape
+      STAGE_A_CUSTOM_GUARD_OUT: artifacts/stage-a-formal-split-custom-guard-shape
+      STAGE_A_CUSTOM_SHAPE_INPUT: artifacts/stage-a-custom-dimension-source-shape/report.json
+      STAGE_A_CUSTOM_GUARD_INPUT: artifacts/stage-a-formal-split-custom-guard-shape/report.json
+      STAGE_A_CUSTOM_PARTITION_OUT: artifacts/stage-a-custom-dimension-boundary-partition
+      STAGE_A_CUSTOM_PARTITION_INPUT: artifacts/stage-a-custom-dimension-boundary-partition/report.json
+      STAGE_A_CUSTOM_REACHABILITY_OUT: artifacts/stage-a-custom-selector-reachability
+      STAGE_A_CUSTOM_REACHABILITY_INPUT: artifacts/stage-a-custom-selector-reachability/report.json
+      STAGE_A_CUSTOM_GEOMETRY_EQ_OUT: artifacts/stage-a-custom-runtime-geometry-equivalence
+    steps:
+      - name: Checkout exact PR HEAD
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 1
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Exact SHA gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          actual="$(git rev-parse HEAD)"
+          test "$actual" = "$HEAD_SHA"
+          echo "EXACT_HEAD_GATE=PASS sha=$actual"
+      - name: Syntax gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check scripts/stage-a-custom-dimension-source-shape-diagnostic.mjs
+          node --check scripts/stage-a-formal-split-custom-guard-shape-diagnostic.mjs
+          node --check scripts/stage-a-custom-dimension-boundary-partition-proof.mjs
+          node --check scripts/stage-a-custom-selector-reachability-diagnostic.mjs
+          node --check scripts/stage-a-custom-runtime-geometry-equivalence.mjs
+          echo 'CUSTOM_RUNTIME_GEOMETRY_SCRIPT_SYNTAX_GATE=PASS'
+      - name: Rebuild formal CUSTOM source evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/stage-a-custom-dimension-source-shape-diagnostic.mjs
+          node scripts/stage-a-formal-split-custom-guard-shape-diagnostic.mjs
+      - name: Fail closed on partition-internal rule types not modeled by current partition proof
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import { readFileSync } from 'node:fs';
+          const r=JSON.parse(readFileSync(process.env.STAGE_A_CUSTOM_SHAPE_INPUT,'utf8'));
+          if(r.exact_head_sha!==process.env.HEAD_SHA)throw new Error('source exact head mismatch');
+          const unsupported=(r.series??[]).flatMap(s=>(s.rules??[]).filter(x=>['POLYGON','PIECEWISE'].includes(x.type)).map(x=>`${s.series}:${x.id}:${x.type}`));
+          if(unsupported.length)throw new Error(`CURRENT_PARTITION_MODEL_MISSING_INTERNAL_BOUNDARIES ${JSON.stringify(unsupported)}`);
+          console.log(`CUSTOM_PARTITION_INTERNAL_TYPE_GATE=PASS rules=${r.total_custom_rule_count}`);
+          NODE
+      - name: Rebuild exact CUSTOM boundary partition
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/stage-a-custom-dimension-boundary-partition-proof.mjs
+      - name: Rebuild exhaustive selector reachability
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/stage-a-custom-selector-reachability-diagnostic.mjs
+      - name: Validate pre-equivalence gates
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import { readFileSync } from 'node:fs';
+          const s=JSON.parse(readFileSync(process.env.STAGE_A_CUSTOM_SHAPE_INPUT,'utf8'));
+          const g=JSON.parse(readFileSync(process.env.STAGE_A_CUSTOM_GUARD_INPUT,'utf8'));
+          const p=JSON.parse(readFileSync(process.env.STAGE_A_CUSTOM_PARTITION_INPUT,'utf8'));
+          const r=JSON.parse(readFileSync(process.env.STAGE_A_CUSTOM_REACHABILITY_INPUT,'utf8'));
+          for(const row of [s,g,p,r])if(row.exact_head_sha!==process.env.HEAD_SHA)throw new Error('pre-equivalence exact head mismatch');
+          if(s.series_count!==6||s.total_custom_rule_count!==152||s.unsupported_count!==0)throw new Error('source shape gate failed');
+          if(g.status!=='PASS'||g.rule_count!==54)throw new Error('formal split guard gate failed');
+          if(p.status!=='GEOMETRY_PARTITION_PASS_RUNTIME_EQUIVALENCE_PENDING'||p.window_count!==92||p.rule_count!==152||p.invalid_boundary_triplet_count!==0||p.selector_geometry_separation_violation_count!==0)throw new Error('partition gate failed');
+          if(r.status!=='PASS'||r.source_rule_count!==152||r.unreachable_context_count!==0)throw new Error('selector reachability gate failed');
+          console.log(`CUSTOM_PRE_EQUIVALENCE_GATES=PASS windows=${p.window_count} rules=${p.rule_count} classes=${p.arrangement_proof_class_count} triplets=${p.boundary_triplet_count} contexts=${r.unique_context_count}`);
+          NODE
+      - name: Prove full Runtime geometry equivalence
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/stage-a-custom-runtime-geometry-equivalence.mjs
+      - name: Validate Runtime geometry equivalence evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import { readFileSync } from 'node:fs';
+          const r=JSON.parse(readFileSync(`${process.env.STAGE_A_CUSTOM_GEOMETRY_EQ_OUT}/report.json`,'utf8'));
+          if(r.exact_head_sha!==process.env.HEAD_SHA)throw new Error('geometry equivalence exact head mismatch');
+          if(r.source_rule_count!==152||r.window_count!==92)throw new Error(`geometry cardinality drift rules=${r.source_rule_count} windows=${r.window_count}`);
+          if(r.mismatch_count!==0||r.status!=='PASS')throw new Error(`runtime geometry mismatches=${r.mismatch_count}`);
+          if(!r.evidence_digest)throw new Error('geometry evidence digest missing');
+          console.log(`CUSTOM_RUNTIME_GEOMETRY_EQUIVALENCE_GATE=PASS windows=${r.window_count} contexts=${r.selector_context_count} rules=${r.source_rule_count} classes=${r.arrangement_proof_class_count} triplets=${r.boundary_triplet_count} witnesses=${r.witness_evaluation_count} calls=${r.resolver_call_count}`);
+          console.log(`CUSTOM_RUNTIME_GEOMETRY_EQUIVALENCE_DIGEST=${r.evidence_digest}`);
+          console.log('CUSTOM_SIZE_COVERAGE_GATE=PASS_GEOMETRY_EQUIVALENCE_ONLY_TRANSITION_PROOF_PENDING');
+          console.log('APP_INTEGRATION_READY=false');
+          console.log('RELEASE_INPUT_GATE=BLOCKED');
+          NODE
+      - name: Upload CUSTOM geometry evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: stage-a-custom-runtime-geometry-equivalence
+          path: |
+            artifacts/stage-a-custom-dimension-source-shape/
+            artifacts/stage-a-formal-split-custom-guard-shape/
+            artifacts/stage-a-custom-dimension-boundary-partition/
+            artifacts/stage-a-custom-selector-reachability/
+            artifacts/stage-a-custom-runtime-geometry-equivalence/
+          if-no-files-found: error

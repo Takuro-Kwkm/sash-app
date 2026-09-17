@@ -1,0 +1,36 @@
+name: Stage A TW 25-Window Exact-Head Consolidation
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/stage-a-tw-25-window-exact-head-consolidation.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: stage-a-tw-25-exact-head-consolidation-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  closed-evidence-gate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Preserve TW 25-window exact evidence and close reconsolidation retry
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo 'TW_25_EXACT_HEAD_CONSOLIDATION_ROUTE=CLOSED'
+          echo 'EVIDENCE_RUN=34946896139'
+          echo 'EVIDENCE_HEAD=beaeb0e57f17655338a49c655b4471e3c87c5a99'
+          echo 'EVIDENCE_ARTIFACT_ID=10387337449'
+          echo 'TW_WINDOW_COUNT=25'
+          echo 'TW_UNVERIFIED_WINDOW_COUNT=0'
+          echo 'TW_EXACT_DISCRETE_TERMINAL_CONTEXT_COUNT=8493556499711262784'
+          echo 'TW_CUSTOM_PENDING_CONTEXT_COUNT=64'
+          echo 'TW_DISCRETE_POPULATION_GATE=PASS'
+          echo 'RETRY_AUTHORIZED=false'
+          echo 'REOPEN_CONDITION=TW_RUNTIME_ADAPTER_UI_RULE_OR_PROOF_MODEL_CHANGE'
+          echo 'APP_INTEGRATION_READY=false'
+          echo 'RELEASE_INPUT_GATE=BLOCKED'

@@ -1,0 +1,208 @@
+name: Stage A Current-Head Continuation Gate
+
+on:
+  push:
+    branches:
+      - feat/new-construction-runtime-ui-v16-20260910
+    paths:
+      - '.github/workflows/stage-a-current-head-continuation-gate.yml'
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: stage-a-current-head-continuation
+  cancel-in-progress: true
+
+jobs:
+  exact_head_continuation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      HEAD_SHA: ${{ github.sha }}
+      TW_EVIDENCE_HEAD: beaeb0e57f17655338a49c655b4471e3c87c5a99
+      NONTW_EVIDENCE_HEAD: 65ab8afc7d4c8db711b191882acfc578414e3e4e
+      OUT_DIR: artifacts/stage-a-105-window-discrete-exact-head-consolidation
+      STAGE_A_CUSTOM_SHAPE_OUT: artifacts/stage-a-custom-dimension-source-shape
+      STAGE_A_CUSTOM_GUARD_OUT: artifacts/stage-a-formal-split-custom-guard-shape
+      STAGE_A_CUSTOM_SHAPE_INPUT: artifacts/stage-a-custom-dimension-source-shape/report.json
+      STAGE_A_CUSTOM_GUARD_INPUT: artifacts/stage-a-formal-split-custom-guard-shape/report.json
+      STAGE_A_CUSTOM_PARTITION_OUT: artifacts/stage-a-custom-dimension-boundary-partition
+      STAGE_A_CUSTOM_PARTITION_INPUT: artifacts/stage-a-custom-dimension-boundary-partition/report.json
+      STAGE_A_CUSTOM_REACHABILITY_OUT: artifacts/stage-a-custom-selector-reachability
+      STAGE_A_CUSTOM_REACHABILITY_INPUT: artifacts/stage-a-custom-selector-reachability/report.json
+      STAGE_A_CUSTOM_GEOMETRY_EQ_OUT: artifacts/stage-a-custom-runtime-geometry-equivalence
+    steps:
+      - name: Checkout exact push HEAD with history
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Exact SHA and discrete source invariance gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          actual="$(git rev-parse HEAD)"
+          test "$actual" = "$HEAD_SHA"
+          git merge-base --is-ancestor "$TW_EVIDENCE_HEAD" "$HEAD_SHA"
+          git merge-base --is-ancestor "$NONTW_EVIDENCE_HEAD" "$HEAD_SHA"
+          git diff --quiet "$TW_EVIDENCE_HEAD" "$HEAD_SHA" -- src/ scripts/stage-a-tw-25-window-exact-head-consolidation.mjs
+          git diff --quiet "$NONTW_EVIDENCE_HEAD" "$HEAD_SHA" -- src/
+          echo "EXACT_HEAD_GATE=PASS sha=$actual"
+          echo 'TW_SOURCE_AND_PROOF_INVARIANCE_GATE=PASS'
+          echo 'NONTW_SOURCE_INVARIANCE_GATE=PASS'
+
+      - name: Download TW 25-window exact evidence
+        uses: actions/download-artifact@v4
+        with:
+          name: stage-a-tw-25-window-exact-head-consolidation
+          path: artifacts/evidence/tw
+          repository: Takuro-Kwkm/sash-app
+          run-id: 34946896139
+          github-token: ${{ github.token }}
+
+      - name: Download Non-TW 80-window exact evidence
+        uses: actions/download-artifact@v4
+        with:
+          name: stage-a-nontw-80-exact-head-consolidation
+          path: artifacts/evidence/nontw
+          repository: Takuro-Kwkm/sash-app
+          run-id: 34948462528
+          github-token: ${{ github.token }}
+
+      - name: Consolidate exact 105-window discrete population
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import { createHash } from 'node:crypto';
+          import { readdirSync,readFileSync,statSync,mkdirSync,writeFileSync } from 'node:fs';
+          import { join } from 'node:path';
+          const loadOne=(root)=>{const files=[];const walk=(d)=>{for(const n of readdirSync(d)){const p=join(d,n);if(statSync(p).isDirectory())walk(p);else if(n==='report.json')files.push(p);}};walk(root);if(files.length!==1)throw new Error(`${root}: expected one report, got ${files.length}`);return JSON.parse(readFileSync(files[0],'utf8'));};
+          const tw=loadOne('artifacts/evidence/tw');
+          const nontw=loadOne('artifacts/evidence/nontw');
+          if(tw.exact_head_sha!==process.env.TW_EVIDENCE_HEAD)throw new Error('TW evidence head mismatch');
+          if(tw.status!=='TW_25_WINDOW_DISCRETE_EXACT_HEAD_CONSOLIDATED_PASS'||tw.counted_window_count!==25||tw.unverified_window_count!==0)throw new Error('TW discrete evidence invalid');
+          if(tw.tw_exact_discrete_terminal_context_count!=='8493556499711262784'||tw.tw_custom_pending_context_count!=='64')throw new Error('TW totals mismatch');
+          if(tw.gate_status?.tw_discrete_population_gate!=='PASS')throw new Error('TW discrete gate not PASS');
+          if(nontw.exact_head_sha!==process.env.NONTW_EVIDENCE_HEAD)throw new Error('Non-TW evidence head mismatch');
+          if(nontw.status!=='NONTW_80_WINDOW_EXACT_HEAD_CONSOLIDATED_PASS'||nontw.counted_window_count!==80||nontw.unverified_window_count!==0)throw new Error('Non-TW discrete evidence invalid');
+          if(nontw.exact_discrete_terminal_context_count!=='4352215444858'||nontw.custom_pending_context_count!=='34750439722')throw new Error('Non-TW totals mismatch');
+          if(nontw.evidence_digest!=='9fe7fc0895630cdbddb090534f445169a0e7e3f441c157c584d89f4aef58832d')throw new Error('Non-TW evidence digest mismatch');
+          if(nontw.gate_status?.nontw_discrete_population_gate!=='PASS')throw new Error('Non-TW discrete gate not PASS');
+          const twWindows=tw.windows??[];const nonTwWindows=nontw.windows??[];
+          if(twWindows.length!==25||nonTwWindows.length!==80)throw new Error('constituent window rows incomplete');
+          const keys=[...twWindows.map((r)=>`SER-LIXIL-TW:${r.window_type}`),...nonTwWindows.map((r)=>`${r.product_id}:${r.window_type}`)];
+          if(keys.length!==105||new Set(keys).size!==105)throw new Error('105-window identity gate failed');
+          const terminal=BigInt(tw.tw_exact_discrete_terminal_context_count)+BigInt(nontw.exact_discrete_terminal_context_count);
+          const custom=BigInt(tw.tw_custom_pending_context_count)+BigInt(nontw.custom_pending_context_count);
+          if(terminal!==8493560851926707642n)throw new Error(`105 terminal mismatch ${terminal}`);
+          if(custom!==34750439786n)throw new Error(`105 custom pending mismatch ${custom}`);
+          const sources={tw:{run_id:34946896139,head:process.env.TW_EVIDENCE_HEAD,artifact_id:10387337449,window_count:25,evidence_digest:tw.evidence_digest},nontw:{run_id:34948462528,head:process.env.NONTW_EVIDENCE_HEAD,artifact_id:10388102164,window_count:80,evidence_digest:nontw.evidence_digest}};
+          const evidenceDigest=createHash('sha256').update(JSON.stringify({sources,tw_windows:twWindows,nontw_windows:nonTwWindows})).digest('hex');
+          const out={exact_head_sha:process.env.HEAD_SHA,task_classification:'NON-PRODUCT-MASTER',product_master_mutation:0,proof_model_version:'RUNTIME_UI_SYMBOLIC_FULL_COVERAGE_V1',consolidation_model_version:'STAGE_A_105_WINDOW_DISCRETE_EXACT_HEAD_CONSOLIDATION_V1',base_window_count:105,counted_window_count:105,unverified_window_count:0,series_window_counts:{SAMOS2H:17,SAMOSL:17,EW:15,TW:25,APW430:25,APW431:6},exact_discrete_terminal_context_count:terminal.toString(),custom_pending_context_count:custom.toString(),evidence_sources:sources,evidence_digest:evidenceDigest,status:'STAGE_A_105_WINDOW_DISCRETE_EXACT_HEAD_CONSOLIDATED_PASS',gate_status:{discrete_population_gate:'PASS',exhaustive_state_graph_gate:'PARTIAL_DISCRETE_PASS_CONTINUOUS_PENDING',qa_population_gate:'BLOCKED_CONTINUOUS_CUSTOM_PROOF_PENDING',full_window_coverage_gate:'BLOCKED_CONTINUOUS_AND_BROWSER_PROOF_PENDING',custom_size_coverage_gate:'BLOCKED_CONTINUOUS_PARTITION_NOT_PROVEN',automated_test_gate:'BLOCKED_BY_CONTINUOUS_POPULATION_GATE',full_browser_qa_gate:'NOT_STARTED',app_integration_ready:false,release_input_gate:'BLOCKED'}};
+          mkdirSync(process.env.OUT_DIR,{recursive:true});writeFileSync(join(process.env.OUT_DIR,'report.json'),JSON.stringify(out,null,2)+'\n');
+          console.log(`STAGE_A_105_DISCRETE_STATUS=${out.status}`);
+          console.log(`BASE_WINDOW_COUNT=${out.base_window_count}`);
+          console.log(`COUNTED_WINDOW_COUNT=${out.counted_window_count}`);
+          console.log(`UNVERIFIED_WINDOW_COUNT=${out.unverified_window_count}`);
+          console.log(`STAGE_A_105_EXACT_DISCRETE_TERMINAL_CONTEXT_COUNT=${out.exact_discrete_terminal_context_count}`);
+          console.log(`STAGE_A_105_CUSTOM_PENDING_CONTEXT_COUNT=${out.custom_pending_context_count}`);
+          console.log(`STAGE_A_105_EVIDENCE_DIGEST=${out.evidence_digest}`);
+          console.log('DISCRETE_POPULATION_GATE=PASS');
+          NODE
+
+      - name: CUSTOM proof syntax gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check scripts/stage-a-custom-dimension-source-shape-diagnostic.mjs
+          node --check scripts/stage-a-formal-split-custom-guard-shape-diagnostic.mjs
+          node --check scripts/stage-a-custom-dimension-boundary-partition-proof.mjs
+          node --check scripts/stage-a-custom-selector-reachability-diagnostic.mjs
+          node --check scripts/stage-a-custom-runtime-geometry-equivalence.mjs
+
+      - name: Inventory CUSTOM source and guard shapes
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/stage-a-custom-dimension-source-shape-diagnostic.mjs
+          node scripts/stage-a-formal-split-custom-guard-shape-diagnostic.mjs
+          node --input-type=module <<'NODE'
+          import { readFileSync } from 'node:fs';
+          const r=JSON.parse(readFileSync(`${process.env.STAGE_A_CUSTOM_SHAPE_OUT}/report.json`,'utf8'));
+          const g=JSON.parse(readFileSync(`${process.env.STAGE_A_CUSTOM_GUARD_OUT}/report.json`,'utf8'));
+          if(r.exact_head_sha!==process.env.HEAD_SHA||g.exact_head_sha!==process.env.HEAD_SHA)throw new Error('custom exact head mismatch');
+          if(r.series_count!==6||r.unsupported_count!==0||r.source_shape_status!=='CUSTOM_SOURCE_SHAPE_INVENTORIED')throw new Error('CUSTOM source shape invalid');
+          if(g.status!=='PASS'||g.rule_count!==54)throw new Error(`guard shape invalid status=${g.status} rules=${g.rule_count}`);
+          const unpartitioned=(r.series??[]).flatMap(s=>(s.rules??[]).filter(x=>['POLYGON','PIECEWISE'].includes(x.type)).map(x=>`${s.series}:${x.id}:${x.type}`));
+          if(unpartitioned.length)throw new Error(`CURRENT_PARTITION_MODEL_MISSING_INTERNAL_BOUNDARIES ${JSON.stringify(unpartitioned)}`);
+          console.log(`CUSTOM_SOURCE_SHAPE_GATE=PASS rules=${r.total_custom_rule_count} explicit_windows=${r.total_explicit_custom_window_id_count}`);
+          console.log(`FORMAL_SPLIT_CUSTOM_GUARD_SHAPE_GATE=PASS rules=${g.rule_count}`);
+          NODE
+
+      - name: Prove exact CUSTOM boundary partition
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/stage-a-custom-dimension-boundary-partition-proof.mjs
+          node --input-type=module <<'NODE'
+          import { readFileSync } from 'node:fs';
+          const p=JSON.parse(readFileSync(`${process.env.STAGE_A_CUSTOM_PARTITION_OUT}/report.json`,'utf8'));
+          if(p.exact_head_sha!==process.env.HEAD_SHA)throw new Error('partition exact head mismatch');
+          if(p.window_count!==92||p.rule_count!==152||p.invalid_boundary_triplet_count!==0||p.selector_geometry_separation_violation_count!==0)throw new Error('CUSTOM geometry partition invalid');
+          if(p.status!=='GEOMETRY_PARTITION_PASS_RUNTIME_EQUIVALENCE_PENDING')throw new Error(`partition status=${p.status}`);
+          console.log(`CUSTOM_GEOMETRY_PARTITION_GATE=PASS windows=${p.window_count} rules=${p.rule_count} classes=${p.arrangement_proof_class_count} triplets=${p.boundary_triplet_count}`);
+          NODE
+
+      - name: Prove CUSTOM selector reachability
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/stage-a-custom-selector-reachability-diagnostic.mjs
+          node --input-type=module <<'NODE'
+          import { readFileSync } from 'node:fs';
+          const r=JSON.parse(readFileSync(`${process.env.STAGE_A_CUSTOM_REACHABILITY_OUT}/report.json`,'utf8'));
+          if(r.exact_head_sha!==process.env.HEAD_SHA)throw new Error('reachability exact head mismatch');
+          const memberships=(r.contexts??[]).reduce((n,c)=>n+(c.rule_ids??[]).length,0);
+          if(r.source_rule_count!==152||memberships!==152||r.unreachable_context_count!==0||r.status!=='PASS')throw new Error('CUSTOM reachability invalid');
+          console.log(`CUSTOM_SELECTOR_REACHABILITY_GATE=PASS contexts=${r.unique_context_count} rules=${memberships}`);
+          NODE
+
+      - name: Prove full CUSTOM Runtime geometry equivalence
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/stage-a-custom-runtime-geometry-equivalence.mjs
+          node --input-type=module <<'NODE'
+          import { readFileSync } from 'node:fs';
+          const r=JSON.parse(readFileSync(`${process.env.STAGE_A_CUSTOM_GEOMETRY_EQ_OUT}/report.json`,'utf8'));
+          if(r.exact_head_sha!==process.env.HEAD_SHA)throw new Error('geometry exact head mismatch');
+          if(r.source_rule_count!==152||r.window_count!==92)throw new Error(`geometry cardinality drift rules=${r.source_rule_count} windows=${r.window_count}`);
+          if(r.mismatch_count!==0||r.status!=='PASS')throw new Error(`runtime geometry mismatches=${r.mismatch_count}`);
+          console.log(`CUSTOM_RUNTIME_GEOMETRY_EQUIVALENCE_GATE=PASS windows=${r.window_count} contexts=${r.selector_context_count} rules=${r.source_rule_count} classes=${r.arrangement_proof_class_count} triplets=${r.boundary_triplet_count} witnesses=${r.witness_evaluation_count} calls=${r.resolver_call_count}`);
+          console.log(`CUSTOM_RUNTIME_GEOMETRY_EQUIVALENCE_DIGEST=${r.evidence_digest}`);
+          console.log('CUSTOM_SIZE_COVERAGE_GATE=PASS_GEOMETRY_EQUIVALENCE_ONLY_TRANSITION_PROOF_PENDING');
+          console.log('APP_INTEGRATION_READY=false');
+          console.log('RELEASE_INPUT_GATE=BLOCKED');
+          NODE
+
+      - name: Upload current-head continuation evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: stage-a-current-head-continuation-evidence
+          path: |
+            artifacts/stage-a-105-window-discrete-exact-head-consolidation/
+            artifacts/stage-a-custom-dimension-source-shape/
+            artifacts/stage-a-formal-split-custom-guard-shape/
+            artifacts/stage-a-custom-dimension-boundary-partition/
+            artifacts/stage-a-custom-selector-reachability/
+            artifacts/stage-a-custom-runtime-geometry-equivalence/
+          if-no-files-found: error

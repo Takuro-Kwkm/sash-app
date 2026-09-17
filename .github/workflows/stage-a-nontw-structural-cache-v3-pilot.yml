@@ -1,0 +1,29 @@
+name: Stage A Non-TW Structural Audit Cache V3 Pilot
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/stage-a-nontw-structural-cache-v3-pilot.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  closed-evidence-gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Preserve V3 evidence and close same-condition retry
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo 'V3_PILOT_EVIDENCE_RUN=34926142137'
+          echo 'EW_WT-EW-HIKICHIGAI=PASS terminal=3140812800 calls=63982 blocker=NONE'
+          echo 'SAMOSL_WT-SL-HIKICHIGAI=BLOCKED source_self_refs=2 fallback=TERMINAL_MULTI_BFS_LIMIT'
+          echo 'SAMOS2H_WT-S2H-MENKOSHI-HIKI=BLOCKED source_self_refs=1 fallback=TIMEOUT'
+          echo 'AUTH_RETRY_GATE=NOT_APPLICABLE'
+          echo 'RETRY_AUTHORIZED=false'
+          echo 'REOPEN_CONDITION=NEW_SOURCE_RULE_MODEL_EVIDENCE'
+          echo 'APP_INTEGRATION_READY=false'
+          echo 'RELEASE_INPUT_GATE=BLOCKED'

@@ -1,0 +1,34 @@
+name: Stage A Rule-Sensitive Weighted State Count Candidate
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/stage-a-rule-sensitive-weighted-state-count-candidate.yml'
+      - 'scripts/stage-a-rule-sensitive-weighted-state-count-candidate.mjs'
+      - 'src/catalog/runtime-master/**'
+      - 'src/catalog/**'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: stage-a-rule-sensitive-weighted-count-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  superseded_gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Close superseded rule-sensitive route
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "RULE_SENSITIVE_WEIGHTED_PATH=CLOSED"
+          echo "CLOSE_REASON=DEPENDENCY_CONTRACT_FALSE_INCONSISTENCIES_AND_12_MINUTE_SHARD_TIMEOUTS"
+          echo "DIAGNOSTIC_EVIDENCE_RUN=34916607742"
+          echo "SUPERSEDED_BY=SEMANTIC_CONTINUATION_DAG"
+          echo "RETRY_AUTHORIZED=false"
+          echo "APP_INTEGRATION_READY=false"
+          echo "RELEASE_INPUT_GATE=BLOCKED"

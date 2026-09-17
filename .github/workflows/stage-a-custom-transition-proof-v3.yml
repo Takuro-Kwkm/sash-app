@@ -1,0 +1,95 @@
+name: Stage A CUSTOM Transition Proof V3
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  prove:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      HEAD_SHA: ${{ github.sha }}
+      CUSTOM_GEOMETRY_EVIDENCE_HEAD: a2558005d3fe32299cce021bb6af6c9c09976b96
+      STAGE_A_CUSTOM_REACHABILITY_INPUT: artifacts/evidence/custom-v5/stage-a-custom-selector-reachability/report.json
+      STAGE_A_CUSTOM_GEOMETRY_EQ_INPUT: artifacts/evidence/custom-v5/stage-a-custom-runtime-geometry-equivalence/report.json
+      STAGE_A_CUSTOM_TRANSITION_OUT: artifacts/stage-a-custom-transition-proof-v3
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Exact HEAD and prerequisite source-invariance gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$HEAD_SHA"
+          git merge-base --is-ancestor "$CUSTOM_GEOMETRY_EVIDENCE_HEAD" "$HEAD_SHA"
+          git diff --quiet "$CUSTOM_GEOMETRY_EVIDENCE_HEAD" "$HEAD_SHA" -- src/
+          node --check scripts/stage-a-custom-transition-proof-v2.mjs
+          node --check scripts/stage-a-custom-transition-proof-v3.mjs
+          echo "EXACT_HEAD_GATE=PASS sha=$HEAD_SHA"
+          echo "CUSTOM_GEOMETRY_EVIDENCE_INVARIANCE_GATE=PASS source_head=$CUSTOM_GEOMETRY_EVIDENCE_HEAD"
+      - name: Download exact CUSTOM geometry V5 evidence
+        uses: actions/download-artifact@v4
+        with:
+          name: stage-a-custom-selector-geometry-v5
+          path: artifacts/evidence/custom-v5
+          repository: Takuro-Kwkm/sash-app
+          run-id: 34968389109
+          github-token: ${{ github.token }}
+      - name: Validate prerequisite evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import { readFileSync } from 'node:fs';
+          const reach=JSON.parse(readFileSync(process.env.STAGE_A_CUSTOM_REACHABILITY_INPUT,'utf8'));
+          const geo=JSON.parse(readFileSync(process.env.STAGE_A_CUSTOM_GEOMETRY_EQ_INPUT,'utf8'));
+          if(reach.exact_head_sha!==process.env.CUSTOM_GEOMETRY_EVIDENCE_HEAD||geo.exact_head_sha!==process.env.CUSTOM_GEOMETRY_EVIDENCE_HEAD)throw new Error('CUSTOM_TRANSITION_V3_PREREQ_HEAD_MISMATCH');
+          if(reach.status!=='PASS'||reach.unique_context_count!==137||reach.unreachable_context_count!==0||reach.source_rule_count!==152)throw new Error('CUSTOM_TRANSITION_V3_REACHABILITY_PREREQ_INVALID');
+          if(geo.status!=='PASS'||geo.mismatch_count!==0||geo.arrangement_proof_class_count!==3456||geo.boundary_triplet_count!==1682)throw new Error('CUSTOM_TRANSITION_V3_GEOMETRY_PREREQ_INVALID');
+          console.log('CUSTOM_TRANSITION_V3_PREREQ_GATE=PASS');
+          NODE
+      - name: Prove Runtime-mode-aware CUSTOM transitions
+        shell: bash
+        run: |
+          set -euo pipefail
+          set +e
+          node scripts/stage-a-custom-transition-proof-v3.mjs
+          rc=$?
+          set -e
+          test -f "$STAGE_A_CUSTOM_TRANSITION_OUT/report.json"
+          node --input-type=module <<'NODE'
+          import { readFileSync } from 'node:fs';
+          const r=JSON.parse(readFileSync(`${process.env.STAGE_A_CUSTOM_TRANSITION_OUT}/report.json`,'utf8'));
+          console.log(`CUSTOM_TRANSITION_V3_REPORT status=${r.status} contexts=${r.selector_context_count} dual=${r.dual_mode_context_count} custom_only=${r.custom_only_context_count} evaluations=${r.evaluation_count}`);
+          if(r.failure)console.log(`CUSTOM_TRANSITION_V3_FAILURE=${JSON.stringify(r.failure)}`);
+          if(r.status==='PASS'){
+            if(r.model_version!=='CUSTOM_TRANSITION_FULL_SELECTOR_CONTEXT_V3_RUNTIME_MODE_TOPOLOGY')throw new Error(`CUSTOM_TRANSITION_V3_MODEL_DRIFT ${r.model_version}`);
+            if(r.selector_context_count!==137||r.source_rule_count!==152||r.dual_mode_context_count!==131||r.custom_only_context_count!==6)throw new Error('CUSTOM_TRANSITION_V3_CARDINALITY_DRIFT');
+            if(r.evaluation_count!==1081||r.post_mode_replay_evaluation_count!==22||r.negative_evaluation_count!==112||r.unbounded_negative_not_applicable_count!==25)throw new Error('CUSTOM_TRANSITION_V3_EVALUATION_DRIFT');
+            if(r.positive_status_counts?.PASS!==26||r.positive_status_counts?.REVIEW_REQUIRED!==111)throw new Error('CUSTOM_TRANSITION_V3_POSITIVE_STATUS_DRIFT');
+            console.log(`CUSTOM_TRANSITION_GATE=PASS contexts=${r.selector_context_count} dual=${r.dual_mode_context_count} custom_only=${r.custom_only_context_count} evaluations=${r.evaluation_count}`);
+            console.log(`CUSTOM_TRANSITION_EVIDENCE_DIGEST=${r.evidence_digest}`);
+            console.log('CUSTOM_SIZE_COVERAGE_GATE=PASS');
+            console.log('AUTOMATED_TEST_GATE=PASS_CUSTOM_SYMBOLIC_PENDING_BROWSER');
+            console.log('FULL_BROWSER_QA_GATE=NOT_STARTED');
+            console.log('APP_INTEGRATION_READY=false');
+            console.log('RELEASE_INPUT_GATE=BLOCKED');
+          }
+          NODE
+          exit "$rc"
+      - name: Upload transition V3 evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: stage-a-custom-transition-proof-v3
+          path: artifacts/stage-a-custom-transition-proof-v3/
+          if-no-files-found: error

@@ -1,363 +1,380 @@
-import { ACTIVE, has, uniq, clone, same, meaningfulHanding, selectedOne, selectedMany, sourceSpecId, sourceWindowId, sourceGlassId, createModel, baseValueRows, labelsToValues, findSize } from './canonical-workbook-reference-v1-model.mjs';
+import { createModel, ACTIVE, has, uniq, clone, same, meaningfulHanding, selectedOne, sourceSpecId, sourceWindowId, baseValueRows } from './canonical-workbook-reference-v1-model.mjs';
 
-const isAvailable = (value) => value === true || value === '○' || value === '可';
-const screenFormOf = (row) => row.screen_type ?? row.label;
-const splitTargets = (value) => String(value ?? '').split(/[・、,]/).map((part) => part.trim()).filter(Boolean);
+const FORMAL_SELECTOR_KEYS = Object.freeze(['glass_configuration','profile','opening_class','panel_count','sill','wall_finish','configuration_variant']);
+const RAW_SELECTOR_KEY = Object.freeze({ configuration_variant:'variant' });
+const FORMAL_SELECTOR_WINDOWS = new Set(['WT-EW-HIKICHIGAI','WT-EW-SHUTTER-HIKI']);
+const selectorRawKey = (key) => RAW_SELECTOR_KEY[key] ?? key;
+const requirement = (field, required, visible = true) => ({ field, required, visible });
+const uniqueWarnings = (values) => [...new Set(values.filter(Boolean))];
 
-function targetContainsForm(raw, form) {
-  return splitTargets(raw).some((target) => target === form || String(form).includes(target) || target.includes(String(form)));
+function selectorDimensions(model) {
+  const raw = Array.isArray(model.selectorModel?.dimensions) ? model.selectorModel.dimensions : [];
+  const byRawKey = new Map(raw.map((row) => [typeof row === 'string' ? row : row?.key, row]));
+  return FORMAL_SELECTOR_KEYS.map((key) => {
+    const rawKey = selectorRawKey(key);
+    const source = byRawKey.get(rawKey);
+    if (!source) return null;
+    if (typeof source === 'string') return { key, rawKey, display_name:key, allowed_values:[] };
+    return { ...source, key, rawKey };
+  }).filter(Boolean);
 }
 
-function screenOrderRule(model, form, mesh) {
-  if (!has(form) || !has(mesh)) return null;
-  const exact = model.screenOrderRules.find((row) => row['網戸タイプ'] === form && row['ネット種類'] === mesh);
-  if (exact) return exact;
-  const netSpec = model.screenNetSpecs.find((row) => row['ネット種類'] === mesh && targetContainsForm(row['対象網戸'], form));
-  if (!netSpec) return null;
-  return model.screenOrderRules.find((row) => row['網戸タイプ'] === netSpec['タイプ'] && row['ネット種類'] === mesh) ?? null;
+function selectorDisplayValue(key, rawValue) {
+  if (key === 'panel_count') return rawValue === null || rawValue === undefined ? 'NULL(HKK)' : String(rawValue);
+  return rawValue === null || rawValue === undefined ? null : String(rawValue);
 }
 
-function screenCandidateAllowed(model, form, mesh) {
-  const rule = screenOrderRule(model, form, mesh);
-  if (!rule) return true;
-  return rule['商品候補表示'] !== '非表示' && rule['見積確定可否'] !== '不可' && rule['未確認時アプリ状態'] !== 'ERROR';
-}
-
-function windowIdMatches(raw, windowId) {
-  return String(raw ?? '').split('/').map((part) => part.trim()).includes(windowId);
-}
-
-function fixedMidrailRule(model, windowId, form) {
-  return model.screenRules.find((row) =>
-    windowIdMatches(row['窓種ID'], windowId) && row['網戸形式'] === form && ['固定','継承'].includes(row['判定'])
-  ) ?? null;
-}
-
-function customRangeMatches(row, selection) {
-  const w = Number(selection.custom_w), h = Number(selection.custom_h);
-  if (!Number.isFinite(w) || !Number.isFinite(h)) return true;
-  return w >= Number(row['W_MIN(mm)']) && w <= Number(row['W_MAX(mm)']) &&
-    h >= Number(row['H_MIN(mm)']) && h <= Number(row['H_MAX(mm)']);
-}
-
-function allowedByField(model, selection) {
-  const allowed = new Map(model.fields.map((def) => [def.field_name, []]));
-  const visible = new Set(['window_type']);
-  const required = new Set(['window_type']);
-  const readOnly = new Set();
-  const labels = new Map();
-  const autoValues = new Map();
-  const windowId = selectedOne(selection,'window_type');
-  const specId = selectedOne(selection,'window_spec');
-  const variant = selectedOne(selection,'variant');
-  const sizeMode = selectedOne(selection,'size_mode');
-  const sizeId = selectedOne(selection,'size');
-  const screenPresence = selectedOne(selection,'screen_presence');
-  const screenForm = selectedOne(selection,'screen_form');
-  const glassId = selectedOne(selection,'glass_base');
-
-  allowed.set('window_type', labelsToValues(baseValueRows(model,'window_type')));
-
-  const window = model.windows.find((row) => row.id === windowId);
-  if (window) {
-    const specRows = model.specs.filter((row) => sourceWindowId(row) === windowId);
-    if (specRows.length) {
-      visible.add('window_spec'); required.add('window_spec');
-      labels.set('window_spec', window.spec_type || '窓種固有仕様');
-      allowed.set('window_spec', specRows.map((row) => row.spec_id));
-      if (specRows.length === 1 && String(window.spec_required ?? '').includes('不要')) {
-        autoValues.set('window_spec', specRows[0].spec_id);
-        readOnly.add('window_spec');
-      }
-    }
-
-    if (specId && specRows.some((row) => row.spec_id === specId)) {
-      const eligibleVariants = uniq(model.variantRelations.filter((row) =>
-        row['選択可否'] === '可' && sourceWindowId(row) === windowId && sourceSpecId(row) === specId
-      ).map((row) => row.variant_id).filter(has), (row) => row);
-      const variantIds = uniq([model.standardVariant, ...eligibleVariants].filter(has), (row) => row);
-      const variantPossible = variantIds.length > 1;
-      if (variantPossible) {
-        visible.add('variant');
-        allowed.set('variant', variantIds.filter((id) => model.variants.some((row) => row.variant_id === id)));
-      }
-
-      const sizeRows = model.normalizedSizes.filter((row) => row.window_id === windowId && row.spec_id === specId);
-      const customRows = model.customRanges.filter((row) => sourceWindowId(row) === windowId && sourceSpecId(row) === specId);
-      const handings = uniq(sizeRows.flatMap((row) => meaningfulHanding(row.handing)), (row) => row);
-      if (handings.length) {
-        visible.add('handing'); required.add('handing'); allowed.set('handing', handings);
-      }
-
-      visible.add('size_mode'); required.add('size_mode');
-      const modes = [];
-      if (sizeRows.length) modes.push('STANDARD');
-      if (customRows.length) modes.push('CUSTOM');
-      allowed.set('size_mode', modes);
-
-      if (sizeMode === 'STANDARD' && sizeRows.length) {
-        visible.add('size'); required.add('size');
-        allowed.set('size', sizeRows.map((row) => row.id));
-      } else if (sizeMode === 'CUSTOM' && customRows.length) {
-        visible.add('custom_w'); visible.add('custom_h'); required.add('custom_w'); required.add('custom_h');
-      }
-
-      const effectiveVariant = variant || (!variantPossible ? model.standardVariant : null);
-      if (!variantPossible || effectiveVariant) {
-        const colorRows = model.colors.filter((row) => row.variant_id === effectiveVariant && isAvailable(row.available));
-        if (colorRows.length) {
-          visible.add('exterior_color'); required.add('exterior_color');
-          allowed.set('exterior_color', uniq(colorRows.map((row) => row.exterior_id), (row) => row));
-          const ext = selectedOne(selection,'exterior_color');
-          if (ext) {
-            visible.add('interior_color'); required.add('interior_color');
-            allowed.set('interior_color', uniq(colorRows.filter((row) => row.exterior_id === ext).map((row) => row.interior_id), (row) => row));
-          }
-        }
-      }
-
-      const windowScreenCandidates = model.screens.filter((row) => row.window_id === windowId && row.presence === 'あり');
-      if (windowScreenCandidates.length) {
-        visible.add('screen_presence');
-        allowed.set('screen_presence',['なし','あり']);
-        if (screenPresence === 'あり') {
-          const forms = uniq(windowScreenCandidates.map(screenFormOf).filter(has),(row)=>row);
-          if (forms.length) { visible.add('screen_form'); allowed.set('screen_form',forms); }
-          const formCandidates = windowScreenCandidates.filter((row) => !screenForm || screenFormOf(row) === screenForm);
-          if (screenForm || forms.length === 1) {
-            const effectiveForm = screenForm || forms[0];
-            const meshes = uniq(formCandidates.map((row) => row.mesh).filter((value)=>
-              has(value) && value !== '対象外' && screenCandidateAllowed(model, effectiveForm, value)
-            ),(row)=>row);
-            if (meshes.length) { visible.add('screen_net'); allowed.set('screen_net',meshes); }
-            const fixedRule = fixedMidrailRule(model, windowId, effectiveForm);
-            const midrails = uniq(formCandidates.map((row) => row.midrail).filter((value) => has(value) && !['対象外','なし（固定）'].includes(value)),(row)=>row);
-            if (!fixedRule && midrails.length) { visible.add('screen_midrail'); allowed.set('screen_midrail',midrails); }
-          }
-        }
-      }
-
-      let glassIds = [];
-      if (sizeMode === 'STANDARD' && sizeId) {
-        glassIds = findSize(model,sizeId)?.glass_ids ?? [];
-      } else if (sizeMode === 'CUSTOM') {
-        const rangeRows = customRows.filter((row) => customRangeMatches(row, selection));
-        glassIds = uniq((rangeRows.length ? rangeRows : customRows).map((row) => sourceGlassId(row)).filter(has),(row)=>row);
-      } else {
-        glassIds = uniq([...sizeRows.flatMap((row)=>row.glass_ids), ...customRows.map((row)=>sourceGlassId(row))].filter(has),(row)=>row);
-      }
-      if (effectiveVariant && effectiveVariant !== model.standardVariant) {
-        glassIds = glassIds.filter((id) => model.variantRelations.some((row) =>
-          row.variant_id === effectiveVariant && sourceWindowId(row) === windowId && sourceSpecId(row) === specId &&
-          sourceGlassId(row) === id && row['選択可否'] === '可'
-        ));
-        if (sizeId) {
-          const sourceSizeIds = new Set(findSize(model,sizeId)?.source_ids ?? []);
-          glassIds = glassIds.filter((id) => !model.variantExclusions.some((row) =>
-            row.variant_id === effectiveVariant && sourceSpecId(row) === specId && sourceGlassId(row) === id &&
-            (sourceSizeIds.has(row.size_id) || row['呼称コード'] === findSize(model,sizeId)?.size_code) &&
-            row['判定'] === '不可'
-          ));
-        }
-      }
-      glassIds = uniq(glassIds,(row)=>row);
-      if (glassIds.length) {
-        visible.add('glass_base'); required.add('glass_base'); allowed.set('glass_base',glassIds);
-      }
-
-      if (glassId && glassIds.includes(glassId)) {
-        const details = model.glassDetails.filter((row) => row.glass_id === glassId);
-        if (details.length) { visible.add('glass_detail'); allowed.set('glass_detail',details.map((row)=>row.glass_detail_id)); }
-        const features = model.glassFeatures.filter((row) => row['対象glass_id'] === glassId);
-        if (features.length) { visible.add('glass_function'); allowed.set('glass_function',features.map((row)=>row.feature_id)); }
-        const selectedDetail = details.find((row) => row.glass_detail_id === selectedOne(selection,'glass_detail'));
-        const glass = model.glasses.find((row) => row.id === glassId);
-        const spacer = selectedDetail?.['スペーサー'] ?? glass?.spacer ?? glass?.['スペーサー'];
-        const gas = selectedDetail?.['ガス'] ?? glass?.gas ?? glass?.['基本ガス'];
-        if (has(spacer)) { visible.add('glass_spacer'); readOnly.add('glass_spacer'); allowed.set('glass_spacer',[spacer]); }
-        if (has(gas)) { visible.add('glass_air_layer'); readOnly.add('glass_air_layer'); allowed.set('glass_air_layer',[gas]); }
-      }
-
-      visible.add('option');
-      const selectedOptions = new Set(selectedMany(selection,'option'));
-      const optionRows = model.options.filter((row) =>
-        (row.window_id === '*' || row.window_id === windowId) &&
-        (!has(row['固有仕様ID']) || row['固有仕様ID'] === '*' || row['固有仕様ID'] === specId)
-      );
-      const optionIds = [];
-      for (const row of optionRows) {
-        const rel = model.optionApplicability.find((one) => one.window_id === windowId && one.option_id === row.id);
-        if (rel?.applicability === 'NON_APPLICABLE') continue;
-        if (rel?.applicability === 'CONDITIONAL_APPLICABLE' && rel.dependency_option_id && !selectedOptions.has(rel.dependency_option_id)) continue;
-        optionIds.push(row.id);
-      }
-      allowed.set('option',uniq(optionIds,(row)=>row));
-    }
+function selectorRawValue(key, displayValue) {
+  if (key === 'panel_count') {
+    if (displayValue === 'NULL(HKK)') return null;
+    if (String(displayValue) === '2' || String(displayValue) === '4') return Number(displayValue);
   }
-  return {allowed, visible, required, readOnly, labels, autoValues};
+  return displayValue;
 }
 
-function normalizeArrays(model, selection) {
-  const out = {};
-  const defs = new Map(model.fields.map((row)=>[row.field_name,row]));
-  for (const [key,value] of Object.entries(selection ?? {})) {
-    const def = defs.get(key);
-    if (!def) continue;
-    out[key] = def.data_type === 'array'
-      ? (Array.isArray(value) ? [...new Set(value.filter(has))] : has(value) ? [value] : [])
-      : value;
-  }
-  return out;
+function selectorValueEquals(key, displayValue, rawValue) {
+  return same(selectorRawValue(key, displayValue), rawValue) || String(selectorRawValue(key, displayValue)) === String(rawValue);
 }
 
-function explicitUnknownErrors(model, inputSelection) {
-  const errors = [];
-  for (const def of model.fields) {
-    if (!(def.field_name in (inputSelection ?? {})) || !['enum','array'].includes(def.data_type)) continue;
-    const base = baseValueRows(model, def.field_name).map((row) => row.canonical_value);
-    const raw = def.data_type === 'array'
-      ? (Array.isArray(inputSelection[def.field_name]) ? inputSelection[def.field_name] : [inputSelection[def.field_name]])
-      : [inputSelection[def.field_name]];
-    for (const value of raw.filter(has)) {
-      if (!base.some((candidate) => same(candidate,value) || String(candidate) === String(value))) {
-        errors.push({code:'SELECTION_NOT_ALLOWED',field:def.field_name,value});
-      }
+function augmentModelForFormalSelectors(model) {
+  const dimensions = selectorDimensions(model);
+  if (!dimensions.length) return { ...model, formalSelectorDimensions:[] };
+  const fields = [...model.fields];
+  const values = [...model.values];
+  for (const [index, dimension] of dimensions.entries()) {
+    const key = dimension.key;
+    if (!fields.some((field) => field.field_name === key)) {
+      fields.push({
+        field_name:key,
+        display_label:dimension.display_name ?? key,
+        display_order:41 + index,
+        data_type:'enum',
+        parent_fields:['window_type'],
+        required_mode:'OPTIONAL',
+        selection_mode:'USER_SELECTABLE',
+        runtime_included:true,
+      });
     }
-  }
-  return errors;
-}
-
-function resolveModel(model, inputSelection = {}) {
-  const selection = normalizeArrays(model,inputSelection);
-  const cleared = [];
-  const errors = explicitUnknownErrors(model,inputSelection);
-  let allowedState;
-
-  for (let iteration=0; iteration<16; iteration++) {
-    const before = JSON.stringify(selection);
-    allowedState = allowedByField(model,selection);
-
-    for (const [key,value] of allowedState.autoValues.entries()) {
-      if (!has(selection[key])) selection[key] = value;
-    }
-    if (allowedState.visible.has('variant') && !has(selection.variant) && model.standardVariant &&
-        (allowedState.allowed.get('variant') ?? []).includes(model.standardVariant)) {
-      selection.variant = model.standardVariant;
-    }
-
-    // Auto-resolved parents can expose valid downstream fields in the same request.
-    // Re-evaluate before pruning so a child supplied with an omitted default parent is not discarded.
-    allowedState = allowedByField(model,selection);
-
-    for (const def of model.fields) {
-      const key = def.field_name;
-      if (!allowedState.visible.has(key)) {
-        if (key in selection) { delete selection[key]; cleared.push({field:key,reason:'NOT_APPLICABLE'}); }
-        continue;
-      }
-      if (!(key in selection)) continue;
-      if (def.data_type === 'array') {
-        const permitted = new Set(allowedState.allowed.get(key) ?? []);
-        const next = selection[key].filter((value)=>permitted.has(value));
-        if (next.length !== selection[key].length) {
-          const removed = selection[key].filter((value)=>!next.includes(value));
-          cleared.push({field:key,reason:'DEPENDENCY',removed});
-          errors.push({code:'SELECTION_INCOMPATIBLE',field:key,value:removed});
-        }
-        if (next.length) selection[key]=next; else delete selection[key];
-      } else if (def.data_type === 'enum') {
-        const permitted = allowedState.allowed.get(key) ?? [];
-        if (has(selection[key]) && !permitted.some((value)=>same(value,selection[key]))) {
-          const removed=selection[key]; delete selection[key]; cleared.push({field:key,reason:'DEPENDENCY',removed});
-          errors.push({code:'SELECTION_INCOMPATIBLE',field:key,value:removed});
-        }
-      }
-    }
-
-    allowedState = allowedByField(model,selection);
-    for (const [key,value] of allowedState.autoValues.entries()) {
-      if (!has(selection[key])) selection[key] = value;
-    }
-    for (const key of ['glass_spacer','glass_air_layer']) {
-      if (!has(selection[key]) && allowedState.visible.has(key) && (allowedState.allowed.get(key) ?? []).length === 1) {
-        selection[key] = allowedState.allowed.get(key)[0];
-      }
-    }
-
-    if (before === JSON.stringify(selection)) break;
-    if (iteration === 15) {
-      const error = new Error('Canonical workbook Runtime resolution exceeded 16 iterations');
-      error.code = 'RUNTIME_RESOLUTION_LOOP';
-      throw error;
-    }
-  }
-
-  allowedState = allowedByField(model,selection);
-
-  if (selection.size_mode === 'CUSTOM' && allowedState.visible.has('custom_w') && allowedState.visible.has('custom_h')) {
-    const w = Number(selection.custom_w), h = Number(selection.custom_h);
-    if (has(selection.custom_w) && !Number.isFinite(w)) errors.push({code:'CUSTOM_SIZE_INVALID_NUMBER',field:'custom_w'});
-    if (has(selection.custom_h) && !Number.isFinite(h)) errors.push({code:'CUSTOM_SIZE_INVALID_NUMBER',field:'custom_h'});
-    if (Number.isFinite(w) && Number.isFinite(h)) {
-      const matches = model.customRanges.filter((row) =>
-        sourceWindowId(row) === selection.window_type && sourceSpecId(row) === selection.window_spec && customRangeMatches(row,selection)
-      );
-      if (!matches.length) errors.push({code:'CUSTOM_SIZE_OUT_OF_RANGE',field:'size',message:'入力寸法は正式Runtimeの特注製作範囲外です。'});
-    }
-  }
-
-  const warnings = [];
-  let manualCheck = false;
-  if (selection.screen_presence === 'あり' && has(selection.screen_net)) {
-    const candidates = model.screens.filter((row) =>
-      row.window_id === selection.window_type && row.presence === 'あり' &&
-      (!has(selection.screen_form) || screenFormOf(row) === selection.screen_form) &&
-      row.mesh === selection.screen_net
-    );
-    const orderRule = screenOrderRule(model, selection.screen_form || screenFormOf(candidates[0]), selection.screen_net);
-    if (candidates.some((row)=>row.unconfirmed_state === 'NEEDS_MFR_CONFIRMATION' || row.estimate_finalization === 'MANUFACTURER_CONFIRMATION_REQUIRED') ||
-        orderRule?.['未確認時アプリ状態'] === 'NEEDS_MFR_CONFIRMATION') {
-      manualCheck = true;
-      warnings.push({
-        code:'NEEDS_MFR_CONFIRMATION',
-        message:'この機能性ネットはサイズにより対応できない場合があります。見積確定前にメーカー確認が必要です。',
-        ruleId:orderRule?.rule_id ?? null,
+    const candidates = uniq([
+      ...(dimension.allowed_values ?? []).map((value) => String(value)),
+      ...(model.selectorCombos ?? []).map((row) => selectorDisplayValue(key,row?.[dimension.rawKey])).filter(has),
+    ], (value) => String(value));
+    for (const value of candidates) {
+      if (values.some((row) => row.field_name === key && String(row.canonical_value) === String(value))) continue;
+      values.push({
+        value_id:`${key}:${value}`,
+        field_name:key,
+        canonical_value:value,
+        display_label:String(value),
+        status:'CURRENT',
+        manual_check:false,
+        user_selectable:true,
+        runtime_selectable:true,
+        source:{ formalSelectorModel:true, rawKey:dimension.rawKey },
       });
     }
   }
+  return {
+    ...model,
+    fields,
+    values,
+    formalSelectorDimensions:dimensions.map((row) => row.key),
+    formalSelectorDimensionDefs:dimensions,
+  };
+}
 
+function formalSelectorKeys(model) { return model.formalSelectorDimensions ?? []; }
+function formalSelectorApplies(model, selection) {
+  if (!formalSelectorKeys(model).length) return false;
+  const windowId = selection?.window_type;
+  if (FORMAL_SELECTOR_WINDOWS.has(windowId)) return true;
+  return windowId === (model.selectorModel?.window_id ?? model.selectorModel?.window_type);
+}
+function selectorTupleMatches(model, row, selection, keys) {
+  for (const key of keys) {
+    if (!has(selection?.[key])) continue;
+    if (!selectorValueEquals(key,selection[key],row?.[selectorRawKey(key)])) return false;
+  }
+  return true;
+}
+function formalSelectorState(model, selection) {
+  const keys = formalSelectorKeys(model);
+  if (!keys.length || !formalSelectorApplies(model,selection)) return null;
+  const candidates = (model.selectorCombos ?? []).filter((row)=>selectorTupleMatches(model,row,selection,keys));
+  const completed = keys.every((key)=>has(selection[key]));
+  const exact = completed ? candidates.find((row)=>keys.every((key)=>selectorValueEquals(key,selection[key],row?.[selectorRawKey(key)]))) : null;
+  return { keys, candidates, completed, exact };
+}
+function formalRuleSelector(rule) { return rule?.selector_json ?? rule?.selector ?? {}; }
+function formalRuleWindow(rule) {
+  const selector = formalRuleSelector(rule);
+  if (has(selector.window_type)) return selector.window_type;
+  const productNode = rule?.product_node ?? rule?.productNode ?? rule?.windowId;
+  return has(productNode) ? String(productNode).split('::')[0] : null;
+}
+function formalRuleSpec(rule) {
+  const selector = formalRuleSelector(rule);
+  return selector.specific_spec ?? selector.window_spec ?? null;
+}
+
+function visibleFieldMapToBridgeState(model, selection, fieldList, errors, warnings, clearedFields) {
+  const visibleByKey = new Map(fieldList.map((field)=>[field.field_name,field]));
   const fields = {};
   for (const def of model.fields) {
-    const isVisible = allowedState.visible.has(def.field_name);
-    const allowed = allowedState.allowed.get(def.field_name) ?? [];
-    const value = def.field_name in selection ? clone(selection[def.field_name]) : null;
-    const resolved = isVisible && has(value) && (allowedState.readOnly.has(def.field_name) || ['glass_spacer','glass_air_layer'].includes(def.field_name));
+    const visible = visibleByKey.get(def.field_name);
+    const value = has(selection[def.field_name]) || Array.isArray(selection[def.field_name]) ? clone(selection[def.field_name]) : null;
+    const allowedValues = visible ? (visible.values ?? []).map((row)=>row?.canonical_value ?? row).filter((value)=>value !== undefined) : [];
+    const readOnly = Boolean(visible?.readOnly || (def.selection_mode === 'AUTO_RESOLVE' && allowedValues.length === 1));
     fields[def.field_name] = {
       value,
-      state: !isVisible ? 'NOT_APPLICABLE' : value === null ? 'UNSET' : resolved ? 'RESOLVED' : 'SELECTED',
-      visibility: isVisible ? 'SHOW' : 'HIDE',
-      required: isVisible && allowedState.required.has(def.field_name),
-      allowed_values: allowed,
-      readOnly: isVisible && allowedState.readOnly.has(def.field_name),
-      display_label: allowedState.labels.get(def.field_name) ?? null,
+      state: !visible ? 'NOT_APPLICABLE' : value === null ? 'UNSET' : readOnly ? 'RESOLVED' : 'SELECTED',
+      visibility: visible ? 'SHOW' : 'HIDE',
+      required:Boolean(visible?.required),
+      allowed_values:allowedValues,
+      readOnly,
+      display_label:visible?.display_label ?? def.display_label ?? null,
       unit:def.unit ?? null,
     };
   }
-  const missing = Object.entries(fields).filter(([,state]) => state.required && state.visibility === 'SHOW' && !has(state.value)).map(([name])=>name);
-  const uniqueErrors = uniq(errors, (row) => JSON.stringify([row.code,row.field,row.value,row.message]));
+  const missing = Object.entries(fields).filter(([,state])=>state.visibility==='SHOW' && state.required && !has(state.value)).map(([name])=>name);
+  const uniqueErrors = uniq(errors,(row)=>JSON.stringify([row.code,row.field,row.value,row.message]));
+  const manualCheck = warnings.length > 0;
   const status = uniqueErrors.length ? 'INVALID' : missing.length ? 'INCOMPLETE' : manualCheck ? 'MANUAL_CHECK' : 'VALID';
   return {
     fields,
     derived_components:new Set(),
     derived_entities:[],
     derived_options:[],
-    warnings,
+    warnings:uniqueWarnings(warnings),
     matched_invalid_rules:uniqueErrors.filter((row)=>row.ruleId).map((row)=>row.ruleId),
     errors:uniqueErrors,
     status,
     missing_required_fields:missing,
-    cleared_fields:cleared,
+    cleared_fields:[...new Set(clearedFields)].map((field)=>({field,reason:'DEPENDENCY'})),
+    order_ready:status === 'VALID',
   };
+}
+
+function resolveModel(model, inputSelection = {}) {
+  const selection = clone(inputSelection ?? {});
+  const clearedFields = [];
+  const errors = [];
+  const warnings = [];
+  const fields = [];
+  const pushField = (field_name, values, required=false, visible=true, extra={}) => {
+    const prior = fields.findIndex((field)=>field.field_name===field_name);
+    const next = { field_name, values, ...requirement(field_name,required,visible), ...extra };
+    if (prior >= 0) fields[prior] = next; else fields.push(next);
+  };
+  const clearField = (key) => {
+    if (has(selection[key]) || Array.isArray(selection[key])) {
+      delete selection[key];
+      clearedFields.push(key);
+    }
+  };
+
+  const windowRows = baseValueRows(model,'window_type');
+  pushField('window_type',windowRows,true,true);
+  const windowId = selectedOne(selection,'window_type');
+  if (!windowId) return visibleFieldMapToBridgeState(model,selection,fields,errors,warnings,clearedFields);
+  const window = model.windows.find((row)=>same(row.id,windowId));
+  if (!window) errors.push({code:'INVALID_WINDOW_TYPE',field:'window_type',value:windowId});
+
+  const specRows = baseValueRows(model,'window_spec').filter((row)=>same(sourceWindowId(row.source),windowId));
+  if (specRows.length) pushField('window_spec',specRows,true,true,{display_label:window?.spec_type ?? '窓種固有仕様'});
+  let specId = selectedOne(selection,'window_spec');
+  if (specId && !specRows.some((row)=>same(row.canonical_value,specId))) { clearField('window_spec'); specId=null; }
+
+  if (formalSelectorApplies(model,selection)) {
+    let running = model.selectorCombos ?? [];
+    for (const key of formalSelectorKeys(model)) {
+      const rawKey = selectorRawKey(key);
+      const values = uniq(running.map((row)=>selectorDisplayValue(key,row?.[rawKey])).filter(has),(value)=>String(value)).map((value)=>
+        baseValueRows(model,key).find((row)=>String(row.canonical_value)===String(value)) ?? ({
+          value_id:`${key}:${value}`,field_name:key,canonical_value:value,display_label:String(value),status:'CURRENT',manual_check:false,user_selectable:true,runtime_selectable:true,source:{formalSelectorModel:true,rawKey},
+        })
+      );
+      pushField(key,values,true,true);
+      if (has(selection[key])) {
+        if (!values.some((row)=>String(row.canonical_value)===String(selection[key]))) {
+          const at=formalSelectorKeys(model).indexOf(key);
+          clearField(key);
+          for (const downstream of formalSelectorKeys(model).slice(at+1)) clearField(downstream);
+          break;
+        }
+        running=running.filter((row)=>selectorValueEquals(key,selection[key],row?.[rawKey]));
+      }
+    }
+    const refreshed=formalSelectorState(model,selection);
+    if (refreshed?.completed && !refreshed.exact) errors.push({code:'FORMAL_SELECTOR_COMBINATION_BLOCKED',field:'window_type',value:windowId});
+  } else {
+    for (const key of formalSelectorKeys(model)) clearField(key);
+  }
+
+  const variantRows = baseValueRows(model,'variant').filter((row)=>{
+    const rel=model.variantRelations.filter((relation)=>same(relation.variant_id,row.canonical_value));
+    return !rel.length || rel.some((relation)=>same(relation.window_id??relation['窓種ID'],windowId));
+  });
+  if (variantRows.length) pushField('variant',variantRows,false,true);
+  if (selection.variant && !variantRows.some((row)=>same(row.canonical_value,selection.variant))) clearField('variant');
+
+  const handingValues = uniq(specRows.flatMap((row)=>meaningfulHanding(row.source?.['開き勝手'] ?? row.source?.handing)),(value)=>value).map((value)=>baseValueRows(model,'handing').find((row)=>same(row.canonical_value,value))).filter(Boolean);
+  if (handingValues.length) pushField('handing',handingValues,false,true);
+  if (selection.handing && !handingValues.some((row)=>same(row.canonical_value,selection.handing))) clearField('handing');
+
+  const customRules = model.document?.working_extensions?.custom_dimension_rules?.rules ?? [];
+  const formalRulesForWindow = customRules.filter((rule)=>{
+    if (!same(formalRuleWindow(rule),windowId)) return false;
+    const ruleSpec=formalRuleSpec(rule);
+    return !specId || !ruleSpec || same(ruleSpec,specId);
+  });
+  const hasFormalCustom = formalRulesForWindow.length > 0;
+  const hasBaselineCustom = model.customRanges.some((row)=>same(row['窓種ID']??row.window_id,windowId) && (!specId || same(row['固有仕様ID']??row.spec_id,specId)));
+  const sizeModes = baseValueRows(model,'size_mode').filter((row)=>row.canonical_value==='STANDARD' || (row.canonical_value==='CUSTOM' && (hasFormalCustom||hasBaselineCustom)));
+  if (specRows.length === 0 || specId || String(window?.spec_required??'').includes('不要')) pushField('size_mode',sizeModes,true,true);
+  if (selection.size_mode && !sizeModes.some((row)=>same(row.canonical_value,selection.size_mode))) clearField('size_mode');
+
+  if (selection.size_mode==='STANDARD') {
+    const rows=baseValueRows(model,'size').filter((row)=>same(row.source?.window_id,windowId)&&(!specId||same(row.source?.spec_id,specId)));
+    if (rows.length) pushField('size',rows,true,true);
+    if (selection.size && !rows.some((row)=>same(row.canonical_value,selection.size))) clearField('size');
+    clearField('custom_w'); clearField('custom_h');
+  } else if (selection.size_mode==='CUSTOM' && (hasFormalCustom||hasBaselineCustom)) {
+    pushField('custom_w',[],true,true); pushField('custom_h',[],true,true); clearField('size');
+  }
+
+  const effectiveVariant = selection.variant ?? model.standardVariant;
+  const colorRows = model.colors.filter((row)=>!effectiveVariant || row.variant_id===effectiveVariant).filter((row)=>row.available===true||row.available==='○'||row.available==='可');
+  const exteriorRows = uniq(colorRows,(row)=>row.exterior_id).map((row)=>baseValueRows(model,'exterior_color').find((value)=>same(value.canonical_value,row.exterior_id))).filter(Boolean);
+  if (exteriorRows.length) pushField('exterior_color',exteriorRows,true,true);
+  if (selection.exterior_color&&!exteriorRows.some((row)=>same(row.canonical_value,selection.exterior_color))) clearField('exterior_color');
+  if (selection.exterior_color) {
+    const interiorIds=uniq(colorRows.filter((row)=>same(row.exterior_id,selection.exterior_color)).map((row)=>row.interior_id),(value)=>value);
+    const interiorRows=interiorIds.map((value)=>baseValueRows(model,'interior_color').find((row)=>same(row.canonical_value,value))).filter(Boolean);
+    if (interiorRows.length) pushField('interior_color',interiorRows,true,true);
+    if (selection.interior_color&&!interiorRows.some((row)=>same(row.canonical_value,selection.interior_color))) clearField('interior_color');
+  } else clearField('interior_color');
+
+  const windowScreens=model.screens.filter((row)=>same(row.window_id,windowId)&&row.presence==='あり');
+  if (windowScreens.length) {
+    pushField('screen_presence',baseValueRows(model,'screen_presence'),false,true);
+    if (selection.screen_presence==='あり') {
+      const forms=uniq(windowScreens.map((row)=>row.screen_type??row.label).filter(has),(value)=>value);
+      const formRows=forms.map((value)=>baseValueRows(model,'screen_form').find((row)=>same(row.canonical_value,value))).filter(Boolean);
+      if (formRows.length) pushField('screen_form',formRows,false,true);
+      const form=selection.screen_form;
+      const screenCandidates=windowScreens.filter((row)=>!form||same(row.screen_type??row.label,form));
+      const midrails=uniq(screenCandidates.map((row)=>row.midrail).filter((value)=>has(value)&&!['対象外','なし（固定）'].includes(value)),(value)=>value);
+      const midrailRows=midrails.map((value)=>baseValueRows(model,'screen_midrail').find((row)=>same(row.canonical_value,value))).filter(Boolean);
+      if(midrailRows.length)pushField('screen_midrail',midrailRows,false,true);
+      const meshes=uniq(screenCandidates.map((row)=>row.mesh).filter((value)=>has(value)&&value!=='対象外'),(value)=>value);
+      const netRows=meshes.map((value)=>baseValueRows(model,'screen_net').find((row)=>same(row.canonical_value,value))).filter(Boolean);
+      if(netRows.length)pushField('screen_net',netRows,false,true);
+    } else { clearField('screen_form'); clearField('screen_midrail'); clearField('screen_net'); }
+  } else { clearField('screen_presence'); clearField('screen_form'); clearField('screen_midrail'); clearField('screen_net'); }
+
+  let glassRows=[];
+  if (formalSelectorApplies(model,selection) && has(selection.glass_configuration)) {
+    const triple=selection.glass_configuration==='TRIPLE';
+    glassRows=baseValueRows(model,'glass_base').filter((row)=>{
+      const category=String(row.source?.['ガラス大分類']??row.display_label??'');
+      return triple ? category.includes('トリプル') : !category.includes('トリプル');
+    });
+  } else if (selection.size_mode==='STANDARD' && selection.size) {
+    const sizeRow=baseValueRows(model,'size').find((row)=>same(row.canonical_value,selection.size));
+    const ids=sizeRow?.source?.glass_ids??[];
+    glassRows=baseValueRows(model,'glass_base').filter((row)=>ids.some((id)=>same(id,row.canonical_value)));
+  } else glassRows=baseValueRows(model,'glass_base');
+  if (glassRows.length) pushField('glass_base',glassRows,true,true);
+  if(selection.glass_base&&!glassRows.some((row)=>same(row.canonical_value,selection.glass_base))) clearField('glass_base');
+  if(selection.glass_base){
+    const detailRows=baseValueRows(model,'glass_detail').filter((row)=>same(row.source?.glass_id,selection.glass_base));
+    if(detailRows.length)pushField('glass_detail',detailRows,false,true);
+    const functionRows=baseValueRows(model,'glass_function').filter((row)=>same(row.source?.['対象glass_id'],selection.glass_base));
+    if(functionRows.length)pushField('glass_function',functionRows,false,true);
+    const glass=model.glasses.find((row)=>same(row.id,selection.glass_base));
+    const selectedDetail=detailRows.find((row)=>same(row.canonical_value,selection.glass_detail));
+    const spacer=selectedDetail?.source?.['スペーサー']??glass?.spacer??glass?.['スペーサー'];
+    const gas=selectedDetail?.source?.['ガス']??glass?.gas??glass?.['基本ガス'];
+    if(has(spacer)){
+      const rows=baseValueRows(model,'glass_spacer').filter((row)=>same(row.canonical_value,spacer));
+      if(rows.length)pushField('glass_spacer',rows,false,true,{readOnly:true});
+      if(!has(selection.glass_spacer))selection.glass_spacer=spacer;
+    }
+    if(has(gas)){
+      const rows=baseValueRows(model,'glass_air_layer').filter((row)=>same(row.canonical_value,gas));
+      if(rows.length)pushField('glass_air_layer',rows,false,true,{readOnly:true});
+      if(!has(selection.glass_air_layer))selection.glass_air_layer=gas;
+    }
+  } else { clearField('glass_detail'); clearField('glass_function'); clearField('glass_spacer'); clearField('glass_air_layer'); }
+
+  const optionRows=baseValueRows(model,'option').filter((row)=>{
+    const source=row.source??{};
+    return source.window_id==='*'||!has(source.window_id)||same(source.window_id,windowId);
+  });
+  if(optionRows.length)pushField('option',optionRows,false,true);
+
+  if (selection.size_mode==='CUSTOM' && has(selection.custom_w) && has(selection.custom_h)) {
+    const w=Number(selection.custom_w),h=Number(selection.custom_h);
+    if(!Number.isFinite(w))errors.push({code:'CUSTOM_SIZE_INVALID_NUMBER',field:'custom_w'});
+    if(!Number.isFinite(h))errors.push({code:'CUSTOM_SIZE_INVALID_NUMBER',field:'custom_h'});
+    if(Number.isFinite(w)&&Number.isFinite(h)){
+      const applicable=formalRulesForWindow.filter((rule)=>{
+        const selector=formalRuleSelector(rule);
+        if(selector.selector_id && formalSelectorApplies(model,selection)){
+          const exact=formalSelectorState(model,selection)?.exact;
+          if(!exact||!same(selector.selector_id,exact.selector_id))return false;
+        }
+        if(selector.glass_base){
+          const ids=Array.isArray(selector.glass_base)?selector.glass_base:[selector.glass_base];
+          if(selection.glass_base&&!ids.includes(selection.glass_base))return false;
+        }
+        return true;
+      });
+      if (formalSelectorApplies(model,selection) && !formalSelectorState(model,selection)?.completed) errors.push({code:'MISSING_SELECTOR',field:'size_mode',value:'CUSTOM'});
+      else if(applicable.length){
+        const inside=applicable.some((rule)=>{
+          const geometry=rule.geometry_rule_json??{};
+          if(geometry.type==='AUTO_RECT'&&typeof geometry.bounds==='string'){
+            const wm=geometry.bounds.match(/(-?\d+(?:\.\d+)?)<=W<=(-?\d+(?:\.\d+)?)/);
+            const hm=geometry.bounds.match(/(-?\d+(?:\.\d+)?)<=H<=(-?\d+(?:\.\d+)?)/);
+            return (!wm||(w>=Number(wm[1])&&w<=Number(wm[2])))&&(!hm||(h>=Number(hm[1])&&h<=Number(hm[2])));
+          }
+          if(geometry.type==='AUTO_POLYGON'&&Array.isArray(geometry.points)){
+            let insidePoly=false; const points=geometry.points;
+            for(let i=0,j=points.length-1;i<points.length;j=i++){
+              const [xi,yi]=points[i],[xj,yj]=points[j];
+              const intersects=((yi>h)!==(yj>h))&&(w<(xj-xi)*(h-yi)/(yj-yi)+xi);
+              if(intersects)insidePoly=!insidePoly;
+            }
+            const onBoundary=points.some(([x1,y1],i)=>{
+              const [x2,y2]=points[(i+1)%points.length];
+              const cross=(w-x1)*(y2-y1)-(h-y1)*(x2-x1);
+              if(Math.abs(cross)>1e-7)return false;
+              return w>=Math.min(x1,x2)&&w<=Math.max(x1,x2)&&h>=Math.min(y1,y2)&&h<=Math.max(y1,y2);
+            });
+            return insidePoly||onBoundary;
+          }
+          return true;
+        });
+        if(!inside)errors.push({code:'CUSTOM_SIZE_OUT_OF_RANGE',field:'size',message:'入力寸法は正式Runtimeの特注製作範囲外です。'});
+      } else if(hasFormalCustom) errors.push({code:'CUSTOM_SELECTOR_RULE_NOT_FOUND',field:'size_mode'});
+      else {
+        const matches=model.customRanges.filter((row)=>{
+          if(!same(row['窓種ID']??row.window_id,windowId))return false;
+          if(specId&&!same(row['固有仕様ID']??row.spec_id,specId))return false;
+          return w>=Number(row['W_MIN(mm)'])&&w<=Number(row['W_MAX(mm)'])&&h>=Number(row['H_MIN(mm)'])&&h<=Number(row['H_MAX(mm)']);
+        });
+        if(!matches.length)errors.push({code:'CUSTOM_SIZE_OUT_OF_RANGE',field:'size',message:'入力寸法は正式Runtimeの特注製作範囲外です。'});
+      }
+    }
+  }
+
+  const selectorAfter=formalSelectorState(model,selection);
+  if(selectorAfter?.completed&&!selectorAfter.exact)errors.push({code:'UNREACHABLE_TUPLE',field:'window_type',value:windowId});
+  const glassContract=model.document?.working_extensions?.glass_manufacturability;
+  if(selection.glass_base&&glassContract?.exact_matrix_status==='ESTIMATE_CONFIRM_REQUIRED') warnings.push(glassContract.user_facing_requirement??'メーカー見積で最終確認してください。');
+  return visibleFieldMapToBridgeState(model,selection,fields,errors,warnings,clearedFields);
 }
 
 export function adaptCanonicalWorkbookReferenceV1(runtimePackage) {
@@ -367,7 +384,8 @@ export function adaptCanonicalWorkbookReferenceV1(runtimePackage) {
     error.code = 'RUNTIME_ADAPTER_SCHEMA_MISMATCH';
     throw error;
   }
-  const model = createModel(document);
+  const baseModel=createModel(document);
+  const model=augmentModelForFormalSelectors(baseModel);
   const master = Object.freeze({
     fields:Object.freeze(model.fields.map((row)=>Object.freeze(row))),
     values:Object.freeze(model.values.map((row)=>Object.freeze(row))),
@@ -377,14 +395,13 @@ export function adaptCanonicalWorkbookReferenceV1(runtimePackage) {
       standardSizeRecords:model.normalizedSizes.length,
       sourceStandardSizeRows:model.provider.sizes?.filter(ACTIVE).length ?? 0,
       targetWindowSizeRows:Object.fromEntries(model.windows.map((window)=>[window.id,(model.provider.sizes ?? []).filter((row)=>ACTIVE(row)&&row.window_id===window.id).length])),
-      customDimensionRules:model.customRanges.length,
+      customDimensionRules:(document?.working_extensions?.custom_dimension_rules?.rules?.length ?? model.customRanges.length),
+      formalSelectorDimensions:model.formalSelectorDimensions.length,
+      formalSelectorCombinations:model.selectorCombos.length,
       manualConfirmation:true,
       sourcePackageVersion:document.package_version,
     }),
     canonicalWorkbook:model,
   });
-  return Object.freeze({
-    master,
-    resolver:(selection)=>resolveModel(model,selection),
-  });
+  return Object.freeze({ master, resolver:(selection)=>resolveModel(model,selection) });
 }

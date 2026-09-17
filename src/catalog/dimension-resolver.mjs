@@ -40,7 +40,10 @@ export function evaluateDimension(catalog,productId,selection={}){
   const rules=dimensionRules(catalog,productId).filter((rule)=>selectorMatches(rule.selector??{},selection,context));
   if(!rules.length)return{status:"BLOCK",message:"選択条件に対応する正式な特注寸法ルールがありません。",matchedRuleIds:[],ruleTypes:[]};
   const review=rules.filter((rule)=>REVIEW_TYPES.has(rule.type));
-  const reviewInside=review.filter((rule)=>rule.type==="COMPOUND_GATE"||inBounds(width,height,rule.bounds));
+  // REVIEW_REQUIRED is only valid inside the formal rule's explicit outer W/H bounds.
+  // An unbounded SOURCE_GRAPH/COMPOUND rule still reviews because null bounds mean "not machine-readable",
+  // but a bounded rule must fail closed outside its stated range.
+  const reviewInside=review.filter((rule)=>inBounds(width,height,rule.bounds));
   if(reviewInside.length)return{
     status:"REVIEW_REQUIRED",
     message:"原本グラフまたは複合条件の確認が必要です。発注前にLIXIL一次資料・見積システムで確認してください。",

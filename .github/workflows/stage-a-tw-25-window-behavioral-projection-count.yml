@@ -1,0 +1,40 @@
+name: Stage A TW 25-Window Behavioral Projection Count
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/stage-a-tw-25-window-behavioral-projection-count.yml'
+      - 'scripts/stage-a-tw-behavioral-projection-count-pilot.mjs'
+      - 'src/catalog/runtime-master/**'
+      - 'src/catalog/**'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: stage-a-tw-25-window-behavioral-projection-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  recovery_gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Preserve baseline and close repeated full-run route
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo 'TW_25_WINDOW_FULL_RERUN_ROUTE=CLOSED'
+          echo 'BASELINE_RUN=34920668737'
+          echo 'BASELINE_HEAD=2a2bfb2643b186ff4881f26d3b54873ede1137da'
+          echo 'REPORT_COUNT=25'
+          echo 'COUNTED_WINDOW_COUNT=20'
+          echo 'UNVERIFIED_WINDOW_COUNT=5'
+          echo 'BASELINE_COUNTED_TERMINAL_CONTEXTS=466674167253565480'
+          echo 'BASELINE_COUNTED_CUSTOM_PENDING_CONTEXTS=40'
+          echo 'BASELINE_PROJECTION_MEMBER_CHECK_COUNT=51939'
+          echo 'FAILED_WINDOWS=SWT-LIX-TW-HIGH-YOKO,SWT-LIX-TW-SHUT-HIKI,SWT-LIX-TW-TERRACE-DOOR,SWT-LIX-TW-SAIHU-KATTEGUCHI,SWT-LIX-TW-KATTEGUCHI'
+          echo 'NEXT_ACTIVE_ROUTE=TW_FIVE_FAILURE_DIAGNOSTIC_THEN_RECOVERY_ONLY'
+          echo 'APP_INTEGRATION_READY=false'
+          echo 'RELEASE_INPUT_GATE=BLOCKED'

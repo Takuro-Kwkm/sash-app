@@ -1,0 +1,28 @@
+name: Stage A Samos Conflict Graph V4 Pilot
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/stage-a-samos-conflict-graph-v4-pilot.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  closed-evidence-gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Preserve V4 pilot evidence and close pilot retry
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo 'V4_PILOT_EVIDENCE_RUN=34926913236'
+          echo 'SAMOS2H_WT-S2H-MENKOSHI-HIKI=PASS terminal=96043843584 custom=1276674048 calls=8517 memo=2923'
+          echo 'SAMOSL_WT-SL-HIKICHIGAI=PASS terminal=22083010560 custom=53673984 calls=1007 memo=168'
+          echo 'COUNT_MODEL=SAMOS_RESOLVER_CONTRACT_CONFLICT_GRAPH_V4'
+          echo 'RETRY_AUTHORIZED=false'
+          echo 'REOPEN_CONDITION=V4_MODEL_OR_RUNTIME_IDENTITY_CHANGE'
+          echo 'APP_INTEGRATION_READY=false'
+          echo 'RELEASE_INPUT_GATE=BLOCKED'

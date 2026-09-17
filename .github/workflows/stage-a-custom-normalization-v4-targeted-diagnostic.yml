@@ -1,0 +1,57 @@
+name: Stage A CUSTOM Normalization V4 Targeted Diagnostic
+
+on:
+  push:
+    branches:
+      - feat/new-construction-runtime-ui-v16-20260910
+    paths:
+      - '.github/workflows/stage-a-custom-normalization-v4-targeted-diagnostic.yml'
+      - 'scripts/stage-a-custom-normalization-v4-targeted-diagnostic.mjs'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: stage-a-custom-normalization-v4-targeted-diagnostic
+  cancel-in-progress: true
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      HEAD_SHA: ${{ github.sha }}
+    steps:
+      - name: Checkout exact push HEAD
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Exact SHA and syntax gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          actual="$(git rev-parse HEAD)"
+          test "$actual" = "$HEAD_SHA"
+          node --check scripts/stage-a-custom-normalization-v4-targeted-diagnostic.mjs
+          echo "EXACT_HEAD_GATE=PASS sha=$actual"
+
+      - name: Run targeted CUSTOM normalization diagnostic
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts/stage-a-custom-normalization-v4-targeted
+          node scripts/stage-a-custom-normalization-v4-targeted-diagnostic.mjs | tee artifacts/stage-a-custom-normalization-v4-targeted/diagnostic.log
+
+      - name: Upload targeted diagnostic evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: stage-a-custom-normalization-v4-targeted
+          path: artifacts/stage-a-custom-normalization-v4-targeted/
+          if-no-files-found: error

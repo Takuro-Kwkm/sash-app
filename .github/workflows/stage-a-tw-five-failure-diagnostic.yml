@@ -1,0 +1,36 @@
+name: Stage A TW Five-Failure Diagnostic
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/stage-a-tw-five-failure-diagnostic.yml'
+      - 'scripts/stage-a-tw-five-failure-diagnostic.mjs'
+      - 'src/catalog/runtime-master/**'
+      - 'src/catalog/**'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: stage-a-tw-five-failure-diagnostic-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  completed_gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Preserve diagnostic evidence and close route
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo 'TW_FIVE_FAILURE_DIAGNOSTIC_ROUTE=CLOSED'
+          echo 'EVIDENCE_RUN=34921207749'
+          echo 'RULE_SHAPE_WINDOWS=SWT-LIX-TW-TERRACE-DOOR,SWT-LIX-TW-SAIHU-KATTEGUCHI,SWT-LIX-TW-KATTEGUCHI'
+          echo 'RULE_SHAPE_RESULT=ONLY_SELECTION_DENIAL_ROW_USES_UNIMPLEMENTED_CONDITION_KEY_シリンダー仕様'
+          echo 'HIGH_YOKO_OPERATION_TYPE=4_RAW_TO_2_ELECTRICAL_CLASSES'
+          echo 'SHUT_HIKI_SHUTTER_TYPE=5_RAW_TO_2_ELECTRICAL_CLASSES'
+          echo 'NEXT_ACTIVE_ROUTE=TW_FIVE_FAILURE_RECOVERY_V2'
+          echo 'APP_INTEGRATION_READY=false'
+          echo 'RELEASE_INPUT_GATE=BLOCKED'

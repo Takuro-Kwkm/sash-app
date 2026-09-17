@@ -1,0 +1,47 @@
+name: Stage A Non-TW 17-Window Terminal Structural Recovery
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/stage-a-nontw-17-window-terminal-structural-recovery.yml'
+      - 'scripts/stage-a-nontw-discrete-exact-runner.mjs'
+      - 'scripts/stage-a-resolver-derived-contract-v2-pilot.mjs'
+      - 'src/catalog/runtime-master/product-module-runtime-adapter.mjs'
+      - 'src/catalog/runtime-master/canonical-workbook-reference-v1-adapter.mjs'
+      - 'src/catalog/runtime-master/runtime-app-bridge.mjs'
+      - 'src/catalog/runtime-master/runtime-master-registry.mjs'
+      - 'src/catalog/catalog-resolver.mjs'
+      - 'src/catalog/resolver-values.mjs'
+      - 'src/catalog/resolver-auto.mjs'
+      - 'src/catalog/selector.mjs'
+      - 'src/catalog/selector-ops.mjs'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: stage-a-nontw-17-terminal-structural-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  closed-evidence-gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 1
+    steps:
+      - name: Preserve timeout evidence and close same-condition retry
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo 'TASK_CLASSIFICATION=NON-PRODUCT-MASTER'
+          echo 'PRODUCT_MASTER_MUTATION=0'
+          echo 'STRUCTURAL_V2_RUN_ID=34925506645'
+          echo 'STRUCTURAL_V2_EVIDENCE_HEAD=7036f7a39bee01d0cf313a80b960a925be2860d8'
+          echo 'FAILURE_TYPE=PERFORMANCE_TIMEOUT'
+          echo 'SAMOS2H_FIRST_BATCH_TIMEOUT_COUNT=6'
+          echo 'STATE_CHANGED=false'
+          echo 'RETRY_AUTHORIZED=false'
+          echo 'STRUCTURAL_V2_RETRY_GATE=CLOSED'
+          echo 'SUPERSEDED_BY=STRUCTURAL_AUDIT_CACHE_V3_PILOT'
+          echo 'APP_INTEGRATION_READY=false'
+          echo 'RELEASE_INPUT_GATE=BLOCKED'

@@ -1,0 +1,32 @@
+name: Stage A APW430 Source Behavior Projection V1
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/stage-a-apw430-behavior-projection-v1.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  closed-evidence-gate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Preserve APW430 projection evidence and close same-condition retry
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo 'APW430_BEHAVIOR_PROJECTION_V1_ROUTE=CLOSED'
+          echo 'EVIDENCE_RUN=34946896020'
+          echo 'EVIDENCE_HEAD=beaeb0e57f17655338a49c655b4471e3c87c5a99'
+          echo 'EVIDENCE_ARTIFACT_ID=10387836194'
+          echo 'RECOVERY_WINDOW_COUNT=3'
+          echo 'RECOVERY_EXACT_DISCRETE_TERMINAL_CONTEXT_COUNT=808800'
+          echo 'RECOVERY_CUSTOM_PENDING_CONTEXT_COUNT=480'
+          echo 'UNVERIFIED_RECOVERY_WINDOW_COUNT=0'
+          echo 'EVIDENCE_DIGEST=864da15c735254a1871511543cfc30dc790c4834a780aafdfacf48fe9c0be015'
+          echo 'RETRY_AUTHORIZED=false'
+          echo 'REOPEN_CONDITION=RUNTIME_ADAPTER_UI_RULE_OR_PROJECTION_MODEL_CHANGE'
+          echo 'APP_INTEGRATION_READY=false'
+          echo 'RELEASE_INPUT_GATE=BLOCKED'

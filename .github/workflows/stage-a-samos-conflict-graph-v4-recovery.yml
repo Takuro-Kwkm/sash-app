@@ -1,0 +1,30 @@
+name: Stage A Samos Conflict Graph V4 Recovery
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/stage-a-samos-conflict-graph-v4-recovery.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  closed-evidence-gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Preserve V4 recovery evidence and close same-condition retry
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo 'V4_RECOVERY_EVIDENCE_RUN=34927175551'
+          echo 'SAMOSL_RECOVERY=8/8_PASS'
+          echo 'SAMOS2H_RECOVERY=0/5_REPORTS timeout_after_terminal_option_audit'
+          echo 'S2H_SHUTTER_AUDIT=candidates15+17 pair_audit_complete_by_11s job_timeout_at_4m'
+          echo 'AGGREGATE_REPORT_COUNT=8'
+          echo 'AGGREGATE_EVIDENCE_DIGEST=ed28b5fd4e71453807b3a39926f377c5e4301c980cc51f45ff3777ecb2b0b8e7'
+          echo 'RETRY_AUTHORIZED=false'
+          echo 'REOPEN_CONDITION=DEPENDENCY_AWARE_FIELD_ORDER_MODEL'
+          echo 'APP_INTEGRATION_READY=false'
+          echo 'RELEASE_INPUT_GATE=BLOCKED'

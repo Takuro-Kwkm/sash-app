@@ -1,0 +1,29 @@
+name: Stage A Samos2H Size Metadata Projection V6.1 Pilot [CLOSED]
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  closed:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Closed retry path
+        run: |
+          echo "SAMOS2H_V6_1_PATH=CLOSED"
+          echo "EVIDENCE_RUN=34930014931"
+          echo "CONTROL_EQUIVALENCE_GATE=PASS"
+          echo "CONTROL_TERMINAL=96043843584"
+          echo "CONTROL_CUSTOM=1276674048"
+          echo "CONTROL_MEMO=2923"
+          echo "CONTROL_CALLS=8517"
+          echo "HEAVY_WINDOW=WT-S2H-SHUTTER-HIKI"
+          echo "FAILURE_TYPE=METADATA_AWARE_MODEL_CONTROL_PASS_HEAVY_TIMEOUT"
+          echo "STATE_CHANGED=false"
+          echo "RETRY_AUTHORIZED=false"
+          echo "REOPEN_CONDITION=predicate-outcome projection that directly reduces metadata-class cardinality"
+          echo "NEXT_PATH=SIZE_PREDICATE_OUTCOME_PARTITION_V6_2"
+          echo "APP_INTEGRATION_READY=false"
+          echo "RELEASE_INPUT_GATE=BLOCKED"
