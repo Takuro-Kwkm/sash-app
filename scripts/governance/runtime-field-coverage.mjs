@@ -62,24 +62,47 @@ function literalAdapterFields(integration) {
   return fields;
 }
 
-function mapDefinitions(definitions, integration) {
+// The UI contract is the single classifier for source fields. A source field is:
+// - excluded only when the category contract explicitly filters it (technical,
+//   internal, fixed hidden identity/context, etc.),
+// - authoritative when it survives that exposure policy, even if semantic-slot
+//   mapping subsequently fails,
+// - adapter-mapped only when the canonical slot/stage mapping succeeds.
+// This keeps source classification and mapping policy identical for builder and
+// independent verifier while still allowing the verifier to check both subset
+// boundaries independently against the generated artifact.
+function classifyAndMapDefinitions(definitions, integration) {
+  const authoritativeFields = [];
+  const excludedFields = [];
   const mapped = [];
   const errors = [];
+
   for (const field of definitions) {
     try {
-      const [resolved] = applyRuntimeUiCategoryOrder([field], integration);
-      if (resolved) mapped.push(resolved);
+      const resolvedRows = applyRuntimeUiCategoryOrder([field], integration);
+      const resolved = resolvedRows[0] ?? null;
+      if (!resolved) {
+        excludedFields.push({ field, reason: 'UI_CONTRACT_EXCLUDED' });
+        continue;
+      }
+      authoritativeFields.push(field);
+      mapped.push(resolved);
     } catch (error) {
+      // A mapping failure does not make the source field disappear. It remains
+      // authoritative and therefore fails Source ⊆ Adapter below.
+      authoritativeFields.push(field);
       errors.push({ key: field.key, code: error.code ?? null, message: error.message });
     }
   }
+
   let ordered = mapped;
   try {
     ordered = applyRuntimeUiCategoryOrder(mapped, integration);
   } catch (error) {
     errors.push({ key: error.fieldKey ?? null, code: error.code ?? null, message: error.message });
   }
-  return { fields: ordered, errors };
+
+  return { authoritativeFields, excludedFields, fields: ordered, errors };
 }
 
 async function productModuleDefinitions(integration) {
@@ -107,8 +130,15 @@ export async function authoritativeSourceUniverse(integration) {
     }
   }
 
-  const mapped = mapDefinitions(definitions, integration);
-  return { source, definitions, mappedFields: mapped.fields, mappingErrors: mapped.errors };
+  const classified = classifyAndMapDefinitions(definitions, integration);
+  return {
+    source,
+    rawDefinitions: definitions,
+    sourceFields: classified.authoritativeFields,
+    excludedFields: classified.excludedFields,
+    mappedFields: classified.fields,
+    mappingErrors: classified.errors,
+  };
 }
 
 export async function baselineFieldUniverse(integration, windows = []) {
@@ -139,15 +169,20 @@ export async function expectedFieldUniverse(integration, windows = []) {
   try {
     ordered = applyRuntimeUiCategoryOrder(ordered, integration);
   } catch {
-    // Per-field mapping errors are already captured from the authoritative source.
+    // Per-field source mapping errors are already captured above. Baseline fields
+    // are produced by the adapter and therefore should already be mapped.
   }
   return {
     source: source.source,
-    sourceFields: source.mappedFields,
+    rawSourceFields: source.rawDefinitions,
+    sourceFields: source.sourceFields,
+    excludedSourceFields: source.excludedFields,
+    sourceMappedFields: source.mappedFields,
     sourceMappingErrors: source.mappingErrors,
     baselineFields: baseline.fields,
     baselineByWindow: baseline.byWindow,
     baselineErrors: baseline.errors,
+    adapterFields: ordered,
     expectedFields: ordered,
   };
 }
