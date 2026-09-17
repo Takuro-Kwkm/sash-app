@@ -1,0 +1,78 @@
+name: Project Governance Gate
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - feat/new-construction-runtime-ui-v16-20260910
+    paths:
+      - 'project-governance/**'
+      - 'scripts/governance/**'
+      - '.github/workflows/project-governance-gate.yml'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'project-governance/**'
+      - 'scripts/governance/**'
+      - '.github/workflows/project-governance-gate.yml'
+
+permissions:
+  contents: read
+  pull-requests: read
+
+concurrency:
+  group: project-governance-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  governance:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+    steps:
+      - name: Checkout exact HEAD
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.HEAD_SHA }}
+          fetch-depth: 0
+
+      - name: Setup Node 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Governance source syntax
+        run: |
+          node --check scripts/governance/governance-lib.mjs
+          node --check scripts/governance/verify-project-state.mjs
+          node --check scripts/governance/evaluate-gates.mjs
+          node --check scripts/governance/collect-evidence.mjs
+          node --check scripts/governance/verify-release-input.mjs
+
+      - name: Project state invariants
+        run: node scripts/governance/verify-project-state.mjs
+
+      - name: Evaluate current gates
+        run: node scripts/governance/evaluate-gates.mjs
+
+      - name: Prevent false release declaration
+        run: node scripts/governance/verify-release-input.mjs
+
+      - name: Record governance foundation evidence
+        run: |
+          node scripts/governance/collect-evidence.mjs \
+            --gate PROJECT_GOVERNANCE_FOUNDATION_GATE \
+            --status PASS \
+            --artifact artifacts/governance/gate-results.json \
+            --command "Project Governance Gate" \
+            --scope "State schema, human-gate invariants, evidence exact-head policy and release false-pass guard"
+
+      - name: Upload governance evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: project-governance-evidence-${{ env.HEAD_SHA }}
+          path: artifacts/governance/
+          if-no-files-found: error

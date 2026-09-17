@@ -1,0 +1,21 @@
+{
+  "schema_version": "1.0.0",
+  "policy": {
+    "current_head_evidence_required_for_automatic_gates": true,
+    "old_head_evidence_is_historical_only": true,
+    "ai_self_declaration_is_not_evidence": true
+  },
+  "entries": [
+    {
+      "id": "PRE_GOVERNANCE_BASELINE",
+      "gate_id": null,
+      "outcome": "OBSERVED",
+      "exact_head": "8fe0d9f428957c1d1659f33e57def51ea70e1ced",
+      "artifact": null,
+      "artifact_sha256": null,
+      "command": null,
+      "scope": "Historical repository baseline before Project Governance Foundation. Not gate evidence.",
+      "authoritative_for_current_head": false
+    }
+  ]
+}
