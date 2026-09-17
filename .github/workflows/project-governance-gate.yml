@@ -40,6 +40,9 @@ jobs:
           node --check scripts/governance/governance-lib.mjs
           node --check scripts/governance/verify-project-state.mjs
           node --check scripts/governance/generate-human-flow-review.mjs
+          node --check scripts/governance/runtime-field-coverage.mjs
+          node --check scripts/governance/build-human-flow-review.mjs
+          node --check scripts/governance/verify-human-flow-field-coverage.mjs
           node --check scripts/governance/collect-qa-evidence.mjs
           node --check scripts/governance/evaluate-gates.mjs
           node --check scripts/governance/generate-progress-ledger.mjs
@@ -50,8 +53,11 @@ jobs:
       - name: Project state invariants
         run: node scripts/governance/verify-project-state.mjs
 
-      - name: Generate exact-head Human Flow Review artifact
-        run: node scripts/governance/generate-human-flow-review.mjs
+      - name: Build exact-head Human Flow Review artifact with source coverage
+        run: node scripts/governance/build-human-flow-review.mjs
+
+      - name: Verify authoritative source-to-artifact field coverage
+        run: node scripts/governance/verify-human-flow-field-coverage.mjs
 
       - name: Collect exact-head QA evidence
         run: node scripts/governance/collect-qa-evidence.mjs
@@ -74,7 +80,7 @@ jobs:
             --status PASS \
             --artifact artifacts/governance/progress-ledger.json \
             --command "Project Governance Gate" \
-            --scope "Runtime snapshot, Human Review artifact generation, exact-head evidence collection, gate aggregation and Progress Ledger"
+            --scope "Runtime snapshot, authoritative field coverage, Human Review artifact generation, exact-head evidence collection, gate aggregation and Progress Ledger"
 
       - name: Upload governance evidence
         if: always()
