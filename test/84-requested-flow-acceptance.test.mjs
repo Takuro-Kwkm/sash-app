@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { resolveRuntimeAppProduct } from '../src/catalog/runtime-master/runtime-app-bridge.mjs';
 import { loadRegisteredRuntime } from '../src/catalog/runtime-master/runtime-master-registry.mjs';
-import { evaluateTwCanonicalWorkbookRuntimeV2 } from '../src/catalog/runtime-master/tw-canonical-workbook-runtime-engine-v2.mjs';
+import { evaluateCanonicalWorkbookRuntime } from '../src/catalog/runtime-master/canonical-workbook-runtime-engine.mjs';
 
 const VENT_DOOR = /採風.*勝手口|勝手口.*採風/u;
 const RAW_COMPOSITION = /(?:\d+\s*-\s*Ar\d+|Ar\d+\s*-\s*LowE\d+|LowE\d+\s*-\s*Ar\d+)/iu;
@@ -132,13 +132,13 @@ test('TW Product Master one-field candidate repair exposes six grille choices wi
   const win = candidate.provider.windows.find((row) => row.id === windowType);
   assert.ok(win, 'TW candidate window row missing');
   win.spec_type = '網付格子種類';
-  const initial = evaluateTwCanonicalWorkbookRuntimeV2(candidate, { window_type:windowType });
+  const initial = evaluateCanonicalWorkbookRuntime(candidate, { window_type:windowType });
   const grille = initial.fields.door_grille_type;
   assert.equal(grille.visibility, 'SHOW');
   assert.equal(grille.allowed_values.length, 6);
   for (const value of grille.allowed_values) {
-    const changed = evaluateTwCanonicalWorkbookRuntimeV2(candidate, { window_type:windowType, door_grille_type:value });
-    assert.equal(changed.selection.door_grille_type, value);
+    const changed = evaluateCanonicalWorkbookRuntime(candidate, { window_type:windowType, door_grille_type:value });
+    assert.equal(changed.fields.door_grille_type.value, value);
     assert.equal(changed.fields.size_mode.visibility, 'SHOW');
   }
 });
