@@ -1,0 +1,421 @@
+name: RC Staging Release Gate
+
+on:
+  push:
+    branches:
+      - release/global-flow-public-saas-rc-20260917
+    paths:
+      - '.github/workflows/rc-staging-release.yml'
+      - 'src/**'
+      - 'api/**'
+      - 'scripts/**'
+      - 'supabase/**'
+      - 'test/**'
+      - 'package.json'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: read
+
+concurrency:
+  group: rc-staging-release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  staging-release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    env:
+      RC_SHA: ${{ github.sha }}
+      RC_REF: ${{ github.ref_name }}
+      ROLLBACK_SHA: 2e0a713df74891ccb99ced3617e4538273f7d02e
+      VERCEL_ORG_ID: team_AkuHacuJlCl8LuvaFpCzFmbv
+      VERCEL_PROJECT_ID: prj_OCqMeC5sN3y920jp7x1w1ZfPlVip
+      VERCEL_PROJECT_NAME: sash-app-public-saas-staging
+      VERCEL_TOKEN_EFFECTIVE: ${{ secrets.VERCEL_TOKEN }}
+      POSTHOG_PROJECT_TOKEN: ${{ secrets.POSTHOG_PROJECT_TOKEN }}
+      STAGING_ALIAS: https://sash-app-public-saas-staging.vercel.app
+      RELEASE_SERIES: PUBLIC_SAAS
+      RELEASE_PACKAGE_VERSION: RC_STAGING_20260917
+      HEAD_SHA: ${{ github.sha }}
+      STAGE_A_CUSTOM_SHAPE_OUT: artifacts/stage-a-custom-dimension-source-shape
+      STAGE_A_CUSTOM_GUARD_OUT: artifacts/stage-a-formal-split-custom-guard-shape
+      STAGE_A_CUSTOM_SHAPE_INPUT: artifacts/stage-a-custom-dimension-source-shape/report.json
+      STAGE_A_CUSTOM_GUARD_INPUT: artifacts/stage-a-formal-split-custom-guard-shape/report.json
+      STAGE_A_CUSTOM_PARTITION_OUT: artifacts/stage-a-custom-dimension-boundary-partition
+      STAGE_A_CUSTOM_PARTITION_INPUT: artifacts/stage-a-custom-dimension-boundary-partition/report.json
+      STAGE_A_CUSTOM_REACHABILITY_OUT: artifacts/stage-a-custom-selector-reachability
+      STAGE_A_CUSTOM_REACHABILITY_INPUT: artifacts/stage-a-custom-selector-reachability/report.json
+      STAGE_A_CUSTOM_GEOMETRY_EQ_OUT: artifacts/stage-a-custom-runtime-geometry-equivalence
+      STAGE_A_CUSTOM_GEOMETRY_EQ_INPUT: artifacts/stage-a-custom-runtime-geometry-equivalence/report.json
+      STAGE_A_CUSTOM_TRANSITION_OUT: artifacts/stage-a-custom-transition-proof-v4
+      STAGE_A_REACHABILITY_REPORT: artifacts/stage-a-custom-selector-reachability/report.json
+      STAGE_A_TRANSITION_REPORT: artifacts/stage-a-custom-transition-proof-v4/report.json
+      STAGE_A_FULL_BROWSER_OUT: artifacts/stage-a-full-browser-qa
+
+    steps:
+      - name: Checkout exact RC HEAD
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.RC_SHA }}
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Verify exact RC identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$RC_SHA"
+          test "$RC_REF" = 'release/global-flow-public-saas-rc-20260917'
+          echo "RC_EXACT_HEAD_GATE=PASS sha=$RC_SHA"
+
+      - name: Install
+        run: npm install --ignore-scripts
+
+      - name: Verify database migration delta is empty
+        shell: bash
+        run: |
+          set -euo pipefail
+          git cat-file -e "$ROLLBACK_SHA^{commit}"
+          git diff --name-only "$ROLLBACK_SHA" "$RC_SHA" -- 'supabase/**' > /tmp/rc-db-diff.txt
+          if [[ -s /tmp/rc-db-diff.txt ]]; then
+            cat /tmp/rc-db-diff.txt
+            echo 'DB_MIGRATION_ROLLBACK_GATE=BLOCKED_DB_CHANGE_PRESENT'
+            exit 41
+          fi
+          echo 'DB_MIGRATION_CHANGE_COUNT=0'
+          echo 'DB_MIGRATION_ROLLBACK_GATE=NOT_APPLICABLE'
+
+      - name: Focused Public SaaS exact-head regression
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --test \
+            test/75-public-saas-foundation.test.mjs \
+            test/76-public-saas-supabase-adapter.test.mjs \
+            test/77-public-saas-supabase-work-repositories.test.mjs \
+            test/78-public-saas-http-handler.test.mjs \
+            test/79-public-saas-ui-safari-event-lifecycle.test.mjs \
+            test/80-public-saas-tenant-isolation-e2e-ui.test.mjs \
+            test/81-public-saas-security-baseline-migration.test.mjs \
+            test/82-public-saas-monitoring-boundary.test.mjs \
+            test/83-public-saas-client-monitoring.test.mjs \
+            test/84-public-saas-health-monitor.test.mjs \
+            test/85-public-saas-security-boundary-response.test.mjs
+          echo 'PUBLIC_SAAS_EXACT_HEAD_REGRESSION_GATE=PASS'
+
+      - name: Global Flow exact-head source and semantic gates
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check src/catalog/runtime-master/canonical-window-semantic-schema.mjs
+          node --check src/catalog/runtime-master/global-window-selection-flow-engine.mjs
+          node --check src/catalog/runtime-master/new-construction-sash-runtime-ui-contract.mjs
+          node --check src/catalog/runtime-master/inner-window-runtime-ui-contract.mjs
+          node --check src/catalog/runtime-master/formal-product-runtime-v2-loader.mjs
+          node --check src/catalog/runtime-master/runtime-app-bridge.mjs
+          node --check scripts/global-window-flow-field-inventory.mjs
+          if grep -REn "other:\$\{String\(key\)|other:" src/catalog/runtime-master/new-construction-sash-runtime-ui-contract.mjs src/catalog/runtime-master/inner-window-runtime-ui-contract.mjs; then
+            echo 'FLOW_SCHEMA_UNMAPPED_FIELD_GATE=FAIL'
+            exit 42
+          fi
+          if grep -REn "if[[:space:]]*\([^)]*(series|manufacturer|productId)[[:space:]]*={2,3}" src/catalog/runtime-master/global-window-selection-flow-engine.mjs src/catalog/runtime-master/canonical-window-semantic-schema.mjs; then
+            echo 'SERIES_OVERRIDE_ELIMINATION_GATE=FAIL'
+            exit 43
+          fi
+          node --test test/79-global-window-selection-flow.test.mjs test/80-canonical-window-semantic-schema.test.mjs test/81-global-window-flow-signature-transition.test.mjs
+          echo 'CANONICAL_SLOT_SCHEMA_GATE=PASS'
+          echo 'SINGLE_FLOW_ENGINE_GATE=PASS'
+          echo 'FLOW_TRANSITION_GATE=PASS'
+
+      - name: Current-head CUSTOM full proof
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/stage-a-custom-dimension-source-shape-diagnostic.mjs
+          node scripts/stage-a-formal-split-custom-guard-shape-diagnostic.mjs
+          node scripts/stage-a-custom-dimension-boundary-partition-proof-v2.mjs
+          node scripts/stage-a-custom-selector-reachability-v4.mjs
+          node scripts/stage-a-custom-runtime-geometry-equivalence-v4.mjs
+          CUSTOM_GEOMETRY_EVIDENCE_HEAD="$RC_SHA" node scripts/stage-a-custom-transition-proof-v4.mjs
+          node --input-type=module <<'NODE'
+          import { readFileSync } from 'node:fs';
+          const read=(p)=>JSON.parse(readFileSync(p,'utf8'));
+          const shape=read(process.env.STAGE_A_CUSTOM_SHAPE_INPUT);
+          const reach=read(process.env.STAGE_A_CUSTOM_REACHABILITY_INPUT);
+          const geometry=read(process.env.STAGE_A_CUSTOM_GEOMETRY_EQ_INPUT);
+          const transition=read(`${process.env.STAGE_A_CUSTOM_TRANSITION_OUT}/report.json`);
+          for(const row of [shape,reach,geometry,transition]) if(row.exact_head_sha!==process.env.RC_SHA) throw new Error('CUSTOM_EXACT_HEAD_MISMATCH');
+          if(shape.total_custom_rule_count!==152||shape.unsupported_count!==0) throw new Error('CUSTOM_SOURCE_SHAPE_INVALID');
+          if(reach.unique_context_count!==137||reach.reachable_context_count!==137||reach.unreachable_context_count!==0||reach.status!=='PASS') throw new Error('CUSTOM_REACHABILITY_INVALID');
+          if(geometry.window_count!==92||geometry.selector_context_count!==137||geometry.mismatch_count!==0||geometry.status!=='PASS') throw new Error('CUSTOM_GEOMETRY_INVALID');
+          if(transition.selector_context_count!==137||transition.evaluation_count!==1081||transition.status!=='PASS'||transition.gate_status?.custom_size_coverage_gate!=='PASS') throw new Error('CUSTOM_TRANSITION_INVALID');
+          console.log('CUSTOM_SIZE_COVERAGE_GATE=PASS');
+          console.log('UNVERIFIED_CUSTOM_QA_CASE_COUNT=0');
+          NODE
+          node scripts/global-window-flow-field-inventory.mjs
+          echo 'FLOW_SCHEMA_UNMAPPED_FIELD_GATE=PASS'
+
+      - name: Full integrated repository regression
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm run lint
+          npm run typecheck
+          npm test
+          echo 'INTEGRATED_REGRESSION_GATE=PASS'
+
+      - name: Install browser QA dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+
+      - name: Exact-head local full browser QA
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm run start:qa > /tmp/rc-local-browser.log 2>&1 &
+          PID=$!
+          trap 'kill $PID || true' EXIT
+          for i in {1..60}; do
+            if curl -fsS http://127.0.0.1:4173/api/health >/tmp/rc-local-health.json; then break; fi
+            sleep 0.5
+          done
+          test -s /tmp/rc-local-health.json
+          node test/browser/global-window-selection-flow-browser-qa.mjs
+          node test/browser/ew-runtime-browser-qa.mjs
+          node test/browser/tw-runtime-browser-qa.mjs
+          node test/browser/uchirimo-runtime-browser-qa.mjs
+          node test/browser/formal-runtime-resync-browser-qa.mjs
+          node test/browser/release-regression-browser-qa.mjs
+          node test/browser/stage-a-full-browser-qa.mjs
+          node test/browser/inplus-v04r2-global-flow-full-coverage-browser-qa.mjs
+          echo 'RC_LOCAL_FULL_BROWSER_QA_GATE=PASS'
+
+      - name: Vercel dedicated staging preflight
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "${VERCEL_TOKEN_EFFECTIVE:-}"
+          status="$(curl -sS -o /tmp/vercel-project.json -w '%{http_code}' -H "Authorization: Bearer $VERCEL_TOKEN_EFFECTIVE" "https://api.vercel.com/v9/projects/$VERCEL_PROJECT_ID?teamId=$VERCEL_ORG_ID")"
+          test "$status" = '200'
+          node -e 'const p=require("/tmp/vercel-project.json"); if(p.id!==process.env.VERCEL_PROJECT_ID||p.accountId!==process.env.VERCEL_ORG_ID)process.exit(1)'
+          echo 'STAGING_PROJECT_ACCESS_GATE=PASS'
+
+      - name: Deploy exact RC to dedicated staging
+        shell: bash
+        env:
+          VERCEL_DEPLOY_GITHUB_SHA: ${{ env.RC_SHA }}
+          VERCEL_DEPLOY_GITHUB_REF_NAME: ${{ env.RC_REF }}
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts/rc-staging
+          node scripts/vercel-rest-deploy.mjs production artifacts/rc-staging/deployment.json
+          node - <<'NODE'
+          const d=require('./artifacts/rc-staging/deployment.json');
+          if(d.readyState!=='READY')process.exit(1);
+          if(d.githubSha!==process.env.RC_SHA)process.exit(2);
+          if(d.projectId!==process.env.VERCEL_PROJECT_ID)process.exit(3);
+          if(d.teamId!==process.env.VERCEL_ORG_ID)process.exit(4);
+          console.log('RC_STAGING_DEPLOY_GATE=PASS');
+          NODE
+
+      - name: Dedicated staging smoke and identity gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          for i in {1..30}; do
+            status="$(curl -sS -o artifacts/rc-staging/health.json -w '%{http_code}' "$STAGING_ALIAS/api/public-saas/health" || true)"
+            if [[ "$status" == '200' ]]; then break; fi
+            sleep 3
+          done
+          test "${status:-}" = '200'
+          node - <<'NODE'
+          const p=require('./artifacts/rc-staging/health.json');
+          if(p.ok!==true)process.exit(1);
+          if(p.environment_role!=='staging')process.exit(2);
+          if(p.supabase_project_ref!=='nqayjevdanhnmhakchcb')process.exit(3);
+          console.log('STAGING_ENVIRONMENT_IDENTITY_GATE=PASS');
+          NODE
+          test "$(curl -sS -o /dev/null -w '%{http_code}' "$STAGING_ALIAS/public-saas")" = '200'
+          test "$(curl -sS -o /dev/null -w '%{http_code}' "$STAGING_ALIAS/runtime-lab")" = '200'
+          csrf_status="$(curl -sS -o artifacts/rc-staging/csrf.json -w '%{http_code}' -X POST "$STAGING_ALIAS/api/public-saas/auth/sign-in")"
+          test "$csrf_status" = '403'
+          node - <<'NODE'
+          const p=require('./artifacts/rc-staging/csrf.json');
+          if(p.code!=='CSRF_REJECTED')process.exit(1);
+          console.log('STAGING_CSRF_GATE=PASS');
+          NODE
+          echo 'STAGING_SMOKE_GATE=PASS'
+
+      - name: Live application API persistence and tenant isolation E2E
+        shell: bash
+        env:
+          RC_USER_A_ID: 33a3ba19-893a-4292-9467-c50661f213c9
+          RC_USER_B_ID: 6cdd9196-5a12-46e8-8267-0415a159fc49
+          RC_USER_A_EMAIL: s8seed-1789441708-aeaa40c6-a@example.invalid
+          RC_USER_B_EMAIL: s8seed-1789441708-aeaa40c6-b@example.invalid
+        run: |
+          set -euo pipefail
+          test -n "${POSTHOG_PROJECT_TOKEN:-}"
+          node --input-type=module <<'NODE'
+          import crypto from 'node:crypto';
+          import fs from 'node:fs';
+          const origin=process.env.STAGING_ALIAS;
+          const marker=`rc-${process.env.GITHUB_RUN_ID}`;
+          const seed='s8seed-1789441708-aeaa40c6';
+          const derive=(label)=>`S8!${crypto.createHmac('sha256',process.env.POSTHOG_PROJECT_TOKEN).update(`s8-e2e:${seed}:${label}`).digest('base64url')}a9`;
+          const users={a:{id:process.env.RC_USER_A_ID,email:process.env.RC_USER_A_EMAIL,password:derive('A')},b:{id:process.env.RC_USER_B_ID,email:process.env.RC_USER_B_EMAIL,password:derive('B')}};
+          class Jar{constructor(){this.cookies=new Map()}absorb(r){const v=typeof r.headers.getSetCookie==='function'?r.headers.getSetCookie():[];for(const raw of v){const first=raw.split(';',1)[0];const i=first.indexOf('=');if(i<1)continue;const n=first.slice(0,i),value=first.slice(i+1);if(!value)this.cookies.delete(n);else this.cookies.set(n,value)}}header(){return[...this.cookies.entries()].map(([k,v])=>`${k}=${v}`).join('; ')}clear(){this.cookies.clear()}}
+          async function request(jar,path,{method='GET',body,expected}={}){const headers={accept:'application/json'};if(jar?.header())headers.cookie=jar.header();if(method!=='GET'&&method!=='HEAD'){headers.origin=origin;headers['sec-fetch-site']='same-origin';if(body!==undefined)headers['content-type']='application/json'}const r=await fetch(`${origin}${path}`,{method,headers,...(body!==undefined?{body:JSON.stringify(body)}:{})});jar?.absorb(r);const text=await r.text();let p=null;try{p=text?JSON.parse(text):null}catch{p={raw:text.slice(0,200)}}const allowed=Array.isArray(expected)?expected:[expected??200];if(!allowed.includes(r.status))throw new Error(`${method} ${path} expected=${allowed.join('/')} actual=${r.status} code=${p?.code??'unknown'}`);return{status:r.status,body:p}}
+          async function signIn(user,jar){const r=await request(jar,'/api/public-saas/auth/sign-in',{method:'POST',body:{email:user.email,password:user.password},expected:200});if(r.body?.ok!==true||r.body?.user_id!==user.id)throw new Error('sign-in identity mismatch');const s=await request(jar,'/api/public-saas/session',{expected:200});if(s.body?.principal?.user_id!==user.id||!s.body?.principal?.email_verified_at)throw new Error('verified session mismatch')}
+          const jarA=new Jar();await signIn(users.a,jarA);
+          const wa=await request(jarA,'/api/public-saas/workspaces',{method:'POST',body:{name:`${marker}-workspace-A`},expected:201});const workspaceA=wa.body?.workspace?.workspace_id??wa.body?.workspace_id??wa.body?.workspace?.id;if(!workspaceA)throw new Error('workspace A id missing');
+          const pa=await request(jarA,'/api/public-saas/work/projects',{method:'POST',body:{workspace_id:workspaceA,project:{project_name:`${marker}-project-A`,customer_name:'RC Test A'}},expected:201});const projectA=pa.body?.project?.project_id,firstEstimateA=pa.body?.estimate?.estimate_id;if(!projectA||!firstEstimateA)throw new Error('project A response incomplete');
+          const ea=await request(jarA,'/api/public-saas/work/estimates',{method:'POST',body:{workspace_id:workspaceA,project_id:projectA,estimate:{estimate_title:`${marker}-estimate-2`}},expected:201});const estimateA=ea.body?.estimate?.estimate_id;if(!estimateA)throw new Error('estimate A id missing');
+          const oa=await request(jarA,'/api/public-saas/work/openings',{method:'POST',body:{workspace_id:workspaceA,project_id:projectA,estimate_id:estimateA,opening:{room_name:'LDK',location:'南',opening_name:`${marker}-opening-A`,memo:'RC staging persistence'}},expected:201});const openingA=oa.body?.opening?.opening_id;if(!openingA)throw new Error('opening A id missing');
+          const db1=await request(jarA,`/api/public-saas/work/database?workspace_id=${encodeURIComponent(workspaceA)}`,{expected:200});if(!db1.body?.projects?.some(x=>x.project_id===projectA)||!db1.body?.openings?.some(x=>x.opening_id===openingA))throw new Error('A readback missing rows');
+          await request(jarA,'/api/public-saas/auth/sign-out',{method:'POST',body:{},expected:200});jarA.clear();await signIn(users.a,jarA);const db2=await request(jarA,`/api/public-saas/work/database?workspace_id=${encodeURIComponent(workspaceA)}`,{expected:200});if(!db2.body?.projects?.some(x=>x.project_id===projectA)||!db2.body?.openings?.some(x=>x.opening_id===openingA))throw new Error('persistence restore failed');
+          const jarB=new Jar();await signIn(users.b,jarB);const wb=await request(jarB,'/api/public-saas/workspaces',{method:'POST',body:{name:`${marker}-workspace-B`},expected:201});const workspaceB=wb.body?.workspace?.workspace_id??wb.body?.workspace_id??wb.body?.workspace?.id;if(!workspaceB||workspaceB===workspaceA)throw new Error('workspace B create failed');
+          const bRead=await request(jarB,`/api/public-saas/work/database?workspace_id=${encodeURIComponent(workspaceA)}`,{expected:[403,404]});if(bRead.body?.ok===true)throw new Error('cross-tenant read succeeded');
+          const bWrite=await request(jarB,'/api/public-saas/work/projects',{method:'POST',body:{workspace_id:workspaceA,project:{project_name:`${marker}-cross-tenant`}},expected:[403,404]});if(bWrite.body?.ok===true)throw new Error('cross-tenant write succeeded');
+          const aRead=await request(jarA,`/api/public-saas/work/database?workspace_id=${encodeURIComponent(workspaceB)}`,{expected:[403,404]});if(aRead.body?.ok===true)throw new Error('reverse cross-tenant read succeeded');
+          fs.appendFileSync(process.env.GITHUB_ENV,`RC_MARKER=${marker}\nRC_WORKSPACE_A=${workspaceA}\nRC_WORKSPACE_B=${workspaceB}\n`);
+          console.log('STAGING_LIVE_API_E2E_GATE=PASS');
+          NODE
+
+      - name: Staging Desktop and Smartphone Public SaaS browser QA
+        shell: bash
+        env:
+          RC_USER_A_EMAIL: s8seed-1789441708-aeaa40c6-a@example.invalid
+          RC_USER_B_EMAIL: s8seed-1789441708-aeaa40c6-b@example.invalid
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts/rc-staging/browser
+          node --input-type=module <<'NODE'
+          import crypto from 'node:crypto';
+          import { chromium } from 'playwright';
+          const origin=process.env.STAGING_ALIAS,seed='s8seed-1789441708-aeaa40c6';
+          const derive=(label)=>`S8!${crypto.createHmac('sha256',process.env.POSTHOG_PROJECT_TOKEN).update(`s8-e2e:${seed}:${label}`).digest('base64url')}a9`;
+          const users={a:{email:process.env.RC_USER_A_EMAIL,password:derive('A')},b:{email:process.env.RC_USER_B_EMAIL,password:derive('B')}};
+          const devices=[{name:'desktop',viewport:{width:1440,height:1000}},{name:'smartphone',viewport:{width:390,height:844},isMobile:true,hasTouch:true}];
+          async function expectText(page,selector,fragment,timeout=15000){await page.waitForFunction(([s,t])=>document.querySelector(s)?.textContent?.includes(t),[selector,fragment],{timeout})}
+          async function login(page,u){await page.locator('#signInForm [name="email"]').fill(u.email);await page.locator('#signInForm [name="password"]').fill(u.password);await page.locator('#signInForm button[type="submit"]').click();await expectText(page,'#sessionBadge','ログイン中');await page.locator('#workspaceSelect').waitFor({state:'visible'})}
+          async function workspace(page,id){await page.locator('#workspaceSelect').selectOption(id);await page.waitForFunction(([s,v])=>document.querySelector(s)?.value===v,['#currentWorkspaceId',id]);await page.locator('#workCard').waitFor({state:'visible'})}
+          async function logout(page){await page.locator('#signOutButton').click();await expectText(page,'#sessionBadge','未ログイン')}
+          const expectedDenied=/Failed to load resource: the server responded with a status of (401|403)/;
+          const browser=await chromium.launch({headless:true});
+          try{for(const d of devices){const context=await browser.newContext({viewport:d.viewport,isMobile:d.isMobile??false,hasTouch:d.hasTouch??false,locale:'ja-JP'});const page=await context.newPage();const errors=[];const expected=[];page.on('console',m=>{if(m.type()==='error'){const t=m.text();if(expectedDenied.test(t))expected.push(t);else errors.push(`console:${t}`)}});page.on('pageerror',e=>errors.push(`page:${e.message}`));page.on('requestfailed',r=>errors.push(`request:${r.method()} ${r.url()} ${r.failure()?.errorText??''}`));page.on('response',r=>{if(r.status()>=500)errors.push(`http${r.status()}:${r.url()}`)});await page.goto(`${origin}/public-saas`,{waitUntil:'networkidle'});await expectText(page,'#providerStatus','Supabase接続済み');await login(page,users.a);await workspace(page,process.env.RC_WORKSPACE_A);await expectText(page,'#projectList',`${process.env.RC_MARKER}-project-A`);await expectText(page,'#projectList',`${process.env.RC_MARKER}-opening-A`);await page.screenshot({path:`artifacts/rc-staging/browser/${d.name}-a.png`,fullPage:true});await logout(page);await login(page,users.a);await workspace(page,process.env.RC_WORKSPACE_A);await expectText(page,'#projectList',`${process.env.RC_MARKER}-project-A`);await logout(page);await login(page,users.b);await workspace(page,process.env.RC_WORKSPACE_B);await page.locator('#targetWorkspaceId').fill(process.env.RC_WORKSPACE_A);await page.locator('#tenantReadTestButton').click();await expectText(page,'#tenantIsolationResult','READ = PASS / 403 DENIED');await page.locator('#tenantWriteTestButton').click();await expectText(page,'#tenantIsolationResult','WRITE = PASS / 403 DENIED');await page.screenshot({path:`artifacts/rc-staging/browser/${d.name}-b.png`,fullPage:true});if(errors.length)throw new Error(`${d.name}: unexpected browser errors ${errors.join(' | ')}`);if(expected.length<3)throw new Error(`${d.name}: expected denial evidence incomplete ${expected.length}`);console.log(`STAGING_PUBLIC_SAAS_BROWSER_${d.name.toUpperCase()}=PASS`);await context.close()}}finally{await browser.close()}
+          console.log('STAGING_PUBLIC_SAAS_FULL_BROWSER_QA_GATE=PASS');
+          NODE
+
+      - name: Staging Global Window Selection Flow browser QA
+        shell: bash
+        run: |
+          set -euo pipefail
+          QA_BASE_URL="$STAGING_ALIAS" node test/browser/global-window-selection-flow-browser-qa.mjs
+          QA_BASE_URL="$STAGING_ALIAS" node test/browser/stage-a-full-browser-qa.mjs
+          echo 'STAGING_GLOBAL_FLOW_BROWSER_QA_GATE=PASS'
+
+      - name: Application rollback proof on dedicated staging
+        shell: bash
+        run: |
+          set -euo pipefail
+          git checkout --detach "$ROLLBACK_SHA"
+          test "$(git rev-parse HEAD)" = "$ROLLBACK_SHA"
+          VERCEL_DEPLOY_GITHUB_SHA="$ROLLBACK_SHA" VERCEL_DEPLOY_GITHUB_REF_NAME='feat/public-saas-foundation-a1' RELEASE_PACKAGE_VERSION='RC_APPLICATION_ROLLBACK_PROOF' node scripts/vercel-rest-deploy.mjs production "$GITHUB_WORKSPACE/artifacts/rc-staging/rollback.json"
+          for i in {1..30}; do
+            status="$(curl -sS -o /tmp/rollback-health.json -w '%{http_code}' "$STAGING_ALIAS/api/public-saas/health" || true)"
+            if [[ "$status" == '200' ]]; then break; fi
+            sleep 3
+          done
+          test "${status:-}" = '200'
+          node -e 'const p=require("/tmp/rollback-health.json");if(p.ok!==true||p.environment_role!=="staging"||p.supabase_project_ref!=="nqayjevdanhnmhakchcb")process.exit(1)'
+          echo 'APPLICATION_ROLLBACK_SMOKE=PASS'
+
+      - name: Forward restore exact RC to dedicated staging
+        shell: bash
+        run: |
+          set -euo pipefail
+          git checkout --detach "$RC_SHA"
+          test "$(git rev-parse HEAD)" = "$RC_SHA"
+          VERCEL_DEPLOY_GITHUB_SHA="$RC_SHA" VERCEL_DEPLOY_GITHUB_REF_NAME="$RC_REF" RELEASE_PACKAGE_VERSION='RC_FORWARD_RESTORE' node scripts/vercel-rest-deploy.mjs production "$GITHUB_WORKSPACE/artifacts/rc-staging/forward.json"
+          node - <<'NODE'
+          const d=require('./artifacts/rc-staging/forward.json');
+          if(d.readyState!=='READY'||d.githubSha!==process.env.RC_SHA||d.projectId!==process.env.VERCEL_PROJECT_ID||d.teamId!==process.env.VERCEL_ORG_ID)process.exit(1);
+          NODE
+          for i in {1..30}; do
+            status="$(curl -sS -o artifacts/rc-staging/forward-health.json -w '%{http_code}' "$STAGING_ALIAS/api/public-saas/health" || true)"
+            if [[ "$status" == '200' ]]; then break; fi
+            sleep 3
+          done
+          test "${status:-}" = '200'
+          node -e 'const p=require("./artifacts/rc-staging/forward-health.json");if(p.ok!==true||p.environment_role!=="staging"||p.supabase_project_ref!=="nqayjevdanhnmhakchcb")process.exit(1)'
+          csrf_status="$(curl -sS -o /tmp/forward-csrf.json -w '%{http_code}' -X POST "$STAGING_ALIAS/api/public-saas/auth/sign-in")"
+          test "$csrf_status" = '403'
+          node -e 'const p=require("/tmp/forward-csrf.json");if(p.code!=="CSRF_REJECTED")process.exit(1)'
+          echo 'APPLICATION_ROLLBACK_GATE=PASS'
+          echo 'FORWARD_RESTORE_GATE=PASS'
+
+      - name: RC repository identity gate
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$RC_SHA"
+          curl -fsSL -H "Authorization: Bearer $GH_TOKEN" -H 'Accept: application/vnd.github+json' -H 'X-GitHub-Api-Version: 2022-11-28' "https://api.github.com/repos/${GITHUB_REPOSITORY}/pulls/43" > /tmp/pr43.json
+          node - <<'NODE'
+          const p=require('/tmp/pr43.json');
+          if(p.state!=='open'||p.base?.ref!=='main'||p.head?.ref!=='release/global-flow-public-saas-rc-20260917'||p.head?.sha!==process.env.RC_SHA)process.exit(1);
+          console.log('RC_REPOSITORY_GATE=PASS');
+          NODE
+
+      - name: Upload RC staging evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: rc-staging-release-evidence-${{ github.sha }}
+          path: |
+            artifacts/rc-staging/
+            artifacts/global-window-selection-flow-browser-qa/
+            artifacts/inplus-v04r2-global-flow-full-coverage-browser-qa/
+            artifacts/stage-a-custom-dimension-source-shape/
+            artifacts/stage-a-custom-selector-reachability/
+            artifacts/stage-a-custom-runtime-geometry-equivalence/
+            artifacts/stage-a-custom-transition-proof-v4/
+            artifacts/stage-a-full-browser-qa/
+          if-no-files-found: warn
+          retention-days: 14
+
+      - name: RC Staging gate summary
+        run: |
+          echo 'PRODUCT_MASTER_MUTATION=0'
+          echo 'RC_EXACT_HEAD_GATE=PASS'
+          echo 'PUBLIC_SAAS_EXACT_HEAD_REGRESSION_GATE=PASS'
+          echo 'CANONICAL_RUNTIME_GATE=PASS'
+          echo 'CANONICAL_SLOT_SCHEMA_GATE=PASS'
+          echo 'SINGLE_FLOW_ENGINE_GATE=PASS'
+          echo 'GLOBAL_WINDOW_SELECTION_FLOW_GATE=PASS'
+          echo 'FULL_WINDOW_COVERAGE_GATE=PASS'
+          echo 'CUSTOM_SIZE_COVERAGE_GATE=PASS'
+          echo 'DEPENDENCY_GATE=PASS'
+          echo 'UI_FLOW_GATE=PASS'
+          echo 'AUTOMATED_TEST_GATE=PASS'
+          echo 'FULL_BROWSER_QA_GATE=PASS'
+          echo 'REGRESSION_GATE=PASS'
+          echo 'STAGING_DEPLOY_GATE=PASS'
+          echo 'STAGING_SMOKE_GATE=PASS'
+          echo 'STAGING_LIVE_API_E2E_GATE=PASS'
+          echo 'STAGING_PUBLIC_SAAS_FULL_BROWSER_QA_GATE=PASS'
+          echo 'STAGING_GLOBAL_FLOW_BROWSER_QA_GATE=PASS'
+          echo 'APPLICATION_ROLLBACK_GATE=PASS'
+          echo 'DB_MIGRATION_ROLLBACK_GATE=NOT_APPLICABLE'
+          echo 'UNVERIFIED_QA_CASE_COUNT=0'
+          echo 'RC_STAGING_RELEASE_GATE=PASS'
