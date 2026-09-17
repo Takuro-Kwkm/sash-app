@@ -10,6 +10,7 @@ if(gh.pr.head!==head||gh.branch.sha!==head||gh.branch.name!==state.branch)throw 
 const review=readJson('artifacts/governance/human-flow-review.json');
 if(review.runtime_snapshot_id!==state.runtime_snapshot_id||review.review_artifact_identity!==state.human_flow_review_artifact_id)throw Error('RUNTIME_IDENTITY_MISMATCH');
 if(state.human_flow_review_gate!=='PASS'&&(state.post_human_review_authorized||state.app_integration_ready||state.release_input_gate==='PASS'))throw Error('HUMAN_REVIEW_BYPASS');
+if(state.governance_foundation.current_state_reconstruction_gate!=='PASS'&&state.post_human_review_authorized)throw Error('DRIVE_RECONSTRUCTION_BYPASS');
 for(const record of registry.entries){
  for(const key of ['evidence_id','exact_head','requirement','command','artifact_identity','artifact_sha256','result','related_gate','runtime_snapshot_id','timestamp','source','historical_relation'])if(!record[key])throw Error(`MISSING_EVIDENCE_${key}`);
  if(record.exact_head!==head||record.runtime_snapshot_id!==state.runtime_snapshot_id)throw Error('STALE_EVIDENCE');
