@@ -148,11 +148,16 @@ export function shouldExposeInnerWindowRuntimeField(field = {}) {
   if (!key || INNER_WINDOW_TECHNICAL_EXACT.has(key)) return false;
   if (field.runtimeIncluded === false || field.runtime_included === false) return false;
   if (field.technical === true || field.internal === true) return false;
-  const visibility = field.visibilityMode ?? field.visibility_mode ?? field.initialVisibility ?? field.initial_visibility ?? null;
+
+  // A Runtime field that is conditionally hidden at the initial state is still
+  // part of the authoritative UI field universe. Only an explicit runtime-level
+  // hidden field, or a fixed hidden identity/context field, is non-user-facing.
+  const runtimeVisibility = field.visibilityMode ?? field.visibility_mode ?? null;
+  const initialVisibility = field.initialVisibility ?? field.initial_visibility ?? null;
   const selectionMode = field.selectionMode ?? field.selection_mode ?? null;
   const showReadOnly = field.showReadOnly === true || field.show_read_only === true;
-  if ((visibility === 'HIDDEN' || visibility === 'HIDE') && !showReadOnly) return false;
-  if (selectionMode === 'FIXED' && (visibility === 'HIDDEN' || visibility === 'HIDE') && !showReadOnly) return false;
+  if ((runtimeVisibility === 'HIDDEN' || runtimeVisibility === 'HIDE') && !showReadOnly) return false;
+  if (selectionMode === 'FIXED' && (initialVisibility === 'HIDDEN' || initialVisibility === 'HIDE') && !showReadOnly) return false;
   return true;
 }
 
