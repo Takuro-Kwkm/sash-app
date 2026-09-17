@@ -34,11 +34,14 @@ jobs:
       VERCEL_PROJECT_ID: prj_OCqMeC5sN3y920jp7x1w1ZfPlVip
       VERCEL_PROJECT_NAME: sash-app-public-saas-staging
       VERCEL_TOKEN_EFFECTIVE: ${{ secrets.VERCEL_TOKEN }}
-      POSTHOG_PROJECT_TOKEN: ${{ secrets.POSTHOG_PROJECT_TOKEN }}
       STAGING_ALIAS: https://sash-app-public-saas-staging.vercel.app
       RELEASE_SERIES: PUBLIC_SAAS
       RELEASE_PACKAGE_VERSION: RC_STAGING_20260917
       HEAD_SHA: ${{ github.sha }}
+      RC_STAGING_USER_A_EMAIL: ${{ secrets.RC_STAGING_USER_A_EMAIL }}
+      RC_STAGING_USER_A_PASSWORD: ${{ secrets.RC_STAGING_USER_A_PASSWORD }}
+      RC_STAGING_USER_B_EMAIL: ${{ secrets.RC_STAGING_USER_B_EMAIL }}
+      RC_STAGING_USER_B_PASSWORD: ${{ secrets.RC_STAGING_USER_B_PASSWORD }}
       STAGE_A_CUSTOM_SHAPE_OUT: artifacts/stage-a-custom-dimension-source-shape
       STAGE_A_CUSTOM_GUARD_OUT: artifacts/stage-a-formal-split-custom-guard-shape
       STAGE_A_CUSTOM_SHAPE_INPUT: artifacts/stage-a-custom-dimension-source-shape/report.json
@@ -254,66 +257,29 @@ jobs:
           NODE
           echo 'STAGING_SMOKE_GATE=PASS'
 
-      - name: Live application API persistence and tenant isolation E2E
+      - name: Verify staging QA fixture configuration
         shell: bash
-        env:
-          RC_USER_A_ID: 33a3ba19-893a-4292-9467-c50661f213c9
-          RC_USER_B_ID: 6cdd9196-5a12-46e8-8267-0415a159fc49
-          RC_USER_A_EMAIL: s8seed-1789441708-aeaa40c6-a@example.invalid
-          RC_USER_B_EMAIL: s8seed-1789441708-aeaa40c6-b@example.invalid
         run: |
           set -euo pipefail
-          test -n "${POSTHOG_PROJECT_TOKEN:-}"
-          node --input-type=module <<'NODE'
-          import crypto from 'node:crypto';
-          import fs from 'node:fs';
-          const origin=process.env.STAGING_ALIAS;
-          const marker=`rc-${process.env.GITHUB_RUN_ID}`;
-          const seed='s8seed-1789441708-aeaa40c6';
-          const derive=(label)=>`S8!${crypto.createHmac('sha256',process.env.POSTHOG_PROJECT_TOKEN).update(`s8-e2e:${seed}:${label}`).digest('base64url')}a9`;
-          const users={a:{id:process.env.RC_USER_A_ID,email:process.env.RC_USER_A_EMAIL,password:derive('A')},b:{id:process.env.RC_USER_B_ID,email:process.env.RC_USER_B_EMAIL,password:derive('B')}};
-          class Jar{constructor(){this.cookies=new Map()}absorb(r){const v=typeof r.headers.getSetCookie==='function'?r.headers.getSetCookie():[];for(const raw of v){const first=raw.split(';',1)[0];const i=first.indexOf('=');if(i<1)continue;const n=first.slice(0,i),value=first.slice(i+1);if(!value)this.cookies.delete(n);else this.cookies.set(n,value)}}header(){return[...this.cookies.entries()].map(([k,v])=>`${k}=${v}`).join('; ')}clear(){this.cookies.clear()}}
-          async function request(jar,path,{method='GET',body,expected}={}){const headers={accept:'application/json'};if(jar?.header())headers.cookie=jar.header();if(method!=='GET'&&method!=='HEAD'){headers.origin=origin;headers['sec-fetch-site']='same-origin';if(body!==undefined)headers['content-type']='application/json'}const r=await fetch(`${origin}${path}`,{method,headers,...(body!==undefined?{body:JSON.stringify(body)}:{})});jar?.absorb(r);const text=await r.text();let p=null;try{p=text?JSON.parse(text):null}catch{p={raw:text.slice(0,200)}}const allowed=Array.isArray(expected)?expected:[expected??200];if(!allowed.includes(r.status))throw new Error(`${method} ${path} expected=${allowed.join('/')} actual=${r.status} code=${p?.code??'unknown'}`);return{status:r.status,body:p}}
-          async function signIn(user,jar){const r=await request(jar,'/api/public-saas/auth/sign-in',{method:'POST',body:{email:user.email,password:user.password},expected:200});if(r.body?.ok!==true||r.body?.user_id!==user.id)throw new Error('sign-in identity mismatch');const s=await request(jar,'/api/public-saas/session',{expected:200});if(s.body?.principal?.user_id!==user.id||!s.body?.principal?.email_verified_at)throw new Error('verified session mismatch')}
-          const jarA=new Jar();await signIn(users.a,jarA);
-          const wa=await request(jarA,'/api/public-saas/workspaces',{method:'POST',body:{name:`${marker}-workspace-A`},expected:201});const workspaceA=wa.body?.workspace?.workspace_id??wa.body?.workspace_id??wa.body?.workspace?.id;if(!workspaceA)throw new Error('workspace A id missing');
-          const pa=await request(jarA,'/api/public-saas/work/projects',{method:'POST',body:{workspace_id:workspaceA,project:{project_name:`${marker}-project-A`,customer_name:'RC Test A'}},expected:201});const projectA=pa.body?.project?.project_id,firstEstimateA=pa.body?.estimate?.estimate_id;if(!projectA||!firstEstimateA)throw new Error('project A response incomplete');
-          const ea=await request(jarA,'/api/public-saas/work/estimates',{method:'POST',body:{workspace_id:workspaceA,project_id:projectA,estimate:{estimate_title:`${marker}-estimate-2`}},expected:201});const estimateA=ea.body?.estimate?.estimate_id;if(!estimateA)throw new Error('estimate A id missing');
-          const oa=await request(jarA,'/api/public-saas/work/openings',{method:'POST',body:{workspace_id:workspaceA,project_id:projectA,estimate_id:estimateA,opening:{room_name:'LDK',location:'南',opening_name:`${marker}-opening-A`,memo:'RC staging persistence'}},expected:201});const openingA=oa.body?.opening?.opening_id;if(!openingA)throw new Error('opening A id missing');
-          const db1=await request(jarA,`/api/public-saas/work/database?workspace_id=${encodeURIComponent(workspaceA)}`,{expected:200});if(!db1.body?.projects?.some(x=>x.project_id===projectA)||!db1.body?.openings?.some(x=>x.opening_id===openingA))throw new Error('A readback missing rows');
-          await request(jarA,'/api/public-saas/auth/sign-out',{method:'POST',body:{},expected:200});jarA.clear();await signIn(users.a,jarA);const db2=await request(jarA,`/api/public-saas/work/database?workspace_id=${encodeURIComponent(workspaceA)}`,{expected:200});if(!db2.body?.projects?.some(x=>x.project_id===projectA)||!db2.body?.openings?.some(x=>x.opening_id===openingA))throw new Error('persistence restore failed');
-          const jarB=new Jar();await signIn(users.b,jarB);const wb=await request(jarB,'/api/public-saas/workspaces',{method:'POST',body:{name:`${marker}-workspace-B`},expected:201});const workspaceB=wb.body?.workspace?.workspace_id??wb.body?.workspace_id??wb.body?.workspace?.id;if(!workspaceB||workspaceB===workspaceA)throw new Error('workspace B create failed');
-          const bRead=await request(jarB,`/api/public-saas/work/database?workspace_id=${encodeURIComponent(workspaceA)}`,{expected:[403,404]});if(bRead.body?.ok===true)throw new Error('cross-tenant read succeeded');
-          const bWrite=await request(jarB,'/api/public-saas/work/projects',{method:'POST',body:{workspace_id:workspaceA,project:{project_name:`${marker}-cross-tenant`}},expected:[403,404]});if(bWrite.body?.ok===true)throw new Error('cross-tenant write succeeded');
-          const aRead=await request(jarA,`/api/public-saas/work/database?workspace_id=${encodeURIComponent(workspaceB)}`,{expected:[403,404]});if(aRead.body?.ok===true)throw new Error('reverse cross-tenant read succeeded');
-          fs.appendFileSync(process.env.GITHUB_ENV,`RC_MARKER=${marker}\nRC_WORKSPACE_A=${workspaceA}\nRC_WORKSPACE_B=${workspaceB}\n`);
-          console.log('STAGING_LIVE_API_E2E_GATE=PASS');
-          NODE
+          test -n "${RC_STAGING_USER_A_EMAIL:-}"
+          test -n "${RC_STAGING_USER_A_PASSWORD:-}"
+          test -n "${RC_STAGING_USER_B_EMAIL:-}"
+          test -n "${RC_STAGING_USER_B_PASSWORD:-}"
+          test "$RC_STAGING_USER_A_EMAIL" != "$RC_STAGING_USER_B_EMAIL"
+          echo 'STAGING_QA_FIXTURE_CONFIG_GATE=PASS'
+
+      - name: Live application API persistence and tenant isolation E2E
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/rc-staging-live-e2e.mjs
 
       - name: Staging Desktop and Smartphone Public SaaS browser QA
         shell: bash
-        env:
-          RC_USER_A_EMAIL: s8seed-1789441708-aeaa40c6-a@example.invalid
-          RC_USER_B_EMAIL: s8seed-1789441708-aeaa40c6-b@example.invalid
         run: |
           set -euo pipefail
           mkdir -p artifacts/rc-staging/browser
-          node --input-type=module <<'NODE'
-          import crypto from 'node:crypto';
-          import { chromium } from 'playwright';
-          const origin=process.env.STAGING_ALIAS,seed='s8seed-1789441708-aeaa40c6';
-          const derive=(label)=>`S8!${crypto.createHmac('sha256',process.env.POSTHOG_PROJECT_TOKEN).update(`s8-e2e:${seed}:${label}`).digest('base64url')}a9`;
-          const users={a:{email:process.env.RC_USER_A_EMAIL,password:derive('A')},b:{email:process.env.RC_USER_B_EMAIL,password:derive('B')}};
-          const devices=[{name:'desktop',viewport:{width:1440,height:1000}},{name:'smartphone',viewport:{width:390,height:844},isMobile:true,hasTouch:true}];
-          async function expectText(page,selector,fragment,timeout=15000){await page.waitForFunction(([s,t])=>document.querySelector(s)?.textContent?.includes(t),[selector,fragment],{timeout})}
-          async function login(page,u){await page.locator('#signInForm [name="email"]').fill(u.email);await page.locator('#signInForm [name="password"]').fill(u.password);await page.locator('#signInForm button[type="submit"]').click();await expectText(page,'#sessionBadge','ログイン中');await page.locator('#workspaceSelect').waitFor({state:'visible'})}
-          async function workspace(page,id){await page.locator('#workspaceSelect').selectOption(id);await page.waitForFunction(([s,v])=>document.querySelector(s)?.value===v,['#currentWorkspaceId',id]);await page.locator('#workCard').waitFor({state:'visible'})}
-          async function logout(page){await page.locator('#signOutButton').click();await expectText(page,'#sessionBadge','未ログイン')}
-          const expectedDenied=/Failed to load resource: the server responded with a status of (401|403)/;
-          const browser=await chromium.launch({headless:true});
-          try{for(const d of devices){const context=await browser.newContext({viewport:d.viewport,isMobile:d.isMobile??false,hasTouch:d.hasTouch??false,locale:'ja-JP'});const page=await context.newPage();const errors=[];const expected=[];page.on('console',m=>{if(m.type()==='error'){const t=m.text();if(expectedDenied.test(t))expected.push(t);else errors.push(`console:${t}`)}});page.on('pageerror',e=>errors.push(`page:${e.message}`));page.on('requestfailed',r=>errors.push(`request:${r.method()} ${r.url()} ${r.failure()?.errorText??''}`));page.on('response',r=>{if(r.status()>=500)errors.push(`http${r.status()}:${r.url()}`)});await page.goto(`${origin}/public-saas`,{waitUntil:'networkidle'});await expectText(page,'#providerStatus','Supabase接続済み');await login(page,users.a);await workspace(page,process.env.RC_WORKSPACE_A);await expectText(page,'#projectList',`${process.env.RC_MARKER}-project-A`);await expectText(page,'#projectList',`${process.env.RC_MARKER}-opening-A`);await page.screenshot({path:`artifacts/rc-staging/browser/${d.name}-a.png`,fullPage:true});await logout(page);await login(page,users.a);await workspace(page,process.env.RC_WORKSPACE_A);await expectText(page,'#projectList',`${process.env.RC_MARKER}-project-A`);await logout(page);await login(page,users.b);await workspace(page,process.env.RC_WORKSPACE_B);await page.locator('#targetWorkspaceId').fill(process.env.RC_WORKSPACE_A);await page.locator('#tenantReadTestButton').click();await expectText(page,'#tenantIsolationResult','READ = PASS / 403 DENIED');await page.locator('#tenantWriteTestButton').click();await expectText(page,'#tenantIsolationResult','WRITE = PASS / 403 DENIED');await page.screenshot({path:`artifacts/rc-staging/browser/${d.name}-b.png`,fullPage:true});if(errors.length)throw new Error(`${d.name}: unexpected browser errors ${errors.join(' | ')}`);if(expected.length<3)throw new Error(`${d.name}: expected denial evidence incomplete ${expected.length}`);console.log(`STAGING_PUBLIC_SAAS_BROWSER_${d.name.toUpperCase()}=PASS`);await context.close()}}finally{await browser.close()}
-          console.log('STAGING_PUBLIC_SAAS_FULL_BROWSER_QA_GATE=PASS');
-          NODE
+          node test/browser/rc-staging-public-saas-browser-qa.mjs
 
       - name: Staging Global Window Selection Flow browser QA
         shell: bash
@@ -412,6 +378,7 @@ jobs:
           echo 'REGRESSION_GATE=PASS'
           echo 'STAGING_DEPLOY_GATE=PASS'
           echo 'STAGING_SMOKE_GATE=PASS'
+          echo 'STAGING_QA_FIXTURE_CONFIG_GATE=PASS'
           echo 'STAGING_LIVE_API_E2E_GATE=PASS'
           echo 'STAGING_PUBLIC_SAAS_FULL_BROWSER_QA_GATE=PASS'
           echo 'STAGING_GLOBAL_FLOW_BROWSER_QA_GATE=PASS'
