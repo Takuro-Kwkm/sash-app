@@ -1,0 +1,57 @@
+{
+  "schema_version": "2.0",
+  "manufacturer": "LIXIL",
+  "series": "TW",
+  "package_version": "integrated-v0.4",
+  "authoring_mode": "INTEGRATED_REFERENCE",
+  "authoring_file_name": "サッシ商品マスター_v0.4.xlsx",
+  "authoring_file_id": "1Jchl9UiiFbCDeiTNLTaWlVRJmNVr1DZA",
+  "runtime_status": "READY",
+  "runtime_files": [
+    {
+      "name": "LIXIL_TW_runtime_integrated-v0.4.json",
+      "id": "1hWy1coHWTsuXYXGLRxZ0a2vJEmSIvg5p",
+      "role": "runtime_master",
+      "sha256": "602201ee4bc834490fae609f97dfa5194bfab88beea6520f642c8ddb22bbafed",
+      "bytes": 2486012
+    }
+  ],
+  "documentation_file": "LIXIL_TW_PRODUCT_MASTER_MANIFEST_integrated-v0.4.md",
+  "documentation_file_id": "1mIDte7Q701MWd-ralMVPy6TRSu2LxKi2",
+  "storage_status": "DRIVE_CANONICAL",
+  "package_gate": "PASS",
+  "storage_gate": "PASS",
+  "registry_gate": "PASS",
+  "master_status": "FORMAL_PASS",
+  "human_approval": "USER_CONTINUATION_AUTHORIZED_20260917",
+  "known_source_limitations": [
+    "OP-LIX-TW-CAT-28322",
+    "OP-LIX-TW-CAT-28323",
+    "CUSTOM_DIMENSION_GRAPH_INTERIORS_REQUIRE_REVIEW"
+  ],
+  "manual_checks": [
+    "TW custom dimensions: outside verified catalog outer envelope = BLOCK; inside = REVIEW_REQUIRED/MANUAL_CHECK."
+  ],
+  "generated_at": "2026-09-17T11:50:22+09:00",
+  "spec_version": "PRODUCT_MASTER_PACKAGE_STORAGE_COMPLETION_GATE_v2.0",
+  "change_control": {
+    "change_id": "LIXIL-TW-GRILLE-R1",
+    "authoring_revision": "TW-GRILLE-R1",
+    "previous_package_version": "integrated-v0.3",
+    "working_qa_drive_file_id": "1gA37k4sJbAJeZajOl85sMtBg37XRxZhZ",
+    "requested_diff_coverage": "PASS",
+    "unrequested_diff_count": 0
+  },
+  "registry_file_id": "1HMMZ8JdsbJPtL_8LjQfxMF8P_Zb4-LReqvPMFn1pJks",
+  "canonical_folder_id": "1oLex2SCEIKoH5mDMtbMasJXglPF-n-a",
+  "old_folder_id": "1K_fgs055I9_Psx6Co5Qn1F1B-Ujpv25L",
+  "working_folder_id": "1uO6KjlmyJKALcFOTOkS96BuV1WzHBULD",
+  "formal_gate_summary": {
+    "content": "PASS",
+    "dependency": "PASS",
+    "qa": "PASS",
+    "artifact_package": "PASS",
+    "storage": "PASS",
+    "registry": "PASS"
+  }
+}
