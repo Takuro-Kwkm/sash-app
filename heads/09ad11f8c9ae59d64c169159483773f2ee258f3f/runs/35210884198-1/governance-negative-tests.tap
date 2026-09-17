@@ -1,0 +1,16 @@
+✔ old HEAD rejected (98.809533ms)
+✔ omitted series rejected (860.193152ms)
+✔ omitted adapter field rejected (841.748373ms)
+✔ builder count cannot authorize itself (902.964967ms)
+✔ duplicated series rejected (1175.134103ms)
+✔ restore verified evidence after negative tests (848.621767ms)
+✔ conditional initial HIDE stays user-facing; fixed identity and technical fields do not (2.547399ms)
+✔ independent workflow trigger is rejected by authority policy (457.725251ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 8
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 5281.953638
