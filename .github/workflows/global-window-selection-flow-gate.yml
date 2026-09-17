@@ -7,6 +7,8 @@ on:
       - feat/new-construction-runtime-ui-v16-20260910
     paths:
       - '.github/workflows/global-window-selection-flow-gate.yml'
+      - 'project-governance/**'
+      - 'scripts/governance/**'
       - 'src/catalog/runtime-master/**'
       - 'src/catalog/**'
       - 'src/ui/web/**'
@@ -19,6 +21,8 @@ on:
       - main
     paths:
       - '.github/workflows/global-window-selection-flow-gate.yml'
+      - 'project-governance/**'
+      - 'scripts/governance/**'
       - 'src/catalog/runtime-master/**'
       - 'src/catalog/**'
       - 'src/ui/web/**'
@@ -36,7 +40,54 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  governance-precheck:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+    outputs:
+      authorized: ${{ steps.human-review.outputs.authorized }}
+    steps:
+      - name: Checkout exact HEAD for governance
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.HEAD_SHA }}
+          fetch-depth: 0
+
+      - name: Setup Node 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Verify project governance state
+        run: node scripts/governance/verify-project-state.mjs
+
+      - name: Evaluate Human Review authorization
+        id: human-review
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/governance/evaluate-gates.mjs
+          node --input-type=module <<'NODE'
+          import { appendFileSync, readFileSync } from 'node:fs';
+          const result = JSON.parse(readFileSync('artifacts/governance/gate-results.json', 'utf8'));
+          const authorized = result.gates?.HUMAN_FLOW_REVIEW_GATE?.status === 'PASS';
+          appendFileSync(process.env.GITHUB_OUTPUT, `authorized=${authorized ? 'true' : 'false'}\n`);
+          console.log(`HUMAN_FLOW_REVIEW_GATE=${authorized ? 'PASS' : result.gates?.HUMAN_FLOW_REVIEW_GATE?.status || 'BLOCKED'}`);
+          console.log(`POST_HUMAN_REVIEW_AUTHORIZED=${authorized ? 'TRUE' : 'FALSE'}`);
+          NODE
+
+      - name: Upload governance precheck evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: global-flow-governance-precheck-${{ env.HEAD_SHA }}
+          path: artifacts/governance/
+          if-no-files-found: error
+
   global-flow:
+    needs: governance-precheck
+    if: needs.governance-precheck.outputs.authorized == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 60
     env:
@@ -262,6 +313,7 @@ jobs:
 
       - name: Gate summary
         run: |
+          echo 'HUMAN_FLOW_REVIEW_GATE=PASS'
           echo 'WINDOW_FLOW_BASELINE_GATE=PASS'
           echo 'CANONICAL_SLOT_SCHEMA_GATE=PASS'
           echo 'FLOW_SCHEMA_UNMAPPED_FIELD_GATE=PASS'
@@ -271,14 +323,9 @@ jobs:
           echo 'FLOW_TRANSITION_GATE=PASS'
           echo 'FULL_BROWSER_FLOW_QA_GATE=PASS'
           echo 'FLOW_REGRESSION_GATE=PASS'
-          echo 'FULL_WINDOW_COVERAGE_GATE=PASS'
           echo 'CUSTOM_SIZE_COVERAGE_GATE=PASS'
-          echo 'DEPENDENCY_GATE=PASS'
-          echo 'UI_FLOW_GATE=PASS'
-          echo 'AUTOMATED_TEST_GATE=PASS'
           echo 'REGRESSION_GATE=PASS'
           echo 'REPOSITORY_GATE=PASS'
-          echo 'UNVERIFIED_QA_CASE_COUNT=0'
-          echo 'GLOBAL_WINDOW_SELECTION_FLOW_READY=TRUE'
-          echo 'APP_INTEGRATION_READY=TRUE'
-          echo 'RELEASE_INPUT_GATE=PASS'
+          echo 'GLOBAL_WINDOW_SELECTION_FLOW_READY=QA_EXECUTED_PENDING_GOVERNANCE_EVIDENCE_IMPORT'
+          echo 'APP_INTEGRATION_READY=FALSE_PENDING_FULL_GOVERNANCE_EVIDENCE'
+          echo 'RELEASE_INPUT_GATE=BLOCKED_PENDING_FULL_GOVERNANCE_EVIDENCE'
