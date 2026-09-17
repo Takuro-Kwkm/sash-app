@@ -3,15 +3,15 @@ import assert from 'node:assert/strict';
 import { loadRegisteredRuntime } from '../src/catalog/runtime-master/runtime-master-registry.mjs';
 import { getRuntimeAppIntegration } from '../src/catalog/runtime-master/runtime-app-bridge.mjs';
 
-test('TW integrated-v0.3 is registered from the formal manifest and verifies the canonical Runtime SHA', async () => {
+test('TW integrated-v0.4 is registered from the formal manifest and verifies the canonical Runtime SHA', async () => {
   const integration = getRuntimeAppIntegration('SER-LIXIL-TW');
   assert.ok(integration);
   assert.deepEqual(
     { manufacturer: integration.manufacturer, series: integration.series, packageVersion: integration.packageVersion, schemaVersion: integration.schemaVersion, status: integration.status, selectable: integration.selectable },
-    { manufacturer: 'LIXIL', series: 'TW', packageVersion: 'integrated-v0.3', schemaVersion: '2.0', status: 'READY', selectable: true },
+    { manufacturer: 'LIXIL', series: 'TW', packageVersion: 'integrated-v0.4', schemaVersion: '2.0', status: 'READY', selectable: true },
   );
-  assert.equal(integration.canonicalRuntimeReference.runtimeManifestDriveFileId, '1f_RL37UoveSoQYtWZQf3NzIG4jUwzlcb');
-  assert.equal(integration.canonicalRuntimeReference.runtimeJsonDriveFileId, '1i_rfZwRcPJCDj3bn-QH1OldX_sbogc2A');
+  assert.equal(integration.canonicalRuntimeReference.runtimeManifestDriveFileId, '13doEdTkUlQNu4Dm-SNwkeUg8RkrjS5G0');
+  assert.equal(integration.canonicalRuntimeReference.runtimeJsonDriveFileId, '1hWy1coHWTsuXYXGLRxZ0a2vJEmSIvg5p');
 
   const runtime = await loadRegisteredRuntime('LIXIL', 'TW');
   assert.equal(runtime.normalizedManifest.formalPass, true);
@@ -22,17 +22,17 @@ test('TW integrated-v0.3 is registered from the formal manifest and verifies the
   assert.equal(runtime.sourcePackageIntegrity.files.length, 1);
   assert.deepEqual(runtime.sourcePackageIntegrity.files[0], {
     role: 'runtime_master',
-    fileName: 'LIXIL_TW_runtime_integrated-v0.3.json',
-    fileId: '1i_rfZwRcPJCDj3bn-QH1OldX_sbogc2A',
-    expected: '81fdd437884e5248103e2d56f24ade6b9939bbf69530a6d22399bb6b1b899fd0',
-    actual: '81fdd437884e5248103e2d56f24ade6b9939bbf69530a6d22399bb6b1b899fd0',
+    fileName: 'LIXIL_TW_runtime_integrated-v0.4.json',
+    fileId: '1hWy1coHWTsuXYXGLRxZ0a2vJEmSIvg5p',
+    expected: '602201ee4bc834490fae609f97dfa5194bfab88beea6520f642c8ddb22bbafed',
+    actual: '602201ee4bc834490fae609f97dfa5194bfab88beea6520f642c8ddb22bbafed',
     match: true,
-    bytes: 4025620,
-    codec: 'json-transform-v1',
+    bytes: 2486012,
+    codec: 'json-transform-chain-v1',
   });
 });
 
-test('TW v0.3 adapter preserves formal inventories and exposes all 25 formal CUSTOM rules without synthetic domain records', async () => {
+test('TW v0.4 adapter preserves formal inventories and exposes all 25 formal CUSTOM rules without synthetic domain records', async () => {
   const { master } = await loadRegisteredRuntime('LIXIL', 'TW');
   assert.equal(master.provider.windows.filter((row) => row.active !== false).length, 25);
   assert.equal(master.provider.sizes.filter((row) => row.active !== false).length, 1112);

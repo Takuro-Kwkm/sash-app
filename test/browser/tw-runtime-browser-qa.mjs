@@ -154,9 +154,9 @@ try {
   assert.equal(response.status(), 200);
   const integration = (await response.json()).find((row) => row.id === PRODUCT_ID);
   assert.ok(integration);
-  assert.equal(integration.packageVersion, 'integrated-v0.3');
+  assert.equal(integration.packageVersion, 'integrated-v0.4');
   assert.equal(integration.schemaVersion, '2.0');
-  assert.equal(integration.sourceHash, 'c4980f45fdf57afe1512f2ca42da0eca53d9facc1f555734f7d89b347a808ee0');
+  assert.equal(integration.sourceHash, '95380f5cab261edf03bf868e0f2120b9d57e941d6618b4543afe7a6ffd00c68e');
   await preflight.close();
 
   for (const config of [
