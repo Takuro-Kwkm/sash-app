@@ -2,6 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync,writeFileSync } from 'node:fs';
 import { spawnSync } from 'node:child_process';
+import { validateConnectorDriveSnapshot } from './drive-authority.mjs';
 const path='artifacts/governance/human-flow-review.json';
 const original=readFileSync(path,'utf8');
 const run=()=>spawnSync(process.execPath,['scripts/governance/verify-human-flow-field-coverage.mjs'],{encoding:'utf8'});
@@ -27,4 +28,20 @@ test('independent workflow trigger is rejected by authority policy',()=>{
  const file='.github/workflows/global-window-selection-flow-gate.yml';const old=readFileSync(file,'utf8');
  try{writeFileSync(file,old.replace('on:\n','on:\n  push:\n'));assert.notEqual(spawnSync('python',['scripts/governance/verify-workflow-authority.py'],{encoding:'utf8'}).status,0);}
  finally{writeFileSync(file,old);assert.equal(spawnSync('python',['scripts/governance/verify-workflow-authority.py'],{encoding:'utf8'}).status,0);}
+});
+
+test('stale Drive connector observation is rejected',()=>{
+ const snapshot=JSON.parse(readFileSync('project-governance/drive-authority-snapshot.json','utf8'));
+ const observed=Date.parse(snapshot.observation.metadata_revalidated_at);
+ const result=validateConnectorDriveSnapshot(snapshot,{now:observed+(3*60*60*1000)});
+ assert.equal(result.status,'BLOCKED');
+ assert.ok(result.errors.includes('CONNECTOR_OBSERVATION_STALE'));
+});
+
+test('missing required Drive authority file is rejected',()=>{
+ const snapshot=JSON.parse(readFileSync('project-governance/drive-authority-snapshot.json','utf8'));
+ snapshot.entries.pop();
+ const result=validateConnectorDriveSnapshot(snapshot,{now:Date.parse(snapshot.observation.metadata_revalidated_at)+(10*60*1000)});
+ assert.equal(result.status,'BLOCKED');
+ assert.ok(result.errors.some(e=>e.startsWith('MISSING_REQUIRED_DRIVE_FILE_')));
 });

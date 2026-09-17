@@ -1,7 +1,9 @@
-// One command reads external current state. Missing access is BLOCKED, never old-state PASS.
+// One command reconstructs current state from persistent evidence plus Drive authority. Missing or stale authority is BLOCKED, never old-state PASS.
 import { createHash } from 'node:crypto';
 import { readJson,writeJson } from './governance-lib.mjs';
+import { validateConnectorDriveSnapshot, verifyLiveDriveSnapshot, resolveDriveAuthority } from './drive-authority.mjs';
 const config=readJson('project-governance/project-state.json');
+if(!process.env.GH_TOKEN)throw Error('GITHUB_READ_CREDENTIAL_REQUIRED');
 const get=async url=>{const r=await fetch(url,{headers:{Authorization:`Bearer ${process.env.GH_TOKEN}`,Accept:'application/vnd.github+json'}});if(!r.ok)throw Error(`READ_FAILED_${r.status}`);return r.json();};
 const base=`https://api.github.com/repos/${config.repository}`;
 const pr=await get(`${base}/pulls/24`);
@@ -15,8 +17,9 @@ const state=JSON.parse((await content(`${pointer.path}/project-state.json`)).toS
 const runs=await get(`${base}/actions/runs?head_sha=${pr.head.sha}&per_page=100`);
 const statuses=await get(`${base}/commits/${pr.head.sha}/status`);
 const drive=readJson('project-governance/drive-authority-snapshot.json');
-let driveLive='BLOCKED_LIVE_DRIVE_READ_NOT_CONFIGURED';
-if(process.env.DRIVE_READONLY_ACCESS_TOKEN){for(const row of drive.entries){const r=await fetch(`https://www.googleapis.com/drive/v3/files/${row.drive_file_id}?fields=id,name,modifiedTime,version`,{headers:{Authorization:`Bearer ${process.env.DRIVE_READONLY_ACCESS_TOKEN}`}});if(!r.ok)throw Error(`DRIVE_READ_FAILED_${r.status}`);const live=await r.json();if(live.modifiedTime!==row.modified_identity||live.name!==row.name)throw Error('DRIVE_AUTHORITY_CHANGED');}driveLive='PASS';}
-writeJson('artifacts/governance/reconstructed-current-state.json',{...state,reconstruction_observed_at:new Date().toISOString(),evidence_storage_commit:ref.object.sha,current_state_reconstruction_gate:driveLive==='PASS'?'PASS':'BLOCKED',drive_live_status:driveLive,workflow_runs:runs.workflow_runs.map(r=>({id:r.id,head:r.head_sha,status:r.status,conclusion:r.conclusion})),commit_status:statuses});
-console.log(`CURRENT_STATE_RECONSTRUCTION_GATE=${driveLive==='PASS'?'PASS':'BLOCKED'} EXACT_HEAD=${pr.head.sha}`);
-if(driveLive!=='PASS')process.exitCode=2;
+const connectorDrive=validateConnectorDriveSnapshot(drive);
+const liveDrive=await verifyLiveDriveSnapshot(drive,process.env.DRIVE_READONLY_ACCESS_TOKEN);
+const driveAuthority=resolveDriveAuthority(connectorDrive,liveDrive);
+writeJson('artifacts/governance/reconstructed-current-state.json',{...state,reconstruction_observed_at:new Date().toISOString(),evidence_storage_commit:ref.object.sha,current_state_reconstruction_gate:driveAuthority.current_state_reconstruction_gate,drive_authority_mode:driveAuthority.authority_mode,connector_snapshot_status:connectorDrive,drive_live_status:liveDrive,post_human_drive_live_gate:driveAuthority.post_human_drive_live_gate,workflow_runs:runs.workflow_runs.map(r=>({id:r.id,head:r.head_sha,status:r.status,conclusion:r.conclusion})),commit_status:statuses});
+console.log(`CURRENT_STATE_RECONSTRUCTION_GATE=${driveAuthority.current_state_reconstruction_gate} DRIVE_AUTHORITY_MODE=${driveAuthority.authority_mode} EXACT_HEAD=${pr.head.sha}`);
+if(driveAuthority.current_state_reconstruction_gate!=='PASS')process.exitCode=2;

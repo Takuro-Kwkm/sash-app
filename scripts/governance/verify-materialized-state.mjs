@@ -10,11 +10,12 @@ if(gh.pr.head!==head||gh.branch.sha!==head||gh.branch.name!==state.branch)throw 
 const review=readJson('artifacts/governance/human-flow-review.json');
 if(review.runtime_snapshot_id!==state.runtime_snapshot_id||review.review_artifact_identity!==state.human_flow_review_artifact_id)throw Error('RUNTIME_IDENTITY_MISMATCH');
 if(state.human_flow_review_gate!=='PASS'&&(state.post_human_review_authorized||state.app_integration_ready||state.release_input_gate==='PASS'))throw Error('HUMAN_REVIEW_BYPASS');
-if(state.governance_foundation.current_state_reconstruction_gate!=='PASS'&&state.post_human_review_authorized)throw Error('DRIVE_RECONSTRUCTION_BYPASS');
+if(state.governance_foundation.current_state_reconstruction_gate!=='PASS'&&state.governance_foundation.status==='PASS')throw Error('FALSE_GOVERNANCE_FOUNDATION_PASS');
+if(state.post_human_review_authorized&&state.governance_foundation.post_human_drive_live_gate!=='PASS')throw Error('LIVE_DRIVE_BYPASS');
 for(const record of registry.entries){
  for(const key of ['evidence_id','exact_head','requirement','command','artifact_identity','artifact_sha256','result','related_gate','runtime_snapshot_id','timestamp','source','historical_relation'])if(!record[key])throw Error(`MISSING_EVIDENCE_${key}`);
  if(record.exact_head!==head||record.runtime_snapshot_id!==state.runtime_snapshot_id)throw Error('STALE_EVIDENCE');
  if(!record.source.startsWith('https://github.com/'))throw Error('EXTERNAL_EXECUTION_EVIDENCE_REQUIRED');
  if(sha256File(`artifacts/governance/${record.artifact_identity}`)!==record.artifact_sha256)throw Error('ARTIFACT_HASH_MISMATCH');
 }
-console.log(`PROJECT_STATE_GATE=PASS EVIDENCE_REGISTRY_GATE=PASS EVIDENCE_COUNT=${registry.entries.length}`);
+console.log(`PROJECT_STATE_GATE=PASS EVIDENCE_REGISTRY_GATE=PASS EVIDENCE_COUNT=${registry.entries.length} CURRENT_STATE_RECONSTRUCTION_GATE=${state.governance_foundation.current_state_reconstruction_gate} DRIVE_AUTHORITY_MODE=${state.governance_foundation.drive_authority_mode}`);
