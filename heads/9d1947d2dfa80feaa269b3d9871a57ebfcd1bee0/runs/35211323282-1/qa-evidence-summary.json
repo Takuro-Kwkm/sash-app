@@ -1,0 +1,8 @@
+{
+  "exact_head": "9d1947d2dfa80feaa269b3d9871a57ebfcd1bee0",
+  "runtime_snapshot_id": "RUNTIME-SNAPSHOT-6d21faa6a959e00ab959",
+  "field_coverage_status": "PASS",
+  "accepted_current_head_entries": 7,
+  "rejected_count": 0,
+  "rejected": []
+}
