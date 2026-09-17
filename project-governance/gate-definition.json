@@ -1,5 +1,5 @@
 {
-  "schema_version": "1.1.0",
+  "schema_version": "1.2.0",
   "gate_order": [
     "CANONICAL_RUNTIME_GATE",
     "RUNTIME_ADAPTER_GATE",
@@ -40,6 +40,9 @@
         "src/ui/web/**",
         "scripts/global-window-flow-*.mjs",
         "scripts/governance/generate-human-flow-review.mjs",
+        "scripts/governance/build-human-flow-review.mjs",
+        "scripts/governance/runtime-field-coverage.mjs",
+        "scripts/governance/verify-human-flow-field-coverage.mjs",
         "project-governance/runtime-snapshot.json",
         "project-governance/gate-definition.json"
       ]
@@ -69,10 +72,6 @@
       "APP_INTEGRATION_READY"
     ],
     "unverified_qa_case_count_must_equal": 0,
-    "required_release_input": [
-      "reviewed_exact_head",
-      "review_artifact_identity",
-      "human_approval_reference"
-    ]
+    "required_release_input": ["reviewed_exact_head", "review_artifact_identity", "human_approval_reference"]
   }
 }
