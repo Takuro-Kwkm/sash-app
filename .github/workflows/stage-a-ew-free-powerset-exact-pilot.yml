@@ -1,7 +1,11 @@
 name: Stage A EW V3 Targeted Exact Recovery
 
 on:
-  workflow_dispatch:
+  workflow_call:
+    inputs:
+      controller_head:
+        required: true
+        type: string
 
 permissions:
   contents: read
@@ -11,7 +15,15 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  governance-authority:
+    uses: ./.github/workflows/governance-authorization.yml
+    with:
+      controller_head: ${{ inputs.controller_head }}
+      release: false
+
   count:
+    needs: ["governance-authority"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && (true) }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
     strategy:
@@ -86,8 +98,8 @@ jobs:
           if-no-files-found: error
 
   aggregate:
-    if: always()
-    needs: count
+    needs: ["governance-authority", "count"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && (always()) }}
     runs-on: ubuntu-latest
     timeout-minutes: 2
     env:

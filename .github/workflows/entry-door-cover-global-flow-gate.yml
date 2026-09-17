@@ -1,42 +1,11 @@
 name: Entry Door Cover Global Flow Gate
 
 on:
-  push:
-    branches:
-      - feat/new-construction-runtime-ui-v16-20260910
-    paths:
-      - '.github/workflows/entry-door-cover-global-flow-gate.yml'
-      - 'src/catalog/runtime-master/entry-door-cover-runtime-ui-contract.mjs'
-      - 'src/catalog/runtime-master/formal-product-runtime-v2-loader.mjs'
-      - 'src/catalog/runtime-master/rechent-door3-nonfire-v1-adapter.mjs'
-      - 'src/catalog/runtime-master/runtime-master-registry.mjs'
-      - 'src/catalog/runtime-master/app-runtime-integration-registry.mjs'
-      - 'src/catalog/runtime-master/runtime-app-bridge.mjs'
-      - 'src/catalog/runtime-master/new-construction-sash-runtime-ui-contract.mjs'
-      - 'src/catalog/runtime-master/global-window-selection-flow-engine.mjs'
-      - 'src/catalog/runtime-master-packages/lixil-rechent-door3-nonfire-v0.8-r7/**'
-      - 'test/82-rechent-entry-door-cover-global-flow.test.mjs'
-      - 'test/browser/rechent-entry-door-cover-global-flow-browser-qa.mjs'
-      - 'src/ui/web/**'
-      - 'package.json'
-  pull_request:
-    branches:
-      - main
-    paths:
-      - '.github/workflows/entry-door-cover-global-flow-gate.yml'
-      - 'src/catalog/runtime-master/entry-door-cover-runtime-ui-contract.mjs'
-      - 'src/catalog/runtime-master/formal-product-runtime-v2-loader.mjs'
-      - 'src/catalog/runtime-master/rechent-door3-nonfire-v1-adapter.mjs'
-      - 'src/catalog/runtime-master/runtime-master-registry.mjs'
-      - 'src/catalog/runtime-master/app-runtime-integration-registry.mjs'
-      - 'src/catalog/runtime-master/runtime-app-bridge.mjs'
-      - 'src/catalog/runtime-master/new-construction-sash-runtime-ui-contract.mjs'
-      - 'src/catalog/runtime-master/global-window-selection-flow-engine.mjs'
-      - 'src/catalog/runtime-master-packages/lixil-rechent-door3-nonfire-v0.8-r7/**'
-      - 'test/82-rechent-entry-door-cover-global-flow.test.mjs'
-      - 'test/browser/rechent-entry-door-cover-global-flow-browser-qa.mjs'
-      - 'src/ui/web/**'
-      - 'package.json'
+  workflow_call:
+    inputs:
+      controller_head:
+        required: true
+        type: string
 
 permissions:
   contents: read
@@ -46,7 +15,15 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  governance-authority:
+    uses: ./.github/workflows/governance-authorization.yml
+    with:
+      controller_head: ${{ inputs.controller_head }}
+      release: false
+
   rechent-entry-door-cover:
+    needs: ["governance-authority"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && (true) }}
     runs-on: ubuntu-latest
     timeout-minutes: 45
     env:

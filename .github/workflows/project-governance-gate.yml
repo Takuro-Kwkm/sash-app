@@ -12,6 +12,7 @@ on:
 permissions:
   contents: read
   pull-requests: read
+  actions: read
 
 concurrency:
   group: project-governance-${{ github.ref }}
@@ -21,7 +22,11 @@ jobs:
   governance:
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    outputs:
+      authorized: ${{ steps.materialize.outputs.authorized }}
     env:
+      GH_TOKEN: ${{ github.token }}
+      DRIVE_READONLY_ACCESS_TOKEN: ${{ secrets.DRIVE_READONLY_ACCESS_TOKEN }}
       HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
     steps:
       - name: Checkout exact HEAD
@@ -50,6 +55,12 @@ jobs:
           node --check scripts/governance/collect-evidence.mjs
           node --check scripts/governance/verify-release-input.mjs
 
+      - name: Install YAML parser
+        run: python -m pip install PyYAML==6.0.2
+
+      - name: Workflow authority policy
+        run: python scripts/governance/verify-workflow-authority.py
+
       - name: Project state invariants
         run: node scripts/governance/verify-project-state.mjs
 
@@ -73,14 +84,16 @@ jobs:
       - name: Prevent false release declaration
         run: node scripts/governance/verify-release-input.mjs
 
-      - name: Record governance foundation evidence
-        run: |
-          node scripts/governance/collect-evidence.mjs \
-            --gate PROJECT_GOVERNANCE_FOUNDATION_GATE \
-            --status PASS \
-            --artifact artifacts/governance/progress-ledger.json \
-            --command "Project Governance Gate" \
-            --scope "Runtime snapshot, authoritative field coverage, Human Review artifact generation, exact-head evidence collection, gate aggregation and Progress Ledger"
+      - name: Governance negative tests
+        shell: bash
+        run: node --test scripts/governance/governance-negative.test.mjs | tee artifacts/governance/governance-negative-tests.tap
+
+      - name: Materialize current repository and external observations
+        id: materialize
+        run: node scripts/governance/materialize-current-state.mjs
+
+      - name: Verify current state and evidence hashes
+        run: node scripts/governance/verify-materialized-state.mjs
 
       - name: Upload governance evidence
         if: always()
@@ -89,3 +102,34 @@ jobs:
           name: project-governance-evidence-${{ env.HEAD_SHA }}
           path: artifacts/governance/
           if-no-files-found: error
+
+  persist:
+    needs: governance
+    if: github.event_name != 'pull_request' && github.repository == 'Takuro-Kwkm/sash-app'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      actions: read
+    env:
+      HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.HEAD_SHA }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - uses: actions/download-artifact@v4
+        with:
+          name: project-governance-evidence-${{ env.HEAD_SHA }}
+          path: artifacts/governance
+      - run: node scripts/governance/verify-materialized-state.mjs
+      - run: node scripts/governance/persist-evidence.mjs
+
+  post-review-global-flow:
+    needs: governance
+    if: needs.governance.outputs.authorized == 'true'
+    uses: ./.github/workflows/global-window-selection-flow-gate.yml
+    with:
+      controller_head: ${{ github.event.pull_request.head.sha || github.sha }}

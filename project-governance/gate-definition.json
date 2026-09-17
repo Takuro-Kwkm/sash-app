@@ -1,5 +1,5 @@
 {
-  "schema_version": "1.2.0",
+  "schema_version": "2.0.0",
   "gate_order": [
     "CANONICAL_RUNTIME_GATE",
     "RUNTIME_ADAPTER_GATE",
@@ -24,16 +24,135 @@
     "APP_INTEGRATION_READY"
   ],
   "gates": {
-    "CANONICAL_RUNTIME_GATE": { "type": "automatic", "requires_exact_head_evidence": true, "requires_runtime_snapshot_identity": true },
-    "RUNTIME_ADAPTER_GATE": { "type": "automatic", "requires_exact_head_evidence": true, "requires_runtime_snapshot_identity": true },
-    "WINDOW_FLOW_BASELINE_GATE": { "type": "automatic", "requires_exact_head_evidence": true, "requires_runtime_snapshot_identity": true },
-    "CANONICAL_SLOT_SCHEMA_GATE": { "type": "automatic", "requires_exact_head_evidence": true, "requires_runtime_snapshot_identity": true },
-    "FLOW_SCHEMA_UNMAPPED_FIELD_GATE": { "type": "automatic", "requires_exact_head_evidence": true, "requires_runtime_snapshot_identity": true },
-    "SINGLE_FLOW_ENGINE_GATE": { "type": "automatic", "requires_exact_head_evidence": true },
-    "SERIES_OVERRIDE_ELIMINATION_GATE": { "type": "automatic", "requires_exact_head_evidence": true },
+    "CANONICAL_RUNTIME_GATE": {
+      "type": "automatic",
+      "requires_exact_head_evidence": true,
+      "requires_runtime_snapshot_identity": true,
+      "gate_id": "CANONICAL_RUNTIME_GATE",
+      "prerequisites": [],
+      "required_evidence": [
+        "CANONICAL_RUNTIME_GATE"
+      ],
+      "required_artifact": "artifacts/governance/human-flow-review.json",
+      "required_exact_head_relation": "artifact.exact_head == evaluated repository HEAD",
+      "pass_condition": "All prerequisites PASS and independently verified current-head artifact/hash evidence; human gate additionally requires explicit approval reference.",
+      "fail_condition": "Missing, stale, mismatched, unverified or failed evidence.",
+      "blocker_behavior": "CLOSE_NEXT_PHASE",
+      "next_authorized_gate": "RUNTIME_ADAPTER_GATE"
+    },
+    "RUNTIME_ADAPTER_GATE": {
+      "type": "automatic",
+      "requires_exact_head_evidence": true,
+      "requires_runtime_snapshot_identity": true,
+      "gate_id": "RUNTIME_ADAPTER_GATE",
+      "prerequisites": [
+        "CANONICAL_RUNTIME_GATE"
+      ],
+      "required_evidence": [
+        "RUNTIME_ADAPTER_GATE"
+      ],
+      "required_artifact": "artifacts/governance/human-flow-review.json",
+      "required_exact_head_relation": "artifact.exact_head == evaluated repository HEAD",
+      "pass_condition": "All prerequisites PASS and independently verified current-head artifact/hash evidence; human gate additionally requires explicit approval reference.",
+      "fail_condition": "Missing, stale, mismatched, unverified or failed evidence.",
+      "blocker_behavior": "CLOSE_NEXT_PHASE",
+      "next_authorized_gate": "WINDOW_FLOW_BASELINE_GATE"
+    },
+    "WINDOW_FLOW_BASELINE_GATE": {
+      "type": "automatic",
+      "requires_exact_head_evidence": true,
+      "requires_runtime_snapshot_identity": true,
+      "gate_id": "WINDOW_FLOW_BASELINE_GATE",
+      "prerequisites": [
+        "RUNTIME_ADAPTER_GATE"
+      ],
+      "required_evidence": [
+        "WINDOW_FLOW_BASELINE_GATE"
+      ],
+      "required_artifact": "artifacts/governance/human-flow-review.json",
+      "required_exact_head_relation": "artifact.exact_head == evaluated repository HEAD",
+      "pass_condition": "All prerequisites PASS and independently verified current-head artifact/hash evidence; human gate additionally requires explicit approval reference.",
+      "fail_condition": "Missing, stale, mismatched, unverified or failed evidence.",
+      "blocker_behavior": "CLOSE_NEXT_PHASE",
+      "next_authorized_gate": "CANONICAL_SLOT_SCHEMA_GATE"
+    },
+    "CANONICAL_SLOT_SCHEMA_GATE": {
+      "type": "automatic",
+      "requires_exact_head_evidence": true,
+      "requires_runtime_snapshot_identity": true,
+      "gate_id": "CANONICAL_SLOT_SCHEMA_GATE",
+      "prerequisites": [
+        "WINDOW_FLOW_BASELINE_GATE"
+      ],
+      "required_evidence": [
+        "CANONICAL_SLOT_SCHEMA_GATE"
+      ],
+      "required_artifact": "artifacts/governance/human-flow-review.json",
+      "required_exact_head_relation": "artifact.exact_head == evaluated repository HEAD",
+      "pass_condition": "All prerequisites PASS and independently verified current-head artifact/hash evidence; human gate additionally requires explicit approval reference.",
+      "fail_condition": "Missing, stale, mismatched, unverified or failed evidence.",
+      "blocker_behavior": "CLOSE_NEXT_PHASE",
+      "next_authorized_gate": "FLOW_SCHEMA_UNMAPPED_FIELD_GATE"
+    },
+    "FLOW_SCHEMA_UNMAPPED_FIELD_GATE": {
+      "type": "automatic",
+      "requires_exact_head_evidence": true,
+      "requires_runtime_snapshot_identity": true,
+      "gate_id": "FLOW_SCHEMA_UNMAPPED_FIELD_GATE",
+      "prerequisites": [
+        "CANONICAL_SLOT_SCHEMA_GATE"
+      ],
+      "required_evidence": [
+        "FLOW_SCHEMA_UNMAPPED_FIELD_GATE"
+      ],
+      "required_artifact": "artifacts/governance/human-flow-review.json",
+      "required_exact_head_relation": "artifact.exact_head == evaluated repository HEAD",
+      "pass_condition": "All prerequisites PASS and independently verified current-head artifact/hash evidence; human gate additionally requires explicit approval reference.",
+      "fail_condition": "Missing, stale, mismatched, unverified or failed evidence.",
+      "blocker_behavior": "CLOSE_NEXT_PHASE",
+      "next_authorized_gate": "SINGLE_FLOW_ENGINE_GATE"
+    },
+    "SINGLE_FLOW_ENGINE_GATE": {
+      "type": "automatic",
+      "requires_exact_head_evidence": true,
+      "gate_id": "SINGLE_FLOW_ENGINE_GATE",
+      "prerequisites": [
+        "FLOW_SCHEMA_UNMAPPED_FIELD_GATE"
+      ],
+      "required_evidence": [
+        "SINGLE_FLOW_ENGINE_GATE"
+      ],
+      "required_artifact": "artifacts/governance/human-flow-review.json",
+      "required_exact_head_relation": "artifact.exact_head == evaluated repository HEAD",
+      "pass_condition": "All prerequisites PASS and independently verified current-head artifact/hash evidence; human gate additionally requires explicit approval reference.",
+      "fail_condition": "Missing, stale, mismatched, unverified or failed evidence.",
+      "blocker_behavior": "CLOSE_NEXT_PHASE",
+      "next_authorized_gate": "SERIES_OVERRIDE_ELIMINATION_GATE"
+    },
+    "SERIES_OVERRIDE_ELIMINATION_GATE": {
+      "type": "automatic",
+      "requires_exact_head_evidence": true,
+      "gate_id": "SERIES_OVERRIDE_ELIMINATION_GATE",
+      "prerequisites": [
+        "SINGLE_FLOW_ENGINE_GATE"
+      ],
+      "required_evidence": [
+        "SERIES_OVERRIDE_ELIMINATION_GATE"
+      ],
+      "required_artifact": "artifacts/governance/human-flow-review.json",
+      "required_exact_head_relation": "artifact.exact_head == evaluated repository HEAD",
+      "pass_condition": "All prerequisites PASS and independently verified current-head artifact/hash evidence; human gate additionally requires explicit approval reference.",
+      "fail_condition": "Missing, stale, mismatched, unverified or failed evidence.",
+      "blocker_behavior": "CLOSE_NEXT_PHASE",
+      "next_authorized_gate": "HUMAN_FLOW_REVIEW_GATE"
+    },
     "HUMAN_FLOW_REVIEW_GATE": {
       "type": "human",
-      "requires": ["reviewed_exact_head", "review_artifact_identity", "human_approval_reference"],
+      "requires": [
+        "reviewed_exact_head",
+        "review_artifact_identity",
+        "human_approval_reference"
+      ],
       "reopen_paths": [
         "src/catalog/runtime-master/**",
         "src/catalog/**",
@@ -45,21 +164,251 @@
         "scripts/governance/verify-human-flow-field-coverage.mjs",
         "project-governance/runtime-snapshot.json",
         "project-governance/gate-definition.json"
-      ]
+      ],
+      "gate_id": "HUMAN_FLOW_REVIEW_GATE",
+      "prerequisites": [
+        "SERIES_OVERRIDE_ELIMINATION_GATE"
+      ],
+      "required_evidence": [
+        "HUMAN_FLOW_REVIEW_GATE"
+      ],
+      "required_artifact": "artifacts/governance/human-flow-review.json",
+      "required_exact_head_relation": "artifact.exact_head == evaluated repository HEAD",
+      "pass_condition": "All prerequisites PASS and independently verified current-head artifact/hash evidence; human gate additionally requires explicit approval reference.",
+      "fail_condition": "Missing, stale, mismatched, unverified or failed evidence.",
+      "blocker_behavior": "CLOSE_NEXT_PHASE",
+      "next_authorized_gate": "FULL_FLOW_SIGNATURE_COVERAGE_GATE"
     },
-    "FULL_FLOW_SIGNATURE_COVERAGE_GATE": { "type": "automatic", "requires_exact_head_evidence": true, "post_human_review": true },
-    "FLOW_TRANSITION_GATE": { "type": "automatic", "requires_exact_head_evidence": true, "post_human_review": true },
-    "FULL_WINDOW_COVERAGE_GATE": { "type": "automatic", "requires_exact_head_evidence": true, "post_human_review": true },
-    "CUSTOM_SIZE_COVERAGE_GATE": { "type": "automatic", "requires_exact_head_evidence": true, "post_human_review": true },
-    "DEPENDENCY_GATE": { "type": "automatic", "requires_exact_head_evidence": true, "post_human_review": true },
-    "UI_FLOW_GATE": { "type": "automatic", "requires_exact_head_evidence": true, "post_human_review": true },
-    "AUTOMATED_TEST_GATE": { "type": "automatic", "requires_exact_head_evidence": true, "post_human_review": true },
-    "FULL_BROWSER_FLOW_QA_GATE": { "type": "automatic", "requires_exact_head_evidence": true, "post_human_review": true },
-    "FULL_BROWSER_QA_GATE": { "type": "automatic", "requires_exact_head_evidence": true, "post_human_review": true },
-    "REGRESSION_GATE": { "type": "automatic", "requires_exact_head_evidence": true, "post_human_review": true },
-    "REPOSITORY_GATE": { "type": "automatic", "requires_exact_head_evidence": true, "post_human_review": true },
-    "GLOBAL_WINDOW_SELECTION_FLOW_GATE": { "type": "composite" },
-    "APP_INTEGRATION_READY": { "type": "composite" }
+    "FULL_FLOW_SIGNATURE_COVERAGE_GATE": {
+      "type": "automatic",
+      "requires_exact_head_evidence": true,
+      "post_human_review": true,
+      "gate_id": "FULL_FLOW_SIGNATURE_COVERAGE_GATE",
+      "prerequisites": [
+        "HUMAN_FLOW_REVIEW_GATE"
+      ],
+      "required_evidence": [
+        "FULL_FLOW_SIGNATURE_COVERAGE_GATE"
+      ],
+      "required_artifact": "gate-specific execution artifact",
+      "required_exact_head_relation": "artifact.exact_head == evaluated repository HEAD",
+      "pass_condition": "All prerequisites PASS and independently verified current-head artifact/hash evidence; human gate additionally requires explicit approval reference.",
+      "fail_condition": "Missing, stale, mismatched, unverified or failed evidence.",
+      "blocker_behavior": "CLOSE_NEXT_PHASE",
+      "next_authorized_gate": "FLOW_TRANSITION_GATE"
+    },
+    "FLOW_TRANSITION_GATE": {
+      "type": "automatic",
+      "requires_exact_head_evidence": true,
+      "post_human_review": true,
+      "gate_id": "FLOW_TRANSITION_GATE",
+      "prerequisites": [
+        "FULL_FLOW_SIGNATURE_COVERAGE_GATE"
+      ],
+      "required_evidence": [
+        "FLOW_TRANSITION_GATE"
+      ],
+      "required_artifact": "gate-specific execution artifact",
+      "required_exact_head_relation": "artifact.exact_head == evaluated repository HEAD",
+      "pass_condition": "All prerequisites PASS and independently verified current-head artifact/hash evidence; human gate additionally requires explicit approval reference.",
+      "fail_condition": "Missing, stale, mismatched, unverified or failed evidence.",
+      "blocker_behavior": "CLOSE_NEXT_PHASE",
+      "next_authorized_gate": "FULL_WINDOW_COVERAGE_GATE"
+    },
+    "FULL_WINDOW_COVERAGE_GATE": {
+      "type": "automatic",
+      "requires_exact_head_evidence": true,
+      "post_human_review": true,
+      "gate_id": "FULL_WINDOW_COVERAGE_GATE",
+      "prerequisites": [
+        "FLOW_TRANSITION_GATE"
+      ],
+      "required_evidence": [
+        "FULL_WINDOW_COVERAGE_GATE"
+      ],
+      "required_artifact": "gate-specific execution artifact",
+      "required_exact_head_relation": "artifact.exact_head == evaluated repository HEAD",
+      "pass_condition": "All prerequisites PASS and independently verified current-head artifact/hash evidence; human gate additionally requires explicit approval reference.",
+      "fail_condition": "Missing, stale, mismatched, unverified or failed evidence.",
+      "blocker_behavior": "CLOSE_NEXT_PHASE",
+      "next_authorized_gate": "CUSTOM_SIZE_COVERAGE_GATE"
+    },
+    "CUSTOM_SIZE_COVERAGE_GATE": {
+      "type": "automatic",
+      "requires_exact_head_evidence": true,
+      "post_human_review": true,
+      "gate_id": "CUSTOM_SIZE_COVERAGE_GATE",
+      "prerequisites": [
+        "FULL_WINDOW_COVERAGE_GATE"
+      ],
+      "required_evidence": [
+        "CUSTOM_SIZE_COVERAGE_GATE"
+      ],
+      "required_artifact": "gate-specific execution artifact",
+      "required_exact_head_relation": "artifact.exact_head == evaluated repository HEAD",
+      "pass_condition": "All prerequisites PASS and independently verified current-head artifact/hash evidence; human gate additionally requires explicit approval reference.",
+      "fail_condition": "Missing, stale, mismatched, unverified or failed evidence.",
+      "blocker_behavior": "CLOSE_NEXT_PHASE",
+      "next_authorized_gate": "DEPENDENCY_GATE"
+    },
+    "DEPENDENCY_GATE": {
+      "type": "automatic",
+      "requires_exact_head_evidence": true,
+      "post_human_review": true,
+      "gate_id": "DEPENDENCY_GATE",
+      "prerequisites": [
+        "CUSTOM_SIZE_COVERAGE_GATE"
+      ],
+      "required_evidence": [
+        "DEPENDENCY_GATE"
+      ],
+      "required_artifact": "gate-specific execution artifact",
+      "required_exact_head_relation": "artifact.exact_head == evaluated repository HEAD",
+      "pass_condition": "All prerequisites PASS and independently verified current-head artifact/hash evidence; human gate additionally requires explicit approval reference.",
+      "fail_condition": "Missing, stale, mismatched, unverified or failed evidence.",
+      "blocker_behavior": "CLOSE_NEXT_PHASE",
+      "next_authorized_gate": "UI_FLOW_GATE"
+    },
+    "UI_FLOW_GATE": {
+      "type": "automatic",
+      "requires_exact_head_evidence": true,
+      "post_human_review": true,
+      "gate_id": "UI_FLOW_GATE",
+      "prerequisites": [
+        "DEPENDENCY_GATE"
+      ],
+      "required_evidence": [
+        "UI_FLOW_GATE"
+      ],
+      "required_artifact": "gate-specific execution artifact",
+      "required_exact_head_relation": "artifact.exact_head == evaluated repository HEAD",
+      "pass_condition": "All prerequisites PASS and independently verified current-head artifact/hash evidence; human gate additionally requires explicit approval reference.",
+      "fail_condition": "Missing, stale, mismatched, unverified or failed evidence.",
+      "blocker_behavior": "CLOSE_NEXT_PHASE",
+      "next_authorized_gate": "AUTOMATED_TEST_GATE"
+    },
+    "AUTOMATED_TEST_GATE": {
+      "type": "automatic",
+      "requires_exact_head_evidence": true,
+      "post_human_review": true,
+      "gate_id": "AUTOMATED_TEST_GATE",
+      "prerequisites": [
+        "UI_FLOW_GATE"
+      ],
+      "required_evidence": [
+        "AUTOMATED_TEST_GATE"
+      ],
+      "required_artifact": "gate-specific execution artifact",
+      "required_exact_head_relation": "artifact.exact_head == evaluated repository HEAD",
+      "pass_condition": "All prerequisites PASS and independently verified current-head artifact/hash evidence; human gate additionally requires explicit approval reference.",
+      "fail_condition": "Missing, stale, mismatched, unverified or failed evidence.",
+      "blocker_behavior": "CLOSE_NEXT_PHASE",
+      "next_authorized_gate": "FULL_BROWSER_FLOW_QA_GATE"
+    },
+    "FULL_BROWSER_FLOW_QA_GATE": {
+      "type": "automatic",
+      "requires_exact_head_evidence": true,
+      "post_human_review": true,
+      "gate_id": "FULL_BROWSER_FLOW_QA_GATE",
+      "prerequisites": [
+        "AUTOMATED_TEST_GATE"
+      ],
+      "required_evidence": [
+        "FULL_BROWSER_FLOW_QA_GATE"
+      ],
+      "required_artifact": "gate-specific execution artifact",
+      "required_exact_head_relation": "artifact.exact_head == evaluated repository HEAD",
+      "pass_condition": "All prerequisites PASS and independently verified current-head artifact/hash evidence; human gate additionally requires explicit approval reference.",
+      "fail_condition": "Missing, stale, mismatched, unverified or failed evidence.",
+      "blocker_behavior": "CLOSE_NEXT_PHASE",
+      "next_authorized_gate": "FULL_BROWSER_QA_GATE"
+    },
+    "FULL_BROWSER_QA_GATE": {
+      "type": "automatic",
+      "requires_exact_head_evidence": true,
+      "post_human_review": true,
+      "gate_id": "FULL_BROWSER_QA_GATE",
+      "prerequisites": [
+        "FULL_BROWSER_FLOW_QA_GATE"
+      ],
+      "required_evidence": [
+        "FULL_BROWSER_QA_GATE"
+      ],
+      "required_artifact": "gate-specific execution artifact",
+      "required_exact_head_relation": "artifact.exact_head == evaluated repository HEAD",
+      "pass_condition": "All prerequisites PASS and independently verified current-head artifact/hash evidence; human gate additionally requires explicit approval reference.",
+      "fail_condition": "Missing, stale, mismatched, unverified or failed evidence.",
+      "blocker_behavior": "CLOSE_NEXT_PHASE",
+      "next_authorized_gate": "REGRESSION_GATE"
+    },
+    "REGRESSION_GATE": {
+      "type": "automatic",
+      "requires_exact_head_evidence": true,
+      "post_human_review": true,
+      "gate_id": "REGRESSION_GATE",
+      "prerequisites": [
+        "FULL_BROWSER_QA_GATE"
+      ],
+      "required_evidence": [
+        "REGRESSION_GATE"
+      ],
+      "required_artifact": "gate-specific execution artifact",
+      "required_exact_head_relation": "artifact.exact_head == evaluated repository HEAD",
+      "pass_condition": "All prerequisites PASS and independently verified current-head artifact/hash evidence; human gate additionally requires explicit approval reference.",
+      "fail_condition": "Missing, stale, mismatched, unverified or failed evidence.",
+      "blocker_behavior": "CLOSE_NEXT_PHASE",
+      "next_authorized_gate": "REPOSITORY_GATE"
+    },
+    "REPOSITORY_GATE": {
+      "type": "automatic",
+      "requires_exact_head_evidence": true,
+      "post_human_review": true,
+      "gate_id": "REPOSITORY_GATE",
+      "prerequisites": [
+        "REGRESSION_GATE"
+      ],
+      "required_evidence": [
+        "REPOSITORY_GATE"
+      ],
+      "required_artifact": "gate-specific execution artifact",
+      "required_exact_head_relation": "artifact.exact_head == evaluated repository HEAD",
+      "pass_condition": "All prerequisites PASS and independently verified current-head artifact/hash evidence; human gate additionally requires explicit approval reference.",
+      "fail_condition": "Missing, stale, mismatched, unverified or failed evidence.",
+      "blocker_behavior": "CLOSE_NEXT_PHASE",
+      "next_authorized_gate": "GLOBAL_WINDOW_SELECTION_FLOW_GATE"
+    },
+    "GLOBAL_WINDOW_SELECTION_FLOW_GATE": {
+      "type": "composite",
+      "gate_id": "GLOBAL_WINDOW_SELECTION_FLOW_GATE",
+      "prerequisites": [
+        "REPOSITORY_GATE"
+      ],
+      "required_evidence": [
+        "GLOBAL_WINDOW_SELECTION_FLOW_GATE"
+      ],
+      "required_artifact": "gate-specific execution artifact",
+      "required_exact_head_relation": "artifact.exact_head == evaluated repository HEAD",
+      "pass_condition": "All prerequisites PASS and independently verified current-head artifact/hash evidence; human gate additionally requires explicit approval reference.",
+      "fail_condition": "Missing, stale, mismatched, unverified or failed evidence.",
+      "blocker_behavior": "CLOSE_NEXT_PHASE",
+      "next_authorized_gate": "APP_INTEGRATION_READY"
+    },
+    "APP_INTEGRATION_READY": {
+      "type": "composite",
+      "gate_id": "APP_INTEGRATION_READY",
+      "prerequisites": [
+        "GLOBAL_WINDOW_SELECTION_FLOW_GATE"
+      ],
+      "required_evidence": [
+        "APP_INTEGRATION_READY"
+      ],
+      "required_artifact": "gate-specific execution artifact",
+      "required_exact_head_relation": "artifact.exact_head == evaluated repository HEAD",
+      "pass_condition": "All prerequisites PASS and independently verified current-head artifact/hash evidence; human gate additionally requires explicit approval reference.",
+      "fail_condition": "Missing, stale, mismatched, unverified or failed evidence.",
+      "blocker_behavior": "CLOSE_NEXT_PHASE",
+      "next_authorized_gate": "RELEASE_INPUT_GATE"
+    }
   },
   "release_requirements": {
     "required_pass_gates": [
@@ -72,6 +421,10 @@
       "APP_INTEGRATION_READY"
     ],
     "unverified_qa_case_count_must_equal": 0,
-    "required_release_input": ["reviewed_exact_head", "review_artifact_identity", "human_approval_reference"]
+    "required_release_input": [
+      "reviewed_exact_head",
+      "review_artifact_identity",
+      "human_approval_reference"
+    ]
   }
 }

@@ -1,13 +1,22 @@
 name: Estimate Output QA
 
 on:
-  pull_request:
-    branches: [main]
-  push:
-    branches: [main]
+  workflow_call:
+    inputs:
+      controller_head:
+        required: true
+        type: string
 
 jobs:
+  governance-authority:
+    uses: ./.github/workflows/governance-authorization.yml
+    with:
+      controller_head: ${{ inputs.controller_head }}
+      release: false
+
   estimate_output:
+    needs: ["governance-authority"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && (true) }}
     runs-on: ubuntu-latest
     env:
       VERCEL_ORG_ID: team_AkuHacuJlCl8LuvaFpCzFmbv

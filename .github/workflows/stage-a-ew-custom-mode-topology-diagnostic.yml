@@ -1,18 +1,26 @@
 name: Stage A EW CUSTOM Mode Topology Diagnostic
 
 on:
-  push:
-    branches: [feat/new-construction-runtime-ui-v16-20260910]
-    paths:
-      - '.github/workflows/stage-a-ew-custom-mode-topology-diagnostic.yml'
-      - 'scripts/stage-a-ew-custom-mode-topology-diagnostic.mjs'
+  workflow_call:
+    inputs:
+      controller_head:
+        required: true
+        type: string
 
 permissions:
   contents: read
   actions: read
 
 jobs:
+  governance-authority:
+    uses: ./.github/workflows/governance-authorization.yml
+    with:
+      controller_head: ${{ inputs.controller_head }}
+      release: false
+
   diagnose:
+    needs: ["governance-authority"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && (true) }}
     runs-on: ubuntu-latest
     timeout-minutes: 5
     env:

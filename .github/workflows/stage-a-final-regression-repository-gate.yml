@@ -1,11 +1,11 @@
 name: Stage A Final Regression and Repository Gate
 
 on:
-  push:
-    branches: [feat/new-construction-runtime-ui-v16-20260910]
-    paths:
-      - '.github/workflows/stage-a-final-regression-repository-gate.yml'
-      - 'scripts/check-runtime-ui-contracts.mjs'
+  workflow_call:
+    inputs:
+      controller_head:
+        required: true
+        type: string
 
 permissions:
   contents: read
@@ -13,7 +13,15 @@ permissions:
   pull-requests: read
 
 jobs:
+  governance-authority:
+    uses: ./.github/workflows/governance-authorization.yml
+    with:
+      controller_head: ${{ inputs.controller_head }}
+      release: false
+
   final-gates:
+    needs: ["governance-authority"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && (true) }}
     runs-on: ubuntu-latest
     timeout-minutes: 25
     env:
@@ -194,8 +202,8 @@ jobs:
           console.log('REGRESSION_GATE=PASS');
           console.log('REPOSITORY_GATE=PASS');
           console.log('UNVERIFIED_QA_CASE_COUNT=0');
-          console.log('APP_INTEGRATION_READY=TRUE');
-          console.log('RELEASE_INPUT_GATE=PASS');
+          console.log('LEGACY_QA_EXECUTED_PENDING_CONTROLLER_EVIDENCE');
+          console.log('LEGACY_RELEASE_CHECK_NOT_RELEASE_AUTHORITY');
           console.log(`FINAL_EVIDENCE_DIGEST=${result.evidence_digest}`);
           NODE
 

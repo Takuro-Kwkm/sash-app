@@ -1,5 +1,5 @@
 import { existsSync } from 'node:fs';
-import { currentExactHead, readJson, relevantChangesSince, writeJson } from './governance-lib.mjs';
+import { currentExactHead, git, readJson, relevantChangesSince, sha256File, writeJson } from './governance-lib.mjs';
 
 const state = readJson('project-governance/project-state.json');
 const definitions = readJson('project-governance/gate-definition.json');
@@ -27,6 +27,7 @@ function latestCurrentHeadEvidence(gateId) {
     entry.gate_id === gateId
     && entry.exact_head === head
     && entry.authoritative_for_current_head !== false
+    && entry.artifact_sha256 && sha256File(entry.artifact) === entry.artifact_sha256
     && (!entry.runtime_snapshot_id || !currentRuntimeSnapshotId || entry.runtime_snapshot_id === currentRuntimeSnapshotId)
   ) || null;
 }
@@ -38,8 +39,9 @@ let relevantChanges = [];
 let humanStatus = 'BLOCKED';
 let humanReason = 'explicit human approval is not recorded';
 if (human.status === 'PASS' && approvalComplete) {
-  const artifactIdentityMatches = !reviewArtifact || reviewArtifact.review_artifact_identity === human.review_artifact_identity;
-  if (!artifactIdentityMatches) {
+  const artifactIdentityMatches = reviewArtifact?.exact_head === head && reviewArtifact?.review_artifact_identity === human.review_artifact_identity && human.reviewed_exact_head === head ;
+  const reviewedCommitExists = git(['rev-parse', '--verify', `${human.reviewed_exact_head}^{commit}`], {allowFailure:true}) === head;
+  if (!artifactIdentityMatches || !reviewedCommitExists) {
     humanStatus = 'REOPEN';
     humanReason = 'recorded Human approval does not match the current review artifact identity';
   } else {
@@ -66,6 +68,11 @@ result.human_review = {
 const humanIndex = definitions.gate_order.indexOf('HUMAN_FLOW_REVIEW_GATE');
 for (const [index, gateId] of definitions.gate_order.entries()) {
   const def = definitions.gates[gateId];
+  const prerequisiteFailures = (def.prerequisites ?? []).filter(id => result.gates[id]?.status !== 'PASS');
+  if (prerequisiteFailures.length) {
+    result.gates[gateId] = {status:'BLOCKED', reason:'prerequisites not PASS', blocking_gates:prerequisiteFailures};
+    continue;
+  }
   if (gateId === 'HUMAN_FLOW_REVIEW_GATE') {
     result.gates[gateId] = { status: humanStatus, reason: humanReason };
     continue;

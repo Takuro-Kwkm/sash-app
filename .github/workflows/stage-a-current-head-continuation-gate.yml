@@ -1,11 +1,11 @@
 name: Stage A Current-Head Continuation Gate
 
 on:
-  push:
-    branches:
-      - feat/new-construction-runtime-ui-v16-20260910
-    paths:
-      - '.github/workflows/stage-a-current-head-continuation-gate.yml'
+  workflow_call:
+    inputs:
+      controller_head:
+        required: true
+        type: string
 
 permissions:
   contents: read
@@ -16,7 +16,15 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  governance-authority:
+    uses: ./.github/workflows/governance-authorization.yml
+    with:
+      controller_head: ${{ inputs.controller_head }}
+      release: false
+
   exact_head_continuation:
+    needs: ["governance-authority"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && (true) }}
     runs-on: ubuntu-latest
     timeout-minutes: 30
     env:

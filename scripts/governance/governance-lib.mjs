@@ -22,7 +22,10 @@ export function git(args, { allowFailure = false } = {}) {
 }
 
 export function currentExactHead() {
-  return process.env.HEAD_SHA || process.env.GITHUB_SHA || git(['rev-parse', 'HEAD']);
+  const actual = git(['rev-parse', 'HEAD']);
+  const expected = process.env.HEAD_SHA || process.env.GITHUB_SHA;
+  if (expected && expected !== actual) throw new Error('EXACT_HEAD_MISMATCH');
+  return actual;
 }
 
 export function currentBranch() {

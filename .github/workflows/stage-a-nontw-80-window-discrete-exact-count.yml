@@ -1,20 +1,25 @@
 name: Stage A Non-TW 80-Window Discrete Exact Count
 
 on:
-  pull_request:
-    branches: [main]
-    paths:
-      - '.github/workflows/stage-a-nontw-80-window-discrete-exact-count.yml'
-      - 'scripts/stage-a-nontw-discrete-exact-runner.mjs'
-      - 'scripts/stage-a-resolver-derived-contract-v2-pilot.mjs'
-      - 'src/catalog/runtime-master/**'
-      - 'src/catalog/**'
+  workflow_call:
+    inputs:
+      controller_head:
+        required: true
+        type: string
 
 permissions:
   contents: read
 
 jobs:
+  governance-authority:
+    uses: ./.github/workflows/governance-authorization.yml
+    with:
+      controller_head: ${{ inputs.controller_head }}
+      release: false
+
   closed-evidence-gate:
+    needs: ["governance-authority"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && (true) }}
     runs-on: ubuntu-latest
     timeout-minutes: 1
     steps:

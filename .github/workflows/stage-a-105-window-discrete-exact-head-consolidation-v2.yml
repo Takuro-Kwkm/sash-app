@@ -1,17 +1,26 @@
 name: Stage A 105-Window Discrete Exact-Head Consolidation V3
 
 on:
-  push:
-    branches: [feat/new-construction-runtime-ui-v16-20260910]
-    paths:
-      - '.github/workflows/stage-a-105-window-discrete-exact-head-consolidation-v2.yml'
+  workflow_call:
+    inputs:
+      controller_head:
+        required: true
+        type: string
 
 permissions:
   contents: read
   actions: read
 
 jobs:
+  governance-authority:
+    uses: ./.github/workflows/governance-authorization.yml
+    with:
+      controller_head: ${{ inputs.controller_head }}
+      release: false
+
   consolidate:
+    needs: ["governance-authority"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && (true) }}
     runs-on: ubuntu-latest
     timeout-minutes: 5
     env:

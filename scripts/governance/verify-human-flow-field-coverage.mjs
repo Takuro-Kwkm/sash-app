@@ -10,6 +10,14 @@ const keysOf = (fields = []) => uniq(fields.map((field) => field?.key ?? field?.
 
 const failures = [];
 const seriesResults = [];
+const snapshot = readJson('project-governance/runtime-snapshot.json');
+const expectedSeries = snapshot.entries.map(row => row.registry_series_key);
+const actualSeries = (review.series ?? []).map(row => row.registry_series_key);
+if (new Set(actualSeries).size !== actualSeries.length) failures.push({issue:'DUPLICATE_SERIES'});
+for (const key of expectedSeries) if (!actualSeries.includes(key)) failures.push({issue:'SOURCE_SERIES_MISSING_FROM_ARTIFACT',series:key});
+for (const key of actualSeries) if (!expectedSeries.includes(key)) failures.push({issue:'UNREGISTERED_ARTIFACT_SERIES',series:key});
+if (review.base_window_count !== (review.series ?? []).reduce((sum,s)=>sum+(s.windows?.length ?? 0),0)) failures.push({issue:'BASE_WINDOW_COUNT_MISMATCH'});
+
 
 for (const series of review.series ?? []) {
   const integration = integrationByRegistryKey(series.registry_series_key);

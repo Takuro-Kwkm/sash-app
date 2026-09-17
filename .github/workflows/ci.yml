@@ -1,13 +1,22 @@
 name: V2 Recovery CI
 
 on:
-  push:
-    branches: [main, feat/catalog-recovery-v2, 'release/lixil-ew-v1.1-production-20260908']
-  pull_request:
-    branches: [main]
+  workflow_call:
+    inputs:
+      controller_head:
+        required: true
+        type: string
 
 jobs:
+  governance-authority:
+    uses: ./.github/workflows/governance-authorization.yml
+    with:
+      controller_head: ${{ inputs.controller_head }}
+      release: true
+
   test:
+    needs: ["governance-authority"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && (true) }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -78,8 +87,8 @@ jobs:
           path: artifacts/
 
   release_build_preflight:
-    needs: test
-    if: github.event_name == 'push' && github.ref == 'refs/heads/release/lixil-ew-v1.1-production-20260908'
+    needs: ["governance-authority", "test"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && (github.event_name == 'push' && github.ref == 'refs/heads/release/lixil-ew-v1.1-production-20260908') }}
     runs-on: ubuntu-latest
     environment: production
     env:
@@ -138,8 +147,8 @@ jobs:
           if-no-files-found: warn
 
   deploy_production:
-    needs: test
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && github.event.head_commit.message == 'release LIXIL EW v1.1 production'
+    needs: ["governance-authority", "test"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && (github.event_name == 'push' && github.ref == 'refs/heads/main' && github.event.head_commit.message == 'release LIXIL EW v1.1 production') }}
     runs-on: ubuntu-latest
     environment: production
     env:

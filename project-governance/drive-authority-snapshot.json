@@ -1,0 +1,52 @@
+{
+  "schema_version": "1.0.0",
+  "read_only": true,
+  "observed_source_head": "bb856785475c3045922b3fcd32776ffff77b84ff",
+  "entries": [
+    {
+      "drive_file_id": "1fc_46QMEwnowrSFjs8T-4VCjbcew2MUvzgUJuWe57f0",
+      "name": "サッシ情報管理アプリ_Runtime UI統合共通仕様書_v1.7",
+      "version": "v1.7",
+      "modified_identity": "2026-09-17T02:33:53.028Z",
+      "retrieved_at": "2026-09-17T10:24:44.573Z",
+      "source": "GOOGLE_DRIVE_CONNECTOR",
+      "content_read": true
+    },
+    {
+      "drive_file_id": "1SwFc2XBRtNYaDaKiwC0QVPPJOvOvhvpEJlPTDUtq0Hw",
+      "name": "サッシ情報管理アプリ_3工程運用共通仕様書_v1.5",
+      "version": "v1.5",
+      "modified_identity": "2026-09-17T02:03:06.776Z",
+      "retrieved_at": "2026-09-17T10:24:44.573Z",
+      "source": "GOOGLE_DRIVE_CONNECTOR",
+      "content_read": true
+    },
+    {
+      "drive_file_id": "1BVFe2qZXlLUVhz37trFUjz6mJOwjvW0P",
+      "name": "サッシ情報管理アプリ_UI実装標準仕様書_内窓・新築系外窓・新築系玄関ドア・玄関カバー工法・外窓カバー工法_v1.8.docx",
+      "version": "v1.8.",
+      "modified_identity": "2026-09-15T14:06:45.535Z",
+      "retrieved_at": "2026-09-17T10:24:44.573Z",
+      "source": "GOOGLE_DRIVE_CONNECTOR",
+      "content_read": true
+    },
+    {
+      "drive_file_id": "1HMMZ8JdsbJPtL_8LjQfxMF8P_Zb4-LReqvPMFn1pJks",
+      "name": "PRODUCT_MASTER_CANONICAL_REGISTRY_v2.0",
+      "version": "v2.0",
+      "modified_identity": "2026-09-17T02:52:44.513Z",
+      "retrieved_at": "2026-09-17T10:24:44.573Z",
+      "source": "GOOGLE_DRIVE_CONNECTOR",
+      "content_read": true
+    },
+    {
+      "drive_file_id": "1Gfoyhy9xTZxJVLl6EnhFCvevZd4VPElACZiSko8OGUw",
+      "name": "サッシ情報管理アプリ_Global Window Selection Flow全面共通化・Full Coverage QA改修仕様書_v1.0",
+      "version": "v1.0",
+      "modified_identity": "2026-09-17T02:24:38.079Z",
+      "retrieved_at": "2026-09-17T10:24:44.573Z",
+      "source": "GOOGLE_DRIVE_CONNECTOR",
+      "content_read": true
+    }
+  ]
+}

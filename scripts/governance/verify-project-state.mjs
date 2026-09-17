@@ -30,12 +30,12 @@ const branch = currentBranch();
 if (branch && branch !== 'HEAD' && branch !== state.branch && process.env.GITHUB_ACTIONS === 'true') errors.push(`branch mismatch: expected ${state.branch}, got ${branch}`);
 
 if (errors.length) {
-  console.error('PROJECT_STATE_GATE=FAIL');
+  console.error('PROJECT_STATE_CONFIG_GATE=FAIL');
   for (const error of errors) console.error(`- ${error}`);
   process.exit(1);
 }
 
-console.log('PROJECT_STATE_GATE=PASS');
+console.log('PROJECT_STATE_CONFIG_GATE=PASS');
 console.log(`TASK_CLASSIFICATION=${state.task_classification}`);
 console.log(`PRODUCT_MASTER_MUTATION=${state.product_master_mutation}`);
 console.log(`HUMAN_FLOW_REVIEW_DECLARED=${human.status}`);

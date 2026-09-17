@@ -1,10 +1,11 @@
 name: Stage A TW 25-Window Exact-Head Consolidation
 
 on:
-  pull_request:
-    branches: [main]
-    paths:
-      - '.github/workflows/stage-a-tw-25-window-exact-head-consolidation.yml'
+  workflow_call:
+    inputs:
+      controller_head:
+        required: true
+        type: string
 
 permissions:
   contents: read
@@ -14,7 +15,15 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  governance-authority:
+    uses: ./.github/workflows/governance-authorization.yml
+    with:
+      controller_head: ${{ inputs.controller_head }}
+      release: false
+
   closed-evidence-gate:
+    needs: ["governance-authority"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && (true) }}
     runs-on: ubuntu-latest
     steps:
       - name: Preserve TW 25-window exact evidence and close reconsolidation retry

@@ -1,15 +1,11 @@
 name: Stage A MULTI_ENUM Browser Equivalence Candidate
 
 on:
-  pull_request:
-    branches: [main]
-    paths:
-      - '.github/workflows/stage-a-multienum-browser-equivalence-candidate.yml'
-      - 'test/browser/stage-a-multienum-browser-equivalence-candidate.mjs'
-      - 'scripts/stage-a-multienum-symbolic-proof-candidate.mjs'
-      - 'src/ui/web/product-configuration-editor.mjs'
-      - 'src/work-management/domain.mjs'
-      - 'src/catalog/runtime-master/**'
+  workflow_call:
+    inputs:
+      controller_head:
+        required: true
+        type: string
 
 permissions:
   contents: read
@@ -19,7 +15,15 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  governance-authority:
+    uses: ./.github/workflows/governance-authorization.yml
+    with:
+      controller_head: ${{ inputs.controller_head }}
+      release: false
+
   browser_equivalence_candidate:
+    needs: ["governance-authority"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && (true) }}
     runs-on: ubuntu-latest
     timeout-minutes: 20
     env:

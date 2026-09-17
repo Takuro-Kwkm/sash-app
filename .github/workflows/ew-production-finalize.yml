@@ -1,12 +1,22 @@
 name: LIXIL EW v1.1 Production Finalize
 
 on:
-  push:
-    branches: [main]
+  workflow_call:
+    inputs:
+      controller_head:
+        required: true
+        type: string
 
 jobs:
+  governance-authority:
+    uses: ./.github/workflows/governance-authorization.yml
+    with:
+      controller_head: ${{ inputs.controller_head }}
+      release: true
+
   finalize_ew_production:
-    if: startsWith(github.event.head_commit.message, 'release LIXIL EW v1.1 production')
+    needs: ["governance-authority"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && (startsWith(github.event.head_commit.message, 'release LIXIL EW v1.1 production')) }}
     runs-on: ubuntu-latest
     environment: production
     env:

@@ -1,19 +1,25 @@
 name: Stage A APW431 6-Window Discrete Exact Reproof
 
 on:
-  push:
-    branches: [feat/new-construction-runtime-ui-v16-20260910]
-    paths:
-      - '.github/workflows/stage-a-apw431-discrete-exact-reproof.yml'
-      - 'scripts/stage-a-nontw-discrete-exact-runner.mjs'
-      - 'scripts/stage-a-resolver-derived-contract-v2-pilot.mjs'
-      - 'src/catalog/runtime-master/apw431-formal-split-v1-adapter.mjs'
+  workflow_call:
+    inputs:
+      controller_head:
+        required: true
+        type: string
 
 permissions:
   contents: read
 
 jobs:
+  governance-authority:
+    uses: ./.github/workflows/governance-authorization.yml
+    with:
+      controller_head: ${{ inputs.controller_head }}
+      release: false
+
   reprove:
+    needs: ["governance-authority"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && (true) }}
     runs-on: ubuntu-latest
     timeout-minutes: 20
     env:

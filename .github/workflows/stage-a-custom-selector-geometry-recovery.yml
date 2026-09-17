@@ -1,13 +1,11 @@
 name: Stage A CUSTOM Selector Geometry Recovery
 
 on:
-  push:
-    branches:
-      - feat/new-construction-runtime-ui-v16-20260910
-    paths:
-      - '.github/workflows/stage-a-custom-selector-geometry-recovery.yml'
-      - 'scripts/stage-a-custom-selector-reachability-diagnostic.mjs'
-      - 'scripts/stage-a-custom-runtime-geometry-equivalence.mjs'
+  workflow_call:
+    inputs:
+      controller_head:
+        required: true
+        type: string
 
 permissions:
   contents: read
@@ -17,7 +15,15 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  governance-authority:
+    uses: ./.github/workflows/governance-authorization.yml
+    with:
+      controller_head: ${{ inputs.controller_head }}
+      release: false
+
   prove:
+    needs: ["governance-authority"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && (true) }}
     runs-on: ubuntu-latest
     timeout-minutes: 30
     env:

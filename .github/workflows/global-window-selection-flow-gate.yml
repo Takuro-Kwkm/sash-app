@@ -1,35 +1,11 @@
 name: Global Window Selection Flow Gate
 
 on:
-  workflow_dispatch:
-  push:
-    branches:
-      - feat/new-construction-runtime-ui-v16-20260910
-    paths:
-      - '.github/workflows/global-window-selection-flow-gate.yml'
-      - 'project-governance/**'
-      - 'scripts/governance/**'
-      - 'src/catalog/runtime-master/**'
-      - 'src/catalog/**'
-      - 'src/ui/web/**'
-      - 'scripts/global-window-flow-*.mjs'
-      - 'scripts/stage-a-custom-*.mjs'
-      - 'test/**'
-      - 'package.json'
-  pull_request:
-    branches:
-      - main
-    paths:
-      - '.github/workflows/global-window-selection-flow-gate.yml'
-      - 'project-governance/**'
-      - 'scripts/governance/**'
-      - 'src/catalog/runtime-master/**'
-      - 'src/catalog/**'
-      - 'src/ui/web/**'
-      - 'scripts/global-window-flow-*.mjs'
-      - 'scripts/stage-a-custom-*.mjs'
-      - 'test/**'
-      - 'package.json'
+  workflow_call:
+    inputs:
+      controller_head:
+        required: true
+        type: string
 
 permissions:
   contents: read
@@ -40,7 +16,15 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  governance-authority:
+    uses: ./.github/workflows/governance-authorization.yml
+    with:
+      controller_head: ${{ inputs.controller_head }}
+      release: false
+
   governance-precheck:
+    needs: ["governance-authority"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && (true) }}
     runs-on: ubuntu-latest
     timeout-minutes: 5
     env:
@@ -86,8 +70,8 @@ jobs:
           if-no-files-found: error
 
   global-flow:
-    needs: governance-precheck
-    if: needs.governance-precheck.outputs.authorized == 'true'
+    needs: ["governance-authority", "governance-precheck"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && (needs.governance-precheck.outputs.authorized == 'true') }}
     runs-on: ubuntu-latest
     timeout-minutes: 60
     env:

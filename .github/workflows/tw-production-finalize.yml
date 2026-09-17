@@ -1,12 +1,22 @@
 name: LIXIL TW integrated-v0.2 Production Finalize
 
 on:
-  push:
-    branches: [main]
+  workflow_call:
+    inputs:
+      controller_head:
+        required: true
+        type: string
 
 jobs:
+  governance-authority:
+    uses: ./.github/workflows/governance-authorization.yml
+    with:
+      controller_head: ${{ inputs.controller_head }}
+      release: true
+
   finalize_tw_production:
-    if: startsWith(github.event.head_commit.message, 'release LIXIL TW integrated-v0.2 production')
+    needs: ["governance-authority"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && (startsWith(github.event.head_commit.message, 'release LIXIL TW integrated-v0.2 production')) }}
     runs-on: ubuntu-latest
     environment: production
     env:
