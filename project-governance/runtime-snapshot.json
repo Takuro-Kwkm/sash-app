@@ -1,0 +1,25 @@
+{
+  "schema_version": "1.0.0",
+  "snapshot_scope": "GLOBAL_WINDOW_SELECTION_FLOW_WINDOW_UI_TARGETS",
+  "source_registry": {
+    "title": "PRODUCT_MASTER_CANONICAL_REGISTRY_v2.0",
+    "drive_file_id": "1HMMZ8JdsbJPtL_8LjQfxMF8P_Zb4-LReqvPMFn1pJks",
+    "sheet": "正本Registry",
+    "observed_at": "2026-09-17",
+    "selection_rule": "master_status=FORMAL_PASS AND runtime_status=READY AND package_gate=PASS AND storage_gate=PASS, intersected with repository Window UI integration categories"
+  },
+  "window_ui_categories": [
+    "NEW_CONSTRUCTION_EXTERIOR_WINDOW",
+    "INNER_WINDOW"
+  ],
+  "entries": [
+    {"registry_series_key":"LIXIL::サーモスⅡH","manufacturer":"LIXIL","registry_series":"サーモスⅡH","app_series":"サーモスⅡ-H","package_version":"v0.9-R3","runtime_manifest_id":"1xnVkGtwoN488zgjoi-FOF9drnaUP-jal","master_status":"FORMAL_PASS","runtime_status":"READY","package_gate":"PASS","storage_gate":"PASS"},
+    {"registry_series_key":"LIXIL::サーモスL","manufacturer":"LIXIL","registry_series":"サーモスL","app_series":"サーモスL","package_version":"v0.7-R2","runtime_manifest_id":"1c-VIgwTqPDTkas0apYqx30AN3PVa71p1","master_status":"FORMAL_PASS","runtime_status":"READY","package_gate":"PASS","storage_gate":"PASS"},
+    {"registry_series_key":"LIXIL::EW","manufacturer":"LIXIL","registry_series":"EW","app_series":"EW","package_version":"v1.2","runtime_manifest_id":"1D-n_dwXfl8M6BjHQqIO6QV7u9FjjRUuU","master_status":"FORMAL_PASS","runtime_status":"READY","package_gate":"PASS","storage_gate":"PASS"},
+    {"registry_series_key":"LIXIL::TW","manufacturer":"LIXIL","registry_series":"TW","app_series":"TW","package_version":"integrated-v0.4","runtime_manifest_id":"13doEdTkUlQNu4Dm-SNwkeUg8RkrjS5G0","master_status":"FORMAL_PASS","runtime_status":"READY","package_gate":"PASS","storage_gate":"PASS"},
+    {"registry_series_key":"YKK AP::APW430","manufacturer":"YKK AP","registry_series":"APW430","app_series":"APW430","package_version":"20260830-R1","runtime_manifest_id":"1kzVrhxbArbmUu9MgLThODKTEuCdxyqfK","master_status":"FORMAL_PASS","runtime_status":"READY","package_gate":"PASS","storage_gate":"PASS"},
+    {"registry_series_key":"YKK AP::APW431","manufacturer":"YKK AP","registry_series":"APW431","app_series":"APW431","package_version":"v1.0","runtime_manifest_id":"1Rfrbcdu5j9ZsWGX9PDyC82iEKWUHhCyv","master_status":"FORMAL_PASS","runtime_status":"READY","package_gate":"PASS","storage_gate":"PASS"},
+    {"registry_series_key":"YKK AP::ウチリモ 内窓","manufacturer":"YKK AP","registry_series":"ウチリモ 内窓","app_series":"ウチリモ 内窓","package_version":"v1.0-P7R1-R2","runtime_manifest_id":"1119yamXn21wLZd3C8LvamNWsTAx_1dt2","master_status":"FORMAL_PASS","runtime_status":"READY","package_gate":"PASS","storage_gate":"PASS"},
+    {"registry_series_key":"LIXIL::インプラス","manufacturer":"LIXIL","registry_series":"インプラス","app_series":"インプラス","package_version":"v0.4-R2","runtime_manifest_id":"1TokjIpcipm8TPxwrSO0FjyPxxvhCq5iZ","master_status":"FORMAL_PASS","runtime_status":"READY","package_gate":"PASS","storage_gate":"PASS"}
+  ]
+}

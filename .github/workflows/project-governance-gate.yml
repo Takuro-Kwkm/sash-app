@@ -20,7 +20,7 @@ concurrency:
 jobs:
   governance:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     env:
       HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
     steps:
@@ -39,15 +39,30 @@ jobs:
         run: |
           node --check scripts/governance/governance-lib.mjs
           node --check scripts/governance/verify-project-state.mjs
+          node --check scripts/governance/generate-human-flow-review.mjs
+          node --check scripts/governance/collect-qa-evidence.mjs
           node --check scripts/governance/evaluate-gates.mjs
+          node --check scripts/governance/generate-progress-ledger.mjs
+          node --check scripts/governance/emit-global-flow-evidence.mjs
           node --check scripts/governance/collect-evidence.mjs
           node --check scripts/governance/verify-release-input.mjs
 
       - name: Project state invariants
         run: node scripts/governance/verify-project-state.mjs
 
-      - name: Evaluate current gates
+      - name: Generate exact-head Human Flow Review artifact
+        run: node scripts/governance/generate-human-flow-review.mjs
+
+      - name: Collect exact-head QA evidence
+        run: node scripts/governance/collect-qa-evidence.mjs
+
+      - name: Aggregate current gates
+        env:
+          GOVERNANCE_EVIDENCE_MANIFEST: artifacts/governance/qa-evidence-manifest.json
         run: node scripts/governance/evaluate-gates.mjs
+
+      - name: Generate Progress Ledger
+        run: node scripts/governance/generate-progress-ledger.mjs
 
       - name: Prevent false release declaration
         run: node scripts/governance/verify-release-input.mjs
@@ -57,9 +72,9 @@ jobs:
           node scripts/governance/collect-evidence.mjs \
             --gate PROJECT_GOVERNANCE_FOUNDATION_GATE \
             --status PASS \
-            --artifact artifacts/governance/gate-results.json \
+            --artifact artifacts/governance/progress-ledger.json \
             --command "Project Governance Gate" \
-            --scope "State schema, human-gate invariants, evidence exact-head policy and release false-pass guard"
+            --scope "Runtime snapshot, Human Review artifact generation, exact-head evidence collection, gate aggregation and Progress Ledger"
 
       - name: Upload governance evidence
         if: always()

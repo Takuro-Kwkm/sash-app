@@ -1,5 +1,5 @@
 {
-  "schema_version": "1.0.0",
+  "schema_version": "1.1.0",
   "gate_order": [
     "CANONICAL_RUNTIME_GATE",
     "RUNTIME_ADAPTER_GATE",
@@ -24,11 +24,11 @@
     "APP_INTEGRATION_READY"
   ],
   "gates": {
-    "CANONICAL_RUNTIME_GATE": { "type": "automatic", "requires_exact_head_evidence": true },
-    "RUNTIME_ADAPTER_GATE": { "type": "automatic", "requires_exact_head_evidence": true },
-    "WINDOW_FLOW_BASELINE_GATE": { "type": "automatic", "requires_exact_head_evidence": true },
-    "CANONICAL_SLOT_SCHEMA_GATE": { "type": "automatic", "requires_exact_head_evidence": true },
-    "FLOW_SCHEMA_UNMAPPED_FIELD_GATE": { "type": "automatic", "requires_exact_head_evidence": true },
+    "CANONICAL_RUNTIME_GATE": { "type": "automatic", "requires_exact_head_evidence": true, "requires_runtime_snapshot_identity": true },
+    "RUNTIME_ADAPTER_GATE": { "type": "automatic", "requires_exact_head_evidence": true, "requires_runtime_snapshot_identity": true },
+    "WINDOW_FLOW_BASELINE_GATE": { "type": "automatic", "requires_exact_head_evidence": true, "requires_runtime_snapshot_identity": true },
+    "CANONICAL_SLOT_SCHEMA_GATE": { "type": "automatic", "requires_exact_head_evidence": true, "requires_runtime_snapshot_identity": true },
+    "FLOW_SCHEMA_UNMAPPED_FIELD_GATE": { "type": "automatic", "requires_exact_head_evidence": true, "requires_runtime_snapshot_identity": true },
     "SINGLE_FLOW_ENGINE_GATE": { "type": "automatic", "requires_exact_head_evidence": true },
     "SERIES_OVERRIDE_ELIMINATION_GATE": { "type": "automatic", "requires_exact_head_evidence": true },
     "HUMAN_FLOW_REVIEW_GATE": {
@@ -39,20 +39,22 @@
         "src/catalog/**",
         "src/ui/web/**",
         "scripts/global-window-flow-*.mjs",
+        "scripts/governance/generate-human-flow-review.mjs",
+        "project-governance/runtime-snapshot.json",
         "project-governance/gate-definition.json"
       ]
     },
-    "FULL_FLOW_SIGNATURE_COVERAGE_GATE": { "type": "automatic", "requires_exact_head_evidence": true },
-    "FLOW_TRANSITION_GATE": { "type": "automatic", "requires_exact_head_evidence": true },
-    "FULL_WINDOW_COVERAGE_GATE": { "type": "automatic", "requires_exact_head_evidence": true },
-    "CUSTOM_SIZE_COVERAGE_GATE": { "type": "automatic", "requires_exact_head_evidence": true },
-    "DEPENDENCY_GATE": { "type": "automatic", "requires_exact_head_evidence": true },
-    "UI_FLOW_GATE": { "type": "automatic", "requires_exact_head_evidence": true },
-    "AUTOMATED_TEST_GATE": { "type": "automatic", "requires_exact_head_evidence": true },
-    "FULL_BROWSER_FLOW_QA_GATE": { "type": "automatic", "requires_exact_head_evidence": true },
-    "FULL_BROWSER_QA_GATE": { "type": "automatic", "requires_exact_head_evidence": true },
-    "REGRESSION_GATE": { "type": "automatic", "requires_exact_head_evidence": true },
-    "REPOSITORY_GATE": { "type": "automatic", "requires_exact_head_evidence": true },
+    "FULL_FLOW_SIGNATURE_COVERAGE_GATE": { "type": "automatic", "requires_exact_head_evidence": true, "post_human_review": true },
+    "FLOW_TRANSITION_GATE": { "type": "automatic", "requires_exact_head_evidence": true, "post_human_review": true },
+    "FULL_WINDOW_COVERAGE_GATE": { "type": "automatic", "requires_exact_head_evidence": true, "post_human_review": true },
+    "CUSTOM_SIZE_COVERAGE_GATE": { "type": "automatic", "requires_exact_head_evidence": true, "post_human_review": true },
+    "DEPENDENCY_GATE": { "type": "automatic", "requires_exact_head_evidence": true, "post_human_review": true },
+    "UI_FLOW_GATE": { "type": "automatic", "requires_exact_head_evidence": true, "post_human_review": true },
+    "AUTOMATED_TEST_GATE": { "type": "automatic", "requires_exact_head_evidence": true, "post_human_review": true },
+    "FULL_BROWSER_FLOW_QA_GATE": { "type": "automatic", "requires_exact_head_evidence": true, "post_human_review": true },
+    "FULL_BROWSER_QA_GATE": { "type": "automatic", "requires_exact_head_evidence": true, "post_human_review": true },
+    "REGRESSION_GATE": { "type": "automatic", "requires_exact_head_evidence": true, "post_human_review": true },
+    "REPOSITORY_GATE": { "type": "automatic", "requires_exact_head_evidence": true, "post_human_review": true },
     "GLOBAL_WINDOW_SELECTION_FLOW_GATE": { "type": "composite" },
     "APP_INTEGRATION_READY": { "type": "composite" }
   },
