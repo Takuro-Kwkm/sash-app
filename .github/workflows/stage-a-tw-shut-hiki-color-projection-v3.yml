@@ -1,0 +1,40 @@
+name: Stage A TW SHUT-HIKI Color Projection V3
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/stage-a-tw-shut-hiki-color-projection-v3.yml'
+      - 'scripts/stage-a-tw-shut-hiki-color-projection-v3-runner.mjs'
+      - 'scripts/stage-a-tw-behavioral-projection-count-pilot.mjs'
+      - 'src/catalog/runtime-master/**'
+      - 'src/catalog/**'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: stage-a-tw-shut-hiki-color-v3-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  closed_gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Preserve V3 evidence and close repeated route
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo 'TW_SHUT_HIKI_COLOR_PROJECTION_V3_ROUTE=CLOSED'
+          echo 'EVIDENCE_RUN=34921919705'
+          echo 'EVIDENCE_HEAD=e560afdc62f33d23cc2f6a520031766a0f43f579'
+          echo 'WINDOW=SWT-LIX-TW-SHUT-HIKI'
+          echo 'EXACT_DISCRETE_TERMINAL_CONTEXT_COUNT=8026510474189209610'
+          echo 'CUSTOM_PENDING_CONTEXT_COUNT=10'
+          echo 'PROJECTION_MISMATCH_COUNT=0'
+          echo 'BLOCKER=NONE'
+          echo 'RETRY_AUTHORIZED=false'
+          echo 'NEXT_ACTIVE_ROUTE=TW_25_WINDOW_EXACT_HEAD_CONSOLIDATION'
+          echo 'APP_INTEGRATION_READY=false'
+          echo 'RELEASE_INPUT_GATE=BLOCKED'

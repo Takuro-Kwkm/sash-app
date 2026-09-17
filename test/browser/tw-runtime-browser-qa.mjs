@@ -6,6 +6,7 @@ const BASE = process.env.QA_BASE_URL ?? 'http://127.0.0.1:4173';
 const SHARE_TOKEN = process.env.VERCEL_SHARE_TOKEN;
 const PRODUCT_ID = 'SER-LIXIL-TW';
 const OUT = 'artifacts/tw-runtime-browser-qa';
+const TECHNICAL_UI_TOKEN = /CUSTOM_DIMENSION_|ORDER_READY\s*=|成立不可Rule|\b(?:BLOCK|BLOCKED|REVIEW_REQUIRED|MANUAL_CHECK|INVALID)\b/;
 await mkdir(OUT, { recursive:true });
 const report = { status:'RUNNING', desktop:{}, mobile:{}, consoleErrors:[], pageErrors:[], failedResponses:[] };
 const browser = await chromium.launch({ headless:true });
@@ -14,6 +15,22 @@ function track(page) {
   page.on('console', (message) => { if (message.type() === 'error') report.consoleErrors.push(message.text()); });
   page.on('pageerror', (error) => report.pageErrors.push(error.message));
   page.on('response', (response) => { if (response.status() >= 400) report.failedResponses.push({ status:response.status(), url:response.url() }); });
+}
+function resolveSelection(response) {
+  if (response.status() !== 200 || !response.url().includes('/api/runtime-master/resolve')) return null;
+  try {
+    const url = new URL(response.url());
+    if (url.searchParams.get('productId') !== PRODUCT_ID) return null;
+    return JSON.parse(url.searchParams.get('selection') ?? '{}');
+  } catch { return null; }
+}
+function sameValue(actual, expected) {
+  if (Array.isArray(expected)) return Array.isArray(actual) && actual.length === expected.length && actual.every((value,index) => String(value) === String(expected[index]));
+  return String(actual) === String(expected);
+}
+function responseHasSelection(response, key, value) {
+  const selection = resolveSelection(response);
+  return selection && sameValue(selection[key], value);
 }
 async function openTw(page) {
   const entry = SHARE_TOKEN ? `${BASE}/runtime-lab?_vercel_share=${encodeURIComponent(SHARE_TOKEN)}` : `${BASE}/runtime-lab`;
@@ -27,15 +44,39 @@ async function openTw(page) {
   await page.waitForSelector('[data-spec-key="window_type"]');
 }
 async function choose(page, key, value) {
-  const response = page.waitForResponse((r) => r.url().includes('/api/runtime-master/resolve') && r.status() === 200);
+  const response = page.waitForResponse((r) => responseHasSelection(r,key,value));
   await page.locator(`[data-spec-key="${key}"]`).selectOption(value);
   return (await response).json();
+}
+async function enterNumber(page, key, value) {
+  const responsePromise = page.waitForResponse((response) => responseHasSelection(response, key, value));
+  const input = page.locator(`[data-spec-key="${key}"]`);
+  await input.evaluate((element, nextValue) => {
+    element.value = String(nextValue);
+    element.dispatchEvent(new Event('change', { bubbles:true }));
+  }, value);
+  const response = await responsePromise;
+  const result = await response.json();
+  assert.ok(sameValue(result.selection?.[key], value), `${key}: Runtime resolved selection mismatch; expected ${String(value)}, got ${JSON.stringify(result.selection?.[key])}`);
+  return result;
+}
+async function assertUserFacingWarnings(page, context) {
+  const text = await page.locator('#warnings').innerText();
+  assert.doesNotMatch(text, TECHNICAL_UI_TOKEN, `${context}: technical Runtime token leaked into UI: ${text}`);
+  return text;
+}
+function hasOutOfRangeDiagnostic(result) {
+  return result.dimensionResult?.status === 'BLOCK'
+    || result.validation?.status === 'INVALID'
+    || (result.validation?.errors ?? []).some((error) => String(error.errorCode ?? error.code ?? '') === 'CUSTOM_DIMENSION_OUT_OF_FORMAL_OUTER_BOUNDS');
 }
 async function exercise(page) {
   let result = await choose(page, 'window_type', 'SWT-LIX-TW-SHUT-HIKI-FLAT');
   assert.deepEqual(result.fields.find((field) => field.key === 'shutter_type').values.map((row) => row.value), ['SP-TW-SHUT-MAN-STD','SP-TW-SHUT-ELE-STD']);
   assert.ok(!result.fields.some((field) => field.key === 'handing'));
   result = await choose(page, 'shutter_type', 'SP-TW-SHUT-MAN-STD');
+  assert.deepEqual(result.fields.find((field) => field.key === 'size_mode').values.map((row) => row.value), ['STANDARD','CUSTOM']);
+  result = await choose(page, 'size_mode', 'STANDARD');
   assert.equal(result.selection.size_mode, 'STANDARD');
   await choose(page, 'panel_count', '2枚建');
   await choose(page, 'size', 'SZ-LIX-TW-SHUT-FLAT-Z-11918');
@@ -62,18 +103,69 @@ async function exercise(page) {
   assert.equal(result.selection.option, undefined);
   assert.ok(!result.fields.some((field) => field.key.startsWith('screen_')));
   assert.ok(!result.fields.some((field) => ['construction','configuration'].includes(field.key)));
-  await page.reload({ waitUntil:'networkidle' });
-  await openTw(page);
-  return { formalRuntime:'PASS', fieldOrder:'PASS', conditionalFields:'PASS', screenBeforeGlass:'PASS', productCodes:'PASS', downstreamReset:'PASS', reloadReset:'PASS' };
+  assert.deepEqual(result.fields.find((field) => field.key === 'size_mode').values.map((row) => row.value), ['STANDARD','CUSTOM']);
+
+  result = await choose(page, 'size_mode', 'CUSTOM');
+  assert.ok(result.fields.some((field) => field.key === 'custom_width'));
+  assert.ok(result.fields.some((field) => field.key === 'custom_height'));
+  assert.ok(!result.fields.some((field) => field.key === 'size'));
+
+  result = await choose(page, 'window_type', 'SWT-LIX-TW-GRILLE-HIKI');
+  const grilleField = result.fields.find((field) => (field.values ?? []).some((row) => row.value === 'SP-TW-GRILLE-VERT'));
+  assert.ok(grilleField, 'TW grille-specific selector must expose formal vertical grille');
+  result = await choose(page, grilleField.key, 'SP-TW-GRILLE-VERT');
+  assert.deepEqual(result.fields.find((field) => field.key === 'size_mode').values.map((row) => row.value), ['STANDARD','CUSTOM']);
+  result = await choose(page, 'size_mode', 'CUSTOM');
+
+  result = await enterNumber(page, 'custom_width', 630);
+  result = await enterNumber(page, 'custom_height', 350);
+  assert.equal(result.dimensionResult?.status, 'REVIEW_REQUIRED');
+  let warningText = await assertUserFacingWarnings(page, 'TW vertical grille formal REVIEW_REQUIRED probe');
+  assert.match(warningText, /メーカー確認が必要/);
+
+  let field = result.fields.find((row) => row.key === 'exterior_color');
+  assert.ok(field, 'in-range CUSTOM must continue to exterior color');
+  result = await choose(page, 'exterior_color', field.values[0].value);
+  field = result.fields.find((row) => row.key === 'interior_color');
+  assert.ok(field, 'in-range CUSTOM must continue to interior color');
+  result = await choose(page, 'interior_color', field.values[0].value);
+  assert.ok(result.fields.some((row) => row.key === 'screen_presence'));
+  field = result.fields.find((row) => row.key === 'glass_base');
+  assert.ok(field, 'in-range CUSTOM must continue to glass');
+  result = await choose(page, 'glass_base', field.values[0].value);
+
+  result = await enterNumber(page, 'custom_width', 629);
+  assert.ok(hasOutOfRangeDiagnostic(result), 'out-of-range CUSTOM width must fail closed');
+  warningText = await assertUserFacingWarnings(page, 'TW formal BLOCK probe');
+  assert.match(warningText, /製作範囲外|W・Hを変更/);
+
+  const outOfViewport = await page.locator('input,select').evaluateAll((elements) => elements.filter((element) => {
+    const rect = element.getBoundingClientRect();
+    return rect.left < -1 || rect.right > window.innerWidth + 1;
+  }).length);
+  assert.equal(outOfViewport, 0);
+  return { formalRuntime:'PASS', fieldOrder:'PASS', conditionalFields:'PASS', sizeMode:'PASS', customRoute:'PASS', customContinuation:'PASS', blockedContinuation:'PASS', userFacingValidation:'PASS', screenBeforeGlass:'PASS', productCodes:'PASS', downstreamReset:'PASS', overflow:outOfViewport };
 }
 
 try {
+  const preflight = await browser.newContext();
+  const preflightUrl = SHARE_TOKEN ? `${BASE}/api/runtime-master/integrations?_vercel_share=${encodeURIComponent(SHARE_TOKEN)}` : `${BASE}/api/runtime-master/integrations`;
+  const response = await preflight.request.get(preflightUrl);
+  assert.equal(response.status(), 200);
+  const integration = (await response.json()).find((row) => row.id === PRODUCT_ID);
+  assert.ok(integration);
+  assert.equal(integration.packageVersion, 'integrated-v0.3');
+  assert.equal(integration.schemaVersion, '2.0');
+  assert.equal(integration.sourceHash, 'c4980f45fdf57afe1512f2ca42da0eca53d9facc1f555734f7d89b347a808ee0');
+  await preflight.close();
+
   for (const config of [
     { key:'desktop', viewport:{ width:1440, height:1000 }, mobile:false },
     { key:'mobile', viewport:{ width:390, height:844 }, mobile:true },
   ]) {
     const context = await browser.newContext({ viewport:config.viewport, isMobile:config.mobile, hasTouch:config.mobile });
-    const page = await context.newPage(); track(page); await openTw(page);
+    const page = await context.newPage(); track(page);
+    await openTw(page);
     const checks = await exercise(page);
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
     assert.ok(overflow <= 1, `${config.key} overflow: ${overflow}`);
@@ -81,7 +173,9 @@ try {
     await page.screenshot({ path:`${OUT}/${config.key}-${config.viewport.width}x${config.viewport.height}.png`, fullPage:true });
     await context.close();
   }
-  assert.deepEqual(report.consoleErrors, []); assert.deepEqual(report.pageErrors, []); assert.deepEqual(report.failedResponses, []);
+  assert.deepEqual(report.consoleErrors, []);
+  assert.deepEqual(report.pageErrors, []);
+  assert.deepEqual(report.failedResponses, []);
   report.status = 'PASS';
   await writeFile(`${OUT}/report.json`, JSON.stringify(report, null, 2));
   console.log(JSON.stringify(report, null, 2));

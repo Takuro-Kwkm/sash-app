@@ -1,8 +1,26 @@
 import { createHash } from 'node:crypto';
 import { readFile } from 'node:fs/promises';
 import { brotliDecompressSync, gunzipSync } from 'node:zlib';
+import { applyFormalRuntimeJsonTransform } from './formal-runtime-json-transform.mjs';
 
 const sha256 = (bytes) => createHash('sha256').update(bytes).digest('hex');
+
+function jsonStructurallyEqual(left, right) {
+  if (Object.is(left, right)) return true;
+  if (Array.isArray(left) || Array.isArray(right)) {
+    return Array.isArray(left)
+      && Array.isArray(right)
+      && left.length === right.length
+      && left.every((value, index) => jsonStructurallyEqual(value, right[index]));
+  }
+  if (left && right && typeof left === 'object' && typeof right === 'object') {
+    const leftKeys = Object.keys(left).sort();
+    const rightKeys = Object.keys(right).sort();
+    return leftKeys.length === rightKeys.length
+      && leftKeys.every((key, index) => key === rightKeys[index] && jsonStructurallyEqual(left[key], right[key]));
+  }
+  return false;
+}
 
 function typeMatches(value, type) {
   if (type === 'null') return value === null;
@@ -16,8 +34,8 @@ function typeMatches(value, type) {
 function validateJsonSchema(value, schema, path = '$') {
   const errors = [];
   if (!schema || typeof schema !== 'object') return errors;
-  if ('const' in schema && value !== schema.const) errors.push(`${path}: expected const ${JSON.stringify(schema.const)}`);
-  if (schema.enum && !schema.enum.some((candidate) => Object.is(candidate, value))) errors.push(`${path}: not in enum`);
+  if ('const' in schema && !jsonStructurallyEqual(value, schema.const)) errors.push(`${path}: expected const ${JSON.stringify(schema.const)}`);
+  if (schema.enum && !schema.enum.some((candidate) => jsonStructurallyEqual(candidate, value))) errors.push(`${path}: not in enum`);
   if (schema.type) {
     const types = Array.isArray(schema.type) ? schema.type : [schema.type];
     if (!types.some((type) => typeMatches(value, type))) return [...errors, `${path}: expected ${types.join('|')}`];
@@ -81,6 +99,7 @@ export function normalizeRuntimeManifest(raw) {
     schemaFile,
     formalPass: raw.formal_pass === true || raw.master_status === 'FORMAL_PASS',
     storageStatus: raw.storage_status,
+    registryStatus: raw.registry_status ?? null,
     packageGate: raw.package_gate,
     storageGate: raw.storage_gate ?? null,
     registryGate: raw.registry_gate ?? null,
@@ -99,6 +118,9 @@ export function normalizeRuntimeManifest(raw) {
 function normalizeTransportSpec(entry, fileId) {
   const raw = entry.materializedFiles?.[fileId];
   if (Array.isArray(raw)) return { codec: 'gzip', paths: raw };
+  if (raw && typeof raw === 'object' && raw.codec === 'json-transform-v1' && raw.base && (raw.transformPath || raw.transformPaths?.length)) {
+    return { codec: 'json-transform-v1', base: raw.base, transformPath: raw.transformPath ?? null, transformPaths: raw.transformPaths ?? null };
+  }
   if (raw && typeof raw === 'object' && Array.isArray(raw.paths)) {
     return { codec: raw.codec ?? 'gzip', paths: raw.paths };
   }
@@ -117,14 +139,35 @@ function decodeTransport(encoded, codec, fileName) {
   fail('RUNTIME_MANIFEST_TRANSPORT_CODEC_UNSUPPORTED', `Unsupported materialized Runtime transport codec: ${codec}`, { fileName, codec });
 }
 
+async function readPackedTransport(transport, fileName) {
+  if (!transport?.paths?.length) fail('RUNTIME_MANIFEST_FILE_MISSING', `Materialized Runtime transport has no explicit paths: ${fileName}`, { fileName, transport });
+  let encoded;
+  try { encoded = (await Promise.all(transport.paths.map((transportPath) => readFile(transportPath, 'utf8')))).join(''); }
+  catch (cause) { fail('RUNTIME_MANIFEST_FILE_MISSING', `Manifest-listed Runtime file is not materialized: ${fileName}`, { cause, fileName }); }
+  return decodeTransport(encoded, transport.codec ?? 'gzip', fileName);
+}
+
+async function readTransformBytes(transport, fileName) {
+  const paths = transport.transformPaths?.length ? transport.transformPaths : [transport.transformPath].filter(Boolean);
+  if (!paths.length) fail('RUNTIME_MANIFEST_FILE_MISSING', `Runtime transform has no path: ${fileName}`, { fileName });
+  try { return Buffer.from((await Promise.all(paths.map((path) => readFile(path, 'utf8')))).join(''), 'utf8'); }
+  catch (cause) { fail('RUNTIME_MANIFEST_FILE_MISSING', `Runtime transform is not materialized: ${fileName}`, { cause, fileName }); }
+}
+
 async function readMaterializedCanonicalFile(entry, manifestRow) {
   const { fileName, fileId, sha256: expectedSha256 } = manifestRow;
   const transport = normalizeTransportSpec(entry, fileId);
-  if (!transport?.paths?.length) fail('RUNTIME_MANIFEST_FILE_MISSING', `Manifest-listed Runtime file has no explicit app materialization mapping: ${fileName}`, { fileName, fileId });
-  let encoded;
-  try { encoded = (await Promise.all(transport.paths.map((transportPath) => readFile(transportPath, 'utf8')))).join(''); }
-  catch (cause) { fail('RUNTIME_MANIFEST_FILE_MISSING', `Manifest-listed Runtime file is not materialized: ${fileName}`, { cause, fileName, fileId }); }
-  const bytes = decodeTransport(encoded, transport.codec, fileName);
+  if (!transport) fail('RUNTIME_MANIFEST_FILE_MISSING', `Manifest-listed Runtime file has no explicit app materialization mapping: ${fileName}`, { fileName, fileId });
+
+  let bytes;
+  if (transport.codec === 'json-transform-v1') {
+    const baseBytes = await readPackedTransport(transport.base, `${fileName}#transform-source`);
+    const transformBytes = await readTransformBytes(transport, fileName);
+    bytes = applyFormalRuntimeJsonTransform(baseBytes, transformBytes);
+  } else {
+    bytes = await readPackedTransport(transport, fileName);
+  }
+
   const actualSha256 = sha256(bytes);
   if (actualSha256 !== expectedSha256) {
     fail('RUNTIME_MANIFEST_FILE_SHA_MISMATCH', `Manifest-listed Runtime file SHA-256 mismatch: ${fileName}`, {
@@ -160,8 +203,19 @@ export async function loadManifestRuntimePackage(entry) {
   for (const [name, expected, actual] of identityPairs) {
     if (String(expected) !== String(actual)) fail('RUNTIME_MANIFEST_IDENTITY_MISMATCH', `${name} mismatch: expected ${expected}, got ${actual}`, { name, expected, actual });
   }
-  const storageReady = manifest.storageStatus === 'PASS' || (manifest.storageStatus === 'DRIVE_CANONICAL' && manifest.storageGate === 'PASS');
-  if (!manifest.formalPass || manifest.runtimeStatus !== 'READY' || !storageReady || manifest.packageGate !== 'PASS' || (manifest.registryGate && manifest.registryGate !== 'PASS')) {
+
+  // Formal manifests exist in multiple governance generations. Some v1 packages
+  // express Storage/Registry completion as status fields rather than *_gate.
+  // Accept only explicit PASS/CANONICAL evidence; never infer readiness from file
+  // location or package name.
+  const storageReady = manifest.storageStatus === 'PASS'
+    || manifest.storageStatus === 'CANONICAL'
+    || (manifest.storageStatus === 'DRIVE_CANONICAL' && manifest.storageGate === 'PASS');
+  const registryReady = manifest.registryGate
+    ? manifest.registryGate === 'PASS'
+    : (manifest.registryStatus ? manifest.registryStatus === 'PASS' : true);
+
+  if (!manifest.formalPass || manifest.runtimeStatus !== 'READY' || !storageReady || manifest.packageGate !== 'PASS' || !registryReady) {
     fail('RUNTIME_MANIFEST_NOT_FORMAL_READY', 'Canonical Runtime manifest is not formally READY', { manifest });
   }
 

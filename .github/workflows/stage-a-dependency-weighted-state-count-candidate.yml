@@ -1,0 +1,36 @@
+name: Stage A Dependency Weighted State Count Candidate
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/stage-a-dependency-weighted-state-count-candidate.yml'
+      - 'scripts/stage-a-dependency-weighted-state-count-candidate.mjs'
+      - 'src/catalog/runtime-master/**'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: stage-a-dependency-weighted-count-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  closed_gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Close superseded parent_fields weighted route
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo 'DEPENDENCY_WEIGHTED_PARENT_FIELDS_ROUTE=CLOSED'
+          echo 'FAILURE_TYPE=DECLARED_PARENT_METADATA_INCONSISTENT'
+          echo 'EVIDENCE_RUN=34915689678'
+          echo 'EVIDENCE_SHARD=5'
+          echo 'PARENT_METADATA_INCONSISTENCY_COUNT=8'
+          echo 'RETRY_AUTHORIZED=false'
+          echo 'REOPEN_CONDITION=dependency contract source changes or new rule-sensitive proof model'
+          echo 'NEXT_PATH=RULE_SENSITIVE_SEMANTIC_CONTINUATION_DAG'
+          echo 'APP_INTEGRATION_READY=false'
+          echo 'RELEASE_INPUT_GATE=BLOCKED'

@@ -1,0 +1,72 @@
+{
+  "schema_version": "2.0",
+  "manufacturer": "LIXIL",
+  "series": "EW",
+  "package_version": "v1.2",
+  "authoring_mode": "GOOGLE_SHEETS",
+  "authoring_file_name": "LIXIL_EW_商品マスター_v1.2",
+  "authoring_file_id": "1hKLlzCqi52tgOPtTHj8iyllN9vtQlF8ABrsCKkRLDsc",
+  "runtime_status": "READY",
+  "runtime_files": [
+    {
+      "file_name": "LIXIL_EW_runtime_v1.2.json",
+      "file_id": "1tHWCWnS-f_R6-IvT0KgA7l1smPQm6dd8",
+      "sha256": "85fce07a07ab938b27d8a8e0178f5b5e2d3779926e6bd10c75d38e4e78699cea",
+      "size_bytes": 2586194,
+      "status": "READY",
+      "role": "runtime_master"
+    }
+  ],
+  "documentation_file": {
+    "file_name": "LIXIL_EW_PRODUCT_MASTER_MANIFEST_v1.2.md",
+    "file_id": "18WPQDF2YPDFRPC3noy6ewmC01cBrz6Cp"
+  },
+  "storage_status": "DRIVE_CANONICAL",
+  "package_gate": "PASS",
+  "content_gate": "PASS_WITH_ESTIMATE_CONFIRMATION_FALLBACK",
+  "dependency_gate": "PASS",
+  "qa_gate": "PASS_WITH_ESTIMATE_CONFIRMATION_FALLBACK",
+  "official_source_scope_gate": "PASS",
+  "estimate_confirmation_contract": {
+    "state": "ESTIMATE_CONFIRM_REQUIRED",
+    "automatic_activation": false,
+    "policy": "MANUFACTURER_ESTIMATE_SYSTEM_DEPENDENCY_EXCEPTION",
+    "meaning": "Manufacturer estimate confirmation required where public official sources do not close exact manufacturability; not ALLOWED by default."
+  },
+  "baseline": {
+    "package_version": "v1.1",
+    "authoring_file_id": "10hw0YcDnNPDASv32Zrxm9ZaSjh8TVHa0",
+    "runtime_manifest_id": "139c0atou5LFz7EIHIdD7ZTYWddfSHf5_"
+  },
+  "target_storage": {
+    "canonical_folder_id": "1mDsi9amFdD5A9N8XrommExB_EMZDQiqu",
+    "old_folder_id": "1rGW_ZFtAYG4oWNRJqSqrqBT5aVQEpxwc",
+    "working_folder_id": "1T_KEc2-27lU6yddCka1ZqI289qolVwmB"
+  },
+  "qa_summary": {
+    "custom_boundary": "877/877 PASS",
+    "exact_geometry_rules": "68/68",
+    "hiki_selector_full_cross_product": "288/288 evaluated; 21 reachable; 267 fail-closed; 0 unverified",
+    "shutter_dependency": "123/123 PASS",
+    "glass_weight_limit_evidence": "262/262 PASS",
+    "runtime_invariance": "43/43 PASS",
+    "unverified_count": 0
+  },
+  "generated_at": "2026-09-16T15:12:00+09:00",
+  "registry_gate": "PASS",
+  "formal_pass": true,
+  "storage_gate": "PASS",
+  "formalization_status": "FORMAL_PASS",
+  "metadata_repair": {
+    "revision": "MR1",
+    "date": "2026-09-16",
+    "reason": "Align formal Runtime Manifest with canonical app loader contract; Runtime payload unchanged.",
+    "changes": [
+      "schema_version normalized to Runtime schema 2.0",
+      "runtime_files[0].role=runtime_master",
+      "storage_status=DRIVE_CANONICAL",
+      "storage_gate=PASS",
+      "formalization_status=FORMAL_PASS"
+    ]
+  }
+}

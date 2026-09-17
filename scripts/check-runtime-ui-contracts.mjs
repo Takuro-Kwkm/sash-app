@@ -6,7 +6,7 @@ const { master } = await loadRegisteredRuntime('LIXIL', 'TW');
 for (const field of master.fields) {
   assert.equal(typeof field.field_name, 'string');
   assert.equal(typeof field.display_order, 'number');
-  assert.ok(['enum','array'].includes(field.data_type));
+  assert.ok(['enum','array','number'].includes(field.data_type), `unsupported runtime UI data_type: ${field.field_name}=${field.data_type}`);
   assert.ok(Array.isArray(field.parent_fields));
 }
 for (const value of master.values) {

@@ -1,0 +1,104 @@
+{
+  "schema_version": "2.0",
+  "manufacturer": "LIXIL",
+  "series": "サーモスⅡH",
+  "display_series": "サーモスⅡ-H",
+  "package_version": "v0.9-R1",
+  "authoring_mode": "STANDALONE",
+  "authoring_file_name": "LIXIL_サーモスⅡH_AUTHORING_MASTER_v0.9-R1.xlsx",
+  "authoring_file_id": "1cQs7VfePJxrcn5g-l6fs4LDE83x0S-dr",
+  "authoring_file_revision_id": "0B1PsqngSohhlZEJMN3k1UkVWV1Z3U2xIQTNwRDlHK2VQWkc4PQ",
+  "authoring_sha256": "4ff454fef7e60d649d112040f21ef201e5d945071946ece0f721f1050fe8b795",
+  "runtime_status": "READY",
+  "runtime_files": [
+    {
+      "role": "RUNTIME_JSON_PACKAGE",
+      "name": "LIXIL_サーモスⅡH_runtime_v0.9-R1.json",
+      "id": "1HF5t9xodqUmAbtiQW5AjHT14WfC9Kki0",
+      "sha256": "d3e227b3689545087a8e33c5034df3efff4aa4493ef208d49c1d161c1afad288",
+      "size_bytes": 6091853
+    },
+    {
+      "role": "RUNTIME_SCHEMA",
+      "name": "samos2h_runtime_package_v0.9-R1.schema.json",
+      "id": "1Mfrc15i9Pa0-tRihbpT74zPzalFb2JW_",
+      "sha256": "6635e755945bbd2156328846ddbaf03ad826472f006af0462e5e7a3109d9e1e6",
+      "size_bytes": 3863
+    }
+  ],
+  "documentation_file": {
+    "name": "LIXIL_サーモスⅡH_PRODUCT_MASTER_MANIFEST_v0.9-R1.md",
+    "id": "1XxY1lxzGnJ3zq1FMcg79Zg7nXhsSLcOv"
+  },
+  "qa_file": {
+    "name": "LIXIL_サーモスⅡH_RUNTIME_QA_v0.9-R1.md",
+    "id": "1c3J0JOeWobuJDU7NOy8yCe96vOBmHtV3"
+  },
+  "storage_status": "DRIVE_CANONICAL",
+  "package_gate": "PASS",
+  "storage_gate": "PASS",
+  "registry_gate": "PASS",
+  "blocking_items": [],
+  "generated_at": "2026-09-10T15:12:00+09:00",
+  "spec_version": "PRODUCT_MASTER_PACKAGE_STORAGE_COMPLETION_GATE_v2.0",
+  "qa_summary": {
+    "status": "PASS",
+    "checks": {
+      "active_window_types": true,
+      "standard_size_rows": true,
+      "selectable_size_rows": true,
+      "inactive_size_rows": true,
+      "custom_dimension_rules": true,
+      "golden_tests": true,
+      "rain_rows": true,
+      "rain_counts": true,
+      "glass_rows": true,
+      "glass_normalized": true,
+      "unique_size_ids": true,
+      "unique_window_ids": true,
+      "unique_allowed_ids": true,
+      "size_window_refs": true,
+      "size_spec_refs": true,
+      "door_windows": true,
+      "custom_fail_closed": true,
+      "dusk_gray_constraint": true,
+      "runtime_standard_records_exact_source_ids": true,
+      "runtime_selectable_ids_exact_authoring_active_ids": true,
+      "runtime_no_shared_construction_duplicate_rows": true,
+      "runtime_no_user_value_shared_marker": true,
+      "runtime_has_construction_default_zairai": true,
+      "runtime_custom_rules_preserved_17": true,
+      "runtime_custom_fail_closed": true,
+      "runtime_door_rules_preserved_10": true,
+      "runtime_anchor_force_dependencies_3": true,
+      "runtime_simple_step_dependency": true
+    },
+    "record_counts": {
+      "active_window_types": 17,
+      "standard_size_rows": 2309,
+      "selectable_size_rows": 2140,
+      "inactive_size_rows": 169,
+      "custom_dimension_rules": 17,
+      "golden_tests": 44,
+      "rain_shutter_rows": 264,
+      "glass_control_rows": 2309,
+      "door_installation_rules": 10,
+      "color_relations": 27,
+      "screen_variants": 12,
+      "normal_estimate_options": 33,
+      "dependencies": 29
+    },
+    "safety": {
+      "unknown_or_compound_not_auto_passed": true,
+      "source_graph_gate_review_required": true,
+      "no_cartesian_runtime_invention": true,
+      "shared_construction_source_rows_not_duplicated": true,
+      "ui_workaround_not_embedded": true
+    }
+  },
+  "formal_status": "FORMAL_PASS",
+  "canonical_folder_id": "1pmCvqkh39bZibmpk-ugRFvJLEowITBmP",
+  "working_folder_id": "17B04JT0R1PvfihsDOe_qTxo-Ens9sptL",
+  "old_folder_id": "1gGn454dYF7UQU56-uMCeXo6m_EfHtTH9",
+  "formalized_at": "2026-09-10T15:45:00+09:00"
+}

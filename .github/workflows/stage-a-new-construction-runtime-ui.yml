@@ -1,0 +1,66 @@
+name: Stage A New Construction Runtime UI
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: stage-a-current-gate-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  current_stage_a_gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    env:
+      HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+      DISCRETE_EVIDENCE_HEAD: 12bcbf0be00b1939ac3c1087338fa7a69b16e807
+      DISCRETE_EVIDENCE_RUN: '34948947605'
+      DISCRETE_EVIDENCE_ARTIFACT_ID: '10388821407'
+      DISCRETE_EVIDENCE_DIGEST: 5132434ab7d34167b27cc76b15f5ec6e0bec8af283814459e77b71dfea5d0b59
+    steps:
+      - name: Checkout exact PR HEAD with history
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+
+      - name: Exact SHA and discrete-runtime invariance gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          actual="$(git rev-parse HEAD)"
+          test "$actual" = "$HEAD_SHA"
+          git merge-base --is-ancestor "$DISCRETE_EVIDENCE_HEAD" "$HEAD_SHA"
+          git diff --quiet "$DISCRETE_EVIDENCE_HEAD" "$HEAD_SHA" -- src/
+          echo "EXACT_HEAD_GATE=PASS sha=$actual"
+          echo "DISCRETE_RUNTIME_INVARIANCE_GATE=PASS evidence_head=$DISCRETE_EVIDENCE_HEAD"
+
+      - name: Current Stage A gate state
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo 'TASK_CLASSIFICATION=NON-PRODUCT-MASTER'
+          echo 'PRODUCT_MASTER_MUTATION=0'
+          echo "DISCRETE_EVIDENCE_RUN=$DISCRETE_EVIDENCE_RUN"
+          echo "DISCRETE_EVIDENCE_ARTIFACT_ID=$DISCRETE_EVIDENCE_ARTIFACT_ID"
+          echo "DISCRETE_EVIDENCE_DIGEST=$DISCRETE_EVIDENCE_DIGEST"
+          echo 'BASE_WINDOW_COUNT=105'
+          echo 'COUNTED_WINDOW_COUNT=105'
+          echo 'UNVERIFIED_QA_CASE_COUNT_DISCRETE=0'
+          echo 'STAGE_A_105_EXACT_DISCRETE_TERMINAL_CONTEXT_COUNT=8493560851926707642'
+          echo 'STAGE_A_105_CUSTOM_PENDING_CONTEXT_COUNT=34750439786'
+          echo 'DISCRETE_POPULATION_GATE=PASS'
+          echo 'EXHAUSTIVE_STATE_GRAPH_GATE=PARTIAL_DISCRETE_PASS_CONTINUOUS_PENDING'
+          echo 'QA_POPULATION_GATE=BLOCKED_CONTINUOUS_CUSTOM_PROOF_PENDING'
+          echo 'CUSTOM_SIZE_COVERAGE_GATE=BLOCKED_CONTINUOUS_PARTITION_NOT_PROVEN'
+          echo 'FULL_WINDOW_COVERAGE_GATE=BLOCKED_CONTINUOUS_AND_BROWSER_PROOF_PENDING'
+          echo 'AUTOMATED_TEST_GATE=BLOCKED_BY_CONTINUOUS_POPULATION_GATE'
+          echo 'FULL_BROWSER_QA_GATE=NOT_STARTED'
+          echo 'APP_INTEGRATION_READY=false'
+          echo 'RELEASE_INPUT_GATE=BLOCKED'
+          echo 'SUPERSEDED_ROUTE=LEGACY_MULTI_ENUM_PREFLIGHT_AND_EXPLICIT_EXHAUSTIVE_SHARDS'
+          echo 'RETRY_AUTHORIZED=false'
+          echo 'REOPEN_CONDITION=DISCRETE_RUNTIME_OR_DISCRETE_PROOF_MODEL_CHANGE'

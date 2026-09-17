@@ -1,0 +1,47 @@
+name: Stage A EW CUSTOM Mode Topology Diagnostic
+
+on:
+  push:
+    branches: [feat/new-construction-runtime-ui-v16-20260910]
+    paths:
+      - '.github/workflows/stage-a-ew-custom-mode-topology-diagnostic.yml'
+      - 'scripts/stage-a-ew-custom-mode-topology-diagnostic.mjs'
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      HEAD_SHA: ${{ github.sha }}
+      CUSTOM_GEOMETRY_EVIDENCE_HEAD: a2558005d3fe32299cce021bb6af6c9c09976b96
+      STAGE_A_CUSTOM_REACHABILITY_INPUT: artifacts/evidence/custom-v5/stage-a-custom-selector-reachability/report.json
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Exact HEAD and runtime invariance
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$HEAD_SHA"
+          git merge-base --is-ancestor "$CUSTOM_GEOMETRY_EVIDENCE_HEAD" "$HEAD_SHA"
+          git diff --quiet "$CUSTOM_GEOMETRY_EVIDENCE_HEAD" "$HEAD_SHA" -- src/
+          node --check scripts/stage-a-ew-custom-mode-topology-diagnostic.mjs
+      - name: Download reachability evidence
+        uses: actions/download-artifact@v4
+        with:
+          name: stage-a-custom-selector-geometry-v5
+          path: artifacts/evidence/custom-v5
+          repository: Takuro-Kwkm/sash-app
+          run-id: 34968389109
+          github-token: ${{ github.token }}
+      - name: Diagnose six EW CUSTOM contexts
+        run: node scripts/stage-a-ew-custom-mode-topology-diagnostic.mjs

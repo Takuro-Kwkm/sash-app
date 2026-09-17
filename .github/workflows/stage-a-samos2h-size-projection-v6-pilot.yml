@@ -1,0 +1,26 @@
+name: Stage A Samos2H Size Projection V6 Pilot [CLOSED]
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  closed:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Closed retry path
+        run: |
+          echo "SAMOS2H_V6_PATH=CLOSED"
+          echo "EVIDENCE_RUN=34929741294"
+          echo "FAILURE_TYPE=CONTROL_EQUIVALENCE_MISMATCH_METADATA_NOT_MODELED"
+          echo "CONTROL_EXPECTED_TERMINAL=96043843584"
+          echo "CONTROL_V6_TERMINAL=62142971904"
+          echo "CONTROL_CUSTOM_MATCH=1276674048"
+          echo "STATE_CHANGED=false"
+          echo "RETRY_AUTHORIZED=false"
+          echo "REOPEN_CONDITION=metadata-aware behavior fingerprint model"
+          echo "NEXT_PATH=SAMOS2H_METADATA_AWARE_SIZE_PROJECTION"
+          echo "APP_INTEGRATION_READY=false"
+          echo "RELEASE_INPUT_GATE=BLOCKED"

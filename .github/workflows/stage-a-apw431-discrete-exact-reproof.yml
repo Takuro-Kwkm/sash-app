@@ -1,0 +1,90 @@
+name: Stage A APW431 6-Window Discrete Exact Reproof
+
+on:
+  push:
+    branches: [feat/new-construction-runtime-ui-v16-20260910]
+    paths:
+      - '.github/workflows/stage-a-apw431-discrete-exact-reproof.yml'
+      - 'scripts/stage-a-nontw-discrete-exact-runner.mjs'
+      - 'scripts/stage-a-resolver-derived-contract-v2-pilot.mjs'
+      - 'src/catalog/runtime-master/apw431-formal-split-v1-adapter.mjs'
+
+permissions:
+  contents: read
+
+jobs:
+  reprove:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      HEAD_SHA: ${{ github.sha }}
+      DISCRETE_BASE_HEAD: 12bcbf0be00b1939ac3c1087338fa7a69b16e807
+      STAGE_A_TARGET_WINDOWS: W431-001,W431-002,W431-003,W431-004,W431-005,W431-006
+      STAGE_A_CONTRACT_V2_OUT: artifacts/stage-a-apw431-discrete-exact-reproof
+      STAGE_A_MAX_MEMO_STATES_PER_WINDOW: '20000'
+      STAGE_A_MAX_RESOLVER_CALLS_PER_WINDOW: '120000'
+      STAGE_A_MAX_TERMINAL_BFS_STATES: '8192'
+    steps:
+      - name: Checkout exact push HEAD
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Exact-head and scoped invalidation gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$HEAD_SHA"
+          git merge-base --is-ancestor "$DISCRETE_BASE_HEAD" "$HEAD_SHA"
+          changed="$(git diff --name-only "$DISCRETE_BASE_HEAD" "$HEAD_SHA" -- src/)"
+          test "$changed" = 'src/catalog/runtime-master/apw431-formal-split-v1-adapter.mjs'
+          node --check scripts/stage-a-nontw-discrete-exact-runner.mjs
+          node --check scripts/stage-a-resolver-derived-contract-v2-pilot.mjs
+          echo "APW431_DISCRETE_REPROOF_INVALIDATION_GATE=PASS changed=$changed"
+
+      - name: Reprove six APW431 windows exactly
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/stage-a-nontw-discrete-exact-runner.mjs | tee /tmp/stage-a-apw431-discrete-reproof.log
+
+      - name: Consolidate APW431 exact counts
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import { readFileSync, writeFileSync } from 'node:fs';
+          const path=process.env.STAGE_A_CONTRACT_V2_OUT+'/report.json';
+          const r=JSON.parse(readFileSync(path,'utf8'));
+          if(r.proof_status!=='COUNTED_CANDIDATE')throw new Error(`APW431_REPROOF_STATUS ${r.proof_status}`);
+          if(r.base_window_count!==6||r.counted_window_count!==6||r.blocked_window_count!==0||r.symbolic_frontier_window_count!==0)throw new Error('APW431_REPROOF_CARDINALITY');
+          const ids=new Set((r.windows??[]).map(x=>x.window_type));
+          for(const id of ['W431-001','W431-002','W431-003','W431-004','W431-005','W431-006'])if(!ids.has(id))throw new Error(`APW431_REPROOF_MISSING ${id}`);
+          if((r.windows??[]).some(x=>x.status!=='COUNTED_CANDIDATE'||x.blocker))throw new Error('APW431_REPROOF_WINDOW_FAILURE');
+          const terminal=(r.windows??[]).reduce((n,x)=>n+BigInt(x.exact_discrete_terminal_context_count),0n);
+          const custom=(r.windows??[]).reduce((n,x)=>n+BigInt(x.custom_pending_context_count),0n);
+          const summary={
+            exact_head_sha:process.env.HEAD_SHA,
+            task_classification:'NON-PRODUCT-MASTER',product_master_mutation:0,
+            model_version:'STAGE_A_APW431_6_WINDOW_DISCRETE_EXACT_REPROOF_V1',
+            window_count:6,exact_discrete_terminal_context_count:terminal.toString(),custom_pending_context_count:custom.toString(),
+            source_report:r,status:'PASS'
+          };
+          writeFileSync(process.env.STAGE_A_CONTRACT_V2_OUT+'/consolidated-report.json',JSON.stringify(summary,null,2)+'\n');
+          console.log(`APW431_DISCRETE_REPROOF_GATE=PASS windows=6 terminal=${terminal} custom_pending=${custom}`);
+          NODE
+
+      - name: Upload APW431 discrete reproof evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: stage-a-apw431-discrete-exact-reproof
+          path: |
+            artifacts/stage-a-apw431-discrete-exact-reproof/
+            /tmp/stage-a-apw431-discrete-reproof.log
+          if-no-files-found: warn

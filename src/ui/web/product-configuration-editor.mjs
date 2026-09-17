@@ -1,6 +1,45 @@
 import { createProductConfigurationSnapshot } from '/work-management/domain.mjs';
 
 const esc=(value)=>String(value??'').replace(/[&<>'\"]/g,(character)=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'\"':"&quot;"})[character]);
+const TECHNICAL_TOKEN=/\b(?:CUSTOM_DIMENSION|RUNTIME|ORDER_READY|[A-Z][A-Z0-9]+(?:_[A-Z0-9]+){1,})\b/;
+const STATUS_LABELS=Object.freeze({
+  BLOCK:'製作範囲外',BLOCKED:'選択できません',REVIEW_REQUIRED:'要確認',MANUAL_CHECK:'要確認',
+  PENDING:'確認待ち',INCOMPLETE:'入力が必要です',INVALID:'入力内容を確認してください',
+  PASS:'入力可能',VALID:'入力可能',ACCEPTED:'入力可能',
+});
+
+function runtimeFieldLabel(result,key){
+  return result.fields?.find((field)=>field.key===key)?.displayLabel
+    ??({custom_width:'特注W',custom_height:'特注H',size_mode:'サイズ方式',size:'規格サイズ'})[key]
+    ??'入力内容';
+}
+function runtimeErrorCode(error){return String(error?.errorCode??error?.code??'');}
+function friendlyValidationError(error,result){
+  const code=runtimeErrorCode(error);
+  if(code==='CUSTOM_DIMENSION_OUT_OF_FORMAL_OUTER_BOUNDS')return '入力した特注サイズは、この仕様の製作範囲外です。W・Hを変更してください。';
+  if(code==='CUSTOM_DIMENSION_FORMAL_RULE_MISSING')return 'この仕様の特注サイズは自動判定できません。メーカーへの確認が必要です。';
+  const message=String(error?.message??'').trim();
+  if(message&&!TECHNICAL_TOKEN.test(message))return message;
+  return `${runtimeFieldLabel(result,error?.field)}の入力内容を確認してください。`;
+}
+function friendlyDimension(dimension){
+  const code=String(dimension?.code??'');
+  if(code==='CUSTOM_DIMENSION_OUT_OF_FORMAL_OUTER_BOUNDS')return {status:'製作範囲外',message:'入力した特注サイズは、この仕様の製作範囲外です。W・Hを変更してください。'};
+  if(code==='CUSTOM_DIMENSION_FORMAL_REVIEW_REQUIRED')return {status:'要確認',message:'入力した特注サイズは外枠範囲内ですが、原本グラフ・ガラス構成・耐風圧などはメーカー一次資料で確認してください。'};
+  if(code==='CUSTOM_DIMENSION_FORMAL_RULE_MISSING')return {status:'確認が必要です',message:'この仕様の特注サイズは自動判定できません。メーカーへの確認が必要です。'};
+  const rawStatus=String(dimension?.status??'');
+  const rawMessage=String(dimension?.message??'').trim();
+  return {status:STATUS_LABELS[rawStatus]??'確認が必要です',message:rawMessage&&!TECHNICAL_TOKEN.test(rawMessage)?rawMessage:''};
+}
+function friendlyNotice(value){
+  const text=String(typeof value==='string'?value:value?.message??value?.code??'').trim();
+  if(!text)return'';
+  if(/^ORDER_READY\s*=\s*false\s*[:：]?/i.test(text))return text.replace(/^ORDER_READY\s*=\s*false\s*[:：]?\s*/i,'');
+  if(/^成立不可Rule\s*[:：]/.test(text))return 'この組み合わせは成立しません。';
+  if(TECHNICAL_TOKEN.test(text))return 'この内容は追加確認が必要です。';
+  return text;
+}
+function uniqueFriendlyNotices(values){return [...new Set(values.map(friendlyNotice).filter(Boolean))];}
 
 async function getJson(url){
   const response=await fetch(url,{cache:'no-store'});
@@ -38,7 +77,7 @@ export class ProductConfigurationEditor {
         <div class="field"><label for="product">商品</label><select id="product" disabled><option value="">選択してください</option></select></div>
         <div id="dynamicForm"></div><div id="warnings"></div>
       </section>
-      <section class="card compact"><h2>選択内容</h2><div id="selectionSummary" class="summary muted">シリーズを選択してください。</div></section>
+      <section class="card compact"><h2>選択内容</h2><div id="selectionSummary" class="summary muted">商品を選択してください。</div></section>
       <section id="productCodeCard" class="card compact" hidden><h2>品番結果</h2><div id="productCodeResults" class="summary"></div></section>
       ${this.showInventory?'<section class="card compact"><h2>Runtime Catalog</h2><div id="inventory"></div></section>':''}`;
     this.root.addEventListener('change',this.boundChange);
@@ -46,8 +85,11 @@ export class ProductConfigurationEditor {
     const [catalogProducts,runtimeProducts,health]=await Promise.all([
       getJson('/api/catalog/products'),getJson('/api/runtime-master/integrations'),getJson('/api/health'),
     ]);
+    // If the App Runtime Integration Registry knows a product, never expose a legacy/skeleton
+    // Catalog row for the same app product id. READY or BLOCKED Runtime identity is authoritative.
+    const runtimeIds=new Set(runtimeProducts.map((row)=>row.id));
     this.state.products=[
-      ...catalogProducts.map((row)=>({...row,sourceType:'CATALOG'})),
+      ...catalogProducts.filter((row)=>!runtimeIds.has(row.id)).map((row)=>({...row,sourceType:'CATALOG'})),
       ...runtimeProducts.map((row)=>({...row,sourceType:'RUNTIME_MASTER'})),
     ];
     const manufacturers=[...new Set(this.state.products.map((row)=>row.manufacturer))].sort((a,b)=>a.localeCompare(b,'ja'));
@@ -67,7 +109,10 @@ export class ProductConfigurationEditor {
   selectManufacturer(manufacturer){
     this.root.querySelector('#manufacturer').value=manufacturer??'';
     fill(this.root.querySelector('#product'),this.productsForManufacturer(manufacturer).map((row)=>({
-      value:row.id,label:row.sourceType==='RUNTIME_MASTER'?(row.selectable===false?`${row.displayName??row.series}（正式Runtime未登録）`:`${row.displayName??row.series} [Runtime]`):(row.displayName??row.series),
+      value:row.id,
+      label:row.sourceType==='RUNTIME_MASTER'
+        ?(row.selectable===false?`${row.displayName??row.series}（利用不可）`:`${row.displayName??row.series} [Runtime]`)
+        :(row.displayName??row.series),
       disabled:row.selectable===false,
     })));
   }
@@ -99,13 +144,31 @@ export class ProductConfigurationEditor {
     await this.resolve({notify:true});
   }
 
+  clearRuntimeDescendants(key){
+    const rows=this.state.resolved?.dependencyFields??[];
+    const children=new Map();
+    for(const row of rows){
+      for(const parent of row.parentFields??[]){
+        if(!children.has(parent))children.set(parent,new Set());
+        children.get(parent).add(row.key);
+      }
+    }
+    const queue=[...(children.get(key)??[])],seen=new Set();
+    while(queue.length){
+      const child=queue.shift();
+      if(seen.has(child))continue;
+      seen.add(child);delete this.state.selection[child];
+      queue.push(...(children.get(child)??[]));
+    }
+  }
+
   async handleChange(event){
     const target=event.target;
     if(target.id==='manufacturer'){
       this.state.resolveRevision+=1;this.state.productId=null;this.state.selection={};this.state.resolved=null;this.state.snapshot=null;this.state.stale=false;
       this.selectManufacturer(target.value);
       this.root.querySelector('#dynamicForm').innerHTML='';this.root.querySelector('#warnings').innerHTML='';
-      this.root.querySelector('#selectionSummary').textContent='シリーズを選択してください。';this.root.querySelector('#productCodeCard').hidden=true;
+      this.root.querySelector('#selectionSummary').textContent='商品を選択してください。';this.root.querySelector('#productCodeCard').hidden=true;
       this.onSnapshot(null);return;
     }
     if(target.id==='product'){
@@ -115,6 +178,7 @@ export class ProductConfigurationEditor {
     }
     if(!target.matches('[data-spec-key]'))return;
     const key=target.dataset.specKey;
+    if(this.state.productSource==='RUNTIME_MASTER')this.clearRuntimeDescendants(key);
     if(target.type==='number'){
       if(target.value!=='')this.state.selection[key]=Number(target.value);else delete this.state.selection[key];
     }else if(target.multiple){
@@ -132,7 +196,9 @@ export class ProductConfigurationEditor {
     const result=await getJson(`${endpoint}?${query}`);
     if(revision!==this.state.resolveRevision||productId!==this.state.productId)return;
     this.state.selection=result.selection;this.state.resolved=result;
-    this.root.querySelector('#dynamicForm').innerHTML=result.fields.map((field)=>this.renderField(field)).join('');
+    const dynamicForm=this.root.querySelector('#dynamicForm');
+    dynamicForm.innerHTML=result.fields.map((field)=>this.renderField(field)).join('');
+    dynamicForm.dataset.resolveRevision=String(revision);
     this.renderWarnings(result);this.renderSummary(result);this.renderProductCodes(result);
     const product=this.state.products.find((row)=>row.id===productId);
     this.state.snapshot=createProductConfigurationSnapshot({product,result});
@@ -152,9 +218,13 @@ export class ProductConfigurationEditor {
 
   renderWarnings(result){
     const errors=result.validation?.errors??[];const dimension=result.dimensionResult;
-    this.root.querySelector('#warnings').innerHTML=(errors.length?`<div class="notice error"><strong>入力内容を確認してください</strong>${errors.map((error)=>`<span>${esc(error.message)}</span>`).join('')}</div>`:'')
-      +(dimension?`<div class="notice dimension ${esc(String(dimension.status).toLowerCase())}"><strong>${esc(dimension.status)}</strong><span>${esc(dimension.message)}</span></div>`:'')
-      +([...(result.notices??[]),...(result.manualWarnings??[])].length?`<div class="notice warning">${[...(result.notices??[]),...(result.manualWarnings??[])].map(esc).join('<br>')}</div>`:'');
+    const dimensionCode=String(dimension?.code??'');
+    const visibleErrors=dimensionCode?errors.filter((error)=>runtimeErrorCode(error)!==dimensionCode):errors;
+    const friendly=dimension?friendlyDimension(dimension):null;
+    const notices=uniqueFriendlyNotices([...(result.notices??[]),...(result.manualWarnings??[])]);
+    this.root.querySelector('#warnings').innerHTML=(visibleErrors.length?`<div class="notice error"><strong>入力内容を確認してください</strong>${visibleErrors.map((error)=>`<span>${esc(friendlyValidationError(error,result))}</span>`).join('')}</div>`:'')
+      +(dimension?`<div class="notice dimension ${esc(String(dimension.status).toLowerCase())}"><strong>${esc(friendly.status)}</strong>${friendly.message?`<span>${esc(friendly.message)}</span>`:''}</div>`:'')
+      +(notices.length?`<div class="notice warning">${notices.map(esc).join('<br>')}</div>`:'');
   }
 
   renderSummary(result){

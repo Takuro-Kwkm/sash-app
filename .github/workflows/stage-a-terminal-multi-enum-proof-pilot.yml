@@ -1,0 +1,38 @@
+name: Stage A Terminal MULTI_ENUM Exact Proof Pilot
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/stage-a-terminal-multi-enum-proof-pilot.yml'
+      - 'scripts/stage-a-terminal-multi-enum-proof-pilot.mjs'
+      - 'src/catalog/runtime-master/**'
+      - 'src/catalog/**'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: stage-a-terminal-multi-enum-pilot-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  superseded_gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Closed route evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo 'TERMINAL_MULTI_ENUM_PILOT_ROUTE=CLOSED'
+          echo 'EW_RESULT=COUNTED_CANDIDATE'
+          echo 'EW_EXACT_DISCRETE_TERMINAL_CONTEXT_COUNT=21233664'
+          echo 'TW_RESULT=TERMINAL_MULTI_PROOF_VALID_BUT_UPSTREAM_MEMO_LIMIT'
+          echo 'TW_TERMINAL_MULTI_PROOF_CONTEXT_COUNT=10'
+          echo 'TW_TERMINAL_MULTI_CACHE_HITS=535'
+          echo 'TW_TERMINAL_TRANSITION_CHECKS=2310'
+          echo 'TW_BLOCKER=MEMO_STATE_LIMIT_REACHED_AT_glass_function'
+          echo 'NEXT_ACTIVE_ROUTE=TW_BEHAVIORAL_PARTITION_DIAGNOSTIC'
+          echo 'APP_INTEGRATION_READY=false'
+          echo 'RELEASE_INPUT_GATE=BLOCKED'

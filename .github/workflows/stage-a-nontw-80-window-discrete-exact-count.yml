@@ -1,0 +1,37 @@
+name: Stage A Non-TW 80-Window Discrete Exact Count
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/stage-a-nontw-80-window-discrete-exact-count.yml'
+      - 'scripts/stage-a-nontw-discrete-exact-runner.mjs'
+      - 'scripts/stage-a-resolver-derived-contract-v2-pilot.mjs'
+      - 'src/catalog/runtime-master/**'
+      - 'src/catalog/**'
+
+permissions:
+  contents: read
+
+jobs:
+  closed-evidence-gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 1
+    steps:
+      - name: Preserve broad-run evidence and close same-condition retry
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo 'TASK_CLASSIFICATION=NON-PRODUCT-MASTER'
+          echo 'PRODUCT_MASTER_MUTATION=0'
+          echo 'NONTW_80_BROAD_RUN_EVIDENCE_HEAD=dd93b7325f2efe6784bb713a8c8e0609ec0d1cdf'
+          echo 'NONTW_80_BROAD_RUN_ID=34922705391'
+          echo 'NONTW_80_AGGREGATE_ARTIFACT_ID=10378848514'
+          echo 'NONTW_80_AGGREGATE_DIGEST=sha256:03da92be497f6792e9e7965e4d654aebf25d0efa79d93247dc1fefb9da27eb38'
+          echo 'COUNTED_WINDOW_COUNT=60'
+          echo 'UNVERIFIED_WINDOW_COUNT=20'
+          echo 'NONTW_80_BROAD_RETRY_GATE=CLOSED'
+          echo 'RETRY_AUTHORIZED=false'
+          echo 'SUPERSEDED_BY=TARGETED_NON_TW_RECOVERY'
+          echo 'APP_INTEGRATION_READY=false'
+          echo 'RELEASE_INPUT_GATE=BLOCKED'

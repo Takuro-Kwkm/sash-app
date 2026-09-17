@@ -1,0 +1,28 @@
+name: Stage A Samos Options Self-Reference Diagnostic
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/stage-a-samos-options-self-reference-diagnostic.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  closed-evidence-gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Preserve Samos source-rule evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo 'DIAGNOSTIC_EVIDENCE_RUN=34926697862'
+          echo 'SAMOS2H_OPTIONS=33 conflict=OP-S2H-ANGLE-COVER::OP-S2H-FINGER-GUARD source=OPR-S2H-001 shape=$contains+DENY_CANDIDATE'
+          echo 'SAMOSL_OPTIONS=39 conflict=OP-SL-ANGLE-COVER::OP-SL-FINGER-GUARD shape=mutual_$notContains'
+          echo 'HIGHER_ORDER_SELF_REFERENCE_COUNT=0'
+          echo 'RETRY_AUTHORIZED=false'
+          echo 'REOPEN_CONDITION=NEW_CONFLICT_GRAPH_V4_MODEL'
+          echo 'APP_INTEGRATION_READY=false'
+          echo 'RELEASE_INPUT_GATE=BLOCKED'

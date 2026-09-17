@@ -1,0 +1,71 @@
+name: Stage A Samos2H Size Behavior Partition Diagnostic
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/stage-a-samos2h-size-behavior-partition-diagnostic.yml'
+      - 'scripts/stage-a-samos2h-size-behavior-partition-diagnostic.mjs'
+      - 'src/catalog/runtime-master/product-module-runtime-adapter.mjs'
+      - 'src/catalog/dimension-resolver.mjs'
+      - 'src/catalog/runtime-master-packages/lixil-samos2h-*/**'
+
+permissions:
+  contents: read
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    env:
+      HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+      STAGE_A_TARGET_WINDOWS: WT-S2H-SHUTTER-HIKI,WT-S2H-HIKICHIGAI
+      STAGE_A_SAMOS_SIZE_PARTITION_OUT: artifacts/stage-a-samos2h-size-behavior-partition
+    steps:
+      - name: Checkout exact PR HEAD
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 1
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Exact SHA gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          actual="$(git rev-parse HEAD)"
+          test "$actual" = "$HEAD_SHA"
+          echo "EXACT_HEAD_GATE=PASS sha=$actual"
+      - name: Derive size behavior partitions from Formal source
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check scripts/stage-a-samos2h-size-behavior-partition-diagnostic.mjs
+          node scripts/stage-a-samos2h-size-behavior-partition-diagnostic.mjs
+      - name: Validate diagnostic invariants
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import { readFileSync } from 'node:fs';
+          const report=JSON.parse(readFileSync('artifacts/stage-a-samos2h-size-behavior-partition/report.json','utf8'));
+          if(report.exact_head_sha!==process.env.HEAD_SHA)throw new Error('exact head mismatch');
+          if(report.windows?.length!==2)throw new Error('expected two window diagnostics');
+          for(const row of report.windows){
+            if(row.logical_size_count<=0)throw new Error(`no sizes for ${row.window_type}`);
+            if(row.behavior_class_count<=0)throw new Error(`no behavior classes for ${row.window_type}`);
+            const weight=row.behavior_classes.reduce((sum,c)=>sum+Number(c.weight||0),0);
+            if(weight!==row.logical_size_count)throw new Error(`partition weight mismatch ${row.window_type}: ${weight} != ${row.logical_size_count}`);
+            console.log(`SIZE_PARTITION_GATE=PASS window=${row.window_type} logical=${row.logical_size_count} classes=${row.behavior_class_count} compression=${row.compression_ratio}`);
+          }
+          console.log('DIAGNOSTIC_ONLY=true');
+          console.log('APP_INTEGRATION_READY=false');
+          console.log('RELEASE_INPUT_GATE=BLOCKED');
+          NODE
+      - name: Upload size partition evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: stage-a-samos2h-size-behavior-partition
+          path: artifacts/stage-a-samos2h-size-behavior-partition/report.json
+          if-no-files-found: error

@@ -1,0 +1,37 @@
+name: Stage A Semantic Continuation DAG Pilot
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/stage-a-semantic-continuation-dag-pilot.yml'
+      - 'scripts/stage-a-semantic-continuation-dag-pilot.mjs'
+      - 'src/catalog/runtime-master/**'
+      - 'src/catalog/**'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: stage-a-semantic-dag-pilot-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  superseded_gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Close superseded semantic DAG v1 pilot
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "SEMANTIC_DAG_V1_PILOT_PATH=CLOSED"
+          echo "CLOSE_REASON=CLASS_REUSE_DETECTED_BUT_CONCRETE_STATE_ENUMERATION_REMAINED"
+          echo "EVIDENCE_RUN=34917584133"
+          echo "EVIDENCE_CONCRETE_STATE_COUNT=72000"
+          echo "EVIDENCE_SEMANTIC_CLASS_COUNT=75"
+          echo "EVIDENCE_CLASS_REUSE_COUNT=67260"
+          echo "SUPERSEDED_BY=RESOLVER_DERIVED_CONTRACT_V2_PILOT"
+          echo "RETRY_AUTHORIZED=false"
+          echo "APP_INTEGRATION_READY=false"
+          echo "RELEASE_INPUT_GATE=BLOCKED"
