@@ -1,7 +1,13 @@
 {
-  "schema_version": "2.0.0",
+  "schema_version": "2.1.0",
   "controller": "project-governance-gate.yml",
   "authorization_workflow": "governance-authorization.yml",
+  "controller_pre_human_jobs": {
+    "governance": {"needs": [], "required_if_contains": []},
+    "persist": {"needs": ["governance"], "required_if_contains": ["github.event_name != 'pull_request'"]},
+    "reconstruct-current-state": {"needs": ["governance", "persist"], "required_if_contains": ["github.event_name != 'pull_request'"]}
+  },
+  "controller_post_human_jobs": ["post-review-global-flow"],
   "legacy_workflows": [
     "ci.yml",
     "entry-door-cover-global-flow-gate.yml",
