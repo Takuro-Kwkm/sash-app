@@ -115,9 +115,22 @@ export function normalizeRuntimeManifest(raw) {
   return deepFreeze(normalized);
 }
 
+function normalizeTransformStage(raw) {
+  if (!raw || typeof raw !== 'object') return null;
+  const transformPath = raw.transformPath ?? null;
+  const transformPaths = raw.transformPaths?.length ? raw.transformPaths : null;
+  if (!transformPath && !transformPaths) return null;
+  return { transformPath, transformPaths };
+}
+
 function normalizeTransportSpec(entry, fileId) {
   const raw = entry.materializedFiles?.[fileId];
   if (Array.isArray(raw)) return { codec: 'gzip', paths: raw };
+  if (raw && typeof raw === 'object' && raw.codec === 'json-transform-chain-v1' && raw.base && raw.stages?.length) {
+    const stages = raw.stages.map(normalizeTransformStage);
+    if (stages.some((stage) => !stage)) return null;
+    return { codec: 'json-transform-chain-v1', base: raw.base, stages };
+  }
   if (raw && typeof raw === 'object' && raw.codec === 'json-transform-v1' && raw.base && (raw.transformPath || raw.transformPaths?.length)) {
     return { codec: 'json-transform-v1', base: raw.base, transformPath: raw.transformPath ?? null, transformPaths: raw.transformPaths ?? null };
   }
@@ -160,7 +173,13 @@ async function readMaterializedCanonicalFile(entry, manifestRow) {
   if (!transport) fail('RUNTIME_MANIFEST_FILE_MISSING', `Manifest-listed Runtime file has no explicit app materialization mapping: ${fileName}`, { fileName, fileId });
 
   let bytes;
-  if (transport.codec === 'json-transform-v1') {
+  if (transport.codec === 'json-transform-chain-v1') {
+    bytes = await readPackedTransport(transport.base, `${fileName}#transform-source`);
+    for (const [index, stage] of transport.stages.entries()) {
+      const transformBytes = await readTransformBytes(stage, `${fileName}#transform-stage-${index + 1}`);
+      bytes = applyFormalRuntimeJsonTransform(bytes, transformBytes);
+    }
+  } else if (transport.codec === 'json-transform-v1') {
     const baseBytes = await readPackedTransport(transport.base, `${fileName}#transform-source`);
     const transformBytes = await readTransformBytes(transport, fileName);
     bytes = applyFormalRuntimeJsonTransform(baseBytes, transformBytes);
