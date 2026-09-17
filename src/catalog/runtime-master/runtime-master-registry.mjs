@@ -26,7 +26,8 @@ const EW_RUNTIME_PARTS = Object.freeze([
   ...Array.from({ length: 37 }, (_, index) => `canonical-02-${String(index).padStart(2,'0')}`),
   'part-03',
 ]);
-const TW_ROOT = join(HERE, '../runtime-master-packages/lixil-tw-integrated-v0.3');
+const TW_ROOT = join(HERE, '../runtime-master-packages/lixil-tw-integrated-v0.4');
+const TW_V03_ROOT = join(HERE, '../runtime-master-packages/lixil-tw-integrated-v0.3');
 const TW_V02_ROOT = join(HERE, '../runtime-master-packages/lixil-tw-integrated-v0.2');
 const TW_TRANSFORM_PARTS = Object.freeze(Array.from({ length: 19 }, (_, index) => `part-${String(index).padStart(2,'0')}`));
 const UCHIRIMO_ROOT = join(HERE, '../runtime-master-packages/ykkap-uchirimo-v1.0-p7r1-r2');
@@ -112,9 +113,18 @@ export const runtimeMasterInventory = Object.freeze([
     }),
   }),
   Object.freeze({
-    manufacturer:'LIXIL', series:'TW', masterVersion:'integrated-v0.3', schemaVersion:'2.0', packageType:'RUNTIME_MANIFEST_V1', adapterType:'TW_CANONICAL_WORKBOOK_REFERENCE_V2', packageRoot:TW_ROOT,
-    runtimeManifestPath:join(TW_ROOT,'runtime_manifest.json'), runtimeManifestDriveFileId:'1f_RL37UoveSoQYtWZQf3NzIG4jUwzlcb', runtimeManifestSha256:'c4980f45fdf57afe1512f2ca42da0eca53d9facc1f555734f7d89b347a808ee0',
-    materializedFiles:Object.freeze({'1i_rfZwRcPJCDj3bn-QH1OldX_sbogc2A':Object.freeze({ codec:'json-transform-v1', base:Object.freeze({codec:'brotli',paths:Object.freeze([join(TW_V02_ROOT,'LIXIL_TW_runtime_integrated-v0.2.json.br.b64.parts/part-00')])}), transformPaths:Object.freeze(TW_TRANSFORM_PARTS.map((name)=>join(TW_ROOT,`runtime_transform.json.parts/${name}`))) })}),
+    manufacturer:'LIXIL', series:'TW', masterVersion:'integrated-v0.4', schemaVersion:'2.0', packageType:'RUNTIME_MANIFEST_V1', adapterType:'TW_CANONICAL_WORKBOOK_REFERENCE_V2', packageRoot:TW_ROOT,
+    runtimeManifestPath:join(TW_ROOT,'runtime_manifest.json'), runtimeManifestDriveFileId:'13doEdTkUlQNu4Dm-SNwkeUg8RkrjS5G0', runtimeManifestSha256:'95380f5cab261edf03bf868e0f2120b9d57e941d6618b4543afe7a6ffd00c68e',
+    materializedFiles:Object.freeze({
+      '1hWy1coHWTsuXYXGLRxZ0a2vJEmSIvg5p':Object.freeze({
+        codec:'json-transform-chain-v1',
+        base:Object.freeze({codec:'brotli',paths:Object.freeze([join(TW_V02_ROOT,'LIXIL_TW_runtime_integrated-v0.2.json.br.b64.parts/part-00')])}),
+        stages:Object.freeze([
+          Object.freeze({transformPaths:Object.freeze(TW_TRANSFORM_PARTS.map((name)=>join(TW_V03_ROOT,`runtime_transform.json.parts/${name}`)))}),
+          Object.freeze({transformPath:join(TW_ROOT,'runtime_transform.json')}),
+        ]),
+      }),
+    }),
   }),
 ]);
 
