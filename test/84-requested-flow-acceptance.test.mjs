@@ -51,6 +51,36 @@ async function advanceUntil(productId, baseSelection, targetKey, max = 50) {
   throw new Error(`${productId}: ${targetKey} did not appear within ${max} transitions`);
 }
 
+async function advanceThroughPrerequisites(productId, baseSelection, targetKey, max = 60) {
+  let result = await resolveRuntimeAppProduct(productId, baseSelection);
+  for (let step = 0; step < max; step += 1) {
+    const targetIndex = result.fields.findIndex((row) => row.key === targetKey);
+    if (targetIndex >= 0) {
+      const prior = result.fields.slice(0, targetIndex).find((row) =>
+        row?.values?.length && !row.readOnly && row.dataType !== 'NUMBER' && row.dataType !== 'TEXT' &&
+        result.selection?.[row.key] === undefined);
+      if (!prior) {
+        const target = result.fields[targetIndex];
+        if (target?.values?.length) return { result, selection: result.selection, target };
+      } else {
+        const value = preferredValue(prior);
+        assert.notEqual(value, undefined, `${productId}:${prior.key}: no selectable prerequisite value`);
+        result = await resolveRuntimeAppProduct(productId, { ...result.selection, [prior.key]: value });
+        continue;
+      }
+    }
+
+    const next = result.fields.find((row) =>
+      row?.values?.length && !row.readOnly && row.key !== targetKey && row.dataType !== 'NUMBER' && row.dataType !== 'TEXT' &&
+      result.selection?.[row.key] === undefined);
+    assert.ok(next, `${productId}: unable to reach ${targetKey} through prerequisite flow; fields=${result.fields.map((row) => row.key).join(',')}`);
+    const value = preferredValue(next);
+    assert.notEqual(value, undefined, `${productId}:${next.key}: no selectable value`);
+    result = await resolveRuntimeAppProduct(productId, { ...result.selection, [next.key]: value });
+  }
+  throw new Error(`${productId}: ${targetKey} prerequisite flow did not converge within ${max} transitions`);
+}
+
 async function completeRequired(productId, baseSelection, max = 60) {
   let result = await resolveRuntimeAppProduct(productId, baseSelection);
   for (let step = 0; step < max; step += 1) {
@@ -126,25 +156,24 @@ test('requested flow: ThermosL ventilation back door exposes all six formal gril
   await assertSixGrilles('SER-LIX-SAMOSL', 'ThermosL');
 });
 
-test('requested flow: Samos2H ventilation back door exposes transparent/pattern/frosted glass across valid glass bases before Low-E/color detail', async () => {
+test('requested flow: Samos2H ventilation back door exposes transparent/pattern/frosted glass after prerequisite flow and before Low-E/color detail', async () => {
   const productId = 'SER-LIX-SAMOS2H';
   const windowType = await windowValueByLabel(productId, VENT_DOOR);
-  const baseReached = await advanceUntil(productId, { window_type: windowType }, 'glass_base');
+  const baseReached = await advanceThroughPrerequisites(productId, { window_type: windowType }, 'glass_base');
   assertGlazingOrder(baseReached.result, 'Samos2H-base');
   assertNoRawComposition(baseReached.result, 'Samos2H-base');
+  assert.ok(baseReached.result.selection.size, 'Samos2H: prerequisite flow must select formal size before glazing acceptance');
 
   const seen = [];
   let transparentBranch = null;
   for (const baseChoice of selectableValues(baseReached.target)) {
-    const afterBase = await resolveRuntimeAppProduct(productId, { ...baseReached.result.selection, glass_base: baseChoice.value });
-    assertGlazingOrder(afterBase, `Samos2H:${baseChoice.value}`);
-    assertNoRawComposition(afterBase, `Samos2H:${baseChoice.value}`);
-    const type = field(afterBase, 'glass_type');
-    if (!type) continue;
-    for (const choice of selectableValues(type)) {
+    const reachedType = await advanceThroughPrerequisites(productId, { ...baseReached.result.selection, glass_base: baseChoice.value }, 'glass_type');
+    assertGlazingOrder(reachedType.result, `Samos2H:${baseChoice.value}`);
+    assertNoRawComposition(reachedType.result, `Samos2H:${baseChoice.value}`);
+    for (const choice of selectableValues(reachedType.target)) {
       const label = String(choice.displayLabel ?? choice.label ?? choice.value);
       seen.push(label);
-      if (!transparentBranch && /透明/u.test(label)) transparentBranch = { selection:afterBase.selection, choice };
+      if (!transparentBranch && /透明/u.test(label)) transparentBranch = { selection:reachedType.result.selection, choice };
     }
   }
   const uniqueLabels = [...new Set(seen)];
@@ -162,7 +191,7 @@ test('requested flow: Samos2H ventilation back door exposes transparent/pattern/
 test('requested flow: ThermosL glass UI is semantic and does not leak raw pane composition strings', async () => {
   const productId = 'SER-LIX-SAMOSL';
   const windowType = await windowValueByLabel(productId, VENT_DOOR);
-  const reached = await advanceUntil(productId, { window_type: windowType }, 'glass_type');
+  const reached = await advanceThroughPrerequisites(productId, { window_type: windowType }, 'glass_type');
   assertAppearanceLabelSet(appearanceLabels(reached.target), 'ThermosL');
   assertGlazingOrder(reached.result, 'ThermosL');
   assertNoRawComposition(reached.result, 'ThermosL');
