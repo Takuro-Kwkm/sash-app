@@ -1,0 +1,116 @@
+{
+  "schema_version": "1.1.0",
+  "generated_at": "2026-09-17T11:32:18.733Z",
+  "exact_head": "d9ff161de1b37a9f745dea8783118f4b6a43d734",
+  "runtime_snapshot_id": "RUNTIME-SNAPSHOT-6d21faa6a959e00ab959",
+  "human_flow_field_coverage_verification": {
+    "status": "PASS",
+    "artifact": "artifacts/governance/human-flow-field-coverage-verification.json",
+    "artifact_sha256": "fb488d8d4d3adc305eb62029ec025484874a929c6ae55b20372b2634b26ea115"
+  },
+  "entries": [
+    {
+      "id": "PRE_GOVERNANCE_BASELINE",
+      "gate_id": null,
+      "outcome": "OBSERVED",
+      "exact_head": "8fe0d9f428957c1d1659f33e57def51ea70e1ced",
+      "artifact": null,
+      "artifact_sha256": null,
+      "command": null,
+      "scope": "Historical repository baseline before Project Governance Foundation. Not gate evidence.",
+      "authoritative_for_current_head": false
+    },
+    {
+      "id": "CANONICAL_RUNTIME_GATE-d9ff161de1b3-19a94b22dbaf",
+      "gate_id": "CANONICAL_RUNTIME_GATE",
+      "outcome": "PASS",
+      "exact_head": "d9ff161de1b37a9f745dea8783118f4b6a43d734",
+      "runtime_snapshot_id": "RUNTIME-SNAPSHOT-6d21faa6a959e00ab959",
+      "artifact": "artifacts/governance/human-flow-review.json",
+      "artifact_sha256": "1cf60df5bbbb4d852907dd0c4df1ba192ef1a38b5aa9c6e3126aebea6bedb50c",
+      "command": "node scripts/governance/build-human-flow-review.mjs && node scripts/governance/verify-human-flow-field-coverage.mjs",
+      "scope": "Pre-Human-Review Runtime identity, authoritative source-field coverage, adapter/baseline field-universe reconciliation and per-window structural baseline evidence. Dynamic selector combinations remain explicitly UNVERIFIED until post-Human QA.",
+      "recorded_at": "2026-09-17T11:32:18.733Z",
+      "authoritative_for_current_head": true
+    },
+    {
+      "id": "RUNTIME_ADAPTER_GATE-d9ff161de1b3-19a94b22dbaf",
+      "gate_id": "RUNTIME_ADAPTER_GATE",
+      "outcome": "PASS",
+      "exact_head": "d9ff161de1b37a9f745dea8783118f4b6a43d734",
+      "runtime_snapshot_id": "RUNTIME-SNAPSHOT-6d21faa6a959e00ab959",
+      "artifact": "artifacts/governance/human-flow-review.json",
+      "artifact_sha256": "1cf60df5bbbb4d852907dd0c4df1ba192ef1a38b5aa9c6e3126aebea6bedb50c",
+      "command": "node scripts/governance/build-human-flow-review.mjs && node scripts/governance/verify-human-flow-field-coverage.mjs",
+      "scope": "Pre-Human-Review Runtime identity, authoritative source-field coverage, adapter/baseline field-universe reconciliation and per-window structural baseline evidence. Dynamic selector combinations remain explicitly UNVERIFIED until post-Human QA.",
+      "recorded_at": "2026-09-17T11:32:18.733Z",
+      "authoritative_for_current_head": true
+    },
+    {
+      "id": "WINDOW_FLOW_BASELINE_GATE-d9ff161de1b3-19a94b22dbaf",
+      "gate_id": "WINDOW_FLOW_BASELINE_GATE",
+      "outcome": "PASS",
+      "exact_head": "d9ff161de1b37a9f745dea8783118f4b6a43d734",
+      "runtime_snapshot_id": "RUNTIME-SNAPSHOT-6d21faa6a959e00ab959",
+      "artifact": "artifacts/governance/human-flow-review.json",
+      "artifact_sha256": "1cf60df5bbbb4d852907dd0c4df1ba192ef1a38b5aa9c6e3126aebea6bedb50c",
+      "command": "node scripts/governance/build-human-flow-review.mjs && node scripts/governance/verify-human-flow-field-coverage.mjs",
+      "scope": "Pre-Human-Review Runtime identity, authoritative source-field coverage, adapter/baseline field-universe reconciliation and per-window structural baseline evidence. Dynamic selector combinations remain explicitly UNVERIFIED until post-Human QA.",
+      "recorded_at": "2026-09-17T11:32:18.733Z",
+      "authoritative_for_current_head": true
+    },
+    {
+      "id": "CANONICAL_SLOT_SCHEMA_GATE-d9ff161de1b3-19a94b22dbaf",
+      "gate_id": "CANONICAL_SLOT_SCHEMA_GATE",
+      "outcome": "PASS",
+      "exact_head": "d9ff161de1b37a9f745dea8783118f4b6a43d734",
+      "runtime_snapshot_id": "RUNTIME-SNAPSHOT-6d21faa6a959e00ab959",
+      "artifact": "artifacts/governance/human-flow-review.json",
+      "artifact_sha256": "1cf60df5bbbb4d852907dd0c4df1ba192ef1a38b5aa9c6e3126aebea6bedb50c",
+      "command": "node scripts/governance/build-human-flow-review.mjs && node scripts/governance/verify-human-flow-field-coverage.mjs",
+      "scope": "Pre-Human-Review Runtime identity, authoritative source-field coverage, adapter/baseline field-universe reconciliation and per-window structural baseline evidence. Dynamic selector combinations remain explicitly UNVERIFIED until post-Human QA.",
+      "recorded_at": "2026-09-17T11:32:18.733Z",
+      "authoritative_for_current_head": true
+    },
+    {
+      "id": "FLOW_SCHEMA_UNMAPPED_FIELD_GATE-d9ff161de1b3-19a94b22dbaf",
+      "gate_id": "FLOW_SCHEMA_UNMAPPED_FIELD_GATE",
+      "outcome": "PASS",
+      "exact_head": "d9ff161de1b37a9f745dea8783118f4b6a43d734",
+      "runtime_snapshot_id": "RUNTIME-SNAPSHOT-6d21faa6a959e00ab959",
+      "artifact": "artifacts/governance/human-flow-review.json",
+      "artifact_sha256": "1cf60df5bbbb4d852907dd0c4df1ba192ef1a38b5aa9c6e3126aebea6bedb50c",
+      "command": "node scripts/governance/build-human-flow-review.mjs && node scripts/governance/verify-human-flow-field-coverage.mjs",
+      "scope": "Pre-Human-Review Runtime identity, authoritative source-field coverage, adapter/baseline field-universe reconciliation and per-window structural baseline evidence. Dynamic selector combinations remain explicitly UNVERIFIED until post-Human QA.",
+      "recorded_at": "2026-09-17T11:32:18.733Z",
+      "authoritative_for_current_head": true
+    },
+    {
+      "id": "SINGLE_FLOW_ENGINE_GATE-d9ff161de1b3-19a94b22dbaf",
+      "gate_id": "SINGLE_FLOW_ENGINE_GATE",
+      "outcome": "PASS",
+      "exact_head": "d9ff161de1b37a9f745dea8783118f4b6a43d734",
+      "runtime_snapshot_id": "RUNTIME-SNAPSHOT-6d21faa6a959e00ab959",
+      "artifact": "artifacts/governance/human-flow-review.json",
+      "artifact_sha256": "1cf60df5bbbb4d852907dd0c4df1ba192ef1a38b5aa9c6e3126aebea6bedb50c",
+      "command": "node scripts/governance/build-human-flow-review.mjs && node scripts/governance/verify-human-flow-field-coverage.mjs",
+      "scope": "Pre-Human-Review Runtime identity, authoritative source-field coverage, adapter/baseline field-universe reconciliation and per-window structural baseline evidence. Dynamic selector combinations remain explicitly UNVERIFIED until post-Human QA.",
+      "recorded_at": "2026-09-17T11:32:18.733Z",
+      "authoritative_for_current_head": true
+    },
+    {
+      "id": "SERIES_OVERRIDE_ELIMINATION_GATE-d9ff161de1b3-19a94b22dbaf",
+      "gate_id": "SERIES_OVERRIDE_ELIMINATION_GATE",
+      "outcome": "PASS",
+      "exact_head": "d9ff161de1b37a9f745dea8783118f4b6a43d734",
+      "runtime_snapshot_id": "RUNTIME-SNAPSHOT-6d21faa6a959e00ab959",
+      "artifact": "artifacts/governance/human-flow-review.json",
+      "artifact_sha256": "1cf60df5bbbb4d852907dd0c4df1ba192ef1a38b5aa9c6e3126aebea6bedb50c",
+      "command": "node scripts/governance/build-human-flow-review.mjs && node scripts/governance/verify-human-flow-field-coverage.mjs",
+      "scope": "Pre-Human-Review Runtime identity, authoritative source-field coverage, adapter/baseline field-universe reconciliation and per-window structural baseline evidence. Dynamic selector combinations remain explicitly UNVERIFIED until post-Human QA.",
+      "recorded_at": "2026-09-17T11:32:18.733Z",
+      "authoritative_for_current_head": true
+    }
+  ],
+  "rejected": []
+}
