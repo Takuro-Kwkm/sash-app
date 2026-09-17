@@ -5,17 +5,9 @@ on:
   push:
     branches:
       - feat/new-construction-runtime-ui-v16-20260910
-    paths:
-      - 'project-governance/**'
-      - 'scripts/governance/**'
-      - '.github/workflows/project-governance-gate.yml'
   pull_request:
     branches:
       - main
-    paths:
-      - 'project-governance/**'
-      - 'scripts/governance/**'
-      - '.github/workflows/project-governance-gate.yml'
 
 permissions:
   contents: read
@@ -23,7 +15,7 @@ permissions:
 
 concurrency:
   group: project-governance-${{ github.ref }}
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   governance:
