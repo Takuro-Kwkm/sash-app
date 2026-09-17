@@ -28,12 +28,12 @@ function latestCurrentHeadEvidence(gateId) {
     && entry.exact_head === head
     && entry.authoritative_for_current_head !== false
     && entry.artifact_sha256 && sha256File(entry.artifact) === entry.artifact_sha256
-    && (!entry.runtime_snapshot_id || !currentRuntimeSnapshotId || entry.runtime_snapshot_id === currentRuntimeSnapshotId)
+    && (definitions.gates[gateId]?.requires_runtime_snapshot_identity ? !!currentRuntimeSnapshotId && entry.runtime_snapshot_id === currentRuntimeSnapshotId : (!entry.runtime_snapshot_id || entry.runtime_snapshot_id === currentRuntimeSnapshotId))
   ) || null;
 }
 
 const humanDef = definitions.gates.HUMAN_FLOW_REVIEW_GATE;
-const human = state.human_review;
+const human = existsSync('artifacts/governance/human-approval-observation.json') ? readJson('artifacts/governance/human-approval-observation.json') : state.human_review;
 const approvalComplete = [human.reviewed_exact_head, human.review_artifact_identity, human.human_approval_reference].every(Boolean);
 let relevantChanges = [];
 let humanStatus = 'BLOCKED';

@@ -18,4 +18,14 @@ node scripts/governance/reconstruct-current-state.mjs
 
 The command requires a scoped GitHub read credential in GH_TOKEN and a Drive read-only credential in DRIVE_READONLY_ACCESS_TOKEN. It reads GitHub and Drive; it never modifies Drive. Missing Drive credentials yield BLOCKED_LIVE_DRIVE_READ_NOT_CONFIGURED, not a false current-state PASS. The checked-in Drive snapshot records connector observations and modified identities; it is not proof of a later live read. If Drive metadata changes, re-read the actual governing content through the connector and review/update the observation before proceeding. Do not put credentials in files, logs or chat.
 
-Approval storage must be external to the evaluated source commit to avoid invalidating its Exact HEAD. No approval has been recorded in this change; until a verified approval reference is supplied through a controlled approval intake, Human Review stays BLOCKED. Source changes require a new artifact and approval. CI SUCCESS here means governance execution succeeded, not that all product/UI/release gates passed. Read the generated per-gate results and reconstruction status.
+Approval storage is external to the evaluated source commit to avoid invalidating its Exact HEAD. No approval has been recorded in this change; until a verified approval reference is supplied through the GitHub human-comment intake, Human Review stays BLOCKED. Source changes require a new artifact and approval. CI SUCCESS here means governance execution succeeded, not that all product/UI/release gates passed. Read the generated per-gate results and reconstruction status.
+
+## Human approval intake
+
+An authorized human listed in `human-review-policy.json` may post a PR #24 comment beginning with `HUMAN_FLOW_REVIEW_APPROVAL` followed on the next line by JSON containing `decision: "APPROVE"`, `reviewed_exact_head`, and `review_artifact_identity`. The controller reads GitHub directly, rejects bots and old-head approvals, and stores the comment URL as the approval reference. A later matching comment with `decision: "REVOKE"` withdraws approval. No comment is posted automatically and no approval was inferred in this change.
+
+## Drive automation setup
+
+For ongoing CI access, configure a Google Workload Identity Provider restricted to this repository/workflow and a service account with viewer access only to the required Drive files. Set GitHub repository variables `GOOGLE_WORKLOAD_IDENTITY_PROVIDER` and `GOOGLE_DRIVE_READER_SERVICE_ACCOUNT`. The controller requests only `drive.readonly` and writes no credential file. Google setup requires an administrator; the connector's ChatGPT login is not an Actions credential. An existing scoped access-token secret is supported as a temporary alternative, but expired tokens must not be retried without renewed authorization.
+
+Reference: https://github.com/google-github-actions/auth (Workload Identity Federation through a Service Account, OAuth access token inputs).

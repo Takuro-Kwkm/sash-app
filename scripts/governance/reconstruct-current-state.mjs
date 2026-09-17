@@ -6,7 +6,7 @@ const get=async url=>{const r=await fetch(url,{headers:{Authorization:`Bearer ${
 const base=`https://api.github.com/repos/${config.repository}`;
 const pr=await get(`${base}/pulls/24`);
 const ref=await get(`${base}/git/ref/heads/governance-evidence`);
-const content=async path=>{const obj=await get(`${base}/contents/${path}?ref=${ref.object.sha}`);if(obj.encoding!=='base64')throw Error('UNSUPPORTED_CONTENT_ENCODING');return Buffer.from(obj.content.replace(/\n/g,''),'base64');};
+const content=async path=>{const obj=await get(`${base}/contents/${path}?ref=${ref.object.sha}`);const blob=obj.encoding==='base64'?obj:await get(`${base}/git/blobs/${obj.sha}`);if(blob.encoding!=='base64')throw Error('UNSUPPORTED_CONTENT_ENCODING');return Buffer.from(blob.content.replace(/\n/g,''),'base64');};
 const pointer=JSON.parse((await content('current.json')).toString());
 if(pointer.exact_head!==pr.head.sha||pointer.branch!==pr.head.ref)throw Error('PERSISTED_STATE_STALE');
 const registry=JSON.parse((await content(`${pointer.path}/evidence-registry.json`)).toString());

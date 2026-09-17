@@ -8,6 +8,7 @@ on:
         type: string
 
 permissions:
+  issues: read
   contents: read
 
 jobs:

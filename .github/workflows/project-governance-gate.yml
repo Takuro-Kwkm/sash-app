@@ -12,6 +12,7 @@ on:
 permissions:
   contents: read
   pull-requests: read
+  issues: read
   actions: read
 
 concurrency:
@@ -22,11 +23,16 @@ jobs:
   governance:
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    permissions:
+      contents: read
+      pull-requests: read
+      issues: read
+      actions: read
+      id-token: write
     outputs:
       authorized: ${{ steps.materialize.outputs.authorized }}
     env:
       GH_TOKEN: ${{ github.token }}
-      DRIVE_READONLY_ACCESS_TOKEN: ${{ secrets.DRIVE_READONLY_ACCESS_TOKEN }}
       HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
     steps:
       - name: Checkout exact HEAD
@@ -73,6 +79,9 @@ jobs:
       - name: Collect exact-head QA evidence
         run: node scripts/governance/collect-qa-evidence.mjs
 
+      - name: Read explicit human approval from GitHub
+        run: node scripts/governance/read-human-approval.mjs
+
       - name: Aggregate current gates
         env:
           GOVERNANCE_EVIDENCE_MANIFEST: artifacts/governance/qa-evidence-manifest.json
@@ -88,8 +97,22 @@ jobs:
         shell: bash
         run: node --test scripts/governance/governance-negative.test.mjs | tee artifacts/governance/governance-negative-tests.tap
 
+      - name: Obtain read-only Drive access through workload identity
+        id: drive-auth
+        if: vars.GOOGLE_WORKLOAD_IDENTITY_PROVIDER != '' && vars.GOOGLE_DRIVE_READER_SERVICE_ACCOUNT != ''
+        uses: google-github-actions/auth@v3
+        with:
+          workload_identity_provider: ${{ vars.GOOGLE_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ vars.GOOGLE_DRIVE_READER_SERVICE_ACCOUNT }}
+          token_format: access_token
+          access_token_scopes: https://www.googleapis.com/auth/drive.readonly
+          create_credentials_file: false
+          export_environment_variables: false
+
       - name: Materialize current repository and external observations
         id: materialize
+        env:
+          DRIVE_READONLY_ACCESS_TOKEN: ${{ steps.drive-auth.outputs.access_token || secrets.DRIVE_READONLY_ACCESS_TOKEN }}
         run: node scripts/governance/materialize-current-state.mjs
 
       - name: Verify current state and evidence hashes

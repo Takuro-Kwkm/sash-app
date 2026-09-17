@@ -13,12 +13,14 @@ on:
         value: ${{ jobs.authorize.outputs.authorized }}
 permissions:
   contents: read
+  issues: read
 jobs:
   authorize:
     runs-on: ubuntu-latest
     outputs:
       authorized: ${{ steps.authorize.outputs.authorized }}
     env:
+      GH_TOKEN: ${{ github.token }}
       HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
       CONTROLLER_HEAD: ${{ inputs.controller_head }}
       RELEASE_WORKFLOW: ${{ inputs.release }}
@@ -33,6 +35,7 @@ jobs:
       - run: node scripts/governance/build-human-flow-review.mjs
       - run: node scripts/governance/verify-human-flow-field-coverage.mjs
       - run: node scripts/governance/collect-qa-evidence.mjs
+      - run: node scripts/governance/read-human-approval.mjs
       - run: node scripts/governance/evaluate-gates.mjs
         env:
           GOVERNANCE_EVIDENCE_MANIFEST: artifacts/governance/qa-evidence-manifest.json

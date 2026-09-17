@@ -47,6 +47,7 @@ const state={schema_version:'2.0.0',exact_head:head,repository:config.repository
 writeJson('artifacts/governance/project-state.json',state);
 const registry={schema_version:'2.0.0',exact_head:head,runtime_snapshot_id:review.runtime_snapshot_id,entries:[]};
 const executions={
+ 'human-approval-observation.json':['HUMAN_FLOW_REVIEW_GATE','node scripts/governance/read-human-approval.mjs',human],
  'scope-verification.json':['CHANGE_SCOPE_GATE','git diff --name-only verified-start-head current-head','PASS'],
  'governance-negative-tests.tap':['GOVERNANCE_NEGATIVE_QA','node --test scripts/governance/governance-negative.test.mjs','PASS'],
  'human-flow-review.json':['HUMAN_FLOW_REVIEW_ARTIFACT','node scripts/governance/build-human-flow-review.mjs','GENERATED'],
