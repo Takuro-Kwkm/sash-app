@@ -1,0 +1,14 @@
+{
+  "status": "PASS",
+  "legacy_workflow_count": 60,
+  "legacy_independent_authority_count": 0,
+  "controller_pre_human_jobs": [
+    "governance",
+    "persist",
+    "reconstruct-current-state"
+  ],
+  "controller_post_human_jobs": [
+    "post-review-global-flow"
+  ],
+  "errors": []
+}
