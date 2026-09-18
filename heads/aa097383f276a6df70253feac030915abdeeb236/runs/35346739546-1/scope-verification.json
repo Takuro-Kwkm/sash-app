@@ -1,0 +1,42 @@
+{
+  "exact_head": "aa097383f276a6df70253feac030915abdeeb236",
+  "base": "dcb79a7dc17bb20ef0321f2211411896420e71c9",
+  "task_id": "EW_V1_3_RUNTIME_RESYNC_20260918",
+  "requested_change_scope": "Re-sync the formally adopted read-only LIXIL EW v1.3 Runtime package into the generic Runtime Adapter / Global Window Selection Flow path. Materialize byte-equivalent Runtime package bytes in the repository, update declarative App Runtime Integration Registry and Runtime inventory identities, extend the canonical workbook adapter generically to consume Formal Runtime frame_angle / installation_environment / declarative dependencies, update EW integration tests and runtime snapshot, regenerate exact-head Human Flow Review evidence, then execute automated/full-coverage/browser/regression gates. Do not mutate Formal Product Master, Drive Runtime, Product Master Registry, other series business rules, Global canonical slot definitions, or UI renderer business rules. A generic base64 materialization transport codec may be added to the canonical Runtime loader solely to preserve exact Formal Runtime bytes without mutating them.",
+  "changed_files": [
+    "project-governance/change-scope.json",
+    "project-governance/runtime-snapshot.json",
+    "src/catalog/runtime-master-packages/lixil-ew-v1.3/LIXIL_EW_runtime_v1.3.json.b64.parts/part-00",
+    "src/catalog/runtime-master-packages/lixil-ew-v1.3/LIXIL_EW_runtime_v1.3.json.b64.parts/part-01",
+    "src/catalog/runtime-master-packages/lixil-ew-v1.3/LIXIL_EW_runtime_v1.3.json.b64.parts/part-02",
+    "src/catalog/runtime-master-packages/lixil-ew-v1.3/LIXIL_EW_runtime_v1.3.json.b64.parts/part-03",
+    "src/catalog/runtime-master-packages/lixil-ew-v1.3/LIXIL_EW_runtime_v1.3.json.b64.parts/part-04",
+    "src/catalog/runtime-master-packages/lixil-ew-v1.3/LIXIL_EW_runtime_v1.3.json.b64.parts/part-05",
+    "src/catalog/runtime-master-packages/lixil-ew-v1.3/LIXIL_EW_runtime_v1.3.json.b64.parts/part-06",
+    "src/catalog/runtime-master-packages/lixil-ew-v1.3/LIXIL_EW_runtime_v1.3.json.b64.parts/part-07",
+    "src/catalog/runtime-master-packages/lixil-ew-v1.3/runtime_manifest.json",
+    "src/catalog/runtime-master/app-runtime-integration-registry.mjs",
+    "src/catalog/runtime-master/canonical-runtime-manifest-loader.mjs",
+    "src/catalog/runtime-master/canonical-workbook-reference-v1-adapter.mjs",
+    "src/catalog/runtime-master/runtime-master-registry.mjs",
+    "test/70-runtime-manifest-ew-integration.test.mjs"
+  ],
+  "requested_diff_coverage": "PASS",
+  "missing_requested_files": [],
+  "unrequested_diff_count": 0,
+  "unrequested_files": [],
+  "repository_runtime_materialization_changed_files": [
+    "src/catalog/runtime-master-packages/lixil-ew-v1.3/LIXIL_EW_runtime_v1.3.json.b64.parts/part-00",
+    "src/catalog/runtime-master-packages/lixil-ew-v1.3/LIXIL_EW_runtime_v1.3.json.b64.parts/part-01",
+    "src/catalog/runtime-master-packages/lixil-ew-v1.3/LIXIL_EW_runtime_v1.3.json.b64.parts/part-02",
+    "src/catalog/runtime-master-packages/lixil-ew-v1.3/LIXIL_EW_runtime_v1.3.json.b64.parts/part-03",
+    "src/catalog/runtime-master-packages/lixil-ew-v1.3/LIXIL_EW_runtime_v1.3.json.b64.parts/part-04",
+    "src/catalog/runtime-master-packages/lixil-ew-v1.3/LIXIL_EW_runtime_v1.3.json.b64.parts/part-05",
+    "src/catalog/runtime-master-packages/lixil-ew-v1.3/LIXIL_EW_runtime_v1.3.json.b64.parts/part-06",
+    "src/catalog/runtime-master-packages/lixil-ew-v1.3/LIXIL_EW_runtime_v1.3.json.b64.parts/part-07",
+    "src/catalog/runtime-master-packages/lixil-ew-v1.3/runtime_manifest.json"
+  ],
+  "canonical_product_master_sources_read_only": true,
+  "product_master_mutation": 0,
+  "status": "PASS"
+}
