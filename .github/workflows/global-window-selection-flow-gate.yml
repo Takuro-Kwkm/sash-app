@@ -56,6 +56,7 @@ jobs:
           set -euo pipefail
           node scripts/governance/build-human-flow-review.mjs
           node scripts/governance/verify-human-flow-field-coverage.mjs
+          node scripts/governance/collect-qa-evidence.mjs
           node scripts/governance/read-human-approval.mjs
           node scripts/governance/evaluate-gates.mjs
           node --input-type=module <<'NODE'
