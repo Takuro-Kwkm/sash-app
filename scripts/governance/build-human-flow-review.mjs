@@ -1,7 +1,7 @@
 import { createHash } from 'node:crypto';
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { dirname } from 'node:path';
-import { GLOBAL_WINDOW_STAGE_ORDER } from '../../src/catalog/runtime-master/canonical-window-semantic-schema.mjs';
+import { GLOBAL_WINDOW_STAGE_ORDER, FRAME_ANGLE_CANONICAL_VALUES, FRAME_ANGLE_CLASSIFICATIONS } from '../../src/catalog/runtime-master/canonical-window-semantic-schema.mjs';
 import { currentExactHead, readJson, writeJson } from './governance-lib.mjs';
 import { expectedFieldUniverse, integrationByRegistryKey } from './runtime-field-coverage.mjs';
 
@@ -34,9 +34,39 @@ function slotRow(field, visible = null) {
     canonical_slot: field.semanticSlot,
     visibility: visible ? 'VISIBLE_AFTER_WINDOW_TYPE_SELECTION' : 'RUNTIME_CONDITIONAL_OR_NOT_APPLICABLE_UNVERIFIED',
     required: visible ? Boolean(visible.required) : field.required === null || field.required === undefined ? 'RUNTIME_DEPENDENT_OR_UNSPECIFIED' : Boolean(field.required),
+    classification: visible?.classification ?? visible?.selectionMode ?? field.selectionMode ?? field.selection_mode ?? (visible ? 'USER_SELECTABLE_OR_CONDITIONAL_UNVERIFIED' : 'RUNTIME_CLASSIFICATION_UNVERIFIED'),
+    allowed_values: visible ? (visible.values ?? []).filter((choice) => choice.disabled !== true).map((choice) => choice.value) : [],
     dependency: visible?.parentFields?.length ? visible.parentFields : dependencyFor(field),
     downstream_clear: 'UNVERIFIED_POST_HUMAN_QA',
     source_coverage: 'AUTHORITATIVE_OR_BASELINE_UNIVERSE',
+  };
+}
+
+function frameAngleState(slots = [], runtimeProperties = [], previous = null) {
+  const slot = slots.find((row) => row.canonical_slot === 'frame_angle' || row.key === 'frame_angle') ?? null;
+  const property = runtimeProperties.find((row) => row.canonical_slot === 'frame_angle' || row.key === 'frame_angle') ?? null;
+  if (!slot && !property) return previous ?? {
+    canonical_slot: 'frame_angle', stage: 'CONFIGURATION', canonical_values: [...FRAME_ANGLE_CANONICAL_VALUES],
+    runtime_presence: 'ABSENT_FROM_FORMAL_RUNTIME', classification: 'NOT_APPLICABLE_OR_PRODUCT_MASTER_GAP_UNVERIFIED',
+    visibility: 'ABSENT_FROM_FORMAL_RUNTIME', required: false, allowed_values: [], invalid_canonical_values: [], fixed_value: null,
+    dependency: [], downstream_clear: 'NOT_APPLICABLE_OR_UNVERIFIED', standard_custom_impact: 'NO_RUNTIME_PROJECTION_TO_EVALUATE', inference_used: false,
+  };
+  const allowed = [...new Set((slot?.allowed_values ?? previous?.allowed_values ?? []).map((value) => String(value)))];
+  const classification = property?.classification ?? slot?.classification ?? previous?.classification ?? 'RUNTIME_CLASSIFICATION_UNVERIFIED';
+  return {
+    ...(previous ?? {}),
+    canonical_slot: 'frame_angle', stage: 'CONFIGURATION', canonical_values: [...FRAME_ANGLE_CANONICAL_VALUES],
+    runtime_presence: 'PRESENT',
+    classification: FRAME_ANGLE_CLASSIFICATIONS.includes(classification) ? classification : 'RUNTIME_CLASSIFICATION_UNVERIFIED',
+    visibility: slot?.visibility ?? previous?.visibility ?? 'HIDDEN_SELECTOR_RUNTIME_PROPERTY',
+    required: slot?.required ?? previous?.required ?? false,
+    allowed_values: allowed,
+    invalid_canonical_values: allowed.filter((value) => !FRAME_ANGLE_CANONICAL_VALUES.includes(value)),
+    fixed_value: property?.classification === 'FIXED' ? property.value ?? previous?.fixed_value ?? null : previous?.fixed_value ?? null,
+    dependency: slot?.dependency ?? previous?.dependency ?? [],
+    downstream_clear: slot?.downstream_clear ?? previous?.downstream_clear ?? 'UNVERIFIED_POST_HUMAN_QA',
+    standard_custom_impact: previous?.standard_custom_impact ?? 'UNVERIFIED_POST_HUMAN_QA',
+    inference_used: false,
   };
 }
 
@@ -65,6 +95,7 @@ function recomputeWindow(window, expectedFields, baselineFields) {
     ...window,
     stage_order: stages,
     slots: orderedRows,
+    frame_angle: frameAngleState(orderedRows, window.runtime_properties ?? [], window.frame_angle ?? null),
     standard_custom: {
       ...previous,
       size_stage_present: orderedRows.some((row) => row.stage === 'SIZE'),
@@ -174,7 +205,16 @@ for (const failure of coverageFailures) {
 }
 
 const blockingUnverified = review.unverified_items.filter((row) => row.severity === 'BLOCKING_REVIEW_COMPLETENESS');
-review.unverified_count = review.unverified_items.length + review.series.reduce((sum, series) => sum + series.windows.reduce((windowSum, window) => windowSum + window.slots.filter((slot) => String(slot.visibility).includes('UNVERIFIED') || String(slot.required).includes('UNSPECIFIED') || String(slot.downstream_clear).includes('UNVERIFIED')).length, 0), 0);
+const frameAngleWindows = review.series.flatMap((series) => series.windows.map((window) => ({ series: series.registry_series_key, window: window.window_id, ...(window.frame_angle ?? {}) })));
+review.frame_angle_summary = {
+  canonical_slot: 'frame_angle', stage: 'CONFIGURATION', canonical_values: [...FRAME_ANGLE_CANONICAL_VALUES],
+  window_count: frameAngleWindows.length,
+  runtime_present_count: frameAngleWindows.filter((row) => row.runtime_presence === 'PRESENT').length,
+  absent_or_unverified_count: frameAngleWindows.filter((row) => row.runtime_presence !== 'PRESENT').length,
+  invalid_canonical_value_count: frameAngleWindows.reduce((sum, row) => sum + (row.invalid_canonical_values?.length ?? 0), 0),
+  inference_used: false,
+};
+review.unverified_count = review.unverified_items.length + review.frame_angle_summary.absent_or_unverified_count + review.series.reduce((sum, series) => sum + series.windows.reduce((windowSum, window) => windowSum + window.slots.filter((slot) => String(slot.visibility).includes('UNVERIFIED') || String(slot.required).includes('UNSPECIFIED') || String(slot.downstream_clear).includes('UNVERIFIED')).length, 0), 0);
 review.review_completeness = review.runtime_snapshot_gaps.length === 0 && review.unmapped_fields.length === 0 && blockingUnverified.length === 0 && review.field_coverage.status === 'PASS' && review.series.every((series) => series.windows.length > 0 && series.field_count > 0)
   ? 'READY_FOR_HUMAN_REVIEW' : 'BLOCKED_ARTIFACT_INCOMPLETE';
 
@@ -197,6 +237,7 @@ writeJson('artifacts/governance/series-field-stage-matrix.json', { exact_head: h
 const md = [];
 md.push('# Human Flow Review Artifact', '', `- Exact HEAD: \`${review.exact_head}\``, `- Runtime Snapshot: \`${review.runtime_snapshot_id}\``, `- Artifact Identity: \`${review.review_artifact_identity}\``, `- Review Completeness: **${review.review_completeness}**`, '- HUMAN_FLOW_REVIEW_GATE: **BLOCKED_PENDING_EXPLICIT_APPROVAL**', `- Series: **${review.series_count}**`, `- BASE_WINDOW_COUNT: **${review.base_window_count}**`, `- Field Mapping: mapped ${review.field_mapping.mapped} / unmapped ${review.field_mapping.unmapped} / conflict ${review.field_mapping.conflict}`, `- Source Field Coverage: **${review.field_coverage.status}** / missing before repair ${review.field_coverage.missing_before_count} / missing after repair ${review.field_coverage.missing_after_count}`, `- Runtime Snapshot Gaps: **${review.runtime_snapshot_gaps.length}**`, `- Explicit Unverified Records: **${review.unverified_items.length}** / total unresolved slot properties ${review.unverified_count}`, '');
 
+md.push('## frame_angle Canonical Coverage', '', `- Canonical values: ${review.frame_angle_summary.canonical_values.join(' / ')}`, `- Runtime present: **${review.frame_angle_summary.runtime_present_count} / ${review.frame_angle_summary.window_count}**`, `- Absent / N/A-or-gap unverified: **${review.frame_angle_summary.absent_or_unverified_count}**`, `- Invalid canonical values: **${review.frame_angle_summary.invalid_canonical_value_count}**`, '- UI inference used: **false**', '');
 md.push('## Series Field Coverage', '', '| Series | Source | Source fields | Baseline union | Expected union | Before | After | Missing after |', '|---|---|---:|---:|---:|---:|---:|---:|');
 for (const row of coverageSeries) md.push(`| ${row.series} | ${row.authoritative_source} | ${row.source_field_count} | ${row.baseline_union_field_count} | ${row.expected_union_field_count} | ${row.artifact_field_count_before} | ${row.artifact_field_count_after} | ${row.missing_after.length} |`);
 md.push('');
@@ -234,11 +275,12 @@ for (const series of review.series) {
       const dependency = slot.dependency?.length ? JSON.stringify(slot.dependency).replace(/\|/g, '\\|') : 'none/unspecified';
       md.push(`| ${slot.stage} | ${slot.key} | ${slot.canonical_slot} | ${String(slot.visibility).replace(/\|/g, '\\|')} | ${String(slot.required).replace(/\|/g, '\\|')} | ${dependency} | ${String(slot.downstream_clear).replace(/\|/g, '\\|')} |`);
     }
+    md.push(`- frame_angle: classification=${window.frame_angle?.classification ?? 'UNVERIFIED'} / visibility=${window.frame_angle?.visibility ?? 'UNVERIFIED'} / allowed=${(window.frame_angle?.allowed_values ?? []).join(', ') || '—'} / fixed=${window.frame_angle?.fixed_value ?? '—'} / dependency=${JSON.stringify(window.frame_angle?.dependency ?? [])} / clear=${window.frame_angle?.downstream_clear ?? 'UNVERIFIED'} / STANDARD-CUSTOM=${window.frame_angle?.standard_custom_impact ?? 'UNVERIFIED'}`);
     if (window.runtime_properties?.length) {
-      md.push('', '**Fixed / Derived Runtime Properties (not selectors)**', '', '| Stage | Runtime property | classification | value / rule |', '|---|---|---|---|');
+      md.push('', '**Fixed / Derived Runtime Properties (not selectors)**', '', '| Stage | Runtime property | Canonical Slot | classification | value / rule |', '|---|---|---|---|---|');
       for (const property of window.runtime_properties) {
         const detail = property.value ?? property.rule ?? property.source ?? 'derived from formal Runtime';
-        md.push(`| ${property.stage ?? 'GLAZING'} | ${property.key} | ${property.classification} | ${String(detail).replace(/\|/g, '\\|')} |`);
+        md.push(`| ${property.stage ?? 'UNMAPPED_RUNTIME_PROPERTY'} | ${property.key} | ${property.canonical_slot ?? '—'} | ${property.classification} | ${String(detail).replace(/\|/g, '\\|')} |`);
       }
     }
     md.push('');
