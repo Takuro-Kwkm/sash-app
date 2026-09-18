@@ -26,5 +26,10 @@
     "test/70-runtime-manifest-ew-integration.test.mjs",
     "src/catalog/runtime-master/canonical-runtime-manifest-loader.mjs"
   ],
-  "canonical_product_master_sources_read_only": true
+  "canonical_product_master_sources_read_only": true,
+  "integration_branch": "feat/ew-v1.3-runtime-resync-20260918",
+  "review_pr": 44,
+  "review_base": "main",
+  "human_flow_review_gate": "REOPEN",
+  "app_integration_ready": false
 }
