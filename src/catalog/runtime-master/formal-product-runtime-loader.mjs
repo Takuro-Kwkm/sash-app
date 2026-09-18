@@ -4,6 +4,7 @@ import { brotliDecompressSync, gunzipSync } from 'node:zlib';
 import { applyFormalRuntimeJsonTransform } from './formal-runtime-json-transform.mjs';
 
 const sha256 = (bytes) => createHash('sha256').update(bytes).digest('hex');
+const jsonText = (bytes) => { const text = bytes.toString('utf8'); return text.charCodeAt(0) === 0xFEFF ? text.slice(1) : text; };
 const deepFreeze = (value) => {
   if (!value || typeof value !== 'object' || Object.isFrozen(value)) return value;
   Object.freeze(value);
@@ -127,7 +128,7 @@ async function materialize(entry, row) {
     });
   }
   let json;
-  try { json = JSON.parse(bytes.toString('utf8')); }
+  try { json = JSON.parse(jsonText(bytes)); }
   catch (cause) { fail('FORMAL_RUNTIME_JSON_INVALID', `Manifest-listed Runtime file is not valid JSON: ${row.fileName}`, { cause, ...row }); }
   return { ...row, actualSha256, actualBytes: bytes.length, codec: transport.codec, json };
 }
@@ -146,7 +147,7 @@ export async function loadFormalProductRuntimePackage(entry) {
     });
   }
   let raw;
-  try { raw = JSON.parse(manifestBytes.toString('utf8')); }
+  try { raw = JSON.parse(jsonText(manifestBytes)); }
   catch (cause) { fail('FORMAL_RUNTIME_MANIFEST_INVALID', 'Formal Runtime manifest is not valid JSON', { cause }); }
 
   const expectedManifestSeries = entry.manifestSeries ?? entry.series;
