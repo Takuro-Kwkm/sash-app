@@ -26,7 +26,7 @@ export function innerWindowDisplayOrder(field, index = 0) {
 // not fall through by domain: they fail FLOW_SCHEMA_UNMAPPED_FIELD_GATE instead.
 export const INNER_WINDOW_UI_STANDARD_ORDER = Object.freeze([
   'window_type',
-  'room_specification','sash_configuration','reverse_handing','three_panel_layout','hinge_side',
+  'room_specification','sash_configuration','reverse_handing','three_panel_layout','hinge_side','frame_angle',
   'size_class','size_mode','size_w','size_h','order_width','order_height','sash_width_allocation','sash_w1','sash_w2','sash_w3','sash_w4',
   'frame_color','body_color',
   'glass_family','glass_structure','glass_type','supply_form','glass_detail','decorative_pattern','low_e_type','lowe_color','glass_coating_color','glass_surface_type','safety_treatment',
@@ -36,7 +36,7 @@ export const INNER_WINDOW_UI_STANDARD_ORDER = Object.freeze([
   'option_items',
 ]);
 
-const CONFIGURATION_SLOTS = new Set(['room_specification','sash_configuration','reverse_handing','three_panel_layout','hinge_side']);
+const CONFIGURATION_SLOTS = new Set(['room_specification','sash_configuration','reverse_handing','three_panel_layout','hinge_side','frame_angle']);
 const SIZE_SLOTS = new Set(['size_class','size_mode','size_w','size_h','order_width','order_height','sash_width_allocation','sash_w1','sash_w2','sash_w3','sash_w4']);
 const FINISH_SLOTS = new Set(['frame_color','body_color']);
 const GLAZING_SLOTS = new Set(['glass_family','glass_structure','glass_type','supply_form','glass_detail','decorative_pattern','low_e_type','lowe_color','glass_coating_color','glass_surface_type','safety_treatment','grille_type','grille_material','muntin_type','vacuum_glass_product','spacer_type','spacer','gas_fill','cavity_fill','cavity_thickness_mm']);
@@ -129,7 +129,7 @@ export function semanticStageForInnerWindowSlot(slot) {
 }
 
 const STANDARD_LABELS = Object.freeze({
-  window_type:'窓種類', size_mode:'サイズ方式', size_w:'特注W（mm）', size_h:'特注H（mm）', order_width:'特注W（mm）', order_height:'特注H（mm）',
+  window_type:'窓種類', frame_angle:'枠アングル', size_mode:'サイズ方式', size_w:'特注W（mm）', size_h:'特注H（mm）', order_width:'特注W（mm）', order_height:'特注H（mm）',
   frame_color:'本体色', body_color:'本体色', glass_family:'ガラス仕様', glass_type:'ガラス種', low_e_type:'Low-E性能', lowe_color:'Low-E性能',
   spacer_type:'スペーサー', spacer:'スペーサー', gas_fill:'中空層', cavity_fill:'中空層', frame_installation_mode:'枠仕様 / 納まり', frame_install_spec:'枠仕様 / 納まり',
   option_items:'オプション',
