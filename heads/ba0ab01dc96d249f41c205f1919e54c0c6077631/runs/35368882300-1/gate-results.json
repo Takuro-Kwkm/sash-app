@@ -1,0 +1,175 @@
+{
+  "schema_version": "1.1.0",
+  "generated_at": "2026-09-18T16:30:58.115Z",
+  "repository": "Takuro-Kwkm/sash-app",
+  "branch": "feat/new-construction-runtime-ui-v16-20260910",
+  "exact_head": "ba0ab01dc96d249f41c205f1919e54c0c6077631",
+  "runtime_snapshot_id": "RUNTIME-SNAPSHOT-ad2603b8a64d026ffd0b",
+  "task_classification": "NON-PRODUCT-MASTER",
+  "product_master_mutation": 0,
+  "gates": {
+    "CANONICAL_RUNTIME_GATE": {
+      "status": "PASS",
+      "evidence_id": "CANONICAL_RUNTIME_GATE-ba0ab01dc96d-7112ef1ee4f5",
+      "exact_head": "ba0ab01dc96d249f41c205f1919e54c0c6077631",
+      "runtime_snapshot_id": "RUNTIME-SNAPSHOT-ad2603b8a64d026ffd0b"
+    },
+    "RUNTIME_ADAPTER_GATE": {
+      "status": "PASS",
+      "evidence_id": "RUNTIME_ADAPTER_GATE-ba0ab01dc96d-7112ef1ee4f5",
+      "exact_head": "ba0ab01dc96d249f41c205f1919e54c0c6077631",
+      "runtime_snapshot_id": "RUNTIME-SNAPSHOT-ad2603b8a64d026ffd0b"
+    },
+    "WINDOW_FLOW_BASELINE_GATE": {
+      "status": "PASS",
+      "evidence_id": "WINDOW_FLOW_BASELINE_GATE-ba0ab01dc96d-7112ef1ee4f5",
+      "exact_head": "ba0ab01dc96d249f41c205f1919e54c0c6077631",
+      "runtime_snapshot_id": "RUNTIME-SNAPSHOT-ad2603b8a64d026ffd0b"
+    },
+    "CANONICAL_SLOT_SCHEMA_GATE": {
+      "status": "PASS",
+      "evidence_id": "CANONICAL_SLOT_SCHEMA_GATE-ba0ab01dc96d-7112ef1ee4f5",
+      "exact_head": "ba0ab01dc96d249f41c205f1919e54c0c6077631",
+      "runtime_snapshot_id": "RUNTIME-SNAPSHOT-ad2603b8a64d026ffd0b"
+    },
+    "FLOW_SCHEMA_UNMAPPED_FIELD_GATE": {
+      "status": "PASS",
+      "evidence_id": "FLOW_SCHEMA_UNMAPPED_FIELD_GATE-ba0ab01dc96d-7112ef1ee4f5",
+      "exact_head": "ba0ab01dc96d249f41c205f1919e54c0c6077631",
+      "runtime_snapshot_id": "RUNTIME-SNAPSHOT-ad2603b8a64d026ffd0b"
+    },
+    "SINGLE_FLOW_ENGINE_GATE": {
+      "status": "PASS",
+      "evidence_id": "SINGLE_FLOW_ENGINE_GATE-ba0ab01dc96d-7112ef1ee4f5",
+      "exact_head": "ba0ab01dc96d249f41c205f1919e54c0c6077631",
+      "runtime_snapshot_id": "RUNTIME-SNAPSHOT-ad2603b8a64d026ffd0b"
+    },
+    "SERIES_OVERRIDE_ELIMINATION_GATE": {
+      "status": "PASS",
+      "evidence_id": "SERIES_OVERRIDE_ELIMINATION_GATE-ba0ab01dc96d-7112ef1ee4f5",
+      "exact_head": "ba0ab01dc96d249f41c205f1919e54c0c6077631",
+      "runtime_snapshot_id": "RUNTIME-SNAPSHOT-ad2603b8a64d026ffd0b"
+    },
+    "HUMAN_FLOW_REVIEW_GATE": {
+      "status": "REOPEN",
+      "reason": "Human-Review-relevant source changed after the reviewed exact HEAD"
+    },
+    "FULL_FLOW_SIGNATURE_COVERAGE_GATE": {
+      "status": "BLOCKED",
+      "reason": "prerequisites not PASS",
+      "blocking_gates": [
+        "HUMAN_FLOW_REVIEW_GATE"
+      ]
+    },
+    "FLOW_TRANSITION_GATE": {
+      "status": "BLOCKED",
+      "reason": "prerequisites not PASS",
+      "blocking_gates": [
+        "FULL_FLOW_SIGNATURE_COVERAGE_GATE"
+      ]
+    },
+    "FULL_WINDOW_COVERAGE_GATE": {
+      "status": "BLOCKED",
+      "reason": "prerequisites not PASS",
+      "blocking_gates": [
+        "FLOW_TRANSITION_GATE"
+      ]
+    },
+    "CUSTOM_SIZE_COVERAGE_GATE": {
+      "status": "BLOCKED",
+      "reason": "prerequisites not PASS",
+      "blocking_gates": [
+        "FULL_WINDOW_COVERAGE_GATE"
+      ]
+    },
+    "DEPENDENCY_GATE": {
+      "status": "BLOCKED",
+      "reason": "prerequisites not PASS",
+      "blocking_gates": [
+        "CUSTOM_SIZE_COVERAGE_GATE"
+      ]
+    },
+    "UI_FLOW_GATE": {
+      "status": "BLOCKED",
+      "reason": "prerequisites not PASS",
+      "blocking_gates": [
+        "DEPENDENCY_GATE"
+      ]
+    },
+    "AUTOMATED_TEST_GATE": {
+      "status": "BLOCKED",
+      "reason": "prerequisites not PASS",
+      "blocking_gates": [
+        "UI_FLOW_GATE"
+      ]
+    },
+    "FULL_BROWSER_FLOW_QA_GATE": {
+      "status": "BLOCKED",
+      "reason": "prerequisites not PASS",
+      "blocking_gates": [
+        "AUTOMATED_TEST_GATE"
+      ]
+    },
+    "FULL_BROWSER_QA_GATE": {
+      "status": "BLOCKED",
+      "reason": "prerequisites not PASS",
+      "blocking_gates": [
+        "FULL_BROWSER_FLOW_QA_GATE"
+      ]
+    },
+    "REGRESSION_GATE": {
+      "status": "BLOCKED",
+      "reason": "prerequisites not PASS",
+      "blocking_gates": [
+        "FULL_BROWSER_QA_GATE"
+      ]
+    },
+    "REPOSITORY_GATE": {
+      "status": "BLOCKED",
+      "reason": "prerequisites not PASS",
+      "blocking_gates": [
+        "REGRESSION_GATE"
+      ]
+    },
+    "GLOBAL_WINDOW_SELECTION_FLOW_GATE": {
+      "status": "BLOCKED",
+      "reason": "prerequisites not PASS",
+      "blocking_gates": [
+        "REPOSITORY_GATE"
+      ]
+    },
+    "APP_INTEGRATION_READY": {
+      "status": "BLOCKED",
+      "reason": "prerequisites not PASS",
+      "blocking_gates": [
+        "GLOBAL_WINDOW_SELECTION_FLOW_GATE"
+      ]
+    }
+  },
+  "human_review": {
+    "status": "REOPEN",
+    "reason": "Human-Review-relevant source changed after the reviewed exact HEAD",
+    "reviewed_exact_head": "0bccb73d7c1df53491536b1fb94631c6b433a160",
+    "review_artifact_identity": "HFR-c4fd80827fd1ec8a3da0e83c083cbf70f2f3b70047a00931712de8e3badf2c21",
+    "current_review_artifact_identity": "HFR-d5672b314c0c90e9d8db5f79853e5f03299bc48eef6b0b27496f7112ef1ee4f5",
+    "human_approval_reference": "https://github.com/Takuro-Kwkm/sash-app/pull/24#issuecomment-5732834015",
+    "relevant_changes_since_review": [
+      "src/catalog/runtime-master/canonical-workbook-reference-v1-adapter.mjs"
+    ]
+  },
+  "release": {
+    "status": "BLOCKED",
+    "blocking_gates": [
+      "HUMAN_FLOW_REVIEW_GATE",
+      "GLOBAL_WINDOW_SELECTION_FLOW_GATE",
+      "FULL_WINDOW_COVERAGE_GATE",
+      "CUSTOM_SIZE_COVERAGE_GATE",
+      "FULL_BROWSER_FLOW_QA_GATE",
+      "FULL_BROWSER_QA_GATE",
+      "APP_INTEGRATION_READY",
+      "UNVERIFIED_QA_CASE_COUNT"
+    ],
+    "missing_release_input": [],
+    "unverified_qa_case_count": null
+  }
+}
