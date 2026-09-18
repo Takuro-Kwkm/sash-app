@@ -4,14 +4,15 @@
   "task_classification": "NON-PRODUCT-MASTER",
   "product_master_mutation": 0,
   "verified_start_head": "dcb79a7dc17bb20ef0321f2211411896420e71c9",
-  "requested_change_scope": "Re-sync the formally adopted read-only LIXIL EW v1.3 Runtime package into the generic Runtime Adapter / Global Window Selection Flow path. Materialize byte-equivalent Runtime package bytes in the repository, update declarative App Runtime Integration Registry and Runtime inventory identities, extend the canonical workbook adapter generically to consume Formal Runtime frame_angle / installation_environment / declarative dependencies, update EW integration tests and runtime snapshot, regenerate exact-head Human Flow Review evidence, then execute automated/full-coverage/browser/regression gates. Do not mutate Formal Product Master, Drive Runtime, Product Master Registry, other series business rules, Global canonical slot definitions, or UI renderer business rules.",
+  "requested_change_scope": "Re-sync the formally adopted read-only LIXIL EW v1.3 Runtime package into the generic Runtime Adapter / Global Window Selection Flow path. Materialize byte-equivalent Runtime package bytes in the repository, update declarative App Runtime Integration Registry and Runtime inventory identities, extend the canonical workbook adapter generically to consume Formal Runtime frame_angle / installation_environment / declarative dependencies, update EW integration tests and runtime snapshot, regenerate exact-head Human Flow Review evidence, then execute automated/full-coverage/browser/regression gates. Do not mutate Formal Product Master, Drive Runtime, Product Master Registry, other series business rules, Global canonical slot definitions, or UI renderer business rules. A generic base64 materialization transport codec may be added to the canonical Runtime loader solely to preserve exact Formal Runtime bytes without mutating them.",
   "allowed_exact_files": [
     "project-governance/change-scope.json",
     "project-governance/runtime-snapshot.json",
     "src/catalog/runtime-master/app-runtime-integration-registry.mjs",
     "src/catalog/runtime-master/runtime-master-registry.mjs",
     "src/catalog/runtime-master/canonical-workbook-reference-v1-adapter.mjs",
-    "test/70-runtime-manifest-ew-integration.test.mjs"
+    "test/70-runtime-manifest-ew-integration.test.mjs",
+    "src/catalog/runtime-master/canonical-runtime-manifest-loader.mjs"
   ],
   "allowed_prefixes": [
     "src/catalog/runtime-master-packages/lixil-ew-v1.3/"
@@ -22,7 +23,8 @@
     "src/catalog/runtime-master/app-runtime-integration-registry.mjs",
     "src/catalog/runtime-master/runtime-master-registry.mjs",
     "src/catalog/runtime-master/canonical-workbook-reference-v1-adapter.mjs",
-    "test/70-runtime-manifest-ew-integration.test.mjs"
+    "test/70-runtime-manifest-ew-integration.test.mjs",
+    "src/catalog/runtime-master/canonical-runtime-manifest-loader.mjs"
   ],
   "canonical_product_master_sources_read_only": true
 }
