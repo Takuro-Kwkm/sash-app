@@ -10,7 +10,7 @@ export const NEW_CONSTRUCTION_EXTERIOR_WINDOW_UI_CATEGORY = 'NEW_CONSTRUCTION_EX
 export const NEW_CONSTRUCTION_SASH_UI_STANDARD_ORDER = Object.freeze([
   'manufacturer','product','window_type','window_spec','handing','frame_angle','size_mode','panel_count','size',
   'exterior_color','interior_color','screen_presence','screen_form','screen_midrail','screen_net',
-  'glass_base','glass_type','glass_detail','glass_function','glass_spacer','glass_air_layer','option',
+  'glass_base','glass_type','glass_detail','glass_function','glass_spacer','glass_air_layer','installation_environment','option',
 ]);
 
 const SLOT_ALIASES = Object.freeze({
@@ -27,6 +27,7 @@ const SLOT_ALIASES = Object.freeze({
   screen:'screen_presence',screen_presence:'screen_presence',screen_type:'screen_form',screen_form:'screen_form',screen_variant:'screen_form',screen_midrail:'screen_midrail',screen_net:'screen_net',
   glass:'glass_base',glass_base:'glass_base',glass_type:'glass_type',glass_detail:'glass_detail',glass_function:'glass_function',glass_additional:'glass_function',
   glass_spacer:'glass_spacer',glass_air_layer:'glass_air_layer',glass_gas:'glass_air_layer',
+  installation_environment:'installation_environment',
   option:'option',options:'option',
 });
 
@@ -36,6 +37,7 @@ const SIZE_SLOTS = new Set(['size_mode','panel_count','size']);
 const FINISH_SLOTS = new Set(['exterior_color','interior_color']);
 const SCREEN_SLOTS = new Set(['screen_presence','screen_form','screen_midrail','screen_net']);
 const GLAZING_SLOTS = new Set(['glass_base','glass_type','glass_detail','glass_function','glass_spacer','glass_air_layer']);
+const INSTALLATION_SLOTS = new Set(['installation_environment']);
 
 const STANDARD_LABELS = Object.freeze({
   window_type:'窓種類',window_configuration:'連窓構成',configuration_variant:'仕様バリアント',region_standard:'地域規格',door_installation:'ドア納まり',
@@ -43,6 +45,7 @@ const STANDARD_LABELS = Object.freeze({
   custom_width:'特注W（mm）',custom_height:'特注H（mm）',custom_w:'特注W（mm）',custom_h:'特注H（mm）',
   exterior_color:'外観色',interior_color:'内観色',screen:'網戸',screen_presence:'網戸',screen_type:'網戸形式',screen_form:'網戸形式',screen_midrail:'網戸中桟',screen_net:'網戸ネット',
   glass:'ガラス',glass_base:'ガラス',glass_type:'ガラス種',glass_detail:'ガラス詳細',glass_function:'ガラス追加機能',glass_additional:'ガラス追加機能',glass_spacer:'スペーサー',glass_air_layer:'中空層',glass_gas:'中空層',
+  installation_environment:'設置環境',
   option:'その他オプション',options:'その他オプション',
 });
 
@@ -61,7 +64,7 @@ const APPROVED_NEW_CONSTRUCTION_EXTENSIONS = Object.freeze({
 });
 
 export function semanticSlotForNewConstructionField(key){return SLOT_ALIASES[key]??null;}
-export function semanticStageForNewConstructionSlot(slot){if(PRODUCT_SLOTS.has(slot))return'PRODUCT';if(slot==='window_type')return'OPENING';if(CONFIGURATION_SLOTS.has(slot))return'CONFIGURATION';if(SIZE_SLOTS.has(slot))return'SIZE';if(FINISH_SLOTS.has(slot))return'FINISH';if(SCREEN_SLOTS.has(slot))return'SCREEN';if(GLAZING_SLOTS.has(slot))return'GLAZING';if(slot==='option')return'OPTION';return null;}
+export function semanticStageForNewConstructionSlot(slot){if(PRODUCT_SLOTS.has(slot))return'PRODUCT';if(slot==='window_type')return'OPENING';if(CONFIGURATION_SLOTS.has(slot))return'CONFIGURATION';if(SIZE_SLOTS.has(slot))return'SIZE';if(FINISH_SLOTS.has(slot))return'FINISH';if(SCREEN_SLOTS.has(slot))return'SCREEN';if(GLAZING_SLOTS.has(slot))return'GLAZING';if(INSTALLATION_SLOTS.has(slot))return'INSTALLATION_SURVEY';if(slot==='option')return'OPTION';return null;}
 export function standardLabelForNewConstructionField(key,fallback){return STANDARD_LABELS[key]??fallback;}
 export function shouldExposeNewConstructionRuntimeField(field={}){const key=field.key??field.field_name;if(isInternalKey(key))return false;if(field.runtimeIncluded===false||field.runtime_included===false)return false;if(field.technical===true||field.internal===true)return false;return true;}
 export function approvedNewConstructionExtensionForField(key){return APPROVED_NEW_CONSTRUCTION_EXTENSIONS[key]??null;}
