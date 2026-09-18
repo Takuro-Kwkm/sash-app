@@ -52,6 +52,7 @@ jobs:
         shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
+          GOVERNANCE_EVIDENCE_MANIFEST: artifacts/governance/qa-evidence-manifest.json
         run: |
           set -euo pipefail
           node scripts/governance/build-human-flow-review.mjs
