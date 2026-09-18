@@ -7,15 +7,15 @@ import { NEW_CONSTRUCTION_SASH_UI_STANDARD_ORDER } from '../src/catalog/runtime-
 const PRODUCT_ID='SER-LIX-EW';
 const TARGET_WINDOW='WT-EW-TATE-SUBERI';
 const TARGET_SPEC='SP-EW-TATE-T';
-const RUNTIME_SHA='85fce07a07ab938b27d8a8e0178f5b5e2d3779926e6bd10c75d38e4e78699cea';
-const MANIFEST_ID='1D-n_dwXfl8M6BjHQqIO6QV7u9FjjRUuU';
+const RUNTIME_SHA='a59848642ae301dcf8a275b7a43bdceb64a7d9e6488a5c79eca21584178be830';
+const MANIFEST_ID='140pCgz2uhukjOjd1wymuISuAMjhaBpCS';
 
 const field=(result,key)=>result.fields.find((row)=>row.key===key);
 const values=(result,key)=>field(result,key)?.values?.map((row)=>row.value)??[];
 const keys=(result)=>result.fields.map((row)=>row.key);
 
 async function targetStandardSelection(){
-  const base={window_type:TARGET_WINDOW,window_spec:TARGET_SPEC,handing:'L',size_mode:'STANDARD'};
+  const base={window_type:TARGET_WINDOW,window_spec:TARGET_SPEC,handing:'L',frame_angle:'WITHOUT_ANGLE',size_mode:'STANDARD'};
   let result=await resolveRuntimeAppProduct(PRODUCT_ID,base);
   const size=values(result,'size')[0];
   assert.ok(size);
@@ -31,12 +31,12 @@ async function targetStandardSelection(){
   return {selection:{...base,size,exterior_color:exterior,interior_color:interior,glass_base:glass},result};
 }
 
-test('EW v1.2 canonical manifest and Runtime bytes load read-only with exact identity and SHA',async()=>{
+test('EW v1.3 canonical manifest and Runtime bytes load read-only with exact identity and SHA',async()=>{
   const runtime=await loadRegisteredRuntime('LIXIL','EW');
   assert.ok(runtime);
   assert.equal(runtime.normalizedManifest.manufacturer,'LIXIL');
   assert.equal(runtime.normalizedManifest.series,'EW');
-  assert.equal(runtime.normalizedManifest.packageVersion,'v1.2');
+  assert.equal(runtime.normalizedManifest.packageVersion,'v1.3');
   assert.equal(runtime.normalizedManifest.schemaVersion,'2.0');
   assert.equal(runtime.normalizedManifest.runtimeStatus,'READY');
   assert.equal(runtime.normalizedManifest.formalPass,true);
@@ -59,14 +59,14 @@ test('EW is registered declaratively as a ready new-construction exterior-window
   assert.equal(ew.selectable,true);
   assert.equal(ew.manufacturer,'LIXIL');
   assert.equal(ew.series,'EW');
-  assert.equal(ew.packageVersion,'v1.2');
+  assert.equal(ew.packageVersion,'v1.3');
   assert.equal(ew.schemaVersion,'2.0');
   assert.equal(ew.uiCategory,'NEW_CONSTRUCTION_EXTERIOR_WINDOW');
   assert.equal(ew.adapterType,'CANONICAL_WORKBOOK_REFERENCE_V1');
   assert.equal(ew.sourceHash,RUNTIME_SHA);
 });
 
-test('EW canonical adapter preserves formal v1.2 source counts without inventing standard size records',async()=>{
+test('EW canonical adapter preserves formal v1.3 source counts without inventing standard size records',async()=>{
   const runtime=await loadRegisteredRuntime('LIXIL','EW');
   assert.equal(runtime.master.capabilities.runtimeContract,'canonical_workbook_reference_v1');
   assert.equal(runtime.master.capabilities.sourceStandardSizeRows,1721);
@@ -74,13 +74,15 @@ test('EW canonical adapter preserves formal v1.2 source counts without inventing
   assert.equal(runtime.master.capabilities.targetWindowSizeRows[TARGET_WINDOW],162);
   assert.equal(runtime.master.capabilities.customDimensionRules,70);
   assert.equal(runtime.master.canonicalWorkbook.windows.length,15);
-  assert.equal(runtime.master.canonicalWorkbook.screens.length,32);
+  assert.equal(runtime.master.canonicalWorkbook.screens.length,42);
   assert.equal(runtime.master.canonicalWorkbook.glasses.length,3);
-  assert.equal(runtime.master.canonicalWorkbook.options.length,22);
+  assert.equal(runtime.master.canonicalWorkbook.options.length,25);
+  assert.equal(runtime.master.capabilities.runtimeSemanticFields,2);
+  assert.equal(runtime.master.capabilities.runtimeDependencyRules,7);
 });
 
 test('v1.8 global UI slots keep configuration before size, screen before glass and options last',async()=>{
-  assert.deepEqual(NEW_CONSTRUCTION_SASH_UI_STANDARD_ORDER.slice(0,7),['manufacturer','product','window_type','window_spec','handing','size_mode','panel_count']);
+  assert.deepEqual(NEW_CONSTRUCTION_SASH_UI_STANDARD_ORDER.slice(0,8),['manufacturer','product','window_type','window_spec','handing','frame_angle','size_mode','panel_count']);
   const {selection}=await targetStandardSelection();
   const result=await resolveRuntimeAppProduct(PRODUCT_ID,{...selection,screen_presence:'あり'});
   const form=values(result,'screen_form')[0];
@@ -88,7 +90,8 @@ test('v1.8 global UI slots keep configuration before size, screen before glass a
   const order=keys(withForm);
   assert.ok(order.indexOf('window_type')<order.indexOf('window_spec'));
   assert.ok(order.indexOf('window_spec')<order.indexOf('handing'));
-  assert.ok(order.indexOf('handing')<order.indexOf('size_mode'));
+  assert.ok(order.indexOf('handing')<order.indexOf('frame_angle'));
+  assert.ok(order.indexOf('frame_angle')<order.indexOf('size_mode'));
   assert.ok(order.indexOf('size_mode')<order.indexOf('size'));
   assert.ok(order.indexOf('size')<order.indexOf('exterior_color'));
   assert.ok(order.indexOf('exterior_color')<order.indexOf('interior_color'));
@@ -99,6 +102,8 @@ test('v1.8 global UI slots keep configuration before size, screen before glass a
   assert.ok(order.indexOf('glass_base')<order.indexOf('glass_detail'));
   assert.ok(order.indexOf('glass_detail')<order.indexOf('glass_spacer'));
   assert.ok(order.indexOf('glass_spacer')<order.indexOf('glass_air_layer'));
+  assert.ok(order.indexOf('glass_air_layer')<order.indexOf('installation_environment'));
+  assert.ok(order.indexOf('installation_environment')<order.indexOf('option'));
   assert.equal(order.at(-1),'option');
   assert.equal(order.includes('construction'),false);
 });
@@ -182,6 +187,65 @@ test('EW option applicability filters non-applicable rows and exposes dependent 
   assert.equal(options.includes('OP-EW-ANGLE-SCREW'),false);
   const withAngle=await resolveRuntimeAppProduct(PRODUCT_ID,{...selection,option:['OP-EW-L-ANGLE']});
   assert.ok(values(withAngle,'option').includes('OP-EW-ANGLE-SCREW'));
+});
+
+test('EW frame_angle is Runtime-driven: selectable, fixed-hidden and conditional FIX L40 are preserved',async()=>{
+  const selectable=await resolveRuntimeAppProduct(PRODUCT_ID,{window_type:TARGET_WINDOW,window_spec:TARGET_SPEC});
+  assert.deepEqual(values(selectable,'frame_angle'),['WITHOUT_ANGLE','WITH_ANGLE']);
+  assert.equal(field(selectable,'frame_angle').required,false,'Runtime does not explicitly mark frame_angle required');
+
+  const fixed=await resolveRuntimeAppProduct(PRODUCT_ID,{window_type:'WT-EW-DREHKIPP'});
+  assert.equal(field(fixed,'frame_angle'),undefined,'FIXED Runtime property must not be inflated into a selector');
+  assert.equal(fixed.selection.frame_angle,'WITHOUT_ANGLE');
+
+  const fixL40=await resolveRuntimeAppProduct(PRODUCT_ID,{window_type:'WT-EW-FIX',window_spec:'SP-EW-FIX-L40'});
+  assert.equal(field(fixL40,'frame_angle'),undefined);
+  assert.equal(fixL40.selection.frame_angle,'WITH_ANGLE');
+});
+
+test('EW installation_environment is Runtime-applicable only and maps to BATHROOM/NON_BATHROOM',async()=>{
+  const applicable=await resolveRuntimeAppProduct(PRODUCT_ID,{window_type:TARGET_WINDOW,window_spec:TARGET_SPEC,frame_angle:'WITHOUT_ANGLE'});
+  assert.deepEqual(values(applicable,'installation_environment'),['BATHROOM','NON_BATHROOM']);
+  assert.equal(field(applicable,'installation_environment').required,false,'Runtime does not explicitly mark installation_environment required');
+  const notApplicable=await resolveRuntimeAppProduct(PRODUCT_ID,{window_type:'WT-EW-DREHKIPP'});
+  assert.equal(field(notApplicable,'installation_environment'),undefined);
+});
+
+test('EW roll screen is exposed only for WITHOUT_ANGLE and excludes formal spec exceptions',async()=>{
+  const without=await resolveRuntimeAppProduct(PRODUCT_ID,{window_type:TARGET_WINDOW,window_spec:TARGET_SPEC,frame_angle:'WITHOUT_ANGLE',screen_presence:'あり'});
+  assert.ok(values(without,'screen_form').includes('ROLL_SCREEN'));
+  assert.equal(field(without,'screen_form').values.find((row)=>row.value==='ROLL_SCREEN')?.displayLabel,'ロール網戸');
+  const withAngle=await resolveRuntimeAppProduct(PRODUCT_ID,{window_type:TARGET_WINDOW,window_spec:TARGET_SPEC,frame_angle:'WITH_ANGLE',screen_presence:'あり'});
+  assert.equal(values(withAngle,'screen_form').includes('ROLL_SCREEN'),false);
+  const excluded=await resolveRuntimeAppProduct(PRODUCT_ID,{window_type:TARGET_WINDOW,window_spec:'SP-EW-TATE-TFSLASH',frame_angle:'WITHOUT_ANGLE',screen_presence:'あり'});
+  assert.equal(values(excluded,'screen_form').includes('ROLL_SCREEN'),false);
+});
+
+test('EW bathroom plus WITH_ANGLE requires the Formal waterproof option and NON_BATHROOM does not',async()=>{
+  const missing=await resolveRuntimeAppProduct(PRODUCT_ID,{window_type:TARGET_WINDOW,window_spec:TARGET_SPEC,frame_angle:'WITH_ANGLE',installation_environment:'BATHROOM'});
+  assert.ok(values(missing,'option').includes('OP-EW-BATH-WATERPROOF-SET'));
+  assert.ok(missing.validation.errors.some((row)=>row.errorCode==='REQUIRED_OPTION_MISSING'&&row.field==='option'));
+  const satisfied=await resolveRuntimeAppProduct(PRODUCT_ID,{window_type:TARGET_WINDOW,window_spec:TARGET_SPEC,frame_angle:'WITH_ANGLE',installation_environment:'BATHROOM',option:['OP-EW-BATH-WATERPROOF-SET']});
+  assert.equal(satisfied.validation.errors.some((row)=>row.errorCode==='REQUIRED_OPTION_MISSING'),false);
+  const nonBathroom=await resolveRuntimeAppProduct(PRODUCT_ID,{window_type:TARGET_WINDOW,window_spec:TARGET_SPEC,frame_angle:'WITH_ANGLE',installation_environment:'NON_BATHROOM'});
+  assert.equal(values(nonBathroom,'option').includes('OP-EW-BATH-WATERPROOF-SET'),false);
+});
+
+test('EW stainless sill cover WITH_ANGLE requires B set and rejects forbidden horizontal roll-screen state',async()=>{
+  const base={window_type:'WT-EW-TERRACE-DOOR',frame_angle:'WITH_ANGLE',option:['OP-EW-SILL-STAINLESS-COVER']};
+  const missing=await resolveRuntimeAppProduct(PRODUCT_ID,base);
+  assert.ok(values(missing,'option').includes('OP-EW-SILL-STAINLESS-COVER-B'));
+  assert.ok(missing.validation.errors.some((row)=>row.errorCode==='REQUIRED_OPTION_MISSING'));
+  const conflict=await resolveRuntimeAppProduct(PRODUCT_ID,{...base,option:['OP-EW-SILL-STAINLESS-COVER','OP-EW-SILL-STAINLESS-COVER-B'],screen_presence:'あり',screen_form:'横引きロール網戸',screen_net:'標準ネット'});
+  assert.ok(conflict.validation.errors.some((row)=>row.errorCode==='OPTION_SCREEN_CONFLICT'));
+});
+
+test('EW resin L-angle option remains semantically separate and never auto-sets frame_angle',async()=>{
+  const without=await resolveRuntimeAppProduct(PRODUCT_ID,{window_type:TARGET_WINDOW,window_spec:TARGET_SPEC,frame_angle:'WITHOUT_ANGLE',option:['OP-EW-L-ANGLE']});
+  assert.equal(without.selection.frame_angle,'WITHOUT_ANGLE');
+  assert.ok(values(without,'option').includes('OP-EW-ANGLE-SCREW'));
+  const withAngle=await resolveRuntimeAppProduct(PRODUCT_ID,{window_type:TARGET_WINDOW,window_spec:TARGET_SPEC,frame_angle:'WITH_ANGLE',option:['OP-EW-L-ANGLE']});
+  assert.equal(withAngle.selection.frame_angle,'WITH_ANGLE');
 });
 
 test('EW invalid unknown selections fail closed and known downstream incompatibilities are cleared',async()=>{
