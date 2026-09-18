@@ -179,12 +179,18 @@ export class ProductConfigurationEditor {
     if(!target.matches('[data-spec-key]'))return;
     const key=target.dataset.specKey;
     if(this.state.productSource==='RUNTIME_MASTER')this.clearRuntimeDescendants(key);
+    const field=this.state.resolved?.fields?.find((row)=>row.key===key);
+    const canonicalChoice=(raw)=>{
+      const match=field?.values?.find((row)=>String(row.value)===String(raw));
+      if(!match)throw new Error(`Runtime option is not available for ${key}: ${raw}`);
+      return match.value;
+    };
     if(target.type==='number'){
       if(target.value!=='')this.state.selection[key]=Number(target.value);else delete this.state.selection[key];
     }else if(target.multiple){
-      const values=[...target.selectedOptions].map((option)=>option.value);
+      const values=[...target.selectedOptions].map((option)=>canonicalChoice(option.value));
       if(values.length)this.state.selection[key]=values;else delete this.state.selection[key];
-    }else if(target.value)this.state.selection[key]=target.value;else delete this.state.selection[key];
+    }else if(target.value)this.state.selection[key]=canonicalChoice(target.value);else delete this.state.selection[key];
     await this.resolve({notify:true});
   }
 
