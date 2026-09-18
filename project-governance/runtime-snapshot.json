@@ -8,7 +8,7 @@
     "observed_at": "2026-09-18",
     "selection_rule": "master_status=FORMAL_PASS AND runtime_status=READY AND package_gate=PASS AND storage_gate=PASS, intersected with repository Window UI integration categories",
     "revision_id": null,
-    "readback_identity": "LIVE_REGISTRY_READ_2026-09-18_AFTER_APW430_R3_APW431_V1_2_FORMALIZATION"
+    "readback_identity": "LIVE_REGISTRY_READ_2026-09-18_AFTER_EW_V1_3_FORMAL_ADOPTION"
   },
   "window_ui_categories": [
     "NEW_CONSTRUCTION_EXTERIOR_WINDOW",
@@ -44,8 +44,8 @@
       "manufacturer": "LIXIL",
       "registry_series": "EW",
       "app_series": "EW",
-      "package_version": "v1.2",
-      "runtime_manifest_id": "1D-n_dwXfl8M6BjHQqIO6QV7u9FjjRUuU",
+      "package_version": "v1.3",
+      "runtime_manifest_id": "140pCgz2uhukjOjd1wymuISuAMjhaBpCS",
       "master_status": "FORMAL_PASS",
       "runtime_status": "READY",
       "package_gate": "PASS",
