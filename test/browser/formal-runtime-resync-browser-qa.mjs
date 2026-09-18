@@ -26,9 +26,11 @@ async function openLab(page){
   await page.waitForFunction(()=>document.querySelector('#status')?.textContent==='CATALOG CONNECTED');
 }
 async function selectAndResolve(page,key,value){
-  const response=page.waitForResponse((r)=>r.url().includes('/api/runtime-master/resolve')&&r.status()===200);
-  await page.locator(`[data-spec-key="${key}"]`).selectOption(value);
-  return (await response).json();
+  const [response]=await Promise.all([
+    page.waitForResponse((r)=>r.url().includes('/api/runtime-master/resolve')&&r.status()===200),
+    page.locator(`[data-spec-key="${key}"]`).selectOption(value),
+  ]);
+  return response.json();
 }
 async function openProduct(page,product){
   await page.selectOption('#manufacturer',product.manufacturer);
