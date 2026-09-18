@@ -31,7 +31,7 @@ export const INNER_WINDOW_UI_STANDARD_ORDER = Object.freeze([
   'frame_color','body_color',
   'glass_family','glass_structure','glass_type','supply_form','glass_detail','decorative_pattern','low_e_type','lowe_color','glass_coating_color','glass_surface_type','safety_treatment',
   'grille_type','grille_material','muntin_type','vacuum_glass_product','spacer_type','spacer','gas_fill','cavity_fill','cavity_thickness_mm',
-  'frame_installation_mode','frame_projection','extension_frame_type','extension_frame_reinforcement','bathroom_installation_type',
+  'frame_installation_mode','frame_projection','extension_frame_type','extension_frame_reinforcement','installation_environment',
   'upper_frame_spec','sash_midrail','crescent_position','frame_install_spec','fukashi_spec','joint_layout',
   'option_items',
 ]);
@@ -40,7 +40,7 @@ const CONFIGURATION_SLOTS = new Set(['room_specification','sash_configuration','
 const SIZE_SLOTS = new Set(['size_class','size_mode','size_w','size_h','order_width','order_height','sash_width_allocation','sash_w1','sash_w2','sash_w3','sash_w4']);
 const FINISH_SLOTS = new Set(['frame_color','body_color']);
 const GLAZING_SLOTS = new Set(['glass_family','glass_structure','glass_type','supply_form','glass_detail','decorative_pattern','low_e_type','lowe_color','glass_coating_color','glass_surface_type','safety_treatment','grille_type','grille_material','muntin_type','vacuum_glass_product','spacer_type','spacer','gas_fill','cavity_fill','cavity_thickness_mm']);
-const INSTALLATION_SLOTS = new Set(['frame_installation_mode','frame_projection','extension_frame_type','extension_frame_reinforcement','bathroom_installation_type','upper_frame_spec','sash_midrail','crescent_position','frame_install_spec','fukashi_spec','joint_layout']);
+const INSTALLATION_SLOTS = new Set(['frame_installation_mode','frame_projection','extension_frame_type','extension_frame_reinforcement','installation_environment','upper_frame_spec','sash_midrail','crescent_position','frame_install_spec','fukashi_spec','joint_layout']);
 const OPTION_SLOTS = new Set(['option_items']);
 
 const installationExtension = (key, order) => Object.freeze({ slot:`extension:installation:${key}`, stage:'INSTALLATION_SURVEY', order });
@@ -114,6 +114,7 @@ const INNER_WINDOW_TECHNICAL_EXACT = new Set([
 ]);
 
 export function semanticSlotForInnerWindowField(key) {
+  if (key === 'bathroom_installation_type') return 'installation_environment';
   return INNER_WINDOW_UI_STANDARD_ORDER.includes(key) ? key : null;
 }
 
@@ -131,7 +132,7 @@ export function semanticStageForInnerWindowSlot(slot) {
 const STANDARD_LABELS = Object.freeze({
   window_type:'窓種類', frame_angle:'枠アングル', size_mode:'サイズ方式', size_w:'特注W（mm）', size_h:'特注H（mm）', order_width:'特注W（mm）', order_height:'特注H（mm）',
   frame_color:'本体色', body_color:'本体色', glass_family:'ガラス仕様', glass_type:'ガラス種', low_e_type:'Low-E性能', lowe_color:'Low-E性能',
-  spacer_type:'スペーサー', spacer:'スペーサー', gas_fill:'中空層', cavity_fill:'中空層', frame_installation_mode:'枠仕様 / 納まり', frame_install_spec:'枠仕様 / 納まり',
+  spacer_type:'スペーサー', spacer:'スペーサー', gas_fill:'中空層', cavity_fill:'中空層', frame_installation_mode:'枠仕様 / 納まり', frame_install_spec:'枠仕様 / 納まり', bathroom_installation_type:'設置環境', installation_environment:'設置環境',
   option_items:'オプション',
 });
 
