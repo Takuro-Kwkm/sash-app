@@ -15,7 +15,8 @@
     "scripts/governance/generate-human-flow-review.mjs",
     "scripts/governance/build-human-flow-review.mjs",
     "test/76-frame-angle-global-flow.test.mjs",
-    "project-governance/drive-authority-policy.json"
+    "project-governance/drive-authority-policy.json",
+    ".github/workflows/project-governance-gate.yml"
   ],
   "allowed_prefixes": [],
   "required_changed_files": [
@@ -27,7 +28,8 @@
     "scripts/governance/generate-human-flow-review.mjs",
     "scripts/governance/build-human-flow-review.mjs",
     "test/76-frame-angle-global-flow.test.mjs",
-    "project-governance/drive-authority-policy.json"
+    "project-governance/drive-authority-policy.json",
+    ".github/workflows/project-governance-gate.yml"
   ],
   "canonical_product_master_sources_read_only": true
 }
