@@ -239,7 +239,7 @@ md.push('# Human Flow Review Artifact', '', `- Exact HEAD: \`${review.exact_head
 
 md.push('## frame_angle Canonical Coverage', '', `- Canonical values: ${review.frame_angle_summary.canonical_values.join(' / ')}`, `- Runtime present: **${review.frame_angle_summary.runtime_present_count} / ${review.frame_angle_summary.window_count}**`, `- Absent / N/A-or-gap unverified: **${review.frame_angle_summary.absent_or_unverified_count}**`, `- Invalid canonical values: **${review.frame_angle_summary.invalid_canonical_value_count}**`, '- UI inference used: **false**', '');
 md.push('## Series Field Coverage', '', '| Series | Source | Source fields | Baseline union | Expected union | Before | After | Missing after |', '|---|---|---:|---:|---:|---:|---:|---:|');
-for (const row of coverageSeries) md.push(`| ${row.series} | ${row.authoritative_source} | ${row.source_field_count} | ${row.baseline_union_field_count} | ${row.expected_union_field_count} | ${row.artifact_field_count_before} | ${row.artifact_field_count_after} | ${row.missing_after.length} |`);
+for (const row of coverageSeries) md.push(`| ${row.series ?? row.registry_series_key ?? 'UNKNOWN'} | ${row.authoritative_source ?? 'N/A'} | ${row.source_field_count ?? 'N/A'} | ${row.baseline_union_field_count ?? 'N/A'} | ${row.expected_union_field_count ?? 'N/A'} | ${row.artifact_field_count_before ?? 'N/A'} | ${row.artifact_field_count_after ?? 'N/A'} | ${Array.isArray(row.missing_after) ? row.missing_after.length : 'N/A'} |`);
 md.push('');
 
 md.push('## Series × Stage / Canonical Slot Matrix', '', '| Series | PRODUCT | OPENING | CONFIGURATION | SIZE | FINISH | SCREEN | GLAZING | INSTALLATION_SURVEY | OPTION |', '|---|---|---|---|---|---|---|---|---|---|');
