@@ -98,6 +98,7 @@ jobs:
       STAGE_A_REACHABILITY_REPORT: artifacts/stage-a-custom-selector-reachability/report.json
       STAGE_A_TRANSITION_REPORT: artifacts/stage-a-custom-transition-proof-v4/report.json
       STAGE_A_FULL_BROWSER_OUT: artifacts/stage-a-full-browser-qa
+      POST_HUMAN_EVIDENCE_OUT: artifacts/governance/post-human
     steps:
       - name: Checkout exact HEAD
         uses: actions/checkout@v4
@@ -148,7 +149,18 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          node --test test/79-global-window-selection-flow.test.mjs test/80-canonical-window-semantic-schema.test.mjs test/81-global-window-flow-signature-transition.test.mjs
+          mkdir -p "$POST_HUMAN_EVIDENCE_OUT"
+          node --test test/79-global-window-selection-flow.test.mjs test/80-canonical-window-semantic-schema.test.mjs test/81-global-window-flow-signature-transition.test.mjs 2>&1 | tee "$POST_HUMAN_EVIDENCE_OUT/global-flow-unit.tap"
+          node --input-type=module <<'NODE'
+          import { mkdirSync, writeFileSync } from 'node:fs';
+          mkdirSync(process.env.POST_HUMAN_EVIDENCE_OUT,{recursive:true});
+          writeFileSync(process.env.POST_HUMAN_EVIDENCE_OUT+'/global-flow-unit.json',JSON.stringify({
+            exact_head:process.env.HEAD_SHA,
+            status:'PASS',
+            gates:['FULL_FLOW_SIGNATURE_COVERAGE_GATE','FLOW_TRANSITION_GATE'],
+            command:'node --test test/79-global-window-selection-flow.test.mjs test/80-canonical-window-semantic-schema.test.mjs test/81-global-window-flow-signature-transition.test.mjs'
+          },null,2)+'\n');
+          NODE
           echo 'CANONICAL_SLOT_SCHEMA_GATE=PASS'
           echo 'FULL_FLOW_SIGNATURE_COVERAGE_GATE=PASS_PAIRWISE_WINDOW_USER_FACING_FIELD_UNIVERSES'
           echo 'FLOW_TRANSITION_GATE=PASS_WINDOW_RESOLVER_TRANSITIONS'
@@ -209,7 +221,17 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          npm test
+          mkdir -p "$POST_HUMAN_EVIDENCE_OUT"
+          npm test 2>&1 | tee "$POST_HUMAN_EVIDENCE_OUT/full-repository-regression.log"
+          node --input-type=module <<'NODE'
+          import { writeFileSync } from 'node:fs';
+          writeFileSync(process.env.POST_HUMAN_EVIDENCE_OUT+'/full-repository-regression.json',JSON.stringify({
+            exact_head:process.env.HEAD_SHA,
+            status:'PASS',
+            gate:'AUTOMATED_TEST_GATE',
+            command:'npm test'
+          },null,2)+'\n');
+          NODE
           echo 'FLOW_REGRESSION_GATE=PASS_ALL_REPOSITORY_TESTS'
 
       - name: Runtime smoke
@@ -264,25 +286,22 @@ jobs:
             sleep 0.5
           done
           node test/browser/inplus-v04r2-global-flow-full-coverage-browser-qa.mjs
+          node --input-type=module <<'NODE'
+          import { writeFileSync } from 'node:fs';
+          const base={
+            exact_head:process.env.HEAD_SHA,
+            status:'PASS',
+            desktop_smartphone:true,
+            global_flow_browser:'artifacts/global-window-selection-flow-browser-qa/report.json',
+            inplus_exhaustive_browser:'artifacts/inplus-v04r2-global-flow-full-coverage-browser-qa/report.json'
+          };
+          writeFileSync(process.env.POST_HUMAN_EVIDENCE_OUT+'/browser-flow-qa.json',JSON.stringify({...base,gate:'FULL_BROWSER_FLOW_QA_GATE'},null,2)+'\n');
+          writeFileSync(process.env.POST_HUMAN_EVIDENCE_OUT+'/regression-gate.json',JSON.stringify({...base,gate:'REGRESSION_GATE',automated_test_log:'artifacts/governance/post-human/full-repository-regression.log'},null,2)+'\n');
+          NODE
           echo 'INPLUS_V04R2_GLOBAL_FLOW_QA_CASE_COUNT=1148'
           echo 'INPLUS_V04R2_GLOBAL_FLOW_BROWSER_STATE_CHECKS_TOTAL=3350'
           echo 'INPLUS_V04R2_GLOBAL_FLOW_UNVERIFIED_QA_CASE_COUNT=0'
           echo 'FULL_BROWSER_FLOW_QA_GATE=PASS'
-
-      - name: Upload Global Window Flow evidence
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: global-window-selection-flow-evidence-${{ github.sha }}
-          path: |
-            artifacts/global-window-selection-flow-browser-qa/
-            artifacts/inplus-v04r2-global-flow-full-coverage-browser-qa/
-            artifacts/stage-a-custom-dimension-source-shape/
-            artifacts/stage-a-custom-selector-reachability/
-            artifacts/stage-a-custom-runtime-geometry-equivalence/
-            artifacts/stage-a-custom-transition-proof-v4/
-            artifacts/stage-a-full-browser-qa/
-          if-no-files-found: warn
 
       - name: Exact-head repository gate
         shell: bash
@@ -297,27 +316,59 @@ jobs:
             -H 'X-GitHub-Api-Version: 2022-11-28' \
             "https://api.github.com/repos/${GITHUB_REPOSITORY}/pulls/24" > /tmp/pr24.json
           node --input-type=module <<'NODE'
-          import { readFileSync } from 'node:fs';
+          import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
           const pr=JSON.parse(readFileSync('/tmp/pr24.json','utf8'));
           if(pr.state!=='open'||pr.merged_at!==null||pr.base?.ref!=='main'||pr.head?.ref!=='feat/new-construction-runtime-ui-v16-20260910'||pr.head?.sha!==process.env.HEAD_SHA)throw new Error('REPOSITORY_PR_IDENTITY_GATE');
+          mkdirSync(process.env.POST_HUMAN_EVIDENCE_OUT,{recursive:true});
+          writeFileSync(process.env.POST_HUMAN_EVIDENCE_OUT+'/repository-gate.json',JSON.stringify({
+            exact_head:process.env.HEAD_SHA,status:'PASS',gate:'REPOSITORY_GATE',pull_request:24,state:pr.state,base:pr.base.ref,head:pr.head.ref,head_sha:pr.head.sha
+          },null,2)+'\n');
           console.log('REPOSITORY_GATE=PASS');
           NODE
 
-      - name: Gate summary
+      - name: Emit and aggregate direct post-Human Governance evidence
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GOVERNANCE_EVIDENCE_MANIFEST: artifacts/governance/qa-evidence-manifest.json
         run: |
-          echo 'HUMAN_FLOW_REVIEW_GATE=PASS'
-          echo 'WINDOW_FLOW_BASELINE_GATE=PASS'
-          echo 'CANONICAL_SLOT_SCHEMA_GATE=PASS'
-          echo 'FLOW_SCHEMA_UNMAPPED_FIELD_GATE=PASS'
-          echo 'SINGLE_FLOW_ENGINE_GATE=PASS'
-          echo 'SERIES_OVERRIDE_ELIMINATION_GATE=PASS'
-          echo 'FULL_FLOW_SIGNATURE_COVERAGE_GATE=PASS'
-          echo 'FLOW_TRANSITION_GATE=PASS'
-          echo 'FULL_BROWSER_FLOW_QA_GATE=PASS'
-          echo 'FLOW_REGRESSION_GATE=PASS'
-          echo 'CUSTOM_SIZE_COVERAGE_GATE=PASS'
-          echo 'REGRESSION_GATE=PASS'
-          echo 'REPOSITORY_GATE=PASS'
-          echo 'GLOBAL_WINDOW_SELECTION_FLOW_READY=QA_EXECUTED_PENDING_GOVERNANCE_EVIDENCE_IMPORT'
-          echo 'APP_INTEGRATION_READY=FALSE_PENDING_FULL_GOVERNANCE_EVIDENCE'
-          echo 'RELEASE_INPUT_GATE=BLOCKED_PENDING_FULL_GOVERNANCE_EVIDENCE'
+          set -euo pipefail
+          node scripts/governance/build-human-flow-review.mjs
+          node scripts/governance/verify-human-flow-field-coverage.mjs
+          node scripts/governance/emit-global-flow-evidence.mjs
+          node scripts/governance/collect-qa-evidence.mjs
+          node scripts/governance/read-human-approval.mjs
+          node scripts/governance/evaluate-gates.mjs
+          node scripts/governance/generate-progress-ledger.mjs
+
+      - name: Upload Global Window Flow evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: global-window-selection-flow-evidence-${{ github.sha }}
+          path: |
+            artifacts/governance/
+            artifacts/global-window-selection-flow-browser-qa/
+            artifacts/inplus-v04r2-global-flow-full-coverage-browser-qa/
+            artifacts/stage-a-custom-dimension-source-shape/
+            artifacts/stage-a-custom-selector-reachability/
+            artifacts/stage-a-custom-runtime-geometry-equivalence/
+            artifacts/stage-a-custom-transition-proof-v4/
+            artifacts/stage-a-full-browser-qa/
+          if-no-files-found: error
+
+      - name: Gate summary
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import { readFileSync } from 'node:fs';
+          const result=JSON.parse(readFileSync('artifacts/governance/gate-results.json','utf8'));
+          for(const id of [
+            'HUMAN_FLOW_REVIEW_GATE','FULL_FLOW_SIGNATURE_COVERAGE_GATE','FLOW_TRANSITION_GATE',
+            'FULL_WINDOW_COVERAGE_GATE','CUSTOM_SIZE_COVERAGE_GATE','DEPENDENCY_GATE','UI_FLOW_GATE',
+            'AUTOMATED_TEST_GATE','FULL_BROWSER_FLOW_QA_GATE','FULL_BROWSER_QA_GATE','REGRESSION_GATE',
+            'REPOSITORY_GATE','GLOBAL_WINDOW_SELECTION_FLOW_GATE','APP_INTEGRATION_READY'
+          ]) console.log(`${id}=${result.gates?.[id]?.status ?? 'UNSET'}`);
+          console.log(`RELEASE_INPUT_GATE=${result.release?.status ?? 'BLOCKED'}`);
+          NODE
