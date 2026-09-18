@@ -1,0 +1,10 @@
+{
+  "status": "BLOCKED",
+  "reviewed_exact_head": null,
+  "review_artifact_identity": null,
+  "human_approval_reference": null,
+  "approved_at": null,
+  "exact_head": "a46427e795ec6a8f704f7d115e0e09a509f209c5",
+  "source": "GITHUB_PR_COMMENT_BY_AUTHORIZED_HUMAN",
+  "observed_at": "2026-09-18T02:17:10.152Z"
+}
