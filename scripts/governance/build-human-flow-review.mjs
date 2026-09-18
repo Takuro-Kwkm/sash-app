@@ -296,4 +296,6 @@ console.log(`HUMAN_REVIEW_FIELD_MISSING_BEFORE=${review.field_coverage.missing_b
 console.log(`HUMAN_REVIEW_FIELD_MISSING_AFTER=${review.field_coverage.missing_after_count}`);
 console.log(`REVIEW_COMPLETENESS=${review.review_completeness}`);
 if (review.field_coverage.status !== 'PASS') console.error(`HUMAN_REVIEW_FIELD_COVERAGE_FAILURE_DETAILS=${JSON.stringify(review.field_coverage.failures)}`);
+if (review.field_coverage.status !== 'PASS') console.error(`HUMAN_REVIEW_RUNTIME_SNAPSHOT_GAPS=${JSON.stringify(review.runtime_snapshot_gaps)}`);
+if (review.field_coverage.status !== 'PASS') console.error(`HUMAN_REVIEW_BLOCKING_UNVERIFIED=${JSON.stringify(review.unverified_items.filter((x)=>x.severity==='BLOCKING_REVIEW_COMPLETENESS'))}`);
 if (review.field_coverage.status !== 'PASS') process.exitCode = 41;
