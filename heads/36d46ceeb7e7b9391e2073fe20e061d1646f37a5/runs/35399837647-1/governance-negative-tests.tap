@@ -1,0 +1,18 @@
+✔ old HEAD rejected (118.805285ms)
+✔ omitted series rejected (1016.417828ms)
+✔ omitted adapter field rejected (1017.84923ms)
+✔ builder count cannot authorize itself (1006.166744ms)
+✔ duplicated series rejected (1283.961001ms)
+✔ restore verified evidence after negative tests (1002.82593ms)
+✔ conditional initial HIDE stays user-facing; fixed identity and technical fields do not (2.38556ms)
+✔ independent workflow trigger is rejected by authority policy (605.779628ms)
+✔ stale Drive connector observation is rejected (0.913637ms)
+✔ missing required Drive authority file is rejected (0.471665ms)
+ℹ tests 10
+ℹ suites 0
+ℹ pass 10
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 6137.247756
