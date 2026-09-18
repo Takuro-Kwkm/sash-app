@@ -139,7 +139,7 @@ function sourceWindowIncludes(sourceWindowIdValue,windowId) {
 function dependencyConditionMatches(condition,selection) {
   if (!condition || typeof condition !== 'object') return true;
   for (const [key,value] of Object.entries(condition)) {
-    if (key==='option_selected') {
+    if (key==='option_selected' || key==='base_option_selected') {
       const options=Array.isArray(selection.option)?selection.option:has(selection.option)?[selection.option]:[];
       if (!options.some((option)=>same(option,value))) return false;
       continue;
