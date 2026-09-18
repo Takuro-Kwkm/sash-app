@@ -50,8 +50,11 @@ jobs:
       - name: Evaluate Human Review authorization
         id: human-review
         shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
+          node scripts/governance/read-human-approval.mjs
           node scripts/governance/evaluate-gates.mjs
           node --input-type=module <<'NODE'
           import { appendFileSync, readFileSync } from 'node:fs';
