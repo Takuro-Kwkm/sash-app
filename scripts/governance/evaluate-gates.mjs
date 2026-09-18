@@ -39,19 +39,27 @@ let relevantChanges = [];
 let humanStatus = 'BLOCKED';
 let humanReason = 'explicit human approval is not recorded';
 if (human.status === 'PASS' && approvalComplete) {
-  const artifactIdentityMatches = reviewArtifact?.exact_head === head && reviewArtifact?.review_artifact_identity === human.review_artifact_identity && human.reviewed_exact_head === head ;
-  const reviewedCommitExists = git(['rev-parse', '--verify', `${human.reviewed_exact_head}^{commit}`], {allowFailure:true}) === head;
-  if (!artifactIdentityMatches || !reviewedCommitExists) {
+  const reviewedCommit = git(['rev-parse', '--verify', `${human.reviewed_exact_head}^{commit}`], {allowFailure:true});
+  const reviewedCommitExists = reviewedCommit === human.reviewed_exact_head;
+  const reviewedIsAncestor = reviewedCommitExists && git(['merge-base', '--is-ancestor', human.reviewed_exact_head, head], {allowFailure:true}) !== null;
+  const currentArtifactExists = reviewArtifact?.exact_head === head;
+  if (!reviewedCommitExists || !reviewedIsAncestor || !currentArtifactExists) {
     humanStatus = 'REOPEN';
-    humanReason = 'recorded Human approval does not match the current review artifact identity';
+    humanReason = 'recorded Human approval cannot be safely related to the current exact HEAD review artifact';
   } else {
     relevantChanges = relevantChangesSince(human.reviewed_exact_head, humanDef.reopen_paths, head);
-    if (relevantChanges.length === 0) {
+    const sameHead = human.reviewed_exact_head === head;
+    const sameHeadArtifactIdentityMatches = !sameHead || reviewArtifact?.review_artifact_identity === human.review_artifact_identity;
+    if (relevantChanges.length === 0 && sameHeadArtifactIdentityMatches) {
       humanStatus = 'PASS';
-      humanReason = 'explicit approval recorded, artifact identity matches, and no Human-Review-relevant source changed since reviewed_exact_head';
+      humanReason = sameHead
+        ? 'explicit approval recorded, artifact identity matches, and no Human-Review-relevant source changed since reviewed_exact_head'
+        : 'explicit approval retained because the reviewed commit is an ancestor of current HEAD and no Human-Review-relevant source changed';
     } else {
       humanStatus = 'REOPEN';
-      humanReason = 'Human-Review-relevant source changed after the reviewed exact HEAD';
+      humanReason = relevantChanges.length
+        ? 'Human-Review-relevant source changed after the reviewed exact HEAD'
+        : 'recorded Human approval does not match the reviewed exact-head artifact identity';
     }
   }
 }
