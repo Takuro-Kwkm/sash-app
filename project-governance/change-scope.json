@@ -1,37 +1,31 @@
 {
   "schema_version": "1.0.0",
-  "task_id": "APW430_APW431_FORMAL_RUNTIME_SYNC_20260918",
+  "task_id": "FRAME_ANGLE_GLOBAL_FLOW_20260918",
   "task_classification": "NON-PRODUCT-MASTER",
   "product_master_mutation": 0,
-  "verified_start_head": "d9ff161de1b37a9f745dea8783118f4b6a43d734",
-  "requested_change_scope": "Read-only sync of newly FORMAL APW430 20260917-R2 and APW431 v1.1 Runtime identities into the app integration lane, adapter alignment to formal glass contracts, governance snapshots, Human Review artifact exposure, and direct validation tests.",
+  "verified_start_head": "a46427e795ec6a8f704f7d115e0e09a509f209c5",
+  "requested_change_scope": "Implement canonical frame_angle in the shared Global Window Selection Flow from the revised Drive specifications; refresh read-only Drive authority and Runtime snapshots; expose frame_angle classification/visibility/allowed/fixed/dependency/clear/STANDARD-CUSTOM state in the regenerated Human Review artifact; do not mutate Product Master, Formal Runtime packages, Runtime JSON, or Product Master Registry.",
   "allowed_exact_files": [
-    ".github/workflows/ci.yml",
     "project-governance/change-scope.json",
     "project-governance/drive-authority-snapshot.json",
     "project-governance/runtime-snapshot.json",
-    "scripts/governance/build-human-flow-review.mjs",
+    "src/catalog/runtime-master/canonical-window-semantic-schema.mjs",
+    "src/catalog/runtime-master/new-construction-sash-runtime-ui-contract.mjs",
+    "src/catalog/runtime-master/inner-window-runtime-ui-contract.mjs",
     "scripts/governance/generate-human-flow-review.mjs",
-    "scripts/governance/materialize-current-state.mjs",
-    "src/catalog/runtime-master/app-runtime-integration-registry.mjs",
-    "src/catalog/runtime-master/apw430-formal-split-v1-adapter.mjs",
-    "src/catalog/runtime-master/apw431-formal-split-v1-adapter.mjs",
-    "src/catalog/runtime-master/formal-product-runtime-loader.mjs",
-    "src/catalog/runtime-master/runtime-master-registry.mjs",
-    "test/75-formal-runtime-resync.test.mjs",
-    "test/browser/formal-runtime-resync-browser-qa.mjs"
+    "scripts/governance/build-human-flow-review.mjs",
+    "test/76-frame-angle-global-flow.test.mjs"
   ],
-  "allowed_prefixes": [
-    "src/catalog/runtime-master-packages/ykkap-apw430-20260917-r2/",
-    "src/catalog/runtime-master-packages/ykkap-apw431-v1.1/"
-  ],
+  "allowed_prefixes": [],
   "required_changed_files": [
+    "project-governance/drive-authority-snapshot.json",
     "project-governance/runtime-snapshot.json",
-    "src/catalog/runtime-master/app-runtime-integration-registry.mjs",
-    "src/catalog/runtime-master/apw430-formal-split-v1-adapter.mjs",
-    "src/catalog/runtime-master/apw431-formal-split-v1-adapter.mjs",
-    "src/catalog/runtime-master/formal-product-runtime-loader.mjs",
-    "src/catalog/runtime-master/runtime-master-registry.mjs"
+    "src/catalog/runtime-master/canonical-window-semantic-schema.mjs",
+    "src/catalog/runtime-master/new-construction-sash-runtime-ui-contract.mjs",
+    "src/catalog/runtime-master/inner-window-runtime-ui-contract.mjs",
+    "scripts/governance/generate-human-flow-review.mjs",
+    "scripts/governance/build-human-flow-review.mjs",
+    "test/76-frame-angle-global-flow.test.mjs"
   ],
   "canonical_product_master_sources_read_only": true
 }
