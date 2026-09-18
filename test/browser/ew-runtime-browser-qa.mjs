@@ -234,9 +234,9 @@ try{
   assert.ok(ew);
   assert.equal(ew.status,'READY');
   assert.equal(ew.selectable,true);
-  assert.equal(ew.packageVersion,'v1.2');
+  assert.equal(ew.packageVersion,'v1.3');
   assert.equal(ew.schemaVersion,'2.0');
-  assert.equal(ew.sourceHash,'85fce07a07ab938b27d8a8e0178f5b5e2d3779926e6bd10c75d38e4e78699cea');
+  assert.equal(ew.sourceHash,'a59848642ae301dcf8a275b7a43bdceb64a7d9e6488a5c79eca21584178be830');
   await preflight.close();
 
   const desktopContext=await browser.newContext({viewport:{width:1440,height:1000}});
