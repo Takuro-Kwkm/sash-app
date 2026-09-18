@@ -35,8 +35,8 @@ const INPLUS_ROOT = join(HERE, '../runtime-master-packages/lixil-inplus-v0.4-r2'
 const SAMOS2H_ROOT = join(HERE, '../runtime-master-packages/lixil-samos2h-v0.9-r3');
 const THERMOSL_ROOT = join(HERE, '../runtime-master-packages/lixil-thermosl-v0.7-r2');
 const RECHENT_ROOT = join(HERE, '../runtime-master-packages/lixil-rechent-door3-nonfire-v0.8-r7');
-const APW430_ROOT = join(HERE, '../runtime-master-packages/ykkap-apw430-20260830-r1');
-const APW431_ROOT = join(HERE, '../runtime-master-packages/ykkap-apw431-v1.0-r1');
+const APW430_ROOT = join(HERE, '../runtime-master-packages/ykkap-apw430-20260917-r2');
+const APW431_ROOT = join(HERE, '../runtime-master-packages/ykkap-apw431-v1.1');
 
 export const runtimeMasterInventory = Object.freeze([
   Object.freeze({
@@ -77,21 +77,21 @@ export const runtimeMasterInventory = Object.freeze([
     }),
   }),
   Object.freeze({
-    manufacturer:'YKK AP', series:'APW430', productId:'SER-YKK-APW430', masterVersion:'20260830-R1', schemaVersion:'product-master-runtime-manifest/1.0', packageType:'FORMAL_PRODUCT_RUNTIME', adapterType:'APW430_FORMAL_SPLIT_V1', packageRoot:APW430_ROOT,
-    runtimeManifestPath:join(APW430_ROOT,'runtime_manifest.json'), runtimeManifestDriveFileId:'1kzVrhxbArbmUu9MgLThODKTEuCdxyqfK', runtimeManifestSha256:'08f3ad4bef73e32b00e9a69af7e0278539bc8899d64713c8f903924cd43de78b',
+    manufacturer:'YKK AP', series:'APW430', productId:'SER-YKK-APW430', masterVersion:'20260917-R2', schemaVersion:'product-master-runtime-manifest/1.0', packageType:'FORMAL_PRODUCT_RUNTIME', adapterType:'APW430_FORMAL_SPLIT_V1', packageRoot:APW430_ROOT,
+    runtimeManifestPath:join(APW430_ROOT,'runtime_manifest.json'), runtimeManifestDriveFileId:'1NzsX4C4M2fpOBUvXdXpPLYYfXfF7PNeo', runtimeManifestSha256:'1b012a78abfbbb2a6647272f92126d37c3a75d0a52d8b03de4d30e2afe9bcfcc',
     materializedFiles:Object.freeze({
-      '1WZcYi7N1sc8yX1NH2aP6tdBVc9vpmXGr':Object.freeze({codec:'brotli',paths:Object.freeze([join(APW430_ROOT,'apw430_core_20260830-R1.json.br.b64.parts/part-00')])}),
-      '10CqTBQMvvo67S7GDprRQNtNvrah2SjeH':Object.freeze({codec:'brotli',paths:Object.freeze([join(APW430_ROOT,'apw430_dimensions_20260830-R1.json.br.b64.parts/part-00')])}),
-      '1iNdn4g59M52mmU2N9VoM7NJIQUPP6qQ_':Object.freeze({codec:'brotli',paths:Object.freeze([join(APW430_ROOT,'apw430_options_20260830-R1.json.br.b64.parts/part-00')])}),
+      '1PP5N_RbSaNjJhuPv1qMUDHjGIaeVgCQo':Object.freeze({codec:'raw-file',paths:Object.freeze([join(APW430_ROOT,'apw430_core_20260917-R2.json')])}),
+      '1AOCQ84DMCxtcBUFluxVo4luwuWNZ8h45':Object.freeze({codec:'raw-file',paths:Object.freeze([join(APW430_ROOT,'apw430_dimensions_20260917-R2.json')])}),
+      '143MG_S6GKaNa7EPUhmFoKoyJdlmJ3i5Q':Object.freeze({codec:'raw-parts',paths:Object.freeze(Array.from({length:6},(_,index)=>join(APW430_ROOT,`apw430_options_20260917-R2.json.parts/part-${String(index).padStart(2,'0')}`)))}),
     }),
   }),
   Object.freeze({
-    manufacturer:'YKK AP', series:'APW431', productId:'SER-YKK-APW431', masterVersion:'v1.0', schemaVersion:'product-master-runtime-manifest/1.0', packageType:'FORMAL_PRODUCT_RUNTIME', adapterType:'APW431_FORMAL_SPLIT_V1', packageRoot:APW431_ROOT,
-    runtimeManifestPath:join(APW431_ROOT,'runtime_manifest.json'), runtimeManifestDriveFileId:'1Rfrbcdu5j9ZsWGX9PDyC82iEKWUHhCyv', runtimeManifestSha256:'f83998aa540ff39907627089adbe84eae32ba9850b36fa8ad7f40a30e2502511',
+    manufacturer:'YKK AP', series:'APW431', productId:'SER-YKK-APW431', masterVersion:'v1.1', schemaVersion:'product-master-runtime-manifest/2.0', packageType:'FORMAL_PRODUCT_RUNTIME', adapterType:'APW431_FORMAL_SPLIT_V1', packageRoot:APW431_ROOT,
+    runtimeManifestPath:join(APW431_ROOT,'runtime_manifest.json'), runtimeManifestDriveFileId:'1ZcgwXjq0KHiVDG8KCvV6k3NAZM-CDk3J', runtimeManifestSha256:'7b4331b62d80a356fdd39549c942bb30db8a6e34e9e7d0fd2277c0bccc4f4f27',
     materializedFiles:Object.freeze({
-      '1dr36iQgt_jtKnU6o_EoTpSteBHQNoOLT':Object.freeze({codec:'brotli',paths:Object.freeze([join(APW431_ROOT,'apw431_core_v1.0-R1.json.br.b64.parts/part-00')])}),
-      '1bccODZ46DhHzv5maVZN07QymZxhb817V':Object.freeze({codec:'brotli',paths:Object.freeze(['part-00','part-01','part-02','part-03','part-04'].map((name)=>join(APW431_ROOT,`apw431_dimensions_v1.0-R1.json.br.b64.parts/${name}`)))}),
-      '1xLBrfHUrgPgc_aCIXS0w6oiSbZ2FiCBi':Object.freeze({codec:'brotli',paths:Object.freeze(['part-00','part-01'].map((name)=>join(APW431_ROOT,`apw431_options_v1.0-R1.json.br.b64.parts/${name}`)))}),
+      '1dkRyTKPr5PXtnzTGkGvEiTeAGmY4fNXs':Object.freeze({codec:'raw-file',paths:Object.freeze([join(APW431_ROOT,'apw431_core_v1.1.json')])}),
+      '1YhB0n_NZ6Ulolo_-hAiz0in7j1Jwuxun':Object.freeze({codec:'raw-file',paths:Object.freeze([join(APW431_ROOT,'apw431_dimensions_v1.1.json')])}),
+      '1aPuMxKKl88Q-E64Gixi0_HFpk1YF5_p5':Object.freeze({codec:'raw-file',paths:Object.freeze([join(APW431_ROOT,'apw431_options_v1.1.json')])}),
     }),
   }),
   Object.freeze({

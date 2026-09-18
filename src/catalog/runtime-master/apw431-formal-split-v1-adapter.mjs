@@ -46,6 +46,31 @@ function customRuleAllows(rule, width, height) {
   return true;
 }
 
+
+function glassContractRows(options, fieldName, windowId) {
+  return (options.glass_field_contract ?? []).filter((row) => {
+    if (row.field !== fieldName) return false;
+    if (Array.isArray(row.windows) && row.windows.length && windowId && !row.windows.includes(windowId)) return false;
+    if (Array.isArray(row.excluded_windows) && windowId && row.excluded_windows.includes(windowId)) return false;
+    return true;
+  });
+}
+
+function apw431RuntimeProperties(options, windowId = null) {
+  return (options.glass_field_contract ?? []).filter((row) => {
+    if (!['FIXED','DERIVED','DERIVED_TECHNICAL_METADATA'].includes(row.classification)) return false;
+    if (Array.isArray(row.windows) && row.windows.length && windowId && !row.windows.includes(windowId)) return false;
+    if (Array.isArray(row.excluded_windows) && windowId && row.excluded_windows.includes(windowId)) return false;
+    return true;
+  }).map((row) => ({
+    key: row.field,
+    displayLabel: row.label ?? row.field,
+    classification: row.classification,
+    value: row.value ?? null,
+    source: row.source ?? null,
+  }));
+}
+
 export function adaptApw431FormalSplitV1(runtimePackage) {
   const { core, dimensions, options } = canonicalDocuments(runtimePackage);
   const windows = (core.series_windows ?? []).filter((row)=>active(row) && row.productId === 'SER-YKK-APW431' && row.selectable !== false)
@@ -224,12 +249,52 @@ export function adaptApw431FormalSplitV1(runtimePackage) {
       }
     }
 
-    const glassRows = (options.glass_master ?? []).filter(active);
-    if (glassRows.length) {
-      fields.push(field('glass_base','ガラス',glassRows.map((row)=>choice(row.glass_id,`${row['大分類']}｜${row['日射区分']}｜${row['ガラス色']}`,row)),{required:true}));
-      const glassIds = glassRows.map((row)=>row.glass_id);
-      selection.glass_base = validOriginal(original,glassIds,'glass_base') ?? undefined;
-      if (!selection.glass_base) return finalize();
+    const glassTypes = glassContractRows(options,'glass_type',window.id).filter((row)=>row.classification==='USER_SELECTABLE');
+    if (glassTypes.length) {
+      fields.push(field('glass_type','ガラス種',glassTypes.map((row)=>choice(row.value,row.label,row)),{required:true}));
+      const typeValues = glassTypes.map((row)=>row.value);
+      selection.glass_type = validOriginal(original,typeValues,'glass_type') ?? undefined;
+      if (!selection.glass_type) return finalize();
+    }
+
+    if (selection.glass_type) {
+      const selectedSize = selection.size_mode === 'STANDARD' ? sizeById.get(selection.size) : null;
+      const eligibility = selectedSize?.glassEligibility ?? {};
+      const detailRows = glassContractRows(options,'glass_detail',window.id)
+        .filter((row)=>row.classification==='CONDITIONAL_USER_SELECTABLE')
+        .filter((row)=>{
+          if (selection.size_mode !== 'STANDARD') return true;
+          if (row.value === 'TRANSPARENT') return eligibility.tripleClear === '可';
+          if (row.value === 'PATTERNED') return eligibility.tripleObscure === '可';
+          if (row.value === 'FROSTED') return true;
+          return false;
+        });
+      if (detailRows.length) {
+        fields.push(field('glass_detail','ガラス詳細',detailRows.map((row)=>choice(row.value,row.label,row)),{required:true}));
+        const detailValues = detailRows.map((row)=>row.value);
+        selection.glass_detail = validOriginal(original,detailValues,'glass_detail') ?? undefined;
+        if (!selection.glass_detail) return finalize();
+      }
+
+      const functionRows = glassContractRows(options,'glass_function',window.id)
+        .filter((row)=>row.classification==='CONDITIONAL_USER_SELECTABLE')
+        .filter((row)=>!Array.isArray(row.details) || row.details.includes(selection.glass_detail))
+        .filter((row)=>{
+          if (selection.size_mode !== 'STANDARD') return selection.glass_detail !== 'FROSTED';
+          if (selection.glass_detail === 'FROSTED') return false;
+          const patterned = selection.glass_detail === 'PATTERNED';
+          if (row.value === 'SAFETY_LAMINATED_30MIL') return (patterned ? eligibility.safetyObscure : eligibility.safetyClear) === '可';
+          if (row.value === 'DISASTER_SAFETY_LAMINATED_60MIL') return (patterned ? eligibility.disasterSafetyObscure : eligibility.disasterSafetyClear) === '可';
+          return false;
+        });
+      if (functionRows.length) {
+        fields.push(field('glass_function','ガラス追加機能',functionRows.map((row)=>choice(row.value,row.label,row))));
+        const functionValues = functionRows.map((row)=>row.value);
+        if (functionValues.includes(original.glass_function)) selection.glass_function = original.glass_function;
+      }
+      if (selection.glass_detail === 'FROSTED') {
+        manualWarnings.push('APW431すりガラスは正式Runtimeのガラスコード・耐風圧表による最終構成導出が必要です。UI側でガラス寸法を推測しません。');
+      }
     }
 
     const optionsRows = (options.other_options ?? []).filter(active);
@@ -249,12 +314,15 @@ export function adaptApw431FormalSplitV1(runtimePackage) {
       const errors = [];
       if (dimensionResult?.status==='BLOCKED') errors.push({ errorCode:dimensionResult.code, field:'size', message:'入力寸法は正式Runtimeの製作範囲外です。' });
       if (dimensionResult?.status==='REVIEW_REQUIRED') errors.push({ errorCode:dimensionResult.code, field:'size', message:'正式Runtime上で工法候補が一意に決まりません。' });
+      const clearedFields = Object.keys(original).filter((key)=>key !== 'construction' && !Object.prototype.hasOwnProperty.call(selection,key));
       return {
         selection,
         fields,
         notices,
         manualWarnings,
-        validation:{ status: errors.length ? (dimensionResult?.status ?? 'INVALID') : (missingRequiredFields.length ? 'INCOMPLETE' : 'VALID'), errors, missingRequiredFields },
+        runtimeProperties: apw431RuntimeProperties(options,window?.id ?? null),
+        clearedFields,
+        validation:{ status: errors.length ? (dimensionResult?.status ?? 'INVALID') : (missingRequiredFields.length ? 'INCOMPLETE' : (manualWarnings.length ? 'MANUAL_CHECK' : 'VALID')), errors, missingRequiredFields },
         dimensionResult,
         orderReady,
         runtimeCapabilities:{ orderReady:false, failClosed:true, standardFirst:true, sourceGraphNoInterpolation:true },

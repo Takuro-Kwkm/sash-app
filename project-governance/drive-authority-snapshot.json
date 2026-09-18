@@ -3,8 +3,8 @@
   "read_only": true,
   "observation": {
     "source": "GOOGLE_DRIVE_CONNECTOR",
-    "initial_content_read_at": "2026-09-17T10:24:44.573Z",
-    "metadata_revalidated_at": "2026-09-17T11:26:27.760Z",
+    "initial_content_read_at": "2026-09-18T02:06:00.000Z",
+    "metadata_revalidated_at": "2026-09-18T02:06:00.000Z",
     "note": "Connector observation of the required read-only governing sources. CI may validate this attestation for current-state reconstruction, but post-human execution still requires a live Drive API read."
   },
   "entries": [
@@ -14,7 +14,7 @@
       "version": "v1.7",
       "modified_identity": "2026-09-17T02:33:53.028Z",
       "current_revision_id": "3",
-      "retrieved_at": "2026-09-17T10:24:44.573Z",
+      "retrieved_at": "2026-09-18T02:06:00.000Z",
       "source": "GOOGLE_DRIVE_CONNECTOR",
       "content_read": true
     },
@@ -24,7 +24,7 @@
       "version": "v1.5",
       "modified_identity": "2026-09-17T02:03:06.776Z",
       "current_revision_id": "11",
-      "retrieved_at": "2026-09-17T10:24:44.573Z",
+      "retrieved_at": "2026-09-18T02:06:00.000Z",
       "source": "GOOGLE_DRIVE_CONNECTOR",
       "content_read": true
     },
@@ -34,7 +34,7 @@
       "version": "v1.8",
       "modified_identity": "2026-09-15T14:06:45.535Z",
       "current_revision_id": "0B1PsqngSohhlWDU0RlVlVGdySGtCZFZRamJGQzl1NDZpbHA4PQ",
-      "retrieved_at": "2026-09-17T10:24:44.573Z",
+      "retrieved_at": "2026-09-18T02:06:00.000Z",
       "source": "GOOGLE_DRIVE_CONNECTOR",
       "content_read": true
     },
@@ -42,9 +42,9 @@
       "drive_file_id": "1HMMZ8JdsbJPtL_8LjQfxMF8P_Zb4-LReqvPMFn1pJks",
       "name": "PRODUCT_MASTER_CANONICAL_REGISTRY_v2.0",
       "version": "v2.0",
-      "modified_identity": "2026-09-17T02:52:44.513Z",
-      "current_revision_id": "144",
-      "retrieved_at": "2026-09-17T10:24:44.573Z",
+      "modified_identity": "2026-09-18T01:17:36.046Z",
+      "current_revision_id": "146",
+      "retrieved_at": "2026-09-18T02:06:00.000Z",
       "source": "GOOGLE_DRIVE_CONNECTOR",
       "content_read": true
     },
@@ -54,7 +54,7 @@
       "version": "v1.0",
       "modified_identity": "2026-09-17T02:24:38.079Z",
       "current_revision_id": "3",
-      "retrieved_at": "2026-09-17T10:24:44.573Z",
+      "retrieved_at": "2026-09-18T02:06:00.000Z",
       "source": "GOOGLE_DRIVE_CONNECTOR",
       "content_read": true
     }

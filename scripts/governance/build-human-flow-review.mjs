@@ -234,6 +234,13 @@ for (const series of review.series) {
       const dependency = slot.dependency?.length ? JSON.stringify(slot.dependency).replace(/\|/g, '\\|') : 'none/unspecified';
       md.push(`| ${slot.stage} | ${slot.key} | ${slot.canonical_slot} | ${String(slot.visibility).replace(/\|/g, '\\|')} | ${String(slot.required).replace(/\|/g, '\\|')} | ${dependency} | ${String(slot.downstream_clear).replace(/\|/g, '\\|')} |`);
     }
+    if (window.runtime_properties?.length) {
+      md.push('', '**Fixed / Derived Runtime Properties (not selectors)**', '', '| Stage | Runtime property | classification | value / rule |', '|---|---|---|---|');
+      for (const property of window.runtime_properties) {
+        const detail = property.value ?? property.rule ?? property.source ?? 'derived from formal Runtime';
+        md.push(`| ${property.stage ?? 'GLAZING'} | ${property.key} | ${property.classification} | ${String(detail).replace(/\|/g, '\\|')} |`);
+      }
+    }
     md.push('');
   }
 }

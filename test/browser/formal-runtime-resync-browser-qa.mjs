@@ -8,8 +8,8 @@ const OUT='artifacts/formal-runtime-resync-browser-qa';
 const PRODUCTS=[
   {manufacturer:'LIXIL',id:'SER-LIX-SAMOS2H',version:'v0.9-R3',windows:17},
   {manufacturer:'LIXIL',id:'SER-LIX-SAMOSL',version:'v0.7-R2',windows:17},
-  {manufacturer:'YKK AP',id:'SER-YKK-APW430',version:'20260830-R1',windows:25},
-  {manufacturer:'YKK AP',id:'SER-YKK-APW431',version:'v1.0',windows:6},
+  {manufacturer:'YKK AP',id:'SER-YKK-APW430',version:'20260917-R2',windows:25},
+  {manufacturer:'YKK AP',id:'SER-YKK-APW431',version:'v1.1',windows:6},
 ];
 await mkdir(OUT,{recursive:true});
 const report={status:'RUNNING',desktop:{},mobile:{},consoleErrors:[],pageErrors:[],failedResponses:[]};
@@ -54,6 +54,12 @@ async function exerciseProduct(page,product){
   assertNoTechnicalLeak(result);
   result=await selectAndResolve(page,'window_type',windows.values[0].value);
   assertNoTechnicalLeak(result);
+  if(product.id==='SER-YKK-APW430'||product.id==='SER-YKK-APW431'){
+    const properties=new Map((result.runtimeProperties??[]).map((row)=>[row.key,row]));
+    assert.ok(String(properties.get('glass_spacer')?.classification??'').includes('FIXED'));
+    assert.ok(String(properties.get('gas')?.classification??'').includes('FIXED'));
+    assert.ok(String(properties.get('glass_air_layer')?.classification??'').includes('DERIVED'));
+  }
   for(let i=0;i<24;i+=1){
     const size=result.fields.find((field)=>field.key==='size');
     if(size?.values?.length){

@@ -19,7 +19,9 @@ function fail(code, message, details = {}) {
 }
 
 function normalizedRuntimeRows(raw) {
-  return (raw.runtime_files ?? []).map((row) => ({
+  const runtimeRoles = new Set(['CORE', 'DIMENSIONS', 'OPTIONS']);
+  const rows = raw.runtime_files ?? (raw.artifacts ?? []).filter((row) => runtimeRoles.has(String(row.role ?? '').toUpperCase()));
+  return rows.map((row) => ({
     role: row.role,
     fileName: row.file_name ?? row.name,
     fileId: row.file_id ?? row.id,
@@ -29,6 +31,9 @@ function normalizedRuntimeRows(raw) {
 }
 
 function storageReady(raw) {
+  if (raw.gates && typeof raw.gates === 'object') {
+    return raw.gates.storage === 'PASS' && raw.gates.registry === 'PASS';
+  }
   if (!['PASS', 'CANONICAL', 'DRIVE_CANONICAL'].includes(String(raw.storage_status ?? ''))) return false;
   if (raw.storage_gate !== undefined && raw.storage_gate !== null && raw.storage_gate !== 'PASS') return false;
   if (raw.registry_gate !== undefined && raw.registry_gate !== null && raw.registry_gate !== 'PASS') return false;
@@ -36,6 +41,12 @@ function storageReady(raw) {
 }
 
 function formalReady(raw) {
+  if (raw.release_status === 'FORMAL_PASS' && raw.gates && typeof raw.gates === 'object') {
+    const required = ['content', 'dependency', 'qa', 'artifact', 'storage', 'registry'];
+    if (!required.every((gate) => raw.gates[gate] === 'PASS')) return false;
+    if (Array.isArray(raw.blocking_items) && raw.blocking_items.length) return false;
+    return storageReady(raw);
+  }
   const packageGateReady = raw.package_gate === 'PASS'
     || (raw.package_gate === 'PASS_CONTENT_DEPENDENCY_QA'
       && raw.formal_pass === true
@@ -72,6 +83,14 @@ function decodeTransport(encoded, codec, fileName) {
 
 async function readPackedTransport(transport, fileName) {
   if (!transport?.paths?.length) fail('FORMAL_RUNTIME_FILE_MISSING', `Formal Runtime transport has no paths: ${fileName}`, { fileName, transport });
+  if (transport.codec === 'raw-file' || transport.codec === 'raw-parts') {
+    try {
+      const parts = await Promise.all(transport.paths.map((path) => readFile(path)));
+      return Buffer.concat(parts);
+    } catch (cause) {
+      fail('FORMAL_RUNTIME_FILE_MISSING', `Formal Runtime transport is not materialized: ${fileName}`, { cause, fileName, transport });
+    }
+  }
   let encoded;
   try {
     encoded = (await Promise.all(transport.paths.map((path) => readFile(path, 'utf8')))).join('');

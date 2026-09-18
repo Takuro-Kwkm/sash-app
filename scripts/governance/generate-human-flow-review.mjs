@@ -257,6 +257,15 @@ for (const integration of integrations) {
     const signatureBasis = slotRows.map((row) => [row.stage, row.canonical_slot, row.visibility, row.required, row.dependency]);
     reviewedWindows.push({
       ...window, stage_order: stages, slots: slotRows,
+      runtime_properties: (baseline.runtimeProperties ?? []).map((property) => ({
+        stage: 'GLAZING',
+        key: property.key,
+        label: property.displayLabel ?? property.key,
+        classification: property.classification ?? 'RUNTIME_PROPERTY',
+        value: property.displayValue ?? property.value ?? null,
+        rule: property.rule ?? null,
+        source: property.source ?? null,
+      })),
       standard_custom: {
         size_stage_present: slotRows.some((row) => row.stage === 'SIZE'), size_mode_selector_present: slotRows.some((row) => row.canonical_slot === 'size_mode'),
         baseline_size_mode_values: sizeModes,
@@ -319,6 +328,13 @@ for (const series of report.series) {
     for (const slot of window.slots) {
       const dependency = slot.dependency?.length ? JSON.stringify(slot.dependency).replace(/\|/g, '\\|') : 'none/unspecified';
       md.push(`| ${slot.stage} | ${slot.key} | ${slot.canonical_slot} | ${String(slot.visibility).replace(/\|/g, '\\|')} | ${String(slot.required).replace(/\|/g, '\\|')} | ${dependency} | ${String(slot.downstream_clear).replace(/\|/g, '\\|')} |`);
+    }
+    if (window.runtime_properties?.length) {
+      md.push('', '**Fixed / Derived Runtime Properties (not selectors)**', '', '| Stage | Runtime property | classification | value / rule |', '|---|---|---|---|');
+      for (const property of window.runtime_properties) {
+        const detail = property.value ?? property.rule ?? property.source ?? 'derived from formal Runtime';
+        md.push(`| ${property.stage} | ${property.key} | ${property.classification} | ${String(detail).replace(/\|/g, '\\|')} |`);
+      }
     }
     md.push('');
   }

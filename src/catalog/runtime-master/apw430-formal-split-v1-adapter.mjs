@@ -95,6 +95,24 @@ function glassChoices(options, windowId, sizeId) {
   });
 }
 
+
+function contractToken(id, values = []) {
+  const token = String(id ?? '');
+  return values.find((value) => token.endsWith(String(value))) ?? null;
+}
+
+function apw430RuntimeProperties(options) {
+  const contract = options.glass_runtime_contract ?? {};
+  const rows = [
+    { key:'glass_base', displayLabel:'ガラス構成', classification:contract.glass_base?.classification ?? 'FIXED', value:contract.glass_base?.value ?? null, displayValue:contract.glass_base?.display ?? contract.glass_base?.value ?? null },
+    { key:'glass_spacer', displayLabel:'スペーサー', classification:contract.spacer?.classification ?? 'FIXED', value:contract.spacer?.value ?? null, displayValue:contract.spacer?.value ?? null },
+    { key:'gas', displayLabel:'封入ガス', classification:contract.gas?.classification ?? 'FIXED', value:contract.gas?.value ?? null, displayValue:contract.gas?.value ?? null },
+    { key:'glass_air_layer', displayLabel:'中空層', classification:contract.air_layer?.classification ?? 'DERIVED', value:null, rule:contract.air_layer?.rule ?? null },
+    { key:'glass_composition', displayLabel:'ガラス構成詳細', classification:contract.glass_composition?.classification ?? 'DERIVED_TECHNICAL_METADATA', value:null, source:contract.glass_composition?.source ?? null },
+  ];
+  return rows.filter((row) => row.value !== null || row.rule || row.source);
+}
+
 function optionChoices(options, selection) {
   const rows = (options.other_options ?? []).filter(active);
   return rows.filter((option) => !(options.option_dependencies ?? []).some((rule) => {
@@ -209,19 +227,75 @@ export function adaptApw430FormalSplitV1(runtimePackage) {
       }
     }
 
-    if (selection.size_mode === 'STANDARD' && selection.size) {
-      const glass = glassChoices(options, selection.window_type, selection.size);
-      if (glass.length) {
-        fields.push(field('glass_base', 'ガラス', glass.map((row) => choice(row.glass_id, `${row['ガラス大分類']}｜${row['Low-E区分']}｜${row['見え方']}`, row)), { required: true }));
-        if (glass.some((row) => row.glass_id === original.glass_base)) selection.glass_base = original.glass_base;
-        if (selection.glass_base) {
-          const selectedGlass = glass.find((row) => row.glass_id === selection.glass_base);
-          const functions = (options.glass_additional_options ?? []).filter(active).filter((row) => String(selectedGlass['ガラス大分類']).includes('トリプル') ? row['トリプル適用'] !== '不可' : row['ペア適用'] !== '不可');
-          if (functions.length) fields.push(field('glass_function', 'ガラス追加機能', functions.map((row) => choice(row.option_id, row['表示名'], row))));
-          if (functions.some((row) => row.option_id === original.glass_function)) selection.glass_function = original.glass_function;
-          const appearances = (options.glass_appearances ?? []).filter(active).filter((row) => String(selectedGlass['ガラス大分類']).includes('トリプル') ? row['トリプル適用'] !== '不可' : row['ペア適用'] !== '不可');
-          if (appearances.length) fields.push(field('glass_type', 'ガラス種', appearances.map((row) => choice(row.appearance_id, row['表示名'], row))));
-          if (appearances.some((row) => row.appearance_id === original.glass_type)) selection.glass_type = original.glass_type;
+    if ((selection.size_mode === 'STANDARD' && selection.size) || selection.size_mode === 'CUSTOM') {
+      const contract = options.glass_runtime_contract ?? {};
+      const availableGlassMaster = selection.size_mode === 'STANDARD'
+        ? glassChoices(options, selection.window_type, selection.size)
+        : (options.glass_master ?? []).filter(active);
+      const glassTypes = availableGlassMaster.length ? (contract.glass_type?.values ?? []) : [];
+      if (glassTypes.length) {
+        fields.push(field('glass_type', 'ガラス種', glassTypes.map((row) => choice(row.id, row.display, row)), { required: true }));
+        if (glassTypes.some((row) => row.id === original.glass_type)) selection.glass_type = original.glass_type;
+      }
+
+      if (selection.glass_type) {
+        const detailTokens = contract.glass_detail?.values ?? ['TRANSPARENT','PATTERN','FROST'];
+        const appearances = (options.glass_appearances ?? []).filter(active).map((row) => ({ row, token: contractToken(row.appearance_id, detailTokens) })).filter(({ token }) => token);
+        let allowedDetails = new Set(detailTokens);
+        let allowedFunctions = [];
+        let gridAllowed = false;
+
+        if (selection.size_mode === 'STANDARD') {
+          const dependency = (options.standard_size_glass_dependencies ?? []).find((row) => row.size_id === selection.size && row.series_window_id === selection.window_type);
+          allowedDetails = new Set([
+            ...(dependency?.transparent_functions?.length ? ['TRANSPARENT'] : []),
+            ...(dependency?.pattern_functions?.length ? ['PATTERN'] : []),
+            ...(dependency?.frost_candidate ? ['FROST'] : []),
+          ]);
+          const grid = (options.standard_grid_count_matrix ?? []).find((row) => row.size_id === selection.size && row.series_window_id === selection.window_type);
+          gridAllowed = Boolean(grid?.grid_in_available);
+        } else {
+          const dependency = (options.custom_glass_dependencies ?? []).find((row) => row.series_window_id === selection.window_type);
+          allowedDetails = new Set(dependency?.standard_appearance_candidates ?? []);
+          gridAllowed = String(dependency?.grid_in ?? '').startsWith('AVAILABLE');
+        }
+
+        const detailRows = appearances.filter(({ token }) => allowedDetails.has(token));
+        if (detailRows.length) {
+          fields.push(field('glass_detail', 'ガラス詳細', detailRows.map(({ row, token }) => choice(token, row['表示名'], row)), { required: true }));
+          if (detailRows.some(({ token }) => token === original.glass_detail)) selection.glass_detail = original.glass_detail;
+        }
+
+        if (selection.glass_detail) {
+          const selectedDetail = selection.glass_detail;
+          if (selection.size_mode === 'STANDARD') {
+            const dependency = (options.standard_size_glass_dependencies ?? []).find((row) => row.size_id === selection.size && row.series_window_id === selection.window_type);
+            if (selectedDetail === 'TRANSPARENT') allowedFunctions = dependency?.transparent_functions ?? [];
+            else if (selectedDetail === 'PATTERN') allowedFunctions = dependency?.pattern_functions ?? [];
+            else if (selectedDetail === 'FROST' && dependency?.frost_candidate) allowedFunctions = ['NORMAL'];
+            const grid = (options.standard_grid_count_matrix ?? []).find((row) => row.size_id === selection.size && row.series_window_id === selection.window_type);
+            if (gridAllowed && (grid?.detail_allowed ?? []).includes(selectedDetail)) allowedFunctions = [...allowedFunctions, 'GRID-IN'];
+          } else {
+            const dependency = (options.custom_glass_dependencies ?? []).find((row) => row.series_window_id === selection.window_type);
+            allowedFunctions = ['NORMAL'];
+            if ((dependency?.laminated_detail_constraint ?? []).includes(selectedDetail)) allowedFunctions.push(...(dependency?.laminated_candidates ?? []));
+            if (gridAllowed && selectedDetail !== 'FROST') allowedFunctions.push('GRID-IN');
+          }
+          allowedFunctions = unique(allowedFunctions);
+          const functionTokens = contract.glass_function?.values ?? ['NORMAL','SAFE-LAM','DISASTER-LAM','GRID-IN'];
+          const functions = (options.glass_additional_options ?? []).filter(active)
+            .map((row) => ({ row, token: contractToken(row.option_id, functionTokens) }))
+            .filter(({ token }) => token && allowedFunctions.includes(token));
+          if (functions.length) {
+            fields.push(field('glass_function', 'ガラス追加機能', functions.map(({ row, token }) => choice(token, row['表示名'], row)), { required: true }));
+            if (functions.some(({ token }) => token === original.glass_function)) selection.glass_function = original.glass_function;
+          }
+          if (selectedDetail === 'FROST') {
+            manualWarnings.push('APW430すりガラスは正式Runtimeの検証済みMANUAL_CHECK方針に従い、耐風圧・ガラス寸法をメーカー資料で最終確認してください。');
+          }
+          if (selection.size_mode === 'CUSTOM') {
+            manualWarnings.push('APW430特注ガラスは正式Runtimeの検証済みMANUAL_CHECK方針に従い、ガラス寸法・構成をメーカー資料で最終確認してください。');
+          }
         }
       }
     }
@@ -255,6 +329,7 @@ export function adaptApw430FormalSplitV1(runtimePackage) {
         fields,
         notices,
         manualWarnings,
+        runtimeProperties: apw430RuntimeProperties(options),
         dimensionResult: selection.size ? (dimensions.standard_sizes ?? []).find((row) => row.id === selection.size) ?? null : null,
         clearedFields,
         validation: { status: missingRequiredFields.length ? 'INCOMPLETE' : manualWarnings.length ? 'MANUAL_CHECK' : 'VALID', errors: [], missingRequiredFields },
