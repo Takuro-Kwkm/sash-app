@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import {
   GLOBAL_WINDOW_STAGE_ORDER,
   NEW_CONSTRUCTION_CANONICAL_SLOT_ORDER,
+  INSTALLATION_ENVIRONMENT_CANONICAL_VALUES,
   canonicalStageForSlot,
   classifyGlazingChoice,
   auditCanonicalGlazingField,
@@ -13,9 +14,13 @@ test('canonical window stages and new-construction slots are globally ordered', 
     'PRODUCT','OPENING','CONFIGURATION','SIZE','FINISH','SCREEN','GLAZING','INSTALLATION_SURVEY','OPTION',
   ]);
   assert.equal(canonicalStageForSlot('glass_type'), 'GLAZING');
+  assert.equal(canonicalStageForSlot('installation_environment'), 'INSTALLATION_SURVEY');
+  assert.deepEqual(INSTALLATION_ENVIRONMENT_CANONICAL_VALUES, ['BATHROOM','NON_BATHROOM']);
   assert.ok(NEW_CONSTRUCTION_CANONICAL_SLOT_ORDER.indexOf('screen_net') < NEW_CONSTRUCTION_CANONICAL_SLOT_ORDER.indexOf('glass_base'));
   assert.ok(NEW_CONSTRUCTION_CANONICAL_SLOT_ORDER.indexOf('glass_type') < NEW_CONSTRUCTION_CANONICAL_SLOT_ORDER.indexOf('glass_detail'));
   assert.ok(NEW_CONSTRUCTION_CANONICAL_SLOT_ORDER.indexOf('glass_detail') < NEW_CONSTRUCTION_CANONICAL_SLOT_ORDER.indexOf('glass_function'));
+  assert.ok(NEW_CONSTRUCTION_CANONICAL_SLOT_ORDER.indexOf('glass_air_layer') < NEW_CONSTRUCTION_CANONICAL_SLOT_ORDER.indexOf('installation_environment'));
+  assert.ok(NEW_CONSTRUCTION_CANONICAL_SLOT_ORDER.indexOf('installation_environment') < NEW_CONSTRUCTION_CANONICAL_SLOT_ORDER.indexOf('option'));
 });
 
 test('glazing value classifier separates appearance, detail, function and technical composition', () => {
