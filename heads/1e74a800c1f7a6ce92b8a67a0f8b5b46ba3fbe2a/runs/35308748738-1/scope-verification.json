@@ -1,0 +1,27 @@
+{
+  "exact_head": "1e74a800c1f7a6ce92b8a67a0f8b5b46ba3fbe2a",
+  "base": "a46427e795ec6a8f704f7d115e0e09a509f209c5",
+  "task_id": "FRAME_ANGLE_GLOBAL_FLOW_20260918",
+  "requested_change_scope": "Implement canonical frame_angle in the shared Global Window Selection Flow from the revised Drive specifications; refresh read-only Drive authority and Runtime snapshots; expose frame_angle classification/visibility/allowed/fixed/dependency/clear/STANDARD-CUSTOM state in the regenerated Human Review artifact; do not mutate Product Master, Formal Runtime packages, Runtime JSON, or Product Master Registry.",
+  "changed_files": [
+    ".github/workflows/project-governance-gate.yml",
+    "project-governance/change-scope.json",
+    "project-governance/drive-authority-policy.json",
+    "project-governance/drive-authority-snapshot.json",
+    "project-governance/runtime-snapshot.json",
+    "scripts/governance/build-human-flow-review.mjs",
+    "scripts/governance/generate-human-flow-review.mjs",
+    "src/catalog/runtime-master/canonical-window-semantic-schema.mjs",
+    "src/catalog/runtime-master/inner-window-runtime-ui-contract.mjs",
+    "src/catalog/runtime-master/new-construction-sash-runtime-ui-contract.mjs",
+    "test/76-frame-angle-global-flow.test.mjs"
+  ],
+  "requested_diff_coverage": "PASS",
+  "missing_requested_files": [],
+  "unrequested_diff_count": 0,
+  "unrequested_files": [],
+  "repository_runtime_materialization_changed_files": [],
+  "canonical_product_master_sources_read_only": true,
+  "product_master_mutation": 0,
+  "status": "PASS"
+}
