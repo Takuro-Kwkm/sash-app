@@ -1,0 +1,104 @@
+﻿{
+  "schema_version": "product-master-runtime-manifest/2.0",
+  "manufacturer": "YKK AP",
+  "series": "APW431",
+  "series_key": "YKK AP::APW431",
+  "package_version": "v1.2",
+  "verification_revision": "20260918-FRAME-ANGLE-R1",
+  "authoring": {
+    "file_name": "YKKAP_APW431_AUTHORING_MASTER_v1.2_FRAME_ANGLE_RECOVERY.xlsx",
+    "file_id": "1LbcIptIWOYogqCF9OPhGQ3L6itox0yND",
+    "sha256": "f6e8a4e0b55179d7f26bd6f446e563efcb2b3b5988d7c28e219aed5f9949a1ab",
+    "bytes": 226881
+  },
+  "runtime_status": "READY",
+  "runtime_files": [
+    {
+      "role": "CORE",
+      "file_name": "apw431_core_v1.2.json",
+      "file_id": "1Tdc-M1JWXOvFhDYiYpwlaVm2QJ_-BujQ",
+      "sha256": "33db499b08c4d987d3979219daf0428d277d6aff0c3ee5453cf21795826069f6",
+      "bytes": 71538
+    },
+    {
+      "role": "DIMENSIONS",
+      "file_name": "apw431_dimensions_v1.2.json",
+      "file_id": "1nJjAqm23gaMdIYUaTrFQzq6pKZsFTiUJ",
+      "sha256": "5a00cb3e2350f5a5a651b2195673aef0de594d41a1e1630eb4ee7a8237342cf3",
+      "bytes": 1818834
+    },
+    {
+      "role": "OPTIONS",
+      "file_name": "apw431_options_v1.2.json",
+      "file_id": "18Q8MkacIL5W-kXFlo2bcdK_G3ypj1Ady",
+      "sha256": "7a2d6a7556b2f0d852aa1b5119dbe3767505aa64fe56fa9dfa970c30a1413101",
+      "bytes": 127549
+    }
+  ],
+  "qa": {
+    "report_file_id": "1sDdkvtXGbGSfoJpqTaCXAKj6olMzJ2WC",
+    "cases_file_id": "18zAqx_MYOwp4Z8uMbMMOWbCMyE42-oTz",
+    "case_count": 1179,
+    "pass_count": 1179,
+    "fail_count": 0,
+    "unverified_count": 0,
+    "status": "PASS"
+  },
+  "semantic_recovery": {
+    "canonical_field": "frame_angle",
+    "stage": "CONFIGURATION",
+    "canonical_values": [
+      "WITH_ANGLE",
+      "WITHOUT_ANGLE"
+    ],
+    "base_window_count": 6,
+    "window_classification": {
+      "CONDITIONAL_USER_SELECTABLE": 4,
+      "FIXED": 2,
+      "USER_SELECTABLE": 0,
+      "NOT_APPLICABLE": 0
+    },
+    "with_angle_applicable_window_count": 4,
+    "without_angle_applicable_window_count": 6,
+    "fixed_with_angle_count": 0,
+    "fixed_without_angle_count": 2,
+    "standard_projection_count": 332,
+    "custom_projection_count": 29,
+    "unknown_fallback": "FORBIDDEN"
+  },
+  "documentation_file": {
+    "file_name": "PRODUCT_MASTER_MANIFEST.md",
+    "file_id": "1emxbMVPK6yjV2s8YeBHPAD7ppePFE8j4",
+    "status": "FORMAL_PASS"
+  },
+  "package_gate": "PASS",
+  "storage_status": "CANONICAL",
+  "registry_gate": "PASS",
+  "canonical_storage_verified": true,
+  "drive_roundtrip_verified": true,
+  "working_folder_id": "12-asRdFp58GmOSJqYXhVPfg4PKQ9afOq",
+  "canonical_folder_id": "16SO5cC-ix7F_vwGLqAyrr62zwDRjXBCB",
+  "old_folder_id": "1VElfoWdIXoXS1wK6qQ6NolSObKHkm6nq",
+  "primary_official_evidence": [
+    {
+      "file_id": "1j9PtW8yoKBZ4Nodm58wU3QtOCvxlEja9",
+      "title": "202607_YKKAP_APW430_商品カタログ.pdf",
+      "pages": [
+        "P.32",
+        "P.80-P.84",
+        "P.100",
+        "P.104",
+        "P.108",
+        "P.112-P.114"
+      ]
+    }
+  ],
+  "requested_diff_coverage": "PASS",
+  "unrequested_diff_count": 0,
+  "other_series_changed_files": 0,
+  "global_flow_changed_files": 0,
+  "ui_changed_files": 0,
+  "blocking_items": [],
+  "generated_at": "2026-09-18T15:20:00+09:00",
+  "formalized_at": "2026-09-18T15:21:56+09:00"
+}
