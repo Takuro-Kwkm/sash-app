@@ -5,7 +5,7 @@ const head=currentExactHead();
 const changeScope=readJson('project-governance/change-scope.json');
 if(changeScope.task_classification!=='NON-PRODUCT-MASTER'||changeScope.product_master_mutation!==0||changeScope.canonical_product_master_sources_read_only!==true)throw Error('CHANGE_SCOPE_CLASSIFICATION_INVALID');
 const base=changeScope.verified_start_head;
-const changed=git(['diff','--name-only',base,head]).split('\n').filter(Boolean);
+const changed=git(['-c','core.quotepath=false','diff','--name-only',base,head]).split('\n').filter(Boolean);
 const allowedExact=new Set(changeScope.allowed_exact_files??[]);
 const allowedPrefixes=changeScope.allowed_prefixes??[];
 const unrequested=changed.filter(p=>!allowedExact.has(p)&&!allowedPrefixes.some(prefix=>p.startsWith(prefix)));
