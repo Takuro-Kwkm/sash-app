@@ -1,0 +1,37 @@
+{
+  "schema_version": "1.0.0",
+  "task_id": "APW430_APW431_FORMAL_RUNTIME_SYNC_20260918",
+  "task_classification": "NON-PRODUCT-MASTER",
+  "product_master_mutation": 0,
+  "verified_start_head": "d9ff161de1b37a9f745dea8783118f4b6a43d734",
+  "requested_change_scope": "Read-only sync of newly FORMAL APW430 20260917-R2 and APW431 v1.1 Runtime identities into the app integration lane, adapter alignment to formal glass contracts, governance snapshots, Human Review artifact exposure, and direct validation tests.",
+  "allowed_exact_files": [
+    ".github/workflows/ci.yml",
+    "project-governance/change-scope.json",
+    "project-governance/drive-authority-snapshot.json",
+    "project-governance/runtime-snapshot.json",
+    "scripts/governance/build-human-flow-review.mjs",
+    "scripts/governance/generate-human-flow-review.mjs",
+    "scripts/governance/materialize-current-state.mjs",
+    "src/catalog/runtime-master/app-runtime-integration-registry.mjs",
+    "src/catalog/runtime-master/apw430-formal-split-v1-adapter.mjs",
+    "src/catalog/runtime-master/apw431-formal-split-v1-adapter.mjs",
+    "src/catalog/runtime-master/formal-product-runtime-loader.mjs",
+    "src/catalog/runtime-master/runtime-master-registry.mjs",
+    "test/75-formal-runtime-resync.test.mjs",
+    "test/browser/formal-runtime-resync-browser-qa.mjs"
+  ],
+  "allowed_prefixes": [
+    "src/catalog/runtime-master-packages/ykkap-apw430-20260917-r2/",
+    "src/catalog/runtime-master-packages/ykkap-apw431-v1.1/"
+  ],
+  "required_changed_files": [
+    "project-governance/runtime-snapshot.json",
+    "src/catalog/runtime-master/app-runtime-integration-registry.mjs",
+    "src/catalog/runtime-master/apw430-formal-split-v1-adapter.mjs",
+    "src/catalog/runtime-master/apw431-formal-split-v1-adapter.mjs",
+    "src/catalog/runtime-master/formal-product-runtime-loader.mjs",
+    "src/catalog/runtime-master/runtime-master-registry.mjs"
+  ],
+  "canonical_product_master_sources_read_only": true
+}
