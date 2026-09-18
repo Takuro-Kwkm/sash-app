@@ -7,7 +7,8 @@
     "sheet": "正本Registry",
     "observed_at": "2026-09-18",
     "selection_rule": "master_status=FORMAL_PASS AND runtime_status=READY AND package_gate=PASS AND storage_gate=PASS, intersected with repository Window UI integration categories",
-    "revision_id": "150"
+    "revision_id": null,
+    "readback_identity": "LIVE_REGISTRY_READ_2026-09-18_AFTER_APW430_R3_APW431_V1_2_FORMALIZATION"
   },
   "window_ui_categories": [
     "NEW_CONSTRUCTION_EXTERIOR_WINDOW",
@@ -67,8 +68,8 @@
       "manufacturer": "YKK AP",
       "registry_series": "APW430",
       "app_series": "APW430",
-      "package_version": "20260917-R2",
-      "runtime_manifest_id": "1NzsX4C4M2fpOBUvXdXpPLYYfXfF7PNeo",
+      "package_version": "20260918-R3",
+      "runtime_manifest_id": "1hyX2Fgu1m28xmkM5I53GZ-xC3PX0b9Hk",
       "master_status": "FORMAL_PASS",
       "runtime_status": "READY",
       "package_gate": "PASS",
@@ -79,8 +80,8 @@
       "manufacturer": "YKK AP",
       "registry_series": "APW431",
       "app_series": "APW431",
-      "package_version": "v1.1",
-      "runtime_manifest_id": "1ZcgwXjq0KHiVDG8KCvV6k3NAZM-CDk3J",
+      "package_version": "v1.2",
+      "runtime_manifest_id": "16-hPgdJYmkl30MvonP_natv3bPV1C-3x",
       "master_status": "FORMAL_PASS",
       "runtime_status": "READY",
       "package_gate": "PASS",
