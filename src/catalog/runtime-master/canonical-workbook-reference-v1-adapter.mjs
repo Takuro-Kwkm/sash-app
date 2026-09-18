@@ -117,6 +117,164 @@ function formalRuleSpec(rule) {
   return selector.specific_spec ?? selector.window_spec ?? null;
 }
 
+function runtimeSemanticEntries(document) {
+  return Object.entries(document?.runtime_semantics ?? {}).filter(([,semantic]) => semantic && typeof semantic === 'object' && has(semantic.canonical_field));
+}
+function runtimeSemanticRuleRows(document, fieldName) {
+  const rows=[];
+  for (const value of Object.values(document ?? {})) {
+    if (!Array.isArray(value)) continue;
+    for (const row of value) if (row && typeof row === 'object' && same(row.canonicalField ?? row.canonical_field,fieldName)) rows.push(row);
+  }
+  return rows;
+}
+function runtimeDependencyRows(model,type=null) {
+  const rows=Array.isArray(model.document?.runtime_dependencies) ? model.document.runtime_dependencies.filter((row)=>row?.status!=='BLOCKED'&&row?.status!=='PENDING') : [];
+  return type ? rows.filter((row)=>row.type===type) : rows;
+}
+function sourceWindowIncludes(sourceWindowIdValue,windowId) {
+  if (!has(sourceWindowIdValue) || sourceWindowIdValue==='*') return true;
+  return String(sourceWindowIdValue).split('/').map((value)=>value.trim()).filter(Boolean).some((value)=>same(value,windowId));
+}
+function dependencyConditionMatches(condition,selection) {
+  if (!condition || typeof condition !== 'object') return true;
+  for (const [key,value] of Object.entries(condition)) {
+    if (key==='option_selected') {
+      const options=Array.isArray(selection.option)?selection.option:has(selection.option)?[selection.option]:[];
+      if (!options.some((option)=>same(option,value))) return false;
+      continue;
+    }
+    if (!same(selection[key],value)) return false;
+  }
+  return true;
+}
+function semanticConditionMatches(condition,selection) {
+  const controlKeys=new Set(['classification','allowedValues','fixedValue','evidence','verificationStatus']);
+  const predicates=Object.entries(condition??{}).filter(([key])=>!controlKeys.has(key));
+  return predicates.every(([key,value])=>same(selection[key],value));
+}
+function effectiveSemanticRule(model,fieldName,selection) {
+  const windowId=selection?.window_type;
+  const base=runtimeSemanticRuleRows(model.document,fieldName).find((row)=>!has(row.windowId??row.window_id)||same(row.windowId??row.window_id,windowId));
+  if (!base) return null;
+  let effective={...base};
+  for (const condition of base.conditions??[]) if (semanticConditionMatches(condition,selection)) effective={...effective,...condition};
+  for (const dependency of runtimeDependencyRows(model,'FIXED_VALUE')) {
+    if (!dependency?.set || !Object.prototype.hasOwnProperty.call(dependency.set,fieldName)) continue;
+    if (!dependencyConditionMatches(dependency.when,selection)) continue;
+    effective={...effective,classification:'FIXED',allowedValues:[dependency.set[fieldName]],fixedValue:dependency.set[fieldName],dependencyId:dependency.dependency_id};
+  }
+  return effective;
+}
+function augmentModelForRuntimeSemantics(model) {
+  const semantics=Object.fromEntries(runtimeSemanticEntries(model.document));
+  if (!Object.keys(semantics).length) return { ...model, runtimeSemantics:semantics };
+  const fields=[...model.fields];
+  const values=model.values.map((row)=>{
+    if (row.field_name!=='screen_form') return row;
+    const source=model.screens.find((screen)=>same(screen.screen_type??screen.label,row.canonical_value)&&has(screen.label));
+    return source && row.display_label===row.canonical_value ? {...row,display_label:source.label} : row;
+  });
+  for (const [fieldName,semantic] of Object.entries(semantics)) {
+    const rules=runtimeSemanticRuleRows(model.document,fieldName);
+    const parents=uniq(rules.flatMap((rule)=>Array.isArray(rule.dependency)?rule.dependency:[]).filter((key)=>typeof key==='string'&&key===key.toLowerCase()&&key!==fieldName&&key!=='option'),(key)=>key);
+    if (!fields.some((field)=>field.field_name===fieldName)) fields.push({
+      field_name:fieldName,
+      display_label:fieldName,
+      display_order:fieldName==='frame_angle'?55:fieldName==='installation_environment'?200:190,
+      data_type:'enum',
+      parent_fields:parents.length?parents:['window_type'],
+      required_mode:'OPTIONAL',
+      selection_mode:'USER_SELECTABLE',
+      runtime_included:true,
+    });
+    for (const value of semantic.canonical_values??[]) {
+      if (values.some((row)=>row.field_name===fieldName&&same(row.canonical_value,value))) continue;
+      values.push({value_id:`${fieldName}:${value}`,field_name:fieldName,canonical_value:value,display_label:String(value),status:'CURRENT',manual_check:false,user_selectable:true,runtime_selectable:true,source:{runtimeSemantic:true,role:semantic.role,stage:semantic.stage}});
+    }
+  }
+  return {...model,fields,values,runtimeSemantics:semantics};
+}
+function selectedScreenIds(model,selection,windowId,candidates=null) {
+  if (selection.screen_presence!=='あり') return [];
+  const rows=(candidates??model.screens).filter((row)=>same(row.window_id,windowId));
+  return rows.filter((row)=>{
+    const form=row.screen_type??row.label;
+    if (has(selection.screen_form)&&!same(form,selection.screen_form)) return false;
+    if (has(selection.screen_net)&&!same(row.mesh,selection.screen_net)) return false;
+    return true;
+  }).map((row)=>row.id).filter(has);
+}
+function screenAllowedByRuntimeDependencies(model,row,selection,specId) {
+  for (const dependency of runtimeDependencyRows(model,'SCREEN_APPLICABILITY')) {
+    if (!(dependency.screen_ids??[]).some((id)=>same(id,row.id))) continue;
+    if ((dependency.excluded_spec_ids??[]).some((id)=>same(id,specId))) return false;
+    for (const [key,value] of Object.entries(dependency.requires??{})) if (!same(selection[key],value)) return false;
+  }
+  return true;
+}
+function optionRelationMatches(relation,selection,windowId) {
+  if (relation?.active===false || !same(relation?.window_id,windowId)) return false;
+  if (relation.applicability==='APPLICABLE') return true;
+  if (relation.applicability==='CONDITIONAL_APPLICABLE') return dependencyConditionMatches(relation.required_when,selection);
+  return false;
+}
+function optionRowsForRuntimeSelection(model,selection,windowId) {
+  return baseValueRows(model,'option').filter((row)=>{
+    const relations=model.optionApplicability.filter((relation)=>same(relation.option_id,row.canonical_value));
+    if (relations.length) return relations.some((relation)=>optionRelationMatches(relation,selection,windowId));
+    return sourceWindowIncludes(row.source?.window_id??row.source?.['窓種ID'],windowId);
+  });
+}
+function applyRuntimeOptionRequirements(model,selection,windowId,screenCandidates,errors) {
+  const selected=Array.isArray(selection.option)?selection.option:has(selection.option)?[selection.option]:[];
+  const screenIds=selectedScreenIds(model,selection,windowId,screenCandidates);
+  for (const dependency of runtimeDependencyRows(model,'OPTION_REQUIREMENT')) {
+    if ((dependency.applicable_window_ids??[]).length && !(dependency.applicable_window_ids??[]).some((id)=>same(id,windowId))) continue;
+    if (!dependencyConditionMatches(dependency.when,selection)) continue;
+    if ((dependency.forbid_screen_ids??[]).some((id)=>screenIds.some((selectedId)=>same(selectedId,id)))) {
+      errors.push({code:'OPTION_SCREEN_CONFLICT',field:'option',ruleId:dependency.dependency_id,message:`${dependency.dependency_id}: selected screen is incompatible with the selected option state`});
+    }
+    for (const optionId of dependency.require??[]) if (!selected.some((value)=>same(value,optionId))) {
+      errors.push({code:'REQUIRED_OPTION_MISSING',field:'option',value:optionId,ruleId:dependency.dependency_id,message:`${dependency.dependency_id}: required option ${optionId} is not selected`});
+    }
+  }
+}
+function applyRuntimeSemanticField(model,fieldName,selection,pushField,clearField,errors) {
+  const semantic=model.runtimeSemantics?.[fieldName];
+  if (!semantic) return;
+  const rule=effectiveSemanticRule(model,fieldName,selection);
+  if (!rule) {
+    clearField(fieldName);
+    if (semantic.unknown_fallback==='FORBIDDEN') errors.push({code:'RUNTIME_SEMANTIC_RULE_MISSING',field:fieldName,value:selection.window_type});
+    return;
+  }
+  const classification=rule.classification;
+  const allowed=rule.allowedValues??rule.allowed_values??[];
+  const rows=allowed.map((value)=>baseValueRows(model,fieldName).find((row)=>same(row.canonical_value,value))).filter(Boolean);
+  if (classification==='NOT_APPLICABLE') { clearField(fieldName); return; }
+  if (classification==='FIXED') {
+    const fixed=rule.fixedValue??rule.fixed_value??allowed[0];
+    if (!has(fixed) || !rows.some((row)=>same(row.canonical_value,fixed))) {
+      errors.push({code:'RUNTIME_SEMANTIC_FIXED_VALUE_INVALID',field:fieldName,ruleId:rule.ruleId??rule.rule_id});
+      clearField(fieldName);
+      return;
+    }
+    if (has(selection[fieldName])&&!same(selection[fieldName],fixed)) clearField(fieldName);
+    selection[fieldName]=fixed;
+    pushField(fieldName,rows,false,false,{readOnly:true,resolvedByRule:true});
+    return;
+  }
+  if (!['USER_SELECTABLE','CONDITIONAL_USER_SELECTABLE'].includes(classification)) {
+    errors.push({code:'RUNTIME_SEMANTIC_CLASSIFICATION_UNSUPPORTED',field:fieldName,value:classification,ruleId:rule.ruleId??rule.rule_id});
+    clearField(fieldName);
+    return;
+  }
+  if (!rows.length || rows.length!==allowed.length) errors.push({code:'RUNTIME_SEMANTIC_ALLOWED_VALUE_MISSING',field:fieldName,ruleId:rule.ruleId??rule.rule_id});
+  pushField(fieldName,rows,rule.required===true||semantic.required===true,semantic.user_visible_when_applicable!==false);
+  if (has(selection[fieldName])&&!rows.some((row)=>same(row.canonical_value,selection[fieldName]))) clearField(fieldName);
+}
+
 function visibleFieldMapToBridgeState(model, selection, fieldList, errors, warnings, clearedFields) {
   const visibleByKey = new Map(fieldList.map((field)=>[field.field_name,field]));
   const fields = {};
