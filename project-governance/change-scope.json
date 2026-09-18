@@ -4,7 +4,7 @@
   "task_classification": "NON-PRODUCT-MASTER",
   "product_master_mutation": 0,
   "verified_start_head": "1e74a800c1f7a6ce92b8a67a0f8b5b46ba3fbe2a",
-  "requested_change_scope": "Promote bathroom installation context to the shared canonical installation_environment slot in INSTALLATION_SURVEY; normalize existing bathroom_installation_type without series/manufacturer business rules; refresh read-only Runtime snapshot/repository mirrors only where required to match current Formal Registry before Human Flow Review; accept byte-identical current Formal Runtime JSON with an optional UTF-8 BOM at loader parse boundaries while preserving raw-byte integrity checks; regenerate exact-head Human Review evidence; do not mutate Product Master, Formal Runtime packages in Drive, Runtime JSON in Drive, or Product Master Registry.",
+  "requested_change_scope": "Promote bathroom installation context to the shared canonical installation_environment slot in INSTALLATION_SURVEY; normalize existing bathroom_installation_type without series/manufacturer business rules; refresh read-only Runtime snapshot/repository mirrors only where required to match current Formal Registry before Human Flow Review; accept byte-identical current Formal Runtime JSON with an optional UTF-8 BOM at loader parse boundaries while preserving raw-byte integrity checks; treat UTF-8 Runtime mirror paths as literal paths during change-scope verification; regenerate exact-head Human Review evidence; do not mutate Product Master, Formal Runtime packages in Drive, Runtime JSON in Drive, or Product Master Registry.",
   "allowed_exact_files": [
     "project-governance/change-scope.json",
     "project-governance/runtime-snapshot.json",
@@ -16,7 +16,8 @@
     "test/79-global-window-selection-flow.test.mjs",
     "test/80-canonical-window-semantic-schema.test.mjs",
     "scripts/governance/build-human-flow-review.mjs",
-    "src/catalog/runtime-master/formal-product-runtime-loader.mjs"
+    "src/catalog/runtime-master/formal-product-runtime-loader.mjs",
+    "scripts/governance/materialize-current-state.mjs"
   ],
   "allowed_prefixes": [
     "src/catalog/runtime-master-packages/lixil-samos2h-v0.9-r4/",
@@ -34,7 +35,8 @@
     "test/79-global-window-selection-flow.test.mjs",
     "test/80-canonical-window-semantic-schema.test.mjs",
     "scripts/governance/build-human-flow-review.mjs",
-    "src/catalog/runtime-master/formal-product-runtime-loader.mjs"
+    "src/catalog/runtime-master/formal-product-runtime-loader.mjs",
+    "scripts/governance/materialize-current-state.mjs"
   ],
   "canonical_product_master_sources_read_only": true
 }
