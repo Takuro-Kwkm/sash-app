@@ -3,18 +3,18 @@
   "read_only": true,
   "observation": {
     "source": "GOOGLE_DRIVE_CONNECTOR",
-    "initial_content_read_at": "2026-09-18T02:06:00.000Z",
-    "metadata_revalidated_at": "2026-09-18T02:06:00.000Z",
-    "note": "Connector observation of the required read-only governing sources. CI may validate this attestation for current-state reconstruction, but post-human execution still requires a live Drive API read."
+    "initial_content_read_at": "2026-09-18T04:50:36.207Z",
+    "metadata_revalidated_at": "2026-09-18T04:50:36.207Z",
+    "note": "Connector observation of current read-only governing sources after frame_angle specification revision. CI may validate this attestation for current-state reconstruction, but post-human execution still requires a live Drive API read."
   },
   "entries": [
     {
       "drive_file_id": "1fc_46QMEwnowrSFjs8T-4VCjbcew2MUvzgUJuWe57f0",
       "name": "サッシ情報管理アプリ_Runtime UI統合共通仕様書_v1.7",
       "version": "v1.7",
-      "modified_identity": "2026-09-17T02:33:53.028Z",
-      "current_revision_id": "3",
-      "retrieved_at": "2026-09-18T02:06:00.000Z",
+      "modified_identity": "2026-09-18T04:02:37.191Z",
+      "current_revision_id": "4",
+      "retrieved_at": "2026-09-18T04:50:36.207Z",
       "source": "GOOGLE_DRIVE_CONNECTOR",
       "content_read": true
     },
@@ -22,9 +22,9 @@
       "drive_file_id": "1SwFc2XBRtNYaDaKiwC0QVPPJOvOvhvpEJlPTDUtq0Hw",
       "name": "サッシ情報管理アプリ_3工程運用共通仕様書_v1.5",
       "version": "v1.5",
-      "modified_identity": "2026-09-17T02:03:06.776Z",
+      "modified_identity": "2026-09-17T02:03:06.712Z",
       "current_revision_id": "11",
-      "retrieved_at": "2026-09-18T02:06:00.000Z",
+      "retrieved_at": "2026-09-18T04:50:36.207Z",
       "source": "GOOGLE_DRIVE_CONNECTOR",
       "content_read": true
     },
@@ -34,7 +34,7 @@
       "version": "v1.8",
       "modified_identity": "2026-09-15T14:06:45.535Z",
       "current_revision_id": "0B1PsqngSohhlWDU0RlVlVGdySGtCZFZRamJGQzl1NDZpbHA4PQ",
-      "retrieved_at": "2026-09-18T02:06:00.000Z",
+      "retrieved_at": "2026-09-18T04:50:36.207Z",
       "source": "GOOGLE_DRIVE_CONNECTOR",
       "content_read": true
     },
@@ -42,9 +42,9 @@
       "drive_file_id": "1HMMZ8JdsbJPtL_8LjQfxMF8P_Zb4-LReqvPMFn1pJks",
       "name": "PRODUCT_MASTER_CANONICAL_REGISTRY_v2.0",
       "version": "v2.0",
-      "modified_identity": "2026-09-18T01:17:36.046Z",
-      "current_revision_id": "146",
-      "retrieved_at": "2026-09-18T02:06:00.000Z",
+      "modified_identity": "2026-09-18T04:36:51.964Z",
+      "current_revision_id": "150",
+      "retrieved_at": "2026-09-18T04:50:36.207Z",
       "source": "GOOGLE_DRIVE_CONNECTOR",
       "content_read": true
     },
@@ -52,9 +52,19 @@
       "drive_file_id": "1Gfoyhy9xTZxJVLl6EnhFCvevZd4VPElACZiSko8OGUw",
       "name": "サッシ情報管理アプリ_Global Window Selection Flow全面共通化・Full Coverage QA改修仕様書_v1.0",
       "version": "v1.0",
-      "modified_identity": "2026-09-17T02:24:38.079Z",
-      "current_revision_id": "3",
-      "retrieved_at": "2026-09-18T02:06:00.000Z",
+      "modified_identity": "2026-09-18T04:03:04.141Z",
+      "current_revision_id": "4",
+      "retrieved_at": "2026-09-18T04:50:36.207Z",
+      "source": "GOOGLE_DRIVE_CONNECTOR",
+      "content_read": true
+    },
+    {
+      "drive_file_id": "1MfixkbV1cZ__DtBknEKsix_nnrXQqjc-LZtXUHwJv_A",
+      "name": "サッシ商品マスター共通仕様書_v0.2",
+      "version": "v0.2",
+      "modified_identity": "2026-09-18T04:03:24.456Z",
+      "current_revision_id": "18",
+      "retrieved_at": "2026-09-18T04:50:36.207Z",
       "source": "GOOGLE_DRIVE_CONNECTOR",
       "content_read": true
     }
