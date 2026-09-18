@@ -14,7 +14,8 @@
     "src/catalog/runtime-master/app-runtime-integration-registry.mjs",
     "src/catalog/runtime-master/runtime-master-registry.mjs",
     "test/79-global-window-selection-flow.test.mjs",
-    "test/80-canonical-window-semantic-schema.test.mjs"
+    "test/80-canonical-window-semantic-schema.test.mjs",
+    "scripts/governance/build-human-flow-review.mjs"
   ],
   "allowed_prefixes": [
     "src/catalog/runtime-master-packages/lixil-samos2h-v0.9-r4/",
@@ -30,7 +31,8 @@
     "src/catalog/runtime-master/app-runtime-integration-registry.mjs",
     "src/catalog/runtime-master/runtime-master-registry.mjs",
     "test/79-global-window-selection-flow.test.mjs",
-    "test/80-canonical-window-semantic-schema.test.mjs"
+    "test/80-canonical-window-semantic-schema.test.mjs",
+    "scripts/governance/build-human-flow-review.mjs"
   ],
   "canonical_product_master_sources_read_only": true
 }
