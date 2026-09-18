@@ -4,17 +4,17 @@
   "observation": {
     "source": "GOOGLE_DRIVE_CONNECTOR",
     "initial_content_read_at": "2026-09-18T04:50:36.207Z",
-    "metadata_revalidated_at": "2026-09-18T13:02:32.121Z",
-    "note": "Current read-only Google Drive Connector revalidation after EW v1.3 Formal adoption and installation_environment common-spec adoption. Connector evidence supports current-state reconstruction; post-human execution still requires live Drive API read in GitHub Actions per drive-authority-policy.json."
+    "metadata_revalidated_at": "2026-09-18T16:02:28.286Z",
+    "note": "Current read-only Google Drive Connector revalidation after granting the GitHub WIF reader service account access to all required authority files. Connector evidence supports current-state reconstruction; post-human execution still requires live Drive API read in GitHub Actions per drive-authority-policy.json."
   },
   "entries": [
     {
       "drive_file_id": "1fc_46QMEwnowrSFjs8T-4VCjbcew2MUvzgUJuWe57f0",
       "name": "サッシ情報管理アプリ_Runtime UI統合共通仕様書_v1.7",
       "version": "v1.7",
-      "modified_identity": "2026-09-18T11:19:54.496Z",
+      "modified_identity": "2026-09-18T15:56:35.004Z",
       "current_revision_id": "5",
-      "retrieved_at": "2026-09-18T13:02:32.121Z",
+      "retrieved_at": "2026-09-18T16:02:28.286Z",
       "source": "GOOGLE_DRIVE_CONNECTOR",
       "content_read": true
     },
@@ -22,9 +22,9 @@
       "drive_file_id": "1SwFc2XBRtNYaDaKiwC0QVPPJOvOvhvpEJlPTDUtq0Hw",
       "name": "サッシ情報管理アプリ_3工程運用共通仕様書_v1.5",
       "version": "v1.5",
-      "modified_identity": "2026-09-17T02:03:06.776Z",
+      "modified_identity": "2026-09-18T15:56:36.553Z",
       "current_revision_id": "11",
-      "retrieved_at": "2026-09-18T13:02:32.121Z",
+      "retrieved_at": "2026-09-18T16:02:28.286Z",
       "source": "GOOGLE_DRIVE_CONNECTOR",
       "content_read": true
     },
@@ -32,9 +32,9 @@
       "drive_file_id": "1BVFe2qZXlLUVhz37trFUjz6mJOwjvW0P",
       "name": "サッシ情報管理アプリ_UI実装標準仕様書_内窓・新築系外窓・新築系玄関ドア・玄関カバー工法・外窓カバー工法_v1.8.docx",
       "version": "v1.8",
-      "modified_identity": "2026-09-15T14:06:45.535Z",
+      "modified_identity": "2026-09-18T15:56:37.761Z",
       "current_revision_id": "0B1PsqngSohhlWDU0RlVlVGdySGtCZFZRamJGQzl1NDZpbHA4PQ",
-      "retrieved_at": "2026-09-18T13:02:32.121Z",
+      "retrieved_at": "2026-09-18T16:02:28.286Z",
       "source": "GOOGLE_DRIVE_CONNECTOR",
       "content_read": true
     },
@@ -42,9 +42,9 @@
       "drive_file_id": "1HMMZ8JdsbJPtL_8LjQfxMF8P_Zb4-LReqvPMFn1pJks",
       "name": "PRODUCT_MASTER_CANONICAL_REGISTRY_v2.0",
       "version": "v2.0",
-      "modified_identity": "2026-09-18T12:14:00.695Z",
+      "modified_identity": "2026-09-18T15:56:39.188Z",
       "current_revision_id": "155",
-      "retrieved_at": "2026-09-18T13:02:32.121Z",
+      "retrieved_at": "2026-09-18T16:02:28.286Z",
       "source": "GOOGLE_DRIVE_CONNECTOR",
       "content_read": true
     },
@@ -52,9 +52,9 @@
       "drive_file_id": "1Gfoyhy9xTZxJVLl6EnhFCvevZd4VPElACZiSko8OGUw",
       "name": "サッシ情報管理アプリ_Global Window Selection Flow全面共通化・Full Coverage QA改修仕様書_v1.0",
       "version": "v1.0",
-      "modified_identity": "2026-09-18T11:19:56.311Z",
+      "modified_identity": "2026-09-18T15:56:40.369Z",
       "current_revision_id": "5",
-      "retrieved_at": "2026-09-18T13:02:32.121Z",
+      "retrieved_at": "2026-09-18T16:02:28.286Z",
       "source": "GOOGLE_DRIVE_CONNECTOR",
       "content_read": true
     },
@@ -62,9 +62,9 @@
       "drive_file_id": "1MfixkbV1cZ__DtBknEKsix_nnrXQqjc-LZtXUHwJv_A",
       "name": "サッシ商品マスター共通仕様書_v0.2",
       "version": "v0.2",
-      "modified_identity": "2026-09-18T11:19:58.199Z",
+      "modified_identity": "2026-09-18T15:56:41.812Z",
       "current_revision_id": "19",
-      "retrieved_at": "2026-09-18T13:02:32.121Z",
+      "retrieved_at": "2026-09-18T16:02:28.286Z",
       "source": "GOOGLE_DRIVE_CONNECTOR",
       "content_read": true
     }
