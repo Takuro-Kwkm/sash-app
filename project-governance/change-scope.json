@@ -1,42 +1,28 @@
 {
   "schema_version": "1.0.0",
-  "task_id": "INSTALLATION_ENVIRONMENT_GLOBAL_FLOW_20260918",
+  "task_id": "EW_V1_3_RUNTIME_RESYNC_20260918",
   "task_classification": "NON-PRODUCT-MASTER",
   "product_master_mutation": 0,
-  "verified_start_head": "1e74a800c1f7a6ce92b8a67a0f8b5b46ba3fbe2a",
-  "requested_change_scope": "Promote bathroom installation context to the shared canonical installation_environment slot in INSTALLATION_SURVEY; normalize existing bathroom_installation_type without series/manufacturer business rules; refresh read-only Runtime snapshot/repository mirrors only where required to match current Formal Registry before Human Flow Review; accept byte-identical current Formal Runtime JSON with an optional UTF-8 BOM at loader parse boundaries while preserving raw-byte integrity checks; treat UTF-8 Runtime mirror paths as literal paths during change-scope verification; regenerate exact-head Human Review evidence; do not mutate Product Master, Formal Runtime packages in Drive, Runtime JSON in Drive, or Product Master Registry.",
+  "verified_start_head": "dcb79a7dc17bb20ef0321f2211411896420e71c9",
+  "requested_change_scope": "Re-sync the formally adopted read-only LIXIL EW v1.3 Runtime package into the generic Runtime Adapter / Global Window Selection Flow path. Materialize byte-equivalent Runtime package bytes in the repository, update declarative App Runtime Integration Registry and Runtime inventory identities, extend the canonical workbook adapter generically to consume Formal Runtime frame_angle / installation_environment / declarative dependencies, update EW integration tests and runtime snapshot, regenerate exact-head Human Flow Review evidence, then execute automated/full-coverage/browser/regression gates. Do not mutate Formal Product Master, Drive Runtime, Product Master Registry, other series business rules, Global canonical slot definitions, or UI renderer business rules.",
   "allowed_exact_files": [
     "project-governance/change-scope.json",
     "project-governance/runtime-snapshot.json",
-    "src/catalog/runtime-master/canonical-window-semantic-schema.mjs",
-    "src/catalog/runtime-master/new-construction-sash-runtime-ui-contract.mjs",
-    "src/catalog/runtime-master/inner-window-runtime-ui-contract.mjs",
     "src/catalog/runtime-master/app-runtime-integration-registry.mjs",
     "src/catalog/runtime-master/runtime-master-registry.mjs",
-    "test/79-global-window-selection-flow.test.mjs",
-    "test/80-canonical-window-semantic-schema.test.mjs",
-    "scripts/governance/build-human-flow-review.mjs",
-    "src/catalog/runtime-master/formal-product-runtime-loader.mjs",
-    "scripts/governance/materialize-current-state.mjs"
+    "src/catalog/runtime-master/canonical-workbook-reference-v1-adapter.mjs",
+    "test/70-runtime-manifest-ew-integration.test.mjs"
   ],
   "allowed_prefixes": [
-    "src/catalog/runtime-master-packages/lixil-samos2h-v0.9-r4/",
-    "src/catalog/runtime-master-packages/ykkap-apw430-20260918-r3/",
-    "src/catalog/runtime-master-packages/ykkap-apw431-v1.2/"
+    "src/catalog/runtime-master-packages/lixil-ew-v1.3/"
   ],
   "required_changed_files": [
     "project-governance/change-scope.json",
     "project-governance/runtime-snapshot.json",
-    "src/catalog/runtime-master/canonical-window-semantic-schema.mjs",
-    "src/catalog/runtime-master/new-construction-sash-runtime-ui-contract.mjs",
-    "src/catalog/runtime-master/inner-window-runtime-ui-contract.mjs",
     "src/catalog/runtime-master/app-runtime-integration-registry.mjs",
     "src/catalog/runtime-master/runtime-master-registry.mjs",
-    "test/79-global-window-selection-flow.test.mjs",
-    "test/80-canonical-window-semantic-schema.test.mjs",
-    "scripts/governance/build-human-flow-review.mjs",
-    "src/catalog/runtime-master/formal-product-runtime-loader.mjs",
-    "scripts/governance/materialize-current-state.mjs"
+    "src/catalog/runtime-master/canonical-workbook-reference-v1-adapter.mjs",
+    "test/70-runtime-manifest-ew-integration.test.mjs"
   ],
   "canonical_product_master_sources_read_only": true
 }
