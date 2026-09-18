@@ -8,6 +8,32 @@ const sourceSpecId=(row)=>row?.['固有仕様ID']??row?.spec_id;
 const screenFormOf=(row)=>row?.screen_type??row?.label;
 const splitTargets=(value)=>String(value??'').split(/[・、,]/).map((part)=>part.trim()).filter(Boolean);
 const windowIdMatches=(raw,windowId)=>String(raw??'').split('/').map((part)=>part.trim()).includes(windowId);
+const selectedOptionsOf=(selection)=>new Set(Array.isArray(selection?.option)?selection.option:has(selection?.option)?[selection.option]:[]);
+function dependencyPredicateMatches(condition,selection){
+  if(!condition||typeof condition!=='object')return true;
+  const selected=selectedOptionsOf(selection);
+  for(const[key,value]of Object.entries(condition)){
+    if(key==='option_selected'||key==='base_option_selected'){
+      if(!selected.has(value))return false;
+      continue;
+    }
+    if(!same(selection?.[key],value))return false;
+  }
+  return true;
+}
+function optionRelationAllows(relation,selection,windowId){
+  if(!relation||relation.active===false||!same(relation.window_id,windowId))return false;
+  if(relation.applicability==='NON_APPLICABLE')return false;
+  if(relation.applicability==='APPLICABLE')return true;
+  if(relation.applicability!=='CONDITIONAL_APPLICABLE')return false;
+  if(relation.required_when&&typeof relation.required_when==='object')return dependencyPredicateMatches(relation.required_when,selection);
+  if(has(relation.dependency_option_id))return selectedOptionsOf(selection).has(relation.dependency_option_id);
+  return false;
+}
+function optionSourceMatchesWindow(row,windowId){
+  if(row?.window_id==='*'||!has(row?.window_id))return true;
+  return windowIdMatches(row.window_id,windowId);
+}
 const GLAZING_SEMANTIC_SLOTS=Object.freeze(['glass_type','glass_detail','glass_function']);
 const GLAZING_SEMANTIC_LABEL=Object.freeze({glass_type:'ガラス種別',glass_detail:'ガラス詳細',glass_function:'ガラス追加機能'});
 const GLAZING_SEMANTIC_ORDER=Object.freeze({glass_type:130,glass_detail:140,glass_function:150});
@@ -253,13 +279,13 @@ export function withCanonicalWorkbookReferenceV1Behavior(adapted){
     applyFormalGlazingSemantic(state,inputSelection,glazingSemanticRows);
 
     if(window&&validSpec){
-      const selectedOptions=new Set(Array.isArray(input.option)?input.option:has(input.option)?[input.option]:[]);
-      const optionRows=(model.options??[]).filter((row)=>(row.window_id==='*'||same(row.window_id,windowId))&&(!has(row['固有仕様ID'])||row['固有仕様ID']==='*'||same(row['固有仕様ID'],specId)));
+      const optionRows=(model.options??[]).filter((row)=>optionSourceMatchesWindow(row,windowId)&&(!has(row['固有仕様ID'])||row['固有仕様ID']==='*'||same(row['固有仕様ID'],specId)));
       const optionIds=[];
       for(const row of optionRows){
-        const rel=(model.optionApplicability??[]).find((one)=>same(one.window_id,windowId)&&same(one.option_id,row.id));
-        if(rel?.applicability==='NON_APPLICABLE')continue;
-        if(rel?.applicability==='CONDITIONAL_APPLICABLE'&&has(rel.dependency_option_id)&&!selectedOptions.has(rel.dependency_option_id))continue;
+        const relations=(model.optionApplicability??[]).filter((one)=>same(one.option_id,row.id)&&same(one.window_id,windowId));
+        if(relations.length){
+          if(!relations.some((relation)=>optionRelationAllows(relation,input,windowId)))continue;
+        }
         optionIds.push(row.id);
       }
       if(state.fields?.option?.visibility==='SHOW')state.fields.option.allowed_values=uniq(optionIds);
