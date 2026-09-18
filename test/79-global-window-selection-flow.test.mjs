@@ -34,6 +34,7 @@ test('new-construction fields use the single global stage sequence', () => {
   const rows = applyNewConstructionSashUiOrder([
     { key: 'glass_type', displayOrder: 10 },
     { key: 'option', displayOrder: 20 },
+    { key: 'installation_environment', displayOrder: 25 },
     { key: 'screen_presence', displayOrder: 30 },
     { key: 'exterior_color', displayOrder: 40 },
     { key: 'size', displayOrder: 50 },
@@ -44,11 +45,11 @@ test('new-construction fields use the single global stage sequence', () => {
   ]);
   assert.deepEqual(stages(rows), [
     'OPENING', 'CONFIGURATION', 'CONFIGURATION', 'SIZE', 'SIZE',
-    'FINISH', 'SCREEN', 'GLAZING', 'OPTION',
+    'FINISH', 'SCREEN', 'GLAZING', 'INSTALLATION_SURVEY', 'OPTION',
   ]);
   assert.deepEqual(keys(rows), [
     'window_type', 'window_spec', 'handing', 'size_mode', 'size',
-    'exterior_color', 'screen_presence', 'glass_type', 'option',
+    'exterior_color', 'screen_presence', 'glass_type', 'installation_environment', 'option',
   ]);
   assert.equal(NEW_CONSTRUCTION_EXTERIOR_WINDOW_UI_CATEGORY, 'NEW_CONSTRUCTION_EXTERIOR_WINDOW');
 });
@@ -56,6 +57,7 @@ test('new-construction fields use the single global stage sequence', () => {
 test('inner-window fields use the same global stage sequence', () => {
   const rows = applyInnerWindowUiOrder([
     { key: 'frame_installation_mode', field_name: 'frame_installation_mode', domain: 'INSTALLATION', displayOrder: 90 },
+    { key: 'bathroom_installation_type', field_name: 'bathroom_installation_type', domain: 'INSTALLATION', displayOrder: 94 },
     { key: 'glass_family', field_name: 'glass_family', domain: 'GLASS', displayOrder: 40 },
     { key: 'frame_color', field_name: 'frame_color', domain: 'COLOR', displayOrder: 80 },
     { key: 'size_w', field_name: 'size_w', domain: 'SIZE', displayOrder: 101 },
@@ -64,11 +66,12 @@ test('inner-window fields use the same global stage sequence', () => {
     { key: 'window_type', field_name: 'window_type', domain: 'PRODUCT', displayOrder: 30 },
   ]);
   assert.deepEqual(stages(rows), [
-    'OPENING', 'CONFIGURATION', 'SIZE', 'SIZE', 'FINISH', 'GLAZING', 'INSTALLATION_SURVEY',
+    'OPENING', 'CONFIGURATION', 'SIZE', 'SIZE', 'FINISH', 'GLAZING', 'INSTALLATION_SURVEY', 'INSTALLATION_SURVEY',
   ]);
   assert.deepEqual(keys(rows), [
-    'window_type', 'room_specification', 'size_mode', 'size_w', 'frame_color', 'glass_family', 'frame_installation_mode',
+    'window_type', 'room_specification', 'size_mode', 'size_w', 'frame_color', 'glass_family', 'frame_installation_mode', 'bathroom_installation_type',
   ]);
+  assert.equal(rows.find((row)=>row.key==='bathroom_installation_type').semanticSlot, 'installation_environment');
   assert.equal(INNER_WINDOW_UI_CATEGORY, 'INNER_WINDOW');
 });
 
