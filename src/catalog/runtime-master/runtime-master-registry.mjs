@@ -18,14 +18,8 @@ import { adaptRechentDoor3NonFireV1 } from './rechent-door3-nonfire-v1-adapter.m
 import { guardFormalCustomDimensionUiResolver } from './formal-custom-dimension-safety.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
-const EW_ROOT = join(HERE, '../runtime-master-packages/lixil-ew-v1.2');
-const EW_RUNTIME_PARTS = Object.freeze([
-  'part-00',
-  ...Array.from({ length: 12 }, (_, index) => `canonical-01-${String(index).padStart(2,'0')}`),
-  'part-02',
-  ...Array.from({ length: 37 }, (_, index) => `canonical-02-${String(index).padStart(2,'0')}`),
-  'part-03',
-]);
+const EW_ROOT = join(HERE, '../runtime-master-packages/lixil-ew-v1.3');
+const EW_RUNTIME_PARTS = Object.freeze(Array.from({ length: 8 }, (_, index) => `part-${String(index).padStart(2,'0')}`));
 const TW_ROOT = join(HERE, '../runtime-master-packages/lixil-tw-integrated-v0.4');
 const TW_V03_ROOT = join(HERE, '../runtime-master-packages/lixil-tw-integrated-v0.3');
 const TW_V02_ROOT = join(HERE, '../runtime-master-packages/lixil-tw-integrated-v0.2');
@@ -56,10 +50,10 @@ export const runtimeMasterInventory = Object.freeze([
     }),
   }),
   Object.freeze({
-    manufacturer:'LIXIL', series:'EW', masterVersion:'v1.2', schemaVersion:'2.0', packageType:'RUNTIME_MANIFEST_V2', adapterType:'CANONICAL_WORKBOOK_REFERENCE_V1', packageRoot:EW_ROOT,
-    runtimeManifestPath:join(EW_ROOT,'runtime_manifest.json'), runtimeManifestDriveFileId:'1D-n_dwXfl8M6BjHQqIO6QV7u9FjjRUuU', runtimeManifestSha256:'d24c5175b1635dd3215294076a18a5adc0e7149f0c9790082a28df9ea115c68c',
+    manufacturer:'LIXIL', series:'EW', masterVersion:'v1.3', schemaVersion:'2.0', packageType:'RUNTIME_MANIFEST_V2', adapterType:'CANONICAL_WORKBOOK_REFERENCE_V1', packageRoot:EW_ROOT,
+    runtimeManifestPath:join(EW_ROOT,'runtime_manifest.json'), runtimeManifestDriveFileId:'140pCgz2uhukjOjd1wymuISuAMjhaBpCS', runtimeManifestSha256:'eb8bce59f249faea5cfc8e3d4b75e44f74ee960eacbdc21e25864b7d8dd08662',
     materializedFiles:Object.freeze({
-      '1tHWCWnS-f_R6-IvT0KgA7l1smPQm6dd8':Object.freeze({codec:'brotli',paths:Object.freeze(EW_RUNTIME_PARTS.map((name)=>join(EW_ROOT,`LIXIL_EW_runtime_v1.2.json.br.b64.parts/${name}`)))}),
+      '11ZmCPKceAmp3OEyJIXy79VoO8PEk_oYw':Object.freeze({codec:'base64',paths:Object.freeze(EW_RUNTIME_PARTS.map((name)=>join(EW_ROOT,`LIXIL_EW_runtime_v1.3.json.b64.parts/${name}`)))}),
     }),
   }),
   Object.freeze({
