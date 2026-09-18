@@ -28,7 +28,7 @@ async function openLab(page){
 async function selectAndResolve(page,key,value){
   const [response]=await Promise.all([
     page.waitForResponse((r)=>r.url().includes('/api/runtime-master/resolve')&&r.status()===200),
-    page.locator(`[data-spec-key="${key}"]`).selectOption(value),
+    page.locator(`[data-spec-key="${key}"]`).selectOption(String(value)),
   ]);
   return response.json();
 }
