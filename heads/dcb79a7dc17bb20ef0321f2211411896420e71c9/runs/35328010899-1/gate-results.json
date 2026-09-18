@@ -1,0 +1,177 @@
+{
+  "schema_version": "1.1.0",
+  "generated_at": "2026-09-18T09:09:14.376Z",
+  "repository": "Takuro-Kwkm/sash-app",
+  "branch": "feat/new-construction-runtime-ui-v16-20260910",
+  "exact_head": "dcb79a7dc17bb20ef0321f2211411896420e71c9",
+  "runtime_snapshot_id": "RUNTIME-SNAPSHOT-2de71509f35b9c01d1bd",
+  "task_classification": "NON-PRODUCT-MASTER",
+  "product_master_mutation": 0,
+  "gates": {
+    "CANONICAL_RUNTIME_GATE": {
+      "status": "PASS",
+      "evidence_id": "CANONICAL_RUNTIME_GATE-dcb79a7dc17b-45e878614d1c",
+      "exact_head": "dcb79a7dc17bb20ef0321f2211411896420e71c9",
+      "runtime_snapshot_id": "RUNTIME-SNAPSHOT-2de71509f35b9c01d1bd"
+    },
+    "RUNTIME_ADAPTER_GATE": {
+      "status": "PASS",
+      "evidence_id": "RUNTIME_ADAPTER_GATE-dcb79a7dc17b-45e878614d1c",
+      "exact_head": "dcb79a7dc17bb20ef0321f2211411896420e71c9",
+      "runtime_snapshot_id": "RUNTIME-SNAPSHOT-2de71509f35b9c01d1bd"
+    },
+    "WINDOW_FLOW_BASELINE_GATE": {
+      "status": "PASS",
+      "evidence_id": "WINDOW_FLOW_BASELINE_GATE-dcb79a7dc17b-45e878614d1c",
+      "exact_head": "dcb79a7dc17bb20ef0321f2211411896420e71c9",
+      "runtime_snapshot_id": "RUNTIME-SNAPSHOT-2de71509f35b9c01d1bd"
+    },
+    "CANONICAL_SLOT_SCHEMA_GATE": {
+      "status": "PASS",
+      "evidence_id": "CANONICAL_SLOT_SCHEMA_GATE-dcb79a7dc17b-45e878614d1c",
+      "exact_head": "dcb79a7dc17bb20ef0321f2211411896420e71c9",
+      "runtime_snapshot_id": "RUNTIME-SNAPSHOT-2de71509f35b9c01d1bd"
+    },
+    "FLOW_SCHEMA_UNMAPPED_FIELD_GATE": {
+      "status": "PASS",
+      "evidence_id": "FLOW_SCHEMA_UNMAPPED_FIELD_GATE-dcb79a7dc17b-45e878614d1c",
+      "exact_head": "dcb79a7dc17bb20ef0321f2211411896420e71c9",
+      "runtime_snapshot_id": "RUNTIME-SNAPSHOT-2de71509f35b9c01d1bd"
+    },
+    "SINGLE_FLOW_ENGINE_GATE": {
+      "status": "PASS",
+      "evidence_id": "SINGLE_FLOW_ENGINE_GATE-dcb79a7dc17b-45e878614d1c",
+      "exact_head": "dcb79a7dc17bb20ef0321f2211411896420e71c9",
+      "runtime_snapshot_id": "RUNTIME-SNAPSHOT-2de71509f35b9c01d1bd"
+    },
+    "SERIES_OVERRIDE_ELIMINATION_GATE": {
+      "status": "PASS",
+      "evidence_id": "SERIES_OVERRIDE_ELIMINATION_GATE-dcb79a7dc17b-45e878614d1c",
+      "exact_head": "dcb79a7dc17bb20ef0321f2211411896420e71c9",
+      "runtime_snapshot_id": "RUNTIME-SNAPSHOT-2de71509f35b9c01d1bd"
+    },
+    "HUMAN_FLOW_REVIEW_GATE": {
+      "status": "BLOCKED",
+      "reason": "explicit human approval is not recorded"
+    },
+    "FULL_FLOW_SIGNATURE_COVERAGE_GATE": {
+      "status": "BLOCKED",
+      "reason": "prerequisites not PASS",
+      "blocking_gates": [
+        "HUMAN_FLOW_REVIEW_GATE"
+      ]
+    },
+    "FLOW_TRANSITION_GATE": {
+      "status": "BLOCKED",
+      "reason": "prerequisites not PASS",
+      "blocking_gates": [
+        "FULL_FLOW_SIGNATURE_COVERAGE_GATE"
+      ]
+    },
+    "FULL_WINDOW_COVERAGE_GATE": {
+      "status": "BLOCKED",
+      "reason": "prerequisites not PASS",
+      "blocking_gates": [
+        "FLOW_TRANSITION_GATE"
+      ]
+    },
+    "CUSTOM_SIZE_COVERAGE_GATE": {
+      "status": "BLOCKED",
+      "reason": "prerequisites not PASS",
+      "blocking_gates": [
+        "FULL_WINDOW_COVERAGE_GATE"
+      ]
+    },
+    "DEPENDENCY_GATE": {
+      "status": "BLOCKED",
+      "reason": "prerequisites not PASS",
+      "blocking_gates": [
+        "CUSTOM_SIZE_COVERAGE_GATE"
+      ]
+    },
+    "UI_FLOW_GATE": {
+      "status": "BLOCKED",
+      "reason": "prerequisites not PASS",
+      "blocking_gates": [
+        "DEPENDENCY_GATE"
+      ]
+    },
+    "AUTOMATED_TEST_GATE": {
+      "status": "BLOCKED",
+      "reason": "prerequisites not PASS",
+      "blocking_gates": [
+        "UI_FLOW_GATE"
+      ]
+    },
+    "FULL_BROWSER_FLOW_QA_GATE": {
+      "status": "BLOCKED",
+      "reason": "prerequisites not PASS",
+      "blocking_gates": [
+        "AUTOMATED_TEST_GATE"
+      ]
+    },
+    "FULL_BROWSER_QA_GATE": {
+      "status": "BLOCKED",
+      "reason": "prerequisites not PASS",
+      "blocking_gates": [
+        "FULL_BROWSER_FLOW_QA_GATE"
+      ]
+    },
+    "REGRESSION_GATE": {
+      "status": "BLOCKED",
+      "reason": "prerequisites not PASS",
+      "blocking_gates": [
+        "FULL_BROWSER_QA_GATE"
+      ]
+    },
+    "REPOSITORY_GATE": {
+      "status": "BLOCKED",
+      "reason": "prerequisites not PASS",
+      "blocking_gates": [
+        "REGRESSION_GATE"
+      ]
+    },
+    "GLOBAL_WINDOW_SELECTION_FLOW_GATE": {
+      "status": "BLOCKED",
+      "reason": "prerequisites not PASS",
+      "blocking_gates": [
+        "REPOSITORY_GATE"
+      ]
+    },
+    "APP_INTEGRATION_READY": {
+      "status": "BLOCKED",
+      "reason": "prerequisites not PASS",
+      "blocking_gates": [
+        "GLOBAL_WINDOW_SELECTION_FLOW_GATE"
+      ]
+    }
+  },
+  "human_review": {
+    "status": "BLOCKED",
+    "reason": "explicit human approval is not recorded",
+    "reviewed_exact_head": null,
+    "review_artifact_identity": null,
+    "current_review_artifact_identity": "HFR-f77cf0e713cf845844f10ac02ee952aad17b97736ed9369d22bf45e878614d1c",
+    "human_approval_reference": null,
+    "relevant_changes_since_review": []
+  },
+  "release": {
+    "status": "BLOCKED",
+    "blocking_gates": [
+      "HUMAN_FLOW_REVIEW_GATE",
+      "GLOBAL_WINDOW_SELECTION_FLOW_GATE",
+      "FULL_WINDOW_COVERAGE_GATE",
+      "CUSTOM_SIZE_COVERAGE_GATE",
+      "FULL_BROWSER_FLOW_QA_GATE",
+      "FULL_BROWSER_QA_GATE",
+      "APP_INTEGRATION_READY",
+      "UNVERIFIED_QA_CASE_COUNT"
+    ],
+    "missing_release_input": [
+      "reviewed_exact_head",
+      "review_artifact_identity",
+      "human_approval_reference"
+    ],
+    "unverified_qa_case_count": null
+  }
+}
