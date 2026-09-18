@@ -216,7 +216,14 @@ function screenAllowedByRuntimeDependencies(model,row,selection,specId) {
 function optionRelationMatches(relation,selection,windowId) {
   if (relation?.active===false || !same(relation?.window_id,windowId)) return false;
   if (relation.applicability==='APPLICABLE') return true;
-  if (relation.applicability==='CONDITIONAL_APPLICABLE') return dependencyConditionMatches(relation.required_when,selection);
+  if (relation.applicability==='CONDITIONAL_APPLICABLE') {
+    if (relation.required_when && typeof relation.required_when==='object') return dependencyConditionMatches(relation.required_when,selection);
+    if (has(relation.dependency_option_id)) {
+      const options=Array.isArray(selection.option)?selection.option:has(selection.option)?[selection.option]:[];
+      return options.some((value)=>same(value,relation.dependency_option_id));
+    }
+    return false;
+  }
   return false;
 }
 function optionRowsForRuntimeSelection(model,selection,windowId) {
