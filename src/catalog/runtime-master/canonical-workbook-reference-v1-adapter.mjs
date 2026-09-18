@@ -382,6 +382,8 @@ function resolveModel(model, inputSelection = {}) {
   if (handingValues.length) pushField('handing',handingValues,false,true);
   if (selection.handing && !handingValues.some((row)=>same(row.canonical_value,selection.handing))) clearField('handing');
 
+  applyRuntimeSemanticField(model,'frame_angle',selection,pushField,clearField,errors);
+
   const customRules = model.document?.working_extensions?.custom_dimension_rules?.rules ?? [];
   const formalRulesForWindow = customRules.filter((rule)=>{
     if (!same(formalRuleWindow(rule),windowId)) return false;
@@ -415,13 +417,14 @@ function resolveModel(model, inputSelection = {}) {
     if (selection.interior_color&&!interiorRows.some((row)=>same(row.canonical_value,selection.interior_color))) clearField('interior_color');
   } else clearField('interior_color');
 
-  const windowScreens=model.screens.filter((row)=>same(row.window_id,windowId)&&row.presence==='あり');
+  const windowScreens=model.screens.filter((row)=>same(row.window_id,windowId)&&row.presence==='あり'&&screenAllowedByRuntimeDependencies(model,row,selection,specId));
   if (windowScreens.length) {
     pushField('screen_presence',baseValueRows(model,'screen_presence'),false,true);
     if (selection.screen_presence==='あり') {
       const forms=uniq(windowScreens.map((row)=>row.screen_type??row.label).filter(has),(value)=>value);
       const formRows=forms.map((value)=>baseValueRows(model,'screen_form').find((row)=>same(row.canonical_value,value))).filter(Boolean);
       if (formRows.length) pushField('screen_form',formRows,false,true);
+      if (selection.screen_form&&!forms.some((value)=>same(value,selection.screen_form))) { clearField('screen_form'); clearField('screen_midrail'); clearField('screen_net'); }
       const form=selection.screen_form;
       const screenCandidates=windowScreens.filter((row)=>!form||same(row.screen_type??row.label,form));
       const midrails=uniq(screenCandidates.map((row)=>row.midrail).filter((value)=>has(value)&&!['対象外','なし（固定）'].includes(value)),(value)=>value);
@@ -468,11 +471,20 @@ function resolveModel(model, inputSelection = {}) {
     }
   } else { clearField('glass_detail'); clearField('glass_function'); clearField('glass_spacer'); clearField('glass_air_layer'); }
 
-  const optionRows=baseValueRows(model,'option').filter((row)=>{
-    const source=row.source??{};
-    return source.window_id==='*'||!has(source.window_id)||same(source.window_id,windowId);
-  });
+  applyRuntimeSemanticField(model,'installation_environment',selection,pushField,clearField,errors);
+
+  const optionRows=optionRowsForRuntimeSelection(model,selection,windowId);
+  if (Array.isArray(selection.option)) {
+    const allowedOptionIds=new Set(optionRows.map((row)=>row.canonical_value));
+    const filtered=selection.option.filter((value)=>allowedOptionIds.has(value));
+    if (filtered.length!==selection.option.length) {
+      selection.option=filtered;
+      clearedFields.push('option');
+      if (!filtered.length) delete selection.option;
+    }
+  } else if (has(selection.option)&&!optionRows.some((row)=>same(row.canonical_value,selection.option))) clearField('option');
   if(optionRows.length)pushField('option',optionRows,false,true);
+  applyRuntimeOptionRequirements(model,selection,windowId,windowScreens,errors);
 
   if (selection.size_mode==='CUSTOM' && has(selection.custom_w) && has(selection.custom_h)) {
     const w=Number(selection.custom_w),h=Number(selection.custom_h);
@@ -545,7 +557,8 @@ export function adaptCanonicalWorkbookReferenceV1(runtimePackage) {
     throw error;
   }
   const baseModel=createModel(document);
-  const model=augmentModelForFormalSelectors(baseModel);
+  const semanticModel=augmentModelForRuntimeSemantics(baseModel);
+  const model=augmentModelForFormalSelectors(semanticModel);
   const master = Object.freeze({
     fields:Object.freeze(model.fields.map((row)=>Object.freeze(row))),
     values:Object.freeze(model.values.map((row)=>Object.freeze(row))),
@@ -558,6 +571,8 @@ export function adaptCanonicalWorkbookReferenceV1(runtimePackage) {
       customDimensionRules:(document?.working_extensions?.custom_dimension_rules?.rules?.length ?? model.customRanges.length),
       formalSelectorDimensions:model.formalSelectorDimensions.length,
       formalSelectorCombinations:model.selectorCombos.length,
+      runtimeSemanticFields:Object.keys(model.runtimeSemantics??{}).length,
+      runtimeDependencyRules:runtimeDependencyRows(model).length,
       manualConfirmation:true,
       sourcePackageVersion:document.package_version,
     }),
