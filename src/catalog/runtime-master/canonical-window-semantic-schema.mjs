@@ -7,6 +7,8 @@ export const FRAME_ANGLE_CLASSIFICATIONS = Object.freeze([
   'USER_SELECTABLE','CONDITIONAL_USER_SELECTABLE','FIXED','NOT_APPLICABLE',
 ]);
 
+export const INSTALLATION_ENVIRONMENT_CANONICAL_VALUES = Object.freeze(['BATHROOM','NON_BATHROOM']);
+
 export const CANONICAL_WINDOW_SLOT_STAGE = Object.freeze({
   manufacturer:'PRODUCT', product:'PRODUCT',
   window_type:'OPENING',
@@ -15,13 +17,13 @@ export const CANONICAL_WINDOW_SLOT_STAGE = Object.freeze({
   exterior_color:'FINISH', interior_color:'FINISH', finish_color:'FINISH',
   screen_presence:'SCREEN', screen_form:'SCREEN', screen_midrail:'SCREEN', screen_net:'SCREEN',
   glass_base:'GLAZING', glass_type:'GLAZING', glass_detail:'GLAZING', glass_function:'GLAZING', glass_spacer:'GLAZING', glass_air_layer:'GLAZING',
-  installation:'INSTALLATION_SURVEY', option:'OPTION',
+  installation:'INSTALLATION_SURVEY', installation_environment:'INSTALLATION_SURVEY', option:'OPTION',
 });
 
 export const NEW_CONSTRUCTION_CANONICAL_SLOT_ORDER = Object.freeze([
   'manufacturer','product','window_type','window_spec','handing','frame_angle','size_mode','panel_count','size',
   'exterior_color','interior_color','screen_presence','screen_form','screen_midrail','screen_net',
-  'glass_base','glass_type','glass_detail','glass_function','glass_spacer','glass_air_layer','option',
+  'glass_base','glass_type','glass_detail','glass_function','glass_spacer','glass_air_layer','installation_environment','option',
 ]);
 
 export function canonicalStageForSlot(slot) {
