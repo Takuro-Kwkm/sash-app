@@ -8,7 +8,7 @@ export const NEW_CONSTRUCTION_EXTERIOR_WINDOW_UI_CATEGORY = 'NEW_CONSTRUCTION_EX
 // Runtime owns existence, values, dependencies and validity. The Global Window
 // Selection Flow owns presentation order and semantic stage normalization.
 export const NEW_CONSTRUCTION_SASH_UI_STANDARD_ORDER = Object.freeze([
-  'manufacturer','product','window_type','window_spec','handing','size_mode','panel_count','size',
+  'manufacturer','product','window_type','window_spec','handing','frame_angle','size_mode','panel_count','size',
   'exterior_color','interior_color','screen_presence','screen_form','screen_midrail','screen_net',
   'glass_base','glass_type','glass_detail','glass_function','glass_spacer','glass_air_layer','option',
 ]);
@@ -20,7 +20,7 @@ const SLOT_ALIASES = Object.freeze({
   operation_type:'window_spec',operation_method:'window_spec',operator_position:'window_spec',handle_type:'window_spec',handle_configuration:'window_spec',
   composition_type:'window_spec',configuration:'window_spec',window_configuration:'window_spec',configuration_variant:'window_spec',variant:'window_spec',joinery_configuration:'window_spec',door_type:'window_spec',
   region_standard:'window_spec',door_installation:'window_spec',
-  handing:'handing',
+  handing:'handing',frame_angle:'frame_angle',
   sash_count:'panel_count',panel_count:'panel_count',leaf_configuration:'panel_count',
   size_mode:'size_mode',size:'size',standard_size:'size',size_id:'size',custom_width:'size',custom_height:'size',custom_w:'size',custom_h:'size',
   exterior_color:'exterior_color',interior_color:'interior_color',
@@ -31,7 +31,7 @@ const SLOT_ALIASES = Object.freeze({
 });
 
 const PRODUCT_SLOTS = new Set(['manufacturer','product']);
-const CONFIGURATION_SLOTS = new Set(['window_spec','handing']);
+const CONFIGURATION_SLOTS = new Set(['window_spec','handing','frame_angle']);
 const SIZE_SLOTS = new Set(['size_mode','panel_count','size']);
 const FINISH_SLOTS = new Set(['exterior_color','interior_color']);
 const SCREEN_SLOTS = new Set(['screen_presence','screen_form','screen_midrail','screen_net']);
@@ -39,7 +39,7 @@ const GLAZING_SLOTS = new Set(['glass_base','glass_type','glass_detail','glass_f
 
 const STANDARD_LABELS = Object.freeze({
   window_type:'窓種類',window_configuration:'連窓構成',configuration_variant:'仕様バリアント',region_standard:'地域規格',door_installation:'ドア納まり',
-  handing:'開き勝手（吊元）',size_mode:'サイズ方式',sash_count:'建具・枚数',panel_count:'建具・枚数',leaf_configuration:'建具・枚数',size:'サイズ',standard_size:'サイズ',
+  handing:'開き勝手（吊元）',frame_angle:'枠アングル',size_mode:'サイズ方式',sash_count:'建具・枚数',panel_count:'建具・枚数',leaf_configuration:'建具・枚数',size:'サイズ',standard_size:'サイズ',
   custom_width:'特注W（mm）',custom_height:'特注H（mm）',custom_w:'特注W（mm）',custom_h:'特注H（mm）',
   exterior_color:'外観色',interior_color:'内観色',screen:'網戸',screen_presence:'網戸',screen_type:'網戸形式',screen_form:'網戸形式',screen_midrail:'網戸中桟',screen_net:'網戸ネット',
   glass:'ガラス',glass_base:'ガラス',glass_type:'ガラス種',glass_detail:'ガラス詳細',glass_function:'ガラス追加機能',glass_additional:'ガラス追加機能',glass_spacer:'スペーサー',glass_air_layer:'中空層',glass_gas:'中空層',
