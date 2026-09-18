@@ -280,16 +280,18 @@ function visibleFieldMapToBridgeState(model, selection, fieldList, errors, warni
   const fields = {};
   for (const def of model.fields) {
     const visible = visibleByKey.get(def.field_name);
+    const exposed = Boolean(visible && visible.visible !== false);
     const value = has(selection[def.field_name]) || Array.isArray(selection[def.field_name]) ? clone(selection[def.field_name]) : null;
     const allowedValues = visible ? (visible.values ?? []).map((row)=>row?.canonical_value ?? row).filter((value)=>value !== undefined) : [];
-    const readOnly = Boolean(visible?.readOnly || (def.selection_mode === 'AUTO_RESOLVE' && allowedValues.length === 1));
+    const readOnly = Boolean(visible?.readOnly || visible?.resolvedByRule || (def.selection_mode === 'AUTO_RESOLVE' && allowedValues.length === 1));
     fields[def.field_name] = {
       value,
-      state: !visible ? 'NOT_APPLICABLE' : value === null ? 'UNSET' : readOnly ? 'RESOLVED' : 'SELECTED',
-      visibility: visible ? 'SHOW' : 'HIDE',
-      required:Boolean(visible?.required),
+      state: !exposed ? (value === null ? 'NOT_APPLICABLE' : readOnly ? 'RESOLVED' : 'NOT_APPLICABLE') : value === null ? 'UNSET' : readOnly ? 'RESOLVED' : 'SELECTED',
+      visibility: exposed ? 'SHOW' : 'HIDE',
+      required:exposed && Boolean(visible?.required),
       allowed_values:allowedValues,
       readOnly,
+      resolved_by_rule:Boolean(visible?.resolvedByRule),
       display_label:visible?.display_label ?? def.display_label ?? null,
       unit:def.unit ?? null,
     };
