@@ -7,7 +7,7 @@
     "sheet": "正本Registry",
     "observed_at": "2026-09-18",
     "selection_rule": "master_status=FORMAL_PASS AND runtime_status=READY AND package_gate=PASS AND storage_gate=PASS, intersected with repository Window UI integration categories",
-    "revision_id": "146"
+    "revision_id": "150"
   },
   "window_ui_categories": [
     "NEW_CONSTRUCTION_EXTERIOR_WINDOW",
@@ -19,8 +19,8 @@
       "manufacturer": "LIXIL",
       "registry_series": "サーモスⅡH",
       "app_series": "サーモスⅡ-H",
-      "package_version": "v0.9-R3",
-      "runtime_manifest_id": "1xnVkGtwoN488zgjoi-FOF9drnaUP-jal",
+      "package_version": "v0.9-R4",
+      "runtime_manifest_id": "1_yIaBpnfppnj36IcuRoX9FBJhtrNngin",
       "master_status": "FORMAL_PASS",
       "runtime_status": "READY",
       "package_gate": "PASS",
