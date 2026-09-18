@@ -2,10 +2,15 @@ export const GLOBAL_WINDOW_STAGE_ORDER = Object.freeze([
   'PRODUCT','OPENING','CONFIGURATION','SIZE','FINISH','SCREEN','GLAZING','INSTALLATION_SURVEY','OPTION',
 ]);
 
+export const FRAME_ANGLE_CANONICAL_VALUES = Object.freeze(['WITH_ANGLE','WITHOUT_ANGLE']);
+export const FRAME_ANGLE_CLASSIFICATIONS = Object.freeze([
+  'USER_SELECTABLE','CONDITIONAL_USER_SELECTABLE','FIXED','NOT_APPLICABLE',
+]);
+
 export const CANONICAL_WINDOW_SLOT_STAGE = Object.freeze({
   manufacturer:'PRODUCT', product:'PRODUCT',
   window_type:'OPENING',
-  window_spec:'CONFIGURATION', handing:'CONFIGURATION',
+  window_spec:'CONFIGURATION', handing:'CONFIGURATION', frame_angle:'CONFIGURATION',
   size_mode:'SIZE', panel_count:'SIZE', size:'SIZE',
   exterior_color:'FINISH', interior_color:'FINISH', finish_color:'FINISH',
   screen_presence:'SCREEN', screen_form:'SCREEN', screen_midrail:'SCREEN', screen_net:'SCREEN',
@@ -14,7 +19,7 @@ export const CANONICAL_WINDOW_SLOT_STAGE = Object.freeze({
 });
 
 export const NEW_CONSTRUCTION_CANONICAL_SLOT_ORDER = Object.freeze([
-  'manufacturer','product','window_type','window_spec','handing','size_mode','panel_count','size',
+  'manufacturer','product','window_type','window_spec','handing','frame_angle','size_mode','panel_count','size',
   'exterior_color','interior_color','screen_presence','screen_form','screen_midrail','screen_net',
   'glass_base','glass_type','glass_detail','glass_function','glass_spacer','glass_air_layer','option',
 ]);
