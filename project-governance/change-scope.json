@@ -1,35 +1,36 @@
 {
   "schema_version": "1.0.0",
-  "task_id": "FRAME_ANGLE_GLOBAL_FLOW_20260918",
+  "task_id": "INSTALLATION_ENVIRONMENT_GLOBAL_FLOW_20260918",
   "task_classification": "NON-PRODUCT-MASTER",
   "product_master_mutation": 0,
-  "verified_start_head": "a46427e795ec6a8f704f7d115e0e09a509f209c5",
-  "requested_change_scope": "Implement canonical frame_angle in the shared Global Window Selection Flow from the revised Drive specifications; refresh read-only Drive authority and Runtime snapshots; expose frame_angle classification/visibility/allowed/fixed/dependency/clear/STANDARD-CUSTOM state in the regenerated Human Review artifact; do not mutate Product Master, Formal Runtime packages, Runtime JSON, or Product Master Registry.",
+  "verified_start_head": "1e74a800c1f7a6ce92b8a67a0f8b5b46ba3fbe2a",
+  "requested_change_scope": "Promote bathroom installation context to the shared canonical installation_environment slot in INSTALLATION_SURVEY; normalize existing bathroom_installation_type without series/manufacturer business rules; refresh read-only Runtime snapshot/repository mirrors only where required to match current Formal Registry before Human Flow Review; regenerate exact-head Human Review evidence; do not mutate Product Master, Formal Runtime packages in Drive, Runtime JSON in Drive, or Product Master Registry.",
   "allowed_exact_files": [
     "project-governance/change-scope.json",
-    "project-governance/drive-authority-snapshot.json",
     "project-governance/runtime-snapshot.json",
     "src/catalog/runtime-master/canonical-window-semantic-schema.mjs",
     "src/catalog/runtime-master/new-construction-sash-runtime-ui-contract.mjs",
     "src/catalog/runtime-master/inner-window-runtime-ui-contract.mjs",
-    "scripts/governance/generate-human-flow-review.mjs",
-    "scripts/governance/build-human-flow-review.mjs",
-    "test/76-frame-angle-global-flow.test.mjs",
-    "project-governance/drive-authority-policy.json",
-    ".github/workflows/project-governance-gate.yml"
+    "src/catalog/runtime-master/app-runtime-integration-registry.mjs",
+    "src/catalog/runtime-master/runtime-master-registry.mjs",
+    "test/79-global-window-selection-flow.test.mjs",
+    "test/80-canonical-window-semantic-schema.test.mjs"
   ],
-  "allowed_prefixes": [],
+  "allowed_prefixes": [
+    "src/catalog/runtime-master-packages/lixil-samos2h-v0.9-r4/",
+    "src/catalog/runtime-master-packages/ykkap-apw430-20260918-r3/",
+    "src/catalog/runtime-master-packages/ykkap-apw431-v1.2/"
+  ],
   "required_changed_files": [
-    "project-governance/drive-authority-snapshot.json",
+    "project-governance/change-scope.json",
     "project-governance/runtime-snapshot.json",
     "src/catalog/runtime-master/canonical-window-semantic-schema.mjs",
     "src/catalog/runtime-master/new-construction-sash-runtime-ui-contract.mjs",
     "src/catalog/runtime-master/inner-window-runtime-ui-contract.mjs",
-    "scripts/governance/generate-human-flow-review.mjs",
-    "scripts/governance/build-human-flow-review.mjs",
-    "test/76-frame-angle-global-flow.test.mjs",
-    "project-governance/drive-authority-policy.json",
-    ".github/workflows/project-governance-gate.yml"
+    "src/catalog/runtime-master/app-runtime-integration-registry.mjs",
+    "src/catalog/runtime-master/runtime-master-registry.mjs",
+    "test/79-global-window-selection-flow.test.mjs",
+    "test/80-canonical-window-semantic-schema.test.mjs"
   ],
   "canonical_product_master_sources_read_only": true
 }
