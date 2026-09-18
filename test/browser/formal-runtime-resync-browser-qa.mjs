@@ -6,10 +6,10 @@ const BASE=process.env.QA_BASE_URL??'http://127.0.0.1:4173';
 const SHARE_TOKEN=process.env.VERCEL_SHARE_TOKEN;
 const OUT='artifacts/formal-runtime-resync-browser-qa';
 const PRODUCTS=[
-  {manufacturer:'LIXIL',id:'SER-LIX-SAMOS2H',version:'v0.9-R3',windows:17},
+  {manufacturer:'LIXIL',id:'SER-LIX-SAMOS2H',version:'v0.9-R4',windows:17},
   {manufacturer:'LIXIL',id:'SER-LIX-SAMOSL',version:'v0.7-R2',windows:17},
-  {manufacturer:'YKK AP',id:'SER-YKK-APW430',version:'20260917-R2',windows:25},
-  {manufacturer:'YKK AP',id:'SER-YKK-APW431',version:'v1.1',windows:6},
+  {manufacturer:'YKK AP',id:'SER-YKK-APW430',version:'20260918-R3',windows:25},
+  {manufacturer:'YKK AP',id:'SER-YKK-APW431',version:'v1.2',windows:6},
 ];
 await mkdir(OUT,{recursive:true});
 const report={status:'RUNNING',desktop:{},mobile:{},consoleErrors:[],pageErrors:[],failedResponses:[]};
