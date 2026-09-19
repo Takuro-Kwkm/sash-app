@@ -169,7 +169,7 @@ await writeFile(`${OUT}/case-index.json`, JSON.stringify({
   browserStateIds:states.map((row) => row.stateId),
 }, null, 2));
 
-const report = { status:'RUNNING', baseWindowCount:BASE_WINDOW_COUNT, logicalQaCaseCount:LOGICAL_QA_CASE_COUNT, sizeGlassCaseCount:SIZE_GLASS_CASE_COUNT, installabilityCaseCount:INSTALLABILITY_CASE_COUNT, additionalOutsideBoundaryStateCount:AUTO_OUTSIDE_STATE_COUNT, browserStateCountPerViewport:BROWSER_STATE_COUNT_PER_VIEWPORT, browserStateChecksTotal:BROWSER_STATE_COUNT_PER_VIEWPORT * 2, verifiedQaCaseCount:0, unverifiedQaCaseCount:LOGICAL_QA_CASE_COUNT, desktop:{}, mobile:{}, consoleErrors:[], pageErrors:[], failedResponses:[] };
+const report = { status:'RUNNING', exactHead:process.env.HEAD_SHA??process.env.GITHUB_SHA??null, baseWindowCount:BASE_WINDOW_COUNT, logicalQaCaseCount:LOGICAL_QA_CASE_COUNT, sizeGlassCaseCount:SIZE_GLASS_CASE_COUNT, installabilityCaseCount:INSTALLABILITY_CASE_COUNT, additionalOutsideBoundaryStateCount:AUTO_OUTSIDE_STATE_COUNT, browserStateCountPerViewport:BROWSER_STATE_COUNT_PER_VIEWPORT, browserStateChecksTotal:BROWSER_STATE_COUNT_PER_VIEWPORT * 2, verifiedQaCaseCount:0, unverifiedQaCaseCount:LOGICAL_QA_CASE_COUNT, desktop:{}, mobile:{}, consoleErrors:[], pageErrors:[], failedResponses:[] };
 const browser = await chromium.launch({ headless:true });
 
 function track(page, viewport) {
