@@ -69,10 +69,17 @@ jobs:
           const listResponse=await fetch(listUrl,{headers});
           if(!listResponse.ok)throw new Error(`STALE_RUN_LIST_FAILED_${listResponse.status}`);
           const payload=await listResponse.json();
+          const currentResponse=await fetch(`${api}/repos/${repo}/actions/runs/${currentRun}`,{headers});
+          if(!currentResponse.ok)throw new Error(`CURRENT_RUN_LOOKUP_FAILED_${currentResponse.status}`);
+          const currentPayload=await currentResponse.json();
+          const currentCreatedAt=Date.parse(currentPayload.created_at??'');
+          if(!Number.isFinite(currentCreatedAt))throw new Error('CURRENT_RUN_CREATED_AT_INVALID');
           const active=new Set(['queued','in_progress','waiting','requested','pending']);
           const stale=(payload.workflow_runs??[]).filter((run)=>
             Number(run.id)!==currentRun &&
             run.head_sha!==head &&
+            Number.isFinite(Date.parse(run.created_at??'')) &&
+            Date.parse(run.created_at)<currentCreatedAt &&
             active.has(run.status)
           );
           console.log(`STALE_GOVERNANCE_RUN_COUNT=${stale.length}`);
