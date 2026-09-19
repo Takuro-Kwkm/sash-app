@@ -217,6 +217,38 @@ jobs:
       - name: App integration regression partition
         run: node --test test/72-work-management.test.mjs test/74-estimate-output.test.mjs test/75-formal-runtime-resync.test.mjs
 
+      - name: Dependency gate direct proof
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$POST_HUMAN_EVIDENCE_OUT"
+          node --test test/70-runtime-manifest-ew-integration.test.mjs test/73-runtime-ui-uchirimo-gate.test.mjs test/77-runtime-ui-inplus-v04r2-installability-coverage.test.mjs test/84-requested-flow-acceptance.test.mjs 2>&1 | tee "$POST_HUMAN_EVIDENCE_OUT/dependency-gate.tap"
+          node --input-type=module <<'NODE'
+          import { writeFileSync } from 'node:fs';
+          writeFileSync(process.env.POST_HUMAN_EVIDENCE_OUT+'/dependency-gate.json',JSON.stringify({
+            exact_head:process.env.HEAD_SHA,
+            status:'PASS',
+            gate:'DEPENDENCY_GATE',
+            command:'node --test test/70-runtime-manifest-ew-integration.test.mjs test/73-runtime-ui-uchirimo-gate.test.mjs test/77-runtime-ui-inplus-v04r2-installability-coverage.test.mjs test/84-requested-flow-acceptance.test.mjs'
+          },null,2)+'\n');
+          NODE
+
+      - name: UI flow gate direct proof
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$POST_HUMAN_EVIDENCE_OUT"
+          node --test test/79-global-window-selection-flow.test.mjs test/74-new-construction-ui-v16.test.mjs test/73-runtime-ui-uchirimo-gate.test.mjs test/75-runtime-ui-inplus-v04r2-gate.test.mjs 2>&1 | tee "$POST_HUMAN_EVIDENCE_OUT/ui-flow-gate.tap"
+          node --input-type=module <<'NODE'
+          import { writeFileSync } from 'node:fs';
+          writeFileSync(process.env.POST_HUMAN_EVIDENCE_OUT+'/ui-flow-gate.json',JSON.stringify({
+            exact_head:process.env.HEAD_SHA,
+            status:'PASS',
+            gate:'UI_FLOW_GATE',
+            command:'node --test test/79-global-window-selection-flow.test.mjs test/74-new-construction-ui-v16.test.mjs test/73-runtime-ui-uchirimo-gate.test.mjs test/75-runtime-ui-inplus-v04r2-gate.test.mjs'
+          },null,2)+'\n');
+          NODE
+
       - name: Full repository regression
         shell: bash
         run: |
