@@ -69,6 +69,9 @@ jobs:
       - name: frame_angle canonical contract tests
         run: node --test test/76-frame-angle-global-flow.test.mjs
 
+      - name: Uchirimo Formal required_when targeted regression
+        run: node --test --test-name-pattern="Formal Phase9-R2" test/73-runtime-ui-uchirimo-gate.test.mjs
+
       - name: Install YAML parser
         run: python -m pip install PyYAML==6.0.2
 
