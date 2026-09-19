@@ -123,6 +123,21 @@ function nextRequiredEnumPartition(result,seed){
   return null;
 }
 
+function isV7MeasuredTimeoutClass(base,glassFamily,extraSeed){
+  if(glassFamily==='insulating_glass'&&base.windowType==='fix_window'){
+    return ['P3P3','F4P3'].includes(String(extraSeed.glass_structure??''));
+  }
+  if(glassFamily==='insulating_glass'&&['inward_opening_window','opening_window_terrace'].includes(base.windowType)){
+    return true;
+  }
+  if(base.windowType==='sliding_window'&&base.sash==='two_panel'){
+    const bathroomWindow=base.room==='bathroom'&&base.sizeClass==='window';
+    const residentialTerrace=base.room==='residential'&&base.sizeClass==='terrace';
+    return (bathroomWindow||residentialTerrace)&&['single_glazing','insulating_glass'].includes(glassFamily);
+  }
+  return false;
+}
+
 async function buildShardPartitions(runtime){
   const rows=[...(runtime.master?.canonical?.product_nodes??[])].sort((a,b)=>String(a.node_id).localeCompare(String(b.node_id)));
   if(!rows.length)throw new Error('UCHIRIMO_PRODUCT_NODE_PLAN_EMPTY');
@@ -155,8 +170,29 @@ async function buildShardPartitions(runtime){
     });
   };
 
+  const splitOnce=async(row,base,glassFamily,seed,extraSeed,resolved,extra)=>{
+    if(!extra){
+      pushPartition(row,base,glassFamily,seed,extraSeed);
+      return;
+    }
+    for(const value of extra.values){
+      const nextSeed={...seed,[extra.field.key]:value};
+      const nextExtraSeed={...extraSeed,[extra.field.key]:value};
+      const nextResolved=await resolveRuntimeAppProduct(PRODUCT_ID,nextSeed);
+      if(!same(nextResolved.selection?.[extra.field.key],value))throw new Error('UCHIRIMO_EXTRA_PARTITION_SEED_REJECTED:'+String(row.node_id)+':'+extra.field.key+':'+String(value));
+      pushPartition(row,base,glassFamily,nextSeed,nextExtraSeed);
+    }
+  };
+
   const expand=async(row,base,glassFamily,seed,extraSeed,resolved,remainingDepth)=>{
-    const extra=remainingDepth>0 ? nextRequiredEnumPartition(resolved,seed) : null;
+    if(remainingDepth<=0){
+      const measuredExtra=isV7MeasuredTimeoutClass(base,glassFamily,extraSeed)
+        ? nextRequiredEnumPartition(resolved,seed)
+        : null;
+      await splitOnce(row,base,glassFamily,seed,extraSeed,resolved,measuredExtra);
+      return;
+    }
+    const extra=nextRequiredEnumPartition(resolved,seed);
     if(!extra){
       pushPartition(row,base,glassFamily,seed,extraSeed);
       return;
@@ -199,14 +235,14 @@ async function plan(){
   if(!include.length)throw new Error('UCHIRIMO_PLAN_LANE_EMPTY:'+PLAN_LANE_INDEX);
   if(include.length>256)throw new Error('UCHIRIMO_PLAN_LANE_MATRIX_LIMIT_EXCEEDED:'+PLAN_LANE_INDEX+':'+include.length);
   const matrix={include};
-  const record={exact_head:head,status:'PASS',partition_axis:'product_node+glass_family+next_required_enum_depth2',shard_count:allPartitions.length,lane_index:PLAN_LANE_INDEX,lane_count:PLAN_LANE_COUNT,lane_shard_count:include.length,matrix};
+  const record={exact_head:head,status:'PASS',partition_axis:'product_node+glass_family+depth2+v7_measured_timeout_depth3',shard_count:allPartitions.length,lane_index:PLAN_LANE_INDEX,lane_count:PLAN_LANE_COUNT,lane_shard_count:include.length,matrix};
   writeFileSync(join(OUT,'matrix.json'),JSON.stringify(record,null,2)+'\n');
   if(process.env.GITHUB_OUTPUT){
     appendFileSync(process.env.GITHUB_OUTPUT,'matrix='+JSON.stringify(matrix)+'\n');
     appendFileSync(process.env.GITHUB_OUTPUT,'shard_count='+String(allPartitions.length)+'\n');
     appendFileSync(process.env.GITHUB_OUTPUT,'lane_shard_count='+String(include.length)+'\n');
   }
-  console.log('UCHIRIMO_SELECTOR_PLAN=PASS partitions='+allPartitions.length+' lane='+PLAN_LANE_INDEX+'/'+PLAN_LANE_COUNT+' lane_partitions='+include.length+' axis=product_node+glass_family+next_required_enum_depth2');
+  console.log('UCHIRIMO_SELECTOR_PLAN=PASS partitions='+allPartitions.length+' lane='+PLAN_LANE_INDEX+'/'+PLAN_LANE_COUNT+' lane_partitions='+include.length+' axis=product_node+glass_family+depth2+v7_measured_timeout_depth3');
 }
 async function aggregate(){
   const head=process.env.HEAD_SHA??process.env.GITHUB_SHA??currentExactHead();
@@ -294,11 +330,11 @@ async function aggregate(){
     exact_head:head,
     task_classification:'NON-PRODUCT-MASTER',
     product_master_mutation:0,
-    proof_model:'UCHIRIMO_REACHABLE_DISCRETE_SELECTOR_EXHAUSTIVE_SHARDED_V6',
+    proof_model:'UCHIRIMO_REACHABLE_DISCRETE_SELECTOR_EXHAUSTIVE_SHARDED_V7',
     runtime_manifest_sha256:[...runtimeHashes][0],
     runtime_integrity_match:true,
     shard_count:EXPECTED_SHARDS,
-    partition_axis:'product_node+glass_family+next_required_enum_depth2',
+    partition_axis:'product_node+glass_family+depth2+v7_measured_timeout_depth3',
     product_node_count:nodeIds.size,
     window_type_count:windows.size,
     terminal_context_count:terminals,
@@ -459,7 +495,7 @@ async function runShard(){
     exact_head:head,
     task_classification:'NON-PRODUCT-MASTER',
     product_master_mutation:0,
-    proof_model:'UCHIRIMO_REACHABLE_DISCRETE_SELECTOR_EXHAUSTIVE_SHARD_V6',
+    proof_model:'UCHIRIMO_REACHABLE_DISCRETE_SELECTOR_EXHAUSTIVE_SHARD_V7',
     shard_index:SHARD_INDEX,
     node_id:SHARD_NODE_ID,
     partition_key:TARGET_PARTITION_KEY,
