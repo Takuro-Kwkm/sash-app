@@ -59,14 +59,19 @@ jobs:
             ['SER-YKK-APW430','APW430',25],
             ['SER-YKK-APW431','APW431',6],
           ];
-          const include=[];
+          const groups=[];
           for (const [product_id,series,expected] of products) {
             const root=await resolveRuntimeAppProduct(product_id,{});
             const field=(root.fields??[]).find((one)=>one.key==='window_type');
             if (!field) throw new Error(`${product_id}: window_type missing`);
             const windows=(field.values??[]).filter((choice)=>choice.disabled!==true).map((choice)=>String(choice.value));
             if (windows.length!==expected) throw new Error(`${product_id}: expected ${expected} windows, got ${windows.length}`);
-            for (const window_type of windows) include.push({product_id,series,window_type});
+            groups.push(windows.map((window_type)=>({product_id,series,window_type})));
+          }
+          const include=[];
+          const maxGroupLength=Math.max(...groups.map((group)=>group.length));
+          for (let index=0;index<maxGroupLength;index+=1) {
+            for (const group of groups) if (group[index]) include.push(group[index]);
           }
           if (include.length!==80) throw new Error(`expected 80 windows, got ${include.length}`);
           const unique=new Set(include.map((row)=>row.window_type));
