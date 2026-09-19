@@ -1,0 +1,14 @@
+{
+  "exact_head": "998e850f41daf76e2a6d5afb694e19228bcebaa8",
+  "runtime_snapshot_id": "RUNTIME-SNAPSHOT-ad2603b8a64d026ffd0b",
+  "gates": {
+    "CANONICAL_RUNTIME_GATE": "PASS",
+    "RUNTIME_ADAPTER_GATE": "PASS",
+    "WINDOW_FLOW_BASELINE_GATE": "PASS",
+    "CANONICAL_SLOT_SCHEMA_GATE": "PASS",
+    "FLOW_SCHEMA_UNMAPPED_FIELD_GATE": "PASS",
+    "SINGLE_FLOW_ENGINE_GATE": "PASS",
+    "SERIES_OVERRIDE_ELIMINATION_GATE": "PASS"
+  },
+  "scope": "Pre-Human-Review Runtime identity, authoritative source-field coverage, adapter/baseline field-universe reconciliation and per-window structural baseline evidence. Dynamic selector combinations remain explicitly UNVERIFIED until post-Human QA."
+}
