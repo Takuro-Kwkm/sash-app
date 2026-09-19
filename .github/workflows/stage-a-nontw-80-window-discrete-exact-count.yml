@@ -28,6 +28,8 @@ jobs:
     if: ${{ needs.governance-authority.outputs.authorized == 'true' }}
     runs-on: ubuntu-latest
     timeout-minutes: 5
+    env:
+      HEAD_SHA: ${{ inputs.controller_head }}
     outputs:
       fingerprint: ${{ steps.fingerprint.outputs.fingerprint }}
       reused: ${{ steps.bind.outputs.reused }}
