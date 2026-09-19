@@ -1,0 +1,10 @@
+{
+  "status": "PASS",
+  "reviewed_exact_head": "998e850f41daf76e2a6d5afb694e19228bcebaa8",
+  "review_artifact_identity": "HFR-6625062975ca68e9282d6d0502fc46a6d3e277172cc9ac5c54583d291527da00",
+  "human_approval_reference": "https://github.com/Takuro-Kwkm/sash-app/pull/24#issuecomment-5739633094",
+  "approved_at": "2026-09-19T05:23:30Z",
+  "exact_head": "fa5c7e980924685aa3c498dc3de5d927062c0ae0",
+  "source": "GITHUB_PR_COMMENT_BY_AUTHORIZED_HUMAN",
+  "observed_at": "2026-09-19T06:14:52.003Z"
+}
