@@ -77,6 +77,99 @@ jobs:
           path: artifacts/governance/
           if-no-files-found: error
 
+  uchirimo-selector-proof:
+    needs: ["governance-authority", "governance-precheck", "uchirimo-selector-proof-aggregate"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && needs.governance-precheck.outputs.authorized == 'true' && needs.uchirimo-selector-proof-aggregate.result == 'success' }}
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [0, 1, 2, 3]
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      UCHIRIMO_SELECTOR_MODE: shard
+      UCHIRIMO_WINDOW_SHARD_INDEX: ${{ matrix.shard }}
+      UCHIRIMO_SELECTOR_EXPECTED_SHARDS: 4
+      UCHIRIMO_RESOLVER_CACHE_MAX: 512
+      UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-selector-proof-shard
+    steps:
+      - name: Checkout exact HEAD
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.HEAD_SHA }}
+          fetch-depth: 0
+
+      - name: Setup Node 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Install
+        run: npm install --ignore-scripts
+
+      - name: Run isolated Uchirimo selector shard
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$HEAD_SHA"
+          node scripts/uchirimo-full-selector-proof.mjs
+
+      - name: Upload Uchirimo selector shard evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: uchirimo-selector-proof-shard-${{ matrix.shard }}-${{ env.HEAD_SHA }}
+          path: artifacts/uchirimo-selector-proof-shard/
+          if-no-files-found: warn
+
+  uchirimo-selector-proof-aggregate:
+    needs: ["governance-authority", "governance-precheck", "uchirimo-selector-proof"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && needs.governance-precheck.outputs.authorized == 'true' && needs.uchirimo-selector-proof.result == 'success' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      UCHIRIMO_SELECTOR_MODE: aggregate
+      UCHIRIMO_SELECTOR_EXPECTED_SHARDS: 4
+      UCHIRIMO_SELECTOR_SHARD_INPUT: artifacts/uchirimo-selector-proof-shards
+      UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-full-selector-proof
+    steps:
+      - name: Checkout exact HEAD
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.HEAD_SHA }}
+          fetch-depth: 0
+
+      - name: Setup Node 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Install
+        run: npm install --ignore-scripts
+
+      - name: Download all successful selector shards
+        uses: actions/download-artifact@v4
+        with:
+          pattern: uchirimo-selector-proof-shard-*-${{ env.HEAD_SHA }}
+          path: artifacts/uchirimo-selector-proof-shards
+          merge-multiple: true
+
+      - name: Aggregate and verify full Uchirimo selector proof
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$HEAD_SHA"
+          node scripts/uchirimo-full-selector-proof.mjs
+
+      - name: Upload aggregated Uchirimo selector proof
+        uses: actions/upload-artifact@v4
+        with:
+          name: uchirimo-selector-proof-aggregate-${{ env.HEAD_SHA }}
+          path: artifacts/uchirimo-full-selector-proof/
+          if-no-files-found: error
+
   global-flow:
     needs: ["governance-authority", "governance-precheck"]
     if: ${{ needs.governance-authority.outputs.authorized == 'true' && (needs.governance-precheck.outputs.authorized == 'true') }}
@@ -113,6 +206,23 @@ jobs:
 
       - name: Install
         run: npm install --ignore-scripts
+
+      - name: Restore aggregated Uchirimo selector proof
+        uses: actions/download-artifact@v4
+        with:
+          name: uchirimo-selector-proof-aggregate-${{ env.HEAD_SHA }}
+          path: artifacts/uchirimo-full-selector-proof
+
+      - name: Verify restored Uchirimo selector proof
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import { readFileSync } from 'node:fs';
+          const report=JSON.parse(readFileSync('artifacts/uchirimo-full-selector-proof/report.json','utf8'));
+          if(report.exact_head!==process.env.HEAD_SHA||report.status!=='PASS'||report.shard_count!==4||report.window_type_count!==4||report.unverified_discrete_selector_case_count!==0)throw new Error('UCHIRIMO_SHARDED_PROOF_RESTORE_INVALID');
+          console.log('UCHIRIMO_FULL_SELECTOR_PROOF=PASS_RESTORED_SHARDED');
+          NODE
 
       - name: Global flow syntax and source gates
         shell: bash
@@ -213,59 +323,6 @@ jobs:
 
       - name: Uchirimo UI regression partition
         run: node --test test/72-runtime-manifest-uchirimo-integration.test.mjs test/73-runtime-ui-uchirimo-gate.test.mjs
-
-      - name: Compute Uchirimo selector proof dependency fingerprint
-        id: uchirimo-proof-fingerprint
-        shell: bash
-        run: |
-          set -euo pipefail
-          node scripts/governance/proof-dependency-fingerprint.mjs --mode fingerprint --family UCHIRIMO_SELECTOR --fingerprint-out artifacts/governance/uchirimo-selector-proof-fingerprint.json
-
-      - name: Restore Uchirimo selector proof cache
-        id: uchirimo-proof-cache
-        uses: actions/cache/restore@v4
-        with:
-          path: artifacts/uchirimo-full-selector-proof
-          key: proof-uchirimo-selector-v1-${{ steps.uchirimo-proof-fingerprint.outputs.fingerprint }}
-
-      - name: Bind cached Uchirimo selector proof to current HEAD
-        id: uchirimo-proof-bind
-        if: ${{ steps.uchirimo-proof-cache.outputs.cache-hit == 'true' }}
-        shell: bash
-        run: |
-          set +e
-          node scripts/governance/proof-dependency-fingerprint.mjs --mode bind --family UCHIRIMO_SELECTOR --artifact artifacts/uchirimo-full-selector-proof/report.json --metadata artifacts/uchirimo-full-selector-proof/source-metadata.json --binding artifacts/uchirimo-full-selector-proof/current-head-binding.json
-          rc=$?
-          set -e
-          if [ "$rc" -eq 0 ]; then
-            echo "reused=true" >> "$GITHUB_OUTPUT"
-            echo "UCHIRIMO_SELECTOR_PROOF_REUSE=PASS"
-          else
-            rm -rf artifacts/uchirimo-full-selector-proof
-            echo "reused=false" >> "$GITHUB_OUTPUT"
-            echo "UCHIRIMO_SELECTOR_PROOF_REUSE=INVALID_RERUN_REQUIRED"
-          fi
-
-      - name: Uchirimo full discrete selector proof
-        if: ${{ steps.uchirimo-proof-bind.outputs.reused != 'true' }}
-        shell: bash
-        run: |
-          set -euo pipefail
-          node scripts/uchirimo-full-selector-proof.mjs
-
-      - name: Stamp fresh Uchirimo selector proof metadata
-        if: ${{ steps.uchirimo-proof-bind.outputs.reused != 'true' }}
-        shell: bash
-        run: |
-          set -euo pipefail
-          node scripts/governance/proof-dependency-fingerprint.mjs --mode stamp --family UCHIRIMO_SELECTOR --artifact artifacts/uchirimo-full-selector-proof/report.json --metadata artifacts/uchirimo-full-selector-proof/source-metadata.json
-
-      - name: Save Uchirimo selector proof cache
-        if: ${{ steps.uchirimo-proof-cache.outputs.cache-hit != 'true' && steps.uchirimo-proof-bind.outputs.reused != 'true' }}
-        uses: actions/cache/save@v4
-        with:
-          path: artifacts/uchirimo-full-selector-proof
-          key: proof-uchirimo-selector-v1-${{ steps.uchirimo-proof-fingerprint.outputs.fingerprint }}
 
       - name: New-construction UI regression partition
         run: node --test test/74-new-construction-ui-v16.test.mjs test/75-stage-a-size-display-full-coverage.test.mjs test/76-custom-dimension-safety.test.mjs
