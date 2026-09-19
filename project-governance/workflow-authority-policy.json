@@ -28,7 +28,8 @@
   "controller_post_human_jobs": [
     "post-review-global-flow",
     "post-review-nontw-exact",
-    "post-review-tw-exact"
+    "post-review-tw-exact",
+    "finalize-post-human-evidence"
   ],
   "legacy_workflows": [
     "ci.yml",
