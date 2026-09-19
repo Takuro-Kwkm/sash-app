@@ -16,6 +16,10 @@ const TARGET_WINDOW=String(process.env.UCHIRIMO_SELECTOR_WINDOW ?? '');
 const TARGET_SASH=String(process.env.UCHIRIMO_SELECTOR_SASH ?? '__UNSET__');
 const TARGET_SIZE_CLASS=String(process.env.UCHIRIMO_SELECTOR_SIZE_CLASS ?? '__UNSET__');
 const TARGET_GLASS_FAMILY=String(process.env.UCHIRIMO_SELECTOR_GLASS_FAMILY ?? '');
+const TARGET_PARTITION_KEY=String(process.env.UCHIRIMO_SELECTOR_PARTITION_KEY ?? '');
+const TARGET_PARTITION_FIELD=String(process.env.UCHIRIMO_SELECTOR_PARTITION_FIELD ?? '__NONE__');
+const TARGET_PARTITION_VALUE_JSON=String(process.env.UCHIRIMO_SELECTOR_PARTITION_VALUE_JSON ?? 'null');
+const TARGET_PARTITION_VALUE=TARGET_PARTITION_FIELD==='__NONE__' ? undefined : JSON.parse(TARGET_PARTITION_VALUE_JSON);
 const EXPECTED_SHARDS=Number(process.env.UCHIRIMO_SELECTOR_EXPECTED_SHARDS ?? 0);
 const MAX_STATES=Number(process.env.UCHIRIMO_SELECTOR_MAX_STATES ?? 1000000);
 const MAX_TERMINALS=Number(process.env.UCHIRIMO_SELECTOR_MAX_TERMINALS ?? 1000000);
@@ -106,29 +110,72 @@ function baseSeedForNode(row){
   return {room,windowType,sash,sizeClass,seed};
 }
 
+function nextRequiredEnumPartition(result,seed){
+  for(const field of result.fields??[]){
+    if(field.required!==true||field.readOnly===true||field.dataType!=='ENUM')continue;
+    if(TECHNICAL_KEYS.has(field.key)||CONTINUOUS_KEYS.has(field.key))continue;
+    if(Object.prototype.hasOwnProperty.call(seed,field.key))continue;
+    const values=[...new Map(enabled(field).map((row)=>[stableJson(row.value),row.value])).values()];
+    if(values.length>1)return {field,values};
+  }
+  return null;
+}
+
 async function buildShardPartitions(runtime){
   const rows=[...(runtime.master?.canonical?.product_nodes??[])].sort((a,b)=>String(a.node_id).localeCompare(String(b.node_id)));
   if(!rows.length)throw new Error('UCHIRIMO_PRODUCT_NODE_PLAN_EMPTY');
   const include=[];
   const seenPartitions=new Set();
+  const seenSeeds=new Set();
+  const pushPartition=(row,base,glassFamily,seed,partitionField='__NONE__',partitionValue=undefined)=>{
+    const nodeId=String(row.node_id);
+    const partitionKey=partitionField==='__NONE__'
+      ? nodeId+'|'+glassFamily+'|__BASE__'
+      : nodeId+'|'+glassFamily+'|'+partitionField+'='+stableJson(partitionValue);
+    if(seenPartitions.has(partitionKey))throw new Error('UCHIRIMO_PARTITION_DUPLICATE:'+partitionKey);
+    const seedKey=stableJson(seed);
+    if(seenSeeds.has(seedKey))throw new Error('UCHIRIMO_PARTITION_SEED_DUPLICATE:'+partitionKey);
+    seenPartitions.add(partitionKey);
+    seenSeeds.add(seedKey);
+    include.push({
+      shard:include.length,
+      node_id:nodeId,
+      partition_key:partitionKey,
+      room_specification:base.room,
+      window_type:base.windowType,
+      sash_configuration:base.sash,
+      size_class:base.sizeClass,
+      glass_family:glassFamily,
+      partition_field:partitionField,
+      partition_value_json:partitionField==='__NONE__'?'null':JSON.stringify(partitionValue)
+    });
+  };
   for(const row of rows){
     const nodeId=String(row.node_id);
-    const {room,windowType,sash,sizeClass,seed:baseSeed}=baseSeedForNode(row);
-    const baseResult=await resolveRuntimeAppProduct(PRODUCT_ID,baseSeed);
-    for(const [key,value] of Object.entries(baseSeed))if(!same(baseResult.selection?.[key],value))throw new Error('UCHIRIMO_PRODUCT_NODE_BASE_SEED_REJECTED:'+nodeId+':'+key);
+    const base=baseSeedForNode(row);
+    const baseResult=await resolveRuntimeAppProduct(PRODUCT_ID,base.seed);
+    for(const [key,value] of Object.entries(base.seed))if(!same(baseResult.selection?.[key],value))throw new Error('UCHIRIMO_PRODUCT_NODE_BASE_SEED_REJECTED:'+nodeId+':'+key);
     const glassField=(baseResult.fields??[]).find((field)=>field.key==='glass_family');
-    const glassFamilies=enabled(glassField).map((entry)=>String(entry.value));
+    const glassFamilies=[...new Set(enabled(glassField).map((entry)=>String(entry.value)))];
     if(!glassFamilies.length)throw new Error('UCHIRIMO_PRODUCT_NODE_GLASS_FAMILY_EMPTY:'+nodeId);
     for(const glassFamily of glassFamilies){
-      const seed={...baseSeed,glass_family:glassFamily};
-      const resolved=await resolveRuntimeAppProduct(PRODUCT_ID,seed);
+      const glassSeed={...base.seed,glass_family:glassFamily};
+      const resolved=await resolveRuntimeAppProduct(PRODUCT_ID,glassSeed);
       if(!same(resolved.selection?.glass_family,glassFamily))throw new Error('UCHIRIMO_GLASS_FAMILY_SEED_REJECTED:'+nodeId+':'+glassFamily);
-      const partitionKey=nodeId+'|'+glassFamily;
-      if(seenPartitions.has(partitionKey))throw new Error('UCHIRIMO_PARTITION_DUPLICATE:'+partitionKey);
-      seenPartitions.add(partitionKey);
-      include.push({shard:include.length,node_id:nodeId,partition_key:partitionKey,room_specification:room,window_type:windowType,sash_configuration:sash,size_class:sizeClass,glass_family:glassFamily});
+      const extra=nextRequiredEnumPartition(resolved,glassSeed);
+      if(!extra){
+        pushPartition(row,base,glassFamily,glassSeed);
+        continue;
+      }
+      for(const value of extra.values){
+        const seed={...glassSeed,[extra.field.key]:value};
+        const partitionResolved=await resolveRuntimeAppProduct(PRODUCT_ID,seed);
+        if(!same(partitionResolved.selection?.[extra.field.key],value))throw new Error('UCHIRIMO_EXTRA_PARTITION_SEED_REJECTED:'+nodeId+':'+extra.field.key+':'+String(value));
+        pushPartition(row,base,glassFamily,seed,extra.field.key,value);
+      }
     }
   }
+  if(include.length>256)throw new Error('UCHIRIMO_PARTITION_MATRIX_LIMIT_EXCEEDED:'+include.length);
   return include;
 }
 
@@ -138,13 +185,13 @@ async function plan(){
   if(!runtime?.sourcePackageIntegrity?.match)throw new Error('UCHIRIMO_RUNTIME_INTEGRITY_NOT_PASS');
   const include=await buildShardPartitions(runtime);
   const matrix={include};
-  const record={exact_head:head,status:'PASS',partition_axis:'product_node+glass_family',shard_count:include.length,matrix};
+  const record={exact_head:head,status:'PASS',partition_axis:'product_node+glass_family+next_required_enum',shard_count:include.length,matrix};
   writeFileSync(join(OUT,'matrix.json'),JSON.stringify(record,null,2)+'\n');
   if(process.env.GITHUB_OUTPUT){
     appendFileSync(process.env.GITHUB_OUTPUT,'matrix='+JSON.stringify(matrix)+'\n');
     appendFileSync(process.env.GITHUB_OUTPUT,'shard_count='+String(include.length)+'\n');
   }
-  console.log('UCHIRIMO_SELECTOR_PLAN=PASS partitions='+include.length);
+  console.log('UCHIRIMO_SELECTOR_PLAN=PASS partitions='+include.length+' axis=product_node+glass_family+next_required_enum');
 }
 async function aggregate(){
   const head=process.env.HEAD_SHA??process.env.GITHUB_SHA??currentExactHead();
@@ -232,11 +279,11 @@ async function aggregate(){
     exact_head:head,
     task_classification:'NON-PRODUCT-MASTER',
     product_master_mutation:0,
-    proof_model:'UCHIRIMO_REACHABLE_DISCRETE_SELECTOR_EXHAUSTIVE_SHARDED_V4',
+    proof_model:'UCHIRIMO_REACHABLE_DISCRETE_SELECTOR_EXHAUSTIVE_SHARDED_V5',
     runtime_manifest_sha256:[...runtimeHashes][0],
     runtime_integrity_match:true,
     shard_count:EXPECTED_SHARDS,
-    partition_axis:'product_node+glass_family',
+    partition_axis:'product_node+glass_family+next_required_enum',
     product_node_count:nodeIds.size,
     window_type_count:windows.size,
     terminal_context_count:terminals,
@@ -283,13 +330,14 @@ async function runShard(){
     return result;
   }
 
-  if(!SHARD_NODE_ID||!TARGET_ROOM||!TARGET_WINDOW||!TARGET_GLASS_FAMILY)throw new Error('UCHIRIMO_SHARD_PLAN_INPUT_MISSING:'+SHARD_INDEX);
+  if(!SHARD_NODE_ID||!TARGET_ROOM||!TARGET_WINDOW||!TARGET_GLASS_FAMILY||!TARGET_PARTITION_KEY)throw new Error('UCHIRIMO_SHARD_PLAN_INPUT_MISSING:'+SHARD_INDEX);
   const formalNode=(runtime.master?.canonical?.product_nodes??[]).find((row)=>String(row.node_id)===SHARD_NODE_ID);
   if(!formalNode)throw new Error('UCHIRIMO_SHARD_PRODUCT_NODE_NOT_FOUND:'+SHARD_NODE_ID);
   const seed={room_specification:TARGET_ROOM,window_type:TARGET_WINDOW};
   if(TARGET_SASH!=='__UNSET__')seed.sash_configuration=TARGET_SASH;
   if(TARGET_SIZE_CLASS!=='__UNSET__')seed.size_class=TARGET_SIZE_CLASS;
   seed.glass_family=TARGET_GLASS_FAMILY;
+  if(TARGET_PARTITION_FIELD!=='__NONE__')seed[TARGET_PARTITION_FIELD]=TARGET_PARTITION_VALUE;
   if(String(formalNode.room??'')!==TARGET_ROOM||String(formalNode.window_type??'')!==TARGET_WINDOW)throw new Error('UCHIRIMO_SHARD_PLAN_NODE_AXIS_MISMATCH:'+SHARD_NODE_ID);
   if(TARGET_WINDOW==='sliding_window'){
     if(TARGET_SASH!=='__UNSET__'&&String(formalNode.sash_configuration??'')!==TARGET_SASH)throw new Error('UCHIRIMO_SHARD_PLAN_SASH_MISMATCH:'+SHARD_NODE_ID);
@@ -393,10 +441,12 @@ async function runShard(){
     exact_head:head,
     task_classification:'NON-PRODUCT-MASTER',
     product_master_mutation:0,
-    proof_model:'UCHIRIMO_REACHABLE_DISCRETE_SELECTOR_EXHAUSTIVE_SHARD_V4',
+    proof_model:'UCHIRIMO_REACHABLE_DISCRETE_SELECTOR_EXHAUSTIVE_SHARD_V5',
     shard_index:SHARD_INDEX,
     node_id:SHARD_NODE_ID,
-    partition_key:SHARD_NODE_ID+'|'+TARGET_GLASS_FAMILY,
+    partition_key:TARGET_PARTITION_KEY,
+    partition_field:TARGET_PARTITION_FIELD,
+    partition_value:TARGET_PARTITION_FIELD==='__NONE__'?null:TARGET_PARTITION_VALUE,
     glass_family:TARGET_GLASS_FAMILY,
     seed:stable(seed),
     shard_count:EXPECTED_SHARDS,
@@ -425,7 +475,7 @@ async function runShard(){
     status:'PASS'
   };
   writeFileSync(join(OUT,'shard-'+SHARD_INDEX+'-report.json'),JSON.stringify(report,null,2)+'\n');
-  console.log('UCHIRIMO_SELECTOR_SHARD=PASS shard='+SHARD_INDEX+' node='+SHARD_NODE_ID+' glass='+TARGET_GLASS_FAMILY+' window='+TARGET_WINDOW+' terminals='+terminalCount+' states='+visited.size+' transitions='+transitionChecks+' peak_heap_mb='+peakHeapMb);
+  console.log('UCHIRIMO_SELECTOR_SHARD=PASS shard='+SHARD_INDEX+' node='+SHARD_NODE_ID+' glass='+TARGET_GLASS_FAMILY+' partition='+TARGET_PARTITION_KEY+' window='+TARGET_WINDOW+' terminals='+terminalCount+' states='+visited.size+' transitions='+transitionChecks+' peak_heap_mb='+peakHeapMb);
 }
 
 const failurePath=join(OUT,MODE==='aggregate'?'aggregate-failure.json':MODE==='plan'?'plan-failure.json':'shard-'+String(SHARD_INDEX)+'-failure.json');
