@@ -13,7 +13,7 @@ permissions:
   pull-requests: read
 
 concurrency:
-  group: global-window-selection-flow-${{ inputs.controller_head }}
+  group: global-window-selection-flow-${{ github.ref }}-${{ inputs.controller_head }}
   cancel-in-progress: true
 
 jobs:
