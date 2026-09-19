@@ -8,7 +8,7 @@ const PRODUCT_ID = 'SER-YKKAP-UCHIRIMO';
 const OUT = 'artifacts/uchirimo-runtime-browser-qa';
 const TECHNICAL_UI_TOKEN = /ORDER_READY\s*=|\b(?:BLOCK|BLOCKED|REVIEW_REQUIRED|MANUAL_CHECK|INVALID)\b/;
 await mkdir(OUT, { recursive:true });
-const report = { status:'RUNNING', desktop:{}, mobile:{}, consoleErrors:[], pageErrors:[], failedResponses:[] };
+const report = { status:'RUNNING', exactHead:process.env.HEAD_SHA??process.env.GITHUB_SHA??null, desktop:{}, mobile:{}, consoleErrors:[], pageErrors:[], failedResponses:[] };
 const browser = await chromium.launch({ headless:true });
 
 function track(page) {
