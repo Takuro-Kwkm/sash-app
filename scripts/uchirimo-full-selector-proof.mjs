@@ -9,7 +9,7 @@ const OUT=process.env.UCHIRIMO_FULL_SELECTOR_OUT ?? 'artifacts/uchirimo-full-sel
 const MAX_STATES=Number(process.env.UCHIRIMO_SELECTOR_MAX_STATES ?? 250000);
 const MAX_TERMINALS=Number(process.env.UCHIRIMO_SELECTOR_MAX_TERMINALS ?? 50000);
 const CONTINUOUS_KEYS=new Set(['size_w','size_h','frame_projection','fukashi_dimension','custom_w','custom_h','custom_width','custom_height']);
-const TECHNICAL_KEYS=new Set(['construction','legacyConstruction','legacyConfiguration','internal_construction']);
+const TECHNICAL_KEYS=new Set(['legacyConstruction','legacyConfiguration','internal_construction']);
 mkdirSync(OUT,{recursive:true});
 const writeFailure=(error)=>{
   try{
