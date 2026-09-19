@@ -1,14 +1,14 @@
-import { mkdirSync, readFileSync } from 'node:fs';
+import { mkdirSync } from 'node:fs';
 import { currentExactHead, readJson, sha256File, writeJson } from './governance-lib.mjs';
 
 const head=currentExactHead();
 const review=readJson('artifacts/governance/human-flow-review.json');
 if(review.exact_head!==head)throw new Error(`Human review artifact HEAD mismatch: artifact=${review.exact_head} current=${head}`);
 
-const tapPass=(path)=>{
-  const text=readFileSync(path,'utf8');
-  if(/(^|\n)not ok\b/m.test(text)||!/# fail 0\b/.test(text))throw new Error(`TAP_NOT_PASS:${path}`);
-  return {path,sha256:sha256File(path)};
+const jsonPass=(path)=>{
+  const row=readJson(path);
+  if(row.status!=='PASS'||row.exact_head!==head)throw new Error(`DIRECT_GATE_EVIDENCE_NOT_PASS:${path}`);
+  return {path,sha256:sha256File(path),command:row.command??null};
 };
 const globalBrowser=readJson('artifacts/global-window-selection-flow-browser-qa/report.json');
 const inplusBrowser=readJson('artifacts/inplus-v04r2-global-flow-full-coverage-browser-qa/report.json');
@@ -37,10 +37,10 @@ if(inplusBrowser.status!=='PASS'||inplusBrowser.logicalQaCaseCount!==1148||inplu
 if(inplusBrowser.desktop?.failed!==0||inplusBrowser.mobile?.failed!==0||(inplusBrowser.consoleErrors??[]).length||(inplusBrowser.pageErrors??[]).length||(inplusBrowser.failedResponses??[]).length)throw new Error('INPLUS_BROWSER_ERROR_NOT_ZERO');
 if(repository.status!=='PASS'||repository.exact_head!==head)throw new Error('REPOSITORY_GATE_PROOF_NOT_PASS');
 
-const signature=tapPass('artifacts/governance/post-human/signature-transition.tap');
-const dependency=tapPass('artifacts/governance/post-human/dependency-gate.tap');
-const uiFlow=tapPass('artifacts/governance/post-human/ui-flow-gate.tap');
-const regression=tapPass('artifacts/governance/post-human/full-repository-regression.tap');
+const signature=jsonPass('artifacts/governance/post-human/global-flow-unit.json');
+const dependency=jsonPass('artifacts/governance/post-human/dependency-gate.json');
+const uiFlow=jsonPass('artifacts/governance/post-human/ui-flow-gate.json');
+const regression=jsonPass('artifacts/governance/post-human/full-repository-regression.json');
 
 const proofPath='artifacts/governance/post-human-global-flow-proof.json';
 const proof={
