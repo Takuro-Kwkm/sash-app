@@ -27,7 +27,7 @@ function assertSemanticOrder(result,label){
   }
 }
 
-const report={status:'RUNNING',viewportResults:{},consoleErrors:[],pageErrors:[],failedResponses:[],integrationCount:0,transitionChecks:0,domSignatureChecks:0};
+const report={status:'RUNNING',exactHead:process.env.HEAD_SHA??process.env.GITHUB_SHA??null,viewportResults:{},consoleErrors:[],pageErrors:[],failedResponses:[],integrationCount:0,windowCoverageChecks:0,transitionChecks:0,domSignatureChecks:0};
 const browser=await chromium.launch({headless:true});
 
 async function installAndSelect(page,integration){
@@ -63,6 +63,21 @@ async function runViewport(name,contextOptions,integrations){
     for(const integration of integrations){
       let result=await installAndSelect(page,integration);
       await assertDomSignature(page,result,`${name}:${integration.id}:initial`);
+      const windowField=(result.fields??[]).find((field)=>field.key==='window_type');
+      const windowChoices=(windowField?.values??[]).filter((choice)=>choice.disabled!==true);
+      assert.ok(windowChoices.length>0,`${name}:${integration.id}:window_type choices missing`);
+      let windowChecks=0;
+      for(const choice of windowChoices){
+        const locator=page.locator('#dynamicForm [data-spec-key="window_type"]');
+        assert.equal(await locator.count(),1,`${name}:${integration.id}:window_type DOM selector missing`);
+        const responsePromise=page.waitForResponse((response)=>response.url().includes('/api/runtime-master/resolve')&&response.status()===200);
+        await locator.selectOption(String(choice.value));
+        result=await (await responsePromise).json();
+        assert.equal(String(result.selection?.window_type),String(choice.value),`${name}:${integration.id}:${choice.value}:window selection did not stick`);
+        await assertDomSignature(page,result,`${name}:${integration.id}:window:${choice.value}`);
+        windowChecks+=1;
+        report.windowCoverageChecks+=1;
+      }
       const visited=new Set();
       let transitions=0;
       for(let step=0;step<12;step+=1){
@@ -92,7 +107,7 @@ async function runViewport(name,contextOptions,integrations){
           transitions+=1;report.transitionChecks+=1;
         }
       }
-      rows.push({id:integration.id,transitions,finalSignature:(result.fields??[]).map((field)=>`${field.semanticStage}:${field.semanticSlot}`)});
+      rows.push({id:integration.id,windowCount:windowChecks,transitions,finalSignature:(result.fields??[]).map((field)=>`${field.semanticStage}:${field.semanticSlot}`)});
     }
   }finally{
     await context.close();
@@ -114,8 +129,13 @@ try{
   assert.deepEqual(report.consoleErrors,[]);
   assert.deepEqual(report.pageErrors,[]);
   assert.deepEqual(report.failedResponses,[]);
+  for(const name of Object.keys(VIEWPORTS)){
+    const count=(report.viewportResults[name]??[]).reduce((sum,row)=>sum+(row.windowCount??0),0);
+    assert.equal(count,113,`${name}: expected all 113 current window types, got ${count}`);
+  }
+  assert.equal(report.windowCoverageChecks,226,`expected 113 windows × 2 viewports, got ${report.windowCoverageChecks}`);
   assert.ok(report.transitionChecks>=16,`expected at least one transition per window integration per viewport, got ${report.transitionChecks}`);
-  assert.ok(report.domSignatureChecks>=32,`expected initial+transition signature checks, got ${report.domSignatureChecks}`);
+  assert.ok(report.domSignatureChecks>=258,`expected initial + 113 window checks per viewport + transitions, got ${report.domSignatureChecks}`);
   report.status='PASS';
   await writeFile(`${OUT}/report.json`,JSON.stringify(report,null,2));
   console.log(JSON.stringify(report,null,2));
