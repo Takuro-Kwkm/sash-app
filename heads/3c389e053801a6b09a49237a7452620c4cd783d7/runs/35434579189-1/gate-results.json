@@ -1,0 +1,169 @@
+{
+  "schema_version": "1.1.0",
+  "generated_at": "2026-09-19T09:24:14.508Z",
+  "repository": "Takuro-Kwkm/sash-app",
+  "branch": "feat/new-construction-runtime-ui-v16-20260910",
+  "exact_head": "3c389e053801a6b09a49237a7452620c4cd783d7",
+  "runtime_snapshot_id": "RUNTIME-SNAPSHOT-ad2603b8a64d026ffd0b",
+  "task_classification": "NON-PRODUCT-MASTER",
+  "product_master_mutation": 0,
+  "gates": {
+    "CANONICAL_RUNTIME_GATE": {
+      "status": "PASS",
+      "evidence_id": "CANONICAL_RUNTIME_GATE-3c389e053801-ee265d13e77d",
+      "exact_head": "3c389e053801a6b09a49237a7452620c4cd783d7",
+      "runtime_snapshot_id": "RUNTIME-SNAPSHOT-ad2603b8a64d026ffd0b"
+    },
+    "RUNTIME_ADAPTER_GATE": {
+      "status": "PASS",
+      "evidence_id": "RUNTIME_ADAPTER_GATE-3c389e053801-ee265d13e77d",
+      "exact_head": "3c389e053801a6b09a49237a7452620c4cd783d7",
+      "runtime_snapshot_id": "RUNTIME-SNAPSHOT-ad2603b8a64d026ffd0b"
+    },
+    "WINDOW_FLOW_BASELINE_GATE": {
+      "status": "PASS",
+      "evidence_id": "WINDOW_FLOW_BASELINE_GATE-3c389e053801-ee265d13e77d",
+      "exact_head": "3c389e053801a6b09a49237a7452620c4cd783d7",
+      "runtime_snapshot_id": "RUNTIME-SNAPSHOT-ad2603b8a64d026ffd0b"
+    },
+    "CANONICAL_SLOT_SCHEMA_GATE": {
+      "status": "PASS",
+      "evidence_id": "CANONICAL_SLOT_SCHEMA_GATE-3c389e053801-ee265d13e77d",
+      "exact_head": "3c389e053801a6b09a49237a7452620c4cd783d7",
+      "runtime_snapshot_id": "RUNTIME-SNAPSHOT-ad2603b8a64d026ffd0b"
+    },
+    "FLOW_SCHEMA_UNMAPPED_FIELD_GATE": {
+      "status": "PASS",
+      "evidence_id": "FLOW_SCHEMA_UNMAPPED_FIELD_GATE-3c389e053801-ee265d13e77d",
+      "exact_head": "3c389e053801a6b09a49237a7452620c4cd783d7",
+      "runtime_snapshot_id": "RUNTIME-SNAPSHOT-ad2603b8a64d026ffd0b"
+    },
+    "SINGLE_FLOW_ENGINE_GATE": {
+      "status": "PASS",
+      "evidence_id": "SINGLE_FLOW_ENGINE_GATE-3c389e053801-ee265d13e77d",
+      "exact_head": "3c389e053801a6b09a49237a7452620c4cd783d7",
+      "runtime_snapshot_id": "RUNTIME-SNAPSHOT-ad2603b8a64d026ffd0b"
+    },
+    "SERIES_OVERRIDE_ELIMINATION_GATE": {
+      "status": "PASS",
+      "evidence_id": "SERIES_OVERRIDE_ELIMINATION_GATE-3c389e053801-ee265d13e77d",
+      "exact_head": "3c389e053801a6b09a49237a7452620c4cd783d7",
+      "runtime_snapshot_id": "RUNTIME-SNAPSHOT-ad2603b8a64d026ffd0b"
+    },
+    "HUMAN_FLOW_REVIEW_GATE": {
+      "status": "PASS",
+      "reason": "explicit approval retained because the reviewed commit is an ancestor of current HEAD and no Human-Review-relevant source changed"
+    },
+    "FULL_FLOW_SIGNATURE_COVERAGE_GATE": {
+      "status": "UNVERIFIED",
+      "reason": "no authoritative evidence for current exact HEAD and Runtime Snapshot"
+    },
+    "FLOW_TRANSITION_GATE": {
+      "status": "BLOCKED",
+      "reason": "prerequisites not PASS",
+      "blocking_gates": [
+        "FULL_FLOW_SIGNATURE_COVERAGE_GATE"
+      ]
+    },
+    "FULL_WINDOW_COVERAGE_GATE": {
+      "status": "BLOCKED",
+      "reason": "prerequisites not PASS",
+      "blocking_gates": [
+        "FLOW_TRANSITION_GATE"
+      ]
+    },
+    "CUSTOM_SIZE_COVERAGE_GATE": {
+      "status": "BLOCKED",
+      "reason": "prerequisites not PASS",
+      "blocking_gates": [
+        "FULL_WINDOW_COVERAGE_GATE"
+      ]
+    },
+    "DEPENDENCY_GATE": {
+      "status": "BLOCKED",
+      "reason": "prerequisites not PASS",
+      "blocking_gates": [
+        "CUSTOM_SIZE_COVERAGE_GATE"
+      ]
+    },
+    "UI_FLOW_GATE": {
+      "status": "BLOCKED",
+      "reason": "prerequisites not PASS",
+      "blocking_gates": [
+        "DEPENDENCY_GATE"
+      ]
+    },
+    "AUTOMATED_TEST_GATE": {
+      "status": "BLOCKED",
+      "reason": "prerequisites not PASS",
+      "blocking_gates": [
+        "UI_FLOW_GATE"
+      ]
+    },
+    "FULL_BROWSER_FLOW_QA_GATE": {
+      "status": "BLOCKED",
+      "reason": "prerequisites not PASS",
+      "blocking_gates": [
+        "AUTOMATED_TEST_GATE"
+      ]
+    },
+    "FULL_BROWSER_QA_GATE": {
+      "status": "BLOCKED",
+      "reason": "prerequisites not PASS",
+      "blocking_gates": [
+        "FULL_BROWSER_FLOW_QA_GATE"
+      ]
+    },
+    "REGRESSION_GATE": {
+      "status": "BLOCKED",
+      "reason": "prerequisites not PASS",
+      "blocking_gates": [
+        "FULL_BROWSER_QA_GATE"
+      ]
+    },
+    "REPOSITORY_GATE": {
+      "status": "BLOCKED",
+      "reason": "prerequisites not PASS",
+      "blocking_gates": [
+        "REGRESSION_GATE"
+      ]
+    },
+    "GLOBAL_WINDOW_SELECTION_FLOW_GATE": {
+      "status": "BLOCKED",
+      "reason": "prerequisites not PASS",
+      "blocking_gates": [
+        "REPOSITORY_GATE"
+      ]
+    },
+    "APP_INTEGRATION_READY": {
+      "status": "BLOCKED",
+      "reason": "prerequisites not PASS",
+      "blocking_gates": [
+        "GLOBAL_WINDOW_SELECTION_FLOW_GATE"
+      ]
+    }
+  },
+  "human_review": {
+    "status": "PASS",
+    "reason": "explicit approval retained because the reviewed commit is an ancestor of current HEAD and no Human-Review-relevant source changed",
+    "reviewed_exact_head": "998e850f41daf76e2a6d5afb694e19228bcebaa8",
+    "review_artifact_identity": "HFR-6625062975ca68e9282d6d0502fc46a6d3e277172cc9ac5c54583d291527da00",
+    "current_review_artifact_identity": "HFR-903bdb85c9e0fd488aa6ec744659bb639e29ffa52525f3cb5ceaee265d13e77d",
+    "human_approval_reference": "https://github.com/Takuro-Kwkm/sash-app/pull/24#issuecomment-5739633094",
+    "relevant_changes_since_review": []
+  },
+  "release": {
+    "status": "BLOCKED",
+    "blocking_gates": [
+      "GLOBAL_WINDOW_SELECTION_FLOW_GATE",
+      "FULL_WINDOW_COVERAGE_GATE",
+      "CUSTOM_SIZE_COVERAGE_GATE",
+      "FULL_BROWSER_FLOW_QA_GATE",
+      "FULL_BROWSER_QA_GATE",
+      "APP_INTEGRATION_READY",
+      "UNVERIFIED_QA_CASE_COUNT"
+    ],
+    "missing_release_input": [],
+    "unverified_qa_case_count": null
+  }
+}
