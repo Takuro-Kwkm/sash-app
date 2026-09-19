@@ -59,6 +59,7 @@ jobs:
           node --check scripts/governance/evaluate-gates.mjs
           node --check scripts/governance/generate-progress-ledger.mjs
           node --check scripts/governance/emit-global-flow-evidence.mjs
+          node --check scripts/governance/finalize-post-human-evidence.mjs
           node --check scripts/governance/collect-evidence.mjs
           node --check scripts/governance/verify-release-input.mjs
           node --check scripts/governance/materialize-current-state.mjs
@@ -207,3 +208,107 @@ jobs:
     uses: ./.github/workflows/stage-a-tw-25-window-behavioral-projection-count.yml
     with:
       controller_head: ${{ github.event.pull_request.head.sha || github.sha }}
+
+  finalize-post-human-evidence:
+    needs:
+      - governance
+      - post-review-global-flow
+      - post-review-nontw-exact
+      - post-review-tw-exact
+    if: ${{ always() && needs.governance.outputs.authorized == 'true' && github.event_name == 'pull_request' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: write
+      pull-requests: read
+      issues: read
+      actions: read
+    env:
+      HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      GH_TOKEN: ${{ github.token }}
+      GOVERNANCE_EVIDENCE_MANIFEST: artifacts/governance/qa-evidence-manifest.json
+      POST_HUMAN_FINAL_SOURCE_ROOT: artifacts/post-human-final-source
+    steps:
+      - name: Checkout exact HEAD for final aggregation
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.HEAD_SHA }}
+          fetch-depth: 0
+
+      - name: Setup Node 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Download Global Flow Heavy QA evidence
+        continue-on-error: true
+        uses: actions/download-artifact@v4
+        with:
+          pattern: global-window-selection-flow-evidence-*
+          path: artifacts/post-human-final-source/global
+          merge-multiple: true
+
+      - name: Download Non-TW exact selector aggregate
+        continue-on-error: true
+        uses: actions/download-artifact@v4
+        with:
+          name: stage-a-nontw-80-window-discrete-exact-aggregate
+          path: artifacts/post-human-final-source/nontw
+
+      - name: Download TW exact selector aggregate
+        continue-on-error: true
+        uses: actions/download-artifact@v4
+        with:
+          name: stage-a-tw-25-window-behavioral-projection-aggregate
+          path: artifacts/post-human-final-source/tw
+
+      - name: Rebuild current-head Human Review identity
+        run: |
+          node scripts/governance/build-human-flow-review.mjs
+          node scripts/governance/verify-human-flow-field-coverage.mjs
+
+      - name: Finalize direct post-Human evidence
+        run: node scripts/governance/finalize-post-human-evidence.mjs
+
+      - name: Collect final current-head evidence
+        run: node scripts/governance/collect-qa-evidence.mjs
+
+      - name: Re-read explicit Human approval
+        run: node scripts/governance/read-human-approval.mjs
+
+      - name: Evaluate final gates
+        run: node scripts/governance/evaluate-gates.mjs
+
+      - name: Generate final Progress Ledger
+        run: node scripts/governance/generate-progress-ledger.mjs
+
+      - name: Verify release input declaration
+        run: node scripts/governance/verify-release-input.mjs
+
+      - name: Persist final post-Human governance evidence
+        run: node scripts/governance/persist-evidence.mjs
+
+      - name: Upload final post-Human evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: post-human-final-governance-evidence-${{ env.HEAD_SHA }}
+          path: artifacts/governance/
+          if-no-files-found: error
+
+      - name: Enforce APP_INTEGRATION_READY and Release Input
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import { readFileSync } from 'node:fs';
+          const result=JSON.parse(readFileSync('artifacts/governance/gate-results.json','utf8'));
+          const app=result.gates?.APP_INTEGRATION_READY?.status;
+          const release=result.release?.status;
+          console.log(`APP_INTEGRATION_READY=${app}`);
+          console.log(`RELEASE_INPUT_GATE=${release}`);
+          if(app!=='PASS'||release!=='PASS'){
+            console.error(JSON.stringify({app,release,blocking_gates:result.release?.blocking_gates,missing_release_input:result.release?.missing_release_input}));
+            process.exit(1);
+          }
+          NODE
