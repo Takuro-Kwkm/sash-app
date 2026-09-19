@@ -17,9 +17,9 @@ const TARGET_SASH=String(process.env.UCHIRIMO_SELECTOR_SASH ?? '__UNSET__');
 const TARGET_SIZE_CLASS=String(process.env.UCHIRIMO_SELECTOR_SIZE_CLASS ?? '__UNSET__');
 const TARGET_GLASS_FAMILY=String(process.env.UCHIRIMO_SELECTOR_GLASS_FAMILY ?? '');
 const TARGET_PARTITION_KEY=String(process.env.UCHIRIMO_SELECTOR_PARTITION_KEY ?? '');
-const TARGET_PARTITION_FIELD=String(process.env.UCHIRIMO_SELECTOR_PARTITION_FIELD ?? '__NONE__');
-const TARGET_PARTITION_VALUE_JSON=String(process.env.UCHIRIMO_SELECTOR_PARTITION_VALUE_JSON ?? 'null');
-const TARGET_PARTITION_VALUE=TARGET_PARTITION_FIELD==='__NONE__' ? undefined : JSON.parse(TARGET_PARTITION_VALUE_JSON);
+const TARGET_PARTITION_SEED_JSON=String(process.env.UCHIRIMO_SELECTOR_PARTITION_SEED_JSON ?? '{}');
+const TARGET_PARTITION_SEED=JSON.parse(TARGET_PARTITION_SEED_JSON);
+const PARTITION_EXTRA_DEPTH=2;
 const EXPECTED_SHARDS=Number(process.env.UCHIRIMO_SELECTOR_EXPECTED_SHARDS ?? 0);
 const MAX_STATES=Number(process.env.UCHIRIMO_SELECTOR_MAX_STATES ?? 1000000);
 const MAX_TERMINALS=Number(process.env.UCHIRIMO_SELECTOR_MAX_TERMINALS ?? 1000000);
@@ -127,11 +127,14 @@ async function buildShardPartitions(runtime){
   const include=[];
   const seenPartitions=new Set();
   const seenSeeds=new Set();
-  const pushPartition=(row,base,glassFamily,seed,partitionField='__NONE__',partitionValue=undefined)=>{
+
+  const pushPartition=(row,base,glassFamily,seed,extraSeed)=>{
     const nodeId=String(row.node_id);
-    const partitionKey=partitionField==='__NONE__'
-      ? nodeId+'|'+glassFamily+'|__BASE__'
-      : nodeId+'|'+glassFamily+'|'+partitionField+'='+stableJson(partitionValue);
+    const extraEntries=Object.entries(extraSeed);
+    const suffix=extraEntries.length
+      ? extraEntries.map(([key,value])=>key+'='+stableJson(value)).join('|')
+      : '__BASE__';
+    const partitionKey=nodeId+'|'+glassFamily+'|'+suffix;
     if(seenPartitions.has(partitionKey))throw new Error('UCHIRIMO_PARTITION_DUPLICATE:'+partitionKey);
     const seedKey=stableJson(seed);
     if(seenSeeds.has(seedKey))throw new Error('UCHIRIMO_PARTITION_SEED_DUPLICATE:'+partitionKey);
@@ -146,10 +149,25 @@ async function buildShardPartitions(runtime){
       sash_configuration:base.sash,
       size_class:base.sizeClass,
       glass_family:glassFamily,
-      partition_field:partitionField,
-      partition_value_json:partitionField==='__NONE__'?'null':JSON.stringify(partitionValue)
+      partition_seed_json:JSON.stringify(stable(extraSeed))
     });
   };
+
+  const expand=async(row,base,glassFamily,seed,extraSeed,resolved,remainingDepth)=>{
+    const extra=remainingDepth>0 ? nextRequiredEnumPartition(resolved,seed) : null;
+    if(!extra){
+      pushPartition(row,base,glassFamily,seed,extraSeed);
+      return;
+    }
+    for(const value of extra.values){
+      const nextSeed={...seed,[extra.field.key]:value};
+      const nextExtraSeed={...extraSeed,[extra.field.key]:value};
+      const nextResolved=await resolveRuntimeAppProduct(PRODUCT_ID,nextSeed);
+      if(!same(nextResolved.selection?.[extra.field.key],value))throw new Error('UCHIRIMO_EXTRA_PARTITION_SEED_REJECTED:'+String(row.node_id)+':'+extra.field.key+':'+String(value));
+      await expand(row,base,glassFamily,nextSeed,nextExtraSeed,nextResolved,remainingDepth-1);
+    }
+  };
+
   for(const row of rows){
     const nodeId=String(row.node_id);
     const base=baseSeedForNode(row);
@@ -162,17 +180,7 @@ async function buildShardPartitions(runtime){
       const glassSeed={...base.seed,glass_family:glassFamily};
       const resolved=await resolveRuntimeAppProduct(PRODUCT_ID,glassSeed);
       if(!same(resolved.selection?.glass_family,glassFamily))throw new Error('UCHIRIMO_GLASS_FAMILY_SEED_REJECTED:'+nodeId+':'+glassFamily);
-      const extra=nextRequiredEnumPartition(resolved,glassSeed);
-      if(!extra){
-        pushPartition(row,base,glassFamily,glassSeed);
-        continue;
-      }
-      for(const value of extra.values){
-        const seed={...glassSeed,[extra.field.key]:value};
-        const partitionResolved=await resolveRuntimeAppProduct(PRODUCT_ID,seed);
-        if(!same(partitionResolved.selection?.[extra.field.key],value))throw new Error('UCHIRIMO_EXTRA_PARTITION_SEED_REJECTED:'+nodeId+':'+extra.field.key+':'+String(value));
-        pushPartition(row,base,glassFamily,seed,extra.field.key,value);
-      }
+      await expand(row,base,glassFamily,glassSeed,{},resolved,PARTITION_EXTRA_DEPTH);
     }
   }
   if(include.length>256)throw new Error('UCHIRIMO_PARTITION_MATRIX_LIMIT_EXCEEDED:'+include.length);
@@ -185,13 +193,13 @@ async function plan(){
   if(!runtime?.sourcePackageIntegrity?.match)throw new Error('UCHIRIMO_RUNTIME_INTEGRITY_NOT_PASS');
   const include=await buildShardPartitions(runtime);
   const matrix={include};
-  const record={exact_head:head,status:'PASS',partition_axis:'product_node+glass_family+next_required_enum',shard_count:include.length,matrix};
+  const record={exact_head:head,status:'PASS',partition_axis:'product_node+glass_family+next_required_enum_depth2',shard_count:include.length,matrix};
   writeFileSync(join(OUT,'matrix.json'),JSON.stringify(record,null,2)+'\n');
   if(process.env.GITHUB_OUTPUT){
     appendFileSync(process.env.GITHUB_OUTPUT,'matrix='+JSON.stringify(matrix)+'\n');
     appendFileSync(process.env.GITHUB_OUTPUT,'shard_count='+String(include.length)+'\n');
   }
-  console.log('UCHIRIMO_SELECTOR_PLAN=PASS partitions='+include.length+' axis=product_node+glass_family+next_required_enum');
+  console.log('UCHIRIMO_SELECTOR_PLAN=PASS partitions='+include.length+' axis=product_node+glass_family+next_required_enum_depth2');
 }
 async function aggregate(){
   const head=process.env.HEAD_SHA??process.env.GITHUB_SHA??currentExactHead();
@@ -279,11 +287,11 @@ async function aggregate(){
     exact_head:head,
     task_classification:'NON-PRODUCT-MASTER',
     product_master_mutation:0,
-    proof_model:'UCHIRIMO_REACHABLE_DISCRETE_SELECTOR_EXHAUSTIVE_SHARDED_V5',
+    proof_model:'UCHIRIMO_REACHABLE_DISCRETE_SELECTOR_EXHAUSTIVE_SHARDED_V6',
     runtime_manifest_sha256:[...runtimeHashes][0],
     runtime_integrity_match:true,
     shard_count:EXPECTED_SHARDS,
-    partition_axis:'product_node+glass_family+next_required_enum',
+    partition_axis:'product_node+glass_family+next_required_enum_depth2',
     product_node_count:nodeIds.size,
     window_type_count:windows.size,
     terminal_context_count:terminals,
@@ -337,7 +345,10 @@ async function runShard(){
   if(TARGET_SASH!=='__UNSET__')seed.sash_configuration=TARGET_SASH;
   if(TARGET_SIZE_CLASS!=='__UNSET__')seed.size_class=TARGET_SIZE_CLASS;
   seed.glass_family=TARGET_GLASS_FAMILY;
-  if(TARGET_PARTITION_FIELD!=='__NONE__')seed[TARGET_PARTITION_FIELD]=TARGET_PARTITION_VALUE;
+  for(const [key,value] of Object.entries(TARGET_PARTITION_SEED)){
+    if(Object.prototype.hasOwnProperty.call(seed,key))throw new Error('UCHIRIMO_PARTITION_SEED_AXIS_COLLISION:'+key);
+    seed[key]=value;
+  }
   if(String(formalNode.room??'')!==TARGET_ROOM||String(formalNode.window_type??'')!==TARGET_WINDOW)throw new Error('UCHIRIMO_SHARD_PLAN_NODE_AXIS_MISMATCH:'+SHARD_NODE_ID);
   if(TARGET_WINDOW==='sliding_window'){
     if(TARGET_SASH!=='__UNSET__'&&String(formalNode.sash_configuration??'')!==TARGET_SASH)throw new Error('UCHIRIMO_SHARD_PLAN_SASH_MISMATCH:'+SHARD_NODE_ID);
@@ -441,12 +452,11 @@ async function runShard(){
     exact_head:head,
     task_classification:'NON-PRODUCT-MASTER',
     product_master_mutation:0,
-    proof_model:'UCHIRIMO_REACHABLE_DISCRETE_SELECTOR_EXHAUSTIVE_SHARD_V5',
+    proof_model:'UCHIRIMO_REACHABLE_DISCRETE_SELECTOR_EXHAUSTIVE_SHARD_V6',
     shard_index:SHARD_INDEX,
     node_id:SHARD_NODE_ID,
     partition_key:TARGET_PARTITION_KEY,
-    partition_field:TARGET_PARTITION_FIELD,
-    partition_value:TARGET_PARTITION_FIELD==='__NONE__'?null:TARGET_PARTITION_VALUE,
+    partition_seed:stable(TARGET_PARTITION_SEED),
     glass_family:TARGET_GLASS_FAMILY,
     seed:stable(seed),
     shard_count:EXPECTED_SHARDS,
