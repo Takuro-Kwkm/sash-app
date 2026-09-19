@@ -445,6 +445,7 @@ jobs:
     if: ${{ needs.governance-authority.outputs.authorized == 'true' && needs.governance-precheck.outputs.authorized == 'true' && needs.uchirimo-selector-proof-cache.outputs.reused != 'true' }}
     strategy:
       fail-fast: false
+      max-parallel: 1
       matrix: ${{ fromJSON(needs.uchirimo-selector-proof-plan-0.outputs.matrix) }}
     runs-on: ubuntu-latest
     timeout-minutes: 20
@@ -494,6 +495,7 @@ jobs:
     if: ${{ needs.governance-authority.outputs.authorized == 'true' && needs.governance-precheck.outputs.authorized == 'true' && needs.uchirimo-selector-proof-cache.outputs.reused != 'true' }}
     strategy:
       fail-fast: false
+      max-parallel: 1
       matrix: ${{ fromJSON(needs.uchirimo-selector-proof-plan-1.outputs.matrix) }}
     runs-on: ubuntu-latest
     timeout-minutes: 20
@@ -543,6 +545,7 @@ jobs:
     if: ${{ needs.governance-authority.outputs.authorized == 'true' && needs.governance-precheck.outputs.authorized == 'true' && needs.uchirimo-selector-proof-cache.outputs.reused != 'true' }}
     strategy:
       fail-fast: false
+      max-parallel: 1
       matrix: ${{ fromJSON(needs.uchirimo-selector-proof-plan-2.outputs.matrix) }}
     runs-on: ubuntu-latest
     timeout-minutes: 20
@@ -592,6 +595,7 @@ jobs:
     if: ${{ needs.governance-authority.outputs.authorized == 'true' && needs.governance-precheck.outputs.authorized == 'true' && needs.uchirimo-selector-proof-cache.outputs.reused != 'true' }}
     strategy:
       fail-fast: false
+      max-parallel: 1
       matrix: ${{ fromJSON(needs.uchirimo-selector-proof-plan-3.outputs.matrix) }}
     runs-on: ubuntu-latest
     timeout-minutes: 20
@@ -641,6 +645,7 @@ jobs:
     if: ${{ needs.governance-authority.outputs.authorized == 'true' && needs.governance-precheck.outputs.authorized == 'true' && needs.uchirimo-selector-proof-cache.outputs.reused != 'true' }}
     strategy:
       fail-fast: false
+      max-parallel: 1
       matrix: ${{ fromJSON(needs.uchirimo-selector-proof-plan-4.outputs.matrix) }}
     runs-on: ubuntu-latest
     timeout-minutes: 20
@@ -690,6 +695,7 @@ jobs:
     if: ${{ needs.governance-authority.outputs.authorized == 'true' && needs.governance-precheck.outputs.authorized == 'true' && needs.uchirimo-selector-proof-cache.outputs.reused != 'true' }}
     strategy:
       fail-fast: false
+      max-parallel: 1
       matrix: ${{ fromJSON(needs.uchirimo-selector-proof-plan-5.outputs.matrix) }}
     runs-on: ubuntu-latest
     timeout-minutes: 20
@@ -739,6 +745,7 @@ jobs:
     if: ${{ needs.governance-authority.outputs.authorized == 'true' && needs.governance-precheck.outputs.authorized == 'true' && needs.uchirimo-selector-proof-cache.outputs.reused != 'true' }}
     strategy:
       fail-fast: false
+      max-parallel: 1
       matrix: ${{ fromJSON(needs.uchirimo-selector-proof-plan-6.outputs.matrix) }}
     runs-on: ubuntu-latest
     timeout-minutes: 20
@@ -788,6 +795,7 @@ jobs:
     if: ${{ needs.governance-authority.outputs.authorized == 'true' && needs.governance-precheck.outputs.authorized == 'true' && needs.uchirimo-selector-proof-cache.outputs.reused != 'true' }}
     strategy:
       fail-fast: false
+      max-parallel: 1
       matrix: ${{ fromJSON(needs.uchirimo-selector-proof-plan-7.outputs.matrix) }}
     runs-on: ubuntu-latest
     timeout-minutes: 20
