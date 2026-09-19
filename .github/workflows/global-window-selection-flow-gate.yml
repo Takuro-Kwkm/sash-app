@@ -131,6 +131,7 @@ jobs:
           node --check test/browser/global-window-selection-flow-browser-qa.mjs
           node --check test/browser/inplus-v04r2-global-flow-full-coverage-browser-qa.mjs
           node --check scripts/uchirimo-full-selector-proof.mjs
+          node --check scripts/governance/proof-dependency-fingerprint.mjs
           if grep -REn "other:\$\{String\(key\)|other:" src/catalog/runtime-master/new-construction-sash-runtime-ui-contract.mjs src/catalog/runtime-master/inner-window-runtime-ui-contract.mjs; then
             echo 'FLOW_SCHEMA_UNMAPPED_FIELD_GATE=FAIL legacy other:* fallback remains'
             exit 31
@@ -213,11 +214,58 @@ jobs:
       - name: Uchirimo UI regression partition
         run: node --test test/72-runtime-manifest-uchirimo-integration.test.mjs test/73-runtime-ui-uchirimo-gate.test.mjs
 
+      - name: Compute Uchirimo selector proof dependency fingerprint
+        id: uchirimo-proof-fingerprint
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/governance/proof-dependency-fingerprint.mjs --mode fingerprint --family UCHIRIMO_SELECTOR --fingerprint-out artifacts/governance/uchirimo-selector-proof-fingerprint.json
+
+      - name: Restore Uchirimo selector proof cache
+        id: uchirimo-proof-cache
+        uses: actions/cache/restore@v4
+        with:
+          path: artifacts/uchirimo-full-selector-proof
+          key: proof-uchirimo-selector-v1-${{ steps.uchirimo-proof-fingerprint.outputs.fingerprint }}
+
+      - name: Bind cached Uchirimo selector proof to current HEAD
+        id: uchirimo-proof-bind
+        if: ${{ steps.uchirimo-proof-cache.outputs.cache-hit == 'true' }}
+        shell: bash
+        run: |
+          set +e
+          node scripts/governance/proof-dependency-fingerprint.mjs --mode bind --family UCHIRIMO_SELECTOR --artifact artifacts/uchirimo-full-selector-proof/report.json --metadata artifacts/uchirimo-full-selector-proof/source-metadata.json --binding artifacts/uchirimo-full-selector-proof/current-head-binding.json
+          rc=$?
+          set -e
+          if [ "$rc" -eq 0 ]; then
+            echo "reused=true" >> "$GITHUB_OUTPUT"
+            echo "UCHIRIMO_SELECTOR_PROOF_REUSE=PASS"
+          else
+            rm -rf artifacts/uchirimo-full-selector-proof
+            echo "reused=false" >> "$GITHUB_OUTPUT"
+            echo "UCHIRIMO_SELECTOR_PROOF_REUSE=INVALID_RERUN_REQUIRED"
+          fi
+
       - name: Uchirimo full discrete selector proof
+        if: ${{ steps.uchirimo-proof-bind.outputs.reused != 'true' }}
         shell: bash
         run: |
           set -euo pipefail
           node scripts/uchirimo-full-selector-proof.mjs
+
+      - name: Stamp fresh Uchirimo selector proof metadata
+        if: ${{ steps.uchirimo-proof-bind.outputs.reused != 'true' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/governance/proof-dependency-fingerprint.mjs --mode stamp --family UCHIRIMO_SELECTOR --artifact artifacts/uchirimo-full-selector-proof/report.json --metadata artifacts/uchirimo-full-selector-proof/source-metadata.json
+
+      - name: Save Uchirimo selector proof cache
+        if: ${{ steps.uchirimo-proof-cache.outputs.cache-hit != 'true' && steps.uchirimo-proof-bind.outputs.reused != 'true' }}
+        uses: actions/cache/save@v4
+        with:
+          path: artifacts/uchirimo-full-selector-proof
+          key: proof-uchirimo-selector-v1-${{ steps.uchirimo-proof-fingerprint.outputs.fingerprint }}
 
       - name: New-construction UI regression partition
         run: node --test test/74-new-construction-ui-v16.test.mjs test/75-stage-a-size-display-full-coverage.test.mjs test/76-custom-dimension-safety.test.mjs

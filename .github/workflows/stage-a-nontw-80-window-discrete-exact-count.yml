@@ -23,6 +23,57 @@ jobs:
       controller_head: ${{ inputs.controller_head }}
       release: false
 
+  proof-cache:
+    needs: ["governance-authority"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      fingerprint: ${{ steps.fingerprint.outputs.fingerprint }}
+      reused: ${{ steps.bind.outputs.reused }}
+    steps:
+      - name: Checkout exact PR HEAD
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.controller_head }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Compute non-TW proof dependency fingerprint
+        id: fingerprint
+        run: node scripts/governance/proof-dependency-fingerprint.mjs --mode fingerprint --family NONTW_EXACT
+      - name: Restore non-TW exact proof cache
+        id: cache
+        uses: actions/cache/restore@v4
+        with:
+          path: artifacts/stage-a-nontw-80-window-discrete-exact-aggregate
+          key: proof-nontw-exact-v1-${{ steps.fingerprint.outputs.fingerprint }}
+      - name: Bind cached non-TW proof to current HEAD
+        id: bind
+        if: ${{ steps.cache.outputs.cache-hit == 'true' }}
+        shell: bash
+        run: |
+          set +e
+          node scripts/governance/proof-dependency-fingerprint.mjs --mode bind --family NONTW_EXACT --artifact artifacts/stage-a-nontw-80-window-discrete-exact-aggregate/report.json --metadata artifacts/stage-a-nontw-80-window-discrete-exact-aggregate/source-metadata.json --binding artifacts/stage-a-nontw-80-window-discrete-exact-aggregate/current-head-binding.json
+          rc=$?
+          set -e
+          if [ "$rc" -eq 0 ]; then
+            echo "reused=true" >> "$GITHUB_OUTPUT"
+            echo "NONTW_EXACT_PROOF_REUSE=PASS"
+          else
+            rm -rf artifacts/stage-a-nontw-80-window-discrete-exact-aggregate
+            echo "reused=false" >> "$GITHUB_OUTPUT"
+            echo "NONTW_EXACT_PROOF_REUSE=INVALID_RERUN_REQUIRED"
+          fi
+      - name: Upload reused non-TW aggregate evidence
+        if: ${{ steps.bind.outputs.reused == 'true' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: stage-a-nontw-80-window-discrete-exact-aggregate
+          path: artifacts/stage-a-nontw-80-window-discrete-exact-aggregate/
+          if-no-files-found: error
+
   inventory:
     needs: ["governance-authority"]
     if: ${{ needs.governance-authority.outputs.authorized == 'true' }}
@@ -82,8 +133,8 @@ jobs:
           NODE
 
   count:
-    needs: [governance-authority, inventory]
-    if: ${{ needs.governance-authority.outputs.authorized == 'true' }}
+    needs: [governance-authority, inventory, proof-cache]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && needs.proof-cache.outputs.reused != 'true' }}
     runs-on: ubuntu-latest
     timeout-minutes: 20
     strategy:
@@ -148,13 +199,21 @@ jobs:
           NODE
 
   aggregate:
-    needs: [governance-authority, inventory, count]
-    if: ${{ always() && needs.governance-authority.outputs.authorized == 'true' }}
+    needs: [governance-authority, inventory, proof-cache, count]
+    if: ${{ always() && needs.governance-authority.outputs.authorized == 'true' && needs.proof-cache.outputs.reused != 'true' }}
     runs-on: ubuntu-latest
     timeout-minutes: 5
     env:
       HEAD_SHA: ${{ inputs.controller_head }}
     steps:
+      - name: Checkout exact PR HEAD for proof metadata
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.controller_head }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
       - name: Download all per-window evidence
         uses: actions/download-artifact@v4
         with:
@@ -206,10 +265,20 @@ jobs:
           console.log('RELEASE_INPUT_GATE=BLOCKED');
           if(!complete)process.exitCode=1;
           NODE
+      - name: Stamp fresh non-TW proof metadata
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/governance/proof-dependency-fingerprint.mjs --mode stamp --family NONTW_EXACT --artifact artifacts/stage-a-nontw-80-window-discrete-exact-aggregate/report.json --metadata artifacts/stage-a-nontw-80-window-discrete-exact-aggregate/source-metadata.json
+      - name: Save non-TW exact proof cache
+        uses: actions/cache/save@v4
+        with:
+          path: artifacts/stage-a-nontw-80-window-discrete-exact-aggregate
+          key: proof-nontw-exact-v1-${{ needs.proof-cache.outputs.fingerprint }}
       - name: Upload non-TW aggregate evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: stage-a-nontw-80-window-discrete-exact-aggregate
-          path: artifacts/stage-a-nontw-80-window-discrete-exact-aggregate/report.json
+          path: artifacts/stage-a-nontw-80-window-discrete-exact-aggregate/
           if-no-files-found: warn

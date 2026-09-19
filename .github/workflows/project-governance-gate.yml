@@ -102,6 +102,10 @@ jobs:
           node --check scripts/governance/generate-progress-ledger.mjs
           node --check scripts/governance/emit-global-flow-evidence.mjs
           node --check scripts/governance/finalize-post-human-evidence.mjs
+          node --check scripts/governance/proof-dependency-fingerprint.mjs
+          node scripts/governance/proof-dependency-fingerprint.mjs --mode fingerprint --family UCHIRIMO_SELECTOR
+          node scripts/governance/proof-dependency-fingerprint.mjs --mode fingerprint --family NONTW_EXACT
+          node scripts/governance/proof-dependency-fingerprint.mjs --mode fingerprint --family TW_EXACT
           node --check scripts/governance/collect-evidence.mjs
           node --check scripts/governance/verify-release-input.mjs
           node --check scripts/governance/materialize-current-state.mjs

@@ -34,7 +34,35 @@ const find=(rows,predicate,label)=>{
   if(hits.length!==1){issues.push(`${label}: expected 1 artifact, found ${hits.length}`);return null;}
   return hits[0];
 };
+const allFiles=[...globalFiles,...nontwFiles,...twFiles];
 const exact=(value)=>value?.exact_head===head||value?.exactHead===head||value?.exact_head_sha===head;
+const embeddedHead=(value)=>value?.exact_head??value?.exactHead??value?.exact_head_sha??null;
+const carryBindings=allFiles.filter(({value})=>value?.binding_type==='CURRENT_HEAD_PROOF_CARRY_FORWARD'&&value?.status==='PASS');
+const usedBindingPaths=new Set();
+const acceptedSource=(row,family)=>{
+  if(!row)return false;
+  if(exact(row.value))return true;
+  const sourceHead=embeddedHead(row.value);
+  const artifactHash=sha256File(row.path);
+  const hits=carryBindings.filter(({value})=>
+    value.family===family
+    && value.current_exact_head===head
+    && value.source_exact_head===sourceHead
+    && value.source_artifact_sha256===artifactHash
+    && value.dependency_fingerprint
+    && value.policy_family_fingerprint
+    && value.runtime_snapshot_sha256
+    && value.impact_decision==='NON_IMPACTING_DEPENDENCIES_UNCHANGED'
+    && Array.isArray(value.dependency_changes)
+    && value.dependency_changes.length===0
+  );
+  if(hits.length!==1){
+    issues.push(`${family}: source proof is not current-head and has ${hits.length} valid Current-HEAD Evidence Bindings`);
+    return false;
+  }
+  usedBindingPaths.add(hits[0].path);
+  return true;
+};
 
 const baseProof=find(globalFiles,(v)=>v?.schema_version==='1.0.0'&&v?.gates?.FULL_FLOW_SIGNATURE_COVERAGE_GATE&&Array.isArray(v?.deliberately_not_claimed),'base post-Human proof');
 const globalBrowser=find(globalFiles,(v)=>v?.integrationCount===8&&v?.windowCoverageChecks===226&&v?.viewportResults,'global browser flow report');
@@ -52,12 +80,12 @@ const checks={
   globalBrowser:Boolean(globalBrowser&&exact(globalBrowser.value)&&globalBrowser.value.status==='PASS'&&globalBrowser.value.integrationCount===8&&globalBrowser.value.windowCoverageChecks===226),
   inplus:Boolean(inplus&&exact(inplus.value)&&inplus.value.status==='PASS'&&inplus.value.verifiedQaCaseCount===1148&&inplus.value.unverifiedQaCaseCount===0&&inplus.value.browserStateChecksTotal===3350),
   stageA:Boolean(stageA&&exact(stageA.value)&&stageA.value.status==='PASS'&&stageA.value.gate_status?.full_browser_qa_gate==='PASS'&&stageA.value.viewports?.desktop?.base_windows?.count===105&&stageA.value.viewports?.smartphone?.base_windows?.count===105&&stageA.value.viewports?.desktop?.custom_contexts?.checked===137&&stageA.value.viewports?.smartphone?.custom_contexts?.checked===137),
-  uchirimoSelector:Boolean(uchirimoSelector&&exact(uchirimoSelector.value)&&uchirimoSelector.value.status==='PASS'&&uchirimoSelector.value.window_type_count===4&&uchirimoSelector.value.unverified_discrete_selector_case_count===0),
+  uchirimoSelector:Boolean(acceptedSource(uchirimoSelector,'UCHIRIMO_SELECTOR')&&uchirimoSelector.value.status==='PASS'&&uchirimoSelector.value.window_type_count===4&&uchirimoSelector.value.unverified_discrete_selector_case_count===0),
   uchirimoBrowser:Boolean(uchirimoBrowser&&exact(uchirimoBrowser.value)&&uchirimoBrowser.value.status==='PASS'&&uchirimoBrowser.value.desktop?.status==='PASS'&&uchirimoBrowser.value.mobile?.status==='PASS'&&!(uchirimoBrowser.value.consoleErrors??[]).length&&!(uchirimoBrowser.value.pageErrors??[]).length&&!(uchirimoBrowser.value.failedResponses??[]).length),
   dependencyDirect:Boolean(dependencyDirect&&exact(dependencyDirect.value)),
   uiDirect:Boolean(uiDirect&&exact(uiDirect.value)),
-  nontw:Boolean(nontw&&nontw.value.exact_head_sha===head&&nontw.value.report_count===80&&nontw.value.counted_window_count===80&&nontw.value.unverified_window_count===0),
-  tw:Boolean(tw&&tw.value.exact_head_sha===head&&tw.value.report_count===25&&tw.value.counted_window_count===25&&tw.value.unverified_window_count===0),
+  nontw:Boolean(acceptedSource(nontw,'NONTW_EXACT')&&nontw.value.report_count===80&&nontw.value.counted_window_count===80&&nontw.value.unverified_window_count===0),
+  tw:Boolean(acceptedSource(tw,'TW_EXACT')&&tw.value.report_count===25&&tw.value.counted_window_count===25&&tw.value.unverified_window_count===0),
 };
 for(const [key,pass] of Object.entries(checks))if(!pass)issues.push(`${key}: direct current-head evidence did not satisfy the final contract`);
 
@@ -120,7 +148,8 @@ const gateProofs={
 };
 
 const sourceRows=[baseProof,globalBrowser,inplus,stageA,uchirimoSelector,uchirimoBrowser,dependencyDirect,uiDirect,nontw,tw].filter(Boolean);
-const sources=Object.fromEntries(sourceRows.map((row)=>[row.path,{sha256:sha256File(row.path)}]));
+const usedBindingRows=carryBindings.filter((row)=>usedBindingPaths.has(row.path));
+const sources=Object.fromEntries([...sourceRows,...usedBindingRows].map((row)=>[row.path,{sha256:sha256File(row.path)}]));
 const proof={
   schema_version:'1.0.0',
   exact_head:head,
@@ -132,6 +161,7 @@ const proof={
   issues:[...new Set(issues)],
   gates:gateProofs,
   sources,
+  carry_forward_bindings:Object.fromEntries(usedBindingRows.map((row)=>[row.path,{sha256:sha256File(row.path),family:row.value.family,source_exact_head:row.value.source_exact_head,current_exact_head:row.value.current_exact_head,dependency_fingerprint:row.value.dependency_fingerprint}])),
 };
 mkdirSync('artifacts/governance/evidence-inputs',{recursive:true});
 const proofPath='artifacts/governance/post-human-final-proof.json';

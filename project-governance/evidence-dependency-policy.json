@@ -1,0 +1,53 @@
+{
+  "schema_version": "1.0.0",
+  "policy": {
+    "exact_head_change_alone_invalidates_all_proofs": false,
+    "current_head_binding_required_for_cross_head_reuse": true,
+    "fail_closed_when_impact_cannot_be_proven": true,
+    "runtime_snapshot_must_match": true,
+    "artifact_hash_must_match": true
+  },
+  "families": {
+    "UCHIRIMO_SELECTOR": {
+      "proof_model_version": "UCHIRIMO_REACHABLE_DISCRETE_SELECTOR_EXHAUSTIVE_V1",
+      "runtime_snapshot": "project-governance/runtime-snapshot.json",
+      "dependencies": [
+        "src/catalog/runtime-master/uchirimo-tabular-v1-adapter.mjs",
+        "src/catalog/runtime-master/runtime-app-bridge.mjs",
+        "src/catalog/runtime-master/canonical-workbook-reference-v1-adapter.mjs",
+        "src/catalog/runtime-master/canonical-workbook-reference-v1-behavior-normalizer.mjs",
+        "src/catalog/runtime-master/canonical-runtime-manifest-loader.mjs",
+        "src/catalog/runtime-master/runtime-master-registry.mjs",
+        "src/catalog/runtime-master/app-runtime-integration-registry.mjs",
+        "scripts/uchirimo-full-selector-proof.mjs",
+        "project-governance/runtime-snapshot.json",
+        "package.json",
+        "package-lock.json"
+      ]
+    },
+    "NONTW_EXACT": {
+      "proof_model_version": "RUNTIME_UI_SYMBOLIC_FULL_COVERAGE_V1",
+      "runtime_snapshot": "project-governance/runtime-snapshot.json",
+      "dependencies": [
+        "src/catalog/runtime-master/**",
+        "src/catalog/runtime-master-packages/**",
+        "scripts/stage-a-nontw-discrete-exact-runner.mjs",
+        "project-governance/runtime-snapshot.json",
+        "package.json",
+        "package-lock.json"
+      ]
+    },
+    "TW_EXACT": {
+      "proof_model_version": "RUNTIME_UI_SYMBOLIC_FULL_COVERAGE_V1",
+      "runtime_snapshot": "project-governance/runtime-snapshot.json",
+      "dependencies": [
+        "src/catalog/runtime-master/**",
+        "src/catalog/runtime-master-packages/**",
+        "scripts/stage-a-tw-*.mjs",
+        "project-governance/runtime-snapshot.json",
+        "package.json",
+        "package-lock.json"
+      ]
+    }
+  }
+}

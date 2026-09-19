@@ -1,8 +1,11 @@
 {
-  "schema_version": "1.0.0",
+  "schema_version": "1.1.0",
   "policy": {
     "current_head_evidence_required_for_automatic_gates": true,
-    "old_head_evidence_is_historical_only": true,
+    "old_head_evidence_without_current_head_binding_is_historical_only": true,
+    "dependency_aware_carry_forward_enabled": true,
+    "current_head_binding_required_for_cross_head_proof_reuse": true,
+    "fail_closed_when_dependency_impact_cannot_be_proven": true,
     "ai_self_declaration_is_not_evidence": true
   },
   "entries": [
