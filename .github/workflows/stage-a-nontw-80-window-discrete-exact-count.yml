@@ -13,7 +13,7 @@ permissions:
   pull-requests: read
 
 concurrency:
-  group: stage-a-nontw-80-discrete-exact-${{ github.event.pull_request.number }}
+  group: stage-a-nontw-80-discrete-exact-${{ inputs.controller_head }}
   cancel-in-progress: true
 
 jobs:
