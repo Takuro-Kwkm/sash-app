@@ -177,6 +177,24 @@ function isV9MeasuredTimeoutClass(base,glassFamily,extraSeed){
   return false;
 }
 
+function isV10MeasuredTimeoutClass(base,glassFamily,extraSeed){
+  if(String(base?.row?.node_id??'')!=='UCH-BATH-IN'||glassFamily!=='insulating_glass')return false;
+  if(String(extraSeed.hinge_side??'')!=='left')return false;
+  const frameColor=String(extraSeed.frame_color??'');
+  const structure=String(extraSeed.glass_structure??'');
+  const lowE=String(extraSeed.low_e_type??'');
+  const depth=Object.keys(extraSeed).length;
+  if(depth===3){
+    return (frameColor==='white'&&structure==='P5P3')
+      ||(frameColor==='calm_black'&&structure==='F4P3');
+  }
+  if(depth===4){
+    return (frameColor==='white'&&structure==='G4P3'&&lowE==='insulating')
+      ||(frameColor==='calm_black'&&structure==='G5P3'&&lowE==='insulating');
+  }
+  return false;
+}
+
 async function buildShardPartitions(runtime){
   const rows=[...(runtime.master?.canonical?.product_nodes??[])].sort((a,b)=>String(a.node_id).localeCompare(String(b.node_id)));
   if(!rows.length)throw new Error('UCHIRIMO_PRODUCT_NODE_PLAN_EMPTY');
@@ -225,7 +243,8 @@ async function buildShardPartitions(runtime){
 
   const expandMeasured=async(row,base,glassFamily,seed,extraSeed,resolved)=>{
     const depth=Object.keys(extraSeed).length;
-    const shouldSplit=isV9MeasuredTimeoutClass(base,glassFamily,extraSeed)
+    const shouldSplit=isV10MeasuredTimeoutClass(base,glassFamily,extraSeed)
+      ||isV9MeasuredTimeoutClass(base,glassFamily,extraSeed)
       ||(depth<=2&&isV7MeasuredTimeoutClass(base,glassFamily,extraSeed))
       ||(depth===3&&isV8MeasuredTimeoutClass(base,glassFamily,extraSeed));
     if(!shouldSplit){
@@ -294,14 +313,14 @@ async function plan(){
   if(!include.length)throw new Error('UCHIRIMO_PLAN_LANE_EMPTY:'+PLAN_LANE_INDEX);
   if(include.length>256)throw new Error('UCHIRIMO_PLAN_LANE_MATRIX_LIMIT_EXCEEDED:'+PLAN_LANE_INDEX+':'+include.length);
   const matrix={include};
-  const record={exact_head:head,status:'PASS',partition_axis:'product_node+glass_family+depth2+v7_depth3+v8_depth4+v9_measured_timeout_depth5',shard_count:allPartitions.length,lane_index:PLAN_LANE_INDEX,lane_count:PLAN_LANE_COUNT,lane_shard_count:include.length,matrix};
+  const record={exact_head:head,status:'PASS',partition_axis:'product_node+glass_family+depth2+v7_depth3+v8_depth4+v9_measured_timeout_depth5+v10_measured_timeout_depth6',shard_count:allPartitions.length,lane_index:PLAN_LANE_INDEX,lane_count:PLAN_LANE_COUNT,lane_shard_count:include.length,matrix};
   writeFileSync(join(OUT,'matrix.json'),JSON.stringify(record,null,2)+'\n');
   if(process.env.GITHUB_OUTPUT){
     appendFileSync(process.env.GITHUB_OUTPUT,'matrix='+JSON.stringify(matrix)+'\n');
     appendFileSync(process.env.GITHUB_OUTPUT,'shard_count='+String(allPartitions.length)+'\n');
     appendFileSync(process.env.GITHUB_OUTPUT,'lane_shard_count='+String(include.length)+'\n');
   }
-  console.log('UCHIRIMO_SELECTOR_PLAN=PASS partitions='+allPartitions.length+' lane='+PLAN_LANE_INDEX+'/'+PLAN_LANE_COUNT+' lane_partitions='+include.length+' axis=product_node+glass_family+depth2+v7_depth3+v8_depth4+v9_measured_timeout_depth5');
+  console.log('UCHIRIMO_SELECTOR_PLAN=PASS partitions='+allPartitions.length+' lane='+PLAN_LANE_INDEX+'/'+PLAN_LANE_COUNT+' lane_partitions='+include.length+' axis=product_node+glass_family+depth2+v7_depth3+v8_depth4+v9_measured_timeout_depth5+v10_measured_timeout_depth6');
 }
 async function aggregate(){
   const head=process.env.HEAD_SHA??process.env.GITHUB_SHA??currentExactHead();
@@ -389,7 +408,7 @@ async function aggregate(){
     exact_head:head,
     task_classification:'NON-PRODUCT-MASTER',
     product_master_mutation:0,
-    proof_model:'UCHIRIMO_REACHABLE_DISCRETE_SELECTOR_EXHAUSTIVE_SHARDED_V9',
+    proof_model:'UCHIRIMO_REACHABLE_DISCRETE_SELECTOR_EXHAUSTIVE_SHARDED_V10',
     runtime_manifest_sha256:[...runtimeHashes][0],
     runtime_integrity_match:true,
     shard_count:EXPECTED_SHARDS,
@@ -554,7 +573,7 @@ async function runShard(){
     exact_head:head,
     task_classification:'NON-PRODUCT-MASTER',
     product_master_mutation:0,
-    proof_model:'UCHIRIMO_REACHABLE_DISCRETE_SELECTOR_EXHAUSTIVE_SHARD_V9',
+    proof_model:'UCHIRIMO_REACHABLE_DISCRETE_SELECTOR_EXHAUSTIVE_SHARD_V10',
     shard_index:SHARD_INDEX,
     node_id:SHARD_NODE_ID,
     partition_key:TARGET_PARTITION_KEY,
