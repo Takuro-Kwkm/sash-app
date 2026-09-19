@@ -130,6 +130,7 @@ jobs:
           node --check test/81-global-window-flow-signature-transition.test.mjs
           node --check test/browser/global-window-selection-flow-browser-qa.mjs
           node --check test/browser/inplus-v04r2-global-flow-full-coverage-browser-qa.mjs
+          node --check scripts/uchirimo-full-selector-proof.mjs
           if grep -REn "other:\$\{String\(key\)|other:" src/catalog/runtime-master/new-construction-sash-runtime-ui-contract.mjs src/catalog/runtime-master/inner-window-runtime-ui-contract.mjs; then
             echo 'FLOW_SCHEMA_UNMAPPED_FIELD_GATE=FAIL legacy other:* fallback remains'
             exit 31
@@ -211,6 +212,12 @@ jobs:
 
       - name: Uchirimo UI regression partition
         run: node --test test/72-runtime-manifest-uchirimo-integration.test.mjs test/73-runtime-ui-uchirimo-gate.test.mjs
+
+      - name: Uchirimo full discrete selector proof
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/uchirimo-full-selector-proof.mjs
 
       - name: New-construction UI regression partition
         run: node --test test/74-new-construction-ui-v16.test.mjs test/75-stage-a-size-display-full-coverage.test.mjs test/76-custom-dimension-safety.test.mjs
@@ -383,6 +390,8 @@ jobs:
             artifacts/governance/
             artifacts/global-window-selection-flow-browser-qa/
             artifacts/inplus-v04r2-global-flow-full-coverage-browser-qa/
+            artifacts/uchirimo-runtime-browser-qa/
+            artifacts/uchirimo-full-selector-proof/
             artifacts/stage-a-custom-dimension-source-shape/
             artifacts/stage-a-custom-selector-reachability/
             artifacts/stage-a-custom-runtime-geometry-equivalence/
