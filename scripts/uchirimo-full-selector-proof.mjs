@@ -78,11 +78,25 @@ const head=currentExactHead();
 const runtime=await loadRegisteredRuntime('YKK AP','ウチリモ 内窓');
 if(!runtime?.sourcePackageIntegrity?.match)throw new Error('UCHIRIMO_RUNTIME_INTEGRITY_NOT_PASS');
 
-const root=await resolveRuntimeAppProduct(PRODUCT_ID,{});
+const resolverCache=new Map();
+let resolverCacheHits=0;
+let resolverCacheMisses=0;
+async function resolveCached(selection){
+  const cacheKey=sha(selection??{});
+  const cached=resolverCache.get(cacheKey);
+  if(cached){resolverCacheHits+=1;return cached;}
+  const result=await resolveRuntimeAppProduct(PRODUCT_ID,selection);
+  resolverCache.set(cacheKey,result);
+  resolverCacheMisses+=1;
+  return result;
+}
+
+const root=await resolveCached({});
 const rootWindow=root.fields.find((field)=>field.key==='window_type');
 if(!rootWindow||enabled(rootWindow).length!==4)throw new Error(`UCHIRIMO_WINDOW_POPULATION_MISMATCH:${enabled(rootWindow).length}`);
 
-const queue=[{selection:{},decisions:{}}];
+const queue=[{selection:root.selection??{},decisions:{},result:root}];
+let queueHead=0;
 const visited=new Set();
 const terminalRows=[];
 const signatureCounts=new Map();
@@ -91,10 +105,10 @@ let dependencyRejections=0;
 let downstreamClearChecks=0;
 let maxQueue=queue.length;
 
-while(queue.length){
+while(queueHead<queue.length){
   if(visited.size>=MAX_STATES)throw new Error(`UCHIRIMO_SELECTOR_STATE_LIMIT_REACHED:${MAX_STATES}`);
-  const current=queue.shift();
-  const result=await resolveRuntimeAppProduct(PRODUCT_ID,current.selection);
+  const current=queue[queueHead++];
+  const result=current.result??await resolveCached(current.selection);
   const visibleKeys=new Set((result.fields??[]).map((field)=>field.key));
   const decisions=Object.fromEntries(Object.entries(current.decisions).filter(([key])=>visibleKeys.has(key)));
   const stateKey=sha({selection:result.selection,decisions});
@@ -133,7 +147,7 @@ while(queue.length){
   for(const branch of branches(nextField)){
     transitionChecks+=1;
     const input=applyBranch(result.selection,nextField,branch);
-    const child=await resolveRuntimeAppProduct(PRODUCT_ID,input);
+    const child=await resolveCached(input);
     const nextDecisions={...decisions,[nextField.key]:branch};
     const branchSurvives=branch.kind==='UNSET'
       ? (!nextField.required && !present(child.selection?.[nextField.key]))
@@ -144,9 +158,10 @@ while(queue.length){
       continue;
     }
     downstreamClearChecks+=(child.clearedFields??[]).length;
-    queue.push({selection:child.selection,decisions:nextDecisions});
+    queue.push({selection:child.selection,decisions:nextDecisions,result:child});
   }
-  if(queue.length>maxQueue)maxQueue=queue.length;
+  const pendingQueueDepth=queue.length-queueHead;
+  if(pendingQueueDepth>maxQueue)maxQueue=pendingQueueDepth;
 }
 
 const windows=new Map();
@@ -178,8 +193,11 @@ const report={
   case_artifact:casesPath,
   case_artifact_sha256:sha(JSON.stringify({exact_head:head,cases:terminalRows},null,2)+'\n'),
   max_queue_depth:maxQueue,
+  resolver_cache_size:resolverCache.size,
+  resolver_cache_hits:resolverCacheHits,
+  resolver_cache_misses:resolverCacheMisses,
   status:'PASS'
 };
 writeFileSync(`${OUT}/report.json`,JSON.stringify(report,null,2)+'\n');
-console.log(`UCHIRIMO_FULL_SELECTOR_PROOF=PASS terminals=${report.terminal_context_count} states=${report.visited_state_count} transitions=${report.transition_check_count}`);
+console.log(`UCHIRIMO_FULL_SELECTOR_PROOF=PASS terminals=${report.terminal_context_count} states=${report.visited_state_count} transitions=${report.transition_check_count} resolver_cache_hits=${report.resolver_cache_hits} resolver_cache_misses=${report.resolver_cache_misses}`);
 console.log('UCHIRIMO_UNVERIFIED_DISCRETE_SELECTOR_CASE_COUNT=0');
