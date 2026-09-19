@@ -1,5 +1,5 @@
 import { createHash } from 'node:crypto';
-import { closeSync, copyFileSync, createReadStream, mkdirSync, openSync, readFileSync, readdirSync, statSync, writeFileSync, writeSync } from 'node:fs';
+import { appendFileSync, closeSync, copyFileSync, createReadStream, mkdirSync, openSync, readFileSync, readdirSync, statSync, writeFileSync, writeSync } from 'node:fs';
 import { basename, join } from 'node:path';
 import { currentExactHead } from './governance/governance-lib.mjs';
 import { loadRegisteredRuntime } from '../src/catalog/runtime-master/runtime-master-registry.mjs';
@@ -10,7 +10,12 @@ const MODE=process.env.UCHIRIMO_SELECTOR_MODE ?? 'shard';
 const OUT=process.env.UCHIRIMO_FULL_SELECTOR_OUT ?? (MODE==='aggregate' ? 'artifacts/uchirimo-full-selector-proof' : 'artifacts/uchirimo-selector-proof-shard');
 const INPUT=process.env.UCHIRIMO_SELECTOR_SHARD_INPUT ?? 'artifacts/uchirimo-selector-proof-shards';
 const SHARD_INDEX=Number(process.env.UCHIRIMO_WINDOW_SHARD_INDEX ?? -1);
-const EXPECTED_SHARDS=Number(process.env.UCHIRIMO_SELECTOR_EXPECTED_SHARDS ?? 4);
+const SHARD_NODE_ID=String(process.env.UCHIRIMO_SELECTOR_NODE_ID ?? '');
+const TARGET_ROOM=String(process.env.UCHIRIMO_SELECTOR_ROOM ?? '');
+const TARGET_WINDOW=String(process.env.UCHIRIMO_SELECTOR_WINDOW ?? '');
+const TARGET_SASH=String(process.env.UCHIRIMO_SELECTOR_SASH ?? '__UNSET__');
+const TARGET_SIZE_CLASS=String(process.env.UCHIRIMO_SELECTOR_SIZE_CLASS ?? '__UNSET__');
+const EXPECTED_SHARDS=Number(process.env.UCHIRIMO_SELECTOR_EXPECTED_SHARDS ?? 0);
 const MAX_STATES=Number(process.env.UCHIRIMO_SELECTOR_MAX_STATES ?? 1000000);
 const MAX_TERMINALS=Number(process.env.UCHIRIMO_SELECTOR_MAX_TERMINALS ?? 1000000);
 const MAX_RESOLVER_CACHE=Number(process.env.UCHIRIMO_RESOLVER_CACHE_MAX ?? 512);
@@ -88,8 +93,42 @@ async function shaFile(path){
   return hash.digest('hex');
 }
 
+async function plan(){
+  const head=currentExactHead();
+  const runtime=await loadRegisteredRuntime('YKK AP','ウチリモ 内窓');
+  if(!runtime?.sourcePackageIntegrity?.match)throw new Error('UCHIRIMO_RUNTIME_INTEGRITY_NOT_PASS');
+  const rows=[...(runtime.master?.canonical?.product_nodes??[])].sort((a,b)=>String(a.node_id).localeCompare(String(b.node_id)));
+  if(!rows.length)throw new Error('UCHIRIMO_PRODUCT_NODE_PLAN_EMPTY');
+  const seenSeeds=new Set();
+  const include=rows.map((row,index)=>{
+    const room=String(row.room??'');
+    const windowType=String(row.window_type??'');
+    if(!room||!windowType)throw new Error('UCHIRIMO_PRODUCT_NODE_AXIS_MISSING:'+String(row.node_id));
+    const sash=windowType==='sliding_window' && row.sash_configuration!=null && row.sash_configuration!=='' ? String(row.sash_configuration) : '__UNSET__';
+    const sizeClass=windowType==='sliding_window' && row.size_class!=null && row.size_class!=='' ? String(row.size_class) : '__UNSET__';
+    const seed={room_specification:room,window_type:windowType};
+    if(sash!=='__UNSET__')seed.sash_configuration=sash;
+    if(sizeClass!=='__UNSET__')seed.size_class=sizeClass;
+    const seedKey=stableJson(seed);
+    if(seenSeeds.has(seedKey))throw new Error('UCHIRIMO_PRODUCT_NODE_SEED_DUPLICATE:'+String(row.node_id));
+    seenSeeds.add(seedKey);
+    return {shard:index,node_id:String(row.node_id),room_specification:room,window_type:windowType,sash_configuration:sash,size_class:sizeClass};
+  });
+  const matrix={include};
+  const record={exact_head:head,status:'PASS',shard_count:include.length,matrix};
+  writeFileSync(join(OUT,'matrix.json'),JSON.stringify(record,null,2)+'\n');
+  if(process.env.GITHUB_OUTPUT){
+    appendFileSync(process.env.GITHUB_OUTPUT,'matrix='+JSON.stringify(matrix)+'\n');
+    appendFileSync(process.env.GITHUB_OUTPUT,'shard_count='+String(include.length)+'\n');
+  }
+  console.log('UCHIRIMO_SELECTOR_PLAN=PASS shards='+include.length);
+}
 async function aggregate(){
   const head=process.env.HEAD_SHA??process.env.GITHUB_SHA??currentExactHead();
+  const runtime=await loadRegisteredRuntime('YKK AP','ウチリモ 内窓');
+  if(!runtime?.sourcePackageIntegrity?.match)throw new Error('UCHIRIMO_RUNTIME_INTEGRITY_NOT_PASS');
+  const expectedNodeIds=new Set((runtime.master?.canonical?.product_nodes??[]).map((row)=>String(row.node_id)));
+  if(expectedNodeIds.size!==EXPECTED_SHARDS)throw new Error('UCHIRIMO_EXPECTED_SHARD_COUNT_RUNTIME_MISMATCH:'+expectedNodeIds.size+':'+EXPECTED_SHARDS);
   const reportPaths=walk(INPUT).filter((path)=>/shard-\d+-report\.json$/.test(path));
   if(reportPaths.length!==EXPECTED_SHARDS)throw new Error('UCHIRIMO_SHARD_REPORT_COUNT_MISMATCH:'+reportPaths.length+':'+EXPECTED_SHARDS);
   const reports=reportPaths.map((path)=>({path,data:JSON.parse(readFileSync(path,'utf8'))})).sort((a,b)=>a.data.shard_index-b.data.shard_index);
@@ -97,6 +136,8 @@ async function aggregate(){
   if(reports.some((row,i)=>row.data.shard_index!==expectedIndices[i]))throw new Error('UCHIRIMO_SHARD_INDEX_COVERAGE_MISMATCH');
   const runtimeHashes=new Set();
   const windows=new Set();
+  const nodeIds=new Set();
+  const seedKeys=new Set();
   const flowSignatures=new Set();
   const perWindow={};
   let terminals=0;
@@ -115,7 +156,13 @@ async function aggregate(){
     if(report.exact_head!==head)throw new Error('UCHIRIMO_SHARD_EXACT_HEAD_MISMATCH:'+report.shard_index);
     if(report.status!=='PASS'||report.unverified_discrete_selector_case_count!==0)throw new Error('UCHIRIMO_SHARD_NOT_PASS:'+report.shard_index);
     if(report.runtime_integrity_match!==true)throw new Error('UCHIRIMO_SHARD_RUNTIME_INTEGRITY_FAIL:'+report.shard_index);
-    if(windows.has(String(report.window_type)))throw new Error('UCHIRIMO_SHARD_DUPLICATE_WINDOW:'+report.window_type);
+    const nodeId=String(report.node_id??'');
+    if(!expectedNodeIds.has(nodeId))throw new Error('UCHIRIMO_SHARD_UNKNOWN_PRODUCT_NODE:'+nodeId);
+    if(nodeIds.has(nodeId))throw new Error('UCHIRIMO_SHARD_DUPLICATE_PRODUCT_NODE:'+nodeId);
+    nodeIds.add(nodeId);
+    const seedKey=stableJson(report.seed??{});
+    if(seedKeys.has(seedKey))throw new Error('UCHIRIMO_SHARD_DUPLICATE_SEED:'+nodeId);
+    seedKeys.add(seedKey);
     windows.add(String(report.window_type));
     runtimeHashes.add(String(report.runtime_manifest_sha256));
     for(const sig of report.flow_signature_sha256s??[])flowSignatures.add(String(sig));
@@ -128,7 +175,7 @@ async function aggregate(){
     resolverCacheMisses+=report.resolver_cache_misses;
     maxStack=Math.max(maxStack,report.max_stack_depth??0);
     peakHeapMb=Math.max(peakHeapMb,report.observed_peak_heap_mb??0);
-    perWindow[String(report.window_type)]=report.terminal_context_count;
+    perWindow[String(report.window_type)]=(perWindow[String(report.window_type)]??0)+report.terminal_context_count;
     const casePath=walk(INPUT).find((path)=>basename(path)===basename(report.case_artifact));
     if(!casePath)throw new Error('UCHIRIMO_SHARD_CASE_ARTIFACT_MISSING:'+report.shard_index);
     const actualCaseSha=await shaFile(casePath);
@@ -140,16 +187,18 @@ async function aggregate(){
     caseArtifacts.push({shard_index:report.shard_index,window_type:report.window_type,path:'shards/'+basename(casePath),sha256:actualCaseSha});
   }
   if(runtimeHashes.size!==1)throw new Error('UCHIRIMO_SHARD_RUNTIME_HASH_MISMATCH');
-  if(windows.size!==EXPECTED_SHARDS)throw new Error('UCHIRIMO_SHARD_WINDOW_COVERAGE_MISMATCH:'+windows.size);
+  if(nodeIds.size!==expectedNodeIds.size||[...expectedNodeIds].some((id)=>!nodeIds.has(id)))throw new Error('UCHIRIMO_SHARD_PRODUCT_NODE_COVERAGE_MISMATCH:'+nodeIds.size+':'+expectedNodeIds.size);
+  if(windows.size!==4)throw new Error('UCHIRIMO_SHARD_WINDOW_COVERAGE_MISMATCH:'+windows.size);
   const combined={
     schema_version:'2.0.0',
     exact_head:head,
     task_classification:'NON-PRODUCT-MASTER',
     product_master_mutation:0,
-    proof_model:'UCHIRIMO_REACHABLE_DISCRETE_SELECTOR_EXHAUSTIVE_SHARDED_V2',
+    proof_model:'UCHIRIMO_REACHABLE_DISCRETE_SELECTOR_EXHAUSTIVE_SHARDED_V3',
     runtime_manifest_sha256:[...runtimeHashes][0],
     runtime_integrity_match:true,
     shard_count:EXPECTED_SHARDS,
+    product_node_count:nodeIds.size,
     window_type_count:windows.size,
     terminal_context_count:terminals,
     visited_state_count:states,
@@ -195,15 +244,21 @@ async function runShard(){
     return result;
   }
 
-  const root=await resolveCached({});
-  const rootWindow=root.fields.find((field)=>field.key==='window_type');
-  const expectedWindows=enabled(rootWindow).map((row)=>row.value);
-  if(!rootWindow||expectedWindows.length!==EXPECTED_SHARDS)throw new Error('UCHIRIMO_WINDOW_POPULATION_MISMATCH:'+(rootWindow?expectedWindows.length:0));
-  const selectedWindow=expectedWindows[SHARD_INDEX];
-  const selected=await resolveCached({...root.selection,window_type:selectedWindow});
-  if(!same(selected.selection?.window_type,selectedWindow))throw new Error('UCHIRIMO_SHARD_WINDOW_SELECTION_REJECTED:'+SHARD_INDEX);
-
-  const stack=[{selection:selected.selection??{window_type:selectedWindow},decisions:{window_type:{kind:'VALUE',value:selectedWindow}}}];
+  if(!SHARD_NODE_ID||!TARGET_ROOM||!TARGET_WINDOW)throw new Error('UCHIRIMO_SHARD_PLAN_INPUT_MISSING:'+SHARD_INDEX);
+  const formalNode=(runtime.master?.canonical?.product_nodes??[]).find((row)=>String(row.node_id)===SHARD_NODE_ID);
+  if(!formalNode)throw new Error('UCHIRIMO_SHARD_PRODUCT_NODE_NOT_FOUND:'+SHARD_NODE_ID);
+  const seed={room_specification:TARGET_ROOM,window_type:TARGET_WINDOW};
+  if(TARGET_SASH!=='__UNSET__')seed.sash_configuration=TARGET_SASH;
+  if(TARGET_SIZE_CLASS!=='__UNSET__')seed.size_class=TARGET_SIZE_CLASS;
+  if(String(formalNode.room??'')!==TARGET_ROOM||String(formalNode.window_type??'')!==TARGET_WINDOW)throw new Error('UCHIRIMO_SHARD_PLAN_NODE_AXIS_MISMATCH:'+SHARD_NODE_ID);
+  if(TARGET_WINDOW==='sliding_window'){
+    if(TARGET_SASH!=='__UNSET__'&&String(formalNode.sash_configuration??'')!==TARGET_SASH)throw new Error('UCHIRIMO_SHARD_PLAN_SASH_MISMATCH:'+SHARD_NODE_ID);
+    if(TARGET_SIZE_CLASS!=='__UNSET__'&&String(formalNode.size_class??'')!==TARGET_SIZE_CLASS)throw new Error('UCHIRIMO_SHARD_PLAN_SIZE_CLASS_MISMATCH:'+SHARD_NODE_ID);
+  }
+  const selected=await resolveCached(seed);
+  for(const [key,value] of Object.entries(seed))if(!same(selected.selection?.[key],value))throw new Error('UCHIRIMO_SHARD_SEED_REJECTED:'+SHARD_NODE_ID+':'+key);
+  const decisions=Object.fromEntries(Object.entries(seed).map(([key,value])=>[key,{kind:'VALUE',value}]));
+  const stack=[{selection:selected.selection??seed,decisions}];
   const visited=new Set();
   const signatureCounts=new Map();
   let transitionChecks=0;
@@ -298,8 +353,10 @@ async function runShard(){
     exact_head:head,
     task_classification:'NON-PRODUCT-MASTER',
     product_master_mutation:0,
-    proof_model:'UCHIRIMO_REACHABLE_DISCRETE_SELECTOR_EXHAUSTIVE_SHARD_V2',
+    proof_model:'UCHIRIMO_REACHABLE_DISCRETE_SELECTOR_EXHAUSTIVE_SHARD_V3',
     shard_index:SHARD_INDEX,
+    node_id:SHARD_NODE_ID,
+    seed:stable(seed),
     shard_count:EXPECTED_SHARDS,
     window_type:selectedWindow,
     runtime_manifest_sha256:runtime.sourcePackageIntegrity.actual,
@@ -325,12 +382,13 @@ async function runShard(){
     status:'PASS'
   };
   writeFileSync(join(OUT,'shard-'+SHARD_INDEX+'-report.json'),JSON.stringify(report,null,2)+'\n');
-  console.log('UCHIRIMO_SELECTOR_SHARD=PASS shard='+SHARD_INDEX+' window='+String(selectedWindow)+' terminals='+terminalCount+' states='+visited.size+' transitions='+transitionChecks+' peak_heap_mb='+peakHeapMb);
+  console.log('UCHIRIMO_SELECTOR_SHARD=PASS shard='+SHARD_INDEX+' node='+SHARD_NODE_ID+' window='+TARGET_WINDOW+' terminals='+terminalCount+' states='+visited.size+' transitions='+transitionChecks+' peak_heap_mb='+peakHeapMb);
 }
 
-const failurePath=join(OUT,MODE==='aggregate'?'aggregate-failure.json':'shard-'+String(SHARD_INDEX)+'-failure.json');
+const failurePath=join(OUT,MODE==='aggregate'?'aggregate-failure.json':MODE==='plan'?'plan-failure.json':'shard-'+String(SHARD_INDEX)+'-failure.json');
 try{
-  if(MODE==='aggregate')await aggregate();
+  if(MODE==='plan')await plan();
+  else if(MODE==='aggregate')await aggregate();
   else if(MODE==='shard')await runShard();
   else throw new Error('UCHIRIMO_UNKNOWN_SELECTOR_MODE:'+MODE);
 }catch(error){

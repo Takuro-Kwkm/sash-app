@@ -9,7 +9,7 @@
   },
   "families": {
     "UCHIRIMO_SELECTOR": {
-      "proof_model_version": "UCHIRIMO_REACHABLE_DISCRETE_SELECTOR_EXHAUSTIVE_SHARDED_V2",
+      "proof_model_version": "UCHIRIMO_REACHABLE_DISCRETE_SELECTOR_EXHAUSTIVE_SHARDED_V3",
       "runtime_snapshot": "project-governance/runtime-snapshot.json",
       "dependencies": [
         "src/catalog/runtime-master/uchirimo-tabular-v1-adapter.mjs",
