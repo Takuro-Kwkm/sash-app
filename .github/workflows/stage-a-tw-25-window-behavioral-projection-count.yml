@@ -1,13 +1,11 @@
 name: Stage A TW 25-Window Behavioral Projection Count
 
 on:
-  pull_request:
-    branches: [main]
-    paths:
-      - '.github/workflows/stage-a-tw-25-window-behavioral-projection-count.yml'
-      - 'scripts/stage-a-tw-behavioral-projection-count-pilot.mjs'
-      - 'src/catalog/runtime-master/**'
-      - 'src/catalog/**'
+  workflow_call:
+    inputs:
+      controller_head:
+        required: true
+        type: string
 
 permissions:
   contents: read
@@ -22,7 +20,7 @@ jobs:
   governance-authority:
     uses: ./.github/workflows/governance-authorization.yml
     with:
-      controller_head: ${{ github.event.pull_request.head.sha || github.sha }}
+      controller_head: ${{ inputs.controller_head }}
       release: false
 
   prepare:
@@ -37,7 +35,7 @@ jobs:
       - name: Checkout exact PR HEAD
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.head.sha }}
+          ref: ${{ inputs.controller_head }}
           fetch-depth: 1
 
       - uses: actions/setup-node@v4
@@ -47,7 +45,7 @@ jobs:
       - name: Build exact TW window matrix
         id: inventory
         env:
-          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          HEAD_SHA: ${{ inputs.controller_head }}
         shell: bash
         run: |
           set -euo pipefail
@@ -68,7 +66,8 @@ jobs:
           NODE
 
   proof:
-    needs: prepare
+    needs: [governance-authority, prepare]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' }}
     runs-on: ubuntu-latest
     timeout-minutes: 5
     strategy:
@@ -77,7 +76,7 @@ jobs:
       matrix:
         window: ${{ fromJSON(needs.prepare.outputs.windows) }}
     env:
-      HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+      HEAD_SHA: ${{ inputs.controller_head }}
       STAGE_A_TARGET_WINDOW: ${{ matrix.window }}
       STAGE_A_MAX_MEMO_STATES_PER_WINDOW: 12000
       STAGE_A_MAX_RESOLVER_CALLS_PER_WINDOW: 120000
@@ -87,7 +86,7 @@ jobs:
       - name: Checkout exact PR HEAD
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.head.sha }}
+          ref: ${{ inputs.controller_head }}
           fetch-depth: 1
 
       - uses: actions/setup-node@v4
@@ -135,12 +134,12 @@ jobs:
           NODE
 
   aggregate:
-    if: always()
-    needs: [prepare, proof]
+    needs: [governance-authority, prepare, proof]
+    if: ${{ always() && needs.governance-authority.outputs.authorized == 'true' }}
     runs-on: ubuntu-latest
     timeout-minutes: 4
     env:
-      HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+      HEAD_SHA: ${{ inputs.controller_head }}
       EXPECTED_WINDOW_COUNT: ${{ needs.prepare.outputs.count }}
     steps:
       - name: Download all per-window evidence

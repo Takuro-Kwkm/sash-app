@@ -193,3 +193,17 @@ jobs:
     uses: ./.github/workflows/global-window-selection-flow-gate.yml
     with:
       controller_head: ${{ github.event.pull_request.head.sha || github.sha }}
+
+  post-review-nontw-exact:
+    needs: governance
+    if: needs.governance.outputs.authorized == 'true' && github.event_name == 'pull_request'
+    uses: ./.github/workflows/stage-a-nontw-80-window-discrete-exact-count.yml
+    with:
+      controller_head: ${{ github.event.pull_request.head.sha || github.sha }}
+
+  post-review-tw-exact:
+    needs: governance
+    if: needs.governance.outputs.authorized == 'true' && github.event_name == 'pull_request'
+    uses: ./.github/workflows/stage-a-tw-25-window-behavioral-projection-count.yml
+    with:
+      controller_head: ${{ github.event.pull_request.head.sha || github.sha }}

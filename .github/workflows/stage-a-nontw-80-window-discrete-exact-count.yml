@@ -1,14 +1,11 @@
 name: Stage A Non-TW 80-Window Discrete Exact Count
 
 on:
-  pull_request:
-    branches: [main]
-    paths:
-      - '.github/workflows/stage-a-nontw-80-window-discrete-exact-count.yml'
-      - 'scripts/stage-a-nontw-discrete-exact-runner.mjs'
-      - 'scripts/stage-a-resolver-derived-contract-v2-pilot.mjs'
-      - 'src/catalog/runtime-master/**'
-      - 'src/catalog/**'
+  workflow_call:
+    inputs:
+      controller_head:
+        required: true
+        type: string
 
 permissions:
   contents: read
@@ -23,7 +20,7 @@ jobs:
   governance-authority:
     uses: ./.github/workflows/governance-authorization.yml
     with:
-      controller_head: ${{ github.event.pull_request.head.sha || github.sha }}
+      controller_head: ${{ inputs.controller_head }}
       release: false
 
   inventory:
@@ -38,7 +35,7 @@ jobs:
       - name: Checkout exact PR HEAD
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.head.sha }}
+          ref: ${{ inputs.controller_head }}
           fetch-depth: 1
       - uses: actions/setup-node@v4
         with:
@@ -47,7 +44,7 @@ jobs:
         name: Build exact non-TW window inventory
         shell: bash
         env:
-          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          HEAD_SHA: ${{ inputs.controller_head }}
         run: |
           set -euo pipefail
           actual="$(git rev-parse HEAD)"
@@ -80,7 +77,8 @@ jobs:
           NODE
 
   count:
-    needs: inventory
+    needs: [governance-authority, inventory]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' }}
     runs-on: ubuntu-latest
     timeout-minutes: 6
     strategy:
@@ -88,7 +86,7 @@ jobs:
       max-parallel: 12
       matrix: ${{ fromJson(needs.inventory.outputs.matrix) }}
     env:
-      HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+      HEAD_SHA: ${{ inputs.controller_head }}
       STAGE_A_TARGET_WINDOWS: ${{ matrix.window_type }}
       STAGE_A_MAX_MEMO_STATES_PER_WINDOW: 12000
       STAGE_A_MAX_RESOLVER_CALLS_PER_WINDOW: 80000
@@ -99,7 +97,7 @@ jobs:
       - name: Checkout exact PR HEAD
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.head.sha }}
+          ref: ${{ inputs.controller_head }}
           fetch-depth: 1
       - uses: actions/setup-node@v4
         with:
@@ -145,12 +143,12 @@ jobs:
           NODE
 
   aggregate:
-    if: always()
-    needs: [inventory,count]
+    needs: [governance-authority, inventory, count]
+    if: ${{ always() && needs.governance-authority.outputs.authorized == 'true' }}
     runs-on: ubuntu-latest
     timeout-minutes: 5
     env:
-      HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+      HEAD_SHA: ${{ inputs.controller_head }}
     steps:
       - name: Download all per-window evidence
         uses: actions/download-artifact@v4
