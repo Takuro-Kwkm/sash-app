@@ -358,7 +358,7 @@ async function runShard(){
     node_id:SHARD_NODE_ID,
     seed:stable(seed),
     shard_count:EXPECTED_SHARDS,
-    window_type:selectedWindow,
+    window_type:TARGET_WINDOW,
     runtime_manifest_sha256:runtime.sourcePackageIntegrity.actual,
     runtime_integrity_match:runtime.sourcePackageIntegrity.match,
     terminal_context_count:terminalCount,
