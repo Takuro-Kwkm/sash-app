@@ -11,8 +11,8 @@ const OUT=process.env.UCHIRIMO_FULL_SELECTOR_OUT ?? (MODE==='aggregate' ? 'artif
 const INPUT=process.env.UCHIRIMO_SELECTOR_SHARD_INPUT ?? 'artifacts/uchirimo-selector-proof-shards';
 const SHARD_INDEX=Number(process.env.UCHIRIMO_WINDOW_SHARD_INDEX ?? -1);
 const EXPECTED_SHARDS=Number(process.env.UCHIRIMO_SELECTOR_EXPECTED_SHARDS ?? 4);
-const MAX_STATES=Number(process.env.UCHIRIMO_SELECTOR_MAX_STATES ?? 250000);
-const MAX_TERMINALS=Number(process.env.UCHIRIMO_SELECTOR_MAX_TERMINALS ?? 100000);
+const MAX_STATES=Number(process.env.UCHIRIMO_SELECTOR_MAX_STATES ?? 1000000);
+const MAX_TERMINALS=Number(process.env.UCHIRIMO_SELECTOR_MAX_TERMINALS ?? 1000000);
 const MAX_RESOLVER_CACHE=Number(process.env.UCHIRIMO_RESOLVER_CACHE_MAX ?? 512);
 const CONTINUOUS_KEYS=new Set(['size_w','size_h','frame_projection','fukashi_dimension','custom_w','custom_h','custom_width','custom_height']);
 const TECHNICAL_KEYS=new Set(['legacyConstruction','legacyConfiguration','internal_construction']);
@@ -212,7 +212,7 @@ async function runShard(){
   let terminalCount=0;
   let maxStack=stack.length;
   let peakHeapMb=0;
-  const casesPath=join(OUT,'shard-'+SHARD_INDEX+'-cases.jsonl');
+  const casesPath=join(OUT,'shard-'+SHARD_INDEX+'-terminal-digests.jsonl');
   const casesFd=openSync(casesPath,'w');
   const caseHash=createHash('sha256');
 
@@ -253,7 +253,11 @@ async function runShard(){
           flow_signature_sha256:sha(signature),
           required_fields:(result.fields??[]).filter((field)=>field.required).map((field)=>field.key)
         };
-        const line=JSON.stringify(row)+'\n';
+        const line=JSON.stringify({
+          case_id:row.case_id,
+          window_type:row.window_type,
+          terminal_sha256:sha(row)
+        })+'\n';
         writeSync(casesFd,line);
         caseHash.update(line);
         continue;
@@ -278,7 +282,7 @@ async function runShard(){
         stack.push({selection:child.selection,decisions:nextDecisions});
       }
       if(stack.length>maxStack)maxStack=stack.length;
-      if(visited.size%2000===0){
+      if(visited.size%25000===0){
         peakHeapMb=Math.max(peakHeapMb,Math.round(process.memoryUsage().heapUsed/1024/1024));
         console.log('UCHIRIMO_SHARD_PROGRESS shard='+SHARD_INDEX+' states='+visited.size+' terminals='+terminalCount+' stack='+stack.length+' heap_mb='+peakHeapMb);
       }
@@ -310,6 +314,7 @@ async function runShard(){
     continuous_dimension_coverage_delegated_to:'CUSTOM_SIZE_COVERAGE_GATE',
     unverified_discrete_selector_case_count:0,
     case_artifact:basename(casesPath),
+    case_artifact_format:'UCHIRIMO_TERMINAL_DIGEST_JSONL_V1',
     case_artifact_sha256:caseHash.digest('hex'),
     max_stack_depth:maxStack,
     observed_peak_heap_mb:peakHeapMb,

@@ -77,15 +77,82 @@ jobs:
           path: artifacts/governance/
           if-no-files-found: error
 
-  uchirimo-selector-proof:
+  uchirimo-selector-proof-cache:
     needs: ["governance-authority", "governance-precheck"]
     if: ${{ needs.governance-authority.outputs.authorized == 'true' && (needs.governance-precheck.outputs.authorized == 'true') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+    outputs:
+      reused: ${{ steps.cache-decision.outputs.reused }}
+    steps:
+      - name: Checkout exact HEAD
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.HEAD_SHA }}
+          fetch-depth: 0
+
+      - name: Setup Node 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Compute Uchirimo selector proof dependency fingerprint
+        id: uchirimo-proof-fingerprint
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/governance/proof-dependency-fingerprint.mjs --mode fingerprint --family UCHIRIMO_SELECTOR --fingerprint-out artifacts/governance/uchirimo-selector-proof-fingerprint.json
+
+      - name: Restore aggregated Uchirimo selector proof cache
+        id: uchirimo-proof-cache
+        uses: actions/cache/restore@v4
+        with:
+          path: artifacts/uchirimo-full-selector-proof
+          key: proof-uchirimo-selector-v2-${{ steps.uchirimo-proof-fingerprint.outputs.fingerprint }}
+
+      - name: Bind cached Uchirimo selector proof to current HEAD
+        id: cache-decision
+        shell: bash
+        env:
+          CACHE_HIT: ${{ steps.uchirimo-proof-cache.outputs.cache-hit }}
+        run: |
+          set +e
+          reused=false
+          if [ "$CACHE_HIT" = "true" ]; then
+            node scripts/governance/proof-dependency-fingerprint.mjs --mode bind --family UCHIRIMO_SELECTOR --artifact artifacts/uchirimo-full-selector-proof/report.json --metadata artifacts/uchirimo-full-selector-proof/source-metadata.json --binding artifacts/uchirimo-full-selector-proof/current-head-binding.json
+            rc=$?
+            if [ "$rc" -eq 0 ]; then
+              reused=true
+              echo "UCHIRIMO_SELECTOR_PROOF_REUSE=PASS"
+            else
+              rm -rf artifacts/uchirimo-full-selector-proof
+              echo "UCHIRIMO_SELECTOR_PROOF_REUSE=INVALID_RERUN_REQUIRED"
+            fi
+          else
+            echo "UCHIRIMO_SELECTOR_PROOF_REUSE=CACHE_MISS"
+          fi
+          echo "reused=$reused" >> "$GITHUB_OUTPUT"
+          exit 0
+
+      - name: Upload reused Uchirimo selector proof for current HEAD
+        if: ${{ steps.cache-decision.outputs.reused == 'true' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: uchirimo-selector-proof-aggregate-${{ env.HEAD_SHA }}
+          path: artifacts/uchirimo-full-selector-proof/
+          if-no-files-found: error
+
+  uchirimo-selector-proof:
+    needs: ["governance-authority", "governance-precheck", "uchirimo-selector-proof-cache"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && needs.governance-precheck.outputs.authorized == 'true' && needs.uchirimo-selector-proof-cache.outputs.reused != 'true' }}
     strategy:
       fail-fast: false
       matrix:
         shard: [0, 1, 2, 3]
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 120
     env:
       HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
       UCHIRIMO_SELECTOR_MODE: shard
@@ -124,7 +191,7 @@ jobs:
           if-no-files-found: warn
 
   uchirimo-selector-proof-aggregate:
-    needs: ["governance-authority", "governance-precheck", "uchirimo-selector-proof"]
+    needs: ["governance-authority", "governance-precheck", "uchirimo-selector-proof-cache", "uchirimo-selector-proof"]
     if: ${{ needs.governance-authority.outputs.authorized == 'true' && needs.governance-precheck.outputs.authorized == 'true' && needs.uchirimo-selector-proof.result == 'success' }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
@@ -163,6 +230,20 @@ jobs:
           test "$(git rev-parse HEAD)" = "$HEAD_SHA"
           node scripts/uchirimo-full-selector-proof.mjs
 
+      - name: Stamp fresh Uchirimo selector proof dependency metadata
+        id: uchirimo-proof-fingerprint
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/governance/proof-dependency-fingerprint.mjs --mode fingerprint --family UCHIRIMO_SELECTOR --fingerprint-out artifacts/governance/uchirimo-selector-proof-fingerprint.json
+          node scripts/governance/proof-dependency-fingerprint.mjs --mode stamp --family UCHIRIMO_SELECTOR --artifact artifacts/uchirimo-full-selector-proof/report.json --metadata artifacts/uchirimo-full-selector-proof/source-metadata.json
+
+      - name: Save aggregated Uchirimo selector proof cache
+        uses: actions/cache/save@v4
+        with:
+          path: artifacts/uchirimo-full-selector-proof
+          key: proof-uchirimo-selector-v2-${{ steps.uchirimo-proof-fingerprint.outputs.fingerprint }}
+
       - name: Upload aggregated Uchirimo selector proof
         uses: actions/upload-artifact@v4
         with:
@@ -171,8 +252,8 @@ jobs:
           if-no-files-found: error
 
   global-flow:
-    needs: ["governance-authority", "governance-precheck", "uchirimo-selector-proof-aggregate"]
-    if: ${{ needs.governance-authority.outputs.authorized == 'true' && needs.governance-precheck.outputs.authorized == 'true' && needs.uchirimo-selector-proof-aggregate.result == 'success' }}
+    needs: ["governance-authority", "governance-precheck", "uchirimo-selector-proof-cache", "uchirimo-selector-proof-aggregate"]
+    if: ${{ always() && needs.governance-authority.outputs.authorized == 'true' && needs.governance-precheck.outputs.authorized == 'true' && (needs.uchirimo-selector-proof-cache.outputs.reused == 'true' || needs.uchirimo-selector-proof-aggregate.result == 'success') }}
     runs-on: ubuntu-latest
     timeout-minutes: 60
     env:
