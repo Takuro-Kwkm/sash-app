@@ -20,6 +20,8 @@ const TARGET_PARTITION_KEY=String(process.env.UCHIRIMO_SELECTOR_PARTITION_KEY ??
 const TARGET_PARTITION_SEED_JSON=String(process.env.UCHIRIMO_SELECTOR_PARTITION_SEED_JSON ?? '{}');
 const TARGET_PARTITION_SEED=JSON.parse(TARGET_PARTITION_SEED_JSON);
 const PARTITION_EXTRA_DEPTH=2;
+const PLAN_LANE_COUNT=Number(process.env.UCHIRIMO_SELECTOR_PLAN_LANE_COUNT ?? 1);
+const PLAN_LANE_INDEX=Number(process.env.UCHIRIMO_SELECTOR_PLAN_LANE_INDEX ?? 0);
 const EXPECTED_SHARDS=Number(process.env.UCHIRIMO_SELECTOR_EXPECTED_SHARDS ?? 0);
 const MAX_STATES=Number(process.env.UCHIRIMO_SELECTOR_MAX_STATES ?? 1000000);
 const MAX_TERMINALS=Number(process.env.UCHIRIMO_SELECTOR_MAX_TERMINALS ?? 1000000);
@@ -183,7 +185,6 @@ async function buildShardPartitions(runtime){
       await expand(row,base,glassFamily,glassSeed,{},resolved,PARTITION_EXTRA_DEPTH);
     }
   }
-  if(include.length>256)throw new Error('UCHIRIMO_PARTITION_MATRIX_LIMIT_EXCEEDED:'+include.length);
   return include;
 }
 
@@ -191,15 +192,21 @@ async function plan(){
   const head=currentExactHead();
   const runtime=await loadRegisteredRuntime('YKK AP','ウチリモ 内窓');
   if(!runtime?.sourcePackageIntegrity?.match)throw new Error('UCHIRIMO_RUNTIME_INTEGRITY_NOT_PASS');
-  const include=await buildShardPartitions(runtime);
+  const allPartitions=await buildShardPartitions(runtime);
+  if(!Number.isInteger(PLAN_LANE_COUNT)||PLAN_LANE_COUNT<1)throw new Error('UCHIRIMO_PLAN_LANE_COUNT_INVALID:'+PLAN_LANE_COUNT);
+  if(!Number.isInteger(PLAN_LANE_INDEX)||PLAN_LANE_INDEX<0||PLAN_LANE_INDEX>=PLAN_LANE_COUNT)throw new Error('UCHIRIMO_PLAN_LANE_INDEX_INVALID:'+PLAN_LANE_INDEX+':'+PLAN_LANE_COUNT);
+  const include=allPartitions.filter((_,index)=>index%PLAN_LANE_COUNT===PLAN_LANE_INDEX);
+  if(!include.length)throw new Error('UCHIRIMO_PLAN_LANE_EMPTY:'+PLAN_LANE_INDEX);
+  if(include.length>256)throw new Error('UCHIRIMO_PLAN_LANE_MATRIX_LIMIT_EXCEEDED:'+PLAN_LANE_INDEX+':'+include.length);
   const matrix={include};
-  const record={exact_head:head,status:'PASS',partition_axis:'product_node+glass_family+next_required_enum_depth2',shard_count:include.length,matrix};
+  const record={exact_head:head,status:'PASS',partition_axis:'product_node+glass_family+next_required_enum_depth2',shard_count:allPartitions.length,lane_index:PLAN_LANE_INDEX,lane_count:PLAN_LANE_COUNT,lane_shard_count:include.length,matrix};
   writeFileSync(join(OUT,'matrix.json'),JSON.stringify(record,null,2)+'\n');
   if(process.env.GITHUB_OUTPUT){
     appendFileSync(process.env.GITHUB_OUTPUT,'matrix='+JSON.stringify(matrix)+'\n');
-    appendFileSync(process.env.GITHUB_OUTPUT,'shard_count='+String(include.length)+'\n');
+    appendFileSync(process.env.GITHUB_OUTPUT,'shard_count='+String(allPartitions.length)+'\n');
+    appendFileSync(process.env.GITHUB_OUTPUT,'lane_shard_count='+String(include.length)+'\n');
   }
-  console.log('UCHIRIMO_SELECTOR_PLAN=PASS partitions='+include.length+' axis=product_node+glass_family+next_required_enum_depth2');
+  console.log('UCHIRIMO_SELECTOR_PLAN=PASS partitions='+allPartitions.length+' lane='+PLAN_LANE_INDEX+'/'+PLAN_LANE_COUNT+' lane_partitions='+include.length+' axis=product_node+glass_family+next_required_enum_depth2');
 }
 async function aggregate(){
   const head=process.env.HEAD_SHA??process.env.GITHUB_SHA??currentExactHead();
