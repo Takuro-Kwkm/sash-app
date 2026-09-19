@@ -124,6 +124,38 @@ test('unknown installation state remains MANUAL_CHECK and fukashi inputs are con
   assert.ok(result.manualWarnings.some((message) => message.includes('P5-UCH-204')));
 });
 
+
+test('Formal Phase9-R2 OR predicate requires substrate_present for unit-bath even without square-pipe reinforcement', async () => {
+  const { master } = await loadRegisteredRuntime('YKK AP', 'ウチリモ 内窓');
+  const input = master.sizeInstallation.installation_input_contract.raw_inputs.find((row) => row.field_name === 'substrate_present');
+  assert.equal(input?.required_when, 'extension_frame_reinforcement == reinforcement_square_pipe OR bathroom_installation_type == unit_bath');
+  const result = await resolveRuntimeAppProduct(PRODUCT, {
+    room_specification:'bathroom',
+    window_type:'sliding_window',
+    sash_configuration:'two_panel',
+    size_class:'window',
+    bathroom_installation_type:'unit_bath',
+  });
+  assert.ok(field(result, 'substrate_present'), 'Formal OR branch bathroom_installation_type == unit_bath must expose substrate_present');
+  assert.equal(field(result, 'substrate_present').required, true);
+});
+
+test('Formal Phase9-R2 AND predicate with != requires lower_resin_jamb_space_mm when resin jamb face is not screw-fixed', async () => {
+  const { master } = await loadRegisteredRuntime('YKK AP', 'ウチリモ 内窓');
+  const input = master.sizeInstallation.installation_input_contract.raw_inputs.find((row) => row.field_name === 'lower_resin_jamb_space_mm');
+  assert.equal(input?.required_when, 'room_specification == bathroom AND bathroom_installation_type == unit_bath AND resin_jamb_face_screw_fixed != yes');
+  const result = await resolveRuntimeAppProduct(PRODUCT, {
+    room_specification:'bathroom',
+    window_type:'sliding_window',
+    sash_configuration:'two_panel',
+    size_class:'window',
+    bathroom_installation_type:'unit_bath',
+    resin_jamb_face_screw_fixed:'no',
+  });
+  assert.ok(field(result, 'lower_resin_jamb_space_mm'), 'Formal AND/!= predicate must expose lower_resin_jamb_space_mm when resin_jamb_face_screw_fixed != yes');
+  assert.equal(field(result, 'lower_resin_jamb_space_mm').required, true);
+});
+
 test('options stay node-scoped and absent capabilities are not synthesized', async () => {
   let result = await resolveRuntimeAppProduct(PRODUCT, { room_specification: 'residential', window_type: 'inward_opening_window' });
   assert.ok(field(result, 'arm_stopper_option'));
