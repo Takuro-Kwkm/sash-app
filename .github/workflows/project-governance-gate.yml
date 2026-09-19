@@ -217,6 +217,7 @@ jobs:
       contents: read
       pull-requests: read
       actions: read
+      id-token: write
     env:
       HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
       GH_TOKEN: ${{ github.token }}
@@ -229,9 +230,21 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 24
+      - name: Obtain read-only Drive access through workload identity
+        id: reconstruct-drive-auth
+        if: vars.GOOGLE_WORKLOAD_IDENTITY_PROVIDER != '' && vars.GOOGLE_DRIVE_READER_SERVICE_ACCOUNT != ''
+        uses: google-github-actions/auth@v3
+        with:
+          workload_identity_provider: ${{ vars.GOOGLE_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ vars.GOOGLE_DRIVE_READER_SERVICE_ACCOUNT }}
+          token_format: access_token
+          access_token_scopes: https://www.googleapis.com/auth/drive.readonly
+          create_credentials_file: false
+          export_environment_variables: false
+
       - name: Reconstruct current state from durable evidence
         env:
-          DRIVE_READONLY_ACCESS_TOKEN: ${{ secrets.DRIVE_READONLY_ACCESS_TOKEN }}
+          DRIVE_READONLY_ACCESS_TOKEN: ${{ steps.reconstruct-drive-auth.outputs.access_token || secrets.DRIVE_READONLY_ACCESS_TOKEN }}
         run: node scripts/governance/reconstruct-current-state.mjs
       - name: Verify reconstructed exact HEAD
         run: |
