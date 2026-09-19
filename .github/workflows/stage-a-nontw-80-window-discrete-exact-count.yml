@@ -138,7 +138,7 @@ jobs:
     needs: [governance-authority, inventory, proof-cache]
     if: ${{ needs.governance-authority.outputs.authorized == 'true' && needs.proof-cache.outputs.reused != 'true' }}
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 35
     strategy:
       fail-fast: false
       max-parallel: 12

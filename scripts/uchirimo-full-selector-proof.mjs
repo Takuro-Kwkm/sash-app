@@ -8,6 +8,8 @@ const PRODUCT_ID='SER-YKKAP-UCHIRIMO';
 const OUT=process.env.UCHIRIMO_FULL_SELECTOR_OUT ?? 'artifacts/uchirimo-full-selector-proof';
 const MAX_STATES=Number(process.env.UCHIRIMO_SELECTOR_MAX_STATES ?? 250000);
 const MAX_TERMINALS=Number(process.env.UCHIRIMO_SELECTOR_MAX_TERMINALS ?? 50000);
+const MAX_RESOLVER_CACHE=Number(process.env.UCHIRIMO_RESOLVER_CACHE_MAX ?? 4096);
+const QUEUE_COMPACT_HEAD=Number(process.env.UCHIRIMO_QUEUE_COMPACT_HEAD ?? 4096);
 const CONTINUOUS_KEYS=new Set(['size_w','size_h','frame_projection','fukashi_dimension','custom_w','custom_h','custom_width','custom_height']);
 const TECHNICAL_KEYS=new Set(['legacyConstruction','legacyConfiguration','internal_construction']);
 mkdirSync(OUT,{recursive:true});
@@ -87,6 +89,10 @@ async function resolveCached(selection){
   if(cached){resolverCacheHits+=1;return cached;}
   const result=await resolveRuntimeAppProduct(PRODUCT_ID,selection);
   resolverCache.set(cacheKey,result);
+  while(resolverCache.size>MAX_RESOLVER_CACHE){
+    const oldest=resolverCache.keys().next().value;
+    resolverCache.delete(oldest);
+  }
   resolverCacheMisses+=1;
   return result;
 }
@@ -162,6 +168,10 @@ while(queueHead<queue.length){
   }
   const pendingQueueDepth=queue.length-queueHead;
   if(pendingQueueDepth>maxQueue)maxQueue=pendingQueueDepth;
+  if(queueHead>=QUEUE_COMPACT_HEAD && queueHead*2>=queue.length){
+    queue.splice(0,queueHead);
+    queueHead=0;
+  }
 }
 
 const windows=new Map();
@@ -194,6 +204,7 @@ const report={
   case_artifact_sha256:sha(JSON.stringify({exact_head:head,cases:terminalRows},null,2)+'\n'),
   max_queue_depth:maxQueue,
   resolver_cache_size:resolverCache.size,
+  resolver_cache_limit:MAX_RESOLVER_CACHE,
   resolver_cache_hits:resolverCacheHits,
   resolver_cache_misses:resolverCacheMisses,
   status:'PASS'
