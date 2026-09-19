@@ -116,7 +116,14 @@ for (const [index, gateId] of definitions.gate_order.entries()) {
 
 const releaseReq = definitions.release_requirements;
 const releaseBlocking = releaseReq.required_pass_gates.filter((id) => result.gates[id]?.status !== 'PASS');
-const unverifiedCount = state.metrics?.unverified_qa_case_count ?? null;
+let unverifiedCount = state.metrics?.unverified_qa_case_count ?? null;
+const postHumanCoveragePath = 'artifacts/governance/post-human-coverage-summary.json';
+if (existsSync(postHumanCoveragePath)) {
+  const postHumanCoverage = readJson(postHumanCoveragePath);
+  if (postHumanCoverage.exact_head === head && Number.isInteger(postHumanCoverage.unverified_qa_case_count)) {
+    unverifiedCount = postHumanCoverage.unverified_qa_case_count;
+  }
+}
 if (unverifiedCount !== releaseReq.unverified_qa_case_count_must_equal) releaseBlocking.push('UNVERIFIED_QA_CASE_COUNT');
 const releaseFields = releaseReq.required_release_input.filter((field) => !human[field]);
 result.release = {
