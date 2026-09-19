@@ -10,6 +10,21 @@ const MAX_STATES=Number(process.env.UCHIRIMO_SELECTOR_MAX_STATES ?? 250000);
 const MAX_TERMINALS=Number(process.env.UCHIRIMO_SELECTOR_MAX_TERMINALS ?? 50000);
 const CONTINUOUS_KEYS=new Set(['size_w','size_h','frame_projection','fukashi_dimension','custom_w','custom_h','custom_width','custom_height']);
 const TECHNICAL_KEYS=new Set(['construction','legacyConstruction','legacyConfiguration','internal_construction']);
+mkdirSync(OUT,{recursive:true});
+const writeFailure=(error)=>{
+  try{
+    writeFileSync(`${OUT}/failure.json`,JSON.stringify({
+      exact_head:process.env.HEAD_SHA??process.env.GITHUB_SHA??null,
+      status:'FAIL',
+      code:error?.code??null,
+      message:error?.message??String(error),
+      stack:error?.stack??null,
+      observed_at:new Date().toISOString()
+    },null,2)+'\n');
+  }catch{}
+};
+process.on('uncaughtException',(error)=>{writeFailure(error);console.error(error);process.exit(1);});
+process.on('unhandledRejection',(error)=>{writeFailure(error);console.error(error);process.exit(1);});
 const stable=(value)=>{
   if(Array.isArray(value))return value.map(stable);
   if(!value||typeof value!=='object')return value;
@@ -59,7 +74,6 @@ function flowSignature(result){
     .join('|');
 }
 
-mkdirSync(OUT,{recursive:true});
 const head=currentExactHead();
 const runtime=await loadRegisteredRuntime('YKK AP','ウチリモ 内窓');
 if(!runtime?.sourcePackageIntegrity?.match)throw new Error('UCHIRIMO_RUNTIME_INTEGRITY_NOT_PASS');
