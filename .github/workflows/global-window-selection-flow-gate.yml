@@ -78,8 +78,8 @@ jobs:
           if-no-files-found: error
 
   uchirimo-selector-proof:
-    needs: ["governance-authority", "governance-precheck", "uchirimo-selector-proof-aggregate"]
-    if: ${{ needs.governance-authority.outputs.authorized == 'true' && needs.governance-precheck.outputs.authorized == 'true' && needs.uchirimo-selector-proof-aggregate.result == 'success' }}
+    needs: ["governance-authority", "governance-precheck"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && (needs.governance-precheck.outputs.authorized == 'true') }}
     strategy:
       fail-fast: false
       matrix:
@@ -171,8 +171,8 @@ jobs:
           if-no-files-found: error
 
   global-flow:
-    needs: ["governance-authority", "governance-precheck"]
-    if: ${{ needs.governance-authority.outputs.authorized == 'true' && (needs.governance-precheck.outputs.authorized == 'true') }}
+    needs: ["governance-authority", "governance-precheck", "uchirimo-selector-proof-aggregate"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && needs.governance-precheck.outputs.authorized == 'true' && needs.uchirimo-selector-proof-aggregate.result == 'success' }}
     runs-on: ubuntu-latest
     timeout-minutes: 60
     env:
