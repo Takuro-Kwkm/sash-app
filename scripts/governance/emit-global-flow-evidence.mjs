@@ -50,16 +50,18 @@ const proof={
   generated_at:new Date().toISOString(),
   task_classification:'NON-PRODUCT-MASTER',
   product_master_mutation:0,
+  deliberately_not_claimed:[
+    'FULL_WINDOW_COVERAGE_GATE',
+    'DEPENDENCY_GATE',
+    'UI_FLOW_GATE',
+    'FULL_BROWSER_QA_GATE'
+  ],
   gates:{
     FULL_FLOW_SIGNATURE_COVERAGE_GATE:{status:'PASS',evidence:signature},
     FLOW_TRANSITION_GATE:{status:'PASS',evidence:signature},
-    FULL_WINDOW_COVERAGE_GATE:{status:'PASS',series_count:8,window_count:113,desktop_window_checks:113,smartphone_window_checks:113,evidence:'artifacts/global-window-selection-flow-browser-qa/report.json'},
     CUSTOM_SIZE_COVERAGE_GATE:{status:'PASS',selector_context_count:custom.selector_context_count,evaluation_count:custom.evaluation_count,unverified_custom_case_count:0,evidence:'artifacts/stage-a-custom-transition-proof-v4/report.json'},
-    DEPENDENCY_GATE:{status:'PASS',evidence:dependency},
-    UI_FLOW_GATE:{status:'PASS',evidence:uiFlow},
     AUTOMATED_TEST_GATE:{status:'PASS',evidence:regression},
     FULL_BROWSER_FLOW_QA_GATE:{status:'PASS',series_count:8,window_count:113,desktop_and_smartphone:true,evidence:'artifacts/global-window-selection-flow-browser-qa/report.json'},
-    FULL_BROWSER_QA_GATE:{status:'PASS',exterior_base_windows:105,inplus_logical_cases:1148,inplus_unverified_cases:0,evidence:['artifacts/stage-a-full-browser-qa/report.json','artifacts/inplus-v04r2-global-flow-full-coverage-browser-qa/report.json','artifacts/global-window-selection-flow-browser-qa/report.json']},
     REGRESSION_GATE:{status:'PASS',evidence:regression},
     REPOSITORY_GATE:{status:'PASS',evidence:'artifacts/governance/post-human/repository-gate.json'}
   }
@@ -88,7 +90,9 @@ writeJson('artifacts/governance/evidence-inputs/global-flow.json',{
   runtime_snapshot_id:review.runtime_snapshot_id,
   proof_artifact:proofPath,
   proof_artifact_sha256:proofHash,
-  entries
+  entries,
+  deliberately_not_claimed:proof.deliberately_not_claimed,
+  note:'These gates require final cross-job direct evidence aggregation. Similar or partial tests are not promoted to PASS here.'
 });
 writeJson('artifacts/governance/evidence-inputs/index.json',{files:['artifacts/governance/evidence-inputs/global-flow.json']});
 console.log(`GLOBAL_FLOW_STANDARD_EVIDENCE_COUNT=${entries.length}`);
