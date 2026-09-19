@@ -16,7 +16,7 @@ permissions:
   actions: read
 
 concurrency:
-  group: project-governance-${{ github.ref }}
+  group: project-governance-${{ github.ref }}-${{ github.event.pull_request.head.sha || github.sha }}
   cancel-in-progress: true
 
 jobs:
