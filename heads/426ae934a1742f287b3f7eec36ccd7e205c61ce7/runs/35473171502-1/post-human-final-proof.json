@@ -1,0 +1,69 @@
+{
+  "schema_version": "1.0.0",
+  "exact_head": "426ae934a1742f287b3f7eec36ccd7e205c61ce7",
+  "task_classification": "NON-PRODUCT-MASTER",
+  "product_master_mutation": 0,
+  "generated_at": "2026-09-19T22:36:26.681Z",
+  "status": "BLOCKED",
+  "checks": {
+    "base": false,
+    "globalBrowser": false,
+    "inplus": false,
+    "stageA": false,
+    "uchirimoSelector": false,
+    "uchirimoBrowser": false,
+    "dependencyDirect": false,
+    "uiDirect": false,
+    "nontw": true,
+    "tw": true
+  },
+  "issues": [
+    "base post-Human proof: expected 1 artifact, found 0",
+    "global browser flow report: expected 1 artifact, found 0",
+    "Inplus exhaustive browser report: expected 1 artifact, found 0",
+    "Stage A full browser report: expected 1 artifact, found 0",
+    "Uchirimo selector proof: expected 1 artifact, found 0",
+    "Uchirimo browser report: expected 1 artifact, found 0",
+    "Dependency direct proof: expected 1 artifact, found 0",
+    "UI flow direct proof: expected 1 artifact, found 0",
+    "base: direct current-head evidence did not satisfy the final contract",
+    "globalBrowser: direct current-head evidence did not satisfy the final contract",
+    "inplus: direct current-head evidence did not satisfy the final contract",
+    "stageA: direct current-head evidence did not satisfy the final contract",
+    "uchirimoSelector: direct current-head evidence did not satisfy the final contract",
+    "uchirimoBrowser: direct current-head evidence did not satisfy the final contract",
+    "dependencyDirect: direct current-head evidence did not satisfy the final contract",
+    "uiDirect: direct current-head evidence did not satisfy the final contract"
+  ],
+  "gates": {},
+  "sources": {
+    "artifacts/post-human-final-source/nontw/report.json": {
+      "sha256": "e88f736696a3a66c025ea81a21b2e179fe7454f169065b06ce81b5fd74d2d7e4"
+    },
+    "artifacts/post-human-final-source/tw/report.json": {
+      "sha256": "fa02acdee038198bed870eb0ddbf4936549844a87f77ce97645b19a1e1244f77"
+    },
+    "artifacts/post-human-final-source/nontw/current-head-binding.json": {
+      "sha256": "a6e325d3d22e26b9ff05cdbd27f3ae850e79ad5cad87a2284b46e1345dfc8d9d"
+    },
+    "artifacts/post-human-final-source/tw/current-head-binding.json": {
+      "sha256": "10161739a285279c154e90f1e2c80b38abcd9dc7b6f4961d1578bcc367cc9487"
+    }
+  },
+  "carry_forward_bindings": {
+    "artifacts/post-human-final-source/nontw/current-head-binding.json": {
+      "sha256": "a6e325d3d22e26b9ff05cdbd27f3ae850e79ad5cad87a2284b46e1345dfc8d9d",
+      "family": "NONTW_EXACT",
+      "source_exact_head": "ef6132491c1321d855b25261f4dd15ced76e8a73",
+      "current_exact_head": "426ae934a1742f287b3f7eec36ccd7e205c61ce7",
+      "dependency_fingerprint": "802d61a4dfbb103e3c4f353119c7bf762ca588e0322107e6206e809abe510a50"
+    },
+    "artifacts/post-human-final-source/tw/current-head-binding.json": {
+      "sha256": "10161739a285279c154e90f1e2c80b38abcd9dc7b6f4961d1578bcc367cc9487",
+      "family": "TW_EXACT",
+      "source_exact_head": "909a87c09fdfac1abc3d49c455c4e129533b0921",
+      "current_exact_head": "426ae934a1742f287b3f7eec36ccd7e205c61ce7",
+      "dependency_fingerprint": "e1a30e28e9ae19e87821e78c90ea463d4d397b529105513fef07348fa4b2c55e"
+    }
+  }
+}
