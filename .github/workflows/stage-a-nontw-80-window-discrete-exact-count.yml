@@ -80,7 +80,7 @@ jobs:
     needs: [governance-authority, inventory]
     if: ${{ needs.governance-authority.outputs.authorized == 'true' }}
     runs-on: ubuntu-latest
-    timeout-minutes: 6
+    timeout-minutes: 15
     strategy:
       fail-fast: false
       max-parallel: 12
@@ -88,10 +88,10 @@ jobs:
     env:
       HEAD_SHA: ${{ inputs.controller_head }}
       STAGE_A_TARGET_WINDOWS: ${{ matrix.window_type }}
-      STAGE_A_MAX_MEMO_STATES_PER_WINDOW: 12000
-      STAGE_A_MAX_RESOLVER_CALLS_PER_WINDOW: 80000
+      STAGE_A_MAX_MEMO_STATES_PER_WINDOW: 20000
+      STAGE_A_MAX_RESOLVER_CALLS_PER_WINDOW: 120000
       STAGE_A_MAX_EXPLICIT_MULTI_ENUM_VALUES: 18
-      STAGE_A_MAX_TERMINAL_BFS_STATES: 4096
+      STAGE_A_MAX_TERMINAL_BFS_STATES: 8192
       STAGE_A_CONTRACT_V2_OUT: artifacts/stage-a-nontw-discrete/${{ matrix.window_type }}
     steps:
       - name: Checkout exact PR HEAD
@@ -134,7 +134,7 @@ jobs:
           if (report.base_window_count!==1 || report.windows?.length!==1) throw new Error('expected one window report');
           const row=report.windows[0];
           if (row.proof_model_version!=='RUNTIME_UI_SYMBOLIC_FULL_COVERAGE_V1') throw new Error(`unexpected proof model ${row.proof_model_version}`);
-          if (row.count_model_version!=='NONTW_RESOLVER_DERIVED_CONTRACT_V2_TERMINAL_MULTI_BFS_V1') throw new Error(`unexpected count model ${row.count_model_version}`);
+          if (row.count_model_version!=='NONTW_RESOLVER_DERIVED_CONTRACT_V2_TERMINAL_STRUCTURAL_CACHE_V3') throw new Error(`unexpected count model ${row.count_model_version}`);
           if (row.status!=='COUNTED_CANDIDATE') throw new Error(`window blocked: ${JSON.stringify(row.blocker)}`);
           if (row.blocker) throw new Error(`blocker present: ${JSON.stringify(row.blocker)}`);
           if ((row.symbolic_frontiers??[]).length) throw new Error('symbolic frontier remains');

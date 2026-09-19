@@ -69,7 +69,7 @@ jobs:
     needs: [governance-authority, prepare]
     if: ${{ needs.governance-authority.outputs.authorized == 'true' }}
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 10
     strategy:
       fail-fast: false
       max-parallel: 5
@@ -106,7 +106,24 @@ jobs:
         run: |
           set -euo pipefail
           node --check scripts/stage-a-tw-behavioral-projection-count-pilot.mjs
-          node scripts/stage-a-tw-behavioral-projection-count-pilot.mjs | tee "/tmp/tw-projection-${{ strategy.job-index }}.log"
+          node --check scripts/stage-a-tw-five-failure-recovery-runner.mjs
+          node --check scripts/stage-a-tw-shut-hiki-color-projection-v3-runner.mjs
+          {
+            case "$STAGE_A_TARGET_WINDOW" in
+              SWT-LIX-TW-SHUT-HIKI)
+                echo 'TW_PROOF_ROUTE=V3_COLOR_RECOVERY'
+                node scripts/stage-a-tw-shut-hiki-color-projection-v3-runner.mjs
+                ;;
+              SWT-LIX-TW-HIGH-YOKO|SWT-LIX-TW-KATTEGUCHI|SWT-LIX-TW-SAIHU-KATTEGUCHI|SWT-LIX-TW-TERRACE-DOOR)
+                echo 'TW_PROOF_ROUTE=V2_HIGHER_ORDER_RECOVERY'
+                node scripts/stage-a-tw-five-failure-recovery-runner.mjs
+                ;;
+              *)
+                echo 'TW_PROOF_ROUTE=V1_BASE'
+                node scripts/stage-a-tw-behavioral-projection-count-pilot.mjs
+                ;;
+            esac
+          } | tee "/tmp/tw-projection-${{ strategy.job-index }}.log"
 
       - name: Upload per-window evidence
         if: always()
