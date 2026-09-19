@@ -80,7 +80,7 @@ jobs:
     needs: [governance-authority, inventory]
     if: ${{ needs.governance-authority.outputs.authorized == 'true' }}
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
     strategy:
       fail-fast: false
       max-parallel: 12
@@ -88,10 +88,10 @@ jobs:
     env:
       HEAD_SHA: ${{ inputs.controller_head }}
       STAGE_A_TARGET_WINDOWS: ${{ matrix.window_type }}
-      STAGE_A_MAX_MEMO_STATES_PER_WINDOW: 20000
-      STAGE_A_MAX_RESOLVER_CALLS_PER_WINDOW: 120000
+      STAGE_A_MAX_MEMO_STATES_PER_WINDOW: 40000
+      STAGE_A_MAX_RESOLVER_CALLS_PER_WINDOW: 240000
       STAGE_A_MAX_EXPLICIT_MULTI_ENUM_VALUES: 18
-      STAGE_A_MAX_TERMINAL_BFS_STATES: 8192
+      STAGE_A_MAX_TERMINAL_BFS_STATES: 16384
       STAGE_A_CONTRACT_V2_OUT: artifacts/stage-a-nontw-discrete/${{ matrix.window_type }}
     steps:
       - name: Checkout exact PR HEAD
