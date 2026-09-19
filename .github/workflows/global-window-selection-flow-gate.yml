@@ -110,7 +110,7 @@ jobs:
         uses: actions/cache/restore@v4
         with:
           path: artifacts/uchirimo-full-selector-proof
-          key: proof-uchirimo-selector-v8-${{ steps.uchirimo-proof-fingerprint.outputs.fingerprint }}
+          key: proof-uchirimo-selector-v9-${{ steps.uchirimo-proof-fingerprint.outputs.fingerprint }}
 
       - name: Bind cached Uchirimo selector proof to current HEAD
         id: cache-decision
@@ -884,7 +884,7 @@ jobs:
         uses: actions/cache/save@v4
         with:
           path: artifacts/uchirimo-full-selector-proof
-          key: proof-uchirimo-selector-v8-${{ steps.uchirimo-proof-fingerprint.outputs.fingerprint }}
+          key: proof-uchirimo-selector-v9-${{ steps.uchirimo-proof-fingerprint.outputs.fingerprint }}
 
       - name: Upload aggregated Uchirimo selector proof
         uses: actions/upload-artifact@v4
