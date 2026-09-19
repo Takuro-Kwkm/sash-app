@@ -1,6 +1,6 @@
 import { createHash } from 'node:crypto';
 import { appendFileSync, closeSync, copyFileSync, createReadStream, mkdirSync, openSync, readFileSync, readdirSync, statSync, writeFileSync, writeSync } from 'node:fs';
-import { basename, join } from 'node:path';
+import { basename, dirname, join } from 'node:path';
 import { currentExactHead } from './governance/governance-lib.mjs';
 import { loadRegisteredRuntime } from '../src/catalog/runtime-master/runtime-master-registry.mjs';
 import { resolveRuntimeAppProduct } from '../src/catalog/runtime-master/runtime-app-bridge.mjs';
@@ -155,8 +155,16 @@ async function aggregate(){
   const expectedPartitionKeys=new Set(expectedPartitions.map((row)=>String(row.partition_key)));
   if(expectedPartitionKeys.size!==EXPECTED_SHARDS)throw new Error('UCHIRIMO_EXPECTED_SHARD_COUNT_RUNTIME_MISMATCH:'+expectedPartitionKeys.size+':'+EXPECTED_SHARDS);
   const reportPaths=walk(INPUT).filter((path)=>/shard-\d+-report\.json$/.test(path));
-  if(reportPaths.length!==EXPECTED_SHARDS)throw new Error('UCHIRIMO_SHARD_REPORT_COUNT_MISMATCH:'+reportPaths.length+':'+EXPECTED_SHARDS);
-  const reports=reportPaths.map((path)=>({path,data:JSON.parse(readFileSync(path,'utf8'))})).sort((a,b)=>a.data.shard_index-b.data.shard_index);
+  const reportCandidates=reportPaths.map((path)=>({path,data:JSON.parse(readFileSync(path,'utf8'))}));
+  const latestByShard=new Map();
+  for(const row of reportCandidates){
+    const index=Number(row.data.shard_index);
+    if(!Number.isInteger(index))continue;
+    const current=latestByShard.get(index);
+    if(!current||Number(row.data.run_attempt??1)>Number(current.data.run_attempt??1))latestByShard.set(index,row);
+  }
+  const reports=[...latestByShard.values()].sort((a,b)=>a.data.shard_index-b.data.shard_index);
+  if(reports.length!==EXPECTED_SHARDS)throw new Error('UCHIRIMO_SHARD_REPORT_COUNT_MISMATCH:'+reports.length+':'+EXPECTED_SHARDS);
   const expectedIndices=Array.from({length:EXPECTED_SHARDS},(_,i)=>i);
   if(reports.some((row,i)=>row.data.shard_index!==expectedIndices[i]))throw new Error('UCHIRIMO_SHARD_INDEX_COVERAGE_MISMATCH');
   const runtimeHashes=new Set();
@@ -205,15 +213,15 @@ async function aggregate(){
     maxStack=Math.max(maxStack,report.max_stack_depth??0);
     peakHeapMb=Math.max(peakHeapMb,report.observed_peak_heap_mb??0);
     perWindow[String(report.window_type)]=(perWindow[String(report.window_type)]??0)+report.terminal_context_count;
-    const casePath=walk(INPUT).find((path)=>basename(path)===basename(report.case_artifact));
-    if(!casePath)throw new Error('UCHIRIMO_SHARD_CASE_ARTIFACT_MISSING:'+report.shard_index);
+    const casePath=join(dirname(row.path),basename(report.case_artifact));
+    if(!statSync(casePath).isFile())throw new Error('UCHIRIMO_SHARD_CASE_ARTIFACT_MISSING:'+report.shard_index);
     const actualCaseSha=await shaFile(casePath);
     if(actualCaseSha!==report.case_artifact_sha256)throw new Error('UCHIRIMO_SHARD_CASE_SHA_MISMATCH:'+report.shard_index);
     const targetCase=join(OUT,'shards',basename(casePath));
     const targetReport=join(OUT,'shards',basename(row.path));
     copyFileSync(casePath,targetCase);
     copyFileSync(row.path,targetReport);
-    caseArtifacts.push({shard_index:report.shard_index,window_type:report.window_type,path:'shards/'+basename(casePath),sha256:actualCaseSha});
+    caseArtifacts.push({shard_index:report.shard_index,run_attempt:Number(report.run_attempt??1),window_type:report.window_type,path:'shards/'+basename(casePath),sha256:actualCaseSha});
   }
   if(runtimeHashes.size!==1)throw new Error('UCHIRIMO_SHARD_RUNTIME_HASH_MISMATCH');
   if(partitionKeys.size!==expectedPartitionKeys.size||[...expectedPartitionKeys].some((key)=>!partitionKeys.has(key)))throw new Error('UCHIRIMO_SHARD_PARTITION_COVERAGE_MISMATCH:'+partitionKeys.size+':'+expectedPartitionKeys.size);
@@ -392,6 +400,7 @@ async function runShard(){
     glass_family:TARGET_GLASS_FAMILY,
     seed:stable(seed),
     shard_count:EXPECTED_SHARDS,
+    run_attempt:Number(process.env.GITHUB_RUN_ATTEMPT??1),
     window_type:TARGET_WINDOW,
     runtime_manifest_sha256:runtime.sourcePackageIntegrity.actual,
     runtime_integrity_match:runtime.sourcePackageIntegrity.match,

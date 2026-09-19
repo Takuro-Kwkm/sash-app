@@ -228,7 +228,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: uchirimo-selector-proof-shard-${{ matrix.shard }}-${{ env.HEAD_SHA }}
+          name: uchirimo-selector-proof-shard-${{ matrix.shard }}-${{ env.HEAD_SHA }}-attempt-${{ github.run_attempt }}
           path: artifacts/uchirimo-selector-proof-shard/
           if-no-files-found: warn
 
@@ -261,9 +261,9 @@ jobs:
       - name: Download all successful selector shards
         uses: actions/download-artifact@v4
         with:
-          pattern: uchirimo-selector-proof-shard-*-${{ env.HEAD_SHA }}
+          pattern: uchirimo-selector-proof-shard-*-${{ env.HEAD_SHA }}-attempt-*
           path: artifacts/uchirimo-selector-proof-shards
-          merge-multiple: true
+          merge-multiple: false
 
       - name: Aggregate and verify full Uchirimo selector proof
         shell: bash
