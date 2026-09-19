@@ -27,7 +27,7 @@ jobs:
       contents: read
       pull-requests: read
       issues: read
-      actions: read
+      actions: write
       id-token: write
     outputs:
       authorized: ${{ steps.materialize.outputs.authorized }}
@@ -45,6 +45,48 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 24
+
+      - name: Cancel stale Project Governance runs from older exact heads
+        if: ${{ github.event_name == 'push' || github.event_name == 'pull_request' }}
+        shell: bash
+        env:
+          CURRENT_RUN_ID: ${{ github.run_id }}
+          CURRENT_BRANCH: ${{ github.event.pull_request.head.ref || github.ref_name }}
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          const api=process.env.GITHUB_API_URL || 'https://api.github.com';
+          const repo=process.env.GITHUB_REPOSITORY;
+          const currentRun=Number(process.env.CURRENT_RUN_ID);
+          const head=process.env.HEAD_SHA;
+          const branch=process.env.CURRENT_BRANCH;
+          const headers={
+            Authorization:`Bearer ${process.env.GH_TOKEN}`,
+            Accept:'application/vnd.github+json',
+            'X-GitHub-Api-Version':'2022-11-28'
+          };
+          const listUrl=`${api}/repos/${repo}/actions/workflows/project-governance-gate.yml/runs?branch=${encodeURIComponent(branch)}&per_page=100`;
+          const listResponse=await fetch(listUrl,{headers});
+          if(!listResponse.ok)throw new Error(`STALE_RUN_LIST_FAILED_${listResponse.status}`);
+          const payload=await listResponse.json();
+          const active=new Set(['queued','in_progress','waiting','requested','pending']);
+          const stale=(payload.workflow_runs??[]).filter((run)=>
+            Number(run.id)!==currentRun &&
+            run.head_sha!==head &&
+            active.has(run.status)
+          );
+          console.log(`STALE_GOVERNANCE_RUN_COUNT=${stale.length}`);
+          for(const run of stale){
+            const response=await fetch(`${api}/repos/${repo}/actions/runs/${run.id}/cancel`,{
+              method:'POST',
+              headers
+            });
+            if(!response.ok && response.status!==409){
+              throw new Error(`STALE_RUN_CANCEL_FAILED run=${run.id} status=${response.status}`);
+            }
+            console.log(`STALE_GOVERNANCE_RUN_CANCEL run=${run.id} head=${run.head_sha} result=${response.status===409?'ALREADY_TERMINAL_OR_CANCELLING':'REQUESTED'}`);
+          }
+          NODE
 
       - name: Governance source syntax
         run: |
