@@ -1,0 +1,15 @@
+{
+  "schema_version": "1.0.0",
+  "read_only": true,
+  "connector_source": "GOOGLE_DRIVE_CONNECTOR",
+  "connector_snapshot_max_age_hours": 2,
+  "post_human_requires_live_api": true,
+  "required_file_ids": [
+    "1fc_46QMEwnowrSFjs8T-4VCjbcew2MUvzgUJuWe57f0",
+    "1SwFc2XBRtNYaDaKiwC0QVPPJOvOvhvpEJlPTDUtq0Hw",
+    "1BVFe2qZXlLUVhz37trFUjz6mJOwjvW0P",
+    "1HMMZ8JdsbJPtL_8LjQfxMF8P_Zb4-LReqvPMFn1pJks",
+    "1Gfoyhy9xTZxJVLl6EnhFCvevZd4VPElACZiSko8OGUw",
+    "1MfixkbV1cZ__DtBknEKsix_nnrXQqjc-LZtXUHwJv_A"
+  ]
+}

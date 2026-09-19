@@ -327,29 +327,39 @@ function evaluateBaseSize(model, nodeId, selection) {
   return { status: 'PASS', message: '正式Runtimeの基本寸法条件に適合しています。', matchedRuleIds: [ruleId] };
 }
 
+function requiredWhenClauseMatches(clause, selection, expression) {
+  const normalized = clause.trim();
+  const inMatch = /^(\w+)\s+in\s+\[([^\]]+)\]$/.exec(normalized);
+  if (inMatch) {
+    const values = inMatch[2].split(',').map((value) => value.trim()).filter(Boolean);
+    return has(selection[inMatch[1]]) && values.some((value) => same(selection[inMatch[1]], value));
+  }
+  const comparison = /^(\w+)\s*(==|!=)\s*([^\s]+)$/.exec(normalized);
+  if (comparison) {
+    const [, field, operator, value] = comparison;
+    if (!has(selection[field])) return false;
+    return operator === '==' ? same(selection[field], value) : !same(selection[field], value);
+  }
+  fail('RUNTIME_REQUIRED_WHEN_UNSUPPORTED', `Unsupported Formal required_when clause: ${normalized}`, { expression, clause: normalized });
+}
+
+function requiredWhenMatches(expression, selection) {
+  const normalized = String(expression ?? '').trim();
+  if (!normalized) return false;
+  return normalized.split(/\s+OR\s+/).some((orGroup) =>
+    orGroup.split(/\s+AND\s+/).every((clause) =>
+      requiredWhenClauseMatches(clause, selection, normalized)));
+}
+
 function installationVisibility(model, selection, visible, required) {
   if (selection.room_specification === 'bathroom') { visible.add('bathroom_installation_type'); required.add('bathroom_installation_type'); }
   if (selection.frame_installation_mode === 'frame_projection') { visible.add('frame_projection'); required.add('frame_projection'); }
   if (selection.extension_frame_type === 'fukashi_60') { visible.add('extension_frame_reinforcement'); required.add('extension_frame_reinforcement'); }
   for (const input of model.sizeInstallation.installation_input_contract.raw_inputs ?? []) {
-    const expr = input.required_when ?? '';
-    const [field] = expr.split(/\s+/);
-    let matches = false;
-    const inMatch = /^(\w+) in \[([^\]]+)\]/.exec(expr);
-    const eqMatch = /^(\w+) == (\w+)/.exec(expr);
-    const neqMatch = /^(\w+) != (\w+)/.exec(expr);
-    if (inMatch) matches = inMatch[2].split(',').map((x) => x.trim()).includes(String(selection[inMatch[1]]));
-    else if (eqMatch) matches = same(selection[eqMatch[1]], eqMatch[2]);
-    else if (neqMatch) matches = has(selection[neqMatch[1]]) && !same(selection[neqMatch[1]], neqMatch[2]);
-    if (expr.includes(' AND ')) {
-      const clauses = expr.split(' AND ');
-      matches = clauses.every((clause) => {
-        const eq = /^(\w+) == (\w+)/.exec(clause); const inn = /^(\w+) in \[([^\]]+)\]/.exec(clause);
-        return eq ? same(selection[eq[1]], eq[2]) : inn ? inn[2].split(',').map((x) => x.trim()).includes(String(selection[inn[1]])) : false;
-      });
+    if (requiredWhenMatches(input.required_when, selection) && model.fieldByName.has(input.field_name)) {
+      visible.add(input.field_name);
+      required.add(input.field_name);
     }
-    if (matches && model.fieldByName.has(input.field_name)) { visible.add(input.field_name); required.add(input.field_name); }
-    void field;
   }
 }
 

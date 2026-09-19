@@ -57,6 +57,7 @@ function transportSpec(entry, fileId) {
 function decodeTransport(encoded, codec, fileName) {
   if (codec === 'identity') return Buffer.from(encoded, 'utf8');
   const packed = Buffer.from(encoded.replace(/\s+/g, ''), 'base64');
+  if (codec === 'base64') return packed;
   try {
     if (codec === 'gzip') return gunzipSync(packed);
     if (codec === 'brotli' || codec === 'br') return brotliDecompressSync(packed);

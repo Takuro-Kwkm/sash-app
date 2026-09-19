@@ -1,0 +1,98 @@
+{
+  "schema_version": "2.1.0",
+  "controller": "project-governance-gate.yml",
+  "authorization_workflow": "governance-authorization.yml",
+  "controller_pre_human_jobs": {
+    "governance": {
+      "needs": [],
+      "required_if_contains": []
+    },
+    "persist": {
+      "needs": [
+        "governance"
+      ],
+      "required_if_contains": [
+        "github.event_name != 'pull_request'"
+      ]
+    },
+    "reconstruct-current-state": {
+      "needs": [
+        "governance",
+        "persist"
+      ],
+      "required_if_contains": [
+        "github.event_name != 'pull_request'"
+      ]
+    }
+  },
+  "controller_post_human_jobs": [
+    "post-review-global-flow",
+    "post-review-nontw-exact",
+    "post-review-tw-exact",
+    "finalize-post-human-evidence"
+  ],
+  "legacy_workflows": [
+    "ci.yml",
+    "entry-door-cover-global-flow-gate.yml",
+    "estimate-output-production.yml",
+    "estimate-output-qa.yml",
+    "ew-production-finalize.yml",
+    "global-window-selection-flow-gate.yml",
+    "stage-a-105-window-discrete-exact-head-consolidation-v2.yml",
+    "stage-a-105-window-discrete-exact-head-consolidation.yml",
+    "stage-a-apw430-behavior-projection-v1.yml",
+    "stage-a-apw431-discrete-exact-reproof.yml",
+    "stage-a-current-head-continuation-gate.yml",
+    "stage-a-custom-dimension-source-shape-diagnostic.yml",
+    "stage-a-custom-normalization-v4-targeted-diagnostic.yml",
+    "stage-a-custom-runtime-geometry-equivalence.yml",
+    "stage-a-custom-selector-geometry-recovery.yml",
+    "stage-a-custom-selector-geometry-v4.yml",
+    "stage-a-custom-transition-proof-v1.yml",
+    "stage-a-custom-transition-proof-v2.yml",
+    "stage-a-custom-transition-proof-v3.yml",
+    "stage-a-custom-transition-proof-v4.yml",
+    "stage-a-dependency-weighted-state-count-candidate.yml",
+    "stage-a-ew-custom-mode-topology-diagnostic.yml",
+    "stage-a-ew-free-powerset-exact-pilot.yml",
+    "stage-a-ew-option-prerequisite-shape-diagnostic.yml",
+    "stage-a-final-regression-repository-gate.yml",
+    "stage-a-full-browser-qa.yml",
+    "stage-a-multienum-browser-equivalence-candidate.yml",
+    "stage-a-new-construction-runtime-ui.yml",
+    "stage-a-nontw-17-window-terminal-structural-recovery.yml",
+    "stage-a-nontw-80-exact-head-consolidation.yml",
+    "stage-a-nontw-80-window-discrete-exact-count.yml",
+    "stage-a-nontw-structural-cache-v3-pilot.yml",
+    "stage-a-resolver-derived-contract-v2-pilot.yml",
+    "stage-a-rule-sensitive-weighted-state-count-candidate.yml",
+    "stage-a-samos-conflict-graph-v4-pilot.yml",
+    "stage-a-samos-conflict-graph-v4-recovery.yml",
+    "stage-a-samos-dependency-frontier-v5-pilot.yml",
+    "stage-a-samos-options-self-reference-diagnostic.yml",
+    "stage-a-samos2h-size-behavior-partition-diagnostic.yml",
+    "stage-a-samos2h-size-metadata-fingerprint-diagnostic.yml",
+    "stage-a-samos2h-size-metadata-projection-v6-1-pilot.yml",
+    "stage-a-samos2h-size-predicate-outcome-diagnostic.yml",
+    "stage-a-samos2h-size-predicate-outcome-projection-v6-2-pilot.yml",
+    "stage-a-samos2h-size-projection-v6-pilot.yml",
+    "stage-a-samos2h-source-behavior-shape.yml",
+    "stage-a-samos2h-state-shape-diagnostic.yml",
+    "stage-a-samos2h-v6-2-17-window-expansion.yml",
+    "stage-a-samosl-v4-17-window-exact-expansion.yml",
+    "stage-a-semantic-continuation-dag-pilot.yml",
+    "stage-a-symbolic-frontier-discovery-candidate.yml",
+    "stage-a-symbolic-full-coverage-proof.yml",
+    "stage-a-terminal-multi-enum-proof-pilot.yml",
+    "stage-a-tw-25-window-behavioral-projection-count.yml",
+    "stage-a-tw-25-window-exact-head-consolidation.yml",
+    "stage-a-tw-behavioral-partition-diagnostic.yml",
+    "stage-a-tw-behavioral-projection-count-pilot.yml",
+    "stage-a-tw-five-failure-diagnostic.yml",
+    "stage-a-tw-five-failure-recovery-v2.yml",
+    "stage-a-tw-shut-hiki-color-projection-v3.yml",
+    "tw-production-finalize.yml"
+  ],
+  "independent_authority_allowed": false,
+  "release_requires_controller_and_release_gate": true
+}

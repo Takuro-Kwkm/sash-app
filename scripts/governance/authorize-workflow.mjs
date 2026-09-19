@@ -1,0 +1,10 @@
+import { appendFileSync } from 'node:fs';
+import { readJson, currentExactHead, git } from './governance-lib.mjs';
+const head=currentExactHead();
+if(git(['rev-parse','HEAD'])!==head || process.env.CONTROLLER_HEAD!==head) throw Error('CONTROLLER_EXACT_HEAD_MISMATCH');
+const expected=`${process.env.GITHUB_REPOSITORY}/.github/workflows/project-governance-gate.yml@`;
+if(!process.env.GITHUB_WORKFLOW_REF?.startsWith(expected)) throw Error('CONTROLLER_CALL_REQUIRED');
+const result=readJson('artifacts/governance/gate-results.json');
+if(result.exact_head!==head || result.gates.HUMAN_FLOW_REVIEW_GATE.status!=='PASS') throw Error('HUMAN_FLOW_REVIEW_REQUIRED');
+if(process.env.RELEASE_WORKFLOW==='true' && result.release.status!=='PASS') throw Error('RELEASE_INPUT_REQUIRED');
+appendFileSync(process.env.GITHUB_OUTPUT,'authorized=true\n');

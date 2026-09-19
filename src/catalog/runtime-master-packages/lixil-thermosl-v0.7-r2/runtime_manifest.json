@@ -1,0 +1,88 @@
+{
+  "schema_version": "1.0",
+  "manufacturer": "LIXIL",
+  "series": "サーモスL",
+  "target_formal_version": "v0.7-R2",
+  "package_version": "v0.7-R2",
+  "authoring_mode": "STANDALONE",
+  "authoring_file_name": "LIXIL_サーモスL_AUTHORING_MASTER_v0.7-R2.xlsx",
+  "authoring_file_id": "1EqEHI8TlP7ZmWAZQSssAEgrRmBlvj9_q",
+  "authoring_sha256": "6eb13ce12cee968527ea591d608da21036b2eca9f98149ce9f966778a8ff4e91",
+  "runtime_status": "READY",
+  "runtime_files": [
+    {
+      "role": "RUNTIME_JSON_PACKAGE",
+      "file_name": "LIXIL_サーモスL_runtime_v0.7-R2.json",
+      "file_id": "12G_Edo55NWgu38gJjTGcqDZ7HsdpAH2I",
+      "sha256": "e0b84fd83a1a2e3c078db357c67ac7bb751b34860c05a2321e1466c5cad97525",
+      "size_bytes": 5147529,
+      "entrypoint": true
+    }
+  ],
+  "runtime_qa": {
+    "file_name": "LIXIL_サーモスL_RUNTIME_QA_v0.7-R2.md",
+    "file_id": "15OqI2iWLFxECGjHXH1uGZeKOklPbwkgq",
+    "sha256": "3fb6c287df7d278bc7f22885f7be28b100287b0fb4dde3d0b8933f34bda4b186",
+    "size_bytes": 2959,
+    "structural_qa": "PASS",
+    "formal_qa": "PASS"
+  },
+  "qa_metrics": {
+    "active_window_types": 17,
+    "standard_size_records": 1644,
+    "selectable_standard_size_records": 1495,
+    "custom_dimension_rules": 50,
+    "golden_tests": "46/46 PASS",
+    "safe_standard_direct_evidence": 523,
+    "safe_standard_allowed": 517,
+    "safe_standard_blocked": 6,
+    "safe_standard_residual_ecr": 1121,
+    "standard_selector_combinations": 374166,
+    "custom_selector_combinations": 11700,
+    "unverified_qa_case_count": 0,
+    "estimate_confirm_auto_activation_violations": 0
+  },
+  "official_evidence": {
+    "SN1400": {
+      "file_id": "1y0AXa3iB5ycoFMqPGdXPgK1bC9pk3-_G",
+      "role": "PRIMARY_OFFICIAL_PDF_REFERENCE_ONLY",
+      "direct_delegation": true,
+      "pages": [
+        "P1/PDF3",
+        "P26/PDF30",
+        "P34/PDF38",
+        "P76/PDF80",
+        "P94/PDF98"
+      ]
+    },
+    "SDC0003156": "VERIFIED_SAFE_STANDARD_PARTIAL_MATRIX",
+    "SDC0003157": "VERIFIED_SAFE_STANDARD_PARTIAL_MATRIX"
+  },
+  "section20": {
+    "official_direct_delegation_evidence_found": true,
+    "result": "PASS",
+    "confirmation_route": "LIXIL見積システム",
+    "automatic_activation": false,
+    "formal_fallback_applied": true
+  },
+  "documentation_file": "LIXIL_サーモスL_PRODUCT_MASTER_MANIFEST_v0.7-R2.md",
+  "documentation_file_id": "1qQ73l6WNFzAh-xeCENM7ySWHC1m7i1cq",
+  "storage_status": "DRIVE_CANONICAL",
+  "working_folder_id": "1PqgX6VbCBmdz121DgLG2xF-Z7aK-pbah",
+  "canonical_folder_id": "1H83njk7Gww0RJOZKntYBp5VxdaJD9Jc4",
+  "old_folder_id": "1LFQOkjIm_INOIu2muWyw6iCN3hqX9c7g",
+  "canonical_registry_status": "v0.7-R2_FORMAL_PASS",
+  "package_gate": "PASS_CONTENT_DEPENDENCY_QA",
+  "formal_pass": true,
+  "formal_adoption_permitted": true,
+  "blocking_items": [],
+  "generated_at": "2026-09-16T16:13:22.108Z",
+  "working_artifact_package_gate": "PASS",
+  "working_savepoint_gate": "PASS",
+  "formal_storage_gate": "PASS",
+  "registry_gate": "PASS",
+  "documentation_sha256": "48f42847d5965a902520bf25b52b7353e2081bbaad852f15611530422e77be8b",
+  "manifest_file_id": "1c-VIgwTqPDTkas0apYqx30AN3PVa71p1",
+  "current_canonical_package_count": 1,
+  "old_v0_7_R1_archived": true
+}

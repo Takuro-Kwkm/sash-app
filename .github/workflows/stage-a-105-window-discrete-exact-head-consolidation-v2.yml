@@ -1,0 +1,142 @@
+name: Stage A 105-Window Discrete Exact-Head Consolidation V3
+
+on:
+  workflow_call:
+    inputs:
+      controller_head:
+        required: true
+        type: string
+
+permissions:
+  issues: read
+  contents: read
+  actions: read
+
+jobs:
+  governance-authority:
+    uses: ./.github/workflows/governance-authorization.yml
+    with:
+      controller_head: ${{ inputs.controller_head }}
+      release: false
+
+  consolidate:
+    needs: ["governance-authority"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && (true) }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      HEAD_SHA: ${{ github.sha }}
+      OLD_105_HEAD: 12bcbf0be00b1939ac3c1087338fa7a69b16e807
+      OLD_105_RUN: '34948947605'
+      OLD_NONTW_RUN: '34948462528'
+      APW431_REPROOF_HEAD: df4e6e2a86f70a0635c7156775d0cb28bb1ca7c8
+      APW431_REPROOF_RUN: '34971484492'
+      OUT: artifacts/stage-a-105-window-discrete-exact-head-consolidation-v3
+    steps:
+      - name: Checkout exact push HEAD with history
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Exact-head scoped source invalidation gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$HEAD_SHA"
+          git merge-base --is-ancestor "$OLD_105_HEAD" "$HEAD_SHA"
+          changed="$(git diff --name-only "$OLD_105_HEAD" "$HEAD_SHA" -- src/)"
+          test "$changed" = 'src/catalog/runtime-master/apw431-formal-split-v1-adapter.mjs'
+          git merge-base --is-ancestor "$APW431_REPROOF_HEAD" "$HEAD_SHA"
+          git diff --quiet "$APW431_REPROOF_HEAD" "$HEAD_SHA" -- src/
+          echo "DISCRETE_SCOPED_INVALIDATION_GATE=PASS changed=$changed"
+
+      - name: Download original 105-window consolidation
+        uses: actions/download-artifact@v4
+        with:
+          name: stage-a-105-window-discrete-exact-head-consolidation
+          path: artifacts/evidence/old-105
+          repository: Takuro-Kwkm/sash-app
+          run-id: ${{ env.OLD_105_RUN }}
+          github-token: ${{ github.token }}
+
+      - name: Download original non-TW 80-window evidence
+        uses: actions/download-artifact@v4
+        with:
+          name: stage-a-nontw-80-exact-head-consolidation
+          path: artifacts/evidence/old-nontw
+          repository: Takuro-Kwkm/sash-app
+          run-id: ${{ env.OLD_NONTW_RUN }}
+          github-token: ${{ github.token }}
+
+      - name: Download current APW431 six-window reproof
+        uses: actions/download-artifact@v4
+        with:
+          name: stage-a-apw431-discrete-exact-reproof
+          path: artifacts/evidence/apw431-reproof
+          repository: Takuro-Kwkm/sash-app
+          run-id: ${{ env.APW431_REPROOF_RUN }}
+          github-token: ${{ github.token }}
+
+      - name: Replace invalidated APW431 slice and consolidate 105 windows
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$OUT"
+          node --input-type=module <<'NODE'
+          import { readFileSync, writeFileSync } from 'node:fs';
+          import { createHash } from 'node:crypto';
+          import { execFileSync } from 'node:child_process';
+          const read=(p)=>JSON.parse(readFileSync(p,'utf8'));
+          const old105=read('artifacts/evidence/old-105/report.json');
+          const old80=read('artifacts/evidence/old-nontw/report.json');
+          const newPath=execFileSync('bash',['-lc',"find artifacts/evidence/apw431-reproof -name consolidated-report.json -print -quit"],{encoding:'utf8'}).trim();
+          if(!newPath)throw new Error('APW431_REPROOF_REPORT_MISSING');
+          const fresh=read(newPath);
+          if(old105.exact_head_sha!==process.env.OLD_105_HEAD||old105.status!=='STAGE_A_105_WINDOW_DISCRETE_EXACT_HEAD_CONSOLIDATED_PASS'||old105.gate_status?.discrete_population_gate!=='PASS'||old105.base_window_count!==105||old105.unverified_window_count!==0)throw new Error('OLD_105_EVIDENCE_INVALID');
+          if(old80.status!=='NONTW_80_WINDOW_EXACT_HEAD_CONSOLIDATED_PASS'||old80.gate_status?.nontw_discrete_population_gate!=='PASS'||old80.counted_window_count!==80||old80.unverified_window_count!==0)throw new Error('OLD_NONTW_EVIDENCE_INVALID');
+          if(fresh.exact_head_sha!==process.env.APW431_REPROOF_HEAD||fresh.status!=='PASS'||fresh.window_count!==6)throw new Error('APW431_REPROOF_EVIDENCE_INVALID');
+          const oldApw=(old80.windows??[]).filter(x=>x.product_id==='SER-YKK-APW431');
+          if(oldApw.length!==6)throw new Error(`OLD_APW431_WINDOW_COUNT ${oldApw.length}`);
+          const oldApwTerminal=oldApw.reduce((n,x)=>n+BigInt(x.exact_discrete_terminal_context_count),0n);
+          const oldApwCustom=oldApw.reduce((n,x)=>n+BigInt(x.custom_pending_context_count),0n);
+          const freshTerminal=BigInt(fresh.exact_discrete_terminal_context_count);
+          const freshCustom=BigInt(fresh.custom_pending_context_count);
+          const terminal=BigInt(old105.exact_discrete_terminal_context_count)-oldApwTerminal+freshTerminal;
+          const custom=BigInt(old105.custom_pending_context_count)-oldApwCustom+freshCustom;
+          if(oldApwTerminal!==326400n||oldApwCustom!==10320n)throw new Error(`OLD_APW431_TOTAL_DRIFT ${oldApwTerminal}/${oldApwCustom}`);
+          if(freshTerminal!==337200n||freshCustom!==21120n)throw new Error(`FRESH_APW431_TOTAL_DRIFT ${freshTerminal}/${freshCustom}`);
+          if(terminal!==8493560851926718442n||custom!==34750450586n)throw new Error(`NEW_105_TOTAL_DRIFT ${terminal}/${custom}`);
+          const payload={
+            exact_head_sha:process.env.HEAD_SHA,
+            task_classification:'NON-PRODUCT-MASTER',product_master_mutation:0,
+            proof_model_version:'RUNTIME_UI_SYMBOLIC_FULL_COVERAGE_V1',
+            consolidation_model_version:'STAGE_A_105_WINDOW_DISCRETE_EXACT_HEAD_CONSOLIDATION_V3_SCOPED_REPROOF',
+            base_window_count:105,counted_window_count:105,unverified_window_count:0,
+            series_window_counts:{SAMOS2H:17,SAMOSL:17,EW:15,TW:25,APW430:25,APW431:6},
+            exact_discrete_terminal_context_count:terminal.toString(),custom_pending_context_count:custom.toString(),
+            replacement:{product_id:'SER-YKK-APW431',window_count:6,old_terminal:oldApwTerminal.toString(),old_custom_pending:oldApwCustom.toString(),new_terminal:freshTerminal.toString(),new_custom_pending:freshCustom.toString(),terminal_delta:(freshTerminal-oldApwTerminal).toString(),custom_pending_delta:(freshCustom-oldApwCustom).toString()},
+            source_invalidation:{base_head:process.env.OLD_105_HEAD,changed_src_files:['src/catalog/runtime-master/apw431-formal-split-v1-adapter.mjs'],replacement_head:process.env.APW431_REPROOF_HEAD},
+            evidence_sources:{old_105_run:Number(process.env.OLD_105_RUN),old_nontw_run:Number(process.env.OLD_NONTW_RUN),apw431_reproof_run:Number(process.env.APW431_REPROOF_RUN)},
+            gate_status:{discrete_population_gate:'PASS',qa_population_discrete_gate:'PASS',custom_size_coverage_gate:'PASS_BY_SEPARATE_V5_V4_EVIDENCE',full_browser_qa_gate:'PENDING',app_integration_ready:false,release_input_gate:'BLOCKED'},
+            status:'PASS'
+          };
+          payload.evidence_digest=createHash('sha256').update(JSON.stringify(payload)).digest('hex');
+          writeFileSync(process.env.OUT+'/report.json',JSON.stringify(payload,null,2)+'\n');
+          console.log(`STAGE_A_105_CURRENT_HEAD_DISCRETE_GATE=PASS terminal=${terminal} custom_pending=${custom}`);
+          console.log(`STAGE_A_105_CURRENT_HEAD_EVIDENCE_DIGEST=${payload.evidence_digest}`);
+          console.log('UNVERIFIED_QA_CASE_COUNT_DISCRETE=0');
+          console.log('FULL_BROWSER_QA_GATE=PENDING');
+          console.log('APP_INTEGRATION_READY=false');
+          NODE
+
+      - name: Upload current-head 105-window discrete evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: stage-a-105-window-discrete-exact-head-consolidation-v3
+          path: ${{ env.OUT }}/
+          if-no-files-found: error

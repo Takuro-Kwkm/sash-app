@@ -1,0 +1,108 @@
+{
+  "schema_version": "2.0",
+  "manufacturer": "LIXIL",
+  "series": "EW",
+  "package_version": "v1.3",
+  "authoring_mode": "GOOGLE_SHEETS",
+  "authoring_file_name": "LIXIL_EW_商品マスター_v1.3",
+  "authoring_file_id": "1rcFrtl4b3CKJDE3ubZLi11vwHJqNs1iu7xEh1dAA6ik",
+  "authoring_sha256": "765e75fbb0c07eb261525acfc4835fddb7561118e453c4628e0c3e1372523404",
+  "runtime_status": "READY",
+  "runtime_files": [
+    {
+      "file_name": "LIXIL_EW_runtime_v1.3.json",
+      "file_id": "11ZmCPKceAmp3OEyJIXy79VoO8PEk_oYw",
+      "sha256": "a59848642ae301dcf8a275b7a43bdceb64a7d9e6488a5c79eca21584178be830",
+      "size_bytes": 2674515,
+      "status": "READY",
+      "role": "runtime_master"
+    }
+  ],
+  "documentation_file": {
+    "file_name": "LIXIL_EW_PRODUCT_MASTER_MANIFEST_v1.3.md",
+    "file_id": "15Q1UpYp3EApuxg-6Aekdg5AijmxRMvNA"
+  },
+  "storage_status": "DRIVE_CANONICAL",
+  "package_gate": "PASS",
+  "content_gate": "PASS",
+  "dependency_gate": "PASS",
+  "qa_gate": "PASS_WITH_ESTIMATE_CONFIRMATION_FALLBACK",
+  "official_source_scope_gate": "PASS",
+  "estimate_confirmation_contract": {
+    "state": "ESTIMATE_CONFIRM_REQUIRED",
+    "automatic_activation": false,
+    "policy": "MANUFACTURER_ESTIMATE_SYSTEM_DEPENDENCY_EXCEPTION",
+    "meaning": "Manufacturer estimate confirmation required where public official sources do not close exact manufacturability; not ALLOWED by default."
+  },
+  "semantic_recovery": {
+    "slot": "frame_angle",
+    "values": [
+      "WITH_ANGLE",
+      "WITHOUT_ANGLE"
+    ],
+    "classification": {
+      "USER_SELECTABLE": 12,
+      "FIXED_WITHOUT_ANGLE": 3
+    },
+    "installation_environment": {
+      "slot": "installation_environment",
+      "stage": "INSTALLATION_SURVEY",
+      "values": [
+        "BATHROOM",
+        "NON_BATHROOM"
+      ],
+      "formal_adoption_exact_head": "dcb79a7dc17bb20ef0321f2211411896420e71c9",
+      "human_review_artifact": "HFR-f77cf0e713cf845844f10ac02ee952aad17b97736ed9369d22bf45e878614d1c"
+    }
+  },
+  "baseline": {
+    "package_version": "v1.2",
+    "authoring_file_id": "1hKLlzCqi52tgOPtTHj8iyllN9vtQlF8ABrsCKkRLDsc",
+    "runtime_file_id": "1tHWCWnS-f_R6-IvT0KgA7l1smPQm6dd8",
+    "runtime_manifest_id": "1D-n_dwXfl8M6BjHQqIO6QV7u9FjjRUuU",
+    "documentation_file_id": "18WPQDF2YPDFRPC3noy6ewmC01cBrz6Cp"
+  },
+  "target_storage": {
+    "canonical_folder_id": "1mDsi9amFdD5A9N8XrommExB_EMZDQiqu",
+    "old_folder_id": "1rGW_ZFtAYG4oWNRJqSqrqBT5aVQEpxwc",
+    "working_folder_id": "1T_KEc2-27lU6yddCka1ZqI289qolVwmB"
+  },
+  "qa_artifacts": {
+    "cases_file_name": "LIXIL_EW_FRAME_ANGLE_QA_CASES_v1.3.json",
+    "cases_file_id": "1F1e3eLto_SOHkyrMmfmRoqEQWMTWm9y9",
+    "cases_sha256": "0310ff8a5d580a8b52c001f913d35b8efe9b0f0b697dabb8640f427975d3488a",
+    "report_file_name": "LIXIL_EW_FRAME_ANGLE_RUNTIME_QA_v1.3.md",
+    "report_file_id": "14hRsNZJPsq9GP3PVi-ZgKFsovrhdRJTt",
+    "build_script_file_id": "1per6HeKaKT6yoFOGs-g-3RczG4faKLM8"
+  },
+  "qa_summary": {
+    "full_coverage": "15120/15120 PASS",
+    "fail_count": 0,
+    "unverified_count": 0,
+    "standard_rows": 1721,
+    "custom_rules": 70,
+    "custom_boundary": "877/877 PASS",
+    "hiki_selector_full_cross_product": "288/288 evaluated",
+    "shutter_dependency": "123/123 PASS",
+    "glass_weight_limit_evidence": "262/262 PASS",
+    "glass_manufacturability": "PASS_WITH_ESTIMATE_CONFIRMATION_FALLBACK"
+  },
+  "requested_diff_coverage": "PASS",
+  "unrequested_diff_count": 0,
+  "generated_at": "2026-09-18T20:44:00+09:00",
+  "registry_gate": "PASS",
+  "formal_pass": true,
+  "storage_gate": "PASS",
+  "formalization_status": "FORMAL_PASS",
+  "formal_adoption": {
+    "registry_file_id": "1HMMZ8JdsbJPtL_8LjQfxMF8P_Zb4-LReqvPMFn1pJks",
+    "registry_sheet": "正本Registry",
+    "registry_row": 4,
+    "canonical_folder_id": "1mDsi9amFdD5A9N8XrommExB_EMZDQiqu",
+    "old_folder_id": "1rGW_ZFtAYG4oWNRJqSqrqBT5aVQEpxwc",
+    "working_folder_id": "1T_KEc2-27lU6yddCka1ZqI289qolVwmB",
+    "duplicate_canonical_folder_scan_count": 33,
+    "duplicate_canonical_package_count": 0,
+    "adopted_at": "2026-09-18T21:10:00+09:00"
+  }
+}

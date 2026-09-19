@@ -1,0 +1,37 @@
+name: Stage A Samos2H Size Predicate Outcome Projection V6.2 Pilot
+
+on:
+  workflow_call:
+    inputs:
+      controller_head:
+        required: true
+        type: string
+
+permissions:
+  issues: read
+  contents: read
+
+jobs:
+  governance-authority:
+    uses: ./.github/workflows/governance-authorization.yml
+    with:
+      controller_head: ${{ inputs.controller_head }}
+      release: false
+
+  closed-evidence-gate:
+    needs: ["governance-authority"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && (true) }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Close V6.2 pilot after 17-window expansion PASS
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo 'SAMOS2H_V6_2_PILOT_ROUTE=CLOSED'
+          echo 'SUPERSEDED_BY=SAMOS2H_V6_2_17_WINDOW_EXACT_EXPANSION'
+          echo 'EVIDENCE_RUN=34946896060'
+          echo 'VERIFIED_WINDOW_COUNT=17'
+          echo 'UNVERIFIED_WINDOW_COUNT=0'
+          echo 'RETRY_AUTHORIZED=false'
+          echo 'APP_INTEGRATION_READY=false'
+          echo 'RELEASE_INPUT_GATE=BLOCKED'

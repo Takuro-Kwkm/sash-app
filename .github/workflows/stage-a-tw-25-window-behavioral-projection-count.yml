@@ -1,0 +1,304 @@
+name: Stage A TW 25-Window Behavioral Projection Count
+
+on:
+  workflow_call:
+    inputs:
+      controller_head:
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  issues: read
+  pull-requests: read
+
+concurrency:
+  group: stage-a-tw-25-window-behavioral-projection-${{ inputs.controller_head }}
+  cancel-in-progress: true
+
+jobs:
+  governance-authority:
+    uses: ./.github/workflows/governance-authorization.yml
+    with:
+      controller_head: ${{ inputs.controller_head }}
+      release: false
+
+  proof-cache:
+    needs: ["governance-authority"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      HEAD_SHA: ${{ inputs.controller_head }}
+    outputs:
+      fingerprint: ${{ steps.fingerprint.outputs.fingerprint }}
+      reused: ${{ steps.bind.outputs.reused }}
+    steps:
+      - name: Checkout exact PR HEAD
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.controller_head }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Compute TW proof dependency fingerprint
+        id: fingerprint
+        run: node scripts/governance/proof-dependency-fingerprint.mjs --mode fingerprint --family TW_EXACT
+      - name: Restore TW exact proof cache
+        id: cache
+        uses: actions/cache/restore@v4
+        with:
+          path: artifacts/stage-a-tw-25-window-aggregate
+          key: proof-tw-exact-v1-${{ steps.fingerprint.outputs.fingerprint }}
+      - name: Bind cached TW proof to current HEAD
+        id: bind
+        if: ${{ steps.cache.outputs.cache-hit == 'true' }}
+        shell: bash
+        run: |
+          set +e
+          node scripts/governance/proof-dependency-fingerprint.mjs --mode bind --family TW_EXACT --artifact artifacts/stage-a-tw-25-window-aggregate/report.json --metadata artifacts/stage-a-tw-25-window-aggregate/source-metadata.json --binding artifacts/stage-a-tw-25-window-aggregate/current-head-binding.json
+          rc=$?
+          set -e
+          if [ "$rc" -eq 0 ]; then
+            echo "reused=true" >> "$GITHUB_OUTPUT"
+            echo "TW_EXACT_PROOF_REUSE=PASS"
+          else
+            rm -rf artifacts/stage-a-tw-25-window-aggregate
+            echo "reused=false" >> "$GITHUB_OUTPUT"
+            echo "TW_EXACT_PROOF_REUSE=INVALID_RERUN_REQUIRED"
+          fi
+      - name: Upload reused TW aggregate evidence
+        if: ${{ steps.bind.outputs.reused == 'true' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: stage-a-tw-25-window-behavioral-projection-aggregate
+          path: artifacts/stage-a-tw-25-window-aggregate/
+          if-no-files-found: error
+
+  prepare:
+    needs: ["governance-authority"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    outputs:
+      windows: ${{ steps.inventory.outputs.windows }}
+      count: ${{ steps.inventory.outputs.count }}
+    steps:
+      - name: Checkout exact PR HEAD
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.controller_head }}
+          fetch-depth: 1
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Build exact TW window matrix
+        id: inventory
+        env:
+          HEAD_SHA: ${{ inputs.controller_head }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          actual="$(git rev-parse HEAD)"
+          test "$actual" = "$HEAD_SHA"
+          node --input-type=module <<'NODE'
+          import { appendFileSync } from 'node:fs';
+          import { loadRegisteredRuntime } from './src/catalog/runtime-master/runtime-master-registry.mjs';
+          const runtime = await loadRegisteredRuntime('LIXIL','TW');
+          const windows = (runtime?.master?.provider?.windows ?? [])
+            .filter((row) => row.active !== false)
+            .sort((a,b) => Number(a.display_order ?? 0) - Number(b.display_order ?? 0) || String(a.id).localeCompare(String(b.id)))
+            .map((row) => String(row.id));
+          if (windows.length !== 25) throw new Error(`TW window inventory mismatch: expected 25, got ${windows.length}`);
+          appendFileSync(process.env.GITHUB_OUTPUT, `windows=${JSON.stringify(windows)}\ncount=${windows.length}\n`);
+          console.log(`TW_WINDOW_INVENTORY_COUNT=${windows.length}`);
+          console.log(`TW_WINDOW_INVENTORY_DIGEST_INPUT=${windows.join(',')}`);
+          NODE
+
+  proof:
+    needs: [governance-authority, prepare, proof-cache]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && needs.proof-cache.outputs.reused != 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      max-parallel: 5
+      matrix:
+        window: ${{ fromJSON(needs.prepare.outputs.windows) }}
+    env:
+      HEAD_SHA: ${{ inputs.controller_head }}
+      STAGE_A_TARGET_WINDOW: ${{ matrix.window }}
+      STAGE_A_MAX_MEMO_STATES_PER_WINDOW: 12000
+      STAGE_A_MAX_RESOLVER_CALLS_PER_WINDOW: 120000
+      STAGE_A_MAX_EXPLICIT_MULTI_ENUM_VALUES: 12
+      STAGE_A_TW_PROJECTION_OUT: artifacts/stage-a-tw-25-window-behavioral-projection-count/${{ matrix.window }}
+    steps:
+      - name: Checkout exact PR HEAD
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.controller_head }}
+          fetch-depth: 1
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Exact SHA gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          actual="$(git rev-parse HEAD)"
+          test "$actual" = "$HEAD_SHA"
+          echo "EXACT_HEAD_GATE=PASS sha=$actual window=$STAGE_A_TARGET_WINDOW"
+
+      - name: Run exact behavioral projection count
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check scripts/stage-a-tw-behavioral-projection-count-pilot.mjs
+          node --check scripts/stage-a-tw-five-failure-recovery-runner.mjs
+          node --check scripts/stage-a-tw-shut-hiki-color-projection-v3-runner.mjs
+          {
+            case "$STAGE_A_TARGET_WINDOW" in
+              SWT-LIX-TW-SHUT-HIKI)
+                echo 'TW_PROOF_ROUTE=V3_COLOR_RECOVERY'
+                node scripts/stage-a-tw-shut-hiki-color-projection-v3-runner.mjs
+                ;;
+              SWT-LIX-TW-HIGH-YOKO|SWT-LIX-TW-KATTEGUCHI|SWT-LIX-TW-SAIHU-KATTEGUCHI|SWT-LIX-TW-TERRACE-DOOR)
+                echo 'TW_PROOF_ROUTE=V2_HIGHER_ORDER_RECOVERY'
+                node scripts/stage-a-tw-five-failure-recovery-runner.mjs
+                ;;
+              *)
+                echo 'TW_PROOF_ROUTE=V1_BASE'
+                node scripts/stage-a-tw-behavioral-projection-count-pilot.mjs
+                ;;
+            esac
+          } | tee "/tmp/tw-projection-${{ strategy.job-index }}.log"
+
+      - name: Upload per-window evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: stage-a-tw-projection-${{ strategy.job-index }}
+          path: |
+            artifacts/stage-a-tw-25-window-behavioral-projection-count/${{ matrix.window }}/report.json
+            /tmp/tw-projection-${{ strategy.job-index }}.log
+          if-no-files-found: warn
+
+      - name: Per-window fail-closed gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import { readFileSync } from 'node:fs';
+          const path = `artifacts/stage-a-tw-25-window-behavioral-projection-count/${process.env.STAGE_A_TARGET_WINDOW}/report.json`;
+          const report = JSON.parse(readFileSync(path,'utf8'));
+          if (report.exact_head_sha !== process.env.HEAD_SHA) throw new Error('exact head mismatch');
+          if (report.status !== 'COUNTED_CANDIDATE') throw new Error(`window blocked: ${JSON.stringify(report.blocker)}`);
+          if (Number(report.projection_mismatch_count ?? 0) !== 0) throw new Error(`projection mismatch: ${report.projection_mismatch_count}`);
+          if (report.blocker) throw new Error(`blocker present: ${JSON.stringify(report.blocker)}`);
+          console.log(`TW_WINDOW_COUNT_COMPONENT=PASS_CANDIDATE window=${report.window_type} terminal=${report.exact_discrete_terminal_context_count}`);
+          NODE
+
+  aggregate:
+    needs: [governance-authority, prepare, proof-cache, proof]
+    if: ${{ always() && needs.governance-authority.outputs.authorized == 'true' && needs.proof-cache.outputs.reused != 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    env:
+      HEAD_SHA: ${{ inputs.controller_head }}
+      EXPECTED_WINDOW_COUNT: ${{ needs.prepare.outputs.count }}
+    steps:
+      - name: Checkout exact PR HEAD for proof metadata
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.controller_head }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Download all per-window evidence
+        uses: actions/download-artifact@v4
+        with:
+          pattern: stage-a-tw-projection-*
+          path: artifacts/collected
+          merge-multiple: true
+
+      - name: Aggregate exact TW discrete count evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import { readdirSync, readFileSync, statSync, mkdirSync, writeFileSync } from 'node:fs';
+          import { join } from 'node:path';
+          import { createHash } from 'node:crypto';
+          const root='artifacts/collected';
+          const files=[];
+          const walk=(dir)=>{ for (const name of readdirSync(dir)) { const path=join(dir,name); if (statSync(path).isDirectory()) walk(path); else if (name==='report.json') files.push(path); } };
+          walk(root);
+          const reports=files.map((path)=>JSON.parse(readFileSync(path,'utf8'))).sort((a,b)=>String(a.window_type).localeCompare(String(b.window_type)));
+          const expected=Number(process.env.EXPECTED_WINDOW_COUNT || 25);
+          const counted=reports.filter((report)=>report.status==='COUNTED_CANDIDATE' && !report.blocker && Number(report.projection_mismatch_count ?? 0)===0);
+          const exactHeadCount=reports.filter((report)=>report.exact_head_sha===process.env.HEAD_SHA).length;
+          const terminalTotal=counted.reduce((sum,report)=>sum+BigInt(report.exact_discrete_terminal_context_count),0n);
+          const customPendingTotal=counted.reduce((sum,report)=>sum+BigInt(report.custom_pending_context_count ?? '0'),0n);
+          const projectionAudits=counted.reduce((sum,report)=>sum+Number(report.projection_group_audit_count ?? 0),0);
+          const projectionMemberChecks=counted.reduce((sum,report)=>sum+Number(report.projection_member_check_count ?? 0),0);
+          const memoStates=counted.reduce((sum,report)=>sum+Number(report.memo_state_count ?? 0),0);
+          const resolverCalls=counted.reduce((sum,report)=>sum+Number(report.resolver_call_count ?? 0),0);
+          const runtimeHashes=[...new Set(reports.map((report)=>report.runtime_manifest_sha256).filter(Boolean))];
+          const blockerRows=reports.filter((report)=>report.status!=='COUNTED_CANDIDATE' || report.blocker || Number(report.projection_mismatch_count ?? 0)!==0)
+            .map((report)=>({window_type:report.window_type,status:report.status,blocker:report.blocker,projection_mismatch_count:report.projection_mismatch_count}));
+          const digestInput=reports.map((report)=>({window_type:report.window_type,terminal:report.exact_discrete_terminal_context_count,custom:report.custom_pending_context_count,projection_digest:report.projection_audit_digest,status:report.status}));
+          const digest=createHash('sha256').update(JSON.stringify(digestInput)).digest('hex');
+          const complete=reports.length===expected && counted.length===expected && exactHeadCount===expected && runtimeHashes.length===1;
+          const aggregate={
+            exact_head_sha:process.env.HEAD_SHA,
+            task_classification:'NON-PRODUCT-MASTER', product_master_mutation:0,
+            proof_model_version:'RUNTIME_UI_SYMBOLIC_FULL_COVERAGE_V1', projection_model_version:'TW_WEIGHTED_BEHAVIORAL_PROJECTION_V1',
+            expected_window_count:expected, report_count:reports.length, counted_window_count:counted.length, exact_head_report_count:exactHeadCount,
+            runtime_manifest_sha256:runtimeHashes.length===1?runtimeHashes[0]:runtimeHashes,
+            tw_exact_discrete_terminal_context_count:terminalTotal.toString(), tw_custom_pending_context_count:customPendingTotal.toString(),
+            total_projection_group_audit_count:projectionAudits, total_projection_member_check_count:projectionMemberChecks,
+            total_memo_state_count:memoStates, total_resolver_call_count:resolverCalls,
+            unverified_window_count:expected-counted.length, blocker_rows:blockerRows,
+            evidence_digest:digest,
+            status:complete?'TW_25_WINDOW_DISCRETE_COUNT_COMPONENT_CANDIDATE_COMPLETE':'BLOCKED',
+            gate_status:{qa_population_gate:'BLOCKED_OTHER_SERIES_AND_CONTINUOUS_PROOF_PENDING',custom_size_coverage_gate:'BLOCKED_CONTINUOUS_PARTITION_NOT_PROVEN',app_integration_ready:false,release_input_gate:'BLOCKED'},
+            windows:reports.map((report)=>({window_type:report.window_type,terminal:report.exact_discrete_terminal_context_count,custom_pending:report.custom_pending_context_count,memo_states:report.memo_state_count,resolver_calls:report.resolver_call_count,projection_audits:report.projection_group_audit_count,projection_member_checks:report.projection_member_check_count,status:report.status})),
+          };
+          mkdirSync('artifacts/stage-a-tw-25-window-aggregate',{recursive:true});
+          writeFileSync('artifacts/stage-a-tw-25-window-aggregate/report.json',JSON.stringify(aggregate,null,2)+'\n');
+          console.log(`TW_25_WINDOW_STATUS=${aggregate.status}`);
+          console.log(`REPORT_COUNT=${aggregate.report_count}`);
+          console.log(`COUNTED_WINDOW_COUNT=${aggregate.counted_window_count}`);
+          console.log(`UNVERIFIED_WINDOW_COUNT=${aggregate.unverified_window_count}`);
+          console.log(`TW_EXACT_DISCRETE_TERMINAL_CONTEXT_COUNT=${aggregate.tw_exact_discrete_terminal_context_count}`);
+          console.log(`TW_CUSTOM_PENDING_CONTEXT_COUNT=${aggregate.tw_custom_pending_context_count}`);
+          console.log(`PROJECTION_MEMBER_CHECK_COUNT=${aggregate.total_projection_member_check_count}`);
+          console.log(`BLOCKER_COUNT=${aggregate.blocker_rows.length}`);
+          console.log('APP_INTEGRATION_READY=false');
+          console.log('RELEASE_INPUT_GATE=BLOCKED');
+          if (!complete) process.exitCode=1;
+          NODE
+
+      - name: Stamp fresh TW proof metadata
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/governance/proof-dependency-fingerprint.mjs --mode stamp --family TW_EXACT --artifact artifacts/stage-a-tw-25-window-aggregate/report.json --metadata artifacts/stage-a-tw-25-window-aggregate/source-metadata.json
+      - name: Save TW exact proof cache
+        uses: actions/cache/save@v4
+        with:
+          path: artifacts/stage-a-tw-25-window-aggregate
+          key: proof-tw-exact-v1-${{ needs.proof-cache.outputs.fingerprint }}
+      - name: Upload TW aggregate evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: stage-a-tw-25-window-behavioral-projection-aggregate
+          path: artifacts/stage-a-tw-25-window-aggregate/
+          if-no-files-found: warn

@@ -1,0 +1,14 @@
+import { readdirSync,readFileSync } from 'node:fs';
+import { currentExactHead,readJson } from './governance-lib.mjs';
+const head=currentExactHead(),config=readJson('project-governance/project-state.json');
+const ref='governance-evidence';
+const api=async(path,method='GET',body)=>{const r=await fetch(`https://api.github.com/repos/${config.repository}/${path}`,{method,headers:{Authorization:`Bearer ${process.env.GH_TOKEN}`,Accept:'application/vnd.github+json','Content-Type':'application/json'},body:body?JSON.stringify(body):undefined});if(r.status===404&&method==='GET'&&path===`git/ref/heads/${ref}`)return null;if(!r.ok)throw Error(`PERSIST_${method}_${r.status}`);return r.json();};
+const old=await api(`git/ref/heads/${ref}`);
+const oldCommit=old?await api(`git/commits/${old.object.sha}`):null;
+const prefix=`heads/${head}/runs/${process.env.GITHUB_RUN_ID}-${process.env.GITHUB_RUN_ATTEMPT||'1'}`;
+const paths=readdirSync('artifacts/governance').filter(p=>/\.(json|md|html|tap)$/.test(p));
+const tree=await api('git/trees','POST',{...(oldCommit?{base_tree:oldCommit.tree.sha}:{}),tree:paths.map(p=>({path:`${prefix}/${p}`,mode:'100644',type:'blob',content:readFileSync(`artifacts/governance/${p}`,'utf8')})).concat([{path:'current.json',mode:'100644',type:'blob',content:JSON.stringify({exact_head:head,branch:config.branch,pull_request:24,path:prefix,run_id:process.env.GITHUB_RUN_ID})}])});
+const commit=await api('git/commits','POST',{message:`Persist governance evidence for ${head}`,tree:tree.sha,parents:old?[old.object.sha]:[]});
+await api(old?`git/refs/heads/${ref}`:'git/refs',old?'PATCH':'POST',old?{sha:commit.sha,force:false}:{ref:`refs/heads/${ref}`,sha:commit.sha});
+const confirmed=await api(`git/ref/heads/${ref}`);if(confirmed.object.sha!==commit.sha)throw Error('PERSIST_READBACK_MISMATCH');
+console.log(`EVIDENCE_PERSISTED_COMMIT=${commit.sha}`);console.log(`EVIDENCE_REGISTRY=https://github.com/${config.repository}/blob/${commit.sha}/${prefix}/evidence-registry.json`);

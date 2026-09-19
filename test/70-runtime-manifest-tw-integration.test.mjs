@@ -3,15 +3,15 @@ import assert from 'node:assert/strict';
 import { loadRegisteredRuntime } from '../src/catalog/runtime-master/runtime-master-registry.mjs';
 import { getRuntimeAppIntegration } from '../src/catalog/runtime-master/runtime-app-bridge.mjs';
 
-test('TW integrated-v0.2 is registered from the formal manifest and verifies its canonical SHA', async () => {
+test('TW integrated-v0.4 is registered from the formal manifest and verifies the canonical Runtime SHA', async () => {
   const integration = getRuntimeAppIntegration('SER-LIXIL-TW');
   assert.ok(integration);
   assert.deepEqual(
     { manufacturer: integration.manufacturer, series: integration.series, packageVersion: integration.packageVersion, schemaVersion: integration.schemaVersion, status: integration.status, selectable: integration.selectable },
-    { manufacturer: 'LIXIL', series: 'TW', packageVersion: 'integrated-v0.2', schemaVersion: '2.0', status: 'READY', selectable: true },
+    { manufacturer: 'LIXIL', series: 'TW', packageVersion: 'integrated-v0.4', schemaVersion: '2.0', status: 'READY', selectable: true },
   );
-  assert.equal(integration.canonicalRuntimeReference.runtimeManifestDriveFileId, '1f9ogJ2pS0HmrUuXG1Qy431lG0mgxN9pw');
-  assert.equal(integration.canonicalRuntimeReference.runtimeJsonDriveFileId, '1yt4ADBqoK4-5Xqt6bJ593Q4thi81IRzI');
+  assert.equal(integration.canonicalRuntimeReference.runtimeManifestDriveFileId, '13doEdTkUlQNu4Dm-SNwkeUg8RkrjS5G0');
+  assert.equal(integration.canonicalRuntimeReference.runtimeJsonDriveFileId, '1hWy1coHWTsuXYXGLRxZ0a2vJEmSIvg5p');
 
   const runtime = await loadRegisteredRuntime('LIXIL', 'TW');
   assert.equal(runtime.normalizedManifest.formalPass, true);
@@ -22,17 +22,17 @@ test('TW integrated-v0.2 is registered from the formal manifest and verifies its
   assert.equal(runtime.sourcePackageIntegrity.files.length, 1);
   assert.deepEqual(runtime.sourcePackageIntegrity.files[0], {
     role: 'runtime_master',
-    fileName: 'LIXIL_TW_runtime_integrated-v0.2.json',
-    fileId: '1yt4ADBqoK4-5Xqt6bJ593Q4thi81IRzI',
-    expected: '358d8ee5f6e13a294a20b3bb69dd07fac6f21ec20da0c43c7e00d6fb8fa0237f',
-    actual: '358d8ee5f6e13a294a20b3bb69dd07fac6f21ec20da0c43c7e00d6fb8fa0237f',
+    fileName: 'LIXIL_TW_runtime_integrated-v0.4.json',
+    fileId: '1hWy1coHWTsuXYXGLRxZ0a2vJEmSIvg5p',
+    expected: '602201ee4bc834490fae609f97dfa5194bfab88beea6520f642c8ddb22bbafed',
+    actual: '602201ee4bc834490fae609f97dfa5194bfab88beea6520f642c8ddb22bbafed',
     match: true,
-    bytes: 3946522,
-    codec: 'brotli',
+    bytes: 2486012,
+    codec: 'json-transform-chain-v1',
   });
 });
 
-test('TW adapter preserves the formal Runtime inventories without synthetic domain records', async () => {
+test('TW v0.4 adapter preserves formal inventories and exposes all 25 formal CUSTOM rules without synthetic domain records', async () => {
   const { master } = await loadRegisteredRuntime('LIXIL', 'TW');
   assert.equal(master.provider.windows.filter((row) => row.active !== false).length, 25);
   assert.equal(master.provider.sizes.filter((row) => row.active !== false).length, 1112);
@@ -43,5 +43,12 @@ test('TW adapter preserves the formal Runtime inventories without synthetic doma
   assert.equal(master.optionCodeLinkages.length, 196);
   assert.equal(master.optionCodeLinkages.filter((row) => row.status === 'SUPERSEDED').length, 0);
   assert.equal(master.sourceRows.screenForms.length, 29);
-  assert.equal(master.capabilities.customSize, 'NOT_PROVIDED_BY_RUNTIME');
+  assert.equal(master.capabilities.customSize, 'FORMAL_SOURCE_GRAPH_GATE');
+  assert.equal(master.capabilities.customDimensionRuleCount, 25);
+  assert.equal(master.capabilities.customDimensionAutomaticRuleCount, 0);
+  assert.equal(master.capabilities.customDimensionSafety, 'OUTSIDE_BLOCK_INSIDE_REVIEW_REQUIRED');
+  assert.equal(master.customDimensionRules.length, 25);
+  assert.equal(new Set(master.customDimensionRules.map((rule) => rule.productNode ?? rule.windowId ?? rule.selector?.window_type)).size, 25);
+  assert.ok(master.customDimensionRules.every((rule) => rule.evaluationType === 'SOURCE_GRAPH_GATE'));
+  assert.ok(master.customDimensionRules.every((rule) => rule.automatic === false));
 });

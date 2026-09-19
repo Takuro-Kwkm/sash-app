@@ -1,0 +1,383 @@
+name: Project Governance Gate
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - feat/new-construction-runtime-ui-v16-20260910
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+  pull-requests: read
+  issues: read
+  actions: read
+
+concurrency:
+  group: project-governance-${{ github.event.pull_request.head.ref || github.ref_name }}
+  cancel-in-progress: true
+
+jobs:
+  governance:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      pull-requests: read
+      issues: read
+      actions: write
+      id-token: write
+    outputs:
+      authorized: ${{ steps.materialize.outputs.authorized }}
+    env:
+      GH_TOKEN: ${{ github.token }}
+      HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+    steps:
+      - name: Checkout exact HEAD
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.HEAD_SHA }}
+          fetch-depth: 0
+
+      - name: Setup Node 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Cancel stale Project Governance runs from older exact heads
+        if: ${{ github.event_name == 'push' || github.event_name == 'pull_request' }}
+        shell: bash
+        env:
+          CURRENT_RUN_ID: ${{ github.run_id }}
+          CURRENT_BRANCH: ${{ github.event.pull_request.head.ref || github.ref_name }}
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          const api=process.env.GITHUB_API_URL || 'https://api.github.com';
+          const repo=process.env.GITHUB_REPOSITORY;
+          const currentRun=Number(process.env.CURRENT_RUN_ID);
+          const head=process.env.HEAD_SHA;
+          const branch=process.env.CURRENT_BRANCH;
+          const headers={
+            Authorization:`Bearer ${process.env.GH_TOKEN}`,
+            Accept:'application/vnd.github+json',
+            'X-GitHub-Api-Version':'2022-11-28'
+          };
+          const listUrl=`${api}/repos/${repo}/actions/workflows/project-governance-gate.yml/runs?branch=${encodeURIComponent(branch)}&per_page=100`;
+          const listResponse=await fetch(listUrl,{headers});
+          if(!listResponse.ok)throw new Error(`STALE_RUN_LIST_FAILED_${listResponse.status}`);
+          const payload=await listResponse.json();
+          const currentResponse=await fetch(`${api}/repos/${repo}/actions/runs/${currentRun}`,{headers});
+          if(!currentResponse.ok)throw new Error(`CURRENT_RUN_LOOKUP_FAILED_${currentResponse.status}`);
+          const currentPayload=await currentResponse.json();
+          const currentCreatedAt=Date.parse(currentPayload.created_at??'');
+          if(!Number.isFinite(currentCreatedAt))throw new Error('CURRENT_RUN_CREATED_AT_INVALID');
+          const active=new Set(['queued','in_progress','waiting','requested','pending']);
+          const stale=(payload.workflow_runs??[]).filter((run)=>
+            Number(run.id)!==currentRun &&
+            run.head_sha!==head &&
+            Number.isFinite(Date.parse(run.created_at??'')) &&
+            Date.parse(run.created_at)<currentCreatedAt &&
+            active.has(run.status)
+          );
+          console.log(`STALE_GOVERNANCE_RUN_COUNT=${stale.length}`);
+          for(const run of stale){
+            const response=await fetch(`${api}/repos/${repo}/actions/runs/${run.id}/cancel`,{
+              method:'POST',
+              headers
+            });
+            if(!response.ok && response.status!==409){
+              throw new Error(`STALE_RUN_CANCEL_FAILED run=${run.id} status=${response.status}`);
+            }
+            console.log(`STALE_GOVERNANCE_RUN_CANCEL run=${run.id} head=${run.head_sha} result=${response.status===409?'ALREADY_TERMINAL_OR_CANCELLING':'REQUESTED'}`);
+          }
+          NODE
+
+      - name: Governance source syntax
+        run: |
+          node --check scripts/governance/governance-lib.mjs
+          node --check scripts/governance/drive-authority.mjs
+          node --check scripts/governance/verify-project-state.mjs
+          node --check scripts/governance/generate-human-flow-review.mjs
+          node --check scripts/governance/runtime-field-coverage.mjs
+          node --check scripts/governance/build-human-flow-review.mjs
+          node --check scripts/governance/verify-human-flow-field-coverage.mjs
+          node --check scripts/governance/collect-qa-evidence.mjs
+          node --check scripts/governance/evaluate-gates.mjs
+          node --check scripts/governance/generate-progress-ledger.mjs
+          node --check scripts/governance/emit-global-flow-evidence.mjs
+          node --check scripts/governance/finalize-post-human-evidence.mjs
+          node --check scripts/governance/proof-dependency-fingerprint.mjs
+          node scripts/governance/proof-dependency-fingerprint.mjs --mode fingerprint --family UCHIRIMO_SELECTOR
+          node scripts/governance/proof-dependency-fingerprint.mjs --mode fingerprint --family NONTW_EXACT
+          node scripts/governance/proof-dependency-fingerprint.mjs --mode fingerprint --family TW_EXACT
+          node --check scripts/governance/collect-evidence.mjs
+          node --check scripts/governance/verify-release-input.mjs
+          node --check scripts/governance/materialize-current-state.mjs
+          node --check scripts/governance/verify-materialized-state.mjs
+          node --check scripts/governance/reconstruct-current-state.mjs
+
+      - name: frame_angle canonical contract tests
+        run: node --test test/76-frame-angle-global-flow.test.mjs
+
+      - name: Uchirimo Formal required_when targeted regression
+        run: node --test --test-name-pattern="Formal Phase9-R2" test/73-runtime-ui-uchirimo-gate.test.mjs
+
+      - name: Install YAML parser
+        run: python -m pip install PyYAML==6.0.2
+
+      - name: Workflow authority policy
+        run: python scripts/governance/verify-workflow-authority.py
+
+      - name: Project state invariants
+        run: node scripts/governance/verify-project-state.mjs
+
+      - name: Build exact-head Human Flow Review artifact with source coverage
+        run: node scripts/governance/build-human-flow-review.mjs
+
+      - name: Verify authoritative source-to-artifact field coverage
+        run: node scripts/governance/verify-human-flow-field-coverage.mjs
+
+      - name: Collect exact-head QA evidence
+        run: node scripts/governance/collect-qa-evidence.mjs
+
+      - name: Read explicit human approval from GitHub
+        run: node scripts/governance/read-human-approval.mjs
+
+      - name: Aggregate current gates
+        env:
+          GOVERNANCE_EVIDENCE_MANIFEST: artifacts/governance/qa-evidence-manifest.json
+        run: node scripts/governance/evaluate-gates.mjs
+
+      - name: Generate Progress Ledger
+        run: node scripts/governance/generate-progress-ledger.mjs
+
+      - name: Prevent false release declaration
+        run: node scripts/governance/verify-release-input.mjs
+
+      - name: Governance negative tests
+        shell: bash
+        run: node --test scripts/governance/governance-negative.test.mjs | tee artifacts/governance/governance-negative-tests.tap
+
+      - name: Obtain read-only Drive access through workload identity
+        id: drive-auth
+        if: vars.GOOGLE_WORKLOAD_IDENTITY_PROVIDER != '' && vars.GOOGLE_DRIVE_READER_SERVICE_ACCOUNT != ''
+        uses: google-github-actions/auth@v3
+        with:
+          workload_identity_provider: ${{ vars.GOOGLE_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ vars.GOOGLE_DRIVE_READER_SERVICE_ACCOUNT }}
+          token_format: access_token
+          access_token_scopes: https://www.googleapis.com/auth/drive.readonly
+          create_credentials_file: false
+          export_environment_variables: false
+
+      - name: Materialize current repository and external observations
+        id: materialize
+        env:
+          DRIVE_READONLY_ACCESS_TOKEN: ${{ steps.drive-auth.outputs.access_token || secrets.DRIVE_READONLY_ACCESS_TOKEN }}
+        run: node scripts/governance/materialize-current-state.mjs
+
+      - name: Verify current state and evidence hashes
+        run: node scripts/governance/verify-materialized-state.mjs
+
+      - name: Upload governance evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: project-governance-evidence-${{ env.HEAD_SHA }}
+          path: artifacts/governance/
+          if-no-files-found: error
+
+  persist:
+    needs: governance
+    if: github.event_name != 'pull_request' && github.repository == 'Takuro-Kwkm/sash-app'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      actions: read
+    env:
+      HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.HEAD_SHA }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - uses: actions/download-artifact@v4
+        with:
+          name: project-governance-evidence-${{ env.HEAD_SHA }}
+          path: artifacts/governance
+      - run: node scripts/governance/verify-materialized-state.mjs
+      - run: node scripts/governance/persist-evidence.mjs
+
+  reconstruct-current-state:
+    needs:
+      - governance
+      - persist
+    if: github.event_name != 'pull_request' && github.repository == 'Takuro-Kwkm/sash-app'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: read
+      actions: read
+      id-token: write
+    env:
+      HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - name: Checkout exact HEAD
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.HEAD_SHA }}
+      - name: Setup Node 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Obtain read-only Drive access through workload identity
+        id: reconstruct-drive-auth
+        if: vars.GOOGLE_WORKLOAD_IDENTITY_PROVIDER != '' && vars.GOOGLE_DRIVE_READER_SERVICE_ACCOUNT != ''
+        uses: google-github-actions/auth@v3
+        with:
+          workload_identity_provider: ${{ vars.GOOGLE_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ vars.GOOGLE_DRIVE_READER_SERVICE_ACCOUNT }}
+          token_format: access_token
+          access_token_scopes: https://www.googleapis.com/auth/drive.readonly
+          create_credentials_file: false
+          export_environment_variables: false
+
+      - name: Reconstruct current state from durable evidence
+        env:
+          DRIVE_READONLY_ACCESS_TOKEN: ${{ steps.reconstruct-drive-auth.outputs.access_token || secrets.DRIVE_READONLY_ACCESS_TOKEN }}
+        run: node scripts/governance/reconstruct-current-state.mjs
+      - name: Verify reconstructed exact HEAD
+        run: |
+          node -e "const fs=require('fs');const s=JSON.parse(fs.readFileSync('artifacts/governance/reconstructed-current-state.json','utf8'));if(s.exact_head!==process.env.HEAD_SHA||s.current_state_reconstruction_gate!=='PASS')process.exit(1);console.log('ONE_SHOT_CURRENT_STATE_RECONSTRUCTION=PASS EXACT_HEAD='+s.exact_head+' DRIVE_AUTHORITY_MODE='+s.drive_authority_mode)"
+
+  post-review-global-flow:
+    needs: governance
+    if: needs.governance.outputs.authorized == 'true'
+    uses: ./.github/workflows/global-window-selection-flow-gate.yml
+    with:
+      controller_head: ${{ github.event.pull_request.head.sha || github.sha }}
+
+  post-review-nontw-exact:
+    needs: governance
+    if: needs.governance.outputs.authorized == 'true' && github.event_name == 'pull_request'
+    uses: ./.github/workflows/stage-a-nontw-80-window-discrete-exact-count.yml
+    with:
+      controller_head: ${{ github.event.pull_request.head.sha || github.sha }}
+
+  post-review-tw-exact:
+    needs: governance
+    if: needs.governance.outputs.authorized == 'true' && github.event_name == 'pull_request'
+    uses: ./.github/workflows/stage-a-tw-25-window-behavioral-projection-count.yml
+    with:
+      controller_head: ${{ github.event.pull_request.head.sha || github.sha }}
+
+  finalize-post-human-evidence:
+    needs:
+      - governance
+      - post-review-global-flow
+      - post-review-nontw-exact
+      - post-review-tw-exact
+    if: ${{ always() && needs.governance.outputs.authorized == 'true' && github.event_name == 'pull_request' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: write
+      pull-requests: read
+      issues: read
+      actions: read
+    env:
+      HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      GH_TOKEN: ${{ github.token }}
+      GOVERNANCE_EVIDENCE_MANIFEST: artifacts/governance/qa-evidence-manifest.json
+      POST_HUMAN_FINAL_SOURCE_ROOT: artifacts/post-human-final-source
+    steps:
+      - name: Checkout exact HEAD for final aggregation
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.HEAD_SHA }}
+          fetch-depth: 0
+
+      - name: Setup Node 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Download Global Flow Heavy QA evidence
+        continue-on-error: true
+        uses: actions/download-artifact@v4
+        with:
+          pattern: global-window-selection-flow-evidence-*
+          path: artifacts/post-human-final-source/global
+          merge-multiple: true
+
+      - name: Download Non-TW exact selector aggregate
+        continue-on-error: true
+        uses: actions/download-artifact@v4
+        with:
+          name: stage-a-nontw-80-window-discrete-exact-aggregate
+          path: artifacts/post-human-final-source/nontw
+
+      - name: Download TW exact selector aggregate
+        continue-on-error: true
+        uses: actions/download-artifact@v4
+        with:
+          name: stage-a-tw-25-window-behavioral-projection-aggregate
+          path: artifacts/post-human-final-source/tw
+
+      - name: Rebuild current-head Human Review identity
+        run: |
+          node scripts/governance/build-human-flow-review.mjs
+          node scripts/governance/verify-human-flow-field-coverage.mjs
+
+      - name: Finalize direct post-Human evidence
+        run: node scripts/governance/finalize-post-human-evidence.mjs
+
+      - name: Collect final current-head evidence
+        run: node scripts/governance/collect-qa-evidence.mjs
+
+      - name: Re-read explicit Human approval
+        run: node scripts/governance/read-human-approval.mjs
+
+      - name: Evaluate final gates
+        run: node scripts/governance/evaluate-gates.mjs
+
+      - name: Generate final Progress Ledger
+        run: node scripts/governance/generate-progress-ledger.mjs
+
+      - name: Verify release input declaration
+        run: node scripts/governance/verify-release-input.mjs
+
+      - name: Persist final post-Human governance evidence
+        run: node scripts/governance/persist-evidence.mjs
+
+      - name: Upload final post-Human evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: post-human-final-governance-evidence-${{ env.HEAD_SHA }}
+          path: artifacts/governance/
+          if-no-files-found: error
+
+      - name: Enforce APP_INTEGRATION_READY and Release Input
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import { readFileSync } from 'node:fs';
+          const result=JSON.parse(readFileSync('artifacts/governance/gate-results.json','utf8'));
+          const app=result.gates?.APP_INTEGRATION_READY?.status;
+          const release=result.release?.status;
+          console.log(`APP_INTEGRATION_READY=${app}`);
+          console.log(`RELEASE_INPUT_GATE=${release}`);
+          if(app!=='PASS'||release!=='PASS'){
+            console.error(JSON.stringify({app,release,blocking_gates:result.release?.blocking_gates,missing_release_input:result.release?.missing_release_input}));
+            process.exit(1);
+          }
+          NODE
