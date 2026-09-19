@@ -177,8 +177,8 @@ function isV9MeasuredTimeoutClass(base,glassFamily,extraSeed){
   return false;
 }
 
-function isV10MeasuredTimeoutClass(base,glassFamily,extraSeed){
-  if(String(base?.row?.node_id??'')!=='UCH-BATH-IN'||glassFamily!=='insulating_glass')return false;
+function isV10MeasuredTimeoutClass(row,glassFamily,extraSeed){
+  if(String(row?.node_id??'')!=='UCH-BATH-IN'||glassFamily!=='insulating_glass')return false;
   if(String(extraSeed.hinge_side??'')!=='left')return false;
   const frameColor=String(extraSeed.frame_color??'');
   const structure=String(extraSeed.glass_structure??'');
@@ -243,7 +243,7 @@ async function buildShardPartitions(runtime){
 
   const expandMeasured=async(row,base,glassFamily,seed,extraSeed,resolved)=>{
     const depth=Object.keys(extraSeed).length;
-    const shouldSplit=isV10MeasuredTimeoutClass(base,glassFamily,extraSeed)
+    const shouldSplit=isV10MeasuredTimeoutClass(row,glassFamily,extraSeed)
       ||isV9MeasuredTimeoutClass(base,glassFamily,extraSeed)
       ||(depth<=2&&isV7MeasuredTimeoutClass(base,glassFamily,extraSeed))
       ||(depth===3&&isV8MeasuredTimeoutClass(base,glassFamily,extraSeed));
