@@ -1,0 +1,46 @@
+{
+  "schema_version": "1.0.0",
+  "exact_head": "e1bc37203c880caf122d7a52c9913588fb7cb7a4",
+  "task_classification": "NON-PRODUCT-MASTER",
+  "product_master_mutation": 0,
+  "generated_at": "2026-09-19T02:28:32.645Z",
+  "status": "BLOCKED",
+  "checks": {
+    "base": false,
+    "globalBrowser": false,
+    "inplus": false,
+    "stageA": false,
+    "uchirimoSelector": false,
+    "uchirimoBrowser": false,
+    "dependencyDirect": false,
+    "uiDirect": false,
+    "nontw": false,
+    "tw": true
+  },
+  "issues": [
+    "base post-Human proof: expected 1 artifact, found 0",
+    "global browser flow report: expected 1 artifact, found 0",
+    "Inplus exhaustive browser report: expected 1 artifact, found 0",
+    "Stage A full browser report: expected 1 artifact, found 0",
+    "Uchirimo selector proof: expected 1 artifact, found 0",
+    "Uchirimo browser report: expected 1 artifact, found 0",
+    "Dependency direct proof: expected 1 artifact, found 0",
+    "UI flow direct proof: expected 1 artifact, found 0",
+    "Non-TW 80-window exact aggregate: expected 1 artifact, found 0",
+    "base: direct current-head evidence did not satisfy the final contract",
+    "globalBrowser: direct current-head evidence did not satisfy the final contract",
+    "inplus: direct current-head evidence did not satisfy the final contract",
+    "stageA: direct current-head evidence did not satisfy the final contract",
+    "uchirimoSelector: direct current-head evidence did not satisfy the final contract",
+    "uchirimoBrowser: direct current-head evidence did not satisfy the final contract",
+    "dependencyDirect: direct current-head evidence did not satisfy the final contract",
+    "uiDirect: direct current-head evidence did not satisfy the final contract",
+    "nontw: direct current-head evidence did not satisfy the final contract"
+  ],
+  "gates": {},
+  "sources": {
+    "artifacts/post-human-final-source/tw/report.json": {
+      "sha256": "c59c056641559e923b7041197fc25477aaac70c69bf2e60212a9c1787fffb690"
+    }
+  }
+}
