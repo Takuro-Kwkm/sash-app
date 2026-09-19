@@ -1,0 +1,118 @@
+{
+  "schema_version": "2.1.0",
+  "exact_head": "647a7230908175c9477c9ed94d04c483262d8ff9",
+  "repository": "Takuro-Kwkm/sash-app",
+  "branch": "feat/new-construction-runtime-ui-v16-20260910",
+  "pull_request": 24,
+  "task_classification": "NON-PRODUCT-MASTER",
+  "product_master_mutation": 0,
+  "current_phase": "GLOBAL_WINDOW_SELECTION_FLOW_FOUNDATION",
+  "target_series": [
+    "LIXIL::サーモスⅡH",
+    "LIXIL::サーモスL",
+    "LIXIL::EW",
+    "LIXIL::TW",
+    "YKK AP::APW430",
+    "YKK AP::APW431",
+    "YKK AP::ウチリモ 内窓",
+    "LIXIL::インプラス"
+  ],
+  "runtime_identities": [
+    {
+      "registry_series_key": "LIXIL::サーモスⅡH",
+      "package_version": "v0.9-R4",
+      "runtime_manifest_id": "1_yIaBpnfppnj36IcuRoX9FBJhtrNngin"
+    },
+    {
+      "registry_series_key": "LIXIL::サーモスL",
+      "package_version": "v0.7-R2",
+      "runtime_manifest_id": "1c-VIgwTqPDTkas0apYqx30AN3PVa71p1"
+    },
+    {
+      "registry_series_key": "LIXIL::EW",
+      "package_version": "v1.3",
+      "runtime_manifest_id": "140pCgz2uhukjOjd1wymuISuAMjhaBpCS"
+    },
+    {
+      "registry_series_key": "LIXIL::TW",
+      "package_version": "integrated-v0.4",
+      "runtime_manifest_id": "13doEdTkUlQNu4Dm-SNwkeUg8RkrjS5G0"
+    },
+    {
+      "registry_series_key": "YKK AP::APW430",
+      "package_version": "20260918-R3",
+      "runtime_manifest_id": "1hyX2Fgu1m28xmkM5I53GZ-xC3PX0b9Hk"
+    },
+    {
+      "registry_series_key": "YKK AP::APW431",
+      "package_version": "v1.2",
+      "runtime_manifest_id": "16-hPgdJYmkl30MvonP_natv3bPV1C-3x"
+    },
+    {
+      "registry_series_key": "YKK AP::ウチリモ 内窓",
+      "package_version": "v1.0-P7R1-R2",
+      "runtime_manifest_id": "1119yamXn21wLZd3C8LvamNWsTAx_1dt2"
+    },
+    {
+      "registry_series_key": "LIXIL::インプラス",
+      "package_version": "v0.4-R2",
+      "runtime_manifest_id": "1TokjIpcipm8TPxwrSO0FjyPxxvhCq5iZ"
+    }
+  ],
+  "runtime_snapshot_id": "RUNTIME-SNAPSHOT-ad2603b8a64d026ffd0b",
+  "series_total": 8,
+  "series_verified": 8,
+  "series_verification_scope": "STRUCTURAL_FIELD_COVERAGE_ONLY",
+  "base_window_count": 113,
+  "flow_mapped": 270,
+  "flow_unmapped": 0,
+  "flow_conflict": 0,
+  "qa_total": null,
+  "qa_pass": null,
+  "qa_fail": null,
+  "unverified_qa_case_count": null,
+  "qa_population_status": "UNVERIFIED_POST_HUMAN_REVIEW_NOT_EXECUTED",
+  "human_flow_review_artifact_id": "HFR-3a81c8717cdc4c379d1ea446cf35e6455aae80f93d1c938c6a7948e209e4e2dd",
+  "human_flow_review_gate": "PASS",
+  "post_human_review_authorized": true,
+  "current_gate": "FULL_FLOW_SIGNATURE_COVERAGE_GATE",
+  "blocker": [],
+  "next_authorized_phase": "CONTROLLER_POST_REVIEW_EXECUTION",
+  "app_integration_ready": false,
+  "release_input_gate": "BLOCKED",
+  "updated_at": "2026-09-19T00:54:12.816Z",
+  "source_evidence": [
+    {
+      "artifact": "github-current-observation.json",
+      "sha256": "bb2a0f890a8de05167baaef9af62d336bf9e498e9f9007445af03a99a496f024"
+    },
+    {
+      "artifact": "human-flow-review.json",
+      "sha256": "a3ed2e6296c4e491e1a1a66516f1c1e3fc425ad586479c1f68fdf0f8235fa7c9"
+    },
+    {
+      "artifact": "human-flow-field-coverage-verification.json",
+      "sha256": "1d04d11db4b6ab9075b2a885b5c1bb4f382fd12d42b193adb9cd1ddc232ee62f"
+    },
+    {
+      "artifact": "gate-results.json",
+      "sha256": "2152ecf83ba57820c82e97050f67e3c18c9aab61d9456087d7a60e2185e2e26c"
+    },
+    {
+      "artifact": "drive-authority-observation.json",
+      "sha256": "6bd4747ba2b39244e8119ddce7b03b5345358a817b966f508c9fe14c9a2bfd09"
+    }
+  ],
+  "governance_foundation": {
+    "status": "PASS",
+    "project_state_gate": "PASS",
+    "governance_definition_gate": "PASS",
+    "workflow_authority_gate": "PASS",
+    "legacy_independent_authority_count": 0,
+    "current_state_reconstruction_gate": "PASS",
+    "drive_authority_mode": "LIVE_API_VERIFIED",
+    "post_human_drive_live_gate": "PASS",
+    "human_flow_field_coverage_gate": "PASS"
+  },
+  "review_unverified_property_count": 3263
+}
