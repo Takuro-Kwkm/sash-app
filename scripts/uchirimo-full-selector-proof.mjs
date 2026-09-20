@@ -188,11 +188,15 @@ function isV10MeasuredTimeoutClass(row,glassFamily,extraSeed){
     return depth<5;
   }
   if(nodeId==='UCH-BATH-SL2-W'
-    &&glassFamily==='single_glazing'
-    &&String(extraSeed.reverse_handing??'')==='standard'){
-    // Run #348 produced repeated measured ~20 minute cancellations across multiple
-    // color/glass-structure seeds in this class. Keep exhaustive traversal intact
-    // and split only this measured hotspot until five partition dimensions are fixed.
+    &&['single_glazing','insulating_glass'].includes(glassFamily)){
+    // Run #364 produced 85 measured ~20 minute cancellations across both handing
+    // directions and both glass families. Keep exhaustive traversal intact and
+    // split only this measured hotspot family one level deeper.
+    return depth<6;
+  }
+  if(nodeId==='UCH-RES-FIX'&&glassFamily==='insulating_glass'){
+    // Run #364 produced 9 measured ~20 minute cancellations in this family.
+    // Split required ENUM axes until five partition dimensions are fixed.
     return depth<5;
   }
   return false;
