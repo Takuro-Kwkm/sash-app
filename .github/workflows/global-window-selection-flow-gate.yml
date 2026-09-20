@@ -194,7 +194,10 @@ jobs:
           const exec0=workflow.indexOf('\n  uchirimo-selector-proof-0:');
           const exec1=workflow.indexOf('\n  uchirimo-selector-proof-aggregate:',exec0);
           const execBlock=workflow.slice(exec0,exec1);
-          if((workflow.match(/UCHIRIMO_SELECTOR_BATCH_SIZE: 2/g)??[]).length!==16)throw new Error('UCHIRIMO_HARNESS_BATCH_PLAN_COUNT_INVALID');
+          const plan0=workflow.indexOf('\n  uchirimo-selector-proof-plan-0:');
+          const plan1=workflow.indexOf('\n  uchirimo-selector-proof-0:',plan0);
+          const planBlock=workflow.slice(plan0,plan1);
+          if((planBlock.match(/UCHIRIMO_SELECTOR_BATCH_SIZE: 2/g)??[]).length!==16)throw new Error('UCHIRIMO_HARNESS_BATCH_PLAN_COUNT_INVALID');
           if((execBlock.match(/UCHIRIMO_SELECTOR_BATCH_JSON:/g)??[]).length!==16)throw new Error('UCHIRIMO_HARNESS_BATCH_ENV_COUNT_INVALID');
           if((execBlock.match(/uchirimo-selector-batch-runner\.mjs/g)??[]).length!==16)throw new Error('UCHIRIMO_HARNESS_BATCH_RUNNER_COUNT_INVALID');
           if(!carry.includes('batch-'))throw new Error('UCHIRIMO_HARNESS_BATCH_CARRY_FORWARD_DISABLED');
