@@ -124,22 +124,39 @@ function changedPaths(source,current){
   const out=git(['diff','--name-only',source+'..'+current]);
   return out?out.split('\n').map((x)=>x.trim()).filter(Boolean):[];
 }
+async function fetchWithRetry(url,options,label){
+  let lastError;
+  for(let attempt=1;attempt<=4;attempt+=1){
+    try{
+      const response=await fetch(url,options);
+      if(response.ok)return response;
+      if(response.status<500&&response.status!==429)throw new Error(label+'_HTTP_'+response.status);
+      lastError=new Error(label+'_HTTP_'+response.status);
+    }catch(error){
+      lastError=error;
+    }
+    if(attempt<4){
+      const delayMs=attempt*1500;
+      console.warn(label+'_RETRY attempt='+attempt+' delay_ms='+delayMs+' reason='+String(lastError?.message??lastError));
+      await new Promise((resolve)=>setTimeout(resolve,delayMs));
+    }
+  }
+  throw new Error(label+'_RETRY_EXHAUSTED:'+String(lastError?.message??lastError));
+}
 async function apiJson(path){
-  const response=await fetch(API+path,{headers:{
+  const response=await fetchWithRetry(API+path,{headers:{
     Authorization:'Bearer '+TOKEN,
     Accept:'application/vnd.github+json',
     'X-GitHub-Api-Version':'2022-11-28'
-  }});
-  if(!response.ok)throw new Error('GITHUB_API_FAILED:'+response.status+':'+path);
+  }},'GITHUB_API:'+path);
   return response.json();
 }
 async function apiBuffer(path){
-  const response=await fetch(API+path,{headers:{
+  const response=await fetchWithRetry(API+path,{headers:{
     Authorization:'Bearer '+TOKEN,
     Accept:'application/vnd.github+json',
     'X-GitHub-Api-Version':'2022-11-28'
-  },redirect:'follow'});
-  if(!response.ok)throw new Error('GITHUB_DOWNLOAD_FAILED:'+response.status+':'+path);
+  },redirect:'follow'},'GITHUB_DOWNLOAD:'+path);
   return Buffer.from(await response.arrayBuffer());
 }
 async function listArtifacts(runId){
