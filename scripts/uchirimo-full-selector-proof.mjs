@@ -179,18 +179,23 @@ function isV9MeasuredTimeoutClass(base,glassFamily,extraSeed){
 
 function isV10MeasuredTimeoutClass(row,glassFamily,extraSeed){
   if(String(row?.node_id??'')!=='UCH-BATH-IN'||glassFamily!=='insulating_glass')return false;
-  if(String(extraSeed.hinge_side??'')!=='left')return false;
+  const hingeSide=String(extraSeed.hinge_side??'');
+  if(!['left','right'].includes(hingeSide))return false;
   const frameColor=String(extraSeed.frame_color??'');
   const structure=String(extraSeed.glass_structure??'');
   const lowE=String(extraSeed.low_e_type??'');
   const depth=Object.keys(extraSeed).length;
   if(depth===3){
-    return (frameColor==='white'&&structure==='P5P3')
-      ||(frameColor==='calm_black'&&structure==='F4P3');
+    return (hingeSide==='left'&&(
+      (frameColor==='white'&&structure==='P5P3')
+      ||(frameColor==='calm_black'&&structure==='F4P3')
+    ))||(hingeSide==='right'&&frameColor==='white'&&structure==='P5P3');
   }
   if(depth===4){
-    return (frameColor==='white'&&structure==='G4P3'&&lowE==='insulating')
-      ||(frameColor==='calm_black'&&['G4P3','G5P3'].includes(structure)&&lowE==='insulating');
+    return hingeSide==='left'&&(
+      (frameColor==='white'&&structure==='G4P3'&&lowE==='insulating')
+      ||(frameColor==='calm_black'&&['G4P3','G5P3'].includes(structure)&&lowE==='insulating')
+    );
   }
   return false;
 }
