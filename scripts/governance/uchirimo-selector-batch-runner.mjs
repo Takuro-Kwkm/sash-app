@@ -51,7 +51,8 @@ function runOne(row){
 }
 
 console.log('UCHIRIMO_SELECTOR_BATCH_START id='+BATCH_ID+' items='+batch.length);
-const results=await Promise.all(batch.map(runOne));
+const results=[];
+for(const row of batch)results.push(await runOne(row));
 const failed=results.filter((row)=>row.status!=='PASS');
 const report={schema_version:'1.0.0',exact_head:process.env.HEAD_SHA??process.env.GITHUB_SHA??null,batch_id:BATCH_ID,item_count:results.length,pass_count:results.length-failed.length,fail_count:failed.length,child_timeout_ms:CHILD_TIMEOUT_MS,results,status:failed.length?'FAIL':'PASS'};
 writeFileSync(join(OUT,'batch-'+BATCH_ID+'-report.json'),JSON.stringify(report,null,2)+'\n');
