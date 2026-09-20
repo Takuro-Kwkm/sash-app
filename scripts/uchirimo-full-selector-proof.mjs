@@ -194,8 +194,9 @@ function isV10MeasuredTimeoutClass(row,glassFamily,extraSeed){
     &&['single_glazing','insulating_glass'].includes(glassFamily)){
     // Run #364 produced 85 measured ~20 minute cancellations across both handing
     // directions and both glass families. Keep exhaustive traversal intact and
-    // split only this measured hotspot family one level deeper.
-    return depth<6;
+    // Current-head evidence still timed out at depth 6 when downstream bathroom / installation ENUM branches remained open.
+    // Split this measured hotspot family one additional required ENUM level; logical coverage is unchanged.
+    return depth<7;
   }
   if(nodeId==='UCH-RES-FIX'&&glassFamily==='insulating_glass'){
     // Run #364 produced 9 measured ~20 minute cancellations in this family.
@@ -367,7 +368,7 @@ async function plan(){
   }
   if(batches.length>256)throw new Error('UCHIRIMO_PLAN_LANE_MATRIX_LIMIT_EXCEEDED:'+PLAN_LANE_INDEX+':'+batches.length);
   const matrix={include:batches.length?batches:[{skip:true,execution_class:'reused',child_timeout_ms:NORMAL_CHILD_TIMEOUT_MS,batch_id:'__REUSED_LANE__',batch_json:'[]'}]};
-  const record={exact_head:head,status:'PASS',partition_axis:'product_node+glass_family+depth2+v7_depth3+v8_depth4+v9_measured_timeout_depth5+v10_measured_timeout_depth6',shard_count:allPartitions.length,lane_index:PLAN_LANE_INDEX,lane_count:PLAN_LANE_COUNT,batch_size:BATCH_SIZE,normal_child_timeout_ms:NORMAL_CHILD_TIMEOUT_MS,heavy_child_timeout_ms:HEAVY_CHILD_TIMEOUT_MS,lane_partition_count:lanePartitions.length,lane_reused_partition_count:lanePartitions.length-pending.length,lane_shard_count:pending.length,lane_normal_partition_count:normalRows.length,lane_heavy_partition_count:heavyRows.length,lane_batch_count:batches.length,matrix};
+  const record={exact_head:head,status:'PASS',partition_axis:'product_node+glass_family+depth2+v7_depth3+v8_depth4+v9_measured_timeout_depth5+v10_measured_timeout_depth7',shard_count:allPartitions.length,lane_index:PLAN_LANE_INDEX,lane_count:PLAN_LANE_COUNT,batch_size:BATCH_SIZE,normal_child_timeout_ms:NORMAL_CHILD_TIMEOUT_MS,heavy_child_timeout_ms:HEAVY_CHILD_TIMEOUT_MS,lane_partition_count:lanePartitions.length,lane_reused_partition_count:lanePartitions.length-pending.length,lane_shard_count:pending.length,lane_normal_partition_count:normalRows.length,lane_heavy_partition_count:heavyRows.length,lane_batch_count:batches.length,matrix};
   writeFileSync(join(OUT,'matrix.json'),JSON.stringify(record,null,2)+'\n');
   if(process.env.GITHUB_OUTPUT){
     appendFileSync(process.env.GITHUB_OUTPUT,'matrix='+JSON.stringify(matrix)+'\n');
@@ -476,7 +477,7 @@ async function aggregate(){
     runtime_manifest_sha256:[...runtimeHashes][0],
     runtime_integrity_match:true,
     shard_count:EXPECTED_SHARDS,
-    partition_axis:'product_node+glass_family+depth2+v7_depth3+v8_depth4+v9_measured_timeout_depth5',
+    partition_axis:'product_node+glass_family+depth2+v7_depth3+v8_depth4+v9_measured_timeout_depth5+v10_measured_timeout_depth7',
     product_node_count:nodeIds.size,
     window_type_count:windows.size,
     terminal_context_count:terminals,
