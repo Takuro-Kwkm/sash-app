@@ -1,0 +1,15 @@
+{
+  "schema_version": "1.0.0",
+  "exact_head": "639e40444077947257ce3d5ff0165a5d9ba32419",
+  "status": "BLOCKED",
+  "series_count": 8,
+  "base_window_count": 113,
+  "qa_case_count": null,
+  "unverified_qa_case_count": 1,
+  "sources": {
+    "nontw": "artifacts/post-human-final-source/nontw/report.json",
+    "tw": "artifacts/post-human-final-source/tw/report.json",
+    "inplus": null,
+    "uchirimo": null
+  }
+}
