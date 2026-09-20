@@ -178,11 +178,23 @@ function isV9MeasuredTimeoutClass(base,glassFamily,extraSeed){
 }
 
 function isV10MeasuredTimeoutClass(row,glassFamily,extraSeed){
-  if(String(row?.node_id??'')!=='UCH-BATH-IN'||glassFamily!=='insulating_glass')return false;
-  // Repeated measured ~20 minute timeouts span multiple hinge/color/glass classes.
-  // Treat the whole hotspot family uniformly and split required ENUM axes until
-  // at least five partition dimensions are fixed (or no further split exists).
-  return Object.keys(extraSeed).length<5;
+  const nodeId=String(row?.node_id??'');
+  const depth=Object.keys(extraSeed).length;
+  if(nodeId==='UCH-BATH-IN'&&glassFamily==='insulating_glass'){
+    // Repeated measured ~20 minute timeouts span multiple hinge/color/glass classes.
+    // Treat the whole hotspot family uniformly and split required ENUM axes until
+    // at least five partition dimensions are fixed (or no further split exists).
+    return depth<5;
+  }
+  if(nodeId==='UCH-BATH-SL2-W'
+    &&glassFamily==='single_glazing'
+    &&String(extraSeed.reverse_handing??'')==='standard'){
+    // Run #348 produced repeated measured ~20 minute cancellations across multiple
+    // color/glass-structure seeds in this class. Keep exhaustive traversal intact
+    // and split only this measured hotspot until five partition dimensions are fixed.
+    return depth<5;
+  }
+  return false;
 }
 
 async function buildShardPartitions(runtime){
