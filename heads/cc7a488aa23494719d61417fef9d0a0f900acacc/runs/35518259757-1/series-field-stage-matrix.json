@@ -1,0 +1,422 @@
+{
+  "exact_head": "cc7a488aa23494719d61417fef9d0a0f900acacc",
+  "stages": [
+    "PRODUCT",
+    "OPENING",
+    "CONFIGURATION",
+    "SIZE",
+    "FINISH",
+    "SCREEN",
+    "GLAZING",
+    "INSTALLATION_SURVEY",
+    "OPTION"
+  ],
+  "series": [
+    {
+      "series": "サーモスⅡ-H",
+      "registry_series_key": "LIXIL::サーモスⅡH",
+      "stages": {
+        "PRODUCT": [],
+        "OPENING": [
+          "window_type"
+        ],
+        "CONFIGURATION": [
+          "window_spec",
+          "handing"
+        ],
+        "SIZE": [
+          "size_mode",
+          "panel_count",
+          "size"
+        ],
+        "FINISH": [
+          "exterior_color",
+          "interior_color"
+        ],
+        "SCREEN": [
+          "screen_presence",
+          "screen_form",
+          "screen_midrail",
+          "screen_net"
+        ],
+        "GLAZING": [
+          "glass_base",
+          "glass_type",
+          "glass_detail",
+          "glass_function",
+          "glass_spacer",
+          "glass_air_layer"
+        ],
+        "INSTALLATION_SURVEY": [],
+        "OPTION": [
+          "option"
+        ]
+      }
+    },
+    {
+      "series": "サーモスL",
+      "registry_series_key": "LIXIL::サーモスL",
+      "stages": {
+        "PRODUCT": [],
+        "OPENING": [
+          "window_type"
+        ],
+        "CONFIGURATION": [
+          "window_spec",
+          "handing"
+        ],
+        "SIZE": [
+          "size_mode",
+          "panel_count",
+          "size"
+        ],
+        "FINISH": [
+          "exterior_color",
+          "interior_color"
+        ],
+        "SCREEN": [
+          "screen_presence",
+          "screen_form",
+          "screen_midrail",
+          "screen_net"
+        ],
+        "GLAZING": [
+          "glass_base",
+          "glass_type",
+          "glass_detail",
+          "glass_function",
+          "glass_spacer",
+          "glass_air_layer"
+        ],
+        "INSTALLATION_SURVEY": [],
+        "OPTION": [
+          "option"
+        ]
+      }
+    },
+    {
+      "series": "EW",
+      "registry_series_key": "LIXIL::EW",
+      "stages": {
+        "PRODUCT": [],
+        "OPENING": [
+          "window_type"
+        ],
+        "CONFIGURATION": [
+          "window_spec",
+          "handing",
+          "frame_angle",
+          "ext.glass_configuration",
+          "ext.profile",
+          "ext.opening_class",
+          "ext.sill",
+          "ext.wall_finish"
+        ],
+        "SIZE": [
+          "size_mode",
+          "panel_count",
+          "size"
+        ],
+        "FINISH": [
+          "exterior_color",
+          "interior_color"
+        ],
+        "SCREEN": [
+          "screen_presence",
+          "screen_form",
+          "screen_midrail",
+          "screen_net"
+        ],
+        "GLAZING": [
+          "glass_base",
+          "glass_type",
+          "glass_detail",
+          "glass_function",
+          "glass_spacer",
+          "glass_air_layer"
+        ],
+        "INSTALLATION_SURVEY": [
+          "installation_environment"
+        ],
+        "OPTION": [
+          "option"
+        ]
+      }
+    },
+    {
+      "series": "TW",
+      "registry_series_key": "LIXIL::TW",
+      "stages": {
+        "PRODUCT": [],
+        "OPENING": [
+          "window_type"
+        ],
+        "CONFIGURATION": [
+          "window_spec",
+          "handing"
+        ],
+        "SIZE": [
+          "size_mode",
+          "panel_count",
+          "size"
+        ],
+        "FINISH": [
+          "exterior_color",
+          "interior_color"
+        ],
+        "SCREEN": [
+          "screen_presence",
+          "screen_form",
+          "screen_midrail",
+          "screen_net"
+        ],
+        "GLAZING": [
+          "glass_base",
+          "glass_type",
+          "glass_detail",
+          "glass_function",
+          "glass_spacer",
+          "glass_air_layer"
+        ],
+        "INSTALLATION_SURVEY": [],
+        "OPTION": [
+          "option"
+        ]
+      }
+    },
+    {
+      "series": "APW430",
+      "registry_series_key": "YKK AP::APW430",
+      "stages": {
+        "PRODUCT": [],
+        "OPENING": [
+          "window_type"
+        ],
+        "CONFIGURATION": [
+          "window_spec",
+          "handing"
+        ],
+        "SIZE": [
+          "size_mode",
+          "panel_count",
+          "size"
+        ],
+        "FINISH": [
+          "exterior_color",
+          "interior_color"
+        ],
+        "SCREEN": [
+          "screen_presence",
+          "screen_form",
+          "screen_net"
+        ],
+        "GLAZING": [
+          "glass_type",
+          "glass_detail",
+          "glass_function"
+        ],
+        "INSTALLATION_SURVEY": [],
+        "OPTION": [
+          "option"
+        ]
+      }
+    },
+    {
+      "series": "APW431",
+      "registry_series_key": "YKK AP::APW431",
+      "stages": {
+        "PRODUCT": [],
+        "OPENING": [
+          "window_type"
+        ],
+        "CONFIGURATION": [
+          "window_spec"
+        ],
+        "SIZE": [
+          "size_mode",
+          "panel_count",
+          "size"
+        ],
+        "FINISH": [
+          "exterior_color",
+          "interior_color"
+        ],
+        "SCREEN": [
+          "screen_presence",
+          "screen_form",
+          "screen_midrail",
+          "screen_net"
+        ],
+        "GLAZING": [
+          "glass_type",
+          "glass_detail",
+          "glass_function"
+        ],
+        "INSTALLATION_SURVEY": [],
+        "OPTION": [
+          "option"
+        ]
+      }
+    },
+    {
+      "series": "ウチリモ 内窓",
+      "registry_series_key": "YKK AP::ウチリモ 内窓",
+      "stages": {
+        "PRODUCT": [],
+        "OPENING": [
+          "window_type"
+        ],
+        "CONFIGURATION": [
+          "room_specification",
+          "sash_configuration",
+          "reverse_handing",
+          "three_panel_layout",
+          "hinge_side"
+        ],
+        "SIZE": [
+          "size_class",
+          "size_mode",
+          "size_w",
+          "size_h",
+          "sash_width_allocation",
+          "sash_w1",
+          "sash_w2",
+          "sash_w3",
+          "sash_w4"
+        ],
+        "FINISH": [
+          "frame_color"
+        ],
+        "SCREEN": [],
+        "GLAZING": [
+          "glass_family",
+          "glass_structure",
+          "low_e_type",
+          "glass_coating_color",
+          "glass_surface_type",
+          "safety_treatment",
+          "grille_type",
+          "grille_material",
+          "muntin_type",
+          "vacuum_glass_product",
+          "spacer_type",
+          "gas_fill",
+          "cavity_thickness_mm"
+        ],
+        "INSTALLATION_SURVEY": [
+          "frame_installation_mode",
+          "frame_projection",
+          "extension_frame_type",
+          "extension_frame_reinforcement",
+          "installation_environment",
+          "crescent_position",
+          "extension:installation:opening_w_top",
+          "extension:installation:opening_w_middle",
+          "extension:installation:opening_w_bottom",
+          "extension:installation:opening_h_left",
+          "extension:installation:opening_h_middle",
+          "extension:installation:opening_h_right",
+          "extension:installation:diagonal_1",
+          "extension:installation:diagonal_2",
+          "extension:installation:available_mounting_depth",
+          "extension:installation:existing_window_interference",
+          "extension:installation:existing_hardware_interference",
+          "extension:installation:structural_support_condition",
+          "extension:installation:floor_support_condition",
+          "extension:installation:construction",
+          "extension:installation:jamb_projection_a_mm",
+          "extension:installation:jamb_face_b_mm",
+          "extension:installation:jamb_height_h_mm",
+          "extension:installation:jamb_height_h1_mm",
+          "extension:installation:jamb_height_h2_mm",
+          "extension:installation:jamb_height_h3_mm",
+          "extension:installation:sill_upper_c_mm",
+          "extension:installation:sill_lower_d_mm",
+          "extension:installation:wall_surface_for_reinforcement_available",
+          "extension:installation:substrate_present",
+          "extension:installation:substrate_wall_gap_present",
+          "extension:installation:substrate_or_structure_present",
+          "extension:installation:substrate_or_structure_wall_gap_present",
+          "extension:installation:stud_spacing_condition_met",
+          "extension:installation:tool_floor_interference",
+          "extension:installation:floor_supports_load",
+          "extension:installation:floor_screw_holding",
+          "extension:installation:baseboard_interference",
+          "extension:installation:vertical_horizontal_jamb_step_e_mm",
+          "extension:installation:lower_mounting_surface_horizontal_or_adjustable",
+          "extension:installation:mounting_surface_flat",
+          "extension:installation:mounting_surface_damage_protection",
+          "extension:installation:resin_jamb_face_screw_fixed",
+          "extension:installation:lower_resin_jamb_space_mm",
+          "extension:installation:existing_lower_jamb_angle_present",
+          "extension:installation:lower_jamb_a_mm",
+          "extension:installation:lower_jamb_a_prime_mm",
+          "extension:installation:hardware_tip_mounting_depth_A_mm",
+          "extension:installation:existing_angle_height_mm",
+          "extension:installation:existing_angle_tip_mm",
+          "extension:installation:system_bath_component_screw_interference",
+          "extension:installation:existing_window_to_jamb_step_large"
+        ],
+        "OPTION": [
+          "extension:option:crescent_presence",
+          "extension:option:crescent_type",
+          "extension:option:pull_handle_type",
+          "extension:option:pull_handle_position",
+          "extension:option:operating_handle_type",
+          "extension:option:middle_rail_option",
+          "extension:option:middle_rail_position",
+          "extension:option:ventilator_option",
+          "extension:option:bottom_rail_type",
+          "extension:option:arm_stopper_option",
+          "extension:option:outside_handle_option"
+        ]
+      }
+    },
+    {
+      "series": "インプラス",
+      "registry_series_key": "LIXIL::インプラス",
+      "stages": {
+        "PRODUCT": [],
+        "OPENING": [
+          "window_type"
+        ],
+        "CONFIGURATION": [
+          "sash_configuration",
+          "reverse_handing",
+          "hinge_side"
+        ],
+        "SIZE": [
+          "size_class",
+          "size_mode",
+          "order_width",
+          "order_height"
+        ],
+        "FINISH": [
+          "body_color"
+        ],
+        "SCREEN": [],
+        "GLAZING": [
+          "glass_family",
+          "glass_type",
+          "supply_form",
+          "glass_detail",
+          "decorative_pattern",
+          "lowe_color",
+          "spacer",
+          "cavity_fill"
+        ],
+        "INSTALLATION_SURVEY": [
+          "upper_frame_spec",
+          "sash_midrail",
+          "crescent_position",
+          "frame_install_spec",
+          "fukashi_spec",
+          "joint_layout"
+        ],
+        "OPTION": [
+          "option_items"
+        ]
+      }
+    }
+  ]
+}
