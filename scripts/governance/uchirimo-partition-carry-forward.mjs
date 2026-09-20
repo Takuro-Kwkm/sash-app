@@ -8,13 +8,14 @@ import { loadRegisteredRuntime } from '../../src/catalog/runtime-master/runtime-
 const HEAD=String(process.env.HEAD_SHA??process.env.GITHUB_SHA??'');
 const REPO=String(process.env.GITHUB_REPOSITORY??'');
 const RUN_ID=Number(process.env.GITHUB_RUN_ID??0);
+const RUN_ATTEMPT=Number(process.env.GITHUB_RUN_ATTEMPT??1);
 const BRANCH=String(process.env.GITHUB_HEAD_REF??process.env.GITHUB_REF_NAME??'');
 const API=String(process.env.GITHUB_API_URL??'https://api.github.com');
 const TOKEN=String(process.env.GH_TOKEN??process.env.GITHUB_TOKEN??'');
 const PLAN_PATH=String(process.env.UCHIRIMO_SELECTOR_CURRENT_PLAN??'artifacts/uchirimo-selector-proof-current-plan/all-partitions.json');
 const OUT=String(process.env.UCHIRIMO_SELECTOR_CARRY_FORWARD_OUT??'artifacts/uchirimo-selector-proof-carry-forward');
 const MAX_SOURCE_RUNS=Number(process.env.UCHIRIMO_CARRY_FORWARD_SOURCE_RUNS??100);
-const MAX_CANDIDATE_RUNS=Number(process.env.UCHIRIMO_CARRY_FORWARD_CANDIDATE_RUNS??8);
+const MAX_CANDIDATE_RUNS=Number(process.env.UCHIRIMO_CARRY_FORWARD_CANDIDATE_RUNS??32);
 const PROOF_SCRIPT='scripts/uchirimo-full-selector-proof.mjs';
 const POLICY_PATH='project-governance/evidence-dependency-policy.json';
 
@@ -182,8 +183,15 @@ const currentRuntimeHash=String(runtime.sourcePackageIntegrity.actual??'');
 const currentExecutionFingerprint=executionDependencyFingerprint(HEAD);
 
 const runsPayload=await apiJson('/repos/'+REPO+'/actions/workflows/project-governance-gate.yml/runs?branch='+encodeURIComponent(BRANCH)+'&per_page=100');
+// Resume is deliberately allowed from the same Exact HEAD and, on a rerun,
+ // from earlier attempts of the same workflow run. A timeout must never erase
+ // already-PASS partition evidence.
 const priorRuns=(runsPayload.workflow_runs??[])
-  .filter((run)=>Number(run.id)!==RUN_ID&&run.head_sha&&run.head_sha!==HEAD)
+  .filter((run)=>{
+    if(!run.head_sha)return false;
+    if(Number(run.id)===RUN_ID)return RUN_ATTEMPT>1;
+    return true;
+  })
   .slice(0,MAX_SOURCE_RUNS);
 
 const candidates=[];
@@ -198,7 +206,12 @@ for(const run of priorRuns){
   if(!shardArtifacts.length)continue;
   candidates.push({run,sourceHead,artifacts:shardArtifacts});
 }
-candidates.sort((a,b)=>b.artifacts.length-a.artifacts.length||Date.parse(b.run.created_at??0)-Date.parse(a.run.created_at??0));
+candidates.sort((a,b)=>
+  Number(b.sourceHead===HEAD)-Number(a.sourceHead===HEAD) ||
+  Number(Number(b.run.id)===RUN_ID)-Number(Number(a.run.id)===RUN_ID) ||
+  b.artifacts.length-a.artifacts.length ||
+  Date.parse(b.run.created_at??0)-Date.parse(a.run.created_at??0)
+);
 const selectedSources=candidates.slice(0,MAX_CANDIDATE_RUNS);
 
 const reused=[];
@@ -306,6 +319,10 @@ const manifest={
   runtime_manifest_sha256:currentRuntimeHash,
   execution_dependency_fingerprint:currentExecutionFingerprint,
   source_runs:sourceSummaries,
+  resume_policy:'SAME_HEAD_AND_PRIOR_ATTEMPT_PARTITION_REUSE_V1',
+  workflow_run_id:RUN_ID,
+  workflow_run_attempt:RUN_ATTEMPT,
+  candidate_run_limit:MAX_CANDIDATE_RUNS,
   reused_partition_count:reused.length,
   rerun_partition_count:Number(plan.shard_count)-reused.length,
   reused_shard_indices:reused.map((row)=>row.shard),
@@ -315,5 +332,6 @@ const manifest={
 writeFileSync(join(OUT,'manifest.json'),JSON.stringify(manifest,null,2)+'\n');
 console.log('UCHIRIMO_PARTITION_CARRY_FORWARD=PASS');
 console.log('UCHIRIMO_CARRY_FORWARD_SOURCE_RUNS='+sourceSummaries.map((row)=>row.run_id+':'+row.accepted_partition_count).join(','));
+console.log('UCHIRIMO_RESUME_POLICY='+manifest.resume_policy);
 console.log('UCHIRIMO_CARRY_FORWARD_REUSED='+manifest.reused_partition_count);
 console.log('UCHIRIMO_CARRY_FORWARD_RERUN='+manifest.rerun_partition_count);
