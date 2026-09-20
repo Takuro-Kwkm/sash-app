@@ -13,7 +13,8 @@ const API=String(process.env.GITHUB_API_URL??'https://api.github.com');
 const TOKEN=String(process.env.GH_TOKEN??process.env.GITHUB_TOKEN??'');
 const PLAN_PATH=String(process.env.UCHIRIMO_SELECTOR_CURRENT_PLAN??'artifacts/uchirimo-selector-proof-current-plan/all-partitions.json');
 const OUT=String(process.env.UCHIRIMO_SELECTOR_CARRY_FORWARD_OUT??'artifacts/uchirimo-selector-proof-carry-forward');
-const MAX_SOURCE_RUNS=Number(process.env.UCHIRIMO_CARRY_FORWARD_SOURCE_RUNS??12);
+const MAX_SOURCE_RUNS=Number(process.env.UCHIRIMO_CARRY_FORWARD_SOURCE_RUNS??100);
+const MAX_CANDIDATE_RUNS=Number(process.env.UCHIRIMO_CARRY_FORWARD_CANDIDATE_RUNS??8);
 const PROOF_SCRIPT='scripts/uchirimo-full-selector-proof.mjs';
 const POLICY_PATH='project-governance/evidence-dependency-policy.json';
 
@@ -198,14 +199,19 @@ for(const run of priorRuns){
   candidates.push({run,sourceHead,artifacts:shardArtifacts});
 }
 candidates.sort((a,b)=>b.artifacts.length-a.artifacts.length||Date.parse(b.run.created_at??0)-Date.parse(a.run.created_at??0));
-const source=candidates[0]??null;
+const selectedSources=candidates.slice(0,MAX_CANDIDATE_RUNS);
 
 const reused=[];
+const reusedKeys=new Set();
+const sourceSummaries=[];
 const temp=mkdtempSync(join(tmpdir(),'uchirimo-carry-'));
 try{
-  if(source){
+  for(const source of selectedSources){
+    if(reusedKeys.size===currentByKey.size)break;
     const sourceChanges=changedPaths(source.sourceHead,HEAD);
+    let acceptedFromSource=0;
     for(const artifact of source.artifacts){
+      if(reusedKeys.size===currentByKey.size)break;
       const zip=await apiBuffer('/repos/'+REPO+'/actions/artifacts/'+artifact.id+'/zip');
       const zipPath=join(temp,String(artifact.id)+'.zip');
       writeFileSync(zipPath,zip);
@@ -219,8 +225,7 @@ try{
       if(String(report.proof_model??'')!=='UCHIRIMO_REACHABLE_DISCRETE_SELECTOR_EXHAUSTIVE_SHARD_V10')continue;
       const partitionKey=String(report.partition_key??'');
       const current=currentByKey.get(partitionKey);
-      if(!current)continue;
-      if(reused.some((row)=>row.partition_key===partitionKey))continue;
+      if(!current||reusedKeys.has(partitionKey))continue;
       if(stableJson(report.seed??{})!==stableJson(currentSeed(current)))continue;
       const caseName=String(report.case_artifact??'');
       const caseEntry=entries.find((name)=>basename(name)===basename(caseName));
@@ -270,13 +275,23 @@ try{
       writeFileSync(join(OUT,currentCaseName),caseBytes);
       writeFileSync(join(OUT,currentReportName),JSON.stringify(rebound,null,2)+'\n');
       writeFileSync(join(OUT,bindingName),JSON.stringify(binding,null,2)+'\n');
+      reusedKeys.add(partitionKey);
+      acceptedFromSource+=1;
       reused.push({
         shard:Number(current.shard),
         partition_key:partitionKey,
+        source_run_id:Number(source.run.id),
+        source_exact_head:source.sourceHead,
         source_shard_index:Number(report.shard_index),
         source_artifact_identity:String(artifact.name)
       });
     }
+    sourceSummaries.push({
+      run_id:Number(source.run.id),
+      exact_head:source.sourceHead,
+      available_artifact_count:source.artifacts.length,
+      accepted_partition_count:acceptedFromSource
+    });
   }
 }finally{
   rmSync(temp,{recursive:true,force:true});
@@ -290,8 +305,7 @@ const manifest={
   current_shard_count:Number(plan.shard_count),
   runtime_manifest_sha256:currentRuntimeHash,
   execution_dependency_fingerprint:currentExecutionFingerprint,
-  source_run_id:source?Number(source.run.id):null,
-  source_exact_head:source?.sourceHead??null,
+  source_runs:sourceSummaries,
   reused_partition_count:reused.length,
   rerun_partition_count:Number(plan.shard_count)-reused.length,
   reused_shard_indices:reused.map((row)=>row.shard),
@@ -300,6 +314,6 @@ const manifest={
 };
 writeFileSync(join(OUT,'manifest.json'),JSON.stringify(manifest,null,2)+'\n');
 console.log('UCHIRIMO_PARTITION_CARRY_FORWARD=PASS');
-console.log('UCHIRIMO_CARRY_FORWARD_SOURCE_RUN='+(manifest.source_run_id??'NONE'));
+console.log('UCHIRIMO_CARRY_FORWARD_SOURCE_RUNS='+sourceSummaries.map((row)=>row.run_id+':'+row.accepted_partition_count).join(','));
 console.log('UCHIRIMO_CARRY_FORWARD_REUSED='+manifest.reused_partition_count);
 console.log('UCHIRIMO_CARRY_FORWARD_RERUN='+manifest.rerun_partition_count);
