@@ -145,9 +145,138 @@ jobs:
           path: artifacts/uchirimo-full-selector-proof/
           if-no-files-found: error
 
-  uchirimo-selector-proof-carry-forward:
+  uchirimo-qa-preflight:
     needs: ["governance-authority", "governance-precheck", "uchirimo-selector-proof-cache"]
     if: ${{ needs.governance-authority.outputs.authorized == 'true' && needs.governance-precheck.outputs.authorized == 'true' && needs.uchirimo-selector-proof-cache.outputs.reused != 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      UCHIRIMO_SELECTOR_MODE: plan-all
+      UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-qa-preflight-plan
+    steps:
+      - name: Checkout exact HEAD
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.HEAD_SHA }}
+          fetch-depth: 0
+
+      - name: Setup Node 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Install
+        run: npm install --ignore-scripts
+
+      - name: QA harness structural self-test
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import { readFileSync } from 'node:fs';
+          const workflow=readFileSync('.github/workflows/global-window-selection-flow-gate.yml','utf8');
+          const carry=readFileSync('scripts/governance/uchirimo-partition-carry-forward.mjs','utf8');
+          const expected=Array.from({length:16},(_,i)=>i);
+          const plan=[...workflow.matchAll(/^  uchirimo-selector-proof-plan-(\d+):/gm)].map((m)=>Number(m[1])).sort((a,b)=>a-b);
+          const proof=[...workflow.matchAll(/^  uchirimo-selector-proof-(\d+):/gm)].map((m)=>Number(m[1])).sort((a,b)=>a-b);
+          if(JSON.stringify(plan)!==JSON.stringify(expected))throw new Error('UCHIRIMO_HARNESS_PLAN_LANES_INVALID:'+JSON.stringify(plan));
+          if(JSON.stringify(proof)!==JSON.stringify(expected))throw new Error('UCHIRIMO_HARNESS_EXECUTION_LANES_INVALID:'+JSON.stringify(proof));
+          const a0=workflow.indexOf('\n  uchirimo-selector-proof-aggregate:');
+          const a1=workflow.indexOf('\n  global-flow:',a0);
+          if(a0<0||a1<0)throw new Error('UCHIRIMO_HARNESS_AGGREGATE_BLOCK_MISSING');
+          const aggregate=workflow.slice(a0,a1);
+          const needsLine=aggregate.split('\n').find((line)=>line.trimStart().startsWith('needs:'))??'';
+          const missingNeeds=expected.filter((i)=>!needsLine.includes('"uchirimo-selector-proof-'+i+'"'));
+          const missingConditions=expected.filter((i)=>!aggregate.includes("needs.uchirimo-selector-proof-"+i+".result == 'success'"));
+          if(missingNeeds.length)throw new Error('UCHIRIMO_HARNESS_AGGREGATE_NEEDS_MISSING:'+missingNeeds.join(','));
+          if(missingConditions.length)throw new Error('UCHIRIMO_HARNESS_AGGREGATE_CONDITION_MISSING:'+missingConditions.join(','));
+          if(carry.includes('head_sha!==HEAD'))throw new Error('UCHIRIMO_HARNESS_SAME_HEAD_RESUME_DISABLED');
+          for(const token of ['RUN_ATTEMPT','Number(run.id)===RUN_ID','UCHIRIMO_CARRY_FORWARD_CANDIDATE_RUNS??32']){
+            if(!carry.includes(token))throw new Error('UCHIRIMO_HARNESS_RESUME_TOKEN_MISSING:'+token);
+          }
+          console.log('UCHIRIMO_QA_HARNESS_SELF_TEST=PASS lanes=16 resume=same-head+prior-attempt');
+          NODE
+
+      - name: Build complete partition inventory
+        run: node scripts/uchirimo-full-selector-proof.mjs
+
+      - name: Collect seed-level resolver and semantic errors without fail-fast
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts/uchirimo-qa-preflight
+          node --input-type=module <<'NODE'
+          import { readFileSync, writeFileSync } from 'node:fs';
+          import { resolveRuntimeAppProduct } from './src/catalog/runtime-master/runtime-app-bridge.mjs';
+          const plan=JSON.parse(readFileSync('artifacts/uchirimo-qa-preflight-plan/all-partitions.json','utf8'));
+          const errors=[];
+          const technical=new Set(['legacyConstruction','legacyConfiguration','internal_construction']);
+          const stable=(value)=>{
+            if(Array.isArray(value))return value.map(stable);
+            if(!value||typeof value!=='object')return value;
+            return Object.fromEntries(Object.entries(value).sort(([a],[b])=>a.localeCompare(b)).map(([k,v])=>[k,stable(v)]));
+          };
+          const same=(a,b)=>JSON.stringify(stable(a))===JSON.stringify(stable(b)) || String(a)===String(b);
+          for(let index=0;index<plan.partitions.length;index+=1){
+            const row=plan.partitions[index];
+            const seed={room_specification:row.room_specification,window_type:row.window_type,glass_family:row.glass_family};
+            if(row.sash_configuration!=='__UNSET__')seed.sash_configuration=row.sash_configuration;
+            if(row.size_class!=='__UNSET__')seed.size_class=row.size_class;
+            Object.assign(seed,JSON.parse(row.partition_seed_json??'{}'));
+            try{
+              const result=await resolveRuntimeAppProduct('SER-YKKAP-UCHIRIMO',seed);
+              if(!result||!Array.isArray(result.fields)||!result.selection){
+                errors.push({shard:row.shard,partition_key:row.partition_key,code:'INVALID_RESOLVER_RESULT'});
+                continue;
+              }
+              for(const [key,value] of Object.entries(seed)){
+                if(!same(result.selection?.[key],value))errors.push({shard:row.shard,partition_key:row.partition_key,code:'SEED_REJECTED',field:key});
+              }
+              const seen=new Set();
+              for(const field of result.fields){
+                if(!field?.key){errors.push({shard:row.shard,partition_key:row.partition_key,code:'FIELD_KEY_MISSING'});continue;}
+                if(seen.has(field.key))errors.push({shard:row.shard,partition_key:row.partition_key,code:'DUPLICATE_FIELD_KEY',field:field.key});
+                seen.add(field.key);
+                if(technical.has(field.key))errors.push({shard:row.shard,partition_key:row.partition_key,code:'TECHNICAL_FIELD_VISIBLE',field:field.key});
+                if(!field.semanticStage||!field.semanticSlot)errors.push({shard:row.shard,partition_key:row.partition_key,code:'UNMAPPED_UI_FIELD',field:field.key});
+                if(!field.dataType)errors.push({shard:row.shard,partition_key:row.partition_key,code:'FIELD_DATATYPE_MISSING',field:field.key});
+                if(field.required===true && ['ENUM','MULTI_ENUM'].includes(field.dataType)){
+                  const enabled=(field.values??[]).filter((v)=>v?.disabled!==true);
+                  if(enabled.length===0)errors.push({shard:row.shard,partition_key:row.partition_key,code:'REQUIRED_FIELD_WITHOUT_ENABLED_VALUE',field:field.key});
+                }
+              }
+            }catch(error){
+              errors.push({shard:row.shard,partition_key:row.partition_key,code:'RESOLVER_EXCEPTION',message:error?.message??String(error)});
+            }
+            if((index+1)%250===0)console.log('UCHIRIMO_PREFLIGHT_PROGRESS partitions='+(index+1)+' errors='+errors.length);
+          }
+          const report={
+            schema_version:'1.0.0',
+            exact_head:process.env.HEAD_SHA,
+            status:errors.length?'FAIL':'PASS',
+            partition_count:plan.partitions.length,
+            error_count:errors.length,
+            errors
+          };
+          writeFileSync('artifacts/uchirimo-qa-preflight/report.json',JSON.stringify(report,null,2)+'\n');
+          console.log('UCHIRIMO_QA_PREFLIGHT='+report.status+' partitions='+report.partition_count+' errors='+report.error_count);
+          if(errors.length)process.exit(41);
+          NODE
+
+      - name: Upload Uchirimo QA preflight evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: uchirimo-qa-preflight-${{ env.HEAD_SHA }}
+          path: |
+            artifacts/uchirimo-qa-preflight/
+            artifacts/uchirimo-qa-preflight-plan/all-partitions.json
+          if-no-files-found: error
+
+  uchirimo-selector-proof-carry-forward:
+    needs: ["governance-authority", "governance-precheck", "uchirimo-selector-proof-cache", "uchirimo-qa-preflight"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && needs.governance-precheck.outputs.authorized == 'true' && needs.uchirimo-selector-proof-cache.outputs.reused != 'true' && needs.uchirimo-qa-preflight.result == 'success' }}
     runs-on: ubuntu-latest
     timeout-minutes: 30
     permissions:
@@ -1714,7 +1843,7 @@ jobs:
           if-no-files-found: warn
 
   uchirimo-selector-proof-aggregate:
-    needs: ["governance-authority", "governance-precheck", "uchirimo-selector-proof-cache", "uchirimo-selector-proof-carry-forward", "uchirimo-selector-proof-plan-0", "uchirimo-selector-proof-plan-1", "uchirimo-selector-proof-plan-2", "uchirimo-selector-proof-plan-3", "uchirimo-selector-proof-plan-4", "uchirimo-selector-proof-plan-5", "uchirimo-selector-proof-plan-6", "uchirimo-selector-proof-plan-7", "uchirimo-selector-proof-plan-15", "uchirimo-selector-proof-plan-14", "uchirimo-selector-proof-plan-13", "uchirimo-selector-proof-plan-12", "uchirimo-selector-proof-plan-11", "uchirimo-selector-proof-plan-10", "uchirimo-selector-proof-plan-9", "uchirimo-selector-proof-plan-8", "uchirimo-selector-proof-0", "uchirimo-selector-proof-1", "uchirimo-selector-proof-2", "uchirimo-selector-proof-3", "uchirimo-selector-proof-4", "uchirimo-selector-proof-5", "uchirimo-selector-proof-6", "uchirimo-selector-proof-7", "uchirimo-selector-proof-8"]
+    needs: ["governance-authority", "governance-precheck", "uchirimo-selector-proof-cache", "uchirimo-selector-proof-carry-forward", "uchirimo-selector-proof-plan-0", "uchirimo-selector-proof-plan-1", "uchirimo-selector-proof-plan-2", "uchirimo-selector-proof-plan-3", "uchirimo-selector-proof-plan-4", "uchirimo-selector-proof-plan-5", "uchirimo-selector-proof-plan-6", "uchirimo-selector-proof-plan-7", "uchirimo-selector-proof-plan-15", "uchirimo-selector-proof-plan-14", "uchirimo-selector-proof-plan-13", "uchirimo-selector-proof-plan-12", "uchirimo-selector-proof-plan-11", "uchirimo-selector-proof-plan-10", "uchirimo-selector-proof-plan-9", "uchirimo-selector-proof-plan-8", "uchirimo-selector-proof-0", "uchirimo-selector-proof-1", "uchirimo-selector-proof-2", "uchirimo-selector-proof-3", "uchirimo-selector-proof-4", "uchirimo-selector-proof-5", "uchirimo-selector-proof-6", "uchirimo-selector-proof-7", "uchirimo-selector-proof-8", "uchirimo-selector-proof-9", "uchirimo-selector-proof-10", "uchirimo-selector-proof-11", "uchirimo-selector-proof-12", "uchirimo-selector-proof-13", "uchirimo-selector-proof-14", "uchirimo-selector-proof-15"]
     if: ${{ needs.governance-authority.outputs.authorized == 'true' && needs.governance-precheck.outputs.authorized == 'true' && needs.uchirimo-selector-proof-0.result == 'success' && needs.uchirimo-selector-proof-1.result == 'success' && needs.uchirimo-selector-proof-2.result == 'success' && needs.uchirimo-selector-proof-3.result == 'success' && needs.uchirimo-selector-proof-4.result == 'success' && needs.uchirimo-selector-proof-5.result == 'success' && needs.uchirimo-selector-proof-6.result == 'success' && needs.uchirimo-selector-proof-7.result == 'success' && needs.uchirimo-selector-proof-8.result == 'success' && needs.uchirimo-selector-proof-9.result == 'success' && needs.uchirimo-selector-proof-10.result == 'success' && needs.uchirimo-selector-proof-11.result == 'success' && needs.uchirimo-selector-proof-12.result == 'success' && needs.uchirimo-selector-proof-13.result == 'success' && needs.uchirimo-selector-proof-14.result == 'success' && needs.uchirimo-selector-proof-15.result == 'success' }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
