@@ -193,7 +193,7 @@ function isV10MeasuredTimeoutClass(row,glassFamily,extraSeed){
   }
   if(depth===4){
     return hingeSide==='left'&&(
-      (frameColor==='white'&&structure==='G4P3'&&lowE==='insulating')
+      (frameColor==='white'&&['G4P3','G5P3'].includes(structure)&&lowE==='insulating')
       ||(frameColor==='calm_black'&&['G4P3','G5P3'].includes(structure)&&lowE==='insulating')
     );
   }
