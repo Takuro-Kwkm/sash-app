@@ -19,6 +19,7 @@ const TARGET_GLASS_FAMILY=String(process.env.UCHIRIMO_SELECTOR_GLASS_FAMILY ?? '
 const TARGET_PARTITION_KEY=String(process.env.UCHIRIMO_SELECTOR_PARTITION_KEY ?? '');
 const TARGET_PARTITION_SEED_JSON=String(process.env.UCHIRIMO_SELECTOR_PARTITION_SEED_JSON ?? '{}');
 const TARGET_PARTITION_SEED=JSON.parse(TARGET_PARTITION_SEED_JSON);
+const REUSE_MANIFEST_PATH=String(process.env.UCHIRIMO_SELECTOR_REUSE_MANIFEST ?? '');
 const PARTITION_EXTRA_DEPTH=2;
 const PLAN_LANE_COUNT=Number(process.env.UCHIRIMO_SELECTOR_PLAN_LANE_COUNT ?? 1);
 const PLAN_LANE_INDEX=Number(process.env.UCHIRIMO_SELECTOR_PLAN_LANE_INDEX ?? 0);
@@ -304,6 +305,30 @@ async function buildShardPartitions(runtime){
   return include;
 }
 
+function reusedPartitionKeys(){
+  if(!REUSE_MANIFEST_PATH)return new Set();
+  const manifest=JSON.parse(readFileSync(REUSE_MANIFEST_PATH,'utf8'));
+  const head=currentExactHead();
+  if(manifest.status!=='PASS'||manifest.current_exact_head!==head)throw new Error('UCHIRIMO_REUSE_MANIFEST_INVALID');
+  return new Set((manifest.reused_partition_keys??[]).map(String));
+}
+
+async function planAll(){
+  const head=currentExactHead();
+  const runtime=await loadRegisteredRuntime('YKK AP','ウチリモ 内窓');
+  if(!runtime?.sourcePackageIntegrity?.match)throw new Error('UCHIRIMO_RUNTIME_INTEGRITY_NOT_PASS');
+  const partitions=await buildShardPartitions(runtime);
+  writeFileSync(join(OUT,'all-partitions.json'),JSON.stringify({
+    schema_version:'1.0.0',
+    exact_head:head,
+    status:'PASS',
+    shard_count:partitions.length,
+    runtime_manifest_sha256:runtime.sourcePackageIntegrity.actual,
+    partitions
+  },null,2)+'\n');
+  console.log('UCHIRIMO_SELECTOR_PLAN_ALL=PASS partitions='+partitions.length);
+}
+
 async function plan(){
   const head=currentExactHead();
   const runtime=await loadRegisteredRuntime('YKK AP','ウチリモ 内窓');
@@ -311,18 +336,30 @@ async function plan(){
   const allPartitions=await buildShardPartitions(runtime);
   if(!Number.isInteger(PLAN_LANE_COUNT)||PLAN_LANE_COUNT<1)throw new Error('UCHIRIMO_PLAN_LANE_COUNT_INVALID:'+PLAN_LANE_COUNT);
   if(!Number.isInteger(PLAN_LANE_INDEX)||PLAN_LANE_INDEX<0||PLAN_LANE_INDEX>=PLAN_LANE_COUNT)throw new Error('UCHIRIMO_PLAN_LANE_INDEX_INVALID:'+PLAN_LANE_INDEX+':'+PLAN_LANE_COUNT);
-  const include=allPartitions.filter((_,index)=>index%PLAN_LANE_COUNT===PLAN_LANE_INDEX);
-  if(!include.length)throw new Error('UCHIRIMO_PLAN_LANE_EMPTY:'+PLAN_LANE_INDEX);
+  const reused=reusedPartitionKeys();
+  const lanePartitions=allPartitions.filter((_,index)=>index%PLAN_LANE_COUNT===PLAN_LANE_INDEX);
+  const include=lanePartitions.filter((row)=>!reused.has(String(row.partition_key)));
   if(include.length>256)throw new Error('UCHIRIMO_PLAN_LANE_MATRIX_LIMIT_EXCEEDED:'+PLAN_LANE_INDEX+':'+include.length);
-  const matrix={include};
-  const record={exact_head:head,status:'PASS',partition_axis:'product_node+glass_family+depth2+v7_depth3+v8_depth4+v9_measured_timeout_depth5+v10_measured_timeout_depth6',shard_count:allPartitions.length,lane_index:PLAN_LANE_INDEX,lane_count:PLAN_LANE_COUNT,lane_shard_count:include.length,matrix};
+  const matrix={include:include.length?include:[{skip:true,shard:-1,node_id:'__REUSED_LANE__',partition_key:'__REUSED_LANE__',room_specification:'__REUSED__',window_type:'__REUSED__',sash_configuration:'__UNSET__',size_class:'__UNSET__',glass_family:'__REUSED__',partition_seed_json:'{}'}]};
+  const record={
+    exact_head:head,
+    status:'PASS',
+    partition_axis:'product_node+glass_family+depth2+v7_depth3+v8_depth4+v9_measured_timeout_depth5+v10_measured_timeout_depth6',
+    shard_count:allPartitions.length,
+    lane_index:PLAN_LANE_INDEX,
+    lane_count:PLAN_LANE_COUNT,
+    lane_partition_count:lanePartitions.length,
+    lane_reused_partition_count:lanePartitions.length-include.length,
+    lane_shard_count:include.length,
+    matrix
+  };
   writeFileSync(join(OUT,'matrix.json'),JSON.stringify(record,null,2)+'\n');
   if(process.env.GITHUB_OUTPUT){
     appendFileSync(process.env.GITHUB_OUTPUT,'matrix='+JSON.stringify(matrix)+'\n');
     appendFileSync(process.env.GITHUB_OUTPUT,'shard_count='+String(allPartitions.length)+'\n');
     appendFileSync(process.env.GITHUB_OUTPUT,'lane_shard_count='+String(include.length)+'\n');
   }
-  console.log('UCHIRIMO_SELECTOR_PLAN=PASS partitions='+allPartitions.length+' lane='+PLAN_LANE_INDEX+'/'+PLAN_LANE_COUNT+' lane_partitions='+include.length+' axis=product_node+glass_family+depth2+v7_depth3+v8_depth4+v9_measured_timeout_depth5+v10_measured_timeout_depth6');
+  console.log('UCHIRIMO_SELECTOR_PLAN=PASS partitions='+allPartitions.length+' lane='+PLAN_LANE_INDEX+'/'+PLAN_LANE_COUNT+' lane_partitions='+lanePartitions.length+' reused='+String(lanePartitions.length-include.length)+' rerun='+include.length);
 }
 async function aggregate(){
   const head=process.env.HEAD_SHA??process.env.GITHUB_SHA??currentExactHead();
@@ -361,6 +398,8 @@ async function aggregate(){
   let resolverCacheMisses=0;
   let maxStack=0;
   let peakHeapMb=0;
+  let carryForwardPartitions=0;
+  let freshPartitions=0;
   mkdirSync(join(OUT,'shards'),{recursive:true});
   const caseArtifacts=[];
   for(const row of reports){
@@ -368,6 +407,13 @@ async function aggregate(){
     if(report.exact_head!==head)throw new Error('UCHIRIMO_SHARD_EXACT_HEAD_MISMATCH:'+report.shard_index);
     if(report.status!=='PASS'||report.unverified_discrete_selector_case_count!==0)throw new Error('UCHIRIMO_SHARD_NOT_PASS:'+report.shard_index);
     if(report.runtime_integrity_match!==true)throw new Error('UCHIRIMO_SHARD_RUNTIME_INTEGRITY_FAIL:'+report.shard_index);
+    if(report.evidence_origin==='CURRENT_HEAD_CARRY_FORWARD'){
+      const binding=report.current_head_binding;
+      if(binding?.status!=='PASS'||binding.current_exact_head!==head||binding.partition_key!==report.partition_key||binding.source_exact_head!==report.source_exact_head)throw new Error('UCHIRIMO_CARRY_FORWARD_BINDING_INVALID:'+report.shard_index);
+      carryForwardPartitions+=1;
+    }else{
+      freshPartitions+=1;
+    }
     const nodeId=String(report.node_id??'');
     const partitionKey=String(report.partition_key??'');
     if(!expectedNodeIds.has(nodeId))throw new Error('UCHIRIMO_SHARD_UNKNOWN_PRODUCT_NODE:'+nodeId);
@@ -399,7 +445,7 @@ async function aggregate(){
     const targetReport=join(OUT,'shards',basename(row.path));
     copyFileSync(casePath,targetCase);
     copyFileSync(row.path,targetReport);
-    caseArtifacts.push({shard_index:report.shard_index,run_attempt:Number(report.run_attempt??1),window_type:report.window_type,path:'shards/'+basename(casePath),sha256:actualCaseSha});
+    caseArtifacts.push({shard_index:report.shard_index,run_attempt:Number(report.run_attempt??1),window_type:report.window_type,path:'shards/'+basename(casePath),sha256:actualCaseSha,evidence_origin:report.evidence_origin??'FRESH_EXECUTION',source_exact_head:report.source_exact_head??null});
   }
   if(runtimeHashes.size!==1)throw new Error('UCHIRIMO_SHARD_RUNTIME_HASH_MISMATCH');
   if(partitionKeys.size!==expectedPartitionKeys.size||[...expectedPartitionKeys].some((key)=>!partitionKeys.has(key)))throw new Error('UCHIRIMO_SHARD_PARTITION_COVERAGE_MISMATCH:'+partitionKeys.size+':'+expectedPartitionKeys.size);
@@ -432,10 +478,12 @@ async function aggregate(){
     resolver_cache_limit_per_shard:MAX_RESOLVER_CACHE,
     resolver_cache_hits:resolverCacheHits,
     resolver_cache_misses:resolverCacheMisses,
+    carry_forward_partition_count:carryForwardPartitions,
+    fresh_execution_partition_count:freshPartitions,
     status:'PASS'
   };
   writeFileSync(join(OUT,'report.json'),JSON.stringify(combined,null,2)+'\n');
-  console.log('UCHIRIMO_FULL_SELECTOR_PROOF=PASS_SHARDED shards='+EXPECTED_SHARDS+' terminals='+terminals+' states='+states+' transitions='+transitions+' peak_heap_mb_max='+peakHeapMb);
+  console.log('UCHIRIMO_FULL_SELECTOR_PROOF=PASS_SHARDED shards='+EXPECTED_SHARDS+' carry_forward='+carryForwardPartitions+' fresh='+freshPartitions+' terminals='+terminals+' states='+states+' transitions='+transitions+' peak_heap_mb_max='+peakHeapMb);
   console.log('UCHIRIMO_UNVERIFIED_DISCRETE_SELECTOR_CASE_COUNT=0');
 }
 
@@ -611,9 +659,10 @@ async function runShard(){
   console.log('UCHIRIMO_SELECTOR_SHARD=PASS shard='+SHARD_INDEX+' node='+SHARD_NODE_ID+' glass='+TARGET_GLASS_FAMILY+' partition='+TARGET_PARTITION_KEY+' window='+TARGET_WINDOW+' terminals='+terminalCount+' states='+visited.size+' transitions='+transitionChecks+' peak_heap_mb='+peakHeapMb);
 }
 
-const failurePath=join(OUT,MODE==='aggregate'?'aggregate-failure.json':MODE==='plan'?'plan-failure.json':'shard-'+String(SHARD_INDEX)+'-failure.json');
+const failurePath=join(OUT,MODE==='aggregate'?'aggregate-failure.json':MODE==='plan'||MODE==='plan-all'?'plan-failure.json':'shard-'+String(SHARD_INDEX)+'-failure.json');
 try{
-  if(MODE==='plan')await plan();
+  if(MODE==='plan-all')await planAll();
+  else if(MODE==='plan')await plan();
   else if(MODE==='aggregate')await aggregate();
   else if(MODE==='shard')await runShard();
   else throw new Error('UCHIRIMO_UNKNOWN_SELECTOR_MODE:'+MODE);
