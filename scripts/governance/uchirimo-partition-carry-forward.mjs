@@ -214,6 +214,8 @@ candidates.sort((a,b)=>
   Date.parse(b.run.created_at??0)-Date.parse(a.run.created_at??0)
 );
 const selectedSources=candidates.slice(0,MAX_CANDIDATE_RUNS);
+const HEAVY_DURATION_THRESHOLD_MS=10*60*1000;
+const heavyByKey=new Map();
 
 const reused=[];
 const reusedKeys=new Set();
@@ -230,6 +232,33 @@ try{
       const zipPath=join(temp,String(artifact.id)+'.zip');
       writeFileSync(zipPath,zip);
       const entries=unzipList(zipPath);
+      const batchEntries=entries.filter((name)=>/batch-[A-Za-z0-9._-]+-report\.json$/.test(name));
+      for(const batchEntry of batchEntries){
+        const batchReport=JSON.parse(String(unzipEntry(zipPath,batchEntry)));
+        if(String(batchReport.exact_head??'')!==source.sourceHead)continue;
+        for(const result of batchReport.results??[]){
+          const partitionKey=String(result.partition_key??'');
+          if(!currentByKey.has(partitionKey))continue;
+          const started=Date.parse(String(result.started_at??''));
+          const completed=Date.parse(String(result.completed_at??''));
+          const durationMs=Number.isFinite(started)&&Number.isFinite(completed)&&completed>=started ? completed-started : 0;
+          const timedOut=result.timed_out===true;
+          if(!timedOut&&durationMs<HEAVY_DURATION_THRESHOLD_MS)continue;
+          const prior=heavyByKey.get(partitionKey);
+          const observation={
+            partition_key:partitionKey,
+            source_run_id:Number(source.run.id),
+            source_exact_head:source.sourceHead,
+            source_artifact_identity:String(artifact.name),
+            timed_out:timedOut,
+            duration_ms:durationMs,
+            classification:timedOut?'OBSERVED_TIMEOUT':'OBSERVED_SLOW'
+          };
+          if(!prior || Number(observation.timed_out)>Number(prior.timed_out) || observation.duration_ms>prior.duration_ms){
+            heavyByKey.set(partitionKey,observation);
+          }
+        }
+      }
       const reportEntries=entries.filter((name)=>/shard-\d+-report\.json$/.test(name));
       if(!reportEntries.length)continue;
       for(const reportEntry of reportEntries){
@@ -274,6 +303,7 @@ try{
 }
 
 reused.sort((a,b)=>a.shard-b.shard);
+const heavyObservations=[...heavyByKey.values()].sort((a,b)=>a.partition_key.localeCompare(b.partition_key));
 const manifest={
   schema_version:'1.0.0',
   status:'PASS',
@@ -288,6 +318,11 @@ const manifest={
   candidate_run_limit:MAX_CANDIDATE_RUNS,
   reused_partition_count:reused.length,
   rerun_partition_count:Number(plan.shard_count)-reused.length,
+  heavy_detection_policy:'OBSERVED_TIMEOUT_OR_10_MINUTE_DURATION_FROM_COMPATIBLE_SOURCE_RUNS_V1',
+  heavy_duration_threshold_ms:HEAVY_DURATION_THRESHOLD_MS,
+  heavy_partition_count:heavyObservations.length,
+  heavy_partition_keys:heavyObservations.map((row)=>row.partition_key),
+  heavy_partition_observations:heavyObservations,
   reused_shard_indices:reused.map((row)=>row.shard),
   reused_partition_keys:reused.map((row)=>row.partition_key),
   reused_partitions:reused
@@ -298,3 +333,4 @@ console.log('UCHIRIMO_CARRY_FORWARD_SOURCE_RUNS='+sourceSummaries.map((row)=>row
 console.log('UCHIRIMO_RESUME_POLICY='+manifest.resume_policy);
 console.log('UCHIRIMO_CARRY_FORWARD_REUSED='+manifest.reused_partition_count);
 console.log('UCHIRIMO_CARRY_FORWARD_RERUN='+manifest.rerun_partition_count);
+console.log('UCHIRIMO_CARRY_FORWARD_HEAVY='+manifest.heavy_partition_count);
