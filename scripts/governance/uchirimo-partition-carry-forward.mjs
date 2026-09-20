@@ -99,7 +99,10 @@ function executionDependencyFingerprint(ref){
     if(path===PROOF_SCRIPT)continue;
     if(path.includes('*'))throw new Error('UCHIRIMO_CARRY_FORWARD_GLOB_DEPENDENCY_UNSUPPORTED:'+path);
     const blob=git(['rev-parse',ref+':'+path],{allowFailure:true});
-    if(!blob)throw new Error('UCHIRIMO_CARRY_FORWARD_DEPENDENCY_MISSING:'+ref+':'+path);
+    // Match proof-dependency-fingerprint.mjs semantics: dependency patterns identify
+    // tracked files when present; an absent optional path (for example package-lock.json)
+    // is not itself a proof dependency and therefore is omitted consistently.
+    if(!blob)continue;
     deps.push({path,blob_sha:blob});
   }
   return sha({
