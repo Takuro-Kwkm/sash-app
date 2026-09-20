@@ -17,6 +17,7 @@ const OUT=String(process.env.UCHIRIMO_SELECTOR_CARRY_FORWARD_OUT??'artifacts/uch
 const MAX_SOURCE_RUNS=Number(process.env.UCHIRIMO_CARRY_FORWARD_SOURCE_RUNS??100);
 const MAX_CANDIDATE_RUNS=Number(process.env.UCHIRIMO_CARRY_FORWARD_CANDIDATE_RUNS??32);
 const PROOF_SCRIPT='scripts/uchirimo-full-selector-proof.mjs';
+const BATCH_RUNNER='scripts/governance/uchirimo-selector-batch-runner.mjs';
 const POLICY_PATH='project-governance/evidence-dependency-policy.json';
 
 if(!HEAD||!REPO||!RUN_ID||!TOKEN)throw new Error('UCHIRIMO_CARRY_FORWARD_ENV_MISSING');
@@ -98,7 +99,7 @@ function executionDependencyFingerprint(ref){
   if(!family)throw new Error('UCHIRIMO_SELECTOR_POLICY_MISSING:'+ref);
   const deps=[];
   for(const path of family.dependencies??[]){
-    if(path===PROOF_SCRIPT)continue;
+    if(path===PROOF_SCRIPT||path===BATCH_RUNNER)continue;
     if(path.includes('*'))throw new Error('UCHIRIMO_CARRY_FORWARD_GLOB_DEPENDENCY_UNSUPPORTED:'+path);
     const blob=git(['rev-parse',ref+':'+path],{allowFailure:true});
     // Match proof-dependency-fingerprint.mjs semantics: dependency patterns identify
@@ -202,7 +203,7 @@ for(const run of priorRuns){
   try{fp=executionDependencyFingerprint(sourceHead);}catch{continue;}
   if(fp!==currentExecutionFingerprint)continue;
   const artifacts=await listArtifacts(run.id);
-  const shardArtifacts=artifacts.filter((a)=>/^uchirimo-selector-proof-shard-\d+-[0-9a-f]{40}-attempt-\d+$/.test(String(a.name??''))&&!a.expired);
+  const shardArtifacts=artifacts.filter((a)=>/^uchirimo-selector-proof-(?:shard-\d+|batch-[A-Za-z0-9._-]+)-[0-9a-f]{40}-attempt-\d+$/.test(String(a.name??''))&&!a.expired);
   if(!shardArtifacts.length)continue;
   candidates.push({run,sourceHead,artifacts:shardArtifacts});
 }
@@ -229,75 +230,37 @@ try{
       const zipPath=join(temp,String(artifact.id)+'.zip');
       writeFileSync(zipPath,zip);
       const entries=unzipList(zipPath);
-      const reportEntry=entries.find((name)=>/shard-\d+-report\.json$/.test(name));
-      if(!reportEntry)continue;
-      const report=JSON.parse(String(unzipEntry(zipPath,reportEntry)));
-      if(report.status!=='PASS'||report.unverified_discrete_selector_case_count!==0||report.runtime_integrity_match!==true)continue;
-      if(String(report.exact_head??'')!==source.sourceHead)continue;
-      if(String(report.runtime_manifest_sha256??'')!==currentRuntimeHash)continue;
-      if(String(report.proof_model??'')!=='UCHIRIMO_REACHABLE_DISCRETE_SELECTOR_EXHAUSTIVE_SHARD_V10')continue;
-      const partitionKey=String(report.partition_key??'');
-      const current=currentByKey.get(partitionKey);
-      if(!current||reusedKeys.has(partitionKey))continue;
-      if(stableJson(report.seed??{})!==stableJson(currentSeed(current)))continue;
-      const caseName=String(report.case_artifact??'');
-      const caseEntry=entries.find((name)=>basename(name)===basename(caseName));
-      if(!caseEntry)continue;
-      const caseBytes=Buffer.from(unzipEntry(zipPath,caseEntry,{binary:true}));
-      const caseSha=sha(caseBytes);
-      if(caseSha!==String(report.case_artifact_sha256??''))continue;
-
-      const currentCaseName='shard-'+current.shard+'-terminal-digests.jsonl';
-      const currentReportName='shard-'+current.shard+'-report.json';
-      const bindingName='shard-'+current.shard+'-current-head-binding.json';
-      const binding={
-        schema_version:'1.0.0',
-        binding_type:'CURRENT_HEAD_PARTITION_PROOF_CARRY_FORWARD',
-        status:'PASS',
-        family:'UCHIRIMO_SELECTOR',
-        source_exact_head:source.sourceHead,
-        current_exact_head:HEAD,
-        source_run_id:Number(source.run.id),
-        source_artifact_identity:String(artifact.name),
-        source_artifact_id:Number(artifact.id),
-        source_artifact_sha256:sha(zip),
-        source_case_artifact_sha256:caseSha,
-        partition_key:partitionKey,
-        current_shard_index:Number(current.shard),
-        source_shard_index:Number(report.shard_index),
-        runtime_manifest_sha256:currentRuntimeHash,
-        execution_dependency_fingerprint:currentExecutionFingerprint,
-        changed_paths:sourceChanges,
-        impact_decision:'PARTITION_IDENTITY_AND_EXECUTION_DEPENDENCIES_UNCHANGED',
-        generated_at:new Date().toISOString()
-      };
-      const rebound={
-        ...report,
-        exact_head:HEAD,
-        shard_index:Number(current.shard),
-        shard_count:Number(plan.shard_count),
-        run_attempt:Number(process.env.GITHUB_RUN_ATTEMPT??1),
-        case_artifact:currentCaseName,
-        evidence_origin:'CURRENT_HEAD_CARRY_FORWARD',
-        source_exact_head:source.sourceHead,
-        source_run_id:Number(source.run.id),
-        source_artifact_identity:String(artifact.name),
-        current_head_binding:binding,
-        status:'PASS'
-      };
-      writeFileSync(join(OUT,currentCaseName),caseBytes);
-      writeFileSync(join(OUT,currentReportName),JSON.stringify(rebound,null,2)+'\n');
-      writeFileSync(join(OUT,bindingName),JSON.stringify(binding,null,2)+'\n');
-      reusedKeys.add(partitionKey);
-      acceptedFromSource+=1;
-      reused.push({
-        shard:Number(current.shard),
-        partition_key:partitionKey,
-        source_run_id:Number(source.run.id),
-        source_exact_head:source.sourceHead,
-        source_shard_index:Number(report.shard_index),
-        source_artifact_identity:String(artifact.name)
-      });
+      const reportEntries=entries.filter((name)=>/shard-\d+-report\.json$/.test(name));
+      if(!reportEntries.length)continue;
+      for(const reportEntry of reportEntries){
+        if(reusedKeys.size===currentByKey.size)break;
+        const report=JSON.parse(String(unzipEntry(zipPath,reportEntry)));
+        if(report.status!=='PASS'||report.unverified_discrete_selector_case_count!==0||report.runtime_integrity_match!==true)continue;
+        if(String(report.exact_head??'')!==source.sourceHead)continue;
+        if(String(report.runtime_manifest_sha256??'')!==currentRuntimeHash)continue;
+        if(String(report.proof_model??'')!=='UCHIRIMO_REACHABLE_DISCRETE_SELECTOR_EXHAUSTIVE_SHARD_V10')continue;
+        const partitionKey=String(report.partition_key??'');
+        const current=currentByKey.get(partitionKey);
+        if(!current||reusedKeys.has(partitionKey))continue;
+        if(stableJson(report.seed??{})!==stableJson(currentSeed(current)))continue;
+        const caseName=String(report.case_artifact??'');
+        const caseEntry=entries.find((name)=>basename(name)===basename(caseName));
+        if(!caseEntry)continue;
+        const caseBytes=Buffer.from(unzipEntry(zipPath,caseEntry,{binary:true}));
+        const caseSha=sha(caseBytes);
+        if(caseSha!==String(report.case_artifact_sha256??''))continue;
+        const currentCaseName='shard-'+current.shard+'-terminal-digests.jsonl';
+        const currentReportName='shard-'+current.shard+'-report.json';
+        const bindingName='shard-'+current.shard+'-current-head-binding.json';
+        const binding={schema_version:'1.0.0',binding_type:'CURRENT_HEAD_PARTITION_PROOF_CARRY_FORWARD',status:'PASS',family:'UCHIRIMO_SELECTOR',source_exact_head:source.sourceHead,current_exact_head:HEAD,source_run_id:Number(source.run.id),source_artifact_identity:String(artifact.name),source_artifact_id:Number(artifact.id),source_artifact_sha256:sha(zip),source_case_artifact_sha256:caseSha,partition_key:partitionKey,current_shard_index:Number(current.shard),source_shard_index:Number(report.shard_index),runtime_manifest_sha256:currentRuntimeHash,execution_dependency_fingerprint:currentExecutionFingerprint,changed_paths:sourceChanges,impact_decision:'PARTITION_IDENTITY_AND_EXECUTION_DEPENDENCIES_UNCHANGED',generated_at:new Date().toISOString()};
+        const rebound={...report,exact_head:HEAD,shard_index:Number(current.shard),shard_count:Number(plan.shard_count),run_attempt:Number(process.env.GITHUB_RUN_ATTEMPT??1),case_artifact:currentCaseName,evidence_origin:'CURRENT_HEAD_CARRY_FORWARD',source_exact_head:source.sourceHead,source_run_id:Number(source.run.id),source_artifact_identity:String(artifact.name),current_head_binding:binding,status:'PASS'};
+        writeFileSync(join(OUT,currentCaseName),caseBytes);
+        writeFileSync(join(OUT,currentReportName),JSON.stringify(rebound,null,2)+'\n');
+        writeFileSync(join(OUT,bindingName),JSON.stringify(binding,null,2)+'\n');
+        reusedKeys.add(partitionKey);
+        acceptedFromSource+=1;
+        reused.push({shard:Number(current.shard),partition_key:partitionKey,source_run_id:Number(source.run.id),source_exact_head:source.sourceHead,source_shard_index:Number(report.shard_index),source_artifact_identity:String(artifact.name)});
+      }
     }
     sourceSummaries.push({
       run_id:Number(source.run.id),

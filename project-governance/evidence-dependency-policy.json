@@ -20,6 +20,7 @@
         "src/catalog/runtime-master/runtime-master-registry.mjs",
         "src/catalog/runtime-master/app-runtime-integration-registry.mjs",
         "scripts/uchirimo-full-selector-proof.mjs",
+        "scripts/governance/uchirimo-selector-batch-runner.mjs",
         "project-governance/runtime-snapshot.json",
         "package.json",
         "package-lock.json"

@@ -23,6 +23,7 @@ const REUSE_MANIFEST_PATH=String(process.env.UCHIRIMO_SELECTOR_REUSE_MANIFEST ??
 const PARTITION_EXTRA_DEPTH=2;
 const PLAN_LANE_COUNT=Number(process.env.UCHIRIMO_SELECTOR_PLAN_LANE_COUNT ?? 1);
 const PLAN_LANE_INDEX=Number(process.env.UCHIRIMO_SELECTOR_PLAN_LANE_INDEX ?? 0);
+const BATCH_SIZE=Number(process.env.UCHIRIMO_SELECTOR_BATCH_SIZE ?? 1);
 const EXPECTED_SHARDS=Number(process.env.UCHIRIMO_SELECTOR_EXPECTED_SHARDS ?? 0);
 const MAX_STATES=Number(process.env.UCHIRIMO_SELECTOR_MAX_STATES ?? 1000000);
 const MAX_TERMINALS=Number(process.env.UCHIRIMO_SELECTOR_MAX_TERMINALS ?? 1000000);
@@ -340,30 +341,26 @@ async function plan(){
   const allPartitions=await buildShardPartitions(runtime);
   if(!Number.isInteger(PLAN_LANE_COUNT)||PLAN_LANE_COUNT<1)throw new Error('UCHIRIMO_PLAN_LANE_COUNT_INVALID:'+PLAN_LANE_COUNT);
   if(!Number.isInteger(PLAN_LANE_INDEX)||PLAN_LANE_INDEX<0||PLAN_LANE_INDEX>=PLAN_LANE_COUNT)throw new Error('UCHIRIMO_PLAN_LANE_INDEX_INVALID:'+PLAN_LANE_INDEX+':'+PLAN_LANE_COUNT);
+  if(!Number.isInteger(BATCH_SIZE)||BATCH_SIZE<1||BATCH_SIZE>2)throw new Error('UCHIRIMO_BATCH_SIZE_INVALID:'+BATCH_SIZE);
   const reused=reusedPartitionKeys();
   const lanePartitions=allPartitions.filter((_,index)=>index%PLAN_LANE_COUNT===PLAN_LANE_INDEX);
   const include=lanePartitions.filter((row)=>!reused.has(String(row.partition_key)));
-  if(include.length>256)throw new Error('UCHIRIMO_PLAN_LANE_MATRIX_LIMIT_EXCEEDED:'+PLAN_LANE_INDEX+':'+include.length);
-  const matrix={include:include.length?include:[{skip:true,shard:-1,node_id:'__REUSED_LANE__',partition_key:'__REUSED_LANE__',room_specification:'__REUSED__',window_type:'__REUSED__',sash_configuration:'__UNSET__',size_class:'__UNSET__',glass_family:'__REUSED__',partition_seed_json:'{}'}]};
-  const record={
-    exact_head:head,
-    status:'PASS',
-    partition_axis:'product_node+glass_family+depth2+v7_depth3+v8_depth4+v9_measured_timeout_depth5+v10_measured_timeout_depth6',
-    shard_count:allPartitions.length,
-    lane_index:PLAN_LANE_INDEX,
-    lane_count:PLAN_LANE_COUNT,
-    lane_partition_count:lanePartitions.length,
-    lane_reused_partition_count:lanePartitions.length-include.length,
-    lane_shard_count:include.length,
-    matrix
-  };
+  const batches=[];
+  for(let offset=0;offset<include.length;offset+=BATCH_SIZE){
+    const items=include.slice(offset,offset+BATCH_SIZE);
+    batches.push({skip:false,batch_id:'lane-'+PLAN_LANE_INDEX+'-batch-'+String(batches.length).padStart(3,'0'),batch_json:JSON.stringify(items)});
+  }
+  if(batches.length>256)throw new Error('UCHIRIMO_PLAN_LANE_MATRIX_LIMIT_EXCEEDED:'+PLAN_LANE_INDEX+':'+batches.length);
+  const matrix={include:batches.length?batches:[{skip:true,batch_id:'__REUSED_LANE__',batch_json:'[]'}]};
+  const record={exact_head:head,status:'PASS',partition_axis:'product_node+glass_family+depth2+v7_depth3+v8_depth4+v9_measured_timeout_depth5+v10_measured_timeout_depth6',shard_count:allPartitions.length,lane_index:PLAN_LANE_INDEX,lane_count:PLAN_LANE_COUNT,batch_size:BATCH_SIZE,lane_partition_count:lanePartitions.length,lane_reused_partition_count:lanePartitions.length-include.length,lane_shard_count:include.length,lane_batch_count:batches.length,matrix};
   writeFileSync(join(OUT,'matrix.json'),JSON.stringify(record,null,2)+'\n');
   if(process.env.GITHUB_OUTPUT){
     appendFileSync(process.env.GITHUB_OUTPUT,'matrix='+JSON.stringify(matrix)+'\n');
     appendFileSync(process.env.GITHUB_OUTPUT,'shard_count='+String(allPartitions.length)+'\n');
     appendFileSync(process.env.GITHUB_OUTPUT,'lane_shard_count='+String(include.length)+'\n');
+    appendFileSync(process.env.GITHUB_OUTPUT,'lane_batch_count='+String(batches.length)+'\n');
   }
-  console.log('UCHIRIMO_SELECTOR_PLAN=PASS partitions='+allPartitions.length+' lane='+PLAN_LANE_INDEX+'/'+PLAN_LANE_COUNT+' lane_partitions='+lanePartitions.length+' reused='+String(lanePartitions.length-include.length)+' rerun='+include.length);
+  console.log('UCHIRIMO_SELECTOR_PLAN=PASS partitions='+allPartitions.length+' lane='+PLAN_LANE_INDEX+'/'+PLAN_LANE_COUNT+' lane_partitions='+lanePartitions.length+' reused='+String(lanePartitions.length-include.length)+' rerun='+include.length+' batches='+batches.length+' batch_size='+BATCH_SIZE);
 }
 async function aggregate(){
   const head=process.env.HEAD_SHA??process.env.GITHUB_SHA??currentExactHead();

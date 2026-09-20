@@ -191,6 +191,13 @@ jobs:
           const missingConditions=expected.filter((i)=>!aggregate.includes("needs.uchirimo-selector-proof-"+i+".result == 'success'"));
           if(missingNeeds.length)throw new Error('UCHIRIMO_HARNESS_AGGREGATE_NEEDS_MISSING:'+missingNeeds.join(','));
           if(missingConditions.length)throw new Error('UCHIRIMO_HARNESS_AGGREGATE_CONDITION_MISSING:'+missingConditions.join(','));
+          const exec0=workflow.indexOf('\n  uchirimo-selector-proof-0:');
+          const exec1=workflow.indexOf('\n  uchirimo-selector-proof-aggregate:',exec0);
+          const execBlock=workflow.slice(exec0,exec1);
+          if((workflow.match(/UCHIRIMO_SELECTOR_BATCH_SIZE: 2/g)??[]).length!==16)throw new Error('UCHIRIMO_HARNESS_BATCH_PLAN_COUNT_INVALID');
+          if((execBlock.match(/UCHIRIMO_SELECTOR_BATCH_JSON:/g)??[]).length!==16)throw new Error('UCHIRIMO_HARNESS_BATCH_ENV_COUNT_INVALID');
+          if((execBlock.match(/uchirimo-selector-batch-runner\.mjs/g)??[]).length!==16)throw new Error('UCHIRIMO_HARNESS_BATCH_RUNNER_COUNT_INVALID');
+          if(!carry.includes('batch-'))throw new Error('UCHIRIMO_HARNESS_BATCH_CARRY_FORWARD_DISABLED');
           if(carry.includes('head_sha!==HEAD'))throw new Error('UCHIRIMO_HARNESS_SAME_HEAD_RESUME_DISABLED');
           for(const token of ['RUN_ATTEMPT','Number(run.id)===RUN_ID','UCHIRIMO_CARRY_FORWARD_CANDIDATE_RUNS??32']){
             if(!carry.includes(token))throw new Error('UCHIRIMO_HARNESS_RESUME_TOKEN_MISSING:'+token);
@@ -336,6 +343,7 @@ jobs:
       UCHIRIMO_SELECTOR_MODE: plan
       UCHIRIMO_SELECTOR_PLAN_LANE_COUNT: 16
       UCHIRIMO_SELECTOR_PLAN_LANE_INDEX: 0
+      UCHIRIMO_SELECTOR_BATCH_SIZE: 2
       UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-selector-proof-plan-0
       UCHIRIMO_SELECTOR_REUSE_MANIFEST: artifacts/uchirimo-selector-proof-carry-forward/manifest.json
     steps:
@@ -380,6 +388,7 @@ jobs:
       UCHIRIMO_SELECTOR_MODE: plan
       UCHIRIMO_SELECTOR_PLAN_LANE_COUNT: 16
       UCHIRIMO_SELECTOR_PLAN_LANE_INDEX: 1
+      UCHIRIMO_SELECTOR_BATCH_SIZE: 2
       UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-selector-proof-plan-1
       UCHIRIMO_SELECTOR_REUSE_MANIFEST: artifacts/uchirimo-selector-proof-carry-forward/manifest.json
     steps:
@@ -424,6 +433,7 @@ jobs:
       UCHIRIMO_SELECTOR_MODE: plan
       UCHIRIMO_SELECTOR_PLAN_LANE_COUNT: 16
       UCHIRIMO_SELECTOR_PLAN_LANE_INDEX: 2
+      UCHIRIMO_SELECTOR_BATCH_SIZE: 2
       UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-selector-proof-plan-2
       UCHIRIMO_SELECTOR_REUSE_MANIFEST: artifacts/uchirimo-selector-proof-carry-forward/manifest.json
     steps:
@@ -468,6 +478,7 @@ jobs:
       UCHIRIMO_SELECTOR_MODE: plan
       UCHIRIMO_SELECTOR_PLAN_LANE_COUNT: 16
       UCHIRIMO_SELECTOR_PLAN_LANE_INDEX: 3
+      UCHIRIMO_SELECTOR_BATCH_SIZE: 2
       UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-selector-proof-plan-3
       UCHIRIMO_SELECTOR_REUSE_MANIFEST: artifacts/uchirimo-selector-proof-carry-forward/manifest.json
     steps:
@@ -512,6 +523,7 @@ jobs:
       UCHIRIMO_SELECTOR_MODE: plan
       UCHIRIMO_SELECTOR_PLAN_LANE_COUNT: 16
       UCHIRIMO_SELECTOR_PLAN_LANE_INDEX: 4
+      UCHIRIMO_SELECTOR_BATCH_SIZE: 2
       UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-selector-proof-plan-4
       UCHIRIMO_SELECTOR_REUSE_MANIFEST: artifacts/uchirimo-selector-proof-carry-forward/manifest.json
     steps:
@@ -556,6 +568,7 @@ jobs:
       UCHIRIMO_SELECTOR_MODE: plan
       UCHIRIMO_SELECTOR_PLAN_LANE_COUNT: 16
       UCHIRIMO_SELECTOR_PLAN_LANE_INDEX: 5
+      UCHIRIMO_SELECTOR_BATCH_SIZE: 2
       UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-selector-proof-plan-5
       UCHIRIMO_SELECTOR_REUSE_MANIFEST: artifacts/uchirimo-selector-proof-carry-forward/manifest.json
     steps:
@@ -600,6 +613,7 @@ jobs:
       UCHIRIMO_SELECTOR_MODE: plan
       UCHIRIMO_SELECTOR_PLAN_LANE_COUNT: 16
       UCHIRIMO_SELECTOR_PLAN_LANE_INDEX: 6
+      UCHIRIMO_SELECTOR_BATCH_SIZE: 2
       UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-selector-proof-plan-6
       UCHIRIMO_SELECTOR_REUSE_MANIFEST: artifacts/uchirimo-selector-proof-carry-forward/manifest.json
     steps:
@@ -644,6 +658,7 @@ jobs:
       UCHIRIMO_SELECTOR_MODE: plan
       UCHIRIMO_SELECTOR_PLAN_LANE_COUNT: 16
       UCHIRIMO_SELECTOR_PLAN_LANE_INDEX: 7
+      UCHIRIMO_SELECTOR_BATCH_SIZE: 2
       UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-selector-proof-plan-7
       UCHIRIMO_SELECTOR_REUSE_MANIFEST: artifacts/uchirimo-selector-proof-carry-forward/manifest.json
     steps:
@@ -688,6 +703,7 @@ jobs:
       UCHIRIMO_SELECTOR_MODE: plan
       UCHIRIMO_SELECTOR_PLAN_LANE_COUNT: 16
       UCHIRIMO_SELECTOR_PLAN_LANE_INDEX: 8
+      UCHIRIMO_SELECTOR_BATCH_SIZE: 2
       UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-selector-proof-plan-8
       UCHIRIMO_SELECTOR_REUSE_MANIFEST: artifacts/uchirimo-selector-proof-carry-forward/manifest.json
     steps:
@@ -732,6 +748,7 @@ jobs:
       UCHIRIMO_SELECTOR_MODE: plan
       UCHIRIMO_SELECTOR_PLAN_LANE_COUNT: 16
       UCHIRIMO_SELECTOR_PLAN_LANE_INDEX: 9
+      UCHIRIMO_SELECTOR_BATCH_SIZE: 2
       UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-selector-proof-plan-9
       UCHIRIMO_SELECTOR_REUSE_MANIFEST: artifacts/uchirimo-selector-proof-carry-forward/manifest.json
     steps:
@@ -776,6 +793,7 @@ jobs:
       UCHIRIMO_SELECTOR_MODE: plan
       UCHIRIMO_SELECTOR_PLAN_LANE_COUNT: 16
       UCHIRIMO_SELECTOR_PLAN_LANE_INDEX: 10
+      UCHIRIMO_SELECTOR_BATCH_SIZE: 2
       UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-selector-proof-plan-10
       UCHIRIMO_SELECTOR_REUSE_MANIFEST: artifacts/uchirimo-selector-proof-carry-forward/manifest.json
     steps:
@@ -820,6 +838,7 @@ jobs:
       UCHIRIMO_SELECTOR_MODE: plan
       UCHIRIMO_SELECTOR_PLAN_LANE_COUNT: 16
       UCHIRIMO_SELECTOR_PLAN_LANE_INDEX: 11
+      UCHIRIMO_SELECTOR_BATCH_SIZE: 2
       UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-selector-proof-plan-11
       UCHIRIMO_SELECTOR_REUSE_MANIFEST: artifacts/uchirimo-selector-proof-carry-forward/manifest.json
     steps:
@@ -864,6 +883,7 @@ jobs:
       UCHIRIMO_SELECTOR_MODE: plan
       UCHIRIMO_SELECTOR_PLAN_LANE_COUNT: 16
       UCHIRIMO_SELECTOR_PLAN_LANE_INDEX: 12
+      UCHIRIMO_SELECTOR_BATCH_SIZE: 2
       UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-selector-proof-plan-12
       UCHIRIMO_SELECTOR_REUSE_MANIFEST: artifacts/uchirimo-selector-proof-carry-forward/manifest.json
     steps:
@@ -908,6 +928,7 @@ jobs:
       UCHIRIMO_SELECTOR_MODE: plan
       UCHIRIMO_SELECTOR_PLAN_LANE_COUNT: 16
       UCHIRIMO_SELECTOR_PLAN_LANE_INDEX: 13
+      UCHIRIMO_SELECTOR_BATCH_SIZE: 2
       UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-selector-proof-plan-13
       UCHIRIMO_SELECTOR_REUSE_MANIFEST: artifacts/uchirimo-selector-proof-carry-forward/manifest.json
     steps:
@@ -952,6 +973,7 @@ jobs:
       UCHIRIMO_SELECTOR_MODE: plan
       UCHIRIMO_SELECTOR_PLAN_LANE_COUNT: 16
       UCHIRIMO_SELECTOR_PLAN_LANE_INDEX: 14
+      UCHIRIMO_SELECTOR_BATCH_SIZE: 2
       UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-selector-proof-plan-14
       UCHIRIMO_SELECTOR_REUSE_MANIFEST: artifacts/uchirimo-selector-proof-carry-forward/manifest.json
     steps:
@@ -996,6 +1018,7 @@ jobs:
       UCHIRIMO_SELECTOR_MODE: plan
       UCHIRIMO_SELECTOR_PLAN_LANE_COUNT: 16
       UCHIRIMO_SELECTOR_PLAN_LANE_INDEX: 15
+      UCHIRIMO_SELECTOR_BATCH_SIZE: 2
       UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-selector-proof-plan-15
       UCHIRIMO_SELECTOR_REUSE_MANIFEST: artifacts/uchirimo-selector-proof-carry-forward/manifest.json
     steps:
@@ -1038,15 +1061,9 @@ jobs:
     env:
       HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
       UCHIRIMO_SELECTOR_MODE: shard
-      UCHIRIMO_WINDOW_SHARD_INDEX: ${{ matrix.shard }}
-      UCHIRIMO_SELECTOR_NODE_ID: ${{ matrix.node_id }}
-      UCHIRIMO_SELECTOR_ROOM: ${{ matrix.room_specification }}
-      UCHIRIMO_SELECTOR_WINDOW: ${{ matrix.window_type }}
-      UCHIRIMO_SELECTOR_SASH: ${{ matrix.sash_configuration }}
-      UCHIRIMO_SELECTOR_SIZE_CLASS: ${{ matrix.size_class }}
-      UCHIRIMO_SELECTOR_GLASS_FAMILY: ${{ matrix.glass_family }}
-      UCHIRIMO_SELECTOR_PARTITION_KEY: ${{ matrix.partition_key }}
-      UCHIRIMO_SELECTOR_PARTITION_SEED_JSON: ${{ matrix.partition_seed_json }}
+      UCHIRIMO_SELECTOR_BATCH_ID: ${{ matrix.batch_id }}
+      UCHIRIMO_SELECTOR_BATCH_JSON: ${{ matrix.batch_json }}
+      UCHIRIMO_SELECTOR_CHILD_TIMEOUT_MS: 1080000
       UCHIRIMO_SELECTOR_EXPECTED_SHARDS: ${{ needs.uchirimo-selector-proof-plan-0.outputs.shard_count }}
       UCHIRIMO_RESOLVER_CACHE_MAX: 2048
       UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-selector-proof-shard
@@ -1062,18 +1079,18 @@ jobs:
           node-version: 24
       - name: Install
         run: npm install --ignore-scripts
-      - name: Run isolated Uchirimo selector shard lane 0
+      - name: Run isolated Uchirimo selector batch lane 0
         if: ${{ matrix.skip != true }}
         shell: bash
         run: |
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$HEAD_SHA"
-          node scripts/uchirimo-full-selector-proof.mjs
-      - name: Upload Uchirimo selector shard evidence
+          node scripts/governance/uchirimo-selector-batch-runner.mjs
+      - name: Upload Uchirimo selector batch evidence
         if: ${{ always() && matrix.skip != true }}
         uses: actions/upload-artifact@v4
         with:
-          name: uchirimo-selector-proof-shard-${{ matrix.shard }}-${{ env.HEAD_SHA }}-attempt-${{ github.run_attempt }}
+          name: uchirimo-selector-proof-batch-${{ matrix.batch_id }}-${{ env.HEAD_SHA }}-attempt-${{ github.run_attempt }}
           path: artifacts/uchirimo-selector-proof-shard/
           if-no-files-found: warn
 
@@ -1089,15 +1106,9 @@ jobs:
     env:
       HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
       UCHIRIMO_SELECTOR_MODE: shard
-      UCHIRIMO_WINDOW_SHARD_INDEX: ${{ matrix.shard }}
-      UCHIRIMO_SELECTOR_NODE_ID: ${{ matrix.node_id }}
-      UCHIRIMO_SELECTOR_ROOM: ${{ matrix.room_specification }}
-      UCHIRIMO_SELECTOR_WINDOW: ${{ matrix.window_type }}
-      UCHIRIMO_SELECTOR_SASH: ${{ matrix.sash_configuration }}
-      UCHIRIMO_SELECTOR_SIZE_CLASS: ${{ matrix.size_class }}
-      UCHIRIMO_SELECTOR_GLASS_FAMILY: ${{ matrix.glass_family }}
-      UCHIRIMO_SELECTOR_PARTITION_KEY: ${{ matrix.partition_key }}
-      UCHIRIMO_SELECTOR_PARTITION_SEED_JSON: ${{ matrix.partition_seed_json }}
+      UCHIRIMO_SELECTOR_BATCH_ID: ${{ matrix.batch_id }}
+      UCHIRIMO_SELECTOR_BATCH_JSON: ${{ matrix.batch_json }}
+      UCHIRIMO_SELECTOR_CHILD_TIMEOUT_MS: 1080000
       UCHIRIMO_SELECTOR_EXPECTED_SHARDS: ${{ needs.uchirimo-selector-proof-plan-1.outputs.shard_count }}
       UCHIRIMO_RESOLVER_CACHE_MAX: 2048
       UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-selector-proof-shard
@@ -1113,18 +1124,18 @@ jobs:
           node-version: 24
       - name: Install
         run: npm install --ignore-scripts
-      - name: Run isolated Uchirimo selector shard lane 1
+      - name: Run isolated Uchirimo selector batch lane 1
         if: ${{ matrix.skip != true }}
         shell: bash
         run: |
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$HEAD_SHA"
-          node scripts/uchirimo-full-selector-proof.mjs
-      - name: Upload Uchirimo selector shard evidence
+          node scripts/governance/uchirimo-selector-batch-runner.mjs
+      - name: Upload Uchirimo selector batch evidence
         if: ${{ always() && matrix.skip != true }}
         uses: actions/upload-artifact@v4
         with:
-          name: uchirimo-selector-proof-shard-${{ matrix.shard }}-${{ env.HEAD_SHA }}-attempt-${{ github.run_attempt }}
+          name: uchirimo-selector-proof-batch-${{ matrix.batch_id }}-${{ env.HEAD_SHA }}-attempt-${{ github.run_attempt }}
           path: artifacts/uchirimo-selector-proof-shard/
           if-no-files-found: warn
 
@@ -1140,15 +1151,9 @@ jobs:
     env:
       HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
       UCHIRIMO_SELECTOR_MODE: shard
-      UCHIRIMO_WINDOW_SHARD_INDEX: ${{ matrix.shard }}
-      UCHIRIMO_SELECTOR_NODE_ID: ${{ matrix.node_id }}
-      UCHIRIMO_SELECTOR_ROOM: ${{ matrix.room_specification }}
-      UCHIRIMO_SELECTOR_WINDOW: ${{ matrix.window_type }}
-      UCHIRIMO_SELECTOR_SASH: ${{ matrix.sash_configuration }}
-      UCHIRIMO_SELECTOR_SIZE_CLASS: ${{ matrix.size_class }}
-      UCHIRIMO_SELECTOR_GLASS_FAMILY: ${{ matrix.glass_family }}
-      UCHIRIMO_SELECTOR_PARTITION_KEY: ${{ matrix.partition_key }}
-      UCHIRIMO_SELECTOR_PARTITION_SEED_JSON: ${{ matrix.partition_seed_json }}
+      UCHIRIMO_SELECTOR_BATCH_ID: ${{ matrix.batch_id }}
+      UCHIRIMO_SELECTOR_BATCH_JSON: ${{ matrix.batch_json }}
+      UCHIRIMO_SELECTOR_CHILD_TIMEOUT_MS: 1080000
       UCHIRIMO_SELECTOR_EXPECTED_SHARDS: ${{ needs.uchirimo-selector-proof-plan-2.outputs.shard_count }}
       UCHIRIMO_RESOLVER_CACHE_MAX: 2048
       UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-selector-proof-shard
@@ -1164,18 +1169,18 @@ jobs:
           node-version: 24
       - name: Install
         run: npm install --ignore-scripts
-      - name: Run isolated Uchirimo selector shard lane 2
+      - name: Run isolated Uchirimo selector batch lane 2
         if: ${{ matrix.skip != true }}
         shell: bash
         run: |
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$HEAD_SHA"
-          node scripts/uchirimo-full-selector-proof.mjs
-      - name: Upload Uchirimo selector shard evidence
+          node scripts/governance/uchirimo-selector-batch-runner.mjs
+      - name: Upload Uchirimo selector batch evidence
         if: ${{ always() && matrix.skip != true }}
         uses: actions/upload-artifact@v4
         with:
-          name: uchirimo-selector-proof-shard-${{ matrix.shard }}-${{ env.HEAD_SHA }}-attempt-${{ github.run_attempt }}
+          name: uchirimo-selector-proof-batch-${{ matrix.batch_id }}-${{ env.HEAD_SHA }}-attempt-${{ github.run_attempt }}
           path: artifacts/uchirimo-selector-proof-shard/
           if-no-files-found: warn
 
@@ -1191,15 +1196,9 @@ jobs:
     env:
       HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
       UCHIRIMO_SELECTOR_MODE: shard
-      UCHIRIMO_WINDOW_SHARD_INDEX: ${{ matrix.shard }}
-      UCHIRIMO_SELECTOR_NODE_ID: ${{ matrix.node_id }}
-      UCHIRIMO_SELECTOR_ROOM: ${{ matrix.room_specification }}
-      UCHIRIMO_SELECTOR_WINDOW: ${{ matrix.window_type }}
-      UCHIRIMO_SELECTOR_SASH: ${{ matrix.sash_configuration }}
-      UCHIRIMO_SELECTOR_SIZE_CLASS: ${{ matrix.size_class }}
-      UCHIRIMO_SELECTOR_GLASS_FAMILY: ${{ matrix.glass_family }}
-      UCHIRIMO_SELECTOR_PARTITION_KEY: ${{ matrix.partition_key }}
-      UCHIRIMO_SELECTOR_PARTITION_SEED_JSON: ${{ matrix.partition_seed_json }}
+      UCHIRIMO_SELECTOR_BATCH_ID: ${{ matrix.batch_id }}
+      UCHIRIMO_SELECTOR_BATCH_JSON: ${{ matrix.batch_json }}
+      UCHIRIMO_SELECTOR_CHILD_TIMEOUT_MS: 1080000
       UCHIRIMO_SELECTOR_EXPECTED_SHARDS: ${{ needs.uchirimo-selector-proof-plan-3.outputs.shard_count }}
       UCHIRIMO_RESOLVER_CACHE_MAX: 2048
       UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-selector-proof-shard
@@ -1215,18 +1214,18 @@ jobs:
           node-version: 24
       - name: Install
         run: npm install --ignore-scripts
-      - name: Run isolated Uchirimo selector shard lane 3
+      - name: Run isolated Uchirimo selector batch lane 3
         if: ${{ matrix.skip != true }}
         shell: bash
         run: |
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$HEAD_SHA"
-          node scripts/uchirimo-full-selector-proof.mjs
-      - name: Upload Uchirimo selector shard evidence
+          node scripts/governance/uchirimo-selector-batch-runner.mjs
+      - name: Upload Uchirimo selector batch evidence
         if: ${{ always() && matrix.skip != true }}
         uses: actions/upload-artifact@v4
         with:
-          name: uchirimo-selector-proof-shard-${{ matrix.shard }}-${{ env.HEAD_SHA }}-attempt-${{ github.run_attempt }}
+          name: uchirimo-selector-proof-batch-${{ matrix.batch_id }}-${{ env.HEAD_SHA }}-attempt-${{ github.run_attempt }}
           path: artifacts/uchirimo-selector-proof-shard/
           if-no-files-found: warn
 
@@ -1242,15 +1241,9 @@ jobs:
     env:
       HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
       UCHIRIMO_SELECTOR_MODE: shard
-      UCHIRIMO_WINDOW_SHARD_INDEX: ${{ matrix.shard }}
-      UCHIRIMO_SELECTOR_NODE_ID: ${{ matrix.node_id }}
-      UCHIRIMO_SELECTOR_ROOM: ${{ matrix.room_specification }}
-      UCHIRIMO_SELECTOR_WINDOW: ${{ matrix.window_type }}
-      UCHIRIMO_SELECTOR_SASH: ${{ matrix.sash_configuration }}
-      UCHIRIMO_SELECTOR_SIZE_CLASS: ${{ matrix.size_class }}
-      UCHIRIMO_SELECTOR_GLASS_FAMILY: ${{ matrix.glass_family }}
-      UCHIRIMO_SELECTOR_PARTITION_KEY: ${{ matrix.partition_key }}
-      UCHIRIMO_SELECTOR_PARTITION_SEED_JSON: ${{ matrix.partition_seed_json }}
+      UCHIRIMO_SELECTOR_BATCH_ID: ${{ matrix.batch_id }}
+      UCHIRIMO_SELECTOR_BATCH_JSON: ${{ matrix.batch_json }}
+      UCHIRIMO_SELECTOR_CHILD_TIMEOUT_MS: 1080000
       UCHIRIMO_SELECTOR_EXPECTED_SHARDS: ${{ needs.uchirimo-selector-proof-plan-4.outputs.shard_count }}
       UCHIRIMO_RESOLVER_CACHE_MAX: 2048
       UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-selector-proof-shard
@@ -1266,18 +1259,18 @@ jobs:
           node-version: 24
       - name: Install
         run: npm install --ignore-scripts
-      - name: Run isolated Uchirimo selector shard lane 4
+      - name: Run isolated Uchirimo selector batch lane 4
         if: ${{ matrix.skip != true }}
         shell: bash
         run: |
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$HEAD_SHA"
-          node scripts/uchirimo-full-selector-proof.mjs
-      - name: Upload Uchirimo selector shard evidence
+          node scripts/governance/uchirimo-selector-batch-runner.mjs
+      - name: Upload Uchirimo selector batch evidence
         if: ${{ always() && matrix.skip != true }}
         uses: actions/upload-artifact@v4
         with:
-          name: uchirimo-selector-proof-shard-${{ matrix.shard }}-${{ env.HEAD_SHA }}-attempt-${{ github.run_attempt }}
+          name: uchirimo-selector-proof-batch-${{ matrix.batch_id }}-${{ env.HEAD_SHA }}-attempt-${{ github.run_attempt }}
           path: artifacts/uchirimo-selector-proof-shard/
           if-no-files-found: warn
 
@@ -1293,15 +1286,9 @@ jobs:
     env:
       HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
       UCHIRIMO_SELECTOR_MODE: shard
-      UCHIRIMO_WINDOW_SHARD_INDEX: ${{ matrix.shard }}
-      UCHIRIMO_SELECTOR_NODE_ID: ${{ matrix.node_id }}
-      UCHIRIMO_SELECTOR_ROOM: ${{ matrix.room_specification }}
-      UCHIRIMO_SELECTOR_WINDOW: ${{ matrix.window_type }}
-      UCHIRIMO_SELECTOR_SASH: ${{ matrix.sash_configuration }}
-      UCHIRIMO_SELECTOR_SIZE_CLASS: ${{ matrix.size_class }}
-      UCHIRIMO_SELECTOR_GLASS_FAMILY: ${{ matrix.glass_family }}
-      UCHIRIMO_SELECTOR_PARTITION_KEY: ${{ matrix.partition_key }}
-      UCHIRIMO_SELECTOR_PARTITION_SEED_JSON: ${{ matrix.partition_seed_json }}
+      UCHIRIMO_SELECTOR_BATCH_ID: ${{ matrix.batch_id }}
+      UCHIRIMO_SELECTOR_BATCH_JSON: ${{ matrix.batch_json }}
+      UCHIRIMO_SELECTOR_CHILD_TIMEOUT_MS: 1080000
       UCHIRIMO_SELECTOR_EXPECTED_SHARDS: ${{ needs.uchirimo-selector-proof-plan-5.outputs.shard_count }}
       UCHIRIMO_RESOLVER_CACHE_MAX: 2048
       UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-selector-proof-shard
@@ -1317,18 +1304,18 @@ jobs:
           node-version: 24
       - name: Install
         run: npm install --ignore-scripts
-      - name: Run isolated Uchirimo selector shard lane 5
+      - name: Run isolated Uchirimo selector batch lane 5
         if: ${{ matrix.skip != true }}
         shell: bash
         run: |
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$HEAD_SHA"
-          node scripts/uchirimo-full-selector-proof.mjs
-      - name: Upload Uchirimo selector shard evidence
+          node scripts/governance/uchirimo-selector-batch-runner.mjs
+      - name: Upload Uchirimo selector batch evidence
         if: ${{ always() && matrix.skip != true }}
         uses: actions/upload-artifact@v4
         with:
-          name: uchirimo-selector-proof-shard-${{ matrix.shard }}-${{ env.HEAD_SHA }}-attempt-${{ github.run_attempt }}
+          name: uchirimo-selector-proof-batch-${{ matrix.batch_id }}-${{ env.HEAD_SHA }}-attempt-${{ github.run_attempt }}
           path: artifacts/uchirimo-selector-proof-shard/
           if-no-files-found: warn
 
@@ -1344,15 +1331,9 @@ jobs:
     env:
       HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
       UCHIRIMO_SELECTOR_MODE: shard
-      UCHIRIMO_WINDOW_SHARD_INDEX: ${{ matrix.shard }}
-      UCHIRIMO_SELECTOR_NODE_ID: ${{ matrix.node_id }}
-      UCHIRIMO_SELECTOR_ROOM: ${{ matrix.room_specification }}
-      UCHIRIMO_SELECTOR_WINDOW: ${{ matrix.window_type }}
-      UCHIRIMO_SELECTOR_SASH: ${{ matrix.sash_configuration }}
-      UCHIRIMO_SELECTOR_SIZE_CLASS: ${{ matrix.size_class }}
-      UCHIRIMO_SELECTOR_GLASS_FAMILY: ${{ matrix.glass_family }}
-      UCHIRIMO_SELECTOR_PARTITION_KEY: ${{ matrix.partition_key }}
-      UCHIRIMO_SELECTOR_PARTITION_SEED_JSON: ${{ matrix.partition_seed_json }}
+      UCHIRIMO_SELECTOR_BATCH_ID: ${{ matrix.batch_id }}
+      UCHIRIMO_SELECTOR_BATCH_JSON: ${{ matrix.batch_json }}
+      UCHIRIMO_SELECTOR_CHILD_TIMEOUT_MS: 1080000
       UCHIRIMO_SELECTOR_EXPECTED_SHARDS: ${{ needs.uchirimo-selector-proof-plan-6.outputs.shard_count }}
       UCHIRIMO_RESOLVER_CACHE_MAX: 2048
       UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-selector-proof-shard
@@ -1368,18 +1349,18 @@ jobs:
           node-version: 24
       - name: Install
         run: npm install --ignore-scripts
-      - name: Run isolated Uchirimo selector shard lane 6
+      - name: Run isolated Uchirimo selector batch lane 6
         if: ${{ matrix.skip != true }}
         shell: bash
         run: |
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$HEAD_SHA"
-          node scripts/uchirimo-full-selector-proof.mjs
-      - name: Upload Uchirimo selector shard evidence
+          node scripts/governance/uchirimo-selector-batch-runner.mjs
+      - name: Upload Uchirimo selector batch evidence
         if: ${{ always() && matrix.skip != true }}
         uses: actions/upload-artifact@v4
         with:
-          name: uchirimo-selector-proof-shard-${{ matrix.shard }}-${{ env.HEAD_SHA }}-attempt-${{ github.run_attempt }}
+          name: uchirimo-selector-proof-batch-${{ matrix.batch_id }}-${{ env.HEAD_SHA }}-attempt-${{ github.run_attempt }}
           path: artifacts/uchirimo-selector-proof-shard/
           if-no-files-found: warn
 
@@ -1395,15 +1376,9 @@ jobs:
     env:
       HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
       UCHIRIMO_SELECTOR_MODE: shard
-      UCHIRIMO_WINDOW_SHARD_INDEX: ${{ matrix.shard }}
-      UCHIRIMO_SELECTOR_NODE_ID: ${{ matrix.node_id }}
-      UCHIRIMO_SELECTOR_ROOM: ${{ matrix.room_specification }}
-      UCHIRIMO_SELECTOR_WINDOW: ${{ matrix.window_type }}
-      UCHIRIMO_SELECTOR_SASH: ${{ matrix.sash_configuration }}
-      UCHIRIMO_SELECTOR_SIZE_CLASS: ${{ matrix.size_class }}
-      UCHIRIMO_SELECTOR_GLASS_FAMILY: ${{ matrix.glass_family }}
-      UCHIRIMO_SELECTOR_PARTITION_KEY: ${{ matrix.partition_key }}
-      UCHIRIMO_SELECTOR_PARTITION_SEED_JSON: ${{ matrix.partition_seed_json }}
+      UCHIRIMO_SELECTOR_BATCH_ID: ${{ matrix.batch_id }}
+      UCHIRIMO_SELECTOR_BATCH_JSON: ${{ matrix.batch_json }}
+      UCHIRIMO_SELECTOR_CHILD_TIMEOUT_MS: 1080000
       UCHIRIMO_SELECTOR_EXPECTED_SHARDS: ${{ needs.uchirimo-selector-proof-plan-7.outputs.shard_count }}
       UCHIRIMO_RESOLVER_CACHE_MAX: 2048
       UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-selector-proof-shard
@@ -1419,18 +1394,18 @@ jobs:
           node-version: 24
       - name: Install
         run: npm install --ignore-scripts
-      - name: Run isolated Uchirimo selector shard lane 7
+      - name: Run isolated Uchirimo selector batch lane 7
         if: ${{ matrix.skip != true }}
         shell: bash
         run: |
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$HEAD_SHA"
-          node scripts/uchirimo-full-selector-proof.mjs
-      - name: Upload Uchirimo selector shard evidence
+          node scripts/governance/uchirimo-selector-batch-runner.mjs
+      - name: Upload Uchirimo selector batch evidence
         if: ${{ always() && matrix.skip != true }}
         uses: actions/upload-artifact@v4
         with:
-          name: uchirimo-selector-proof-shard-${{ matrix.shard }}-${{ env.HEAD_SHA }}-attempt-${{ github.run_attempt }}
+          name: uchirimo-selector-proof-batch-${{ matrix.batch_id }}-${{ env.HEAD_SHA }}-attempt-${{ github.run_attempt }}
           path: artifacts/uchirimo-selector-proof-shard/
           if-no-files-found: warn
 
@@ -1446,15 +1421,9 @@ jobs:
     env:
       HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
       UCHIRIMO_SELECTOR_MODE: shard
-      UCHIRIMO_WINDOW_SHARD_INDEX: ${{ matrix.shard }}
-      UCHIRIMO_SELECTOR_NODE_ID: ${{ matrix.node_id }}
-      UCHIRIMO_SELECTOR_ROOM: ${{ matrix.room_specification }}
-      UCHIRIMO_SELECTOR_WINDOW: ${{ matrix.window_type }}
-      UCHIRIMO_SELECTOR_SASH: ${{ matrix.sash_configuration }}
-      UCHIRIMO_SELECTOR_SIZE_CLASS: ${{ matrix.size_class }}
-      UCHIRIMO_SELECTOR_GLASS_FAMILY: ${{ matrix.glass_family }}
-      UCHIRIMO_SELECTOR_PARTITION_KEY: ${{ matrix.partition_key }}
-      UCHIRIMO_SELECTOR_PARTITION_SEED_JSON: ${{ matrix.partition_seed_json }}
+      UCHIRIMO_SELECTOR_BATCH_ID: ${{ matrix.batch_id }}
+      UCHIRIMO_SELECTOR_BATCH_JSON: ${{ matrix.batch_json }}
+      UCHIRIMO_SELECTOR_CHILD_TIMEOUT_MS: 1080000
       UCHIRIMO_SELECTOR_EXPECTED_SHARDS: ${{ needs.uchirimo-selector-proof-plan-8.outputs.shard_count }}
       UCHIRIMO_RESOLVER_CACHE_MAX: 2048
       UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-selector-proof-shard
@@ -1470,18 +1439,18 @@ jobs:
           node-version: 24
       - name: Install
         run: npm install --ignore-scripts
-      - name: Run isolated Uchirimo selector shard lane 8
+      - name: Run isolated Uchirimo selector batch lane 8
         if: ${{ matrix.skip != true }}
         shell: bash
         run: |
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$HEAD_SHA"
-          node scripts/uchirimo-full-selector-proof.mjs
-      - name: Upload Uchirimo selector shard evidence
+          node scripts/governance/uchirimo-selector-batch-runner.mjs
+      - name: Upload Uchirimo selector batch evidence
         if: ${{ always() && matrix.skip != true }}
         uses: actions/upload-artifact@v4
         with:
-          name: uchirimo-selector-proof-shard-${{ matrix.shard }}-${{ env.HEAD_SHA }}-attempt-${{ github.run_attempt }}
+          name: uchirimo-selector-proof-batch-${{ matrix.batch_id }}-${{ env.HEAD_SHA }}-attempt-${{ github.run_attempt }}
           path: artifacts/uchirimo-selector-proof-shard/
           if-no-files-found: warn
 
@@ -1497,15 +1466,9 @@ jobs:
     env:
       HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
       UCHIRIMO_SELECTOR_MODE: shard
-      UCHIRIMO_WINDOW_SHARD_INDEX: ${{ matrix.shard }}
-      UCHIRIMO_SELECTOR_NODE_ID: ${{ matrix.node_id }}
-      UCHIRIMO_SELECTOR_ROOM: ${{ matrix.room_specification }}
-      UCHIRIMO_SELECTOR_WINDOW: ${{ matrix.window_type }}
-      UCHIRIMO_SELECTOR_SASH: ${{ matrix.sash_configuration }}
-      UCHIRIMO_SELECTOR_SIZE_CLASS: ${{ matrix.size_class }}
-      UCHIRIMO_SELECTOR_GLASS_FAMILY: ${{ matrix.glass_family }}
-      UCHIRIMO_SELECTOR_PARTITION_KEY: ${{ matrix.partition_key }}
-      UCHIRIMO_SELECTOR_PARTITION_SEED_JSON: ${{ matrix.partition_seed_json }}
+      UCHIRIMO_SELECTOR_BATCH_ID: ${{ matrix.batch_id }}
+      UCHIRIMO_SELECTOR_BATCH_JSON: ${{ matrix.batch_json }}
+      UCHIRIMO_SELECTOR_CHILD_TIMEOUT_MS: 1080000
       UCHIRIMO_SELECTOR_EXPECTED_SHARDS: ${{ needs.uchirimo-selector-proof-plan-9.outputs.shard_count }}
       UCHIRIMO_RESOLVER_CACHE_MAX: 2048
       UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-selector-proof-shard
@@ -1521,18 +1484,18 @@ jobs:
           node-version: 24
       - name: Install
         run: npm install --ignore-scripts
-      - name: Run isolated Uchirimo selector shard lane 9
+      - name: Run isolated Uchirimo selector batch lane 9
         if: ${{ matrix.skip != true }}
         shell: bash
         run: |
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$HEAD_SHA"
-          node scripts/uchirimo-full-selector-proof.mjs
-      - name: Upload Uchirimo selector shard evidence
+          node scripts/governance/uchirimo-selector-batch-runner.mjs
+      - name: Upload Uchirimo selector batch evidence
         if: ${{ always() && matrix.skip != true }}
         uses: actions/upload-artifact@v4
         with:
-          name: uchirimo-selector-proof-shard-${{ matrix.shard }}-${{ env.HEAD_SHA }}-attempt-${{ github.run_attempt }}
+          name: uchirimo-selector-proof-batch-${{ matrix.batch_id }}-${{ env.HEAD_SHA }}-attempt-${{ github.run_attempt }}
           path: artifacts/uchirimo-selector-proof-shard/
           if-no-files-found: warn
 
@@ -1548,15 +1511,9 @@ jobs:
     env:
       HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
       UCHIRIMO_SELECTOR_MODE: shard
-      UCHIRIMO_WINDOW_SHARD_INDEX: ${{ matrix.shard }}
-      UCHIRIMO_SELECTOR_NODE_ID: ${{ matrix.node_id }}
-      UCHIRIMO_SELECTOR_ROOM: ${{ matrix.room_specification }}
-      UCHIRIMO_SELECTOR_WINDOW: ${{ matrix.window_type }}
-      UCHIRIMO_SELECTOR_SASH: ${{ matrix.sash_configuration }}
-      UCHIRIMO_SELECTOR_SIZE_CLASS: ${{ matrix.size_class }}
-      UCHIRIMO_SELECTOR_GLASS_FAMILY: ${{ matrix.glass_family }}
-      UCHIRIMO_SELECTOR_PARTITION_KEY: ${{ matrix.partition_key }}
-      UCHIRIMO_SELECTOR_PARTITION_SEED_JSON: ${{ matrix.partition_seed_json }}
+      UCHIRIMO_SELECTOR_BATCH_ID: ${{ matrix.batch_id }}
+      UCHIRIMO_SELECTOR_BATCH_JSON: ${{ matrix.batch_json }}
+      UCHIRIMO_SELECTOR_CHILD_TIMEOUT_MS: 1080000
       UCHIRIMO_SELECTOR_EXPECTED_SHARDS: ${{ needs.uchirimo-selector-proof-plan-10.outputs.shard_count }}
       UCHIRIMO_RESOLVER_CACHE_MAX: 2048
       UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-selector-proof-shard
@@ -1572,18 +1529,18 @@ jobs:
           node-version: 24
       - name: Install
         run: npm install --ignore-scripts
-      - name: Run isolated Uchirimo selector shard lane 10
+      - name: Run isolated Uchirimo selector batch lane 10
         if: ${{ matrix.skip != true }}
         shell: bash
         run: |
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$HEAD_SHA"
-          node scripts/uchirimo-full-selector-proof.mjs
-      - name: Upload Uchirimo selector shard evidence
+          node scripts/governance/uchirimo-selector-batch-runner.mjs
+      - name: Upload Uchirimo selector batch evidence
         if: ${{ always() && matrix.skip != true }}
         uses: actions/upload-artifact@v4
         with:
-          name: uchirimo-selector-proof-shard-${{ matrix.shard }}-${{ env.HEAD_SHA }}-attempt-${{ github.run_attempt }}
+          name: uchirimo-selector-proof-batch-${{ matrix.batch_id }}-${{ env.HEAD_SHA }}-attempt-${{ github.run_attempt }}
           path: artifacts/uchirimo-selector-proof-shard/
           if-no-files-found: warn
 
@@ -1599,15 +1556,9 @@ jobs:
     env:
       HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
       UCHIRIMO_SELECTOR_MODE: shard
-      UCHIRIMO_WINDOW_SHARD_INDEX: ${{ matrix.shard }}
-      UCHIRIMO_SELECTOR_NODE_ID: ${{ matrix.node_id }}
-      UCHIRIMO_SELECTOR_ROOM: ${{ matrix.room_specification }}
-      UCHIRIMO_SELECTOR_WINDOW: ${{ matrix.window_type }}
-      UCHIRIMO_SELECTOR_SASH: ${{ matrix.sash_configuration }}
-      UCHIRIMO_SELECTOR_SIZE_CLASS: ${{ matrix.size_class }}
-      UCHIRIMO_SELECTOR_GLASS_FAMILY: ${{ matrix.glass_family }}
-      UCHIRIMO_SELECTOR_PARTITION_KEY: ${{ matrix.partition_key }}
-      UCHIRIMO_SELECTOR_PARTITION_SEED_JSON: ${{ matrix.partition_seed_json }}
+      UCHIRIMO_SELECTOR_BATCH_ID: ${{ matrix.batch_id }}
+      UCHIRIMO_SELECTOR_BATCH_JSON: ${{ matrix.batch_json }}
+      UCHIRIMO_SELECTOR_CHILD_TIMEOUT_MS: 1080000
       UCHIRIMO_SELECTOR_EXPECTED_SHARDS: ${{ needs.uchirimo-selector-proof-plan-11.outputs.shard_count }}
       UCHIRIMO_RESOLVER_CACHE_MAX: 2048
       UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-selector-proof-shard
@@ -1623,18 +1574,18 @@ jobs:
           node-version: 24
       - name: Install
         run: npm install --ignore-scripts
-      - name: Run isolated Uchirimo selector shard lane 11
+      - name: Run isolated Uchirimo selector batch lane 11
         if: ${{ matrix.skip != true }}
         shell: bash
         run: |
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$HEAD_SHA"
-          node scripts/uchirimo-full-selector-proof.mjs
-      - name: Upload Uchirimo selector shard evidence
+          node scripts/governance/uchirimo-selector-batch-runner.mjs
+      - name: Upload Uchirimo selector batch evidence
         if: ${{ always() && matrix.skip != true }}
         uses: actions/upload-artifact@v4
         with:
-          name: uchirimo-selector-proof-shard-${{ matrix.shard }}-${{ env.HEAD_SHA }}-attempt-${{ github.run_attempt }}
+          name: uchirimo-selector-proof-batch-${{ matrix.batch_id }}-${{ env.HEAD_SHA }}-attempt-${{ github.run_attempt }}
           path: artifacts/uchirimo-selector-proof-shard/
           if-no-files-found: warn
 
@@ -1650,15 +1601,9 @@ jobs:
     env:
       HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
       UCHIRIMO_SELECTOR_MODE: shard
-      UCHIRIMO_WINDOW_SHARD_INDEX: ${{ matrix.shard }}
-      UCHIRIMO_SELECTOR_NODE_ID: ${{ matrix.node_id }}
-      UCHIRIMO_SELECTOR_ROOM: ${{ matrix.room_specification }}
-      UCHIRIMO_SELECTOR_WINDOW: ${{ matrix.window_type }}
-      UCHIRIMO_SELECTOR_SASH: ${{ matrix.sash_configuration }}
-      UCHIRIMO_SELECTOR_SIZE_CLASS: ${{ matrix.size_class }}
-      UCHIRIMO_SELECTOR_GLASS_FAMILY: ${{ matrix.glass_family }}
-      UCHIRIMO_SELECTOR_PARTITION_KEY: ${{ matrix.partition_key }}
-      UCHIRIMO_SELECTOR_PARTITION_SEED_JSON: ${{ matrix.partition_seed_json }}
+      UCHIRIMO_SELECTOR_BATCH_ID: ${{ matrix.batch_id }}
+      UCHIRIMO_SELECTOR_BATCH_JSON: ${{ matrix.batch_json }}
+      UCHIRIMO_SELECTOR_CHILD_TIMEOUT_MS: 1080000
       UCHIRIMO_SELECTOR_EXPECTED_SHARDS: ${{ needs.uchirimo-selector-proof-plan-12.outputs.shard_count }}
       UCHIRIMO_RESOLVER_CACHE_MAX: 2048
       UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-selector-proof-shard
@@ -1674,18 +1619,18 @@ jobs:
           node-version: 24
       - name: Install
         run: npm install --ignore-scripts
-      - name: Run isolated Uchirimo selector shard lane 12
+      - name: Run isolated Uchirimo selector batch lane 12
         if: ${{ matrix.skip != true }}
         shell: bash
         run: |
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$HEAD_SHA"
-          node scripts/uchirimo-full-selector-proof.mjs
-      - name: Upload Uchirimo selector shard evidence
+          node scripts/governance/uchirimo-selector-batch-runner.mjs
+      - name: Upload Uchirimo selector batch evidence
         if: ${{ always() && matrix.skip != true }}
         uses: actions/upload-artifact@v4
         with:
-          name: uchirimo-selector-proof-shard-${{ matrix.shard }}-${{ env.HEAD_SHA }}-attempt-${{ github.run_attempt }}
+          name: uchirimo-selector-proof-batch-${{ matrix.batch_id }}-${{ env.HEAD_SHA }}-attempt-${{ github.run_attempt }}
           path: artifacts/uchirimo-selector-proof-shard/
           if-no-files-found: warn
 
@@ -1701,15 +1646,9 @@ jobs:
     env:
       HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
       UCHIRIMO_SELECTOR_MODE: shard
-      UCHIRIMO_WINDOW_SHARD_INDEX: ${{ matrix.shard }}
-      UCHIRIMO_SELECTOR_NODE_ID: ${{ matrix.node_id }}
-      UCHIRIMO_SELECTOR_ROOM: ${{ matrix.room_specification }}
-      UCHIRIMO_SELECTOR_WINDOW: ${{ matrix.window_type }}
-      UCHIRIMO_SELECTOR_SASH: ${{ matrix.sash_configuration }}
-      UCHIRIMO_SELECTOR_SIZE_CLASS: ${{ matrix.size_class }}
-      UCHIRIMO_SELECTOR_GLASS_FAMILY: ${{ matrix.glass_family }}
-      UCHIRIMO_SELECTOR_PARTITION_KEY: ${{ matrix.partition_key }}
-      UCHIRIMO_SELECTOR_PARTITION_SEED_JSON: ${{ matrix.partition_seed_json }}
+      UCHIRIMO_SELECTOR_BATCH_ID: ${{ matrix.batch_id }}
+      UCHIRIMO_SELECTOR_BATCH_JSON: ${{ matrix.batch_json }}
+      UCHIRIMO_SELECTOR_CHILD_TIMEOUT_MS: 1080000
       UCHIRIMO_SELECTOR_EXPECTED_SHARDS: ${{ needs.uchirimo-selector-proof-plan-13.outputs.shard_count }}
       UCHIRIMO_RESOLVER_CACHE_MAX: 2048
       UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-selector-proof-shard
@@ -1725,18 +1664,18 @@ jobs:
           node-version: 24
       - name: Install
         run: npm install --ignore-scripts
-      - name: Run isolated Uchirimo selector shard lane 13
+      - name: Run isolated Uchirimo selector batch lane 13
         if: ${{ matrix.skip != true }}
         shell: bash
         run: |
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$HEAD_SHA"
-          node scripts/uchirimo-full-selector-proof.mjs
-      - name: Upload Uchirimo selector shard evidence
+          node scripts/governance/uchirimo-selector-batch-runner.mjs
+      - name: Upload Uchirimo selector batch evidence
         if: ${{ always() && matrix.skip != true }}
         uses: actions/upload-artifact@v4
         with:
-          name: uchirimo-selector-proof-shard-${{ matrix.shard }}-${{ env.HEAD_SHA }}-attempt-${{ github.run_attempt }}
+          name: uchirimo-selector-proof-batch-${{ matrix.batch_id }}-${{ env.HEAD_SHA }}-attempt-${{ github.run_attempt }}
           path: artifacts/uchirimo-selector-proof-shard/
           if-no-files-found: warn
 
@@ -1752,15 +1691,9 @@ jobs:
     env:
       HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
       UCHIRIMO_SELECTOR_MODE: shard
-      UCHIRIMO_WINDOW_SHARD_INDEX: ${{ matrix.shard }}
-      UCHIRIMO_SELECTOR_NODE_ID: ${{ matrix.node_id }}
-      UCHIRIMO_SELECTOR_ROOM: ${{ matrix.room_specification }}
-      UCHIRIMO_SELECTOR_WINDOW: ${{ matrix.window_type }}
-      UCHIRIMO_SELECTOR_SASH: ${{ matrix.sash_configuration }}
-      UCHIRIMO_SELECTOR_SIZE_CLASS: ${{ matrix.size_class }}
-      UCHIRIMO_SELECTOR_GLASS_FAMILY: ${{ matrix.glass_family }}
-      UCHIRIMO_SELECTOR_PARTITION_KEY: ${{ matrix.partition_key }}
-      UCHIRIMO_SELECTOR_PARTITION_SEED_JSON: ${{ matrix.partition_seed_json }}
+      UCHIRIMO_SELECTOR_BATCH_ID: ${{ matrix.batch_id }}
+      UCHIRIMO_SELECTOR_BATCH_JSON: ${{ matrix.batch_json }}
+      UCHIRIMO_SELECTOR_CHILD_TIMEOUT_MS: 1080000
       UCHIRIMO_SELECTOR_EXPECTED_SHARDS: ${{ needs.uchirimo-selector-proof-plan-14.outputs.shard_count }}
       UCHIRIMO_RESOLVER_CACHE_MAX: 2048
       UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-selector-proof-shard
@@ -1776,18 +1709,18 @@ jobs:
           node-version: 24
       - name: Install
         run: npm install --ignore-scripts
-      - name: Run isolated Uchirimo selector shard lane 14
+      - name: Run isolated Uchirimo selector batch lane 14
         if: ${{ matrix.skip != true }}
         shell: bash
         run: |
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$HEAD_SHA"
-          node scripts/uchirimo-full-selector-proof.mjs
-      - name: Upload Uchirimo selector shard evidence
+          node scripts/governance/uchirimo-selector-batch-runner.mjs
+      - name: Upload Uchirimo selector batch evidence
         if: ${{ always() && matrix.skip != true }}
         uses: actions/upload-artifact@v4
         with:
-          name: uchirimo-selector-proof-shard-${{ matrix.shard }}-${{ env.HEAD_SHA }}-attempt-${{ github.run_attempt }}
+          name: uchirimo-selector-proof-batch-${{ matrix.batch_id }}-${{ env.HEAD_SHA }}-attempt-${{ github.run_attempt }}
           path: artifacts/uchirimo-selector-proof-shard/
           if-no-files-found: warn
 
@@ -1803,15 +1736,9 @@ jobs:
     env:
       HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
       UCHIRIMO_SELECTOR_MODE: shard
-      UCHIRIMO_WINDOW_SHARD_INDEX: ${{ matrix.shard }}
-      UCHIRIMO_SELECTOR_NODE_ID: ${{ matrix.node_id }}
-      UCHIRIMO_SELECTOR_ROOM: ${{ matrix.room_specification }}
-      UCHIRIMO_SELECTOR_WINDOW: ${{ matrix.window_type }}
-      UCHIRIMO_SELECTOR_SASH: ${{ matrix.sash_configuration }}
-      UCHIRIMO_SELECTOR_SIZE_CLASS: ${{ matrix.size_class }}
-      UCHIRIMO_SELECTOR_GLASS_FAMILY: ${{ matrix.glass_family }}
-      UCHIRIMO_SELECTOR_PARTITION_KEY: ${{ matrix.partition_key }}
-      UCHIRIMO_SELECTOR_PARTITION_SEED_JSON: ${{ matrix.partition_seed_json }}
+      UCHIRIMO_SELECTOR_BATCH_ID: ${{ matrix.batch_id }}
+      UCHIRIMO_SELECTOR_BATCH_JSON: ${{ matrix.batch_json }}
+      UCHIRIMO_SELECTOR_CHILD_TIMEOUT_MS: 1080000
       UCHIRIMO_SELECTOR_EXPECTED_SHARDS: ${{ needs.uchirimo-selector-proof-plan-15.outputs.shard_count }}
       UCHIRIMO_RESOLVER_CACHE_MAX: 2048
       UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-selector-proof-shard
@@ -1827,18 +1754,18 @@ jobs:
           node-version: 24
       - name: Install
         run: npm install --ignore-scripts
-      - name: Run isolated Uchirimo selector shard lane 15
+      - name: Run isolated Uchirimo selector batch lane 15
         if: ${{ matrix.skip != true }}
         shell: bash
         run: |
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$HEAD_SHA"
-          node scripts/uchirimo-full-selector-proof.mjs
-      - name: Upload Uchirimo selector shard evidence
+          node scripts/governance/uchirimo-selector-batch-runner.mjs
+      - name: Upload Uchirimo selector batch evidence
         if: ${{ always() && matrix.skip != true }}
         uses: actions/upload-artifact@v4
         with:
-          name: uchirimo-selector-proof-shard-${{ matrix.shard }}-${{ env.HEAD_SHA }}-attempt-${{ github.run_attempt }}
+          name: uchirimo-selector-proof-batch-${{ matrix.batch_id }}-${{ env.HEAD_SHA }}-attempt-${{ github.run_attempt }}
           path: artifacts/uchirimo-selector-proof-shard/
           if-no-files-found: warn
 
@@ -1871,7 +1798,7 @@ jobs:
       - name: Download all successful selector shards
         uses: actions/download-artifact@v4
         with:
-          pattern: uchirimo-selector-proof-shard-*-${{ env.HEAD_SHA }}-attempt-*
+          pattern: uchirimo-selector-proof-*-${{ env.HEAD_SHA }}-attempt-*
           path: artifacts/uchirimo-selector-proof-shards
           merge-multiple: false
 
@@ -1980,6 +1907,7 @@ jobs:
           node --check test/browser/global-window-selection-flow-browser-qa.mjs
           node --check test/browser/inplus-v04r2-global-flow-full-coverage-browser-qa.mjs
           node --check scripts/uchirimo-full-selector-proof.mjs
+          node --check scripts/governance/uchirimo-selector-batch-runner.mjs
           node --check scripts/governance/proof-dependency-fingerprint.mjs
           if grep -REn "other:\$\{String\(key\)|other:" src/catalog/runtime-master/new-construction-sash-runtime-ui-contract.mjs src/catalog/runtime-master/inner-window-runtime-ui-contract.mjs; then
             echo 'FLOW_SCHEMA_UNMAPPED_FIELD_GATE=FAIL legacy other:* fallback remains'
