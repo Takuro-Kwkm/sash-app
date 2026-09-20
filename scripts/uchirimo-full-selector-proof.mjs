@@ -372,7 +372,7 @@ async function plan(){
   if(process.env.GITHUB_OUTPUT){
     appendFileSync(process.env.GITHUB_OUTPUT,'matrix='+JSON.stringify(matrix)+'\n');
     appendFileSync(process.env.GITHUB_OUTPUT,'shard_count='+String(allPartitions.length)+'\n');
-    appendFileSync(process.env.GITHUB_OUTPUT,'lane_shard_count='+String(include.length)+'\n');
+    appendFileSync(process.env.GITHUB_OUTPUT,'lane_shard_count='+String(pending.length)+'\n');
     appendFileSync(process.env.GITHUB_OUTPUT,'lane_batch_count='+String(batches.length)+'\n');
   }
   console.log('UCHIRIMO_SELECTOR_PLAN=PASS partitions='+allPartitions.length+' lane='+PLAN_LANE_INDEX+'/'+PLAN_LANE_COUNT+' lane_partitions='+lanePartitions.length+' reused='+String(lanePartitions.length-pending.length)+' rerun='+pending.length+' normal='+normalRows.length+' heavy='+heavyRows.length+' batches='+batches.length+' batch_size='+BATCH_SIZE);
