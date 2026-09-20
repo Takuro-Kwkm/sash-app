@@ -2,9 +2,6 @@ name: Project Governance Gate
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - feat/new-construction-runtime-ui-v16-20260910
   pull_request:
     branches:
       - main
