@@ -187,7 +187,7 @@ function isV10MeasuredTimeoutClass(row,glassFamily,extraSeed){
   const depth=Object.keys(extraSeed).length;
   if(depth===3){
     return (hingeSide==='left'&&(
-      (frameColor==='white'&&structure==='P5P3')
+      (frameColor==='white'&&['F4P3','P5P3'].includes(structure))
       ||(frameColor==='calm_black'&&structure==='F4P3')
     ))||(hingeSide==='right'&&frameColor==='white'&&structure==='P5P3');
   }
