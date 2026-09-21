@@ -1,0 +1,48 @@
+{
+  "schema_version": "1.0.0",
+  "exact_head": "8bd08742b43ee5692a8161bee6b8520c6424d9a9",
+  "task_classification": "NON-PRODUCT-MASTER",
+  "product_master_mutation": 0,
+  "generated_at": "2026-09-21T16:14:05.177Z",
+  "status": "BLOCKED",
+  "checks": {
+    "base": false,
+    "globalBrowser": false,
+    "inplus": false,
+    "stageA": false,
+    "uchirimoSelector": false,
+    "uchirimoBrowser": false,
+    "dependencyDirect": false,
+    "uiDirect": false,
+    "nontw": true,
+    "tw": true
+  },
+  "issues": [
+    "base post-Human proof: expected 1 artifact, found 0",
+    "global browser flow report: expected 1 artifact, found 0",
+    "Inplus exhaustive browser report: expected 1 artifact, found 0",
+    "Stage A full browser report: expected 1 artifact, found 0",
+    "Uchirimo selector proof: expected 1 artifact, found 0",
+    "Uchirimo browser report: expected 1 artifact, found 0",
+    "Dependency direct proof: expected 1 artifact, found 0",
+    "UI flow direct proof: expected 1 artifact, found 0",
+    "base: direct current-head evidence did not satisfy the final contract",
+    "globalBrowser: direct current-head evidence did not satisfy the final contract",
+    "inplus: direct current-head evidence did not satisfy the final contract",
+    "stageA: direct current-head evidence did not satisfy the final contract",
+    "uchirimoSelector: direct current-head evidence did not satisfy the final contract",
+    "uchirimoBrowser: direct current-head evidence did not satisfy the final contract",
+    "dependencyDirect: direct current-head evidence did not satisfy the final contract",
+    "uiDirect: direct current-head evidence did not satisfy the final contract"
+  ],
+  "gates": {},
+  "sources": {
+    "artifacts/post-human-final-source/nontw/report.json": {
+      "sha256": "0100a599b55a6f3e4871f696b92547fb9d4e24d0d16fa9f98281f891f86da9f8"
+    },
+    "artifacts/post-human-final-source/tw/report.json": {
+      "sha256": "e0cb85ea55c5a8f9602cb98bef484510a73215338af5fabfa3231b55bc28eb27"
+    }
+  },
+  "carry_forward_bindings": {}
+}
