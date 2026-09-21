@@ -9,7 +9,6 @@ const HEAD=String(process.env.HEAD_SHA??process.env.GITHUB_SHA??'');
 const REPO=String(process.env.GITHUB_REPOSITORY??'');
 const RUN_ID=Number(process.env.GITHUB_RUN_ID??0);
 const RUN_ATTEMPT=Number(process.env.GITHUB_RUN_ATTEMPT??1);
-const BRANCH=String(process.env.GITHUB_HEAD_REF??process.env.GITHUB_REF_NAME??'');
 const API=String(process.env.GITHUB_API_URL??'https://api.github.com');
 const TOKEN=String(process.env.GH_TOKEN??process.env.GITHUB_TOKEN??'');
 const PLAN_PATH=String(process.env.UCHIRIMO_SELECTOR_CURRENT_PLAN??'artifacts/uchirimo-selector-proof-current-plan/all-partitions.json');
@@ -161,11 +160,12 @@ async function apiBuffer(path){
 }
 async function listArtifacts(runId){
   const out=[];
-  for(let page=1;page<=20;page+=1){
+  for(let page=1;;page+=1){
     const payload=await apiJson('/repos/'+REPO+'/actions/runs/'+runId+'/artifacts?per_page=100&page='+page);
     const rows=payload.artifacts??[];
     out.push(...rows);
-    if(rows.length<100)break;
+    const totalCount=Number(payload.total_count??out.length);
+    if(rows.length<100||out.length>=totalCount)break;
   }
   return out;
 }
@@ -200,11 +200,22 @@ if(!runtime?.sourcePackageIntegrity?.match)throw new Error('UCHIRIMO_CARRY_FORWA
 const currentRuntimeHash=String(runtime.sourcePackageIntegrity.actual??'');
 const currentExecutionFingerprint=executionDependencyFingerprint(HEAD);
 
-const runsPayload=await apiJson('/repos/'+REPO+'/actions/workflows/project-governance-gate.yml/runs?branch='+encodeURIComponent(BRANCH)+'&per_page=100');
-// Resume is deliberately allowed from the same Exact HEAD and, on a rerun,
- // from earlier attempts of the same workflow run. A timeout must never erase
- // already-PASS partition evidence.
-const priorRuns=(runsPayload.workflow_runs??[])
+const sameHeadRunsPayload=await apiJson('/repos/'+REPO+'/actions/workflows/project-governance-gate.yml/runs?head_sha='+encodeURIComponent(HEAD)+'&per_page=100');
+const recentRunsPayload=await apiJson('/repos/'+REPO+'/actions/workflows/project-governance-gate.yml/runs?per_page=100');
+const discoveredRuns=[];
+const discoveredRunIds=new Set();
+for(const payload of [sameHeadRunsPayload,recentRunsPayload]){
+  for(const run of payload.workflow_runs??[]){
+    const id=Number(run.id);
+    if(!id||discoveredRunIds.has(id))continue;
+    discoveredRunIds.add(id);
+    discoveredRuns.push(run);
+  }
+}
+// Resume is deliberately event-agnostic: pull_request, workflow_dispatch, and
+// prior attempts of the same workflow run may all contain compatible evidence.
+// A timeout must never erase already-PASS partition evidence.
+const priorRuns=discoveredRuns
   .filter((run)=>{
     if(!run.head_sha)return false;
     if(Number(run.id)===RUN_ID)return RUN_ATTEMPT>1;
