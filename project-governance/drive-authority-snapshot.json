@@ -4,8 +4,8 @@
   "observation": {
     "source": "GOOGLE_DRIVE_CONNECTOR",
     "initial_content_read_at": "2026-09-18T04:50:36.207Z",
-    "metadata_revalidated_at": "2026-09-19T07:04:01.911Z",
-    "note": "Current read-only Google Drive Connector revalidation after QA/Evidence Governance dependency-aware invalidation update. Required authority-file modified identities were re-read; Product Master / Formal Runtime remain read-only. GitHub post-human execution still requires live Drive API read per drive-authority-policy.json."
+    "metadata_revalidated_at": "2026-09-22T20:34:09.000Z",
+    "note": "Current read-only Google Drive Connector revalidation after Canonical Registry metadata change. All 6 required authority files were re-read; only PRODUCT_MASTER_CANONICAL_REGISTRY_v2.0 modified identity changed. Product Master / Formal Runtime remain read-only. GitHub post-human execution still requires live Drive API read per drive-authority-policy.json."
   },
   "entries": [
     {
@@ -14,7 +14,7 @@
       "version": "v1.7",
       "modified_identity": "2026-09-19T06:57:40.018Z",
       "current_revision_id": "ANLCKQmnBYvQJc5aw6VYaZNqQK_drKuXUAqS1snxxQZVvT_UV-nITaaUDy8QbniKF0zHtApchFLxzco-tcXPIxMVbkBTV2c38UNijwePei0",
-      "retrieved_at": "2026-09-19T07:04:01.911Z",
+      "retrieved_at": "2026-09-22T20:34:09.000Z",
       "source": "GOOGLE_DRIVE_CONNECTOR",
       "content_read": true
     },
@@ -24,7 +24,7 @@
       "version": "v1.5",
       "modified_identity": "2026-09-18T15:56:36.553Z",
       "current_revision_id": "11",
-      "retrieved_at": "2026-09-19T07:04:01.911Z",
+      "retrieved_at": "2026-09-22T20:34:09.000Z",
       "source": "GOOGLE_DRIVE_CONNECTOR",
       "content_read": true
     },
@@ -34,7 +34,7 @@
       "version": "v1.8",
       "modified_identity": "2026-09-18T15:56:37.761Z",
       "current_revision_id": "0B1PsqngSohhlWDU0RlVlVGdySGtCZFZRamJGQzl1NDZpbHA4PQ",
-      "retrieved_at": "2026-09-19T07:04:01.911Z",
+      "retrieved_at": "2026-09-22T20:34:09.000Z",
       "source": "GOOGLE_DRIVE_CONNECTOR",
       "content_read": true
     },
@@ -42,9 +42,9 @@
       "drive_file_id": "1HMMZ8JdsbJPtL_8LjQfxMF8P_Zb4-LReqvPMFn1pJks",
       "name": "PRODUCT_MASTER_CANONICAL_REGISTRY_v2.0",
       "version": "v2.0",
-      "modified_identity": "2026-09-18T15:56:39.188Z",
-      "current_revision_id": "155",
-      "retrieved_at": "2026-09-19T07:04:01.911Z",
+      "modified_identity": "2026-09-22T10:39:01.941Z",
+      "current_revision_id": "160",
+      "retrieved_at": "2026-09-22T20:34:09.000Z",
       "source": "GOOGLE_DRIVE_CONNECTOR",
       "content_read": true
     },
@@ -54,7 +54,7 @@
       "version": "v1.0",
       "modified_identity": "2026-09-19T06:57:25.836Z",
       "current_revision_id": "ANLCKQmapd3UhLHK0at1EbxpzNAktPK8uXt6PM2PDx2ih77ydudkhxgrhynDqXBww9aktCRWxQAZ-eKn9q4gTpjxC7KCvFFnKvRscv2H0ME",
-      "retrieved_at": "2026-09-19T07:04:01.911Z",
+      "retrieved_at": "2026-09-22T20:34:09.000Z",
       "source": "GOOGLE_DRIVE_CONNECTOR",
       "content_read": true
     },
@@ -64,7 +64,7 @@
       "version": "v0.2",
       "modified_identity": "2026-09-18T15:56:41.812Z",
       "current_revision_id": "19",
-      "retrieved_at": "2026-09-19T07:04:01.911Z",
+      "retrieved_at": "2026-09-22T20:34:09.000Z",
       "source": "GOOGLE_DRIVE_CONNECTOR",
       "content_read": true
     }
