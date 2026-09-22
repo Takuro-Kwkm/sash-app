@@ -199,7 +199,7 @@ jobs:
           const planBlock=workflow.slice(plan0,plan1);
           if((planBlock.match(/UCHIRIMO_SELECTOR_BATCH_SIZE: 1/g)??[]).length!==16)throw new Error('UCHIRIMO_HARNESS_BATCH_PLAN_COUNT_INVALID');
           if((planBlock.match(/UCHIRIMO_SELECTOR_NORMAL_CHILD_TIMEOUT_MS: 1080000/g)??[]).length!==16)throw new Error('UCHIRIMO_HARNESS_NORMAL_TIMEOUT_POLICY_INVALID');
-          if((planBlock.match(/UCHIRIMO_SELECTOR_HEAVY_CHILD_TIMEOUT_MS: 1800000/g)??[]).length!==16)throw new Error('UCHIRIMO_HARNESS_HEAVY_TIMEOUT_POLICY_INVALID');
+          if((planBlock.match(/UCHIRIMO_SELECTOR_HEAVY_CHILD_TIMEOUT_MS: 3000000/g)??[]).length!==16)throw new Error('UCHIRIMO_HARNESS_HEAVY_TIMEOUT_POLICY_INVALID');
           if((execBlock.match(/UCHIRIMO_SELECTOR_BATCH_JSON:/g)??[]).length!==16)throw new Error('UCHIRIMO_HARNESS_BATCH_ENV_COUNT_INVALID');
           if((execBlock.match(/UCHIRIMO_SELECTOR_CHILD_TIMEOUT_MS: \$\{\{ matrix\.child_timeout_ms \}\}/g)??[]).length!==16)throw new Error('UCHIRIMO_HARNESS_MATRIX_TIMEOUT_BINDING_INVALID');
           if((execBlock.match(/uchirimo-selector-batch-runner\.mjs/g)??[]).length!==16)throw new Error('UCHIRIMO_HARNESS_BATCH_RUNNER_COUNT_INVALID');
@@ -351,7 +351,7 @@ jobs:
       UCHIRIMO_SELECTOR_PLAN_LANE_INDEX: 0
       UCHIRIMO_SELECTOR_BATCH_SIZE: 1
       UCHIRIMO_SELECTOR_NORMAL_CHILD_TIMEOUT_MS: 1080000
-      UCHIRIMO_SELECTOR_HEAVY_CHILD_TIMEOUT_MS: 1800000
+      UCHIRIMO_SELECTOR_HEAVY_CHILD_TIMEOUT_MS: 3000000
       UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-selector-proof-plan-0
       UCHIRIMO_SELECTOR_REUSE_MANIFEST: artifacts/uchirimo-selector-proof-carry-forward/manifest.json
     steps:
@@ -398,7 +398,7 @@ jobs:
       UCHIRIMO_SELECTOR_PLAN_LANE_INDEX: 1
       UCHIRIMO_SELECTOR_BATCH_SIZE: 1
       UCHIRIMO_SELECTOR_NORMAL_CHILD_TIMEOUT_MS: 1080000
-      UCHIRIMO_SELECTOR_HEAVY_CHILD_TIMEOUT_MS: 1800000
+      UCHIRIMO_SELECTOR_HEAVY_CHILD_TIMEOUT_MS: 3000000
       UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-selector-proof-plan-1
       UCHIRIMO_SELECTOR_REUSE_MANIFEST: artifacts/uchirimo-selector-proof-carry-forward/manifest.json
     steps:
@@ -445,7 +445,7 @@ jobs:
       UCHIRIMO_SELECTOR_PLAN_LANE_INDEX: 2
       UCHIRIMO_SELECTOR_BATCH_SIZE: 1
       UCHIRIMO_SELECTOR_NORMAL_CHILD_TIMEOUT_MS: 1080000
-      UCHIRIMO_SELECTOR_HEAVY_CHILD_TIMEOUT_MS: 1800000
+      UCHIRIMO_SELECTOR_HEAVY_CHILD_TIMEOUT_MS: 3000000
       UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-selector-proof-plan-2
       UCHIRIMO_SELECTOR_REUSE_MANIFEST: artifacts/uchirimo-selector-proof-carry-forward/manifest.json
     steps:
@@ -492,7 +492,7 @@ jobs:
       UCHIRIMO_SELECTOR_PLAN_LANE_INDEX: 3
       UCHIRIMO_SELECTOR_BATCH_SIZE: 1
       UCHIRIMO_SELECTOR_NORMAL_CHILD_TIMEOUT_MS: 1080000
-      UCHIRIMO_SELECTOR_HEAVY_CHILD_TIMEOUT_MS: 1800000
+      UCHIRIMO_SELECTOR_HEAVY_CHILD_TIMEOUT_MS: 3000000
       UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-selector-proof-plan-3
       UCHIRIMO_SELECTOR_REUSE_MANIFEST: artifacts/uchirimo-selector-proof-carry-forward/manifest.json
     steps:
@@ -539,7 +539,7 @@ jobs:
       UCHIRIMO_SELECTOR_PLAN_LANE_INDEX: 4
       UCHIRIMO_SELECTOR_BATCH_SIZE: 1
       UCHIRIMO_SELECTOR_NORMAL_CHILD_TIMEOUT_MS: 1080000
-      UCHIRIMO_SELECTOR_HEAVY_CHILD_TIMEOUT_MS: 1800000
+      UCHIRIMO_SELECTOR_HEAVY_CHILD_TIMEOUT_MS: 3000000
       UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-selector-proof-plan-4
       UCHIRIMO_SELECTOR_REUSE_MANIFEST: artifacts/uchirimo-selector-proof-carry-forward/manifest.json
     steps:
@@ -586,7 +586,7 @@ jobs:
       UCHIRIMO_SELECTOR_PLAN_LANE_INDEX: 5
       UCHIRIMO_SELECTOR_BATCH_SIZE: 1
       UCHIRIMO_SELECTOR_NORMAL_CHILD_TIMEOUT_MS: 1080000
-      UCHIRIMO_SELECTOR_HEAVY_CHILD_TIMEOUT_MS: 1800000
+      UCHIRIMO_SELECTOR_HEAVY_CHILD_TIMEOUT_MS: 3000000
       UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-selector-proof-plan-5
       UCHIRIMO_SELECTOR_REUSE_MANIFEST: artifacts/uchirimo-selector-proof-carry-forward/manifest.json
     steps:
@@ -633,7 +633,7 @@ jobs:
       UCHIRIMO_SELECTOR_PLAN_LANE_INDEX: 6
       UCHIRIMO_SELECTOR_BATCH_SIZE: 1
       UCHIRIMO_SELECTOR_NORMAL_CHILD_TIMEOUT_MS: 1080000
-      UCHIRIMO_SELECTOR_HEAVY_CHILD_TIMEOUT_MS: 1800000
+      UCHIRIMO_SELECTOR_HEAVY_CHILD_TIMEOUT_MS: 3000000
       UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-selector-proof-plan-6
       UCHIRIMO_SELECTOR_REUSE_MANIFEST: artifacts/uchirimo-selector-proof-carry-forward/manifest.json
     steps:
@@ -680,7 +680,7 @@ jobs:
       UCHIRIMO_SELECTOR_PLAN_LANE_INDEX: 7
       UCHIRIMO_SELECTOR_BATCH_SIZE: 1
       UCHIRIMO_SELECTOR_NORMAL_CHILD_TIMEOUT_MS: 1080000
-      UCHIRIMO_SELECTOR_HEAVY_CHILD_TIMEOUT_MS: 1800000
+      UCHIRIMO_SELECTOR_HEAVY_CHILD_TIMEOUT_MS: 3000000
       UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-selector-proof-plan-7
       UCHIRIMO_SELECTOR_REUSE_MANIFEST: artifacts/uchirimo-selector-proof-carry-forward/manifest.json
     steps:
@@ -727,7 +727,7 @@ jobs:
       UCHIRIMO_SELECTOR_PLAN_LANE_INDEX: 8
       UCHIRIMO_SELECTOR_BATCH_SIZE: 1
       UCHIRIMO_SELECTOR_NORMAL_CHILD_TIMEOUT_MS: 1080000
-      UCHIRIMO_SELECTOR_HEAVY_CHILD_TIMEOUT_MS: 1800000
+      UCHIRIMO_SELECTOR_HEAVY_CHILD_TIMEOUT_MS: 3000000
       UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-selector-proof-plan-8
       UCHIRIMO_SELECTOR_REUSE_MANIFEST: artifacts/uchirimo-selector-proof-carry-forward/manifest.json
     steps:
@@ -774,7 +774,7 @@ jobs:
       UCHIRIMO_SELECTOR_PLAN_LANE_INDEX: 9
       UCHIRIMO_SELECTOR_BATCH_SIZE: 1
       UCHIRIMO_SELECTOR_NORMAL_CHILD_TIMEOUT_MS: 1080000
-      UCHIRIMO_SELECTOR_HEAVY_CHILD_TIMEOUT_MS: 1800000
+      UCHIRIMO_SELECTOR_HEAVY_CHILD_TIMEOUT_MS: 3000000
       UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-selector-proof-plan-9
       UCHIRIMO_SELECTOR_REUSE_MANIFEST: artifacts/uchirimo-selector-proof-carry-forward/manifest.json
     steps:
@@ -821,7 +821,7 @@ jobs:
       UCHIRIMO_SELECTOR_PLAN_LANE_INDEX: 10
       UCHIRIMO_SELECTOR_BATCH_SIZE: 1
       UCHIRIMO_SELECTOR_NORMAL_CHILD_TIMEOUT_MS: 1080000
-      UCHIRIMO_SELECTOR_HEAVY_CHILD_TIMEOUT_MS: 1800000
+      UCHIRIMO_SELECTOR_HEAVY_CHILD_TIMEOUT_MS: 3000000
       UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-selector-proof-plan-10
       UCHIRIMO_SELECTOR_REUSE_MANIFEST: artifacts/uchirimo-selector-proof-carry-forward/manifest.json
     steps:
@@ -868,7 +868,7 @@ jobs:
       UCHIRIMO_SELECTOR_PLAN_LANE_INDEX: 11
       UCHIRIMO_SELECTOR_BATCH_SIZE: 1
       UCHIRIMO_SELECTOR_NORMAL_CHILD_TIMEOUT_MS: 1080000
-      UCHIRIMO_SELECTOR_HEAVY_CHILD_TIMEOUT_MS: 1800000
+      UCHIRIMO_SELECTOR_HEAVY_CHILD_TIMEOUT_MS: 3000000
       UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-selector-proof-plan-11
       UCHIRIMO_SELECTOR_REUSE_MANIFEST: artifacts/uchirimo-selector-proof-carry-forward/manifest.json
     steps:
@@ -915,7 +915,7 @@ jobs:
       UCHIRIMO_SELECTOR_PLAN_LANE_INDEX: 12
       UCHIRIMO_SELECTOR_BATCH_SIZE: 1
       UCHIRIMO_SELECTOR_NORMAL_CHILD_TIMEOUT_MS: 1080000
-      UCHIRIMO_SELECTOR_HEAVY_CHILD_TIMEOUT_MS: 1800000
+      UCHIRIMO_SELECTOR_HEAVY_CHILD_TIMEOUT_MS: 3000000
       UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-selector-proof-plan-12
       UCHIRIMO_SELECTOR_REUSE_MANIFEST: artifacts/uchirimo-selector-proof-carry-forward/manifest.json
     steps:
@@ -962,7 +962,7 @@ jobs:
       UCHIRIMO_SELECTOR_PLAN_LANE_INDEX: 13
       UCHIRIMO_SELECTOR_BATCH_SIZE: 1
       UCHIRIMO_SELECTOR_NORMAL_CHILD_TIMEOUT_MS: 1080000
-      UCHIRIMO_SELECTOR_HEAVY_CHILD_TIMEOUT_MS: 1800000
+      UCHIRIMO_SELECTOR_HEAVY_CHILD_TIMEOUT_MS: 3000000
       UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-selector-proof-plan-13
       UCHIRIMO_SELECTOR_REUSE_MANIFEST: artifacts/uchirimo-selector-proof-carry-forward/manifest.json
     steps:
@@ -1009,7 +1009,7 @@ jobs:
       UCHIRIMO_SELECTOR_PLAN_LANE_INDEX: 14
       UCHIRIMO_SELECTOR_BATCH_SIZE: 1
       UCHIRIMO_SELECTOR_NORMAL_CHILD_TIMEOUT_MS: 1080000
-      UCHIRIMO_SELECTOR_HEAVY_CHILD_TIMEOUT_MS: 1800000
+      UCHIRIMO_SELECTOR_HEAVY_CHILD_TIMEOUT_MS: 3000000
       UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-selector-proof-plan-14
       UCHIRIMO_SELECTOR_REUSE_MANIFEST: artifacts/uchirimo-selector-proof-carry-forward/manifest.json
     steps:
@@ -1056,7 +1056,7 @@ jobs:
       UCHIRIMO_SELECTOR_PLAN_LANE_INDEX: 15
       UCHIRIMO_SELECTOR_BATCH_SIZE: 1
       UCHIRIMO_SELECTOR_NORMAL_CHILD_TIMEOUT_MS: 1080000
-      UCHIRIMO_SELECTOR_HEAVY_CHILD_TIMEOUT_MS: 1800000
+      UCHIRIMO_SELECTOR_HEAVY_CHILD_TIMEOUT_MS: 3000000
       UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-selector-proof-plan-15
       UCHIRIMO_SELECTOR_REUSE_MANIFEST: artifacts/uchirimo-selector-proof-carry-forward/manifest.json
     steps:
@@ -1095,7 +1095,7 @@ jobs:
       max-parallel: 2
       matrix: ${{ fromJSON(needs.uchirimo-selector-proof-plan-0.outputs.matrix) }}
     runs-on: ubuntu-latest
-    timeout-minutes: 35
+    timeout-minutes: 55
     env:
       HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
       UCHIRIMO_SELECTOR_MODE: shard
@@ -1103,7 +1103,9 @@ jobs:
       UCHIRIMO_SELECTOR_BATCH_JSON: ${{ matrix.batch_json }}
       UCHIRIMO_SELECTOR_CHILD_TIMEOUT_MS: ${{ matrix.child_timeout_ms }}
       UCHIRIMO_SELECTOR_EXPECTED_SHARDS: ${{ needs.uchirimo-selector-proof-plan-0.outputs.shard_count }}
-      UCHIRIMO_RESOLVER_CACHE_MAX: 2048
+      UCHIRIMO_RESOLVER_CACHE_MAX: 4096
+      UCHIRIMO_SELECTOR_MAX_STATES: 2000000
+      UCHIRIMO_SELECTOR_MAX_TERMINALS: 2000000
       UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-selector-proof-shard
     steps:
       - name: Checkout exact HEAD
@@ -1140,7 +1142,7 @@ jobs:
       max-parallel: 2
       matrix: ${{ fromJSON(needs.uchirimo-selector-proof-plan-1.outputs.matrix) }}
     runs-on: ubuntu-latest
-    timeout-minutes: 35
+    timeout-minutes: 55
     env:
       HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
       UCHIRIMO_SELECTOR_MODE: shard
@@ -1148,7 +1150,9 @@ jobs:
       UCHIRIMO_SELECTOR_BATCH_JSON: ${{ matrix.batch_json }}
       UCHIRIMO_SELECTOR_CHILD_TIMEOUT_MS: ${{ matrix.child_timeout_ms }}
       UCHIRIMO_SELECTOR_EXPECTED_SHARDS: ${{ needs.uchirimo-selector-proof-plan-1.outputs.shard_count }}
-      UCHIRIMO_RESOLVER_CACHE_MAX: 2048
+      UCHIRIMO_RESOLVER_CACHE_MAX: 4096
+      UCHIRIMO_SELECTOR_MAX_STATES: 2000000
+      UCHIRIMO_SELECTOR_MAX_TERMINALS: 2000000
       UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-selector-proof-shard
     steps:
       - name: Checkout exact HEAD
@@ -1185,7 +1189,7 @@ jobs:
       max-parallel: 2
       matrix: ${{ fromJSON(needs.uchirimo-selector-proof-plan-2.outputs.matrix) }}
     runs-on: ubuntu-latest
-    timeout-minutes: 35
+    timeout-minutes: 55
     env:
       HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
       UCHIRIMO_SELECTOR_MODE: shard
@@ -1193,7 +1197,9 @@ jobs:
       UCHIRIMO_SELECTOR_BATCH_JSON: ${{ matrix.batch_json }}
       UCHIRIMO_SELECTOR_CHILD_TIMEOUT_MS: ${{ matrix.child_timeout_ms }}
       UCHIRIMO_SELECTOR_EXPECTED_SHARDS: ${{ needs.uchirimo-selector-proof-plan-2.outputs.shard_count }}
-      UCHIRIMO_RESOLVER_CACHE_MAX: 2048
+      UCHIRIMO_RESOLVER_CACHE_MAX: 4096
+      UCHIRIMO_SELECTOR_MAX_STATES: 2000000
+      UCHIRIMO_SELECTOR_MAX_TERMINALS: 2000000
       UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-selector-proof-shard
     steps:
       - name: Checkout exact HEAD
@@ -1230,7 +1236,7 @@ jobs:
       max-parallel: 2
       matrix: ${{ fromJSON(needs.uchirimo-selector-proof-plan-3.outputs.matrix) }}
     runs-on: ubuntu-latest
-    timeout-minutes: 35
+    timeout-minutes: 55
     env:
       HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
       UCHIRIMO_SELECTOR_MODE: shard
@@ -1238,7 +1244,9 @@ jobs:
       UCHIRIMO_SELECTOR_BATCH_JSON: ${{ matrix.batch_json }}
       UCHIRIMO_SELECTOR_CHILD_TIMEOUT_MS: ${{ matrix.child_timeout_ms }}
       UCHIRIMO_SELECTOR_EXPECTED_SHARDS: ${{ needs.uchirimo-selector-proof-plan-3.outputs.shard_count }}
-      UCHIRIMO_RESOLVER_CACHE_MAX: 2048
+      UCHIRIMO_RESOLVER_CACHE_MAX: 4096
+      UCHIRIMO_SELECTOR_MAX_STATES: 2000000
+      UCHIRIMO_SELECTOR_MAX_TERMINALS: 2000000
       UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-selector-proof-shard
     steps:
       - name: Checkout exact HEAD
@@ -1275,7 +1283,7 @@ jobs:
       max-parallel: 2
       matrix: ${{ fromJSON(needs.uchirimo-selector-proof-plan-4.outputs.matrix) }}
     runs-on: ubuntu-latest
-    timeout-minutes: 35
+    timeout-minutes: 55
     env:
       HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
       UCHIRIMO_SELECTOR_MODE: shard
@@ -1283,7 +1291,9 @@ jobs:
       UCHIRIMO_SELECTOR_BATCH_JSON: ${{ matrix.batch_json }}
       UCHIRIMO_SELECTOR_CHILD_TIMEOUT_MS: ${{ matrix.child_timeout_ms }}
       UCHIRIMO_SELECTOR_EXPECTED_SHARDS: ${{ needs.uchirimo-selector-proof-plan-4.outputs.shard_count }}
-      UCHIRIMO_RESOLVER_CACHE_MAX: 2048
+      UCHIRIMO_RESOLVER_CACHE_MAX: 4096
+      UCHIRIMO_SELECTOR_MAX_STATES: 2000000
+      UCHIRIMO_SELECTOR_MAX_TERMINALS: 2000000
       UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-selector-proof-shard
     steps:
       - name: Checkout exact HEAD
@@ -1320,7 +1330,7 @@ jobs:
       max-parallel: 2
       matrix: ${{ fromJSON(needs.uchirimo-selector-proof-plan-5.outputs.matrix) }}
     runs-on: ubuntu-latest
-    timeout-minutes: 35
+    timeout-minutes: 55
     env:
       HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
       UCHIRIMO_SELECTOR_MODE: shard
@@ -1328,7 +1338,9 @@ jobs:
       UCHIRIMO_SELECTOR_BATCH_JSON: ${{ matrix.batch_json }}
       UCHIRIMO_SELECTOR_CHILD_TIMEOUT_MS: ${{ matrix.child_timeout_ms }}
       UCHIRIMO_SELECTOR_EXPECTED_SHARDS: ${{ needs.uchirimo-selector-proof-plan-5.outputs.shard_count }}
-      UCHIRIMO_RESOLVER_CACHE_MAX: 2048
+      UCHIRIMO_RESOLVER_CACHE_MAX: 4096
+      UCHIRIMO_SELECTOR_MAX_STATES: 2000000
+      UCHIRIMO_SELECTOR_MAX_TERMINALS: 2000000
       UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-selector-proof-shard
     steps:
       - name: Checkout exact HEAD
@@ -1365,7 +1377,7 @@ jobs:
       max-parallel: 2
       matrix: ${{ fromJSON(needs.uchirimo-selector-proof-plan-6.outputs.matrix) }}
     runs-on: ubuntu-latest
-    timeout-minutes: 35
+    timeout-minutes: 55
     env:
       HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
       UCHIRIMO_SELECTOR_MODE: shard
@@ -1373,7 +1385,9 @@ jobs:
       UCHIRIMO_SELECTOR_BATCH_JSON: ${{ matrix.batch_json }}
       UCHIRIMO_SELECTOR_CHILD_TIMEOUT_MS: ${{ matrix.child_timeout_ms }}
       UCHIRIMO_SELECTOR_EXPECTED_SHARDS: ${{ needs.uchirimo-selector-proof-plan-6.outputs.shard_count }}
-      UCHIRIMO_RESOLVER_CACHE_MAX: 2048
+      UCHIRIMO_RESOLVER_CACHE_MAX: 4096
+      UCHIRIMO_SELECTOR_MAX_STATES: 2000000
+      UCHIRIMO_SELECTOR_MAX_TERMINALS: 2000000
       UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-selector-proof-shard
     steps:
       - name: Checkout exact HEAD
@@ -1410,7 +1424,7 @@ jobs:
       max-parallel: 2
       matrix: ${{ fromJSON(needs.uchirimo-selector-proof-plan-7.outputs.matrix) }}
     runs-on: ubuntu-latest
-    timeout-minutes: 35
+    timeout-minutes: 55
     env:
       HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
       UCHIRIMO_SELECTOR_MODE: shard
@@ -1418,7 +1432,9 @@ jobs:
       UCHIRIMO_SELECTOR_BATCH_JSON: ${{ matrix.batch_json }}
       UCHIRIMO_SELECTOR_CHILD_TIMEOUT_MS: ${{ matrix.child_timeout_ms }}
       UCHIRIMO_SELECTOR_EXPECTED_SHARDS: ${{ needs.uchirimo-selector-proof-plan-7.outputs.shard_count }}
-      UCHIRIMO_RESOLVER_CACHE_MAX: 2048
+      UCHIRIMO_RESOLVER_CACHE_MAX: 4096
+      UCHIRIMO_SELECTOR_MAX_STATES: 2000000
+      UCHIRIMO_SELECTOR_MAX_TERMINALS: 2000000
       UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-selector-proof-shard
     steps:
       - name: Checkout exact HEAD
@@ -1455,7 +1471,7 @@ jobs:
       max-parallel: 2
       matrix: ${{ fromJSON(needs.uchirimo-selector-proof-plan-8.outputs.matrix) }}
     runs-on: ubuntu-latest
-    timeout-minutes: 35
+    timeout-minutes: 55
     env:
       HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
       UCHIRIMO_SELECTOR_MODE: shard
@@ -1463,7 +1479,9 @@ jobs:
       UCHIRIMO_SELECTOR_BATCH_JSON: ${{ matrix.batch_json }}
       UCHIRIMO_SELECTOR_CHILD_TIMEOUT_MS: ${{ matrix.child_timeout_ms }}
       UCHIRIMO_SELECTOR_EXPECTED_SHARDS: ${{ needs.uchirimo-selector-proof-plan-8.outputs.shard_count }}
-      UCHIRIMO_RESOLVER_CACHE_MAX: 2048
+      UCHIRIMO_RESOLVER_CACHE_MAX: 4096
+      UCHIRIMO_SELECTOR_MAX_STATES: 2000000
+      UCHIRIMO_SELECTOR_MAX_TERMINALS: 2000000
       UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-selector-proof-shard
     steps:
       - name: Checkout exact HEAD
@@ -1500,7 +1518,7 @@ jobs:
       max-parallel: 2
       matrix: ${{ fromJSON(needs.uchirimo-selector-proof-plan-9.outputs.matrix) }}
     runs-on: ubuntu-latest
-    timeout-minutes: 35
+    timeout-minutes: 55
     env:
       HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
       UCHIRIMO_SELECTOR_MODE: shard
@@ -1508,7 +1526,9 @@ jobs:
       UCHIRIMO_SELECTOR_BATCH_JSON: ${{ matrix.batch_json }}
       UCHIRIMO_SELECTOR_CHILD_TIMEOUT_MS: ${{ matrix.child_timeout_ms }}
       UCHIRIMO_SELECTOR_EXPECTED_SHARDS: ${{ needs.uchirimo-selector-proof-plan-9.outputs.shard_count }}
-      UCHIRIMO_RESOLVER_CACHE_MAX: 2048
+      UCHIRIMO_RESOLVER_CACHE_MAX: 4096
+      UCHIRIMO_SELECTOR_MAX_STATES: 2000000
+      UCHIRIMO_SELECTOR_MAX_TERMINALS: 2000000
       UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-selector-proof-shard
     steps:
       - name: Checkout exact HEAD
@@ -1545,7 +1565,7 @@ jobs:
       max-parallel: 2
       matrix: ${{ fromJSON(needs.uchirimo-selector-proof-plan-10.outputs.matrix) }}
     runs-on: ubuntu-latest
-    timeout-minutes: 35
+    timeout-minutes: 55
     env:
       HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
       UCHIRIMO_SELECTOR_MODE: shard
@@ -1553,7 +1573,9 @@ jobs:
       UCHIRIMO_SELECTOR_BATCH_JSON: ${{ matrix.batch_json }}
       UCHIRIMO_SELECTOR_CHILD_TIMEOUT_MS: ${{ matrix.child_timeout_ms }}
       UCHIRIMO_SELECTOR_EXPECTED_SHARDS: ${{ needs.uchirimo-selector-proof-plan-10.outputs.shard_count }}
-      UCHIRIMO_RESOLVER_CACHE_MAX: 2048
+      UCHIRIMO_RESOLVER_CACHE_MAX: 4096
+      UCHIRIMO_SELECTOR_MAX_STATES: 2000000
+      UCHIRIMO_SELECTOR_MAX_TERMINALS: 2000000
       UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-selector-proof-shard
     steps:
       - name: Checkout exact HEAD
@@ -1590,7 +1612,7 @@ jobs:
       max-parallel: 2
       matrix: ${{ fromJSON(needs.uchirimo-selector-proof-plan-11.outputs.matrix) }}
     runs-on: ubuntu-latest
-    timeout-minutes: 35
+    timeout-minutes: 55
     env:
       HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
       UCHIRIMO_SELECTOR_MODE: shard
@@ -1598,7 +1620,9 @@ jobs:
       UCHIRIMO_SELECTOR_BATCH_JSON: ${{ matrix.batch_json }}
       UCHIRIMO_SELECTOR_CHILD_TIMEOUT_MS: ${{ matrix.child_timeout_ms }}
       UCHIRIMO_SELECTOR_EXPECTED_SHARDS: ${{ needs.uchirimo-selector-proof-plan-11.outputs.shard_count }}
-      UCHIRIMO_RESOLVER_CACHE_MAX: 2048
+      UCHIRIMO_RESOLVER_CACHE_MAX: 4096
+      UCHIRIMO_SELECTOR_MAX_STATES: 2000000
+      UCHIRIMO_SELECTOR_MAX_TERMINALS: 2000000
       UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-selector-proof-shard
     steps:
       - name: Checkout exact HEAD
@@ -1635,7 +1659,7 @@ jobs:
       max-parallel: 2
       matrix: ${{ fromJSON(needs.uchirimo-selector-proof-plan-12.outputs.matrix) }}
     runs-on: ubuntu-latest
-    timeout-minutes: 35
+    timeout-minutes: 55
     env:
       HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
       UCHIRIMO_SELECTOR_MODE: shard
@@ -1643,7 +1667,9 @@ jobs:
       UCHIRIMO_SELECTOR_BATCH_JSON: ${{ matrix.batch_json }}
       UCHIRIMO_SELECTOR_CHILD_TIMEOUT_MS: ${{ matrix.child_timeout_ms }}
       UCHIRIMO_SELECTOR_EXPECTED_SHARDS: ${{ needs.uchirimo-selector-proof-plan-12.outputs.shard_count }}
-      UCHIRIMO_RESOLVER_CACHE_MAX: 2048
+      UCHIRIMO_RESOLVER_CACHE_MAX: 4096
+      UCHIRIMO_SELECTOR_MAX_STATES: 2000000
+      UCHIRIMO_SELECTOR_MAX_TERMINALS: 2000000
       UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-selector-proof-shard
     steps:
       - name: Checkout exact HEAD
@@ -1680,7 +1706,7 @@ jobs:
       max-parallel: 2
       matrix: ${{ fromJSON(needs.uchirimo-selector-proof-plan-13.outputs.matrix) }}
     runs-on: ubuntu-latest
-    timeout-minutes: 35
+    timeout-minutes: 55
     env:
       HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
       UCHIRIMO_SELECTOR_MODE: shard
@@ -1688,7 +1714,9 @@ jobs:
       UCHIRIMO_SELECTOR_BATCH_JSON: ${{ matrix.batch_json }}
       UCHIRIMO_SELECTOR_CHILD_TIMEOUT_MS: ${{ matrix.child_timeout_ms }}
       UCHIRIMO_SELECTOR_EXPECTED_SHARDS: ${{ needs.uchirimo-selector-proof-plan-13.outputs.shard_count }}
-      UCHIRIMO_RESOLVER_CACHE_MAX: 2048
+      UCHIRIMO_RESOLVER_CACHE_MAX: 4096
+      UCHIRIMO_SELECTOR_MAX_STATES: 2000000
+      UCHIRIMO_SELECTOR_MAX_TERMINALS: 2000000
       UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-selector-proof-shard
     steps:
       - name: Checkout exact HEAD
@@ -1725,7 +1753,7 @@ jobs:
       max-parallel: 2
       matrix: ${{ fromJSON(needs.uchirimo-selector-proof-plan-14.outputs.matrix) }}
     runs-on: ubuntu-latest
-    timeout-minutes: 35
+    timeout-minutes: 55
     env:
       HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
       UCHIRIMO_SELECTOR_MODE: shard
@@ -1733,7 +1761,9 @@ jobs:
       UCHIRIMO_SELECTOR_BATCH_JSON: ${{ matrix.batch_json }}
       UCHIRIMO_SELECTOR_CHILD_TIMEOUT_MS: ${{ matrix.child_timeout_ms }}
       UCHIRIMO_SELECTOR_EXPECTED_SHARDS: ${{ needs.uchirimo-selector-proof-plan-14.outputs.shard_count }}
-      UCHIRIMO_RESOLVER_CACHE_MAX: 2048
+      UCHIRIMO_RESOLVER_CACHE_MAX: 4096
+      UCHIRIMO_SELECTOR_MAX_STATES: 2000000
+      UCHIRIMO_SELECTOR_MAX_TERMINALS: 2000000
       UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-selector-proof-shard
     steps:
       - name: Checkout exact HEAD
@@ -1770,7 +1800,7 @@ jobs:
       max-parallel: 2
       matrix: ${{ fromJSON(needs.uchirimo-selector-proof-plan-15.outputs.matrix) }}
     runs-on: ubuntu-latest
-    timeout-minutes: 35
+    timeout-minutes: 55
     env:
       HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
       UCHIRIMO_SELECTOR_MODE: shard
@@ -1778,7 +1808,9 @@ jobs:
       UCHIRIMO_SELECTOR_BATCH_JSON: ${{ matrix.batch_json }}
       UCHIRIMO_SELECTOR_CHILD_TIMEOUT_MS: ${{ matrix.child_timeout_ms }}
       UCHIRIMO_SELECTOR_EXPECTED_SHARDS: ${{ needs.uchirimo-selector-proof-plan-15.outputs.shard_count }}
-      UCHIRIMO_RESOLVER_CACHE_MAX: 2048
+      UCHIRIMO_RESOLVER_CACHE_MAX: 4096
+      UCHIRIMO_SELECTOR_MAX_STATES: 2000000
+      UCHIRIMO_SELECTOR_MAX_TERMINALS: 2000000
       UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-selector-proof-shard
     steps:
       - name: Checkout exact HEAD
