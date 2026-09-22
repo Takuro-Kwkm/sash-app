@@ -291,7 +291,7 @@ jobs:
     needs: ["governance-authority", "governance-precheck", "uchirimo-selector-proof-cache", "uchirimo-qa-preflight"]
     if: ${{ needs.governance-authority.outputs.authorized == 'true' && needs.governance-precheck.outputs.authorized == 'true' && needs.uchirimo-selector-proof-cache.outputs.reused != 'true' && needs.uchirimo-qa-preflight.result == 'success' }}
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 60
     permissions:
       contents: read
       actions: read
