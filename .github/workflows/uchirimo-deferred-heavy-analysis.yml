@@ -1,0 +1,71 @@
+name: Uchirimo Deferred Heavy Partition Analysis
+
+on:
+  workflow_dispatch:
+    inputs:
+      source_run_id:
+        description: Historical exhaustive Uchirimo run used as measured failure evidence
+        required: false
+        default: '35670279840'
+      source_exact_head:
+        description: Exact HEAD for the historical source run
+        required: false
+        default: '508021c64897039b2fa6e0391058ad88394536af'
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: uchirimo-deferred-heavy-analysis-${{ github.ref_name }}
+  cancel-in-progress: true
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      HEAD_SHA: ${{ github.sha }}
+      GH_TOKEN: ${{ github.token }}
+      UCHIRIMO_HEAVY_SOURCE_RUN_ID: ${{ inputs.source_run_id }}
+      UCHIRIMO_HEAVY_SOURCE_HEAD: ${{ inputs.source_exact_head }}
+      UCHIRIMO_HEAVY_ANALYSIS_OUT: artifacts/uchirimo-heavy-recovery
+    steps:
+      - name: Checkout exact HEAD
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.HEAD_SHA }}
+          fetch-depth: 0
+      - name: Setup Node 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Install
+        run: npm install --ignore-scripts
+      - name: Verify deferred scope and analysis syntax
+        run: |
+          test "$(git rev-parse HEAD)" = "$HEAD_SHA"
+          node --check scripts/governance/uchirimo-heavy-partition-analysis.mjs
+          node -e "const s=require('./project-governance/release-scope.json'); if(s.product_master_mutation!==0||s.current_release_targets.length!==7||s.deferred_targets.length!==1||s.deferred_targets[0].integration_id!=='SER-YKKAP-UCHIRIMO'||s.deferred_targets[0].qa_status==='PASS') process.exit(1)"
+      - name: Analyze measured heavy partitions and build recursive child plan
+        run: node scripts/governance/uchirimo-heavy-partition-analysis.mjs
+      - name: Verify analysis contract
+        run: |
+          node --input-type=module <<'NODE'
+          import { readFileSync } from 'node:fs';
+          const a=JSON.parse(readFileSync('artifacts/uchirimo-heavy-recovery/heavy-partition-analysis.json','utf8'));
+          const p=JSON.parse(readFileSync('artifacts/uchirimo-heavy-recovery/recursive-partition-plan.json','utf8'));
+          if(a.exact_head!==process.env.HEAD_SHA||a.heavy_partition_count<1||a.deferred_scope_status!=='DEFERRED_UNVERIFIED')throw new Error('HEAVY_ANALYSIS_INVALID');
+          if(p.exact_head!==process.env.HEAD_SHA||p.PARTITION_OVERLAP_COUNT!==0||p.PARTITION_GAP_COUNT!==0)throw new Error('RECURSIVE_PLAN_COVERAGE_INVALID');
+          console.log(`HEAVY_PARTITION_COUNT=${a.heavy_partition_count}`);
+          console.log(`HEAVY_PRODUCT_NODES=${a.heavy_product_nodes.join(',')}`);
+          console.log(`CHILD_PARTITION_COUNT=${p.child_partition_count}`);
+          console.log(`UNSPLITTABLE_PARENT_COUNT=${p.UNSPLITTABLE_PARENT_COUNT}`);
+          NODE
+      - name: Upload Heavy Partition Analysis
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: uchirimo-heavy-partition-analysis-${{ env.HEAD_SHA }}
+          path: artifacts/uchirimo-heavy-recovery/
+          if-no-files-found: error
