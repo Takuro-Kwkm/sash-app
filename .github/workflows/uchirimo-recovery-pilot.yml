@@ -651,3 +651,102 @@ jobs:
           name: current-release-scope-final-${{ env.HEAD_SHA }}
           path: artifacts/current-release-scope-final/
           if-no-files-found: error
+
+  heavy-recovery-analysis:
+    needs: ["governance-authority"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && inputs.lane == 'current-release-scope' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      GH_TOKEN: ${{ github.token }}
+      HEAD_SHA: ${{ inputs.controller_head }}
+      UCHIRIMO_HEAVY_SOURCE_RUN_ID: '35670279840'
+      UCHIRIMO_HEAVY_SOURCE_HEAD: '508021c64897039b2fa6e0391058ad88394536af'
+      UCHIRIMO_HEAVY_ANALYSIS_OUT: artifacts/uchirimo-heavy-recovery
+    steps:
+      - name: Checkout exact HEAD
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.HEAD_SHA }}
+          fetch-depth: 0
+
+      - name: Detect recovery-analysis source change
+        id: changes
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$HEAD_SHA"
+          changed="$(git diff-tree --no-commit-id --name-only -r "$HEAD_SHA")"
+          if printf '%s\n' "$changed" | grep -Eq '^(scripts/governance/uchirimo-heavy-partition-analysis\.mjs|\.github/workflows/uchirimo-recovery-pilot\.yml)$'; then
+            echo "required=true" >> "$GITHUB_OUTPUT"
+            echo "UCHIRIMO_HEAVY_ANALYSIS_TRIGGER=SOURCE_CHANGED"
+          else
+            echo "required=false" >> "$GITHUB_OUTPUT"
+            echo "UCHIRIMO_HEAVY_ANALYSIS_TRIGGER=SKIP_NO_SOURCE_CHANGE"
+          fi
+
+      - name: Setup Node 24
+        if: ${{ steps.changes.outputs.required == 'true' }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Install
+        if: ${{ steps.changes.outputs.required == 'true' }}
+        run: npm install --ignore-scripts
+
+      - name: Reconstruct heavy partition evidence from source run
+        id: analysis
+        if: ${{ steps.changes.outputs.required == 'true' }}
+        continue-on-error: true
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check scripts/governance/uchirimo-heavy-partition-analysis.mjs
+          node scripts/governance/uchirimo-heavy-partition-analysis.mjs
+
+      - name: Verify analysis-only coverage shape
+        id: verify
+        if: ${{ steps.changes.outputs.required == 'true' && steps.analysis.outcome == 'success' }}
+        continue-on-error: true
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import { readFileSync } from 'node:fs';
+          const analysis=JSON.parse(readFileSync('artifacts/uchirimo-heavy-recovery/heavy-partition-analysis.json','utf8'));
+          const plan=JSON.parse(readFileSync('artifacts/uchirimo-heavy-recovery/recursive-partition-plan.json','utf8'));
+          if(analysis.task_classification!=='NON-PRODUCT-MASTER'||analysis.product_master_mutation!==0)throw new Error('RECOVERY_ANALYSIS_CLASSIFICATION_INVALID');
+          if(analysis.deferred_scope_status!=='DEFERRED_UNVERIFIED')throw new Error('UCHIRIMO_DEFERRED_STATUS_INVALID');
+          if(!Number.isInteger(analysis.heavy_partition_count)||analysis.heavy_partition_count<1)throw new Error('HEAVY_PARTITION_INVENTORY_EMPTY');
+          if(plan.status!=='PLAN_READY')throw new Error('RECOVERY_PLAN_NOT_READY');
+          if(plan.PARTITION_OVERLAP_COUNT!==0||plan.PARTITION_GAP_COUNT!==0)throw new Error('RECOVERY_PLAN_COVERAGE_SHAPE_INVALID');
+          console.log('UCHIRIMO_HEAVY_ANALYSIS_ONLY=PASS');
+          console.log('UCHIRIMO_FULL_COVERAGE_QA_GATE=BLOCKED');
+          console.log('APP_INTEGRATION_READY=FALSE');
+          console.log('RELEASE_INPUT_GATE=BLOCKED');
+          NODE
+
+      - name: Record deferred recovery status
+        if: ${{ always() }}
+        shell: bash
+        env:
+          REQUIRED: ${{ steps.changes.outputs.required }}
+          ANALYSIS_OUTCOME: ${{ steps.analysis.outcome }}
+          VERIFY_OUTCOME: ${{ steps.verify.outcome }}
+        run: |
+          set -euo pipefail
+          echo "UCHIRIMO_RECOVERY_ANALYSIS_REQUIRED=${REQUIRED:-false}"
+          echo "UCHIRIMO_RECOVERY_ANALYSIS_OUTCOME=${ANALYSIS_OUTCOME:-skipped}"
+          echo "UCHIRIMO_RECOVERY_VERIFY_OUTCOME=${VERIFY_OUTCOME:-skipped}"
+          echo "UCHIRIMO_QA_STATUS=UNVERIFIED"
+          echo "UCHIRIMO_RELEASE_ELIGIBILITY=FALSE"
+          echo "FULL_COVERAGE_QA_GATE=BLOCKED"
+
+      - name: Upload heavy recovery analysis evidence
+        if: ${{ always() && steps.changes.outputs.required == 'true' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: uchirimo-heavy-recovery-analysis-${{ env.HEAD_SHA }}
+          path: artifacts/uchirimo-heavy-recovery/
+          if-no-files-found: warn
