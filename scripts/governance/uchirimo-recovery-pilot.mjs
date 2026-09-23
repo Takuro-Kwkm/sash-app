@@ -34,7 +34,6 @@ const same=(a,b)=>Array.isArray(b)
   ? Array.isArray(a)&&stableJson(a.map(String).sort())===stableJson(b.map(String).sort())
   : Object.is(a,b)||String(a)===String(b);
 const enabled=(field)=>(field?.values??[]).filter((row)=>row?.disabled!==true);
-const sha=(value)=>createHash('sha256').update(typeof value==='string'?value:stableJson(value)).digest('hex');
 
 function walk(dir){
   const out=[];
@@ -77,6 +76,17 @@ function nextRequiredEnumPartition(result,seed){
   }
   return null;
 }
+function remainingEnumFanoutScore(result,seed){
+  let score=0;
+  for(const field of result.fields??[]){
+    if(field?.required!==true||field?.readOnly===true||field?.dataType!=='ENUM')continue;
+    if(TECHNICAL_KEYS.has(field.key)||CONTINUOUS_KEYS.has(field.key))continue;
+    if(Object.prototype.hasOwnProperty.call(seed,field.key))continue;
+    const values=[...new Map(enabled(field).map((row)=>[stableJson(row.value),row.value])).values()];
+    if(values.length>1)score+=values.length;
+  }
+  return score;
+}
 function severityScore(row){
   const key=String(row.partition_key??'');
   let score=0;
@@ -91,15 +101,7 @@ function severityScore(row){
   return score;
 }
 
-async function plan(){
-  if(!Number.isInteger(TARGET_COUNT)||TARGET_COUNT<12||TARGET_COUNT>20)throw new Error('UCHIRIMO_RECOVERY_PILOT_TARGET_COUNT_INVALID:'+TARGET_COUNT);
-  const head=currentExactHead();
-  const runtime=await loadRegisteredRuntime('YKK AP','ウチリモ 内窓');
-  if(!runtime?.sourcePackageIntegrity?.match)throw new Error('UCHIRIMO_RECOVERY_PILOT_RUNTIME_INTEGRITY_NOT_PASS');
-  const base=JSON.parse(readFileSync(BASE_PLAN,'utf8'));
-  if(base.status!=='PASS'||base.exact_head!==head)throw new Error('UCHIRIMO_RECOVERY_PILOT_BASE_PLAN_INVALID');
-  if(base.runtime_manifest_sha256!==runtime.sourcePackageIntegrity.actual)throw new Error('UCHIRIMO_RECOVERY_PILOT_RUNTIME_HASH_MISMATCH');
-
+async function buildPlus1Candidates(base){
   const candidatesByNode=new Map([...TARGET_NODE_IDS].map((id)=>[id,[]]));
   const parents=base.partitions
     .filter((row)=>TARGET_NODE_IDS.has(String(row.node_id)))
@@ -121,12 +123,12 @@ async function plan(){
       const childExtra={...parentExtra,[split.field.key]:value};
       const candidate={
         node_id:String(row.node_id),
-        parent_shard:Number(row.shard),
-        parent_partition_key:String(row.partition_key),
-        parent_partition_depth:Object.keys(parentExtra).length,
-        split_field:String(split.field.key),
-        split_cardinality:split.values.length,
-        split_value:value,
+        root_parent_shard:Number(row.shard),
+        root_parent_partition_key:String(row.partition_key),
+        root_parent_partition_depth:Object.keys(parentExtra).length,
+        first_split_field:String(split.field.key),
+        first_split_cardinality:split.values.length,
+        first_split_value:value,
         room_specification:String(row.room_specification),
         window_type:String(row.window_type),
         sash_configuration:String(row.sash_configuration??'__UNSET__'),
@@ -139,11 +141,14 @@ async function plan(){
       candidatesByNode.get(String(row.node_id)).push(candidate);
     }
   }
+  return candidatesByNode;
+}
 
+function selectPlus1PilotBranches(candidatesByNode){
   const selected=[];
   for(const [nodeId,quota] of TARGET_QUOTAS){
     const rows=(candidatesByNode.get(nodeId)??[])
-      .sort((a,b)=>b.severity_score-a.severity_score||a.parent_partition_key.localeCompare(b.parent_partition_key)||stableJson(a.split_value).localeCompare(stableJson(b.split_value)));
+      .sort((a,b)=>b.severity_score-a.severity_score||a.root_parent_partition_key.localeCompare(b.root_parent_partition_key)||stableJson(a.first_split_value).localeCompare(stableJson(b.first_split_value)));
     const unique=[];
     const seen=new Set();
     for(const row of rows){
@@ -155,6 +160,71 @@ async function plan(){
     if(unique.length!==quota)throw new Error('UCHIRIMO_RECOVERY_PILOT_QUOTA_UNSATISFIED:'+nodeId+':'+unique.length+':'+quota);
     selected.push(...unique);
   }
+  return selected;
+}
+
+async function deepenPlus1Branch(row){
+  const seed=baseSelection(row);
+  const resolved=await resolveRuntimeAppProduct('SER-YKKAP-UCHIRIMO',seed);
+  for(const [key,value] of Object.entries(seed)){
+    if(!same(resolved.selection?.[key],value))throw new Error('UCHIRIMO_RECOVERY_PILOT_PLUS1_SEED_REJECTED:'+String(row.partition_key)+':'+key);
+  }
+  const split=nextRequiredEnumPartition(resolved,seed);
+  if(!split)throw new Error('UCHIRIMO_RECOVERY_PILOT_PLUS2_SPLIT_UNAVAILABLE:'+String(row.partition_key));
+  const parentExtra=JSON.parse(String(row.partition_seed_json??'{}'));
+  const grandchildren=[];
+  for(const value of split.values){
+    const grandchildSeed={...seed,[split.field.key]:value};
+    const grandchildResolved=await resolveRuntimeAppProduct('SER-YKKAP-UCHIRIMO',grandchildSeed);
+    if(!same(grandchildResolved.selection?.[split.field.key],value))continue;
+    const grandchildExtra={...parentExtra,[split.field.key]:value};
+    grandchildren.push({
+      node_id:row.node_id,
+      root_parent_shard:row.root_parent_shard,
+      root_parent_partition_key:row.root_parent_partition_key,
+      root_parent_partition_depth:row.root_parent_partition_depth,
+      plus1_partition_key:row.partition_key,
+      plus1_partition_depth:Object.keys(parentExtra).length,
+      first_split_field:row.first_split_field,
+      first_split_cardinality:row.first_split_cardinality,
+      first_split_value:row.first_split_value,
+      second_split_field:String(split.field.key),
+      second_split_cardinality:split.values.length,
+      second_split_value:value,
+      room_specification:row.room_specification,
+      window_type:row.window_type,
+      sash_configuration:row.sash_configuration,
+      size_class:row.size_class,
+      glass_family:row.glass_family,
+      partition_key:String(row.partition_key)+'|'+String(split.field.key)+'='+stableJson(value),
+      partition_seed_json:JSON.stringify(stable(grandchildExtra)),
+      severity_score:row.severity_score,
+      remaining_enum_fanout_score:remainingEnumFanoutScore(grandchildResolved,grandchildSeed)
+    });
+  }
+  if(!grandchildren.length)throw new Error('UCHIRIMO_RECOVERY_PILOT_PLUS2_CHILD_UNAVAILABLE:'+String(row.partition_key));
+  grandchildren.sort((a,b)=>
+    b.remaining_enum_fanout_score-a.remaining_enum_fanout_score ||
+    stableJson(a.second_split_value).localeCompare(stableJson(b.second_split_value))
+  );
+  return grandchildren[0];
+}
+
+async function plan(){
+  if(!Number.isInteger(TARGET_COUNT)||TARGET_COUNT<12||TARGET_COUNT>20)throw new Error('UCHIRIMO_RECOVERY_PILOT_TARGET_COUNT_INVALID:'+TARGET_COUNT);
+  const head=currentExactHead();
+  const runtime=await loadRegisteredRuntime('YKK AP','ウチリモ 内窓');
+  if(!runtime?.sourcePackageIntegrity?.match)throw new Error('UCHIRIMO_RECOVERY_PILOT_RUNTIME_INTEGRITY_NOT_PASS');
+  const base=JSON.parse(readFileSync(BASE_PLAN,'utf8'));
+  if(base.status!=='PASS'||base.exact_head!==head)throw new Error('UCHIRIMO_RECOVERY_PILOT_BASE_PLAN_INVALID');
+  if(base.runtime_manifest_sha256!==runtime.sourcePackageIntegrity.actual)throw new Error('UCHIRIMO_RECOVERY_PILOT_RUNTIME_HASH_MISMATCH');
+
+  const plus1Candidates=await buildPlus1Candidates(base);
+  const selectedPlus1=selectPlus1PilotBranches(plus1Candidates);
+  if(selectedPlus1.length!==TARGET_COUNT)throw new Error('UCHIRIMO_RECOVERY_PILOT_PLUS1_SELECTED_COUNT_MISMATCH:'+selectedPlus1.length+':'+TARGET_COUNT);
+
+  const selected=[];
+  for(const row of selectedPlus1)selected.push(await deepenPlus1Branch(row));
   if(selected.length!==TARGET_COUNT)throw new Error('UCHIRIMO_RECOVERY_PILOT_SELECTED_COUNT_MISMATCH:'+selected.length+':'+TARGET_COUNT);
 
   const pilotRows=selected.map((row,index)=>({
@@ -165,9 +235,10 @@ async function plan(){
   const matrix={include:pilotRows.map((row)=>({
     pilot_index:row.pilot_index,
     node_id:row.node_id,
-    parent_partition_key:row.parent_partition_key,
-    split_field:row.split_field,
-    split_cardinality:row.split_cardinality,
+    parent_partition_key:row.plus1_partition_key,
+    split_field:row.second_split_field,
+    split_cardinality:row.second_split_cardinality,
+    split_path:row.first_split_field+'>'+row.second_split_field,
     child_timeout_ms:CHILD_TIMEOUT_MS,
     batch_id:'recovery-pilot-'+String(row.pilot_index).padStart(2,'0'),
     batch_json:JSON.stringify([{
@@ -185,12 +256,14 @@ async function plan(){
 
   mkdirSync(PLAN_OUT,{recursive:true});
   const planReport={
-    schema_version:'1.0.0',
+    schema_version:'1.1.0',
     exact_head:head,
     task_classification:'NON-PRODUCT-MASTER',
     product_master_mutation:0,
     purpose:'UCHIRIMO_HEAVY_PARTITION_RECOVERY_PILOT',
-    partition_plan_version:'UCHIRIMO_RECOVERY_PILOT_ADAPTIVE_PLUS1_V1',
+    partition_plan_version:'UCHIRIMO_RECOVERY_PILOT_ADAPTIVE_PLUS2_V2',
+    recovery_split_depth:2,
+    selection_strategy:'V1_QUOTA_BRANCHES_THEN_MAX_REMAINING_ENUM_FANOUT',
     target_node_ids:[...TARGET_NODE_IDS],
     target_quotas:Object.fromEntries(TARGET_QUOTAS),
     pilot_partition_count:pilotRows.length,
@@ -208,7 +281,7 @@ async function plan(){
   if(process.env.GITHUB_OUTPUT){
     writeFileSync(process.env.GITHUB_OUTPUT,'matrix='+JSON.stringify(matrix)+'\n'+'pilot_count='+String(pilotRows.length)+'\n',{flag:'a'});
   }
-  console.log('UCHIRIMO_RECOVERY_PILOT_PLAN=PASS count='+pilotRows.length+' nodes='+[...TARGET_NODE_IDS].join(','));
+  console.log('UCHIRIMO_RECOVERY_PILOT_PLAN=PASS version='+planReport.partition_plan_version+' count='+pilotRows.length+' nodes='+[...TARGET_NODE_IDS].join(','));
 }
 
 async function verify(){
