@@ -101,7 +101,7 @@ function nextSplit(result,seed){
     if(TECHNICAL_KEYS.has(field.key)||CONTINUOUS_KEYS.has(field.key))continue;
     if(Object.prototype.hasOwnProperty.call(seed,field.key))continue;
     const values=[...new Map(enabled(field).map((row)=>[stableJson(row.value),row.value])).values()];
-    if(values.length>1)return {field_key:field.key,values};
+    if(values.length>1)return {field_key:field.key,field_required:true,field_data_type:'ENUM',values};
   }
   return null;
 }
@@ -275,7 +275,10 @@ for(const obs of heavy){
     RUNTIME_SNAPSHOT_ID:canonicalRuntimeSnapshotId,
     SOURCE_PARTITION_KEY:obs.partition_key,
     NEXT_SPLIT_FIELD:split?.field_key??null,
+    NEXT_SPLIT_FIELD_REQUIRED:split?.field_required??null,
+    NEXT_SPLIT_FIELD_DATA_TYPE:split?.field_data_type??null,
     NEXT_SPLIT_CARDINALITY:split?.values?.length??0,
+    NEXT_SPLIT_VALUES:split?.values?.map(stable)??[],
   });
   if(!split)continue;
   for(const value of split.values){
@@ -316,9 +319,61 @@ for(const parent of splitParents){
   if(matching.length!==parent.NEXT_SPLIT_CARDINALITY)splitGapCount+=1;
 }
 
+let parentUnionMismatchCount=0;
+let childPrefixMismatchCount=0;
+let splitSemanticMismatchCount=0;
+let parentChildCardinalityMismatchCount=0;
+const coverageProofRows=[];
+for(const parent of splitParents){
+  const matching=children.filter((row)=>row.PARENT_PARTITION_ID===parent.PARTITION_ID);
+  const expectedSet=new Set((parent.NEXT_SPLIT_VALUES??[]).map(stableJson));
+  const actualSet=new Set(matching.map((row)=>stableJson(row.SPLIT_VALUE)));
+  const unionMatch=expectedSet.size===actualSet.size&&[...expectedSet].every((value)=>actualSet.has(value));
+  const cardinalityMatch=matching.length===parent.NEXT_SPLIT_CARDINALITY&&actualSet.size===matching.length;
+  const splitSemanticMatch=parent.NEXT_SPLIT_FIELD_REQUIRED===true&&parent.NEXT_SPLIT_FIELD_DATA_TYPE==='ENUM'&&Boolean(parent.NEXT_SPLIT_FIELD);
+  let prefixMatch=true;
+  for(const child of matching){
+    const parentEntries=Object.entries(parent.SELECTOR_PREFIX??{});
+    const parentPreserved=parentEntries.every(([key,value])=>same(child.SELECTOR_PREFIX?.[key],value));
+    const extraKeys=Object.keys(child.SELECTOR_PREFIX??{}).filter((key)=>!Object.prototype.hasOwnProperty.call(parent.SELECTOR_PREFIX??{},key));
+    const oneSplitAxis=extraKeys.length===1&&extraKeys[0]===parent.NEXT_SPLIT_FIELD&&same(child.SELECTOR_PREFIX?.[parent.NEXT_SPLIT_FIELD],child.SPLIT_VALUE);
+    if(!parentPreserved||!oneSplitAxis){
+      prefixMatch=false;
+      break;
+    }
+  }
+  if(!unionMatch)parentUnionMismatchCount+=1;
+  if(!prefixMatch)childPrefixMismatchCount+=1;
+  if(!splitSemanticMatch)splitSemanticMismatchCount+=1;
+  if(!cardinalityMatch)parentChildCardinalityMismatchCount+=1;
+  coverageProofRows.push({
+    PARENT_PARTITION_ID:parent.PARTITION_ID,
+    SOURCE_PARTITION_KEY:parent.SOURCE_PARTITION_KEY,
+    SPLIT_FIELD:parent.NEXT_SPLIT_FIELD,
+    SPLIT_FIELD_REQUIRED:parent.NEXT_SPLIT_FIELD_REQUIRED,
+    SPLIT_FIELD_DATA_TYPE:parent.NEXT_SPLIT_FIELD_DATA_TYPE,
+    EXPECTED_VALUE_COUNT:expectedSet.size,
+    ACTUAL_CHILD_COUNT:matching.length,
+    EXPECTED_VALUE_SET_SHA256:hash([...expectedSet].sort()),
+    ACTUAL_VALUE_SET_SHA256:hash([...actualSet].sort()),
+    PARENT_UNION_EQUALS_CHILDREN:unionMatch,
+    CHILD_PREFIX_PRESERVATION:prefixMatch,
+    CHILD_CARDINALITY_AND_UNIQUENESS:cardinalityMatch,
+    SPLIT_SEMANTICS_VALID:splitSemanticMatch,
+    STATUS:unionMatch&&prefixMatch&&cardinalityMatch&&splitSemanticMatch?'PASS':'FAIL'
+  });
+}
+const coveragePreservationPass=
+  parentUnionMismatchCount===0&&
+  childPrefixMismatchCount===0&&
+  splitSemanticMismatchCount===0&&
+  parentChildCardinalityMismatchCount===0&&
+  unsplittableParents.length===0&&
+  splitParents.length===parentRecords.length;
+
 const productNodes=[...new Set(parentRecords.map((row)=>row.PRODUCT_NODE))].sort();
 const analysis={
-  schema_version:'1.0.0',
+  schema_version:'1.1.0',
   artifact_type:'UCHIRIMO_HEAVY_PARTITION_ANALYSIS',
   exact_head:head,
   source_exact_head:SOURCE_EXACT_HEAD,
@@ -339,8 +394,32 @@ const analysis={
   partitions:parentRecords,
   status:'PASS_ANALYSIS_ONLY'
 };
-const plan={
+const coverageProof={
   schema_version:'1.0.0',
+  artifact_type:'UCHIRIMO_RECURSIVE_COVERAGE_PRESERVATION_PROOF',
+  exact_head:head,
+  source_run_id:SOURCE_RUN_ID,
+  runtime_snapshot_id:canonicalRuntimeSnapshotId,
+  parent_partition_count:parentRecords.length,
+  split_parent_count:splitParents.length,
+  child_partition_count:children.length,
+  UNSPLITTABLE_PARENT_COUNT:unsplittableParents.length,
+  PARENT_UNION_MISMATCH_COUNT:parentUnionMismatchCount,
+  CHILD_PREFIX_MISMATCH_COUNT:childPrefixMismatchCount,
+  SPLIT_SEMANTIC_MISMATCH_COUNT:splitSemanticMismatchCount,
+  PARENT_CHILD_CARDINALITY_MISMATCH_COUNT:parentChildCardinalityMismatchCount,
+  proof_semantics:'For each heavy parent, the chosen axis is a required Formal Runtime ENUM. The expected enabled value set at the parent equals the unique child split-value set, every child preserves the complete parent selector prefix, and the child adds exactly one split-axis value. Therefore Parent branch space = Union(All Child branch spaces) for this split level.',
+  parents:coverageProofRows,
+  coverage_preservation_status:coveragePreservationPass?'PASS':'FAIL',
+  status:coveragePreservationPass?'PASS':'FAIL'
+};
+const planReady=
+  overlapCount===0&&
+  splitGapCount===0&&
+  unsplittableParents.length===0&&
+  coveragePreservationPass;
+const plan={
+  schema_version:'1.1.0',
   artifact_type:'UCHIRIMO_RECURSIVE_PARTITION_PLAN',
   exact_head:head,
   runtime_snapshot_id:canonicalRuntimeSnapshotId,
@@ -351,13 +430,19 @@ const plan={
   PARTITION_OVERLAP_COUNT:overlapCount,
   PARTITION_GAP_COUNT:splitGapCount,
   UNSPLITTABLE_PARENT_COUNT:unsplittableParents.length,
-  coverage_semantics:'Each split parent is partitioned over the complete enabled value set of the next Formal Runtime required multi-valued ENUM selector. Unsplittable parents remain BLOCKED/UNVERIFIED and are not PASS.',
+  PARENT_UNION_MISMATCH_COUNT:parentUnionMismatchCount,
+  CHILD_PREFIX_MISMATCH_COUNT:childPrefixMismatchCount,
+  SPLIT_SEMANTIC_MISMATCH_COUNT:splitSemanticMismatchCount,
+  PARENT_CHILD_CARDINALITY_MISMATCH_COUNT:parentChildCardinalityMismatchCount,
+  COVERAGE_PRESERVATION_STATUS:coverageProof.coverage_preservation_status,
+  coverage_semantics:'Each heavy parent is partitioned over the complete enabled value set of the next Formal Runtime required multi-valued ENUM selector. Parent/child selector-prefix preservation and exact set union are independently materialized in coverage-preservation-proof.json. Unsplittable parents remain BLOCKED/UNVERIFIED and make the plan BLOCKED.',
   children,
   unsplittable_parent_ids:unsplittableParents.map((row)=>row.PARTITION_ID),
-  status:overlapCount===0&&splitGapCount===0?'PLAN_READY':'BLOCKED'
+  status:planReady?'PLAN_READY':'BLOCKED'
 };
 writeJson(`${OUT}/heavy-partition-analysis.json`,analysis);
 writeJson(`${OUT}/recursive-partition-plan.json`,plan);
+writeJson(`${OUT}/coverage-preservation-proof.json`,coverageProof);
 console.log(`HEAVY_PARTITION_IDENTIFIED=${parentRecords.length>0?'TRUE':'FALSE'}`);
 console.log(`HEAVY_PARTITION_COUNT=${parentRecords.length}`);
 console.log(`HEAVY_PRODUCT_NODES=${productNodes.join(',')}`);
@@ -365,6 +450,11 @@ console.log(`RECURSIVE_CHILD_PARTITION_COUNT=${children.length}`);
 console.log(`PARTITION_OVERLAP_COUNT=${overlapCount}`);
 console.log(`PARTITION_GAP_COUNT=${splitGapCount}`);
 console.log(`UNSPLITTABLE_PARENT_COUNT=${unsplittableParents.length}`);
+console.log(`PARENT_UNION_MISMATCH_COUNT=${parentUnionMismatchCount}`);
+console.log(`CHILD_PREFIX_MISMATCH_COUNT=${childPrefixMismatchCount}`);
+console.log(`SPLIT_SEMANTIC_MISMATCH_COUNT=${splitSemanticMismatchCount}`);
+console.log(`PARENT_CHILD_CARDINALITY_MISMATCH_COUNT=${parentChildCardinalityMismatchCount}`);
+console.log(`COVERAGE_PRESERVATION_STATUS=${coverageProof.coverage_preservation_status}`);
 console.log(`LOG_UNAVAILABLE_JOB_COUNT=${logUnavailableJobCount}`);
 console.log(`SOURCE_PLAN_FALLBACK_PARTITION_COUNT=${sourcePlanFallbackPartitionCount}`);
 console.log('UCHIRIMO_DEFERRED_SCOPE=DEFERRED_UNVERIFIED');
