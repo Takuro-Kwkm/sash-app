@@ -475,6 +475,7 @@ function durationMs(startedAt,completedAt){
   return Number.isFinite(a)&&Number.isFinite(b)&&b>=a?b-a:null;
 }
 
+let depth1MicroSummary=null;
 if(planReady){
   if(!Number.isFinite(DEPTH1_MICRO_CHILD_TIMEOUT_MS)||DEPTH1_MICRO_CHILD_TIMEOUT_MS<30000)throw new Error('DEPTH1_MICRO_CHILD_TIMEOUT_INVALID');
   const microOut=`${OUT}/depth1-micro-calibration`;
@@ -590,6 +591,7 @@ if(planReady){
     calibration_invalid_count:invalidRows.length,
     failed_product_nodes:deeperSplitRows.map((row)=>row.product_node),
     invalid_product_nodes:invalidRows.map((row)=>row.product_node),
+    pass_product_nodes:results.filter((row)=>row.status==='PASS').map((row)=>row.product_node),
     results,
     full_child_execution_authorized:false,
     decision:invalidRows.length>0
@@ -599,10 +601,190 @@ if(planReady){
         :'DEPTH2_REQUIRED_FOR_FAILED_NODES',
     status:invalidRows.length>0?'BLOCKED':'MEASURED_CALIBRATION_ONLY'
   };
+  depth1MicroSummary=microSummary;
   writeJson(`${OUT}/depth1-micro-calibration.json`,microSummary);
   console.log(`DEPTH1_MICRO_CALIBRATION_PASS_COUNT=${passCount}/${results.length}`);
   console.log(`DEPTH1_MICRO_CALIBRATION_INVALID_COUNT=${invalidRows.length}`);
   console.log(`DEPTH1_MICRO_CALIBRATION_DECISION=${microSummary.decision}`);
+}
+
+let depth2Plan=null;
+let depth2CoverageProof=null;
+if(planReady&&depth1MicroSummary?.decision==='DEPTH2_REQUIRED_FOR_FAILED_NODES'&&depth1MicroSummary.calibration_invalid_count===0){
+  const depth2TargetNodeSet=new Set(depth1MicroSummary.failed_product_nodes);
+  const depth2Parents=[];
+  const depth2Children=[];
+  for(const depth1Child of children.filter((row)=>depth2TargetNodeSet.has(row.PRODUCT_NODE))){
+    const seed=depth1Child.SELECTOR_PREFIX??{};
+    const resolved=await resolveRuntimeAppProduct(PRODUCT_ID,seed);
+    for(const [key,value] of Object.entries(seed))if(!same(resolved.selection?.[key],value))throw new Error(`DEPTH2_PARENT_SEED_REJECTED:${depth1Child.PARTITION_ID}:${key}`);
+    const split=nextSplit(resolved,seed);
+    depth2Parents.push({
+      PARTITION_ID:depth1Child.PARTITION_ID,
+      PARENT_PARTITION_ID:depth1Child.PARENT_PARTITION_ID,
+      PRODUCT_NODE:depth1Child.PRODUCT_NODE,
+      WINDOW_ID:depth1Child.WINDOW_ID,
+      FLOW_SIGNATURE:flowSignature(resolved),
+      SELECTOR_PREFIX:seed,
+      SOURCE_DEPTH1_PARTITION_ID:depth1Child.PARTITION_ID,
+      NEXT_SPLIT_FIELD:split?.field_key??null,
+      NEXT_SPLIT_FIELD_REQUIRED:split?.field_required??null,
+      NEXT_SPLIT_FIELD_DATA_TYPE:split?.field_data_type??null,
+      NEXT_SPLIT_CARDINALITY:split?.values?.length??0,
+      NEXT_SPLIT_VALUES:split?.values?.map(stable)??[],
+      EXACT_HEAD:head,
+      RUNTIME_SNAPSHOT_ID:canonicalRuntimeSnapshotId,
+      STATUS:split?'DEPTH2_SPLIT_PLANNED':'DEPTH2_UNSPLITTABLE'
+    });
+    if(!split)continue;
+    for(const value of split.values){
+      const depth2Seed={...seed,[split.field_key]:value};
+      const depth2Resolved=await resolveRuntimeAppProduct(PRODUCT_ID,depth2Seed);
+      if(!same(depth2Resolved.selection?.[split.field_key],value))throw new Error(`DEPTH2_CHILD_SEED_REJECTED:${depth1Child.PARTITION_ID}:${split.field_key}`);
+      const depth2Id=`UHC2-${hash(stableJson([depth1Child.PARTITION_ID,split.field_key,value])).slice(0,20)}`;
+      depth2Children.push({
+        PARTITION_ID:depth2Id,
+        PARENT_PARTITION_ID:depth1Child.PARTITION_ID,
+        ROOT_HEAVY_PARENT_PARTITION_ID:depth1Child.PARENT_PARTITION_ID,
+        PRODUCT_NODE:depth1Child.PRODUCT_NODE,
+        WINDOW_ID:depth1Child.WINDOW_ID,
+        FLOW_SIGNATURE:flowSignature(depth2Resolved),
+        SELECTOR_PREFIX:depth2Seed,
+        SPLIT_FIELD:split.field_key,
+        SPLIT_VALUE:value,
+        PARTITION_DEPTH:2,
+        EXPECTED_CASE_COUNT:null,
+        EXECUTED_CASE_COUNT:0,
+        PASS:0,
+        FAIL:0,
+        BLOCKED:0,
+        UNVERIFIED:1,
+        EXACT_HEAD:head,
+        RUNTIME_SNAPSHOT_ID:canonicalRuntimeSnapshotId,
+        STATUS:'PLANNED_UNVERIFIED'
+      });
+    }
+  }
+
+  const depth2ChildIds=depth2Children.map((row)=>row.PARTITION_ID);
+  const depth2OverlapCount=depth2ChildIds.length-new Set(depth2ChildIds).size;
+  const depth2ParentsWithChildren=new Set(depth2Children.map((row)=>row.PARENT_PARTITION_ID));
+  const depth2UnsplittableParents=depth2Parents.filter((row)=>!depth2ParentsWithChildren.has(row.PARTITION_ID));
+  const depth2SplitParents=depth2Parents.filter((row)=>depth2ParentsWithChildren.has(row.PARTITION_ID));
+  let depth2GapCount=0;
+  let depth2ParentUnionMismatchCount=0;
+  let depth2ChildPrefixMismatchCount=0;
+  let depth2SplitSemanticMismatchCount=0;
+  let depth2ParentChildCardinalityMismatchCount=0;
+  const depth2ProofRows=[];
+
+  for(const parent of depth2SplitParents){
+    const matching=depth2Children.filter((row)=>row.PARENT_PARTITION_ID===parent.PARTITION_ID);
+    if(matching.length!==parent.NEXT_SPLIT_CARDINALITY)depth2GapCount+=1;
+    const expectedSet=new Set((parent.NEXT_SPLIT_VALUES??[]).map(stableJson));
+    const actualSet=new Set(matching.map((row)=>stableJson(row.SPLIT_VALUE)));
+    const unionMatch=expectedSet.size===actualSet.size&&[...expectedSet].every((value)=>actualSet.has(value));
+    const cardinalityMatch=matching.length===parent.NEXT_SPLIT_CARDINALITY&&actualSet.size===matching.length;
+    const splitSemanticMatch=parent.NEXT_SPLIT_FIELD_REQUIRED===true&&parent.NEXT_SPLIT_FIELD_DATA_TYPE==='ENUM'&&Boolean(parent.NEXT_SPLIT_FIELD);
+    let prefixMatch=true;
+    for(const child of matching){
+      const parentEntries=Object.entries(parent.SELECTOR_PREFIX??{});
+      const parentPreserved=parentEntries.every(([key,value])=>same(child.SELECTOR_PREFIX?.[key],value));
+      const extraKeys=Object.keys(child.SELECTOR_PREFIX??{}).filter((key)=>!Object.prototype.hasOwnProperty.call(parent.SELECTOR_PREFIX??{},key));
+      const oneSplitAxis=extraKeys.length===1&&extraKeys[0]===parent.NEXT_SPLIT_FIELD&&same(child.SELECTOR_PREFIX?.[parent.NEXT_SPLIT_FIELD],child.SPLIT_VALUE);
+      if(!parentPreserved||!oneSplitAxis){prefixMatch=false;break;}
+    }
+    if(!unionMatch)depth2ParentUnionMismatchCount+=1;
+    if(!prefixMatch)depth2ChildPrefixMismatchCount+=1;
+    if(!splitSemanticMatch)depth2SplitSemanticMismatchCount+=1;
+    if(!cardinalityMatch)depth2ParentChildCardinalityMismatchCount+=1;
+    depth2ProofRows.push({
+      PARENT_PARTITION_ID:parent.PARTITION_ID,
+      PRODUCT_NODE:parent.PRODUCT_NODE,
+      SPLIT_FIELD:parent.NEXT_SPLIT_FIELD,
+      SPLIT_FIELD_REQUIRED:parent.NEXT_SPLIT_FIELD_REQUIRED,
+      SPLIT_FIELD_DATA_TYPE:parent.NEXT_SPLIT_FIELD_DATA_TYPE,
+      EXPECTED_VALUE_COUNT:expectedSet.size,
+      ACTUAL_CHILD_COUNT:matching.length,
+      EXPECTED_VALUE_SET_SHA256:hash([...expectedSet].sort()),
+      ACTUAL_VALUE_SET_SHA256:hash([...actualSet].sort()),
+      PARENT_UNION_EQUALS_CHILDREN:unionMatch,
+      CHILD_PREFIX_PRESERVATION:prefixMatch,
+      CHILD_CARDINALITY_AND_UNIQUENESS:cardinalityMatch,
+      SPLIT_SEMANTICS_VALID:splitSemanticMatch,
+      STATUS:unionMatch&&prefixMatch&&cardinalityMatch&&splitSemanticMatch?'PASS':'FAIL'
+    });
+  }
+
+  const depth2CoveragePreservationPass=
+    depth2OverlapCount===0&&
+    depth2GapCount===0&&
+    depth2ParentUnionMismatchCount===0&&
+    depth2ChildPrefixMismatchCount===0&&
+    depth2SplitSemanticMismatchCount===0&&
+    depth2ParentChildCardinalityMismatchCount===0&&
+    depth2UnsplittableParents.length===0&&
+    depth2SplitParents.length===depth2Parents.length;
+
+  depth2CoverageProof={
+    schema_version:'1.0.0',
+    artifact_type:'UCHIRIMO_DEPTH2_COVERAGE_PRESERVATION_PROOF',
+    exact_head:head,
+    runtime_snapshot_id:canonicalRuntimeSnapshotId,
+    source_depth1_micro_calibration_sha256:hash(depth1MicroSummary),
+    target_product_nodes:[...depth2TargetNodeSet].sort(),
+    excluded_depth1_pass_product_nodes:[...(depth1MicroSummary.pass_product_nodes??[])].sort(),
+    parent_partition_count:depth2Parents.length,
+    split_parent_count:depth2SplitParents.length,
+    child_partition_count:depth2Children.length,
+    PARTITION_OVERLAP_COUNT:depth2OverlapCount,
+    PARTITION_GAP_COUNT:depth2GapCount,
+    UNSPLITTABLE_PARENT_COUNT:depth2UnsplittableParents.length,
+    PARENT_UNION_MISMATCH_COUNT:depth2ParentUnionMismatchCount,
+    CHILD_PREFIX_MISMATCH_COUNT:depth2ChildPrefixMismatchCount,
+    SPLIT_SEMANTIC_MISMATCH_COUNT:depth2SplitSemanticMismatchCount,
+    PARENT_CHILD_CARDINALITY_MISMATCH_COUNT:depth2ParentChildCardinalityMismatchCount,
+    proof_semantics:'For every Depth-1 child in a product node measured as NEEDS_DEEPER_SPLIT, the complete enabled value set of the next Formal Runtime required multi-valued ENUM is materialized as unique Depth-2 children. Every Depth-2 child preserves the full Depth-1 selector prefix and adds exactly one split-axis value, so each Depth-1 parent branch space equals the union of its Depth-2 child branch spaces.',
+    parents:depth2ProofRows,
+    coverage_preservation_status:depth2CoveragePreservationPass?'PASS':'FAIL',
+    status:depth2CoveragePreservationPass?'PASS':'FAIL'
+  };
+  depth2Plan={
+    schema_version:'1.0.0',
+    artifact_type:'UCHIRIMO_DEPTH2_RECURSIVE_PARTITION_PLAN',
+    exact_head:head,
+    runtime_snapshot_id:canonicalRuntimeSnapshotId,
+    source_run_id:SOURCE_RUN_ID,
+    source_depth1_micro_calibration_sha256:hash(depth1MicroSummary),
+    partition_depth:2,
+    target_product_nodes:[...depth2TargetNodeSet].sort(),
+    excluded_depth1_pass_product_nodes:[...(depth1MicroSummary.pass_product_nodes??[])].sort(),
+    parent_partition_count:depth2Parents.length,
+    child_partition_count:depth2Children.length,
+    PARTITION_OVERLAP_COUNT:depth2OverlapCount,
+    PARTITION_GAP_COUNT:depth2GapCount,
+    UNSPLITTABLE_PARENT_COUNT:depth2UnsplittableParents.length,
+    PARENT_UNION_MISMATCH_COUNT:depth2ParentUnionMismatchCount,
+    CHILD_PREFIX_MISMATCH_COUNT:depth2ChildPrefixMismatchCount,
+    SPLIT_SEMANTIC_MISMATCH_COUNT:depth2SplitSemanticMismatchCount,
+    PARENT_CHILD_CARDINALITY_MISMATCH_COUNT:depth2ParentChildCardinalityMismatchCount,
+    COVERAGE_PRESERVATION_STATUS:depth2CoverageProof.coverage_preservation_status,
+    parents:depth2Parents,
+    children:depth2Children,
+    unsplittable_parent_ids:depth2UnsplittableParents.map((row)=>row.PARTITION_ID),
+    full_depth2_execution_authorized:false,
+    status:depth2CoveragePreservationPass?'PLAN_READY':'BLOCKED'
+  };
+  writeJson(`${OUT}/depth2-recursive-partition-plan.json`,depth2Plan);
+  writeJson(`${OUT}/depth2-coverage-preservation-proof.json`,depth2CoverageProof);
+  console.log(`DEPTH2_TARGET_PRODUCT_NODE_COUNT=${depth2TargetNodeSet.size}`);
+  console.log(`DEPTH2_PARENT_PARTITION_COUNT=${depth2Parents.length}`);
+  console.log(`DEPTH2_CHILD_PARTITION_COUNT=${depth2Children.length}`);
+  console.log(`DEPTH2_PARTITION_OVERLAP_COUNT=${depth2OverlapCount}`);
+  console.log(`DEPTH2_PARTITION_GAP_COUNT=${depth2GapCount}`);
+  console.log(`DEPTH2_UNSPLITTABLE_PARENT_COUNT=${depth2UnsplittableParents.length}`);
+  console.log(`DEPTH2_COVERAGE_PRESERVATION_STATUS=${depth2CoverageProof.coverage_preservation_status}`);
+  console.log(`DEPTH2_PLAN_STATUS=${depth2Plan.status}`);
 }
 
 console.log(`HEAVY_PARTITION_IDENTIFIED=${parentRecords.length>0?'TRUE':'FALSE'}`);
