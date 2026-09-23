@@ -84,9 +84,11 @@ jobs:
     needs:
       - governance-authority
       - pilot-plan
-    if: ${{ needs.governance-authority.outputs.authorized == 'true' && needs.pilot-plan.result == 'success' }}
+    # v2 is mechanically incapable of passing after observed 35-minute timeouts.
+    # Keep the failed execution path closed while checkpoint/resume recovery is implemented.
+    if: ${{ false }}
     strategy:
-      fail-fast: false
+      fail-fast: true
       max-parallel: 4
       matrix: ${{ fromJSON(needs.pilot-plan.outputs.matrix) }}
     runs-on: ubuntu-latest
@@ -158,13 +160,6 @@ jobs:
       full_coverage_authorized: ${{ steps.hold-full-coverage.outputs.full_coverage_authorized }}
     env:
       HEAD_SHA: ${{ inputs.controller_head }}
-      UCHIRIMO_RECOVERY_PILOT_MODE: aggregate
-      UCHIRIMO_RECOVERY_PILOT_PLAN_OUT: artifacts/uchirimo-recovery-pilot-plan
-      UCHIRIMO_RECOVERY_PILOT_SOURCE_ROOT: artifacts/uchirimo-recovery-pilot-source
-      UCHIRIMO_RECOVERY_PILOT_AGGREGATE_OUT: artifacts/uchirimo-recovery-pilot-aggregate
-      UCHIRIMO_RECOVERY_PILOT_TARGET_COUNT: 16
-      UCHIRIMO_RECOVERY_PILOT_PASS_MAX_ELAPSED_MS: 1800000
-      UCHIRIMO_RECOVERY_PILOT_CHILD_TIMEOUT_MS: 2100000
     steps:
       - name: Checkout exact HEAD
         uses: actions/checkout@v4
@@ -172,42 +167,13 @@ jobs:
           ref: ${{ env.HEAD_SHA }}
           fetch-depth: 0
 
-      - name: Setup Node 24
-        uses: actions/setup-node@v4
-        with:
-          node-version: 24
-
-      - name: Download Recovery Pilot plan
-        uses: actions/download-artifact@v4
-        with:
-          name: uchirimo-recovery-pilot-plan-${{ env.HEAD_SHA }}
-          path: artifacts/uchirimo-recovery-pilot-plan
-
-      - name: Download Recovery Pilot child evidence
-        continue-on-error: true
-        uses: actions/download-artifact@v4
-        with:
-          pattern: uchirimo-recovery-pilot-child-*-${{ env.HEAD_SHA }}
-          path: artifacts/uchirimo-recovery-pilot-source
-          merge-multiple: true
-
-      - name: Evaluate Recovery Pilot Hard Gate
-        run: node scripts/governance/uchirimo-recovery-pilot.mjs
-
-      - name: Hold Full Coverage until recovery integration is current-head ready
+      - name: Hold Full Coverage while recovery v3 is being implemented
         id: hold-full-coverage
         shell: bash
         run: |
-          echo "pilot_hard_gate=PASS" >> "$GITHUB_OUTPUT"
+          echo "pilot_hard_gate=BLOCKED" >> "$GITHUB_OUTPUT"
           echo "full_coverage_authorized=false" >> "$GITHUB_OUTPUT"
-          echo "RECOVERY_INTEGRATION_GATE=BLOCKED"
-          echo "FULL_COVERAGE_QA_GATE=BLOCKED reason=RECOVERY_INTEGRATION_PENDING"
+          echo "RECOVERY_V2_EXECUTION_PATH=CLOSED"
+          echo "RECOVERY_V3_CHECKPOINT_RESUME_GATE=BLOCKED"
+          echo "FULL_COVERAGE_QA_GATE=BLOCKED reason=RECOVERY_V3_PENDING"
           exit 1
-
-      - name: Upload Recovery Pilot aggregate
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: uchirimo-recovery-pilot-aggregate-${{ env.HEAD_SHA }}
-          path: artifacts/uchirimo-recovery-pilot-aggregate/
-          if-no-files-found: error
