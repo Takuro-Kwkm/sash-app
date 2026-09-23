@@ -1,6 +1,6 @@
 import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
-import { mkdirSync } from 'node:fs';
+import { mkdirSync, unlinkSync, writeFileSync } from 'node:fs';
 import { appRuntimeIntegrationRegistry } from '../../src/catalog/runtime-master/app-runtime-integration-registry.mjs';
 import { loadRegisteredRuntime } from '../../src/catalog/runtime-master/runtime-master-registry.mjs';
 import { resolveRuntimeAppProduct } from '../../src/catalog/runtime-master/runtime-app-bridge.mjs';
@@ -38,6 +38,10 @@ function ghJson(path){
 }
 function ghText(path){
   return execFileSync('gh',['api','--allow-escape-sequences',path],{encoding:'utf8',maxBuffer:64*1024*1024});
+}
+function logUnavailable(error){
+  const text=[error?.message,error?.stderr,error?.stdout].map((value)=>String(value??'')).join('\n');
+  return /HTTP 404|BlobNotFound|specified blob does not exist/i.test(text);
 }
 async function listJobs(){
   const first=ghJson(`/repos/${REPO}/actions/runs/${SOURCE_RUN_ID}/jobs?per_page=100&page=1`);
@@ -108,6 +112,49 @@ function baseSeed(row){
   return {...seed,...JSON.parse(row.partition_seed_json??'{}')};
 }
 
+const sourcePlanCache=new Map();
+function sourceBatchIdentity(job){
+  const match=String(job.name??'').match(/\b(lane-(\d+)-(?:heavy|normal)-\d+)\b/);
+  if(!match)throw new Error(`SOURCE_JOB_BATCH_ID_UNPARSEABLE:${job.id}`);
+  return {batch_id:match[1],lane:Number(match[2])};
+}
+function sourcePlanLane(lane){
+  if(sourcePlanCache.has(lane))return sourcePlanCache.get(lane);
+  const artifactName=`uchirimo-selector-proof-plan-${lane}-${SOURCE_EXACT_HEAD}`;
+  const lookup=ghJson(`/repos/${REPO}/actions/runs/${SOURCE_RUN_ID}/artifacts?name=${encodeURIComponent(artifactName)}`);
+  const artifact=(lookup.artifacts??[]).find((row)=>row.name===artifactName&&row.expired!==true);
+  if(!artifact)throw new Error(`SOURCE_PLAN_ARTIFACT_NOT_FOUND:${lane}:${artifactName}`);
+  const zipPath=`/tmp/uchirimo-source-plan-${SOURCE_RUN_ID}-${lane}-${process.pid}.zip`;
+  const zip=execFileSync('gh',['api','--allow-escape-sequences',`/repos/${REPO}/actions/artifacts/${artifact.id}/zip`],{maxBuffer:16*1024*1024});
+  writeFileSync(zipPath,zip);
+  let matrix;
+  try{
+    matrix=JSON.parse(execFileSync('unzip',['-p',zipPath,'matrix.json'],{encoding:'utf8',maxBuffer:4*1024*1024}));
+  }finally{
+    unlinkSync(zipPath);
+  }
+  const rows=new Map((matrix.matrix?.include??[]).map((row)=>[String(row.batch_id),row]));
+  if(rows.size===0)throw new Error(`SOURCE_PLAN_MATRIX_EMPTY:${lane}`);
+  sourcePlanCache.set(lane,rows);
+  return rows;
+}
+function sourcePlanBatch(job){
+  const {batch_id,lane}=sourceBatchIdentity(job);
+  const entry=sourcePlanLane(lane).get(batch_id);
+  if(!entry)throw new Error(`SOURCE_PLAN_BATCH_NOT_FOUND:${job.id}:${batch_id}`);
+  let rows;
+  try{
+    rows=JSON.parse(entry.batch_json);
+  }catch{
+    throw new Error(`SOURCE_PLAN_BATCH_JSON_INVALID:${job.id}:${batch_id}`);
+  }
+  if(!Array.isArray(rows)||rows.length===0)throw new Error(`SOURCE_PLAN_BATCH_EMPTY:${job.id}:${batch_id}`);
+  const timeoutRaw=entry.child_timeout_ms;
+  const childTimeout=timeoutRaw==null?null:Number(timeoutRaw);
+  if(childTimeout!==null&&!Number.isFinite(childTimeout))throw new Error(`SOURCE_PLAN_TIMEOUT_INVALID:${job.id}:${batch_id}`);
+  return {batch_id,lane,rows,childTimeout};
+}
+
 const integrations=appRuntimeIntegrationRegistry.filter((row)=>['NEW_CONSTRUCTION_EXTERIOR_WINDOW','INNER_WINDOW'].includes(row.uiCategory));
 const snapshotByKey=new Map(canonicalSnapshot.entries.map((row)=>[row.registry_series_key,row]));
 const canonicalProjection=integrations.map((integration)=>({
@@ -128,12 +175,37 @@ const candidates=jobs.filter((job)=>
 );
 
 const observations=[];
+let logUnavailableJobCount=0;
+const logUnavailableJobIds=[];
+let sourcePlanFallbackPartitionCount=0;
 for(const [index,job] of candidates.entries()){
-  const log=ghText(`/repos/${REPO}/actions/jobs/${job.id}/logs`);
-  const batch=parseBatch(log);
-  if(!batch)continue;
-  const progress=lastProgress(log);
-  const childTimeout=timeoutMs(log);
+  let log=null;
+  let batch=null;
+  let progress=null;
+  let childTimeout=null;
+  let sourceEvidence='JOB_LOG';
+  let metricsVerificationStatus='MEASURED_FROM_JOB_LOG';
+  try{
+    log=ghText(`/repos/${REPO}/actions/jobs/${job.id}/logs`);
+  }catch(error){
+    if(!logUnavailable(error))throw error;
+    logUnavailableJobCount+=1;
+    logUnavailableJobIds.push(job.id);
+    sourceEvidence='SOURCE_PLAN_ARTIFACT_FALLBACK';
+    metricsVerificationStatus='LOG_UNAVAILABLE_IDENTITY_RECOVERED';
+  }
+  if(log!==null){
+    batch=parseBatch(log);
+    progress=lastProgress(log);
+    childTimeout=timeoutMs(log);
+  }
+  if(!batch){
+    const fallback=sourcePlanBatch(job);
+    batch=fallback.rows;
+    if(childTimeout===null)childTimeout=fallback.childTimeout;
+    sourcePlanFallbackPartitionCount+=batch.length;
+    if(log!==null)sourceEvidence='JOB_LOG_PLUS_SOURCE_PLAN_IDENTITY';
+  }
   for(const row of batch){
     observations.push({
       job_id:job.id,
@@ -141,8 +213,10 @@ for(const [index,job] of candidates.entries()){
       conclusion:job.conclusion,
       elapsed_time_ms:elapsedMs(job),
       child_timeout_ms:childTimeout,
-      failure_class:classify(job,log,progress,childTimeout),
+      failure_class:classify(job,log??'',progress,childTimeout),
       measured_progress:progress,
+      source_evidence:sourceEvidence,
+      metrics_verification_status:metricsVerificationStatus,
       ...row,
     });
   }
@@ -169,6 +243,11 @@ for(const obs of heavy){
   const signature=flowSignature(resolved);
   const split=nextSplit(resolved,seed);
   const parentId=`UHP-${hash(obs.partition_key).slice(0,20)}`;
+  const estimateStatus=obs.failure_class==='CANCELLED'
+    ?'UNBOUNDED_PARENT_CANCELLED'
+    :['TIMEOUT','DATA_EXPLOSION'].includes(obs.failure_class)
+      ?'UNBOUNDED_PARENT_TIMEOUT'
+      :'UNBOUNDED_PARENT_INCOMPLETE';
   parentRecords.push({
     PARTITION_ID:parentId,
     PARENT_PARTITION_ID:null,
@@ -177,15 +256,20 @@ for(const obs of heavy){
     FLOW_SIGNATURE:signature,
     SELECTOR_PREFIX:seed,
     ESTIMATED_CASE_COUNT:null,
-    ESTIMATED_CASE_COUNT_STATUS:'UNBOUNDED_PARENT_TIMEOUT',
-    GENERATED_CASE_COUNT:Number(obs.measured_progress?.terminals??0),
-    EXECUTED_CASE_COUNT:Number(obs.measured_progress?.terminals??0),
+    ESTIMATED_CASE_COUNT_STATUS:estimateStatus,
+    GENERATED_CASE_COUNT:obs.measured_progress?.terminals??null,
+    EXECUTED_CASE_COUNT:obs.measured_progress?.terminals??null,
+    OBSERVED_STATE_COUNT:obs.measured_progress?.states??null,
+    OBSERVED_TERMINAL_COUNT:obs.measured_progress?.terminals??null,
+    OBSERVED_PEAK_HEAP_MB:obs.measured_progress?.heap_mb??null,
     PASS_COUNT:0,
     FAIL_COUNT:obs.conclusion==='failure'?1:0,
     BLOCKED_COUNT:1,
     UNVERIFIED_COUNT:1,
     ELAPSED_TIME:obs.elapsed_time_ms,
     FAILURE_CLASS:obs.failure_class,
+    SOURCE_EVIDENCE:obs.source_evidence,
+    METRICS_VERIFICATION_STATUS:obs.metrics_verification_status,
     EXACT_HEAD:head,
     SOURCE_EXACT_HEAD:SOURCE_EXACT_HEAD,
     RUNTIME_SNAPSHOT_ID:canonicalRuntimeSnapshotId,
@@ -247,6 +331,10 @@ const analysis={
   heavy_product_nodes:productNodes,
   observed_failure_job_count:candidates.length,
   observed_partition_count:observations.length,
+  log_unavailable_job_count:logUnavailableJobCount,
+  log_unavailable_job_ids:logUnavailableJobIds,
+  source_plan_fallback_partition_count:sourcePlanFallbackPartitionCount,
+  source_job_identity_recovery_status:'COMPLETE',
   failure_class_counts:Object.fromEntries([...new Set(parentRecords.map((row)=>row.FAILURE_CLASS))].map((key)=>[key,parentRecords.filter((row)=>row.FAILURE_CLASS===key).length])),
   partitions:parentRecords,
   status:'PASS_ANALYSIS_ONLY'
@@ -277,4 +365,6 @@ console.log(`RECURSIVE_CHILD_PARTITION_COUNT=${children.length}`);
 console.log(`PARTITION_OVERLAP_COUNT=${overlapCount}`);
 console.log(`PARTITION_GAP_COUNT=${splitGapCount}`);
 console.log(`UNSPLITTABLE_PARENT_COUNT=${unsplittableParents.length}`);
+console.log(`LOG_UNAVAILABLE_JOB_COUNT=${logUnavailableJobCount}`);
+console.log(`SOURCE_PLAN_FALLBACK_PARTITION_COUNT=${sourcePlanFallbackPartitionCount}`);
 console.log('UCHIRIMO_DEFERRED_SCOPE=DEFERRED_UNVERIFIED');
