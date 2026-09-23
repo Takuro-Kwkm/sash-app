@@ -196,10 +196,13 @@ jobs:
 
       - name: Hold Full Coverage until recovery integration is current-head ready
         id: hold-full-coverage
+        shell: bash
         run: |
           echo "pilot_hard_gate=PASS" >> "$GITHUB_OUTPUT"
           echo "full_coverage_authorized=false" >> "$GITHUB_OUTPUT"
+          echo "RECOVERY_INTEGRATION_GATE=BLOCKED"
           echo "FULL_COVERAGE_QA_GATE=BLOCKED reason=RECOVERY_INTEGRATION_PENDING"
+          exit 1
 
       - name: Upload Recovery Pilot aggregate
         if: always()
