@@ -1,0 +1,15 @@
+{
+  "schema_version": "1.0.0",
+  "exact_head": "80178b357fa05c3557b293e18bb2ef457aab4bc9",
+  "status": "BLOCKED",
+  "series_count": 8,
+  "base_window_count": 113,
+  "qa_case_count": null,
+  "unverified_qa_case_count": 1,
+  "sources": {
+    "nontw": null,
+    "tw": null,
+    "inplus": null,
+    "uchirimo": null
+  }
+}
