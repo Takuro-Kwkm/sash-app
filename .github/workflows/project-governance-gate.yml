@@ -261,12 +261,13 @@ jobs:
     uses: ./.github/workflows/uchirimo-recovery-pilot.yml
     with:
       controller_head: ${{ github.event.pull_request.head.sha || github.sha }}
+      lane: current-release-scope
 
   post-review-global-flow:
     needs:
       - governance
       - post-review-uchirimo-recovery-pilot
-    if: needs.governance.outputs.authorized == 'true' && needs.post-review-uchirimo-recovery-pilot.result == 'success'
+    if: needs.governance.outputs.authorized == 'true' && needs.post-review-uchirimo-recovery-pilot.outputs.full_coverage_authorized == 'true'
     uses: ./.github/workflows/global-window-selection-flow-gate.yml
     with:
       controller_head: ${{ github.event.pull_request.head.sha || github.sha }}
@@ -275,7 +276,7 @@ jobs:
     needs:
       - governance
       - post-review-uchirimo-recovery-pilot
-    if: needs.governance.outputs.authorized == 'true' && needs.post-review-uchirimo-recovery-pilot.result == 'success' && github.event_name == 'pull_request'
+    if: needs.governance.outputs.authorized == 'true' && needs.post-review-uchirimo-recovery-pilot.outputs.full_coverage_authorized == 'true' && github.event_name == 'pull_request'
     uses: ./.github/workflows/stage-a-nontw-80-window-discrete-exact-count.yml
     with:
       controller_head: ${{ github.event.pull_request.head.sha || github.sha }}
@@ -284,7 +285,7 @@ jobs:
     needs:
       - governance
       - post-review-uchirimo-recovery-pilot
-    if: needs.governance.outputs.authorized == 'true' && needs.post-review-uchirimo-recovery-pilot.result == 'success' && github.event_name == 'pull_request'
+    if: needs.governance.outputs.authorized == 'true' && needs.post-review-uchirimo-recovery-pilot.outputs.full_coverage_authorized == 'true' && github.event_name == 'pull_request'
     uses: ./.github/workflows/stage-a-tw-25-window-behavioral-projection-count.yml
     with:
       controller_head: ${{ github.event.pull_request.head.sha || github.sha }}
@@ -296,7 +297,7 @@ jobs:
       - post-review-global-flow
       - post-review-nontw-exact
       - post-review-tw-exact
-    if: ${{ always() && needs.governance.outputs.authorized == 'true' && github.event_name == 'pull_request' }}
+    if: ${{ always() && needs.governance.outputs.authorized == 'true' && needs.post-review-uchirimo-recovery-pilot.outputs.full_coverage_authorized == 'true' && github.event_name == 'pull_request' }}
     runs-on: ubuntu-latest
     timeout-minutes: 20
     permissions:
