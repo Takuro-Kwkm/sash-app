@@ -26,6 +26,7 @@
     }
   },
   "controller_post_human_jobs": [
+    "post-review-uchirimo-recovery-pilot",
     "post-review-global-flow",
     "post-review-nontw-exact",
     "post-review-tw-exact",
@@ -38,6 +39,7 @@
     "estimate-output-qa.yml",
     "ew-production-finalize.yml",
     "global-window-selection-flow-gate.yml",
+    "uchirimo-recovery-pilot.yml",
     "stage-a-105-window-discrete-exact-head-consolidation-v2.yml",
     "stage-a-105-window-discrete-exact-head-consolidation.yml",
     "stage-a-apw430-behavior-projection-v1.yml",

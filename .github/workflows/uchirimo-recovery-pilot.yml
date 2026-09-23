@@ -9,9 +9,23 @@ on:
 
 permissions:
   contents: read
+  issues: read
+  pull-requests: read
+
+concurrency:
+  group: uchirimo-recovery-pilot-${{ inputs.controller_head }}
+  cancel-in-progress: true
 
 jobs:
+  governance-authority:
+    uses: ./.github/workflows/governance-authorization.yml
+    with:
+      controller_head: ${{ inputs.controller_head }}
+      release: false
+
   pilot-plan:
+    needs: ["governance-authority"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' }}
     runs-on: ubuntu-latest
     timeout-minutes: 20
     outputs:
@@ -60,8 +74,10 @@ jobs:
           if-no-files-found: error
 
   pilot-run:
-    needs: pilot-plan
-    if: needs.pilot-plan.result == 'success'
+    needs:
+      - governance-authority
+      - pilot-plan
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && needs.pilot-plan.result == 'success' }}
     strategy:
       fail-fast: false
       max-parallel: 4
@@ -124,9 +140,10 @@ jobs:
 
   pilot-gate:
     needs:
+      - governance-authority
       - pilot-plan
       - pilot-run
-    if: always()
+    if: ${{ always() && needs.governance-authority.outputs.authorized == 'true' }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
     env:
