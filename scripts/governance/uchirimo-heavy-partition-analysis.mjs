@@ -453,12 +453,12 @@ function microSeverity(parent){
   const fallbackBonus=parent.SOURCE_EVIDENCE==='SOURCE_PLAN_ARTIFACT_FALLBACK'?1:0;
   return classRank*1e15+fallbackBonus*1e14+Number(parent.OBSERVED_STATE_COUNT??0)*1e6+Number(parent.ELAPSED_TIME??0)*1e2+Number(parent.NEXT_SPLIT_CARDINALITY??0);
 }
-function microBatchRow(child,index){
+function microBatchRow(child){
   const prefix=child.SELECTOR_PREFIX??{};
   const baseKeys=new Set(['room_specification','window_type','glass_family','sash_configuration','size_class']);
   const extra=Object.fromEntries(Object.entries(prefix).filter(([key])=>!baseKeys.has(key)));
   return {
-    shard:index,
+    shard:0,
     node_id:child.PRODUCT_NODE,
     partition_key:child.PARTITION_ID,
     room_specification:String(prefix.room_specification),
@@ -498,7 +498,7 @@ if(planReady){
     const caseOut=`${microOut}/case-${caseId}`;
     const batchId=`depth1-micro-${caseId}`;
     mkdirSync(caseOut,{recursive:true});
-    const row=microBatchRow(child,index);
+    const row=microBatchRow(child);
     let executionError=null;
     try{
       execFileSync(process.execPath,['scripts/governance/uchirimo-selector-batch-runner.mjs'],{
@@ -508,6 +508,7 @@ if(planReady){
           UCHIRIMO_SELECTOR_BATCH_ID:batchId,
           UCHIRIMO_SELECTOR_BATCH_JSON:JSON.stringify([row]),
           UCHIRIMO_SELECTOR_CHILD_TIMEOUT_MS:String(DEPTH1_MICRO_CHILD_TIMEOUT_MS),
+          UCHIRIMO_SELECTOR_EXPECTED_SHARDS:'1',
           UCHIRIMO_FULL_SELECTOR_OUT:caseOut
         },
         encoding:'utf8',
@@ -518,8 +519,8 @@ if(planReady){
       executionError={message:String(error?.message??error),code:error?.code??null,signal:error?.signal??null,killed:error?.killed??null};
     }
     const batchReport=readJsonSafe(`${caseOut}/batch-${batchId}-report.json`);
-    const shardReport=readJsonSafe(`${caseOut}/shard-${index}-report.json`);
-    const failureReport=readJsonSafe(`${caseOut}/shard-${index}-failure.json`);
+    const shardReport=readJsonSafe(`${caseOut}/shard-0-report.json`);
+    const failureReport=readJsonSafe(`${caseOut}/shard-0-failure.json`);
     let caseArtifactShaMatch=null;
     if(shardReport?.case_artifact){
       const casePath=`${caseOut}/${shardReport.case_artifact}`;
@@ -529,7 +530,7 @@ if(planReady){
         unlinkSync(casePath);
       }
     }
-    const terminalDigest=`${caseOut}/shard-${index}-terminal-digests.jsonl`;
+    const terminalDigest=`${caseOut}/shard-0-terminal-digests.jsonl`;
     if(existsSync(terminalDigest))unlinkSync(terminalDigest);
     const elapsed=durationMs(batchReport?.results?.[0]?.started_at,batchReport?.results?.[0]?.completed_at);
     const pass=
@@ -540,6 +541,11 @@ if(planReady){
       Number(shardReport?.unverified_discrete_selector_case_count??1)===0&&
       caseArtifactShaMatch===true&&
       Number.isFinite(elapsed)&&elapsed<=DEPTH1_MICRO_CHILD_TIMEOUT_MS;
+    const failureMessage=String(failureReport?.message??'');
+    const needsDeeperSplit=
+      batchReport?.results?.[0]?.timed_out===true||
+      /UCHIRIMO_SELECTOR_STATE_LIMIT_REACHED|UCHIRIMO_TERMINAL_LIMIT_REACHED/.test(failureMessage);
+    const status=pass?'PASS':needsDeeperSplit?'NEEDS_DEEPER_SPLIT':'CALIBRATION_INVALID';
     const result={
       index,
       product_node:child.PRODUCT_NODE,
@@ -558,15 +564,17 @@ if(planReady){
       case_artifact_sha256_match:caseArtifactShaMatch,
       execution_error:executionError,
       failure_artifact_present:Boolean(failureReport),
-      status:pass?'PASS':'NEEDS_DEEPER_SPLIT'
+      failure_message:failureMessage||null,
+      status
     };
     results.push(result);
     console.log(`DEPTH1_MICRO_CASE node=${child.PRODUCT_NODE} status=${result.status} elapsed_ms=${String(elapsed)}`);
   }
   const passCount=results.filter((row)=>row.status==='PASS').length;
-  const failedNodes=results.filter((row)=>row.status!=='PASS').map((row)=>row.product_node);
+  const deeperSplitRows=results.filter((row)=>row.status==='NEEDS_DEEPER_SPLIT');
+  const invalidRows=results.filter((row)=>row.status==='CALIBRATION_INVALID');
   const microSummary={
-    schema_version:'1.0.0',
+    schema_version:'1.1.0',
     artifact_type:'UCHIRIMO_DEPTH1_MICRO_CALIBRATION',
     exact_head:head,
     runtime_snapshot_id:canonicalRuntimeSnapshotId,
@@ -578,15 +586,22 @@ if(planReady){
     selected_child_count:results.length,
     child_timeout_ms:DEPTH1_MICRO_CHILD_TIMEOUT_MS,
     pass_count:passCount,
-    needs_deeper_split_count:results.length-passCount,
-    failed_product_nodes:failedNodes,
+    needs_deeper_split_count:deeperSplitRows.length,
+    calibration_invalid_count:invalidRows.length,
+    failed_product_nodes:deeperSplitRows.map((row)=>row.product_node),
+    invalid_product_nodes:invalidRows.map((row)=>row.product_node),
     results,
     full_child_execution_authorized:false,
-    decision:passCount===results.length?'DEPTH1_FAST_PATH_PROMISING':'DEPTH2_REQUIRED_FOR_FAILED_NODES',
-    status:'MEASURED_CALIBRATION_ONLY'
+    decision:invalidRows.length>0
+      ?'CALIBRATION_INVALID'
+      :passCount===results.length
+        ?'DEPTH1_FAST_PATH_PROMISING'
+        :'DEPTH2_REQUIRED_FOR_FAILED_NODES',
+    status:invalidRows.length>0?'BLOCKED':'MEASURED_CALIBRATION_ONLY'
   };
   writeJson(`${OUT}/depth1-micro-calibration.json`,microSummary);
   console.log(`DEPTH1_MICRO_CALIBRATION_PASS_COUNT=${passCount}/${results.length}`);
+  console.log(`DEPTH1_MICRO_CALIBRATION_INVALID_COUNT=${invalidRows.length}`);
   console.log(`DEPTH1_MICRO_CALIBRATION_DECISION=${microSummary.decision}`);
 }
 
