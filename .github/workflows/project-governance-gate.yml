@@ -115,6 +115,7 @@ jobs:
           node --check scripts/governance/materialize-current-state.mjs
           node --check scripts/governance/verify-materialized-state.mjs
           node --check scripts/governance/reconstruct-current-state.mjs
+          node --check scripts/governance/uchirimo-recovery-pilot.mjs
 
       - name: frame_angle canonical contract tests
         run: node --test test/76-frame-angle-global-flow.test.mjs
@@ -254,23 +255,36 @@ jobs:
         run: |
           node -e "const fs=require('fs');const s=JSON.parse(fs.readFileSync('artifacts/governance/reconstructed-current-state.json','utf8'));if(s.exact_head!==process.env.HEAD_SHA||s.current_state_reconstruction_gate!=='PASS')process.exit(1);console.log('ONE_SHOT_CURRENT_STATE_RECONSTRUCTION=PASS EXACT_HEAD='+s.exact_head+' DRIVE_AUTHORITY_MODE='+s.drive_authority_mode)"
 
-  post-review-global-flow:
+  post-review-uchirimo-recovery-pilot:
     needs: governance
     if: needs.governance.outputs.authorized == 'true'
+    uses: ./.github/workflows/uchirimo-recovery-pilot.yml
+    with:
+      controller_head: ${{ github.event.pull_request.head.sha || github.sha }}
+
+  post-review-global-flow:
+    needs:
+      - governance
+      - post-review-uchirimo-recovery-pilot
+    if: needs.governance.outputs.authorized == 'true' && needs.post-review-uchirimo-recovery-pilot.result == 'success'
     uses: ./.github/workflows/global-window-selection-flow-gate.yml
     with:
       controller_head: ${{ github.event.pull_request.head.sha || github.sha }}
 
   post-review-nontw-exact:
-    needs: governance
-    if: needs.governance.outputs.authorized == 'true' && github.event_name == 'pull_request'
+    needs:
+      - governance
+      - post-review-uchirimo-recovery-pilot
+    if: needs.governance.outputs.authorized == 'true' && needs.post-review-uchirimo-recovery-pilot.result == 'success' && github.event_name == 'pull_request'
     uses: ./.github/workflows/stage-a-nontw-80-window-discrete-exact-count.yml
     with:
       controller_head: ${{ github.event.pull_request.head.sha || github.sha }}
 
   post-review-tw-exact:
-    needs: governance
-    if: needs.governance.outputs.authorized == 'true' && github.event_name == 'pull_request'
+    needs:
+      - governance
+      - post-review-uchirimo-recovery-pilot
+    if: needs.governance.outputs.authorized == 'true' && needs.post-review-uchirimo-recovery-pilot.result == 'success' && github.event_name == 'pull_request'
     uses: ./.github/workflows/stage-a-tw-25-window-behavioral-projection-count.yml
     with:
       controller_head: ${{ github.event.pull_request.head.sha || github.sha }}
@@ -278,6 +292,7 @@ jobs:
   finalize-post-human-evidence:
     needs:
       - governance
+      - post-review-uchirimo-recovery-pilot
       - post-review-global-flow
       - post-review-nontw-exact
       - post-review-tw-exact

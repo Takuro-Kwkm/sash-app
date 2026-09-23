@@ -1,0 +1,176 @@
+name: Uchirimo Recovery Pilot
+
+on:
+  workflow_call:
+    inputs:
+      controller_head:
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  pilot-plan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    outputs:
+      matrix: ${{ steps.plan.outputs.matrix }}
+      pilot_count: ${{ steps.plan.outputs.pilot_count }}
+    env:
+      HEAD_SHA: ${{ inputs.controller_head }}
+      UCHIRIMO_SELECTOR_MODE: plan-all
+      UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-recovery-pilot-base-plan
+      UCHIRIMO_RECOVERY_PILOT_MODE: plan
+      UCHIRIMO_RECOVERY_PILOT_BASE_PLAN: artifacts/uchirimo-recovery-pilot-base-plan/all-partitions.json
+      UCHIRIMO_RECOVERY_PILOT_PLAN_OUT: artifacts/uchirimo-recovery-pilot-plan
+      UCHIRIMO_RECOVERY_PILOT_TARGET_COUNT: 16
+      UCHIRIMO_RECOVERY_PILOT_PASS_MAX_ELAPSED_MS: 1800000
+      UCHIRIMO_RECOVERY_PILOT_CHILD_TIMEOUT_MS: 2100000
+    steps:
+      - name: Checkout exact HEAD
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.HEAD_SHA }}
+          fetch-depth: 0
+
+      - name: Setup Node 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Install
+        run: npm install --ignore-scripts
+
+      - name: Verify exact HEAD
+        run: test "$(git rev-parse HEAD)" = "$HEAD_SHA"
+
+      - name: Build unchanged current partition inventory
+        run: node scripts/uchirimo-full-selector-proof.mjs
+
+      - name: Build adaptive +1 Recovery Pilot plan
+        id: plan
+        run: node scripts/governance/uchirimo-recovery-pilot.mjs
+
+      - name: Upload Recovery Pilot plan
+        uses: actions/upload-artifact@v4
+        with:
+          name: uchirimo-recovery-pilot-plan-${{ env.HEAD_SHA }}
+          path: artifacts/uchirimo-recovery-pilot-plan/
+          if-no-files-found: error
+
+  pilot-run:
+    needs: pilot-plan
+    if: needs.pilot-plan.result == 'success'
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+      matrix: ${{ fromJSON(needs.pilot-plan.outputs.matrix) }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      HEAD_SHA: ${{ inputs.controller_head }}
+      UCHIRIMO_SELECTOR_MODE: shard
+      UCHIRIMO_SELECTOR_BATCH_ID: ${{ matrix.batch_id }}
+      UCHIRIMO_SELECTOR_BATCH_JSON: ${{ matrix.batch_json }}
+      UCHIRIMO_SELECTOR_CHILD_TIMEOUT_MS: ${{ matrix.child_timeout_ms }}
+      UCHIRIMO_SELECTOR_EXPECTED_SHARDS: ${{ needs.pilot-plan.outputs.pilot_count }}
+      UCHIRIMO_RESOLVER_CACHE_MAX: 4096
+      UCHIRIMO_SELECTOR_MAX_STATES: 2000000
+      UCHIRIMO_SELECTOR_MAX_TERMINALS: 2000000
+      UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-recovery-pilot-shard
+      UCHIRIMO_RECOVERY_PILOT_MODE: verify
+      UCHIRIMO_RECOVERY_PILOT_PASS_MAX_ELAPSED_MS: 1800000
+    steps:
+      - name: Checkout exact HEAD
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.HEAD_SHA }}
+          fetch-depth: 0
+
+      - name: Setup Node 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Install
+        run: npm install --ignore-scripts
+
+      - name: Verify exact HEAD
+        run: test "$(git rev-parse HEAD)" = "$HEAD_SHA"
+
+      - name: Run isolated Recovery Pilot child
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/governance/uchirimo-selector-batch-runner.mjs
+
+      - name: Verify child evidence and terminal artifact integrity
+        if: always()
+        run: node scripts/governance/uchirimo-recovery-pilot.mjs
+
+      - name: Remove large terminal digest after integrity verification
+        if: always()
+        shell: bash
+        run: rm -f artifacts/uchirimo-recovery-pilot-shard/shard-*-terminal-digests.jsonl
+
+      - name: Upload lightweight Recovery Pilot child evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: uchirimo-recovery-pilot-child-${{ matrix.pilot_index }}-${{ env.HEAD_SHA }}
+          path: artifacts/uchirimo-recovery-pilot-shard/
+          if-no-files-found: error
+
+  pilot-gate:
+    needs:
+      - pilot-plan
+      - pilot-run
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      HEAD_SHA: ${{ inputs.controller_head }}
+      UCHIRIMO_RECOVERY_PILOT_MODE: aggregate
+      UCHIRIMO_RECOVERY_PILOT_PLAN_OUT: artifacts/uchirimo-recovery-pilot-plan
+      UCHIRIMO_RECOVERY_PILOT_SOURCE_ROOT: artifacts/uchirimo-recovery-pilot-source
+      UCHIRIMO_RECOVERY_PILOT_AGGREGATE_OUT: artifacts/uchirimo-recovery-pilot-aggregate
+      UCHIRIMO_RECOVERY_PILOT_TARGET_COUNT: 16
+      UCHIRIMO_RECOVERY_PILOT_PASS_MAX_ELAPSED_MS: 1800000
+      UCHIRIMO_RECOVERY_PILOT_CHILD_TIMEOUT_MS: 2100000
+    steps:
+      - name: Checkout exact HEAD
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.HEAD_SHA }}
+          fetch-depth: 0
+
+      - name: Setup Node 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Download Recovery Pilot plan
+        uses: actions/download-artifact@v4
+        with:
+          name: uchirimo-recovery-pilot-plan-${{ env.HEAD_SHA }}
+          path: artifacts/uchirimo-recovery-pilot-plan
+
+      - name: Download Recovery Pilot child evidence
+        continue-on-error: true
+        uses: actions/download-artifact@v4
+        with:
+          pattern: uchirimo-recovery-pilot-child-*-${{ env.HEAD_SHA }}
+          path: artifacts/uchirimo-recovery-pilot-source
+          merge-multiple: true
+
+      - name: Evaluate Recovery Pilot Hard Gate
+        run: node scripts/governance/uchirimo-recovery-pilot.mjs
+
+      - name: Upload Recovery Pilot aggregate
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: uchirimo-recovery-pilot-aggregate-${{ env.HEAD_SHA }}
+          path: artifacts/uchirimo-recovery-pilot-aggregate/
+          if-no-files-found: error
