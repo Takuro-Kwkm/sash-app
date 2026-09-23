@@ -8,11 +8,11 @@ on:
         type: string
     outputs:
       pilot_hard_gate:
-        description: Recovery Pilot Hard Gate result
-        value: ${{ jobs.pilot-gate.outputs.pilot_hard_gate }}
+        description: Recovery gate state
+        value: ${{ jobs.recovery-gate.outputs.pilot_hard_gate }}
       full_coverage_authorized:
         description: Full Coverage authorization after recovery integration
-        value: ${{ jobs.pilot-gate.outputs.full_coverage_authorized }}
+        value: ${{ jobs.recovery-gate.outputs.full_coverage_authorized }}
 
 permissions:
   contents: read
@@ -30,82 +30,22 @@ jobs:
       controller_head: ${{ inputs.controller_head }}
       release: false
 
-  pilot-plan:
+  endurance-calibration:
     needs: ["governance-authority"]
     if: ${{ needs.governance-authority.outputs.authorized == 'true' }}
     runs-on: ubuntu-latest
-    timeout-minutes: 20
-    outputs:
-      matrix: ${{ steps.plan.outputs.matrix }}
-      pilot_count: ${{ steps.plan.outputs.pilot_count }}
-    env:
-      HEAD_SHA: ${{ inputs.controller_head }}
-      UCHIRIMO_SELECTOR_MODE: plan-all
-      UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-recovery-pilot-base-plan
-      UCHIRIMO_RECOVERY_PILOT_MODE: plan
-      UCHIRIMO_RECOVERY_PILOT_BASE_PLAN: artifacts/uchirimo-recovery-pilot-base-plan/all-partitions.json
-      UCHIRIMO_RECOVERY_PILOT_PLAN_OUT: artifacts/uchirimo-recovery-pilot-plan
-      UCHIRIMO_RECOVERY_PILOT_TARGET_COUNT: 16
-      UCHIRIMO_RECOVERY_PILOT_PASS_MAX_ELAPSED_MS: 1800000
-      UCHIRIMO_RECOVERY_PILOT_CHILD_TIMEOUT_MS: 2100000
-    steps:
-      - name: Checkout exact HEAD
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ env.HEAD_SHA }}
-          fetch-depth: 0
-
-      - name: Setup Node 24
-        uses: actions/setup-node@v4
-        with:
-          node-version: 24
-
-      - name: Install
-        run: npm install --ignore-scripts
-
-      - name: Verify exact HEAD
-        run: test "$(git rev-parse HEAD)" = "$HEAD_SHA"
-
-      - name: Build unchanged current partition inventory
-        run: node scripts/uchirimo-full-selector-proof.mjs
-
-      - name: Build adaptive +2 Recovery Pilot plan
-        id: plan
-        run: node scripts/governance/uchirimo-recovery-pilot.mjs
-
-      - name: Upload Recovery Pilot plan
-        uses: actions/upload-artifact@v4
-        with:
-          name: uchirimo-recovery-pilot-plan-${{ env.HEAD_SHA }}
-          path: artifacts/uchirimo-recovery-pilot-plan/
-          if-no-files-found: error
-
-  pilot-run:
-    needs:
-      - governance-authority
-      - pilot-plan
-    # v2 is mechanically incapable of passing after observed 35-minute timeouts.
-    # Keep the failed execution path closed while checkpoint/resume recovery is implemented.
-    if: ${{ false }}
-    strategy:
-      fail-fast: true
-      max-parallel: 4
-      matrix: ${{ fromJSON(needs.pilot-plan.outputs.matrix) }}
-    runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 330
     env:
       HEAD_SHA: ${{ inputs.controller_head }}
       UCHIRIMO_SELECTOR_MODE: shard
-      UCHIRIMO_SELECTOR_BATCH_ID: ${{ matrix.batch_id }}
-      UCHIRIMO_SELECTOR_BATCH_JSON: ${{ matrix.batch_json }}
-      UCHIRIMO_SELECTOR_CHILD_TIMEOUT_MS: ${{ matrix.child_timeout_ms }}
-      UCHIRIMO_SELECTOR_EXPECTED_SHARDS: ${{ needs.pilot-plan.outputs.pilot_count }}
+      UCHIRIMO_SELECTOR_BATCH_ID: recovery-v3-endurance-00
+      UCHIRIMO_SELECTOR_BATCH_JSON: '[{"shard":0,"node_id":"UCH-RES-SL2-T","partition_key":"UCH-RES-SL2-T|single_glazing|reverse_handing=\"reverse\"|frame_color=\"clear\"|glass_structure=\"F4\"|crescent_position=\"custom\"|crescent_presence=\"crescentless_special_order\"","room_specification":"residential","window_type":"sliding_window","sash_configuration":"two_panel","size_class":"terrace","glass_family":"single_glazing","partition_seed_json":"{\"crescent_position\":\"custom\",\"crescent_presence\":\"crescentless_special_order\",\"frame_color\":\"clear\",\"glass_structure\":\"F4\",\"reverse_handing\":\"reverse\"}"}]'
+      UCHIRIMO_SELECTOR_CHILD_TIMEOUT_MS: 18000000
+      UCHIRIMO_SELECTOR_EXPECTED_SHARDS: 1
       UCHIRIMO_RESOLVER_CACHE_MAX: 4096
-      UCHIRIMO_SELECTOR_MAX_STATES: 2000000
-      UCHIRIMO_SELECTOR_MAX_TERMINALS: 2000000
-      UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-recovery-pilot-shard
-      UCHIRIMO_RECOVERY_PILOT_MODE: verify
-      UCHIRIMO_RECOVERY_PILOT_PASS_MAX_ELAPSED_MS: 1800000
+      UCHIRIMO_SELECTOR_MAX_STATES: 5000000
+      UCHIRIMO_SELECTOR_MAX_TERMINALS: 5000000
+      UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-recovery-v3-endurance
     steps:
       - name: Checkout exact HEAD
         uses: actions/checkout@v4
@@ -124,56 +64,64 @@ jobs:
       - name: Verify exact HEAD
         run: test "$(git rev-parse HEAD)" = "$HEAD_SHA"
 
-      - name: Run isolated Recovery Pilot child
+      - name: Run one isolated heavy partition to natural completion
+        run: node scripts/governance/uchirimo-selector-batch-runner.mjs
+
+      - name: Verify terminal artifact integrity
         shell: bash
         run: |
           set -euo pipefail
-          node scripts/governance/uchirimo-selector-batch-runner.mjs
-
-      - name: Verify child evidence and terminal artifact integrity
-        if: always()
-        run: node scripts/governance/uchirimo-recovery-pilot.mjs
+          node --input-type=module <<'NODE'
+          import { createHash } from 'node:crypto';
+          import { readFileSync } from 'node:fs';
+          const out='artifacts/uchirimo-recovery-v3-endurance';
+          const report=JSON.parse(readFileSync(out+'/shard-0-report.json','utf8'));
+          const data=readFileSync(out+'/'+report.case_artifact);
+          const actual=createHash('sha256').update(data).digest('hex');
+          if(report.status!=='PASS')throw new Error('ENDURANCE_SHARD_NOT_PASS');
+          if(report.runtime_integrity_match!==true)throw new Error('ENDURANCE_RUNTIME_INTEGRITY_FAIL');
+          if(report.unverified_discrete_selector_case_count!==0)throw new Error('ENDURANCE_UNVERIFIED_NONZERO');
+          if(actual!==report.case_artifact_sha256)throw new Error('ENDURANCE_CASE_SHA_MISMATCH');
+          console.log('UCHIRIMO_RECOVERY_V3_ENDURANCE=PASS states='+report.visited_state_count+' terminals='+report.terminal_context_count+' peak_heap_mb='+report.observed_peak_heap_mb);
+          NODE
 
       - name: Remove large terminal digest after integrity verification
         if: always()
-        shell: bash
-        run: rm -f artifacts/uchirimo-recovery-pilot-shard/shard-*-terminal-digests.jsonl
+        run: rm -f artifacts/uchirimo-recovery-v3-endurance/shard-*-terminal-digests.jsonl
 
-      - name: Upload lightweight Recovery Pilot child evidence
+      - name: Upload lightweight endurance evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: uchirimo-recovery-pilot-child-${{ matrix.pilot_index }}-${{ env.HEAD_SHA }}
-          path: artifacts/uchirimo-recovery-pilot-shard/
+          name: uchirimo-recovery-v3-endurance-${{ env.HEAD_SHA }}
+          path: artifacts/uchirimo-recovery-v3-endurance/
           if-no-files-found: error
 
-  pilot-gate:
+  recovery-gate:
     needs:
       - governance-authority
-      - pilot-plan
-      - pilot-run
+      - endurance-calibration
     if: ${{ always() && needs.governance-authority.outputs.authorized == 'true' }}
     runs-on: ubuntu-latest
-    timeout-minutes: 10
     outputs:
-      pilot_hard_gate: ${{ steps.hold-full-coverage.outputs.pilot_hard_gate }}
-      full_coverage_authorized: ${{ steps.hold-full-coverage.outputs.full_coverage_authorized }}
-    env:
-      HEAD_SHA: ${{ inputs.controller_head }}
+      pilot_hard_gate: ${{ steps.gate.outputs.pilot_hard_gate }}
+      full_coverage_authorized: ${{ steps.gate.outputs.full_coverage_authorized }}
     steps:
-      - name: Checkout exact HEAD
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ env.HEAD_SHA }}
-          fetch-depth: 0
-
-      - name: Hold Full Coverage while recovery v3 is being implemented
-        id: hold-full-coverage
+      - name: Keep Full Coverage closed after calibration
+        id: gate
         shell: bash
+        env:
+          ENDURANCE_RESULT: ${{ needs.endurance-calibration.result }}
         run: |
+          set -euo pipefail
           echo "pilot_hard_gate=BLOCKED" >> "$GITHUB_OUTPUT"
           echo "full_coverage_authorized=false" >> "$GITHUB_OUTPUT"
-          echo "RECOVERY_V2_EXECUTION_PATH=CLOSED"
-          echo "RECOVERY_V3_CHECKPOINT_RESUME_GATE=BLOCKED"
-          echo "FULL_COVERAGE_QA_GATE=BLOCKED reason=RECOVERY_V3_PENDING"
+          if [ "$ENDURANCE_RESULT" = "success" ]; then
+            echo "RECOVERY_V3_ENDURANCE_CALIBRATION=PASS"
+            echo "RECOVERY_INTEGRATION_GATE=BLOCKED reason=GLOBAL_HEAVY_PARTITION_STRATEGY_PENDING"
+          else
+            echo "RECOVERY_V3_ENDURANCE_CALIBRATION=FAIL result=$ENDURANCE_RESULT"
+            echo "RECOVERY_INTEGRATION_GATE=BLOCKED reason=ENDURANCE_CALIBRATION_NOT_PASS"
+          fi
+          echo "FULL_COVERAGE_QA_GATE=BLOCKED"
           exit 1
