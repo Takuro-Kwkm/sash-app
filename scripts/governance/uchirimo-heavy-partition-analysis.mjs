@@ -37,7 +37,7 @@ function ghJson(path){
   return JSON.parse(execFileSync('gh',['api',path],{encoding:'utf8',maxBuffer:64*1024*1024}));
 }
 function ghText(path){
-  return execFileSync('gh',['api',path],{encoding:'utf8',maxBuffer:64*1024*1024});
+  return execFileSync('gh',['api','--allow-escape-sequences',path],{encoding:'utf8',maxBuffer:64*1024*1024});
 }
 async function listJobs(){
   const first=ghJson(`/repos/${REPO}/actions/runs/${SOURCE_RUN_ID}/jobs?per_page=100&page=1`);
