@@ -12,7 +12,13 @@ if(!Array.isArray(batch)||batch.length<1||batch.length>2)throw new Error('UCHIRI
 if(!Number.isFinite(CHILD_TIMEOUT_MS)||CHILD_TIMEOUT_MS<60000)throw new Error('UCHIRIMO_CHILD_TIMEOUT_INVALID:'+CHILD_TIMEOUT_MS);
 mkdirSync(OUT,{recursive:true});
 
-function envFor(row){
+function constraintsFor(row){
+  const parsed=JSON.parse(String(row.decision_constraints_json ?? '[]'));
+  if(!Array.isArray(parsed))throw new Error('UCHIRIMO_DECISION_CONSTRAINTS_INVALID');
+  return parsed;
+}
+
+function envFor(row,constraints){
   return {
     ...process.env,
     UCHIRIMO_SELECTOR_MODE:'shard',
@@ -25,6 +31,7 @@ function envFor(row){
     UCHIRIMO_SELECTOR_GLASS_FAMILY:String(row.glass_family),
     UCHIRIMO_SELECTOR_PARTITION_KEY:String(row.partition_key),
     UCHIRIMO_SELECTOR_PARTITION_SEED_JSON:String(row.partition_seed_json ?? '{}'),
+    UCHIRIMO_SELECTOR_DECISION_CONSTRAINTS_JSON:JSON.stringify(constraints),
     UCHIRIMO_FULL_SELECTOR_OUT:OUT
   };
 }
@@ -32,7 +39,15 @@ function envFor(row){
 function runOne(row){
   return new Promise((resolve)=>{
     const startedAt=new Date().toISOString();
-    const child=spawn(process.execPath,['scripts/uchirimo-full-selector-proof.mjs'],{env:envFor(row),stdio:'inherit'});
+    let constraints;
+    try{constraints=constraintsFor(row)}catch(error){
+      resolve({shard:Number(row.shard),partition_key:String(row.partition_key),status:'FAIL',timed_out:false,exit_code:null,signal:null,error:error?.message??String(error),runner:null,constraint_count:null,started_at:startedAt,completed_at:new Date().toISOString()});
+      return;
+    }
+    const runner=constraints.length
+      ? 'scripts/governance/uchirimo-constraint-selector-runner.mjs'
+      : 'scripts/uchirimo-full-selector-proof.mjs';
+    const child=spawn(process.execPath,[runner],{env:envFor(row,constraints),stdio:'inherit'});
     let timedOut=false;
     const timer=setTimeout(()=>{
       timedOut=true;
@@ -41,11 +56,11 @@ function runOne(row){
     },CHILD_TIMEOUT_MS);
     child.on('error',(error)=>{
       clearTimeout(timer);
-      resolve({shard:Number(row.shard),partition_key:String(row.partition_key),status:'FAIL',timed_out:timedOut,exit_code:null,signal:null,error:error?.message??String(error),started_at:startedAt,completed_at:new Date().toISOString()});
+      resolve({shard:Number(row.shard),partition_key:String(row.partition_key),status:'FAIL',timed_out:timedOut,exit_code:null,signal:null,error:error?.message??String(error),runner,constraint_count:constraints.length,started_at:startedAt,completed_at:new Date().toISOString()});
     });
     child.on('exit',(code,signal)=>{
       clearTimeout(timer);
-      resolve({shard:Number(row.shard),partition_key:String(row.partition_key),status:code===0&&!timedOut?'PASS':'FAIL',timed_out:timedOut,exit_code:code,signal:signal??null,started_at:startedAt,completed_at:new Date().toISOString()});
+      resolve({shard:Number(row.shard),partition_key:String(row.partition_key),status:code===0&&!timedOut?'PASS':'FAIL',timed_out:timedOut,exit_code:code,signal:signal??null,runner,constraint_count:constraints.length,started_at:startedAt,completed_at:new Date().toISOString()});
     });
   });
 }
@@ -54,7 +69,7 @@ console.log('UCHIRIMO_SELECTOR_BATCH_START id='+BATCH_ID+' items='+batch.length)
 const results=[];
 for(const row of batch)results.push(await runOne(row));
 const failed=results.filter((row)=>row.status!=='PASS');
-const report={schema_version:'1.0.0',exact_head:process.env.HEAD_SHA??process.env.GITHUB_SHA??null,batch_id:BATCH_ID,item_count:results.length,pass_count:results.length-failed.length,fail_count:failed.length,child_timeout_ms:CHILD_TIMEOUT_MS,results,status:failed.length?'FAIL':'PASS'};
+const report={schema_version:'1.1.0',exact_head:process.env.HEAD_SHA??process.env.GITHUB_SHA??null,batch_id:BATCH_ID,item_count:results.length,pass_count:results.length-failed.length,fail_count:failed.length,child_timeout_ms:CHILD_TIMEOUT_MS,results,status:failed.length?'FAIL':'PASS'};
 writeFileSync(join(OUT,'batch-'+BATCH_ID+'-report.json'),JSON.stringify(report,null,2)+'\n');
 if(failed.length){
   console.error('UCHIRIMO_SELECTOR_BATCH=FAIL id='+BATCH_ID+' failed='+failed.map((row)=>row.shard).join(','));
