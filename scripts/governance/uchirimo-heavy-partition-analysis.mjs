@@ -464,6 +464,299 @@ if(depth2Summary.decision==='DEPTH3_REQUIRED_FOR_FAILED_NODES'){
   if(invalidRows.length>0)throw new Error('DEPTH3_MICRO_CALIBRATION_INVALID');
 }
 
+const DEPTH4_MICRO_CHILD_TIMEOUT_MS=Number(process.env.UCHIRIMO_DEPTH4_MICRO_CHILD_TIMEOUT_MS ?? 45000);
+if(!Number.isFinite(DEPTH4_MICRO_CHILD_TIMEOUT_MS)||DEPTH4_MICRO_CHILD_TIMEOUT_MS<30000)throw new Error('DEPTH4_MICRO_CHILD_TIMEOUT_INVALID');
+function remainingDiscreteAxes(result,seed){
+  const axes=[];
+  for(const field of result.fields??[]){
+    if(field.readOnly===true||TECHNICAL_KEYS.has(field.key)||CONTINUOUS_KEYS.has(field.key))continue;
+    if(Object.prototype.hasOwnProperty.call(seed,field.key))continue;
+    if(field.dataType!=='ENUM'&&field.dataType!=='MULTI_ENUM')continue;
+    const values=[...new Map(enabled(field).map((row)=>[stableJson(row.value),row.value])).values()];
+    if(values.length===0)continue;
+    axes.push({
+      field_key:field.key,
+      data_type:field.dataType,
+      required:field.required===true,
+      semantic_stage:field.semanticStage??null,
+      semantic_slot:field.semanticSlot??null,
+      enabled_value_count:values.length,
+      enabled_values:values.map(stable),
+      safe_required_enum_split_candidate:field.required===true&&field.dataType==='ENUM'&&values.length>1
+    });
+  }
+  return axes;
+}
+const depth3SummaryCurrent=readJsonSafe(`${OUT}/depth3-representative-micro-calibration.json`);
+const depth3PlanCurrent=readJsonSafe(`${OUT}/depth3-representative-partition-plan.json`);
+if(depth3SummaryCurrent?.decision==='DEPTH4_REQUIRED_FOR_FAILED_REPRESENTATIVES'){
+  if(depth3SummaryCurrent.exact_head!==head||depth3PlanCurrent?.exact_head!==head)throw new Error('DEPTH4_SOURCE_EXACT_HEAD_MISMATCH');
+  if(Number(depth3SummaryCurrent.calibration_invalid_count??1)!==0)throw new Error('DEPTH4_SOURCE_CALIBRATION_INVALID');
+  const timeoutRows=(depth3SummaryCurrent.results??[]).filter((row)=>row.status==='NEEDS_DEEPER_SPLIT');
+  const parentRows=[];
+  const childRows=[];
+  const structuralRows=[];
+  for(const timeoutRow of timeoutRows){
+    const depth3Child=(depth3PlanCurrent.children??[]).find((row)=>row.PARTITION_ID===timeoutRow.depth3_child_partition_id);
+    if(!depth3Child)throw new Error(`DEPTH4_PARENT_NOT_FOUND:${timeoutRow.product_node}:${timeoutRow.depth3_child_partition_id}`);
+    const seed=depth3Child.SELECTOR_PREFIX??{};
+    const resolved=await resolveRuntimeAppProduct(PRODUCT_ID,seed);
+    for(const [key,value] of Object.entries(seed))if(!same(resolved.selection?.[key],value))throw new Error(`DEPTH4_PARENT_SEED_REJECTED:${depth3Child.PARTITION_ID}:${key}`);
+    const axes=remainingDiscreteAxes(resolved,seed);
+    const safeRequiredAxes=axes.filter((row)=>row.safe_required_enum_split_candidate);
+    const optionalOrMultiAxes=axes.filter((row)=>!row.safe_required_enum_split_candidate);
+    const split=nextSplit(resolved,seed);
+    const visibleRequiredProduct=safeRequiredAxes.reduce((product,row)=>product*Math.max(1,row.enabled_value_count),1);
+    const structuralClassification=split
+      ?'SAFE_REQUIRED_ENUM_FRONTIER_REMAINS'
+      :optionalOrMultiAxes.length>0
+        ?'SAFE_REQUIRED_ENUM_EXHAUSTED_OPTIONAL_OR_MULTI_REMAINS'
+        :'SAFE_DISCRETE_SPLIT_AXES_EXHAUSTED';
+    structuralRows.push({
+      PRODUCT_NODE:depth3Child.PRODUCT_NODE,
+      DEPTH3_CHILD_PARTITION_ID:depth3Child.PARTITION_ID,
+      SEEDED_SELECTOR_COUNT:Object.keys(seed).length,
+      REMAINING_DISCRETE_AXIS_COUNT:axes.length,
+      REMAINING_SAFE_REQUIRED_ENUM_AXIS_COUNT:safeRequiredAxes.length,
+      REMAINING_OPTIONAL_OR_MULTI_AXIS_COUNT:optionalOrMultiAxes.length,
+      CURRENT_VISIBLE_REQUIRED_ENUM_CARDINALITY_PRODUCT:visibleRequiredProduct,
+      NEXT_SAFE_SPLIT_FIELD:split?.field_key??null,
+      NEXT_SAFE_SPLIT_CARDINALITY:split?.values?.length??0,
+      STRUCTURAL_CLASSIFICATION:structuralClassification,
+      REMAINING_AXES:axes
+    });
+    const parent={
+      PARTITION_ID:depth3Child.PARTITION_ID,
+      PRODUCT_NODE:depth3Child.PRODUCT_NODE,
+      WINDOW_ID:depth3Child.WINDOW_ID,
+      FLOW_SIGNATURE:flowSignature(resolved),
+      SELECTOR_PREFIX:seed,
+      SOURCE_DEPTH3_PARTITION_ID:depth3Child.PARTITION_ID,
+      ROOT_HEAVY_PARENT_PARTITION_ID:depth3Child.ROOT_HEAVY_PARENT_PARTITION_ID,
+      NEXT_SPLIT_FIELD:split?.field_key??null,
+      NEXT_SPLIT_FIELD_REQUIRED:split?.field_required??null,
+      NEXT_SPLIT_FIELD_DATA_TYPE:split?.field_data_type??null,
+      NEXT_SPLIT_CARDINALITY:split?.values?.length??0,
+      NEXT_SPLIT_VALUES:split?.values?.map(stable)??[],
+      EXACT_HEAD:head,
+      RUNTIME_SNAPSHOT_ID:depth3PlanCurrent.runtime_snapshot_id,
+      STATUS:split?'DEPTH4_SPLIT_PLANNED':'DEPTH4_UNSPLITTABLE'
+    };
+    parentRows.push(parent);
+    if(!split)continue;
+    for(const value of split.values){
+      const childSeed={...seed,[split.field_key]:value};
+      const childResolved=await resolveRuntimeAppProduct(PRODUCT_ID,childSeed);
+      if(!same(childResolved.selection?.[split.field_key],value))throw new Error(`DEPTH4_CHILD_SEED_REJECTED:${depth3Child.PARTITION_ID}:${split.field_key}`);
+      childRows.push({
+        PARTITION_ID:`UHC4-${hash(stableJson([depth3Child.PARTITION_ID,split.field_key,value])).slice(0,20)}`,
+        PARENT_PARTITION_ID:depth3Child.PARTITION_ID,
+        ROOT_HEAVY_PARENT_PARTITION_ID:depth3Child.ROOT_HEAVY_PARENT_PARTITION_ID,
+        PRODUCT_NODE:depth3Child.PRODUCT_NODE,
+        WINDOW_ID:depth3Child.WINDOW_ID,
+        FLOW_SIGNATURE:flowSignature(childResolved),
+        SELECTOR_PREFIX:childSeed,
+        SPLIT_FIELD:split.field_key,
+        SPLIT_VALUE:value,
+        PARTITION_DEPTH:4,
+        EXECUTED_CASE_COUNT:0,
+        PASS:0,
+        FAIL:0,
+        BLOCKED:0,
+        UNVERIFIED:1,
+        EXACT_HEAD:head,
+        RUNTIME_SNAPSHOT_ID:depth3PlanCurrent.runtime_snapshot_id,
+        STATUS:'PLANNED_UNVERIFIED'
+      });
+    }
+  }
+  const ids=childRows.map((row)=>row.PARTITION_ID);
+  const overlapCount=ids.length-new Set(ids).size;
+  const parentsWithChildren=new Set(childRows.map((row)=>row.PARENT_PARTITION_ID));
+  const unsplittableParents=parentRows.filter((row)=>!parentsWithChildren.has(row.PARTITION_ID));
+  let gapCount=0;
+  let unionMismatchCount=0;
+  let prefixMismatchCount=0;
+  let semanticMismatchCount=0;
+  let cardinalityMismatchCount=0;
+  const proofRows=[];
+  for(const parent of parentRows.filter((row)=>parentsWithChildren.has(row.PARTITION_ID))){
+    const matching=childRows.filter((row)=>row.PARENT_PARTITION_ID===parent.PARTITION_ID);
+    if(matching.length!==parent.NEXT_SPLIT_CARDINALITY)gapCount+=1;
+    const expectedSet=new Set((parent.NEXT_SPLIT_VALUES??[]).map(stableJson));
+    const actualSet=new Set(matching.map((row)=>stableJson(row.SPLIT_VALUE)));
+    const unionMatch=expectedSet.size===actualSet.size&&[...expectedSet].every((value)=>actualSet.has(value));
+    const cardinalityMatch=matching.length===parent.NEXT_SPLIT_CARDINALITY&&actualSet.size===matching.length;
+    const semanticMatch=parent.NEXT_SPLIT_FIELD_REQUIRED===true&&parent.NEXT_SPLIT_FIELD_DATA_TYPE==='ENUM'&&Boolean(parent.NEXT_SPLIT_FIELD);
+    let prefixMatch=true;
+    for(const child of matching){
+      const parentPreserved=Object.entries(parent.SELECTOR_PREFIX??{}).every(([key,value])=>same(child.SELECTOR_PREFIX?.[key],value));
+      const extraKeys=Object.keys(child.SELECTOR_PREFIX??{}).filter((key)=>!Object.prototype.hasOwnProperty.call(parent.SELECTOR_PREFIX??{},key));
+      const oneSplitAxis=extraKeys.length===1&&extraKeys[0]===parent.NEXT_SPLIT_FIELD&&same(child.SELECTOR_PREFIX?.[parent.NEXT_SPLIT_FIELD],child.SPLIT_VALUE);
+      if(!parentPreserved||!oneSplitAxis){prefixMatch=false;break;}
+    }
+    if(!unionMatch)unionMismatchCount+=1;
+    if(!prefixMatch)prefixMismatchCount+=1;
+    if(!semanticMatch)semanticMismatchCount+=1;
+    if(!cardinalityMatch)cardinalityMismatchCount+=1;
+    proofRows.push({
+      PARENT_PARTITION_ID:parent.PARTITION_ID,
+      PRODUCT_NODE:parent.PRODUCT_NODE,
+      SPLIT_FIELD:parent.NEXT_SPLIT_FIELD,
+      SPLIT_FIELD_REQUIRED:parent.NEXT_SPLIT_FIELD_REQUIRED,
+      SPLIT_FIELD_DATA_TYPE:parent.NEXT_SPLIT_FIELD_DATA_TYPE,
+      EXPECTED_VALUE_COUNT:expectedSet.size,
+      ACTUAL_CHILD_COUNT:matching.length,
+      EXPECTED_VALUE_SET_SHA256:hash([...expectedSet].sort()),
+      ACTUAL_VALUE_SET_SHA256:hash([...actualSet].sort()),
+      PARENT_UNION_EQUALS_CHILDREN:unionMatch,
+      CHILD_PREFIX_PRESERVATION:prefixMatch,
+      CHILD_CARDINALITY_AND_UNIQUENESS:cardinalityMatch,
+      SPLIT_SEMANTICS_VALID:semanticMatch,
+      STATUS:unionMatch&&prefixMatch&&cardinalityMatch&&semanticMatch?'PASS':'FAIL'
+    });
+  }
+  const preservationPass=
+    overlapCount===0&&gapCount===0&&unsplittableParents.length===0&&
+    unionMismatchCount===0&&prefixMismatchCount===0&&semanticMismatchCount===0&&cardinalityMismatchCount===0&&
+    parentsWithChildren.size===parentRows.length;
+  const depth4Proof={
+    schema_version:'1.0.0',
+    artifact_type:'UCHIRIMO_DEPTH4_REPRESENTATIVE_COVERAGE_PRESERVATION_PROOF',
+    exact_head:head,
+    runtime_snapshot_id:depth3PlanCurrent.runtime_snapshot_id,
+    diagnostic_scope:'DEPTH3_TIMEOUT_REPRESENTATIVE_BRANCHES_ONLY',
+    source_depth3_micro_sha256:hash(depth3SummaryCurrent),
+    parent_partition_count:parentRows.length,
+    child_partition_count:childRows.length,
+    PARTITION_OVERLAP_COUNT:overlapCount,
+    PARTITION_GAP_COUNT:gapCount,
+    UNSPLITTABLE_PARENT_COUNT:unsplittableParents.length,
+    PARENT_UNION_MISMATCH_COUNT:unionMismatchCount,
+    CHILD_PREFIX_MISMATCH_COUNT:prefixMismatchCount,
+    SPLIT_SEMANTIC_MISMATCH_COUNT:semanticMismatchCount,
+    PARENT_CHILD_CARDINALITY_MISMATCH_COUNT:cardinalityMismatchCount,
+    proof_semantics:'For each representative Depth-3 child measured as NEEDS_DEEPER_SPLIT, the complete enabled value set of the next Formal Runtime required multi-valued ENUM is materialized as unique Depth-4 children. Each child preserves the complete Depth-3 selector prefix and adds exactly one safe split-axis value. This proves union preservation for the representative timeout branches only; it is not Full Coverage evidence.',
+    parents:proofRows,
+    coverage_preservation_status:preservationPass?'PASS':'FAIL',
+    full_coverage_authorized:false,
+    status:preservationPass?'PASS':'FAIL'
+  };
+  const depth4Plan={
+    schema_version:'1.0.0',
+    artifact_type:'UCHIRIMO_DEPTH4_REPRESENTATIVE_RECURSIVE_PARTITION_PLAN',
+    exact_head:head,
+    runtime_snapshot_id:depth3PlanCurrent.runtime_snapshot_id,
+    partition_depth:4,
+    diagnostic_scope:'DEPTH3_TIMEOUT_REPRESENTATIVE_BRANCHES_ONLY',
+    target_product_nodes:[...new Set(parentRows.map((row)=>row.PRODUCT_NODE))].sort(),
+    parent_partition_count:parentRows.length,
+    child_partition_count:childRows.length,
+    PARTITION_OVERLAP_COUNT:overlapCount,
+    PARTITION_GAP_COUNT:gapCount,
+    UNSPLITTABLE_PARENT_COUNT:unsplittableParents.length,
+    PARENT_UNION_MISMATCH_COUNT:unionMismatchCount,
+    CHILD_PREFIX_MISMATCH_COUNT:prefixMismatchCount,
+    SPLIT_SEMANTIC_MISMATCH_COUNT:semanticMismatchCount,
+    PARENT_CHILD_CARDINALITY_MISMATCH_COUNT:cardinalityMismatchCount,
+    COVERAGE_PRESERVATION_STATUS:depth4Proof.coverage_preservation_status,
+    parents:parentRows,
+    children:childRows,
+    unsplittable_parent_ids:unsplittableParents.map((row)=>row.PARTITION_ID),
+    full_depth4_execution_authorized:false,
+    full_coverage_authorized:false,
+    status:preservationPass?'DIAGNOSTIC_PLAN_READY':'BLOCKED'
+  };
+  const structuralSummary={
+    schema_version:'1.0.0',
+    artifact_type:'UCHIRIMO_DEPTH4_RESIDUAL_SEARCH_SPACE_ANALYSIS',
+    exact_head:head,
+    diagnostic_scope:'DEPTH3_TIMEOUT_REPRESENTATIVE_BRANCHES_ONLY',
+    representative_count:structuralRows.length,
+    safe_required_enum_frontier_count:structuralRows.filter((row)=>row.STRUCTURAL_CLASSIFICATION==='SAFE_REQUIRED_ENUM_FRONTIER_REMAINS').length,
+    safe_required_enum_exhausted_optional_or_multi_count:structuralRows.filter((row)=>row.STRUCTURAL_CLASSIFICATION==='SAFE_REQUIRED_ENUM_EXHAUSTED_OPTIONAL_OR_MULTI_REMAINS').length,
+    safe_discrete_split_axes_exhausted_count:structuralRows.filter((row)=>row.STRUCTURAL_CLASSIFICATION==='SAFE_DISCRETE_SPLIT_AXES_EXHAUSTED').length,
+    interpretation:'Current visible cardinality products are diagnostic search-space indicators only. They are not exact terminal-case counts because downstream dependency, optional UNSET, and MULTI_ENUM subset branches can change the realized space.',
+    rows:structuralRows,
+    full_coverage_authorized:false,
+    status:'DIAGNOSTIC_ONLY'
+  };
+  writeJson(`${OUT}/depth4-representative-partition-plan.json`,depth4Plan);
+  writeJson(`${OUT}/depth4-representative-coverage-preservation-proof.json`,depth4Proof);
+  writeJson(`${OUT}/depth4-residual-search-space-analysis.json`,structuralSummary);
+  console.log(`DEPTH4_REPRESENTATIVE_PARENT_COUNT=${parentRows.length}`);
+  console.log(`DEPTH4_REPRESENTATIVE_CHILD_COUNT=${childRows.length}`);
+  console.log(`DEPTH4_PARTITION_OVERLAP_COUNT=${overlapCount}`);
+  console.log(`DEPTH4_PARTITION_GAP_COUNT=${gapCount}`);
+  console.log(`DEPTH4_UNSPLITTABLE_PARENT_COUNT=${unsplittableParents.length}`);
+  console.log(`DEPTH4_COVERAGE_PRESERVATION_STATUS=${depth4Proof.coverage_preservation_status}`);
+  console.log(`DEPTH4_SAFE_REQUIRED_ENUM_FRONTIER_COUNT=${structuralSummary.safe_required_enum_frontier_count}`);
+  console.log(`DEPTH4_OPTIONAL_MULTI_ONLY_COUNT=${structuralSummary.safe_required_enum_exhausted_optional_or_multi_count}`);
+  console.log(`DEPTH4_DISCRETE_AXES_EXHAUSTED_COUNT=${structuralSummary.safe_discrete_split_axes_exhausted_count}`);
+  console.log(`DEPTH4_PLAN_STATUS=${depth4Plan.status}`);
+  if(preservationPass){
+    const depth4Results=[];
+    for(const [index,parent] of parentRows.entries()){
+      const child=childRows
+        .filter((row)=>row.PARENT_PARTITION_ID===parent.PARTITION_ID)
+        .sort((a,b)=>stableJson(a.SPLIT_VALUE).localeCompare(stableJson(b.SPLIT_VALUE))||String(a.PARTITION_ID).localeCompare(String(b.PARTITION_ID)))[0];
+      if(!child)throw new Error(`DEPTH4_MICRO_CHILD_SELECTION_FAILED:${parent.PRODUCT_NODE}:${parent.PARTITION_ID}`);
+      const measured=runMicroCase({child,index,depth:4,timeoutMs:DEPTH4_MICRO_CHILD_TIMEOUT_MS});
+      const result={
+        index,
+        product_node:parent.PRODUCT_NODE,
+        source_depth3_child_partition_id:parent.PARTITION_ID,
+        depth4_child_partition_id:child.PARTITION_ID,
+        split_field:child.SPLIT_FIELD,
+        split_value:child.SPLIT_VALUE,
+        child_timeout_ms:DEPTH4_MICRO_CHILD_TIMEOUT_MS,
+        ...measured
+      };
+      depth4Results.push(result);
+      console.log(`DEPTH4_MICRO_CASE node=${parent.PRODUCT_NODE} status=${result.status} elapsed_ms=${String(result.elapsed_ms)} states=${String(result.visited_state_count)} terminals=${String(result.terminal_context_count)}`);
+    }
+    const passRows=depth4Results.filter((row)=>row.status==='PASS');
+    const deeperRows=depth4Results.filter((row)=>row.status==='NEEDS_DEEPER_SPLIT');
+    const invalidRows=depth4Results.filter((row)=>row.status==='CALIBRATION_INVALID');
+    const depth4Summary={
+      schema_version:'1.0.0',
+      artifact_type:'UCHIRIMO_DEPTH4_REPRESENTATIVE_MICRO_CALIBRATION',
+      exact_head:head,
+      task_classification:'NON-PRODUCT-MASTER',
+      product_master_mutation:0,
+      diagnostic_scope:'DEPTH3_TIMEOUT_REPRESENTATIVE_BRANCHES_ONLY',
+      source_depth4_plan_sha256:hash(depth4Plan),
+      source_depth4_coverage_proof_sha256:hash(depth4Proof),
+      source_depth4_structural_analysis_sha256:hash(structuralSummary),
+      selected_product_node_count:parentRows.length,
+      selected_child_count:depth4Results.length,
+      child_timeout_ms:DEPTH4_MICRO_CHILD_TIMEOUT_MS,
+      pass_count:passRows.length,
+      needs_deeper_split_count:deeperRows.length,
+      calibration_invalid_count:invalidRows.length,
+      pass_product_nodes:passRows.map((row)=>row.product_node),
+      failed_product_nodes:deeperRows.map((row)=>row.product_node),
+      invalid_product_nodes:invalidRows.map((row)=>row.product_node),
+      results:depth4Results,
+      full_depth4_execution_authorized:false,
+      full_coverage_authorized:false,
+      decision:invalidRows.length>0
+        ?'CALIBRATION_INVALID'
+        :passRows.length===depth4Results.length
+          ?'DEPTH4_REPRESENTATIVE_FAST_PATH_PROMISING'
+          :'DEPTH5_REQUIRED_FOR_FAILED_REPRESENTATIVES',
+      status:invalidRows.length>0?'BLOCKED':'MEASURED_CALIBRATION_ONLY'
+    };
+    writeJson(`${OUT}/depth4-representative-micro-calibration.json`,depth4Summary);
+    console.log(`DEPTH4_MICRO_CALIBRATION_PASS_COUNT=${passRows.length}/${depth4Results.length}`);
+    console.log(`DEPTH4_MICRO_CALIBRATION_INVALID_COUNT=${invalidRows.length}`);
+    console.log(`DEPTH4_MICRO_CALIBRATION_DECISION=${depth4Summary.decision}`);
+    if(invalidRows.length>0)throw new Error('DEPTH4_MICRO_CALIBRATION_INVALID');
+  }else{
+    console.log('DEPTH4_MICRO_CALIBRATION_DECISION=NOT_RUN_PLAN_BLOCKED');
+  }
+}
+
 console.log('UCHIRIMO_FULL_COVERAGE_QA_GATE=BLOCKED');
 console.log('APP_INTEGRATION_READY=FALSE');
 console.log('RELEASE_INPUT_GATE=BLOCKED');
