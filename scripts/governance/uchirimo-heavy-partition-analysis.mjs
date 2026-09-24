@@ -464,8 +464,8 @@ if(depth2Summary.decision==='DEPTH3_REQUIRED_FOR_FAILED_NODES'){
   if(invalidRows.length>0)throw new Error('DEPTH3_MICRO_CALIBRATION_INVALID');
 }
 
-const DEPTH4_MICRO_CHILD_TIMEOUT_MS=Number(process.env.UCHIRIMO_DEPTH4_MICRO_CHILD_TIMEOUT_MS ?? 45000);
-if(!Number.isFinite(DEPTH4_MICRO_CHILD_TIMEOUT_MS)||DEPTH4_MICRO_CHILD_TIMEOUT_MS<30000)throw new Error('DEPTH4_MICRO_CHILD_TIMEOUT_INVALID');
+const DEPTH4_MICRO_CHILD_TIMEOUT_MS=Number(process.env.UCHIRIMO_DEPTH4_MICRO_CHILD_TIMEOUT_MS ?? 60000);
+if(!Number.isFinite(DEPTH4_MICRO_CHILD_TIMEOUT_MS)||DEPTH4_MICRO_CHILD_TIMEOUT_MS<60000)throw new Error('DEPTH4_MICRO_CHILD_TIMEOUT_INVALID');
 function remainingDiscreteAxes(result,seed){
   const axes=[];
   for(const field of result.fields??[]){
