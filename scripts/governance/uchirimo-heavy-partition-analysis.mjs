@@ -9,14 +9,12 @@ const SOURCE_HEAD='71d47fc53069c65616723854dbc35919155e0900';
 const SOURCE_ANALYSIS_BLOB='3804d2a073f75a10614a57babb560e5fa664963b';
 const SOURCE_BATCH_BLOB='435a48d054d74798f61368234bc6775cdaa0c770';
 const SOURCE_FULL_BLOB='94a86542cace253dc45e7b1f8589f98b837a4cce';
-const CURRENT_BATCH_BLOB='d3d1055b02c7677e246515facd7359da441a4bd1';
-const CURRENT_CONSTRAINT_RUNNER_BLOB='7d51822363ed13d8c792ed7b2bd53cbc85b6c976';
+const CURRENT_BATCH_BLOB='65a57854ab7adf45fa0486b465530686d76cb09f';
 const SOURCE_ART=`uchirimo-heavy-recovery-analysis-${SOURCE_HEAD}`;
 const SOURCE_HARD_REL='source-run-35987594269/source-run-35985579293/explicit-decision-constraint-model-hard-proof.json';
 const SOURCE_MODEL_REL='source-run-35987594269/source-run-35985579293/source-run-35982709102/explicit-decision-constraint-partition-model-proof.json';
 const PATH='scripts/governance/uchirimo-heavy-partition-analysis.mjs';
 const BATCH_PATH='scripts/governance/uchirimo-selector-batch-runner.mjs';
-const CONSTRAINT_RUNNER_PATH='scripts/governance/uchirimo-constraint-selector-runner.mjs';
 const FULL_RUNNER_PATH='scripts/uchirimo-full-selector-proof.mjs';
 const OUT=String(process.env.UCHIRIMO_HEAVY_ANALYSIS_OUT??'artifacts/uchirimo-heavy-recovery');
 const TIMEOUT=Number(process.env.UCHIRIMO_CONSTRAINT_RUNNER_MICRO_TIMEOUT_MS??60000);
@@ -145,13 +143,11 @@ if(sourceAnalysisBlob!==SOURCE_ANALYSIS_BLOB)throw new Error(`SOURCE_ANALYSIS_BL
 if(sourceBatchBlob!==SOURCE_BATCH_BLOB)throw new Error(`SOURCE_BATCH_BLOB_MISMATCH:${sourceBatchBlob}`);
 if(sourceFullBlob!==SOURCE_FULL_BLOB)throw new Error(`SOURCE_FULL_BLOB_MISMATCH:${sourceFullBlob}`);
 const currentBatchBlob=execFileSync('git',['rev-parse',`${head}:${BATCH_PATH}`],{encoding:'utf8'}).trim();
-const currentConstraintBlob=execFileSync('git',['rev-parse',`${head}:${CONSTRAINT_RUNNER_PATH}`],{encoding:'utf8'}).trim();
 const currentFullBlob=execFileSync('git',['rev-parse',`${head}:${FULL_RUNNER_PATH}`],{encoding:'utf8'}).trim();
 if(currentBatchBlob!==CURRENT_BATCH_BLOB)throw new Error(`CURRENT_BATCH_BLOB_MISMATCH:${currentBatchBlob}`);
-if(currentConstraintBlob!==CURRENT_CONSTRAINT_RUNNER_BLOB)throw new Error(`CURRENT_CONSTRAINT_RUNNER_BLOB_MISMATCH:${currentConstraintBlob}`);
 if(currentFullBlob!==SOURCE_FULL_BLOB)throw new Error('FULL_SELECTOR_RUNNER_UNREQUESTED_CHANGE');
 const changed=execFileSync('git',['diff','--name-only',`${SOURCE_HEAD}..${head}`],{encoding:'utf8'}).trim().split(/\r?\n/).filter(Boolean).sort();
-const expectedChanged=[PATH,BATCH_PATH,CONSTRAINT_RUNNER_PATH].sort();
+const expectedChanged=[PATH,BATCH_PATH].sort();
 if(sj(changed)!==sj(expectedChanged))throw new Error(`RUNNER_SCOPE_INVALID:${changed.join(',')}`);
 
 const sourceDir=`${OUT}/source-run-${SOURCE_RUN}`;
@@ -212,7 +208,7 @@ const invalid=results.filter((row)=>row.status==='CALIBRATION_INVALID');
 const representativeVerified=invalid.length===0&&results.every((row)=>row.constraint_start_valid===true&&(row.status==='PASS'||row.constraint_progress_valid===true));
 const runnerMicro={
   schema_version:'1.0.0',artifact_type:'UCHIRIMO_EXPLICIT_DECISION_CONSTRAINT_REAL_RUNNER_MICRO_CALIBRATION',exact_head:head,
-  source_authorization_exact_head:SOURCE_HEAD,runner_model:'BATCH_DISPATCH_TO_DEDICATED_CONSTRAINT_SHARD_V1',representative_count:results.length,child_timeout_ms:TIMEOUT,
+  source_authorization_exact_head:SOURCE_HEAD,runner_model:'BATCH_INLINE_EXPLICIT_CONSTRAINT_SHARD_V1',representative_count:results.length,child_timeout_ms:TIMEOUT,
   pass_count:pass.length,needs_further_partitioning_count:further.length,calibration_invalid_count:invalid.length,results,
   runner_constraint_support_implemented:true,runner_constraint_representative_verified:representativeVerified,full_aggregate_constraint_support_implemented:false,
   constraint_full_execution_authorized:false,full_coverage_authorized:false,status:representativeVerified?'MEASURED_RUNNER_SUPPORT_ONLY':'BLOCKED'
@@ -231,7 +227,7 @@ writeJson(`${OUT}/depth9-and-constraint-micro-decision.json`,decision);
 console.log(`CONSTRAINT_RUNNER_MICRO_PASS_COUNT=${pass.length}/${results.length}`);
 console.log(`CONSTRAINT_RUNNER_MICRO_NEEDS_FURTHER_PARTITIONING_COUNT=${further.length}`);
 console.log(`CONSTRAINT_RUNNER_MICRO_INVALID_COUNT=${invalid.length}`);
-console.log(`RUNNER_CONSTRAINT_SUPPORT_IMPLEMENTED=${String(true).toUpperCase()}`);
+console.log('RUNNER_CONSTRAINT_SUPPORT_IMPLEMENTED=TRUE');
 console.log(`RUNNER_CONSTRAINT_REPRESENTATIVE_VERIFIED=${String(representativeVerified).toUpperCase()}`);
 console.log('FULL_AGGREGATE_CONSTRAINT_SUPPORT_IMPLEMENTED=FALSE');
 console.log('CONSTRAINT_FULL_EXECUTION_AUTHORIZED=FALSE');
