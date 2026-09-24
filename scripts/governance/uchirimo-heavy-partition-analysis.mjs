@@ -2,236 +2,73 @@ import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import { existsSync, mkdirSync, readFileSync, unlinkSync } from 'node:fs';
 import { loadRegisteredRuntime } from '../../src/catalog/runtime-master/runtime-master-registry.mjs';
+import { resolveRuntimeAppProduct } from '../../src/catalog/runtime-master/runtime-app-bridge.mjs';
 import { currentExactHead, writeJson } from './governance-lib.mjs';
 
-const SOURCE_RUN='35988553229';
-const SOURCE_HEAD='71d47fc53069c65616723854dbc35919155e0900';
-const SOURCE_ANALYSIS_BLOB='3804d2a073f75a10614a57babb560e5fa664963b';
-const SOURCE_BATCH_BLOB='435a48d054d74798f61368234bc6775cdaa0c770';
-const SOURCE_FULL_BLOB='94a86542cace253dc45e7b1f8589f98b837a4cce';
-const CURRENT_BATCH_BLOB='65a57854ab7adf45fa0486b465530686d76cb09f';
+const PID='SER-YKKAP-UCHIRIMO';
+const SOURCE_RUN='35990543075';
+const SOURCE_HEAD='91d096bbfb5b613a39f3d85326ab1568b1b73113';
 const SOURCE_ART=`uchirimo-heavy-recovery-analysis-${SOURCE_HEAD}`;
-const SOURCE_HARD_REL='source-run-35987594269/source-run-35985579293/explicit-decision-constraint-model-hard-proof.json';
-const SOURCE_MODEL_REL='source-run-35987594269/source-run-35985579293/source-run-35982709102/explicit-decision-constraint-partition-model-proof.json';
+const SOURCE_ANALYSIS_BLOB='151612f7136c8d7cf77db524a8a831d5c41ed0cd';
+const SOURCE_BATCH_BLOB='65a57854ab7adf45fa0486b465530686d76cb09f';
+const SOURCE_FULL_BLOB='94a86542cace253dc45e7b1f8589f98b837a4cce';
+const MODEL_REL='source-run-35988553229/source-run-35987594269/source-run-35985579293/source-run-35982709102/explicit-decision-constraint-partition-model-proof.json';
 const PATH='scripts/governance/uchirimo-heavy-partition-analysis.mjs';
-const BATCH_PATH='scripts/governance/uchirimo-selector-batch-runner.mjs';
-const FULL_RUNNER_PATH='scripts/uchirimo-full-selector-proof.mjs';
+const BATCH='scripts/governance/uchirimo-selector-batch-runner.mjs';
+const FULL='scripts/uchirimo-full-selector-proof.mjs';
 const OUT=String(process.env.UCHIRIMO_HEAVY_ANALYSIS_OUT??'artifacts/uchirimo-heavy-recovery');
-const TIMEOUT=Number(process.env.UCHIRIMO_CONSTRAINT_RUNNER_MICRO_TIMEOUT_MS??60000);
+const TIMEOUT=Number(process.env.UCHIRIMO_DEPTH10_MICRO_TIMEOUT_MS??60000);
 const head=currentExactHead();
-if(!Number.isFinite(TIMEOUT)||TIMEOUT<60000)throw new Error('CONSTRAINT_RUNNER_TIMEOUT_INVALID');
+if(!Number.isFinite(TIMEOUT)||TIMEOUT<60000)throw new Error('DEPTH10_TIMEOUT_INVALID');
 mkdirSync(OUT,{recursive:true});
 
-const stable=(value)=>Array.isArray(value)
-  ? value.map(stable)
-  : (!value||typeof value!=='object')
-    ? value
-    : Object.fromEntries(Object.entries(value).sort(([a],[b])=>a.localeCompare(b)).map(([key,v])=>[key,stable(v)]));
-const sj=(value)=>JSON.stringify(stable(value));
-const hash=(value)=>createHash('sha256').update(typeof value==='string'?value:sj(value)).digest('hex');
-const read=(path)=>JSON.parse(readFileSync(path,'utf8'));
-const safeRead=(path)=>{try{return read(path)}catch{return null}};
+const TECH=new Set(['legacyConstruction','legacyConfiguration','internal_construction']);
+const CONT=new Set(['size_w','size_h','frame_projection','fukashi_dimension','custom_w','custom_h','custom_width','custom_height']);
+const stable=(v)=>Array.isArray(v)?v.map(stable):(!v||typeof v!=='object')?v:Object.fromEntries(Object.entries(v).sort(([a],[b])=>a.localeCompare(b)).map(([k,x])=>[k,stable(x)]));
+const sj=(v)=>JSON.stringify(stable(v));
+const hash=(v)=>createHash('sha256').update(typeof v==='string'?v:sj(v)).digest('hex');
+const read=(p)=>JSON.parse(readFileSync(p,'utf8'));
+const safeRead=(p)=>{try{return read(p)}catch{return null}};
+const same=(a,b)=>Array.isArray(b)?Array.isArray(a)&&sj(a.map(String).sort())===sj(b.map(String).sort()):Object.is(a,b)||String(a)===String(b);
+const present=(v)=>v!==undefined&&v!==null&&v!==''&&(!Array.isArray(v)||v.length>0);
+const enabled=(f)=>[...new Map((f?.values??[]).filter(x=>x.disabled!==true).map(x=>[sj(x.value),x.value])).values()];
+const normalizeMulti=(rows)=>[...new Map(rows.map(v=>[String(v),v])).values()].sort((a,b)=>String(a).localeCompare(String(b)));
+const flowSignature=(r)=>(r.fields??[]).filter(f=>!TECH.has(f.key)).map(f=>`${f.semanticStage}:${f.semanticSlot}:${f.key}:${f.required?'R':'O'}:${f.readOnly?'RO':'RW'}`).join('|');
 
-function runnerRow(lane,index){
-  const prefix=stable(lane.selector_prefix??{});
-  const baseKeys=new Set(['room_specification','window_type','glass_family','sash_configuration','size_class']);
-  const constraints=[{field_key:lane.selected_constraint_field,decision:{kind:'UNSET'}}];
-  return {
-    shard:0,
-    node_id:lane.product_node,
-    partition_key:`${lane.lane_id}|constraint-micro-${index}|${lane.selected_constraint_field}=EXPLICIT_UNSET`,
-    room_specification:String(prefix.room_specification),
-    window_type:String(prefix.window_type),
-    sash_configuration:prefix.sash_configuration==null?'__UNSET__':String(prefix.sash_configuration),
-    size_class:prefix.size_class==null?'__UNSET__':String(prefix.size_class),
-    glass_family:String(prefix.glass_family),
-    partition_seed_json:sj(Object.fromEntries(Object.entries(prefix).filter(([key])=>!baseKeys.has(key)))),
-    decision_constraints_json:sj(constraints),
-    expected_constraint_hash:hash(constraints)
-  };
-}
+function unresolvedAxes(result,seed){return (result.fields??[]).filter(f=>!f.readOnly&&!TECH.has(f.key)&&!CONT.has(f.key)&&!Object.prototype.hasOwnProperty.call(seed,f.key)&&['ENUM','MULTI_ENUM'].includes(f.dataType)).map(f=>{const values=enabled(f);return {key:f.key,type:f.dataType,required:f.required===true,count:values.length,values,safe:f.required===true&&f.dataType==='ENUM'&&values.length>1,field:f};}).filter(x=>x.count>0);}
+const safeSplit=(r,s)=>unresolvedAxes(r,s).find(x=>x.safe)??null;
+function decisionDomain(field){const values=enabled(field);if(field.dataType==='MULTI_ENUM'){if(values.length>12)throw new Error('MULTI_ENUM_SYMBOLIC_REQUIRED:'+field.key);const out=[];if(field.required!==true)out.push({kind:'UNSET'});for(let mask=1;mask<2**values.length;mask++){const sub=[];for(let i=0;i<values.length;i++)if(mask&(1<<i))sub.push(values[i]);out.push({kind:'VALUE',value:normalizeMulti(sub)});}return out;}const out=values.map(v=>({kind:'VALUE',value:stable(v)}));if(field.required!==true)out.unshift({kind:'UNSET'});return out;}
+function applyDecision(selection,key,d){const next={...(selection??{})};if(d.kind==='UNSET')delete next[key];else next[key]=d.value;return next;}
+function survives(result,key,d){const f=(result.fields??[]).find(x=>x.key===key)??null;if(!f)return false;if(d.kind==='UNSET')return f.required!==true&&!present(result.selection?.[key]);return same(result.selection?.[key],d.value);}
+function prefixPreserved(result,prefix){return Object.entries(prefix).every(([k,v])=>same(result.selection?.[k],v));}
+const dkey=(d)=>d.kind==='UNSET'?'UNSET':`VALUE:${sj(d.value)}`;
 
-function measureRunnerConstraint(lane,index){
-  const row=runnerRow(lane,index);
-  const id=String(index).padStart(2,'0');
-  const dir=`${OUT}/constraint-runner-micro/case-${id}`;
-  const batchId=`constraint-runner-micro-${id}`;
-  mkdirSync(dir,{recursive:true});
-  let executionError=null;
-  try{
-    execFileSync(process.execPath,[BATCH_PATH],{
-      env:{
-        ...process.env,
-        HEAD_SHA:head,
-        UCHIRIMO_SELECTOR_BATCH_ID:batchId,
-        UCHIRIMO_SELECTOR_BATCH_JSON:JSON.stringify([row]),
-        UCHIRIMO_SELECTOR_CHILD_TIMEOUT_MS:String(TIMEOUT),
-        UCHIRIMO_SELECTOR_EXPECTED_SHARDS:'1',
-        UCHIRIMO_SELECTOR_MAX_STATES:'1000000',
-        UCHIRIMO_SELECTOR_MAX_TERMINALS:'1000000',
-        UCHIRIMO_RESOLVER_CACHE_MAX:'512',
-        UCHIRIMO_FULL_SELECTOR_OUT:dir
-      },
-      encoding:'utf8',
-      timeout:TIMEOUT+20000,
-      maxBuffer:64*1024*1024
-    });
-  }catch(error){
-    executionError={message:String(error?.message??error),code:error?.code??null,signal:error?.signal??null};
-  }
-  const batch=safeRead(`${dir}/batch-${batchId}-report.json`);
-  const start=safeRead(`${dir}/shard-0-constraint-start.json`);
-  const progress=safeRead(`${dir}/shard-0-constraint-progress.json`);
-  const report=safeRead(`${dir}/shard-0-report.json`);
-  const failure=safeRead(`${dir}/shard-0-failure.json`);
-  const digest=`${dir}/shard-0-terminal-digests.jsonl`;
-  if(existsSync(digest))unlinkSync(digest);
-  const result=batch?.results?.[0]??null;
-  const started=Date.parse(result?.started_at??'');
-  const completed=Date.parse(result?.completed_at??'');
-  const elapsedMs=Number.isFinite(started)&&Number.isFinite(completed)&&completed>=started?completed-started:null;
-  const startValid=start?.status==='PASS'
-    &&start.exact_head===head
-    &&start.runner==='UCHIRIMO_EXPLICIT_DECISION_CONSTRAINT_SHARD_V1'
-    &&start.decision_constraints_sha256===row.expected_constraint_hash
-    &&start.runtime_integrity_match===true;
-  const progressValid=progress?.exact_head===head
-    &&progress.decision_constraints_sha256===row.expected_constraint_hash
-    &&Number(progress.visited_state_count??0)>0;
-  const completedPass=batch?.status==='PASS'
-    &&report?.status==='PASS'
-    &&report?.exact_head===head
-    &&report?.runtime_integrity_match===true
-    &&report?.decision_constraints_sha256===row.expected_constraint_hash
-    &&Number(report?.unverified_discrete_selector_case_count??1)===0;
-  const message=String(failure?.message??'');
-  const timedOut=result?.timed_out===true;
-  const stateLimit=/UCHIRIMO_SELECTOR_STATE_LIMIT_REACHED/.test(message);
-  const terminalLimit=/UCHIRIMO_TERMINAL_LIMIT_REACHED/.test(message);
-  const outcome=completedPass
-    ? 'COMPLETED'
-    : timedOut&&startValid&&progressValid
-      ? 'TIMEOUT_CONSTRAINT_ACTIVE'
-      : stateLimit&&startValid
-        ? 'STATE_LIMIT_REACHED'
-        : terminalLimit&&startValid
-          ? 'TERMINAL_LIMIT_REACHED'
-          : 'INVALID';
-  return {
-    outcome,
-    elapsed_ms:elapsedMs,
-    timed_out:timedOut,
-    runner_path:result?.runner??null,
-    constraint_count:result?.constraint_count??null,
-    constraint_start_valid:startValid,
-    constraint_progress_valid:progressValid,
-    visited_state_count:report?.visited_state_count??progress?.visited_state_count??null,
-    terminal_context_count:report?.terminal_context_count??progress?.terminal_context_count??null,
-    transition_check_count:report?.transition_check_count??progress?.transition_check_count??null,
-    dependency_rejection_count:report?.dependency_rejection_count??progress?.dependency_rejection_count??null,
-    constraint_rejection_count:report?.constraint_rejection_count??progress?.constraint_rejection_count??null,
-    failure_message:message||null,
-    execution_error:executionError
-  };
-}
+function normalRow(partition){const s=partition.SELECTOR_PREFIX??{}, base=new Set(['room_specification','window_type','glass_family','sash_configuration','size_class']);return {shard:0,node_id:partition.PRODUCT_NODE,partition_key:partition.PARTITION_ID,room_specification:String(s.room_specification),window_type:String(s.window_type),sash_configuration:s.sash_configuration==null?'__UNSET__':String(s.sash_configuration),size_class:s.size_class==null?'__UNSET__':String(s.size_class),glass_family:String(s.glass_family),partition_seed_json:sj(Object.fromEntries(Object.entries(s).filter(([k])=>!base.has(k))))};}
+function constraintRow(lane,index,constraints){const s=lane.selector_prefix??{}, base=new Set(['room_specification','window_type','glass_family','sash_configuration','size_class']);return {shard:0,node_id:lane.product_node,partition_key:`${lane.lane_id}|constraint-depth2-${index}`,room_specification:String(s.room_specification),window_type:String(s.window_type),sash_configuration:s.sash_configuration==null?'__UNSET__':String(s.sash_configuration),size_class:s.size_class==null?'__UNSET__':String(s.size_class),glass_family:String(s.glass_family),partition_seed_json:sj(Object.fromEntries(Object.entries(s).filter(([k])=>!base.has(k)))),decision_constraints_json:sj(constraints),expected_hash:hash(constraints)};}
+function runBatch(row,id,dir){mkdirSync(dir,{recursive:true});let executionError=null;try{execFileSync(process.execPath,[BATCH],{env:{...process.env,HEAD_SHA:head,UCHIRIMO_SELECTOR_BATCH_ID:id,UCHIRIMO_SELECTOR_BATCH_JSON:JSON.stringify([row]),UCHIRIMO_SELECTOR_CHILD_TIMEOUT_MS:String(TIMEOUT),UCHIRIMO_SELECTOR_EXPECTED_SHARDS:'1',UCHIRIMO_SELECTOR_MAX_STATES:'1000000',UCHIRIMO_SELECTOR_MAX_TERMINALS:'1000000',UCHIRIMO_RESOLVER_CACHE_MAX:'512',UCHIRIMO_FULL_SELECTOR_OUT:dir},encoding:'utf8',timeout:TIMEOUT+20000,maxBuffer:64*1024*1024});}catch(e){executionError={message:String(e?.message??e),code:e?.code??null,signal:e?.signal??null};}const batch=safeRead(`${dir}/batch-${id}-report.json`),report=safeRead(`${dir}/shard-0-report.json`),failure=safeRead(`${dir}/shard-0-failure.json`),start=safeRead(`${dir}/shard-0-constraint-start.json`),progress=safeRead(`${dir}/shard-0-constraint-progress.json`),digest=`${dir}/shard-0-terminal-digests.jsonl`;if(existsSync(digest))unlinkSync(digest);const br=batch?.results?.[0]??null,started=Date.parse(br?.started_at??''),completed=Date.parse(br?.completed_at??''),elapsed=Number.isFinite(started)&&Number.isFinite(completed)&&completed>=started?completed-started:null;return {batch,br,report,failure,start,progress,elapsed,executionError};}
+function normalMicro(partition,index){const id=`depth10-safe-micro-${String(index).padStart(2,'0')}`,dir=`${OUT}/depth10-safe-micro/case-${String(index).padStart(2,'0')}`,x=runBatch(normalRow(partition),id,dir),msg=String(x.failure?.message??x.br?.error??''),timed=x.br?.timed_out===true,pass=x.batch?.status==='PASS'&&x.report?.status==='PASS'&&x.report?.runtime_integrity_match===true&&Number(x.report?.unverified_discrete_selector_case_count??1)===0;return {elapsed_ms:x.elapsed,timed_out:timed,state_limit_reached:/STATE_LIMIT/.test(msg),terminal_limit_reached:/TERMINAL_LIMIT/.test(msg),visited_state_count:x.report?.visited_state_count??null,terminal_context_count:x.report?.terminal_context_count??null,failure_message:msg||null,execution_error:x.executionError,outcome:pass?'COMPLETED':timed?'TIMEOUT':/STATE_LIMIT/.test(msg)?'STATE_LIMIT_REACHED':/TERMINAL_LIMIT/.test(msg)?'TERMINAL_LIMIT_REACHED':'INVALID'};}
+function constraintMicro(lane,index,constraints){const row=constraintRow(lane,index,constraints),id=`constraint-depth2-micro-${String(index).padStart(2,'0')}`,dir=`${OUT}/constraint-depth2-micro/case-${String(index).padStart(2,'0')}`,x=runBatch(row,id,dir),msg=String(x.failure?.message??x.br?.error??''),timed=x.br?.timed_out===true,startOk=x.start?.status==='PASS'&&x.start.exact_head===head&&x.start.runner==='UCHIRIMO_EXPLICIT_DECISION_CONSTRAINT_SHARD_V1'&&x.start.decision_constraints_sha256===row.expected_hash&&x.start.runtime_integrity_match===true,progressOk=x.progress?.exact_head===head&&x.progress.decision_constraints_sha256===row.expected_hash&&Number(x.progress.visited_state_count??0)>0,pass=x.batch?.status==='PASS'&&x.report?.status==='PASS'&&x.report?.exact_head===head&&x.report?.decision_constraints_sha256===row.expected_hash&&x.report?.runtime_integrity_match===true&&Number(x.report?.unverified_discrete_selector_case_count??1)===0;const outcome=pass?'COMPLETED':timed&&startOk&&progressOk?'TIMEOUT_CONSTRAINT_ACTIVE':/STATE_LIMIT/.test(msg)&&startOk?'STATE_LIMIT_REACHED':/TERMINAL_LIMIT/.test(msg)&&startOk?'TERMINAL_LIMIT_REACHED':'INVALID';return {outcome,elapsed_ms:x.elapsed,timed_out:timed,runner_path:x.br?.runner??null,constraint_count:x.br?.constraint_count??null,constraint_start_valid:startOk,constraint_progress_valid:progressOk,visited_state_count:x.report?.visited_state_count??x.progress?.visited_state_count??null,terminal_context_count:x.report?.terminal_context_count??x.progress?.terminal_context_count??null,transition_check_count:x.report?.transition_check_count??x.progress?.transition_check_count??null,constraint_rejection_count:x.report?.constraint_rejection_count??x.progress?.constraint_rejection_count??null,failure_message:msg||null,execution_error:x.executionError};}
 
 execFileSync('git',['merge-base','--is-ancestor',SOURCE_HEAD,head],{stdio:'ignore'});
-const sourceAnalysisBlob=execFileSync('git',['rev-parse',`${SOURCE_HEAD}:${PATH}`],{encoding:'utf8'}).trim();
-const sourceBatchBlob=execFileSync('git',['rev-parse',`${SOURCE_HEAD}:${BATCH_PATH}`],{encoding:'utf8'}).trim();
-const sourceFullBlob=execFileSync('git',['rev-parse',`${SOURCE_HEAD}:${FULL_RUNNER_PATH}`],{encoding:'utf8'}).trim();
-if(sourceAnalysisBlob!==SOURCE_ANALYSIS_BLOB)throw new Error(`SOURCE_ANALYSIS_BLOB_MISMATCH:${sourceAnalysisBlob}`);
-if(sourceBatchBlob!==SOURCE_BATCH_BLOB)throw new Error(`SOURCE_BATCH_BLOB_MISMATCH:${sourceBatchBlob}`);
-if(sourceFullBlob!==SOURCE_FULL_BLOB)throw new Error(`SOURCE_FULL_BLOB_MISMATCH:${sourceFullBlob}`);
-const currentBatchBlob=execFileSync('git',['rev-parse',`${head}:${BATCH_PATH}`],{encoding:'utf8'}).trim();
-const currentFullBlob=execFileSync('git',['rev-parse',`${head}:${FULL_RUNNER_PATH}`],{encoding:'utf8'}).trim();
-if(currentBatchBlob!==CURRENT_BATCH_BLOB)throw new Error(`CURRENT_BATCH_BLOB_MISMATCH:${currentBatchBlob}`);
-if(currentFullBlob!==SOURCE_FULL_BLOB)throw new Error('FULL_SELECTOR_RUNNER_UNREQUESTED_CHANGE');
-const changed=execFileSync('git',['diff','--name-only',`${SOURCE_HEAD}..${head}`],{encoding:'utf8'}).trim().split(/\r?\n/).filter(Boolean).sort();
-const expectedChanged=[PATH,BATCH_PATH].sort();
-if(sj(changed)!==sj(expectedChanged))throw new Error(`RUNNER_SCOPE_INVALID:${changed.join(',')}`);
+for(const [p,e] of [[PATH,SOURCE_ANALYSIS_BLOB],[BATCH,SOURCE_BATCH_BLOB],[FULL,SOURCE_FULL_BLOB]]){const a=execFileSync('git',['rev-parse',`${SOURCE_HEAD}:${p}`],{encoding:'utf8'}).trim();if(a!==e)throw new Error(`SOURCE_BLOB_MISMATCH:${p}:${a}`);}
+const changed=execFileSync('git',['diff','--name-only',`${SOURCE_HEAD}..${head}`],{encoding:'utf8'}).trim().split(/\r?\n/).filter(Boolean).sort();if(sj(changed)!==sj([PATH]))throw new Error('NEXT_STAGE_SCOPE_INVALID:'+changed.join(','));
+if(execFileSync('git',['rev-parse',`${head}:${BATCH}`],{encoding:'utf8'}).trim()!==SOURCE_BATCH_BLOB||execFileSync('git',['rev-parse',`${head}:${FULL}`],{encoding:'utf8'}).trim()!==SOURCE_FULL_BLOB)throw new Error('RUNNER_IDENTITY_CHANGED');
+const src=`${OUT}/source-run-${SOURCE_RUN}`;mkdirSync(src,{recursive:true});execFileSync('gh',['run','download',SOURCE_RUN,'--repo',String(process.env.GITHUB_REPOSITORY??'Takuro-Kwkm/sash-app'),'--name',SOURCE_ART,'--dir',src],{stdio:'inherit',timeout:120000});
+const heavy=read(`${src}/heavy-partition-analysis.json`),recursive=read(`${src}/recursive-partition-plan.json`),d9plan=read(`${src}/depth9-safe-representative-partition-plan.json`),d9proof=read(`${src}/depth9-safe-representative-coverage-preservation-proof.json`),d9micro=read(`${src}/depth9-safe-representative-micro-calibration.json`),runnerMicro=read(`${src}/explicit-decision-constraint-real-runner-micro-calibration.json`),sourceDecision=read(`${src}/depth9-and-constraint-micro-decision.json`),model=read(`${src}/${MODEL_REL}`);
+for(const x of [heavy,recursive,d9plan,d9proof,d9micro,runnerMicro,sourceDecision])if(x.exact_head!==SOURCE_HEAD)throw new Error('SOURCE_HEAD_MISMATCH');
+if(d9proof.coverage_preservation_status!=='PASS'||d9micro.decision!=='DEPTH10_REQUIRED_FOR_FAILED_SAFE_REPRESENTATIVES'||d9micro.calibration_invalid_count!==0||d9micro.needs_deeper_split_count!==3)throw new Error('SOURCE_DEPTH9_INVALID');
+if(runnerMicro.runner_constraint_support_implemented!==true||runnerMicro.runner_constraint_representative_verified!==true||runnerMicro.calibration_invalid_count!==0||runnerMicro.needs_further_partitioning_count!==2||sourceDecision.next_constraint_action!=='DEEPER_OPTIONAL_CONSTRAINT_PARTITION_REQUIRED')throw new Error('SOURCE_CONSTRAINT_RUNNER_INVALID');
+const runtime=await loadRegisteredRuntime('YKK AP','ウチリモ 内窓');if(!runtime?.sourcePackageIntegrity?.match)throw new Error('RUNTIME_INTEGRITY_FAIL');
+const binding={schema_version:'1.0.0',artifact_type:'UCHIRIMO_DEPTH10_AND_CONSTRAINT_DEPTH2_SOURCE_BINDING',exact_head:head,source_exact_head:SOURCE_HEAD,source_run_id:Number(SOURCE_RUN),changed_files_since_source:changed,source_depth9_decision:d9micro.decision,source_constraint_next_action:sourceDecision.next_constraint_action,source_runner_constraint_support:true,current_runtime_manifest_sha256:runtime.sourcePackageIntegrity.actual,status:'PASS'};writeJson(`${OUT}/depth10-and-constraint-depth2-source-binding.json`,binding);writeJson(`${OUT}/heavy-partition-analysis.json`,{...heavy,exact_head:head,evidence_origin:'CURRENT_HEAD_DEPTH10_BINDING',source_bound_exact_head:SOURCE_HEAD,current_head_binding_sha256:hash(binding),source_pass_evidence_reused_as_current_head:false});writeJson(`${OUT}/recursive-partition-plan.json`,{...recursive,exact_head:head,evidence_origin:'CURRENT_HEAD_DEPTH10_BINDING',source_bound_exact_head:SOURCE_HEAD,current_head_binding_sha256:hash(binding),source_pass_evidence_reused_as_current_head:false});
 
-const sourceDir=`${OUT}/source-run-${SOURCE_RUN}`;
-mkdirSync(sourceDir,{recursive:true});
-execFileSync('gh',['run','download',SOURCE_RUN,'--repo',String(process.env.GITHUB_REPOSITORY??'Takuro-Kwkm/sash-app'),'--name',SOURCE_ART,'--dir',sourceDir],{stdio:'inherit',timeout:120000});
-const sourceHeavy=read(`${sourceDir}/heavy-partition-analysis.json`);
-const sourcePlan=read(`${sourceDir}/recursive-partition-plan.json`);
-const sourceDepth9Plan=read(`${sourceDir}/depth9-safe-representative-partition-plan.json`);
-const sourceDepth9Proof=read(`${sourceDir}/depth9-safe-representative-coverage-preservation-proof.json`);
-const sourceDepth9Micro=read(`${sourceDir}/depth9-safe-representative-micro-calibration.json`);
-const sourceConstraintMicro=read(`${sourceDir}/explicit-decision-constraint-representative-micro-calibration.json`);
-const sourceDecision=read(`${sourceDir}/depth9-and-constraint-micro-decision.json`);
-const sourceHard=read(`${sourceDir}/${SOURCE_HARD_REL}`);
-const sourceModel=read(`${sourceDir}/${SOURCE_MODEL_REL}`);
-if(sourceDecision.exact_head!==SOURCE_HEAD||sourceDecision.runner_implementation_authorized!==true||sourceDecision.constraint_micro_calibration_invalid_count!==0)throw new Error('SOURCE_RUNNER_AUTHORIZATION_NOT_PASS');
-if(sourceConstraintMicro.exact_head!==SOURCE_HEAD||sourceConstraintMicro.calibration_invalid_count!==0||sourceConstraintMicro.needs_further_partitioning_count!==2)throw new Error('SOURCE_CONSTRAINT_MICRO_SHAPE_INVALID');
-if(sourceDepth9Micro.decision!=='DEPTH10_REQUIRED_FOR_FAILED_SAFE_REPRESENTATIVES'||sourceDepth9Micro.calibration_invalid_count!==0)throw new Error('SOURCE_DEPTH9_DECISION_INVALID');
-if(sourceHard.EXPLICIT_DECISION_CONSTRAINT_MODEL_GATE!=='PASS'||sourceHard.lane_pass_count!==7||sourceHard.lane_fail_count!==0)throw new Error('SOURCE_HARD_PROOF_NOT_PASS');
-if(sourceModel.explicit_decision_constraint_model_status!=='PASS'||sourceModel.lane_count!==7)throw new Error('SOURCE_MODEL_PROOF_NOT_PASS');
+const d9ById=new Map(d9plan.children.map(c=>[c.PARTITION_ID,c])), parents=[],children=[];
+for(const r of d9micro.results){if(r.status!=='NEEDS_DEEPER_SPLIT'||!r.next_safe_split_field)continue;const c=d9ById.get(r.depth9_child_partition_id);if(!c)throw new Error('DEPTH10_SOURCE_CHILD_MISSING');const seed=c.SELECTOR_PREFIX??{},resolved=await resolveRuntimeAppProduct(PID,seed);if(!prefixPreserved(resolved,seed))throw new Error('DEPTH10_PARENT_PREFIX_REJECTED');const split=safeSplit(resolved,seed);if(!split||split.key!==r.next_safe_split_field||split.count!==r.next_safe_split_cardinality)throw new Error('DEPTH10_SPLIT_DRIFT:'+c.PARTITION_ID);const p={PARTITION_ID:c.PARTITION_ID,PRODUCT_NODE:c.PRODUCT_NODE,WINDOW_ID:String(seed.window_type),SELECTOR_PREFIX:stable(seed),NEXT_SPLIT_FIELD:split.key,NEXT_SPLIT_VALUES:split.values,NEXT_SPLIT_CARDINALITY:split.count,PARTITION_DEPTH:9,EXACT_HEAD:head,STATUS:'DEPTH10_SAFE_SPLIT_PLANNED'};parents.push(p);for(const value of split.values){const cs={...seed,[split.key]:value},cr=await resolveRuntimeAppProduct(PID,cs);if(!prefixPreserved(cr,cs))throw new Error('DEPTH10_CHILD_SEED_REJECTED');const next=safeSplit(cr,cs);children.push({PARTITION_ID:`UHC10-${hash([p.PARTITION_ID,split.key,value]).slice(0,20)}`,PARENT_PARTITION_ID:p.PARTITION_ID,PRODUCT_NODE:p.PRODUCT_NODE,WINDOW_ID:p.WINDOW_ID,FLOW_SIGNATURE:flowSignature(cr),SELECTOR_PREFIX:stable(cs),SPLIT_FIELD:split.key,SPLIT_VALUE:stable(value),PARTITION_DEPTH:10,NEXT_SAFE_SPLIT_FIELD:next?.key??null,NEXT_SAFE_SPLIT_CARDINALITY:next?.count??0,SAFE_REQUIRED_ENUM_FRONTIER_EXHAUSTED:!next,EXACT_HEAD:head,STATUS:'PLANNED_UNVERIFIED'});}}
+if(parents.length!==3)throw new Error('DEPTH10_PARENT_COUNT_INVALID:'+parents.length);let overlap=children.length-new Set(children.map(c=>c.PARTITION_ID)).size,gap=0,unionMismatch=0,prefixMismatch=0,cardMismatch=0;const parentProofs=[];for(const p of parents){const cs=children.filter(c=>c.PARENT_PARTITION_ID===p.PARTITION_ID),expected=new Set(p.NEXT_SPLIT_VALUES.map(sj)),actual=new Set(cs.map(c=>sj(c.SPLIT_VALUE))),union=expected.size===actual.size&&[...expected].every(x=>actual.has(x)),prefix=cs.every(c=>Object.entries(p.SELECTOR_PREFIX).every(([k,v])=>same(c.SELECTOR_PREFIX[k],v))&&Object.keys(c.SELECTOR_PREFIX).filter(k=>!Object.prototype.hasOwnProperty.call(p.SELECTOR_PREFIX,k)).length===1),card=cs.length===p.NEXT_SPLIT_CARDINALITY&&actual.size===cs.length;if(!union)unionMismatch++;if(!prefix)prefixMismatch++;if(!card){cardMismatch++;gap++;}parentProofs.push({PARENT_PARTITION_ID:p.PARTITION_ID,PRODUCT_NODE:p.PRODUCT_NODE,SPLIT_FIELD:p.NEXT_SPLIT_FIELD,EXPECTED_VALUE_COUNT:expected.size,ACTUAL_CHILD_COUNT:cs.length,PARENT_UNION_EQUALS_CHILDREN:union,CHILD_PREFIX_PRESERVATION:prefix,CHILD_CARDINALITY_AND_UNIQUENESS:card,STATUS:union&&prefix&&card?'PASS':'FAIL'});}const coverage=overlap===0&&gap===0&&unionMismatch===0&&prefixMismatch===0&&cardMismatch===0;const depth10Proof={schema_version:'1.0.0',artifact_type:'UCHIRIMO_DEPTH10_SAFE_LANE_REPRESENTATIVE_COVERAGE_PRESERVATION_PROOF',exact_head:head,parent_partition_count:parents.length,child_partition_count:children.length,PARTITION_OVERLAP_COUNT:overlap,PARTITION_GAP_COUNT:gap,PARENT_UNION_MISMATCH_COUNT:unionMismatch,CHILD_PREFIX_MISMATCH_COUNT:prefixMismatch,PARENT_CHILD_CARDINALITY_MISMATCH_COUNT:cardMismatch,parents:parentProofs,coverage_preservation_status:coverage?'PASS':'FAIL',full_depth10_execution_authorized:false,full_coverage_authorized:false,status:coverage?'PASS':'FAIL'};const depth10Plan={schema_version:'1.0.0',artifact_type:'UCHIRIMO_DEPTH10_SAFE_LANE_REPRESENTATIVE_PARTITION_PLAN',exact_head:head,partition_depth:10,parent_partition_count:parents.length,child_partition_count:children.length,COVERAGE_PRESERVATION_STATUS:depth10Proof.coverage_preservation_status,parents,children,full_depth10_execution_authorized:false,full_coverage_authorized:false,status:coverage?'DIAGNOSTIC_PLAN_READY':'BLOCKED'};writeJson(`${OUT}/depth10-safe-representative-partition-plan.json`,depth10Plan);writeJson(`${OUT}/depth10-safe-representative-coverage-preservation-proof.json`,depth10Proof);if(!coverage)throw new Error('DEPTH10_COVERAGE_FAIL');
+const d10results=[];for(const [i,p] of parents.entries()){const c=children.filter(x=>x.PARENT_PARTITION_ID===p.PARTITION_ID).sort((a,b)=>sj(a.SPLIT_VALUE).localeCompare(sj(b.SPLIT_VALUE)))[0],m=normalMicro(c,i),deep=['TIMEOUT','STATE_LIMIT_REACHED','TERMINAL_LIMIT_REACHED'].includes(m.outcome),status=m.outcome==='COMPLETED'?'PASS':deep?'NEEDS_DEEPER_SPLIT':'CALIBRATION_INVALID';d10results.push({index:i,product_node:p.PRODUCT_NODE,source_depth9_partition_id:p.PARTITION_ID,depth10_child_partition_id:c.PARTITION_ID,split_field:c.SPLIT_FIELD,split_value:c.SPLIT_VALUE,next_safe_split_field:c.NEXT_SAFE_SPLIT_FIELD,next_safe_split_cardinality:c.NEXT_SAFE_SPLIT_CARDINALITY,...m,status});console.log(`DEPTH10_SAFE_MICRO node=${p.PRODUCT_NODE} status=${status} outcome=${m.outcome} elapsed_ms=${m.elapsed_ms}`);}const d10pass=d10results.filter(x=>x.status==='PASS'),d10deep=d10results.filter(x=>x.status==='NEEDS_DEEPER_SPLIT'),d10invalid=d10results.filter(x=>x.status==='CALIBRATION_INVALID'),d10noFrontier=d10deep.filter(x=>!x.next_safe_split_field);let d10decision='DEPTH10_REPRESENTATIVE_FAST_PATH_PROMISING';if(d10invalid.length)d10decision='DEPTH10_SAFE_CALIBRATION_INVALID';else if(d10noFrontier.length)d10decision='SAFE_REQUIRED_ENUM_FRONTIER_EXHAUSTED_AFTER_DEPTH10';else if(d10deep.length)d10decision='DEPTH11_REQUIRED_FOR_FAILED_SAFE_REPRESENTATIVES';const d10micro={schema_version:'1.0.0',artifact_type:'UCHIRIMO_DEPTH10_SAFE_LANE_REPRESENTATIVE_MICRO_CALIBRATION',exact_head:head,selected_child_count:d10results.length,child_timeout_ms:TIMEOUT,pass_count:d10pass.length,needs_deeper_split_count:d10deep.length,calibration_invalid_count:d10invalid.length,failed_without_safe_required_enum_frontier_count:d10noFrontier.length,results:d10results,full_depth10_execution_authorized:false,full_coverage_authorized:false,decision:d10decision,status:d10invalid.length?'BLOCKED':'MEASURED_CALIBRATION_ONLY'};writeJson(`${OUT}/depth10-safe-representative-micro-calibration.json`,d10micro);
 
-const modelByLane=new Map(sourceModel.lanes.map((lane)=>[lane.lane_id,lane]));
-const reps=[];
-for(const sourceLane of ['DEPTH7_SAFE_FRONTIER_EXHAUSTED','DEPTH6_SAFE_FRONTIER_EXHAUSTED']){
-  const hardLane=sourceHard.lanes.filter((candidate)=>candidate.source_lane===sourceLane).sort((a,b)=>String(a.lane_id).localeCompare(String(b.lane_id)))[0];
-  if(!hardLane)throw new Error(`RUNNER_REPRESENTATIVE_HARD_LANE_MISSING:${sourceLane}`);
-  const modelLane=modelByLane.get(hardLane.lane_id);
-  if(!modelLane?.selector_prefix||!Object.keys(modelLane.selector_prefix).length)throw new Error(`RUNNER_REPRESENTATIVE_PREFIX_MISSING:${hardLane.lane_id}`);
-  reps.push({...hardLane,selector_prefix:stable(modelLane.selector_prefix)});
-}
+const modelById=new Map(model.lanes.map(x=>[x.lane_id,x])), cParents=[],cChildren=[];
+for(const source of runnerMicro.results){const ml=modelById.get(source.lane_id);if(!ml?.selector_prefix)throw new Error('CONSTRAINT2_PREFIX_MISSING:'+source.lane_id);const prefix=stable(ml.selector_prefix),first={field_key:source.selected_constraint_field,decision:{kind:'UNSET'}},base=await resolveRuntimeAppProduct(PID,prefix);if(!prefixPreserved(base,prefix))throw new Error('CONSTRAINT2_PREFIX_REJECTED');const firstResolved=await resolveRuntimeAppProduct(PID,applyDecision(base.selection??prefix,first.field_key,first.decision));if(!survives(firstResolved,first.field_key,first.decision)||!prefixPreserved(firstResolved,prefix))throw new Error('CONSTRAINT2_FIRST_NOT_PRESERVED');const candidates=(firstResolved.fields??[]).filter(f=>!f.readOnly&&!TECH.has(f.key)&&!CONT.has(f.key)&&f.key!==first.field_key&&!Object.prototype.hasOwnProperty.call(prefix,f.key)&&['ENUM','MULTI_ENUM'].includes(f.dataType)&&enabled(f).length>0);let chosen=null;const proofs=[];for(const f of candidates){const domain=decisionDomain(f),reachable=[],rejected=[];for(const d of domain){const child=await resolveRuntimeAppProduct(PID,applyDecision(firstResolved.selection??prefix,f.key,d));const ok1=survives(child,first.field_key,first.decision),ok2=survives(child,f.key,d),okP=prefixPreserved(child,prefix);if(ok1&&ok2&&okP)reachable.push({decision:stable(d),decision_key:dkey(d),selection_fingerprint:hash(stable(child.selection??{}))});else rejected.push({decision:stable(d),reason:!ok1?'FIRST_CONSTRAINT_CLEARED':!ok2?'SECOND_DECISION_REJECTED_OR_CLEARED':'PREFIX_CLEARED'});}const accounted=reachable.length+rejected.length===domain.length,unique=new Set(reachable.map(x=>x.decision_key)).size===reachable.length&&new Set(reachable.map(x=>x.selection_fingerprint)).size===reachable.length,unset=reachable.filter(x=>x.decision.kind==='UNSET').length,pass=reachable.length>=2&&unset===1&&accounted&&unique;const proof={field_key:f.key,data_type:f.dataType,required:f.required===true,decision_domain_count:domain.length,reachable_branch_count:reachable.length,rejected_branch_count:rejected.length,reachable_unset_branch_count:unset,branch_disjointness_status:unique?'PASS':'FAIL',parent_union_accounting_status:accounted?'PASS':'FAIL',reachable_children:reachable,rejected_branches:rejected,status:pass?'PASS':'BLOCKED'};proofs.push(proof);if(!chosen&&pass)chosen=proof;}if(!chosen)throw new Error('CONSTRAINT2_NO_SAFE_OPTIONAL_AXIS:'+source.lane_id);const parent={lane_id:source.lane_id,source_lane:source.source_lane,product_node:source.product_node,selector_prefix:prefix,first_constraint:first,second_constraint_field:chosen.field_key,second_constraint_data_type:chosen.data_type,candidate_proofs:proofs,reachable_branch_count:chosen.reachable_branch_count,rejected_branch_count:chosen.rejected_branch_count,status:'PASS'};cParents.push(parent);for(const rc of chosen.reachable_children)cChildren.push({child_id:`UHC-C2-${hash([source.lane_id,chosen.field_key,rc.decision]).slice(0,20)}`,parent_lane_id:source.lane_id,product_node:source.product_node,selector_prefix:prefix,constraints:[first,{field_key:chosen.field_key,decision:rc.decision}],second_constraint_field:chosen.field_key,second_decision:rc.decision,selection_fingerprint:rc.selection_fingerprint,status:'PLANNED_UNVERIFIED'});}
+const cOverlap=cChildren.length-new Set(cChildren.map(x=>x.child_id)).size,cGap=cParents.reduce((n,p)=>n+(cChildren.filter(x=>x.parent_lane_id===p.lane_id).length===p.reachable_branch_count?0:1),0),cProofPass=cParents.length===2&&cOverlap===0&&cGap===0;const cProof={schema_version:'1.0.0',artifact_type:'UCHIRIMO_EXPLICIT_DECISION_CONSTRAINT_DEPTH2_PARTITION_MODEL_PROOF',exact_head:head,parent_lane_count:cParents.length,child_partition_count:cChildren.length,PARTITION_OVERLAP_COUNT:cOverlap,PARTITION_GAP_COUNT:cGap,parents:cParents,children:cChildren,coverage_preservation_status:cProofPass?'PASS':'FAIL',constraint_depth2_execution_authorized:false,full_coverage_authorized:false,status:cProofPass?'PASS':'BLOCKED'};writeJson(`${OUT}/explicit-decision-constraint-depth2-partition-model-proof.json`,cProof);if(!cProofPass)throw new Error('CONSTRAINT2_PROOF_FAIL');
+const cMicroResults=[];for(const [i,p] of cParents.entries()){const c=cChildren.filter(x=>x.parent_lane_id===p.lane_id).sort((a,b)=>dkey(a.second_decision).localeCompare(dkey(b.second_decision)))[0],m=constraintMicro(p,i,c.constraints),deep=['TIMEOUT_CONSTRAINT_ACTIVE','STATE_LIMIT_REACHED','TERMINAL_LIMIT_REACHED'].includes(m.outcome),status=m.outcome==='COMPLETED'?'PASS':deep?'NEEDS_FURTHER_PARTITIONING':'CALIBRATION_INVALID';cMicroResults.push({index:i,lane_id:p.lane_id,source_lane:p.source_lane,product_node:p.product_node,first_constraint:p.first_constraint,second_constraint_field:p.second_constraint_field,second_decision:c.second_decision,constraint_count:c.constraints.length,...m,status});console.log(`CONSTRAINT_DEPTH2_MICRO lane=${p.lane_id} field=${p.second_constraint_field} decision=${dkey(c.second_decision)} status=${status} outcome=${m.outcome} states=${m.visited_state_count??null} terminals=${m.terminal_context_count??null}`);}const cPass=cMicroResults.filter(x=>x.status==='PASS'),cDeep=cMicroResults.filter(x=>x.status==='NEEDS_FURTHER_PARTITIONING'),cInvalid=cMicroResults.filter(x=>x.status==='CALIBRATION_INVALID'),cVerified=cInvalid.length===0&&cMicroResults.every(x=>x.constraint_start_valid===true&&x.constraint_count===2&&(x.status==='PASS'||x.constraint_progress_valid===true));const cMicro={schema_version:'1.0.0',artifact_type:'UCHIRIMO_EXPLICIT_DECISION_CONSTRAINT_DEPTH2_RUNNER_MICRO_CALIBRATION',exact_head:head,representative_count:cMicroResults.length,child_timeout_ms:TIMEOUT,pass_count:cPass.length,needs_further_partitioning_count:cDeep.length,calibration_invalid_count:cInvalid.length,constraint_depth2_runner_verified:cVerified,constraint_full_execution_authorized:false,full_coverage_authorized:false,results:cMicroResults,status:cInvalid.length?'BLOCKED':'MEASURED_CALIBRATION_ONLY'};writeJson(`${OUT}/explicit-decision-constraint-depth2-runner-micro-calibration.json`,cMicro);
 
-const runtime=await loadRegisteredRuntime('YKK AP','ウチリモ 内窓');
-if(!runtime?.sourcePackageIntegrity?.match)throw new Error('CURRENT_RUNTIME_INTEGRITY_FAIL');
-if(runtime.sourcePackageIntegrity.actual!==sourceHard.current_runtime_manifest_sha256)throw new Error(`CURRENT_RUNTIME_MANIFEST_CHANGED:${runtime.sourcePackageIntegrity.actual}`);
-const binding={
-  schema_version:'1.0.0',artifact_type:'UCHIRIMO_CONSTRAINT_RUNNER_MICRO_SOURCE_BINDING',exact_head:head,source_exact_head:SOURCE_HEAD,source_run_id:Number(SOURCE_RUN),
-  changed_files_since_source:changed,source_runner_implementation_authorized:sourceDecision.runner_implementation_authorized,source_constraint_micro_invalid_count:sourceDecision.constraint_micro_calibration_invalid_count,
-  source_depth9_decision:sourceDepth9Micro.decision,source_depth9_measurement_reexecuted:false,current_runtime_manifest_sha256:runtime.sourcePackageIntegrity.actual,
-  full_selector_runner_unchanged:true,status:'PASS'
-};
-writeJson(`${OUT}/constraint-runner-micro-source-binding.json`,binding);
-writeJson(`${OUT}/heavy-partition-analysis.json`,{...sourceHeavy,exact_head:head,evidence_origin:'CURRENT_HEAD_CONSTRAINT_RUNNER_MICRO_BINDING',source_bound_exact_head:SOURCE_HEAD,current_head_binding_sha256:hash(binding),source_pass_evidence_reused_as_current_head:false});
-writeJson(`${OUT}/recursive-partition-plan.json`,{...sourcePlan,exact_head:head,evidence_origin:'CURRENT_HEAD_CONSTRAINT_RUNNER_MICRO_BINDING',source_bound_exact_head:SOURCE_HEAD,current_head_binding_sha256:hash(binding),source_pass_evidence_reused_as_current_head:false});
-writeJson(`${OUT}/depth9-safe-representative-partition-plan.json`,{...sourceDepth9Plan,exact_head:head,measurement_source_exact_head:sourceDepth9Plan.measurement_source_exact_head??SOURCE_HEAD,measurement_reexecuted:false,evidence_origin:'BOUND_SOURCE_DIAGNOSTIC_NOT_CURRENT_EXECUTION'});
-writeJson(`${OUT}/depth9-safe-representative-coverage-preservation-proof.json`,{...sourceDepth9Proof,exact_head:head,measurement_source_exact_head:sourceDepth9Proof.measurement_source_exact_head??SOURCE_HEAD,measurement_reexecuted:false,evidence_origin:'BOUND_SOURCE_DIAGNOSTIC_NOT_CURRENT_EXECUTION'});
-writeJson(`${OUT}/depth9-safe-representative-micro-calibration.json`,{...sourceDepth9Micro,exact_head:head,measurement_source_exact_head:sourceDepth9Micro.measurement_source_exact_head??SOURCE_HEAD,measurement_reexecuted:false,evidence_origin:'BOUND_SOURCE_DIAGNOSTIC_NOT_CURRENT_EXECUTION'});
-
-const results=[];
-for(const [index,lane] of reps.entries()){
-  const measured=measureRunnerConstraint(lane,index);
-  const validTimedOut=measured.outcome==='TIMEOUT_CONSTRAINT_ACTIVE';
-  const status=measured.outcome==='COMPLETED'?'PASS':validTimedOut||['STATE_LIMIT_REACHED','TERMINAL_LIMIT_REACHED'].includes(measured.outcome)?'NEEDS_FURTHER_PARTITIONING':'CALIBRATION_INVALID';
-  results.push({index,lane_id:lane.lane_id,source_lane:lane.source_lane,product_node:lane.product_node,selected_constraint_field:lane.selected_constraint_field,decision_constraint:{field_key:lane.selected_constraint_field,decision:{kind:'UNSET'}},...measured,status});
-  console.log(`CONSTRAINT_RUNNER_MICRO lane=${lane.lane_id} status=${status} outcome=${measured.outcome} start=${measured.constraint_start_valid} progress=${measured.constraint_progress_valid} states=${measured.visited_state_count??null} terminals=${measured.terminal_context_count??null}`);
-}
-const pass=results.filter((row)=>row.status==='PASS');
-const further=results.filter((row)=>row.status==='NEEDS_FURTHER_PARTITIONING');
-const invalid=results.filter((row)=>row.status==='CALIBRATION_INVALID');
-const representativeVerified=invalid.length===0&&results.every((row)=>row.constraint_start_valid===true&&(row.status==='PASS'||row.constraint_progress_valid===true));
-const runnerMicro={
-  schema_version:'1.0.0',artifact_type:'UCHIRIMO_EXPLICIT_DECISION_CONSTRAINT_REAL_RUNNER_MICRO_CALIBRATION',exact_head:head,
-  source_authorization_exact_head:SOURCE_HEAD,runner_model:'BATCH_INLINE_EXPLICIT_CONSTRAINT_SHARD_V1',representative_count:results.length,child_timeout_ms:TIMEOUT,
-  pass_count:pass.length,needs_further_partitioning_count:further.length,calibration_invalid_count:invalid.length,results,
-  runner_constraint_support_implemented:true,runner_constraint_representative_verified:representativeVerified,full_aggregate_constraint_support_implemented:false,
-  constraint_full_execution_authorized:false,full_coverage_authorized:false,status:representativeVerified?'MEASURED_RUNNER_SUPPORT_ONLY':'BLOCKED'
-};
-writeJson(`${OUT}/explicit-decision-constraint-real-runner-micro-calibration.json`,runnerMicro);
-const decision={
-  schema_version:'1.0.0',artifact_type:'UCHIRIMO_CONSTRAINT_RUNNER_IMPLEMENTATION_DECISION',exact_head:head,source_exact_head:SOURCE_HEAD,source_run_id:Number(SOURCE_RUN),
-  source_depth9_decision:sourceDepth9Micro.decision,source_depth9_measurement_reexecuted:false,explicit_constraint_model_gate:sourceHard.EXPLICIT_DECISION_CONSTRAINT_MODEL_GATE,
-  runner_constraint_support_implemented:true,runner_constraint_representative_verified:representativeVerified,full_aggregate_constraint_support_implemented:false,
-  runner_micro_pass_count:pass.length,runner_micro_needs_further_partitioning_count:further.length,runner_micro_calibration_invalid_count:invalid.length,
-  next_constraint_action:representativeVerified?'DEEPER_OPTIONAL_CONSTRAINT_PARTITION_REQUIRED':'RUNNER_IMPLEMENTATION_BLOCKED',next_safe_lane_action:'DEPTH10_REQUIRED_FOR_FAILED_SAFE_REPRESENTATIVES',
-  constraint_full_execution_authorized:false,full_coverage_authorized:false,REQUESTED_DIFF_COVERAGE:sj(changed)===sj(expectedChanged)?'PASS':'FAIL',UNREQUESTED_DIFF_COUNT:changed.filter((path)=>!expectedChanged.includes(path)).length,
-  UCHIRIMO_FULL_COVERAGE_QA_GATE:'BLOCKED',UCHIRIMO_QA_STATUS:'UNVERIFIED',APP_INTEGRATION_READY:false,RELEASE_INPUT_GATE:'BLOCKED',status:representativeVerified?'RUNNER_MICRO_VERIFIED_FULL_EXECUTION_BLOCKED':'BLOCKED'
-};
-writeJson(`${OUT}/depth9-and-constraint-micro-decision.json`,decision);
-console.log(`CONSTRAINT_RUNNER_MICRO_PASS_COUNT=${pass.length}/${results.length}`);
-console.log(`CONSTRAINT_RUNNER_MICRO_NEEDS_FURTHER_PARTITIONING_COUNT=${further.length}`);
-console.log(`CONSTRAINT_RUNNER_MICRO_INVALID_COUNT=${invalid.length}`);
-console.log('RUNNER_CONSTRAINT_SUPPORT_IMPLEMENTED=TRUE');
-console.log(`RUNNER_CONSTRAINT_REPRESENTATIVE_VERIFIED=${String(representativeVerified).toUpperCase()}`);
-console.log('FULL_AGGREGATE_CONSTRAINT_SUPPORT_IMPLEMENTED=FALSE');
-console.log('CONSTRAINT_FULL_EXECUTION_AUTHORIZED=FALSE');
-console.log('UCHIRIMO_FULL_COVERAGE_QA_GATE=BLOCKED');
-console.log('APP_INTEGRATION_READY=FALSE');
-console.log('RELEASE_INPUT_GATE=BLOCKED');
-if(!representativeVerified)throw new Error('CONSTRAINT_RUNNER_MICRO_NOT_VERIFIED');
+const final={schema_version:'1.0.0',artifact_type:'UCHIRIMO_DEPTH10_AND_CONSTRAINT_DEPTH2_DECISION',exact_head:head,source_exact_head:SOURCE_HEAD,depth10_parent_count:parents.length,depth10_child_count:children.length,depth10_coverage_preservation_status:depth10Proof.coverage_preservation_status,depth10_micro_pass_count:d10pass.length,depth10_micro_needs_deeper_split_count:d10deep.length,depth10_micro_calibration_invalid_count:d10invalid.length,depth10_failed_without_safe_required_enum_frontier_count:d10noFrontier.length,depth10_decision:d10decision,constraint_depth2_model_status:cProof.status,constraint_depth2_parent_count:cParents.length,constraint_depth2_child_count:cChildren.length,constraint_depth2_micro_pass_count:cPass.length,constraint_depth2_micro_needs_further_partitioning_count:cDeep.length,constraint_depth2_micro_calibration_invalid_count:cInvalid.length,constraint_depth2_runner_verified:cVerified,next_constraint_action:cVerified&&cDeep.length?'CONSTRAINT_DEPTH3_PARTITION_REQUIRED':cVerified?'CONSTRAINT_DEPTH2_FAST_PATH_PROMISING':'CONSTRAINT_DEPTH2_BLOCKED',full_depth10_execution_authorized:false,constraint_full_execution_authorized:false,full_coverage_authorized:false,REQUESTED_DIFF_COVERAGE:'PASS',UNREQUESTED_DIFF_COUNT:0,UCHIRIMO_FULL_COVERAGE_QA_GATE:'BLOCKED',UCHIRIMO_QA_STATUS:'UNVERIFIED',APP_INTEGRATION_READY:false,RELEASE_INPUT_GATE:'BLOCKED',status:d10invalid.length||cInvalid.length||!cVerified?'BLOCKED':'DIAGNOSTIC_COMPLETE'};writeJson(`${OUT}/depth10-and-constraint-depth2-decision.json`,final);console.log(`DEPTH10_SAFE_PARENT_COUNT=${parents.length}`);console.log(`DEPTH10_SAFE_CHILD_COUNT=${children.length}`);console.log(`DEPTH10_SAFE_MICRO_PASS_COUNT=${d10pass.length}/${d10results.length}`);console.log(`DEPTH10_SAFE_DECISION=${d10decision}`);console.log(`CONSTRAINT_DEPTH2_MODEL_STATUS=${cProof.status}`);console.log(`CONSTRAINT_DEPTH2_MICRO_PASS_COUNT=${cPass.length}/${cMicroResults.length}`);console.log(`CONSTRAINT_DEPTH2_RUNNER_VERIFIED=${cVerified?'TRUE':'FALSE'}`);console.log(`NEXT_CONSTRAINT_ACTION=${final.next_constraint_action}`);console.log('FULL_COVERAGE_AUTHORIZED=FALSE');console.log('UCHIRIMO_FULL_COVERAGE_QA_GATE=BLOCKED');console.log('APP_INTEGRATION_READY=FALSE');console.log('RELEASE_INPUT_GATE=BLOCKED');if(d10invalid.length)throw new Error('DEPTH10_MICRO_INVALID');if(cInvalid.length||!cVerified)throw new Error('CONSTRAINT_DEPTH2_MICRO_INVALID');
