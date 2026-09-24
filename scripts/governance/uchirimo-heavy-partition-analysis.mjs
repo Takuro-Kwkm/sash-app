@@ -1,12 +1,30 @@
-import './uchirimo-heavy-partition-analysis-core.mjs';
 import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
-import { existsSync, mkdirSync, readFileSync, unlinkSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, unlinkSync, writeFileSync } from 'node:fs';
+import { pathToFileURL } from 'node:url';
 import { currentExactHead, writeJson } from './governance-lib.mjs';
 
+const BASE_ANALYSIS_COMMIT='9487ab753962e71b737d49c21c2a875523560260';
+const BASE_ANALYSIS_BLOB='f74843323373de4fa87cf69f636e9b738abb7beb';
+const ANALYSIS_PATH='scripts/governance/uchirimo-heavy-partition-analysis.mjs';
 const OUT=String(process.env.UCHIRIMO_HEAVY_ANALYSIS_OUT ?? 'artifacts/uchirimo-heavy-recovery');
 const DEPTH2_MICRO_CHILD_TIMEOUT_MS=Number(process.env.UCHIRIMO_DEPTH2_MICRO_CHILD_TIMEOUT_MS ?? 60000);
 const head=currentExactHead();
+
+// The recovery-analysis body that produced the accepted Depth-2 plan/proof is
+// re-executed at the current Exact HEAD. Its source blob is pinned and verified
+// before execution; no prior-head QA artifact is carried forward as PASS evidence.
+execFileSync('git',['merge-base','--is-ancestor',BASE_ANALYSIS_COMMIT,head],{stdio:'ignore'});
+const baseSource=execFileSync('git',['show',`${BASE_ANALYSIS_COMMIT}:${ANALYSIS_PATH}`],{encoding:'utf8',maxBuffer:8*1024*1024});
+const actualBlob=execFileSync('git',['hash-object','--stdin'],{input:baseSource,encoding:'utf8'}).trim();
+if(actualBlob!==BASE_ANALYSIS_BLOB)throw new Error(`DEPTH2_MICRO_BASE_ANALYSIS_BLOB_MISMATCH:${actualBlob}`);
+const tempCore=`scripts/governance/.uchirimo-heavy-partition-analysis-core-${process.pid}.mjs`;
+writeFileSync(tempCore,baseSource);
+try{
+  await import(`${pathToFileURL(tempCore).href}?head=${head}`);
+}finally{
+  if(existsSync(tempCore))unlinkSync(tempCore);
+}
 
 const stable=(value)=>{
   if(Array.isArray(value))return value.map(stable);
@@ -154,6 +172,9 @@ const summary={
   exact_head:head,
   task_classification:'NON-PRODUCT-MASTER',
   product_master_mutation:0,
+  base_analysis_commit:BASE_ANALYSIS_COMMIT,
+  base_analysis_blob:BASE_ANALYSIS_BLOB,
+  base_analysis_reexecuted_at_current_head:true,
   source_depth1_micro_sha256:hash(depth1),
   source_depth2_plan_sha256:hash(depth2Plan),
   source_depth2_coverage_proof_sha256:hash(depth2Proof),
