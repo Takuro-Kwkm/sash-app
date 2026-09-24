@@ -1,81 +1,373 @@
 import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
-import { existsSync,mkdirSync,readFileSync,unlinkSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, unlinkSync } from 'node:fs';
 import { resolveRuntimeAppProduct } from '../../src/catalog/runtime-master/runtime-app-bridge.mjs';
 import { loadRegisteredRuntime } from '../../src/catalog/runtime-master/runtime-master-registry.mjs';
-import { currentExactHead,writeJson } from './governance-lib.mjs';
+import { currentExactHead, writeJson } from './governance-lib.mjs';
 
 const PRODUCT_ID='SER-YKKAP-UCHIRIMO';
-const SOURCE_RUN_ID='35968064836';
-const SOURCE_HEAD='4d23f3455d9cfa7cdf4c74f36c4e607d0ceacd84';
-const SOURCE_BLOB='f65d5fe9973acc20b5a039c3ec7720c12d9ae931';
+const SOURCE_RUN_ID='35963229341';
+const SOURCE_HEAD='2a8e007fd0a6c4eeac5aa24db45c7d4c9006e793';
+const SOURCE_BLOB='95a2077eb3612ac63850332c980ea9ad2c80c53f';
 const ANALYSIS_PATH='scripts/governance/uchirimo-heavy-partition-analysis.mjs';
 const SOURCE_ARTIFACT='uchirimo-heavy-recovery-analysis-'+SOURCE_HEAD;
 const OUT=String(process.env.UCHIRIMO_HEAVY_ANALYSIS_OUT??'artifacts/uchirimo-heavy-recovery');
-const TIMEOUT=Number(process.env.UCHIRIMO_DEPTH7_MICRO_CHILD_TIMEOUT_MS??60000);
-const PROBE_LIMIT=Number(process.env.UCHIRIMO_DEPTH7_STATE_PROBE_LIMIT??1000);
+const CHILD_TIMEOUT_MS=Number(process.env.UCHIRIMO_DEPTH5_MEASUREMENT_CHILD_TIMEOUT_MS??60000);
+const STATE_PROBE_LIMIT=Number(process.env.UCHIRIMO_DEPTH5_MEASUREMENT_STATE_PROBE_LIMIT??100);
 const head=currentExactHead();
-if(!Number.isFinite(TIMEOUT)||TIMEOUT<60000)throw new Error('DEPTH7_MICRO_CHILD_TIMEOUT_INVALID');
-if(!Number.isInteger(PROBE_LIMIT)||PROBE_LIMIT<100)throw new Error('DEPTH7_STATE_PROBE_LIMIT_INVALID');
+
+if(!Number.isFinite(CHILD_TIMEOUT_MS)||CHILD_TIMEOUT_MS<60000)throw new Error('DEPTH5_MEASUREMENT_TIMEOUT_INVALID');
+if(!Number.isInteger(STATE_PROBE_LIMIT)||STATE_PROBE_LIMIT<10)throw new Error('DEPTH5_MEASUREMENT_STATE_PROBE_LIMIT_INVALID');
 mkdirSync(OUT,{recursive:true});
 
-const stable=v=>Array.isArray(v)?v.map(stable):(!v||typeof v!=='object')?v:Object.fromEntries(Object.entries(v).sort(([a],[b])=>a.localeCompare(b)).map(([k,x])=>[k,stable(x)]));
-const stableJson=v=>JSON.stringify(stable(v));
-const hash=v=>createHash('sha256').update(typeof v==='string'?v:stableJson(v)).digest('hex');
-const hashBuffer=v=>createHash('sha256').update(v).digest('hex');
-const same=(a,b)=>Array.isArray(b)?Array.isArray(a)&&stableJson(a.map(String).sort())===stableJson(b.map(String).sort()):Object.is(a,b)||String(a)===String(b);
-const readJson=p=>JSON.parse(readFileSync(p,'utf8'));
-const readJsonSafe=p=>{try{return readJson(p)}catch{return null}};
-const enabled=f=>(f?.values??[]).filter(x=>x.disabled!==true);
-const CONTINUOUS_KEYS=new Set(['size_w','size_h','frame_projection','fukashi_dimension','custom_w','custom_h','custom_width','custom_height']);
-const TECHNICAL_KEYS=new Set(['legacyConstruction','legacyConfiguration','internal_construction']);
-function flowSignature(r){return (r.fields??[]).filter(f=>!TECHNICAL_KEYS.has(f.key)).map(f=>`${f.semanticStage}:${f.semanticSlot}:${f.key}:${f.required?'R':'O'}:${f.readOnly?'RO':'RW'}`).join('|')}
-function discreteAxes(r,seed){return (r.fields??[]).filter(f=>!f.readOnly&&!TECHNICAL_KEYS.has(f.key)&&!CONTINUOUS_KEYS.has(f.key)&&!Object.prototype.hasOwnProperty.call(seed,f.key)&&['ENUM','MULTI_ENUM'].includes(f.dataType)).map(f=>{const vals=[...new Map(enabled(f).map(x=>[stableJson(x.value),x.value])).values()];const symbolic=f.dataType==='MULTI_ENUM'&&vals.length>20;const branchCount=f.dataType==='ENUM'?(vals.length+(f.required?0:1)):(symbolic?null:Math.max(0,2**vals.length-(f.required?1:0)));return {field_key:f.key,data_type:f.dataType,required:f.required===true,semantic_stage:f.semanticStage??null,semantic_slot:f.semanticSlot??null,enabled_value_count:vals.length,enabled_values:vals.map(stable),theoretical_branch_count_with_unset_or_subsets:branchCount,symbolic_branch_count_required:symbolic,safe_required_enum_split_candidate:f.required===true&&f.dataType==='ENUM'&&vals.length>1}}).filter(x=>x.enabled_value_count>0)}
-function nextSplit(r,seed){const axis=discreteAxes(r,seed).find(x=>x.safe_required_enum_split_candidate);if(!axis)return null;return axis}
-function batchRow(p){const s=p.SELECTOR_PREFIX??{},base=new Set(['room_specification','window_type','glass_family','sash_configuration','size_class']);return {shard:0,node_id:p.PRODUCT_NODE,partition_key:p.PARTITION_ID,room_specification:String(s.room_specification),window_type:String(s.window_type),sash_configuration:s.sash_configuration==null?'__UNSET__':String(s.sash_configuration),size_class:s.size_class==null?'__UNSET__':String(s.size_class),glass_family:String(s.glass_family),partition_seed_json:stableJson(Object.fromEntries(Object.entries(s).filter(([k])=>!base.has(k))))}}
-function runCase(partition,index,label,maxStates){const caseId=String(index).padStart(2,'0'),caseOut=`${OUT}/depth7-${label}/case-${caseId}`,batchId=`depth7-${label}-${caseId}`;mkdirSync(caseOut,{recursive:true});let executionError=null;try{execFileSync(process.execPath,['scripts/governance/uchirimo-selector-batch-runner.mjs'],{env:{...process.env,HEAD_SHA:head,UCHIRIMO_SELECTOR_BATCH_ID:batchId,UCHIRIMO_SELECTOR_BATCH_JSON:JSON.stringify([batchRow(partition)]),UCHIRIMO_SELECTOR_CHILD_TIMEOUT_MS:String(TIMEOUT),UCHIRIMO_SELECTOR_EXPECTED_SHARDS:'1',UCHIRIMO_SELECTOR_MAX_STATES:String(maxStates),UCHIRIMO_SELECTOR_MAX_TERMINALS:'1000000',UCHIRIMO_FULL_SELECTOR_OUT:caseOut},encoding:'utf8',timeout:TIMEOUT+20000,maxBuffer:64*1024*1024})}catch(e){executionError={message:String(e?.message??e),code:e?.code??null,signal:e?.signal??null}}
- const batch=readJsonSafe(`${caseOut}/batch-${batchId}-report.json`),report=readJsonSafe(`${caseOut}/shard-0-report.json`),failure=readJsonSafe(`${caseOut}/shard-0-failure.json`);let artifactShaMatch=null;if(report?.case_artifact){const p=`${caseOut}/${report.case_artifact}`;if(existsSync(p)){artifactShaMatch=hashBuffer(readFileSync(p))===report.case_artifact_sha256;unlinkSync(p)}}const digest=`${caseOut}/shard-0-terminal-digests.jsonl`;if(existsSync(digest))unlinkSync(digest);const a=Date.parse(batch?.results?.[0]?.started_at??''),z=Date.parse(batch?.results?.[0]?.completed_at??''),elapsed=Number.isFinite(a)&&Number.isFinite(z)&&z>=a?z-a:null,msg=String(failure?.message??''),timedOut=batch?.results?.[0]?.timed_out===true,stateLimit=/UCHIRIMO_SELECTOR_STATE_LIMIT_REACHED/.test(msg),terminalLimit=/UCHIRIMO_TERMINAL_LIMIT_REACHED/.test(msg),pass=batch?.status==='PASS'&&!timedOut&&report?.status==='PASS'&&report?.runtime_integrity_match===true&&Number(report?.unverified_discrete_selector_case_count??1)===0&&artifactShaMatch===true&&Number.isFinite(elapsed)&&elapsed<=TIMEOUT;return {elapsed_ms:elapsed,timed_out:timedOut,state_limit:maxStates,state_limit_reached:stateLimit,terminal_limit_reached:terminalLimit,visited_state_count:report?.visited_state_count??null,terminal_context_count:report?.terminal_context_count??null,failure_message:msg||null,execution_error:executionError,case_artifact_sha256_match:artifactShaMatch,outcome:pass?'COMPLETED':stateLimit?'STATE_PROBE_LIMIT_REACHED':timedOut?'TIMEOUT_BEFORE_STATE_PROBE_LIMIT':'INVALID'}}
+const stable=(value)=>{
+  if(Array.isArray(value))return value.map(stable);
+  if(!value||typeof value!=='object')return value;
+  return Object.fromEntries(Object.entries(value).sort(([a],[b])=>a.localeCompare(b)).map(([k,v])=>[k,stable(v)]));
+};
+const stableJson=(value)=>JSON.stringify(stable(value));
+const sha=(value)=>createHash('sha256').update(typeof value==='string'?value:stableJson(value)).digest('hex');
+const shaBuffer=(value)=>createHash('sha256').update(value).digest('hex');
+const same=(a,b)=>Array.isArray(b)
+  ? Array.isArray(a)&&stableJson(a.map(String).sort())===stableJson(b.map(String).sort())
+  : Object.is(a,b)||String(a)===String(b);
+const readJson=(path)=>JSON.parse(readFileSync(path,'utf8'));
+const readJsonSafe=(path)=>{ try{return readJson(path);}catch{return null;} };
+
+function terminalDigestCount(path){
+  if(!existsSync(path))return 0;
+  const text=readFileSync(path,'utf8');
+  if(text.length===0)return 0;
+  return text.split('\n').filter(Boolean).length;
+}
+
+function batchRow(partition){
+  const seed=partition.SELECTOR_PREFIX??{};
+  const baseKeys=new Set(['room_specification','window_type','glass_family','sash_configuration','size_class']);
+  return {
+    shard:0,
+    node_id:partition.PRODUCT_NODE,
+    partition_key:partition.PARTITION_ID,
+    room_specification:String(seed.room_specification),
+    window_type:String(seed.window_type),
+    sash_configuration:seed.sash_configuration==null?'__UNSET__':String(seed.sash_configuration),
+    size_class:seed.size_class==null?'__UNSET__':String(seed.size_class),
+    glass_family:String(seed.glass_family),
+    partition_seed_json:stableJson(Object.fromEntries(Object.entries(seed).filter(([key])=>!baseKeys.has(key))))
+  };
+}
+
+function runDepth5Measurement(partition,index){
+  const caseId=String(index).padStart(2,'0');
+  const caseOut=`${OUT}/depth5-measurement-gap/case-${caseId}`;
+  const batchId=`depth5-measurement-${caseId}`;
+  mkdirSync(caseOut,{recursive:true});
+  let executionError=null;
+  try{
+    execFileSync(process.execPath,['scripts/governance/uchirimo-selector-batch-runner.mjs'],{
+      env:{
+        ...process.env,
+        HEAD_SHA:head,
+        UCHIRIMO_SELECTOR_BATCH_ID:batchId,
+        UCHIRIMO_SELECTOR_BATCH_JSON:JSON.stringify([batchRow(partition)]),
+        UCHIRIMO_SELECTOR_CHILD_TIMEOUT_MS:String(CHILD_TIMEOUT_MS),
+        UCHIRIMO_SELECTOR_EXPECTED_SHARDS:'1',
+        UCHIRIMO_SELECTOR_MAX_STATES:String(STATE_PROBE_LIMIT),
+        UCHIRIMO_SELECTOR_MAX_TERMINALS:'1000000',
+        UCHIRIMO_FULL_SELECTOR_OUT:caseOut
+      },
+      encoding:'utf8',
+      timeout:CHILD_TIMEOUT_MS+20000,
+      maxBuffer:64*1024*1024
+    });
+  }catch(error){
+    executionError={
+      message:String(error?.message??error),
+      code:error?.code??null,
+      signal:error?.signal??null,
+      killed:error?.killed??null
+    };
+  }
+
+  const batch=readJsonSafe(`${caseOut}/batch-${batchId}-report.json`);
+  const report=readJsonSafe(`${caseOut}/shard-0-report.json`);
+  const failure=readJsonSafe(`${caseOut}/shard-0-failure.json`);
+  const digestPath=`${caseOut}/shard-0-terminal-digests.jsonl`;
+  const partialTerminalCount=terminalDigestCount(digestPath);
+
+  let caseArtifactShaMatch=null;
+  if(report?.case_artifact){
+    const casePath=`${caseOut}/${report.case_artifact}`;
+    if(existsSync(casePath)){
+      caseArtifactShaMatch=shaBuffer(readFileSync(casePath))===report.case_artifact_sha256;
+      unlinkSync(casePath);
+    }
+  }
+  if(existsSync(digestPath))unlinkSync(digestPath);
+
+  const started=Date.parse(batch?.results?.[0]?.started_at??'');
+  const completed=Date.parse(batch?.results?.[0]?.completed_at??'');
+  const elapsedMs=Number.isFinite(started)&&Number.isFinite(completed)&&completed>=started ? completed-started : null;
+  const failureMessage=String(failure?.message??'');
+  const timedOut=batch?.results?.[0]?.timed_out===true;
+  const stateLimitReached=/UCHIRIMO_SELECTOR_STATE_LIMIT_REACHED/.test(failureMessage);
+  const terminalLimitReached=/UCHIRIMO_TERMINAL_LIMIT_REACHED/.test(failureMessage);
+  const completedPass=
+    batch?.status==='PASS' &&
+    !timedOut &&
+    report?.status==='PASS' &&
+    report?.runtime_integrity_match===true &&
+    Number(report?.unverified_discrete_selector_case_count??1)===0 &&
+    caseArtifactShaMatch===true;
+
+  let outcome='INVALID';
+  if(completedPass)outcome='COMPLETED';
+  else if(stateLimitReached)outcome='STATE_PROBE_LIMIT_REACHED';
+  else if(timedOut)outcome='TIMEOUT_BEFORE_STATE_PROBE_LIMIT';
+
+  const exactStateCount=completedPass ? Number(report?.visited_state_count) : stateLimitReached ? STATE_PROBE_LIMIT : null;
+  const stateCountUpperBound=timedOut&&!stateLimitReached ? STATE_PROBE_LIMIT-1 : exactStateCount;
+  const elapsedSeconds=Number.isFinite(elapsedMs)&&elapsedMs>0 ? elapsedMs/1000 : null;
+
+  return {
+    elapsed_ms:elapsedMs,
+    timed_out:timedOut,
+    state_probe_limit:STATE_PROBE_LIMIT,
+    state_probe_limit_reached:stateLimitReached,
+    terminal_limit_reached:terminalLimitReached,
+    visited_state_count:report?.visited_state_count??null,
+    exact_or_threshold_state_progress_count:exactStateCount,
+    state_progress_upper_bound:stateCountUpperBound,
+    terminal_context_count:report?.terminal_context_count??null,
+    partial_terminal_digest_count:partialTerminalCount,
+    states_per_second_wall_clock_actual:exactStateCount!=null&&elapsedSeconds ? exactStateCount/elapsedSeconds : null,
+    states_per_second_wall_clock_upper_bound:timedOut&&!stateLimitReached&&elapsedSeconds ? (STATE_PROBE_LIMIT-1)/elapsedSeconds : null,
+    batch_report_present:Boolean(batch),
+    shard_report_present:Boolean(report),
+    failure_report_present:Boolean(failure),
+    runtime_integrity_match:report?.runtime_integrity_match??null,
+    unverified_discrete_selector_case_count:report?.unverified_discrete_selector_case_count??null,
+    case_artifact_sha256_match:caseArtifactShaMatch,
+    failure_message:failureMessage||null,
+    execution_error:executionError,
+    outcome
+  };
+}
 
 execFileSync('git',['merge-base','--is-ancestor',SOURCE_HEAD,head],{stdio:'ignore'});
 const sourceBlob=execFileSync('git',['rev-parse',`${SOURCE_HEAD}:${ANALYSIS_PATH}`],{encoding:'utf8'}).trim();
-if(sourceBlob!==SOURCE_BLOB)throw new Error('DEPTH7_SOURCE_ANALYSIS_BLOB_MISMATCH:'+sourceBlob);
+if(sourceBlob!==SOURCE_BLOB)throw new Error('DEPTH5_MEASUREMENT_SOURCE_BLOB_MISMATCH:'+sourceBlob);
 const changedRaw=execFileSync('git',['diff','--name-only',`${SOURCE_HEAD}..${head}`],{encoding:'utf8'}).trim();
 const changedFiles=changedRaw?changedRaw.split(/\r?\n/).filter(Boolean):[];
-if(changedFiles.length!==1||changedFiles[0]!==ANALYSIS_PATH)throw new Error('DEPTH7_SOURCE_BINDING_DIFF_SCOPE_INVALID:'+changedFiles.join(','));
-const sourceDir=`${OUT}/depth7-source-run-${SOURCE_RUN_ID}`;mkdirSync(sourceDir,{recursive:true});
-execFileSync('gh',['run','download',SOURCE_RUN_ID,'--repo',String(process.env.GITHUB_REPOSITORY??'Takuro-Kwkm/sash-app'),'--name',SOURCE_ARTIFACT,'--dir',sourceDir],{stdio:'inherit',timeout:120000});
-const heavy=readJson(`${sourceDir}/heavy-partition-analysis.json`),recursive=readJson(`${sourceDir}/recursive-partition-plan.json`),depth6Plan=readJson(`${sourceDir}/depth6-representative-partition-plan.json`),depth6Proof=readJson(`${sourceDir}/depth6-representative-coverage-preservation-proof.json`),depth6Micro=readJson(`${sourceDir}/depth6-representative-micro-calibration.json`),depth6Probe=readJson(`${sourceDir}/depth6-state-probe-comparison.json`);
-for(const x of [heavy,recursive,depth6Plan,depth6Proof,depth6Micro,depth6Probe])if(x.exact_head!==SOURCE_HEAD)throw new Error('DEPTH7_SOURCE_ARTIFACT_HEAD_MISMATCH');
-if(depth6Plan.status!=='DIAGNOSTIC_PLAN_READY'||depth6Proof.coverage_preservation_status!=='PASS'||depth6Micro.decision!=='SAFE_REQUIRED_ENUM_FRONTIER_EXHAUSTED_FOR_FAILED_REPRESENTATIVES'||Number(depth6Micro.calibration_invalid_count??1)!==0||depth6Probe.invalid_probe_count!==0)throw new Error('DEPTH7_SOURCE_PRECONDITION_INVALID');
-for(const k of ['PARTITION_OVERLAP_COUNT','PARTITION_GAP_COUNT','UNSPLITTABLE_PARENT_COUNT','PARENT_UNION_MISMATCH_COUNT','CHILD_PREFIX_MISMATCH_COUNT','SPLIT_SEMANTIC_MISMATCH_COUNT','PARENT_CHILD_CARDINALITY_MISMATCH_COUNT'])if(Number(depth6Plan[k]??1)!==0||Number(depth6Proof[k]??1)!==0)throw new Error('DEPTH7_SOURCE_COVERAGE_INVALID:'+k);
-const runtime=await loadRegisteredRuntime('YKK AP','ウチリモ 内窓');if(!runtime?.sourcePackageIntegrity?.match)throw new Error('DEPTH7_RUNTIME_INTEGRITY_FAIL');
-const binding={schema_version:'1.0.0',artifact_type:'UCHIRIMO_DEPTH7_SOURCE_DIAGNOSTIC_BINDING',exact_head:head,source_exact_head:SOURCE_HEAD,source_run_id:Number(SOURCE_RUN_ID),source_artifact:SOURCE_ARTIFACT,source_analysis_blob:sourceBlob,changed_files_since_source:changedFiles,source_evidence_role:'DIAGNOSTIC_TARGET_IDENTITY_ONLY',source_pass_evidence_reused_as_current_head:false,current_head_runtime_revalidation_required:true,current_head_coverage_reproof_required:true,current_runtime_manifest_sha256:runtime.sourcePackageIntegrity.actual,status:'PASS'};writeJson(`${OUT}/depth7-source-diagnostic-binding.json`,binding);
-writeJson(`${OUT}/heavy-partition-analysis.json`,{...heavy,exact_head:head,evidence_origin:'CURRENT_HEAD_DIAGNOSTIC_BINDING',source_bound_exact_head:SOURCE_HEAD,current_head_binding_sha256:hash(binding),source_pass_evidence_reused_as_current_head:false});
-writeJson(`${OUT}/recursive-partition-plan.json`,{...recursive,exact_head:head,evidence_origin:'CURRENT_HEAD_DIAGNOSTIC_BINDING',source_bound_exact_head:SOURCE_HEAD,current_head_binding_sha256:hash(binding),source_pass_evidence_reused_as_current_head:false});
+if(changedFiles.length!==1||changedFiles[0]!==ANALYSIS_PATH){
+  throw new Error('DEPTH5_MEASUREMENT_SCOPE_INVALID:'+changedFiles.join(','));
+}
 
-const depth6Children=new Map((depth6Plan.children??[]).map(x=>[x.PARTITION_ID,x]));
-const failed=(depth6Micro.results??[]).filter(x=>x.status==='NEEDS_DEEPER_SPLIT');
-const safeLane=[],exhaustedLane=[];
-for(const result of failed){const sourceChild=depth6Children.get(result.depth6_child_partition_id);if(!sourceChild)throw new Error('DEPTH7_SOURCE_CHILD_MISSING:'+result.depth6_child_partition_id);const seed=sourceChild.SELECTOR_PREFIX??{},resolved=await resolveRuntimeAppProduct(PRODUCT_ID,seed);for(const [k,v] of Object.entries(seed))if(!same(resolved.selection?.[k],v))throw new Error(`DEPTH7_SOURCE_SEED_REJECTED:${sourceChild.PARTITION_ID}:${k}`);const axes=discreteAxes(resolved,seed),split=nextSplit(resolved,seed);const row={result,sourceChild,seed,resolved,axes,split};if(split)safeLane.push(row);else exhaustedLane.push(row)}
-if(safeLane.length!==8||exhaustedLane.length!==2)throw new Error(`DEPTH7_LANE_COUNT_UNEXPECTED:${safeLane.length}:${exhaustedLane.length}`);
+const sourceDir=`${OUT}/depth5-measurement-source-run-${SOURCE_RUN_ID}`;
+mkdirSync(sourceDir,{recursive:true});
+execFileSync('gh',[
+  'run','download',SOURCE_RUN_ID,
+  '--repo',String(process.env.GITHUB_REPOSITORY??'Takuro-Kwkm/sash-app'),
+  '--name',SOURCE_ARTIFACT,
+  '--dir',sourceDir
+],{stdio:'inherit',timeout:120000});
 
-const exhaustedRows=[];
-for(const row of exhaustedLane){const optionalEnum=row.axes.filter(x=>!x.required&&x.data_type==='ENUM'),multi=row.axes.filter(x=>x.data_type==='MULTI_ENUM'),other=row.axes.filter(x=>!(x.data_type==='MULTI_ENUM'||(!x.required&&x.data_type==='ENUM')));exhaustedRows.push({PRODUCT_NODE:row.sourceChild.PRODUCT_NODE,DEPTH6_CHILD_PARTITION_ID:row.sourceChild.PARTITION_ID,SELECTOR_PREFIX:row.seed,REMAINING_DISCRETE_AXIS_COUNT:row.axes.length,REMAINING_OPTIONAL_ENUM_AXIS_COUNT:optionalEnum.length,REMAINING_MULTI_ENUM_AXIS_COUNT:multi.length,UNCLASSIFIED_REMAINING_AXIS_COUNT:other.length,REMAINING_AXES:row.axes,SAFE_REQUIRED_ENUM_FRONTIER_EXHAUSTED:true,STANDARD_PARTITION_SEED_SPLIT_AUTHORIZED:false,REASON:'No remaining required multi-valued ENUM. Optional ENUM UNSET branches and MULTI_ENUM subset semantics require a separate mechanically proven partition model before execution.'})}
-const exhaustedAnalysis={schema_version:'1.0.0',artifact_type:'UCHIRIMO_DEPTH7_EXHAUSTED_REQUIRED_ENUM_FRONTIER_ANALYSIS',exact_head:head,diagnostic_scope:'DEPTH6_FAILED_REPRESENTATIVES_WITHOUT_SAFE_REQUIRED_ENUM_FRONTIER',representative_count:exhaustedRows.length,product_nodes:exhaustedRows.map(x=>x.PRODUCT_NODE),optional_enum_axis_count_total:exhaustedRows.reduce((n,x)=>n+x.REMAINING_OPTIONAL_ENUM_AXIS_COUNT,0),multi_enum_axis_count_total:exhaustedRows.reduce((n,x)=>n+x.REMAINING_MULTI_ENUM_AXIS_COUNT,0),rows:exhaustedRows,optional_or_multi_partition_authorized:false,full_coverage_authorized:false,status:'BLOCKED_PENDING_ALTERNATE_PARTITION_MODEL'};writeJson(`${OUT}/depth7-exhausted-required-enum-frontier-analysis.json`,exhaustedAnalysis);
+const heavy=readJson(`${sourceDir}/heavy-partition-analysis.json`);
+const recursive=readJson(`${sourceDir}/recursive-partition-plan.json`);
+const depth5Plan=readJson(`${sourceDir}/depth5-representative-partition-plan.json`);
+const depth5Proof=readJson(`${sourceDir}/depth5-representative-coverage-preservation-proof.json`);
+const depth5Micro=readJson(`${sourceDir}/depth5-representative-micro-calibration.json`);
 
-const parents=[],children=[];
-for(const row of safeLane){const sp=row.split;const parent={PARTITION_ID:row.sourceChild.PARTITION_ID,PRODUCT_NODE:row.sourceChild.PRODUCT_NODE,WINDOW_ID:row.sourceChild.WINDOW_ID,FLOW_SIGNATURE:flowSignature(row.resolved),SELECTOR_PREFIX:row.seed,ROOT_HEAVY_PARENT_PARTITION_ID:row.sourceChild.ROOT_HEAVY_PARENT_PARTITION_ID,NEXT_SPLIT_FIELD:sp.field_key,NEXT_SPLIT_FIELD_REQUIRED:true,NEXT_SPLIT_FIELD_DATA_TYPE:'ENUM',NEXT_SPLIT_CARDINALITY:sp.enabled_value_count,NEXT_SPLIT_VALUES:sp.enabled_values,EXACT_HEAD:head,RUNTIME_SNAPSHOT_ID:recursive.runtime_snapshot_id,STATUS:'DEPTH7_SPLIT_PLANNED'};parents.push(parent);for(const value of sp.enabled_values){const childSeed={...row.seed,[sp.field_key]:value},childResolved=await resolveRuntimeAppProduct(PRODUCT_ID,childSeed);for(const [k,v] of Object.entries(childSeed))if(!same(childResolved.selection?.[k],v))throw new Error(`DEPTH7_CHILD_SEED_REJECTED:${row.sourceChild.PARTITION_ID}:${k}`);const childAxes=discreteAxes(childResolved,childSeed),next=nextSplit(childResolved,childSeed);children.push({PARTITION_ID:`UHC7-${hash(stableJson([row.sourceChild.PARTITION_ID,sp.field_key,value])).slice(0,20)}`,PARENT_PARTITION_ID:row.sourceChild.PARTITION_ID,ROOT_HEAVY_PARENT_PARTITION_ID:row.sourceChild.ROOT_HEAVY_PARENT_PARTITION_ID,PRODUCT_NODE:row.sourceChild.PRODUCT_NODE,WINDOW_ID:row.sourceChild.WINDOW_ID,FLOW_SIGNATURE:flowSignature(childResolved),SELECTOR_PREFIX:childSeed,SPLIT_FIELD:sp.field_key,SPLIT_VALUE:value,PARTITION_DEPTH:7,REMAINING_SAFE_REQUIRED_ENUM_AXIS_COUNT:childAxes.filter(x=>x.safe_required_enum_split_candidate).length,REMAINING_OPTIONAL_OR_MULTI_AXIS_COUNT:childAxes.filter(x=>!x.safe_required_enum_split_candidate).length,NEXT_SAFE_SPLIT_FIELD:next?.field_key??null,NEXT_SAFE_SPLIT_CARDINALITY:next?.enabled_value_count??0,SAFE_REQUIRED_ENUM_FRONTIER_EXHAUSTED:!next,EXACT_HEAD:head,RUNTIME_SNAPSHOT_ID:recursive.runtime_snapshot_id,STATUS:'PLANNED_UNVERIFIED'})}}
-const ids=children.map(x=>x.PARTITION_ID),overlap=ids.length-new Set(ids).size,parentsWithChildren=new Set(children.map(x=>x.PARENT_PARTITION_ID)),unsplittable=parents.filter(x=>!parentsWithChildren.has(x.PARTITION_ID));let gap=0,unionMismatch=0,prefixMismatch=0,semanticMismatch=0,cardinalityMismatch=0;const proofRows=[];for(const parent of parents){const matching=children.filter(x=>x.PARENT_PARTITION_ID===parent.PARTITION_ID);if(matching.length!==parent.NEXT_SPLIT_CARDINALITY)gap++;const expected=new Set(parent.NEXT_SPLIT_VALUES.map(stableJson)),actual=new Set(matching.map(x=>stableJson(x.SPLIT_VALUE))),union=expected.size===actual.size&&[...expected].every(x=>actual.has(x)),card=matching.length===parent.NEXT_SPLIT_CARDINALITY&&actual.size===matching.length,semantic=parent.NEXT_SPLIT_FIELD_REQUIRED===true&&parent.NEXT_SPLIT_FIELD_DATA_TYPE==='ENUM'&&Boolean(parent.NEXT_SPLIT_FIELD);let prefix=true;for(const child of matching){const preserved=Object.entries(parent.SELECTOR_PREFIX).every(([k,v])=>same(child.SELECTOR_PREFIX?.[k],v)),extra=Object.keys(child.SELECTOR_PREFIX).filter(k=>!Object.prototype.hasOwnProperty.call(parent.SELECTOR_PREFIX,k));if(!preserved||extra.length!==1||extra[0]!==parent.NEXT_SPLIT_FIELD||!same(child.SELECTOR_PREFIX[parent.NEXT_SPLIT_FIELD],child.SPLIT_VALUE)){prefix=false;break}}if(!union)unionMismatch++;if(!prefix)prefixMismatch++;if(!semantic)semanticMismatch++;if(!card)cardinalityMismatch++;proofRows.push({PARENT_PARTITION_ID:parent.PARTITION_ID,PRODUCT_NODE:parent.PRODUCT_NODE,SPLIT_FIELD:parent.NEXT_SPLIT_FIELD,EXPECTED_VALUE_COUNT:expected.size,ACTUAL_CHILD_COUNT:matching.length,PARENT_UNION_EQUALS_CHILDREN:union,CHILD_PREFIX_PRESERVATION:prefix,CHILD_CARDINALITY_AND_UNIQUENESS:card,SPLIT_SEMANTICS_VALID:semantic,STATUS:union&&prefix&&card&&semantic?'PASS':'FAIL'})}
-const coveragePass=overlap===0&&gap===0&&unsplittable.length===0&&unionMismatch===0&&prefixMismatch===0&&semanticMismatch===0&&cardinalityMismatch===0&&parentsWithChildren.size===parents.length;
-const proof={schema_version:'1.0.0',artifact_type:'UCHIRIMO_DEPTH7_SAFE_LANE_COVERAGE_PRESERVATION_PROOF',exact_head:head,diagnostic_scope:'DEPTH6_FAILED_REPRESENTATIVES_WITH_SAFE_REQUIRED_ENUM_FRONTIER_ONLY',parent_partition_count:parents.length,child_partition_count:children.length,PARTITION_OVERLAP_COUNT:overlap,PARTITION_GAP_COUNT:gap,UNSPLITTABLE_PARENT_COUNT:unsplittable.length,PARENT_UNION_MISMATCH_COUNT:unionMismatch,CHILD_PREFIX_MISMATCH_COUNT:prefixMismatch,SPLIT_SEMANTIC_MISMATCH_COUNT:semanticMismatch,PARENT_CHILD_CARDINALITY_MISMATCH_COUNT:cardinalityMismatch,parents:proofRows,coverage_preservation_status:coveragePass?'PASS':'FAIL',full_coverage_authorized:false,status:coveragePass?'PASS':'FAIL'};
-const plan={schema_version:'1.0.0',artifact_type:'UCHIRIMO_DEPTH7_SAFE_LANE_RECURSIVE_PARTITION_PLAN',exact_head:head,partition_depth:7,diagnostic_scope:'DEPTH6_FAILED_REPRESENTATIVES_WITH_SAFE_REQUIRED_ENUM_FRONTIER_ONLY',target_product_nodes:[...new Set(parents.map(x=>x.PRODUCT_NODE))].sort(),parent_partition_count:parents.length,child_partition_count:children.length,PARTITION_OVERLAP_COUNT:overlap,PARTITION_GAP_COUNT:gap,UNSPLITTABLE_PARENT_COUNT:unsplittable.length,PARENT_UNION_MISMATCH_COUNT:unionMismatch,CHILD_PREFIX_MISMATCH_COUNT:prefixMismatch,SPLIT_SEMANTIC_MISMATCH_COUNT:semanticMismatch,PARENT_CHILD_CARDINALITY_MISMATCH_COUNT:cardinalityMismatch,COVERAGE_PRESERVATION_STATUS:proof.coverage_preservation_status,parents,children,full_depth7_execution_authorized:false,full_coverage_authorized:false,status:coveragePass?'DIAGNOSTIC_PLAN_READY':'BLOCKED'};
-writeJson(`${OUT}/depth7-safe-lane-partition-plan.json`,plan);writeJson(`${OUT}/depth7-safe-lane-coverage-preservation-proof.json`,proof);console.log(`DEPTH7_SAFE_LANE_PARENT_COUNT=${parents.length}`);console.log(`DEPTH7_SAFE_LANE_CHILD_COUNT=${children.length}`);console.log(`DEPTH7_SAFE_LANE_COVERAGE_PRESERVATION_STATUS=${proof.coverage_preservation_status}`);console.log(`DEPTH7_EXHAUSTED_LANE_COUNT=${exhaustedRows.length}`);if(!coveragePass)throw new Error('DEPTH7_SAFE_LANE_PLAN_BLOCKED');
+for(const artifact of [heavy,recursive,depth5Plan,depth5Proof,depth5Micro]){
+  if(artifact.exact_head!==SOURCE_HEAD)throw new Error('DEPTH5_MEASUREMENT_SOURCE_ARTIFACT_HEAD_MISMATCH');
+}
+if(depth5Plan.status!=='DIAGNOSTIC_PLAN_READY')throw new Error('DEPTH5_MEASUREMENT_SOURCE_PLAN_INVALID');
+if(depth5Proof.coverage_preservation_status!=='PASS')throw new Error('DEPTH5_MEASUREMENT_SOURCE_COVERAGE_INVALID');
+if(depth5Micro.decision!=='DEPTH6_REQUIRED_FOR_FAILED_REPRESENTATIVES')throw new Error('DEPTH5_MEASUREMENT_SOURCE_DECISION_INVALID');
+if(Number(depth5Micro.calibration_invalid_count??1)!==0)throw new Error('DEPTH5_MEASUREMENT_SOURCE_CALIBRATION_INVALID');
+for(const key of [
+  'PARTITION_OVERLAP_COUNT',
+  'PARTITION_GAP_COUNT',
+  'UNSPLITTABLE_PARENT_COUNT',
+  'PARENT_UNION_MISMATCH_COUNT',
+  'CHILD_PREFIX_MISMATCH_COUNT',
+  'SPLIT_SEMANTIC_MISMATCH_COUNT',
+  'PARENT_CHILD_CARDINALITY_MISMATCH_COUNT'
+]){
+  if(Number(depth5Plan[key]??1)!==0||Number(depth5Proof[key]??1)!==0)throw new Error('DEPTH5_MEASUREMENT_SOURCE_COVERAGE_COUNTER_INVALID:'+key);
+}
 
-const selected=[];for(const parent of parents){const source=depth6Children.get(parent.PARTITION_ID),child=children.filter(x=>x.PARENT_PARTITION_ID===parent.PARTITION_ID).sort((a,b)=>stableJson(a.SPLIT_VALUE).localeCompare(stableJson(b.SPLIT_VALUE)))[0];if(!source||!child)throw new Error('DEPTH7_REPRESENTATIVE_SELECTION_FAILED:'+parent.PRODUCT_NODE);selected.push({parent,source,child})}
-const probeRows=[];for(const [i,x] of selected.entries()){const parentProbe=runCase(x.source,i,'depth6-state-probe',PROBE_LIMIT),childProbe=runCase(x.child,i,'depth7-state-probe',PROBE_LIMIT);probeRows.push({index:i,product_node:x.parent.PRODUCT_NODE,depth6_partition_id:x.parent.PARTITION_ID,depth7_partition_id:x.child.PARTITION_ID,split_field:x.child.SPLIT_FIELD,split_value:x.child.SPLIT_VALUE,state_probe_limit:PROBE_LIMIT,baseline_depth6_probe:parentProbe,depth7_probe:childProbe,threshold_elapsed_ratio_depth7_over_depth6:parentProbe.state_limit_reached&&childProbe.state_limit_reached&&parentProbe.elapsed_ms>0?childProbe.elapsed_ms/parentProbe.elapsed_ms:null});console.log(`DEPTH7_STATE_PROBE node=${x.parent.PRODUCT_NODE} depth6=${parentProbe.outcome}:${parentProbe.elapsed_ms} depth7=${childProbe.outcome}:${childProbe.elapsed_ms}`)}
-const invalidProbe=probeRows.filter(x=>x.baseline_depth6_probe.outcome==='INVALID'||x.depth7_probe.outcome==='INVALID');const probeSummary={schema_version:'1.0.0',artifact_type:'UCHIRIMO_DEPTH7_SAFE_LANE_STATE_PROBE_COMPARISON',exact_head:head,state_probe_limit:PROBE_LIMIT,representative_count:probeRows.length,invalid_probe_count:invalidProbe.length,rows:probeRows,full_coverage_authorized:false,status:invalidProbe.length?'BLOCKED':'DIAGNOSTIC_ONLY'};writeJson(`${OUT}/depth7-safe-lane-state-probe-comparison.json`,probeSummary);if(invalidProbe.length)throw new Error('DEPTH7_STATE_PROBE_INVALID');
+const runtime=await loadRegisteredRuntime('YKK AP','ウチリモ 内窓');
+if(!runtime?.sourcePackageIntegrity?.match)throw new Error('DEPTH5_MEASUREMENT_RUNTIME_INTEGRITY_FAIL');
 
-const results=[];for(const [i,x] of selected.entries()){const measured=runCase(x.child,i,'micro-calibration',1000000),pass=measured.outcome==='COMPLETED',deeper=measured.timed_out||measured.state_limit_reached||measured.terminal_limit_reached,status=pass?'PASS':deeper?'NEEDS_DEEPER_SPLIT':'CALIBRATION_INVALID';results.push({index:i,product_node:x.parent.PRODUCT_NODE,source_depth6_child_partition_id:x.parent.PARTITION_ID,depth7_child_partition_id:x.child.PARTITION_ID,split_field:x.child.SPLIT_FIELD,split_value:x.child.SPLIT_VALUE,remaining_safe_required_enum_axis_count:x.child.REMAINING_SAFE_REQUIRED_ENUM_AXIS_COUNT,next_safe_split_field:x.child.NEXT_SAFE_SPLIT_FIELD,next_safe_split_cardinality:x.child.NEXT_SAFE_SPLIT_CARDINALITY,...measured,status});console.log(`DEPTH7_MICRO_CASE node=${x.parent.PRODUCT_NODE} status=${status} elapsed_ms=${measured.elapsed_ms}`)}
-const passes=results.filter(x=>x.status==='PASS'),deeper=results.filter(x=>x.status==='NEEDS_DEEPER_SPLIT'),invalid=results.filter(x=>x.status==='CALIBRATION_INVALID'),safeFailed=deeper.filter(x=>x.next_safe_split_field),newlyExhausted=deeper.filter(x=>!x.next_safe_split_field);const summary={schema_version:'1.0.0',artifact_type:'UCHIRIMO_DEPTH7_SAFE_LANE_MICRO_CALIBRATION',exact_head:head,task_classification:'NON-PRODUCT-MASTER',product_master_mutation:0,selected_child_count:results.length,child_timeout_ms:TIMEOUT,pass_count:passes.length,needs_deeper_split_count:deeper.length,calibration_invalid_count:invalid.length,failed_with_safe_required_enum_frontier_count:safeFailed.length,newly_exhausted_required_enum_frontier_count:newlyExhausted.length,preexisting_exhausted_lane_count:exhaustedRows.length,results,full_depth7_execution_authorized:false,full_coverage_authorized:false,decision:invalid.length?'CALIBRATION_INVALID':deeper.length===0?'SAFE_LANE_FAST_PATH_PROMISING_EXHAUSTED_LANE_REMAINS':safeFailed.length>0?'DEPTH8_REQUIRED_FOR_SAFE_FAILED_REPRESENTATIVES_AND_EXHAUSTED_LANE_MODEL_REQUIRED':'ALL_FAILED_SAFE_LANE_REPRESENTATIVES_NOW_REQUIRED_ENUM_EXHAUSTED',status:invalid.length?'BLOCKED':'MEASURED_CALIBRATION_ONLY'};writeJson(`${OUT}/depth7-safe-lane-micro-calibration.json`,summary);
-writeJson(`${OUT}/depth7-recovery-lane-decision.json`,{schema_version:'1.0.0',artifact_type:'UCHIRIMO_DEPTH7_RECOVERY_LANE_DECISION',exact_head:head,safe_lane:{representative_count:parents.length,coverage_preservation_status:proof.coverage_preservation_status,micro_decision:summary.decision,pass_count:passes.length,needs_deeper_split_count:deeper.length,failed_with_safe_frontier_count:safeFailed.length,newly_exhausted_count:newlyExhausted.length},exhausted_lane:{representative_count:exhaustedRows.length,product_nodes:exhaustedRows.map(x=>x.PRODUCT_NODE),partition_model_status:'BLOCKED_PENDING_ALTERNATE_PARTITION_MODEL',optional_or_multi_partition_authorized:false},full_coverage_authorized:false,UCHIRIMO_QA_STATUS:'UNVERIFIED',APP_INTEGRATION_READY:false,RELEASE_INPUT_GATE:'BLOCKED',status:invalid.length?'BLOCKED':'RECOVERY_CONTINUES'});
-console.log(`DEPTH7_MICRO_CALIBRATION_PASS_COUNT=${passes.length}/${results.length}`);console.log(`DEPTH7_MICRO_CALIBRATION_INVALID_COUNT=${invalid.length}`);console.log(`DEPTH7_SAFE_FAILED_WITH_FRONTIER_COUNT=${safeFailed.length}`);console.log(`DEPTH7_NEWLY_EXHAUSTED_COUNT=${newlyExhausted.length}`);console.log(`DEPTH7_MICRO_CALIBRATION_DECISION=${summary.decision}`);if(invalid.length)throw new Error('DEPTH7_MICRO_CALIBRATION_INVALID');console.log('UCHIRIMO_FULL_COVERAGE_QA_GATE=BLOCKED');console.log('APP_INTEGRATION_READY=FALSE');console.log('RELEASE_INPUT_GATE=BLOCKED');
+const binding={
+  schema_version:'1.0.0',
+  artifact_type:'UCHIRIMO_DEPTH5_MEASUREMENT_GAP_SOURCE_BINDING',
+  exact_head:head,
+  source_exact_head:SOURCE_HEAD,
+  source_run_id:Number(SOURCE_RUN_ID),
+  source_artifact:SOURCE_ARTIFACT,
+  source_analysis_blob:sourceBlob,
+  changed_files_since_source:changedFiles,
+  changed_file_count:changedFiles.length,
+  source_evidence_role:'DIAGNOSTIC_TARGET_IDENTITY_ONLY',
+  source_pass_evidence_reused_as_current_head:false,
+  current_head_runtime_revalidation_required:true,
+  current_runtime_manifest_sha256:runtime.sourcePackageIntegrity.actual,
+  exhaustive_runner_source_modified:false,
+  status:'PASS'
+};
+writeJson(`${OUT}/depth5-measurement-gap-source-binding.json`,binding);
+
+writeJson(`${OUT}/heavy-partition-analysis.json`,{
+  ...heavy,
+  exact_head:head,
+  evidence_origin:'CURRENT_HEAD_DIAGNOSTIC_BINDING',
+  source_bound_exact_head:SOURCE_HEAD,
+  current_head_binding_sha256:sha(binding),
+  source_pass_evidence_reused_as_current_head:false
+});
+writeJson(`${OUT}/recursive-partition-plan.json`,{
+  ...recursive,
+  exact_head:head,
+  evidence_origin:'CURRENT_HEAD_DIAGNOSTIC_BINDING',
+  source_bound_exact_head:SOURCE_HEAD,
+  current_head_binding_sha256:sha(binding),
+  source_pass_evidence_reused_as_current_head:false
+});
+
+const childrenById=new Map((depth5Plan.children??[]).map((row)=>[row.PARTITION_ID,row]));
+const failedRepresentatives=(depth5Micro.results??[]).filter((row)=>row.status==='NEEDS_DEEPER_SPLIT');
+if(failedRepresentatives.length!==10)throw new Error('DEPTH5_MEASUREMENT_REPRESENTATIVE_COUNT_INVALID:'+failedRepresentatives.length);
+
+const results=[];
+for(const [index,sourceResult] of failedRepresentatives.entries()){
+  const partition=childrenById.get(sourceResult.depth5_child_partition_id);
+  if(!partition)throw new Error('DEPTH5_MEASUREMENT_PARTITION_MISSING:'+String(sourceResult.depth5_child_partition_id));
+  const seed=partition.SELECTOR_PREFIX??{};
+
+  const resolveStarted=Date.now();
+  const resolved=await resolveRuntimeAppProduct(PRODUCT_ID,seed);
+  const initialResolveMs=Date.now()-resolveStarted;
+  for(const [key,value] of Object.entries(seed)){
+    if(!same(resolved.selection?.[key],value))throw new Error(`DEPTH5_MEASUREMENT_SEED_REJECTED:${partition.PARTITION_ID}:${key}`);
+  }
+
+  const measurement=runDepth5Measurement(partition,index);
+  const concreteStateProgress=
+    measurement.outcome==='STATE_PROBE_LIMIT_REACHED' ||
+    measurement.outcome==='COMPLETED';
+  const concreteTerminalProgress=Number(measurement.partial_terminal_digest_count??0)>0;
+  const validOutcome=['STATE_PROBE_LIMIT_REACHED','COMPLETED','TIMEOUT_BEFORE_STATE_PROBE_LIMIT'].includes(measurement.outcome);
+  const measurementValid=
+    validOutcome &&
+    Number.isFinite(initialResolveMs) &&
+    initialResolveMs<CHILD_TIMEOUT_MS &&
+    (concreteStateProgress||concreteTerminalProgress);
+
+  results.push({
+    index,
+    product_node:partition.PRODUCT_NODE,
+    depth5_partition_id:partition.PARTITION_ID,
+    selector_prefix:seed,
+    next_safe_split_field:sourceResult.next_safe_split_field??partition.NEXT_SAFE_SPLIT_FIELD??null,
+    next_safe_split_cardinality:sourceResult.next_safe_split_cardinality??partition.NEXT_SAFE_SPLIT_CARDINALITY??null,
+    initial_resolve_ms:initialResolveMs,
+    concrete_state_progress_observed:concreteStateProgress,
+    concrete_terminal_progress_observed:concreteTerminalProgress,
+    measurement_valid:measurementValid,
+    ...measurement
+  });
+
+  console.log(
+    `DEPTH5_MEASUREMENT node=${partition.PRODUCT_NODE}`+
+    ` resolve_ms=${initialResolveMs}`+
+    ` outcome=${measurement.outcome}`+
+    ` state_progress=${measurement.exact_or_threshold_state_progress_count??'<'+STATE_PROBE_LIMIT}`+
+    ` terminals=${measurement.partial_terminal_digest_count}`+
+    ` rate=${measurement.states_per_second_wall_clock_actual??measurement.states_per_second_wall_clock_upper_bound??'null'}`
+  );
+}
+
+const invalid=results.filter((row)=>!row.measurement_valid);
+const missingSafeSplit=results.filter((row)=>!row.next_safe_split_field);
+const timeoutBeforeProbe=results.filter((row)=>row.outcome==='TIMEOUT_BEFORE_STATE_PROBE_LIMIT');
+const stateProbeReached=results.filter((row)=>row.outcome==='STATE_PROBE_LIMIT_REACHED');
+const completed=results.filter((row)=>row.outcome==='COMPLETED');
+const initialResolveMaxMs=Math.max(...results.map((row)=>Number(row.initial_resolve_ms??0)));
+const totalObservedTerminals=results.reduce((sum,row)=>sum+Number(row.partial_terminal_digest_count??0),0);
+
+const depth6ExecutionAuthorized=
+  invalid.length===0 &&
+  missingSafeSplit.length===0 &&
+  results.length===10;
+
+let decision='DEPTH6_BLOCKED_MEASUREMENT_INVALID';
+if(depth6ExecutionAuthorized)decision='DEPTH6_DIAGNOSTIC_EXECUTION_AUTHORIZED_FROM_MEASURED_DEPTH5_PROGRESS';
+else if(missingSafeSplit.length>0)decision='DEPTH6_BLOCKED_SAFE_REQUIRED_ENUM_FRONTIER_MISSING';
+
+const evidence={
+  schema_version:'1.0.0',
+  artifact_type:'UCHIRIMO_DEPTH5_MEASUREMENT_GAP_CLOSURE',
+  exact_head:head,
+  task_classification:'NON-PRODUCT-MASTER',
+  product_master_mutation:0,
+  source_exact_head:SOURCE_HEAD,
+  source_run_id:Number(SOURCE_RUN_ID),
+  representative_count:results.length,
+  child_timeout_ms:CHILD_TIMEOUT_MS,
+  state_probe_limit:STATE_PROBE_LIMIT,
+  completed_count:completed.length,
+  state_probe_limit_reached_count:stateProbeReached.length,
+  timeout_before_state_probe_count:timeoutBeforeProbe.length,
+  measurement_invalid_count:invalid.length,
+  missing_safe_split_count:missingSafeSplit.length,
+  max_initial_resolve_ms:initialResolveMaxMs,
+  partial_terminal_digest_count_total:totalObservedTerminals,
+  results,
+  measurement_method:{
+    runner_semantics_modified:false,
+    bounded_state_probe:true,
+    partial_terminal_progress_from_existing_terminal_digest:true,
+    initial_resolve_probe:'resolveRuntimeAppProduct on the identical Depth5 representative seed before child traversal',
+    rate_basis:'batch wall clock including child setup; exact when state threshold/completion observed, upper bound when timeout occurs before threshold'
+  },
+  depth6_execution_authorized:depth6ExecutionAuthorized,
+  full_depth6_execution_authorized:false,
+  full_coverage_authorized:false,
+  UCHIRIMO_FULL_COVERAGE_QA_GATE:'BLOCKED',
+  APP_INTEGRATION_READY:false,
+  RELEASE_INPUT_GATE:'BLOCKED',
+  decision,
+  status:invalid.length===0?'MEASURED_DIAGNOSTIC_COMPLETE':'BLOCKED'
+};
+writeJson(`${OUT}/depth5-measurement-gap-closure.json`,evidence);
+writeJson(`${OUT}/depth6-execution-decision.json`,{
+  schema_version:'1.0.0',
+  artifact_type:'UCHIRIMO_DEPTH6_EXECUTION_DECISION',
+  exact_head:head,
+  evidence_artifact:'depth5-measurement-gap-closure.json',
+  representative_count:results.length,
+  measurement_invalid_count:invalid.length,
+  missing_safe_split_count:missingSafeSplit.length,
+  depth6_execution_authorized:depth6ExecutionAuthorized,
+  authorization_scope:'REPRESENTATIVE_DIAGNOSTIC_ONLY',
+  full_depth6_execution_authorized:false,
+  full_coverage_authorized:false,
+  decision,
+  status:depth6ExecutionAuthorized?'AUTHORIZED_FOR_NEXT_DIAGNOSTIC_STEP':'BLOCKED'
+});
+
+console.log(`DEPTH5_MEASUREMENT_REPRESENTATIVE_COUNT=${results.length}`);
+console.log(`DEPTH5_MEASUREMENT_INVALID_COUNT=${invalid.length}`);
+console.log(`DEPTH5_STATE_PROBE_LIMIT_REACHED_COUNT=${stateProbeReached.length}`);
+console.log(`DEPTH5_TIMEOUT_BEFORE_STATE_PROBE_COUNT=${timeoutBeforeProbe.length}`);
+console.log(`DEPTH5_PARTIAL_TERMINAL_COUNT_TOTAL=${totalObservedTerminals}`);
+console.log(`DEPTH5_MAX_INITIAL_RESOLVE_MS=${initialResolveMaxMs}`);
+console.log(`DEPTH6_DIAGNOSTIC_EXECUTION_AUTHORIZED=${depth6ExecutionAuthorized?'TRUE':'FALSE'}`);
+console.log(`DEPTH6_EXECUTION_DECISION=${decision}`);
+console.log('UCHIRIMO_FULL_COVERAGE_QA_GATE=BLOCKED');
+console.log('APP_INTEGRATION_READY=FALSE');
+console.log('RELEASE_INPUT_GATE=BLOCKED');
+
+if(invalid.length>0)throw new Error('DEPTH5_MEASUREMENT_GAP_NOT_CLOSED');
