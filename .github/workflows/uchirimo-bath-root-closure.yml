@@ -1,0 +1,287 @@
+name: Uchirimo Bath Root Recursive Closure
+
+on:
+  push:
+    branches:
+      - feat/new-construction-runtime-ui-v16-20260910
+    paths:
+      - .github/workflows/uchirimo-bath-root-closure.yml
+      - scripts/governance/uchirimo-bath-root-closure.mjs
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+  pull-requests: read
+
+concurrency:
+  group: uchirimo-bath-root-closure-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    outputs:
+      matrix: ${{ steps.prepare.outputs.matrix }}
+    env:
+      GH_TOKEN: ${{ github.token }}
+      HEAD_SHA: ${{ github.sha }}
+      SOURCE_HEAD: d38062cbac649f70ee9ce848d92185bd5181b52f
+      SOURCE_RUN_ID: '36138682468'
+      SOURCE_ARTIFACT: uchirimo-heavy-recovery-analysis-d38062cbac649f70ee9ce848d92185bd5181b52f
+      SOURCE_DIGEST: sha256:a2cc2b3cc1f7e6cf0b57f8336d2ec96a70b2b6268af940c0531bd1f1a176ccd5
+      FAILURE_HEAD: c83252b2511af5f6abc9186aad9f3c65dc2f2c7f
+      FAILURE_RUN_ID: '36141061035'
+      PREP_OUT: artifacts/uchirimo-bath-closure-input
+      RUNNER_BLOB: 65a57854ab7adf45fa0486b465530686d76cb09f
+      FULL_PROOF_BLOB: 94a86542cace253dc45e7b1f8589f98b837a4cce
+    steps:
+      - name: Checkout exact HEAD
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.HEAD_SHA }}
+          fetch-depth: 0
+
+      - name: Setup Node 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Install
+        run: npm install --ignore-scripts
+
+      - name: Verify exact scope and source identities
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$HEAD_SHA"
+          git merge-base --is-ancestor "$SOURCE_HEAD" "$HEAD_SHA"
+          git merge-base --is-ancestor "$FAILURE_HEAD" "$HEAD_SHA"
+          mapfile -t changed < <(git diff --name-only "$SOURCE_HEAD..$HEAD_SHA" | sort)
+          expected=(
+            ".github/workflows/uchirimo-bath-root-closure.yml"
+            ".github/workflows/uchirimo-stage1-bath-recovery.yml"
+            "scripts/governance/uchirimo-bath-root-closure.mjs"
+          )
+          test "${#changed[@]}" -eq "${#expected[@]}"
+          for i in "${!expected[@]}"; do test "${changed[$i]}" = "${expected[$i]}"; done
+          test "$(git rev-parse "$HEAD_SHA:scripts/governance/uchirimo-selector-batch-runner.mjs")" = "$RUNNER_BLOB"
+          test "$(git rev-parse "$HEAD_SHA:scripts/uchirimo-full-selector-proof.mjs")" = "$FULL_PROOF_BLOB"
+          source_digest="$(gh api "repos/${GITHUB_REPOSITORY}/actions/runs/${SOURCE_RUN_ID}/artifacts?per_page=100" --jq ".artifacts[] | select(.name == \"${SOURCE_ARTIFACT}\") | .digest")"
+          test "$source_digest" = "$SOURCE_DIGEST"
+          test "$(gh api "repos/${GITHUB_REPOSITORY}/actions/runs/${FAILURE_RUN_ID}" --jq '.head_sha')" = "$FAILURE_HEAD"
+          mkdir -p "$PREP_OUT/source" "$PREP_OUT/failures"
+          gh run download "$SOURCE_RUN_ID" --repo "$GITHUB_REPOSITORY" --name "$SOURCE_ARTIFACT" --dir "$PREP_OUT/source"
+
+      - name: Download and verify current-head timeout evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          declare -A digests=(
+            [0]='sha256:f229a248ea69f9c905a2cd6bd4b3ba0916d96fb6f5edb740fe0b0755b7ead5c0'
+            [1]='sha256:d753543e39d0bd49ae5f69bf3d1393a5dc3aeeeb4fa123782b0901b51ae00e4c'
+            [2]='sha256:6a418e398beb09f8d14812f3f69da22f0af38fe9070f18ed3b42d8343c397e72'
+            [3]='sha256:9472e76e117508499549df7df5b95b5dfccbca688a70c86c276c3bc249c0b702'
+            [4]='sha256:3e5888dacf98b3a8067a8f4ccd6c94116d52d7b7251a217ce428999eada52ceb'
+            [5]='sha256:09104d4efd0d0f479871a896884c4f8a79df49b9a0456617646f4ad985f17ff6'
+          )
+          for index in 0 1 2 3 4 5; do
+            name="uchirimo-stage1-bath-batch-${index}-${FAILURE_HEAD}"
+            actual="$(gh api "repos/${GITHUB_REPOSITORY}/actions/runs/${FAILURE_RUN_ID}/artifacts?name=${name}" --jq '.artifacts[0].digest')"
+            test "$actual" = "${digests[$index]}"
+            mkdir -p "$PREP_OUT/failures/$index"
+            gh run download "$FAILURE_RUN_ID" --repo "$GITHUB_REPOSITORY" --name "$name" --dir "$PREP_OUT/failures/$index"
+          done
+
+      - name: Build Bath root closure input
+        id: prepare
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import { appendFileSync, readFileSync, writeFileSync } from 'node:fs';
+          import { loadRegisteredRuntime } from './src/catalog/runtime-master/runtime-master-registry.mjs';
+          const env=process.env;
+          const source=JSON.parse(readFileSync(`${env.PREP_OUT}/source/explicit-constraint-stage1-bath-depth1-existing-partition-runner-input.json`,'utf8'));
+          if(source.exact_head!==env.SOURCE_HEAD||source.status!=='INPUT_READY'||source.item_count!==76||source.root_count!==38)throw new Error('BATH_SOURCE_INPUT_INVALID');
+          if(source.runner_blob_sha!==env.RUNNER_BLOB||source.full_selector_proof_blob_sha!==env.FULL_PROOF_BLOB)throw new Error('BATH_SOURCE_RUNNER_IDENTITY_INVALID');
+          const timeoutKeys=[];
+          for(let index=0;index<6;index+=1){
+            const row=JSON.parse(readFileSync(`${env.PREP_OUT}/failures/${index}/stage1-batch-${String(index).padStart(2,'0')}-verification.json`,'utf8'));
+            if(row.exact_head!==env.FAILURE_HEAD||row.status!=='FAIL'||row.pass_count!==0||row.fail_count!==2||row.integrity_failures?.length!==0)throw new Error(`BATH_TIMEOUT_EVIDENCE_INVALID:${index}`);
+            for(const result of row.results??[]){
+              if(result.status!=='FAIL'||result.timed_out!==true||result.signal!=='SIGTERM')throw new Error(`BATH_TIMEOUT_RESULT_INVALID:${index}`);
+              timeoutKeys.push(String(result.partition_key));
+            }
+          }
+          if(timeoutKeys.length!==12||new Set(timeoutKeys).size!==12)throw new Error('BATH_TIMEOUT_PARTITION_SET_INVALID');
+          const runtime=await loadRegisteredRuntime('YKK AP','ウチリモ 内窓');
+          if(!runtime?.sourcePackageIntegrity?.match||runtime.sourcePackageIntegrity.actual!==source.current_runtime_manifest_sha256)throw new Error('BATH_CURRENT_RUNTIME_IDENTITY_INVALID');
+          const byRoot=new Map();
+          for(const item of source.runner_items??[]){
+            const key=String(item.original_parent_partition_id);
+            if(!byRoot.has(key))byRoot.set(key,[]);
+            byRoot.get(key).push(item);
+          }
+          const roots=[...byRoot.entries()].sort(([a],[b])=>a.localeCompare(b)).map(([rootId,items],root_index)=>({
+            root_index,
+            original_parent_partition_id:rootId,
+            depth1_items:items.sort((a,b)=>String(a.partition_key).localeCompare(String(b.partition_key)))
+          }));
+          if(roots.length!==38||roots.some((row)=>row.depth1_items.length!==2))throw new Error('BATH_ROOT_GROUPING_INVALID');
+          const output={
+            schema_version:'1.0.0',
+            artifact_type:'UCHIRIMO_BATH_ROOT_RECURSIVE_CLOSURE_INPUT',
+            exact_head:env.HEAD_SHA,
+            source_exact_head:env.SOURCE_HEAD,
+            source_run_id:Number(env.SOURCE_RUN_ID),
+            source_artifact:env.SOURCE_ARTIFACT,
+            failure_exact_head:env.FAILURE_HEAD,
+            failure_run_id:Number(env.FAILURE_RUN_ID),
+            task_classification:'NON-PRODUCT-MASTER',
+            product_master_mutation:0,
+            runtime_manifest_sha256:runtime.sourcePackageIntegrity.actual,
+            root_count:38,
+            source_depth1_partition_count:76,
+            known_timeout_partition_count:12,
+            known_timeout_partition_keys:timeoutKeys.sort(),
+            roots,
+            split_policy:'REUSE_EXISTING_NEXT_SPLIT_REQUIRED_ENUM_ONLY',
+            retry_policy:'KNOWN_TIMEOUT_PARTITIONS_ARE_SPLIT_DIRECTLY_AND_NOT_RETRIED',
+            APP_INTEGRATION_READY:false,
+            RELEASE_INPUT_GATE:'BLOCKED',
+            status:'READY'
+          };
+          writeFileSync(`${env.PREP_OUT}/bath-root-closure-input.json`,JSON.stringify(output,null,2)+'\n');
+          appendFileSync(env.GITHUB_OUTPUT,`matrix=${JSON.stringify({include:roots.map((row)=>({root_index:row.root_index}))})}\n`);
+          console.log('BATH_ROOT_CLOSURE_INPUT=READY roots=38 depth1=76 known_timeouts=12');
+          NODE
+
+      - name: Upload Bath root closure input
+        uses: actions/upload-artifact@v4
+        with:
+          name: uchirimo-bath-root-closure-input-${{ env.HEAD_SHA }}
+          path: ${{ env.PREP_OUT }}/
+          if-no-files-found: error
+
+  close-root:
+    needs: [prepare]
+    strategy:
+      fail-fast: false
+      max-parallel: 12
+      matrix: ${{ fromJSON(needs.prepare.outputs.matrix) }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    env:
+      HEAD_SHA: ${{ github.sha }}
+      ROOT_INDEX: ${{ matrix.root_index }}
+      INPUT_DIR: artifacts/uchirimo-bath-closure-input
+      OUT_DIR: artifacts/uchirimo-bath-root-closure
+      UCHIRIMO_BATH_CHILD_TIMEOUT_MS: '120000'
+      UCHIRIMO_BATH_MAX_DEPTH: '12'
+      UCHIRIMO_BATH_MAX_PARTITIONS_PER_ROOT: '2000'
+    steps:
+      - name: Checkout exact HEAD
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.HEAD_SHA }}
+          fetch-depth: 0
+
+      - name: Setup Node 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Install
+        run: npm install --ignore-scripts
+
+      - name: Download Bath root closure input
+        uses: actions/download-artifact@v4
+        with:
+          name: uchirimo-bath-root-closure-input-${{ env.HEAD_SHA }}
+          path: ${{ env.INPUT_DIR }}
+
+      - name: Execute recursive root closure
+        env:
+          UCHIRIMO_BATH_ROOT_INDEX: ${{ env.ROOT_INDEX }}
+          UCHIRIMO_BATH_CLOSURE_INPUT: ${{ env.INPUT_DIR }}/bath-root-closure-input.json
+          UCHIRIMO_BATH_ROOT_OUT: ${{ env.OUT_DIR }}
+        run: node scripts/governance/uchirimo-bath-root-closure.mjs
+
+      - name: Upload root closure evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: uchirimo-bath-root-${{ matrix.root_index }}-${{ env.HEAD_SHA }}
+          path: ${{ env.OUT_DIR }}/
+          if-no-files-found: error
+
+  aggregate:
+    needs: [prepare, close-root]
+    if: ${{ always() && needs.prepare.result == 'success' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      HEAD_SHA: ${{ github.sha }}
+      AGG_OUT: artifacts/uchirimo-bath-root-aggregate
+    steps:
+      - name: Download all Bath root evidence
+        uses: actions/download-artifact@v4
+        with:
+          pattern: uchirimo-bath-root-*-${{ env.HEAD_SHA }}
+          path: ${{ env.AGG_OUT }}/roots
+          merge-multiple: true
+
+      - name: Aggregate Bath 38 root Closure
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import { mkdirSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
+          import { join } from 'node:path';
+          const out=process.env.AGG_OUT;
+          const rootsDir=join(out,'roots');
+          mkdirSync(out,{recursive:true});
+          const files=readdirSync(rootsDir).filter((name)=>/^bath-root-\d+-closure\.json$/.test(name)).sort();
+          const rows=files.map((name)=>JSON.parse(readFileSync(join(rootsDir,name),'utf8')));
+          const current=rows.filter((row)=>row.exact_head===process.env.HEAD_SHA);
+          const closed=current.filter((row)=>row.status==='PASS'&&row.original_root_closure_proven===true);
+          const blocked=current.filter((row)=>row.status!=='PASS'||row.original_root_closure_proven!==true);
+          const result={
+            schema_version:'1.0.0',
+            artifact_type:'UCHIRIMO_BATH_38_ROOT_RECURSIVE_CLOSURE_AGGREGATE',
+            exact_head:process.env.HEAD_SHA,
+            task_classification:'NON-PRODUCT-MASTER',
+            product_master_mutation:0,
+            expected_root_count:38,
+            observed_root_report_count:current.length,
+            closed_root_count:closed.length,
+            blocked_root_count:38-closed.length,
+            executed_partition_count:current.reduce((n,row)=>n+Number(row.executed_partition_count??0),0),
+            pass_leaf_count:current.reduce((n,row)=>n+Number(row.pass_leaf_count??0),0),
+            timeout_event_count:current.reduce((n,row)=>n+Number(row.timeout_event_count??0),0),
+            split_count:current.reduce((n,row)=>n+Number(row.split_count??0),0),
+            direct_split_known_timeout_count:current.reduce((n,row)=>n+Number(row.direct_split_known_timeout_count??0),0),
+            max_observed_depth:Math.max(0,...current.map((row)=>Number(row.max_observed_depth??0))),
+            blocked_roots:blocked.map((row)=>({root_index:row.root_index,original_parent_partition_id:row.original_parent_partition_id,blocked:row.blocked??[]})),
+            bath_38_root_closure_proven:current.length===38&&closed.length===38,
+            original_514_closure_proven:false,
+            next_recovery_action:current.length===38&&closed.length===38?'NONBATH_476_ROOT_CLOSURE':'RECOVER_ONLY_BLOCKED_BATH_ROOT_LEAVES',
+            UCHIRIMO_FULL_COVERAGE_QA_GATE:'BLOCKED',
+            UCHIRIMO_QA_STATUS:'UNVERIFIED',
+            APP_INTEGRATION_READY:false,
+            RELEASE_INPUT_GATE:'BLOCKED',
+            status:current.length===38&&closed.length===38?'PASS':'BLOCKED'
+          };
+          writeFileSync(join(out,'bath-38-root-closure-aggregate.json'),JSON.stringify(result,null,2)+'\n');
+          console.log(`BATH_38_ROOT_CLOSURE=${result.status} closed=${closed.length}/38 reports=${current.length}/38 timeouts=${result.timeout_event_count} splits=${result.split_count} max_depth=${result.max_observed_depth}`);
+          NODE
+
+      - name: Upload Bath aggregate evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: uchirimo-bath-38-root-closure-${{ env.HEAD_SHA }}
+          path: ${{ env.AGG_OUT }}/
+          if-no-files-found: error
