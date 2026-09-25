@@ -8,18 +8,18 @@ const P='scripts/governance/uchirimo-heavy-partition-analysis.mjs';
 const B='scripts/governance/uchirimo-selector-batch-runner.mjs';
 const F='scripts/uchirimo-full-selector-proof.mjs';
 const R='Takuro-Kwkm/sash-app';
-const SR='36080020201';
-const SH='701920127f1afff1fecc240772307d9986b840ea';
+const SR='36081608404';
+const SH='9da800dfbaabe5666cefdd2676d5c52e06f8596d';
 const SA=`uchirimo-heavy-recovery-analysis-${SH}`;
-const SD='sha256:72ea711929d72afb5bd3b2d515802edf81d6e7d9f1447c405723791325ac9a15';
-const SB='8126dc5fe004d048ead58dc94c7b6df3b0fdfc5e';
+const SD='sha256:f850c91b5a1b5c1ad4dafab476cce49b7e350af7aed4ba8b683fb5932be04a43';
+const SB='8ffad08b225257e4963a9302a3a8307fc12b5207';
 const BB='65a57854ab7adf45fa0486b465530686d76cb09f';
 const FB='94a86542cace253dc45e7b1f8589f98b837a4cce';
 const OUT=String(process.env.UCHIRIMO_HEAVY_ANALYSIS_OUT??'artifacts/uchirimo-heavy-recovery');
-const TIMEOUT=Number(process.env.UCHIRIMO_REP_REINFORCEMENT_CHILD_TIMEOUT_MS??60000);
+const TIMEOUT=Number(process.env.UCHIRIMO_REMAINING95_REINFORCEMENT_CHILD_TIMEOUT_MS??60000);
 const repo=String(process.env.GITHUB_REPOSITORY??R);
 const head=currentExactHead();
-if(!Number.isFinite(TIMEOUT)||TIMEOUT<60000)throw new Error('REP_REINFORCEMENT_TIMEOUT_INVALID');
+if(!Number.isFinite(TIMEOUT)||TIMEOUT<60000)throw new Error('REMAINING95_REINFORCEMENT_TIMEOUT_INVALID');
 mkdirSync(OUT,{recursive:true});
 
 const stable=v=>Array.isArray(v)?v.map(stable):(!v||typeof v!=='object')?v:Object.fromEntries(Object.entries(v).sort(([a],[b])=>a.localeCompare(b)).map(([k,x])=>[k,stable(x)]));
@@ -30,14 +30,14 @@ const safe=p=>{try{return rd(p)}catch{return null}};
 const meta=(run,name,dig)=>{const x=JSON.parse(execFileSync('gh',['api',`repos/${repo}/actions/runs/${run}/artifacts?per_page=100`],{encoding:'utf8',timeout:120000,maxBuffer:16e6})).artifacts?.find(x=>x.name===name);if(!x||x.expired||x.digest!==dig)throw new Error('SOURCE_ARTIFACT_INVALID:'+run)};
 const dl=(run,name,dir)=>{mkdirSync(dir,{recursive:true});execFileSync('gh',['run','download',run,'--repo',repo,'--name',name,'--dir',dir],{stdio:'inherit',timeout:120000})};
 
-function runRepresentative(child,index){
+function runChild(child,index){
   const s=child.selector_prefix??{};
   const base=new Set(['room_specification','window_type','glass_family','sash_configuration','size_class']);
   const constraints=child.constraints;
   const row={
     shard:0,
     node_id:child.product_node,
-    partition_key:`${child.parent_id}|rep-reinforcement-none`,
+    partition_key:`${child.child_id}|remaining95-reinforcement`,
     room_specification:String(s.room_specification),
     window_type:String(s.window_type),
     sash_configuration:s.sash_configuration==null?'__UNSET__':String(s.sash_configuration),
@@ -47,8 +47,8 @@ function runRepresentative(child,index){
     decision_constraints_json:sj(constraints),
     expected_hash:hash(constraints),
   };
-  const id=`rep-reinf-${String(index).padStart(2,'0')}`;
-  const dir=`${OUT}/representative-reinforcement/case-${String(index).padStart(2,'0')}`;
+  const id=`rem95-reinf-${String(index).padStart(2,'0')}`;
+  const dir=`${OUT}/remaining95-reinforcement/case-${String(index).padStart(2,'0')}`;
   mkdirSync(dir,{recursive:true});
   let execution_error=null;
   try{
@@ -74,44 +74,46 @@ const changed=execFileSync('git',['diff','--name-only',`${SH}..${head}`],{encodi
 if(sj(changed)!==sj([P]))throw new Error('NEXT_STAGE_SCOPE_INVALID:'+changed.join(','));
 if(execFileSync('git',['rev-parse',`${head}:${B}`],{encoding:'utf8'}).trim()!==BB||execFileSync('git',['rev-parse',`${head}:${F}`],{encoding:'utf8'}).trim()!==FB)throw new Error('RUNNER_IDENTITY_CHANGED');
 meta(SR,SA,SD);
-const t=String(process.env.RUNNER_TEMP??'/tmp'),s=`${t}/urep-reinf-${SR}`;
+const t=String(process.env.RUNNER_TEMP??'/tmp'),s=`${t}/u95-reinf-${SR}`;
 dl(SR,SA,s);
 for(const f of readdirSync(s).filter(x=>x.endsWith('.json'))){const d=rd(`${s}/${f}`);writeJson(`${OUT}/${f}`,{...d,exact_head:head,source_bound_exact_head:SH,measurement_reexecuted:false,evidence_origin:'BOUND_SOURCE_EVIDENCE_NO_REEXECUTION'})}
 
 const part=rd(`${s}/explicit-constraint-slow19-reinforcement-partition-model-proof.json`);
-const dec=rd(`${s}/explicit-constraint-slow19-reinforcement-partition-decision.json`);
-const exec76=rd(`${s}/explicit-constraint-remaining76-extension-frame-execution.json`);
-const hist=rd(`${s}/explicit-decision-constraint-depth3-all-branch-calibration.json`);
-if(part.status!=='PASS'||part.parent_count!==19||part.child_count!==114||part.split_field!=='extension_frame_reinforcement'||part.PARTITION_OVERLAP_COUNT!==0||part.PARTITION_GAP_COUNT!==0||part.coverage_preservation_status!=='PASS'||part.execution_performed!==false)throw new Error('REINFORCEMENT_PARTITION_MODEL_INVALID');
-if(dec.next_recovery_action!=='CALIBRATE_REPRESENTATIVE_REINFORCEMENT_CHILDREN_FOR_19_SLOW_EXTENSION_PARENTS'||dec.representative_execution_authorized!==true||dec.all_children_execution_authorized!==false||dec.slow19_source_reexecution_authorized!==false)throw new Error('REINFORCEMENT_PARTITION_DECISION_INVALID');
-if(exec76.pass_count!==57||exec76.needs_further_partitioning_count!==19||exec76.execution_invalid_count!==0||exec76.remaining76_execution_verified!==true)throw new Error('REMAINING76_SOURCE_INVALID');
-const histNone=(hist.results??[]).filter(x=>x.third_constraint_field==='extension_frame_reinforcement'&&x.third_decision?.kind==='VALUE'&&x.third_decision?.value==='none');
-if(hist.expected_branch_count!==12||hist.pass_count!==10||hist.needs_further_partitioning_count!==2||hist.calibration_invalid_count!==0||hist.constraint_depth3_all_branch_runner_verified!==true||histNone.length!==2||histNone.some(x=>x.status!=='PASS'||x.timed_out||x.constraint_count!==3||Number(x.visited_state_count??0)<=0||Number(x.terminal_context_count??0)<=0))throw new Error('HISTORICAL_REINFORCEMENT_NONE_BASIS_INVALID');
-const histAvg=Math.round(histNone.reduce((a,x)=>a+Number(x.elapsed_ms??0),0)/histNone.length);
+const calibration=rd(`${s}/explicit-constraint-slow19-reinforcement-representative-calibration.json`);
+const decision=rd(`${s}/explicit-constraint-slow19-reinforcement-representative-decision.json`);
+if(part.status!=='PASS'||part.parent_count!==19||part.child_count!==114||part.split_field!=='extension_frame_reinforcement'||part.PARTITION_OVERLAP_COUNT!==0||part.PARTITION_GAP_COUNT!==0||part.coverage_preservation_status!=='PASS')throw new Error('REINFORCEMENT_PARTITION_MODEL_INVALID');
+if(calibration.status!=='PASS'||calibration.representative_count!==19||calibration.representative_pass_count!==19||calibration.representative_nonempty_pass_count!==19||calibration.representative_empty_pass_count!==0||calibration.representative_needs_further_partitioning_count!==0||calibration.representative_invalid_count!==0||calibration.representative_execution_verified!==true||calibration.representative_fast_path_promising!==true)throw new Error('REINFORCEMENT_REPRESENTATIVE_CALIBRATION_INVALID');
+if(decision.next_recovery_action!=='EXECUTE_REMAINING_95_REINFORCEMENT_CHILDREN_ONLY'||decision.representative_reexecution_authorized!==false||decision.remaining_95_execution_authorized!==true||decision.all_114_execution_authorized!==false)throw new Error('REINFORCEMENT_REPRESENTATIVE_DECISION_INVALID');
 const rt=await loadRegisteredRuntime('YKK AP','ウチリモ 内窓');
-if(!rt?.sourcePackageIntegrity?.match||rt.sourcePackageIntegrity.actual!==part.current_runtime_manifest_sha256)throw new Error('RUNTIME_IDENTITY_CHANGED');
-const reps=part.children.filter(x=>x.split_decision?.kind==='VALUE'&&x.split_decision?.value==='none');
-if(reps.length!==19||new Set(reps.map(x=>x.parent_id)).size!==19||reps.some(x=>!Array.isArray(x.constraints)||x.constraints.length!==3||x.constraints[2]?.field_key!=='extension_frame_reinforcement'))throw new Error('REPRESENTATIVE_SET_INVALID');
+if(!rt?.sourcePackageIntegrity?.match||rt.sourcePackageIntegrity.actual!==part.current_runtime_manifest_sha256||rt.sourcePackageIntegrity.actual!==calibration.current_runtime_manifest_sha256)throw new Error('RUNTIME_IDENTITY_CHANGED');
+const repIds=new Set(calibration.representatives.map(x=>x.child_id));
+if(repIds.size!==19||calibration.representatives.some(x=>x.status!=='PASS'||Number(x.terminal_context_count??0)<=0||x.split_decision?.value!=='none'))throw new Error('REPRESENTATIVE_SET_INVALID');
+const remaining=part.children.filter(x=>!repIds.has(x.child_id));
+if(remaining.length!==95||remaining.some(x=>x.split_decision?.kind!=='VALUE'||x.split_decision?.value==='none')||new Set(remaining.map(x=>x.child_id)).size!==95)throw new Error('REMAINING95_SET_INVALID');
+if(new Set([...repIds,...remaining.map(x=>x.child_id)]).size!==114)throw new Error('FULL114_IDENTITY_INVALID');
+for(const x of remaining){if(!Array.isArray(x.constraints)||x.constraints.length!==3||x.constraints[0]?.field_key!=='frame_installation_mode'||x.constraints[1]?.field_key!=='extension_frame_type'||x.constraints[1]?.decision?.value!=='fukashi_60'||x.constraints[2]?.field_key!=='extension_frame_reinforcement')throw new Error('REMAINING95_CONSTRAINT_INVALID:'+x.child_id)}
 
 const results=[];
-for(const [i,x] of reps.entries()){
-  const z=runRepresentative(x,i);results.push(z);
-  console.log(`REP_REINFORCEMENT index=${i} parent=${x.parent_id} lane=${x.lane_id} status=${z.status} states=${z.visited_state_count??null} terminals=${z.terminal_context_count??null}`);
+for(const [i,x] of remaining.entries()){
+  const z=runChild(x,i);results.push(z);
+  console.log(`REMAINING95_REINFORCEMENT index=${i} parent=${x.parent_id} lane=${x.lane_id} decision=${x.split_decision_key} status=${z.status} states=${z.visited_state_count??null} terminals=${z.terminal_context_count??null}`);
 }
 const pass=results.filter(x=>x.status==='PASS'),slow=results.filter(x=>x.status==='NEEDS_FURTHER_PARTITIONING'),invalid=results.filter(x=>x.status==='EXECUTION_INVALID'),empty=pass.filter(x=>Number(x.terminal_context_count??0)===0),nonempty=pass.filter(x=>Number(x.terminal_context_count??0)>0);
-const verified=invalid.length===0&&results.length===19&&results.every(x=>x.constraint_start_valid===true&&x.constraint_count===3&&(x.status==='PASS'||x.constraint_progress_valid===true));
-const promising=verified&&pass.length===19&&nonempty.length===19&&slow.length===0&&empty.length===0;
-const next=!verified||invalid.length?'REPRESENTATIVE_REINFORCEMENT_CALIBRATION_BLOCKED':slow.length?'PARTITION_ONLY_SLOW_REPRESENTATIVE_REINFORCEMENT_PARENTS_ON_NEXT_SAFE_ENUM':empty.length?'RESELECT_NONEMPTY_REPRESENTATIVE_FOR_EMPTY_REINFORCEMENT_PARENTS':'EXECUTE_REMAINING_95_REINFORCEMENT_CHILDREN_ONLY';
-writeJson(`${OUT}/explicit-constraint-slow19-reinforcement-representative-calibration.json`,{schema_version:'1.0.0',artifact_type:'UCHIRIMO_SLOW19_REINFORCEMENT_REPRESENTATIVE_CALIBRATION',exact_head:head,source_exact_head:SH,source_run_id:Number(SR),source_artifact_name:SA,source_artifact_digest:SD,current_runtime_manifest_sha256:rt.sourcePackageIntegrity.actual,historical_basis:{artifact_type:hist.artifact_type,source_exact_head:hist.source_exact_head,source_run_id:hist.source_run_id,representative_split_decision:{kind:'VALUE',value:'none'},historical_pass_count:histNone.length,historical_timeout_count:0,historical_average_elapsed_ms:histAvg},parent_count:19,partition_child_count:114,representative_count:19,representative_pass_count:pass.length,representative_nonempty_pass_count:nonempty.length,representative_empty_pass_count:empty.length,representative_needs_further_partitioning_count:slow.length,representative_invalid_count:invalid.length,representative_execution_verified:verified,representative_fast_path_promising:promising,representatives:results,status:!verified||invalid.length?'BLOCKED':promising?'PASS':'MEASURED_PARTIAL'});
-writeJson(`${OUT}/explicit-constraint-slow19-reinforcement-representative-decision.json`,{schema_version:'1.0.0',artifact_type:'UCHIRIMO_SLOW19_REINFORCEMENT_REPRESENTATIVE_DECISION',exact_head:head,representative_count:19,pass_count:pass.length,nonempty_pass_count:nonempty.length,empty_pass_count:empty.length,needs_further_partitioning_count:slow.length,invalid_count:invalid.length,next_recovery_action:next,representative_reexecution_authorized:false,remaining_95_execution_authorized:promising,all_114_execution_authorized:false,full_constraint_execution_authorized:false,full_coverage_authorized:false,REQUESTED_CHANGE_SCOPE:'UCHIRIMO_HEAVY_RECOVERY_CALIBRATE_19_REPRESENTATIVE_REINFORCEMENT_NONE_CHILDREN_ONLY',REQUESTED_DIFF_COVERAGE:'PASS',UNREQUESTED_DIFF_COUNT:0,UCHIRIMO_FULL_COVERAGE_QA_GATE:'BLOCKED',UCHIRIMO_QA_STATUS:'UNVERIFIED',APP_INTEGRATION_READY:false,RELEASE_INPUT_GATE:'BLOCKED',status:!verified||invalid.length?'BLOCKED':promising?'DIAGNOSTIC_COMPLETE':'PARTIAL_CALIBRATION'});
-console.log(`REPRESENTATIVE_REINFORCEMENT_PASS_COUNT=${pass.length}/19`);
-console.log(`REPRESENTATIVE_REINFORCEMENT_NONEMPTY_PASS_COUNT=${nonempty.length}`);
-console.log(`REPRESENTATIVE_REINFORCEMENT_EMPTY_PASS_COUNT=${empty.length}`);
-console.log(`REPRESENTATIVE_REINFORCEMENT_NEEDS_FURTHER_PARTITIONING_COUNT=${slow.length}`);
-console.log(`REPRESENTATIVE_REINFORCEMENT_INVALID_COUNT=${invalid.length}`);
+const verified=invalid.length===0&&results.length===95&&results.every(x=>x.constraint_start_valid===true&&x.constraint_count===3&&(x.status==='PASS'||x.constraint_progress_valid===true));
+const complete114=verified&&pass.length===95&&slow.length===0;
+const next=!verified||invalid.length?'REMAINING_95_REINFORCEMENT_EXECUTION_BLOCKED':slow.length?'PARTITION_ONLY_SLOW_REMAINING_REINFORCEMENT_CHILDREN':'REINFORCEMENT_114_EXECUTION_CLOSURE_READY';
+writeJson(`${OUT}/explicit-constraint-remaining95-reinforcement-execution.json`,{schema_version:'1.0.0',artifact_type:'UCHIRIMO_REMAINING95_REINFORCEMENT_EXECUTION',exact_head:head,source_exact_head:SH,source_run_id:Number(SR),source_artifact_name:SA,source_artifact_digest:SD,current_runtime_manifest_sha256:rt.sourcePackageIntegrity.actual,partition_parent_count:19,partition_child_count:114,representative_closed_child_count:19,representative_children_reexecuted:false,expected_execution_child_count:95,executed_child_count:results.length,pass_count:pass.length,nonempty_pass_count:nonempty.length,empty_pass_count:empty.length,needs_further_partitioning_count:slow.length,execution_invalid_count:invalid.length,remaining95_execution_verified:verified,covered_reinforcement_child_count:19+pass.length,unresolved_reinforcement_child_count:slow.length+invalid.length,all_114_reinforcement_children_covered:complete114,child_timeout_ms:TIMEOUT,results,status:invalid.length||!verified?'BLOCKED':complete114?'PASS':'MEASURED_PARTIAL'});
+writeJson(`${OUT}/explicit-constraint-remaining95-reinforcement-decision.json`,{schema_version:'1.0.0',artifact_type:'UCHIRIMO_REMAINING95_REINFORCEMENT_DECISION',exact_head:head,representative_closed_child_count:19,representative_children_reexecuted:false,executed_child_count:results.length,pass_count:pass.length,nonempty_pass_count:nonempty.length,empty_pass_count:empty.length,needs_further_partitioning_count:slow.length,execution_invalid_count:invalid.length,covered_reinforcement_child_count:19+pass.length,unresolved_reinforcement_child_count:slow.length+invalid.length,all_114_reinforcement_children_covered:complete114,next_recovery_action:next,remaining_95_reexecution_authorized:false,full_constraint_execution_authorized:false,full_coverage_authorized:false,REQUESTED_CHANGE_SCOPE:'UCHIRIMO_HEAVY_RECOVERY_EXECUTE_REMAINING_95_REINFORCEMENT_CHILDREN_ONLY',REQUESTED_DIFF_COVERAGE:'PASS',UNREQUESTED_DIFF_COUNT:0,UCHIRIMO_FULL_COVERAGE_QA_GATE:'BLOCKED',UCHIRIMO_QA_STATUS:'UNVERIFIED',APP_INTEGRATION_READY:false,RELEASE_INPUT_GATE:'BLOCKED',status:invalid.length||!verified?'BLOCKED':complete114?'DIAGNOSTIC_COMPLETE':'PARTIAL_CLOSURE'});
+console.log(`REMAINING95_REINFORCEMENT_PASS_COUNT=${pass.length}/95`);
+console.log(`REMAINING95_REINFORCEMENT_NONEMPTY_PASS_COUNT=${nonempty.length}`);
+console.log(`REMAINING95_REINFORCEMENT_EMPTY_PASS_COUNT=${empty.length}`);
+console.log(`REMAINING95_REINFORCEMENT_NEEDS_FURTHER_PARTITIONING_COUNT=${slow.length}`);
+console.log(`REMAINING95_REINFORCEMENT_EXECUTION_INVALID_COUNT=${invalid.length}`);
+console.log(`ALL_114_REINFORCEMENT_CHILDREN_COVERED=${complete114?'TRUE':'FALSE'}`);
 console.log(`NEXT_RECOVERY_ACTION=${next}`);
+console.log('REPRESENTATIVE_CHILDREN_REEXECUTED=FALSE');
 console.log('FULL_COVERAGE_AUTHORIZED=FALSE');
 console.log('UCHIRIMO_FULL_COVERAGE_QA_GATE=BLOCKED');
 console.log('APP_INTEGRATION_READY=FALSE');
 console.log('RELEASE_INPUT_GATE=BLOCKED');
-if(invalid.length||!verified)throw new Error('REPRESENTATIVE_REINFORCEMENT_CALIBRATION_INVALID');
+if(invalid.length||!verified)throw new Error('REMAINING95_REINFORCEMENT_EXECUTION_INVALID');
