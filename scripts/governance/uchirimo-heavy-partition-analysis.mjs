@@ -1,171 +1,117 @@
 import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
-import { mkdirSync, readFileSync, readdirSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, readdirSync, unlinkSync } from 'node:fs';
 import { loadRegisteredRuntime } from '../../src/catalog/runtime-master/runtime-master-registry.mjs';
-import { resolveRuntimeAppProduct } from '../../src/catalog/runtime-master/runtime-app-bridge.mjs';
 import { currentExactHead, writeJson } from './governance-lib.mjs';
 
-const PID='SER-YKKAP-UCHIRIMO';
 const P='scripts/governance/uchirimo-heavy-partition-analysis.mjs';
 const B='scripts/governance/uchirimo-selector-batch-runner.mjs';
 const F='scripts/uchirimo-full-selector-proof.mjs';
 const R='Takuro-Kwkm/sash-app';
-const SR='36077493632';
-const SH='e2ab6b0d6f8ac6e367406c64af32dc6f8339c8a0';
+const SR='36080020201';
+const SH='701920127f1afff1fecc240772307d9986b840ea';
 const SA=`uchirimo-heavy-recovery-analysis-${SH}`;
-const SD='sha256:57ef204966e9645e68596b77905198c771414a379adfa8d73796488a41d6e996';
-const SB='abd2ab59223837f22913e7c496335ef4e73fcf26';
-const MR='35982709102';
-const MH='fa426d588ce41343d462472882f791616fd29fe1';
-const MA=`uchirimo-heavy-recovery-analysis-${MH}`;
-const MD='sha256:b1a50e0ca2438cbfb3642b4c7d59d5d4ca025d0ed51463b5519c769e15fbf89a';
+const SD='sha256:72ea711929d72afb5bd3b2d515802edf81d6e7d9f1447c405723791325ac9a15';
+const SB='8126dc5fe004d048ead58dc94c7b6df3b0fdfc5e';
 const BB='65a57854ab7adf45fa0486b465530686d76cb09f';
 const FB='94a86542cace253dc45e7b1f8589f98b837a4cce';
 const OUT=String(process.env.UCHIRIMO_HEAVY_ANALYSIS_OUT??'artifacts/uchirimo-heavy-recovery');
-const REPO=String(process.env.GITHUB_REPOSITORY??R);
+const TIMEOUT=Number(process.env.UCHIRIMO_REP_REINFORCEMENT_CHILD_TIMEOUT_MS??60000);
+const repo=String(process.env.GITHUB_REPOSITORY??R);
 const head=currentExactHead();
+if(!Number.isFinite(TIMEOUT)||TIMEOUT<60000)throw new Error('REP_REINFORCEMENT_TIMEOUT_INVALID');
 mkdirSync(OUT,{recursive:true});
 
-const TECH=new Set(['legacyConstruction','legacyConfiguration','internal_construction']);
-const CONT=new Set(['size_w','size_h','frame_projection','fukashi_dimension','custom_w','custom_h','custom_width','custom_height']);
 const stable=v=>Array.isArray(v)?v.map(stable):(!v||typeof v!=='object')?v:Object.fromEntries(Object.entries(v).sort(([a],[b])=>a.localeCompare(b)).map(([k,x])=>[k,stable(x)]));
 const sj=v=>JSON.stringify(stable(v));
 const hash=v=>createHash('sha256').update(typeof v==='string'?v:sj(v)).digest('hex');
 const rd=p=>JSON.parse(readFileSync(p,'utf8'));
-const same=(a,b)=>Array.isArray(b)?Array.isArray(a)&&sj(a.map(String).sort())===sj(b.map(String).sort()):Object.is(a,b)||String(a)===String(b);
-const present=v=>v!==undefined&&v!==null&&v!==''&&(!Array.isArray(v)||v.length>0);
-const enabled=f=>[...new Map((f?.values??[]).filter(x=>x.disabled!==true).map(x=>[sj(x.value),x.value])).values()];
-const normalizeMulti=rows=>[...new Map(rows.map(v=>[String(v),v])).values()].sort((a,b)=>String(a).localeCompare(String(b)));
-const prefixPreserved=(result,prefix)=>Object.entries(prefix).every(([k,v])=>same(result.selection?.[k],v));
-const dkey=d=>d.kind==='UNSET'?'UNSET':`VALUE:${sj(d.value)}`;
-const meta=(run,name,dig)=>{const x=JSON.parse(execFileSync('gh',['api',`repos/${REPO}/actions/runs/${run}/artifacts?per_page=100`],{encoding:'utf8',timeout:120000,maxBuffer:16e6})).artifacts?.find(x=>x.name===name);if(!x||x.expired||x.digest!==dig)throw new Error('SOURCE_ARTIFACT_INVALID:'+run)};
-const dl=(run,name,dir)=>{mkdirSync(dir,{recursive:true});execFileSync('gh',['run','download',run,'--repo',REPO,'--name',name,'--dir',dir],{stdio:'inherit',timeout:120000})};
+const safe=p=>{try{return rd(p)}catch{return null}};
+const meta=(run,name,dig)=>{const x=JSON.parse(execFileSync('gh',['api',`repos/${repo}/actions/runs/${run}/artifacts?per_page=100`],{encoding:'utf8',timeout:120000,maxBuffer:16e6})).artifacts?.find(x=>x.name===name);if(!x||x.expired||x.digest!==dig)throw new Error('SOURCE_ARTIFACT_INVALID:'+run)};
+const dl=(run,name,dir)=>{mkdirSync(dir,{recursive:true});execFileSync('gh',['run','download',run,'--repo',repo,'--name',name,'--dir',dir],{stdio:'inherit',timeout:120000})};
 
-function decisionDomain(field){
-  const values=enabled(field);
-  if(field.dataType==='MULTI_ENUM'){
-    if(values.length>12)throw new Error('MULTI_ENUM_SYMBOLIC_REQUIRED:'+field.key);
-    const out=[];
-    if(field.required!==true)out.push({kind:'UNSET'});
-    for(let mask=1;mask<2**values.length;mask+=1){
-      const subset=[];
-      for(let i=0;i<values.length;i+=1)if(mask&(1<<i))subset.push(values[i]);
-      out.push({kind:'VALUE',value:normalizeMulti(subset)});
-    }
-    return out;
-  }
-  const out=values.map(v=>({kind:'VALUE',value:stable(v)}));
-  if(field.required!==true)out.unshift({kind:'UNSET'});
-  return out;
-}
-function applyDecision(selection,key,decision){
-  const next={...(selection??{})};
-  if(decision.kind==='UNSET')delete next[key]; else next[key]=decision.value;
-  return next;
-}
-function survives(result,key,decision){
-  const field=(result.fields??[]).find(x=>x.key===key)??null;
-  if(!field)return false;
-  if(decision.kind==='UNSET')return field.required!==true&&!present(result.selection?.[key]);
-  return same(result.selection?.[key],decision.value);
-}
-async function applyConstraints(prefix,constraints){
-  let result=await resolveRuntimeAppProduct(PID,prefix);
-  if(!prefixPreserved(result,prefix))throw new Error('SLOW19_PREFIX_REJECTED');
-  for(const constraint of constraints){
-    result=await resolveRuntimeAppProduct(PID,applyDecision(result.selection??prefix,constraint.field_key,constraint.decision));
-    if(!survives(result,constraint.field_key,constraint.decision))throw new Error('SLOW19_SOURCE_CONSTRAINT_NOT_PRESERVED:'+constraint.field_key);
-    if(!prefixPreserved(result,prefix))throw new Error('SLOW19_SOURCE_CONSTRAINT_CLEARED_PREFIX:'+constraint.field_key);
-  }
-  return result;
+function runRepresentative(child,index){
+  const s=child.selector_prefix??{};
+  const base=new Set(['room_specification','window_type','glass_family','sash_configuration','size_class']);
+  const constraints=child.constraints;
+  const row={
+    shard:0,
+    node_id:child.product_node,
+    partition_key:`${child.parent_id}|rep-reinforcement-none`,
+    room_specification:String(s.room_specification),
+    window_type:String(s.window_type),
+    sash_configuration:s.sash_configuration==null?'__UNSET__':String(s.sash_configuration),
+    size_class:s.size_class==null?'__UNSET__':String(s.size_class),
+    glass_family:String(s.glass_family),
+    partition_seed_json:sj(Object.fromEntries(Object.entries(s).filter(([k])=>!base.has(k)))),
+    decision_constraints_json:sj(constraints),
+    expected_hash:hash(constraints),
+  };
+  const id=`rep-reinf-${String(index).padStart(2,'0')}`;
+  const dir=`${OUT}/representative-reinforcement/case-${String(index).padStart(2,'0')}`;
+  mkdirSync(dir,{recursive:true});
+  let execution_error=null;
+  try{
+    execFileSync(process.execPath,[B],{
+      env:{...process.env,HEAD_SHA:head,UCHIRIMO_SELECTOR_BATCH_ID:id,UCHIRIMO_SELECTOR_BATCH_JSON:JSON.stringify([row]),UCHIRIMO_SELECTOR_CHILD_TIMEOUT_MS:String(TIMEOUT),UCHIRIMO_SELECTOR_EXPECTED_SHARDS:'1',UCHIRIMO_SELECTOR_MAX_STATES:'1000000',UCHIRIMO_SELECTOR_MAX_TERMINALS:'1000000',UCHIRIMO_RESOLVER_CACHE_MAX:'512',UCHIRIMO_FULL_SELECTOR_OUT:dir},
+      encoding:'utf8',timeout:TIMEOUT+20000,maxBuffer:64e6,
+    });
+  }catch(e){execution_error={message:String(e?.message??e),code:e?.code??null,signal:e?.signal??null}}
+  const batch=safe(`${dir}/batch-${id}-report.json`),report=safe(`${dir}/shard-0-report.json`),failure=safe(`${dir}/shard-0-failure.json`),start=safe(`${dir}/shard-0-constraint-start.json`),progress=safe(`${dir}/shard-0-constraint-progress.json`),digest=`${dir}/shard-0-terminal-digests.jsonl`;
+  if(existsSync(digest))unlinkSync(digest);
+  const br=batch?.results?.[0]??null,a=Date.parse(br?.started_at??''),b=Date.parse(br?.completed_at??''),elapsed=Number.isFinite(a)&&Number.isFinite(b)&&b>=a?b-a:null,msg=String(failure?.message??br?.error??''),timed=br?.timed_out===true;
+  const startOk=start?.status==='PASS'&&start.exact_head===head&&start.runner==='UCHIRIMO_EXPLICIT_DECISION_CONSTRAINT_SHARD_V1'&&start.decision_constraints_sha256===row.expected_hash&&start.runtime_integrity_match===true;
+  const progressOk=progress?.exact_head===head&&progress.decision_constraints_sha256===row.expected_hash&&Number(progress.visited_state_count??0)>0;
+  const pass=batch?.status==='PASS'&&report?.status==='PASS'&&report?.exact_head===head&&report?.decision_constraints_sha256===row.expected_hash&&report?.runtime_integrity_match===true&&Number(report?.unverified_discrete_selector_case_count??1)===0;
+  const outcome=pass?'COMPLETED':timed&&startOk&&progressOk?'TIMEOUT_CONSTRAINT_ACTIVE':/STATE_LIMIT/.test(msg)&&startOk?'STATE_LIMIT_REACHED':/TERMINAL_LIMIT/.test(msg)&&startOk?'TERMINAL_LIMIT_REACHED':'INVALID';
+  const status=outcome==='COMPLETED'?'PASS':['TIMEOUT_CONSTRAINT_ACTIVE','STATE_LIMIT_REACHED','TERMINAL_LIMIT_REACHED'].includes(outcome)?'NEEDS_FURTHER_PARTITIONING':'EXECUTION_INVALID';
+  return {parent_id:child.parent_id,child_id:child.child_id,source_child_id:child.source_child_id,lane_id:child.lane_id,product_node:child.product_node,split_field:child.split_field,split_decision:child.split_decision,split_decision_key:child.split_decision_key,constraints,outcome,status,elapsed_ms:elapsed,timed_out:timed,constraint_count:br?.constraint_count??null,constraint_start_valid:startOk,constraint_progress_valid:progressOk,visited_state_count:report?.visited_state_count??progress?.visited_state_count??null,terminal_context_count:report?.terminal_context_count??progress?.terminal_context_count??null,transition_check_count:report?.transition_check_count??progress?.transition_check_count??null,constraint_rejection_count:report?.constraint_rejection_count??progress?.constraint_rejection_count??null,failure_message:msg||null,execution_error};
 }
 
 execFileSync('git',['merge-base','--is-ancestor',SH,head],{stdio:'ignore'});
 if(execFileSync('git',['rev-parse',`${SH}:${P}`],{encoding:'utf8'}).trim()!==SB)throw new Error('SOURCE_ANALYSIS_BLOB_MISMATCH');
 const changed=execFileSync('git',['diff','--name-only',`${SH}..${head}`],{encoding:'utf8'}).trim().split(/\r?\n/).filter(Boolean).sort();
 if(sj(changed)!==sj([P]))throw new Error('NEXT_STAGE_SCOPE_INVALID:'+changed.join(','));
-if(execFileSync('git',['rev-parse',`${head}:${B}`],{encoding:'utf8'}).trim()!==BB)throw new Error('BATCH_RUNNER_IDENTITY_CHANGED');
-if(execFileSync('git',['rev-parse',`${head}:${F}`],{encoding:'utf8'}).trim()!==FB)throw new Error('FULL_SELECTOR_RUNNER_IDENTITY_CHANGED');
-meta(SR,SA,SD);meta(MR,MA,MD);
+if(execFileSync('git',['rev-parse',`${head}:${B}`],{encoding:'utf8'}).trim()!==BB||execFileSync('git',['rev-parse',`${head}:${F}`],{encoding:'utf8'}).trim()!==FB)throw new Error('RUNNER_IDENTITY_CHANGED');
+meta(SR,SA,SD);
+const t=String(process.env.RUNNER_TEMP??'/tmp'),s=`${t}/urep-reinf-${SR}`;
+dl(SR,SA,s);
+for(const f of readdirSync(s).filter(x=>x.endsWith('.json'))){const d=rd(`${s}/${f}`);writeJson(`${OUT}/${f}`,{...d,exact_head:head,source_bound_exact_head:SH,measurement_reexecuted:false,evidence_origin:'BOUND_SOURCE_EVIDENCE_NO_REEXECUTION'})}
 
-const t=String(process.env.RUNNER_TEMP??'/tmp'),s=`${t}/uslow19-${SR}`,m=`${t}/uslow19-model-${MR}`;
-dl(SR,SA,s);dl(MR,MA,m);
-for(const f of readdirSync(s).filter(x=>x.endsWith('.json'))){
-  const d=rd(`${s}/${f}`);
-  writeJson(`${OUT}/${f}`,{...d,exact_head:head,source_bound_exact_head:SH,measurement_reexecuted:false,evidence_origin:'BOUND_SOURCE_EVIDENCE_NO_REEXECUTION'});
-}
-
+const part=rd(`${s}/explicit-constraint-slow19-reinforcement-partition-model-proof.json`);
+const dec=rd(`${s}/explicit-constraint-slow19-reinforcement-partition-decision.json`);
 const exec76=rd(`${s}/explicit-constraint-remaining76-extension-frame-execution.json`);
-const dec76=rd(`${s}/explicit-constraint-remaining76-extension-frame-decision.json`);
-const model=rd(`${m}/explicit-decision-constraint-partition-model-proof.json`);
-const modelBinding=rd(`${m}/depth8-source-binding.json`);
-if(exec76.exact_head!==SH||exec76.executed_child_count!==76||exec76.pass_count!==57||exec76.needs_further_partitioning_count!==19||exec76.execution_invalid_count!==0||exec76.remaining76_execution_verified!==true||exec76.status!=='MEASURED_PARTIAL')throw new Error('REMAINING76_SOURCE_INVALID');
-if(dec76.next_recovery_action!=='PARTITION_ONLY_SLOW_REMAINING_EXTENSION_FRAME_CHILDREN'||dec76.covered_extension_child_count!==76||dec76.unresolved_extension_child_count!==19||dec76.status!=='PARTIAL_CLOSURE')throw new Error('REMAINING76_DECISION_INVALID');
-if(model.exact_head!==MH||model.lane_count!==7||model.proof_pass_count!==7||model.blocked_count!==0||model.explicit_decision_constraint_model_status!=='PASS')throw new Error('MODEL_SOURCE_INVALID');
-if(modelBinding.status!=='PASS')throw new Error('MODEL_BINDING_INVALID');
-
+const hist=rd(`${s}/explicit-decision-constraint-depth3-all-branch-calibration.json`);
+if(part.status!=='PASS'||part.parent_count!==19||part.child_count!==114||part.split_field!=='extension_frame_reinforcement'||part.PARTITION_OVERLAP_COUNT!==0||part.PARTITION_GAP_COUNT!==0||part.coverage_preservation_status!=='PASS'||part.execution_performed!==false)throw new Error('REINFORCEMENT_PARTITION_MODEL_INVALID');
+if(dec.next_recovery_action!=='CALIBRATE_REPRESENTATIVE_REINFORCEMENT_CHILDREN_FOR_19_SLOW_EXTENSION_PARENTS'||dec.representative_execution_authorized!==true||dec.all_children_execution_authorized!==false||dec.slow19_source_reexecution_authorized!==false)throw new Error('REINFORCEMENT_PARTITION_DECISION_INVALID');
+if(exec76.pass_count!==57||exec76.needs_further_partitioning_count!==19||exec76.execution_invalid_count!==0||exec76.remaining76_execution_verified!==true)throw new Error('REMAINING76_SOURCE_INVALID');
+const histNone=(hist.results??[]).filter(x=>x.third_constraint_field==='extension_frame_reinforcement'&&x.third_decision?.kind==='VALUE'&&x.third_decision?.value==='none');
+if(hist.expected_branch_count!==12||hist.pass_count!==10||hist.needs_further_partitioning_count!==2||hist.calibration_invalid_count!==0||hist.constraint_depth3_all_branch_runner_verified!==true||histNone.length!==2||histNone.some(x=>x.status!=='PASS'||x.timed_out||x.constraint_count!==3||Number(x.visited_state_count??0)<=0||Number(x.terminal_context_count??0)<=0))throw new Error('HISTORICAL_REINFORCEMENT_NONE_BASIS_INVALID');
+const histAvg=Math.round(histNone.reduce((a,x)=>a+Number(x.elapsed_ms??0),0)/histNone.length);
 const rt=await loadRegisteredRuntime('YKK AP','ウチリモ 内窓');
-if(!rt?.sourcePackageIntegrity?.match||rt.sourcePackageIntegrity.actual!==exec76.current_runtime_manifest_sha256||rt.sourcePackageIntegrity.actual!==modelBinding.current_runtime_manifest_sha256)throw new Error('RUNTIME_IDENTITY_CHANGED');
-const laneById=new Map(model.lanes.map(x=>[x.lane_id,x]));
-const slow=exec76.results.filter(x=>x.status==='NEEDS_FURTHER_PARTITIONING');
-if(slow.length!==19||slow.some(x=>x.outcome!=='TIMEOUT_CONSTRAINT_ACTIVE'||x.constraint_start_valid!==true||x.constraint_progress_valid!==true||x.split_decision?.kind!=='VALUE'||x.split_decision?.value!=='fukashi_60'||x.constraints?.length!==2))throw new Error('SLOW19_SET_INVALID');
+if(!rt?.sourcePackageIntegrity?.match||rt.sourcePackageIntegrity.actual!==part.current_runtime_manifest_sha256)throw new Error('RUNTIME_IDENTITY_CHANGED');
+const reps=part.children.filter(x=>x.split_decision?.kind==='VALUE'&&x.split_decision?.value==='none');
+if(reps.length!==19||new Set(reps.map(x=>x.parent_id)).size!==19||reps.some(x=>!Array.isArray(x.constraints)||x.constraints.length!==3||x.constraints[2]?.field_key!=='extension_frame_reinforcement'))throw new Error('REPRESENTATIVE_SET_INVALID');
 
-const parents=[];const children=[];
-for(const source of slow){
-  const lane=laneById.get(source.lane_id);
-  if(!lane||lane.product_node!==source.product_node)throw new Error('SLOW19_LANE_MISSING:'+source.child_id);
-  const prefix=stable(lane.selector_prefix??{});
-  const sourceConstraints=stable(source.constraints);
-  const constrained=await applyConstraints(prefix,sourceConstraints);
-  const constraintKeys=new Set(sourceConstraints.map(x=>x.field_key));
-  const candidates=(constrained.fields??[]).filter(field=>
-    !field.readOnly&&!TECH.has(field.key)&&!CONT.has(field.key)&&!constraintKeys.has(field.key)
-    &&!Object.prototype.hasOwnProperty.call(prefix,field.key)
-    &&['ENUM','MULTI_ENUM'].includes(field.dataType)&&enabled(field).length>0
-  );
-  const candidateProofs=[];
-  for(const field of candidates){
-    const domain=decisionDomain(field),reachable=[],rejected=[];
-    for(const decision of domain){
-      const child=await resolveRuntimeAppProduct(PID,applyDecision(constrained.selection??prefix,field.key,decision));
-      const constraintsOk=sourceConstraints.every(c=>survives(child,c.field_key,c.decision));
-      const splitOk=survives(child,field.key,decision);
-      const prefixOk=prefixPreserved(child,prefix);
-      if(constraintsOk&&splitOk&&prefixOk)reachable.push({decision:stable(decision),decision_key:dkey(decision),selection_fingerprint:hash(stable(child.selection??{}))});
-      else rejected.push({decision:stable(decision),reason:!constraintsOk?'SOURCE_CONSTRAINT_CLEARED':!splitOk?'SPLIT_DECISION_REJECTED_OR_CLEARED':'PREFIX_CLEARED'});
-    }
-    const accounted=reachable.length+rejected.length===domain.length;
-    const uniqueKeys=new Set(reachable.map(x=>x.decision_key)).size===reachable.length;
-    const uniqueFingerprints=new Set(reachable.map(x=>x.selection_fingerprint)).size===reachable.length;
-    const unsetCount=reachable.filter(x=>x.decision.kind==='UNSET').length;
-    const unsetValid=field.required===true?unsetCount===0:unsetCount===1;
-    const pass=reachable.length>=2&&unsetValid&&accounted&&uniqueKeys&&uniqueFingerprints;
-    candidateProofs.push({field_key:field.key,data_type:field.dataType,required:field.required===true,decision_domain_count:domain.length,reachable_branch_count:reachable.length,rejected_branch_count:rejected.length,reachable_unset_branch_count:unsetCount,branch_disjointness_status:uniqueKeys&&uniqueFingerprints?'PASS':'FAIL',parent_union_accounting_status:accounted?'PASS':'FAIL',reachable_children:reachable,rejected_branches:rejected,status:pass?'PASS':'BLOCKED'});
-  }
-  const chosen=candidateProofs.find(x=>x.field_key==='extension_frame_reinforcement'&&x.status==='PASS');
-  if(!chosen)throw new Error('EXTENSION_FRAME_REINFORCEMENT_NOT_SAFE:'+source.child_id);
-  const parentId=`UHC-S19P-${hash({child_id:source.child_id,constraints:sourceConstraints}).slice(0,20)}`;
-  parents.push({parent_id:parentId,source_child_id:source.child_id,source_parent_id:source.parent_id,lane_id:source.lane_id,product_node:source.product_node,selector_prefix:prefix,source_constraints:sourceConstraints,split_field:'extension_frame_reinforcement',split_data_type:chosen.data_type,decision_domain_count:chosen.decision_domain_count,reachable_branch_count:chosen.reachable_branch_count,rejected_branch_count:chosen.rejected_branch_count,candidate_proofs:candidateProofs,partition_overlap_count:0,partition_gap_count:0,status:'PASS'});
-  for(const reach of chosen.reachable_children){
-    const constraints=[...sourceConstraints,{field_key:'extension_frame_reinforcement',decision:reach.decision}];
-    children.push({child_id:`UHC-S19C-${hash({parent_id:parentId,constraints}).slice(0,20)}`,parent_id:parentId,source_child_id:source.child_id,lane_id:source.lane_id,product_node:source.product_node,selector_prefix:prefix,constraints,split_field:'extension_frame_reinforcement',split_decision:reach.decision,split_decision_key:dkey(reach.decision),selection_fingerprint:reach.selection_fingerprint,execution_status:'UNVERIFIED',status:'PLANNED_UNVERIFIED'});
-  }
+const results=[];
+for(const [i,x] of reps.entries()){
+  const z=runRepresentative(x,i);results.push(z);
+  console.log(`REP_REINFORCEMENT index=${i} parent=${x.parent_id} lane=${x.lane_id} status=${z.status} states=${z.visited_state_count??null} terminals=${z.terminal_context_count??null}`);
 }
-const overlap=children.length-new Set(children.map(x=>x.child_id)).size;
-const gap=parents.reduce((n,p)=>n+(children.filter(c=>c.parent_id===p.parent_id).length===p.reachable_branch_count?0:1),0);
-const parentIds=new Set(parents.map(x=>x.parent_id));
-const proofPass=parents.length===19&&parentIds.size===19&&children.length>19&&overlap===0&&gap===0&&parents.every(x=>x.reachable_branch_count>=2&&x.status==='PASS');
-writeJson(`${OUT}/explicit-constraint-slow19-reinforcement-partition-model-proof.json`,{schema_version:'1.0.0',artifact_type:'UCHIRIMO_SLOW19_EXTENSION_FRAME_REINFORCEMENT_PARTITION_MODEL_PROOF',exact_head:head,source_exact_head:SH,source_run_id:Number(SR),source_artifact_name:SA,source_artifact_digest:SD,model_source_exact_head:MH,model_source_run_id:Number(MR),model_source_artifact_name:MA,model_source_artifact_digest:MD,current_runtime_manifest_sha256:rt.sourcePackageIntegrity.actual,parent_count:parents.length,split_field:'extension_frame_reinforcement',child_count:children.length,PARTITION_OVERLAP_COUNT:overlap,PARTITION_GAP_COUNT:gap,parents,children,coverage_preservation_status:proofPass?'PASS':'FAIL',execution_performed:false,full_coverage_authorized:false,status:proofPass?'PASS':'BLOCKED'});
-if(!proofPass)throw new Error('SLOW19_REINFORCEMENT_PARTITION_MODEL_FAIL');
-writeJson(`${OUT}/explicit-constraint-slow19-reinforcement-partition-decision.json`,{schema_version:'1.0.0',artifact_type:'UCHIRIMO_SLOW19_EXTENSION_FRAME_REINFORCEMENT_PARTITION_DECISION',exact_head:head,parent_count:parents.length,child_count:children.length,split_field:'extension_frame_reinforcement',PARTITION_OVERLAP_COUNT:overlap,PARTITION_GAP_COUNT:gap,coverage_preservation_status:'PASS',execution_performed:false,next_recovery_action:'CALIBRATE_REPRESENTATIVE_REINFORCEMENT_CHILDREN_FOR_19_SLOW_EXTENSION_PARENTS',representative_execution_authorized:true,all_children_execution_authorized:false,slow19_source_reexecution_authorized:false,full_constraint_execution_authorized:false,full_coverage_authorized:false,REQUESTED_CHANGE_SCOPE:'UCHIRIMO_HEAVY_RECOVERY_PARTITION_ONLY_19_SLOW_FUKASHI60_CHILDREN_BY_REINFORCEMENT',REQUESTED_DIFF_COVERAGE:'PASS',UNREQUESTED_DIFF_COUNT:0,UCHIRIMO_FULL_COVERAGE_QA_GATE:'BLOCKED',UCHIRIMO_QA_STATUS:'UNVERIFIED',APP_INTEGRATION_READY:false,RELEASE_INPUT_GATE:'BLOCKED',status:'DIAGNOSTIC_COMPLETE'});
-console.log('SLOW19_REINFORCEMENT_PARTITION_MODEL_STATUS=PASS');
-console.log(`PARENT_COUNT=${parents.length}`);
-console.log(`CHILD_COUNT=${children.length}`);
-console.log(`PARTITION_OVERLAP_COUNT=${overlap}`);
-console.log(`PARTITION_GAP_COUNT=${gap}`);
-console.log('EXECUTION_PERFORMED=FALSE');
-console.log('NEXT_RECOVERY_ACTION=CALIBRATE_REPRESENTATIVE_REINFORCEMENT_CHILDREN_FOR_19_SLOW_EXTENSION_PARENTS');
+const pass=results.filter(x=>x.status==='PASS'),slow=results.filter(x=>x.status==='NEEDS_FURTHER_PARTITIONING'),invalid=results.filter(x=>x.status==='EXECUTION_INVALID'),empty=pass.filter(x=>Number(x.terminal_context_count??0)===0),nonempty=pass.filter(x=>Number(x.terminal_context_count??0)>0);
+const verified=invalid.length===0&&results.length===19&&results.every(x=>x.constraint_start_valid===true&&x.constraint_count===3&&(x.status==='PASS'||x.constraint_progress_valid===true));
+const promising=verified&&pass.length===19&&nonempty.length===19&&slow.length===0&&empty.length===0;
+const next=!verified||invalid.length?'REPRESENTATIVE_REINFORCEMENT_CALIBRATION_BLOCKED':slow.length?'PARTITION_ONLY_SLOW_REPRESENTATIVE_REINFORCEMENT_PARENTS_ON_NEXT_SAFE_ENUM':empty.length?'RESELECT_NONEMPTY_REPRESENTATIVE_FOR_EMPTY_REINFORCEMENT_PARENTS':'EXECUTE_REMAINING_95_REINFORCEMENT_CHILDREN_ONLY';
+writeJson(`${OUT}/explicit-constraint-slow19-reinforcement-representative-calibration.json`,{schema_version:'1.0.0',artifact_type:'UCHIRIMO_SLOW19_REINFORCEMENT_REPRESENTATIVE_CALIBRATION',exact_head:head,source_exact_head:SH,source_run_id:Number(SR),source_artifact_name:SA,source_artifact_digest:SD,current_runtime_manifest_sha256:rt.sourcePackageIntegrity.actual,historical_basis:{artifact_type:hist.artifact_type,source_exact_head:hist.source_exact_head,source_run_id:hist.source_run_id,representative_split_decision:{kind:'VALUE',value:'none'},historical_pass_count:histNone.length,historical_timeout_count:0,historical_average_elapsed_ms:histAvg},parent_count:19,partition_child_count:114,representative_count:19,representative_pass_count:pass.length,representative_nonempty_pass_count:nonempty.length,representative_empty_pass_count:empty.length,representative_needs_further_partitioning_count:slow.length,representative_invalid_count:invalid.length,representative_execution_verified:verified,representative_fast_path_promising:promising,representatives:results,status:!verified||invalid.length?'BLOCKED':promising?'PASS':'MEASURED_PARTIAL'});
+writeJson(`${OUT}/explicit-constraint-slow19-reinforcement-representative-decision.json`,{schema_version:'1.0.0',artifact_type:'UCHIRIMO_SLOW19_REINFORCEMENT_REPRESENTATIVE_DECISION',exact_head:head,representative_count:19,pass_count:pass.length,nonempty_pass_count:nonempty.length,empty_pass_count:empty.length,needs_further_partitioning_count:slow.length,invalid_count:invalid.length,next_recovery_action:next,representative_reexecution_authorized:false,remaining_95_execution_authorized:promising,all_114_execution_authorized:false,full_constraint_execution_authorized:false,full_coverage_authorized:false,REQUESTED_CHANGE_SCOPE:'UCHIRIMO_HEAVY_RECOVERY_CALIBRATE_19_REPRESENTATIVE_REINFORCEMENT_NONE_CHILDREN_ONLY',REQUESTED_DIFF_COVERAGE:'PASS',UNREQUESTED_DIFF_COUNT:0,UCHIRIMO_FULL_COVERAGE_QA_GATE:'BLOCKED',UCHIRIMO_QA_STATUS:'UNVERIFIED',APP_INTEGRATION_READY:false,RELEASE_INPUT_GATE:'BLOCKED',status:!verified||invalid.length?'BLOCKED':promising?'DIAGNOSTIC_COMPLETE':'PARTIAL_CALIBRATION'});
+console.log(`REPRESENTATIVE_REINFORCEMENT_PASS_COUNT=${pass.length}/19`);
+console.log(`REPRESENTATIVE_REINFORCEMENT_NONEMPTY_PASS_COUNT=${nonempty.length}`);
+console.log(`REPRESENTATIVE_REINFORCEMENT_EMPTY_PASS_COUNT=${empty.length}`);
+console.log(`REPRESENTATIVE_REINFORCEMENT_NEEDS_FURTHER_PARTITIONING_COUNT=${slow.length}`);
+console.log(`REPRESENTATIVE_REINFORCEMENT_INVALID_COUNT=${invalid.length}`);
+console.log(`NEXT_RECOVERY_ACTION=${next}`);
 console.log('FULL_COVERAGE_AUTHORIZED=FALSE');
 console.log('UCHIRIMO_FULL_COVERAGE_QA_GATE=BLOCKED');
 console.log('APP_INTEGRATION_READY=FALSE');
 console.log('RELEASE_INPUT_GATE=BLOCKED');
+if(invalid.length||!verified)throw new Error('REPRESENTATIVE_REINFORCEMENT_CALIBRATION_INVALID');
