@@ -8,11 +8,11 @@ const P='scripts/governance/uchirimo-heavy-partition-analysis.mjs';
 const B='scripts/governance/uchirimo-selector-batch-runner.mjs';
 const F='scripts/uchirimo-full-selector-proof.mjs';
 const R='Takuro-Kwkm/sash-app';
-const SR='36102824069';
-const SH='d6dc854065579b69372db9f181060009aa258c46';
+const SR='36110660337';
+const SH='3de6c5529344bf6606b6a2d9c61a7d0136431088';
 const SA=`uchirimo-heavy-recovery-analysis-${SH}`;
-const SD='sha256:17d0f0e56505bda556a8620fe64304003dc1af4f78e87e9f2e853aa76079e5e1';
-const SB='e18f8e7b182e0332bb7ed40524b7b02d8ecbb2a6';
+const SD='sha256:8e6f7568a08fcceec6b02811ca1b2eb1e39d0a4665ec62817969bad69d84eafb';
+const SB='1d7c5fbb1339d1b1786b86af18136fb9565a1992';
 const BB='65a57854ab7adf45fa0486b465530686d76cb09f';
 const FB='94a86542cace253dc45e7b1f8589f98b837a4cce';
 const OUT=String(process.env.UCHIRIMO_HEAVY_ANALYSIS_OUT??'artifacts/uchirimo-heavy-recovery');
@@ -35,106 +35,93 @@ const changed=execFileSync('git',['diff','--name-only',`${SH}..${head}`],{encodi
 if(sj(changed)!==sj([P]))throw new Error('NEXT_STAGE_SCOPE_INVALID:'+changed.join(','));
 if(blob(head,B)!==BB||blob(head,F)!==FB)throw new Error('RUNNER_IDENTITY_CHANGED');
 meta(SR,SA,SD);
-const t=String(process.env.RUNNER_TEMP??'/tmp'),s=`${t}/uextension95-closure-${SR}`;
+const t=String(process.env.RUNNER_TEMP??'/tmp'),s=`${t}/uframe21-closure-${SR}`;
 dl(SR,SA,s);
 
+const frameBinding=rd(`${s}/explicit-constraint-7-lane-recursive-closure-binding.json`);
+const frameExec=rd(`${s}/explicit-constraint-7-lane-remaining19-execution.json`);
+const frameDecision=rd(`${s}/explicit-constraint-7-lane-remaining19-decision.json`);
 const extensionPart=rd(`${s}/explicit-constraint-remaining19-extension-frame-partition-model-proof.json`);
-const extensionCal=rd(`${s}/explicit-constraint-remaining19-extension-frame-representative-calibration.json`);
-const extensionExec=rd(`${s}/explicit-constraint-remaining76-extension-frame-execution.json`);
-const extensionDecision=rd(`${s}/explicit-constraint-remaining76-extension-frame-decision.json`);
-const reinforcementPart=rd(`${s}/explicit-constraint-slow19-reinforcement-partition-model-proof.json`);
-const reinforcementClosure=rd(`${s}/explicit-constraint-reinforcement114-closure-proof.json`);
-const reinforcementDecision=rd(`${s}/explicit-constraint-reinforcement114-closure-decision.json`);
+const extensionClosure=rd(`${s}/explicit-constraint-extension-frame95-closure-proof.json`);
+const extensionDecision=rd(`${s}/explicit-constraint-extension-frame95-closure-decision.json`);
 
 const rt=await loadRegisteredRuntime('YKK AP','ウチリモ 内窓');
 const runtimeHash=rt?.sourcePackageIntegrity?.actual??null;
 if(!rt?.sourcePackageIntegrity?.match||!runtimeHash)throw new Error('RUNTIME_IDENTITY_INVALID');
-for(const [name,x] of Object.entries({extensionPart,extensionExec,reinforcementPart,reinforcementClosure})){
+for(const [name,x] of Object.entries({frameBinding,frameExec,extensionPart,extensionClosure})){
   if(x.exact_head!==SH)throw new Error('SOURCE_EXACT_HEAD_MISMATCH:'+name);
   if(x.current_runtime_manifest_sha256!==runtimeHash)throw new Error('RUNTIME_IDENTITY_CHANGED:'+name);
 }
-if(extensionCal.exact_head!==SH||extensionDecision.exact_head!==SH||reinforcementDecision.exact_head!==SH)throw new Error('SOURCE_EXACT_HEAD_MISMATCH:decision_or_calibration');
-for(const [name,x] of Object.entries({extensionPart,extensionCal,extensionExec,extensionDecision,reinforcementPart,reinforcementClosure})){
+if(frameDecision.exact_head!==SH||extensionDecision.exact_head!==SH)throw new Error('SOURCE_EXACT_HEAD_MISMATCH:decision');
+for(const [name,x] of Object.entries({frameBinding,frameExec,frameDecision,extensionPart,extensionClosure})){
   const b=x.current_head_evidence_binding;
   if(!b||b.current_exact_head!==SH||b.measurement_reexecuted!==false)throw new Error('SOURCE_CURRENT_HEAD_BINDING_INVALID:'+name);
 }
-if(extensionPart.source_run_id!==36071450296||extensionPart.source_artifact_digest!=='sha256:6f5f846d13314910b33ff855f6cb978f09ed6153b3671726e9643bbc45c325bc')throw new Error('EXTENSION_PARTITION_SOURCE_BINDING_INVALID');
-if(extensionCal.source_run_id!==36074654997||extensionCal.source_artifact_digest!=='sha256:9116ff7b26024835d4511e1cc2a82ede25ee9306ad080d9a07702765d9bca763')throw new Error('EXTENSION_CALIBRATION_SOURCE_BINDING_INVALID');
-if(extensionExec.source_run_id!==36076441589||extensionExec.source_artifact_digest!=='sha256:54db7e1f526b0b0e578fcc4bf7b5c23d1294ea515e1841a11b0300e17226f5ae')throw new Error('EXTENSION_EXECUTION_SOURCE_BINDING_INVALID');
-if(reinforcementPart.source_run_id!==36077493632||reinforcementPart.source_artifact_digest!=='sha256:57ef204966e9645e68596b77905198c771414a379adfa8d73796488a41d6e996')throw new Error('REINFORCEMENT_PARTITION_SOURCE_BINDING_INVALID');
+if(frameBinding.closure_source_run_id!==36065595011||frameBinding.closure_source_artifact_digest!=='sha256:ebd836f955b1e57e077ce0a5c795272ff061dbfc026c38bb1eef4627efc90074')throw new Error('FRAME_BINDING_CLOSURE_SOURCE_INVALID');
+if(frameBinding.model_source_run_id!==35985579293||frameBinding.model_source_artifact_digest!=='sha256:26fa7cd7aff04d9770d1e613a1f847803034ad8b14a24269704016aa73404c2c')throw new Error('FRAME_BINDING_MODEL_SOURCE_INVALID');
+if(frameExec.source_run_id!==36070242614||frameExec.source_artifact_digest!=='sha256:37b764b4d7cba9c677e49fdba24fba2347eaec634efe311a96c77401192fbb1c')throw new Error('FRAME_EXEC_SOURCE_INVALID');
+if(frameExec.model_source_run_id!==35982709102||frameExec.model_source_artifact_digest!=='sha256:b1a50e0ca2438cbfb3642b4c7d59d5d4ca025d0ed51463b5519c769e15fbf89a')throw new Error('FRAME_EXEC_MODEL_SOURCE_INVALID');
+if(extensionPart.source_run_id!==36071450296||extensionPart.source_artifact_digest!=='sha256:6f5f846d13314910b33ff855f6cb978f09ed6153b3671726e9643bbc45c325bc')throw new Error('EXTENSION_PARTITION_SOURCE_INVALID');
 
+if(frameBinding.status!=='PASS'||frameBinding.binding_status!=='PASS'||frameBinding.model_lane_count!==7||frameBinding.model_decision_child_count!==21||frameBinding.closure_bound_child_count!==2||frameBinding.remaining_unverified_child_count!==19||frameBinding.full_constraint_execution_authorized!==false||frameBinding.full_coverage_authorized!==false)throw new Error('FRAME21_MODEL_BINDING_INVALID');
+if(frameExec.status!=='MEASURED_PARTIAL'||frameExec.expected_execution_child_count!==19||frameExec.executed_child_count!==19||frameExec.pass_count!==0||frameExec.needs_further_partitioning_count!==19||frameExec.execution_invalid_count!==0||frameExec.remaining19_execution_verified!==true||frameExec.all_21_decision_children_covered!==false)throw new Error('FRAME19_EXECUTION_INVALID');
+if(frameDecision.next_recovery_action!=='PARTITION_ONLY_SLOW_REMAINING_EXPLICIT_CONSTRAINT_CHILDREN'||frameDecision.full_constraint_execution_authorized!==false||frameDecision.full_coverage_authorized!==false)throw new Error('FRAME19_DECISION_INVALID');
 if(extensionPart.status!=='PASS'||extensionPart.parent_count!==19||extensionPart.child_count!==95||extensionPart.split_field!=='extension_frame_type'||extensionPart.partition_overlap_count!==0||extensionPart.partition_gap_count!==0||extensionPart.coverage_preservation_status!=='PASS')throw new Error('EXTENSION_PARTITION_MODEL_INVALID');
-if(extensionCal.status!=='PASS'||extensionCal.representative_count!==19||extensionCal.representative_pass_count!==19||extensionCal.representative_nonempty_pass_count!==19||extensionCal.representative_empty_pass_count!==0||extensionCal.representative_needs_further_partitioning_count!==0||extensionCal.representative_invalid_count!==0||extensionCal.representative_execution_verified!==true)throw new Error('EXTENSION_REPRESENTATIVE_INVALID');
-if(extensionExec.status!=='MEASURED_PARTIAL'||extensionExec.executed_child_count!==76||extensionExec.pass_count!==57||extensionExec.nonempty_pass_count!==57||extensionExec.empty_pass_count!==0||extensionExec.needs_further_partitioning_count!==19||extensionExec.execution_invalid_count!==0||extensionExec.unresolved_extension_child_count!==19||extensionExec.all_95_extension_children_covered!==false)throw new Error('EXTENSION_REMAINING76_INVALID');
-if(extensionDecision.next_recovery_action!=='PARTITION_ONLY_SLOW_REMAINING_EXTENSION_FRAME_CHILDREN'||extensionDecision.remaining_76_reexecution_authorized!==false||extensionDecision.full_constraint_execution_authorized!==false||extensionDecision.full_coverage_authorized!==false)throw new Error('EXTENSION_DECISION_INVALID');
+if(extensionClosure.status!=='PASS'||extensionClosure.closed_extension_child_count!==95||extensionClosure.unresolved_extension_child_count!==0||extensionClosure.all_95_extension_children_covered!==true||extensionClosure.execution_performed!==false)throw new Error('EXTENSION95_CLOSURE_SOURCE_INVALID');
+if(extensionDecision.next_recovery_action!=='EXTENSION_FRAME_TYPE_95_TO_FRAME_INSTALLATION_MODE_21_CLOSURE_PROOF_READY'||extensionDecision.full_coverage_authorized!==false)throw new Error('EXTENSION95_CLOSURE_DECISION_INVALID');
 
-if(reinforcementPart.status!=='PASS'||reinforcementPart.parent_count!==19||reinforcementPart.child_count!==114||reinforcementPart.split_field!=='extension_frame_reinforcement'||reinforcementPart.PARTITION_OVERLAP_COUNT!==0||reinforcementPart.PARTITION_GAP_COUNT!==0||reinforcementPart.coverage_preservation_status!=='PASS')throw new Error('REINFORCEMENT_PARTITION_MODEL_INVALID');
-if(reinforcementClosure.status!=='PASS'||reinforcementClosure.closed_reinforcement_child_count!==114||reinforcementClosure.unresolved_reinforcement_child_count!==0||reinforcementClosure.all_114_reinforcement_children_covered!==true||reinforcementClosure.execution_performed!==false)throw new Error('REINFORCEMENT114_CLOSURE_SOURCE_INVALID');
-if(reinforcementDecision.next_recovery_action!=='REINFORCEMENT_114_TO_EXTENSION_FRAME_TYPE_SLOW19_CLOSURE_PROOF_READY'||reinforcementDecision.full_coverage_authorized!==false)throw new Error('REINFORCEMENT114_CLOSURE_DECISION_INVALID');
+const frameChildren=frameBinding.children??[];
+if(frameChildren.length!==21)throw new Error('FRAME21_CHILD_COUNT_INVALID');
+const frameFp=new Set(frameChildren.map(x=>x.selection_fingerprint));
+if(frameFp.size!==21)throw new Error('FRAME21_FINGERPRINT_IDENTITY_INVALID');
+const directClosed=frameChildren.filter(x=>x.execution_status==='PASS_BY_RECURSIVE_LEAF_CLOSURE'&&Number(x.closure_terminal_leaf_count??0)>0);
+const unresolvedModel=frameChildren.filter(x=>x.execution_status!=='PASS_BY_RECURSIVE_LEAF_CLOSURE');
+if(directClosed.length!==2||directClosed.some(x=>Number(x.closure_terminal_leaf_count??0)!==14)||unresolvedModel.length!==19)throw new Error('FRAME21_PRIOR_CLOSURE_SET_INVALID');
 
+const frameExecByFp=new Map(frameExec.results.map(x=>[x.selection_fingerprint,x]));
+if(frameExecByFp.size!==19||frameExec.results.some(x=>x.status!=='NEEDS_FURTHER_PARTITIONING'||x.constraint_start_valid!==true||x.constraint_progress_valid!==true))throw new Error('FRAME19_SLOW_SET_INVALID');
+const unresolvedFp=new Set(unresolvedModel.map(x=>x.selection_fingerprint));
+if(!sameIds(frameExecByFp.keys(),unresolvedFp))throw new Error('FRAME19_EXEC_TO_MODEL_IDENTITY_INVALID');
+for(const m of unresolvedModel){
+  const x=frameExecByFp.get(m.selection_fingerprint);
+  if(!x||x.lane_id!==m.lane_id||x.product_node!==m.product_node||x.decision_key!==m.decision_key)throw new Error('FRAME19_EXEC_TO_MODEL_BINDING_MISMATCH:'+m.selection_fingerprint);
+}
+
+const extensionParentByFp=new Map(extensionPart.parents.map(x=>[x.parent_selection_fingerprint,x]));
+if(extensionParentByFp.size!==19||!sameIds(extensionParentByFp.keys(),frameExecByFp.keys()))throw new Error('FRAME19_TO_EXTENSION19_IDENTITY_INVALID');
 const extensionModelById=new Map(extensionPart.children.map(x=>[x.child_id,x]));
-const representative=extensionCal.representatives;
-const directPass=extensionExec.results.filter(x=>x.status==='PASS');
-const slow=extensionExec.results.filter(x=>x.status==='NEEDS_FURTHER_PARTITIONING');
-if(representative.length!==19||representative.some(x=>x.split_decision_key!=='UNSET'||x.status!=='PASS'||Number(x.terminal_context_count??0)<=0))throw new Error('EXTENSION_REPRESENTATIVE_SET_INVALID');
-if(directPass.length!==57||directPass.some(x=>!['none','fukashi_25','fukashi_40'].includes(x.split_decision?.value)||Number(x.terminal_context_count??0)<=0))throw new Error('EXTENSION_DIRECT_PASS_SET_INVALID');
-if(slow.length!==19||slow.some(x=>x.split_decision?.value!=='fukashi_60'||x.constraint_start_valid!==true||x.constraint_progress_valid!==true))throw new Error('EXTENSION_FUKASHI60_SLOW19_SET_INVALID');
-const measuredExtensionIds=new Set([...representative,...extensionExec.results].map(x=>x.child_id));
-if(measuredExtensionIds.size!==95||!sameIds(measuredExtensionIds,extensionModelById.keys()))throw new Error('EXTENSION_95_IDENTITY_INVALID');
-
+const closedExtensionIds=new Set(extensionClosure.extension_child_ids??[]);
+if(closedExtensionIds.size!==95||!sameIds(closedExtensionIds,extensionModelById.keys()))throw new Error('EXTENSION95_CLOSED_IDENTITY_INVALID');
 const extensionChildrenByParent=new Map();
 for(const c of extensionPart.children){const a=extensionChildrenByParent.get(c.parent_id)??[];a.push(c);extensionChildrenByParent.set(c.parent_id,a)}
-const extensionMeasuredById=new Map([...representative,...extensionExec.results].map(x=>[x.child_id,x]));
-const expectedExtensionDecisionKeys=['UNSET','VALUE:"none"','VALUE:"fukashi_25"','VALUE:"fukashi_40"','VALUE:"fukashi_60"'].sort();
-for(const p of extensionPart.parents){
-  const kids=extensionChildrenByParent.get(p.parent_id)??[];
-  const keys=kids.map(x=>x.split_decision_key).sort();
-  const slowKids=kids.filter(x=>extensionMeasuredById.get(x.child_id)?.status==='NEEDS_FURTHER_PARTITIONING');
-  const passKids=kids.filter(x=>extensionMeasuredById.get(x.child_id)?.status==='PASS');
-  if(kids.length!==5||sj(keys)!==sj(expectedExtensionDecisionKeys)||slowKids.length!==1||slowKids[0].split_decision?.value!=='fukashi_60'||passKids.length!==4)throw new Error('EXTENSION_PARENT_DOMAIN_INVALID:'+p.parent_id);
+if(extensionChildrenByParent.size!==19)throw new Error('EXTENSION_PARENT_COUNT_INVALID');
+
+const frameBridgeRecords=[];
+for(const [fp,source] of frameExecByFp){
+  const p=extensionParentByFp.get(fp),model=frameChildren.find(x=>x.selection_fingerprint===fp);
+  if(!p||!model)throw new Error('FRAME19_SOURCE_MISSING:'+fp);
+  if(source.lane_id!==p.lane_id||source.product_node!==p.product_node||source.decision_key!==p.parent_decision_key||model.lane_id!==p.lane_id||model.product_node!==p.product_node||model.decision_key!==p.parent_decision_key)throw new Error('FRAME_TO_EXTENSION_SOURCE_BINDING_MISMATCH:'+fp);
+  const kids=(extensionChildrenByParent.get(p.parent_id)??[]).sort((a,b)=>String(a.split_decision_key).localeCompare(String(b.split_decision_key)));
+  if(kids.length!==5||kids.some(x=>!closedExtensionIds.has(x.child_id)))throw new Error('EXTENSION_PARENT_NOT_CLOSED:'+p.parent_id);
+  frameBridgeRecords.push({selection_fingerprint:fp,lane_id:p.lane_id,product_node:p.product_node,frame_decision_key:p.parent_decision_key,extension_parent_id:p.parent_id,frame_source_status:source.status,extension_partition_overlap_count:p.partition_overlap_count,extension_partition_gap_count:p.partition_gap_count,extension_child_ids:kids.map(x=>x.child_id),extension_decisions:kids.map(x=>x.split_decision_key),extension_child_closed:kids.map(x=>closedExtensionIds.has(x.child_id)),closure_status:'PASS'});
 }
+if(frameBridgeRecords.length!==19||frameBridgeRecords.some(x=>x.closure_status!=='PASS'||x.extension_partition_overlap_count!==0||x.extension_partition_gap_count!==0||x.extension_child_ids.length!==5||x.extension_child_closed.some(v=>v!==true)))throw new Error('FRAME19_CLOSURE_INVALID');
 
-const reinforcementModelById=new Map(reinforcementPart.children.map(x=>[x.child_id,x]));
-const closedReinforcementIds=new Set(reinforcementClosure.reinforcement_child_ids??[]);
-if(closedReinforcementIds.size!==114||!sameIds(closedReinforcementIds,reinforcementModelById.keys()))throw new Error('REINFORCEMENT114_CLOSED_IDENTITY_INVALID');
-const reinforcementChildrenByParent=new Map();
-for(const c of reinforcementPart.children){const a=reinforcementChildrenByParent.get(c.parent_id)??[];a.push(c);reinforcementChildrenByParent.set(c.parent_id,a)}
-if(reinforcementChildrenByParent.size!==19)throw new Error('REINFORCEMENT_PARENT_COUNT_INVALID');
-for(const p of reinforcementPart.parents){
-  const kids=reinforcementChildrenByParent.get(p.parent_id)??[];
-  if(kids.length!==6||kids.some(x=>!closedReinforcementIds.has(x.child_id)))throw new Error('REINFORCEMENT_PARENT_NOT_CLOSED:'+p.parent_id);
-}
-
-const slowById=new Map(slow.map(x=>[x.child_id,x]));
-const reinforcementParentBySourceId=new Map(reinforcementPart.parents.map(x=>[x.source_child_id,x]));
-if(slowById.size!==19||reinforcementParentBySourceId.size!==19||!sameIds(slowById.keys(),reinforcementParentBySourceId.keys()))throw new Error('EXTENSION_FUKASHI60_19_TO_REINFORCEMENT19_IDENTITY_INVALID');
-
-const extensionBridgeRecords=[];
-for(const [extensionChildId,source] of slowById){
-  const model=extensionModelById.get(extensionChildId),p=reinforcementParentBySourceId.get(extensionChildId);
-  if(!model||!p)throw new Error('EXTENSION_FUKASHI60_SOURCE_MISSING:'+extensionChildId);
-  if(sj(source.constraints)!==sj(model.constraints)||sj(p.source_constraints)!==sj(model.constraints)||p.source_parent_id!==model.parent_id||p.lane_id!==source.lane_id||p.lane_id!==model.lane_id||p.product_node!==source.product_node||p.product_node!==model.product_node)throw new Error('EXTENSION_TO_REINFORCEMENT_SOURCE_BINDING_MISMATCH:'+extensionChildId);
-  const kids=(reinforcementChildrenByParent.get(p.parent_id)??[]).sort((a,b)=>String(a.split_decision_key).localeCompare(String(b.split_decision_key)));
-  extensionBridgeRecords.push({extension_child_id:extensionChildId,extension_parent_id:model.parent_id,reinforcement_parent_id:p.parent_id,lane_id:p.lane_id,product_node:p.product_node,extension_source_status:source.status,reinforcement_partition_overlap_count:p.partition_overlap_count,reinforcement_partition_gap_count:p.partition_gap_count,reinforcement_child_ids:kids.map(x=>x.child_id),reinforcement_decisions:kids.map(x=>x.split_decision_key),reinforcement_child_closed:kids.map(x=>closedReinforcementIds.has(x.child_id)),closure_status:'PASS'});
-}
-if(extensionBridgeRecords.length!==19||extensionBridgeRecords.some(x=>x.closure_status!=='PASS'||x.reinforcement_partition_overlap_count!==0||x.reinforcement_partition_gap_count!==0||x.reinforcement_child_ids.length!==6||x.reinforcement_child_closed.some(v=>v!==true)))throw new Error('EXTENSION_FUKASHI60_19_CLOSURE_INVALID');
-
-const closedExtensionIds=new Set([...representative.map(x=>x.child_id),...directPass.map(x=>x.child_id),...extensionBridgeRecords.map(x=>x.extension_child_id)]);
-const all95=closedExtensionIds.size===95&&sameIds(closedExtensionIds,extensionModelById.keys());
-if(!all95)throw new Error('EXTENSION95_CLOSURE_INVALID');
-const dependencyFingerprint=hash({runtime_manifest_sha256:runtimeHash,selector_batch_runner_blob:BB,full_selector_proof_blob:FB,source_artifact_digest:SD,extension_partition_semantic_hash:hash(extensionPart),extension_representative_semantic_hash:hash(extensionCal),extension_execution_semantic_hash:hash(extensionExec),reinforcement_partition_semantic_hash:hash(reinforcementPart),reinforcement114_closure_semantic_hash:hash(reinforcementClosure)});
+const closedFrameFp=new Set([...directClosed.map(x=>x.selection_fingerprint),...frameBridgeRecords.map(x=>x.selection_fingerprint)]);
+const all21=closedFrameFp.size===21&&sameIds(closedFrameFp,frameFp);
+if(!all21)throw new Error('FRAME21_CLOSURE_INVALID');
+const dependencyFingerprint=hash({runtime_manifest_sha256:runtimeHash,selector_batch_runner_blob:BB,full_selector_proof_blob:FB,source_artifact_digest:SD,frame_binding_semantic_hash:hash(frameBinding),frame_execution_semantic_hash:hash(frameExec),extension_partition_semantic_hash:hash(extensionPart),extension95_closure_semantic_hash:hash(extensionClosure)});
 const binding={source_exact_head:SH,source_run_id:Number(SR),source_artifact_identity:SA,source_artifact_sha256:SD,current_exact_head:head,changed_paths:changed,dependency_fingerprint:dependencyFingerprint,impact_decision:'CLOSURE_ONLY_ANALYZER_CHANGE_SOURCE_MEASUREMENTS_BOUND_AND_REVALIDATED',measurement_reexecuted:false};
 
 for(const f of readdirSync(s).filter(x=>x.endsWith('.json'))){const d=rd(`${s}/${f}`);writeJson(`${OUT}/${f}`,{...d,exact_head:head,source_bound_exact_head:SH,measurement_reexecuted:false,evidence_origin:'CURRENT_HEAD_BOUND_SOURCE_EVIDENCE_NO_REEXECUTION',current_head_evidence_binding:binding})}
-writeJson(`${OUT}/explicit-constraint-reinforcement114-to-extension-frame-fukashi60-closure-proof.json`,{schema_version:'1.0.0',artifact_type:'UCHIRIMO_REINFORCEMENT114_TO_EXTENSION_FRAME_FUKASHI60_CLOSURE_PROOF',exact_head:head,current_runtime_manifest_sha256:runtimeHash,current_head_evidence_binding:binding,extension_fukashi60_source_count:19,extension_fukashi60_direct_source_status:'NEEDS_FURTHER_PARTITIONING',reinforcement_partition_parent_count:19,reinforcement_partition_child_count:114,reinforcement_closed_child_count:114,extension_fukashi60_closed_via_reinforcement_count:19,extension_fukashi60_unresolved_count:0,all_19_extension_fukashi60_children_closed:true,bridge_records:extensionBridgeRecords,execution_performed:false,status:'PASS'});
-writeJson(`${OUT}/explicit-constraint-extension-frame95-closure-proof.json`,{schema_version:'1.0.0',artifact_type:'UCHIRIMO_EXTENSION_FRAME95_CLOSURE_PROOF',exact_head:head,current_runtime_manifest_sha256:runtimeHash,current_head_evidence_binding:binding,partition_parent_count:19,partition_child_count:95,partition_overlap_count:0,partition_gap_count:0,coverage_preservation_status:'PASS',representative_unset_pass_count:19,remaining_direct_pass_count:57,direct_pass_child_count:76,partition_bridge_closed_fukashi60_child_count:19,closed_extension_child_count:95,unresolved_extension_child_count:0,all_95_extension_children_covered:true,extension_child_ids:[...closedExtensionIds].sort(),execution_performed:false,status:'PASS'});
-writeJson(`${OUT}/explicit-constraint-extension-frame95-closure-decision.json`,{schema_version:'1.0.0',artifact_type:'UCHIRIMO_EXTENSION_FRAME95_CLOSURE_DECISION',exact_head:head,all_19_extension_fukashi60_children_closed:true,all_95_extension_children_covered:true,closed_extension_child_count:95,unresolved_extension_child_count:0,next_recovery_action:'EXTENSION_FRAME_TYPE_95_TO_FRAME_INSTALLATION_MODE_21_CLOSURE_PROOF_READY',extension_frame_reexecution_authorized:false,reinforcement_reexecution_authorized:false,new_partition_authorized:false,full_constraint_execution_authorized:false,full_coverage_authorized:false,REQUESTED_CHANGE_SCOPE:'UCHIRIMO_HEAVY_RECOVERY_REINFORCEMENT_114_TO_EXTENSION_FRAME_TYPE_SLOW19_CLOSURE_PROOF',REQUESTED_DIFF_COVERAGE:'PASS',UNREQUESTED_DIFF_COUNT:0,UCHIRIMO_FULL_COVERAGE_QA_GATE:'BLOCKED',UCHIRIMO_QA_STATUS:'UNVERIFIED',APP_INTEGRATION_READY:false,RELEASE_INPUT_GATE:'BLOCKED',status:'DIAGNOSTIC_COMPLETE'});
-console.log('REINFORCEMENT_114_CLOSED=114/114');
-console.log('EXTENSION_FUKASHI60_19_CLOSED_VIA_REINFORCEMENT=19/19');
+writeJson(`${OUT}/explicit-constraint-extension-frame95-to-frame-installation-mode19-closure-proof.json`,{schema_version:'1.0.0',artifact_type:'UCHIRIMO_EXTENSION_FRAME95_TO_FRAME_INSTALLATION_MODE19_CLOSURE_PROOF',exact_head:head,current_runtime_manifest_sha256:runtimeHash,current_head_evidence_binding:binding,frame_slow_source_count:19,frame_slow_direct_source_status:'NEEDS_FURTHER_PARTITIONING',extension_partition_parent_count:19,extension_partition_child_count:95,extension_closed_child_count:95,frame_slow_closed_via_extension_count:19,frame_slow_unresolved_count:0,all_19_frame_slow_children_closed:true,bridge_records:frameBridgeRecords,execution_performed:false,status:'PASS'});
+writeJson(`${OUT}/explicit-constraint-frame-installation-mode21-closure-proof.json`,{schema_version:'1.0.0',artifact_type:'UCHIRIMO_FRAME_INSTALLATION_MODE21_CLOSURE_PROOF',exact_head:head,current_runtime_manifest_sha256:runtimeHash,current_head_evidence_binding:binding,model_lane_count:7,model_decision_child_count:21,direct_recursive_leaf_closed_child_count:2,direct_recursive_leaf_terminal_count:28,partition_bridge_closed_child_count:19,closed_frame_child_count:21,unresolved_frame_child_count:0,all_21_frame_installation_mode_children_covered:true,closed_selection_fingerprints:[...closedFrameFp].sort(),execution_performed:false,status:'PASS'});
+writeJson(`${OUT}/explicit-constraint-frame-installation-mode21-closure-decision.json`,{schema_version:'1.0.0',artifact_type:'UCHIRIMO_FRAME_INSTALLATION_MODE21_CLOSURE_DECISION',exact_head:head,all_19_remaining_frame_children_closed:true,all_21_frame_installation_mode_children_covered:true,closed_frame_child_count:21,unresolved_frame_child_count:0,next_recovery_action:'FRAME_INSTALLATION_MODE_21_TO_ORIGINAL_514_CLOSURE_PROOF_READY',frame_reexecution_authorized:false,extension_frame_reexecution_authorized:false,new_partition_authorized:false,full_constraint_execution_authorized:false,full_coverage_authorized:false,REQUESTED_CHANGE_SCOPE:'UCHIRIMO_HEAVY_RECOVERY_EXTENSION_FRAME_95_TO_FRAME_INSTALLATION_MODE_21_CLOSURE_PROOF',REQUESTED_DIFF_COVERAGE:'PASS',UNREQUESTED_DIFF_COUNT:0,UCHIRIMO_FULL_COVERAGE_QA_GATE:'BLOCKED',UCHIRIMO_QA_STATUS:'UNVERIFIED',APP_INTEGRATION_READY:false,RELEASE_INPUT_GATE:'BLOCKED',status:'DIAGNOSTIC_COMPLETE'});
 console.log('EXTENSION_FRAME_95_CLOSED=95/95');
-console.log('EXTENSION_DIRECT_PASS_COUNT=76');
-console.log('EXTENSION_PARTITION_BRIDGE_CLOSED_COUNT=19');
-console.log('NEXT_RECOVERY_ACTION=EXTENSION_FRAME_TYPE_95_TO_FRAME_INSTALLATION_MODE_21_CLOSURE_PROOF_READY');
+console.log('FRAME_INSTALLATION_MODE_REMAINING19_CLOSED_VIA_EXTENSION=19/19');
+console.log('FRAME_INSTALLATION_MODE_DIRECT_PRIOR_CLOSED=2/2');
+console.log('FRAME_INSTALLATION_MODE_21_CLOSED=21/21');
+console.log('NEXT_RECOVERY_ACTION=FRAME_INSTALLATION_MODE_21_TO_ORIGINAL_514_CLOSURE_PROOF_READY');
 console.log('EXPLORATION_EXECUTION_PERFORMED=FALSE');
 console.log('FULL_COVERAGE_AUTHORIZED=FALSE');
 console.log('UCHIRIMO_FULL_COVERAGE_QA_GATE=BLOCKED');
