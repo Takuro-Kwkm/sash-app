@@ -50,6 +50,8 @@ const runtimeHash=rt?.sourcePackageIntegrity?.actual??null;
 if(!rt?.sourcePackageIntegrity?.match||!runtimeHash)throw new Error('RUNTIME_IDENTITY_INVALID');
 for(const [name,x] of Object.entries({frameBinding,frameExec,extensionPart,extensionClosure})){
   if(x.exact_head!==SH)throw new Error('SOURCE_EXACT_HEAD_MISMATCH:'+name);
+}
+for(const [name,x] of Object.entries({frameBinding,extensionPart,extensionClosure})){
   if(x.current_runtime_manifest_sha256!==runtimeHash)throw new Error('RUNTIME_IDENTITY_CHANGED:'+name);
 }
 if(frameDecision.exact_head!==SH||extensionDecision.exact_head!==SH)throw new Error('SOURCE_EXACT_HEAD_MISMATCH:decision');
