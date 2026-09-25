@@ -55,7 +55,8 @@ jobs:
           const byId=new Map((plan.children??[]).map(x=>[String(x.PARTITION_ID),x])),roots=coverage.stage2.coverage_roots.map((r,i)=>{const items=r.required_existing_partition_ids.map(id=>byId.get(String(id)));if(items.some(x=>!x))throw new Error('DEPTH2_ID_MISSING:'+r.original_parent_partition_id);return{root_index:i,original_parent_partition_id:r.original_parent_partition_id,product_node:r.product_node,window_id:r.window_id,depth2_items:items}});
           if(roots.length!==476||roots.reduce((n,r)=>n+r.depth2_items.length,0)!==7364)throw new Error('NONBATH_COUNTS_INVALID');
           const rt=await loadRegisteredRuntime('YKK AP','ウチリモ 内窓');if(!rt?.sourcePackageIntegrity?.match||rt.sourcePackageIntegrity.actual!==coverage.current_runtime_manifest_sha256)throw new Error('RUNTIME_IDENTITY_INVALID');
-          const out={schema_version:'1.0.0',artifact_type:'UCHIRIMO_NONBATH_476_ROOT_RECURSIVE_CLOSURE_INPUT',exact_head:e.HEAD_SHA,task_classification:'NON-PRODUCT-MASTER',product_master_mutation:0,runtime_manifest_sha256:rt.sourcePackageIntegrity.actual,root_count:476,source_depth2_partition_count:7364,bath_38_closure_bound:true,roots,status:'READY',APP_INTEGRATION_READY:false,RELEASE_INPUT_GATE:'BLOCKED'};writeFileSync(`${e.OUT}/nonbath-root-closure-input.json`,JSON.stringify(out,null,2)+'\n');appendFileSync(e.GITHUB_OUTPUT,`matrix=${JSON.stringify({include:roots.map(r=>({root_index:r.root_index}))})}\n`);
+          const out={schema_version:'1.0.0',artifact_type:'UCHIRIMO_NONBATH_476_ROOT_RECURSIVE_CLOSURE_INPUT',exact_head:e.HEAD_SHA,task_classification:'NON-PRODUCT-MASTER',product_master_mutation:0,runtime_manifest_sha256:rt.sourcePackageIntegrity.actual,root_count:476,source_depth2_partition_count:7364,bath_38_closure_bound:true,roots,status:'READY',APP_INTEGRATION_READY:false,RELEASE_INPUT_GATE:'BLOCKED'};writeFileSync(`${e.OUT}/nonbath-root-closure-input.json`,JSON.stringify(out,null,2)+'\n');
+          const groups=[];for(let i=0;i<roots.length;i+=2)groups.push({group_index:i/2,root_indices:[i,i+1].filter(x=>x<roots.length)});appendFileSync(e.GITHUB_OUTPUT,`matrix=${JSON.stringify({include:groups})}\n`);
           NODE
       - uses: actions/upload-artifact@v4
         with: {name: 'uchirimo-nonbath-root-input-${{ env.HEAD_SHA }}', path: '${{ env.OUT }}/', if-no-files-found: error}
@@ -67,7 +68,7 @@ jobs:
       matrix: ${{ fromJSON(needs.prepare.outputs.matrix) }}
     runs-on: ubuntu-latest
     timeout-minutes: 360
-    env: {HEAD_SHA: '${{ github.sha }}', ROOT_INDEX: '${{ matrix.root_index }}', IN: artifacts/uchirimo-nonbath-input, OUT: artifacts/uchirimo-nonbath-root, UCHIRIMO_NONBATH_CHILD_TIMEOUT_MS: '120000', UCHIRIMO_NONBATH_MAX_DEPTH: '12', UCHIRIMO_NONBATH_MAX_PARTITIONS_PER_ROOT: '4000'}
+    env: {HEAD_SHA: '${{ github.sha }}', ROOT_INDICES: '${{ toJSON(matrix.root_indices) }}', GROUP_INDEX: '${{ matrix.group_index }}', IN: artifacts/uchirimo-nonbath-input, OUT: artifacts/uchirimo-nonbath-root, UCHIRIMO_NONBATH_CHILD_TIMEOUT_MS: '120000', UCHIRIMO_NONBATH_MAX_DEPTH: '12', UCHIRIMO_NONBATH_MAX_PARTITIONS_PER_ROOT: '4000'}
     steps:
       - uses: actions/checkout@v4
         with: {ref: '${{ env.HEAD_SHA }}', fetch-depth: 0}
@@ -76,12 +77,18 @@ jobs:
       - run: npm install --ignore-scripts
       - uses: actions/download-artifact@v4
         with: {name: 'uchirimo-nonbath-root-input-${{ env.HEAD_SHA }}', path: '${{ env.IN }}'}
-      - name: Close root recursively
-        env: {UCHIRIMO_NONBATH_ROOT_INDEX: '${{ env.ROOT_INDEX }}', UCHIRIMO_NONBATH_CLOSURE_INPUT: '${{ env.IN }}/nonbath-root-closure-input.json', UCHIRIMO_NONBATH_ROOT_OUT: '${{ env.OUT }}'}
-        run: node scripts/governance/uchirimo-nonbath-root-closure.mjs
+      - name: Close roots recursively
+        run: |
+          set -euo pipefail
+          mkdir -p "$OUT"
+          node --input-type=module <<'NODE'
+          import {execFileSync,spawnSync} from 'node:child_process';import {copyFileSync,mkdirSync} from 'node:fs';import {join} from 'node:path';
+          const roots=JSON.parse(process.env.ROOT_INDICES);let failed=false;
+          for(const idx of roots){const rootOut=join(process.env.OUT,`root-${idx}`);mkdirSync(rootOut,{recursive:true});const r=spawnSync(process.execPath,['scripts/governance/uchirimo-nonbath-root-closure.mjs'],{env:{...process.env,UCHIRIMO_NONBATH_ROOT_INDEX:String(idx),UCHIRIMO_NONBATH_CLOSURE_INPUT:`${process.env.IN}/nonbath-root-closure-input.json`,UCHIRIMO_NONBATH_ROOT_OUT:rootOut},stdio:'inherit'});const name=`nonbath-root-${String(idx).padStart(3,'0')}-closure.json`;try{copyFileSync(join(rootOut,name),join(process.env.OUT,name))}catch{}if(r.status!==0)failed=true}if(failed)process.exit(1);
+          NODE
       - if: always()
         uses: actions/upload-artifact@v4
-        with: {name: 'uchirimo-nonbath-root-${{ matrix.root_index }}-${{ env.HEAD_SHA }}', path: '${{ env.OUT }}/', if-no-files-found: error}
+        with: {name: 'uchirimo-nonbath-root-group-${{ matrix.group_index }}-${{ env.HEAD_SHA }}', path: '${{ env.OUT }}/', if-no-files-found: error}
   aggregate:
     needs: [prepare, close-root]
     if: ${{ always() && needs.prepare.result == 'success' }}
@@ -90,7 +97,7 @@ jobs:
     env: {HEAD_SHA: '${{ github.sha }}', OUT: artifacts/uchirimo-nonbath-aggregate}
     steps:
       - uses: actions/download-artifact@v4
-        with: {pattern: 'uchirimo-nonbath-root-*-${{ env.HEAD_SHA }}', path: '${{ env.OUT }}/roots', merge-multiple: true}
+        with: {pattern: 'uchirimo-nonbath-root-group-*-${{ env.HEAD_SHA }}', path: '${{ env.OUT }}/roots', merge-multiple: true}
       - name: Aggregate 476 roots
         run: |
           node --input-type=module <<'NODE'
