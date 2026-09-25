@@ -8,18 +8,18 @@ const P='scripts/governance/uchirimo-heavy-partition-analysis.mjs';
 const B='scripts/governance/uchirimo-selector-batch-runner.mjs';
 const F='scripts/uchirimo-full-selector-proof.mjs';
 const R='Takuro-Kwkm/sash-app';
-const SR='36086845251';
-const SH='037684aae6a400672b5f1c2e8764cdd6ef45c0f5';
+const SR='36088697832';
+const SH='963c513d546151db97c9cee3d6c5bdd1689ef1c7';
 const SA=`uchirimo-heavy-recovery-analysis-${SH}`;
-const SD='sha256:0fc468431b6999def3f4959d7638191684613a95333bdc39c913b99ee25b0de2';
-const SB='659994ba2c2caad9482894229cb1fcec26fc5b91';
+const SD='sha256:ed8776a87d335310265a7a94465de8edfc4cd027d07236c3dddcaae5885b733c';
+const SB='545203a6f86770f787bf20e0406f498c6ee43e95';
 const BB='65a57854ab7adf45fa0486b465530686d76cb09f';
 const FB='94a86542cace253dc45e7b1f8589f98b837a4cce';
 const OUT=String(process.env.UCHIRIMO_HEAVY_ANALYSIS_OUT??'artifacts/uchirimo-heavy-recovery');
-const TIMEOUT=Number(process.env.UCHIRIMO_CONSTRUCTION_REPRESENTATIVE_CHILD_TIMEOUT_MS??60000);
+const TIMEOUT=Number(process.env.UCHIRIMO_REMAINING38_CONSTRUCTION_CHILD_TIMEOUT_MS??60000);
 const REPO=String(process.env.GITHUB_REPOSITORY??R);
 const head=currentExactHead();
-if(!Number.isFinite(TIMEOUT)||TIMEOUT<60000)throw new Error('CONSTRUCTION_REPRESENTATIVE_TIMEOUT_INVALID');
+if(!Number.isFinite(TIMEOUT)||TIMEOUT<60000)throw new Error('REMAINING38_CONSTRUCTION_TIMEOUT_INVALID');
 mkdirSync(OUT,{recursive:true});
 
 const stable=v=>Array.isArray(v)?v.map(stable):(!v||typeof v!=='object')?v:Object.fromEntries(Object.entries(v).sort(([a],[b])=>a.localeCompare(b)).map(([k,x])=>[k,stable(x)]));
@@ -37,7 +37,7 @@ function runChild(child,index){
   const row={
     shard:0,
     node_id:child.product_node,
-    partition_key:`${child.child_id}|construction-representative-rc`,
+    partition_key:`${child.child_id}|remaining38-construction`,
     room_specification:String(s.room_specification),
     window_type:String(s.window_type),
     sash_configuration:s.sash_configuration==null?'__UNSET__':String(s.sash_configuration),
@@ -47,8 +47,8 @@ function runChild(child,index){
     decision_constraints_json:sj(constraints),
     expected_hash:hash(constraints),
   };
-  const id=`construction-rep-rc-${String(index).padStart(2,'0')}`;
-  const dir=`${OUT}/construction-representative-rc/case-${String(index).padStart(2,'0')}`;
+  const id=`remaining38-construction-${String(index).padStart(2,'0')}`;
+  const dir=`${OUT}/remaining38-construction/case-${String(index).padStart(2,'0')}`;
   mkdirSync(dir,{recursive:true});
   let execution_error=null;
   try{
@@ -74,41 +74,51 @@ const changed=execFileSync('git',['diff','--name-only',`${SH}..${head}`],{encodi
 if(sj(changed)!==sj([P]))throw new Error('NEXT_STAGE_SCOPE_INVALID:'+changed.join(','));
 if(execFileSync('git',['rev-parse',`${head}:${B}`],{encoding:'utf8'}).trim()!==BB||execFileSync('git',['rev-parse',`${head}:${F}`],{encoding:'utf8'}).trim()!==FB)throw new Error('RUNNER_IDENTITY_CHANGED');
 meta(SR,SA,SD);
-const t=String(process.env.RUNNER_TEMP??'/tmp'),s=`${t}/uconstruct-rep-${SR}`;
+const t=String(process.env.RUNNER_TEMP??'/tmp'),s=`${t}/uconstruct-rem38-${SR}`;
 dl(SR,SA,s);
 for(const f of readdirSync(s).filter(x=>x.endsWith('.json'))){const d=rd(`${s}/${f}`);writeJson(`${OUT}/${f}`,{...d,exact_head:head,source_bound_exact_head:SH,measurement_reexecuted:false,evidence_origin:'BOUND_SOURCE_EVIDENCE_NO_REEXECUTION'})}
 
 const part=rd(`${s}/explicit-constraint-slow19-bracket-construction-partition-model-proof.json`);
-const decision=rd(`${s}/explicit-constraint-slow19-bracket-construction-partition-decision.json`);
-if(part.status!=='PASS'||part.parent_count!==19||part.child_count!==57||part.split_field!=='construction'||part.PARTITION_OVERLAP_COUNT!==0||part.PARTITION_GAP_COUNT!==0||part.coverage_preservation_status!=='PASS'||part.execution_performed!==false)throw new Error('CONSTRUCTION_PARTITION_MODEL_INVALID');
-if(decision.next_recovery_action!=='CALIBRATE_REPRESENTATIVE_CONSTRUCTION_CHILDREN_FOR_19_SLOW_BRACKET_PARENTS'||decision.representative_execution_authorized!==true||decision.all_children_execution_authorized!==false||decision.slow19_source_reexecution_authorized!==false||decision.full_constraint_execution_authorized!==false)throw new Error('CONSTRUCTION_PARTITION_DECISION_INVALID');
+const calibration=rd(`${s}/explicit-constraint-slow19-bracket-construction-representative-calibration.json`);
+const decision=rd(`${s}/explicit-constraint-slow19-bracket-construction-representative-decision.json`);
+if(part.status!=='PASS'||part.parent_count!==19||part.child_count!==57||part.split_field!=='construction'||part.PARTITION_OVERLAP_COUNT!==0||part.PARTITION_GAP_COUNT!==0||part.coverage_preservation_status!=='PASS')throw new Error('CONSTRUCTION_PARTITION_MODEL_INVALID');
+if(calibration.status!=='PASS'||calibration.representative_count!==19||calibration.representative_pass_count!==19||calibration.representative_nonempty_pass_count!==19||calibration.representative_empty_pass_count!==0||calibration.representative_needs_further_partitioning_count!==0||calibration.representative_invalid_count!==0||calibration.representative_execution_verified!==true||calibration.representative_fast_path_promising!==true)throw new Error('CONSTRUCTION_REPRESENTATIVE_CALIBRATION_INVALID');
+if(decision.next_recovery_action!=='EXECUTE_REMAINING_38_CONSTRUCTION_CHILDREN_ONLY'||decision.representative_reexecution_authorized!==false||decision.remaining_38_execution_authorized!==true||decision.all_57_execution_authorized!==false)throw new Error('CONSTRUCTION_REPRESENTATIVE_DECISION_INVALID');
 const rt=await loadRegisteredRuntime('YKK AP','ウチリモ 内窓');
-if(!rt?.sourcePackageIntegrity?.match||rt.sourcePackageIntegrity.actual!==part.current_runtime_manifest_sha256)throw new Error('RUNTIME_IDENTITY_CHANGED');
+if(!rt?.sourcePackageIntegrity?.match||rt.sourcePackageIntegrity.actual!==part.current_runtime_manifest_sha256||rt.sourcePackageIntegrity.actual!==calibration.current_runtime_manifest_sha256)throw new Error('RUNTIME_IDENTITY_CHANGED');
 
-const representatives=part.children.filter(x=>x.split_decision?.kind==='VALUE'&&x.split_decision?.value==='rc');
-if(representatives.length!==19||new Set(representatives.map(x=>x.parent_id)).size!==19||new Set(representatives.map(x=>x.child_id)).size!==19)throw new Error('CONSTRUCTION_REPRESENTATIVE_SET_INVALID');
-if(representatives.some(x=>!Array.isArray(x.constraints)||x.constraints.length!==4||x.constraints[0]?.field_key!=='frame_installation_mode'||x.constraints[1]?.field_key!=='extension_frame_type'||x.constraints[1]?.decision?.value!=='fukashi_60'||x.constraints[2]?.field_key!=='extension_frame_reinforcement'||x.constraints[2]?.decision?.value!=='reinforcement_bracket'||x.constraints[3]?.field_key!=='construction'||x.constraints[3]?.decision?.value!=='rc'))throw new Error('CONSTRUCTION_REPRESENTATIVE_CONSTRAINT_INVALID');
+const repIds=new Set(calibration.representatives.map(x=>x.child_id));
+if(repIds.size!==19||calibration.representatives.some(x=>x.status!=='PASS'||Number(x.terminal_context_count??0)<=0||x.split_decision?.value!=='rc'))throw new Error('REPRESENTATIVE_SET_INVALID');
+const remaining=part.children.filter(x=>!repIds.has(x.child_id));
+if(remaining.length!==38||new Set(remaining.map(x=>x.parent_id)).size!==19||new Set(remaining.map(x=>x.child_id)).size!==38)throw new Error('REMAINING38_SET_INVALID');
+if(remaining.some(x=>x.split_decision?.kind!=='VALUE'||!['wood','unknown'].includes(x.split_decision?.value)))throw new Error('REMAINING38_DECISION_INVALID');
+if(new Set([...repIds,...remaining.map(x=>x.child_id)]).size!==57)throw new Error('FULL57_IDENTITY_INVALID');
+for(const x of remaining){if(!Array.isArray(x.constraints)||x.constraints.length!==4||x.constraints[0]?.field_key!=='frame_installation_mode'||x.constraints[1]?.field_key!=='extension_frame_type'||x.constraints[1]?.decision?.value!=='fukashi_60'||x.constraints[2]?.field_key!=='extension_frame_reinforcement'||x.constraints[2]?.decision?.value!=='reinforcement_bracket'||x.constraints[3]?.field_key!=='construction'||!['wood','unknown'].includes(x.constraints[3]?.decision?.value))throw new Error('REMAINING38_CONSTRAINT_INVALID:'+x.child_id)}
 
 const results=[];
-for(const [i,x] of representatives.entries()){
+for(const [i,x] of remaining.entries()){
   const z=runChild(x,i);results.push(z);
-  console.log(`CONSTRUCTION_REPRESENTATIVE index=${i} parent=${x.parent_id} lane=${x.lane_id} decision=${x.split_decision_key} status=${z.status} states=${z.visited_state_count??null} terminals=${z.terminal_context_count??null}`);
+  console.log(`REMAINING38_CONSTRUCTION index=${i} parent=${x.parent_id} lane=${x.lane_id} decision=${x.split_decision_key} status=${z.status} states=${z.visited_state_count??null} terminals=${z.terminal_context_count??null}`);
 }
 const pass=results.filter(x=>x.status==='PASS'),slow=results.filter(x=>x.status==='NEEDS_FURTHER_PARTITIONING'),invalid=results.filter(x=>x.status==='EXECUTION_INVALID'),empty=pass.filter(x=>Number(x.terminal_context_count??0)===0),nonempty=pass.filter(x=>Number(x.terminal_context_count??0)>0);
-const verified=invalid.length===0&&results.length===19&&results.every(x=>x.constraint_start_valid===true&&x.constraint_count===4&&(x.status==='PASS'||x.constraint_progress_valid===true));
-const fast=verified&&pass.length===19&&nonempty.length===19&&empty.length===0&&slow.length===0;
-const next=!verified||invalid.length?'REPRESENTATIVE_CONSTRUCTION_CALIBRATION_BLOCKED':fast?'EXECUTE_REMAINING_38_CONSTRUCTION_CHILDREN_ONLY':'RECALIBRATE_OR_PARTITION_ONLY_SLOW_REPRESENTATIVE_CONSTRUCTION_CHILDREN';
-writeJson(`${OUT}/explicit-constraint-slow19-bracket-construction-representative-calibration.json`,{schema_version:'1.0.0',artifact_type:'UCHIRIMO_SLOW19_REINFORCEMENT_BRACKET_CONSTRUCTION_REPRESENTATIVE_CALIBRATION',exact_head:head,source_exact_head:SH,source_run_id:Number(SR),source_artifact_name:SA,source_artifact_digest:SD,current_runtime_manifest_sha256:rt.sourcePackageIntegrity.actual,partition_parent_count:19,partition_child_count:57,representative_decision:{kind:'VALUE',value:'rc'},representative_selection_basis:{historical_basis:'Prior Depth4 partial evidence observed rc and unknown PASS while wood was slow; used only to choose rc for current calibration.',historical_evidence_reused_as_current_pass_evidence:false,current_19_parent_measurement_required:true},representative_count:results.length,representative_pass_count:pass.length,representative_nonempty_pass_count:nonempty.length,representative_empty_pass_count:empty.length,representative_needs_further_partitioning_count:slow.length,representative_invalid_count:invalid.length,representative_execution_verified:verified,representative_fast_path_promising:fast,child_timeout_ms:TIMEOUT,representatives:results,status:!verified?'BLOCKED':fast?'PASS':'MEASURED_PARTIAL'});
-writeJson(`${OUT}/explicit-constraint-slow19-bracket-construction-representative-decision.json`,{schema_version:'1.0.0',artifact_type:'UCHIRIMO_SLOW19_REINFORCEMENT_BRACKET_CONSTRUCTION_REPRESENTATIVE_DECISION',exact_head:head,partition_parent_count:19,partition_child_count:57,representative_decision:{kind:'VALUE',value:'rc'},representative_count:results.length,representative_pass_count:pass.length,representative_nonempty_pass_count:nonempty.length,representative_empty_pass_count:empty.length,representative_needs_further_partitioning_count:slow.length,representative_invalid_count:invalid.length,representative_execution_verified:verified,representative_fast_path_promising:fast,representative_reexecution_authorized:false,remaining_38_execution_authorized:fast,all_57_execution_authorized:false,slow19_source_reexecution_authorized:false,full_constraint_execution_authorized:false,full_coverage_authorized:false,next_recovery_action:next,REQUESTED_CHANGE_SCOPE:'UCHIRIMO_HEAVY_RECOVERY_CALIBRATE_REPRESENTATIVE_CONSTRUCTION_CHILDREN_FOR_19_SLOW_REINFORCEMENT_BRACKET_PARENTS',REQUESTED_DIFF_COVERAGE:'PASS',UNREQUESTED_DIFF_COUNT:0,UCHIRIMO_FULL_COVERAGE_QA_GATE:'BLOCKED',UCHIRIMO_QA_STATUS:'UNVERIFIED',APP_INTEGRATION_READY:false,RELEASE_INPUT_GATE:'BLOCKED',status:!verified?'BLOCKED':fast?'DIAGNOSTIC_COMPLETE':'PARTIAL_CLOSURE'});
-console.log(`CONSTRUCTION_REPRESENTATIVE_PASS_COUNT=${pass.length}/19`);
-console.log(`CONSTRUCTION_REPRESENTATIVE_NONEMPTY_PASS_COUNT=${nonempty.length}`);
-console.log(`CONSTRUCTION_REPRESENTATIVE_EMPTY_PASS_COUNT=${empty.length}`);
-console.log(`CONSTRUCTION_REPRESENTATIVE_NEEDS_FURTHER_PARTITIONING_COUNT=${slow.length}`);
-console.log(`CONSTRUCTION_REPRESENTATIVE_INVALID_COUNT=${invalid.length}`);
-console.log(`CONSTRUCTION_REPRESENTATIVE_FAST_PATH_PROMISING=${fast?'TRUE':'FALSE'}`);
+const verified=invalid.length===0&&results.length===38&&results.every(x=>x.constraint_start_valid===true&&x.constraint_count===4&&(x.status==='PASS'||x.constraint_progress_valid===true));
+const complete57=verified&&pass.length===38&&slow.length===0;
+const covered=19+pass.length,unresolved=slow.length+invalid.length;
+const slowValues=[...new Set(slow.map(x=>x.split_decision?.value))].sort();
+const next=!verified||invalid.length?'REMAINING_38_CONSTRUCTION_EXECUTION_BLOCKED':slow.length?'PARTITION_ONLY_SLOW_REMAINING_CONSTRUCTION_CHILDREN':'CONSTRUCTION_57_EXECUTION_CLOSURE_READY';
+writeJson(`${OUT}/explicit-constraint-remaining38-construction-execution.json`,{schema_version:'1.0.0',artifact_type:'UCHIRIMO_REMAINING38_CONSTRUCTION_EXECUTION',exact_head:head,source_exact_head:SH,source_run_id:Number(SR),source_artifact_name:SA,source_artifact_digest:SD,current_runtime_manifest_sha256:rt.sourcePackageIntegrity.actual,partition_parent_count:19,partition_child_count:57,representative_closed_child_count:19,representative_children_reexecuted:false,expected_execution_child_count:38,executed_child_count:results.length,pass_count:pass.length,nonempty_pass_count:nonempty.length,empty_pass_count:empty.length,needs_further_partitioning_count:slow.length,execution_invalid_count:invalid.length,remaining38_execution_verified:verified,covered_construction_child_count:covered,unresolved_construction_child_count:unresolved,slow_split_values:slowValues,all_57_construction_children_covered:complete57,child_timeout_ms:TIMEOUT,results,status:invalid.length||!verified?'BLOCKED':complete57?'PASS':'MEASURED_PARTIAL'});
+writeJson(`${OUT}/explicit-constraint-remaining38-construction-decision.json`,{schema_version:'1.0.0',artifact_type:'UCHIRIMO_REMAINING38_CONSTRUCTION_DECISION',exact_head:head,representative_closed_child_count:19,representative_children_reexecuted:false,executed_child_count:results.length,pass_count:pass.length,nonempty_pass_count:nonempty.length,empty_pass_count:empty.length,needs_further_partitioning_count:slow.length,execution_invalid_count:invalid.length,covered_construction_child_count:covered,unresolved_construction_child_count:unresolved,slow_split_values:slowValues,all_57_construction_children_covered:complete57,next_recovery_action:next,remaining_38_reexecution_authorized:false,representative_reexecution_authorized:false,full_57_reexecution_authorized:false,full_constraint_execution_authorized:false,full_coverage_authorized:false,REQUESTED_CHANGE_SCOPE:'UCHIRIMO_HEAVY_RECOVERY_EXECUTE_REMAINING_38_CONSTRUCTION_CHILDREN_ONLY',REQUESTED_DIFF_COVERAGE:'PASS',UNREQUESTED_DIFF_COUNT:0,UCHIRIMO_FULL_COVERAGE_QA_GATE:'BLOCKED',UCHIRIMO_QA_STATUS:'UNVERIFIED',APP_INTEGRATION_READY:false,RELEASE_INPUT_GATE:'BLOCKED',status:invalid.length||!verified?'BLOCKED':complete57?'DIAGNOSTIC_COMPLETE':'PARTIAL_CLOSURE'});
+console.log(`REMAINING38_CONSTRUCTION_PASS_COUNT=${pass.length}/38`);
+console.log(`REMAINING38_CONSTRUCTION_NONEMPTY_PASS_COUNT=${nonempty.length}`);
+console.log(`REMAINING38_CONSTRUCTION_EMPTY_PASS_COUNT=${empty.length}`);
+console.log(`REMAINING38_CONSTRUCTION_NEEDS_FURTHER_PARTITIONING_COUNT=${slow.length}`);
+console.log(`REMAINING38_CONSTRUCTION_EXECUTION_INVALID_COUNT=${invalid.length}`);
+console.log(`REMAINING38_CONSTRUCTION_SLOW_SPLIT_VALUES=${slowValues.join(',')||'NONE'}`);
+console.log(`ALL_57_CONSTRUCTION_CHILDREN_COVERED=${complete57?'TRUE':'FALSE'}`);
 console.log(`NEXT_RECOVERY_ACTION=${next}`);
+console.log('REPRESENTATIVE_CHILDREN_REEXECUTED=FALSE');
 console.log('FULL_COVERAGE_AUTHORIZED=FALSE');
 console.log('UCHIRIMO_FULL_COVERAGE_QA_GATE=BLOCKED');
 console.log('APP_INTEGRATION_READY=FALSE');
 console.log('RELEASE_INPUT_GATE=BLOCKED');
-if(invalid.length||!verified)throw new Error('CONSTRUCTION_REPRESENTATIVE_CALIBRATION_INVALID');
+if(invalid.length||!verified)throw new Error('REMAINING38_CONSTRUCTION_EXECUTION_INVALID');
