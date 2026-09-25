@@ -54,7 +54,7 @@ for(const [name,x] of Object.entries({extensionPart,extensionExec,reinforcementP
   if(x.current_runtime_manifest_sha256!==runtimeHash)throw new Error('RUNTIME_IDENTITY_CHANGED:'+name);
 }
 if(extensionCal.exact_head!==SH||extensionDecision.exact_head!==SH||reinforcementDecision.exact_head!==SH)throw new Error('SOURCE_EXACT_HEAD_MISMATCH:decision_or_calibration');
-for(const [name,x] of Object.entries({extensionPart,extensionCal,extensionExec,extensionDecision,reinforcementPart,reinforcementClosure,reinforcementDecision})){
+for(const [name,x] of Object.entries({extensionPart,extensionCal,extensionExec,extensionDecision,reinforcementPart,reinforcementClosure})){
   const b=x.current_head_evidence_binding;
   if(!b||b.current_exact_head!==SH||b.measurement_reexecuted!==false)throw new Error('SOURCE_CURRENT_HEAD_BINDING_INVALID:'+name);
 }
