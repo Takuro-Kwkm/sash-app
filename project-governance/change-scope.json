@@ -44,5 +44,5 @@
   "review_base": "main",
   "human_flow_review_gate": "EXISTING_POLICY_EVALUATION_REQUIRED",
   "app_integration_ready": false,
-  "execution_lane": "uchirimo-recovery-only"
+  "execution_lane": "uchirimo-v11-recovery-only"
 }
