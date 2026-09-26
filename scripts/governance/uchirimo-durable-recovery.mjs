@@ -124,7 +124,12 @@ async function prepare(out) {
       execFileSync('gh',['api','--method','POST',`repos/${process.env.GITHUB_REPOSITORY}/actions/runs/${run}/cancel`],{stdio:'inherit'});
       cancellation=activeBeforeCancel.length?'SUPERSEDED_NONTERMINAL_CANCEL_REQUESTED':'QUEUED_ONLY_CANCEL_REQUESTED';
       for(let n=0;n<30;n++){await new Promise(r=>setTimeout(r,2000));after=api(`actions/runs/${run}`);if(after.status==='completed')break;}
-      if(after.status!=='completed')throw new Error('LEGACY_CANCEL_NOT_TERMINAL');
+      if(after.status!=='completed'){
+        execFileSync('gh',['api','--method','POST',`repos/${process.env.GITHUB_REPOSITORY}/actions/runs/${run}/force-cancel`],{stdio:'inherit'});
+        cancellation += '+FORCE_CANCEL_REQUESTED';
+        for(let n=0;n<30;n++){await new Promise(r=>setTimeout(r,2000));after=api(`actions/runs/${run}`);if(after.status==='completed')break;}
+      }
+      if(after.status!=='completed')throw new Error('LEGACY_FORCE_CANCEL_NOT_TERMINAL');
       const finalArtifacts=pages(`actions/runs/${run}/artifacts`,'artifacts');
       const originalById=new Map(artifacts.map(a=>[a.id,a.digest]));
       for(const artifact of finalArtifacts){
