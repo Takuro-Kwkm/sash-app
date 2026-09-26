@@ -1,4 +1,4 @@
-name: Uchirimo Accelerated Recursive Closure
+name: Uchirimo Durable Exhaustive Recovery
 on:
   workflow_call:
     inputs:
@@ -15,223 +15,174 @@ permissions:
   pull-requests: read
   actions: read
 concurrency:
-  group: uchirimo-accelerated-closure-${{ inputs.controller_head }}
+  group: uchirimo-durable-${{ inputs.controller_head }}
   cancel-in-progress: false
-
 jobs:
   governance-authority:
     uses: ./.github/workflows/governance-authorization.yml
     with:
       controller_head: ${{ inputs.controller_head }}
       release: false
-
   prepare:
     needs: [governance-authority]
+    outputs:
+      plan_attempt: ${{ steps.plan_identity.outputs.plan_attempt }}
     if: needs.governance-authority.outputs.authorized == 'true'
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 25
     permissions:
       contents: read
-      actions: read
-    outputs:
-      matrix: ${{ steps.prep.outputs.matrix }}
+      actions: write
     env:
-      GH_TOKEN: ${{ github.token }}
       HEAD_SHA: ${{ inputs.controller_head }}
-      SOURCE_HEAD: d38062cbac649f70ee9ce848d92185bd5181b52f
-      SOURCE_RUN_ID: '36138682468'
-      SOURCE_ARTIFACT: uchirimo-heavy-recovery-analysis-d38062cbac649f70ee9ce848d92185bd5181b52f
-      SOURCE_DIGEST: sha256:a2cc2b3cc1f7e6cf0b57f8336d2ec96a70b2b6268af940c0531bd1f1a176ccd5
-      DIAG_RUN_ID: '35963229341'
-      DIAG_ARTIFACT: uchirimo-heavy-recovery-analysis-2a8e007fd0a6c4eeac5aa24db45c7d4c9006e793
-      DIAG_DIGEST: sha256:379c4150957ce53cf032b80e3ac0a8fc66aebd022c84b50ac4b0de66bd59e8be
-      BATH_RUN_ID: '36148451323'
-      BATH_HEAD: b04e70967cdbaebe1e6e052166e40cb10874814a
-      BATH_ARTIFACT: uchirimo-bath-38-root-closure-b04e70967cdbaebe1e6e052166e40cb10874814a
-      BATH_DIGEST: sha256:9f6fc7586c9c92e78d2f114c10094b50757fc1d5c5a3aa47020ea7c88d312ad9
-      OUT: artifacts/uchirimo-nonbath-input
+      GH_TOKEN: ${{ github.token }}
     steps:
       - uses: actions/checkout@v4
-        with:
-          ref: ${{ env.HEAD_SHA }}
-          fetch-depth: 0
+        with: {ref: '${{ env.HEAD_SHA }}', fetch-depth: 0}
       - uses: actions/setup-node@v4
         with: {node-version: 24}
-      - run: npm install --ignore-scripts
-      - name: Bind source evidence
+      - name: Install locked runtime dependencies
         run: |
-          set -euo pipefail
-          test "$(git rev-parse HEAD)" = "$HEAD_SHA"
-          test "$(gh api repos/${GITHUB_REPOSITORY}/actions/runs/${SOURCE_RUN_ID}/artifacts?per_page=100 --jq ".artifacts[]|select(.name==\"${SOURCE_ARTIFACT}\")|.digest")" = "$SOURCE_DIGEST"
-          test "$(gh api repos/${GITHUB_REPOSITORY}/actions/runs/${DIAG_RUN_ID}/artifacts?per_page=100 --jq ".artifacts[]|select(.name==\"${DIAG_ARTIFACT}\")|.digest")" = "$DIAG_DIGEST"
-          test "$(gh api repos/${GITHUB_REPOSITORY}/actions/runs/${BATH_RUN_ID}/artifacts?per_page=100 --jq ".artifacts[]|select(.name==\"${BATH_ARTIFACT}\")|.digest")" = "$BATH_DIGEST"
-          mkdir -p "$OUT/source" "$OUT/diag" "$OUT/bath"
-          gh run download "$SOURCE_RUN_ID" --repo "$GITHUB_REPOSITORY" --name "$SOURCE_ARTIFACT" --dir "$OUT/source"
-          gh run download "$DIAG_RUN_ID" --repo "$GITHUB_REPOSITORY" --name "$DIAG_ARTIFACT" --dir "$OUT/diag"
-          gh run download "$BATH_RUN_ID" --repo "$GITHUB_REPOSITORY" --name "$BATH_ARTIFACT" --dir "$OUT/bath"
-      - name: Build exact 476-root input and 238-pair matrix
-        id: prep
-        run: |
-          node --input-type=module <<'NODE'
-          import {appendFileSync,readFileSync,writeFileSync} from 'node:fs';
-          import {loadRegisteredRuntime} from './src/catalog/runtime-master/runtime-master-registry.mjs';
-          const e=process.env,rd=p=>JSON.parse(readFileSync(p,'utf8'));
-          const coverage=rd(`${e.OUT}/source/explicit-constraint-original514-existing-partition-execution-coverage-plan.json`);
-          const plan=rd(`${e.OUT}/diag/depth2-recursive-partition-plan.json`);
-          const bath=rd(`${e.OUT}/bath/bath-38-root-closure-aggregate.json`);
-          if(bath.exact_head!==e.BATH_HEAD||bath.status!=='PASS'||bath.closed_root_count!==38||bath.bath_38_root_closure_proven!==true)throw new Error('BATH_CLOSURE_NOT_PROVEN');
-          if(coverage.exact_head!==e.SOURCE_HEAD||coverage.stage2?.root_count!==476||coverage.stage2?.existing_partition_execution_unit_count!==7364)throw new Error('STAGE2_COVERAGE_INVALID');
-          if(plan.child_partition_count!==7364||plan.COVERAGE_PRESERVATION_STATUS!=='PASS')throw new Error('DEPTH2_PLAN_INVALID');
-          const byId=new Map((plan.children??[]).map(x=>[String(x.PARTITION_ID),x]));
-          const roots=coverage.stage2.coverage_roots.map((r,i)=>{
-            const items=r.required_existing_partition_ids.map(id=>byId.get(String(id)));
-            if(items.some(x=>!x))throw new Error('DEPTH2_ID_MISSING:'+r.original_parent_partition_id);
-            return{root_index:i,original_parent_partition_id:r.original_parent_partition_id,product_node:r.product_node,window_id:r.window_id,depth2_items:items};
-          });
-          if(roots.length!==476||roots.reduce((n,r)=>n+r.depth2_items.length,0)!==7364)throw new Error('NONBATH_COUNTS_INVALID');
-          const rt=await loadRegisteredRuntime('YKK AP','ウチリモ 内窓');
-          if(!rt?.sourcePackageIntegrity?.match||rt.sourcePackageIntegrity.actual!==coverage.current_runtime_manifest_sha256)throw new Error('RUNTIME_IDENTITY_INVALID');
-          const out={schema_version:'1.1.0',artifact_type:'UCHIRIMO_NONBATH_476_ROOT_RECURSIVE_CLOSURE_INPUT',exact_head:e.HEAD_SHA,task_classification:'NON-PRODUCT-MASTER',product_master_mutation:0,runtime_manifest_sha256:rt.sourcePackageIntegrity.actual,root_count:476,source_depth2_partition_count:7364,bath_38_closure_bound:true,roots,status:'READY',APP_INTEGRATION_READY:false,RELEASE_INPUT_GATE:'BLOCKED'};
-          writeFileSync(`${e.OUT}/nonbath-root-closure-input.json`,JSON.stringify(out,null,2)+'\n');
-          const groups=[];
-          for(let i=0;i<476;i+=2)groups.push({group_index:i/2,root_indices:[i,i+1]});
-          appendFileSync(e.GITHUB_OUTPUT,`matrix=${JSON.stringify({include:groups})}\n`);
-          console.log('NONBATH_ACCELERATOR_PLAN=PASS roots=476 groups='+groups.length+' partitions=7364');
-          NODE
-      - uses: actions/upload-artifact@v4
+          npm install --ignore-scripts
+          git diff --exit-code -- package.json package-lock.json
+      - name: Preserve legacy evidence and freeze non-overlapping work
+        run: node scripts/governance/uchirimo-durable-recovery.mjs prepare artifacts/uchirimo-durable-plan
+      - name: Bind plan artifact to the attempt that ran prepare
+        id: plan_identity
+        if: success()
+        run: echo "plan_attempt=${GITHUB_RUN_ATTEMPT}" >> "$GITHUB_OUTPUT"
+      - if: always()
+        uses: actions/upload-artifact@v4
         with:
-          name: uchirimo-nonbath-accelerated-input-${{ env.HEAD_SHA }}
-          path: ${{ env.OUT }}/
+          name: uchirimo-durable-plan-${{ env.HEAD_SHA }}-${{ github.run_attempt }}
+          path: artifacts/uchirimo-durable-plan/
           if-no-files-found: error
           compression-level: 1
-
-  close-root:
+  worker:
     needs: [governance-authority, prepare]
-    if: needs.governance-authority.outputs.authorized == 'true' && needs.prepare.result == 'success'
+    if: needs.governance-authority.outputs.authorized == 'true'
     strategy:
       fail-fast: false
-      max-parallel: 20
-      matrix: ${{ fromJSON(needs.prepare.outputs.matrix) }}
+      max-parallel: 8
+      matrix: {lane: [0, 1, 2, 3, 4, 5, 6, 7]}
     runs-on: ubuntu-latest
-    timeout-minutes: 330
-    env:
-      HEAD_SHA: ${{ inputs.controller_head }}
-      ROOT_INDICES: ${{ toJSON(matrix.root_indices) }}
-      GROUP_INDEX: ${{ matrix.group_index }}
-      IN: artifacts/uchirimo-nonbath-input
-      OUT: artifacts/uchirimo-nonbath-root
-      UCHIRIMO_NONBATH_CHILD_TIMEOUT_MS: '60000'
-      UCHIRIMO_NONBATH_PRESPLIT_DEPTH: '7'
-      UCHIRIMO_NONBATH_MAX_DEPTH: '16'
-      UCHIRIMO_NONBATH_MAX_PARTITIONS_PER_ROOT: '20000'
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: ${{ env.HEAD_SHA }}
-          fetch-depth: 0
-      - uses: actions/setup-node@v4
-        with: {node-version: 24}
-      - run: npm install --ignore-scripts
-      - uses: actions/download-artifact@v4
-        with:
-          name: uchirimo-nonbath-accelerated-input-${{ env.HEAD_SHA }}
-          path: ${{ env.IN }}
-      - name: Close paired roots concurrently
-        run: |
-          set -euo pipefail
-          mkdir -p "$OUT"
-          node --input-type=module <<'NODE'
-          import {spawn} from 'node:child_process';
-          import {copyFileSync,mkdirSync} from 'node:fs';
-          import {join} from 'node:path';
-          const roots=JSON.parse(process.env.ROOT_INDICES);
-          const runRoot=(idx)=>new Promise((resolve)=>{
-            const rootOut=join(process.env.OUT,`root-${idx}`);mkdirSync(rootOut,{recursive:true});
-            const child=spawn(process.execPath,['scripts/governance/uchirimo-nonbath-root-closure.mjs'],{env:{...process.env,UCHIRIMO_NONBATH_ROOT_INDEX:String(idx),UCHIRIMO_NONBATH_CLOSURE_INPUT:`${process.env.IN}/nonbath-root-closure-input.json`,UCHIRIMO_NONBATH_ROOT_OUT:rootOut},stdio:'inherit'});
-            child.on('exit',(code)=>{
-              const name=`nonbath-root-${String(idx).padStart(3,'0')}-closure.json`;
-              try{copyFileSync(join(rootOut,name),join(process.env.OUT,name));}catch{}
-              resolve({idx,code});
-            });
-            child.on('error',()=>resolve({idx,code:1}));
-          });
-          const results=await Promise.all(roots.map(runRoot));
-          console.log('NONBATH_PAIR_RESULT '+JSON.stringify(results));
-          if(results.some(r=>r.code!==0))process.exit(1);
-          NODE
-      - if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: uchirimo-nonbath-accelerated-group-${{ matrix.group_index }}-${{ env.HEAD_SHA }}
-          path: ${{ env.OUT }}/
-          if-no-files-found: error
-          compression-level: 1
-
-  aggregate:
-    needs: [governance-authority, prepare, close-root]
-    if: ${{ always() && needs.governance-authority.outputs.authorized == 'true' && needs.prepare.result == 'success' }}
-    runs-on: ubuntu-latest
-    timeout-minutes: 40
-    permissions:
-      contents: read
-      actions: read
+    timeout-minutes: 60
     env:
       HEAD_SHA: ${{ inputs.controller_head }}
       GH_TOKEN: ${{ github.token }}
-      BATH_RUN_ID: '36148451323'
-      BATH_HEAD: b04e70967cdbaebe1e6e052166e40cb10874814a
-      BATH_ARTIFACT: uchirimo-bath-38-root-closure-b04e70967cdbaebe1e6e052166e40cb10874814a
-      BATH_DIGEST: sha256:9f6fc7586c9c92e78d2f114c10094b50757fc1d5c5a3aa47020ea7c88d312ad9
-      OUT: artifacts/uchirimo-accelerated-aggregate
+      RESUME_RUN_ID: ${{ inputs.resume_run_id }}
+      LANE: ${{ matrix.lane }}
+      PLAN: artifacts/uchirimo-durable-plan/plan.json
+      OUT: artifacts/uchirimo-durable-worker
+      UCHIRIMO_DURABLE_WAVE_MS: '300000'
     steps:
       - uses: actions/checkout@v4
-        with:
-          ref: ${{ env.HEAD_SHA }}
-          fetch-depth: 0
+        with: {ref: '${{ env.HEAD_SHA }}', fetch-depth: 0}
       - uses: actions/setup-node@v4
         with: {node-version: 24}
+      - name: Install locked runtime dependencies
+        run: |
+          npm install --ignore-scripts
+          git diff --exit-code -- package.json package-lock.json
       - uses: actions/download-artifact@v4
         with:
-          pattern: uchirimo-nonbath-accelerated-group-*-${{ env.HEAD_SHA }}
-          path: ${{ env.OUT }}/roots
-          merge-multiple: true
-      - name: Rebind Bath38 closure and aggregate Original514
-        run: |
-          set -euo pipefail
-          test "$(gh api repos/${GITHUB_REPOSITORY}/actions/runs/${BATH_RUN_ID}/artifacts?per_page=100 --jq ".artifacts[]|select(.name==\"${BATH_ARTIFACT}\")|.digest")" = "$BATH_DIGEST"
-          mkdir -p "$OUT/bath"
-          gh run download "$BATH_RUN_ID" --repo "$GITHUB_REPOSITORY" --name "$BATH_ARTIFACT" --dir "$OUT/bath"
-          node --input-type=module <<'NODE'
-          import {createHash} from 'node:crypto';
-          import {execFileSync} from 'node:child_process';
-          import {mkdirSync,readFileSync,readdirSync,writeFileSync} from 'node:fs';
-          import {join} from 'node:path';
-          import {loadRegisteredRuntime} from './src/catalog/runtime-master/runtime-master-registry.mjs';
-          const e=process.env,rd=p=>JSON.parse(readFileSync(p,'utf8'));
-          mkdirSync(e.OUT,{recursive:true});
-          const d=join(e.OUT,'roots');
-          const rows=readdirSync(d).filter(n=>/^nonbath-root-\d+-closure\.json$/.test(n)).map(n=>rd(join(d,n))).filter(r=>r.exact_head===e.HEAD_SHA);
-          const closed=rows.filter(r=>r.status==='PASS'&&r.original_root_closure_proven===true);
-          const blocked=rows.filter(r=>r.status!=='PASS'||r.original_root_closure_proven!==true);
-          const nonbathPass=rows.length===476&&closed.length===476;
-          const nonbath={schema_version:'1.1.0',artifact_type:'UCHIRIMO_NONBATH_476_ROOT_RECURSIVE_CLOSURE_AGGREGATE',exact_head:e.HEAD_SHA,expected_root_count:476,observed_root_report_count:rows.length,closed_root_count:closed.length,blocked_root_count:476-closed.length,executed_partition_count:rows.reduce((n,r)=>n+Number(r.executed_partition_count??0),0),timeout_event_count:rows.reduce((n,r)=>n+Number(r.timeout_event_count??0),0),split_count:rows.reduce((n,r)=>n+Number(r.split_count??0),0),blocked_roots:blocked.map(r=>({root_index:r.root_index,original_parent_partition_id:r.original_parent_partition_id,blocked:r.blocked})),nonbath_476_root_closure_proven:nonbathPass,status:nonbathPass?'PASS':'BLOCKED'};
-          writeFileSync(join(e.OUT,'nonbath-476-root-closure-aggregate.json'),JSON.stringify(nonbath,null,2)+'\n');
-          const bath=rd(join(e.OUT,'bath','bath-38-root-closure-aggregate.json'));
-          const bathInput=rd(join(e.OUT,'bath','roots','bath-root-closure-input.json'));
-          const runtime=await loadRegisteredRuntime('YKK AP','ウチリモ 内窓');
-          const currentProof=execFileSync('git',['rev-parse',`HEAD:scripts/uchirimo-full-selector-proof.mjs`],{encoding:'utf8'}).trim();
-          const bathProof=execFileSync('git',['rev-parse',`${e.BATH_HEAD}:scripts/uchirimo-full-selector-proof.mjs`],{encoding:'utf8'}).trim();
-          const bathBound=bath.status==='PASS'&&bath.closed_root_count===38&&bath.bath_38_root_closure_proven===true&&runtime?.sourcePackageIntegrity?.match&&bathInput.runtime_manifest_sha256===runtime.sourcePackageIntegrity.actual&&currentProof===bathProof;
-          const pass=nonbathPass&&bathBound;
-          const report={schema_version:'1.0.0',artifact_type:'UCHIRIMO_ORIGINAL_514_ROOT_CLOSURE',exact_head:e.HEAD_SHA,nonbath_closed_roots:closed.length,bath_closed_roots:bathBound?38:0,closed_original_roots:closed.length+(bathBound?38:0),expected_original_roots:514,bath_current_head_binding:bathBound?'PASS':'FAIL',nonbath_476_root_closure_proven:nonbathPass,bath_38_root_closure_proven:bathBound,original_514_closure_proven:pass,UCHIRIMO_QA_STATUS:pass?'HEAVY_CLOSURE_PASS_FULL_SELECTOR_AGGREGATE_PENDING':'UNVERIFIED',APP_INTEGRATION_READY:false,RELEASE_INPUT_GATE:'BLOCKED',status:pass?'PASS':'BLOCKED'};
-          writeFileSync(join(e.OUT,'original-514-root-closure.json'),JSON.stringify(report,null,2)+'\n');
-          console.log(`ORIGINAL_514_CLOSURE=${report.status} closed=${report.closed_original_roots}/514 nonbath=${closed.length}/476 bath=${bathBound?38:0}/38`);
-          if(!pass)process.exit(1);
-          NODE
-      - if: always()
+          name: uchirimo-durable-plan-${{ env.HEAD_SHA }}-${{ needs.prepare.outputs.plan_attempt }}
+          path: artifacts/uchirimo-durable-plan
+      - name: Restore only certified same-HEAD continuation
+        if: env.RESUME_RUN_ID != ''
+        run: node scripts/governance/uchirimo-durable-recovery.mjs restore "$PLAN" "$OUT" "$LANE" "$RESUME_RUN_ID"
+      - name: Continue frozen frontier wave 1
+        run: node scripts/governance/uchirimo-durable-recovery.mjs worker "$PLAN" "$OUT" "$LANE"
+      - name: Preserve wave 1 without overwrite
+        if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: uchirimo-original-514-accelerated-closure-${{ env.HEAD_SHA }}
+          name: uchirimo-durable-${{ env.HEAD_SHA }}-lane-${{ matrix.lane }}-attempt-${{ github.run_attempt }}-wave-1
           path: ${{ env.OUT }}/
           if-no-files-found: error
           compression-level: 1
+      - name: Continue frozen frontier wave 2
+        run: node scripts/governance/uchirimo-durable-recovery.mjs worker "$PLAN" "$OUT" "$LANE"
+      - name: Preserve wave 2 without overwrite
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: uchirimo-durable-${{ env.HEAD_SHA }}-lane-${{ matrix.lane }}-attempt-${{ github.run_attempt }}-wave-2
+          path: ${{ env.OUT }}/
+          if-no-files-found: error
+          compression-level: 1
+      - name: Continue frozen frontier wave 3
+        run: node scripts/governance/uchirimo-durable-recovery.mjs worker "$PLAN" "$OUT" "$LANE"
+      - name: Preserve wave 3 without overwrite
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: uchirimo-durable-${{ env.HEAD_SHA }}-lane-${{ matrix.lane }}-attempt-${{ github.run_attempt }}-wave-3
+          path: ${{ env.OUT }}/
+          if-no-files-found: error
+          compression-level: 1
+      - name: Continue frozen frontier wave 4
+        run: node scripts/governance/uchirimo-durable-recovery.mjs worker "$PLAN" "$OUT" "$LANE"
+      - name: Preserve wave 4 without overwrite
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: uchirimo-durable-${{ env.HEAD_SHA }}-lane-${{ matrix.lane }}-attempt-${{ github.run_attempt }}-wave-4
+          path: ${{ env.OUT }}/
+          if-no-files-found: error
+          compression-level: 1
+      - name: Continue frozen frontier wave 5
+        run: node scripts/governance/uchirimo-durable-recovery.mjs worker "$PLAN" "$OUT" "$LANE"
+      - name: Preserve wave 5 without overwrite
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: uchirimo-durable-${{ env.HEAD_SHA }}-lane-${{ matrix.lane }}-attempt-${{ github.run_attempt }}-wave-5
+          path: ${{ env.OUT }}/
+          if-no-files-found: error
+          compression-level: 1
+      - name: Continue frozen frontier wave 6
+        run: node scripts/governance/uchirimo-durable-recovery.mjs worker "$PLAN" "$OUT" "$LANE"
+      - name: Preserve wave 6 without overwrite
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: uchirimo-durable-${{ env.HEAD_SHA }}-lane-${{ matrix.lane }}-attempt-${{ github.run_attempt }}-wave-6
+          path: ${{ env.OUT }}/
+          if-no-files-found: error
+          compression-level: 1
+  aggregate:
+    needs: [governance-authority, prepare, worker]
+    if: ${{ always() && needs.governance-authority.outputs.authorized == 'true' && needs.prepare.result == 'success' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      HEAD_SHA: ${{ inputs.controller_head }}
+      GH_TOKEN: ${{ github.token }}
+      CURRENT_RUN: ${{ github.run_id }}
+    steps:
+      - uses: actions/checkout@v4
+        with: {ref: '${{ env.HEAD_SHA }}', fetch-depth: 0}
+      - uses: actions/setup-node@v4
+        with: {node-version: 24}
+      - name: Install locked runtime dependencies
+        run: |
+          npm install --ignore-scripts
+          git diff --exit-code -- package.json package-lock.json
+      - uses: actions/download-artifact@v4
+        with:
+          name: uchirimo-durable-plan-${{ env.HEAD_SHA }}-${{ needs.prepare.outputs.plan_attempt }}
+          path: artifacts/uchirimo-durable-plan
+      - name: Read latest retained snapshot of every lane
+        run: |
+          for lane in 0 1 2 3 4 5 6 7; do
+            node scripts/governance/uchirimo-durable-recovery.mjs restore artifacts/uchirimo-durable-plan/plan.json "artifacts/uchirimo-durable-latest/lane-$lane" "$lane" "$CURRENT_RUN" || echo "MISSING_OR_INVALID_LANE=$lane"
+          done
+      - name: Verify exact coverage, hashes and parent closure
+        run: node scripts/governance/uchirimo-durable-recovery.mjs aggregate artifacts/uchirimo-durable-plan/plan.json artifacts/uchirimo-durable-latest artifacts/uchirimo-durable-aggregate
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: uchirimo-durable-aggregate-${{ env.HEAD_SHA }}-${{ github.run_attempt }}
+          path: artifacts/uchirimo-durable-aggregate/
+          if-no-files-found: error
