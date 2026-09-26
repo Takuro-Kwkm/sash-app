@@ -55,7 +55,12 @@ function createModel(document) {
     throw error;
   }
   const provider = document.provider ?? {};
-  const sourceTables = document.source_tables ?? {};
+  const baselineSourceTables = document.source_tables ?? {};
+  const overlayContract = document?.working_extensions?.authoring_overlay_contract ?? {};
+  const overlayTables = overlayContract?.precedence === 'authoring_overlay supersedes matching baseline source_tables for v1.2 formal package'
+    ? (document?.working_extensions?.authoring_overlay ?? {})
+    : {};
+  const sourceTables = Object.freeze({ ...baselineSourceTables, ...overlayTables });
 
   const specs = normalizeTable(sourceTables, '04_窓種固有仕様', 'spec_id').filter(ACTIVE);
   const customRanges = normalizeTable(sourceTables, '06C_特注寸法範囲', 'range_id').filter(ACTIVE);
@@ -106,6 +111,11 @@ function createModel(document) {
 
   const standardVariant = variants.find((row) => row['既定'] === true || row['既定'] === 'TRUE')?.variant_id ?? variants[0]?.variant_id ?? null;
   const designVariantIds = new Set(variantRelations.map((row) => row.variant_id).filter(has));
+  const selectorModel = document?.working_extensions?.hikichigai_selector_model ?? null;
+  const formalSelectorDimensions = Array.isArray(selectorModel?.dimensions)
+    ? selectorModel.dimensions.filter((field) => ['glass_configuration','profile','opening_class','panel_count','sill','wall_finish','variant'].includes(field))
+    : [];
+  const selectorCombos = Array.isArray(selectorModel?.combinations) ? selectorModel.combinations : [];
 
   const fields = [
     fieldDef('window_type','窓種類',30,'enum',[],'REQUIRED'),
@@ -113,6 +123,7 @@ function createModel(document) {
     fieldDef('variant','商品バリエーション',45,'enum',['window_type','window_spec'],'OPTIONAL'),
     fieldDef('handing','開き勝手（吊元）',50,'enum',['window_type','window_spec'],'OPTIONAL'),
     fieldDef('size_mode','サイズ方式',60,'enum',['window_type','window_spec'],'REQUIRED'),
+    fieldDef('panel_count','建具・枚数',65,'enum',['window_type','window_spec'],'OPTIONAL'),
     fieldDef('size','サイズ',80,'enum',['window_type','window_spec','size_mode'],'OPTIONAL'),
     fieldDef('custom_w','特注W',81,'number',['window_type','window_spec','size_mode'],'OPTIONAL','USER_SELECTABLE',{unit:'mm'}),
     fieldDef('custom_h','特注H',82,'number',['window_type','window_spec','size_mode'],'OPTIONAL','USER_SELECTABLE',{unit:'mm'}),
@@ -129,6 +140,11 @@ function createModel(document) {
     fieldDef('glass_air_layer','中空層',170,'enum',['glass_base','glass_detail'],'OPTIONAL','AUTO_RESOLVE'),
     fieldDef('option','その他オプション',210,'array',['window_type','window_spec'],'OPTIONAL'),
   ];
+  const selectorLabels = Object.freeze({glass_configuration:'ガラス構成',profile:'プロファイル',opening_class:'開口区分',sill:'下枠',wall_finish:'壁仕上げ'});
+  for (const key of formalSelectorDimensions) {
+    if (fields.some((field)=>field.field_name===key)) continue;
+    fields.splice(2,0,fieldDef(key,selectorLabels[key]??key,41,'enum',['window_type'],'OPTIONAL'));
+  }
 
   const values = [];
   for (const row of windows) values.push(valueRow('window_type',row.id,row.label,row));
@@ -137,6 +153,11 @@ function createModel(document) {
   for (const value of ['L','R']) values.push(valueRow('handing',value,value === 'L' ? '左吊元（L）' : '右吊元（R）'));
   values.push(valueRow('size_mode','STANDARD','規格'));
   values.push(valueRow('size_mode','CUSTOM','特注'));
+  for (const key of formalSelectorDimensions) {
+    for (const value of uniq(selectorCombos.map((row)=>row?.[key]).filter(has),(row)=>row)) {
+      values.push(valueRow(key,value,String(value),{formalSelectorModel:true,dimension:key}));
+    }
+  }
   for (const row of normalizedSizes) values.push(valueRow('size',row.id,`${row.size_code} ｜ ${row.actual_w}×${row.actual_h}mm`,{
     ...row,
     metadata: { callW: row.nominal_w, callH: row.nominal_h, callCode: row.size_code, actualW: row.actual_w, actualH: row.actual_h, sizeCode: row.size_code },
@@ -197,6 +218,7 @@ function createModel(document) {
     windows, specs, customRanges, variants, variantRelations, variantExclusions, designVariantIds, standardVariant,
     colors: allColorRows, screens, screenNetSpecs, glasses, glassDetails, glassFeatures, screenRules, screenOrderRules, validationRules,
     options, optionApplicability, normalizedSizes, fields, values,
+    selectorModel, formalSelectorDimensions, selectorCombos,
   };
 }
 

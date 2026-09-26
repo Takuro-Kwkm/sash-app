@@ -1,0 +1,2492 @@
+{
+  "schema_version": "product-master-runtime-core/1.0",
+  "package_version": "20260918-R3",
+  "product": {
+    "productId": "SER-YKK-APW430",
+    "category": "サッシ",
+    "manufacturer": "YKK AP",
+    "displayName": "APW 430",
+    "fireClassificationSelection": "不要",
+    "active": true,
+    "registrationStatus": "カタログ確認済",
+    "effectiveFrom": null,
+    "effectiveTo": null,
+    "sourceNote": "202608_YKKAP_APW430_商品カタログ／202608_YKKAP_APW430_業務用資料集／YKK AP公式価格表",
+    "_source": {
+      "sheet": "02_シリーズ",
+      "row": 8
+    }
+  },
+  "input_flow": [
+    {
+      "順番": 1,
+      "項目ID": "F001",
+      "画面表示名": "商品区分",
+      "表示条件": "常時",
+      "選択肢の親": "-",
+      "商品マスター保持": "○",
+      "備考": "まずはサッシを対象",
+      "_source": {
+        "sheet": "01_入力フロー",
+        "row": 4
+      }
+    },
+    {
+      "順番": 2,
+      "項目ID": "F002",
+      "画面表示名": "メーカー",
+      "表示条件": "商品区分=サッシ",
+      "選択肢の親": "商品区分",
+      "商品マスター保持": "○",
+      "備考": "メーカー選択",
+      "_source": {
+        "sheet": "01_入力フロー",
+        "row": 5
+      }
+    },
+    {
+      "順番": 3,
+      "項目ID": "F003",
+      "画面表示名": "シリーズ",
+      "表示条件": "メーカー選択後",
+      "選択肢の親": "メーカー",
+      "商品マスター保持": "○",
+      "備考": "防火仕様はシリーズ名で表現",
+      "_source": {
+        "sheet": "01_入力フロー",
+        "row": 6
+      }
+    },
+    {
+      "順番": 4,
+      "項目ID": "F004",
+      "画面表示名": "窓種",
+      "表示条件": "シリーズ選択後",
+      "選択肢の親": "シリーズ",
+      "商品マスター保持": "○",
+      "備考": "シリーズで選べる窓種のみ表示",
+      "_source": {
+        "sheet": "01_入力フロー",
+        "row": 7
+      }
+    },
+    {
+      "順番": 5,
+      "項目ID": "F005",
+      "画面表示名": "窓種固有仕様",
+      "表示条件": "該当窓種のみ",
+      "選択肢の親": "シリーズ+窓種",
+      "商品マスター保持": "○",
+      "備考": "シャッター/面格子/雨戸/引違い特殊仕様等、シリーズ窓種に定義された固有仕様だけを表示。建数・size_id条件がある特殊仕様は05Cで候補を絞る",
+      "_source": {
+        "sheet": "01_入力フロー",
+        "row": 8
+      }
+    },
+    {
+      "順番": 5.5,
+      "項目ID": "F006A",
+      "画面表示名": "連窓構成",
+      "表示条件": "2連窓/3連窓等の構成差が存在する窓種のみ",
+      "選択肢の親": "シリーズ+窓種",
+      "商品マスター保持": "○",
+      "備考": "2連窓・3連窓等を窓種固有仕様としてサイズより前に選択。06Cの正式構成ルールおよび規格size_idのR2/R3系区分を根拠とする。",
+      "_source": {
+        "sheet": "01_入力フロー",
+        "row": 10
+      }
+    },
+    {
+      "順番": 5.6,
+      "項目ID": "F006B",
+      "画面表示名": "建具・枚数",
+      "表示条件": "2枚建/4枚建等の枚数差が存在する窓種のみ",
+      "選択肢の親": "シリーズ+窓種",
+      "商品マスター保持": "○",
+      "備考": "2枚建・4枚建を工法区分から分離し、UI標準v1.6のpanel_countとしてサイズより前に選択。",
+      "_source": {
+        "sheet": "01_入力フロー",
+        "row": 11
+      }
+    },
+    {
+      "順番": 5.9,
+      "項目ID": "F006",
+      "画面表示名": "工法区分（内部）",
+      "表示条件": "UI非表示・Runtime内部解決",
+      "選択肢の親": "シリーズ+窓種+サイズ/構成",
+      "商品マスター保持": "○",
+      "備考": "APW430では工法/アングル条件を内部技術キーとして保持し、UI標準v1.6に従いユーザー選択には露出しない。",
+      "_source": {
+        "sheet": "01_入力フロー",
+        "row": 9
+      }
+    },
+    {
+      "順番": 7,
+      "項目ID": "F007",
+      "画面表示名": "サイズ",
+      "表示条件": "窓種固有仕様・連窓構成・建具/枚数（該当時）確定後",
+      "選択肢の親": "シリーズ+窓種+固有仕様+連窓構成+建具/枚数",
+      "商品マスター保持": "○",
+      "備考": "呼称寸法・実寸W/Hは正式規格値を保持。UI表示は「呼称寸法 ｜ W 実寸W × H 実寸H」。工法区分は内部解決し、サイズ候補のユーザー絞込軸にしない。",
+      "_source": {
+        "sheet": "01_入力フロー",
+        "row": 12
+      }
+    },
+    {
+      "順番": 8,
+      "項目ID": "F008",
+      "画面表示名": "外観色",
+      "表示条件": "サイズ確定後",
+      "選択肢の親": "シリーズ",
+      "商品マスター保持": "○",
+      "備考": "設定色のみ",
+      "_source": {
+        "sheet": "01_入力フロー",
+        "row": 13
+      }
+    },
+    {
+      "順番": 9,
+      "項目ID": "F009",
+      "画面表示名": "内観色",
+      "表示条件": "外観色選択後",
+      "選択肢の親": "シリーズ+外観色",
+      "商品マスター保持": "○",
+      "備考": "内外同色制約等を制御",
+      "_source": {
+        "sheet": "01_入力フロー",
+        "row": 14
+      }
+    },
+    {
+      "順番": 10,
+      "項目ID": "F010",
+      "画面表示名": "網戸有無",
+      "表示条件": "内観色選択後かつ網戸設定のある窓種。必須構成はあり固定、網戸設定なしはスキップ",
+      "選択肢の親": "シリーズ+窓種+サイズ",
+      "商品マスター保持": "○",
+      "備考": "引違窓系は中桟・ネット種類まで",
+      "_source": {
+        "sheet": "01_入力フロー",
+        "row": 15
+      }
+    },
+    {
+      "順番": 11,
+      "項目ID": "F010A",
+      "画面表示名": "網戸仕様",
+      "表示条件": "網戸有無=ありの場合のみ。形式・中桟・ネット種類等を窓種別に表示",
+      "選択肢の親": "網戸有無+シリーズ+窓種+サイズ",
+      "商品マスター保持": "○",
+      "備考": "トリプル／ペア（Low-E複層）の大分類。窓種・サイズの適用条件で候補を制御",
+      "_source": {
+        "sheet": "01_入力フロー",
+        "row": 16
+      }
+    },
+    {
+      "順番": 12,
+      "項目ID": "F011",
+      "画面表示名": "ガラス",
+      "表示条件": "網戸処理完了後（網戸なし／スキップを含む）",
+      "選択肢の親": "シリーズ+窓種+サイズ",
+      "商品マスター保持": "○",
+      "備考": "選択したガラス大分類に属する詳細のみ表示。トリプル→トリプル詳細、ペア→ペア詳細",
+      "_source": {
+        "sheet": "01_入力フロー",
+        "row": 17
+      }
+    },
+    {
+      "順番": 13,
+      "項目ID": "F012",
+      "画面表示名": "ガラス詳細",
+      "表示条件": "ガラス選択後",
+      "選択肢の親": "ガラス大分類",
+      "商品マスター保持": "○",
+      "備考": "シリーズごとの正式OP",
+      "_source": {
+        "sheet": "01_入力フロー",
+        "row": 18
+      }
+    },
+    {
+      "順番": 14,
+      "項目ID": "F012A",
+      "画面表示名": "ガラス追加機能",
+      "表示条件": "ガラス詳細選択後。設定がある場合",
+      "選択肢の親": "ガラス大分類+ガラス詳細",
+      "商品マスター保持": "×",
+      "備考": "見積明細に保存",
+      "_source": {
+        "sheet": "01_入力フロー",
+        "row": 19
+      }
+    },
+    {
+      "順番": "15",
+      "項目ID": "F012B",
+      "画面表示名": "ガラス種",
+      "表示条件": "ガラス追加機能選択後。透明/型板/フロスト/乳白を条件連動",
+      "選択肢の親": "ガラス大分類+ガラス詳細+ガラス追加機能",
+      "商品マスター保持": null,
+      "備考": null,
+      "_source": {
+        "sheet": "01_入力フロー",
+        "row": 20
+      }
+    },
+    {
+      "順番": "16",
+      "項目ID": "F013",
+      "画面表示名": "その他オプション",
+      "表示条件": "設定がある場合",
+      "選択肢の親": "確定商品仕様",
+      "商品マスター保持": null,
+      "備考": null,
+      "_source": {
+        "sheet": "01_入力フロー",
+        "row": 21
+      }
+    },
+    {
+      "順番": "17",
+      "項目ID": "F014",
+      "画面表示名": "数量",
+      "表示条件": "商品仕様確定後",
+      "選択肢の親": "-",
+      "商品マスター保持": null,
+      "備考": null,
+      "_source": {
+        "sheet": "01_入力フロー",
+        "row": 22
+      }
+    },
+    {
+      "順番": 3.5,
+      "項目ID": "F003A",
+      "画面表示名": "地域区分",
+      "表示条件": "シリーズに地域別品番/仕様あり",
+      "選択肢の親": "シリーズ",
+      "商品マスター保持": "○",
+      "備考": "EW防火戸は北海道／東北／北関東以南でおすすめ品番と推奨アングル仕様を分岐。品番生成は03B参照",
+      "_source": {
+        "sheet": "01_入力フロー",
+        "row": 23
+      }
+    },
+    {
+      "順番": 15.5,
+      "項目ID": "F012C",
+      "画面表示名": "設置場所",
+      "表示条件": "シリーズに設置場所連動OPあり",
+      "選択肢の親": "確定商品仕様",
+      "商品マスター保持": "×",
+      "備考": "一般／浴室。見積明細コンテキストに保持。EW防火戸は浴室＋アングル付で浴室防水部品セットを必須自動追加",
+      "_source": {
+        "sheet": "01_入力フロー",
+        "row": 24
+      }
+    }
+  ],
+  "common_window_master": [
+    {
+      "window_type_id": "WT-HIKICHIGAI",
+      "窓種表示名": "引違窓",
+      "固有仕様種別": "なし",
+      "固有仕様必須": "不要",
+      "網戸設定": "あり",
+      "中桟選択": "あり",
+      "ネット種類選択": "あり",
+      "有効": true,
+      "登録状態": "構造確定",
+      "備考": null,
+      "_source": {
+        "sheet": "03_窓種",
+        "row": 4
+      }
+    },
+    {
+      "window_type_id": "WT-SHUTTER-HIKI",
+      "窓種表示名": "シャッター付引違窓",
+      "固有仕様種別": "シャッター種類",
+      "固有仕様必須": "必須",
+      "網戸設定": "あり",
+      "中桟選択": "あり",
+      "ネット種類選択": "あり",
+      "有効": true,
+      "登録状態": "構造確定",
+      "備考": "シャッター種類を窓種直後に選択",
+      "_source": {
+        "sheet": "03_窓種",
+        "row": 5
+      }
+    },
+    {
+      "window_type_id": "WT-MENKOSHI-HIKI",
+      "窓種表示名": "面格子付引違窓",
+      "固有仕様種別": "面格子種類",
+      "固有仕様必須": "必須",
+      "網戸設定": "あり",
+      "中桟選択": "あり",
+      "ネット種類選択": "あり",
+      "有効": true,
+      "登録状態": "構造確定",
+      "備考": "面格子種類を窓種直後に選択",
+      "_source": {
+        "sheet": "03_窓種",
+        "row": 7
+      }
+    },
+    {
+      "window_type_id": "WT-FIX",
+      "窓種表示名": "FIX窓",
+      "固有仕様種別": "なし",
+      "固有仕様必須": "不要",
+      "網戸設定": "なし",
+      "中桟選択": "なし",
+      "ネット種類選択": "なし",
+      "有効": true,
+      "登録状態": "要シリーズ照合",
+      "備考": null,
+      "_source": {
+        "sheet": "03_窓種",
+        "row": 8
+      }
+    },
+    {
+      "window_type_id": "WT-TATE-SUBERI",
+      "窓種表示名": "縦すべり出し窓",
+      "固有仕様種別": "なし",
+      "固有仕様必須": "不要",
+      "網戸設定": "シリーズ連動",
+      "中桟選択": "なし",
+      "ネット種類選択": "シリーズ連動",
+      "有効": true,
+      "登録状態": "構造確定",
+      "備考": "ハンドルはシリーズ窓種名へ統合。後選択しない",
+      "_source": {
+        "sheet": "03_窓種",
+        "row": 9
+      }
+    },
+    {
+      "window_type_id": "WT-YOKO-SUBERI",
+      "窓種表示名": "横すべり出し窓",
+      "固有仕様種別": "なし",
+      "固有仕様必須": "不要",
+      "網戸設定": "シリーズ連動",
+      "中桟選択": "なし",
+      "ネット種類選択": "シリーズ連動",
+      "有効": true,
+      "登録状態": "構造確定",
+      "備考": "ハンドルはシリーズ窓種名へ統合。後選択しない",
+      "_source": {
+        "sheet": "03_窓種",
+        "row": 10
+      }
+    },
+    {
+      "window_type_id": "WT-KOSHO-SUBERI",
+      "窓種表示名": "高所用すべり出し窓",
+      "固有仕様種別": "操作仕様",
+      "固有仕様必須": "シリーズ連動",
+      "網戸設定": "シリーズ連動",
+      "中桟選択": "なし",
+      "ネット種類選択": "シリーズ連動",
+      "有効": true,
+      "登録状態": "構造確定",
+      "備考": "YKK AP APW 430掲載。操作方式はシリーズ窓種名へ統合",
+      "_source": {
+        "sheet": "03_窓種",
+        "row": 20
+      }
+    },
+    {
+      "window_type_id": "WT-TWO-ACTION",
+      "窓種表示名": "ツーアクション窓",
+      "固有仕様種別": "なし",
+      "固有仕様必須": "不要",
+      "網戸設定": "シリーズ連動",
+      "中桟選択": "なし",
+      "ネット種類選択": "シリーズ連動",
+      "有効": true,
+      "登録状態": "構造確定",
+      "備考": "YKK AP APW 430正式窓種",
+      "_source": {
+        "sheet": "03_窓種",
+        "row": 21
+      }
+    }
+  ],
+  "series_windows": [
+    {
+      "id": "SWT-YKK-APW430-FIX",
+      "productId": "SER-YKK-APW430",
+      "commonWindowId": "WT-FIX",
+      "displayName": "FIX窓",
+      "category": "装飾窓",
+      "specificSpecType": "なし",
+      "selectable": false,
+      "displayOrder": 10,
+      "active": false,
+      "registrationStatus": "旧汎用ID（非選択）",
+      "source": "202607_YKKAP_APW430_商品カタログ P.70-71／業務用資料集",
+      "note": "窓タイプ／テラスタイプ（在来・2×4）へ分割。旧汎用IDは選択対象外。APW431は別管理",
+      "_source": {
+        "sheet": "03A_シリーズ窓種設定",
+        "row": 40
+      }
+    },
+    {
+      "id": "SWT-YKK-APW430-TATE-GREMON-SINGLE",
+      "productId": "SER-YKK-APW430",
+      "commonWindowId": "WT-TATE-SUBERI",
+      "displayName": "たてすべり出し窓（グレモンハンドル仕様）単窓",
+      "category": "装飾窓",
+      "specificSpecType": "なし",
+      "selectable": true,
+      "displayOrder": 20,
+      "active": true,
+      "registrationStatus": "公式確認済",
+      "source": "202608_YKKAP_APW430_業務用資料集／YKK AP公式価格表",
+      "note": "ハンドルを窓種へ一体化",
+      "_source": {
+        "sheet": "03A_シリーズ窓種設定",
+        "row": 41
+      }
+    },
+    {
+      "id": "SWT-YKK-APW430-TATE-GREMON-FIX-DAN",
+      "productId": "SER-YKK-APW430",
+      "commonWindowId": "WT-TATE-SUBERI",
+      "displayName": "たてすべり出し窓（グレモンハンドル仕様）＋FIX段窓",
+      "category": "装飾窓",
+      "specificSpecType": "なし",
+      "selectable": true,
+      "displayOrder": 30,
+      "active": true,
+      "registrationStatus": "公式確認済",
+      "source": "202608_YKKAP_APW430_業務用資料集／YKK AP公式価格表",
+      "note": "ハンドル・連段窓構成を商品単位で管理",
+      "_source": {
+        "sheet": "03A_シリーズ窓種設定",
+        "row": 42
+      }
+    },
+    {
+      "id": "SWT-YKK-APW430-TATE-GREMON-FIX-REN",
+      "productId": "SER-YKK-APW430",
+      "commonWindowId": "WT-TATE-SUBERI",
+      "displayName": "たてすべり出し窓（グレモンハンドル仕様）＋FIX連窓",
+      "category": "装飾窓",
+      "specificSpecType": "なし",
+      "selectable": true,
+      "displayOrder": 40,
+      "active": true,
+      "registrationStatus": "公式確認済",
+      "source": "202608_YKKAP_APW430_業務用資料集／YKK AP公式価格表",
+      "note": "2連窓系",
+      "_source": {
+        "sheet": "03A_シリーズ窓種設定",
+        "row": 43
+      }
+    },
+    {
+      "id": "SWT-YKK-APW430-TATE-GREMON-WINDCATCH",
+      "productId": "SER-YKK-APW430",
+      "commonWindowId": "WT-TATE-SUBERI",
+      "displayName": "たてすべり出し窓（グレモンハンドル仕様）ウインドキャッチ連窓",
+      "category": "装飾窓",
+      "specificSpecType": "なし",
+      "selectable": true,
+      "displayOrder": 50,
+      "active": true,
+      "registrationStatus": "公式確認済",
+      "source": "202608_YKKAP_APW430_商品カタログ／業務用資料集",
+      "note": "ウインドキャッチ連窓を独立管理",
+      "_source": {
+        "sheet": "03A_シリーズ窓種設定",
+        "row": 44
+      }
+    },
+    {
+      "id": "SWT-YKK-APW430-TATE-OP-SINGLE",
+      "productId": "SER-YKK-APW430",
+      "commonWindowId": "WT-TATE-SUBERI",
+      "displayName": "たてすべり出し窓（オペレーターハンドル仕様）単窓",
+      "category": "装飾窓",
+      "specificSpecType": "なし",
+      "selectable": true,
+      "displayOrder": 60,
+      "active": true,
+      "registrationStatus": "公式確認済",
+      "source": "202608_YKKAP_APW430_業務用資料集／YKK AP公式価格表",
+      "note": "ハンドルを窓種へ一体化",
+      "_source": {
+        "sheet": "03A_シリーズ窓種設定",
+        "row": 45
+      }
+    },
+    {
+      "id": "SWT-YKK-APW430-TATE-OP-FIX-DAN",
+      "productId": "SER-YKK-APW430",
+      "commonWindowId": "WT-TATE-SUBERI",
+      "displayName": "たてすべり出し窓（オペレーターハンドル仕様）＋FIX段窓",
+      "category": "装飾窓",
+      "specificSpecType": "なし",
+      "selectable": true,
+      "displayOrder": 70,
+      "active": true,
+      "registrationStatus": "公式確認済",
+      "source": "202608_YKKAP_APW430_業務用資料集／YKK AP公式価格表",
+      "note": "ハンドル・段窓構成を商品単位で管理",
+      "_source": {
+        "sheet": "03A_シリーズ窓種設定",
+        "row": 46
+      }
+    },
+    {
+      "id": "SWT-YKK-APW430-TATE-OP-FIX-REN",
+      "productId": "SER-YKK-APW430",
+      "commonWindowId": "WT-TATE-SUBERI",
+      "displayName": "たてすべり出し窓（オペレーターハンドル仕様）＋FIX連窓",
+      "category": "装飾窓",
+      "specificSpecType": "なし",
+      "selectable": true,
+      "displayOrder": 80,
+      "active": true,
+      "registrationStatus": "公式確認済",
+      "source": "202608_YKKAP_APW430_業務用資料集／YKK AP公式価格表",
+      "note": "2連窓系",
+      "_source": {
+        "sheet": "03A_シリーズ窓種設定",
+        "row": 47
+      }
+    },
+    {
+      "id": "SWT-YKK-APW430-TATE-OP-WINDCATCH",
+      "productId": "SER-YKK-APW430",
+      "commonWindowId": "WT-TATE-SUBERI",
+      "displayName": "たてすべり出し窓（オペレーターハンドル仕様）ウインドキャッチ連窓",
+      "category": "装飾窓",
+      "specificSpecType": "なし",
+      "selectable": true,
+      "displayOrder": 90,
+      "active": true,
+      "registrationStatus": "公式確認済",
+      "source": "202608_YKKAP_APW430_商品カタログ／業務用資料集",
+      "note": "ウインドキャッチ連窓を独立管理",
+      "_source": {
+        "sheet": "03A_シリーズ窓種設定",
+        "row": 48
+      }
+    },
+    {
+      "id": "SWT-YKK-APW430-SUBERI-GREMON-SINGLE",
+      "productId": "SER-YKK-APW430",
+      "commonWindowId": "WT-YOKO-SUBERI",
+      "displayName": "すべり出し窓（グレモンハンドル仕様）単窓",
+      "category": "装飾窓",
+      "specificSpecType": "なし",
+      "selectable": true,
+      "displayOrder": 100,
+      "active": true,
+      "registrationStatus": "公式確認済",
+      "source": "202608_YKKAP_APW430_業務用資料集／YKK AP公式価格表",
+      "note": "YKK AP正式名は「すべり出し窓」。共通窓種は横すべり出し系へ対応",
+      "_source": {
+        "sheet": "03A_シリーズ窓種設定",
+        "row": 49
+      }
+    },
+    {
+      "id": "SWT-YKK-APW430-SUBERI-GREMON-FIX-DAN",
+      "productId": "SER-YKK-APW430",
+      "commonWindowId": "WT-YOKO-SUBERI",
+      "displayName": "すべり出し窓（グレモンハンドル仕様）＋FIX段窓",
+      "category": "装飾窓",
+      "specificSpecType": "なし",
+      "selectable": true,
+      "displayOrder": 110,
+      "active": true,
+      "registrationStatus": "公式確認済",
+      "source": "202608_YKKAP_APW430_業務用資料集／YKK AP公式価格表",
+      "note": "段窓構成を独立管理",
+      "_source": {
+        "sheet": "03A_シリーズ窓種設定",
+        "row": 50
+      }
+    },
+    {
+      "id": "SWT-YKK-APW430-SUBERI-GREMON-FIX-REN",
+      "productId": "SER-YKK-APW430",
+      "commonWindowId": "WT-YOKO-SUBERI",
+      "displayName": "すべり出し窓（グレモンハンドル仕様）＋FIX連窓",
+      "category": "装飾窓",
+      "specificSpecType": "なし",
+      "selectable": true,
+      "displayOrder": 120,
+      "active": true,
+      "registrationStatus": "公式確認済",
+      "source": "202608_YKKAP_APW430_業務用資料集／YKK AP公式価格表",
+      "note": "連窓構成を独立管理",
+      "_source": {
+        "sheet": "03A_シリーズ窓種設定",
+        "row": 51
+      }
+    },
+    {
+      "id": "SWT-YKK-APW430-SUBERI-OP-SINGLE",
+      "productId": "SER-YKK-APW430",
+      "commonWindowId": "WT-YOKO-SUBERI",
+      "displayName": "すべり出し窓（オペレーターハンドル仕様）単窓",
+      "category": "装飾窓",
+      "specificSpecType": "なし",
+      "selectable": true,
+      "displayOrder": 130,
+      "active": true,
+      "registrationStatus": "公式確認済",
+      "source": "202608_YKKAP_APW430_業務用資料集／YKK AP公式価格表",
+      "note": "ハンドルを窓種へ一体化",
+      "_source": {
+        "sheet": "03A_シリーズ窓種設定",
+        "row": 52
+      }
+    },
+    {
+      "id": "SWT-YKK-APW430-SUBERI-OP-FIX-DAN",
+      "productId": "SER-YKK-APW430",
+      "commonWindowId": "WT-YOKO-SUBERI",
+      "displayName": "すべり出し窓（オペレーターハンドル仕様）＋FIX段窓",
+      "category": "装飾窓",
+      "specificSpecType": "なし",
+      "selectable": true,
+      "displayOrder": 140,
+      "active": true,
+      "registrationStatus": "公式確認済",
+      "source": "202608_YKKAP_APW430_業務用資料集／YKK AP公式価格表",
+      "note": "段窓構成を独立管理",
+      "_source": {
+        "sheet": "03A_シリーズ窓種設定",
+        "row": 53
+      }
+    },
+    {
+      "id": "SWT-YKK-APW430-SUBERI-OP-FIX-REN",
+      "productId": "SER-YKK-APW430",
+      "commonWindowId": "WT-YOKO-SUBERI",
+      "displayName": "すべり出し窓（オペレーターハンドル仕様）＋FIX連窓",
+      "category": "装飾窓",
+      "specificSpecType": "なし",
+      "selectable": true,
+      "displayOrder": 150,
+      "active": true,
+      "registrationStatus": "公式確認済",
+      "source": "202608_YKKAP_APW430_業務用資料集／YKK AP公式価格表",
+      "note": "連窓構成を独立管理",
+      "_source": {
+        "sheet": "03A_シリーズ窓種設定",
+        "row": 54
+      }
+    },
+    {
+      "id": "SWT-YKK-APW430-HIGH-SINGLE",
+      "productId": "SER-YKK-APW430",
+      "commonWindowId": "WT-KOSHO-SUBERI",
+      "displayName": "高所用すべり出し窓 単窓",
+      "category": "装飾窓",
+      "specificSpecType": "なし",
+      "selectable": true,
+      "displayOrder": 160,
+      "active": true,
+      "registrationStatus": "公式確認済",
+      "source": "202608_YKKAP_APW430_業務用資料集／YKK AP公式価格表",
+      "note": "標準操作仕様",
+      "_source": {
+        "sheet": "03A_シリーズ窓種設定",
+        "row": 55
+      }
+    },
+    {
+      "id": "SWT-YKK-APW430-HIGH-ENDOP-SINGLE",
+      "productId": "SER-YKK-APW430",
+      "commonWindowId": "WT-KOSHO-SUBERI",
+      "displayName": "高所用すべり出し窓（端部操作仕様）単窓",
+      "category": "装飾窓",
+      "specificSpecType": "なし",
+      "selectable": true,
+      "displayOrder": 170,
+      "active": true,
+      "registrationStatus": "公式確認済",
+      "source": "YKK AP公式価格表",
+      "note": "端部操作仕様を別窓種レコードで管理",
+      "_source": {
+        "sheet": "03A_シリーズ窓種設定",
+        "row": 56
+      }
+    },
+    {
+      "id": "SWT-YKK-APW430-TWOACTION-SINGLE",
+      "productId": "SER-YKK-APW430",
+      "commonWindowId": "WT-TWO-ACTION",
+      "displayName": "ツーアクション窓 単窓",
+      "category": "装飾窓",
+      "specificSpecType": "なし",
+      "selectable": true,
+      "displayOrder": 180,
+      "active": true,
+      "registrationStatus": "公式確認済",
+      "source": "202608_YKKAP_APW430_商品カタログ／YKK AP公式価格表",
+      "note": "専用可動網戸あり",
+      "_source": {
+        "sheet": "03A_シリーズ窓種設定",
+        "row": 57
+      }
+    },
+    {
+      "id": "SWT-YKK-APW430-TWOACTION-FIX-DAN",
+      "productId": "SER-YKK-APW430",
+      "commonWindowId": "WT-TWO-ACTION",
+      "displayName": "ツーアクション窓＋FIX段窓",
+      "category": "装飾窓",
+      "specificSpecType": "なし",
+      "selectable": true,
+      "displayOrder": 190,
+      "active": true,
+      "registrationStatus": "公式確認済",
+      "source": "YKK AP公式価格表",
+      "note": "段窓構成を独立管理",
+      "_source": {
+        "sheet": "03A_シリーズ窓種設定",
+        "row": 58
+      }
+    },
+    {
+      "id": "SWT-YKK-APW430-TWOACTION-FIX-REN",
+      "productId": "SER-YKK-APW430",
+      "commonWindowId": "WT-TWO-ACTION",
+      "displayName": "ツーアクション窓＋FIX連窓",
+      "category": "装飾窓",
+      "specificSpecType": "なし",
+      "selectable": true,
+      "displayOrder": 200,
+      "active": true,
+      "registrationStatus": "公式確認済",
+      "source": "YKK AP公式価格表",
+      "note": "連窓構成を独立管理",
+      "_source": {
+        "sheet": "03A_シリーズ窓種設定",
+        "row": 59
+      }
+    },
+    {
+      "id": "SWT-YKK-APW430-HIKI",
+      "productId": "SER-YKK-APW430",
+      "commonWindowId": "WT-HIKICHIGAI",
+      "displayName": "引違い窓",
+      "category": "引違い窓",
+      "specificSpecType": "引違い特殊仕様",
+      "selectable": true,
+      "displayOrder": 210,
+      "active": true,
+      "registrationStatus": "公式確認済",
+      "source": "202608_YKKAP_APW430_商品カタログ／業務用資料集／YKK AP公式価格表",
+      "note": "2枚建・4枚建は06_サイズで管理。引違い特殊仕様は05Cでクレセント仕様／クレセントダウン仕様／非常用進入口対応サイズ仕様を制御",
+      "_source": {
+        "sheet": "03A_シリーズ窓種設定",
+        "row": 60
+      }
+    },
+    {
+      "id": "SWT-YKK-APW430-MENKOSHI-HIKI",
+      "productId": "SER-YKK-APW430",
+      "commonWindowId": "WT-MENKOSHI-HIKI",
+      "displayName": "面格子付引違い窓",
+      "category": "引違い窓",
+      "specificSpecType": "面格子種類",
+      "selectable": true,
+      "displayOrder": 220,
+      "active": true,
+      "registrationStatus": "公式確認済",
+      "source": "202608_YKKAP_APW430_商品カタログ／YKK AP公式CAD",
+      "note": "面格子を独立商品として管理",
+      "_source": {
+        "sheet": "03A_シリーズ窓種設定",
+        "row": 61
+      }
+    },
+    {
+      "id": "SWT-YKK-APW430-SHUTTER-HIKI",
+      "productId": "SER-YKK-APW430",
+      "commonWindowId": "WT-SHUTTER-HIKI",
+      "displayName": "シャッター付引違い窓",
+      "category": "引違い窓",
+      "specificSpecType": "シャッター種類",
+      "selectable": true,
+      "displayOrder": 230,
+      "active": true,
+      "registrationStatus": "公式確認済",
+      "source": "202608_YKKAP_APW430_商品カタログ／業務用資料集／YKK AP公式価格表",
+      "note": "APW 431シャッター付引違いテラス戸は別管理",
+      "_source": {
+        "sheet": "03A_シリーズ窓種設定",
+        "row": 62
+      }
+    },
+    {
+      "id": "SWT-YKK-APW430-FIX-MADO",
+      "productId": "SER-YKK-APW430",
+      "commonWindowId": "WT-FIX",
+      "displayName": "FIX窓 窓タイプ",
+      "category": "装飾窓",
+      "specificSpecType": "なし",
+      "selectable": true,
+      "displayOrder": 10,
+      "active": true,
+      "registrationStatus": "公式確認済",
+      "source": "202607_YKKAP_APW430_商品カタログ P.70／業務用資料集",
+      "note": "窓タイプを独立管理",
+      "_source": {
+        "sheet": "03A_シリーズ窓種設定",
+        "row": 63
+      }
+    },
+    {
+      "id": "SWT-YKK-APW430-FIX-TR-ZAIRAI",
+      "productId": "SER-YKK-APW430",
+      "commonWindowId": "WT-FIX",
+      "displayName": "FIX窓 テラスタイプ（在来）",
+      "category": "装飾窓",
+      "specificSpecType": "なし",
+      "selectable": true,
+      "displayOrder": 11,
+      "active": true,
+      "registrationStatus": "公式確認済",
+      "source": "202607_YKKAP_APW430_商品カタログ P.71／業務用資料集",
+      "note": "テラスタイプ・在来。アングル付のみ",
+      "_source": {
+        "sheet": "03A_シリーズ窓種設定",
+        "row": 64
+      }
+    },
+    {
+      "id": "SWT-YKK-APW430-FIX-TR-204",
+      "productId": "SER-YKK-APW430",
+      "commonWindowId": "WT-FIX",
+      "displayName": "FIX窓 テラスタイプ（2×4）",
+      "category": "装飾窓",
+      "specificSpecType": "なし",
+      "selectable": true,
+      "displayOrder": 12,
+      "active": true,
+      "registrationStatus": "公式確認済",
+      "source": "202607_YKKAP_APW430_商品カタログ P.71／業務用資料集",
+      "note": "テラスタイプ・2×4。アングル付のみ",
+      "_source": {
+        "sheet": "03A_シリーズ窓種設定",
+        "row": 65
+      }
+    }
+  ],
+  "specific_specs": [
+    {
+      "spec_id": "SP-YKK-APW430-GRILLE-VERT",
+      "シリーズID": "SER-YKK-APW430",
+      "窓種ID": "WT-MENKOSHI-HIKI",
+      "固有仕様種別": "面格子種類",
+      "表示名": "たて格子",
+      "メーカー正式名称": "たて格子",
+      "サイズ連動キー": "APW430-GRILLE-VERT",
+      "有効": true,
+      "登録状態": "公式確認済",
+      "表示順": 10,
+      "出典": "YKK AP公式CAD／202608_YKKAP_APW430_業務用資料集",
+      "備考": "面格子付引違い窓",
+      "_source": {
+        "sheet": "04_窓種固有仕様",
+        "row": 40
+      }
+    },
+    {
+      "spec_id": "SP-YKK-APW430-GRILLE-IGETA",
+      "シリーズID": "SER-YKK-APW430",
+      "窓種ID": "WT-MENKOSHI-HIKI",
+      "固有仕様種別": "面格子種類",
+      "表示名": "井桁格子",
+      "メーカー正式名称": "井桁格子",
+      "サイズ連動キー": "APW430-GRILLE-IGETA",
+      "有効": true,
+      "登録状態": "公式確認済",
+      "表示順": 20,
+      "出典": "YKK AP公式CAD／202608_YKKAP_APW430_業務用資料集",
+      "備考": "面格子付引違い窓",
+      "_source": {
+        "sheet": "04_窓種固有仕様",
+        "row": 41
+      }
+    },
+    {
+      "spec_id": "SP-YKK-APW430-GRILLE-LATTICE",
+      "シリーズID": "SER-YKK-APW430",
+      "窓種ID": "WT-MENKOSHI-HIKI",
+      "固有仕様種別": "面格子種類",
+      "表示名": "ラチス格子",
+      "メーカー正式名称": "ラチス格子",
+      "サイズ連動キー": "APW430-GRILLE-LATTICE",
+      "有効": true,
+      "登録状態": "公式確認済",
+      "表示順": 30,
+      "出典": "YKK AP公式CAD／202608_YKKAP_APW430_業務用資料集",
+      "備考": "面格子付引違い窓",
+      "_source": {
+        "sheet": "04_窓種固有仕様",
+        "row": 42
+      }
+    },
+    {
+      "spec_id": "SP-YKK-APW430-GRILLE-HORIZ",
+      "シリーズID": "SER-YKK-APW430",
+      "窓種ID": "WT-MENKOSHI-HIKI",
+      "固有仕様種別": "面格子種類",
+      "表示名": "横格子",
+      "メーカー正式名称": "横格子",
+      "サイズ連動キー": "APW430-GRILLE-HORIZ",
+      "有効": true,
+      "登録状態": "公式確認済",
+      "表示順": 40,
+      "出典": "YKK AP公式CAD／202608_YKKAP_APW430_業務用資料集",
+      "備考": "面格子付引違い窓",
+      "_source": {
+        "sheet": "04_窓種固有仕様",
+        "row": 43
+      }
+    },
+    {
+      "spec_id": "SP-YKK-APW430-SHUT-REMOTE",
+      "シリーズID": "SER-YKK-APW430",
+      "窓種ID": "WT-SHUTTER-HIKI",
+      "固有仕様種別": "シャッター種類",
+      "表示名": "リモコンシャッター",
+      "メーカー正式名称": "リモコンシャッター",
+      "サイズ連動キー": "APW430-SHUT-REMOTE",
+      "有効": true,
+      "登録状態": "公式確認済",
+      "表示順": 10,
+      "出典": "YKK AP APW430価格表／業務用資料集",
+      "備考": "シャッター付引違い窓",
+      "_source": {
+        "sheet": "04_窓種固有仕様",
+        "row": 44
+      }
+    },
+    {
+      "spec_id": "SP-YKK-APW430-SHUT-MANUAL",
+      "シリーズID": "SER-YKK-APW430",
+      "窓種ID": "WT-SHUTTER-HIKI",
+      "固有仕様種別": "シャッター種類",
+      "表示名": "手動シャッター",
+      "メーカー正式名称": "手動シャッター",
+      "サイズ連動キー": "APW430-SHUT-MANUAL",
+      "有効": true,
+      "登録状態": "公式確認済",
+      "表示順": 20,
+      "出典": "YKK AP APW430価格表／業務用資料集",
+      "備考": "シャッター付引違い窓",
+      "_source": {
+        "sheet": "04_窓種固有仕様",
+        "row": 45
+      }
+    },
+    {
+      "spec_id": "SP-YKK-APW430-SHUT-REMOTE-SLIT-GR",
+      "シリーズID": "SER-YKK-APW430",
+      "窓種ID": "WT-SHUTTER-HIKI",
+      "固有仕様種別": "シャッター種類",
+      "表示名": "リモコンスリットシャッターGR",
+      "メーカー正式名称": "リモコンスリットシャッターGR",
+      "サイズ連動キー": "APW430-SHUT-REMOTE-SLIT-GR",
+      "有効": true,
+      "登録状態": "公式確認済・発売時期注意",
+      "表示順": 30,
+      "出典": "202608_YKKAP_APW430_商品カタログ／業務用資料集",
+      "備考": "2027年4月発売予定。2026-08-27時点では見積選択不可にする",
+      "_source": {
+        "sheet": "04_窓種固有仕様",
+        "row": 46
+      }
+    },
+    {
+      "spec_id": "SP-YKK-APW430-SHUT-REMOTE-GR",
+      "シリーズID": "SER-YKK-APW430",
+      "窓種ID": "WT-SHUTTER-HIKI",
+      "固有仕様種別": "シャッター種類",
+      "表示名": "リモコンシャッターGR",
+      "メーカー正式名称": "リモコンシャッターGR",
+      "サイズ連動キー": "APW430-SHUT-REMOTE-GR",
+      "有効": true,
+      "登録状態": "公式確認済",
+      "表示順": 40,
+      "出典": "YKK AP APW430価格表／業務用資料集",
+      "備考": "シャッター付引違い窓",
+      "_source": {
+        "sheet": "04_窓種固有仕様",
+        "row": 47
+      }
+    },
+    {
+      "spec_id": "SP-YKK-APW430-SHUT-MANUAL-GR",
+      "シリーズID": "SER-YKK-APW430",
+      "窓種ID": "WT-SHUTTER-HIKI",
+      "固有仕様種別": "シャッター種類",
+      "表示名": "手動シャッターGR",
+      "メーカー正式名称": "手動シャッターGR",
+      "サイズ連動キー": "APW430-SHUT-MANUAL-GR",
+      "有効": true,
+      "登録状態": "公式確認済",
+      "表示順": 50,
+      "出典": "YKK AP APW430価格表／業務用資料集",
+      "備考": "シャッター付引違い窓",
+      "_source": {
+        "sheet": "04_窓種固有仕様",
+        "row": 48
+      }
+    },
+    {
+      "spec_id": "SP-YKK-APW430-HIKI-STANDARD",
+      "シリーズID": "SER-YKK-APW430",
+      "窓種ID": "WT-HIKICHIGAI",
+      "固有仕様種別": "引違い特殊仕様",
+      "表示名": "クレセント仕様",
+      "メーカー正式名称": "クレセント仕様",
+      "サイズ連動キー": "APW430-HIKI-STANDARD",
+      "有効": true,
+      "登録状態": "公式確認済",
+      "表示順": 10,
+      "出典": "202607_YKKAP_APW430_商品カタログ P.76-78",
+      "備考": "標準仕様。05Cで既存引違い窓規格へ適用",
+      "_source": {
+        "sheet": "04_窓種固有仕様",
+        "row": 55
+      }
+    },
+    {
+      "spec_id": "SP-YKK-APW430-HIKI-CRESCENT-DOWN",
+      "シリーズID": "SER-YKK-APW430",
+      "窓種ID": "WT-HIKICHIGAI",
+      "固有仕様種別": "引違い特殊仕様",
+      "表示名": "クレセントダウン仕様",
+      "メーカー正式名称": "クレセントダウン仕様",
+      "サイズ連動キー": "APW430-HIKI-CRESCENT-DOWN",
+      "有効": true,
+      "登録状態": "公式確認済・サイズオーダー仕様",
+      "表示順": 20,
+      "出典": "202607_YKKAP_APW430_商品カタログ P.77／202608_YKKAP_APW430_業務用資料集 P.6",
+      "備考": "クレセント位置固定。2枚建のみ。4枚建・面格子付・非常用進入口対応サイズ仕様・シャッター付は設定なし",
+      "_source": {
+        "sheet": "04_窓種固有仕様",
+        "row": 56
+      }
+    },
+    {
+      "spec_id": "SP-YKK-APW430-HIKI-EMERGENCY",
+      "シリーズID": "SER-YKK-APW430",
+      "窓種ID": "WT-HIKICHIGAI",
+      "固有仕様種別": "引違い特殊仕様",
+      "表示名": "非常用進入口対応サイズ仕様",
+      "メーカー正式名称": "非常用進入口対応サイズ仕様",
+      "サイズ連動キー": "APW430-HIKI-EMERGENCY",
+      "有効": true,
+      "登録状態": "公式確認済・規格限定",
+      "表示順": 30,
+      "出典": "202607_YKKAP_APW430_商品カタログ P.77-78／202608_YKKAP_APW430_業務用資料集 P.6",
+      "備考": "2枚建16513のみ。有効開口750mm。地域・建築条件により採用可否確認",
+      "_source": {
+        "sheet": "04_窓種固有仕様",
+        "row": 57
+      }
+    }
+  ],
+  "availability_relations": [
+    {
+      "relation_id": "REL-YKK-APW430-GRILLE-VERT",
+      "シリーズID": "SER-YKK-APW430",
+      "窓種ID": "WT-MENKOSHI-HIKI",
+      "固有仕様ID": "SP-YKK-APW430-GRILLE-VERT",
+      "選択可否": "可",
+      "サイズ連動": "○",
+      "有効": true,
+      "登録状態": "公式確認済",
+      "出典": "YKK AP公式CAD",
+      "備考": "種類別サイズ差は06_サイズ/制約側で管理",
+      "_source": {
+        "sheet": "05_設定可否関係",
+        "row": 40
+      }
+    },
+    {
+      "relation_id": "REL-YKK-APW430-GRILLE-IGETA",
+      "シリーズID": "SER-YKK-APW430",
+      "窓種ID": "WT-MENKOSHI-HIKI",
+      "固有仕様ID": "SP-YKK-APW430-GRILLE-IGETA",
+      "選択可否": "可",
+      "サイズ連動": "○",
+      "有効": true,
+      "登録状態": "公式確認済",
+      "出典": "YKK AP公式CAD",
+      "備考": "種類別サイズ差は06_サイズ/制約側で管理",
+      "_source": {
+        "sheet": "05_設定可否関係",
+        "row": 41
+      }
+    },
+    {
+      "relation_id": "REL-YKK-APW430-GRILLE-LATTICE",
+      "シリーズID": "SER-YKK-APW430",
+      "窓種ID": "WT-MENKOSHI-HIKI",
+      "固有仕様ID": "SP-YKK-APW430-GRILLE-LATTICE",
+      "選択可否": "可",
+      "サイズ連動": "○",
+      "有効": true,
+      "登録状態": "公式確認済",
+      "出典": "YKK AP公式CAD",
+      "備考": "種類別サイズ差は06_サイズ/制約側で管理",
+      "_source": {
+        "sheet": "05_設定可否関係",
+        "row": 42
+      }
+    },
+    {
+      "relation_id": "REL-YKK-APW430-GRILLE-HORIZ",
+      "シリーズID": "SER-YKK-APW430",
+      "窓種ID": "WT-MENKOSHI-HIKI",
+      "固有仕様ID": "SP-YKK-APW430-GRILLE-HORIZ",
+      "選択可否": "可",
+      "サイズ連動": "○",
+      "有効": true,
+      "登録状態": "公式確認済",
+      "出典": "YKK AP公式CAD",
+      "備考": "種類別サイズ差は06_サイズ/制約側で管理",
+      "_source": {
+        "sheet": "05_設定可否関係",
+        "row": 43
+      }
+    },
+    {
+      "relation_id": "REL-YKK-APW430-SHUT-REMOTE",
+      "シリーズID": "SER-YKK-APW430",
+      "窓種ID": "WT-SHUTTER-HIKI",
+      "固有仕様ID": "SP-YKK-APW430-SHUT-REMOTE",
+      "選択可否": "可",
+      "サイズ連動": "○",
+      "有効": true,
+      "登録状態": "公式確認済",
+      "出典": "YKK AP APW430価格表",
+      "備考": "現行",
+      "_source": {
+        "sheet": "05_設定可否関係",
+        "row": 44
+      }
+    },
+    {
+      "relation_id": "REL-YKK-APW430-SHUT-MANUAL",
+      "シリーズID": "SER-YKK-APW430",
+      "窓種ID": "WT-SHUTTER-HIKI",
+      "固有仕様ID": "SP-YKK-APW430-SHUT-MANUAL",
+      "選択可否": "可",
+      "サイズ連動": "○",
+      "有効": true,
+      "登録状態": "公式確認済",
+      "出典": "YKK AP APW430価格表",
+      "備考": "現行",
+      "_source": {
+        "sheet": "05_設定可否関係",
+        "row": 45
+      }
+    },
+    {
+      "relation_id": "REL-YKK-APW430-SHUT-REMOTE-SLIT-GR",
+      "シリーズID": "SER-YKK-APW430",
+      "窓種ID": "WT-SHUTTER-HIKI",
+      "固有仕様ID": "SP-YKK-APW430-SHUT-REMOTE-SLIT-GR",
+      "選択可否": "不可",
+      "サイズ連動": "○",
+      "有効": true,
+      "登録状態": "発売予定登録",
+      "出典": "202608_YKKAP_APW430_商品カタログ",
+      "備考": "2027年4月発売予定。発売前は選択不可",
+      "_source": {
+        "sheet": "05_設定可否関係",
+        "row": 46
+      }
+    },
+    {
+      "relation_id": "REL-YKK-APW430-SHUT-REMOTE-GR",
+      "シリーズID": "SER-YKK-APW430",
+      "窓種ID": "WT-SHUTTER-HIKI",
+      "固有仕様ID": "SP-YKK-APW430-SHUT-REMOTE-GR",
+      "選択可否": "可",
+      "サイズ連動": "○",
+      "有効": true,
+      "登録状態": "公式確認済",
+      "出典": "YKK AP APW430価格表",
+      "備考": "現行",
+      "_source": {
+        "sheet": "05_設定可否関係",
+        "row": 47
+      }
+    },
+    {
+      "relation_id": "REL-YKK-APW430-SHUT-MANUAL-GR",
+      "シリーズID": "SER-YKK-APW430",
+      "窓種ID": "WT-SHUTTER-HIKI",
+      "固有仕様ID": "SP-YKK-APW430-SHUT-MANUAL-GR",
+      "選択可否": "可",
+      "サイズ連動": "○",
+      "有効": true,
+      "登録状態": "公式確認済",
+      "出典": "YKK AP APW430価格表",
+      "備考": "現行",
+      "_source": {
+        "sheet": "05_設定可否関係",
+        "row": 48
+      }
+    },
+    {
+      "relation_id": "REL-YKK-APW430-HIKI-STANDARD",
+      "シリーズID": "SER-YKK-APW430",
+      "窓種ID": "WT-HIKICHIGAI",
+      "固有仕様ID": "SP-YKK-APW430-HIKI-STANDARD",
+      "選択可否": "可",
+      "サイズ連動": "－",
+      "有効": true,
+      "登録状態": "公式確認済",
+      "出典": "202607_YKKAP_APW430_商品カタログ P.76-78",
+      "備考": "標準クレセント仕様",
+      "_source": {
+        "sheet": "05_設定可否関係",
+        "row": 55
+      }
+    },
+    {
+      "relation_id": "REL-YKK-APW430-HIKI-CRESCENT-DOWN",
+      "シリーズID": "SER-YKK-APW430",
+      "窓種ID": "WT-HIKICHIGAI",
+      "固有仕様ID": "SP-YKK-APW430-HIKI-CRESCENT-DOWN",
+      "選択可否": "可",
+      "サイズ連動": "○",
+      "有効": true,
+      "登録状態": "公式確認済・条件付",
+      "出典": "202607_YKKAP_APW430_商品カタログ P.77／202608_YKKAP_APW430_業務用資料集 P.6",
+      "備考": "05Cの2枚建条件を満たす場合のみ候補表示",
+      "_source": {
+        "sheet": "05_設定可否関係",
+        "row": 56
+      }
+    },
+    {
+      "relation_id": "REL-YKK-APW430-HIKI-EMERGENCY",
+      "シリーズID": "SER-YKK-APW430",
+      "窓種ID": "WT-HIKICHIGAI",
+      "固有仕様ID": "SP-YKK-APW430-HIKI-EMERGENCY",
+      "選択可否": "可",
+      "サイズ連動": "○",
+      "有効": true,
+      "登録状態": "公式確認済・規格限定",
+      "出典": "202607_YKKAP_APW430_商品カタログ P.77-78／202608_YKKAP_APW430_業務用資料集 P.6",
+      "備考": "05Cで2枚建16513のみ候補表示",
+      "_source": {
+        "sheet": "05_設定可否関係",
+        "row": 57
+      }
+    }
+  ],
+  "colors": [
+    {
+      "color_relation_id": "CLR-YKK-APW430-YW-WH",
+      "シリーズID": "SER-YKK-APW430",
+      "外観色ID": "EXT-YKK-YW",
+      "外観色表示名": "ホワイト",
+      "内観色ID": "INT-YKK-WH",
+      "内観色表示名": "ホワイト",
+      "組合せ可否": "可",
+      "有効": true,
+      "登録状態": "公式確認済",
+      "出典": "202608_YKKAP_APW430_商品カタログ P.40",
+      "備考": "外観コードYW",
+      "_source": {
+        "sheet": "07_色",
+        "row": 38
+      }
+    },
+    {
+      "color_relation_id": "CLR-YKK-APW430-JO-WH",
+      "シリーズID": "SER-YKK-APW430",
+      "外観色ID": "EXT-YKK-JO",
+      "外観色表示名": "プラチナステン",
+      "内観色ID": "INT-YKK-WH",
+      "内観色表示名": "ホワイト",
+      "組合せ可否": "可",
+      "有効": true,
+      "登録状態": "公式確認済",
+      "出典": "202608_YKKAP_APW430_商品カタログ P.40",
+      "備考": "外観コードJO",
+      "_source": {
+        "sheet": "07_色",
+        "row": 39
+      }
+    },
+    {
+      "color_relation_id": "CLR-YKK-APW430-J5-WH",
+      "シリーズID": "SER-YKK-APW430",
+      "外観色ID": "EXT-YKK-J5",
+      "外観色表示名": "ブラウン",
+      "内観色ID": "INT-YKK-WH",
+      "内観色表示名": "ホワイト",
+      "組合せ可否": "可",
+      "有効": true,
+      "登録状態": "公式確認済",
+      "出典": "202608_YKKAP_APW430_商品カタログ P.40",
+      "備考": "外観コードJ5",
+      "_source": {
+        "sheet": "07_色",
+        "row": 40
+      }
+    },
+    {
+      "color_relation_id": "CLR-YKK-APW430-3A-WH",
+      "シリーズID": "SER-YKK-APW430",
+      "外観色ID": "EXT-YKK-3A",
+      "外観色表示名": "ブラック",
+      "内観色ID": "INT-YKK-WH",
+      "内観色表示名": "ホワイト",
+      "組合せ可否": "可",
+      "有効": true,
+      "登録状態": "公式確認済",
+      "出典": "202608_YKKAP_APW430_商品カタログ P.40",
+      "備考": "外観コード3A",
+      "_source": {
+        "sheet": "07_色",
+        "row": 41
+      }
+    },
+    {
+      "color_relation_id": "CLR-YKK-APW430-3A-OC",
+      "シリーズID": "SER-YKK-APW430",
+      "外観色ID": "EXT-YKK-3A",
+      "外観色表示名": "ブラック",
+      "内観色ID": "INT-YKK-OC",
+      "内観色表示名": "ブラック",
+      "組合せ可否": "可",
+      "有効": true,
+      "登録状態": "公式確認済",
+      "出典": "202608_YKKAP_APW430_商品カタログ P.40",
+      "備考": "内観ブラックは外観ブラックのみ。ツーアクション窓は内外観ブラック色の設定なし（202608_YKKAP_APW430_商品カタログ P.40・P.72）",
+      "_source": {
+        "sheet": "07_色",
+        "row": 42
+      }
+    }
+  ],
+  "color_applicability_rules": [
+    {
+      "color_rule_id": "CR-YKK-APW430-TWO-S-3AOC",
+      "シリーズID": "SER-YKK-APW430",
+      "シリーズ窓種ID": "SWT-YKK-APW430-TWOACTION-SINGLE",
+      "color_id": "CLR-YKK-APW430-3A-OC",
+      "選択可否": "不可",
+      "有効": true,
+      "登録状態": "公式確認済",
+      "出典": "202607_YKKAP_APW430_商品カタログ P.40/P.72",
+      "備考": "ツーアクション窓は内外観ブラック色の設定なし",
+      "優先度": 100,
+      "_source": {
+        "sheet": "07A_色適用条件",
+        "row": 4
+      }
+    },
+    {
+      "color_rule_id": "CR-YKK-APW430-TWO-DAN-3AOC",
+      "シリーズID": "SER-YKK-APW430",
+      "シリーズ窓種ID": "SWT-YKK-APW430-TWOACTION-FIX-DAN",
+      "color_id": "CLR-YKK-APW430-3A-OC",
+      "選択可否": "不可",
+      "有効": true,
+      "登録状態": "公式確認済",
+      "出典": "202607_YKKAP_APW430_商品カタログ P.40/P.72",
+      "備考": "ツーアクション窓は内外観ブラック色の設定なし",
+      "優先度": 100,
+      "_source": {
+        "sheet": "07A_色適用条件",
+        "row": 5
+      }
+    },
+    {
+      "color_rule_id": "CR-YKK-APW430-TWO-REN-3AOC",
+      "シリーズID": "SER-YKK-APW430",
+      "シリーズ窓種ID": "SWT-YKK-APW430-TWOACTION-FIX-REN",
+      "color_id": "CLR-YKK-APW430-3A-OC",
+      "選択可否": "不可",
+      "有効": true,
+      "登録状態": "公式確認済",
+      "出典": "202607_YKKAP_APW430_商品カタログ P.40/P.72",
+      "備考": "ツーアクション窓は内外観ブラック色の設定なし",
+      "優先度": 100,
+      "_source": {
+        "sheet": "07A_色適用条件",
+        "row": 6
+      }
+    }
+  ],
+  "golden_tests": [
+    {
+      "test_id": "APW430-GT-01",
+      "scenario": "APW430/431シリーズ分離",
+      "expected": "APW430ではAPW431テラス系を候補に出さない",
+      "implementation_basis": "03AでAPW430有効25窓種を独立管理。APW431は別シリーズ",
+      "status": "PASS",
+      "risk_control": "シリーズ混在防止",
+      "maintenance": "維持",
+      "evidence_note": "APW430マスターへAPW431を混入しない",
+      "_source_sheet": "11_見積入力テスト",
+      "_source_row": 56
+    },
+    {
+      "test_id": "APW430-GT-02",
+      "scenario": "すべり出しグレモン 04603網戸",
+      "expected": "□＝上げ下げロール/横引きロールのみ",
+      "implementation_basis": "09Cで04603を□として2形式に限定",
+      "status": "PASS",
+      "risk_control": "サイズ別網戸誤候補防止",
+      "maintenance": "維持",
+      "evidence_note": "202607 APW430商品カタログ P.54",
+      "_source_sheet": "11_見積入力テスト",
+      "_source_row": 57
+    },
+    {
+      "test_id": "APW430-GT-03",
+      "scenario": "すべり出しグレモン 11903網戸",
+      "expected": "◇＝内開き/横引きロール。上げ下げロールは出さない",
+      "implementation_basis": "09Cで11903を◇として2形式に限定",
+      "status": "PASS",
+      "risk_control": "サイズ別網戸誤候補防止",
+      "maintenance": "維持",
+      "evidence_note": "202607 APW430商品カタログ P.54",
+      "_source_sheet": "11_見積入力テスト",
+      "_source_row": 58
+    },
+    {
+      "test_id": "APW430-GT-04",
+      "scenario": "すべり出しグレモン 165043網戸",
+      "expected": "◆＝横引きロール網戸（両引き）のみ",
+      "implementation_basis": "09Cで165043を◆、両引き専用として登録",
+      "status": "PASS",
+      "risk_control": "大型規格の誤形式防止",
+      "maintenance": "維持",
+      "evidence_note": "202607 APW430商品カタログ P.54",
+      "_source_sheet": "11_見積入力テスト",
+      "_source_row": 59
+    },
+    {
+      "test_id": "APW430-GT-05",
+      "scenario": "すべり出しオペレーター網戸",
+      "expected": "固定網戸のみ",
+      "implementation_basis": "09Aでオペレーター系を固定網戸に限定。09Cサイズ例外なし",
+      "status": "PASS",
+      "risk_control": "操作方式別網戸混在防止",
+      "maintenance": "維持",
+      "evidence_note": "グレモンのロール網戸候補を流用しない",
+      "_source_sheet": "11_見積入力テスト",
+      "_source_row": 60
+    },
+    {
+      "test_id": "APW430-GT-06",
+      "scenario": "ガラス大分類",
+      "expected": "APW430全25有効窓種でトリプル可・複層不可",
+      "implementation_basis": "08Aに25/25登録、08C 718サイズへ基本判定が連動",
+      "status": "PASS",
+      "risk_control": "ペアガラス誤選択防止",
+      "maintenance": "維持",
+      "evidence_note": "耐風圧等級は自動判定対象外。通常見積ではトリプル/複層の基本可否と、明確なメーカー設定外のみを制御",
+      "_source_sheet": "11_見積入力テスト",
+      "_source_row": 61
+    },
+    {
+      "test_id": "APW430-GT-07",
+      "scenario": "ツーアクション色制約",
+      "expected": "内外観ブラック（3A/OC）を候補に出さない",
+      "implementation_basis": "07Aで単窓/FIX段窓/FIX連窓の3構成を明示不可",
+      "status": "PASS",
+      "risk_control": "存在しない色組合せ防止",
+      "maintenance": "維持",
+      "evidence_note": "商品カタログ P.40/P.72",
+      "_source_sheet": "11_見積入力テスト",
+      "_source_row": 62
+    },
+    {
+      "test_id": "APW430-GT-08",
+      "scenario": "面格子 横格子サイズ制約",
+      "expected": "W150/W160/W165では横格子を候補に出さない",
+      "implementation_basis": "05Aに対象15規格を明示不可で登録",
+      "status": "PASS",
+      "risk_control": "面格子種類別の過剰候補防止",
+      "maintenance": "維持",
+      "evidence_note": "面格子自体の設定不可サイズは06_サイズで除外済",
+      "_source_sheet": "11_見積入力テスト",
+      "_source_row": 63
+    },
+    {
+      "test_id": "APW430-GT-09",
+      "scenario": "耐風圧判定方針",
+      "expected": "耐風圧等級を入力・自動判定しない",
+      "implementation_basis": "08Aで対象外、08Cは基本ガラス可否のみ。特殊サイズ・高耐風圧案件はカタログ確認",
+      "status": "PASS",
+      "risk_control": "入力負担・保守複雑化を回避",
+      "maintenance": "維持",
+      "evidence_note": "S-1/S-2/S-3は見積UI対象外",
+      "_source_sheet": "11_見積入力テスト",
+      "_source_row": 64
+    },
+    {
+      "test_id": "APW430-GT-10",
+      "scenario": "下枠カバー×外観ホワイト",
+      "expected": "外観ホワイト時は下枠カバーを候補に出さない",
+      "implementation_basis": "10Bでホワイト時に選択不可",
+      "status": "PASS",
+      "risk_control": "色別OP誤選択防止",
+      "maintenance": "維持",
+      "evidence_note": "商品カタログ P.35",
+      "_source_sheet": "11_見積入力テスト",
+      "_source_row": 65
+    },
+    {
+      "test_id": "APW430-GT-11",
+      "scenario": "付加断熱用水切×非ホワイト",
+      "expected": "対応窓種で水切＋非ホワイトなら下枠カバー必須",
+      "implementation_basis": "10Bで自動追加・必須",
+      "status": "PASS",
+      "risk_control": "必須部材漏れ防止",
+      "maintenance": "維持",
+      "evidence_note": "商品カタログ各商品ページ",
+      "_source_sheet": "11_見積入力テスト",
+      "_source_row": 66
+    },
+    {
+      "test_id": "APW430-GT-12",
+      "scenario": "下枠カバー窓種適用",
+      "expected": "ツーアクション/引違い/面格子付/シャッター付では候補非表示",
+      "implementation_basis": "10Bで非対応窓種を明示不可",
+      "status": "PASS",
+      "risk_control": "窓種非対応OPの誤選択防止",
+      "maintenance": "維持",
+      "evidence_note": "商品カタログ P.35 対応商品一覧／面格子商品ページ",
+      "_source_sheet": "11_見積入力テスト",
+      "_source_row": 67
+    },
+    {
+      "test_id": "APW430-GT-13",
+      "scenario": "シャッター発売状態",
+      "expected": "現行4種のみ選択可。リモコンスリットシャッターGRは発売前非表示",
+      "implementation_basis": "05で現行4種=可、発売予定品=不可",
+      "status": "PASS",
+      "risk_control": "発売前商品の誤見積防止",
+      "maintenance": "2027年4月発売後に再確認",
+      "evidence_note": "202608資料：2027年4月発売予定",
+      "_source_sheet": "11_見積入力テスト",
+      "_source_row": 68
+    },
+    {
+      "test_id": "APW430-GT-14",
+      "scenario": "クレセントダウン仕様",
+      "expected": "2枚建のみ候補表示。4枚建・面格子付・シャッター付では表示しない",
+      "implementation_basis": "04/05で固有仕様化し、05Cで建数=2枚建・H570〜1570に限定",
+      "status": "PASS",
+      "risk_control": "クレセントダウン誤候補防止",
+      "maintenance": "維持",
+      "evidence_note": "商品カタログ P.77／業務用資料集 P.6",
+      "_source_sheet": "11_見積入力テスト",
+      "_source_row": 69
+    },
+    {
+      "test_id": "APW430-GT-15",
+      "scenario": "非常用進入口対応サイズ仕様",
+      "expected": "2枚建16513だけ候補表示。他サイズ・4枚建では表示しない",
+      "implementation_basis": "05Cでsize_id=SZ-YKK-APW430-HIKI-H2-16513を明示許可",
+      "status": "PASS",
+      "risk_control": "非常用進入口の規格誤選択防止",
+      "maintenance": "維持",
+      "evidence_note": "商品カタログ P.77-78／業務用資料集 P.6。有効開口750mm",
+      "_source_sheet": "11_見積入力テスト",
+      "_source_row": 70
+    },
+    {
+      "test_id": "APW430-GT-16",
+      "scenario": "引違い特殊仕様の排他制御",
+      "expected": "クレセント仕様／クレセントダウン仕様／非常用進入口対応サイズ仕様は1項目の3択。面格子付・シャッター付には項目非表示",
+      "implementation_basis": "03AのSWT-YKK-APW430-HIKIだけ固有仕様種別=引違い特殊仕様。05Cで条件制御",
+      "status": "PASS",
+      "risk_control": "特殊仕様の併用・別窓種混入防止",
+      "maintenance": "維持",
+      "evidence_note": "商品カタログ P.76-78",
+      "_source_sheet": "11_見積入力テスト",
+      "_source_row": 71
+    },
+    {
+      "test_id": "APW430-GATE",
+      "scenario": "APW430通常見積UI投入判定",
+      "expected": "718サイズ・25窓種・サイズ別網戸・色例外・面格子例外・基本ガラス可否・OP依存・引違い特殊仕様を機械判定",
+      "implementation_basis": "APW430-GT-01〜16 PASS。耐風圧等級は自動判定対象外",
+      "status": "PASS",
+      "risk_control": "通常見積UIへ投入可能",
+      "maintenance": "次段階=見積UI実装",
+      "evidence_note": "APW431は別シリーズ。非常用進入口は16513・2枚建のみ",
+      "_source_sheet": "11_見積入力テスト",
+      "_source_row": 72
+    }
+  ],
+  "provenance": {
+    "authoring_drive_file_id": "13pORfVXbbab2MFx8v_42kqeE2fVaqI2h5rRvxCe1mz4",
+    "authoring_file_name": "YKKAP_APW430_AUTHORING_MASTER_20260918-R3",
+    "authoring_export_sha256": "c910db94b3e10c354d2c02fef10ec431566e0eb4665315240fc90cc784052b6f",
+    "authoring_modified_at": "2026-09-18T05:09:35.771Z",
+    "generation_method": "Formal R2 Runtime baseline + verified APW430 R3 native Authoring Master semantic sheets (12A/12B/12C) and six scoped 09_網戸 corrections. No UI inference.",
+    "formula_sensitive_tables": {
+      "08C_サイズ別ガラス判定": {
+        "apw430_rows": 718,
+        "recovery": "exported formula fallback values"
+      },
+      "09C_サイズ別網戸判定": {
+        "apw430_rows": 140,
+        "recovery": "68 exported spill fallback values + 72 stored values"
+      },
+      "05A_サイズ別固有仕様判定": {
+        "apw430_rows": 15,
+        "recovery": "exported formula fallback values"
+      }
+    },
+    "revision": "20260918-R3",
+    "change_summary": "APW430 screen_midrail & frame_angle Semantic Recovery. Non-semantic Product Master data, Glass, Color, and other Screen fields remain unchanged.",
+    "source_working_authoring_file_id": "1PjW9yLf5r2XGsOy9HS8SJMPzK2eg6EDw9N7tOMlMSxA"
+  },
+  "runtime_semantics": {
+    "ui_standard": "サッシ情報管理アプリ_Runtime UI統合共通仕様書_v1.7",
+    "construction": {
+      "role": "INTERNAL_TECHNICAL_KEY",
+      "user_visible": false,
+      "user_selectable": false,
+      "selection_mode": "INTERNAL_RESOLVE",
+      "notes": "既存constructionは工法・旧アングル文字列を含む技術キーとして保持する。frame_angleのUser-facing意味はcanonical frame_angleから解決し、construction文字列解析で推測しない。"
+    },
+    "configuration": {
+      "role": "WINDOW_SPEC",
+      "user_visible_when_applicable": true,
+      "canonical_values": [
+        "2連窓",
+        "3連窓",
+        "3連窓・ウインドキャッチ"
+      ],
+      "source": "06C_特注寸法範囲および規格size_id R2/R3/R3W"
+    },
+    "panelCount": {
+      "role": "PANEL_COUNT",
+      "user_visible_when_applicable": true,
+      "canonical_values": [
+        "2枚建",
+        "4枚建"
+      ],
+      "source": "06_サイズ 建て方/区分（20260830-R1で工法区分から意味分離）"
+    },
+    "legacy_fields": {
+      "legacyConstruction": "20260830 Runtimeのconstruction原値。監査専用・UI非表示。",
+      "legacyConfiguration": "20260830 Runtimeのconfiguration原値。監査専用・UI非表示。"
+    },
+    "frame_angle": {
+      "role": "FRAME_ANGLE",
+      "canonical_field": "frame_angle",
+      "stage": "CONFIGURATION",
+      "canonical_values": [
+        "WITH_ANGLE",
+        "WITHOUT_ANGLE"
+      ],
+      "user_visible_when_applicable": true,
+      "selector_policy": "USER_SELECTABLEのみSelector表示。FIXEDは自動解決しSelectorを表示しない。",
+      "position": "window_spec -> handing -> frame_angle -> SIZE",
+      "rule_source": "12B_SemanticRules",
+      "dependency_source": "12C_SemanticDependency",
+      "unknown_fallback": "FORBIDDEN"
+    }
+  },
+  "frame_angle_rules": [
+    {
+      "seriesWindowId": "SWT-YKK-APW430-TATE-GREMON-SINGLE",
+      "windowName": "たてすべり出し窓（グレモンハンドル仕様）単窓",
+      "canonicalField": "frame_angle",
+      "stage": "CONFIGURATION",
+      "officialTerminology": "アングル付 / アングル無",
+      "classification": "USER_SELECTABLE",
+      "allowedValues": [
+        "WITH_ANGLE",
+        "WITHOUT_ANGLE"
+      ],
+      "fixedValue": null,
+      "construction": "アングル付/無共通",
+      "region": "ALL",
+      "standardCustom": [
+        "STANDARD",
+        "CUSTOM"
+      ],
+      "sizeAuthority": "existing standard_sizes/custom_dimension_rules; resolve frame_angle before SIZE",
+      "dependency": [
+        "window_type",
+        "frame_angle",
+        "SIZE"
+      ],
+      "clearBehavior": "frame_angle change clears SIZE; window_type change re-resolves frame_angle and clears SIZE",
+      "evidence": [
+        "E-FA-001",
+        "E-FA-006"
+      ],
+      "verificationStatus": "VERIFIED"
+    },
+    {
+      "seriesWindowId": "SWT-YKK-APW430-TATE-GREMON-FIX-DAN",
+      "windowName": "たてすべり出し窓（グレモンハンドル仕様）＋FIX段窓",
+      "canonicalField": "frame_angle",
+      "stage": "CONFIGURATION",
+      "officialTerminology": "アングル付 / アングル無",
+      "classification": "USER_SELECTABLE",
+      "allowedValues": [
+        "WITH_ANGLE",
+        "WITHOUT_ANGLE"
+      ],
+      "fixedValue": null,
+      "construction": "アングル付/無共通",
+      "region": "ALL",
+      "standardCustom": [
+        "STANDARD",
+        "CUSTOM"
+      ],
+      "sizeAuthority": "existing standard_sizes/custom_dimension_rules; resolve frame_angle before SIZE",
+      "dependency": [
+        "window_type",
+        "frame_angle",
+        "SIZE"
+      ],
+      "clearBehavior": "frame_angle change clears SIZE; window_type change re-resolves frame_angle and clears SIZE",
+      "evidence": [
+        "E-FA-001",
+        "E-FA-006"
+      ],
+      "verificationStatus": "VERIFIED"
+    },
+    {
+      "seriesWindowId": "SWT-YKK-APW430-TATE-GREMON-FIX-REN",
+      "windowName": "たてすべり出し窓（グレモンハンドル仕様）＋FIX連窓",
+      "canonicalField": "frame_angle",
+      "stage": "CONFIGURATION",
+      "officialTerminology": "アングル付 / アングル無",
+      "classification": "USER_SELECTABLE",
+      "allowedValues": [
+        "WITH_ANGLE",
+        "WITHOUT_ANGLE"
+      ],
+      "fixedValue": null,
+      "construction": "アングル付/無共通",
+      "region": "ALL",
+      "standardCustom": [
+        "STANDARD",
+        "CUSTOM"
+      ],
+      "sizeAuthority": "existing standard_sizes/custom_dimension_rules; resolve frame_angle before SIZE",
+      "dependency": [
+        "window_type",
+        "frame_angle",
+        "SIZE"
+      ],
+      "clearBehavior": "frame_angle change clears SIZE; window_type change re-resolves frame_angle and clears SIZE",
+      "evidence": [
+        "E-FA-001",
+        "E-FA-006"
+      ],
+      "verificationStatus": "VERIFIED"
+    },
+    {
+      "seriesWindowId": "SWT-YKK-APW430-TATE-GREMON-WINDCATCH",
+      "windowName": "たてすべり出し窓（グレモンハンドル仕様）ウインドキャッチ連窓",
+      "canonicalField": "frame_angle",
+      "stage": "CONFIGURATION",
+      "officialTerminology": "アングル付 / アングル無",
+      "classification": "USER_SELECTABLE",
+      "allowedValues": [
+        "WITH_ANGLE",
+        "WITHOUT_ANGLE"
+      ],
+      "fixedValue": null,
+      "construction": "アングル付/無共通",
+      "region": "ALL",
+      "standardCustom": [
+        "STANDARD",
+        "CUSTOM"
+      ],
+      "sizeAuthority": "existing standard_sizes/custom_dimension_rules; resolve frame_angle before SIZE",
+      "dependency": [
+        "window_type",
+        "frame_angle",
+        "SIZE"
+      ],
+      "clearBehavior": "frame_angle change clears SIZE; window_type change re-resolves frame_angle and clears SIZE",
+      "evidence": [
+        "E-FA-001",
+        "E-FA-006"
+      ],
+      "verificationStatus": "VERIFIED"
+    },
+    {
+      "seriesWindowId": "SWT-YKK-APW430-TATE-OP-SINGLE",
+      "windowName": "たてすべり出し窓（オペレーターハンドル仕様）単窓",
+      "canonicalField": "frame_angle",
+      "stage": "CONFIGURATION",
+      "officialTerminology": "アングル付 / アングル無",
+      "classification": "USER_SELECTABLE",
+      "allowedValues": [
+        "WITH_ANGLE",
+        "WITHOUT_ANGLE"
+      ],
+      "fixedValue": null,
+      "construction": "アングル付/無共通",
+      "region": "ALL",
+      "standardCustom": [
+        "STANDARD",
+        "CUSTOM"
+      ],
+      "sizeAuthority": "existing standard_sizes/custom_dimension_rules; resolve frame_angle before SIZE",
+      "dependency": [
+        "window_type",
+        "frame_angle",
+        "SIZE"
+      ],
+      "clearBehavior": "frame_angle change clears SIZE; window_type change re-resolves frame_angle and clears SIZE",
+      "evidence": [
+        "E-FA-001",
+        "E-FA-006"
+      ],
+      "verificationStatus": "VERIFIED"
+    },
+    {
+      "seriesWindowId": "SWT-YKK-APW430-TATE-OP-FIX-DAN",
+      "windowName": "たてすべり出し窓（オペレーターハンドル仕様）＋FIX段窓",
+      "canonicalField": "frame_angle",
+      "stage": "CONFIGURATION",
+      "officialTerminology": "アングル付 / アングル無",
+      "classification": "USER_SELECTABLE",
+      "allowedValues": [
+        "WITH_ANGLE",
+        "WITHOUT_ANGLE"
+      ],
+      "fixedValue": null,
+      "construction": "アングル付/無共通",
+      "region": "ALL",
+      "standardCustom": [
+        "STANDARD",
+        "CUSTOM"
+      ],
+      "sizeAuthority": "existing standard_sizes/custom_dimension_rules; resolve frame_angle before SIZE",
+      "dependency": [
+        "window_type",
+        "frame_angle",
+        "SIZE"
+      ],
+      "clearBehavior": "frame_angle change clears SIZE; window_type change re-resolves frame_angle and clears SIZE",
+      "evidence": [
+        "E-FA-001",
+        "E-FA-006"
+      ],
+      "verificationStatus": "VERIFIED"
+    },
+    {
+      "seriesWindowId": "SWT-YKK-APW430-TATE-OP-FIX-REN",
+      "windowName": "たてすべり出し窓（オペレーターハンドル仕様）＋FIX連窓",
+      "canonicalField": "frame_angle",
+      "stage": "CONFIGURATION",
+      "officialTerminology": "アングル付 / アングル無",
+      "classification": "USER_SELECTABLE",
+      "allowedValues": [
+        "WITH_ANGLE",
+        "WITHOUT_ANGLE"
+      ],
+      "fixedValue": null,
+      "construction": "アングル付/無共通",
+      "region": "ALL",
+      "standardCustom": [
+        "STANDARD",
+        "CUSTOM"
+      ],
+      "sizeAuthority": "existing standard_sizes/custom_dimension_rules; resolve frame_angle before SIZE",
+      "dependency": [
+        "window_type",
+        "frame_angle",
+        "SIZE"
+      ],
+      "clearBehavior": "frame_angle change clears SIZE; window_type change re-resolves frame_angle and clears SIZE",
+      "evidence": [
+        "E-FA-001",
+        "E-FA-006"
+      ],
+      "verificationStatus": "VERIFIED"
+    },
+    {
+      "seriesWindowId": "SWT-YKK-APW430-TATE-OP-WINDCATCH",
+      "windowName": "たてすべり出し窓（オペレーターハンドル仕様）ウインドキャッチ連窓",
+      "canonicalField": "frame_angle",
+      "stage": "CONFIGURATION",
+      "officialTerminology": "アングル付 / アングル無",
+      "classification": "USER_SELECTABLE",
+      "allowedValues": [
+        "WITH_ANGLE",
+        "WITHOUT_ANGLE"
+      ],
+      "fixedValue": null,
+      "construction": "アングル付/無共通",
+      "region": "ALL",
+      "standardCustom": [
+        "STANDARD",
+        "CUSTOM"
+      ],
+      "sizeAuthority": "existing standard_sizes/custom_dimension_rules; resolve frame_angle before SIZE",
+      "dependency": [
+        "window_type",
+        "frame_angle",
+        "SIZE"
+      ],
+      "clearBehavior": "frame_angle change clears SIZE; window_type change re-resolves frame_angle and clears SIZE",
+      "evidence": [
+        "E-FA-001",
+        "E-FA-006"
+      ],
+      "verificationStatus": "VERIFIED"
+    },
+    {
+      "seriesWindowId": "SWT-YKK-APW430-SUBERI-GREMON-SINGLE",
+      "windowName": "すべり出し窓（グレモンハンドル仕様）単窓",
+      "canonicalField": "frame_angle",
+      "stage": "CONFIGURATION",
+      "officialTerminology": "アングル付 / アングル無",
+      "classification": "USER_SELECTABLE",
+      "allowedValues": [
+        "WITH_ANGLE",
+        "WITHOUT_ANGLE"
+      ],
+      "fixedValue": null,
+      "construction": "アングル付/無共通",
+      "region": "ALL",
+      "standardCustom": [
+        "STANDARD",
+        "CUSTOM"
+      ],
+      "sizeAuthority": "existing standard_sizes/custom_dimension_rules; resolve frame_angle before SIZE",
+      "dependency": [
+        "window_type",
+        "frame_angle",
+        "SIZE"
+      ],
+      "clearBehavior": "frame_angle change clears SIZE; window_type change re-resolves frame_angle and clears SIZE",
+      "evidence": [
+        "E-FA-001",
+        "E-FA-006"
+      ],
+      "verificationStatus": "VERIFIED"
+    },
+    {
+      "seriesWindowId": "SWT-YKK-APW430-SUBERI-GREMON-FIX-DAN",
+      "windowName": "すべり出し窓（グレモンハンドル仕様）＋FIX段窓",
+      "canonicalField": "frame_angle",
+      "stage": "CONFIGURATION",
+      "officialTerminology": "アングル付 / アングル無",
+      "classification": "USER_SELECTABLE",
+      "allowedValues": [
+        "WITH_ANGLE",
+        "WITHOUT_ANGLE"
+      ],
+      "fixedValue": null,
+      "construction": "アングル付/無共通",
+      "region": "ALL",
+      "standardCustom": [
+        "STANDARD",
+        "CUSTOM"
+      ],
+      "sizeAuthority": "existing standard_sizes/custom_dimension_rules; resolve frame_angle before SIZE",
+      "dependency": [
+        "window_type",
+        "frame_angle",
+        "SIZE"
+      ],
+      "clearBehavior": "frame_angle change clears SIZE; window_type change re-resolves frame_angle and clears SIZE",
+      "evidence": [
+        "E-FA-001",
+        "E-FA-006"
+      ],
+      "verificationStatus": "VERIFIED"
+    },
+    {
+      "seriesWindowId": "SWT-YKK-APW430-SUBERI-GREMON-FIX-REN",
+      "windowName": "すべり出し窓（グレモンハンドル仕様）＋FIX連窓",
+      "canonicalField": "frame_angle",
+      "stage": "CONFIGURATION",
+      "officialTerminology": "アングル付 / アングル無",
+      "classification": "USER_SELECTABLE",
+      "allowedValues": [
+        "WITH_ANGLE",
+        "WITHOUT_ANGLE"
+      ],
+      "fixedValue": null,
+      "construction": "アングル付/無共通",
+      "region": "ALL",
+      "standardCustom": [
+        "STANDARD",
+        "CUSTOM"
+      ],
+      "sizeAuthority": "existing standard_sizes/custom_dimension_rules; resolve frame_angle before SIZE",
+      "dependency": [
+        "window_type",
+        "frame_angle",
+        "SIZE"
+      ],
+      "clearBehavior": "frame_angle change clears SIZE; window_type change re-resolves frame_angle and clears SIZE",
+      "evidence": [
+        "E-FA-001",
+        "E-FA-006"
+      ],
+      "verificationStatus": "VERIFIED"
+    },
+    {
+      "seriesWindowId": "SWT-YKK-APW430-SUBERI-OP-SINGLE",
+      "windowName": "すべり出し窓（オペレーターハンドル仕様）単窓",
+      "canonicalField": "frame_angle",
+      "stage": "CONFIGURATION",
+      "officialTerminology": "アングル付 / アングル無",
+      "classification": "USER_SELECTABLE",
+      "allowedValues": [
+        "WITH_ANGLE",
+        "WITHOUT_ANGLE"
+      ],
+      "fixedValue": null,
+      "construction": "アングル付/無共通",
+      "region": "ALL",
+      "standardCustom": [
+        "STANDARD",
+        "CUSTOM"
+      ],
+      "sizeAuthority": "existing standard_sizes/custom_dimension_rules; resolve frame_angle before SIZE",
+      "dependency": [
+        "window_type",
+        "frame_angle",
+        "SIZE"
+      ],
+      "clearBehavior": "frame_angle change clears SIZE; window_type change re-resolves frame_angle and clears SIZE",
+      "evidence": [
+        "E-FA-001",
+        "E-FA-006"
+      ],
+      "verificationStatus": "VERIFIED"
+    },
+    {
+      "seriesWindowId": "SWT-YKK-APW430-SUBERI-OP-FIX-DAN",
+      "windowName": "すべり出し窓（オペレーターハンドル仕様）＋FIX段窓",
+      "canonicalField": "frame_angle",
+      "stage": "CONFIGURATION",
+      "officialTerminology": "アングル付 / アングル無",
+      "classification": "USER_SELECTABLE",
+      "allowedValues": [
+        "WITH_ANGLE",
+        "WITHOUT_ANGLE"
+      ],
+      "fixedValue": null,
+      "construction": "アングル付/無共通",
+      "region": "ALL",
+      "standardCustom": [
+        "STANDARD",
+        "CUSTOM"
+      ],
+      "sizeAuthority": "existing standard_sizes/custom_dimension_rules; resolve frame_angle before SIZE",
+      "dependency": [
+        "window_type",
+        "frame_angle",
+        "SIZE"
+      ],
+      "clearBehavior": "frame_angle change clears SIZE; window_type change re-resolves frame_angle and clears SIZE",
+      "evidence": [
+        "E-FA-001",
+        "E-FA-006"
+      ],
+      "verificationStatus": "VERIFIED"
+    },
+    {
+      "seriesWindowId": "SWT-YKK-APW430-SUBERI-OP-FIX-REN",
+      "windowName": "すべり出し窓（オペレーターハンドル仕様）＋FIX連窓",
+      "canonicalField": "frame_angle",
+      "stage": "CONFIGURATION",
+      "officialTerminology": "アングル付 / アングル無",
+      "classification": "USER_SELECTABLE",
+      "allowedValues": [
+        "WITH_ANGLE",
+        "WITHOUT_ANGLE"
+      ],
+      "fixedValue": null,
+      "construction": "アングル付/無共通",
+      "region": "ALL",
+      "standardCustom": [
+        "STANDARD",
+        "CUSTOM"
+      ],
+      "sizeAuthority": "existing standard_sizes/custom_dimension_rules; resolve frame_angle before SIZE",
+      "dependency": [
+        "window_type",
+        "frame_angle",
+        "SIZE"
+      ],
+      "clearBehavior": "frame_angle change clears SIZE; window_type change re-resolves frame_angle and clears SIZE",
+      "evidence": [
+        "E-FA-001",
+        "E-FA-006"
+      ],
+      "verificationStatus": "VERIFIED"
+    },
+    {
+      "seriesWindowId": "SWT-YKK-APW430-HIGH-SINGLE",
+      "windowName": "高所用すべり出し窓 単窓",
+      "canonicalField": "frame_angle",
+      "stage": "CONFIGURATION",
+      "officialTerminology": "アングル付 / アングル無",
+      "classification": "USER_SELECTABLE",
+      "allowedValues": [
+        "WITH_ANGLE",
+        "WITHOUT_ANGLE"
+      ],
+      "fixedValue": null,
+      "construction": "アングル付/無共通",
+      "region": "ALL",
+      "standardCustom": [
+        "STANDARD",
+        "CUSTOM"
+      ],
+      "sizeAuthority": "existing standard_sizes/custom_dimension_rules; resolve frame_angle before SIZE",
+      "dependency": [
+        "window_type",
+        "frame_angle",
+        "SIZE"
+      ],
+      "clearBehavior": "frame_angle change clears SIZE; window_type change re-resolves frame_angle and clears SIZE",
+      "evidence": [
+        "E-FA-001",
+        "E-FA-006"
+      ],
+      "verificationStatus": "VERIFIED"
+    },
+    {
+      "seriesWindowId": "SWT-YKK-APW430-HIGH-ENDOP-SINGLE",
+      "windowName": "高所用すべり出し窓（端部操作仕様）単窓",
+      "canonicalField": "frame_angle",
+      "stage": "CONFIGURATION",
+      "officialTerminology": "アングル付 / アングル無",
+      "classification": "USER_SELECTABLE",
+      "allowedValues": [
+        "WITH_ANGLE",
+        "WITHOUT_ANGLE"
+      ],
+      "fixedValue": null,
+      "construction": "アングル付/無共通",
+      "region": "ALL",
+      "standardCustom": [
+        "STANDARD",
+        "CUSTOM"
+      ],
+      "sizeAuthority": "existing standard_sizes/custom_dimension_rules; resolve frame_angle before SIZE",
+      "dependency": [
+        "window_type",
+        "frame_angle",
+        "SIZE"
+      ],
+      "clearBehavior": "frame_angle change clears SIZE; window_type change re-resolves frame_angle and clears SIZE",
+      "evidence": [
+        "E-FA-001",
+        "E-FA-006"
+      ],
+      "verificationStatus": "VERIFIED"
+    },
+    {
+      "seriesWindowId": "SWT-YKK-APW430-TWOACTION-SINGLE",
+      "windowName": "ツーアクション窓 単窓",
+      "canonicalField": "frame_angle",
+      "stage": "CONFIGURATION",
+      "officialTerminology": "アングル無枠のみ",
+      "classification": "FIXED",
+      "allowedValues": [
+        "WITHOUT_ANGLE"
+      ],
+      "fixedValue": "WITHOUT_ANGLE",
+      "construction": "アングル無",
+      "region": "ALL",
+      "standardCustom": [
+        "STANDARD",
+        "CUSTOM"
+      ],
+      "sizeAuthority": "existing standard_sizes/custom_dimension_rules; resolve frame_angle before SIZE",
+      "dependency": [
+        "window_type",
+        "frame_angle",
+        "SIZE"
+      ],
+      "clearBehavior": "window_type change re-resolves fixed frame_angle and clears SIZE",
+      "evidence": [
+        "E-FA-002"
+      ],
+      "verificationStatus": "VERIFIED"
+    },
+    {
+      "seriesWindowId": "SWT-YKK-APW430-TWOACTION-FIX-DAN",
+      "windowName": "ツーアクション窓＋FIX段窓",
+      "canonicalField": "frame_angle",
+      "stage": "CONFIGURATION",
+      "officialTerminology": "アングル無枠のみ",
+      "classification": "FIXED",
+      "allowedValues": [
+        "WITHOUT_ANGLE"
+      ],
+      "fixedValue": "WITHOUT_ANGLE",
+      "construction": "アングル無",
+      "region": "ALL",
+      "standardCustom": [
+        "STANDARD",
+        "CUSTOM"
+      ],
+      "sizeAuthority": "existing standard_sizes/custom_dimension_rules; resolve frame_angle before SIZE",
+      "dependency": [
+        "window_type",
+        "frame_angle",
+        "SIZE"
+      ],
+      "clearBehavior": "window_type change re-resolves fixed frame_angle and clears SIZE",
+      "evidence": [
+        "E-FA-002"
+      ],
+      "verificationStatus": "VERIFIED"
+    },
+    {
+      "seriesWindowId": "SWT-YKK-APW430-TWOACTION-FIX-REN",
+      "windowName": "ツーアクション窓＋FIX連窓",
+      "canonicalField": "frame_angle",
+      "stage": "CONFIGURATION",
+      "officialTerminology": "アングル無枠のみ",
+      "classification": "FIXED",
+      "allowedValues": [
+        "WITHOUT_ANGLE"
+      ],
+      "fixedValue": "WITHOUT_ANGLE",
+      "construction": "アングル無",
+      "region": "ALL",
+      "standardCustom": [
+        "STANDARD",
+        "CUSTOM"
+      ],
+      "sizeAuthority": "existing standard_sizes/custom_dimension_rules; resolve frame_angle before SIZE",
+      "dependency": [
+        "window_type",
+        "frame_angle",
+        "SIZE"
+      ],
+      "clearBehavior": "window_type change re-resolves fixed frame_angle and clears SIZE",
+      "evidence": [
+        "E-FA-002"
+      ],
+      "verificationStatus": "VERIFIED"
+    },
+    {
+      "seriesWindowId": "SWT-YKK-APW430-HIKI",
+      "windowName": "引違い窓",
+      "canonicalField": "frame_angle",
+      "stage": "CONFIGURATION",
+      "officialTerminology": "アングル付 / アングル無",
+      "classification": "USER_SELECTABLE",
+      "allowedValues": [
+        "WITH_ANGLE",
+        "WITHOUT_ANGLE"
+      ],
+      "fixedValue": null,
+      "construction": "アングル付/無共通",
+      "region": "ALL",
+      "standardCustom": [
+        "STANDARD",
+        "CUSTOM"
+      ],
+      "sizeAuthority": "existing standard_sizes/custom_dimension_rules; resolve frame_angle before SIZE",
+      "dependency": [
+        "window_type",
+        "frame_angle",
+        "SIZE"
+      ],
+      "clearBehavior": "frame_angle change clears SIZE; window_type change re-resolves frame_angle and clears SIZE",
+      "evidence": [
+        "E-FA-001",
+        "E-FA-004"
+      ],
+      "verificationStatus": "VERIFIED"
+    },
+    {
+      "seriesWindowId": "SWT-YKK-APW430-MENKOSHI-HIKI",
+      "windowName": "面格子付引違い窓",
+      "canonicalField": "frame_angle",
+      "stage": "CONFIGURATION",
+      "officialTerminology": "アングル付 / アングル無",
+      "classification": "USER_SELECTABLE",
+      "allowedValues": [
+        "WITH_ANGLE",
+        "WITHOUT_ANGLE"
+      ],
+      "fixedValue": null,
+      "construction": "アングル付/無共通",
+      "region": "ALL",
+      "standardCustom": [
+        "STANDARD",
+        "CUSTOM"
+      ],
+      "sizeAuthority": "existing standard_sizes/custom_dimension_rules; resolve frame_angle before SIZE",
+      "dependency": [
+        "window_type",
+        "frame_angle",
+        "SIZE"
+      ],
+      "clearBehavior": "frame_angle change clears SIZE; window_type change re-resolves frame_angle and clears SIZE",
+      "evidence": [
+        "E-FA-001",
+        "E-FA-004"
+      ],
+      "verificationStatus": "VERIFIED"
+    },
+    {
+      "seriesWindowId": "SWT-YKK-APW430-SHUTTER-HIKI",
+      "windowName": "シャッター付引違い窓",
+      "canonicalField": "frame_angle",
+      "stage": "CONFIGURATION",
+      "officialTerminology": "アングル付 / アングル無",
+      "classification": "USER_SELECTABLE",
+      "allowedValues": [
+        "WITH_ANGLE",
+        "WITHOUT_ANGLE"
+      ],
+      "fixedValue": null,
+      "construction": "アングル付/無共通",
+      "region": "ALL",
+      "standardCustom": [
+        "STANDARD",
+        "CUSTOM"
+      ],
+      "sizeAuthority": "existing standard_sizes/custom_dimension_rules; resolve frame_angle before SIZE",
+      "dependency": [
+        "window_type",
+        "frame_angle",
+        "SIZE"
+      ],
+      "clearBehavior": "frame_angle change clears SIZE; window_type change re-resolves frame_angle and clears SIZE",
+      "evidence": [
+        "E-FA-001",
+        "E-FA-004",
+        "E-FA-005"
+      ],
+      "verificationStatus": "VERIFIED"
+    },
+    {
+      "seriesWindowId": "SWT-YKK-APW430-FIX-MADO",
+      "windowName": "FIX窓 窓タイプ",
+      "canonicalField": "frame_angle",
+      "stage": "CONFIGURATION",
+      "officialTerminology": "アングル付 / アングル無",
+      "classification": "USER_SELECTABLE",
+      "allowedValues": [
+        "WITH_ANGLE",
+        "WITHOUT_ANGLE"
+      ],
+      "fixedValue": null,
+      "construction": "アングル付/無共通",
+      "region": "ALL",
+      "standardCustom": [
+        "STANDARD",
+        "CUSTOM"
+      ],
+      "sizeAuthority": "existing standard_sizes/custom_dimension_rules; resolve frame_angle before SIZE",
+      "dependency": [
+        "window_type",
+        "frame_angle",
+        "SIZE"
+      ],
+      "clearBehavior": "frame_angle change clears SIZE; window_type change re-resolves frame_angle and clears SIZE",
+      "evidence": [
+        "E-FA-001",
+        "E-FA-006"
+      ],
+      "verificationStatus": "VERIFIED"
+    },
+    {
+      "seriesWindowId": "SWT-YKK-APW430-FIX-TR-ZAIRAI",
+      "windowName": "FIX窓 テラスタイプ（在来）",
+      "canonicalField": "frame_angle",
+      "stage": "CONFIGURATION",
+      "officialTerminology": "アングル付枠のみ",
+      "classification": "FIXED",
+      "allowedValues": [
+        "WITH_ANGLE"
+      ],
+      "fixedValue": "WITH_ANGLE",
+      "construction": "在来・アングル付",
+      "region": "ALL",
+      "standardCustom": [
+        "STANDARD",
+        "CUSTOM"
+      ],
+      "sizeAuthority": "existing standard_sizes/custom_dimension_rules; resolve frame_angle before SIZE",
+      "dependency": [
+        "window_type",
+        "construction",
+        "frame_angle",
+        "SIZE"
+      ],
+      "clearBehavior": "window_type/construction change re-resolves fixed frame_angle and clears SIZE",
+      "evidence": [
+        "E-FA-003"
+      ],
+      "verificationStatus": "VERIFIED"
+    },
+    {
+      "seriesWindowId": "SWT-YKK-APW430-FIX-TR-204",
+      "windowName": "FIX窓 テラスタイプ（2×4）",
+      "canonicalField": "frame_angle",
+      "stage": "CONFIGURATION",
+      "officialTerminology": "アングル付枠のみ",
+      "classification": "FIXED",
+      "allowedValues": [
+        "WITH_ANGLE"
+      ],
+      "fixedValue": "WITH_ANGLE",
+      "construction": "2×4・アングル付",
+      "region": "ALL",
+      "standardCustom": [
+        "STANDARD",
+        "CUSTOM"
+      ],
+      "sizeAuthority": "existing standard_sizes/custom_dimension_rules; resolve frame_angle before SIZE",
+      "dependency": [
+        "window_type",
+        "construction",
+        "frame_angle",
+        "SIZE"
+      ],
+      "clearBehavior": "window_type/construction change re-resolves fixed frame_angle and clears SIZE",
+      "evidence": [
+        "E-FA-003"
+      ],
+      "verificationStatus": "VERIFIED"
+    }
+  ]
+}

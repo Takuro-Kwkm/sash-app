@@ -155,8 +155,32 @@ function buildModel(runtimePackage) {
   }
   if (!valueKeys.has('size_mode\u0000"custom"')) values.push({ field_name: 'size_mode', canonical_value: 'custom', status: 'CURRENT', display_label: '特注', user_selectable: false, runtime_selectable: true });
   const fieldByName = new Map(fields.map((row) => [row.field_name, row]));
+  const valuesByField = new Map();
+  for (const row of values) {
+    if (!valuesByField.has(row.field_name)) valuesByField.set(row.field_name, []);
+    valuesByField.get(row.field_name).push(row.canonical_value);
+  }
+  for (const [field, rows] of valuesByField) valuesByField.set(field, Object.freeze(unique(rows)));
+
+  const glassIdsByNodeId = new Map(canonical.product_nodes.map((row) => [row.node_id, new Set()]));
+  for (const row of canonical.glass_node_matrix) {
+    if (row.status === 'NOT_APPLICABLE') continue;
+    if (!glassIdsByNodeId.has(row.node_id)) glassIdsByNodeId.set(row.node_id, new Set());
+    glassIdsByNodeId.get(row.node_id).add(row.glass_spec_id);
+  }
+  const glassSpecsByNodeId = new Map();
+  for (const [nodeId, ids] of glassIdsByNodeId) {
+    glassSpecsByNodeId.set(nodeId, Object.freeze(canonical.glass_specs.filter((row) => ids.has(row.glass_spec_id))));
+  }
+  const detailMatrixByNodeId = new Map(canonical.detail_field_matrix.map((row) => [row.node_id, row]));
+  const sizeRuleByNodeId = new Map(canonical.size_rules.map((row) => [row[1], row]));
+  const sortedDependencyRules = Object.freeze([...canonical.dependency_rules].sort((a, b) => a.priority - b.priority || a.rule_id.localeCompare(b.rule_id)));
+  const glassScopeRules = Object.freeze(sortedDependencyRules.filter((rule) => rule.effect?.action === 'exclude_scope_classes'));
+  const manualRouteByGsc = new Map((judgment.manual_check_routes ?? []).map((row) => [row.gsc_id, row]));
+
   return Object.freeze({
-    fields: Object.freeze(fields), values: Object.freeze(values), fieldByName,
+    fields: Object.freeze(fields), values: Object.freeze(values), fieldByName, valuesByField,
+    glassSpecsByNodeId, detailMatrixByNodeId, sizeRuleByNodeId, sortedDependencyRules, glassScopeRules, manualRouteByGsc,
     canonical, judgment, sizeInstallation, vacuum,
     capabilities: Object.freeze({
       runtimeContract: 'uchirimo_tabular_v1', dependencyRules: canonical.dependency_rules.length,
@@ -169,7 +193,7 @@ function buildModel(runtimePackage) {
 }
 
 function baseAllowed(model, field) {
-  return unique(model.values.filter((row) => row.field_name === field && row.status === 'CURRENT').map((row) => row.canonical_value));
+  return model.valuesByField.get(field) ?? [];
 }
 
 function conditionMatches(condition, selection) {
@@ -204,8 +228,8 @@ function configureNodeAxes(model, selection, visible, required, allowed) {
 
 function applyGlassScopeRules(model, selection, glasses) {
   let out = glasses;
-  for (const rule of model.canonical.dependency_rules) {
-    if (rule.effect.action !== 'exclude_scope_classes' || !ruleMatches(rule, selection)) continue;
+  for (const rule of model.glassScopeRules) {
+    if (!ruleMatches(rule, selection)) continue;
     const denied = new Set(rule.effect.values ?? []);
     out = out.filter((row) => !denied.has(row.scope_class));
   }
@@ -214,8 +238,7 @@ function applyGlassScopeRules(model, selection, glasses) {
 
 function configureGlass(model, nodeId, selection, visible, required, allowed, derived) {
   for (const field of GLASS_AXES) { visible.delete(field); required.delete(field); }
-  const availableIds = new Set(model.canonical.glass_node_matrix.filter((row) => row.node_id === nodeId && row.status !== 'NOT_APPLICABLE').map((row) => row.glass_spec_id));
-  let candidates = applyGlassScopeRules(model, selection, model.canonical.glass_specs.filter((row) => availableIds.has(row.glass_spec_id)));
+  let candidates = applyGlassScopeRules(model, selection, model.glassSpecsByNodeId.get(nodeId) ?? []);
   for (const field of GLASS_AXES) {
     const effective = { ...selection, ...derived };
     const prerequisite = field === 'glass_family' ||
@@ -247,7 +270,7 @@ function configureGlass(model, nodeId, selection, visible, required, allowed, de
 }
 
 function matrixFor(model, nodeId) {
-  return model.canonical.detail_field_matrix.find((row) => row.node_id === nodeId) ?? null;
+  return model.detailMatrixByNodeId.get(nodeId) ?? null;
 }
 
 function configureDetailFields(model, matrix, visible, required) {
@@ -262,7 +285,7 @@ function configureDetailFields(model, matrix, visible, required) {
 }
 
 function applyRules(model, selection, visible, required, allowed, derived, notices, exceptions, errors) {
-  for (const rule of [...model.canonical.dependency_rules].sort((a, b) => a.priority - b.priority || a.rule_id.localeCompare(b.rule_id))) {
+  for (const rule of model.sortedDependencyRules) {
     if (!ruleMatches(rule, { ...selection, ...derived })) continue;
     const effect = rule.effect;
     const current = allowed.get(effect.target_field) ?? baseAllowed(model, effect.target_field);
@@ -298,7 +321,7 @@ function applyRules(model, selection, visible, required, allowed, derived, notic
 }
 
 function evaluateBaseSize(model, nodeId, selection) {
-  const rule = model.canonical.size_rules.find((row) => row[1] === nodeId);
+  const rule = model.sizeRuleByNodeId.get(nodeId);
   if (!rule) return { status: 'BLOCK', message: '対応する正式Dimension Ruleがありません。', matchedRuleIds: [] };
   const [ruleId,,, expression] = rule;
   const w = Number(selection.size_w), h = Number(selection.size_h);
@@ -327,29 +350,39 @@ function evaluateBaseSize(model, nodeId, selection) {
   return { status: 'PASS', message: '正式Runtimeの基本寸法条件に適合しています。', matchedRuleIds: [ruleId] };
 }
 
+function requiredWhenClauseMatches(clause, selection, expression) {
+  const normalized = clause.trim();
+  const inMatch = /^(\w+)\s+in\s+\[([^\]]+)\]$/.exec(normalized);
+  if (inMatch) {
+    const values = inMatch[2].split(',').map((value) => value.trim()).filter(Boolean);
+    return has(selection[inMatch[1]]) && values.some((value) => same(selection[inMatch[1]], value));
+  }
+  const comparison = /^(\w+)\s*(==|!=)\s*([^\s]+)$/.exec(normalized);
+  if (comparison) {
+    const [, field, operator, value] = comparison;
+    if (!has(selection[field])) return false;
+    return operator === '==' ? same(selection[field], value) : !same(selection[field], value);
+  }
+  fail('RUNTIME_REQUIRED_WHEN_UNSUPPORTED', `Unsupported Formal required_when clause: ${normalized}`, { expression, clause: normalized });
+}
+
+function requiredWhenMatches(expression, selection) {
+  const normalized = String(expression ?? '').trim();
+  if (!normalized) return false;
+  return normalized.split(/\s+OR\s+/).some((orGroup) =>
+    orGroup.split(/\s+AND\s+/).every((clause) =>
+      requiredWhenClauseMatches(clause, selection, normalized)));
+}
+
 function installationVisibility(model, selection, visible, required) {
   if (selection.room_specification === 'bathroom') { visible.add('bathroom_installation_type'); required.add('bathroom_installation_type'); }
   if (selection.frame_installation_mode === 'frame_projection') { visible.add('frame_projection'); required.add('frame_projection'); }
   if (selection.extension_frame_type === 'fukashi_60') { visible.add('extension_frame_reinforcement'); required.add('extension_frame_reinforcement'); }
   for (const input of model.sizeInstallation.installation_input_contract.raw_inputs ?? []) {
-    const expr = input.required_when ?? '';
-    const [field] = expr.split(/\s+/);
-    let matches = false;
-    const inMatch = /^(\w+) in \[([^\]]+)\]/.exec(expr);
-    const eqMatch = /^(\w+) == (\w+)/.exec(expr);
-    const neqMatch = /^(\w+) != (\w+)/.exec(expr);
-    if (inMatch) matches = inMatch[2].split(',').map((x) => x.trim()).includes(String(selection[inMatch[1]]));
-    else if (eqMatch) matches = same(selection[eqMatch[1]], eqMatch[2]);
-    else if (neqMatch) matches = has(selection[neqMatch[1]]) && !same(selection[neqMatch[1]], neqMatch[2]);
-    if (expr.includes(' AND ')) {
-      const clauses = expr.split(' AND ');
-      matches = clauses.every((clause) => {
-        const eq = /^(\w+) == (\w+)/.exec(clause); const inn = /^(\w+) in \[([^\]]+)\]/.exec(clause);
-        return eq ? same(selection[eq[1]], eq[2]) : inn ? inn[2].split(',').map((x) => x.trim()).includes(String(selection[inn[1]])) : false;
-      });
+    if (requiredWhenMatches(input.required_when, selection) && model.fieldByName.has(input.field_name)) {
+      visible.add(input.field_name);
+      required.add(input.field_name);
     }
-    if (matches && model.fieldByName.has(input.field_name)) { visible.add(input.field_name); required.add(input.field_name); }
-    void field;
   }
 }
 
@@ -396,7 +429,7 @@ function buildState(model, input = {}) {
   const dimension = node ? evaluateBaseSize(model, node.node_id, selection) : { status: 'PENDING', message: '商品構成を選択してください。', matchedRuleIds: [] };
   const manualWarnings = [];
   const gsc = final.derived.glass_size_constraint_group;
-  const manualRoute = model.judgment.manual_check_routes?.find((row) => row.gsc_id === gsc);
+  const manualRoute = model.manualRouteByGsc.get(gsc);
   if (manualRoute) {
     exceptions.push({ status: 'MANUAL_CHECK', ruleId: manualRoute.id });
     manualWarnings.push(`要確認理由: 正式サイズ範囲が未確定 / 該当Rule: ${manualRoute.id} (${gsc}) / 確認先: メーカー見積`);

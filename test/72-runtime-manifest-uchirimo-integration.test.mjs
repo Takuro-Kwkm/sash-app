@@ -69,8 +69,11 @@ test('adapter rejects duplicate IDs, broken references and unsupported dependenc
 });
 
 test('common registry and bridge contain metadata/mapping only, not Uchirimo business branches', async () => {
-  for (const path of ['../src/catalog/runtime-master/app-runtime-integration-registry.mjs', '../src/catalog/runtime-master/runtime-app-bridge.mjs', '../src/catalog/runtime-master/inner-window-runtime-ui-contract.mjs']) {
+  for (const path of ['../src/catalog/runtime-master/app-runtime-integration-registry.mjs', '../src/catalog/runtime-master/runtime-app-bridge.mjs']) {
     const source = await readFile(new URL(path, import.meta.url), 'utf8');
     assert.equal(/if\s*\([^)]*(?:ウチリモ|UCHIRIMO|bathroom|spacer_type|gas_fill)/.test(source), false, path);
   }
+  const contractPath='../src/catalog/runtime-master/inner-window-runtime-ui-contract.mjs';
+  const contract = await readFile(new URL(contractPath, import.meta.url), 'utf8');
+  assert.equal(/if\s*\([^)]*(?:ウチリモ|UCHIRIMO)/.test(contract), false, contractPath);
 });

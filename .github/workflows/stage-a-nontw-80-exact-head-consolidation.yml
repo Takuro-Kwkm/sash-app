@@ -1,0 +1,42 @@
+name: Stage A Non-TW 80-Window Exact-Head Consolidation
+
+on:
+  workflow_call:
+    inputs:
+      controller_head:
+        required: true
+        type: string
+
+permissions:
+  issues: read
+  contents: read
+
+jobs:
+  governance-authority:
+    uses: ./.github/workflows/governance-authorization.yml
+    with:
+      controller_head: ${{ inputs.controller_head }}
+      release: false
+
+  closed-evidence-gate:
+    needs: ["governance-authority"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && (true) }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Preserve Non-TW 80 exact-head evidence and close retry route
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo 'NONTW_80_CONSOLIDATION_ROUTE=CLOSED'
+          echo 'NONTW_80_EVIDENCE_RUN=34948462528'
+          echo 'NONTW_80_EVIDENCE_HEAD=65ab8afc7d4c8db711b191882acfc578414e3e4e'
+          echo 'NONTW_80_ARTIFACT_ID=10388102164'
+          echo 'NONTW_80_EXACT_DISCRETE_TERMINAL_CONTEXT_COUNT=4352215444858'
+          echo 'NONTW_80_CUSTOM_PENDING_CONTEXT_COUNT=34750439722'
+          echo 'NONTW_80_UNVERIFIED_WINDOW_COUNT=0'
+          echo 'NONTW_80_EVIDENCE_DIGEST=9fe7fc0895630cdbddb090534f445169a0e7e3f441c157c584d89f4aef58832d'
+          echo 'NONTW_DISCRETE_POPULATION_GATE=PASS'
+          echo 'RETRY_AUTHORIZED=false'
+          echo 'REOPEN_CONDITION=RUNTIME_ADAPTER_UI_OR_RULE_SEMANTICS_CHANGE'
+          echo 'APP_INTEGRATION_READY=false'
+          echo 'RELEASE_INPUT_GATE=BLOCKED'

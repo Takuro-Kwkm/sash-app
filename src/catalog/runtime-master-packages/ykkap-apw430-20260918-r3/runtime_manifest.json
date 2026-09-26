@@ -1,0 +1,130 @@
+{
+  "schema_version": "product-master-runtime-manifest/1.0",
+  "manufacturer": "YKK AP",
+  "series": "APW430",
+  "product_id": "SER-YKK-APW430",
+  "package_version": "20260918-R3",
+  "authoring_mode": "DIRECT_AUTHORING_MASTER",
+  "authoring_file_name": "YKKAP_APW430_AUTHORING_MASTER_20260918-R3",
+  "authoring_file_id": "13pORfVXbbab2MFx8v_42kqeE2fVaqI2h5rRvxCe1mz4",
+  "authoring_export_sha256": "f0e52e58c9c9ea5aa78386e66069ff2109d8031c888b70005cac09365bd35752",
+  "authoring_export_snapshot_at": "2026-09-18T14:28:46+09:00",
+  "runtime_status": "READY",
+  "runtime_files": [
+    {
+      "role": "CORE",
+      "file_name": "apw430_core_20260918-R3.json",
+      "file_id": "1S5Vo-rF1wpQDsNOQr0jMTAaRlvnx3MCF",
+      "sha256": "05ee0db4ceb17a0043372ee7b888ee4ac94f7dc170d08ccf4b1f356fdef17340",
+      "bytes": 87168
+    },
+    {
+      "role": "DIMENSIONS",
+      "file_name": "apw430_dimensions_20260918-R3.json",
+      "file_id": "1llpTNz_CweEF7vZxP0XRRwzTG4kBF8AX",
+      "sha256": "e50d8099a2fec74e5b211508256ecee6805ef5227d814198c0a7319b88ca0262",
+      "bytes": 974838
+    },
+    {
+      "role": "OPTIONS",
+      "file_name": "apw430_options_20260918-R3.json",
+      "file_id": "1gb1rWWxNC0Wd6mvZ1ZfqPYrsYyUPGGM_",
+      "sha256": "c2a5f32a7b553c183c58f2aa18726dc200d4ef396e5bf6b0c35a52ef48dafe38",
+      "bytes": 3447531
+    }
+  ],
+  "documentation_file": {
+    "file_name": "PRODUCT_MASTER_MANIFEST.md",
+    "file_id": "1pvcuXMLm8NCIRoO39Ei97wfqiNEIeKb_",
+    "status": "FORMAL_PASS"
+  },
+  "storage_status": "CANONICAL",
+  "package_gate": "PASS",
+  "generated_at": "2026-09-18T14:28:46+09:00",
+  "working_folder_id": "1aPJlt5dTFHKqS5Koaino9PLqaH4DUB7m",
+  "canonical_folder_id": "1Cd4_yiAB0Zy6Yb1xo_7ihB4KA44wtUkY",
+  "old_folder_id": "1s3T__4JWrX7TrVVTAPaozordvIWzlGzj",
+  "qa_report": {
+    "file_name": "YKKAP_APW430_RUNTIME_QA_20260918-R3.md",
+    "file_id": "1NdVjDAP4DR9gyG7SQ8nJ704crk2tbRBP",
+    "detailed_cases_file_id": "15qcMIAqRMlmCUH7l505cyPk15Om_Doko",
+    "status": "PASS",
+    "case_count": 2484,
+    "pass_count": 2484,
+    "fail_count": 0,
+    "unverified_count": 0
+  },
+  "record_counts": {
+    "series": 1,
+    "windows_common": 8,
+    "series_windows": 26,
+    "active_series_windows": 25,
+    "specific_specs": 12,
+    "relations": 12,
+    "dimension_dictionary": 151,
+    "standard_sizes_history": 718,
+    "active_standard_sizes": 715,
+    "inactive_standard_sizes": 3,
+    "custom_dimension_rules": 25,
+    "colors": 5,
+    "color_rules": 3,
+    "glass": 4,
+    "glass_applicability": 25,
+    "glass_size_rules": 715,
+    "glass_additional_options": 4,
+    "glass_appearances": 3,
+    "glass_manufacturability_rules": 824,
+    "glass_symbol_legend": 25,
+    "glass_symbol_matrix": 715,
+    "grid_window_rules": 25,
+    "standard_grid_count_matrix": 715,
+    "standard_size_glass_dependencies": 715,
+    "custom_glass_dependencies": 25,
+    "screens": 12,
+    "screen_forms": 36,
+    "screen_size_rules": 140,
+    "options": 2,
+    "option_dependencies": 4,
+    "spec_size_rules": 15,
+    "special_spec_rules": 3,
+    "golden_tests": 17,
+    "frame_angle_rules": 25,
+    "screen_midrail_rules": 25
+  },
+  "semantic_recovery": {
+    "screen_midrail": {
+      "classification": {
+        "USER_SELECTABLE": 3,
+        "NOT_APPLICABLE": 22
+      },
+      "allowed_values": [
+        "中桟なし",
+        "中桟付き"
+      ],
+      "applicable_window_count": 3
+    },
+    "frame_angle": {
+      "classification": {
+        "USER_SELECTABLE": 20,
+        "FIXED": 5,
+        "NOT_APPLICABLE": 0
+      },
+      "allowed_values": [
+        "WITH_ANGLE",
+        "WITHOUT_ANGLE"
+      ],
+      "with_angle_applicable_count": 22,
+      "without_angle_applicable_count": 23,
+      "fixed_with_angle_count": 2,
+      "fixed_without_angle_count": 3
+    }
+  },
+  "blocking_items": [],
+  "verification_revision": "20260918-R3-SCREEN-MIDRAIL-FRAME-ANGLE-RECOVERY",
+  "drive_roundtrip_verified": true,
+  "canonical_storage_verified": true,
+  "registry_gate": "PASS",
+  "requested_diff_coverage": "PASS",
+  "unrequested_diff_count": 0,
+  "formalized_at": "2026-09-18T14:35:29+09:00"
+}

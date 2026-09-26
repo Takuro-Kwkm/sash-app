@@ -1,0 +1,51 @@
+{
+  "format": "formal-runtime-json-transform/1.0",
+  "source": {
+    "file_name": "LIXIL_サーモスⅡH_runtime_v0.9-R1.json",
+    "sha256": "d3e227b3689545087a8e33c5034df3efff4aa4493ef208d49c1d161c1afad288",
+    "size_bytes": 6091853
+  },
+  "target": {
+    "file_name": "LIXIL_サーモスⅡH_runtime_v0.9-R2.json",
+    "sha256": "3b62646a7990a0735703e5a39024c88f707f8aa1110aae3a7452541c139c647f",
+    "size_bytes": 6097986
+  },
+  "recursive_string_replacements": [
+    {"from": "v0.9-R1", "to": "v0.9-R2"},
+    {"from": "LIXIL_サーモスⅡH_AUTHORING_MASTER_v0.9-R1.xlsx", "to": "LIXIL_サーモスⅡH_AUTHORING_MASTER_v0.9-R2.xlsx"}
+  ],
+  "operations": [
+    {"op":"set","pointer":"/authoring_binding/file_id","value":"1uR67bDeN1FmGod9mBaCLyQjldBJuI26N"},
+    {"op":"set","pointer":"/authoring_binding/revision_id","value":"0B1PsqngSohhla2NtWlFpendraW5sM0ZaK1QyeUJDMTJZTk9NPQ"},
+    {"op":"set","pointer":"/authoring_binding/sha256","value":"807a3709ceb6f59e9a9c25b195a0b13f7cbfdd443ab77eeba9f2bd99d130e656"},
+    {"op":"set","pointer":"/authoring_binding/size_bytes","value":561468},
+    {"op":"set","pointer":"/authoring_binding/modified_time","value":"2026-09-12T16:09:49.264Z"},
+    {"op":"set","pointer":"/authoring_binding/folder_role","value":"01_正本"},
+    {"op":"set","pointer":"/product_module/product/source/id","value":"1uR67bDeN1FmGod9mBaCLyQjldBJuI26N"},
+    {"op":"set","pointer":"/product_module/product/source/revisionId","value":"0B1PsqngSohhla2NtWlFpendraW5sM0ZaK1QyeUJDMTJZTk9NPQ"},
+    {"op":"set","pointer":"/product_module/product/source/sha256","value":"807a3709ceb6f59e9a9c25b195a0b13f7cbfdd443ab77eeba9f2bd99d130e656"},
+    {"op":"set","pointer":"/product_module/product/source/sizeBytes","value":561468},
+    {"op":"set","pointer":"/product_module/product/source/modifiedTime","value":"2026-09-12T16:09:49.264Z"},
+    {"op":"set","pointer":"/product_module/product/source/folder","value":"01_正本"},
+    {"op":"append","pointer":"/product_module/product/notices","values":["v0.9-R2で採風勝手口ドアFSの網付格子6仕様をRuntime grille_typeへ正式投影。CR-S2H-016のspecific_spec参照をselector metadataで解決。"]},
+    {"op":"append","pointer":"/product_module/allowedValues","values":[
+      {"id":"SER-LIX-SAMOS2H:grille_type:SP-S2H-KSF-GRID-V:SP-S2H-KSF-GRID-V","productId":"SER-LIX-SAMOS2H","specificationKey":"grille_type","value":"SP-S2H-KSF-GRID-V","displayLabel":"縦格子","displayOrder":10,"status":"ACTIVE","selector":{"window_type":"WT-S2H-KATTEGUCHI-VENT-FS","screen_variant":"SCV-S2H-KSF-GRID"},"evidenceIds":["EV-S2H-001","EV-S2H-002"],"metadata":{"sourceFile":"LIXIL_サーモスⅡH_AUTHORING_MASTER_v0.9-R2.xlsx","sourceSheet":"04_窓種固有仕様","sourceRow":45,"specific_spec":"SP-S2H-KSF-GRID-V","formalName":"縦格子","sourceStatus":"2026価格表/カタログ確認済み"}},
+      {"id":"SER-LIX-SAMOS2H:grille_type:SP-S2H-KSF-GRID-H:SP-S2H-KSF-GRID-H","productId":"SER-LIX-SAMOS2H","specificationKey":"grille_type","value":"SP-S2H-KSF-GRID-H","displayLabel":"横格子","displayOrder":20,"status":"ACTIVE","selector":{"window_type":"WT-S2H-KATTEGUCHI-VENT-FS","screen_variant":"SCV-S2H-KSF-GRID"},"evidenceIds":["EV-S2H-001","EV-S2H-002"],"metadata":{"sourceFile":"LIXIL_サーモスⅡH_AUTHORING_MASTER_v0.9-R2.xlsx","sourceSheet":"04_窓種固有仕様","sourceRow":46,"specific_spec":"SP-S2H-KSF-GRID-H","formalName":"横格子","sourceStatus":"2026価格表/カタログ確認済み"}},
+      {"id":"SER-LIX-SAMOS2H:grille_type:SP-S2H-KSF-GRID-DH:SP-S2H-KSF-GRID-DH","productId":"SER-LIX-SAMOS2H","specificationKey":"grille_type","value":"SP-S2H-KSF-GRID-DH","displayLabel":"デザイン横格子","displayOrder":30,"status":"ACTIVE","selector":{"window_type":"WT-S2H-KATTEGUCHI-VENT-FS","screen_variant":"SCV-S2H-KSF-GRID"},"evidenceIds":["EV-S2H-001","EV-S2H-002"],"metadata":{"sourceFile":"LIXIL_サーモスⅡH_AUTHORING_MASTER_v0.9-R2.xlsx","sourceSheet":"04_窓種固有仕様","sourceRow":47,"specific_spec":"SP-S2H-KSF-GRID-DH","formalName":"デザイン横格子","sourceStatus":"2026価格表/カタログ確認済み"}},
+      {"id":"SER-LIX-SAMOS2H:grille_type:SP-S2H-KSF-GRID-DIA:SP-S2H-KSF-GRID-DIA","productId":"SER-LIX-SAMOS2H","specificationKey":"grille_type","value":"SP-S2H-KSF-GRID-DIA","displayLabel":"ヒシクロス格子","displayOrder":40,"status":"ACTIVE","selector":{"window_type":"WT-S2H-KATTEGUCHI-VENT-FS","screen_variant":"SCV-S2H-KSF-GRID"},"evidenceIds":["EV-S2H-001","EV-S2H-002"],"metadata":{"sourceFile":"LIXIL_サーモスⅡH_AUTHORING_MASTER_v0.9-R2.xlsx","sourceSheet":"04_窓種固有仕様","sourceRow":48,"specific_spec":"SP-S2H-KSF-GRID-DIA","formalName":"ヒシクロス格子","sourceStatus":"2026価格表/カタログ確認済み"}},
+      {"id":"SER-LIX-SAMOS2H:grille_type:SP-S2H-KSF-GRID-IGETA:SP-S2H-KSF-GRID-IGETA","productId":"SER-LIX-SAMOS2H","specificationKey":"grille_type","value":"SP-S2H-KSF-GRID-IGETA","displayLabel":"井桁格子","displayOrder":50,"status":"ACTIVE","selector":{"window_type":"WT-S2H-KATTEGUCHI-VENT-FS","screen_variant":"SCV-S2H-KSF-GRID"},"evidenceIds":["EV-S2H-001","EV-S2H-002"],"metadata":{"sourceFile":"LIXIL_サーモスⅡH_AUTHORING_MASTER_v0.9-R2.xlsx","sourceSheet":"04_窓種固有仕様","sourceRow":49,"specific_spec":"SP-S2H-KSF-GRID-IGETA","formalName":"井桁格子","sourceStatus":"2026価格表/カタログ確認済み"}},
+      {"id":"SER-LIX-SAMOS2H:grille_type:SP-S2H-KSF-GRID-NONE:SP-S2H-KSF-GRID-NONE","productId":"SER-LIX-SAMOS2H","specificationKey":"grille_type","value":"SP-S2H-KSF-GRID-NONE","displayLabel":"格子なし（無地）","displayOrder":60,"status":"ACTIVE","selector":{"window_type":"WT-S2H-KATTEGUCHI-VENT-FS","screen_variant":"SCV-S2H-KSF-GRID"},"evidenceIds":["EV-S2H-001","EV-S2H-002"],"metadata":{"sourceFile":"LIXIL_サーモスⅡH_AUTHORING_MASTER_v0.9-R2.xlsx","sourceSheet":"04_窓種固有仕様","sourceRow":50,"specific_spec":"SP-S2H-KSF-GRID-NONE","formalName":"格子なし（無地）","sourceStatus":"2026価格表/カタログ確認済み"}}
+    ]},
+    {"op":"sort","pointer":"/product_module/allowedValues","keys":["specificationKey","displayOrder","id"]},
+    {"op":"set","pointer":"/product_module/specificationDefinitions/3/displayLabel","value":"格子種類"},
+    {"op":"set","pointer":"/product_module/specificationDefinitions/3/description","value":"格子種類をAuthoring Master v0.9-R2から選択"},
+    {"op":"delete","pointer":"/product_module/specificationDefinitions/3/selector/window_type"},
+    {"op":"set","pointer":"/product_module/specificationDefinitions/3/selector/anyOf","value":[{"window_type":{"$in":["WT-S2H-MENKOSHI-HIKI","WT-S2H-MENKOSHI-AGE-FS"]}},{"window_type":"WT-S2H-KATTEGUCHI-VENT-FS","screen_variant":"SCV-S2H-KSF-GRID"}]},
+    {"op":"set","pointer":"/qa_summary/checks/runtime_ksf_grille_selector_rows_6","value":true},
+    {"op":"set","pointer":"/qa_summary/checks/runtime_ksf_custom_specific_spec_resolvable","value":true},
+    {"op":"set","pointer":"/qa_summary/record_counts/ksf_grille_type_values","value":6},
+    {"op":"set","pointer":"/qa_summary/record_counts/grille_type_values","value":18},
+    {"op":"set","pointer":"/runtime_projection/change_summary","value":"採風勝手口ドアFSの正式網付格子6仕様をgrille_type selector候補へ投影し、CUSTOM Rule CR-S2H-016のspecific_spec参照を解決。商品仕様・サイズ境界の変更なし。"}
+  ],
+  "serialization": {"indent":2,"trailing_newline":true}
+}

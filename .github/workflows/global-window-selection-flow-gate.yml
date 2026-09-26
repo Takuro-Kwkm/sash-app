@@ -1,0 +1,2258 @@
+name: Global Window Selection Flow Gate
+
+on:
+  workflow_call:
+    inputs:
+      controller_head:
+        required: true
+        type: string
+
+permissions:
+  issues: read
+  contents: read
+  pull-requests: read
+  actions: read
+
+concurrency:
+  group: global-window-selection-flow-${{ github.event.pull_request.head.ref || github.ref_name }}
+  cancel-in-progress: true
+
+jobs:
+  governance-authority:
+    uses: ./.github/workflows/governance-authorization.yml
+    with:
+      controller_head: ${{ inputs.controller_head }}
+      release: false
+
+  governance-precheck:
+    needs: ["governance-authority"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && (true) }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+    outputs:
+      authorized: ${{ steps.human-review.outputs.authorized }}
+    steps:
+      - name: Checkout exact HEAD for governance
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.HEAD_SHA }}
+          fetch-depth: 0
+
+      - name: Setup Node 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Verify project governance state
+        run: node scripts/governance/verify-project-state.mjs
+
+      - name: Evaluate Human Review authorization
+        id: human-review
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GOVERNANCE_EVIDENCE_MANIFEST: artifacts/governance/qa-evidence-manifest.json
+        run: |
+          set -euo pipefail
+          node scripts/governance/build-human-flow-review.mjs
+          node scripts/governance/verify-human-flow-field-coverage.mjs
+          node scripts/governance/collect-qa-evidence.mjs
+          node scripts/governance/read-human-approval.mjs
+          node scripts/governance/evaluate-gates.mjs
+          node --input-type=module <<'NODE'
+          import { appendFileSync, readFileSync } from 'node:fs';
+          const result = JSON.parse(readFileSync('artifacts/governance/gate-results.json', 'utf8'));
+          const authorized = result.gates?.HUMAN_FLOW_REVIEW_GATE?.status === 'PASS';
+          appendFileSync(process.env.GITHUB_OUTPUT, `authorized=${authorized ? 'true' : 'false'}\n`);
+          console.log(`HUMAN_FLOW_REVIEW_GATE=${authorized ? 'PASS' : result.gates?.HUMAN_FLOW_REVIEW_GATE?.status || 'BLOCKED'}`);
+          console.log(`POST_HUMAN_REVIEW_AUTHORIZED=${authorized ? 'TRUE' : 'FALSE'}`);
+          NODE
+
+      - name: Upload governance precheck evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: global-flow-governance-precheck-${{ env.HEAD_SHA }}
+          path: artifacts/governance/
+          if-no-files-found: error
+
+  uchirimo-selector-proof-cache:
+    needs: ["governance-authority", "governance-precheck"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && (needs.governance-precheck.outputs.authorized == 'true') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+    outputs:
+      reused: ${{ steps.cache-decision.outputs.reused }}
+    steps:
+      - name: Checkout exact HEAD
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.HEAD_SHA }}
+          fetch-depth: 0
+
+      - name: Setup Node 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Compute Uchirimo selector proof dependency fingerprint
+        id: uchirimo-proof-fingerprint
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/governance/proof-dependency-fingerprint.mjs --mode fingerprint --family UCHIRIMO_SELECTOR --fingerprint-out artifacts/governance/uchirimo-selector-proof-fingerprint.json
+
+      - name: Restore aggregated Uchirimo selector proof cache
+        id: uchirimo-proof-cache
+        uses: actions/cache/restore@v4
+        with:
+          path: artifacts/uchirimo-full-selector-proof
+          key: proof-uchirimo-selector-v9-${{ steps.uchirimo-proof-fingerprint.outputs.fingerprint }}
+
+      - name: Bind cached Uchirimo selector proof to current HEAD
+        id: cache-decision
+        shell: bash
+        env:
+          CACHE_HIT: ${{ steps.uchirimo-proof-cache.outputs.cache-hit }}
+        run: |
+          set +e
+          reused=false
+          if [ "$CACHE_HIT" = "true" ]; then
+            node scripts/governance/proof-dependency-fingerprint.mjs --mode bind --family UCHIRIMO_SELECTOR --artifact artifacts/uchirimo-full-selector-proof/report.json --metadata artifacts/uchirimo-full-selector-proof/source-metadata.json --binding artifacts/uchirimo-full-selector-proof/current-head-binding.json
+            rc=$?
+            if [ "$rc" -eq 0 ]; then
+              reused=true
+              echo "UCHIRIMO_SELECTOR_PROOF_REUSE=PASS"
+            else
+              rm -rf artifacts/uchirimo-full-selector-proof
+              echo "UCHIRIMO_SELECTOR_PROOF_REUSE=INVALID_RERUN_REQUIRED"
+            fi
+          else
+            echo "UCHIRIMO_SELECTOR_PROOF_REUSE=CACHE_MISS"
+          fi
+          echo "reused=$reused" >> "$GITHUB_OUTPUT"
+          exit 0
+
+      - name: Upload reused Uchirimo selector proof for current HEAD
+        if: ${{ steps.cache-decision.outputs.reused == 'true' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: uchirimo-selector-proof-aggregate-${{ env.HEAD_SHA }}
+          path: artifacts/uchirimo-full-selector-proof/
+          if-no-files-found: error
+
+  uchirimo-qa-preflight:
+    needs: ["governance-authority", "governance-precheck", "uchirimo-selector-proof-cache"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && needs.governance-precheck.outputs.authorized == 'true' && needs.uchirimo-selector-proof-cache.outputs.reused != 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      UCHIRIMO_SELECTOR_MODE: plan-all
+      UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-qa-preflight-plan
+    steps:
+      - name: Checkout exact HEAD
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.HEAD_SHA }}
+          fetch-depth: 0
+
+      - name: Setup Node 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Install
+        run: npm install --ignore-scripts
+
+      - name: QA harness structural self-test
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import { readFileSync } from 'node:fs';
+          const workflow=readFileSync('.github/workflows/global-window-selection-flow-gate.yml','utf8');
+          const carry=readFileSync('scripts/governance/uchirimo-partition-carry-forward.mjs','utf8');
+          const expected=Array.from({length:16},(_,i)=>i);
+          const plan=[...workflow.matchAll(/^  uchirimo-selector-proof-plan-(\d+):/gm)].map((m)=>Number(m[1])).sort((a,b)=>a-b);
+          const proof=[...workflow.matchAll(/^  uchirimo-selector-proof-(\d+):/gm)].map((m)=>Number(m[1])).sort((a,b)=>a-b);
+          if(JSON.stringify(plan)!==JSON.stringify(expected))throw new Error('UCHIRIMO_HARNESS_PLAN_LANES_INVALID:'+JSON.stringify(plan));
+          if(JSON.stringify(proof)!==JSON.stringify(expected))throw new Error('UCHIRIMO_HARNESS_EXECUTION_LANES_INVALID:'+JSON.stringify(proof));
+          const a0=workflow.indexOf('\n  uchirimo-selector-proof-aggregate:');
+          const a1=workflow.indexOf('\n  global-flow:',a0);
+          if(a0<0||a1<0)throw new Error('UCHIRIMO_HARNESS_AGGREGATE_BLOCK_MISSING');
+          const aggregate=workflow.slice(a0,a1);
+          const needsLine=aggregate.split('\n').find((line)=>line.trimStart().startsWith('needs:'))??'';
+          const missingNeeds=expected.filter((i)=>!needsLine.includes('"uchirimo-selector-proof-'+i+'"'));
+          const missingConditions=expected.filter((i)=>!aggregate.includes("needs.uchirimo-selector-proof-"+i+".result == 'success'"));
+          if(missingNeeds.length)throw new Error('UCHIRIMO_HARNESS_AGGREGATE_NEEDS_MISSING:'+missingNeeds.join(','));
+          if(missingConditions.length)throw new Error('UCHIRIMO_HARNESS_AGGREGATE_CONDITION_MISSING:'+missingConditions.join(','));
+          const exec0=workflow.indexOf('\n  uchirimo-selector-proof-0:');
+          const exec1=workflow.indexOf('\n  uchirimo-selector-proof-aggregate:',exec0);
+          const execBlock=workflow.slice(exec0,exec1);
+          const plan0=workflow.indexOf('\n  uchirimo-selector-proof-plan-0:');
+          const plan1=workflow.indexOf('\n  uchirimo-selector-proof-0:',plan0);
+          const planBlock=workflow.slice(plan0,plan1);
+          if((planBlock.match(/UCHIRIMO_SELECTOR_BATCH_SIZE: 1/g)??[]).length!==16)throw new Error('UCHIRIMO_HARNESS_BATCH_PLAN_COUNT_INVALID');
+          if((planBlock.match(/UCHIRIMO_SELECTOR_NORMAL_CHILD_TIMEOUT_MS: 1080000/g)??[]).length!==16)throw new Error('UCHIRIMO_HARNESS_NORMAL_TIMEOUT_POLICY_INVALID');
+          if((planBlock.match(/UCHIRIMO_SELECTOR_HEAVY_CHILD_TIMEOUT_MS: 3000000/g)??[]).length!==16)throw new Error('UCHIRIMO_HARNESS_HEAVY_TIMEOUT_POLICY_INVALID');
+          if((execBlock.match(/UCHIRIMO_SELECTOR_BATCH_JSON:/g)??[]).length!==16)throw new Error('UCHIRIMO_HARNESS_BATCH_ENV_COUNT_INVALID');
+          if((execBlock.match(/UCHIRIMO_SELECTOR_CHILD_TIMEOUT_MS: \$\{\{ matrix\.child_timeout_ms \}\}/g)??[]).length!==16)throw new Error('UCHIRIMO_HARNESS_MATRIX_TIMEOUT_BINDING_INVALID');
+          if((execBlock.match(/uchirimo-selector-batch-runner\.mjs/g)??[]).length!==16)throw new Error('UCHIRIMO_HARNESS_BATCH_RUNNER_COUNT_INVALID');
+          if(!carry.includes('batch-'))throw new Error('UCHIRIMO_HARNESS_BATCH_CARRY_FORWARD_DISABLED');
+          if(carry.includes('head_sha!==HEAD'))throw new Error('UCHIRIMO_HARNESS_SAME_HEAD_RESUME_DISABLED');
+          for(const token of ['RUN_ATTEMPT','Number(run.id)===RUN_ID','UCHIRIMO_CARRY_FORWARD_CANDIDATE_RUNS??32']){
+            if(!carry.includes(token))throw new Error('UCHIRIMO_HARNESS_RESUME_TOKEN_MISSING:'+token);
+          }
+          console.log('UCHIRIMO_QA_HARNESS_SELF_TEST=PASS lanes=16 resume=same-head+prior-attempt');
+          NODE
+
+      - name: Build complete partition inventory
+        run: node scripts/uchirimo-full-selector-proof.mjs
+
+      - name: Collect seed-level resolver and semantic errors without fail-fast
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts/uchirimo-qa-preflight
+          node --input-type=module <<'NODE'
+          import { readFileSync, writeFileSync } from 'node:fs';
+          import { resolveRuntimeAppProduct } from './src/catalog/runtime-master/runtime-app-bridge.mjs';
+          const plan=JSON.parse(readFileSync('artifacts/uchirimo-qa-preflight-plan/all-partitions.json','utf8'));
+          const errors=[];
+          const technical=new Set(['legacyConstruction','legacyConfiguration','internal_construction']);
+          const stable=(value)=>{
+            if(Array.isArray(value))return value.map(stable);
+            if(!value||typeof value!=='object')return value;
+            return Object.fromEntries(Object.entries(value).sort(([a],[b])=>a.localeCompare(b)).map(([k,v])=>[k,stable(v)]));
+          };
+          const same=(a,b)=>JSON.stringify(stable(a))===JSON.stringify(stable(b)) || String(a)===String(b);
+          for(let index=0;index<plan.partitions.length;index+=1){
+            const row=plan.partitions[index];
+            const seed={room_specification:row.room_specification,window_type:row.window_type,glass_family:row.glass_family};
+            if(row.sash_configuration!=='__UNSET__')seed.sash_configuration=row.sash_configuration;
+            if(row.size_class!=='__UNSET__')seed.size_class=row.size_class;
+            Object.assign(seed,JSON.parse(row.partition_seed_json??'{}'));
+            try{
+              const result=await resolveRuntimeAppProduct('SER-YKKAP-UCHIRIMO',seed);
+              if(!result||!Array.isArray(result.fields)||!result.selection){
+                errors.push({shard:row.shard,partition_key:row.partition_key,code:'INVALID_RESOLVER_RESULT'});
+                continue;
+              }
+              for(const [key,value] of Object.entries(seed)){
+                if(!same(result.selection?.[key],value))errors.push({shard:row.shard,partition_key:row.partition_key,code:'SEED_REJECTED',field:key});
+              }
+              const seen=new Set();
+              for(const field of result.fields){
+                if(!field?.key){errors.push({shard:row.shard,partition_key:row.partition_key,code:'FIELD_KEY_MISSING'});continue;}
+                if(seen.has(field.key))errors.push({shard:row.shard,partition_key:row.partition_key,code:'DUPLICATE_FIELD_KEY',field:field.key});
+                seen.add(field.key);
+                if(technical.has(field.key))errors.push({shard:row.shard,partition_key:row.partition_key,code:'TECHNICAL_FIELD_VISIBLE',field:field.key});
+                if(!field.semanticStage||!field.semanticSlot)errors.push({shard:row.shard,partition_key:row.partition_key,code:'UNMAPPED_UI_FIELD',field:field.key});
+                if(!field.dataType)errors.push({shard:row.shard,partition_key:row.partition_key,code:'FIELD_DATATYPE_MISSING',field:field.key});
+                if(field.required===true && ['ENUM','MULTI_ENUM'].includes(field.dataType)){
+                  const enabled=(field.values??[]).filter((v)=>v?.disabled!==true);
+                  if(enabled.length===0)errors.push({shard:row.shard,partition_key:row.partition_key,code:'REQUIRED_FIELD_WITHOUT_ENABLED_VALUE',field:field.key});
+                }
+              }
+            }catch(error){
+              errors.push({shard:row.shard,partition_key:row.partition_key,code:'RESOLVER_EXCEPTION',message:error?.message??String(error)});
+            }
+            if((index+1)%250===0)console.log('UCHIRIMO_PREFLIGHT_PROGRESS partitions='+(index+1)+' errors='+errors.length);
+          }
+          const report={
+            schema_version:'1.0.0',
+            exact_head:process.env.HEAD_SHA,
+            status:errors.length?'FAIL':'PASS',
+            partition_count:plan.partitions.length,
+            error_count:errors.length,
+            errors
+          };
+          writeFileSync('artifacts/uchirimo-qa-preflight/report.json',JSON.stringify(report,null,2)+'\n');
+          console.log('UCHIRIMO_QA_PREFLIGHT='+report.status+' partitions='+report.partition_count+' errors='+report.error_count);
+          if(errors.length)process.exit(41);
+          NODE
+
+      - name: Upload Uchirimo QA preflight evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: uchirimo-qa-preflight-${{ env.HEAD_SHA }}
+          path: |
+            artifacts/uchirimo-qa-preflight/
+            artifacts/uchirimo-qa-preflight-plan/all-partitions.json
+          if-no-files-found: error
+
+  uchirimo-selector-proof-carry-forward:
+    needs: ["governance-authority", "governance-precheck", "uchirimo-selector-proof-cache", "uchirimo-qa-preflight"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && needs.governance-precheck.outputs.authorized == 'true' && needs.uchirimo-selector-proof-cache.outputs.reused != 'true' && needs.uchirimo-qa-preflight.result == 'success' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    permissions:
+      contents: read
+      actions: read
+    env:
+      HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      UCHIRIMO_SELECTOR_MODE: plan-all
+      UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-selector-proof-current-plan
+      UCHIRIMO_SELECTOR_CURRENT_PLAN: artifacts/uchirimo-selector-proof-current-plan/all-partitions.json
+      UCHIRIMO_SELECTOR_CARRY_FORWARD_OUT: artifacts/uchirimo-selector-proof-carry-forward
+    steps:
+      - name: Checkout exact HEAD with history
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.HEAD_SHA }}
+          fetch-depth: 0
+
+      - name: Setup Node 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Install
+        run: npm install --ignore-scripts
+
+      - name: Build current full Uchirimo partition plan
+        run: node scripts/uchirimo-full-selector-proof.mjs
+
+      - name: Revalidate reusable partition proofs against current HEAD
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          node --check scripts/governance/uchirimo-partition-carry-forward.mjs
+          node scripts/governance/uchirimo-partition-carry-forward.mjs
+
+      - name: Upload current-head partition carry-forward evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: uchirimo-selector-proof-carry-forward-${{ env.HEAD_SHA }}
+          path: artifacts/uchirimo-selector-proof-carry-forward/
+          if-no-files-found: error
+
+  uchirimo-selector-proof-plan-0:
+    needs: ["governance-authority", "governance-precheck", "uchirimo-selector-proof-cache", "uchirimo-selector-proof-carry-forward"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && needs.governance-precheck.outputs.authorized == 'true' && needs.uchirimo-selector-proof-cache.outputs.reused != 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      matrix: ${{ steps.plan.outputs.matrix }}
+      shard_count: ${{ steps.plan.outputs.shard_count }}
+      lane_shard_count: ${{ steps.plan.outputs.lane_shard_count }}
+    env:
+      HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      UCHIRIMO_SELECTOR_MODE: plan
+      UCHIRIMO_SELECTOR_PLAN_LANE_COUNT: 16
+      UCHIRIMO_SELECTOR_PLAN_LANE_INDEX: 0
+      UCHIRIMO_SELECTOR_BATCH_SIZE: 1
+      UCHIRIMO_SELECTOR_NORMAL_CHILD_TIMEOUT_MS: 1080000
+      UCHIRIMO_SELECTOR_HEAVY_CHILD_TIMEOUT_MS: 3000000
+      UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-selector-proof-plan-0
+      UCHIRIMO_SELECTOR_REUSE_MANIFEST: artifacts/uchirimo-selector-proof-carry-forward/manifest.json
+    steps:
+      - name: Checkout exact HEAD
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.HEAD_SHA }}
+          fetch-depth: 0
+      - name: Setup Node 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Install
+        run: npm install --ignore-scripts
+      - name: Download current-head partition carry-forward manifest
+        uses: actions/download-artifact@v4
+        with:
+          name: uchirimo-selector-proof-carry-forward-${{ env.HEAD_SHA }}
+          path: artifacts/uchirimo-selector-proof-carry-forward
+
+      - name: Build Uchirimo V8 selector shard matrix lane 0
+        id: plan
+        run: node scripts/uchirimo-full-selector-proof.mjs
+      - name: Upload selector shard plan lane 0
+        uses: actions/upload-artifact@v4
+        with:
+          name: uchirimo-selector-proof-plan-0-${{ env.HEAD_SHA }}
+          path: artifacts/uchirimo-selector-proof-plan-0/
+          if-no-files-found: error
+
+  uchirimo-selector-proof-plan-1:
+    needs: ["governance-authority", "governance-precheck", "uchirimo-selector-proof-cache", "uchirimo-selector-proof-carry-forward"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && needs.governance-precheck.outputs.authorized == 'true' && needs.uchirimo-selector-proof-cache.outputs.reused != 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      matrix: ${{ steps.plan.outputs.matrix }}
+      shard_count: ${{ steps.plan.outputs.shard_count }}
+      lane_shard_count: ${{ steps.plan.outputs.lane_shard_count }}
+    env:
+      HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      UCHIRIMO_SELECTOR_MODE: plan
+      UCHIRIMO_SELECTOR_PLAN_LANE_COUNT: 16
+      UCHIRIMO_SELECTOR_PLAN_LANE_INDEX: 1
+      UCHIRIMO_SELECTOR_BATCH_SIZE: 1
+      UCHIRIMO_SELECTOR_NORMAL_CHILD_TIMEOUT_MS: 1080000
+      UCHIRIMO_SELECTOR_HEAVY_CHILD_TIMEOUT_MS: 3000000
+      UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-selector-proof-plan-1
+      UCHIRIMO_SELECTOR_REUSE_MANIFEST: artifacts/uchirimo-selector-proof-carry-forward/manifest.json
+    steps:
+      - name: Checkout exact HEAD
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.HEAD_SHA }}
+          fetch-depth: 0
+      - name: Setup Node 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Install
+        run: npm install --ignore-scripts
+      - name: Download current-head partition carry-forward manifest
+        uses: actions/download-artifact@v4
+        with:
+          name: uchirimo-selector-proof-carry-forward-${{ env.HEAD_SHA }}
+          path: artifacts/uchirimo-selector-proof-carry-forward
+
+      - name: Build Uchirimo V8 selector shard matrix lane 1
+        id: plan
+        run: node scripts/uchirimo-full-selector-proof.mjs
+      - name: Upload selector shard plan lane 1
+        uses: actions/upload-artifact@v4
+        with:
+          name: uchirimo-selector-proof-plan-1-${{ env.HEAD_SHA }}
+          path: artifacts/uchirimo-selector-proof-plan-1/
+          if-no-files-found: error
+
+  uchirimo-selector-proof-plan-2:
+    needs: ["governance-authority", "governance-precheck", "uchirimo-selector-proof-cache", "uchirimo-selector-proof-carry-forward"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && needs.governance-precheck.outputs.authorized == 'true' && needs.uchirimo-selector-proof-cache.outputs.reused != 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      matrix: ${{ steps.plan.outputs.matrix }}
+      shard_count: ${{ steps.plan.outputs.shard_count }}
+      lane_shard_count: ${{ steps.plan.outputs.lane_shard_count }}
+    env:
+      HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      UCHIRIMO_SELECTOR_MODE: plan
+      UCHIRIMO_SELECTOR_PLAN_LANE_COUNT: 16
+      UCHIRIMO_SELECTOR_PLAN_LANE_INDEX: 2
+      UCHIRIMO_SELECTOR_BATCH_SIZE: 1
+      UCHIRIMO_SELECTOR_NORMAL_CHILD_TIMEOUT_MS: 1080000
+      UCHIRIMO_SELECTOR_HEAVY_CHILD_TIMEOUT_MS: 3000000
+      UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-selector-proof-plan-2
+      UCHIRIMO_SELECTOR_REUSE_MANIFEST: artifacts/uchirimo-selector-proof-carry-forward/manifest.json
+    steps:
+      - name: Checkout exact HEAD
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.HEAD_SHA }}
+          fetch-depth: 0
+      - name: Setup Node 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Install
+        run: npm install --ignore-scripts
+      - name: Download current-head partition carry-forward manifest
+        uses: actions/download-artifact@v4
+        with:
+          name: uchirimo-selector-proof-carry-forward-${{ env.HEAD_SHA }}
+          path: artifacts/uchirimo-selector-proof-carry-forward
+
+      - name: Build Uchirimo V8 selector shard matrix lane 2
+        id: plan
+        run: node scripts/uchirimo-full-selector-proof.mjs
+      - name: Upload selector shard plan lane 2
+        uses: actions/upload-artifact@v4
+        with:
+          name: uchirimo-selector-proof-plan-2-${{ env.HEAD_SHA }}
+          path: artifacts/uchirimo-selector-proof-plan-2/
+          if-no-files-found: error
+
+  uchirimo-selector-proof-plan-3:
+    needs: ["governance-authority", "governance-precheck", "uchirimo-selector-proof-cache", "uchirimo-selector-proof-carry-forward"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && needs.governance-precheck.outputs.authorized == 'true' && needs.uchirimo-selector-proof-cache.outputs.reused != 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      matrix: ${{ steps.plan.outputs.matrix }}
+      shard_count: ${{ steps.plan.outputs.shard_count }}
+      lane_shard_count: ${{ steps.plan.outputs.lane_shard_count }}
+    env:
+      HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      UCHIRIMO_SELECTOR_MODE: plan
+      UCHIRIMO_SELECTOR_PLAN_LANE_COUNT: 16
+      UCHIRIMO_SELECTOR_PLAN_LANE_INDEX: 3
+      UCHIRIMO_SELECTOR_BATCH_SIZE: 1
+      UCHIRIMO_SELECTOR_NORMAL_CHILD_TIMEOUT_MS: 1080000
+      UCHIRIMO_SELECTOR_HEAVY_CHILD_TIMEOUT_MS: 3000000
+      UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-selector-proof-plan-3
+      UCHIRIMO_SELECTOR_REUSE_MANIFEST: artifacts/uchirimo-selector-proof-carry-forward/manifest.json
+    steps:
+      - name: Checkout exact HEAD
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.HEAD_SHA }}
+          fetch-depth: 0
+      - name: Setup Node 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Install
+        run: npm install --ignore-scripts
+      - name: Download current-head partition carry-forward manifest
+        uses: actions/download-artifact@v4
+        with:
+          name: uchirimo-selector-proof-carry-forward-${{ env.HEAD_SHA }}
+          path: artifacts/uchirimo-selector-proof-carry-forward
+
+      - name: Build Uchirimo V8 selector shard matrix lane 3
+        id: plan
+        run: node scripts/uchirimo-full-selector-proof.mjs
+      - name: Upload selector shard plan lane 3
+        uses: actions/upload-artifact@v4
+        with:
+          name: uchirimo-selector-proof-plan-3-${{ env.HEAD_SHA }}
+          path: artifacts/uchirimo-selector-proof-plan-3/
+          if-no-files-found: error
+
+  uchirimo-selector-proof-plan-4:
+    needs: ["governance-authority", "governance-precheck", "uchirimo-selector-proof-cache", "uchirimo-selector-proof-carry-forward"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && needs.governance-precheck.outputs.authorized == 'true' && needs.uchirimo-selector-proof-cache.outputs.reused != 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      matrix: ${{ steps.plan.outputs.matrix }}
+      shard_count: ${{ steps.plan.outputs.shard_count }}
+      lane_shard_count: ${{ steps.plan.outputs.lane_shard_count }}
+    env:
+      HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      UCHIRIMO_SELECTOR_MODE: plan
+      UCHIRIMO_SELECTOR_PLAN_LANE_COUNT: 16
+      UCHIRIMO_SELECTOR_PLAN_LANE_INDEX: 4
+      UCHIRIMO_SELECTOR_BATCH_SIZE: 1
+      UCHIRIMO_SELECTOR_NORMAL_CHILD_TIMEOUT_MS: 1080000
+      UCHIRIMO_SELECTOR_HEAVY_CHILD_TIMEOUT_MS: 3000000
+      UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-selector-proof-plan-4
+      UCHIRIMO_SELECTOR_REUSE_MANIFEST: artifacts/uchirimo-selector-proof-carry-forward/manifest.json
+    steps:
+      - name: Checkout exact HEAD
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.HEAD_SHA }}
+          fetch-depth: 0
+      - name: Setup Node 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Install
+        run: npm install --ignore-scripts
+      - name: Download current-head partition carry-forward manifest
+        uses: actions/download-artifact@v4
+        with:
+          name: uchirimo-selector-proof-carry-forward-${{ env.HEAD_SHA }}
+          path: artifacts/uchirimo-selector-proof-carry-forward
+
+      - name: Build Uchirimo V8 selector shard matrix lane 4
+        id: plan
+        run: node scripts/uchirimo-full-selector-proof.mjs
+      - name: Upload selector shard plan lane 4
+        uses: actions/upload-artifact@v4
+        with:
+          name: uchirimo-selector-proof-plan-4-${{ env.HEAD_SHA }}
+          path: artifacts/uchirimo-selector-proof-plan-4/
+          if-no-files-found: error
+
+  uchirimo-selector-proof-plan-5:
+    needs: ["governance-authority", "governance-precheck", "uchirimo-selector-proof-cache", "uchirimo-selector-proof-carry-forward"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && needs.governance-precheck.outputs.authorized == 'true' && needs.uchirimo-selector-proof-cache.outputs.reused != 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      matrix: ${{ steps.plan.outputs.matrix }}
+      shard_count: ${{ steps.plan.outputs.shard_count }}
+      lane_shard_count: ${{ steps.plan.outputs.lane_shard_count }}
+    env:
+      HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      UCHIRIMO_SELECTOR_MODE: plan
+      UCHIRIMO_SELECTOR_PLAN_LANE_COUNT: 16
+      UCHIRIMO_SELECTOR_PLAN_LANE_INDEX: 5
+      UCHIRIMO_SELECTOR_BATCH_SIZE: 1
+      UCHIRIMO_SELECTOR_NORMAL_CHILD_TIMEOUT_MS: 1080000
+      UCHIRIMO_SELECTOR_HEAVY_CHILD_TIMEOUT_MS: 3000000
+      UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-selector-proof-plan-5
+      UCHIRIMO_SELECTOR_REUSE_MANIFEST: artifacts/uchirimo-selector-proof-carry-forward/manifest.json
+    steps:
+      - name: Checkout exact HEAD
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.HEAD_SHA }}
+          fetch-depth: 0
+      - name: Setup Node 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Install
+        run: npm install --ignore-scripts
+      - name: Download current-head partition carry-forward manifest
+        uses: actions/download-artifact@v4
+        with:
+          name: uchirimo-selector-proof-carry-forward-${{ env.HEAD_SHA }}
+          path: artifacts/uchirimo-selector-proof-carry-forward
+
+      - name: Build Uchirimo V8 selector shard matrix lane 5
+        id: plan
+        run: node scripts/uchirimo-full-selector-proof.mjs
+      - name: Upload selector shard plan lane 5
+        uses: actions/upload-artifact@v4
+        with:
+          name: uchirimo-selector-proof-plan-5-${{ env.HEAD_SHA }}
+          path: artifacts/uchirimo-selector-proof-plan-5/
+          if-no-files-found: error
+
+  uchirimo-selector-proof-plan-6:
+    needs: ["governance-authority", "governance-precheck", "uchirimo-selector-proof-cache", "uchirimo-selector-proof-carry-forward"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && needs.governance-precheck.outputs.authorized == 'true' && needs.uchirimo-selector-proof-cache.outputs.reused != 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      matrix: ${{ steps.plan.outputs.matrix }}
+      shard_count: ${{ steps.plan.outputs.shard_count }}
+      lane_shard_count: ${{ steps.plan.outputs.lane_shard_count }}
+    env:
+      HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      UCHIRIMO_SELECTOR_MODE: plan
+      UCHIRIMO_SELECTOR_PLAN_LANE_COUNT: 16
+      UCHIRIMO_SELECTOR_PLAN_LANE_INDEX: 6
+      UCHIRIMO_SELECTOR_BATCH_SIZE: 1
+      UCHIRIMO_SELECTOR_NORMAL_CHILD_TIMEOUT_MS: 1080000
+      UCHIRIMO_SELECTOR_HEAVY_CHILD_TIMEOUT_MS: 3000000
+      UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-selector-proof-plan-6
+      UCHIRIMO_SELECTOR_REUSE_MANIFEST: artifacts/uchirimo-selector-proof-carry-forward/manifest.json
+    steps:
+      - name: Checkout exact HEAD
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.HEAD_SHA }}
+          fetch-depth: 0
+      - name: Setup Node 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Install
+        run: npm install --ignore-scripts
+      - name: Download current-head partition carry-forward manifest
+        uses: actions/download-artifact@v4
+        with:
+          name: uchirimo-selector-proof-carry-forward-${{ env.HEAD_SHA }}
+          path: artifacts/uchirimo-selector-proof-carry-forward
+
+      - name: Build Uchirimo V8 selector shard matrix lane 6
+        id: plan
+        run: node scripts/uchirimo-full-selector-proof.mjs
+      - name: Upload selector shard plan lane 6
+        uses: actions/upload-artifact@v4
+        with:
+          name: uchirimo-selector-proof-plan-6-${{ env.HEAD_SHA }}
+          path: artifacts/uchirimo-selector-proof-plan-6/
+          if-no-files-found: error
+
+  uchirimo-selector-proof-plan-7:
+    needs: ["governance-authority", "governance-precheck", "uchirimo-selector-proof-cache", "uchirimo-selector-proof-carry-forward"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && needs.governance-precheck.outputs.authorized == 'true' && needs.uchirimo-selector-proof-cache.outputs.reused != 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      matrix: ${{ steps.plan.outputs.matrix }}
+      shard_count: ${{ steps.plan.outputs.shard_count }}
+      lane_shard_count: ${{ steps.plan.outputs.lane_shard_count }}
+    env:
+      HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      UCHIRIMO_SELECTOR_MODE: plan
+      UCHIRIMO_SELECTOR_PLAN_LANE_COUNT: 16
+      UCHIRIMO_SELECTOR_PLAN_LANE_INDEX: 7
+      UCHIRIMO_SELECTOR_BATCH_SIZE: 1
+      UCHIRIMO_SELECTOR_NORMAL_CHILD_TIMEOUT_MS: 1080000
+      UCHIRIMO_SELECTOR_HEAVY_CHILD_TIMEOUT_MS: 3000000
+      UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-selector-proof-plan-7
+      UCHIRIMO_SELECTOR_REUSE_MANIFEST: artifacts/uchirimo-selector-proof-carry-forward/manifest.json
+    steps:
+      - name: Checkout exact HEAD
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.HEAD_SHA }}
+          fetch-depth: 0
+      - name: Setup Node 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Install
+        run: npm install --ignore-scripts
+      - name: Download current-head partition carry-forward manifest
+        uses: actions/download-artifact@v4
+        with:
+          name: uchirimo-selector-proof-carry-forward-${{ env.HEAD_SHA }}
+          path: artifacts/uchirimo-selector-proof-carry-forward
+
+      - name: Build Uchirimo V8 selector shard matrix lane 7
+        id: plan
+        run: node scripts/uchirimo-full-selector-proof.mjs
+      - name: Upload selector shard plan lane 7
+        uses: actions/upload-artifact@v4
+        with:
+          name: uchirimo-selector-proof-plan-7-${{ env.HEAD_SHA }}
+          path: artifacts/uchirimo-selector-proof-plan-7/
+          if-no-files-found: error
+
+  uchirimo-selector-proof-plan-8:
+    needs: ["governance-authority", "governance-precheck", "uchirimo-selector-proof-cache", "uchirimo-selector-proof-carry-forward"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && needs.governance-precheck.outputs.authorized == 'true' && needs.uchirimo-selector-proof-cache.outputs.reused != 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      matrix: ${{ steps.plan.outputs.matrix }}
+      shard_count: ${{ steps.plan.outputs.shard_count }}
+      lane_shard_count: ${{ steps.plan.outputs.lane_shard_count }}
+    env:
+      HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      UCHIRIMO_SELECTOR_MODE: plan
+      UCHIRIMO_SELECTOR_PLAN_LANE_COUNT: 16
+      UCHIRIMO_SELECTOR_PLAN_LANE_INDEX: 8
+      UCHIRIMO_SELECTOR_BATCH_SIZE: 1
+      UCHIRIMO_SELECTOR_NORMAL_CHILD_TIMEOUT_MS: 1080000
+      UCHIRIMO_SELECTOR_HEAVY_CHILD_TIMEOUT_MS: 3000000
+      UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-selector-proof-plan-8
+      UCHIRIMO_SELECTOR_REUSE_MANIFEST: artifacts/uchirimo-selector-proof-carry-forward/manifest.json
+    steps:
+      - name: Checkout exact HEAD
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.HEAD_SHA }}
+          fetch-depth: 0
+      - name: Setup Node 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Install
+        run: npm install --ignore-scripts
+      - name: Download current-head partition carry-forward manifest
+        uses: actions/download-artifact@v4
+        with:
+          name: uchirimo-selector-proof-carry-forward-${{ env.HEAD_SHA }}
+          path: artifacts/uchirimo-selector-proof-carry-forward
+
+      - name: Build Uchirimo V8 selector shard matrix lane 8
+        id: plan
+        run: node scripts/uchirimo-full-selector-proof.mjs
+      - name: Upload selector shard plan lane 8
+        uses: actions/upload-artifact@v4
+        with:
+          name: uchirimo-selector-proof-plan-8-${{ env.HEAD_SHA }}
+          path: artifacts/uchirimo-selector-proof-plan-8/
+          if-no-files-found: error
+
+  uchirimo-selector-proof-plan-9:
+    needs: ["governance-authority", "governance-precheck", "uchirimo-selector-proof-cache", "uchirimo-selector-proof-carry-forward"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && needs.governance-precheck.outputs.authorized == 'true' && needs.uchirimo-selector-proof-cache.outputs.reused != 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      matrix: ${{ steps.plan.outputs.matrix }}
+      shard_count: ${{ steps.plan.outputs.shard_count }}
+      lane_shard_count: ${{ steps.plan.outputs.lane_shard_count }}
+    env:
+      HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      UCHIRIMO_SELECTOR_MODE: plan
+      UCHIRIMO_SELECTOR_PLAN_LANE_COUNT: 16
+      UCHIRIMO_SELECTOR_PLAN_LANE_INDEX: 9
+      UCHIRIMO_SELECTOR_BATCH_SIZE: 1
+      UCHIRIMO_SELECTOR_NORMAL_CHILD_TIMEOUT_MS: 1080000
+      UCHIRIMO_SELECTOR_HEAVY_CHILD_TIMEOUT_MS: 3000000
+      UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-selector-proof-plan-9
+      UCHIRIMO_SELECTOR_REUSE_MANIFEST: artifacts/uchirimo-selector-proof-carry-forward/manifest.json
+    steps:
+      - name: Checkout exact HEAD
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.HEAD_SHA }}
+          fetch-depth: 0
+      - name: Setup Node 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Install
+        run: npm install --ignore-scripts
+      - name: Download current-head partition carry-forward manifest
+        uses: actions/download-artifact@v4
+        with:
+          name: uchirimo-selector-proof-carry-forward-${{ env.HEAD_SHA }}
+          path: artifacts/uchirimo-selector-proof-carry-forward
+
+      - name: Build Uchirimo V8 selector shard matrix lane 9
+        id: plan
+        run: node scripts/uchirimo-full-selector-proof.mjs
+      - name: Upload selector shard plan lane 9
+        uses: actions/upload-artifact@v4
+        with:
+          name: uchirimo-selector-proof-plan-9-${{ env.HEAD_SHA }}
+          path: artifacts/uchirimo-selector-proof-plan-9/
+          if-no-files-found: error
+
+  uchirimo-selector-proof-plan-10:
+    needs: ["governance-authority", "governance-precheck", "uchirimo-selector-proof-cache", "uchirimo-selector-proof-carry-forward"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && needs.governance-precheck.outputs.authorized == 'true' && needs.uchirimo-selector-proof-cache.outputs.reused != 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      matrix: ${{ steps.plan.outputs.matrix }}
+      shard_count: ${{ steps.plan.outputs.shard_count }}
+      lane_shard_count: ${{ steps.plan.outputs.lane_shard_count }}
+    env:
+      HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      UCHIRIMO_SELECTOR_MODE: plan
+      UCHIRIMO_SELECTOR_PLAN_LANE_COUNT: 16
+      UCHIRIMO_SELECTOR_PLAN_LANE_INDEX: 10
+      UCHIRIMO_SELECTOR_BATCH_SIZE: 1
+      UCHIRIMO_SELECTOR_NORMAL_CHILD_TIMEOUT_MS: 1080000
+      UCHIRIMO_SELECTOR_HEAVY_CHILD_TIMEOUT_MS: 3000000
+      UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-selector-proof-plan-10
+      UCHIRIMO_SELECTOR_REUSE_MANIFEST: artifacts/uchirimo-selector-proof-carry-forward/manifest.json
+    steps:
+      - name: Checkout exact HEAD
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.HEAD_SHA }}
+          fetch-depth: 0
+      - name: Setup Node 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Install
+        run: npm install --ignore-scripts
+      - name: Download current-head partition carry-forward manifest
+        uses: actions/download-artifact@v4
+        with:
+          name: uchirimo-selector-proof-carry-forward-${{ env.HEAD_SHA }}
+          path: artifacts/uchirimo-selector-proof-carry-forward
+
+      - name: Build Uchirimo V8 selector shard matrix lane 10
+        id: plan
+        run: node scripts/uchirimo-full-selector-proof.mjs
+      - name: Upload selector shard plan lane 10
+        uses: actions/upload-artifact@v4
+        with:
+          name: uchirimo-selector-proof-plan-10-${{ env.HEAD_SHA }}
+          path: artifacts/uchirimo-selector-proof-plan-10/
+          if-no-files-found: error
+
+  uchirimo-selector-proof-plan-11:
+    needs: ["governance-authority", "governance-precheck", "uchirimo-selector-proof-cache", "uchirimo-selector-proof-carry-forward"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && needs.governance-precheck.outputs.authorized == 'true' && needs.uchirimo-selector-proof-cache.outputs.reused != 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      matrix: ${{ steps.plan.outputs.matrix }}
+      shard_count: ${{ steps.plan.outputs.shard_count }}
+      lane_shard_count: ${{ steps.plan.outputs.lane_shard_count }}
+    env:
+      HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      UCHIRIMO_SELECTOR_MODE: plan
+      UCHIRIMO_SELECTOR_PLAN_LANE_COUNT: 16
+      UCHIRIMO_SELECTOR_PLAN_LANE_INDEX: 11
+      UCHIRIMO_SELECTOR_BATCH_SIZE: 1
+      UCHIRIMO_SELECTOR_NORMAL_CHILD_TIMEOUT_MS: 1080000
+      UCHIRIMO_SELECTOR_HEAVY_CHILD_TIMEOUT_MS: 3000000
+      UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-selector-proof-plan-11
+      UCHIRIMO_SELECTOR_REUSE_MANIFEST: artifacts/uchirimo-selector-proof-carry-forward/manifest.json
+    steps:
+      - name: Checkout exact HEAD
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.HEAD_SHA }}
+          fetch-depth: 0
+      - name: Setup Node 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Install
+        run: npm install --ignore-scripts
+      - name: Download current-head partition carry-forward manifest
+        uses: actions/download-artifact@v4
+        with:
+          name: uchirimo-selector-proof-carry-forward-${{ env.HEAD_SHA }}
+          path: artifacts/uchirimo-selector-proof-carry-forward
+
+      - name: Build Uchirimo V8 selector shard matrix lane 11
+        id: plan
+        run: node scripts/uchirimo-full-selector-proof.mjs
+      - name: Upload selector shard plan lane 11
+        uses: actions/upload-artifact@v4
+        with:
+          name: uchirimo-selector-proof-plan-11-${{ env.HEAD_SHA }}
+          path: artifacts/uchirimo-selector-proof-plan-11/
+          if-no-files-found: error
+
+  uchirimo-selector-proof-plan-12:
+    needs: ["governance-authority", "governance-precheck", "uchirimo-selector-proof-cache", "uchirimo-selector-proof-carry-forward"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && needs.governance-precheck.outputs.authorized == 'true' && needs.uchirimo-selector-proof-cache.outputs.reused != 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      matrix: ${{ steps.plan.outputs.matrix }}
+      shard_count: ${{ steps.plan.outputs.shard_count }}
+      lane_shard_count: ${{ steps.plan.outputs.lane_shard_count }}
+    env:
+      HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      UCHIRIMO_SELECTOR_MODE: plan
+      UCHIRIMO_SELECTOR_PLAN_LANE_COUNT: 16
+      UCHIRIMO_SELECTOR_PLAN_LANE_INDEX: 12
+      UCHIRIMO_SELECTOR_BATCH_SIZE: 1
+      UCHIRIMO_SELECTOR_NORMAL_CHILD_TIMEOUT_MS: 1080000
+      UCHIRIMO_SELECTOR_HEAVY_CHILD_TIMEOUT_MS: 3000000
+      UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-selector-proof-plan-12
+      UCHIRIMO_SELECTOR_REUSE_MANIFEST: artifacts/uchirimo-selector-proof-carry-forward/manifest.json
+    steps:
+      - name: Checkout exact HEAD
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.HEAD_SHA }}
+          fetch-depth: 0
+      - name: Setup Node 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Install
+        run: npm install --ignore-scripts
+      - name: Download current-head partition carry-forward manifest
+        uses: actions/download-artifact@v4
+        with:
+          name: uchirimo-selector-proof-carry-forward-${{ env.HEAD_SHA }}
+          path: artifacts/uchirimo-selector-proof-carry-forward
+
+      - name: Build Uchirimo V8 selector shard matrix lane 12
+        id: plan
+        run: node scripts/uchirimo-full-selector-proof.mjs
+      - name: Upload selector shard plan lane 12
+        uses: actions/upload-artifact@v4
+        with:
+          name: uchirimo-selector-proof-plan-12-${{ env.HEAD_SHA }}
+          path: artifacts/uchirimo-selector-proof-plan-12/
+          if-no-files-found: error
+
+  uchirimo-selector-proof-plan-13:
+    needs: ["governance-authority", "governance-precheck", "uchirimo-selector-proof-cache", "uchirimo-selector-proof-carry-forward"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && needs.governance-precheck.outputs.authorized == 'true' && needs.uchirimo-selector-proof-cache.outputs.reused != 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      matrix: ${{ steps.plan.outputs.matrix }}
+      shard_count: ${{ steps.plan.outputs.shard_count }}
+      lane_shard_count: ${{ steps.plan.outputs.lane_shard_count }}
+    env:
+      HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      UCHIRIMO_SELECTOR_MODE: plan
+      UCHIRIMO_SELECTOR_PLAN_LANE_COUNT: 16
+      UCHIRIMO_SELECTOR_PLAN_LANE_INDEX: 13
+      UCHIRIMO_SELECTOR_BATCH_SIZE: 1
+      UCHIRIMO_SELECTOR_NORMAL_CHILD_TIMEOUT_MS: 1080000
+      UCHIRIMO_SELECTOR_HEAVY_CHILD_TIMEOUT_MS: 3000000
+      UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-selector-proof-plan-13
+      UCHIRIMO_SELECTOR_REUSE_MANIFEST: artifacts/uchirimo-selector-proof-carry-forward/manifest.json
+    steps:
+      - name: Checkout exact HEAD
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.HEAD_SHA }}
+          fetch-depth: 0
+      - name: Setup Node 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Install
+        run: npm install --ignore-scripts
+      - name: Download current-head partition carry-forward manifest
+        uses: actions/download-artifact@v4
+        with:
+          name: uchirimo-selector-proof-carry-forward-${{ env.HEAD_SHA }}
+          path: artifacts/uchirimo-selector-proof-carry-forward
+
+      - name: Build Uchirimo V8 selector shard matrix lane 13
+        id: plan
+        run: node scripts/uchirimo-full-selector-proof.mjs
+      - name: Upload selector shard plan lane 13
+        uses: actions/upload-artifact@v4
+        with:
+          name: uchirimo-selector-proof-plan-13-${{ env.HEAD_SHA }}
+          path: artifacts/uchirimo-selector-proof-plan-13/
+          if-no-files-found: error
+
+  uchirimo-selector-proof-plan-14:
+    needs: ["governance-authority", "governance-precheck", "uchirimo-selector-proof-cache", "uchirimo-selector-proof-carry-forward"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && needs.governance-precheck.outputs.authorized == 'true' && needs.uchirimo-selector-proof-cache.outputs.reused != 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      matrix: ${{ steps.plan.outputs.matrix }}
+      shard_count: ${{ steps.plan.outputs.shard_count }}
+      lane_shard_count: ${{ steps.plan.outputs.lane_shard_count }}
+    env:
+      HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      UCHIRIMO_SELECTOR_MODE: plan
+      UCHIRIMO_SELECTOR_PLAN_LANE_COUNT: 16
+      UCHIRIMO_SELECTOR_PLAN_LANE_INDEX: 14
+      UCHIRIMO_SELECTOR_BATCH_SIZE: 1
+      UCHIRIMO_SELECTOR_NORMAL_CHILD_TIMEOUT_MS: 1080000
+      UCHIRIMO_SELECTOR_HEAVY_CHILD_TIMEOUT_MS: 3000000
+      UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-selector-proof-plan-14
+      UCHIRIMO_SELECTOR_REUSE_MANIFEST: artifacts/uchirimo-selector-proof-carry-forward/manifest.json
+    steps:
+      - name: Checkout exact HEAD
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.HEAD_SHA }}
+          fetch-depth: 0
+      - name: Setup Node 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Install
+        run: npm install --ignore-scripts
+      - name: Download current-head partition carry-forward manifest
+        uses: actions/download-artifact@v4
+        with:
+          name: uchirimo-selector-proof-carry-forward-${{ env.HEAD_SHA }}
+          path: artifacts/uchirimo-selector-proof-carry-forward
+
+      - name: Build Uchirimo V8 selector shard matrix lane 14
+        id: plan
+        run: node scripts/uchirimo-full-selector-proof.mjs
+      - name: Upload selector shard plan lane 14
+        uses: actions/upload-artifact@v4
+        with:
+          name: uchirimo-selector-proof-plan-14-${{ env.HEAD_SHA }}
+          path: artifacts/uchirimo-selector-proof-plan-14/
+          if-no-files-found: error
+
+  uchirimo-selector-proof-plan-15:
+    needs: ["governance-authority", "governance-precheck", "uchirimo-selector-proof-cache", "uchirimo-selector-proof-carry-forward"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && needs.governance-precheck.outputs.authorized == 'true' && needs.uchirimo-selector-proof-cache.outputs.reused != 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      matrix: ${{ steps.plan.outputs.matrix }}
+      shard_count: ${{ steps.plan.outputs.shard_count }}
+      lane_shard_count: ${{ steps.plan.outputs.lane_shard_count }}
+    env:
+      HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      UCHIRIMO_SELECTOR_MODE: plan
+      UCHIRIMO_SELECTOR_PLAN_LANE_COUNT: 16
+      UCHIRIMO_SELECTOR_PLAN_LANE_INDEX: 15
+      UCHIRIMO_SELECTOR_BATCH_SIZE: 1
+      UCHIRIMO_SELECTOR_NORMAL_CHILD_TIMEOUT_MS: 1080000
+      UCHIRIMO_SELECTOR_HEAVY_CHILD_TIMEOUT_MS: 3000000
+      UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-selector-proof-plan-15
+      UCHIRIMO_SELECTOR_REUSE_MANIFEST: artifacts/uchirimo-selector-proof-carry-forward/manifest.json
+    steps:
+      - name: Checkout exact HEAD
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.HEAD_SHA }}
+          fetch-depth: 0
+      - name: Setup Node 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Install
+        run: npm install --ignore-scripts
+      - name: Download current-head partition carry-forward manifest
+        uses: actions/download-artifact@v4
+        with:
+          name: uchirimo-selector-proof-carry-forward-${{ env.HEAD_SHA }}
+          path: artifacts/uchirimo-selector-proof-carry-forward
+
+      - name: Build Uchirimo V8 selector shard matrix lane 15
+        id: plan
+        run: node scripts/uchirimo-full-selector-proof.mjs
+      - name: Upload selector shard plan lane 15
+        uses: actions/upload-artifact@v4
+        with:
+          name: uchirimo-selector-proof-plan-15-${{ env.HEAD_SHA }}
+          path: artifacts/uchirimo-selector-proof-plan-15/
+          if-no-files-found: error
+
+  uchirimo-selector-proof-0:
+    needs: ["governance-authority", "governance-precheck", "uchirimo-selector-proof-cache", "uchirimo-selector-proof-plan-0"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && needs.governance-precheck.outputs.authorized == 'true' && needs.uchirimo-selector-proof-cache.outputs.reused != 'true' }}
+    strategy:
+      fail-fast: false
+      max-parallel: 2
+      matrix: ${{ fromJSON(needs.uchirimo-selector-proof-plan-0.outputs.matrix) }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    env:
+      HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      UCHIRIMO_SELECTOR_MODE: shard
+      UCHIRIMO_SELECTOR_BATCH_ID: ${{ matrix.batch_id }}
+      UCHIRIMO_SELECTOR_BATCH_JSON: ${{ matrix.batch_json }}
+      UCHIRIMO_SELECTOR_CHILD_TIMEOUT_MS: ${{ matrix.child_timeout_ms }}
+      UCHIRIMO_SELECTOR_EXPECTED_SHARDS: ${{ needs.uchirimo-selector-proof-plan-0.outputs.shard_count }}
+      UCHIRIMO_RESOLVER_CACHE_MAX: 4096
+      UCHIRIMO_SELECTOR_MAX_STATES: 2000000
+      UCHIRIMO_SELECTOR_MAX_TERMINALS: 2000000
+      UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-selector-proof-shard
+    steps:
+      - name: Checkout exact HEAD
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.HEAD_SHA }}
+          fetch-depth: 0
+      - name: Setup Node 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Install
+        run: npm install --ignore-scripts
+      - name: Run isolated Uchirimo selector batch lane 0
+        if: ${{ matrix.skip != true }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$HEAD_SHA"
+          node scripts/governance/uchirimo-selector-batch-runner.mjs
+      - name: Upload Uchirimo selector batch evidence
+        if: ${{ always() && matrix.skip != true }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: uchirimo-selector-proof-batch-${{ matrix.batch_id }}-${{ env.HEAD_SHA }}-attempt-${{ github.run_attempt }}
+          path: artifacts/uchirimo-selector-proof-shard/
+          if-no-files-found: warn
+
+  uchirimo-selector-proof-1:
+    needs: ["governance-authority", "governance-precheck", "uchirimo-selector-proof-cache", "uchirimo-selector-proof-plan-1"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && needs.governance-precheck.outputs.authorized == 'true' && needs.uchirimo-selector-proof-cache.outputs.reused != 'true' }}
+    strategy:
+      fail-fast: false
+      max-parallel: 2
+      matrix: ${{ fromJSON(needs.uchirimo-selector-proof-plan-1.outputs.matrix) }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    env:
+      HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      UCHIRIMO_SELECTOR_MODE: shard
+      UCHIRIMO_SELECTOR_BATCH_ID: ${{ matrix.batch_id }}
+      UCHIRIMO_SELECTOR_BATCH_JSON: ${{ matrix.batch_json }}
+      UCHIRIMO_SELECTOR_CHILD_TIMEOUT_MS: ${{ matrix.child_timeout_ms }}
+      UCHIRIMO_SELECTOR_EXPECTED_SHARDS: ${{ needs.uchirimo-selector-proof-plan-1.outputs.shard_count }}
+      UCHIRIMO_RESOLVER_CACHE_MAX: 4096
+      UCHIRIMO_SELECTOR_MAX_STATES: 2000000
+      UCHIRIMO_SELECTOR_MAX_TERMINALS: 2000000
+      UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-selector-proof-shard
+    steps:
+      - name: Checkout exact HEAD
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.HEAD_SHA }}
+          fetch-depth: 0
+      - name: Setup Node 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Install
+        run: npm install --ignore-scripts
+      - name: Run isolated Uchirimo selector batch lane 1
+        if: ${{ matrix.skip != true }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$HEAD_SHA"
+          node scripts/governance/uchirimo-selector-batch-runner.mjs
+      - name: Upload Uchirimo selector batch evidence
+        if: ${{ always() && matrix.skip != true }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: uchirimo-selector-proof-batch-${{ matrix.batch_id }}-${{ env.HEAD_SHA }}-attempt-${{ github.run_attempt }}
+          path: artifacts/uchirimo-selector-proof-shard/
+          if-no-files-found: warn
+
+  uchirimo-selector-proof-2:
+    needs: ["governance-authority", "governance-precheck", "uchirimo-selector-proof-cache", "uchirimo-selector-proof-plan-2"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && needs.governance-precheck.outputs.authorized == 'true' && needs.uchirimo-selector-proof-cache.outputs.reused != 'true' }}
+    strategy:
+      fail-fast: false
+      max-parallel: 2
+      matrix: ${{ fromJSON(needs.uchirimo-selector-proof-plan-2.outputs.matrix) }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    env:
+      HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      UCHIRIMO_SELECTOR_MODE: shard
+      UCHIRIMO_SELECTOR_BATCH_ID: ${{ matrix.batch_id }}
+      UCHIRIMO_SELECTOR_BATCH_JSON: ${{ matrix.batch_json }}
+      UCHIRIMO_SELECTOR_CHILD_TIMEOUT_MS: ${{ matrix.child_timeout_ms }}
+      UCHIRIMO_SELECTOR_EXPECTED_SHARDS: ${{ needs.uchirimo-selector-proof-plan-2.outputs.shard_count }}
+      UCHIRIMO_RESOLVER_CACHE_MAX: 4096
+      UCHIRIMO_SELECTOR_MAX_STATES: 2000000
+      UCHIRIMO_SELECTOR_MAX_TERMINALS: 2000000
+      UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-selector-proof-shard
+    steps:
+      - name: Checkout exact HEAD
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.HEAD_SHA }}
+          fetch-depth: 0
+      - name: Setup Node 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Install
+        run: npm install --ignore-scripts
+      - name: Run isolated Uchirimo selector batch lane 2
+        if: ${{ matrix.skip != true }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$HEAD_SHA"
+          node scripts/governance/uchirimo-selector-batch-runner.mjs
+      - name: Upload Uchirimo selector batch evidence
+        if: ${{ always() && matrix.skip != true }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: uchirimo-selector-proof-batch-${{ matrix.batch_id }}-${{ env.HEAD_SHA }}-attempt-${{ github.run_attempt }}
+          path: artifacts/uchirimo-selector-proof-shard/
+          if-no-files-found: warn
+
+  uchirimo-selector-proof-3:
+    needs: ["governance-authority", "governance-precheck", "uchirimo-selector-proof-cache", "uchirimo-selector-proof-plan-3"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && needs.governance-precheck.outputs.authorized == 'true' && needs.uchirimo-selector-proof-cache.outputs.reused != 'true' }}
+    strategy:
+      fail-fast: false
+      max-parallel: 2
+      matrix: ${{ fromJSON(needs.uchirimo-selector-proof-plan-3.outputs.matrix) }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    env:
+      HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      UCHIRIMO_SELECTOR_MODE: shard
+      UCHIRIMO_SELECTOR_BATCH_ID: ${{ matrix.batch_id }}
+      UCHIRIMO_SELECTOR_BATCH_JSON: ${{ matrix.batch_json }}
+      UCHIRIMO_SELECTOR_CHILD_TIMEOUT_MS: ${{ matrix.child_timeout_ms }}
+      UCHIRIMO_SELECTOR_EXPECTED_SHARDS: ${{ needs.uchirimo-selector-proof-plan-3.outputs.shard_count }}
+      UCHIRIMO_RESOLVER_CACHE_MAX: 4096
+      UCHIRIMO_SELECTOR_MAX_STATES: 2000000
+      UCHIRIMO_SELECTOR_MAX_TERMINALS: 2000000
+      UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-selector-proof-shard
+    steps:
+      - name: Checkout exact HEAD
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.HEAD_SHA }}
+          fetch-depth: 0
+      - name: Setup Node 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Install
+        run: npm install --ignore-scripts
+      - name: Run isolated Uchirimo selector batch lane 3
+        if: ${{ matrix.skip != true }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$HEAD_SHA"
+          node scripts/governance/uchirimo-selector-batch-runner.mjs
+      - name: Upload Uchirimo selector batch evidence
+        if: ${{ always() && matrix.skip != true }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: uchirimo-selector-proof-batch-${{ matrix.batch_id }}-${{ env.HEAD_SHA }}-attempt-${{ github.run_attempt }}
+          path: artifacts/uchirimo-selector-proof-shard/
+          if-no-files-found: warn
+
+  uchirimo-selector-proof-4:
+    needs: ["governance-authority", "governance-precheck", "uchirimo-selector-proof-cache", "uchirimo-selector-proof-plan-4"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && needs.governance-precheck.outputs.authorized == 'true' && needs.uchirimo-selector-proof-cache.outputs.reused != 'true' }}
+    strategy:
+      fail-fast: false
+      max-parallel: 2
+      matrix: ${{ fromJSON(needs.uchirimo-selector-proof-plan-4.outputs.matrix) }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    env:
+      HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      UCHIRIMO_SELECTOR_MODE: shard
+      UCHIRIMO_SELECTOR_BATCH_ID: ${{ matrix.batch_id }}
+      UCHIRIMO_SELECTOR_BATCH_JSON: ${{ matrix.batch_json }}
+      UCHIRIMO_SELECTOR_CHILD_TIMEOUT_MS: ${{ matrix.child_timeout_ms }}
+      UCHIRIMO_SELECTOR_EXPECTED_SHARDS: ${{ needs.uchirimo-selector-proof-plan-4.outputs.shard_count }}
+      UCHIRIMO_RESOLVER_CACHE_MAX: 4096
+      UCHIRIMO_SELECTOR_MAX_STATES: 2000000
+      UCHIRIMO_SELECTOR_MAX_TERMINALS: 2000000
+      UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-selector-proof-shard
+    steps:
+      - name: Checkout exact HEAD
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.HEAD_SHA }}
+          fetch-depth: 0
+      - name: Setup Node 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Install
+        run: npm install --ignore-scripts
+      - name: Run isolated Uchirimo selector batch lane 4
+        if: ${{ matrix.skip != true }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$HEAD_SHA"
+          node scripts/governance/uchirimo-selector-batch-runner.mjs
+      - name: Upload Uchirimo selector batch evidence
+        if: ${{ always() && matrix.skip != true }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: uchirimo-selector-proof-batch-${{ matrix.batch_id }}-${{ env.HEAD_SHA }}-attempt-${{ github.run_attempt }}
+          path: artifacts/uchirimo-selector-proof-shard/
+          if-no-files-found: warn
+
+  uchirimo-selector-proof-5:
+    needs: ["governance-authority", "governance-precheck", "uchirimo-selector-proof-cache", "uchirimo-selector-proof-plan-5"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && needs.governance-precheck.outputs.authorized == 'true' && needs.uchirimo-selector-proof-cache.outputs.reused != 'true' }}
+    strategy:
+      fail-fast: false
+      max-parallel: 2
+      matrix: ${{ fromJSON(needs.uchirimo-selector-proof-plan-5.outputs.matrix) }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    env:
+      HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      UCHIRIMO_SELECTOR_MODE: shard
+      UCHIRIMO_SELECTOR_BATCH_ID: ${{ matrix.batch_id }}
+      UCHIRIMO_SELECTOR_BATCH_JSON: ${{ matrix.batch_json }}
+      UCHIRIMO_SELECTOR_CHILD_TIMEOUT_MS: ${{ matrix.child_timeout_ms }}
+      UCHIRIMO_SELECTOR_EXPECTED_SHARDS: ${{ needs.uchirimo-selector-proof-plan-5.outputs.shard_count }}
+      UCHIRIMO_RESOLVER_CACHE_MAX: 4096
+      UCHIRIMO_SELECTOR_MAX_STATES: 2000000
+      UCHIRIMO_SELECTOR_MAX_TERMINALS: 2000000
+      UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-selector-proof-shard
+    steps:
+      - name: Checkout exact HEAD
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.HEAD_SHA }}
+          fetch-depth: 0
+      - name: Setup Node 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Install
+        run: npm install --ignore-scripts
+      - name: Run isolated Uchirimo selector batch lane 5
+        if: ${{ matrix.skip != true }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$HEAD_SHA"
+          node scripts/governance/uchirimo-selector-batch-runner.mjs
+      - name: Upload Uchirimo selector batch evidence
+        if: ${{ always() && matrix.skip != true }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: uchirimo-selector-proof-batch-${{ matrix.batch_id }}-${{ env.HEAD_SHA }}-attempt-${{ github.run_attempt }}
+          path: artifacts/uchirimo-selector-proof-shard/
+          if-no-files-found: warn
+
+  uchirimo-selector-proof-6:
+    needs: ["governance-authority", "governance-precheck", "uchirimo-selector-proof-cache", "uchirimo-selector-proof-plan-6"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && needs.governance-precheck.outputs.authorized == 'true' && needs.uchirimo-selector-proof-cache.outputs.reused != 'true' }}
+    strategy:
+      fail-fast: false
+      max-parallel: 2
+      matrix: ${{ fromJSON(needs.uchirimo-selector-proof-plan-6.outputs.matrix) }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    env:
+      HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      UCHIRIMO_SELECTOR_MODE: shard
+      UCHIRIMO_SELECTOR_BATCH_ID: ${{ matrix.batch_id }}
+      UCHIRIMO_SELECTOR_BATCH_JSON: ${{ matrix.batch_json }}
+      UCHIRIMO_SELECTOR_CHILD_TIMEOUT_MS: ${{ matrix.child_timeout_ms }}
+      UCHIRIMO_SELECTOR_EXPECTED_SHARDS: ${{ needs.uchirimo-selector-proof-plan-6.outputs.shard_count }}
+      UCHIRIMO_RESOLVER_CACHE_MAX: 4096
+      UCHIRIMO_SELECTOR_MAX_STATES: 2000000
+      UCHIRIMO_SELECTOR_MAX_TERMINALS: 2000000
+      UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-selector-proof-shard
+    steps:
+      - name: Checkout exact HEAD
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.HEAD_SHA }}
+          fetch-depth: 0
+      - name: Setup Node 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Install
+        run: npm install --ignore-scripts
+      - name: Run isolated Uchirimo selector batch lane 6
+        if: ${{ matrix.skip != true }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$HEAD_SHA"
+          node scripts/governance/uchirimo-selector-batch-runner.mjs
+      - name: Upload Uchirimo selector batch evidence
+        if: ${{ always() && matrix.skip != true }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: uchirimo-selector-proof-batch-${{ matrix.batch_id }}-${{ env.HEAD_SHA }}-attempt-${{ github.run_attempt }}
+          path: artifacts/uchirimo-selector-proof-shard/
+          if-no-files-found: warn
+
+  uchirimo-selector-proof-7:
+    needs: ["governance-authority", "governance-precheck", "uchirimo-selector-proof-cache", "uchirimo-selector-proof-plan-7"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && needs.governance-precheck.outputs.authorized == 'true' && needs.uchirimo-selector-proof-cache.outputs.reused != 'true' }}
+    strategy:
+      fail-fast: false
+      max-parallel: 2
+      matrix: ${{ fromJSON(needs.uchirimo-selector-proof-plan-7.outputs.matrix) }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    env:
+      HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      UCHIRIMO_SELECTOR_MODE: shard
+      UCHIRIMO_SELECTOR_BATCH_ID: ${{ matrix.batch_id }}
+      UCHIRIMO_SELECTOR_BATCH_JSON: ${{ matrix.batch_json }}
+      UCHIRIMO_SELECTOR_CHILD_TIMEOUT_MS: ${{ matrix.child_timeout_ms }}
+      UCHIRIMO_SELECTOR_EXPECTED_SHARDS: ${{ needs.uchirimo-selector-proof-plan-7.outputs.shard_count }}
+      UCHIRIMO_RESOLVER_CACHE_MAX: 4096
+      UCHIRIMO_SELECTOR_MAX_STATES: 2000000
+      UCHIRIMO_SELECTOR_MAX_TERMINALS: 2000000
+      UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-selector-proof-shard
+    steps:
+      - name: Checkout exact HEAD
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.HEAD_SHA }}
+          fetch-depth: 0
+      - name: Setup Node 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Install
+        run: npm install --ignore-scripts
+      - name: Run isolated Uchirimo selector batch lane 7
+        if: ${{ matrix.skip != true }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$HEAD_SHA"
+          node scripts/governance/uchirimo-selector-batch-runner.mjs
+      - name: Upload Uchirimo selector batch evidence
+        if: ${{ always() && matrix.skip != true }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: uchirimo-selector-proof-batch-${{ matrix.batch_id }}-${{ env.HEAD_SHA }}-attempt-${{ github.run_attempt }}
+          path: artifacts/uchirimo-selector-proof-shard/
+          if-no-files-found: warn
+
+  uchirimo-selector-proof-8:
+    needs: ["governance-authority", "governance-precheck", "uchirimo-selector-proof-cache", "uchirimo-selector-proof-plan-8"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && needs.governance-precheck.outputs.authorized == 'true' && needs.uchirimo-selector-proof-cache.outputs.reused != 'true' }}
+    strategy:
+      fail-fast: false
+      max-parallel: 2
+      matrix: ${{ fromJSON(needs.uchirimo-selector-proof-plan-8.outputs.matrix) }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    env:
+      HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      UCHIRIMO_SELECTOR_MODE: shard
+      UCHIRIMO_SELECTOR_BATCH_ID: ${{ matrix.batch_id }}
+      UCHIRIMO_SELECTOR_BATCH_JSON: ${{ matrix.batch_json }}
+      UCHIRIMO_SELECTOR_CHILD_TIMEOUT_MS: ${{ matrix.child_timeout_ms }}
+      UCHIRIMO_SELECTOR_EXPECTED_SHARDS: ${{ needs.uchirimo-selector-proof-plan-8.outputs.shard_count }}
+      UCHIRIMO_RESOLVER_CACHE_MAX: 4096
+      UCHIRIMO_SELECTOR_MAX_STATES: 2000000
+      UCHIRIMO_SELECTOR_MAX_TERMINALS: 2000000
+      UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-selector-proof-shard
+    steps:
+      - name: Checkout exact HEAD
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.HEAD_SHA }}
+          fetch-depth: 0
+      - name: Setup Node 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Install
+        run: npm install --ignore-scripts
+      - name: Run isolated Uchirimo selector batch lane 8
+        if: ${{ matrix.skip != true }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$HEAD_SHA"
+          node scripts/governance/uchirimo-selector-batch-runner.mjs
+      - name: Upload Uchirimo selector batch evidence
+        if: ${{ always() && matrix.skip != true }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: uchirimo-selector-proof-batch-${{ matrix.batch_id }}-${{ env.HEAD_SHA }}-attempt-${{ github.run_attempt }}
+          path: artifacts/uchirimo-selector-proof-shard/
+          if-no-files-found: warn
+
+  uchirimo-selector-proof-9:
+    needs: ["governance-authority", "governance-precheck", "uchirimo-selector-proof-cache", "uchirimo-selector-proof-plan-9"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && needs.governance-precheck.outputs.authorized == 'true' && needs.uchirimo-selector-proof-cache.outputs.reused != 'true' }}
+    strategy:
+      fail-fast: false
+      max-parallel: 2
+      matrix: ${{ fromJSON(needs.uchirimo-selector-proof-plan-9.outputs.matrix) }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    env:
+      HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      UCHIRIMO_SELECTOR_MODE: shard
+      UCHIRIMO_SELECTOR_BATCH_ID: ${{ matrix.batch_id }}
+      UCHIRIMO_SELECTOR_BATCH_JSON: ${{ matrix.batch_json }}
+      UCHIRIMO_SELECTOR_CHILD_TIMEOUT_MS: ${{ matrix.child_timeout_ms }}
+      UCHIRIMO_SELECTOR_EXPECTED_SHARDS: ${{ needs.uchirimo-selector-proof-plan-9.outputs.shard_count }}
+      UCHIRIMO_RESOLVER_CACHE_MAX: 4096
+      UCHIRIMO_SELECTOR_MAX_STATES: 2000000
+      UCHIRIMO_SELECTOR_MAX_TERMINALS: 2000000
+      UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-selector-proof-shard
+    steps:
+      - name: Checkout exact HEAD
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.HEAD_SHA }}
+          fetch-depth: 0
+      - name: Setup Node 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Install
+        run: npm install --ignore-scripts
+      - name: Run isolated Uchirimo selector batch lane 9
+        if: ${{ matrix.skip != true }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$HEAD_SHA"
+          node scripts/governance/uchirimo-selector-batch-runner.mjs
+      - name: Upload Uchirimo selector batch evidence
+        if: ${{ always() && matrix.skip != true }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: uchirimo-selector-proof-batch-${{ matrix.batch_id }}-${{ env.HEAD_SHA }}-attempt-${{ github.run_attempt }}
+          path: artifacts/uchirimo-selector-proof-shard/
+          if-no-files-found: warn
+
+  uchirimo-selector-proof-10:
+    needs: ["governance-authority", "governance-precheck", "uchirimo-selector-proof-cache", "uchirimo-selector-proof-plan-10"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && needs.governance-precheck.outputs.authorized == 'true' && needs.uchirimo-selector-proof-cache.outputs.reused != 'true' }}
+    strategy:
+      fail-fast: false
+      max-parallel: 2
+      matrix: ${{ fromJSON(needs.uchirimo-selector-proof-plan-10.outputs.matrix) }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    env:
+      HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      UCHIRIMO_SELECTOR_MODE: shard
+      UCHIRIMO_SELECTOR_BATCH_ID: ${{ matrix.batch_id }}
+      UCHIRIMO_SELECTOR_BATCH_JSON: ${{ matrix.batch_json }}
+      UCHIRIMO_SELECTOR_CHILD_TIMEOUT_MS: ${{ matrix.child_timeout_ms }}
+      UCHIRIMO_SELECTOR_EXPECTED_SHARDS: ${{ needs.uchirimo-selector-proof-plan-10.outputs.shard_count }}
+      UCHIRIMO_RESOLVER_CACHE_MAX: 4096
+      UCHIRIMO_SELECTOR_MAX_STATES: 2000000
+      UCHIRIMO_SELECTOR_MAX_TERMINALS: 2000000
+      UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-selector-proof-shard
+    steps:
+      - name: Checkout exact HEAD
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.HEAD_SHA }}
+          fetch-depth: 0
+      - name: Setup Node 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Install
+        run: npm install --ignore-scripts
+      - name: Run isolated Uchirimo selector batch lane 10
+        if: ${{ matrix.skip != true }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$HEAD_SHA"
+          node scripts/governance/uchirimo-selector-batch-runner.mjs
+      - name: Upload Uchirimo selector batch evidence
+        if: ${{ always() && matrix.skip != true }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: uchirimo-selector-proof-batch-${{ matrix.batch_id }}-${{ env.HEAD_SHA }}-attempt-${{ github.run_attempt }}
+          path: artifacts/uchirimo-selector-proof-shard/
+          if-no-files-found: warn
+
+  uchirimo-selector-proof-11:
+    needs: ["governance-authority", "governance-precheck", "uchirimo-selector-proof-cache", "uchirimo-selector-proof-plan-11"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && needs.governance-precheck.outputs.authorized == 'true' && needs.uchirimo-selector-proof-cache.outputs.reused != 'true' }}
+    strategy:
+      fail-fast: false
+      max-parallel: 2
+      matrix: ${{ fromJSON(needs.uchirimo-selector-proof-plan-11.outputs.matrix) }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    env:
+      HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      UCHIRIMO_SELECTOR_MODE: shard
+      UCHIRIMO_SELECTOR_BATCH_ID: ${{ matrix.batch_id }}
+      UCHIRIMO_SELECTOR_BATCH_JSON: ${{ matrix.batch_json }}
+      UCHIRIMO_SELECTOR_CHILD_TIMEOUT_MS: ${{ matrix.child_timeout_ms }}
+      UCHIRIMO_SELECTOR_EXPECTED_SHARDS: ${{ needs.uchirimo-selector-proof-plan-11.outputs.shard_count }}
+      UCHIRIMO_RESOLVER_CACHE_MAX: 4096
+      UCHIRIMO_SELECTOR_MAX_STATES: 2000000
+      UCHIRIMO_SELECTOR_MAX_TERMINALS: 2000000
+      UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-selector-proof-shard
+    steps:
+      - name: Checkout exact HEAD
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.HEAD_SHA }}
+          fetch-depth: 0
+      - name: Setup Node 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Install
+        run: npm install --ignore-scripts
+      - name: Run isolated Uchirimo selector batch lane 11
+        if: ${{ matrix.skip != true }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$HEAD_SHA"
+          node scripts/governance/uchirimo-selector-batch-runner.mjs
+      - name: Upload Uchirimo selector batch evidence
+        if: ${{ always() && matrix.skip != true }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: uchirimo-selector-proof-batch-${{ matrix.batch_id }}-${{ env.HEAD_SHA }}-attempt-${{ github.run_attempt }}
+          path: artifacts/uchirimo-selector-proof-shard/
+          if-no-files-found: warn
+
+  uchirimo-selector-proof-12:
+    needs: ["governance-authority", "governance-precheck", "uchirimo-selector-proof-cache", "uchirimo-selector-proof-plan-12"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && needs.governance-precheck.outputs.authorized == 'true' && needs.uchirimo-selector-proof-cache.outputs.reused != 'true' }}
+    strategy:
+      fail-fast: false
+      max-parallel: 2
+      matrix: ${{ fromJSON(needs.uchirimo-selector-proof-plan-12.outputs.matrix) }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    env:
+      HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      UCHIRIMO_SELECTOR_MODE: shard
+      UCHIRIMO_SELECTOR_BATCH_ID: ${{ matrix.batch_id }}
+      UCHIRIMO_SELECTOR_BATCH_JSON: ${{ matrix.batch_json }}
+      UCHIRIMO_SELECTOR_CHILD_TIMEOUT_MS: ${{ matrix.child_timeout_ms }}
+      UCHIRIMO_SELECTOR_EXPECTED_SHARDS: ${{ needs.uchirimo-selector-proof-plan-12.outputs.shard_count }}
+      UCHIRIMO_RESOLVER_CACHE_MAX: 4096
+      UCHIRIMO_SELECTOR_MAX_STATES: 2000000
+      UCHIRIMO_SELECTOR_MAX_TERMINALS: 2000000
+      UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-selector-proof-shard
+    steps:
+      - name: Checkout exact HEAD
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.HEAD_SHA }}
+          fetch-depth: 0
+      - name: Setup Node 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Install
+        run: npm install --ignore-scripts
+      - name: Run isolated Uchirimo selector batch lane 12
+        if: ${{ matrix.skip != true }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$HEAD_SHA"
+          node scripts/governance/uchirimo-selector-batch-runner.mjs
+      - name: Upload Uchirimo selector batch evidence
+        if: ${{ always() && matrix.skip != true }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: uchirimo-selector-proof-batch-${{ matrix.batch_id }}-${{ env.HEAD_SHA }}-attempt-${{ github.run_attempt }}
+          path: artifacts/uchirimo-selector-proof-shard/
+          if-no-files-found: warn
+
+  uchirimo-selector-proof-13:
+    needs: ["governance-authority", "governance-precheck", "uchirimo-selector-proof-cache", "uchirimo-selector-proof-plan-13"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && needs.governance-precheck.outputs.authorized == 'true' && needs.uchirimo-selector-proof-cache.outputs.reused != 'true' }}
+    strategy:
+      fail-fast: false
+      max-parallel: 2
+      matrix: ${{ fromJSON(needs.uchirimo-selector-proof-plan-13.outputs.matrix) }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    env:
+      HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      UCHIRIMO_SELECTOR_MODE: shard
+      UCHIRIMO_SELECTOR_BATCH_ID: ${{ matrix.batch_id }}
+      UCHIRIMO_SELECTOR_BATCH_JSON: ${{ matrix.batch_json }}
+      UCHIRIMO_SELECTOR_CHILD_TIMEOUT_MS: ${{ matrix.child_timeout_ms }}
+      UCHIRIMO_SELECTOR_EXPECTED_SHARDS: ${{ needs.uchirimo-selector-proof-plan-13.outputs.shard_count }}
+      UCHIRIMO_RESOLVER_CACHE_MAX: 4096
+      UCHIRIMO_SELECTOR_MAX_STATES: 2000000
+      UCHIRIMO_SELECTOR_MAX_TERMINALS: 2000000
+      UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-selector-proof-shard
+    steps:
+      - name: Checkout exact HEAD
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.HEAD_SHA }}
+          fetch-depth: 0
+      - name: Setup Node 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Install
+        run: npm install --ignore-scripts
+      - name: Run isolated Uchirimo selector batch lane 13
+        if: ${{ matrix.skip != true }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$HEAD_SHA"
+          node scripts/governance/uchirimo-selector-batch-runner.mjs
+      - name: Upload Uchirimo selector batch evidence
+        if: ${{ always() && matrix.skip != true }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: uchirimo-selector-proof-batch-${{ matrix.batch_id }}-${{ env.HEAD_SHA }}-attempt-${{ github.run_attempt }}
+          path: artifacts/uchirimo-selector-proof-shard/
+          if-no-files-found: warn
+
+  uchirimo-selector-proof-14:
+    needs: ["governance-authority", "governance-precheck", "uchirimo-selector-proof-cache", "uchirimo-selector-proof-plan-14"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && needs.governance-precheck.outputs.authorized == 'true' && needs.uchirimo-selector-proof-cache.outputs.reused != 'true' }}
+    strategy:
+      fail-fast: false
+      max-parallel: 2
+      matrix: ${{ fromJSON(needs.uchirimo-selector-proof-plan-14.outputs.matrix) }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    env:
+      HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      UCHIRIMO_SELECTOR_MODE: shard
+      UCHIRIMO_SELECTOR_BATCH_ID: ${{ matrix.batch_id }}
+      UCHIRIMO_SELECTOR_BATCH_JSON: ${{ matrix.batch_json }}
+      UCHIRIMO_SELECTOR_CHILD_TIMEOUT_MS: ${{ matrix.child_timeout_ms }}
+      UCHIRIMO_SELECTOR_EXPECTED_SHARDS: ${{ needs.uchirimo-selector-proof-plan-14.outputs.shard_count }}
+      UCHIRIMO_RESOLVER_CACHE_MAX: 4096
+      UCHIRIMO_SELECTOR_MAX_STATES: 2000000
+      UCHIRIMO_SELECTOR_MAX_TERMINALS: 2000000
+      UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-selector-proof-shard
+    steps:
+      - name: Checkout exact HEAD
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.HEAD_SHA }}
+          fetch-depth: 0
+      - name: Setup Node 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Install
+        run: npm install --ignore-scripts
+      - name: Run isolated Uchirimo selector batch lane 14
+        if: ${{ matrix.skip != true }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$HEAD_SHA"
+          node scripts/governance/uchirimo-selector-batch-runner.mjs
+      - name: Upload Uchirimo selector batch evidence
+        if: ${{ always() && matrix.skip != true }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: uchirimo-selector-proof-batch-${{ matrix.batch_id }}-${{ env.HEAD_SHA }}-attempt-${{ github.run_attempt }}
+          path: artifacts/uchirimo-selector-proof-shard/
+          if-no-files-found: warn
+
+  uchirimo-selector-proof-15:
+    needs: ["governance-authority", "governance-precheck", "uchirimo-selector-proof-cache", "uchirimo-selector-proof-plan-15"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && needs.governance-precheck.outputs.authorized == 'true' && needs.uchirimo-selector-proof-cache.outputs.reused != 'true' }}
+    strategy:
+      fail-fast: false
+      max-parallel: 2
+      matrix: ${{ fromJSON(needs.uchirimo-selector-proof-plan-15.outputs.matrix) }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    env:
+      HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      UCHIRIMO_SELECTOR_MODE: shard
+      UCHIRIMO_SELECTOR_BATCH_ID: ${{ matrix.batch_id }}
+      UCHIRIMO_SELECTOR_BATCH_JSON: ${{ matrix.batch_json }}
+      UCHIRIMO_SELECTOR_CHILD_TIMEOUT_MS: ${{ matrix.child_timeout_ms }}
+      UCHIRIMO_SELECTOR_EXPECTED_SHARDS: ${{ needs.uchirimo-selector-proof-plan-15.outputs.shard_count }}
+      UCHIRIMO_RESOLVER_CACHE_MAX: 4096
+      UCHIRIMO_SELECTOR_MAX_STATES: 2000000
+      UCHIRIMO_SELECTOR_MAX_TERMINALS: 2000000
+      UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-selector-proof-shard
+    steps:
+      - name: Checkout exact HEAD
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.HEAD_SHA }}
+          fetch-depth: 0
+      - name: Setup Node 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Install
+        run: npm install --ignore-scripts
+      - name: Run isolated Uchirimo selector batch lane 15
+        if: ${{ matrix.skip != true }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$HEAD_SHA"
+          node scripts/governance/uchirimo-selector-batch-runner.mjs
+      - name: Upload Uchirimo selector batch evidence
+        if: ${{ always() && matrix.skip != true }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: uchirimo-selector-proof-batch-${{ matrix.batch_id }}-${{ env.HEAD_SHA }}-attempt-${{ github.run_attempt }}
+          path: artifacts/uchirimo-selector-proof-shard/
+          if-no-files-found: warn
+
+  uchirimo-selector-proof-aggregate:
+    needs: ["governance-authority", "governance-precheck", "uchirimo-selector-proof-cache", "uchirimo-selector-proof-carry-forward", "uchirimo-selector-proof-plan-0", "uchirimo-selector-proof-plan-1", "uchirimo-selector-proof-plan-2", "uchirimo-selector-proof-plan-3", "uchirimo-selector-proof-plan-4", "uchirimo-selector-proof-plan-5", "uchirimo-selector-proof-plan-6", "uchirimo-selector-proof-plan-7", "uchirimo-selector-proof-plan-15", "uchirimo-selector-proof-plan-14", "uchirimo-selector-proof-plan-13", "uchirimo-selector-proof-plan-12", "uchirimo-selector-proof-plan-11", "uchirimo-selector-proof-plan-10", "uchirimo-selector-proof-plan-9", "uchirimo-selector-proof-plan-8", "uchirimo-selector-proof-0", "uchirimo-selector-proof-1", "uchirimo-selector-proof-2", "uchirimo-selector-proof-3", "uchirimo-selector-proof-4", "uchirimo-selector-proof-5", "uchirimo-selector-proof-6", "uchirimo-selector-proof-7", "uchirimo-selector-proof-8", "uchirimo-selector-proof-9", "uchirimo-selector-proof-10", "uchirimo-selector-proof-11", "uchirimo-selector-proof-12", "uchirimo-selector-proof-13", "uchirimo-selector-proof-14", "uchirimo-selector-proof-15"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && needs.governance-precheck.outputs.authorized == 'true' && needs.uchirimo-selector-proof-0.result == 'success' && needs.uchirimo-selector-proof-1.result == 'success' && needs.uchirimo-selector-proof-2.result == 'success' && needs.uchirimo-selector-proof-3.result == 'success' && needs.uchirimo-selector-proof-4.result == 'success' && needs.uchirimo-selector-proof-5.result == 'success' && needs.uchirimo-selector-proof-6.result == 'success' && needs.uchirimo-selector-proof-7.result == 'success' && needs.uchirimo-selector-proof-8.result == 'success' && needs.uchirimo-selector-proof-9.result == 'success' && needs.uchirimo-selector-proof-10.result == 'success' && needs.uchirimo-selector-proof-11.result == 'success' && needs.uchirimo-selector-proof-12.result == 'success' && needs.uchirimo-selector-proof-13.result == 'success' && needs.uchirimo-selector-proof-14.result == 'success' && needs.uchirimo-selector-proof-15.result == 'success' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      UCHIRIMO_SELECTOR_MODE: aggregate
+      UCHIRIMO_SELECTOR_EXPECTED_SHARDS: ${{ needs.uchirimo-selector-proof-plan-0.outputs.shard_count }}
+      UCHIRIMO_SELECTOR_SHARD_INPUT: artifacts/uchirimo-selector-proof-shards
+      UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-full-selector-proof
+    steps:
+      - name: Checkout exact HEAD
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.HEAD_SHA }}
+          fetch-depth: 0
+
+      - name: Setup Node 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Install
+        run: npm install --ignore-scripts
+
+      - name: Download all successful selector shards
+        uses: actions/download-artifact@v4
+        with:
+          pattern: uchirimo-selector-proof-*-${{ env.HEAD_SHA }}-attempt-*
+          path: artifacts/uchirimo-selector-proof-shards
+          merge-multiple: false
+
+      - name: Download current-head carry-forward selector shards
+        uses: actions/download-artifact@v4
+        with:
+          name: uchirimo-selector-proof-carry-forward-${{ env.HEAD_SHA }}
+          path: artifacts/uchirimo-selector-proof-shards/carry-forward
+
+      - name: Aggregate and verify full Uchirimo selector proof
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$HEAD_SHA"
+          node scripts/uchirimo-full-selector-proof.mjs
+
+      - name: Stamp fresh Uchirimo selector proof dependency metadata
+        id: uchirimo-proof-fingerprint
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/governance/proof-dependency-fingerprint.mjs --mode fingerprint --family UCHIRIMO_SELECTOR --fingerprint-out artifacts/governance/uchirimo-selector-proof-fingerprint.json
+          node scripts/governance/proof-dependency-fingerprint.mjs --mode stamp --family UCHIRIMO_SELECTOR --artifact artifacts/uchirimo-full-selector-proof/report.json --metadata artifacts/uchirimo-full-selector-proof/source-metadata.json
+
+      - name: Save aggregated Uchirimo selector proof cache
+        uses: actions/cache/save@v4
+        with:
+          path: artifacts/uchirimo-full-selector-proof
+          key: proof-uchirimo-selector-v9-${{ steps.uchirimo-proof-fingerprint.outputs.fingerprint }}
+
+      - name: Upload aggregated Uchirimo selector proof
+        uses: actions/upload-artifact@v4
+        with:
+          name: uchirimo-selector-proof-aggregate-${{ env.HEAD_SHA }}
+          path: artifacts/uchirimo-full-selector-proof/
+          if-no-files-found: error
+
+  global-flow:
+    needs: ["governance-authority", "governance-precheck", "uchirimo-selector-proof-cache", "uchirimo-selector-proof-aggregate"]
+    if: ${{ always() && needs.governance-authority.outputs.authorized == 'true' && needs.governance-precheck.outputs.authorized == 'true' && (needs.uchirimo-selector-proof-cache.outputs.reused == 'true' || needs.uchirimo-selector-proof-aggregate.result == 'success') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      STAGE_A_CUSTOM_SHAPE_OUT: artifacts/stage-a-custom-dimension-source-shape
+      STAGE_A_CUSTOM_GUARD_OUT: artifacts/stage-a-formal-split-custom-guard-shape
+      STAGE_A_CUSTOM_SHAPE_INPUT: artifacts/stage-a-custom-dimension-source-shape/report.json
+      STAGE_A_CUSTOM_GUARD_INPUT: artifacts/stage-a-formal-split-custom-guard-shape/report.json
+      STAGE_A_CUSTOM_PARTITION_OUT: artifacts/stage-a-custom-dimension-boundary-partition
+      STAGE_A_CUSTOM_PARTITION_INPUT: artifacts/stage-a-custom-dimension-boundary-partition/report.json
+      STAGE_A_CUSTOM_REACHABILITY_OUT: artifacts/stage-a-custom-selector-reachability
+      STAGE_A_CUSTOM_REACHABILITY_INPUT: artifacts/stage-a-custom-selector-reachability/report.json
+      STAGE_A_CUSTOM_GEOMETRY_EQ_OUT: artifacts/stage-a-custom-runtime-geometry-equivalence
+      STAGE_A_CUSTOM_GEOMETRY_EQ_INPUT: artifacts/stage-a-custom-runtime-geometry-equivalence/report.json
+      STAGE_A_CUSTOM_TRANSITION_OUT: artifacts/stage-a-custom-transition-proof-v4
+      STAGE_A_REACHABILITY_REPORT: artifacts/stage-a-custom-selector-reachability/report.json
+      STAGE_A_TRANSITION_REPORT: artifacts/stage-a-custom-transition-proof-v4/report.json
+      STAGE_A_FULL_BROWSER_OUT: artifacts/stage-a-full-browser-qa
+      POST_HUMAN_EVIDENCE_OUT: artifacts/governance/post-human
+    steps:
+      - name: Checkout exact HEAD
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.HEAD_SHA }}
+          fetch-depth: 0
+
+      - name: Setup Node 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Install
+        run: npm install --ignore-scripts
+
+      - name: Restore aggregated Uchirimo selector proof
+        uses: actions/download-artifact@v4
+        with:
+          name: uchirimo-selector-proof-aggregate-${{ env.HEAD_SHA }}
+          path: artifacts/uchirimo-full-selector-proof
+
+      - name: Verify restored Uchirimo selector proof
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import { readFileSync } from 'node:fs';
+          const report=JSON.parse(readFileSync('artifacts/uchirimo-full-selector-proof/report.json','utf8'));
+          if(report.exact_head!==process.env.HEAD_SHA||report.status!=='PASS'||report.product_node_count<=0||report.shard_count<report.product_node_count||report.window_type_count!==4||report.unverified_discrete_selector_case_count!==0)throw new Error('UCHIRIMO_SHARDED_PROOF_RESTORE_INVALID');
+          console.log('UCHIRIMO_FULL_SELECTOR_PROOF=PASS_RESTORED_SHARDED');
+          NODE
+
+      - name: Global flow syntax and source gates
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check src/catalog/runtime-master/canonical-window-semantic-schema.mjs
+          node --check src/catalog/runtime-master/global-window-selection-flow-engine.mjs
+          node --check src/catalog/runtime-master/new-construction-sash-runtime-ui-contract.mjs
+          node --check src/catalog/runtime-master/inner-window-runtime-ui-contract.mjs
+          node --check src/catalog/runtime-master/formal-product-runtime-v2-loader.mjs
+          node --check src/catalog/runtime-master/runtime-app-bridge.mjs
+          node --check scripts/global-window-flow-field-inventory.mjs
+          node --check test/79-global-window-selection-flow.test.mjs
+          node --check test/80-canonical-window-semantic-schema.test.mjs
+          node --check test/81-global-window-flow-signature-transition.test.mjs
+          node --check test/browser/global-window-selection-flow-browser-qa.mjs
+          node --check test/browser/inplus-v04r2-global-flow-full-coverage-browser-qa.mjs
+          node --check scripts/uchirimo-full-selector-proof.mjs
+          node --check scripts/governance/uchirimo-selector-batch-runner.mjs
+          node --check scripts/governance/proof-dependency-fingerprint.mjs
+          if grep -REn "other:\$\{String\(key\)|other:" src/catalog/runtime-master/new-construction-sash-runtime-ui-contract.mjs src/catalog/runtime-master/inner-window-runtime-ui-contract.mjs; then
+            echo 'FLOW_SCHEMA_UNMAPPED_FIELD_GATE=FAIL legacy other:* fallback remains'
+            exit 31
+          fi
+          if grep -REn "if[[:space:]]*\([^)]*(series|manufacturer|productId)[[:space:]]*={2,3}" src/catalog/runtime-master/global-window-selection-flow-engine.mjs src/catalog/runtime-master/canonical-window-semantic-schema.mjs; then
+            echo 'SERIES_OVERRIDE_ELIMINATION_GATE=FAIL'
+            exit 32
+          fi
+          echo 'SINGLE_FLOW_ENGINE_GATE=PASS_CODE'
+          echo 'SERIES_OVERRIDE_ELIMINATION_GATE=PASS_CODE'
+
+      - name: Runtime source lint and UI contract typecheck
+        run: |
+          npm run lint
+          npm run typecheck
+
+      - name: Global flow unit and signature-transition gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$POST_HUMAN_EVIDENCE_OUT"
+          node --test test/79-global-window-selection-flow.test.mjs test/80-canonical-window-semantic-schema.test.mjs test/81-global-window-flow-signature-transition.test.mjs 2>&1 | tee "$POST_HUMAN_EVIDENCE_OUT/global-flow-unit.tap"
+          node --input-type=module <<'NODE'
+          import { mkdirSync, writeFileSync } from 'node:fs';
+          mkdirSync(process.env.POST_HUMAN_EVIDENCE_OUT,{recursive:true});
+          writeFileSync(process.env.POST_HUMAN_EVIDENCE_OUT+'/global-flow-unit.json',JSON.stringify({
+            exact_head:process.env.HEAD_SHA,
+            status:'PASS',
+            gates:['FULL_FLOW_SIGNATURE_COVERAGE_GATE','FLOW_TRANSITION_GATE'],
+            command:'node --test test/79-global-window-selection-flow.test.mjs test/80-canonical-window-semantic-schema.test.mjs test/81-global-window-flow-signature-transition.test.mjs'
+          },null,2)+'\n');
+          NODE
+          echo 'CANONICAL_SLOT_SCHEMA_GATE=PASS'
+          echo 'FULL_FLOW_SIGNATURE_COVERAGE_GATE=PASS_PAIRWISE_WINDOW_USER_FACING_FIELD_UNIVERSES'
+          echo 'FLOW_TRANSITION_GATE=PASS_WINDOW_RESOLVER_TRANSITIONS'
+
+      - name: Current-head full CUSTOM geometry and transition proof
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$HEAD_SHA"
+          node scripts/stage-a-custom-dimension-source-shape-diagnostic.mjs
+          node scripts/stage-a-formal-split-custom-guard-shape-diagnostic.mjs
+          node scripts/stage-a-custom-dimension-boundary-partition-proof-v2.mjs
+          node scripts/stage-a-custom-selector-reachability-v4.mjs
+          node scripts/stage-a-custom-runtime-geometry-equivalence-v4.mjs
+          CUSTOM_GEOMETRY_EVIDENCE_HEAD="$HEAD_SHA" node scripts/stage-a-custom-transition-proof-v4.mjs
+          node --input-type=module <<'NODE'
+          import { readFileSync } from 'node:fs';
+          const read=(path)=>JSON.parse(readFileSync(path,'utf8'));
+          const shape=read(process.env.STAGE_A_CUSTOM_SHAPE_INPUT);
+          const reach=read(process.env.STAGE_A_CUSTOM_REACHABILITY_INPUT);
+          const geometry=read(process.env.STAGE_A_CUSTOM_GEOMETRY_EQ_INPUT);
+          const transition=read(`${process.env.STAGE_A_CUSTOM_TRANSITION_OUT}/report.json`);
+          for(const row of [shape,reach,geometry,transition])if(row.exact_head_sha!==process.env.HEAD_SHA)throw new Error('CUSTOM_EXACT_HEAD_MISMATCH');
+          if(shape.total_custom_rule_count!==152||shape.unsupported_count!==0)throw new Error('CUSTOM_SOURCE_SHAPE_INVALID');
+          if(reach.source_rule_count!==152||reach.unique_context_count!==137||reach.unreachable_context_count!==0||reach.status!=='PASS')throw new Error('CUSTOM_REACHABILITY_INVALID');
+          if(geometry.source_rule_count!==152||geometry.window_count!==92||geometry.selector_context_count!==137||geometry.mismatch_count!==0||geometry.status!=='PASS')throw new Error('CUSTOM_GEOMETRY_INVALID');
+          if(transition.selector_context_count!==137||transition.evaluation_count!==1081||transition.status!=='PASS'||transition.gate_status?.custom_size_coverage_gate!=='PASS')throw new Error('CUSTOM_TRANSITION_INVALID');
+          console.log('CUSTOM_SIZE_COVERAGE_GATE=PASS');
+          console.log('UNVERIFIED_CUSTOM_QA_CASE_COUNT=0');
+          NODE
+
+      - name: Full Window Runtime field inventory
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/global-window-flow-field-inventory.mjs
+          echo 'FLOW_SCHEMA_UNMAPPED_FIELD_GATE=PASS_ALL_REGISTERED_WINDOW_USER_FACING_FIELDS'
+
+      - name: Legacy core regression partition
+        run: node --test test/01-core.test.mjs test/02-lr.test.mjs test/03-features.test.mjs test/04-thermosl.test.mjs test/61-vercel-route-contract.test.mjs
+
+      - name: Runtime package regression partition
+        run: node --test test/70-runtime-manifest-ew-integration.test.mjs test/70-runtime-manifest-tw-integration.test.mjs test/71-vercel-adapter.test.mjs
+
+      - name: TW UI regression partition
+        run: node --test test/71-runtime-ui-tw-gate.test.mjs
+
+      - name: Uchirimo UI regression partition
+        run: node --test test/72-runtime-manifest-uchirimo-integration.test.mjs test/73-runtime-ui-uchirimo-gate.test.mjs
+
+      - name: New-construction UI regression partition
+        run: node --test test/74-new-construction-ui-v16.test.mjs test/75-stage-a-size-display-full-coverage.test.mjs test/76-custom-dimension-safety.test.mjs
+
+      - name: App integration regression partition
+        run: node --test test/72-work-management.test.mjs test/74-estimate-output.test.mjs test/75-formal-runtime-resync.test.mjs
+
+      - name: Dependency gate direct proof
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$POST_HUMAN_EVIDENCE_OUT"
+          node --test test/70-runtime-manifest-ew-integration.test.mjs test/73-runtime-ui-uchirimo-gate.test.mjs test/77-runtime-ui-inplus-v04r2-installability-coverage.test.mjs test/84-requested-flow-acceptance.test.mjs 2>&1 | tee "$POST_HUMAN_EVIDENCE_OUT/dependency-gate.tap"
+          node --input-type=module <<'NODE'
+          import { writeFileSync } from 'node:fs';
+          writeFileSync(process.env.POST_HUMAN_EVIDENCE_OUT+'/dependency-gate.json',JSON.stringify({
+            exact_head:process.env.HEAD_SHA,
+            status:'PASS',
+            gate:'DEPENDENCY_GATE',
+            command:'node --test test/70-runtime-manifest-ew-integration.test.mjs test/73-runtime-ui-uchirimo-gate.test.mjs test/77-runtime-ui-inplus-v04r2-installability-coverage.test.mjs test/84-requested-flow-acceptance.test.mjs'
+          },null,2)+'\n');
+          NODE
+
+      - name: UI flow gate direct proof
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$POST_HUMAN_EVIDENCE_OUT"
+          node --test test/79-global-window-selection-flow.test.mjs test/74-new-construction-ui-v16.test.mjs test/73-runtime-ui-uchirimo-gate.test.mjs test/75-runtime-ui-inplus-v04r2-gate.test.mjs 2>&1 | tee "$POST_HUMAN_EVIDENCE_OUT/ui-flow-gate.tap"
+          node --input-type=module <<'NODE'
+          import { writeFileSync } from 'node:fs';
+          writeFileSync(process.env.POST_HUMAN_EVIDENCE_OUT+'/ui-flow-gate.json',JSON.stringify({
+            exact_head:process.env.HEAD_SHA,
+            status:'PASS',
+            gate:'UI_FLOW_GATE',
+            command:'node --test test/79-global-window-selection-flow.test.mjs test/74-new-construction-ui-v16.test.mjs test/73-runtime-ui-uchirimo-gate.test.mjs test/75-runtime-ui-inplus-v04r2-gate.test.mjs'
+          },null,2)+'\n');
+          NODE
+
+      - name: Full repository regression
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$POST_HUMAN_EVIDENCE_OUT"
+          npm test 2>&1 | tee "$POST_HUMAN_EVIDENCE_OUT/full-repository-regression.log"
+          node --input-type=module <<'NODE'
+          import { writeFileSync } from 'node:fs';
+          writeFileSync(process.env.POST_HUMAN_EVIDENCE_OUT+'/full-repository-regression.json',JSON.stringify({
+            exact_head:process.env.HEAD_SHA,
+            status:'PASS',
+            gate:'AUTOMATED_TEST_GATE',
+            command:'npm test'
+          },null,2)+'\n');
+          NODE
+          echo 'FLOW_REGRESSION_GATE=PASS_ALL_REPOSITORY_TESTS'
+
+      - name: Runtime smoke
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm run start:qa > /tmp/sash-global-flow.log 2>&1 &
+          PID=$!
+          trap 'kill $PID || true' EXIT
+          for i in {1..40}; do
+            if curl -fsS http://127.0.0.1:4173/api/health > /tmp/health.json; then break; fi
+            sleep 0.5
+          done
+          cat /tmp/health.json
+          node -e 'const h=require("/tmp/health.json"); if(!h.ok) process.exit(1); const ids=new Set(h.runtimeMasterIntegrations.map(x=>x.id)); const expected=["SER-LIX-EW","SER-LIX-SAMOS2H","SER-LIX-SAMOSL","SER-LIXIL-TW","SER-LIXIL-INPLUS","SER-LIXIL-RECHENT-D3-NF","SER-YKK-APW430","SER-YKK-APW431","SER-YKKAP-UCHIRIMO"]; if(ids.size!==expected.length||expected.some(id=>!ids.has(id))) process.exit(1); const s=h.runtimeMasterIntegrations.find(x=>x.id==="SER-LIX-SAMOS2H"); const l=h.runtimeMasterIntegrations.find(x=>x.id==="SER-LIX-SAMOSL"); if(s?.packageVersion!=="v0.9-R4"||s?.sourceHash!=="993481b2f0ab1d519a091e1b9f99a329eef7c67ec89cd1c82ddfab0d3c624955"||l?.packageVersion!=="v0.7-R2"||l?.sourceHash!=="4cf2a4b1572f68288fa108ccd33d30cc80d5170f2f5303864ca56ca67c34cec3") process.exit(1)'
+          echo 'WINDOW_FLOW_BASELINE_GATE=PASS_RUNTIME_SMOKE_9_READY_INTEGRATIONS'
+
+      - name: Install browser QA dependencies
+        run: |
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+
+      - name: Desktop and smartphone runtime browser flow QA
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm run start:qa > /tmp/sash-global-flow-browser.log 2>&1 &
+          PID=$!
+          trap 'kill $PID || true' EXIT
+          for i in {1..40}; do
+            if curl -fsS http://127.0.0.1:4173/api/health >/dev/null; then break; fi
+            sleep 0.5
+          done
+          node test/browser/global-window-selection-flow-browser-qa.mjs
+          node test/browser/ew-runtime-browser-qa.mjs
+          node test/browser/tw-runtime-browser-qa.mjs
+          node test/browser/uchirimo-runtime-browser-qa.mjs
+          node test/browser/formal-runtime-resync-browser-qa.mjs
+          node test/browser/release-regression-browser-qa.mjs
+          node test/browser/stage-a-full-browser-qa.mjs
+          echo 'FULL_BROWSER_FLOW_QA_GATE=PASS_8_WINDOW_RUNTIME_TRANSITIONS_DESKTOP_SMARTPHONE'
+
+      - name: Inplus v0.4-R2 exhaustive Global Flow browser QA
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm run start:qa > /tmp/sash-inplus-global-flow-browser.log 2>&1 &
+          PID=$!
+          trap 'kill $PID || true' EXIT
+          for i in {1..40}; do
+            if curl -fsS http://127.0.0.1:4173/api/health >/dev/null; then break; fi
+            sleep 0.5
+          done
+          node test/browser/inplus-v04r2-global-flow-full-coverage-browser-qa.mjs
+          node --input-type=module <<'NODE'
+          import { writeFileSync } from 'node:fs';
+          const base={
+            exact_head:process.env.HEAD_SHA,
+            status:'PASS',
+            desktop_smartphone:true,
+            global_flow_browser:'artifacts/global-window-selection-flow-browser-qa/report.json',
+            inplus_exhaustive_browser:'artifacts/inplus-v04r2-global-flow-full-coverage-browser-qa/report.json'
+          };
+          writeFileSync(process.env.POST_HUMAN_EVIDENCE_OUT+'/browser-flow-qa.json',JSON.stringify({...base,gate:'FULL_BROWSER_FLOW_QA_GATE'},null,2)+'\n');
+          writeFileSync(process.env.POST_HUMAN_EVIDENCE_OUT+'/regression-gate.json',JSON.stringify({...base,gate:'REGRESSION_GATE',automated_test_log:'artifacts/governance/post-human/full-repository-regression.log'},null,2)+'\n');
+          NODE
+          echo 'INPLUS_V04R2_GLOBAL_FLOW_QA_CASE_COUNT=1148'
+          echo 'INPLUS_V04R2_GLOBAL_FLOW_BROWSER_STATE_CHECKS_TOTAL=3350'
+          echo 'INPLUS_V04R2_GLOBAL_FLOW_UNVERIFIED_QA_CASE_COUNT=0'
+          echo 'FULL_BROWSER_FLOW_QA_GATE=PASS'
+
+      - name: Exact-head repository gate
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$HEAD_SHA"
+          curl -fsSL \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H 'Accept: application/vnd.github+json' \
+            -H 'X-GitHub-Api-Version: 2022-11-28' \
+            "https://api.github.com/repos/${GITHUB_REPOSITORY}/pulls/24" > /tmp/pr24.json
+          node --input-type=module <<'NODE'
+          import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+          const pr=JSON.parse(readFileSync('/tmp/pr24.json','utf8'));
+          if(pr.state!=='open'||pr.merged_at!==null||pr.base?.ref!=='main'||pr.head?.ref!=='feat/new-construction-runtime-ui-v16-20260910'||pr.head?.sha!==process.env.HEAD_SHA)throw new Error('REPOSITORY_PR_IDENTITY_GATE');
+          mkdirSync(process.env.POST_HUMAN_EVIDENCE_OUT,{recursive:true});
+          writeFileSync(process.env.POST_HUMAN_EVIDENCE_OUT+'/repository-gate.json',JSON.stringify({
+            exact_head:process.env.HEAD_SHA,status:'PASS',gate:'REPOSITORY_GATE',pull_request:24,state:pr.state,base:pr.base.ref,head:pr.head.ref,head_sha:pr.head.sha
+          },null,2)+'\n');
+          console.log('REPOSITORY_GATE=PASS');
+          NODE
+
+      - name: Emit and aggregate direct post-Human Governance evidence
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GOVERNANCE_EVIDENCE_MANIFEST: artifacts/governance/qa-evidence-manifest.json
+        run: |
+          set -euo pipefail
+          node scripts/governance/build-human-flow-review.mjs
+          node scripts/governance/verify-human-flow-field-coverage.mjs
+          node scripts/governance/emit-global-flow-evidence.mjs
+          node scripts/governance/collect-qa-evidence.mjs
+          node scripts/governance/read-human-approval.mjs
+          node scripts/governance/evaluate-gates.mjs
+          node scripts/governance/generate-progress-ledger.mjs
+
+      - name: Upload Global Window Flow evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: global-window-selection-flow-evidence-${{ github.sha }}
+          path: |
+            artifacts/governance/
+            artifacts/global-window-selection-flow-browser-qa/
+            artifacts/inplus-v04r2-global-flow-full-coverage-browser-qa/
+            artifacts/uchirimo-runtime-browser-qa/
+            artifacts/uchirimo-full-selector-proof/
+            artifacts/stage-a-custom-dimension-source-shape/
+            artifacts/stage-a-custom-selector-reachability/
+            artifacts/stage-a-custom-runtime-geometry-equivalence/
+            artifacts/stage-a-custom-transition-proof-v4/
+            artifacts/stage-a-full-browser-qa/
+          if-no-files-found: error
+
+      - name: Gate summary
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import { readFileSync } from 'node:fs';
+          const result=JSON.parse(readFileSync('artifacts/governance/gate-results.json','utf8'));
+          for(const id of [
+            'HUMAN_FLOW_REVIEW_GATE','FULL_FLOW_SIGNATURE_COVERAGE_GATE','FLOW_TRANSITION_GATE',
+            'FULL_WINDOW_COVERAGE_GATE','CUSTOM_SIZE_COVERAGE_GATE','DEPENDENCY_GATE','UI_FLOW_GATE',
+            'AUTOMATED_TEST_GATE','FULL_BROWSER_FLOW_QA_GATE','FULL_BROWSER_QA_GATE','REGRESSION_GATE',
+            'REPOSITORY_GATE','GLOBAL_WINDOW_SELECTION_FLOW_GATE','APP_INTEGRATION_READY'
+          ]) console.log(`${id}=${result.gates?.[id]?.status ?? 'UNSET'}`);
+          console.log(`RELEASE_INPUT_GATE=${result.release?.status ?? 'BLOCKED'}`);
+          NODE

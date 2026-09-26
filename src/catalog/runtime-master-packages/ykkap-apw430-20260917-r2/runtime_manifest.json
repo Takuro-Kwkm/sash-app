@@ -1,0 +1,115 @@
+{
+  "schema_version": "product-master-runtime-manifest/1.0",
+  "manufacturer": "YKK AP",
+  "series": "APW430",
+  "product_id": "SER-YKK-APW430",
+  "package_version": "20260917-R2",
+  "authoring_mode": "DIRECT_AUTHORING_MASTER",
+  "authoring_file_name": "YKKAP_APW430_AUTHORING_MASTER_20260917-R2",
+  "authoring_file_id": "10IVpq-VxMTysNEbVoLa8Id9Ui_kMq-KpLbUzORTlqF8",
+  "authoring_export_sha256": "0ef491efe268f9dcba963bfca40522a31b488df926fd4b9353ec0f03cfa5d67d",
+  "runtime_status": "READY",
+  "runtime_files": [
+    {
+      "role": "CORE",
+      "file_name": "apw430_core_20260917-R2.json",
+      "file_id": "1PP5N_RbSaNjJhuPv1qMUDHjGIaeVgCQo",
+      "sha256": "c685d3a96d2007c6d78f43893aeaf1bbc139892ad79698e3a97a087fd2690884",
+      "bytes": 61726
+    },
+    {
+      "role": "DIMENSIONS",
+      "file_name": "apw430_dimensions_20260917-R2.json",
+      "file_id": "1AOCQ84DMCxtcBUFluxVo4luwuWNZ8h45",
+      "sha256": "f731cadc95e72ac9ad75986d49cc630319538e3b2d6c3cec8b4e60a54747ca0f",
+      "bytes": 791465
+    },
+    {
+      "role": "OPTIONS",
+      "file_name": "apw430_options_20260917-R2.json",
+      "file_id": "143MG_S6GKaNa7EPUhmFoKoyJdlmJ3i5Q",
+      "sha256": "f8394c1f047ef0d6e49ee49522ea78f0fd81b32a5d2d1a5536c5bcf63ded6e45",
+      "bytes": 3413266
+    }
+  ],
+  "documentation_file": {
+    "file_name": "PRODUCT_MASTER_MANIFEST.md",
+    "file_id": "17BmkwRTaXiJUS1rBxB7xp-XeqogdULpH",
+    "status": "FORMAL_PASS"
+  },
+  "storage_status": "CANONICAL",
+  "package_gate": "PASS",
+  "generated_at": "2026-09-18T09:30:00+09:00",
+  "working_folder_id": "1aPJlt5dTFHKqS5Koaino9PLqaH4DUB7m",
+  "canonical_folder_id": "1Cd4_yiAB0Zy6Yb1xo_7ihB4KA44wtUkY",
+  "old_folder_id": "1s3T__4JWrX7TrVVTAPaozordvIWzlGzj",
+  "qa_report": {
+    "file_name": "YKKAP_APW430_RUNTIME_QA_20260917-R2.md",
+    "file_id": "1gj8MoIC8zCzDp6x1lPk7GXLc2LLDGwXD",
+    "detailed_cases_file_id": "1L4tOo4WhhblqQ7T7M4TJDMvimyAttqLn",
+    "status": "PASS",
+    "case_count": 10243,
+    "pass_count": 10243,
+    "fail_count": 0,
+    "unverified_count": 0
+  },
+  "record_counts": {
+    "series": 1,
+    "windows_common": 8,
+    "series_windows": 26,
+    "active_series_windows": 25,
+    "specific_specs": 12,
+    "relations": 12,
+    "dimension_dictionary": 151,
+    "standard_sizes_history": 718,
+    "active_standard_sizes": 715,
+    "inactive_standard_sizes": 3,
+    "custom_dimension_rules": 25,
+    "colors": 5,
+    "color_rules": 3,
+    "glass": 4,
+    "glass_applicability": 25,
+    "glass_size_rules": 715,
+    "glass_additional_options": 4,
+    "glass_appearances": 3,
+    "glass_manufacturability_rules": 824,
+    "glass_symbol_legend": 25,
+    "glass_symbol_matrix": 715,
+    "grid_window_rules": 25,
+    "standard_grid_count_matrix": 715,
+    "standard_size_glass_dependencies": 715,
+    "custom_glass_dependencies": 25,
+    "screens": 12,
+    "screen_forms": 36,
+    "screen_size_rules": 140,
+    "options": 2,
+    "option_dependencies": 4,
+    "spec_size_rules": 15,
+    "special_spec_rules": 3,
+    "golden_tests": 17
+  },
+  "blocking_items": [],
+  "manual_check_policy": "verified fail-closed outcomes are retained for frost STANDARD glass-dimension confirmation and CUSTOM glass dimension/composition; they are not UNVERIFIED cases",
+  "verification_revision": "20260917-R2-GLASS-RECOVERY",
+  "drive_roundtrip_verified": true,
+  "canonical_storage_verified": true,
+  "registry_gate": "PASS",
+  "glass_runtime_contract": {
+    "glass_base": "TRIPLE",
+    "glass_detail": [
+      "TRANSPARENT",
+      "PATTERN",
+      "FROST"
+    ],
+    "glass_function": [
+      "NORMAL",
+      "SAFE-LAM",
+      "DISASTER-LAM",
+      "GRID-IN"
+    ],
+    "gas": "ARGON_FIXED",
+    "spacer": "RESIN_FIXED",
+    "air_layer": "DERIVED"
+  },
+  "formalized_at": "2026-09-18T09:31:00+09:00"
+}

@@ -1,0 +1,46 @@
+name: Stage A Non-TW 17-Window Terminal Structural Recovery
+
+on:
+  workflow_call:
+    inputs:
+      controller_head:
+        required: true
+        type: string
+
+permissions:
+  issues: read
+  contents: read
+
+concurrency:
+  group: stage-a-nontw-17-terminal-structural-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  governance-authority:
+    uses: ./.github/workflows/governance-authorization.yml
+    with:
+      controller_head: ${{ inputs.controller_head }}
+      release: false
+
+  closed-evidence-gate:
+    needs: ["governance-authority"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && (true) }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 1
+    steps:
+      - name: Preserve timeout evidence and close same-condition retry
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo 'TASK_CLASSIFICATION=NON-PRODUCT-MASTER'
+          echo 'PRODUCT_MASTER_MUTATION=0'
+          echo 'STRUCTURAL_V2_RUN_ID=34925506645'
+          echo 'STRUCTURAL_V2_EVIDENCE_HEAD=7036f7a39bee01d0cf313a80b960a925be2860d8'
+          echo 'FAILURE_TYPE=PERFORMANCE_TIMEOUT'
+          echo 'SAMOS2H_FIRST_BATCH_TIMEOUT_COUNT=6'
+          echo 'STATE_CHANGED=false'
+          echo 'RETRY_AUTHORIZED=false'
+          echo 'STRUCTURAL_V2_RETRY_GATE=CLOSED'
+          echo 'SUPERSEDED_BY=STRUCTURAL_AUDIT_CACHE_V3_PILOT'
+          echo 'APP_INTEGRATION_READY=false'
+          echo 'RELEASE_INPUT_GATE=BLOCKED'
