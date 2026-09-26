@@ -88,12 +88,12 @@ export function instrumentV10(original) {
   const stack=restored?.stack??[{selection:selected.selection??seed,decisions,result:selected}];`);
   once('const visited=new Set();', 'const visited=new Set(restored?.visited??[]);');
   once('const signatureCounts=new Map();', 'const signatureCounts=new Map(restored?.signatureCounts??[]);');
-  for (const name of ['transitionChecks','dependencyRejections','downstreamClearChecks','terminalCount','peakHeapMb']) {
+  for (const name of ['transitionChecks','dependencyRejections','downstreamClearChecks','terminalCount','terminalClassCount','symbolicEquivalenceChecks','symbolicCollapsedBranchCount','symbolicFallbackCount','peakHeapMb']) {
     once(`let ${name}=0;`, `let ${name}=restored?.${name}??0;`);
   }
   once('let maxStack=stack.length;', 'let maxStack=restored?.maxStack??stack.length;');
   once("const casesFd=openSync(casesPath,'w');\n  const caseHash=createHash('sha256');", `const {casesFd,caseHash}=recovery.openTerminal(casesPath);
-  const saveContinuation=status=>recovery.save({stack,visited:[...visited],signatureCounts:[...signatureCounts],transitionChecks,dependencyRejections,downstreamClearChecks,terminalCount,maxStack,peakHeapMb},casesFd,casesPath,caseHash,status);`);
+  const saveContinuation=status=>recovery.save({stack,visited:[...visited],signatureCounts:[...signatureCounts],transitionChecks,dependencyRejections,downstreamClearChecks,terminalCount,terminalClassCount,symbolicEquivalenceChecks,symbolicCollapsedBranchCount,symbolicFallbackCount,maxStack,peakHeapMb},casesFd,casesPath,caseHash,status);`);
   once('    while(stack.length){', `    while(stack.length){
       if(recovery.shouldYield()){saveContinuation('YIELDED');return;}
       if(recovery.shouldSave())saveContinuation('IN_PROGRESS');`);
