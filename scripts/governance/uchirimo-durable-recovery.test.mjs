@@ -5,7 +5,7 @@ import {tmpdir} from 'node:os';
 import {join,dirname,basename} from 'node:path';
 import {createHash} from 'node:crypto';
 import {checkpointSession,atomicJson,hash,readCheckpoint,instrumentV10} from './uchirimo-checkpoint-hook.mjs';
-import {SOURCE,buildInventory,aggregatePlan,validateResult} from './uchirimo-durable-recovery.mjs';
+import {SOURCE,buildInventory,aggregatePlan,validateResult,legacyHeldRoots,nextCursor} from './uchirimo-durable-recovery.mjs';
 const temp=()=>fs.mkdtempSync(join(tmpdir(),'uchirimo-durable-test-'));
 const H='1'.repeat(40),F='2'.repeat(64),R='3'.repeat(64);
 const identity={exact_head:H,semantic_fingerprint:F,seed:{x:'a'},partition_key:'P',runtime_manifest_sha256:R};
@@ -71,4 +71,19 @@ test('result identity, missing bytes and proof-model failures block aggregation'
 });
 test('duplicate result and partial parent coverage never close a parent',()=>{
   const {plan,dir}=validReportFixture(),a=aggregatePlan(plan,[dir,dir]);assert.ok(a.errors.some(e=>e.startsWith('DUPLICATE_RESULT')));assert.equal(a.closed_nonbath_roots,0);assert.equal(a.nonbath_closure_proven,false);
+});
+
+test('terminal old groups release only their two roots, active/queued/unknown remain held',()=>{
+ const jobs=[{name:'prepare',status:'completed'},{name:'close-root (0, 0, 1)',status:'completed'},{name:'close-root (1, 2, 3)',status:'completed'},{name:'close-root (2, 4, 5)',status:'in_progress'},{name:'close-root (3, 6, 7)',status:'queued'}];
+ const held=legacyHeldRoots(jobs,{runStatus:'queued',holdRoot2:true});assert.equal(held.length,473);for(const i of [0,1,3])assert.equal(held.includes(i),false);for(const i of [2,4,5,6,7,475])assert.equal(held.includes(i),true);
+ const p=buildInventory(inputFixture(),{head:H,semanticFingerprint:F,heldRoots:held});assert.equal(p.tasks.length,7364);assert.ok(p.tasks.some(t=>!held.includes(t.root_index)));
+});
+test('legacy job identity errors and missing ownership fail closed',()=>{
+ assert.equal(legacyHeldRoots([],{runStatus:'queued'}).length,476);
+ for(const name of ['close-root (2, 1, 2)','close-root (238, 476, 477)','close-root (garbled)'])assert.throws(()=>legacyHeldRoots([{name,status:'completed'}],{runStatus:'queued'}),/LEGACY_/);
+ const j={name:'close-root (0, 0, 1)',status:'completed'};assert.throws(()=>legacyHeldRoots([j,j],{runStatus:'queued'}),/IDENTITY/);
+ assert.deepEqual(legacyHeldRoots([],{runStatus:'completed',holdRoot2:true}),[2]);
+});
+test('a yielded checkpoint continues its partition before opening another one',()=>{
+ assert.equal(nextCursor(7,'YIELDED'),7);assert.equal(nextCursor(7,'PASS'),8);assert.equal(nextCursor(7,'BLOCKED'),8);assert.throws(()=>nextCursor(7,'UNKNOWN'));
 });

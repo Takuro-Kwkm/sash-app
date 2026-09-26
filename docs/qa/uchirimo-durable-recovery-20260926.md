@@ -30,3 +30,7 @@ Aggregation rejects missing/duplicate lanes, duplicate or unexpected partition r
 ## Validation record
 
 Local checkpoint/inventory negative tests passed; actual frozen input has 7,364 unique partitions. The actual repository V10 differential test runs in CI before Human-authorized heavy execution. CI/QA outcomes are provided by exact-head Actions artifacts, not this document. No all-product QA PASS is declared here.
+
+## Active legacy ownership refinement
+
+Initial controller run 36220092744 passed the complete durable/original-oracle test and workflow authority check, but correctly reported no new verified partitions because its conservative handoff held all 476 roots while the legacy matrix remained active. The planner now verifies each exact two-root legacy matrix job identity. Only completed groups relinquish their roots; active, queued, missing and unparseable ownership never releases a root. The separately running root2 remains held. The full 7,364-partition denominator is unchanged. A YIELDED partition resumes before that worker opens the next partition, avoiding a full inventory sweep between slices. The scoped recovery lane suppresses unrelated current-release heavy QA without weakening authorization or changing the release scope.

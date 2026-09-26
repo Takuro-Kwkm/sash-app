@@ -34,6 +34,7 @@ jobs:
       id-token: write
     outputs:
       authorized: ${{ steps.materialize.outputs.authorized }}
+      uchirimo_recovery_only: ${{ steps.scope.outputs.uchirimo_recovery_only }}
     env:
       GH_TOKEN: ${{ github.token }}
       HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
@@ -96,6 +97,15 @@ jobs:
             }
             console.log(`STALE_GOVERNANCE_RUN_CANCEL run=${run.id} head=${run.head_sha} result=${response.status===409?'ALREADY_TERMINAL_OR_CANCELLING':'REQUESTED'}`);
           }
+          NODE
+
+      - name: Resolve requested execution lane
+        id: scope
+        run: |
+          node --input-type=module <<'NODE'
+          import {readFileSync,appendFileSync} from 'node:fs';
+          const scope=JSON.parse(readFileSync('project-governance/change-scope.json','utf8'));
+          appendFileSync(process.env.GITHUB_OUTPUT,`uchirimo_recovery_only=${scope.execution_lane==='uchirimo-recovery-only'}\n`);
           NODE
 
       - name: Governance source syntax
@@ -270,7 +280,7 @@ jobs:
 
   post-review-uchirimo-recovery-pilot:
     needs: governance
-    if: needs.governance.outputs.authorized == 'true'
+    if: needs.governance.outputs.authorized == 'true' && needs.governance.outputs.uchirimo_recovery_only != 'true'
     uses: ./.github/workflows/uchirimo-recovery-pilot.yml
     with:
       controller_head: ${{ github.event.pull_request.head.sha || github.sha }}

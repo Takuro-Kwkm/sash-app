@@ -50,11 +50,32 @@ export function buildInventory(input, {head,semanticFingerprint,heldRoots=[]}) {
     APP_INTEGRATION_READY:false,RELEASE_INPUT_GATE:'BLOCKED'};
 }
 
+/** Only terminal legacy matrix jobs relinquish ownership. Unknown jobs stay held. */
+export function legacyHeldRoots(jobs,{runStatus,holdRoot2=false}) {
+  const held=new Set(Array.from({length:476},(_,i)=>i)),seen=new Set();
+  for(const job of jobs){
+    if(!String(job.name??'').startsWith('close-root'))continue;
+    const m=/^close-root \((\d+), (\d+), (\d+)\)$/.exec(job.name);
+    if(!m)throw new Error('LEGACY_JOB_NAME_INVALID');
+    const [g,a,b]=m.slice(1).map(Number);
+    if(g<0||g>=238||a!==g*2||b!==a+1||seen.has(g))throw new Error('LEGACY_GROUP_IDENTITY_INVALID');
+    seen.add(g);
+    if(job.status==='completed'){held.delete(a);held.delete(b);}
+  }
+  if(runStatus==='completed')held.clear();
+  if(holdRoot2)held.add(2);
+  return [...held].sort((a,b)=>a-b);
+}
+export function nextCursor(cursor,status){
+  if(!Number.isSafeInteger(cursor)||cursor<0||!['YIELDED','PASS','BLOCKED'].includes(status))throw new Error('CURSOR_TRANSITION_INVALID');
+  return status==='YIELDED'?cursor:cursor+1;
+}
+
 async function prepare(out) {
   const head=exactHead();verifyLegacySource();mkdirSync(out,{recursive:true});
   const runtime=await (await import('../../src/catalog/runtime-master/runtime-master-registry.mjs')).loadRegisteredRuntime('YKK AP','ウチリモ 内窓');
   if(!runtime?.sourcePackageIntegrity?.match||runtime.sourcePackageIntegrity.actual!==SOURCE.runtime)throw new Error('RUNTIME_SNAPSHOT_MISMATCH');
-  const observations=[];let holdAll=false,holdRoot2=false;
+  const observations=[];let ownershipJobs=[],ownershipStatus=null,holdRoot2=false;
   for(const [run,expectedHead] of [[SOURCE.run,SOURCE.head],[SOURCE.legacy_root2_run,SOURCE.legacy_root2_head]]){
     const before=api(`actions/runs/${run}`);
     if(before.head_sha!==expectedHead)throw new Error('LEGACY_RUN_IDENTITY_MISMATCH');
@@ -79,15 +100,16 @@ async function prepare(out) {
       cancellation='QUEUED_ONLY_CANCEL_REQUESTED';
       for(let n=0;n<6;n++){await new Promise(r=>setTimeout(r,2000));after=api(`actions/runs/${run}`);if(after.status==='completed')break;}
     }
-    if(after.status!=='completed'){if(run===SOURCE.run)holdAll=true;else holdRoot2=true;}
-    observations.push({run_id:run,source_exact_head:expectedHead,status:after.status,conclusion:after.conclusion,cancellation,active_job_ids:active.map(j=>j.id),
+    if(after.run_attempt!==before.run_attempt)throw new Error('LEGACY_RUN_ATTEMPT_CHANGED');
+    if(run===SOURCE.run){ownershipJobs=jobs;ownershipStatus=after.status;}else holdRoot2=after.status!=='completed';
+    observations.push({run_id:run,source_exact_head:expectedHead,status:after.status,conclusion:after.conclusion,cancellation,active_job_ids:active.map(j=>j.id),job_ownership:jobs.filter(j=>String(j.name??'').startsWith('close-root')).map(j=>({id:j.id,name:j.name,status:j.status,conclusion:j.conclusion})),
       artifacts:artifacts.map(a=>({id:a.id,name:a.name,digest:a.digest,extracted_files:files(join(out,'legacy',String(run),String(a.id))).map(p=>({path:p.slice(out.length+1),sha256:hash(readFileSync(p))}))}))});
   }
   const inputArtifact=observations[0].artifacts.find(x=>x.id===SOURCE.artifact);
   if(inputArtifact?.name!==SOURCE.name||inputArtifact?.digest!==SOURCE.digest)throw new Error('FROZEN_ARTIFACT_IDENTITY_MISMATCH');
   const inputPath=join(out,'legacy',String(SOURCE.run),String(SOURCE.artifact),'nonbath-root-closure-input.json');
   if(hash(readFileSync(inputPath))!==SOURCE.input_sha256)throw new Error('FROZEN_INPUT_HASH_MISMATCH');
-  const input=rd(inputPath),heldRoots=holdAll?input.roots.map(r=>r.root_index):holdRoot2?[2]:[];
+  const input=rd(inputPath),heldRoots=legacyHeldRoots(ownershipJobs,{runStatus:ownershipStatus,holdRoot2});
   const plan=buildInventory(input,{head,semanticFingerprint:fingerprint(),heldRoots});
   atomicJson(join(out,'source-preservation.json'),{exact_head:head,observations,source_input_sha256:SOURCE.input_sha256});
   atomicJson(join(out,'plan.json'),plan);
@@ -142,10 +164,10 @@ function worker(planPath,out,lane){
   try {
     let idle=0;
     while(tasks.length&&Date.now()<deadline&&idle<tasks.length){
-      const task=tasks[cursor%tasks.length];cursor++;const dir=join(out,task.id);mkdirSync(dir,{recursive:true});
-      if(existsSync(join(dir,'blocked.json'))){idle++;continue;}
+      const task=tasks[cursor%tasks.length];const dir=join(out,task.id);mkdirSync(dir,{recursive:true});
+      if(existsSync(join(dir,'blocked.json'))){cursor=nextCursor(cursor,'BLOCKED');idle++;continue;}
       try {
-        if(validateResult(plan,task,dir)){idle++;continue;}
+        if(validateResult(plan,task,dir)){cursor=nextCursor(cursor,'PASS');idle++;continue;}
         idle=0;
         const prior=existsSync(join(dir,'continuation.json'))?hash(readFileSync(join(dir,'continuation.json'))):null;
         const child=spawnSync(process.execPath,[generated],{env:taskEnv(task,dir,plan.semantic_fingerprint,Math.min(45000,Math.max(1,deadline-Date.now()))),stdio:'inherit',timeout:90000});
@@ -154,8 +176,9 @@ function worker(planPath,out,lane){
           const cp=readCheckpoint(join(dir,'continuation.json'),{exact_head:plan.exact_head,semantic_fingerprint:plan.semantic_fingerprint,seed:stable(task.seed),partition_key:task.id,runtime_manifest_sha256:plan.runtime_manifest_sha256});
           if(cp.status!=='YIELDED')throw new Error('UNEXPECTED_CONTINUATION_STATUS');
           if(prior===hash(readFileSync(join(dir,'continuation.json'))))throw new Error('NO_FRONTIER_PROGRESS');
-        }
-      } catch(e) {atomicJson(join(dir,'blocked.json'),{exact_head:plan.exact_head,partition_key:task.id,status:'BLOCKED',reason:e.message,automatic_retry:false});}
+          cursor=nextCursor(cursor,'YIELDED');
+        }else cursor=nextCursor(cursor,'PASS');
+      } catch(e) {atomicJson(join(dir,'blocked.json'),{exact_head:plan.exact_head,partition_key:task.id,status:'BLOCKED',reason:e.message,automatic_retry:false});cursor=nextCursor(cursor,'BLOCKED');}
       atomicJson(progressPath,{schema:'UCHIRIMO_LANE_V1',exact_head:plan.exact_head,plan_id:plan.plan_id,lane,cursor,status:'CHECKPOINTED',APP_INTEGRATION_READY:false});
     }
   } finally {unlinkSync(generated);}
