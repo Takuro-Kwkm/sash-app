@@ -113,9 +113,11 @@ async function prepare(out) {
     const beforeCancelArtifacts=pages(`actions/runs/${run}/artifacts`,'artifacts');
     const snapshot=a=>a.map(x=>[x.id,x.digest]).sort((a,b)=>a[0]-b[0]);
     if(hash(snapshot(artifacts))!==hash(snapshot(beforeCancelArtifacts)))throw new Error('LEGACY_ARTIFACT_SET_CHANGED_REPLAN_WITHOUT_CANCEL');
-    let jobs=pages(`actions/runs/${run}/jobs?filter=latest`,'jobs');
-    const activeBeforeCancel=jobs.filter(j=>j.status!=='completed');
     let after=api(`actions/runs/${run}`),cancellation='NOT_REQUESTED';
+    // A terminal parent run owns no live work. Avoid the known-bad paginated jobs
+    // endpoint entirely once GitHub itself reports the run completed.
+    let jobs=after.status==='completed'?[]:pages(`actions/runs/${run}/jobs?filter=latest`,'jobs');
+    const activeBeforeCancel=jobs.filter(j=>j.status!=='completed');
     // This obsolete broad run is now a runner-starvation source. All published
     // artifacts are preserved before cancellation; in-flight nonterminal work
     // is not PASS evidence and is intentionally replaced by durable checkpoints.
