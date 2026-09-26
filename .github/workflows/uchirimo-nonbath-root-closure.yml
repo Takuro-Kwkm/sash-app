@@ -25,6 +25,8 @@ jobs:
       release: false
   prepare:
     needs: [governance-authority]
+    outputs:
+      plan_attempt: ${{ steps.plan_identity.outputs.plan_attempt }}
     if: needs.governance-authority.outputs.authorized == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 25
@@ -45,6 +47,10 @@ jobs:
           git diff --exit-code -- package.json package-lock.json
       - name: Preserve legacy evidence and freeze non-overlapping work
         run: node scripts/governance/uchirimo-durable-recovery.mjs prepare artifacts/uchirimo-durable-plan
+      - name: Bind plan artifact to the attempt that ran prepare
+        id: plan_identity
+        if: success()
+        run: echo "plan_attempt=${GITHUB_RUN_ATTEMPT}" >> "$GITHUB_OUTPUT"
       - if: always()
         uses: actions/upload-artifact@v4
         with:
@@ -80,7 +86,7 @@ jobs:
           git diff --exit-code -- package.json package-lock.json
       - uses: actions/download-artifact@v4
         with:
-          name: uchirimo-durable-plan-${{ env.HEAD_SHA }}-${{ github.run_attempt }}
+          name: uchirimo-durable-plan-${{ env.HEAD_SHA }}-${{ needs.prepare.outputs.plan_attempt }}
           path: artifacts/uchirimo-durable-plan
       - name: Restore only certified same-HEAD continuation
         if: env.RESUME_RUN_ID != ''
@@ -165,7 +171,7 @@ jobs:
           git diff --exit-code -- package.json package-lock.json
       - uses: actions/download-artifact@v4
         with:
-          name: uchirimo-durable-plan-${{ env.HEAD_SHA }}-${{ github.run_attempt }}
+          name: uchirimo-durable-plan-${{ env.HEAD_SHA }}-${{ needs.prepare.outputs.plan_attempt }}
           path: artifacts/uchirimo-durable-plan
       - name: Read latest retained snapshot of every lane
         run: |
