@@ -35,6 +35,7 @@ jobs:
     outputs:
       authorized: ${{ steps.materialize.outputs.authorized }}
       uchirimo_recovery_only: ${{ steps.scope.outputs.uchirimo_recovery_only }}
+      uchirimo_v11_recovery_only: ${{ steps.scope.outputs.uchirimo_v11_recovery_only }}
       uchirimo_resume_run_id: ${{ steps.resume.outputs.resume_run_id }}
     env:
       GH_TOKEN: ${{ github.token }}
@@ -106,12 +107,14 @@ jobs:
           node --input-type=module <<'NODE'
           import {readFileSync,appendFileSync} from 'node:fs';
           const scope=JSON.parse(readFileSync('project-governance/change-scope.json','utf8'));
-          appendFileSync(process.env.GITHUB_OUTPUT,`uchirimo_recovery_only=${scope.execution_lane==='uchirimo-recovery-only'}\n`);
+          const recoveryOnly=['uchirimo-recovery-only','uchirimo-v11-recovery-only'].includes(scope.execution_lane);
+          appendFileSync(process.env.GITHUB_OUTPUT,`uchirimo_recovery_only=${recoveryOnly}\n`);
+          appendFileSync(process.env.GITHUB_OUTPUT,`uchirimo_v11_recovery_only=${scope.execution_lane==='uchirimo-v11-recovery-only'}\n`);
           NODE
 
       - name: Resolve latest durable Uchirimo continuation
         id: resume
-        if: steps.scope.outputs.uchirimo_recovery_only == 'true'
+        if: steps.scope.outputs.uchirimo_recovery_only == 'true' && steps.scope.outputs.uchirimo_v11_recovery_only != 'true'
         env:
           CURRENT_RUN_ID: ${{ github.run_id }}
           CURRENT_BRANCH: ${{ github.event.pull_request.head.ref || github.ref_name }}
@@ -324,7 +327,7 @@ jobs:
     needs:
       - governance
       - post-review-uchirimo-recovery-pilot
-    if: needs.governance.outputs.authorized == 'true' && needs.post-review-uchirimo-recovery-pilot.outputs.full_coverage_authorized == 'true'
+    if: ${{ always() && needs.governance.outputs.authorized == 'true' && (needs.governance.outputs.uchirimo_v11_recovery_only == 'true' || needs.post-review-uchirimo-recovery-pilot.outputs.full_coverage_authorized == 'true') }}
     uses: ./.github/workflows/global-window-selection-flow-gate.yml
     with:
       controller_head: ${{ github.event.pull_request.head.sha || github.sha }}
@@ -333,7 +336,7 @@ jobs:
     needs:
       - governance
       - post-review-uchirimo-recovery-pilot
-    if: needs.governance.outputs.authorized == 'true' && needs.post-review-uchirimo-recovery-pilot.outputs.full_coverage_authorized == 'true' && github.event_name == 'pull_request'
+    if: ${{ always() && needs.governance.outputs.authorized == 'true' && (needs.governance.outputs.uchirimo_v11_recovery_only == 'true' || needs.post-review-uchirimo-recovery-pilot.outputs.full_coverage_authorized == 'true') && github.event_name == 'pull_request' }}
     uses: ./.github/workflows/stage-a-nontw-80-window-discrete-exact-count.yml
     with:
       controller_head: ${{ github.event.pull_request.head.sha || github.sha }}
@@ -342,7 +345,7 @@ jobs:
     needs:
       - governance
       - post-review-uchirimo-recovery-pilot
-    if: needs.governance.outputs.authorized == 'true' && needs.post-review-uchirimo-recovery-pilot.outputs.full_coverage_authorized == 'true' && github.event_name == 'pull_request'
+    if: ${{ always() && needs.governance.outputs.authorized == 'true' && (needs.governance.outputs.uchirimo_v11_recovery_only == 'true' || needs.post-review-uchirimo-recovery-pilot.outputs.full_coverage_authorized == 'true') && github.event_name == 'pull_request' }}
     uses: ./.github/workflows/stage-a-tw-25-window-behavioral-projection-count.yml
     with:
       controller_head: ${{ github.event.pull_request.head.sha || github.sha }}
@@ -354,7 +357,7 @@ jobs:
       - post-review-global-flow
       - post-review-nontw-exact
       - post-review-tw-exact
-    if: ${{ always() && needs.governance.outputs.authorized == 'true' && needs.post-review-uchirimo-recovery-pilot.outputs.full_coverage_authorized == 'true' && github.event_name == 'pull_request' }}
+    if: ${{ always() && needs.governance.outputs.authorized == 'true' && (needs.governance.outputs.uchirimo_v11_recovery_only == 'true' || needs.post-review-uchirimo-recovery-pilot.outputs.full_coverage_authorized == 'true') && github.event_name == 'pull_request' && needs.post-review-global-flow.result == 'success' && needs.post-review-nontw-exact.result == 'success' && needs.post-review-tw-exact.result == 'success' }}
     runs-on: ubuntu-latest
     timeout-minutes: 20
     permissions:
@@ -455,7 +458,7 @@ jobs:
 
   post-review-uchirimo-durable-recovery:
     needs: governance
-    if: needs.governance.outputs.authorized == 'true'
+    if: needs.governance.outputs.authorized == 'true' && needs.governance.outputs.uchirimo_recovery_only == 'true' && needs.governance.outputs.uchirimo_v11_recovery_only != 'true'
     permissions:
       contents: read
       issues: read
