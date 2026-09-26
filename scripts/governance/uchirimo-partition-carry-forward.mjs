@@ -18,6 +18,9 @@ const MAX_CANDIDATE_RUNS=Number(process.env.UCHIRIMO_CARRY_FORWARD_CANDIDATE_RUN
 const PROOF_SCRIPT='scripts/uchirimo-full-selector-proof.mjs';
 const BATCH_RUNNER='scripts/governance/uchirimo-selector-batch-runner.mjs';
 const POLICY_PATH='project-governance/evidence-dependency-policy.json';
+const LEGACY_V10_REFERENCE_HEAD='508021c64897039b2fa6e0391058ad88394536af';
+const LEGACY_V10_MODEL='UCHIRIMO_REACHABLE_DISCRETE_SELECTOR_EXHAUSTIVE_SHARD_V10';
+const V11_MODEL='UCHIRIMO_REACHABLE_DISCRETE_SELECTOR_EXHAUSTIVE_SYMBOLIC_SHARD_V11';
 
 if(!HEAD||!REPO||!RUN_ID||!TOKEN)throw new Error('UCHIRIMO_CARRY_FORWARD_ENV_MISSING');
 mkdirSync(OUT,{recursive:true});
@@ -92,24 +95,27 @@ function executionSemanticSource(ref){
   const runShard=extractFunction(source,'runShard');
   return [constants,helpers,runShard].join('\n---\n');
 }
-function executionDependencyFingerprint(ref){
+function dependencyRows(ref){
   const policy=JSON.parse(gitShow(ref,POLICY_PATH));
   const family=policy.families?.UCHIRIMO_SELECTOR;
   if(!family)throw new Error('UCHIRIMO_SELECTOR_POLICY_MISSING:'+ref);
   const deps=[];
   for(const path of family.dependencies??[]){
-    if(path===PROOF_SCRIPT||path===BATCH_RUNNER)continue;
     if(path.includes('*'))throw new Error('UCHIRIMO_CARRY_FORWARD_GLOB_DEPENDENCY_UNSUPPORTED:'+path);
     const blob=git(['rev-parse',ref+':'+path],{allowFailure:true});
-    // Match proof-dependency-fingerprint.mjs semantics: dependency patterns identify
-    // tracked files when present; an absent optional path (for example package-lock.json)
-    // is not itself a proof dependency and therefore is omitted consistently.
     if(!blob)continue;
     deps.push({path,blob_sha:blob});
   }
+  return deps;
+}
+function runtimeDependencyFingerprint(ref){
+  const deps=dependencyRows(ref).filter((row)=>![PROOF_SCRIPT,BATCH_RUNNER,POLICY_PATH].includes(row.path));
+  return sha({family:'UCHIRIMO_SELECTOR_RUNTIME_BEHAVIOR',dependencies:deps});
+}
+function executionDependencyFingerprint(ref){
+  const deps=dependencyRows(ref).filter((row)=>![PROOF_SCRIPT,BATCH_RUNNER].includes(row.path));
   return sha({
     family:'UCHIRIMO_SELECTOR_PARTITION_EXECUTION',
-    proof_model:'UCHIRIMO_REACHABLE_DISCRETE_SELECTOR_EXHAUSTIVE_SHARD_V10',
     semantic_source_sha256:sha(executionSemanticSource(ref)),
     dependencies:deps
   });
@@ -199,6 +205,8 @@ const runtime=await loadRegisteredRuntime('YKK AP','ウチリモ 内窓');
 if(!runtime?.sourcePackageIntegrity?.match)throw new Error('UCHIRIMO_CARRY_FORWARD_RUNTIME_INTEGRITY_FAIL');
 const currentRuntimeHash=String(runtime.sourcePackageIntegrity.actual??'');
 const currentExecutionFingerprint=executionDependencyFingerprint(HEAD);
+const currentRuntimeDependencyFingerprint=runtimeDependencyFingerprint(HEAD);
+const legacyV10ExecutionFingerprint=executionDependencyFingerprint(LEGACY_V10_REFERENCE_HEAD);
 
 const sameHeadRunsPayload=await apiJson('/repos/'+REPO+'/actions/workflows/project-governance-gate.yml/runs?head_sha='+encodeURIComponent(HEAD)+'&per_page=100');
 const recentRunsPayload=await apiJson('/repos/'+REPO+'/actions/workflows/project-governance-gate.yml/runs?per_page=100');
@@ -227,13 +235,13 @@ const candidates=[];
 for(const run of priorRuns){
   const sourceHead=String(run.head_sha??'');
   if(!/^[0-9a-f]{40}$/.test(sourceHead)||!isAncestor(sourceHead,HEAD))continue;
-  let fp;
-  try{fp=executionDependencyFingerprint(sourceHead);}catch{continue;}
-  if(fp!==currentExecutionFingerprint)continue;
+  let fp,runtimeFp;
+  try{fp=executionDependencyFingerprint(sourceHead);runtimeFp=runtimeDependencyFingerprint(sourceHead);}catch{continue;}
+  if(runtimeFp!==currentRuntimeDependencyFingerprint)continue;
   const artifacts=await listArtifacts(run.id);
   const shardArtifacts=artifacts.filter((a)=>/^uchirimo-selector-proof-(?:shard-\d+|batch-[A-Za-z0-9._-]+)-[0-9a-f]{40}-attempt-\d+$/.test(String(a.name??''))&&!a.expired);
   if(!shardArtifacts.length)continue;
-  candidates.push({run,sourceHead,artifacts:shardArtifacts});
+  candidates.push({run,sourceHead,artifacts:shardArtifacts,executionFingerprint:fp,runtimeDependencyFingerprint:runtimeFp});
 }
 candidates.sort((a,b)=>
   Number(b.sourceHead===HEAD)-Number(a.sourceHead===HEAD) ||
@@ -295,7 +303,10 @@ try{
         if(report.status!=='PASS'||report.unverified_discrete_selector_case_count!==0||report.runtime_integrity_match!==true)continue;
         if(String(report.exact_head??'')!==source.sourceHead)continue;
         if(String(report.runtime_manifest_sha256??'')!==currentRuntimeHash)continue;
-        if(String(report.proof_model??'')!=='UCHIRIMO_REACHABLE_DISCRETE_SELECTOR_EXHAUSTIVE_SHARD_V10')continue;
+        const proofModel=String(report.proof_model??'');
+        if(![LEGACY_V10_MODEL,V11_MODEL].includes(proofModel))continue;
+        if(proofModel===LEGACY_V10_MODEL&&source.executionFingerprint!==legacyV10ExecutionFingerprint)continue;
+        if(proofModel===V11_MODEL&&source.executionFingerprint!==currentExecutionFingerprint)continue;
         const partitionKey=String(report.partition_key??'');
         const current=currentByKey.get(partitionKey);
         if(!current||reusedKeys.has(partitionKey))continue;
@@ -309,7 +320,7 @@ try{
         const currentCaseName='shard-'+current.shard+'-terminal-digests.jsonl';
         const currentReportName='shard-'+current.shard+'-report.json';
         const bindingName='shard-'+current.shard+'-current-head-binding.json';
-        const binding={schema_version:'1.0.0',binding_type:'CURRENT_HEAD_PARTITION_PROOF_CARRY_FORWARD',status:'PASS',family:'UCHIRIMO_SELECTOR',source_exact_head:source.sourceHead,current_exact_head:HEAD,source_run_id:Number(source.run.id),source_artifact_identity:String(artifact.name),source_artifact_id:Number(artifact.id),source_artifact_sha256:sha(zip),source_case_artifact_sha256:caseSha,partition_key:partitionKey,current_shard_index:Number(current.shard),source_shard_index:Number(report.shard_index),runtime_manifest_sha256:currentRuntimeHash,execution_dependency_fingerprint:currentExecutionFingerprint,changed_paths:sourceChanges,impact_decision:'PARTITION_IDENTITY_AND_EXECUTION_DEPENDENCIES_UNCHANGED',generated_at:new Date().toISOString()};
+        const binding={schema_version:'1.0.0',binding_type:'CURRENT_HEAD_PARTITION_PROOF_CARRY_FORWARD',status:'PASS',family:'UCHIRIMO_SELECTOR',source_exact_head:source.sourceHead,current_exact_head:HEAD,source_run_id:Number(source.run.id),source_artifact_identity:String(artifact.name),source_artifact_id:Number(artifact.id),source_artifact_sha256:sha(zip),source_case_artifact_sha256:caseSha,partition_key:partitionKey,current_shard_index:Number(current.shard),source_shard_index:Number(report.shard_index),runtime_manifest_sha256:currentRuntimeHash,source_proof_model:proofModel,source_execution_dependency_fingerprint:source.executionFingerprint,current_execution_dependency_fingerprint:currentExecutionFingerprint,runtime_dependency_fingerprint:currentRuntimeDependencyFingerprint,legacy_v10_reference_head:proofModel===LEGACY_V10_MODEL?LEGACY_V10_REFERENCE_HEAD:null,changed_paths:sourceChanges,impact_decision:proofModel===LEGACY_V10_MODEL?'LEGACY_V10_PROOF_RETAINED_RUNTIME_DEPENDENCIES_UNCHANGED':'PARTITION_IDENTITY_AND_V11_EXECUTION_DEPENDENCIES_UNCHANGED',generated_at:new Date().toISOString()};
         const rebound={...report,exact_head:HEAD,shard_index:Number(current.shard),shard_count:Number(plan.shard_count),run_attempt:Number(process.env.GITHUB_RUN_ATTEMPT??1),case_artifact:currentCaseName,evidence_origin:'CURRENT_HEAD_CARRY_FORWARD',source_exact_head:source.sourceHead,source_run_id:Number(source.run.id),source_artifact_identity:String(artifact.name),current_head_binding:binding,status:'PASS'};
         writeFileSync(join(OUT,currentCaseName),caseBytes);
         writeFileSync(join(OUT,currentReportName),JSON.stringify(rebound,null,2)+'\n');
@@ -339,8 +350,11 @@ const manifest={
   current_shard_count:Number(plan.shard_count),
   runtime_manifest_sha256:currentRuntimeHash,
   execution_dependency_fingerprint:currentExecutionFingerprint,
+  runtime_dependency_fingerprint:currentRuntimeDependencyFingerprint,
+  legacy_v10_execution_fingerprint:legacyV10ExecutionFingerprint,
+  legacy_v10_reference_head:LEGACY_V10_REFERENCE_HEAD,
   source_runs:sourceSummaries,
-  resume_policy:'SAME_HEAD_AND_PRIOR_ATTEMPT_PARTITION_REUSE_V1',
+  resume_policy:'V10_RUNTIME_DEPENDENCY_BOUND_PLUS_V11_SEMANTIC_REUSE_V2',
   workflow_run_id:RUN_ID,
   workflow_run_attempt:RUN_ATTEMPT,
   candidate_run_limit:MAX_CANDIDATE_RUNS,
