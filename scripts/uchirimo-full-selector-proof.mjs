@@ -87,6 +87,57 @@ function flowSignature(result){
     .join('|');
 }
 
+function buildSymbolicSafety(runtime){
+  const master=runtime.master;
+  const fieldNames=new Set((master?.fields??[]).map((row)=>String(row.field_name)));
+  const behaviorInputs=new Set([
+    'room_specification','window_type','sash_configuration','size_class',
+    'glass_family','glass_structure','low_e_type','glass_coating_color','glass_surface_type',
+    'safety_treatment','grille_type','grille_material','muntin_type','vacuum_glass_product',
+    'spacer_type','gas_fill','size_w','size_h','bathroom_installation_type',
+    'frame_installation_mode','extension_frame_type'
+  ]);
+  const behaviorTargets=new Set([
+    'bathroom_installation_type','frame_projection','extension_frame_reinforcement'
+  ]);
+  for(const rule of master?.canonical?.dependency_rules??[]){
+    for(const condition of rule.conditions??[])if(condition?.field)behaviorInputs.add(String(condition.field));
+    const effect=rule.effect??{};
+    if(effect.field)behaviorInputs.add(String(effect.field));
+    if(effect.target_field)behaviorTargets.add(String(effect.target_field));
+    for(const key of Object.keys(effect.also??{}))behaviorTargets.add(String(key));
+  }
+  for(const input of master?.sizeInstallation?.installation_input_contract?.raw_inputs??[]){
+    if(input?.field_name)behaviorTargets.add(String(input.field_name));
+    const expression=String(input?.required_when??'');
+    for(const match of expression.matchAll(/\b[A-Za-z_][A-Za-z0-9_]*\b/g)){
+      if(fieldNames.has(match[0]))behaviorInputs.add(match[0]);
+    }
+  }
+  const independent=new Set([...fieldNames].filter((key)=>
+    !behaviorInputs.has(key)&&!behaviorTargets.has(key)&&!CONTINUOUS_KEYS.has(key)&&!TECHNICAL_KEYS.has(key)
+  ));
+  return {behaviorInputs,behaviorTargets,independent};
+}
+function symbolicBehaviorProjection(result,ignoredKey){
+  const selection=Object.fromEntries(Object.entries(result.selection??{}).filter(([key])=>key!==ignoredKey));
+  const fields=(result.fields??[]).map((field)=>({
+    key:field.key,
+    dataType:field.dataType,
+    required:Boolean(field.required),
+    readOnly:Boolean(field.readOnly),
+    semanticStage:field.semanticStage??null,
+    semanticSlot:field.semanticSlot??null,
+    values:enabled(field).map((row)=>stable(row.value))
+  }));
+  return stable({
+    selection,
+    fields,
+    validation_status:result.validation?.status??null,
+    clearedFields:result.clearedFields??[]
+  });
+}
+
 function walk(dir){
   const out=[];
   for(const name of readdirSync(dir)){
@@ -407,6 +458,8 @@ async function aggregate(){
   const flowSignatures=new Set();
   const perWindow={};
   let terminals=0;
+  let terminalClasses=0;
+  const proofModelCounts={};
   let states=0;
   let transitions=0;
   let dependencyRejections=0;
@@ -444,7 +497,9 @@ async function aggregate(){
     windows.add(String(report.window_type));
     runtimeHashes.add(String(report.runtime_manifest_sha256));
     for(const sig of report.flow_signature_sha256s??[])flowSignatures.add(String(sig));
+    proofModelCounts[String(report.proof_model??'UNKNOWN')]=(proofModelCounts[String(report.proof_model??'UNKNOWN')]??0)+1;
     terminals+=report.terminal_context_count;
+    terminalClasses+=Number(report.terminal_equivalence_class_count??report.terminal_context_count??0);
     states+=report.visited_state_count;
     transitions+=report.transition_check_count;
     dependencyRejections+=report.dependency_rejection_count;
@@ -473,7 +528,7 @@ async function aggregate(){
     exact_head:head,
     task_classification:'NON-PRODUCT-MASTER',
     product_master_mutation:0,
-    proof_model:'UCHIRIMO_REACHABLE_DISCRETE_SELECTOR_EXHAUSTIVE_SHARDED_V10',
+    proof_model:'UCHIRIMO_REACHABLE_DISCRETE_SELECTOR_EXHAUSTIVE_SHARDED_V10_V11',
     runtime_manifest_sha256:[...runtimeHashes][0],
     runtime_integrity_match:true,
     shard_count:EXPECTED_SHARDS,
@@ -481,6 +536,8 @@ async function aggregate(){
     product_node_count:nodeIds.size,
     window_type_count:windows.size,
     terminal_context_count:terminals,
+    terminal_equivalence_class_count:terminalClasses,
+    proof_model_counts:Object.fromEntries(Object.entries(proofModelCounts).sort(([a],[b])=>a.localeCompare(b))),
     visited_state_count:states,
     transition_check_count:transitions,
     dependency_rejection_count:dependencyRejections,
@@ -509,6 +566,7 @@ async function runShard(){
   const head=currentExactHead();
   const runtime=await loadRegisteredRuntime('YKK AP','ウチリモ 内窓');
   if(!runtime?.sourcePackageIntegrity?.match)throw new Error('UCHIRIMO_RUNTIME_INTEGRITY_NOT_PASS');
+  const symbolicSafety=buildSymbolicSafety(runtime);
   const resolverCache=new Map();
   let resolverCacheHits=0;
   let resolverCacheMisses=0;
@@ -546,12 +604,17 @@ async function runShard(){
   for(const [key,value] of Object.entries(seed))if(!same(selected.selection?.[key],value))throw new Error('UCHIRIMO_SHARD_SEED_REJECTED:'+SHARD_NODE_ID+':'+key);
   const decisions=Object.fromEntries(Object.entries(seed).map(([key,value])=>[key,{kind:'VALUE',value}]));
   const stack=[{selection:selected.selection??seed,decisions,result:selected}];
+  for(const item of stack){if(!Number.isSafeInteger(item.symbolicMultiplier))item.symbolicMultiplier=1;if(!Array.isArray(item.symbolicAxes))item.symbolicAxes=[];}
   const visited=new Set();
   const signatureCounts=new Map();
   let transitionChecks=0;
   let dependencyRejections=0;
   let downstreamClearChecks=0;
   let terminalCount=0;
+  let terminalClassCount=0;
+  let symbolicEquivalenceChecks=0;
+  let symbolicCollapsedBranchCount=0;
+  let symbolicFallbackCount=0;
   let maxStack=stack.length;
   let peakHeapMb=0;
   const casesPath=join(OUT,'shard-'+SHARD_INDEX+'-terminal-digests.jsonl');
@@ -562,6 +625,8 @@ async function runShard(){
     while(stack.length){
       if(visited.size>=MAX_STATES)throw new Error('UCHIRIMO_SELECTOR_STATE_LIMIT_REACHED:'+MAX_STATES+':SHARD:'+SHARD_INDEX);
       const current=stack.pop();
+      if(!Number.isSafeInteger(current.symbolicMultiplier))current.symbolicMultiplier=1;
+      if(!Array.isArray(current.symbolicAxes))current.symbolicAxes=[];
       const result=current.result??await resolveCached(current.selection);
       const visibleKeys=new Set((result.fields??[]).map((field)=>field.key));
       const decisions=Object.fromEntries(Object.entries(current.decisions).filter(([key])=>visibleKeys.has(key)));
@@ -584,12 +649,17 @@ async function runShard(){
       );
 
       if(!nextField){
-        if(terminalCount>=MAX_TERMINALS)throw new Error('UCHIRIMO_TERMINAL_LIMIT_REACHED:'+MAX_TERMINALS+':SHARD:'+SHARD_INDEX);
-        terminalCount+=1;
+        const multiplicity=Number(current.symbolicMultiplier??1);
+        if(terminalClassCount>=MAX_TERMINALS)throw new Error('UCHIRIMO_TERMINAL_CLASS_LIMIT_REACHED:'+MAX_TERMINALS+':SHARD:'+SHARD_INDEX);
+        if(!Number.isSafeInteger(multiplicity)||multiplicity<1||terminalCount>Number.MAX_SAFE_INTEGER-multiplicity)throw new Error('UCHIRIMO_SYMBOLIC_MULTIPLICITY_OVERFLOW:SHARD:'+SHARD_INDEX);
+        terminalClassCount+=1;
+        terminalCount+=multiplicity;
         const row={
-          case_id:'UCHIRIMO-S'+SHARD_INDEX+'-'+String(terminalCount).padStart(6,'0'),
+          case_id:'UCHIRIMO-S'+SHARD_INDEX+'-C'+String(terminalClassCount).padStart(6,'0'),
           window_type:result.selection?.window_type??null,
-          selection:stable(result.selection??{}),
+          representative_selection:stable(result.selection??{}),
+          symbolic_multiplicity:multiplicity,
+          symbolic_axes:stable(current.symbolicAxes??[]),
           validation_status:result.validation?.status??null,
           continuous_fields:(result.fields??[]).filter((field)=>CONTINUOUS_KEYS.has(field.key)||field.dataType==='NUMBER').map((field)=>field.key),
           flow_signature_sha256:sha(signature),
@@ -598,7 +668,8 @@ async function runShard(){
         const line=JSON.stringify({
           case_id:row.case_id,
           window_type:row.window_type,
-          terminal_sha256:sha(row)
+          symbolic_multiplicity:multiplicity,
+          terminal_class_sha256:sha(row)
         })+'\n';
         writeSync(casesFd,line);
         caseHash.update(line);
@@ -606,6 +677,61 @@ async function runShard(){
       }
 
       const fieldBranches=branches(nextField);
+      if(symbolicSafety.independent.has(nextField.key)&&fieldBranches.length>1){
+        const evaluated=[];
+        for(const branch of fieldBranches){
+          transitionChecks+=1;
+          const input=applyBranch(result.selection,nextField,branch);
+          const child=await resolveCached(input);
+          const nextDecisions={...decisions,[nextField.key]:branch};
+          const branchSurvives=branch.kind==='UNSET'
+            ? (!nextField.required && !present(child.selection?.[nextField.key]))
+            : same(child.selection?.[nextField.key],branch.value);
+          const priorSurvive=Object.entries(decisions).every(([key,decision])=>decisionSurvives(child,key,decision));
+          if(!branchSurvives||!priorSurvive){
+            dependencyRejections+=1;
+            evaluated.push({accepted:false,branch});
+            continue;
+          }
+          downstreamClearChecks+=(child.clearedFields??[]).length;
+          symbolicEquivalenceChecks+=1;
+          evaluated.push({accepted:true,branch,child,nextDecisions,projection:sha(symbolicBehaviorProjection(child,nextField.key))});
+        }
+        const accepted=evaluated.filter((row)=>row.accepted);
+        const equivalent=accepted.length===fieldBranches.length&&new Set(accepted.map((row)=>row.projection)).size===1;
+        if(equivalent){
+          const factor=fieldBranches.length;
+          const priorMultiplier=Number(current.symbolicMultiplier??1);
+          if(!Number.isSafeInteger(priorMultiplier)||priorMultiplier<1||priorMultiplier>Math.floor(Number.MAX_SAFE_INTEGER/factor))throw new Error('UCHIRIMO_SYMBOLIC_MULTIPLICITY_OVERFLOW:SHARD:'+SHARD_INDEX+':FIELD:'+nextField.key);
+          symbolicCollapsedBranchCount+=factor-1;
+          const representative=accepted[0];
+          stack.push({
+            selection:representative.child.selection,
+            decisions:representative.nextDecisions,
+            result:representative.child,
+            symbolicMultiplier:priorMultiplier*factor,
+            symbolicAxes:[...(current.symbolicAxes??[]),{
+              field_key:nextField.key,
+              branch_count:factor,
+              branches:fieldBranches.map((branch)=>stable(branch))
+            }]
+          });
+          continue;
+        }
+        symbolicFallbackCount+=1;
+        for(let i=evaluated.length-1;i>=0;i-=1){
+          const row=evaluated[i];
+          if(!row.accepted)continue;
+          stack.push({
+            selection:row.child.selection,
+            decisions:row.nextDecisions,
+            result:row.child,
+            symbolicMultiplier:current.symbolicMultiplier??1,
+            symbolicAxes:current.symbolicAxes??[]
+          });
+        }
+        continue;
+      }
       for(let i=fieldBranches.length-1;i>=0;i-=1){
         const branch=fieldBranches[i];
         transitionChecks+=1;
@@ -621,7 +747,7 @@ async function runShard(){
           continue;
         }
         downstreamClearChecks+=(child.clearedFields??[]).length;
-        stack.push({selection:child.selection,decisions:nextDecisions,result:child});
+        stack.push({selection:child.selection,decisions:nextDecisions,result:child,symbolicMultiplier:current.symbolicMultiplier??1,symbolicAxes:current.symbolicAxes??[]});
       }
       if(stack.length>maxStack)maxStack=stack.length;
       if(visited.size%25000===0){
@@ -640,7 +766,7 @@ async function runShard(){
     exact_head:head,
     task_classification:'NON-PRODUCT-MASTER',
     product_master_mutation:0,
-    proof_model:'UCHIRIMO_REACHABLE_DISCRETE_SELECTOR_EXHAUSTIVE_SHARD_V10',
+    proof_model:'UCHIRIMO_REACHABLE_DISCRETE_SELECTOR_EXHAUSTIVE_SYMBOLIC_SHARD_V11',
     shard_index:SHARD_INDEX,
     node_id:SHARD_NODE_ID,
     partition_key:TARGET_PARTITION_KEY,
@@ -653,6 +779,12 @@ async function runShard(){
     runtime_manifest_sha256:runtime.sourcePackageIntegrity.actual,
     runtime_integrity_match:runtime.sourcePackageIntegrity.match,
     terminal_context_count:terminalCount,
+    terminal_equivalence_class_count:terminalClassCount,
+    symbolic_equivalence_check_count:symbolicEquivalenceChecks,
+    symbolic_collapsed_branch_count:symbolicCollapsedBranchCount,
+    symbolic_fallback_count:symbolicFallbackCount,
+    symbolic_independent_field_count:symbolicSafety.independent.size,
+    symbolic_independent_fields:[...symbolicSafety.independent].sort(),
     visited_state_count:visited.size,
     transition_check_count:transitionChecks,
     dependency_rejection_count:dependencyRejections,
@@ -662,7 +794,7 @@ async function runShard(){
     continuous_dimension_coverage_delegated_to:'CUSTOM_SIZE_COVERAGE_GATE',
     unverified_discrete_selector_case_count:0,
     case_artifact:basename(casesPath),
-    case_artifact_format:'UCHIRIMO_TERMINAL_DIGEST_JSONL_V1',
+    case_artifact_format:'UCHIRIMO_TERMINAL_EQUIVALENCE_CLASS_DIGEST_JSONL_V1',
     case_artifact_sha256:caseHash.digest('hex'),
     max_stack_depth:maxStack,
     observed_peak_heap_mb:peakHeapMb,
@@ -673,7 +805,7 @@ async function runShard(){
     status:'PASS'
   };
   writeFileSync(join(OUT,'shard-'+SHARD_INDEX+'-report.json'),JSON.stringify(report,null,2)+'\n');
-  console.log('UCHIRIMO_SELECTOR_SHARD=PASS shard='+SHARD_INDEX+' node='+SHARD_NODE_ID+' glass='+TARGET_GLASS_FAMILY+' partition='+TARGET_PARTITION_KEY+' window='+TARGET_WINDOW+' terminals='+terminalCount+' states='+visited.size+' transitions='+transitionChecks+' peak_heap_mb='+peakHeapMb);
+  console.log('UCHIRIMO_SELECTOR_SHARD=PASS_V11 shard='+SHARD_INDEX+' node='+SHARD_NODE_ID+' glass='+TARGET_GLASS_FAMILY+' partition='+TARGET_PARTITION_KEY+' window='+TARGET_WINDOW+' logical_terminals='+terminalCount+' terminal_classes='+terminalClassCount+' states='+visited.size+' transitions='+transitionChecks+' collapsed_branches='+symbolicCollapsedBranchCount+' symbolic_fallbacks='+symbolicFallbackCount+' peak_heap_mb='+peakHeapMb);
 }
 
 const failurePath=join(OUT,MODE==='aggregate'?'aggregate-failure.json':MODE==='plan'||MODE==='plan-all'?'plan-failure.json':'shard-'+String(SHARD_INDEX)+'-failure.json');
