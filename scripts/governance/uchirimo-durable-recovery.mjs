@@ -40,7 +40,7 @@ function crossHeadBinding(sourceHead,targetHead){
   for(const path of CONTINUATION_STATE_DEPENDENCIES){
     if(git('rev-parse',`${sourceHead}:${path}`)!==git('rev-parse',`HEAD:${path}`))throw new Error(`RESUME_CONTINUATION_STATE_CHANGED:${path}`);
   }
-  return{source_exact_head:sourceHead,current_exact_head:targetHead,changed_paths:changed,dependency_changes,impact_decision:'NON_IMPACTING_PROOF_DEPENDENCIES_UNCHANGED'};
+  return{source_exact_head:sourceHead,current_exact_head:targetHead,changed_paths:changed,dependency_changes:dependencyChanges,impact_decision:'NON_IMPACTING_PROOF_DEPENDENCIES_UNCHANGED'};
 }
 export function rebindCheckpointEnvelope(envelope,{sourceHead,targetHead,sourceFingerprint,targetFingerprint,task,runtimeHash}){
   if(envelope?.schema!=='UCHIRIMO_CONTINUATION_V1'||hash(envelope.body)!==envelope.sha256)throw new Error('RESUME_CHECKPOINT_CORRUPT');
