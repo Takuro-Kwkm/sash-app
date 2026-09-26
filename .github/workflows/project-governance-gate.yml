@@ -2,6 +2,12 @@ name: Project Governance Gate
 
 on:
   workflow_dispatch:
+    inputs:
+      uchirimo_resume_run_id:
+        description: Prior controller Run ID with same-HEAD durable checkpoints
+        required: false
+        type: string
+        default: ''
   pull_request:
     branches:
       - main
@@ -116,6 +122,13 @@ jobs:
           node --check scripts/governance/verify-materialized-state.mjs
           node --check scripts/governance/reconstruct-current-state.mjs
           node --check scripts/governance/uchirimo-recovery-pilot.mjs
+
+      - name: Uchirimo durable continuation unit and legacy-oracle tests
+        run: |
+          set -euo pipefail
+          test -f scripts/uchirimo-full-selector-proof.mjs
+          mkdir -p artifacts/governance
+          node --test scripts/governance/uchirimo-durable-recovery.test.mjs | tee artifacts/governance/uchirimo-durable-tests.tap
 
       - name: frame_angle canonical contract tests
         run: node --test test/76-frame-angle-global-flow.test.mjs
@@ -394,3 +407,17 @@ jobs:
             process.exit(1);
           }
           NODE
+
+
+  post-review-uchirimo-durable-recovery:
+    needs: governance
+    if: needs.governance.outputs.authorized == 'true'
+    permissions:
+      contents: read
+      issues: read
+      pull-requests: read
+      actions: write
+    uses: ./.github/workflows/uchirimo-nonbath-root-closure.yml
+    with:
+      controller_head: ${{ github.event.pull_request.head.sha || github.sha }}
+      resume_run_id: ${{ inputs.uchirimo_resume_run_id || '' }}

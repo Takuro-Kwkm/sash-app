@@ -1,43 +1,27 @@
-name: Uchirimo NonBath Root2 Descendant Recovery
+name: Retired Uchirimo Recovery Entry
+# Preserve the path for historical evidence; never restart the failed old route.
+# Existing running executions retain their own immutable workflow revision.
 on:
-  push:
-    branches: [feat/new-construction-runtime-ui-v16-20260910]
-    paths: [.github/workflows/uchirimo-nonbath-root2-descendant-recovery.yml]
-  workflow_dispatch:
-permissions: {contents: read, actions: read, pull-requests: read}
+  workflow_call:
+    inputs:
+      controller_head:
+        required: true
+        type: string
+permissions:
+  contents: read
+  issues: read
 jobs:
-  recover-root2:
+  governance-authority:
+    uses: ./.github/workflows/governance-authorization.yml
+    with:
+      controller_head: ${{ inputs.controller_head }}
+      release: false
+  retired:
+    needs: [governance-authority]
+    if: needs.governance-authority.outputs.authorized == 'true'
     runs-on: ubuntu-latest
-    timeout-minutes: 360
-    env:
-      GH_TOKEN: ${{ github.token }}
-      HEAD_SHA: ${{ github.sha }}
-      SOURCE_RUN_ID: '36189422570'
-      SOURCE_ARTIFACT: uchirimo-nonbath-root-input-f6ea438bbf22fcfd459511af13f89499dd0ad5d1
-      IN: artifacts/uchirimo-nonbath-input
-      OUT: artifacts/uchirimo-nonbath-root2-recovery
-      UCHIRIMO_NONBATH_ROOT_INDEX: '2'
-      UCHIRIMO_CONFIRMED_TIMEOUT_PREFIX: '58'
-      UCHIRIMO_NONBATH_CHILD_TIMEOUT_MS: '120000'
-      UCHIRIMO_NONBATH_MAX_DEPTH: '12'
-      UCHIRIMO_NONBATH_MAX_PARTITIONS_PER_ROOT: '4000'
     steps:
-      - uses: actions/checkout@v4
-        with: {ref: '${{ env.HEAD_SHA }}', fetch-depth: 0}
-      - uses: actions/setup-node@v4
-        with: {node-version: 24}
-      - run: npm install --ignore-scripts
-      - name: Bind exact existing input evidence
+      - name: Reject obsolete timeout-and-restart route
         run: |
-          set -euo pipefail
-          test "$(git rev-parse HEAD)" = "$HEAD_SHA"
-          mkdir -p "$IN"
-          gh run download "$SOURCE_RUN_ID" --repo "$GITHUB_REPOSITORY" --name "$SOURCE_ARTIFACT" --dir "$IN"
-      - name: Recover only below confirmed timed-out prefix
-        run: |
-          set -euo pipefail
-          mkdir -p "$OUT"
-          UCHIRIMO_NONBATH_CLOSURE_INPUT="$IN/nonbath-root-closure-input.json" UCHIRIMO_NONBATH_ROOT_OUT="$OUT" node scripts/governance/uchirimo-nonbath-descendant-recovery.mjs
-      - if: always()
-        uses: actions/upload-artifact@v4
-        with: {name: 'uchirimo-nonbath-root2-descendant-recovery-${{ env.HEAD_SHA }}', path: '${{ env.OUT }}/', if-no-files-found: error}
+          echo 'RETIRED_ROUTE: use Project Governance / Uchirimo durable recovery'
+          exit 1

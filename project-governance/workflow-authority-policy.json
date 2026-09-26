@@ -30,7 +30,8 @@
     "post-review-global-flow",
     "post-review-nontw-exact",
     "post-review-tw-exact",
-    "finalize-post-human-evidence"
+    "finalize-post-human-evidence",
+    "post-review-uchirimo-durable-recovery"
   ],
   "legacy_workflows": [
     "ci.yml",
@@ -93,7 +94,11 @@
     "stage-a-tw-five-failure-diagnostic.yml",
     "stage-a-tw-five-failure-recovery-v2.yml",
     "stage-a-tw-shut-hiki-color-projection-v3.yml",
-    "tw-production-finalize.yml"
+    "tw-production-finalize.yml",
+    "uchirimo-stage1-bath-recovery.yml",
+    "uchirimo-bath-root-closure.yml",
+    "uchirimo-nonbath-root-closure.yml",
+    "uchirimo-nonbath-root2-descendant-recovery.yml"
   ],
   "independent_authority_allowed": false,
   "release_requires_controller_and_release_gate": true
