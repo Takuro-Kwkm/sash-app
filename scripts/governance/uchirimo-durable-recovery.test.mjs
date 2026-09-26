@@ -5,7 +5,7 @@ import {tmpdir} from 'node:os';
 import {join,dirname,basename} from 'node:path';
 import {createHash} from 'node:crypto';
 import {checkpointSession,atomicJson,hash,readCheckpoint,instrumentV10} from './uchirimo-checkpoint-hook.mjs';
-import {SOURCE,buildInventory,aggregatePlan,validateResult,legacyHeldRoots,nextCursor} from './uchirimo-durable-recovery.mjs';
+import {SOURCE,buildInventory,aggregatePlan,validateResult,legacyHeldRoots,nextCursor,rebindCheckpointEnvelope} from './uchirimo-durable-recovery.mjs';
 const temp=()=>fs.mkdtempSync(join(tmpdir(),'uchirimo-durable-test-'));
 const H='1'.repeat(40),F='2'.repeat(64),R='3'.repeat(64);
 const identity={exact_head:H,semantic_fingerprint:F,seed:{x:'a'},partition_key:'P',runtime_manifest_sha256:R};
@@ -14,6 +14,15 @@ function checkpointFixture(){const out=temp(),s=session(out),path=join(out,'case
 test('checkpoint round-trip and certified terminal prefix',()=>{const {out,path}=checkpointFixture();const s=session(out);assert.equal(s.saved.state.terminalCount,1);const x=s.openTerminal(path);assert.equal(x.caseHash.digest('hex'),hash('abc\n'));fs.closeSync(x.casesFd);});
 test('corrupt checkpoint is rejected',()=>{const {out}=checkpointFixture();const p=join(out,'continuation.json'),x=JSON.parse(fs.readFileSync(p));x.body.state.terminalCount=999;atomicJson(p,x);assert.throws(()=>session(out),/CORRUPT/);});
 test('wrong HEAD/seed/runtime/fingerprint are all rejected',()=>{const {out}=checkpointFixture();for(const [k,v] of [['exact_head','bad'],['seed',{x:'b'}],['runtime_manifest_sha256','bad'],['semantic_fingerprint','bad']])assert.throws(()=>readCheckpoint(join(out,'continuation.json'),{...identity,[k]:v}),/IDENTITY/);});
+test('cross-head continuation rebind preserves certified state but changes only identity',()=>{
+  const {out}=checkpointFixture(),p=join(out,'continuation.json'),envelope=JSON.parse(fs.readFileSync(p));
+  const task={id:'P',seed:{x:'a'}},target='4'.repeat(40),targetFp='5'.repeat(64);
+  const rebound=rebindCheckpointEnvelope(envelope,{sourceHead:H,targetHead:target,sourceFingerprint:F,targetFingerprint:targetFp,task,runtimeHash:R});
+  atomicJson(p,rebound);
+  const body=readCheckpoint(p,{exact_head:target,semantic_fingerprint:targetFp,seed:{x:'a'},partition_key:'P',runtime_manifest_sha256:R});
+  assert.equal(body.state.terminalCount,1);assert.equal(body.terminal_sha256,hash('abc\n'));
+  assert.throws(()=>rebindCheckpointEnvelope({...envelope,sha256:'bad'},{sourceHead:H,targetHead:target,sourceFingerprint:F,targetFingerprint:targetFp,task,runtimeHash:R}),/CORRUPT/);
+});
 test('terminal corruption is rejected without truncation',()=>{const {out,path}=checkpointFixture();fs.writeFileSync(path,'bad\nTAIL');assert.throws(()=>session(out).openTerminal(path),/HASH_MISMATCH/);assert.equal(fs.readFileSync(path,'utf8'),'bad\nTAIL');});
 test('only uncommitted crash tail is rolled back',()=>{const {out,path}=checkpointFixture();fs.appendFileSync(path,'uncommitted');const s=session(out),x=s.openTerminal(path);fs.closeSync(x.casesFd);assert.equal(fs.readFileSync(path,'utf8'),'abc\n');});
 test('missing terminal file and orphan evidence fail closed',()=>{const {out,path}=checkpointFixture();fs.unlinkSync(path);assert.throws(()=>session(out).openTerminal(path),/MISSING/);const o=temp(),p=join(o,'cases.jsonl');fs.writeFileSync(p,'evidence');assert.throws(()=>session(o).openTerminal(p),/ORPHAN/);});

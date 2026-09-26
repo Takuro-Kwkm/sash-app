@@ -35,6 +35,7 @@ jobs:
     outputs:
       authorized: ${{ steps.materialize.outputs.authorized }}
       uchirimo_recovery_only: ${{ steps.scope.outputs.uchirimo_recovery_only }}
+      uchirimo_resume_run_id: ${{ steps.resume.outputs.resume_run_id }}
     env:
       GH_TOKEN: ${{ github.token }}
       HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
@@ -108,6 +109,143 @@ jobs:
           appendFileSync(process.env.GITHUB_OUTPUT,`uchirimo_recovery_only=${scope.execution_lane==='uchirimo-recovery-only'}\n`);
           NODE
 
+
+      - name: Resolve latest durable Uchirimo continuation
+        id: resume
+        if: steps.scope.outputs.uchirimo_recovery_only == 'true'
+        env:
+          CURRENT_RUN_ID: ${{ github.run_id }}
+          CURRENT_BRANCH: ${{ github.event.pull_request.head.ref || github.ref_name }}
+          EXPLICIT_RESUME_RUN_ID: ${{ inputs.uchirimo_resume_run_id || '' }}
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import {execFileSync} from 'node:child_process';
+          import {appendFileSync} from 'node:fs';
+          const repo=process.env.GITHUB_REPOSITORY,current=Number(process.env.CURRENT_RUN_ID);
+          const api=(path)=>JSON.parse(execFileSync('gh',['api',`repos/${repo}/${path}`],{encoding:'utf8',maxBuffer:32*1024*1024}));
+          let selected=String(process.env.EXPLICIT_RESUME_RUN_ID??'').trim();
+          if(!selected){
+            const runs=api(`actions/workflows/project-governance-gate.yml/runs?branch=${encodeURIComponent(process.env.CURRENT_BRANCH)}&per_page=100`).workflow_runs
+              .filter(run=>Number(run.id)!==current).sort((a,b)=>Date.parse(b.updated_at)-Date.parse(a.updated_at));
+            for(const run of runs){
+              const artifacts=api(`actions/runs/${run.id}/artifacts?per_page=100`).artifacts??[];
+              const lanes=new Set(artifacts.filter(a=>!a.expired&&new RegExp(`^uchirimo-durable-${run.head_sha}-lane-([0-7])-attempt-[0-9]+-wave-[0-9]+name: Project Governance Gate
+
+on:
+  workflow_dispatch:
+    inputs:
+      uchirimo_resume_run_id:
+        description: Prior controller Run ID with same-HEAD durable checkpoints
+        required: false
+        type: string
+        default: ''
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+  pull-requests: read
+  issues: read
+  actions: read
+
+concurrency:
+  group: project-governance-${{ github.event.pull_request.head.ref || github.ref_name }}
+  cancel-in-progress: true
+
+jobs:
+  governance:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      pull-requests: read
+      issues: read
+      actions: write
+      id-token: write
+    outputs:
+      authorized: ${{ steps.materialize.outputs.authorized }}
+      uchirimo_recovery_only: ${{ steps.scope.outputs.uchirimo_recovery_only }}
+      uchirimo_resume_run_id: ${{ steps.resume.outputs.resume_run_id }}
+    env:
+      GH_TOKEN: ${{ github.token }}
+      HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+    steps:
+      - name: Checkout exact HEAD
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.HEAD_SHA }}
+          fetch-depth: 0
+
+      - name: Setup Node 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Cancel stale Project Governance runs from older exact heads
+        if: ${{ github.event_name == 'push' || github.event_name == 'pull_request' }}
+        shell: bash
+        env:
+          CURRENT_RUN_ID: ${{ github.run_id }}
+          CURRENT_BRANCH: ${{ github.event.pull_request.head.ref || github.ref_name }}
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          const api=process.env.GITHUB_API_URL || 'https://api.github.com';
+          const repo=process.env.GITHUB_REPOSITORY;
+          const currentRun=Number(process.env.CURRENT_RUN_ID);
+          const head=process.env.HEAD_SHA;
+          const branch=process.env.CURRENT_BRANCH;
+          const headers={
+            Authorization:`Bearer ${process.env.GH_TOKEN}`,
+            Accept:'application/vnd.github+json',
+            'X-GitHub-Api-Version':'2022-11-28'
+          };
+          const listUrl=`${api}/repos/${repo}/actions/workflows/project-governance-gate.yml/runs?branch=${encodeURIComponent(branch)}&per_page=100`;
+          const listResponse=await fetch(listUrl,{headers});
+          if(!listResponse.ok)throw new Error(`STALE_RUN_LIST_FAILED_${listResponse.status}`);
+          const payload=await listResponse.json();
+          const currentResponse=await fetch(`${api}/repos/${repo}/actions/runs/${currentRun}`,{headers});
+          if(!currentResponse.ok)throw new Error(`CURRENT_RUN_LOOKUP_FAILED_${currentResponse.status}`);
+          const currentPayload=await currentResponse.json();
+          const currentCreatedAt=Date.parse(currentPayload.created_at??'');
+          if(!Number.isFinite(currentCreatedAt))throw new Error('CURRENT_RUN_CREATED_AT_INVALID');
+          const active=new Set(['queued','in_progress','waiting','requested','pending']);
+          const stale=(payload.workflow_runs??[]).filter((run)=>
+            Number(run.id)!==currentRun &&
+            run.head_sha!==head &&
+            Number.isFinite(Date.parse(run.created_at??'')) &&
+            Date.parse(run.created_at)<currentCreatedAt &&
+            active.has(run.status)
+          );
+          console.log(`STALE_GOVERNANCE_RUN_COUNT=${stale.length}`);
+          for(const run of stale){
+            const response=await fetch(`${api}/repos/${repo}/actions/runs/${run.id}/cancel`,{
+              method:'POST',
+              headers
+            });
+            if(!response.ok && response.status!==409){
+              throw new Error(`STALE_RUN_CANCEL_FAILED run=${run.id} status=${response.status}`);
+            }
+            console.log(`STALE_GOVERNANCE_RUN_CANCEL run=${run.id} head=${run.head_sha} result=${response.status===409?'ALREADY_TERMINAL_OR_CANCELLING':'REQUESTED'}`);
+          }
+          NODE
+
+      - name: Resolve requested execution lane
+        id: scope
+        run: |
+          node --input-type=module <<'NODE'
+          import {readFileSync,appendFileSync} from 'node:fs';
+          const scope=JSON.parse(readFileSync('project-governance/change-scope.json','utf8'));
+).test(a.name)).map(a=>Number(a.name.match(/-lane-([0-7])-/)[1])));
+              if(lanes.size===8){selected=String(run.id);break;}
+            }
+          }
+          if(selected){const source=api(`actions/runs/${selected}`);if(source.path!=='.github/workflows/project-governance-gate.yml')throw new Error('AUTO_RESUME_SOURCE_NOT_CONTROLLER');console.log(`UCHIRIMO_AUTO_RESUME_RUN=${selected} source_head=${source.head_sha}`);}
+          else console.log('UCHIRIMO_AUTO_RESUME_RUN=NONE');
+          appendFileSync(process.env.GITHUB_OUTPUT,`resume_run_id=${selected}\n`);
+          NODE
       - name: Governance source syntax
         run: |
           node --check scripts/governance/governance-lib.mjs
@@ -430,4 +568,4 @@ jobs:
     uses: ./.github/workflows/uchirimo-nonbath-root-closure.yml
     with:
       controller_head: ${{ github.event.pull_request.head.sha || github.sha }}
-      resume_run_id: ${{ inputs.uchirimo_resume_run_id || '' }}
+      resume_run_id: ${{ inputs.uchirimo_resume_run_id || needs.governance.outputs.uchirimo_resume_run_id || '' }}

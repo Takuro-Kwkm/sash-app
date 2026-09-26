@@ -7,6 +7,7 @@ import {existsSync, mkdirSync, readFileSync, readdirSync, unlinkSync, writeFileS
 import {basename, dirname, join, resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {atomicJson, hash, instrumentV10, readCheckpoint, stable} from './uchirimo-checkpoint-hook.mjs';
+import {changedPathsBetween, globToRegExp, readJson} from './governance-lib.mjs';
 
 export const SOURCE = Object.freeze({run:36189422570, head:'f6ea438bbf22fcfd459511af13f89499dd0ad5d1', artifact:10887444330,
   name:'uchirimo-nonbath-root-input-f6ea438bbf22fcfd459511af13f89499dd0ad5d1',
@@ -17,6 +18,8 @@ export const SOURCE = Object.freeze({run:36189422570, head:'f6ea438bbf22fcfd4595
   proof_blob:'94a86542cace253dc45e7b1f8589f98b837a4cce'});
 const PROOF='scripts/uchirimo-full-selector-proof.mjs';
 const DEPENDENCIES=['src/catalog','project-governance/runtime-snapshot.json','package.json','package-lock.json',PROOF,'scripts/governance/uchirimo-selector-batch-runner.mjs','scripts/governance/uchirimo-checkpoint-hook.mjs','scripts/governance/uchirimo-durable-recovery.mjs'];
+const PROOF_POLICY='project-governance/evidence-dependency-policy.json';
+const CONTINUATION_STATE_DEPENDENCIES=['scripts/governance/uchirimo-checkpoint-hook.mjs'];
 const rd=p=>JSON.parse(readFileSync(p,'utf8'));
 const git=(...args)=>execFileSync('git',args,{encoding:'utf8'}).trim();
 function api(path,method='GET') { return JSON.parse(execFileSync('gh',['api','--method',method,`repos/${process.env.GITHUB_REPOSITORY}/${path}`],{encoding:'utf8',maxBuffer:32*1024*1024})||'null'); }
@@ -25,6 +28,27 @@ function files(dir){return !existsSync(dir)?[]:readdirSync(dir,{withFileTypes:tr
 function exactHead(){const h=git('rev-parse','HEAD');if(h!==process.env.HEAD_SHA)throw new Error('EXACT_HEAD_MISMATCH');return h;}
 function fingerprint(){return hash(git('ls-tree','-r','HEAD','--',...DEPENDENCIES));}
 function verifyLegacySource(){if(git('rev-parse',`HEAD:${PROOF}`)!==SOURCE.proof_blob)throw new Error('LEGACY_PROOF_SOURCE_DRIFT');instrumentV10(readFileSync(PROOF,'utf8'));}
+function crossHeadBinding(sourceHead,targetHead){
+  if(sourceHead===targetHead)return{source_exact_head:sourceHead,current_exact_head:targetHead,changed_paths:[],dependency_changes:[],impact_decision:'DIRECT_SAME_HEAD'};
+  if(git('rev-parse','--verify',`${sourceHead}^{commit}`)!==sourceHead)throw new Error('RESUME_SOURCE_COMMIT_NOT_AVAILABLE');
+  try{execFileSync('git',['merge-base','--is-ancestor',sourceHead,targetHead],{stdio:'ignore'});}catch{throw new Error('RESUME_SOURCE_NOT_ANCESTOR');}
+  const policy=readJson(PROOF_POLICY),family=policy.families?.UCHIRIMO_SELECTOR;
+  if(!family?.dependencies?.length)throw new Error('RESUME_PROOF_DEPENDENCY_POLICY_MISSING');
+  const changed=changedPathsBetween(sourceHead,targetHead);
+  const dependencyChanges=changed.filter(path=>family.dependencies.some(pattern=>globToRegExp(pattern).test(path)));
+  if(dependencyChanges.length)throw new Error(`RESUME_PROOF_DEPENDENCY_CHANGED:${dependencyChanges.join(',')}`);
+  for(const path of CONTINUATION_STATE_DEPENDENCIES){
+    if(git('rev-parse',`${sourceHead}:${path}`)!==git('rev-parse',`HEAD:${path}`))throw new Error(`RESUME_CONTINUATION_STATE_CHANGED:${path}`);
+  }
+  return{source_exact_head:sourceHead,current_exact_head:targetHead,changed_paths:changed,dependency_changes,impact_decision:'NON_IMPACTING_PROOF_DEPENDENCIES_UNCHANGED'};
+}
+export function rebindCheckpointEnvelope(envelope,{sourceHead,targetHead,sourceFingerprint,targetFingerprint,task,runtimeHash}){
+  if(envelope?.schema!=='UCHIRIMO_CONTINUATION_V1'||hash(envelope.body)!==envelope.sha256)throw new Error('RESUME_CHECKPOINT_CORRUPT');
+  const body=envelope.body,id=body?.identity??{};
+  if(id.exact_head!==sourceHead||id.semantic_fingerprint!==sourceFingerprint||id.partition_key!==task.id||hash(id.seed)!==hash(task.seed)||id.runtime_manifest_sha256!==runtimeHash)throw new Error('RESUME_CHECKPOINT_SOURCE_IDENTITY_MISMATCH');
+  const nextBody={...body,identity:{...id,exact_head:targetHead,semantic_fingerprint:targetFingerprint}};
+  return{schema:'UCHIRIMO_CONTINUATION_V1',body:nextBody,sha256:hash(nextBody)};
+}
 
 export function buildInventory(input, {head,semanticFingerprint,heldRoots=[]}) {
   if(input.status!=='READY'||input.exact_head!==SOURCE.head||input.root_count!==476||input.roots?.length!==476||input.runtime_manifest_sha256!==SOURCE.runtime)throw new Error('FROZEN_INPUT_INVALID');
@@ -141,13 +165,38 @@ export function validateResult(plan,task,dir){
 }
 function restore(planPath,out,lane,run){
   const plan=rd(planPath);verifyPlan(plan);if(!/^\d+$/.test(run))throw new Error('RESUME_RUN_INVALID');
-  const source=api(`actions/runs/${run}`);if(source.head_sha!==plan.exact_head||source.path!=='.github/workflows/project-governance-gate.yml')throw new Error('RESUME_SOURCE_IDENTITY_MISMATCH');
-  const prefix=`uchirimo-durable-${plan.exact_head}-lane-${lane}-`;
-  const candidates=pages(`actions/runs/${run}/artifacts`,'artifacts').filter(a=>a.name.startsWith(prefix)&&!a.expired).sort((a,b)=>b.id-a.id);
+  const source=api(`actions/runs/${run}`);if(source.path!=='.github/workflows/project-governance-gate.yml')throw new Error('RESUME_SOURCE_IDENTITY_MISMATCH');
+  const artifacts=pages(`actions/runs/${run}/artifacts`,'artifacts');
+  const prefix=`uchirimo-durable-${source.head_sha}-lane-${lane}-`;
+  const candidates=artifacts.filter(a=>a.name.startsWith(prefix)&&!a.expired).sort((a,b)=>b.id-a.id);
   if(!candidates.length)throw new Error('RESUME_ARTIFACT_MISSING');const selected=candidates[0];
   mkdirSync(out,{recursive:true});execFileSync('gh',['run','download',run,'--repo',process.env.GITHUB_REPOSITORY,'--name',selected.name,'--dir',out],{stdio:'inherit'});
-  const record=rd(join(out,`lane-${lane}.json`));if(record.plan_id!==plan.plan_id||record.exact_head!==plan.exact_head||record.lane!==lane)throw new Error('RESUME_PLAN_MISMATCH');
-  atomicJson(join(out,'resume-binding.json'),{source_run_id:Number(run),source_artifact_id:selected.id,source_artifact_digest:selected.digest,exact_head:plan.exact_head,plan_id:plan.plan_id,semantic_fingerprint:plan.semantic_fingerprint,status:'CONTINUATION_BOUND_NOT_QA_PASS'});
+  const recordPath=join(out,`lane-${lane}.json`),record=rd(recordPath);
+  if(record.lane!==lane||record.exact_head!==source.head_sha)throw new Error('RESUME_LANE_SOURCE_MISMATCH');
+  let binding=crossHeadBinding(source.head_sha,plan.exact_head);
+  if(source.head_sha===plan.exact_head){
+    if(record.plan_id!==plan.plan_id)throw new Error('RESUME_PLAN_MISMATCH');
+  }else{
+    const planArtifact=artifacts.filter(a=>a.name.startsWith(`uchirimo-durable-plan-${source.head_sha}-`)&&!a.expired).sort((a,b)=>b.id-a.id)[0];
+    if(!planArtifact)throw new Error('RESUME_SOURCE_PLAN_MISSING');
+    const sourcePlanDir=join(dirname(out),`.resume-source-plan-${lane}`);mkdirSync(sourcePlanDir,{recursive:true});
+    execFileSync('gh',['run','download',run,'--repo',process.env.GITHUB_REPOSITORY,'--name',planArtifact.name,'--dir',sourcePlanDir],{stdio:'inherit'});
+    const sourcePlan=rd(join(sourcePlanDir,'plan.json'));
+    if(sourcePlan.exact_head!==source.head_sha||sourcePlan.plan_id!==record.plan_id||sourcePlan.input_sha256!==plan.input_sha256||sourcePlan.runtime_manifest_sha256!==plan.runtime_manifest_sha256||hash(sourcePlan.tasks)!==hash(plan.tasks))throw new Error('RESUME_SOURCE_PLAN_UNIVERSE_MISMATCH');
+    const reports=files(out).filter(p=>basename(p)==='shard-0-report.json');
+    if(reports.length)throw new Error('RESUME_CROSS_HEAD_COMPLETED_RESULT_REQUIRES_PROOF_BINDING');
+    const byId=new Map(plan.tasks.map(task=>[task.id,task]));let rebound=0;
+    for(const path of files(out).filter(p=>basename(p)==='continuation.json')){
+      const envelope=rd(path),task=byId.get(envelope?.body?.identity?.partition_key);
+      if(!task)throw new Error('RESUME_CHECKPOINT_PARTITION_UNKNOWN');
+      atomicJson(path,rebindCheckpointEnvelope(envelope,{sourceHead:source.head_sha,targetHead:plan.exact_head,sourceFingerprint:sourcePlan.semantic_fingerprint,targetFingerprint:plan.semantic_fingerprint,task,runtimeHash:plan.runtime_manifest_sha256}));
+      rebound++;
+    }
+    if(!rebound)throw new Error('RESUME_CROSS_HEAD_CHECKPOINT_MISSING');
+    atomicJson(recordPath,{...record,exact_head:plan.exact_head,plan_id:plan.plan_id,status:'CHECKPOINTED_CROSS_HEAD_BOUND'});
+    binding={...binding,source_plan_artifact_id:planArtifact.id,rebound_checkpoint_count:rebound};
+  }
+  atomicJson(join(out,'resume-binding.json'),{source_run_id:Number(run),source_artifact_id:selected.id,source_artifact_digest:selected.digest,exact_head:plan.exact_head,plan_id:plan.plan_id,semantic_fingerprint:plan.semantic_fingerprint,...binding,status:'CONTINUATION_BOUND_NOT_QA_PASS'});
 }
 function worker(planPath,out,lane){
   const plan=rd(planPath);verifyPlan(plan);verifyLegacySource();
@@ -159,31 +208,31 @@ function worker(planPath,out,lane){
   const progressPath=join(out,`lane-${lane}.json`);
   const previous=existsSync(progressPath)?rd(progressPath):null;
   if(previous&&(previous.exact_head!==plan.exact_head||previous.plan_id!==plan.plan_id||previous.lane!==lane))throw new Error('LANE_IDENTITY_MISMATCH');
-  let cursor=previous?.cursor??0;
-  if(!Number.isSafeInteger(cursor)||cursor<0)throw new Error('CURSOR_INVALID');
+  let cursor=Number.isSafeInteger(previous?.cursor)?previous.cursor:0;
+  const pending=tasks.filter(task=>{const dir=join(out,task.id);if(existsSync(join(dir,'blocked.json')))return false;try{return !validateResult(plan,task,dir);}catch{return true;}});
+  pending.sort((a,b)=>{const ac=existsSync(join(out,a.id,'continuation.json'))?0:1,bc=existsSync(join(out,b.id,'continuation.json'))?0:1;return ac-bc||a.id.localeCompare(b.id);});
   try {
-    let idle=0;
-    while(tasks.length&&Date.now()<deadline&&idle<tasks.length){
-      const task=tasks[cursor%tasks.length];const dir=join(out,task.id);mkdirSync(dir,{recursive:true});
-      if(existsSync(join(dir,'blocked.json'))){cursor=nextCursor(cursor,'BLOCKED');idle++;continue;}
+    while(pending.length&&Date.now()<deadline){
+      const task=pending[0],dir=join(out,task.id);mkdirSync(dir,{recursive:true});let outcome='YIELDED';
       try {
-        if(validateResult(plan,task,dir)){cursor=nextCursor(cursor,'PASS');idle++;continue;}
-        idle=0;
-        const prior=existsSync(join(dir,'continuation.json'))?hash(readFileSync(join(dir,'continuation.json'))):null;
-        const child=spawnSync(process.execPath,[generated],{env:taskEnv(task,dir,plan.semantic_fingerprint,Math.min(45000,Math.max(1,deadline-Date.now()))),stdio:'inherit',timeout:90000});
-        if(child.status!==0)throw new Error(`EXECUTION_BLOCKED:${child.status}:${child.signal??''}`);
-        if(!validateResult(plan,task,dir)){
-          const cp=readCheckpoint(join(dir,'continuation.json'),{exact_head:plan.exact_head,semantic_fingerprint:plan.semantic_fingerprint,seed:stable(task.seed),partition_key:task.id,runtime_manifest_sha256:plan.runtime_manifest_sha256});
-          if(cp.status!=='YIELDED')throw new Error('UNEXPECTED_CONTINUATION_STATUS');
-          if(prior===hash(readFileSync(join(dir,'continuation.json'))))throw new Error('NO_FRONTIER_PROGRESS');
-          cursor=nextCursor(cursor,'YIELDED');
-        }else cursor=nextCursor(cursor,'PASS');
-      } catch(e) {atomicJson(join(dir,'blocked.json'),{exact_head:plan.exact_head,partition_key:task.id,status:'BLOCKED',reason:e.message,automatic_retry:false});cursor=nextCursor(cursor,'BLOCKED');}
-      atomicJson(progressPath,{schema:'UCHIRIMO_LANE_V1',exact_head:plan.exact_head,plan_id:plan.plan_id,lane,cursor,status:'CHECKPOINTED',APP_INTEGRATION_READY:false});
+        if(validateResult(plan,task,dir))outcome='PASS';
+        else{
+          const prior=existsSync(join(dir,'continuation.json'))?hash(readFileSync(join(dir,'continuation.json'))):null;
+          const child=spawnSync(process.execPath,[generated],{env:taskEnv(task,dir,plan.semantic_fingerprint,Math.min(45000,Math.max(1,deadline-Date.now()))),stdio:'inherit',timeout:90000});
+          if(child.status!==0)throw new Error(`EXECUTION_BLOCKED:${child.status}:${child.signal??''}`);
+          if(!validateResult(plan,task,dir)){
+            const cp=readCheckpoint(join(dir,'continuation.json'),{exact_head:plan.exact_head,semantic_fingerprint:plan.semantic_fingerprint,seed:stable(task.seed),partition_key:task.id,runtime_manifest_sha256:plan.runtime_manifest_sha256});
+            if(cp.status!=='YIELDED')throw new Error('UNEXPECTED_CONTINUATION_STATUS');
+            if(prior===hash(readFileSync(join(dir,'continuation.json'))))throw new Error('NO_FRONTIER_PROGRESS');
+          }else outcome='PASS';
+        }
+      } catch(e) {atomicJson(join(dir,'blocked.json'),{exact_head:plan.exact_head,partition_key:task.id,status:'BLOCKED',reason:e.message,automatic_retry:false});outcome='BLOCKED';}
+      if(outcome!=='YIELDED'){pending.shift();cursor++;}
+      atomicJson(progressPath,{schema:'UCHIRIMO_LANE_V1',exact_head:plan.exact_head,plan_id:plan.plan_id,lane,cursor,current_partition_id:pending[0]?.id??null,remaining_partition_count:pending.length,status:'CHECKPOINTED',APP_INTEGRATION_READY:false});
     }
   } finally {unlinkSync(generated);}
-  atomicJson(progressPath,{schema:'UCHIRIMO_LANE_V1',exact_head:plan.exact_head,plan_id:plan.plan_id,lane,cursor,status:'CHECKPOINTED',APP_INTEGRATION_READY:false});
-  console.log(`DURABLE_WAVE_SAVED lane=${lane} cursor=${cursor}`);
+  atomicJson(progressPath,{schema:'UCHIRIMO_LANE_V1',exact_head:plan.exact_head,plan_id:plan.plan_id,lane,cursor,current_partition_id:pending[0]?.id??null,remaining_partition_count:pending.length,status:'CHECKPOINTED',APP_INTEGRATION_READY:false});
+  console.log(`DURABLE_WAVE_SAVED lane=${lane} cursor=${cursor} remaining=${pending.length} current=${pending[0]?.id??'NONE'}`);
 }
 export function aggregatePlan(plan,dirs){
   const byId=new Map(),errors=[],laneIds=new Set(),failures=new Map();
