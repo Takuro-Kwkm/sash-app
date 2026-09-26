@@ -4,6 +4,7 @@ import * as fs from 'node:fs';
 import {tmpdir} from 'node:os';
 import {join,dirname,basename} from 'node:path';
 import {createHash} from 'node:crypto';
+import {execFileSync} from 'node:child_process';
 import {checkpointSession,atomicJson,hash,readCheckpoint,instrumentV10} from './uchirimo-checkpoint-hook.mjs';
 import {SOURCE,buildInventory,aggregatePlan,validateResult,legacyHeldRoots,nextCursor,rebindCheckpointEnvelope} from './uchirimo-durable-recovery.mjs';
 const temp=()=>fs.mkdtempSync(join(tmpdir(),'uchirimo-durable-test-'));
@@ -33,9 +34,11 @@ test('duplicate roots, partitions and wrong parent are rejected',()=>{let i=inpu
 test('empty aggregate cannot claim closure or release',()=>{const p=buildInventory(inputFixture(),{head:H,semanticFingerprint:F}),a=aggregatePlan(p,[]);assert.equal(a.verified_partitions,0);assert.equal(a.pending_partitions,7364);assert.equal(a.nonbath_closure_proven,false);assert.equal(a.original_514_closure_proven,false);assert.equal(a.APP_INTEGRATION_READY,false);assert.equal(a.RELEASE_INPUT_GATE,'BLOCKED');assert.match(a.errors.join(),/MISSING_LANES/);});
 test('source drift refuses instrumentation',()=>assert.throws(()=>instrumentV10('not the original proof'),/BOUNDARY/));
 const proofPath='scripts/uchirimo-full-selector-proof.mjs';
-test('actual legacy V10 oracle equals repeatedly resumed traversal', {skip:!fs.existsSync(proofPath)}, async()=>{
+test('legacy V10 identity remains bound while current V11 equals repeatedly resumed traversal', {skip:!fs.existsSync(proofPath)}, async()=>{
   const original=fs.readFileSync(proofPath,'utf8');
-  const blob=createHash('sha1').update(`blob ${Buffer.byteLength(original)}\0`).update(original).digest('hex');assert.equal(blob,SOURCE.proof_blob);
+  const blob=createHash('sha1').update(`blob ${Buffer.byteLength(original)}\0`).update(original).digest('hex');
+  assert.notEqual(blob,SOURCE.proof_blob,'current V11 must not masquerade as legacy V10');
+  assert.equal(execFileSync('git',['rev-parse',`${SOURCE.head}:${proofPath}`],{encoding:'utf8'}).trim(),SOURCE.proof_blob,'legacy V10 blob identity must remain verifiable at source HEAD');
   const instrumented=instrumentV10(original),plain=temp(),durable=temp();
   const AsyncFunction=Object.getPrototypeOf(async function(){}).constructor;
   const base=['room_specification','window_type','glass_family'];
