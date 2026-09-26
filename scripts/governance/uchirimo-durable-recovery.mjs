@@ -103,30 +103,42 @@ async function prepare(out) {
   for(const [run,expectedHead] of [[SOURCE.run,SOURCE.head],[SOURCE.legacy_root2_run,SOURCE.legacy_root2_head]]){
     const before=api(`actions/runs/${run}`);
     if(before.head_sha!==expectedHead)throw new Error('LEGACY_RUN_IDENTITY_MISMATCH');
-    const artifacts=pages(`actions/runs/${run}/artifacts`,'artifacts');
-    for(const artifact of artifacts){
+    let artifacts=pages(`actions/runs/${run}/artifacts`,'artifacts');
+    const preserveArtifact=artifact=>{
       if(artifact.expired||!/^sha256:[a-f0-9]{64}$/.test(artifact.digest??''))throw new Error('SOURCE_ARTIFACT_UNAVAILABLE');
       const dest=join(out,'legacy',String(run),String(artifact.id));mkdirSync(dest,{recursive:true});
-      execFileSync('gh',['run','download',String(run),'--repo',process.env.GITHUB_REPOSITORY,'--name',artifact.name,'--dir',dest],{stdio:'inherit'});
-    }
-    const afterArtifacts=pages(`actions/runs/${run}/artifacts`,'artifacts');
+      if(!files(dest).length)execFileSync('gh',['run','download',String(run),'--repo',process.env.GITHUB_REPOSITORY,'--name',artifact.name,'--dir',dest],{stdio:'inherit'});
+    };
+    for(const artifact of artifacts)preserveArtifact(artifact);
+    const beforeCancelArtifacts=pages(`actions/runs/${run}/artifacts`,'artifacts');
     const snapshot=a=>a.map(x=>[x.id,x.digest]).sort((a,b)=>a[0]-b[0]);
-    if(hash(snapshot(artifacts))!==hash(snapshot(afterArtifacts)))throw new Error('LEGACY_ARTIFACT_SET_CHANGED_REPLAN_WITHOUT_CANCEL');
-    const jobs=pages(`actions/runs/${run}/jobs?filter=latest`,'jobs');
-    const active=jobs.filter(j=>j.status!=='completed' && (j.status==='in_progress'||j.started_at));
+    if(hash(snapshot(artifacts))!==hash(snapshot(beforeCancelArtifacts)))throw new Error('LEGACY_ARTIFACT_SET_CHANGED_REPLAN_WITHOUT_CANCEL');
+    let jobs=pages(`actions/runs/${run}/jobs?filter=latest`,'jobs');
+    const activeBeforeCancel=jobs.filter(j=>j.status!=='completed');
     let after=api(`actions/runs/${run}`),cancellation='NOT_REQUESTED';
-    // Only the old large queue may be drained, and only with all published
-    // evidence preserved and no running job. Never cancel active root 2.
-    if(run===SOURCE.run&&after.status!=='completed'&&active.length===0){
-      const recheck=pages(`actions/runs/${run}/jobs?filter=latest`,'jobs');
-      if(recheck.some(j=>j.status!=='completed'&&(j.status==='in_progress'||j.started_at)))throw new Error('LEGACY_BECAME_ACTIVE_NOT_CANCELLED');
+    // This obsolete broad run is now a runner-starvation source. All published
+    // artifacts are preserved before cancellation; in-flight nonterminal work
+    // is not PASS evidence and is intentionally replaced by durable checkpoints.
+    // Root2 is separate and is never cancelled here.
+    if(run===SOURCE.run&&after.status!=='completed'){
       execFileSync('gh',['api','--method','POST',`repos/${process.env.GITHUB_REPOSITORY}/actions/runs/${run}/cancel`],{stdio:'inherit'});
-      cancellation='QUEUED_ONLY_CANCEL_REQUESTED';
-      for(let n=0;n<6;n++){await new Promise(r=>setTimeout(r,2000));after=api(`actions/runs/${run}`);if(after.status==='completed')break;}
+      cancellation=activeBeforeCancel.length?'SUPERSEDED_NONTERMINAL_CANCEL_REQUESTED':'QUEUED_ONLY_CANCEL_REQUESTED';
+      for(let n=0;n<30;n++){await new Promise(r=>setTimeout(r,2000));after=api(`actions/runs/${run}`);if(after.status==='completed')break;}
+      if(after.status!=='completed')throw new Error('LEGACY_CANCEL_NOT_TERMINAL');
+      const finalArtifacts=pages(`actions/runs/${run}/artifacts`,'artifacts');
+      const originalById=new Map(artifacts.map(a=>[a.id,a.digest]));
+      for(const artifact of finalArtifacts){
+        const prior=originalById.get(artifact.id);
+        if(prior&&prior!==artifact.digest)throw new Error('LEGACY_ARTIFACT_DIGEST_CHANGED_AFTER_CANCEL');
+        preserveArtifact(artifact);
+      }
+      artifacts=finalArtifacts;
+      jobs=pages(`actions/runs/${run}/jobs?filter=latest`,'jobs');
+      if(jobs.some(j=>j.status!=='completed'))throw new Error('LEGACY_JOBS_NOT_TERMINAL_AFTER_CANCEL');
     }
     if(after.run_attempt!==before.run_attempt)throw new Error('LEGACY_RUN_ATTEMPT_CHANGED');
     if(run===SOURCE.run){ownershipJobs=jobs;ownershipStatus=after.status;}else holdRoot2=after.status!=='completed';
-    observations.push({run_id:run,source_exact_head:expectedHead,status:after.status,conclusion:after.conclusion,cancellation,active_job_ids:active.map(j=>j.id),job_ownership:jobs.filter(j=>String(j.name??'').startsWith('close-root')).map(j=>({id:j.id,name:j.name,status:j.status,conclusion:j.conclusion})),
+    observations.push({run_id:run,source_exact_head:expectedHead,status:after.status,conclusion:after.conclusion,cancellation,active_job_ids_before_cancel:activeBeforeCancel.map(j=>j.id),job_ownership:jobs.filter(j=>String(j.name??'').startsWith('close-root')).map(j=>({id:j.id,name:j.name,status:j.status,conclusion:j.conclusion})),
       artifacts:artifacts.map(a=>({id:a.id,name:a.name,digest:a.digest,extracted_files:files(join(out,'legacy',String(run),String(a.id))).map(p=>({path:p.slice(out.length+1),sha256:hash(readFileSync(p))}))}))});
   }
   const inputArtifact=observations[0].artifacts.find(x=>x.id===SOURCE.artifact);
