@@ -21,6 +21,7 @@ const POLICY_PATH='project-governance/evidence-dependency-policy.json';
 const LEGACY_V10_REFERENCE_HEAD='508021c64897039b2fa6e0391058ad88394536af';
 const LEGACY_V10_MODEL='UCHIRIMO_REACHABLE_DISCRETE_SELECTOR_EXHAUSTIVE_SHARD_V10';
 const V11_MODEL='UCHIRIMO_REACHABLE_DISCRETE_SELECTOR_EXHAUSTIVE_SYMBOLIC_SHARD_V11';
+const PINNED_SOURCE_RUN_IDS=Object.freeze([35518342017,35670279840]);
 
 if(!HEAD||!REPO||!RUN_ID||!TOKEN)throw new Error('UCHIRIMO_CARRY_FORWARD_ENV_MISSING');
 mkdirSync(OUT,{recursive:true});
@@ -220,6 +221,13 @@ for(const payload of [sameHeadRunsPayload,recentRunsPayload]){
     discoveredRuns.push(run);
   }
 }
+for(const id of PINNED_SOURCE_RUN_IDS){
+  if(discoveredRunIds.has(id))continue;
+  const run=await apiJson('/repos/'+REPO+'/actions/runs/'+id);
+  if(Number(run.id)!==id)throw new Error('UCHIRIMO_PINNED_SOURCE_IDENTITY_MISMATCH:'+id);
+  discoveredRunIds.add(id);
+  discoveredRuns.push(run);
+}
 // Resume is deliberately event-agnostic: pull_request, workflow_dispatch, and
 // prior attempts of the same workflow run may all contain compatible evidence.
 // A timeout must never erase already-PASS partition evidence.
@@ -358,6 +366,7 @@ const manifest={
   workflow_run_id:RUN_ID,
   workflow_run_attempt:RUN_ATTEMPT,
   candidate_run_limit:MAX_CANDIDATE_RUNS,
+  pinned_source_run_ids:[...PINNED_SOURCE_RUN_IDS],
   reused_partition_count:reused.length,
   rerun_partition_count:Number(plan.shard_count)-reused.length,
   heavy_detection_policy:'OBSERVED_TIMEOUT_OR_10_MINUTE_DURATION_FROM_COMPATIBLE_SOURCE_RUNS_V1',
