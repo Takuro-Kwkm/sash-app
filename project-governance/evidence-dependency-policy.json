@@ -9,7 +9,7 @@
   },
   "families": {
     "UCHIRIMO_SELECTOR": {
-      "proof_model_version": "UCHIRIMO_REACHABLE_DISCRETE_SELECTOR_EXHAUSTIVE_SHARDED_V10",
+      "proof_model_version": "UCHIRIMO_REACHABLE_DISCRETE_SELECTOR_EXHAUSTIVE_SHARDED_V10_V11",
       "runtime_snapshot": "project-governance/runtime-snapshot.json",
       "dependencies": [
         "src/catalog/runtime-master/uchirimo-tabular-v1-adapter.mjs",
@@ -24,7 +24,12 @@
         "project-governance/runtime-snapshot.json",
         "package.json",
         "package-lock.json"
-      ]
+      ],
+      "evidence_models": [
+        "UCHIRIMO_REACHABLE_DISCRETE_SELECTOR_EXHAUSTIVE_SHARD_V10",
+        "UCHIRIMO_REACHABLE_DISCRETE_SELECTOR_EXHAUSTIVE_SYMBOLIC_SHARD_V11"
+      ],
+      "cross_head_reuse_policy": "V10_REQUIRES_RUNTIME_BEHAVIOR_DEPENDENCIES_UNCHANGED_AND_APPROVED_V10_SEMANTIC_REFERENCE; V11_REQUIRES_RUNTIME_BEHAVIOR_AND_V11_EXECUTION_SEMANTICS_UNCHANGED"
     },
     "NONTW_EXACT": {
       "proof_model_version": "RUNTIME_UI_SYMBOLIC_FULL_COVERAGE_V1",
