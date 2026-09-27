@@ -4,27 +4,27 @@
   "observation": {
     "source": "GOOGLE_DRIVE_CONNECTOR",
     "initial_content_read_at": "2026-09-18T04:50:36.207Z",
-    "metadata_revalidated_at": "2026-09-22T20:34:09.000Z",
-    "note": "Current read-only Google Drive Connector revalidation after Canonical Registry metadata change. All 6 required authority files were re-read; only PRODUCT_MASTER_CANONICAL_REGISTRY_v2.0 modified identity changed. Product Master / Formal Runtime remain read-only. GitHub post-human execution still requires live Drive API read per drive-authority-policy.json."
+    "metadata_revalidated_at": "2026-09-27T12:46:16.627Z",
+    "note": "Re-read all six authority documents through the Google Drive connector. Adopt the 2026-09-27 formal revisions defining sales-estimate responsibility boundaries; preserve the existing 3956-parent Uchirimo QA population, Runtime and UI. Live Drive metadata verification remains mandatory."
   },
   "entries": [
     {
       "drive_file_id": "1fc_46QMEwnowrSFjs8T-4VCjbcew2MUvzgUJuWe57f0",
-      "name": "サッシ情報管理アプリ_Runtime UI統合共通仕様書_v1.7",
-      "version": "v1.7",
-      "modified_identity": "2026-09-19T06:57:40.018Z",
-      "current_revision_id": "ANLCKQmnBYvQJc5aw6VYaZNqQK_drKuXUAqS1snxxQZVvT_UV-nITaaUDy8QbniKF0zHtApchFLxzco-tcXPIxMVbkBTV2c38UNijwePei0",
-      "retrieved_at": "2026-09-22T20:34:09.000Z",
+      "name": "サッシ情報管理アプリ_Runtime UI統合共通仕様書_v1.8",
+      "version": "v1.8",
+      "modified_identity": "2026-09-27T11:50:41.836Z",
+      "current_revision_id": "ANLCKQmeogk4ZBCDzxcuOajkK1Jgh1EI-npg27B_GA1IhCV4roraXbUSwY1CcsClmQuraHVczd_Ks70reM3IHNWYWTG0-9blU148F3u9wI4",
+      "retrieved_at": "2026-09-27T12:46:16.627Z",
       "source": "GOOGLE_DRIVE_CONNECTOR",
       "content_read": true
     },
     {
       "drive_file_id": "1SwFc2XBRtNYaDaKiwC0QVPPJOvOvhvpEJlPTDUtq0Hw",
-      "name": "サッシ情報管理アプリ_3工程運用共通仕様書_v1.5",
-      "version": "v1.5",
-      "modified_identity": "2026-09-18T15:56:36.553Z",
-      "current_revision_id": "11",
-      "retrieved_at": "2026-09-22T20:34:09.000Z",
+      "name": "サッシ情報管理アプリ_3工程運用共通仕様書_v1.6",
+      "version": "v1.6",
+      "modified_identity": "2026-09-27T11:44:42.806Z",
+      "current_revision_id": "ANLCKQmiWgLV0RdyTqrBhiUf5paMhF55XatbFtlrW7GomrdDl-WK14ACeTF1mLQC0HWs-tjge9KkEJhPHdv4rVQH2whCYidzpjEQOk8Lbxw",
+      "retrieved_at": "2026-09-27T12:46:16.627Z",
       "source": "GOOGLE_DRIVE_CONNECTOR",
       "content_read": true
     },
@@ -34,7 +34,7 @@
       "version": "v1.8",
       "modified_identity": "2026-09-18T15:56:37.761Z",
       "current_revision_id": "0B1PsqngSohhlWDU0RlVlVGdySGtCZFZRamJGQzl1NDZpbHA4PQ",
-      "retrieved_at": "2026-09-22T20:34:09.000Z",
+      "retrieved_at": "2026-09-27T12:46:16.627Z",
       "source": "GOOGLE_DRIVE_CONNECTOR",
       "content_read": true
     },
@@ -44,27 +44,27 @@
       "version": "v2.0",
       "modified_identity": "2026-09-22T10:39:01.941Z",
       "current_revision_id": "160",
-      "retrieved_at": "2026-09-22T20:34:09.000Z",
+      "retrieved_at": "2026-09-27T12:46:16.627Z",
       "source": "GOOGLE_DRIVE_CONNECTOR",
       "content_read": true
     },
     {
       "drive_file_id": "1Gfoyhy9xTZxJVLl6EnhFCvevZd4VPElACZiSko8OGUw",
-      "name": "サッシ情報管理アプリ_Global Window Selection Flow全面共通化・Full Coverage QA改修仕様書_v1.0",
-      "version": "v1.0",
-      "modified_identity": "2026-09-19T06:57:25.836Z",
-      "current_revision_id": "ANLCKQmapd3UhLHK0at1EbxpzNAktPK8uXt6PM2PDx2ih77ydudkhxgrhynDqXBww9aktCRWxQAZ-eKn9q4gTpjxC7KCvFFnKvRscv2H0ME",
-      "retrieved_at": "2026-09-22T20:34:09.000Z",
+      "name": "サッシ情報管理アプリ_Global Window Selection Flow全面共通化・Full Coverage QA改修仕様書_v1.1",
+      "version": "v1.1",
+      "modified_identity": "2026-09-27T11:44:48.177Z",
+      "current_revision_id": "ANLCKQlK-FKvpiXT2iGV-1AeufWqqLJMfv-cKJD0krMxm6bsMZWhi3l8NiC6ltJ8sO8UmW7TurZSDJEXqj5RlBSPS0L8jAVBa0xHbAdC1Mk",
+      "retrieved_at": "2026-09-27T12:46:16.627Z",
       "source": "GOOGLE_DRIVE_CONNECTOR",
       "content_read": true
     },
     {
       "drive_file_id": "1MfixkbV1cZ__DtBknEKsix_nnrXQqjc-LZtXUHwJv_A",
-      "name": "サッシ商品マスター共通仕様書_v0.2",
-      "version": "v0.2",
-      "modified_identity": "2026-09-18T15:56:41.812Z",
-      "current_revision_id": "19",
-      "retrieved_at": "2026-09-22T20:34:09.000Z",
+      "name": "サッシ商品マスター共通仕様書_v0.3",
+      "version": "v0.3",
+      "modified_identity": "2026-09-27T11:46:20.062Z",
+      "current_revision_id": "ANLCKQnkw2N1mObuRNv7ubiNZroDI90vH6jKRGeXmGgVhwkutHsDZLbltFnE4tqH0OsoUZcrTFdXAydfTq2oXMimTuzNk8HNCZk-uTE9MWI",
+      "retrieved_at": "2026-09-27T12:46:16.627Z",
       "source": "GOOGLE_DRIVE_CONNECTOR",
       "content_read": true
     }

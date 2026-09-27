@@ -204,6 +204,11 @@ jobs:
       - name: Uchirimo cumulative controller isolation tests
         run: node scripts/governance/uchirimo-v11-recovery-controller.test.mjs
 
+      - name: Uchirimo real-runtime split audit and synthetic finalization regression
+        if: ${{ github.event_name != 'workflow_dispatch' || inputs.uchirimo_v12_generation == '0' }}
+        shell: bash
+        run: node scripts/governance/uchirimo-v12-recovery-integration.test.mjs | tee artifacts/governance/uchirimo-v12-integration-tests.log
+
       - name: frame_angle canonical contract tests
         run: node --test test/76-frame-angle-global-flow.test.mjs
 

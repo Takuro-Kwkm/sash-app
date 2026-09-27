@@ -1,6 +1,7 @@
 import { createHash } from 'node:crypto';
 import { appendFileSync, mkdirSync, readFileSync, readdirSync, statSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
+import { pathToFileURL } from 'node:url';
 import {
   CONTROLLER_CONTRACT_VERSION,
   MAX_AUTOMATIC_GENERATIONS,
@@ -48,7 +49,6 @@ const HEAVY_TIMEOUT_MS=Number(process.env.UCHIRIMO_SELECTOR_HEAVY_CHILD_TIMEOUT_
 const EXECUTION_INPUT=String(process.env.UCHIRIMO_V12_EXECUTION_INPUT??'artifacts/uchirimo-v12-execution');
 const PLAN_SUMMARY_INPUT=String(process.env.UCHIRIMO_V12_PLAN_SUMMARY_INPUT??'artifacts/uchirimo-v12-plans');
 
-mkdirSync(OUT,{recursive:true});
 
 const readJson=(path)=>JSON.parse(readFileSync(path,'utf8'));
 const writeJson=(path,value)=>writeFileSync(path,JSON.stringify(value,null,2)+'\n');
@@ -169,6 +169,8 @@ async function init(){
     recovery_tree_root_hash:recoveryTreeRootHash,
     prior_state_sha256:null
   });
+  const preflight=await validateExecutionFrontier({plan,units,certificates,parents:parentStatuses,state,laneCount:LANE_COUNT});
+  writeJson(join(OUT,'preflight-report.json'),preflight);
   writeJson(STATE_PATH,state);
   writeJson(UNITS_PATH,{schema_version:'1.0.0',controller_contract_version:CONTROLLER_CONTRACT_VERSION,exact_head:String(plan.exact_head),units});
   writeJson(CERTIFICATES_PATH,{schema_version:'1.0.0',controller_contract_version:CONTROLLER_CONTRACT_VERSION,exact_head:String(plan.exact_head),certificates});
@@ -199,6 +201,7 @@ async function init(){
     status:unsplittable?'BLOCKED_UNSPLITTABLE':'PASS'
   });
   if(unsplittable)throw new Error('BLOCKED_UNSPLITTABLE:'+unsplittable);
+  if(preflight.status!=='PASS')throw new Error('UCHIRIMO_V12_PREFLIGHT_BLOCKED:'+preflight.errors.join(','));
   console.log('UCHIRIMO_V12_CONTROLLER_INIT=PASS parents=3956 closed='+reused.size+' open='+(3956-reused.size)+' normal='+pendingNormal+' heavy='+pendingHeavy+' parent_population_sha256='+populationHash);
 }
 
@@ -327,7 +330,7 @@ function baseSeed(parent){
   return seed;
 }
 
-async function resolveUnitSelection(parent,unit){
+export async function resolveUnitSelection(parent,unit){
   const seed=baseSeed(parent);
   let result=await resolveRuntimeAppProduct('SER-YKKAP-UCHIRIMO',seed);
   for(const [key,value] of Object.entries(seed))if(!same(result.selection?.[key],value))throw new Error('UCHIRIMO_V12_SPLIT_SEED_REJECTED:'+unit.recovery_unit_id+':'+key);
@@ -344,7 +347,7 @@ async function resolveUnitSelection(parent,unit){
   return {seed,result,constraints};
 }
 
-async function splitUnit({parent,unit,units,certificates,exactHead,runtimeManifestSha,executionFingerprint}){
+export async function splitUnit({parent,unit,units,certificates,exactHead,runtimeManifestSha,executionFingerprint}){
   const unitId=String(unit.recovery_unit_id);
   if(Number(unit.recovery_depth)>=MAX_RECOVERY_DEPTH)return {unit:{...unit,state:'BLOCKED_RECOVERY_DEPTH',next_action:'BLOCKED'},child_count:0};
   const resolved=await resolveUnitSelection(parent,unit);
@@ -382,6 +385,44 @@ async function splitUnit({parent,unit,units,certificates,exactHead,runtimeManife
   }
   certificates[unitId]=certificate;
   return {unit:{...unit,state:'PENDING_CHILDREN',next_action:'WAIT_CHILDREN',split_certificate_sha256:certificate.certificate_sha256},child_count:certificate.children.length};
+}
+
+export async function validateExecutionFrontier({plan,units,certificates,parents,state,laneCount=16}){
+  const errors=[];
+  const byKey=new Map(plan.partitions.map(row=>[String(row.partition_key),row]));
+  let checkedChildren=0;
+  for(const [unitId,cert] of Object.entries(certificates)){
+    validateSplitCertificate(cert);
+    const unit=units[unitId],parent=byKey.get(cert.parent_partition_key);
+    if(!unit||!parent)throw new Error('RECOVERY_PREFLIGHT_PARENT_MISSING');
+    if(cert.exact_head!==state.exact_head||cert.runtime_manifest_sha256!==state.runtime_manifest_sha256||cert.proof_execution_fingerprint!==state.execution_fingerprint)throw new Error('RECOVERY_PREFLIGHT_CERTIFICATE_IDENTITY_MISMATCH');
+    const resolved=await resolveUnitSelection(parent,unit);
+    const axis=chooseNextSplitAxis(resolved.result.fields,[...Object.keys(resolved.seed),...resolved.constraints.map(row=>row.field_key)]);
+    if(!axis||axis.field_key!==cert.split_field_key||sha256(axis.values)!==cert.split_field_domain_sha256||sha256(resolved.result.selection??{})!==cert.parent_selection_sha256)throw new Error('RECOVERY_PREFLIGHT_DOMAIN_MISMATCH');
+    for(const child of cert.children){
+      const actual=units[child.recovery_unit_id];
+      if(!actual||actual.parent_recovery_unit_id!==unitId||actual.decision_constraints_sha256!==child.decision_constraints_sha256)throw new Error('RECOVERY_PREFLIGHT_CHILD_MISMATCH');
+      await resolveUnitSelection(parent,actual);
+      checkedChildren+=1;
+    }
+  }
+  const eligible=Object.values(units).filter(unit=>['PENDING_NORMAL','PENDING_HEAVY'].includes(unit.state));
+  for(const unit of eligible){
+    assertComputeSchedule(unit,units);
+    assertKnownHeavyRootNotScheduled(unit);
+    if(parents[unit.parent_partition_key]?.status!=='OPEN')throw new Error('RECOVERY_PREFLIGHT_PASS_PARENT_REOPEN');
+    if(unit.recovery_unit_id!==recoveryUnitId(unit.parent_partition_key,unit.decision_constraints)||unit.decision_constraints_sha256!==sha256(canonicalConstraints(unit.decision_constraints)))throw new Error('RECOVERY_PREFLIGHT_UNIT_IDENTITY_MISMATCH');
+  }
+  const lanes=Array.from({length:laneCount},(_,lane)=>{
+    const rows=eligible.filter(unit=>Number(unit.parent_shard_index)%laneCount===lane);
+    let remaining=rows,batches=0,generations=0,maximumBatchTimeoutMs=0;
+    while(remaining.length){const wave=scheduleLane(remaining);batches+=wave.scheduled.length;generations+=1;for(const batch of wave.scheduled)maximumBatchTimeoutMs=Math.max(maximumBatchTimeoutMs,batch.units.length*(batch.execution_class==='HEAVY'?HEAVY_TIMEOUT_MS:NORMAL_TIMEOUT_MS));remaining=wave.deferred.flatMap(batch=>batch.units);}
+    return {lane,unit_count:rows.length,batch_count:batches,minimum_generations_for_current_frontier:generations,timeout_budget_minutes_at_two_parallel_workers:Math.ceil(batches/2)*maximumBatchTimeoutMs/60000};
+  });
+  const minimumGenerations=Math.max(0,...lanes.map(row=>row.minimum_generations_for_current_frontier));
+  const availableGenerations=MAX_AUTOMATIC_GENERATIONS-Number(state.generation)+1;
+  if(minimumGenerations>availableGenerations)errors.push('BLOCKED_GENERATION_CAPACITY');
+  return {schema_version:'1.0.0',exact_head:state.exact_head,runtime_manifest_sha256:state.runtime_manifest_sha256,canonical_parent_count:plan.partitions.length,checked_split_certificate_count:Object.keys(certificates).length,checked_child_selection_count:checkedChildren,eligible_unit_count:eligible.length,known_heavy_root_execution_count:0,pass_parent_reopen_count:0,minimum_generations_for_current_frontier:minimumGenerations,available_generations:availableGenerations,lanes,compute_completion:'UNVERIFIED_UNTIL_EXECUTION',errors,status:errors.length?'BLOCKED':'PASS'};
 }
 
 function reportIndex(dir){
@@ -424,7 +465,8 @@ function uniqueJsonByBase(index,base,{optional=false}={}){
     if(optional)return null;
     throw new Error('UCHIRIMO_V12_EVIDENCE_FILE_MISSING:'+base);
   }
-  const values=paths.map((path)=>({path,data:readJson(path),hash:sha256(readJson(path))}));
+  // This hash is handed to the finalizer, which verifies the original artifact bytes.
+  const values=paths.map((path)=>({path,data:readJson(path),hash:rawFileSha256(path)}));
   const hashes=new Set(values.map((row)=>row.hash));
   if(hashes.size!==1)throw new Error('UCHIRIMO_V12_EVIDENCE_FILE_CONFLICT:'+base);
   return values[0];
@@ -661,8 +703,11 @@ function resumeGeneration(){
   console.log('UCHIRIMO_V12_CONTROLLER_RESUME=PASS generation='+GENERATION+' source_generation='+priorState.generation+' open='+priorState.open_parent_count);
 }
 
+if(process.argv[1]&&import.meta.url===pathToFileURL(process.argv[1]).href){
+mkdirSync(OUT,{recursive:true});
 if(MODE==='init')await init();
 else if(MODE==='plan-lane')planLane();
 else if(MODE==='advance')await advance();
 else if(MODE==='resume-generation')resumeGeneration();
 else throw new Error('UCHIRIMO_V12_CONTROLLER_MODE_UNSUPPORTED:'+MODE);
+}
