@@ -213,6 +213,7 @@ function planLane(){
     execution_class:batch.execution_class.toLowerCase(),
     child_timeout_ms:batch.execution_class==='HEAVY'?HEAVY_TIMEOUT_MS:NORMAL_TIMEOUT_MS,
     batch_id:'v12-g'+String(state.generation).padStart(2,'0')+'-lane-'+String(LANE_INDEX).padStart(2,'0')+'-'+String(index).padStart(3,'0'),
+    artifact_identity:'uchirimo-v12-batch-v12-g'+String(state.generation).padStart(2,'0')+'-lane-'+String(LANE_INDEX).padStart(2,'0')+'-'+String(index).padStart(3,'0')+'-'+String(plan.exact_head),
     batch_json:JSON.stringify(batch.units.map(toItem))
   }));
   const matrix={include:matrixEntries.length?matrixEntries:[{skip:true,execution_class:'reused',child_timeout_ms:NORMAL_TIMEOUT_MS,batch_id:'__V12_EMPTY_LANE__',batch_json:'[]'}]};
@@ -373,7 +374,9 @@ function executionResults(index){
     if(hashes.size!==1)throw new Error('UCHIRIMO_V12_BATCH_REPORT_CONFLICT:'+base);
     const report=parsed[0];
     if(String(report.exact_head??'')!==HEAD)throw new Error('UCHIRIMO_V12_BATCH_HEAD_MISMATCH:'+base);
-    for(const result of report.results??[])rows.push({...result,batch_id:String(report.batch_id??''),batch_report:base});
+    const artifactIdentity=String(report.evidence_artifact_identity??'');
+    if(!artifactIdentity)throw new Error('UCHIRIMO_V12_BATCH_ARTIFACT_IDENTITY_MISSING:'+base);
+    for(const result of report.results??[])rows.push({...result,batch_id:String(report.batch_id??''),batch_report:base,evidence_artifact_identity:artifactIdentity});
   }
   const byUnit=new Map();
   for(const row of rows){
@@ -441,7 +444,7 @@ async function advance(){
         : recoveryEvidenceNames(unit).report;
       const proofRow=uniqueJsonByBase(index,proofBase);
       const proof=validateProofReport(unit,parent,proofRow.data,files);
-      transitioned={...transitioned,proof_report:proof,proof_report_sha256:proofRow.hash,proof_report_file:proofBase,evidence_batch_id:String(result.batch_id??''),evidence_batch_report:String(result.batch_report??'')};
+      transitioned={...transitioned,proof_report:proof,proof_report_sha256:proofRow.hash,proof_report_file:proofBase,evidence_batch_id:String(result.batch_id??''),evidence_batch_report:String(result.batch_report??''),evidence_artifact_identity:String(result.evidence_artifact_identity??''),evidence_source_run_id:Number(process.env.GITHUB_RUN_ID??0)||null,evidence_source_run_attempt:Number(process.env.GITHUB_RUN_ATTEMPT??1)};
     }
     if(transitioned.state==='SPLIT_REQUIRED'){
       const parent=parentByKey.get(String(unit.parent_partition_key));
