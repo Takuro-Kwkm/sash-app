@@ -271,6 +271,14 @@ export function synthesizeParentClosure({
   leafEvidence.sort((a,b)=>a.recovery_unit_id.localeCompare(b.recovery_unit_id));
   if(leafEvidence.some((row)=>!row.case_artifact||!/^[0-9a-f]{64}$/.test(row.case_artifact_sha256)))throw new Error('RECOVERY_PARENT_LEAF_CASE_IDENTITY_INVALID:'+parentKey);
   const treeHash=recoveryTreeHash({root_unit_id,units,certificates});
+  const parentSeed={
+    room_specification:String(parent.room_specification??''),
+    window_type:String(parent.window_type??''),
+    glass_family:String(parent.glass_family??'')
+  };
+  if(String(parent.sash_configuration??'__UNSET__')!=='__UNSET__')parentSeed.sash_configuration=String(parent.sash_configuration);
+  if(String(parent.size_class??'__UNSET__')!=='__UNSET__')parentSeed.size_class=String(parent.size_class);
+  Object.assign(parentSeed,JSON.parse(String(parent.partition_seed_json??'{}')));
   return {
     schema_version:'1.0.0',
     exact_head:[...heads][0],
@@ -281,6 +289,7 @@ export function synthesizeParentClosure({
     node_id:String(parent.node_id??''),
     partition_key:parentKey,
     partition_seed:stable(JSON.parse(String(parent.partition_seed_json??'{}'))),
+    seed:stable(parentSeed),
     glass_family:String(parent.glass_family??''),
     window_type:String(parent.window_type??''),
     runtime_manifest_sha256:[...runtimes][0],
