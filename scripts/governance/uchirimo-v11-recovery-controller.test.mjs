@@ -9,7 +9,8 @@ import {
   validateSplitCertificate,
   validateRecoveryTree,
   scheduleLane,
-  buildControllerState
+  buildControllerState,
+  sha256
 } from './uchirimo-v11-recovery-controller.mjs';
 
 const parent='UCH-X|insulating_glass|a="1"';
@@ -61,7 +62,24 @@ assert.equal(cert.controller_contract_version,CONTROLLER_CONTRACT_VERSION);
 assert.equal(validateSplitCertificate(cert),true);
 const bad=structuredClone(cert);
 bad.children.pop();
-assert.throws(()=>validateSplitCertificate(bad),/CHILD_COUNT_MISMATCH/);
+assert.throws(()=>validateSplitCertificate(bad),/CERTIFICATE_HASH_MISMATCH/);
+const structurallyBad=structuredClone(cert);
+structurallyBad.children.pop();
+const structurallyBadBody={...structurallyBad};
+delete structurallyBadBody.certificate_sha256;
+structurallyBad.certificate_sha256=sha256(structurallyBadBody);
+assert.throws(()=>validateSplitCertificate(structurallyBad),/CHILD_COUNT_MISMATCH/);
+assert.throws(()=>buildSplitCertificate({
+  exact_head:'a'.repeat(40),
+  runtime_manifest_sha256:'r',
+  proof_execution_fingerprint:'p',
+  parent_partition_key:parent,
+  parent_recovery_unit_id:'wrong',
+  parent_constraints:[],
+  split_field_key:'color',
+  domain_values:['A','B'],
+  parent_selection_sha256:'s'
+}),/PARENT_UNIT_ID_MISMATCH/);
 
 const units={
   [rootId]:{state:'PENDING_CHILDREN'},
@@ -108,5 +126,28 @@ const state=buildControllerState({
   blocked_counts:{}
 });
 assert.equal(state.next_action,'EXECUTE');
+
+const noProgress=buildControllerState({
+  exact_head:'b'.repeat(40),
+  generation:3,
+  parent_population_count:3956,
+  parent_population_sha256:'pop',
+  runtime_manifest_sha256:'run',
+  execution_fingerprint:'exec',
+  planner_fingerprint:'plan',
+  closed_parent_count:3900,
+  open_parent_count:56,
+  pass_unit_count:4000,
+  pending_normal_count:10,
+  pending_heavy_count:20,
+  split_required_count:1,
+  deferred_count:25,
+  blocked_counts:{},
+  prior_state_sha256:state.current_state_sha256
+});
+assert.equal(noProgress.next_action,'BLOCKED');
+assert.equal(noProgress.blocked_counts.BLOCKED_NO_PROGRESS,1);
+
+assert.throws(()=>scheduleLane([{parent_shard_index:0,recovery_depth:0,recovery_unit_id:'x',execution_class:'UNKNOWN'}]),/EXECUTION_CLASS_INVALID/);
 
 console.log('UCHIRIMO_V12_DETERMINISTIC_CONTROLLER_TEST=PASS');
