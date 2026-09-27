@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import {
   CONTROLLER_CONTRACT_VERSION,
   recoveryUnitId,
+  recoveryEvidenceNames,
   classifyExecutionResult,
   transitionUnit,
   chooseNextSplitAxis,
@@ -17,6 +18,12 @@ const parent='UCH-X|insulating_glass|a="1"';
 const rootId=recoveryUnitId(parent,[]);
 assert.equal(rootId,recoveryUnitId(parent,[]));
 assert.notEqual(rootId,recoveryUnitId(parent,[{field_key:'x',decision:{kind:'VALUE',value:'A'}}]));
+const rootNames=recoveryEvidenceNames({parent_shard_index:7,recovery_unit_id:rootId});
+const childId=recoveryUnitId(parent,[{field_key:'x',decision:{kind:'VALUE',value:'A'}}]);
+const childNames=recoveryEvidenceNames({parent_shard_index:7,recovery_unit_id:childId});
+assert.notEqual(rootNames.report,childNames.report);
+assert.match(rootNames.report,/^unit-7-[0-9a-f]{64}-report\.json$/);
+assert.throws(()=>recoveryEvidenceNames({parent_shard_index:7,recovery_unit_id:'bad'}),/UNIT_ID_INVALID/);
 
 assert.equal(classifyExecutionResult({status:'PASS'}),'PASS');
 assert.equal(classifyExecutionResult({status:'FAIL',timed_out:true}),'COMPUTE_RECOVERABLE');
