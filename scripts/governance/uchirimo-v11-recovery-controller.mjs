@@ -36,6 +36,22 @@ export function recoveryUnitId(parentPartitionKey,constraints=[]){
   return sha256(key+'\0'+stableJson(canonicalConstraints(constraints)));
 }
 
+export function recoveryEvidenceNames({parent_shard_index,recovery_unit_id}){
+  const shard=Number(parent_shard_index);
+  const unitId=String(recovery_unit_id??'');
+  if(!Number.isInteger(shard)||shard<0)throw new Error('RECOVERY_EVIDENCE_PARENT_SHARD_INVALID');
+  if(!/^[0-9a-f]{64}$/.test(unitId))throw new Error('RECOVERY_EVIDENCE_UNIT_ID_INVALID');
+  const prefix='unit-'+shard+'-'+unitId;
+  return {
+    prefix,
+    start:prefix+'-start.json',
+    progress:prefix+'-progress.json',
+    failure:prefix+'-failure.json',
+    report:prefix+'-report.json',
+    terminal_digests:prefix+'-terminal-digests.jsonl'
+  };
+}
+
 export function classifyExecutionResult(result={}){
   if(result.status==='PASS'&&result.timed_out!==true)return 'PASS';
   const code=String(result.code??'');
