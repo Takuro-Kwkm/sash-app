@@ -76,6 +76,7 @@ jobs:
           UCHIRIMO_SELECTOR_CARRY_FORWARD_OUT: artifacts/uchirimo-selector-proof-carry-forward
         run: node scripts/governance/uchirimo-partition-carry-forward.mjs
       - name: Upload generation-zero carry-forward evidence
+        id: carry-upload
         if: ${{ inputs.generation == 0 }}
         uses: actions/upload-artifact@v4
         with:
@@ -90,6 +91,8 @@ jobs:
           UCHIRIMO_V12_PARENT_PLAN: artifacts/uchirimo-v12-parent-plan/all-partitions.json
           UCHIRIMO_V12_CARRY_MANIFEST: artifacts/uchirimo-selector-proof-carry-forward/manifest.json
           UCHIRIMO_V12_CARRY_ARTIFACT_IDENTITY: ${{ env.CARRY_ARTIFACT }}
+          UCHIRIMO_V12_CARRY_ARTIFACT_ID: ${{ steps.carry-upload.outputs.artifact-id }}
+          UCHIRIMO_V12_CARRY_ARTIFACT_DIGEST: ${{ steps.carry-upload.outputs.artifact-digest }}
           UCHIRIMO_V12_CONTROLLER_OUT: artifacts/uchirimo-v12-controller
         run: node scripts/governance/uchirimo-v11-recovery-controller-runner.mjs
       - name: Download prior controller state
@@ -1725,13 +1728,64 @@ jobs:
         with:
           name: uchirimo-v12-controller-state-${{ env.HEAD_SHA }}-g${{ env.GEN }}
           path: artifacts/uchirimo-v12-controller-state
+      - name: Resolve generation-zero carry source
+        id: carry-source
+        shell: bash
+        run: |
+          node --input-type=module <<'NODE'
+          import {appendFileSync,readFileSync} from 'node:fs';
+          const parents=JSON.parse(readFileSync('artifacts/uchirimo-v12-controller-state/parent-status.json','utf8')).parents;
+          const row=Object.values(parents).find((item)=>item.status==='ROOT_PASS_CARRY_FORWARD');
+          if(!row){
+            appendFileSync(process.env.GITHUB_OUTPUT,'has_carry=false\n');
+            process.exit(0);
+          }
+          if(!row.current_carry_forward_run_id||!row.current_carry_forward_artifact_identity)throw new Error('UCHIRIMO_V12_CARRY_SOURCE_IDENTITY_MISSING');
+          appendFileSync(process.env.GITHUB_OUTPUT,'has_carry=true\n');
+          appendFileSync(process.env.GITHUB_OUTPUT,'run_id='+String(row.current_carry_forward_run_id)+'\n');
+          appendFileSync(process.env.GITHUB_OUTPUT,'artifact_identity='+String(row.current_carry_forward_artifact_identity)+'\n');
+          appendFileSync(process.env.GITHUB_OUTPUT,'artifact_id='+String(row.current_carry_forward_artifact_id??'')+'\n');
+          appendFileSync(process.env.GITHUB_OUTPUT,'artifact_digest='+String(row.current_carry_forward_artifact_digest??'')+'\n');
+          NODE
+      - name: Download generation-zero carry payload once
+        if: ${{ steps.carry-source.outputs.has_carry == 'true' }}
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ steps.carry-source.outputs.artifact_identity }}
+          path: artifacts/uchirimo-v12-carry-forward
+          run-id: ${{ steps.carry-source.outputs.run_id }}
+          github-token: ${{ github.token }}
+      - name: Verify carry artifact metadata
+        if: ${{ steps.carry-source.outputs.has_carry == 'true' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EXPECTED_ID: ${{ steps.carry-source.outputs.artifact_id }}
+          EXPECTED_DIGEST: ${{ steps.carry-source.outputs.artifact_digest }}
+          SOURCE_RUN_ID: ${{ steps.carry-source.outputs.run_id }}
+          SOURCE_NAME: ${{ steps.carry-source.outputs.artifact_identity }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          const headers={Authorization:'Bearer '+process.env.GH_TOKEN,Accept:'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'};
+          const url=(process.env.GITHUB_API_URL||'https://api.github.com')+'/repos/'+process.env.GITHUB_REPOSITORY+'/actions/runs/'+process.env.SOURCE_RUN_ID+'/artifacts?per_page=100';
+          const response=await fetch(url,{headers});
+          if(!response.ok)throw new Error('UCHIRIMO_V12_CARRY_METADATA_HTTP_'+response.status);
+          const payload=await response.json();
+          const rows=(payload.artifacts??[]).filter((row)=>String(row.name)===process.env.SOURCE_NAME&&!row.expired);
+          if(rows.length!==1)throw new Error('UCHIRIMO_V12_CARRY_METADATA_COUNT:'+rows.length);
+          const row=rows[0];
+          if(process.env.EXPECTED_ID&&String(row.id)!==process.env.EXPECTED_ID)throw new Error('UCHIRIMO_V12_CARRY_ARTIFACT_ID_MISMATCH');
+          if(process.env.EXPECTED_DIGEST&&row.digest&&String(row.digest)!==process.env.EXPECTED_DIGEST)throw new Error('UCHIRIMO_V12_CARRY_ARTIFACT_DIGEST_MISMATCH');
+          console.log('UCHIRIMO_V12_CARRY_ARTIFACT_METADATA=PASS id='+row.id);
+          NODE
       - name: Materialize canonical parent evidence
         env:
           UCHIRIMO_V12_PARENT_PLAN: artifacts/uchirimo-v12-parent-plan/all-partitions.json
           UCHIRIMO_V12_STATE: artifacts/uchirimo-v12-controller-state/controller-state.json
           UCHIRIMO_V12_UNITS: artifacts/uchirimo-v12-controller-state/recovery-units.json
           UCHIRIMO_V12_PARENT_STATUS: artifacts/uchirimo-v12-controller-state/parent-status.json
-          UCHIRIMO_V12_CARRY_FORWARD_DIR: artifacts/uchirimo-v12-empty-carry
+          UCHIRIMO_V12_CARRY_FORWARD_DIR: artifacts/uchirimo-v12-carry-forward
           UCHIRIMO_V12_FINALIZED_OUT: artifacts/uchirimo-v12-finalized
         run: node scripts/governance/uchirimo-v11-recovery-finalizer.mjs
       - name: Aggregate canonical 3956 parents
