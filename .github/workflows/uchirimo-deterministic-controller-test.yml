@@ -42,6 +42,7 @@ jobs:
           node --check scripts/governance/uchirimo-v11-recovery-controller.test.mjs
           node --check scripts/governance/uchirimo-selector-batch-runner.mjs
           node --check scripts/governance/uchirimo-v11-recovery-controller-runner.mjs
+          node --check scripts/governance/uchirimo-v11-recovery-finalizer.mjs
           node scripts/governance/uchirimo-v11-recovery-controller.test.mjs
 
       - name: Build frozen canonical parent plan
@@ -410,5 +411,111 @@ jobs:
           if(parent?.status!=='RECOVERY_TREE_PASS'||parent?.closure_type!=='RECOVERY_TREE_PASS')throw new Error('UCHIRIMO_V12_FULL_CYCLE_PARENT_STATUS_INVALID:'+String(parent?.status));
           if(!parent.synthesized_parent_report||parent.synthesized_parent_report.status!=='PASS')throw new Error('UCHIRIMO_V12_FULL_CYCLE_SYNTHESIZED_REPORT_MISSING');
           console.log('UCHIRIMO_V12_FULL_RECOVERY_CYCLE=PASS closed='+state.closed_parent_count+' next='+state.next_action+' leaves='+parent.synthesized_parent_report.recovery_leaf_count);
+          NODE
+
+      - name: Exercise final materialization and legacy aggregate compatibility
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf artifacts/uchirimo-v12-finalizer-carry artifacts/uchirimo-v12-finalizer-local artifacts/uchirimo-v12-finalized artifacts/uchirimo-v12-final-aggregate
+          mkdir -p artifacts/uchirimo-v12-finalizer-carry artifacts/uchirimo-v12-finalizer-local/fixture-child-artifact artifacts/uchirimo-v12-finalized artifacts/uchirimo-v12-final-aggregate
+
+          node --input-type=module <<'NODE'
+          import {createHash} from 'node:crypto';
+          import {copyFileSync,readFileSync,writeFileSync,readdirSync} from 'node:fs';
+          const sha=(bytes)=>createHash('sha256').update(bytes).digest('hex');
+          const stable=(v)=>Array.isArray(v)?v.map(stable):(!v||typeof v!=='object'?v:Object.fromEntries(Object.entries(v).sort(([a],[b])=>a.localeCompare(b)).map(([k,x])=>[k,stable(x)])));
+          const plan=JSON.parse(readFileSync('artifacts/uchirimo-v12-parent-plan/all-partitions.json','utf8'));
+          const state=JSON.parse(readFileSync('artifacts/uchirimo-v12-gen1-advance/controller-state.json','utf8'));
+          const parents=JSON.parse(readFileSync('artifacts/uchirimo-v12-gen1-advance/parent-status.json','utf8')).parents;
+          const seedFor=(row)=>{
+            const seed={room_specification:row.room_specification,window_type:row.window_type,glass_family:row.glass_family};
+            if(row.sash_configuration!=='__UNSET__')seed.sash_configuration=row.sash_configuration;
+            if(row.size_class!=='__UNSET__')seed.size_class=row.size_class;
+            Object.assign(seed,JSON.parse(row.partition_seed_json??'{}'));
+            return stable(seed);
+          };
+          for(const row of plan.partitions){
+            const status=parents[row.partition_key];
+            if(status?.status!=='ROOT_PASS_CARRY_FORWARD')continue;
+            const caseName='shard-'+row.shard+'-terminal-digests.jsonl';
+            const caseBytes=Buffer.from(JSON.stringify({case_id:'carry-'+row.shard,terminal_sha256:sha(Buffer.from(row.partition_key))})+'\n');
+            const caseSha=sha(caseBytes);
+            writeFileSync('artifacts/uchirimo-v12-finalizer-carry/'+caseName,caseBytes);
+            const flowSha=sha(Buffer.from('flow-'+row.partition_key));
+            const report={
+              schema_version:'2.0.0',
+              exact_head:process.env.HEAD_SHA,
+              task_classification:'NON-PRODUCT-MASTER',
+              product_master_mutation:0,
+              proof_model:'UCHIRIMO_REACHABLE_DISCRETE_SELECTOR_EXHAUSTIVE_SYMBOLIC_SHARD_V11',
+              shard_index:row.shard,
+              node_id:row.node_id,
+              partition_key:row.partition_key,
+              partition_seed:stable(JSON.parse(row.partition_seed_json??'{}')),
+              glass_family:row.glass_family,
+              seed:seedFor(row),
+              shard_count:3956,
+              run_attempt:1,
+              window_type:row.window_type,
+              runtime_manifest_sha256:state.runtime_manifest_sha256,
+              runtime_integrity_match:true,
+              terminal_context_count:1,
+              terminal_equivalence_class_count:1,
+              visited_state_count:1,
+              transition_check_count:1,
+              dependency_rejection_count:0,
+              downstream_clear_event_count:0,
+              flow_signature_count:1,
+              flow_signature_sha256s:[flowSha],
+              continuous_dimension_coverage_delegated_to:'CUSTOM_SIZE_COVERAGE_GATE',
+              unverified_discrete_selector_case_count:0,
+              case_artifact:caseName,
+              case_artifact_format:'UCHIRIMO_TERMINAL_DIGEST_JSONL_V1',
+              case_artifact_sha256:caseSha,
+              max_stack_depth:1,
+              observed_peak_heap_mb:1,
+              resolver_cache_limit:4096,
+              resolver_cache_hits:0,
+              resolver_cache_misses:1,
+              evidence_origin:'CURRENT_HEAD_CARRY_FORWARD',
+              source_exact_head:process.env.HEAD_SHA,
+              source_run_id:1,
+              source_artifact_identity:'fixture-carry',
+              current_head_binding:{status:'PASS',current_exact_head:process.env.HEAD_SHA,source_exact_head:process.env.HEAD_SHA,partition_key:row.partition_key},
+              status:'PASS'
+            };
+            writeFileSync('artifacts/uchirimo-v12-finalizer-carry/shard-'+row.shard+'-report.json',JSON.stringify(report,null,2)+'\n');
+          }
+          for(const name of readdirSync('artifacts/uchirimo-v12-gen1-execution')){
+            if(/^unit-.+-(?:report\.json|terminal-digests\.jsonl)$/.test(name)){
+              copyFileSync('artifacts/uchirimo-v12-gen1-execution/'+name,'artifacts/uchirimo-v12-finalizer-local/fixture-child-artifact/'+name);
+            }
+          }
+          NODE
+
+          UCHIRIMO_V12_PARENT_PLAN=artifacts/uchirimo-v12-parent-plan/all-partitions.json \
+          UCHIRIMO_V12_STATE=artifacts/uchirimo-v12-gen1-advance/controller-state.json \
+          UCHIRIMO_V12_UNITS=artifacts/uchirimo-v12-gen1-advance/recovery-units.json \
+          UCHIRIMO_V12_PARENT_STATUS=artifacts/uchirimo-v12-gen1-advance/parent-status.json \
+          UCHIRIMO_V12_CARRY_FORWARD_DIR=artifacts/uchirimo-v12-finalizer-carry \
+          UCHIRIMO_V12_LOCAL_EVIDENCE_ROOT=artifacts/uchirimo-v12-finalizer-local \
+          UCHIRIMO_V12_FINALIZED_OUT=artifacts/uchirimo-v12-finalized \
+          node scripts/governance/uchirimo-v11-recovery-finalizer.mjs
+
+          UCHIRIMO_SELECTOR_MODE=aggregate \
+          UCHIRIMO_SELECTOR_SHARD_INPUT=artifacts/uchirimo-v12-finalized \
+          UCHIRIMO_SELECTOR_EXPECTED_SHARDS=3956 \
+          UCHIRIMO_FULL_SELECTOR_OUT=artifacts/uchirimo-v12-final-aggregate \
+          node scripts/uchirimo-full-selector-proof.mjs
+
+          node --input-type=module <<'NODE'
+          import {readFileSync} from 'node:fs';
+          const finalizer=JSON.parse(readFileSync('artifacts/uchirimo-v12-finalized/v12-finalization-manifest.json','utf8'));
+          const aggregate=JSON.parse(readFileSync('artifacts/uchirimo-v12-final-aggregate/report.json','utf8'));
+          if(finalizer.status!=='PASS'||finalizer.parent_population_count!==3956||finalizer.report_count!==3956)throw new Error('UCHIRIMO_V12_FINALIZER_FIXTURE_INVALID');
+          if(finalizer.recovery_tree_parent_count!==1||finalizer.carry_forward_parent_count!==3955)throw new Error('UCHIRIMO_V12_FINALIZER_CLOSURE_COUNTS_INVALID:'+finalizer.carry_forward_parent_count+':'+finalizer.recovery_tree_parent_count);
+          if(aggregate.status!=='PASS'||aggregate.shard_count!==3956||aggregate.unverified_discrete_selector_case_count!==0)throw new Error('UCHIRIMO_V12_LEGACY_AGGREGATE_COMPAT_FAIL');
+          console.log('UCHIRIMO_V12_FINAL_AGGREGATE_COMPAT=PASS parents='+aggregate.shard_count+' carry='+finalizer.carry_forward_parent_count+' recovery='+finalizer.recovery_tree_parent_count);
           NODE
 
