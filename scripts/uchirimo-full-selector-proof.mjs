@@ -431,9 +431,13 @@ async function plan(){
   const pending=lanePartitions.filter((row)=>!reused.has(String(row.partition_key)));
   const normalRows=pending.filter((row)=>!heavy.has(String(row.partition_key)));
   const heavyRows=pending.filter((row)=>heavy.has(String(row.partition_key)));
+  let normalBatchSize=BATCH_SIZE;
+  const projectedBatchCount=(size)=>Math.ceil(normalRows.length/size)+heavyRows.length;
+  if(projectedBatchCount(normalBatchSize)>256&&normalBatchSize<2)normalBatchSize=2;
+  if(projectedBatchCount(normalBatchSize)>256)throw new Error('UCHIRIMO_PLAN_LANE_MATRIX_LIMIT_EXCEEDED:'+PLAN_LANE_INDEX+':'+projectedBatchCount(normalBatchSize));
   const batches=[];
-  for(let offset=0;offset<normalRows.length;offset+=BATCH_SIZE){
-    const items=normalRows.slice(offset,offset+BATCH_SIZE);
+  for(let offset=0;offset<normalRows.length;offset+=normalBatchSize){
+    const items=normalRows.slice(offset,offset+normalBatchSize);
     batches.push({skip:false,execution_class:'normal',child_timeout_ms:NORMAL_CHILD_TIMEOUT_MS,batch_id:'lane-'+PLAN_LANE_INDEX+'-normal-'+String(batches.length).padStart(3,'0'),batch_json:JSON.stringify(items)});
   }
   for(const row of heavyRows){
@@ -441,7 +445,7 @@ async function plan(){
   }
   if(batches.length>256)throw new Error('UCHIRIMO_PLAN_LANE_MATRIX_LIMIT_EXCEEDED:'+PLAN_LANE_INDEX+':'+batches.length);
   const matrix={include:batches.length?batches:[{skip:true,execution_class:'reused',child_timeout_ms:NORMAL_CHILD_TIMEOUT_MS,batch_id:'__REUSED_LANE__',batch_json:'[]'}]};
-  const record={exact_head:head,status:'PASS',partition_axis:'product_node+glass_family+depth2+v7_depth3+v8_depth4+v9_measured_timeout_depth5+v10_measured_timeout_depth7',shard_count:allPartitions.length,lane_index:PLAN_LANE_INDEX,lane_count:PLAN_LANE_COUNT,batch_size:BATCH_SIZE,normal_child_timeout_ms:NORMAL_CHILD_TIMEOUT_MS,heavy_child_timeout_ms:HEAVY_CHILD_TIMEOUT_MS,lane_partition_count:lanePartitions.length,lane_reused_partition_count:lanePartitions.length-pending.length,lane_shard_count:pending.length,lane_normal_partition_count:normalRows.length,lane_heavy_partition_count:heavyRows.length,lane_batch_count:batches.length,matrix};
+  const record={exact_head:head,status:'PASS',partition_axis:'product_node+glass_family+depth2+v7_depth3+v8_depth4+v9_measured_timeout_depth5+v10_measured_timeout_depth7',shard_count:allPartitions.length,lane_index:PLAN_LANE_INDEX,lane_count:PLAN_LANE_COUNT,batch_size:BATCH_SIZE,effective_normal_batch_size:normalBatchSize,normal_child_timeout_ms:NORMAL_CHILD_TIMEOUT_MS,heavy_child_timeout_ms:HEAVY_CHILD_TIMEOUT_MS,lane_partition_count:lanePartitions.length,lane_reused_partition_count:lanePartitions.length-pending.length,lane_shard_count:pending.length,lane_normal_partition_count:normalRows.length,lane_heavy_partition_count:heavyRows.length,lane_batch_count:batches.length,matrix};
   writeFileSync(join(OUT,'matrix.json'),JSON.stringify(record,null,2)+'\n');
   if(process.env.GITHUB_OUTPUT){
     appendFileSync(process.env.GITHUB_OUTPUT,'matrix='+JSON.stringify(matrix)+'\n');
