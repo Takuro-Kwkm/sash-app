@@ -23,7 +23,8 @@
     ".github/workflows/global-window-selection-flow-gate.yml",
     "scripts/governance/uchirimo-selector-batch-runner.mjs",
     "scripts/governance/uchirimo-v11-recovery-controller.mjs",
-    "scripts/governance/uchirimo-v11-recovery-controller.test.mjs"
+    "scripts/governance/uchirimo-v11-recovery-controller.test.mjs",
+    ".github/workflows/uchirimo-deterministic-controller-test.yml"
   ],
   "allowed_prefixes": [],
   "required_changed_files": [
@@ -35,7 +36,8 @@
     "scripts/governance/uchirimo-v11-recovery-controller.mjs",
     "scripts/governance/uchirimo-v11-recovery-controller.test.mjs",
     ".github/workflows/project-governance-gate.yml",
-    "project-governance/evidence-dependency-policy.json"
+    "project-governance/evidence-dependency-policy.json",
+    ".github/workflows/uchirimo-deterministic-controller-test.yml"
   ],
   "canonical_product_master_sources_read_only": true,
   "integration_branch": "feat/new-construction-runtime-ui-v16-20260910",
