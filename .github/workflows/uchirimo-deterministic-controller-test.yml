@@ -40,6 +40,7 @@ jobs:
           set -euo pipefail
           node --check scripts/governance/uchirimo-v11-recovery-controller.mjs
           node --check scripts/governance/uchirimo-v11-recovery-controller.test.mjs
+          node --check scripts/governance/uchirimo-selector-batch-runner.mjs
           node scripts/governance/uchirimo-v11-recovery-controller.test.mjs
 
       - name: Build frozen canonical parent plan
