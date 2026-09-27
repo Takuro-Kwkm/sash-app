@@ -1,11 +1,12 @@
 import { createHash } from 'node:crypto';
 
-export const CONTROLLER_CONTRACT_VERSION='UCHIRIMO_V12_DETERMINISTIC_RECOVERY_CONTROLLER_V2';
+export const CONTROLLER_CONTRACT_VERSION='UCHIRIMO_V12_DETERMINISTIC_RECOVERY_CONTROLLER_V3';
 export const COMPLETION_MODEL='UCHIRIMO_CUMULATIVE_PARENT_LEDGER_V1';
 export const MATRIX_LIMIT=256;
 export const MAX_NORMAL_BATCH_SIZE=2;
 export const MAX_INFRA_RETRIES=2;
 export const MAX_AUTOMATIC_GENERATIONS=12;
+export const MAX_RECOVERY_DEPTH=MAX_AUTOMATIC_GENERATIONS+1;
 
 const TECHNICAL_KEYS=new Set(['legacyConstruction','legacyConfiguration','internal_construction']);
 const CONTINUOUS_KEYS=new Set(['size_w','size_h','frame_projection','fukashi_dimension','custom_w','custom_h','custom_width','custom_height']);
@@ -67,10 +68,10 @@ export function transitionUnit(unit,event){
   const executionClass=String(unit?.execution_class??'NORMAL');
   const infraRetries=Number(unit?.infra_retry_count??0);
   if(!['NORMAL','HEAVY'].includes(executionClass))throw new Error('RECOVERY_EXECUTION_CLASS_INVALID:'+executionClass);
+  if(unit?.compute_failed===true&&['PASS','COMPUTE_RECOVERABLE','INFRA_TRANSIENT'].includes(event))throw new Error('SAME_UNIT_COMPUTE_RETRY_FORBIDDEN');
   if(event==='PASS')return {...unit,state:'PASS',next_action:'NONE'};
   if(event==='COMPUTE_RECOVERABLE'){
-    if(executionClass==='NORMAL')return {...unit,state:'PENDING_HEAVY',execution_class:'HEAVY',next_action:'PROMOTE_HEAVY'};
-    return {...unit,state:'SPLIT_REQUIRED',next_action:'SPLIT'};
+    return {...unit,state:'SPLIT_REQUIRED',compute_failed:true,next_action:'SPLIT'};
   }
   if(event==='INFRA_TRANSIENT'){
     if(infraRetries<MAX_INFRA_RETRIES)return {...unit,state:executionClass==='HEAVY'?'PENDING_HEAVY':'PENDING_NORMAL',infra_retry_count:infraRetries+1,next_action:'RETRY_SAME_UNIT'};
@@ -78,6 +79,15 @@ export function transitionUnit(unit,event){
   }
   if(event==='INTEGRITY_BLOCK')return {...unit,state:'BLOCKED_INTEGRITY',next_action:'BLOCKED'};
   return {...unit,state:'BLOCKED_SEMANTIC',next_action:'BLOCKED'};
+}
+
+export function assertComputeSchedule(unit,units={}){
+  if(unit.state==='PASS'||unit.compute_failed===true||!['PENDING_NORMAL','PENDING_HEAVY'].includes(unit.state))throw new Error('SAME_UNIT_COMPUTE_RETRY_FORBIDDEN:'+unit.recovery_unit_id);
+  if(Number(unit.recovery_depth)>MAX_RECOVERY_DEPTH)throw new Error('BLOCKED_RECOVERY_DEPTH:'+unit.recovery_unit_id);
+  for(const other of Object.values(units)){
+    if(other.recovery_unit_id===unit.recovery_unit_id)continue;
+    if(other.parent_partition_key===unit.parent_partition_key&&other.compute_failed===true&&other.decision_constraints_sha256===unit.decision_constraints_sha256)throw new Error('SAME_CONSTRAINT_COMPUTE_RETRY_FORBIDDEN:'+unit.recovery_unit_id);
+  }
 }
 
 function enabledEnumValues(field){
@@ -349,7 +359,7 @@ export function scheduleLane(units,{matrixLimit=MATRIX_LIMIT}={}){
   };
 }
 
-const HARD_BLOCKER_KEY_PATTERN=/(?:INTEGRITY|IDENTITY|POPULATION|FINGERPRINT|NO_PROGRESS|GENERATION_LIMIT|GLOBAL)/;
+const HARD_BLOCKER_KEY_PATTERN=/(?:INTEGRITY|IDENTITY|POPULATION|FINGERPRINT|NO_PROGRESS|GENERATION_LIMIT|RECOVERY_DEPTH|UNSPLITTABLE|GLOBAL)/;
 
 function blockerSummary(blockedCounts={}){
   let hard=0;
