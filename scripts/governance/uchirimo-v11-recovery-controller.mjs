@@ -1,6 +1,7 @@
 import { createHash } from 'node:crypto';
 
-export const CONTROLLER_CONTRACT_VERSION='UCHIRIMO_V12_DETERMINISTIC_RECOVERY_CONTROLLER_V1';
+export const CONTROLLER_CONTRACT_VERSION='UCHIRIMO_V12_DETERMINISTIC_RECOVERY_CONTROLLER_V2';
+export const COMPLETION_MODEL='UCHIRIMO_CUMULATIVE_PARENT_LEDGER_V1';
 export const MATRIX_LIMIT=256;
 export const MAX_NORMAL_BATCH_SIZE=2;
 export const MAX_INFRA_RETRIES=2;
@@ -348,9 +349,34 @@ export function scheduleLane(units,{matrixLimit=MATRIX_LIMIT}={}){
   };
 }
 
+const HARD_BLOCKER_KEY_PATTERN=/(?:INTEGRITY|IDENTITY|POPULATION|FINGERPRINT|NO_PROGRESS|GENERATION_LIMIT|GLOBAL)/;
+
+function blockerSummary(blockedCounts={}){
+  let hard=0;
+  let quarantined=0;
+  for(const [key,value] of Object.entries(blockedCounts??{})){
+    const count=Math.max(0,Number(value??0));
+    if(!Number.isFinite(count)||count===0)continue;
+    if(HARD_BLOCKER_KEY_PATTERN.test(String(key)))hard+=count;
+    else quarantined+=count;
+  }
+  return {hard,quarantined,total:hard+quarantined};
+}
+
+function applyDerivedControllerState(state){
+  const blockers=blockerSummary(state.blocked_counts);
+  state.completion_model=COMPLETION_MODEL;
+  state.runnable_unit_count=state.pending_normal_count+state.pending_heavy_count+state.split_required_count+state.deferred_count;
+  state.hard_blocker_count=blockers.hard;
+  state.quarantined_blocker_count=blockers.quarantined;
+  state.blocked_unit_count=blockers.total;
+  return state;
+}
+
 function controllerSemanticState(state){
   return {
     controller_contract_version:state.controller_contract_version,
+    completion_model:state.completion_model,
     exact_head:state.exact_head,
     parent_population_count:state.parent_population_count,
     parent_population_sha256:state.parent_population_sha256,
@@ -364,6 +390,9 @@ function controllerSemanticState(state){
     pending_heavy_count:state.pending_heavy_count,
     split_required_count:state.split_required_count,
     deferred_count:state.deferred_count,
+    runnable_unit_count:state.runnable_unit_count,
+    hard_blocker_count:state.hard_blocker_count,
+    quarantined_blocker_count:state.quarantined_blocker_count,
     blocked_counts:stable(state.blocked_counts??{}),
     recovery_tree_root_hash:state.recovery_tree_root_hash
   };
@@ -373,6 +402,7 @@ export function buildControllerState(input){
   const state={
     schema_version:'1.0.0',
     controller_contract_version:CONTROLLER_CONTRACT_VERSION,
+    completion_model:COMPLETION_MODEL,
     exact_head:String(input.exact_head??''),
     generation:Number(input.generation??0),
     source_controller_run_id:input.source_controller_run_id==null?null:Number(input.source_controller_run_id),
@@ -392,20 +422,23 @@ export function buildControllerState(input){
     recovery_tree_root_hash:String(input.recovery_tree_root_hash??''),
     prior_state_sha256:input.prior_state_sha256??null
   };
-  let blocked=Object.values(state.blocked_counts).reduce((a,b)=>a+Number(b||0),0);
   if(state.generation>=MAX_AUTOMATIC_GENERATIONS&&state.open_parent_count>0){
     state.blocked_counts={...state.blocked_counts,BLOCKED_GENERATION_LIMIT:Number(state.blocked_counts.BLOCKED_GENERATION_LIMIT??0)+1};
-    blocked+=1;
   }
+  applyDerivedControllerState(state);
   state.current_state_sha256=sha256(controllerSemanticState(state));
   if(state.prior_state_sha256&&state.prior_state_sha256===state.current_state_sha256&&state.open_parent_count>0){
     state.blocked_counts={...state.blocked_counts,BLOCKED_NO_PROGRESS:Number(state.blocked_counts.BLOCKED_NO_PROGRESS??0)+1};
+    applyDerivedControllerState(state);
     state.current_state_sha256=sha256(controllerSemanticState(state));
-    blocked+=1;
   }
-  if(blocked>0)state.next_action='BLOCKED';
+
+  // Cumulative completion: isolated infra/semantic failures are quarantined.
+  // They do not invalidate already-PASS parents and do not stop unrelated runnable units.
+  // Only systemic evidence/identity/integrity failures stop the controller immediately.
+  if(state.hard_blocker_count>0)state.next_action='BLOCKED';
   else if(state.open_parent_count===0&&state.deferred_count===0)state.next_action='FINAL_AGGREGATE';
-  else if(state.pending_normal_count+state.pending_heavy_count+state.split_required_count+state.deferred_count>0)state.next_action=input.after_generation===true?'DISPATCH_NEXT_GENERATION':'EXECUTE';
+  else if(state.runnable_unit_count>0)state.next_action=input.after_generation===true?'DISPATCH_NEXT_GENERATION':'EXECUTE';
   else state.next_action='BLOCKED';
   return state;
 }

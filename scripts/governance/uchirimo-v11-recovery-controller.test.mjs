@@ -190,6 +190,89 @@ const afterGeneration=buildControllerState({
 });
 assert.equal(afterGeneration.next_action,'DISPATCH_NEXT_GENERATION');
 
+const isolatedSemantic=buildControllerState({
+  exact_head:'b'.repeat(40),
+  generation:2,
+  parent_population_count:3956,
+  parent_population_sha256:'pop',
+  runtime_manifest_sha256:'run',
+  execution_fingerprint:'exec',
+  planner_fingerprint:'plan',
+  closed_parent_count:3900,
+  open_parent_count:56,
+  pass_unit_count:4000,
+  pending_normal_count:10,
+  pending_heavy_count:20,
+  split_required_count:1,
+  deferred_count:25,
+  blocked_counts:{BLOCKED_SEMANTIC:1}
+});
+assert.equal(isolatedSemantic.next_action,'EXECUTE');
+assert.equal(isolatedSemantic.quarantined_blocker_count,1);
+assert.equal(isolatedSemantic.hard_blocker_count,0);
+assert.equal(isolatedSemantic.closed_parent_count,3900);
+
+const isolatedInfraAfterGeneration=buildControllerState({
+  exact_head:'b'.repeat(40),
+  generation:2,
+  parent_population_count:3956,
+  parent_population_sha256:'pop',
+  runtime_manifest_sha256:'run',
+  execution_fingerprint:'exec',
+  planner_fingerprint:'plan',
+  closed_parent_count:3900,
+  open_parent_count:56,
+  pass_unit_count:4000,
+  pending_normal_count:10,
+  pending_heavy_count:20,
+  split_required_count:1,
+  deferred_count:25,
+  blocked_counts:{BLOCKED_INFRA:1},
+  after_generation:true
+});
+assert.equal(isolatedInfraAfterGeneration.next_action,'DISPATCH_NEXT_GENERATION');
+assert.equal(isolatedInfraAfterGeneration.quarantined_blocker_count,1);
+
+const hardIntegrity=buildControllerState({
+  exact_head:'b'.repeat(40),
+  generation:2,
+  parent_population_count:3956,
+  parent_population_sha256:'pop',
+  runtime_manifest_sha256:'run',
+  execution_fingerprint:'exec',
+  planner_fingerprint:'plan',
+  closed_parent_count:3900,
+  open_parent_count:56,
+  pass_unit_count:4000,
+  pending_normal_count:10,
+  pending_heavy_count:20,
+  split_required_count:1,
+  deferred_count:25,
+  blocked_counts:{BLOCKED_INTEGRITY:1}
+});
+assert.equal(hardIntegrity.next_action,'BLOCKED');
+assert.equal(hardIntegrity.hard_blocker_count,1);
+
+const quarantinedOnly=buildControllerState({
+  exact_head:'b'.repeat(40),
+  generation:2,
+  parent_population_count:3956,
+  parent_population_sha256:'pop',
+  runtime_manifest_sha256:'run',
+  execution_fingerprint:'exec',
+  planner_fingerprint:'plan',
+  closed_parent_count:3955,
+  open_parent_count:1,
+  pass_unit_count:4000,
+  pending_normal_count:0,
+  pending_heavy_count:0,
+  split_required_count:0,
+  deferred_count:0,
+  blocked_counts:{BLOCKED_SEMANTIC:1}
+});
+assert.equal(quarantinedOnly.next_action,'BLOCKED');
+assert.equal(quarantinedOnly.closed_parent_count,3955);
+
 const noProgress=buildControllerState({
   exact_head:'b'.repeat(40),
   generation:3,

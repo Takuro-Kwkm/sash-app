@@ -29,7 +29,7 @@ permissions:
   actions: read
 
 concurrency:
-  group: project-governance-${{ github.event.pull_request.head.ref || github.ref_name }}-${{ github.event.pull_request.head.sha || github.sha }}
+  group: project-governance-${{ github.event.pull_request.head.ref || github.ref_name }}
   cancel-in-progress: true
 
 jobs:
@@ -188,6 +188,9 @@ jobs:
           test -f scripts/uchirimo-full-selector-proof.mjs
           mkdir -p artifacts/governance
           node --test scripts/governance/uchirimo-durable-recovery.test.mjs | tee artifacts/governance/uchirimo-durable-tests.tap
+
+      - name: Uchirimo cumulative controller isolation tests
+        run: node scripts/governance/uchirimo-v11-recovery-controller.test.mjs
 
       - name: frame_angle canonical contract tests
         run: node --test test/76-frame-angle-global-flow.test.mjs
