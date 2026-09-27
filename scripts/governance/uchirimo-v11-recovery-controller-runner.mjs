@@ -1,4 +1,4 @@
-import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { appendFileSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import {
   CONTROLLER_CONTRACT_VERSION,
@@ -219,7 +219,6 @@ function planLane(){
   };
   writeJson(join(OUT,'lane-'+LANE_INDEX+'-plan.json'),summary);
   if(process.env.GITHUB_OUTPUT){
-    const {appendFileSync}=await import('node:fs');
     appendFileSync(process.env.GITHUB_OUTPUT,'matrix='+JSON.stringify(matrix)+'\n');
     appendFileSync(process.env.GITHUB_OUTPUT,'parent_count=3956\n');
     appendFileSync(process.env.GITHUB_OUTPUT,'scheduled_unit_count='+String(summary.scheduled_unit_count)+'\n');
