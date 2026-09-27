@@ -4,6 +4,7 @@ import { tmpdir } from 'node:os';
 import { basename, join } from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { loadRegisteredRuntime } from '../../src/catalog/runtime-master/runtime-master-registry.mjs';
+import {fetchWithRetry,rememberVerifiedShard,alreadyVerifiedSingleShard,accountedBatch} from './uchirimo-carry-transport.mjs';
 
 const HEAD=String(process.env.HEAD_SHA??process.env.GITHUB_SHA??'');
 const REPO=String(process.env.GITHUB_REPOSITORY??'');
@@ -137,25 +138,6 @@ function changedPaths(source,current){
   const out=git(['diff','--name-only',source+'..'+current]);
   return out?out.split('\n').map((x)=>x.trim()).filter(Boolean):[];
 }
-async function fetchWithRetry(url,options,label){
-  let lastError;
-  for(let attempt=1;attempt<=4;attempt+=1){
-    try{
-      const response=await fetch(url,options);
-      if(response.ok)return response;
-      if(response.status<500&&response.status!==429)throw new Error(label+'_HTTP_'+response.status);
-      lastError=new Error(label+'_HTTP_'+response.status);
-    }catch(error){
-      lastError=error;
-    }
-    if(attempt<4){
-      const delayMs=attempt*1500;
-      console.warn(label+'_RETRY attempt='+attempt+' delay_ms='+delayMs+' reason='+String(lastError?.message??lastError));
-      await new Promise((resolve)=>setTimeout(resolve,delayMs));
-    }
-  }
-  throw new Error(label+'_RETRY_EXHAUSTED:'+String(lastError?.message??lastError));
-}
 async function apiJson(path){
   const response=await fetchWithRetry(API+path,{headers:{
     Authorization:'Bearer '+TOKEN,
@@ -268,7 +250,7 @@ for(const run of priorRuns){
   const artifacts=await listArtifacts(run.id);
   const shardArtifacts=artifacts.filter((a)=>/^(?:uchirimo-selector-proof-(?:shard-\d+|batch-[A-Za-z0-9._-]+)-[0-9a-f]{40}-attempt-\d+|uchirimo-v12-batch-v12-g\d+-lane-\d+-\d+-[0-9a-f]{40})$/.test(String(a.name??''))&&!a.expired);
   if(!shardArtifacts.length)continue;
-  candidates.push({run,sourceHead,artifacts:shardArtifacts,executionFingerprint:fp,runtimeDependencyFingerprint:runtimeFp});
+  candidates.push({run,sourceHead,artifacts:shardArtifacts,planArtifacts:artifacts.filter(a=>!a.expired&&/^uchirimo-selector-proof-plan-\d+-[0-9a-f]{40}$/.test(a.name)),executionFingerprint:fp,runtimeDependencyFingerprint:runtimeFp});
 }
 candidates.sort((a,b)=>
   Number(b.sourceHead===HEAD)-Number(a.sourceHead===HEAD) ||
@@ -284,6 +266,8 @@ const reused=[];
 const reusedKeys=new Set();
 const sourceSummaries=[];
 const inaccessibleArtifacts=[];
+const coveredSingleShards=new Set();
+let duplicateArtifactsSkipped=0;
 const temp=mkdtempSync(join(tmpdir(),'uchirimo-carry-'));
 try{
   if(BOOTSTRAP_DIR){
@@ -330,6 +314,7 @@ try{
       const caseBytes=readFileSync(casePaths[0]);
       const caseSha=sha(caseBytes);
       if(caseSha!==String(report.case_artifact_sha256??''))continue;
+      rememberVerifiedShard(coveredSingleShards,report);
       const currentCaseName='shard-'+current.shard+'-terminal-digests.jsonl';
       const currentReportName='shard-'+current.shard+'-report.json';
       const bindingName='shard-'+current.shard+'-current-head-binding.json';
@@ -349,12 +334,36 @@ try{
     if(reusedKeys.size===currentByKey.size)break;
     const sourceChanges=changedPaths(source.sourceHead,HEAD);
     let acceptedFromSource=0;
+    const lanePlans=new Map();
     for(const artifact of source.artifacts){
       if(reusedKeys.size===currentByKey.size)break;
+      if(alreadyVerifiedSingleShard(coveredSingleShards,source.sourceHead,String(artifact.name))){duplicateArtifactsSkipped++;continue;}
+      const laneMatch=/^uchirimo-selector-proof-batch-lane-(\d+)-(?:normal|heavy)-\d+-[0-9a-f]{40}-attempt-(\d+)$/.exec(artifact.name);
+      if(laneMatch&&Number(laneMatch[2])===Number(source.run.run_attempt)){
+        const lane=Number(laneMatch[1]);
+        if(!lanePlans.has(lane)){
+          lanePlans.set(lane,null);
+          const matches=source.planArtifacts.filter(a=>a.name==='uchirimo-selector-proof-plan-'+lane+'-'+source.sourceHead);
+          if(matches.length===1){
+            const meta=matches[0];
+            try{
+              const bytes=await apiBuffer('/repos/'+REPO+'/actions/artifacts/'+meta.id+'/zip');
+              const path=join(temp,'plan-'+meta.id+'.zip');writeFileSync(path,bytes);
+              const entries=unzipList(path).filter(n=>basename(n)==='matrix.json');
+              if(entries.length===1)lanePlans.set(lane,{meta,data:JSON.parse(String(unzipEntry(path,entries[0])))});
+            }catch(error){if([401,403].includes(error.httpStatus))throw error;console.warn('UCHIRIMO_PLAN_INDEX_UNAVAILABLE:'+meta.id);}
+          }
+        }
+        const indexed=lanePlans.get(lane);
+        if(indexed&&Date.parse(artifact.created_at)>=Date.parse(indexed.meta.created_at)&&accountedBatch({plan:indexed.data,artifact,run:source.run,reusedKeys,heavyByKey,currentByKey})){
+          duplicateArtifactsSkipped++;continue;
+        }
+      }
       let zip;
       try{
         zip=await apiBuffer('/repos/'+REPO+'/actions/artifacts/'+artifact.id+'/zip');
       }catch(error){
+        if([401,403].includes(error.httpStatus))throw new Error('UCHIRIMO_CARRY_ACCESS_BLOCKED:'+error.message);
         inaccessibleArtifacts.push({source_run_id:Number(source.run.id),source_exact_head:source.sourceHead,artifact_id:Number(artifact.id),artifact_identity:String(artifact.name),error:String(error?.message??error)});
         console.warn('UCHIRIMO_CARRY_FORWARD_ARTIFACT_SKIPPED id='+artifact.id+' name='+String(artifact.name)+' reason='+String(error?.message??error));
         continue;
@@ -411,6 +420,7 @@ try{
         const caseBytes=Buffer.from(unzipEntry(zipPath,caseEntry,{binary:true}));
         const caseSha=sha(caseBytes);
         if(caseSha!==String(report.case_artifact_sha256??''))continue;
+        rememberVerifiedShard(coveredSingleShards,report);
         const currentCaseName='shard-'+current.shard+'-terminal-digests.jsonl';
         const currentReportName='shard-'+current.shard+'-report.json';
         const bindingName='shard-'+current.shard+'-current-head-binding.json';
@@ -430,6 +440,7 @@ try{
       available_artifact_count:source.artifacts.length,
       accepted_partition_count:acceptedFromSource
     });
+    console.log('UCHIRIMO_SOURCE_SCAN run='+source.run.id+' accepted='+acceptedFromSource+' retained_total='+reusedKeys.size+' accounted_artifacts_skipped='+duplicateArtifactsSkipped);
   }
 }finally{
   rmSync(temp,{recursive:true,force:true});
@@ -450,6 +461,7 @@ const manifest={
   source_runs:sourceSummaries,
   bootstrap_only:BOOTSTRAP_ONLY,
   inaccessible_artifact_count:inaccessibleArtifacts.length,
+  verified_duplicate_artifacts_skipped:duplicateArtifactsSkipped,
   inaccessible_artifacts:inaccessibleArtifacts,
   resume_policy:'V10_RUNTIME_DEPENDENCY_BOUND_PLUS_V11_SEMANTIC_REUSE_PLUS_V12_ROOT_BATCH_V3',
   workflow_run_id:RUN_ID,

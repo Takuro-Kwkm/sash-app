@@ -209,6 +209,9 @@ jobs:
         shell: bash
         run: node scripts/governance/uchirimo-v12-recovery-integration.test.mjs | tee artifacts/governance/uchirimo-v12-integration-tests.log
 
+      - name: Uchirimo carry transport and verified duplicate regression
+        run: node scripts/governance/uchirimo-carry-transport.test.mjs
+
       - name: frame_angle canonical contract tests
         run: node --test test/76-frame-angle-global-flow.test.mjs
 
