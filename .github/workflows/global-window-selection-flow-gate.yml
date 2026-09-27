@@ -6,6 +6,22 @@ on:
       controller_head:
         required: true
         type: string
+      uchirimo_v12_enabled:
+        required: false
+        type: boolean
+        default: false
+      uchirimo_v12_generation:
+        required: false
+        type: number
+        default: 0
+      uchirimo_v12_source_run_id:
+        required: false
+        type: string
+        default: ''
+    outputs:
+      full_coverage_complete:
+        description: Whether Global Window Selection Flow completed on the exact HEAD
+        value: ${{ jobs.global-flow.outputs.full_coverage_complete }}
 
 permissions:
   issues: read
@@ -78,9 +94,24 @@ jobs:
           path: artifacts/governance/
           if-no-files-found: error
 
+  uchirimo-v12-controller:
+    needs: ["governance-authority", "governance-precheck"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && needs.governance-precheck.outputs.authorized == 'true' && inputs.uchirimo_v12_enabled == true }}
+    permissions:
+      contents: read
+      actions: write
+      pull-requests: read
+      issues: read
+    uses: ./.github/workflows/uchirimo-v12-selector-controller.yml
+    with:
+      controller_head: ${{ inputs.controller_head }}
+      generation: ${{ inputs.uchirimo_v12_generation }}
+      source_controller_run_id: ${{ inputs.uchirimo_v12_source_run_id }}
+
+
   uchirimo-selector-proof-cache:
     needs: ["governance-authority", "governance-precheck"]
-    if: ${{ needs.governance-authority.outputs.authorized == 'true' && (needs.governance-precheck.outputs.authorized == 'true') }}
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && needs.governance-precheck.outputs.authorized == 'true' && inputs.uchirimo_v12_enabled != true }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
     env:
@@ -1907,9 +1938,11 @@ jobs:
           if-no-files-found: error
 
   global-flow:
-    needs: ["governance-authority", "governance-precheck", "uchirimo-selector-proof-cache", "uchirimo-selector-proof-aggregate"]
-    if: ${{ always() && needs.governance-authority.outputs.authorized == 'true' && needs.governance-precheck.outputs.authorized == 'true' && (needs.uchirimo-selector-proof-cache.outputs.reused == 'true' || needs.uchirimo-selector-proof-aggregate.result == 'success') }}
+    needs: ["governance-authority", "governance-precheck", "uchirimo-v12-controller", "uchirimo-selector-proof-cache", "uchirimo-selector-proof-aggregate"]
+    if: ${{ always() && needs.governance-authority.outputs.authorized == 'true' && needs.governance-precheck.outputs.authorized == 'true' && ((inputs.uchirimo_v12_enabled == true && needs.uchirimo-v12-controller.outputs.complete == 'true') || (inputs.uchirimo_v12_enabled != true && (needs.uchirimo-selector-proof-cache.outputs.reused == 'true' || needs.uchirimo-selector-proof-aggregate.result == 'success'))) }}
     runs-on: ubuntu-latest
+    outputs:
+      full_coverage_complete: ${{ steps.v12-complete.outputs.value }}
     timeout-minutes: 60
     env:
       HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
@@ -2256,3 +2289,7 @@ jobs:
           ]) console.log(`${id}=${result.gates?.[id]?.status ?? 'UNSET'}`);
           console.log(`RELEASE_INPUT_GATE=${result.release?.status ?? 'BLOCKED'}`);
           NODE
+
+      - name: Mark Global Flow full coverage complete
+        id: v12-complete
+        run: echo "value=true" >> "$GITHUB_OUTPUT"
