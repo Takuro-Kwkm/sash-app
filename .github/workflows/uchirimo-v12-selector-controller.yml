@@ -45,6 +45,8 @@ jobs:
       GEN: ${{ inputs.generation }}
       SOURCE_RUN_ID: ${{ inputs.source_controller_run_id }}
       CARRY_ARTIFACT: uchirimo-selector-proof-carry-forward-${{ inputs.controller_head }}
+      BOOTSTRAP_CARRY_RUN_ID: 36254578442
+      BOOTSTRAP_CARRY_ARTIFACT: uchirimo-selector-proof-carry-forward-5bcc185405c478dab3c53c47992c0b06d114cfcd
     steps:
       - uses: actions/checkout@v4
         with:
@@ -76,12 +78,24 @@ jobs:
           const plan=JSON.parse(readFileSync('artifacts/uchirimo-v12-parent-plan/all-partitions.json','utf8'));
           if(plan.status!=='PASS'||plan.shard_count!==3956||new Set(plan.partitions.map((r)=>r.partition_key)).size!==3956)throw new Error('UCHIRIMO_V12_PARENT_DENOMINATOR_INVALID:'+String(plan.shard_count));
           NODE
+      - name: Download verified bootstrap carry-forward bundle
+        if: ${{ inputs.generation == 0 }}
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ env.BOOTSTRAP_CARRY_ARTIFACT }}
+          path: artifacts/uchirimo-v12-bootstrap-carry
+          run-id: ${{ env.BOOTSTRAP_CARRY_RUN_ID }}
+          github-token: ${{ github.token }}
       - name: Revalidate compatible parent evidence
         if: ${{ inputs.generation == 0 }}
         env:
           GH_TOKEN: ${{ github.token }}
           UCHIRIMO_SELECTOR_CURRENT_PLAN: artifacts/uchirimo-v12-parent-plan/all-partitions.json
           UCHIRIMO_SELECTOR_CARRY_FORWARD_OUT: artifacts/uchirimo-selector-proof-carry-forward
+          UCHIRIMO_CARRY_FORWARD_BOOTSTRAP_DIR: artifacts/uchirimo-v12-bootstrap-carry
+          UCHIRIMO_CARRY_FORWARD_BOOTSTRAP_ONLY: 'true'
+          UCHIRIMO_CARRY_FORWARD_BOOTSTRAP_RUN_ID: ${{ env.BOOTSTRAP_CARRY_RUN_ID }}
+          UCHIRIMO_CARRY_FORWARD_BOOTSTRAP_ARTIFACT_IDENTITY: ${{ env.BOOTSTRAP_CARRY_ARTIFACT }}
         run: node scripts/governance/uchirimo-partition-carry-forward.mjs
       - name: Upload generation-zero carry-forward evidence
         id: carry-upload
