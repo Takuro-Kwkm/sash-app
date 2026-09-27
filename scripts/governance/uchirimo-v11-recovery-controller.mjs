@@ -195,6 +195,116 @@ export function validateRecoveryTree({root_unit_id,units={},certificates={}}){
   return visit(root_unit_id);
 }
 
+export function recoveryTreeHash({root_unit_id,units={},certificates={}}){
+  const seen=new Set();
+  const visit=(unitId)=>{
+    if(seen.has(unitId))throw new Error('RECOVERY_TREE_HASH_CYCLE:'+unitId);
+    seen.add(unitId);
+    const unit=units[unitId];
+    if(!unit)throw new Error('RECOVERY_TREE_HASH_UNIT_MISSING:'+unitId);
+    const certificate=certificates[unitId]??null;
+    if(certificate)validateSplitCertificate(certificate);
+    const children=certificate
+      ? certificate.children.map((child)=>visit(child.recovery_unit_id))
+      : [];
+    seen.delete(unitId);
+    return {
+      recovery_unit_id:unitId,
+      state:String(unit.state??''),
+      execution_class:String(unit.execution_class??''),
+      decision_constraints_sha256:String(unit.decision_constraints_sha256??''),
+      certificate_sha256:certificate?.certificate_sha256??null,
+      children
+    };
+  };
+  return sha256(visit(root_unit_id));
+}
+
+export function synthesizeParentClosure({
+  parent,
+  root_unit_id,
+  units={},
+  certificates={},
+  leaf_reports={}
+}){
+  const parentShard=Number(parent?.shard);
+  const parentKey=String(parent?.partition_key??'');
+  if(!Number.isInteger(parentShard)||parentShard<0||!parentKey)throw new Error('RECOVERY_PARENT_IDENTITY_INVALID');
+  const tree=validateRecoveryTree({root_unit_id,units,certificates});
+  if(!tree.closed)throw new Error('RECOVERY_PARENT_TREE_NOT_CLOSED:'+parentKey);
+  if(!tree.leaf_ids.length)throw new Error('RECOVERY_PARENT_TREE_EMPTY:'+parentKey);
+  const reports=tree.leaf_ids.map((unitId)=>{
+    const report=leaf_reports[unitId];
+    if(!report)throw new Error('RECOVERY_PARENT_LEAF_REPORT_MISSING:'+unitId);
+    if(report.status!=='PASS'||Number(report.unverified_discrete_selector_case_count??0)!==0)throw new Error('RECOVERY_PARENT_LEAF_NOT_PASS:'+unitId);
+    if(String(report.recovery_unit_id??'')!==unitId)throw new Error('RECOVERY_PARENT_LEAF_UNIT_ID_MISMATCH:'+unitId);
+    if(Number(report.parent_shard_index??report.shard_index)!==parentShard)throw new Error('RECOVERY_PARENT_LEAF_SHARD_MISMATCH:'+unitId);
+    if(String(report.parent_partition_key??report.partition_key)!==parentKey)throw new Error('RECOVERY_PARENT_LEAF_PARTITION_MISMATCH:'+unitId);
+    if(report.runtime_integrity_match!==true)throw new Error('RECOVERY_PARENT_LEAF_RUNTIME_INTEGRITY_FAIL:'+unitId);
+    return report;
+  });
+  const heads=new Set(reports.map((report)=>String(report.exact_head??'')));
+  const runtimes=new Set(reports.map((report)=>String(report.runtime_manifest_sha256??'')));
+  if(heads.size!==1||![...heads][0])throw new Error('RECOVERY_PARENT_LEAF_HEAD_MISMATCH:'+parentKey);
+  if(runtimes.size!==1||![...runtimes][0])throw new Error('RECOVERY_PARENT_LEAF_RUNTIME_MISMATCH:'+parentKey);
+  const flowSignatures=new Set();
+  const leafEvidence=[];
+  let terminals=0,states=0,transitions=0,dependencyRejections=0,downstreamClearChecks=0,resolverCacheHits=0,resolverCacheMisses=0,maxStack=0,peakHeap=0;
+  for(const report of reports){
+    for(const sig of report.flow_signature_sha256s??[])flowSignatures.add(String(sig));
+    terminals+=Number(report.terminal_context_count??0);
+    states+=Number(report.visited_state_count??0);
+    transitions+=Number(report.transition_check_count??0);
+    dependencyRejections+=Number(report.dependency_rejection_count??0);
+    downstreamClearChecks+=Number(report.downstream_clear_event_count??0);
+    resolverCacheHits+=Number(report.resolver_cache_hits??0);
+    resolverCacheMisses+=Number(report.resolver_cache_misses??0);
+    maxStack=Math.max(maxStack,Number(report.max_stack_depth??0));
+    peakHeap=Math.max(peakHeap,Number(report.observed_peak_heap_mb??0));
+    leafEvidence.push({
+      recovery_unit_id:String(report.recovery_unit_id),
+      decision_constraints_sha256:String(report.decision_constraints_sha256??''),
+      case_artifact:String(report.case_artifact??''),
+      case_artifact_sha256:String(report.case_artifact_sha256??'')
+    });
+  }
+  leafEvidence.sort((a,b)=>a.recovery_unit_id.localeCompare(b.recovery_unit_id));
+  if(leafEvidence.some((row)=>!row.case_artifact||!/^[0-9a-f]{64}$/.test(row.case_artifact_sha256)))throw new Error('RECOVERY_PARENT_LEAF_CASE_IDENTITY_INVALID:'+parentKey);
+  const treeHash=recoveryTreeHash({root_unit_id,units,certificates});
+  return {
+    schema_version:'1.0.0',
+    exact_head:[...heads][0],
+    task_classification:'NON-PRODUCT-MASTER',
+    product_master_mutation:0,
+    proof_model:'UCHIRIMO_REACHABLE_DISCRETE_SELECTOR_RECOVERY_TREE_PARENT_V1',
+    shard_index:parentShard,
+    node_id:String(parent.node_id??''),
+    partition_key:parentKey,
+    partition_seed:stable(JSON.parse(String(parent.partition_seed_json??'{}'))),
+    glass_family:String(parent.glass_family??''),
+    window_type:String(parent.window_type??''),
+    runtime_manifest_sha256:[...runtimes][0],
+    runtime_integrity_match:true,
+    terminal_context_count:terminals,
+    visited_state_count:states,
+    transition_check_count:transitions,
+    dependency_rejection_count:dependencyRejections,
+    downstream_clear_event_count:downstreamClearChecks,
+    flow_signature_count:flowSignatures.size,
+    flow_signature_sha256s:[...flowSignatures].sort(),
+    unverified_discrete_selector_case_count:0,
+    max_stack_depth:maxStack,
+    observed_peak_heap_mb:peakHeap,
+    resolver_cache_hits:resolverCacheHits,
+    resolver_cache_misses:resolverCacheMisses,
+    recovery_tree_root_unit_id:root_unit_id,
+    recovery_tree_root_sha256:treeHash,
+    recovery_leaf_count:leafEvidence.length,
+    recovery_leaf_evidence:leafEvidence,
+    status:'PASS'
+  };
+}
+
 function unitSort(a,b){
   return Number(a.parent_shard_index)-Number(b.parent_shard_index)
     || Number(a.recovery_depth??0)-Number(b.recovery_depth??0)
