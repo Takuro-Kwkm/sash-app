@@ -2,6 +2,7 @@ import { appendFileSync, mkdirSync, readFileSync, readdirSync, statSync, writeFi
 import { join } from 'node:path';
 import {
   CONTROLLER_CONTRACT_VERSION,
+  MAX_AUTOMATIC_GENERATIONS,
   buildControllerState,
   buildSplitCertificate,
   canonicalConstraints,
@@ -559,7 +560,38 @@ async function advance(){
   console.log('UCHIRIMO_V12_CONTROLLER_ADVANCE='+state.next_action+' generation='+GENERATION+' closed='+closedParents+' open='+openParents+' normal='+pendingNormal+' heavy='+pendingHeavy+' deferred='+deferredIds.size+' blocked='+Object.values(blockedCounts).reduce((a,b)=>a+b,0));
 }
 
+
+function resumeGeneration(){
+  const priorState=readJson(STATE_PATH);
+  const unitsEnvelope=readJson(UNITS_PATH);
+  const certificatesEnvelope=readJson(CERTIFICATES_PATH);
+  const parentsEnvelope=readJson(PARENTS_PATH);
+  if(priorState.controller_contract_version!==CONTROLLER_CONTRACT_VERSION||unitsEnvelope.controller_contract_version!==CONTROLLER_CONTRACT_VERSION||certificatesEnvelope.controller_contract_version!==CONTROLLER_CONTRACT_VERSION||parentsEnvelope.controller_contract_version!==CONTROLLER_CONTRACT_VERSION)throw new Error('UCHIRIMO_V12_RESUME_CONTRACT_MISMATCH');
+  if(String(priorState.exact_head)!==HEAD||String(unitsEnvelope.exact_head)!==HEAD||String(certificatesEnvelope.exact_head)!==HEAD||String(parentsEnvelope.exact_head)!==HEAD)throw new Error('UCHIRIMO_V12_RESUME_HEAD_MISMATCH');
+  if(priorState.next_action!=='DISPATCH_NEXT_GENERATION')throw new Error('UCHIRIMO_V12_RESUME_NOT_AUTHORIZED:'+String(priorState.next_action));
+  const expectedGeneration=Number(priorState.generation)+1;
+  if(GENERATION!==expectedGeneration)throw new Error('UCHIRIMO_V12_RESUME_GENERATION_MISMATCH:'+GENERATION+':'+expectedGeneration);
+  if(GENERATION>MAX_AUTOMATIC_GENERATIONS)throw new Error('UCHIRIMO_V12_RESUME_GENERATION_LIMIT:'+GENERATION);
+  const state={...priorState,generation:GENERATION,source_controller_run_id:SOURCE_RUN_ID,next_action:'EXECUTE'};
+  writeJson(join(OUT,'controller-state.json'),state);
+  writeJson(join(OUT,'recovery-units.json'),unitsEnvelope);
+  writeJson(join(OUT,'split-certificates.json'),certificatesEnvelope);
+  writeJson(join(OUT,'parent-status.json'),parentsEnvelope);
+  writeJson(join(OUT,'resume-report.json'),{
+    schema_version:'1.0.0',
+    controller_contract_version:CONTROLLER_CONTRACT_VERSION,
+    exact_head:HEAD,
+    source_generation:Number(priorState.generation),
+    generation:GENERATION,
+    source_controller_run_id:SOURCE_RUN_ID,
+    state_sha256:String(priorState.current_state_sha256),
+    status:'PASS'
+  });
+  console.log('UCHIRIMO_V12_CONTROLLER_RESUME=PASS generation='+GENERATION+' source_generation='+priorState.generation+' open='+priorState.open_parent_count);
+}
+
 if(MODE==='init')init();
 else if(MODE==='plan-lane')planLane();
 else if(MODE==='advance')await advance();
+else if(MODE==='resume-generation')resumeGeneration();
 else throw new Error('UCHIRIMO_V12_CONTROLLER_MODE_UNSUPPORTED:'+MODE);
