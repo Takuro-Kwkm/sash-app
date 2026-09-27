@@ -41,6 +41,7 @@ jobs:
           node --check scripts/governance/uchirimo-v11-recovery-controller.mjs
           node --check scripts/governance/uchirimo-v11-recovery-controller.test.mjs
           node --check scripts/governance/uchirimo-selector-batch-runner.mjs
+          node --check scripts/governance/uchirimo-v11-recovery-controller-runner.mjs
           node scripts/governance/uchirimo-v11-recovery-controller.test.mjs
 
       - name: Build frozen canonical parent plan
@@ -60,4 +61,67 @@ jobs:
           if(plan.status!=='PASS')throw new Error('UCHIRIMO_V12_PARENT_PLAN_NOT_PASS');
           if(plan.shard_count!==3956)throw new Error('UCHIRIMO_V12_PARENT_DENOMINATOR_DRIFT:'+plan.shard_count);
           if(new Set(plan.partitions.map((row)=>row.partition_key)).size!==3956)throw new Error('UCHIRIMO_V12_PARENT_KEY_DUPLICATE');
+          NODE
+
+      - name: Exercise deterministic controller init and lane planning
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts/uchirimo-v12-fixture artifacts/uchirimo-v12-controller
+          node --input-type=module <<'NODE'
+          import {readFileSync,writeFileSync} from 'node:fs';
+          const plan=JSON.parse(readFileSync('artifacts/uchirimo-v12-parent-plan/all-partitions.json','utf8'));
+          const reused=plan.partitions.slice(0,3950);
+          const open=plan.partitions.slice(3950);
+          const carry={
+            schema_version:'1.0.0',
+            status:'PASS',
+            current_exact_head:process.env.HEAD_SHA,
+            current_shard_count:3956,
+            runtime_manifest_sha256:plan.runtime_manifest_sha256,
+            execution_dependency_fingerprint:'fixture-execution',
+            reused_partition_count:reused.length,
+            rerun_partition_count:open.length,
+            heavy_partition_count:1,
+            reused_partition_keys:reused.map((row)=>row.partition_key),
+            reused_partitions:reused.map((row)=>({shard:row.shard,partition_key:row.partition_key,source_run_id:1,source_exact_head:process.env.HEAD_SHA,source_shard_index:row.shard,source_artifact_identity:'fixture'})),
+            heavy_partition_keys:[open[0].partition_key],
+            heavy_partition_observations:[{partition_key:open[0].partition_key,timed_out:true,duration_ms:3000000,classification:'OBSERVED_TIMEOUT'}]
+          };
+          writeFileSync('artifacts/uchirimo-v12-fixture/carry.json',JSON.stringify(carry,null,2)+'\n');
+          NODE
+          UCHIRIMO_V12_CONTROLLER_MODE=init \
+          UCHIRIMO_V12_PARENT_PLAN=artifacts/uchirimo-v12-parent-plan/all-partitions.json \
+          UCHIRIMO_V12_CARRY_MANIFEST=artifacts/uchirimo-v12-fixture/carry.json \
+          UCHIRIMO_V12_CONTROLLER_OUT=artifacts/uchirimo-v12-controller \
+          node scripts/governance/uchirimo-v11-recovery-controller-runner.mjs
+          node --input-type=module <<'NODE'
+          import {readFileSync} from 'node:fs';
+          const state=JSON.parse(readFileSync('artifacts/uchirimo-v12-controller/controller-state.json','utf8'));
+          if(state.closed_parent_count!==3950||state.open_parent_count!==6)throw new Error('UCHIRIMO_V12_INIT_PARENT_COUNTS_INVALID');
+          if(state.pending_heavy_count!==1||state.pending_normal_count!==5)throw new Error('UCHIRIMO_V12_INIT_CLASS_COUNTS_INVALID');
+          if(state.next_action!=='EXECUTE')throw new Error('UCHIRIMO_V12_INIT_NEXT_ACTION_INVALID:'+state.next_action);
+          NODE
+          total=0
+          deferred=0
+          for lane in $(seq 0 15); do
+            GITHUB_OUTPUT='' \
+            UCHIRIMO_V12_CONTROLLER_MODE=plan-lane \
+            UCHIRIMO_V12_PARENT_PLAN=artifacts/uchirimo-v12-parent-plan/all-partitions.json \
+            UCHIRIMO_V12_STATE=artifacts/uchirimo-v12-controller/controller-state.json \
+            UCHIRIMO_V12_UNITS=artifacts/uchirimo-v12-controller/recovery-units.json \
+            UCHIRIMO_V12_CONTROLLER_OUT=artifacts/uchirimo-v12-controller \
+            UCHIRIMO_SELECTOR_PLAN_LANE_INDEX=$lane \
+            node scripts/governance/uchirimo-v11-recovery-controller-runner.mjs
+          done
+          node --input-type=module <<'NODE'
+          import {readFileSync} from 'node:fs';
+          let scheduled=0,deferred=0;
+          for(let lane=0;lane<16;lane+=1){
+            const row=JSON.parse(readFileSync('artifacts/uchirimo-v12-controller/lane-'+lane+'-plan.json','utf8'));
+            scheduled+=row.scheduled_unit_count;
+            deferred+=row.deferred_unit_count;
+          }
+          if(scheduled!==6||deferred!==0)throw new Error('UCHIRIMO_V12_LANE_SCHEDULE_TOTAL_INVALID:'+scheduled+':'+deferred);
+          console.log('UCHIRIMO_V12_CONTROLLER_FIXTURE=PASS scheduled='+scheduled+' deferred='+deferred);
           NODE
