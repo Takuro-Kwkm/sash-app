@@ -396,7 +396,7 @@ export function buildControllerState(input){
   }
   if(blocked>0)state.next_action='BLOCKED';
   else if(state.open_parent_count===0&&state.deferred_count===0)state.next_action='FINAL_AGGREGATE';
-  else if(state.pending_normal_count+state.pending_heavy_count+state.split_required_count+state.deferred_count>0)state.next_action='EXECUTE';
+  else if(state.pending_normal_count+state.pending_heavy_count+state.split_required_count+state.deferred_count>0)state.next_action=input.after_generation===true?'DISPATCH_NEXT_GENERATION':'EXECUTE';
   else state.next_action='BLOCKED';
   return state;
 }
