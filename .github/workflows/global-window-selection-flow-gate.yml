@@ -235,6 +235,7 @@ jobs:
           if((execBlock.match(/UCHIRIMO_SELECTOR_CHILD_TIMEOUT_MS: \$\{\{ matrix\.child_timeout_ms \}\}/g)??[]).length!==16)throw new Error('UCHIRIMO_HARNESS_MATRIX_TIMEOUT_BINDING_INVALID');
           if((execBlock.match(/uchirimo-selector-batch-runner\.mjs/g)??[]).length!==16)throw new Error('UCHIRIMO_HARNESS_BATCH_RUNNER_COUNT_INVALID');
           if(!carry.includes('batch-'))throw new Error('UCHIRIMO_HARNESS_BATCH_CARRY_FORWARD_DISABLED');
+          if(!carry.includes('uchirimo-v12-batch-v12-g'))throw new Error('UCHIRIMO_HARNESS_V12_BATCH_CARRY_FORWARD_DISABLED');
           if(carry.includes('head_sha!==HEAD'))throw new Error('UCHIRIMO_HARNESS_SAME_HEAD_RESUME_DISABLED');
           for(const token of ['RUN_ATTEMPT','Number(run.id)===RUN_ID','UCHIRIMO_CARRY_FORWARD_CANDIDATE_RUNS??32']){
             if(!carry.includes(token))throw new Error('UCHIRIMO_HARNESS_RESUME_TOKEN_MISSING:'+token);

@@ -266,7 +266,7 @@ for(const run of priorRuns){
   try{fp=executionDependencyFingerprint(sourceHead);runtimeFp=runtimeDependencyFingerprint(sourceHead);}catch{continue;}
   if(runtimeFp!==currentRuntimeDependencyFingerprint)continue;
   const artifacts=await listArtifacts(run.id);
-  const shardArtifacts=artifacts.filter((a)=>/^uchirimo-selector-proof-(?:shard-\d+|batch-[A-Za-z0-9._-]+)-[0-9a-f]{40}-attempt-\d+$/.test(String(a.name??''))&&!a.expired);
+  const shardArtifacts=artifacts.filter((a)=>/^(?:uchirimo-selector-proof-(?:shard-\d+|batch-[A-Za-z0-9._-]+)-[0-9a-f]{40}-attempt-\d+|uchirimo-v12-batch-v12-g\d+-lane-\d+-\d+-[0-9a-f]{40})$/.test(String(a.name??''))&&!a.expired);
   if(!shardArtifacts.length)continue;
   candidates.push({run,sourceHead,artifacts:shardArtifacts,executionFingerprint:fp,runtimeDependencyFingerprint:runtimeFp});
 }
@@ -451,7 +451,7 @@ const manifest={
   bootstrap_only:BOOTSTRAP_ONLY,
   inaccessible_artifact_count:inaccessibleArtifacts.length,
   inaccessible_artifacts:inaccessibleArtifacts,
-  resume_policy:'V10_RUNTIME_DEPENDENCY_BOUND_PLUS_V11_SEMANTIC_REUSE_V2',
+  resume_policy:'V10_RUNTIME_DEPENDENCY_BOUND_PLUS_V11_SEMANTIC_REUSE_PLUS_V12_ROOT_BATCH_V3',
   workflow_run_id:RUN_ID,
   workflow_run_attempt:RUN_ATTEMPT,
   candidate_run_limit:MAX_CANDIDATE_RUNS,
