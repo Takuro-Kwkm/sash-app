@@ -82,7 +82,7 @@ jobs:
             Accept:'application/vnd.github+json',
             'X-GitHub-Api-Version':'2022-11-28'
           };
-          const listUrl=`${api}/repos/${repo}/actions/workflows/project-governance-gate.yml/runs?branch=${encodeURIComponent(branch)}&per_page=100`;
+          const listUrl=`${api}/repos/${repo}/actions/workflows/project-governance-gate.yml/runs?per_page=100`;
           const listResponse=await fetch(listUrl,{headers});
           if(!listResponse.ok)throw new Error(`STALE_RUN_LIST_FAILED_${listResponse.status}`);
           const payload=await listResponse.json();
@@ -94,6 +94,7 @@ jobs:
           const active=new Set(['queued','in_progress','waiting','requested','pending']);
           const stale=(payload.workflow_runs??[]).filter((run)=>
             Number(run.id)!==currentRun &&
+            String(run.head_branch??'')===String(branch??'') &&
             run.head_sha!==head &&
             Number.isFinite(Date.parse(run.created_at??'')) &&
             Date.parse(run.created_at)<currentCreatedAt &&
@@ -105,10 +106,21 @@ jobs:
               method:'POST',
               headers
             });
-            if(!response.ok && response.status!==409){
+            if(response.status===409){
+              const force=await fetch(`${api}/repos/${repo}/actions/runs/${run.id}/force-cancel`,{
+                method:'POST',
+                headers
+              });
+              if(!force.ok&&force.status!==409){
+                throw new Error(`STALE_RUN_FORCE_CANCEL_FAILED run=${run.id} status=${force.status}`);
+              }
+              console.log(`STALE_GOVERNANCE_RUN_FORCE_CANCEL run=${run.id} head=${run.head_sha} result=${force.status===409?'ALREADY_TERMINAL_OR_CANCELLING':'REQUESTED'}`);
+              continue;
+            }
+            if(!response.ok){
               throw new Error(`STALE_RUN_CANCEL_FAILED run=${run.id} status=${response.status}`);
             }
-            console.log(`STALE_GOVERNANCE_RUN_CANCEL run=${run.id} head=${run.head_sha} result=${response.status===409?'ALREADY_TERMINAL_OR_CANCELLING':'REQUESTED'}`);
+            console.log(`STALE_GOVERNANCE_RUN_CANCEL run=${run.id} head=${run.head_sha} result=REQUESTED`);
           }
           NODE
 
