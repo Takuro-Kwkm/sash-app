@@ -1792,11 +1792,17 @@ jobs:
           set -euo pipefail
           node --input-type=module <<'NODE'
           const headers={Authorization:'Bearer '+process.env.GH_TOKEN,Accept:'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'};
-          const url=(process.env.GITHUB_API_URL||'https://api.github.com')+'/repos/'+process.env.GITHUB_REPOSITORY+'/actions/runs/'+process.env.SOURCE_RUN_ID+'/artifacts?per_page=100';
-          const response=await fetch(url,{headers});
-          if(!response.ok)throw new Error('UCHIRIMO_V12_CARRY_METADATA_HTTP_'+response.status);
-          const payload=await response.json();
-          const rows=(payload.artifacts??[]).filter((row)=>String(row.name)===process.env.SOURCE_NAME&&!row.expired);
+          const base=(process.env.GITHUB_API_URL||'https://api.github.com')+'/repos/'+process.env.GITHUB_REPOSITORY+'/actions/runs/'+process.env.SOURCE_RUN_ID+'/artifacts';
+          const all=[];
+          for(let page=1;;page+=1){
+            const response=await fetch(base+'?per_page=100&page='+page,{headers});
+            if(!response.ok)throw new Error('UCHIRIMO_V12_CARRY_METADATA_HTTP_'+response.status);
+            const payload=await response.json();
+            const batch=payload.artifacts??[];
+            all.push(...batch);
+            if(batch.length<100||all.length>=Number(payload.total_count??all.length))break;
+          }
+          const rows=all.filter((row)=>String(row.name)===process.env.SOURCE_NAME&&!row.expired);
           if(rows.length!==1)throw new Error('UCHIRIMO_V12_CARRY_METADATA_COUNT:'+rows.length);
           const row=rows[0];
           if(process.env.EXPECTED_ID&&String(row.id)!==process.env.EXPECTED_ID)throw new Error('UCHIRIMO_V12_CARRY_ARTIFACT_ID_MISMATCH');
