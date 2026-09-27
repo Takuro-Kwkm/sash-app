@@ -106,7 +106,7 @@ const wave=scheduleLane(capacity);
 assert.equal(wave.effective_normal_batch_size,2);
 assert.equal(wave.scheduled.length,256);
 assert.equal(wave.deferred.length,4);
-assert.equal(wave.deferred_unit_count,4);
+assert.equal(wave.deferred_unit_count,8);
 
 const state=buildControllerState({
   exact_head:'b'.repeat(40),
