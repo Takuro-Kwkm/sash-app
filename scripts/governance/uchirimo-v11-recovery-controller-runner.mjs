@@ -1,3 +1,4 @@
+import { createHash } from 'node:crypto';
 import { appendFileSync, mkdirSync, readFileSync, readdirSync, statSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import {
@@ -317,6 +318,29 @@ function reportIndex(dir){
   return byBase;
 }
 
+function fileIndex(dir){
+  const byBase=new Map();
+  for(const path of walkFiles(dir)){
+    const base=path.split('/').pop();
+    if(!byBase.has(base))byBase.set(base,[]);
+    byBase.get(base).push(path);
+  }
+  return byBase;
+}
+
+function rawFileSha256(path){
+  return createHash('sha256').update(readFileSync(path)).digest('hex');
+}
+
+function uniqueFileByBase(index,base){
+  const paths=index.get(base)??[];
+  if(!paths.length)throw new Error('UCHIRIMO_V12_EVIDENCE_FILE_MISSING:'+base);
+  const rows=paths.map((path)=>({path,hash:rawFileSha256(path)}));
+  const hashes=new Set(rows.map((row)=>row.hash));
+  if(hashes.size!==1)throw new Error('UCHIRIMO_V12_EVIDENCE_FILE_CONFLICT:'+base);
+  return rows[0];
+}
+
 function uniqueJsonByBase(index,base,{optional=false}={}){
   const paths=index.get(base)??[];
   if(!paths.length){
@@ -361,7 +385,7 @@ function executionResults(index){
   return byUnit;
 }
 
-function validateProofReport(unit,parent,report){
+function validateProofReport(unit,parent,report,files){
   if(report.status!=='PASS'||Number(report.unverified_discrete_selector_case_count??0)!==0)throw new Error('UCHIRIMO_V12_PROOF_NOT_PASS:'+unit.recovery_unit_id);
   if(String(report.exact_head??'')!==HEAD)throw new Error('UCHIRIMO_V12_PROOF_HEAD_MISMATCH:'+unit.recovery_unit_id);
   if(report.runtime_integrity_match!==true)throw new Error('UCHIRIMO_V12_PROOF_RUNTIME_INTEGRITY_FAIL:'+unit.recovery_unit_id);
@@ -371,7 +395,9 @@ function validateProofReport(unit,parent,report){
     if(String(report.decision_constraints_sha256??'')!==String(unit.decision_constraints_sha256??''))throw new Error('UCHIRIMO_V12_PROOF_CONSTRAINT_HASH_MISMATCH:'+unit.recovery_unit_id);
   }
   if(!String(report.case_artifact??'')||!/^[0-9a-f]{64}$/.test(String(report.case_artifact_sha256??'')))throw new Error('UCHIRIMO_V12_PROOF_CASE_IDENTITY_INVALID:'+unit.recovery_unit_id);
-  return report;
+  const caseFile=uniqueFileByBase(files,String(report.case_artifact));
+  if(caseFile.hash!==String(report.case_artifact_sha256))throw new Error('UCHIRIMO_V12_PROOF_CASE_SHA_MISMATCH:'+unit.recovery_unit_id);
+  return {...report,evidence_case_file_sha256:caseFile.hash};
 }
 
 async function advance(){
@@ -392,6 +418,7 @@ async function advance(){
   const certificates=structuredClone(certificatesEnvelope.certificates??{});
   const parents=structuredClone(parentsEnvelope.parents??{});
   const index=reportIndex(EXECUTION_INPUT);
+  const files=fileIndex(EXECUTION_INPUT);
   const results=executionResults(index);
   const summaries=planSummaries();
   const scheduledIds=new Set(summaries.flatMap((row)=>row.scheduled_recovery_unit_ids??[]).map(String));
@@ -413,7 +440,7 @@ async function advance(){
         ? 'shard-'+unit.parent_shard_index+'-report.json'
         : recoveryEvidenceNames(unit).report;
       const proofRow=uniqueJsonByBase(index,proofBase);
-      const proof=validateProofReport(unit,parent,proofRow.data);
+      const proof=validateProofReport(unit,parent,proofRow.data,files);
       transitioned={...transitioned,proof_report:proof,proof_report_sha256:proofRow.hash,proof_report_file:proofBase,evidence_batch_id:String(result.batch_id??''),evidence_batch_report:String(result.batch_report??'')};
     }
     if(transitioned.state==='SPLIT_REQUIRED'){
