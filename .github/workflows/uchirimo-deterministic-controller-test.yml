@@ -8,6 +8,10 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: uchirimo-deterministic-controller-prep
+  cancel-in-progress: true
+
 jobs:
   controller-contract:
     runs-on: ubuntu-latest
