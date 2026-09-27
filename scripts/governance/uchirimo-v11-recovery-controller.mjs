@@ -1,0 +1,247 @@
+import { createHash } from 'node:crypto';
+
+export const CONTROLLER_CONTRACT_VERSION='UCHIRIMO_V12_DETERMINISTIC_RECOVERY_CONTROLLER_V1';
+export const MATRIX_LIMIT=256;
+export const MAX_NORMAL_BATCH_SIZE=2;
+export const MAX_INFRA_RETRIES=2;
+export const MAX_AUTOMATIC_GENERATIONS=12;
+
+const TECHNICAL_KEYS=new Set(['legacyConstruction','legacyConfiguration','internal_construction']);
+const CONTINUOUS_KEYS=new Set(['size_w','size_h','frame_projection','fukashi_dimension','custom_w','custom_h','custom_width','custom_height']);
+
+export function stable(value){
+  if(Array.isArray(value))return value.map(stable);
+  if(!value||typeof value!=='object')return value;
+  return Object.fromEntries(Object.entries(value).sort(([a],[b])=>a.localeCompare(b)).map(([k,v])=>[k,stable(v)]));
+}
+export const stableJson=(value)=>JSON.stringify(stable(value));
+export const sha256=(value)=>createHash('sha256').update(typeof value==='string'?value:stableJson(value)).digest('hex');
+
+export function canonicalConstraints(constraints=[]){
+  if(!Array.isArray(constraints))throw new Error('RECOVERY_CONSTRAINTS_INVALID');
+  const seen=new Set();
+  return constraints.map((entry,index)=>{
+    const fieldKey=String(entry?.field_key??'');
+    const decision=stable(entry?.decision);
+    if(!fieldKey||!decision||!['VALUE','UNSET'].includes(String(decision.kind??'')))throw new Error('RECOVERY_CONSTRAINT_INVALID:'+index);
+    if(seen.has(fieldKey))throw new Error('RECOVERY_CONSTRAINT_DUPLICATE_FIELD:'+fieldKey);
+    seen.add(fieldKey);
+    return {field_key:fieldKey,decision};
+  });
+}
+
+export function recoveryUnitId(parentPartitionKey,constraints=[]){
+  const key=String(parentPartitionKey??'');
+  if(!key)throw new Error('RECOVERY_PARENT_PARTITION_KEY_REQUIRED');
+  return sha256(key+'\0'+stableJson(canonicalConstraints(constraints)));
+}
+
+export function classifyExecutionResult(result={}){
+  if(result.status==='PASS'&&result.timed_out!==true)return 'PASS';
+  const code=String(result.code??'');
+  const message=String(result.error??result.message??'');
+  if(result.timed_out===true||/UCHIRIMO_(?:CONSTRAINT_)?CHILD_TIMEOUT|STATE_LIMIT_REACHED|TERMINAL_LIMIT_REACHED/.test(code+' '+message))return 'COMPUTE_RECOVERABLE';
+  if(/(?:HTTP_)?(?:429|500|502|503|504)\b|ECONNRESET|ETIMEDOUT|EAI_AGAIN|SERVICE_UNAVAILABLE|GITHUB_API_TRANSIENT/.test(code+' '+message))return 'INFRA_TRANSIENT';
+  if(/HASH_MISMATCH|EXACT_HEAD_MISMATCH|DEPENDENCY_.*MISMATCH|IDENTITY_MISMATCH|DUPLICATE_PARTITION|COVERAGE_MISMATCH|RUNTIME_INTEGRITY/.test(code+' '+message))return 'INTEGRITY_BLOCK';
+  return 'SEMANTIC_BLOCK';
+}
+
+export function transitionUnit(unit,event){
+  const executionClass=String(unit?.execution_class??'NORMAL');
+  const infraRetries=Number(unit?.infra_retry_count??0);
+  if(!['NORMAL','HEAVY'].includes(executionClass))throw new Error('RECOVERY_EXECUTION_CLASS_INVALID:'+executionClass);
+  if(event==='PASS')return {...unit,state:'PASS',next_action:'NONE'};
+  if(event==='COMPUTE_RECOVERABLE'){
+    if(executionClass==='NORMAL')return {...unit,state:'PENDING_HEAVY',execution_class:'HEAVY',next_action:'PROMOTE_HEAVY'};
+    return {...unit,state:'SPLIT_REQUIRED',next_action:'SPLIT'};
+  }
+  if(event==='INFRA_TRANSIENT'){
+    if(infraRetries<MAX_INFRA_RETRIES)return {...unit,state:executionClass==='HEAVY'?'PENDING_HEAVY':'PENDING_NORMAL',infra_retry_count:infraRetries+1,next_action:'RETRY_SAME_UNIT'};
+    return {...unit,state:'BLOCKED_INFRA',next_action:'BLOCKED'};
+  }
+  if(event==='INTEGRITY_BLOCK')return {...unit,state:'BLOCKED_INTEGRITY',next_action:'BLOCKED'};
+  return {...unit,state:'BLOCKED_SEMANTIC',next_action:'BLOCKED'};
+}
+
+function enabledEnumValues(field){
+  return [...new Map((field?.values??[])
+    .filter((entry)=>entry.disabled!==true)
+    .map((entry)=>[stableJson(entry.value),entry.value])).values()];
+}
+
+export function chooseNextSplitAxis(fields=[],fixedKeys=[]){
+  const fixed=new Set([...fixedKeys].map(String));
+  for(const field of fields??[]){
+    const key=String(field?.key??'');
+    if(!key||fixed.has(key)||TECHNICAL_KEYS.has(key)||CONTINUOUS_KEYS.has(key))continue;
+    if(field.required!==true||field.readOnly===true||field.dataType!=='ENUM')continue;
+    const values=enabledEnumValues(field);
+    if(values.length>1)return {field_key:key,values:values.map(stable)};
+  }
+  return null;
+}
+
+export function buildSplitCertificate({
+  exact_head,
+  runtime_manifest_sha256,
+  proof_execution_fingerprint,
+  parent_partition_key,
+  parent_recovery_unit_id,
+  parent_constraints=[],
+  split_field_key,
+  domain_values=[],
+  parent_selection_sha256
+}){
+  const constraints=canonicalConstraints(parent_constraints);
+  const fieldKey=String(split_field_key??'');
+  if(!fieldKey||constraints.some((entry)=>entry.field_key===fieldKey))throw new Error('RECOVERY_SPLIT_FIELD_INVALID:'+fieldKey);
+  const values=[...new Map((domain_values??[]).map((value)=>[stableJson(value),stable(value)])).values()];
+  if(values.length<2)throw new Error('RECOVERY_SPLIT_DOMAIN_TOO_SMALL');
+  const children=values.map((value)=>{
+    const childConstraints=[...constraints,{field_key:fieldKey,decision:{kind:'VALUE',value}}];
+    return {
+      decision:value,
+      decision_sha256:sha256(value),
+      constraints:childConstraints,
+      decision_constraints_sha256:sha256(childConstraints),
+      recovery_unit_id:recoveryUnitId(parent_partition_key,childConstraints)
+    };
+  });
+  const body={
+    schema_version:'1.0.0',
+    controller_contract_version:CONTROLLER_CONTRACT_VERSION,
+    exact_head:String(exact_head??''),
+    runtime_manifest_sha256:String(runtime_manifest_sha256??''),
+    proof_execution_fingerprint:String(proof_execution_fingerprint??''),
+    parent_partition_key:String(parent_partition_key??''),
+    parent_recovery_unit_id:String(parent_recovery_unit_id??recoveryUnitId(parent_partition_key,constraints)),
+    parent_constraints:constraints,
+    parent_constraints_sha256:sha256(constraints),
+    split_field_key:fieldKey,
+    split_field_domain_sha256:sha256(values),
+    domain_values:values,
+    children,
+    parent_selection_sha256:String(parent_selection_sha256??'')
+  };
+  return {...body,certificate_sha256:sha256(body)};
+}
+
+export function validateSplitCertificate(certificate){
+  if(certificate?.controller_contract_version!==CONTROLLER_CONTRACT_VERSION)throw new Error('RECOVERY_SPLIT_CONTRACT_MISMATCH');
+  const body={...certificate}; delete body.certificate_sha256;
+  if(sha256(body)!==certificate.certificate_sha256)throw new Error('RECOVERY_SPLIT_CERTIFICATE_HASH_MISMATCH');
+  const constraints=canonicalConstraints(certificate.parent_constraints??[]);
+  if(sha256(constraints)!==certificate.parent_constraints_sha256)throw new Error('RECOVERY_PARENT_CONSTRAINT_HASH_MISMATCH');
+  const values=[...new Map((certificate.domain_values??[]).map((value)=>[stableJson(value),stable(value)])).values()];
+  if(values.length<2||sha256(values)!==certificate.split_field_domain_sha256)throw new Error('RECOVERY_SPLIT_DOMAIN_MISMATCH');
+  if((certificate.children??[]).length!==values.length)throw new Error('RECOVERY_SPLIT_CHILD_COUNT_MISMATCH');
+  const expected=new Map(values.map((value)=>[stableJson(value),value]));
+  const childIds=new Set();
+  for(const child of certificate.children??[]){
+    const key=stableJson(child.decision);
+    if(!expected.has(key))throw new Error('RECOVERY_SPLIT_CHILD_OUT_OF_DOMAIN');
+    expected.delete(key);
+    const childConstraints=[...constraints,{field_key:certificate.split_field_key,decision:{kind:'VALUE',value:stable(child.decision)}}];
+    const expectedId=recoveryUnitId(certificate.parent_partition_key,childConstraints);
+    if(expectedId!==child.recovery_unit_id)throw new Error('RECOVERY_SPLIT_CHILD_ID_MISMATCH');
+    if(sha256(childConstraints)!==child.decision_constraints_sha256)throw new Error('RECOVERY_SPLIT_CHILD_CONSTRAINT_HASH_MISMATCH');
+    if(childIds.has(expectedId))throw new Error('RECOVERY_SPLIT_CHILD_DUPLICATE');
+    childIds.add(expectedId);
+  }
+  if(expected.size)throw new Error('RECOVERY_SPLIT_DOMAIN_GAP');
+  return true;
+}
+
+export function validateRecoveryTree({root_unit_id,units={},certificates={}}){
+  const visiting=new Set();
+  const visit=(unitId)=>{
+    if(visiting.has(unitId))throw new Error('RECOVERY_TREE_CYCLE:'+unitId);
+    const unit=units[unitId];
+    if(!unit)throw new Error('RECOVERY_TREE_UNIT_MISSING:'+unitId);
+    if(unit.state==='PASS')return {leaf_ids:[unitId],closed:true};
+    if(unit.state!=='PENDING_CHILDREN'&&unit.state!=='SPLIT_REQUIRED')return {leaf_ids:[],closed:false};
+    const certificate=certificates[unitId];
+    if(!certificate)return {leaf_ids:[],closed:false};
+    validateSplitCertificate(certificate);
+    if(certificate.parent_recovery_unit_id!==unitId)throw new Error('RECOVERY_TREE_CERTIFICATE_PARENT_MISMATCH:'+unitId);
+    visiting.add(unitId);
+    const leaves=[];
+    for(const child of certificate.children){
+      const result=visit(child.recovery_unit_id);
+      if(!result.closed){visiting.delete(unitId);return {leaf_ids:[],closed:false};}
+      leaves.push(...result.leaf_ids);
+    }
+    visiting.delete(unitId);
+    return {leaf_ids:leaves.sort(),closed:true};
+  };
+  return visit(root_unit_id);
+}
+
+function unitSort(a,b){
+  return Number(a.parent_shard_index)-Number(b.parent_shard_index)
+    || Number(a.recovery_depth??0)-Number(b.recovery_depth??0)
+    || String(a.recovery_unit_id).localeCompare(String(b.recovery_unit_id));
+}
+
+export function scheduleLane(units,{matrixLimit=MATRIX_LIMIT}={}){
+  const rows=[...units].sort(unitSort);
+  const heavy=rows.filter((row)=>row.execution_class==='HEAVY');
+  const normal=rows.filter((row)=>row.execution_class!=='HEAVY');
+  let normalBatchSize=1;
+  if(heavy.length+normal.length>matrixLimit)normalBatchSize=2;
+  const batches=[];
+  for(let offset=0;offset<normal.length;offset+=normalBatchSize){
+    const items=normal.slice(offset,offset+normalBatchSize);
+    batches.push({execution_class:'NORMAL',units:items});
+  }
+  for(const row of heavy)batches.push({execution_class:'HEAVY',units:[row]});
+  batches.sort((a,b)=>unitSort(a.units[0],b.units[0]));
+  const scheduled=batches.slice(0,matrixLimit);
+  const deferred=batches.slice(matrixLimit);
+  return {
+    matrix_limit:matrixLimit,
+    effective_normal_batch_size:normalBatchSize,
+    scheduled,
+    deferred,
+    scheduled_unit_count:scheduled.reduce((n,b)=>n+b.units.length,0),
+    deferred_unit_count:deferred.reduce((n,b)=>n+b.units.length,0)
+  };
+}
+
+export function buildControllerState(input){
+  const state={
+    schema_version:'1.0.0',
+    controller_contract_version:CONTROLLER_CONTRACT_VERSION,
+    exact_head:String(input.exact_head??''),
+    generation:Number(input.generation??0),
+    source_controller_run_id:input.source_controller_run_id==null?null:Number(input.source_controller_run_id),
+    parent_population_count:Number(input.parent_population_count??0),
+    parent_population_sha256:String(input.parent_population_sha256??''),
+    runtime_manifest_sha256:String(input.runtime_manifest_sha256??''),
+    execution_fingerprint:String(input.execution_fingerprint??''),
+    planner_fingerprint:String(input.planner_fingerprint??''),
+    closed_parent_count:Number(input.closed_parent_count??0),
+    open_parent_count:Number(input.open_parent_count??0),
+    pass_unit_count:Number(input.pass_unit_count??0),
+    pending_normal_count:Number(input.pending_normal_count??0),
+    pending_heavy_count:Number(input.pending_heavy_count??0),
+    split_required_count:Number(input.split_required_count??0),
+    deferred_count:Number(input.deferred_count??0),
+    blocked_counts:stable(input.blocked_counts??{}),
+    recovery_tree_root_hash:String(input.recovery_tree_root_hash??''),
+    prior_state_sha256:input.prior_state_sha256??null
+  };
+  const blocked=Object.values(state.blocked_counts).reduce((a,b)=>a+Number(b||0),0);
+  if(blocked>0)state.next_action='BLOCKED';
+  else if(state.open_parent_count===0&&state.deferred_count===0)state.next_action='FINAL_AGGREGATE';
+  else if(state.generation>=MAX_AUTOMATIC_GENERATIONS)state.next_action='BLOCKED';
+  else if(state.pending_normal_count+state.pending_heavy_count+state.split_required_count+state.deferred_count>0)state.next_action='EXECUTE';
+  else state.next_action='BLOCKED';
+  state.current_state_sha256=sha256(state);
+  if(state.prior_state_sha256&&state.prior_state_sha256===state.current_state_sha256){
+    state.next_action='BLOCKED';
+    state.blocked_counts={...state.blocked_counts,BLOCKED_NO_PROGRESS:Number(state.blocked_counts.BLOCKED_NO_PROGRESS??0)+1};
+    state.current_state_sha256=sha256({...state,current_state_sha256:undefined});
+  }
+  return state;
+}
