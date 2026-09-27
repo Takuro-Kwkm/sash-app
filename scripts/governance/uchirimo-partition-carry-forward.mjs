@@ -18,6 +18,9 @@ const MAX_CANDIDATE_RUNS=Number(process.env.UCHIRIMO_CARRY_FORWARD_CANDIDATE_RUN
 const PROOF_SCRIPT='scripts/uchirimo-full-selector-proof.mjs';
 const BATCH_RUNNER='scripts/governance/uchirimo-selector-batch-runner.mjs';
 const POLICY_PATH='project-governance/evidence-dependency-policy.json';
+const V12_CONTROLLER='scripts/governance/uchirimo-v11-recovery-controller.mjs';
+const V12_CONTROLLER_RUNNER='scripts/governance/uchirimo-v11-recovery-controller-runner.mjs';
+const V12_FINALIZER='scripts/governance/uchirimo-v11-recovery-finalizer.mjs';
 const LEGACY_V10_REFERENCE_HEAD='508021c64897039b2fa6e0391058ad88394536af';
 const LEGACY_V10_MODEL='UCHIRIMO_REACHABLE_DISCRETE_SELECTOR_EXHAUSTIVE_SHARD_V10';
 const V11_MODEL='UCHIRIMO_REACHABLE_DISCRETE_SELECTOR_EXHAUSTIVE_SYMBOLIC_SHARD_V11';
@@ -110,11 +113,11 @@ function dependencyRows(ref){
   return deps;
 }
 function runtimeDependencyFingerprint(ref){
-  const deps=dependencyRows(ref).filter((row)=>![PROOF_SCRIPT,BATCH_RUNNER,POLICY_PATH].includes(row.path));
+  const deps=dependencyRows(ref).filter((row)=>![PROOF_SCRIPT,BATCH_RUNNER,POLICY_PATH,V12_CONTROLLER,V12_CONTROLLER_RUNNER,V12_FINALIZER].includes(row.path));
   return sha({family:'UCHIRIMO_SELECTOR_RUNTIME_BEHAVIOR',dependencies:deps});
 }
 function executionDependencyFingerprint(ref){
-  const deps=dependencyRows(ref).filter((row)=>![PROOF_SCRIPT,BATCH_RUNNER].includes(row.path));
+  const deps=dependencyRows(ref).filter((row)=>![PROOF_SCRIPT,BATCH_RUNNER,POLICY_PATH,V12_CONTROLLER,V12_CONTROLLER_RUNNER,V12_FINALIZER].includes(row.path));
   return sha({
     family:'UCHIRIMO_SELECTOR_PARTITION_EXECUTION',
     semantic_source_sha256:sha(executionSemanticSource(ref)),
