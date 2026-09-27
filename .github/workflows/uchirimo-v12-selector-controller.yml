@@ -46,6 +46,16 @@ jobs:
         with:
           node-version: 24
       - run: npm install --ignore-scripts
+      - name: Compute generation identities
+        id: generation
+        shell: bash
+        run: |
+          node --input-type=module <<'NODE'
+          import {appendFileSync} from 'node:fs';
+          const current=Number(process.env.GEN);
+          if(!Number.isInteger(current)||current<0)throw new Error('UCHIRIMO_V12_GENERATION_INVALID:'+process.env.GEN);
+          appendFileSync(process.env.GITHUB_OUTPUT,'previous_generation='+String(Math.max(0,current-1))+'\n');
+          NODE
       - name: Build frozen canonical parent plan
         env:
           UCHIRIMO_SELECTOR_MODE: plan-all
@@ -86,7 +96,7 @@ jobs:
         if: ${{ inputs.generation > 0 }}
         uses: actions/download-artifact@v4
         with:
-          name: uchirimo-v12-controller-state-${{ env.HEAD_SHA }}-g${{ inputs.generation - 1 }}
+          name: uchirimo-v12-controller-state-${{ env.HEAD_SHA }}-g${{ steps.generation.outputs.previous_generation }}
           path: artifacts/uchirimo-v12-prior
           run-id: ${{ inputs.source_controller_run_id }}
           github-token: ${{ github.token }}
@@ -1660,13 +1670,14 @@ jobs:
     env:
       GH_TOKEN: ${{ github.token }}
       HEAD_BRANCH: ${{ github.event.pull_request.head.ref || github.ref_name }}
-      NEXT_GEN: ${{ inputs.generation + 1 }}
+      CURRENT_GEN: ${{ inputs.generation }}
       SOURCE_RUN_ID: ${{ github.run_id }}
     steps:
       - name: Dispatch exactly one next Project Governance generation
         shell: bash
         run: |
           set -euo pipefail
+          NEXT_GEN="$(node -e "const n=Number(process.env.CURRENT_GEN); if(!Number.isInteger(n)||n<0)process.exit(2); process.stdout.write(String(n+1));")"
           gh api --method POST "repos/${GITHUB_REPOSITORY}/actions/workflows/project-governance-gate.yml/dispatches" \
             -f ref="$HEAD_BRANCH" \
             -f "inputs[uchirimo_v12_generation]=$NEXT_GEN" \
