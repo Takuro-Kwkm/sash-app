@@ -1,0 +1,20 @@
+name: Temporary Cancel Stale Uchirimo Run 36285811763
+
+on:
+  push:
+    branches:
+      - tmp/cancel-stale-uchirimo-run-36285811763
+
+concurrency:
+  group: project-governance-feat/new-construction-runtime-ui-v16-20260910-980de6c80823c36d577eed8b630ca102ccf1e1d5
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  noop:
+    runs-on: ubuntu-latest
+    timeout-minutes: 1
+    steps:
+      - run: echo "STALE_RUN_CONCURRENCY_CANCEL_REQUESTED=36285811763"
