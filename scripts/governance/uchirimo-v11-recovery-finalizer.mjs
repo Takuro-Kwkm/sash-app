@@ -175,15 +175,30 @@ try{
     if(!status)throw new Error('UCHIRIMO_V12_FINALIZER_PARENT_STATUS_MISSING:'+key);
     const targetReport=join(OUT,'shard-'+parent.shard+'-report.json');
     if(status.closure_type==='ROOT_PASS'&&status.status==='ROOT_PASS_CARRY_FORWARD'){
-      const row=uniqueLocal(carryIndex,'shard-'+parent.shard+'-report.json');
-      if(!row)throw new Error('UCHIRIMO_V12_FINALIZER_CARRY_REPORT_MISSING:'+parent.shard);
-      const report=readJson(row.path);
+      const reportBase='shard-'+parent.shard+'-report.json';
+      const localReport=uniqueLocal(carryIndex,reportBase);
+      let reportBytes,report,caseBytes;
+      if(localReport){
+        reportBytes=readFileSync(localReport.path);
+        report=JSON.parse(String(reportBytes));
+        const caseRow=uniqueLocal(carryIndex,String(report.case_artifact));
+        if(!caseRow)throw new Error('UCHIRIMO_V12_FINALIZER_CARRY_CASE_MISSING:'+parent.shard);
+        caseBytes=readFileSync(caseRow.path);
+      }else{
+        const runId=Number(status.current_carry_forward_run_id??0);
+        const artifactIdentity=String(status.current_carry_forward_artifact_identity??'');
+        if(!runId||!artifactIdentity)throw new Error('UCHIRIMO_V12_FINALIZER_CARRY_SOURCE_IDENTITY_MISSING:'+parent.shard);
+        const source=await artifactSource(runId,artifactIdentity,temp);
+        reportBytes=sourceBytes(source,reportBase);
+        report=JSON.parse(String(reportBytes));
+        caseBytes=sourceBytes(source,String(report.case_artifact));
+        sourceArtifacts.set(String(source.identity),{run_id:source.run_id,artifact_id:source.artifact_id??null,artifact_identity:source.identity,artifact_zip_sha256:source.artifact_zip_sha256??null});
+      }
       validateCanonicalReport(report,parent,String(state.runtime_manifest_sha256));
       if(report.evidence_origin!=='CURRENT_HEAD_CARRY_FORWARD'||report.current_head_binding?.status!=='PASS'||String(report.current_head_binding?.current_exact_head??'')!==HEAD)throw new Error('UCHIRIMO_V12_FINALIZER_CARRY_BINDING_INVALID:'+parent.shard);
-      const caseRow=uniqueLocal(carryIndex,String(report.case_artifact));
-      if(!caseRow||caseRow.hash!==String(report.case_artifact_sha256))throw new Error('UCHIRIMO_V12_FINALIZER_CARRY_CASE_SHA_MISMATCH:'+parent.shard);
-      copyFileSync(row.path,targetReport);
-      copyFileSync(caseRow.path,join(OUT,String(report.case_artifact)));
+      if(rawSha(caseBytes)!==String(report.case_artifact_sha256))throw new Error('UCHIRIMO_V12_FINALIZER_CARRY_CASE_SHA_MISMATCH:'+parent.shard);
+      writeFileSync(targetReport,reportBytes);
+      writeFileSync(join(OUT,String(report.case_artifact)),caseBytes);
       carryCount+=1;
       continue;
     }
