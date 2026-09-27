@@ -262,6 +262,20 @@ function isV10MeasuredTimeoutClass(row,glassFamily,extraSeed){
     // domain. This changes execution granularity only; no Runtime/UI rule changes.
     return depth<5;
   }
+  if(nodeId==='UCH-RES-SL2-W'
+    &&['single_glazing','insulating_glass'].includes(glassFamily)){
+    // The same run produced repeated 50 minute heavy-child timeouts across both
+    // residential two-panel window glass families. Split two additional required
+    // ENUM axes; logical coverage and selector semantics remain unchanged.
+    return depth<5;
+  }
+  if(['UCH-RES-SL3-T','UCH-RES-SL3-W'].includes(nodeId)
+    &&glassFamily==='insulating_glass'){
+    // Measured 50 minute heavy-child timeouts also reached these residential
+    // three-panel families. Refine execution granularity only, preserving the
+    // complete parent domain as the disjoint union of the generated children.
+    return depth<5;
+  }
   return false;
 }
 
