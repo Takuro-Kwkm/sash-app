@@ -4,6 +4,8 @@ import { join } from 'node:path';
 import {
   CONTROLLER_CONTRACT_VERSION,
   MAX_AUTOMATIC_GENERATIONS,
+  MAX_RECOVERY_DEPTH,
+  assertComputeSchedule,
   buildControllerState,
   buildSplitCertificate,
   canonicalConstraints,
@@ -18,6 +20,7 @@ import {
   stableJson,
   synthesizeParentClosure,
   transitionUnit,
+  validateSplitCertificate,
   validateRecoveryTree
 } from './uchirimo-v11-recovery-controller.mjs';
 import { loadRegisteredRuntime } from '../../src/catalog/runtime-master/runtime-master-registry.mjs';
@@ -71,7 +74,7 @@ function validatePlan(plan){
   if(HEAD&&String(plan.exact_head??'')!==HEAD)throw new Error('UCHIRIMO_V12_PARENT_PLAN_HEAD_MISMATCH');
 }
 
-function init(){
+async function init(){
   const plan=readJson(PLAN_PATH);
   const carry=readJson(CARRY_PATH);
   validatePlan(plan);
@@ -85,8 +88,9 @@ function init(){
 
   const parentStatuses={};
   const units={};
+  const certificates={};
   let pendingNormal=0;
-  let pendingHeavy=0;
+  let pendingHeavy=0,knownHeavyParents=0,preSplitParents=0,preSplitChildren=0,unsplittable=0;
   for(const parent of plan.partitions){
     const key=String(parent.partition_key);
     if(reused.has(key)){
@@ -105,9 +109,8 @@ function init(){
     }
     const rootId=recoveryUnitId(key,[]);
     const executionClass=heavy.has(key)?'HEAVY':'NORMAL';
-    const state=executionClass==='HEAVY'?'PENDING_HEAVY':'PENDING_NORMAL';
-    if(executionClass==='HEAVY')pendingHeavy+=1;
-    else pendingNormal+=1;
+    const state=executionClass==='HEAVY'?'SPLIT_REQUIRED':'PENDING_NORMAL';
+    if(executionClass==='NORMAL')pendingNormal+=1;
     units[rootId]={
       controller_contract_version:CONTROLLER_CONTRACT_VERSION,
       parent_shard_index:Number(parent.shard),
@@ -129,11 +132,18 @@ function init(){
       closure_type:null,
       root_recovery_unit_id:rootId
     };
+    if(executionClass==='HEAVY'){
+      knownHeavyParents+=1;
+      const split=await splitUnit({parent,unit:units[rootId],units,certificates,exactHead:String(plan.exact_head),runtimeManifestSha:String(carry.runtime_manifest_sha256??''),executionFingerprint:String(carry.execution_dependency_fingerprint??'')});
+      units[rootId]=split.unit;
+      if(split.unit.state==='BLOCKED_UNSPLITTABLE')unsplittable+=1;
+      else {preSplitParents+=1;preSplitChildren+=split.child_count;pendingNormal+=split.child_count;}
+    }
   }
   const populationHash=parentPopulationHash(plan);
   const recoveryTreeRootHash=sha256({
     units:Object.values(units).sort((a,b)=>a.parent_shard_index-b.parent_shard_index),
-    certificates:{},
+    certificates,
     parent_statuses:Object.values(parentStatuses).sort((a,b)=>a.parent_shard_index-b.parent_shard_index)
   });
   const state=buildControllerState({
@@ -152,13 +162,13 @@ function init(){
     pending_heavy_count:pendingHeavy,
     split_required_count:0,
     deferred_count:0,
-    blocked_counts:{},
+    blocked_counts:unsplittable?{BLOCKED_UNSPLITTABLE:unsplittable}:{},
     recovery_tree_root_hash:recoveryTreeRootHash,
     prior_state_sha256:null
   });
   writeJson(STATE_PATH,state);
   writeJson(UNITS_PATH,{schema_version:'1.0.0',controller_contract_version:CONTROLLER_CONTRACT_VERSION,exact_head:String(plan.exact_head),units});
-  writeJson(CERTIFICATES_PATH,{schema_version:'1.0.0',controller_contract_version:CONTROLLER_CONTRACT_VERSION,exact_head:String(plan.exact_head),certificates:{}});
+  writeJson(CERTIFICATES_PATH,{schema_version:'1.0.0',controller_contract_version:CONTROLLER_CONTRACT_VERSION,exact_head:String(plan.exact_head),certificates});
   writeJson(PARENTS_PATH,{schema_version:'1.0.0',controller_contract_version:CONTROLLER_CONTRACT_VERSION,exact_head:String(plan.exact_head),parent_population_count:3956,parent_population_sha256:populationHash,parents:parentStatuses});
   writeJson(join(OUT,'controller-manifest.json'),{
     schema_version:'1.0.0',
@@ -171,6 +181,11 @@ function init(){
     open_parent_count:3956-reused.size,
     initial_pending_normal_count:pendingNormal,
     initial_pending_heavy_count:pendingHeavy,
+    known_heavy_parent_count:knownHeavyParents,
+    pre_split_parent_count:preSplitParents,
+    pre_split_child_count:preSplitChildren,
+    known_heavy_root_execution_count:0,
+    unsplittable_pre_split_parent_count:unsplittable,
     runtime_manifest_sha256:String(carry.runtime_manifest_sha256??''),
     execution_fingerprint:String(carry.execution_dependency_fingerprint??''),
     source_carry_forward_manifest_sha256:sha256(carry),
@@ -178,8 +193,9 @@ function init(){
     current_carry_forward_artifact_identity:CARRY_ARTIFACT_IDENTITY||null,
     current_carry_forward_artifact_id:CARRY_ARTIFACT_ID||null,
     current_carry_forward_artifact_digest:CARRY_ARTIFACT_DIGEST||null,
-    status:'PASS'
+    status:unsplittable?'BLOCKED_UNSPLITTABLE':'PASS'
   });
+  if(unsplittable)throw new Error('BLOCKED_UNSPLITTABLE:'+unsplittable);
   console.log('UCHIRIMO_V12_CONTROLLER_INIT=PASS parents=3956 closed='+reused.size+' open='+(3956-reused.size)+' normal='+pendingNormal+' heavy='+pendingHeavy+' parent_population_sha256='+populationHash);
 }
 
@@ -199,6 +215,10 @@ function planLane(){
     : Object.values(unitsEnvelope.units??{})
       .filter((unit)=>['PENDING_NORMAL','PENDING_HEAVY'].includes(String(unit.state)))
       .filter((unit)=>Number(unit.parent_shard_index)%LANE_COUNT===LANE_INDEX);
+  for(const unit of eligible){
+    assertComputeSchedule(unit,unitsEnvelope.units);
+    if(Number(unit.recovery_depth)===0&&unit.execution_class==='HEAVY')throw new Error('KNOWN_HEAVY_ROOT_EXECUTION_FORBIDDEN:'+unit.recovery_unit_id);
+  }
   const scheduled=scheduleLane(eligible);
   const toItem=(unit)=>{
     const parent=parentByKey.get(String(unit.parent_partition_key));
@@ -319,6 +339,46 @@ async function resolveUnitSelection(parent,unit){
     for(const [seedKey,value] of Object.entries(seed))if(!same(result.selection?.[seedKey],value))throw new Error('UCHIRIMO_V12_SPLIT_CLEARED_SEED:'+unit.recovery_unit_id+':'+seedKey);
   }
   return {seed,result,constraints};
+}
+
+async function splitUnit({parent,unit,units,certificates,exactHead,runtimeManifestSha,executionFingerprint}){
+  const unitId=String(unit.recovery_unit_id);
+  if(Number(unit.recovery_depth)>=MAX_RECOVERY_DEPTH)return {unit:{...unit,state:'BLOCKED_RECOVERY_DEPTH',next_action:'BLOCKED'},child_count:0};
+  const resolved=await resolveUnitSelection(parent,unit);
+  const axis=chooseNextSplitAxis(resolved.result.fields??[],[...Object.keys(resolved.seed),...resolved.constraints.map((entry)=>entry.field_key)]);
+  if(!axis)return {unit:{...unit,state:'BLOCKED_UNSPLITTABLE',next_action:'BLOCKED'},child_count:0};
+  const certificate=buildSplitCertificate({
+    exact_head:exactHead,
+    runtime_manifest_sha256:runtimeManifestSha,
+    proof_execution_fingerprint:executionFingerprint,
+    parent_partition_key:String(unit.parent_partition_key),
+    parent_recovery_unit_id:unitId,
+    parent_constraints:resolved.constraints,
+    split_field_key:axis.field_key,
+    domain_values:axis.values,
+    parent_selection_sha256:sha256(resolved.result.selection??{})
+  });
+  validateSplitCertificate(certificate);
+  for(const child of certificate.children){
+    if(units[child.recovery_unit_id])throw new Error('UCHIRIMO_V12_SPLIT_CHILD_ALREADY_EXISTS:'+child.recovery_unit_id);
+    for(const other of Object.values(units))if(other.parent_partition_key===unit.parent_partition_key&&other.decision_constraints_sha256===child.decision_constraints_sha256)throw new Error('SAME_CONSTRAINT_COMPUTE_RETRY_FORBIDDEN:'+child.recovery_unit_id);
+    units[child.recovery_unit_id]={
+      controller_contract_version:CONTROLLER_CONTRACT_VERSION,
+      parent_shard_index:Number(unit.parent_shard_index),
+      parent_partition_key:String(unit.parent_partition_key),
+      recovery_unit_id:String(child.recovery_unit_id),
+      parent_recovery_unit_id:unitId,
+      recovery_depth:Number(unit.recovery_depth)+1,
+      decision_constraints:child.constraints,
+      decision_constraints_sha256:child.decision_constraints_sha256,
+      execution_class:'NORMAL',
+      infra_retry_count:0,
+      state:'PENDING_NORMAL',
+      next_action:'EXECUTE'
+    };
+  }
+  certificates[unitId]=certificate;
+  return {unit:{...unit,state:'PENDING_CHILDREN',next_action:'WAIT_CHILDREN',split_certificate_sha256:certificate.certificate_sha256},child_count:certificate.children.length};
 }
 
 function reportIndex(dir){
@@ -445,7 +505,8 @@ async function advance(){
 
   for(const unitId of scheduledIds){
     const unit=units[unitId];
-    if(!['PENDING_NORMAL','PENDING_HEAVY'].includes(String(unit.state)))throw new Error('UCHIRIMO_V12_SCHEDULED_UNIT_STATE_INVALID:'+unitId+':'+unit.state);
+    assertComputeSchedule(unit,units);
+    if(Number(unit.recovery_depth)===0&&unit.execution_class==='HEAVY')throw new Error('KNOWN_HEAVY_ROOT_EXECUTION_FORBIDDEN:'+unitId);
     const result=results.get(unitId)??{status:'FAIL',timed_out:false,error:'GITHUB_API_TRANSIENT:MISSING_SCHEDULED_BATCH_RESULT',code:'GITHUB_API_TRANSIENT'};
     const event=classifyExecutionResult(result);
     let transitioned=transitionUnit(unit,event);
@@ -462,43 +523,7 @@ async function advance(){
     if(transitioned.state==='SPLIT_REQUIRED'){
       const parent=parentByKey.get(String(unit.parent_partition_key));
       if(!parent)throw new Error('UCHIRIMO_V12_SPLIT_PARENT_UNKNOWN:'+unitId);
-      const resolved=await resolveUnitSelection(parent,unit);
-      const fixedKeys=[...Object.keys(resolved.seed),...resolved.constraints.map((entry)=>entry.field_key)];
-      const axis=chooseNextSplitAxis(resolved.result.fields??[],fixedKeys);
-      if(!axis){
-        transitioned={...transitioned,state:'BLOCKED_UNSPLITTABLE',next_action:'BLOCKED'};
-      }else{
-        const certificate=buildSplitCertificate({
-          exact_head:HEAD,
-          runtime_manifest_sha256:String(priorState.runtime_manifest_sha256),
-          proof_execution_fingerprint:String(priorState.execution_fingerprint),
-          parent_partition_key:String(unit.parent_partition_key),
-          parent_recovery_unit_id:unitId,
-          parent_constraints:resolved.constraints,
-          split_field_key:axis.field_key,
-          domain_values:axis.values,
-          parent_selection_sha256:sha256(resolved.result.selection??{})
-        });
-        certificates[unitId]=certificate;
-        for(const child of certificate.children){
-          if(units[child.recovery_unit_id])throw new Error('UCHIRIMO_V12_SPLIT_CHILD_ALREADY_EXISTS:'+child.recovery_unit_id);
-          units[child.recovery_unit_id]={
-            controller_contract_version:CONTROLLER_CONTRACT_VERSION,
-            parent_shard_index:Number(unit.parent_shard_index),
-            parent_partition_key:String(unit.parent_partition_key),
-            recovery_unit_id:String(child.recovery_unit_id),
-            parent_recovery_unit_id:unitId,
-            recovery_depth:Number(unit.recovery_depth)+1,
-            decision_constraints:child.constraints,
-            decision_constraints_sha256:child.decision_constraints_sha256,
-            execution_class:'NORMAL',
-            infra_retry_count:0,
-            state:'PENDING_NORMAL',
-            next_action:'EXECUTE'
-          };
-        }
-        transitioned={...transitioned,state:'PENDING_CHILDREN',next_action:'WAIT_CHILDREN',split_certificate_sha256:certificate.certificate_sha256};
-      }
+      transitioned=(await splitUnit({parent,unit:transitioned,units,certificates,exactHead:HEAD,runtimeManifestSha:String(priorState.runtime_manifest_sha256),executionFingerprint:String(priorState.execution_fingerprint)})).unit;
     }
     units[unitId]=transitioned;
   }
@@ -633,7 +658,7 @@ function resumeGeneration(){
   console.log('UCHIRIMO_V12_CONTROLLER_RESUME=PASS generation='+GENERATION+' source_generation='+priorState.generation+' open='+priorState.open_parent_count);
 }
 
-if(MODE==='init')init();
+if(MODE==='init')await init();
 else if(MODE==='plan-lane')planLane();
 else if(MODE==='advance')await advance();
 else if(MODE==='resume-generation')resumeGeneration();
