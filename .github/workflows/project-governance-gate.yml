@@ -340,6 +340,11 @@ jobs:
       - governance
       - post-review-uchirimo-recovery-pilot
     if: ${{ always() && needs.governance.outputs.authorized == 'true' && (needs.governance.outputs.uchirimo_v12_recovery_only == 'true' || needs.governance.outputs.uchirimo_v11_recovery_only == 'true' || needs.post-review-uchirimo-recovery-pilot.outputs.full_coverage_authorized == 'true') }}
+    permissions:
+      contents: read
+      pull-requests: read
+      issues: read
+      actions: write
     uses: ./.github/workflows/global-window-selection-flow-gate.yml
     with:
       controller_head: ${{ github.event.pull_request.head.sha || github.sha }}
