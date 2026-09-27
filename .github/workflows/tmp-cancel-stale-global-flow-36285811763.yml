@@ -1,0 +1,20 @@
+name: Temporary Cancel Stale Global Flow 36285811763
+
+on:
+  push:
+    branches:
+      - tmp/cancel-stale-uchirimo-run-36285811763
+
+concurrency:
+  group: global-window-selection-flow-feat/new-construction-runtime-ui-v16-20260910
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  noop:
+    runs-on: ubuntu-latest
+    timeout-minutes: 1
+    steps:
+      - run: echo "STALE_GLOBAL_FLOW_CONCURRENCY_CANCEL_REQUESTED=36285811763"
