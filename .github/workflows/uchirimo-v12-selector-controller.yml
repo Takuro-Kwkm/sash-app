@@ -29,7 +29,15 @@ permissions:
   issues: read
 
 jobs:
+  governance-authority:
+    uses: ./.github/workflows/governance-authorization.yml
+    with:
+      controller_head: ${{ inputs.controller_head }}
+      release: false
+
   prepare:
+    needs: ["governance-authority"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' }}
     runs-on: ubuntu-latest
     timeout-minutes: 60
     env:
@@ -127,7 +135,8 @@ jobs:
           if-no-files-found: error
 
   plan-0:
-    needs: prepare
+    needs: ["governance-authority", "prepare"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && needs.prepare.result == 'success' }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
     outputs:
@@ -174,7 +183,8 @@ jobs:
 
 
   plan-1:
-    needs: prepare
+    needs: ["governance-authority", "prepare"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && needs.prepare.result == 'success' }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
     outputs:
@@ -221,7 +231,8 @@ jobs:
 
 
   plan-2:
-    needs: prepare
+    needs: ["governance-authority", "prepare"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && needs.prepare.result == 'success' }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
     outputs:
@@ -268,7 +279,8 @@ jobs:
 
 
   plan-3:
-    needs: prepare
+    needs: ["governance-authority", "prepare"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && needs.prepare.result == 'success' }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
     outputs:
@@ -315,7 +327,8 @@ jobs:
 
 
   plan-4:
-    needs: prepare
+    needs: ["governance-authority", "prepare"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && needs.prepare.result == 'success' }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
     outputs:
@@ -362,7 +375,8 @@ jobs:
 
 
   plan-5:
-    needs: prepare
+    needs: ["governance-authority", "prepare"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && needs.prepare.result == 'success' }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
     outputs:
@@ -409,7 +423,8 @@ jobs:
 
 
   plan-6:
-    needs: prepare
+    needs: ["governance-authority", "prepare"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && needs.prepare.result == 'success' }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
     outputs:
@@ -456,7 +471,8 @@ jobs:
 
 
   plan-7:
-    needs: prepare
+    needs: ["governance-authority", "prepare"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && needs.prepare.result == 'success' }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
     outputs:
@@ -503,7 +519,8 @@ jobs:
 
 
   plan-8:
-    needs: prepare
+    needs: ["governance-authority", "prepare"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && needs.prepare.result == 'success' }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
     outputs:
@@ -550,7 +567,8 @@ jobs:
 
 
   plan-9:
-    needs: prepare
+    needs: ["governance-authority", "prepare"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && needs.prepare.result == 'success' }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
     outputs:
@@ -597,7 +615,8 @@ jobs:
 
 
   plan-10:
-    needs: prepare
+    needs: ["governance-authority", "prepare"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && needs.prepare.result == 'success' }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
     outputs:
@@ -644,7 +663,8 @@ jobs:
 
 
   plan-11:
-    needs: prepare
+    needs: ["governance-authority", "prepare"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && needs.prepare.result == 'success' }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
     outputs:
@@ -691,7 +711,8 @@ jobs:
 
 
   plan-12:
-    needs: prepare
+    needs: ["governance-authority", "prepare"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && needs.prepare.result == 'success' }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
     outputs:
@@ -738,7 +759,8 @@ jobs:
 
 
   plan-13:
-    needs: prepare
+    needs: ["governance-authority", "prepare"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && needs.prepare.result == 'success' }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
     outputs:
@@ -785,7 +807,8 @@ jobs:
 
 
   plan-14:
-    needs: prepare
+    needs: ["governance-authority", "prepare"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && needs.prepare.result == 'success' }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
     outputs:
@@ -832,7 +855,8 @@ jobs:
 
 
   plan-15:
-    needs: prepare
+    needs: ["governance-authority", "prepare"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && needs.prepare.result == 'success' }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
     outputs:
@@ -879,8 +903,8 @@ jobs:
 
 
   execute-0:
-    needs: plan-0
-    if: ${{ always() && needs.plan-0.result == 'success' }}
+    needs: ["governance-authority", "plan-0"]
+    if: ${{ always() && needs.governance-authority.outputs.authorized == 'true' && needs.plan-0.result == 'success' }}
     strategy:
       fail-fast: false
       max-parallel: 2
@@ -924,8 +948,8 @@ jobs:
 
 
   execute-1:
-    needs: plan-1
-    if: ${{ always() && needs.plan-1.result == 'success' }}
+    needs: ["governance-authority", "plan-1"]
+    if: ${{ always() && needs.governance-authority.outputs.authorized == 'true' && needs.plan-1.result == 'success' }}
     strategy:
       fail-fast: false
       max-parallel: 2
@@ -969,8 +993,8 @@ jobs:
 
 
   execute-2:
-    needs: plan-2
-    if: ${{ always() && needs.plan-2.result == 'success' }}
+    needs: ["governance-authority", "plan-2"]
+    if: ${{ always() && needs.governance-authority.outputs.authorized == 'true' && needs.plan-2.result == 'success' }}
     strategy:
       fail-fast: false
       max-parallel: 2
@@ -1014,8 +1038,8 @@ jobs:
 
 
   execute-3:
-    needs: plan-3
-    if: ${{ always() && needs.plan-3.result == 'success' }}
+    needs: ["governance-authority", "plan-3"]
+    if: ${{ always() && needs.governance-authority.outputs.authorized == 'true' && needs.plan-3.result == 'success' }}
     strategy:
       fail-fast: false
       max-parallel: 2
@@ -1059,8 +1083,8 @@ jobs:
 
 
   execute-4:
-    needs: plan-4
-    if: ${{ always() && needs.plan-4.result == 'success' }}
+    needs: ["governance-authority", "plan-4"]
+    if: ${{ always() && needs.governance-authority.outputs.authorized == 'true' && needs.plan-4.result == 'success' }}
     strategy:
       fail-fast: false
       max-parallel: 2
@@ -1104,8 +1128,8 @@ jobs:
 
 
   execute-5:
-    needs: plan-5
-    if: ${{ always() && needs.plan-5.result == 'success' }}
+    needs: ["governance-authority", "plan-5"]
+    if: ${{ always() && needs.governance-authority.outputs.authorized == 'true' && needs.plan-5.result == 'success' }}
     strategy:
       fail-fast: false
       max-parallel: 2
@@ -1149,8 +1173,8 @@ jobs:
 
 
   execute-6:
-    needs: plan-6
-    if: ${{ always() && needs.plan-6.result == 'success' }}
+    needs: ["governance-authority", "plan-6"]
+    if: ${{ always() && needs.governance-authority.outputs.authorized == 'true' && needs.plan-6.result == 'success' }}
     strategy:
       fail-fast: false
       max-parallel: 2
@@ -1194,8 +1218,8 @@ jobs:
 
 
   execute-7:
-    needs: plan-7
-    if: ${{ always() && needs.plan-7.result == 'success' }}
+    needs: ["governance-authority", "plan-7"]
+    if: ${{ always() && needs.governance-authority.outputs.authorized == 'true' && needs.plan-7.result == 'success' }}
     strategy:
       fail-fast: false
       max-parallel: 2
@@ -1239,8 +1263,8 @@ jobs:
 
 
   execute-8:
-    needs: plan-8
-    if: ${{ always() && needs.plan-8.result == 'success' }}
+    needs: ["governance-authority", "plan-8"]
+    if: ${{ always() && needs.governance-authority.outputs.authorized == 'true' && needs.plan-8.result == 'success' }}
     strategy:
       fail-fast: false
       max-parallel: 2
@@ -1284,8 +1308,8 @@ jobs:
 
 
   execute-9:
-    needs: plan-9
-    if: ${{ always() && needs.plan-9.result == 'success' }}
+    needs: ["governance-authority", "plan-9"]
+    if: ${{ always() && needs.governance-authority.outputs.authorized == 'true' && needs.plan-9.result == 'success' }}
     strategy:
       fail-fast: false
       max-parallel: 2
@@ -1329,8 +1353,8 @@ jobs:
 
 
   execute-10:
-    needs: plan-10
-    if: ${{ always() && needs.plan-10.result == 'success' }}
+    needs: ["governance-authority", "plan-10"]
+    if: ${{ always() && needs.governance-authority.outputs.authorized == 'true' && needs.plan-10.result == 'success' }}
     strategy:
       fail-fast: false
       max-parallel: 2
@@ -1374,8 +1398,8 @@ jobs:
 
 
   execute-11:
-    needs: plan-11
-    if: ${{ always() && needs.plan-11.result == 'success' }}
+    needs: ["governance-authority", "plan-11"]
+    if: ${{ always() && needs.governance-authority.outputs.authorized == 'true' && needs.plan-11.result == 'success' }}
     strategy:
       fail-fast: false
       max-parallel: 2
@@ -1419,8 +1443,8 @@ jobs:
 
 
   execute-12:
-    needs: plan-12
-    if: ${{ always() && needs.plan-12.result == 'success' }}
+    needs: ["governance-authority", "plan-12"]
+    if: ${{ always() && needs.governance-authority.outputs.authorized == 'true' && needs.plan-12.result == 'success' }}
     strategy:
       fail-fast: false
       max-parallel: 2
@@ -1464,8 +1488,8 @@ jobs:
 
 
   execute-13:
-    needs: plan-13
-    if: ${{ always() && needs.plan-13.result == 'success' }}
+    needs: ["governance-authority", "plan-13"]
+    if: ${{ always() && needs.governance-authority.outputs.authorized == 'true' && needs.plan-13.result == 'success' }}
     strategy:
       fail-fast: false
       max-parallel: 2
@@ -1509,8 +1533,8 @@ jobs:
 
 
   execute-14:
-    needs: plan-14
-    if: ${{ always() && needs.plan-14.result == 'success' }}
+    needs: ["governance-authority", "plan-14"]
+    if: ${{ always() && needs.governance-authority.outputs.authorized == 'true' && needs.plan-14.result == 'success' }}
     strategy:
       fail-fast: false
       max-parallel: 2
@@ -1554,8 +1578,8 @@ jobs:
 
 
   execute-15:
-    needs: plan-15
-    if: ${{ always() && needs.plan-15.result == 'success' }}
+    needs: ["governance-authority", "plan-15"]
+    if: ${{ always() && needs.governance-authority.outputs.authorized == 'true' && needs.plan-15.result == 'success' }}
     strategy:
       fail-fast: false
       max-parallel: 2
@@ -1598,8 +1622,8 @@ jobs:
           if-no-files-found: warn
 
   advance:
-    needs: [prepare, plan-0, plan-1, plan-2, plan-3, plan-4, plan-5, plan-6, plan-7, plan-8, plan-9, plan-10, plan-11, plan-12, plan-13, plan-14, plan-15, execute-0, execute-1, execute-2, execute-3, execute-4, execute-5, execute-6, execute-7, execute-8, execute-9, execute-10, execute-11, execute-12, execute-13, execute-14, execute-15]
-    if: ${{ always() && needs.prepare.result == 'success' }}
+    needs: [governance-authority, prepare, plan-0, plan-1, plan-2, plan-3, plan-4, plan-5, plan-6, plan-7, plan-8, plan-9, plan-10, plan-11, plan-12, plan-13, plan-14, plan-15, execute-0, execute-1, execute-2, execute-3, execute-4, execute-5, execute-6, execute-7, execute-8, execute-9, execute-10, execute-11, execute-12, execute-13, execute-14, execute-15]
+    if: ${{ always() && needs.governance-authority.outputs.authorized == 'true' && needs.prepare.result == 'success' }}
     runs-on: ubuntu-latest
     timeout-minutes: 30
     outputs:
@@ -1664,8 +1688,8 @@ jobs:
           if-no-files-found: error
 
   dispatch-next:
-    needs: advance
-    if: ${{ needs.advance.outputs.next_action == 'DISPATCH_NEXT_GENERATION' }}
+    needs: ["governance-authority", "advance"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && needs.advance.outputs.next_action == 'DISPATCH_NEXT_GENERATION' }}
     runs-on: ubuntu-latest
     permissions:
       actions: write
@@ -1688,8 +1712,8 @@ jobs:
           echo "UCHIRIMO_V12_NEXT_GENERATION_DISPATCHED=$NEXT_GEN source_run=$SOURCE_RUN_ID"
 
   blocked:
-    needs: advance
-    if: ${{ needs.advance.outputs.next_action == 'BLOCKED' }}
+    needs: ["governance-authority", "advance"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && needs.advance.outputs.next_action == 'BLOCKED' }}
     runs-on: ubuntu-latest
     steps:
       - run: |
@@ -1697,8 +1721,8 @@ jobs:
           exit 1
 
   finalize:
-    needs: advance
-    if: ${{ needs.advance.outputs.next_action == 'FINAL_AGGREGATE' }}
+    needs: ["governance-authority", "advance"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && needs.advance.outputs.next_action == 'FINAL_AGGREGATE' }}
     runs-on: ubuntu-latest
     timeout-minutes: 60
     permissions:
