@@ -252,3 +252,161 @@ jobs:
           console.log('UCHIRIMO_V12_RUNTIME_SPLIT=PASS field='+cert.split_field_key+' children='+cert.children.length+' next='+state.next_action);
           NODE
 
+      - name: Exercise next generation and recovery-tree parent closure
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf artifacts/uchirimo-v12-gen1 artifacts/uchirimo-v12-gen1-execution artifacts/uchirimo-v12-gen1-advance
+          mkdir -p artifacts/uchirimo-v12-gen1 artifacts/uchirimo-v12-gen1-execution artifacts/uchirimo-v12-gen1-advance
+
+          UCHIRIMO_V12_CONTROLLER_MODE=resume-generation \
+          UCHIRIMO_V12_GENERATION=1 \
+          UCHIRIMO_V12_SOURCE_CONTROLLER_RUN_ID=999 \
+          UCHIRIMO_V12_STATE=artifacts/uchirimo-v12-split-advance/controller-state.json \
+          UCHIRIMO_V12_UNITS=artifacts/uchirimo-v12-split-advance/recovery-units.json \
+          UCHIRIMO_V12_CERTIFICATES=artifacts/uchirimo-v12-split-advance/split-certificates.json \
+          UCHIRIMO_V12_PARENT_STATUS=artifacts/uchirimo-v12-split-advance/parent-status.json \
+          UCHIRIMO_V12_CONTROLLER_OUT=artifacts/uchirimo-v12-gen1 \
+          node scripts/governance/uchirimo-v11-recovery-controller-runner.mjs
+
+          for lane in $(seq 0 15); do
+            GITHUB_OUTPUT='' \
+            UCHIRIMO_V12_CONTROLLER_MODE=plan-lane \
+            UCHIRIMO_V12_GENERATION=1 \
+            UCHIRIMO_V12_PARENT_PLAN=artifacts/uchirimo-v12-parent-plan/all-partitions.json \
+            UCHIRIMO_V12_STATE=artifacts/uchirimo-v12-gen1/controller-state.json \
+            UCHIRIMO_V12_UNITS=artifacts/uchirimo-v12-gen1/recovery-units.json \
+            UCHIRIMO_V12_CONTROLLER_OUT=artifacts/uchirimo-v12-gen1 \
+            UCHIRIMO_SELECTOR_PLAN_LANE_INDEX=$lane \
+            node scripts/governance/uchirimo-v11-recovery-controller-runner.mjs
+          done
+
+          node --input-type=module <<'NODE'
+          import {createHash} from 'node:crypto';
+          import {readFileSync,writeFileSync} from 'node:fs';
+          import {recoveryEvidenceNames} from './scripts/governance/uchirimo-v11-recovery-controller.mjs';
+          const state=JSON.parse(readFileSync('artifacts/uchirimo-v12-gen1/controller-state.json','utf8'));
+          const units=JSON.parse(readFileSync('artifacts/uchirimo-v12-gen1/recovery-units.json','utf8')).units;
+          const pending=Object.values(units).filter((unit)=>['PENDING_NORMAL','PENDING_HEAVY'].includes(unit.state));
+          if(!pending.length)throw new Error('UCHIRIMO_V12_FULL_CYCLE_CHILDREN_MISSING');
+          let scheduled=[];
+          let deferred=0;
+          for(let lane=0;lane<16;lane+=1){
+            const summary=JSON.parse(readFileSync('artifacts/uchirimo-v12-gen1/lane-'+lane+'-plan.json','utf8'));
+            scheduled.push(...summary.scheduled_recovery_unit_ids);
+            deferred+=summary.deferred_unit_count;
+          }
+          scheduled=[...new Set(scheduled)];
+          if(deferred!==0)throw new Error('UCHIRIMO_V12_FULL_CYCLE_UNEXPECTED_DEFERRED:'+deferred);
+          if(scheduled.length!==pending.length)throw new Error('UCHIRIMO_V12_FULL_CYCLE_SCHEDULE_GAP:'+scheduled.length+':'+pending.length);
+          const results=[];
+          for(const unitId of scheduled.sort()){
+            const unit=units[unitId];
+            const names=recoveryEvidenceNames(unit);
+            const caseLine=JSON.stringify({case_id:'fixture-'+unitId.slice(0,12),terminal_sha256:createHash('sha256').update(unitId).digest('hex')})+'\n';
+            const casePath='artifacts/uchirimo-v12-gen1-execution/'+names.terminal_digests;
+            writeFileSync(casePath,caseLine);
+            const caseSha=createHash('sha256').update(Buffer.from(caseLine)).digest('hex');
+            const proof={
+              schema_version:'2.0.0',
+              exact_head:process.env.HEAD_SHA,
+              task_classification:'NON-PRODUCT-MASTER',
+              product_master_mutation:0,
+              proof_model:'UCHIRIMO_REACHABLE_DISCRETE_SELECTOR_EXPLICIT_CONSTRAINT_SHARD_V2',
+              shard_index:unit.parent_shard_index,
+              parent_shard_index:unit.parent_shard_index,
+              node_id:'FIXTURE',
+              partition_key:unit.parent_partition_key,
+              parent_partition_key:unit.parent_partition_key,
+              recovery_unit_id:unit.recovery_unit_id,
+              recovery_depth:unit.recovery_depth,
+              parent_recovery_unit_id:unit.parent_recovery_unit_id,
+              decision_constraints:unit.decision_constraints,
+              decision_constraints_sha256:unit.decision_constraints_sha256,
+              glass_family:'fixture',
+              seed:{fixture:true},
+              shard_count:3956,
+              run_attempt:1,
+              window_type:'fixture',
+              runtime_manifest_sha256:state.runtime_manifest_sha256,
+              runtime_integrity_match:true,
+              terminal_context_count:1,
+              visited_state_count:1,
+              transition_check_count:1,
+              dependency_rejection_count:0,
+              constraint_rejection_count:0,
+              downstream_clear_event_count:0,
+              flow_signature_count:1,
+              flow_signature_sha256s:[createHash('sha256').update('flow-'+unitId).digest('hex')],
+              continuous_dimension_coverage_delegated_to:'CUSTOM_SIZE_COVERAGE_GATE',
+              unverified_discrete_selector_case_count:0,
+              case_artifact:names.terminal_digests,
+              case_artifact_format:'UCHIRIMO_TERMINAL_DIGEST_JSONL_V1',
+              case_artifact_sha256:caseSha,
+              max_stack_depth:1,
+              observed_peak_heap_mb:1,
+              resolver_cache_size:1,
+              resolver_cache_limit:4096,
+              resolver_cache_hits:0,
+              resolver_cache_misses:1,
+              status:'PASS'
+            };
+            writeFileSync('artifacts/uchirimo-v12-gen1-execution/'+names.report,JSON.stringify(proof,null,2)+'\n');
+            results.push({
+              shard:unit.parent_shard_index,
+              partition_key:unit.parent_partition_key,
+              parent_shard_index:unit.parent_shard_index,
+              parent_partition_key:unit.parent_partition_key,
+              recovery_unit_id:unit.recovery_unit_id,
+              recovery_depth:unit.recovery_depth,
+              parent_recovery_unit_id:unit.parent_recovery_unit_id,
+              decision_constraints_sha256:unit.decision_constraints_sha256,
+              status:'PASS',
+              timed_out:false,
+              exit_code:0,
+              signal:null,
+              runner:'fixture',
+              constraint_count:unit.decision_constraints.length,
+              started_at:'2026-09-27T01:00:00.000Z',
+              completed_at:'2026-09-27T01:00:01.000Z'
+            });
+          }
+          const batch={
+            schema_version:'2.0.0',
+            exact_head:process.env.HEAD_SHA,
+            batch_id:'fixture-child-pass',
+            item_count:results.length,
+            pass_count:results.length,
+            fail_count:0,
+            child_timeout_ms:1080000,
+            results,
+            status:'PASS'
+          };
+          writeFileSync('artifacts/uchirimo-v12-gen1-execution/batch-fixture-child-pass-report.json',JSON.stringify(batch,null,2)+'\n');
+          NODE
+
+          UCHIRIMO_V12_CONTROLLER_MODE=advance \
+          UCHIRIMO_V12_GENERATION=1 \
+          UCHIRIMO_V12_PARENT_PLAN=artifacts/uchirimo-v12-parent-plan/all-partitions.json \
+          UCHIRIMO_V12_STATE=artifacts/uchirimo-v12-gen1/controller-state.json \
+          UCHIRIMO_V12_UNITS=artifacts/uchirimo-v12-gen1/recovery-units.json \
+          UCHIRIMO_V12_CERTIFICATES=artifacts/uchirimo-v12-gen1/split-certificates.json \
+          UCHIRIMO_V12_PARENT_STATUS=artifacts/uchirimo-v12-gen1/parent-status.json \
+          UCHIRIMO_V12_EXECUTION_INPUT=artifacts/uchirimo-v12-gen1-execution \
+          UCHIRIMO_V12_PLAN_SUMMARY_INPUT=artifacts/uchirimo-v12-gen1 \
+          UCHIRIMO_V12_CONTROLLER_OUT=artifacts/uchirimo-v12-gen1-advance \
+          node scripts/governance/uchirimo-v11-recovery-controller-runner.mjs
+
+          node --input-type=module <<'NODE'
+          import {readFileSync} from 'node:fs';
+          const candidate=JSON.parse(readFileSync('artifacts/uchirimo-v12-split-fixture/candidate.json','utf8')).candidate;
+          const state=JSON.parse(readFileSync('artifacts/uchirimo-v12-gen1-advance/controller-state.json','utf8'));
+          const parents=JSON.parse(readFileSync('artifacts/uchirimo-v12-gen1-advance/parent-status.json','utf8')).parents;
+          if(state.closed_parent_count!==3956||state.open_parent_count!==0)throw new Error('UCHIRIMO_V12_FULL_CYCLE_PARENT_CLOSURE_INVALID:'+state.closed_parent_count+':'+state.open_parent_count);
+          if(state.next_action!=='FINAL_AGGREGATE')throw new Error('UCHIRIMO_V12_FULL_CYCLE_NEXT_ACTION_INVALID:'+state.next_action);
+          const parent=parents[candidate.partition_key];
+          if(parent?.status!=='RECOVERY_TREE_PASS'||parent?.closure_type!=='RECOVERY_TREE_PASS')throw new Error('UCHIRIMO_V12_FULL_CYCLE_PARENT_STATUS_INVALID:'+String(parent?.status));
+          if(!parent.synthesized_parent_report||parent.synthesized_parent_report.status!=='PASS')throw new Error('UCHIRIMO_V12_FULL_CYCLE_SYNTHESIZED_REPORT_MISSING');
+          console.log('UCHIRIMO_V12_FULL_RECOVERY_CYCLE=PASS closed='+state.closed_parent_count+' next='+state.next_action+' leaves='+parent.synthesized_parent_report.recovery_leaf_count);
+          NODE
+
