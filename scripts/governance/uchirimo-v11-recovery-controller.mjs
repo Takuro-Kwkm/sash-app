@@ -90,6 +90,10 @@ export function assertComputeSchedule(unit,units={}){
   }
 }
 
+export function assertKnownHeavyRootNotScheduled(unit){
+  if(Number(unit.recovery_depth)===0&&unit.execution_class==='HEAVY')throw new Error('KNOWN_HEAVY_ROOT_EXECUTION_FORBIDDEN:'+unit.recovery_unit_id);
+}
+
 function enabledEnumValues(field){
   return [...new Map((field?.values??[])
     .filter((entry)=>entry.disabled!==true)
