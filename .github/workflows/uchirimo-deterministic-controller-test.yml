@@ -50,6 +50,8 @@ jobs:
         run: |
           set -euo pipefail
           ruby -e "require 'yaml'; YAML.load_file('.github/workflows/uchirimo-v12-selector-controller.yml', aliases: true); puts 'UCHIRIMO_V12_WORKFLOW_YAML=PASS'"
+          ruby -e "require 'yaml'; YAML.load_file('.github/workflows/global-window-selection-flow-gate.yml', aliases: true); puts 'GLOBAL_FLOW_WORKFLOW_YAML=PASS'"
+          ruby -e "require 'yaml'; YAML.load_file('.github/workflows/project-governance-gate.yml', aliases: true); puts 'PROJECT_GOVERNANCE_WORKFLOW_YAML=PASS'"
           node --input-type=module <<'NODE'
           import {readFileSync} from 'node:fs';
           const src=readFileSync('.github/workflows/uchirimo-v12-selector-controller.yml','utf8');
@@ -68,6 +70,23 @@ jobs:
           ]) if(!src.includes(token))throw new Error('UCHIRIMO_V12_WORKFLOW_TOKEN_MISSING:'+token);
           if(src.includes('GITHUB_OUTPUT: ${{ steps.plan.outputs }}'))throw new Error('UCHIRIMO_V12_INVALID_OUTPUT_ENV');
           console.log('UCHIRIMO_V12_WORKFLOW_STRUCTURE=PASS lanes=16');
+          const globalFlow=readFileSync('.github/workflows/global-window-selection-flow-gate.yml','utf8');
+          for(const token of [
+            'uchirimo_v12_enabled:',
+            'uchirimo-v12-controller:',
+            "inputs.uchirimo_v12_enabled == true",
+            "needs.uchirimo-v12-controller.outputs.complete == 'true'",
+            'full_coverage_complete:'
+          ]) if(!globalFlow.includes(token))throw new Error('UCHIRIMO_V12_GLOBAL_FLOW_TOKEN_MISSING:'+token);
+          const governance=readFileSync('.github/workflows/project-governance-gate.yml','utf8');
+          for(const token of [
+            'uchirimo_v12_generation:',
+            'uchirimo_v12_source_run_id:',
+            'uchirimo_v12_recovery_only:',
+            "uchirimo-v12-deterministic-recovery-only",
+            "needs.post-review-global-flow.outputs.full_coverage_complete == 'true'"
+          ]) if(!governance.includes(token))throw new Error('UCHIRIMO_V12_GOVERNANCE_TOKEN_MISSING:'+token);
+          console.log('UCHIRIMO_V12_GOVERNANCE_WIRING=PASS');
           NODE
       - name: Build frozen canonical parent plan
         run: node scripts/uchirimo-full-selector-proof.mjs
