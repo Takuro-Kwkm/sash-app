@@ -34,6 +34,7 @@ const CERTIFICATES_PATH=String(process.env.UCHIRIMO_V12_CERTIFICATES??join(OUT,'
 const PARENTS_PATH=String(process.env.UCHIRIMO_V12_PARENT_STATUS??join(OUT,'parent-status.json'));
 const GENERATION=Number(process.env.UCHIRIMO_V12_GENERATION??0);
 const SOURCE_RUN_ID=process.env.UCHIRIMO_V12_SOURCE_CONTROLLER_RUN_ID?Number(process.env.UCHIRIMO_V12_SOURCE_CONTROLLER_RUN_ID):null;
+const CARRY_ARTIFACT_IDENTITY=String(process.env.UCHIRIMO_V12_CARRY_ARTIFACT_IDENTITY??'');
 const LANE_COUNT=Number(process.env.UCHIRIMO_SELECTOR_PLAN_LANE_COUNT??16);
 const LANE_INDEX=Number(process.env.UCHIRIMO_SELECTOR_PLAN_LANE_INDEX??0);
 const NORMAL_TIMEOUT_MS=Number(process.env.UCHIRIMO_SELECTOR_NORMAL_CHILD_TIMEOUT_MS??1080000);
@@ -92,6 +93,8 @@ function init(){
         parent_partition_key:key,
         status:'ROOT_PASS_CARRY_FORWARD',
         closure_type:'ROOT_PASS',
+        current_carry_forward_run_id:Number(process.env.GITHUB_RUN_ID??0)||null,
+        current_carry_forward_artifact_identity:CARRY_ARTIFACT_IDENTITY||null,
         source:carry.reused_partitions?.find((row)=>String(row.partition_key)===key)??null
       };
       continue;
@@ -167,6 +170,8 @@ function init(){
     runtime_manifest_sha256:String(carry.runtime_manifest_sha256??''),
     execution_fingerprint:String(carry.execution_dependency_fingerprint??''),
     source_carry_forward_manifest_sha256:sha256(carry),
+    current_carry_forward_run_id:Number(process.env.GITHUB_RUN_ID??0)||null,
+    current_carry_forward_artifact_identity:CARRY_ARTIFACT_IDENTITY||null,
     status:'PASS'
   });
   console.log('UCHIRIMO_V12_CONTROLLER_INIT=PASS parents=3956 closed='+reused.size+' open='+(3956-reused.size)+' normal='+pendingNormal+' heavy='+pendingHeavy+' parent_population_sha256='+populationHash);
