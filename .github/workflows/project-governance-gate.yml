@@ -356,7 +356,8 @@ jobs:
     needs:
       - governance
       - post-review-uchirimo-recovery-pilot
-    if: ${{ always() && needs.governance.outputs.authorized == 'true' && (needs.governance.outputs.uchirimo_v12_recovery_only == 'true' || needs.governance.outputs.uchirimo_v11_recovery_only == 'true' || needs.post-review-uchirimo-recovery-pilot.outputs.full_coverage_authorized == 'true') && (github.event_name == 'pull_request' || needs.governance.outputs.uchirimo_v12_recovery_only == 'true') }}
+      - post-review-global-flow
+    if: ${{ always() && needs.governance.outputs.authorized == 'true' && (needs.governance.outputs.uchirimo_v12_recovery_only == 'true' || needs.governance.outputs.uchirimo_v11_recovery_only == 'true' || needs.post-review-uchirimo-recovery-pilot.outputs.full_coverage_authorized == 'true') && (github.event_name == 'pull_request' || needs.governance.outputs.uchirimo_v12_recovery_only == 'true') && (needs.governance.outputs.uchirimo_v12_recovery_only != 'true' || needs.post-review-global-flow.outputs.full_coverage_complete == 'true') }}
     uses: ./.github/workflows/stage-a-nontw-80-window-discrete-exact-count.yml
     with:
       controller_head: ${{ github.event.pull_request.head.sha || github.sha }}
@@ -365,7 +366,8 @@ jobs:
     needs:
       - governance
       - post-review-uchirimo-recovery-pilot
-    if: ${{ always() && needs.governance.outputs.authorized == 'true' && (needs.governance.outputs.uchirimo_v12_recovery_only == 'true' || needs.governance.outputs.uchirimo_v11_recovery_only == 'true' || needs.post-review-uchirimo-recovery-pilot.outputs.full_coverage_authorized == 'true') && (github.event_name == 'pull_request' || needs.governance.outputs.uchirimo_v12_recovery_only == 'true') }}
+      - post-review-global-flow
+    if: ${{ always() && needs.governance.outputs.authorized == 'true' && (needs.governance.outputs.uchirimo_v12_recovery_only == 'true' || needs.governance.outputs.uchirimo_v11_recovery_only == 'true' || needs.post-review-uchirimo-recovery-pilot.outputs.full_coverage_authorized == 'true') && (github.event_name == 'pull_request' || needs.governance.outputs.uchirimo_v12_recovery_only == 'true') && (needs.governance.outputs.uchirimo_v12_recovery_only != 'true' || needs.post-review-global-flow.outputs.full_coverage_complete == 'true') }}
     uses: ./.github/workflows/stage-a-tw-25-window-behavioral-projection-count.yml
     with:
       controller_head: ${{ github.event.pull_request.head.sha || github.sha }}
