@@ -5,6 +5,8 @@ import {
   recoveryEvidenceNames,
   classifyExecutionResult,
   transitionUnit,
+  assertComputeSchedule,
+  MAX_RECOVERY_DEPTH,
   chooseNextSplitAxis,
   buildSplitCertificate,
   validateSplitCertificate,
@@ -35,10 +37,13 @@ assert.equal(classifyExecutionResult({status:'FAIL',error:'UCHIRIMO_UNMAPPED_UI_
 
 let unit={execution_class:'NORMAL',infra_retry_count:0};
 unit=transitionUnit(unit,'COMPUTE_RECOVERABLE');
-assert.equal(unit.execution_class,'HEAVY');
-assert.equal(unit.state,'PENDING_HEAVY');
-unit=transitionUnit(unit,'COMPUTE_RECOVERABLE');
 assert.equal(unit.state,'SPLIT_REQUIRED');
+assert.equal(unit.compute_failed,true);
+assert.throws(()=>transitionUnit(unit,'COMPUTE_RECOVERABLE'),/SAME_UNIT_COMPUTE_RETRY_FORBIDDEN/);
+assert.throws(()=>assertComputeSchedule({...unit,recovery_unit_id:rootId}),/SAME_UNIT_COMPUTE_RETRY_FORBIDDEN/);
+assert.throws(()=>assertComputeSchedule({state:'PASS',recovery_unit_id:rootId}),/SAME_UNIT_COMPUTE_RETRY_FORBIDDEN/);
+assert.throws(()=>assertComputeSchedule({state:'PENDING_NORMAL',recovery_unit_id:'new',parent_partition_key:parent,decision_constraints_sha256:sha256([]),recovery_depth:0},{[rootId]:{...unit,recovery_unit_id:rootId,parent_partition_key:parent,decision_constraints_sha256:sha256([])}}),/SAME_CONSTRAINT_COMPUTE_RETRY_FORBIDDEN/);
+assert.throws(()=>assertComputeSchedule({state:'PENDING_NORMAL',recovery_unit_id:rootId,recovery_depth:MAX_RECOVERY_DEPTH+1}),/BLOCKED_RECOVERY_DEPTH/);
 
 let infra={execution_class:'NORMAL',infra_retry_count:0};
 infra=transitionUnit(infra,'INFRA_TRANSIENT');
@@ -69,6 +74,10 @@ const cert=buildSplitCertificate({
 });
 assert.equal(cert.controller_contract_version,CONTROLLER_CONTRACT_VERSION);
 assert.equal(validateSplitCertificate(cert),true);
+assert.equal(cert.children.length,2);
+assert.equal(new Set(cert.children.map(child=>child.recovery_unit_id)).size,2);
+assert.deepEqual(cert.children.map(child=>child.decision),cert.domain_values);
+assert.equal(cert.children[0].recovery_unit_id,recoveryUnitId(parent,cert.children[0].constraints));
 const bad=structuredClone(cert);
 bad.children.pop();
 assert.throws(()=>validateSplitCertificate(bad),/CERTIFICATE_HASH_MISMATCH/);
