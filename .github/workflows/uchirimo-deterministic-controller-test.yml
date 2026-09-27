@@ -125,3 +125,130 @@ jobs:
           if(scheduled!==6||deferred!==0)throw new Error('UCHIRIMO_V12_LANE_SCHEDULE_TOTAL_INVALID:'+scheduled+':'+deferred);
           console.log('UCHIRIMO_V12_CONTROLLER_FIXTURE=PASS scheduled='+scheduled+' deferred='+deferred);
           NODE
+
+      - name: Exercise Runtime-derived heavy timeout split
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf artifacts/uchirimo-v12-split-fixture artifacts/uchirimo-v12-split-controller artifacts/uchirimo-v12-split-execution artifacts/uchirimo-v12-split-advance
+          mkdir -p artifacts/uchirimo-v12-split-fixture artifacts/uchirimo-v12-split-controller artifacts/uchirimo-v12-split-execution artifacts/uchirimo-v12-split-advance
+          node --input-type=module <<'NODE'
+          import {readFileSync,writeFileSync} from 'node:fs';
+          import {resolveRuntimeAppProduct} from './src/catalog/runtime-master/runtime-app-bridge.mjs';
+          import {chooseNextSplitAxis} from './scripts/governance/uchirimo-v11-recovery-controller.mjs';
+          const plan=JSON.parse(readFileSync('artifacts/uchirimo-v12-parent-plan/all-partitions.json','utf8'));
+          let candidate=null,axis=null;
+          for(const row of plan.partitions){
+            const seed={room_specification:row.room_specification,window_type:row.window_type,glass_family:row.glass_family};
+            if(row.sash_configuration!=='__UNSET__')seed.sash_configuration=row.sash_configuration;
+            if(row.size_class!=='__UNSET__')seed.size_class=row.size_class;
+            Object.assign(seed,JSON.parse(row.partition_seed_json??'{}'));
+            const resolved=await resolveRuntimeAppProduct('SER-YKKAP-UCHIRIMO',seed);
+            const found=chooseNextSplitAxis(resolved.fields??[],Object.keys(seed));
+            if(found){candidate=row;axis=found;break;}
+          }
+          if(!candidate||!axis)throw new Error('UCHIRIMO_V12_SPLIT_FIXTURE_CANDIDATE_MISSING');
+          const reused=plan.partitions.filter((row)=>row.partition_key!==candidate.partition_key);
+          const carry={
+            schema_version:'1.0.0',
+            status:'PASS',
+            current_exact_head:process.env.HEAD_SHA,
+            current_shard_count:3956,
+            runtime_manifest_sha256:plan.runtime_manifest_sha256,
+            execution_dependency_fingerprint:'fixture-execution',
+            reused_partition_count:reused.length,
+            rerun_partition_count:1,
+            heavy_partition_count:1,
+            reused_partition_keys:reused.map((row)=>row.partition_key),
+            reused_partitions:reused.map((row)=>({shard:row.shard,partition_key:row.partition_key,source_run_id:1,source_exact_head:process.env.HEAD_SHA,source_shard_index:row.shard,source_artifact_identity:'fixture'})),
+            heavy_partition_keys:[candidate.partition_key],
+            heavy_partition_observations:[{partition_key:candidate.partition_key,timed_out:true,duration_ms:3000000,classification:'OBSERVED_TIMEOUT'}]
+          };
+          writeFileSync('artifacts/uchirimo-v12-split-fixture/carry.json',JSON.stringify(carry,null,2)+'\n');
+          writeFileSync('artifacts/uchirimo-v12-split-fixture/candidate.json',JSON.stringify({candidate,expected_split_field:axis.field_key,expected_domain_count:axis.values.length},null,2)+'\n');
+          console.log('UCHIRIMO_V12_SPLIT_FIXTURE parent='+candidate.partition_key+' field='+axis.field_key+' values='+axis.values.length);
+          NODE
+
+          UCHIRIMO_V12_CONTROLLER_MODE=init \
+          UCHIRIMO_V12_PARENT_PLAN=artifacts/uchirimo-v12-parent-plan/all-partitions.json \
+          UCHIRIMO_V12_CARRY_MANIFEST=artifacts/uchirimo-v12-split-fixture/carry.json \
+          UCHIRIMO_V12_CONTROLLER_OUT=artifacts/uchirimo-v12-split-controller \
+          node scripts/governance/uchirimo-v11-recovery-controller-runner.mjs
+
+          for lane in $(seq 0 15); do
+            GITHUB_OUTPUT='' \
+            UCHIRIMO_V12_CONTROLLER_MODE=plan-lane \
+            UCHIRIMO_V12_PARENT_PLAN=artifacts/uchirimo-v12-parent-plan/all-partitions.json \
+            UCHIRIMO_V12_STATE=artifacts/uchirimo-v12-split-controller/controller-state.json \
+            UCHIRIMO_V12_UNITS=artifacts/uchirimo-v12-split-controller/recovery-units.json \
+            UCHIRIMO_V12_CONTROLLER_OUT=artifacts/uchirimo-v12-split-controller \
+            UCHIRIMO_SELECTOR_PLAN_LANE_INDEX=$lane \
+            node scripts/governance/uchirimo-v11-recovery-controller-runner.mjs
+          done
+
+          node --input-type=module <<'NODE'
+          import {readFileSync,writeFileSync} from 'node:fs';
+          const units=JSON.parse(readFileSync('artifacts/uchirimo-v12-split-controller/recovery-units.json','utf8')).units;
+          const unit=Object.values(units)[0];
+          if(!unit||unit.execution_class!=='HEAVY')throw new Error('UCHIRIMO_V12_SPLIT_FIXTURE_ROOT_NOT_HEAVY');
+          const report={
+            schema_version:'2.0.0',
+            exact_head:process.env.HEAD_SHA,
+            batch_id:'fixture-heavy-timeout',
+            item_count:1,
+            pass_count:0,
+            fail_count:1,
+            child_timeout_ms:3000000,
+            results:[{
+              shard:unit.parent_shard_index,
+              partition_key:unit.parent_partition_key,
+              parent_shard_index:unit.parent_shard_index,
+              parent_partition_key:unit.parent_partition_key,
+              recovery_unit_id:unit.recovery_unit_id,
+              recovery_depth:0,
+              parent_recovery_unit_id:null,
+              decision_constraints_sha256:unit.decision_constraints_sha256,
+              status:'FAIL',
+              timed_out:true,
+              exit_code:null,
+              signal:'SIGTERM',
+              runner:'fixture',
+              constraint_count:0,
+              started_at:'2026-09-27T00:00:00.000Z',
+              completed_at:'2026-09-27T00:50:00.000Z'
+            }],
+            status:'FAIL'
+          };
+          writeFileSync('artifacts/uchirimo-v12-split-execution/batch-fixture-heavy-timeout-report.json',JSON.stringify(report,null,2)+'\n');
+          NODE
+
+          UCHIRIMO_V12_CONTROLLER_MODE=advance \
+          UCHIRIMO_V12_PARENT_PLAN=artifacts/uchirimo-v12-parent-plan/all-partitions.json \
+          UCHIRIMO_V12_STATE=artifacts/uchirimo-v12-split-controller/controller-state.json \
+          UCHIRIMO_V12_UNITS=artifacts/uchirimo-v12-split-controller/recovery-units.json \
+          UCHIRIMO_V12_CERTIFICATES=artifacts/uchirimo-v12-split-controller/split-certificates.json \
+          UCHIRIMO_V12_PARENT_STATUS=artifacts/uchirimo-v12-split-controller/parent-status.json \
+          UCHIRIMO_V12_EXECUTION_INPUT=artifacts/uchirimo-v12-split-execution \
+          UCHIRIMO_V12_PLAN_SUMMARY_INPUT=artifacts/uchirimo-v12-split-controller \
+          UCHIRIMO_V12_CONTROLLER_OUT=artifacts/uchirimo-v12-split-advance \
+          node scripts/governance/uchirimo-v11-recovery-controller-runner.mjs
+
+          node --input-type=module <<'NODE'
+          import {readFileSync} from 'node:fs';
+          const candidate=JSON.parse(readFileSync('artifacts/uchirimo-v12-split-fixture/candidate.json','utf8'));
+          const state=JSON.parse(readFileSync('artifacts/uchirimo-v12-split-advance/controller-state.json','utf8'));
+          const units=JSON.parse(readFileSync('artifacts/uchirimo-v12-split-advance/recovery-units.json','utf8')).units;
+          const certs=JSON.parse(readFileSync('artifacts/uchirimo-v12-split-advance/split-certificates.json','utf8')).certificates;
+          const root=Object.values(units).find((unit)=>unit.recovery_depth===0);
+          if(!root||root.state!=='PENDING_CHILDREN')throw new Error('UCHIRIMO_V12_SPLIT_ROOT_STATE_INVALID:'+String(root?.state));
+          const cert=certs[root.recovery_unit_id];
+          if(!cert)throw new Error('UCHIRIMO_V12_SPLIT_CERTIFICATE_MISSING');
+          if(cert.split_field_key!==candidate.expected_split_field)throw new Error('UCHIRIMO_V12_SPLIT_FIELD_DRIFT:'+cert.split_field_key+':'+candidate.expected_split_field);
+          if(cert.children.length!==candidate.expected_domain_count)throw new Error('UCHIRIMO_V12_SPLIT_DOMAIN_COUNT_DRIFT:'+cert.children.length+':'+candidate.expected_domain_count);
+          const children=cert.children.map((child)=>units[child.recovery_unit_id]);
+          if(children.some((child)=>!child||child.state!=='PENDING_NORMAL'||child.execution_class!=='NORMAL'))throw new Error('UCHIRIMO_V12_SPLIT_CHILD_STATE_INVALID');
+          if(state.next_action!=='DISPATCH_NEXT_GENERATION')throw new Error('UCHIRIMO_V12_SPLIT_NEXT_ACTION_INVALID:'+state.next_action);
+          if(state.closed_parent_count!==3955||state.open_parent_count!==1)throw new Error('UCHIRIMO_V12_SPLIT_PARENT_COUNT_INVALID');
+          console.log('UCHIRIMO_V12_RUNTIME_SPLIT=PASS field='+cert.split_field_key+' children='+cert.children.length+' next='+state.next_action);
+          NODE
+
