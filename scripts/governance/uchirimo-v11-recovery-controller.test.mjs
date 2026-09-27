@@ -6,6 +6,7 @@ import {
   classifyExecutionResult,
   transitionUnit,
   assertComputeSchedule,
+  assertKnownHeavyRootNotScheduled,
   MAX_RECOVERY_DEPTH,
   chooseNextSplitAxis,
   buildSplitCertificate,
@@ -44,6 +45,8 @@ assert.throws(()=>assertComputeSchedule({...unit,recovery_unit_id:rootId}),/SAME
 assert.throws(()=>assertComputeSchedule({state:'PASS',recovery_unit_id:rootId}),/SAME_UNIT_COMPUTE_RETRY_FORBIDDEN/);
 assert.throws(()=>assertComputeSchedule({state:'PENDING_NORMAL',recovery_unit_id:'new',parent_partition_key:parent,decision_constraints_sha256:sha256([]),recovery_depth:0},{[rootId]:{...unit,recovery_unit_id:rootId,parent_partition_key:parent,decision_constraints_sha256:sha256([])}}),/SAME_CONSTRAINT_COMPUTE_RETRY_FORBIDDEN/);
 assert.throws(()=>assertComputeSchedule({state:'PENDING_NORMAL',recovery_unit_id:rootId,recovery_depth:MAX_RECOVERY_DEPTH+1}),/BLOCKED_RECOVERY_DEPTH/);
+assert.throws(()=>assertKnownHeavyRootNotScheduled({recovery_depth:0,execution_class:'HEAVY',recovery_unit_id:rootId}),/KNOWN_HEAVY_ROOT_EXECUTION_FORBIDDEN/);
+assert.doesNotThrow(()=>assertKnownHeavyRootNotScheduled({recovery_depth:1,execution_class:'NORMAL',recovery_unit_id:childId}));
 
 let infra={execution_class:'NORMAL',infra_retry_count:0};
 infra=transitionUnit(infra,'INFRA_TRANSIENT');
