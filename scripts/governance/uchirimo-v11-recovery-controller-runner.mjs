@@ -185,12 +185,14 @@ function planLane(){
   if(state.controller_contract_version!==CONTROLLER_CONTRACT_VERSION||unitsEnvelope.controller_contract_version!==CONTROLLER_CONTRACT_VERSION)throw new Error('UCHIRIMO_V12_CONTROLLER_CONTRACT_MISMATCH');
   if(String(state.exact_head)!==String(plan.exact_head)||String(unitsEnvelope.exact_head)!==String(plan.exact_head))throw new Error('UCHIRIMO_V12_CONTROLLER_HEAD_MISMATCH');
   if(Number(state.parent_population_count)!==3956||String(state.parent_population_sha256)!==parentPopulationHash(plan))throw new Error('UCHIRIMO_V12_CONTROLLER_POPULATION_MISMATCH');
-  if(state.next_action!=='EXECUTE')throw new Error('UCHIRIMO_V12_CONTROLLER_NOT_EXECUTABLE:'+String(state.next_action));
+  if(!['EXECUTE','FINAL_AGGREGATE'].includes(String(state.next_action)))throw new Error('UCHIRIMO_V12_CONTROLLER_NOT_EXECUTABLE:'+String(state.next_action));
   if(!Number.isInteger(LANE_COUNT)||LANE_COUNT<1||!Number.isInteger(LANE_INDEX)||LANE_INDEX<0||LANE_INDEX>=LANE_COUNT)throw new Error('UCHIRIMO_V12_LANE_INVALID:'+LANE_INDEX+':'+LANE_COUNT);
   const parentByKey=new Map(plan.partitions.map((row)=>[String(row.partition_key),row]));
-  const eligible=Object.values(unitsEnvelope.units??{})
-    .filter((unit)=>['PENDING_NORMAL','PENDING_HEAVY'].includes(String(unit.state)))
-    .filter((unit)=>Number(unit.parent_shard_index)%LANE_COUNT===LANE_INDEX);
+  const eligible=state.next_action==='FINAL_AGGREGATE'
+    ? []
+    : Object.values(unitsEnvelope.units??{})
+      .filter((unit)=>['PENDING_NORMAL','PENDING_HEAVY'].includes(String(unit.state)))
+      .filter((unit)=>Number(unit.parent_shard_index)%LANE_COUNT===LANE_INDEX);
   const scheduled=scheduleLane(eligible);
   const toItem=(unit)=>{
     const parent=parentByKey.get(String(unit.parent_partition_key));
