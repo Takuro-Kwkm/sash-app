@@ -23,13 +23,20 @@
         "scripts/governance/uchirimo-selector-batch-runner.mjs",
         "project-governance/runtime-snapshot.json",
         "package.json",
-        "package-lock.json"
+        "package-lock.json",
+        "scripts/governance/uchirimo-v11-recovery-controller.mjs",
+        "scripts/governance/uchirimo-v11-recovery-controller-runner.mjs",
+        "scripts/governance/uchirimo-v11-recovery-finalizer.mjs"
       ],
       "evidence_models": [
         "UCHIRIMO_REACHABLE_DISCRETE_SELECTOR_EXHAUSTIVE_SHARD_V10",
-        "UCHIRIMO_REACHABLE_DISCRETE_SELECTOR_EXHAUSTIVE_SYMBOLIC_SHARD_V11"
+        "UCHIRIMO_REACHABLE_DISCRETE_SELECTOR_EXHAUSTIVE_SYMBOLIC_SHARD_V11",
+        "UCHIRIMO_REACHABLE_DISCRETE_SELECTOR_EXPLICIT_CONSTRAINT_SHARD_V2",
+        "UCHIRIMO_REACHABLE_DISCRETE_SELECTOR_RECOVERY_TREE_PARENT_V1"
       ],
-      "cross_head_reuse_policy": "V10_REQUIRES_RUNTIME_BEHAVIOR_DEPENDENCIES_UNCHANGED_AND_APPROVED_V10_SEMANTIC_REFERENCE; V11_REQUIRES_RUNTIME_BEHAVIOR_AND_V11_EXECUTION_SEMANTICS_UNCHANGED"
+      "cross_head_reuse_policy": "V10_REQUIRES_RUNTIME_BEHAVIOR_DEPENDENCIES_UNCHANGED_AND_APPROVED_V10_SEMANTIC_REFERENCE; V11_REQUIRES_RUNTIME_BEHAVIOR_AND_V11_EXECUTION_SEMANTICS_UNCHANGED",
+      "recovery_controller_contract_version": "UCHIRIMO_V12_DETERMINISTIC_RECOVERY_CONTROLLER_V1",
+      "recovery_cross_head_reuse_policy": "FAIL_CLOSED_UNLESS_CANONICAL_PARENT_IDENTITY_RUNTIME_EXECUTION_SEMANTICS_SPLIT_CERTIFICATES_CONTROLLER_CONTRACT_AND_ARTIFACT_HASHES_ALL_MATCH"
     },
     "NONTW_EXACT": {
       "proof_model_version": "RUNTIME_UI_SYMBOLIC_FULL_COVERAGE_V1",
