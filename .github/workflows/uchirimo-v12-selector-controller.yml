@@ -141,8 +141,6 @@ jobs:
           path: artifacts/uchirimo-v12-controller
       - name: Plan lane 0
         id: plan
-        env:
-          GITHUB_OUTPUT: ${{ steps.plan.outputs }}
         shell: bash
         run: |
           set -euo pipefail
@@ -190,8 +188,6 @@ jobs:
           path: artifacts/uchirimo-v12-controller
       - name: Plan lane 1
         id: plan
-        env:
-          GITHUB_OUTPUT: ${{ steps.plan.outputs }}
         shell: bash
         run: |
           set -euo pipefail
@@ -239,8 +235,6 @@ jobs:
           path: artifacts/uchirimo-v12-controller
       - name: Plan lane 2
         id: plan
-        env:
-          GITHUB_OUTPUT: ${{ steps.plan.outputs }}
         shell: bash
         run: |
           set -euo pipefail
@@ -288,8 +282,6 @@ jobs:
           path: artifacts/uchirimo-v12-controller
       - name: Plan lane 3
         id: plan
-        env:
-          GITHUB_OUTPUT: ${{ steps.plan.outputs }}
         shell: bash
         run: |
           set -euo pipefail
@@ -337,8 +329,6 @@ jobs:
           path: artifacts/uchirimo-v12-controller
       - name: Plan lane 4
         id: plan
-        env:
-          GITHUB_OUTPUT: ${{ steps.plan.outputs }}
         shell: bash
         run: |
           set -euo pipefail
@@ -386,8 +376,6 @@ jobs:
           path: artifacts/uchirimo-v12-controller
       - name: Plan lane 5
         id: plan
-        env:
-          GITHUB_OUTPUT: ${{ steps.plan.outputs }}
         shell: bash
         run: |
           set -euo pipefail
@@ -435,8 +423,6 @@ jobs:
           path: artifacts/uchirimo-v12-controller
       - name: Plan lane 6
         id: plan
-        env:
-          GITHUB_OUTPUT: ${{ steps.plan.outputs }}
         shell: bash
         run: |
           set -euo pipefail
@@ -484,8 +470,6 @@ jobs:
           path: artifacts/uchirimo-v12-controller
       - name: Plan lane 7
         id: plan
-        env:
-          GITHUB_OUTPUT: ${{ steps.plan.outputs }}
         shell: bash
         run: |
           set -euo pipefail
@@ -533,8 +517,6 @@ jobs:
           path: artifacts/uchirimo-v12-controller
       - name: Plan lane 8
         id: plan
-        env:
-          GITHUB_OUTPUT: ${{ steps.plan.outputs }}
         shell: bash
         run: |
           set -euo pipefail
@@ -582,8 +564,6 @@ jobs:
           path: artifacts/uchirimo-v12-controller
       - name: Plan lane 9
         id: plan
-        env:
-          GITHUB_OUTPUT: ${{ steps.plan.outputs }}
         shell: bash
         run: |
           set -euo pipefail
@@ -631,8 +611,6 @@ jobs:
           path: artifacts/uchirimo-v12-controller
       - name: Plan lane 10
         id: plan
-        env:
-          GITHUB_OUTPUT: ${{ steps.plan.outputs }}
         shell: bash
         run: |
           set -euo pipefail
@@ -680,8 +658,6 @@ jobs:
           path: artifacts/uchirimo-v12-controller
       - name: Plan lane 11
         id: plan
-        env:
-          GITHUB_OUTPUT: ${{ steps.plan.outputs }}
         shell: bash
         run: |
           set -euo pipefail
@@ -729,8 +705,6 @@ jobs:
           path: artifacts/uchirimo-v12-controller
       - name: Plan lane 12
         id: plan
-        env:
-          GITHUB_OUTPUT: ${{ steps.plan.outputs }}
         shell: bash
         run: |
           set -euo pipefail
@@ -778,8 +752,6 @@ jobs:
           path: artifacts/uchirimo-v12-controller
       - name: Plan lane 13
         id: plan
-        env:
-          GITHUB_OUTPUT: ${{ steps.plan.outputs }}
         shell: bash
         run: |
           set -euo pipefail
@@ -827,8 +799,6 @@ jobs:
           path: artifacts/uchirimo-v12-controller
       - name: Plan lane 14
         id: plan
-        env:
-          GITHUB_OUTPUT: ${{ steps.plan.outputs }}
         shell: bash
         run: |
           set -euo pipefail
@@ -876,8 +846,6 @@ jobs:
           path: artifacts/uchirimo-v12-controller
       - name: Plan lane 15
         id: plan
-        env:
-          GITHUB_OUTPUT: ${{ steps.plan.outputs }}
         shell: bash
         run: |
           set -euo pipefail
