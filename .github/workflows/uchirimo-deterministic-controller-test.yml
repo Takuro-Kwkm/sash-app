@@ -1,0 +1,58 @@
+name: Uchirimo Deterministic Controller Prep Test
+
+on:
+  push:
+    branches:
+      - tmp/uchirimo-deterministic-controller-v1-20260927
+
+permissions:
+  contents: read
+
+jobs:
+  controller-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      HEAD_SHA: ${{ github.sha }}
+      UCHIRIMO_SELECTOR_MODE: plan-all
+      UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-v12-parent-plan
+    steps:
+      - name: Checkout exact prep HEAD
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.HEAD_SHA }}
+          fetch-depth: 0
+
+      - name: Setup Node 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Install
+        run: npm install --ignore-scripts
+
+      - name: Controller syntax and unit tests
+        run: |
+          set -euo pipefail
+          node --check scripts/governance/uchirimo-v11-recovery-controller.mjs
+          node --check scripts/governance/uchirimo-v11-recovery-controller.test.mjs
+          node scripts/governance/uchirimo-v11-recovery-controller.test.mjs
+
+      - name: Build frozen canonical parent plan
+        run: node scripts/uchirimo-full-selector-proof.mjs
+
+      - name: Enforce frozen parent denominator
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import {readFileSync} from 'node:fs';
+          import {createHash} from 'node:crypto';
+          const plan=JSON.parse(readFileSync('artifacts/uchirimo-v12-parent-plan/all-partitions.json','utf8'));
+          const stable=(v)=>Array.isArray(v)?v.map(stable):(!v||typeof v!=='object'?v:Object.fromEntries(Object.entries(v).sort(([a],[b])=>a.localeCompare(b)).map(([k,x])=>[k,stable(x)])));
+          const hash=createHash('sha256').update(JSON.stringify(stable(plan.partitions))).digest('hex');
+          console.log('UCHIRIMO_V12_PARENT_COUNT='+plan.shard_count);
+          console.log('UCHIRIMO_V12_PARENT_POPULATION_SHA256='+hash);
+          if(plan.status!=='PASS')throw new Error('UCHIRIMO_V12_PARENT_PLAN_NOT_PASS');
+          if(plan.shard_count!==3956)throw new Error('UCHIRIMO_V12_PARENT_DENOMINATOR_DRIFT:'+plan.shard_count);
+          if(new Set(plan.partitions.map((row)=>row.partition_key)).size!==3956)throw new Error('UCHIRIMO_V12_PARENT_KEY_DUPLICATE');
+          NODE
