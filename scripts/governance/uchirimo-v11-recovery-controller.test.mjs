@@ -170,6 +170,25 @@ const state=buildControllerState({
   blocked_counts:{}
 });
 assert.equal(state.next_action,'EXECUTE');
+const afterGeneration=buildControllerState({
+  exact_head:'b'.repeat(40),
+  generation:2,
+  parent_population_count:3956,
+  parent_population_sha256:'pop',
+  runtime_manifest_sha256:'run',
+  execution_fingerprint:'exec',
+  planner_fingerprint:'plan',
+  closed_parent_count:3900,
+  open_parent_count:56,
+  pass_unit_count:4000,
+  pending_normal_count:10,
+  pending_heavy_count:20,
+  split_required_count:1,
+  deferred_count:25,
+  blocked_counts:{},
+  after_generation:true
+});
+assert.equal(afterGeneration.next_action,'DISPATCH_NEXT_GENERATION');
 
 const noProgress=buildControllerState({
   exact_head:'b'.repeat(40),
