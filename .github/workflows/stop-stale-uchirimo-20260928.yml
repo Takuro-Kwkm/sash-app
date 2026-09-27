@@ -1,0 +1,68 @@
+name: Stop only three stale Uchirimo runs 20260928
+on:
+  push:
+    branches: [ops/stop-stale-uchirimo-runs-20260928]
+    paths: [.github/workflows/stop-stale-uchirimo-20260928.yml]
+permissions:
+  actions: write
+jobs:
+  force-cancel-and-verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Force cancel pinned stale runs and verify terminal jobs
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: python
+        run: |
+          import json, os, time, urllib.request, urllib.error
+          repo = "Takuro-Kwkm/sash-app"
+          targets = {
+            36308658664: "faa99100edbc857d1b14910e169c52e002504bd3",
+            36316468707: "55750519c5b0ecdf9f6c4f413205f7759a968e41",
+            36310342280: "673d96759613f913b3c4b87e98a0e1386720d210",
+          }
+          protected = 36352146462
+          headers = {"Authorization": "Bearer " + os.environ["GH_TOKEN"], "Accept": "application/vnd.github+json", "X-GitHub-Api-Version": "2022-11-28"}
+          def api(path, method="GET"):
+              req = urllib.request.Request("https://api.github.com/repos/" + repo + "/" + path, headers=headers, method=method)
+              try:
+                  with urllib.request.urlopen(req, timeout=30) as response:
+                      body = response.read()
+                      return response.status, json.loads(body) if body else {}
+              except urllib.error.HTTPError as error:
+                  if error.code == 409: return 409, {}
+                  raise RuntimeError("GitHub HTTP " + str(error.code) + " at " + path) from None
+          for run_id, expected_sha in targets.items():
+              assert run_id != protected and str(run_id) != os.environ["GITHUB_RUN_ID"]
+              _, run = api("actions/runs/" + str(run_id))
+              assert run["head_sha"] == expected_sha
+              assert run["path"] == ".github/workflows/project-governance-gate.yml"
+              assert run["head_branch"] == "feat/new-construction-runtime-ui-v16-20260910"
+              if run["status"] != "completed":
+                  status, _ = api("actions/runs/" + str(run_id) + "/force-cancel", "POST")
+                  print("FORCE_CANCEL_REQUEST", run_id, status, flush=True)
+          deadline = time.monotonic() + 300
+          while True:
+              remaining = []
+              for run_id in targets:
+                  _, run = api("actions/runs/" + str(run_id))
+                  print("RUN_STATE", run_id, run["status"], run["conclusion"], flush=True)
+                  if run["status"] != "completed": remaining.append(run_id)
+              if not remaining: break
+              if time.monotonic() >= deadline: raise RuntimeError("CANCELLATION_NOT_TERMINAL " + str(remaining))
+              time.sleep(15)
+          for run_id in targets:
+              page = 1
+              unfinished = []
+              while True:
+                  _, result = api("actions/runs/" + str(run_id) + "/jobs?per_page=100&page=" + str(page))
+                  jobs = result.get("jobs", [])
+                  unfinished += [job["id"] for job in jobs if job["status"] != "completed"]
+                  if len(jobs) < 100: break
+                  page += 1
+              print("UNFINISHED_JOBS", run_id, len(unfinished), flush=True)
+              assert not unfinished, (run_id, unfinished)
+          _, latest = api("actions/runs/" + str(protected))
+          print("PROTECTED_LATEST_RUN", protected, latest["status"], latest["conclusion"], flush=True)
+          
