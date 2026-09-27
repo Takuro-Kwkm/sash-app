@@ -1,5 +1,5 @@
 import { createHash } from 'node:crypto';
-import { mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdtempSync, mkdirSync, readFileSync, readdirSync, rmSync, statSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { basename, join } from 'node:path';
 import { spawnSync } from 'node:child_process';
@@ -25,6 +25,10 @@ const LEGACY_V10_REFERENCE_HEAD='508021c64897039b2fa6e0391058ad88394536af';
 const LEGACY_V10_MODEL='UCHIRIMO_REACHABLE_DISCRETE_SELECTOR_EXHAUSTIVE_SHARD_V10';
 const V11_MODEL='UCHIRIMO_REACHABLE_DISCRETE_SELECTOR_EXHAUSTIVE_SYMBOLIC_SHARD_V11';
 const PINNED_SOURCE_RUN_IDS=Object.freeze([35518342017,35670279840]);
+const BOOTSTRAP_DIR=String(process.env.UCHIRIMO_CARRY_FORWARD_BOOTSTRAP_DIR??'');
+const BOOTSTRAP_ONLY=String(process.env.UCHIRIMO_CARRY_FORWARD_BOOTSTRAP_ONLY??'false')==='true';
+const BOOTSTRAP_RUN_ID=Number(process.env.UCHIRIMO_CARRY_FORWARD_BOOTSTRAP_RUN_ID??0);
+const BOOTSTRAP_ARTIFACT_IDENTITY=String(process.env.UCHIRIMO_CARRY_FORWARD_BOOTSTRAP_ARTIFACT_IDENTITY??'');
 
 if(!HEAD||!REPO||!RUN_ID||!TOKEN)throw new Error('UCHIRIMO_CARRY_FORWARD_ENV_MISSING');
 mkdirSync(OUT,{recursive:true});
@@ -198,6 +202,18 @@ function currentSeed(row){
   return stable(seed);
 }
 
+function walkFiles(dir){
+  const out=[];
+  if(!dir||!existsSync(dir))return out;
+  const visit=(path)=>{
+    const st=statSync(path);
+    if(st.isDirectory())for(const name of readdirSync(path))visit(join(path,name));
+    else out.push(path);
+  };
+  visit(dir);
+  return out;
+}
+
 const plan=JSON.parse(readFileSync(PLAN_PATH,'utf8'));
 if(plan.exact_head!==HEAD)throw new Error('UCHIRIMO_CARRY_FORWARD_PLAN_HEAD_MISMATCH');
 const partitions=Array.isArray(plan.partitions)?plan.partitions:[];
@@ -267,15 +283,82 @@ const heavyByKey=new Map();
 const reused=[];
 const reusedKeys=new Set();
 const sourceSummaries=[];
+const inaccessibleArtifacts=[];
 const temp=mkdtempSync(join(tmpdir(),'uchirimo-carry-'));
 try{
-  for(const source of selectedSources){
+  if(BOOTSTRAP_DIR){
+    const files=walkFiles(BOOTSTRAP_DIR);
+    const byBase=new Map();
+    for(const path of files){
+      const name=basename(path);
+      if(!byBase.has(name))byBase.set(name,[]);
+      byBase.get(name).push(path);
+    }
+    const manifestPaths=byBase.get('manifest.json')??[];
+    if(manifestPaths.length!==1)throw new Error('UCHIRIMO_BOOTSTRAP_MANIFEST_COUNT:'+manifestPaths.length);
+    const bootstrapManifest=JSON.parse(readFileSync(manifestPaths[0],'utf8'));
+    if(bootstrapManifest.status!=='PASS')throw new Error('UCHIRIMO_BOOTSTRAP_MANIFEST_NOT_PASS');
+    if(String(bootstrapManifest.runtime_manifest_sha256??'')!==currentRuntimeHash)throw new Error('UCHIRIMO_BOOTSTRAP_RUNTIME_HASH_MISMATCH');
+    if(String(bootstrapManifest.runtime_dependency_fingerprint??'')!==currentRuntimeDependencyFingerprint)throw new Error('UCHIRIMO_BOOTSTRAP_RUNTIME_DEPENDENCY_MISMATCH');
+    if(String(bootstrapManifest.execution_dependency_fingerprint??'')!==currentExecutionFingerprint)throw new Error('UCHIRIMO_BOOTSTRAP_EXECUTION_DEPENDENCY_MISMATCH');
+    const bootstrapHead=String(bootstrapManifest.current_exact_head??'');
+    if(!/^[0-9a-f]{40}$/.test(bootstrapHead)||!isAncestor(bootstrapHead,HEAD))throw new Error('UCHIRIMO_BOOTSTRAP_HEAD_INVALID:'+bootstrapHead);
+    for(const observation of bootstrapManifest.heavy_partition_observations??[]){
+      const key=String(observation.partition_key??'');
+      if(!currentByKey.has(key))continue;
+      heavyByKey.set(key,{...observation,bootstrap_source:true});
+    }
+    let accepted=0;
+    for(const partitionKey of bootstrapManifest.reused_partition_keys??[]){
+      if(reusedKeys.has(String(partitionKey)))continue;
+      const current=currentByKey.get(String(partitionKey));
+      if(!current)continue;
+      const sourceShard=(bootstrapManifest.reused_partitions??[]).find((row)=>String(row.partition_key)===String(partitionKey))?.shard;
+      const sourceReportBase='shard-'+String(sourceShard)+'-report.json';
+      const reportPaths=byBase.get(sourceReportBase)??[];
+      if(reportPaths.length!==1)continue;
+      const report=JSON.parse(readFileSync(reportPaths[0],'utf8'));
+      if(report.status!=='PASS'||report.unverified_discrete_selector_case_count!==0||report.runtime_integrity_match!==true)continue;
+      if(String(report.exact_head??'')!==bootstrapHead)continue;
+      if(String(report.runtime_manifest_sha256??'')!==currentRuntimeHash)continue;
+      if(stableJson(report.seed??{})!==stableJson(currentSeed(current)))continue;
+      const proofModel=String(report.proof_model??'');
+      if(![LEGACY_V10_MODEL,V11_MODEL].includes(proofModel))continue;
+      const caseName=String(report.case_artifact??'');
+      const casePaths=byBase.get(basename(caseName))??[];
+      if(casePaths.length!==1)continue;
+      const caseBytes=readFileSync(casePaths[0]);
+      const caseSha=sha(caseBytes);
+      if(caseSha!==String(report.case_artifact_sha256??''))continue;
+      const currentCaseName='shard-'+current.shard+'-terminal-digests.jsonl';
+      const currentReportName='shard-'+current.shard+'-report.json';
+      const bindingName='shard-'+current.shard+'-current-head-binding.json';
+      const binding={schema_version:'1.0.0',binding_type:'CURRENT_HEAD_PARTITION_PROOF_CARRY_FORWARD',status:'PASS',family:'UCHIRIMO_SELECTOR',source_exact_head:bootstrapHead,current_exact_head:HEAD,source_run_id:BOOTSTRAP_RUN_ID||null,source_artifact_identity:BOOTSTRAP_ARTIFACT_IDENTITY||'LOCAL_BOOTSTRAP_BUNDLE',source_artifact_id:null,source_artifact_sha256:null,source_case_artifact_sha256:caseSha,partition_key:String(partitionKey),current_shard_index:Number(current.shard),source_shard_index:Number(report.shard_index),runtime_manifest_sha256:currentRuntimeHash,source_proof_model:proofModel,source_execution_dependency_fingerprint:String(bootstrapManifest.execution_dependency_fingerprint),current_execution_dependency_fingerprint:currentExecutionFingerprint,runtime_dependency_fingerprint:currentRuntimeDependencyFingerprint,changed_paths:changedPaths(bootstrapHead,HEAD),impact_decision:'BOOTSTRAP_PARTITION_IDENTITY_AND_EXECUTION_DEPENDENCIES_UNCHANGED',generated_at:new Date().toISOString()};
+      const rebound={...report,exact_head:HEAD,shard_index:Number(current.shard),shard_count:Number(plan.shard_count),run_attempt:Number(process.env.GITHUB_RUN_ATTEMPT??1),case_artifact:currentCaseName,evidence_origin:'CURRENT_HEAD_CARRY_FORWARD',source_exact_head:bootstrapHead,source_run_id:BOOTSTRAP_RUN_ID||null,source_artifact_identity:BOOTSTRAP_ARTIFACT_IDENTITY||'LOCAL_BOOTSTRAP_BUNDLE',current_head_binding:binding,status:'PASS'};
+      writeFileSync(join(OUT,currentCaseName),caseBytes);
+      writeFileSync(join(OUT,currentReportName),JSON.stringify(rebound,null,2)+'\n');
+      writeFileSync(join(OUT,bindingName),JSON.stringify(binding,null,2)+'\n');
+      reusedKeys.add(String(partitionKey));
+      reused.push({shard:Number(current.shard),partition_key:String(partitionKey),source_run_id:BOOTSTRAP_RUN_ID||null,source_exact_head:bootstrapHead,source_shard_index:Number(report.shard_index),source_artifact_identity:BOOTSTRAP_ARTIFACT_IDENTITY||'LOCAL_BOOTSTRAP_BUNDLE'});
+      accepted+=1;
+    }
+    sourceSummaries.push({run_id:BOOTSTRAP_RUN_ID||null,exact_head:bootstrapHead,available_artifact_count:1,accepted_partition_count:accepted,source_type:'BOOTSTRAP_CARRY_FORWARD_BUNDLE'});
+    console.log('UCHIRIMO_BOOTSTRAP_CARRY_FORWARD=PASS source_head='+bootstrapHead+' accepted='+accepted);
+  }
+  if(!BOOTSTRAP_ONLY) for(const source of selectedSources){
     if(reusedKeys.size===currentByKey.size)break;
     const sourceChanges=changedPaths(source.sourceHead,HEAD);
     let acceptedFromSource=0;
     for(const artifact of source.artifacts){
       if(reusedKeys.size===currentByKey.size)break;
-      const zip=await apiBuffer('/repos/'+REPO+'/actions/artifacts/'+artifact.id+'/zip');
+      let zip;
+      try{
+        zip=await apiBuffer('/repos/'+REPO+'/actions/artifacts/'+artifact.id+'/zip');
+      }catch(error){
+        inaccessibleArtifacts.push({source_run_id:Number(source.run.id),source_exact_head:source.sourceHead,artifact_id:Number(artifact.id),artifact_identity:String(artifact.name),error:String(error?.message??error)});
+        console.warn('UCHIRIMO_CARRY_FORWARD_ARTIFACT_SKIPPED id='+artifact.id+' name='+String(artifact.name)+' reason='+String(error?.message??error));
+        continue;
+      }
       const zipPath=join(temp,String(artifact.id)+'.zip');
       writeFileSync(zipPath,zip);
       const entries=unzipList(zipPath);
@@ -365,6 +448,9 @@ const manifest={
   legacy_v10_execution_fingerprint:legacyV10ExecutionFingerprint,
   legacy_v10_reference_head:LEGACY_V10_REFERENCE_HEAD,
   source_runs:sourceSummaries,
+  bootstrap_only:BOOTSTRAP_ONLY,
+  inaccessible_artifact_count:inaccessibleArtifacts.length,
+  inaccessible_artifacts:inaccessibleArtifacts,
   resume_policy:'V10_RUNTIME_DEPENDENCY_BOUND_PLUS_V11_SEMANTIC_REUSE_V2',
   workflow_run_id:RUN_ID,
   workflow_run_attempt:RUN_ATTEMPT,
@@ -388,3 +474,4 @@ console.log('UCHIRIMO_RESUME_POLICY='+manifest.resume_policy);
 console.log('UCHIRIMO_CARRY_FORWARD_REUSED='+manifest.reused_partition_count);
 console.log('UCHIRIMO_CARRY_FORWARD_RERUN='+manifest.rerun_partition_count);
 console.log('UCHIRIMO_CARRY_FORWARD_HEAVY='+manifest.heavy_partition_count);
+console.log('UCHIRIMO_CARRY_FORWARD_INACCESSIBLE_ARTIFACTS='+manifest.inaccessible_artifact_count);
