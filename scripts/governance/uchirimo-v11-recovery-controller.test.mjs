@@ -9,6 +9,8 @@ import {
   buildSplitCertificate,
   validateSplitCertificate,
   validateRecoveryTree,
+  recoveryTreeHash,
+  synthesizeParentClosure,
   scheduleLane,
   buildControllerState,
   sha256
@@ -98,6 +100,41 @@ assert.equal(tree.closed,true);
 assert.equal(tree.leaf_ids.length,2);
 units[cert.children[1].recovery_unit_id]={state:'PENDING_HEAVY'};
 assert.equal(validateRecoveryTree({root_unit_id:rootId,units,certificates:{[rootId]:cert}}).closed,false);
+
+units[cert.children[1].recovery_unit_id]={state:'PASS'};
+const leafReports=Object.fromEntries(cert.children.map((child,index)=>[child.recovery_unit_id,{
+  status:'PASS',
+  unverified_discrete_selector_case_count:0,
+  recovery_unit_id:child.recovery_unit_id,
+  parent_shard_index:7,
+  parent_partition_key:parent,
+  decision_constraints_sha256:child.decision_constraints_sha256,
+  exact_head:'a'.repeat(40),
+  runtime_manifest_sha256:'r',
+  runtime_integrity_match:true,
+  terminal_context_count:10+index,
+  visited_state_count:100+index,
+  transition_check_count:200+index,
+  dependency_rejection_count:index,
+  downstream_clear_event_count:index+1,
+  resolver_cache_hits:5,
+  resolver_cache_misses:7,
+  max_stack_depth:3+index,
+  observed_peak_heap_mb:40+index,
+  flow_signature_sha256s:['f'+index],
+  case_artifact:'unit-'+index+'.jsonl',
+  case_artifact_sha256:String(index+1).repeat(64).slice(0,64)
+}]));
+const parentRow={shard:7,partition_key:parent,node_id:'UCH-X',partition_seed_json:'{}',glass_family:'insulating_glass',window_type:'sliding_window'};
+const synthesized=synthesizeParentClosure({parent:parentRow,root_unit_id:rootId,units,certificates:{[rootId]:cert},leaf_reports:leafReports});
+assert.equal(synthesized.status,'PASS');
+assert.equal(synthesized.recovery_leaf_count,2);
+assert.equal(synthesized.terminal_context_count,21);
+assert.equal(synthesized.partition_key,parent);
+assert.equal(synthesized.recovery_tree_root_sha256,recoveryTreeHash({root_unit_id:rootId,units,certificates:{[rootId]:cert}}));
+const badLeaf=structuredClone(leafReports);
+badLeaf[cert.children[0].recovery_unit_id].parent_partition_key='wrong';
+assert.throws(()=>synthesizeParentClosure({parent:parentRow,root_unit_id:rootId,units,certificates:{[rootId]:cert},leaf_reports:badLeaf}),/LEAF_PARTITION_MISMATCH/);
 
 const normals=Array.from({length:258},(_,i)=>({parent_shard_index:i,recovery_depth:0,recovery_unit_id:'n'+String(i).padStart(3,'0'),execution_class:'NORMAL'}));
 const plan=scheduleLane(normals);
