@@ -9,6 +9,7 @@ import { canonicalConstraints, recoveryUnitId, recoveryEvidenceNames, sha256 as 
 
 const OUT=String(process.env.UCHIRIMO_FULL_SELECTOR_OUT ?? 'artifacts/uchirimo-selector-proof-shard');
 const BATCH_ID=String(process.env.UCHIRIMO_SELECTOR_BATCH_ID ?? '');
+const EVIDENCE_ARTIFACT_IDENTITY=String(process.env.UCHIRIMO_V12_EVIDENCE_ARTIFACT_IDENTITY ?? '');
 const CHILD_TIMEOUT_MS=Number(process.env.UCHIRIMO_SELECTOR_CHILD_TIMEOUT_MS ?? 1080000);
 const EXPECTED_SHARDS=Number(process.env.UCHIRIMO_SELECTOR_EXPECTED_SHARDS ?? 0);
 const MAX_STATES=Number(process.env.UCHIRIMO_SELECTOR_MAX_STATES ?? 1000000);
@@ -325,7 +326,7 @@ for(const row of batch){
   else results.push({...await runNormal(row),...identity});
 }
 const failed=results.filter((row)=>row.status!=='PASS');
-const report={schema_version:'2.0.0',exact_head:process.env.HEAD_SHA??process.env.GITHUB_SHA??null,batch_id:BATCH_ID,item_count:results.length,pass_count:results.length-failed.length,fail_count:failed.length,child_timeout_ms:CHILD_TIMEOUT_MS,results,status:failed.length?'FAIL':'PASS'};
+const report={schema_version:'2.0.0',exact_head:process.env.HEAD_SHA??process.env.GITHUB_SHA??null,batch_id:BATCH_ID,evidence_artifact_identity:EVIDENCE_ARTIFACT_IDENTITY||null,item_count:results.length,pass_count:results.length-failed.length,fail_count:failed.length,child_timeout_ms:CHILD_TIMEOUT_MS,results,status:failed.length?'FAIL':'PASS'};
 writeFileSync(join(OUT,'batch-'+BATCH_ID+'-report.json'),JSON.stringify(report,null,2)+'\n');
 if(failed.length){
   console.error('UCHIRIMO_SELECTOR_BATCH=FAIL id='+BATCH_ID+' failed='+failed.map((row)=>row.shard).join(','));
