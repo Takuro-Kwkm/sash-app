@@ -45,6 +45,30 @@ jobs:
           node --check scripts/governance/uchirimo-v11-recovery-finalizer.mjs
           node scripts/governance/uchirimo-v11-recovery-controller.test.mjs
 
+      - name: Validate V12 workflow structure
+        shell: bash
+        run: |
+          set -euo pipefail
+          ruby -e "require 'yaml'; YAML.load_file('.github/workflows/uchirimo-v12-selector-controller.yml', aliases: true); puts 'UCHIRIMO_V12_WORKFLOW_YAML=PASS'"
+          node --input-type=module <<'NODE'
+          import {readFileSync} from 'node:fs';
+          const src=readFileSync('.github/workflows/uchirimo-v12-selector-controller.yml','utf8');
+          const plan=[...src.matchAll(/^  plan-(\\d+):/gm)].map((m)=>Number(m[1])).sort((a,b)=>a-b);
+          const exec=[...src.matchAll(/^  execute-(\\d+):/gm)].map((m)=>Number(m[1])).sort((a,b)=>a-b);
+          const expected=Array.from({length:16},(_,i)=>i);
+          if(JSON.stringify(plan)!==JSON.stringify(expected))throw new Error('UCHIRIMO_V12_PLAN_LANES_INVALID:'+JSON.stringify(plan));
+          if(JSON.stringify(exec)!==JSON.stringify(expected))throw new Error('UCHIRIMO_V12_EXEC_LANES_INVALID:'+JSON.stringify(exec));
+          for(const token of [
+            'UCHIRIMO_V12_EVIDENCE_ARTIFACT_IDENTITY: ${{ matrix.artifact_identity }}',
+            'uchirimo-v12-controller-state-${{ env.HEAD_SHA }}-g${{ env.GEN }}',
+            "needs.advance.outputs.next_action == 'DISPATCH_NEXT_GENERATION'",
+            "needs.advance.outputs.next_action == 'FINAL_AGGREGATE'",
+            'uchirimo-v11-recovery-finalizer.mjs',
+            'UCHIRIMO_SELECTOR_EXPECTED_SHARDS: 3956'
+          ]) if(!src.includes(token))throw new Error('UCHIRIMO_V12_WORKFLOW_TOKEN_MISSING:'+token);
+          if(src.includes('GITHUB_OUTPUT: ${{ steps.plan.outputs }}'))throw new Error('UCHIRIMO_V12_INVALID_OUTPUT_ENV');
+          console.log('UCHIRIMO_V12_WORKFLOW_STRUCTURE=PASS lanes=16');
+          NODE
       - name: Build frozen canonical parent plan
         run: node scripts/uchirimo-full-selector-proof.mjs
 
