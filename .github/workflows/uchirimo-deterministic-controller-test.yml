@@ -55,8 +55,8 @@ jobs:
           node --input-type=module <<'NODE'
           import {readFileSync} from 'node:fs';
           const src=readFileSync('.github/workflows/uchirimo-v12-selector-controller.yml','utf8');
-          const plan=[...src.matchAll(/^  plan-(\\d+):/gm)].map((m)=>Number(m[1])).sort((a,b)=>a-b);
-          const exec=[...src.matchAll(/^  execute-(\\d+):/gm)].map((m)=>Number(m[1])).sort((a,b)=>a-b);
+          const plan=[...src.matchAll(/^  plan-(\d+):/gm)].map((m)=>Number(m[1])).sort((a,b)=>a-b);
+          const exec=[...src.matchAll(/^  execute-(\d+):/gm)].map((m)=>Number(m[1])).sort((a,b)=>a-b);
           const expected=Array.from({length:16},(_,i)=>i);
           if(JSON.stringify(plan)!==JSON.stringify(expected))throw new Error('UCHIRIMO_V12_PLAN_LANES_INVALID:'+JSON.stringify(plan));
           if(JSON.stringify(exec)!==JSON.stringify(expected))throw new Error('UCHIRIMO_V12_EXEC_LANES_INVALID:'+JSON.stringify(exec));
