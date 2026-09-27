@@ -107,6 +107,8 @@ export function buildSplitCertificate({
       recovery_unit_id:recoveryUnitId(parent_partition_key,childConstraints)
     };
   });
+  const computedParentUnitId=recoveryUnitId(parent_partition_key,constraints);
+  if(parent_recovery_unit_id&&String(parent_recovery_unit_id)!==computedParentUnitId)throw new Error('RECOVERY_SPLIT_PARENT_UNIT_ID_MISMATCH');
   const body={
     schema_version:'1.0.0',
     controller_contract_version:CONTROLLER_CONTRACT_VERSION,
@@ -114,7 +116,7 @@ export function buildSplitCertificate({
     runtime_manifest_sha256:String(runtime_manifest_sha256??''),
     proof_execution_fingerprint:String(proof_execution_fingerprint??''),
     parent_partition_key:String(parent_partition_key??''),
-    parent_recovery_unit_id:String(parent_recovery_unit_id??recoveryUnitId(parent_partition_key,constraints)),
+    parent_recovery_unit_id:computedParentUnitId,
     parent_constraints:constraints,
     parent_constraints_sha256:sha256(constraints),
     split_field_key:fieldKey,
@@ -184,7 +186,10 @@ function unitSort(a,b){
 }
 
 export function scheduleLane(units,{matrixLimit=MATRIX_LIMIT}={}){
-  const rows=[...units].sort(unitSort);
+  const rows=[...units].map((row)=>{
+    if(!['NORMAL','HEAVY'].includes(String(row?.execution_class??'')))throw new Error('RECOVERY_SCHEDULE_EXECUTION_CLASS_INVALID:'+String(row?.execution_class??''));
+    return row;
+  }).sort(unitSort);
   const heavy=rows.filter((row)=>row.execution_class==='HEAVY');
   const normal=rows.filter((row)=>row.execution_class!=='HEAVY');
   let normalBatchSize=1;
@@ -205,6 +210,27 @@ export function scheduleLane(units,{matrixLimit=MATRIX_LIMIT}={}){
     deferred,
     scheduled_unit_count:scheduled.reduce((n,b)=>n+b.units.length,0),
     deferred_unit_count:deferred.reduce((n,b)=>n+b.units.length,0)
+  };
+}
+
+function controllerSemanticState(state){
+  return {
+    controller_contract_version:state.controller_contract_version,
+    exact_head:state.exact_head,
+    parent_population_count:state.parent_population_count,
+    parent_population_sha256:state.parent_population_sha256,
+    runtime_manifest_sha256:state.runtime_manifest_sha256,
+    execution_fingerprint:state.execution_fingerprint,
+    planner_fingerprint:state.planner_fingerprint,
+    closed_parent_count:state.closed_parent_count,
+    open_parent_count:state.open_parent_count,
+    pass_unit_count:state.pass_unit_count,
+    pending_normal_count:state.pending_normal_count,
+    pending_heavy_count:state.pending_heavy_count,
+    split_required_count:state.split_required_count,
+    deferred_count:state.deferred_count,
+    blocked_counts:stable(state.blocked_counts??{}),
+    recovery_tree_root_hash:state.recovery_tree_root_hash
   };
 }
 
@@ -231,17 +257,20 @@ export function buildControllerState(input){
     recovery_tree_root_hash:String(input.recovery_tree_root_hash??''),
     prior_state_sha256:input.prior_state_sha256??null
   };
-  const blocked=Object.values(state.blocked_counts).reduce((a,b)=>a+Number(b||0),0);
+  let blocked=Object.values(state.blocked_counts).reduce((a,b)=>a+Number(b||0),0);
+  if(state.generation>=MAX_AUTOMATIC_GENERATIONS&&state.open_parent_count>0){
+    state.blocked_counts={...state.blocked_counts,BLOCKED_GENERATION_LIMIT:Number(state.blocked_counts.BLOCKED_GENERATION_LIMIT??0)+1};
+    blocked+=1;
+  }
+  state.current_state_sha256=sha256(controllerSemanticState(state));
+  if(state.prior_state_sha256&&state.prior_state_sha256===state.current_state_sha256&&state.open_parent_count>0){
+    state.blocked_counts={...state.blocked_counts,BLOCKED_NO_PROGRESS:Number(state.blocked_counts.BLOCKED_NO_PROGRESS??0)+1};
+    state.current_state_sha256=sha256(controllerSemanticState(state));
+    blocked+=1;
+  }
   if(blocked>0)state.next_action='BLOCKED';
   else if(state.open_parent_count===0&&state.deferred_count===0)state.next_action='FINAL_AGGREGATE';
-  else if(state.generation>=MAX_AUTOMATIC_GENERATIONS)state.next_action='BLOCKED';
   else if(state.pending_normal_count+state.pending_heavy_count+state.split_required_count+state.deferred_count>0)state.next_action='EXECUTE';
   else state.next_action='BLOCKED';
-  state.current_state_sha256=sha256(state);
-  if(state.prior_state_sha256&&state.prior_state_sha256===state.current_state_sha256){
-    state.next_action='BLOCKED';
-    state.blocked_counts={...state.blocked_counts,BLOCKED_NO_PROGRESS:Number(state.blocked_counts.BLOCKED_NO_PROGRESS??0)+1};
-    state.current_state_sha256=sha256({...state,current_state_sha256:undefined});
-  }
   return state;
 }
