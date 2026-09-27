@@ -5,6 +5,7 @@ import { basename, join } from 'node:path';
 import { currentExactHead } from './governance-lib.mjs';
 import { loadRegisteredRuntime } from '../../src/catalog/runtime-master/runtime-master-registry.mjs';
 import { resolveRuntimeAppProduct } from '../../src/catalog/runtime-master/runtime-app-bridge.mjs';
+import { canonicalConstraints, recoveryUnitId, sha256 as recoverySha256 } from './uchirimo-v11-recovery-controller.mjs';
 
 const OUT=String(process.env.UCHIRIMO_FULL_SELECTOR_OUT ?? 'artifacts/uchirimo-selector-proof-shard');
 const BATCH_ID=String(process.env.UCHIRIMO_SELECTOR_BATCH_ID ?? '');
@@ -41,6 +42,32 @@ function parseConstraints(row){
   const parsed=JSON.parse(String(row.decision_constraints_json ?? '[]'));
   if(!Array.isArray(parsed))throw new Error('UCHIRIMO_DECISION_CONSTRAINTS_INVALID');
   return parsed;
+}
+
+function recoveryIdentity(row,constraints){
+  const parentShard=Number(row.parent_shard_index ?? row.shard);
+  const parentPartitionKey=String(row.parent_partition_key ?? row.partition_key ?? '');
+  if(!Number.isInteger(parentShard)||parentShard<0)throw new Error('UCHIRIMO_RECOVERY_PARENT_SHARD_INVALID');
+  if(!parentPartitionKey)throw new Error('UCHIRIMO_RECOVERY_PARENT_PARTITION_KEY_MISSING');
+  const normalized=canonicalConstraints(constraints);
+  const unitId=recoveryUnitId(parentPartitionKey,normalized);
+  if(row.recovery_unit_id!=null&&String(row.recovery_unit_id)!==unitId)throw new Error('UCHIRIMO_RECOVERY_UNIT_ID_MISMATCH:'+parentPartitionKey);
+  const depth=normalized.length;
+  if(row.recovery_depth!=null&&Number(row.recovery_depth)!==depth)throw new Error('UCHIRIMO_RECOVERY_DEPTH_MISMATCH:'+parentPartitionKey);
+  const parentUnitId=row.parent_recovery_unit_id==null?null:String(row.parent_recovery_unit_id);
+  return {
+    parent_shard_index:parentShard,
+    parent_partition_key:parentPartitionKey,
+    recovery_unit_id:unitId,
+    recovery_depth:depth,
+    parent_recovery_unit_id:parentUnitId,
+    decision_constraints:normalized,
+    decision_constraints_sha256:recoverySha256(normalized)
+  };
+}
+
+function recoveryPrefix(identity){
+  return 'unit-'+identity.parent_shard_index+'-'+identity.recovery_unit_id;
 }
 
 function envForNormal(row){
@@ -132,14 +159,15 @@ function flowSignature(result){
     .join('|');
 }
 
-async function runConstraint(row,constraints){
+async function runConstraint(row,constraints,identity){
   const startedAt=new Date().toISOString();
   const startedMs=Date.now();
   const deadline=startedMs+CHILD_TIMEOUT_MS;
   const shard=Number(row.shard);
   const partitionKey=String(row.partition_key);
-  const failurePath=join(OUT,'shard-'+String(shard)+'-failure.json');
-  const progressPath=join(OUT,'shard-'+String(shard)+'-constraint-progress.json');
+  const prefix=recoveryPrefix(identity);
+  const failurePath=join(OUT,prefix+'-failure.json');
+  const progressPath=join(OUT,prefix+'-progress.json');
   let casesFd=null;
   try{
     if(!Number.isInteger(shard)||shard<0||shard>=EXPECTED_SHARDS)throw new Error('UCHIRIMO_INVALID_SHARD_INDEX:'+shard);
@@ -197,8 +225,9 @@ async function runConstraint(row,constraints){
 
     const constraintMap=new Map(constraints.map((entry)=>[String(entry.field_key),stable(entry.decision)]));
     const constraintHash=sha(stable(constraints));
-    const startArtifact={schema_version:'1.0.0',exact_head:head,task_classification:'NON-PRODUCT-MASTER',product_master_mutation:0,runner:'UCHIRIMO_EXPLICIT_DECISION_CONSTRAINT_SHARD_V1',shard_index:shard,node_id:String(row.node_id),partition_key:partitionKey,seed:stable(seed),seed_sha256:sha(seed),decision_constraints:stable(constraints),decision_constraints_sha256:constraintHash,initial_selection_sha256:sha(selected.selection??{}),runtime_manifest_sha256:runtime.sourcePackageIntegrity.actual,runtime_integrity_match:true,status:'PASS'};
-    writeFileSync(join(OUT,'shard-'+shard+'-constraint-start.json'),JSON.stringify(startArtifact,null,2)+'\n');
+    if(constraintHash!==identity.decision_constraints_sha256)throw new Error('UCHIRIMO_RECOVERY_CONSTRAINT_HASH_MISMATCH:'+identity.recovery_unit_id);
+    const startArtifact={schema_version:'2.0.0',exact_head:head,task_classification:'NON-PRODUCT-MASTER',product_master_mutation:0,runner:'UCHIRIMO_EXPLICIT_DECISION_CONSTRAINT_SHARD_V2',shard_index:shard,parent_shard_index:identity.parent_shard_index,node_id:String(row.node_id),partition_key:partitionKey,parent_partition_key:identity.parent_partition_key,recovery_unit_id:identity.recovery_unit_id,recovery_depth:identity.recovery_depth,parent_recovery_unit_id:identity.parent_recovery_unit_id,seed:stable(seed),seed_sha256:sha(seed),decision_constraints:identity.decision_constraints,decision_constraints_sha256:constraintHash,initial_selection_sha256:sha(selected.selection??{}),runtime_manifest_sha256:runtime.sourcePackageIntegrity.actual,runtime_integrity_match:true,status:'PASS'};
+    writeFileSync(join(OUT,prefix+'-start.json'),JSON.stringify(startArtifact,null,2)+'\n');
 
     const stack=[{selection:selected.selection??seed,decisions:{...decisions},result:selected}];
     const visited=new Set();
@@ -210,7 +239,7 @@ async function runConstraint(row,constraints){
     let terminalCount=0;
     let maxStack=stack.length;
     let peakHeapMb=0;
-    const casesPath=join(OUT,'shard-'+shard+'-terminal-digests.jsonl');
+    const casesPath=join(OUT,prefix+'-terminal-digests.jsonl');
     casesFd=openSync(casesPath,'w');
     const caseHash=createHash('sha256');
     const writeProgress=(status='IN_PROGRESS')=>writeFileSync(progressPath,JSON.stringify({schema_version:'1.0.0',exact_head:head,shard_index:shard,partition_key:partitionKey,decision_constraints_sha256:constraintHash,visited_state_count:visited.size,terminal_context_count:terminalCount,transition_check_count:transitionChecks,dependency_rejection_count:dependencyRejections,constraint_rejection_count:constraintRejections,max_stack_depth:maxStack,resolver_cache_hits:resolverCacheHits,resolver_cache_misses:resolverCacheMisses,status},null,2)+'\n');
@@ -220,7 +249,7 @@ async function runConstraint(row,constraints){
       if(Date.now()>=deadline){
         writeProgress('TIMEOUT');
         writeFileSync(failurePath,JSON.stringify({exact_head:head,mode:'constraint-shard',shard_index:shard,status:'FAIL',message:'UCHIRIMO_CONSTRAINT_CHILD_TIMEOUT:'+CHILD_TIMEOUT_MS,observed_at:new Date().toISOString()},null,2)+'\n');
-        return {shard,partition_key:partitionKey,status:'FAIL',timed_out:true,exit_code:null,signal:null,runner:'INLINE_EXPLICIT_CONSTRAINT_V1',constraint_count:constraints.length,started_at:startedAt,completed_at:new Date().toISOString()};
+        return {shard,partition_key:partitionKey,parent_shard_index:identity.parent_shard_index,parent_partition_key:identity.parent_partition_key,recovery_unit_id:identity.recovery_unit_id,recovery_depth:identity.recovery_depth,parent_recovery_unit_id:identity.parent_recovery_unit_id,decision_constraints_sha256:identity.decision_constraints_sha256,status:'FAIL',timed_out:true,exit_code:null,signal:null,runner:'INLINE_EXPLICIT_CONSTRAINT_V2',constraint_count:constraints.length,started_at:startedAt,completed_at:new Date().toISOString()};
       }
       if(visited.size>=MAX_STATES)throw new Error('UCHIRIMO_SELECTOR_STATE_LIMIT_REACHED:'+MAX_STATES+':SHARD:'+shard);
       const current=stack.pop();
@@ -242,7 +271,7 @@ async function runConstraint(row,constraints){
       if(!nextField){
         if(terminalCount>=MAX_TERMINALS)throw new Error('UCHIRIMO_TERMINAL_LIMIT_REACHED:'+MAX_TERMINALS+':SHARD:'+shard);
         terminalCount+=1;
-        const terminal={case_id:'UCHIRIMO-C'+shard+'-'+String(terminalCount).padStart(6,'0'),window_type:result.selection?.window_type??null,selection:stable(result.selection??{}),validation_status:result.validation?.status??null,flow_signature_sha256:sha(signature),decision_constraints_sha256:constraintHash};
+        const terminal={case_id:'UCHIRIMO-C'+shard+'-'+identity.recovery_unit_id.slice(0,12)+'-'+String(terminalCount).padStart(6,'0'),window_type:result.selection?.window_type??null,selection:stable(result.selection??{}),validation_status:result.validation?.status??null,flow_signature_sha256:sha(signature),decision_constraints_sha256:constraintHash};
         const line=JSON.stringify({case_id:terminal.case_id,window_type:terminal.window_type,terminal_sha256:sha(terminal)})+'\n';
         writeSync(casesFd,line);
         caseHash.update(line);
@@ -269,30 +298,34 @@ async function runConstraint(row,constraints){
     closeSync(casesFd);casesFd=null;
     peakHeapMb=Math.max(peakHeapMb,Math.round(process.memoryUsage().heapUsed/1024/1024));
     if(terminalCount===0)throw new Error('UCHIRIMO_NO_TERMINAL_SELECTOR_CONTEXTS:SHARD:'+shard);
-    const report={schema_version:'1.0.0',exact_head:head,task_classification:'NON-PRODUCT-MASTER',product_master_mutation:0,proof_model:'UCHIRIMO_REACHABLE_DISCRETE_SELECTOR_EXPLICIT_CONSTRAINT_SHARD_V1',shard_index:shard,node_id:String(row.node_id),partition_key:partitionKey,partition_seed:stable(extra),decision_constraints:stable(constraints),decision_constraints_sha256:constraintHash,glass_family:String(row.glass_family),seed:stable(seed),shard_count:EXPECTED_SHARDS,run_attempt:Number(process.env.GITHUB_RUN_ATTEMPT??1),window_type:String(row.window_type),runtime_manifest_sha256:runtime.sourcePackageIntegrity.actual,runtime_integrity_match:true,terminal_context_count:terminalCount,visited_state_count:visited.size,transition_check_count:transitionChecks,dependency_rejection_count:dependencyRejections,constraint_rejection_count:constraintRejections,downstream_clear_event_count:downstreamClearChecks,flow_signature_count:signatureCounts.size,flow_signature_sha256s:[...signatureCounts.keys()].map((value)=>sha(value)).sort(),continuous_dimension_coverage_delegated_to:'CUSTOM_SIZE_COVERAGE_GATE',unverified_discrete_selector_case_count:0,case_artifact:basename(casesPath),case_artifact_format:'UCHIRIMO_TERMINAL_DIGEST_JSONL_V1',case_artifact_sha256:caseHash.digest('hex'),max_stack_depth:maxStack,observed_peak_heap_mb:peakHeapMb,resolver_cache_size:resolverCache.size,resolver_cache_limit:MAX_RESOLVER_CACHE,resolver_cache_hits:resolverCacheHits,resolver_cache_misses:resolverCacheMisses,status:'PASS'};
+    const report={schema_version:'2.0.0',exact_head:head,task_classification:'NON-PRODUCT-MASTER',product_master_mutation:0,proof_model:'UCHIRIMO_REACHABLE_DISCRETE_SELECTOR_EXPLICIT_CONSTRAINT_SHARD_V2',shard_index:shard,parent_shard_index:identity.parent_shard_index,node_id:String(row.node_id),partition_key:partitionKey,parent_partition_key:identity.parent_partition_key,recovery_unit_id:identity.recovery_unit_id,recovery_depth:identity.recovery_depth,parent_recovery_unit_id:identity.parent_recovery_unit_id,partition_seed:stable(extra),decision_constraints:identity.decision_constraints,decision_constraints_sha256:constraintHash,glass_family:String(row.glass_family),seed:stable(seed),shard_count:EXPECTED_SHARDS,run_attempt:Number(process.env.GITHUB_RUN_ATTEMPT??1),window_type:String(row.window_type),runtime_manifest_sha256:runtime.sourcePackageIntegrity.actual,runtime_integrity_match:true,terminal_context_count:terminalCount,visited_state_count:visited.size,transition_check_count:transitionChecks,dependency_rejection_count:dependencyRejections,constraint_rejection_count:constraintRejections,downstream_clear_event_count:downstreamClearChecks,flow_signature_count:signatureCounts.size,flow_signature_sha256s:[...signatureCounts.keys()].map((value)=>sha(value)).sort(),continuous_dimension_coverage_delegated_to:'CUSTOM_SIZE_COVERAGE_GATE',unverified_discrete_selector_case_count:0,case_artifact:basename(casesPath),case_artifact_format:'UCHIRIMO_TERMINAL_DIGEST_JSONL_V1',case_artifact_sha256:caseHash.digest('hex'),max_stack_depth:maxStack,observed_peak_heap_mb:peakHeapMb,resolver_cache_size:resolverCache.size,resolver_cache_limit:MAX_RESOLVER_CACHE,resolver_cache_hits:resolverCacheHits,resolver_cache_misses:resolverCacheMisses,status:'PASS'};
     writeProgress('PASS');
-    writeFileSync(join(OUT,'shard-'+shard+'-report.json'),JSON.stringify(report,null,2)+'\n');
+    writeFileSync(join(OUT,prefix+'-report.json'),JSON.stringify(report,null,2)+'\n');
     console.log('UCHIRIMO_CONSTRAINT_SELECTOR_SHARD=PASS shard='+shard+' constraints='+constraints.length+' terminals='+terminalCount+' states='+visited.size+' constraint_rejections='+constraintRejections);
-    return {shard,partition_key:partitionKey,status:'PASS',timed_out:false,exit_code:0,signal:null,runner:'INLINE_EXPLICIT_CONSTRAINT_V1',constraint_count:constraints.length,started_at:startedAt,completed_at:new Date().toISOString()};
+    return {shard,partition_key:partitionKey,parent_shard_index:identity.parent_shard_index,parent_partition_key:identity.parent_partition_key,recovery_unit_id:identity.recovery_unit_id,recovery_depth:identity.recovery_depth,parent_recovery_unit_id:identity.parent_recovery_unit_id,decision_constraints_sha256:identity.decision_constraints_sha256,status:'PASS',timed_out:false,exit_code:0,signal:null,runner:'INLINE_EXPLICIT_CONSTRAINT_V2',constraint_count:constraints.length,started_at:startedAt,completed_at:new Date().toISOString()};
   }catch(error){
     if(casesFd!==null){try{closeSync(casesFd)}catch{}casesFd=null;}
     try{writeFileSync(failurePath,JSON.stringify({exact_head:process.env.HEAD_SHA??process.env.GITHUB_SHA??null,mode:'constraint-shard',shard_index:Number.isInteger(shard)?shard:null,status:'FAIL',code:error?.code??null,message:error?.message??String(error),stack:error?.stack??null,observed_at:new Date().toISOString()},null,2)+'\n')}catch{}
-    return {shard,partition_key:partitionKey,status:'FAIL',timed_out:false,exit_code:1,signal:null,error:error?.message??String(error),runner:'INLINE_EXPLICIT_CONSTRAINT_V1',constraint_count:constraints.length,started_at:startedAt,completed_at:new Date().toISOString()};
+    return {shard,partition_key:partitionKey,parent_shard_index:identity.parent_shard_index,parent_partition_key:identity.parent_partition_key,recovery_unit_id:identity.recovery_unit_id,recovery_depth:identity.recovery_depth,parent_recovery_unit_id:identity.parent_recovery_unit_id,decision_constraints_sha256:identity.decision_constraints_sha256,status:'FAIL',timed_out:false,exit_code:1,signal:null,error:error?.message??String(error),runner:'INLINE_EXPLICIT_CONSTRAINT_V2',constraint_count:constraints.length,started_at:startedAt,completed_at:new Date().toISOString()};
   }
 }
 
 console.log('UCHIRIMO_SELECTOR_BATCH_START id='+BATCH_ID+' items='+batch.length);
 const results=[];
 for(const row of batch){
-  let constraints;
-  try{constraints=parseConstraints(row)}catch(error){
+  let constraints,identity;
+  try{
+    constraints=parseConstraints(row);
+    identity=recoveryIdentity(row,constraints);
+  }catch(error){
     results.push({shard:Number(row.shard),partition_key:String(row.partition_key),status:'FAIL',timed_out:false,exit_code:null,signal:null,error:error?.message??String(error),runner:null,constraint_count:null,started_at:new Date().toISOString(),completed_at:new Date().toISOString()});
     continue;
   }
-  results.push(constraints.length?await runConstraint(row,constraints):await runNormal(row));
+  if(constraints.length)results.push(await runConstraint(row,constraints,identity));
+  else results.push({...await runNormal(row),...identity});
 }
 const failed=results.filter((row)=>row.status!=='PASS');
-const report={schema_version:'1.1.0',exact_head:process.env.HEAD_SHA??process.env.GITHUB_SHA??null,batch_id:BATCH_ID,item_count:results.length,pass_count:results.length-failed.length,fail_count:failed.length,child_timeout_ms:CHILD_TIMEOUT_MS,results,status:failed.length?'FAIL':'PASS'};
+const report={schema_version:'2.0.0',exact_head:process.env.HEAD_SHA??process.env.GITHUB_SHA??null,batch_id:BATCH_ID,item_count:results.length,pass_count:results.length-failed.length,fail_count:failed.length,child_timeout_ms:CHILD_TIMEOUT_MS,results,status:failed.length?'FAIL':'PASS'};
 writeFileSync(join(OUT,'batch-'+BATCH_ID+'-report.json'),JSON.stringify(report,null,2)+'\n');
 if(failed.length){
   console.error('UCHIRIMO_SELECTOR_BATCH=FAIL id='+BATCH_ID+' failed='+failed.map((row)=>row.shard).join(','));
