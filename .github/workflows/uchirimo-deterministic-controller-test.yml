@@ -88,6 +88,13 @@ jobs:
           ]) if(!governance.includes(token))throw new Error('UCHIRIMO_V12_GOVERNANCE_TOKEN_MISSING:'+token);
           console.log('UCHIRIMO_V12_GOVERNANCE_WIRING=PASS');
           NODE
+      - name: Verify final workflow authority shape
+        shell: bash
+        run: |
+          set -euo pipefail
+          mv .github/workflows/uchirimo-deterministic-controller-test.yml /tmp/uchirimo-deterministic-controller-test.yml
+          python3 scripts/governance/verify-workflow-authority.py
+          mv /tmp/uchirimo-deterministic-controller-test.yml .github/workflows/uchirimo-deterministic-controller-test.yml
       - name: Build frozen canonical parent plan
         run: node scripts/uchirimo-full-selector-proof.mjs
 
