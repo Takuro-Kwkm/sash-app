@@ -40,7 +40,6 @@
     "estimate-output-qa.yml",
     "ew-production-finalize.yml",
     "global-window-selection-flow-gate.yml",
-    "uchirimo-recovery-pilot.yml",
     "stage-a-105-window-discrete-exact-head-consolidation-v2.yml",
     "stage-a-105-window-discrete-exact-head-consolidation.yml",
     "stage-a-apw430-behavior-projection-v1.yml",
@@ -95,10 +94,12 @@
     "stage-a-tw-five-failure-recovery-v2.yml",
     "stage-a-tw-shut-hiki-color-projection-v3.yml",
     "tw-production-finalize.yml",
-    "uchirimo-stage1-bath-recovery.yml",
     "uchirimo-bath-root-closure.yml",
     "uchirimo-nonbath-root-closure.yml",
-    "uchirimo-nonbath-root2-descendant-recovery.yml"
+    "uchirimo-nonbath-root2-descendant-recovery.yml",
+    "uchirimo-recovery-pilot.yml",
+    "uchirimo-stage1-bath-recovery.yml",
+    "uchirimo-v12-selector-controller.yml"
   ],
   "independent_authority_allowed": false,
   "release_requires_controller_and_release_gate": true
