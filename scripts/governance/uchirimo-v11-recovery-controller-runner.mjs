@@ -6,6 +6,7 @@ import {
   MAX_AUTOMATIC_GENERATIONS,
   MAX_RECOVERY_DEPTH,
   assertComputeSchedule,
+  assertKnownHeavyRootNotScheduled,
   buildControllerState,
   buildSplitCertificate,
   canonicalConstraints,
@@ -80,6 +81,8 @@ async function init(){
   validatePlan(plan);
   if(carry.status!=='PASS'||String(carry.current_exact_head??'')!==String(plan.exact_head??''))throw new Error('UCHIRIMO_V12_CARRY_MANIFEST_INVALID');
   if(Number(carry.current_shard_count)!==3956)throw new Error('UCHIRIMO_V12_CARRY_PARENT_COUNT_MISMATCH:'+carry.current_shard_count);
+  const runtime=await loadRegisteredRuntime('YKK AP','ウチリモ 内窓');
+  if(!runtime?.sourcePackageIntegrity?.match||String(runtime.sourcePackageIntegrity.actual)!==String(carry.runtime_manifest_sha256??''))throw new Error('UCHIRIMO_V12_INIT_RUNTIME_INTEGRITY_FAIL');
   const byKey=new Map(plan.partitions.map((row)=>[String(row.partition_key),row]));
   const reused=new Set((carry.reused_partition_keys??[]).map(String));
   const heavy=new Set((carry.heavy_partition_keys??[]).map(String));
@@ -217,7 +220,7 @@ function planLane(){
       .filter((unit)=>Number(unit.parent_shard_index)%LANE_COUNT===LANE_INDEX);
   for(const unit of eligible){
     assertComputeSchedule(unit,unitsEnvelope.units);
-    if(Number(unit.recovery_depth)===0&&unit.execution_class==='HEAVY')throw new Error('KNOWN_HEAVY_ROOT_EXECUTION_FORBIDDEN:'+unit.recovery_unit_id);
+    assertKnownHeavyRootNotScheduled(unit);
   }
   const scheduled=scheduleLane(eligible);
   const toItem=(unit)=>{
@@ -506,7 +509,7 @@ async function advance(){
   for(const unitId of scheduledIds){
     const unit=units[unitId];
     assertComputeSchedule(unit,units);
-    if(Number(unit.recovery_depth)===0&&unit.execution_class==='HEAVY')throw new Error('KNOWN_HEAVY_ROOT_EXECUTION_FORBIDDEN:'+unitId);
+    assertKnownHeavyRootNotScheduled(unit);
     const result=results.get(unitId)??{status:'FAIL',timed_out:false,error:'GITHUB_API_TRANSIENT:MISSING_SCHEDULED_BATCH_RESULT',code:'GITHUB_API_TRANSIENT'};
     const event=classifyExecutionResult(result);
     let transitioned=transitionUnit(unit,event);
