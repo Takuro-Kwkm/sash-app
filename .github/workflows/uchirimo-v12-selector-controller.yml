@@ -101,7 +101,7 @@ jobs:
           UCHIRIMO_SELECTOR_CURRENT_PLAN: artifacts/uchirimo-v12-parent-plan/all-partitions.json
           UCHIRIMO_SELECTOR_CARRY_FORWARD_OUT: artifacts/uchirimo-selector-proof-carry-forward
           UCHIRIMO_CARRY_FORWARD_BOOTSTRAP_DIR: ${{ steps.bootstrap-download.outcome == 'success' && 'artifacts/uchirimo-v12-bootstrap-carry' || '' }}
-          UCHIRIMO_CARRY_FORWARD_BOOTSTRAP_ONLY: 'false'
+          UCHIRIMO_CARRY_FORWARD_BOOTSTRAP_ONLY: ${{ steps.bootstrap-download.outcome == 'success' && 'true' || 'false' }}
           UCHIRIMO_CARRY_FORWARD_BOOTSTRAP_RUN_ID: ${{ env.BOOTSTRAP_CARRY_RUN_ID }}
           UCHIRIMO_CARRY_FORWARD_BOOTSTRAP_ARTIFACT_IDENTITY: ${{ env.BOOTSTRAP_CARRY_ARTIFACT }}
         run: |
