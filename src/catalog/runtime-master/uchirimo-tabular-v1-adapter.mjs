@@ -204,11 +204,17 @@ function buildModel(runtimePackage) {
   const sizeRuleByNodeId = new Map(canonical.size_rules.map((row) => [row[1], row]));
   const sortedDependencyRules = Object.freeze([...canonical.dependency_rules].sort((a, b) => a.priority - b.priority || a.rule_id.localeCompare(b.rule_id)));
   const glassScopeRules = Object.freeze(sortedDependencyRules.filter((rule) => rule.effect?.action === 'exclude_scope_classes'));
+  // A Slim candidate shares each selector prefix across many installation and
+  // frame states. Bound the cache so QA traversal does not grow memory without
+  // limit. The FORMAL matrix path remains byte-for-byte behavior compatible.
+  const glassFacetCache = canonical.glass_compatibility_profiles ? new Map() : null;
+  const glassScopeCache = canonical.glass_compatibility_profiles ? new Map() : null;
   const manualRouteByGsc = new Map((judgment.manual_check_routes ?? []).map((row) => [row.gsc_id, row]));
 
   return Object.freeze({
     fields: Object.freeze(fields), values: Object.freeze(values), fieldByName, valuesByField,
-    glassSpecsByNodeId, detailMatrixByNodeId, sizeRuleByNodeId, sortedDependencyRules, glassScopeRules, manualRouteByGsc,
+    glassSpecsByNodeId, detailMatrixByNodeId, sizeRuleByNodeId, sortedDependencyRules, glassScopeRules,
+    glassFacetCache, glassScopeCache, manualRouteByGsc,
     canonical, judgment, sizeInstallation, vacuum,
     capabilities: Object.freeze({
       runtimeContract: 'uchirimo_tabular_v1', dependencyRules: canonical.dependency_rules.length,
@@ -264,9 +270,31 @@ function applyGlassScopeRules(model, selection, glasses) {
   return out;
 }
 
+function scopedGlassCandidates(model, nodeId, selection) {
+  const glasses = model.glassSpecsByNodeId.get(nodeId) ?? [];
+  if (!model.glassScopeCache) return { glasses: applyGlassScopeRules(model, selection, glasses), scopeKey: '' };
+  const denied = new Set();
+  for (const rule of model.glassScopeRules) {
+    if (ruleMatches(rule, selection)) for (const value of rule.effect.values ?? []) denied.add(value);
+  }
+  const scopeKey = JSON.stringify([...denied].sort());
+  const key = `${nodeId}\u0000${scopeKey}`;
+  if (!model.glassScopeCache.has(key)) model.glassScopeCache.set(key,
+    denied.size ? glasses.filter((row) => !denied.has(row.scope_class)) : glasses);
+  return { glasses: model.glassScopeCache.get(key), scopeKey };
+}
+
+function rememberGlassFacet(cache, key, value) {
+  cache.set(key, value);
+  if (cache.size > 8192) cache.delete(cache.keys().next().value);
+}
+
 function configureGlass(model, nodeId, selection, visible, required, allowed, derived) {
   for (const field of GLASS_AXES) { visible.delete(field); required.delete(field); }
-  let candidates = applyGlassScopeRules(model, selection, model.glassSpecsByNodeId.get(nodeId) ?? []);
+  const scoped = scopedGlassCandidates(model, nodeId, selection);
+  let candidates = scoped.glasses;
+  const prefix = [];
+  let previousChoice = null, previousField = null;
   for (const field of GLASS_AXES) {
     const effective = { ...selection, ...derived };
     const prerequisite = field === 'glass_family' ||
@@ -277,15 +305,29 @@ function configureGlass(model, nodeId, selection, visible, required, allowed, de
       (field === 'grille_material' && has(effective.grille_type) && effective.grille_type !== 'none') ||
       (field === 'vacuum_glass_product' && effective.glass_family === 'vacuum_glass') ||
       (['spacer_type', 'gas_fill'].includes(field) && effective.glass_family === 'insulating_glass' && has(effective.glass_structure));
-    const meaningful = unique(candidates.map((row) => row[field]).filter((value) => has(value) && !NA.has(value)));
+    const cacheKey = model.glassFacetCache ? JSON.stringify([nodeId, scoped.scopeKey, prefix]) : null;
+    const cached = cacheKey && model.glassFacetCache.get(cacheKey);
+    let meaningful;
+    if (cached) {
+      candidates = cached.candidates;
+      meaningful = cached.meaningful;
+    } else {
+      if (model.glassFacetCache && has(previousChoice)) candidates = candidates.filter((row) => same(row[previousField], previousChoice));
+      meaningful = unique(candidates.map((row) => row[field]).filter((value) => has(value) && !NA.has(value)));
+      if (cacheKey) rememberGlassFacet(model.glassFacetCache, cacheKey, { candidates, meaningful });
+    }
     allowed.set(field, meaningful);
     if (prerequisite && (meaningful.length > 1 || meaningful.length === 1 || has(selection[field]))) {
       visible.add(field); required.add(field);
     }
     if (prerequisite && meaningful.length === 1 && !has(selection[field])) derived[field] = meaningful[0];
     const chosen = has(selection[field]) ? selection[field] : derived[field];
-    if (has(chosen)) candidates = candidates.filter((row) => same(row[field], chosen));
+    if (!model.glassFacetCache && has(chosen)) candidates = candidates.filter((row) => same(row[field], chosen));
+    previousField = field;
+    previousChoice = chosen;
+    prefix.push(has(chosen) ? chosen : null);
   }
+  if (model.glassFacetCache && has(previousChoice)) candidates = candidates.filter((row) => same(row[previousField], previousChoice));
   if (candidates.length === 1) {
     const glass = candidates[0];
     derived.glass_spec_id = glass.glass_spec_id;

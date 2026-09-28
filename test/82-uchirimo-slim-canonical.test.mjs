@@ -73,3 +73,29 @@ test('Slim rejects lost disposition, unmapped glass, and status drift', async ()
   factDrift.dependency_rules[0].priority += 1;
   assert.equal(compareUchirimoGlassSemantics(legacy, factDrift).unchanged_fact_mismatch_count, 1);
 });
+
+test('Slim glass prefix cache preserves resolved states, invalid clears, and stays bounded', async () => {
+  const pkg = await packagePromise;
+  const { legacy, slimPackage } = candidates(pkg);
+  const before = adaptUchirimoTabularV1(pkg);
+  const after = adaptUchirimoTabularV1(slimPackage);
+  const axes = ['glass_family', 'glass_structure', 'low_e_type', 'glass_coating_color',
+    'glass_surface_type', 'safety_treatment', 'grille_type', 'grille_material',
+    'muntin_type', 'vacuum_glass_product', 'spacer_type', 'gas_fill'];
+  const seeds = [];
+  for (let index = 0; index < 255; index += 1) {
+    const node = legacy.product_nodes[index % legacy.product_nodes.length];
+    const glass = legacy.glass_specs[(index * 97) % legacy.glass_specs.length];
+    const seed = { room_specification: node.room, window_type: node.window_type,
+      frame_color: index % 2 ? 'white' : 'calm_black', size_w: 600, size_h: 700 };
+    if (node.window_type === 'sliding_window') Object.assign(seed,
+      { sash_configuration: node.sash_configuration, size_class: node.size_class });
+    for (const axis of axes) if (glass[axis] && glass[axis] !== 'NOT_APPLICABLE') seed[axis] = glass[axis];
+    if (index % 9 === 0) seed.glass_structure = '__INVALID__';
+    if (index % 11 === 0) seed.low_e_type = '__INVALID__';
+    seeds.push(seed);
+  }
+  for (const seed of [...seeds, ...seeds]) assert.deepEqual(after.resolver(seed), before.resolver(seed));
+  assert.ok(after.master.glassFacetCache.size > 0);
+  assert.ok(after.master.glassFacetCache.size <= 8192);
+});
