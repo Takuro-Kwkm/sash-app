@@ -1,4 +1,4 @@
-name: Stop only three stale Uchirimo runs 20260928
+name: Stop stalled Uchirimo run 36352146462
 on:
   push:
     branches: [ops/stop-stale-uchirimo-runs-20260928]
@@ -17,12 +17,7 @@ jobs:
         run: |
           import json, os, time, urllib.request, urllib.error
           repo = "Takuro-Kwkm/sash-app"
-          targets = {
-            36308658664: "faa99100edbc857d1b14910e169c52e002504bd3",
-            36316468707: "55750519c5b0ecdf9f6c4f413205f7759a968e41",
-            36310342280: "673d96759613f913b3c4b87e98a0e1386720d210",
-          }
-          protected = 36352146462
+          targets = {36352146462: "ffa0c86d33652c0edf8fdc43a7391b2cc3750ec0"}
           headers = {"Authorization": "Bearer " + os.environ["GH_TOKEN"], "Accept": "application/vnd.github+json", "X-GitHub-Api-Version": "2022-11-28"}
           def api(path, method="GET"):
               req = urllib.request.Request("https://api.github.com/repos/" + repo + "/" + path, headers=headers, method=method)
@@ -34,7 +29,7 @@ jobs:
                   if error.code == 409: return 409, {}
                   raise RuntimeError("GitHub HTTP " + str(error.code) + " at " + path) from None
           for run_id, expected_sha in targets.items():
-              assert run_id != protected and str(run_id) != os.environ["GITHUB_RUN_ID"]
+              assert str(run_id) != os.environ["GITHUB_RUN_ID"]
               _, run = api("actions/runs/" + str(run_id))
               assert run["head_sha"] == expected_sha
               assert run["path"] == ".github/workflows/project-governance-gate.yml"
@@ -63,6 +58,3 @@ jobs:
                   page += 1
               print("UNFINISHED_JOBS", run_id, len(unfinished), flush=True)
               assert not unfinished, (run_id, unfinished)
-          _, latest = api("actions/runs/" + str(protected))
-          print("PROTECTED_LATEST_RUN", protected, latest["status"], latest["conclusion"], flush=True)
-          
