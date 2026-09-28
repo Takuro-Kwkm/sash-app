@@ -169,24 +169,52 @@ export function buildSymbolicSafety(runtime){
   const behaviorTargets=new Set([
     'bathroom_installation_type','frame_projection','extension_frame_reinforcement'
   ]);
+  const upstreamInputs=new Map();
+  const recordInputs=(target,inputs)=>{
+    if(!target)return;
+    if(!upstreamInputs.has(target))upstreamInputs.set(target,new Set());
+    for(const input of inputs)if(input)upstreamInputs.get(target).add(String(input));
+  };
   for(const rule of master?.canonical?.dependency_rules??[]){
     for(const condition of rule.conditions??[])if(condition?.field)behaviorInputs.add(String(condition.field));
     const effect=rule.effect??{};
     if(effect.field)behaviorInputs.add(String(effect.field));
     if(effect.target_field)behaviorTargets.add(String(effect.target_field));
     for(const key of Object.keys(effect.also??{}))behaviorTargets.add(String(key));
+    const inputs=[...(rule.conditions??[]).map(condition=>condition?.field),effect.field];
+    for(const target of [effect.target_field,...Object.keys(effect.also??{})])recordInputs(target,inputs);
   }
   for(const input of master?.sizeInstallation?.installation_input_contract?.raw_inputs??[]){
     if(input?.field_name)behaviorTargets.add(String(input.field_name));
     const expression=String(input?.required_when??'');
     for(const match of expression.matchAll(/\b[A-Za-z_][A-Za-z0-9_]*\b/g)){
-      if(fieldNames.has(match[0]))behaviorInputs.add(match[0]);
+      if(fieldNames.has(match[0])){
+        behaviorInputs.add(match[0]);
+        recordInputs(input.field_name,[match[0]]);
+      }
     }
   }
+  // A rule target or raw installation input may depend on upstream values but
+  // never influence another field. Such sinks can share a downstream traversal.
+  // Keep every condition input (including required_when and fixed_by sources)
+  // explicit, even when its effect appears only after a later decision. Every
+  // sink value must still preserve constraints and have equal resolver behavior
+  // projections before its branch multiplicity can be collapsed.
   const independent=new Set([...fieldNames].filter((key)=>
-    !behaviorInputs.has(key)&&!behaviorTargets.has(key)&&!CONTINUOUS_KEYS.has(key)&&!TECHNICAL_KEYS.has(key)
+    !behaviorInputs.has(key)&&!CONTINUOUS_KEYS.has(key)&&!TECHNICAL_KEYS.has(key)
   ));
-  return {behaviorInputs,behaviorTargets,independent};
+  return {behaviorInputs,behaviorTargets,independent,upstreamInputs};
+}
+function symbolicInputsSettled(key,safety,decisions,seed,visiting=new Set()){
+  if(visiting.has(key))return false;
+  const next=new Set(visiting);next.add(key);
+  for(const input of safety.upstreamInputs.get(key)??[]){
+    // Unknown, hidden, derived or not-yet-selected inputs conservatively disable
+    // collapse. Follow ancestors too: a selected input can depend on a later one.
+    if(!Object.hasOwn(decisions,input)&&!Object.hasOwn(seed,input))return false;
+    if(!symbolicInputsSettled(input,safety,decisions,seed,next))return false;
+  }
+  return true;
 }
 function symbolicBehaviorProjection(result,ignoredKey){
   const selection=Object.fromEntries(Object.entries(result.selection??{}).filter(([key])=>key!==ignoredKey));
@@ -360,7 +388,7 @@ export async function runConstraint(row,constraints,identity,options={}){
           downstreamClearChecks+=(child.clearedFields??[]).length;
           evaluated.push({branch,selection:child.selection,decisions:{...currentDecisions,[nextField.key]:branch},result:child,symbolicMultiplier:current.symbolicMultiplier,symbolicAxes:current.symbolicAxes});
         }
-        if(options.symbolic!==false&&symbolicSafety.independent.has(nextField.key)&&fieldBranches.length>1){
+        if(options.symbolic!==false&&symbolicSafety.independent.has(nextField.key)&&fieldBranches.length>1&&symbolicInputsSettled(nextField.key,symbolicSafety,currentDecisions,seed)){
           symbolicEquivalenceChecks+=evaluated.length;
           const equivalent=evaluated.length===fieldBranches.length&&new Set(evaluated.map(item=>sha(symbolicBehaviorProjection(item.result,nextField.key)))).size===1;
           if(equivalent){
