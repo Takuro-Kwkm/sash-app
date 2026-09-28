@@ -7,6 +7,7 @@ on:
       - 'src/catalog/runtime-master/uchirimo-tabular-v1-adapter.mjs'
       - 'src/catalog/runtime-master/runtime-app-bridge.mjs'
       - 'scripts/governance/uchirimo-slim-*.mjs'
+      - 'scripts/uchirimo-full-selector-proof.mjs'
       - 'test/fixtures/uchirimo-slim/**'
       - 'test/82-uchirimo-slim-canonical.test.mjs'
       - '.github/workflows/uchirimo-slim-candidate-qa.yml'
@@ -83,6 +84,26 @@ jobs:
         with:
           name: uchirimo-slim-selector-migration-differential
           path: artifacts/uchirimo-slim/selector-differential.json
+  parent-migration-differential:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      UCHIRIMO_SELECTOR_MODE: plan-all
+      UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-slim/parent-differential-plan
+      UCHIRIMO_SLIM_PARENT_SHARD: 3186
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: node scripts/uchirimo-full-selector-proof.mjs
+      - run: node scripts/governance/uchirimo-slim-parent-differential.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: uchirimo-slim-parent-migration-differential
+          path: artifacts/uchirimo-slim/parent-differential/
   representative-http-e2e:
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
