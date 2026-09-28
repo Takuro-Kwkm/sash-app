@@ -63,6 +63,21 @@ jobs:
       - run: node --test test/72-runtime-manifest-uchirimo-integration.test.mjs test/73-runtime-ui-uchirimo-gate.test.mjs test/82-uchirimo-slim-canonical.test.mjs
       - run: node scripts/governance/uchirimo-slim-normalize.mjs
       - run: cmp data/uchirimo-slim/working-candidate.json artifacts/uchirimo-slim/uchirimo-slim-working-candidate.json
+  selector-migration-differential:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: node scripts/governance/uchirimo-slim-selector-differential.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: uchirimo-slim-selector-migration-differential
+          path: artifacts/uchirimo-slim/selector-differential.json
   representative-http-e2e:
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
