@@ -5,12 +5,14 @@ import { performance } from 'node:perf_hooks';
 import { getRuntimeMasterEntry } from '../../src/catalog/runtime-master/runtime-master-registry.mjs';
 import { loadCanonicalWorkbookRuntimePackage } from '../../src/catalog/runtime-master/canonical-runtime-manifest-loader.mjs';
 import { adaptUchirimoTabularV1 } from '../../src/catalog/runtime-master/uchirimo-tabular-v1-adapter.mjs';
+import { getRuntimeAppIntegration, normalizeRuntimeSelection, toRuntimeUiResult } from '../../src/catalog/runtime-master/runtime-app-bridge.mjs';
 import { compareUchirimoGlassSemantics } from '../../src/catalog/runtime-master/uchirimo-slim-canonical.mjs';
 
 // Migration-only differential. This does not certify every reachable selector
 // state of a V12 parent and cannot itself import a historical parent PASS.
 const candidatePath = process.env.UCHIRIMO_SLIM_INPUT ?? 'data/uchirimo-slim/working-candidate.json';
 const output = process.env.UCHIRIMO_SLIM_DIFFERENTIAL_OUT ?? 'artifacts/uchirimo-slim/selector-differential.json';
+const planPath = process.env.UCHIRIMO_SLIM_PARENT_PLAN ?? 'artifacts/uchirimo-slim/differential-plan/all-partitions.json';
 const bytes = readFileSync(candidatePath);
 const candidateHash = createHash('sha256').update(bytes).digest('hex');
 const candidate = JSON.parse(bytes);
@@ -81,12 +83,34 @@ for (const node of legacy.product_nodes) {
     }
   }
 }
+const plan = JSON.parse(readFileSync(planPath, 'utf8'));
+assert.equal(plan.status, 'PASS');
+assert.equal(plan.shard_count, 3956);
+assert.equal(plan.runtime_manifest_sha256, pkg.integrity.actual);
+const integration = getRuntimeAppIntegration('SER-YKKAP-UCHIRIMO');
+let parentSeedCases = 0;
+for (const row of plan.partitions) {
+  const seed = { room_specification: row.room_specification, window_type: row.window_type };
+  if (row.sash_configuration !== '__UNSET__') seed.sash_configuration = row.sash_configuration;
+  if (row.size_class !== '__UNSET__') seed.size_class = row.size_class;
+  seed.glass_family = row.glass_family;
+  Object.assign(seed, JSON.parse(row.partition_seed_json));
+  const resolve = (adapted) => {
+    const normalized = normalizeRuntimeSelection(adapted.master, seed);
+    return toRuntimeUiResult(adapted.master, adapted.resolver(normalized), integration, pkg.integrity);
+  };
+  const old = resolve(before), current = resolve(after);
+  if (json(current) !== json(old)) throw new Error(`PARENT_SEED_DIFFERENTIAL_MISMATCH:${row.shard}`);
+  digest.update(json(current)); digest.update('\n');
+  parentSeedCases++;
+}
 const report = { schema_version: 'UCHIRIMO_SLIM_SELECTOR_DIFFERENTIAL_V1', status: 'PASS',
   evidence_scope: 'MIGRATION_DIFFERENTIAL_NOT_PARENT_LEVEL_V12_PASS',
   candidate_sha256: candidateHash, source_runtime_sha256: pkg.integrity.actual,
   matched_model_components: modelKeys, matrix_dispositions: matrix.match_count,
   node_count: legacy.product_nodes.length, glass_count: legacy.glass_specs.length,
   full_selection_cases: fullCases, prefix_selection_cases: prefixCases, invalid_selection_cases: invalidCases,
+  parent_seed_ui_cases: parentSeedCases,
   total_matched_resolver_cases: fullCases + prefixCases + invalidCases,
   response_stream_sha256: digest.digest('hex'),
   duration_ms: Math.round((performance.now() - start) * 1000) / 1000,

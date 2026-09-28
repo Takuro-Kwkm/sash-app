@@ -67,11 +67,15 @@ jobs:
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    env:
+      UCHIRIMO_SELECTOR_MODE: plan-all
+      UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-slim/differential-plan
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: '24'
+      - run: node scripts/uchirimo-full-selector-proof.mjs
       - run: node scripts/governance/uchirimo-slim-selector-differential.mjs
       - uses: actions/upload-artifact@v4
         if: always()
