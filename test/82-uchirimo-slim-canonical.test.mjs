@@ -108,10 +108,13 @@ test('Slim indexed value rows preserve full UI output for representative glass p
   const slim = adaptUchirimoTabularV1(slimPackage);
   const integration = getRuntimeAppIntegration('SER-YKKAP-UCHIRIMO');
   assert.ok(slim.master.valueRowsByField instanceof Map);
+  assert.ok(slim.master.valueLookupByField instanceof Map);
   for (const field of slim.master.fields) {
-    assert.deepEqual(slim.master.valueRowsByField.get(field.field_name) ?? [],
-      old.master.values.filter((row) => row.field_name === field.field_name &&
-        row.status === 'CURRENT' && row.runtime_selectable !== false));
+    const expected = old.master.values.filter((row) => row.field_name === field.field_name &&
+      row.status === 'CURRENT' && row.runtime_selectable !== false);
+    assert.deepEqual(slim.master.valueRowsByField.get(field.field_name) ?? [], expected);
+    assert.deepEqual(slim.master.valueLookupByField.get(field.field_name) ?? new Map(),
+      new Map(expected.map((row) => [JSON.stringify(row.canonical_value), row])));
   }
   for (let index = 0; index < 105; index += 1) {
     const node = legacy.product_nodes[index % legacy.product_nodes.length];

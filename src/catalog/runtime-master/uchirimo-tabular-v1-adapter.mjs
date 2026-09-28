@@ -183,6 +183,8 @@ function buildModel(runtimePackage) {
     }
   }
   for (const [field, rows] of valuesByField) valuesByField.set(field, Object.freeze(unique(rows)));
+  const valueLookupByField = valueRowsByField ? new Map([...valueRowsByField].map(([field, rows]) =>
+    [field, new Map(rows.map((row) => [JSON.stringify(row.canonical_value), row]))])) : null;
 
   const glassSpecsByNodeId = new Map();
   if (canonical.glass_compatibility_profiles) {
@@ -217,7 +219,7 @@ function buildModel(runtimePackage) {
   const manualRouteByGsc = new Map((judgment.manual_check_routes ?? []).map((row) => [row.gsc_id, row]));
 
   return Object.freeze({
-    fields: Object.freeze(fields), values: Object.freeze(values), fieldByName, valuesByField, valueRowsByField,
+    fields: Object.freeze(fields), values: Object.freeze(values), fieldByName, valuesByField, valueRowsByField, valueLookupByField,
     glassSpecsByNodeId, detailMatrixByNodeId, sizeRuleByNodeId, sortedDependencyRules, glassScopeRules,
     glassFacetCache, glassScopeCache, manualRouteByGsc,
     canonical, judgment, sizeInstallation, vacuum,
