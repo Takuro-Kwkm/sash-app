@@ -1,0 +1,26 @@
+✔ checkpoint round-trip and certified terminal prefix (9.533838ms)
+✔ corrupt checkpoint is rejected (2.383008ms)
+✔ wrong HEAD/seed/runtime/fingerprint are all rejected (1.59695ms)
+✔ cross-head continuation rebind preserves certified state but changes only identity (2.665208ms)
+✔ terminal corruption is rejected without truncation (1.794455ms)
+✔ only uncommitted crash tail is rolled back (1.812137ms)
+✔ missing terminal file and orphan evidence fail closed (1.957885ms)
+✔ fixed complete universe has no duplicate or omitted units (77.292805ms)
+✔ holding a running root never removes it from the universe (77.888109ms)
+✔ duplicate roots, partitions and wrong parent are rejected (19.119727ms)
+✔ empty aggregate cannot claim closure or release (33.564666ms)
+✔ source drift refuses instrumentation (0.29895ms)
+✔ legacy V10 identity remains bound while current V11 equals repeatedly resumed traversal (129.713865ms)
+✔ result identity, missing bytes and proof-model failures block aggregation (35.25044ms)
+✔ duplicate result and partial parent coverage never close a parent (37.711792ms)
+✔ terminal old groups release only their two roots, active/queued/unknown remain held (37.302718ms)
+✔ legacy job identity errors and missing ownership fail closed (0.858821ms)
+✔ a yielded checkpoint continues its partition before opening another one (0.158712ms)
+ℹ tests 18
+ℹ suites 0
+ℹ pass 18
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 559.250731
