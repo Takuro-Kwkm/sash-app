@@ -404,6 +404,7 @@ function applyDerivedControllerState(state){
 
 function controllerSemanticState(state){
   return {
+    ...(state.compatible_head_bindings?.length?{compatible_head_bindings:state.compatible_head_bindings}:{}),
     controller_contract_version:state.controller_contract_version,
     completion_model:state.completion_model,
     exact_head:state.exact_head,
@@ -430,6 +431,7 @@ function controllerSemanticState(state){
 export function buildControllerState(input){
   const state={
     schema_version:'1.0.0',
+    ...(input.compatible_head_bindings?.length?{compatible_head_bindings:structuredClone(input.compatible_head_bindings)}:{}),
     controller_contract_version:CONTROLLER_CONTRACT_VERSION,
     completion_model:COMPLETION_MODEL,
     exact_head:String(input.exact_head??''),
@@ -469,3 +471,4 @@ export function buildControllerState(input){
   else state.next_action='BLOCKED';
   return state;
 }
+

@@ -651,6 +651,7 @@ async function advance(){
     blocked_counts:blockedCounts,
     recovery_tree_root_hash:treeHash,
     prior_state_sha256:String(priorState.current_state_sha256),
+    compatible_head_bindings:priorState.compatible_head_bindings,
     after_generation:true
   });
   writeJson(join(OUT,'controller-state.json'),state);
@@ -716,3 +717,4 @@ else if(MODE==='advance')await advance();
 else if(MODE==='resume-generation')resumeGeneration();
 else throw new Error('UCHIRIMO_V12_CONTROLLER_MODE_UNSUPPORTED:'+MODE);
 }
+

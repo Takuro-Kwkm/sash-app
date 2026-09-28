@@ -90,6 +90,26 @@ try{
  assert.equal(manifest.report_count,3956);assert.equal(manifest.recovery_tree_parent_count,1);assert.equal(manifest.fresh_root_parent_count,64);assert.equal(manifest.carry_forward_parent_count,3891);
  run('scripts/uchirimo-full-selector-proof.mjs',{...env,UCHIRIMO_SELECTOR_MODE:'aggregate',UCHIRIMO_SELECTOR_SHARD_INPUT:finalDir,UCHIRIMO_SELECTOR_EXPECTED_SHARDS:'3956',UCHIRIMO_FULL_SELECTOR_OUT:join(root,'aggregate')});
  assert.equal(read(join(root,'aggregate/report.json')).status,'PASS');
+ // A workflow-only HEAD change retains raw source files and hashes. Verify
+ // finalization and aggregation of old-head evidence through a validated chain.
+ const nextHead=head==='c'.repeat(40)?'d'.repeat(40):'c'.repeat(40);
+ const imported=structuredClone(state);
+ imported.exact_head=nextHead;
+ imported.execution_fingerprint=raw(Buffer.from('SYNTHETIC_TEST_ONLY'));
+ imported.compatible_head_bindings=[{status:'PASS',source_exact_head:head,current_exact_head:nextHead,source_controller_run_id:1,source_state_sha256:raw(readFileSync(join(out,'controller-state.json'))),source_artifact_id:2,source_artifact_identity:'fixture-controller-state',source_artifact_digest:'sha256:'+raw(Buffer.from('SYNTHETIC_TEST_ONLY')),runtime_manifest_sha256:imported.runtime_manifest_sha256,execution_fingerprint:imported.execution_fingerprint,planner_fingerprint:imported.planner_fingerprint,parent_population_sha256:imported.parent_population_sha256}];
+ const importedState=join(root,'imported-state.json'),importedUnits=join(root,'imported-units.json'),importedParents=join(root,'imported-parents.json');
+ write(importedState,imported);write(importedUnits,{...read(join(out,'recovery-units.json')),exact_head:nextHead});write(importedParents,{...read(join(out,'parent-status.json')),exact_head:nextHead});
+ const importedFinal=join(root,'imported-final'),importedEnv={...finalEnv,HEAD_SHA:nextHead,UCHIRIMO_V12_STATE:importedState,UCHIRIMO_V12_UNITS:importedUnits,UCHIRIMO_V12_PARENT_STATUS:importedParents,UCHIRIMO_V12_FINALIZED_OUT:importedFinal};
+ run('scripts/governance/uchirimo-v11-recovery-finalizer.mjs',importedEnv);
+ assert.equal(read(join(importedFinal,'v12-finalization-manifest.json')).report_count,3956);
+ assert.equal(read(join(importedFinal,'shard-1-report.json')).compatible_controller_binding.source_exact_head,head);
+ assert.equal(read(join(importedFinal,'shard-65-report.json')).current_head_binding.current_exact_head,nextHead);
+ for(const id of ids)assert.equal(after[id].proof_report_sha256,raw(readFileSync(join(evidence,after[id].proof_report_file))));
+ run('scripts/uchirimo-full-selector-proof.mjs',{...env,HEAD_SHA:nextHead,UCHIRIMO_SELECTOR_MODE:'aggregate',UCHIRIMO_SELECTOR_SHARD_INPUT:importedFinal,UCHIRIMO_SELECTOR_EXPECTED_SHARDS:'3956',UCHIRIMO_FULL_SELECTOR_OUT:join(root,'imported-aggregate')});
+ assert.equal(read(join(root,'imported-aggregate/report.json')).status,'PASS');
+ const badBinding=structuredClone(imported);badBinding.compatible_head_bindings[0].execution_fingerprint='0'.repeat(64);write(importedState,badBinding);
+ assert.throws(()=>run('scripts/governance/uchirimo-v11-recovery-finalizer.mjs',importedEnv),/FINGERPRINT_MISMATCH/);
+ console.log('UCHIRIMO_V12_IMPORTED_FINALIZATION=PASS 3956 parents/raw source hash retained/aggregate/mismatch rejected; SYNTHETIC ONLY');
  // Corrupt one retained source byte. The same finalizer must now reject it.
  const victim=after[ids[0]].proof_report_file;writeFileSync(join(sources,'fixture-artifact',victim),readFileSync(join(sources,'fixture-artifact',victim),'utf8')+' ');
  assert.throws(()=>run('scripts/governance/uchirimo-v11-recovery-finalizer.mjs',finalEnv),/REPORT_SHA_MISMATCH/);

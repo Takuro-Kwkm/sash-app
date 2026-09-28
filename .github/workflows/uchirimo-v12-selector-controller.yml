@@ -59,9 +59,12 @@ jobs:
       - name: Verify recovery machinery before scheduling selectors
         if: ${{ inputs.generation == 0 }}
         run: |
+          node scripts/governance/uchirimo-v12-workflow-continuation.test.mjs
+          node scripts/governance/uchirimo-controller-evidence-binding.test.mjs
           node scripts/governance/uchirimo-selector-batch-runner.test.mjs
           node scripts/governance/uchirimo-v11-recovery-controller.test.mjs
           node scripts/governance/uchirimo-v12-recovery-integration.test.mjs
+          node scripts/governance/uchirimo-controller-checkpoint.test.mjs
       - name: Compute generation identities
         id: generation
         shell: bash
@@ -84,9 +87,18 @@ jobs:
           const plan=JSON.parse(readFileSync('artifacts/uchirimo-v12-parent-plan/all-partitions.json','utf8'));
           if(plan.status!=='PASS'||plan.shard_count!==3956||new Set(plan.partitions.map((r)=>r.partition_key)).size!==3956)throw new Error('UCHIRIMO_V12_PARENT_DENOMINATOR_INVALID:'+String(plan.shard_count));
           NODE
+      - name: Restore latest compatible cumulative controller checkpoint
+        id: compatible-checkpoint
+        if: ${{ inputs.generation == 0 }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          HEAD_BRANCH: ${{ github.event.pull_request.head.ref || github.ref_name }}
+          UCHIRIMO_V12_PARENT_PLAN: artifacts/uchirimo-v12-parent-plan/all-partitions.json
+          UCHIRIMO_V12_CONTROLLER_OUT: artifacts/uchirimo-v12-controller
+        run: node scripts/governance/uchirimo-controller-checkpoint-discovery.mjs
       - name: Download preferred bootstrap carry-forward bundle
         id: bootstrap-download
-        if: ${{ inputs.generation == 0 }}
+        if: ${{ inputs.generation == 0 && steps.compatible-checkpoint.outputs.restored != 'true' }}
         continue-on-error: true
         uses: actions/download-artifact@v4
         with:
@@ -95,7 +107,7 @@ jobs:
           run-id: ${{ env.BOOTSTRAP_CARRY_RUN_ID }}
           github-token: ${{ github.token }}
       - name: Revalidate compatible parent evidence cumulatively
-        if: ${{ inputs.generation == 0 }}
+        if: ${{ inputs.generation == 0 && steps.compatible-checkpoint.outputs.restored != 'true' }}
         env:
           GH_TOKEN: ${{ github.token }}
           UCHIRIMO_SELECTOR_CURRENT_PLAN: artifacts/uchirimo-v12-parent-plan/all-partitions.json
@@ -111,14 +123,14 @@ jobs:
           node scripts/governance/uchirimo-partition-carry-forward.mjs
       - name: Upload generation-zero carry-forward evidence
         id: carry-upload
-        if: ${{ inputs.generation == 0 }}
+        if: ${{ inputs.generation == 0 && steps.compatible-checkpoint.outputs.restored != 'true' }}
         uses: actions/upload-artifact@v4
         with:
           name: ${{ env.CARRY_ARTIFACT }}
           path: artifacts/uchirimo-selector-proof-carry-forward/
           if-no-files-found: error
       - name: Initialize controller generation zero
-        if: ${{ inputs.generation == 0 }}
+        if: ${{ inputs.generation == 0 && steps.compatible-checkpoint.outputs.restored != 'true' }}
         env:
           UCHIRIMO_V12_CONTROLLER_MODE: init
           UCHIRIMO_V12_GENERATION: 0
@@ -1717,15 +1729,6 @@ jobs:
           UCHIRIMO_V12_PLAN_SUMMARY_INPUT: artifacts/uchirimo-v12-plans
           UCHIRIMO_V12_CONTROLLER_OUT: artifacts/uchirimo-v12-controller-state
         run: node scripts/governance/uchirimo-v11-recovery-controller-runner.mjs
-      - name: Read next action
-        id: state
-        run: |
-          node --input-type=module <<'NODE'
-          import {appendFileSync,readFileSync} from 'node:fs';
-          const state=JSON.parse(readFileSync('artifacts/uchirimo-v12-controller-state/controller-state.json','utf8'));
-          appendFileSync(process.env.GITHUB_OUTPUT,'next_action='+state.next_action+'\n');
-          console.log('UCHIRIMO_V12_NEXT_ACTION='+state.next_action);
-          NODE
       - uses: actions/upload-artifact@v4
         with:
           name: uchirimo-v12-controller-state-${{ env.HEAD_SHA }}-g${{ env.GEN }}
@@ -1741,6 +1744,16 @@ jobs:
         with:
           path: artifacts/uchirimo-v12-prior
           key: uchirimo-v12-controller-state-${{ env.HEAD_SHA }}-g${{ env.GEN }}
+      # Publish a continuation decision only after its state has been saved.
+      - name: Read next action
+        id: state
+        run: |
+          node --input-type=module <<'NODE'
+          import {appendFileSync,readFileSync} from 'node:fs';
+          const state=JSON.parse(readFileSync('artifacts/uchirimo-v12-controller-state/controller-state.json','utf8'));
+          appendFileSync(process.env.GITHUB_OUTPUT,'next_action='+state.next_action+'\n');
+          console.log('UCHIRIMO_V12_NEXT_ACTION='+state.next_action);
+          NODE
 
   dispatch-next:
     needs: ["governance-authority", "advance"]
@@ -1748,7 +1761,7 @@ jobs:
     # converted into split/deferred work. Bypass GitHub's implicit success()
     # guard so the saved controller decision can dispatch the next generation.
     # A cancelled stale run must never dispatch a successor.
-    if: ${{ always() && !cancelled() && needs.governance-authority.outputs.authorized == 'true' && needs.advance.outputs.next_action == 'DISPATCH_NEXT_GENERATION' }}
+    if: ${{ always() && !cancelled() && needs.governance-authority.outputs.authorized == 'true' && needs.advance.result == 'success' && needs.advance.outputs.next_action == 'DISPATCH_NEXT_GENERATION' }}
     runs-on: ubuntu-latest
     permissions:
       actions: write
@@ -1772,7 +1785,7 @@ jobs:
 
   blocked:
     needs: ["governance-authority", "advance"]
-    if: ${{ always() && !cancelled() && needs.governance-authority.outputs.authorized == 'true' && needs.advance.outputs.next_action == 'BLOCKED' }}
+    if: ${{ always() && !cancelled() && needs.governance-authority.outputs.authorized == 'true' && needs.advance.result == 'success' && needs.advance.outputs.next_action == 'BLOCKED' }}
     runs-on: ubuntu-latest
     steps:
       - run: |
@@ -1781,7 +1794,7 @@ jobs:
 
   finalize:
     needs: ["governance-authority", "advance"]
-    if: ${{ always() && !cancelled() && needs.governance-authority.outputs.authorized == 'true' && needs.advance.outputs.next_action == 'FINAL_AGGREGATE' }}
+    if: ${{ always() && !cancelled() && needs.governance-authority.outputs.authorized == 'true' && needs.advance.result == 'success' && needs.advance.outputs.next_action == 'FINAL_AGGREGATE' }}
     runs-on: ubuntu-latest
     timeout-minutes: 60
     permissions:
@@ -1865,7 +1878,8 @@ jobs:
           if(rows.length!==1)throw new Error('UCHIRIMO_V12_CARRY_METADATA_COUNT:'+rows.length);
           const row=rows[0];
           if(process.env.EXPECTED_ID&&String(row.id)!==process.env.EXPECTED_ID)throw new Error('UCHIRIMO_V12_CARRY_ARTIFACT_ID_MISMATCH');
-          if(process.env.EXPECTED_DIGEST&&row.digest&&String(row.digest)!==process.env.EXPECTED_DIGEST)throw new Error('UCHIRIMO_V12_CARRY_ARTIFACT_DIGEST_MISMATCH');
+          const {normalizeArtifactDigest}=await import('./scripts/governance/uchirimo-controller-evidence-binding.mjs');
+          if(process.env.EXPECTED_DIGEST&&normalizeArtifactDigest(row.digest)!==normalizeArtifactDigest(process.env.EXPECTED_DIGEST))throw new Error('UCHIRIMO_V12_CARRY_ARTIFACT_DIGEST_MISMATCH');
           console.log('UCHIRIMO_V12_CARRY_ARTIFACT_METADATA=PASS id='+row.id);
           NODE
       - name: Materialize canonical parent evidence
@@ -1900,4 +1914,3 @@ jobs:
           echo "complete=true" >> "$GITHUB_OUTPUT"
           echo "next_action=COMPLETE" >> "$GITHUB_OUTPUT"
           echo "UCHIRIMO_V12_SELECTOR=COMPLETE"
-

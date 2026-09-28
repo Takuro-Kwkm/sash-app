@@ -4,6 +4,8 @@ import { tmpdir } from 'node:os';
 import { basename, join } from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { CONTROLLER_CONTRACT_VERSION, sha256, stable } from './uchirimo-v11-recovery-controller.mjs';
+import {bindControllerEvidenceReport} from './uchirimo-controller-evidence-binding.mjs';
+import {fetchWithRetry} from './uchirimo-carry-transport.mjs';
 
 const HEAD=String(process.env.HEAD_SHA??process.env.GITHUB_SHA??'');
 const REPO=String(process.env.GITHUB_REPOSITORY??'');
@@ -55,20 +57,6 @@ function uniqueLocal(index,base){
   return rows[0];
 }
 
-async function fetchWithRetry(url,options,label){
-  let last;
-  for(let attempt=1;attempt<=4;attempt+=1){
-    try{
-      const response=await fetch(url,options);
-      if(response.ok)return response;
-      if(response.status<500&&response.status!==429)throw new Error(label+'_HTTP_'+response.status);
-      last=new Error(label+'_HTTP_'+response.status);
-    }catch(error){last=error;}
-    if(attempt<4)await new Promise((resolve)=>setTimeout(resolve,attempt*1500));
-  }
-  throw new Error(label+'_RETRY_EXHAUSTED:'+String(last?.message??last));
-}
-
 async function apiJson(path){
   if(!REPO||!TOKEN)throw new Error('UCHIRIMO_V12_FINALIZER_GITHUB_ENV_MISSING');
   const response=await fetchWithRetry(API+path,{headers:{Authorization:'Bearer '+TOKEN,Accept:'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'}},'GITHUB_API:'+path);
@@ -81,7 +69,10 @@ async function apiBuffer(path){
   return Buffer.from(await response.arrayBuffer());
 }
 
+const runArtifactCache=new Map();
 async function listArtifacts(runId){
+  const cacheKey=String(runId);
+  if(runArtifactCache.has(cacheKey))return runArtifactCache.get(cacheKey);
   const rows=[];
   for(let page=1;;page+=1){
     const payload=await apiJson('/repos/'+REPO+'/actions/runs/'+runId+'/artifacts?per_page=100&page='+page);
@@ -89,6 +80,7 @@ async function listArtifacts(runId){
     rows.push(...batch);
     if(batch.length<100||rows.length>=Number(payload.total_count??rows.length))break;
   }
+  runArtifactCache.set(cacheKey,rows);
   return rows;
 }
 
@@ -194,10 +186,13 @@ try{
         caseBytes=sourceBytes(source,String(report.case_artifact));
         sourceArtifacts.set(String(source.identity),{run_id:source.run_id,artifact_id:source.artifact_id??null,artifact_identity:source.identity,artifact_zip_sha256:source.artifact_zip_sha256??null});
       }
+      const requiresRebind=report.exact_head!==HEAD;
+      report=bindControllerEvidenceReport(report,{head:HEAD,state,sourceReportSha256:rawSha(reportBytes)});
       validateCanonicalReport(report,parent,String(state.runtime_manifest_sha256));
       if(report.evidence_origin!=='CURRENT_HEAD_CARRY_FORWARD'||report.current_head_binding?.status!=='PASS'||String(report.current_head_binding?.current_exact_head??'')!==HEAD)throw new Error('UCHIRIMO_V12_FINALIZER_CARRY_BINDING_INVALID:'+parent.shard);
       if(rawSha(caseBytes)!==String(report.case_artifact_sha256))throw new Error('UCHIRIMO_V12_FINALIZER_CARRY_CASE_SHA_MISMATCH:'+parent.shard);
-      writeFileSync(targetReport,reportBytes);
+      if(requiresRebind)writeJson(targetReport,report);
+      else writeFileSync(targetReport,reportBytes);
       writeFileSync(join(OUT,String(report.case_artifact)),caseBytes);
       carryCount+=1;
       continue;
@@ -210,11 +205,14 @@ try{
       const source=await artifactSource(root.evidence_source_run_id,root.evidence_artifact_identity,temp);
       const reportBytes=sourceBytes(source,String(root.proof_report_file));
       if(rawSha(reportBytes)!==String(root.proof_report_sha256))throw new Error('UCHIRIMO_V12_FINALIZER_FRESH_ROOT_REPORT_SHA_MISMATCH:'+parent.shard);
-      const report=JSON.parse(String(reportBytes));
+      const sourceReport=JSON.parse(String(reportBytes));
+      const requiresRebind=sourceReport.exact_head!==HEAD;
+      const report=bindControllerEvidenceReport(sourceReport,{head:HEAD,state,sourceReportSha256:rawSha(reportBytes)});
       validateCanonicalReport(report,parent,String(state.runtime_manifest_sha256));
       const caseBytes=sourceBytes(source,String(report.case_artifact));
       if(rawSha(caseBytes)!==String(report.case_artifact_sha256))throw new Error('UCHIRIMO_V12_FINALIZER_FRESH_ROOT_CASE_SHA_MISMATCH:'+parent.shard);
-      writeFileSync(targetReport,reportBytes);
+      if(requiresRebind)writeJson(targetReport,report);
+      else writeFileSync(targetReport,reportBytes);
       writeFileSync(join(OUT,String(report.case_artifact)),caseBytes);
       sourceArtifacts.set(String(source.identity),{run_id:source.run_id,artifact_id:source.artifact_id??null,artifact_identity:source.identity,artifact_zip_sha256:source.artifact_zip_sha256??null});
       freshRootCount+=1;
