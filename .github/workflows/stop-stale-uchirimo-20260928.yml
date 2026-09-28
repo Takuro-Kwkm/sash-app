@@ -61,16 +61,16 @@ jobs:
               page = 1
               unfinished = []
               while True:
-                  _, result = api("actions/runs/" + str(run_id) + "/jobs?per_page=100&page=" + str(page))
+                  _, result = api("actions/runs/" + str(run_id) + "/jobs?per_page=20&page=" + str(page))
                   jobs = result.get("jobs", [])
                   unfinished += [job["id"] for job in jobs if job["status"] != "completed"]
-                  if len(jobs) < 100: break
+                  if len(jobs) < 20: break
                   page += 1
               print("UNFINISHED_JOBS", run_id, len(unfinished), flush=True)
               assert not unfinished, (run_id, unfinished)
 
   dispatch-probe:
-    needs: force-cancel-and-verify
+    if: github.event_name == 'push'
     runs-on: ubuntu-latest
     permissions:
       actions: write
