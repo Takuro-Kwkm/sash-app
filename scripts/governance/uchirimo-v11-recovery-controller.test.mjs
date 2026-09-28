@@ -64,6 +64,20 @@ const axis=chooseNextSplitAxis([
 assert.equal(axis.field_key,'color');
 assert.deepEqual(axis.values,['A','B']);
 
+// Do not spend recovery depth splitting an already collapsible axis while a
+// behavior-changing optional axis still causes the expensive subtree.
+const optionalAxis=chooseNextSplitAxis([
+  {key:'color',required:true,dataType:'ENUM',values:[{value:'A'},{value:'B'}]},
+  {key:'frame_installation_mode',required:false,dataType:'ENUM',values:[{value:'x'},{value:'y'}]}
+],[],{independent:new Set(['color'])});
+assert.equal(optionalAxis.field_key,'frame_installation_mode');
+assert.deepEqual(optionalAxis.decisions,[{kind:'UNSET'},{kind:'VALUE',value:'x'},{kind:'VALUE',value:'y'}]);
+const optionalCert=buildSplitCertificate({parent_partition_key:parent,split_field_key:optionalAxis.field_key,domain_values:optionalAxis.values,domain_decisions:optionalAxis.decisions});
+assert.equal(validateSplitCertificate(optionalCert),true);
+assert.equal(optionalCert.children.length,3);
+assert.deepEqual(optionalCert.children[0].constraints,[{field_key:'frame_installation_mode',decision:{kind:'UNSET'}}]);
+assert.equal(new Set(optionalCert.children.map(c=>c.recovery_unit_id)).size,3);
+
 const cert=buildSplitCertificate({
   exact_head:'a'.repeat(40),
   runtime_manifest_sha256:'r',
@@ -150,19 +164,19 @@ assert.throws(()=>synthesizeParentClosure({parent:parentRow,root_unit_id:rootId,
 
 const normals=Array.from({length:258},(_,i)=>({parent_shard_index:i,recovery_depth:0,recovery_unit_id:'n'+String(i).padStart(3,'0'),execution_class:'NORMAL'}));
 const plan=scheduleLane(normals);
-assert.equal(plan.effective_normal_batch_size,2);
-assert.equal(plan.scheduled.length,129);
-assert.equal(plan.deferred.length,0);
+assert.equal(plan.effective_normal_batch_size,1);
+assert.equal(plan.scheduled.length,4);
+assert.equal(plan.deferred.length,254);
 
 const capacity=[
   ...Array.from({length:250},(_,i)=>({parent_shard_index:i,recovery_depth:0,recovery_unit_id:'h'+i,execution_class:'HEAVY'})),
   ...Array.from({length:20},(_,i)=>({parent_shard_index:300+i,recovery_depth:0,recovery_unit_id:'n'+i,execution_class:'NORMAL'}))
 ];
 const wave=scheduleLane(capacity);
-assert.equal(wave.effective_normal_batch_size,2);
-assert.equal(wave.scheduled.length,256);
-assert.equal(wave.deferred.length,4);
-assert.equal(wave.deferred_unit_count,8);
+assert.equal(wave.effective_normal_batch_size,1);
+assert.equal(wave.scheduled.length,4);
+assert.equal(wave.deferred.length,266);
+assert.equal(wave.deferred_unit_count,266);
 
 const state=buildControllerState({
   exact_head:'b'.repeat(40),
@@ -309,3 +323,12 @@ assert.equal(noProgress.blocked_counts.BLOCKED_NO_PROGRESS,1);
 assert.throws(()=>scheduleLane([{parent_shard_index:0,recovery_depth:0,recovery_unit_id:'x',execution_class:'UNKNOWN'}]),/EXECUTION_CLASS_INVALID/);
 
 console.log('UCHIRIMO_V12_DETERMINISTIC_CONTROLLER_TEST=PASS');
+
+// Queue pagination must not consume the recovery depth budget or duplicate work.
+let remaining=normals,waveCount=0;const scheduled=new Set();
+while(remaining.length){const next=scheduleLane(remaining);for(const batch of next.scheduled)for(const unit of batch.units){assert.ok(!scheduled.has(unit.recovery_unit_id));scheduled.add(unit.recovery_unit_id);}remaining=next.deferred.flatMap(batch=>batch.units);waveCount++;}
+assert.ok(waveCount>12);assert.equal(scheduled.size,normals.length);
+const laterWave=buildControllerState({...state,generation:waveCount,prior_state_sha256:null,after_generation:true});
+assert.equal(laterWave.next_action,'DISPATCH_NEXT_GENERATION');
+assert.equal(laterWave.runnable_unit_count,laterWave.pending_normal_count+laterWave.pending_heavy_count+laterWave.split_required_count);
+assert.throws(()=>scheduleLane(normals,{waveLimit:0}),/WAVE_LIMIT_INVALID/);

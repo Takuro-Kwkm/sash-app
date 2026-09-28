@@ -1,12 +1,14 @@
 import { createHash } from 'node:crypto';
 
-export const CONTROLLER_CONTRACT_VERSION='UCHIRIMO_V12_DETERMINISTIC_RECOVERY_CONTROLLER_V3';
+export const CONTROLLER_CONTRACT_VERSION='UCHIRIMO_V12_DETERMINISTIC_RECOVERY_CONTROLLER_V4';
 export const COMPLETION_MODEL='UCHIRIMO_CUMULATIVE_PARENT_LEDGER_V1';
 export const MATRIX_LIMIT=256;
 export const MAX_NORMAL_BATCH_SIZE=2;
 export const MAX_INFRA_RETRIES=2;
-export const MAX_AUTOMATIC_GENERATIONS=12;
-export const MAX_RECOVERY_DEPTH=MAX_AUTOMATIC_GENERATIONS+1;
+// A dispatch wave is queue pagination, not a recovery depth. Finite branch domains,
+// MAX_RECOVERY_DEPTH, per-unit retry budgets, and no-progress detection bound recovery.
+export const MAX_RECOVERY_DEPTH=13;
+export const MAX_BATCHES_PER_WAVE=4;
 
 const TECHNICAL_KEYS=new Set(['legacyConstruction','legacyConfiguration','internal_construction']);
 const CONTINUOUS_KEYS=new Set(['size_w','size_h','frame_projection','fukashi_dimension','custom_w','custom_h','custom_width','custom_height']);
@@ -100,16 +102,20 @@ function enabledEnumValues(field){
     .map((entry)=>[stableJson(entry.value),entry.value])).values()];
 }
 
-export function chooseNextSplitAxis(fields=[],fixedKeys=[]){
+export function chooseNextSplitAxis(fields=[],fixedKeys=[],{independent=new Set()}={}){
   const fixed=new Set([...fixedKeys].map(String));
+  const candidates=[];
   for(const field of fields??[]){
     const key=String(field?.key??'');
-    if(!key||fixed.has(key)||TECHNICAL_KEYS.has(key)||CONTINUOUS_KEYS.has(key))continue;
-    if(field.required!==true||field.readOnly===true||field.dataType!=='ENUM')continue;
-    const values=enabledEnumValues(field);
-    if(values.length>1)return {field_key:key,values:values.map(stable)};
+    if(!key||fixed.has(key)||TECHNICAL_KEYS.has(key)||CONTINUOUS_KEYS.has(key)||field.readOnly===true||field.dataType!=='ENUM')continue;
+    const values=enabledEnumValues(field).map(stable);
+    const decisions=values.map(value=>({kind:'VALUE',value}));
+    if(field.required!==true)decisions.unshift({kind:'UNSET'});
+    if(decisions.length>1)candidates.push({field_key:key,values,decisions,rank:(independent.has(key)?2:0)+(field.required===true?0:1)});
   }
-  return null;
+  candidates.sort((a,b)=>a.rank-b.rank);
+  if(!candidates.length)return null;
+  const {rank,...axis}=candidates[0];return axis;
 }
 
 export function buildSplitCertificate({
@@ -121,18 +127,21 @@ export function buildSplitCertificate({
   parent_constraints=[],
   split_field_key,
   domain_values=[],
+  domain_decisions=null,
   parent_selection_sha256
 }){
   const constraints=canonicalConstraints(parent_constraints);
   const fieldKey=String(split_field_key??'');
   if(!fieldKey||constraints.some((entry)=>entry.field_key===fieldKey))throw new Error('RECOVERY_SPLIT_FIELD_INVALID:'+fieldKey);
   const values=[...new Map((domain_values??[]).map((value)=>[stableJson(value),stable(value)])).values()];
-  if(values.length<2)throw new Error('RECOVERY_SPLIT_DOMAIN_TOO_SMALL');
-  const children=values.map((value)=>{
-    const childConstraints=[...constraints,{field_key:fieldKey,decision:{kind:'VALUE',value}}];
+  const decisions=(domain_decisions??values.map(value=>({kind:'VALUE',value}))).map(stable);
+  if(decisions.length<2||new Set(decisions.map(stableJson)).size!==decisions.length||decisions.some(d=>!['VALUE','UNSET'].includes(d.kind)))throw new Error('RECOVERY_SPLIT_DOMAIN_TOO_SMALL');
+  const children=decisions.map((decision)=>{
+    const childConstraints=[...constraints,{field_key:fieldKey,decision}];
     return {
-      decision:value,
-      decision_sha256:sha256(value),
+      decision:decision.kind==='VALUE'?decision.value:null,
+      branch_decision:decision,
+      decision_sha256:sha256(decision),
       constraints:childConstraints,
       decision_constraints_sha256:sha256(childConstraints),
       recovery_unit_id:recoveryUnitId(parent_partition_key,childConstraints)
@@ -151,8 +160,9 @@ export function buildSplitCertificate({
     parent_constraints:constraints,
     parent_constraints_sha256:sha256(constraints),
     split_field_key:fieldKey,
-    split_field_domain_sha256:sha256(values),
+    split_field_domain_sha256:sha256(decisions),
     domain_values:values,
+    domain_decisions:decisions,
     children,
     parent_selection_sha256:String(parent_selection_sha256??'')
   };
@@ -165,19 +175,22 @@ export function validateSplitCertificate(certificate){
   if(sha256(body)!==certificate.certificate_sha256)throw new Error('RECOVERY_SPLIT_CERTIFICATE_HASH_MISMATCH');
   const constraints=canonicalConstraints(certificate.parent_constraints??[]);
   if(sha256(constraints)!==certificate.parent_constraints_sha256)throw new Error('RECOVERY_PARENT_CONSTRAINT_HASH_MISMATCH');
-  const values=[...new Map((certificate.domain_values??[]).map((value)=>[stableJson(value),stable(value)])).values()];
-  if(values.length<2||sha256(values)!==certificate.split_field_domain_sha256)throw new Error('RECOVERY_SPLIT_DOMAIN_MISMATCH');
-  if((certificate.children??[]).length!==values.length)throw new Error('RECOVERY_SPLIT_CHILD_COUNT_MISMATCH');
-  const expected=new Map(values.map((value)=>[stableJson(value),value]));
+  const decisions=certificate.domain_decisions??[];
+  if(decisions.length<2||new Set(decisions.map(stableJson)).size!==decisions.length||sha256(decisions)!==certificate.split_field_domain_sha256)throw new Error('RECOVERY_SPLIT_DOMAIN_MISMATCH');
+  if(decisions.some(d=>!['VALUE','UNSET'].includes(d.kind)||(d.kind==='VALUE'&&!Object.prototype.hasOwnProperty.call(d,'value'))))throw new Error('RECOVERY_SPLIT_DOMAIN_MISMATCH');
+  if(stableJson(decisions.filter(d=>d.kind==='VALUE').map(d=>d.value))!==stableJson(certificate.domain_values))throw new Error('RECOVERY_SPLIT_DOMAIN_MISMATCH');
+  if((certificate.children??[]).length!==decisions.length)throw new Error('RECOVERY_SPLIT_CHILD_COUNT_MISMATCH');
+  const expected=new Map(decisions.map(decision=>[stableJson(decision),decision]));
   const childIds=new Set();
   for(const child of certificate.children??[]){
-    const key=stableJson(child.decision);
+    const key=stableJson(child.branch_decision);
     if(!expected.has(key))throw new Error('RECOVERY_SPLIT_CHILD_OUT_OF_DOMAIN');
     expected.delete(key);
-    const childConstraints=[...constraints,{field_key:certificate.split_field_key,decision:{kind:'VALUE',value:stable(child.decision)}}];
+    const childConstraints=[...constraints,{field_key:certificate.split_field_key,decision:stable(child.branch_decision)}];
     const expectedId=recoveryUnitId(certificate.parent_partition_key,childConstraints);
     if(expectedId!==child.recovery_unit_id)throw new Error('RECOVERY_SPLIT_CHILD_ID_MISMATCH');
     if(sha256(childConstraints)!==child.decision_constraints_sha256)throw new Error('RECOVERY_SPLIT_CHILD_CONSTRAINT_HASH_MISMATCH');
+    if(sha256(child.constraints)!==child.decision_constraints_sha256||sha256(child.branch_decision)!==child.decision_sha256)throw new Error('RECOVERY_SPLIT_CHILD_CONSTRAINT_HASH_MISMATCH');
     if(childIds.has(expectedId))throw new Error('RECOVERY_SPLIT_CHILD_DUPLICATE');
     childIds.add(expectedId);
   }
@@ -335,7 +348,8 @@ function unitSort(a,b){
     || String(a.recovery_unit_id).localeCompare(String(b.recovery_unit_id));
 }
 
-export function scheduleLane(units,{matrixLimit=MATRIX_LIMIT}={}){
+export function scheduleLane(units,{matrixLimit=MATRIX_LIMIT,waveLimit=MAX_BATCHES_PER_WAVE}={}){
+  if(!Number.isInteger(waveLimit)||waveLimit<1||waveLimit>matrixLimit)throw new Error('RECOVERY_WAVE_LIMIT_INVALID');
   const rows=[...units].map((row)=>{
     if(!['NORMAL','HEAVY'].includes(String(row?.execution_class??'')))throw new Error('RECOVERY_SCHEDULE_EXECUTION_CLASS_INVALID:'+String(row?.execution_class??''));
     return row;
@@ -343,7 +357,7 @@ export function scheduleLane(units,{matrixLimit=MATRIX_LIMIT}={}){
   const heavy=rows.filter((row)=>row.execution_class==='HEAVY');
   const normal=rows.filter((row)=>row.execution_class!=='HEAVY');
   let normalBatchSize=1;
-  if(heavy.length+normal.length>matrixLimit)normalBatchSize=2;
+  // One unit per batch keeps the feedback wave bounded by one child timeout.
   const batches=[];
   for(let offset=0;offset<normal.length;offset+=normalBatchSize){
     const items=normal.slice(offset,offset+normalBatchSize);
@@ -351,10 +365,11 @@ export function scheduleLane(units,{matrixLimit=MATRIX_LIMIT}={}){
   }
   for(const row of heavy)batches.push({execution_class:'HEAVY',units:[row]});
   batches.sort((a,b)=>unitSort(a.units[0],b.units[0]));
-  const scheduled=batches.slice(0,matrixLimit);
-  const deferred=batches.slice(matrixLimit);
+  const scheduled=batches.slice(0,waveLimit);
+  const deferred=batches.slice(waveLimit);
   return {
     matrix_limit:matrixLimit,
+    wave_limit:waveLimit,
     effective_normal_batch_size:normalBatchSize,
     scheduled,
     deferred,
@@ -380,7 +395,7 @@ function blockerSummary(blockedCounts={}){
 function applyDerivedControllerState(state){
   const blockers=blockerSummary(state.blocked_counts);
   state.completion_model=COMPLETION_MODEL;
-  state.runnable_unit_count=state.pending_normal_count+state.pending_heavy_count+state.split_required_count+state.deferred_count;
+  state.runnable_unit_count=state.pending_normal_count+state.pending_heavy_count+state.split_required_count;
   state.hard_blocker_count=blockers.hard;
   state.quarantined_blocker_count=blockers.quarantined;
   state.blocked_unit_count=blockers.total;
@@ -436,9 +451,7 @@ export function buildControllerState(input){
     recovery_tree_root_hash:String(input.recovery_tree_root_hash??''),
     prior_state_sha256:input.prior_state_sha256??null
   };
-  if(state.generation>=MAX_AUTOMATIC_GENERATIONS&&state.open_parent_count>0){
-    state.blocked_counts={...state.blocked_counts,BLOCKED_GENERATION_LIMIT:Number(state.blocked_counts.BLOCKED_GENERATION_LIMIT??0)+1};
-  }
+  if(!Number.isSafeInteger(state.generation)||state.generation<0)throw new Error('RECOVERY_WAVE_INDEX_INVALID');
   applyDerivedControllerState(state);
   state.current_state_sha256=sha256(controllerSemanticState(state));
   if(state.prior_state_sha256&&state.prior_state_sha256===state.current_state_sha256&&state.open_parent_count>0){

@@ -4,7 +4,6 @@ import { join } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import {
   CONTROLLER_CONTRACT_VERSION,
-  MAX_AUTOMATIC_GENERATIONS,
   MAX_RECOVERY_DEPTH,
   assertComputeSchedule,
   assertKnownHeavyRootNotScheduled,
@@ -27,6 +26,7 @@ import {
 } from './uchirimo-v11-recovery-controller.mjs';
 import { loadRegisteredRuntime } from '../../src/catalog/runtime-master/runtime-master-registry.mjs';
 import { resolveRuntimeAppProduct } from '../../src/catalog/runtime-master/runtime-app-bridge.mjs';
+import { validateConstraintCaseEvidence, buildSymbolicSafety } from './uchirimo-selector-batch-runner.mjs';
 
 const MODE=String(process.env.UCHIRIMO_V12_CONTROLLER_MODE??'init');
 const HEAD=String(process.env.HEAD_SHA??process.env.GITHUB_SHA??'');
@@ -44,7 +44,7 @@ const CARRY_ARTIFACT_ID=Number(process.env.UCHIRIMO_V12_CARRY_ARTIFACT_ID??0);
 const CARRY_ARTIFACT_DIGEST=String(process.env.UCHIRIMO_V12_CARRY_ARTIFACT_DIGEST??'');
 const LANE_COUNT=Number(process.env.UCHIRIMO_SELECTOR_PLAN_LANE_COUNT??16);
 const LANE_INDEX=Number(process.env.UCHIRIMO_SELECTOR_PLAN_LANE_INDEX??0);
-const NORMAL_TIMEOUT_MS=Number(process.env.UCHIRIMO_SELECTOR_NORMAL_CHILD_TIMEOUT_MS??1080000);
+const NORMAL_TIMEOUT_MS=Number(process.env.UCHIRIMO_SELECTOR_NORMAL_CHILD_TIMEOUT_MS??300000);
 const HEAVY_TIMEOUT_MS=Number(process.env.UCHIRIMO_SELECTOR_HEAVY_CHILD_TIMEOUT_MS??3000000);
 const EXECUTION_INPUT=String(process.env.UCHIRIMO_V12_EXECUTION_INPUT??'artifacts/uchirimo-v12-execution');
 const PLAN_SUMMARY_INPUT=String(process.env.UCHIRIMO_V12_PLAN_SUMMARY_INPUT??'artifacts/uchirimo-v12-plans');
@@ -351,7 +351,8 @@ export async function splitUnit({parent,unit,units,certificates,exactHead,runtim
   const unitId=String(unit.recovery_unit_id);
   if(Number(unit.recovery_depth)>=MAX_RECOVERY_DEPTH)return {unit:{...unit,state:'BLOCKED_RECOVERY_DEPTH',next_action:'BLOCKED'},child_count:0};
   const resolved=await resolveUnitSelection(parent,unit);
-  const axis=chooseNextSplitAxis(resolved.result.fields??[],[...Object.keys(resolved.seed),...resolved.constraints.map((entry)=>entry.field_key)]);
+  const {independent}=buildSymbolicSafety(await loadRegisteredRuntime('YKK AP','ウチリモ 内窓'));
+  const axis=chooseNextSplitAxis(resolved.result.fields??[],[...Object.keys(resolved.seed),...resolved.constraints.map((entry)=>entry.field_key)],{independent});
   if(!axis)return {unit:{...unit,state:'BLOCKED_UNSPLITTABLE',next_action:'BLOCKED'},child_count:0};
   const certificate=buildSplitCertificate({
     exact_head:exactHead,
@@ -362,6 +363,7 @@ export async function splitUnit({parent,unit,units,certificates,exactHead,runtim
     parent_constraints:resolved.constraints,
     split_field_key:axis.field_key,
     domain_values:axis.values,
+    domain_decisions:axis.decisions,
     parent_selection_sha256:sha256(resolved.result.selection??{})
   });
   validateSplitCertificate(certificate);
@@ -391,14 +393,15 @@ export async function validateExecutionFrontier({plan,units,certificates,parents
   const errors=[];
   const byKey=new Map(plan.partitions.map(row=>[String(row.partition_key),row]));
   let checkedChildren=0;
+  const {independent}=buildSymbolicSafety(await loadRegisteredRuntime('YKK AP','ウチリモ 内窓'));
   for(const [unitId,cert] of Object.entries(certificates)){
     validateSplitCertificate(cert);
     const unit=units[unitId],parent=byKey.get(cert.parent_partition_key);
     if(!unit||!parent)throw new Error('RECOVERY_PREFLIGHT_PARENT_MISSING');
     if(cert.exact_head!==state.exact_head||cert.runtime_manifest_sha256!==state.runtime_manifest_sha256||cert.proof_execution_fingerprint!==state.execution_fingerprint)throw new Error('RECOVERY_PREFLIGHT_CERTIFICATE_IDENTITY_MISMATCH');
     const resolved=await resolveUnitSelection(parent,unit);
-    const axis=chooseNextSplitAxis(resolved.result.fields,[...Object.keys(resolved.seed),...resolved.constraints.map(row=>row.field_key)]);
-    if(!axis||axis.field_key!==cert.split_field_key||sha256(axis.values)!==cert.split_field_domain_sha256||sha256(resolved.result.selection??{})!==cert.parent_selection_sha256)throw new Error('RECOVERY_PREFLIGHT_DOMAIN_MISMATCH');
+    const axis=chooseNextSplitAxis(resolved.result.fields,[...Object.keys(resolved.seed),...resolved.constraints.map(row=>row.field_key)],{independent});
+    if(!axis||axis.field_key!==cert.split_field_key||sha256(axis.decisions)!==cert.split_field_domain_sha256||sha256(resolved.result.selection??{})!==cert.parent_selection_sha256)throw new Error('RECOVERY_PREFLIGHT_DOMAIN_MISMATCH');
     for(const child of cert.children){
       const actual=units[child.recovery_unit_id];
       if(!actual||actual.parent_recovery_unit_id!==unitId||actual.decision_constraints_sha256!==child.decision_constraints_sha256)throw new Error('RECOVERY_PREFLIGHT_CHILD_MISMATCH');
@@ -420,9 +423,9 @@ export async function validateExecutionFrontier({plan,units,certificates,parents
     return {lane,unit_count:rows.length,batch_count:batches,minimum_generations_for_current_frontier:generations,timeout_budget_minutes_at_two_parallel_workers:Math.ceil(batches/2)*maximumBatchTimeoutMs/60000};
   });
   const minimumGenerations=Math.max(0,...lanes.map(row=>row.minimum_generations_for_current_frontier));
-  const availableGenerations=MAX_AUTOMATIC_GENERATIONS-Number(state.generation)+1;
-  if(minimumGenerations>availableGenerations)errors.push('BLOCKED_GENERATION_CAPACITY');
-  return {schema_version:'1.0.0',exact_head:state.exact_head,runtime_manifest_sha256:state.runtime_manifest_sha256,canonical_parent_count:plan.partitions.length,checked_split_certificate_count:Object.keys(certificates).length,checked_child_selection_count:checkedChildren,eligible_unit_count:eligible.length,known_heavy_root_execution_count:0,pass_parent_reopen_count:0,minimum_generations_for_current_frontier:minimumGenerations,available_generations:availableGenerations,lanes,compute_completion:'UNVERIFIED_UNTIL_EXECUTION',errors,status:errors.length?'BLOCKED':'PASS'};
+  const maximumRecoveryDepth=Math.max(0,...Object.values(units).map(unit=>Number(unit.recovery_depth??0)));
+  if(maximumRecoveryDepth>MAX_RECOVERY_DEPTH)errors.push('BLOCKED_RECOVERY_DEPTH');
+  return {schema_version:'1.0.0',exact_head:state.exact_head,runtime_manifest_sha256:state.runtime_manifest_sha256,canonical_parent_count:plan.partitions.length,checked_split_certificate_count:Object.keys(certificates).length,checked_child_selection_count:checkedChildren,eligible_unit_count:eligible.length,known_heavy_root_execution_count:0,pass_parent_reopen_count:0,minimum_generations_for_current_frontier:minimumGenerations,termination_policy:'FINITE_TREE_DEPTH_AND_UNIT_RETRY_BUDGET',maximum_recovery_depth:maximumRecoveryDepth,recovery_depth_limit:MAX_RECOVERY_DEPTH,lanes,compute_completion:'UNVERIFIED_UNTIL_EXECUTION',errors,status:errors.length?'BLOCKED':'PASS'};
 }
 
 function reportIndex(dir){
@@ -518,6 +521,7 @@ function validateProofReport(unit,parent,report,files){
   if(!String(report.case_artifact??'')||!/^[0-9a-f]{64}$/.test(String(report.case_artifact_sha256??'')))throw new Error('UCHIRIMO_V12_PROOF_CASE_IDENTITY_INVALID:'+unit.recovery_unit_id);
   const caseFile=uniqueFileByBase(files,String(report.case_artifact));
   if(caseFile.hash!==String(report.case_artifact_sha256))throw new Error('UCHIRIMO_V12_PROOF_CASE_SHA_MISMATCH:'+unit.recovery_unit_id);
+  validateConstraintCaseEvidence(report,readFileSync(caseFile.path,'utf8'));
   return {...report,evidence_case_file_sha256:caseFile.hash};
 }
 
@@ -684,7 +688,8 @@ function resumeGeneration(){
   if(priorState.next_action!=='DISPATCH_NEXT_GENERATION')throw new Error('UCHIRIMO_V12_RESUME_NOT_AUTHORIZED:'+String(priorState.next_action));
   const expectedGeneration=Number(priorState.generation)+1;
   if(GENERATION!==expectedGeneration)throw new Error('UCHIRIMO_V12_RESUME_GENERATION_MISMATCH:'+GENERATION+':'+expectedGeneration);
-  if(GENERATION>MAX_AUTOMATIC_GENERATIONS)throw new Error('UCHIRIMO_V12_RESUME_GENERATION_LIMIT:'+GENERATION);
+  if(!Number.isSafeInteger(GENERATION)||GENERATION<0)throw new Error('UCHIRIMO_V12_RESUME_WAVE_INVALID');
+  for(const unit of Object.values(unitsEnvelope.units))if(Number(unit.recovery_depth)>MAX_RECOVERY_DEPTH)throw new Error('UCHIRIMO_V12_RESUME_RECOVERY_DEPTH_LIMIT');
   const state={...priorState,generation:GENERATION,source_controller_run_id:SOURCE_RUN_ID,next_action:'EXECUTE'};
   writeJson(join(OUT,'controller-state.json'),state);
   writeJson(join(OUT,'recovery-units.json'),unitsEnvelope);

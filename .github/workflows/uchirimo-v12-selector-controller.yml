@@ -45,8 +45,8 @@ jobs:
       GEN: ${{ inputs.generation }}
       SOURCE_RUN_ID: ${{ inputs.source_controller_run_id }}
       CARRY_ARTIFACT: uchirimo-selector-proof-carry-forward-${{ inputs.controller_head }}
-      BOOTSTRAP_CARRY_RUN_ID: 36254578442
-      BOOTSTRAP_CARRY_ARTIFACT: uchirimo-selector-proof-carry-forward-5bcc185405c478dab3c53c47992c0b06d114cfcd
+      BOOTSTRAP_CARRY_RUN_ID: 36352146462
+      BOOTSTRAP_CARRY_ARTIFACT: uchirimo-selector-proof-carry-forward-ffa0c86d33652c0edf8fdc43a7391b2cc3750ec0
     steps:
       - uses: actions/checkout@v4
         with:
@@ -56,6 +56,12 @@ jobs:
         with:
           node-version: 24
       - run: npm install --ignore-scripts
+      - name: Verify recovery machinery before scheduling selectors
+        if: ${{ inputs.generation == 0 }}
+        run: |
+          node scripts/governance/uchirimo-selector-batch-runner.test.mjs
+          node scripts/governance/uchirimo-v11-recovery-controller.test.mjs
+          node scripts/governance/uchirimo-v12-recovery-integration.test.mjs
       - name: Compute generation identities
         id: generation
         shell: bash
@@ -943,7 +949,7 @@ jobs:
 
   execute-0:
     needs: ["governance-authority", "plan-0"]
-    if: ${{ always() && needs.governance-authority.outputs.authorized == 'true' && needs.plan-0.result == 'success' }}
+    if: ${{ !cancelled() && needs.governance-authority.outputs.authorized == 'true' && needs.plan-0.result == 'success' }}
     strategy:
       fail-fast: false
       max-parallel: 2
@@ -988,7 +994,7 @@ jobs:
 
   execute-1:
     needs: ["governance-authority", "plan-1"]
-    if: ${{ always() && needs.governance-authority.outputs.authorized == 'true' && needs.plan-1.result == 'success' }}
+    if: ${{ !cancelled() && needs.governance-authority.outputs.authorized == 'true' && needs.plan-1.result == 'success' }}
     strategy:
       fail-fast: false
       max-parallel: 2
@@ -1033,7 +1039,7 @@ jobs:
 
   execute-2:
     needs: ["governance-authority", "plan-2"]
-    if: ${{ always() && needs.governance-authority.outputs.authorized == 'true' && needs.plan-2.result == 'success' }}
+    if: ${{ !cancelled() && needs.governance-authority.outputs.authorized == 'true' && needs.plan-2.result == 'success' }}
     strategy:
       fail-fast: false
       max-parallel: 2
@@ -1078,7 +1084,7 @@ jobs:
 
   execute-3:
     needs: ["governance-authority", "plan-3"]
-    if: ${{ always() && needs.governance-authority.outputs.authorized == 'true' && needs.plan-3.result == 'success' }}
+    if: ${{ !cancelled() && needs.governance-authority.outputs.authorized == 'true' && needs.plan-3.result == 'success' }}
     strategy:
       fail-fast: false
       max-parallel: 2
@@ -1123,7 +1129,7 @@ jobs:
 
   execute-4:
     needs: ["governance-authority", "plan-4"]
-    if: ${{ always() && needs.governance-authority.outputs.authorized == 'true' && needs.plan-4.result == 'success' }}
+    if: ${{ !cancelled() && needs.governance-authority.outputs.authorized == 'true' && needs.plan-4.result == 'success' }}
     strategy:
       fail-fast: false
       max-parallel: 2
@@ -1168,7 +1174,7 @@ jobs:
 
   execute-5:
     needs: ["governance-authority", "plan-5"]
-    if: ${{ always() && needs.governance-authority.outputs.authorized == 'true' && needs.plan-5.result == 'success' }}
+    if: ${{ !cancelled() && needs.governance-authority.outputs.authorized == 'true' && needs.plan-5.result == 'success' }}
     strategy:
       fail-fast: false
       max-parallel: 2
@@ -1213,7 +1219,7 @@ jobs:
 
   execute-6:
     needs: ["governance-authority", "plan-6"]
-    if: ${{ always() && needs.governance-authority.outputs.authorized == 'true' && needs.plan-6.result == 'success' }}
+    if: ${{ !cancelled() && needs.governance-authority.outputs.authorized == 'true' && needs.plan-6.result == 'success' }}
     strategy:
       fail-fast: false
       max-parallel: 2
@@ -1258,7 +1264,7 @@ jobs:
 
   execute-7:
     needs: ["governance-authority", "plan-7"]
-    if: ${{ always() && needs.governance-authority.outputs.authorized == 'true' && needs.plan-7.result == 'success' }}
+    if: ${{ !cancelled() && needs.governance-authority.outputs.authorized == 'true' && needs.plan-7.result == 'success' }}
     strategy:
       fail-fast: false
       max-parallel: 2
@@ -1303,7 +1309,7 @@ jobs:
 
   execute-8:
     needs: ["governance-authority", "plan-8"]
-    if: ${{ always() && needs.governance-authority.outputs.authorized == 'true' && needs.plan-8.result == 'success' }}
+    if: ${{ !cancelled() && needs.governance-authority.outputs.authorized == 'true' && needs.plan-8.result == 'success' }}
     strategy:
       fail-fast: false
       max-parallel: 2
@@ -1348,7 +1354,7 @@ jobs:
 
   execute-9:
     needs: ["governance-authority", "plan-9"]
-    if: ${{ always() && needs.governance-authority.outputs.authorized == 'true' && needs.plan-9.result == 'success' }}
+    if: ${{ !cancelled() && needs.governance-authority.outputs.authorized == 'true' && needs.plan-9.result == 'success' }}
     strategy:
       fail-fast: false
       max-parallel: 2
@@ -1393,7 +1399,7 @@ jobs:
 
   execute-10:
     needs: ["governance-authority", "plan-10"]
-    if: ${{ always() && needs.governance-authority.outputs.authorized == 'true' && needs.plan-10.result == 'success' }}
+    if: ${{ !cancelled() && needs.governance-authority.outputs.authorized == 'true' && needs.plan-10.result == 'success' }}
     strategy:
       fail-fast: false
       max-parallel: 2
@@ -1438,7 +1444,7 @@ jobs:
 
   execute-11:
     needs: ["governance-authority", "plan-11"]
-    if: ${{ always() && needs.governance-authority.outputs.authorized == 'true' && needs.plan-11.result == 'success' }}
+    if: ${{ !cancelled() && needs.governance-authority.outputs.authorized == 'true' && needs.plan-11.result == 'success' }}
     strategy:
       fail-fast: false
       max-parallel: 2
@@ -1483,7 +1489,7 @@ jobs:
 
   execute-12:
     needs: ["governance-authority", "plan-12"]
-    if: ${{ always() && needs.governance-authority.outputs.authorized == 'true' && needs.plan-12.result == 'success' }}
+    if: ${{ !cancelled() && needs.governance-authority.outputs.authorized == 'true' && needs.plan-12.result == 'success' }}
     strategy:
       fail-fast: false
       max-parallel: 2
@@ -1528,7 +1534,7 @@ jobs:
 
   execute-13:
     needs: ["governance-authority", "plan-13"]
-    if: ${{ always() && needs.governance-authority.outputs.authorized == 'true' && needs.plan-13.result == 'success' }}
+    if: ${{ !cancelled() && needs.governance-authority.outputs.authorized == 'true' && needs.plan-13.result == 'success' }}
     strategy:
       fail-fast: false
       max-parallel: 2
@@ -1573,7 +1579,7 @@ jobs:
 
   execute-14:
     needs: ["governance-authority", "plan-14"]
-    if: ${{ always() && needs.governance-authority.outputs.authorized == 'true' && needs.plan-14.result == 'success' }}
+    if: ${{ !cancelled() && needs.governance-authority.outputs.authorized == 'true' && needs.plan-14.result == 'success' }}
     strategy:
       fail-fast: false
       max-parallel: 2
@@ -1618,7 +1624,7 @@ jobs:
 
   execute-15:
     needs: ["governance-authority", "plan-15"]
-    if: ${{ always() && needs.governance-authority.outputs.authorized == 'true' && needs.plan-15.result == 'success' }}
+    if: ${{ !cancelled() && needs.governance-authority.outputs.authorized == 'true' && needs.plan-15.result == 'success' }}
     strategy:
       fail-fast: false
       max-parallel: 2
@@ -1890,3 +1896,4 @@ jobs:
           echo "complete=true" >> "$GITHUB_OUTPUT"
           echo "next_action=COMPLETE" >> "$GITHUB_OUTPUT"
           echo "UCHIRIMO_V12_SELECTOR=COMPLETE"
+
