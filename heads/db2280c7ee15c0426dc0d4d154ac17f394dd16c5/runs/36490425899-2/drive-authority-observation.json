@@ -1,0 +1,130 @@
+{
+  "schema_version": "2.0.0",
+  "read_only": true,
+  "observation": {
+    "source": "GOOGLE_DRIVE_CONNECTOR",
+    "initial_content_read_at": "2026-09-18T04:50:36.207Z",
+    "metadata_revalidated_at": "2026-09-28T01:53:38.976Z",
+    "note": "Revalidated metadata for all six authority documents through the Google Drive connector. Re-read registry revision 162 and compared it with revision 160: only Rechent entrance sliding door 2 changed to Product Master R25 and Lasissa S V-rail v1.0 was added. The Uchirimo row is unchanged. Both updated products exclude Runtime from Product Master FORMAL; app integration remains a separate lifecycle. Preserve the existing 3956-parent Uchirimo QA population, Runtime and UI. Live Drive metadata verification remains mandatory."
+  },
+  "entries": [
+    {
+      "drive_file_id": "1fc_46QMEwnowrSFjs8T-4VCjbcew2MUvzgUJuWe57f0",
+      "name": "サッシ情報管理アプリ_Runtime UI統合共通仕様書_v1.8",
+      "version": "v1.8",
+      "modified_identity": "2026-09-27T11:50:41.836Z",
+      "current_revision_id": "ANLCKQmeogk4ZBCDzxcuOajkK1Jgh1EI-npg27B_GA1IhCV4roraXbUSwY1CcsClmQuraHVczd_Ks70reM3IHNWYWTG0-9blU148F3u9wI4",
+      "retrieved_at": "2026-09-28T01:53:38.976Z",
+      "source": "GOOGLE_DRIVE_CONNECTOR",
+      "content_read": true
+    },
+    {
+      "drive_file_id": "1SwFc2XBRtNYaDaKiwC0QVPPJOvOvhvpEJlPTDUtq0Hw",
+      "name": "サッシ情報管理アプリ_3工程運用共通仕様書_v1.6",
+      "version": "v1.6",
+      "modified_identity": "2026-09-27T11:44:42.806Z",
+      "current_revision_id": "ANLCKQmiWgLV0RdyTqrBhiUf5paMhF55XatbFtlrW7GomrdDl-WK14ACeTF1mLQC0HWs-tjge9KkEJhPHdv4rVQH2whCYidzpjEQOk8Lbxw",
+      "retrieved_at": "2026-09-28T01:53:38.976Z",
+      "source": "GOOGLE_DRIVE_CONNECTOR",
+      "content_read": true
+    },
+    {
+      "drive_file_id": "1BVFe2qZXlLUVhz37trFUjz6mJOwjvW0P",
+      "name": "サッシ情報管理アプリ_UI実装標準仕様書_内窓・新築系外窓・新築系玄関ドア・玄関カバー工法・外窓カバー工法_v1.8.docx",
+      "version": "v1.8",
+      "modified_identity": "2026-09-18T15:56:37.761Z",
+      "current_revision_id": "0B1PsqngSohhlWDU0RlVlVGdySGtCZFZRamJGQzl1NDZpbHA4PQ",
+      "retrieved_at": "2026-09-28T01:53:38.976Z",
+      "source": "GOOGLE_DRIVE_CONNECTOR",
+      "content_read": true
+    },
+    {
+      "drive_file_id": "1HMMZ8JdsbJPtL_8LjQfxMF8P_Zb4-LReqvPMFn1pJks",
+      "name": "PRODUCT_MASTER_CANONICAL_REGISTRY_v2.0",
+      "version": "v2.0",
+      "modified_identity": "2026-09-28T01:31:08.565Z",
+      "current_revision_id": "162",
+      "retrieved_at": "2026-09-28T01:53:38.976Z",
+      "source": "GOOGLE_DRIVE_CONNECTOR",
+      "content_read": true
+    },
+    {
+      "drive_file_id": "1Gfoyhy9xTZxJVLl6EnhFCvevZd4VPElACZiSko8OGUw",
+      "name": "サッシ情報管理アプリ_Global Window Selection Flow全面共通化・Full Coverage QA改修仕様書_v1.1",
+      "version": "v1.1",
+      "modified_identity": "2026-09-27T11:44:48.177Z",
+      "current_revision_id": "ANLCKQlK-FKvpiXT2iGV-1AeufWqqLJMfv-cKJD0krMxm6bsMZWhi3l8NiC6ltJ8sO8UmW7TurZSDJEXqj5RlBSPS0L8jAVBa0xHbAdC1Mk",
+      "retrieved_at": "2026-09-28T01:53:38.976Z",
+      "source": "GOOGLE_DRIVE_CONNECTOR",
+      "content_read": true
+    },
+    {
+      "drive_file_id": "1MfixkbV1cZ__DtBknEKsix_nnrXQqjc-LZtXUHwJv_A",
+      "name": "サッシ商品マスター共通仕様書_v0.3",
+      "version": "v0.3",
+      "modified_identity": "2026-09-27T11:46:20.062Z",
+      "current_revision_id": "ANLCKQnkw2N1mObuRNv7ubiNZroDI90vH6jKRGeXmGgVhwkutHsDZLbltFnE4tqH0OsoUZcrTFdXAydfTq2oXMimTuzNk8HNCZk-uTE9MWI",
+      "retrieved_at": "2026-09-28T01:53:38.976Z",
+      "source": "GOOGLE_DRIVE_CONNECTOR",
+      "content_read": true
+    }
+  ],
+  "exact_head": "db2280c7ee15c0426dc0d4d154ac17f394dd16c5",
+  "connector_snapshot_status": {
+    "status": "BLOCKED",
+    "mode": "CONNECTOR_ATTESTED",
+    "checked_at": "2026-09-28T23:05:47.541Z",
+    "observed_at": "2026-09-28T01:53:38.976Z",
+    "max_age_hours": 2,
+    "errors": [
+      "CONNECTOR_OBSERVATION_STALE"
+    ]
+  },
+  "live_read_status": {
+    "status": "PASS",
+    "mode": "LIVE_API_VERIFIED",
+    "reason": null,
+    "checked_at": "2026-09-28T23:05:48.308Z",
+    "entries": [
+      {
+        "drive_file_id": "1fc_46QMEwnowrSFjs8T-4VCjbcew2MUvzgUJuWe57f0",
+        "name": "サッシ情報管理アプリ_Runtime UI統合共通仕様書_v1.8",
+        "modified_identity": "2026-09-27T11:50:41.836Z",
+        "live_revision": "31"
+      },
+      {
+        "drive_file_id": "1SwFc2XBRtNYaDaKiwC0QVPPJOvOvhvpEJlPTDUtq0Hw",
+        "name": "サッシ情報管理アプリ_3工程運用共通仕様書_v1.6",
+        "modified_identity": "2026-09-27T11:44:42.806Z",
+        "live_revision": "52"
+      },
+      {
+        "drive_file_id": "1BVFe2qZXlLUVhz37trFUjz6mJOwjvW0P",
+        "name": "サッシ情報管理アプリ_UI実装標準仕様書_内窓・新築系外窓・新築系玄関ドア・玄関カバー工法・外窓カバー工法_v1.8.docx",
+        "modified_identity": "2026-09-18T15:56:37.761Z",
+        "live_revision": "70"
+      },
+      {
+        "drive_file_id": "1HMMZ8JdsbJPtL_8LjQfxMF8P_Zb4-LReqvPMFn1pJks",
+        "name": "PRODUCT_MASTER_CANONICAL_REGISTRY_v2.0",
+        "modified_identity": "2026-09-28T01:31:08.565Z",
+        "live_revision": "308"
+      },
+      {
+        "drive_file_id": "1Gfoyhy9xTZxJVLl6EnhFCvevZd4VPElACZiSko8OGUw",
+        "name": "サッシ情報管理アプリ_Global Window Selection Flow全面共通化・Full Coverage QA改修仕様書_v1.1",
+        "modified_identity": "2026-09-27T11:44:48.177Z",
+        "live_revision": "33"
+      },
+      {
+        "drive_file_id": "1MfixkbV1cZ__DtBknEKsix_nnrXQqjc-LZtXUHwJv_A",
+        "name": "サッシ商品マスター共通仕様書_v0.3",
+        "modified_identity": "2026-09-27T11:46:20.062Z",
+        "live_revision": "44"
+      }
+    ]
+  },
+  "authority_mode": "LIVE_API_VERIFIED",
+  "current_state_reconstruction_gate": "PASS",
+  "post_human_drive_live_gate": "PASS"
+}
