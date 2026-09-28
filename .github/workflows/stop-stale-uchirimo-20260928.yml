@@ -1,5 +1,10 @@
-name: Stop stalled Uchirimo run 36352146462
+name: Stop stalled Uchirimo and verify branch dispatch
 on:
+  workflow_dispatch:
+    inputs:
+      probe:
+        type: string
+        default: 'branch-dispatch'
   push:
     branches: [ops/stop-stale-uchirimo-runs-20260928]
     paths: [.github/workflows/stop-stale-uchirimo-20260928.yml]
@@ -7,6 +12,7 @@ permissions:
   actions: write
 jobs:
   force-cancel-and-verify:
+    if: github.event_name == 'push'
     runs-on: ubuntu-latest
     timeout-minutes: 8
     steps:
@@ -58,3 +64,19 @@ jobs:
                   page += 1
               print("UNFINISHED_JOBS", run_id, len(unfinished), flush=True)
               assert not unfinished, (run_id, unfinished)
+
+  dispatch-probe:
+    needs: force-cancel-and-verify
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+    steps:
+      - env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh api --method POST repos/Takuro-Kwkm/sash-app/actions/workflows/stop-stale-uchirimo-20260928.yml/dispatches -f ref=ops/stop-stale-uchirimo-runs-20260928 -f 'inputs[probe]=branch-dispatch'
+  probe-received:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo BRANCH_ONLY_WORKFLOW_DISPATCH_RECEIVED
