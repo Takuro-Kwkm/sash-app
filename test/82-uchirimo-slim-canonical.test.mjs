@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { getRuntimeMasterEntry } from '../src/catalog/runtime-master/runtime-master-registry.mjs';
 import { loadCanonicalWorkbookRuntimePackage } from '../src/catalog/runtime-master/canonical-runtime-manifest-loader.mjs';
 import { adaptUchirimoTabularV1 } from '../src/catalog/runtime-master/uchirimo-tabular-v1-adapter.mjs';
+import { getRuntimeAppIntegration, normalizeRuntimeSelection, toRuntimeUiResult } from '../src/catalog/runtime-master/runtime-app-bridge.mjs';
 import { normalizeUchirimoGlassMatrix, projectUchirimoGlassMatrix, compareUchirimoGlassSemantics } from '../src/catalog/runtime-master/uchirimo-slim-canonical.mjs';
 
 const entry = getRuntimeMasterEntry('YKK AP', 'ウチリモ 内窓');
@@ -98,4 +99,32 @@ test('Slim glass prefix cache preserves resolved states, invalid clears, and sta
   for (const seed of [...seeds, ...seeds]) assert.deepEqual(after.resolver(seed), before.resolver(seed));
   assert.ok(after.master.glassFacetCache.size > 0);
   assert.ok(after.master.glassFacetCache.size <= 8192);
+});
+
+test('Slim indexed value rows preserve full UI output for representative glass paths', async () => {
+  const pkg = await packagePromise;
+  const { legacy, slimPackage } = candidates(pkg);
+  const old = adaptUchirimoTabularV1(pkg);
+  const slim = adaptUchirimoTabularV1(slimPackage);
+  const integration = getRuntimeAppIntegration('SER-YKKAP-UCHIRIMO');
+  assert.ok(slim.master.valueRowsByField instanceof Map);
+  for (const field of slim.master.fields) {
+    assert.deepEqual(slim.master.valueRowsByField.get(field.field_name) ?? [],
+      old.master.values.filter((row) => row.field_name === field.field_name &&
+        row.status === 'CURRENT' && row.runtime_selectable !== false));
+  }
+  for (let index = 0; index < 105; index += 1) {
+    const node = legacy.product_nodes[index % legacy.product_nodes.length];
+    const glass = legacy.glass_specs[(index * 17) % legacy.glass_specs.length];
+    const seed = { room_specification: node.room, window_type: node.window_type,
+      glass_family: glass.glass_family, glass_structure: glass.glass_structure,
+      frame_color: index % 2 ? 'white' : 'calm_black', size_w: 600, size_h: 700 };
+    if (node.window_type === 'sliding_window') Object.assign(seed,
+      { sash_configuration: node.sash_configuration, size_class: node.size_class });
+    const resolve = (adapted) => {
+      const normalized = normalizeRuntimeSelection(adapted.master, seed);
+      return toRuntimeUiResult(adapted.master, adapted.resolver(normalized), integration, pkg.integrity);
+    };
+    assert.deepEqual(resolve(slim), resolve(old));
+  }
 });

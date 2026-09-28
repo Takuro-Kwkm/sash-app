@@ -173,9 +173,14 @@ function buildModel(runtimePackage) {
   if (!valueKeys.has('size_mode\u0000"custom"')) values.push({ field_name: 'size_mode', canonical_value: 'custom', status: 'CURRENT', display_label: '特注', user_selectable: false, runtime_selectable: true });
   const fieldByName = new Map(fields.map((row) => [row.field_name, row]));
   const valuesByField = new Map();
+  const valueRowsByField = canonical.glass_compatibility_profiles ? new Map() : null;
   for (const row of values) {
     if (!valuesByField.has(row.field_name)) valuesByField.set(row.field_name, []);
     valuesByField.get(row.field_name).push(row.canonical_value);
+    if (valueRowsByField && row.status === 'CURRENT' && row.runtime_selectable !== false) {
+      if (!valueRowsByField.has(row.field_name)) valueRowsByField.set(row.field_name, []);
+      valueRowsByField.get(row.field_name).push(row);
+    }
   }
   for (const [field, rows] of valuesByField) valuesByField.set(field, Object.freeze(unique(rows)));
 
@@ -212,7 +217,7 @@ function buildModel(runtimePackage) {
   const manualRouteByGsc = new Map((judgment.manual_check_routes ?? []).map((row) => [row.gsc_id, row]));
 
   return Object.freeze({
-    fields: Object.freeze(fields), values: Object.freeze(values), fieldByName, valuesByField,
+    fields: Object.freeze(fields), values: Object.freeze(values), fieldByName, valuesByField, valueRowsByField,
     glassSpecsByNodeId, detailMatrixByNodeId, sizeRuleByNodeId, sortedDependencyRules, glassScopeRules,
     glassFacetCache, glassScopeCache, manualRouteByGsc,
     canonical, judgment, sizeInstallation, vacuum,
