@@ -5,7 +5,7 @@ import {join,basename} from 'node:path';
 import {execFileSync,spawnSync} from 'node:child_process';
 import {loadRegisteredRuntime} from '../../src/catalog/runtime-master/runtime-master-registry.mjs';
 import {CONTROLLER_CONTRACT_VERSION,sha256} from './uchirimo-v11-recovery-controller.mjs';
-import {importCompatibleCheckpoint,parentPopulationHash} from './uchirimo-controller-checkpoint.mjs';
+import {importCompatibleCheckpoint,parentPopulationHash,checkpointCoverage} from './uchirimo-controller-checkpoint.mjs';
 import {validateExecutionFrontier} from './uchirimo-v11-recovery-controller-runner.mjs';
 import {fetchWithRetry} from './uchirimo-carry-transport.mjs';
 
@@ -78,11 +78,12 @@ try{
   const closed=new Set(Object.entries(result.parentsEnvelope.parents).filter(([,p])=>p.status!=='OPEN').map(([key])=>key));
   const split=new Set(Object.keys(result.certificatesEnvelope.certificates));valid.push({run,artifact,result,pass,closed,split});
  }
- const dominates=(a,b)=>['pass','closed','split'].every(kind=>[...b[kind]].every(key=>a[kind].has(key)));
+ const dominates=(a,b)=>checkpointCoverage(a.result,b.result).dominates;
  const selected=valid.find(candidate=>valid.every(other=>dominates(candidate,other)));
  if(valid.length&&!selected)throw new Error('UCHIRIMO_CHECKPOINT_INCOMPARABLE_PROGRESS_REQUIRES_MERGE');
  if(!selected){output('restored','false');console.log('UCHIRIMO_COMPATIBLE_CHECKPOINT=NONE');}
  else{
+  selected.result.report.covered_prior_checkpoints=valid.filter(other=>other!==selected).map(other=>({source_run_id:Number(other.run.id),source_artifact_id:Number(other.artifact.id),source_artifact_identity:other.artifact.name,source_artifact_digest:other.artifact.digest,source_state_sha256:other.result.state.prior_state_sha256,source_exact_head:other.run.head_sha,...checkpointCoverage(selected.result,other.result)}));
   const frontier=await validateExecutionFrontier({plan,units:selected.result.unitsEnvelope.units,certificates:selected.result.certificatesEnvelope.certificates,parents:selected.result.parentsEnvelope.parents,state:selected.result.state});
   if(frontier.status!=='PASS')throw new Error('UCHIRIMO_CHECKPOINT_FRONTIER_INVALID:'+frontier.errors.join(','));
   mkdirSync(out,{recursive:true});

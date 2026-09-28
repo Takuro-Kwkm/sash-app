@@ -92,3 +92,53 @@ export function importCompatibleCheckpoint(input){
  const wrap=(original,key,value)=>({...original,exact_head:head,[key]:value});
  return {state,unitsEnvelope:wrap(oldUnits,'units',units),certificatesEnvelope:wrap(oldCerts,'certificates',certificates),parentsEnvelope:wrap(oldParents,'parents',parents),report:{status:'PASS',source_exact_head:old.exact_head,current_exact_head:head,source_run_id:source.run_id,preserved_closed_parent_count:old.closed_parent_count,preserved_pass_unit_count:old.pass_unit_count,preserved_unit_count:Object.keys(units).length,preserved_split_certificate_count:Object.keys(certificates).length,compute_execution_count:0}};
 }
+
+// Both inputs must already have passed validateCheckpoint/importCompatibleCheckpoint.
+// A completed certified subtree proves the same domain as its earlier unsplit PASS.
+// Literal unit/split ID subset tests are insufficient after a timeout/resplit race.
+export function checkpointCoverage(candidate,prior){
+ for(const field of ['exact_head','runtime_manifest_sha256','execution_fingerprint','planner_fingerprint','parent_population_sha256'])if(candidate.state[field]!==prior.state[field])fail('COVERAGE_IDENTITY_MISMATCH:'+field);
+ const units=candidate.unitsEnvelope.units,certificates=candidate.certificatesEnvelope.certificates,parents=candidate.parentsEnvelope.parents;
+ const oldUnits=prior.unitsEnvelope.units,oldCertificates=prior.certificatesEnvelope.certificates,oldParents=prior.parentsEnvelope.parents;
+ const proofRows=ids=>ids.map(id=>({recovery_unit_id:id,proof_report_sha256:units[id].proof_report_sha256,evidence_source_run_id:units[id].evidence_source_run_id,evidence_artifact_identity:units[id].evidence_artifact_identity}));
+ const subtree=id=>{
+  if(!units[id])return null;
+  const tree=validateRecoveryTree({root_unit_id:id,units,certificates});if(!tree.closed)return null;
+  const visited=new Set(),certs=[];
+  const visit=key=>{if(visited.has(key))fail('COVERAGE_TREE_CYCLE');visited.add(key);if(units[key].state==='PASS')return;const cert=certificates[key];validateSplitCertificate(cert);certs.push({parent_recovery_unit_id:key,certificate_sha256:cert.certificate_sha256});for(const child of cert.children)visit(child.recovery_unit_id);};visit(id);
+  return {coverage_type:units[id].state==='PASS'?'EXACT_UNIT_PASS':'CERTIFIED_SUBTREE_PASS',covering_root_recovery_unit_id:id,covering_leaf_evidence:proofRows(tree.leaf_ids),covering_split_certificates:certs};
+ };
+ const coverage=(id,parentKey)=>{
+  const exact=subtree(id);if(exact)return exact;
+  // Walk the earlier validated certificate ancestry; constraints are never guessed.
+  let child=oldUnits[id],seen=new Set();
+  while(child?.parent_recovery_unit_id){
+   const ancestorId=child.parent_recovery_unit_id;if(seen.has(ancestorId))fail('COVERAGE_ANCESTOR_CYCLE');seen.add(ancestorId);
+   const cert=oldCertificates[ancestorId];
+   if(!cert||!cert.children.some(row=>row.recovery_unit_id===child.recovery_unit_id))fail('COVERAGE_ANCESTRY_UNPROVEN');
+   validateSplitCertificate(cert);
+   if(units[ancestorId]?.state==='PASS')return {coverage_type:'ANCESTOR_PASS',covering_root_recovery_unit_id:ancestorId,covering_leaf_evidence:proofRows([ancestorId]),covering_split_certificates:[],prior_ancestry_certificate_sha256:cert.certificate_sha256};
+   child=oldUnits[ancestorId];
+  }
+  const parent=parents[parentKey];
+  if(parent?.status==='ROOT_PASS_CARRY_FORWARD')return {coverage_type:'CANONICAL_ROOT_CARRY_PASS',parent_partition_key:parentKey,source_run_id:parent.current_carry_forward_run_id,source_artifact_id:parent.current_carry_forward_artifact_id,source_artifact_identity:parent.current_carry_forward_artifact_identity,source_artifact_digest:parent.current_carry_forward_artifact_digest};
+  if(parent&&parent.status!=='OPEN'){
+   const proof=subtree(parent.root_recovery_unit_id);if(proof)return {...proof,coverage_type:'CANONICAL_PARENT_PASS',parent_partition_key:parentKey};
+  }
+  return null;
+ };
+ const uncovered=[],passEvidence=[],splitEvidence=[];
+ for(const [key,parent]of Object.entries(oldParents))if(parent.status!=='OPEN'&&parents[key]?.status==='OPEN')uncovered.push({kind:'PARENT',id:key});
+ for(const [id,unit]of Object.entries(oldUnits))if(unit.state==='PASS'){
+  const covered=coverage(id,unit.parent_partition_key);
+  if(!covered)uncovered.push({kind:'PASS_UNIT',id});
+  else passEvidence.push({prior_recovery_unit_id:id,parent_partition_key:unit.parent_partition_key,prior_proof_report_sha256:unit.proof_report_sha256,prior_evidence_source_run_id:unit.evidence_source_run_id,prior_evidence_artifact_identity:unit.evidence_artifact_identity,coverage:covered});
+ }
+ for(const [id,cert]of Object.entries(oldCertificates)){
+  if(certificates[id]?.certificate_sha256===cert.certificate_sha256&&['PENDING_CHILDREN','SPLIT_REQUIRED'].includes(units[id]?.state))continue;
+  const covered=coverage(id,cert.parent_partition_key);
+  if(!covered)uncovered.push({kind:'RETIRED_SPLIT',id});
+  else splitEvidence.push({prior_recovery_unit_id:id,parent_partition_key:cert.parent_partition_key,prior_certificate_sha256:cert.certificate_sha256,coverage:covered});
+ }
+ return {dominates:uncovered.length===0,uncovered,covered_prior_pass_evidence:passEvidence,covered_prior_split_evidence:splitEvidence};
+}

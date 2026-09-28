@@ -2,7 +2,7 @@
 import assert from 'node:assert/strict';
 import {createHash}from'node:crypto';
 import {CONTROLLER_CONTRACT_VERSION,buildControllerState,buildSplitCertificate,recoveryUnitId,sha256,synthesizeParentClosure} from './uchirimo-v11-recovery-controller.mjs';
-import {parentPopulationHash,checkpointTreeHash,importCompatibleCheckpoint,validateCheckpoint} from './uchirimo-controller-checkpoint.mjs';
+import {parentPopulationHash,checkpointTreeHash,importCompatibleCheckpoint,validateCheckpoint,checkpointCoverage} from './uchirimo-controller-checkpoint.mjs';
 const old='a'.repeat(40),head='b'.repeat(40),runtime='c'.repeat(64),execution='d'.repeat(64);
 const plan={status:'PASS',exact_head:head,shard_count:3956,partitions:Array.from({length:3956},(_,shard)=>({shard,node_id:'FIXTURE',partition_key:'FIXTURE-'+shard,room_specification:'fixture',window_type:'fixture',sash_configuration:'__UNSET__',size_class:'__UNSET__',glass_family:'fixture',partition_seed_json:'{}'}))};
 const parents=Object.fromEntries(plan.partitions.map(p=>[p.partition_key,{parent_shard_index:p.shard,parent_partition_key:p.partition_key,status:'ROOT_PASS_CARRY_FORWARD',closure_type:'ROOT_PASS',current_carry_forward_run_id:1,current_carry_forward_artifact_identity:'fixture-carry',current_carry_forward_artifact_id:2,current_carry_forward_artifact_digest:'sha256:'+'f'.repeat(64)}]));
@@ -38,4 +38,21 @@ assert.throws(()=>importCompatibleCheckpoint({...input,source:{...input.source,a
 assert.throws(()=>importCompatibleCheckpoint({...input,source:{...input.source,execution_files_identical:false}}),/SOURCE_VERIFICATION/);
 const noProgress={...input,state:buildControllerState({...state,blocked_counts:{BLOCKED_NO_PROGRESS:1},prior_state_sha256:null})};
 const blocked=importCompatibleCheckpoint({...noProgress,head:old,plan:{...plan,exact_head:old}});assert.equal(blocked.state.next_action,'BLOCKED');assert.equal(blocked.state.blocked_counts.BLOCKED_NO_PROGRESS,1);
-console.log('UCHIRIMO_COMPATIBLE_CHECKPOINT_TEST=PASS synthetic preservation/lineage/mismatch/corruption/no-progress; NOT_PRODUCT_QA_EVIDENCE');
+// A prior unsplit PASS and a newer fully certified subtree prove the same domain.
+const priorUnsplit=structuredClone(input),p0=plan.partitions[0],root0=recoveryUnitId(p0.partition_key,[]);
+priorUnsplit.unitsEnvelope.units[root0]=pass(priorUnsplit.unitsEnvelope.units[root0]);
+const rootPass=priorUnsplit.unitsEnvelope.units[root0];
+priorUnsplit.parentsEnvelope.parents[p0.partition_key]={parent_shard_index:0,parent_partition_key:p0.partition_key,status:'ROOT_PASS_FRESH',closure_type:'ROOT_PASS',root_recovery_unit_id:root0,proof_report:rootPass.proof_report,proof_report_sha256:rootPass.proof_report_sha256};
+priorUnsplit.state=buildControllerState({...state,pass_unit_count:4,recovery_tree_root_hash:checkpointTreeHash(priorUnsplit.unitsEnvelope.units,priorUnsplit.certificatesEnvelope.certificates,priorUnsplit.parentsEnvelope.parents),after_generation:true});
+const importedUnsplit=importCompatibleCheckpoint(priorUnsplit);
+const coverage=checkpointCoverage(migrated,importedUnsplit);assert.equal(coverage.dominates,true);
+const mapped=coverage.covered_prior_pass_evidence.find(row=>row.prior_recovery_unit_id===root0);
+assert.equal(mapped.coverage.coverage_type,'CERTIFIED_SUBTREE_PASS');assert.equal(mapped.coverage.covering_leaf_evidence.length,2);assert.equal(mapped.coverage.covering_split_certificates.length,1);
+// One unproved child invalidates the claimed coverage, even if stale parent metadata says closed.
+const incomplete=structuredClone(migrated),missingChild=certificates[root0].children[0].recovery_unit_id;
+incomplete.unitsEnvelope.units[missingChild].state='PENDING_NORMAL';
+const missingCoverage=checkpointCoverage(incomplete,importedUnsplit);assert.equal(missingCoverage.dominates,false);assert.ok(missingCoverage.uncovered.some(row=>row.id===root0));
+// A newer verified ancestor PASS covers an older split; children are never replayed.
+assert.equal(checkpointCoverage(importedUnsplit,migrated).dominates,true);
+assert.ok(checkpointCoverage(importedUnsplit,migrated).covered_prior_split_evidence.some(row=>row.prior_recovery_unit_id===root0&&row.coverage.coverage_type==='EXACT_UNIT_PASS'));
+console.log('UCHIRIMO_COMPATIBLE_CHECKPOINT_TEST=PASS synthetic preservation/lineage/mismatch/corruption/no-progress/certified-subtree-dominance/incomplete-subtree-rejection; NOT_PRODUCT_QA_EVIDENCE');
