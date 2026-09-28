@@ -121,6 +121,18 @@ try {
   assert(compatible.length === candidates.length, 'CHECKPOINT_EXECUTION_LINEAGES_DIFFER');
   const selected = candidates.find((candidate) => candidates.every((prior) => candidate === prior || checkpointCoverage(candidate.bundle, prior.bundle).dominates));
   assert(selected, 'CHECKPOINT_PROGRESS_INCOMPARABLE');
+  const currentParents = selected.bundle.parentsEnvelope.parents;
+  const partitionClassification = plan.partitions.map((partition) => {
+    const active = currentParents[partition.partition_key];
+    assert(active?.parent_shard_index === partition.shard, 'CHECKPOINT_CLASSIFICATION_PARENT_MISMATCH');
+    return { shard: partition.shard, partition_key: partition.partition_key,
+      active_v12_status: active.status,
+      active_v12_class: active.status === 'OPEN' ? 'RESIDUAL_RECHECK_REQUIRED' : 'SAFE_CARRY_FORWARD',
+      slim_candidate_class: 'RESIDUAL_RECHECK_REQUIRED' };
+  });
+  const activeCarry = partitionClassification.filter((row) => row.active_v12_class === 'SAFE_CARRY_FORWARD').length;
+  assert(activeCarry === selected.closed_parent_count && partitionClassification.length - activeCarry === selected.open_parent_count,
+    'CHECKPOINT_CLASSIFICATION_COUNTER_MISMATCH');
   const publicRow = ({ bundle, ...row }) => row;
   const report = { schema_version: 'UCHIRIMO_SLIM_V12_READ_ONLY_INVENTORY_V1', status: 'PASS',
     scope: localBundle ? 'OFFLINE_CHECKPOINT_VALIDATION' : 'LATEST_DOMINATING_CHECKPOINT_IN_FIRST_100_BASE_BRANCH_RUNS',
@@ -128,15 +140,25 @@ try {
     validated_checkpoint_count: candidates.length, selected: publicRow(selected),
     other_checkpoints: candidates.filter((row) => row !== selected).map((row) => ({ provenance: row.provenance,
       generation: row.generation, closed_parent_count: row.closed_parent_count, pass_unit_count: row.pass_unit_count })),
-    candidate_carry_forward: { safe_carry_forward: 'PRESERVE_ACTIVE_FORMAL_PASS_ONLY',
-      equivalence_carry_forward: 'NOT_IMPORTED_EXECUTION_DEPENDENCY_CHANGED',
-      residual_recheck_required: selected.pending_normal_count + selected.pending_heavy_count + selected.split_required_count,
-      selector_execution_count: 0, active_checkpoint_mutation: false },
+    carry_forward_classification: {
+      active_v12: { safe_carry_forward_parent_count: activeCarry,
+        equivalence_carry_forward_parent_count: 0,
+        residual_recheck_required_parent_count: selected.open_parent_count,
+        pending_recovery_unit_count: selected.pending_normal_count + selected.pending_heavy_count + selected.split_required_count },
+      slim_candidate: { safe_carry_forward_parent_count: 0,
+        equivalence_carry_forward_parent_count: 0,
+        residual_recheck_required_parent_count: partitionClassification.length,
+        reason: 'SELECTOR_EXECUTION_DEPENDENCIES_CHANGED; CANDIDATE PARENT EQUIVALENCE NOT PROVEN' },
+      selector_execution_count: 0, active_checkpoint_mutation: false,
+      partition_classification: partitionClassification,
+    },
   };
   mkdirSync(output.slice(0, output.lastIndexOf('/')), { recursive: true });
   writeFileSync(output, JSON.stringify(report, null, 2) + '\n');
   console.log(JSON.stringify({ status: report.status, scope: report.scope, checkpoints: candidates.length,
     selected_run_id: selected.provenance.run_id ?? null, selected_generation: selected.generation,
     closed: selected.closed_parent_count, pass_units: selected.pass_unit_count,
-    residual_units: report.candidate_carry_forward.residual_recheck_required }));
+    active_open_parents: selected.open_parent_count,
+    active_pending_units: report.carry_forward_classification.active_v12.pending_recovery_unit_count,
+    slim_parent_recheck: report.carry_forward_classification.slim_candidate.residual_recheck_required_parent_count }));
 } finally { rmSync(temporary, { recursive: true, force: true }); }
