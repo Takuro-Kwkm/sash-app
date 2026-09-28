@@ -11,6 +11,31 @@ on:
       - '.github/workflows/uchirimo-slim-candidate-qa.yml'
   workflow_dispatch:
 jobs:
+  v12-checkpoint-inventory:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      actions: read
+      contents: read
+    env:
+      GITHUB_TOKEN: ${{ github.token }}
+      UCHIRIMO_V12_BASE_BRANCH: ${{ github.event.pull_request.base.ref }}
+      UCHIRIMO_V12_BASE_HEAD: ${{ github.event.pull_request.base.sha }}
+      UCHIRIMO_SELECTOR_MODE: plan-all
+      UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-slim/checkpoint-inventory-plan
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: node scripts/uchirimo-full-selector-proof.mjs
+      - run: node scripts/governance/uchirimo-slim-checkpoint-inventory.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: uchirimo-slim-v12-checkpoint-inventory
+          path: artifacts/uchirimo-slim/checkpoint-inventory.json
   recurring-candidate:
     runs-on: ubuntu-latest
     timeout-minutes: 10
