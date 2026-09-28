@@ -92,8 +92,25 @@ function validateReferences(canonical, judgment) {
   }
   const nodeIds = new Set(canonical.product_nodes.map((row) => row.node_id));
   const glassIds = new Set(canonical.glass_specs.map((row) => row.glass_spec_id));
-  for (const row of canonical.glass_node_matrix) {
-    if (!nodeIds.has(row.node_id) || !glassIds.has(row.glass_spec_id)) fail('RUNTIME_REFERENCE_BROKEN', 'glass_node_matrix contains a broken reference', { row });
+  const profiles = canonical.glass_compatibility_profiles;
+  if (profiles) {
+    if (canonical.glass_node_matrix?.length) fail('RUNTIME_REFERENCE_BROKEN', 'Slim profiles and the legacy matrix cannot both be authoritative');
+    assertUnique(profiles, 'profile_id', 'glass_compatibility_profiles');
+    const profileIds = new Set(profiles.map((row) => row.profile_id));
+    for (const glass of canonical.glass_specs) {
+      if (!profileIds.has(glass.compatibility_profile_id)) fail('RUNTIME_REFERENCE_BROKEN', 'glass_spec has no compatibility profile', { glassId: glass.glass_spec_id });
+    }
+    for (const profile of profiles) {
+      const rows = profile.node_statuses ?? [];
+      if (rows.length !== nodeIds.size || new Set(rows.map((row) => row.node_id)).size !== nodeIds.size ||
+          rows.some((row) => !nodeIds.has(row.node_id) || !['AVAILABLE', 'NOT_APPLICABLE', 'SPECIAL_CHECK_REQUIRED'].includes(row.status))) {
+        fail('RUNTIME_REFERENCE_BROKEN', 'glass compatibility profile has incomplete or invalid node dispositions', { profileId: profile.profile_id });
+      }
+    }
+  } else {
+    for (const row of canonical.glass_node_matrix ?? []) {
+      if (!nodeIds.has(row.node_id) || !glassIds.has(row.glass_spec_id)) fail('RUNTIME_REFERENCE_BROKEN', 'glass_node_matrix contains a broken reference', { row });
+    }
   }
 }
 
@@ -162,15 +179,26 @@ function buildModel(runtimePackage) {
   }
   for (const [field, rows] of valuesByField) valuesByField.set(field, Object.freeze(unique(rows)));
 
-  const glassIdsByNodeId = new Map(canonical.product_nodes.map((row) => [row.node_id, new Set()]));
-  for (const row of canonical.glass_node_matrix) {
-    if (row.status === 'NOT_APPLICABLE') continue;
-    if (!glassIdsByNodeId.has(row.node_id)) glassIdsByNodeId.set(row.node_id, new Set());
-    glassIdsByNodeId.get(row.node_id).add(row.glass_spec_id);
-  }
   const glassSpecsByNodeId = new Map();
-  for (const [nodeId, ids] of glassIdsByNodeId) {
-    glassSpecsByNodeId.set(nodeId, Object.freeze(canonical.glass_specs.filter((row) => ids.has(row.glass_spec_id))));
+  if (canonical.glass_compatibility_profiles) {
+    const permittedProfiles = new Map(canonical.product_nodes.map((row) => [row.node_id, new Set()]));
+    for (const profile of canonical.glass_compatibility_profiles) {
+      for (const row of profile.node_statuses) {
+        if (row.status !== 'NOT_APPLICABLE') permittedProfiles.get(row.node_id).add(profile.profile_id);
+      }
+    }
+    for (const [nodeId, ids] of permittedProfiles) {
+      glassSpecsByNodeId.set(nodeId, Object.freeze(canonical.glass_specs.filter((row) => ids.has(row.compatibility_profile_id))));
+    }
+  } else {
+    const glassIdsByNodeId = new Map(canonical.product_nodes.map((row) => [row.node_id, new Set()]));
+    for (const row of canonical.glass_node_matrix ?? []) {
+      if (row.status === 'NOT_APPLICABLE') continue;
+      glassIdsByNodeId.get(row.node_id).add(row.glass_spec_id);
+    }
+    for (const [nodeId, ids] of glassIdsByNodeId) {
+      glassSpecsByNodeId.set(nodeId, Object.freeze(canonical.glass_specs.filter((row) => ids.has(row.glass_spec_id))));
+    }
   }
   const detailMatrixByNodeId = new Map(canonical.detail_field_matrix.map((row) => [row.node_id, row]));
   const sizeRuleByNodeId = new Map(canonical.size_rules.map((row) => [row[1], row]));
