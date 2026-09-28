@@ -360,8 +360,12 @@ function configureDetailFields(model, matrix, visible, required) {
 }
 
 function applyRules(model, selection, visible, required, allowed, derived, notices, exceptions, errors) {
+  // Slim selector traversal revisits many states with the same short rule
+  // sequence. Keep the effective selection current as rules derive values,
+  // instead of copying every field once per rule. The FORMAL path is intact.
+  const effective = model.glassFacetCache ? { ...selection, ...derived } : null;
   for (const rule of model.sortedDependencyRules) {
-    if (!ruleMatches(rule, { ...selection, ...derived })) continue;
+    if (!ruleMatches(rule, effective ?? { ...selection, ...derived })) continue;
     const effect = rule.effect;
     const current = allowed.get(effect.target_field) ?? baseAllowed(model, effect.target_field);
     if (effect.action === 'allow_only') {
@@ -392,6 +396,7 @@ function applyRules(model, selection, visible, required, allowed, derived, notic
     } else if (effect.action === 'evaluate_phase3_r2_reinforcement_master') {
       visible.add(effect.target_field); required.add(effect.target_field);
     }
+    if (effective) Object.assign(effective, derived);
   }
 }
 

@@ -68,3 +68,21 @@ jobs:
         with:
           name: uchirimo-slim-residual-heavy-3795
           path: artifacts/uchirimo-slim/residual-heavy-3795/
+  residual-heavy-3796:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    env:
+      UCHIRIMO_SLIM_RESIDUAL_FIXTURE: test/fixtures/uchirimo-slim/heavy-shard-3796.json
+      UCHIRIMO_SLIM_TIMEOUT_MS: '600000'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: node scripts/governance/uchirimo-slim-residual-replay.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: uchirimo-slim-residual-heavy-3796
+          path: artifacts/uchirimo-slim/residual-heavy-3796/

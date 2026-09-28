@@ -33,15 +33,17 @@ const resolveProduct = async (_, selection) => {
   const normalized = normalizeRuntimeSelection(adapted.master, selection);
   return toRuntimeUiResult(adapted.master, adapted.resolver(normalized), integration, pkg.integrity);
 };
-const row = JSON.parse(readFileSync('test/fixtures/uchirimo-slim/heavy-shard-3795.json'));
+const fixture = process.env.UCHIRIMO_SLIM_RESIDUAL_FIXTURE ?? 'test/fixtures/uchirimo-slim/heavy-shard-3795.json';
+const row = JSON.parse(readFileSync(fixture));
 const constraints = JSON.parse(row.decision_constraints_json);
 const identity = recoveryIdentity(row, constraints);
-const output = process.env.UCHIRIMO_SLIM_RESIDUAL_OUT ?? 'artifacts/uchirimo-slim/residual-heavy-3795';
+const output = process.env.UCHIRIMO_SLIM_RESIDUAL_OUT ?? `artifacts/uchirimo-slim/residual-heavy-${row.shard}`;
 mkdirSync(output, { recursive: true });
 const start = performance.now();
 const result = await runConstraint(row, constraints, identity, {
   out: output, expectedShards: 3956, head: currentExactHead(),
-  maxStates: 2000000, maxTerminals: 2000000, timeoutMs: 300000,
+  maxStates: Number(process.env.UCHIRIMO_SLIM_MAX_STATES ?? 2000000),
+  maxTerminals: 2000000, timeoutMs: Number(process.env.UCHIRIMO_SLIM_TIMEOUT_MS ?? 300000),
   loadRuntime: async () => runtime, resolveProduct,
 });
 if (result.status !== 'PASS') throw new Error(`UCHIRIMO_SLIM_RESIDUAL_FAIL:${result.error}`);
@@ -53,7 +55,10 @@ const caseHash = createHash('sha256').update(caseBytes).digest('hex');
 if (caseHash !== report.case_artifact_sha256) throw new Error('UCHIRIMO_SLIM_CASE_DIGEST_MISMATCH');
 const summary = {
   schema_version: 'UCHIRIMO_SLIM_RESIDUAL_DIAGNOSTIC_V1',
-  status: 'PASS', source_job_id: 108978046250, source_shard: 3795,
+  status: 'PASS', source_job_id: row.source_job_id ?? (row.shard === 3795 ? 108978046250 : null),
+  source_artifact_id: row.source_artifact_id ?? null,
+  source_artifact_digest: row.source_artifact_digest ?? null,
+  source_shard: row.shard, source_recovery_unit_id: row.recovery_unit_id,
   candidate_sha256: candidateSha, source_runtime_sha256: pkg.integrity.actual,
   exact_head: report.exact_head, visited_state_count: report.visited_state_count,
   terminal_context_count: report.terminal_context_count,
