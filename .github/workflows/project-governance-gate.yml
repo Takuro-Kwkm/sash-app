@@ -48,6 +48,7 @@ jobs:
       uchirimo_v11_recovery_only: ${{ steps.scope.outputs.uchirimo_v11_recovery_only }}
       uchirimo_v12_recovery_only: ${{ steps.scope.outputs.uchirimo_v12_recovery_only }}
       uchirimo_resume_run_id: ${{ steps.resume.outputs.resume_run_id }}
+      uchirimo_v12_generation: ${{ steps.scope.outputs.uchirimo_v12_generation }}
     env:
       GH_TOKEN: ${{ github.token }}
       HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
@@ -126,14 +127,31 @@ jobs:
 
       - name: Resolve requested execution lane
         id: scope
+        env:
+          REQUESTED_V12_GENERATION: ${{ inputs.uchirimo_v12_generation || '0' }}
+          SOURCE_V12_RUN: ${{ inputs.uchirimo_v12_source_run_id || '' }}
         run: |
           node --input-type=module <<'NODE'
           import {readFileSync,appendFileSync} from 'node:fs';
+          import {execFileSync} from 'node:child_process';
+          import {continuationGeneration} from './scripts/governance/uchirimo-balanced-scheduler.mjs';
           const scope=JSON.parse(readFileSync('project-governance/change-scope.json','utf8'));
           const recoveryOnly=['uchirimo-recovery-only','uchirimo-v11-recovery-only','uchirimo-v12-deterministic-recovery-only'].includes(scope.execution_lane);
           appendFileSync(process.env.GITHUB_OUTPUT,`uchirimo_recovery_only=${recoveryOnly}\n`);
           appendFileSync(process.env.GITHUB_OUTPUT,`uchirimo_v11_recovery_only=${scope.execution_lane==='uchirimo-v11-recovery-only'}\n`);
           appendFileSync(process.env.GITHUB_OUTPUT,`uchirimo_v12_recovery_only=${scope.execution_lane==='uchirimo-v12-deterministic-recovery-only'}\n`);
+          const requested=Number(process.env.REQUESTED_V12_GENERATION);
+          let sourceHead;
+          if(scope.execution_lane==='uchirimo-v12-deterministic-recovery-only'&&requested>0){
+            const source=process.env.SOURCE_V12_RUN;
+            if(!/^[1-9][0-9]*$/.test(source??''))throw new Error('UCHIRIMO_SOURCE_RUN_REQUIRED');
+            const run=JSON.parse(execFileSync('gh',['api',`repos/${process.env.GITHUB_REPOSITORY}/actions/runs/${source}`],{encoding:'utf8'}));
+            sourceHead=run.head_sha;
+          }
+          const generation=scope.execution_lane==='uchirimo-v12-deterministic-recovery-only'
+            ? continuationGeneration({requestedGeneration:requested,head:process.env.HEAD_SHA,sourceHead}) : requested;
+          appendFileSync(process.env.GITHUB_OUTPUT,`uchirimo_v12_generation=${generation}\n`);
+          console.log(`UCHIRIMO_CONTINUATION_GENERATION requested=${requested} effective=${generation} checkpoint_import=${requested>0&&generation===0}`);
           NODE
 
       - name: Resolve latest durable Uchirimo continuation
@@ -372,7 +390,7 @@ jobs:
     with:
       controller_head: ${{ github.event.pull_request.head.sha || github.sha }}
       uchirimo_v12_enabled: ${{ needs.governance.outputs.uchirimo_v12_recovery_only == 'true' }}
-      uchirimo_v12_generation: ${{ fromJSON(inputs.uchirimo_v12_generation || '0') }}
+      uchirimo_v12_generation: ${{ fromJSON(needs.governance.outputs.uchirimo_v12_generation || '0') }}
       uchirimo_v12_source_run_id: ${{ inputs.uchirimo_v12_source_run_id || '' }}
 
   post-review-nontw-exact:

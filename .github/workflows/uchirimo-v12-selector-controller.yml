@@ -59,6 +59,7 @@ jobs:
       - name: Verify recovery machinery before scheduling selectors
         if: ${{ inputs.generation == 0 }}
         run: |
+          node scripts/governance/uchirimo-balanced-scheduler.test.mjs
           node scripts/governance/uchirimo-v12-workflow-continuation.test.mjs
           node scripts/governance/uchirimo-controller-evidence-binding.test.mjs
           node scripts/governance/uchirimo-selector-batch-runner.test.mjs
@@ -231,7 +232,7 @@ jobs:
           UCHIRIMO_V12_CONTROLLER_OUT=artifacts/uchirimo-v12-plan-0 \
           UCHIRIMO_SELECTOR_PLAN_LANE_COUNT=16 \
           UCHIRIMO_SELECTOR_PLAN_LANE_INDEX=0 \
-          node scripts/governance/uchirimo-v11-recovery-controller-runner.mjs
+          node scripts/governance/uchirimo-balanced-scheduler.mjs
       - uses: actions/upload-artifact@v4
         with:
           name: uchirimo-v12-plan-${{ env.HEAD_SHA }}-g${{ env.GEN }}-lane-0
@@ -279,7 +280,7 @@ jobs:
           UCHIRIMO_V12_CONTROLLER_OUT=artifacts/uchirimo-v12-plan-1 \
           UCHIRIMO_SELECTOR_PLAN_LANE_COUNT=16 \
           UCHIRIMO_SELECTOR_PLAN_LANE_INDEX=1 \
-          node scripts/governance/uchirimo-v11-recovery-controller-runner.mjs
+          node scripts/governance/uchirimo-balanced-scheduler.mjs
       - uses: actions/upload-artifact@v4
         with:
           name: uchirimo-v12-plan-${{ env.HEAD_SHA }}-g${{ env.GEN }}-lane-1
@@ -327,7 +328,7 @@ jobs:
           UCHIRIMO_V12_CONTROLLER_OUT=artifacts/uchirimo-v12-plan-2 \
           UCHIRIMO_SELECTOR_PLAN_LANE_COUNT=16 \
           UCHIRIMO_SELECTOR_PLAN_LANE_INDEX=2 \
-          node scripts/governance/uchirimo-v11-recovery-controller-runner.mjs
+          node scripts/governance/uchirimo-balanced-scheduler.mjs
       - uses: actions/upload-artifact@v4
         with:
           name: uchirimo-v12-plan-${{ env.HEAD_SHA }}-g${{ env.GEN }}-lane-2
@@ -375,7 +376,7 @@ jobs:
           UCHIRIMO_V12_CONTROLLER_OUT=artifacts/uchirimo-v12-plan-3 \
           UCHIRIMO_SELECTOR_PLAN_LANE_COUNT=16 \
           UCHIRIMO_SELECTOR_PLAN_LANE_INDEX=3 \
-          node scripts/governance/uchirimo-v11-recovery-controller-runner.mjs
+          node scripts/governance/uchirimo-balanced-scheduler.mjs
       - uses: actions/upload-artifact@v4
         with:
           name: uchirimo-v12-plan-${{ env.HEAD_SHA }}-g${{ env.GEN }}-lane-3
@@ -423,7 +424,7 @@ jobs:
           UCHIRIMO_V12_CONTROLLER_OUT=artifacts/uchirimo-v12-plan-4 \
           UCHIRIMO_SELECTOR_PLAN_LANE_COUNT=16 \
           UCHIRIMO_SELECTOR_PLAN_LANE_INDEX=4 \
-          node scripts/governance/uchirimo-v11-recovery-controller-runner.mjs
+          node scripts/governance/uchirimo-balanced-scheduler.mjs
       - uses: actions/upload-artifact@v4
         with:
           name: uchirimo-v12-plan-${{ env.HEAD_SHA }}-g${{ env.GEN }}-lane-4
@@ -471,7 +472,7 @@ jobs:
           UCHIRIMO_V12_CONTROLLER_OUT=artifacts/uchirimo-v12-plan-5 \
           UCHIRIMO_SELECTOR_PLAN_LANE_COUNT=16 \
           UCHIRIMO_SELECTOR_PLAN_LANE_INDEX=5 \
-          node scripts/governance/uchirimo-v11-recovery-controller-runner.mjs
+          node scripts/governance/uchirimo-balanced-scheduler.mjs
       - uses: actions/upload-artifact@v4
         with:
           name: uchirimo-v12-plan-${{ env.HEAD_SHA }}-g${{ env.GEN }}-lane-5
@@ -519,7 +520,7 @@ jobs:
           UCHIRIMO_V12_CONTROLLER_OUT=artifacts/uchirimo-v12-plan-6 \
           UCHIRIMO_SELECTOR_PLAN_LANE_COUNT=16 \
           UCHIRIMO_SELECTOR_PLAN_LANE_INDEX=6 \
-          node scripts/governance/uchirimo-v11-recovery-controller-runner.mjs
+          node scripts/governance/uchirimo-balanced-scheduler.mjs
       - uses: actions/upload-artifact@v4
         with:
           name: uchirimo-v12-plan-${{ env.HEAD_SHA }}-g${{ env.GEN }}-lane-6
@@ -567,7 +568,7 @@ jobs:
           UCHIRIMO_V12_CONTROLLER_OUT=artifacts/uchirimo-v12-plan-7 \
           UCHIRIMO_SELECTOR_PLAN_LANE_COUNT=16 \
           UCHIRIMO_SELECTOR_PLAN_LANE_INDEX=7 \
-          node scripts/governance/uchirimo-v11-recovery-controller-runner.mjs
+          node scripts/governance/uchirimo-balanced-scheduler.mjs
       - uses: actions/upload-artifact@v4
         with:
           name: uchirimo-v12-plan-${{ env.HEAD_SHA }}-g${{ env.GEN }}-lane-7
@@ -615,7 +616,7 @@ jobs:
           UCHIRIMO_V12_CONTROLLER_OUT=artifacts/uchirimo-v12-plan-8 \
           UCHIRIMO_SELECTOR_PLAN_LANE_COUNT=16 \
           UCHIRIMO_SELECTOR_PLAN_LANE_INDEX=8 \
-          node scripts/governance/uchirimo-v11-recovery-controller-runner.mjs
+          node scripts/governance/uchirimo-balanced-scheduler.mjs
       - uses: actions/upload-artifact@v4
         with:
           name: uchirimo-v12-plan-${{ env.HEAD_SHA }}-g${{ env.GEN }}-lane-8
@@ -663,7 +664,7 @@ jobs:
           UCHIRIMO_V12_CONTROLLER_OUT=artifacts/uchirimo-v12-plan-9 \
           UCHIRIMO_SELECTOR_PLAN_LANE_COUNT=16 \
           UCHIRIMO_SELECTOR_PLAN_LANE_INDEX=9 \
-          node scripts/governance/uchirimo-v11-recovery-controller-runner.mjs
+          node scripts/governance/uchirimo-balanced-scheduler.mjs
       - uses: actions/upload-artifact@v4
         with:
           name: uchirimo-v12-plan-${{ env.HEAD_SHA }}-g${{ env.GEN }}-lane-9
@@ -711,7 +712,7 @@ jobs:
           UCHIRIMO_V12_CONTROLLER_OUT=artifacts/uchirimo-v12-plan-10 \
           UCHIRIMO_SELECTOR_PLAN_LANE_COUNT=16 \
           UCHIRIMO_SELECTOR_PLAN_LANE_INDEX=10 \
-          node scripts/governance/uchirimo-v11-recovery-controller-runner.mjs
+          node scripts/governance/uchirimo-balanced-scheduler.mjs
       - uses: actions/upload-artifact@v4
         with:
           name: uchirimo-v12-plan-${{ env.HEAD_SHA }}-g${{ env.GEN }}-lane-10
@@ -759,7 +760,7 @@ jobs:
           UCHIRIMO_V12_CONTROLLER_OUT=artifacts/uchirimo-v12-plan-11 \
           UCHIRIMO_SELECTOR_PLAN_LANE_COUNT=16 \
           UCHIRIMO_SELECTOR_PLAN_LANE_INDEX=11 \
-          node scripts/governance/uchirimo-v11-recovery-controller-runner.mjs
+          node scripts/governance/uchirimo-balanced-scheduler.mjs
       - uses: actions/upload-artifact@v4
         with:
           name: uchirimo-v12-plan-${{ env.HEAD_SHA }}-g${{ env.GEN }}-lane-11
@@ -807,7 +808,7 @@ jobs:
           UCHIRIMO_V12_CONTROLLER_OUT=artifacts/uchirimo-v12-plan-12 \
           UCHIRIMO_SELECTOR_PLAN_LANE_COUNT=16 \
           UCHIRIMO_SELECTOR_PLAN_LANE_INDEX=12 \
-          node scripts/governance/uchirimo-v11-recovery-controller-runner.mjs
+          node scripts/governance/uchirimo-balanced-scheduler.mjs
       - uses: actions/upload-artifact@v4
         with:
           name: uchirimo-v12-plan-${{ env.HEAD_SHA }}-g${{ env.GEN }}-lane-12
@@ -855,7 +856,7 @@ jobs:
           UCHIRIMO_V12_CONTROLLER_OUT=artifacts/uchirimo-v12-plan-13 \
           UCHIRIMO_SELECTOR_PLAN_LANE_COUNT=16 \
           UCHIRIMO_SELECTOR_PLAN_LANE_INDEX=13 \
-          node scripts/governance/uchirimo-v11-recovery-controller-runner.mjs
+          node scripts/governance/uchirimo-balanced-scheduler.mjs
       - uses: actions/upload-artifact@v4
         with:
           name: uchirimo-v12-plan-${{ env.HEAD_SHA }}-g${{ env.GEN }}-lane-13
@@ -903,7 +904,7 @@ jobs:
           UCHIRIMO_V12_CONTROLLER_OUT=artifacts/uchirimo-v12-plan-14 \
           UCHIRIMO_SELECTOR_PLAN_LANE_COUNT=16 \
           UCHIRIMO_SELECTOR_PLAN_LANE_INDEX=14 \
-          node scripts/governance/uchirimo-v11-recovery-controller-runner.mjs
+          node scripts/governance/uchirimo-balanced-scheduler.mjs
       - uses: actions/upload-artifact@v4
         with:
           name: uchirimo-v12-plan-${{ env.HEAD_SHA }}-g${{ env.GEN }}-lane-14
@@ -951,7 +952,7 @@ jobs:
           UCHIRIMO_V12_CONTROLLER_OUT=artifacts/uchirimo-v12-plan-15 \
           UCHIRIMO_SELECTOR_PLAN_LANE_COUNT=16 \
           UCHIRIMO_SELECTOR_PLAN_LANE_INDEX=15 \
-          node scripts/governance/uchirimo-v11-recovery-controller-runner.mjs
+          node scripts/governance/uchirimo-balanced-scheduler.mjs
       - uses: actions/upload-artifact@v4
         with:
           name: uchirimo-v12-plan-${{ env.HEAD_SHA }}-g${{ env.GEN }}-lane-15
