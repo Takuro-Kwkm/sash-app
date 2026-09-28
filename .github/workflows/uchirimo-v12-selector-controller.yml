@@ -1744,7 +1744,11 @@ jobs:
 
   dispatch-next:
     needs: ["governance-authority", "advance"]
-    if: ${{ needs.governance-authority.outputs.authorized == 'true' && needs.advance.outputs.next_action == 'DISPATCH_NEXT_GENERATION' }}
+    # Expected compute-timeout matrix failures are consumed by `advance` and
+    # converted into split/deferred work. Bypass GitHub's implicit success()
+    # guard so the saved controller decision can dispatch the next generation.
+    # A cancelled stale run must never dispatch a successor.
+    if: ${{ always() && !cancelled() && needs.governance-authority.outputs.authorized == 'true' && needs.advance.outputs.next_action == 'DISPATCH_NEXT_GENERATION' }}
     runs-on: ubuntu-latest
     permissions:
       actions: write
@@ -1768,7 +1772,7 @@ jobs:
 
   blocked:
     needs: ["governance-authority", "advance"]
-    if: ${{ needs.governance-authority.outputs.authorized == 'true' && needs.advance.outputs.next_action == 'BLOCKED' }}
+    if: ${{ always() && !cancelled() && needs.governance-authority.outputs.authorized == 'true' && needs.advance.outputs.next_action == 'BLOCKED' }}
     runs-on: ubuntu-latest
     steps:
       - run: |
@@ -1777,7 +1781,7 @@ jobs:
 
   finalize:
     needs: ["governance-authority", "advance"]
-    if: ${{ needs.governance-authority.outputs.authorized == 'true' && needs.advance.outputs.next_action == 'FINAL_AGGREGATE' }}
+    if: ${{ always() && !cancelled() && needs.governance-authority.outputs.authorized == 'true' && needs.advance.outputs.next_action == 'FINAL_AGGREGATE' }}
     runs-on: ubuntu-latest
     timeout-minutes: 60
     permissions:
