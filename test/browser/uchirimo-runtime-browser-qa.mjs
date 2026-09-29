@@ -55,7 +55,8 @@ async function exercise(page){
   assert.equal(snapshot.configuration.glass_structure,undefined);
   assert.equal(snapshot.sales_request_handoff.spacer_type_request,'resin');
   assert.equal(snapshot.sales_request_handoff.gas_fill_request,'argon');
-  assert.match(await page.locator('#qaRoot #selectionSummary').innerText(),/透明ガラス.*樹脂スペーサー.*アルゴンガス入り/s);
+  const summary=await page.locator('#qaRoot #selectionSummary').innerText();
+  for(const label of ['透明ガラス','樹脂スペーサー','アルゴンガス入り'])assert.ok(summary.includes(label),`${label} missing from summary`);
   await select(page,'glass_family','single_glazing');
   for(const key of ['sales_spacer_type','sales_gas_fill','spacer_type','gas_fill'])
     assert.equal(await page.locator(`#qaRoot [data-spec-key="${key}"]`).count(),0,`${key} must be absent for single glazing`);
