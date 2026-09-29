@@ -1,0 +1,58 @@
+name: Seven Series Production QA Closure
+
+on:
+  push:
+    branches: [qa/seven-series-production-closure-20260929]
+
+permissions:
+  contents: read
+
+jobs:
+  production-qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      QA_BASE_URL: https://sash-app-wave3-preview.vercel.app
+      HEAD_SHA: ${{ github.sha }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Production Runtime smoke
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -fsS "$QA_BASE_URL/api/health" > /tmp/health.json
+          node --input-type=module <<'NODE'
+          import {readFileSync} from 'node:fs';
+          const h=JSON.parse(readFileSync('/tmp/health.json','utf8'));
+          const expected=['SER-LIXIL-TW','SER-LIX-EW','SER-LIX-SAMOS2H','SER-LIX-SAMOSL','SER-YKK-APW430','SER-YKK-APW431','SER-YKKAP-UCHIRIMO'];
+          if(!h.ok)process.exit(1);
+          const byId=new Map((h.runtimeMasterIntegrations??[]).map(x=>[x.id,x]));
+          if(expected.some(id=>!byId.has(id)||byId.get(id).status!=='READY'||byId.get(id).selectable!==true))process.exit(1);
+          console.log('SEVEN_SERIES_RUNTIME_SMOKE=PASS');
+          NODE
+      - name: Install browser QA dependencies
+        run: |
+          npm install --ignore-scripts
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+      - name: Production end-to-end QA
+        run: |
+          node test/browser/uchirimo-runtime-browser-qa.mjs
+          node test/browser/global-window-selection-flow-browser-qa.mjs
+          node test/browser/seven-series-business-flow-qa.mjs
+          node test/browser/release-regression-browser-qa.mjs
+          npm run test:browser:work
+          npm run test:browser:estimate-output
+          echo 'PRODUCTION_BROWSER_QA_GATE=PASS'
+      - name: Upload QA evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: seven-series-production-qa-closure-${{ github.sha }}
+          path: artifacts/
+          if-no-files-found: warn
