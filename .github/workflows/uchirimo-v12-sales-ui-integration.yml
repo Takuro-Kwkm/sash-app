@@ -106,6 +106,7 @@ jobs:
       VERCEL_PROJECT_NAME: sash-app-wave3-preview
       RELEASE_SERIES: UCHIRIMO_V12_SALES_UI
       RELEASE_PACKAGE_VERSION: integration-preview
+      VERCEL_DEPLOY_SOURCE: files
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
