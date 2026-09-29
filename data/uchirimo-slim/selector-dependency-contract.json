@@ -11,7 +11,9 @@
     "src/catalog/runtime-master/global-window-selection-flow-engine.mjs": "a02b361d265d139ffa037cb16c0e19167db01c126d8b5d0110238653490fe678",
     "src/catalog/runtime-master/canonical-window-semantic-schema.mjs": "623ba5a487f405ae9839427263d18159b8350783041cb59d07bc015cd91e209a",
     "data/uchirimo-slim/runtime-support.json": "25eaf0a65482aed99a37852c1b1c5c7d4c60de54c1a3954923abb4f11b7e4a1d",
-    "scripts/governance/uchirimo-slim-runtime-support.mjs": "39aefa65d163460d80b2568086b64b88ba135119709cb182b5b0cf652bfd9dc4",
-    "scripts/governance/uchirimo-slim-factorized-selector.mjs": "a2fb337342762b4ff7012fc8bdd10eecfa1b72810a08d2f23703d2be4de84d79"
+    "scripts/governance/uchirimo-slim-runtime-support.mjs": "39344a263b8b0dab5ced1528c569f82d651e4b2e6f102f4ff692e75a56561fe1",
+    "scripts/governance/uchirimo-slim-factorized-selector.mjs": "a2fb337342762b4ff7012fc8bdd10eecfa1b72810a08d2f23703d2be4de84d79",
+    "scripts/governance/uchirimo-frozen-migration-entry.mjs": "e0e5f78b2a51b9154bed8d07cde609768c3a0eb5ce53ef3cba7dc33f3a804d9e",
+    "scripts/governance/uchirimo-adopted-slim-runtime.mjs": "781d6177c537af344ada8d951ec8fd3c33a906c22768917be65fd9ced9f109b2"
   }
 }
