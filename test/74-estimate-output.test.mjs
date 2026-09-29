@@ -70,15 +70,17 @@ test('EW / TW / ウチリモ use the same generic Snapshot mapping',()=>{
   assert.ok(model.rows.every((row)=>row.size.includes('640')));
 });
 
-test('Uchirimo estimate request carries appearance and manufacturer glass handoff without thickness',()=>{
+test('Uchirimo estimate request carries appearance, spacer and cavity without thickness',()=>{
   const snap=snapshot({manufacturer:'YKK AP',series:'ウチリモ 内窓',validation:'NEEDS_REVALIDATION'});
   snap.product_id='SER-YKKAP-UCHIRIMO';
-  snap.configuration={window_type:'fix_window',size_w:800,size_h:700,sales_glass_appearance:'frosted'};
+  snap.configuration={window_type:'fix_window',size_w:800,size_h:700,sales_glass_appearance:'frosted',sales_spacer_type:'resin',sales_gas_fill:'argon'};
   snap.display_summary=[
     {key:'window_type',label:'窓種類',value:'FIX窓'},
     {key:'size_w',label:'製品W',value:'800'},
     {key:'size_h',label:'製品H',value:'700'},
     {key:'sales_glass_appearance',label:'希望するガラスの見た目',value:'すり板ガラス'},
+    {key:'sales_spacer_type',label:'スペーサー',value:'樹脂スペーサー'},
+    {key:'sales_gas_fill',label:'中空層',value:'アルゴンガス入り'},
   ];
   snap.sales_request_handoff={glass_appearance:'frosted',glass_structure:'MANUFACTURER_ESTIMATE_CONFIRMATION'};
   snap.sales_request_state='READY_FOR_MANUFACTURER_ESTIMATE';
@@ -86,8 +88,11 @@ test('Uchirimo estimate request carries appearance and manufacturer glass handof
   assert.equal(model.rows[0].state,EstimateOutputState.NEEDS_CONFIRMATION);
   assert.equal(model.rows[0].size,'800 × 700');
   assert.match(model.rows[0].major_specifications,/希望するガラスの見た目: すり板ガラス/);
+  assert.match(model.rows[0].major_specifications,/スペーサー: 樹脂スペーサー \/ 中空層: アルゴンガス入り/);
   assert.ok(model.rows[0].issues.some(issue=>issue.code==='GLASS_STRUCTURE_MANUFACTURER_ESTIMATE'));
   assert.equal(model.rows[0].configuration.glass_structure,undefined);
+  assert.equal(model.rows[0].configuration.sales_spacer_type,'resin');
+  assert.equal(model.rows[0].configuration.sales_gas_fill,'argon');
 });
 
 test('TW 30-opening case yields 30 confirmation rows and 3 PDF pages',()=>{

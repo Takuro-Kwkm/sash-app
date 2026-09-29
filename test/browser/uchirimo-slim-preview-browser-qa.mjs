@@ -43,16 +43,30 @@ async function exercise(page){
  assert.equal(result.selection.glass_structure,undefined,'appearance must not choose technical thickness');
  assert.equal(await page.locator('[data-spec-key="sales_glass_appearance"]').inputValue(),'clear');
  assert.equal(await page.locator('[data-spec-key="glass_structure"]').count(),0,'sales must not choose glass thickness');
+ assert.deepEqual(await page.locator('[data-spec-key="sales_spacer_type"] option').allTextContents(),['選択してください','アルミスペーサー','樹脂スペーサー']);
+ assert.deepEqual(await page.locator('[data-spec-key="sales_gas_fill"] option').allTextContents(),['選択してください','空気層','アルゴンガス入り']);
+ await choose(page,'sales_spacer_type','resin');
+ await choose(page,'sales_gas_fill','argon');
+ let salesSnapshot=await page.evaluate(()=>window.__uchirimoPreviewEditor.getSnapshot());
+ assert.equal(salesSnapshot.configuration.sales_spacer_type,'resin');
+ assert.equal(salesSnapshot.configuration.sales_gas_fill,'argon');
+ assert.equal(salesSnapshot.sales_request_handoff.spacer_type_request,'resin');
+ assert.equal(salesSnapshot.sales_request_handoff.gas_fill_request,'argon');
+ assert.equal(salesSnapshot.configuration.glass_structure,undefined);
+ assert.match(await page.locator('#selectionSummary').innerText(),/樹脂スペーサー.*アルゴンガス入り/s);
  assert.equal(await page.locator('#selectionSummary').innerText().then(x=>x.includes('透明ガラス')),true);
  assert.equal(await page.locator('[data-spec-key="low_e_type"]').count(),1);
  result=await choose(page,'glass_family','single_glazing');
- for(const key of ['low_e_type','spacer_type','gas_fill'])assert.equal(await page.locator(`[data-spec-key="${key}"]`).count(),0,`${key} must clear`);
+ for(const key of ['low_e_type','spacer_type','gas_fill','sales_spacer_type','sales_gas_fill'])assert.equal(await page.locator(`[data-spec-key="${key}"]`).count(),0,`${key} must clear`);
+ salesSnapshot=await page.evaluate(()=>window.__uchirimoPreviewEditor.getSnapshot());
+ assert.equal(salesSnapshot.configuration.sales_spacer_type,undefined);
+ assert.equal(salesSnapshot.configuration.sales_gas_fill,undefined);
  assert.ok((await page.locator('[data-spec-key="sales_glass_appearance"] option').allTextContents()).some(x=>x.includes('和紙調')));
  result=await choose(page,'sales_glass_appearance','washi');
  assert.equal(await page.locator('[data-spec-key="sales_glass_appearance"]').inputValue(),'washi');
  assert.equal(await page.locator('[data-spec-key="glass_structure"]').count(),0);
  assert.equal(result.orderReady,false);
- assert.match(await page.locator('#warnings').innerText(),/ガラスの厚み・構成.*メーカー見積/s);
+ assert.match(await page.locator('#warnings').innerText(),/ガラスの厚みと最終仕様.*メーカー見積/s);
  assert.doesNotMatch(await page.locator('#warnings').innerText(),technical);
  result=await choose(page,'size_w',500);
  result=await choose(page,'size_h',500);
@@ -80,7 +94,7 @@ async function exercise(page){
  assert.ok(overflow<=1,`HORIZONTAL_OVERFLOW:${overflow}`);
  const inputOverflow=await page.locator('input,select').evaluateAll(nodes=>nodes.filter(node=>{const r=node.getBoundingClientRect();return r.left < -1||r.right>innerWidth+1;}).length);
  assert.equal(inputOverflow,0);
- return {status:'PASS',appearance_first:'PASS',thickness_not_exposed:'PASS',dependency_clear:'PASS',manufacturer_handoff:'PASS',size_block_and_recovery:'PASS',technical_token_hidden:'PASS',overflow,input_overflow:inputOverflow};
+ return {status:'PASS',appearance_first:'PASS',spacer_and_cavity_restored:'PASS',thickness_not_exposed:'PASS',dependency_clear:'PASS',manufacturer_handoff:'PASS',size_block_and_recovery:'PASS',technical_token_hidden:'PASS',overflow,input_overflow:inputOverflow};
 }
 try{
  for(const config of [{name:'desktop',width:1440,height:1000,mobile:false},{name:'mobile',width:390,height:844,mobile:true}]){

@@ -26,7 +26,13 @@ function summaryValue(snapshot,keys){
 
 function majorSpecificationText(snapshot){
   const rows=summaryRows(snapshot);
-  if(snapshot?.product_id==='SER-YKKAP-UCHIRIMO')rows.sort((a,b)=>Number(b.key==='sales_glass_appearance')-Number(a.key==='sales_glass_appearance'));
+  if(snapshot?.product_id==='SER-YKKAP-UCHIRIMO'){
+    const priority=['sales_glass_appearance','sales_spacer_type','sales_gas_fill'];
+    rows.sort((a,b)=>{
+      const left=priority.indexOf(a.key),right=priority.indexOf(b.key);
+      return (left<0?priority.length:left)-(right<0?priority.length:right);
+    });
+  }
   return rows
     .filter((row)=>!OMIT_MAJOR_KEYS.has(row.key))
     .slice(0,8)
@@ -64,7 +70,7 @@ function classifyRow(opening,snapshot,price){
     issues.push({code:'PRODUCT_SNAPSHOT_MISSING',message:'商品仕様Snapshotが保存されていません。'});
     return {state:EstimateOutputState.INCOMPLETE,issues};
   }
-  if(snapshot.sales_request_handoff?.glass_structure==='MANUFACTURER_ESTIMATE_CONFIRMATION')issues.push({code:'GLASS_STRUCTURE_MANUFACTURER_ESTIMATE',message:'ガラスの厚み・構成はメーカー見積で確認してください。'});
+  if(snapshot.sales_request_handoff?.glass_structure==='MANUFACTURER_ESTIMATE_CONFIRMATION')issues.push({code:'GLASS_STRUCTURE_MANUFACTURER_ESTIMATE',message:'ガラスの厚みと最終仕様はメーカー見積で確認してください。'});
   if(snapshot.validation_state==='INVALID'){
     issues.push({code:'PRODUCT_SNAPSHOT_INVALID',message:'保存SnapshotがINVALIDです。'});
     return {state:EstimateOutputState.INVALID,issues};

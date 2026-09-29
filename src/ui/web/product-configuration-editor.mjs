@@ -9,6 +9,8 @@ const STATUS_LABELS=Object.freeze({
 });
 const UCHIRIMO_PRODUCT_ID='SER-YKKAP-UCHIRIMO';
 const UCHIRIMO_APPEARANCE_KEY='sales_glass_appearance';
+const UCHIRIMO_SPACER_KEY='sales_spacer_type';
+const UCHIRIMO_GAS_KEY='sales_gas_fill';
 const UCHIRIMO_APPEARANCES=Object.freeze([
   {value:'clear',displayLabel:'透明ガラス'},
   {value:'pattern',displayLabel:'型板ガラス'},
@@ -18,6 +20,16 @@ const UCHIRIMO_APPEARANCES=Object.freeze([
 const UCHIRIMO_GLASS_DETAILS=new Set([
   'glass_structure','glass_structure_code','glass_spec_id','glass_size_constraint_group',
   'glass_surface_type','spacer_type','gas_fill','cavity_thickness_mm',
+]);
+const UCHIRIMO_SALES_CAVITY_FIELDS=Object.freeze([
+  {key:UCHIRIMO_SPACER_KEY,displayLabel:'スペーサー',dataType:'ENUM',required:false,values:[
+    {value:'aluminum',displayLabel:'アルミスペーサー'},
+    {value:'resin',displayLabel:'樹脂スペーサー'},
+  ],semanticStage:'GLAZING',semanticSlot:'spacer_type',displayOrder:1},
+  {key:UCHIRIMO_GAS_KEY,displayLabel:'中空層',dataType:'ENUM',required:false,values:[
+    {value:'air',displayLabel:'空気層'},
+    {value:'argon',displayLabel:'アルゴンガス入り'},
+  ],semanticStage:'GLAZING',semanticSlot:'gas_fill',displayOrder:2},
 ]);
 
 function runtimeFieldLabel(result,key){
@@ -75,7 +87,7 @@ function identityFor(product){
 export class ProductConfigurationEditor {
   constructor(root,{initialSnapshot=null,onSnapshot=()=>{},showInventory=false}={}){
     this.root=root;this.initialSnapshot=initialSnapshot;this.onSnapshot=onSnapshot;this.showInventory=showInventory;
-    this.state={products:[],productId:null,productSource:'CATALOG',selection:{},resolved:null,resolveRevision:0,snapshot:initialSnapshot,stale:false,salesGlassAppearance:initialSnapshot?.configuration?.[UCHIRIMO_APPEARANCE_KEY]??null};
+    this.state={products:[],productId:null,productSource:'CATALOG',selection:{},resolved:null,resolveRevision:0,snapshot:initialSnapshot,stale:false,salesGlassAppearance:initialSnapshot?.configuration?.[UCHIRIMO_APPEARANCE_KEY]??null,salesSpacerType:initialSnapshot?.configuration?.[UCHIRIMO_SPACER_KEY]??null,salesGasFill:initialSnapshot?.configuration?.[UCHIRIMO_GAS_KEY]??null};
     this.boundChange=(event)=>this.handleChange(event);
     this.boundClick=(event)=>this.handleClick(event);
   }
@@ -138,7 +150,9 @@ export class ProductConfigurationEditor {
     this.root.querySelector('#product').value=product.id;
     this.state.productId=product.id;this.state.productSource=product.sourceType;this.state.selection={...snapshot.configuration};
     this.state.salesGlassAppearance=product.id===UCHIRIMO_PRODUCT_ID?this.state.selection[UCHIRIMO_APPEARANCE_KEY]??null:null;
-    delete this.state.selection[UCHIRIMO_APPEARANCE_KEY];
+    this.state.salesSpacerType=product.id===UCHIRIMO_PRODUCT_ID?this.state.selection[UCHIRIMO_SPACER_KEY]??null:null;
+    this.state.salesGasFill=product.id===UCHIRIMO_PRODUCT_ID?this.state.selection[UCHIRIMO_GAS_KEY]??null:null;
+    for(const key of [UCHIRIMO_APPEARANCE_KEY,UCHIRIMO_SPACER_KEY,UCHIRIMO_GAS_KEY])delete this.state.selection[key];
     this.state.stale=identityFor(product)!==snapshot.runtime_manifest_identity||String(product.packageVersion??product.source?.version??'LEGACY-UNVERSIONED')!==String(snapshot.package_version);
     if(this.state.stale){this.renderFrozenSnapshot('旧Runtimeで作成された設定です。保存時Snapshotは自動更新されません。',true);return;}
     await this.resolve({notify:false});
@@ -179,14 +193,14 @@ export class ProductConfigurationEditor {
   async handleChange(event){
     const target=event.target;
     if(target.id==='manufacturer'){
-      this.state.resolveRevision+=1;this.state.productId=null;this.state.selection={};this.state.resolved=null;this.state.snapshot=null;this.state.stale=false;this.state.salesGlassAppearance=null;
+      this.state.resolveRevision+=1;this.state.productId=null;this.state.selection={};this.state.resolved=null;this.state.snapshot=null;this.state.stale=false;this.state.salesGlassAppearance=null;this.state.salesSpacerType=null;this.state.salesGasFill=null;
       this.selectManufacturer(target.value);
       this.root.querySelector('#dynamicForm').innerHTML='';this.root.querySelector('#warnings').innerHTML='';
       this.root.querySelector('#selectionSummary').textContent='商品を選択してください。';this.root.querySelector('#productCodeCard').hidden=true;
       this.onSnapshot(null);return;
     }
     if(target.id==='product'){
-      this.state.productId=target.value||null;this.state.selection={};this.state.resolved=null;this.state.snapshot=null;this.state.stale=false;this.state.salesGlassAppearance=null;
+      this.state.productId=target.value||null;this.state.selection={};this.state.resolved=null;this.state.snapshot=null;this.state.stale=false;this.state.salesGlassAppearance=null;this.state.salesSpacerType=null;this.state.salesGasFill=null;
       const product=this.state.products.find((row)=>row.id===this.state.productId);this.state.productSource=product?.sourceType??'CATALOG';
       await this.resolve({notify:true});return;
     }
@@ -195,6 +209,12 @@ export class ProductConfigurationEditor {
     if(this.state.productId===UCHIRIMO_PRODUCT_ID&&key===UCHIRIMO_APPEARANCE_KEY){
       this.state.salesGlassAppearance=target.value||null;
       for(const detail of UCHIRIMO_GLASS_DETAILS)delete this.state.selection[detail];
+      await this.resolve({notify:true});return;
+    }
+    if(this.state.productId===UCHIRIMO_PRODUCT_ID&&(key===UCHIRIMO_SPACER_KEY||key===UCHIRIMO_GAS_KEY)){
+      const field=UCHIRIMO_SALES_CAVITY_FIELDS.find((row)=>row.key===key);
+      if(target.value&&!field.values.some((row)=>row.value===target.value))throw new Error(`Sales option is not available for ${key}: ${target.value}`);
+      this.state[key===UCHIRIMO_SPACER_KEY?'salesSpacerType':'salesGasFill']=target.value||null;
       await this.resolve({notify:true});return;
     }
     if(this.state.productSource==='RUNTIME_MASTER')this.clearRuntimeDescendants(key);
@@ -216,7 +236,7 @@ export class ProductConfigurationEditor {
   async resolve({notify=true}={}){
     const revision=++this.state.resolveRevision,productId=this.state.productId;
     if(!productId){this.root.querySelector('#dynamicForm').innerHTML='';return;}
-    if(productId===UCHIRIMO_PRODUCT_ID)for(const detail of UCHIRIMO_GLASS_DETAILS)delete this.state.selection[detail];
+    if(productId===UCHIRIMO_PRODUCT_ID)for(const detail of [...UCHIRIMO_GLASS_DETAILS,UCHIRIMO_APPEARANCE_KEY,UCHIRIMO_SPACER_KEY,UCHIRIMO_GAS_KEY])delete this.state.selection[detail];
     const query=new URLSearchParams({productId,selection:JSON.stringify(this.state.selection)});
     const endpoint=this.state.productSource==='RUNTIME_MASTER'?'/api/runtime-master/resolve':'/api/catalog/resolve';
     let result=await getJson(`${endpoint}?${query}`);
@@ -224,14 +244,21 @@ export class ProductConfigurationEditor {
     if(productId===UCHIRIMO_PRODUCT_ID){
       const family=result.selection.glass_family;
       if(this.state.salesGlassAppearance==='washi'&&family&&family!=='single_glazing')this.state.salesGlassAppearance=null;
+      if(family!=='insulating_glass'){this.state.salesSpacerType=null;this.state.salesGasFill=null;}
       const chosen=this.state.salesGlassAppearance;
       const offered=UCHIRIMO_APPEARANCES.filter((value)=>value.value!=='washi'||!family||family==='single_glazing');
       const displayField={key:UCHIRIMO_APPEARANCE_KEY,displayLabel:'希望するガラスの見た目',dataType:'ENUM',required:false,values:offered,semanticStage:'GLAZING',semanticSlot:'glass_type',displayOrder:0};
       const glassIndex=result.fields.findIndex((field)=>field.key==='glass_structure');
       if(glassIndex>=0)result.fields.splice(glassIndex,0,displayField);
       else if(family)result.fields.splice(result.fields.findIndex((field)=>field.key==='glass_family')+1,0,displayField);
+      if(family==='insulating_glass'){
+        const index=result.fields.findIndex((field)=>field.key===UCHIRIMO_APPEARANCE_KEY);
+        result.fields.splice(index+1,0,...UCHIRIMO_SALES_CAVITY_FIELDS);
+        if(this.state.salesSpacerType)result.selection={...result.selection,[UCHIRIMO_SPACER_KEY]:this.state.salesSpacerType};
+        if(this.state.salesGasFill)result.selection={...result.selection,[UCHIRIMO_GAS_KEY]:this.state.salesGasFill};
+      }
       if(chosen)result.selection={...result.selection,[UCHIRIMO_APPEARANCE_KEY]:chosen};
-      if(chosen)result.manualWarnings=[...(result.manualWarnings??[]),'ガラスの厚み・構成は営業画面では確定しません。希望する見た目を見積依頼に引き継ぎ、メーカー見積で確認してください。'];
+      if(chosen)result.manualWarnings=[...(result.manualWarnings??[]),'ガラスの厚みと最終仕様はメーカー見積で確認します。選択した見た目・スペーサー・中空層は希望として見積依頼に引き継ぎます。'];
     }
     this.state.selection=result.selection;this.state.resolved=result;
     const dynamicForm=this.root.querySelector('#dynamicForm');
@@ -247,7 +274,7 @@ export class ProductConfigurationEditor {
       for(const key of UCHIRIMO_GLASS_DETAILS)delete this.state.snapshot.configuration[key];
       this.state.snapshot.display_summary=this.state.snapshot.display_summary.filter((row)=>!UCHIRIMO_GLASS_DETAILS.has(row.key));
       if(this.state.salesGlassAppearance){
-        this.state.snapshot.sales_request_handoff={glass_appearance:this.state.salesGlassAppearance,glass_structure:'MANUFACTURER_ESTIMATE_CONFIRMATION'};
+        this.state.snapshot.sales_request_handoff={glass_appearance:this.state.salesGlassAppearance,spacer_type_request:this.state.salesSpacerType,gas_fill_request:this.state.salesGasFill,glass_structure:'MANUFACTURER_ESTIMATE_CONFIRMATION'};
         this.state.snapshot.validation_state='NEEDS_REVALIDATION';
         const missingSalesField=(result.validation?.missingRequiredFields??[]).some((key)=>!UCHIRIMO_GLASS_DETAILS.has(key))
           ||result.fields.some((field)=>field.required&&!UCHIRIMO_GLASS_DETAILS.has(field.key)
@@ -270,7 +297,7 @@ export class ProductConfigurationEditor {
     const selected=Array.isArray(this.state.selection[field.key])?this.state.selection[field.key]:[this.state.selection[field.key]];
     const options=field.values.map((value)=>`<option value="${esc(value.value)}"${selected.some((one)=>String(one)===String(value.value))?' selected':''}>${esc(value.displayLabel)}${value.manualCheck?'（要確認）':''}</option>`).join('');
     const multi=field.dataType==='MULTI_ENUM';
-    return `<div class="field" data-key="${esc(field.key)}"><label>${esc(field.displayLabel)}${required}</label><select data-spec-key="${esc(field.key)}"${multi?' multiple size="5"':''}${field.readOnly||!field.values.length?' disabled':''}>${multi?'':'<option value="">選択してください</option>'}${options}</select>${field.key===UCHIRIMO_APPEARANCE_KEY?'<small class="field-help">ガラスの厚み・構成はメーカー見積で確認します。</small>':multi?'<small class="field-help">複数選択できます</small>':''}</div>`;
+    return `<div class="field" data-key="${esc(field.key)}"><label>${esc(field.displayLabel)}${required}</label><select data-spec-key="${esc(field.key)}"${multi?' multiple size="5"':''}${field.readOnly||!field.values.length?' disabled':''}>${multi?'':'<option value="">選択してください</option>'}${options}</select>${field.key===UCHIRIMO_APPEARANCE_KEY?'<small class="field-help">ガラスの厚みはメーカー見積で確認します。</small>':field.key===UCHIRIMO_SPACER_KEY||field.key===UCHIRIMO_GAS_KEY?'<small class="field-help">希望を見積依頼へ引き継ぎ、成立はメーカー見積で確認します。</small>':multi?'<small class="field-help">複数選択できます</small>':''}</div>`;
   }
 
   renderWarnings(result){
