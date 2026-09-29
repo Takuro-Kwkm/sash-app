@@ -1,0 +1,8 @@
+{
+  "schema": "APP_PRODUCTION_HOTFIX_V1",
+  "scope": "NON_PRODUCT_MASTER_UI",
+  "change": "PROJECT_ADDRESS_SINGLE_FIELD",
+  "date": "2026-09-29",
+  "source_commit": "1068880cfa8e0f529ede632c6c3f1bb613e15af4",
+  "notes": "Project address input consolidated from five split fields into one canonical address field with legacy read compatibility."
+}
