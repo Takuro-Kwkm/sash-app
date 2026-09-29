@@ -1,0 +1,127 @@
+name: App Production Hotfix
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.release/app-production-hotfix-v1'
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  production-hotfix:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    environment: production
+    env:
+      VERCEL_ORG_ID: team_AkuHacuJlCl8LuvaFpCzFmbv
+      VERCEL_PROJECT_ID: prj_4z0zqW6yKyPuFINODfGX8LPBuJRP
+      VERCEL_PROJECT_NAME: sash-app-wave3-preview
+      VERCEL_TOKEN_PRIMARY: ${{ secrets.VERCEL_TOKEN }}
+      VERCEL_TOKEN_FALLBACK: ${{ secrets.VERCEL_ACCESS_TOKEN }}
+      VERCEL_DEPLOY_SOURCE: files
+      RELEASE_SERIES: APP_NON_PRODUCT_MASTER_UI
+      RELEASE_PACKAGE_VERSION: address-single-field-20260929
+      PRODUCTION_URL: https://sash-app-wave3-preview.vercel.app
+      PRODUCTION_HOST: sash-app-wave3-preview.vercel.app
+
+    steps:
+      - name: Checkout exact main hotfix SHA
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Assert hotfix scope
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          node --input-type=module <<'NODE'
+          import {readFileSync} from 'node:fs';
+          const marker=JSON.parse(readFileSync('.release/app-production-hotfix-v1','utf8'));
+          if(marker.scope!=='NON_PRODUCT_MASTER_UI')throw new Error('HOTFIX_SCOPE_INVALID');
+          if(marker.change!=='PROJECT_ADDRESS_SINGLE_FIELD')throw new Error('HOTFIX_CHANGE_INVALID');
+          console.log('HOTFIX_SCOPE_GATE=PASS');
+          NODE
+
+      - name: Install and application regression
+        run: |
+          npm install --ignore-scripts
+          npm run lint
+          npm run typecheck
+          npm test
+
+      - name: Prepare Vercel credential
+        shell: bash
+        run: |
+          set -euo pipefail
+          token="${VERCEL_TOKEN_PRIMARY:-${VERCEL_TOKEN_FALLBACK:-}}"
+          if [[ -z "$token" ]]; then echo 'VERCEL_CREDENTIAL_GATE=BLOCKED'; exit 42; fi
+          echo "VERCEL_TOKEN_EFFECTIVE=$token" >> "$GITHUB_ENV"
+          status="$(curl -sS -o /tmp/vercel-project.json -w '%{http_code}' -H "Authorization: Bearer $token" "https://api.vercel.com/v9/projects/$VERCEL_PROJECT_ID")"
+          test "$status" = "200"
+          node -e 'const p=require("/tmp/vercel-project.json"); if(p.id!==process.env.VERCEL_PROJECT_ID||p.accountId!==process.env.VERCEL_ORG_ID) process.exit(1)'
+          echo 'VERCEL_CREDENTIAL_GATE=PASS'
+
+      - name: Deploy exact hotfix SHA to Production
+        run: node scripts/vercel-rest-deploy.mjs production artifacts/app-hotfix-production/deployment.json
+
+      - name: Verify Production identity and alias
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import {readFileSync} from 'node:fs';
+          const d=JSON.parse(readFileSync('artifacts/app-hotfix-production/deployment.json','utf8'));
+          if(d.readyState!=='READY'||d.githubSha!==process.env.GITHUB_SHA||d.releaseCommitSha!==process.env.GITHUB_SHA||d.mode!=='production')throw new Error('PRODUCTION_IDENTITY_INVALID');
+          console.log('PRODUCTION_IDENTITY_GATE=PASS '+d.deploymentUrl);
+          NODE
+          status="$(curl -sS -o artifacts/app-hotfix-production/vercel-deployment.json -w '%{http_code}' -H "Authorization: Bearer $VERCEL_TOKEN_EFFECTIVE" "https://api.vercel.com/v13/deployments/$DEPLOY_ID?teamId=$VERCEL_ORG_ID")"
+          test "$status" = "200"
+          node -e 'const d=require("./artifacts/app-hotfix-production/vercel-deployment.json"); if(d.readyState!=="READY"||d.target!=="production"||d.meta?.releaseCommitSha!==process.env.GITHUB_SHA||!Array.isArray(d.alias)||!d.alias.includes(process.env.PRODUCTION_HOST)) process.exit(1)'
+          echo 'PRODUCTION_ALIAS_GATE=PASS'
+
+      - name: Production health smoke
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts/app-hotfix-production
+          curl -fsS "$PRODUCTION_URL/api/health" > artifacts/app-hotfix-production/health.json
+          node --input-type=module <<'NODE'
+          import {readFileSync} from 'node:fs';
+          const h=JSON.parse(readFileSync('artifacts/app-hotfix-production/health.json','utf8'));
+          if(!h.ok)throw new Error('PRODUCTION_HEALTH_FAILED');
+          const expected=['SER-LIXIL-TW','SER-LIX-EW','SER-LIX-SAMOS2H','SER-LIX-SAMOSL','SER-YKK-APW430','SER-YKK-APW431','SER-YKKAP-UCHIRIMO'];
+          const byId=new Map((h.runtimeMasterIntegrations??[]).map(x=>[x.id,x]));
+          if(expected.some(id=>!byId.has(id)||byId.get(id).status!=='READY'||byId.get(id).selectable!==true))throw new Error('SEVEN_SERIES_RUNTIME_SMOKE_FAILED');
+          console.log('PRODUCTION_HEALTH_GATE=PASS');
+          NODE
+
+      - name: Install browser QA dependencies
+        run: |
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+
+      - name: Production address and business-flow QA
+        env:
+          QA_BASE_URL: ${{ env.PRODUCTION_URL }}
+        run: |
+          npm run test:browser:work
+          npm run test:browser:estimate-output
+          node test/browser/seven-series-business-flow-qa.mjs
+          echo 'PRODUCTION_BROWSER_QA_GATE=PASS'
+
+      - name: Upload hotfix evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-production-hotfix-${{ github.sha }}
+          path: artifacts/
+          if-no-files-found: warn
