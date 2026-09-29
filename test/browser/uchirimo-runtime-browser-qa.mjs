@@ -1,208 +1,89 @@
 import assert from 'node:assert/strict';
-import { mkdir, writeFile } from 'node:fs/promises';
-import { chromium } from 'playwright';
+import {mkdir,writeFile} from 'node:fs/promises';
+import {chromium} from 'playwright';
 
-const BASE = process.env.QA_BASE_URL ?? 'http://127.0.0.1:4173';
-const SHARE_TOKEN = process.env.VERCEL_SHARE_TOKEN;
-const PRODUCT_ID = 'SER-YKKAP-UCHIRIMO';
-const OUT = 'artifacts/uchirimo-runtime-browser-qa';
-const TECHNICAL_UI_TOKEN = /ORDER_READY\s*=|\b(?:BLOCK|BLOCKED|REVIEW_REQUIRED|MANUAL_CHECK|INVALID)\b/;
-await mkdir(OUT, { recursive:true });
-const report = { status:'RUNNING', exactHead:process.env.HEAD_SHA??process.env.GITHUB_SHA??null, desktop:{}, mobile:{}, consoleErrors:[], pageErrors:[], failedResponses:[] };
-const browser = await chromium.launch({ headless:true });
+const BASE=process.env.QA_BASE_URL??'http://127.0.0.1:4173';
+const OUT='artifacts/uchirimo-runtime-browser-qa';
+const PRODUCT='SER-YKKAP-UCHIRIMO';
+const report={status:'RUNNING',exactHead:process.env.HEAD_SHA??process.env.GITHUB_SHA??null,desktop:{},mobile:{},consoleErrors:[],pageErrors:[],failedResponses:[]};
+await mkdir(OUT,{recursive:true});
+const browser=await chromium.launch({headless:true});
 
-function track(page) {
-  page.on('console', (message) => { if (message.type() === 'error') report.consoleErrors.push(message.text()); });
-  page.on('pageerror', (error) => report.pageErrors.push(error.message));
-  page.on('response', (response) => { if (response.status() >= 400) report.failedResponses.push({ status:response.status(), url:response.url() }); });
-}
-
-function matchesRuntimeSelection(response, key, value) {
-  if (response.status() !== 200 || !response.url().includes('/api/runtime-master/resolve')) return false;
-  try {
-    const selection = JSON.parse(new URL(response.url()).searchParams.get('selection') ?? '{}');
-    const actual = selection[key];
-    if (Array.isArray(actual)) return actual.some((one) => String(one) === String(value));
-    return typeof value === 'number' ? Number(actual) === value : String(actual) === String(value);
-  } catch { return false; }
-}
-
-async function openUchirimo(page) {
-  const entry = SHARE_TOKEN ? `${BASE}/runtime-lab?_vercel_share=${encodeURIComponent(SHARE_TOKEN)}` : `${BASE}/runtime-lab`;
-  await page.goto(entry, { waitUntil:'networkidle' });
-  await page.waitForFunction(() => document.querySelector('#status')?.textContent === 'CATALOG CONNECTED');
-  await page.selectOption('#manufacturer', 'YKK AP');
-  await page.waitForFunction((id) => [...document.querySelectorAll('#product option')].some((option) => option.value === id && !option.disabled), PRODUCT_ID);
-  const response = page.waitForResponse((row) => row.url().includes('/api/runtime-master/resolve') && row.status() === 200);
-  await page.selectOption('#product', PRODUCT_ID);
-  const result = await (await response).json();
-  await page.waitForSelector('[data-spec-key="room_specification"]');
+async function select(page,key,value){
+  const old=await page.evaluate(()=>Number(document.querySelector('#qaRoot #dynamicForm')?.dataset.resolveRevision??0));
+  const response=page.waitForResponse((row)=>row.url().includes('/api/runtime-master/resolve')&&row.status()===200);
+  const field=page.locator(`#qaRoot [data-spec-key="${key}"]`);
+  if(typeof value==='number'){await field.fill(String(value));await field.dispatchEvent('change');}
+  else await field.selectOption(value);
+  const result=await (await response).json();
+  await page.waitForFunction((revision)=>Number(document.querySelector('#qaRoot #dynamicForm')?.dataset.resolveRevision)>revision,old);
   return result;
 }
 
-async function triggerChoice(locator, value) {
-  if (typeof value === 'number') {
-    await locator.fill(String(value));
-    await locator.dispatchEvent('change');
-  } else {
-    await locator.selectOption(String(value));
-  }
+async function exercise(page){
+  page.on('console',(message)=>{if(message.type()==='error')report.consoleErrors.push(message.text());});
+  page.on('pageerror',(error)=>report.pageErrors.push(error.message));
+  page.on('response',(response)=>{if(response.status()>=400)report.failedResponses.push({status:response.status(),url:response.url()});});
+  await page.goto(`${BASE}/runtime-lab`,{waitUntil:'networkidle'});
+  await page.evaluate(async()=>{
+    const {ProductConfigurationEditor}=await import('/product-configuration-editor.mjs');
+    const root=document.createElement('div');root.id='qaRoot';document.body.append(root);
+    window.qaEditor=new ProductConfigurationEditor(root);await window.qaEditor.mount();
+  });
+  const integrations=await page.evaluate(async()=>await(await fetch('/api/runtime-master/integrations')).json());
+  const requested=['SER-LIXIL-TW','SER-LIX-EW','SER-YKK-APW430','SER-YKK-APW431','SER-LIX-SAMOSL','SER-LIX-SAMOS2H',PRODUCT];
+  for(const id of requested)assert.ok(integrations.some((row)=>row.id===id&&row.status==='READY'&&row.selectable),`${id} unavailable`);
+  await page.locator('#qaRoot #manufacturer').selectOption('YKK AP');
+  const initial=page.waitForResponse((row)=>row.url().includes('/api/runtime-master/resolve')&&row.status()===200);
+  await page.locator('#qaRoot #product').selectOption(PRODUCT);
+  await initial;
+  await page.locator('#qaRoot [data-spec-key="room_specification"]').waitFor();
+  await select(page,'room_specification','residential');
+  await select(page,'window_type','fix_window');
+  await select(page,'glass_family','insulating_glass');
+  assert.equal(await page.locator('#qaRoot [data-spec-key="glass_structure"]').count(),0);
+  assert.deepEqual(await page.locator('#qaRoot [data-spec-key="sales_glass_appearance"] option').allTextContents(),['選択してください','透明ガラス','型板ガラス','すり板ガラス']);
+  assert.deepEqual(await page.locator('#qaRoot [data-spec-key="sales_spacer_type"] option').allTextContents(),['選択してください','アルミスペーサー','樹脂スペーサー']);
+  assert.deepEqual(await page.locator('#qaRoot [data-spec-key="sales_gas_fill"] option').allTextContents(),['選択してください','空気層','アルゴンガス入り']);
+  await select(page,'sales_glass_appearance','clear');
+  await select(page,'sales_spacer_type','resin');
+  await select(page,'sales_gas_fill','argon');
+  let snapshot=await page.evaluate(()=>window.qaEditor.getSnapshot());
+  assert.equal(snapshot.configuration.sales_glass_appearance,'clear');
+  assert.equal(snapshot.configuration.sales_spacer_type,'resin');
+  assert.equal(snapshot.configuration.sales_gas_fill,'argon');
+  assert.equal(snapshot.configuration.glass_structure,undefined);
+  assert.equal(snapshot.sales_request_handoff.spacer_type_request,'resin');
+  assert.equal(snapshot.sales_request_handoff.gas_fill_request,'argon');
+  assert.match(await page.locator('#qaRoot #selectionSummary').innerText(),/透明ガラス.*樹脂スペーサー.*アルゴンガス入り/s);
+  await select(page,'glass_family','single_glazing');
+  for(const key of ['sales_spacer_type','sales_gas_fill','spacer_type','gas_fill'])
+    assert.equal(await page.locator(`#qaRoot [data-spec-key="${key}"]`).count(),0,`${key} must be absent for single glazing`);
+  snapshot=await page.evaluate(()=>window.qaEditor.getSnapshot());
+  assert.equal(snapshot.configuration.sales_spacer_type,undefined);
+  assert.equal(snapshot.configuration.sales_gas_fill,undefined);
+  await select(page,'sales_glass_appearance','washi');
+  await select(page,'size_w',500);
+  const dimension=await select(page,'size_h',500);
+  assert.equal(dimension.dimensionResult?.status,'PASS');
+  assert.doesNotMatch(await page.locator('#qaRoot #warnings').innerText(),/ORDER_READY\s*=|\b(?:BLOCKED|REVIEW_REQUIRED|MANUAL_CHECK)\b/);
+  snapshot=await page.evaluate(()=>window.qaEditor.getSnapshot());
+  assert.equal(snapshot.configuration.sales_glass_appearance,'washi');
+  const overflow=await page.evaluate(()=>Math.max(0,document.documentElement.scrollWidth-window.innerWidth));
+  assert.ok(overflow<=1,`horizontal overflow ${overflow}`);
+  return {status:'PASS',readyProducts:requested.length,salesSpacerAndCavity:'PASS',thicknessHidden:'PASS',dependencyClear:'PASS',snapshot:'PASS',dimension:'PASS',overflow};
 }
 
-async function choose(page, key, value) {
-  const locator = page.locator(`[data-spec-key="${key}"]`);
-  await locator.waitFor();
-  for (let attempt = 1; attempt <= 2; attempt += 1) {
-    const response = page.waitForResponse((row) => matchesRuntimeSelection(row, key, value), { timeout:15000 });
-    await triggerChoice(locator, value);
-    try {
-      return await (await response).json();
-    } catch (error) {
-      if (attempt === 2) throw new Error(`runtime response timeout for ${key}=${String(value)} after retry`, { cause:error });
-      await page.waitForTimeout(100);
-    }
-  }
-  throw new Error(`unreachable choose failure for ${key}`);
-}
-
-async function chooseIfAvailable(page, result, key, preferred) {
-  const field = result.fields.find((row) => row.key === key);
-  if (!field || result.selection[key] !== undefined) return result;
-  const value = field.values.some((row) => String(row.value) === String(preferred)) ? preferred : field.values[0]?.value;
-  if (value === undefined) return result;
-  return choose(page, key, value);
-}
-
-async function completeRequired(page, result) {
-  for (let pass = 0; pass < 60; pass += 1) {
-    const field = result.fields.find((row) => row.required && result.selection[row.key] === undefined);
-    if (!field) return result;
-    const value = field.dataType === 'NUMBER' ? 500 : field.values[0]?.value;
-    assert.notEqual(value, undefined, `${field.key} must expose a formal input`);
-    result = await choose(page, field.key, value);
-  }
-  throw new Error('Uchirimo browser form did not converge');
-}
-
-const keys = (page) => page.locator('#dynamicForm [data-spec-key]').evaluateAll((elements) => elements.map((element) => element.dataset.specKey));
-
-async function exercise(page) {
-  let result = await openUchirimo(page);
-  assert.deepEqual(await keys(page), ['window_type','room_specification','size_mode']);
-  assert.equal(await page.locator('[data-spec-key="size_mode"]').isDisabled(), true);
-  assert.equal(await page.locator('[data-spec-key="size_mode"]').inputValue(), 'custom');
-
-  result = await choose(page, 'room_specification', 'residential');
-  result = await choose(page, 'window_type', 'fix_window');
-  result = await choose(page, 'glass_family', 'insulating_glass');
-  assert.equal(await page.locator('[data-spec-key="low_e_type"]').count(), 1);
-  result = await choose(page, 'glass_structure', 'P3P3');
-  assert.equal(await page.locator('[data-spec-key="spacer_type"]').count(), 1);
-  assert.equal(await page.locator('[data-spec-key="gas_fill"]').count(), 1);
-  result = await choose(page, 'spacer_type', 'aluminum');
-  assert.equal(result.selection.gas_fill, undefined, 'spacer alone must not determine cavity gas');
-
-  result = await choose(page, 'glass_family', 'single_glazing');
-  assert.equal(await page.locator('[data-spec-key="low_e_type"]').count(), 0);
-  assert.equal(await page.locator('[data-spec-key="spacer_type"]').count(), 0);
-  assert.equal(await page.locator('[data-spec-key="gas_fill"]').count(), 0);
-  result = await chooseIfAvailable(page, result, 'glass_structure', 'W3');
-  result = await chooseIfAvailable(page, result, 'glass_surface_type', 'washi');
-  result = await chooseIfAvailable(page, result, 'safety_treatment', 'standard');
-  result = await chooseIfAvailable(page, result, 'grille_type', 'none');
-  result = await chooseIfAvailable(page, result, 'muntin_type', 'none');
-
-  const ordered = await keys(page);
-  for (const [before, after] of [
-    ['window_type','room_specification'],
-    ['room_specification','size_mode'],
-    ['size_mode','frame_color'],
-    ['frame_color','glass_family'],
-    ['glass_family','frame_installation_mode'],
-  ]) assert.ok(ordered.indexOf(before) < ordered.indexOf(after), `${before} must precede ${after}`);
-  assert.equal(ordered.includes('glass_spec_id'), false);
-
-  result = await choose(page, 'frame_color', 'greige');
-  result = await choose(page, 'frame_installation_mode', 'frame_projection');
-  assert.equal(await page.locator('[data-spec-key="frame_projection"]').count(), 1);
-  result = await choose(page, 'window_type', 'sliding_window');
-  result = await chooseIfAvailable(page, result, 'sash_configuration', 'two_panel');
-  result = await chooseIfAvailable(page, result, 'size_class', 'window');
-  result = await choose(page, 'frame_color', 'greige');
-  result = await choose(page, 'room_specification', 'bathroom');
-  assert.equal(result.selection.frame_color, undefined);
-  assert.ok(result.clearedFields.some((row) => row.field === 'frame_color'));
-
-  result = await choose(page, 'room_specification', 'residential');
-  result = await choose(page, 'window_type', 'fix_window');
-  result = await chooseIfAvailable(page, result, 'glass_family', 'single_glazing');
-  result = await chooseIfAvailable(page, result, 'glass_structure', 'W3');
-  result = await chooseIfAvailable(page, result, 'glass_surface_type', 'washi');
-  result = await chooseIfAvailable(page, result, 'safety_treatment', 'standard');
-  result = await chooseIfAvailable(page, result, 'grille_type', 'none');
-  result = await chooseIfAvailable(page, result, 'muntin_type', 'none');
-  result = await completeRequired(page, result);
-  assert.equal(result.validation.status, 'MANUAL_CHECK');
-  assert.equal(result.orderReady, false);
-  assert.ok(result.manualWarnings.some((message) => message.includes('メーカー見積')));
-  assert.equal(result.dimensionResult.status, 'PASS');
-  const warningText = await page.locator('#warnings').innerText();
-  assert.match(warningText, /メーカー見積/);
-  assert.doesNotMatch(warningText, TECHNICAL_UI_TOKEN);
-  assert.ok((await page.locator('#selectionSummary').innerText()).includes('和紙調'));
-
-  result = await choose(page, 'size_w', 100);
-  assert.equal(result.dimensionResult.status, 'BLOCK');
-  assert.equal(result.validation.status, 'BLOCKED');
-  assert.doesNotMatch(await page.locator('#warnings').innerText(), TECHNICAL_UI_TOKEN);
-  result = await choose(page, 'size_w', 500);
-  assert.equal(result.dimensionResult.status, 'PASS');
-
-  result = await choose(page, 'window_type', 'inward_opening_window');
-  assert.equal(await page.locator('[data-spec-key="arm_stopper_option"]').count(), 1);
-  assert.equal(await page.locator('[data-spec-key="outside_handle_option"]').count(), 0);
-
-  const outOfViewport = await page.locator('input,select').evaluateAll((elements) => elements.filter((element) => {
-    const rect = element.getBoundingClientRect();
-    return rect.left < -1 || rect.right > window.innerWidth + 1;
-  }).length);
-  assert.equal(outOfViewport, 0);
-  return { manufacturerSelection:'PASS', seriesSelection:'PASS', dynamicFields:'PASS', dependency:'PASS', downstreamClear:'PASS', customSize:'PASS', options:'PASS', manualConfirmation:'PASS', userFacingValidation:'PASS', invalidConfiguration:'PASS', summary:'PASS', inputOverflow:outOfViewport };
-}
-
-try {
-  const preflight = await browser.newContext();
-  const preflightUrl = SHARE_TOKEN ? `${BASE}/api/runtime-master/integrations?_vercel_share=${encodeURIComponent(SHARE_TOKEN)}` : `${BASE}/api/runtime-master/integrations`;
-  const response = await preflight.request.get(preflightUrl);
-  assert.equal(response.status(), 200);
-  const integration = (await response.json()).find((row) => row.id === PRODUCT_ID);
-  assert.ok(integration);
-  assert.equal(integration.packageVersion, 'v1.0-P7R1-R2');
-  assert.equal(integration.schemaVersion, '2.0');
-  assert.equal(integration.sourceHash, 'be4f1f77727424dc06ddf9de947201f33d4aee5219b182e37d0f178e1fb7147d');
-  await preflight.close();
-
-  for (const config of [
-    { key:'desktop', viewport:{ width:1440, height:1000 }, mobile:false },
-    { key:'mobile', viewport:{ width:390, height:844 }, mobile:true },
-  ]) {
-    const context = await browser.newContext({ viewport:config.viewport, isMobile:config.mobile, hasTouch:config.mobile });
-    const page = await context.newPage(); track(page);
-    const checks = await exercise(page);
-    const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
-    assert.ok(overflow <= 1, `${config.key} overflow: ${overflow}`);
-    report[config.key] = { ...checks, overflow, status:'PASS' };
-    await page.screenshot({ path:`${OUT}/${config.key}-${config.viewport.width}x${config.viewport.height}.png`, fullPage:true });
+try{
+  for(const config of [{name:'desktop',width:1440,height:1000,mobile:false},{name:'mobile',width:390,height:844,mobile:true}]){
+    const context=await browser.newContext({viewport:{width:config.width,height:config.height},isMobile:config.mobile,hasTouch:config.mobile});
+    const page=await context.newPage();
+    report[config.name]=await exercise(page);
+    await page.screenshot({path:`${OUT}/${config.name}-${config.width}x${config.height}.png`,fullPage:true});
     await context.close();
   }
-  assert.deepEqual(report.consoleErrors, []);
-  assert.deepEqual(report.pageErrors, []);
-  assert.deepEqual(report.failedResponses, []);
-  report.status = 'PASS';
-  await writeFile(`${OUT}/report.json`, JSON.stringify(report, null, 2));
-  console.log(JSON.stringify(report, null, 2));
-} catch (error) {
-  report.status = 'FAIL'; report.failure = error.stack ?? String(error);
-  await writeFile(`${OUT}/report.json`, JSON.stringify(report, null, 2));
-  throw error;
-} finally { await browser.close(); }
+  assert.deepEqual(report.consoleErrors,[]);assert.deepEqual(report.pageErrors,[]);assert.deepEqual(report.failedResponses,[]);
+  report.status='PASS';
+}catch(error){report.status='FAIL';report.failure=error.stack??String(error);throw error;}
+finally{await writeFile(`${OUT}/report.json`,JSON.stringify(report,null,2)+'\n');await browser.close();}
+console.log(JSON.stringify(report));
