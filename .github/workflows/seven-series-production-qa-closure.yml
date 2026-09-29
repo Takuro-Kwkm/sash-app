@@ -41,13 +41,31 @@ jobs:
           npm install --no-save playwright@1.55.0
           npx playwright install --with-deps chromium
       - name: Production end-to-end QA
+        shell: bash
         run: |
-          node test/browser/uchirimo-runtime-browser-qa.mjs
-          node test/browser/global-window-selection-flow-browser-qa.mjs
-          node test/browser/seven-series-business-flow-qa.mjs
-          node test/browser/release-regression-browser-qa.mjs
-          npm run test:browser:work
-          npm run test:browser:estimate-output
+          set +e
+          failures=0
+          run_case() {
+            echo "::group::$1"
+            shift
+            "$@"
+            code=$?
+            echo "::endgroup::"
+            if [[ $code -ne 0 ]]; then
+              echo "QA_CASE_FAIL=$1 exit=$code"
+              failures=$((failures+1))
+            fi
+          }
+          run_case UCHIRIMO node test/browser/uchirimo-runtime-browser-qa.mjs
+          run_case GLOBAL_FLOW node test/browser/global-window-selection-flow-browser-qa.mjs
+          run_case SEVEN_SERIES_BUSINESS node test/browser/seven-series-business-flow-qa.mjs
+          run_case RELEASE_REGRESSION node test/browser/release-regression-browser-qa.mjs
+          run_case WORK_MANAGEMENT npm run test:browser:work
+          run_case ESTIMATE_OUTPUT npm run test:browser:estimate-output
+          if [[ $failures -ne 0 ]]; then
+            echo "PRODUCTION_BROWSER_QA_GATE=FAIL failures=$failures"
+            exit 1
+          fi
           echo 'PRODUCTION_BROWSER_QA_GATE=PASS'
       - name: Upload QA evidence
         if: always()
