@@ -1,0 +1,40 @@
+name: Stop obsolete V12 run
+on:
+  push:
+    branches: [ops/stop-v12-20260929]
+    paths: [.github/workflows/stop-obsolete-v12.yml]
+permissions:
+  contents: read
+  actions: write
+jobs:
+  stop:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      GH_TOKEN: ${{ github.token }}
+      TARGET_BRANCH: feat/new-construction-runtime-ui-v16-20260910
+    steps:
+      - name: Force cancel only obsolete V12 controller runs
+        shell: bash
+        run: |
+          set -euo pipefail
+          repo="$GITHUB_REPOSITORY"
+          test "$repo" = "Takuro-Kwkm/sash-app"
+          for pass in 1 2 3; do
+            gh api --method GET "repos/$repo/actions/workflows/project-governance-gate.yml/runs" -f branch="$TARGET_BRANCH" -f per_page=100 > /tmp/v12-runs.json
+            mapfile -t ids < <(jq -r --arg branch "$TARGET_BRANCH" '.workflow_runs[] | select(.head_branch==$branch and .head_sha=="db2280c7ee15c0426dc0d4d154ac17f394dd16c5" and .status!="completed") | .id' /tmp/v12-runs.json)
+            if [ "${#ids[@]}" -eq 0 ]; then
+              echo "V12_STOP_VERIFIED active=0"
+              exit 0
+            fi
+            for id in "${ids[@]}"; do
+              echo "Force cancelling obsolete V12 run $id"
+              gh api --method POST "repos/$repo/actions/runs/$id/force-cancel" || {
+                state="$(gh api "repos/$repo/actions/runs/$id" --jq .status)"
+                test "$state" = completed
+              }
+            done
+            sleep 10
+          done
+          echo "V12_STOP_NOT_YET_CONFIRMED"
+          exit 1
