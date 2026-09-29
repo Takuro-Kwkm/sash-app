@@ -35,7 +35,7 @@ test('Vercel repository adapter health preserves loaded READY Runtime identities
   assert.equal(byId.get('SER-LIXIL-INPLUS').sourceHash,'cbbdb6ba315c985f7d27f75a237e861be8ce635962ce1cd5a746d7f152c8e1f8');
   assert.equal(byId.get('SER-YKK-APW430').sourceHash,'e2755a735fc3a7c94afacc58175a390bf00784cf1f13521a1263076d7bfae1c7');
   assert.equal(byId.get('SER-YKK-APW431').sourceHash,'b8927a51a5e31b0c7a89a98b65833cf4f7e0e641c52316cecce4f493399eb1f9');
-  assert.equal(byId.get('SER-YKKAP-UCHIRIMO').sourceHash,'be4f1f77727424dc06ddf9de947201f33d4aee5219b182e37d0f178e1fb7147d');
+  assert.equal(byId.get('SER-YKKAP-UCHIRIMO').sourceHash,'3e2f2960a3761bc14a6c0ac3c9d9ee6d5c3e8f3b43bdee2bab81de7297afb5d4');
 });
 
 test('Vercel Runtime integration route includes all registered READY identities', async()=>{

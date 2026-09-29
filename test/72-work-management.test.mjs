@@ -75,6 +75,21 @@ test('clearing a saved product snapshot returns the Opening to DRAFT',async()=>{
   assert.equal(updated.product_configuration_snapshot,null);
 });
 
+test('Uchirimo sales request can complete an opening with manufacturer glass confirmation pending',async()=>{
+  const {service}=setup();
+  const {project,estimate}=await service.createProject({project_name:'ウチリモ見積依頼'});
+  const opening=await service.createOpening(project.project_id,estimate.estimate_id);
+  const snapshot={product_id:'SER-YKKAP-UCHIRIMO',validation_state:'NEEDS_REVALIDATION',
+    sales_request_state:'READY_FOR_MANUFACTURER_ESTIMATE',
+    sales_request_handoff:{glass_appearance:'pattern',glass_structure:'MANUFACTURER_ESTIMATE_CONFIRMATION'}};
+  const saved=await service.updateOpening(project.project_id,estimate.estimate_id,opening.opening_id,{product_configuration_snapshot:snapshot});
+  assert.equal(saved.status,'COMPLETE');
+  assert.equal(saved.product_configuration_snapshot.validation_state,'NEEDS_REVALIDATION');
+  const incomplete=await service.updateOpening(project.project_id,estimate.estimate_id,opening.opening_id,
+    {product_configuration_snapshot:{...snapshot,sales_request_state:undefined}});
+  assert.equal(incomplete.status,'DRAFT');
+});
+
 test('duplicate receives a new immutable ID and independent snapshot',async()=>{
   const {service}=setup();
   const {project,estimate}=await service.createProject({project_name:'複製案件'});

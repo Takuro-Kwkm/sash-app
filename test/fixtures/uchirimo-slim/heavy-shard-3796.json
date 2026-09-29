@@ -1,0 +1,19 @@
+{
+  "node_id": "UCH-RES-SL3-T",
+  "partition_key": "UCH-RES-SL3-T|insulating_glass|three_panel_layout=\"meeting_inner_inner_outer\"|sash_width_allocation=\"MANUAL_ALLOCATION\"",
+  "parent_shard_index": 3796,
+  "parent_partition_key": "UCH-RES-SL3-T|insulating_glass|three_panel_layout=\"meeting_inner_inner_outer\"|sash_width_allocation=\"MANUAL_ALLOCATION\"",
+  "recovery_unit_id": "ee756ac342cf6cb08cff5950450977acc5c43c5e027302c43f81615b7e2b89c8",
+  "parent_recovery_unit_id": "efbff5740d3250daf32add7ed4eb5a175471fc9ff1dc72c7d9f346b681a64e95",
+  "recovery_depth": 2,
+  "shard": 3796,
+  "room_specification": "residential",
+  "window_type": "sliding_window",
+  "sash_configuration": "three_panel",
+  "size_class": "terrace",
+  "glass_family": "insulating_glass",
+  "partition_seed_json": "{\"sash_width_allocation\":\"MANUAL_ALLOCATION\",\"three_panel_layout\":\"meeting_inner_inner_outer\"}",
+  "decision_constraints_json": "[{\"field_key\":\"frame_color\",\"decision\":{\"kind\":\"VALUE\",\"value\":\"medium_oak\"}},{\"field_key\":\"glass_structure\",\"decision\":{\"kind\":\"VALUE\",\"value\":\"P3P3\"}}]",
+  "source_artifact_id": 10977100761,
+  "source_artifact_digest": "e874708b6467ca9cf4161489eea7f583a1b9d98eed0f37d7ca45973ced50663c"
+}

@@ -1,0 +1,21 @@
+{
+  "shard": 3797,
+  "node_id": "UCH-RES-SL3-T",
+  "partition_key": "UCH-RES-SL3-T|insulating_glass|three_panel_layout=\"meeting_inner_inner_outer\"|sash_width_allocation=\"AUTO_EQUAL_FOUR\"",
+  "room_specification": "residential",
+  "window_type": "sliding_window",
+  "sash_configuration": "three_panel",
+  "size_class": "terrace",
+  "glass_family": "insulating_glass",
+  "partition_seed_json": "{\"sash_width_allocation\":\"AUTO_EQUAL_FOUR\",\"three_panel_layout\":\"meeting_inner_inner_outer\"}",
+  "parent_shard_index": 3797,
+  "parent_partition_key": "UCH-RES-SL3-T|insulating_glass|three_panel_layout=\"meeting_inner_inner_outer\"|sash_width_allocation=\"AUTO_EQUAL_FOUR\"",
+  "recovery_unit_id": "f2542ca8e68d7d7d1d75ecfcb25684028f610094f373030b08e3b699eb95b307",
+  "parent_recovery_unit_id": "25ce13596da6d00ace2ee88c2f505406793279f7f9f06cf75a8680ed0102cc39",
+  "recovery_depth": 2,
+  "decision_constraints_json": "[{\"field_key\":\"frame_color\",\"decision\":{\"kind\":\"VALUE\",\"value\":\"medium_oak\"}},{\"field_key\":\"glass_structure\",\"decision\":{\"kind\":\"VALUE\",\"value\":\"P3P3\"}}]",
+  "source_checkpoint_artifact_id": 10976138931,
+  "source_checkpoint_archive_sha256": "3eb992f487413bf82688e0fcd496a11163b7fcb7931b326533aaad1372f0b8d7",
+  "source_checkpoint_generation": 9,
+  "source_unit_state": "PENDING_NORMAL"
+}

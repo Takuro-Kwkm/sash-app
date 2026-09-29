@@ -1,6 +1,7 @@
 import { createHash } from 'node:crypto';
 import { appendFileSync, closeSync, copyFileSync, createReadStream, mkdirSync, openSync, readFileSync, readdirSync, statSync, writeFileSync, writeSync } from 'node:fs';
 import { basename, dirname, join } from 'node:path';
+import { pathToFileURL } from 'node:url';
 import { currentExactHead } from './governance/governance-lib.mjs';
 import { loadRegisteredRuntime } from '../src/catalog/runtime-master/runtime-master-registry.mjs';
 import { resolveRuntimeAppProduct } from '../src/catalog/runtime-master/runtime-app-bridge.mjs';
@@ -565,10 +566,10 @@ async function aggregate(){
   console.log('UCHIRIMO_UNVERIFIED_DISCRETE_SELECTOR_CASE_COUNT=0');
 }
 
-async function runShard(){
+export async function runShard({loadRuntime=loadRegisteredRuntime,resolveProduct=resolveRuntimeAppProduct,out=OUT}={}){
   if(!Number.isInteger(SHARD_INDEX)||SHARD_INDEX<0||SHARD_INDEX>=EXPECTED_SHARDS)throw new Error('UCHIRIMO_INVALID_SHARD_INDEX:'+SHARD_INDEX);
   const head=currentExactHead();
-  const runtime=await loadRegisteredRuntime('YKK AP','ウチリモ 内窓');
+  const runtime=await loadRuntime('YKK AP','ウチリモ 内窓');
   if(!runtime?.sourcePackageIntegrity?.match)throw new Error('UCHIRIMO_RUNTIME_INTEGRITY_NOT_PASS');
   const symbolicSafety=buildSymbolicSafety(runtime);
   const resolverCache=new Map();
@@ -578,7 +579,7 @@ async function runShard(){
     const cacheKey=sha(selection??{});
     const cached=resolverCache.get(cacheKey);
     if(cached){resolverCacheHits+=1;return cached;}
-    const result=await resolveRuntimeAppProduct(PRODUCT_ID,selection);
+    const result=await resolveProduct(PRODUCT_ID,selection);
     resolverCache.set(cacheKey,result);
     while(resolverCache.size>MAX_RESOLVER_CACHE){
       const oldest=resolverCache.keys().next().value;
@@ -621,7 +622,8 @@ async function runShard(){
   let symbolicFallbackCount=0;
   let maxStack=stack.length;
   let peakHeapMb=0;
-  const casesPath=join(OUT,'shard-'+SHARD_INDEX+'-terminal-digests.jsonl');
+  mkdirSync(out,{recursive:true});
+  const casesPath=join(out,'shard-'+SHARD_INDEX+'-terminal-digests.jsonl');
   const casesFd=openSync(casesPath,'w');
   const caseHash=createHash('sha256');
 
@@ -808,10 +810,12 @@ async function runShard(){
     resolver_cache_misses:resolverCacheMisses,
     status:'PASS'
   };
-  writeFileSync(join(OUT,'shard-'+SHARD_INDEX+'-report.json'),JSON.stringify(report,null,2)+'\n');
+  writeFileSync(join(out,'shard-'+SHARD_INDEX+'-report.json'),JSON.stringify(report,null,2)+'\n');
   console.log('UCHIRIMO_SELECTOR_SHARD=PASS_V11 shard='+SHARD_INDEX+' node='+SHARD_NODE_ID+' glass='+TARGET_GLASS_FAMILY+' partition='+TARGET_PARTITION_KEY+' window='+TARGET_WINDOW+' logical_terminals='+terminalCount+' terminal_classes='+terminalClassCount+' states='+visited.size+' transitions='+transitionChecks+' collapsed_branches='+symbolicCollapsedBranchCount+' symbolic_fallbacks='+symbolicFallbackCount+' peak_heap_mb='+peakHeapMb);
+  return report;
 }
 
+if(process.argv[1] && import.meta.url===pathToFileURL(process.argv[1]).href){
 const failurePath=join(OUT,MODE==='aggregate'?'aggregate-failure.json':MODE==='plan'||MODE==='plan-all'?'plan-failure.json':'shard-'+String(SHARD_INDEX)+'-failure.json');
 try{
   if(MODE==='plan-all')await planAll();
@@ -834,4 +838,5 @@ try{
   }catch{}
   console.error(error);
   process.exit(1);
+}
 }

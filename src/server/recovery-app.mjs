@@ -18,7 +18,7 @@ const runtimeMasterIntegrations=runtimeIntegrationDeclarations.filter((row)=>row
 const buildTimestamp=new Date().toISOString();
 const buildIdentity={appVersion:"work-management-v1.0+estimate-output-v1.0",workSchemaVersion:WORK_SCHEMA_VERSION,catalog,runtimeMasterIntegrations:runtimeIntegrationDeclarations.map(({id,packageVersion,sourceHash,status,selectable})=>({id,packageVersion,sourceHash,status,selectable}))};
 const buildId=`SASH-WORK-V1-${createHash("sha256").update(JSON.stringify(buildIdentity)).digest("hex").slice(0,12)}`;
-const catalogVersion="V4.3 RECOVERY + WAVE3-1 THERMOS-L + LIXIL EW v1.1 + LIXIL TW integrated-v0.3 + YKK AP ウチリモ v1.0-P7R1-R2";
+const catalogVersion="7シリーズ統合 / TW integrated-v0.4 / EW v1.3 / サーモスⅡH v0.9-R4 / サーモスL v0.7-R2 / APW430 20260918-R3 / APW431 v1.2 / ウチリモ Slim V2";
 
 export const releaseBuildMetadata=Object.freeze({buildId,buildTimestamp,catalogVersion});
 
