@@ -75,7 +75,7 @@ window.fetch=(input)=>{const url=new URL(typeof input==="string"?input:input.url
   if(url.pathname==="/api/health")return reply({ok:true,buildId:${json(buildId)},buildTimestamp:${json(generatedAt)},catalogVersion:"YKK AP ウチリモ v1.0-P7R1-R2 Review Build",inventory:[],runtimeMasterIntegrations:[integration]});
   if(url.pathname==="/api/catalog/products")return reply([]);
   if(url.pathname==="/api/runtime-master/integrations")return reply([integration]);
-  if(url.pathname==="/api/runtime-master/resolve"){let selection={};try{selection=JSON.parse(url.searchParams.get("selection")??"{}");}catch{}return reply(toUi(adapted.resolver(selection)));}
+  if(url.pathname==="/api/runtime-master/resolve"){let selection={};try{selection=JSON.parse(url.searchParams.get("selection")??"{}");}catch{}const result=toUi(adapted.resolver(selection));window.__uchirimoPreviewLastResult=result;window.__uchirimoPreviewResolveCount=(window.__uchirimoPreviewResolveCount??0)+1;return reply(result);}
   return reply({error:"Review Preview endpoint not found"},404);
 };
 await import(URL.createObjectURL(new Blob([${json(appSource)}],{type:"text/javascript"})));

@@ -12,6 +12,8 @@ on:
       - 'test/82-uchirimo-slim-canonical.test.mjs'
       - 'test/83-uchirimo-glass-rule-model.test.mjs'
       - 'test/84-uchirimo-factorized-selector.test.mjs'
+      - 'test/browser/uchirimo-slim-preview-browser-qa.mjs'
+      - 'scripts/build-uchirimo-runtime-review-preview.mjs'
       - 'src/catalog/runtime-master/uchirimo-glass-rule-model.mjs'
       - '.github/workflows/uchirimo-slim-candidate-qa.yml'
   workflow_dispatch:
@@ -105,6 +107,27 @@ jobs:
         with:
           name: uchirimo-slim-dimension-boundary-differential
           path: artifacts/uchirimo-slim/dimension-boundary-differential.json
+  candidate-browser-preview:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: UCHIRIMO_SLIM_PREVIEW_INPUT=data/uchirimo-slim/working-candidate.json node scripts/build-uchirimo-runtime-review-preview.mjs artifacts/uchirimo-slim/review-preview/index.html
+      - run: |
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+      - run: node test/browser/uchirimo-slim-preview-browser-qa.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: uchirimo-slim-candidate-browser-preview
+          path: |
+            artifacts/uchirimo-slim/review-preview/index.html
+            artifacts/uchirimo-slim/browser-qa/
   parent-migration-differential:
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
