@@ -39,6 +39,10 @@ export function newId(prefix,uuid=globalThis.crypto?.randomUUID?.bind(globalThis
 
 const text=(value)=>String(value??'').trim();
 const nullableText=(value)=>text(value)||null;
+const legacyProjectAddress=(data)=>[
+  data?.postal_code?`〒${text(data.postal_code)}`:null,
+  data?.prefecture,data?.city,data?.street,data?.building,
+].map(nullableText).filter(Boolean).join(' ')||null;
 
 export function createProject(data,{clock,id}={}) {
   const projectName=text(data?.project_name);
@@ -52,11 +56,7 @@ export function createProject(data,{clock,id}={}) {
     request_company_contact:nullableText(data?.request_company_contact),
     sales_person:nullableText(data?.sales_person),
     customer_name:nullableText(data?.customer_name),
-    postal_code:nullableText(data?.postal_code),
-    prefecture:nullableText(data?.prefecture),
-    city:nullableText(data?.city),
-    street:nullableText(data?.street),
-    building:nullableText(data?.building),
+    address:nullableText(data?.address)??legacyProjectAddress(data),
     project_type:data?.project_type??null,
     memo:nullableText(data?.memo),
     owner_user_id:data?.owner_user_id??null,
