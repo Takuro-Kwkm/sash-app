@@ -85,7 +85,7 @@ jobs:
           set -euo pipefail
           node --input-type=module <<'NODE'
           import {readFileSync} from 'node:fs';
-          const report=JSON.parse(readFileSync('artifacts/project-governance-slim/factorized/report.json','utf8'));
+          const report=JSON.parse(readFileSync('artifacts/project-governance-slim/factorized/summary.json','utf8'));
           if(report.status!=='PASS')throw new Error('SLIM_FACTORIZED_QA_NOT_PASS');
           if(report.prior_pass_imported!==0)throw new Error('LEGACY_PASS_IMPORTED');
           if(report.legacy_materialized_rows_read!==0)throw new Error('LEGACY_ROWS_READ');
