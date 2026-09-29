@@ -149,9 +149,10 @@ export class ProductConfigurationEditor {
     this.selectManufacturer(product.manufacturer);
     this.root.querySelector('#product').value=product.id;
     this.state.productId=product.id;this.state.productSource=product.sourceType;this.state.selection={...snapshot.configuration};
-    this.state.salesGlassAppearance=product.id===UCHIRIMO_PRODUCT_ID?this.state.selection[UCHIRIMO_APPEARANCE_KEY]??null:null;
-    this.state.salesSpacerType=product.id===UCHIRIMO_PRODUCT_ID?this.state.selection[UCHIRIMO_SPACER_KEY]??null:null;
-    this.state.salesGasFill=product.id===UCHIRIMO_PRODUCT_ID?this.state.selection[UCHIRIMO_GAS_KEY]??null:null;
+    const salesHandoff=snapshot.sales_request_handoff??{};
+    this.state.salesGlassAppearance=product.id===UCHIRIMO_PRODUCT_ID?(salesHandoff.glass_appearance??this.state.selection[UCHIRIMO_APPEARANCE_KEY]??null):null;
+    this.state.salesSpacerType=product.id===UCHIRIMO_PRODUCT_ID?(salesHandoff.spacer_type_request??this.state.selection[UCHIRIMO_SPACER_KEY]??null):null;
+    this.state.salesGasFill=product.id===UCHIRIMO_PRODUCT_ID?(salesHandoff.gas_fill_request??this.state.selection[UCHIRIMO_GAS_KEY]??null):null;
     for(const key of [UCHIRIMO_APPEARANCE_KEY,UCHIRIMO_SPACER_KEY,UCHIRIMO_GAS_KEY])delete this.state.selection[key];
     this.state.stale=identityFor(product)!==snapshot.runtime_manifest_identity||String(product.packageVersion??product.source?.version??'LEGACY-UNVERSIONED')!==String(snapshot.package_version);
     if(this.state.stale){this.renderFrozenSnapshot('旧Runtimeで作成された設定です。保存時Snapshotは自動更新されません。',true);return;}
@@ -271,7 +272,7 @@ export class ProductConfigurationEditor {
     const product=this.state.products.find((row)=>row.id===productId);
     this.state.snapshot=createProductConfigurationSnapshot({product,result});
     if(productId===UCHIRIMO_PRODUCT_ID){
-      for(const key of UCHIRIMO_GLASS_DETAILS)delete this.state.snapshot.configuration[key];
+      for(const key of [...UCHIRIMO_GLASS_DETAILS,UCHIRIMO_APPEARANCE_KEY,UCHIRIMO_SPACER_KEY,UCHIRIMO_GAS_KEY])delete this.state.snapshot.configuration[key];
       this.state.snapshot.display_summary=this.state.snapshot.display_summary.filter((row)=>!UCHIRIMO_GLASS_DETAILS.has(row.key));
       if(this.state.salesGlassAppearance){
         this.state.snapshot.sales_request_handoff={glass_appearance:this.state.salesGlassAppearance,spacer_type_request:this.state.salesSpacerType,gas_fill_request:this.state.salesGasFill,glass_structure:'MANUFACTURER_ESTIMATE_CONFIRMATION'};

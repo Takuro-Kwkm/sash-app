@@ -9,24 +9,19 @@ const report={status:'RUNNING',exactHead:process.env.HEAD_SHA??process.env.GITHU
 await mkdir(OUT,{recursive:true});
 const browser=await chromium.launch({headless:true});
 
-function responseSelection(row){
-  if(!row.url().includes('/api/runtime-master/resolve')||row.status()!==200)return null;
-  try{return JSON.parse(new URL(row.url()).searchParams.get('selection')??'{}');}catch{return null;}
-}
-function sameSelectionValue(actual,expected){return String(actual)===String(expected);}
-
 async function select(page,key,value){
   const old=await page.evaluate(()=>Number(document.querySelector('#qaRoot #dynamicForm')?.dataset.resolveRevision??0));
-  const response=page.waitForResponse((row)=>{
-    const selection=responseSelection(row);
-    return selection!==null&&sameSelectionValue(selection[key],value);
-  });
   const field=page.locator(`#qaRoot [data-spec-key="${key}"]`);
   if(typeof value==='number'){await field.fill(String(value));await field.dispatchEvent('change');}
   else await field.selectOption(value);
-  const result=await (await response).json();
-  await page.waitForFunction((revision)=>Number(document.querySelector('#qaRoot #dynamicForm')?.dataset.resolveRevision)>revision,old);
-  return result;
+  await page.waitForFunction(({revision,key,value})=>{
+    const current=Number(document.querySelector('#qaRoot #dynamicForm')?.dataset.resolveRevision??0);
+    const snapshot=window.qaEditor?.getSnapshot?.();
+    const handoffKey={sales_glass_appearance:'glass_appearance',sales_spacer_type:'spacer_type_request',sales_gas_fill:'gas_fill_request'}[key];
+    const persisted=handoffKey?snapshot?.sales_request_handoff?.[handoffKey]:snapshot?.configuration?.[key];
+    return current>revision&&String(persisted)===String(value);
+  },{revision:old,key,value});
+  return page.evaluate(()=>window.qaEditor.state.resolved);
 }
 
 async function exercise(page){
@@ -58,10 +53,11 @@ async function exercise(page){
   await select(page,'sales_spacer_type','resin');
   await select(page,'sales_gas_fill','argon');
   let snapshot=await page.evaluate(()=>window.qaEditor.getSnapshot());
-  assert.equal(snapshot.configuration.sales_glass_appearance,'clear');
-  assert.equal(snapshot.configuration.sales_spacer_type,'resin');
-  assert.equal(snapshot.configuration.sales_gas_fill,'argon');
+  assert.equal(snapshot.configuration.sales_glass_appearance,undefined);
+  assert.equal(snapshot.configuration.sales_spacer_type,undefined);
+  assert.equal(snapshot.configuration.sales_gas_fill,undefined);
   assert.equal(snapshot.configuration.glass_structure,undefined);
+  assert.equal(snapshot.sales_request_handoff.glass_appearance,'clear');
   assert.equal(snapshot.sales_request_handoff.spacer_type_request,'resin');
   assert.equal(snapshot.sales_request_handoff.gas_fill_request,'argon');
   const summary=await page.locator('#qaRoot #selectionSummary').innerText();
@@ -78,7 +74,16 @@ async function exercise(page){
   assert.equal(dimension.dimensionResult?.status,'PASS');
   assert.doesNotMatch(await page.locator('#qaRoot #warnings').innerText(),/ORDER_READY\s*=|\b(?:BLOCKED|REVIEW_REQUIRED|MANUAL_CHECK)\b/);
   snapshot=await page.evaluate(()=>window.qaEditor.getSnapshot());
-  assert.equal(snapshot.configuration.sales_glass_appearance,'washi');
+  assert.equal(snapshot.configuration.sales_glass_appearance,undefined);
+  assert.equal(snapshot.sales_request_handoff.glass_appearance,'washi');
+  await page.evaluate(async(saved)=>{
+    const {ProductConfigurationEditor}=await import('/product-configuration-editor.mjs');
+    const root=document.createElement('div');root.id='qaRestoreRoot';document.body.append(root);
+    window.qaRestoreEditor=new ProductConfigurationEditor(root,{initialSnapshot:saved});
+    await window.qaRestoreEditor.mount();
+  },snapshot);
+  assert.equal(await page.locator('#qaRestoreRoot [data-spec-key="sales_glass_appearance"]').inputValue(),'washi');
+  assert.equal((await page.evaluate(()=>window.qaRestoreEditor.getSnapshot())).sales_request_handoff.glass_appearance,'washi');
   const overflow=await page.evaluate(()=>Math.max(0,document.documentElement.scrollWidth-window.innerWidth));
   assert.ok(overflow<=1,`horizontal overflow ${overflow}`);
   return {status:'PASS',readyProducts:requested.length,salesSpacerAndCavity:'PASS',thicknessHidden:'PASS',dependencyClear:'PASS',snapshot:'PASS',dimension:'PASS',overflow};
