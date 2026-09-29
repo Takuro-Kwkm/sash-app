@@ -51,16 +51,28 @@ test('project address uses one canonical field and legacy split input is migrate
   assert.equal(updated.building,null);
 });
 
+test('opening metadata stores floor while legacy opening_name remains backward compatible',async()=>{
+  const {service}=setup();
+  const {project,estimate}=await service.createProject({project_name:'階数案件'});
+  const opening=await service.createOpening(project.project_id,estimate.estimate_id,{floor:'20階',room_name:'会議室',location:'東面',opening_name:'旧互換名称'});
+  assert.equal(opening.floor,'20階');
+  assert.equal(opening.room_name,'会議室');
+  assert.equal(opening.location,'東面');
+  assert.equal(opening.opening_name,'旧互換名称');
+});
+
 test('versioned browser persistence restores projects and openings after a new app instance',async()=>{
   const first=setup();
   const {project,estimate}=await first.service.createProject({project_name:'復元案件'});
-  await first.service.createOpening(project.project_id,estimate.estimate_id,{room_name:'洋室',opening_name:'腰窓'});
+  await first.service.createOpening(project.project_id,estimate.estimate_id,{floor:'2階',room_name:'洋室',location:'北面',opening_name:'旧腰窓'});
   const secondStore=new BrowserStorageDocumentStore(first.storage);
   const secondRepositories=createRepositoryBundle(secondStore);
   const secondService=new WorkManagementService(secondRepositories);
   const restored=await secondService.getEstimateDetail(project.project_id,estimate.estimate_id);
   assert.equal(restored.project.project_name,'復元案件');
-  assert.equal(restored.openings[0].opening_name,'腰窓');
+  assert.equal(restored.openings[0].floor,'2階');
+  assert.equal(restored.openings[0].room_name,'洋室');
+  assert.equal(restored.openings[0].opening_name,'旧腰窓');
   assert.equal(secondStore.read().schema_version,'1.0');
 });
 
@@ -117,10 +129,14 @@ test('Uchirimo sales request can complete an opening with manufacturer glass con
 test('duplicate receives a new immutable ID and independent snapshot',async()=>{
   const {service}=setup();
   const {project,estimate}=await service.createProject({project_name:'複製案件'});
-  const original=await service.createOpening(project.project_id,estimate.estimate_id,{room_name:'LDK',product_configuration_snapshot:{configuration:{size:'A'},validation_state:'VALID'}});
+  const original=await service.createOpening(project.project_id,estimate.estimate_id,{floor:'1階',room_name:'LDK',location:'南面',opening_name:'旧名称',product_configuration_snapshot:{configuration:{size:'A'},validation_state:'VALID'}});
   const copy=await service.duplicateOpening(project.project_id,estimate.estimate_id,original.opening_id);
   assert.notEqual(copy.opening_id,original.opening_id);
   assert.equal(copy.opening_no,2);
+  assert.equal(copy.floor,'1階');
+  assert.equal(copy.room_name,'LDK');
+  assert.equal(copy.location,'南面');
+  assert.equal(copy.opening_name,null);
   copy.product_configuration_snapshot.configuration.size='B';
   assert.equal((await service.repositories.openings.require(original.opening_id)).product_configuration_snapshot.configuration.size,'A');
 });
@@ -128,19 +144,19 @@ test('duplicate receives a new immutable ID and independent snapshot',async()=>{
 test('reorder persists sort_order and display opening_no',async()=>{
   const {service}=setup();
   const {project,estimate}=await service.createProject({project_name:'並べ替え案件'});
-  const first=await service.createOpening(project.project_id,estimate.estimate_id,{opening_name:'A'});
-  const second=await service.createOpening(project.project_id,estimate.estimate_id,{opening_name:'B'});
+  const first=await service.createOpening(project.project_id,estimate.estimate_id,{floor:'1階',room_name:'A'});
+  const second=await service.createOpening(project.project_id,estimate.estimate_id,{floor:'2階',room_name:'B'});
   await service.moveOpening(project.project_id,estimate.estimate_id,second.opening_id,'up');
   const rows=(await service.getEstimateDetail(project.project_id,estimate.estimate_id)).openings;
-  assert.deepEqual(rows.map((row)=>[row.opening_name,row.opening_no,row.sort_order]),[['B',1,0],['A',2,1]]);
+  assert.deepEqual(rows.map((row)=>[row.room_name,row.floor,row.opening_no,row.sort_order]),[['B','2階',1,0],['A','1階',2,1]]);
   assert.equal(rows[1].opening_id,first.opening_id);
 });
 
 test('soft delete hides only the target Opening and supports restore',async()=>{
   const {service,repositories}=setup();
   const {project,estimate}=await service.createProject({project_name:'削除案件'});
-  const first=await service.createOpening(project.project_id,estimate.estimate_id,{opening_name:'A'});
-  const second=await service.createOpening(project.project_id,estimate.estimate_id,{opening_name:'B'});
+  const first=await service.createOpening(project.project_id,estimate.estimate_id,{floor:'1階',room_name:'A'});
+  const second=await service.createOpening(project.project_id,estimate.estimate_id,{floor:'2階',room_name:'B'});
   await service.softDeleteOpening(project.project_id,estimate.estimate_id,first.opening_id);
   assert.deepEqual((await repositories.openings.listByEstimate(estimate.estimate_id)).map((row)=>row.opening_id),[second.opening_id]);
   assert.ok((await repositories.openings.require(first.opening_id,{includeDeleted:true})).deleted_at);
