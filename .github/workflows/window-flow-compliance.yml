@@ -40,33 +40,3 @@ jobs:
         with:
           name: window-flow-compliance-${{ github.sha }}
           path: artifacts/
-  preview:
-    needs: qa
-    runs-on: ubuntu-latest
-    timeout-minutes: 25
-    env:
-      VERCEL_ORG_ID: team_AkuHacuJlCl8LuvaFpCzFmbv
-      VERCEL_PROJECT_ID: prj_4z0zqW6yKyPuFINODfGX8LPBuJRP
-      VERCEL_PROJECT_NAME: sash-app-wave3-preview
-      RELEASE_SERIES: EIGHT_WINDOW_FLOW_COMPLIANCE
-      RELEASE_PACKAGE_VERSION: integration-preview
-      VERCEL_DEPLOY_SOURCE: files
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 24
-      - name: Prepare deployment credential
-        env:
-          VERCEL_TOKEN_PRIMARY: ${{ secrets.VERCEL_TOKEN }}
-          VERCEL_TOKEN_FALLBACK: ${{ secrets.VERCEL_ACCESS_TOKEN }}
-        run: |
-          token="${VERCEL_TOKEN_PRIMARY:-${VERCEL_TOKEN_FALLBACK:-}}"
-          if [[ -z "$token" ]]; then echo 'VERCEL_CREDENTIAL_GATE=BLOCKED'; exit 42; fi
-          echo "VERCEL_TOKEN_EFFECTIVE=$token" >> "$GITHUB_ENV"
-      - run: node scripts/vercel-rest-deploy.mjs preview artifacts/window-flow-compliance/deployment.json
-      - if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: window-flow-preview-${{ github.sha }}
-          path: artifacts/window-flow-compliance/

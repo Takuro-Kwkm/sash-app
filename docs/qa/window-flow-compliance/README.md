@@ -65,3 +65,7 @@ The old fixed source contract correctly rejected the changed bridge. It is prese
 Generic summary output no longer truncates after eight fields. Excel adds explicit confirmation messages. PDF wraps every specification and confirmation, sizes rows from measured text, and paginates long rows without dropping content or crossing the footer. Eight-series browser QA inspects actual canvas text for every saved major field and manufacturer-confirmation messages, in addition to checking the downloaded PDF. The 30-row regression now produces five measured pages rather than silently truncating into three.
 
 The final browser fixtures explicitly exercise all three sales glazing requests together before changing glass family. Their applicability clearing and full PDF handoff are asserted without product-specific PASS exceptions.
+
+## Deployment execution recovery
+
+Vercel files-mode upload reached the `api-upload-free` 5,000 requests/day limit (HTTP 429). This is a STORAGE_EXECUTION_BLOCKER, not a Product Fact defect or content-QA failure. The Preview workflow now uses the existing gitSource deployment path and checks the resulting exact commit identity. Preview deployment is separated from the full QA workflow; deployment success alone never grants APP_INTEGRATION_READY.
