@@ -64,6 +64,12 @@ function button(label,{action='',nav='',kind='secondary',disabled=false}={}){
 function snapshotValue(snapshot,keys){
   const row=(snapshot?.display_summary??[]).find((item)=>keys.includes(item.key));return row?.value??null;
 }
+function floorOptions(selected){
+  return `<option value="">選択してください</option>${Array.from({length:20},(_,index)=>{
+    const value=`${index+1}階`;
+    return `<option value="${value}" ${selected===value?'selected':''}>${value}</option>`;
+  }).join('')}`;
+}
 
 function projectForm(project={}){
   return `<form id="projectForm" class="form-grid">
@@ -154,9 +160,9 @@ async function renderOpeningEditor(projectId,estimateId,openingId){
   $('#appMain').innerHTML=`<div class="breadcrumbs"><a href="/" data-nav="/">案件一覧</a><span>/</span><a href="/projects/${projectId}/estimates/${estimateId}" data-opening-back>${esc(detail.estimate.estimate_title??'見積')}</a><span>/</span><strong>開口 ${opening.opening_no}</strong></div>
     <div class="page-heading"><div><div class="eyebrow">${esc(opening.status)}</div><h1>${esc(openingDisplayName(opening))}</h1></div><div id="saveState" class="save-state">${saveStatusMarkup(status)}</div></div>
     <section class="card"><h2>開口部情報</h2><div class="form-grid">
+      <div class="field"><label>階数</label><select data-opening-field="floor">${floorOptions(draft.floor??'')}</select></div>
       <div class="field"><label>部屋名</label><input data-opening-field="room_name" value="${esc(draft.room_name??'')}" placeholder="LDK、洋室、浴室など"></div>
-      <div class="field"><label>位置</label><input data-opening-field="location" value="${esc(draft.location??'')}" placeholder="南面、正面、階段横など"></div>
-      <div class="field span-2"><label>開口名称</label><input data-opening-field="opening_name" value="${esc(draft.opening_name??'')}" placeholder="掃き出し窓、腰窓、玄関など"></div>
+      <div class="field span-2"><label>位置</label><input data-opening-field="location" value="${esc(draft.location??'')}" placeholder="南面、正面、階段横など"></div>
       <div class="field span-2"><label>備考</label><textarea data-opening-field="memo" rows="3">${esc(draft.memo??'')}</textarea></div>
     </div></section><div id="productEditor"></div>
     <section class="sticky-save"><div id="saveFailureHelp"></div><div class="button-row">${button('見積へ戻る',{action:'back-estimate'})}<button id="saveOpening" type="button" class="button primary">この開口部を保存</button></div></section>`;
@@ -177,7 +183,7 @@ async function renderOpeningEditor(projectId,estimateId,openingId){
   };
   const clearFailureHelp=()=>{if(isActive())failureHelpTarget.innerHTML='';};
   const showFailureHelp=()=>{if(isActive())failureHelpTarget.innerHTML='<div class="notice error">入力内容はこの画面に保持されています。<button type="button" class="button secondary small" data-action="retry-save">再試行</button></div>';};
-  const payload=()=>({room_name:draft.room_name??null,location:draft.location??null,opening_name:draft.opening_name??null,memo:draft.memo??null,product_configuration_snapshot:draft.product_configuration_snapshot??null});
+  const payload=()=>({floor:draft.floor??null,room_name:draft.room_name??null,location:draft.location??null,memo:draft.memo??null,product_configuration_snapshot:draft.product_configuration_snapshot??null});
   const keepEmergencyDraft=()=>{try{localStorage.setItem(draftKey(openingId),JSON.stringify({updated_after:currentUpdatedAt,payload:payload()}));}catch{/* formal save will surface storage errors */}};
   const persist=()=>{
     if(timer){clearTimeout(timer);timer=null;}const request=++sequence;const toSave=payload();
@@ -203,7 +209,7 @@ async function renderOpeningEditor(projectId,estimateId,openingId){
   $('[data-action="back-estimate"]').addEventListener('click',async()=>{const ok=status===SaveStatus.SAVED?true:await persist();if(ok)navigate(`/projects/${projectId}/estimates/${estimateId}`);});
   $('#saveOpening').addEventListener('click',async()=>{const ok=await persist();if(ok)navigate(`/projects/${projectId}/estimates/${estimateId}`);});
   failureHelpTarget.addEventListener('click',(event)=>{if(event.target.closest('[data-action="retry-save"]'))void persist();});
-  document.querySelectorAll('[data-opening-field]').forEach((input)=>input.addEventListener('input',()=>{draft[input.dataset.openingField]=input.value.trim()||null;markDirty();}));
+  document.querySelectorAll('[data-opening-field]').forEach((input)=>input.addEventListener(input.tagName==='SELECT'?'change':'input',()=>{draft[input.dataset.openingField]=input.value.trim()||null;markDirty();}));
   activeProductEditor=new ProductConfigurationEditor(productEditorTarget,{initialSnapshot:draft.product_configuration_snapshot,onSnapshot:(snapshot)=>{if(!isActive())return;draft.product_configuration_snapshot=snapshot;markDirty();}});
   try{await activeProductEditor.mount();}catch(error){if(isActive()&&productEditorTarget.isConnected)productEditorTarget.innerHTML=`<div class="notice error">商品Runtimeを読み込めませんでした: ${esc(error.message)}</div>`;}
   if(emergency){setSaveStatus(SaveStatus.UNSAVED,'前回の未保存入力を復元しました。');timer=setTimeout(()=>persist(),100);}
@@ -215,9 +221,9 @@ async function renderSummary(projectId,estimateId){
   $('#appMain').innerHTML=`<div class="breadcrumbs"><a href="/projects/${projectId}/estimates/${estimateId}" data-nav="/projects/${projectId}/estimates/${estimateId}">見積へ戻る</a></div>
     <div class="page-heading"><div><h1>見積確認</h1><p class="lead">${esc(estimate.estimate_title??'見積')} · Revision ${estimate.revision_no}</p></div></div>
     ${incomplete.length?`<div class="notice warning"><strong>未完了の開口部が ${incomplete.length}件あります。</strong></div>`:'<div class="notice success">すべての開口部が入力完了です。</div>'}
-    <section class="summary-table-wrap"><table class="estimate-summary"><thead><tr><th>No.</th><th>部屋 / 位置</th><th>メーカー / シリーズ</th><th>窓・ドア種類</th><th>主要仕様</th><th>サイズ</th><th>状態</th></tr></thead><tbody>${openings.map((opening)=>{
+    <section class="summary-table-wrap"><table class="estimate-summary"><thead><tr><th>No.</th><th>階数 / 部屋名 / 位置</th><th>メーカー / シリーズ</th><th>窓・ドア種類</th><th>主要仕様</th><th>サイズ</th><th>状態</th></tr></thead><tbody>${openings.map((opening)=>{
       const snapshot=opening.product_configuration_snapshot;const main=(snapshot?.display_summary??[]).filter((row)=>!['window_type','opening_type','door_type','size','custom_width','custom_height'].includes(row.key)).slice(0,3).map((row)=>row.value).join(' / ');
-      return `<tr><td>${opening.opening_no}</td><td><strong>${display(opening.room_name)}</strong><small>${display(opening.location)}</small></td><td>${display(snapshot?.manufacturer)}<small>${display(snapshot?.series)}</small></td><td>${display(snapshotValue(snapshot,['window_type','opening_type','door_type']))}</td><td>${display(main)}</td><td>${display(snapshotValue(snapshot,['size','custom_width','width']))}</td><td><span class="state-pill ${opening.status.toLowerCase()}">${esc(opening.status)}</span></td></tr>`;
+      return `<tr><td>${opening.opening_no}</td><td><strong>${display(opening.floor)}</strong><small>${display(opening.room_name)} / ${display(opening.location)}</small></td><td>${display(snapshot?.manufacturer)}<small>${display(snapshot?.series)}</small></td><td>${display(snapshotValue(snapshot,['window_type','opening_type','door_type']))}</td><td>${display(main)}</td><td>${display(snapshotValue(snapshot,['size','custom_width','width']))}</td><td><span class="state-pill ${opening.status.toLowerCase()}">${esc(opening.status)}</span></td></tr>`;
     }).join('')}</tbody></table></section>`;
 }
 
