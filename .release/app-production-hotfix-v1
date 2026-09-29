@@ -1,10 +1,10 @@
 {
   "schema": "APP_PRODUCTION_HOTFIX_V1",
   "scope": "NON_PRODUCT_MASTER_UI",
-  "change": "PROJECT_ADDRESS_SINGLE_FIELD",
+  "change": "OPENING_FLOOR_FIELD",
   "date": "2026-09-29",
-  "source_commit": "1068880cfa8e0f529ede632c6c3f1bb613e15af4",
-  "notes": "Project address input consolidated from five split fields into one canonical address field with legacy read compatibility.",
-  "attempt": 2,
+  "source_commit": "f998121eefdea89513033bc3c787ae5a2a3232df",
+  "notes": "Opening metadata changed to floor/room/location/memo. Floor uses a 1階-20階 selector. Legacy opening_name remains stored only for backward compatibility.",
+  "attempt": 3,
   "trigger": "PR_MERGE_PUSH"
 }
