@@ -45,7 +45,7 @@ Final gate: APP_INTEGRATION_READY = FALSE while the confirmed frame contract def
 ## Local candidate QA (before commit; CI must repeat against exact HEAD)
 
 - Source lint and Runtime UI contract check: PASS.
-- Unit/integration tests: 221 PASS, 0 FAIL.
+- Unit/integration tests: 222 PASS, 0 FAIL.
 - Global browser: 339 window/viewports, 6,282 primary transitions, 6,645 API/DOM comparisons; 0 mismatch, 0 console/page/unexpected-response errors.
 - Downstream: 42 window/product/viewports, 501 transitions; valid-value retention, clear, internal selection, snapshot and restore PASS. Estimate-model equality is also enforced by the committed suite.
 - Eight-series business flow: 24 saved/reopened products, 8 estimate rows at each viewport, Excel/PDF/Print PASS. Inplus fixtures VALID; Uchirimo remains manufacturer-estimate confirmation.
@@ -58,4 +58,8 @@ These PASS results do not close PMD-INPLUS-FRAME-CARDINALITY-001 or constitute h
 
 ## Formal QA boundary update
 
-The old fixed source contract correctly rejected the changed bridge. It is preserved. `formal-evaluator-qa-contract.json` records reviewed current pins and edge-impact reasoning. The unchanged Formal evaluator is re-executed with a test-only projection for internal size selectors; the public App wrapper has separate 221-test and browser coverage. This projection is never imported by the App and is not a post-Global presentation mutation. Fresh factorized QA completed all 42 roots; no historical PASS imported. The original Formal package and historical contract remain unchanged.
+The old fixed source contract correctly rejected the changed bridge. It is preserved. `formal-evaluator-qa-contract.json` records reviewed current pins and edge-impact reasoning. The unchanged Formal evaluator is re-executed with a test-only projection for internal size selectors; the public App wrapper has separate 222-test and browser coverage. This projection is never imported by the App and is not a post-Global presentation mutation. Fresh factorized QA completed all 42 roots; no historical PASS imported. The original Formal package and historical contract remain unchanged.
+
+## Estimate handoff completeness
+
+Generic summary output no longer truncates after eight fields. Excel adds explicit confirmation messages. PDF wraps every specification and confirmation, sizes rows from measured text, and paginates long rows without dropping content or crossing the footer. Eight-series browser QA inspects actual canvas text for every saved major field and manufacturer-confirmation messages, in addition to checking the downloaded PDF. The 30-row regression now produces five measured pages rather than silently truncating into three.

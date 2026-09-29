@@ -77,8 +77,19 @@ try{
   for(const label of ['TW','EW','サーモス','430','431','ウチリモ','インプラス'])assert.ok(output.includes(label),`output missing ${label}`);
   const pending=page.waitForEvent('download');await page.click('#estimateOutputExcel');const download=await pending;
   assert.match(download.suggestedFilename(),/\.xlsx$/);assert.equal(await download.failure(),null);
+  await page.evaluate(()=>{
+   window.__pdfText=[];window.__pdfBounds=[];
+   const fill=CanvasRenderingContext2D.prototype.fillText,stroke=CanvasRenderingContext2D.prototype.strokeRect;
+   CanvasRenderingContext2D.prototype.fillText=function(text,...args){window.__pdfText.push(String(text));return fill.call(this,text,...args);};
+   CanvasRenderingContext2D.prototype.strokeRect=function(x,y,w,h){window.__pdfBounds.push({y,h});return stroke.call(this,x,y,w,h);};
+  });
   const pdfPending=page.waitForEvent('download');await page.click('#estimateOutputPdf');const pdf=await pdfPending;
   assert.match(pdf.suggestedFilename(),/\.pdf$/);const pdfBytes=await readFile(await pdf.path());assert.equal(pdfBytes.subarray(0,8).toString(),'%PDF-1.4');
+  const pdfEvidence=await page.evaluate(()=>({text:window.__pdfText.join(''),bounds:window.__pdfBounds,summaries:window.__sashWorkApp.readDatabase().openings.filter(o=>!o.deleted_at).flatMap(o=>o.product_configuration_snapshot?.display_summary??[])}));
+  const dimensionKeys=new Set(['window_type','opening_type','door_type','size','custom_width','width','custom_height','height','size_w','size_h','order_width','order_height']);
+  for(const row of pdfEvidence.summaries.filter(r=>!dimensionKeys.has(r.key)))assert.ok(pdfEvidence.text.includes(`${row.label}: ${row.value}`),`PDF truncated ${row.key}`);
+  assert.ok(pdfEvidence.bounds.every(r=>r.y+r.h<=1650),'PDF row crosses footer');
+  assert.ok(pdfEvidence.text.includes('メーカー見積で確認'),'PDF lost manufacturer confirmation');
   await page.evaluate(()=>{window.__qaPrinted=false;window.print=()=>{window.__qaPrinted=true;};});await page.click('#estimateOutputPrint');assert.equal(await page.evaluate(()=>window.__qaPrinted),true);
   await page.emulateMedia({media:'print'});assert.equal(await page.locator('.estimate-output-actions').evaluate(e=>getComputedStyle(e).display),'none');await page.emulateMedia({media:'screen'});
   await page.screenshot({path:`${OUT}/output-${width}.png`,fullPage:true});

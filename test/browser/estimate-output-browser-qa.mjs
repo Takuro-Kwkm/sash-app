@@ -70,7 +70,7 @@ try{
   const pdfPromise=page.waitForEvent('download');await page.click('#estimateOutputPdf');const pdf=await pdfPromise;
   assert.match(pdf.suggestedFilename(),/\.pdf$/);const pdfPath=await pdf.path();assert.ok(pdfPath);
   const pdfBytes=await readFile(pdfPath);assert.ok((await stat(pdfPath)).size>5000);assert.equal(pdfBytes.subarray(0,8).toString('utf8'),'%PDF-1.4');
-  const pdfText=pdfBytes.toString('latin1');assert.equal((pdfText.match(/\/Type \/Page \/Parent/g)??[]).length,3);
+  const pdfText=pdfBytes.toString('latin1');const pageCount=(pdfText.match(/\/Type \/Page \/Parent/g)??[]).length;assert.ok(pageCount>=3);report.pdfPageCount=pageCount;
   report.checks.pdf_download_and_pagination='PASS';
 
   await page.evaluate(()=>{window.__estimatePrintCalled=false;window.print=()=>{window.__estimatePrintCalled=true;};});

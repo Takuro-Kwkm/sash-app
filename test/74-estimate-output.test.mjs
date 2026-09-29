@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createEstimateOutputModel, EstimateOutputState } from '../src/estimate-output/model.mjs';
-import { paginateEstimateOutput, buildPdfFromJpegPages } from '../src/estimate-output/pdf-renderer.mjs';
+import { layoutEstimatePdfRows, buildPdfFromJpegPages } from '../src/estimate-output/pdf-renderer.mjs';
 import { createEstimateXlsxBytes } from '../src/estimate-output/xlsx-renderer.mjs';
 
 const project={
@@ -87,6 +87,7 @@ test('Uchirimo estimate request carries appearance, spacer and cavity without th
     {key:'window_type',label:'窓種類',value:'FIX窓'},
     {key:'size_w',label:'製品W',value:'800'},
     {key:'size_h',label:'製品H',value:'700'},
+    ...Array.from({length:9},(_,i)=>({key:`option_${i}`,label:`希望仕様${i}`,value:`選択${i}`})),
     {key:'sales_glass_appearance',label:'希望するガラスの見た目',value:'すり板ガラス'},
     {key:'sales_spacer_type',label:'スペーサー',value:'樹脂スペーサー'},
     {key:'sales_gas_fill',label:'中空層',value:'アルゴンガス入り'},
@@ -104,14 +105,14 @@ test('Uchirimo estimate request carries appearance, spacer and cavity without th
   assert.equal(model.rows[0].configuration.sales_gas_fill,'argon');
 });
 
-test('TW 30-opening case yields 30 confirmation rows and 3 PDF pages',()=>{
+test('TW 30-opening case retains every confirmation row across measured PDF pages',()=>{
   const openings=Array.from({length:30},(_,index)=>opening(index+1));
   const model=createEstimateOutputModel({project,estimate,openings});
   assert.deepEqual(model.counts,{total:30,complete:0,incomplete:0,needs_confirmation:30,invalid:0});
   assert.equal(model.state,'NEEDS_CONFIRMATION');
-  const pages=paginateEstimateOutput(model,{rowsPerPage:10});
-  assert.equal(pages.length,3);
-  assert.deepEqual(pages.map((page)=>page.length),[10,10,10]);
+  const pages=layoutEstimatePdfRows(model,{font:'',measureText:text=>({width:text.length*19})});
+  assert.deepEqual(pages.flat().map(row=>row.opening_no),model.rows.map(row=>row.opening_no));
+  assert.ok(pages.every(page=>page.reduce((n,row)=>n+row.pdfHeight+10,0)-10<=1340));
 });
 
 test('PDF builder emits one PDF page object per rendered JPEG page',()=>{
@@ -134,4 +135,15 @@ test('XLSX is an OOXML ZIP and does not synthesize a zero price',()=>{
   assert.ok(text.includes('xl/sharedStrings.xml'));
   assert.ok(text.includes('要確認'));
   assert.equal(model.rows[0].price,null);
+});
+
+test('PDF layout retains long specifications and confirmation text without page overflow',async()=>{
+ const {layoutEstimatePdfRows}=await import('../src/estimate-output/pdf-renderer.mjs');
+ const ctx={font:'',measureText:text=>({width:text.length*19})};
+ const full='仕様確認'.repeat(1500)+'最後の希望仕様';
+ const pages=layoutEstimatePdfRows({rows:[{opening_no:1,major_specifications:full,issues:[{message:'メーカー見積確認'}]}]},ctx);
+ assert.ok(pages.length>1);
+ const text=pages.flat().flatMap(row=>row.pdfLines).join('');
+ assert.ok(text.includes(full));assert.ok(text.includes('メーカー見積確認'));
+ for(const page of pages)assert.ok(page.reduce((n,row)=>n+row.pdfHeight+10,0)-10<=1340);
 });

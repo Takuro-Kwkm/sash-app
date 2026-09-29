@@ -28,7 +28,6 @@ function majorSpecificationText(snapshot){
   const rows=summaryRows(snapshot);
   return rows
     .filter((row)=>!OMIT_MAJOR_KEYS.has(row.key))
-    .slice(0,8)
     .map((row)=>`${row.label??row.key}: ${row.value}`)
     .join(' / ')||null;
 }
