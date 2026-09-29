@@ -9,24 +9,13 @@ const report={status:'RUNNING',exactHead:process.env.HEAD_SHA??process.env.GITHU
 await mkdir(OUT,{recursive:true});
 const browser=await chromium.launch({headless:true});
 
-function responseSelection(row){
-  if(!row.url().includes('/api/runtime-master/resolve')||row.status()!==200)return null;
-  try{return JSON.parse(new URL(row.url()).searchParams.get('selection')??'{}');}catch{return null;}
-}
-function sameSelectionValue(actual,expected){return String(actual)===String(expected);}
-
 async function select(page,key,value){
   const old=await page.evaluate(()=>Number(document.querySelector('#qaRoot #dynamicForm')?.dataset.resolveRevision??0));
-  const response=page.waitForResponse((row)=>{
-    const selection=responseSelection(row);
-    return selection!==null&&sameSelectionValue(selection[key],value);
-  });
   const field=page.locator(`#qaRoot [data-spec-key="${key}"]`);
   if(typeof value==='number'){await field.fill(String(value));await field.dispatchEvent('change');}
   else await field.selectOption(value);
-  const result=await (await response).json();
   await page.waitForFunction((revision)=>Number(document.querySelector('#qaRoot #dynamicForm')?.dataset.resolveRevision)>revision,old);
-  return result;
+  return page.evaluate(()=>window.qaEditor.state.resolved);
 }
 
 async function exercise(page){
