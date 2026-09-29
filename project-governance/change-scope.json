@@ -40,11 +40,22 @@
   "automatic_order": "OUT_OF_SCOPE",
   "manufacturer_confirmation_paths": "PRESERVE_AS_CONFIRMATION",
   "app_integration_ready": true,
-  "production_current": false,
+  "production_current": true,
   "app_integration_ready_gate": {
     "status": "PASS",
     "run_id": 36541859591,
     "validated_head": "1e157f0180e01e41e8966e1f05cf47b50c13df92",
     "main_merge_sha": "76ec5a28cc918e48f2b47f0c97eb1fb92100ab7e"
+  },
+  "production_release_gate": {
+    "status": "PASS",
+    "run_id": 36551583985,
+    "release_sha": "9aec225c6e8625aadce05afd5523e587026dd02a",
+    "production_url": "https://sash-app-wave3-preview.vercel.app",
+    "production_scope": "SEVEN_SERIES_SLIM_V2",
+    "legacy_v12": "STOPPED",
+    "production_runtime_smoke": "PASS",
+    "production_browser_qa": "PASS",
+    "evidence_artifact": "seven-series-slim-production-9aec225c6e8625aadce05afd5523e587026dd02a"
   }
 }
