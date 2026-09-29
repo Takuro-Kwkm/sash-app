@@ -38,7 +38,7 @@ UI v1.9 requires independent slots and conditional subfields; merely renaming th
 
 Formal evaluator regressions remain at the formal evaluator boundary (including the existing 995 Inplus dimension/glass cases), with new sales-presentation tests at the public API. Historical factorized source fingerprint is not declared an exact-source PASS after bridge changes; hash tamper detection is tested independently. No old V12 large selection-space recomputation.
 
-The Browser suite exercises all 113 current window types at three viewports and first/second selectable choices along each primary path. Every step compares actual control labels, field sequence and semantic/presentation attributes. The downstream suite separately checks 501 transitions, internal state, snapshot, restore and estimate model. This is primary-flow coverage, not mathematical enumeration of all Selection Space combinations. Human Flow Review remains unperformed.
+The Browser suite exercises all 113 current window types at three viewports and first/second selectable choices along each primary path. Every step compares actual control labels, field sequence and semantic/presentation attributes. The downstream suite separately checks 519 transitions, internal state, snapshot, restore and estimate model. This is primary-flow coverage, not mathematical enumeration of all Selection Space combinations. Human Flow Review remains unperformed.
 
 Final gate: APP_INTEGRATION_READY = FALSE while the confirmed frame contract defect remains; Human Flow Review is also pending. CI/Preview results are recorded against the exact commit, not fabricated here.
 
@@ -47,7 +47,7 @@ Final gate: APP_INTEGRATION_READY = FALSE while the confirmed frame contract def
 - Source lint and Runtime UI contract check: PASS.
 - Unit/integration tests: 222 PASS, 0 FAIL.
 - Global browser: 339 window/viewports, 6,282 primary transitions, 6,645 API/DOM comparisons; 0 mismatch, 0 console/page/unexpected-response errors.
-- Downstream: 42 window/product/viewports, 501 transitions; valid-value retention, clear, internal selection, snapshot and restore PASS. Estimate-model equality is also enforced by the committed suite.
+- Downstream: 42 window/product/viewports, 519 transitions; valid-value retention, clear, internal selection, snapshot and restore PASS. Estimate-model equality is also enforced by the committed suite.
 - Eight-series business flow: 24 saved/reopened products, 8 estimate rows at each viewport, Excel/PDF/Print PASS. Inplus fixtures VALID; Uchirimo remains manufacturer-estimate confirmation.
 - Work-management, release and estimate-output browser regressions PASS.
 - Self-contained eight-series HTML: 24 Runtime parity checks PASS.
@@ -63,3 +63,5 @@ The old fixed source contract correctly rejected the changed bridge. It is prese
 ## Estimate handoff completeness
 
 Generic summary output no longer truncates after eight fields. Excel adds explicit confirmation messages. PDF wraps every specification and confirmation, sizes rows from measured text, and paginates long rows without dropping content or crossing the footer. Eight-series browser QA inspects actual canvas text for every saved major field and manufacturer-confirmation messages, in addition to checking the downloaded PDF. The 30-row regression now produces five measured pages rather than silently truncating into three.
+
+The final browser fixtures explicitly exercise all three sales glazing requests together before changing glass family. Their applicability clearing and full PDF handoff are asserted without product-specific PASS exceptions.

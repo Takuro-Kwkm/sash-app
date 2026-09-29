@@ -51,7 +51,7 @@ try{
     const revision=await page.locator('#dynamicForm').getAttribute('data-resolve-revision');
     const response=page.waitForResponse(r=>r.url().includes('/api/runtime-master/resolve')&&r.status()===200);
     if(target.type==='number'){await control.fill('1000');await control.dispatchEvent('change');}
-    else await control.selectOption(target.options.includes('NONE')?'NONE':target.options[0]);
+    else await control.selectOption(target.options.includes('NONE')?'NONE':target.options.includes('insulating_glass')?'insulating_glass':target.options[0]);
     await response;
     await page.waitForFunction(old=>document.querySelector('#dynamicForm')?.dataset.resolveRevision!==old,revision);
    }

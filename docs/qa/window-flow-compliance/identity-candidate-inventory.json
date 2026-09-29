@@ -1107,28 +1107,28 @@
   },
   {
     "file": "src/estimate-output/model.mjs",
-    "line": 109,
+    "line": 108,
     "source": "      product_id:nullable(snapshot.product_id),",
     "classification": "legitimate declarative metadata",
     "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
   },
   {
     "file": "src/estimate-output/model.mjs",
-    "line": 124,
+    "line": 123,
     "source": "      manufacturer:nullable(snapshot?.manufacturer),",
     "classification": "legitimate declarative metadata",
     "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
   },
   {
     "file": "src/estimate-output/model.mjs",
-    "line": 125,
+    "line": 124,
     "source": "      series:nullable(snapshot?.series),",
     "classification": "legitimate declarative metadata",
     "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
   },
   {
     "file": "src/estimate-output/pdf-renderer.mjs",
-    "line": 42,
+    "line": 35,
     "source": "  return [row.manufacturer,row.series,row.opening_type,row.major_specifications,row.size].filter(Boolean).join(' / ')||'商品仕様未入力';",
     "classification": "legitimate declarative metadata",
     "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."

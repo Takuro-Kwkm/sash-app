@@ -37,7 +37,7 @@ try{
    const visited=new Set();
    for(let step=0;step<65;step++){
     const s=await state(), f=s.result.fields.find(f=>!f.disabled&&!visited.has(f.key)&&s.selection[f.key]===undefined&&(f.dataType==='NUMBER'||f.values.some(v=>!v.disabled)));
-    if(!f)break;visited.add(f.key);const choice=f.values.find(v=>!v.disabled);
+    if(!f)break;visited.add(f.key);const choice=f.values.find(v=>!v.disabled&&v.value==='insulating_glass')??f.values.find(v=>!v.disabled);
     await change(f.key,f.dataType==='NUMBER'?500:f.dataType==='MULTI_ENUM'?[String(choice.value)]:String(choice.value));
    }
    const seed=await state(),stages=new Set(),checks=[];
