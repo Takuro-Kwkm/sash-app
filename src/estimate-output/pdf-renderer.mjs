@@ -56,7 +56,7 @@ function renderCanvasPage(model,rows,pageIndex,pageCount,documentRef){
   for(const row of rows){
     ctx.strokeStyle='#d9e1e7';ctx.lineWidth=2;ctx.strokeRect(72,y,1096,126);
     drawText(ctx,String(row.opening_no).padStart(2,'0'),92,y+18,{font:'bold 25px sans-serif'});
-    drawText(ctx,[row.room_name,row.location,row.opening_name].filter(Boolean).join(' / ')||'開口部',150,y+16,{font:'bold 23px sans-serif',maxWidth:780});
+    drawText(ctx,[row.floor,row.room_name,row.location].filter(Boolean).join(' / ')||'開口部',150,y+16,{font:'bold 23px sans-serif',maxWidth:780});
     drawText(ctx,outputStateLabel(row.state),1140,y+18,{font:'bold 19px sans-serif',align:'right'});
     ctx.font='19px sans-serif';const lines=wrapText(ctx,rowLine(row),900).slice(0,2);
     lines.forEach((line,index)=>drawText(ctx,line,150,y+54+index*27,{font:'19px sans-serif',maxWidth:900}));
