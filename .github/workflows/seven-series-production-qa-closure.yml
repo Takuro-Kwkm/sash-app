@@ -40,8 +40,17 @@ jobs:
           npm install --ignore-scripts
           npm install --no-save playwright@1.55.0
           npx playwright install --with-deps chromium
-      - name: Production end-to-end QA
-        run: node test/browser/uchirimo-runtime-browser-qa.mjs
+      - name: Validate fixed Uchirimo flow on branch Runtime
+        shell: bash
+        run: |
+          npm run start:qa > /tmp/uchirimo-fixed.log 2>&1 &
+          pid=$!
+          trap 'kill "$pid" || true' EXIT
+          for i in {1..60}; do
+            if curl -fsS http://127.0.0.1:4173/api/health >/dev/null; then break; fi
+            sleep 1
+          done
+          QA_BASE_URL=http://127.0.0.1:4173 HEAD_SHA=$GITHUB_SHA node test/browser/uchirimo-runtime-browser-qa.mjs
       - name: Upload QA evidence
         if: always()
         uses: actions/upload-artifact@v4
