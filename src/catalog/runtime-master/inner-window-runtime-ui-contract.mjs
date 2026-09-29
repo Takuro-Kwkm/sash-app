@@ -1,6 +1,7 @@
 import { applyGlobalWindowSelectionFlow } from './global-window-selection-flow-engine.mjs';
 
 export const INNER_WINDOW_UI_CATEGORY = 'INNER_WINDOW';
+export const INNER_WINDOW_INTERNAL_SELECTION_FIELDS = Object.freeze(['size_mode','size_class']);
 
 // Runtime/Adapter may retain its own source order for normalization, but the final
 // presentation order is owned exclusively by Global Window Selection Flow.

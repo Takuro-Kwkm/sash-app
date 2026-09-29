@@ -22,6 +22,7 @@ jobs:
     env:
       HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
       UCHIRIMO_QA_REGISTERED_RUNTIME: '1'
+      UCHIRIMO_DEPENDENCY_CONTRACT: docs/qa/window-flow-compliance/formal-evaluator-qa-contract.json
       UCHIRIMO_FACTORIZED_OUT: artifacts/project-governance-slim/factorized
     steps:
       - name: Checkout exact HEAD

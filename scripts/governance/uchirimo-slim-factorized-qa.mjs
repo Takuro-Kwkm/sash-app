@@ -5,7 +5,7 @@ import {loadSlimQaRuntime} from './uchirimo-slim-runtime-support.mjs';
 import {loadAdoptedSlimQaRuntime} from './uchirimo-adopted-slim-runtime.mjs';
 import {currentExactHead} from './governance-lib.mjs';
 const out=process.env.UCHIRIMO_FACTORIZED_OUT??'artifacts/uchirimo-slim/factorized-qa';
-const contract=JSON.parse(readFileSync('data/uchirimo-slim/selector-dependency-contract.json'));verifySourceContract(contract);
+const contract=JSON.parse(readFileSync(process.env.UCHIRIMO_DEPENDENCY_CONTRACT??'data/uchirimo-slim/selector-dependency-contract.json'));verifySourceContract(contract);
 const adopted=process.env.UCHIRIMO_QA_REGISTERED_RUNTIME==='1';
 const {candidate,bytes,support,runtime,resolve}=adopted?await loadAdoptedSlimQaRuntime():loadSlimQaRuntime();
 const manifestSha=support.source_integrity.actual;
@@ -31,6 +31,6 @@ try{
  for(const row of selected.length?selected.map(n=>plan.partitions[n]):plan.partitions){
   parents.push(runner.run(row));if(parents.length%25===0||selected.length||plan.shard_count<100)console.log(JSON.stringify({parent:row.shard,complete:parents.length,...runner.metrics()}));
  }
- const summary={schema:'UCHIRIMO_FACTORIZED_SELECTOR_QA_V1',runtime_binding:adopted?'REGISTERED_APPLICATION_RUNTIME':'FROZEN_CANDIDATE',status:'PASS',scope:'DISCRETE_SELECTOR_NORMAL_FORMS_WITH_DEPENDENCY_CONTRACT',exact_head:currentExactHead(),candidate_sha256:hash(bytes.toString()),runtime_manifest_sha256:manifestSha,dependency_contract_sha256:hash(contract),plan_sha256:hash(plan),parents_completed:parents.length,expected_parents:plan.shard_count,all_parent_coverage:parents.length===plan.shard_count,prior_pass_imported:0,legacy_materialized_rows_read:0,metrics:runner.metrics(),observed_peak_rss_mb:Math.round(process.resourceUsage().maxRSS/1024),continuous_dimensions:'SEPARATE_GATE_REQUIRED',formal_adoption:'NOT_GRANTED_BY_THIS_REPORT',parents};
+ const summary={schema:'UCHIRIMO_FACTORIZED_SELECTOR_QA_V1',runtime_binding:adopted?'FORMAL_EVALUATOR_OF_REGISTERED_RUNTIME':'FROZEN_CANDIDATE',status:'PASS',scope:'DISCRETE_SELECTOR_NORMAL_FORMS_WITH_DEPENDENCY_CONTRACT',exact_head:currentExactHead(),candidate_sha256:hash(bytes.toString()),runtime_manifest_sha256:manifestSha,dependency_contract_sha256:hash(contract),plan_sha256:hash(plan),parents_completed:parents.length,expected_parents:plan.shard_count,all_parent_coverage:parents.length===plan.shard_count,prior_pass_imported:0,legacy_materialized_rows_read:0,metrics:runner.metrics(),observed_peak_rss_mb:Math.round(process.resourceUsage().maxRSS/1024),continuous_dimensions:'SEPARATE_GATE_REQUIRED',formal_adoption:'NOT_GRANTED_BY_THIS_REPORT',parents};
  writeFileSync(`${out}/summary.json`,JSON.stringify(summary,null,2)+'\n');console.log(JSON.stringify({...summary,parents:undefined}));
 }catch(error){writeFileSync(`${out}/failure.json`,JSON.stringify({status:'FAIL',completed:parents.length,error:error.message,stack:error.stack,metrics:runner.metrics()},null,2)+'\n');throw error;}

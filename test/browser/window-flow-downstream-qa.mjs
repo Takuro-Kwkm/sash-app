@@ -16,8 +16,24 @@ try{
    await page.evaluate(async()=>{const {ProductConfigurationEditor}=await import('/product-configuration-editor.mjs');window.Editor=ProductConfigurationEditor;window.qaEditor?.destroy();document.body.innerHTML='<main id="qaRoot"></main>';window.qaEditor=new ProductConfigurationEditor(document.querySelector('#qaRoot'));await window.qaEditor.mount();});
    await page.selectOption('#manufacturer',product.manufacturer);await page.selectOption('#product',product.id);
    await page.waitForFunction(id=>window.qaEditor.state.resolved?.productId===id,product.id);
+   const seeds=await page.evaluate(async id=>{
+    const initial=window.qaEditor.state.resolved;
+    const windows=initial.fields.find(f=>f.key==='window_type').values.filter(v=>!v.disabled);
+    const probes=await Promise.all(windows.map(async c=>({window:c.value,result:await(await fetch('/api/runtime-master/resolve?'+new URLSearchParams({productId:id,selection:JSON.stringify({window_type:c.value})}))).json()})));
+    const picked=new Set([windows[0].value]);
+    for(const slot of ['handing','hinge_side','window_configuration','configuration_variant','installation_environment','frame_angle']){
+     const candidate=probes.find(p=>p.result.fields.some(f=>f.semanticSlot===slot&&!f.disabled&&f.values.filter(v=>!v.disabled).length>1));
+     if(candidate)picked.add(candidate.window);
+    }
+    return [...picked];
+   },product.id);
+   for(const windowSeed of seeds){
+   const reset=page.waitForResponse(r=>r.url().includes('/api/runtime-master/resolve')&&r.status()===200);
+   await page.selectOption('#product',product.id);await reset;
+   await page.waitForFunction(()=>window.qaEditor.state.resolved&&Object.keys(window.qaEditor.state.selection).length<8);
    async function state(){return page.evaluate(()=>({result:window.qaEditor.state.resolved,selection:window.qaEditor.state.selection,snapshot:window.qaEditor.getSnapshot()}));}
    async function change(key,value){const old=await page.locator('#dynamicForm').getAttribute('data-resolve-revision');const control=page.locator(`[data-spec-key="${key}"]`);if(await control.getAttribute('type')==='number'){await control.fill(String(value));await control.dispatchEvent('change');}else await control.selectOption(value);await page.waitForFunction(old=>document.querySelector('#dynamicForm').dataset.resolveRevision!==old,old);return state();}
+   await change("window_type",String(windowSeed));
    const visited=new Set();
    for(let step=0;step<65;step++){
     const s=await state(), f=s.result.fields.find(f=>!f.disabled&&!visited.has(f.key)&&s.selection[f.key]===undefined&&(f.dataType==='NUMBER'||f.values.some(v=>!v.disabled)));
@@ -65,8 +81,9 @@ try{
     const restored=await state();assert.deepEqual(restored.selection,after.selection,`${product.id}:${f.key} restore drift`);
     checks.push({key:f.key,stage:f.semanticStage,validRetained:retained,cleared,restore:'PASS'});
    }
-   assert.ok(checks.length,product.id);report.cases.push({width,id:product.id,stages:[...stages],checks});
+   assert.ok(checks.length,product.id);report.cases.push({width,id:product.id,windowSeed,stages:[...stages],checks});
   }
+   }
   await context.close();
  }
  assert.deepEqual(report.errors,[]);report.status='PASS';
