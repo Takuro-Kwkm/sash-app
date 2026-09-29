@@ -39,6 +39,12 @@
   "automatic_price": "OUT_OF_SCOPE",
   "automatic_order": "OUT_OF_SCOPE",
   "manufacturer_confirmation_paths": "PRESERVE_AS_CONFIRMATION",
-  "app_integration_ready": "PENDING_CURRENT_BASELINE_GATE",
-  "production_current": false
+  "app_integration_ready": true,
+  "production_current": false,
+  "app_integration_ready_gate": {
+    "status": "PASS",
+    "run_id": 36541859591,
+    "validated_head": "1e157f0180e01e41e8966e1f05cf47b50c13df92",
+    "main_merge_sha": "76ec5a28cc918e48f2b47f0c97eb1fb92100ab7e"
+  }
 }
