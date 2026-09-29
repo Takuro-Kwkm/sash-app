@@ -66,8 +66,11 @@ async function exercise(page){
   assert.equal(snapshot.configuration.sales_spacer_type,undefined);
   assert.equal(snapshot.configuration.sales_gas_fill,undefined);
   await select(page,'sales_glass_appearance','washi');
+  console.log('UCHIRIMO_DIAG_AFTER_WASHI',JSON.stringify(await page.evaluate(()=>({salesGlassAppearance:window.qaEditor.state.salesGlassAppearance,selection:window.qaEditor.state.selection,snapshot:window.qaEditor.getSnapshot()}))));
   await select(page,'size_w',500);
+  console.log('UCHIRIMO_DIAG_AFTER_W',JSON.stringify(await page.evaluate(()=>({salesGlassAppearance:window.qaEditor.state.salesGlassAppearance,selection:window.qaEditor.state.selection,snapshot:window.qaEditor.getSnapshot()}))));
   const dimension=await select(page,'size_h',500);
+  console.log('UCHIRIMO_DIAG_AFTER_H',JSON.stringify(await page.evaluate(()=>({salesGlassAppearance:window.qaEditor.state.salesGlassAppearance,selection:window.qaEditor.state.selection,snapshot:window.qaEditor.getSnapshot()}))));
   assert.equal(dimension.dimensionResult?.status,'PASS');
   assert.doesNotMatch(await page.locator('#qaRoot #warnings').innerText(),/ORDER_READY\s*=|\b(?:BLOCKED|REVIEW_REQUIRED|MANUAL_CHECK)\b/);
   snapshot=await page.evaluate(()=>window.qaEditor.getSnapshot());
