@@ -101,10 +101,10 @@ await import(appUrl);
 const banner = `<section class="card compact review-build-note"><h2>ウチリモ Runtime UI Review Build</h2><p class="lead"><strong>REVIEW IN PROGRESS</strong> — YKK AP ウチリモ 内窓 / INNER_WINDOW / ${candidateHash ? 'Slim V2 WORKING（正式採用前）' : 'v1.0-P7R1-R2'} / UI Standard v1.6</p><p class="lead">生成: ${generatedAt} · データ: ${candidateHash ? '正規化したWorking候補。ガラス成立ルールを直接評価する実Adapterを使用' : '正式RuntimeのRepository transport fixture（4 component SHA検証済み）'} · APIのみブラウザ内stub。保存・外部通信は行いません。Preview用UI変換は本番サーバーを代替しません。</p><p class="lead">Build Identity: ${buildId} · Manifest SHA-256: ${entry.runtimeManifestSha256}${candidateHash ? ` · Candidate SHA-256: ${candidateHash}` : ''}</p></section>`;
 const html = htmlSource
   .replace('<link rel="stylesheet" href="/styles.css">', `<style>${styles}</style>`)
-  .replace('<link rel="stylesheet" href="/styles-wave3.css">', `<style>${waveStyles}.review-build-note strong{color:#9b6210}</style>`)
+  .replace('<link rel="stylesheet" href="/styles-wave3.css">', `<style>${waveStyles}.review-build-note{max-width:1050px;margin:16px auto}.review-build-note strong{color:#9b6210}</style>`)
   .replace('<link rel="stylesheet" href="/work-management.css">', `<style>${workStyles}</style>`)
   .replace('<link rel="stylesheet" href="/estimate-output.css">', `<style>${estimateStyles}</style>`)
-  .replace('<main>', `<main>${banner}`)
+  .replace('<main id="appMain" aria-live="polite"></main>', `${banner}<main id="appMain" aria-live="polite"></main>`)
   .replace('<script type="module" src="/app.js"></script>', `<script type="module">${bootstrap}</script>`)
   .replace('<script type="module" src="/estimate-output-integration.mjs"></script>', '');
 await mkdir(dirname(output), { recursive:true });
