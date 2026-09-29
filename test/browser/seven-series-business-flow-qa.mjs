@@ -18,8 +18,13 @@ try{
   await page.goto(entry,{waitUntil:'networkidle'});
   await page.getByRole('button',{name:'新しい案件'}).first().click();
   await page.locator('[name="project_name"]').fill(`7シリーズ統合QA ${width}`);
+  const address=`熊本県熊本市中央区QA-${width}-1-2-3 テスト101号`;
+  assert.equal(await page.locator('[name="postal_code"],[name="prefecture"],[name="city"],[name="street"],[name="building"]').count(),0);
+  await page.locator('[name="address"]').fill(address);
   await page.locator('#projectForm button[type="submit"]').click();
   await page.waitForURL(/\/projects\/prj_/);
+  const savedProjectAddress=await page.evaluate(()=>window.__sashWorkApp.readDatabase().projects.find(row=>!row.deleted_at)?.address);
+  assert.equal(savedProjectAddress,address);
   await page.getByRole('button',{name:'見積を開く'}).click();
   const estimateUrl=page.url();
   const checks=[];
