@@ -1,0 +1,72 @@
+name: Window Flow Compliance Closure
+on:
+  push:
+    branches: [integration/window-flow-compliance-20260929]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: npm run lint && npm run typecheck && npm test
+      - run: npm install --no-save playwright@1.55.0 && npx playwright install --with-deps chromium
+      - name: Eight series browser and regression
+        env:
+          HEAD_SHA: ${{ github.sha }}
+        run: |
+          npm run start:qa > /tmp/window-flow.log 2>&1 &
+          pid=$!
+          trap 'kill "$pid" || true' EXIT
+          for i in {1..60}; do
+            if curl -fsS http://127.0.0.1:4173/api/health >/dev/null; then break; fi
+            sleep 1
+          done
+          node test/browser/global-window-selection-flow-browser-qa.mjs
+          node test/browser/window-flow-downstream-qa.mjs
+          node test/browser/eight-series-business-flow-qa.mjs
+          node test/browser/release-regression-browser-qa.mjs
+          node test/browser/work-management-browser-qa.mjs
+          node test/browser/estimate-output-browser-qa.mjs
+          node scripts/build-eight-series-review.mjs
+          node test/browser/eight-series-preview-qa.mjs
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: window-flow-compliance-${{ github.sha }}
+          path: artifacts/
+  preview:
+    needs: qa
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      VERCEL_ORG_ID: team_AkuHacuJlCl8LuvaFpCzFmbv
+      VERCEL_PROJECT_ID: prj_4z0zqW6yKyPuFINODfGX8LPBuJRP
+      VERCEL_PROJECT_NAME: sash-app-wave3-preview
+      RELEASE_SERIES: EIGHT_WINDOW_FLOW_COMPLIANCE
+      RELEASE_PACKAGE_VERSION: integration-preview
+      VERCEL_DEPLOY_SOURCE: files
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Prepare deployment credential
+        env:
+          VERCEL_TOKEN_PRIMARY: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_TOKEN_FALLBACK: ${{ secrets.VERCEL_ACCESS_TOKEN }}
+        run: |
+          token="${VERCEL_TOKEN_PRIMARY:-${VERCEL_TOKEN_FALLBACK:-}}"
+          if [[ -z "$token" ]]; then echo 'VERCEL_CREDENTIAL_GATE=BLOCKED'; exit 42; fi
+          echo "VERCEL_TOKEN_EFFECTIVE=$token" >> "$GITHUB_ENV"
+      - run: node scripts/vercel-rest-deploy.mjs preview artifacts/window-flow-compliance/deployment.json
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: window-flow-preview-${{ github.sha }}
+          path: artifacts/window-flow-compliance/

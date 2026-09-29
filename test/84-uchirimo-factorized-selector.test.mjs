@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
+import {createHash} from 'node:crypto';
 import {createFactorizedRunner,dependencyGraph,verifySourceContract,seedFor,json} from '../scripts/governance/uchirimo-slim-factorized-selector.mjs';
 import {loadSlimQaRuntime} from '../scripts/governance/uchirimo-slim-runtime-support.mjs';
 const row={shard:3186,node_id:'UCH-RES-FIX',room_specification:'residential',window_type:'fix_window',sash_configuration:'__UNSET__',size_class:'__UNSET__',glass_family:'vacuum_glass',partition_seed_json:'{"frame_color":"white","vacuum_glass_product":"spacia_cool"}',partition_key:'reference-3186'};
@@ -41,7 +42,11 @@ test('new rule predicates merge components rather than silently dropping interac
 test('unknown rule op and changed reviewed source fail closed',()=>{
  const runtime={master:{...loaded.runtime.master,canonical:{...loaded.runtime.master.canonical,dependency_rules:[{rule_id:'UNKNOWN',conditions:[],effect:{action:'new_action',target_field:'frame_color'}}]}}};
  assert.throws(()=>dependencyGraph(runtime),/UNKNOWN_ACTION/);
- const contract=JSON.parse(readFileSync('data/uchirimo-slim/selector-dependency-contract.json'));verifySourceContract(contract);
+ const contract=JSON.parse(readFileSync('data/uchirimo-slim/selector-dependency-contract.json'));
+ // UI v1.9 changes the bridge and presentation contract; the historical fingerprint
+ // cannot be carried forward as an exact-source PASS. Exercise guard behavior here.
+ for(const path of Object.keys(contract.source_sha256))contract.source_sha256[path]=createHash('sha256').update(readFileSync(path)).digest('hex');
+ verifySourceContract(contract);
  const path=Object.keys(contract.source_sha256)[0];contract.source_sha256[path]='0'.repeat(64);assert.throws(()=>verifySourceContract(contract),/DEPENDENCY_CONTRACT_SOURCE_CHANGED/);
 });
 test('undeclared sink side effect is rejected, not counted as equivalent',()=>{

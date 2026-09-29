@@ -1,0 +1,1150 @@
+[
+  {
+    "file": "src/ui/web/app.js",
+    "line": 130,
+    "source": "    <div class=\"opening-spec\"><span>${display(snapshot?.manufacturer)}</span><strong>${display(snapshot?.series)}</strong><span>${display(snapshotValue(snapshot,['window_type','opening_type','door_type']))}</span><span>${display(snapshotValue(snapshot,['size','custom_width','width']))} ${snapshotValue(snapshot,['custom_height','height'])?`× ${esc(snapshotValue(snapshot,['custom_height','height']))}`:''}</span></div>",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/ui/web/app.js",
+    "line": 226,
+    "source": "      return `<tr><td>${opening.opening_no}</td><td><strong>${display(opening.floor)}</strong><small>${display(opening.room_name)} / ${display(opening.location)}</small></td><td>${display(snapshot?.manufacturer)}<small>${display(snapshot?.series)}</small></td><td>${display(snapshotValue(snapshot,['window_type','opening_type','door_type']))}</td><td>${display(main)}</td><td>${display(snapshotValue(snapshot,['size','custom_width','width']))}</td><td><span class=\"state-pill ${opening.status.toLowerCase()}\">${esc(opening.status)}</span></td></tr>`;",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/ui/web/estimate-output-integration.mjs",
+    "line": 46,
+    "source": "  <section class=\"summary-table-wrap estimate-output-table-wrap\"><table class=\"estimate-summary\"><thead><tr><th>No.</th><th>階数 / 部屋名 / 位置</th><th>メーカー / シリーズ</th><th>窓・ドア種類</th><th>主要仕様</th><th>サイズ</th><th>状態</th><th>監査情報</th></tr></thead><tbody>${model.rows.map((row)=>`<tr><td>${row.opening_no}</td><td><strong>${show(row.floor)}</strong><small>${show(row.room_name)} / ${show(row.location)}</small></td><td>${show(row.manufacturer)}<small>${show(row.series)}</small></td><td>${show(row.opening_type)}</td><td>${show(row.major_specifications)}</td><td>${show(row.size)}</td><td>${esc(outputStateLabel(row.state))}<small>${row.issues.map((issue)=>esc(issue.message)).join('<br>')}</small></td><td><small>${show(row.audit?.package_version)}<br>${show(row.audit?.validation_state)}<br>${show(row.audit?.source_mode)}</small></td></tr>`).join('')}</tbody></table></section>`;",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/ui/web/product-configuration-editor.mjs",
+    "line": 65,
+    "source": "    this.state={products:[],productId:null,productSource:'CATALOG',selection:{},resolved:null,resolveRevision:0,snapshot:initialSnapshot,stale:false};",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/ui/web/product-configuration-editor.mjs",
+    "line": 75,
+    "source": "        <div class=\"field\"><label for=\"manufacturer\">メーカー</label><select id=\"manufacturer\"><option value=\"\">選択してください</option></select></div>",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/ui/web/product-configuration-editor.mjs",
+    "line": 94,
+    "source": "    const manufacturers=[...new Set(this.state.products.map((row)=>row.manufacturer))].sort((a,b)=>a.localeCompare(b,'ja'));",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/ui/web/product-configuration-editor.mjs",
+    "line": 95,
+    "source": "    fill(this.root.querySelector('#manufacturer'),manufacturers.map((value)=>({value,label:value})));",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/ui/web/product-configuration-editor.mjs",
+    "line": 107,
+    "source": "  productsForManufacturer(manufacturer){return this.state.products.filter((row)=>row.manufacturer===manufacturer);}",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/ui/web/product-configuration-editor.mjs",
+    "line": 108,
+    "source": "  selectManufacturer(manufacturer){",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/ui/web/product-configuration-editor.mjs",
+    "line": 109,
+    "source": "    this.root.querySelector('#manufacturer').value=manufacturer??'';",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/ui/web/product-configuration-editor.mjs",
+    "line": 110,
+    "source": "    fill(this.root.querySelector('#product'),this.productsForManufacturer(manufacturer).map((row)=>({",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/ui/web/product-configuration-editor.mjs",
+    "line": 113,
+    "source": "        ?(row.selectable===false?`${row.displayName??row.series}（利用不可）`:`${row.displayName??row.series} [Runtime]`)",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/ui/web/product-configuration-editor.mjs",
+    "line": 114,
+    "source": "        :(row.displayName??row.series),",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/ui/web/product-configuration-editor.mjs",
+    "line": 122,
+    "source": "    const product=this.state.products.find((row)=>row.id===snapshot.product_id);",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/ui/web/product-configuration-editor.mjs",
+    "line": 124,
+    "source": "    this.selectManufacturer(product.manufacturer);",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/ui/web/product-configuration-editor.mjs",
+    "line": 126,
+    "source": "    this.state.productId=product.id;this.state.productSource=product.sourceType;this.state.selection={...snapshot.configuration};",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/ui/web/product-configuration-editor.mjs",
+    "line": 152,
+    "source": "    if(target.id==='manufacturer'){",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/ui/web/product-configuration-editor.mjs",
+    "line": 153,
+    "source": "      this.state.resolveRevision+=1;this.state.productId=null;this.state.selection={};this.state.resolved=null;this.state.snapshot=null;this.state.stale=false;",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/ui/web/product-configuration-editor.mjs",
+    "line": 160,
+    "source": "      this.state.productId=target.value||null;this.state.selection={};this.state.resolved=null;this.state.snapshot=null;this.state.stale=false;",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/ui/web/product-configuration-editor.mjs",
+    "line": 161,
+    "source": "      const product=this.state.products.find((row)=>row.id===this.state.productId);this.state.productSource=product?.sourceType??'CATALOG';",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/ui/web/product-configuration-editor.mjs",
+    "line": 182,
+    "source": "    const revision=++this.state.resolveRevision,productId=this.state.productId;",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/ui/web/product-configuration-editor.mjs",
+    "line": 183,
+    "source": "    if(!productId){this.root.querySelector('#dynamicForm').innerHTML='';return;}",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/ui/web/product-configuration-editor.mjs",
+    "line": 184,
+    "source": "    const query=new URLSearchParams({productId,selection:JSON.stringify(this.state.selection)});",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/ui/web/product-configuration-editor.mjs",
+    "line": 187,
+    "source": "    if(revision!==this.state.resolveRevision||productId!==this.state.productId)return;",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/ui/web/product-configuration-editor.mjs",
+    "line": 193,
+    "source": "    const product=this.state.products.find((row)=>row.id===productId);",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/ui/web/product-configuration-editor.mjs",
+    "line": 222,
+    "source": "    const product=this.state.products.find((row)=>row.id===this.state.productId);",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/ui/web/product-configuration-editor.mjs",
+    "line": 234,
+    "source": "    const catalog=(health.inventory??[]).map((row)=>`<div class=\"inventory-row\"><div><strong>${esc(row.manufacturer)} ${esc(row.series)}</strong><small>${esc(row.productId)}</small></div><div>${row.definitions} fields / ${row.allowedValues} values</div></div>`).join('');",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/ui/web/product-configuration-editor.mjs",
+    "line": 235,
+    "source": "    const runtime=(health.runtimeMasterIntegrations??[]).map((row)=>`<div class=\"inventory-row\"><div><strong>${esc(row.manufacturer)} ${esc(row.series)}</strong><small>${esc(row.id)} · Runtime Master</small></div><div>${esc(row.status)}</div></div>`).join('');",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/app-runtime-integration-registry.mjs",
+    "line": 3,
+    "source": "  Object.freeze({ id:'SER-LIX-SAMOS2H', manufacturer:'LIXIL', series:'サーモスⅡ-H', displayName:'サーモスⅡ-H', productCategory:'sash', uiCategory:'NEW_CONSTRUCTION_EXTERIOR_WINDOW', registrySeriesKey:'LIXIL::サーモスⅡH', canonicalRuntimeReference:Object.freeze({ runtimeManifestDriveFileId:'1_yIaBpnfppnj36IcuRoX9FBJhtrNngin', runtimeDriveFileId:'1Cqy4X23hWNFuhmKMzI7iTtUqOaH_N5S_', runtimeSchemaDriveFileId:'1mGXoPvmeEN-clO2mrvQ6R1bVtmVP0uIW', canonicalFolderId:'1pmCvqkh39bZibmpk-ugRFvJLEowITBmP' }), packageVersion:'v0.9-R4', schemaVersion:'2.0', sourceHash:'993481b2f0ab1d519a091e1b9f99a329eef7c67ec89cd1c82ddfab0d3c624955', adapterType:'PRODUCT_MODULE_RUNTIME_V1', uiStandardSpec:'サッシ情報管理アプリ_UI実装標準仕様書_v1.9' }),",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/app-runtime-integration-registry.mjs",
+    "line": 4,
+    "source": "  Object.freeze({ id:'SER-LIX-SAMOSL', manufacturer:'LIXIL', series:'サーモスL', displayName:'サーモスL', productCategory:'sash', uiCategory:'NEW_CONSTRUCTION_EXTERIOR_WINDOW', registrySeriesKey:'LIXIL::サーモスL', canonicalRuntimeReference:Object.freeze({ runtimeManifestDriveFileId:'1c-VIgwTqPDTkas0apYqx30AN3PVa71p1', runtimeDriveFileId:'12G_Edo55NWgu38gJjTGcqDZ7HsdpAH2I', canonicalFolderId:'1H83njk7Gww0RJOZKntYBp5VxdaJD9Jc4' }), packageVersion:'v0.7-R2', schemaVersion:'2.0', sourceHash:'4cf2a4b1572f68288fa108ccd33d30cc80d5170f2f5303864ca56ca67c34cec3', adapterType:'PRODUCT_MODULE_RUNTIME_V1', uiStandardSpec:'サッシ情報管理アプリ_UI実装標準仕様書_v1.9' }),",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/app-runtime-integration-registry.mjs",
+    "line": 5,
+    "source": "  Object.freeze({ id:'SER-LIX-EW', manufacturer:'LIXIL', series:'EW', displayName:'EW', productCategory:'sash', uiCategory:'NEW_CONSTRUCTION_EXTERIOR_WINDOW', registrySeriesKey:'LIXIL::EW', canonicalRuntimeReference:Object.freeze({ runtimeManifestDriveFileId:'140pCgz2uhukjOjd1wymuISuAMjhaBpCS', runtimeDriveFileId:'11ZmCPKceAmp3OEyJIXy79VoO8PEk_oYw', canonicalFolderId:'1mDsi9amFdD5A9N8XrommExB_EMZDQiqu' }), packageVersion:'v1.3', schemaVersion:'2.0', sourceHash:'a59848642ae301dcf8a275b7a43bdceb64a7d9e6488a5c79eca21584178be830', adapterType:'CANONICAL_WORKBOOK_REFERENCE_V1', uiStandardSpec:'サッシ情報管理アプリ_UI実装標準仕様書_v1.9' }),",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/app-runtime-integration-registry.mjs",
+    "line": 6,
+    "source": "  Object.freeze({ id:'SER-LIXIL-TW', manufacturer:'LIXIL', series:'TW', displayName:'TW', productCategory:'sash', uiCategory:'NEW_CONSTRUCTION_EXTERIOR_WINDOW', registrySeriesKey:'LIXIL::TW', canonicalRuntimeReference:Object.freeze({ runtimeManifestDriveFileId:'13doEdTkUlQNu4Dm-SNwkeUg8RkrjS5G0', runtimeJsonDriveFileId:'1hWy1coHWTsuXYXGLRxZ0a2vJEmSIvg5p', canonicalFolderId:'1oLex2SCEIKoH5mDMtbMasJXglPF-n-a' }), packageVersion:'integrated-v0.4', schemaVersion:'2.0', sourceHash:'95380f5cab261edf03bf868e0f2120b9d57e941d6618b4543afe7a6ffd00c68e', adapterType:'TW_CANONICAL_WORKBOOK_REFERENCE_V2', uiStandardSpec:'サッシ情報管理アプリ_UI実装標準仕様書_v1.9' }),",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/app-runtime-integration-registry.mjs",
+    "line": 7,
+    "source": "  Object.freeze({ id:'SER-LIXIL-RECHENT-D3-NF', manufacturer:'LIXIL', series:'リシェント玄関ドア3 非防火', displayName:'リシェント玄関ドア3', productCategory:'entry_door', uiCategory:'ENTRY_DOOR_COVER', registrySeriesKey:'LIXIL::リシェント玄関ドア3 非防火', canonicalRuntimeReference:Object.freeze({ runtimeManifestDriveFileId:'11P1jHLQs4KO9ZiHxF7ofvqDcwtuoNxbU', canonicalFolderId:'1wNyL_JFz4wMFfV4zRbcahqCbU24K-n_G' }), packageVersion:'v0.8-R7', schemaVersion:'PRODUCT_MASTER_RUNTIME_v2.0', sourceHash:'6c189dff2197ab095168c308fb6733bd1a0f5a2f336a3352a39ce536ee08230d', adapterType:'RECHENT_DOOR3_NONFIRE_V1', uiStandardSpec:'サッシ情報管理アプリ_UI実装標準仕様書_v1.8', uiContractSource:Object.freeze({ uiStandardDriveFileId:'1BVFe2qZXlLUVhz37trFUjz6mJOwjvW0P', runtimeManifestDriveFileId:'11P1jHLQs4KO9ZiHxF7ofvqDcwtuoNxbU', packageVersion:'v0.8-R7' }) }),",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/app-runtime-integration-registry.mjs",
+    "line": 8,
+    "source": "  Object.freeze({ id:'SER-YKK-APW430', manufacturer:'YKK AP', series:'APW430', displayName:'APW 430', productCategory:'sash', uiCategory:'NEW_CONSTRUCTION_EXTERIOR_WINDOW', registrySeriesKey:'YKK AP::APW430', canonicalRuntimeReference:Object.freeze({ runtimeManifestDriveFileId:'1hyX2Fgu1m28xmkM5I53GZ-xC3PX0b9Hk', coreRuntimeDriveFileId:'1S5Vo-rF1wpQDsNOQr0jMTAaRlvnx3MCF', dimensionsRuntimeDriveFileId:'1llpTNz_CweEF7vZxP0XRRwzTG4kBF8AX', optionsRuntimeDriveFileId:'1gb1rWWxNC0Wd6mvZ1ZfqPYrsYyUPGGM_', canonicalFolderId:'1Cd4_yiAB0Zy6Yb1xo_7ihB4KA44wtUkY' }), packageVersion:'20260918-R3', schemaVersion:'product-master-runtime-manifest/1.0', sourceHash:'e2755a735fc3a7c94afacc58175a390bf00784cf1f13521a1263076d7bfae1c7', adapterType:'APW430_FORMAL_SPLIT_V1', uiStandardSpec:'サッシ情報管理アプリ_UI実装標準仕様書_v1.9' }),",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/app-runtime-integration-registry.mjs",
+    "line": 9,
+    "source": "  Object.freeze({ id:'SER-YKK-APW431', manufacturer:'YKK AP', series:'APW431', displayName:'APW 431', productCategory:'sash', uiCategory:'NEW_CONSTRUCTION_EXTERIOR_WINDOW', registrySeriesKey:'YKK AP::APW431', canonicalRuntimeReference:Object.freeze({ runtimeManifestDriveFileId:'16-hPgdJYmkl30MvonP_natv3bPV1C-3x', coreRuntimeDriveFileId:'1Tdc-M1JWXOvFhDYiYpwlaVm2QJ_-BujQ', dimensionsRuntimeDriveFileId:'1nJjAqm23gaMdIYUaTrFQzq6pKZsFTiUJ', optionsRuntimeDriveFileId:'18Q8MkacIL5W-kXFlo2bcdK_G3ypj1Ady', canonicalFolderId:'16SO5cC-ix7F_vwGLqAyrr62zwDRjXBCB' }), packageVersion:'v1.2', schemaVersion:'product-master-runtime-manifest/2.0', sourceHash:'b8927a51a5e31b0c7a89a98b65833cf4f7e0e641c52316cecce4f493399eb1f9', adapterType:'APW431_FORMAL_SPLIT_V1', uiStandardSpec:'サッシ情報管理アプリ_UI実装標準仕様書_v1.9' }),",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/app-runtime-integration-registry.mjs",
+    "line": 10,
+    "source": "  Object.freeze({ id:'SER-YKKAP-UCHIRIMO', salesRequestExtension:SALES_GLAZING_REQUEST, manufacturer:'YKK AP', series:'ウチリモ 内窓', displayName:'ウチリモ 内窓', productCategory:'sash', uiCategory:'INNER_WINDOW', registrySeriesKey:'YKK AP::ウチリモ 内窓', canonicalRuntimeReference:Object.freeze({ runtimeManifestDriveFileId:'1oR7kQo7JGe-twx-Ko4Fbgkuk7M4Cp77q', canonicalFolderId:'1-flyN0KX2zdqXbebX2kVF4VRW0jTSrQu' }), packageVersion:'v1.0-P7R1-R2', schemaVersion:'2.0', sourceHash:'3e2f2960a3761bc14a6c0ac3c9d9ee6d5c3e8f3b43bdee2bab81de7297afb5d4', adapterType:'UCHIRIMO_TABULAR_V1', uiStandardSpec:'サッシ情報管理アプリ_UI実装標準仕様書_v1.9' }),",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/app-runtime-integration-registry.mjs",
+    "line": 12,
+    "source": "    id:'SER-LIXIL-INPLUS', manufacturer:'LIXIL', series:'インプラス', displayName:'インプラス', productCategory:'sash', uiCategory:'INNER_WINDOW', registrySeriesKey:'LIXIL::インプラス',",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/app-runtime-integration-registry.mjs",
+    "line": 19,
+    "source": "export function getAppRuntimeIntegrationMetadata(manufacturer, series) {",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/app-runtime-integration-registry.mjs",
+    "line": 20,
+    "source": "  return appRuntimeIntegrationRegistry.find((row) => row.manufacturer === manufacturer && row.series === series) ?? null;",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/apw430-formal-split-v1-adapter.mjs",
+    "line": 37,
+    "source": "  const rules = (dimensions.special_spec_applicability ?? []).filter((rule) => active(rule) && rule['固有仕様ID'] === specId && rule['シリーズ窓種ID'] === row.seriesWindowId);",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/apw430-formal-split-v1-adapter.mjs",
+    "line": 54,
+    "source": "  return (dimensions.standard_sizes ?? []).filter((row) => active(row) && row.seriesWindowId === selection.window_type)",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/apw430-formal-split-v1-adapter.mjs",
+    "line": 132,
+    "source": "  const windows = (core.series_windows ?? []).filter((row) => active(row) && row.productId === 'SER-YKK-APW430')",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/apw430-formal-split-v1-adapter.mjs",
+    "line": 175,
+    "source": "    const customRule = (dimensions.custom_dimension_rules ?? []).find((row) => active(row) && (row.productNode === window.id || row.selector?.seriesWindowId === window.id || row.selector?.window_type === window.id));",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/apw430-formal-split-v1-adapter.mjs",
+    "line": 249,
+    "source": "          const dependency = (options.standard_size_glass_dependencies ?? []).find((row) => row.size_id === selection.size && row.series_window_id === selection.window_type);",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/apw430-formal-split-v1-adapter.mjs",
+    "line": 255,
+    "source": "          const grid = (options.standard_grid_count_matrix ?? []).find((row) => row.size_id === selection.size && row.series_window_id === selection.window_type);",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/apw430-formal-split-v1-adapter.mjs",
+    "line": 258,
+    "source": "          const dependency = (options.custom_glass_dependencies ?? []).find((row) => row.series_window_id === selection.window_type);",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/apw430-formal-split-v1-adapter.mjs",
+    "line": 272,
+    "source": "            const dependency = (options.standard_size_glass_dependencies ?? []).find((row) => row.size_id === selection.size && row.series_window_id === selection.window_type);",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/apw430-formal-split-v1-adapter.mjs",
+    "line": 276,
+    "source": "            const grid = (options.standard_grid_count_matrix ?? []).find((row) => row.size_id === selection.size && row.series_window_id === selection.window_type);",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/apw430-formal-split-v1-adapter.mjs",
+    "line": 279,
+    "source": "            const dependency = (options.custom_glass_dependencies ?? []).find((row) => row.series_window_id === selection.window_type);",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/apw431-formal-split-v1-adapter.mjs",
+    "line": 76,
+    "source": "  const windows = (core.series_windows ?? []).filter((row)=>active(row) && row.productId === 'SER-YKK-APW431' && row.selectable !== false)",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/canonical-runtime-manifest-loader.mjs",
+    "line": 28,
+    "source": "    manufacturer: raw.manufacturer,",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/canonical-runtime-manifest-loader.mjs",
+    "line": 29,
+    "source": "    series: raw.series,",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/canonical-runtime-manifest-loader.mjs",
+    "line": 41,
+    "source": "  for (const key of ['schemaVersion','manufacturer','series','packageVersion','runtimeStatus']) {",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/canonical-runtime-manifest-loader.mjs",
+    "line": 101,
+    "source": "    ['manufacturer', manifest.manufacturer, identity?.manufacturer],",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/canonical-runtime-manifest-loader.mjs",
+    "line": 102,
+    "source": "    ['series', manifest.series, identity?.series],",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/canonical-runtime-manifest-loader.mjs",
+    "line": 133,
+    "source": "    ['manufacturer', entry.manufacturer, manifest.manufacturer],",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/canonical-runtime-manifest-loader.mjs",
+    "line": 134,
+    "source": "    ['series', entry.series, manifest.series],",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/canonical-window-semantic-schema.mjs",
+    "line": 13,
+    "source": "  manufacturer:'PRODUCT', product:'PRODUCT',",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/canonical-window-semantic-schema.mjs",
+    "line": 24,
+    "source": "  'manufacturer','product','window_type','window_spec','handing','frame_angle','size_mode','panel_count','size',",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/canonical-workbook-runtime-engine.mjs",
+    "line": 266,
+    "source": "    const rules = master.optionCodeLinkages.filter((row) => row.parent_option_id === optionId && row.status !== 'SUPERSEDED' && String(row.series_window_scope ?? '').split('|').includes(selection.window_type));",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/entry-door-cover-runtime-ui-contract.mjs",
+    "line": 7,
+    "source": "// no manufacturer/series/product branching belongs here.",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/formal-custom-dimension-safety.mjs",
+    "line": 19,
+    "source": "    seriesWindowId: ['window_type'],",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/formal-custom-dimension-safety.mjs",
+    "line": 33,
+    "source": "  const windowId = rule.windowId ?? rule.productNode ?? rule.selector?.window_type ?? rule.selector?.seriesWindowId;",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/formal-custom-dimension-safety.mjs",
+    "line": 37,
+    "source": "    if (['window_type', 'seriesWindowId', 'construction'].includes(key)) continue;",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/formal-product-runtime-loader.mjs",
+    "line": 153,
+    "source": "  const expectedManifestSeries = entry.manifestSeries ?? entry.series;",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/formal-product-runtime-loader.mjs",
+    "line": 155,
+    "source": "    ['manufacturer', entry.manufacturer, raw.manufacturer],",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/formal-product-runtime-loader.mjs",
+    "line": 156,
+    "source": "    ['series', expectedManifestSeries, raw.series],",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/formal-product-runtime-loader.mjs",
+    "line": 172,
+    "source": "  const expectedProductId = entry.productId ?? raw.product_id ?? null;",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/formal-product-runtime-loader.mjs",
+    "line": 177,
+    "source": "    const docManufacturer = document.manufacturer ?? document.metadata?.manufacturer;",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/formal-product-runtime-loader.mjs",
+    "line": 178,
+    "source": "    const docSeries = document.series ?? document.metadata?.series;",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/formal-product-runtime-loader.mjs",
+    "line": 180,
+    "source": "    const docProductId = document.product_id ?? document.product?.productId ?? document.product_module?.product?.id;",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/formal-product-runtime-loader.mjs",
+    "line": 181,
+    "source": "    if (!matchesIdentity(docManufacturer, entry.manufacturer)) fail('FORMAL_RUNTIME_DOCUMENT_IDENTITY_MISMATCH', `${row.role}: manufacturer mismatch`, { row });",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/formal-product-runtime-loader.mjs",
+    "line": 182,
+    "source": "    if (!matchesIdentity(docSeries, expectedManifestSeries)) fail('FORMAL_RUNTIME_DOCUMENT_IDENTITY_MISMATCH', `${row.role}: series mismatch`, { row });",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/formal-product-runtime-loader.mjs",
+    "line": 184,
+    "source": "    if (!matchesIdentity(docProductId, expectedProductId)) fail('FORMAL_RUNTIME_DOCUMENT_IDENTITY_MISMATCH', `${row.role}: product_id mismatch`, { row });",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/formal-product-runtime-v2-loader.mjs",
+    "line": 94,
+    "source": "  const expectedManifestSeries=entry.manifestSeries??entry.series;",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/formal-product-runtime-v2-loader.mjs",
+    "line": 95,
+    "source": "  for(const[name,expected,actual]of[['manufacturer',entry.manufacturer,raw.manufacturer],['series',expectedManifestSeries,raw.series],['package_version',entry.masterVersion,raw.package_version]])if(!matchesIdentity(actual,expected))fail('FORMAL_RUNTIME_MANIFEST_IDENTITY_MISMATCH',`${name} mismatch: expected ${expected}, got ${actual}`,{name,expected,actual});",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/formal-product-runtime-v2-loader.mjs",
+    "line": 106,
+    "source": "    const docManufacturer=document.manufacturer??document.metadata?.manufacturer;",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/formal-product-runtime-v2-loader.mjs",
+    "line": 107,
+    "source": "    const docSeries=document.series??document.metadata?.series;",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/formal-product-runtime-v2-loader.mjs",
+    "line": 109,
+    "source": "    if(!matchesIdentity(docManufacturer,entry.manufacturer))fail('FORMAL_RUNTIME_DOCUMENT_IDENTITY_MISMATCH',`${row.fileName}: manufacturer mismatch`,{row});",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/formal-product-runtime-v2-loader.mjs",
+    "line": 110,
+    "source": "    if(!matchesIdentity(docSeries,expectedManifestSeries))fail('FORMAL_RUNTIME_DOCUMENT_IDENTITY_MISMATCH',`${row.fileName}: series mismatch`,{row});",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/new-construction-sash-runtime-ui-contract.mjs",
+    "line": 11,
+    "source": "  'manufacturer','product','window_type','window_spec','handing','frame_angle','size_mode','panel_count','size',",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/new-construction-sash-runtime-ui-contract.mjs",
+    "line": 17,
+    "source": "  manufacturer:'manufacturer',product:'product',",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/new-construction-sash-runtime-ui-contract.mjs",
+    "line": 34,
+    "source": "const PRODUCT_SLOTS = new Set(['manufacturer','product']);",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/new-construction-sash-runtime-ui-contract.mjs",
+    "line": 57,
+    "source": "// Exact-key only: no series/manufacturer fallback and no generic escape hatch.",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/product-module-glass-manufacturability.mjs",
+    "line": 14,
+    "source": "    manufacturer: module.product?.manufacturer,",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/product-module-glass-manufacturability.mjs",
+    "line": 15,
+    "source": "    series: module.product?.displayName ?? module.product?.series,",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/product-module-runtime-adapter.mjs",
+    "line": 126,
+    "source": "        productId: module.product.id,",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/product-module-runtime-adapter.mjs",
+    "line": 138,
+    "source": "function allowedRowFor(catalog, productId, field, value, selection, context) {",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/product-module-runtime-adapter.mjs",
+    "line": 139,
+    "source": "  return catalog.allowedValues.find((row) => row.productId === productId && row.specificationKey === field &&",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/product-module-runtime-adapter.mjs",
+    "line": 157,
+    "source": "function customConstructionCandidates(module, catalog, productId, selection) {",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/product-module-runtime-adapter.mjs",
+    "line": 159,
+    "source": "  const context = buildCatalogContext(catalog, productId);",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/product-module-runtime-adapter.mjs",
+    "line": 191,
+    "source": "  const productId = module.product.id;",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/product-module-runtime-adapter.mjs",
+    "line": 207,
+    "source": "    let result = stabilizeSelection(catalog, productId, working);",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/product-module-runtime-adapter.mjs",
+    "line": 213,
+    "source": "      const candidates = customConstructionCandidates(module, catalog, productId, result.selection);",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/product-module-runtime-adapter.mjs",
+    "line": 235,
+    "source": "      result = stabilizeSelection(catalog, productId, working);",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/product-module-runtime-adapter.mjs",
+    "line": 239,
+    "source": "    const context = buildCatalogContext(catalog, productId);",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/product-module-runtime-adapter.mjs",
+    "line": 243,
+    "source": "        const row = allowedRowFor(catalog, productId, field.key, choice.value, resolved, context);",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/runtime-app-bridge.mjs",
+    "line": 7,
+    "source": "const integrationKey=(manufacturer,series)=>`${manufacturer}::${series}`;",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/runtime-app-bridge.mjs",
+    "line": 8,
+    "source": "const generatedProductId=(manufacturer,series)=>`RUNTIME-${manufacturer}-${series}`.replace(/[^A-Za-z0-9._-]+/g,'-');",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/runtime-app-bridge.mjs",
+    "line": 9,
+    "source": "const metadataByKey=new Map(appRuntimeIntegrationRegistry.map((row)=>[integrationKey(row.manufacturer,row.series),row]));",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/runtime-app-bridge.mjs",
+    "line": 12,
+    "source": "function registeredIntegration(entry){const metadata=metadataByKey.get(integrationKey(entry.manufacturer,entry.series));return Object.freeze({id:metadata?.id??generatedProductId(entry.manufacturer,entry.series),manufacturer:entry.manufacturer,series:entry.series,displayName:metadata?.displayName??entry.series,productCategory:metadata?.productCategory??null,uiCategory:metadata?.uiCategory??null,registrySeriesKey:metadata?.registrySeriesKey??integrationKey(entry.manufacturer,entry.series),source:'RUNTIME_MASTER',status:'READY',selectable:true,blockReason:null,masterVersion:entry.masterVersion,packageVersion:metadata?.packageVersion??entry.masterVersion,schemaVersion:entry.schemaVersion,sourceHash:metadata?.sourceHash??entry.sourceZipSha256??entry.runtimeManifestSha256??null,adapterType:metadata?.adapterType??entry.adapterType??'XE_ZIP_V1',canonicalRuntimeReference:metadata?.canonicalRuntimeReference??null,uiStandardSpec:metadata?.uiStandardSpec??null,uiContractSource:metadata?.uiContractSource??null,salesRequestExtension:metadata?.salesRequestExtension??null});}",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/runtime-app-bridge.mjs",
+    "line": 14,
+    "source": "export function runtimeAppIntegrationInventory(){const rows=runtimeMasterInventory.map(registeredIntegration);const registeredKeys=new Set(runtimeMasterInventory.map((entry)=>integrationKey(entry.manufacturer,entry.series)));for(const metadata of appRuntimeIntegrationRegistry)if(!registeredKeys.has(integrationKey(metadata.manufacturer,metadata.series)))rows.push(blockedCandidate(metadata));return rows.sort((a,b)=>a.manufacturer.localeCompare(b.manufacturer,'ja')||a.series.localeCompare(b.series,'ja'));}",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/runtime-app-bridge.mjs",
+    "line": 15,
+    "source": "export function getRuntimeAppIntegration(productId){return runtimeAppIntegrationInventory().find((row)=>row.id===productId)??null;}",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/runtime-app-bridge.mjs",
+    "line": 24,
+    "source": "export function toRuntimeUiResult(master,state,integration,sourcePackageIntegrity=null){const visible=[];const customSize=master.capabilities?.uiSemanticSupport?.customSize;for(const[index,def]of master.fields.entries()){const fieldState=state.fields[def.field_name];if(!fieldState||fieldState.visibility==='HIDE'||def.runtime_included===false)continue;if((def.selection_mode==='DERIVED'||def.selection_mode==='FIXED')&&def.show_read_only!==true)continue;const dimensionField=(customSize?.dimensionFields??[]).includes(def.field_name);visible.push({key:def.field_name,domain:def.domain??null,displayLabel:fieldState.display_label??labelFrom(def,humanizeFieldName(def.field_name)),displayOrder:Number(def.display_order??def.displayOrder??index+1),dataType:dataTypeFor(def),unit:fieldState.unit??def.unit??(dimensionField?customSize?.unit:null),step:fieldState.step??(dimensionField?customSize?.stepMm:null),required:Boolean(fieldState.required),values:choicesFor(master,def,fieldState,integration),selectionMode:def.selection_mode,runtimeState:fieldState.state,readOnly:Boolean(fieldState.readOnly||fieldState.derived_by_rule||fieldState.resolved_by_rule)||(def.selection_mode==='AUTO_RESOLVE'&&fieldState.allowed_values?.length===1),parentFields:def.parent_fields??[]});}visible.push(...(state.presentationFields??[]));const orderedVisible=applyRuntimeUiCategoryOrder(visible,integration);const visibleKeys=new Set(orderedVisible.map((field)=>field.key));const selectionKeys=runtimeResolvedHiddenKeys(master,state,visibleKeys);const selection=Object.fromEntries(Object.entries(state.fields).filter(([name,fieldState])=>selectionKeys.has(name)&&fieldState.value!==null&&fieldState.value!==undefined).map(([name,fieldState])=>{if(!Array.isArray(fieldState.value))return[name,fieldState.value];const selectable=new Set(valueRowsFor(master,name).filter((row)=>row.user_selectable!==false).map((row)=>row.canonical_value));return[name,fieldState.value.filter((value)=>selectable.has(value))];}).filter(([,value])=>!Array.isArray(value)||value.length));Object.assign(selection,state.presentationSelection??{});const errors=(state.errors??[]).map((error)=>({errorCode:error.code??'RUNTIME_VALIDATION_ERROR',field:error.field??null,message:error.message??(error.field?`${error.field}: ${error.code??'入力値が成立しません'}`:warningText(error))}));return{productId:integration.id,manufacturer:integration.manufacturer,series:integration.series,source:'RUNTIME_MASTER',status:integration.status,selection,dependencyFields:master.fields.map((def)=>({key:def.field_name,parentFields:def.parent_fields??[]})),fields:orderedVisible,confirmationRequests:state.confirmation_requests,sales_request_handoff:state.sales_request_handoff,sales_request_state:state.sales_request_state,notices:[...((state.order_ready??master.capabilities?.orderReady)===false?['ORDER_READY = false：営業見積入力用です。発注確定にはメーカー確認が必要です。']:[]),...(state.warnings??[]).map(warningText),...(state.derived_entities??[]).map(row=>`${({REQUIRES:'必要',ENABLES:'有効',FIXES:'固定'})[row.relationship]}: ${row.displayLabel}${row.note?`（${row.note}）`:''}`),...((state.derived_options??[]).length?[`自動適用オプション: ${(state.derived_options??[]).map((id)=>labelFrom(master.values.find((row)=>row.field_name==='option'&&row.canonical_value===id),id)).join('、')}`]:[])],manualWarnings:[...(state.manual_checks??[]).map((row)=>`MANUAL_CHECK ${row.id}: ${row.reason}`),...(state.manual_warnings??[]),...(state.matched_invalid_rules??[]).map((ruleId)=>`成立不可Rule: ${ruleId}`)],validation:{status:state.status,errors,missingRequiredFields:[...(state.missing_required_fields??[])]},derivedEntities:state.derived_entities??[],derivedComponents:[...(state.derived_components??[])].sort(),derivedOptions:[...(state.derived_options??[])].sort(),clearedFields:[...(state.cleared_fields??[])],optionCodeResults:state.option_code_results??[],optionCodeLinkageCount:state.option_code_linkage_count??0,runtimeCapabilities:master.capabilities??null,dimensionResult:state.dimension_result??null,orderReady:state.order_ready??master.capabilities?.orderReady??null,runtimeMaster:runtimeMasterMetadata(integration,sourcePackageIntegrity)};}",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/runtime-app-bridge.mjs",
+    "line": 25,
+    "source": "function toDirectUiResolverResult(raw,integration,sourcePackageIntegrity=null){const visible=(raw.fields??[]).map((field,index)=>{let values=field.values??[];if(integration.uiCategory===NEW_CONSTRUCTION_EXTERIOR_WINDOW_UI_CATEGORY&&field.key==='size')values=formatAndSortStandardSizeChoices(values);else values=values.map(({runtimeValueRow,...choice})=>choice);return{...field,displayOrder:Number(field.displayOrder??(index+1)*10),values,parentFields:field.parentFields??[]};});const fields=applyRuntimeUiCategoryOrder(visible,integration);const validation=raw.validation??{status:'VALID',errors:[],missingRequiredFields:[]};return{...raw,productId:integration.id,manufacturer:integration.manufacturer,series:integration.series,source:'RUNTIME_MASTER',status:integration.status,selection:raw.selection??{},dependencyFields:raw.dependencyFields??fields.map((field)=>({key:field.key,parentFields:field.parentFields??[]})),fields,notices:raw.notices??[],manualWarnings:raw.manualWarnings??[],validation:{status:validation.status??'VALID',errors:validation.errors??[],missingRequiredFields:validation.missingRequiredFields??validation.missing_required_fields??[]},clearedFields:raw.clearedFields??[],optionCodeResults:raw.optionCodeResults??[],optionCodeLinkageCount:raw.optionCodeLinkageCount??0,runtimeCapabilities:raw.runtimeCapabilities??null,dimensionResult:raw.dimensionResult??null,orderReady:raw.orderReady??false,runtimeMaster:runtimeMasterMetadata(integration,sourcePackageIntegrity)};}",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/runtime-app-bridge.mjs",
+    "line": 26,
+    "source": "export async function resolveRuntimeAppProduct(productId,selection={}){const integration=getRuntimeAppIntegration(productId);if(!integration){const error=new Error(`Unknown Runtime app product: ${productId}`);error.code='RUNTIME_APP_PRODUCT_NOT_FOUND';throw error;}if(!integration.selectable){const error=new Error(integration.blockReason??`Runtime app product is blocked: ${productId}`);error.code='RUNTIME_MASTER_NOT_REGISTERED';error.integration=integration;throw error;}const entry=getRuntimeMasterEntry(integration.manufacturer,integration.series);if(!entry){const error=new Error(`Runtime Master Registry entry disappeared: ${integration.manufacturer}/${integration.series}`);error.code='RUNTIME_MASTER_NOT_REGISTERED';throw error;}const runtime=await loadRegisteredRuntime(integration.manufacturer,integration.series);if(!runtime){const error=new Error(`Runtime Master could not be loaded: ${integration.manufacturer}/${integration.series}`);error.code='RUNTIME_MASTER_LOAD_FAILED';throw error;}if(runtime.uiResolver)return toDirectUiResolverResult(runtime.uiResolver(selection??{}),integration,runtime.sourcePackageIntegrity);const normalized=normalizeRuntimeSelection(runtime.master,selection);const evaluate=(value)=>runtime.resolver?runtime.resolver(value):evaluateConfiguration(runtime.master,value);const state=integration.uiCategory==='INNER_WINDOW'?evaluateInnerWindowPresentation(runtime.master,{...normalized,...Object.fromEntries(Object.entries(selection).filter(([key])=>integration.salesRequestExtension?.fields.some(field=>field.key===key)))},evaluate,integration.salesRequestExtension):evaluate(normalized);return toRuntimeUiResult(runtime.master,state,integration,runtime.sourcePackageIntegrity);}",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/runtime-manifest-loader.mjs",
+    "line": 94,
+    "source": "    manufacturer: raw.manufacturer,",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/runtime-manifest-loader.mjs",
+    "line": 95,
+    "source": "    series: raw.series,",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/runtime-manifest-loader.mjs",
+    "line": 108,
+    "source": "  for (const key of ['schemaVersion','manufacturer','series','packageVersion','runtimeStatus']) {",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/runtime-manifest-loader.mjs",
+    "line": 217,
+    "source": "    ['manufacturer', entry.manufacturer, manifest.manufacturer],",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/runtime-manifest-loader.mjs",
+    "line": 218,
+    "source": "    ['series', entry.series, manifest.series],",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/runtime-manifest-loader.mjs",
+    "line": 254,
+    "source": "    for (const [name, expected] of [['manufacturer', manifest.manufacturer], ['series', manifest.series], ['package_version', manifest.packageVersion]]) {",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/runtime-master-registry.mjs",
+    "line": 27,
+    "source": "const UCHIRIMO_ROOT = join(HERE, '../runtime-master-packages/ykkap-uchirimo-v1.0-p7r1-r2');",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/runtime-master-registry.mjs",
+    "line": 28,
+    "source": "const UCHIRIMO_SLIM_ROOT = join(HERE, '../runtime-master-packages/ykkap-uchirimo-slim-v2-20260929');",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/runtime-master-registry.mjs",
+    "line": 29,
+    "source": "const INPLUS_ROOT = join(HERE, '../runtime-master-packages/lixil-inplus-v0.4-r2');",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/runtime-master-registry.mjs",
+    "line": 38,
+    "source": "    manufacturer:'LIXIL', series:'サーモスⅡ-H', manifestSeries:'サーモスⅡH', productId:'SER-LIX-SAMOS2H', masterVersion:'v0.9-R4', schemaVersion:'2.0',",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/runtime-master-registry.mjs",
+    "line": 47,
+    "source": "    manufacturer:'LIXIL', series:'サーモスL', productId:'SER-LIX-SAMOSL', masterVersion:'v0.7-R2', schemaVersion:'2.0', packageType:'FORMAL_PRODUCT_RUNTIME', adapterType:'PRODUCT_MODULE_RUNTIME_V1', productModuleRole:'RUNTIME_JSON_PACKAGE', packageRoot:THERMOSL_ROOT,",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/runtime-master-registry.mjs",
+    "line": 54,
+    "source": "    manufacturer:'LIXIL', series:'EW', masterVersion:'v1.3', schemaVersion:'2.0', packageType:'RUNTIME_MANIFEST_V2', adapterType:'CANONICAL_WORKBOOK_REFERENCE_V1', packageRoot:EW_ROOT,",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/runtime-master-registry.mjs",
+    "line": 61,
+    "source": "    manufacturer:'LIXIL', series:'リシェント玄関ドア3 非防火', productId:'SER-LIXIL-RECHENT-D3-NF', masterVersion:'v0.8-R7', schemaVersion:'PRODUCT_MASTER_RUNTIME_v2.0', packageType:'FORMAL_PRODUCT_RUNTIME', adapterType:'RECHENT_DOOR3_NONFIRE_V1', packageRoot:RECHENT_ROOT,",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/runtime-master-registry.mjs",
+    "line": 75,
+    "source": "    manufacturer:'YKK AP', series:'APW430', productId:'SER-YKK-APW430', masterVersion:'20260918-R3', schemaVersion:'product-master-runtime-manifest/1.0', packageType:'FORMAL_PRODUCT_RUNTIME', adapterType:'APW430_FORMAL_SPLIT_V1', packageRoot:APW430_ROOT,",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/runtime-master-registry.mjs",
+    "line": 84,
+    "source": "    manufacturer:'YKK AP', series:'APW431', productId:'SER-YKK-APW431', masterVersion:'v1.2', schemaVersion:'product-master-runtime-manifest/2.0', packageType:'FORMAL_PRODUCT_RUNTIME', adapterType:'APW431_FORMAL_SPLIT_V1', packageRoot:APW431_ROOT,",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/runtime-master-registry.mjs",
+    "line": 93,
+    "source": "    manufacturer:'YKK AP', series:'ウチリモ 内窓', masterVersion:'v1.0-P7R1-R2', schemaVersion:'2.0', packageType:'RUNTIME_MANIFEST_V2', adapterType:'UCHIRIMO_TABULAR_V1', requireRuntimeContract:false, enforceComponentSchemaVersion:false, runtimeRevision:'SLIM-V2-20260929', packageRoot:UCHIRIMO_SLIM_ROOT,",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/runtime-master-registry.mjs",
+    "line": 94,
+    "source": "    runtimeManifestPath:join(UCHIRIMO_SLIM_ROOT,'runtime_manifest.json'), runtimeManifestDriveFileId:'1oR7kQo7JGe-twx-Ko4Fbgkuk7M4Cp77q', runtimeManifestSha256:'3e2f2960a3761bc14a6c0ac3c9d9ee6d5c3e8f3b43bdee2bab81de7297afb5d4',",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/runtime-master-registry.mjs",
+    "line": 96,
+    "source": "      '1er4keQZ_SQyku3ae2bNxGukvkUvzRy-H':Object.freeze({codec:'identity',paths:Object.freeze([join(UCHIRIMO_SLIM_ROOT,'canonical.json')])}),",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/runtime-master-registry.mjs",
+    "line": 97,
+    "source": "      '1c6hmvMgSLhESgmMJTRW7DN_opa1HhYlZ':Object.freeze({codec:'brotli',paths:Object.freeze([join(UCHIRIMO_ROOT,'size-installation.json.br.b64.parts/part-00')])}),",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/runtime-master-registry.mjs",
+    "line": 98,
+    "source": "      '1TJn2-e6Sa6LcIv6FxNt0ahGSWlcgclJZ':Object.freeze({codec:'brotli',paths:Object.freeze([join(UCHIRIMO_ROOT,'vacuum-glass.json.br.b64.parts/part-00')])}),",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/runtime-master-registry.mjs",
+    "line": 99,
+    "source": "      '1fNUukTQaDJT2iWbNk6F8gcLLt22Sg32z':Object.freeze({codec:'brotli',paths:Object.freeze([join(UCHIRIMO_ROOT,'judgment-engine.json.br.b64.parts/part-00')])}),",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/runtime-master-registry.mjs",
+    "line": 103,
+    "source": "    manufacturer:'LIXIL', series:'インプラス', masterVersion:'v0.4-R2', schemaVersion:'2.0', packageType:'RUNTIME_MANIFEST_V1', adapterType:'SEMANTIC_TABLE_BUNDLE_V2', packageRoot:INPLUS_ROOT,",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/runtime-master-registry.mjs",
+    "line": 104,
+    "source": "    runtimeManifestPath:join(INPLUS_ROOT,'runtime_manifest.json'), runtimeManifestDriveFileId:'1TokjIpcipm8TPxwrSO0FjyPxxvhCq5iZ', runtimeManifestSha256:'cbbdb6ba315c985f7d27f75a237e861be8ce635962ce1cd5a746d7f152c8e1f8',",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/runtime-master-registry.mjs",
+    "line": 106,
+    "source": "      '16dqUaVFp0YW3PqJ-A9tR0fAV0KT7WZML':Object.freeze({ codec:'gzip', paths:Object.freeze(['part-00a','part-00b','part-00c','part-01','part-02a','part-02b','part-02c','part-03'].map((name)=>join(INPLUS_ROOT,`LIXIL_インプラス_runtime_v0.4-R2.json.gz.b64.parts/${name}`))) }),",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/runtime-master-registry.mjs",
+    "line": 107,
+    "source": "      '1Qov5w3pNrU9om40OLJikJv7B8klK1RNz':Object.freeze({codec:'gzip',paths:Object.freeze([join(INPLUS_ROOT,'LIXIL_インプラス_runtime_v0.4-R2.schema.json.gz.b64')])}),",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/runtime-master-registry.mjs",
+    "line": 111,
+    "source": "    manufacturer:'LIXIL', series:'TW', masterVersion:'integrated-v0.4', schemaVersion:'2.0', packageType:'RUNTIME_MANIFEST_V1', adapterType:'TW_CANONICAL_WORKBOOK_REFERENCE_V2', packageRoot:TW_ROOT,",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/runtime-master-registry.mjs",
+    "line": 126,
+    "source": "export function getRuntimeMasterEntry(manufacturer, series) {",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/runtime-master-registry.mjs",
+    "line": 127,
+    "source": "  return runtimeMasterInventory.find((x) => x.manufacturer === manufacturer && x.series === series) ?? null;",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/runtime-master-registry.mjs",
+    "line": 138,
+    "source": "  } else if (entry.packageType === 'RUNTIME_MANIFEST_V2' && entry.adapterType === 'UCHIRIMO_TABULAR_V1') {",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/runtime-master-registry.mjs",
+    "line": 169,
+    "source": "export async function loadRegisteredRuntime(manufacturer, series) {",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/runtime-master-registry.mjs",
+    "line": 170,
+    "source": "  const entry = getRuntimeMasterEntry(manufacturer, series);",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/runtime-master-registry.mjs",
+    "line": 172,
+    "source": "  const key = `${manufacturer}/${series}`;",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/tw-canonical-workbook-reference-v1-adapter.mjs",
+    "line": 54,
+    "source": "    .filter((row) => row['シリーズID'] === document.series_id && row['有効'] !== false)",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/tw-canonical-workbook-reference-v1-adapter.mjs",
+    "line": 78,
+    "source": "  for (const row of sourceRows(document, '04_窓種固有仕様').filter((row) => row['シリーズID'] === document.series_id && row['有効'] !== false)) {",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/tw-canonical-workbook-reference-v1-adapter.mjs",
+    "line": 99,
+    "source": "    row['シリーズID'] === document.series_id && row['有効'] !== false && row['網戸形式'] !== 'なし')) {",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/tw-canonical-workbook-reference-v1-adapter.mjs",
+    "line": 106,
+    "source": "    .filter((row) => row['シリーズID'] === document.series_id && row['有効'] !== false && String(row['アクション']).startsWith('自動追加'))",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/tw-canonical-workbook-reference-v1-adapter.mjs",
+    "line": 121,
+    "source": "  for (const row of sourceRows(document, '08E_ガラス種').filter((row) => row['シリーズID'] === document.series_id && row['有効'] !== false)) {",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/tw-canonical-workbook-reference-v1-adapter.mjs",
+    "line": 125,
+    "source": "  for (const row of sourceRows(document, '08D_ガラス追加機能').filter((row) => row['シリーズID'] === document.series_id && row['有効'] !== false)) {",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/tw-canonical-workbook-reference-v1-adapter.mjs",
+    "line": 156,
+    "source": "      specs: sourceRows(document, '04_窓種固有仕様').filter((row) => row['シリーズID'] === document.series_id && row['有効'] !== false),",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/tw-canonical-workbook-reference-v1-adapter.mjs",
+    "line": 157,
+    "source": "      glassApplicability: sourceRows(document, '08A_ガラス適用条件').filter((row) => row['シリーズID'] === document.series_id && row['有効'] !== false),",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/tw-canonical-workbook-reference-v1-adapter.mjs",
+    "line": 158,
+    "source": "      glassTypes: sourceRows(document, '08E_ガラス種').filter((row) => row['シリーズID'] === document.series_id && row['有効'] !== false),",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/tw-canonical-workbook-reference-v1-adapter.mjs",
+    "line": 159,
+    "source": "      glassFunctions: sourceRows(document, '08D_ガラス追加機能').filter((row) => row['シリーズID'] === document.series_id && row['有効'] !== false),",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/tw-canonical-workbook-reference-v1-adapter.mjs",
+    "line": 160,
+    "source": "      screenForms: sourceRows(document, '09A_網戸形式設定').filter((row) => row['シリーズID'] === document.series_id && row['有効'] !== false),",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/tw-canonical-workbook-reference-v1-adapter.mjs",
+    "line": 161,
+    "source": "      specDimensionRules: sourceRows(document, '05B_固有仕様寸法ルール').filter((row) => row['シリーズID'] === document.series_id && String(row['有効']).toUpperCase() !== 'FALSE'),",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/tw-canonical-workbook-reference-v1-adapter.mjs",
+    "line": 162,
+    "source": "      optionDependencies: sourceRows(document, '10B_OP依存関係').filter((row) => row['シリーズID'] === document.series_id && row['有効'] !== false),",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/uchirimo-glass-rule-model.mjs",
+    "line": 4,
+    "source": "// manufacturer allowances. Every rectangle must be an exact union of input tuples.",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/uchirimo-glass-rule-model.mjs",
+    "line": 57,
+    "source": "    schema_version: 'UCHIRIMO_GLASS_RULE_MODEL_V1',",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/uchirimo-glass-rule-model.mjs",
+    "line": 81,
+    "source": "  check(m?.schema_version === 'UCHIRIMO_GLASS_RULE_MODEL_V1', 'SCHEMA');",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/catalog/runtime-master/uchirimo-tabular-v1-adapter.mjs",
+    "line": 156,
+    "source": "      visibility_mode: ['manufacturer', 'series', 'product_category'].includes(row.field_name) ? 'HIDDEN' : 'CONDITIONAL',",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/work-management/domain.mjs",
+    "line": 147,
+    "source": "    manufacturer:result.manufacturer??product.manufacturer,",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/work-management/domain.mjs",
+    "line": 148,
+    "source": "    series:result.series??product.series??product.displayName,",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/work-management/domain.mjs",
+    "line": 158,
+    "source": "    product_id:product.id,",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/estimate-output/model.mjs",
+    "line": 109,
+    "source": "      product_id:nullable(snapshot.product_id),",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/estimate-output/model.mjs",
+    "line": 124,
+    "source": "      manufacturer:nullable(snapshot?.manufacturer),",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/estimate-output/model.mjs",
+    "line": 125,
+    "source": "      series:nullable(snapshot?.series),",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/estimate-output/pdf-renderer.mjs",
+    "line": 42,
+    "source": "  return [row.manufacturer,row.series,row.opening_type,row.major_specifications,row.size].filter(Boolean).join(' / ')||'商品仕様未入力';",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/estimate-output/xlsx-renderer.mjs",
+    "line": 76,
+    "source": "    row.manufacturer??'',",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  },
+  {
+    "file": "src/estimate-output/xlsx-renderer.mjs",
+    "line": 77,
+    "source": "    row.series??'',",
+    "classification": "legitimate declarative metadata",
+    "review_scope": "Identity lookup, registration, display metadata or formal-source adapter join; not a conditional presentation flow."
+  }
+]

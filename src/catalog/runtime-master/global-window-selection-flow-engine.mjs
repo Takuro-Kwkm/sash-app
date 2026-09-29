@@ -30,6 +30,7 @@ export function applyGlobalWindowSelectionFlow(fields = [], contract = {}) {
     semanticStageForSlot,
     approvedExtensionForField,
     shouldExposeField = () => true,
+    presentationExtensionForField = () => null,
     standardLabelForField = (_key, fallback) => fallback,
   } = contract;
 
@@ -68,8 +69,13 @@ export function applyGlobalWindowSelectionFlow(fields = [], contract = {}) {
         ...field,
         semanticStage,
         semanticSlot,
+        presentationSlot: presentationExtensionForField(key)?.slot ?? semanticSlot,
+        visible: true,
+        required: Boolean(field.required),
+        readOnly: Boolean(field.readOnly),
+        disabled: Boolean(field.disabled || field.readOnly || (['ENUM','MULTI_ENUM'].includes(field.dataType) && !field.values?.length)),
         displayLabel: standardLabelForField(key, field.displayLabel),
-        __stageIndex: stageIndex,
+        __stageIndex: presentationExtensionForField(key)?.order ?? stageIndex,
         __slotIndex: slotIndex,
         __runtimeOrder: Number(field.displayOrder ?? 1000 + inputIndex),
         __inputIndex: inputIndex,

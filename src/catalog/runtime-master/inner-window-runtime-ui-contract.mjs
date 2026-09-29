@@ -110,10 +110,12 @@ const APPROVED_INNER_WINDOW_EXTENSIONS = Object.freeze({
 });
 
 const INNER_WINDOW_TECHNICAL_EXACT = new Set([
-  'glass_structure_code','glass_spec_id','glass_size_constraint_group',
+  'glass_structure_code','glass_spec_id','glass_size_constraint_group','size_mode','size_class',
 ]);
 
 export function semanticSlotForInnerWindowField(key) {
+  const salesSlot={sales_glass_appearance:'glass_type',sales_spacer_type:'spacer_type',sales_gas_fill:'gas_fill'}[key];
+  if(salesSlot)return salesSlot;
   if (key === 'bathroom_installation_type') return 'installation_environment';
   return INNER_WINDOW_UI_STANDARD_ORDER.includes(key) ? key : null;
 }
@@ -132,7 +134,7 @@ export function semanticStageForInnerWindowSlot(slot) {
 const STANDARD_LABELS = Object.freeze({
   window_type:'窓種類', frame_angle:'枠アングル', size_mode:'サイズ方式', size_w:'特注W（mm）', size_h:'特注H（mm）', order_width:'特注W（mm）', order_height:'特注H（mm）',
   frame_color:'本体色', body_color:'本体色', glass_family:'ガラス仕様', glass_type:'ガラス種', low_e_type:'Low-E性能', lowe_color:'Low-E性能',
-  spacer_type:'スペーサー', spacer:'スペーサー', gas_fill:'中空層', cavity_fill:'中空層', frame_installation_mode:'枠仕様 / 納まり', frame_install_spec:'枠仕様 / 納まり', bathroom_installation_type:'設置環境', installation_environment:'設置環境',
+  spacer_type:'スペーサー', spacer:'スペーサー', gas_fill:'中空層', cavity_fill:'中空層', frame_installation_mode:'枠仕様', frame_install_spec:'枠・納まり仕様（区分分離未対応）', bathroom_installation_type:'設置環境', installation_environment:'設置環境',
   option_items:'オプション',
 });
 
@@ -171,5 +173,6 @@ export function applyInnerWindowUiOrder(fields = []) {
     approvedExtensionForField: approvedInnerWindowExtensionForField,
     shouldExposeField: shouldExposeInnerWindowRuntimeField,
     standardLabelForField: standardLabelForInnerWindowField,
+    presentationExtensionForField: key => ['size_w','size_h','order_width','order_height','sash_width_allocation','sash_w1','sash_w2','sash_w3','sash_w4'].includes(key) ? {slot:'INNER_WINDOW_PRE_OPTION_DIMENSION',order:7.5} : null,
   });
 }

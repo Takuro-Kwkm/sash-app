@@ -1,0 +1,86 @@
+[
+  {
+    "file": "src/ui/web/product-configuration-editor.mjs",
+    "line": 153,
+    "match": "product.id===UCHIRIMO_PRODUCT_ID",
+    "classification": "Global Flow bypass",
+    "resolution": "removed; shared contract"
+  },
+  {
+    "file": "src/ui/web/product-configuration-editor.mjs",
+    "line": 154,
+    "match": "product.id===UCHIRIMO_PRODUCT_ID",
+    "classification": "Global Flow bypass",
+    "resolution": "removed; shared contract"
+  },
+  {
+    "file": "src/ui/web/product-configuration-editor.mjs",
+    "line": 155,
+    "match": "product.id===UCHIRIMO_PRODUCT_ID",
+    "classification": "Global Flow bypass",
+    "resolution": "removed; shared contract"
+  },
+  {
+    "file": "src/ui/web/product-configuration-editor.mjs",
+    "line": 210,
+    "match": "this.state.productId===UCHIRIMO_PRODUCT_ID",
+    "classification": "Global Flow bypass",
+    "resolution": "removed; shared contract"
+  },
+  {
+    "file": "src/ui/web/product-configuration-editor.mjs",
+    "line": 215,
+    "match": "this.state.productId===UCHIRIMO_PRODUCT_ID",
+    "classification": "Global Flow bypass",
+    "resolution": "removed; shared contract"
+  },
+  {
+    "file": "src/ui/web/product-configuration-editor.mjs",
+    "line": 240,
+    "match": "productId===UCHIRIMO_PRODUCT_ID",
+    "classification": "Global Flow bypass",
+    "resolution": "removed; shared contract"
+  },
+  {
+    "file": "src/ui/web/product-configuration-editor.mjs",
+    "line": 245,
+    "match": "productId===UCHIRIMO_PRODUCT_ID",
+    "classification": "Global Flow bypass",
+    "resolution": "removed; shared contract"
+  },
+  {
+    "file": "src/ui/web/product-configuration-editor.mjs",
+    "line": 266,
+    "match": "productId===UCHIRIMO_PRODUCT_ID",
+    "classification": "Global Flow bypass",
+    "resolution": "removed; shared contract"
+  },
+  {
+    "file": "src/ui/web/product-configuration-editor.mjs",
+    "line": 274,
+    "match": "productId===UCHIRIMO_PRODUCT_ID",
+    "classification": "Global Flow bypass",
+    "resolution": "removed; shared contract"
+  },
+  {
+    "file": "src/ui/web/product-configuration-editor.mjs",
+    "line": 317,
+    "match": "this.state.productId!==UCHIRIMO_PRODUCT_ID",
+    "classification": "Global Flow bypass",
+    "resolution": "removed; shared contract"
+  },
+  {
+    "file": "src/work-management/service.mjs",
+    "line": 78,
+    "match": "product_id==='SER-YKKAP-UCHIRIMO'",
+    "classification": "business-rule override",
+    "resolution": "removed; shared contract"
+  },
+  {
+    "file": "src/estimate-output/model.mjs",
+    "line": 29,
+    "match": "product_id==='SER-YKKAP-UCHIRIMO'",
+    "classification": "business-rule override",
+    "resolution": "removed; shared contract"
+  }
+]

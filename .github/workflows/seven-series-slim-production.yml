@@ -143,7 +143,7 @@ jobs:
         run: |
           node test/browser/uchirimo-runtime-browser-qa.mjs
           node test/browser/global-window-selection-flow-browser-qa.mjs
-          node test/browser/seven-series-business-flow-qa.mjs
+          node test/browser/eight-series-business-flow-qa.mjs
           node test/browser/release-regression-browser-qa.mjs
           npm run test:browser:work
           npm run test:browser:estimate-output

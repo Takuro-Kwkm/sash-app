@@ -36,7 +36,7 @@ jobs:
           done
           node test/browser/uchirimo-runtime-browser-qa.mjs
           node test/browser/global-window-selection-flow-browser-qa.mjs
-          node test/browser/seven-series-business-flow-qa.mjs
+          node test/browser/eight-series-business-flow-qa.mjs
           node test/browser/release-regression-browser-qa.mjs
           npm run test:browser:work
           npm run test:browser:estimate-output
@@ -48,7 +48,7 @@ jobs:
           name: seven-series-slim-browser-qa-${{ github.sha }}
           path: |
             artifacts/seven-series-review/
-            artifacts/seven-series-business-flow/
+            artifacts/eight-series-business-flow/
             artifacts/uchirimo-runtime-browser-qa/
             artifacts/global-window-selection-flow-browser-qa/
             artifacts/release-regression-browser-qa/

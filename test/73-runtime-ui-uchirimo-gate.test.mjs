@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { loadRegisteredRuntime } from '../src/catalog/runtime-master/runtime-master-registry.mjs';
-import { resolveRuntimeAppProduct } from '../src/catalog/runtime-master/runtime-app-bridge.mjs';
+import { resolveFormalRuntimeProduct as resolveRuntimeAppProduct } from './helpers/formal-runtime-result.mjs';
 
 const PRODUCT = 'SER-YKKAP-UCHIRIMO';
 const field = (result, key) => result.fields.find((row) => row.key === key);
@@ -20,13 +20,13 @@ async function complete(seed, preferences = {}) {
   throw new Error('Uchirimo representative configuration did not converge');
 }
 
-test('initial inner-window flow follows v1.8 global OPENING then CONFIGURATION stage order', async () => {
+test('initial inner-window flow follows v1.9 global OPENING then CONFIGURATION stage order', async () => {
   const result = await resolveRuntimeAppProduct(PRODUCT, {});
-  assert.deepEqual(result.fields.map((row) => row.key), ['window_type', 'room_specification', 'size_mode']);
+  assert.deepEqual(result.fields.map((row) => row.key), ['window_type', 'room_specification']);
   assert.deepEqual(values(result, 'room_specification'), ['residential', 'bathroom']);
   assert.deepEqual(values(result, 'window_type'), ['sliding_window', 'fix_window', 'inward_opening_window', 'opening_window_terrace']);
-  assert.deepEqual(values(result, 'size_mode'), ['custom']);
-  assert.equal(field(result, 'size_mode').readOnly, true);
+  assert.equal(result.selection.size_mode,'custom');
+  assert.equal(field(result, 'size_mode'), undefined);
 });
 
 test('glass_spec_id resolves internally and never appears as a giant dropdown', async () => {
@@ -52,10 +52,10 @@ test('Low-E block, spacer and cavity are separate Runtime dependencies', async (
   assert.equal(field(result, 'gas_fill'), undefined);
 });
 
-test('v1.8 global order keeps configuration and size before finish/glazing/installation', async () => {
+test('v1.9 keeps semantic SIZE with pre-option dimension presentation', async () => {
   const result = await resolveRuntimeAppProduct(PRODUCT, { ...baseNode, glass_family: 'insulating_glass', glass_structure: 'P3P3', low_e_type: 'insulating' });
   const order = result.fields.map((row) => row.key);
-  for (const [a, b] of [['window_type','room_specification'],['room_specification','size_mode'],['size_mode','frame_color'],['frame_color','glass_family'],['glass_family','low_e_type'],['low_e_type','spacer_type'],['spacer_type','gas_fill'],['gas_fill','frame_installation_mode']]) assert.ok(order.indexOf(a) < order.indexOf(b), `${a} before ${b}`);
+  for (const [a, b] of [['window_type','room_specification'],['room_specification','frame_color'],['frame_color','glass_family'],['glass_family','low_e_type'],['low_e_type','spacer_type'],['spacer_type','gas_fill'],['gas_fill','frame_installation_mode']]) assert.ok(order.indexOf(a) < order.indexOf(b), `${a} before ${b}`);
 });
 
 test('bathroom dependency exposes only formal colors and clears stale residential color', async () => {
@@ -68,8 +68,8 @@ test('bathroom dependency exposes only formal colors and clears stale residentia
 
 test('custom size exposes no standard records or synthetic W×H combinations', async () => {
   const result = await resolveRuntimeAppProduct(PRODUCT, baseNode);
-  assert.equal(field(result, 'size_mode').readOnly, true);
-  assert.deepEqual(values(result, 'size_mode'), ['custom']);
+  assert.equal(field(result, 'size_mode'), undefined);
+  assert.equal(result.selection.size_mode,'custom');
   assert.ok(field(result, 'size_w')); assert.ok(field(result, 'size_h'));
   assert.equal(result.fields.some((row) => row.key === 'size'), false);
   assert.equal(result.runtimeCapabilities.standardSizeRecords, 0);
@@ -94,7 +94,7 @@ test('upstream changes remove invalid downstream values', async () => {
 
 test('formal fixed/derived values are read-only', async () => {
   const result = await resolveRuntimeAppProduct(PRODUCT, baseNode);
-  assert.equal(field(result, 'size_mode').readOnly, true);
+  assert.equal(field(result, 'size_mode'), undefined);
   assert.equal(field(result, 'operating_handle_type').readOnly, true);
   assert.deepEqual(values(result, 'operating_handle_type'), ['detachable_handle']);
 });

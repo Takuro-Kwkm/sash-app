@@ -23,7 +23,7 @@ function assertCanonicalStageOrder(rows, label) {
   for (const field of rows) {
     assert.ok(field.semanticSlot, `${label}:${field.key} missing semanticSlot`);
     assert.ok(field.semanticStage, `${label}:${field.key} missing semanticStage`);
-    const current = STAGE_INDEX.get(field.semanticStage);
+    const current = field.presentationSlot==='INNER_WINDOW_PRE_OPTION_DIMENSION'?7.5:STAGE_INDEX.get(field.semanticStage);
     assert.notEqual(current, undefined, `${label}:${field.key} unknown stage ${field.semanticStage}`);
     assert.ok(current >= previous, `${label}:${field.key} stage order regressed`);
     previous = current;
@@ -66,10 +66,10 @@ test('inner-window fields use the same global stage sequence', () => {
     { key: 'window_type', field_name: 'window_type', domain: 'PRODUCT', displayOrder: 30 },
   ]);
   assert.deepEqual(stages(rows), [
-    'OPENING', 'CONFIGURATION', 'SIZE', 'SIZE', 'FINISH', 'GLAZING', 'INSTALLATION_SURVEY', 'INSTALLATION_SURVEY',
+    'OPENING', 'CONFIGURATION', 'FINISH', 'GLAZING', 'INSTALLATION_SURVEY', 'INSTALLATION_SURVEY', 'SIZE',
   ]);
   assert.deepEqual(keys(rows), [
-    'window_type', 'room_specification', 'size_mode', 'size_w', 'frame_color', 'glass_family', 'frame_installation_mode', 'bathroom_installation_type',
+    'window_type', 'room_specification', 'frame_color', 'glass_family', 'frame_installation_mode', 'bathroom_installation_type', 'size_w',
   ]);
   assert.equal(rows.find((row)=>row.key==='bathroom_installation_type').semanticSlot, 'installation_environment');
   assert.equal(INNER_WINDOW_UI_CATEGORY, 'INNER_WINDOW');
@@ -96,11 +96,11 @@ test('approved category extensions are exact declarative Uchirimo fields', () =>
   assert.equal(rows[1].semanticSlot, 'extension:option:arm_stopper_option');
 });
 
-test('all registered window integrations point to UI standard v1.8 and resolve through canonical stages', async () => {
+test('all registered window integrations point to UI standard v1.9 and resolve through canonical stages', async () => {
   const integrations = windowIntegrations();
   assert.equal(integrations.length, 8, 'Global Window Flow population must remain the eight registered window integrations');
   for (const integration of integrations) {
-    assert.equal(integration.uiStandardSpec, 'サッシ情報管理アプリ_UI実装標準仕様書_v1.8', integration.id);
+    assert.equal(integration.uiStandardSpec, 'サッシ情報管理アプリ_UI実装標準仕様書_v1.9', integration.id);
     const result = await resolveRuntimeAppProduct(integration.id, {});
     assert.equal(result.productId, integration.id);
     assertCanonicalStageOrder(result.fields, integration.id);

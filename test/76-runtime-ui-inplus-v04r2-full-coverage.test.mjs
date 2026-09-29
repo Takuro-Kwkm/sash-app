@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 
 import { loadRegisteredRuntime } from '../src/catalog/runtime-master/runtime-master-registry.mjs';
-import { resolveRuntimeAppProduct } from '../src/catalog/runtime-master/runtime-app-bridge.mjs';
+import { resolveFormalRuntimeProduct as resolveRuntimeAppProduct } from './helpers/formal-runtime-result.mjs';
 
 const PRODUCT_ID = 'SER-LIXIL-INPLUS';
 const SELECTOR_KEYS = ['window_type','sash_configuration','size_class','upper_frame_spec','joint_layout'];
@@ -69,8 +69,8 @@ async function resolveCase(caseId, phase, selection) {
 
 function assertCustomUi(result, caseId) {
   const mode = result.fields.find((field) => field.key === 'size_mode');
-  assert.ok(mode, `${caseId}: size_mode missing`);
-  assert.deepEqual(mode.values.map((row) => row.value), ['CUSTOM'], `${caseId}: STANDARD must not be offered`);
+  assert.equal(mode,undefined,`${caseId}: size_mode is internal in UI v1.9`);
+  assert.deepEqual(result.runtimeCapabilities.uiSemanticSupport.customSize.allowedModes,['CUSTOM']);
   const width = result.fields.find((field) => field.key === 'order_width');
   const height = result.fields.find((field) => field.key === 'order_height');
   assert.ok(width, `${caseId}: CUSTOM W missing`);

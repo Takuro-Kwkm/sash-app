@@ -9,6 +9,7 @@ import {
   getRuntimeAppIntegration,
   resolveRuntimeAppProduct,
 } from '../src/catalog/runtime-master/runtime-app-bridge.mjs';
+import { resolveFormalRuntimeProduct } from './helpers/formal-runtime-result.mjs';
 import { GLOBAL_WINDOW_STAGE_ORDER } from '../src/catalog/runtime-master/global-window-selection-flow-engine.mjs';
 
 const PRODUCT_ID = 'SER-LIXIL-INPLUS';
@@ -41,7 +42,7 @@ function assertGlobalFlow(fields) {
   for (const field of fields) {
     assert.ok(field.semanticSlot, `unmapped semantic slot: ${field.key}`);
     assert.ok(field.semanticStage, `unmapped semantic stage: ${field.key}`);
-    const index = GLOBAL_WINDOW_STAGE_ORDER.indexOf(field.semanticStage);
+    const index = field.presentationSlot==='INNER_WINDOW_PRE_OPTION_DIMENSION'?7.5:GLOBAL_WINDOW_STAGE_ORDER.indexOf(field.semanticStage);
     assert.ok(index >= 0, `unknown global stage ${field.semanticStage} for ${field.key}`);
     assert.ok(index >= previous, `stage inversion at ${field.key}: ${field.semanticStage}`);
     previous = index;
@@ -94,13 +95,13 @@ test('Inplus v0.4-R2 exposes Formal CUSTOM-only size capability', async () => {
   assert.equal(custom.clearRules.upstream_selector_change, 'CLEAR_INVALID_DOWNSTREAM_AND_REEVALUATE');
 });
 
-test('Inplus v0.4-R2 uses UI v1.8 Global Window Selection Flow with no series template', async () => {
+test('Inplus v0.4-R2 uses UI v1.9 Global Window Selection Flow with no series template', async () => {
   const integration = getRuntimeAppIntegration(PRODUCT_ID);
   assert.ok(integration);
   assert.equal(integration.packageVersion, 'v0.4-R2');
   assert.equal(integration.uiCategory, 'INNER_WINDOW');
   assert.equal(integration.uiTemplate, undefined);
-  assert.equal(integration.uiStandardSpec, 'サッシ情報管理アプリ_UI実装標準仕様書_v1.8');
+  assert.equal(integration.uiStandardSpec, 'サッシ情報管理アプリ_UI実装標準仕様書_v1.9');
   assert.equal(integration.sourceHash, MANIFEST_SHA);
   assert.equal(integration.canonicalRuntimeReference.runtimeManifestDriveFileId, MANIFEST_ID);
   assert.equal(integration.canonicalRuntimeReference.runtimeJsonDriveFileId, RUNTIME_ID);
@@ -110,15 +111,8 @@ test('Inplus v0.4-R2 uses UI v1.8 Global Window Selection Flow with no series te
   assertGlobalFlow(initial.fields);
   assert.ok(initial.fields.every((field) => field.semanticSlot && field.semanticStage));
 
-  const sizeMode = initial.fields.find((field) => field.key === 'size_mode');
-  assert.ok(sizeMode);
-  assert.equal(sizeMode.semanticStage, 'SIZE');
-  assert.equal(sizeMode.required, true);
-  assert.deepEqual(sizeMode.values.map((row) => row.value), ['CUSTOM']);
-  assert.deepEqual(sizeMode.values.map((row) => row.displayLabel), ['特注']);
-  assert.equal(initial.fields.some((field) => field.key === 'order_width'), false);
-  assert.equal(initial.fields.some((field) => field.key === 'order_height'), false);
-
+  assert.equal(initial.fields.some(f=>['size_mode','size_class'].includes(f.key)),false);
+  assert.equal(initial.selection.size_mode,'CUSTOM');
   const custom = await resolveRuntimeAppProduct(PRODUCT_ID, { size_mode: 'CUSTOM' });
   assertGlobalFlow(custom.fields);
   const width = custom.fields.find((field) => field.key === 'order_width');
@@ -162,10 +156,9 @@ test('Inplus v0.4-R2 CUSTOM validation passes valid ranges and blocks invalid ra
 });
 
 test('Inplus v0.4-R2 never offers STANDARD and clears unsupported size input fail-closed', async () => {
-  const result = await resolveRuntimeAppProduct(PRODUCT_ID, { ...baseCustomSelection(), size_mode: 'STANDARD' });
+  const result = await resolveFormalRuntimeProduct(PRODUCT_ID, { ...baseCustomSelection(), size_mode: 'STANDARD' });
   const mode = result.fields.find((field) => field.key === 'size_mode');
-  assert.ok(mode);
-  assert.deepEqual(mode.values.map((row) => row.value), ['CUSTOM']);
+  assert.equal(mode,undefined);
   assert.equal(result.selection.size_mode, undefined);
   assert.equal(result.selection.order_width, undefined);
   assert.equal(result.selection.order_height, undefined);

@@ -8,9 +8,8 @@ const OUT='artifacts/global-window-selection-flow-browser-qa';
 const STAGES=['PRODUCT','OPENING','CONFIGURATION','SIZE','FINISH','SCREEN','GLAZING','INSTALLATION_SURVEY','OPTION'];
 const STAGE_INDEX=new Map(STAGES.map((stage,index)=>[stage,index]));
 const WINDOW_UI_CATEGORIES=new Set(['NEW_CONSTRUCTION_EXTERIOR_WINDOW','INNER_WINDOW']);
-const UCHIRIMO_HIDDEN_GLASS_KEYS=new Set(['glass_structure','glass_structure_code','glass_spec_id','glass_size_constraint_group','glass_surface_type','spacer_type','gas_fill','cavity_thickness_mm']);
-const UCHIRIMO_SALES_KEYS=new Set(['sales_glass_appearance','sales_spacer_type','sales_gas_fill']);
 const VIEWPORTS={
+  tablet:{viewport:{width:768,height:1000}},
   desktop:{viewport:{width:1440,height:1000}},
   smartphone:{viewport:{width:390,height:844},isMobile:true,hasTouch:true},
 };
@@ -22,7 +21,7 @@ function assertSemanticOrder(result,label){
     assert.ok(field.semanticSlot,`${label}:${field.key}:semanticSlot missing`);
     assert.ok(field.semanticStage,`${label}:${field.key}:semanticStage missing`);
     assert.equal(String(field.semanticSlot).startsWith('other:'),false,`${label}:${field.key}:other fallback`);
-    const current=STAGE_INDEX.get(field.semanticStage);
+    const current=field.presentationSlot==='INNER_WINDOW_PRE_OPTION_DIMENSION'?7.5:STAGE_INDEX.get(field.semanticStage);
     assert.notEqual(current,undefined,`${label}:${field.key}:unknown stage ${field.semanticStage}`);
     assert.ok(current>=previous,`${label}:${field.key}:stage inversion`);
     previous=current;
@@ -48,13 +47,9 @@ async function assertDomSignature(page,result,label){
   assertSemanticOrder(result,label);
   const domKeys=await page.locator('#dynamicForm .field[data-key]').evaluateAll((nodes)=>nodes.map((node)=>node.dataset.key));
   const resultKeys=(result.fields??[]).map((field)=>field.key);
-  if(result.productId==='SER-YKKAP-UCHIRIMO'){
-    assert.deepEqual(domKeys.filter((key)=>!UCHIRIMO_SALES_KEYS.has(key)),resultKeys.filter((key)=>!UCHIRIMO_HIDDEN_GLASS_KEYS.has(key)),`${label}:Uchirimo Runtime field order changed`);
-    const family=result.selection?.glass_family;
-    const expected=family==='insulating_glass'?['sales_glass_appearance','sales_spacer_type','sales_gas_fill']:family?['sales_glass_appearance']:[];
-    assert.deepEqual(domKeys.filter((key)=>UCHIRIMO_SALES_KEYS.has(key)),expected,`${label}:sales glazing fields differ`);
-    if(expected.length)assert.equal(domKeys.indexOf(expected[0]),domKeys.indexOf('glass_family')+1,`${label}:sales glazing must follow glass family`);
-  }else assert.deepEqual(domKeys,resultKeys,`${label}:DOM key sequence differs from resolver Global Flow sequence`);
+  assert.deepEqual(domKeys,resultKeys,`${label}:DOM key sequence differs from resolver Global Flow sequence`);
+  const controls=await page.locator('#dynamicForm [data-spec-key]').evaluateAll(nodes=>nodes.map(n=>({key:n.dataset.specKey,stage:n.dataset.semanticStage,slot:n.dataset.semanticSlot,label:n.closest(".field").querySelector("label").firstChild.textContent,required:n.required,readOnly:n.dataset.readOnly==='true',disabled:n.disabled,visible:!!n.getClientRects().length})));
+  assert.deepEqual(controls,result.fields.map(f=>({key:f.key,stage:f.semanticStage,slot:f.semanticSlot,label:f.displayLabel,required:f.required,readOnly:f.readOnly,disabled:f.disabled,visible:f.visible})),`${label}:API DOM field contract mismatch`);
   const overflow=await page.evaluate(()=>Math.max(0,document.documentElement.scrollWidth-window.innerWidth));
   assert.ok(overflow<=1,`${label}:horizontal overflow ${overflow}`);
   report.domSignatureChecks+=1;
@@ -74,8 +69,12 @@ async function runViewport(name,contextOptions,integrations){
       const windowField=(result.fields??[]).find((field)=>field.key==='window_type');
       const windowChoices=(windowField?.values??[]).filter((choice)=>choice.disabled!==true);
       assert.ok(windowChoices.length>0,`${name}:${integration.id}:window_type choices missing`);
-      let windowChecks=0;
+      let windowChecks=0,transitions=0;
+      const signatures=new Set();
       for(const choice of windowChoices){
+        const reset=page.waitForResponse(r=>r.url().includes('/api/runtime-master/resolve')&&r.status()===200);
+        await page.selectOption('#product',integration.id);await reset;
+        await page.waitForFunction(()=>document.querySelector('#dynamicForm [data-spec-key="window_type"]'));
         const locator=page.locator('#dynamicForm [data-spec-key="window_type"]');
         assert.equal(await locator.count(),1,`${name}:${integration.id}:window_type DOM selector missing`);
         const responsePromise=page.waitForResponse((response)=>response.url().includes('/api/runtime-master/resolve')&&response.status()===200);
@@ -85,12 +84,10 @@ async function runViewport(name,contextOptions,integrations){
         await assertDomSignature(page,result,`${name}:${integration.id}:window:${choice.value}`);
         windowChecks+=1;
         report.windowCoverageChecks+=1;
-      }
-      const visited=new Set();
-      let transitions=0;
-      for(let step=0;step<12;step+=1){
+      const visited=new Set(["window_type"]);
+      for(let step=0;step<64;step+=1){
         const field=(result.fields??[]).find((candidate)=>{
-          if(candidate.readOnly||visited.has(candidate.key)||candidate.dataType==='NUMBER'||candidate.dataType==='TEXT')return false;
+          if(candidate.disabled||candidate.readOnly||visited.has(candidate.key)||candidate.dataType==='NUMBER'||candidate.dataType==='TEXT')return false;
           return (candidate.values??[]).some((choice)=>choice.disabled!==true);
         });
         if(!field)break;
@@ -115,7 +112,9 @@ async function runViewport(name,contextOptions,integrations){
           transitions+=1;report.transitionChecks+=1;
         }
       }
-      rows.push({id:integration.id,windowCount:windowChecks,transitions,finalSignature:(result.fields??[]).map((field)=>`${field.semanticStage}:${field.semanticSlot}`)});
+      signatures.add(JSON.stringify((result.fields??[]).map(f=>[f.key,f.required,f.readOnly,f.disabled])));
+      }
+      rows.push({id:integration.id,windowCount:windowChecks,primarySignatures:signatures.size,transitions,finalSignature:(result.fields??[]).map((field)=>`${field.semanticStage}:${field.semanticSlot}`)});
     }
   }finally{
     await context.close();
@@ -125,6 +124,7 @@ async function runViewport(name,contextOptions,integrations){
 
 try{
   const requestContext=await browser.newContext();
+  if(SHARE_TOKEN){const entry=await requestContext.newPage();await entry.goto(`${BASE}/?_vercel_share=${encodeURIComponent(SHARE_TOKEN)}`,{waitUntil:"networkidle"});}
   const integrationsResponse=await requestContext.request.get(`${BASE}/api/runtime-master/integrations`);
   assert.equal(integrationsResponse.status(),200);
   const integrations=(await integrationsResponse.json()).filter((row)=>row.selectable&&row.status==='READY'&&WINDOW_UI_CATEGORIES.has(row.uiCategory));
@@ -141,7 +141,7 @@ try{
     const count=(report.viewportResults[name]??[]).reduce((sum,row)=>sum+(row.windowCount??0),0);
     assert.equal(count,113,`${name}: expected all 113 current window types, got ${count}`);
   }
-  assert.equal(report.windowCoverageChecks,226,`expected 113 windows × 2 viewports, got ${report.windowCoverageChecks}`);
+  assert.equal(report.windowCoverageChecks,339,`expected 113 windows × 3 viewports, got ${report.windowCoverageChecks}`);
   assert.ok(report.transitionChecks>=16,`expected at least one transition per window integration per viewport, got ${report.transitionChecks}`);
   assert.ok(report.domSignatureChecks>=258,`expected initial + 113 window checks per viewport + transitions, got ${report.domSignatureChecks}`);
   report.status='PASS';

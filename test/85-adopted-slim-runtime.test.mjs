@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {loadAdoptedSlimQaRuntime} from '../scripts/governance/uchirimo-adopted-slim-runtime.mjs';
-import {resolveRuntimeAppProduct} from '../src/catalog/runtime-master/runtime-app-bridge.mjs';
+import {resolveFormalRuntimeProduct as resolveRuntimeAppProduct} from './helpers/formal-runtime-result.mjs';
 
 test('application registration loads the adopted Slim bytes and real rule engine',async()=>{
  const {candidate,runtime,resolve}=await loadAdoptedSlimQaRuntime();

@@ -111,16 +111,16 @@ export function createOpening(estimateId,data={}, {clock,id}={}) {
 function displaySummary(result) {
   const labels=new Map();
   for(const field of result?.fields??[])for(const option of field.values??[])labels.set(`${field.key}:${String(option.value)}`,option.displayLabel);
-  return Object.entries(result?.selection??{}).map(([key,value])=>{
-    const field=(result.fields??[]).find((row)=>row.key===key);
-    if(!field)return null;
+  return (result?.fields??[]).map((field)=>{
+    const key=field.key,value=result?.selection?.[key];
+    if(value===undefined||value===null||value==='')return null;
     const values=Array.isArray(value)?value:[value];
     return {key,label:field.displayLabel,value:values.map((one)=>labels.get(`${key}:${String(one)}`)??String(one)).join('、')};
   }).filter(Boolean);
 }
 
 function validationState(result) {
-  if((result?.validation?.errors??[]).length)return ValidationState.INVALID;
+  if((result?.validation?.errors??[]).length||['INVALID','BLOCKED'].includes(result?.validation?.status))return ValidationState.INVALID;
   if((result?.validation?.missingRequiredFields??[]).length)return ValidationState.NEEDS_REVALIDATION;
   const selection=result?.selection??{};
   const missingVisibleRequired=(result?.fields??[]).some((field)=>field.required&&(
@@ -150,8 +150,10 @@ export function createProductConfigurationSnapshot({product,result,clock}) {
     runtime_manifest_identity:runtimeIdentity,
     runtime_integrity_hash:sourceHash,
     configuration:cloneValue(result.selection??{}),
+    ...(result.confirmationRequests?.length?{confirmation_requests:cloneValue(result.confirmationRequests)}:{}),
+    ...(result.sales_request_handoff?{sales_request_handoff:cloneValue(result.sales_request_handoff),sales_request_state:result.sales_request_state}:{}),
     display_summary:displaySummary(result),
-    validation_state:validationState(result),
+    validation_state:result.sales_request_handoff?ValidationState.NEEDS_REVALIDATION:validationState(result),
     source_mode:canonical?'CANONICAL_RUNTIME':'LEGACY_CATALOG',
     product_id:product.id,
     product_source:result.source??product.sourceType??product.source??'CATALOG',

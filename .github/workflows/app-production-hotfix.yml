@@ -115,7 +115,7 @@ jobs:
         run: |
           npm run test:browser:work
           npm run test:browser:estimate-output
-          node test/browser/seven-series-business-flow-qa.mjs
+          node test/browser/eight-series-business-flow-qa.mjs
           echo 'PRODUCTION_BROWSER_QA_GATE=PASS'
 
       - name: Upload hotfix evidence
