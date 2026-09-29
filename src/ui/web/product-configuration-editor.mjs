@@ -16,7 +16,8 @@ const UCHIRIMO_APPEARANCES=Object.freeze([
   {value:'washi',displayLabel:'和紙調ガラス（単板のみ）'},
 ]);
 const UCHIRIMO_GLASS_DETAILS=new Set([
-  'glass_structure','glass_surface_type','spacer_type','gas_fill','cavity_thickness_mm',
+  'glass_structure','glass_structure_code','glass_spec_id','glass_size_constraint_group',
+  'glass_surface_type','spacer_type','gas_fill','cavity_thickness_mm',
 ]);
 
 function runtimeFieldLabel(result,key){
@@ -215,6 +216,7 @@ export class ProductConfigurationEditor {
   async resolve({notify=true}={}){
     const revision=++this.state.resolveRevision,productId=this.state.productId;
     if(!productId){this.root.querySelector('#dynamicForm').innerHTML='';return;}
+    if(productId===UCHIRIMO_PRODUCT_ID)for(const detail of UCHIRIMO_GLASS_DETAILS)delete this.state.selection[detail];
     const query=new URLSearchParams({productId,selection:JSON.stringify(this.state.selection)});
     const endpoint=this.state.productSource==='RUNTIME_MASTER'?'/api/runtime-master/resolve':'/api/catalog/resolve';
     let result=await getJson(`${endpoint}?${query}`);
