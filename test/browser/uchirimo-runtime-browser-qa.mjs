@@ -14,7 +14,11 @@ async function select(page,key,value){
   const field=page.locator(`#qaRoot [data-spec-key="${key}"]`);
   if(typeof value==='number'){await field.fill(String(value));await field.dispatchEvent('change');}
   else await field.selectOption(value);
-  await page.waitForFunction((revision)=>Number(document.querySelector('#qaRoot #dynamicForm')?.dataset.resolveRevision)>revision,old);
+  await page.waitForFunction(({revision,key,value})=>{
+    const current=Number(document.querySelector('#qaRoot #dynamicForm')?.dataset.resolveRevision??0);
+    const snapshot=window.qaEditor?.getSnapshot?.();
+    return current>revision&&String(snapshot?.configuration?.[key])===String(value);
+  },{revision:old,key,value});
   return page.evaluate(()=>window.qaEditor.state.resolved);
 }
 
