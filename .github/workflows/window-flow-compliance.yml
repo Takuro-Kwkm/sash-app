@@ -28,6 +28,7 @@ jobs:
             sleep 1
           done
           node test/browser/global-window-selection-flow-browser-qa.mjs
+          node test/browser/inner-window-canonical-frame-qa.mjs
           node test/browser/window-flow-downstream-qa.mjs
           node test/browser/eight-series-business-flow-qa.mjs
           node test/browser/release-regression-browser-qa.mjs

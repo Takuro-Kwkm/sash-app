@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 
 import { loadRegisteredRuntime } from '../src/catalog/runtime-master/runtime-master-registry.mjs';
-import { resolveRuntimeAppProduct } from '../src/catalog/runtime-master/runtime-app-bridge.mjs';
+import { resolveFormalRuntimeProduct as resolveRuntimeAppProduct } from './helpers/legacy-inplus-source-result.mjs';
 
 const PRODUCT_ID = 'SER-LIXIL-INPLUS';
 const EXPECTED_INSTALLABILITY_CASE_COUNT = 153;
@@ -105,7 +105,7 @@ test('Inplus installability coverage expands all Formal scope/item/delegate bran
   assert.equal(cases.filter((row) => row.jointJoin).length, 18);
 });
 
-test('Inplus installability executes all 153 Formal dependency cases fail-closed', async () => {
+test('Inplus unchanged source matrix executes all 153 legacy dependency cases fail-closed (not R3 canonical QA)', async () => {
   const runtime = await loadRegisteredRuntime('LIXIL','インプラス');
   const master = runtime.master;
   const cases = buildCases(master);
@@ -123,7 +123,7 @@ test('Inplus installability executes all 153 Formal dependency cases fail-closed
 
     const result = await resolveCase(caseId, selection);
     const debug = dependencyDebug(result, field);
-    assert.equal(result.runtimeMaster.packageVersion, 'v0.4-R2', `${caseId}: package identity`);
+    assert.equal(result.runtimeMaster.packageVersion, 'v0.4-R3', `${caseId}: package identity`);
     assert.equal(result.runtimeMaster.sourcePackageIntegrity.match, true, `${caseId}: runtime integrity`);
 
     if (expected === 'CLEARED') {

@@ -1,20 +1,20 @@
 {
   "schema": "UCHIRIMO_SELECTOR_DEPENDENCY_CONTRACT_V1",
-  "scope": "Current App v1.9 presentation of the unchanged Formal evaluator. Factorized dependency axes remain Formal fields, not the new sales/internal-class wrapper. Discrete selectors only; App public flow is verified separately.",
+  "scope": "Historical frozen Slim V2 source-evaluator regression only. R3 canonical frame semantics require fresh independent QA; this witness is not carried forward as R3 PASS.",
   "source_sha256": {
-    "src/catalog/runtime-master/uchirimo-tabular-v1-adapter.mjs": "807bb549684d5fb122e4534e19df1a3440e496e4a1bb9ff7f08b2adc34b1ef38",
+    "src/catalog/runtime-master/uchirimo-tabular-v1-adapter.mjs": "d56efc591a648ec3379e6bba0fe8261de933cdcada4ac9439b34fd280dd14c50",
     "src/catalog/runtime-master/uchirimo-glass-rule-model.mjs": "0e8b1e37a05d25f80e7fc7f9a930c4349f8f97b5c43e9706c8aa99d1904c88b7",
-    "src/catalog/runtime-master/runtime-app-bridge.mjs": "5047ef5dd0b7fb003935f2391b55cc21f85570dd7965a32cc7e8be70b52eac10",
+    "src/catalog/runtime-master/runtime-app-bridge.mjs": "ae020559dde2379d3c5e6f315006d1b2ccecef30425aa599d90080b6268aae76",
     "src/catalog/runtime-master/new-construction-sash-runtime-ui-contract.mjs": "7f7cec995f75b6b74f6b1fdafb6968051d4fed8772be26a473728886437b8f91",
     "scripts/governance/uchirimo-selector-batch-runner.mjs": "29f26ef702d4c505ed3ab27de35eafc36b63f24bbbfe0d7fbaa55b631f920d74",
-    "src/catalog/runtime-master/inner-window-runtime-ui-contract.mjs": "43fa435165d9938cdde3aa8330c81808408d60d789677baa201bd54bf6278627",
+    "src/catalog/runtime-master/inner-window-runtime-ui-contract.mjs": "0d558f0a361da50446442dc9a7d5b6dc795b5f10fb0e29ebe56eed9b8d22b4a6",
     "src/catalog/runtime-master/global-window-selection-flow-engine.mjs": "e95f567131fd7ecc47c50f6b674b826aea9ab3508a938e9a5fc37f889097ebe1",
-    "src/catalog/runtime-master/canonical-window-semantic-schema.mjs": "623ba5a487f405ae9839427263d18159b8350783041cb59d07bc015cd91e209a",
+    "src/catalog/runtime-master/canonical-window-semantic-schema.mjs": "03ace90218363f62ad89280c77a328bb2e05efd362f6b17eca8989f0d52edeb7",
     "data/uchirimo-slim/runtime-support.json": "25eaf0a65482aed99a37852c1b1c5c7d4c60de54c1a3954923abb4f11b7e4a1d",
     "scripts/governance/uchirimo-slim-runtime-support.mjs": "39344a263b8b0dab5ced1528c569f82d651e4b2e6f102f4ff692e75a56561fe1",
     "scripts/governance/uchirimo-slim-factorized-selector.mjs": "a2fb337342762b4ff7012fc8bdd10eecfa1b72810a08d2f23703d2be4de84d79",
     "scripts/governance/uchirimo-frozen-migration-entry.mjs": "e0e5f78b2a51b9154bed8d07cde609768c3a0eb5ce53ef3cba7dc33f3a804d9e",
-    "scripts/governance/uchirimo-adopted-slim-runtime.mjs": "03173318330cb1a2d000dbb8f6c3c00aed12da9f80bf4d3e95d7601c5034fa5a",
+    "scripts/governance/uchirimo-adopted-slim-runtime.mjs": "873dd4d7d862303d1936d5620dccac86c67ca053896db4d1a6d441e3cc0e136b",
     "scripts/governance/formal-selector-qa-projection.mjs": "f1acb09facd8cec0781a8a3e09398a338226bdb8008089f39264d00bf5035f8b"
   },
   "review": {
@@ -47,6 +47,7 @@
       }
     ],
     "dependency_edge_review": "Adapter, glass model, runtime data, dependencyGraph and source resolver unchanged. toRuntimeUiResult adds presentation metadata/order only for raw formal states; presentationFields is absent on this QA boundary. No new read/write dependency edges in the evaluated Formal resolver. Public evaluateInnerWindowPresentation is intentionally covered by App tests and browser QA, not this factorized proof.",
-    "qa_projection": "Test-only projection exposes source-proven internal size selectors to the Formal enumeration driver. It does not alter their values, domains, dependencies or source evaluator. Public UI remains hidden and is tested separately."
+    "qa_projection": "Test-only projection exposes source-proven internal size selectors to the Formal enumeration driver. It does not alter their values, domains, dependencies or source evaluator. Public UI remains hidden and is tested separately.",
+    "canonical_frame_r3": "New public frame wrapper does not run in the historical witness. Current registered R3 package/adopted runtime has separate exact identity and semantic tests. Historical extraction explicitly reconstructs its old last-role-wins view; live loader preserves every component. The explicit support-component projection/60 incompatibility is consumed only by the new canonical-frame contract; the historical witness has no such contract and is unchanged. Fresh R3 integration tests cover that dependency."
   }
 }

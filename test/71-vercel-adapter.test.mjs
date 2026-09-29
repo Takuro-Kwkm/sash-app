@@ -32,10 +32,10 @@ test('Vercel repository adapter health preserves loaded READY Runtime identities
   assert.equal(byId.get('SER-LIX-SAMOS2H').sourceHash,'993481b2f0ab1d519a091e1b9f99a329eef7c67ec89cd1c82ddfab0d3c624955');
   assert.equal(byId.get('SER-LIX-SAMOSL').sourceHash,'4cf2a4b1572f68288fa108ccd33d30cc80d5170f2f5303864ca56ca67c34cec3');
   assert.equal(byId.get('SER-LIXIL-TW').sourceHash,'95380f5cab261edf03bf868e0f2120b9d57e941d6618b4543afe7a6ffd00c68e');
-  assert.equal(byId.get('SER-LIXIL-INPLUS').sourceHash,'cbbdb6ba315c985f7d27f75a237e861be8ce635962ce1cd5a746d7f152c8e1f8');
+  assert.equal(byId.get('SER-LIXIL-INPLUS').sourceHash,'d408bd64237ba5d44f9ebbf3ab3c869e9b64864ff0da28609568718b881607d1');
   assert.equal(byId.get('SER-YKK-APW430').sourceHash,'e2755a735fc3a7c94afacc58175a390bf00784cf1f13521a1263076d7bfae1c7');
   assert.equal(byId.get('SER-YKK-APW431').sourceHash,'b8927a51a5e31b0c7a89a98b65833cf4f7e0e641c52316cecce4f493399eb1f9');
-  assert.equal(byId.get('SER-YKKAP-UCHIRIMO').sourceHash,'3e2f2960a3761bc14a6c0ac3c9d9ee6d5c3e8f3b43bdee2bab81de7297afb5d4');
+  assert.equal(byId.get('SER-YKKAP-UCHIRIMO').sourceHash,'730986d6f9e852759b8259587f7ded9255bf052130c8faa083b4fce1fc45c968');
 });
 
 test('Vercel Runtime integration route includes all registered READY identities', async()=>{

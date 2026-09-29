@@ -1,3 +1,5 @@
+> Historical PR baseline at 58a4dda. Its old product identities, blockers and counts are superseded by [INNER_WINDOW Canonical Frame R3](../inner-window-canonical-frame/README.md). Retained as prior-work evidence, not current affected-scope PASS.
+
 # Global Window Selection Flow compliance candidate — 2026-09-29
 
 NON-PRODUCT-MASTER TASK. PRODUCT_MASTER_MUTATION = 0. Candidate only; no production promotion.

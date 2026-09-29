@@ -56,8 +56,8 @@ test('new-construction fields use the single global stage sequence', () => {
 
 test('inner-window fields use the same global stage sequence', () => {
   const rows = applyInnerWindowUiOrder([
-    { key: 'frame_installation_mode', field_name: 'frame_installation_mode', domain: 'INSTALLATION', displayOrder: 90 },
-    { key: 'bathroom_installation_type', field_name: 'bathroom_installation_type', domain: 'INSTALLATION', displayOrder: 94 },
+    { key: 'frame_spec', field_name: 'frame_spec', domain: 'INSTALLATION', displayOrder: 90 },
+    { key: 'installation_environment', field_name: 'installation_environment', domain: 'INSTALLATION', displayOrder: 94 },
     { key: 'glass_family', field_name: 'glass_family', domain: 'GLASS', displayOrder: 40 },
     { key: 'frame_color', field_name: 'frame_color', domain: 'COLOR', displayOrder: 80 },
     { key: 'size_w', field_name: 'size_w', domain: 'SIZE', displayOrder: 101 },
@@ -69,9 +69,9 @@ test('inner-window fields use the same global stage sequence', () => {
     'OPENING', 'CONFIGURATION', 'FINISH', 'GLAZING', 'INSTALLATION_SURVEY', 'INSTALLATION_SURVEY', 'SIZE',
   ]);
   assert.deepEqual(keys(rows), [
-    'window_type', 'room_specification', 'frame_color', 'glass_family', 'frame_installation_mode', 'bathroom_installation_type', 'size_w',
+    'window_type', 'room_specification', 'frame_color', 'glass_family', 'frame_spec', 'installation_environment', 'size_w',
   ]);
-  assert.equal(rows.find((row)=>row.key==='bathroom_installation_type').semanticSlot, 'installation_environment');
+  assert.equal(rows.find((row)=>row.key==='installation_environment').semanticSlot, 'installation_environment');
   assert.equal(INNER_WINDOW_UI_CATEGORY, 'INNER_WINDOW');
 });
 

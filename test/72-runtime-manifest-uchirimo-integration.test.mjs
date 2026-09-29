@@ -7,14 +7,14 @@ import { adaptUchirimoTabularV1 } from '../src/catalog/runtime-master/uchirimo-t
 import { getRuntimeAppIntegration, resolveRuntimeAppProduct } from '../src/catalog/runtime-master/runtime-app-bridge.mjs';
 
 const PRODUCT = 'SER-YKKAP-UCHIRIMO';
-const MANIFEST_SHA = '3e2f2960a3761bc14a6c0ac3c9d9ee6d5c3e8f3b43bdee2bab81de7297afb5d4';
+const MANIFEST_SHA = '730986d6f9e852759b8259587f7ded9255bf052130c8faa083b4fce1fc45c968';
 
-test('Uchirimo is declaratively registered from the formal v1.0-P7R1-R2 manifest', () => {
+test('Uchirimo is declaratively registered from the formal v1.0-P7R1-R3 manifest', () => {
   const integration = getRuntimeAppIntegration(PRODUCT);
   assert.deepEqual({ manufacturer: integration.manufacturer, series: integration.series, packageVersion: integration.packageVersion, schemaVersion: integration.schemaVersion, uiCategory: integration.uiCategory, adapterType: integration.adapterType }, {
-    manufacturer: 'YKK AP', series: 'ウチリモ 内窓', packageVersion: 'v1.0-P7R1-R2', schemaVersion: '2.0', uiCategory: 'INNER_WINDOW', adapterType: 'UCHIRIMO_TABULAR_V1',
+    manufacturer: 'YKK AP', series: 'ウチリモ 内窓', packageVersion: 'v1.0-P7R1-R3', schemaVersion: '2.0', uiCategory: 'INNER_WINDOW', adapterType: 'UCHIRIMO_TABULAR_V1',
   });
-  assert.equal(integration.canonicalRuntimeReference.runtimeManifestDriveFileId, '1oR7kQo7JGe-twx-Ko4Fbgkuk7M4Cp77q');
+  assert.equal(integration.canonicalRuntimeReference.runtimeManifestDriveFileId, '1Khn16tbOnmykUpJ5SRR93mNs4CTbHcvU');
   assert.equal(integration.canonicalRuntimeReference.canonicalFolderId, '1-flyN0KX2zdqXbebX2kVF4VRW0jTSrQu');
   assert.equal(integration.sourceHash, MANIFEST_SHA);
 });
@@ -28,7 +28,7 @@ test('manifest is the only package entry and all four declared component bytes p
   assert.equal(runtime.sourcePackageIntegrity.match, true);
   assert.equal(runtime.sourcePackageIntegrity.files.length, 4);
   assert.deepEqual(runtime.sourcePackageIntegrity.files.map((row) => row.fileId), [
-    '1er4keQZ_SQyku3ae2bNxGukvkUvzRy-H', '1c6hmvMgSLhESgmMJTRW7DN_opa1HhYlZ', '1TJn2-e6Sa6LcIv6FxNt0ahGSWlcgclJZ', '1fNUukTQaDJT2iWbNk6F8gcLLt22Sg32z',
+    '1Jcn3NSLIQsiRpHJgFVrUNRLntTAYbLDc', '1DZAw4iHWubamImzYXMesfEcGUmxW6Vy1', '1j-UTb1WohZfUdAOUJ_n_q5FmAs2qtdQm', '1_WcgxnTujQaoQmyOdSuOXX31-Curpqka',
   ]);
   assert.ok(runtime.sourcePackageIntegrity.files.every((row) => row.match && ['brotli','identity'].includes(row.codec)));
 });

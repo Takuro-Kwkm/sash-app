@@ -17,7 +17,7 @@ const assertSubset = (left, right, label) => {
 const IDENTITY_FIELDS = ['manufacturer', 'series', 'product_category','size_mode','size_class'];
 const INPLUS_CONDITIONAL_FIELDS = [
   'reverse_handing', 'order_width', 'order_height',
-  'sash_midrail', 'crescent_position', 'fukashi_spec', 'joint_layout',
+  'sash_midrail', 'crescent_position', 'fukashi_presence','fukashi_sides','fukashi_depth','fukashi_reinforcement', 'joint_layout',
   'lowe_color', 'cavity_fill', 'supply_form', 'glass_detail',
   'decorative_pattern', 'spacer',
 ];

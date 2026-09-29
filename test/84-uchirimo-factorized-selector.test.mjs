@@ -56,8 +56,9 @@ test('extracted support preserves source document precedence and all resolved co
  const {loadCanonicalWorkbookRuntimePackage}=await import('../src/catalog/runtime-master/canonical-runtime-manifest-loader.mjs');
  const {adaptUchirimoTabularV1}=await import('../src/catalog/runtime-master/uchirimo-tabular-v1-adapter.mjs');
  const pkg=await loadCanonicalWorkbookRuntimePackage(getRuntimeMasterEntry('YKK AP','ウチリモ 内窓'));
- const role=Object.keys(pkg.documents).find(k=>pkg.documents[k]?.glass_node_matrix);
- const prior=adaptUchirimoTabularV1({...pkg,documents:{...pkg.documents,[role]:loaded.candidate.canonical}});
- assert.deepEqual(loaded.support.document_role_order,Object.keys(pkg.documents));
+ const historicalDocuments=Object.fromEntries(Object.entries(pkg.documents).map(([key,document])=>[key.split(':')[0],document]));
+ const role=Object.keys(historicalDocuments).find(k=>historicalDocuments[k]?.glass_node_matrix);
+ const prior=adaptUchirimoTabularV1({...pkg,documents:{...historicalDocuments,[role]:loaded.candidate.canonical}});
+ assert.deepEqual(loaded.support.document_role_order,Object.keys(historicalDocuments));
  for(const key of ['sizeInstallation','judgment','vacuum','fields','capabilities'])assert.deepEqual(loaded.runtime.master[key],prior.master[key],key);
 });

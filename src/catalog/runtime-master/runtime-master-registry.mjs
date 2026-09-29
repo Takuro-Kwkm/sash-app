@@ -16,6 +16,7 @@ import { adaptApw430FormalSplitV1 } from './apw430-formal-split-v1-adapter.mjs';
 import { adaptApw431FormalSplitV1 } from './apw431-formal-split-v1-adapter.mjs';
 import { adaptRechentDoor3NonFireV1 } from './rechent-door3-nonfire-v1-adapter.mjs';
 import { guardFormalCustomDimensionUiResolver } from './formal-custom-dimension-safety.mjs';
+import { adaptFrameRuntime } from './frame-runtime-adapter.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const EW_ROOT = join(HERE, '../runtime-master-packages/lixil-ew-v1.3');
@@ -25,8 +26,8 @@ const TW_V03_ROOT = join(HERE, '../runtime-master-packages/lixil-tw-integrated-v
 const TW_V02_ROOT = join(HERE, '../runtime-master-packages/lixil-tw-integrated-v0.2');
 const TW_TRANSFORM_PARTS = Object.freeze(Array.from({ length: 19 }, (_, index) => `part-${String(index).padStart(2,'0')}`));
 const UCHIRIMO_ROOT = join(HERE, '../runtime-master-packages/ykkap-uchirimo-v1.0-p7r1-r2');
-const UCHIRIMO_SLIM_ROOT = join(HERE, '../runtime-master-packages/ykkap-uchirimo-slim-v2-20260929');
-const INPLUS_ROOT = join(HERE, '../runtime-master-packages/lixil-inplus-v0.4-r2');
+const UCHIRIMO_SLIM_ROOT = join(HERE, '../runtime-master-packages/ykkap-uchirimo-slim-v3-frame');
+const INPLUS_ROOT = join(HERE, '../runtime-master-packages/lixil-inplus-v0.4-r3-frame');
 const SAMOS2H_ROOT = join(HERE, '../runtime-master-packages/lixil-samos2h-v0.9-r4');
 const THERMOSL_ROOT = join(HERE, '../runtime-master-packages/lixil-thermosl-v0.7-r2');
 const RECHENT_ROOT = join(HERE, '../runtime-master-packages/lixil-rechent-door3-nonfire-v0.8-r7');
@@ -90,21 +91,21 @@ export const runtimeMasterInventory = Object.freeze([
     }),
   }),
   Object.freeze({
-    manufacturer:'YKK AP', series:'ウチリモ 内窓', masterVersion:'v1.0-P7R1-R2', schemaVersion:'2.0', packageType:'RUNTIME_MANIFEST_V2', adapterType:'UCHIRIMO_TABULAR_V1', requireRuntimeContract:false, enforceComponentSchemaVersion:false, runtimeRevision:'SLIM-V2-20260929', packageRoot:UCHIRIMO_SLIM_ROOT,
-    runtimeManifestPath:join(UCHIRIMO_SLIM_ROOT,'runtime_manifest.json'), runtimeManifestDriveFileId:'1oR7kQo7JGe-twx-Ko4Fbgkuk7M4Cp77q', runtimeManifestSha256:'3e2f2960a3761bc14a6c0ac3c9d9ee6d5c3e8f3b43bdee2bab81de7297afb5d4',
+    manufacturer:'YKK AP', series:'ウチリモ 内窓', masterVersion:'v1.0-P7R1-R3', schemaVersion:'2.0', packageType:'RUNTIME_MANIFEST_V2', adapterType:'UCHIRIMO_TABULAR_V1', requireRuntimeContract:false, enforceComponentSchemaVersion:false, runtimeRevision:'SLIM-V3-INNER-WINDOW-CANONICAL-FRAME-20260929', packageRoot:UCHIRIMO_SLIM_ROOT,
+    runtimeManifestPath:join(UCHIRIMO_SLIM_ROOT,'runtime_manifest.json'), runtimeManifestDriveFileId:'1Khn16tbOnmykUpJ5SRR93mNs4CTbHcvU', runtimeManifestSha256:'730986d6f9e852759b8259587f7ded9255bf052130c8faa083b4fce1fc45c968',
     materializedFiles:Object.freeze({
-      '1er4keQZ_SQyku3ae2bNxGukvkUvzRy-H':Object.freeze({codec:'identity',paths:Object.freeze([join(UCHIRIMO_SLIM_ROOT,'canonical.json')])}),
-      '1c6hmvMgSLhESgmMJTRW7DN_opa1HhYlZ':Object.freeze({codec:'brotli',paths:Object.freeze([join(UCHIRIMO_ROOT,'size-installation.json.br.b64.parts/part-00')])}),
-      '1TJn2-e6Sa6LcIv6FxNt0ahGSWlcgclJZ':Object.freeze({codec:'brotli',paths:Object.freeze([join(UCHIRIMO_ROOT,'vacuum-glass.json.br.b64.parts/part-00')])}),
-      '1fNUukTQaDJT2iWbNk6F8gcLLt22Sg32z':Object.freeze({codec:'brotli',paths:Object.freeze([join(UCHIRIMO_ROOT,'judgment-engine.json.br.b64.parts/part-00')])}),
+      '1Jcn3NSLIQsiRpHJgFVrUNRLntTAYbLDc':Object.freeze({codec:'identity',paths:Object.freeze([join(UCHIRIMO_SLIM_ROOT,'canonical.json')])}),
+      '1DZAw4iHWubamImzYXMesfEcGUmxW6Vy1':Object.freeze({codec:'identity',paths:Object.freeze([join(UCHIRIMO_SLIM_ROOT,'size-installation.json')])}),
+      '1j-UTb1WohZfUdAOUJ_n_q5FmAs2qtdQm':Object.freeze({codec:'identity',paths:Object.freeze([join(UCHIRIMO_SLIM_ROOT,'vacuum-glass.json')])}),
+      '1_WcgxnTujQaoQmyOdSuOXX31-Curpqka':Object.freeze({codec:'identity',paths:Object.freeze([join(UCHIRIMO_SLIM_ROOT,'judgment-engine.json')])}),
     }),
   }),
   Object.freeze({
-    manufacturer:'LIXIL', series:'インプラス', masterVersion:'v0.4-R2', schemaVersion:'2.0', packageType:'RUNTIME_MANIFEST_V1', adapterType:'SEMANTIC_TABLE_BUNDLE_V2', packageRoot:INPLUS_ROOT,
-    runtimeManifestPath:join(INPLUS_ROOT,'runtime_manifest.json'), runtimeManifestDriveFileId:'1TokjIpcipm8TPxwrSO0FjyPxxvhCq5iZ', runtimeManifestSha256:'cbbdb6ba315c985f7d27f75a237e861be8ce635962ce1cd5a746d7f152c8e1f8',
+    manufacturer:'LIXIL', series:'インプラス', masterVersion:'v0.4-R3', schemaVersion:'2.0', packageType:'RUNTIME_MANIFEST_V1', adapterType:'SEMANTIC_TABLE_BUNDLE_V2', packageRoot:INPLUS_ROOT,
+    runtimeManifestPath:join(INPLUS_ROOT,'runtime_manifest.json'), runtimeManifestDriveFileId:'1N1sQQM616oeuQm7kehqaz3EMQDrNzfhy', runtimeManifestSha256:'d408bd64237ba5d44f9ebbf3ab3c869e9b64864ff0da28609568718b881607d1',
     materializedFiles:Object.freeze({
-      '16dqUaVFp0YW3PqJ-A9tR0fAV0KT7WZML':Object.freeze({ codec:'gzip', paths:Object.freeze(['part-00a','part-00b','part-00c','part-01','part-02a','part-02b','part-02c','part-03'].map((name)=>join(INPLUS_ROOT,`LIXIL_インプラス_runtime_v0.4-R2.json.gz.b64.parts/${name}`))) }),
-      '1Qov5w3pNrU9om40OLJikJv7B8klK1RNz':Object.freeze({codec:'gzip',paths:Object.freeze([join(INPLUS_ROOT,'LIXIL_インプラス_runtime_v0.4-R2.schema.json.gz.b64')])}),
+      '19OtDgWSQFehEmxFYFIqxZGZCFXyzJaZ4':Object.freeze({codec:'gzip',paths:Object.freeze([join(INPLUS_ROOT,'canonical.json.gz.b64')])}),
+      '1d61bdbtl9LafVMgwzu2rduwMieB8kKtf':Object.freeze({codec:'gzip',paths:Object.freeze([join(INPLUS_ROOT,'runtime.schema.json.gz.b64')])}),
     }),
   }),
   Object.freeze({
@@ -163,6 +164,8 @@ async function loadRuntime(entry) {
     error.code = 'RUNTIME_ADAPTER_NOT_REGISTERED';
     throw error;
   }
+  const frameContract = Object.values(runtimePackage.documents ?? {}).find(document => document?.inner_window_frame_contract)?.inner_window_frame_contract;
+  if (frameContract) adapted = adaptFrameRuntime(adapted, frameContract);
   return Object.freeze({ entry, master: adapted.master ?? null, api: null, resolver: adapted.resolver ?? null, uiResolver: adapted.uiResolver ?? null, sourcePackageIntegrity: runtimePackage.integrity, normalizedManifest: runtimePackage.manifest });
 }
 

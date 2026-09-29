@@ -83,7 +83,7 @@ function evaluateInnerWindowPass(master, input, resolve, sales=null) {
       state.status=feasible.length?'MANUAL_CHECK':'INVALID';state.order_ready=false;
       state.dimension_result={status:feasible.length?'REVIEW_REQUIRED':'BLOCKED',message:feasible.length?'窓／テラス区分が一意に確定しないため、製作範囲・仕様をメーカー見積で確認してください。':'入力寸法は正式Runtimeの全サイズ区分で製作範囲外です。',matchedRuleIds:[...new Set(applicable.flatMap(row=>row.dimension_result?.matchedRuleIds??[]))]};
       state.manual_warnings=[...(state.manual_warnings??[]),'窓／テラス区分：メーカー見積確認。自動発注不可。'];
-      state.confirmation_requests=[{code:'INNER_WINDOW_SIZE_CLASS_CONFIRM',message:'窓／テラス区分と適用する製作範囲をメーカー見積で確認してください。'}];
+      state.confirmation_requests=[...(state.confirmation_requests??[]),...applicable.flatMap(row=>row.confirmation_requests??[]),{code:'INNER_WINDOW_SIZE_CLASS_CONFIRM',message:'窓／テラス区分と適用する製作範囲をメーカー見積で確認してください。'}].filter((row,index,all)=>all.findIndex(other=>JSON.stringify(other)===JSON.stringify(row))===index);
       state.missing_required_fields=Object.entries(state.fields).filter(([key,row])=>key!=='size_class'&&row.visibility!=='HIDE'&&row.required&&(row.value===null||row.value===undefined||row.value==='')).map(([key])=>key);
       state.errors=applicable.every(row=>row.errors?.length)?applicable.flatMap(row=>row.errors):[];
     }

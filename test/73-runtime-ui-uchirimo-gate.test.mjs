@@ -22,7 +22,7 @@ async function complete(seed, preferences = {}) {
 
 test('initial inner-window flow follows v1.9 global OPENING then CONFIGURATION stage order', async () => {
   const result = await resolveRuntimeAppProduct(PRODUCT, {});
-  assert.deepEqual(result.fields.map((row) => row.key), ['window_type', 'room_specification']);
+  assert.deepEqual(result.fields.map((row) => row.key), ['window_type', 'room_specification', 'frame_spec', 'fukashi_presence']);
   assert.deepEqual(values(result, 'room_specification'), ['residential', 'bathroom']);
   assert.deepEqual(values(result, 'window_type'), ['sliding_window', 'fix_window', 'inward_opening_window', 'opening_window_terrace']);
   assert.equal(result.selection.size_mode,'custom');
@@ -55,7 +55,7 @@ test('Low-E block, spacer and cavity are separate Runtime dependencies', async (
 test('v1.9 keeps semantic SIZE with pre-option dimension presentation', async () => {
   const result = await resolveRuntimeAppProduct(PRODUCT, { ...baseNode, glass_family: 'insulating_glass', glass_structure: 'P3P3', low_e_type: 'insulating' });
   const order = result.fields.map((row) => row.key);
-  for (const [a, b] of [['window_type','room_specification'],['room_specification','frame_color'],['frame_color','glass_family'],['glass_family','low_e_type'],['low_e_type','spacer_type'],['spacer_type','gas_fill'],['gas_fill','frame_installation_mode']]) assert.ok(order.indexOf(a) < order.indexOf(b), `${a} before ${b}`);
+  for (const [a, b] of [['window_type','room_specification'],['room_specification','frame_color'],['frame_color','glass_family'],['glass_family','low_e_type'],['low_e_type','spacer_type'],['spacer_type','gas_fill'],['gas_fill','frame_spec']]) assert.ok(order.indexOf(a) < order.indexOf(b), `${a} before ${b}`);
 });
 
 test('bathroom dependency exposes only formal colors and clears stale residential color', async () => {
@@ -118,7 +118,7 @@ test('manual and special-check routes remain non-PASS while ORDER_READY stays fa
 
 test('unknown installation state remains MANUAL_CHECK and fukashi inputs are conditional', async () => {
   const result = await resolveRuntimeAppProduct(PRODUCT, { ...baseNode, extension_frame_type: 'fukashi_60', extension_frame_reinforcement: 'reinforcement_square_pipe', floor_support_condition: 'unknown' });
-  assert.ok(field(result, 'extension_frame_reinforcement'));
+  assert.ok(field(result, 'fukashi_reinforcement'));
   assert.ok(field(result, 'construction'));
   assert.equal(result.validation.status, 'MANUAL_CHECK');
   assert.ok(result.manualWarnings.some((message) => message.includes('P5-UCH-204')));

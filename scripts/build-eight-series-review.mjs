@@ -54,7 +54,7 @@ const api=await import(moduleUrl('src/catalog/runtime-master/runtime-app-bridge.
 const inventory=api.runtimeAppIntegrationInventory().filter(x=>x.selectable);
 window.__eightPreviewIdentity=${safe(identity)};
 window.fetch=async(input)=>{const u=new URL(typeof input==='string'?input:input.url,location.href);let data;
-if(u.pathname==='/api/health')data={ok:true,buildId:'EIGHT-SLIM-'+window.__eightPreviewIdentity.slice(0,12),catalogVersion:'8シリーズ / ウチリモ Slim V2',inventory:[],runtimeMasterIntegrations:inventory};
+if(u.pathname==='/api/health')data={ok:true,buildId:'EIGHT-SLIM-'+window.__eightPreviewIdentity.slice(0,12),catalogVersion:'8シリーズ / 内窓 共通枠仕様 R3',inventory:[],runtimeMasterIntegrations:inventory};
 else if(u.pathname==='/api/catalog/products')data=[];
 else if(u.pathname==='/api/runtime-master/integrations')data=inventory;
 else if(u.pathname==='/api/runtime-master/resolve')data=await api.resolveRuntimeAppProduct(u.searchParams.get('productId'),JSON.parse(u.searchParams.get('selection')??'{}'));
@@ -64,7 +64,7 @@ await import(moduleUrl('src/ui/web/app.js'));
 `;
 let html=readFileSync('src/ui/web/index.html','utf8');
 html=html.replace(/<link rel="stylesheet" href="\/([^\"]+)">/g,(_,name)=>'<style>'+readFileSync('src/ui/web/'+name,'utf8')+'</style>');
-html=html.replace('<main id="appMain" aria-live="polite"></main>',`<section class="card compact"><h2>8シリーズ統合版 — ウチリモ Slim V2</h2><p>TW・EW・サーモスⅡH・サーモスL・APW430・APW431・ウチリモ・インプラス。配置版と同じマスター・Adapter・選択処理を使用。</p><p>このHTMLは商品選定の確認用です。API通信をブラウザ内処理に置き換えています。案件保存・見積出力は配置版で利用できます。</p><small>Build: ${identity.slice(0,16)}</small></section><main id="appMain" aria-live="polite"></main>`);
+html=html.replace('<main id="appMain" aria-live="polite"></main>',`<section class="card compact"><h2>8シリーズ統合版 — 内窓 共通枠仕様 R3</h2><p>TW・EW・サーモスⅡH・サーモスL・APW430・APW431・ウチリモ・インプラス。配置版と同じマスター・Adapter・選択処理を使用。</p><p>このHTMLは商品選定の確認用です。API通信をブラウザ内処理に置き換えています。案件保存・見積出力は配置版で利用できます。</p><small>Build: ${identity.slice(0,16)}</small></section><main id="appMain" aria-live="polite"></main>`);
 html=html.replace('<script type="module" src="/app.js"></script>',()=>'<script type="module">'+bootstrap+'</script>').replace('<script type="module" src="/estimate-output-integration.mjs"></script>','');
 const out=resolve(process.argv[2]??'artifacts/eight-series-review/index.html');mkdirSync(dirname(out),{recursive:true});writeFileSync(out,html);
 writeFileSync(dirname(out)+'/identity.json',JSON.stringify({identity,series:[...series],runtimeIdentities:entries.map(e=>({series:e.series,manifestSha256:e.runtimeManifestSha256})),bytes:Buffer.byteLength(html)},null,2)+'\n');

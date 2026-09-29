@@ -1,0 +1,945 @@
+{
+  "master": "YKK AP ウチリモ 内窓 Size / Installation Dependency Master",
+  "version": "v1.0-P7R1-R3",
+  "status": {
+    "phase_3_r2": "FORMAL_PASS",
+    "phase_3": "FORMAL_PASS",
+    "phase_4": "FORMAL_PASS",
+    "phase_5_sales_level": "PASS_WITH_MANUAL_CHECK",
+    "phase_6_runtime": "READY_WITH_MANUAL_CHECK",
+    "phase_7_r1": "JUDGMENT_ENGINE_RUNTIME_SOURCE"
+  },
+  "exception_routing": {
+    "GSC-IGU-P5P3": {
+      "status": "SPECIAL_CHECK_REQUIRED",
+      "reason": "No current official Uchirimo source found that maps P5P3 to a specific sliding sash roller-load curve; do not infer from total thickness."
+    },
+    "GSC-IGU-G5P3": {
+      "status": "SPECIAL_CHECK_REQUIRED",
+      "reason": "No current official Uchirimo source found that maps G5P3 to a specific sliding sash roller-load curve; do not infer from total thickness."
+    },
+    "fix_wind_pressure_detail": {
+      "status": "SPECIAL_CHECK_REQUIRED",
+      "reason": "400Pa/600Pa performance boundary retained as special-case metadata; requested wind-pressure grade is not a normal Runtime input."
+    }
+  },
+  "fukashi_60": {
+    "base_candidate_condition": {
+      "required_jamb_depth_mm_min": 25,
+      "trigger": "standard/projection/25/40 depth cannot clear projecting existing-window hardware",
+      "result": "EVALUATE_REINFORCEMENT_METHOD"
+    },
+    "frame_projection_compatibility": "INCOMPATIBLE",
+    "reinforcement_required": true,
+    "methods": {
+      "reinforcement_square_pipe": {
+        "construction": [
+          "wood"
+        ],
+        "jamb_projection_a_mm": [
+          0,
+          20
+        ],
+        "jamb_face_b_mm": [
+          20,
+          26
+        ],
+        "jamb_height_h_mm_min": 100,
+        "wall_surface_for_reinforcement_required": true,
+        "substrate_wall_gap_allowed": false,
+        "sill_position_rule": {
+          "if_c_mm_lte_30": {
+            "d_mm_min": 50,
+            "result": "SCREW_POSITION_40"
+          },
+          "if_c_mm_gt_30_lte_45": {
+            "d_mm_min": 65,
+            "result": "SCREW_POSITION_55"
+          },
+          "if_c_mm_gt_45": {
+            "result": "INCOMPATIBLE"
+          },
+          "below_required_d": {
+            "result": "INCOMPATIBLE"
+          },
+          "source": "EV-UCH-024 / XAAAA-K25-527F2 P57"
+        }
+      },
+      "reinforcement_bracket": {
+        "construction": [
+          "wood",
+          "rc"
+        ],
+        "jamb_projection_a_mm": [
+          0,
+          23
+        ],
+        "jamb_face_b_mm_min": 20,
+        "jamb_height_h_mm_min": 230,
+        "wall_surface_for_reinforcement_required": true,
+        "substrate_or_structure_wall_gap_allowed": false,
+        "wood_stud_spacing_condition_required": true,
+        "tool_floor_interference_allowed": false,
+        "source_completion": "EV-UCH-025 / XAAAA-K25-527F2 P60-P61"
+      },
+      "reinforcement_bundle": {
+        "jamb_face_b_mm_min": 20,
+        "all_three_jamb_heights_h_mm": [
+          200,
+          1500
+        ],
+        "floor_supports_load": true,
+        "floor_screw_holding": true,
+        "no_baseboard_interference": true
+      },
+      "construction_material_floor_supported": {
+        "jamb_face_b_mm_min": 20,
+        "floor_supports_load": true
+      },
+      "stepped_fukashi_60": {
+        "jamb_face_b_mm_min": 20,
+        "jamb_height_h_mm_max": 200,
+        "vertical_horizontal_jamb_step_e_mm_max": 10
+      }
+    },
+    "short_jamb_rule": {
+      "if_jamb_height_h_mm_lte": 200,
+      "standard_reinforcement_parts": "INCOMPATIBLE",
+      "alternatives": [
+        "construction_material_floor_supported",
+        "stepped_fukashi_60"
+      ]
+    },
+    "result_statuses": [
+      "REQUIRES_REINFORCEMENT",
+      "INCOMPATIBLE",
+      "MANUAL_CHECK_REQUIRED"
+    ]
+  },
+  "bathroom": {
+    "common": {
+      "frame_projection": "INCOMPATIBLE",
+      "extension_frame": "INCOMPATIBLE"
+    },
+    "unit_bath": {
+      "common_required": [
+        "substrate_present",
+        "lower_mounting_surface_horizontal_or_adjustable",
+        "mounting_surface_flat",
+        "mounting_surface_damage_protection",
+        "resin_jamb_face_screw_fixed_or_lower_jamb_reinforced_spec"
+      ],
+      "sliding": {
+        "existing_angle_present_lower_jamb_a_mm_min": 85,
+        "existing_angle_absent_lower_jamb_a_prime_mm_min": 100,
+        "hardware_tip_mounting_depth_A_mm_min": 60,
+        "existing_angle_height_mm_max": 3,
+        "existing_angle_tip_mm_max": 5,
+        "lower_jamb_reinforced_spec_if_resin_jamb_face_screw_fixing_unconfirmed": true,
+        "space_below_lower_resin_jamb_mm_min_if_reinforced": 50
+      },
+      "inward": {
+        "hardware_tip_mounting_depth_A_mm_min": 50,
+        "system_bath_component_screw_interference": "INCOMPATIBLE",
+        "large_existing_window_to_jamb_step": "REQUIRES_COVER_OR_ADJUSTMENT"
+      },
+      "resin_jamb_fallback": {
+        "if_resin_jamb_face_screw_fixed": "NO_OR_UNKNOWN",
+        "required": "lower_jamb_reinforced_spec",
+        "lower_resin_jamb_space_mm_min": 50,
+        "source": "EV-UCH-026 / P42-P43"
+      }
+    },
+    "tile": {
+      "common_required": [
+        "lower_mounting_surface_horizontal_or_adjustable",
+        "mounting_surface_flat"
+      ],
+      "sliding": {
+        "existing_angle_absent_lower_jamb_a_prime_mm_min": 100,
+        "hardware_tip_mounting_depth_A_mm_min": 60,
+        "existing_angle_height_mm_max_if_present": 3,
+        "existing_angle_tip_mm_max_if_present": 5
+      },
+      "inward": {
+        "hardware_tip_mounting_depth_A_mm_min": 50,
+        "large_existing_window_to_jamb_step": "REQUIRES_COVER_OR_ADJUSTMENT"
+      }
+    },
+    "final_statuses": [
+      "INSTALLABLE",
+      "REQUIRES_OPTION",
+      "INCOMPATIBLE",
+      "MANUAL_CHECK_REQUIRED"
+    ]
+  },
+  "vacuum_curve_artifact": "uchiremo_phase3_r2_vacuum_curve_master.json",
+  "carried_forward_from": "v1.0-P7R1-R2",
+  "carry_forward_reason": "InnerWindowCanonicalFrame_R1: product facts unchanged; package identity synchronized.",
+  "manual_check_policy": {
+    "human_approved_gsc": [
+      "GSC-GRID-G4P3",
+      "GSC-IGU-G4P3",
+      "GSC-SG-W3",
+      "GSC-SG-W5"
+    ],
+    "manufacturer_quote_recheck_required": true,
+    "ai_auto_approval_future_gaps": "PROHIBITED"
+  },
+  "phase7_runtime_status": "READY_WITH_MANUAL_CHECK",
+  "formalization_authorization": {
+    "final_human_approval": "PASS",
+    "approved_at": "2026-09-08T20:24:28+09:00",
+    "previous_formal_package_version": "v1.0-P7R1",
+    "approved_candidate_package_version": "v1.0-P7R1-R2-WORKING",
+    "formal_package_version": "v1.0-P7R1-R2",
+    "product_rule_mutation": "YES_PHASE9_R2",
+    "manual_check_preserved": true,
+    "formal_storage_authorized": true,
+    "human_approval": "PASS",
+    "storage_status": "CANONICAL_PARENT_VERIFIED"
+  },
+  "phase9_r1_status": {
+    "status": "CARRIED_FORWARD_WITH_BLOCKER",
+    "blocking_item": "P9R1-BLOCK-02",
+    "note": "InstallationRules detailed input contract requires separate evidence-backed definition before APP integration."
+  },
+  "size_selection_contract": {
+    "mode_field": "size_mode",
+    "allowed_modes": [
+      "custom"
+    ],
+    "fixed_value": "custom",
+    "display_value": "特注",
+    "standard_size_records_status": "NOT_APPLICABLE",
+    "standard_size_record_generation": "PROHIBITED",
+    "dimension_inputs": [
+      "size_w",
+      "size_h"
+    ],
+    "dimension_basis": "opening dimensions are measured; KW/KH are calculated and validated against Runtime size/manufacturing rules",
+    "evidence": [
+      "EV-UCH-023"
+    ],
+    "source_pages": [
+      "XAAAA-H26-067-2 P32",
+      "XAAAA-H26-067-2 P110"
+    ],
+    "ui_semantics": "INNER_WINDOW standard slot remains 規格/特注, but this series exposes only 特注 because manufacturer ordering is measurement/order-dimension based."
+  },
+  "installation_input_contract": {
+    "contract_version": "Phase9-R2",
+    "raw_inputs": [
+      {
+        "field_name": "construction",
+        "value_type": "enum",
+        "unit": null,
+        "allowed_values": [
+          "wood",
+          "rc",
+          "unknown"
+        ],
+        "required_when": "extension_frame_reinforcement in [reinforcement_square_pipe, reinforcement_bracket]",
+        "evidence": [
+          "EV-UCH-024",
+          "EV-UCH-025"
+        ],
+        "unknown_policy": "MANUAL_CHECK_REQUIRED",
+        "note": null
+      },
+      {
+        "field_name": "jamb_projection_a_mm",
+        "value_type": "number",
+        "unit": "mm",
+        "allowed_values": null,
+        "required_when": "extension_frame_reinforcement in [reinforcement_square_pipe, reinforcement_bracket]",
+        "evidence": [
+          "EV-UCH-024",
+          "EV-UCH-025"
+        ],
+        "unknown_policy": "MISSING_REQUIRED_INPUT => MANUAL_CHECK_REQUIRED",
+        "note": null
+      },
+      {
+        "field_name": "jamb_face_b_mm",
+        "value_type": "number",
+        "unit": "mm",
+        "allowed_values": null,
+        "required_when": "extension_frame_reinforcement != none",
+        "evidence": [
+          "EV-UCH-024",
+          "EV-UCH-025"
+        ],
+        "unknown_policy": "MISSING_REQUIRED_INPUT => MANUAL_CHECK_REQUIRED",
+        "note": null
+      },
+      {
+        "field_name": "jamb_height_h_mm",
+        "value_type": "number",
+        "unit": "mm",
+        "allowed_values": null,
+        "required_when": "extension_frame_reinforcement in [reinforcement_square_pipe, reinforcement_bracket, stepped_fukashi_60]",
+        "evidence": [
+          "EV-UCH-024",
+          "EV-UCH-025"
+        ],
+        "unknown_policy": "MISSING_REQUIRED_INPUT => MANUAL_CHECK_REQUIRED",
+        "note": null
+      },
+      {
+        "field_name": "jamb_height_h1_mm",
+        "value_type": "number",
+        "unit": "mm",
+        "allowed_values": null,
+        "required_when": "extension_frame_reinforcement == reinforcement_bundle",
+        "evidence": [
+          "EV-UCH-025"
+        ],
+        "unknown_policy": "MISSING_REQUIRED_INPUT => MANUAL_CHECK_REQUIRED",
+        "note": null
+      },
+      {
+        "field_name": "jamb_height_h2_mm",
+        "value_type": "number",
+        "unit": "mm",
+        "allowed_values": null,
+        "required_when": "extension_frame_reinforcement == reinforcement_bundle",
+        "evidence": [
+          "EV-UCH-025"
+        ],
+        "unknown_policy": "MISSING_REQUIRED_INPUT => MANUAL_CHECK_REQUIRED",
+        "note": null
+      },
+      {
+        "field_name": "jamb_height_h3_mm",
+        "value_type": "number",
+        "unit": "mm",
+        "allowed_values": null,
+        "required_when": "extension_frame_reinforcement == reinforcement_bundle",
+        "evidence": [
+          "EV-UCH-025"
+        ],
+        "unknown_policy": "MISSING_REQUIRED_INPUT => MANUAL_CHECK_REQUIRED",
+        "note": null
+      },
+      {
+        "field_name": "sill_upper_c_mm",
+        "value_type": "number",
+        "unit": "mm",
+        "allowed_values": null,
+        "required_when": "extension_frame_reinforcement == reinforcement_square_pipe",
+        "evidence": [
+          "EV-UCH-024"
+        ],
+        "unknown_policy": "MISSING_REQUIRED_INPUT => MANUAL_CHECK_REQUIRED",
+        "note": null
+      },
+      {
+        "field_name": "sill_lower_d_mm",
+        "value_type": "number",
+        "unit": "mm",
+        "allowed_values": null,
+        "required_when": "extension_frame_reinforcement == reinforcement_square_pipe",
+        "evidence": [
+          "EV-UCH-024"
+        ],
+        "unknown_policy": "MISSING_REQUIRED_INPUT => MANUAL_CHECK_REQUIRED",
+        "note": null
+      },
+      {
+        "field_name": "vertical_horizontal_jamb_step_e_mm",
+        "value_type": "number",
+        "unit": "mm",
+        "allowed_values": null,
+        "required_when": "extension_frame_reinforcement == stepped_fukashi_60",
+        "evidence": [
+          "EV-UCH-025"
+        ],
+        "unknown_policy": "MISSING_REQUIRED_INPUT => MANUAL_CHECK_REQUIRED",
+        "note": null
+      },
+      {
+        "field_name": "lower_resin_jamb_space_mm",
+        "value_type": "number",
+        "unit": "mm",
+        "allowed_values": null,
+        "required_when": "room_specification == bathroom AND bathroom_installation_type == unit_bath AND resin_jamb_face_screw_fixed != yes",
+        "evidence": [
+          "EV-UCH-026"
+        ],
+        "unknown_policy": "MISSING_REQUIRED_INPUT => MANUAL_CHECK_REQUIRED",
+        "note": null
+      },
+      {
+        "field_name": "lower_jamb_a_mm",
+        "value_type": "number",
+        "unit": "mm",
+        "allowed_values": null,
+        "required_when": "room_specification == bathroom AND window_type == sliding_window AND existing_lower_jamb_angle_present == yes",
+        "evidence": [
+          "EV-UCH-026"
+        ],
+        "unknown_policy": "MISSING_REQUIRED_INPUT => MANUAL_CHECK_REQUIRED",
+        "note": null
+      },
+      {
+        "field_name": "lower_jamb_a_prime_mm",
+        "value_type": "number",
+        "unit": "mm",
+        "allowed_values": null,
+        "required_when": "room_specification == bathroom AND window_type == sliding_window AND existing_lower_jamb_angle_present == no",
+        "evidence": [
+          "EV-UCH-026"
+        ],
+        "unknown_policy": "MISSING_REQUIRED_INPUT => MANUAL_CHECK_REQUIRED",
+        "note": null
+      },
+      {
+        "field_name": "hardware_tip_mounting_depth_A_mm",
+        "value_type": "number",
+        "unit": "mm",
+        "allowed_values": null,
+        "required_when": "room_specification == bathroom AND window_type in [sliding_window,inward_opening_window]",
+        "evidence": [
+          "EV-UCH-026"
+        ],
+        "unknown_policy": "MISSING_REQUIRED_INPUT => MANUAL_CHECK_REQUIRED",
+        "note": null
+      },
+      {
+        "field_name": "existing_angle_height_mm",
+        "value_type": "number",
+        "unit": "mm",
+        "allowed_values": null,
+        "required_when": "room_specification == bathroom AND window_type == sliding_window AND existing_lower_jamb_angle_present == yes",
+        "evidence": [
+          "EV-UCH-026"
+        ],
+        "unknown_policy": "MISSING_REQUIRED_INPUT => MANUAL_CHECK_REQUIRED",
+        "note": null
+      },
+      {
+        "field_name": "existing_angle_tip_mm",
+        "value_type": "number",
+        "unit": "mm",
+        "allowed_values": null,
+        "required_when": "room_specification == bathroom AND window_type == sliding_window AND existing_lower_jamb_angle_present == yes",
+        "evidence": [
+          "EV-UCH-026"
+        ],
+        "unknown_policy": "MISSING_REQUIRED_INPUT => MANUAL_CHECK_REQUIRED",
+        "note": null
+      },
+      {
+        "field_name": "wall_surface_for_reinforcement_available",
+        "value_type": "enum",
+        "unit": null,
+        "allowed_values": [
+          "yes",
+          "no",
+          "unknown"
+        ],
+        "required_when": "extension_frame_reinforcement in [reinforcement_square_pipe, reinforcement_bracket]",
+        "evidence": [
+          "EV-UCH-024",
+          "EV-UCH-025"
+        ],
+        "unknown_policy": "MANUAL_CHECK_REQUIRED",
+        "note": null
+      },
+      {
+        "field_name": "substrate_present",
+        "value_type": "enum",
+        "unit": null,
+        "allowed_values": [
+          "yes",
+          "no",
+          "unknown"
+        ],
+        "required_when": "extension_frame_reinforcement == reinforcement_square_pipe OR bathroom_installation_type == unit_bath",
+        "evidence": [
+          "EV-UCH-024",
+          "EV-UCH-026"
+        ],
+        "unknown_policy": "MANUAL_CHECK_REQUIRED",
+        "note": null
+      },
+      {
+        "field_name": "substrate_wall_gap_present",
+        "value_type": "enum",
+        "unit": null,
+        "allowed_values": [
+          "yes",
+          "no",
+          "unknown"
+        ],
+        "required_when": "extension_frame_reinforcement == reinforcement_square_pipe",
+        "evidence": [
+          "EV-UCH-024"
+        ],
+        "unknown_policy": "MANUAL_CHECK_REQUIRED",
+        "note": null
+      },
+      {
+        "field_name": "substrate_or_structure_present",
+        "value_type": "enum",
+        "unit": null,
+        "allowed_values": [
+          "yes",
+          "no",
+          "unknown"
+        ],
+        "required_when": "extension_frame_reinforcement in [reinforcement_bracket, construction_material_floor_supported]",
+        "evidence": [
+          "EV-UCH-025"
+        ],
+        "unknown_policy": "MANUAL_CHECK_REQUIRED",
+        "note": null
+      },
+      {
+        "field_name": "substrate_or_structure_wall_gap_present",
+        "value_type": "enum",
+        "unit": null,
+        "allowed_values": [
+          "yes",
+          "no",
+          "unknown"
+        ],
+        "required_when": "extension_frame_reinforcement in [reinforcement_bracket, construction_material_floor_supported]",
+        "evidence": [
+          "EV-UCH-025"
+        ],
+        "unknown_policy": "MANUAL_CHECK_REQUIRED",
+        "note": null
+      },
+      {
+        "field_name": "stud_spacing_condition_met",
+        "value_type": "enum",
+        "unit": null,
+        "allowed_values": [
+          "yes",
+          "no",
+          "unknown"
+        ],
+        "required_when": "extension_frame_reinforcement == reinforcement_bracket AND construction == wood",
+        "evidence": [
+          "EV-UCH-025"
+        ],
+        "unknown_policy": "MANUAL_CHECK_REQUIRED",
+        "note": null
+      },
+      {
+        "field_name": "tool_floor_interference",
+        "value_type": "enum",
+        "unit": null,
+        "allowed_values": [
+          "yes",
+          "no",
+          "unknown"
+        ],
+        "required_when": "extension_frame_reinforcement == reinforcement_bracket",
+        "evidence": [
+          "EV-UCH-025"
+        ],
+        "unknown_policy": "MANUAL_CHECK_REQUIRED",
+        "note": null
+      },
+      {
+        "field_name": "floor_supports_load",
+        "value_type": "enum",
+        "unit": null,
+        "allowed_values": [
+          "yes",
+          "no",
+          "unknown"
+        ],
+        "required_when": "extension_frame_reinforcement in [reinforcement_bundle, construction_material_floor_supported]",
+        "evidence": [
+          "EV-UCH-025"
+        ],
+        "unknown_policy": "MANUAL_CHECK_REQUIRED",
+        "note": null
+      },
+      {
+        "field_name": "floor_screw_holding",
+        "value_type": "enum",
+        "unit": null,
+        "allowed_values": [
+          "yes",
+          "no",
+          "unknown"
+        ],
+        "required_when": "extension_frame_reinforcement == reinforcement_bundle",
+        "evidence": [
+          "EV-UCH-025"
+        ],
+        "unknown_policy": "MANUAL_CHECK_REQUIRED",
+        "note": null
+      },
+      {
+        "field_name": "baseboard_interference",
+        "value_type": "enum",
+        "unit": null,
+        "allowed_values": [
+          "yes",
+          "no",
+          "unknown"
+        ],
+        "required_when": "extension_frame_reinforcement == reinforcement_bundle",
+        "evidence": [
+          "EV-UCH-025"
+        ],
+        "unknown_policy": "MANUAL_CHECK_REQUIRED",
+        "note": null
+      },
+      {
+        "field_name": "lower_mounting_surface_horizontal_or_adjustable",
+        "value_type": "enum",
+        "unit": null,
+        "allowed_values": [
+          "yes",
+          "no",
+          "unknown"
+        ],
+        "required_when": "room_specification == bathroom",
+        "evidence": [
+          "EV-UCH-026"
+        ],
+        "unknown_policy": "MANUAL_CHECK_REQUIRED",
+        "note": null
+      },
+      {
+        "field_name": "mounting_surface_flat",
+        "value_type": "enum",
+        "unit": null,
+        "allowed_values": [
+          "yes",
+          "no",
+          "unknown"
+        ],
+        "required_when": "room_specification == bathroom",
+        "evidence": [
+          "EV-UCH-026"
+        ],
+        "unknown_policy": "MANUAL_CHECK_REQUIRED",
+        "note": null
+      },
+      {
+        "field_name": "mounting_surface_damage_protection",
+        "value_type": "enum",
+        "unit": null,
+        "allowed_values": [
+          "yes",
+          "no",
+          "unknown"
+        ],
+        "required_when": "room_specification == bathroom AND bathroom_installation_type == unit_bath",
+        "evidence": [
+          "EV-UCH-026"
+        ],
+        "unknown_policy": "MANUAL_CHECK_REQUIRED",
+        "note": null
+      },
+      {
+        "field_name": "resin_jamb_face_screw_fixed",
+        "value_type": "enum",
+        "unit": null,
+        "allowed_values": [
+          "yes",
+          "no",
+          "unknown"
+        ],
+        "required_when": "room_specification == bathroom AND bathroom_installation_type == unit_bath",
+        "evidence": [
+          "EV-UCH-026"
+        ],
+        "unknown_policy": "MANUAL_CHECK_REQUIRED",
+        "note": null
+      },
+      {
+        "field_name": "existing_lower_jamb_angle_present",
+        "value_type": "enum",
+        "unit": null,
+        "allowed_values": [
+          "yes",
+          "no",
+          "unknown"
+        ],
+        "required_when": "room_specification == bathroom AND window_type == sliding_window",
+        "evidence": [
+          "EV-UCH-026"
+        ],
+        "unknown_policy": "MANUAL_CHECK_REQUIRED",
+        "note": null
+      },
+      {
+        "field_name": "system_bath_component_screw_interference",
+        "value_type": "enum",
+        "unit": null,
+        "allowed_values": [
+          "yes",
+          "no",
+          "unknown"
+        ],
+        "required_when": "room_specification == bathroom AND bathroom_installation_type == unit_bath AND window_type == inward_opening_window",
+        "evidence": [
+          "EV-UCH-026"
+        ],
+        "unknown_policy": "MANUAL_CHECK_REQUIRED",
+        "note": null
+      },
+      {
+        "field_name": "existing_window_to_jamb_step_large",
+        "value_type": "enum",
+        "unit": null,
+        "allowed_values": [
+          "yes",
+          "no",
+          "unknown"
+        ],
+        "required_when": "room_specification == bathroom AND window_type == inward_opening_window",
+        "evidence": [
+          "EV-UCH-026"
+        ],
+        "unknown_policy": "MANUAL_CHECK_REQUIRED",
+        "note": null
+      }
+    ],
+    "summary_fields": {
+      "existing_window_interference": {
+        "allowed_values": [
+          "none",
+          "present",
+          "unknown"
+        ],
+        "evidence": [
+          "EV-UCH-027"
+        ],
+        "unknown_policy": "MANUAL_CHECK_REQUIRED"
+      },
+      "existing_hardware_interference": {
+        "allowed_values": [
+          "none",
+          "present",
+          "unknown"
+        ],
+        "evidence": [
+          "EV-UCH-027"
+        ],
+        "unknown_policy": "MANUAL_CHECK_REQUIRED"
+      },
+      "structural_support_condition": {
+        "allowed_values": [
+          "sufficient",
+          "insufficient",
+          "unknown"
+        ],
+        "derivation": "summary of method-specific substrate/support inputs",
+        "unknown_policy": "MANUAL_CHECK_REQUIRED"
+      },
+      "floor_support_condition": {
+        "allowed_values": [
+          "sufficient",
+          "insufficient",
+          "unknown"
+        ],
+        "derivation": "floor_supports_load: yes=>sufficient, no=>insufficient, unknown=>unknown",
+        "unknown_policy": "MANUAL_CHECK_REQUIRED"
+      }
+    },
+    "missing_input_policy": "MANUAL_CHECK_REQUIRED",
+    "do_not_infer": true
+  },
+  "installation_constraint_input_map": {
+    "construction": {
+      "raw_field": "construction",
+      "operator": "in"
+    },
+    "jamb_projection_a_mm": {
+      "raw_field": "jamb_projection_a_mm",
+      "operator": "between"
+    },
+    "jamb_face_b_mm": {
+      "raw_field": "jamb_face_b_mm",
+      "operator": "between"
+    },
+    "jamb_face_b_mm_min": {
+      "raw_field": "jamb_face_b_mm",
+      "operator": "gte"
+    },
+    "jamb_height_h_mm_min": {
+      "raw_field": "jamb_height_h_mm",
+      "operator": "gte"
+    },
+    "jamb_height_h_mm_max": {
+      "raw_field": "jamb_height_h_mm",
+      "operator": "lte"
+    },
+    "wall_surface_for_reinforcement_required": {
+      "raw_field": "wall_surface_for_reinforcement_available",
+      "operator": "eq_yes_if_true"
+    },
+    "substrate_wall_gap_allowed": {
+      "raw_field": "substrate_wall_gap_present",
+      "operator": "eq_no_if_false"
+    },
+    "substrate_or_structure_wall_gap_allowed": {
+      "raw_field": "substrate_or_structure_wall_gap_present",
+      "operator": "eq_no_if_false"
+    },
+    "all_three_jamb_heights_h_mm": {
+      "raw_fields": [
+        "jamb_height_h1_mm",
+        "jamb_height_h2_mm",
+        "jamb_height_h3_mm"
+      ],
+      "operator": "all_between"
+    },
+    "floor_supports_load": {
+      "raw_field": "floor_supports_load",
+      "operator": "eq_yes_if_true"
+    },
+    "floor_screw_holding": {
+      "raw_field": "floor_screw_holding",
+      "operator": "eq_yes_if_true"
+    },
+    "no_baseboard_interference": {
+      "raw_field": "baseboard_interference",
+      "operator": "eq_no_if_true"
+    },
+    "vertical_horizontal_jamb_step_e_mm_max": {
+      "raw_field": "vertical_horizontal_jamb_step_e_mm",
+      "operator": "lte"
+    },
+    "frame_projection": {
+      "raw_field": "frame_installation_mode",
+      "operator": "incompatible_when_value",
+      "value": "frame_projection"
+    },
+    "extension_frame": {
+      "raw_field": "extension_frame_type",
+      "operator": "incompatible_when_not",
+      "value": "none"
+    },
+    "existing_angle_present_lower_jamb_a_mm_min": {
+      "raw_field": "lower_jamb_a_mm",
+      "operator": "gte",
+      "required_if": "existing_lower_jamb_angle_present=yes"
+    },
+    "existing_angle_absent_lower_jamb_a_prime_mm_min": {
+      "raw_field": "lower_jamb_a_prime_mm",
+      "operator": "gte",
+      "required_if": "existing_lower_jamb_angle_present=no"
+    },
+    "hardware_tip_mounting_depth_A_mm_min": {
+      "raw_field": "hardware_tip_mounting_depth_A_mm",
+      "operator": "gte"
+    },
+    "existing_angle_height_mm_max": {
+      "raw_field": "existing_angle_height_mm",
+      "operator": "lte",
+      "required_if": "existing_lower_jamb_angle_present=yes"
+    },
+    "existing_angle_tip_mm_max": {
+      "raw_field": "existing_angle_tip_mm",
+      "operator": "lte",
+      "required_if": "existing_lower_jamb_angle_present=yes"
+    },
+    "lower_jamb_reinforced_spec_if_resin_jamb_face_screw_fixing_unconfirmed": {
+      "raw_field": "resin_jamb_face_screw_fixed",
+      "operator": "if_not_yes_require_reinforced_spec"
+    },
+    "space_below_lower_resin_jamb_mm_min_if_reinforced": {
+      "raw_field": "lower_resin_jamb_space_mm",
+      "operator": "gte",
+      "required_if": "reinforced_spec=true"
+    },
+    "system_bath_component_screw_interference": {
+      "raw_field": "system_bath_component_screw_interference",
+      "operator": "incompatible_when_yes"
+    },
+    "large_existing_window_to_jamb_step": {
+      "raw_field": "existing_window_to_jamb_step_large",
+      "operator": "requires_cover_or_adjustment_when_yes"
+    },
+    "existing_angle_height_mm_max_if_present": {
+      "raw_field": "existing_angle_height_mm",
+      "operator": "lte",
+      "required_if": "existing_lower_jamb_angle_present=yes"
+    },
+    "existing_angle_tip_mm_max_if_present": {
+      "raw_field": "existing_angle_tip_mm",
+      "operator": "lte",
+      "required_if": "existing_lower_jamb_angle_present=yes"
+    },
+    "sill_upper_c_mm_max": {
+      "raw_field": "sill_upper_c_mm",
+      "operator": "lte"
+    },
+    "sill_upper_c_mm_min_exclusive": {
+      "raw_field": "sill_upper_c_mm",
+      "operator": "gt"
+    },
+    "sill_lower_d_mm_min": {
+      "raw_field": "sill_lower_d_mm",
+      "operator": "gte"
+    },
+    "stud_spacing_condition_met": {
+      "raw_field": "stud_spacing_condition_met",
+      "operator": "eq_yes_if_true"
+    },
+    "tool_floor_interference": {
+      "raw_field": "tool_floor_interference",
+      "operator": "eq_no_if_false"
+    },
+    "substrate_present": {
+      "raw_field": "substrate_present",
+      "operator": "eq_yes_if_true"
+    },
+    "lower_mounting_surface_horizontal_or_adjustable": {
+      "raw_field": "lower_mounting_surface_horizontal_or_adjustable",
+      "operator": "eq_yes_if_true"
+    },
+    "mounting_surface_flat": {
+      "raw_field": "mounting_surface_flat",
+      "operator": "eq_yes_if_true"
+    },
+    "mounting_surface_damage_protection": {
+      "raw_field": "mounting_surface_damage_protection",
+      "operator": "eq_yes_if_true"
+    },
+    "resin_jamb_face_screw_fixed": {
+      "raw_field": "resin_jamb_face_screw_fixed",
+      "operator": "eq_yes_if_true"
+    },
+    "lower_resin_jamb_space_mm_min_if_reinforced": {
+      "raw_field": "lower_resin_jamb_space_mm",
+      "operator": "gte",
+      "required_if": "reinforced_spec=true"
+    }
+  },
+  "phase9_r2_status": {
+    "status": "FORMALIZATION_AUTHORIZED",
+    "resolved": [
+      "P9R1-BLOCK-01",
+      "P9R1-BLOCK-02"
+    ],
+    "technical_blockers_remaining": [],
+    "human_approval": "PASS",
+    "canonical_mutation": "COMPLETE",
+    "registry_mutation": "COMPLETE",
+    "formalization_status": "FORMAL_PASS"
+  },
+  "formal_storage_target": {
+    "canonical_folder_id": "1-flyN0KX2zdqXbebX2kVF4VRW0jTSrQu",
+    "storage_gate_status": "CANONICAL_PARENT_VERIFIED",
+    "verified_parent_folder_id": "1-flyN0KX2zdqXbebX2kVF4VRW0jTSrQu",
+    "verified_at": "2026-09-08T20:34:37+09:00"
+  },
+  "public_selection_contract": {
+    "version": "inner_window_frame_contract/1.1",
+    "canonical_file": "YKKAP_ウチリモ内窓_Slim_Canonical_v3_InnerWindowCanonicalFrame_R1_FORMAL.json",
+    "legacy_fields": "INTERNAL_SOURCE_ONLY",
+    "qa_status": "PASS_CURRENT_BASELINE"
+  }
+}
