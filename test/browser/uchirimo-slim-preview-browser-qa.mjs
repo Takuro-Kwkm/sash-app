@@ -41,7 +41,7 @@ async function exercise(page){
  assert.deepEqual(await appearance.locator('option').allTextContents(),['選択してください','透明ガラス','型板ガラス','すり板ガラス']);
  result=await choose(page,'sales_glass_appearance','clear');
  assert.equal(result.selection.glass_structure,undefined,'appearance must not choose technical thickness');
- assert.equal(result.selection.sales_glass_appearance,'clear');
+ assert.equal(await page.locator('[data-spec-key="sales_glass_appearance"]').inputValue(),'clear');
  assert.equal(await page.locator('[data-spec-key="glass_structure"]').count(),0,'sales must not choose glass thickness');
  assert.equal(await page.locator('#selectionSummary').innerText().then(x=>x.includes('透明ガラス')),true);
  assert.equal(await page.locator('[data-spec-key="low_e_type"]').count(),1);
@@ -49,11 +49,10 @@ async function exercise(page){
  for(const key of ['low_e_type','spacer_type','gas_fill'])assert.equal(await page.locator(`[data-spec-key="${key}"]`).count(),0,`${key} must clear`);
  assert.ok((await page.locator('[data-spec-key="sales_glass_appearance"] option').allTextContents()).some(x=>x.includes('和紙調')));
  result=await choose(page,'sales_glass_appearance','washi');
- assert.equal(result.selection.sales_glass_appearance,'washi');
+ assert.equal(await page.locator('[data-spec-key="sales_glass_appearance"]').inputValue(),'washi');
  assert.equal(await page.locator('[data-spec-key="glass_structure"]').count(),0);
  assert.equal(result.orderReady,false);
- assert.ok(result.manualWarnings.some(x=>x.includes('厚み・構成')));
- assert.match(await page.locator('#warnings').innerText(),/メーカー見積/);
+ assert.match(await page.locator('#warnings').innerText(),/ガラスの厚み・構成.*メーカー見積/s);
  assert.doesNotMatch(await page.locator('#warnings').innerText(),technical);
  result=await choose(page,'size_w',500);
  result=await choose(page,'size_h',500);
