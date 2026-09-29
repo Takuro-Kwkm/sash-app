@@ -2,9 +2,9 @@
   "schema": "SEVEN_SERIES_SLIM_PRODUCTION_TRIGGER_V1",
   "baseline": "SEVEN_SERIES_SLIM_V2",
   "release_date": "2026-09-29",
-  "attempt": 2,
+  "attempt": 3,
   "app_integration_ready": true,
   "legacy_v12": "STOPPED",
-  "qa_fix": "UCHIRIMO_RESOLVE_RESPONSE_CORRELATION",
-  "source_main_before_trigger": "680cddf9acaa1771907e6f650caeaa9c682d647c"
+  "fix": "UCHIRIMO_SALES_REQUEST_HANDOFF_PERSISTENCE",
+  "source_main_before_trigger": "df534bfe78a0cc6c4638254be300db05fb9a4770"
 }
