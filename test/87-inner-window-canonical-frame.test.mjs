@@ -77,7 +77,13 @@ test('R3 source-delegated projection excludes the explicit incompatible fukashi 
  assert.equal(r.fields.frame_spec.value,'frame_projection');assert.equal(r.fields.fukashi_depth.value,null);assert.equal(r.fields.fukashi_reinforcement.value,null);
 });
 
-test('R3 empty reinforcement domain is hidden and omitted for 20 mm fukashi',()=>{
+test('R3 20 mm fukashi retains its source-provided optional detail candidates',()=>{
  const r=runtime.inplus.resolver({...seeds.inplus,fukashi_presence:'present',fukashi_depth:'20',fukashi_sides:'three_side'});
- assert.equal(r.fields.fukashi_reinforcement.visibility,'HIDE');assert.equal(r.fields.fukashi_reinforcement.value,null);
+ assert.equal(r.fields.fukashi_reinforcement.visibility,'SHOW');assert.deepEqual(r.fields.fukashi_reinforcement.allowed_values,['none','corner']);assert.equal(r.fields.fukashi_reinforcement.value,null);
+});
+
+test('Empty canonical candidate domains are hidden instead of requiring impossible selection',()=>{
+ const contract={...i,fields:i.fields.map(f=>f.field_name==='fukashi_reinforcement'?{...f,values:[]}:f)};
+ const r=resolveFrameContract(contract,{...seeds.inplus,fukashi_presence:'present',fukashi_depth:'50',fukashi_sides:'three_side'});
+ assert.equal(r.fields.fukashi_reinforcement.visibility,'HIDE');assert.equal(r.fields.fukashi_reinforcement.required,false);
 });
