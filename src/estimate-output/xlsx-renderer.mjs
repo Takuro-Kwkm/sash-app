@@ -68,11 +68,11 @@ function buildWorkbookParts(model){
     if(!index.has(key)){index.set(key,shared.length);shared.push(key);}
     return index.get(key);
   };
-  const headers=['No.','部屋 / 位置','開口名称','メーカー','シリーズ','窓・ドア種類','主要仕様','サイズ','出力状態','金額','Runtime Package','Runtime Identity','Validation','Source Mode'];
+  const headers=['No.','階数','部屋 / 位置','メーカー','シリーズ','窓・ドア種類','主要仕様','サイズ','出力状態','金額','Runtime Package','Runtime Identity','Validation','Source Mode'];
   const rows=[headers,...model.rows.map((row)=>[
     row.opening_no,
+    row.floor??'',
     [row.room_name,row.location].filter(Boolean).join(' / '),
-    row.opening_name??'',
     row.manufacturer??'',
     row.series??'',
     row.opening_type??'',
@@ -97,7 +97,7 @@ function buildWorkbookParts(model){
   }).join('');
 
   const sheet=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetViews><sheetView workbookViewId="0"><pane ySplit="1" topLeftCell="A2" activePane="bottomLeft" state="frozen"/></sheetView></sheetViews><cols><col min="1" max="1" width="7" customWidth="1"/><col min="2" max="2" width="24" customWidth="1"/><col min="3" max="8" width="22" customWidth="1"/><col min="9" max="9" width="14" customWidth="1"/><col min="10" max="10" width="14" customWidth="1"/><col min="11" max="14" width="24" customWidth="1"/></cols><sheetData>${rowXml}</sheetData><autoFilter ref="A1:N${rows.length}"/></worksheet>`;
+<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetViews><sheetView workbookViewId="0"><pane ySplit="1" topLeftCell="A2" activePane="bottomLeft" state="frozen"/></sheetView></sheetViews><cols><col min="1" max="1" width="7" customWidth="1"/><col min="2" max="2" width="10" customWidth="1"/><col min="3" max="3" width="24" customWidth="1"/><col min="4" max="8" width="22" customWidth="1"/><col min="9" max="9" width="14" customWidth="1"/><col min="10" max="10" width="14" customWidth="1"/><col min="11" max="14" width="24" customWidth="1"/></cols><sheetData>${rowXml}</sheetData><autoFilter ref="A1:N${rows.length}"/></worksheet>`;
   const sharedStrings=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <sst xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" count="${shared.length}" uniqueCount="${shared.length}">${shared.map((value)=>`<si><t xml:space="preserve">${xml(value)}</t></si>`).join('')}</sst>`;
   return {sheet,sharedStrings};
