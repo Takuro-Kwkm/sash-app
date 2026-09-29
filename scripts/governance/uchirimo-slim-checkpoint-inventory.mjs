@@ -3,7 +3,7 @@ import { execFileSync } from 'node:child_process';
 import { mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { getRuntimeMasterEntry } from '../../src/catalog/runtime-master/runtime-master-registry.mjs';
+import { getRuntimeMasterEntry } from './uchirimo-frozen-migration-entry.mjs';
 import { loadCanonicalWorkbookRuntimePackage } from '../../src/catalog/runtime-master/canonical-runtime-manifest-loader.mjs';
 import { CONTROLLER_CONTRACT_VERSION, sha256 } from './uchirimo-v11-recovery-controller.mjs';
 import { checkpointCoverage, parentPopulationHash, validateCheckpoint } from './uchirimo-controller-checkpoint.mjs';

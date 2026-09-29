@@ -1,0 +1,81 @@
+{
+  "schema": "SEVEN_SERIES_SLIM_RELEASE_SCOPE_V1",
+  "scope": "SALES_ESTIMATE_REQUEST",
+  "excluded": [
+    "AUTOMATIC_ORDER",
+    "AUTOMATIC_PRICE",
+    "AUTOMATIC_BOM"
+  ],
+  "v12": {
+    "status": "STOPPED",
+    "run": 36533088492,
+    "old_open_parents": 124,
+    "not_counted_as_new_failures": true
+  },
+  "products": [
+    {
+      "manufacturer": "LIXIL",
+      "series": "サーモスⅡ-H",
+      "packageVersion": "v0.9-R4",
+      "runtimeRevision": null,
+      "manifestId": "1_yIaBpnfppnj36IcuRoX9FBJhtrNngin",
+      "manifestSha256": "993481b2f0ab1d519a091e1b9f99a329eef7c67ec89cd1c82ddfab0d3c624955"
+    },
+    {
+      "manufacturer": "LIXIL",
+      "series": "サーモスL",
+      "packageVersion": "v0.7-R2",
+      "runtimeRevision": null,
+      "manifestId": "1c-VIgwTqPDTkas0apYqx30AN3PVa71p1",
+      "manifestSha256": "4cf2a4b1572f68288fa108ccd33d30cc80d5170f2f5303864ca56ca67c34cec3"
+    },
+    {
+      "manufacturer": "LIXIL",
+      "series": "EW",
+      "packageVersion": "v1.3",
+      "runtimeRevision": null,
+      "manifestId": "140pCgz2uhukjOjd1wymuISuAMjhaBpCS",
+      "manifestSha256": "eb8bce59f249faea5cfc8e3d4b75e44f74ee960eacbdc21e25864b7d8dd08662"
+    },
+    {
+      "manufacturer": "YKK AP",
+      "series": "APW430",
+      "packageVersion": "20260918-R3",
+      "runtimeRevision": null,
+      "manifestId": "1hyX2Fgu1m28xmkM5I53GZ-xC3PX0b9Hk",
+      "manifestSha256": "e2755a735fc3a7c94afacc58175a390bf00784cf1f13521a1263076d7bfae1c7"
+    },
+    {
+      "manufacturer": "YKK AP",
+      "series": "APW431",
+      "packageVersion": "v1.2",
+      "runtimeRevision": null,
+      "manifestId": "16-hPgdJYmkl30MvonP_natv3bPV1C-3x",
+      "manifestSha256": "b8927a51a5e31b0c7a89a98b65833cf4f7e0e641c52316cecce4f493399eb1f9"
+    },
+    {
+      "manufacturer": "YKK AP",
+      "series": "ウチリモ 内窓",
+      "packageVersion": "v1.0-P7R1-R2",
+      "runtimeRevision": "SLIM-V2-20260929",
+      "manifestId": "1oR7kQo7JGe-twx-Ko4Fbgkuk7M4Cp77q",
+      "manifestSha256": "3e2f2960a3761bc14a6c0ac3c9d9ee6d5c3e8f3b43bdee2bab81de7297afb5d4"
+    },
+    {
+      "manufacturer": "LIXIL",
+      "series": "TW",
+      "packageVersion": "integrated-v0.4",
+      "runtimeRevision": null,
+      "manifestId": "13doEdTkUlQNu4Dm-SNwkeUg8RkrjS5G0",
+      "manifestSha256": "4ca87f7fc327f798da9ac0e39d4aa7ba4e8bda1e5635cc91959fe241059aa7d7"
+    }
+  ],
+  "qa": {
+    "unit": "npm test",
+    "discrete": "UCHIRIMO_QA_REGISTERED_RUNTIME=1 node scripts/governance/uchirimo-slim-factorized-qa.mjs",
+    "dimensions": "node scripts/governance/uchirimo-slim-dimension-differential.mjs",
+    "business": "node test/browser/seven-series-business-flow-qa.mjs",
+    "preview": "node test/browser/seven-series-preview-qa.mjs"
+  },
+  "other_six_product_packages": "UNCHANGED_FROM_93e9e5701602b7cfc15b0edb0f74006681e2c982"
+}

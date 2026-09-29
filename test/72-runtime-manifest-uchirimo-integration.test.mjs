@@ -7,14 +7,14 @@ import { adaptUchirimoTabularV1 } from '../src/catalog/runtime-master/uchirimo-t
 import { getRuntimeAppIntegration, resolveRuntimeAppProduct } from '../src/catalog/runtime-master/runtime-app-bridge.mjs';
 
 const PRODUCT = 'SER-YKKAP-UCHIRIMO';
-const MANIFEST_SHA = 'be4f1f77727424dc06ddf9de947201f33d4aee5219b182e37d0f178e1fb7147d';
+const MANIFEST_SHA = '3e2f2960a3761bc14a6c0ac3c9d9ee6d5c3e8f3b43bdee2bab81de7297afb5d4';
 
 test('Uchirimo is declaratively registered from the formal v1.0-P7R1-R2 manifest', () => {
   const integration = getRuntimeAppIntegration(PRODUCT);
   assert.deepEqual({ manufacturer: integration.manufacturer, series: integration.series, packageVersion: integration.packageVersion, schemaVersion: integration.schemaVersion, uiCategory: integration.uiCategory, adapterType: integration.adapterType }, {
     manufacturer: 'YKK AP', series: 'ウチリモ 内窓', packageVersion: 'v1.0-P7R1-R2', schemaVersion: '2.0', uiCategory: 'INNER_WINDOW', adapterType: 'UCHIRIMO_TABULAR_V1',
   });
-  assert.equal(integration.canonicalRuntimeReference.runtimeManifestDriveFileId, '1119yamXn21wLZd3C8LvamNWsTAx_1dt2');
+  assert.equal(integration.canonicalRuntimeReference.runtimeManifestDriveFileId, '1oR7kQo7JGe-twx-Ko4Fbgkuk7M4Cp77q');
   assert.equal(integration.canonicalRuntimeReference.canonicalFolderId, '1-flyN0KX2zdqXbebX2kVF4VRW0jTSrQu');
   assert.equal(integration.sourceHash, MANIFEST_SHA);
 });
@@ -28,16 +28,16 @@ test('manifest is the only package entry and all four declared component bytes p
   assert.equal(runtime.sourcePackageIntegrity.match, true);
   assert.equal(runtime.sourcePackageIntegrity.files.length, 4);
   assert.deepEqual(runtime.sourcePackageIntegrity.files.map((row) => row.fileId), [
-    '1iX6-TuR7B7tUKqtGnd76IzVJzq9OH2zK', '1c6hmvMgSLhESgmMJTRW7DN_opa1HhYlZ', '1TJn2-e6Sa6LcIv6FxNt0ahGSWlcgclJZ', '1fNUukTQaDJT2iWbNk6F8gcLLt22Sg32z',
+    '1er4keQZ_SQyku3ae2bNxGukvkUvzRy-H', '1c6hmvMgSLhESgmMJTRW7DN_opa1HhYlZ', '1TJn2-e6Sa6LcIv6FxNt0ahGSWlcgclJZ', '1fNUukTQaDJT2iWbNk6F8gcLLt22Sg32z',
   ]);
-  assert.ok(runtime.sourcePackageIntegrity.files.every((row) => row.match && row.codec === 'brotli'));
+  assert.ok(runtime.sourcePackageIntegrity.files.every((row) => row.match && ['brotli','identity'].includes(row.codec)));
 });
 
 test('schema adapter preserves formal inventories and does not invent standard sizes, BOM or lifecycle', async () => {
   const { master } = await loadRegisteredRuntime('YKK AP', 'ウチリモ 内窓');
   assert.equal(master.canonical.product_nodes.length, 15);
-  assert.equal(master.canonical.glass_specs.length, 566);
-  assert.equal(master.canonical.glass_node_matrix.length, 8490);
+  assert.equal(master.canonical.glass_rule_model.identities.length, 566);
+  assert.equal(master.canonical.glass_node_matrix, undefined);
   assert.equal(master.canonical.dependency_rules.length, 29);
   assert.equal(master.canonical.option_master.length, 9);
   assert.equal(master.capabilities.standardSizeRecords, 0);

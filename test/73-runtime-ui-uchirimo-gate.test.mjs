@@ -101,7 +101,7 @@ test('formal fixed/derived values are read-only', async () => {
 
 test('manual and special-check routes remain non-PASS while ORDER_READY stays false', async () => {
   const { master } = await loadRegisteredRuntime('YKK AP', 'ウチリモ 内窓');
-  const pick = (gsc) => master.canonical.glass_specs.find((row) => row.glass_size_constraint_group === gsc);
+  const pick = (gsc) => master.canonical.glass_rule_model.identities.map((_,i)=>master.glassRuleIndex.projectAt(i)).find((row) => row.glass_size_constraint_group === gsc);
   const semantic = (glass) => Object.fromEntries(['glass_family','glass_structure','low_e_type','glass_coating_color','glass_surface_type','safety_treatment','grille_type','grille_material','muntin_type','vacuum_glass_product','spacer_type','gas_fill'].filter((key) => glass[key] && glass[key] !== 'NOT_APPLICABLE').map((key) => [key, glass[key]]));
   let result = await resolveRuntimeAppProduct(PRODUCT, { ...baseNode, ...semantic(pick('GSC-SG-W3')), size_w: 500, size_h: 500 });
   assert.equal(result.validation.status, 'MANUAL_CHECK');

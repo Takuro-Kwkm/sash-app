@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { readFileSync,writeFileSync } from 'node:fs';
 import { pathToFileURL } from 'node:url';
-import { getRuntimeMasterEntry } from '../../src/catalog/runtime-master/runtime-master-registry.mjs';
+import { getRuntimeMasterEntry } from './uchirimo-frozen-migration-entry.mjs';
 import { adaptUchirimoTabularV1 } from '../../src/catalog/runtime-master/uchirimo-tabular-v1-adapter.mjs';
 import { getRuntimeAppIntegration,normalizeRuntimeSelection,toRuntimeUiResult } from '../../src/catalog/runtime-master/runtime-app-bridge.mjs';
 import { hash } from './uchirimo-slim-factorized-selector.mjs';

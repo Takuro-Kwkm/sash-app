@@ -1,7 +1,7 @@
 import { createHash } from 'node:crypto';
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { performance } from 'node:perf_hooks';
-import { getRuntimeMasterEntry } from '../../src/catalog/runtime-master/runtime-master-registry.mjs';
+import { getRuntimeMasterEntry } from './uchirimo-frozen-migration-entry.mjs';
 import { loadCanonicalWorkbookRuntimePackage } from '../../src/catalog/runtime-master/canonical-runtime-manifest-loader.mjs';
 import { adaptUchirimoTabularV1 } from '../../src/catalog/runtime-master/uchirimo-tabular-v1-adapter.mjs';
 import { normalizeUchirimoGlassMatrix, compareUchirimoGlassSemantics } from '../../src/catalog/runtime-master/uchirimo-slim-canonical.mjs';

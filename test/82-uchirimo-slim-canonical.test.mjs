@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { getRuntimeMasterEntry } from '../src/catalog/runtime-master/runtime-master-registry.mjs';
+import { getRuntimeMasterEntry } from '../scripts/governance/uchirimo-frozen-migration-entry.mjs';
 import { loadCanonicalWorkbookRuntimePackage } from '../src/catalog/runtime-master/canonical-runtime-manifest-loader.mjs';
 import { adaptUchirimoTabularV1 } from '../src/catalog/runtime-master/uchirimo-tabular-v1-adapter.mjs';
 import { getRuntimeAppIntegration, normalizeRuntimeSelection, toRuntimeUiResult } from '../src/catalog/runtime-master/runtime-app-bridge.mjs';

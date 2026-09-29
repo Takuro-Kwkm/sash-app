@@ -51,7 +51,7 @@ test('undeclared sink side effect is rejected, not counted as equivalent',()=>{
  assert.throws(()=>runner.run(row),/SINK_HAS_NONLOCAL_EFFECT|UNDECLARED_CROSS_COMPONENT_EFFECT/);
 });
 test('extracted support preserves source document precedence and all resolved contracts',async()=>{
- const {getRuntimeMasterEntry}=await import('../src/catalog/runtime-master/runtime-master-registry.mjs');
+ const {getRuntimeMasterEntry}=await import('../scripts/governance/uchirimo-frozen-migration-entry.mjs');
  const {loadCanonicalWorkbookRuntimePackage}=await import('../src/catalog/runtime-master/canonical-runtime-manifest-loader.mjs');
  const {adaptUchirimoTabularV1}=await import('../src/catalog/runtime-master/uchirimo-tabular-v1-adapter.mjs');
  const pkg=await loadCanonicalWorkbookRuntimePackage(getRuntimeMasterEntry('YKK AP','ウチリモ 内窓'));

@@ -8,6 +8,8 @@ const OUT='artifacts/global-window-selection-flow-browser-qa';
 const STAGES=['PRODUCT','OPENING','CONFIGURATION','SIZE','FINISH','SCREEN','GLAZING','INSTALLATION_SURVEY','OPTION'];
 const STAGE_INDEX=new Map(STAGES.map((stage,index)=>[stage,index]));
 const WINDOW_UI_CATEGORIES=new Set(['NEW_CONSTRUCTION_EXTERIOR_WINDOW','INNER_WINDOW']);
+const UCHIRIMO_HIDDEN_GLASS_KEYS=new Set(['glass_structure','glass_structure_code','glass_spec_id','glass_size_constraint_group','glass_surface_type','spacer_type','gas_fill','cavity_thickness_mm']);
+const UCHIRIMO_SALES_KEYS=new Set(['sales_glass_appearance','sales_spacer_type','sales_gas_fill']);
 const VIEWPORTS={
   desktop:{viewport:{width:1440,height:1000}},
   smartphone:{viewport:{width:390,height:844},isMobile:true,hasTouch:true},
@@ -46,7 +48,13 @@ async function assertDomSignature(page,result,label){
   assertSemanticOrder(result,label);
   const domKeys=await page.locator('#dynamicForm .field[data-key]').evaluateAll((nodes)=>nodes.map((node)=>node.dataset.key));
   const resultKeys=(result.fields??[]).map((field)=>field.key);
-  assert.deepEqual(domKeys,resultKeys,`${label}:DOM key sequence differs from resolver Global Flow sequence`);
+  if(result.productId==='SER-YKKAP-UCHIRIMO'){
+    assert.deepEqual(domKeys.filter((key)=>!UCHIRIMO_SALES_KEYS.has(key)),resultKeys.filter((key)=>!UCHIRIMO_HIDDEN_GLASS_KEYS.has(key)),`${label}:Uchirimo Runtime field order changed`);
+    const family=result.selection?.glass_family;
+    const expected=family==='insulating_glass'?['sales_glass_appearance','sales_spacer_type','sales_gas_fill']:family?['sales_glass_appearance']:[];
+    assert.deepEqual(domKeys.filter((key)=>UCHIRIMO_SALES_KEYS.has(key)),expected,`${label}:sales glazing fields differ`);
+    if(expected.length)assert.equal(domKeys.indexOf(expected[0]),domKeys.indexOf('glass_family')+1,`${label}:sales glazing must follow glass family`);
+  }else assert.deepEqual(domKeys,resultKeys,`${label}:DOM key sequence differs from resolver Global Flow sequence`);
   const overflow=await page.evaluate(()=>Math.max(0,document.documentElement.scrollWidth-window.innerWidth));
   assert.ok(overflow<=1,`${label}:horizontal overflow ${overflow}`);
   report.domSignatureChecks+=1;
