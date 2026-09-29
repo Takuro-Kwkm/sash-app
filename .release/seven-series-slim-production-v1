@@ -1,0 +1,8 @@
+{
+  "schema": "SEVEN_SERIES_SLIM_PRODUCTION_TRIGGER_V1",
+  "baseline": "SEVEN_SERIES_SLIM_V2",
+  "release_date": "2026-09-29",
+  "app_integration_ready": true,
+  "legacy_v12": "STOPPED",
+  "source_main_before_trigger": "93bfbc970ee94bcfa8cc2f447bbc3197acaac278"
+}
