@@ -91,7 +91,7 @@ window.fetch=(input)=>{const url=new URL(typeof input==="string"?input:input.url
 };
 const appUrl=moduleUrl(${json(appSource)}
  .replace("const parts=location.pathname.split('/').filter(Boolean);","const parts=['runtime-lab'];")
- .replace("await activeProductEditor.mount();","await activeProductEditor.mount();window.__uchirimoPreviewEditor=activeProductEditor;")
+ .replace("{showInventory:true});await activeProductEditor.mount();","{showInventory:true});await activeProductEditor.mount();window.__uchirimoPreviewEditor=activeProductEditor;")
  .replace('/work-management/domain.mjs',domainUrl)
  .replace('/work-management/storage.mjs',storageUrl)
  .replace('/work-management/repositories.mjs',repositoriesUrl)
