@@ -1,0 +1,41 @@
+name: Stop legacy governance run
+on:
+  push:
+    branches: [ops/stop-legacy-governance-20260929]
+    paths: [.github/workflows/stop-legacy-governance.yml]
+permissions:
+  contents: read
+  actions: write
+jobs:
+  stop:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      GH_TOKEN: ${{ github.token }}
+      TARGET_RUN_ID: "36541392164"
+      TARGET_HEAD: "2e8dbefe869c9396cb105589905528409473ec93"
+    steps:
+      - name: Force cancel obsolete Project Governance run
+        shell: bash
+        run: |
+          set -euo pipefail
+          repo="$GITHUB_REPOSITORY"
+          test "$repo" = "Takuro-Kwkm/sash-app"
+          current="$(gh api "repos/$repo/actions/runs/$TARGET_RUN_ID")"
+          test "$(jq -r .head_sha <<<"$current")" = "$TARGET_HEAD"
+          state="$(jq -r .status <<<"$current")"
+          if [ "$state" = completed ]; then
+            echo "LEGACY_GOVERNANCE_STOP_VERIFIED state=completed"
+            exit 0
+          fi
+          gh api --method POST "repos/$repo/actions/runs/$TARGET_RUN_ID/force-cancel" || true
+          for i in {1..12}; do
+            sleep 5
+            state="$(gh api "repos/$repo/actions/runs/$TARGET_RUN_ID" --jq .status)"
+            if [ "$state" = completed ]; then
+              echo "LEGACY_GOVERNANCE_STOP_VERIFIED state=completed"
+              exit 0
+            fi
+          done
+          echo "LEGACY_GOVERNANCE_STOP_NOT_CONFIRMED"
+          exit 1
