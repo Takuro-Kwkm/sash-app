@@ -61,6 +61,8 @@ jobs:
       UCHIRIMO_SELECTOR_CURRENT_PLAN: artifacts/uchirimo-v12-parent-plan/all-partitions.json
       UCHIRIMO_V12_PARENT_PLAN: artifacts/uchirimo-v12-parent-plan/all-partitions.json
       UCHIRIMO_V12_CONTROLLER_OUT: artifacts/uchirimo-v12-ui-checkpoint
+      UCHIRIMO_CHECKPOINT_SOURCE_RUN_ID: '36521352366'
+      UCHIRIMO_CHECKPOINT_SOURCE_ARTIFACT_ID: '11013298429'
     steps:
       - uses: actions/checkout@v4
         with:
