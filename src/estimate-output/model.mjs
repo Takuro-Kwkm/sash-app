@@ -95,6 +95,8 @@ function classifyRow(opening,snapshot,price){
 }
 
 function outputAddress(project){
+  const canonical=nullable(project?.address);
+  if(canonical)return canonical;
   const parts=[project?.postal_code?`〒${text(project.postal_code)}`:null,project?.prefecture,project?.city,project?.street,project?.building].map(nullable).filter(Boolean);
   return parts.join(' ')||null;
 }
@@ -163,7 +165,6 @@ export function createEstimateOutputModel({project,estimate,openings,generatedAt
       request_company_contact:nullable(project.request_company_contact),
       sales_person:nullable(project.sales_person),
       customer_name:nullable(project.customer_name),
-      postal_code:nullable(project.postal_code),
       address:outputAddress(project),
     },
     estimate:{

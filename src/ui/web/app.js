@@ -8,7 +8,9 @@ const $=(selector)=>document.querySelector(selector);
 const esc=(value)=>String(value??'').replace(/[&<>'\"]/g,(character)=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'\"':"&quot;"})[character]);
 const display=(value,fallback='—')=>value?esc(value):fallback;
 const dateTime=(value)=>value?new Intl.DateTimeFormat('ja-JP',{dateStyle:'short',timeStyle:'short'}).format(new Date(value)):'—';
-const address=(project)=>[project.postal_code?`〒${project.postal_code}`:null,project.prefecture,project.city,project.street,project.building].filter(Boolean).join(' ')||'住所未入力';
+const legacyAddress=(project)=>[project?.postal_code?`〒${project.postal_code}`:null,project?.prefecture,project?.city,project?.street,project?.building].filter(Boolean).join(' ');
+const addressValue=(project)=>String(project?.address??'').trim()||legacyAddress(project);
+const address=(project)=>addressValue(project)||'住所未入力';
 const draftKey=(id)=>`sash.work-draft.${id}`;
 
 let persistenceFailure=false;
@@ -70,11 +72,7 @@ function projectForm(project={}){
     <div class="field"><label>依頼会社担当</label><input name="request_company_contact" value="${esc(project.request_company_contact??'')}"></div>
     <div class="field"><label>営業担当</label><input name="sales_person" value="${esc(project.sales_person??'')}"></div>
     <div class="field"><label>施主名</label><input name="customer_name" value="${esc(project.customer_name??'')}"></div>
-    <div class="field"><label>郵便番号</label><input name="postal_code" inputmode="numeric" value="${esc(project.postal_code??'')}"></div>
-    <div class="field"><label>都道府県</label><input name="prefecture" value="${esc(project.prefecture??'')}"></div>
-    <div class="field"><label>市区町村</label><input name="city" value="${esc(project.city??'')}"></div>
-    <div class="field"><label>番地</label><input name="street" value="${esc(project.street??'')}"></div>
-    <div class="field span-2"><label>建物名</label><input name="building" value="${esc(project.building??'')}"></div>
+    <div class="field span-2"><label>住所</label><input name="address" autocomplete="street-address" placeholder="熊本県熊本市中央区○○1-2-3 ○○マンション101号" value="${esc(addressValue(project))}"></div>
     <div class="field"><label>案件種別</label><select name="project_type"><option value="">選択してください</option><option value="NEW_BUILD" ${project.project_type==='NEW_BUILD'?'selected':''}>新築</option><option value="RENOVATION" ${project.project_type==='RENOVATION'?'selected':''}>リフォーム</option><option value="OTHER" ${project.project_type==='OTHER'?'selected':''}>その他</option></select></div>
     <div class="field span-2"><label>備考</label><textarea name="memo" rows="4">${esc(project.memo??'')}</textarea></div>
     <div class="form-actions span-2"><button class="button primary" type="submit">保存</button>${button('キャンセル',{nav:project.project_id?`/projects/${project.project_id}`:'/'})}</div>

@@ -27,6 +27,30 @@ test('work domain keeps Project 1:N Estimate 1:N Opening',async()=>{
   assert.equal((await repositories.openings.listByEstimate(estimate.estimate_id)).length,1);
 });
 
+test('project address uses one canonical field and legacy split input is migrated',async()=>{
+  const {service}=setup();
+  const canonical=await service.createProject({
+    project_name:'住所統合案件',
+    address:'熊本県熊本市中央区○○1-2-3 ○○マンション101号',
+  });
+  assert.equal(canonical.project.address,'熊本県熊本市中央区○○1-2-3 ○○マンション101号');
+  assert.equal(canonical.project.postal_code,undefined);
+  assert.equal(canonical.project.prefecture,undefined);
+
+  const legacy=await service.createProject({
+    project_name:'旧住所案件',
+    postal_code:'8600801',prefecture:'熊本県',city:'熊本市中央区',street:'安政町1-1',building:'テストビル101',
+  });
+  assert.equal(legacy.project.address,'〒8600801 熊本県 熊本市中央区 安政町1-1 テストビル101');
+  const updated=await service.updateProject(legacy.project.project_id,{address:'熊本県熊本市中央区新住所2-3-4'});
+  assert.equal(updated.address,'熊本県熊本市中央区新住所2-3-4');
+  assert.equal(updated.postal_code,null);
+  assert.equal(updated.prefecture,null);
+  assert.equal(updated.city,null);
+  assert.equal(updated.street,null);
+  assert.equal(updated.building,null);
+});
+
 test('versioned browser persistence restores projects and openings after a new app instance',async()=>{
   const first=setup();
   const {project,estimate}=await first.service.createProject({project_name:'復元案件'});
