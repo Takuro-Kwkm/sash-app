@@ -6,8 +6,8 @@ import { createEstimateXlsxBytes } from '../src/estimate-output/xlsx-renderer.mj
 
 const project={
   project_id:'prj_test',project_name:'熊本モデルハウス',request_company:'青空工務店',
-  request_company_contact:'山田',sales_person:'巧竜',customer_name:'施主A',postal_code:'8600801',
-  prefecture:'熊本県',city:'熊本市中央区',street:'安政町1-1',building:null,
+  request_company_contact:'山田',sales_person:'巧竜',customer_name:'施主A',
+  address:'熊本県熊本市中央区安政町1-1',
 };
 const estimate={estimate_id:'est_test',project_id:'prj_test',estimate_no:1,revision_no:2,status:'DRAFT',estimate_title:'本見積'};
 
@@ -41,7 +41,14 @@ test('stored Snapshot is the SSOT and missing price stays null / NEEDS_CONFIRMAT
   assert.equal(model.state,EstimateOutputState.NEEDS_CONFIRMATION);
   assert.deepEqual(model.counts,{total:1,complete:0,incomplete:0,needs_confirmation:1,invalid:0});
   assert.equal(model.rows[0].audit.runtime_manifest_identity,'manifest-1');
-  assert.equal(model.project.address,'〒8600801 熊本県 熊本市中央区 安政町1-1');
+  assert.equal(model.project.address,'熊本県熊本市中央区安政町1-1');
+});
+
+test('legacy split project address remains readable for existing saved cases',()=>{
+  const legacyProject={...project,address:null,postal_code:'8600801',prefecture:'熊本県',city:'熊本市中央区',street:'安政町1-1',building:'旧ビル101'};
+  const model=createEstimateOutputModel({project:legacyProject,estimate,openings:[opening(1)]});
+  assert.equal(model.project.address,'〒8600801 熊本県 熊本市中央区 安政町1-1 旧ビル101');
+  assert.equal('postal_code' in model.project,false);
 });
 
 test('explicit stored price allows COMPLETE while incomplete and invalid remain distinct',()=>{
