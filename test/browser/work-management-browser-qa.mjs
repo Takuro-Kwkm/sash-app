@@ -107,9 +107,9 @@ async function completeRequiredBeforeSize(result){
 async function createOpening(index,product){
   await page.getByRole('button',{name:'開口部を追加',exact:true}).click();
   await page.waitForURL(/\/openings\/opn_/);
+  await page.locator('[data-opening-field="floor"]').selectOption(index%2===0?'1階':'2階');
   await page.locator('[data-opening-field="room_name"]').fill(index===0?'LDK':`洋室${index}`);
   await page.locator('[data-opening-field="location"]').fill(index%2===0?'南面':'北面');
-  await page.locator('[data-opening-field="opening_name"]').fill(index===0?'掃き出し窓':`開口${index+1}`);
   await page.selectOption('#manufacturer',product.manufacturer);
   const initial=page.waitForResponse((row)=>row.url().includes('/resolve')&&row.status()===200);
   await page.selectOption('#product',product.id);let result=await (await initial).json();
@@ -142,10 +142,8 @@ try{
   await page.locator('[name="project_name"]').fill('熊本中央区モデルハウス');
   await page.locator('[name="request_company"]').fill('青空工務店');
   await page.locator('[name="sales_person"]').fill('巧竜');
-  await page.locator('[name="postal_code"]').fill('8600801');
-  await page.locator('[name="prefecture"]').fill('熊本県');
-  await page.locator('[name="city"]').fill('熊本市中央区');
-  await page.locator('[name="street"]').fill('安政町1-1');
+  assert.equal(await page.locator('[name="postal_code"],[name="prefecture"],[name="city"],[name="street"],[name="building"]').count(),0);
+  await page.locator('[name="address"]').fill('熊本県熊本市中央区安政町1-1');
   await page.locator('#projectForm button[type="submit"]').click();
   await page.waitForURL(/\/projects\/prj_/);
   assert.match(await page.locator('main').innerText(),/青空工務店/);
@@ -173,7 +171,10 @@ try{
   await page.locator('.opening-card').first().getByRole('button',{name:'複製'}).click();
   assert.equal(await page.locator('.opening-card').count(),11);
   await page.locator('.opening-card').last().getByRole('button',{name:'編集'}).click();
-  await page.locator('[data-opening-field="opening_name"]').fill('掃き出し窓 サイズ変更');
+  assert.equal(await page.locator('[data-opening-field="opening_name"]').count(),0);
+  const floor=page.locator('[data-opening-field="floor"]');
+  assert.equal(await floor.locator('option:not([value=""])').count(),20);
+  await floor.selectOption('12階');
   const sizeMode=page.locator('[data-spec-key="size_mode"]');
   let standardResult=null;
   if(await sizeMode.count()&&await sizeMode.inputValue()==='CUSTOM'){
@@ -195,7 +196,7 @@ try{
     }
   }
   await page.getByRole('button',{name:'この開口部を保存'}).click();await page.waitForURL(estimateUrl);
-  assert.match(await page.locator('.opening-card').last().innerText(),/サイズ変更/);
+  assert.match(await page.locator('.opening-card').last().innerText(),/12階/);
   report.scenarios.C='PASS';
 
   await page.locator('.opening-card').last().getByRole('button',{name:'↑'}).click();
