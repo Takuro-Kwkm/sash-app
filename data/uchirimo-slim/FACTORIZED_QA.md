@@ -64,11 +64,17 @@ against explicit enumeration and negative tests that introduce side effects.
 - Migration samples retain the logical counts 430,230,528 / 1,871,880,192 /
   1,871,880,192. Counts are represented symbolically, not claimed as individually
   executed resolver calls.
+- The migration-only dimension differential compares complete FORMAL and Slim
+  responses for representative W/H values around serialized glass limits.
+  Its 15-node × 23-GSC matrix includes partially serialized and blocked GSCs;
+  missing manufacturer limits remain unresolved. This is a boundary sample,
+  not a proof for every numeric value or every edit sequence.
 
 ```sh
 node --test test/84-uchirimo-factorized-selector.test.mjs
 node scripts/governance/uchirimo-slim-factorized-samples.mjs
 node scripts/governance/uchirimo-slim-factorized-qa.mjs
+node scripts/governance/uchirimo-slim-dimension-differential.mjs
 # Migration only, after generating the existing plan:
 UCHIRIMO_FACTORIZED_PLAN=artifacts/uchirimo-slim/checkpoint-inventory-plan/all-partitions.json \
 UCHIRIMO_FACTORIZED_OUT=artifacts/uchirimo-slim/factorized-legacy-plan \

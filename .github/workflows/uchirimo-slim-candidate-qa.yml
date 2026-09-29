@@ -90,6 +90,21 @@ jobs:
         with:
           name: uchirimo-slim-selector-migration-differential
           path: artifacts/uchirimo-slim/selector-differential.json
+  dimension-boundary-differential:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: node scripts/governance/uchirimo-slim-dimension-differential.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: uchirimo-slim-dimension-boundary-differential
+          path: artifacts/uchirimo-slim/dimension-boundary-differential.json
   parent-migration-differential:
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
