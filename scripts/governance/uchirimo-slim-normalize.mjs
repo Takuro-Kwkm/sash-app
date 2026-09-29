@@ -5,6 +5,7 @@ import { getRuntimeMasterEntry } from '../../src/catalog/runtime-master/runtime-
 import { loadCanonicalWorkbookRuntimePackage } from '../../src/catalog/runtime-master/canonical-runtime-manifest-loader.mjs';
 import { adaptUchirimoTabularV1 } from '../../src/catalog/runtime-master/uchirimo-tabular-v1-adapter.mjs';
 import { normalizeUchirimoGlassMatrix, compareUchirimoGlassSemantics } from '../../src/catalog/runtime-master/uchirimo-slim-canonical.mjs';
+import { normalizeGlassSpecifications, projectGlassSpecifications } from '../../src/catalog/runtime-master/uchirimo-glass-rule-model.mjs';
 
 const out = process.env.UCHIRIMO_SLIM_OUT ?? 'artifacts/uchirimo-slim';
 const sha = (bytes) => createHash('sha256').update(bytes).digest('hex');
@@ -13,7 +14,9 @@ const pkg = await loadCanonicalWorkbookRuntimePackage(entry);
 if (!pkg.integrity.match) throw new Error('FORMAL_RUNTIME_INTEGRITY_FAILED');
 const role = Object.keys(pkg.documents).find((name) => pkg.documents[name]?.glass_node_matrix);
 const formal = pkg.documents[role];
-const slim = normalizeUchirimoGlassMatrix(formal);
+const matrixSlim = normalizeUchirimoGlassMatrix(formal);
+const slim = normalizeGlassSpecifications(matrixSlim);
+const projectedGlass = projectGlassSpecifications(slim);
 const equivalence = compareUchirimoGlassSemantics(formal, slim);
 if (equivalence.status !== 'PASS') throw new Error(`SLIM_EQUIVALENCE_FAILED:${JSON.stringify(equivalence)}`);
 const slimPackage = { ...pkg, documents: { ...pkg.documents, [role]: slim } };
@@ -29,15 +32,12 @@ const measure = (adapter, iterations) => {
 const legacyRows = formal.glass_node_matrix.length;
 const profileStatuses = slim.glass_compatibility_profiles.reduce((n, row) => n + row.node_statuses.length, 0);
 const slimCompatibilityRows = slim.glass_compatibility_profiles.length + profileStatuses;
-const glassProfiles = new Map(slim.glass_specs.map((glass) => [glass.glass_spec_id, glass.compatibility_profile_id]));
 const candidateBody = {
-  schema_version: 'UCHIRIMO_SLIM_CANONICAL_CANDIDATE_V1',
+  schema_version: 'UCHIRIMO_SLIM_CANONICAL_CANDIDATE_V2',
   lifecycle: 'WORKING_CANDIDATE_NOT_FORMAL',
   source_formal: { product_master_file_id: '11p2SkAXYNAAJwWYGBjmWOTVO6rZquyJf',
     runtime_manifest_file_id: entry.runtimeManifestDriveFileId, runtime_manifest_sha256: pkg.integrity.actual,
     package_version: entry.masterVersion },
-  glass_compatibility_profiles: slim.glass_compatibility_profiles,
-  glass_profile_assignment: Object.fromEntries(glassProfiles),
   canonical: slim,
 };
 mkdirSync(out, { recursive: true });
@@ -48,7 +48,9 @@ const report = {
   source_integrity: 'PASS', legacy_reference: 'UNCHANGED_FORMAL_RUNTIME_AND_FORMAL_WORKBOOK',
   classification: { base_nodes: formal.product_nodes.length, glass_specs: formal.glass_specs.length,
     legacy_cartesian_derived_rows: legacyRows, independent_node_glass_pair_facts: 0,
-    retained_glass_facts: slim.glass_specs.length, compatibility_profiles: slim.glass_compatibility_profiles.length,
+    retained_glass_configurations: projectedGlass.length,
+    glass_model: Object.fromEntries(['base', 'decoration', 'cavity', 'assessment', 'rules', 'identities'].map((key) => [key, slim.glass_rule_model[key].length])),
+    compatibility_profiles: slim.glass_compatibility_profiles.length,
     profile_node_dispositions: profileStatuses, dependency_rules: slim.dependency_rules.length,
     size_constraints: slim.glass_size_rules?.length ?? 0,
     installation_rules: slim.installation_rules?.length ?? 0,
@@ -58,7 +60,10 @@ const report = {
     compatibility_rows_removed: legacyRows - slimCompatibilityRows,
     compatibility_reduction_percent: Math.round((1 - slimCompatibilityRows / legacyRows) * 10000) / 100,
     before_nodes_glass_compatibility: formal.product_nodes.length + formal.glass_specs.length + legacyRows,
-    after_nodes_glass_compatibility: slim.product_nodes.length + slim.glass_specs.length + slimCompatibilityRows },
+    after_nodes_glass_compatibility: slim.product_nodes.length + ['base', 'decoration', 'cavity', 'assessment', 'rules', 'identities'].reduce((n, key) => n + slim.glass_rule_model[key].length, 0) + slimCompatibilityRows,
+    before_glass_spec_size_and_allowed_rows: formal.glass_specs.length + formal.glass_size_mapping.length + formal.allowed_values.filter((row) => row.field_name === 'glass_spec_id').length,
+    after_glass_model_rows: ['base', 'decoration', 'cavity', 'assessment', 'rules', 'identities'].reduce((n, key) => n + slim.glass_rule_model[key].length, 0),
+    derived_projection_descriptors: 1 },
   runtime_smoke: { candidate_adapter_loaded: Boolean(candidate.master), same_eligible_glass_sets: formal.product_nodes.every((node) =>
     JSON.stringify(old.master.glassSpecsByNodeId.get(node.node_id).map((glass) => glass.glass_spec_id)) ===
     JSON.stringify(candidate.master.glassSpecsByNodeId.get(node.node_id).map((glass) => glass.glass_spec_id))) },

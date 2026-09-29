@@ -1,4 +1,5 @@
 import { innerWindowDisplayOrder } from './inner-window-runtime-ui-contract.mjs';
+import { compileGlassRuleModel, projectGlassAllowedValues } from './uchirimo-glass-rule-model.mjs';
 
 const NA = new Set(['NOT_APPLICABLE', 'N/A', 'not_applicable']);
 const NODE_AXES = ['room_specification', 'window_type', 'sash_configuration', 'size_class'];
@@ -66,7 +67,8 @@ function assertUnique(rows, key, label) {
 function validateReferences(canonical, judgment) {
   assertUnique(canonical.field_registry, 'field_name', 'field_registry');
   assertUnique(canonical.product_nodes, 'node_id', 'product_nodes');
-  assertUnique(canonical.glass_specs, 'glass_spec_id', 'glass_specs');
+  const glassRows = canonical.glass_rule_model?.identities ?? canonical.glass_specs;
+  assertUnique(glassRows, 'glass_spec_id', 'glass_specs');
   assertUnique(canonical.dependency_rules, 'rule_id', 'dependency_rules');
   const fields = new Set(canonical.field_registry.map((row) => row.field_name));
   fields.add('size_mode'); fields.add('node_id'); fields.add('glass_spec_id');
@@ -91,13 +93,13 @@ function validateReferences(canonical, judgment) {
     if (!declared.has(id)) fail('RUNTIME_REFERENCE_BROKEN', `Judgment engine references missing dependency rule ${id}`);
   }
   const nodeIds = new Set(canonical.product_nodes.map((row) => row.node_id));
-  const glassIds = new Set(canonical.glass_specs.map((row) => row.glass_spec_id));
+  const glassIds = new Set(glassRows.map((row) => row.glass_spec_id));
   const profiles = canonical.glass_compatibility_profiles;
   if (profiles) {
     if (canonical.glass_node_matrix?.length) fail('RUNTIME_REFERENCE_BROKEN', 'Slim profiles and the legacy matrix cannot both be authoritative');
     assertUnique(profiles, 'profile_id', 'glass_compatibility_profiles');
     const profileIds = new Set(profiles.map((row) => row.profile_id));
-    for (const glass of canonical.glass_specs) {
+    for (const glass of canonical.glass_rule_model?.assessment.map((row) => row.facts) ?? canonical.glass_specs) {
       if (!profileIds.has(glass.compatibility_profile_id)) fail('RUNTIME_REFERENCE_BROKEN', 'glass_spec has no compatibility profile', { glassId: glass.glass_spec_id });
     }
     for (const profile of profiles) {
@@ -121,7 +123,11 @@ function dataType(raw) {
 }
 
 function buildModel(runtimePackage) {
-  const canonical = canonicalDocument(runtimePackage.documents);
+  const sourceCanonical = canonicalDocument(runtimePackage.documents);
+  // Only the public ID/value registry is projected. Product combinations are
+  // queried through normalized rules; full glass rows remain migration/debug only.
+  const glassRuleIndex = sourceCanonical?.glass_rule_model ? compileGlassRuleModel(sourceCanonical) : null;
+  const canonical = glassRuleIndex ? { ...sourceCanonical, allowed_values: projectGlassAllowedValues(sourceCanonical) } : sourceCanonical;
   const judgment = roleDocument(runtimePackage.documents, (value) => value?.engine_role === 'SALES_LEVEL_JUDGMENT_ENGINE');
   const sizeInstallation = roleDocument(runtimePackage.documents, (value) => value?.size_selection_contract && value?.installation_input_contract);
   const vacuum = roleDocument(runtimePackage.documents, (value) => Array.isArray(value?.curves));
@@ -187,7 +193,15 @@ function buildModel(runtimePackage) {
     [field, new Map(rows.map((row) => [JSON.stringify(row.canonical_value), row]))])) : null;
 
   const glassSpecsByNodeId = new Map();
-  if (canonical.glass_compatibility_profiles) {
+  if (glassRuleIndex) {
+    // A compatibility accessor for explicit audit callers. The resolver never
+    // invokes it and never constructs a 566-row product table.
+    glassSpecsByNodeId.get = (nodeId) => {
+      const mask = glassRuleIndex.maskFor(nodeId);
+      return sourceCanonical.glass_rule_model.identities.flatMap((_, i) =>
+        mask & (1n << BigInt(i)) ? [glassRuleIndex.projectAt(i)] : []);
+    };
+  } else if (canonical.glass_compatibility_profiles) {
     const permittedProfiles = new Map(canonical.product_nodes.map((row) => [row.node_id, new Set()]));
     for (const profile of canonical.glass_compatibility_profiles) {
       for (const row of profile.node_statuses) {
@@ -221,11 +235,11 @@ function buildModel(runtimePackage) {
   return Object.freeze({
     fields: Object.freeze(fields), values: Object.freeze(values), fieldByName, valuesByField, valueRowsByField, valueLookupByField,
     glassSpecsByNodeId, detailMatrixByNodeId, sizeRuleByNodeId, sortedDependencyRules, glassScopeRules,
-    glassFacetCache, glassScopeCache, manualRouteByGsc,
+    glassFacetCache, glassScopeCache, manualRouteByGsc, glassRuleIndex,
     canonical, judgment, sizeInstallation, vacuum,
     capabilities: Object.freeze({
       runtimeContract: 'uchirimo_tabular_v1', dependencyRules: canonical.dependency_rules.length,
-      productNodes: canonical.product_nodes.length, glassSpecs: canonical.glass_specs.length,
+      productNodes: canonical.product_nodes.length, glassSpecs: glassRuleIndex?.logical_count ?? canonical.glass_specs.length,
       standardSizeRecords: 0, sizeMode: sizeInstallation.size_selection_contract.fixed_value,
       options: canonical.option_master.length, bom: 'NOT_PROVIDED_BY_RUNTIME', lifecycle: 'NOT_PROVIDED_BY_RUNTIME',
       manualCheckCount: judgment.manual_check_routes?.length ?? 0, orderReady: runtimePackage.rawManifest.order_ready === true,
@@ -278,7 +292,7 @@ function applyGlassScopeRules(model, selection, glasses) {
 }
 
 function scopedGlassCandidates(model, nodeId, selection) {
-  const glasses = model.glassSpecsByNodeId.get(nodeId) ?? [];
+  const glasses = model.glassRuleIndex ? null : model.glassSpecsByNodeId.get(nodeId) ?? [];
   if (!model.glassScopeCache) return { glasses: applyGlassScopeRules(model, selection, glasses), scopeKey: '' };
   const denied = new Set();
   for (const rule of model.glassScopeRules) {
@@ -286,8 +300,9 @@ function scopedGlassCandidates(model, nodeId, selection) {
   }
   const scopeKey = JSON.stringify([...denied].sort());
   const key = `${nodeId}\u0000${scopeKey}`;
-  if (!model.glassScopeCache.has(key)) model.glassScopeCache.set(key,
-    denied.size ? glasses.filter((row) => !denied.has(row.scope_class)) : glasses);
+  if (!model.glassScopeCache.has(key)) model.glassScopeCache.set(key, model.glassRuleIndex
+    ? model.glassRuleIndex.maskFor(nodeId, denied)
+    : denied.size ? glasses.filter((row) => !denied.has(row.scope_class)) : glasses);
   return { glasses: model.glassScopeCache.get(key), scopeKey };
 }
 
@@ -319,8 +334,12 @@ function configureGlass(model, nodeId, selection, visible, required, allowed, de
       candidates = cached.candidates;
       meaningful = cached.meaningful;
     } else {
-      if (model.glassFacetCache && has(previousChoice)) candidates = candidates.filter((row) => same(row[previousField], previousChoice));
-      meaningful = unique(candidates.map((row) => row[field]).filter((value) => has(value) && !NA.has(value)));
+      if (model.glassFacetCache && has(previousChoice)) candidates = model.glassRuleIndex
+        ? model.glassRuleIndex.filter(candidates, previousField, previousChoice)
+        : candidates.filter((row) => same(row[previousField], previousChoice));
+      meaningful = model.glassRuleIndex
+        ? model.glassRuleIndex.choices(candidates, field).filter((value) => has(value) && !NA.has(value))
+        : unique(candidates.map((row) => row[field]).filter((value) => has(value) && !NA.has(value)));
       if (cacheKey) rememberGlassFacet(model.glassFacetCache, cacheKey, { candidates, meaningful });
     }
     allowed.set(field, meaningful);
@@ -334,9 +353,11 @@ function configureGlass(model, nodeId, selection, visible, required, allowed, de
     previousChoice = chosen;
     prefix.push(has(chosen) ? chosen : null);
   }
-  if (model.glassFacetCache && has(previousChoice)) candidates = candidates.filter((row) => same(row[previousField], previousChoice));
-  if (candidates.length === 1) {
-    const glass = candidates[0];
+  if (model.glassFacetCache && has(previousChoice)) candidates = model.glassRuleIndex
+    ? model.glassRuleIndex.filter(candidates, previousField, previousChoice)
+    : candidates.filter((row) => same(row[previousField], previousChoice));
+  const glass = model.glassRuleIndex ? model.glassRuleIndex.singleton(candidates) : candidates.length === 1 ? candidates[0] : null;
+  if (glass) {
     derived.glass_spec_id = glass.glass_spec_id;
     derived.glass_size_constraint_group = glass.glass_size_constraint_group;
     for (const field of ['cavity_thickness_mm']) {

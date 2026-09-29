@@ -1,6 +1,7 @@
 import { createHash } from 'node:crypto';
 import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { performance } from 'node:perf_hooks';
+import { compileGlassRuleModel } from '../../src/catalog/runtime-master/uchirimo-glass-rule-model.mjs';
 
 // This job intentionally reads the candidate only. The 8,490-row legacy
 // reference belongs to the one-time migration proof, not recurring QA.
@@ -19,7 +20,8 @@ const unique = (rows, key) => {
 assert(candidate.lifecycle === 'WORKING_CANDIDATE_NOT_FORMAL', 'CANDIDATE_LIFECYCLE_CHANGED');
 assert(!Object.hasOwn(c, 'glass_node_matrix'), 'LEGACY_MATRIX_REINTRODUCED');
 const nodeIds = unique(c.product_nodes, 'node_id');
-const glassIds = unique(c.glass_specs, 'glass_spec_id');
+const glassRules = c.glass_rule_model ? compileGlassRuleModel(c) : null;
+const glassIds = unique(c.glass_rule_model?.identities ?? c.glass_specs, 'glass_spec_id');
 const profileIds = unique(c.glass_compatibility_profiles, 'profile_id');
 const evidenceIds = unique(c.evidence, 'source_id');
 unique(c.dependency_rules, 'rule_id');
@@ -36,10 +38,11 @@ for (const profile of c.glass_compatibility_profiles) {
   assert(seen.size === nodeIds.size, 'PROFILE_NODE_COVERAGE');
   evaluated += 1;
 }
-for (const glass of c.glass_specs) {
+for (const glass of c.glass_rule_model?.assessment.map((row) => row.facts) ?? c.glass_specs) {
   assert(profileIds.has(glass.compatibility_profile_id), 'GLASS_PROFILE_ORPHAN');
-  evaluated += 1;
+  if (!glassRules) evaluated += 1;
 }
+if (glassRules) evaluated += glassRules.authoritative_records;
 for (const rule of c.dependency_rules) {
   assert(typeof rule.source_id === 'string' && rule.source_id.length > 0, 'RULE_SOURCE_MISSING');
   if (rule.source_id.startsWith('EV-UCH-')) assert(evidenceIds.has(rule.source_id), 'RULE_EVIDENCE_ORPHAN');
@@ -56,13 +59,18 @@ for (const row of c.installation_rules) {
 // Product nodes and evidence were checked for unique identifiers above.
 evaluated += c.product_nodes.length + c.evidence.length;
 const report = {
-  schema_version: 'UCHIRIMO_SLIM_RECURRING_QA_V1', status: 'PASS',
+  schema_version: 'UCHIRIMO_SLIM_RECURRING_QA_V2', status: 'PASS',
+  evidence_scope: 'NORMALIZED_PRODUCT_RULE_INTEGRITY_NOT_FULL_SELECTOR_FLOW_CLOSURE',
   candidate_sha256: createHash('sha256').update(bytes).digest('hex'),
   counts: { base_nodes: nodeIds.size, glass_specs: glassIds.size,
     compatibility_profiles: profileIds.size, profile_node_dispositions: Object.values(dispositions).reduce((a, b) => a + b, 0),
     dependency_rules: c.dependency_rules.length, size_constraints: c.glass_size_rules.length,
     installation_rules: c.installation_rules.length, evidence_rows: c.evidence.length,
-    authoritative_records_evaluated: evaluated, legacy_materialized_rows_evaluated: 0,
+    authoritative_records_evaluated: evaluated,
+    identity_records_checked: glassRules?.identity_records_checked ?? glassIds.size,
+    total_record_visits_including_identity: evaluated + (glassRules?.identity_records_checked ?? 0),
+    glass_model: glassRules ? Object.fromEntries(['base', 'decoration', 'cavity', 'assessment', 'rules'].map((key) => [key, c.glass_rule_model[key].length])) : null,
+    legacy_materialized_rows_evaluated: 0, glass_spec_rows_materialized: 0,
     dispositions_in_profiles: dispositions },
   duration_ms: Math.round((performance.now() - start) * 1000) / 1000,
   observed_peak_heap_mb: Math.round(process.memoryUsage().heapUsed / 1024 / 1024),

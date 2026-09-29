@@ -11,17 +11,28 @@ const root = join(here, '..');
 const webRoot = join(root, 'src', 'ui', 'web');
 const output = resolve(process.argv[2] ?? join(root, 'artifacts', 'uchirimo-runtime-ui-preview', 'index.html'));
 const entry = getRuntimeMasterEntry('YKK AP', 'ウチリモ 内窓');
-const runtimePackage = await loadCanonicalWorkbookRuntimePackage(entry);
+let runtimePackage = await loadCanonicalWorkbookRuntimePackage(entry);
+const candidatePath = process.env.UCHIRIMO_SLIM_PREVIEW_INPUT;
+let candidateHash = null;
+if (candidatePath) {
+  const bytes = await readFile(resolve(candidatePath));
+  const candidate = JSON.parse(bytes);
+  if (candidate.lifecycle !== 'WORKING_CANDIDATE_NOT_FORMAL' || candidate.source_formal.runtime_manifest_sha256 !== runtimePackage.integrity.actual) throw new Error('PREVIEW_CANDIDATE_IDENTITY_MISMATCH');
+  const role = Object.keys(runtimePackage.documents).find((key) => runtimePackage.documents[key]?.glass_node_matrix);
+  runtimePackage = { ...runtimePackage, documents: { ...runtimePackage.documents, [role]: candidate.canonical } };
+  candidateHash = createHash('sha256').update(bytes).digest('hex');
+}
 const integration = getRuntimeAppIntegration('SER-YKKAP-UCHIRIMO');
-const [htmlSource, appSource, styles, waveStyles, adapterSource] = await Promise.all([
+const [htmlSource, appSource, styles, waveStyles, adapterSource, glassRuleSource] = await Promise.all([
   readFile(join(webRoot, 'index.html'), 'utf8'),
   readFile(join(webRoot, 'app.js'), 'utf8'),
   readFile(join(webRoot, 'styles.css'), 'utf8'),
   readFile(join(webRoot, 'styles-wave3.css'), 'utf8'),
   readFile(join(root, 'src/catalog/runtime-master/uchirimo-tabular-v1-adapter.mjs'), 'utf8'),
+  readFile(join(root, 'src/catalog/runtime-master/uchirimo-glass-rule-model.mjs'), 'utf8'),
 ]);
 const generatedAt = new Date().toISOString();
-const buildId = `UCHIRIMO-UI-${createHash('sha256').update(appSource).update(adapterSource).update(JSON.stringify(runtimePackage.manifest)).digest('hex').slice(0, 12)}`;
+const buildId = `UCHIRIMO-UI-${createHash('sha256').update(appSource).update(adapterSource).update(glassRuleSource).update(candidateHash ?? '').update(JSON.stringify(runtimePackage.manifest)).digest('hex').slice(0, 12)}`;
 const json = (value) => JSON.stringify(value).replaceAll('</script', '<\\/script');
 const order = {
   room_specification:25, window_type:30, sash_configuration:32, size_class:34, reverse_handing:36,
@@ -40,7 +51,9 @@ const browserAdapter = adapterSource.replace(
 const bootstrap = `
 const runtimePackage=${json(runtimePackage)};
 const integration=${json(integration)};
-const adapterUrl=URL.createObjectURL(new Blob([${json(browserAdapter)}],{type:"text/javascript"}));
+// The browser is read-only: normalization/ID hashing is never invoked here.
+const glassRuleUrl=URL.createObjectURL(new Blob([${json(glassRuleSource.replace("import { createHash } from 'node:crypto';", "const createHash=()=>{throw new Error('PREVIEW_NORMALIZATION_NOT_SUPPORTED')};"))}],{type:"text/javascript"}));
+const adapterUrl=URL.createObjectURL(new Blob([${json(browserAdapter)}.replace('./uchirimo-glass-rule-model.mjs',glassRuleUrl)],{type:"text/javascript"}));
 const {adaptUchirimoTabularV1}=await import(adapterUrl);
 const adapted=adaptUchirimoTabularV1(runtimePackage);
 const master=adapted.master;
@@ -67,7 +80,7 @@ window.fetch=(input)=>{const url=new URL(typeof input==="string"?input:input.url
 };
 await import(URL.createObjectURL(new Blob([${json(appSource)}],{type:"text/javascript"})));
 `;
-const banner = `<section class="card compact review-build-note"><h2>ウチリモ Runtime UI Review Build</h2><p class="lead"><strong>REVIEW IN PROGRESS</strong> — YKK AP ウチリモ 内窓 / INNER_WINDOW / v1.0-P7R1-R2 / UI Standard v1.6</p><p class="lead">生成: ${generatedAt} · データ: 正式RuntimeのRepository transport fixture（4 component SHA検証済み） · APIのみブラウザ内stub。保存・外部通信は行いません。</p><p class="lead">Build Identity: ${buildId} · Manifest SHA-256: ${entry.runtimeManifestSha256}</p></section>`;
+const banner = `<section class="card compact review-build-note"><h2>ウチリモ Runtime UI Review Build</h2><p class="lead"><strong>REVIEW IN PROGRESS</strong> — YKK AP ウチリモ 内窓 / INNER_WINDOW / ${candidateHash ? 'Slim V2 WORKING（正式採用前）' : 'v1.0-P7R1-R2'} / UI Standard v1.6</p><p class="lead">生成: ${generatedAt} · データ: ${candidateHash ? '正規化したWorking候補。ガラス成立ルールを直接評価する実Adapterを使用' : '正式RuntimeのRepository transport fixture（4 component SHA検証済み）'} · APIのみブラウザ内stub。保存・外部通信は行いません。Preview用UI変換は本番サーバーを代替しません。</p><p class="lead">Build Identity: ${buildId} · Manifest SHA-256: ${entry.runtimeManifestSha256}${candidateHash ? ` · Candidate SHA-256: ${candidateHash}` : ''}</p></section>`;
 const html = htmlSource
   .replace('<link rel="stylesheet" href="/styles.css">', `<style>${styles}</style>`)
   .replace('<link rel="stylesheet" href="/styles-wave3.css">', `<style>${waveStyles}.review-build-note strong{color:#9b6210}</style>`)

@@ -7,12 +7,17 @@ import { loadCanonicalWorkbookRuntimePackage } from '../../src/catalog/runtime-m
 import { adaptUchirimoTabularV1 } from '../../src/catalog/runtime-master/uchirimo-tabular-v1-adapter.mjs';
 import { getRuntimeAppIntegration, normalizeRuntimeSelection, toRuntimeUiResult } from '../../src/catalog/runtime-master/runtime-app-bridge.mjs';
 import { compareUchirimoGlassSemantics } from '../../src/catalog/runtime-master/uchirimo-slim-canonical.mjs';
+import { projectGlassSpecifications } from '../../src/catalog/runtime-master/uchirimo-glass-rule-model.mjs';
 
 // Migration-only differential. This does not certify every reachable selector
 // state of a V12 parent and cannot itself import a historical parent PASS.
 const candidatePath = process.env.UCHIRIMO_SLIM_INPUT ?? 'data/uchirimo-slim/working-candidate.json';
 const output = process.env.UCHIRIMO_SLIM_DIFFERENTIAL_OUT ?? 'artifacts/uchirimo-slim/selector-differential.json';
 const planPath = process.env.UCHIRIMO_SLIM_PARENT_PLAN ?? 'artifacts/uchirimo-slim/differential-plan/all-partitions.json';
+// Validate prerequisites before the expensive full glass differential.
+const plan = JSON.parse(readFileSync(planPath, 'utf8'));
+assert.equal(plan.status, 'PASS');
+assert.equal(plan.shard_count, 3956);
 const bytes = readFileSync(candidatePath);
 const candidateHash = createHash('sha256').update(bytes).digest('hex');
 const candidate = JSON.parse(bytes);
@@ -20,6 +25,7 @@ assert.equal(candidate.lifecycle, 'WORKING_CANDIDATE_NOT_FORMAL');
 const pkg = await loadCanonicalWorkbookRuntimePackage(getRuntimeMasterEntry('YKK AP', 'ウチリモ 内窓'));
 assert.equal(pkg.integrity.match, true);
 assert.equal(pkg.integrity.actual, candidate.source_formal.runtime_manifest_sha256);
+assert.equal(plan.runtime_manifest_sha256, pkg.integrity.actual);
 const role = Object.keys(pkg.documents).find((key) => pkg.documents[key]?.glass_node_matrix);
 assert.ok(role);
 const legacy = pkg.documents[role];
@@ -72,7 +78,7 @@ for (const node of legacy.product_nodes) {
     }
   }
   const representatives = new Map();
-  for (const glass of slim.glass_specs) if (!representatives.has(glass.compatibility_profile_id)) {
+  for (const glass of projectGlassSpecifications(slim)) if (!representatives.has(glass.compatibility_profile_id)) {
     representatives.set(glass.compatibility_profile_id, glass);
   }
   for (const glass of representatives.values()) {
@@ -83,10 +89,6 @@ for (const node of legacy.product_nodes) {
     }
   }
 }
-const plan = JSON.parse(readFileSync(planPath, 'utf8'));
-assert.equal(plan.status, 'PASS');
-assert.equal(plan.shard_count, 3956);
-assert.equal(plan.runtime_manifest_sha256, pkg.integrity.actual);
 const integration = getRuntimeAppIntegration('SER-YKKAP-UCHIRIMO');
 let parentSeedCases = 0;
 for (const row of plan.partitions) {

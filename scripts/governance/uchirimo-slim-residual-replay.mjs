@@ -13,7 +13,7 @@ import { getRuntimeAppIntegration, normalizeRuntimeSelection, toRuntimeUiResult 
 const candidatePath = 'data/uchirimo-slim/working-candidate.json';
 const candidateBytes = readFileSync(candidatePath);
 const candidateSha = createHash('sha256').update(candidateBytes).digest('hex');
-if (candidateSha !== '81a33f01803099297a8fb9f92d512c9a2c450131b86b54186ed249fddbd8319f') {
+if (candidateSha !== '4a3518c3f5706aa4cff6ddcc10532edcade4f00f84a81ad63e3d74fa98d85930') {
   throw new Error('UCHIRIMO_SLIM_CANDIDATE_HASH_MISMATCH');
 }
 const candidate = JSON.parse(candidateBytes);

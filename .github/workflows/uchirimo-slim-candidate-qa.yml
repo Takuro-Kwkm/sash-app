@@ -10,6 +10,8 @@ on:
       - 'scripts/uchirimo-full-selector-proof.mjs'
       - 'test/fixtures/uchirimo-slim/**'
       - 'test/82-uchirimo-slim-canonical.test.mjs'
+      - 'test/83-uchirimo-glass-rule-model.test.mjs'
+      - 'src/catalog/runtime-master/uchirimo-glass-rule-model.mjs'
       - '.github/workflows/uchirimo-slim-candidate-qa.yml'
   workflow_dispatch:
 jobs:
@@ -46,7 +48,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - run: echo '81a33f01803099297a8fb9f92d512c9a2c450131b86b54186ed249fddbd8319f  data/uchirimo-slim/working-candidate.json' | sha256sum --check
+      - run: echo '4a3518c3f5706aa4cff6ddcc10532edcade4f00f84a81ad63e3d74fa98d85930  data/uchirimo-slim/working-candidate.json' | sha256sum --check
       - run: node scripts/governance/uchirimo-slim-recurring-qa.mjs
       - uses: actions/upload-artifact@v4
         if: always()
@@ -62,7 +64,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - run: node --test test/70-runtime-manifest-ew-integration.test.mjs test/70-runtime-manifest-tw-integration.test.mjs test/71-runtime-ui-tw-gate.test.mjs test/72-runtime-manifest-uchirimo-integration.test.mjs test/73-runtime-ui-uchirimo-gate.test.mjs test/74-new-construction-ui-v16.test.mjs test/81-ew-v12-formal-glazing-semantic.test.mjs test/82-ew-custom-glass-validation.test.mjs test/82-uchirimo-slim-canonical.test.mjs
+      - run: node --test test/70-runtime-manifest-ew-integration.test.mjs test/70-runtime-manifest-tw-integration.test.mjs test/71-runtime-ui-tw-gate.test.mjs test/72-runtime-manifest-uchirimo-integration.test.mjs test/73-runtime-ui-uchirimo-gate.test.mjs test/74-new-construction-ui-v16.test.mjs test/81-ew-v12-formal-glazing-semantic.test.mjs test/82-ew-custom-glass-validation.test.mjs test/82-uchirimo-slim-canonical.test.mjs test/83-uchirimo-glass-rule-model.test.mjs
       - run: node scripts/governance/uchirimo-slim-normalize.mjs
       - run: cmp data/uchirimo-slim/working-candidate.json artifacts/uchirimo-slim/uchirimo-slim-working-candidate.json
   selector-migration-differential:

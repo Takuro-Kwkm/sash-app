@@ -1,11 +1,12 @@
 import { createHash } from 'node:crypto';
+import { projectGlassCanonical, projectGlassSpecifications, stableJson } from './uchirimo-glass-rule-model.mjs';
 
 const key = (nodeId, glassId) => `${nodeId}\u0000${glassId}`;
 const digest = (value) => createHash('sha256').update(JSON.stringify(value)).digest('hex');
 
 export function projectUchirimoGlassMatrix(canonical) {
   const nodes = canonical.product_nodes ?? [];
-  const glasses = canonical.glass_specs ?? [];
+  const glasses = projectGlassSpecifications(canonical) ?? [];
   const profiles = canonical.glass_compatibility_profiles ?? [];
   if (!profiles.length || canonical.glass_node_matrix?.length) throw new Error('SLIM_PROFILE_EXCLUSIVE_REQUIRED');
   const nodeIds = nodes.map((node) => node.node_id);
@@ -76,6 +77,7 @@ export function normalizeUchirimoGlassMatrix(canonical) {
 }
 
 export function compareUchirimoGlassSemantics(legacy, slim) {
+  slim = projectGlassCanonical(slim);
   const projection = projectUchirimoGlassMatrix(slim);
   const rowKey = (row) => key(row.node_id, row.glass_spec_id);
   const old = new Map(), current = new Map();
@@ -93,7 +95,7 @@ export function compareUchirimoGlassSemantics(legacy, slim) {
     (row.status !== current.get(id).status || row.gsc !== current.get(id).gsc || row.scope_class !== current.get(id).scope_class));
   const priorGlasses = new Map((legacy.glass_specs ?? []).map((glass) => [glass.glass_spec_id, glass]));
   const evidenceMismatches = (slim.glass_specs ?? []).filter(({ compatibility_profile_id, ...glass }) =>
-    JSON.stringify(priorGlasses.get(glass.glass_spec_id)) !== JSON.stringify(glass));
+    stableJson(priorGlasses.get(glass.glass_spec_id)) !== stableJson(glass));
   const evidenceIds = new Set((slim.evidence ?? []).map((row) => row.source_id));
   const evidenceOrphans = (slim.glass_specs ?? []).filter((glass) =>
     [glass.row_source_id, glass.source_id, ...String(glass.source_ids ?? '').split(/[;,]/)]
@@ -104,7 +106,7 @@ export function compareUchirimoGlassSemantics(legacy, slim) {
   const prior = structuredClone(legacy);
   delete preserved.glass_node_matrix;
   delete prior.glass_node_matrix;
-  const unchangedFactMismatch = JSON.stringify(preserved) !== JSON.stringify(prior);
+  const unchangedFactMismatch = stableJson(preserved) !== stableJson(prior);
   return {
     legacy_count: old.size, projection_count: current.size, match_count: old.size - missing.length - mismatches.length,
     missing_count: missing.length, extra_count: extra.length, status_or_fact_mismatch_count: mismatches.length,
