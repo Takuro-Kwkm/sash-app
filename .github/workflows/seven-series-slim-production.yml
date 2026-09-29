@@ -1,0 +1,172 @@
+name: Seven Series Slim Production
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.release/seven-series-slim-production-v1'
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  production-release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    environment: production
+    env:
+      VERCEL_ORG_ID: team_AkuHacuJlCl8LuvaFpCzFmbv
+      VERCEL_PROJECT_ID: prj_4z0zqW6yKyPuFINODfGX8LPBuJRP
+      VERCEL_PROJECT_NAME: sash-app-wave3-preview
+      VERCEL_TOKEN_PRIMARY: ${{ secrets.VERCEL_TOKEN }}
+      VERCEL_TOKEN_FALLBACK: ${{ secrets.VERCEL_ACCESS_TOKEN }}
+      VERCEL_DEPLOY_SOURCE: files
+      RELEASE_SERIES: SEVEN_SERIES_SLIM_V2
+      RELEASE_PACKAGE_VERSION: production-20260929
+      PRODUCTION_URL: https://sash-app-wave3-preview.vercel.app
+      PRODUCTION_HOST: sash-app-wave3-preview.vercel.app
+      UCHIRIMO_QA_REGISTERED_RUNTIME: '1'
+      UCHIRIMO_FACTORIZED_OUT: artifacts/production-slim/factorized
+
+    steps:
+      - name: Checkout exact main release SHA
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Assert current Slim release authority
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          node --input-type=module <<'NODE'
+          import {readFileSync} from 'node:fs';
+          const scope=JSON.parse(readFileSync('data/seven-series-slim-release-scope.json','utf8'));
+          const change=JSON.parse(readFileSync('project-governance/change-scope.json','utf8'));
+          const expected=['TW','EW','サーモスⅡ-H','サーモスL','APW430','APW431','ウチリモ 内窓'];
+          const actual=scope.products.map(x=>x.series);
+          if(scope.schema!=='SEVEN_SERIES_SLIM_RELEASE_SCOPE_V1')throw new Error('SLIM_SCOPE_SCHEMA_INVALID');
+          if(scope.scope!=='SALES_ESTIMATE_REQUEST')throw new Error('BUSINESS_SCOPE_INVALID');
+          if(scope.v12?.status!=='STOPPED'||scope.v12?.not_counted_as_new_failures!==true)throw new Error('LEGACY_V12_NOT_ISOLATED');
+          if(actual.length!==7||expected.some(x=>!actual.includes(x)))throw new Error('SEVEN_SERIES_SCOPE_MISMATCH');
+          if(change.current_baseline!=='SEVEN_SERIES_SLIM_V2')throw new Error('CURRENT_BASELINE_MISMATCH');
+          if(change.legacy_qa_mode!=='ARCHIVED_REFERENCE_ONLY')throw new Error('LEGACY_QA_MODE_INVALID');
+          if(change.app_integration_ready!==true)throw new Error('APP_INTEGRATION_NOT_READY');
+          if(change.production_current!==false)throw new Error('PRODUCTION_ALREADY_CURRENT');
+          console.log('RELEASE_AUTHORITY_GATE=PASS');
+          console.log('LEGACY_V12=STOPPED');
+          console.log('CURRENT_QA_DENOMINATOR=SLIM_CANONICAL_ONLY');
+          NODE
+
+      - name: Install and exact release regression
+        run: |
+          npm install --ignore-scripts
+          npm run lint
+          npm run typecheck
+          npm test
+          node scripts/governance/uchirimo-slim-factorized-qa.mjs
+          node scripts/governance/uchirimo-slim-dimension-differential.mjs
+          node scripts/build-seven-series-review.mjs
+
+      - name: Prepare Vercel credential
+        shell: bash
+        run: |
+          set -euo pipefail
+          token="${VERCEL_TOKEN_PRIMARY:-${VERCEL_TOKEN_FALLBACK:-}}"
+          if [[ -z "$token" ]]; then echo 'VERCEL_CREDENTIAL_GATE=BLOCKED'; exit 42; fi
+          echo "VERCEL_TOKEN_EFFECTIVE=$token" >> "$GITHUB_ENV"
+          status="$(curl -sS -o /tmp/vercel-project.json -w '%{http_code}' -H "Authorization: Bearer $token" "https://api.vercel.com/v9/projects/$VERCEL_PROJECT_ID")"
+          test "$status" = "200"
+          node -e 'const p=require("/tmp/vercel-project.json"); if(p.id!==process.env.VERCEL_PROJECT_ID||p.accountId!==process.env.VERCEL_ORG_ID) process.exit(1)'
+          echo 'VERCEL_CREDENTIAL_GATE=PASS'
+          echo 'VERCEL_PROJECT_ACCESS_GATE=PASS'
+
+      - name: Deploy exact main SHA to Production
+        run: node scripts/vercel-rest-deploy.mjs production artifacts/seven-series-production/deployment.json
+
+      - name: Verify Production identity and canonical alias
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import {readFileSync} from 'node:fs';
+          const d=JSON.parse(readFileSync('artifacts/seven-series-production/deployment.json','utf8'));
+          if(d.readyState!=='READY'||d.githubSha!==process.env.GITHUB_SHA||d.releaseCommitSha!==process.env.GITHUB_SHA||d.mode!=='production')throw new Error('PRODUCTION_IDENTITY_INVALID');
+          console.log('PRODUCTION_IDENTITY_GATE=PASS '+d.deploymentUrl);
+          NODE
+          status="$(curl -sS -o artifacts/seven-series-production/vercel-deployment.json -w '%{http_code}' -H "Authorization: Bearer $VERCEL_TOKEN_EFFECTIVE" "https://api.vercel.com/v13/deployments/$DEPLOY_ID?teamId=$VERCEL_ORG_ID")"
+          test "$status" = "200"
+          node -e 'const d=require("./artifacts/seven-series-production/vercel-deployment.json"); if(d.readyState!=="READY"||d.target!=="production"||d.meta?.releaseCommitSha!==process.env.GITHUB_SHA||!Array.isArray(d.alias)||!d.alias.includes(process.env.PRODUCTION_HOST)) process.exit(1)'
+          echo 'PRODUCTION_ALIAS_GATE=PASS'
+
+      - name: Production seven-series Runtime smoke
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts/seven-series-production
+          for i in {1..60}; do
+            if curl -fsS "$PRODUCTION_URL/api/health" > artifacts/seven-series-production/health.json; then
+              if node --input-type=module <<'NODE'
+          import {readFileSync} from 'node:fs';
+          const h=JSON.parse(readFileSync('artifacts/seven-series-production/health.json','utf8'));
+          const expected=['SER-LIXIL-TW','SER-LIX-EW','SER-LIX-SAMOS2H','SER-LIX-SAMOSL','SER-YKK-APW430','SER-YKK-APW431','SER-YKKAP-UCHIRIMO'];
+          if(!h.ok)process.exit(1);
+          const byId=new Map((h.runtimeMasterIntegrations??[]).map(x=>[x.id,x]));
+          if(expected.some(id=>!byId.has(id)||byId.get(id).status!=='READY'||byId.get(id).selectable!==true))process.exit(1);
+          console.log('SEVEN_SERIES_RUNTIME_SMOKE=PASS');
+          NODE
+              then
+                curl -fsS "$PRODUCTION_URL/api/runtime-master/integrations" > artifacts/seven-series-production/integrations.json
+                exit 0
+              fi
+            fi
+            sleep 1
+          done
+          echo 'SEVEN_SERIES_RUNTIME_SMOKE=BLOCKED'
+          exit 49
+
+      - name: Install Production browser QA dependencies
+        run: |
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+
+      - name: Production end-to-end QA
+        env:
+          QA_BASE_URL: ${{ env.PRODUCTION_URL }}
+          HEAD_SHA: ${{ github.sha }}
+        run: |
+          node test/browser/uchirimo-runtime-browser-qa.mjs
+          node test/browser/global-window-selection-flow-browser-qa.mjs
+          node test/browser/seven-series-business-flow-qa.mjs
+          node test/browser/release-regression-browser-qa.mjs
+          npm run test:browser:work
+          npm run test:browser:estimate-output
+          echo 'PRODUCTION_BROWSER_QA_GATE=PASS'
+
+      - name: Write release evidence
+        if: always()
+        shell: bash
+        run: |
+          mkdir -p artifacts/seven-series-production
+          {
+            echo "release_sha=$GITHUB_SHA"
+            echo "baseline=SEVEN_SERIES_SLIM_V2"
+            echo "legacy_v12=STOPPED"
+            echo "production_url=$PRODUCTION_URL"
+            echo "deployment_id=${DEPLOY_ID:-}"
+            echo "deployment_url=${DEPLOY_URL:-}"
+          } > artifacts/seven-series-production/release.txt
+
+      - name: Upload Production evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: seven-series-slim-production-${{ github.sha }}
+          path: artifacts/
+          if-no-files-found: warn
