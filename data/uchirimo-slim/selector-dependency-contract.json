@@ -1,0 +1,17 @@
+{
+  "schema": "UCHIRIMO_SELECTOR_DEPENDENCY_CONTRACT_V1",
+  "scope": "Discrete selectors, fixed node/partition seed, dimensions delegated. No status-based pruning. Audit edge scopes before updating source pins.",
+  "source_sha256": {
+    "src/catalog/runtime-master/uchirimo-tabular-v1-adapter.mjs": "807bb549684d5fb122e4534e19df1a3440e496e4a1bb9ff7f08b2adc34b1ef38",
+    "src/catalog/runtime-master/uchirimo-glass-rule-model.mjs": "0e8b1e37a05d25f80e7fc7f9a930c4349f8f97b5c43e9706c8aa99d1904c88b7",
+    "src/catalog/runtime-master/runtime-app-bridge.mjs": "ceedd90b52559eb082696421a2fb6843e248c8886257a6b84ed0a11b1fefd7eb",
+    "src/catalog/runtime-master/new-construction-sash-runtime-ui-contract.mjs": "7f7cec995f75b6b74f6b1fdafb6968051d4fed8772be26a473728886437b8f91",
+    "scripts/governance/uchirimo-selector-batch-runner.mjs": "29f26ef702d4c505ed3ab27de35eafc36b63f24bbbfe0d7fbaa55b631f920d74",
+    "src/catalog/runtime-master/inner-window-runtime-ui-contract.mjs": "e7075aaafb832d93f54bf67c74ca52a9345a9b714c01277337c3a9fe3b1beaff",
+    "src/catalog/runtime-master/global-window-selection-flow-engine.mjs": "a02b361d265d139ffa037cb16c0e19167db01c126d8b5d0110238653490fe678",
+    "src/catalog/runtime-master/canonical-window-semantic-schema.mjs": "623ba5a487f405ae9839427263d18159b8350783041cb59d07bc015cd91e209a",
+    "data/uchirimo-slim/runtime-support.json": "25eaf0a65482aed99a37852c1b1c5c7d4c60de54c1a3954923abb4f11b7e4a1d",
+    "scripts/governance/uchirimo-slim-runtime-support.mjs": "39aefa65d163460d80b2568086b64b88ba135119709cb182b5b0cf652bfd9dc4",
+    "scripts/governance/uchirimo-slim-factorized-selector.mjs": "a2fb337342762b4ff7012fc8bdd10eecfa1b72810a08d2f23703d2be4de84d79"
+  }
+}
