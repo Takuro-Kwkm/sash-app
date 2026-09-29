@@ -122,9 +122,9 @@ export function createEstimateOutputModel({project,estimate,openings,generatedAt
     return {
       opening_id:opening?.opening_id??`row-${index+1}`,
       opening_no:Number(opening?.opening_no??index+1),
+      floor:nullable(opening?.floor),
       room_name:nullable(opening?.room_name),
       location:nullable(opening?.location),
-      opening_name:nullable(opening?.opening_name),
       memo:nullable(opening?.memo),
       manufacturer:nullable(snapshot?.manufacturer),
       series:nullable(snapshot?.series),
