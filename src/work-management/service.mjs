@@ -24,7 +24,17 @@ export class WorkManagementService {
     await this.repositories.estimates.create(estimate);
     return {project,estimate};
   }
-  updateProject(id,patch,options){return this.repositories.projects.update(id,patch,options);}
+  updateProject(id,patch,options){
+    const normalized={...patch};
+    if(Object.prototype.hasOwnProperty.call(normalized,'address')){
+      normalized.postal_code=null;
+      normalized.prefecture=null;
+      normalized.city=null;
+      normalized.street=null;
+      normalized.building=null;
+    }
+    return this.repositories.projects.update(id,normalized,options);
+  }
   archiveProject(id){return this.repositories.projects.update(id,{status:ProjectStatus.ARCHIVED});}
   restoreProject(id){return this.repositories.projects.update(id,{status:ProjectStatus.ACTIVE});}
 
