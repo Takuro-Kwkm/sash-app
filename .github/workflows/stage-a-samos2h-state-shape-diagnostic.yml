@@ -1,0 +1,36 @@
+name: Stage A Samos2H State Shape Diagnostic [CLOSED]
+
+on:
+  workflow_call:
+    inputs:
+      controller_head:
+        required: true
+        type: string
+
+permissions:
+  issues: read
+  contents: read
+
+jobs:
+  governance-authority:
+    uses: ./.github/workflows/governance-authorization.yml
+    with:
+      controller_head: ${{ inputs.controller_head }}
+      release: false
+
+  closed:
+    needs: ["governance-authority"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && (true) }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Closed retry path
+        run: |
+          echo "STATE_SHAPE_DIAGNOSTIC_PATH=CLOSED"
+          echo "EVIDENCE_RUN=34928921744"
+          echo "FAILURE_TYPE=UPSTREAM_RESOLVER_EVALUATION_COST_TIMEOUT"
+          echo "STATE_CHANGED=false"
+          echo "RETRY_AUTHORIZED=false"
+          echo "REOPEN_CONDITION=new proof model or source-static projection that directly removes repeated resolver evaluation"
+          echo "NEXT_PATH=SOURCE_STATIC_BEHAVIOR_FINGERPRINT"
+          echo "APP_INTEGRATION_READY=false"
+          echo "RELEASE_INPUT_GATE=BLOCKED"

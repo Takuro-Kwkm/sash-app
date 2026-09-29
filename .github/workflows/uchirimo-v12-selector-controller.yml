@@ -1,0 +1,1917 @@
+name: Uchirimo V12 Deterministic Selector Controller
+
+on:
+  workflow_call:
+    inputs:
+      controller_head:
+        required: true
+        type: string
+      generation:
+        required: false
+        type: number
+        default: 0
+      source_controller_run_id:
+        required: false
+        type: string
+        default: ''
+    outputs:
+      complete:
+        description: Whether canonical Uchirimo selector aggregate was completed in this generation
+        value: ${{ jobs.finalize.outputs.complete || 'false' }}
+      next_action:
+        description: Controller next action
+        value: ${{ jobs.advance.outputs.next_action || jobs.finalize.outputs.next_action || 'BLOCKED' }}
+
+permissions:
+  contents: read
+  actions: write
+  pull-requests: read
+  issues: read
+
+jobs:
+  governance-authority:
+    uses: ./.github/workflows/governance-authorization.yml
+    with:
+      controller_head: ${{ inputs.controller_head }}
+      release: false
+
+  prepare:
+    needs: ["governance-authority"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      HEAD_SHA: ${{ inputs.controller_head }}
+      GEN: ${{ inputs.generation }}
+      SOURCE_RUN_ID: ${{ inputs.source_controller_run_id }}
+      CARRY_ARTIFACT: uchirimo-selector-proof-carry-forward-${{ inputs.controller_head }}
+      BOOTSTRAP_CARRY_RUN_ID: 36352146462
+      BOOTSTRAP_CARRY_ARTIFACT: uchirimo-selector-proof-carry-forward-ffa0c86d33652c0edf8fdc43a7391b2cc3750ec0
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.HEAD_SHA }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: npm install --ignore-scripts
+      - name: Verify recovery machinery before scheduling selectors
+        if: ${{ inputs.generation == 0 }}
+        run: |
+          node scripts/governance/uchirimo-balanced-scheduler.test.mjs
+          node scripts/governance/uchirimo-v12-workflow-continuation.test.mjs
+          node scripts/governance/uchirimo-controller-evidence-binding.test.mjs
+          node scripts/governance/uchirimo-selector-batch-runner.test.mjs
+          node scripts/governance/uchirimo-v11-recovery-controller.test.mjs
+          node scripts/governance/uchirimo-v12-recovery-integration.test.mjs
+          node scripts/governance/uchirimo-controller-checkpoint.test.mjs
+      - name: Compute generation identities
+        id: generation
+        shell: bash
+        run: |
+          node --input-type=module <<'NODE'
+          import {appendFileSync} from 'node:fs';
+          const current=Number(process.env.GEN);
+          if(!Number.isInteger(current)||current<0)throw new Error('UCHIRIMO_V12_GENERATION_INVALID:'+process.env.GEN);
+          appendFileSync(process.env.GITHUB_OUTPUT,'previous_generation='+String(Math.max(0,current-1))+'\n');
+          NODE
+      - name: Build frozen canonical parent plan
+        env:
+          UCHIRIMO_SELECTOR_MODE: plan-all
+          UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-v12-parent-plan
+        run: node scripts/uchirimo-full-selector-proof.mjs
+      - name: Enforce frozen parent denominator
+        run: |
+          node --input-type=module <<'NODE'
+          import {readFileSync} from 'node:fs';
+          const plan=JSON.parse(readFileSync('artifacts/uchirimo-v12-parent-plan/all-partitions.json','utf8'));
+          if(plan.status!=='PASS'||plan.shard_count!==3956||new Set(plan.partitions.map((r)=>r.partition_key)).size!==3956)throw new Error('UCHIRIMO_V12_PARENT_DENOMINATOR_INVALID:'+String(plan.shard_count));
+          NODE
+      - name: Restore latest compatible cumulative controller checkpoint
+        id: compatible-checkpoint
+        if: ${{ inputs.generation == 0 }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          HEAD_BRANCH: ${{ github.event.pull_request.head.ref || github.ref_name }}
+          UCHIRIMO_V12_PARENT_PLAN: artifacts/uchirimo-v12-parent-plan/all-partitions.json
+          UCHIRIMO_V12_CONTROLLER_OUT: artifacts/uchirimo-v12-controller
+        run: node scripts/governance/uchirimo-controller-checkpoint-discovery.mjs
+      - name: Download preferred bootstrap carry-forward bundle
+        id: bootstrap-download
+        if: ${{ inputs.generation == 0 && steps.compatible-checkpoint.outputs.restored != 'true' }}
+        continue-on-error: true
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ env.BOOTSTRAP_CARRY_ARTIFACT }}
+          path: artifacts/uchirimo-v12-bootstrap-carry
+          run-id: ${{ env.BOOTSTRAP_CARRY_RUN_ID }}
+          github-token: ${{ github.token }}
+      - name: Revalidate compatible parent evidence cumulatively
+        if: ${{ inputs.generation == 0 && steps.compatible-checkpoint.outputs.restored != 'true' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          UCHIRIMO_SELECTOR_CURRENT_PLAN: artifacts/uchirimo-v12-parent-plan/all-partitions.json
+          UCHIRIMO_SELECTOR_CARRY_FORWARD_OUT: artifacts/uchirimo-selector-proof-carry-forward
+          UCHIRIMO_CARRY_FORWARD_BOOTSTRAP_DIR: ${{ steps.bootstrap-download.outcome == 'success' && 'artifacts/uchirimo-v12-bootstrap-carry' || '' }}
+          UCHIRIMO_CARRY_FORWARD_BOOTSTRAP_ONLY: ${{ steps.bootstrap-download.outcome == 'success' && 'true' || 'false' }}
+          UCHIRIMO_CARRY_FORWARD_BOOTSTRAP_RUN_ID: ${{ env.BOOTSTRAP_CARRY_RUN_ID }}
+          UCHIRIMO_CARRY_FORWARD_BOOTSTRAP_ARTIFACT_IDENTITY: ${{ env.BOOTSTRAP_CARRY_ARTIFACT }}
+        run: |
+          if [ "${{ steps.bootstrap-download.outcome }}" != "success" ]; then
+            echo "UCHIRIMO_BOOTSTRAP_BUNDLE=UNAVAILABLE_FALLBACK_TO_COMPATIBLE_HISTORY"
+          fi
+          node scripts/governance/uchirimo-partition-carry-forward.mjs
+      - name: Upload generation-zero carry-forward evidence
+        id: carry-upload
+        if: ${{ inputs.generation == 0 && steps.compatible-checkpoint.outputs.restored != 'true' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.CARRY_ARTIFACT }}
+          path: artifacts/uchirimo-selector-proof-carry-forward/
+          if-no-files-found: error
+      - name: Initialize controller generation zero
+        if: ${{ inputs.generation == 0 && steps.compatible-checkpoint.outputs.restored != 'true' }}
+        env:
+          UCHIRIMO_V12_CONTROLLER_MODE: init
+          UCHIRIMO_V12_GENERATION: 0
+          UCHIRIMO_V12_PARENT_PLAN: artifacts/uchirimo-v12-parent-plan/all-partitions.json
+          UCHIRIMO_V12_CARRY_MANIFEST: artifacts/uchirimo-selector-proof-carry-forward/manifest.json
+          UCHIRIMO_V12_CARRY_ARTIFACT_IDENTITY: ${{ env.CARRY_ARTIFACT }}
+          UCHIRIMO_V12_CARRY_ARTIFACT_ID: ${{ steps.carry-upload.outputs.artifact-id }}
+          UCHIRIMO_V12_CARRY_ARTIFACT_DIGEST: ${{ steps.carry-upload.outputs.artifact-digest }}
+          UCHIRIMO_V12_CONTROLLER_OUT: artifacts/uchirimo-v12-controller
+        run: node scripts/governance/uchirimo-v11-recovery-controller-runner.mjs
+      - name: Download prior controller state
+        id: prior-controller-artifact
+        if: ${{ inputs.generation > 0 }}
+        continue-on-error: true
+        uses: actions/download-artifact@v4
+        with:
+          name: uchirimo-v12-controller-state-${{ env.HEAD_SHA }}-g${{ steps.generation.outputs.previous_generation }}
+          path: artifacts/uchirimo-v12-prior
+          run-id: ${{ inputs.source_controller_run_id }}
+          github-token: ${{ github.token }}
+      - name: Restore prior controller state from durable cache
+        id: prior-controller-cache
+        if: ${{ inputs.generation > 0 && steps.prior-controller-artifact.outcome != 'success' }}
+        uses: actions/cache/restore@v4
+        with:
+          path: artifacts/uchirimo-v12-prior
+          key: uchirimo-v12-controller-state-${{ env.HEAD_SHA }}-g${{ steps.generation.outputs.previous_generation }}
+      - name: Require one durable controller-state copy
+        if: ${{ inputs.generation > 0 }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f artifacts/uchirimo-v12-prior/controller-state.json
+          test -f artifacts/uchirimo-v12-prior/recovery-units.json
+          test -f artifacts/uchirimo-v12-prior/split-certificates.json
+          test -f artifacts/uchirimo-v12-prior/parent-status.json
+          echo "UCHIRIMO_V12_PRIOR_STATE=AVAILABLE artifact_outcome=${{ steps.prior-controller-artifact.outcome }} cache_hit=${{ steps.prior-controller-cache.outputs.cache-hit }}"
+      - name: Resume authorized next generation
+        if: ${{ inputs.generation > 0 }}
+        env:
+          UCHIRIMO_V12_CONTROLLER_MODE: resume-generation
+          UCHIRIMO_V12_GENERATION: ${{ inputs.generation }}
+          UCHIRIMO_V12_SOURCE_CONTROLLER_RUN_ID: ${{ inputs.source_controller_run_id }}
+          UCHIRIMO_V12_STATE: artifacts/uchirimo-v12-prior/controller-state.json
+          UCHIRIMO_V12_UNITS: artifacts/uchirimo-v12-prior/recovery-units.json
+          UCHIRIMO_V12_CERTIFICATES: artifacts/uchirimo-v12-prior/split-certificates.json
+          UCHIRIMO_V12_PARENT_STATUS: artifacts/uchirimo-v12-prior/parent-status.json
+          UCHIRIMO_V12_CONTROLLER_OUT: artifacts/uchirimo-v12-controller
+        run: node scripts/governance/uchirimo-v11-recovery-controller-runner.mjs
+      - uses: actions/upload-artifact@v4
+        with:
+          name: uchirimo-v12-parent-plan-${{ env.HEAD_SHA }}-g${{ env.GEN }}
+          path: artifacts/uchirimo-v12-parent-plan/
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        with:
+          name: uchirimo-v12-controller-input-${{ env.HEAD_SHA }}-g${{ env.GEN }}
+          path: artifacts/uchirimo-v12-controller/
+          if-no-files-found: error
+
+  plan-0:
+    needs: ["governance-authority", "prepare"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && needs.prepare.result == 'success' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    outputs:
+      matrix: ${{ steps.plan.outputs.matrix }}
+    env:
+      HEAD_SHA: ${{ inputs.controller_head }}
+      GEN: ${{ inputs.generation }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.HEAD_SHA }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: npm install --ignore-scripts
+      - uses: actions/download-artifact@v4
+        with:
+          name: uchirimo-v12-parent-plan-${{ env.HEAD_SHA }}-g${{ env.GEN }}
+          path: artifacts/uchirimo-v12-parent-plan
+      - uses: actions/download-artifact@v4
+        with:
+          name: uchirimo-v12-controller-input-${{ env.HEAD_SHA }}-g${{ env.GEN }}
+          path: artifacts/uchirimo-v12-controller
+      - name: Plan lane 0
+        id: plan
+        shell: bash
+        run: |
+          set -euo pipefail
+          UCHIRIMO_V12_CONTROLLER_MODE=plan-lane \
+          UCHIRIMO_V12_GENERATION="$GEN" \
+          UCHIRIMO_V12_PARENT_PLAN=artifacts/uchirimo-v12-parent-plan/all-partitions.json \
+          UCHIRIMO_V12_STATE=artifacts/uchirimo-v12-controller/controller-state.json \
+          UCHIRIMO_V12_UNITS=artifacts/uchirimo-v12-controller/recovery-units.json \
+          UCHIRIMO_V12_CONTROLLER_OUT=artifacts/uchirimo-v12-plan-0 \
+          UCHIRIMO_SELECTOR_PLAN_LANE_COUNT=16 \
+          UCHIRIMO_SELECTOR_PLAN_LANE_INDEX=0 \
+          node scripts/governance/uchirimo-balanced-scheduler.mjs
+      - uses: actions/upload-artifact@v4
+        with:
+          name: uchirimo-v12-plan-${{ env.HEAD_SHA }}-g${{ env.GEN }}-lane-0
+          path: artifacts/uchirimo-v12-plan-0/
+          if-no-files-found: error
+
+
+  plan-1:
+    needs: ["governance-authority", "prepare"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && needs.prepare.result == 'success' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    outputs:
+      matrix: ${{ steps.plan.outputs.matrix }}
+    env:
+      HEAD_SHA: ${{ inputs.controller_head }}
+      GEN: ${{ inputs.generation }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.HEAD_SHA }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: npm install --ignore-scripts
+      - uses: actions/download-artifact@v4
+        with:
+          name: uchirimo-v12-parent-plan-${{ env.HEAD_SHA }}-g${{ env.GEN }}
+          path: artifacts/uchirimo-v12-parent-plan
+      - uses: actions/download-artifact@v4
+        with:
+          name: uchirimo-v12-controller-input-${{ env.HEAD_SHA }}-g${{ env.GEN }}
+          path: artifacts/uchirimo-v12-controller
+      - name: Plan lane 1
+        id: plan
+        shell: bash
+        run: |
+          set -euo pipefail
+          UCHIRIMO_V12_CONTROLLER_MODE=plan-lane \
+          UCHIRIMO_V12_GENERATION="$GEN" \
+          UCHIRIMO_V12_PARENT_PLAN=artifacts/uchirimo-v12-parent-plan/all-partitions.json \
+          UCHIRIMO_V12_STATE=artifacts/uchirimo-v12-controller/controller-state.json \
+          UCHIRIMO_V12_UNITS=artifacts/uchirimo-v12-controller/recovery-units.json \
+          UCHIRIMO_V12_CONTROLLER_OUT=artifacts/uchirimo-v12-plan-1 \
+          UCHIRIMO_SELECTOR_PLAN_LANE_COUNT=16 \
+          UCHIRIMO_SELECTOR_PLAN_LANE_INDEX=1 \
+          node scripts/governance/uchirimo-balanced-scheduler.mjs
+      - uses: actions/upload-artifact@v4
+        with:
+          name: uchirimo-v12-plan-${{ env.HEAD_SHA }}-g${{ env.GEN }}-lane-1
+          path: artifacts/uchirimo-v12-plan-1/
+          if-no-files-found: error
+
+
+  plan-2:
+    needs: ["governance-authority", "prepare"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && needs.prepare.result == 'success' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    outputs:
+      matrix: ${{ steps.plan.outputs.matrix }}
+    env:
+      HEAD_SHA: ${{ inputs.controller_head }}
+      GEN: ${{ inputs.generation }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.HEAD_SHA }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: npm install --ignore-scripts
+      - uses: actions/download-artifact@v4
+        with:
+          name: uchirimo-v12-parent-plan-${{ env.HEAD_SHA }}-g${{ env.GEN }}
+          path: artifacts/uchirimo-v12-parent-plan
+      - uses: actions/download-artifact@v4
+        with:
+          name: uchirimo-v12-controller-input-${{ env.HEAD_SHA }}-g${{ env.GEN }}
+          path: artifacts/uchirimo-v12-controller
+      - name: Plan lane 2
+        id: plan
+        shell: bash
+        run: |
+          set -euo pipefail
+          UCHIRIMO_V12_CONTROLLER_MODE=plan-lane \
+          UCHIRIMO_V12_GENERATION="$GEN" \
+          UCHIRIMO_V12_PARENT_PLAN=artifacts/uchirimo-v12-parent-plan/all-partitions.json \
+          UCHIRIMO_V12_STATE=artifacts/uchirimo-v12-controller/controller-state.json \
+          UCHIRIMO_V12_UNITS=artifacts/uchirimo-v12-controller/recovery-units.json \
+          UCHIRIMO_V12_CONTROLLER_OUT=artifacts/uchirimo-v12-plan-2 \
+          UCHIRIMO_SELECTOR_PLAN_LANE_COUNT=16 \
+          UCHIRIMO_SELECTOR_PLAN_LANE_INDEX=2 \
+          node scripts/governance/uchirimo-balanced-scheduler.mjs
+      - uses: actions/upload-artifact@v4
+        with:
+          name: uchirimo-v12-plan-${{ env.HEAD_SHA }}-g${{ env.GEN }}-lane-2
+          path: artifacts/uchirimo-v12-plan-2/
+          if-no-files-found: error
+
+
+  plan-3:
+    needs: ["governance-authority", "prepare"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && needs.prepare.result == 'success' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    outputs:
+      matrix: ${{ steps.plan.outputs.matrix }}
+    env:
+      HEAD_SHA: ${{ inputs.controller_head }}
+      GEN: ${{ inputs.generation }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.HEAD_SHA }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: npm install --ignore-scripts
+      - uses: actions/download-artifact@v4
+        with:
+          name: uchirimo-v12-parent-plan-${{ env.HEAD_SHA }}-g${{ env.GEN }}
+          path: artifacts/uchirimo-v12-parent-plan
+      - uses: actions/download-artifact@v4
+        with:
+          name: uchirimo-v12-controller-input-${{ env.HEAD_SHA }}-g${{ env.GEN }}
+          path: artifacts/uchirimo-v12-controller
+      - name: Plan lane 3
+        id: plan
+        shell: bash
+        run: |
+          set -euo pipefail
+          UCHIRIMO_V12_CONTROLLER_MODE=plan-lane \
+          UCHIRIMO_V12_GENERATION="$GEN" \
+          UCHIRIMO_V12_PARENT_PLAN=artifacts/uchirimo-v12-parent-plan/all-partitions.json \
+          UCHIRIMO_V12_STATE=artifacts/uchirimo-v12-controller/controller-state.json \
+          UCHIRIMO_V12_UNITS=artifacts/uchirimo-v12-controller/recovery-units.json \
+          UCHIRIMO_V12_CONTROLLER_OUT=artifacts/uchirimo-v12-plan-3 \
+          UCHIRIMO_SELECTOR_PLAN_LANE_COUNT=16 \
+          UCHIRIMO_SELECTOR_PLAN_LANE_INDEX=3 \
+          node scripts/governance/uchirimo-balanced-scheduler.mjs
+      - uses: actions/upload-artifact@v4
+        with:
+          name: uchirimo-v12-plan-${{ env.HEAD_SHA }}-g${{ env.GEN }}-lane-3
+          path: artifacts/uchirimo-v12-plan-3/
+          if-no-files-found: error
+
+
+  plan-4:
+    needs: ["governance-authority", "prepare"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && needs.prepare.result == 'success' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    outputs:
+      matrix: ${{ steps.plan.outputs.matrix }}
+    env:
+      HEAD_SHA: ${{ inputs.controller_head }}
+      GEN: ${{ inputs.generation }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.HEAD_SHA }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: npm install --ignore-scripts
+      - uses: actions/download-artifact@v4
+        with:
+          name: uchirimo-v12-parent-plan-${{ env.HEAD_SHA }}-g${{ env.GEN }}
+          path: artifacts/uchirimo-v12-parent-plan
+      - uses: actions/download-artifact@v4
+        with:
+          name: uchirimo-v12-controller-input-${{ env.HEAD_SHA }}-g${{ env.GEN }}
+          path: artifacts/uchirimo-v12-controller
+      - name: Plan lane 4
+        id: plan
+        shell: bash
+        run: |
+          set -euo pipefail
+          UCHIRIMO_V12_CONTROLLER_MODE=plan-lane \
+          UCHIRIMO_V12_GENERATION="$GEN" \
+          UCHIRIMO_V12_PARENT_PLAN=artifacts/uchirimo-v12-parent-plan/all-partitions.json \
+          UCHIRIMO_V12_STATE=artifacts/uchirimo-v12-controller/controller-state.json \
+          UCHIRIMO_V12_UNITS=artifacts/uchirimo-v12-controller/recovery-units.json \
+          UCHIRIMO_V12_CONTROLLER_OUT=artifacts/uchirimo-v12-plan-4 \
+          UCHIRIMO_SELECTOR_PLAN_LANE_COUNT=16 \
+          UCHIRIMO_SELECTOR_PLAN_LANE_INDEX=4 \
+          node scripts/governance/uchirimo-balanced-scheduler.mjs
+      - uses: actions/upload-artifact@v4
+        with:
+          name: uchirimo-v12-plan-${{ env.HEAD_SHA }}-g${{ env.GEN }}-lane-4
+          path: artifacts/uchirimo-v12-plan-4/
+          if-no-files-found: error
+
+
+  plan-5:
+    needs: ["governance-authority", "prepare"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && needs.prepare.result == 'success' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    outputs:
+      matrix: ${{ steps.plan.outputs.matrix }}
+    env:
+      HEAD_SHA: ${{ inputs.controller_head }}
+      GEN: ${{ inputs.generation }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.HEAD_SHA }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: npm install --ignore-scripts
+      - uses: actions/download-artifact@v4
+        with:
+          name: uchirimo-v12-parent-plan-${{ env.HEAD_SHA }}-g${{ env.GEN }}
+          path: artifacts/uchirimo-v12-parent-plan
+      - uses: actions/download-artifact@v4
+        with:
+          name: uchirimo-v12-controller-input-${{ env.HEAD_SHA }}-g${{ env.GEN }}
+          path: artifacts/uchirimo-v12-controller
+      - name: Plan lane 5
+        id: plan
+        shell: bash
+        run: |
+          set -euo pipefail
+          UCHIRIMO_V12_CONTROLLER_MODE=plan-lane \
+          UCHIRIMO_V12_GENERATION="$GEN" \
+          UCHIRIMO_V12_PARENT_PLAN=artifacts/uchirimo-v12-parent-plan/all-partitions.json \
+          UCHIRIMO_V12_STATE=artifacts/uchirimo-v12-controller/controller-state.json \
+          UCHIRIMO_V12_UNITS=artifacts/uchirimo-v12-controller/recovery-units.json \
+          UCHIRIMO_V12_CONTROLLER_OUT=artifacts/uchirimo-v12-plan-5 \
+          UCHIRIMO_SELECTOR_PLAN_LANE_COUNT=16 \
+          UCHIRIMO_SELECTOR_PLAN_LANE_INDEX=5 \
+          node scripts/governance/uchirimo-balanced-scheduler.mjs
+      - uses: actions/upload-artifact@v4
+        with:
+          name: uchirimo-v12-plan-${{ env.HEAD_SHA }}-g${{ env.GEN }}-lane-5
+          path: artifacts/uchirimo-v12-plan-5/
+          if-no-files-found: error
+
+
+  plan-6:
+    needs: ["governance-authority", "prepare"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && needs.prepare.result == 'success' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    outputs:
+      matrix: ${{ steps.plan.outputs.matrix }}
+    env:
+      HEAD_SHA: ${{ inputs.controller_head }}
+      GEN: ${{ inputs.generation }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.HEAD_SHA }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: npm install --ignore-scripts
+      - uses: actions/download-artifact@v4
+        with:
+          name: uchirimo-v12-parent-plan-${{ env.HEAD_SHA }}-g${{ env.GEN }}
+          path: artifacts/uchirimo-v12-parent-plan
+      - uses: actions/download-artifact@v4
+        with:
+          name: uchirimo-v12-controller-input-${{ env.HEAD_SHA }}-g${{ env.GEN }}
+          path: artifacts/uchirimo-v12-controller
+      - name: Plan lane 6
+        id: plan
+        shell: bash
+        run: |
+          set -euo pipefail
+          UCHIRIMO_V12_CONTROLLER_MODE=plan-lane \
+          UCHIRIMO_V12_GENERATION="$GEN" \
+          UCHIRIMO_V12_PARENT_PLAN=artifacts/uchirimo-v12-parent-plan/all-partitions.json \
+          UCHIRIMO_V12_STATE=artifacts/uchirimo-v12-controller/controller-state.json \
+          UCHIRIMO_V12_UNITS=artifacts/uchirimo-v12-controller/recovery-units.json \
+          UCHIRIMO_V12_CONTROLLER_OUT=artifacts/uchirimo-v12-plan-6 \
+          UCHIRIMO_SELECTOR_PLAN_LANE_COUNT=16 \
+          UCHIRIMO_SELECTOR_PLAN_LANE_INDEX=6 \
+          node scripts/governance/uchirimo-balanced-scheduler.mjs
+      - uses: actions/upload-artifact@v4
+        with:
+          name: uchirimo-v12-plan-${{ env.HEAD_SHA }}-g${{ env.GEN }}-lane-6
+          path: artifacts/uchirimo-v12-plan-6/
+          if-no-files-found: error
+
+
+  plan-7:
+    needs: ["governance-authority", "prepare"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && needs.prepare.result == 'success' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    outputs:
+      matrix: ${{ steps.plan.outputs.matrix }}
+    env:
+      HEAD_SHA: ${{ inputs.controller_head }}
+      GEN: ${{ inputs.generation }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.HEAD_SHA }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: npm install --ignore-scripts
+      - uses: actions/download-artifact@v4
+        with:
+          name: uchirimo-v12-parent-plan-${{ env.HEAD_SHA }}-g${{ env.GEN }}
+          path: artifacts/uchirimo-v12-parent-plan
+      - uses: actions/download-artifact@v4
+        with:
+          name: uchirimo-v12-controller-input-${{ env.HEAD_SHA }}-g${{ env.GEN }}
+          path: artifacts/uchirimo-v12-controller
+      - name: Plan lane 7
+        id: plan
+        shell: bash
+        run: |
+          set -euo pipefail
+          UCHIRIMO_V12_CONTROLLER_MODE=plan-lane \
+          UCHIRIMO_V12_GENERATION="$GEN" \
+          UCHIRIMO_V12_PARENT_PLAN=artifacts/uchirimo-v12-parent-plan/all-partitions.json \
+          UCHIRIMO_V12_STATE=artifacts/uchirimo-v12-controller/controller-state.json \
+          UCHIRIMO_V12_UNITS=artifacts/uchirimo-v12-controller/recovery-units.json \
+          UCHIRIMO_V12_CONTROLLER_OUT=artifacts/uchirimo-v12-plan-7 \
+          UCHIRIMO_SELECTOR_PLAN_LANE_COUNT=16 \
+          UCHIRIMO_SELECTOR_PLAN_LANE_INDEX=7 \
+          node scripts/governance/uchirimo-balanced-scheduler.mjs
+      - uses: actions/upload-artifact@v4
+        with:
+          name: uchirimo-v12-plan-${{ env.HEAD_SHA }}-g${{ env.GEN }}-lane-7
+          path: artifacts/uchirimo-v12-plan-7/
+          if-no-files-found: error
+
+
+  plan-8:
+    needs: ["governance-authority", "prepare"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && needs.prepare.result == 'success' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    outputs:
+      matrix: ${{ steps.plan.outputs.matrix }}
+    env:
+      HEAD_SHA: ${{ inputs.controller_head }}
+      GEN: ${{ inputs.generation }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.HEAD_SHA }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: npm install --ignore-scripts
+      - uses: actions/download-artifact@v4
+        with:
+          name: uchirimo-v12-parent-plan-${{ env.HEAD_SHA }}-g${{ env.GEN }}
+          path: artifacts/uchirimo-v12-parent-plan
+      - uses: actions/download-artifact@v4
+        with:
+          name: uchirimo-v12-controller-input-${{ env.HEAD_SHA }}-g${{ env.GEN }}
+          path: artifacts/uchirimo-v12-controller
+      - name: Plan lane 8
+        id: plan
+        shell: bash
+        run: |
+          set -euo pipefail
+          UCHIRIMO_V12_CONTROLLER_MODE=plan-lane \
+          UCHIRIMO_V12_GENERATION="$GEN" \
+          UCHIRIMO_V12_PARENT_PLAN=artifacts/uchirimo-v12-parent-plan/all-partitions.json \
+          UCHIRIMO_V12_STATE=artifacts/uchirimo-v12-controller/controller-state.json \
+          UCHIRIMO_V12_UNITS=artifacts/uchirimo-v12-controller/recovery-units.json \
+          UCHIRIMO_V12_CONTROLLER_OUT=artifacts/uchirimo-v12-plan-8 \
+          UCHIRIMO_SELECTOR_PLAN_LANE_COUNT=16 \
+          UCHIRIMO_SELECTOR_PLAN_LANE_INDEX=8 \
+          node scripts/governance/uchirimo-balanced-scheduler.mjs
+      - uses: actions/upload-artifact@v4
+        with:
+          name: uchirimo-v12-plan-${{ env.HEAD_SHA }}-g${{ env.GEN }}-lane-8
+          path: artifacts/uchirimo-v12-plan-8/
+          if-no-files-found: error
+
+
+  plan-9:
+    needs: ["governance-authority", "prepare"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && needs.prepare.result == 'success' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    outputs:
+      matrix: ${{ steps.plan.outputs.matrix }}
+    env:
+      HEAD_SHA: ${{ inputs.controller_head }}
+      GEN: ${{ inputs.generation }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.HEAD_SHA }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: npm install --ignore-scripts
+      - uses: actions/download-artifact@v4
+        with:
+          name: uchirimo-v12-parent-plan-${{ env.HEAD_SHA }}-g${{ env.GEN }}
+          path: artifacts/uchirimo-v12-parent-plan
+      - uses: actions/download-artifact@v4
+        with:
+          name: uchirimo-v12-controller-input-${{ env.HEAD_SHA }}-g${{ env.GEN }}
+          path: artifacts/uchirimo-v12-controller
+      - name: Plan lane 9
+        id: plan
+        shell: bash
+        run: |
+          set -euo pipefail
+          UCHIRIMO_V12_CONTROLLER_MODE=plan-lane \
+          UCHIRIMO_V12_GENERATION="$GEN" \
+          UCHIRIMO_V12_PARENT_PLAN=artifacts/uchirimo-v12-parent-plan/all-partitions.json \
+          UCHIRIMO_V12_STATE=artifacts/uchirimo-v12-controller/controller-state.json \
+          UCHIRIMO_V12_UNITS=artifacts/uchirimo-v12-controller/recovery-units.json \
+          UCHIRIMO_V12_CONTROLLER_OUT=artifacts/uchirimo-v12-plan-9 \
+          UCHIRIMO_SELECTOR_PLAN_LANE_COUNT=16 \
+          UCHIRIMO_SELECTOR_PLAN_LANE_INDEX=9 \
+          node scripts/governance/uchirimo-balanced-scheduler.mjs
+      - uses: actions/upload-artifact@v4
+        with:
+          name: uchirimo-v12-plan-${{ env.HEAD_SHA }}-g${{ env.GEN }}-lane-9
+          path: artifacts/uchirimo-v12-plan-9/
+          if-no-files-found: error
+
+
+  plan-10:
+    needs: ["governance-authority", "prepare"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && needs.prepare.result == 'success' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    outputs:
+      matrix: ${{ steps.plan.outputs.matrix }}
+    env:
+      HEAD_SHA: ${{ inputs.controller_head }}
+      GEN: ${{ inputs.generation }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.HEAD_SHA }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: npm install --ignore-scripts
+      - uses: actions/download-artifact@v4
+        with:
+          name: uchirimo-v12-parent-plan-${{ env.HEAD_SHA }}-g${{ env.GEN }}
+          path: artifacts/uchirimo-v12-parent-plan
+      - uses: actions/download-artifact@v4
+        with:
+          name: uchirimo-v12-controller-input-${{ env.HEAD_SHA }}-g${{ env.GEN }}
+          path: artifacts/uchirimo-v12-controller
+      - name: Plan lane 10
+        id: plan
+        shell: bash
+        run: |
+          set -euo pipefail
+          UCHIRIMO_V12_CONTROLLER_MODE=plan-lane \
+          UCHIRIMO_V12_GENERATION="$GEN" \
+          UCHIRIMO_V12_PARENT_PLAN=artifacts/uchirimo-v12-parent-plan/all-partitions.json \
+          UCHIRIMO_V12_STATE=artifacts/uchirimo-v12-controller/controller-state.json \
+          UCHIRIMO_V12_UNITS=artifacts/uchirimo-v12-controller/recovery-units.json \
+          UCHIRIMO_V12_CONTROLLER_OUT=artifacts/uchirimo-v12-plan-10 \
+          UCHIRIMO_SELECTOR_PLAN_LANE_COUNT=16 \
+          UCHIRIMO_SELECTOR_PLAN_LANE_INDEX=10 \
+          node scripts/governance/uchirimo-balanced-scheduler.mjs
+      - uses: actions/upload-artifact@v4
+        with:
+          name: uchirimo-v12-plan-${{ env.HEAD_SHA }}-g${{ env.GEN }}-lane-10
+          path: artifacts/uchirimo-v12-plan-10/
+          if-no-files-found: error
+
+
+  plan-11:
+    needs: ["governance-authority", "prepare"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && needs.prepare.result == 'success' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    outputs:
+      matrix: ${{ steps.plan.outputs.matrix }}
+    env:
+      HEAD_SHA: ${{ inputs.controller_head }}
+      GEN: ${{ inputs.generation }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.HEAD_SHA }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: npm install --ignore-scripts
+      - uses: actions/download-artifact@v4
+        with:
+          name: uchirimo-v12-parent-plan-${{ env.HEAD_SHA }}-g${{ env.GEN }}
+          path: artifacts/uchirimo-v12-parent-plan
+      - uses: actions/download-artifact@v4
+        with:
+          name: uchirimo-v12-controller-input-${{ env.HEAD_SHA }}-g${{ env.GEN }}
+          path: artifacts/uchirimo-v12-controller
+      - name: Plan lane 11
+        id: plan
+        shell: bash
+        run: |
+          set -euo pipefail
+          UCHIRIMO_V12_CONTROLLER_MODE=plan-lane \
+          UCHIRIMO_V12_GENERATION="$GEN" \
+          UCHIRIMO_V12_PARENT_PLAN=artifacts/uchirimo-v12-parent-plan/all-partitions.json \
+          UCHIRIMO_V12_STATE=artifacts/uchirimo-v12-controller/controller-state.json \
+          UCHIRIMO_V12_UNITS=artifacts/uchirimo-v12-controller/recovery-units.json \
+          UCHIRIMO_V12_CONTROLLER_OUT=artifacts/uchirimo-v12-plan-11 \
+          UCHIRIMO_SELECTOR_PLAN_LANE_COUNT=16 \
+          UCHIRIMO_SELECTOR_PLAN_LANE_INDEX=11 \
+          node scripts/governance/uchirimo-balanced-scheduler.mjs
+      - uses: actions/upload-artifact@v4
+        with:
+          name: uchirimo-v12-plan-${{ env.HEAD_SHA }}-g${{ env.GEN }}-lane-11
+          path: artifacts/uchirimo-v12-plan-11/
+          if-no-files-found: error
+
+
+  plan-12:
+    needs: ["governance-authority", "prepare"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && needs.prepare.result == 'success' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    outputs:
+      matrix: ${{ steps.plan.outputs.matrix }}
+    env:
+      HEAD_SHA: ${{ inputs.controller_head }}
+      GEN: ${{ inputs.generation }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.HEAD_SHA }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: npm install --ignore-scripts
+      - uses: actions/download-artifact@v4
+        with:
+          name: uchirimo-v12-parent-plan-${{ env.HEAD_SHA }}-g${{ env.GEN }}
+          path: artifacts/uchirimo-v12-parent-plan
+      - uses: actions/download-artifact@v4
+        with:
+          name: uchirimo-v12-controller-input-${{ env.HEAD_SHA }}-g${{ env.GEN }}
+          path: artifacts/uchirimo-v12-controller
+      - name: Plan lane 12
+        id: plan
+        shell: bash
+        run: |
+          set -euo pipefail
+          UCHIRIMO_V12_CONTROLLER_MODE=plan-lane \
+          UCHIRIMO_V12_GENERATION="$GEN" \
+          UCHIRIMO_V12_PARENT_PLAN=artifacts/uchirimo-v12-parent-plan/all-partitions.json \
+          UCHIRIMO_V12_STATE=artifacts/uchirimo-v12-controller/controller-state.json \
+          UCHIRIMO_V12_UNITS=artifacts/uchirimo-v12-controller/recovery-units.json \
+          UCHIRIMO_V12_CONTROLLER_OUT=artifacts/uchirimo-v12-plan-12 \
+          UCHIRIMO_SELECTOR_PLAN_LANE_COUNT=16 \
+          UCHIRIMO_SELECTOR_PLAN_LANE_INDEX=12 \
+          node scripts/governance/uchirimo-balanced-scheduler.mjs
+      - uses: actions/upload-artifact@v4
+        with:
+          name: uchirimo-v12-plan-${{ env.HEAD_SHA }}-g${{ env.GEN }}-lane-12
+          path: artifacts/uchirimo-v12-plan-12/
+          if-no-files-found: error
+
+
+  plan-13:
+    needs: ["governance-authority", "prepare"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && needs.prepare.result == 'success' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    outputs:
+      matrix: ${{ steps.plan.outputs.matrix }}
+    env:
+      HEAD_SHA: ${{ inputs.controller_head }}
+      GEN: ${{ inputs.generation }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.HEAD_SHA }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: npm install --ignore-scripts
+      - uses: actions/download-artifact@v4
+        with:
+          name: uchirimo-v12-parent-plan-${{ env.HEAD_SHA }}-g${{ env.GEN }}
+          path: artifacts/uchirimo-v12-parent-plan
+      - uses: actions/download-artifact@v4
+        with:
+          name: uchirimo-v12-controller-input-${{ env.HEAD_SHA }}-g${{ env.GEN }}
+          path: artifacts/uchirimo-v12-controller
+      - name: Plan lane 13
+        id: plan
+        shell: bash
+        run: |
+          set -euo pipefail
+          UCHIRIMO_V12_CONTROLLER_MODE=plan-lane \
+          UCHIRIMO_V12_GENERATION="$GEN" \
+          UCHIRIMO_V12_PARENT_PLAN=artifacts/uchirimo-v12-parent-plan/all-partitions.json \
+          UCHIRIMO_V12_STATE=artifacts/uchirimo-v12-controller/controller-state.json \
+          UCHIRIMO_V12_UNITS=artifacts/uchirimo-v12-controller/recovery-units.json \
+          UCHIRIMO_V12_CONTROLLER_OUT=artifacts/uchirimo-v12-plan-13 \
+          UCHIRIMO_SELECTOR_PLAN_LANE_COUNT=16 \
+          UCHIRIMO_SELECTOR_PLAN_LANE_INDEX=13 \
+          node scripts/governance/uchirimo-balanced-scheduler.mjs
+      - uses: actions/upload-artifact@v4
+        with:
+          name: uchirimo-v12-plan-${{ env.HEAD_SHA }}-g${{ env.GEN }}-lane-13
+          path: artifacts/uchirimo-v12-plan-13/
+          if-no-files-found: error
+
+
+  plan-14:
+    needs: ["governance-authority", "prepare"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && needs.prepare.result == 'success' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    outputs:
+      matrix: ${{ steps.plan.outputs.matrix }}
+    env:
+      HEAD_SHA: ${{ inputs.controller_head }}
+      GEN: ${{ inputs.generation }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.HEAD_SHA }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: npm install --ignore-scripts
+      - uses: actions/download-artifact@v4
+        with:
+          name: uchirimo-v12-parent-plan-${{ env.HEAD_SHA }}-g${{ env.GEN }}
+          path: artifacts/uchirimo-v12-parent-plan
+      - uses: actions/download-artifact@v4
+        with:
+          name: uchirimo-v12-controller-input-${{ env.HEAD_SHA }}-g${{ env.GEN }}
+          path: artifacts/uchirimo-v12-controller
+      - name: Plan lane 14
+        id: plan
+        shell: bash
+        run: |
+          set -euo pipefail
+          UCHIRIMO_V12_CONTROLLER_MODE=plan-lane \
+          UCHIRIMO_V12_GENERATION="$GEN" \
+          UCHIRIMO_V12_PARENT_PLAN=artifacts/uchirimo-v12-parent-plan/all-partitions.json \
+          UCHIRIMO_V12_STATE=artifacts/uchirimo-v12-controller/controller-state.json \
+          UCHIRIMO_V12_UNITS=artifacts/uchirimo-v12-controller/recovery-units.json \
+          UCHIRIMO_V12_CONTROLLER_OUT=artifacts/uchirimo-v12-plan-14 \
+          UCHIRIMO_SELECTOR_PLAN_LANE_COUNT=16 \
+          UCHIRIMO_SELECTOR_PLAN_LANE_INDEX=14 \
+          node scripts/governance/uchirimo-balanced-scheduler.mjs
+      - uses: actions/upload-artifact@v4
+        with:
+          name: uchirimo-v12-plan-${{ env.HEAD_SHA }}-g${{ env.GEN }}-lane-14
+          path: artifacts/uchirimo-v12-plan-14/
+          if-no-files-found: error
+
+
+  plan-15:
+    needs: ["governance-authority", "prepare"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && needs.prepare.result == 'success' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    outputs:
+      matrix: ${{ steps.plan.outputs.matrix }}
+    env:
+      HEAD_SHA: ${{ inputs.controller_head }}
+      GEN: ${{ inputs.generation }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.HEAD_SHA }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: npm install --ignore-scripts
+      - uses: actions/download-artifact@v4
+        with:
+          name: uchirimo-v12-parent-plan-${{ env.HEAD_SHA }}-g${{ env.GEN }}
+          path: artifacts/uchirimo-v12-parent-plan
+      - uses: actions/download-artifact@v4
+        with:
+          name: uchirimo-v12-controller-input-${{ env.HEAD_SHA }}-g${{ env.GEN }}
+          path: artifacts/uchirimo-v12-controller
+      - name: Plan lane 15
+        id: plan
+        shell: bash
+        run: |
+          set -euo pipefail
+          UCHIRIMO_V12_CONTROLLER_MODE=plan-lane \
+          UCHIRIMO_V12_GENERATION="$GEN" \
+          UCHIRIMO_V12_PARENT_PLAN=artifacts/uchirimo-v12-parent-plan/all-partitions.json \
+          UCHIRIMO_V12_STATE=artifacts/uchirimo-v12-controller/controller-state.json \
+          UCHIRIMO_V12_UNITS=artifacts/uchirimo-v12-controller/recovery-units.json \
+          UCHIRIMO_V12_CONTROLLER_OUT=artifacts/uchirimo-v12-plan-15 \
+          UCHIRIMO_SELECTOR_PLAN_LANE_COUNT=16 \
+          UCHIRIMO_SELECTOR_PLAN_LANE_INDEX=15 \
+          node scripts/governance/uchirimo-balanced-scheduler.mjs
+      - uses: actions/upload-artifact@v4
+        with:
+          name: uchirimo-v12-plan-${{ env.HEAD_SHA }}-g${{ env.GEN }}-lane-15
+          path: artifacts/uchirimo-v12-plan-15/
+          if-no-files-found: error
+
+
+  execute-0:
+    needs: ["governance-authority", "plan-0"]
+    if: ${{ !cancelled() && needs.governance-authority.outputs.authorized == 'true' && needs.plan-0.result == 'success' }}
+    strategy:
+      fail-fast: false
+      max-parallel: 2
+      matrix: ${{ fromJSON(needs.plan-0.outputs.matrix) }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    env:
+      HEAD_SHA: ${{ inputs.controller_head }}
+      UCHIRIMO_SELECTOR_BATCH_ID: ${{ matrix.batch_id }}
+      UCHIRIMO_SELECTOR_BATCH_JSON: ${{ matrix.batch_json }}
+      UCHIRIMO_SELECTOR_CHILD_TIMEOUT_MS: ${{ matrix.child_timeout_ms }}
+      UCHIRIMO_SELECTOR_EXPECTED_SHARDS: 3956
+      UCHIRIMO_RESOLVER_CACHE_MAX: 4096
+      UCHIRIMO_SELECTOR_MAX_STATES: 2000000
+      UCHIRIMO_SELECTOR_MAX_TERMINALS: 2000000
+      UCHIRIMO_V12_EVIDENCE_ARTIFACT_IDENTITY: ${{ matrix.artifact_identity }}
+      UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-v12-execution
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.HEAD_SHA }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: npm install --ignore-scripts
+      - name: Execute batch
+        if: ${{ matrix.skip != true }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$HEAD_SHA"
+          node scripts/governance/uchirimo-selector-batch-runner.mjs
+      - name: Upload batch evidence
+        if: ${{ always() && matrix.skip != true }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact_identity }}
+          path: artifacts/uchirimo-v12-execution/
+          if-no-files-found: warn
+
+
+  execute-1:
+    needs: ["governance-authority", "plan-1"]
+    if: ${{ !cancelled() && needs.governance-authority.outputs.authorized == 'true' && needs.plan-1.result == 'success' }}
+    strategy:
+      fail-fast: false
+      max-parallel: 2
+      matrix: ${{ fromJSON(needs.plan-1.outputs.matrix) }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    env:
+      HEAD_SHA: ${{ inputs.controller_head }}
+      UCHIRIMO_SELECTOR_BATCH_ID: ${{ matrix.batch_id }}
+      UCHIRIMO_SELECTOR_BATCH_JSON: ${{ matrix.batch_json }}
+      UCHIRIMO_SELECTOR_CHILD_TIMEOUT_MS: ${{ matrix.child_timeout_ms }}
+      UCHIRIMO_SELECTOR_EXPECTED_SHARDS: 3956
+      UCHIRIMO_RESOLVER_CACHE_MAX: 4096
+      UCHIRIMO_SELECTOR_MAX_STATES: 2000000
+      UCHIRIMO_SELECTOR_MAX_TERMINALS: 2000000
+      UCHIRIMO_V12_EVIDENCE_ARTIFACT_IDENTITY: ${{ matrix.artifact_identity }}
+      UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-v12-execution
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.HEAD_SHA }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: npm install --ignore-scripts
+      - name: Execute batch
+        if: ${{ matrix.skip != true }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$HEAD_SHA"
+          node scripts/governance/uchirimo-selector-batch-runner.mjs
+      - name: Upload batch evidence
+        if: ${{ always() && matrix.skip != true }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact_identity }}
+          path: artifacts/uchirimo-v12-execution/
+          if-no-files-found: warn
+
+
+  execute-2:
+    needs: ["governance-authority", "plan-2"]
+    if: ${{ !cancelled() && needs.governance-authority.outputs.authorized == 'true' && needs.plan-2.result == 'success' }}
+    strategy:
+      fail-fast: false
+      max-parallel: 2
+      matrix: ${{ fromJSON(needs.plan-2.outputs.matrix) }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    env:
+      HEAD_SHA: ${{ inputs.controller_head }}
+      UCHIRIMO_SELECTOR_BATCH_ID: ${{ matrix.batch_id }}
+      UCHIRIMO_SELECTOR_BATCH_JSON: ${{ matrix.batch_json }}
+      UCHIRIMO_SELECTOR_CHILD_TIMEOUT_MS: ${{ matrix.child_timeout_ms }}
+      UCHIRIMO_SELECTOR_EXPECTED_SHARDS: 3956
+      UCHIRIMO_RESOLVER_CACHE_MAX: 4096
+      UCHIRIMO_SELECTOR_MAX_STATES: 2000000
+      UCHIRIMO_SELECTOR_MAX_TERMINALS: 2000000
+      UCHIRIMO_V12_EVIDENCE_ARTIFACT_IDENTITY: ${{ matrix.artifact_identity }}
+      UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-v12-execution
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.HEAD_SHA }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: npm install --ignore-scripts
+      - name: Execute batch
+        if: ${{ matrix.skip != true }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$HEAD_SHA"
+          node scripts/governance/uchirimo-selector-batch-runner.mjs
+      - name: Upload batch evidence
+        if: ${{ always() && matrix.skip != true }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact_identity }}
+          path: artifacts/uchirimo-v12-execution/
+          if-no-files-found: warn
+
+
+  execute-3:
+    needs: ["governance-authority", "plan-3"]
+    if: ${{ !cancelled() && needs.governance-authority.outputs.authorized == 'true' && needs.plan-3.result == 'success' }}
+    strategy:
+      fail-fast: false
+      max-parallel: 2
+      matrix: ${{ fromJSON(needs.plan-3.outputs.matrix) }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    env:
+      HEAD_SHA: ${{ inputs.controller_head }}
+      UCHIRIMO_SELECTOR_BATCH_ID: ${{ matrix.batch_id }}
+      UCHIRIMO_SELECTOR_BATCH_JSON: ${{ matrix.batch_json }}
+      UCHIRIMO_SELECTOR_CHILD_TIMEOUT_MS: ${{ matrix.child_timeout_ms }}
+      UCHIRIMO_SELECTOR_EXPECTED_SHARDS: 3956
+      UCHIRIMO_RESOLVER_CACHE_MAX: 4096
+      UCHIRIMO_SELECTOR_MAX_STATES: 2000000
+      UCHIRIMO_SELECTOR_MAX_TERMINALS: 2000000
+      UCHIRIMO_V12_EVIDENCE_ARTIFACT_IDENTITY: ${{ matrix.artifact_identity }}
+      UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-v12-execution
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.HEAD_SHA }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: npm install --ignore-scripts
+      - name: Execute batch
+        if: ${{ matrix.skip != true }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$HEAD_SHA"
+          node scripts/governance/uchirimo-selector-batch-runner.mjs
+      - name: Upload batch evidence
+        if: ${{ always() && matrix.skip != true }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact_identity }}
+          path: artifacts/uchirimo-v12-execution/
+          if-no-files-found: warn
+
+
+  execute-4:
+    needs: ["governance-authority", "plan-4"]
+    if: ${{ !cancelled() && needs.governance-authority.outputs.authorized == 'true' && needs.plan-4.result == 'success' }}
+    strategy:
+      fail-fast: false
+      max-parallel: 2
+      matrix: ${{ fromJSON(needs.plan-4.outputs.matrix) }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    env:
+      HEAD_SHA: ${{ inputs.controller_head }}
+      UCHIRIMO_SELECTOR_BATCH_ID: ${{ matrix.batch_id }}
+      UCHIRIMO_SELECTOR_BATCH_JSON: ${{ matrix.batch_json }}
+      UCHIRIMO_SELECTOR_CHILD_TIMEOUT_MS: ${{ matrix.child_timeout_ms }}
+      UCHIRIMO_SELECTOR_EXPECTED_SHARDS: 3956
+      UCHIRIMO_RESOLVER_CACHE_MAX: 4096
+      UCHIRIMO_SELECTOR_MAX_STATES: 2000000
+      UCHIRIMO_SELECTOR_MAX_TERMINALS: 2000000
+      UCHIRIMO_V12_EVIDENCE_ARTIFACT_IDENTITY: ${{ matrix.artifact_identity }}
+      UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-v12-execution
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.HEAD_SHA }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: npm install --ignore-scripts
+      - name: Execute batch
+        if: ${{ matrix.skip != true }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$HEAD_SHA"
+          node scripts/governance/uchirimo-selector-batch-runner.mjs
+      - name: Upload batch evidence
+        if: ${{ always() && matrix.skip != true }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact_identity }}
+          path: artifacts/uchirimo-v12-execution/
+          if-no-files-found: warn
+
+
+  execute-5:
+    needs: ["governance-authority", "plan-5"]
+    if: ${{ !cancelled() && needs.governance-authority.outputs.authorized == 'true' && needs.plan-5.result == 'success' }}
+    strategy:
+      fail-fast: false
+      max-parallel: 2
+      matrix: ${{ fromJSON(needs.plan-5.outputs.matrix) }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    env:
+      HEAD_SHA: ${{ inputs.controller_head }}
+      UCHIRIMO_SELECTOR_BATCH_ID: ${{ matrix.batch_id }}
+      UCHIRIMO_SELECTOR_BATCH_JSON: ${{ matrix.batch_json }}
+      UCHIRIMO_SELECTOR_CHILD_TIMEOUT_MS: ${{ matrix.child_timeout_ms }}
+      UCHIRIMO_SELECTOR_EXPECTED_SHARDS: 3956
+      UCHIRIMO_RESOLVER_CACHE_MAX: 4096
+      UCHIRIMO_SELECTOR_MAX_STATES: 2000000
+      UCHIRIMO_SELECTOR_MAX_TERMINALS: 2000000
+      UCHIRIMO_V12_EVIDENCE_ARTIFACT_IDENTITY: ${{ matrix.artifact_identity }}
+      UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-v12-execution
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.HEAD_SHA }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: npm install --ignore-scripts
+      - name: Execute batch
+        if: ${{ matrix.skip != true }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$HEAD_SHA"
+          node scripts/governance/uchirimo-selector-batch-runner.mjs
+      - name: Upload batch evidence
+        if: ${{ always() && matrix.skip != true }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact_identity }}
+          path: artifacts/uchirimo-v12-execution/
+          if-no-files-found: warn
+
+
+  execute-6:
+    needs: ["governance-authority", "plan-6"]
+    if: ${{ !cancelled() && needs.governance-authority.outputs.authorized == 'true' && needs.plan-6.result == 'success' }}
+    strategy:
+      fail-fast: false
+      max-parallel: 2
+      matrix: ${{ fromJSON(needs.plan-6.outputs.matrix) }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    env:
+      HEAD_SHA: ${{ inputs.controller_head }}
+      UCHIRIMO_SELECTOR_BATCH_ID: ${{ matrix.batch_id }}
+      UCHIRIMO_SELECTOR_BATCH_JSON: ${{ matrix.batch_json }}
+      UCHIRIMO_SELECTOR_CHILD_TIMEOUT_MS: ${{ matrix.child_timeout_ms }}
+      UCHIRIMO_SELECTOR_EXPECTED_SHARDS: 3956
+      UCHIRIMO_RESOLVER_CACHE_MAX: 4096
+      UCHIRIMO_SELECTOR_MAX_STATES: 2000000
+      UCHIRIMO_SELECTOR_MAX_TERMINALS: 2000000
+      UCHIRIMO_V12_EVIDENCE_ARTIFACT_IDENTITY: ${{ matrix.artifact_identity }}
+      UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-v12-execution
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.HEAD_SHA }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: npm install --ignore-scripts
+      - name: Execute batch
+        if: ${{ matrix.skip != true }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$HEAD_SHA"
+          node scripts/governance/uchirimo-selector-batch-runner.mjs
+      - name: Upload batch evidence
+        if: ${{ always() && matrix.skip != true }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact_identity }}
+          path: artifacts/uchirimo-v12-execution/
+          if-no-files-found: warn
+
+
+  execute-7:
+    needs: ["governance-authority", "plan-7"]
+    if: ${{ !cancelled() && needs.governance-authority.outputs.authorized == 'true' && needs.plan-7.result == 'success' }}
+    strategy:
+      fail-fast: false
+      max-parallel: 2
+      matrix: ${{ fromJSON(needs.plan-7.outputs.matrix) }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    env:
+      HEAD_SHA: ${{ inputs.controller_head }}
+      UCHIRIMO_SELECTOR_BATCH_ID: ${{ matrix.batch_id }}
+      UCHIRIMO_SELECTOR_BATCH_JSON: ${{ matrix.batch_json }}
+      UCHIRIMO_SELECTOR_CHILD_TIMEOUT_MS: ${{ matrix.child_timeout_ms }}
+      UCHIRIMO_SELECTOR_EXPECTED_SHARDS: 3956
+      UCHIRIMO_RESOLVER_CACHE_MAX: 4096
+      UCHIRIMO_SELECTOR_MAX_STATES: 2000000
+      UCHIRIMO_SELECTOR_MAX_TERMINALS: 2000000
+      UCHIRIMO_V12_EVIDENCE_ARTIFACT_IDENTITY: ${{ matrix.artifact_identity }}
+      UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-v12-execution
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.HEAD_SHA }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: npm install --ignore-scripts
+      - name: Execute batch
+        if: ${{ matrix.skip != true }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$HEAD_SHA"
+          node scripts/governance/uchirimo-selector-batch-runner.mjs
+      - name: Upload batch evidence
+        if: ${{ always() && matrix.skip != true }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact_identity }}
+          path: artifacts/uchirimo-v12-execution/
+          if-no-files-found: warn
+
+
+  execute-8:
+    needs: ["governance-authority", "plan-8"]
+    if: ${{ !cancelled() && needs.governance-authority.outputs.authorized == 'true' && needs.plan-8.result == 'success' }}
+    strategy:
+      fail-fast: false
+      max-parallel: 2
+      matrix: ${{ fromJSON(needs.plan-8.outputs.matrix) }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    env:
+      HEAD_SHA: ${{ inputs.controller_head }}
+      UCHIRIMO_SELECTOR_BATCH_ID: ${{ matrix.batch_id }}
+      UCHIRIMO_SELECTOR_BATCH_JSON: ${{ matrix.batch_json }}
+      UCHIRIMO_SELECTOR_CHILD_TIMEOUT_MS: ${{ matrix.child_timeout_ms }}
+      UCHIRIMO_SELECTOR_EXPECTED_SHARDS: 3956
+      UCHIRIMO_RESOLVER_CACHE_MAX: 4096
+      UCHIRIMO_SELECTOR_MAX_STATES: 2000000
+      UCHIRIMO_SELECTOR_MAX_TERMINALS: 2000000
+      UCHIRIMO_V12_EVIDENCE_ARTIFACT_IDENTITY: ${{ matrix.artifact_identity }}
+      UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-v12-execution
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.HEAD_SHA }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: npm install --ignore-scripts
+      - name: Execute batch
+        if: ${{ matrix.skip != true }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$HEAD_SHA"
+          node scripts/governance/uchirimo-selector-batch-runner.mjs
+      - name: Upload batch evidence
+        if: ${{ always() && matrix.skip != true }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact_identity }}
+          path: artifacts/uchirimo-v12-execution/
+          if-no-files-found: warn
+
+
+  execute-9:
+    needs: ["governance-authority", "plan-9"]
+    if: ${{ !cancelled() && needs.governance-authority.outputs.authorized == 'true' && needs.plan-9.result == 'success' }}
+    strategy:
+      fail-fast: false
+      max-parallel: 2
+      matrix: ${{ fromJSON(needs.plan-9.outputs.matrix) }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    env:
+      HEAD_SHA: ${{ inputs.controller_head }}
+      UCHIRIMO_SELECTOR_BATCH_ID: ${{ matrix.batch_id }}
+      UCHIRIMO_SELECTOR_BATCH_JSON: ${{ matrix.batch_json }}
+      UCHIRIMO_SELECTOR_CHILD_TIMEOUT_MS: ${{ matrix.child_timeout_ms }}
+      UCHIRIMO_SELECTOR_EXPECTED_SHARDS: 3956
+      UCHIRIMO_RESOLVER_CACHE_MAX: 4096
+      UCHIRIMO_SELECTOR_MAX_STATES: 2000000
+      UCHIRIMO_SELECTOR_MAX_TERMINALS: 2000000
+      UCHIRIMO_V12_EVIDENCE_ARTIFACT_IDENTITY: ${{ matrix.artifact_identity }}
+      UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-v12-execution
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.HEAD_SHA }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: npm install --ignore-scripts
+      - name: Execute batch
+        if: ${{ matrix.skip != true }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$HEAD_SHA"
+          node scripts/governance/uchirimo-selector-batch-runner.mjs
+      - name: Upload batch evidence
+        if: ${{ always() && matrix.skip != true }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact_identity }}
+          path: artifacts/uchirimo-v12-execution/
+          if-no-files-found: warn
+
+
+  execute-10:
+    needs: ["governance-authority", "plan-10"]
+    if: ${{ !cancelled() && needs.governance-authority.outputs.authorized == 'true' && needs.plan-10.result == 'success' }}
+    strategy:
+      fail-fast: false
+      max-parallel: 2
+      matrix: ${{ fromJSON(needs.plan-10.outputs.matrix) }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    env:
+      HEAD_SHA: ${{ inputs.controller_head }}
+      UCHIRIMO_SELECTOR_BATCH_ID: ${{ matrix.batch_id }}
+      UCHIRIMO_SELECTOR_BATCH_JSON: ${{ matrix.batch_json }}
+      UCHIRIMO_SELECTOR_CHILD_TIMEOUT_MS: ${{ matrix.child_timeout_ms }}
+      UCHIRIMO_SELECTOR_EXPECTED_SHARDS: 3956
+      UCHIRIMO_RESOLVER_CACHE_MAX: 4096
+      UCHIRIMO_SELECTOR_MAX_STATES: 2000000
+      UCHIRIMO_SELECTOR_MAX_TERMINALS: 2000000
+      UCHIRIMO_V12_EVIDENCE_ARTIFACT_IDENTITY: ${{ matrix.artifact_identity }}
+      UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-v12-execution
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.HEAD_SHA }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: npm install --ignore-scripts
+      - name: Execute batch
+        if: ${{ matrix.skip != true }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$HEAD_SHA"
+          node scripts/governance/uchirimo-selector-batch-runner.mjs
+      - name: Upload batch evidence
+        if: ${{ always() && matrix.skip != true }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact_identity }}
+          path: artifacts/uchirimo-v12-execution/
+          if-no-files-found: warn
+
+
+  execute-11:
+    needs: ["governance-authority", "plan-11"]
+    if: ${{ !cancelled() && needs.governance-authority.outputs.authorized == 'true' && needs.plan-11.result == 'success' }}
+    strategy:
+      fail-fast: false
+      max-parallel: 2
+      matrix: ${{ fromJSON(needs.plan-11.outputs.matrix) }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    env:
+      HEAD_SHA: ${{ inputs.controller_head }}
+      UCHIRIMO_SELECTOR_BATCH_ID: ${{ matrix.batch_id }}
+      UCHIRIMO_SELECTOR_BATCH_JSON: ${{ matrix.batch_json }}
+      UCHIRIMO_SELECTOR_CHILD_TIMEOUT_MS: ${{ matrix.child_timeout_ms }}
+      UCHIRIMO_SELECTOR_EXPECTED_SHARDS: 3956
+      UCHIRIMO_RESOLVER_CACHE_MAX: 4096
+      UCHIRIMO_SELECTOR_MAX_STATES: 2000000
+      UCHIRIMO_SELECTOR_MAX_TERMINALS: 2000000
+      UCHIRIMO_V12_EVIDENCE_ARTIFACT_IDENTITY: ${{ matrix.artifact_identity }}
+      UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-v12-execution
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.HEAD_SHA }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: npm install --ignore-scripts
+      - name: Execute batch
+        if: ${{ matrix.skip != true }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$HEAD_SHA"
+          node scripts/governance/uchirimo-selector-batch-runner.mjs
+      - name: Upload batch evidence
+        if: ${{ always() && matrix.skip != true }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact_identity }}
+          path: artifacts/uchirimo-v12-execution/
+          if-no-files-found: warn
+
+
+  execute-12:
+    needs: ["governance-authority", "plan-12"]
+    if: ${{ !cancelled() && needs.governance-authority.outputs.authorized == 'true' && needs.plan-12.result == 'success' }}
+    strategy:
+      fail-fast: false
+      max-parallel: 2
+      matrix: ${{ fromJSON(needs.plan-12.outputs.matrix) }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    env:
+      HEAD_SHA: ${{ inputs.controller_head }}
+      UCHIRIMO_SELECTOR_BATCH_ID: ${{ matrix.batch_id }}
+      UCHIRIMO_SELECTOR_BATCH_JSON: ${{ matrix.batch_json }}
+      UCHIRIMO_SELECTOR_CHILD_TIMEOUT_MS: ${{ matrix.child_timeout_ms }}
+      UCHIRIMO_SELECTOR_EXPECTED_SHARDS: 3956
+      UCHIRIMO_RESOLVER_CACHE_MAX: 4096
+      UCHIRIMO_SELECTOR_MAX_STATES: 2000000
+      UCHIRIMO_SELECTOR_MAX_TERMINALS: 2000000
+      UCHIRIMO_V12_EVIDENCE_ARTIFACT_IDENTITY: ${{ matrix.artifact_identity }}
+      UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-v12-execution
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.HEAD_SHA }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: npm install --ignore-scripts
+      - name: Execute batch
+        if: ${{ matrix.skip != true }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$HEAD_SHA"
+          node scripts/governance/uchirimo-selector-batch-runner.mjs
+      - name: Upload batch evidence
+        if: ${{ always() && matrix.skip != true }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact_identity }}
+          path: artifacts/uchirimo-v12-execution/
+          if-no-files-found: warn
+
+
+  execute-13:
+    needs: ["governance-authority", "plan-13"]
+    if: ${{ !cancelled() && needs.governance-authority.outputs.authorized == 'true' && needs.plan-13.result == 'success' }}
+    strategy:
+      fail-fast: false
+      max-parallel: 2
+      matrix: ${{ fromJSON(needs.plan-13.outputs.matrix) }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    env:
+      HEAD_SHA: ${{ inputs.controller_head }}
+      UCHIRIMO_SELECTOR_BATCH_ID: ${{ matrix.batch_id }}
+      UCHIRIMO_SELECTOR_BATCH_JSON: ${{ matrix.batch_json }}
+      UCHIRIMO_SELECTOR_CHILD_TIMEOUT_MS: ${{ matrix.child_timeout_ms }}
+      UCHIRIMO_SELECTOR_EXPECTED_SHARDS: 3956
+      UCHIRIMO_RESOLVER_CACHE_MAX: 4096
+      UCHIRIMO_SELECTOR_MAX_STATES: 2000000
+      UCHIRIMO_SELECTOR_MAX_TERMINALS: 2000000
+      UCHIRIMO_V12_EVIDENCE_ARTIFACT_IDENTITY: ${{ matrix.artifact_identity }}
+      UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-v12-execution
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.HEAD_SHA }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: npm install --ignore-scripts
+      - name: Execute batch
+        if: ${{ matrix.skip != true }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$HEAD_SHA"
+          node scripts/governance/uchirimo-selector-batch-runner.mjs
+      - name: Upload batch evidence
+        if: ${{ always() && matrix.skip != true }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact_identity }}
+          path: artifacts/uchirimo-v12-execution/
+          if-no-files-found: warn
+
+
+  execute-14:
+    needs: ["governance-authority", "plan-14"]
+    if: ${{ !cancelled() && needs.governance-authority.outputs.authorized == 'true' && needs.plan-14.result == 'success' }}
+    strategy:
+      fail-fast: false
+      max-parallel: 2
+      matrix: ${{ fromJSON(needs.plan-14.outputs.matrix) }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    env:
+      HEAD_SHA: ${{ inputs.controller_head }}
+      UCHIRIMO_SELECTOR_BATCH_ID: ${{ matrix.batch_id }}
+      UCHIRIMO_SELECTOR_BATCH_JSON: ${{ matrix.batch_json }}
+      UCHIRIMO_SELECTOR_CHILD_TIMEOUT_MS: ${{ matrix.child_timeout_ms }}
+      UCHIRIMO_SELECTOR_EXPECTED_SHARDS: 3956
+      UCHIRIMO_RESOLVER_CACHE_MAX: 4096
+      UCHIRIMO_SELECTOR_MAX_STATES: 2000000
+      UCHIRIMO_SELECTOR_MAX_TERMINALS: 2000000
+      UCHIRIMO_V12_EVIDENCE_ARTIFACT_IDENTITY: ${{ matrix.artifact_identity }}
+      UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-v12-execution
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.HEAD_SHA }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: npm install --ignore-scripts
+      - name: Execute batch
+        if: ${{ matrix.skip != true }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$HEAD_SHA"
+          node scripts/governance/uchirimo-selector-batch-runner.mjs
+      - name: Upload batch evidence
+        if: ${{ always() && matrix.skip != true }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact_identity }}
+          path: artifacts/uchirimo-v12-execution/
+          if-no-files-found: warn
+
+
+  execute-15:
+    needs: ["governance-authority", "plan-15"]
+    if: ${{ !cancelled() && needs.governance-authority.outputs.authorized == 'true' && needs.plan-15.result == 'success' }}
+    strategy:
+      fail-fast: false
+      max-parallel: 2
+      matrix: ${{ fromJSON(needs.plan-15.outputs.matrix) }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    env:
+      HEAD_SHA: ${{ inputs.controller_head }}
+      UCHIRIMO_SELECTOR_BATCH_ID: ${{ matrix.batch_id }}
+      UCHIRIMO_SELECTOR_BATCH_JSON: ${{ matrix.batch_json }}
+      UCHIRIMO_SELECTOR_CHILD_TIMEOUT_MS: ${{ matrix.child_timeout_ms }}
+      UCHIRIMO_SELECTOR_EXPECTED_SHARDS: 3956
+      UCHIRIMO_RESOLVER_CACHE_MAX: 4096
+      UCHIRIMO_SELECTOR_MAX_STATES: 2000000
+      UCHIRIMO_SELECTOR_MAX_TERMINALS: 2000000
+      UCHIRIMO_V12_EVIDENCE_ARTIFACT_IDENTITY: ${{ matrix.artifact_identity }}
+      UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-v12-execution
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.HEAD_SHA }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: npm install --ignore-scripts
+      - name: Execute batch
+        if: ${{ matrix.skip != true }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$HEAD_SHA"
+          node scripts/governance/uchirimo-selector-batch-runner.mjs
+      - name: Upload batch evidence
+        if: ${{ always() && matrix.skip != true }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact_identity }}
+          path: artifacts/uchirimo-v12-execution/
+          if-no-files-found: warn
+
+  advance:
+    needs: [governance-authority, prepare, plan-0, plan-1, plan-2, plan-3, plan-4, plan-5, plan-6, plan-7, plan-8, plan-9, plan-10, plan-11, plan-12, plan-13, plan-14, plan-15, execute-0, execute-1, execute-2, execute-3, execute-4, execute-5, execute-6, execute-7, execute-8, execute-9, execute-10, execute-11, execute-12, execute-13, execute-14, execute-15]
+    if: ${{ always() && needs.governance-authority.outputs.authorized == 'true' && needs.prepare.result == 'success' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    outputs:
+      next_action: ${{ steps.state.outputs.next_action }}
+    env:
+      HEAD_SHA: ${{ inputs.controller_head }}
+      GEN: ${{ inputs.generation }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.HEAD_SHA }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: npm install --ignore-scripts
+      - uses: actions/download-artifact@v4
+        with:
+          name: uchirimo-v12-parent-plan-${{ env.HEAD_SHA }}-g${{ env.GEN }}
+          path: artifacts/uchirimo-v12-parent-plan
+      - uses: actions/download-artifact@v4
+        with:
+          name: uchirimo-v12-controller-input-${{ env.HEAD_SHA }}-g${{ env.GEN }}
+          path: artifacts/uchirimo-v12-controller-input
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: uchirimo-v12-plan-${{ env.HEAD_SHA }}-g${{ env.GEN }}-lane-*
+          path: artifacts/uchirimo-v12-plans
+          merge-multiple: false
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          pattern: uchirimo-v12-batch-*
+          path: artifacts/uchirimo-v12-execution
+          merge-multiple: false
+      - name: Advance deterministic state
+        env:
+          UCHIRIMO_V12_CONTROLLER_MODE: advance
+          UCHIRIMO_V12_GENERATION: ${{ inputs.generation }}
+          UCHIRIMO_V12_PARENT_PLAN: artifacts/uchirimo-v12-parent-plan/all-partitions.json
+          UCHIRIMO_V12_STATE: artifacts/uchirimo-v12-controller-input/controller-state.json
+          UCHIRIMO_V12_UNITS: artifacts/uchirimo-v12-controller-input/recovery-units.json
+          UCHIRIMO_V12_CERTIFICATES: artifacts/uchirimo-v12-controller-input/split-certificates.json
+          UCHIRIMO_V12_PARENT_STATUS: artifacts/uchirimo-v12-controller-input/parent-status.json
+          UCHIRIMO_V12_EXECUTION_INPUT: artifacts/uchirimo-v12-execution
+          UCHIRIMO_V12_PLAN_SUMMARY_INPUT: artifacts/uchirimo-v12-plans
+          UCHIRIMO_V12_CONTROLLER_OUT: artifacts/uchirimo-v12-controller-state
+        run: node scripts/governance/uchirimo-v11-recovery-controller-runner.mjs
+      - uses: actions/upload-artifact@v4
+        with:
+          name: uchirimo-v12-controller-state-${{ env.HEAD_SHA }}-g${{ env.GEN }}
+          path: artifacts/uchirimo-v12-controller-state/
+          if-no-files-found: error
+      - name: Stage controller state for secondary durable cache
+        shell: bash
+        run: |
+          rm -rf artifacts/uchirimo-v12-prior
+          cp -R artifacts/uchirimo-v12-controller-state artifacts/uchirimo-v12-prior
+      - name: Save controller state to secondary durable cache
+        uses: actions/cache/save@v4
+        with:
+          path: artifacts/uchirimo-v12-prior
+          key: uchirimo-v12-controller-state-${{ env.HEAD_SHA }}-g${{ env.GEN }}
+      # Publish a continuation decision only after its state has been saved.
+      - name: Read next action
+        id: state
+        run: |
+          node --input-type=module <<'NODE'
+          import {appendFileSync,readFileSync} from 'node:fs';
+          const state=JSON.parse(readFileSync('artifacts/uchirimo-v12-controller-state/controller-state.json','utf8'));
+          appendFileSync(process.env.GITHUB_OUTPUT,'next_action='+state.next_action+'\n');
+          console.log('UCHIRIMO_V12_NEXT_ACTION='+state.next_action);
+          NODE
+
+  dispatch-next:
+    needs: ["governance-authority", "advance"]
+    # Expected compute-timeout matrix failures are consumed by `advance` and
+    # converted into split/deferred work. Bypass GitHub's implicit success()
+    # guard so the saved controller decision can dispatch the next generation.
+    # A cancelled stale run must never dispatch a successor.
+    if: ${{ always() && !cancelled() && needs.governance-authority.outputs.authorized == 'true' && needs.advance.result == 'success' && needs.advance.outputs.next_action == 'DISPATCH_NEXT_GENERATION' }}
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+      contents: read
+    env:
+      GH_TOKEN: ${{ github.token }}
+      HEAD_BRANCH: ${{ github.event.pull_request.head.ref || github.ref_name }}
+      CURRENT_GEN: ${{ inputs.generation }}
+      SOURCE_RUN_ID: ${{ github.run_id }}
+    steps:
+      - name: Dispatch exactly one next Project Governance generation
+        shell: bash
+        run: |
+          set -euo pipefail
+          NEXT_GEN="$(node -e "const n=Number(process.env.CURRENT_GEN); if(!Number.isInteger(n)||n<0)process.exit(2); process.stdout.write(String(n+1));")"
+          gh api --method POST "repos/${GITHUB_REPOSITORY}/actions/workflows/project-governance-gate.yml/dispatches" \
+            -f ref="$HEAD_BRANCH" \
+            -f "inputs[uchirimo_v12_generation]=$NEXT_GEN" \
+            -f "inputs[uchirimo_v12_source_run_id]=$SOURCE_RUN_ID"
+          echo "UCHIRIMO_V12_NEXT_GENERATION_DISPATCHED=$NEXT_GEN source_run=$SOURCE_RUN_ID"
+
+  blocked:
+    needs: ["governance-authority", "advance"]
+    if: ${{ always() && !cancelled() && needs.governance-authority.outputs.authorized == 'true' && needs.advance.result == 'success' && needs.advance.outputs.next_action == 'BLOCKED' }}
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          echo "UCHIRIMO_V12_CONTROLLER=BLOCKED"
+          exit 1
+
+  finalize:
+    needs: ["governance-authority", "advance"]
+    if: ${{ always() && !cancelled() && needs.governance-authority.outputs.authorized == 'true' && needs.advance.result == 'success' && needs.advance.outputs.next_action == 'FINAL_AGGREGATE' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    permissions:
+      contents: read
+      actions: read
+    outputs:
+      complete: ${{ steps.done.outputs.complete }}
+      next_action: ${{ steps.done.outputs.next_action }}
+    env:
+      HEAD_SHA: ${{ inputs.controller_head }}
+      GEN: ${{ inputs.generation }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.HEAD_SHA }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: npm install --ignore-scripts
+      - uses: actions/download-artifact@v4
+        with:
+          name: uchirimo-v12-parent-plan-${{ env.HEAD_SHA }}-g${{ env.GEN }}
+          path: artifacts/uchirimo-v12-parent-plan
+      - uses: actions/download-artifact@v4
+        with:
+          name: uchirimo-v12-controller-state-${{ env.HEAD_SHA }}-g${{ env.GEN }}
+          path: artifacts/uchirimo-v12-controller-state
+      - name: Resolve generation-zero carry source
+        id: carry-source
+        shell: bash
+        run: |
+          node --input-type=module <<'NODE'
+          import {appendFileSync,readFileSync} from 'node:fs';
+          const parents=JSON.parse(readFileSync('artifacts/uchirimo-v12-controller-state/parent-status.json','utf8')).parents;
+          const row=Object.values(parents).find((item)=>item.status==='ROOT_PASS_CARRY_FORWARD');
+          if(!row){
+            appendFileSync(process.env.GITHUB_OUTPUT,'has_carry=false\n');
+            process.exit(0);
+          }
+          if(!row.current_carry_forward_run_id||!row.current_carry_forward_artifact_identity)throw new Error('UCHIRIMO_V12_CARRY_SOURCE_IDENTITY_MISSING');
+          appendFileSync(process.env.GITHUB_OUTPUT,'has_carry=true\n');
+          appendFileSync(process.env.GITHUB_OUTPUT,'run_id='+String(row.current_carry_forward_run_id)+'\n');
+          appendFileSync(process.env.GITHUB_OUTPUT,'artifact_identity='+String(row.current_carry_forward_artifact_identity)+'\n');
+          appendFileSync(process.env.GITHUB_OUTPUT,'artifact_id='+String(row.current_carry_forward_artifact_id??'')+'\n');
+          appendFileSync(process.env.GITHUB_OUTPUT,'artifact_digest='+String(row.current_carry_forward_artifact_digest??'')+'\n');
+          NODE
+      - name: Download generation-zero carry payload once
+        if: ${{ steps.carry-source.outputs.has_carry == 'true' }}
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ steps.carry-source.outputs.artifact_identity }}
+          path: artifacts/uchirimo-v12-carry-forward
+          run-id: ${{ steps.carry-source.outputs.run_id }}
+          github-token: ${{ github.token }}
+      - name: Verify carry artifact metadata
+        if: ${{ steps.carry-source.outputs.has_carry == 'true' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EXPECTED_ID: ${{ steps.carry-source.outputs.artifact_id }}
+          EXPECTED_DIGEST: ${{ steps.carry-source.outputs.artifact_digest }}
+          SOURCE_RUN_ID: ${{ steps.carry-source.outputs.run_id }}
+          SOURCE_NAME: ${{ steps.carry-source.outputs.artifact_identity }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          const headers={Authorization:'Bearer '+process.env.GH_TOKEN,Accept:'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'};
+          const base=(process.env.GITHUB_API_URL||'https://api.github.com')+'/repos/'+process.env.GITHUB_REPOSITORY+'/actions/runs/'+process.env.SOURCE_RUN_ID+'/artifacts';
+          const all=[];
+          for(let page=1;;page+=1){
+            const response=await fetch(base+'?per_page=100&page='+page,{headers});
+            if(!response.ok)throw new Error('UCHIRIMO_V12_CARRY_METADATA_HTTP_'+response.status);
+            const payload=await response.json();
+            const batch=payload.artifacts??[];
+            all.push(...batch);
+            if(batch.length<100||all.length>=Number(payload.total_count??all.length))break;
+          }
+          const rows=all.filter((row)=>String(row.name)===process.env.SOURCE_NAME&&!row.expired);
+          if(rows.length!==1)throw new Error('UCHIRIMO_V12_CARRY_METADATA_COUNT:'+rows.length);
+          const row=rows[0];
+          if(process.env.EXPECTED_ID&&String(row.id)!==process.env.EXPECTED_ID)throw new Error('UCHIRIMO_V12_CARRY_ARTIFACT_ID_MISMATCH');
+          const {normalizeArtifactDigest}=await import('./scripts/governance/uchirimo-controller-evidence-binding.mjs');
+          if(process.env.EXPECTED_DIGEST&&normalizeArtifactDigest(row.digest)!==normalizeArtifactDigest(process.env.EXPECTED_DIGEST))throw new Error('UCHIRIMO_V12_CARRY_ARTIFACT_DIGEST_MISMATCH');
+          console.log('UCHIRIMO_V12_CARRY_ARTIFACT_METADATA=PASS id='+row.id);
+          NODE
+      - name: Materialize canonical parent evidence
+        env:
+          UCHIRIMO_V12_PARENT_PLAN: artifacts/uchirimo-v12-parent-plan/all-partitions.json
+          UCHIRIMO_V12_STATE: artifacts/uchirimo-v12-controller-state/controller-state.json
+          UCHIRIMO_V12_UNITS: artifacts/uchirimo-v12-controller-state/recovery-units.json
+          UCHIRIMO_V12_PARENT_STATUS: artifacts/uchirimo-v12-controller-state/parent-status.json
+          UCHIRIMO_V12_CARRY_FORWARD_DIR: artifacts/uchirimo-v12-carry-forward
+          UCHIRIMO_V12_FINALIZED_OUT: artifacts/uchirimo-v12-finalized
+        run: node scripts/governance/uchirimo-v11-recovery-finalizer.mjs
+      - name: Aggregate canonical 3956 parents
+        env:
+          UCHIRIMO_SELECTOR_MODE: aggregate
+          UCHIRIMO_SELECTOR_SHARD_INPUT: artifacts/uchirimo-v12-finalized
+          UCHIRIMO_SELECTOR_EXPECTED_SHARDS: 3956
+          UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-full-selector-proof
+        run: node scripts/uchirimo-full-selector-proof.mjs
+      - name: Stamp proof dependency metadata
+        id: fingerprint
+        run: |
+          node scripts/governance/proof-dependency-fingerprint.mjs --mode fingerprint --family UCHIRIMO_SELECTOR --fingerprint-out artifacts/governance/uchirimo-selector-proof-fingerprint.json
+          node scripts/governance/proof-dependency-fingerprint.mjs --mode stamp --family UCHIRIMO_SELECTOR --artifact artifacts/uchirimo-full-selector-proof/report.json --metadata artifacts/uchirimo-full-selector-proof/source-metadata.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: uchirimo-selector-proof-aggregate-${{ env.HEAD_SHA }}
+          path: artifacts/uchirimo-full-selector-proof/
+          if-no-files-found: error
+      - name: Mark canonical selector complete
+        id: done
+        run: |
+          echo "complete=true" >> "$GITHUB_OUTPUT"
+          echo "next_action=COMPLETE" >> "$GITHUB_OUTPUT"
+          echo "UCHIRIMO_V12_SELECTOR=COMPLETE"

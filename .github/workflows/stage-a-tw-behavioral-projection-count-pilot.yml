@@ -1,0 +1,48 @@
+name: Stage A TW Behavioral Projection Count Pilot
+
+on:
+  workflow_call:
+    inputs:
+      controller_head:
+        required: true
+        type: string
+
+permissions:
+  issues: read
+  contents: read
+
+concurrency:
+  group: stage-a-tw-behavioral-projection-count-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  governance-authority:
+    uses: ./.github/workflows/governance-authorization.yml
+    with:
+      controller_head: ${{ inputs.controller_head }}
+      release: false
+
+  completed_gate:
+    needs: ["governance-authority"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && (true) }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Completed pilot evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo 'TW_BEHAVIORAL_PROJECTION_PILOT_ROUTE=CLOSED'
+          echo 'EVIDENCE_RUN=34920566065'
+          echo 'TARGET_WINDOW=SWT-LIX-TW-TATE-GREMON-TF'
+          echo 'EXACT_DISCRETE_TERMINAL_CONTEXT_COUNT=471104225282'
+          echo 'CUSTOM_PENDING_CONTEXT_COUNT=2'
+          echo 'MEMO_STATE_COUNT=1331'
+          echo 'RESOLVER_CALL_COUNT=2903'
+          echo 'PROJECTION_GROUP_AUDIT_COUNT=481'
+          echo 'PROJECTION_MEMBER_CHECK_COUNT=1452'
+          echo 'PROJECTION_MISMATCH_COUNT=0'
+          echo 'BLOCKER=NONE'
+          echo 'NEXT_ACTIVE_ROUTE=TW_25_WINDOW_BEHAVIORAL_PROJECTION_COUNT'
+          echo 'APP_INTEGRATION_READY=false'
+          echo 'RELEASE_INPUT_GATE=BLOCKED'

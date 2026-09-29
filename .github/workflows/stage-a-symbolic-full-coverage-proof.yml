@@ -1,0 +1,38 @@
+name: Stage A Symbolic Full Coverage Proof
+
+on:
+  workflow_call:
+    inputs:
+      controller_head:
+        required: true
+        type: string
+
+permissions:
+  issues: read
+  contents: read
+
+concurrency:
+  group: stage-a-symbolic-full-coverage-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  governance-authority:
+    uses: ./.github/workflows/governance-authorization.yml
+    with:
+      controller_head: ${{ inputs.controller_head }}
+      release: false
+
+  performance_gate:
+    needs: ["governance-authority"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && (true) }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Close superseded explicit traversal route
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo 'EXPLICIT_GOVERNING_TRAVERSAL_PATH=CLOSED'
+          echo 'REASON=105-window discovery already proved 80 non-TW windows exceed bounded explicit traversal; evaluate dependency-weighted exact counting before reopening a governing proof run.'
+          echo 'PROOF_MODEL_VERSION=RUNTIME_UI_SYMBOLIC_FULL_COVERAGE_V1'
+          echo 'APP_INTEGRATION_READY=false'
+          echo 'RELEASE_INPUT_GATE=BLOCKED'

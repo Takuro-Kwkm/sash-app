@@ -1,0 +1,41 @@
+name: Stage A Samos2H V6.2 17-Window Exact Expansion
+
+on:
+  workflow_call:
+    inputs:
+      controller_head:
+        required: true
+        type: string
+
+permissions:
+  issues: read
+  contents: read
+
+jobs:
+  governance-authority:
+    uses: ./.github/workflows/governance-authorization.yml
+    with:
+      controller_head: ${{ inputs.controller_head }}
+      release: false
+
+  closed-evidence-gate:
+    needs: ["governance-authority"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && (true) }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Preserve Samos2H V6.2 evidence and close same-condition retry
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo 'SAMOS2H_V6_2_17_WINDOW_ROUTE=CLOSED'
+          echo 'EVIDENCE_RUN=34946896060'
+          echo 'EVIDENCE_HEAD=beaeb0e57f17655338a49c655b4471e3c87c5a99'
+          echo 'SUMMARY_ARTIFACT_ID=10387890824'
+          echo 'VERIFIED_WINDOW_COUNT=17'
+          echo 'UNVERIFIED_WINDOW_COUNT=0'
+          echo 'TOTAL_EXACT_DISCRETE_TERMINAL_CONTEXT_COUNT=3867730371648'
+          echo 'TOTAL_CUSTOM_PENDING_CONTEXT_COUNT=31500480960'
+          echo 'RETRY_AUTHORIZED=false'
+          echo 'REOPEN_CONDITION=RUNTIME_ADAPTER_UI_RULE_OR_PROJECTION_MODEL_CHANGE'
+          echo 'APP_INTEGRATION_READY=false'
+          echo 'RELEASE_INPUT_GATE=BLOCKED'

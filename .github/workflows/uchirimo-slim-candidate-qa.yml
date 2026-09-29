@@ -1,0 +1,265 @@
+name: Uchirimo Slim Candidate QA
+on:
+  workflow_dispatch:
+jobs:
+  v12-checkpoint-inventory:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      actions: read
+      contents: read
+    env:
+      GITHUB_TOKEN: ${{ github.token }}
+      UCHIRIMO_V12_BASE_BRANCH: ${{ github.event.pull_request.base.ref }}
+      UCHIRIMO_V12_BASE_HEAD: ${{ github.event.pull_request.base.sha }}
+      UCHIRIMO_SELECTOR_MODE: plan-all
+      UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-slim/checkpoint-inventory-plan
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: node scripts/uchirimo-full-selector-proof.mjs
+      - run: node scripts/governance/uchirimo-slim-checkpoint-inventory.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: uchirimo-slim-v12-checkpoint-inventory
+          path: artifacts/uchirimo-slim/checkpoint-inventory.json
+  recurring-candidate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: echo '4a3518c3f5706aa4cff6ddcc10532edcade4f00f84a81ad63e3d74fa98d85930  data/uchirimo-slim/working-candidate.json' | sha256sum --check
+      - run: node scripts/governance/uchirimo-slim-recurring-qa.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: uchirimo-slim-candidate-recurring-qa
+          path: artifacts/uchirimo-slim/recurring-qa.json
+  migration-equivalence:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --test test/70-runtime-manifest-ew-integration.test.mjs test/70-runtime-manifest-tw-integration.test.mjs test/71-runtime-ui-tw-gate.test.mjs test/72-runtime-manifest-uchirimo-integration.test.mjs test/73-runtime-ui-uchirimo-gate.test.mjs test/74-new-construction-ui-v16.test.mjs test/81-ew-v12-formal-glazing-semantic.test.mjs test/82-ew-custom-glass-validation.test.mjs test/82-uchirimo-slim-canonical.test.mjs test/83-uchirimo-glass-rule-model.test.mjs test/84-uchirimo-factorized-selector.test.mjs
+      - run: cp data/uchirimo-slim/runtime-support.json /tmp/uchirimo-runtime-support-before.json
+      - run: node scripts/governance/uchirimo-slim-runtime-support.mjs
+      - run: cmp /tmp/uchirimo-runtime-support-before.json data/uchirimo-slim/runtime-support.json
+      - run: node scripts/governance/uchirimo-slim-normalize.mjs
+      - run: cmp data/uchirimo-slim/working-candidate.json artifacts/uchirimo-slim/uchirimo-slim-working-candidate.json
+  selector-migration-differential:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      UCHIRIMO_SELECTOR_MODE: plan-all
+      UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-slim/differential-plan
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: node scripts/uchirimo-full-selector-proof.mjs
+      - run: node scripts/governance/uchirimo-slim-selector-differential.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: uchirimo-slim-selector-migration-differential
+          path: artifacts/uchirimo-slim/selector-differential.json
+  dimension-boundary-differential:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: node scripts/governance/uchirimo-slim-dimension-differential.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: uchirimo-slim-dimension-boundary-differential
+          path: artifacts/uchirimo-slim/dimension-boundary-differential.json
+  candidate-browser-preview:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: UCHIRIMO_SLIM_PREVIEW_INPUT=data/uchirimo-slim/working-candidate.json node scripts/build-uchirimo-runtime-review-preview.mjs artifacts/uchirimo-slim/review-preview/index.html
+      - run: |
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+      - run: node test/browser/uchirimo-slim-preview-browser-qa.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: uchirimo-slim-candidate-browser-preview
+          path: |
+            artifacts/uchirimo-slim/review-preview/index.html
+            artifacts/uchirimo-slim/browser-qa/
+  parent-migration-differential:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      UCHIRIMO_SELECTOR_MODE: plan-all
+      UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-slim/parent-differential-plan
+      UCHIRIMO_SLIM_PARENT_SHARD: 3186
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: node scripts/uchirimo-full-selector-proof.mjs
+      - run: node scripts/governance/uchirimo-slim-parent-differential.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: uchirimo-slim-parent-migration-differential
+          path: artifacts/uchirimo-slim/parent-differential/
+  representative-http-e2e:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: node scripts/governance/uchirimo-slim-http-e2e.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: uchirimo-slim-http-e2e
+          path: artifacts/uchirimo-slim/http-e2e.json
+  residual-heavy-sample:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: node scripts/governance/uchirimo-slim-residual-replay.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: uchirimo-slim-residual-heavy-3795
+          path: artifacts/uchirimo-slim/residual-heavy-3795/
+  residual-heavy-3796:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    env:
+      UCHIRIMO_SLIM_RESIDUAL_FIXTURE: test/fixtures/uchirimo-slim/heavy-shard-3796.json
+      UCHIRIMO_SLIM_TIMEOUT_MS: '600000'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: node scripts/governance/uchirimo-slim-residual-replay.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: uchirimo-slim-residual-heavy-3796
+          path: artifacts/uchirimo-slim/residual-heavy-3796/
+  residual-3797-checkpoint-sample:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    env:
+      UCHIRIMO_SLIM_RESIDUAL_FIXTURE: test/fixtures/uchirimo-slim/residual-3797-g9.json
+      UCHIRIMO_SLIM_TIMEOUT_MS: '600000'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: node scripts/governance/uchirimo-slim-residual-replay.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: uchirimo-slim-residual-3797-checkpoint-sample
+          path: artifacts/uchirimo-slim/residual-heavy-3797/
+
+  factorized-recurring-selector:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: node scripts/governance/uchirimo-slim-factorized-qa.mjs
+      - run: node scripts/governance/uchirimo-slim-factorized-samples.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: uchirimo-slim-factorized-selector
+          path: |
+            artifacts/uchirimo-slim/factorized-qa/
+            artifacts/uchirimo-slim/factorized-samples.json
+  factorized-plan-migration:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      UCHIRIMO_SELECTOR_MODE: plan-all
+      UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-slim/factorized-old-plan
+      UCHIRIMO_FACTORIZED_PLAN: artifacts/uchirimo-slim/factorized-old-plan/all-partitions.json
+      UCHIRIMO_FACTORIZED_OUT: artifacts/uchirimo-slim/factorized-legacy-plan
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: node scripts/uchirimo-full-selector-proof.mjs
+      - run: node scripts/governance/uchirimo-slim-factorized-qa.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: uchirimo-slim-factorized-plan-migration
+          path: |
+            artifacts/uchirimo-slim/factorized-legacy-plan/
+            artifacts/uchirimo-slim/factorized-old-plan/all-partitions.json
+  factorized-coverage-consolidation:
+    if: github.event_name == 'pull_request'
+    needs: [factorized-recurring-selector, factorized-plan-migration]
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - uses: actions/download-artifact@v4
+        with:
+          name: uchirimo-slim-factorized-selector
+          path: artifacts/uchirimo-slim/
+      - uses: actions/download-artifact@v4
+        with:
+          name: uchirimo-slim-factorized-plan-migration
+          path: artifacts/uchirimo-slim/
+      - run: node scripts/governance/uchirimo-slim-factorized-coverage.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: uchirimo-slim-factorized-coverage
+          path: artifacts/uchirimo-slim/factorized-coverage.json

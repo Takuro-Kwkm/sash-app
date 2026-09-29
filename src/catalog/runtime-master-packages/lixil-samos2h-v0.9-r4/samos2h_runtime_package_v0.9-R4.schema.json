@@ -1,0 +1,175 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "samos2h_runtime_package_v0.9-R4.schema.json",
+  "title": "LIXIL サーモスⅡH Runtime JSON Package v0.9-R4",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "runtime_package_schema_version",
+    "role",
+    "manufacturer",
+    "series",
+    "display_series",
+    "package_version",
+    "product_id",
+    "source_of_truth",
+    "authoring_binding",
+    "runtime_projection",
+    "product_module",
+    "parity_digests",
+    "qa_summary"
+  ],
+  "properties": {
+    "runtime_package_schema_version": {
+      "const": "1.0"
+    },
+    "role": {
+      "const": "RUNTIME_JSON_PACKAGE"
+    },
+    "manufacturer": {
+      "const": "LIXIL"
+    },
+    "series": {
+      "const": "サーモスⅡH"
+    },
+    "display_series": {
+      "const": "サーモスⅡ-H"
+    },
+    "package_version": {
+      "const": "v0.9-R4"
+    },
+    "product_id": {
+      "const": "SER-LIX-SAMOS2H"
+    },
+    "source_of_truth": {
+      "const": "AUTHORING_MASTER"
+    },
+    "authoring_binding": {
+      "type": "object",
+      "required": [
+        "file_id",
+        "file_name",
+        "package_version",
+        "revision_id",
+        "modified_time",
+        "size_bytes",
+        "sha256",
+        "folder_role"
+      ],
+      "properties": {
+        "file_id": {
+          "const": "1_p-xJ9Mv7FecoR8Me0E43f3LEEkpVQSP"
+        },
+        "file_name": {
+          "const": "LIXIL_サーモスⅡH_AUTHORING_MASTER_v0.9-R4.xlsx"
+        },
+        "package_version": {
+          "const": "v0.9-R4"
+        },
+        "revision_id": {
+          "const": "0B1PsqngSohhlKzEwUmhVQ3poa3I3bkdyTUt6MG00UmU5L1ZnPQ"
+        },
+        "modified_time": {
+          "type": "string",
+          "minLength": 1
+        },
+        "size_bytes": {
+          "const": 661883
+        },
+        "sha256": {
+          "const": "eeb285689a1e8a78469d5d13d1e015083d7f2e71ab274427dcfd413e33adc8e4"
+        },
+        "folder_role": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "runtime_projection": {
+      "type": "object"
+    },
+    "product_module": {
+      "type": "object",
+      "required": [
+        "product",
+        "specificationDefinitions",
+        "allowedValues",
+        "standardSizeRecords",
+        "requiredFieldRules",
+        "ruleSets",
+        "dependencies",
+        "evidence",
+        "goldenTests",
+        "stats"
+      ],
+      "properties": {
+        "product": {
+          "type": "object"
+        },
+        "specificationDefinitions": {
+          "type": "array",
+          "minItems": 1
+        },
+        "allowedValues": {
+          "type": "array",
+          "minItems": 1
+        },
+        "standardSizeRecords": {
+          "type": "array",
+          "minItems": 2309,
+          "maxItems": 2309
+        },
+        "requiredFieldRules": {
+          "type": "array",
+          "minItems": 1
+        },
+        "ruleSets": {
+          "type": "array",
+          "minItems": 1
+        },
+        "dependencies": {
+          "type": "array",
+          "minItems": 1
+        },
+        "evidence": {
+          "type": "array",
+          "minItems": 12
+        },
+        "goldenTests": {
+          "type": "array",
+          "minItems": 44,
+          "maxItems": 44
+        },
+        "stats": {
+          "type": "object"
+        }
+      }
+    },
+    "parity_digests": {
+      "type": "object"
+    },
+    "qa_summary": {
+      "type": "object",
+      "required": [
+        "status",
+        "checks",
+        "record_counts",
+        "safety"
+      ],
+      "properties": {
+        "status": {
+          "const": "PASS"
+        },
+        "checks": {
+          "type": "object"
+        },
+        "record_counts": {
+          "type": "object"
+        },
+        "safety": {
+          "type": "object"
+        }
+      }
+    }
+  }
+}

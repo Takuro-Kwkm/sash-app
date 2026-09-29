@@ -1,0 +1,102 @@
+{
+  "schema_version": "product-master-runtime-manifest/2.0",
+  "manufacturer": "YKK AP",
+  "series": "APW431",
+  "registry_key": "YKK AP::APW431",
+  "package_version": "v1.1",
+  "verification_revision": "20260918-GLASS-R2",
+  "release_status": "FORMAL_PASS",
+  "formalized_at": "2026-09-18T01:15:00Z",
+  "governing_spec": "PRODUCT_MASTER_PACKAGE_STORAGE_COMPLETION_GATE_v2.0",
+  "canonical_folder_id": "16SO5cC-ix7F_vwGLqAyrr62zwDRjXBCB",
+  "working_folder_id": "12-asRdFp58GmOSJqYXhVPfg4PKQ9afOq",
+  "old_folder_id": "1VElfoWdIXoXS1wK6qQ6NolSObKHkm6nq",
+  "artifacts": [
+    {
+      "role": "AUTHORING",
+      "file_name": "YKKAP_APW431_AUTHORING_MASTER_v1.1_GLASS_RECOVERY_FORMAL.xlsx",
+      "file_id": "1a74bRArw_dfwmOyZ0HYPfmfGyAMvT1I6",
+      "bytes": 218560,
+      "sha256": "e9b252e490969222c1a89579fbd13592892fbad7fb230bd21a6436f088fd71d3"
+    },
+    {
+      "role": "CORE",
+      "file_name": "apw431_core_v1.1.json",
+      "file_id": "1dkRyTKPr5PXtnzTGkGvEiTeAGmY4fNXs",
+      "bytes": 60431,
+      "sha256": "9fff49082f4a0b1026a86baf24fc2cfd112d0d03193124f5f96777b05b694a4a"
+    },
+    {
+      "role": "DIMENSIONS",
+      "file_name": "apw431_dimensions_v1.1.json",
+      "file_id": "1YhB0n_NZ6Ulolo_-hAiz0in7j1Jwuxun",
+      "bytes": 1685250,
+      "sha256": "386e9abccdc4ba15c1dcfd5bf722cf48f45f4b277e2c6f87182cb215acc8b171"
+    },
+    {
+      "role": "OPTIONS",
+      "file_name": "apw431_options_v1.1.json",
+      "file_id": "1aPuMxKKl88Q-E64Gixi0_HFpk1YF5_p5",
+      "bytes": 127228,
+      "sha256": "b14489ab792536b74b0d013020f8a4b9366d5b2b6e501b94f0ac274f8e95bcf9"
+    },
+    {
+      "role": "QA_REPORT",
+      "file_name": "YKKAP_APW431_GLASS_RUNTIME_QA_v1.1.md",
+      "file_id": "1NxVtO5R6LgpJeV_5ht1eNLkzr05cCsvm",
+      "bytes": 2170,
+      "sha256": "74dbfa54b66e1e5a3bd6858eb216e85f40c42c68680bd4fe99041bd76bcdd960"
+    }
+  ],
+  "support": [
+    {
+      "role": "QA_CASES",
+      "file_name": "APW431_GLASS_FULL_COVERAGE_QA_CASES_v1.1.jsonl",
+      "file_id": "1coqioAB_3QvS7tpXW5vxC_RMhpkXu-0e",
+      "sha256": "926e2ab1df28c7fdde69d8d7dcab80b2e7f508f9787ddd59fe6354417105aa2f"
+    },
+    {
+      "role": "QA_SUMMARY",
+      "file_name": "APW431_GLASS_FULL_COVERAGE_QA_SUMMARY_v1.1.json",
+      "file_id": "1GCKWlMxk1i41_nEx4Isg52eDqVZfG0UP",
+      "sha256": "0bf0d545c47bd9dcfd465a424eaa8342036592daade9be831b47462f66f0a9f3"
+    },
+    {
+      "role": "OFFICIAL_CATALOG",
+      "file_name": "202607_YKKAP_APW430_商品カタログ.pdf",
+      "file_id": "1j9PtW8yoKBZ4Nodm58wU3QtOCvxlEja9"
+    },
+    {
+      "role": "OFFICIAL_BUSINESS_MANUAL",
+      "file_name": "202608_YKKAP_APW430_業務用資料集.pdf",
+      "file_id": "1GZRfXqRKZKti-LreyNgW9-wegAF-HzaK"
+    }
+  ],
+  "counts": {
+    "base_window_count": 6,
+    "standard_size_count": 332,
+    "custom_rule_count": 29,
+    "glass_type_count": 4,
+    "glass_field_contract_count": 15,
+    "glass_dependency_contract_count": 13,
+    "qa_case_count": 20322,
+    "qa_pass": 20322,
+    "qa_fail": 0,
+    "unverified_qa_case_count": 0
+  },
+  "change_scope": {
+    "glass_related": true,
+    "non_glass_changed_files": 0,
+    "global_flow_changed": false,
+    "ui_changed": false
+  },
+  "gates": {
+    "official_source_scope": "PASS",
+    "content": "PASS",
+    "dependency": "PASS",
+    "qa": "PASS",
+    "artifact": "PASS",
+    "storage": "PASS",
+    "registry": "PASS"
+  }
+}

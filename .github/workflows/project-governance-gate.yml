@@ -1,0 +1,119 @@
+name: Project Governance Gate
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: project-governance-${{ github.event.pull_request.head.ref || github.ref_name }}-${{ github.event.pull_request.head.sha || github.sha }}
+  cancel-in-progress: true
+
+jobs:
+  governance:
+    name: governance
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      UCHIRIMO_QA_REGISTERED_RUNTIME: '1'
+      UCHIRIMO_FACTORIZED_OUT: artifacts/project-governance-slim/factorized
+    steps:
+      - name: Checkout exact HEAD
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.HEAD_SHA }}
+          fetch-depth: 0
+
+      - name: Setup Node 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Validate seven-series current baseline
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import {readFileSync} from 'node:fs';
+
+          const scope=JSON.parse(readFileSync('data/seven-series-slim-release-scope.json','utf8'));
+          const expected=[
+            'TW','EW','サーモスⅡ-H','サーモスL','APW430','APW431','ウチリモ 内窓'
+          ];
+          const actual=scope.products.map(x=>x.series);
+          if(scope.schema!=='SEVEN_SERIES_SLIM_RELEASE_SCOPE_V1')throw new Error('SLIM_SCOPE_SCHEMA_INVALID');
+          if(scope.scope!=='SALES_ESTIMATE_REQUEST')throw new Error('BUSINESS_SCOPE_INVALID');
+          if(scope.v12?.status!=='STOPPED')throw new Error('LEGACY_V12_NOT_STOPPED');
+          if(scope.v12?.not_counted_as_new_failures!==true)throw new Error('LEGACY_V12_DENOMINATOR_NOT_ISOLATED');
+          if(actual.length!==7||expected.some(x=>!actual.includes(x)))throw new Error('SEVEN_SERIES_SCOPE_MISMATCH');
+          if(actual.includes('インプラス'))throw new Error('RELEASE_SCOPE_CONTAINS_UNREQUESTED_INPLUS');
+          if(scope.other_six_product_packages?.startsWith('UNCHANGED_FROM_')!==true)throw new Error('UNCHANGED_PACKAGE_BOUNDARY_MISSING');
+
+          const uch=scope.products.find(x=>x.series==='ウチリモ 内窓');
+          if(uch?.runtimeRevision!=='SLIM-V2-20260929')throw new Error('UCHIRIMO_SLIM_RUNTIME_NOT_CURRENT');
+
+          console.log('BASELINE_RESET=PASS');
+          console.log('LEGACY_QA_MODE=ARCHIVED_REFERENCE_ONLY');
+          console.log('CURRENT_QA_DENOMINATOR=SLIM_CANONICAL_ONLY');
+          console.log('SEVEN_SERIES_SCOPE=PASS');
+          NODE
+
+      - name: Install dependencies
+        run: npm install --ignore-scripts
+
+      - name: Core application regression
+        run: npm run lint && npm run typecheck && npm test
+
+      - name: Uchirimo Slim discrete dependency QA
+        run: node scripts/governance/uchirimo-slim-factorized-qa.mjs
+
+      - name: Uchirimo Slim dimension boundary QA
+        run: node scripts/governance/uchirimo-slim-dimension-differential.mjs
+
+      - name: Build seven-series review model
+        run: node scripts/build-seven-series-review.mjs
+
+      - name: Assert no legacy QA carry-forward
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import {readFileSync} from 'node:fs';
+          const report=JSON.parse(readFileSync('artifacts/project-governance-slim/factorized/summary.json','utf8'));
+          if(report.status!=='PASS')throw new Error('SLIM_FACTORIZED_QA_NOT_PASS');
+          if(report.prior_pass_imported!==0)throw new Error('LEGACY_PASS_IMPORTED');
+          if(report.legacy_materialized_rows_read!==0)throw new Error('LEGACY_ROWS_READ');
+          if(report.parents_completed!==report.expected_parents)throw new Error('SLIM_ROOT_COVERAGE_INCOMPLETE');
+          console.log('LEGACY_CARRY_FORWARD=0');
+          console.log('SLIM_ROOT_COVERAGE=PASS');
+          NODE
+
+      - name: Governance summary
+        shell: bash
+        run: |
+          {
+            echo '## Seven-series Slim governance'
+            echo ''
+            echo '- Baseline: Slim Canonical / registered Runtime'
+            echo '- Legacy V10/V11/V12 QA: archived reference only'
+            echo '- Release scope: TW / EW / サーモスⅡ-H / サーモスL / APW430 / APW431 / ウチリモ'
+            echo '- Automatic BOM / price / order: out of scope'
+            echo '- Manufacturer-confirmation paths remain confirmation paths'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload current-baseline QA evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: seven-series-slim-governance-${{ env.HEAD_SHA }}
+          path: |
+            artifacts/project-governance-slim/
+            artifacts/uchirimo-slim/dimension-boundary-differential.json
+            artifacts/seven-series-review/
+          if-no-files-found: warn

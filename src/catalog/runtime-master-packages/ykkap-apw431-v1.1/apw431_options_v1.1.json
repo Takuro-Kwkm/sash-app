@@ -1,0 +1,3789 @@
+{
+  "schema_version": "product-master-runtime-options/1.0",
+  "package_version": "v1.1",
+  "verification_revision": "20260918-GLASS-R2",
+  "product_id": "SER-YKK-APW431",
+  "exterior_colors": [
+    {
+      "color_id": "E431-01",
+      "正式色名称": "ホワイト",
+      "色コード": "YW",
+      "状態": "現行",
+      "適用": "基本色",
+      "根拠ページ": "P.40",
+      "根拠URL": "https://drive.google.com/file/d/1j9PtW8yoKBZ4Nodm58wU3QtOCvxlEja9/view?usp=drivesdk",
+      "_source": {
+        "sheet": "07_外観色",
+        "row": 4
+      }
+    },
+    {
+      "color_id": "E431-02",
+      "正式色名称": "プラチナステン",
+      "色コード": "JO",
+      "状態": "現行",
+      "適用": "基本色",
+      "根拠ページ": "P.40",
+      "根拠URL": "https://drive.google.com/file/d/1j9PtW8yoKBZ4Nodm58wU3QtOCvxlEja9/view?usp=drivesdk",
+      "_source": {
+        "sheet": "07_外観色",
+        "row": 5
+      }
+    },
+    {
+      "color_id": "E431-03",
+      "正式色名称": "ブラウン",
+      "色コード": "J5",
+      "状態": "現行",
+      "適用": "基本色",
+      "根拠ページ": "P.40",
+      "根拠URL": "https://drive.google.com/file/d/1j9PtW8yoKBZ4Nodm58wU3QtOCvxlEja9/view?usp=drivesdk",
+      "_source": {
+        "sheet": "07_外観色",
+        "row": 6
+      }
+    },
+    {
+      "color_id": "E431-04",
+      "正式色名称": "ブラック",
+      "色コード": "3A",
+      "状態": "現行",
+      "適用": "基本色",
+      "根拠ページ": "P.40",
+      "根拠URL": "https://drive.google.com/file/d/1j9PtW8yoKBZ4Nodm58wU3QtOCvxlEja9/view?usp=drivesdk",
+      "_source": {
+        "sheet": "07_外観色",
+        "row": 7
+      }
+    }
+  ],
+  "interior_colors": [
+    {
+      "color_id": "I431-01",
+      "正式色名称": "ホワイト",
+      "色コード": "YW",
+      "状態": "現行",
+      "適用": "基本",
+      "根拠ページ": "P.40",
+      "根拠URL": "https://drive.google.com/file/d/1j9PtW8yoKBZ4Nodm58wU3QtOCvxlEja9/view?usp=drivesdk",
+      "_source": {
+        "sheet": "08_内観色",
+        "row": 4
+      }
+    },
+    {
+      "color_id": "I431-02",
+      "正式色名称": "ブラック",
+      "色コード": "OC",
+      "状態": "現行",
+      "適用": "外観ブラック時のみ",
+      "根拠ページ": "P.40",
+      "根拠URL": "https://drive.google.com/file/d/1j9PtW8yoKBZ4Nodm58wU3QtOCvxlEja9/view?usp=drivesdk",
+      "備考": "大開口スライディングは内外観ブラック設定なし。",
+      "_source": {
+        "sheet": "08_内観色",
+        "row": 5
+      }
+    }
+  ],
+  "color_combinations": [
+    {
+      "combo_id": "C431-01",
+      "外観色": "ホワイト",
+      "外観コード": "YW",
+      "内観色": "ホワイト",
+      "内観コード": "YW",
+      "状態": "現行",
+      "適用窓種": "全対象窓種",
+      "除外窓種": "-",
+      "根拠ページ": "P.40",
+      "根拠URL": "https://drive.google.com/file/d/1j9PtW8yoKBZ4Nodm58wU3QtOCvxlEja9/view?usp=drivesdk",
+      "_source": {
+        "sheet": "09_色組合せ",
+        "row": 4
+      }
+    },
+    {
+      "combo_id": "C431-02",
+      "外観色": "プラチナステン",
+      "外観コード": "JO",
+      "内観色": "ホワイト",
+      "内観コード": "YW",
+      "状態": "現行",
+      "適用窓種": "全対象窓種",
+      "除外窓種": "-",
+      "根拠ページ": "P.40",
+      "根拠URL": "https://drive.google.com/file/d/1j9PtW8yoKBZ4Nodm58wU3QtOCvxlEja9/view?usp=drivesdk",
+      "_source": {
+        "sheet": "09_色組合せ",
+        "row": 5
+      }
+    },
+    {
+      "combo_id": "C431-03",
+      "外観色": "ブラウン",
+      "外観コード": "J5",
+      "内観色": "ホワイト",
+      "内観コード": "YW",
+      "状態": "現行",
+      "適用窓種": "全対象窓種",
+      "除外窓種": "-",
+      "根拠ページ": "P.40",
+      "根拠URL": "https://drive.google.com/file/d/1j9PtW8yoKBZ4Nodm58wU3QtOCvxlEja9/view?usp=drivesdk",
+      "_source": {
+        "sheet": "09_色組合せ",
+        "row": 6
+      }
+    },
+    {
+      "combo_id": "C431-04",
+      "外観色": "ブラック",
+      "外観コード": "3A",
+      "内観色": "ホワイト",
+      "内観コード": "YW",
+      "状態": "現行",
+      "適用窓種": "全対象窓種",
+      "除外窓種": "-",
+      "根拠ページ": "P.40",
+      "根拠URL": "https://drive.google.com/file/d/1j9PtW8yoKBZ4Nodm58wU3QtOCvxlEja9/view?usp=drivesdk",
+      "_source": {
+        "sheet": "09_色組合せ",
+        "row": 7
+      }
+    },
+    {
+      "combo_id": "C431-05",
+      "外観色": "ブラック",
+      "外観コード": "3A",
+      "内観色": "ブラック",
+      "内観コード": "OC",
+      "状態": "現行",
+      "適用窓種": "APW431対象窓種（条件付）",
+      "除外窓種": "大開口スライディング",
+      "根拠ページ": "P.40",
+      "根拠URL": "https://drive.google.com/file/d/1j9PtW8yoKBZ4Nodm58wU3QtOCvxlEja9/view?usp=drivesdk",
+      "備考": "大開口スライディングに内外観ブラック色の設定なし。",
+      "_source": {
+        "sheet": "09_色組合せ",
+        "row": 8
+      }
+    }
+  ],
+  "screen_master": [
+    {
+      "screen_id": "SC431-001",
+      "対象window_id": "W431-001",
+      "窓種": "引違いテラス戸",
+      "網戸記号": "□",
+      "正式網戸形式": "スライド網戸 XMH",
+      "ネット種類": "ブラックネット／クリアネット",
+      "中桟": "中桟なし標準／中桟付選択可",
+      "サイズ適用": "05_規格サイズの全該当行",
+      "状態": "確定",
+      "根拠ページ": "網戸P.8/P.24、商品P.82-83",
+      "根拠URL": "https://drive.google.com/file/d/1dUvviOvGXJ0w_MiOvuQuMzlMxgxCyEEP/view?usp=drivesdk",
+      "注意事項": "-",
+      "備考": "YKK APスライド網戸は標準で中桟なし。",
+      "_source": {
+        "sheet": "10_網戸",
+        "row": 4
+      }
+    },
+    {
+      "screen_id": "SC431-002",
+      "対象window_id": "W431-002",
+      "窓種": "シャッター付引違いテラス戸",
+      "網戸記号": "□",
+      "正式網戸形式": "スライド網戸 XMH",
+      "ネット種類": "ブラックネット／クリアネット",
+      "中桟": "中桟なし標準／中桟付選択可",
+      "サイズ適用": "05_規格サイズの全該当行",
+      "状態": "確定",
+      "根拠ページ": "網戸P.8/P.24、商品P.93",
+      "根拠URL": "https://drive.google.com/file/d/1dUvviOvGXJ0w_MiOvuQuMzlMxgxCyEEP/view?usp=drivesdk",
+      "注意事項": "-",
+      "_source": {
+        "sheet": "10_網戸",
+        "row": 5
+      }
+    },
+    {
+      "screen_id": "SC431-003",
+      "対象window_id": "W431-003",
+      "窓種": "大開口スライディング",
+      "網戸記号": "□",
+      "正式網戸形式": "スライド網戸 XMH",
+      "ネット種類": "ブラックネット／クリアネット",
+      "中桟": "中桟なし標準／中桟付選択可",
+      "サイズ適用": "05_規格サイズの全該当行",
+      "状態": "確定",
+      "根拠ページ": "商品P.102-103、網戸P.8/P.24",
+      "根拠URL": "https://drive.google.com/file/d/1dUvviOvGXJ0w_MiOvuQuMzlMxgxCyEEP/view?usp=drivesdk",
+      "注意事項": "-",
+      "_source": {
+        "sheet": "10_網戸",
+        "row": 6
+      }
+    },
+    {
+      "screen_id": "SC431-004",
+      "対象window_id": "W431-004",
+      "窓種": "開き窓テラス",
+      "網戸記号": "□",
+      "正式網戸形式": "上げ下げロール網戸 XMW／横引きロール網戸 XMY",
+      "ネット種類": "ブラックネット／クリアネット",
+      "中桟": "対象外",
+      "サイズ適用": "記号□のサイズ",
+      "状態": "確定",
+      "根拠ページ": "商品P.106、網戸P.62",
+      "根拠URL": "https://drive.google.com/file/d/1dUvviOvGXJ0w_MiOvuQuMzlMxgxCyEEP/view?usp=drivesdk",
+      "注意事項": "-",
+      "_source": {
+        "sheet": "10_網戸",
+        "row": 7
+      }
+    },
+    {
+      "screen_id": "SC431-005",
+      "対象window_id": "W431-004",
+      "窓種": "開き窓テラス",
+      "網戸記号": "■※",
+      "正式網戸形式": "横引きロール網戸 XMY",
+      "ネット種類": "ブラックネット／クリアネット",
+      "中桟": "対象外",
+      "サイズ適用": "記号■※のサイズ",
+      "状態": "確定",
+      "根拠ページ": "商品P.106、網戸P.62",
+      "根拠URL": "https://drive.google.com/file/d/1dUvviOvGXJ0w_MiOvuQuMzlMxgxCyEEP/view?usp=drivesdk",
+      "注意事項": "横引きロール網戸を付ける場合、有効開口750mm未満",
+      "_source": {
+        "sheet": "10_網戸",
+        "row": 8
+      }
+    },
+    {
+      "screen_id": "SC431-006",
+      "対象window_id": "W431-005",
+      "窓種": "テラスドア",
+      "網戸記号": "□",
+      "正式網戸形式": "上げ下げロール網戸 XMW／横引きロール網戸 XMY",
+      "ネット種類": "ブラックネット／クリアネット",
+      "中桟": "対象外",
+      "サイズ適用": "記号□のサイズ",
+      "状態": "確定",
+      "根拠ページ": "商品P.110、網戸P.62",
+      "根拠URL": "https://drive.google.com/file/d/1dUvviOvGXJ0w_MiOvuQuMzlMxgxCyEEP/view?usp=drivesdk",
+      "注意事項": "-",
+      "_source": {
+        "sheet": "10_網戸",
+        "row": 9
+      }
+    },
+    {
+      "screen_id": "SC431-007",
+      "対象window_id": "W431-005",
+      "窓種": "テラスドア",
+      "網戸記号": "■※",
+      "正式網戸形式": "横引きロール網戸 XMY",
+      "ネット種類": "ブラックネット／クリアネット",
+      "中桟": "対象外",
+      "サイズ適用": "記号■※のサイズ",
+      "状態": "確定",
+      "根拠ページ": "商品P.110、網戸P.62",
+      "根拠URL": "https://drive.google.com/file/d/1dUvviOvGXJ0w_MiOvuQuMzlMxgxCyEEP/view?usp=drivesdk",
+      "注意事項": "横引きロール網戸を付ける場合、有効開口750mm未満",
+      "_source": {
+        "sheet": "10_網戸",
+        "row": 10
+      }
+    },
+    {
+      "screen_id": "SC431-008",
+      "対象window_id": "W431-006",
+      "窓種": "勝手口ドア",
+      "網戸記号": "□",
+      "正式網戸形式": "上げ下げロール網戸 XMW／横引きロール網戸 XMY",
+      "ネット種類": "ブラックネット／クリアネット",
+      "中桟": "対象外",
+      "サイズ適用": "記号□のサイズ",
+      "状態": "確定",
+      "根拠ページ": "商品P.114、網戸P.62",
+      "根拠URL": "https://drive.google.com/file/d/1dUvviOvGXJ0w_MiOvuQuMzlMxgxCyEEP/view?usp=drivesdk",
+      "注意事項": "-",
+      "_source": {
+        "sheet": "10_網戸",
+        "row": 11
+      }
+    },
+    {
+      "screen_id": "SC431-009",
+      "対象window_id": "W431-006",
+      "窓種": "勝手口ドア",
+      "網戸記号": "■※",
+      "正式網戸形式": "横引きロール網戸 XMY",
+      "ネット種類": "ブラックネット／クリアネット",
+      "中桟": "対象外",
+      "サイズ適用": "記号■※のサイズ",
+      "状態": "確定",
+      "根拠ページ": "商品P.114、網戸P.62",
+      "根拠URL": "https://drive.google.com/file/d/1dUvviOvGXJ0w_MiOvuQuMzlMxgxCyEEP/view?usp=drivesdk",
+      "注意事項": "横引きロール網戸を付ける場合、有効開口750mm未満",
+      "_source": {
+        "sheet": "10_網戸",
+        "row": 12
+      }
+    }
+  ],
+  "glass_master": [
+    {
+      "glass_id": "GL431-001",
+      "大分類": "トリプルガラス",
+      "Low-E構成": "ダブルLow-E",
+      "日射区分": "日射取得型",
+      "ガラス色": "クリア",
+      "中空層": "アルゴンガス",
+      "スペーサー": "樹脂",
+      "状態": "現行",
+      "適用": "窓種・サイズ別可否あり",
+      "根拠ページ": "P.42",
+      "根拠URL": "https://drive.google.com/file/d/1j9PtW8yoKBZ4Nodm58wU3QtOCvxlEja9/view?usp=drivesdk",
+      "_source": {
+        "sheet": "11_ガラス",
+        "row": 4
+      }
+    },
+    {
+      "glass_id": "GL431-002",
+      "大分類": "トリプルガラス",
+      "Low-E構成": "ダブルLow-E",
+      "日射区分": "日射遮蔽型",
+      "ガラス色": "ブルー",
+      "中空層": "アルゴンガス",
+      "スペーサー": "樹脂",
+      "状態": "現行",
+      "適用": "窓種・サイズ別可否あり",
+      "根拠ページ": "P.42",
+      "根拠URL": "https://drive.google.com/file/d/1j9PtW8yoKBZ4Nodm58wU3QtOCvxlEja9/view?usp=drivesdk",
+      "_source": {
+        "sheet": "11_ガラス",
+        "row": 5
+      }
+    },
+    {
+      "glass_id": "GL431-003",
+      "大分類": "トリプルガラス",
+      "Low-E構成": "ダブルLow-E",
+      "日射区分": "日射遮蔽型",
+      "ガラス色": "ブロンズ",
+      "中空層": "アルゴンガス",
+      "スペーサー": "樹脂",
+      "状態": "現行",
+      "適用": "窓種・サイズ別可否あり",
+      "根拠ページ": "P.42",
+      "根拠URL": "https://drive.google.com/file/d/1j9PtW8yoKBZ4Nodm58wU3QtOCvxlEja9/view?usp=drivesdk",
+      "_source": {
+        "sheet": "11_ガラス",
+        "row": 6
+      }
+    },
+    {
+      "glass_id": "GL431-004",
+      "大分類": "トリプルガラス",
+      "Low-E構成": "ダブルLow-E",
+      "日射区分": "日射遮蔽型",
+      "ガラス色": "ニュートラル",
+      "中空層": "アルゴンガス",
+      "スペーサー": "樹脂",
+      "状態": "現行",
+      "適用": "窓種・サイズ別可否あり",
+      "根拠ページ": "P.42",
+      "根拠URL": "https://drive.google.com/file/d/1j9PtW8yoKBZ4Nodm58wU3QtOCvxlEja9/view?usp=drivesdk",
+      "_source": {
+        "sheet": "11_ガラス",
+        "row": 7
+      }
+    }
+  ],
+  "glass_details": [
+    {
+      "detail_id": "GD431-001",
+      "詳細分類": "面材",
+      "選択肢/値": "透明",
+      "適用ガラス": "GL431-001～004",
+      "状態": "現行",
+      "根拠ページ": "P.42",
+      "根拠URL": "https://drive.google.com/file/d/1j9PtW8yoKBZ4Nodm58wU3QtOCvxlEja9/view?usp=drivesdk",
+      "備考": "ガラス厚・サイズ別可否あり",
+      "_source": {
+        "sheet": "12_ガラス詳細",
+        "row": 4
+      }
+    },
+    {
+      "detail_id": "GD431-002",
+      "詳細分類": "面材",
+      "選択肢/値": "型",
+      "適用ガラス": "GL431-001～004",
+      "状態": "条件付",
+      "根拠ページ": "P.42",
+      "根拠URL": "https://drive.google.com/file/d/1j9PtW8yoKBZ4Nodm58wU3QtOCvxlEja9/view?usp=drivesdk",
+      "備考": "窓種・サイズ別可否あり",
+      "_source": {
+        "sheet": "12_ガラス詳細",
+        "row": 5
+      }
+    },
+    {
+      "detail_id": "GD431-003",
+      "詳細分類": "面材",
+      "選択肢/値": "すり",
+      "適用ガラス": "GL431-001～004",
+      "状態": "条件付",
+      "根拠ページ": "P.42",
+      "根拠URL": "https://drive.google.com/file/d/1j9PtW8yoKBZ4Nodm58wU3QtOCvxlEja9/view?usp=drivesdk",
+      "備考": "窓種・サイズ別可否あり",
+      "_source": {
+        "sheet": "12_ガラス詳細",
+        "row": 6
+      }
+    },
+    {
+      "detail_id": "GD431-004",
+      "詳細分類": "中空層",
+      "選択肢/値": "アルゴンガス",
+      "適用ガラス": "GL431-001～004",
+      "状態": "標準体系",
+      "根拠ページ": "P.42",
+      "根拠URL": "https://drive.google.com/file/d/1j9PtW8yoKBZ4Nodm58wU3QtOCvxlEja9/view?usp=drivesdk",
+      "_source": {
+        "sheet": "12_ガラス詳細",
+        "row": 7
+      }
+    },
+    {
+      "detail_id": "GD431-005",
+      "詳細分類": "スペーサー",
+      "選択肢/値": "樹脂スペーサー",
+      "適用ガラス": "GL431-001～004",
+      "状態": "標準体系",
+      "根拠ページ": "P.42",
+      "根拠URL": "https://drive.google.com/file/d/1j9PtW8yoKBZ4Nodm58wU3QtOCvxlEja9/view?usp=drivesdk",
+      "_source": {
+        "sheet": "12_ガラス詳細",
+        "row": 8
+      }
+    },
+    {
+      "detail_id": "GD431-006",
+      "詳細分類": "追加機能",
+      "選択肢/値": "安全合わせガラス",
+      "適用ガラス": "GL431-001～004",
+      "状態": "条件付",
+      "根拠ページ": "P.42/P.128",
+      "根拠URL": "https://drive.google.com/file/d/1j9PtW8yoKBZ4Nodm58wU3QtOCvxlEja9/view?usp=drivesdk",
+      "備考": "構成・サイズ別可否あり",
+      "_source": {
+        "sheet": "12_ガラス詳細",
+        "row": 9
+      }
+    },
+    {
+      "detail_id": "GD431-007",
+      "詳細分類": "追加機能",
+      "選択肢/値": "防災安全合わせガラス",
+      "適用ガラス": "GL431-001～004",
+      "状態": "条件付",
+      "根拠ページ": "P.42/P.128",
+      "根拠URL": "https://drive.google.com/file/d/1j9PtW8yoKBZ4Nodm58wU3QtOCvxlEja9/view?usp=drivesdk",
+      "備考": "構成・サイズ別可否あり",
+      "_source": {
+        "sheet": "12_ガラス詳細",
+        "row": 10
+      }
+    }
+  ],
+  "other_options": [
+    {
+      "option_id": "OP431-001",
+      "対象window_id": "対象窓種",
+      "オプション分類": "外部部材",
+      "表示名": "下枠カバー（アルミ製）",
+      "状態": "窓種別設定",
+      "選択タイミング": "商品確定後",
+      "根拠ページ": "商品カタログ",
+      "根拠URL": "https://drive.google.com/file/d/1j9PtW8yoKBZ4Nodm58wU3QtOCvxlEja9/view?usp=drivesdk",
+      "備考": "外観色ホワイトには下枠カバー設定なし。施工後の取付不可。",
+      "_source": {
+        "sheet": "13_その他OP",
+        "row": 4
+      }
+    },
+    {
+      "option_id": "OP431-002",
+      "対象window_id": "対象窓種",
+      "オプション分類": "外部部材",
+      "表示名": "水切材",
+      "状態": "窓種別設定",
+      "選択タイミング": "商品確定後",
+      "根拠ページ": "商品カタログ",
+      "根拠URL": "https://drive.google.com/file/d/1j9PtW8yoKBZ4Nodm58wU3QtOCvxlEja9/view?usp=drivesdk",
+      "備考": "対応商品・色は商品別制約。",
+      "_source": {
+        "sheet": "13_その他OP",
+        "row": 5
+      }
+    },
+    {
+      "option_id": "OP431-003",
+      "対象window_id": "対象窓種",
+      "オプション分類": "窓まわり商品",
+      "表示名": "アウターシェード",
+      "状態": "関連商品",
+      "選択タイミング": "見積条件確定後",
+      "根拠ページ": "商品カタログ",
+      "根拠URL": "https://drive.google.com/file/d/1j9PtW8yoKBZ4Nodm58wU3QtOCvxlEja9/view?usp=drivesdk",
+      "備考": "サッシ本体商品コードを変えない関連商品として別管理推奨。",
+      "_source": {
+        "sheet": "13_その他OP",
+        "row": 6
+      }
+    }
+  ],
+  "evidence": [
+    {
+      "evidence_id": "EV431-001",
+      "資料種別": "共通仕様",
+      "資料名称": "サッシ商品マスター共通仕様書_v0.1",
+      "発行年月": "-",
+      "確認日": "2026-08-27",
+      "対象情報": "データ階層・防火分離・入力順・Evidence原則",
+      "主要ページ": "全体",
+      "URL": "https://docs.google.com/document/d/1MfixkbV1cZ__DtBknEKsix_nnrXQqjc-LZtXUHwJv_A/edit?usp=drivesdk",
+      "状態": "確認済",
+      "_source": {
+        "sheet": "14_Evidence",
+        "row": 4
+      }
+    },
+    {
+      "evidence_id": "EV431-002",
+      "資料種別": "商品カタログ",
+      "資料名称": "YKK AP APW 430 商品カタログ",
+      "発行年月": "2026-07",
+      "確認日": "2026-08-27",
+      "対象情報": "窓種・色・ガラス・商品特長",
+      "主要ページ": "P.38/P.40/P.42/P.80/P.84/P.100/P.104/P.108/P.112",
+      "URL": "https://drive.google.com/file/d/1j9PtW8yoKBZ4Nodm58wU3QtOCvxlEja9/view?usp=drivesdk",
+      "状態": "確認済",
+      "備考": "Drive内正本",
+      "_source": {
+        "sheet": "14_Evidence",
+        "row": 5
+      }
+    },
+    {
+      "evidence_id": "EV431-003",
+      "資料種別": "業務用資料",
+      "資料名称": "YKK AP APW 430 業務用（製作範囲・納まり図）",
+      "発行年月": "2026-08",
+      "確認日": "2026-08-27",
+      "対象情報": "製作範囲・納まり図・ガラス仕様",
+      "主要ページ": "P.6/P.7/P.9/P.11/P.12/P.13/P.138",
+      "URL": "https://drive.google.com/file/d/1GZRfXqRKZKti-LreyNgW9-wegAF-HzaK/view?usp=drivesdk",
+      "状態": "確認済",
+      "備考": "Drive内正本",
+      "_source": {
+        "sheet": "14_Evidence",
+        "row": 6
+      }
+    },
+    {
+      "evidence_id": "EV431-004",
+      "資料種別": "網戸カタログ",
+      "資料名称": "YKK AP 網戸シリーズ",
+      "発行年月": "2026-05",
+      "確認日": "2026-08-27",
+      "対象情報": "網戸形式・ネット仕様・サッシ対応",
+      "主要ページ": "P.3/P.4/P.62",
+      "URL": "https://drive.google.com/file/d/1dUvviOvGXJ0w_MiOvuQuMzlMxgxCyEEP/view?usp=drivesdk",
+      "状態": "確認済",
+      "備考": "Drive内正本",
+      "_source": {
+        "sheet": "14_Evidence",
+        "row": 7
+      }
+    },
+    {
+      "evidence_id": "EV431-005",
+      "資料種別": "メーカー公式Web",
+      "資料名称": "APW 430 窓種ラインアップ",
+      "発行年月": "現行",
+      "確認日": "2026-08-27",
+      "対象情報": "APW431窓種ラインアップ補完",
+      "主要ページ": "-",
+      "URL": "https://www.ykkap.co.jp/consumer/products/window/apw430/lineup",
+      "状態": "参照",
+      "_source": {
+        "sheet": "14_Evidence",
+        "row": 8
+      }
+    },
+    {
+      "evidence_id": "EV431-006",
+      "資料種別": "メーカー公式Web",
+      "資料名称": "APW 430/431 価格表データ",
+      "発行年月": "2026-08",
+      "確認日": "2026-08-27",
+      "対象情報": "工法・操作補助・シャッター・腰パネル等",
+      "主要ページ": "-",
+      "URL": "https://webcatalog.ykkap.co.jp/webcatalog/data/data_info/window/htdocs/",
+      "状態": "参照",
+      "備考": "規格サイズ完全展開時に再確認",
+      "_source": {
+        "sheet": "14_Evidence",
+        "row": 9
+      }
+    },
+    {
+      "evidence_id": "EV431-007",
+      "資料種別": "価格表Web",
+      "資料名称": "APW430 価格表",
+      "発行年月": "2026-08",
+      "確認日": "2026-08-27",
+      "対象情報": "シャッター商品体系・オプション",
+      "主要ページ": "商品体系",
+      "URL": "https://webcatalog.ykkap.co.jp/iportal/CatalogDetail.do?catalogID=13184240000&designID=pro&method=initial_screen&volumeID=YKKAPDC1",
+      "状態": "確認済",
+      "備考": "カタログコード XAAAA-H26-075K1",
+      "_source": {
+        "sheet": "14_Evidence",
+        "row": 10
+      }
+    },
+    {
+      "evidence_id": "EV431-008",
+      "資料種別": "商品カタログ",
+      "資料名称": "APW430 商品カタログ 規格サイズ表",
+      "発行年月": "2026-07",
+      "確認日": "2026-08-27",
+      "対象情報": "APW431全規格サイズ・ガラス記号・網戸記号",
+      "主要ページ": "P.82/P.83/P.93/P.102/P.103/P.106/P.110/P.114",
+      "URL": "https://drive.google.com/file/d/1j9PtW8yoKBZ4Nodm58wU3QtOCvxlEja9/view?usp=drivesdk",
+      "状態": "確認済",
+      "備考": "1呼称1行へ展開",
+      "_source": {
+        "sheet": "14_Evidence",
+        "row": 11
+      }
+    },
+    {
+      "evidence_id": "EV431-009",
+      "資料種別": "業務用資料",
+      "資料名称": "APW430 業務用（製作範囲・納まり図）",
+      "発行年月": "2026-08",
+      "確認日": "2026-08-27",
+      "対象情報": "次段階のサイズオーダー製作範囲",
+      "主要ページ": "P.6-P.13",
+      "URL": "https://drive.google.com/file/d/1GZRfXqRKZKti-LreyNgW9-wegAF-HzaK/view?usp=drivesdk",
+      "状態": "確認済",
+      "備考": "v0.3で数値ルール化予定",
+      "_source": {
+        "sheet": "14_Evidence",
+        "row": 12
+      }
+    },
+    {
+      "evidence_id": "EV431-010",
+      "資料種別": "業務用資料",
+      "資料名称": "APW430/431 製作範囲 数値ルール",
+      "発行年月": "2026-08",
+      "確認日": "2026-08-27",
+      "対象情報": "自由寸法W/H、H-W関係式、ガラス重量・寸法式、操作部品位置",
+      "主要ページ": "P.6-P.13",
+      "URL": "https://drive.google.com/file/d/1GZRfXqRKZKti-LreyNgW9-wegAF-HzaK/view?usp=drivesdk",
+      "状態": "確認済",
+      "備考": "v0.3で数値化",
+      "_source": {
+        "sheet": "14_Evidence",
+        "row": 13
+      }
+    },
+    {
+      "evidence_id": "EV431-011",
+      "資料種別": "業務用資料",
+      "資料名称": "ガラス品種別 耐風圧許容面積/製作可能寸法",
+      "発行年月": "2026-08",
+      "確認日": "2026-08-27",
+      "対象情報": "S-1/S-2/S-3許容面積、ガラス最小/最大寸法",
+      "主要ページ": "P.141",
+      "URL": "https://drive.google.com/file/d/1GZRfXqRKZKti-LreyNgW9-wegAF-HzaK/view?usp=drivesdk",
+      "状態": "確認済",
+      "備考": "全31記号を登録",
+      "_source": {
+        "sheet": "14_Evidence",
+        "row": 14
+      }
+    },
+    {
+      "evidence_id": "EV431-012",
+      "資料種別": "業務用資料",
+      "資料名称": "APW431 シャッター付引違いテラス戸 製作範囲",
+      "発行年月": "2026-08",
+      "確認日": "2026-08-27",
+      "対象情報": "シャッター種類限定・表1ガラス・重量ガラス",
+      "主要ページ": "P.9-P.10",
+      "URL": "https://drive.google.com/file/d/1GZRfXqRKZKti-LreyNgW9-wegAF-HzaK/view?usp=drivesdk",
+      "状態": "確認済",
+      "備考": "v0.4特殊条件化",
+      "_source": {
+        "sheet": "14_Evidence",
+        "row": 15
+      }
+    },
+    {
+      "evidence_id": "EV431-013",
+      "資料種別": "業務用資料",
+      "資料名称": "APW431 引違いテラス戸 製作範囲",
+      "発行年月": "2026-08",
+      "確認日": "2026-08-27",
+      "対象情報": "標準/重量ガラス・操作部品位置・表1ガラス",
+      "主要ページ": "P.6-P.7",
+      "URL": "https://drive.google.com/file/d/1GZRfXqRKZKti-LreyNgW9-wegAF-HzaK/view?usp=drivesdk",
+      "状態": "確認済",
+      "備考": "v0.4重量ガラス化",
+      "_source": {
+        "sheet": "14_Evidence",
+        "row": 16
+      }
+    },
+    {
+      "evidence_id": "EV431-014",
+      "資料種別": "業務用資料",
+      "資料名称": "ガラス品種別 耐風圧許容面積/製作可能寸法",
+      "発行年月": "2026-08",
+      "確認日": "2026-08-27",
+      "対象情報": "YKKAPガラス記号と安全/防災安全合わせ構成",
+      "主要ページ": "P.141",
+      "URL": "https://drive.google.com/file/d/1GZRfXqRKZKti-LreyNgW9-wegAF-HzaK/view?usp=drivesdk",
+      "状態": "確認済",
+      "備考": "表1コード対応確認",
+      "_source": {
+        "sheet": "14_Evidence",
+        "row": 17
+      }
+    },
+    {
+      "evidence_id": "EV431-015",
+      "資料種別": "業務用資料",
+      "資料名称": "APW431 シャッター付引違いテラス戸 5種類製作範囲",
+      "発行年月": "2026-08",
+      "確認日": "2026-08-27",
+      "対象情報": "2枚建の明示Wアンカー、4枚建範囲",
+      "主要ページ": "P.9-P.10",
+      "URL": "https://drive.google.com/file/d/1GZRfXqRKZKti-LreyNgW9-wegAF-HzaK/view?usp=drivesdk",
+      "状態": "確認済",
+      "備考": "v0.5候補フィルタ化",
+      "_source": {
+        "sheet": "14_Evidence",
+        "row": 18
+      }
+    },
+    {
+      "evidence_id": "EV431-016",
+      "資料種別": "商品カタログ",
+      "資料名称": "APW431 シャッター商品体系",
+      "発行年月": "2026-07",
+      "確認日": "2026-08-27",
+      "対象情報": "5種類＋JEM-A SKU",
+      "主要ページ": "P.84/P.93",
+      "URL": "https://drive.google.com/file/d/1j9PtW8yoKBZ4Nodm58wU3QtOCvxlEja9/view?usp=drivesdk",
+      "状態": "確認済",
+      "備考": "UIではJEM-Aをサブオプション化",
+      "_source": {
+        "sheet": "14_Evidence",
+        "row": 19
+      }
+    },
+    {
+      "evidence_id": "EV431-017",
+      "資料種別": "統合実装",
+      "資料名称": "APW431 規格/自由寸法統合ロジック",
+      "発行年月": "2026-08",
+      "確認日": "2026-08-27",
+      "対象情報": "332規格＋自由寸法ルール＋候補絞込",
+      "主要ページ": "v0.5内部",
+      "URL": "-",
+      "状態": "確認済",
+      "備考": "アプリ実装用キーを追加",
+      "_source": {
+        "sheet": "14_Evidence",
+        "row": 20
+      }
+    },
+    {
+      "evidence_id": "EV431-018",
+      "資料種別": "統合正本",
+      "資料名称": "サッシ商品マスター_v0.1（APW430正本）",
+      "発行年月": "現行",
+      "確認日": "2026-08-27",
+      "対象情報": "APW430シリーズID・25窓種/718規格・色・網戸・入力フロー",
+      "主要ページ": "00_README/01/02/07/09A",
+      "URL": "https://docs.google.com/spreadsheets/d/1ordbcPQS7XhptLMjRON2oxmdsPhs-aY-Wm7quPHvM9U/edit?usp=drivesdk",
+      "状態": "確認済",
+      "備考": "APW431との最終整合QAに使用",
+      "_source": {
+        "sheet": "14_Evidence",
+        "row": 21
+      }
+    },
+    {
+      "evidence_id": "EV431-019",
+      "資料種別": "共通仕様",
+      "資料名称": "サッシ商品マスター共通仕様書_v0.1",
+      "発行年月": "現行",
+      "確認日": "2026-08-27",
+      "対象情報": "基本階層・防火・網戸順・ガラス・Evidence・UI・条件判定層",
+      "主要ページ": "全体",
+      "URL": "https://docs.google.com/document/d/1MfixkbV1cZ__DtBknEKsix_nnrXQqjc-LZtXUHwJv_A/edit?usp=drivesdk",
+      "状態": "確認済",
+      "備考": "v1.0最終QA",
+      "_source": {
+        "sheet": "14_Evidence",
+        "row": 22
+      }
+    },
+    {
+      "evidence_id": "EV431-020",
+      "資料種別": "内部QA",
+      "資料名称": "APW431 APW430整合QA",
+      "発行年月": "v1.0",
+      "確認日": "2026-08-27",
+      "対象情報": "series_id・色・網戸・入力順・規格分離",
+      "主要ページ": "30_APW430整合QA",
+      "URL": "-",
+      "状態": "PASS",
+      "備考": "12/12",
+      "_source": {
+        "sheet": "14_Evidence",
+        "row": 23
+      }
+    },
+    {
+      "evidence_id": "EV431-021",
+      "資料種別": "内部QA",
+      "資料名称": "APW431 共通仕様最終QA",
+      "発行年月": "v1.0",
+      "確認日": "2026-08-27",
+      "対象情報": "共通仕様書必須ルール",
+      "主要ページ": "31_共通仕様最終QA",
+      "URL": "-",
+      "状態": "PASS",
+      "備考": "18/18",
+      "_source": {
+        "sheet": "14_Evidence",
+        "row": 24
+      }
+    }
+  ],
+  "glass_applicability_rules": [
+    {
+      "glass_rule_id": "GR431-SLIDE",
+      "適用窓種": "引違いテラス戸／シャッター付引違いテラス戸",
+      "記号": "◎",
+      "トリプル透明": "可",
+      "トリプル型": "可",
+      "防災安全透明": "可",
+      "防災安全型": "可",
+      "安全透明": "可",
+      "安全型": "可",
+      "可否要約": "トリプル透明／トリプル型／防災安全透明／防災安全型／安全透明／安全型",
+      "根拠ページ": "商品カタログ P.83",
+      "根拠URL": "https://drive.google.com/file/d/1j9PtW8yoKBZ4Nodm58wU3QtOCvxlEja9/view?usp=drivesdk",
+      "備考": "引違い系専用凡例",
+      "_source": {
+        "sheet": "16_ガラス可否ルール",
+        "row": 4
+      }
+    },
+    {
+      "glass_rule_id": "GR431-SLIDE",
+      "適用窓種": "引違いテラス戸／シャッター付引違いテラス戸",
+      "記号": "●",
+      "トリプル透明": "可",
+      "トリプル型": "可",
+      "防災安全透明": "可",
+      "防災安全型": "可",
+      "安全透明": "不可",
+      "安全型": "不可",
+      "可否要約": "トリプル透明／トリプル型／防災安全透明／防災安全型",
+      "根拠ページ": "商品カタログ P.83",
+      "根拠URL": "https://drive.google.com/file/d/1j9PtW8yoKBZ4Nodm58wU3QtOCvxlEja9/view?usp=drivesdk",
+      "備考": "引違い系専用凡例",
+      "_source": {
+        "sheet": "16_ガラス可否ルール",
+        "row": 5
+      }
+    },
+    {
+      "glass_rule_id": "GR431-SLIDE",
+      "適用窓種": "引違いテラス戸／シャッター付引違いテラス戸",
+      "記号": "〇",
+      "トリプル透明": "可",
+      "トリプル型": "可",
+      "防災安全透明": "可",
+      "防災安全型": "不可",
+      "安全透明": "可",
+      "安全型": "可",
+      "可否要約": "トリプル透明／トリプル型／防災安全透明／安全透明／安全型",
+      "根拠ページ": "商品カタログ P.83",
+      "根拠URL": "https://drive.google.com/file/d/1j9PtW8yoKBZ4Nodm58wU3QtOCvxlEja9/view?usp=drivesdk",
+      "備考": "引違い系専用凡例",
+      "_source": {
+        "sheet": "16_ガラス可否ルール",
+        "row": 6
+      }
+    },
+    {
+      "glass_rule_id": "GR431-SLIDE",
+      "適用窓種": "引違いテラス戸／シャッター付引違いテラス戸",
+      "記号": "▽",
+      "トリプル透明": "可",
+      "トリプル型": "可",
+      "防災安全透明": "可",
+      "防災安全型": "不可",
+      "安全透明": "可",
+      "安全型": "不可",
+      "可否要約": "トリプル透明／トリプル型／防災安全透明／安全透明",
+      "根拠ページ": "商品カタログ P.83",
+      "根拠URL": "https://drive.google.com/file/d/1j9PtW8yoKBZ4Nodm58wU3QtOCvxlEja9/view?usp=drivesdk",
+      "備考": "引違い系専用凡例",
+      "_source": {
+        "sheet": "16_ガラス可否ルール",
+        "row": 7
+      }
+    },
+    {
+      "glass_rule_id": "GR431-SLIDE",
+      "適用窓種": "引違いテラス戸／シャッター付引違いテラス戸",
+      "記号": "△",
+      "トリプル透明": "可",
+      "トリプル型": "可",
+      "防災安全透明": "可",
+      "防災安全型": "不可",
+      "安全透明": "不可",
+      "安全型": "不可",
+      "可否要約": "トリプル透明／トリプル型／防災安全透明",
+      "根拠ページ": "商品カタログ P.83",
+      "根拠URL": "https://drive.google.com/file/d/1j9PtW8yoKBZ4Nodm58wU3QtOCvxlEja9/view?usp=drivesdk",
+      "備考": "引違い系専用凡例",
+      "_source": {
+        "sheet": "16_ガラス可否ルール",
+        "row": 8
+      }
+    },
+    {
+      "glass_rule_id": "GR431-SLIDE",
+      "適用窓種": "引違いテラス戸／シャッター付引違いテラス戸",
+      "記号": "▲",
+      "トリプル透明": "可",
+      "トリプル型": "可",
+      "防災安全透明": "不可",
+      "防災安全型": "不可",
+      "安全透明": "不可",
+      "安全型": "不可",
+      "可否要約": "トリプル透明／トリプル型",
+      "根拠ページ": "商品カタログ P.83",
+      "根拠URL": "https://drive.google.com/file/d/1j9PtW8yoKBZ4Nodm58wU3QtOCvxlEja9/view?usp=drivesdk",
+      "備考": "引違い系専用凡例",
+      "_source": {
+        "sheet": "16_ガラス可否ルール",
+        "row": 9
+      }
+    },
+    {
+      "glass_rule_id": "GR431-LARGE",
+      "適用窓種": "大開口スライディング",
+      "記号": "◎",
+      "トリプル透明": "可",
+      "トリプル型": "可",
+      "防災安全透明": "可",
+      "防災安全型": "可",
+      "安全透明": "可",
+      "安全型": "可",
+      "可否要約": "トリプル透明／トリプル型／防災安全透明／防災安全型／安全透明／安全型",
+      "根拠ページ": "商品カタログ P.102",
+      "根拠URL": "https://drive.google.com/file/d/1j9PtW8yoKBZ4Nodm58wU3QtOCvxlEja9/view?usp=drivesdk",
+      "備考": "大開口専用凡例",
+      "_source": {
+        "sheet": "16_ガラス可否ルール",
+        "row": 10
+      }
+    },
+    {
+      "glass_rule_id": "GR431-LARGE",
+      "適用窓種": "大開口スライディング",
+      "記号": "〇",
+      "トリプル透明": "可",
+      "トリプル型": "可",
+      "防災安全透明": "可",
+      "防災安全型": "不可",
+      "安全透明": "可",
+      "安全型": "可",
+      "可否要約": "トリプル透明／トリプル型／防災安全透明／安全透明／安全型",
+      "根拠ページ": "商品カタログ P.102",
+      "根拠URL": "https://drive.google.com/file/d/1j9PtW8yoKBZ4Nodm58wU3QtOCvxlEja9/view?usp=drivesdk",
+      "備考": "大開口専用凡例",
+      "_source": {
+        "sheet": "16_ガラス可否ルール",
+        "row": 11
+      }
+    },
+    {
+      "glass_rule_id": "GR431-LARGE",
+      "適用窓種": "大開口スライディング",
+      "記号": "△",
+      "トリプル透明": "可",
+      "トリプル型": "可",
+      "防災安全透明": "可",
+      "防災安全型": "不可",
+      "安全透明": "可",
+      "安全型": "不可",
+      "可否要約": "トリプル透明／トリプル型／防災安全透明／安全透明",
+      "根拠ページ": "商品カタログ P.102",
+      "根拠URL": "https://drive.google.com/file/d/1j9PtW8yoKBZ4Nodm58wU3QtOCvxlEja9/view?usp=drivesdk",
+      "備考": "大開口専用凡例",
+      "_source": {
+        "sheet": "16_ガラス可否ルール",
+        "row": 12
+      }
+    },
+    {
+      "glass_rule_id": "GR431-LARGE",
+      "適用窓種": "大開口スライディング",
+      "記号": "▲",
+      "トリプル透明": "可",
+      "トリプル型": "可",
+      "防災安全透明": "不可",
+      "防災安全型": "不可",
+      "安全透明": "可",
+      "安全型": "不可",
+      "可否要約": "トリプル透明／トリプル型／安全透明",
+      "根拠ページ": "商品カタログ P.102",
+      "根拠URL": "https://drive.google.com/file/d/1j9PtW8yoKBZ4Nodm58wU3QtOCvxlEja9/view?usp=drivesdk",
+      "備考": "大開口専用凡例",
+      "_source": {
+        "sheet": "16_ガラス可否ルール",
+        "row": 13
+      }
+    },
+    {
+      "glass_rule_id": "GR431-DOOR",
+      "適用窓種": "開き窓テラス／テラスドア",
+      "記号": "◎",
+      "トリプル透明": "可",
+      "トリプル型": "可",
+      "防災安全透明": "可",
+      "防災安全型": "可",
+      "安全透明": "可",
+      "安全型": "可",
+      "可否要約": "トリプル透明／トリプル型／防災安全透明／防災安全型／安全透明／安全型",
+      "根拠ページ": "商品カタログ P.106/P.110",
+      "根拠URL": "https://drive.google.com/file/d/1j9PtW8yoKBZ4Nodm58wU3QtOCvxlEja9/view?usp=drivesdk",
+      "備考": "開き・テラスドア専用凡例",
+      "_source": {
+        "sheet": "16_ガラス可否ルール",
+        "row": 14
+      }
+    },
+    {
+      "glass_rule_id": "GR431-DOOR",
+      "適用窓種": "開き窓テラス／テラスドア",
+      "記号": "〇",
+      "トリプル透明": "可",
+      "トリプル型": "可",
+      "防災安全透明": "可",
+      "防災安全型": "不可",
+      "安全透明": "可",
+      "安全型": "可",
+      "可否要約": "トリプル透明／トリプル型／防災安全透明／安全透明／安全型",
+      "根拠ページ": "商品カタログ P.106/P.110",
+      "根拠URL": "https://drive.google.com/file/d/1j9PtW8yoKBZ4Nodm58wU3QtOCvxlEja9/view?usp=drivesdk",
+      "備考": "開き・テラスドア専用凡例",
+      "_source": {
+        "sheet": "16_ガラス可否ルール",
+        "row": 15
+      }
+    },
+    {
+      "glass_rule_id": "GR431-DOOR",
+      "適用窓種": "開き窓テラス／テラスドア",
+      "記号": "△",
+      "トリプル透明": "可",
+      "トリプル型": "可",
+      "防災安全透明": "可",
+      "防災安全型": "不可",
+      "安全透明": "可",
+      "安全型": "不可",
+      "可否要約": "トリプル透明／トリプル型／防災安全透明／安全透明",
+      "根拠ページ": "商品カタログ P.106/P.110",
+      "根拠URL": "https://drive.google.com/file/d/1j9PtW8yoKBZ4Nodm58wU3QtOCvxlEja9/view?usp=drivesdk",
+      "備考": "開き・テラスドア専用凡例",
+      "_source": {
+        "sheet": "16_ガラス可否ルール",
+        "row": 16
+      }
+    },
+    {
+      "glass_rule_id": "GR431-DOOR",
+      "適用窓種": "開き窓テラス／テラスドア",
+      "記号": "▲",
+      "トリプル透明": "可",
+      "トリプル型": "不可",
+      "防災安全透明": "不可",
+      "防災安全型": "不可",
+      "安全透明": "可",
+      "安全型": "不可",
+      "可否要約": "トリプル透明／安全透明",
+      "根拠ページ": "商品カタログ P.106/P.110",
+      "根拠URL": "https://drive.google.com/file/d/1j9PtW8yoKBZ4Nodm58wU3QtOCvxlEja9/view?usp=drivesdk",
+      "備考": "開き・テラスドア専用凡例",
+      "_source": {
+        "sheet": "16_ガラス可否ルール",
+        "row": 17
+      }
+    },
+    {
+      "glass_rule_id": "GR431-DOOR",
+      "適用窓種": "開き窓テラス／テラスドア",
+      "記号": "▽",
+      "トリプル透明": "可",
+      "トリプル型": "可",
+      "防災安全透明": "不可",
+      "防災安全型": "不可",
+      "安全透明": "不可",
+      "安全型": "不可",
+      "可否要約": "トリプル透明／トリプル型",
+      "根拠ページ": "商品カタログ P.106/P.110",
+      "根拠URL": "https://drive.google.com/file/d/1j9PtW8yoKBZ4Nodm58wU3QtOCvxlEja9/view?usp=drivesdk",
+      "備考": "開き・テラスドア専用凡例",
+      "_source": {
+        "sheet": "16_ガラス可否ルール",
+        "row": 18
+      }
+    },
+    {
+      "glass_rule_id": "GR431-DOOR",
+      "適用窓種": "開き窓テラス／テラスドア",
+      "記号": "▼",
+      "トリプル透明": "可",
+      "トリプル型": "可",
+      "防災安全透明": "可",
+      "防災安全型": "可",
+      "安全透明": "不可",
+      "安全型": "不可",
+      "可否要約": "トリプル透明／トリプル型／防災安全透明／防災安全型",
+      "根拠ページ": "商品カタログ P.106/P.110",
+      "根拠URL": "https://drive.google.com/file/d/1j9PtW8yoKBZ4Nodm58wU3QtOCvxlEja9/view?usp=drivesdk",
+      "備考": "開き・テラスドア専用凡例",
+      "_source": {
+        "sheet": "16_ガラス可否ルール",
+        "row": 19
+      }
+    },
+    {
+      "glass_rule_id": "GR431-BACK",
+      "適用窓種": "勝手口ドア",
+      "記号": "◎",
+      "トリプル透明": "可",
+      "トリプル型": "可",
+      "防災安全透明": "可",
+      "防災安全型": "可",
+      "安全透明": "可",
+      "安全型": "可",
+      "可否要約": "トリプル透明／トリプル型／防災安全透明／防災安全型／安全透明／安全型",
+      "根拠ページ": "商品カタログ P.114",
+      "根拠URL": "https://drive.google.com/file/d/1j9PtW8yoKBZ4Nodm58wU3QtOCvxlEja9/view?usp=drivesdk",
+      "備考": "勝手口専用凡例",
+      "_source": {
+        "sheet": "16_ガラス可否ルール",
+        "row": 20
+      }
+    },
+    {
+      "glass_rule_id": "GR431-BACK",
+      "適用窓種": "勝手口ドア",
+      "記号": "〇",
+      "トリプル透明": "可",
+      "トリプル型": "可",
+      "防災安全透明": "不可",
+      "防災安全型": "不可",
+      "安全透明": "不可",
+      "安全型": "不可",
+      "可否要約": "トリプル透明／トリプル型",
+      "根拠ページ": "商品カタログ P.114",
+      "根拠URL": "https://drive.google.com/file/d/1j9PtW8yoKBZ4Nodm58wU3QtOCvxlEja9/view?usp=drivesdk",
+      "備考": "勝手口専用凡例",
+      "_source": {
+        "sheet": "16_ガラス可否ルール",
+        "row": 21
+      }
+    },
+    {
+      "glass_rule_id": "GR431-BACK",
+      "適用窓種": "勝手口ドア",
+      "記号": "▼",
+      "トリプル透明": "可",
+      "トリプル型": "可",
+      "防災安全透明": "可",
+      "防災安全型": "可",
+      "安全透明": "不可",
+      "安全型": "不可",
+      "可否要約": "トリプル透明／トリプル型／防災安全透明／防災安全型",
+      "根拠ページ": "商品カタログ P.114",
+      "根拠URL": "https://drive.google.com/file/d/1j9PtW8yoKBZ4Nodm58wU3QtOCvxlEja9/view?usp=drivesdk",
+      "備考": "勝手口専用凡例",
+      "_source": {
+        "sheet": "16_ガラス可否ルール",
+        "row": 22
+      }
+    }
+  ],
+  "shutter_types": [
+    {
+      "shutter_type_id": "ST431-01",
+      "表示順": 1,
+      "正式選択肢": "リモコンスリットシャッターGR",
+      "区分": "耐風シャッターGR",
+      "耐風系": "GR",
+      "操作": "電動",
+      "JEM-A選択肢": "なし",
+      "2枚建W_min": 1273,
+      "4枚建W_min": 2000,
+      "W_max": 2600,
+      "サイズ判定": "2枚建:W≧1273／4枚建:W≧2000＋窓本体製作範囲",
+      "状態": "現行／2027年4月リニューアル予定",
+      "根拠": "業務用P.9-P.10・商品P.84/P.93",
+      "_source": {
+        "sheet": "17_シャッター体系",
+        "row": 4
+      }
+    },
+    {
+      "shutter_type_id": "ST431-02",
+      "表示順": 2,
+      "正式選択肢": "リモコンシャッターGR",
+      "区分": "耐風シャッターGR",
+      "耐風系": "GR",
+      "操作": "電動",
+      "JEM-A選択肢": "なし/あり",
+      "2枚建W_min": 1169,
+      "4枚建W_min": 2000,
+      "W_max": 2600,
+      "サイズ判定": "2枚建:W≧1169／4枚建:W≧2000＋窓本体製作範囲",
+      "状態": "現行",
+      "根拠": "業務用P.9-P.10・商品P.84/P.93",
+      "_source": {
+        "sheet": "17_シャッター体系",
+        "row": 5
+      }
+    },
+    {
+      "shutter_type_id": "ST431-03",
+      "表示順": 3,
+      "正式選択肢": "手動シャッターGR",
+      "区分": "耐風シャッターGR",
+      "耐風系": "GR",
+      "操作": "手動",
+      "JEM-A選択肢": "対象外",
+      "2枚建W_min": 1000,
+      "4枚建W_min": 2000,
+      "W_max": 2600,
+      "サイズ判定": "2枚建:W≧1000／4枚建:W≧2000＋窓本体製作範囲",
+      "状態": "現行",
+      "根拠": "業務用P.9-P.10・商品P.84/P.93",
+      "_source": {
+        "sheet": "17_シャッター体系",
+        "row": 6
+      }
+    },
+    {
+      "shutter_type_id": "ST431-04",
+      "表示順": 4,
+      "正式選択肢": "リモコンシャッター",
+      "区分": "標準シャッター",
+      "耐風系": "標準",
+      "操作": "電動",
+      "JEM-A選択肢": "なし/あり",
+      "2枚建W_min": 1147,
+      "4枚建W_min": 2000,
+      "W_max": 2600,
+      "サイズ判定": "2枚建:W≧1147／4枚建:W≧2000＋窓本体製作範囲",
+      "状態": "現行",
+      "根拠": "業務用P.9-P.10・商品P.84/P.93",
+      "_source": {
+        "sheet": "17_シャッター体系",
+        "row": 7
+      }
+    },
+    {
+      "shutter_type_id": "ST431-05",
+      "表示順": 5,
+      "正式選択肢": "手動シャッター",
+      "区分": "標準シャッター",
+      "耐風系": "標準",
+      "操作": "手動",
+      "JEM-A選択肢": "対象外",
+      "2枚建W_min": 1000,
+      "4枚建W_min": 2000,
+      "W_max": 2600,
+      "サイズ判定": "2枚建:W≧1000／4枚建:W≧2000＋窓本体製作範囲",
+      "状態": "現行",
+      "根拠": "業務用P.9-P.10・商品P.84/P.93",
+      "_source": {
+        "sheet": "17_シャッター体系",
+        "row": 8
+      }
+    }
+  ],
+  "glass_wind_pressure": [
+    {
+      "glass_key": "SLIDE|GAP3",
+      "系統": "SLIDE",
+      "ガラス区分": "透明",
+      "YKKAP記号": "GAP3",
+      "構成": "Low-E3/12/フロート3/12/Low-E3",
+      "S1許容面積_m2": 4.247,
+      "S2許容面積_m2": 2.831,
+      "S3許容面積_m2": 2.123,
+      "最小W_mm": 181,
+      "最小H_mm": 181,
+      "最大W_mm": 1800,
+      "最大H_mm": 2420,
+      "根拠ページ": "業務用 P.141",
+      "根拠URL": "https://drive.google.com/file/d/1GZRfXqRKZKti-LreyNgW9-wegAF-HzaK/view?usp=drivesdk",
+      "_source": {
+        "sheet": "19_ガラス耐風圧",
+        "row": 4
+      }
+    },
+    {
+      "glass_key": "SLIDE|GZP4",
+      "系統": "SLIDE",
+      "ガラス区分": "透明",
+      "YKKAP記号": "GZP4",
+      "構成": "Low-E4/11/フロート3/11/Low-E4",
+      "S1許容面積_m2": 5.225,
+      "S2許容面積_m2": 3.483,
+      "S3許容面積_m2": 2.612,
+      "最小W_mm": 181,
+      "最小H_mm": 181,
+      "最大W_mm": 1800,
+      "最大H_mm": 2420,
+      "根拠ページ": "業務用 P.141",
+      "根拠URL": "https://drive.google.com/file/d/1GZRfXqRKZKti-LreyNgW9-wegAF-HzaK/view?usp=drivesdk",
+      "_source": {
+        "sheet": "19_ガラス耐風圧",
+        "row": 5
+      }
+    },
+    {
+      "glass_key": "SLIDE|VFP3",
+      "系統": "SLIDE",
+      "ガラス区分": "型",
+      "YKKAP記号": "VFP3",
+      "構成": "Low-E3/12/型3/12/Low-E3",
+      "S1許容面積_m2": 2.606,
+      "S2許容面積_m2": 1.737,
+      "S3許容面積_m2": 1.303,
+      "最小W_mm": 181,
+      "最小H_mm": 181,
+      "最大W_mm": 1800,
+      "最大H_mm": 2420,
+      "根拠ページ": "業務用 P.141",
+      "根拠URL": "https://drive.google.com/file/d/1GZRfXqRKZKti-LreyNgW9-wegAF-HzaK/view?usp=drivesdk",
+      "_source": {
+        "sheet": "19_ガラス耐風圧",
+        "row": 6
+      }
+    },
+    {
+      "glass_key": "SLIDE|VDP4",
+      "系統": "SLIDE",
+      "ガラス区分": "型",
+      "YKKAP記号": "VDP4",
+      "構成": "Low-E4/11/型3/11/Low-E4",
+      "S1許容面積_m2": 4.987,
+      "S2許容面積_m2": 3.325,
+      "S3許容面積_m2": 2.493,
+      "最小W_mm": 181,
+      "最小H_mm": 181,
+      "最大W_mm": 1800,
+      "最大H_mm": 2420,
+      "根拠ページ": "業務用 P.141",
+      "根拠URL": "https://drive.google.com/file/d/1GZRfXqRKZKti-LreyNgW9-wegAF-HzaK/view?usp=drivesdk",
+      "_source": {
+        "sheet": "19_ガラス耐風圧",
+        "row": 7
+      }
+    },
+    {
+      "glass_key": "SLIDE|VCP5",
+      "系統": "SLIDE",
+      "ガラス区分": "型",
+      "YKKAP記号": "VCP5",
+      "構成": "Low-E5/10/型3/10/Low-E5",
+      "S1許容面積_m2": 6.723,
+      "S2許容面積_m2": 4.482,
+      "S3許容面積_m2": 3.361,
+      "最小W_mm": 181,
+      "最小H_mm": 181,
+      "最大W_mm": 1800,
+      "最大H_mm": 2420,
+      "根拠ページ": "業務用 P.141",
+      "根拠URL": "https://drive.google.com/file/d/1GZRfXqRKZKti-LreyNgW9-wegAF-HzaK/view?usp=drivesdk",
+      "_source": {
+        "sheet": "19_ガラス耐風圧",
+        "row": 8
+      }
+    },
+    {
+      "glass_key": "SLIDE|JGP3",
+      "系統": "SLIDE",
+      "ガラス区分": "すり",
+      "YKKAP記号": "JGP3",
+      "構成": "Low-E3/11/すり5/11/Low-E3",
+      "S1許容面積_m2": 2.441,
+      "S2許容面積_m2": 1.627,
+      "S3許容面積_m2": 1.22,
+      "最小W_mm": 181,
+      "最小H_mm": 181,
+      "最大W_mm": 1169,
+      "最大H_mm": 1779,
+      "根拠ページ": "業務用 P.141",
+      "根拠URL": "https://drive.google.com/file/d/1GZRfXqRKZKti-LreyNgW9-wegAF-HzaK/view?usp=drivesdk",
+      "_source": {
+        "sheet": "19_ガラス耐風圧",
+        "row": 9
+      }
+    },
+    {
+      "glass_key": "SLIDE|GXP3",
+      "系統": "SLIDE",
+      "ガラス区分": "安全透明",
+      "YKKAP記号": "GXP3",
+      "構成": "安全合わせ30mil",
+      "S1許容面積_m2": 5.222,
+      "S2許容面積_m2": 3.481,
+      "S3許容面積_m2": 2.611,
+      "最小W_mm": 181,
+      "最小H_mm": 181,
+      "最大W_mm": 1800,
+      "最大H_mm": 2420,
+      "根拠ページ": "業務用 P.141",
+      "根拠URL": "https://drive.google.com/file/d/1GZRfXqRKZKti-LreyNgW9-wegAF-HzaK/view?usp=drivesdk",
+      "_source": {
+        "sheet": "19_ガラス耐風圧",
+        "row": 10
+      }
+    },
+    {
+      "glass_key": "SLIDE|GYP3",
+      "系統": "SLIDE",
+      "ガラス区分": "防災透明",
+      "YKKAP記号": "GYP3",
+      "構成": "防災安全合わせ60mil",
+      "S1許容面積_m2": 4.304,
+      "S2許容面積_m2": 2.869,
+      "S3許容面積_m2": 2.152,
+      "最小W_mm": 181,
+      "最小H_mm": 181,
+      "最大W_mm": 1800,
+      "最大H_mm": 2400,
+      "根拠ページ": "業務用 P.141",
+      "根拠URL": "https://drive.google.com/file/d/1GZRfXqRKZKti-LreyNgW9-wegAF-HzaK/view?usp=drivesdk",
+      "_source": {
+        "sheet": "19_ガラス耐風圧",
+        "row": 11
+      }
+    },
+    {
+      "glass_key": "SLIDE|GJP3",
+      "系統": "SLIDE",
+      "ガラス区分": "安全型",
+      "YKKAP記号": "GJP3",
+      "構成": "安全合わせ30mil 型",
+      "S1許容面積_m2": 3.204,
+      "S2許容面積_m2": 2.136,
+      "S3許容面積_m2": 1.602,
+      "最小W_mm": 181,
+      "最小H_mm": 181,
+      "最大W_mm": 1800,
+      "最大H_mm": 2400,
+      "根拠ページ": "業務用 P.141",
+      "根拠URL": "https://drive.google.com/file/d/1GZRfXqRKZKti-LreyNgW9-wegAF-HzaK/view?usp=drivesdk",
+      "_source": {
+        "sheet": "19_ガラス耐風圧",
+        "row": 12
+      }
+    },
+    {
+      "glass_key": "SLIDE|GLP3",
+      "系統": "SLIDE",
+      "ガラス区分": "防災型",
+      "YKKAP記号": "GLP3",
+      "構成": "防災安全合わせ60mil 型",
+      "S1許容面積_m2": 2.641,
+      "S2許容面積_m2": 1.761,
+      "S3許容面積_m2": 1.32,
+      "最小W_mm": 181,
+      "最小H_mm": 181,
+      "最大W_mm": 1800,
+      "最大H_mm": 2400,
+      "根拠ページ": "業務用 P.141",
+      "根拠URL": "https://drive.google.com/file/d/1GZRfXqRKZKti-LreyNgW9-wegAF-HzaK/view?usp=drivesdk",
+      "_source": {
+        "sheet": "19_ガラス耐風圧",
+        "row": 13
+      }
+    },
+    {
+      "glass_key": "DOOR|VAP3",
+      "系統": "DOOR",
+      "ガラス区分": "透明",
+      "YKKAP記号": "VAP3",
+      "構成": "Low-E3/18/フロート3/18/Low-E3",
+      "S1許容面積_m2": 4.247,
+      "S2許容面積_m2": 2.831,
+      "S3許容面積_m2": 2.123,
+      "最小W_mm": 181,
+      "最小H_mm": 181,
+      "最大W_mm": 2000,
+      "最大H_mm": 2500,
+      "根拠ページ": "業務用 P.141",
+      "根拠URL": "https://drive.google.com/file/d/1GZRfXqRKZKti-LreyNgW9-wegAF-HzaK/view?usp=drivesdk",
+      "_source": {
+        "sheet": "19_ガラス耐風圧",
+        "row": 14
+      }
+    },
+    {
+      "glass_key": "DOOR|VNP4",
+      "系統": "DOOR",
+      "ガラス区分": "透明",
+      "YKKAP記号": "VNP4",
+      "構成": "Low-E4/16/フロート5/16/Low-E4",
+      "S1許容面積_m2": 6.14,
+      "S2許容面積_m2": 4.093,
+      "S3許容面積_m2": 3.07,
+      "最小W_mm": 181,
+      "最小H_mm": 181,
+      "最大W_mm": 2000,
+      "最大H_mm": 2500,
+      "根拠ページ": "業務用 P.141",
+      "根拠URL": "https://drive.google.com/file/d/1GZRfXqRKZKti-LreyNgW9-wegAF-HzaK/view?usp=drivesdk",
+      "_source": {
+        "sheet": "19_ガラス耐風圧",
+        "row": 15
+      }
+    },
+    {
+      "glass_key": "DOOR|VPP5",
+      "系統": "DOOR",
+      "ガラス区分": "透明",
+      "YKKAP記号": "VPP5",
+      "構成": "Low-E5/16/フロート3/16/Low-E5",
+      "S1許容面積_m2": 6.723,
+      "S2許容面積_m2": 4.482,
+      "S3許容面積_m2": 3.361,
+      "最小W_mm": 181,
+      "最小H_mm": 181,
+      "最大W_mm": 2000,
+      "最大H_mm": 2500,
+      "根拠ページ": "業務用 P.141",
+      "根拠URL": "https://drive.google.com/file/d/1GZRfXqRKZKti-LreyNgW9-wegAF-HzaK/view?usp=drivesdk",
+      "_source": {
+        "sheet": "19_ガラス耐風圧",
+        "row": 16
+      }
+    },
+    {
+      "glass_key": "DOOR|GVP5",
+      "系統": "DOOR",
+      "ガラス区分": "透明",
+      "YKKAP記号": "GVP5",
+      "構成": "Low-E5/15/フロート5/15/Low-E5",
+      "S1許容面積_m2": 9.102,
+      "S2許容面積_m2": 6.068,
+      "S3許容面積_m2": 4.551,
+      "最小W_mm": 181,
+      "最小H_mm": 181,
+      "最大W_mm": 2000,
+      "最大H_mm": 2500,
+      "根拠ページ": "業務用 P.141",
+      "根拠URL": "https://drive.google.com/file/d/1GZRfXqRKZKti-LreyNgW9-wegAF-HzaK/view?usp=drivesdk",
+      "_source": {
+        "sheet": "19_ガラス耐風圧",
+        "row": 17
+      }
+    },
+    {
+      "glass_key": "DOOR|VBP3",
+      "系統": "DOOR",
+      "ガラス区分": "型",
+      "YKKAP記号": "VBP3",
+      "構成": "Low-E3/18/型3/18/Low-E3",
+      "S1許容面積_m2": 2.606,
+      "S2許容面積_m2": 1.737,
+      "S3許容面積_m2": 1.303,
+      "最小W_mm": 181,
+      "最小H_mm": 181,
+      "最大W_mm": 1800,
+      "最大H_mm": 2420,
+      "根拠ページ": "業務用 P.141",
+      "根拠URL": "https://drive.google.com/file/d/1GZRfXqRKZKti-LreyNgW9-wegAF-HzaK/view?usp=drivesdk",
+      "_source": {
+        "sheet": "19_ガラス耐風圧",
+        "row": 18
+      }
+    },
+    {
+      "glass_key": "DOOR|VUP5",
+      "系統": "DOOR",
+      "ガラス区分": "型",
+      "YKKAP記号": "VUP5",
+      "構成": "Low-E5/16/型3/16/Low-E5",
+      "S1許容面積_m2": 6.723,
+      "S2許容面積_m2": 4.482,
+      "S3許容面積_m2": 3.361,
+      "最小W_mm": 181,
+      "最小H_mm": 181,
+      "最大W_mm": 1800,
+      "最大H_mm": 2420,
+      "根拠ページ": "業務用 P.141",
+      "根拠URL": "https://drive.google.com/file/d/1GZRfXqRKZKti-LreyNgW9-wegAF-HzaK/view?usp=drivesdk",
+      "_source": {
+        "sheet": "19_ガラス耐風圧",
+        "row": 19
+      }
+    },
+    {
+      "glass_key": "DOOR|VGP4",
+      "系統": "DOOR",
+      "ガラス区分": "すり",
+      "YKKAP記号": "VGP4",
+      "構成": "Low-E4/16/すり5/16/Low-E4",
+      "S1許容面積_m2": 3.768,
+      "S2許容面積_m2": 2.512,
+      "S3許容面積_m2": 1.884,
+      "最小W_mm": 181,
+      "最小H_mm": 181,
+      "最大W_mm": 1169,
+      "最大H_mm": 1779,
+      "根拠ページ": "業務用 P.141",
+      "根拠URL": "https://drive.google.com/file/d/1GZRfXqRKZKti-LreyNgW9-wegAF-HzaK/view?usp=drivesdk",
+      "_source": {
+        "sheet": "19_ガラス耐風圧",
+        "row": 20
+      }
+    },
+    {
+      "glass_key": "DOOR|VXP3",
+      "系統": "DOOR",
+      "ガラス区分": "安全透明",
+      "YKKAP記号": "VXP3",
+      "構成": "安全合わせ30mil",
+      "S1許容面積_m2": 5.222,
+      "S2許容面積_m2": 3.481,
+      "S3許容面積_m2": 2.611,
+      "最小W_mm": 181,
+      "最小H_mm": 181,
+      "最大W_mm": 1800,
+      "最大H_mm": 2420,
+      "根拠ページ": "業務用 P.141",
+      "根拠URL": "https://drive.google.com/file/d/1GZRfXqRKZKti-LreyNgW9-wegAF-HzaK/view?usp=drivesdk",
+      "_source": {
+        "sheet": "19_ガラス耐風圧",
+        "row": 21
+      }
+    },
+    {
+      "glass_key": "DOOR|VYP3",
+      "系統": "DOOR",
+      "ガラス区分": "防災透明",
+      "YKKAP記号": "VYP3",
+      "構成": "防災安全合わせ60mil",
+      "S1許容面積_m2": 4.304,
+      "S2許容面積_m2": 2.869,
+      "S3許容面積_m2": 2.152,
+      "最小W_mm": 181,
+      "最小H_mm": 181,
+      "最大W_mm": 1800,
+      "最大H_mm": 2400,
+      "根拠ページ": "業務用 P.141",
+      "根拠URL": "https://drive.google.com/file/d/1GZRfXqRKZKti-LreyNgW9-wegAF-HzaK/view?usp=drivesdk",
+      "_source": {
+        "sheet": "19_ガラス耐風圧",
+        "row": 22
+      }
+    },
+    {
+      "glass_key": "DOOR|VJP3",
+      "系統": "DOOR",
+      "ガラス区分": "安全型",
+      "YKKAP記号": "VJP3",
+      "構成": "安全合わせ30mil 型",
+      "S1許容面積_m2": 3.204,
+      "S2許容面積_m2": 2.136,
+      "S3許容面積_m2": 1.602,
+      "最小W_mm": 181,
+      "最小H_mm": 181,
+      "最大W_mm": 1800,
+      "最大H_mm": 2400,
+      "根拠ページ": "業務用 P.141",
+      "根拠URL": "https://drive.google.com/file/d/1GZRfXqRKZKti-LreyNgW9-wegAF-HzaK/view?usp=drivesdk",
+      "_source": {
+        "sheet": "19_ガラス耐風圧",
+        "row": 23
+      }
+    },
+    {
+      "glass_key": "DOOR|VLP3",
+      "系統": "DOOR",
+      "ガラス区分": "防災型",
+      "YKKAP記号": "VLP3",
+      "構成": "防災安全合わせ60mil 型",
+      "S1許容面積_m2": 2.641,
+      "S2許容面積_m2": 1.761,
+      "S3許容面積_m2": 1.32,
+      "最小W_mm": 181,
+      "最小H_mm": 181,
+      "最大W_mm": 1800,
+      "最大H_mm": 2400,
+      "根拠ページ": "業務用 P.141",
+      "根拠URL": "https://drive.google.com/file/d/1GZRfXqRKZKti-LreyNgW9-wegAF-HzaK/view?usp=drivesdk",
+      "_source": {
+        "sheet": "19_ガラス耐風圧",
+        "row": 24
+      }
+    },
+    {
+      "glass_key": "LARGE|JAP3",
+      "系統": "LARGE",
+      "ガラス区分": "透明",
+      "YKKAP記号": "JAP3",
+      "構成": "Low-E3/16/フロート3/16/Low-E3",
+      "S1許容面積_m2": 4.247,
+      "S2許容面積_m2": 2.831,
+      "S3許容面積_m2": 2.123,
+      "最小W_mm": 181,
+      "最小H_mm": 181,
+      "最大W_mm": 1800,
+      "最大H_mm": 2420,
+      "根拠ページ": "業務用 P.141",
+      "根拠URL": "https://drive.google.com/file/d/1GZRfXqRKZKti-LreyNgW9-wegAF-HzaK/view?usp=drivesdk",
+      "_source": {
+        "sheet": "19_ガラス耐風圧",
+        "row": 25
+      }
+    },
+    {
+      "glass_key": "LARGE|JZP4",
+      "系統": "LARGE",
+      "ガラス区分": "透明",
+      "YKKAP記号": "JZP4",
+      "構成": "Low-E4/15/フロート3/15/Low-E4",
+      "S1許容面積_m2": 5.225,
+      "S2許容面積_m2": 3.483,
+      "S3許容面積_m2": 2.612,
+      "最小W_mm": 181,
+      "最小H_mm": 181,
+      "最大W_mm": 1800,
+      "最大H_mm": 2420,
+      "根拠ページ": "業務用 P.141",
+      "根拠URL": "https://drive.google.com/file/d/1GZRfXqRKZKti-LreyNgW9-wegAF-HzaK/view?usp=drivesdk",
+      "_source": {
+        "sheet": "19_ガラス耐風圧",
+        "row": 26
+      }
+    },
+    {
+      "glass_key": "LARGE|VRP3",
+      "系統": "LARGE",
+      "ガラス区分": "型",
+      "YKKAP記号": "VRP3",
+      "構成": "Low-E3/16/型3/16/Low-E3",
+      "S1許容面積_m2": 2.606,
+      "S2許容面積_m2": 1.737,
+      "S3許容面積_m2": 1.303,
+      "最小W_mm": 181,
+      "最小H_mm": 181,
+      "最大W_mm": 1800,
+      "最大H_mm": 2420,
+      "根拠ページ": "業務用 P.141",
+      "根拠URL": "https://drive.google.com/file/d/1GZRfXqRKZKti-LreyNgW9-wegAF-HzaK/view?usp=drivesdk",
+      "_source": {
+        "sheet": "19_ガラス耐風圧",
+        "row": 27
+      }
+    },
+    {
+      "glass_key": "LARGE|VSP4",
+      "系統": "LARGE",
+      "ガラス区分": "型",
+      "YKKAP記号": "VSP4",
+      "構成": "Low-E4/15/型3/15/Low-E4",
+      "S1許容面積_m2": 4.987,
+      "S2許容面積_m2": 3.325,
+      "S3許容面積_m2": 2.493,
+      "最小W_mm": 181,
+      "最小H_mm": 181,
+      "最大W_mm": 1800,
+      "最大H_mm": 2420,
+      "根拠ページ": "業務用 P.141",
+      "根拠URL": "https://drive.google.com/file/d/1GZRfXqRKZKti-LreyNgW9-wegAF-HzaK/view?usp=drivesdk",
+      "_source": {
+        "sheet": "19_ガラス耐風圧",
+        "row": 28
+      }
+    },
+    {
+      "glass_key": "LARGE|VTP5",
+      "系統": "LARGE",
+      "ガラス区分": "型",
+      "YKKAP記号": "VTP5",
+      "構成": "Low-E5/14/型3/14/Low-E5",
+      "S1許容面積_m2": 6.723,
+      "S2許容面積_m2": 4.482,
+      "S3許容面積_m2": 3.361,
+      "最小W_mm": 181,
+      "最小H_mm": 181,
+      "最大W_mm": 1800,
+      "最大H_mm": 2420,
+      "根拠ページ": "業務用 P.141",
+      "根拠URL": "https://drive.google.com/file/d/1GZRfXqRKZKti-LreyNgW9-wegAF-HzaK/view?usp=drivesdk",
+      "_source": {
+        "sheet": "19_ガラス耐風圧",
+        "row": 29
+      }
+    },
+    {
+      "glass_key": "LARGE|JGP3",
+      "系統": "LARGE",
+      "ガラス区分": "すり",
+      "YKKAP記号": "JGP3",
+      "構成": "Low-E3/15/すり5/15/Low-E3",
+      "S1許容面積_m2": 2.441,
+      "S2許容面積_m2": 1.627,
+      "S3許容面積_m2": 1.22,
+      "最小W_mm": 181,
+      "最小H_mm": 181,
+      "最大W_mm": 1169,
+      "最大H_mm": 1779,
+      "備考": "大開口スライディングにはすりガラス設定なし",
+      "根拠ページ": "業務用 P.141",
+      "根拠URL": "https://drive.google.com/file/d/1GZRfXqRKZKti-LreyNgW9-wegAF-HzaK/view?usp=drivesdk",
+      "_source": {
+        "sheet": "19_ガラス耐風圧",
+        "row": 30
+      }
+    },
+    {
+      "glass_key": "LARGE|JXP3",
+      "系統": "LARGE",
+      "ガラス区分": "安全透明",
+      "YKKAP記号": "JXP3",
+      "構成": "安全合わせ30mil",
+      "S1許容面積_m2": 5.222,
+      "S2許容面積_m2": 3.481,
+      "S3許容面積_m2": 2.611,
+      "最小W_mm": 181,
+      "最小H_mm": 181,
+      "最大W_mm": 1800,
+      "最大H_mm": 2420,
+      "根拠ページ": "業務用 P.141",
+      "根拠URL": "https://drive.google.com/file/d/1GZRfXqRKZKti-LreyNgW9-wegAF-HzaK/view?usp=drivesdk",
+      "_source": {
+        "sheet": "19_ガラス耐風圧",
+        "row": 31
+      }
+    },
+    {
+      "glass_key": "LARGE|JYP3",
+      "系統": "LARGE",
+      "ガラス区分": "防災透明",
+      "YKKAP記号": "JYP3",
+      "構成": "防災安全合わせ60mil",
+      "S1許容面積_m2": 4.304,
+      "S2許容面積_m2": 2.869,
+      "S3許容面積_m2": 2.152,
+      "最小W_mm": 181,
+      "最小H_mm": 181,
+      "最大W_mm": 1800,
+      "最大H_mm": 2400,
+      "根拠ページ": "業務用 P.141",
+      "根拠URL": "https://drive.google.com/file/d/1GZRfXqRKZKti-LreyNgW9-wegAF-HzaK/view?usp=drivesdk",
+      "_source": {
+        "sheet": "19_ガラス耐風圧",
+        "row": 32
+      }
+    },
+    {
+      "glass_key": "LARGE|JJP3",
+      "系統": "LARGE",
+      "ガラス区分": "安全型",
+      "YKKAP記号": "JJP3",
+      "構成": "安全合わせ30mil 型",
+      "S1許容面積_m2": 3.204,
+      "S2許容面積_m2": 2.136,
+      "S3許容面積_m2": 1.602,
+      "最小W_mm": 181,
+      "最小H_mm": 181,
+      "最大W_mm": 1800,
+      "最大H_mm": 2400,
+      "根拠ページ": "業務用 P.141",
+      "根拠URL": "https://drive.google.com/file/d/1GZRfXqRKZKti-LreyNgW9-wegAF-HzaK/view?usp=drivesdk",
+      "_source": {
+        "sheet": "19_ガラス耐風圧",
+        "row": 33
+      }
+    },
+    {
+      "glass_key": "LARGE|JLP3",
+      "系統": "LARGE",
+      "ガラス区分": "防災型",
+      "YKKAP記号": "JLP3",
+      "構成": "防災安全合わせ60mil 型",
+      "S1許容面積_m2": 2.641,
+      "S2許容面積_m2": 1.761,
+      "S3許容面積_m2": 1.32,
+      "最小W_mm": 181,
+      "最小H_mm": 181,
+      "最大W_mm": 1800,
+      "最大H_mm": 2400,
+      "根拠ページ": "業務用 P.141",
+      "根拠URL": "https://drive.google.com/file/d/1GZRfXqRKZKti-LreyNgW9-wegAF-HzaK/view?usp=drivesdk",
+      "_source": {
+        "sheet": "19_ガラス耐風圧",
+        "row": 34
+      }
+    }
+  ],
+  "operation_component_positions": [
+    {
+      "対象規格": "北海道規格・本州2×4",
+      "サッシH範囲": "1571≦H≦1652",
+      "クレセント位置": "H-663",
+      "掘込引手位置": "663",
+      "大型引手/サポートハンドル/サポート引手位置": "-",
+      "根拠ページ": "業務用 P.7",
+      "根拠URL": "https://drive.google.com/file/d/1GZRfXqRKZKti-LreyNgW9-wegAF-HzaK/view?usp=drivesdk",
+      "備考": "クレセントアップ仕様",
+      "_source": {
+        "sheet": "21_操作部品位置",
+        "row": 4
+      }
+    },
+    {
+      "対象規格": "北海道規格・本州2×4",
+      "サッシH範囲": "1652<H≦1870",
+      "クレセント位置": "H-663",
+      "掘込引手位置": "H-1052",
+      "大型引手/サポートハンドル/サポート引手位置": "-",
+      "根拠ページ": "業務用 P.7",
+      "根拠URL": "https://drive.google.com/file/d/1GZRfXqRKZKti-LreyNgW9-wegAF-HzaK/view?usp=drivesdk",
+      "_source": {
+        "sheet": "21_操作部品位置",
+        "row": 5
+      }
+    },
+    {
+      "対象規格": "北海道規格・本州2×4",
+      "サッシH範囲": "1870<H≦1920",
+      "クレセント位置": "H-729",
+      "掘込引手位置": "H-1052",
+      "大型引手/サポートハンドル/サポート引手位置": "-",
+      "根拠ページ": "業務用 P.7",
+      "根拠URL": "https://drive.google.com/file/d/1GZRfXqRKZKti-LreyNgW9-wegAF-HzaK/view?usp=drivesdk",
+      "_source": {
+        "sheet": "21_操作部品位置",
+        "row": 6
+      }
+    },
+    {
+      "対象規格": "北海道規格・本州2×4",
+      "サッシH範囲": "1920<H≦2070",
+      "クレセント位置": "H-729",
+      "掘込引手位置": "844",
+      "大型引手/サポートハンドル/サポート引手位置": "-",
+      "根拠ページ": "業務用 P.7",
+      "根拠URL": "https://drive.google.com/file/d/1GZRfXqRKZKti-LreyNgW9-wegAF-HzaK/view?usp=drivesdk",
+      "_source": {
+        "sheet": "21_操作部品位置",
+        "row": 7
+      }
+    },
+    {
+      "対象規格": "北海道規格・本州2×4",
+      "サッシH範囲": "2070<H≦2270",
+      "クレセント位置": "H-770",
+      "掘込引手位置": "844",
+      "大型引手/サポートハンドル/サポート引手位置": "-",
+      "根拠ページ": "業務用 P.7",
+      "根拠URL": "https://drive.google.com/file/d/1GZRfXqRKZKti-LreyNgW9-wegAF-HzaK/view?usp=drivesdk",
+      "_source": {
+        "sheet": "21_操作部品位置",
+        "row": 8
+      }
+    },
+    {
+      "対象規格": "北海道規格・本州2×4",
+      "サッシH範囲": "2270<H≦2470",
+      "クレセント位置": "1500",
+      "掘込引手位置": "844",
+      "大型引手/サポートハンドル/サポート引手位置": "-",
+      "根拠ページ": "業務用 P.7",
+      "根拠URL": "https://drive.google.com/file/d/1GZRfXqRKZKti-LreyNgW9-wegAF-HzaK/view?usp=drivesdk",
+      "_source": {
+        "sheet": "21_操作部品位置",
+        "row": 9
+      }
+    },
+    {
+      "対象規格": "本州規格・在来",
+      "サッシH範囲": "1531≦H≦1612",
+      "クレセント位置": "H-623",
+      "掘込引手位置": "663",
+      "大型引手/サポートハンドル/サポート引手位置": "-",
+      "根拠ページ": "業務用 P.7",
+      "根拠URL": "https://drive.google.com/file/d/1GZRfXqRKZKti-LreyNgW9-wegAF-HzaK/view?usp=drivesdk",
+      "備考": "クレセントアップ仕様",
+      "_source": {
+        "sheet": "21_操作部品位置",
+        "row": 10
+      }
+    },
+    {
+      "対象規格": "本州規格・在来",
+      "サッシH範囲": "1612<H≦1830",
+      "クレセント位置": "H-623",
+      "掘込引手位置": "H-1012",
+      "大型引手/サポートハンドル/サポート引手位置": "-",
+      "根拠ページ": "業務用 P.7",
+      "根拠URL": "https://drive.google.com/file/d/1GZRfXqRKZKti-LreyNgW9-wegAF-HzaK/view?usp=drivesdk",
+      "_source": {
+        "sheet": "21_操作部品位置",
+        "row": 11
+      }
+    },
+    {
+      "対象規格": "本州規格・在来",
+      "サッシH範囲": "1830<H≦1880",
+      "クレセント位置": "H-689",
+      "掘込引手位置": "H-1012",
+      "大型引手/サポートハンドル/サポート引手位置": "-",
+      "根拠ページ": "業務用 P.7",
+      "根拠URL": "https://drive.google.com/file/d/1GZRfXqRKZKti-LreyNgW9-wegAF-HzaK/view?usp=drivesdk",
+      "_source": {
+        "sheet": "21_操作部品位置",
+        "row": 12
+      }
+    },
+    {
+      "対象規格": "本州規格・在来",
+      "サッシH範囲": "1880<H≦2030",
+      "クレセント位置": "H-689",
+      "掘込引手位置": "844",
+      "大型引手/サポートハンドル/サポート引手位置": "-",
+      "根拠ページ": "業務用 P.7",
+      "根拠URL": "https://drive.google.com/file/d/1GZRfXqRKZKti-LreyNgW9-wegAF-HzaK/view?usp=drivesdk",
+      "_source": {
+        "sheet": "21_操作部品位置",
+        "row": 13
+      }
+    },
+    {
+      "対象規格": "本州規格・在来",
+      "サッシH範囲": "2030<H≦2230",
+      "クレセント位置": "H-730",
+      "掘込引手位置": "844",
+      "大型引手/サポートハンドル/サポート引手位置": "-",
+      "根拠ページ": "業務用 P.7",
+      "根拠URL": "https://drive.google.com/file/d/1GZRfXqRKZKti-LreyNgW9-wegAF-HzaK/view?usp=drivesdk",
+      "_source": {
+        "sheet": "21_操作部品位置",
+        "row": 14
+      }
+    },
+    {
+      "対象規格": "本州規格・在来",
+      "サッシH範囲": "2230<H≦2430",
+      "クレセント位置": "1500",
+      "掘込引手位置": "844",
+      "大型引手/サポートハンドル/サポート引手位置": "-",
+      "根拠ページ": "業務用 P.7",
+      "根拠URL": "https://drive.google.com/file/d/1GZRfXqRKZKti-LreyNgW9-wegAF-HzaK/view?usp=drivesdk",
+      "_source": {
+        "sheet": "21_操作部品位置",
+        "row": 15
+      }
+    },
+    {
+      "対象規格": "北海道規格・本州2×4",
+      "サッシH範囲": "1840≦H≦1870",
+      "クレセント位置": "H-663",
+      "掘込引手位置": "-",
+      "大型引手/サポートハンドル/サポート引手位置": "H-986",
+      "根拠ページ": "業務用 P.7",
+      "根拠URL": "https://drive.google.com/file/d/1GZRfXqRKZKti-LreyNgW9-wegAF-HzaK/view?usp=drivesdk",
+      "備考": "大型引手等",
+      "_source": {
+        "sheet": "21_操作部品位置",
+        "row": 16
+      }
+    },
+    {
+      "対象規格": "北海道規格・本州2×4",
+      "サッシH範囲": "1870<H≦1920",
+      "クレセント位置": "H-729",
+      "掘込引手位置": "-",
+      "大型引手/サポートハンドル/サポート引手位置": "H-986",
+      "根拠ページ": "業務用 P.7",
+      "根拠URL": "https://drive.google.com/file/d/1GZRfXqRKZKti-LreyNgW9-wegAF-HzaK/view?usp=drivesdk",
+      "_source": {
+        "sheet": "21_操作部品位置",
+        "row": 17
+      }
+    },
+    {
+      "対象規格": "北海道規格・本州2×4",
+      "サッシH範囲": "1920<H≦2070",
+      "クレセント位置": "H-729",
+      "掘込引手位置": "-",
+      "大型引手/サポートハンドル/サポート引手位置": "910",
+      "根拠ページ": "業務用 P.7",
+      "根拠URL": "https://drive.google.com/file/d/1GZRfXqRKZKti-LreyNgW9-wegAF-HzaK/view?usp=drivesdk",
+      "_source": {
+        "sheet": "21_操作部品位置",
+        "row": 18
+      }
+    },
+    {
+      "対象規格": "北海道規格・本州2×4",
+      "サッシH範囲": "2070<H≦2270",
+      "クレセント位置": "H-770",
+      "掘込引手位置": "-",
+      "大型引手/サポートハンドル/サポート引手位置": "910",
+      "根拠ページ": "業務用 P.7",
+      "根拠URL": "https://drive.google.com/file/d/1GZRfXqRKZKti-LreyNgW9-wegAF-HzaK/view?usp=drivesdk",
+      "_source": {
+        "sheet": "21_操作部品位置",
+        "row": 19
+      }
+    },
+    {
+      "対象規格": "北海道規格・本州2×4",
+      "サッシH範囲": "2270<H≦2470",
+      "クレセント位置": "1500",
+      "掘込引手位置": "-",
+      "大型引手/サポートハンドル/サポート引手位置": "910",
+      "根拠ページ": "業務用 P.7",
+      "根拠URL": "https://drive.google.com/file/d/1GZRfXqRKZKti-LreyNgW9-wegAF-HzaK/view?usp=drivesdk",
+      "_source": {
+        "sheet": "21_操作部品位置",
+        "row": 20
+      }
+    },
+    {
+      "対象規格": "本州規格・在来",
+      "サッシH範囲": "1800≦H≦1830",
+      "クレセント位置": "H-623",
+      "掘込引手位置": "-",
+      "大型引手/サポートハンドル/サポート引手位置": "H-946",
+      "根拠ページ": "業務用 P.7",
+      "根拠URL": "https://drive.google.com/file/d/1GZRfXqRKZKti-LreyNgW9-wegAF-HzaK/view?usp=drivesdk",
+      "備考": "大型引手等",
+      "_source": {
+        "sheet": "21_操作部品位置",
+        "row": 21
+      }
+    },
+    {
+      "対象規格": "本州規格・在来",
+      "サッシH範囲": "1830<H≦1880",
+      "クレセント位置": "H-689",
+      "掘込引手位置": "-",
+      "大型引手/サポートハンドル/サポート引手位置": "H-946",
+      "根拠ページ": "業務用 P.7",
+      "根拠URL": "https://drive.google.com/file/d/1GZRfXqRKZKti-LreyNgW9-wegAF-HzaK/view?usp=drivesdk",
+      "_source": {
+        "sheet": "21_操作部品位置",
+        "row": 22
+      }
+    },
+    {
+      "対象規格": "本州規格・在来",
+      "サッシH範囲": "1880<H≦2030",
+      "クレセント位置": "H-689",
+      "掘込引手位置": "-",
+      "大型引手/サポートハンドル/サポート引手位置": "910",
+      "根拠ページ": "業務用 P.7",
+      "根拠URL": "https://drive.google.com/file/d/1GZRfXqRKZKti-LreyNgW9-wegAF-HzaK/view?usp=drivesdk",
+      "_source": {
+        "sheet": "21_操作部品位置",
+        "row": 23
+      }
+    },
+    {
+      "対象規格": "本州規格・在来",
+      "サッシH範囲": "2030<H≦2230",
+      "クレセント位置": "H-730",
+      "掘込引手位置": "-",
+      "大型引手/サポートハンドル/サポート引手位置": "910",
+      "根拠ページ": "業務用 P.7",
+      "根拠URL": "https://drive.google.com/file/d/1GZRfXqRKZKti-LreyNgW9-wegAF-HzaK/view?usp=drivesdk",
+      "_source": {
+        "sheet": "21_操作部品位置",
+        "row": 24
+      }
+    },
+    {
+      "対象規格": "本州規格・在来",
+      "サッシH範囲": "2230<H≦2430",
+      "クレセント位置": "1500",
+      "掘込引手位置": "-",
+      "大型引手/サポートハンドル/サポート引手位置": "910",
+      "根拠ページ": "業務用 P.7",
+      "根拠URL": "https://drive.google.com/file/d/1GZRfXqRKZKti-LreyNgW9-wegAF-HzaK/view?usp=drivesdk",
+      "_source": {
+        "sheet": "21_操作部品位置",
+        "row": 25
+      }
+    }
+  ],
+  "shutter_special_conditions": [
+    {
+      "rule_id": "SHSP431-001",
+      "対象window_id": "W431-002",
+      "対象": "シャッター付引違いテラス戸",
+      "工法": "在来/2×4",
+      "建数": "全",
+      "shutter_type_id": "ALL",
+      "対象シャッター": "全種類",
+      "判定レベル": "AUTO",
+      "条件種別": "クレセント",
+      "条件": "クレセントアップ選択",
+      "結果": "NG",
+      "アプリ動作": "選択肢非表示",
+      "根拠アンカー": "注記",
+      "根拠ページ": "業務用P.9-P.10",
+      "根拠URL": "https://drive.google.com/file/d/1GZRfXqRKZKti-LreyNgW9-wegAF-HzaK/view?usp=drivesdk",
+      "誤判定防止メモ": "シャッター付にはクレセントアップ設定なし",
+      "状態": "確定",
+      "優先度": 1,
+      "更新日": "2026-08-27",
+      "旧v0.4扱い": "AUTO",
+      "移行結果": "継続",
+      "_source": {
+        "sheet": "22_シャッター特殊条件",
+        "row": 4
+      }
+    },
+    {
+      "rule_id": "SHSP431-002",
+      "対象window_id": "W431-002",
+      "対象": "シャッター付引違いテラス戸",
+      "工法": "在来/2×4",
+      "建数": "2枚建",
+      "shutter_type_id": "ST431-01",
+      "対象シャッター": "リモコンスリットシャッターGR",
+      "判定レベル": "AUTO",
+      "条件種別": "最小W",
+      "条件": "W<1273",
+      "結果": "NG",
+      "アプリ動作": "候補から除外",
+      "根拠アンカー": "W=1273",
+      "根拠ページ": "業務用P.9-P.10",
+      "根拠URL": "https://drive.google.com/file/d/1GZRfXqRKZKti-LreyNgW9-wegAF-HzaK/view?usp=drivesdk",
+      "誤判定防止メモ": "H上限は本体のH=1.73W（2×4は+40）で同時判定",
+      "状態": "確定",
+      "優先度": 1,
+      "更新日": "2026-08-27",
+      "旧v0.4扱い": "SOURCE_GRAPH",
+      "移行結果": "AUTOへ昇格",
+      "_source": {
+        "sheet": "22_シャッター特殊条件",
+        "row": 5
+      }
+    },
+    {
+      "rule_id": "SHSP431-003",
+      "対象window_id": "W431-002",
+      "対象": "シャッター付引違いテラス戸",
+      "工法": "在来/2×4",
+      "建数": "2枚建",
+      "shutter_type_id": "ST431-02",
+      "対象シャッター": "リモコンシャッターGR",
+      "判定レベル": "AUTO",
+      "条件種別": "最小W",
+      "条件": "W<1169",
+      "結果": "NG",
+      "アプリ動作": "候補から除外",
+      "根拠アンカー": "W=1169",
+      "根拠ページ": "業務用P.9-P.10",
+      "根拠URL": "https://drive.google.com/file/d/1GZRfXqRKZKti-LreyNgW9-wegAF-HzaK/view?usp=drivesdk",
+      "誤判定防止メモ": "明示縦アンカーを使用",
+      "状態": "確定",
+      "優先度": 1,
+      "更新日": "2026-08-27",
+      "旧v0.4扱い": "SOURCE_GRAPH",
+      "移行結果": "AUTOへ昇格",
+      "_source": {
+        "sheet": "22_シャッター特殊条件",
+        "row": 6
+      }
+    },
+    {
+      "rule_id": "SHSP431-004",
+      "対象window_id": "W431-002",
+      "対象": "シャッター付引違いテラス戸",
+      "工法": "在来/2×4",
+      "建数": "2枚建",
+      "shutter_type_id": "ST431-04",
+      "対象シャッター": "リモコンシャッター",
+      "判定レベル": "AUTO",
+      "条件種別": "最小W",
+      "条件": "W<1147",
+      "結果": "NG",
+      "アプリ動作": "候補から除外",
+      "根拠アンカー": "W=1147",
+      "根拠ページ": "業務用P.9-P.10",
+      "根拠URL": "https://drive.google.com/file/d/1GZRfXqRKZKti-LreyNgW9-wegAF-HzaK/view?usp=drivesdk",
+      "誤判定防止メモ": "明示縦アンカーを使用",
+      "状態": "確定",
+      "優先度": 1,
+      "更新日": "2026-08-27",
+      "旧v0.4扱い": "SOURCE_GRAPH",
+      "移行結果": "AUTOへ昇格",
+      "_source": {
+        "sheet": "22_シャッター特殊条件",
+        "row": 7
+      }
+    },
+    {
+      "rule_id": "SHSP431-005",
+      "対象window_id": "W431-002",
+      "対象": "シャッター付引違いテラス戸",
+      "工法": "在来/2×4",
+      "建数": "2枚建",
+      "shutter_type_id": "ST431-03",
+      "対象シャッター": "手動シャッターGR",
+      "判定レベル": "AUTO",
+      "条件種別": "最小W",
+      "条件": "W<1000",
+      "結果": "NG",
+      "アプリ動作": "候補から除外",
+      "根拠アンカー": "W=1000",
+      "根拠ページ": "業務用P.9-P.10",
+      "根拠URL": "https://drive.google.com/file/d/1GZRfXqRKZKti-LreyNgW9-wegAF-HzaK/view?usp=drivesdk",
+      "誤判定防止メモ": "本体製作範囲と同じ左端",
+      "状態": "確定",
+      "優先度": 1,
+      "更新日": "2026-08-27",
+      "旧v0.4扱い": "SOURCE_GRAPH",
+      "移行結果": "AUTOへ昇格",
+      "_source": {
+        "sheet": "22_シャッター特殊条件",
+        "row": 8
+      }
+    },
+    {
+      "rule_id": "SHSP431-006",
+      "対象window_id": "W431-002",
+      "対象": "シャッター付引違いテラス戸",
+      "工法": "在来/2×4",
+      "建数": "2枚建",
+      "shutter_type_id": "ST431-05",
+      "対象シャッター": "手動シャッター",
+      "判定レベル": "AUTO",
+      "条件種別": "最小W",
+      "条件": "W<1000",
+      "結果": "NG",
+      "アプリ動作": "候補から除外",
+      "根拠アンカー": "W=1000",
+      "根拠ページ": "業務用P.9-P.10",
+      "根拠URL": "https://drive.google.com/file/d/1GZRfXqRKZKti-LreyNgW9-wegAF-HzaK/view?usp=drivesdk",
+      "誤判定防止メモ": "本体製作範囲と同じ左端",
+      "状態": "確定",
+      "優先度": 1,
+      "更新日": "2026-08-27",
+      "旧v0.4扱い": "SOURCE_GRAPH",
+      "移行結果": "AUTOへ昇格",
+      "_source": {
+        "sheet": "22_シャッター特殊条件",
+        "row": 9
+      }
+    },
+    {
+      "rule_id": "SHSP431-007",
+      "対象window_id": "W431-002",
+      "対象": "シャッター付引違いテラス戸",
+      "工法": "在来/2×4",
+      "建数": "4枚建",
+      "shutter_type_id": "ALL",
+      "対象シャッター": "全種類",
+      "判定レベル": "AUTO",
+      "条件種別": "4枚建",
+      "条件": "W<2000 または本体範囲外",
+      "結果": "NG",
+      "アプリ動作": "候補から除外",
+      "根拠アンカー": "W=2000, H=0.91W(+40)",
+      "根拠ページ": "業務用P.9-P.10",
+      "根拠URL": "https://drive.google.com/file/d/1GZRfXqRKZKti-LreyNgW9-wegAF-HzaK/view?usp=drivesdk",
+      "誤判定防止メモ": "5種類共通で4枚建専用本体範囲を使用",
+      "状態": "確定",
+      "優先度": 1,
+      "更新日": "2026-08-27",
+      "旧v0.4扱い": "AUTO",
+      "移行結果": "継続",
+      "_source": {
+        "sheet": "22_シャッター特殊条件",
+        "row": 10
+      }
+    },
+    {
+      "rule_id": "SHSP431-008",
+      "対象window_id": "W431-002",
+      "対象": "シャッター付引違いテラス戸",
+      "工法": "在来/2×4",
+      "建数": "2枚建",
+      "shutter_type_id": "ALL",
+      "対象シャッター": "全種類",
+      "判定レベル": "AUTO",
+      "条件種別": "表1ガラス",
+      "条件": "標準仕様かつ表1ガラスかつW>1870",
+      "結果": "NG",
+      "アプリ動作": "ガラス候補から除外",
+      "根拠アンカー": "W=1870",
+      "根拠ページ": "業務用P.9-P.10",
+      "根拠URL": "https://drive.google.com/file/d/1GZRfXqRKZKti-LreyNgW9-wegAF-HzaK/view?usp=drivesdk",
+      "誤判定防止メモ": "重量ガラス仕様は別ルール",
+      "状態": "確定",
+      "優先度": 1,
+      "更新日": "2026-08-27",
+      "旧v0.4扱い": "AUTO",
+      "移行結果": "継続",
+      "_source": {
+        "sheet": "22_シャッター特殊条件",
+        "row": 11
+      }
+    },
+    {
+      "rule_id": "SHSP431-009",
+      "対象window_id": "W431-002",
+      "対象": "シャッター付引違いテラス戸",
+      "工法": "在来",
+      "建数": "2枚建",
+      "shutter_type_id": "ALL",
+      "対象シャッター": "全種類",
+      "判定レベル": "AUTO",
+      "条件種別": "操作部品",
+      "条件": "大型引手等かつH<1800",
+      "結果": "NG",
+      "アプリ動作": "操作部品候補から除外",
+      "根拠アンカー": "H=1800",
+      "根拠ページ": "業務用P.9",
+      "根拠URL": "https://drive.google.com/file/d/1GZRfXqRKZKti-LreyNgW9-wegAF-HzaK/view?usp=drivesdk",
+      "誤判定防止メモ": "本州在来",
+      "状態": "確定",
+      "優先度": 2,
+      "更新日": "2026-08-27",
+      "旧v0.4扱い": "AUTO",
+      "移行結果": "継続",
+      "_source": {
+        "sheet": "22_シャッター特殊条件",
+        "row": 12
+      }
+    },
+    {
+      "rule_id": "SHSP431-010",
+      "対象window_id": "W431-002",
+      "対象": "シャッター付引違いテラス戸",
+      "工法": "2×4",
+      "建数": "2枚建",
+      "shutter_type_id": "ALL",
+      "対象シャッター": "全種類",
+      "判定レベル": "AUTO",
+      "条件種別": "操作部品",
+      "条件": "大型引手等かつH<1840",
+      "結果": "NG",
+      "アプリ動作": "操作部品候補から除外",
+      "根拠アンカー": "H=1840",
+      "根拠ページ": "業務用P.10",
+      "根拠URL": "https://drive.google.com/file/d/1GZRfXqRKZKti-LreyNgW9-wegAF-HzaK/view?usp=drivesdk",
+      "誤判定防止メモ": "2×4",
+      "状態": "確定",
+      "優先度": 2,
+      "更新日": "2026-08-27",
+      "旧v0.4扱い": "AUTO",
+      "移行結果": "継続",
+      "_source": {
+        "sheet": "22_シャッター特殊条件",
+        "row": 13
+      }
+    }
+  ],
+  "heavy_and_special_glass_rules": [
+    {
+      "rule_id": "WG431-001",
+      "対象window_id": "W431-001",
+      "対象商品": "引違いテラス戸",
+      "工法": "本州 在来",
+      "建数": "2枚建",
+      "ガラス仕様": "標準仕様",
+      "条件区分": "重量上限",
+      "W_min": 1000,
+      "W_max": 2600,
+      "H_min": 1531,
+      "H_max": 2430,
+      "ガラス重量上限_kg": 63,
+      "耐風圧": "図表判定",
+      "ガラス条件": "P.141許容面積併用",
+      "操作部品H下限": 1800,
+      "AUTO可否": "AUTO",
+      "根拠ページ": "業務用 P.7",
+      "根拠URL": "https://drive.google.com/file/d/1GZRfXqRKZKti-LreyNgW9-wegAF-HzaK/view?usp=drivesdk",
+      "UI/判定動作": "通常重量上限63.0kg",
+      "備考": "4枚建は40.5kg",
+      "_source": {
+        "sheet": "23_重量ガラス・特殊ガラス",
+        "row": 4
+      }
+    },
+    {
+      "rule_id": "WG431-002",
+      "対象window_id": "W431-001",
+      "対象商品": "引違いテラス戸",
+      "工法": "本州 在来",
+      "建数": "2枚建",
+      "ガラス仕様": "重量ガラス仕様",
+      "条件区分": "重量上限",
+      "W_min": 1871,
+      "W_max": 2600,
+      "H_min": 1531,
+      "H_max": 2430,
+      "ガラス厚合計上限_mm": 13,
+      "ガラス重量上限_kg": 74.2,
+      "耐風圧": "S-1/S-2図表",
+      "ガラス条件": "重量ガラス仕様専用範囲",
+      "表1ガラスH上限": "図中斜線部はH≦2030",
+      "操作部品H下限": 1800,
+      "AUTO可否": "PARTIAL",
+      "根拠ページ": "業務用 P.7",
+      "根拠URL": "https://drive.google.com/file/d/1GZRfXqRKZKti-LreyNgW9-wegAF-HzaK/view?usp=drivesdk",
+      "UI/判定動作": "基礎W/H・t・重量はAUTO、斜線ポリゴンは図表照合",
+      "備考": "3+A12+3+A12+3/型はH=2230製作不可",
+      "_source": {
+        "sheet": "23_重量ガラス・特殊ガラス",
+        "row": 5
+      }
+    },
+    {
+      "rule_id": "WG431-003",
+      "対象window_id": "W431-001",
+      "対象商品": "引違いテラス戸",
+      "工法": "本州 2×4",
+      "建数": "2枚建",
+      "ガラス仕様": "重量ガラス仕様",
+      "条件区分": "重量上限",
+      "W_min": 1871,
+      "W_max": 2600,
+      "H_min": 1571,
+      "H_max": 2470,
+      "ガラス厚合計上限_mm": 13,
+      "ガラス重量上限_kg": 74.2,
+      "耐風圧": "S-1/S-2図表",
+      "ガラス条件": "重量ガラス仕様専用範囲",
+      "表1ガラスH上限": "図中斜線部はH≦2070",
+      "操作部品H下限": 1840,
+      "AUTO可否": "PARTIAL",
+      "根拠ページ": "業務用 P.7",
+      "根拠URL": "https://drive.google.com/file/d/1GZRfXqRKZKti-LreyNgW9-wegAF-HzaK/view?usp=drivesdk",
+      "UI/判定動作": "基礎W/H・t・重量はAUTO、斜線ポリゴンは図表照合",
+      "備考": "3+A12+3+A12+3/型はH=2270製作不可",
+      "_source": {
+        "sheet": "23_重量ガラス・特殊ガラス",
+        "row": 6
+      }
+    },
+    {
+      "rule_id": "WG431-004",
+      "対象window_id": "W431-001",
+      "対象商品": "引違いテラス戸",
+      "工法": "北海道 在来",
+      "建数": "2枚建",
+      "ガラス仕様": "重量ガラス仕様",
+      "条件区分": "重量上限",
+      "W_min": 1871,
+      "W_max": 2600,
+      "H_min": 1571,
+      "H_max": 2470,
+      "ガラス厚合計上限_mm": 13,
+      "ガラス重量上限_kg": 74.2,
+      "耐風圧": "S-1/S-2図表",
+      "ガラス条件": "重量ガラス仕様専用範囲",
+      "表1ガラスH上限": "図中斜線部はH≦2070",
+      "操作部品H下限": 1840,
+      "AUTO可否": "PARTIAL",
+      "根拠ページ": "業務用 P.6",
+      "根拠URL": "https://drive.google.com/file/d/1GZRfXqRKZKti-LreyNgW9-wegAF-HzaK/view?usp=drivesdk",
+      "UI/判定動作": "北海道は本州2×4と同H体系",
+      "備考": "3+A12+3+A12+3/型はH=2270製作不可",
+      "_source": {
+        "sheet": "23_重量ガラス・特殊ガラス",
+        "row": 7
+      }
+    },
+    {
+      "rule_id": "WG431-005",
+      "対象window_id": "W431-002",
+      "対象商品": "シャッター付引違いテラス戸",
+      "工法": "本州 在来",
+      "建数": "2枚建",
+      "ガラス仕様": "重量ガラス仕様",
+      "条件区分": "重量上限",
+      "W_min": 1871,
+      "W_max": 2600,
+      "H_min": 1531,
+      "H_max": 2230,
+      "ガラス厚合計上限_mm": 13,
+      "ガラス重量上限_kg": 74.2,
+      "耐風圧": "S-2",
+      "ガラス条件": "重量ガラス仕様専用範囲",
+      "表1ガラスH上限": "図中斜線部はH≦2030",
+      "操作部品H下限": 1800,
+      "AUTO可否": "PARTIAL",
+      "根拠ページ": "業務用 P.9",
+      "根拠URL": "https://drive.google.com/file/d/1GZRfXqRKZKti-LreyNgW9-wegAF-HzaK/view?usp=drivesdk",
+      "UI/判定動作": "基礎W/H・t・重量はAUTO、表1領域は図表照合",
+      "備考": "3+A12+3+A12+3/型はH=2230製作不可",
+      "_source": {
+        "sheet": "23_重量ガラス・特殊ガラス",
+        "row": 8
+      }
+    },
+    {
+      "rule_id": "WG431-006",
+      "対象window_id": "W431-002",
+      "対象商品": "シャッター付引違いテラス戸",
+      "工法": "本州 2×4",
+      "建数": "2枚建",
+      "ガラス仕様": "重量ガラス仕様",
+      "条件区分": "重量上限",
+      "W_min": 1871,
+      "W_max": 2600,
+      "H_min": 1571,
+      "H_max": 2270,
+      "ガラス厚合計上限_mm": 13,
+      "ガラス重量上限_kg": 74.2,
+      "耐風圧": "S-2",
+      "ガラス条件": "重量ガラス仕様専用範囲",
+      "表1ガラスH上限": "図中斜線部はH≦2070",
+      "操作部品H下限": 1840,
+      "AUTO可否": "PARTIAL",
+      "根拠ページ": "業務用 P.10",
+      "根拠URL": "https://drive.google.com/file/d/1GZRfXqRKZKti-LreyNgW9-wegAF-HzaK/view?usp=drivesdk",
+      "UI/判定動作": "基礎W/H・t・重量はAUTO、表1領域は図表照合",
+      "備考": "3+A12+3+A12+3/型はH=2270製作不可",
+      "_source": {
+        "sheet": "23_重量ガラス・特殊ガラス",
+        "row": 9
+      }
+    },
+    {
+      "rule_id": "WG431-007",
+      "対象window_id": "W431-001/W431-002",
+      "対象商品": "引違いテラス系",
+      "工法": "全対象",
+      "建数": "4枚建",
+      "ガラス仕様": "重量ガラス仕様",
+      "条件区分": "設定有無",
+      "ガラス条件": "重量ガラス仕様なし",
+      "AUTO可否": "AUTO",
+      "根拠ページ": "業務用 P.6-P.10",
+      "根拠URL": "https://drive.google.com/file/d/1GZRfXqRKZKti-LreyNgW9-wegAF-HzaK/view?usp=drivesdk",
+      "UI/判定動作": "4枚建では重量ガラス仕様を選択肢から除外",
+      "_source": {
+        "sheet": "23_重量ガラス・特殊ガラス",
+        "row": 10
+      }
+    },
+    {
+      "rule_id": "table1_id",
+      "対象window_id": "区分",
+      "対象商品": "YKKAP記号",
+      "工法": "ガラス構成",
+      "建数": "根拠",
+      "ガラス仕様": "備考",
+      "_source": {
+        "sheet": "23_重量ガラス・特殊ガラス",
+        "row": 14
+      }
+    },
+    {
+      "rule_id": "TBL1-01",
+      "対象window_id": "安全合わせ透明",
+      "対象商品": "GXP3",
+      "工法": "4+G10+3・30mil・3+G10+3",
+      "建数": "P.7/P.9/P.10",
+      "ガラス仕様": "YKKAPコードはP.141構成から対応",
+      "_source": {
+        "sheet": "23_重量ガラス・特殊ガラス",
+        "row": 15
+      }
+    },
+    {
+      "rule_id": "TBL1-02",
+      "対象window_id": "安全合わせ型",
+      "対象商品": "GJP3",
+      "工法": "4+G10+3・30mil・型3+G10+3",
+      "建数": "P.7/P.9/P.10",
+      "_source": {
+        "sheet": "23_重量ガラス・特殊ガラス",
+        "row": 16
+      }
+    },
+    {
+      "rule_id": "TBL1-03",
+      "対象window_id": "防災安全合わせ透明",
+      "対象商品": "GYP3",
+      "工法": "3+G10+3・60mil・3+G10+3",
+      "建数": "P.7/P.9/P.10",
+      "_source": {
+        "sheet": "23_重量ガラス・特殊ガラス",
+        "row": 17
+      }
+    },
+    {
+      "rule_id": "TBL1-04",
+      "対象window_id": "防災安全合わせ型",
+      "対象商品": "GLP3",
+      "工法": "3+G10+3・60mil・型3+G10+3",
+      "建数": "P.7/P.9/P.10",
+      "_source": {
+        "sheet": "23_重量ガラス・特殊ガラス",
+        "row": 18
+      }
+    },
+    {
+      "rule_id": "TBL1-05",
+      "対象window_id": "型・厚板構成",
+      "対象商品": "構成指定",
+      "工法": "4+G10+型4+G10+5",
+      "建数": "P.7/P.9/P.10",
+      "ガラス仕様": "記号は資料上この表では明示されないため構成で保持",
+      "_source": {
+        "sheet": "23_重量ガラス・特殊ガラス",
+        "row": 19
+      }
+    },
+    {
+      "rule_id": "TBL1-06",
+      "対象window_id": "型・アルゴン構成",
+      "対象商品": "構成指定",
+      "工法": "5+A10+型3+A10+5",
+      "建数": "P.7/P.9/P.10",
+      "ガラス仕様": "記号は資料上この表では明示されないため構成で保持",
+      "_source": {
+        "sheet": "23_重量ガラス・特殊ガラス",
+        "row": 20
+      }
+    }
+  ],
+  "judgement_accuracy_classes": [
+    {
+      "class": "AUTO",
+      "意味": "メーカー資料に数値・式が明記",
+      "判定方法": "数式で完全判定",
+      "アプリ動作": "可/不可を自動確定",
+      "許容する表示": "製作可・製作不可",
+      "禁止動作": "図表確認を不要と断定しない条件への流用",
+      "代表例": "W/H範囲・重量・P.141許容面積",
+      "根拠": "https://drive.google.com/file/d/1GZRfXqRKZKti-LreyNgW9-wegAF-HzaK/view?usp=drivesdk",
+      "優先度": 1,
+      "_source": {
+        "sheet": "24_判定精度クラス",
+        "row": 4
+      }
+    },
+    {
+      "class": "PARTIAL",
+      "意味": "一部数値化できるが図表領域が残る",
+      "判定方法": "数値条件を先に判定し残部のみ照合",
+      "アプリ動作": "明確なNGは即除外、残りは要照合",
+      "許容する表示": "製作不可・製作可能候補・要図表照合",
+      "禁止動作": "残存図表条件を勝手に補間",
+      "代表例": "重量ガラス仕様",
+      "根拠": "https://drive.google.com/file/d/1GZRfXqRKZKti-LreyNgW9-wegAF-HzaK/view?usp=drivesdk",
+      "優先度": 2,
+      "_source": {
+        "sheet": "24_判定精度クラス",
+        "row": 5
+      }
+    },
+    {
+      "class": "SOURCE_GRAPH",
+      "意味": "着色領域/曲線のみで境界式が未記載",
+      "判定方法": "メーカー原図と照合",
+      "アプリ動作": "対象候補を警告付き表示",
+      "許容する表示": "要図表照合",
+      "禁止動作": "独自近似式で可/不可を確定",
+      "代表例": "シャッター手動限定領域・スリットGR不可領域",
+      "根拠": "https://drive.google.com/file/d/1GZRfXqRKZKti-LreyNgW9-wegAF-HzaK/view?usp=drivesdk",
+      "優先度": 3,
+      "_source": {
+        "sheet": "24_判定精度クラス",
+        "row": 6
+      }
+    }
+  ],
+  "shutter_candidate_filters": [
+    {
+      "filter_id": "SF431-01-2",
+      "shutter_type_id": "ST431-01",
+      "シャッター種類": "リモコンスリットシャッターGR",
+      "建数": "2枚建",
+      "W_min": 1273,
+      "W_max": 2600,
+      "本体H式": "在来:H≦1.73W／2×4:H≦1.73W+40",
+      "JEM-A選択肢": "なし",
+      "標準サイズ判定": "W≧1273の規格サイズのみ候補化",
+      "自由寸法判定": "本体製作範囲PASSかつW≧1273",
+      "判定精度": "AUTO",
+      "候補除外理由": "W<1273なら候補除外",
+      "根拠ページ": "業務用P.9-P.10",
+      "根拠URL": "https://drive.google.com/file/d/1GZRfXqRKZKti-LreyNgW9-wegAF-HzaK/view?usp=drivesdk",
+      "表示順": 1,
+      "状態": "確定",
+      "_source": {
+        "sheet": "25_シャッター候補フィルタ",
+        "row": 4
+      }
+    },
+    {
+      "filter_id": "SF431-01-4",
+      "shutter_type_id": "ST431-01",
+      "シャッター種類": "リモコンスリットシャッターGR",
+      "建数": "4枚建",
+      "W_min": 2000,
+      "W_max": 2600,
+      "本体H式": "在来:H≦0.91W／2×4:H≦0.91W+40",
+      "JEM-A選択肢": "なし",
+      "標準サイズ判定": "4枚建規格サイズはW≧2000で候補化",
+      "自由寸法判定": "4枚建本体製作範囲PASS",
+      "判定精度": "AUTO",
+      "候補除外理由": "本体製作範囲外なら候補除外",
+      "根拠ページ": "業務用P.9-P.10",
+      "根拠URL": "https://drive.google.com/file/d/1GZRfXqRKZKti-LreyNgW9-wegAF-HzaK/view?usp=drivesdk",
+      "表示順": 1,
+      "状態": "確定",
+      "_source": {
+        "sheet": "25_シャッター候補フィルタ",
+        "row": 5
+      }
+    },
+    {
+      "filter_id": "SF431-02-2",
+      "shutter_type_id": "ST431-02",
+      "シャッター種類": "リモコンシャッターGR",
+      "建数": "2枚建",
+      "W_min": 1169,
+      "W_max": 2600,
+      "本体H式": "在来:H≦1.73W／2×4:H≦1.73W+40",
+      "JEM-A選択肢": "なし/あり",
+      "標準サイズ判定": "W≧1169の規格サイズのみ候補化",
+      "自由寸法判定": "本体製作範囲PASSかつW≧1169",
+      "判定精度": "AUTO",
+      "候補除外理由": "W<1169なら候補除外",
+      "根拠ページ": "業務用P.9-P.10",
+      "根拠URL": "https://drive.google.com/file/d/1GZRfXqRKZKti-LreyNgW9-wegAF-HzaK/view?usp=drivesdk",
+      "表示順": 2,
+      "状態": "確定",
+      "_source": {
+        "sheet": "25_シャッター候補フィルタ",
+        "row": 6
+      }
+    },
+    {
+      "filter_id": "SF431-02-4",
+      "shutter_type_id": "ST431-02",
+      "シャッター種類": "リモコンシャッターGR",
+      "建数": "4枚建",
+      "W_min": 2000,
+      "W_max": 2600,
+      "本体H式": "在来:H≦0.91W／2×4:H≦0.91W+40",
+      "JEM-A選択肢": "なし/あり",
+      "標準サイズ判定": "4枚建規格サイズはW≧2000で候補化",
+      "自由寸法判定": "4枚建本体製作範囲PASS",
+      "判定精度": "AUTO",
+      "候補除外理由": "本体製作範囲外なら候補除外",
+      "根拠ページ": "業務用P.9-P.10",
+      "根拠URL": "https://drive.google.com/file/d/1GZRfXqRKZKti-LreyNgW9-wegAF-HzaK/view?usp=drivesdk",
+      "表示順": 2,
+      "状態": "確定",
+      "_source": {
+        "sheet": "25_シャッター候補フィルタ",
+        "row": 7
+      }
+    },
+    {
+      "filter_id": "SF431-03-2",
+      "shutter_type_id": "ST431-03",
+      "シャッター種類": "手動シャッターGR",
+      "建数": "2枚建",
+      "W_min": 1000,
+      "W_max": 2600,
+      "本体H式": "在来:H≦1.73W／2×4:H≦1.73W+40",
+      "JEM-A選択肢": "対象外",
+      "標準サイズ判定": "W≧1000の規格サイズのみ候補化",
+      "自由寸法判定": "本体製作範囲PASSかつW≧1000",
+      "判定精度": "AUTO",
+      "候補除外理由": "W<1000なら候補除外",
+      "根拠ページ": "業務用P.9-P.10",
+      "根拠URL": "https://drive.google.com/file/d/1GZRfXqRKZKti-LreyNgW9-wegAF-HzaK/view?usp=drivesdk",
+      "表示順": 3,
+      "状態": "確定",
+      "_source": {
+        "sheet": "25_シャッター候補フィルタ",
+        "row": 8
+      }
+    },
+    {
+      "filter_id": "SF431-03-4",
+      "shutter_type_id": "ST431-03",
+      "シャッター種類": "手動シャッターGR",
+      "建数": "4枚建",
+      "W_min": 2000,
+      "W_max": 2600,
+      "本体H式": "在来:H≦0.91W／2×4:H≦0.91W+40",
+      "JEM-A選択肢": "対象外",
+      "標準サイズ判定": "4枚建規格サイズはW≧2000で候補化",
+      "自由寸法判定": "4枚建本体製作範囲PASS",
+      "判定精度": "AUTO",
+      "候補除外理由": "本体製作範囲外なら候補除外",
+      "根拠ページ": "業務用P.9-P.10",
+      "根拠URL": "https://drive.google.com/file/d/1GZRfXqRKZKti-LreyNgW9-wegAF-HzaK/view?usp=drivesdk",
+      "表示順": 3,
+      "状態": "確定",
+      "_source": {
+        "sheet": "25_シャッター候補フィルタ",
+        "row": 9
+      }
+    },
+    {
+      "filter_id": "SF431-04-2",
+      "shutter_type_id": "ST431-04",
+      "シャッター種類": "リモコンシャッター",
+      "建数": "2枚建",
+      "W_min": 1147,
+      "W_max": 2600,
+      "本体H式": "在来:H≦1.73W／2×4:H≦1.73W+40",
+      "JEM-A選択肢": "なし/あり",
+      "標準サイズ判定": "W≧1147の規格サイズのみ候補化",
+      "自由寸法判定": "本体製作範囲PASSかつW≧1147",
+      "判定精度": "AUTO",
+      "候補除外理由": "W<1147なら候補除外",
+      "根拠ページ": "業務用P.9-P.10",
+      "根拠URL": "https://drive.google.com/file/d/1GZRfXqRKZKti-LreyNgW9-wegAF-HzaK/view?usp=drivesdk",
+      "表示順": 4,
+      "状態": "確定",
+      "_source": {
+        "sheet": "25_シャッター候補フィルタ",
+        "row": 10
+      }
+    },
+    {
+      "filter_id": "SF431-04-4",
+      "shutter_type_id": "ST431-04",
+      "シャッター種類": "リモコンシャッター",
+      "建数": "4枚建",
+      "W_min": 2000,
+      "W_max": 2600,
+      "本体H式": "在来:H≦0.91W／2×4:H≦0.91W+40",
+      "JEM-A選択肢": "なし/あり",
+      "標準サイズ判定": "4枚建規格サイズはW≧2000で候補化",
+      "自由寸法判定": "4枚建本体製作範囲PASS",
+      "判定精度": "AUTO",
+      "候補除外理由": "本体製作範囲外なら候補除外",
+      "根拠ページ": "業務用P.9-P.10",
+      "根拠URL": "https://drive.google.com/file/d/1GZRfXqRKZKti-LreyNgW9-wegAF-HzaK/view?usp=drivesdk",
+      "表示順": 4,
+      "状態": "確定",
+      "_source": {
+        "sheet": "25_シャッター候補フィルタ",
+        "row": 11
+      }
+    },
+    {
+      "filter_id": "SF431-05-2",
+      "shutter_type_id": "ST431-05",
+      "シャッター種類": "手動シャッター",
+      "建数": "2枚建",
+      "W_min": 1000,
+      "W_max": 2600,
+      "本体H式": "在来:H≦1.73W／2×4:H≦1.73W+40",
+      "JEM-A選択肢": "対象外",
+      "標準サイズ判定": "W≧1000の規格サイズのみ候補化",
+      "自由寸法判定": "本体製作範囲PASSかつW≧1000",
+      "判定精度": "AUTO",
+      "候補除外理由": "W<1000なら候補除外",
+      "根拠ページ": "業務用P.9-P.10",
+      "根拠URL": "https://drive.google.com/file/d/1GZRfXqRKZKti-LreyNgW9-wegAF-HzaK/view?usp=drivesdk",
+      "表示順": 5,
+      "状態": "確定",
+      "_source": {
+        "sheet": "25_シャッター候補フィルタ",
+        "row": 12
+      }
+    },
+    {
+      "filter_id": "SF431-05-4",
+      "shutter_type_id": "ST431-05",
+      "シャッター種類": "手動シャッター",
+      "建数": "4枚建",
+      "W_min": 2000,
+      "W_max": 2600,
+      "本体H式": "在来:H≦0.91W／2×4:H≦0.91W+40",
+      "JEM-A選択肢": "対象外",
+      "標準サイズ判定": "4枚建規格サイズはW≧2000で候補化",
+      "自由寸法判定": "4枚建本体製作範囲PASS",
+      "判定精度": "AUTO",
+      "候補除外理由": "本体製作範囲外なら候補除外",
+      "根拠ページ": "業務用P.9-P.10",
+      "根拠URL": "https://drive.google.com/file/d/1GZRfXqRKZKti-LreyNgW9-wegAF-HzaK/view?usp=drivesdk",
+      "表示順": 5,
+      "状態": "確定",
+      "_source": {
+        "sheet": "25_シャッター候補フィルタ",
+        "row": 13
+      }
+    }
+  ],
+  "golden_tests": [
+    {
+      "test_id": "STD_シャッター通常",
+      "期待値": "規格候補確定",
+      "実結果": "規格候補確定",
+      "判定": "PASS",
+      "サイズモード": "規格",
+      "シャッター整合": "PASS",
+      "JEM-A整合": "PASS",
+      "理由": "規格候補マスターに完全一致",
+      "E2E集計": "テスト数",
+      "件数": 14,
+      "_source": {
+        "sheet": "29_E2Eテスト",
+        "row": 4
+      }
+    },
+    {
+      "test_id": "STD_W119_スリットGR不可",
+      "期待値": "NG",
+      "実結果": "NG",
+      "判定": "PASS",
+      "サイズモード": "規格条件NG",
+      "シャッター整合": "PASS",
+      "JEM-A整合": "PASS",
+      "理由": "そのW/Hは規格サイズだが選択したシャッター種類は設定不可",
+      "E2E集計": "PASS",
+      "件数": 14,
+      "_source": {
+        "sheet": "29_E2Eテスト",
+        "row": 5
+      }
+    },
+    {
+      "test_id": "STD_W119_リモコンGR可",
+      "期待値": "規格候補確定",
+      "実結果": "規格候補確定",
+      "判定": "PASS",
+      "サイズモード": "規格",
+      "シャッター整合": "PASS",
+      "JEM-A整合": "PASS",
+      "理由": "規格候補マスターに完全一致",
+      "E2E集計": "FAIL",
+      "件数": 0,
+      "_source": {
+        "sheet": "29_E2Eテスト",
+        "row": 6
+      }
+    },
+    {
+      "test_id": "STD_リモコンGR_JEMAあり",
+      "期待値": "規格候補確定",
+      "実結果": "規格候補確定",
+      "判定": "PASS",
+      "サイズモード": "規格",
+      "シャッター整合": "PASS",
+      "JEM-A整合": "PASS",
+      "理由": "規格候補マスターに完全一致",
+      "E2E集計": "候補マスター行数",
+      "件数": 538,
+      "_source": {
+        "sheet": "29_E2Eテスト",
+        "row": 7
+      }
+    },
+    {
+      "test_id": "FREE_スリットGR_W1300",
+      "期待値": "自由寸法候補",
+      "実結果": "自由寸法候補",
+      "判定": "PASS",
+      "サイズモード": "自由寸法",
+      "rule_id": "RG431-SH-HN-2",
+      "シャッター整合": "PASS",
+      "JEM-A整合": "PASS",
+      "理由": "自由寸法ルールに適合",
+      "_source": {
+        "sheet": "29_E2Eテスト",
+        "row": 8
+      }
+    },
+    {
+      "test_id": "FREE_リモコン_W1100不可",
+      "期待値": "NG",
+      "実結果": "NG",
+      "判定": "PASS",
+      "サイズモード": "自由寸法",
+      "rule_id": "RG431-SH-HN-2",
+      "シャッター整合": "PASS",
+      "JEM-A整合": "PASS",
+      "理由": "選択シャッターの製作範囲外",
+      "_source": {
+        "sheet": "29_E2Eテスト",
+        "row": 9
+      }
+    },
+    {
+      "test_id": "FREE_手動_W1100可",
+      "期待値": "自由寸法候補",
+      "実結果": "自由寸法候補",
+      "判定": "PASS",
+      "サイズモード": "自由寸法",
+      "rule_id": "RG431-SH-HN-2",
+      "シャッター整合": "PASS",
+      "JEM-A整合": "PASS",
+      "理由": "自由寸法ルールに適合",
+      "_source": {
+        "sheet": "29_E2Eテスト",
+        "row": 10
+      }
+    },
+    {
+      "test_id": "STD_非シャッター",
+      "期待値": "規格候補確定",
+      "実結果": "規格候補確定",
+      "判定": "PASS",
+      "サイズモード": "規格",
+      "シャッター整合": "PASS",
+      "JEM-A整合": "PASS",
+      "理由": "規格候補マスターに完全一致",
+      "_source": {
+        "sheet": "29_E2Eテスト",
+        "row": 11
+      }
+    },
+    {
+      "test_id": "JEMA_スリットGRあり不可",
+      "期待値": "NG",
+      "実結果": "NG",
+      "判定": "PASS",
+      "サイズモード": "規格",
+      "シャッター整合": "PASS",
+      "JEM-A整合": "NG",
+      "理由": "JEM-A選択がシャッター仕様と不整合",
+      "_source": {
+        "sheet": "29_E2Eテスト",
+        "row": 12
+      }
+    },
+    {
+      "test_id": "FREE_4枚建_スリットGR可",
+      "期待値": "自由寸法候補",
+      "実結果": "自由寸法候補",
+      "判定": "PASS",
+      "サイズモード": "自由寸法",
+      "rule_id": "RG431-SH-HN-4",
+      "シャッター整合": "PASS",
+      "JEM-A整合": "PASS",
+      "理由": "自由寸法ルールに適合",
+      "_source": {
+        "sheet": "29_E2Eテスト",
+        "row": 13
+      }
+    },
+    {
+      "test_id": "FREE_2x4_スリットGR可",
+      "期待値": "自由寸法候補",
+      "実結果": "自由寸法候補",
+      "判定": "PASS",
+      "サイズモード": "自由寸法",
+      "rule_id": "RG431-SH-24-2",
+      "シャッター整合": "PASS",
+      "JEM-A整合": "PASS",
+      "理由": "自由寸法ルールに適合",
+      "_source": {
+        "sheet": "29_E2Eテスト",
+        "row": 14
+      }
+    },
+    {
+      "test_id": "FREE_大開口均等",
+      "期待値": "自由寸法候補（要図表照合）",
+      "実結果": "自由寸法候補（要図表照合）",
+      "判定": "PASS",
+      "サイズモード": "自由寸法",
+      "rule_id": "RG431-LG-本州-EQ",
+      "シャッター整合": "PASS",
+      "JEM-A整合": "PASS",
+      "理由": "重量ガラス等の残存図表条件を確認",
+      "_source": {
+        "sheet": "29_E2Eテスト",
+        "row": 15
+      }
+    },
+    {
+      "test_id": "FREE_引違いクレセントアップ",
+      "期待値": "自由寸法候補",
+      "実結果": "自由寸法候補",
+      "判定": "PASS",
+      "サイズモード": "自由寸法",
+      "rule_id": "RG431-SL-HN-2",
+      "シャッター整合": "PASS",
+      "JEM-A整合": "PASS",
+      "理由": "自由寸法ルールに適合",
+      "_source": {
+        "sheet": "29_E2Eテスト",
+        "row": 16
+      }
+    },
+    {
+      "test_id": "FREE_重量ガラス",
+      "期待値": "自由寸法候補（要図表照合）",
+      "実結果": "自由寸法候補（要図表照合）",
+      "判定": "PASS",
+      "サイズモード": "自由寸法",
+      "rule_id": "RG431-SL-HN-2",
+      "シャッター整合": "PASS",
+      "JEM-A整合": "PASS",
+      "理由": "重量ガラス等の残存図表条件を確認",
+      "_source": {
+        "sheet": "29_E2Eテスト",
+        "row": 17
+      }
+    }
+  ],
+  "provenance": {
+    "authoring_drive_file_id": "1TBEn2tTbFjBLeIOeDs0fR3iIDcLEn3jI",
+    "authoring_file_name": "APW431_商品マスター_v1.0_最終QA正式固定版.xlsx",
+    "authoring_export_sha256": "2dc67a247e56efd98bd9e5437b410eca02fd3ef0b4f62009216c964d673e922a",
+    "authoring_bytes": 209048,
+    "generation_method": "Direct extraction from APW431 v1.0 fixed Authoring workbook; computed cell values serialized without inventing missing product specifications.",
+    "formula_sensitive_tables": [
+      "26_統合候補マスター",
+      "28_自由寸法Lookup",
+      "29_E2Eテスト",
+      "32_リリース固定"
+    ],
+    "revision": "20260911-R1",
+    "generated_at": "2026-09-11T21:24:00+09:00",
+    "semantic_change": false,
+    "change_summary": "Generated standard Runtime JSON package from existing v1.0 fixed Authoring Master. Product specifications unchanged.",
+    "glass_recovery": {
+      "source_ids": [
+        "1j9PtW8yoKBZ4Nodm58wU3QtOCvxlEja9",
+        "1GZRfXqRKZKti-LreyNgW9-wegAF-HzaK"
+      ],
+      "verified_at": "2026-09-18",
+      "official_only": true
+    }
+  },
+  "glass_field_contract": [
+    {
+      "id": "GFC431-001",
+      "field": "glass_base",
+      "value": "TRIPLE_GLAZING",
+      "label": "トリプルガラス",
+      "classification": "FIXED",
+      "visibility": "HIDE",
+      "required": true,
+      "windows": [
+        "W431-001",
+        "W431-002",
+        "W431-003",
+        "W431-004",
+        "W431-005",
+        "W431-006"
+      ],
+      "source": {
+        "file_id": "1j9PtW8yoKBZ4Nodm58wU3QtOCvxlEja9",
+        "page": "P.42"
+      }
+    },
+    {
+      "id": "GFC431-002",
+      "field": "glass_low_e",
+      "value": "DOUBLE_LOW_E",
+      "label": "ダブルLow-E",
+      "classification": "FIXED",
+      "visibility": "HIDE",
+      "required": true,
+      "windows": [
+        "W431-001",
+        "W431-002",
+        "W431-003",
+        "W431-004",
+        "W431-005",
+        "W431-006"
+      ],
+      "source": {
+        "file_id": "1j9PtW8yoKBZ4Nodm58wU3QtOCvxlEja9",
+        "page": "P.42"
+      }
+    },
+    {
+      "id": "GFC431-003",
+      "field": "glass_type",
+      "value": "SOLAR_GAIN_CLEAR",
+      "label": "日射取得型 クリア",
+      "classification": "USER_SELECTABLE",
+      "visibility": "SHOW",
+      "required": true,
+      "glass_master_id": "GL431-001",
+      "windows": [
+        "W431-001",
+        "W431-002",
+        "W431-003",
+        "W431-004",
+        "W431-005",
+        "W431-006"
+      ],
+      "source": {
+        "file_id": "1j9PtW8yoKBZ4Nodm58wU3QtOCvxlEja9",
+        "page": "P.42"
+      }
+    },
+    {
+      "id": "GFC431-004",
+      "field": "glass_type",
+      "value": "SOLAR_CONTROL_BLUE",
+      "label": "日射遮蔽型 ブルー",
+      "classification": "USER_SELECTABLE",
+      "visibility": "SHOW",
+      "required": true,
+      "glass_master_id": "GL431-002",
+      "windows": [
+        "W431-001",
+        "W431-002",
+        "W431-003",
+        "W431-004",
+        "W431-005",
+        "W431-006"
+      ],
+      "source": {
+        "file_id": "1j9PtW8yoKBZ4Nodm58wU3QtOCvxlEja9",
+        "page": "P.42"
+      }
+    },
+    {
+      "id": "GFC431-005",
+      "field": "glass_type",
+      "value": "SOLAR_CONTROL_BRONZE",
+      "label": "日射遮蔽型 ブロンズ",
+      "classification": "USER_SELECTABLE",
+      "visibility": "SHOW",
+      "required": true,
+      "glass_master_id": "GL431-003",
+      "windows": [
+        "W431-001",
+        "W431-002",
+        "W431-003",
+        "W431-004",
+        "W431-005",
+        "W431-006"
+      ],
+      "source": {
+        "file_id": "1j9PtW8yoKBZ4Nodm58wU3QtOCvxlEja9",
+        "page": "P.42"
+      }
+    },
+    {
+      "id": "GFC431-006",
+      "field": "glass_type",
+      "value": "SOLAR_CONTROL_NEUTRAL",
+      "label": "日射遮蔽型 ニュートラル",
+      "classification": "USER_SELECTABLE",
+      "visibility": "SHOW",
+      "required": true,
+      "glass_master_id": "GL431-004",
+      "windows": [
+        "W431-001",
+        "W431-002",
+        "W431-003",
+        "W431-004",
+        "W431-005",
+        "W431-006"
+      ],
+      "source": {
+        "file_id": "1j9PtW8yoKBZ4Nodm58wU3QtOCvxlEja9",
+        "page": "P.42"
+      }
+    },
+    {
+      "id": "GFC431-007",
+      "field": "glass_detail",
+      "value": "TRANSPARENT",
+      "label": "透明",
+      "classification": "CONDITIONAL_USER_SELECTABLE",
+      "visibility": "CONDITIONAL",
+      "required": "CONDITIONAL",
+      "windows": [
+        "W431-001",
+        "W431-002",
+        "W431-003",
+        "W431-004",
+        "W431-005",
+        "W431-006"
+      ],
+      "source": {
+        "file_id": "1j9PtW8yoKBZ4Nodm58wU3QtOCvxlEja9",
+        "page": "P.42/P.83/P.102/P.106/P.110/P.114"
+      }
+    },
+    {
+      "id": "GFC431-008",
+      "field": "glass_detail",
+      "value": "PATTERNED",
+      "label": "型",
+      "classification": "CONDITIONAL_USER_SELECTABLE",
+      "visibility": "CONDITIONAL",
+      "required": "CONDITIONAL",
+      "windows": [
+        "W431-001",
+        "W431-002",
+        "W431-003",
+        "W431-004",
+        "W431-005",
+        "W431-006"
+      ],
+      "source": {
+        "file_id": "1j9PtW8yoKBZ4Nodm58wU3QtOCvxlEja9",
+        "page": "P.42/P.83/P.102/P.106/P.110/P.114"
+      }
+    },
+    {
+      "id": "GFC431-009",
+      "field": "glass_detail",
+      "value": "FROSTED",
+      "label": "すり",
+      "classification": "CONDITIONAL_USER_SELECTABLE",
+      "visibility": "CONDITIONAL",
+      "required": "CONDITIONAL",
+      "windows": [
+        "W431-001",
+        "W431-002",
+        "W431-004",
+        "W431-005",
+        "W431-006"
+      ],
+      "excluded_windows": [
+        "W431-003"
+      ],
+      "source": {
+        "file_id": "1GZRfXqRKZKti-LreyNgW9-wegAF-HzaK",
+        "page": "P.141"
+      }
+    },
+    {
+      "id": "GFC431-010",
+      "field": "glass_function",
+      "value": "SAFETY_LAMINATED_30MIL",
+      "label": "安全合わせ複層ガラス 30mil",
+      "classification": "CONDITIONAL_USER_SELECTABLE",
+      "visibility": "CONDITIONAL",
+      "required": false,
+      "details": [
+        "TRANSPARENT",
+        "PATTERNED"
+      ],
+      "source": {
+        "file_id": "1j9PtW8yoKBZ4Nodm58wU3QtOCvxlEja9",
+        "page": "P.43/P.83/P.102/P.106/P.110/P.114"
+      }
+    },
+    {
+      "id": "GFC431-011",
+      "field": "glass_function",
+      "value": "DISASTER_SAFETY_LAMINATED_60MIL",
+      "label": "防災安全合わせ複層ガラス 60mil",
+      "classification": "CONDITIONAL_USER_SELECTABLE",
+      "visibility": "CONDITIONAL",
+      "required": false,
+      "details": [
+        "TRANSPARENT",
+        "PATTERNED"
+      ],
+      "source": {
+        "file_id": "1j9PtW8yoKBZ4Nodm58wU3QtOCvxlEja9",
+        "page": "P.43/P.83/P.102/P.106/P.110/P.114"
+      }
+    },
+    {
+      "id": "GFC431-012",
+      "field": "glass_spacer",
+      "value": "RESIN",
+      "label": "樹脂スペーサー",
+      "classification": "FIXED",
+      "visibility": "HIDE",
+      "required": true,
+      "source": {
+        "file_id": "1j9PtW8yoKBZ4Nodm58wU3QtOCvxlEja9",
+        "page": "P.42"
+      }
+    },
+    {
+      "id": "GFC431-013",
+      "field": "gas",
+      "value": "ARGON",
+      "label": "アルゴンガス入",
+      "classification": "FIXED",
+      "visibility": "HIDE",
+      "required": true,
+      "source": {
+        "file_id": "1j9PtW8yoKBZ4Nodm58wU3QtOCvxlEja9",
+        "page": "P.42"
+      }
+    },
+    {
+      "id": "GFC431-014",
+      "field": "glass_air_layer",
+      "value": "BY_YKKAP_GLASS_CODE",
+      "label": "中空層厚",
+      "classification": "DERIVED",
+      "visibility": "HIDE",
+      "required": true,
+      "source": {
+        "file_id": "1GZRfXqRKZKti-LreyNgW9-wegAF-HzaK",
+        "page": "P.141"
+      }
+    },
+    {
+      "id": "GFC431-015",
+      "field": "glass_composition",
+      "value": "BY_YKKAP_GLASS_CODE",
+      "label": "室外側/中空層/中間/中空層/室内側",
+      "classification": "DERIVED_TECHNICAL_METADATA",
+      "visibility": "HIDE",
+      "required": true,
+      "source": {
+        "file_id": "1GZRfXqRKZKti-LreyNgW9-wegAF-HzaK",
+        "page": "P.141"
+      }
+    }
+  ],
+  "glass_dependency_contract": [
+    {
+      "id": "GDP431-001",
+      "type": "WINDOW_RULE_MAP",
+      "windows": [
+        "W431-001",
+        "W431-002"
+      ],
+      "rule": "GR431-SLIDE",
+      "composition_family": "SLIDE",
+      "action": "FILTER_AND_CLEAR_INVALID"
+    },
+    {
+      "id": "GDP431-002",
+      "type": "WINDOW_RULE_MAP",
+      "windows": [
+        "W431-003"
+      ],
+      "rule": "GR431-LARGE",
+      "composition_family": "LARGE",
+      "action": "FILTER_AND_CLEAR_INVALID"
+    },
+    {
+      "id": "GDP431-003",
+      "type": "WINDOW_RULE_MAP",
+      "windows": [
+        "W431-004",
+        "W431-005"
+      ],
+      "rule": "GR431-DOOR",
+      "composition_family": "DOOR",
+      "action": "FILTER_AND_CLEAR_INVALID"
+    },
+    {
+      "id": "GDP431-004",
+      "type": "WINDOW_RULE_MAP",
+      "windows": [
+        "W431-006"
+      ],
+      "rule": "GR431-BACK",
+      "composition_family": "DOOR",
+      "action": "FILTER_AND_CLEAR_INVALID"
+    },
+    {
+      "id": "GDP431-005",
+      "type": "SIZE_RULE",
+      "parent": "size_candidate",
+      "children": [
+        "glass_detail",
+        "glass_function"
+      ],
+      "action": "FILTER_AND_CLEAR_INVALID",
+      "standard_condition_ng_no_custom_fallback": true
+    },
+    {
+      "id": "GDP431-006",
+      "type": "CUSTOM_RULE",
+      "parent": "custom_size",
+      "children": [
+        "glass_code",
+        "glass_composition"
+      ],
+      "action": "VALIDATE_OR_BLOCK",
+      "outside_range": "BLOCK",
+      "source_graph": "MANUAL_CHECK"
+    },
+    {
+      "id": "GDP431-007",
+      "type": "PARENT_CHANGE_CLEAR",
+      "parent": "glass_type",
+      "action": "CLEAR_AND_REDERIVE",
+      "clear": [
+        "glass_code",
+        "glass_air_layer",
+        "glass_composition"
+      ],
+      "retain_if_compatible": [
+        "glass_detail",
+        "glass_function"
+      ]
+    },
+    {
+      "id": "GDP431-008",
+      "type": "PARENT_CHANGE_CLEAR",
+      "parent": "glass_detail",
+      "action": "CLEAR_INVALID_AND_REDERIVE",
+      "clear_invalid": [
+        "glass_function"
+      ],
+      "clear": [
+        "glass_code",
+        "glass_air_layer",
+        "glass_composition"
+      ]
+    },
+    {
+      "id": "GDP431-009",
+      "type": "PARENT_CHANGE_CLEAR",
+      "parent": "glass_function",
+      "action": "CLEAR_AND_REDERIVE",
+      "clear": [
+        "glass_code",
+        "glass_air_layer",
+        "glass_composition"
+      ]
+    },
+    {
+      "id": "GDP431-010",
+      "type": "FIXED_PROPERTY",
+      "fields": [
+        "glass_base",
+        "glass_low_e",
+        "glass_spacer",
+        "gas"
+      ],
+      "action": "ASSIGN_NO_SELECTOR"
+    },
+    {
+      "id": "GDP431-011",
+      "type": "DERIVED_PROPERTY",
+      "parent": "glass_code",
+      "children": [
+        "glass_air_layer",
+        "glass_composition"
+      ],
+      "action": "DERIVE"
+    },
+    {
+      "id": "GDP431-012",
+      "type": "UNAVAILABLE_COMBINATION",
+      "when": {
+        "window_type": "W431-003",
+        "glass_detail": "FROSTED"
+      },
+      "action": "REJECT_AND_CLEAR"
+    },
+    {
+      "id": "GDP431-013",
+      "type": "UNAVAILABLE_COMBINATION",
+      "when": {
+        "operation_configuration": "4枚建",
+        "heavy_glass": true
+      },
+      "action": "REJECT_AND_CLEAR"
+    }
+  ],
+  "glass_window_rule_mapping": [
+    {
+      "id": "GDP431-001",
+      "type": "WINDOW_RULE_MAP",
+      "windows": [
+        "W431-001",
+        "W431-002"
+      ],
+      "rule": "GR431-SLIDE",
+      "composition_family": "SLIDE",
+      "action": "FILTER_AND_CLEAR_INVALID"
+    },
+    {
+      "id": "GDP431-002",
+      "type": "WINDOW_RULE_MAP",
+      "windows": [
+        "W431-003"
+      ],
+      "rule": "GR431-LARGE",
+      "composition_family": "LARGE",
+      "action": "FILTER_AND_CLEAR_INVALID"
+    },
+    {
+      "id": "GDP431-003",
+      "type": "WINDOW_RULE_MAP",
+      "windows": [
+        "W431-004",
+        "W431-005"
+      ],
+      "rule": "GR431-DOOR",
+      "composition_family": "DOOR",
+      "action": "FILTER_AND_CLEAR_INVALID"
+    },
+    {
+      "id": "GDP431-004",
+      "type": "WINDOW_RULE_MAP",
+      "windows": [
+        "W431-006"
+      ],
+      "rule": "GR431-BACK",
+      "composition_family": "DOOR",
+      "action": "FILTER_AND_CLEAR_INVALID"
+    }
+  ],
+  "release_status": "FORMAL",
+  "authoring": {
+    "file_name": "YKKAP_APW431_AUTHORING_MASTER_v1.1_GLASS_RECOVERY_FORMAL.xlsx",
+    "file_id": "1a74bRArw_dfwmOyZ0HYPfmfGyAMvT1I6",
+    "sha256": "e9b252e490969222c1a89579fbd13592892fbad7fb230bd21a6436f088fd71d3"
+  }
+}

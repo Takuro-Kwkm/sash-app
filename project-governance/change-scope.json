@@ -1,0 +1,44 @@
+{
+  "schema_version": "2.0.0",
+  "task_id": "SEVEN_SERIES_SLIM_PROMOTION_20260929",
+  "task_classification": "NON-PRODUCT-MASTER",
+  "product_master_mutation": 0,
+  "business_scope": "SALES_ESTIMATE_REQUEST",
+  "current_baseline": "SEVEN_SERIES_SLIM_V2",
+  "baseline_reset": true,
+  "legacy_qa_mode": "ARCHIVED_REFERENCE_ONLY",
+  "legacy_v12": {
+    "status": "STOPPED",
+    "run_id": 36533088492,
+    "old_open_parent_count": 124,
+    "counts_as_current_failure": false,
+    "carry_forward_to_current_qa": false
+  },
+  "series": [
+    "TW",
+    "EW",
+    "サーモスⅡ-H",
+    "サーモスL",
+    "APW430",
+    "APW431",
+    "ウチリモ 内窓"
+  ],
+  "qa_contract": {
+    "old_case_count_parity_required": false,
+    "old_canonical_id_parity_required": false,
+    "old_pass_fail_parity_required": false,
+    "legacy_artifact_required": false,
+    "unchanged_manufacturer_fact_evidence_reusable": true,
+    "current_slim_baseline_only": true
+  },
+  "integration_branch": "feat/new-construction-runtime-ui-v16-20260910",
+  "review_pr": 24,
+  "review_base": "main",
+  "execution_lane": "seven-series-slim-promotion",
+  "automatic_bom": "OUT_OF_SCOPE",
+  "automatic_price": "OUT_OF_SCOPE",
+  "automatic_order": "OUT_OF_SCOPE",
+  "manufacturer_confirmation_paths": "PRESERVE_AS_CONFIRMATION",
+  "app_integration_ready": "PENDING_CURRENT_BASELINE_GATE",
+  "production_current": false
+}

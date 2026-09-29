@@ -1,0 +1,30 @@
+{
+  "schema_version": "1.0.0",
+  "priority_order": [
+    "CONNECTOR_PLUGIN",
+    "OFFICIAL_API",
+    "AUTOMATION_GITHUB_ACTIONS",
+    "CLOUD_BROWSER_COMPUTER_USE",
+    "HUMAN_OPERATION"
+  ],
+  "rules": {
+    "same_failed_path_retry_without_state_change": false,
+    "local_git_https_auth_default": "CLOSED",
+    "secrets_in_chat_log_issue_artifact_repository": "PROHIBITED"
+  },
+  "services": {
+    "github": {
+      "selected_path": "CONNECTOR_PLUGIN",
+      "status": "OPEN",
+      "retry_authorized": true,
+      "last_observed": "2026-09-17T13:50:00+09:00",
+      "evidence": "PR, commit, tree and repository file reads succeeded through the GitHub connector before this foundation change.",
+      "fallbacks": [
+        { "path": "OFFICIAL_API", "status": "AVAILABLE_IF_NEEDED" },
+        { "path": "AUTOMATION_GITHUB_ACTIONS", "status": "AVAILABLE_IF_NEEDED" },
+        { "path": "LOCAL_GIT_HTTPS", "status": "CLOSED_BY_DEFAULT" },
+        { "path": "HUMAN_OPERATION", "status": "FALLBACK_ONLY" }
+      ]
+    }
+  }
+}

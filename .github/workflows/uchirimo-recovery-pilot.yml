@@ -1,0 +1,752 @@
+name: Release Scope / Uchirimo Recovery Lanes
+
+on:
+  workflow_call:
+    inputs:
+      controller_head:
+        required: true
+        type: string
+      lane:
+        required: false
+        type: string
+        default: combined
+    outputs:
+      pilot_hard_gate:
+        description: Uchirimo recovery gate state
+        value: ${{ jobs.recovery-gate.outputs.pilot_hard_gate }}
+      full_coverage_authorized:
+        description: Uchirimo Full Coverage authorization
+        value: ${{ jobs.recovery-gate.outputs.full_coverage_authorized }}
+      current_release_scope_ready:
+        description: Current Release Scope lane result
+        value: ${{ jobs.current-release-final.outputs.current_release_scope_ready }}
+
+permissions:
+  contents: read
+  issues: read
+  pull-requests: read
+  actions: read
+
+concurrency:
+  group: release-scope-lanes-${{ inputs.lane }}-${{ inputs.controller_head }}
+  cancel-in-progress: true
+
+jobs:
+  governance-authority:
+    uses: ./.github/workflows/governance-authorization.yml
+    with:
+      controller_head: ${{ inputs.controller_head }}
+      release: false
+
+  # ---------------------------------------------------------------------------
+  # Lane B: Uchirimo recovery remains DEFERRED / UNVERIFIED.
+  # The old giant endurance partition is intentionally NOT retried automatically.
+  # Recursive heavy-partition recovery will be introduced only after measured
+  # evidence is available and the retry rule is satisfied.
+  # ---------------------------------------------------------------------------
+  endurance-calibration:
+    needs: ["governance-authority"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && inputs.lane == 'legacy-endurance-calibration' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 330
+    env:
+      HEAD_SHA: ${{ inputs.controller_head }}
+      UCHIRIMO_SELECTOR_MODE: shard
+      UCHIRIMO_SELECTOR_BATCH_ID: recovery-v3-endurance-00
+      UCHIRIMO_SELECTOR_BATCH_JSON: '[{"shard":0,"node_id":"UCH-RES-SL2-T","partition_key":"UCH-RES-SL2-T|single_glazing|reverse_handing=\"reverse\"|frame_color=\"clear\"|glass_structure=\"F4\"|crescent_position=\"custom\"|crescent_presence=\"crescentless_special_order\"","room_specification":"residential","window_type":"sliding_window","sash_configuration":"two_panel","size_class":"terrace","glass_family":"single_glazing","partition_seed_json":"{\"crescent_position\":\"custom\",\"crescent_presence\":\"crescentless_special_order\",\"frame_color\":\"clear\",\"glass_structure\":\"F4\",\"reverse_handing\":\"reverse\"}"}]'
+      UCHIRIMO_SELECTOR_CHILD_TIMEOUT_MS: 18000000
+      UCHIRIMO_SELECTOR_EXPECTED_SHARDS: 1
+      UCHIRIMO_RESOLVER_CACHE_MAX: 4096
+      UCHIRIMO_SELECTOR_MAX_STATES: 5000000
+      UCHIRIMO_SELECTOR_MAX_TERMINALS: 5000000
+      UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-recovery-v3-endurance
+    steps:
+      - name: Checkout exact HEAD
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.HEAD_SHA }}
+          fetch-depth: 0
+      - name: Setup Node 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Install
+        run: npm install --ignore-scripts
+      - name: Verify exact HEAD
+        run: test "$(git rev-parse HEAD)" = "$HEAD_SHA"
+      - name: Run one isolated heavy partition to natural completion
+        run: node scripts/governance/uchirimo-selector-batch-runner.mjs
+      - name: Verify terminal artifact integrity
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import { createHash } from 'node:crypto';
+          import { readFileSync } from 'node:fs';
+          const out='artifacts/uchirimo-recovery-v3-endurance';
+          const report=JSON.parse(readFileSync(out+'/shard-0-report.json','utf8'));
+          const data=readFileSync(out+'/'+report.case_artifact);
+          const actual=createHash('sha256').update(data).digest('hex');
+          if(report.status!=='PASS')throw new Error('ENDURANCE_SHARD_NOT_PASS');
+          if(report.runtime_integrity_match!==true)throw new Error('ENDURANCE_RUNTIME_INTEGRITY_FAIL');
+          if(report.unverified_discrete_selector_case_count!==0)throw new Error('ENDURANCE_UNVERIFIED_NONZERO');
+          if(actual!==report.case_artifact_sha256)throw new Error('ENDURANCE_CASE_SHA_MISMATCH');
+          console.log('UCHIRIMO_RECOVERY_V3_ENDURANCE=PASS states='+report.visited_state_count+' terminals='+report.terminal_context_count+' peak_heap_mb='+report.observed_peak_heap_mb);
+          NODE
+      - name: Remove large terminal digest after integrity verification
+        if: always()
+        run: rm -f artifacts/uchirimo-recovery-v3-endurance/shard-*-terminal-digests.jsonl
+      - name: Upload lightweight endurance evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: uchirimo-recovery-v3-endurance-${{ env.HEAD_SHA }}
+          path: artifacts/uchirimo-recovery-v3-endurance/
+          if-no-files-found: error
+
+  recovery-gate:
+    needs:
+      - governance-authority
+      - endurance-calibration
+    if: ${{ always() && needs.governance-authority.outputs.authorized == 'true' && inputs.lane != 'current-release-scope' }}
+    runs-on: ubuntu-latest
+    outputs:
+      pilot_hard_gate: ${{ steps.gate.outputs.pilot_hard_gate }}
+      full_coverage_authorized: ${{ steps.gate.outputs.full_coverage_authorized }}
+    steps:
+      - name: Keep Uchirimo Full Coverage closed
+        id: gate
+        shell: bash
+        env:
+          ENDURANCE_RESULT: ${{ needs.endurance-calibration.result }}
+        run: |
+          set -euo pipefail
+          echo "pilot_hard_gate=BLOCKED" >> "$GITHUB_OUTPUT"
+          echo "full_coverage_authorized=false" >> "$GITHUB_OUTPUT"
+          if [ "$ENDURANCE_RESULT" = "success" ]; then
+            echo "RECOVERY_V3_ENDURANCE_CALIBRATION=PASS"
+            echo "RECOVERY_INTEGRATION_GATE=BLOCKED reason=GLOBAL_HEAVY_PARTITION_STRATEGY_PENDING"
+          elif [ "$ENDURANCE_RESULT" = "skipped" ]; then
+            echo "RECOVERY_INTEGRATION_GATE=BLOCKED reason=LEGACY_ENDURANCE_DISABLED_USE_RECURSIVE_RECOVERY"
+          else
+            echo "RECOVERY_V3_ENDURANCE_CALIBRATION=FAIL result=$ENDURANCE_RESULT"
+            echo "RECOVERY_INTEGRATION_GATE=BLOCKED reason=ENDURANCE_CALIBRATION_NOT_PASS"
+          fi
+          echo "UCHIRIMO_QA_STATUS=UNVERIFIED"
+          echo "UCHIRIMO_RELEASE_ELIGIBILITY=FALSE"
+          echo "FULL_COVERAGE_QA_GATE=BLOCKED"
+          exit 1
+
+  # ---------------------------------------------------------------------------
+  # Lane A: Current Release Scope. Source of Truth is release-scope.json.
+  # No Uchirimo exhaustive proof or Uchirimo browser artifact is required here.
+  # ---------------------------------------------------------------------------
+  current-release-nontw-exact:
+    needs: ["governance-authority"]
+    if: ${{ (inputs.lane == 'combined' || inputs.lane == 'current-release-scope') && needs.governance-authority.outputs.authorized == 'true' }}
+    uses: ./.github/workflows/stage-a-nontw-80-window-discrete-exact-count.yml
+    with:
+      controller_head: ${{ inputs.controller_head }}
+
+  current-release-tw-exact:
+    needs: ["governance-authority"]
+    if: ${{ (inputs.lane == 'combined' || inputs.lane == 'current-release-scope') && needs.governance-authority.outputs.authorized == 'true' }}
+    uses: ./.github/workflows/stage-a-tw-25-window-behavioral-projection-count.yml
+    with:
+      controller_head: ${{ inputs.controller_head }}
+
+  current-release-qa:
+    needs: ["governance-authority"]
+    if: ${{ (inputs.lane == 'combined' || inputs.lane == 'current-release-scope') && needs.governance-authority.outputs.authorized == 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    env:
+      HEAD_SHA: ${{ inputs.controller_head }}
+      STAGE_A_CUSTOM_SHAPE_OUT: artifacts/stage-a-custom-dimension-source-shape
+      STAGE_A_CUSTOM_GUARD_OUT: artifacts/stage-a-formal-split-custom-guard-shape
+      STAGE_A_CUSTOM_SHAPE_INPUT: artifacts/stage-a-custom-dimension-source-shape/report.json
+      STAGE_A_CUSTOM_GUARD_INPUT: artifacts/stage-a-formal-split-custom-guard-shape/report.json
+      STAGE_A_CUSTOM_PARTITION_OUT: artifacts/stage-a-custom-dimension-boundary-partition
+      STAGE_A_CUSTOM_PARTITION_INPUT: artifacts/stage-a-custom-dimension-boundary-partition/report.json
+      STAGE_A_CUSTOM_REACHABILITY_OUT: artifacts/stage-a-custom-selector-reachability
+      STAGE_A_CUSTOM_REACHABILITY_INPUT: artifacts/stage-a-custom-selector-reachability/report.json
+      STAGE_A_CUSTOM_GEOMETRY_EQ_OUT: artifacts/stage-a-custom-runtime-geometry-equivalence
+      STAGE_A_CUSTOM_GEOMETRY_EQ_INPUT: artifacts/stage-a-custom-runtime-geometry-equivalence/report.json
+      STAGE_A_CUSTOM_TRANSITION_OUT: artifacts/stage-a-custom-transition-proof-v4
+      STAGE_A_REACHABILITY_REPORT: artifacts/stage-a-custom-selector-reachability/report.json
+      STAGE_A_TRANSITION_REPORT: artifacts/stage-a-custom-transition-proof-v4/report.json
+      STAGE_A_FULL_BROWSER_OUT: artifacts/stage-a-full-browser-qa
+    steps:
+      - name: Checkout exact HEAD
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.HEAD_SHA }}
+          fetch-depth: 0
+
+      - name: Setup Node 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Install
+        run: npm install --ignore-scripts
+
+      - name: Verify exact HEAD and Current Release Scope invariants
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$HEAD_SHA"
+          mkdir -p artifacts/current-release-scope
+          node --input-type=module <<'NODE'
+          import { readFileSync, writeFileSync } from 'node:fs';
+          const scope=JSON.parse(readFileSync('project-governance/release-scope.json','utf8'));
+          const state=JSON.parse(readFileSync('project-governance/project-state.json','utf8'));
+          if(scope.task_classification!=='NON-PRODUCT-MASTER'||scope.product_master_mutation!==0)throw new Error('RELEASE_SCOPE_CLASSIFICATION_INVALID');
+          if(!Array.isArray(scope.current_release_targets)||scope.current_release_targets.length===0)throw new Error('CURRENT_RELEASE_SCOPE_EMPTY');
+          const currentIds=scope.current_release_targets.map((row)=>row.integration_id);
+          if(new Set(currentIds).size!==currentIds.length)throw new Error('CURRENT_RELEASE_SCOPE_DUPLICATE_INTEGRATION');
+          const deferred=scope.deferred_targets?.find((row)=>row.integration_id==='SER-YKKAP-UCHIRIMO');
+          if(!deferred||deferred.status!=='DEFERRED'||deferred.qa_status!=='UNVERIFIED'||deferred.release_eligibility!==false)throw new Error('UCHIRIMO_DEFERRED_INVARIANT_INVALID');
+          if(currentIds.includes('SER-YKKAP-UCHIRIMO'))throw new Error('UCHIRIMO_LEAKED_INTO_CURRENT_RELEASE_SCOPE');
+          if(state.flags?.app_integration_ready!==false||state.flags?.release_input_gate!=='BLOCKED')throw new Error('GLOBAL_GATE_STATE_MUST_REMAIN_BLOCKED');
+          writeFileSync('artifacts/current-release-scope/scope.json',JSON.stringify({
+            schema_version:'1.0.0',
+            exact_head:process.env.HEAD_SHA,
+            current_release_targets:scope.current_release_targets,
+            deferred_targets:scope.deferred_targets,
+            current_release_target_count:scope.current_release_targets.length,
+            global_app_integration_ready:state.flags.app_integration_ready,
+            global_release_input_gate:state.flags.release_input_gate
+          },null,2)+'\n');
+          console.log('CURRENT_RELEASE_SCOPE_TARGET_COUNT='+scope.current_release_targets.length);
+          console.log('UCHIRIMO_QA_STATUS='+deferred.qa_status);
+          console.log('UCHIRIMO_RELEASE_ELIGIBILITY='+String(deferred.release_eligibility).toUpperCase());
+          NODE
+
+      - name: Current Release Scope static and regression QA
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm run lint
+          npm run typecheck
+          node --test \
+            test/01-core.test.mjs \
+            test/02-lr.test.mjs \
+            test/03-features.test.mjs \
+            test/04-thermosl.test.mjs \
+            test/70-runtime-manifest-ew-integration.test.mjs \
+            test/70-runtime-manifest-tw-integration.test.mjs \
+            test/71-runtime-ui-tw-gate.test.mjs \
+            test/74-new-construction-ui-v16.test.mjs \
+            test/75-runtime-ui-inplus-v04r2-gate.test.mjs \
+            test/75-stage-a-size-display-full-coverage.test.mjs \
+            test/76-custom-dimension-safety.test.mjs \
+            test/76-frame-angle-global-flow.test.mjs \
+            test/77-runtime-ui-inplus-v04r2-installability-coverage.test.mjs \
+            test/83-thermosl-r2-glass-manufacturability.test.mjs \
+            2>&1 | tee artifacts/current-release-scope/scoped-regression.tap
+
+      - name: Current-head exterior CUSTOM geometry and transition proof
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/stage-a-custom-dimension-source-shape-diagnostic.mjs
+          node scripts/stage-a-formal-split-custom-guard-shape-diagnostic.mjs
+          node scripts/stage-a-custom-dimension-boundary-partition-proof-v2.mjs
+          node scripts/stage-a-custom-selector-reachability-v4.mjs
+          node scripts/stage-a-custom-runtime-geometry-equivalence-v4.mjs
+          CUSTOM_GEOMETRY_EVIDENCE_HEAD="$HEAD_SHA" node scripts/stage-a-custom-transition-proof-v4.mjs
+          node --input-type=module <<'NODE'
+          import { readFileSync } from 'node:fs';
+          const read=(path)=>JSON.parse(readFileSync(path,'utf8'));
+          const shape=read(process.env.STAGE_A_CUSTOM_SHAPE_INPUT);
+          const reach=read(process.env.STAGE_A_CUSTOM_REACHABILITY_INPUT);
+          const geometry=read(process.env.STAGE_A_CUSTOM_GEOMETRY_EQ_INPUT);
+          const transition=read(`${process.env.STAGE_A_CUSTOM_TRANSITION_OUT}/report.json`);
+          for(const row of [shape,reach,geometry,transition])if(row.exact_head_sha!==process.env.HEAD_SHA)throw new Error('CUSTOM_EXACT_HEAD_MISMATCH');
+          if(shape.total_custom_rule_count!==152||shape.unsupported_count!==0)throw new Error('CUSTOM_SOURCE_SHAPE_INVALID');
+          if(reach.source_rule_count!==152||reach.unique_context_count!==137||reach.unreachable_context_count!==0||reach.status!=='PASS')throw new Error('CUSTOM_REACHABILITY_INVALID');
+          if(geometry.source_rule_count!==152||geometry.window_count!==92||geometry.selector_context_count!==137||geometry.mismatch_count!==0||geometry.status!=='PASS')throw new Error('CUSTOM_GEOMETRY_INVALID');
+          if(transition.selector_context_count!==137||transition.evaluation_count!==1081||transition.status!=='PASS'||transition.gate_status?.custom_size_coverage_gate!=='PASS')throw new Error('CUSTOM_TRANSITION_INVALID');
+          console.log('CURRENT_RELEASE_SCOPE_CUSTOM_SIZE_COVERAGE=PASS');
+          NODE
+
+      - name: Install browser QA dependencies
+        run: |
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+
+      - name: Current Release Scope browser Full Coverage
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat > artifacts/current-release-scope/current-release-scope-browser.mjs <<'NODE'
+          import assert from 'node:assert/strict';
+          import { readFile, writeFile } from 'node:fs/promises';
+          import { chromium } from 'playwright';
+
+          const BASE=process.env.QA_BASE_URL??'http://127.0.0.1:4173';
+          const HEAD=process.env.HEAD_SHA??null;
+          const STAGES=['PRODUCT','OPENING','CONFIGURATION','SIZE','FINISH','SCREEN','GLAZING','INSTALLATION_SURVEY','OPTION'];
+          const STAGE_INDEX=new Map(STAGES.map((stage,index)=>[stage,index]));
+          const VIEWPORTS={
+            desktop:{viewport:{width:1440,height:1000}},
+            smartphone:{viewport:{width:390,height:844},isMobile:true,hasTouch:true},
+          };
+          const scope=JSON.parse(await readFile('project-governance/release-scope.json','utf8'));
+          const targetIds=new Set(scope.current_release_targets.map((row)=>row.integration_id));
+          assert.ok(targetIds.size>0,'current release target set is empty');
+          assert.equal(targetIds.has('SER-YKKAP-UCHIRIMO'),false,'deferred Uchirimo leaked into current release scope');
+
+          const report={
+            schema_version:'1.0.0',
+            status:'RUNNING',
+            exactHead:HEAD,
+            currentReleaseTargetCount:targetIds.size,
+            currentReleaseTargetIds:[...targetIds],
+            deferredTargets:scope.deferred_targets,
+            viewportResults:{},
+            windowCountPerViewport:{},
+            consoleErrors:[],
+            pageErrors:[],
+            failedResponses:[],
+            integrationCount:0,
+            windowCoverageChecks:0,
+            transitionChecks:0,
+            domSignatureChecks:0
+          };
+
+          function assertSemanticOrder(result,label){
+            let previous=-1;
+            for(const field of result.fields??[]){
+              assert.ok(field.semanticSlot,`${label}:${field.key}:semanticSlot missing`);
+              assert.ok(field.semanticStage,`${label}:${field.key}:semanticStage missing`);
+              assert.equal(String(field.semanticSlot).startsWith('other:'),false,`${label}:${field.key}:other fallback`);
+              const current=STAGE_INDEX.get(field.semanticStage);
+              assert.notEqual(current,undefined,`${label}:${field.key}:unknown stage ${field.semanticStage}`);
+              assert.ok(current>=previous,`${label}:${field.key}:stage inversion`);
+              previous=current;
+            }
+          }
+
+          const browser=await chromium.launch({headless:true});
+          async function installAndSelect(page,integration){
+            await page.goto(`${BASE}/runtime-lab`,{waitUntil:'networkidle'});
+            await page.waitForFunction(()=>document.querySelector('#status')?.textContent==='CATALOG CONNECTED');
+            await page.selectOption('#manufacturer',integration.manufacturer);
+            await page.waitForFunction((id)=>[...document.querySelectorAll('#product option')].some((option)=>option.value===id),integration.id);
+            const resolved=page.waitForResponse((response)=>response.url().includes('/api/runtime-master/resolve')&&response.status()===200);
+            await page.selectOption('#product',integration.id);
+            return (await resolved).json();
+          }
+          async function assertDomSignature(page,result,label){
+            assertSemanticOrder(result,label);
+            const domKeys=await page.locator('#dynamicForm .field[data-key]').evaluateAll((nodes)=>nodes.map((node)=>node.dataset.key));
+            const resultKeys=(result.fields??[]).map((field)=>field.key);
+            assert.deepEqual(domKeys,resultKeys,`${label}:DOM key sequence differs from resolver sequence`);
+            const overflow=await page.evaluate(()=>Math.max(0,document.documentElement.scrollWidth-window.innerWidth));
+            assert.ok(overflow<=1,`${label}:horizontal overflow ${overflow}`);
+            report.domSignatureChecks+=1;
+          }
+          async function runViewport(name,contextOptions,integrations){
+            const context=await browser.newContext(contextOptions);
+            const page=await context.newPage();
+            page.on('console',(message)=>{if(message.type()==='error')report.consoleErrors.push({viewport:name,text:message.text()});});
+            page.on('pageerror',(error)=>report.pageErrors.push({viewport:name,text:error.message}));
+            page.on('response',(response)=>{if(response.status()>=400&&!response.url().includes('favicon'))report.failedResponses.push({viewport:name,status:response.status(),url:response.url()});});
+            const rows=[];
+            try{
+              for(const integration of integrations){
+                let result=await installAndSelect(page,integration);
+                await assertDomSignature(page,result,`${name}:${integration.id}:initial`);
+                const windowField=(result.fields??[]).find((field)=>field.key==='window_type');
+                const windowChoices=(windowField?.values??[]).filter((choice)=>choice.disabled!==true);
+                assert.ok(windowChoices.length>0,`${name}:${integration.id}:window_type choices missing`);
+                let windowChecks=0;
+                for(const choice of windowChoices){
+                  const locator=page.locator('#dynamicForm [data-spec-key="window_type"]');
+                  assert.equal(await locator.count(),1,`${name}:${integration.id}:window_type DOM selector missing`);
+                  const responsePromise=page.waitForResponse((response)=>response.url().includes('/api/runtime-master/resolve')&&response.status()===200);
+                  await locator.selectOption(String(choice.value));
+                  result=await (await responsePromise).json();
+                  assert.equal(String(result.selection?.window_type),String(choice.value),`${name}:${integration.id}:${choice.value}:window selection did not stick`);
+                  await assertDomSignature(page,result,`${name}:${integration.id}:window:${choice.value}`);
+                  windowChecks+=1;
+                  report.windowCoverageChecks+=1;
+                }
+                const visited=new Set();
+                let transitions=0;
+                for(let step=0;step<12;step+=1){
+                  const field=(result.fields??[]).find((candidate)=>{
+                    if(candidate.readOnly||visited.has(candidate.key)||candidate.dataType==='NUMBER'||candidate.dataType==='TEXT')return false;
+                    return (candidate.values??[]).some((choice)=>choice.disabled!==true);
+                  });
+                  if(!field)break;
+                  visited.add(field.key);
+                  const choices=(field.values??[]).filter((choice)=>choice.disabled!==true);
+                  if(!choices.length)continue;
+                  const locator=page.locator(`#dynamicForm [data-spec-key="${field.key}"]`);
+                  if(await locator.count()===0)continue;
+                  const wanted=field.dataType==='MULTI_ENUM'?[String(choices[0].value)]:String(choices[0].value);
+                  const responsePromise=page.waitForResponse((response)=>response.url().includes('/api/runtime-master/resolve')&&response.status()===200);
+                  await locator.selectOption(wanted);
+                  result=await (await responsePromise).json();
+                  await assertDomSignature(page,result,`${name}:${integration.id}:set:${field.key}`);
+                  transitions+=1;
+                  report.transitionChecks+=1;
+                }
+                assert.ok(transitions>=1,`${name}:${integration.id}:no transition exercised`);
+                rows.push({id:integration.id,windowCount:windowChecks,transitions});
+              }
+            }finally{
+              await context.close();
+            }
+            report.viewportResults[name]=rows;
+            report.windowCountPerViewport[name]=rows.reduce((sum,row)=>sum+row.windowCount,0);
+          }
+
+          try{
+            const requestContext=await browser.newContext();
+            const response=await requestContext.request.get(`${BASE}/api/runtime-master/integrations`);
+            assert.equal(response.status(),200);
+            const all=await response.json();
+            const integrations=all.filter((row)=>targetIds.has(row.id));
+            await requestContext.close();
+            assert.equal(integrations.length,targetIds.size,'Current Release Scope integration count differs from release-scope.json');
+            assert.deepEqual(new Set(integrations.map((row)=>row.id)),targetIds,'Current Release Scope integration identities differ from release-scope.json');
+            for(const integration of integrations){
+              assert.equal(integration.selectable,true,`${integration.id}:not selectable`);
+              assert.equal(integration.status,'READY',`${integration.id}:not READY`);
+            }
+            report.integrationCount=integrations.length;
+            for(const [name,options] of Object.entries(VIEWPORTS))await runViewport(name,options,integrations);
+            const viewportCounts=Object.values(report.windowCountPerViewport);
+            assert.ok(viewportCounts.length===2&&viewportCounts[0]>0&&viewportCounts.every((value)=>value===viewportCounts[0]),'viewport window coverage mismatch');
+            assert.equal(report.windowCoverageChecks,viewportCounts[0]*2,'window coverage check count mismatch');
+            assert.deepEqual(report.consoleErrors,[]);
+            assert.deepEqual(report.pageErrors,[]);
+            assert.deepEqual(report.failedResponses,[]);
+            report.status='PASS';
+          }catch(error){
+            report.status='FAIL';
+            report.failure=error.stack??String(error);
+            throw error;
+          }finally{
+            await writeFile('artifacts/current-release-scope/browser-report.json',JSON.stringify(report,null,2)+'\n');
+            await browser.close();
+          }
+          NODE
+
+          npm run start:qa > /tmp/current-release-scope-browser.log 2>&1 &
+          PID=$!
+          trap 'kill $PID || true' EXIT
+          for i in {1..60}; do
+            if curl -fsS http://127.0.0.1:4173/api/health >/dev/null; then break; fi
+            sleep 0.5
+          done
+          node artifacts/current-release-scope/current-release-scope-browser.mjs
+          node test/browser/stage-a-full-browser-qa.mjs
+          node test/browser/inplus-v04r2-global-flow-full-coverage-browser-qa.mjs
+
+      - name: Verify Current Release Scope browser evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import { readFileSync } from 'node:fs';
+          const read=(path)=>JSON.parse(readFileSync(path,'utf8'));
+          const scope=read('artifacts/current-release-scope/scope.json');
+          const browser=read('artifacts/current-release-scope/browser-report.json');
+          const stageA=read('artifacts/stage-a-full-browser-qa/report.json');
+          const inplus=read('artifacts/inplus-v04r2-global-flow-full-coverage-browser-qa/report.json');
+          const head=process.env.HEAD_SHA;
+          const exact=(row)=>row?.exact_head===head||row?.exactHead===head||row?.exact_head_sha===head;
+          if(scope.exact_head!==head)throw new Error('SCOPE_HEAD_MISMATCH');
+          if(!exact(browser)||browser.status!=='PASS'||browser.integrationCount!==scope.current_release_target_count)throw new Error('CURRENT_SCOPE_BROWSER_INVALID');
+          if(!exact(stageA)||stageA.status!=='PASS'||stageA.gate_status?.full_browser_qa_gate!=='PASS')throw new Error('STAGE_A_BROWSER_INVALID');
+          if(stageA.viewports?.desktop?.base_windows?.count!==105||stageA.viewports?.smartphone?.base_windows?.count!==105)throw new Error('EXTERIOR_BROWSER_BASE_WINDOW_COUNT_INVALID');
+          if(stageA.viewports?.desktop?.custom_contexts?.checked!==137||stageA.viewports?.smartphone?.custom_contexts?.checked!==137)throw new Error('EXTERIOR_BROWSER_CUSTOM_CONTEXT_INVALID');
+          if(!exact(inplus)||inplus.status!=='PASS'||inplus.verifiedQaCaseCount!==1148||inplus.unverifiedQaCaseCount!==0||inplus.browserStateChecksTotal!==3350)throw new Error('INPLUS_EXHAUSTIVE_BROWSER_INVALID');
+          const deferred=scope.deferred_targets?.find((row)=>row.integration_id==='SER-YKKAP-UCHIRIMO');
+          if(!deferred||deferred.qa_status!=='UNVERIFIED'||deferred.release_eligibility!==false)throw new Error('UCHIRIMO_DEFERRED_STATE_LOST');
+          console.log('CURRENT_RELEASE_SCOPE_BROWSER_QA=PASS');
+          console.log('CURRENT_RELEASE_SCOPE_UNVERIFIED_QA_CASE_COUNT=0');
+          console.log('UCHIRIMO_QA_STATUS=UNVERIFIED');
+          NODE
+
+      - name: Upload Current Release Scope QA evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: current-release-scope-global-evidence-${{ env.HEAD_SHA }}
+          path: |
+            artifacts/current-release-scope/
+            artifacts/inplus-v04r2-global-flow-full-coverage-browser-qa/
+            artifacts/stage-a-full-browser-qa/
+            artifacts/stage-a-custom-dimension-source-shape/
+            artifacts/stage-a-custom-selector-reachability/
+            artifacts/stage-a-custom-runtime-geometry-equivalence/
+            artifacts/stage-a-custom-transition-proof-v4/
+          if-no-files-found: error
+
+  current-release-final:
+    needs:
+      - governance-authority
+      - current-release-nontw-exact
+      - current-release-tw-exact
+      - current-release-qa
+    if: ${{ always() && (inputs.lane == 'combined' || inputs.lane == 'current-release-scope') && needs.governance-authority.outputs.authorized == 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    outputs:
+      current_release_scope_ready: ${{ steps.final.outputs.current_release_scope_ready }}
+    env:
+      HEAD_SHA: ${{ inputs.controller_head }}
+    steps:
+      - name: Checkout exact HEAD
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.HEAD_SHA }}
+          fetch-depth: 0
+
+      - name: Setup Node 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Download Current Release Scope QA evidence
+        uses: actions/download-artifact@v4
+        with:
+          name: current-release-scope-global-evidence-${{ env.HEAD_SHA }}
+          path: artifacts/current-release-scope-final/current
+
+      - name: Download Non-TW exact aggregate
+        uses: actions/download-artifact@v4
+        with:
+          name: stage-a-nontw-80-window-discrete-exact-aggregate
+          path: artifacts/current-release-scope-final/nontw
+
+      - name: Download TW exact aggregate
+        uses: actions/download-artifact@v4
+        with:
+          name: stage-a-tw-25-window-behavioral-projection-aggregate
+          path: artifacts/current-release-scope-final/tw
+
+      - name: Evaluate Current Release Scope Final Gate
+        id: final
+        shell: bash
+        env:
+          NONTW_RESULT: ${{ needs.current-release-nontw-exact.result }}
+          TW_RESULT: ${{ needs.current-release-tw-exact.result }}
+          QA_RESULT: ${{ needs.current-release-qa.result }}
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import { existsSync, readFileSync, writeFileSync } from 'node:fs';
+          import { join } from 'node:path';
+
+          const head=process.env.HEAD_SHA;
+          const read=(path)=>JSON.parse(readFileSync(path,'utf8'));
+          const base='artifacts/current-release-scope-final';
+          const scope=read(join(base,'current/current-release-scope/scope.json'));
+          const browser=read(join(base,'current/current-release-scope/browser-report.json'));
+          const stageA=read(join(base,'current/stage-a-full-browser-qa/report.json'));
+          const inplus=read(join(base,'current/inplus-v04r2-global-flow-full-coverage-browser-qa/report.json'));
+          const nontwPath=join(base,'nontw/report.json');
+          const twPath=join(base,'tw/report.json');
+          const nontw=read(nontwPath);
+          const tw=read(twPath);
+          const exact=(row)=>row?.exact_head===head||row?.exactHead===head||row?.exact_head_sha===head;
+
+          function validateBoundProof(row,dir,family){
+            if(exact(row))return {mode:'DIRECT_CURRENT_HEAD',source_exact_head:head};
+            const bindingPath=join(dir,'current-head-binding.json');
+            if(!existsSync(bindingPath))throw new Error(`${family}_STALE_WITHOUT_BINDING`);
+            const binding=read(bindingPath);
+            const embedded=row?.exact_head??row?.exactHead??row?.exact_head_sha??null;
+            if(binding.status!=='PASS'||binding.family!==family||binding.current_exact_head!==head||binding.source_exact_head!==embedded)throw new Error(`${family}_BINDING_IDENTITY_INVALID`);
+            if(binding.impact_decision!=='NON_IMPACTING_DEPENDENCIES_UNCHANGED'||!Array.isArray(binding.dependency_changes)||binding.dependency_changes.length!==0)throw new Error(`${family}_BINDING_IMPACT_INVALID`);
+            return {mode:'CURRENT_HEAD_EVIDENCE_BINDING',source_exact_head:embedded};
+          }
+
+          const nontwBinding=validateBoundProof(nontw,join(base,'nontw'),'NONTW_EXACT');
+          const twBinding=validateBoundProof(tw,join(base,'tw'),'TW_EXACT');
+
+          if(process.env.NONTW_RESULT!=='success'||process.env.TW_RESULT!=='success'||process.env.QA_RESULT!=='success')throw new Error('CURRENT_RELEASE_SCOPE_COMPONENT_JOB_NOT_SUCCESS');
+          if(scope.exact_head!==head)throw new Error('SCOPE_EXACT_HEAD_MISMATCH');
+          if(scope.current_release_target_count!==scope.current_release_targets.length||scope.current_release_target_count===0)throw new Error('SCOPE_TARGET_COUNT_INVALID');
+          if(!exact(browser)||browser.status!=='PASS'||browser.integrationCount!==scope.current_release_target_count)throw new Error('CURRENT_SCOPE_BROWSER_NOT_PASS');
+          if(!exact(stageA)||stageA.status!=='PASS'||stageA.gate_status?.full_browser_qa_gate!=='PASS')throw new Error('STAGE_A_BROWSER_NOT_PASS');
+          if(!exact(inplus)||inplus.status!=='PASS'||inplus.verifiedQaCaseCount!==1148||inplus.unverifiedQaCaseCount!==0)throw new Error('INPLUS_FULL_COVERAGE_NOT_PASS');
+          if(nontw.status!=='NONTW_80_WINDOW_DISCRETE_EXACT_PASS'||nontw.report_count!==80||nontw.counted_window_count!==80||nontw.unverified_window_count!==0)throw new Error('NONTW_EXACT_NOT_PASS');
+          if(tw.status!=='TW_25_WINDOW_DISCRETE_COUNT_COMPONENT_CANDIDATE_COMPLETE'||tw.report_count!==25||tw.counted_window_count!==25||tw.unverified_window_count!==0)throw new Error('TW_EXACT_NOT_PASS');
+
+          const deferred=scope.deferred_targets?.find((row)=>row.integration_id==='SER-YKKAP-UCHIRIMO');
+          if(!deferred||deferred.status!=='DEFERRED'||deferred.qa_status!=='UNVERIFIED'||deferred.release_eligibility!==false)throw new Error('UCHIRIMO_DEFERRED_INVARIANT_INVALID');
+          if(scope.current_release_targets.some((row)=>row.integration_id==='SER-YKKAP-UCHIRIMO'))throw new Error('UCHIRIMO_IN_CURRENT_SCOPE');
+
+          const perViewport=Object.values(browser.windowCountPerViewport??{});
+          if(perViewport.length!==2||perViewport[0]!==perViewport[1])throw new Error('CURRENT_SCOPE_VIEWPORT_WINDOW_COUNT_MISMATCH');
+          const inplusRow=(browser.viewportResults?.desktop??[]).find((row)=>row.id==='SER-LIXIL-INPLUS');
+          if(!inplusRow||inplusRow.windowCount<=0)throw new Error('INPLUS_BASE_WINDOW_COUNT_MISSING');
+          const exteriorBaseWindowCount=nontw.counted_window_count+tw.counted_window_count;
+          const baseWindowCount=exteriorBaseWindowCount+inplusRow.windowCount;
+          if(perViewport[0]!==baseWindowCount)throw new Error(`CURRENT_SCOPE_BASE_WINDOW_COUNT_MISMATCH expected=${baseWindowCount} actual=${perViewport[0]}`);
+
+          let qaCaseCount=null;
+          try{
+            qaCaseCount=(
+              BigInt(nontw.exact_discrete_terminal_context_count??'0')+
+              BigInt(tw.tw_exact_discrete_terminal_context_count??'0')+
+              BigInt(inplus.logicalQaCaseCount??0)
+            ).toString();
+          }catch{}
+
+          const result={
+            schema_version:'1.0.0',
+            exact_head:head,
+            task_classification:'NON-PRODUCT-MASTER',
+            product_master_mutation:0,
+            gate:'CURRENT_RELEASE_SCOPE_FINAL_GATE',
+            status:'PASS',
+            current_release_scope_ready:true,
+            current_release_targets:scope.current_release_targets,
+            current_release_target_count:scope.current_release_target_count,
+            deferred_targets:scope.deferred_targets,
+            exterior_exact_window_count:exteriorBaseWindowCount,
+            base_window_count:baseWindowCount,
+            qa_case_count:qaCaseCount,
+            unverified_qa_case_count:0,
+            unknown_count:0,
+            unmapped_count:0,
+            browser_window_checks:browser.windowCoverageChecks,
+            browser_viewports:Object.keys(browser.viewportResults??{}),
+            inplus_logical_qa_case_count:inplus.logicalQaCaseCount,
+            nontw_evidence_binding:nontwBinding,
+            tw_evidence_binding:twBinding,
+            global_gate_state:{
+              app_integration_ready:scope.global_app_integration_ready,
+              release_input_gate:scope.global_release_input_gate
+            },
+            invariants:{
+              deferred_target_treated_as_pass:false,
+              deferred_target_release_eligible:false,
+              formal_runtime_mutated:false,
+              coverage_reduction_within_current_release_scope:false
+            }
+          };
+          writeFileSync(join(base,'current-release-scope-final.json'),JSON.stringify(result,null,2)+'\n');
+          console.log('CURRENT_RELEASE_SCOPE_FINAL_GATE=PASS');
+          console.log('CURRENT_RELEASE_SCOPE_READY=TRUE');
+          console.log('CURRENT_RELEASE_SCOPE_UNVERIFIED_QA_CASE_COUNT=0');
+          console.log('UCHIRIMO_QA_STATUS=UNVERIFIED');
+          console.log('UCHIRIMO_RELEASE_ELIGIBILITY=FALSE');
+          NODE
+          echo "current_release_scope_ready=true" >> "$GITHUB_OUTPUT"
+
+      - name: Upload Current Release Scope Final evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: current-release-scope-final-${{ env.HEAD_SHA }}
+          path: artifacts/current-release-scope-final/
+          if-no-files-found: error
+
+  heavy-recovery-analysis:
+    needs: ["governance-authority"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && inputs.lane == 'current-release-scope' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      GH_TOKEN: ${{ github.token }}
+      HEAD_SHA: ${{ inputs.controller_head }}
+      UCHIRIMO_HEAVY_SOURCE_RUN_ID: '35670279840'
+      UCHIRIMO_HEAVY_SOURCE_HEAD: '508021c64897039b2fa6e0391058ad88394536af'
+      UCHIRIMO_HEAVY_ANALYSIS_OUT: artifacts/uchirimo-heavy-recovery
+    steps:
+      - name: Checkout exact HEAD
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.HEAD_SHA }}
+          fetch-depth: 0
+
+      - name: Detect recovery-analysis source change
+        id: changes
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$HEAD_SHA"
+          changed="$(git diff-tree --no-commit-id --name-only -r "$HEAD_SHA")"
+          if printf '%s\n' "$changed" | grep -Eq '^(scripts/governance/uchirimo-heavy-partition-analysis\.mjs|\.github/workflows/uchirimo-recovery-pilot\.yml)$'; then
+            echo "required=true" >> "$GITHUB_OUTPUT"
+            echo "UCHIRIMO_HEAVY_ANALYSIS_TRIGGER=SOURCE_CHANGED"
+          else
+            echo "required=false" >> "$GITHUB_OUTPUT"
+            echo "UCHIRIMO_HEAVY_ANALYSIS_TRIGGER=SKIP_NO_SOURCE_CHANGE"
+          fi
+
+      - name: Setup Node 24
+        if: ${{ steps.changes.outputs.required == 'true' }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Install
+        if: ${{ steps.changes.outputs.required == 'true' }}
+        run: npm install --ignore-scripts
+
+      - name: Reconstruct heavy partition evidence from source run
+        id: analysis
+        if: ${{ steps.changes.outputs.required == 'true' }}
+        continue-on-error: true
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check scripts/governance/uchirimo-heavy-partition-analysis.mjs
+          node scripts/governance/uchirimo-heavy-partition-analysis.mjs
+
+      - name: Verify analysis-only coverage shape
+        id: verify
+        if: ${{ steps.changes.outputs.required == 'true' && steps.analysis.outcome == 'success' }}
+        continue-on-error: true
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import { readFileSync } from 'node:fs';
+          const analysis=JSON.parse(readFileSync('artifacts/uchirimo-heavy-recovery/heavy-partition-analysis.json','utf8'));
+          const plan=JSON.parse(readFileSync('artifacts/uchirimo-heavy-recovery/recursive-partition-plan.json','utf8'));
+          if(analysis.task_classification!=='NON-PRODUCT-MASTER'||analysis.product_master_mutation!==0)throw new Error('RECOVERY_ANALYSIS_CLASSIFICATION_INVALID');
+          if(analysis.deferred_scope_status!=='DEFERRED_UNVERIFIED')throw new Error('UCHIRIMO_DEFERRED_STATUS_INVALID');
+          if(!Number.isInteger(analysis.heavy_partition_count)||analysis.heavy_partition_count<1)throw new Error('HEAVY_PARTITION_INVENTORY_EMPTY');
+          if(plan.status!=='PLAN_READY')throw new Error('RECOVERY_PLAN_NOT_READY');
+          if(plan.PARTITION_OVERLAP_COUNT!==0||plan.PARTITION_GAP_COUNT!==0)throw new Error('RECOVERY_PLAN_COVERAGE_SHAPE_INVALID');
+          console.log('UCHIRIMO_HEAVY_ANALYSIS_ONLY=PASS');
+          console.log('UCHIRIMO_FULL_COVERAGE_QA_GATE=BLOCKED');
+          console.log('APP_INTEGRATION_READY=FALSE');
+          console.log('RELEASE_INPUT_GATE=BLOCKED');
+          NODE
+
+      - name: Record deferred recovery status
+        if: ${{ always() }}
+        shell: bash
+        env:
+          REQUIRED: ${{ steps.changes.outputs.required }}
+          ANALYSIS_OUTCOME: ${{ steps.analysis.outcome }}
+          VERIFY_OUTCOME: ${{ steps.verify.outcome }}
+        run: |
+          set -euo pipefail
+          echo "UCHIRIMO_RECOVERY_ANALYSIS_REQUIRED=${REQUIRED:-false}"
+          echo "UCHIRIMO_RECOVERY_ANALYSIS_OUTCOME=${ANALYSIS_OUTCOME:-skipped}"
+          echo "UCHIRIMO_RECOVERY_VERIFY_OUTCOME=${VERIFY_OUTCOME:-skipped}"
+          echo "UCHIRIMO_QA_STATUS=UNVERIFIED"
+          echo "UCHIRIMO_RELEASE_ELIGIBILITY=FALSE"
+          echo "FULL_COVERAGE_QA_GATE=BLOCKED"
+
+      - name: Upload heavy recovery analysis evidence
+        if: ${{ always() && steps.changes.outputs.required == 'true' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: uchirimo-heavy-recovery-analysis-${{ env.HEAD_SHA }}
+          path: artifacts/uchirimo-heavy-recovery/
+          if-no-files-found: warn

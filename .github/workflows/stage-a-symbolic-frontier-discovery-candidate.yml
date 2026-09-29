@@ -1,0 +1,40 @@
+name: Stage A Symbolic Frontier Discovery Candidate
+
+on:
+  workflow_call:
+    inputs:
+      controller_head:
+        required: true
+        type: string
+
+permissions:
+  issues: read
+  contents: read
+
+concurrency:
+  group: stage-a-symbolic-frontier-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  governance-authority:
+    uses: ./.github/workflows/governance-authorization.yml
+    with:
+      controller_head: ${{ inputs.controller_head }}
+      release: false
+
+  superseded_gate:
+    needs: ["governance-authority"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && (true) }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Close superseded discovery route
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo 'SYMBOLIC_FRONTIER_DISCOVERY_ROUTE=SUPERSEDED'
+          echo 'FORMAL_GOVERNANCE=サッシ情報管理アプリ_Runtime UI統合共通仕様書_v1.5'
+          echo 'PROOF_MODEL_VERSION=RUNTIME_UI_SYMBOLIC_FULL_COVERAGE_V1'
+          echo 'EVIDENCE_BASELINE_RUN=34913709911'
+          echo 'NEXT_ACTIVE_ROUTE=DEPENDENCY_WEIGHTED_EXACT_COUNT'
+          echo 'APP_INTEGRATION_READY=false'
+          echo 'RELEASE_INPUT_GATE=BLOCKED'

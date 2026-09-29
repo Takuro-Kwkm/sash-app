@@ -1,0 +1,21 @@
+{
+  "schema": "SLIM_ADOPTION_CONTENT_QA_V1",
+  "status": "PASS",
+  "candidate_sha256": "4a3518c3f5706aa4cff6ddcc10532edcade4f00f84a81ad63e3d74fa98d85930",
+  "canonical_sha256": "4522b7ad065d53370ce25a257b989b01994fbf0c1c11be76f4f1bff013353116",
+  "migration_unit_tests": 14,
+  "dimension_boundary_responses": 4440,
+  "factorized_roots": 42,
+  "factorized_transition_checks": 273305,
+  "manual_checks_preserved": 4,
+  "source_formal": {
+    "id": "1119yamXn21wLZd3C8LvamNWsTAx_1dt2",
+    "sha256": "be4f1f77727424dc06ddf9de947201f33d4aee5219b182e37d0f178e1fb7147d"
+  },
+  "prior_candidate_ci": {
+    "run_id": 36523217131,
+    "head": "93e9e5701602b7cfc15b0edb0f74006681e2c982",
+    "jobs_passed": 14
+  },
+  "integration_release": "SEPARATE_GATE_IN_PROGRESS"
+}

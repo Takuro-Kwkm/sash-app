@@ -1,0 +1,9 @@
+{
+  "schema_version": "1.0.0",
+  "authorized_github_logins": ["Takuro-Kwkm"],
+  "source": "GitHub PR #24 comment by authorized human user",
+  "required_prefix": "HUMAN_FLOW_REVIEW_APPROVAL",
+  "required_fields": ["decision", "reviewed_exact_head", "review_artifact_identity"],
+  "bot_approval_allowed": false,
+  "old_head_approval_allowed": false
+}

@@ -1,0 +1,45 @@
+name: Stage A Resolver-Derived Contract v2 Pilot
+
+on:
+  workflow_call:
+    inputs:
+      controller_head:
+        required: true
+        type: string
+
+permissions:
+  issues: read
+  contents: read
+
+concurrency:
+  group: stage-a-resolver-derived-contract-v2-pilot-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  governance-authority:
+    uses: ./.github/workflows/governance-authorization.yml
+    with:
+      controller_head: ${{ inputs.controller_head }}
+      release: false
+
+  superseded_gate:
+    needs: ["governance-authority"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && (true) }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Close completed resolver-derived contract v2 pilot route
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "RESOLVER_DERIVED_CONTRACT_V2_PILOT_PATH=CLOSED"
+          echo "EVIDENCE_RUN=34919112040"
+          echo "EVIDENCE_HEAD=82062e0c5802d27ab0b891a2206bd0900230eb5a"
+          echo "CONTRACT_INCONSISTENCY_COUNT=0_FOR_ALL_SIX_PILOT_WINDOWS"
+          echo "COUNTED_EXAMPLES=SAMOS2H,SAMOSL,APW430,APW431"
+          echo "EW_BLOCKER=TERMINAL_MULTI_ENUM_RESOLVER_CALL_EXPLOSION"
+          echo "TW_BLOCKER=UPSTREAM_CONTEXT_PLUS_TERMINAL_MULTI_ENUM_SYMBOLIC_COMPOSITION"
+          echo "SUPERSEDED_BY=TERMINAL_MULTI_ENUM_EXACT_PROOF_PILOT"
+          echo "RETRY_AUTHORIZED=false"
+          echo "APP_INTEGRATION_READY=false"
+          echo "RELEASE_INPUT_GATE=BLOCKED"

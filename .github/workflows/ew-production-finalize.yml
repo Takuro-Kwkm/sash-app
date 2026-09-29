@@ -1,12 +1,22 @@
 name: LIXIL EW v1.1 Production Finalize
 
 on:
-  push:
-    branches: [main]
+  workflow_call:
+    inputs:
+      controller_head:
+        required: true
+        type: string
 
 jobs:
+  governance-authority:
+    uses: ./.github/workflows/governance-authorization.yml
+    with:
+      controller_head: ${{ inputs.controller_head }}
+      release: true
+
   finalize_ew_production:
-    if: startsWith(github.event.head_commit.message, 'release LIXIL EW v1.1 production')
+    needs: ["governance-authority"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && (startsWith(github.event.head_commit.message, 'release LIXIL EW v1.1 production')) }}
     runs-on: ubuntu-latest
     environment: production
     env:
@@ -15,7 +25,7 @@ jobs:
       VERCEL_PROJECT_NAME: sash-app-wave3-preview
       VERCEL_TOKEN_PRIMARY: ${{ secrets.VERCEL_TOKEN }}
       VERCEL_TOKEN_FALLBACK: ${{ secrets.VERCEL_ACCESS_TOKEN }}
-      EXPECTED_EW_RUNTIME_SHA: 082442f82f51c4a81050d8e16d5fe3b9cb142004deb371a3e2bbb21384ca37dd
+      EXPECTED_EW_RUNTIME_SHA: 85fce07a07ab938b27d8a8e0178f5b5e2d3779926e6bd10c75d38e4e78699cea
       PRODUCTION_URL: https://sash-app-wave3-preview.vercel.app
       PRODUCTION_HOST: sash-app-wave3-preview.vercel.app
     steps:

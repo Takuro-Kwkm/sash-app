@@ -1,13 +1,22 @@
 name: V2 Recovery CI
 
 on:
-  push:
-    branches: [main, feat/catalog-recovery-v2, 'release/lixil-ew-v1.1-production-20260908']
-  pull_request:
-    branches: [main]
+  workflow_call:
+    inputs:
+      controller_head:
+        required: true
+        type: string
 
 jobs:
+  governance-authority:
+    uses: ./.github/workflows/governance-authorization.yml
+    with:
+      controller_head: ${{ inputs.controller_head }}
+      release: true
+
   test:
+    needs: ["governance-authority"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && (true) }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -30,6 +39,9 @@ jobs:
           node --check src/work-management/service.mjs
           node --check src/catalog/runtime-master/runtime-app-bridge.mjs
           node --check src/catalog/runtime-master/runtime-master-registry.mjs
+          node --check src/catalog/runtime-master/formal-product-runtime-loader.mjs
+          node --check src/catalog/runtime-master/apw430-formal-split-v1-adapter.mjs
+          node --check src/catalog/runtime-master/apw431-formal-split-v1-adapter.mjs
       - name: Full repository tests
         run: npm test
       - name: Runtime smoke
@@ -42,17 +54,18 @@ jobs:
             sleep 0.5
           done
           cat /tmp/health.json
-          node -e 'const h=require("/tmp/health.json"); const ids=new Set(h.runtimeMasterIntegrations.map(x=>x.id)); if(!h.ok || h.inventory.length!==4 || ids.size!==4 || !ids.has("SER-LIX-EW") || !ids.has("SER-LIXIL-TW") || !ids.has("SER-LIXIL-INPLUS") || !ids.has("SER-YKKAP-UCHIRIMO")) process.exit(1)'
+          node -e 'const h=require("/tmp/health.json"); const ids=new Set(h.runtimeMasterIntegrations.map(x=>x.id)); const expected=["SER-LIX-EW","SER-LIX-SAMOS2H","SER-LIX-SAMOSL","SER-LIXIL-TW","SER-LIXIL-INPLUS","SER-LIXIL-RECHENT-D3-NF","SER-YKK-APW430","SER-YKK-APW431","SER-YKKAP-UCHIRIMO"]; if(!h.ok || h.inventory.length!==4 || ids.size!==expected.length || expected.some(id=>!ids.has(id))) process.exit(1)'
           curl -fsS http://127.0.0.1:4173/api/runtime-master/integrations > /tmp/integrations.json
-          node -e 'const r=require("/tmp/integrations.json"); const ew=r.find(x=>x.id==="SER-LIX-EW"); if(!ew || !ew.selectable || ew.status!=="READY" || ew.sourceHash!=="082442f82f51c4a81050d8e16d5fe3b9cb142004deb371a3e2bbb21384ca37dd") process.exit(1)'
-          node -e 'const r=require("/tmp/integrations.json"); const tw=r.find(x=>x.id==="SER-LIXIL-TW"); if(!tw || !tw.selectable || tw.status!=="READY" || tw.sourceHash!=="52af3e462f940df67c267de5f715250290136afdd67a70611e684fcc3d5d064e") process.exit(1)'
-          node -e 'const r=require("/tmp/integrations.json"); const i=r.find(x=>x.id==="SER-LIXIL-INPLUS"); if(!i || !i.selectable || i.status!=="READY" || i.packageVersion!=="v0.4-R2" || i.sourceHash!=="cbbdb6ba315c985f7d27f75a237e861be8ce635962ce1cd5a746d7f152c8e1f8") process.exit(1)'
+          node -e 'const r=require("/tmp/integrations.json"); const ew=r.find(x=>x.id==="SER-LIX-EW"); if(!ew || !ew.selectable || ew.status!=="READY" || ew.sourceHash!=="85fce07a07ab938b27d8a8e0178f5b5e2d3779926e6bd10c75d38e4e78699cea") process.exit(1)'
+          node -e 'const r=require("/tmp/integrations.json"); const tw=r.find(x=>x.id==="SER-LIXIL-TW"); if(!tw || !tw.selectable || tw.status!=="READY" || tw.packageVersion!=="integrated-v0.4" || tw.sourceHash!=="95380f5cab261edf03bf868e0f2120b9d57e941d6618b4543afe7a6ffd00c68e") process.exit(1)'
+          node -e 'const r=require("/tmp/integrations.json"); const a430=r.find(x=>x.id==="SER-YKK-APW430"); if(!a430 || !a430.selectable || a430.status!=="READY" || a430.packageVersion!=="20260917-R2" || a430.sourceHash!=="1b012a78abfbbb2a6647272f92126d37c3a75d0a52d8b03de4d30e2afe9bcfcc") process.exit(1)'
+          node -e 'const r=require("/tmp/integrations.json"); const a431=r.find(x=>x.id==="SER-YKK-APW431"); if(!a431 || !a431.selectable || a431.status!=="READY" || a431.packageVersion!=="v1.1" || a431.sourceHash!=="7b4331b62d80a356fdd39549c942bb30db8a6e34e9e7d0fd2277c0bccc4f4f27") process.exit(1)'
           node -e 'const r=require("/tmp/integrations.json"); const u=r.find(x=>x.id==="SER-YKKAP-UCHIRIMO"); if(!u || !u.selectable || u.status!=="READY" || u.sourceHash!=="be4f1f77727424dc06ddf9de947201f33d4aee5219b182e37d0f178e1fb7147d") process.exit(1)'
       - name: Install browser QA dependencies
         run: |
           npm install --no-save playwright@1.55.0
           npx playwright install --with-deps chromium
-      - name: Uchirimo/EW/TW desktop/mobile browser QA, work-management QA and existing-series regression
+      - name: Runtime desktop/mobile browser QA, work-management QA and existing-series regression
         run: |
           npm run start:qa > /tmp/sash-v2-browser.log 2>&1 &
           PID=$!
@@ -64,6 +77,7 @@ jobs:
           node test/browser/ew-runtime-browser-qa.mjs
           node test/browser/tw-runtime-browser-qa.mjs
           node test/browser/uchirimo-runtime-browser-qa.mjs
+          node test/browser/formal-runtime-resync-browser-qa.mjs
           node test/browser/release-regression-browser-qa.mjs
           node test/browser/work-management-browser-qa.mjs
       - name: Upload browser QA artifacts
@@ -74,8 +88,8 @@ jobs:
           path: artifacts/
 
   release_build_preflight:
-    needs: test
-    if: github.event_name == 'push' && github.ref == 'refs/heads/release/lixil-ew-v1.1-production-20260908'
+    needs: ["governance-authority", "test"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && (github.event_name == 'push' && github.ref == 'refs/heads/release/lixil-ew-v1.1-production-20260908') }}
     runs-on: ubuntu-latest
     environment: production
     env:
@@ -134,8 +148,8 @@ jobs:
           if-no-files-found: warn
 
   deploy_production:
-    needs: test
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && github.event.head_commit.message == 'release LIXIL EW v1.1 production'
+    needs: ["governance-authority", "test"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && (github.event_name == 'push' && github.ref == 'refs/heads/main' && github.event.head_commit.message == 'release LIXIL EW v1.1 production') }}
     runs-on: ubuntu-latest
     environment: production
     env:
@@ -144,7 +158,7 @@ jobs:
       VERCEL_PROJECT_NAME: sash-app-wave3-preview
       VERCEL_TOKEN_PRIMARY: ${{ secrets.VERCEL_TOKEN }}
       VERCEL_TOKEN_FALLBACK: ${{ secrets.VERCEL_ACCESS_TOKEN }}
-      EXPECTED_EW_RUNTIME_SHA: 082442f82f51c4a81050d8e16d5fe3b9cb142004deb371a3e2bbb21384ca37dd
+      EXPECTED_EW_RUNTIME_SHA: 85fce07a07ab938b27d8a8e0178f5b5e2d3779926e6bd10c75d38e4e78699cea
       PRODUCTION_URL: https://sash-app-wave3-preview.vercel.app
       PRODUCTION_HOST: sash-app-wave3-preview.vercel.app
     steps:

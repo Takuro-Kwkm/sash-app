@@ -1,0 +1,1067 @@
+evaluation_mode": "MANUAL_CHECK_P141_GLASS_DIMENSION",
+      "frost_laminated": "NOT_ALLOWED",
+      "frost_grid_in": "NOT_ALLOWED",
+      "frost_validation": "Official frost species exists, but per-size glass-dimension formula is not projected for all 715 STANDARD rows; require P.141 glass-dimension MANUAL_CHECK. Laminated and grid-in are not allowed.",
+      "source": "SZ-YKK-APW430-SHUT-H2-18313｜商品カタログ P.92規格サイズ＋P.84『シャッター部以外の商品体系は引違い窓に準じる』＋P.78ガラス記号凡例",
+      "verification": "OFFICIAL_STANDARD_TABLE"
+    },
+    {
+      "size_id": "SZ-YKK-APW430-SHUT-H2-23309",
+      "series_window_id": "SWT-YKK-APW430-SHUTTER-HIKI",
+      "glass_symbol": "◎",
+      "symbol_legend_page": "P.78",
+      "transparent_functions": [
+        "NORMAL",
+        "SAFE-LAM",
+        "DISASTER-LAM"
+      ],
+      "pattern_functions": [
+        "NORMAL",
+        "SAFE-LAM",
+        "DISASTER-LAM"
+      ],
+      "frost_functions": [],
+      "frost_candidate": true,
+      "frost_evaluation_mode": "MANUAL_CHECK_P141_GLASS_DIMENSION",
+      "frost_laminated": "NOT_ALLOWED",
+      "frost_grid_in": "NOT_ALLOWED",
+      "frost_validation": "Official frost species exists, but per-size glass-dimension formula is not projected for all 715 STANDARD rows; require P.141 glass-dimension MANUAL_CHECK. Laminated and grid-in are not allowed.",
+      "source": "SZ-YKK-APW430-SHUT-H2-23309｜商品カタログ P.92規格サイズ＋P.84『シャッター部以外の商品体系は引違い窓に準じる』＋P.78ガラス記号凡例",
+      "verification": "OFFICIAL_STANDARD_TABLE"
+    },
+    {
+      "size_id": "SZ-YKK-APW430-SHUT-H2-25109",
+      "series_window_id": "SWT-YKK-APW430-SHUTTER-HIKI",
+      "glass_symbol": "◎",
+      "symbol_legend_page": "P.78",
+      "transparent_functions": [
+        "NORMAL",
+        "SAFE-LAM",
+        "DISASTER-LAM"
+      ],
+      "pattern_functions": [
+        "NORMAL",
+        "SAFE-LAM",
+        "DISASTER-LAM"
+      ],
+      "frost_functions": [],
+      "frost_candidate": true,
+      "frost_evaluation_mode": "MANUAL_CHECK_P141_GLASS_DIMENSION",
+      "frost_laminated": "NOT_ALLOWED",
+      "frost_grid_in": "NOT_ALLOWED",
+      "frost_validation": "Official frost species exists, but per-size glass-dimension formula is not projected for all 715 STANDARD rows; require P.141 glass-dimension MANUAL_CHECK. Laminated and grid-in are not allowed.",
+      "source": "SZ-YKK-APW430-SHUT-H2-25109｜商品カタログ P.92規格サイズ＋P.84『シャッター部以外の商品体系は引違い窓に準じる』＋P.78ガラス記号凡例",
+      "verification": "OFFICIAL_STANDARD_TABLE"
+    },
+    {
+      "size_id": "SZ-YKK-APW430-SHUT-H4-25109",
+      "series_window_id": "SWT-YKK-APW430-SHUTTER-HIKI",
+      "glass_symbol": "◎",
+      "symbol_legend_page": "P.78",
+      "transparent_functions": [
+        "NORMAL",
+        "SAFE-LAM",
+        "DISASTER-LAM"
+      ],
+      "pattern_functions": [
+        "NORMAL",
+        "SAFE-LAM",
+        "DISASTER-LAM"
+      ],
+      "frost_functions": [],
+      "frost_candidate": true,
+      "frost_evaluation_mode": "MANUAL_CHECK_P141_GLASS_DIMENSION",
+      "frost_laminated": "NOT_ALLOWED",
+      "frost_grid_in": "NOT_ALLOWED",
+      "frost_validation": "Official frost species exists, but per-size glass-dimension formula is not projected for all 715 STANDARD rows; require P.141 glass-dimension MANUAL_CHECK. Laminated and grid-in are not allowed.",
+      "source": "SZ-YKK-APW430-SHUT-H4-25109｜商品カタログ P.92規格サイズ＋P.84『シャッター部以外の商品体系は引違い窓に準じる』＋P.78ガラス記号凡例",
+      "verification": "OFFICIAL_STANDARD_TABLE"
+    },
+    {
+      "size_id": "SZ-YKK-APW430-SHUT-H2-25609",
+      "series_window_id": "SWT-YKK-APW430-SHUTTER-HIKI",
+      "glass_symbol": "◎",
+      "symbol_legend_page": "P.78",
+      "transparent_functions": [
+        "NORMAL",
+        "SAFE-LAM",
+        "DISASTER-LAM"
+      ],
+      "pattern_functions": [
+        "NORMAL",
+        "SAFE-LAM",
+        "DISASTER-LAM"
+      ],
+      "frost_functions": [],
+      "frost_candidate": true,
+      "frost_evaluation_mode": "MANUAL_CHECK_P141_GLASS_DIMENSION",
+      "frost_laminated": "NOT_ALLOWED",
+      "frost_grid_in": "NOT_ALLOWED",
+      "frost_validation": "Official frost species exists, but per-size glass-dimension formula is not projected for all 715 STANDARD rows; require P.141 glass-dimension MANUAL_CHECK. Laminated and grid-in are not allowed.",
+      "source": "SZ-YKK-APW430-SHUT-H2-25609｜商品カタログ P.92規格サイズ＋P.84『シャッター部以外の商品体系は引違い窓に準じる』＋P.78ガラス記号凡例",
+      "verification": "OFFICIAL_STANDARD_TABLE"
+    },
+    {
+      "size_id": "SZ-YKK-APW430-SHUT-H4-25609",
+      "series_window_id": "SWT-YKK-APW430-SHUTTER-HIKI",
+      "glass_symbol": "◎",
+      "symbol_legend_page": "P.78",
+      "transparent_functions": [
+        "NORMAL",
+        "SAFE-LAM",
+        "DISASTER-LAM"
+      ],
+      "pattern_functions": [
+        "NORMAL",
+        "SAFE-LAM",
+        "DISASTER-LAM"
+      ],
+      "frost_functions": [],
+      "frost_candidate": true,
+      "frost_evaluation_mode": "MANUAL_CHECK_P141_GLASS_DIMENSION",
+      "frost_laminated": "NOT_ALLOWED",
+      "frost_grid_in": "NOT_ALLOWED",
+      "frost_validation": "Official frost species exists, but per-size glass-dimension formula is not projected for all 715 STANDARD rows; require P.141 glass-dimension MANUAL_CHECK. Laminated and grid-in are not allowed.",
+      "source": "SZ-YKK-APW430-SHUT-H4-25609｜商品カタログ P.92規格サイズ＋P.84『シャッター部以外の商品体系は引違い窓に準じる』＋P.78ガラス記号凡例",
+      "verification": "OFFICIAL_STANDARD_TABLE"
+    },
+    {
+      "size_id": "SZ-YKK-APW430-SHUT-H2-23311",
+      "series_window_id": "SWT-YKK-APW430-SHUTTER-HIKI",
+      "glass_symbol": "◎",
+      "symbol_legend_page": "P.78",
+      "transparent_functions": [
+        "NORMAL",
+        "SAFE-LAM",
+        "DISASTER-LAM"
+      ],
+      "pattern_functions": [
+        "NORMAL",
+        "SAFE-LAM",
+        "DISASTER-LAM"
+      ],
+      "frost_functions": [],
+      "frost_candidate": true,
+      "frost_evaluation_mode": "MANUAL_CHECK_P141_GLASS_DIMENSION",
+      "frost_laminated": "NOT_ALLOWED",
+      "frost_grid_in": "NOT_ALLOWED",
+      "frost_validation": "Official frost species exists, but per-size glass-dimension formula is not projected for all 715 STANDARD rows; require P.141 glass-dimension MANUAL_CHECK. Laminated and grid-in are not allowed.",
+      "source": "SZ-YKK-APW430-SHUT-H2-23311｜商品カタログ P.92規格サイズ＋P.84『シャッター部以外の商品体系は引違い窓に準じる』＋P.78ガラス記号凡例",
+      "verification": "OFFICIAL_STANDARD_TABLE"
+    },
+    {
+      "size_id": "SZ-YKK-APW430-SHUT-H2-25111",
+      "series_window_id": "SWT-YKK-APW430-SHUTTER-HIKI",
+      "glass_symbol": "◎",
+      "symbol_legend_page": "P.78",
+      "transparent_functions": [
+        "NORMAL",
+        "SAFE-LAM",
+        "DISASTER-LAM"
+      ],
+      "pattern_functions": [
+        "NORMAL",
+        "SAFE-LAM",
+        "DISASTER-LAM"
+      ],
+      "frost_functions": [],
+      "frost_candidate": true,
+      "frost_evaluation_mode": "MANUAL_CHECK_P141_GLASS_DIMENSION",
+      "frost_laminated": "NOT_ALLOWED",
+      "frost_grid_in": "NOT_ALLOWED",
+      "frost_validation": "Official frost species exists, but per-size glass-dimension formula is not projected for all 715 STANDARD rows; require P.141 glass-dimension MANUAL_CHECK. Laminated and grid-in are not allowed.",
+      "source": "SZ-YKK-APW430-SHUT-H2-25111｜商品カタログ P.92規格サイズ＋P.84『シャッター部以外の商品体系は引違い窓に準じる』＋P.78ガラス記号凡例",
+      "verification": "OFFICIAL_STANDARD_TABLE"
+    },
+    {
+      "size_id": "SZ-YKK-APW430-SHUT-H4-25111",
+      "series_window_id": "SWT-YKK-APW430-SHUTTER-HIKI",
+      "glass_symbol": "◎",
+      "symbol_legend_page": "P.78",
+      "transparent_functions": [
+        "NORMAL",
+        "SAFE-LAM",
+        "DISASTER-LAM"
+      ],
+      "pattern_functions": [
+        "NORMAL",
+        "SAFE-LAM",
+        "DISASTER-LAM"
+      ],
+      "frost_functions": [],
+      "frost_candidate": true,
+      "frost_evaluation_mode": "MANUAL_CHECK_P141_GLASS_DIMENSION",
+      "frost_laminated": "NOT_ALLOWED",
+      "frost_grid_in": "NOT_ALLOWED",
+      "frost_validation": "Official frost species exists, but per-size glass-dimension formula is not projected for all 715 STANDARD rows; require P.141 glass-dimension MANUAL_CHECK. Laminated and grid-in are not allowed.",
+      "source": "SZ-YKK-APW430-SHUT-H4-25111｜商品カタログ P.92規格サイズ＋P.84『シャッター部以外の商品体系は引違い窓に準じる』＋P.78ガラス記号凡例",
+      "verification": "OFFICIAL_STANDARD_TABLE"
+    },
+    {
+      "size_id": "SZ-YKK-APW430-SHUT-H2-25611",
+      "series_window_id": "SWT-YKK-APW430-SHUTTER-HIKI",
+      "glass_symbol": "◎",
+      "symbol_legend_page": "P.78",
+      "transparent_functions": [
+        "NORMAL",
+        "SAFE-LAM",
+        "DISASTER-LAM"
+      ],
+      "pattern_functions": [
+        "NORMAL",
+        "SAFE-LAM",
+        "DISASTER-LAM"
+      ],
+      "frost_functions": [],
+      "frost_candidate": true,
+      "frost_evaluation_mode": "MANUAL_CHECK_P141_GLASS_DIMENSION",
+      "frost_laminated": "NOT_ALLOWED",
+      "frost_grid_in": "NOT_ALLOWED",
+      "frost_validation": "Official frost species exists, but per-size glass-dimension formula is not projected for all 715 STANDARD rows; require P.141 glass-dimension MANUAL_CHECK. Laminated and grid-in are not allowed.",
+      "source": "SZ-YKK-APW430-SHUT-H2-25611｜商品カタログ P.92規格サイズ＋P.84『シャッター部以外の商品体系は引違い窓に準じる』＋P.78ガラス記号凡例",
+      "verification": "OFFICIAL_STANDARD_TABLE"
+    },
+    {
+      "size_id": "SZ-YKK-APW430-SHUT-H4-25611",
+      "series_window_id": "SWT-YKK-APW430-SHUTTER-HIKI",
+      "glass_symbol": "◎",
+      "symbol_legend_page": "P.78",
+      "transparent_functions": [
+        "NORMAL",
+        "SAFE-LAM",
+        "DISASTER-LAM"
+      ],
+      "pattern_functions": [
+        "NORMAL",
+        "SAFE-LAM",
+        "DISASTER-LAM"
+      ],
+      "frost_functions": [],
+      "frost_candidate": true,
+      "frost_evaluation_mode": "MANUAL_CHECK_P141_GLASS_DIMENSION",
+      "frost_laminated": "NOT_ALLOWED",
+      "frost_grid_in": "NOT_ALLOWED",
+      "frost_validation": "Official frost species exists, but per-size glass-dimension formula is not projected for all 715 STANDARD rows; require P.141 glass-dimension MANUAL_CHECK. Laminated and grid-in are not allowed.",
+      "source": "SZ-YKK-APW430-SHUT-H4-25611｜商品カタログ P.92規格サイズ＋P.84『シャッター部以外の商品体系は引違い窓に準じる』＋P.78ガラス記号凡例",
+      "verification": "OFFICIAL_STANDARD_TABLE"
+    },
+    {
+      "size_id": "SZ-YKK-APW430-SHUT-H2-23313",
+      "series_window_id": "SWT-YKK-APW430-SHUTTER-HIKI",
+      "glass_symbol": "○",
+      "symbol_legend_page": "P.78",
+      "transparent_functions": [
+        "NORMAL",
+        "DISASTER-LAM"
+      ],
+      "pattern_functions": [
+        "NORMAL",
+        "DISASTER-LAM"
+      ],
+      "frost_functions": [],
+      "frost_candidate": true,
+      "frost_evaluation_mode": "MANUAL_CHECK_P141_GLASS_DIMENSION",
+      "frost_laminated": "NOT_ALLOWED",
+      "frost_grid_in": "NOT_ALLOWED",
+      "frost_validation": "Official frost species exists, but per-size glass-dimension formula is not projected for all 715 STANDARD rows; require P.141 glass-dimension MANUAL_CHECK. Laminated and grid-in are not allowed.",
+      "source": "SZ-YKK-APW430-SHUT-H2-23313｜商品カタログ P.92規格サイズ＋P.84『シャッター部以外の商品体系は引違い窓に準じる』＋P.78ガラス記号凡例",
+      "verification": "OFFICIAL_STANDARD_TABLE"
+    },
+    {
+      "size_id": "SZ-YKK-APW430-SHUT-H2-25113",
+      "series_window_id": "SWT-YKK-APW430-SHUTTER-HIKI",
+      "glass_symbol": "△",
+      "symbol_legend_page": "P.78",
+      "transparent_functions": [
+        "NORMAL"
+      ],
+      "pattern_functions": [
+        "NORMAL"
+      ],
+      "frost_functions": [],
+      "frost_candidate": true,
+      "frost_evaluation_mode": "MANUAL_CHECK_P141_GLASS_DIMENSION",
+      "frost_laminated": "NOT_ALLOWED",
+      "frost_grid_in": "NOT_ALLOWED",
+      "frost_validation": "Official frost species exists, but per-size glass-dimension formula is not projected for all 715 STANDARD rows; require P.141 glass-dimension MANUAL_CHECK. Laminated and grid-in are not allowed.",
+      "source": "SZ-YKK-APW430-SHUT-H2-25113｜商品カタログ P.92規格サイズ＋P.84『シャッター部以外の商品体系は引違い窓に準じる』＋P.78ガラス記号凡例",
+      "verification": "OFFICIAL_STANDARD_TABLE"
+    },
+    {
+      "size_id": "SZ-YKK-APW430-SHUT-H4-25113",
+      "series_window_id": "SWT-YKK-APW430-SHUTTER-HIKI",
+      "glass_symbol": "◎",
+      "symbol_legend_page": "P.78",
+      "transparent_functions": [
+        "NORMAL",
+        "SAFE-LAM",
+        "DISASTER-LAM"
+      ],
+      "pattern_functions": [
+        "NORMAL",
+        "SAFE-LAM",
+        "DISASTER-LAM"
+      ],
+      "frost_functions": [],
+      "frost_candidate": true,
+      "frost_evaluation_mode": "MANUAL_CHECK_P141_GLASS_DIMENSION",
+      "frost_laminated": "NOT_ALLOWED",
+      "frost_grid_in": "NOT_ALLOWED",
+      "frost_validation": "Official frost species exists, but per-size glass-dimension formula is not projected for all 715 STANDARD rows; require P.141 glass-dimension MANUAL_CHECK. Laminated and grid-in are not allowed.",
+      "source": "SZ-YKK-APW430-SHUT-H4-25113｜商品カタログ P.92規格サイズ＋P.84『シャッター部以外の商品体系は引違い窓に準じる』＋P.78ガラス記号凡例",
+      "verification": "OFFICIAL_STANDARD_TABLE"
+    },
+    {
+      "size_id": "SZ-YKK-APW430-SHUT-H2-25613",
+      "series_window_id": "SWT-YKK-APW430-SHUTTER-HIKI",
+      "glass_symbol": "△",
+      "symbol_legend_page": "P.78",
+      "transparent_functions": [
+        "NORMAL"
+      ],
+      "pattern_functions": [
+        "NORMAL"
+      ],
+      "frost_functions": [],
+      "frost_candidate": true,
+      "frost_evaluation_mode": "MANUAL_CHECK_P141_GLASS_DIMENSION",
+      "frost_laminated": "NOT_ALLOWED",
+      "frost_grid_in": "NOT_ALLOWED",
+      "frost_validation": "Official frost species exists, but per-size glass-dimension formula is not projected for all 715 STANDARD rows; require P.141 glass-dimension MANUAL_CHECK. Laminated and grid-in are not allowed.",
+      "source": "SZ-YKK-APW430-SHUT-H2-25613｜商品カタログ P.92規格サイズ＋P.84『シャッター部以外の商品体系は引違い窓に準じる』＋P.78ガラス記号凡例",
+      "verification": "OFFICIAL_STANDARD_TABLE"
+    },
+    {
+      "size_id": "SZ-YKK-APW430-SHUT-H4-25613",
+      "series_window_id": "SWT-YKK-APW430-SHUTTER-HIKI",
+      "glass_symbol": "◎",
+      "symbol_legend_page": "P.78",
+      "transparent_functions": [
+        "NORMAL",
+        "SAFE-LAM",
+        "DISASTER-LAM"
+      ],
+      "pattern_functions": [
+        "NORMAL",
+        "SAFE-LAM",
+        "DISASTER-LAM"
+      ],
+      "frost_functions": [],
+      "frost_candidate": true,
+      "frost_evaluation_mode": "MANUAL_CHECK_P141_GLASS_DIMENSION",
+      "frost_laminated": "NOT_ALLOWED",
+      "frost_grid_in": "NOT_ALLOWED",
+      "frost_validation": "Official frost species exists, but per-size glass-dimension formula is not projected for all 715 STANDARD rows; require P.141 glass-dimension MANUAL_CHECK. Laminated and grid-in are not allowed.",
+      "source": "SZ-YKK-APW430-SHUT-H4-25613｜商品カタログ P.92規格サイズ＋P.84『シャッター部以外の商品体系は引違い窓に準じる』＋P.78ガラス記号凡例",
+      "verification": "OFFICIAL_STANDARD_TABLE"
+    }
+  ],
+  "custom_glass_dependencies": [
+    {
+      "series_window_id": "SWT-YKK-APW430-FIX-MADO",
+      "glass_base": "TRIPLE",
+      "standard_appearance_candidates": [
+        "TRANSPARENT",
+        "PATTERN",
+        "FROST"
+      ],
+      "laminated_candidates": [
+        "SAFE-LAM",
+        "DISASTER-LAM"
+      ],
+      "laminated_detail_constraint": [
+        "TRANSPARENT",
+        "PATTERN"
+      ],
+      "frost_laminated": "NOT_ALLOWED",
+      "grid_in": "AVAILABLE_WITH_OFFICIAL_GRID_TABLE",
+      "grid_max_glass_w_mm": 1200,
+      "grid_max_glass_h_mm": 2200,
+      "grid_frost": "NOT_ALLOWED",
+      "custom_evaluation_mode": "MANUAL_CHECK_GLASS_DIMENSIONS_AND_COMPOSITION",
+      "manual_check_is_verified_policy": true,
+      "source": "202608_YKKAP_APW430_業務用資料集 P.130,P.134"
+    },
+    {
+      "series_window_id": "SWT-YKK-APW430-FIX-TR-204",
+      "glass_base": "TRIPLE",
+      "standard_appearance_candidates": [
+        "TRANSPARENT",
+        "PATTERN",
+        "FROST"
+      ],
+      "laminated_candidates": [
+        "SAFE-LAM",
+        "DISASTER-LAM"
+      ],
+      "laminated_detail_constraint": [
+        "TRANSPARENT",
+        "PATTERN"
+      ],
+      "frost_laminated": "NOT_ALLOWED",
+      "grid_in": "AVAILABLE_WITH_OFFICIAL_GRID_TABLE",
+      "grid_max_glass_w_mm": 1200,
+      "grid_max_glass_h_mm": 2200,
+      "grid_frost": "NOT_ALLOWED",
+      "custom_evaluation_mode": "MANUAL_CHECK_GLASS_DIMENSIONS_AND_COMPOSITION",
+      "manual_check_is_verified_policy": true,
+      "source": "202608_YKKAP_APW430_業務用資料集 P.130,P.134"
+    },
+    {
+      "series_window_id": "SWT-YKK-APW430-FIX-TR-ZAIRAI",
+      "glass_base": "TRIPLE",
+      "standard_appearance_candidates": [
+        "TRANSPARENT",
+        "PATTERN",
+        "FROST"
+      ],
+      "laminated_candidates": [
+        "SAFE-LAM",
+        "DISASTER-LAM"
+      ],
+      "laminated_detail_constraint": [
+        "TRANSPARENT",
+        "PATTERN"
+      ],
+      "frost_laminated": "NOT_ALLOWED",
+      "grid_in": "AVAILABLE_WITH_OFFICIAL_GRID_TABLE",
+      "grid_max_glass_w_mm": 1200,
+      "grid_max_glass_h_mm": 2200,
+      "grid_frost": "NOT_ALLOWED",
+      "custom_evaluation_mode": "MANUAL_CHECK_GLASS_DIMENSIONS_AND_COMPOSITION",
+      "manual_check_is_verified_policy": true,
+      "source": "202608_YKKAP_APW430_業務用資料集 P.130,P.134"
+    },
+    {
+      "series_window_id": "SWT-YKK-APW430-HIGH-ENDOP-SINGLE",
+      "glass_base": "TRIPLE",
+      "standard_appearance_candidates": [
+        "TRANSPARENT",
+        "PATTERN",
+        "FROST"
+      ],
+      "laminated_candidates": [
+        "SAFE-LAM",
+        "DISASTER-LAM"
+      ],
+      "laminated_detail_constraint": [
+        "TRANSPARENT",
+        "PATTERN"
+      ],
+      "frost_laminated": "NOT_ALLOWED",
+      "grid_in": "AVAILABLE_WITH_OFFICIAL_GRID_TABLE",
+      "grid_max_glass_w_mm": 1200,
+      "grid_max_glass_h_mm": 2200,
+      "grid_frost": "NOT_ALLOWED",
+      "custom_evaluation_mode": "MANUAL_CHECK_GLASS_DIMENSIONS_AND_COMPOSITION",
+      "manual_check_is_verified_policy": true,
+      "source": "202608_YKKAP_APW430_業務用資料集 P.130,P.133"
+    },
+    {
+      "series_window_id": "SWT-YKK-APW430-HIGH-SINGLE",
+      "glass_base": "TRIPLE",
+      "standard_appearance_candidates": [
+        "TRANSPARENT",
+        "PATTERN",
+        "FROST"
+      ],
+      "laminated_candidates": [
+        "SAFE-LAM",
+        "DISASTER-LAM"
+      ],
+      "laminated_detail_constraint": [
+        "TRANSPARENT",
+        "PATTERN"
+      ],
+      "frost_laminated": "NOT_ALLOWED",
+      "grid_in": "AVAILABLE_WITH_OFFICIAL_GRID_TABLE",
+      "grid_max_glass_w_mm": 1200,
+      "grid_max_glass_h_mm": 2200,
+      "grid_frost": "NOT_ALLOWED",
+      "custom_evaluation_mode": "MANUAL_CHECK_GLASS_DIMENSIONS_AND_COMPOSITION",
+      "manual_check_is_verified_policy": true,
+      "source": "202608_YKKAP_APW430_業務用資料集 P.130,P.133"
+    },
+    {
+      "series_window_id": "SWT-YKK-APW430-HIKI",
+      "glass_base": "TRIPLE",
+      "standard_appearance_candidates": [
+        "TRANSPARENT",
+        "PATTERN",
+        "FROST"
+      ],
+      "laminated_candidates": [
+        "SAFE-LAM",
+        "DISASTER-LAM"
+      ],
+      "laminated_detail_constraint": [
+        "TRANSPARENT",
+        "PATTERN"
+      ],
+      "frost_laminated": "NOT_ALLOWED",
+      "grid_in": "AVAILABLE_WITH_OFFICIAL_GRID_TABLE",
+      "grid_max_glass_w_mm": 1200,
+      "grid_max_glass_h_mm": 2200,
+      "grid_frost": "NOT_ALLOWED",
+      "custom_evaluation_mode": "MANUAL_CHECK_GLASS_DIMENSIONS_AND_COMPOSITION",
+      "manual_check_is_verified_policy": true,
+      "source": "202608_YKKAP_APW430_業務用資料集 P.130,P.136"
+    },
+    {
+      "series_window_id": "SWT-YKK-APW430-MENKOSHI-HIKI",
+      "glass_base": "TRIPLE",
+      "standard_appearance_candidates": [
+        "TRANSPARENT",
+        "PATTERN",
+        "FROST"
+      ],
+      "laminated_candidates": [
+        "SAFE-LAM",
+        "DISASTER-LAM"
+      ],
+      "laminated_detail_constraint": [
+        "TRANSPARENT",
+        "PATTERN"
+      ],
+      "frost_laminated": "NOT_ALLOWED",
+      "grid_in": "NOT_AVAILABLE_NO_DIRECT_OFFICIAL_GRID_TABLE",
+      "grid_max_glass_w_mm": null,
+      "grid_max_glass_h_mm": null,
+      "grid_frost": "NOT_ALLOWED",
+      "custom_evaluation_mode": "MANUAL_CHECK_GLASS_DIMENSIONS_AND_COMPOSITION",
+      "manual_check_is_verified_policy": true,
+      "source": "202608_YKKAP_APW430_業務用資料集 P.130-137監査。直接掲載なしのため推測許可しない"
+    },
+    {
+      "series_window_id": "SWT-YKK-APW430-SHUTTER-HIKI",
+      "glass_base": "TRIPLE",
+      "standard_appearance_candidates": [
+        "TRANSPARENT",
+        "PATTERN",
+        "FROST"
+      ],
+      "laminated_candidates": [
+        "SAFE-LAM",
+        "DISASTER-LAM"
+      ],
+      "laminated_detail_constraint": [
+        "TRANSPARENT",
+        "PATTERN"
+      ],
+      "frost_laminated": "NOT_ALLOWED",
+      "grid_in": "NOT_AVAILABLE_NO_DIRECT_OFFICIAL_GRID_TABLE",
+      "grid_max_glass_w_mm": null,
+      "grid_max_glass_h_mm": null,
+      "grid_frost": "NOT_ALLOWED",
+      "custom_evaluation_mode": "MANUAL_CHECK_GLASS_DIMENSIONS_AND_COMPOSITION",
+      "manual_check_is_verified_policy": true,
+      "source": "202608_YKKAP_APW430_業務用資料集 P.130-137監査。直接掲載なしのため推測許可しない"
+    },
+    {
+      "series_window_id": "SWT-YKK-APW430-SUBERI-GREMON-FIX-DAN",
+      "glass_base": "TRIPLE",
+      "standard_appearance_candidates": [
+        "TRANSPARENT",
+        "PATTERN",
+        "FROST"
+      ],
+      "laminated_candidates": [
+        "SAFE-LAM",
+        "DISASTER-LAM"
+      ],
+      "laminated_detail_constraint": [
+        "TRANSPARENT",
+        "PATTERN"
+      ],
+      "frost_laminated": "NOT_ALLOWED",
+      "grid_in": "AVAILABLE_WITH_OFFICIAL_GRID_TABLE",
+      "grid_max_glass_w_mm": 1200,
+      "grid_max_glass_h_mm": 2200,
+      "grid_frost": "NOT_ALLOWED",
+      "custom_evaluation_mode": "MANUAL_CHECK_GLASS_DIMENSIONS_AND_COMPOSITION",
+      "manual_check_is_verified_policy": true,
+      "source": "202608_YKKAP_APW430_業務用資料集 P.130,P.133"
+    },
+    {
+      "series_window_id": "SWT-YKK-APW430-SUBERI-GREMON-FIX-REN",
+      "glass_base": "TRIPLE",
+      "standard_appearance_candidates": [
+        "TRANSPARENT",
+        "PATTERN",
+        "FROST"
+      ],
+      "laminated_candidates": [
+        "SAFE-LAM",
+        "DISASTER-LAM"
+      ],
+      "laminated_detail_constraint": [
+        "TRANSPARENT",
+        "PATTERN"
+      ],
+      "frost_laminated": "NOT_ALLOWED",
+      "grid_in": "AVAILABLE_WITH_OFFICIAL_GRID_TABLE",
+      "grid_max_glass_w_mm": 1200,
+      "grid_max_glass_h_mm": 2200,
+      "grid_frost": "NOT_ALLOWED",
+      "custom_evaluation_mode": "MANUAL_CHECK_GLASS_DIMENSIONS_AND_COMPOSITION",
+      "manual_check_is_verified_policy": true,
+      "source": "202608_YKKAP_APW430_業務用資料集 P.130,P.133"
+    },
+    {
+      "series_window_id": "SWT-YKK-APW430-SUBERI-GREMON-SINGLE",
+      "glass_base": "TRIPLE",
+      "standard_appearance_candidates": [
+        "TRANSPARENT",
+        "PATTERN",
+        "FROST"
+      ],
+      "laminated_candidates": [
+        "SAFE-LAM",
+        "DISASTER-LAM"
+      ],
+      "laminated_detail_constraint": [
+        "TRANSPARENT",
+        "PATTERN"
+      ],
+      "frost_laminated": "NOT_ALLOWED",
+      "grid_in": "AVAILABLE_WITH_OFFICIAL_GRID_TABLE",
+      "grid_max_glass_w_mm": 1200,
+      "grid_max_glass_h_mm": 2200,
+      "grid_frost": "NOT_ALLOWED",
+      "custom_evaluation_mode": "MANUAL_CHECK_GLASS_DIMENSIONS_AND_COMPOSITION",
+      "manual_check_is_verified_policy": true,
+      "source": "202608_YKKAP_APW430_業務用資料集 P.130,P.132"
+    },
+    {
+      "series_window_id": "SWT-YKK-APW430-SUBERI-OP-FIX-DAN",
+      "glass_base": "TRIPLE",
+      "standard_appearance_candidates": [
+        "TRANSPARENT",
+        "PATTERN",
+        "FROST"
+      ],
+      "laminated_candidates": [
+        "SAFE-LAM",
+        "DISASTER-LAM"
+      ],
+      "laminated_detail_constraint": [
+        "TRANSPARENT",
+        "PATTERN"
+      ],
+      "frost_laminated": "NOT_ALLOWED",
+      "grid_in": "AVAILABLE_WITH_OFFICIAL_GRID_TABLE",
+      "grid_max_glass_w_mm": 1200,
+      "grid_max_glass_h_mm": 2200,
+      "grid_frost": "NOT_ALLOWED",
+      "custom_evaluation_mode": "MANUAL_CHECK_GLASS_DIMENSIONS_AND_COMPOSITION",
+      "manual_check_is_verified_policy": true,
+      "source": "202608_YKKAP_APW430_業務用資料集 P.130,P.133"
+    },
+    {
+      "series_window_id": "SWT-YKK-APW430-SUBERI-OP-FIX-REN",
+      "glass_base": "TRIPLE",
+      "standard_appearance_candidates": [
+        "TRANSPARENT",
+        "PATTERN",
+        "FROST"
+      ],
+      "laminated_candidates": [
+        "SAFE-LAM",
+        "DISASTER-LAM"
+      ],
+      "laminated_detail_constraint": [
+        "TRANSPARENT",
+        "PATTERN"
+      ],
+      "frost_laminated": "NOT_ALLOWED",
+      "grid_in": "AVAILABLE_WITH_OFFICIAL_GRID_TABLE",
+      "grid_max_glass_w_mm": 1200,
+      "grid_max_glass_h_mm": 2200,
+      "grid_frost": "NOT_ALLOWED",
+      "custom_evaluation_mode": "MANUAL_CHECK_GLASS_DIMENSIONS_AND_COMPOSITION",
+      "manual_check_is_verified_policy": true,
+      "source": "202608_YKKAP_APW430_業務用資料集 P.130,P.133"
+    },
+    {
+      "series_window_id": "SWT-YKK-APW430-SUBERI-OP-SINGLE",
+      "glass_base": "TRIPLE",
+      "standard_appearance_candidates": [
+        "TRANSPARENT",
+        "PATTERN",
+        "FROST"
+      ],
+      "laminated_candidates": [
+        "SAFE-LAM",
+        "DISASTER-LAM"
+      ],
+      "laminated_detail_constraint": [
+        "TRANSPARENT",
+        "PATTERN"
+      ],
+      "frost_laminated": "NOT_ALLOWED",
+      "grid_in": "AVAILABLE_WITH_OFFICIAL_GRID_TABLE",
+      "grid_max_glass_w_mm": 1200,
+      "grid_max_glass_h_mm": 2200,
+      "grid_frost": "NOT_ALLOWED",
+      "custom_evaluation_mode": "MANUAL_CHECK_GLASS_DIMENSIONS_AND_COMPOSITION",
+      "manual_check_is_verified_policy": true,
+      "source": "202608_YKKAP_APW430_業務用資料集 P.130,P.132"
+    },
+    {
+      "series_window_id": "SWT-YKK-APW430-TATE-GREMON-FIX-DAN",
+      "glass_base": "TRIPLE",
+      "standard_appearance_candidates": [
+        "TRANSPARENT",
+        "PATTERN",
+        "FROST"
+      ],
+      "laminated_candidates": [
+        "SAFE-LAM",
+        "DISASTER-LAM"
+      ],
+      "laminated_detail_constraint": [
+        "TRANSPARENT",
+        "PATTERN"
+      ],
+      "frost_laminated": "NOT_ALLOWED",
+      "grid_in": "AVAILABLE_WITH_OFFICIAL_GRID_TABLE",
+      "grid_max_glass_w_mm": 1200,
+      "grid_max_glass_h_mm": 2200,
+      "grid_frost": "NOT_ALLOWED",
+      "custom_evaluation_mode": "MANUAL_CHECK_GLASS_DIMENSIONS_AND_COMPOSITION",
+      "manual_check_is_verified_policy": true,
+      "source": "202608_YKKAP_APW430_業務用資料集 P.130,P.131"
+    },
+    {
+      "series_window_id": "SWT-YKK-APW430-TATE-GREMON-FIX-REN",
+      "glass_base": "TRIPLE",
+      "standard_appearance_candidates": [
+        "TRANSPARENT",
+        "PATTERN",
+        "FROST"
+      ],
+      "laminated_candidates": [
+        "SAFE-LAM",
+        "DISASTER-LAM"
+      ],
+      "laminated_detail_constraint": [
+        "TRANSPARENT",
+        "PATTERN"
+      ],
+      "frost_laminated": "NOT_ALLOWED",
+      "grid_in": "AVAILABLE_WITH_OFFICIAL_GRID_TABLE",
+      "grid_max_glass_w_mm": 1200,
+      "grid_max_glass_h_mm": 2200,
+      "grid_frost": "NOT_ALLOWED",
+      "custom_evaluation_mode": "MANUAL_CHECK_GLASS_DIMENSIONS_AND_COMPOSITION",
+      "manual_check_is_verified_policy": true,
+      "source": "202608_YKKAP_APW430_業務用資料集 P.130,P.131"
+    },
+    {
+      "series_window_id": "SWT-YKK-APW430-TATE-GREMON-SINGLE",
+      "glass_base": "TRIPLE",
+      "standard_appearance_candidates": [
+        "TRANSPARENT",
+        "PATTERN",
+        "FROST"
+      ],
+      "laminated_candidates": [
+        "SAFE-LAM",
+        "DISASTER-LAM"
+      ],
+      "laminated_detail_constraint": [
+        "TRANSPARENT",
+        "PATTERN"
+      ],
+      "frost_laminated": "NOT_ALLOWED",
+      "grid_in": "AVAILABLE_WITH_OFFICIAL_GRID_TABLE",
+      "grid_max_glass_w_mm": 1200,
+      "grid_max_glass_h_mm": 2200,
+      "grid_frost": "NOT_ALLOWED",
+      "custom_evaluation_mode": "MANUAL_CHECK_GLASS_DIMENSIONS_AND_COMPOSITION",
+      "manual_check_is_verified_policy": true,
+      "source": "202608_YKKAP_APW430_業務用資料集 P.130,P.131"
+    },
+    {
+      "series_window_id": "SWT-YKK-APW430-TATE-GREMON-WINDCATCH",
+      "glass_base": "TRIPLE",
+      "standard_appearance_candidates": [
+        "TRANSPARENT",
+        "PATTERN",
+        "FROST"
+      ],
+      "laminated_candidates": [
+        "SAFE-LAM",
+        "DISASTER-LAM"
+      ],
+      "laminated_detail_constraint": [
+        "TRANSPARENT",
+        "PATTERN"
+      ],
+      "frost_laminated": "NOT_ALLOWED",
+      "grid_in": "AVAILABLE_WITH_OFFICIAL_GRID_TABLE",
+      "grid_max_glass_w_mm": 1200,
+      "grid_max_glass_h_mm": 2200,
+      "grid_frost": "NOT_ALLOWED",
+      "custom_evaluation_mode": "MANUAL_CHECK_GLASS_DIMENSIONS_AND_COMPOSITION",
+      "manual_check_is_verified_policy": true,
+      "source": "202608_YKKAP_APW430_業務用資料集 P.130,P.131"
+    },
+    {
+      "series_window_id": "SWT-YKK-APW430-TATE-OP-FIX-DAN",
+      "glass_base": "TRIPLE",
+      "standard_appearance_candidates": [
+        "TRANSPARENT",
+        "PATTERN",
+        "FROST"
+      ],
+      "laminated_candidates": [
+        "SAFE-LAM",
+        "DISASTER-LAM"
+      ],
+      "laminated_detail_constraint": [
+        "TRANSPARENT",
+        "PATTERN"
+      ],
+      "frost_laminated": "NOT_ALLOWED",
+      "grid_in": "AVAILABLE_WITH_OFFICIAL_GRID_TABLE",
+      "grid_max_glass_w_mm": 1200,
+      "grid_max_glass_h_mm": 2200,
+      "grid_frost": "NOT_ALLOWED",
+      "custom_evaluation_mode": "MANUAL_CHECK_GLASS_DIMENSIONS_AND_COMPOSITION",
+      "manual_check_is_verified_policy": true,
+      "source": "202608_YKKAP_APW430_業務用資料集 P.130,P.131"
+    },
+    {
+      "series_window_id": "SWT-YKK-APW430-TATE-OP-FIX-REN",
+      "glass_base": "TRIPLE",
+      "standard_appearance_candidates": [
+        "TRANSPARENT",
+        "PATTERN",
+        "FROST"
+      ],
+      "laminated_candidates": [
+        "SAFE-LAM",
+        "DISASTER-LAM"
+      ],
+      "laminated_detail_constraint": [
+        "TRANSPARENT",
+        "PATTERN"
+      ],
+      "frost_laminated": "NOT_ALLOWED",
+      "grid_in": "AVAILABLE_WITH_OFFICIAL_GRID_TABLE",
+      "grid_max_glass_w_mm": 1200,
+      "grid_max_glass_h_mm": 2200,
+      "grid_frost": "NOT_ALLOWED",
+      "custom_evaluation_mode": "MANUAL_CHECK_GLASS_DIMENSIONS_AND_COMPOSITION",
+      "manual_check_is_verified_policy": true,
+      "source": "202608_YKKAP_APW430_業務用資料集 P.130,P.131"
+    },
+    {
+      "series_window_id": "SWT-YKK-APW430-TATE-OP-SINGLE",
+      "glass_base": "TRIPLE",
+      "standard_appearance_candidates": [
+        "TRANSPARENT",
+        "PATTERN",
+        "FROST"
+      ],
+      "laminated_candidates": [
+        "SAFE-LAM",
+        "DISASTER-LAM"
+      ],
+      "laminated_detail_constraint": [
+        "TRANSPARENT",
+        "PATTERN"
+      ],
+      "frost_laminated": "NOT_ALLOWED",
+      "grid_in": "AVAILABLE_WITH_OFFICIAL_GRID_TABLE",
+      "grid_max_glass_w_mm": 1200,
+      "grid_max_glass_h_mm": 2200,
+      "grid_frost": "NOT_ALLOWED",
+      "custom_evaluation_mode": "MANUAL_CHECK_GLASS_DIMENSIONS_AND_COMPOSITION",
+      "manual_check_is_verified_policy": true,
+      "source": "202608_YKKAP_APW430_業務用資料集 P.130,P.131"
+    },
+    {
+      "series_window_id": "SWT-YKK-APW430-TATE-OP-WINDCATCH",
+      "glass_base": "TRIPLE",
+      "standard_appearance_candidates": [
+        "TRANSPARENT",
+        "PATTERN",
+        "FROST"
+      ],
+      "laminated_candidates": [
+        "SAFE-LAM",
+        "DISASTER-LAM"
+      ],
+      "laminated_detail_constraint": [
+        "TRANSPARENT",
+        "PATTERN"
+      ],
+      "frost_laminated": "NOT_ALLOWED",
+      "grid_in": "AVAILABLE_WITH_OFFICIAL_GRID_TABLE",
+      "grid_max_glass_w_mm": 1200,
+      "grid_max_glass_h_mm": 2200,
+      "grid_frost": "NOT_ALLOWED",
+      "custom_evaluation_mode": "MANUAL_CHECK_GLASS_DIMENSIONS_AND_COMPOSITION",
+      "manual_check_is_verified_policy": true,
+      "source": "202608_YKKAP_APW430_業務用資料集 P.130,P.131"
+    },
+    {
+      "series_window_id": "SWT-YKK-APW430-TWOACTION-FIX-DAN",
+      "glass_base": "TRIPLE",
+      "standard_appearance_candidates": [
+        "TRANSPARENT",
+        "PATTERN",
+        "FROST"
+      ],
+      "laminated_candidates": [
+        "SAFE-LAM",
+        "DISASTER-LAM"
+      ],
+      "laminated_detail_constraint": [
+        "TRANSPARENT",
+        "PATTERN"
+      ],
+      "frost_laminated": "NOT_ALLOWED",
+      "grid_in": "AVAILABLE_WITH_OFFICIAL_GRID_TABLE",
+      "grid_max_glass_w_mm": 1200,
+      "grid_max_glass_h_mm": 2200,
+      "grid_frost": "NOT_ALLOWED",
+      "custom_evaluation_mode": "MANUAL_CHECK_GLASS_DIMENSIONS_AND_COMPOSITION",
+      "manual_check_is_verified_policy": true,
+      "source": "202608_YKKAP_APW430_業務用資料集 P.130,P.134"
+    },
+    {
+      "series_window_id": "SWT-YKK-APW430-TWOACTION-FIX-REN",
+      "glass_base": "TRIPLE",
+      "standard_appearance_candidates": [
+        "TRANSPARENT",
+        "PATTERN",
+        "FROST"
+      ],
+      "laminated_candidates": [
+        "SAFE-LAM",
+        "DISASTER-LAM"
+      ],
+      "laminated_detail_constraint": [
+        "TRANSPARENT",
+        "PATTERN"
+      ],
+      "frost_laminated": "NOT_ALLOWED",
+      "grid_in": "AVAILABLE_WITH_OFFICIAL_GRID_TABLE",
+      "grid_max_glass_w_mm": 1200,
+      "grid_max_glass_h_mm": 2200,
+      "grid_frost": "NOT_ALLOWED",
+      "custom_evaluation_mode": "MANUAL_CHECK_GLASS_DIMENSIONS_AND_COMPOSITION",
+      "manual_check_is_verified_policy": true,
+      "source": "202608_YKKAP_APW430_業務用資料集 P.130,P.134"
+    },
+    {
+      "series_window_id": "SWT-YKK-APW430-TWOACTION-SINGLE",
+      "glass_base": "TRIPLE",
+      "standard_appearance_candidates": [
+        "TRANSPARENT",
+        "PATTERN",
+        "FROST"
+      ],
+      "laminated_candidates": [
+        "SAFE-LAM",
+        "DISASTER-LAM"
+      ],
+      "laminated_detail_constraint": [
+        "TRANSPARENT",
+        "PATTERN"
+      ],
+      "frost_laminated": "NOT_ALLOWED",
+      "grid_in": "AVAILABLE_WITH_OFFICIAL_GRID_TABLE",
+      "grid_max_glass_w_mm": 1200,
+      "grid_max_glass_h_mm": 2200,
+      "grid_frost": "NOT_ALLOWED",
+      "custom_evaluation_mode": "MANUAL_CHECK_GLASS_DIMENSIONS_AND_COMPOSITION",
+      "manual_check_is_verified_policy": true,
+      "source": "202608_YKKAP_APW430_業務用資料集 P.130,P.135"
+    }
+  ],
+  "glass_runtime_contract": {
+    "glass_base": {
+      "value": "TRIPLE",
+      "display": "トリプルガラス",
+      "classification": "FIXED_FOR_SERIES_BASELINE",
+      "userSelector": false
+    },
+    "glass_type": {
+      "selector": true,
+      "values": [
+        {
+          "id": "SOLAR_CONTROL_DOUBLE_LOW_E_BLUE",
+          "display": "日射遮蔽型 ダブルLow-E ブルー"
+        },
+        {
+          "id": "SOLAR_CONTROL_DOUBLE_LOW_E_BRONZE",
+          "display": "日射遮蔽型 ダブルLow-E ブロンズ"
+        },
+        {
+          "id": "SOLAR_CONTROL_DOUBLE_LOW_E_NEUTRAL",
+          "display": "日射遮蔽型 ダブルLow-E ニュートラル"
+        },
+        {
+          "id": "SOLAR_GAIN_DOUBLE_LOW_E_CLEAR",
+          "display": "日射取得型 ダブルLow-E クリア"
+        }
+      ]
+    },
+    "glass_detail": {
+      "selector": true,
+      "values": [
+        "TRANSPARENT",
+        "PATTERN",
+        "FROST"
+      ]
+    },
+    "glass_function": {
+      "selector": true,
+      "values": [
+        "NORMAL",
+        "SAFE-LAM",
+        "DISASTER-LAM",
+        "GRID-IN"
+      ]
+    },
+    "gas": {
+      "value": "アルゴン",
+      "classification": "FIXED",
+      "userSelector": false
+    },
+    "spacer": {
+      "value": "樹脂",
+      "classification": "FIXED",
+      "userSelector": false
+    },
+    "air_layer": {
+      "classification": "DERIVED",
+      "userSelector": false,
+      "rule": "window-group + glass composition; triple-glass air-layer thickness is not user-selectable"
+    },
+    "glass_composition": {
+      "classification": "DERIVED_TECHNICAL_METADATA",
+      "userSelector": false,
+      "source": "glass_manufacturability_rules"
+    },
+    "combination_constraints": {
+      "FROST+SAFE-LAM": "NOT_ALLOWED_NO_OFFICIAL_COMPOSITION",
+      "FROST+DISASTER-LAM": "NOT_ALLOWED_NO_OFFICIAL_COMPOSITION",
+      "FROST+GRID-IN": "NOT_ALLOWED_OFFICIAL",
+      "GRID-IN.detail": [
+        "TRANSPARENT",
+        "PATTERN"
+      ],
+      "GRID-IN.max_glass_w_mm": 1200,
+      "GRID-IN.max_glass_h_mm": 2200,
+      "GRID-IN.material": "アルミ格子",
+      "GRID-IN.location": "室外側中空層",
+      "GRID-IN.resin_grid": false,
+      "GRID-IN.air_layer_user_specification": false
+    }
+  }
+}

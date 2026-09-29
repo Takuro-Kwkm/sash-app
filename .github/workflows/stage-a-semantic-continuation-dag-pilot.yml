@@ -1,0 +1,44 @@
+name: Stage A Semantic Continuation DAG Pilot
+
+on:
+  workflow_call:
+    inputs:
+      controller_head:
+        required: true
+        type: string
+
+permissions:
+  issues: read
+  contents: read
+
+concurrency:
+  group: stage-a-semantic-dag-pilot-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  governance-authority:
+    uses: ./.github/workflows/governance-authorization.yml
+    with:
+      controller_head: ${{ inputs.controller_head }}
+      release: false
+
+  superseded_gate:
+    needs: ["governance-authority"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && (true) }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Close superseded semantic DAG v1 pilot
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "SEMANTIC_DAG_V1_PILOT_PATH=CLOSED"
+          echo "CLOSE_REASON=CLASS_REUSE_DETECTED_BUT_CONCRETE_STATE_ENUMERATION_REMAINED"
+          echo "EVIDENCE_RUN=34917584133"
+          echo "EVIDENCE_CONCRETE_STATE_COUNT=72000"
+          echo "EVIDENCE_SEMANTIC_CLASS_COUNT=75"
+          echo "EVIDENCE_CLASS_REUSE_COUNT=67260"
+          echo "SUPERSEDED_BY=RESOLVER_DERIVED_CONTRACT_V2_PILOT"
+          echo "RETRY_AUTHORIZED=false"
+          echo "APP_INTEGRATION_READY=false"
+          echo "RELEASE_INPUT_GATE=BLOCKED"

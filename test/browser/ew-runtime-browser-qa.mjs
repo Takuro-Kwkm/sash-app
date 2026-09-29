@@ -175,8 +175,13 @@ async function exercise(page){
   assert.equal(result.validation.errors.some((error)=>error.errorCode==='CUSTOM_SIZE_OUT_OF_RANGE'),false);
   await chooseFirst(page,'exterior_color');
   await chooseFirst(page,'interior_color');
+  const customGlassValues=await page.locator('[data-spec-key="glass_base"] option:not([value=""])').evaluateAll((rows)=>rows.map((row)=>row.value));
+  assert.deepEqual(customGlassValues,['GL-EW-LOWE-PG','GL-EW-PG']);
+  assert.equal(customGlassValues.includes('GL-EW-TG'),false);
   result=(await chooseFirst(page,'glass_base')).result;
-  assert.equal(result.validation.status,'VALID');
+  assert.equal(result.validation.status,'MANUAL_CHECK');
+  assert.deepEqual(result.validation.errors,[]);
+  assert.ok(result.notices.some((message)=>message.includes('manufacturer estimate')));
   result=await chooseNumber(page,'custom_w',499);
   assert.equal(result.validation.status,'INVALID');
   assert.ok(result.validation.errors.some((error)=>error.errorCode==='CUSTOM_SIZE_OUT_OF_RANGE'));
@@ -201,7 +206,9 @@ async function exercise(page){
   await choose(page,'screen_form','横引きロール網戸');
   await choose(page,'screen_net','標準ネット');
   result=(await chooseFirst(page,'glass_base')).result;
-  assert.equal(result.validation.status,'VALID');
+  assert.equal(result.validation.status,'MANUAL_CHECK');
+  assert.deepEqual(result.validation.errors,[]);
+  assert.ok(result.notices.some((message)=>message.includes('manufacturer estimate')));
   const summary=await page.locator('#selectionSummary').innerText();
   assert.ok(summary.includes('縦すべり出し窓'));
 
@@ -227,9 +234,9 @@ try{
   assert.ok(ew);
   assert.equal(ew.status,'READY');
   assert.equal(ew.selectable,true);
-  assert.equal(ew.packageVersion,'v1.1');
+  assert.equal(ew.packageVersion,'v1.3');
   assert.equal(ew.schemaVersion,'2.0');
-  assert.equal(ew.sourceHash,'082442f82f51c4a81050d8e16d5fe3b9cb142004deb371a3e2bbb21384ca37dd');
+  assert.equal(ew.sourceHash,'a59848642ae301dcf8a275b7a43bdceb64a7d9e6488a5c79eca21584178be830');
   await preflight.close();
 
   const desktopContext=await browser.newContext({viewport:{width:1440,height:1000}});

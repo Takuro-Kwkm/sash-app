@@ -1,0 +1,30 @@
+{
+  "schema_version": "1.0.0",
+  "task_classification": "NON-PRODUCT-MASTER",
+  "product_master_mutation": 0,
+  "scope_policy": "CURRENT_RELEASE_SCOPE_EXCLUDES_DEFERRED_TARGETS_WITHOUT_MUTATING_FORMAL_RUNTIME",
+  "current_release_targets": [
+    {"registry_series_key":"LIXIL::EW","integration_id":"SER-LIX-EW"},
+    {"registry_series_key":"LIXIL::サーモスⅡH","integration_id":"SER-LIX-SAMOS2H"},
+    {"registry_series_key":"LIXIL::サーモスL","integration_id":"SER-LIX-SAMOSL"},
+    {"registry_series_key":"LIXIL::TW","integration_id":"SER-LIXIL-TW"},
+    {"registry_series_key":"LIXIL::インプラス","integration_id":"SER-LIXIL-INPLUS"},
+    {"registry_series_key":"YKK AP::APW430","integration_id":"SER-YKK-APW430"},
+    {"registry_series_key":"YKK AP::APW431","integration_id":"SER-YKK-APW431"}
+  ],
+  "deferred_targets": [
+    {
+      "registry_series_key":"YKK AP::ウチリモ 内窓",
+      "integration_id":"SER-YKKAP-UCHIRIMO",
+      "status":"DEFERRED",
+      "qa_status":"UNVERIFIED",
+      "release_eligibility":false,
+      "reason":"HEAVY_PARTITION_RECOVERY"
+    }
+  ],
+  "invariants": {
+    "formal_runtime_mutated": false,
+    "deferred_target_treated_as_pass": false,
+    "coverage_reduction_within_current_release_scope": false
+  }
+}

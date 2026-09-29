@@ -1,0 +1,286 @@
+name: Stage A Non-TW 80-Window Discrete Exact Count
+
+on:
+  workflow_call:
+    inputs:
+      controller_head:
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  issues: read
+  pull-requests: read
+
+concurrency:
+  group: stage-a-nontw-80-discrete-exact-${{ inputs.controller_head }}
+  cancel-in-progress: true
+
+jobs:
+  governance-authority:
+    uses: ./.github/workflows/governance-authorization.yml
+    with:
+      controller_head: ${{ inputs.controller_head }}
+      release: false
+
+  proof-cache:
+    needs: ["governance-authority"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      HEAD_SHA: ${{ inputs.controller_head }}
+    outputs:
+      fingerprint: ${{ steps.fingerprint.outputs.fingerprint }}
+      reused: ${{ steps.bind.outputs.reused }}
+    steps:
+      - name: Checkout exact PR HEAD
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.controller_head }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Compute non-TW proof dependency fingerprint
+        id: fingerprint
+        run: node scripts/governance/proof-dependency-fingerprint.mjs --mode fingerprint --family NONTW_EXACT
+      - name: Restore non-TW exact proof cache
+        id: cache
+        uses: actions/cache/restore@v4
+        with:
+          path: artifacts/stage-a-nontw-80-window-discrete-exact-aggregate
+          key: proof-nontw-exact-v1-${{ steps.fingerprint.outputs.fingerprint }}
+      - name: Bind cached non-TW proof to current HEAD
+        id: bind
+        if: ${{ steps.cache.outputs.cache-hit == 'true' }}
+        shell: bash
+        run: |
+          set +e
+          node scripts/governance/proof-dependency-fingerprint.mjs --mode bind --family NONTW_EXACT --artifact artifacts/stage-a-nontw-80-window-discrete-exact-aggregate/report.json --metadata artifacts/stage-a-nontw-80-window-discrete-exact-aggregate/source-metadata.json --binding artifacts/stage-a-nontw-80-window-discrete-exact-aggregate/current-head-binding.json
+          rc=$?
+          set -e
+          if [ "$rc" -eq 0 ]; then
+            echo "reused=true" >> "$GITHUB_OUTPUT"
+            echo "NONTW_EXACT_PROOF_REUSE=PASS"
+          else
+            rm -rf artifacts/stage-a-nontw-80-window-discrete-exact-aggregate
+            echo "reused=false" >> "$GITHUB_OUTPUT"
+            echo "NONTW_EXACT_PROOF_REUSE=INVALID_RERUN_REQUIRED"
+          fi
+      - name: Upload reused non-TW aggregate evidence
+        if: ${{ steps.bind.outputs.reused == 'true' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: stage-a-nontw-80-window-discrete-exact-aggregate
+          path: artifacts/stage-a-nontw-80-window-discrete-exact-aggregate/
+          if-no-files-found: error
+
+  inventory:
+    needs: ["governance-authority"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    outputs:
+      matrix: ${{ steps.inventory.outputs.matrix }}
+      count: ${{ steps.inventory.outputs.count }}
+    steps:
+      - name: Checkout exact PR HEAD
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.controller_head }}
+          fetch-depth: 1
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - id: inventory
+        name: Build exact non-TW window inventory
+        shell: bash
+        env:
+          HEAD_SHA: ${{ inputs.controller_head }}
+        run: |
+          set -euo pipefail
+          actual="$(git rev-parse HEAD)"
+          test "$actual" = "$HEAD_SHA"
+          node --input-type=module <<'NODE'
+          import { appendFileSync } from 'node:fs';
+          import { resolveRuntimeAppProduct } from './src/catalog/runtime-master/runtime-app-bridge.mjs';
+          const products=[
+            ['SER-LIX-SAMOS2H','SAMOS2H',17],
+            ['SER-LIX-SAMOSL','SAMOSL',17],
+            ['SER-LIX-EW','EW',15],
+            ['SER-YKK-APW430','APW430',25],
+            ['SER-YKK-APW431','APW431',6],
+          ];
+          const groups=[];
+          for (const [product_id,series,expected] of products) {
+            const root=await resolveRuntimeAppProduct(product_id,{});
+            const field=(root.fields??[]).find((one)=>one.key==='window_type');
+            if (!field) throw new Error(`${product_id}: window_type missing`);
+            const windows=(field.values??[]).filter((choice)=>choice.disabled!==true).map((choice)=>String(choice.value));
+            if (windows.length!==expected) throw new Error(`${product_id}: expected ${expected} windows, got ${windows.length}`);
+            groups.push(windows.map((window_type)=>({product_id,series,window_type})));
+          }
+          const include=[];
+          const maxGroupLength=Math.max(...groups.map((group)=>group.length));
+          for (let index=0;index<maxGroupLength;index+=1) {
+            for (const group of groups) if (group[index]) include.push(group[index]);
+          }
+          if (include.length!==80) throw new Error(`expected 80 windows, got ${include.length}`);
+          const unique=new Set(include.map((row)=>row.window_type));
+          if (unique.size!==80) throw new Error(`window_type ids are not unique: ${unique.size}/80`);
+          appendFileSync(process.env.GITHUB_OUTPUT,`matrix=${JSON.stringify({include})}\n`);
+          appendFileSync(process.env.GITHUB_OUTPUT,`count=${include.length}\n`);
+          console.log(`NONTW_WINDOW_INVENTORY=PASS count=${include.length}`);
+          NODE
+
+  count:
+    needs: [governance-authority, inventory, proof-cache]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && needs.proof-cache.outputs.reused != 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    strategy:
+      fail-fast: false
+      max-parallel: 12
+      matrix: ${{ fromJson(needs.inventory.outputs.matrix) }}
+    env:
+      HEAD_SHA: ${{ inputs.controller_head }}
+      STAGE_A_TARGET_WINDOWS: ${{ matrix.window_type }}
+      STAGE_A_MAX_MEMO_STATES_PER_WINDOW: 40000
+      STAGE_A_MAX_RESOLVER_CALLS_PER_WINDOW: 240000
+      STAGE_A_MAX_EXPLICIT_MULTI_ENUM_VALUES: 18
+      STAGE_A_MAX_TERMINAL_BFS_STATES: 16384
+      STAGE_A_CONTRACT_V2_OUT: artifacts/stage-a-nontw-discrete/${{ matrix.window_type }}
+    steps:
+      - name: Checkout exact PR HEAD
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.controller_head }}
+          fetch-depth: 1
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Exact SHA gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          actual="$(git rev-parse HEAD)"
+          test "$actual" = "$HEAD_SHA"
+          echo "EXACT_HEAD_GATE=PASS sha=$actual window=$STAGE_A_TARGET_WINDOWS"
+      - name: Run non-TW discrete exact count
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check scripts/stage-a-nontw-discrete-exact-runner.mjs
+          node scripts/stage-a-nontw-discrete-exact-runner.mjs | tee /tmp/stage-a-nontw-${{ strategy.job-index }}.log
+      - name: Upload per-window evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: stage-a-nontw-discrete-${{ matrix.window_type }}
+          path: artifacts/stage-a-nontw-discrete/${{ matrix.window_type }}/report.json
+          if-no-files-found: warn
+      - name: Fail-closed per-window gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import { readFileSync } from 'node:fs';
+          const path=`artifacts/stage-a-nontw-discrete/${process.env.STAGE_A_TARGET_WINDOWS}/report.json`;
+          const report=JSON.parse(readFileSync(path,'utf8'));
+          if (report.exact_head_sha!==process.env.HEAD_SHA) throw new Error('exact head mismatch');
+          if (report.base_window_count!==1 || report.windows?.length!==1) throw new Error('expected one window report');
+          const row=report.windows[0];
+          if (row.proof_model_version!=='RUNTIME_UI_SYMBOLIC_FULL_COVERAGE_V1') throw new Error(`unexpected proof model ${row.proof_model_version}`);
+          if (row.count_model_version!=='NONTW_RESOLVER_DERIVED_CONTRACT_V2_FRONTIER_MEMO_V5') throw new Error(`unexpected count model ${row.count_model_version}`);
+          if (row.status!=='COUNTED_CANDIDATE') throw new Error(`window blocked: ${JSON.stringify(row.blocker)}`);
+          if (row.blocker) throw new Error(`blocker present: ${JSON.stringify(row.blocker)}`);
+          if ((row.symbolic_frontiers??[]).length) throw new Error('symbolic frontier remains');
+          if (!row.runtime_manifest_sha256) throw new Error('runtime identity missing');
+          console.log(`NONTW_WINDOW_GATE=PASS series=${row.series} window=${row.window_type} terminal=${row.exact_discrete_terminal_context_count}`);
+          NODE
+
+  aggregate:
+    needs: [governance-authority, inventory, proof-cache, count]
+    if: ${{ always() && needs.governance-authority.outputs.authorized == 'true' && needs.proof-cache.outputs.reused != 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      HEAD_SHA: ${{ inputs.controller_head }}
+    steps:
+      - name: Checkout exact PR HEAD for proof metadata
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.controller_head }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Download all per-window evidence
+        uses: actions/download-artifact@v4
+        with:
+          pattern: stage-a-nontw-discrete-*
+          path: artifacts/collected
+      - name: Aggregate exact non-TW population
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import { createHash } from 'node:crypto';
+          import { readdirSync,readFileSync,statSync,mkdirSync,writeFileSync } from 'node:fs';
+          import { join } from 'node:path';
+          const files=[];
+          const walk=(dir)=>{for(const name of readdirSync(dir)){const path=join(dir,name);if(statSync(path).isDirectory())walk(path);else if(name==='report.json')files.push(path);}};
+          walk('artifacts/collected');
+          const rows=[];
+          for (const path of files) {
+            const report=JSON.parse(readFileSync(path,'utf8'));
+            if (report.exact_head_sha!==process.env.HEAD_SHA) throw new Error(`exact head mismatch in ${path}`);
+            if (report.windows?.length!==1) throw new Error(`expected one window in ${path}`);
+            rows.push(report.windows[0]);
+          }
+          rows.sort((a,b)=>String(a.window_type).localeCompare(String(b.window_type)));
+          const unique=new Set(rows.map((row)=>row.window_type));
+          const expectedSeries={SAMOS2H:17,SAMOSL:17,EW:15,APW430:25,APW431:6};
+          const seriesKey=(row)=>row.product_id==='SER-LIX-SAMOS2H'?'SAMOS2H':row.product_id==='SER-LIX-SAMOSL'?'SAMOSL':row.product_id==='SER-LIX-EW'?'EW':row.product_id==='SER-YKK-APW430'?'APW430':row.product_id==='SER-YKK-APW431'?'APW431':'UNKNOWN';
+          const counts={};for(const row of rows)counts[seriesKey(row)]=(counts[seriesKey(row)]??0)+1;
+          const failed=rows.filter((row)=>row.status!=='COUNTED_CANDIDATE'||row.blocker||(row.symbolic_frontiers??[]).length||!row.exact_discrete_terminal_context_count);
+          const complete=rows.length===80&&unique.size===80&&Object.entries(expectedSeries).every(([key,n])=>counts[key]===n)&&failed.length===0;
+          const terminal=failed.length?null:rows.reduce((sum,row)=>sum+BigInt(row.exact_discrete_terminal_context_count),0n);
+          const custom=failed.length?null:rows.reduce((sum,row)=>sum+BigInt(row.custom_pending_context_count??'0'),0n);
+          const runtimeIdentities={};
+          for(const row of rows){const key=seriesKey(row);runtimeIdentities[key]??=new Set();runtimeIdentities[key].add(row.runtime_manifest_sha256);}
+          const runtimeIdentityObject=Object.fromEntries(Object.entries(runtimeIdentities).map(([key,set])=>[key,[...set].sort()]));
+          const digest=createHash('sha256').update(JSON.stringify(rows.map((row)=>({window_type:row.window_type,terminal:row.exact_discrete_terminal_context_count,custom:row.custom_pending_context_count,runtime:row.runtime_manifest_sha256,contract:row.contract_digest,terminal_multi:row.terminal_multi_proof_digest,status:row.status})))).digest('hex');
+          const report={exact_head_sha:process.env.HEAD_SHA,task_classification:'NON-PRODUCT-MASTER',product_master_mutation:0,proof_model_version:'RUNTIME_UI_SYMBOLIC_FULL_COVERAGE_V1',count_model_version:'NONTW_RESOLVER_DERIVED_CONTRACT_V2_FRONTIER_MEMO_V5',expected_window_count:80,report_count:rows.length,unique_window_count:unique.size,series_window_counts:counts,expected_series_window_counts:expectedSeries,counted_window_count:rows.length-failed.length,unverified_window_count:80-(rows.length-failed.length),exact_discrete_terminal_context_count:terminal?.toString()??null,custom_pending_context_count:custom?.toString()??null,runtime_identities:runtimeIdentityObject,failed_windows:failed.map((row)=>({series:row.series,window_type:row.window_type,status:row.status,blocker:row.blocker,symbolic_frontiers:row.symbolic_frontiers})),evidence_digest:digest,status:complete?'NONTW_80_WINDOW_DISCRETE_EXACT_PASS':'BLOCKED',gate_status:{nontw_discrete_population_gate:complete?'PASS':'BLOCKED',qa_population_gate:'BLOCKED_TW_CURRENT_HEAD_CONSOLIDATION_AND_CONTINUOUS_PROOF_PENDING',custom_size_coverage_gate:'BLOCKED_CONTINUOUS_PARTITION_NOT_PROVEN',app_integration_ready:false,release_input_gate:'BLOCKED'},windows:rows};
+          mkdirSync('artifacts/stage-a-nontw-80-window-discrete-exact-aggregate',{recursive:true});
+          writeFileSync('artifacts/stage-a-nontw-80-window-discrete-exact-aggregate/report.json',JSON.stringify(report,null,2)+'\n');
+          console.log(`NONTW_80_STATUS=${report.status}`);
+          console.log(`REPORT_COUNT=${report.report_count}`);
+          console.log(`COUNTED_WINDOW_COUNT=${report.counted_window_count}`);
+          console.log(`UNVERIFIED_WINDOW_COUNT=${report.unverified_window_count}`);
+          console.log(`FAILED_WINDOW_COUNT=${failed.length}`);
+          console.log(`NONTW_EXACT_DISCRETE_TERMINAL_CONTEXT_COUNT=${report.exact_discrete_terminal_context_count??'BLOCKED'}`);
+          console.log(`NONTW_CUSTOM_PENDING_CONTEXT_COUNT=${report.custom_pending_context_count??'BLOCKED'}`);
+          console.log(`NONTW_EVIDENCE_DIGEST=${report.evidence_digest}`);
+          console.log('APP_INTEGRATION_READY=false');
+          console.log('RELEASE_INPUT_GATE=BLOCKED');
+          if(!complete)process.exitCode=1;
+          NODE
+      - name: Stamp fresh non-TW proof metadata
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/governance/proof-dependency-fingerprint.mjs --mode stamp --family NONTW_EXACT --artifact artifacts/stage-a-nontw-80-window-discrete-exact-aggregate/report.json --metadata artifacts/stage-a-nontw-80-window-discrete-exact-aggregate/source-metadata.json
+      - name: Save non-TW exact proof cache
+        uses: actions/cache/save@v4
+        with:
+          path: artifacts/stage-a-nontw-80-window-discrete-exact-aggregate
+          key: proof-nontw-exact-v1-${{ needs.proof-cache.outputs.fingerprint }}
+      - name: Upload non-TW aggregate evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: stage-a-nontw-80-window-discrete-exact-aggregate
+          path: artifacts/stage-a-nontw-80-window-discrete-exact-aggregate/
+          if-no-files-found: warn

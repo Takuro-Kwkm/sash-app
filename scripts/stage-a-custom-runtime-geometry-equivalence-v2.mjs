@@ -1,0 +1,129 @@
+import { createHash } from 'node:crypto';
+import { readFile, mkdir, writeFile } from 'node:fs/promises';
+import { runtimeAppIntegrationInventory, resolveRuntimeAppProduct } from '../src/catalog/runtime-master/runtime-app-bridge.mjs';
+
+const SHAPE=process.env.STAGE_A_CUSTOM_SHAPE_INPUT??'artifacts/stage-a-custom-dimension-source-shape/report.json';
+const GUARD=process.env.STAGE_A_CUSTOM_GUARD_INPUT??'artifacts/stage-a-formal-split-custom-guard-shape/report.json';
+const PARTITION=process.env.STAGE_A_CUSTOM_PARTITION_INPUT??'artifacts/stage-a-custom-dimension-boundary-partition/report.json';
+const REACH=process.env.STAGE_A_CUSTOM_REACHABILITY_INPUT??'artifacts/stage-a-custom-selector-reachability/report.json';
+const OUT=process.env.STAGE_A_CUSTOM_GEOMETRY_EQ_OUT??'artifacts/stage-a-custom-runtime-geometry-equivalence';
+const HEAD_SHA=process.env.HEAD_SHA??null;
+const TOL=1e-8;
+const stable=(v)=>Array.isArray(v)?v.map(stable):(!v||typeof v!=='object'?v:Object.fromEntries(Object.entries(v).sort(([a],[b])=>a.localeCompare(b)).map(([k,x])=>[k,stable(x)])));
+const stableJson=(v)=>JSON.stringify(stable(v));
+const hash=(v)=>createHash('sha256').update(stableJson(v)).digest('hex');
+const finite=(v)=>Number.isFinite(Number(v));
+const round=(v,n=10)=>Number(Number(v).toFixed(n));
+const same=(a,b)=>Object.is(a,b)||String(a)===String(b);
+const uniqNum=(values)=>{const out=[];for(const v of values.filter(Number.isFinite).sort((a,b)=>a-b)){if(!out.length||Math.abs(v-out.at(-1))>TOL)out.push(v);}return out;};
+
+const [shape,guard,partition,reach]=await Promise.all([SHAPE,GUARD,PARTITION,REACH].map(async(p)=>JSON.parse(await readFile(p,'utf8'))));
+for(const [name,row] of [['shape',shape],['guard',guard],['partition',partition],['reachability',reach]])if(row.exact_head_sha!==HEAD_SHA)throw new Error(`CUSTOM_GEOMETRY_EQ_V2_${name.toUpperCase()}_HEAD_MISMATCH`);
+if(shape.source_shape_status!=='CUSTOM_SOURCE_SHAPE_INVENTORIED'||shape.unsupported_count!==0)throw new Error('CUSTOM_GEOMETRY_EQ_V2_SOURCE_NOT_READY');
+if(guard.status!=='PASS')throw new Error('CUSTOM_GEOMETRY_EQ_V2_GUARD_NOT_READY');
+if(partition.status!=='GEOMETRY_PARTITION_PASS_RUNTIME_EQUIVALENCE_PENDING')throw new Error(`CUSTOM_GEOMETRY_EQ_V2_PARTITION_NOT_READY ${partition.status}`);
+if(reach.status!=='PASS'||reach.unreachable_context_count!==0)throw new Error('CUSTOM_GEOMETRY_EQ_V2_REACHABILITY_NOT_READY');
+if(shape.total_custom_rule_count!==152||partition.rule_count!==152||reach.source_rule_count!==152)throw new Error('CUSTOM_GEOMETRY_EQ_V2_RULE_CARDINALITY_DRIFT');
+if(partition.window_count!==92)throw new Error(`CUSTOM_GEOMETRY_EQ_V2_WINDOW_CARDINALITY_DRIFT ${partition.window_count}`);
+
+function canonicalLine(a,b,c,source){const norm=Math.hypot(a,b);if(!(norm>TOL))throw new Error(`DEGENERATE_BOUNDARY_LINE ${source}`);a/=norm;b/=norm;c/=norm;if(a<-TOL||(Math.abs(a)<=TOL&&b<0)){a=-a;b=-b;c=-c;}return{a:round(a,12),b:round(b,12),c:round(c,12),sources:[source]};}
+const vertical=(x,source)=>canonicalLine(1,0,-Number(x),source);
+const horizontal=(y,source)=>canonicalLine(0,1,-Number(y),source);
+function lineFromPoints(p,q,source){const[x1,y1]=p,[x2,y2]=q;return canonicalLine(y2-y1,x1-x2,x2*y1-x1*y2,source);}
+const lineKey=(l)=>`${l.a}|${l.b}|${l.c}`;
+function addLine(map,line){const key=lineKey(line),old=map.get(key);if(old){old.sources.push(...line.sources);return old;}map.set(key,line);return line;}
+function addBounds(map,bounds,source){if(finite(bounds?.minW))addLine(map,vertical(bounds.minW,`${source}:minW`));if(finite(bounds?.maxW))addLine(map,vertical(bounds.maxW,`${source}:maxW`));if(finite(bounds?.minH))addLine(map,horizontal(bounds.minH,`${source}:minH`));if(finite(bounds?.maxH))addLine(map,horizontal(bounds.maxH,`${source}:maxH`));}
+function intersection(l1,l2){const det=l1.a*l2.b-l1.b*l2.a;if(Math.abs(det)<=TOL)return null;const x=(l1.b*l2.c-l1.c*l2.b)/det,y=(l1.c*l2.a-l1.a*l2.c)/det;return Number.isFinite(x)&&Number.isFinite(y)?[x,y]:null;}
+function evalLine(l,p){return l.a*p[0]+l.b*p[1]+l.c;}
+function sign(v){return Math.abs(v)<=1e-7?'0':v<0?'-':'+';}
+function axisProbes(values){const xs=uniqNum(values);if(!xs.length)return[0];const out=[xs[0]-1];for(let i=0;i<xs.length;i++){out.push(xs[i]);if(i+1<xs.length)out.push((xs[i]+xs[i+1])/2);}out.push(xs.at(-1)+1);return out;}
+function closestPointOnLine(l){return[-l.a*l.c,-l.b*l.c];}
+function tangent(l){return[-l.b,l.a];}
+function boundaryTriplets(lines){let segments=0,triplets=0,invalid=0;const digestRows=[],witnesses=[];for(let i=0;i<lines.length;i++){const target=lines[i],p0=closestPointOnLine(target),t=tangent(target),cuts=[];for(let j=0;j<lines.length;j++){if(i===j)continue;const p=intersection(target,lines[j]);if(p)cuts.push((p[0]-p0[0])*t[0]+(p[1]-p0[1])*t[1]);}const ts=uniqNum(cuts),segmentTs=[];if(!ts.length)segmentTs.push(0);else{segmentTs.push(ts[0]-1);for(let k=0;k+1<ts.length;k++)segmentTs.push((ts[k]+ts[k+1])/2);segmentTs.push(ts.at(-1)+1);}for(const tv of segmentTs){segments++;const p=[p0[0]+tv*t[0],p0[1]+tv*t[1]];let nearest=Infinity;for(let j=0;j<lines.length;j++){if(i===j)continue;const d=Math.abs(evalLine(lines[j],p));if(d>TOL)nearest=Math.min(nearest,d);}const delta=Number.isFinite(nearest)?Math.max(1e-6,Math.min(1,nearest/4)):1;const minus=[p[0]-delta*target.a,p[1]-delta*target.b],plus=[p[0]+delta*target.a,p[1]+delta*target.b];const targetOk=sign(evalLine(target,p))==='0'&&sign(evalLine(target,minus))==='-'&&sign(evalLine(target,plus))==='+';let othersOk=true;for(let j=0;j<lines.length;j++){if(i===j)continue;const sm=sign(evalLine(lines[j],minus)),sp=sign(evalLine(lines[j],plus));if(sm==='0'||sp==='0'||sm!==sp){othersOk=false;break;}}if(!targetOk||!othersOk)invalid++;triplets++;digestRows.push([lineKey(target),round(p[0],7),round(p[1],7),round(delta,9)]);witnesses.push({line:lineKey(target),segment_index:segments-1,minus:[round(minus[0],8),round(minus[1],8)],exact:[round(p[0],8),round(p[1],8)],plus:[round(plus[0],8),round(plus[1],8)]});}}return{boundary_segment_count:segments,boundary_triplet_count:triplets,invalid_boundary_triplet_count:invalid,digest:hash(digestRows),witnesses};}
+
+const guardBySeriesRule=new Map();for(const s of guard.series??[])for(const r of s.rows??[])guardBySeriesRule.set(`${s.series}|${r.id}`,r);
+const shapeSeries=new Map((shape.series??[]).map((s)=>[s.series,s]));
+const partitionWindow=new Map((partition.windows??[]).map((w)=>[`${w.series}|${w.window_id}`,w]));
+const ruleBySeriesId=new Map();for(const s of shape.series??[])for(const r of s.rules??[])ruleBySeriesId.set(`${s.series}|${r.id}`,{...r,manufacturer:s.manufacturer,series:s.series,adapter_type:s.adapter_type});
+
+function reconstructWindow(seriesName,windowId){const s=shapeSeries.get(seriesName);if(!s)throw new Error(`CUSTOM_GEOMETRY_EQ_V2_SERIES_MISSING ${seriesName}`);const rules=(s.rules??[]).filter((r)=>r.window_id===windowId);const lineMap=new Map();for(const r of rules){addBounds(lineMap,r.bounds,`${r.id}:rule-bounds`);if(r.type==='AUTO_RATIO')addLine(lineMap,canonicalLine(Number(r.ratio),-1,0,`${r.id}:ratio`));if(r.type==='AUTO_PIECEWISE')for(const[idx,region]of(r.regions??[]).entries()){const[minW,maxW,minH,maxH]=region;addBounds(lineMap,{minW,maxW,minH,maxH},`${r.id}:region:${idx}`);}if(r.type==='AUTO_POLYGON'||r.type==='POLYGON'){const pts=r.points??[];for(let i=0;i<pts.length;i++)addLine(lineMap,lineFromPoints(pts[i],pts[(i+1)%pts.length],`${r.id}:polygon-edge:${i}`));}if(r.type==='PIECEWISE')for(const[idx,region]of(r.regions??[]).entries()){const[minW,maxW,minH,maxH]=region;addBounds(lineMap,{minW,maxW,minH,maxH},`${r.id}:region:${idx}`);}if(r.type==='APW431_AFFINE_BOUNDS'&&finite(r.upper_a)&&finite(r.upper_b))addLine(lineMap,canonicalLine(Number(r.upper_a),-1,Number(r.upper_b),`${r.id}:affine-upper`));const g=guardBySeriesRule.get(`${seriesName}|${r.id}`);if(g)for(const c of g.components??[])addBounds(lineMap,c.bounds,`${r.id}:guard:${c.source}:${c.specific_spec??'*'}`);}
+ const lines=[...lineMap.values()].sort((a,b)=>lineKey(a).localeCompare(lineKey(b)));const intersections=[];for(let i=0;i<lines.length;i++)for(let j=i+1;j<lines.length;j++){const p=intersection(lines[i],lines[j]);if(p)intersections.push(p);}const uniqueIntersections=[...new Map(intersections.map((p)=>[`${round(p[0],8)},${round(p[1],8)}`,p])).values()];const xCritical=[];for(const l of lines)if(Math.abs(l.b)<=TOL)xCritical.push(-l.c/l.a);for(const p of uniqueIntersections)xCritical.push(p[0]);const proofBySignature=new Map();for(const x of axisProbes(xCritical)){const yCritical=[];for(const l of lines)if(Math.abs(l.b)>TOL)yCritical.push(-(l.a*x+l.c)/l.b);for(const y of axisProbes(yCritical)){const p=[x,y],sig=lines.map((l)=>sign(evalLine(l,p))).join('');const zeroCount=[...sig].filter((c)=>c==='0').length;if(!proofBySignature.has(sig))proofBySignature.set(sig,{x:round(x,8),y:round(y,8),zero_count:zeroCount});}}
+ const triplets=boundaryTriplets(lines);const source=partitionWindow.get(`${seriesName}|${windowId}`);if(!source)throw new Error(`CUSTOM_GEOMETRY_EQ_V2_PARTITION_WINDOW_MISSING ${seriesName}/${windowId}`);const lineDigest=hash(lines),proofDigest=hash([...proofBySignature.entries()].sort());if(lineDigest!==source.line_digest||proofDigest!==source.proof_class_digest||triplets.digest!==source.digest||proofBySignature.size!==source.arrangement_proof_class_count||triplets.boundary_triplet_count!==source.boundary_triplet_count||triplets.invalid_boundary_triplet_count!==0)throw new Error(`CUSTOM_GEOMETRY_EQ_V2_PARTITION_RECONSTRUCTION_MISMATCH ${seriesName}/${windowId}`);
+ return{rules,lines,proofClasses:[...proofBySignature.entries()].sort().map(([signature,p])=>({signature,...p})),triplets};}
+
+// Expected geometry must use the same finite-number semantics as the Runtime evaluator.
+// Partition topology uses tolerance only to generate stable proof cells; status comparison does not.
+function withinRuntime(v,min,max){return finite(v)&&(min===null||min===undefined||Number(v)>=Number(min))&&(max===null||max===undefined||Number(v)<=Number(max));}
+function inBoundsRuntime(w,h,b={}){return withinRuntime(w,b.minW,b.maxW)&&withinRuntime(h,b.minH,b.maxH);}
+function onSegmentRuntime(x,y,[x1,y1],[x2,y2]){const cross=(x-x1)*(y2-y1)-(y-y1)*(x2-x1);if(Math.abs(cross)>1e-7)return false;return x>=Math.min(x1,x2)&&x<=Math.max(x1,x2)&&y>=Math.min(y1,y2)&&y<=Math.max(y1,y2);}
+function inPolygonRuntime(x,y,points=[]){if(points.length<3)return false;let inside=false;for(let i=0,j=points.length-1;i<points.length;j=i++){const a=points[j],b=points[i];if(onSegmentRuntime(x,y,a,b))return true;if(((b[1]>y)!==(a[1]>y))&&(x<(a[0]-b[0])*(y-b[1])/(a[1]-b[1])+b[0]))inside=!inside;}return inside;}
+function geometryTruth(rule,w,h){if(!inBoundsRuntime(w,h,rule.bounds??{}))return false;switch(rule.type){case'AUTO_RECT':case'RECT_RANGE':case'REVIEW_REQUIRED':case'SOURCE_GRAPH':case'SOURCE_GRAPH_GATE':case'COMPOUND_GATE':return true;case'AUTO_RATIO':return finite(rule.ratio)&&Number(h)<=Number(rule.ratio)*Number(w);case'AUTO_PIECEWISE':case'PIECEWISE':return !(rule.regions??[]).length||(rule.regions??[]).some(([minW,maxW,minH,maxH])=>withinRuntime(w,minW,maxW)&&withinRuntime(h,minH,maxH));case'AUTO_POLYGON':case'POLYGON':return inPolygonRuntime(Number(w),Number(h),rule.points??[]);case'APW431_AFFINE_BOUNDS':return !(finite(rule.upper_a)&&finite(rule.upper_b))||Number(h)<=Number(rule.upper_a)*Number(w)+Number(rule.upper_b);default:throw new Error(`CUSTOM_GEOMETRY_EQ_V2_UNSUPPORTED_RULE_TYPE ${rule.series}/${rule.id}/${rule.type}`);}}
+
+const aliases={specific_spec:['specific_spec','window_spec','type_spec','product_spec','specification'],leaf_configuration:['leaf_configuration','window_configuration','panel_count','type_spec'],regionStandard:['region_standard'],panelOrConfiguration:['panel_count','window_configuration'],typeOrSpec:['window_configuration','window_spec','type_spec'],window_type:['window_type'],seriesWindowId:['window_type'],construction:['construction','internal_construction'],internal_construction:['construction','internal_construction']};
+function actualFor(result,key){for(const candidate of aliases[key]??[key]){const value=result?.internalSelection?.[candidate]??result?.selection?.[candidate];if(value!==undefined&&value!==null&&value!=='')return value;}return undefined;}
+function expectedMatches(actual,expected){if(expected===undefined||expected===null||expected===''||expected==='*')return true;if(Array.isArray(expected))return expected.some((v)=>same(actual,v));if(expected&&typeof expected==='object'){if('$in'in expected)return Array.isArray(expected.$in)&&expected.$in.some((v)=>same(actual,v));if('$eq'in expected)return same(actual,expected.$eq);throw new Error(`CUSTOM_GEOMETRY_EQ_V2_SELECTOR_OPERATOR_UNSUPPORTED ${stableJson(expected)}`);}return same(actual,expected);}
+function hiddenConstruction(rule){return rule.selector?.internal_construction??rule.selector?.construction??null;}
+function hiddenSelectorMatches(rule,result){for(const key of ['construction','internal_construction']){if(!Object.prototype.hasOwnProperty.call(rule.selector??{},key))continue;const actual=actualFor(result,key);if(actual===undefined)continue;if(!expectedMatches(actual,rule.selector[key]))return false;}return true;}
+
+const autoTypes=new Set(['AUTO_RECT','AUTO_RATIO','AUTO_PIECEWISE','AUTO_POLYGON']);
+const reviewTypes=new Set(['SOURCE_GRAPH_GATE','COMPOUND_GATE']);
+function expectedStatus(adapterType,rules,w,h,result){
+  let applicable=rules.filter((rule)=>hiddenSelectorMatches(rule,result));
+  const resolvedConstruction=actualFor(result,'construction');
+  if(adapterType==='PRODUCT_MODULE_RUNTIME_V1'&&resolvedConstruction===undefined){
+    const boundedCandidates=applicable.filter((rule)=>hiddenConstruction(rule)!==null&&inBoundsRuntime(w,h,rule.bounds??{}));
+    const constructions=[...new Set(boundedCandidates.map(hiddenConstruction).filter((value)=>value!==null).map(String))];
+    if(constructions.length>1)return{status:'REVIEW_REQUIRED',trueRuleIds:[],applicableRuleIds:boundedCandidates.map((rule)=>rule.id),constructionCandidates:constructions};
+    if(constructions.length===1)applicable=applicable.filter((rule)=>hiddenConstruction(rule)===null||same(hiddenConstruction(rule),constructions[0]));
+    else if(applicable.some((rule)=>hiddenConstruction(rule)!==null))return{status:'BLOCK',trueRuleIds:[],applicableRuleIds:applicable.map((rule)=>rule.id),constructionCandidates:[]};
+  }
+  const truth=applicable.filter((rule)=>geometryTruth(rule,w,h));
+  if(adapterType==='APW430_FORMAL_SPLIT_V1'||adapterType==='APW431_FORMAL_SPLIT_V1'||adapterType==='TW_CANONICAL_WORKBOOK_REFERENCE_V2')return{status:truth.length?'REVIEW_REQUIRED':'BLOCK',trueRuleIds:truth.map((rule)=>rule.id),applicableRuleIds:applicable.map((rule)=>rule.id)};
+  if(adapterType==='CANONICAL_WORKBOOK_REFERENCE_V1')return{status:truth.length?'PASS':'BLOCK',trueRuleIds:truth.map((rule)=>rule.id),applicableRuleIds:applicable.map((rule)=>rule.id)};
+  if(adapterType==='PRODUCT_MODULE_RUNTIME_V1'){
+    const review=truth.filter((rule)=>reviewTypes.has(rule.type));if(review.length)return{status:'REVIEW_REQUIRED',trueRuleIds:truth.map((rule)=>rule.id),applicableRuleIds:applicable.map((rule)=>rule.id)};
+    const auto=truth.filter((rule)=>autoTypes.has(rule.type));const unsupported=applicable.filter((rule)=>!autoTypes.has(rule.type)&&!reviewTypes.has(rule.type));if(unsupported.length)throw new Error(`CUSTOM_GEOMETRY_EQ_V2_PRODUCT_MODULE_TYPE_UNSUPPORTED ${unsupported.map((rule)=>rule.type).join(',')}`);
+    return{status:auto.length?'PASS':'BLOCK',trueRuleIds:truth.map((rule)=>rule.id),applicableRuleIds:applicable.map((rule)=>rule.id)};
+  }
+  throw new Error(`CUSTOM_GEOMETRY_EQ_V2_ADAPTER_UNSUPPORTED ${adapterType}`);
+}
+function runtimeStatus(result){const d=result?.dimensionResult??result?.dimension_result??null,raw=String(d?.status??'');if(raw==='BLOCKED')return{status:'BLOCK',matchedRuleIds:d?.matchedRuleIds??d?.matched_rule_ids??d?.candidateRuleIds??[]};if(['PASS','REVIEW_REQUIRED','BLOCK'].includes(raw))return{status:raw,matchedRuleIds:d?.matchedRuleIds??d?.matched_rule_ids??d?.candidateRuleIds??[]};const errors=result?.validation?.errors??[];if(errors.some((e)=>['CUSTOM_SIZE_OUT_OF_RANGE','CUSTOM_DIMENSION_OUT_OF_FORMAL_OUTER_BOUNDS','RUNTIME_CONSTRUCTION_NOT_RESOLVED','CUSTOM_DIMENSION_FORMAL_RULE_MISSING'].includes(e.errorCode??e.code)))return{status:'BLOCK',matchedRuleIds:[]};if(result?.series==='EW'&&result?.selection?.size_mode==='CUSTOM')return{status:'PASS',matchedRuleIds:[]};return{status:'NONE',matchedRuleIds:[]};}
+
+const integrations=runtimeAppIntegrationInventory(),integrationBySeries=new Map(integrations.filter((row)=>row.selectable!==false).map((row)=>[`${row.manufacturer}|${row.series}`,row]));
+const reconstructed=new Map();for(const w of partition.windows??[])reconstructed.set(`${w.series}|${w.window_id}`,reconstructWindow(w.series,w.window_id));
+if(reconstructed.size!==partition.window_count)throw new Error('CUSTOM_GEOMETRY_EQ_V2_RECONSTRUCTED_WINDOW_COUNT_MISMATCH');
+const totalClasses=[...reconstructed.values()].reduce((n,row)=>n+row.proofClasses.length,0),totalTriplets=[...reconstructed.values()].reduce((n,row)=>n+row.triplets.boundary_triplet_count,0);if(totalClasses!==partition.arrangement_proof_class_count||totalTriplets!==partition.boundary_triplet_count)throw new Error('CUSTOM_GEOMETRY_EQ_V2_GLOBAL_PARTITION_COUNT_MISMATCH');
+
+const resolverCache=new Map();let resolverCalls=0;async function resolveWitness(context,point){const key=stableJson([context.product_id,context.selection_prefix,context.custom_width_field,context.custom_height_field,point]);if(resolverCache.has(key))return resolverCache.get(key);const selection={...(context.selection_prefix??{}),[context.custom_width_field]:point[0],[context.custom_height_field]:point[1]};const result=await resolveRuntimeAppProduct(context.product_id,selection);resolverCalls++;resolverCache.set(key,result);return result;}
+
+const mismatches=[],contextReports=[];let witnessEvaluations=0,proofClassEvaluations=0,boundaryWitnessEvaluations=0;
+for(const context of reach.contexts??[]){
+  const integration=integrationBySeries.get(`${context.manufacturer}|${context.series}`);if(!integration||integration.id!==context.product_id)throw new Error(`CUSTOM_GEOMETRY_EQ_V2_INTEGRATION_DRIFT ${context.series}`);
+  const reconstructedWindow=reconstructed.get(`${context.series}|${context.window_id}`);if(!reconstructedWindow)throw new Error(`CUSTOM_GEOMETRY_EQ_V2_WINDOW_NOT_PARTITIONED ${context.series}/${context.window_id}`);
+  const contextRules=(context.rule_ids??[]).map((id)=>ruleBySeriesId.get(`${context.series}|${id}`));if(contextRules.some((rule)=>!rule))throw new Error(`CUSTOM_GEOMETRY_EQ_V2_RULE_ID_MISSING ${context.series}/${context.window_id}`);
+  const witnesses=[];for(const p of reconstructedWindow.proofClasses)witnesses.push({kind:'PROOF_CLASS',signature:p.signature,zero_count:p.zero_count,point:[p.x,p.y]});for(const t of reconstructedWindow.triplets.witnesses)witnesses.push({kind:'BOUNDARY_MINUS',line:t.line,point:t.minus},{kind:'BOUNDARY_EXACT',line:t.line,point:t.exact},{kind:'BOUNDARY_PLUS',line:t.line,point:t.plus});
+  let contextMismatch=0,positiveWitness=null,negativeWitness=null,positiveFallback=null,negativeFallback=null;
+  for(const witness of witnesses){
+    const result=await resolveWitness(context,witness.point);witnessEvaluations++;if(witness.kind==='PROOF_CLASS')proofClassEvaluations++;else boundaryWitnessEvaluations++;
+    const expected=expectedStatus(integration.adapterType,contextRules,witness.point[0],witness.point[1],result),actual=runtimeStatus(result);
+    const witnessSummary={kind:witness.kind,point:witness.point,expected_status:expected.status};
+    if(expected.status==='BLOCK'){negativeFallback??=witnessSummary;if(witness.kind==='PROOF_CLASS'&&witness.zero_count===0)negativeWitness??=witnessSummary;}else{positiveFallback??=witnessSummary;if(witness.kind==='PROOF_CLASS'&&witness.zero_count===0)positiveWitness??=witnessSummary;}
+    let ok=actual.status===expected.status;
+    if(ok&&actual.status!=='BLOCK'&&actual.matchedRuleIds.length){const trueIds=new Set(expected.trueRuleIds.map(String));if(actual.matchedRuleIds.some((id)=>!trueIds.has(String(id))))ok=false;}
+    if(!ok){contextMismatch++;if(mismatches.length<200)mismatches.push({series:context.series,window_id:context.window_id,context_index:context.context_index,rule_ids:context.rule_ids,kind:witness.kind,line:witness.line??null,point:witness.point,expected_status:expected.status,actual_status:actual.status,expected_true_rule_ids:expected.trueRuleIds,applicable_rule_ids:expected.applicableRuleIds,actual_matched_rule_ids:actual.matchedRuleIds,validation_status:result?.validation?.status??null,dimension_result:result?.dimensionResult??result?.dimension_result??null,internal_selection:result?.internalSelection??null});}
+  }
+  contextReports.push({series:context.series,window_id:context.window_id,context_index:context.context_index,rule_count:contextRules.length,proof_class_count:reconstructedWindow.proofClasses.length,boundary_triplet_count:reconstructedWindow.triplets.boundary_triplet_count,witness_count:witnesses.length,mismatch_count:contextMismatch,positive_witness:positiveWitness??positiveFallback,negative_witness:negativeWitness??negativeFallback});
+  console.log(`CUSTOM_GEOMETRY_EQ_V2 context=${context.context_index}/${reach.contexts.length} series=${context.series} window=${context.window_id} rules=${contextRules.length} witnesses=${witnesses.length} mismatches=${contextMismatch}`);
+}
+
+const mismatchCount=contextReports.reduce((n,row)=>n+row.mismatch_count,0);
+const report={exact_head_sha:HEAD_SHA,task_classification:'NON-PRODUCT-MASTER',product_master_mutation:0,proof_model_version:'RUNTIME_UI_SYMBOLIC_FULL_COVERAGE_V1',model_version:'CUSTOM_RUNTIME_GEOMETRY_EQUIVALENCE_FULL_ARRANGEMENT_V2_RUNTIME_SEMANTICS',source_shape_digest:shape.evidence_digest,guard_shape_digest:guard.evidence_digest,partition_digest:partition.evidence_digest,selector_reachability_digest:reach.evidence_digest,source_rule_count:shape.total_custom_rule_count,window_count:partition.window_count,selector_context_count:reach.unique_context_count,arrangement_proof_class_count:totalClasses,boundary_triplet_count:totalTriplets,witness_evaluation_count:witnessEvaluations,proof_class_evaluation_count:proofClassEvaluations,boundary_witness_evaluation_count:boundaryWitnessEvaluations,resolver_call_count:resolverCalls,mismatch_count:mismatchCount,mismatches,contexts:contextReports,status:mismatchCount?'BLOCKED_RUNTIME_GEOMETRY_MISMATCH':'PASS'};
+report.evidence_digest=hash({head:HEAD_SHA,source:shape.evidence_digest,guard:guard.evidence_digest,partition:partition.evidence_digest,reach:reach.evidence_digest,model:report.model_version,contexts:contextReports});
+report.gate_status={discrete_population_gate:'PASS',custom_geometry_partition_gate:'PASS',custom_selector_reachability_gate:'PASS',custom_runtime_geometry_equivalence_gate:mismatchCount?'BLOCKED':'PASS',custom_size_coverage_gate:mismatchCount?'BLOCKED_RUNTIME_GEOMETRY_MISMATCH':'PASS_GEOMETRY_EQUIVALENCE_ONLY_TRANSITION_PROOF_PENDING',qa_population_gate:mismatchCount?'BLOCKED_CONTINUOUS_CUSTOM_RUNTIME_EQUIVALENCE':'PASS_CUSTOM_GEOMETRY_PENDING_TRANSITION_PROOF',automated_test_gate:'BLOCKED_PENDING_CUSTOM_TRANSITION_PROOF',full_browser_qa_gate:'NOT_STARTED',app_integration_ready:false,release_input_gate:'BLOCKED'};
+await mkdir(OUT,{recursive:true});await writeFile(`${OUT}/report.json`,JSON.stringify(report,null,2)+'\n','utf8');
+console.log(`CUSTOM_RUNTIME_GEOMETRY_EQUIVALENCE_V2_GATE=${mismatchCount?'BLOCKED':'PASS'} windows=${report.window_count} contexts=${report.selector_context_count} rules=${report.source_rule_count} classes=${report.arrangement_proof_class_count} boundary_triplets=${report.boundary_triplet_count} witness_evaluations=${report.witness_evaluation_count} resolver_calls=${report.resolver_call_count} mismatches=${report.mismatch_count}`);
+console.log(`CUSTOM_RUNTIME_GEOMETRY_EQUIVALENCE_V2_DIGEST=${report.evidence_digest}`);
+console.log(`CUSTOM_SIZE_COVERAGE_GATE=${report.gate_status.custom_size_coverage_gate}`);
+console.log('APP_INTEGRATION_READY=false');
+console.log('RELEASE_INPUT_GATE=BLOCKED');
+if(mismatchCount)process.exitCode=2;

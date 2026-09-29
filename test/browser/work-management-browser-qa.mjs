@@ -18,10 +18,90 @@ function track(target){
 }
 track(page);
 
+function resolveSelection(response){
+  if(response.status()!==200||!response.url().includes('/resolve'))return null;
+  try{return JSON.parse(new URL(response.url()).searchParams.get('selection')??'{}');}catch{return null;}
+}
+function sameValue(actual,expected){
+  if(Array.isArray(expected))return Array.isArray(actual)&&actual.length===expected.length&&actual.every((value,index)=>String(value)===String(expected[index]));
+  return String(actual)===String(expected);
+}
+function runtimeRenderExpectations(result){
+  return (result.fields??[]).map((field)=>({
+    key:field.key,
+    values:(field.values??[]).map((row)=>String(row.value)),
+    selected:result.selection?.[field.key]===undefined?null:(Array.isArray(result.selection[field.key])?result.selection[field.key].map(String):String(result.selection[field.key])),
+    hasSelection:result.selection?.[field.key]!==undefined,
+  }));
+}
+async function waitForRenderedRuntime(result){
+  const expected=runtimeRenderExpectations(result);
+  try{
+    await page.waitForFunction((rows)=>rows.every((row)=>{
+      const control=document.querySelector(`[data-spec-key="${row.key}"]`);
+      if(!control)return false;
+      if(control.tagName==='SELECT'){
+        const actual=[...control.options].filter((option)=>option.value!=='').map((option)=>option.value);
+        if(actual.length!==row.values.length||actual.some((value,index)=>value!==row.values[index]))return false;
+        if(row.hasSelection){
+          if(Array.isArray(row.selected)){
+            const selected=[...control.selectedOptions].map((option)=>option.value);
+            if(selected.length!==row.selected.length||selected.some((value,index)=>value!==row.selected[index]))return false;
+          }else if(String(control.value)!==String(row.selected))return false;
+        }
+      }else if(row.hasSelection&&String(control.value)!==String(row.selected))return false;
+      return true;
+    }),expected,{timeout:5000});
+  }catch(error){
+    const actual=await page.evaluate(()=>[...document.querySelectorAll('[data-spec-key]')].map((control)=>({
+      key:control.dataset.specKey,
+      tag:control.tagName,
+      value:control.value,
+      values:control.tagName==='SELECT'?[...control.options].filter((option)=>option.value!=='').map((option)=>option.value):[],
+      disabled:control.disabled,
+    })));
+    console.log('WORK_RUNTIME_RENDER_MISMATCH='+JSON.stringify({expected,actual}));
+    throw error;
+  }
+}
 async function choose(key,value){
-  const response=page.waitForResponse((row)=>row.url().includes('/resolve')&&row.status()===200);
-  await page.locator(`[data-spec-key="${key}"]`).selectOption(String(value));
-  await response;
+  const response=page.waitForResponse((row)=>{const selection=resolveSelection(row);return selection&&sameValue(selection[key],value);});
+  await page.locator(`[data-spec-key="${key}"]`).selectOption(value);
+  const result=await (await response).json();
+  await waitForRenderedRuntime(result);
+  return result;
+}
+async function enterNumber(key,value){
+  const response=page.waitForResponse((row)=>{const selection=resolveSelection(row);return selection&&sameValue(selection[key],value);});
+  const input=page.locator(`[data-spec-key="${key}"]`);await input.fill(String(value));await input.dispatchEvent('change');
+  const result=await (await response).json();
+  await waitForRenderedRuntime(result);
+  return result;
+}
+async function chooseFirst(key,{prefer=null}={}){
+  const locator=page.locator(`[data-spec-key="${key}"]`);
+  const options=await locator.locator('option:not([value=""])').evaluateAll((rows)=>rows.map((row)=>({value:row.value,disabled:row.disabled})).filter((row)=>!row.disabled));
+  assert.ok(options.length,`${key} must have at least one selectable option`);
+  const value=prefer&&options.some((row)=>row.value===prefer)?prefer:options[0].value;
+  return choose(key,value);
+}
+async function completeVisibleRequiredSelects(result){
+  for(let pass=0;pass<30;pass++){
+    const missing=result.fields.find((field)=>field.required&&field.dataType!=='NUMBER'&&field.values?.length&&result.selection[field.key]===undefined);
+    if(!missing)return result;
+    const preferred=missing.key==='screen_presence'&&missing.values.some((row)=>row.value==='NONE')?'NONE':missing.values[0].value;
+    result=await choose(missing.key,preferred);
+  }
+  throw new Error('visible required Runtime fields did not converge');
+}
+async function completeRequiredBeforeSize(result){
+  for(let pass=0;pass<30;pass++){
+    const missing=result.fields.find((field)=>field.key!=='size'&&field.required&&field.dataType!=='NUMBER'&&field.values?.length&&result.selection[field.key]===undefined);
+    if(!missing)return result;
+    const preferred=missing.key==='screen_presence'&&missing.values.some((row)=>row.value==='NONE')?'NONE':missing.values[0].value;
+    result=await choose(missing.key,preferred);
+  }
+  throw new Error('pre-size Runtime fields did not converge');
 }
 
 async function createOpening(index,product){
@@ -32,13 +112,24 @@ async function createOpening(index,product){
   await page.locator('[data-opening-field="opening_name"]').fill(index===0?'掃き出し窓':`開口${index+1}`);
   await page.selectOption('#manufacturer',product.manufacturer);
   const initial=page.waitForResponse((row)=>row.url().includes('/resolve')&&row.status()===200);
-  await page.selectOption('#product',product.id);await initial;
+  await page.selectOption('#product',product.id);let result=await (await initial).json();
+  await waitForRenderedRuntime(result);
   if(index===0){
-    await choose('window_type','SWT-LIX-TW-SHUT-HIKI-FLAT');
-    await choose('shutter_type','SP-TW-SHUT-MAN-STD');
-    await choose('panel_count','2枚建');
-    const firstSize=await page.locator('[data-spec-key="size"] option:not([value=""])').first().getAttribute('value');
-    assert.ok(firstSize);await choose('size',firstSize);
+    result=await choose('window_type','SWT-LIX-TW-GRILLE-HIKI');
+    result=await choose('grille_type','SP-TW-GRILLE-VERT');
+    result=await choose('size_mode','CUSTOM');
+    result=await enterNumber('custom_width',630);
+    result=await enterNumber('custom_height',350);
+    assert.equal(result.dimensionResult?.status,'REVIEW_REQUIRED');
+    assert.ok(result.fields.some((field)=>field.key==='exterior_color'));
+    result=await chooseFirst('exterior_color');
+    result=await chooseFirst('interior_color');
+    if(result.fields.some((field)=>field.key==='screen_presence'))result=await chooseFirst('screen_presence',{prefer:'NONE'});
+    result=await chooseFirst('glass_base');
+    result=await completeVisibleRequiredSelects(result);
+    assert.equal(result.dimensionResult?.status,'REVIEW_REQUIRED');
+    assert.equal(result.orderReady,false);
+    assert.ok(result.fields.some((field)=>field.key==='option'));
   }
   await page.getByRole('button',{name:'この開口部を保存'}).click();
   await page.waitForURL(/\/estimates\/est_/);
@@ -63,24 +154,46 @@ try{
   const projectUrl=page.url();
   await page.getByRole('button',{name:'見積を開く'}).click();
   const estimateUrl=page.url();
-  const catalogResponse=await context.request.get(`${BASE}/api/catalog/products`);const catalog=await catalogResponse.json();
   const tw={id:'SER-LIXIL-TW',manufacturer:'LIXIL'};
-  const ykk=catalog.find((row)=>row.manufacturer==='YKK AP');assert.ok(ykk);
+  const ykk={id:'SER-YKKAP-UCHIRIMO',manufacturer:'YKK AP'};
   for(let index=0;index<10;index++)await createOpening(index,index%2===0?tw:ykk);
   assert.equal(await page.locator('.opening-card').count(),10);
   const database=await page.evaluate(()=>window.__sashWorkApp.readDatabase());
   const estimateId=new URL(estimateUrl).pathname.split('/').at(-1);
   const active=database.openings.filter((row)=>row.estimate_id===estimateId&&!row.deleted_at);
   assert.equal(active.length,10);assert.deepEqual(new Set(active.map((row)=>row.product_configuration_snapshot.manufacturer)),new Set(['LIXIL','YKK AP']));
-  report.scenarios.B='PASS';
+  const savedCustomTw=active.find((row)=>row.product_configuration_snapshot?.product_id==='SER-LIXIL-TW'&&row.product_configuration_snapshot?.configuration?.size_mode==='CUSTOM');
+  assert.ok(savedCustomTw,'a valid TW CUSTOM opening must be persisted');
+  assert.equal(savedCustomTw.product_configuration_snapshot.configuration.custom_width,630);
+  assert.equal(savedCustomTw.product_configuration_snapshot.configuration.custom_height,350);
+  assert.equal(savedCustomTw.product_configuration_snapshot.validation_state,'VALID');
+  assert.equal(savedCustomTw.product_configuration_snapshot.configuration.size,undefined);
+  report.scenarios.B='PASS';report.scenarios.TW_CUSTOM_CONTINUE_AND_SAVE='PASS';
 
   await page.locator('.opening-card').first().getByRole('button',{name:'複製'}).click();
   assert.equal(await page.locator('.opening-card').count(),11);
   await page.locator('.opening-card').last().getByRole('button',{name:'編集'}).click();
   await page.locator('[data-opening-field="opening_name"]').fill('掃き出し窓 サイズ変更');
-  await page.waitForFunction(()=>document.querySelectorAll('[data-spec-key="size"] option:not([value=""])').length>1);
-  const sizeOptions=page.locator('[data-spec-key="size"] option:not([value=""])');
-  assert.ok(await sizeOptions.count()>1);const secondSize=await sizeOptions.nth(1).getAttribute('value');await choose('size',secondSize);
+  const sizeMode=page.locator('[data-spec-key="size_mode"]');
+  let standardResult=null;
+  if(await sizeMode.count()&&await sizeMode.inputValue()==='CUSTOM'){
+    standardResult=await choose('size_mode','STANDARD');
+    standardResult=await completeRequiredBeforeSize(standardResult);
+    await waitForRenderedRuntime(standardResult);
+    const runtimeSize=standardResult.fields.find((field)=>field.key==='size');
+    assert.ok(runtimeSize?.values?.length,'STANDARD transition must expose at least one formal size');
+    if(standardResult.selection.size!==undefined){
+      assert.ok(runtimeSize.values.some((row)=>String(row.value)===String(standardResult.selection.size)),'auto-resolved STANDARD size must be a formal Runtime candidate');
+    }else{
+      const sizeControl=page.locator('[data-spec-key="size"]');
+      assert.equal(await sizeControl.count(),1,'STANDARD transition must render exactly one size control');
+      const renderedValues=await sizeControl.locator('option:not([value=""])').evaluateAll((rows)=>rows.map((row)=>row.value));
+      const formalValues=runtimeSize.values.map((row)=>String(row.value));
+      assert.deepEqual(renderedValues,formalValues,'rendered STANDARD size candidates must exactly match synchronized formal Runtime candidates');
+      const targetSize=runtimeSize.values[runtimeSize.values.length>1?1:0].value;
+      await choose('size',targetSize);
+    }
+  }
   await page.getByRole('button',{name:'この開口部を保存'}).click();await page.waitForURL(estimateUrl);
   assert.match(await page.locator('.opening-card').last().innerText(),/サイズ変更/);
   report.scenarios.C='PASS';
@@ -100,7 +213,7 @@ try{
   await page.locator('.opening-card').first().getByRole('button',{name:'編集'}).click();
   await page.evaluate(()=>window.__sashWorkApp.setPersistenceFailure(true));
   await page.locator('[data-opening-field="memo"]').fill('保存失敗後も保持される入力');
-  await page.waitForFunction(()=>document.querySelector('.save-status')?.textContent==='保存失敗',{timeout:5000});
+  await page.waitForFunction(()=>document.querySelector('.save-status')?.textContent==='保存失敗',undefined,{timeout:5000});
   assert.equal(await page.locator('[data-opening-field="memo"]').inputValue(),'保存失敗後も保持される入力');
   await page.evaluate(()=>window.__sashWorkApp.setPersistenceFailure(false));await page.getByRole('button',{name:'再試行'}).click();
   await page.waitForFunction(()=>document.querySelector('.save-status')?.textContent==='保存済み');report.scenarios.G='PASS';
@@ -125,7 +238,7 @@ try{
   await page.reload({waitUntil:'networkidle'});
   await page.waitForSelector('[data-opening-field="memo"]');
   assert.equal(await page.locator('[data-opening-field="memo"]').inputValue(),raceMemo);
-  await page.waitForFunction(()=>document.querySelector('.save-status')?.textContent==='保存済み',{timeout:5000});
+  await page.waitForFunction(()=>document.querySelector('.save-status')?.textContent==='保存済み',undefined,{timeout:5000});
   report.scenarios.SAVE_NAVIGATION_RACE='PASS';
 
   const openingPath=new URL(page.url()).pathname;
@@ -134,7 +247,7 @@ try{
   const frozen=await page.evaluate(()=>window.__sashWorkApp.readDatabase().openings.find((row)=>row.product_configuration_snapshot?.runtime_manifest_identity==='old-manifest')?.product_configuration_snapshot.runtime_manifest_identity);
   assert.equal(frozen,'old-manifest');
   const revalidate=page.waitForResponse((row)=>row.url().includes('/api/runtime-master/resolve')&&row.status()===200);await page.click('[data-runtime-action="revalidate"]');await revalidate;
-  await page.waitForFunction(()=>document.querySelector('.save-status')?.textContent==='保存済み',{timeout:5000});report.scenarios.H='PASS';
+  await page.waitForFunction(()=>document.querySelector('.save-status')?.textContent==='保存済み',undefined,{timeout:5000});report.scenarios.H='PASS';
 
   await page.goto(BASE,{waitUntil:'networkidle'});await page.getByRole('button',{name:'新しい案件'}).click();await page.locator('[name="project_name"]').fill('別案件');await page.locator('#projectForm button[type="submit"]').click();await page.waitForURL(/\/projects\/prj_/);
   await page.getByRole('button',{name:'見積を開く'}).click();assert.equal(await page.locator('.opening-card').count(),0);report.scenarios.I='PASS';

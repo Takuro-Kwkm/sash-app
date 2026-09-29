@@ -1,0 +1,121 @@
+name: Seven Series Slim Integration
+
+on:
+  push:
+    branches: [integration/seven-series-slim-20260929]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  browser-qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: npm install --ignore-scripts
+      - run: npm run lint && npm run typecheck && npm test
+      - run: |
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+      - name: Exercise actual Runtime on desktop and mobile
+        env:
+          HEAD_SHA: ${{ github.sha }}
+        run: |
+          npm run start:qa > /tmp/sash-v12-sales-ui.log 2>&1 &
+          pid=$!
+          trap 'kill "$pid" || true' EXIT
+          for i in {1..60}; do
+            if curl -fsS http://127.0.0.1:4173/api/health >/dev/null; then break; fi
+            sleep 1
+          done
+          node test/browser/uchirimo-runtime-browser-qa.mjs
+          node test/browser/global-window-selection-flow-browser-qa.mjs
+          node test/browser/seven-series-business-flow-qa.mjs
+          node test/browser/release-regression-browser-qa.mjs
+          npm run test:browser:work
+          npm run test:browser:estimate-output
+          node scripts/build-seven-series-review.mjs
+          node test/browser/seven-series-preview-qa.mjs
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: seven-series-slim-browser-qa-${{ github.sha }}
+          path: |
+            artifacts/seven-series-review/
+            artifacts/seven-series-business-flow/
+            artifacts/uchirimo-runtime-browser-qa/
+            artifacts/global-window-selection-flow-browser-qa/
+            artifacts/release-regression-browser-qa/
+            artifacts/work-management-browser-qa/
+            artifacts/estimate-output-browser-qa/
+          if-no-files-found: warn
+
+  adopted-slim-qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      UCHIRIMO_QA_REGISTERED_RUNTIME: '1'
+      UCHIRIMO_FACTORIZED_OUT: artifacts/seven-series-adopted-factorized
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: node scripts/governance/uchirimo-slim-factorized-qa.mjs
+      - run: node scripts/governance/uchirimo-slim-dimension-differential.mjs
+      - run: node scripts/build-seven-series-review.mjs
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: seven-series-adopted-slim-${{ github.sha }}
+          path: |
+            artifacts/seven-series-adopted-factorized/
+            artifacts/uchirimo-slim/dimension-boundary-differential.json
+            artifacts/seven-series-review/
+
+  preview:
+    needs: [browser-qa, adopted-slim-qa]
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      VERCEL_ORG_ID: team_AkuHacuJlCl8LuvaFpCzFmbv
+      VERCEL_PROJECT_ID: prj_4z0zqW6yKyPuFINODfGX8LPBuJRP
+      VERCEL_PROJECT_NAME: sash-app-wave3-preview
+      RELEASE_SERIES: SEVEN_SERIES_SLIM_V2
+      RELEASE_PACKAGE_VERSION: integration-preview
+      VERCEL_DEPLOY_SOURCE: files
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Prepare Vercel credential
+        env:
+          VERCEL_TOKEN_PRIMARY: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_TOKEN_FALLBACK: ${{ secrets.VERCEL_ACCESS_TOKEN }}
+        run: |
+          token="${VERCEL_TOKEN_PRIMARY:-${VERCEL_TOKEN_FALLBACK:-}}"
+          if [[ -z "$token" ]]; then echo 'VERCEL_CREDENTIAL_GATE=BLOCKED'; exit 42; fi
+          echo "VERCEL_TOKEN_EFFECTIVE=$token" >> "$GITHUB_ENV"
+      - name: Deploy exact HEAD preview
+        run: node scripts/vercel-rest-deploy.mjs preview artifacts/seven-series-slim/deployment.json
+      - name: Verify preview identity and service
+        run: |
+          node --input-type=module <<'NODE'
+          import {readFileSync} from 'node:fs';
+          const d=JSON.parse(readFileSync('artifacts/seven-series-slim/deployment.json'));
+          if(d.readyState!=='READY'||d.githubSha!==process.env.GITHUB_SHA||d.releaseCommitSha!==process.env.GITHUB_SHA||d.mode!=='preview')throw new Error('PREVIEW_IDENTITY_INVALID');
+          console.log('PREVIEW_IDENTITY=PASS '+d.deploymentUrl);
+          NODE
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: seven-series-slim-preview-${{ github.sha }}
+          path: artifacts/seven-series-slim/
+          if-no-files-found: warn

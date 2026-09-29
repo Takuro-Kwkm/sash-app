@@ -1,0 +1,27 @@
+name: Retired Uchirimo Recovery Entry
+# Preserve the path for historical evidence; never restart the failed old route.
+# Existing running executions retain their own immutable workflow revision.
+on:
+  workflow_call:
+    inputs:
+      controller_head:
+        required: true
+        type: string
+permissions:
+  contents: read
+  issues: read
+jobs:
+  governance-authority:
+    uses: ./.github/workflows/governance-authorization.yml
+    with:
+      controller_head: ${{ inputs.controller_head }}
+      release: false
+  retired:
+    needs: [governance-authority]
+    if: needs.governance-authority.outputs.authorized == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Reject obsolete timeout-and-restart route
+        run: |
+          echo 'RETIRED_ROUTE: use Project Governance / Uchirimo durable recovery'
+          exit 1

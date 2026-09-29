@@ -1,0 +1,2424 @@
+{
+  "schema_version": "product-master-runtime-core/1.0",
+  "package_version": "v1.2",
+  "verification_revision": "20260918-FRAME-ANGLE-R1",
+  "product": {
+    "productId": "SER-YKK-APW431",
+    "category": "サッシ",
+    "manufacturer": "YKK AP",
+    "displayName": "APW 431",
+    "productFamily": "APW 430シリーズ",
+    "fireClassificationSelection": "不要",
+    "active": true,
+    "registrationStatus": "現行",
+    "effectiveFrom": "2026-08-27",
+    "sourceNote": "APW430正本がAPW431を別シリーズとして管理する方針に統一。一次資料はAPW430/431共通カタログを利用。",
+    "_source": {
+      "sheet": "02_シリーズ",
+      "row": 4
+    }
+  },
+  "excluded_product_nodes": [
+    {
+      "productId": "SER-YKK-APW431-FIRE",
+      "displayName": "APW 431 防火窓",
+      "active": false,
+      "status": "別シリーズ",
+      "note": "本マスター対象外。防火を通常APW431のON/OFF項目にしない。",
+      "_source": {
+        "sheet": "02_シリーズ",
+        "row": 5
+      }
+    }
+  ],
+  "input_flow": [
+    {
+      "order": 1,
+      "fieldId": "F001",
+      "label": "商品区分",
+      "displayCondition": "常時",
+      "seriesRule": "サッシ",
+      "retainedInProductMaster": "○",
+      "apw430Alignment": "一致",
+      "_source": {
+        "sheet": "01_入力フロー",
+        "row": 4
+      }
+    },
+    {
+      "order": 2,
+      "fieldId": "F002",
+      "label": "メーカー",
+      "displayCondition": "商品区分=サッシ",
+      "seriesRule": "YKK AP固定",
+      "retainedInProductMaster": "○",
+      "apw430Alignment": "一致",
+      "_source": {
+        "sheet": "01_入力フロー",
+        "row": 5
+      }
+    },
+    {
+      "order": 3,
+      "fieldId": "F003",
+      "label": "シリーズ",
+      "displayCondition": "メーカー選択後",
+      "seriesRule": "APW 431。APW430とは別シリーズID",
+      "retainedInProductMaster": "○",
+      "apw430Alignment": "シリーズIDを分離",
+      "_source": {
+        "sheet": "01_入力フロー",
+        "row": 6
+      }
+    },
+    {
+      "order": 3.5,
+      "fieldId": "F003A",
+      "label": "地域規格",
+      "displayCondition": "シリーズ選択後かつ地域差がある商品",
+      "seriesRule": "北海道／本州。窓種・サイズ候補を先行絞込",
+      "retainedInProductMaster": "○",
+      "apw430Alignment": "APW430の地域区分拡張と同型",
+      "_source": {
+        "sheet": "01_入力フロー",
+        "row": 7
+      }
+    },
+    {
+      "order": 4,
+      "fieldId": "F003C",
+      "label": "商品カテゴリー",
+      "displayCondition": "地域規格後",
+      "seriesRule": "一般窓／引違い窓／シャッター付窓／ドア",
+      "retainedInProductMaster": "○",
+      "apw430Alignment": "共通仕様のカテゴリー階層を保持する拡張ID",
+      "_source": {
+        "sheet": "01_入力フロー",
+        "row": 8
+      }
+    },
+    {
+      "order": 5,
+      "fieldId": "F004",
+      "label": "窓種",
+      "displayCondition": "カテゴリー選択後",
+      "seriesRule": "APW431に存在する6窓種のみ",
+      "retainedInProductMaster": "○",
+      "apw430Alignment": "APW430のF004=窓種に一致",
+      "_source": {
+        "sheet": "01_入力フロー",
+        "row": 9
+      }
+    },
+    {
+      "order": 6,
+      "fieldId": "F005",
+      "label": "窓種固有仕様",
+      "displayCondition": "該当窓種のみ",
+      "seriesRule": "建数・構成・シャッター種類。JEM-Aはシャッターのサブ項目",
+      "retainedInProductMaster": "○",
+      "apw430Alignment": "APW430 F005に一致",
+      "_source": {
+        "sheet": "01_入力フロー",
+        "row": 10
+      }
+    },
+    {
+      "order": 7,
+      "fieldId": "F006",
+      "label": "工法区分",
+      "displayCondition": "窓種/固有仕様確定後",
+      "seriesRule": "在来／2×4。対応工法のみ表示",
+      "retainedInProductMaster": "○",
+      "apw430Alignment": "APW430 F006に一致",
+      "_source": {
+        "sheet": "01_入力フロー",
+        "row": 11
+      }
+    },
+    {
+      "order": 8,
+      "fieldId": "F007",
+      "label": "サイズ",
+      "displayCondition": "工法区分確定後",
+      "seriesRule": "規格332件→一致なしのみ自由寸法ルールへ",
+      "retainedInProductMaster": "○",
+      "apw430Alignment": "APW430 F007に一致",
+      "_source": {
+        "sheet": "01_入力フロー",
+        "row": 12
+      }
+    },
+    {
+      "order": 9,
+      "fieldId": "F008",
+      "label": "外観色",
+      "displayCondition": "サイズ確定後",
+      "seriesRule": "正式4色のみ",
+      "retainedInProductMaster": "○",
+      "apw430Alignment": "一致",
+      "_source": {
+        "sheet": "01_入力フロー",
+        "row": 13
+      }
+    },
+    {
+      "order": 10,
+      "fieldId": "F009",
+      "label": "内観色",
+      "displayCondition": "外観色選択後",
+      "seriesRule": "正式2色＋組合せ制約",
+      "retainedInProductMaster": "○",
+      "apw430Alignment": "一致",
+      "_source": {
+        "sheet": "01_入力フロー",
+        "row": 14
+      }
+    },
+    {
+      "order": 11,
+      "fieldId": "F010",
+      "label": "網戸有無",
+      "displayCondition": "内観色後かつ網戸設定あり",
+      "seriesRule": "あり／なし。設定なし窓種はスキップ",
+      "retainedInProductMaster": "○",
+      "apw430Alignment": "APW430 F010に一致",
+      "_source": {
+        "sheet": "01_入力フロー",
+        "row": 15
+      }
+    },
+    {
+      "order": 12,
+      "fieldId": "F010A",
+      "label": "網戸仕様",
+      "displayCondition": "網戸有無=あり",
+      "seriesRule": "形式・中桟・ネット種類をサイズ別許可リストで表示",
+      "retainedInProductMaster": "○",
+      "apw430Alignment": "APW430 F010Aに一致",
+      "_source": {
+        "sheet": "01_入力フロー",
+        "row": 16
+      }
+    },
+    {
+      "order": 13,
+      "fieldId": "F011",
+      "label": "ガラス",
+      "displayCondition": "網戸処理完了後",
+      "seriesRule": "ダブルLow-Eトリプル系。サイズ別可否",
+      "retainedInProductMaster": "○",
+      "apw430Alignment": "一致",
+      "_source": {
+        "sheet": "01_入力フロー",
+        "row": 17
+      },
+      "canonicalFields": [
+        "glass_base",
+        "glass_type",
+        "glass_low_e"
+      ],
+      "projectionClassification": {
+        "glass_base": "FIXED",
+        "glass_type": "USER_SELECTABLE",
+        "glass_low_e": "FIXED"
+      }
+    },
+    {
+      "order": 14,
+      "fieldId": "F012",
+      "label": "ガラス詳細",
+      "displayCondition": "ガラス選択後",
+      "seriesRule": "日射区分・色・面材・ガス・スペーサー・安全/防災等",
+      "retainedInProductMaster": "○",
+      "apw430Alignment": "一致",
+      "_source": {
+        "sheet": "01_入力フロー",
+        "row": 18
+      },
+      "canonicalFields": [
+        "glass_detail",
+        "glass_function",
+        "glass_spacer",
+        "gas",
+        "glass_air_layer",
+        "glass_composition"
+      ],
+      "projectionClassification": {
+        "glass_detail": "CONDITIONAL_USER_SELECTABLE",
+        "glass_function": "CONDITIONAL_USER_SELECTABLE",
+        "glass_spacer": "FIXED",
+        "gas": "FIXED",
+        "glass_air_layer": "DERIVED",
+        "glass_composition": "DERIVED_TECHNICAL_METADATA"
+      }
+    },
+    {
+      "order": 15,
+      "fieldId": "F013",
+      "label": "その他オプション",
+      "displayCondition": "設定がある場合",
+      "seriesRule": "商品成立条件を変えない正式OPのみ",
+      "retainedInProductMaster": "○",
+      "apw430Alignment": "一致",
+      "_source": {
+        "sheet": "01_入力フロー",
+        "row": 19
+      }
+    },
+    {
+      "order": 16,
+      "fieldId": "F014",
+      "label": "数量",
+      "displayCondition": "商品仕様確定後",
+      "seriesRule": "見積明細側で保持",
+      "retainedInProductMaster": "×",
+      "apw430Alignment": "一致",
+      "_source": {
+        "sheet": "01_入力フロー",
+        "row": 20
+      }
+    }
+  ],
+  "series_windows": [
+    {
+      "id": "W431-001",
+      "productId": "SER-YKK-APW431",
+      "integrationWindowId": "SWT-YKK-APW431-HIKI-TERRACE",
+      "displayName": "引違いテラス戸",
+      "category": "引違い窓",
+      "operationConfiguration": "2枚建／4枚建",
+      "regionStandards": "北海道／本州",
+      "selectable": true,
+      "active": true,
+      "registrationStatus": "現行",
+      "catalogPage": "P.80",
+      "manufacturingRangePage": "P.6（北海道）／P.7（本州）",
+      "sourceUrl": "https://drive.google.com/file/d/1j9PtW8yoKBZ4Nodm58wU3QtOCvxlEja9/view?usp=drivesdk",
+      "note": "APW431の主要テラス商品。",
+      "_source": {
+        "sheet": "03_窓種",
+        "row": 4
+      }
+    },
+    {
+      "id": "W431-002",
+      "productId": "SER-YKK-APW431",
+      "integrationWindowId": "SWT-YKK-APW431-SHUTTER-HIKI-TERRACE",
+      "displayName": "シャッター付引違いテラス戸",
+      "category": "シャッター付窓",
+      "operationConfiguration": "2枚建／4枚建＋シャッター",
+      "regionStandards": "本州",
+      "selectable": true,
+      "active": true,
+      "registrationStatus": "現行",
+      "catalogPage": "P.84",
+      "manufacturingRangePage": "P.9",
+      "sourceUrl": "https://drive.google.com/file/d/1j9PtW8yoKBZ4Nodm58wU3QtOCvxlEja9/view?usp=drivesdk",
+      "note": "シャッター種類を窓種直後に選択。",
+      "_source": {
+        "sheet": "03_窓種",
+        "row": 5
+      }
+    },
+    {
+      "id": "W431-003",
+      "productId": "SER-YKK-APW431",
+      "integrationWindowId": "SWT-YKK-APW431-LARGE-SLIDING",
+      "displayName": "大開口スライディング",
+      "category": "引違い窓",
+      "operationConfiguration": "偏芯タイプ／均等タイプ",
+      "regionStandards": "北海道／本州",
+      "selectable": true,
+      "active": true,
+      "registrationStatus": "現行",
+      "catalogPage": "P.100",
+      "manufacturingRangePage": "P.11",
+      "sourceUrl": "https://drive.google.com/file/d/1j9PtW8yoKBZ4Nodm58wU3QtOCvxlEja9/view?usp=drivesdk",
+      "note": "内外観ブラック色は設定なし。",
+      "_source": {
+        "sheet": "03_窓種",
+        "row": 6
+      }
+    },
+    {
+      "id": "W431-004",
+      "productId": "SER-YKK-APW431",
+      "integrationWindowId": "SWT-YKK-APW431-OPEN-TERRACE",
+      "displayName": "開き窓テラス",
+      "category": "一般窓",
+      "operationConfiguration": "単窓／2連窓／3連窓",
+      "regionStandards": "北海道",
+      "selectable": true,
+      "active": true,
+      "registrationStatus": "現行",
+      "catalogPage": "P.104",
+      "manufacturingRangePage": "P.13",
+      "sourceUrl": "https://drive.google.com/file/d/1j9PtW8yoKBZ4Nodm58wU3QtOCvxlEja9/view?usp=drivesdk",
+      "note": "テラス属性の開き窓。",
+      "_source": {
+        "sheet": "03_窓種",
+        "row": 7
+      }
+    },
+    {
+      "id": "W431-005",
+      "productId": "SER-YKK-APW431",
+      "integrationWindowId": "SWT-YKK-APW431-TERRACE-DOOR",
+      "displayName": "テラスドア",
+      "category": "ドア",
+      "operationConfiguration": "単窓／2連窓／3連窓",
+      "regionStandards": "本州",
+      "selectable": true,
+      "active": true,
+      "registrationStatus": "現行",
+      "catalogPage": "P.108",
+      "manufacturingRangePage": "P.12",
+      "sourceUrl": "https://drive.google.com/file/d/1j9PtW8yoKBZ4Nodm58wU3QtOCvxlEja9/view?usp=drivesdk",
+      "note": "外部ハンドル付。",
+      "_source": {
+        "sheet": "03_窓種",
+        "row": 8
+      }
+    },
+    {
+      "id": "W431-006",
+      "productId": "SER-YKK-APW431",
+      "integrationWindowId": "SWT-YKK-APW431-BACK-DOOR",
+      "displayName": "勝手口ドア",
+      "category": "ドア",
+      "operationConfiguration": "中桟無／断熱腰パネル付",
+      "regionStandards": "北海道／本州",
+      "selectable": true,
+      "active": true,
+      "registrationStatus": "現行",
+      "catalogPage": "P.112",
+      "manufacturingRangePage": "P.13",
+      "sourceUrl": "https://drive.google.com/file/d/1j9PtW8yoKBZ4Nodm58wU3QtOCvxlEja9/view?usp=drivesdk",
+      "note": "下枠ステンレスカバー付仕様あり。",
+      "_source": {
+        "sheet": "03_窓種",
+        "row": 9
+      }
+    }
+  ],
+  "specific_specs": [
+    {
+      "spec_id": "SP431-001",
+      "productId": "SER-YKK-APW431",
+      "windowId": "W431-001",
+      "specType": "建数",
+      "displayValue": "2枚建",
+      "selectionTiming": "窓種直後",
+      "status": "確定",
+      "evidence": "商品/価格表",
+      "note": null,
+      "_source": {
+        "sheet": "04_窓種固有仕様",
+        "row": 4
+      }
+    },
+    {
+      "spec_id": "SP431-002",
+      "productId": "SER-YKK-APW431",
+      "windowId": "W431-001",
+      "specType": "建数",
+      "displayValue": "4枚建",
+      "selectionTiming": "窓種直後",
+      "status": "確定",
+      "evidence": "商品/価格表",
+      "note": null,
+      "_source": {
+        "sheet": "04_窓種固有仕様",
+        "row": 5
+      }
+    },
+    {
+      "spec_id": "SP431-003",
+      "productId": "SER-YKK-APW431",
+      "windowId": "W431-001",
+      "specType": "地域規格",
+      "displayValue": "北海道規格",
+      "selectionTiming": "建数後",
+      "status": "確定",
+      "evidence": "業務用P.6",
+      "note": null,
+      "_source": {
+        "sheet": "04_窓種固有仕様",
+        "row": 6
+      }
+    },
+    {
+      "spec_id": "SP431-004",
+      "productId": "SER-YKK-APW431",
+      "windowId": "W431-001",
+      "specType": "地域規格",
+      "displayValue": "本州規格",
+      "selectionTiming": "建数後",
+      "status": "確定",
+      "evidence": "業務用P.7",
+      "note": null,
+      "_source": {
+        "sheet": "04_窓種固有仕様",
+        "row": 7
+      }
+    },
+    {
+      "spec_id": "SP431-005",
+      "productId": "SER-YKK-APW431",
+      "windowId": "W431-001",
+      "specType": "施錠",
+      "displayValue": "クレセント仕様",
+      "selectionTiming": "建数後",
+      "status": "確認済",
+      "evidence": "価格表",
+      "note": null,
+      "_source": {
+        "sheet": "04_窓種固有仕様",
+        "row": 8
+      }
+    },
+    {
+      "spec_id": "SP431-006",
+      "productId": "SER-YKK-APW431",
+      "windowId": "W431-001",
+      "specType": "操作補助",
+      "displayValue": "大型引手付",
+      "selectionTiming": "サイズ確定後",
+      "status": "条件付",
+      "evidence": "価格表",
+      "note": "サイズ別可否あり",
+      "_source": {
+        "sheet": "04_窓種固有仕様",
+        "row": 9
+      }
+    },
+    {
+      "spec_id": "SP431-007",
+      "productId": "SER-YKK-APW431",
+      "windowId": "W431-001",
+      "specType": "操作補助",
+      "displayValue": "サポートハンドル付",
+      "selectionTiming": "サイズ確定後",
+      "status": "条件付",
+      "evidence": "価格表",
+      "note": "サイズ別可否あり",
+      "_source": {
+        "sheet": "04_窓種固有仕様",
+        "row": 10
+      }
+    },
+    {
+      "spec_id": "SP431-008",
+      "productId": "SER-YKK-APW431",
+      "windowId": "W431-001",
+      "specType": "操作補助",
+      "displayValue": "サポート引手付",
+      "selectionTiming": "サイズ確定後",
+      "status": "条件付",
+      "evidence": "価格表",
+      "note": "サイズ別可否あり",
+      "_source": {
+        "sheet": "04_窓種固有仕様",
+        "row": 11
+      }
+    },
+    {
+      "spec_id": "SP431-009",
+      "productId": "SER-YKK-APW431",
+      "windowId": "W431-001",
+      "specType": "特殊仕様",
+      "displayValue": "非常用進入口対応サイズ仕様",
+      "selectionTiming": "サイズ選択時",
+      "status": "条件付",
+      "evidence": "商品カタログ",
+      "note": "対応呼称は規格サイズ表で制御",
+      "_source": {
+        "sheet": "04_窓種固有仕様",
+        "row": 12
+      }
+    },
+    {
+      "spec_id": "SP431-010",
+      "productId": "SER-YKK-APW431",
+      "windowId": "W431-002",
+      "specType": "建数",
+      "displayValue": "2枚建",
+      "selectionTiming": "窓種直後",
+      "status": "確定",
+      "evidence": "価格表",
+      "note": null,
+      "_source": {
+        "sheet": "04_窓種固有仕様",
+        "row": 13
+      }
+    },
+    {
+      "spec_id": "SP431-011",
+      "productId": "SER-YKK-APW431",
+      "windowId": "W431-002",
+      "specType": "建数",
+      "displayValue": "4枚建",
+      "selectionTiming": "窓種直後",
+      "status": "確定",
+      "evidence": "価格表",
+      "note": null,
+      "_source": {
+        "sheet": "04_窓種固有仕様",
+        "row": 14
+      }
+    },
+    {
+      "spec_id": "SP431-012",
+      "productId": "SER-YKK-APW431",
+      "windowId": "W431-002",
+      "specType": "地域規格",
+      "displayValue": "本州規格",
+      "selectionTiming": "建数後",
+      "status": "確定",
+      "evidence": "業務用P.9",
+      "note": null,
+      "_source": {
+        "sheet": "04_窓種固有仕様",
+        "row": 15
+      }
+    },
+    {
+      "spec_id": "SP431-013",
+      "productId": "SER-YKK-APW431",
+      "windowId": "W431-002",
+      "specType": "シャッター種類",
+      "displayValue": "リモコンシャッター",
+      "selectionTiming": "窓種直後",
+      "status": "現行",
+      "evidence": "商品/価格表",
+      "note": null,
+      "_source": {
+        "sheet": "04_窓種固有仕様",
+        "row": 16
+      }
+    },
+    {
+      "spec_id": "SP431-014",
+      "productId": "SER-YKK-APW431",
+      "windowId": "W431-002",
+      "specType": "シャッター種類",
+      "displayValue": "手動シャッター",
+      "selectionTiming": "窓種直後",
+      "status": "現行",
+      "evidence": "商品/価格表",
+      "note": null,
+      "_source": {
+        "sheet": "04_窓種固有仕様",
+        "row": 17
+      }
+    },
+    {
+      "spec_id": "SP431-015",
+      "productId": "SER-YKK-APW431",
+      "windowId": "W431-002",
+      "specType": "シャッター種類",
+      "displayValue": "リモコンシャッター JEM-A端子付",
+      "selectionTiming": "窓種直後",
+      "status": "現行",
+      "evidence": "価格表",
+      "note": "HEMS連携系",
+      "_source": {
+        "sheet": "04_窓種固有仕様",
+        "row": 18
+      }
+    },
+    {
+      "spec_id": "SP431-016",
+      "productId": "SER-YKK-APW431",
+      "windowId": "W431-002",
+      "specType": "シャッター種類",
+      "displayValue": "リモコンシャッターGR",
+      "selectionTiming": "窓種直後",
+      "status": "現行",
+      "evidence": "価格表",
+      "note": "耐風系",
+      "_source": {
+        "sheet": "04_窓種固有仕様",
+        "row": 19
+      }
+    },
+    {
+      "spec_id": "SP431-017",
+      "productId": "SER-YKK-APW431",
+      "windowId": "W431-002",
+      "specType": "シャッター種類",
+      "displayValue": "手動シャッターGR",
+      "selectionTiming": "窓種直後",
+      "status": "現行",
+      "evidence": "価格表",
+      "note": "耐風系",
+      "_source": {
+        "sheet": "04_窓種固有仕様",
+        "row": 20
+      }
+    },
+    {
+      "spec_id": "SP431-018",
+      "productId": "SER-YKK-APW431",
+      "windowId": "W431-002",
+      "specType": "シャッター種類",
+      "displayValue": "リモコンシャッターGR JEM-A端子付",
+      "selectionTiming": "窓種直後",
+      "status": "現行",
+      "evidence": "価格表",
+      "note": "HEMS連携系",
+      "_source": {
+        "sheet": "04_窓種固有仕様",
+        "row": 21
+      }
+    },
+    {
+      "spec_id": "SP431-019",
+      "productId": "SER-YKK-APW431",
+      "windowId": "W431-002",
+      "specType": "シャッター種類",
+      "displayValue": "リモコンスリットシャッターGR",
+      "selectionTiming": "窓種直後",
+      "status": "現行／改訂予定",
+      "evidence": "2026.08業務用",
+      "note": "2027年4月リニューアル予定",
+      "_source": {
+        "sheet": "04_窓種固有仕様",
+        "row": 22
+      }
+    },
+    {
+      "spec_id": "SP431-020",
+      "productId": "SER-YKK-APW431",
+      "windowId": "W431-002",
+      "specType": "操作補助",
+      "displayValue": "大型引手／サポートハンドル／サポート引手",
+      "selectionTiming": "サイズ確定後",
+      "status": "条件付",
+      "evidence": "価格表",
+      "note": "サイズ別可否あり",
+      "_source": {
+        "sheet": "04_窓種固有仕様",
+        "row": 23
+      }
+    },
+    {
+      "spec_id": "SP431-021",
+      "productId": "SER-YKK-APW431",
+      "windowId": "W431-003",
+      "specType": "タイプ",
+      "displayValue": "偏芯タイプ",
+      "selectionTiming": "窓種直後",
+      "status": "確定",
+      "evidence": "商品/価格表",
+      "note": null,
+      "_source": {
+        "sheet": "04_窓種固有仕様",
+        "row": 24
+      }
+    },
+    {
+      "spec_id": "SP431-022",
+      "productId": "SER-YKK-APW431",
+      "windowId": "W431-003",
+      "specType": "タイプ",
+      "displayValue": "均等タイプ",
+      "selectionTiming": "窓種直後",
+      "status": "確定",
+      "evidence": "商品/価格表",
+      "note": null,
+      "_source": {
+        "sheet": "04_窓種固有仕様",
+        "row": 25
+      }
+    },
+    {
+      "spec_id": "SP431-023",
+      "productId": "SER-YKK-APW431",
+      "windowId": "W431-003",
+      "specType": "地域規格",
+      "displayValue": "北海道規格",
+      "selectionTiming": "タイプ後",
+      "status": "確定",
+      "evidence": "業務用P.11",
+      "note": null,
+      "_source": {
+        "sheet": "04_窓種固有仕様",
+        "row": 26
+      }
+    },
+    {
+      "spec_id": "SP431-024",
+      "productId": "SER-YKK-APW431",
+      "windowId": "W431-003",
+      "specType": "地域規格",
+      "displayValue": "本州規格",
+      "selectionTiming": "タイプ後",
+      "status": "確定",
+      "evidence": "業務用P.11",
+      "note": null,
+      "_source": {
+        "sheet": "04_窓種固有仕様",
+        "row": 27
+      }
+    },
+    {
+      "spec_id": "SP431-025",
+      "productId": "SER-YKK-APW431",
+      "windowId": "W431-004",
+      "specType": "構成",
+      "displayValue": "単窓",
+      "selectionTiming": "窓種直後",
+      "status": "確定",
+      "evidence": "商品カタログ",
+      "note": null,
+      "_source": {
+        "sheet": "04_窓種固有仕様",
+        "row": 28
+      }
+    },
+    {
+      "spec_id": "SP431-026",
+      "productId": "SER-YKK-APW431",
+      "windowId": "W431-004",
+      "specType": "構成",
+      "displayValue": "2連窓",
+      "selectionTiming": "窓種直後",
+      "status": "確定",
+      "evidence": "商品カタログ",
+      "note": null,
+      "_source": {
+        "sheet": "04_窓種固有仕様",
+        "row": 29
+      }
+    },
+    {
+      "spec_id": "SP431-027",
+      "productId": "SER-YKK-APW431",
+      "windowId": "W431-004",
+      "specType": "構成",
+      "displayValue": "3連窓",
+      "selectionTiming": "窓種直後",
+      "status": "確定",
+      "evidence": "商品カタログ",
+      "note": null,
+      "_source": {
+        "sheet": "04_窓種固有仕様",
+        "row": 30
+      }
+    },
+    {
+      "spec_id": "SP431-028",
+      "productId": "SER-YKK-APW431",
+      "windowId": "W431-004",
+      "specType": "地域規格",
+      "displayValue": "北海道規格",
+      "selectionTiming": "構成後",
+      "status": "確定",
+      "evidence": "業務用P.13",
+      "note": null,
+      "_source": {
+        "sheet": "04_窓種固有仕様",
+        "row": 31
+      }
+    },
+    {
+      "spec_id": "SP431-029",
+      "productId": "SER-YKK-APW431",
+      "windowId": "W431-005",
+      "specType": "構成",
+      "displayValue": "単窓",
+      "selectionTiming": "窓種直後",
+      "status": "確定",
+      "evidence": "商品カタログ",
+      "note": null,
+      "_source": {
+        "sheet": "04_窓種固有仕様",
+        "row": 32
+      }
+    },
+    {
+      "spec_id": "SP431-030",
+      "productId": "SER-YKK-APW431",
+      "windowId": "W431-005",
+      "specType": "構成",
+      "displayValue": "2連窓",
+      "selectionTiming": "窓種直後",
+      "status": "確定",
+      "evidence": "商品カタログ",
+      "note": null,
+      "_source": {
+        "sheet": "04_窓種固有仕様",
+        "row": 33
+      }
+    },
+    {
+      "spec_id": "SP431-031",
+      "productId": "SER-YKK-APW431",
+      "windowId": "W431-005",
+      "specType": "構成",
+      "displayValue": "3連窓",
+      "selectionTiming": "窓種直後",
+      "status": "確定",
+      "evidence": "商品カタログ",
+      "note": null,
+      "_source": {
+        "sheet": "04_窓種固有仕様",
+        "row": 34
+      }
+    },
+    {
+      "spec_id": "SP431-032",
+      "productId": "SER-YKK-APW431",
+      "windowId": "W431-005",
+      "specType": "地域規格",
+      "displayValue": "本州規格",
+      "selectionTiming": "構成後",
+      "status": "確定",
+      "evidence": "業務用P.12",
+      "note": null,
+      "_source": {
+        "sheet": "04_窓種固有仕様",
+        "row": 35
+      }
+    },
+    {
+      "spec_id": "SP431-033",
+      "productId": "SER-YKK-APW431",
+      "windowId": "W431-005",
+      "specType": "ハンドル",
+      "displayValue": "外部ハンドル付",
+      "selectionTiming": "自動",
+      "status": "確定",
+      "evidence": "商品カタログ",
+      "note": "窓種固有の標準属性として保持",
+      "_source": {
+        "sheet": "04_窓種固有仕様",
+        "row": 36
+      }
+    },
+    {
+      "spec_id": "SP431-034",
+      "productId": "SER-YKK-APW431",
+      "windowId": "W431-005",
+      "specType": "工法/枠",
+      "displayValue": "2×4／床厚27mm対応",
+      "selectionTiming": "サイズ選択時",
+      "status": "条件付",
+      "evidence": "価格表",
+      "note": "規格サイズ別",
+      "_source": {
+        "sheet": "04_窓種固有仕様",
+        "row": 37
+      }
+    },
+    {
+      "spec_id": "SP431-035",
+      "productId": "SER-YKK-APW431",
+      "windowId": "W431-006",
+      "specType": "地域規格",
+      "displayValue": "北海道規格",
+      "selectionTiming": "窓種直後",
+      "status": "確定",
+      "evidence": "業務用P.13",
+      "note": null,
+      "_source": {
+        "sheet": "04_窓種固有仕様",
+        "row": 38
+      }
+    },
+    {
+      "spec_id": "SP431-036",
+      "productId": "SER-YKK-APW431",
+      "windowId": "W431-006",
+      "specType": "地域規格",
+      "displayValue": "本州規格",
+      "selectionTiming": "窓種直後",
+      "status": "確定",
+      "evidence": "業務用P.13",
+      "note": null,
+      "_source": {
+        "sheet": "04_窓種固有仕様",
+        "row": 39
+      }
+    },
+    {
+      "spec_id": "SP431-037",
+      "productId": "SER-YKK-APW431",
+      "windowId": "W431-006",
+      "specType": "パネル仕様",
+      "displayValue": "中桟無",
+      "selectionTiming": "地域規格後",
+      "status": "確定",
+      "evidence": "商品/価格表",
+      "note": null,
+      "_source": {
+        "sheet": "04_窓種固有仕様",
+        "row": 40
+      }
+    },
+    {
+      "spec_id": "SP431-038",
+      "productId": "SER-YKK-APW431",
+      "windowId": "W431-006",
+      "specType": "パネル仕様",
+      "displayValue": "断熱腰パネル付",
+      "selectionTiming": "地域規格後",
+      "status": "確定",
+      "evidence": "商品/価格表",
+      "note": null,
+      "_source": {
+        "sheet": "04_窓種固有仕様",
+        "row": 41
+      }
+    },
+    {
+      "spec_id": "SP431-039",
+      "productId": "SER-YKK-APW431",
+      "windowId": "W431-006",
+      "specType": "下枠仕様",
+      "displayValue": "標準",
+      "selectionTiming": "パネル後",
+      "status": "確定",
+      "evidence": "価格表",
+      "note": null,
+      "_source": {
+        "sheet": "04_窓種固有仕様",
+        "row": 42
+      }
+    },
+    {
+      "spec_id": "SP431-040",
+      "productId": "SER-YKK-APW431",
+      "windowId": "W431-006",
+      "specType": "下枠仕様",
+      "displayValue": "下枠ステンレスカバー付",
+      "selectionTiming": "パネル後",
+      "status": "確定",
+      "evidence": "価格表",
+      "note": null,
+      "_source": {
+        "sheet": "04_窓種固有仕様",
+        "row": 43
+      }
+    },
+    {
+      "spec_id": "SP431-041",
+      "productId": "SER-YKK-APW431",
+      "windowId": "W431-006",
+      "specType": "工法/枠",
+      "displayValue": "2×4／床厚27mm対応",
+      "selectionTiming": "サイズ選択時",
+      "status": "条件付",
+      "evidence": "価格表",
+      "note": "規格サイズ別",
+      "_source": {
+        "sheet": "04_窓種固有仕様",
+        "row": 44
+      }
+    }
+  ],
+  "release_fixed": [
+    {
+      "キー": "release_version",
+      "値": "1.0",
+      "状態": "FROZEN",
+      "変更可否": "差分改訂のみ",
+      "変更条件": "メーカー資料改訂または共通仕様改訂",
+      "根拠": "本ブック全体",
+      "備考": "正式固定版",
+      "_source": {
+        "sheet": "32_リリース固定",
+        "row": 4
+      }
+    },
+    {
+      "キー": "release_date",
+      "値": "2026-08-27",
+      "状態": "FROZEN",
+      "変更可否": "不可",
+      "変更条件": "次版で更新",
+      "根拠": "-",
+      "_source": {
+        "sheet": "32_リリース固定",
+        "row": 5
+      }
+    },
+    {
+      "キー": "series_id",
+      "値": "SER-YKK-APW431",
+      "状態": "FROZEN",
+      "変更可否": "原則不可",
+      "変更条件": "統合ID規約自体の改訂",
+      "根拠": "30_APW430整合QA",
+      "_source": {
+        "sheet": "32_リリース固定",
+        "row": 6
+      }
+    },
+    {
+      "キー": "product_family",
+      "値": "APW 430シリーズ",
+      "状態": "FROZEN",
+      "変更可否": "差分改訂のみ",
+      "変更条件": "メーカー商品体系変更",
+      "根拠": "公式APW430/431資料",
+      "_source": {
+        "sheet": "32_リリース固定",
+        "row": 7
+      }
+    },
+    {
+      "キー": "window_count",
+      "値": "6",
+      "状態": "FROZEN",
+      "変更可否": "差分改訂のみ",
+      "変更条件": "商品ラインアップ変更",
+      "根拠": "03_窓種",
+      "_source": {
+        "sheet": "32_リリース固定",
+        "row": 8
+      }
+    },
+    {
+      "キー": "standard_size_count",
+      "値": "332",
+      "状態": "FROZEN",
+      "変更可否": "差分改訂のみ",
+      "変更条件": "規格表改訂",
+      "根拠": "05_規格サイズ",
+      "_source": {
+        "sheet": "32_リリース固定",
+        "row": 9
+      }
+    },
+    {
+      "キー": "candidate_count",
+      "値": "538",
+      "状態": "FROZEN",
+      "変更可否": "自動再生成",
+      "変更条件": "規格/シャッター条件改訂",
+      "根拠": "26_統合候補マスター",
+      "_source": {
+        "sheet": "32_リリース固定",
+        "row": 10
+      }
+    },
+    {
+      "キー": "free_rule_count",
+      "値": "29",
+      "状態": "FROZEN",
+      "変更可否": "差分改訂のみ",
+      "変更条件": "業務用製作範囲改訂",
+      "根拠": "18_製作範囲ルール",
+      "_source": {
+        "sheet": "32_リリース固定",
+        "row": 11
+      }
+    },
+    {
+      "キー": "glass_wind_records",
+      "値": "31",
+      "状態": "FROZEN",
+      "変更可否": "差分改訂のみ",
+      "変更条件": "ガラス資料改訂",
+      "根拠": "19_ガラス耐風圧",
+      "_source": {
+        "sheet": "32_リリース固定",
+        "row": 12
+      }
+    },
+    {
+      "キー": "shutter_types",
+      "値": "5",
+      "状態": "FROZEN",
+      "変更可否": "差分改訂のみ",
+      "変更条件": "シャッター商品体系改訂",
+      "根拠": "17_シャッター体系",
+      "備考": "JEM-Aは別サブオプション",
+      "_source": {
+        "sheet": "32_リリース固定",
+        "row": 13
+      }
+    },
+    {
+      "キー": "e2e",
+      "値": "14/14 PASS",
+      "状態": "PASS",
+      "変更可否": "テスト追加可",
+      "変更条件": "ロジック変更時は全件再実行",
+      "根拠": "29_E2Eテスト",
+      "備考": "FAIL 0が必須",
+      "_source": {
+        "sheet": "32_リリース固定",
+        "row": 14
+      }
+    },
+    {
+      "キー": "known_limit_1",
+      "値": "大開口等の耐風圧境界曲線",
+      "状態": "ACCEPTED",
+      "変更可否": "独自近似禁止",
+      "変更条件": "メーカーが数式/表を公開した場合のみAUTO化",
+      "根拠": "24_判定精度クラス",
+      "備考": "SOURCE_GRAPH",
+      "_source": {
+        "sheet": "32_リリース固定",
+        "row": 15
+      }
+    },
+    {
+      "キー": "known_limit_2",
+      "値": "重量ガラス一部斜線領域",
+      "状態": "ACCEPTED",
+      "変更可否": "独自近似禁止",
+      "変更条件": "メーカー数式公開時のみAUTO化",
+      "根拠": "23_重量ガラス・特殊ガラス",
+      "備考": "PARTIAL",
+      "_source": {
+        "sheet": "32_リリース固定",
+        "row": 16
+      }
+    },
+    {
+      "キー": "future_change",
+      "値": "リモコンスリットシャッターGRの将来改定情報",
+      "状態": "TRACK",
+      "変更可否": "v1.0へ先取り反映しない",
+      "変更条件": "発効時点の公式資料確認後v1.1差分",
+      "根拠": "17/14",
+      "備考": "2026-08-27基準で凍結",
+      "_source": {
+        "sheet": "32_リリース固定",
+        "row": 17
+      }
+    },
+    {
+      "キー": "gate",
+      "値": "APP_INTEGRATION_READY",
+      "状態": "PASS",
+      "変更可否": "-",
+      "変更条件": "30/31/29がPASS",
+      "根拠": "30/31/29",
+      "備考": "通常APW431の作成完了",
+      "_source": {
+        "sheet": "32_リリース固定",
+        "row": 18
+      }
+    }
+  ],
+  "qa_history": [
+    {
+      "QA_ID": "QA431-001",
+      "確認項目": "共通仕様の入力順",
+      "判定": "PASS",
+      "内容": "内観色→網戸→ガラス→ガラス詳細の順序を維持",
+      "次アクション": "-",
+      "_source": {
+        "sheet": "15_QA",
+        "row": 4
+      }
+    },
+    {
+      "QA_ID": "QA431-002",
+      "確認項目": "APW431のシリーズ扱い",
+      "判定": "PASS",
+      "内容": "SER-YKK-APW431としてAPW430から独立。商品ファミリー=APW430シリーズ",
+      "次アクション": "-",
+      "_source": {
+        "sheet": "15_QA",
+        "row": 5
+      }
+    },
+    {
+      "QA_ID": "QA431-003",
+      "確認項目": "防火商品の分離",
+      "判定": "PASS",
+      "内容": "APW431防火窓を通常マスターから分離",
+      "次アクション": "-",
+      "_source": {
+        "sheet": "15_QA",
+        "row": 6
+      }
+    },
+    {
+      "QA_ID": "QA431-004",
+      "確認項目": "窓種ラインアップ",
+      "判定": "PASS",
+      "内容": "現行6窓種を登録",
+      "次アクション": "-",
+      "_source": {
+        "sheet": "15_QA",
+        "row": 7
+      }
+    },
+    {
+      "QA_ID": "QA431-005",
+      "確認項目": "規格サイズ完全展開",
+      "判定": "PASS",
+      "内容": "1呼称1行・全332レコード。在来/2×4/床厚27mm/地域/建数/構成を分離",
+      "次アクション": "-",
+      "_source": {
+        "sheet": "15_QA",
+        "row": 8
+      }
+    },
+    {
+      "QA_ID": "QA431-006",
+      "確認項目": "サイズ別ガラス可否",
+      "判定": "PASS",
+      "内容": "原資料の◎○△▲▽▼●を窓種別ルールセットで6可否列へ展開",
+      "次アクション": "-",
+      "_source": {
+        "sheet": "15_QA",
+        "row": 9
+      }
+    },
+    {
+      "QA_ID": "QA431-007",
+      "確認項目": "サイズ別網戸可否",
+      "判定": "PASS",
+      "内容": "□/■※を正式網戸形式へ展開。XMHは中桟なし標準・中桟付選択可",
+      "次アクション": "-",
+      "_source": {
+        "sheet": "15_QA",
+        "row": 10
+      }
+    },
+    {
+      "QA_ID": "QA431-008",
+      "確認項目": "シャッターサイズ可否",
+      "判定": "PASS",
+      "内容": "シャッター付引違いテラス戸の存在サイズを全行化し、5種類＋JEM-Aサブオプションへ正規化",
+      "次アクション": "17/25/26シート",
+      "_source": {
+        "sheet": "15_QA",
+        "row": 11
+      }
+    },
+    {
+      "QA_ID": "QA431-009",
+      "確認項目": "重量障子/非常用進入口",
+      "判定": "PASS",
+      "内容": "カタログの網掛け・赤枠情報をサイズ属性として保持",
+      "次アクション": "-",
+      "_source": {
+        "sheet": "15_QA",
+        "row": 12
+      }
+    },
+    {
+      "QA_ID": "QA431-010",
+      "確認項目": "有効開口750mm",
+      "判定": "PASS",
+      "内容": "開き窓テラス/テラスドア/勝手口ドアの対応サイズを属性化",
+      "次アクション": "-",
+      "_source": {
+        "sheet": "15_QA",
+        "row": 13
+      }
+    },
+    {
+      "QA_ID": "QA431-011",
+      "確認項目": "製作範囲自由寸法min/max",
+      "判定": "PASS",
+      "内容": "自由寸法製作範囲はv0.3で数値ルール化済み。29件を実装",
+      "次アクション": "完了",
+      "_source": {
+        "sheet": "15_QA",
+        "row": 14
+      }
+    },
+    {
+      "QA_ID": "QA431-012",
+      "確認項目": "自由寸法の明示数値ルール",
+      "判定": "PASS",
+      "内容": "製作範囲ルール29件を数値化。H-W関係式・WS/WF条件・ガラス寸法式・重量上限を保持",
+      "次アクション": "-",
+      "_source": {
+        "sheet": "15_QA",
+        "row": 15
+      }
+    },
+    {
+      "QA_ID": "QA431-013",
+      "確認項目": "ガラス耐風圧許容面積",
+      "判定": "PASS",
+      "内容": "P.141から31ガラス記号をS-1/S-2/S-3別に登録",
+      "次アクション": "-",
+      "_source": {
+        "sheet": "15_QA",
+        "row": 16
+      }
+    },
+    {
+      "QA_ID": "QA431-014",
+      "確認項目": "自由寸法判定シミュレーター",
+      "判定": "PASS",
+      "内容": "基礎範囲・ガラス寸法・面積・重量・選択耐風圧を自動照合",
+      "次アクション": "-",
+      "_source": {
+        "sheet": "15_QA",
+        "row": 17
+      }
+    },
+    {
+      "QA_ID": "QA431-015",
+      "確認項目": "耐風圧境界曲線の完全数式化",
+      "判定": "LIMIT",
+      "内容": "大開口スライディング等のS-2/S-3境界曲線はメーカー数式非公開",
+      "次アクション": "原図/P.141と併用し「要図表照合」で制御",
+      "_source": {
+        "sheet": "15_QA",
+        "row": 18
+      }
+    },
+    {
+      "QA_ID": "QA431-016",
+      "確認項目": "シャッター特殊条件分離",
+      "判定": "PASS",
+      "内容": "P.9/P.10のクレセントアップ不可、表1ガラスW>1870不可、操作部品H条件をAUTO化",
+      "次アクション": "-",
+      "_source": {
+        "sheet": "15_QA",
+        "row": 19
+      }
+    },
+    {
+      "QA_ID": "QA431-017",
+      "確認項目": "シャッター着色領域",
+      "判定": "PASS",
+      "内容": "白色部=手動GR/手動のみ、濃色部=スリットGR不可をSOURCE_GRAPHとして保持",
+      "次アクション": "境界式を勝手に近似しない",
+      "_source": {
+        "sheet": "15_QA",
+        "row": 20
+      }
+    },
+    {
+      "QA_ID": "QA431-018",
+      "確認項目": "重量ガラス仕様",
+      "判定": "PASS",
+      "内容": "2枚建専用、t≦13、74.2kg、W≥1871を判定へ反映",
+      "次アクション": "-",
+      "_source": {
+        "sheet": "15_QA",
+        "row": 21
+      }
+    },
+    {
+      "QA_ID": "QA431-019",
+      "確認項目": "表1ガラス",
+      "判定": "PASS",
+      "内容": "6構成を専用一覧化。標準仕様W>1870の不可条件を自動判定",
+      "次アクション": "-",
+      "_source": {
+        "sheet": "15_QA",
+        "row": 22
+      }
+    },
+    {
+      "QA_ID": "QA431-020",
+      "確認項目": "操作部品H条件",
+      "判定": "PASS",
+      "内容": "在来H≥1800、北海道/2×4 H≥1840を判定",
+      "次アクション": "-",
+      "_source": {
+        "sheet": "15_QA",
+        "row": 23
+      }
+    },
+    {
+      "QA_ID": "QA431-021",
+      "確認項目": "判定精度管理",
+      "判定": "PASS",
+      "内容": "AUTO/PARTIAL/SOURCE_GRAPHの3クラスを導入",
+      "次アクション": "-",
+      "_source": {
+        "sheet": "15_QA",
+        "row": 24
+      }
+    },
+    {
+      "QA_ID": "QA431-022",
+      "確認項目": "v0.4統合シミュレーター",
+      "判定": "PASS",
+      "内容": "重量ガラス・表1・シャッター種類・操作部品・クレセントを入力して総合判定",
+      "次アクション": "-",
+      "_source": {
+        "sheet": "15_QA",
+        "row": 25
+      }
+    },
+    {
+      "QA_ID": "QA431-023",
+      "確認項目": "シャッター5種類正規化",
+      "判定": "PASS",
+      "内容": "リモコンスリットGR/リモコンGR/手動GR/リモコン/手動の5種類へ統合。JEM-Aは別項目",
+      "次アクション": "-",
+      "_source": {
+        "sheet": "15_QA",
+        "row": 26
+      }
+    },
+    {
+      "QA_ID": "QA431-024",
+      "確認項目": "シャッター最小Wアンカー",
+      "判定": "PASS",
+      "内容": "2枚建:1000/1147/1169/1273、4枚建:2000を候補フィルタに反映",
+      "次アクション": "-",
+      "_source": {
+        "sheet": "15_QA",
+        "row": 27
+      }
+    },
+    {
+      "QA_ID": "QA431-025",
+      "確認項目": "規格候補展開",
+      "判定": "PASS",
+      "内容": "規格332行から実選択候補538行を生成",
+      "次アクション": "-",
+      "_source": {
+        "sheet": "15_QA",
+        "row": 28
+      }
+    },
+    {
+      "QA_ID": "QA431-026",
+      "確認項目": "規格サイズOP不可時の処理",
+      "判定": "PASS",
+      "内容": "同一W/Hが規格に存在しても選択シャッター不可なら『規格条件NG』。自由寸法へ誤ルーティングしない",
+      "次アクション": "-",
+      "_source": {
+        "sheet": "15_QA",
+        "row": 29
+      }
+    },
+    {
+      "QA_ID": "QA431-027",
+      "確認項目": "自由寸法ルール自動選択",
+      "判定": "PASS",
+      "内容": "選択項目からrule_keyを生成し29ルールを自動検索",
+      "次アクション": "-",
+      "_source": {
+        "sheet": "15_QA",
+        "row": 30
+      }
+    },
+    {
+      "QA_ID": "QA431-028",
+      "確認項目": "JEM-A分岐",
+      "判定": "PASS",
+      "内容": "リモコンGR/リモコンのみ『なし/あり』、スリットGRは『なし』、手動は対象外",
+      "次アクション": "-",
+      "_source": {
+        "sheet": "15_QA",
+        "row": 31
+      }
+    },
+    {
+      "QA_ID": "QA431-029",
+      "確認項目": "規格/自由統合ロジック",
+      "判定": "PASS",
+      "内容": "27_APP統合選択で1入力系に統合",
+      "次アクション": "-",
+      "_source": {
+        "sheet": "15_QA",
+        "row": 32
+      }
+    },
+    {
+      "QA_ID": "QA431-030",
+      "確認項目": "アプリ投入判定",
+      "判定": "READY",
+      "内容": "通常APW431は実装投入可能レベル",
+      "次アクション": "防火・将来商品改定は別管理",
+      "_source": {
+        "sheet": "15_QA",
+        "row": 33
+      }
+    },
+    {
+      "QA_ID": "QA431-031",
+      "確認項目": "E2E統合テスト",
+      "判定": "PASS",
+      "内容": "14ケース全PASS：規格/自由/シャッター/JEM-A/重量ガラス/大開口を確認",
+      "次アクション": "-",
+      "_source": {
+        "sheet": "15_QA",
+        "row": 34
+      }
+    },
+    {
+      "QA_ID": "QA431-032",
+      "確認項目": "実装投入ゲート",
+      "判定": "READY",
+      "内容": "通常APW431の選択ロジック・候補マスター・判定ルールが一体化",
+      "次アクション": "アプリ側で同じkey/IDを使用",
+      "_source": {
+        "sheet": "15_QA",
+        "row": 35
+      }
+    }
+  ],
+  "apw430_alignment_qa": [
+    {
+      "QA_ID": "I430431-001",
+      "比較項目": "シリーズ分離",
+      "APW430正本": "SER-YKK-APW430。READMEでAPW431は別シリーズ",
+      "APW431 v1.0": "SER-YKK-APW431",
+      "判定": "PASS",
+      "解決方法": "APW431を独立series_idへ変更",
+      "根拠": "APW430正本 00_README/02_シリーズ",
+      "備考": "カタログファミリーは共有",
+      "_source": {
+        "sheet": "30_APW430整合QA",
+        "row": 4
+      }
+    },
+    {
+      "QA_ID": "I430431-002",
+      "比較項目": "窓種混在防止",
+      "APW430正本": "APW430=有効25窓種。APW431を除外",
+      "APW431 v1.0": "APW431=6窓種のみ",
+      "判定": "PASS",
+      "解決方法": "シリーズ境界を固定",
+      "根拠": "APW430正本 00_README",
+      "備考": "APW430 718規格をAPW431へ流用しない",
+      "_source": {
+        "sheet": "30_APW430整合QA",
+        "row": 5
+      }
+    },
+    {
+      "QA_ID": "I430431-003",
+      "比較項目": "シリーズID命名",
+      "APW430正本": "SER-YKK-APW430",
+      "APW431 v1.0": "SER-YKK-APW431",
+      "判定": "PASS",
+      "解決方法": "SER-YKK-*規則に統一",
+      "根拠": "APW430 02_シリーズ",
+      "_source": {
+        "sheet": "30_APW430整合QA",
+        "row": 6
+      }
+    },
+    {
+      "QA_ID": "I430431-004",
+      "比較項目": "窓種統合ID",
+      "APW430正本": "SWT-YKK-APW430-*",
+      "APW431 v1.0": "SWT-YKK-APW431-*を追加",
+      "判定": "PASS",
+      "解決方法": "ローカルW431-IDを残しintegration_window_idを追加",
+      "根拠": "APW430 09A等",
+      "備考": "既存candidate_keyを壊さない",
+      "_source": {
+        "sheet": "30_APW430整合QA",
+        "row": 7
+      }
+    },
+    {
+      "QA_ID": "I430431-005",
+      "比較項目": "外観色",
+      "APW430正本": "YW/JO/J5/3A",
+      "APW431 v1.0": "YW/JO/J5/3A",
+      "判定": "PASS",
+      "解決方法": "共通色コードを維持",
+      "根拠": "APW430 07_色 / APW431商品P.40",
+      "備考": "4色一致",
+      "_source": {
+        "sheet": "30_APW430整合QA",
+        "row": 8
+      }
+    },
+    {
+      "QA_ID": "I430431-006",
+      "比較項目": "内観色",
+      "APW430正本": "WH/OC相当：ホワイト/ブラック",
+      "APW431 v1.0": "ホワイト/ブラック",
+      "判定": "PASS",
+      "解決方法": "名称・コード体系を共通化可能",
+      "根拠": "APW430 07_色 / APW431商品P.40",
+      "_source": {
+        "sheet": "30_APW430整合QA",
+        "row": 9
+      }
+    },
+    {
+      "QA_ID": "I430431-007",
+      "比較項目": "色組合せ",
+      "APW430正本": "基本5組合せ",
+      "APW431 v1.0": "5組合せ",
+      "判定": "PASS",
+      "解決方法": "シリーズ共通＋窓種例外方式",
+      "根拠": "APW430 07_色 / APW431 09_色組合せ",
+      "備考": "APW430ツーアクション、APW431大開口に個別例外",
+      "_source": {
+        "sheet": "30_APW430整合QA",
+        "row": 10
+      }
+    },
+    {
+      "QA_ID": "I430431-008",
+      "比較項目": "網戸正式名称",
+      "APW430正本": "スライド/横引きロール/上げ下げロール等",
+      "APW431 v1.0": "XMH/XMY/XMW",
+      "判定": "PASS",
+      "解決方法": "YKK AP正式名称を共通利用",
+      "根拠": "APW430 09A / 網戸2026.05",
+      "備考": "サイズ別可否はシリーズ別",
+      "_source": {
+        "sheet": "30_APW430整合QA",
+        "row": 11
+      }
+    },
+    {
+      "QA_ID": "I430431-009",
+      "比較項目": "シャッター位置",
+      "APW430正本": "窓種固有仕様→サイズ前",
+      "APW431 v1.0": "窓種固有仕様→サイズ前",
+      "判定": "PASS",
+      "解決方法": "入力フローF005へ統一",
+      "根拠": "共通仕様11章 / APW430 01_入力フロー",
+      "備考": "JEM-Aはサブ項目",
+      "_source": {
+        "sheet": "30_APW430整合QA",
+        "row": 12
+      }
+    },
+    {
+      "QA_ID": "I430431-010",
+      "比較項目": "工法区分",
+      "APW430正本": "F006、サイズ前",
+      "APW431 v1.0": "F006、サイズ前",
+      "判定": "PASS",
+      "解決方法": "v1.0入力フローへ追加",
+      "根拠": "APW430 01_入力フロー",
+      "備考": "在来/2×4",
+      "_source": {
+        "sheet": "30_APW430整合QA",
+        "row": 13
+      }
+    },
+    {
+      "QA_ID": "I430431-011",
+      "比較項目": "規格/自由判定",
+      "APW430正本": "規格は公式サイズのみ。例外は条件判定層",
+      "APW431 v1.0": "332規格＋29自由ルール",
+      "判定": "PASS",
+      "解決方法": "基本マスター＋条件判定層",
+      "根拠": "APW430 README / 共通仕様31章",
+      "_source": {
+        "sheet": "30_APW430整合QA",
+        "row": 14
+      }
+    },
+    {
+      "QA_ID": "I430431-012",
+      "比較項目": "Evidence",
+      "APW430正本": "公式カタログ/業務用/網戸資料を保持",
+      "APW431 v1.0": "同じ一次資料＋ページ/URL/確認日",
+      "判定": "PASS",
+      "解決方法": "Evidence構造を維持",
+      "根拠": "共通仕様23章",
+      "_source": {
+        "sheet": "30_APW430整合QA",
+        "row": 15
+      }
+    }
+  ],
+  "common_spec_final_qa": [
+    {
+      "QA_ID": "CF431-001",
+      "共通仕様項目": "基本階層",
+      "要求": "メーカー→シリーズ→商品カテゴリー→窓種→固有仕様→サイズ→色→網戸→ガラス→詳細→OP",
+      "v1.0実装": "01_入力フローで保持",
+      "判定": "PASS",
+      "主参照シート": "01_入力フロー",
+      "備考": "地域/工法はシリーズ固有の条件項目",
+      "_source": {
+        "sheet": "31_共通仕様最終QA",
+        "row": 4
+      }
+    },
+    {
+      "QA_ID": "CF431-002",
+      "共通仕様項目": "メーカー",
+      "要求": "自由入力させない",
+      "v1.0実装": "YKK AP固定",
+      "判定": "PASS",
+      "主参照シート": "01/02",
+      "_source": {
+        "sheet": "31_共通仕様最終QA",
+        "row": 5
+      }
+    },
+    {
+      "QA_ID": "CF431-003",
+      "共通仕様項目": "シリーズ固有体系",
+      "要求": "異なるシリーズを無理に混在させない",
+      "v1.0実装": "APW431をSER-YKK-APW431として独立",
+      "判定": "PASS",
+      "主参照シート": "02/30",
+      "_source": {
+        "sheet": "31_共通仕様最終QA",
+        "row": 6
+      }
+    },
+    {
+      "QA_ID": "CF431-004",
+      "共通仕様項目": "防火",
+      "要求": "ON/OFFにしない",
+      "v1.0実装": "APW431防火窓を別series_id・対象外",
+      "判定": "PASS",
+      "主参照シート": "02",
+      "_source": {
+        "sheet": "31_共通仕様最終QA",
+        "row": 7
+      }
+    },
+    {
+      "QA_ID": "CF431-005",
+      "共通仕様項目": "商品カテゴリー",
+      "要求": "メーカー体系を優先",
+      "v1.0実装": "一般窓/引違い窓/シャッター付窓/ドア",
+      "判定": "PASS",
+      "主参照シート": "01/03",
+      "_source": {
+        "sheet": "31_共通仕様最終QA",
+        "row": 8
+      }
+    },
+    {
+      "QA_ID": "CF431-006",
+      "共通仕様項目": "操作方式",
+      "要求": "サイズ体系に影響すれば上位分岐",
+      "v1.0実装": "建数/偏芯均等/腰パネル等をサイズ前",
+      "判定": "PASS",
+      "主参照シート": "04/18",
+      "_source": {
+        "sheet": "31_共通仕様最終QA",
+        "row": 9
+      }
+    },
+    {
+      "QA_ID": "CF431-007",
+      "共通仕様項目": "存在しない仕様",
+      "要求": "推測で作成しない",
+      "v1.0実装": "Evidenceなし仕様を確定しない",
+      "判定": "PASS",
+      "主参照シート": "14/24",
+      "_source": {
+        "sheet": "31_共通仕様最終QA",
+        "row": 10
+      }
+    },
+    {
+      "QA_ID": "CF431-008",
+      "共通仕様項目": "シャッター付商品",
+      "要求": "独立窓種＋シャッター種類をサイズ前",
+      "v1.0実装": "W431-002＋5種類",
+      "判定": "PASS",
+      "主参照シート": "03/17/25",
+      "_source": {
+        "sheet": "31_共通仕様最終QA",
+        "row": 11
+      }
+    },
+    {
+      "QA_ID": "CF431-009",
+      "共通仕様項目": "サイズ",
+      "要求": "呼称W/H・実寸W/H・製作範囲",
+      "v1.0実装": "332規格＋29自由ルール",
+      "判定": "PASS",
+      "主参照シート": "05/18",
+      "_source": {
+        "sheet": "31_共通仕様最終QA",
+        "row": 12
+      }
+    },
+    {
+      "QA_ID": "CF431-010",
+      "共通仕様項目": "外観色",
+      "要求": "正式色のみ",
+      "v1.0実装": "4色",
+      "判定": "PASS",
+      "主参照シート": "07",
+      "_source": {
+        "sheet": "31_共通仕様最終QA",
+        "row": 13
+      }
+    },
+    {
+      "QA_ID": "CF431-011",
+      "共通仕様項目": "内観色",
+      "要求": "別マスター＋組合せ制約",
+      "v1.0実装": "2色＋5組合せ＋例外",
+      "判定": "PASS",
+      "主参照シート": "08/09",
+      "_source": {
+        "sheet": "31_共通仕様最終QA",
+        "row": 14
+      }
+    },
+    {
+      "QA_ID": "CF431-012",
+      "共通仕様項目": "網戸順",
+      "要求": "内観色の後",
+      "v1.0実装": "F010/F010Aを内観色直後",
+      "判定": "PASS",
+      "主参照シート": "01",
+      "_source": {
+        "sheet": "31_共通仕様最終QA",
+        "row": 15
+      }
+    },
+    {
+      "QA_ID": "CF431-013",
+      "共通仕様項目": "引違い網戸",
+      "要求": "有無・中桟・ネット種類",
+      "v1.0実装": "XMH＋中桟＋ブラック/クリア",
+      "判定": "PASS",
+      "主参照シート": "10/05",
+      "備考": "メーカー設定品として管理",
+      "_source": {
+        "sheet": "31_共通仕様最終QA",
+        "row": 16
+      }
+    },
+    {
+      "QA_ID": "CF431-014",
+      "共通仕様項目": "すべり/ドア網戸",
+      "要求": "窓種ごとの正式仕様",
+      "v1.0実装": "XMW/XMYを窓種・サイズ別",
+      "判定": "PASS",
+      "主参照シート": "10",
+      "_source": {
+        "sheet": "31_共通仕様最終QA",
+        "row": 17
+      }
+    },
+    {
+      "QA_ID": "CF431-015",
+      "共通仕様項目": "ガラス",
+      "要求": "網戸後、大分類と詳細を分離可能",
+      "v1.0実装": "F011→F012、サイズ可否/耐風圧を別判定",
+      "判定": "PASS",
+      "主参照シート": "11/12/16/19",
+      "_source": {
+        "sheet": "31_共通仕様最終QA",
+        "row": 18
+      }
+    },
+    {
+      "QA_ID": "CF431-016",
+      "共通仕様項目": "オプション",
+      "要求": "商品成立条件を変えない後付け部材のみ",
+      "v1.0実装": "サイズ/性能に影響する条件は上位分岐",
+      "判定": "PASS",
+      "主参照シート": "13/17/18/23",
+      "_source": {
+        "sheet": "31_共通仕様最終QA",
+        "row": 19
+      }
+    },
+    {
+      "QA_ID": "CF431-017",
+      "共通仕様項目": "Evidence",
+      "要求": "資料名・年月・ページ・Web・確認日",
+      "v1.0実装": "EV431-001〜017＋正式固定Evidence",
+      "判定": "PASS",
+      "主参照シート": "14",
+      "_source": {
+        "sheet": "31_共通仕様最終QA",
+        "row": 20
+      }
+    },
+    {
+      "QA_ID": "CF431-018",
+      "共通仕様項目": "UI原則",
+      "要求": "選択不可候補は最初から表示しない",
+      "v1.0実装": "538候補＋ルールエンジンでフィルタ",
+      "判定": "PASS",
+      "主参照シート": "25/26/27",
+      "_source": {
+        "sheet": "31_共通仕様最終QA",
+        "row": 21
+      }
+    }
+  ],
+  "provenance": {
+    "authoring_drive_file_id": "1LbcIptIWOYogqCF9OPhGQ3L6itox0yND",
+    "authoring_file_name": "YKKAP_APW431_AUTHORING_MASTER_v1.2_FRAME_ANGLE_RECOVERY.xlsx",
+    "authoring_export_sha256": "f6e8a4e0b55179d7f26bd6f446e563efcb2b3b5988d7c28e219aed5f9949a1ab",
+    "authoring_bytes": 226881,
+    "generation_method": "Direct extraction from APW431 v1.0 fixed Authoring workbook; computed cell values serialized without inventing missing product specifications.",
+    "formula_sensitive_tables": [
+      "26_統合候補マスター",
+      "28_自由寸法Lookup",
+      "29_E2Eテスト",
+      "32_リリース固定"
+    ],
+    "revision": "20260918-FRAME-ANGLE-R1",
+    "generated_at": "2026-09-18T15:15:00+09:00",
+    "semantic_change": true,
+    "change_summary": "APW431 frame_angle Canonical Semantic Recovery only. Existing Glass/Color/Screen/Option/geometry data unchanged.",
+    "frame_angle_recovery": {
+      "source_ids": [
+        "1j9PtW8yoKBZ4Nodm58wU3QtOCvxlEja9"
+      ],
+      "verified_at": "2026-09-18",
+      "official_only": true,
+      "canonical_field": "frame_angle",
+      "canonical_values": [
+        "WITH_ANGLE",
+        "WITHOUT_ANGLE"
+      ]
+    }
+  },
+  "runtime_semantics": {
+    "ui_standard": "サッシ情報管理アプリ_UI実装標準仕様書_v1.6",
+    "seriesBoundary": "APW431 is independent series SER-YKK-APW431; APW430 sizes must not be reused.",
+    "fireProducts": "APW431 fire-rated products are outside this package and must not be treated as an ON/OFF option.",
+    "selectionOrder": [
+      "F001",
+      "F002",
+      "F003",
+      "F003A",
+      "F003C",
+      "F004",
+      "F005",
+      "F006",
+      "F007",
+      "F008",
+      "F009",
+      "F010",
+      "F010A",
+      "F011",
+      "F012",
+      "F013",
+      "F014"
+    ],
+    "standardSizeRoute": "Exact standard candidate match first.",
+    "customSizeRoute": "Only when no standard base-size match exists; use explicit 29 manufacturing-range rules.",
+    "standardConditionNg": "If base W/H is standard but selected shutter/option is unavailable, return STANDARD_CONDITION_NG; never reroute to custom size.",
+    "sourceGraphPolicy": "Do not approximate unpublished manufacturer boundary curves. Return manual/source-graph check where authoring precision class requires it.",
+    "glassProjectionContract": {
+      "stage": "GLAZING",
+      "version": "apw431-glass-contract/1.1-R1",
+      "userFacingFields": [
+        {
+          "canonicalField": "glass_type",
+          "visibility": "SHOW",
+          "required": true,
+          "allowedValuesSource": "glass_master"
+        },
+        {
+          "canonicalField": "glass_detail",
+          "visibility": "CONDITIONAL",
+          "required": "CONDITIONAL",
+          "allowedValuesSource": "glass_field_contract"
+        },
+        {
+          "canonicalField": "glass_function",
+          "visibility": "CONDITIONAL",
+          "required": false,
+          "allowedValuesSource": "glass_field_contract"
+        }
+      ],
+      "fixedFields": [
+        {
+          "canonicalField": "glass_base",
+          "value": "TRIPLE_GLAZING"
+        },
+        {
+          "canonicalField": "glass_low_e",
+          "value": "DOUBLE_LOW_E"
+        },
+        {
+          "canonicalField": "glass_spacer",
+          "value": "RESIN"
+        },
+        {
+          "canonicalField": "gas",
+          "value": "ARGON"
+        }
+      ],
+      "derivedFields": [
+        "glass_air_layer",
+        "glass_composition",
+        "glass_code"
+      ],
+      "unknownFieldPolicy": "FAIL_CLOSED",
+      "noIndependentSelector": [
+        "glass_base",
+        "glass_low_e",
+        "glass_spacer",
+        "gas",
+        "glass_air_layer",
+        "glass_composition"
+      ]
+    },
+    "frame_angle": {
+      "role": "FRAME_ANGLE",
+      "canonical_field": "frame_angle",
+      "stage": "CONFIGURATION",
+      "canonical_values": [
+        "WITH_ANGLE",
+        "WITHOUT_ANGLE"
+      ],
+      "user_visible_when_applicable": true,
+      "selector_policy": "USER_SELECTABLEではSelector表示。CONDITIONAL_USER_SELECTABLEはregionStandard/construction解決後にUSER_SELECTABLEとなる場合のみ表示。FIXEDは自動解決しSelectorを表示しない。",
+      "position": "window_spec -> handing -> frame_angle -> SIZE",
+      "rule_source": "37_FrameAngleRules",
+      "dependency_source": "38_FrameAngleDependency",
+      "unknown_fallback": "FORBIDDEN"
+    }
+  },
+  "release_status": "FORMAL_CANDIDATE",
+  "authoring": {
+    "file_name": "YKKAP_APW431_AUTHORING_MASTER_v1.2_FRAME_ANGLE_RECOVERY.xlsx",
+    "file_id": "1LbcIptIWOYogqCF9OPhGQ3L6itox0yND",
+    "sha256": "f6e8a4e0b55179d7f26bd6f446e563efcb2b3b5988d7c28e219aed5f9949a1ab"
+  },
+  "frame_angle_rules": [
+    {
+      "windowId": "W431-001",
+      "seriesWindowId": "SWT-YKK-APW431-HIKI-TERRACE",
+      "windowName": "引違いテラス戸",
+      "canonicalField": "frame_angle",
+      "stage": "CONFIGURATION",
+      "classification": "CONDITIONAL_USER_SELECTABLE",
+      "allowedValues": [
+        "WITHOUT_ANGLE",
+        "WITH_ANGLE"
+      ],
+      "fixedValue": null,
+      "conditions": [
+        {
+          "regionStandard": "北海道",
+          "construction": "在来",
+          "officialFrameSpec": "アングル無",
+          "classification": "FIXED",
+          "allowedValues": [
+            "WITHOUT_ANGLE"
+          ],
+          "fixedValue": "WITHOUT_ANGLE",
+          "evidence": "FAE431-002"
+        },
+        {
+          "regionStandard": "本州",
+          "construction": "2×4",
+          "officialFrameSpec": "アングル付",
+          "classification": "FIXED",
+          "allowedValues": [
+            "WITH_ANGLE"
+          ],
+          "fixedValue": "WITH_ANGLE",
+          "evidence": "FAE431-002"
+        },
+        {
+          "regionStandard": "本州",
+          "construction": "在来",
+          "officialFrameSpec": "アングル付/無",
+          "classification": "USER_SELECTABLE",
+          "allowedValues": [
+            "WITH_ANGLE",
+            "WITHOUT_ANGLE"
+          ],
+          "fixedValue": null,
+          "evidence": "FAE431-002"
+        }
+      ],
+      "standardCustom": [
+        "STANDARD",
+        "CUSTOM"
+      ],
+      "sizeAuthority": "existing standard_sizes/custom_dimension_rules; resolve frame_angle before SIZE",
+      "dependency": [
+        "window_type",
+        "regionStandard",
+        "construction",
+        "frame_angle",
+        "SIZE"
+      ],
+      "clearBehavior": "window_type/regionStandard/construction change re-resolves frame_angle and clears SIZE; frame_angle change clears SIZE",
+      "evidence": [
+        "FAE431-002"
+      ],
+      "verificationStatus": "VERIFIED"
+    },
+    {
+      "windowId": "W431-002",
+      "seriesWindowId": "SWT-YKK-APW431-SHUTTER-HIKI-TERRACE",
+      "windowName": "シャッター付引違いテラス戸",
+      "canonicalField": "frame_angle",
+      "stage": "CONFIGURATION",
+      "classification": "CONDITIONAL_USER_SELECTABLE",
+      "allowedValues": [
+        "WITH_ANGLE",
+        "WITHOUT_ANGLE"
+      ],
+      "fixedValue": null,
+      "conditions": [
+        {
+          "regionStandard": "本州",
+          "construction": "2×4",
+          "officialFrameSpec": "アングル付",
+          "classification": "FIXED",
+          "allowedValues": [
+            "WITH_ANGLE"
+          ],
+          "fixedValue": "WITH_ANGLE",
+          "evidence": "FAE431-003"
+        },
+        {
+          "regionStandard": "本州",
+          "construction": "在来",
+          "officialFrameSpec": "アングル付/無",
+          "classification": "USER_SELECTABLE",
+          "allowedValues": [
+            "WITH_ANGLE",
+            "WITHOUT_ANGLE"
+          ],
+          "fixedValue": null,
+          "evidence": "FAE431-003"
+        }
+      ],
+      "standardCustom": [
+        "STANDARD",
+        "CUSTOM"
+      ],
+      "sizeAuthority": "existing standard_sizes/custom_dimension_rules; resolve frame_angle before SIZE",
+      "dependency": [
+        "window_type",
+        "regionStandard",
+        "construction",
+        "frame_angle",
+        "SIZE"
+      ],
+      "clearBehavior": "window_type/regionStandard/construction change re-resolves frame_angle and clears SIZE; frame_angle change clears SIZE",
+      "evidence": [
+        "FAE431-003"
+      ],
+      "verificationStatus": "VERIFIED"
+    },
+    {
+      "windowId": "W431-003",
+      "seriesWindowId": "SWT-YKK-APW431-LARGE-SLIDING",
+      "windowName": "大開口スライディング",
+      "canonicalField": "frame_angle",
+      "stage": "CONFIGURATION",
+      "classification": "FIXED",
+      "allowedValues": [
+        "WITHOUT_ANGLE"
+      ],
+      "fixedValue": "WITHOUT_ANGLE",
+      "conditions": [
+        {
+          "regionStandard": "北海道",
+          "construction": "在来",
+          "officialFrameSpec": "アングル無",
+          "classification": "FIXED",
+          "allowedValues": [
+            "WITHOUT_ANGLE"
+          ],
+          "fixedValue": "WITHOUT_ANGLE",
+          "evidence": "FAE431-004"
+        },
+        {
+          "regionStandard": "本州",
+          "construction": "在来",
+          "officialFrameSpec": "アングル無",
+          "classification": "FIXED",
+          "allowedValues": [
+            "WITHOUT_ANGLE"
+          ],
+          "fixedValue": "WITHOUT_ANGLE",
+          "evidence": "FAE431-004"
+        }
+      ],
+      "standardCustom": [
+        "STANDARD",
+        "CUSTOM"
+      ],
+      "sizeAuthority": "existing standard_sizes/custom_dimension_rules; resolve frame_angle before SIZE",
+      "dependency": [
+        "window_type",
+        "regionStandard",
+        "construction",
+        "frame_angle",
+        "SIZE"
+      ],
+      "clearBehavior": "window_type/regionStandard/construction change re-resolves frame_angle and clears SIZE; frame_angle change clears SIZE",
+      "evidence": [
+        "FAE431-004"
+      ],
+      "verificationStatus": "VERIFIED"
+    },
+    {
+      "windowId": "W431-004",
+      "seriesWindowId": "SWT-YKK-APW431-OPEN-TERRACE",
+      "windowName": "開き窓テラス",
+      "canonicalField": "frame_angle",
+      "stage": "CONFIGURATION",
+      "classification": "FIXED",
+      "allowedValues": [
+        "WITHOUT_ANGLE"
+      ],
+      "fixedValue": "WITHOUT_ANGLE",
+      "conditions": [
+        {
+          "regionStandard": "北海道",
+          "construction": "在来",
+          "officialFrameSpec": "アングル無",
+          "classification": "FIXED",
+          "allowedValues": [
+            "WITHOUT_ANGLE"
+          ],
+          "fixedValue": "WITHOUT_ANGLE",
+          "evidence": "FAE431-005"
+        }
+      ],
+      "standardCustom": [
+        "STANDARD",
+        "CUSTOM"
+      ],
+      "sizeAuthority": "existing standard_sizes/custom_dimension_rules; resolve frame_angle before SIZE",
+      "dependency": [
+        "window_type",
+        "regionStandard",
+        "construction",
+        "frame_angle",
+        "SIZE"
+      ],
+      "clearBehavior": "window_type/regionStandard/construction change re-resolves frame_angle and clears SIZE; frame_angle change clears SIZE",
+      "evidence": [
+        "FAE431-005"
+      ],
+      "verificationStatus": "VERIFIED"
+    },
+    {
+      "windowId": "W431-005",
+      "seriesWindowId": "SWT-YKK-APW431-TERRACE-DOOR",
+      "windowName": "テラスドア",
+      "canonicalField": "frame_angle",
+      "stage": "CONFIGURATION",
+      "classification": "CONDITIONAL_USER_SELECTABLE",
+      "allowedValues": [
+        "WITH_ANGLE",
+        "WITHOUT_ANGLE"
+      ],
+      "fixedValue": null,
+      "conditions": [
+        {
+          "regionStandard": "本州",
+          "construction": "2×4",
+          "officialFrameSpec": "アングル付",
+          "classification": "FIXED",
+          "allowedValues": [
+            "WITH_ANGLE"
+          ],
+          "fixedValue": "WITH_ANGLE",
+          "evidence": "FAE431-006"
+        },
+        {
+          "regionStandard": "本州",
+          "construction": "在来",
+          "officialFrameSpec": "アングル付/無",
+          "classification": "USER_SELECTABLE",
+          "allowedValues": [
+            "WITH_ANGLE",
+            "WITHOUT_ANGLE"
+          ],
+          "fixedValue": null,
+          "evidence": "FAE431-006"
+        }
+      ],
+      "standardCustom": [
+        "STANDARD",
+        "CUSTOM"
+      ],
+      "sizeAuthority": "existing standard_sizes/custom_dimension_rules; resolve frame_angle before SIZE",
+      "dependency": [
+        "window_type",
+        "regionStandard",
+        "construction",
+        "frame_angle",
+        "SIZE"
+      ],
+      "clearBehavior": "window_type/regionStandard/construction change re-resolves frame_angle and clears SIZE; frame_angle change clears SIZE",
+      "evidence": [
+        "FAE431-006"
+      ],
+      "verificationStatus": "VERIFIED"
+    },
+    {
+      "windowId": "W431-006",
+      "seriesWindowId": "SWT-YKK-APW431-BACK-DOOR",
+      "windowName": "勝手口ドア",
+      "canonicalField": "frame_angle",
+      "stage": "CONFIGURATION",
+      "classification": "CONDITIONAL_USER_SELECTABLE",
+      "allowedValues": [
+        "WITHOUT_ANGLE",
+        "WITH_ANGLE"
+      ],
+      "fixedValue": null,
+      "conditions": [
+        {
+          "regionStandard": "北海道",
+          "construction": "在来",
+          "officialFrameSpec": "アングル無",
+          "classification": "FIXED",
+          "allowedValues": [
+            "WITHOUT_ANGLE"
+          ],
+          "fixedValue": "WITHOUT_ANGLE",
+          "evidence": "FAE431-007"
+        },
+        {
+          "regionStandard": "本州",
+          "construction": "2×4",
+          "officialFrameSpec": "アングル付",
+          "classification": "FIXED",
+          "allowedValues": [
+            "WITH_ANGLE"
+          ],
+          "fixedValue": "WITH_ANGLE",
+          "evidence": "FAE431-007"
+        },
+        {
+          "regionStandard": "本州",
+          "construction": "在来",
+          "officialFrameSpec": "アングル付/無",
+          "classification": "USER_SELECTABLE",
+          "allowedValues": [
+            "WITH_ANGLE",
+            "WITHOUT_ANGLE"
+          ],
+          "fixedValue": null,
+          "evidence": "FAE431-007"
+        }
+      ],
+      "standardCustom": [
+        "STANDARD",
+        "CUSTOM"
+      ],
+      "sizeAuthority": "existing standard_sizes/custom_dimension_rules; resolve frame_angle before SIZE",
+      "dependency": [
+        "window_type",
+        "regionStandard",
+        "construction",
+        "frame_angle",
+        "SIZE"
+      ],
+      "clearBehavior": "window_type/regionStandard/construction change re-resolves frame_angle and clears SIZE; frame_angle change clears SIZE",
+      "evidence": [
+        "FAE431-007"
+      ],
+      "verificationStatus": "VERIFIED"
+    }
+  ]
+}

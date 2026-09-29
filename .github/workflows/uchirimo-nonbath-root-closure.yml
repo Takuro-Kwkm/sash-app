@@ -1,0 +1,188 @@
+name: Uchirimo Durable Exhaustive Recovery
+on:
+  workflow_call:
+    inputs:
+      controller_head:
+        required: true
+        type: string
+      resume_run_id:
+        required: false
+        type: string
+        default: ''
+permissions:
+  contents: read
+  issues: read
+  pull-requests: read
+  actions: read
+concurrency:
+  group: uchirimo-durable-${{ inputs.controller_head }}
+  cancel-in-progress: false
+jobs:
+  governance-authority:
+    uses: ./.github/workflows/governance-authorization.yml
+    with:
+      controller_head: ${{ inputs.controller_head }}
+      release: false
+  prepare:
+    needs: [governance-authority]
+    outputs:
+      plan_attempt: ${{ steps.plan_identity.outputs.plan_attempt }}
+    if: needs.governance-authority.outputs.authorized == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    permissions:
+      contents: read
+      actions: write
+    env:
+      HEAD_SHA: ${{ inputs.controller_head }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+        with: {ref: '${{ env.HEAD_SHA }}', fetch-depth: 0}
+      - uses: actions/setup-node@v4
+        with: {node-version: 24}
+      - name: Install locked runtime dependencies
+        run: |
+          npm install --ignore-scripts
+          git diff --exit-code -- package.json package-lock.json
+      - name: Preserve legacy evidence and freeze non-overlapping work
+        run: node scripts/governance/uchirimo-durable-recovery.mjs prepare artifacts/uchirimo-durable-plan
+      - name: Bind plan artifact to the attempt that ran prepare
+        id: plan_identity
+        if: success()
+        run: echo "plan_attempt=${GITHUB_RUN_ATTEMPT}" >> "$GITHUB_OUTPUT"
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: uchirimo-durable-plan-${{ env.HEAD_SHA }}-${{ github.run_attempt }}
+          path: artifacts/uchirimo-durable-plan/
+          if-no-files-found: error
+          compression-level: 1
+  worker:
+    needs: [governance-authority, prepare]
+    if: needs.governance-authority.outputs.authorized == 'true'
+    strategy:
+      fail-fast: false
+      max-parallel: 8
+      matrix: {lane: [0, 1, 2, 3, 4, 5, 6, 7]}
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      HEAD_SHA: ${{ inputs.controller_head }}
+      GH_TOKEN: ${{ github.token }}
+      RESUME_RUN_ID: ${{ inputs.resume_run_id }}
+      LANE: ${{ matrix.lane }}
+      PLAN: artifacts/uchirimo-durable-plan/plan.json
+      OUT: artifacts/uchirimo-durable-worker
+      UCHIRIMO_DURABLE_WAVE_MS: '300000'
+    steps:
+      - uses: actions/checkout@v4
+        with: {ref: '${{ env.HEAD_SHA }}', fetch-depth: 0}
+      - uses: actions/setup-node@v4
+        with: {node-version: 24}
+      - name: Install locked runtime dependencies
+        run: |
+          npm install --ignore-scripts
+          git diff --exit-code -- package.json package-lock.json
+      - uses: actions/download-artifact@v4
+        with:
+          name: uchirimo-durable-plan-${{ env.HEAD_SHA }}-${{ needs.prepare.outputs.plan_attempt }}
+          path: artifacts/uchirimo-durable-plan
+      - name: Restore only certified same-HEAD continuation
+        if: env.RESUME_RUN_ID != ''
+        run: node scripts/governance/uchirimo-durable-recovery.mjs restore "$PLAN" "$OUT" "$LANE" "$RESUME_RUN_ID"
+      - name: Continue frozen frontier wave 1
+        run: node scripts/governance/uchirimo-durable-recovery.mjs worker "$PLAN" "$OUT" "$LANE"
+      - name: Preserve wave 1 without overwrite
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: uchirimo-durable-${{ env.HEAD_SHA }}-lane-${{ matrix.lane }}-attempt-${{ github.run_attempt }}-wave-1
+          path: ${{ env.OUT }}/
+          if-no-files-found: error
+          compression-level: 1
+      - name: Continue frozen frontier wave 2
+        run: node scripts/governance/uchirimo-durable-recovery.mjs worker "$PLAN" "$OUT" "$LANE"
+      - name: Preserve wave 2 without overwrite
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: uchirimo-durable-${{ env.HEAD_SHA }}-lane-${{ matrix.lane }}-attempt-${{ github.run_attempt }}-wave-2
+          path: ${{ env.OUT }}/
+          if-no-files-found: error
+          compression-level: 1
+      - name: Continue frozen frontier wave 3
+        run: node scripts/governance/uchirimo-durable-recovery.mjs worker "$PLAN" "$OUT" "$LANE"
+      - name: Preserve wave 3 without overwrite
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: uchirimo-durable-${{ env.HEAD_SHA }}-lane-${{ matrix.lane }}-attempt-${{ github.run_attempt }}-wave-3
+          path: ${{ env.OUT }}/
+          if-no-files-found: error
+          compression-level: 1
+      - name: Continue frozen frontier wave 4
+        run: node scripts/governance/uchirimo-durable-recovery.mjs worker "$PLAN" "$OUT" "$LANE"
+      - name: Preserve wave 4 without overwrite
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: uchirimo-durable-${{ env.HEAD_SHA }}-lane-${{ matrix.lane }}-attempt-${{ github.run_attempt }}-wave-4
+          path: ${{ env.OUT }}/
+          if-no-files-found: error
+          compression-level: 1
+      - name: Continue frozen frontier wave 5
+        run: node scripts/governance/uchirimo-durable-recovery.mjs worker "$PLAN" "$OUT" "$LANE"
+      - name: Preserve wave 5 without overwrite
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: uchirimo-durable-${{ env.HEAD_SHA }}-lane-${{ matrix.lane }}-attempt-${{ github.run_attempt }}-wave-5
+          path: ${{ env.OUT }}/
+          if-no-files-found: error
+          compression-level: 1
+      - name: Continue frozen frontier wave 6
+        run: node scripts/governance/uchirimo-durable-recovery.mjs worker "$PLAN" "$OUT" "$LANE"
+      - name: Preserve wave 6 without overwrite
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: uchirimo-durable-${{ env.HEAD_SHA }}-lane-${{ matrix.lane }}-attempt-${{ github.run_attempt }}-wave-6
+          path: ${{ env.OUT }}/
+          if-no-files-found: error
+          compression-level: 1
+  aggregate:
+    needs: [governance-authority, prepare, worker]
+    if: ${{ always() && needs.governance-authority.outputs.authorized == 'true' && needs.prepare.result == 'success' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      HEAD_SHA: ${{ inputs.controller_head }}
+      GH_TOKEN: ${{ github.token }}
+      CURRENT_RUN: ${{ github.run_id }}
+    steps:
+      - uses: actions/checkout@v4
+        with: {ref: '${{ env.HEAD_SHA }}', fetch-depth: 0}
+      - uses: actions/setup-node@v4
+        with: {node-version: 24}
+      - name: Install locked runtime dependencies
+        run: |
+          npm install --ignore-scripts
+          git diff --exit-code -- package.json package-lock.json
+      - uses: actions/download-artifact@v4
+        with:
+          name: uchirimo-durable-plan-${{ env.HEAD_SHA }}-${{ needs.prepare.outputs.plan_attempt }}
+          path: artifacts/uchirimo-durable-plan
+      - name: Read latest retained snapshot of every lane
+        run: |
+          for lane in 0 1 2 3 4 5 6 7; do
+            node scripts/governance/uchirimo-durable-recovery.mjs restore artifacts/uchirimo-durable-plan/plan.json "artifacts/uchirimo-durable-latest/lane-$lane" "$lane" "$CURRENT_RUN" || echo "MISSING_OR_INVALID_LANE=$lane"
+          done
+      - name: Verify exact coverage, hashes and parent closure
+        run: node scripts/governance/uchirimo-durable-recovery.mjs aggregate artifacts/uchirimo-durable-plan/plan.json artifacts/uchirimo-durable-latest artifacts/uchirimo-durable-aggregate
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: uchirimo-durable-aggregate-${{ env.HEAD_SHA }}-${{ github.run_attempt }}
+          path: artifacts/uchirimo-durable-aggregate/
+          if-no-files-found: error

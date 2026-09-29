@@ -1,0 +1,45 @@
+name: Stage A TW Five-Failure Recovery V2
+
+on:
+  workflow_call:
+    inputs:
+      controller_head:
+        required: true
+        type: string
+
+permissions:
+  issues: read
+  contents: read
+
+concurrency:
+  group: stage-a-tw-five-failure-recovery-v2-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  governance-authority:
+    uses: ./.github/workflows/governance-authorization.yml
+    with:
+      controller_head: ${{ inputs.controller_head }}
+      release: false
+
+  closed_gate:
+    needs: ["governance-authority"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && (true) }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Preserve V2 recovery evidence and close repeated route
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo 'TW_FIVE_FAILURE_RECOVERY_V2_ROUTE=CLOSED'
+          echo 'EVIDENCE_RUN=34921354690'
+          echo 'PASSED_WINDOWS=SWT-LIX-TW-HIGH-YOKO,SWT-LIX-TW-TERRACE-DOOR,SWT-LIX-TW-SAIHU-KATTEGUCHI,SWT-LIX-TW-KATTEGUCHI'
+          echo 'UNVERIFIED_WINDOW=SWT-LIX-TW-SHUT-HIKI'
+          echo 'FAILURE_TYPE=PERFORMANCE_TIMEOUT'
+          echo 'TIMEOUT_MINUTES=6'
+          echo 'RETRY_AUTHORIZED=false'
+          echo 'REOPEN_CONDITION=color-behavior projection or another cause-related algorithm change'
+          echo 'NEXT_ACTIVE_ROUTE=TW_SHUT_HIKI_COLOR_PROJECTION_V3'
+          echo 'APP_INTEGRATION_READY=false'
+          echo 'RELEASE_INPUT_GATE=BLOCKED'

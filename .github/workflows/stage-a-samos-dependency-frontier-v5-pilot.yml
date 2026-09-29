@@ -1,0 +1,39 @@
+name: Stage A Samos Dependency Frontier V5 Pilot
+
+on:
+  workflow_call:
+    inputs:
+      controller_head:
+        required: true
+        type: string
+
+permissions:
+  issues: read
+  contents: read
+
+jobs:
+  governance-authority:
+    uses: ./.github/workflows/governance-authorization.yml
+    with:
+      controller_head: ${{ inputs.controller_head }}
+      release: false
+
+  closed-evidence-gate:
+    needs: ["governance-authority"]
+    if: ${{ needs.governance-authority.outputs.authorized == 'true' && (true) }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Preserve V5 evidence and close same-condition retry
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo 'V5_PILOT_EVIDENCE_RUN=34927763485'
+          echo 'CONTROL_WT-S2H-MENKOSHI-HIKI=TIMEOUT report_not_generated'
+          echo 'HEAVY_WT-S2H-SHUTTER-HIKI=TIMEOUT report_not_generated'
+          echo 'FIELD_ORDER_MODEL=DEPENDENCY_FRONTIER_MIN_DESCENDANTS_MRV_V1'
+          echo 'CONTROL_EQUIVALENCE_GATE=NOT_REACHED'
+          echo 'RETRY_AUTHORIZED=false'
+          echo 'REOPEN_CONDITION=NEW_SOURCE_DERIVED_BEHAVIOR_PROJECTION_MODEL'
+          echo 'APP_INTEGRATION_READY=false'
+          echo 'RELEASE_INPUT_GATE=BLOCKED'

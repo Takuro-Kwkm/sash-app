@@ -1,0 +1,17 @@
+{
+  "shard": 3795,
+  "node_id": "UCH-RES-SL3-T",
+  "partition_key": "UCH-RES-SL3-T|insulating_glass|three_panel_layout=\"meeting_outer_inner_inner\"|sash_width_allocation=\"AUTO_EQUAL_FOUR\"",
+  "parent_shard_index": 3795,
+  "parent_partition_key": "UCH-RES-SL3-T|insulating_glass|three_panel_layout=\"meeting_outer_inner_inner\"|sash_width_allocation=\"AUTO_EQUAL_FOUR\"",
+  "recovery_unit_id": "eec45fa4b220405f0f73f28f0e0b4563096e44c51c2f0c71f671e3ce57c3738b",
+  "parent_recovery_unit_id": "e05820fa8ba8e9a95d7f486a0544503b8f745e9dd364d3a3205acee16ffb6494",
+  "recovery_depth": 5,
+  "room_specification": "residential",
+  "window_type": "sliding_window",
+  "sash_configuration": "three_panel",
+  "size_class": "terrace",
+  "glass_family": "insulating_glass",
+  "partition_seed_json": "{\"sash_width_allocation\":\"AUTO_EQUAL_FOUR\",\"three_panel_layout\":\"meeting_outer_inner_inner\"}",
+  "decision_constraints_json": "[{\"field_key\":\"frame_color\",\"decision\":{\"kind\":\"VALUE\",\"value\":\"dark_brown\"}},{\"field_key\":\"glass_structure\",\"decision\":{\"kind\":\"VALUE\",\"value\":\"G4P3\"}},{\"field_key\":\"low_e_type\",\"decision\":{\"kind\":\"VALUE\",\"value\":\"insulating\"}},{\"field_key\":\"glass_coating_color\",\"decision\":{\"kind\":\"VALUE\",\"value\":\"neutral\"}},{\"field_key\":\"glass_surface_type\",\"decision\":{\"kind\":\"VALUE\",\"value\":\"frosted\"}}]"
+}

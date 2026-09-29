@@ -1,0 +1,96 @@
+{
+  "schema_version": "2.0",
+  "manufacturer": "YKK AP",
+  "series": "ウチリモ 内窓",
+  "package_version": "v1.0-P7R1-R2",
+  "authoring_mode": "FILE",
+  "authoring_file_name": "YKKAP_ウチリモ内窓_商品マスター_v1.0-P7R1-R2.xlsx",
+  "authoring_file_id": "11p2SkAXYNAAJwWYGBjmWOTVO6rZquyJf",
+  "authoring_source_version": "v1.0-P7R1-R2-WORKING",
+  "authoring_alignment_status": "PASS",
+  "runtime_status": "READY",
+  "runtime_readiness_detail": "SALES_LEVEL_WITH_MANUAL_CHECK",
+  "runtime_files": [
+    {
+      "name": "YKKAP_ウチリモ内窓_Slim_Canonical_v2_20260929.json",
+      "id": "1er4keQZ_SQyku3ae2bNxGukvkUvzRy-H",
+      "role": "canonical_runtime",
+      "version": "v1.0-P7R1-R2",
+      "sha256": "4522b7ad065d53370ce25a257b989b01994fbf0c1c11be76f4f1bff013353116"
+    },
+    {
+      "name": "YKKAP_ウチリモ内窓_Size_Installation_Dependency_Master_v1.0-P7R1-R2.json",
+      "id": "1c6hmvMgSLhESgmMJTRW7DN_opa1HhYlZ",
+      "role": "support_component",
+      "version": "v1.0-P7R1-R2",
+      "sha256": "6dc916ed34051496bb2144cfdf391ec334ea5f9ab24ae8a060886fc2c267fe15"
+    },
+    {
+      "name": "YKKAP_ウチリモ内窓_Vacuum_Glass_Curve_Master_v1.0-P7R1-R2.json",
+      "id": "1TJn2-e6Sa6LcIv6FxNt0ahGSWlcgclJZ",
+      "role": "support_component",
+      "version": "v1.0-P7R1-R2",
+      "sha256": "940a33525afca49be49d4a6291e1f8b0bd4a0bae364db0d7ea3afee19a9719ff"
+    },
+    {
+      "name": "YKKAP_ウチリモ内窓_Judgment_Engine_v1.0-P7R1-R2.json",
+      "id": "1fNUukTQaDJT2iWbNk6F8gcLLt22Sg32z",
+      "role": "judgment_engine",
+      "version": "v1.0-P7R1-R2",
+      "sha256": "361ff4f37ad4290f944f7b0e525982c69a9571049c90d05b402f750dd250914d"
+    }
+  ],
+  "runtime_file_count": 4,
+  "documentation_file": "YKKAP_ウチリモ内窓_Slim_PRODUCT_MASTER_MANIFEST_20260929.md",
+  "storage_status": "PASS_CANONICAL",
+  "working_folder_id": "1ToOa_3UStpMJfUzW5Dl0Ah_Q-kkX88n3",
+  "canonical_folder_id": "1-flyN0KX2zdqXbebX2kVF4VRW0jTSrQu",
+  "old_folder_id": "1ujE3U_EMGAhbhh5_Q8asnEsbw9Ols7iL",
+  "runtime_package_gate": "PASS",
+  "package_gate": "PASS",
+  "blocking_items": [],
+  "manual_check": {
+    "count": 4,
+    "status": "PRESERVED_HUMAN_APPROVED",
+    "ids": [
+      "P5R1G-MC-01",
+      "P5R1G-MC-02",
+      "P5R1G-MC-03",
+      "P5R1G-MC-04"
+    ],
+    "manufacturer_quote_recheck_required": true
+  },
+  "special_checks": [
+    "GSC-IGU-P5P3",
+    "GSC-IGU-G5P3",
+    "FIX_WIND_PRESSURE",
+    "INSTALLATION_UNKNOWN_INPUT"
+  ],
+  "order_ready": false,
+  "judgment_engine_status": "READY_FAIL_CLOSED",
+  "repository_integration": "READY_FOR_RUNTIME_UI_INTEGRATION",
+  "human_approval": "PASS",
+  "human_approval_basis": "User directed Slim adoption and seven-series reintegration on 2026-09-29; execution authorized by やれ。",
+  "formalization_status": "FORMAL_PASS",
+  "generated_at": "2026-09-08T20:24:28+09:00",
+  "spec_version": "PRODUCT_MASTER_PACKAGE_STORAGE_COMPLETION_GATE_v2.0",
+  "working_savepoint_gate": "PASS",
+  "registry_gate": "PASS",
+  "updated_at": "2026-09-29",
+  "app_integration_ready": false,
+  "manufacturer_material_residual_check": "PASS",
+  "formal_pass": true,
+  "runtime_revision": "SLIM-V2-20260929",
+  "source_formal_manifest": {
+    "id": "1119yamXn21wLZd3C8LvamNWsTAx_1dt2",
+    "sha256": "be4f1f77727424dc06ddf9de947201f33d4aee5219b182e37d0f178e1fb7147d"
+  },
+  "slim_candidate_sha256": "4a3518c3f5706aa4cff6ddcc10532edcade4f00f84a81ad63e3d74fa98d85930",
+  "authoring_alignment_note": "Product facts and Authoring version unchanged. Lossless Slim runtime representation revision; explicit migration QA retains all glass dispositions, rules and evidence.",
+  "runtime_manifest_file_id": "1oR7kQo7JGe-twx-Ko4Fbgkuk7M4Cp77q",
+  "documentation_file_id": "104dR4UWFGrxA7aXtA3zSMp9p__Z2mtoK",
+  "storage_gate": "PASS",
+  "canonical_parent_verification": "PASS",
+  "duplicate_check": "PASS",
+  "finalized_at": "2026-09-29"
+}

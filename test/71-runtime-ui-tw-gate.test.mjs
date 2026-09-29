@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { resolveRuntimeAppProduct } from '../src/catalog/runtime-master/runtime-app-bridge.mjs';
+import { loadRegisteredRuntime } from '../src/catalog/runtime-master/runtime-master-registry.mjs';
 
 const PRODUCT = 'SER-LIXIL-TW';
 
@@ -16,7 +17,30 @@ async function complete(windowType, overrides = {}) {
   throw new Error('representative TW selection did not converge');
 }
 
-test('TW starts with manufacturer/product/window context and follows the UI Standard v1.5 order', async () => {
+function formalBounds(rule) {
+  const raw = rule?.geometryRule?.bounds ?? rule?.bounds ?? {};
+  return {
+    minW:Number(raw.minW ?? raw.W_min), maxW:Number(raw.maxW ?? raw.W_max),
+    minH:Number(raw.minH ?? raw.H_min), maxH:Number(raw.maxH ?? raw.H_max),
+  };
+}
+
+async function completeCustomUpstream(windowType) {
+  let selection = { window_type:windowType, size_mode:'CUSTOM' };
+  for (let pass = 0; pass < 30; pass += 1) {
+    const result = await resolveRuntimeAppProduct(PRODUCT, selection);
+    const missing = result.fields.find((field) =>
+      field.required && !['custom_width','custom_height'].includes(field.key) &&
+      selection[field.key] === undefined && field.values.length);
+    if (!missing) return { result, selection:result.selection };
+    const value = missing.key === 'screen_presence' && missing.values.some((row) => row.value === 'NONE')
+      ? 'NONE' : missing.values[0].value;
+    selection = { ...result.selection, [missing.key]:value };
+  }
+  throw new Error(`TW CUSTOM upstream frontier did not converge: ${windowType}`);
+}
+
+test('TW starts with manufacturer/product/window context and exposes formal STANDARD/CUSTOM size modes in UI Standard order', async () => {
   const initial = await resolveRuntimeAppProduct(PRODUCT, {});
   assert.deepEqual(initial.fields.map((field) => field.key), ['window_type']);
   assert.equal(initial.fields[0].values.length, 25);
@@ -28,10 +52,98 @@ test('TW starts with manufacturer/product/window context and follows the UI Stan
   for (const internal of ['construction','configuration','common_window_id','actual_w','actual_h']) assert.ok(!keys.includes(internal));
   const optionValues = result.fields.find((field) => field.key === 'option').values.map((row) => row.value);
   assert.ok(!optionValues.some((value) => value.startsWith('SCR-')));
-  assert.deepEqual(result.fields.find((field) => field.key === 'size_mode').values.map((row) => row.value), ['STANDARD']);
+  assert.deepEqual(result.fields.find((field) => field.key === 'size_mode').values.map((row) => row.value), ['STANDARD','CUSTOM']);
   assert.ok(!result.fields.some((field) => ['custom_width','custom_height'].includes(field.key)));
   assert.equal(result.fields.find((field) => field.key === 'exterior_color').values.length, 6);
   assert.equal(result.fields.find((field) => field.key === 'interior_color').values.length, 5);
+});
+
+test('TW formal CUSTOM outer envelope is REVIEW_REQUIRED inside, BLOCK outside, and mode switching clears stale dimensions', async () => {
+  const completeResult = await complete('SWT-LIX-TW-UNIT-HIKI', { glass_base: 'Low-E複層ガラス' });
+  let result = await resolveRuntimeAppProduct(PRODUCT, { ...completeResult.selection, size_mode: 'CUSTOM' });
+  const keys = result.fields.map((field) => field.key);
+  assert.ok(keys.includes('custom_width'));
+  assert.ok(keys.includes('custom_height'));
+  assert.ok(!keys.includes('size'));
+  assert.equal(result.selection.size, undefined);
+  assert.ok(result.clearedFields.some((row) => row.field === 'size'));
+
+  result = await resolveRuntimeAppProduct(PRODUCT, { ...result.selection, custom_width: 1000, custom_height: 1000 });
+  assert.equal(result.dimensionResult.status, 'REVIEW_REQUIRED');
+  assert.equal(result.dimensionResult.automatic, false);
+  assert.deepEqual(result.dimensionResult.ruleTypes, ['SOURCE_GRAPH_GATE']);
+  assert.equal(result.orderReady, false);
+
+  result = await resolveRuntimeAppProduct(PRODUCT, { ...completeResult.selection, size_mode: 'CUSTOM', custom_width: 629, custom_height: 1000 });
+  assert.equal(result.dimensionResult.status, 'BLOCK');
+  assert.equal(result.dimensionResult.automatic, false);
+  assert.equal(result.dimensionResult.code, 'CUSTOM_DIMENSION_OUT_OF_FORMAL_OUTER_BOUNDS');
+  assert.equal(result.validation.status, 'INVALID');
+  assert.ok(result.validation.errors.some((row) => row.errorCode === 'CUSTOM_DIMENSION_OUT_OF_FORMAL_OUTER_BOUNDS'));
+
+  result = await resolveRuntimeAppProduct(PRODUCT, { ...completeResult.selection, size_mode: 'STANDARD', custom_width: 1000, custom_height: 1000 });
+  assert.equal(result.selection.custom_width, undefined);
+  assert.equal(result.selection.custom_height, undefined);
+  assert.ok(result.clearedFields.some((row) => row.field === 'custom_width'));
+  assert.ok(result.clearedFields.some((row) => row.field === 'custom_height'));
+});
+
+test('TW CUSTOM continues downstream only when the entered dimensions are inside the formal outer envelope', async () => {
+  let result = await resolveRuntimeAppProduct(PRODUCT, {
+    window_type:'SWT-LIX-TW-GRILLE-HIKI',
+    grille_type:'SP-TW-GRILLE-VERT',
+    size_mode:'CUSTOM', custom_width:630, custom_height:350,
+  });
+  assert.equal(result.dimensionResult?.status, 'REVIEW_REQUIRED');
+  assert.ok(result.fields.some((field) => field.key === 'exterior_color'));
+  assert.ok(!result.fields.some((field) => field.key === 'size'));
+
+  const exterior = result.fields.find((field) => field.key === 'exterior_color').values[0].value;
+  result = await resolveRuntimeAppProduct(PRODUCT, { ...result.selection, exterior_color:exterior });
+  const interior = result.fields.find((field) => field.key === 'interior_color').values[0].value;
+  result = await resolveRuntimeAppProduct(PRODUCT, { ...result.selection, interior_color:interior });
+  assert.ok(result.fields.some((field) => field.key === 'screen_presence'));
+  assert.ok(result.fields.some((field) => field.key === 'glass_base'));
+
+  const glassBase = result.fields.find((field) => field.key === 'glass_base').values[0].value;
+  result = await resolveRuntimeAppProduct(PRODUCT, { ...result.selection, glass_base:glassBase });
+  assert.ok(result.fields.some((field) => field.key === 'option'));
+  assert.equal(result.dimensionResult?.status, 'REVIEW_REQUIRED');
+
+  result = await resolveRuntimeAppProduct(PRODUCT, { ...result.selection, custom_width:629, custom_height:887 });
+  assert.equal(result.dimensionResult?.status, 'BLOCK');
+  assert.equal(result.validation.status, 'INVALID');
+  for (const key of ['exterior_color','interior_color','screen_presence','screen_type','glass_base','glass_type','option']) {
+    assert.equal(result.selection[key], undefined, `${key} must clear when CUSTOM dimensions become invalid`);
+    assert.ok(!result.fields.some((field) => field.key === key), `${key} must not remain visible after a blocked CUSTOM size`);
+  }
+});
+
+test('all 25 TW formal CUSTOM rules continue in-range and stop out-of-range', async () => {
+  const runtime = await loadRegisteredRuntime('LIXIL','TW');
+  const rules = runtime.master.customDimensionRules;
+  assert.equal(rules.length, 25);
+  for (const rule of rules) {
+    const windowType = String(rule.productNode ?? rule.windowId ?? rule.selector?.window_type ?? '');
+    const bounds = formalBounds(rule);
+    assert.ok(windowType);
+    assert.ok(Object.values(bounds).every(Number.isFinite), `${windowType} must have finite formal outer bounds`);
+    const frontier = await completeCustomUpstream(windowType);
+    const width = Math.round((bounds.minW + bounds.maxW) / 2);
+    const height = Math.round((bounds.minH + bounds.maxH) / 2);
+    let result = await resolveRuntimeAppProduct(PRODUCT, {
+      ...frontier.selection, custom_width:width, custom_height:height,
+    });
+    assert.equal(result.dimensionResult?.status, 'REVIEW_REQUIRED', `${windowType} in-range CUSTOM must remain review-required`);
+    assert.ok(result.fields.some((field) => field.key === 'exterior_color'), `${windowType} in-range CUSTOM must expose downstream color`);
+    assert.ok(!result.fields.some((field) => field.key === 'size'), `${windowType} must not expose runtime-only context size`);
+
+    result = await resolveRuntimeAppProduct(PRODUCT, {
+      ...frontier.selection, custom_width:bounds.minW - 1, custom_height:height,
+    });
+    assert.equal(result.dimensionResult?.status, 'BLOCK', `${windowType} out-of-range CUSTOM must block`);
+    assert.ok(!result.fields.some((field) => field.key === 'exterior_color'), `${windowType} out-of-range CUSTOM must not expose downstream color`);
+  }
 });
 
 test('formal window-specific fields, handing and size-only specification rules are enforced', async () => {
