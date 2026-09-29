@@ -11,6 +11,7 @@ const expectedSource=candidate.source_formal.runtime_manifest_sha256;
 await mkdir(out,{recursive:true});
 const report={schema:'UCHIRIMO_SLIM_PREVIEW_BROWSER_QA_V1',status:'RUNNING',scope:'SELF_CONTAINED_CANDIDATE_PREVIEW_NOT_PRODUCTION_ROUTE',exact_head:process.env.GITHUB_SHA??null,candidate_source_runtime_sha256:expectedSource,desktop:{},mobile:{},console_errors:[],page_errors:[],failed_responses:[]};
 const browser=await chromium.launch({headless:true});
+let activePage=null;
 const technical=/ORDER_READY\s*=|\b(?:BLOCK|BLOCKED|REVIEW_REQUIRED|MANUAL_CHECK|INVALID)\b/;
 async function choose(page,key,value){
  const selector=`[data-spec-key="${key}"]`,field=page.locator(selector);
@@ -79,15 +80,16 @@ try{
  for(const config of [{name:'desktop',width:1440,height:1000,mobile:false},{name:'mobile',width:390,height:844,mobile:true}]){
   const context=await browser.newContext({viewport:{width:config.width,height:config.height},isMobile:config.mobile,hasTouch:config.mobile});
   const page=await context.newPage();
+  activePage=page;
   page.on('console',m=>{if(m.type()==='error')report.console_errors.push(m.text());});
   page.on('pageerror',e=>report.page_errors.push(e.message));
   page.on('response',r=>{if(r.status()>=400)report.failed_responses.push({status:r.status(),url:r.url()});});
   report[config.name]=await exercise(page);
   await page.screenshot({path:`${out}/${config.name}-${config.width}x${config.height}.png`,fullPage:true});
-  await context.close();
+  await context.close();activePage=null;
  }
  assert.deepEqual(report.console_errors,[]);assert.deepEqual(report.page_errors,[]);assert.deepEqual(report.failed_responses,[]);
  report.status='PASS';
-}catch(e){report.status='FAIL';report.failure=e.stack??String(e);throw e;}
+}catch(e){report.status='FAIL';report.failure=e.stack??String(e);await activePage?.screenshot({path:`${out}/failure.png`,fullPage:true}).catch(()=>{});throw e;}
 finally{await writeFile(`${out}/report.json`,JSON.stringify(report,null,2)+'\n');await browser.close();}
 console.log(JSON.stringify(report));

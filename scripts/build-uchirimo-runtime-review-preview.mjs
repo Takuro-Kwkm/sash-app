@@ -23,13 +23,18 @@ if (candidatePath) {
   candidateHash = createHash('sha256').update(bytes).digest('hex');
 }
 const integration = getRuntimeAppIntegration('SER-YKKAP-UCHIRIMO');
-const [htmlSource, appSource, styles, waveStyles, adapterSource, glassRuleSource] = await Promise.all([
+const [htmlSource, appSource, styles, waveStyles, workStyles, estimateStyles, adapterSource, glassRuleSource,
+  domainSource, storageSource, repositoriesSource, serviceSource, editorSource] = await Promise.all([
   readFile(join(webRoot, 'index.html'), 'utf8'),
   readFile(join(webRoot, 'app.js'), 'utf8'),
   readFile(join(webRoot, 'styles.css'), 'utf8'),
   readFile(join(webRoot, 'styles-wave3.css'), 'utf8'),
+  readFile(join(webRoot, 'work-management.css'), 'utf8'),
+  readFile(join(webRoot, 'estimate-output.css'), 'utf8'),
   readFile(join(root, 'src/catalog/runtime-master/uchirimo-tabular-v1-adapter.mjs'), 'utf8'),
   readFile(join(root, 'src/catalog/runtime-master/uchirimo-glass-rule-model.mjs'), 'utf8'),
+  ...['domain','storage','repositories','service'].map(name=>readFile(join(root,'src/work-management',`${name}.mjs`),'utf8')),
+  readFile(join(webRoot,'product-configuration-editor.mjs'),'utf8'),
 ]);
 const generatedAt = new Date().toISOString();
 const buildId = `UCHIRIMO-UI-${createHash('sha256').update(appSource).update(adapterSource).update(glassRuleSource).update(candidateHash ?? '').update(JSON.stringify(runtimePackage.manifest)).digest('hex').slice(0, 12)}`;
@@ -51,6 +56,12 @@ const browserAdapter = adapterSource.replace(
 const bootstrap = `
 const runtimePackage=${json(runtimePackage)};
 const integration=${json(integration)};
+const moduleUrl=source=>URL.createObjectURL(new Blob([source],{type:"text/javascript"}));
+const domainUrl=moduleUrl(${json(domainSource)});
+const storageUrl=moduleUrl(${json(storageSource)}.replace('./domain.mjs',domainUrl));
+const repositoriesUrl=moduleUrl(${json(repositoriesSource)}.replace('./domain.mjs',domainUrl));
+const serviceUrl=moduleUrl(${json(serviceSource)}.replace('./domain.mjs',domainUrl));
+const editorUrl=moduleUrl(${json(editorSource)}.replace('/work-management/domain.mjs',domainUrl));
 // The browser is read-only: normalization/ID hashing is never invoked here.
 const glassRuleUrl=URL.createObjectURL(new Blob([${json(glassRuleSource.replace("import { createHash } from 'node:crypto';", "const createHash=()=>{throw new Error('PREVIEW_NORMALIZATION_NOT_SUPPORTED')};"))}],{type:"text/javascript"}));
 const adapterUrl=URL.createObjectURL(new Blob([${json(browserAdapter)}.replace('./uchirimo-glass-rule-model.mjs',glassRuleUrl)],{type:"text/javascript"}));
@@ -78,14 +89,24 @@ window.fetch=(input)=>{const url=new URL(typeof input==="string"?input:input.url
   if(url.pathname==="/api/runtime-master/resolve"){let selection={};try{selection=JSON.parse(url.searchParams.get("selection")??"{}");}catch{}const result=toUi(adapted.resolver(selection));window.__uchirimoPreviewLastResult=result;window.__uchirimoPreviewResolveCount=(window.__uchirimoPreviewResolveCount??0)+1;return reply(result);}
   return reply({error:"Review Preview endpoint not found"},404);
 };
-await import(URL.createObjectURL(new Blob([${json(appSource)}],{type:"text/javascript"})));
+const appUrl=moduleUrl(${json(appSource)}
+ .replace("const parts=location.pathname.split('/').filter(Boolean);","const parts=['runtime-lab'];")
+ .replace('/work-management/domain.mjs',domainUrl)
+ .replace('/work-management/storage.mjs',storageUrl)
+ .replace('/work-management/repositories.mjs',repositoriesUrl)
+ .replace('/work-management/service.mjs',serviceUrl)
+ .replace('./product-configuration-editor.mjs',editorUrl));
+await import(appUrl);
 `;
 const banner = `<section class="card compact review-build-note"><h2>ウチリモ Runtime UI Review Build</h2><p class="lead"><strong>REVIEW IN PROGRESS</strong> — YKK AP ウチリモ 内窓 / INNER_WINDOW / ${candidateHash ? 'Slim V2 WORKING（正式採用前）' : 'v1.0-P7R1-R2'} / UI Standard v1.6</p><p class="lead">生成: ${generatedAt} · データ: ${candidateHash ? '正規化したWorking候補。ガラス成立ルールを直接評価する実Adapterを使用' : '正式RuntimeのRepository transport fixture（4 component SHA検証済み）'} · APIのみブラウザ内stub。保存・外部通信は行いません。Preview用UI変換は本番サーバーを代替しません。</p><p class="lead">Build Identity: ${buildId} · Manifest SHA-256: ${entry.runtimeManifestSha256}${candidateHash ? ` · Candidate SHA-256: ${candidateHash}` : ''}</p></section>`;
 const html = htmlSource
   .replace('<link rel="stylesheet" href="/styles.css">', `<style>${styles}</style>`)
   .replace('<link rel="stylesheet" href="/styles-wave3.css">', `<style>${waveStyles}.review-build-note strong{color:#9b6210}</style>`)
+  .replace('<link rel="stylesheet" href="/work-management.css">', `<style>${workStyles}</style>`)
+  .replace('<link rel="stylesheet" href="/estimate-output.css">', `<style>${estimateStyles}</style>`)
   .replace('<main>', `<main>${banner}`)
-  .replace('<script type="module" src="/app.js"></script>', `<script type="module">${bootstrap}</script>`);
+  .replace('<script type="module" src="/app.js"></script>', `<script type="module">${bootstrap}</script>`)
+  .replace('<script type="module" src="/estimate-output-integration.mjs"></script>', '');
 await mkdir(dirname(output), { recursive:true });
 await writeFile(output, html);
 console.log(JSON.stringify({ output, buildId, generatedAt, bytes:Buffer.byteLength(html), fields:Object.values(runtimePackage.documents).find((document)=>document?.field_registry)?.field_registry.length ?? 0, components:runtimePackage.manifest.runtimeFiles.length }));
