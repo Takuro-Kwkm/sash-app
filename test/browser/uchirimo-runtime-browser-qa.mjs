@@ -17,7 +17,9 @@ async function select(page,key,value){
   await page.waitForFunction(({revision,key,value})=>{
     const current=Number(document.querySelector('#qaRoot #dynamicForm')?.dataset.resolveRevision??0);
     const snapshot=window.qaEditor?.getSnapshot?.();
-    return current>revision&&String(snapshot?.configuration?.[key])===String(value);
+    const handoffKey={sales_glass_appearance:'glass_appearance',sales_spacer_type:'spacer_type_request',sales_gas_fill:'gas_fill_request'}[key];
+    const persisted=handoffKey?snapshot?.sales_request_handoff?.[handoffKey]:snapshot?.configuration?.[key];
+    return current>revision&&String(persisted)===String(value);
   },{revision:old,key,value});
   return page.evaluate(()=>window.qaEditor.state.resolved);
 }
