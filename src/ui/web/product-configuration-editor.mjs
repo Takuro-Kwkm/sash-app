@@ -249,6 +249,14 @@ export class ProductConfigurationEditor {
       if(this.state.salesGlassAppearance){
         this.state.snapshot.sales_request_handoff={glass_appearance:this.state.salesGlassAppearance,glass_structure:'MANUFACTURER_ESTIMATE_CONFIRMATION'};
         this.state.snapshot.validation_state='NEEDS_REVALIDATION';
+        const missingSalesField=(result.validation?.missingRequiredFields??[]).some((key)=>!UCHIRIMO_GLASS_DETAILS.has(key))
+          ||result.fields.some((field)=>field.required&&!UCHIRIMO_GLASS_DETAILS.has(field.key)
+            &&(result.selection[field.key]===undefined||result.selection[field.key]===null||result.selection[field.key]===''));
+        const dimensionReady=['PASS','REVIEW_REQUIRED'].includes(result.dimensionResult?.status);
+        if(!missingSalesField&&dimensionReady&&!(result.validation?.errors??[]).length
+          &&!['INVALID','BLOCKED'].includes(result.validation?.status)){
+          this.state.snapshot.sales_request_state='READY_FOR_MANUFACTURER_ESTIMATE';
+        }
       }
     }
     const badge=this.root.querySelector('#runtimeVersionBadge');badge.hidden=false;badge.textContent=`${this.state.snapshot.source_mode==='CANONICAL_RUNTIME'?'Runtime':'Legacy'} ${this.state.snapshot.package_version}`;

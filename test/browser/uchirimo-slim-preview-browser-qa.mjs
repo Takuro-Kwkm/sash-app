@@ -56,6 +56,20 @@ async function exercise(page){
  assert.doesNotMatch(await page.locator('#warnings').innerText(),technical);
  result=await choose(page,'size_w',500);
  result=await choose(page,'size_h',500);
+ for(let i=0;i<60;i++){
+  const field=result.fields.find(x=>x.required&&result.selection[x.key]===undefined
+    &&!['glass_structure','glass_surface_type','spacer_type','gas_fill','cavity_thickness_mm'].includes(x.key));
+  if(!field)break;
+  const value=field.dataType==='NUMBER'?500:field.values[0]?.value;
+  assert.notEqual(value,undefined,`SALES_INPUT_MISSING:${field.key}`);
+  result=await choose(page,field.key,value);
+ }
+ const snapshot=await page.evaluate(()=>window.__uchirimoPreviewEditor.getSnapshot());
+ assert.equal(snapshot.sales_request_state,'READY_FOR_MANUFACTURER_ESTIMATE');
+ assert.equal(snapshot.validation_state,'NEEDS_REVALIDATION');
+ assert.equal(snapshot.configuration.sales_glass_appearance,'washi');
+ assert.equal(snapshot.configuration.glass_structure,undefined);
+ assert.equal(snapshot.configuration.glass_spec_id,undefined);
  result=await choose(page,'size_w',100);
  assert.equal(result.validation.status,'BLOCKED');
  assert.equal(result.dimensionResult.status,'BLOCK');

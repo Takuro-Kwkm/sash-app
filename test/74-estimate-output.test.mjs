@@ -81,8 +81,9 @@ test('Uchirimo estimate request carries appearance and manufacturer glass handof
     {key:'sales_glass_appearance',label:'希望するガラスの見た目',value:'すり板ガラス'},
   ];
   snap.sales_request_handoff={glass_appearance:'frosted',glass_structure:'MANUFACTURER_ESTIMATE_CONFIRMATION'};
-  const model=createEstimateOutputModel({project,estimate,openings:[opening(1,{snap,status:'DRAFT'})]});
-  assert.equal(model.rows[0].state,EstimateOutputState.INCOMPLETE);
+  snap.sales_request_state='READY_FOR_MANUFACTURER_ESTIMATE';
+  const model=createEstimateOutputModel({project,estimate,openings:[opening(1,{snap,status:'COMPLETE'})]});
+  assert.equal(model.rows[0].state,EstimateOutputState.NEEDS_CONFIRMATION);
   assert.equal(model.rows[0].size,'800 × 700');
   assert.match(model.rows[0].major_specifications,/希望するガラスの見た目: すり板ガラス/);
   assert.ok(model.rows[0].issues.some(issue=>issue.code==='GLASS_STRUCTURE_MANUFACTURER_ESTIMATE'));
