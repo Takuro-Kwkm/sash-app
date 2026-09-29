@@ -70,6 +70,25 @@ test('EW / TW / ウチリモ use the same generic Snapshot mapping',()=>{
   assert.ok(model.rows.every((row)=>row.size.includes('640')));
 });
 
+test('Uchirimo estimate request carries appearance and manufacturer glass handoff without thickness',()=>{
+  const snap=snapshot({manufacturer:'YKK AP',series:'ウチリモ 内窓',validation:'NEEDS_REVALIDATION'});
+  snap.product_id='SER-YKKAP-UCHIRIMO';
+  snap.configuration={window_type:'fix_window',size_w:800,size_h:700,sales_glass_appearance:'frosted'};
+  snap.display_summary=[
+    {key:'window_type',label:'窓種類',value:'FIX窓'},
+    {key:'size_w',label:'製品W',value:'800'},
+    {key:'size_h',label:'製品H',value:'700'},
+    {key:'sales_glass_appearance',label:'希望するガラスの見た目',value:'すり板ガラス'},
+  ];
+  snap.sales_request_handoff={glass_appearance:'frosted',glass_structure:'MANUFACTURER_ESTIMATE_CONFIRMATION'};
+  const model=createEstimateOutputModel({project,estimate,openings:[opening(1,{snap,status:'DRAFT'})]});
+  assert.equal(model.rows[0].state,EstimateOutputState.INCOMPLETE);
+  assert.equal(model.rows[0].size,'800 × 700');
+  assert.match(model.rows[0].major_specifications,/希望するガラスの見た目: すり板ガラス/);
+  assert.ok(model.rows[0].issues.some(issue=>issue.code==='GLASS_STRUCTURE_MANUFACTURER_ESTIMATE'));
+  assert.equal(model.rows[0].configuration.glass_structure,undefined);
+});
+
 test('TW 30-opening case yields 30 confirmation rows and 3 PDF pages',()=>{
   const openings=Array.from({length:30},(_,index)=>opening(index+1));
   const model=createEstimateOutputModel({project,estimate,openings});

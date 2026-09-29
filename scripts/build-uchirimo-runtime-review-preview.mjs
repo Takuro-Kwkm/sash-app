@@ -37,7 +37,7 @@ const [htmlSource, appSource, styles, waveStyles, workStyles, estimateStyles, ad
   readFile(join(webRoot,'product-configuration-editor.mjs'),'utf8'),
 ]);
 const generatedAt = new Date().toISOString();
-const buildId = `UCHIRIMO-UI-${createHash('sha256').update(appSource).update(adapterSource).update(glassRuleSource).update(candidateHash ?? '').update(JSON.stringify(runtimePackage.manifest)).digest('hex').slice(0, 12)}`;
+const buildId = `UCHIRIMO-UI-${createHash('sha256').update(appSource).update(editorSource).update(adapterSource).update(glassRuleSource).update(candidateHash ?? '').update(JSON.stringify(runtimePackage.manifest)).digest('hex').slice(0, 12)}`;
 const json = (value) => JSON.stringify(value).replaceAll('</script', '<\\/script');
 const order = {
   room_specification:25, window_type:30, sash_configuration:32, size_class:34, reverse_handing:36,

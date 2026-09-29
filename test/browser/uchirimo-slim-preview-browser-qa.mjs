@@ -21,12 +21,6 @@ async function choose(page,key,value){
  await page.waitForFunction(count=>(window.__uchirimoPreviewResolveCount??0)>count,old);
  return page.evaluate(()=>window.__uchirimoPreviewLastResult);
 }
-async function chooseIfAvailable(page,result,key,preferred){
- const field=result.fields.find(x=>x.key===key);
- if(!field||result.selection[key]!==undefined)return result;
- const value=field.values.some(x=>String(x.value)===String(preferred))?preferred:field.values[0]?.value;
- return value===undefined?result:choose(page,key,value);
-}
 async function exercise(page){
  await page.goto(pathToFileURL(preview).href,{waitUntil:'load'});
  await page.waitForFunction(()=>document.querySelector('#status')?.textContent==='CATALOG CONNECTED');
@@ -43,27 +37,26 @@ async function exercise(page){
  result=await choose(page,'room_specification','residential');
  result=await choose(page,'window_type','fix_window');
  result=await choose(page,'glass_family','insulating_glass');
+ const appearance=page.locator('[data-spec-key="sales_glass_appearance"]');
+ assert.deepEqual(await appearance.locator('option').allTextContents(),['選択してください','透明ガラス','型板ガラス','すり板ガラス']);
+ result=await choose(page,'sales_glass_appearance','clear');
+ assert.equal(result.selection.glass_structure,undefined,'appearance must not choose technical thickness');
+ assert.equal(result.selection.sales_glass_appearance,'clear');
+ assert.equal(await page.locator('[data-spec-key="glass_structure"]').count(),0,'sales must not choose glass thickness');
+ assert.equal(await page.locator('#selectionSummary').innerText().then(x=>x.includes('透明ガラス')),true);
  assert.equal(await page.locator('[data-spec-key="low_e_type"]').count(),1);
- result=await choose(page,'glass_structure','P3P3');
- assert.equal(await page.locator('[data-spec-key="spacer_type"]').count(),1);
- assert.equal(await page.locator('[data-spec-key="gas_fill"]').count(),1);
- result=await choose(page,'spacer_type','aluminum');
- assert.equal(result.selection.gas_fill,undefined);
  result=await choose(page,'glass_family','single_glazing');
  for(const key of ['low_e_type','spacer_type','gas_fill'])assert.equal(await page.locator(`[data-spec-key="${key}"]`).count(),0,`${key} must clear`);
- for(const [key,value] of [['glass_structure','W3'],['glass_surface_type','washi'],['safety_treatment','standard'],['grille_type','none'],['muntin_type','none']])result=await chooseIfAvailable(page,result,key,value);
- for(let i=0;i<60;i++){
-  const field=result.fields.find(x=>x.required&&result.selection[x.key]===undefined);
-  if(!field)break;
-  const value=field.dataType==='NUMBER'?500:field.values[0]?.value;
-  assert.notEqual(value,undefined,`REQUIRED_INPUT_MISSING:${field.key}`);
-  result=await choose(page,field.key,value);
- }
- assert.equal(result.validation.status,'MANUAL_CHECK');
+ assert.ok((await page.locator('[data-spec-key="sales_glass_appearance"] option').allTextContents()).some(x=>x.includes('和紙調')));
+ result=await choose(page,'sales_glass_appearance','washi');
+ assert.equal(result.selection.sales_glass_appearance,'washi');
+ assert.equal(await page.locator('[data-spec-key="glass_structure"]').count(),0);
  assert.equal(result.orderReady,false);
- assert.ok(result.manualWarnings.some(x=>x.includes('メーカー見積')));
+ assert.ok(result.manualWarnings.some(x=>x.includes('厚み・構成')));
  assert.match(await page.locator('#warnings').innerText(),/メーカー見積/);
  assert.doesNotMatch(await page.locator('#warnings').innerText(),technical);
+ result=await choose(page,'size_w',500);
+ result=await choose(page,'size_h',500);
  result=await choose(page,'size_w',100);
  assert.equal(result.validation.status,'BLOCKED');
  assert.equal(result.dimensionResult.status,'BLOCK');
@@ -74,7 +67,7 @@ async function exercise(page){
  assert.ok(overflow<=1,`HORIZONTAL_OVERFLOW:${overflow}`);
  const inputOverflow=await page.locator('input,select').evaluateAll(nodes=>nodes.filter(node=>{const r=node.getBoundingClientRect();return r.left < -1||r.right>innerWidth+1;}).length);
  assert.equal(inputOverflow,0);
- return {status:'PASS',dependency_clear:'PASS',manual_handoff:'PASS',size_block_and_recovery:'PASS',technical_token_hidden:'PASS',overflow,input_overflow:inputOverflow};
+ return {status:'PASS',appearance_first:'PASS',thickness_not_exposed:'PASS',dependency_clear:'PASS',manufacturer_handoff:'PASS',size_block_and_recovery:'PASS',technical_token_hidden:'PASS',overflow,input_overflow:inputOverflow};
 }
 try{
  for(const config of [{name:'desktop',width:1440,height:1000,mobile:false},{name:'mobile',width:390,height:844,mobile:true}]){

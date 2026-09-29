@@ -10,7 +10,7 @@ const nullable=(value)=>text(value)||null;
 const clone=(value)=>globalThis.structuredClone?globalThis.structuredClone(value):JSON.parse(JSON.stringify(value));
 
 const TYPE_KEYS=new Set(['window_type','opening_type','door_type']);
-const SIZE_KEYS=new Set(['size','custom_width','width','custom_height','height']);
+const SIZE_KEYS=new Set(['size','custom_width','width','custom_height','height','size_w','size_h']);
 const OMIT_MAJOR_KEYS=new Set([...TYPE_KEYS,...SIZE_KEYS]);
 
 function summaryRows(snapshot){
@@ -25,7 +25,9 @@ function summaryValue(snapshot,keys){
 }
 
 function majorSpecificationText(snapshot){
-  return summaryRows(snapshot)
+  const rows=summaryRows(snapshot);
+  if(snapshot?.product_id==='SER-YKKAP-UCHIRIMO')rows.sort((a,b)=>Number(b.key==='sales_glass_appearance')-Number(a.key==='sales_glass_appearance'));
+  return rows
     .filter((row)=>!OMIT_MAJOR_KEYS.has(row.key))
     .slice(0,8)
     .map((row)=>`${row.label??row.key}: ${row.value}`)
@@ -35,8 +37,8 @@ function majorSpecificationText(snapshot){
 function sizeText(snapshot){
   const size=summaryValue(snapshot,['size']);
   if(size)return text(size);
-  const width=summaryValue(snapshot,['custom_width','width'])??snapshot?.configuration?.custom_width??snapshot?.configuration?.width??null;
-  const height=summaryValue(snapshot,['custom_height','height'])??snapshot?.configuration?.custom_height??snapshot?.configuration?.height??null;
+  const width=summaryValue(snapshot,['custom_width','width','size_w'])??snapshot?.configuration?.custom_width??snapshot?.configuration?.width??snapshot?.configuration?.size_w??null;
+  const height=summaryValue(snapshot,['custom_height','height','size_h'])??snapshot?.configuration?.custom_height??snapshot?.configuration?.height??snapshot?.configuration?.size_h??null;
   if(width!==null&&height!==null)return `${text(width)} × ${text(height)}`;
   if(width!==null)return text(width);
   return null;
@@ -62,6 +64,7 @@ function classifyRow(opening,snapshot,price){
     issues.push({code:'PRODUCT_SNAPSHOT_MISSING',message:'商品仕様Snapshotが保存されていません。'});
     return {state:EstimateOutputState.INCOMPLETE,issues};
   }
+  if(snapshot.sales_request_handoff?.glass_structure==='MANUFACTURER_ESTIMATE_CONFIRMATION')issues.push({code:'GLASS_STRUCTURE_MANUFACTURER_ESTIMATE',message:'ガラスの厚み・構成はメーカー見積で確認してください。'});
   if(snapshot.validation_state==='INVALID'){
     issues.push({code:'PRODUCT_SNAPSHOT_INVALID',message:'保存SnapshotがINVALIDです。'});
     return {state:EstimateOutputState.INVALID,issues};
