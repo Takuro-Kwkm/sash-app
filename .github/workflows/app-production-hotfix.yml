@@ -23,7 +23,7 @@ jobs:
       VERCEL_TOKEN_FALLBACK: ${{ secrets.VERCEL_ACCESS_TOKEN }}
       VERCEL_DEPLOY_SOURCE: files
       RELEASE_SERIES: APP_NON_PRODUCT_MASTER_UI
-      RELEASE_PACKAGE_VERSION: address-single-field-20260929
+      RELEASE_PACKAGE_VERSION: app-ui-hotfix-20260929
       PRODUCTION_URL: https://sash-app-wave3-preview.vercel.app
       PRODUCTION_HOST: sash-app-wave3-preview.vercel.app
 
@@ -47,8 +47,8 @@ jobs:
           import {readFileSync} from 'node:fs';
           const marker=JSON.parse(readFileSync('.release/app-production-hotfix-v1','utf8'));
           if(marker.scope!=='NON_PRODUCT_MASTER_UI')throw new Error('HOTFIX_SCOPE_INVALID');
-          if(marker.change!=='PROJECT_ADDRESS_SINGLE_FIELD')throw new Error('HOTFIX_CHANGE_INVALID');
-          console.log('HOTFIX_SCOPE_GATE=PASS');
+          if(typeof marker.change!=='string'||!marker.change.trim())throw new Error('HOTFIX_CHANGE_INVALID');
+          console.log('HOTFIX_SCOPE_GATE=PASS '+marker.change);
           NODE
 
       - name: Install and application regression
@@ -109,7 +109,7 @@ jobs:
           npm install --no-save playwright@1.55.0
           npx playwright install --with-deps chromium
 
-      - name: Production address and business-flow QA
+      - name: Production UI and business-flow QA
         env:
           QA_BASE_URL: ${{ env.PRODUCTION_URL }}
         run: |

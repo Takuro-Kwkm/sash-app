@@ -26,8 +26,8 @@ const database={
   schema_version:'1.0',revision:31,
   projects:[{
     project_id:'prj_estimate_output',project_name:'TW 30開口 QA',status:'ACTIVE',request_company:'青空工務店',
-    request_company_contact:'山田',sales_person:'巧竜',customer_name:'施主A',postal_code:'8600801',prefecture:'熊本県',
-    city:'熊本市中央区',street:'安政町1-1',building:null,project_type:'NEW_BUILD',memo:null,owner_user_id:null,workspace_id:null,
+    request_company_contact:'山田',sales_person:'巧竜',customer_name:'施主A',address:'熊本県熊本市中央区安政町1-1',
+    project_type:'NEW_BUILD',memo:null,owner_user_id:null,workspace_id:null,
     created_at:'2026-09-10T03:00:00.000Z',updated_at:'2026-09-10T03:30:00.000Z',deleted_at:null,
   }],
   estimates:[{
@@ -36,7 +36,7 @@ const database={
   }],
   openings:Array.from({length:30},(_,offset)=>{
     const index=offset+1;
-    return {opening_id:`opn_${String(index).padStart(2,'0')}`,estimate_id:'est_estimate_output',opening_no:index,sort_order:offset,status:'COMPLETE',room_name:index===1?'LDK':`洋室${index}`,location:index%2?'南面':'北面',opening_name:`TW窓 ${index}`,memo:null,product_configuration_snapshot:snapshot(index),created_at:'2026-09-10T03:00:00.000Z',updated_at:'2026-09-10T03:30:00.000Z',deleted_at:null};
+    return {opening_id:`opn_${String(index).padStart(2,'0')}`,estimate_id:'est_estimate_output',opening_no:index,sort_order:offset,status:'COMPLETE',floor:index%2?'1階':'2階',room_name:index===1?'LDK':`洋室${index}`,location:index%2?'南面':'北面',memo:null,product_configuration_snapshot:snapshot(index),created_at:'2026-09-10T03:00:00.000Z',updated_at:'2026-09-10T03:30:00.000Z',deleted_at:null};
   }),
 };
 
@@ -59,6 +59,7 @@ try{
   assert.equal(await page.locator('.estimate-output-table-wrap tbody tr').count(),30);
   assert.match(await page.locator('.estimate-output-counts').innerText(),/30[\s\S]*0[\s\S]*0[\s\S]*30[\s\S]*0/);
   assert.match(await page.locator('.notice').innerText(),/要確認/);
+  assert.match(await page.locator('.estimate-output-table-wrap tbody tr').first().innerText(),/1階/);
   report.checks.output_screen_30_rows='PASS';
 
   const excelPromise=page.waitForEvent('download');await page.click('#estimateOutputExcel');const excel=await excelPromise;

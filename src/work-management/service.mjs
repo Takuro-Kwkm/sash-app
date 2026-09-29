@@ -89,7 +89,7 @@ export class WorkManagementService {
     const openings=await this.repositories.openings.listByEstimate(estimateId);
     const duplicate=createOpening(estimateId,{
       opening_no:openings.length+1,sort_order:openings.length,
-      room_name:source.room_name,location:source.location,opening_name:source.opening_name?`${source.opening_name}（複製）`:null,
+      floor:source.floor,room_name:source.room_name,location:source.location,
       memo:source.memo,status:source.status,product_configuration_snapshot:cloneValue(source.product_configuration_snapshot),
     },{clock:this.clock,id:this.id('opn')});
     return this.repositories.openings.create(duplicate);

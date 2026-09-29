@@ -96,6 +96,7 @@ export function createOpening(estimateId,data={}, {clock,id}={}) {
     opening_no:Number(data.opening_no??1),
     sort_order:Number(data.sort_order??0),
     status:data.status??OpeningStatus.DRAFT,
+    floor:nullableText(data.floor),
     room_name:nullableText(data.room_name),
     location:nullableText(data.location),
     opening_name:nullableText(data.opening_name),
@@ -159,6 +160,6 @@ export function createProductConfigurationSnapshot({product,result,clock}) {
 }
 
 export function openingDisplayName(opening) {
-  const metadata=[opening.room_name,opening.location].filter(Boolean).join(' ');
-  return [`開口 ${opening.opening_no}`,metadata,opening.opening_name].filter(Boolean).join('｜');
+  const metadata=[opening.floor,opening.room_name,opening.location].filter(Boolean).join(' ');
+  return [`開口 ${opening.opening_no}`,metadata].filter(Boolean).join('｜');
 }

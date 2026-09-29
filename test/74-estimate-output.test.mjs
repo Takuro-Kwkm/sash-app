@@ -29,7 +29,7 @@ function snapshot({manufacturer='LIXIL',series='TW',validation='VALID',price}={}
 function opening(index,{snap=snapshot(),status='COMPLETE'}={}){
   return {
     opening_id:`opn_${index}`,estimate_id:'est_test',opening_no:index,sort_order:index-1,status,
-    room_name:index===1?'LDK':`洋室${index}`,location:index%2?'南面':'北面',opening_name:'窓',memo:null,
+    floor:index%2?'1階':'2階',room_name:index===1?'LDK':`洋室${index}`,location:index%2?'南面':'北面',memo:null,
     product_configuration_snapshot:snap,
   };
 }
@@ -42,6 +42,8 @@ test('stored Snapshot is the SSOT and missing price stays null / NEEDS_CONFIRMAT
   assert.deepEqual(model.counts,{total:1,complete:0,incomplete:0,needs_confirmation:1,invalid:0});
   assert.equal(model.rows[0].audit.runtime_manifest_identity,'manifest-1');
   assert.equal(model.project.address,'熊本県熊本市中央区安政町1-1');
+  assert.equal(model.rows[0].floor,'1階');
+  assert.equal('opening_name' in model.rows[0],false);
 });
 
 test('legacy split project address remains readable for existing saved cases',()=>{

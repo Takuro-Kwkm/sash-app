@@ -31,7 +31,12 @@ try{
   for(const [manufacturer,id]of products){
    await page.getByRole('button',{name:'開口部を追加',exact:true}).click();
    await page.waitForURL(/\/openings\/opn_/);
-   await page.locator('[data-opening-field="opening_name"]').fill(id);
+   assert.equal(await page.locator('[data-opening-field="opening_name"]').count(),0);
+   const floor=page.locator('[data-opening-field="floor"]');
+   assert.equal(await floor.locator('option:not([value=""])').count(),20);
+   await floor.selectOption('1階');
+   await page.locator('[data-opening-field="room_name"]').fill('QA室');
+   await page.locator('[data-opening-field="location"]').fill('南面');
    await page.selectOption('#manufacturer',manufacturer);
    const initial=page.waitForResponse(r=>r.url().includes('/api/runtime-master/resolve')&&r.status()===200);
    await page.selectOption('#product',id);await initial;
