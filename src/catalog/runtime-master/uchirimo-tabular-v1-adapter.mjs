@@ -18,15 +18,32 @@ const SUPPORTED_OPS = new Set(['eq', 'neq', 'in']);
 const VALUE_LABELS = Object.freeze({
   insulating_glass: '複層ガラス', single_glazing: '単板ガラス', vacuum_glass: '真空ガラス',
   insulating: '断熱タイプ', solar_control: '遮熱タイプ', none: 'なし',
+  blue: 'ブルー', bronze: 'ブロンズ', neutral: 'ニュートラル',
   clear: '透明', frosted: 'すり板', pattern: '型板', washi: '和紙調',
-  standard: '一般', tempered: '強化', safety_laminated_30mil: '安全合わせ30mil',
-  aluminum: 'アルミスペーサー', resin: '樹脂スペーサー', air: '空気層', argon: 'アルゴンガス入り',
+  standard: '一般', tempered: '強化', safety_laminated_30mil: '安全合わせガラス30mil',
+  air: '空気層', argon: 'アルゴンガス入り',
   residential: '居室仕様', bathroom: '浴室仕様', sliding_window: '引違い窓', fix_window: 'FIX窓',
   inward_opening_window: '内開き窓', opening_window_terrace: '開き窓テラス',
   custom: '特注', left: '左吊元', right: '右吊元', yes: 'あり', no: 'なし', unknown: '未確認',
   reinforcement_square_pipe: '補強角パイプ', reinforcement_bracket: '補強ブラケット',
   reinforcement_bundle: '補強束', construction_material_floor_supported: '建材床支持',
   stepped_fukashi_60: '段差ふかし枠60',
+});
+
+const FIELD_VALUE_LABELS = Object.freeze({
+  spacer_type: Object.freeze({ aluminum:'アルミスペーサー', resin:'樹脂スペーサー' }),
+  grille_material: Object.freeze({ aluminum:'アルミ格子', resin:'樹脂格子', muntin:'組子' }),
+  grille_type: Object.freeze({
+    plain:'プレーンタイプ', elegant:'エレガントタイプ',
+    wa01:'洋風タイプ WA01', wa02:'洋風タイプ WA02',
+    pa01:'プレーリータイプ PA01', pa02:'プレーリータイプ PA02', wp01:'洋風タイプ WP01',
+    aramagoushi:'和室用 荒間格子', yokoshige_fukiyose:'和室用 横繁吹寄格子',
+    tateshige_fukiyose:'和室用 たて繁吹寄格子', none:'なし',
+  }),
+  muntin_type: Object.freeze({
+    aramagoushi:'和室用 荒間格子', yokoshige_fukiyose:'和室用 横繁吹寄格子', none:'なし',
+  }),
+  vacuum_glass_product: Object.freeze({ spacia_cool:'スペーシア クール', glavenir:'Glavenir' }),
 });
 
 const FIELD_LABELS = Object.freeze({
@@ -44,7 +61,11 @@ function fail(code, message, details = {}) {
 const has = (value) => value !== null && value !== undefined && value !== '';
 const same = (a, b) => Object.is(a, b) || String(a) === String(b);
 const unique = (rows) => [...new Map(rows.map((row) => [JSON.stringify(row), row])).values()];
-const valueLabel = (value, fallback) => fallback ?? VALUE_LABELS[value] ?? String(value);
+const valueLabel = (fieldName, value, fallback) => {
+  const sourceLabel = has(fallback) ? String(fallback) : null;
+  if (sourceLabel && sourceLabel !== String(value)) return sourceLabel;
+  return FIELD_VALUE_LABELS[fieldName]?.[value] ?? VALUE_LABELS[value] ?? sourceLabel ?? String(value);
+};
 
 function canonicalDocument(documents) {
   return documents.canonical_runtime ?? documents.canonical_master ??
@@ -174,7 +195,7 @@ function buildModel(runtimePackage) {
     valueKeys.add(key);
     values.push({
       field_name: row.field_name, canonical_value: row.allowed_value, status: 'CURRENT',
-      display_label: valueLabel(row.allowed_value, row.display_name), user_selectable: row.status !== 'FIXED', runtime_selectable: true,
+      display_label: valueLabel(row.field_name, row.allowed_value, row.display_name), user_selectable: row.status !== 'FIXED', runtime_selectable: true,
     });
   }
   if (!valueKeys.has('size_mode\u0000"custom"')) values.push({ field_name: 'size_mode', canonical_value: 'custom', status: 'CURRENT', display_label: '特注', user_selectable: false, runtime_selectable: true });
