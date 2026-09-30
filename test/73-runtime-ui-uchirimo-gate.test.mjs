@@ -80,7 +80,7 @@ test('Uchirimo glazing choices expose Japanese UI labels instead of canonical En
   for (const [value, label] of Object.entries(coating)) assert.notEqual(label, value, `raw glass coating token leaked: ${value}`);
 });
 
-test('v1.9 keeps semantic SIZE with pre-option dimension presentation', async () => {
+test('v1.9 keeps semantic SIZE while presenting custom dimensions as the final input step', async () => {
   const result = await resolveRuntimeAppProduct(PRODUCT, { ...baseNode, glass_family: 'insulating_glass', glass_structure: 'P3P3', low_e_type: 'insulating' });
   const order = result.fields.map((row) => row.key);
   for (const [a, b] of [['window_type','room_specification'],['room_specification','frame_color'],['frame_color','glass_family'],['glass_family','low_e_type'],['low_e_type','spacer_type'],['spacer_type','gas_fill'],['gas_fill','frame_spec']]) assert.ok(order.indexOf(a) < order.indexOf(b), `${a} before ${b}`);
