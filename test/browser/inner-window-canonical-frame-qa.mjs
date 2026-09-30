@@ -72,6 +72,8 @@ for(const width of [1440,768,390]){
  assert.equal(await page.locator('#dynamicForm [data-key="supply_form"]').count(),0);
  assert.equal(await page.locator('#dynamicForm [data-key="glass_detail"]').count(),0);
  assert.equal(await page.locator('#dynamicForm [data-key="crescent_presence"]').count(),1);
+ assert.equal(await page.locator('#dynamicForm [data-spec-key="crescent_presence"] option[value="crescentless_special_order"]').textContent(),'なし（特注・要確認）');
+ assert.equal((await page.evaluate(()=>window.frameEditor.state.resolved.fields.find(f=>f.key==='crescent_presence').values.find(v=>v.value==='crescentless_special_order').manualCheck)),true);
  assert.equal(await page.locator('#dynamicForm [data-key="fukashi_curtain_rail"]').count(),1);
  const reinforcement=page.locator('#dynamicForm [data-spec-key="fukashi_reinforcement"]');
  assert.ok((await reinforcement.locator('option').allTextContents()).some(text=>text.includes('ふかし枠下部補強部材')));
