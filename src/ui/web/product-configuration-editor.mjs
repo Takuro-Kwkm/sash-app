@@ -1,6 +1,7 @@
 import { createProductConfigurationSnapshot } from '/work-management/domain.mjs';
 
 const esc=(value)=>String(value??'').replace(/[&<>'\"]/g,(character)=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'\"':"&quot;"})[character]);
+const reviewChoiceLabel=(value)=>`${esc(value.displayLabel)}${value.manualCheck&&!String(value.displayLabel).includes('要確認')?'（要確認）':''}`;
 const TECHNICAL_TOKEN=/\b(?:CUSTOM_DIMENSION|RUNTIME|ORDER_READY|[A-Z][A-Z0-9]+(?:_[A-Z0-9]+){1,})\b/;
 const STATUS_LABELS=Object.freeze({
   BLOCK:'製作範囲外',BLOCKED:'選択できません',REVIEW_REQUIRED:'要確認',MANUAL_CHECK:'要確認',
@@ -224,11 +225,11 @@ export class ProductConfigurationEditor {
     const selected=Array.isArray(this.state.selection[field.key])?this.state.selection[field.key]:[this.state.selection[field.key]];
     const multi=field.dataType==='MULTI_ENUM';
     if(multi){
-      const choices=field.values.map((value)=>`<label class="multi-enum-option"><input type="checkbox" data-multi-value="true" value="${esc(value.value)}"${value.disabled||field.disabled||field.readOnly?' disabled':''}${selected.some((one)=>String(one)===String(value.value))?' checked':''}><span>${esc(value.displayLabel)}${value.manualCheck?'（要確認）':''}</span></label>`).join('');
+      const choices=field.values.map((value)=>`<label class="multi-enum-option"><input type="checkbox" data-multi-value="true" value="${esc(value.value)}"${value.disabled||field.disabled||field.readOnly?' disabled':''}${selected.some((one)=>String(one)===String(value.value))?' checked':''}><span>${reviewChoiceLabel(value)}</span></label>`).join('');
       const nativeOptions=field.values.map((value)=>`<option value="${esc(value.value)}"${value.disabled?' disabled':''}${selected.some((one)=>String(one)===String(value.value))?' selected':''}>${esc(value.displayLabel)}</option>`).join('');
       return `<div class="field" data-key="${esc(field.key)}"><label>${esc(field.displayLabel)}${required}</label><select class="multi-enum-native-control" data-spec-key="${esc(field.key)}" ${attributes} multiple aria-hidden="true" tabindex="-1">${nativeOptions}</select><div class="multi-enum-group" role="group" aria-label="${esc(field.displayLabel)}" data-multi-enum="true" data-multi-key="${esc(field.key)}">${choices}</div><small class="field-help">${esc(field.helpText??'複数選択できます')}</small></div>`;
     }
-    const options=field.values.map((value)=>`<option value="${esc(value.value)}"${value.disabled?' disabled':''}${selected.some((one)=>String(one)===String(value.value))?' selected':''}>${esc(value.displayLabel)}${value.manualCheck?'（要確認）':''}</option>`).join('');
+    const options=field.values.map((value)=>`<option value="${esc(value.value)}"${value.disabled?' disabled':''}${selected.some((one)=>String(one)===String(value.value))?' selected':''}>${reviewChoiceLabel(value)}</option>`).join('');
     return `<div class="field" data-key="${esc(field.key)}"><label>${esc(field.displayLabel)}${required}</label><select data-spec-key="${esc(field.key)}" ${attributes}><option value="">選択してください</option>${options}</select>${field.helpText?`<small class="field-help">${esc(field.helpText)}</small>`:''}</div>`;
   }
 
