@@ -7,7 +7,7 @@
     "src/catalog/runtime-master/runtime-app-bridge.mjs": "1e654159b95b61c9db2455e4f5b1564326ef6f96a5c45073e239c4e961b6a14f",
     "src/catalog/runtime-master/new-construction-sash-runtime-ui-contract.mjs": "7f7cec995f75b6b74f6b1fdafb6968051d4fed8772be26a473728886437b8f91",
     "scripts/governance/uchirimo-selector-batch-runner.mjs": "29f26ef702d4c505ed3ab27de35eafc36b63f24bbbfe0d7fbaa55b631f920d74",
-    "src/catalog/runtime-master/inner-window-runtime-ui-contract.mjs": "19f627d442129bc98b4f3900907bf543915523f1cb62456b477d4a46588c4880",
+    "src/catalog/runtime-master/inner-window-runtime-ui-contract.mjs": "935ae47f954a2d058c45e41109b906773a63c105fb929b2ccc252381a5824e85",
     "src/catalog/runtime-master/global-window-selection-flow-engine.mjs": "e95f567131fd7ecc47c50f6b674b826aea9ab3508a938e9a5fc37f889097ebe1",
     "src/catalog/runtime-master/canonical-window-semantic-schema.mjs": "03ace90218363f62ad89280c77a328bb2e05efd362f6b17eca8989f0d52edeb7",
     "data/uchirimo-slim/runtime-support.json": "25eaf0a65482aed99a37852c1b1c5c7d4c60de54c1a3954923abb4f11b7e4a1d",
@@ -33,7 +33,7 @@
       {
         "file": "src/catalog/runtime-master/inner-window-runtime-ui-contract.mjs",
         "baseline_sha256": "e7075aaafb832d93f54bf67c74ca52a9345a9b714c01277337c3a9fe3b1beaff",
-        "candidate_sha256": "19f627d442129bc98b4f3900907bf543915523f1cb62456b477d4a46588c4880"
+        "candidate_sha256": "935ae47f954a2d058c45e41109b906773a63c105fb929b2ccc252381a5824e85"
       },
       {
         "file": "src/catalog/runtime-master/global-window-selection-flow-engine.mjs",
@@ -57,6 +57,7 @@
     "canonical_frame_r4": "Uchirimo R4 restores fukashi_sides from EV-UCH-028 and preserves clear as the Formal label クリア. Current registered R4 package has exact identity, semantic tests and downstream-clear QA; the historical factorized witness is not used as R4 proof.",
     "canonical_frame_r5": "Uchirimo R5 restores explicit middle_rail_option なし/あり from EV-UCH-029. The adopted-runtime source pin changed only to the current Runtime revision identity; selector dependency reads/writes in the historical witness are unchanged. Fresh R5 Runtime/UI and downstream-clear QA provide current proof.",
     "ui_glazing_localization_20260930": "Mapped raw presentation tokens for glass family, Low-E, coating color, glass surface, safety treatment, spacer, cavity gas, grille/muntin and vacuum-glass product. Glass construction codes remain codes. No Product Master, Formal Runtime, Registry, dependency or selection-value mutation.",
-    "ui_final_dimension_order_20260930": "Inner-window custom W/H fields retain semanticStage=SIZE and all existing validation/dependency behavior, but their presentationSlot moves from pre-option to the final sales-input step after OPTION. The renderer separately groups discrete OPTION-stage fields under an オプション heading when no aggregate option_items selector exists; this adds no product-specific selection branch and does not mutate Product Master, Formal Runtime, Registry, selection values, dependencies, validation or estimate handoff."
+    "ui_final_dimension_order_20260930": "Inner-window custom W/H fields retain semanticStage=SIZE and all existing validation/dependency behavior, but their presentationSlot moves from pre-option to the final sales-input step after OPTION. The renderer separately groups discrete OPTION-stage fields under an オプション heading when no aggregate option_items selector exists; this adds no product-specific selection branch and does not mutate Product Master, Formal Runtime, Registry, selection values, dependencies, validation or estimate handoff.",
+    "ui_sales_request_controls_20260930": "Inner-window UI mapping adds declarative sales-request extension slots for fukashi curtain-rail response and installation auxiliary requests. The historical Uchirimo factorized source evaluator does not consume these presentation-only extension fields; Formal Runtime values, dependency reads/writes, selection semantics and Product Master identities are unchanged."
   }
 }
