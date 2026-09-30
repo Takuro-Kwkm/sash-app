@@ -37,7 +37,7 @@ export const INPLUS_SALES_REQUEST = Object.freeze({
   manualWarning:'営業入力で確定しない仕様は、選択した希望条件を積算／LIXIL確認事項として見積依頼へ引き継ぎます。',
   confirmationTo:'積算／LIXIL',
   confirmationCode:'INPLUS_SALES_REQUEST_CONFIRM',
-  requireManufacturerGlassDetail:true,
+  alwaysConfirm:true,
   fields:Object.freeze([
     {
       key:'sales_spacer_type',
@@ -112,7 +112,7 @@ function requestChoices(definition){
 export function applySalesRequestExtension(state, input, contract) {
   if (!contract) return state;
   const fields=[], selection={}, handoff={...(contract.handoffDefaults??{})};
-  let requiresManual=false;
+  let requiresManual=Boolean(contract.alwaysConfirm);
 
   for(const definition of contract.fields??[]){
     if(!requestFieldApplies(definition,state))continue;
@@ -155,15 +155,6 @@ export function applySalesRequestExtension(state, input, contract) {
   state.missing_required_fields=(state.missing_required_fields??[]).filter(key=>!suppressed.has(key));
   state.presentationFields=fields;
   state.presentationSelection=selection;
-
-  if(contract.requireManufacturerGlassDetail&&suppressed.has('glass_detail')&&state.dimension_result?.status==='PASS'){
-    state.dimension_result={
-      ...state.dimension_result,
-      status:'REVIEW_REQUIRED',
-      message:'基本製作範囲内です。営業UIではガラス詳細を確定しないため、最終のガラス別製作可否は積算／メーカー見積で確認してください。',
-    };
-    requiresManual=true;
-  }
 
   if(Object.keys(handoff).length)state.sales_request_handoff=handoff;
   if(requiresManual){
