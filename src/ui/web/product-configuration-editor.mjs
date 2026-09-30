@@ -197,10 +197,12 @@ export class ProductConfigurationEditor {
   }
 
   renderFields(fields=[]){
+    const product=this.state.products.find((row)=>row.id===this.state.productId);
     const hasAggregateOption=fields.some((field)=>field.key==='option_items');
+    const groupIndividualOptions=product?.uiCategory==='INNER_WINDOW'&&!hasAggregateOption;
     let optionHeadingShown=false;
     return fields.map((field)=>{
-      const showOptionHeading=!hasAggregateOption&&!optionHeadingShown&&field.semanticStage==='OPTION';
+      const showOptionHeading=groupIndividualOptions&&!optionHeadingShown&&field.semanticStage==='OPTION';
       if(showOptionHeading)optionHeadingShown=true;
       return `${showOptionHeading?'<div class="runtime-field-group-heading" data-semantic-group="OPTION">オプション</div>':''}${this.renderField(field)}`;
     }).join('');
