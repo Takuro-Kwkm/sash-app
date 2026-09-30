@@ -27,7 +27,7 @@ L-type handle is an Inplus terrace sliding-sash option. Known prohibitions clear
 - Upstream choices remain selectable when a downstream choice conflicts; selecting the upstream choice clears the conflicting downstream value. Empty candidate domains are hidden.
 - Canonical/source evaluation converges before emitting selections. Clear history, invalid input errors and confirmation requests survive internal reevaluation.
 - The manifest loader preserves every component with a repeated role. The Uchirimo adapter prefers the complete installation component over the embedded projection and consumes its explicit projection/60mm incompatibility. No manufacturer fact is inferred.
-- W/H stays in the declarative pre-option SIZE presentation. Size mode and size class remain internal.
+- W/H retains declarative SIZE semantics but is presented as the final sales-input step after options. Size mode and size class remain internal.
 - The self-contained eight-series preview uses the same modules, adopted Runtime bytes and resolver as the deployed application.
 
 ## QA boundaries
