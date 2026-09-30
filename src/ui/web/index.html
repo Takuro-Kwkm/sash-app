@@ -3,19 +3,45 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="color-scheme" content="light dark">
   <title>サッシ情報管理アプリ｜案件管理</title>
+  <script>
+    (() => {
+      const key='sash.theme.v1';
+      let preference='system';
+      try {
+        const stored=localStorage.getItem(key);
+        if(['light','dark','system'].includes(stored)) preference=stored;
+      } catch {}
+      const dark=preference==='dark'||(preference==='system'&&window.matchMedia?.('(prefers-color-scheme: dark)').matches);
+      document.documentElement.dataset.theme=dark?'dark':'light';
+      document.documentElement.dataset.themePreference=preference;
+    })();
+  </script>
   <link rel="stylesheet" href="/styles.css">
   <link rel="stylesheet" href="/styles-wave3.css">
   <link rel="stylesheet" href="/work-management.css">
   <link rel="stylesheet" href="/estimate-output.css">
+  <link rel="stylesheet" href="/theme.css">
 </head>
 <body>
 <header class="topbar">
   <a class="brand" href="/" data-nav="/"><strong>サッシ情報管理アプリ</strong><span id="headerContext" class="sub">案件一覧</span></a>
-  <span id="status" class="badge">loading</span>
+  <div class="topbar-actions">
+    <label class="theme-picker" for="themePreference">
+      <span class="sr-only">表示テーマ</span>
+      <select id="themePreference" aria-label="表示テーマ">
+        <option value="system">システム</option>
+        <option value="light">ライト</option>
+        <option value="dark">ダーク</option>
+      </select>
+    </label>
+    <span id="status" class="badge">loading</span>
+  </div>
 </header>
 <main id="appMain" aria-live="polite"></main>
 <footer id="build">Build identity loading...</footer>
+<script src="/theme.js"></script>
 <script type="module" src="/app.js"></script>
 <script type="module" src="/estimate-output-integration.mjs"></script>
 </body>
