@@ -4,10 +4,10 @@
   "source_sha256": {
     "src/catalog/runtime-master/uchirimo-tabular-v1-adapter.mjs": "a6f3cdca31609a2cde44e11c972b2446440e31cf988f1a1908aff6ecfde971ee",
     "src/catalog/runtime-master/uchirimo-glass-rule-model.mjs": "0e8b1e37a05d25f80e7fc7f9a930c4349f8f97b5c43e9706c8aa99d1904c88b7",
-    "src/catalog/runtime-master/runtime-app-bridge.mjs": "2c89650b6a0177ff1252db2537a1bd59e93ff5210baeb07e3a8b5c66708efcaa",
+    "src/catalog/runtime-master/runtime-app-bridge.mjs": "d85009e03f163c0fffe5658b049ab7d0b271ea54b6188b2cb0619ecd1b54bec4",
     "src/catalog/runtime-master/new-construction-sash-runtime-ui-contract.mjs": "7f7cec995f75b6b74f6b1fdafb6968051d4fed8772be26a473728886437b8f91",
     "scripts/governance/uchirimo-selector-batch-runner.mjs": "29f26ef702d4c505ed3ab27de35eafc36b63f24bbbfe0d7fbaa55b631f920d74",
-    "src/catalog/runtime-master/inner-window-runtime-ui-contract.mjs": "4f3d43e6633b63f5e4d403c9ac2cd428a4c0db0dfd0dd826d0356e5d8d6a700c",
+    "src/catalog/runtime-master/inner-window-runtime-ui-contract.mjs": "3f8c74de7872adaac2b59d93fb85a6ae9092024b1614c0cef4e5b91bfa6fce0b",
     "src/catalog/runtime-master/global-window-selection-flow-engine.mjs": "e95f567131fd7ecc47c50f6b674b826aea9ab3508a938e9a5fc37f889097ebe1",
     "src/catalog/runtime-master/canonical-window-semantic-schema.mjs": "03ace90218363f62ad89280c77a328bb2e05efd362f6b17eca8989f0d52edeb7",
     "data/uchirimo-slim/runtime-support.json": "25eaf0a65482aed99a37852c1b1c5c7d4c60de54c1a3954923abb4f11b7e4a1d",
@@ -28,12 +28,12 @@
       {
         "file": "src/catalog/runtime-master/runtime-app-bridge.mjs",
         "baseline_sha256": "ceedd90b52559eb082696421a2fb6843e248c8886257a6b84ed0a11b1fefd7eb",
-        "candidate_sha256": "2c89650b6a0177ff1252db2537a1bd59e93ff5210baeb07e3a8b5c66708efcaa"
+        "candidate_sha256": "d85009e03f163c0fffe5658b049ab7d0b271ea54b6188b2cb0619ecd1b54bec4"
       },
       {
         "file": "src/catalog/runtime-master/inner-window-runtime-ui-contract.mjs",
         "baseline_sha256": "e7075aaafb832d93f54bf67c74ca52a9345a9b714c01277337c3a9fe3b1beaff",
-        "candidate_sha256": "4f3d43e6633b63f5e4d403c9ac2cd428a4c0db0dfd0dd826d0356e5d8d6a700c"
+        "candidate_sha256": "3f8c74de7872adaac2b59d93fb85a6ae9092024b1614c0cef4e5b91bfa6fce0b"
       },
       {
         "file": "src/catalog/runtime-master/global-window-selection-flow-engine.mjs",
@@ -51,7 +51,7 @@
         "candidate_sha256": "f1acb09facd8cec0781a8a3e09398a338226bdb8008089f39264d00bf5035f8b"
       }
     ],
-    "dependency_edge_review": "Runtime bridge change is presentation-only: when a Runtime value label is exactly the raw canonical glass token, the UI substitutes a Japanese display label. Explicit Formal labels still win (including frame_color=clear → クリア). Resolver selection values, dependency reads/writes, visibility, validation, glass model, Runtime data, and dependencyGraph are unchanged. Fresh Uchirimo UI regression asserts Japanese glazing labels; the full core suite reached 511 tests with this hash pin as the sole pre-sync failure.",
+    "dependency_edge_review": "Runtime bridge changes are presentation-only. Generic raw glass tokens receive Japanese display labels; for Inplus cavity_fill only, detailed air-layer labels such as 乾燥空気 A12 / アルゴン系 are collapsed to 乾燥空気 / アルゴンガス for sales UI display while the canonical selection value is retained unchanged. Other explicit Formal labels still win (including frame_color=clear → クリア). Resolver selection values, dependency reads/writes, visibility, validation, glass model, Runtime data, and dependencyGraph are unchanged. Fresh inner-window UI regression asserts these labels and values.",
     "qa_projection": "Test-only projection exposes source-proven internal size selectors to the Formal enumeration driver. It does not alter their values, domains, dependencies or source evaluator. Public UI remains hidden and is tested separately.",
     "canonical_frame_r3": "New public frame wrapper does not run in the historical witness. Current registered R3 package/adopted runtime has separate exact identity and semantic tests. Historical extraction explicitly reconstructs its old last-role-wins view; live loader preserves every component. The explicit support-component projection/60 incompatibility is consumed only by the new canonical-frame contract; the historical witness has no such contract and is unchanged. Fresh R3 integration tests cover that dependency.",
     "canonical_frame_r4": "Uchirimo R4 restores fukashi_sides from EV-UCH-028 and preserves clear as the Formal label クリア. Current registered R4 package has exact identity, semantic tests and downstream-clear QA; the historical factorized witness is not used as R4 proof.",
@@ -59,6 +59,7 @@
     "ui_glazing_localization_20260930": "Mapped raw presentation tokens for glass family, Low-E, coating color, glass surface, safety treatment, spacer, cavity gas, grille/muntin and vacuum-glass product. Glass construction codes remain codes. No Product Master, Formal Runtime, Registry, dependency or selection-value mutation.",
     "ui_final_dimension_order_20260930": "Inner-window custom W/H fields retain semanticStage=SIZE and all existing validation/dependency behavior, but their presentationSlot moves from pre-option to the final sales-input step after OPTION. The renderer separately groups discrete OPTION-stage fields under an オプション heading when no aggregate option_items selector exists; this adds no product-specific selection branch and does not mutate Product Master, Formal Runtime, Registry, selection values, dependencies, validation or estimate handoff.",
     "ui_sales_request_controls_20260930": "Reviewed 2026-09-30 Inplus/UI correction adds evidence-backed sales-request presentation and value augmentation only: fukashi lower reinforcement request, crescent presence/type/position/P input, and official installation option names. These additions do not change the historical Uchirimo source evaluator dependency graph; current Inplus behavior is covered by dedicated runtime/UI tests.",
+    "ui_inner_window_human_review_corrections_20261001": "Human review correction only. Inplus crescent-position mode is exposed for sliding windows unless crescentless special order is selected; its numeric P request remains after final custom W/H. Uchirimo adds an app-side numeric custom crescent-position request after final W/H when Formal crescent_position=custom. Curtain-rail presentation is ordered immediately after fukashi_presence without changing its existing applicability conditions. Inplus cavity_fill keeps the Formal canonical value and dependency semantics but removes air-layer thickness from the displayed choice label. Product Master, Formal Runtime, Registry, prices, BOM and order-readiness rules are unchanged.",
     "ui_standard_v21_source_pin_recovery": {
       "reviewed_base_commit": "b06e1e7938891bfdbb7b69f3e980fdd2a626b9b4",
       "reviewed_candidate_commit": "a21fec05534c0a309ff805d8fbdca7d6916d5704",
