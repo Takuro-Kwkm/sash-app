@@ -1,10 +1,10 @@
 {
   "schema": "APP_PRODUCTION_HOTFIX_V1",
   "scope": "NON_PRODUCT_MASTER_UI",
-  "change": "DARK_MODE_UI",
+  "change": "DARK_MODE_FULL_VIEWPORT",
   "date": "2026-09-30",
-  "source_commit": "8e24ccc94d176519dcd1f90848e0b1c81852029b",
-  "notes": "Add System/Light/Dark theme switching, persistent preference, low-glare dark styling, print light reset, and browser QA. Product Master and Runtime data are unchanged.",
+  "source_commit": "5caea375ccf89540579940eb608d4605c61cc0ef",
+  "notes": "Ensure dark mode colors the root canvas and body across the full viewport so no light band remains below short pages. Add regression coverage. Product Master and Runtime data are unchanged.",
   "attempt": 1,
   "trigger": "PR_MERGE_PUSH"
 }
