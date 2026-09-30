@@ -23,7 +23,7 @@ function assertCanonicalStageOrder(rows, label) {
   for (const field of rows) {
     assert.ok(field.semanticSlot, `${label}:${field.key} missing semanticSlot`);
     assert.ok(field.semanticStage, `${label}:${field.key} missing semanticStage`);
-    const current = field.presentationSlot==='INNER_WINDOW_PRE_OPTION_DIMENSION'?7.5:STAGE_INDEX.get(field.semanticStage);
+    const current = field.presentationSlot==='INNER_WINDOW_FINAL_DIMENSION'?9:STAGE_INDEX.get(field.semanticStage);
     assert.notEqual(current, undefined, `${label}:${field.key} unknown stage ${field.semanticStage}`);
     assert.ok(current >= previous, `${label}:${field.key} stage order regressed`);
     previous = current;
