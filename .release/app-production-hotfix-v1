@@ -3,8 +3,8 @@
   "scope": "NON_PRODUCT_MASTER_UI",
   "change": "DARK_MODE_FULL_VIEWPORT",
   "date": "2026-09-30",
-  "source_commit": "5caea375ccf89540579940eb608d4605c61cc0ef",
-  "notes": "Ensure dark mode colors the root canvas and body across the full viewport so no light band remains below short pages. Add regression coverage. Product Master and Runtime data are unchanged.",
-  "attempt": 1,
+  "source_commit": "a7aaaf654302279eed8d4314f06fe4f43f544f13",
+  "notes": "Retry dark full viewport production hotfix. Primary files deployment remains authoritative, with exact Git source fallback only when Vercel returns HTTP 429 upload rate limiting. Product Master and Runtime data are unchanged.",
+  "attempt": 2,
   "trigger": "PR_MERGE_PUSH"
 }
