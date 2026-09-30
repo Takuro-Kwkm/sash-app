@@ -73,36 +73,39 @@ for(const width of [1440,768,390]){
  assert.equal(await page.locator('#dynamicForm [data-key="glass_detail"]').count(),0);
  assert.equal(await page.locator('#dynamicForm [data-key="crescent_presence"]').count(),1);
  assert.equal(await page.locator('#dynamicForm [data-key="fukashi_curtain_rail"]').count(),1);
- const aux=page.locator('#dynamicForm [data-multi-key="sales_installation_auxiliaries"]');
- assert.equal(await aux.count(),1);
- assert.equal(await aux.locator('input[data-multi-value]').count(),3);
+ const reinforcement=page.locator('#dynamicForm [data-spec-key="fukashi_reinforcement"]');
+ assert.ok((await reinforcement.locator('option').allTextContents()).some(text=>text.includes('ふかし枠下部補強部材')));
+ const options=page.locator('#dynamicForm [data-multi-key="option_items"]');
+ assert.equal(await options.count(),1);
+ for(const value of ['OP-STEP','OP-EMBED-RESIN','OP-TRUE-WALL-SCREW','OP-REPLACEMENT-CRESCENT'])assert.equal(await options.locator(`input[value="${value}"]`).count(),1,value);
  let rev=await page.locator('#dynamicForm').getAttribute('data-resolve-revision');
- await aux.locator('input[value="OP-STEP"]').check();
+ await options.locator('input[value="OP-EMBED-RESIN"]').check();
  await page.waitForFunction(r=>document.querySelector('#dynamicForm').dataset.resolveRevision!==r,rev);
  rev=await page.locator('#dynamicForm').getAttribute('data-resolve-revision');
- await page.locator('#dynamicForm [data-multi-key="sales_installation_auxiliaries"] input[value="TRUE_WALL_SCREW"]').check();
+ await page.locator('#dynamicForm [data-multi-key="option_items"] input[value="OP-TRUE-WALL-SCREW"]').check();
  await page.waitForFunction(r=>document.querySelector('#dynamicForm').dataset.resolveRevision!==r,rev);
  let salesState=await page.evaluate(()=>window.frameEditor.state);
- assert.deepEqual(new Set(salesState.selection.sales_installation_auxiliaries),new Set(['OP-STEP','TRUE_WALL_SCREW']));
+ assert.ok(salesState.selection.option_items.includes('OP-EMBED-RESIN'));
+ assert.ok(salesState.selection.option_items.includes('OP-TRUE-WALL-SCREW'));
  rev=await page.locator('#dynamicForm').getAttribute('data-resolve-revision');
- await page.locator('#dynamicForm [data-spec-key="crescent_presence"]').selectOption('crescentless_special_order');
+ await page.locator('#dynamicForm [data-spec-key="crescent_presence"]').selectOption('installed');
+ await page.waitForFunction(r=>document.querySelector('#dynamicForm').dataset.resolveRevision!==r,rev);
+ assert.equal(await page.locator('#dynamicForm [data-spec-key="crescent_type"] option', {hasText:'キー付きクレセント'}).count(),1);
+ rev=await page.locator('#dynamicForm').getAttribute('data-resolve-revision');
+ await page.locator('#dynamicForm [data-spec-key="crescent_position_mode"]').selectOption('custom');
+ await page.waitForFunction(r=>document.querySelector('#dynamicForm').dataset.resolveRevision!==r,rev);
+ const pField=page.locator('#dynamicForm [data-spec-key="crescent_position_p_mm"]');
+ assert.equal(await pField.count(),1);
+ assert.equal(await pField.getAttribute('step'),'0.5');
+ const pAfterH=await page.evaluate(()=>{const p=document.querySelector('[data-key="crescent_position_p_mm"]'),h=document.querySelector('[data-key="order_height"]');return Boolean(p&&h&&(h.compareDocumentPosition(p)&Node.DOCUMENT_POSITION_FOLLOWING));});
+ assert.equal(pAfterH,true);
+ rev=await page.locator('#dynamicForm').getAttribute('data-resolve-revision');
+ await pField.fill('550');
+ await pField.dispatchEvent('change');
  await page.waitForFunction(r=>document.querySelector('#dynamicForm').dataset.resolveRevision!==r,rev);
  salesState=await page.evaluate(()=>window.frameEditor.state);
- assert.equal(salesState.selection.crescent_presence,'crescentless_special_order');
+ assert.equal(salesState.selection.crescent_position_p_mm,550);
  assert.ok(salesState.resolved.confirmationRequests.some(row=>row.code==='INPLUS_SALES_REQUEST_CONFIRM'));
- const formalOptions=page.locator('#dynamicForm [data-multi-key="option_items"]');
- if(await formalOptions.count()){
-  const available=await formalOptions.locator('input[data-multi-value]:not(:disabled)').evaluateAll(nodes=>nodes.map(n=>n.value));
-  if(available.length>=2){
-   for(const value of available.slice(0,2)){
-    rev=await page.locator('#dynamicForm').getAttribute('data-resolve-revision');
-    await page.locator(`#dynamicForm [data-multi-key="option_items"] input[value="${value}"]`).check();
-    await page.waitForFunction(r=>document.querySelector('#dynamicForm').dataset.resolveRevision!==r,rev);
-   }
-   const multi=await page.evaluate(()=>window.frameEditor.state.selection.option_items);
-   assert.equal(Array.isArray(multi),true);assert.ok(multi.length>=2);
-  }
- }
  const overflowRequested=await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth);assert.ok(overflowRequested<=1);
  report.cases.push({width,product:'SER-LIXIL-INPLUS',transition:'requested-sales-controls',status:'PASS'});
 
