@@ -5,6 +5,7 @@ import { readFile } from 'node:fs/promises';
 const INDEX='src/ui/web/index.html';
 const THEME_JS='src/ui/web/theme.js';
 const THEME_CSS='src/ui/web/theme.css';
+const SERVER='src/server/recovery-app.mjs';
 
 test('theme selector and no-flash theme bootstrap are wired into the app shell',async()=>{
   const html=await readFile(INDEX,'utf8');
@@ -38,4 +39,11 @@ test('dark mode covers app shell, forms, cards, notices and print reset',async()
     'html[data-theme="dark"] .estimate-summary th',
     '@media print',
   ]) assert.ok(css.includes(selector),`missing theme rule: ${selector}`);
+});
+
+
+test('theme assets are explicitly served by the recovery app',async()=>{
+  const source=await readFile(SERVER,'utf8');
+  assert.match(source,/url\.pathname==="\/theme\.js"/);
+  assert.match(source,/url\.pathname==="\/theme\.css"/);
 });
