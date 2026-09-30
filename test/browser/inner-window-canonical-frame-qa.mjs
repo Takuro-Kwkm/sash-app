@@ -75,6 +75,11 @@ for(const width of [1440,768,390]){
  assert.equal(await page.locator('#dynamicForm [data-spec-key="crescent_presence"] option[value="crescentless_special_order"]').textContent(),'なし（特注・要確認）');
  assert.equal((await page.evaluate(()=>window.frameEditor.state.resolved.fields.find(f=>f.key==='crescent_presence').values.find(v=>v.value==='crescentless_special_order').manualCheck)),true);
  assert.equal(await page.locator('#dynamicForm [data-key="fukashi_curtain_rail"]').count(),1);
+ assert.equal(await page.locator('#dynamicForm [data-key="crescent_position_mode"]').count(),1);
+ const cavityLabels=(await page.locator('#dynamicForm [data-spec-key="cavity_fill"] option').allTextContents()).filter(text=>text!=='選択してください');
+ assert.ok(cavityLabels.every(text=>!/\b(?:A|Ar)\d+(?:\.\d+)?\b/.test(text)));
+ const railImmediatelyAfterPresence=await page.evaluate(()=>{const keys=[...document.querySelectorAll('#dynamicForm .field[data-key]')].map(node=>node.dataset.key);return keys.indexOf('fukashi_curtain_rail')===keys.indexOf('fukashi_presence')+1;});
+ assert.equal(railImmediatelyAfterPresence,true);
  const reinforcement=page.locator('#dynamicForm [data-spec-key="fukashi_reinforcement"]');
  assert.ok((await reinforcement.locator('option').allTextContents()).some(text=>text.includes('ふかし枠下部補強部材')));
  const options=page.locator('#dynamicForm [data-multi-key="option_items"]');
@@ -110,6 +115,30 @@ for(const width of [1440,768,390]){
  assert.ok(salesState.resolved.confirmationRequests.some(row=>row.code==='INPLUS_SALES_REQUEST_CONFIRM'));
  const overflowRequested=await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth);assert.ok(overflowRequested<=1);
  report.cases.push({width,product:'SER-LIXIL-INPLUS',transition:'requested-sales-controls',status:'PASS'});
+
+ // Uchirimo custom crescent position: position mode stays Formal, numeric request is app-side
+ // and must render only after the final custom W/H controls.
+ await page.evaluate(async ()=>{
+  const id='SER-YKKAP-UCHIRIMO';
+  const {ProductConfigurationEditor}=await import('/product-configuration-editor.mjs');
+  const{createProductConfigurationSnapshot}=await import('/work-management/domain.mjs');
+  const inventory=await(await fetch('/api/runtime-master/integrations')).json(),product=inventory.find(x=>x.id===id);
+  const seed={room_specification:'residential',window_type:'sliding_window',sash_configuration:'two_panel',size_w:1000,size_h:1000,crescent_presence:'installed',crescent_position:'custom'};
+  const result=await(await fetch('/api/runtime-master/resolve?'+new URLSearchParams({productId:id,selection:JSON.stringify(seed)}))).json();
+  const snapshot=createProductConfigurationSnapshot({product,result});
+  window.frameEditor?.destroy();document.body.innerHTML='<main id="qaRoot"></main>';
+  window.frameEditor=new ProductConfigurationEditor(document.querySelector('#qaRoot'),{initialSnapshot:snapshot});await window.frameEditor.mount();
+ });
+ const uchPosition=page.locator('#dynamicForm [data-spec-key="crescent_position_custom_mm"]');
+ assert.equal(await uchPosition.count(),1);
+ const uchPositionAfterH=await page.evaluate(()=>{const p=document.querySelector('[data-key="crescent_position_custom_mm"]'),h=document.querySelector('[data-key="size_h"]');return Boolean(p&&h&&(h.compareDocumentPosition(p)&Node.DOCUMENT_POSITION_FOLLOWING));});
+ assert.equal(uchPositionAfterH,true);
+ let uchRev=await page.locator('#dynamicForm').getAttribute('data-resolve-revision');
+ await uchPosition.fill('500');await uchPosition.dispatchEvent('change');
+ await page.waitForFunction(r=>document.querySelector('#dynamicForm').dataset.resolveRevision!==r,uchRev);
+ const uchState=await page.evaluate(()=>window.frameEditor.state);
+ assert.equal(uchState.selection.crescent_position_custom_mm,500);
+ report.cases.push({width,product:'SER-YKKAP-UCHIRIMO',transition:'custom-crescent-position',status:'PASS'});
 
  await page.close();
 }
