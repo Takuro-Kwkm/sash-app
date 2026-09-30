@@ -122,8 +122,8 @@ function selectedRuntimeValues(state){
     .map(([key,field])=>[key,field.value]));
 }
 
-function requestFieldApplies(definition,state){
-  const selected=selectedRuntimeValues(state);
+function requestFieldApplies(definition,state,input={}){
+  const selected={...selectedRuntimeValues(state),...(state.presentationSelection??{}),...input};
   const family=selected.glass_family;
   if(definition.families&&!definition.families.includes(family))return false;
   for(const [key,expected] of Object.entries(definition.when??{})){
@@ -180,7 +180,7 @@ export function applySalesRequestExtension(state, input, contract, master=null) 
   let presentationMissing=false;
 
   for(const definition of contract.fields??[]){
-    if(!requestFieldApplies(definition,state))continue;
+    if(!requestFieldApplies(definition,state,input))continue;
     const family=state.fields.glass_family?.value;
     const dataType=definition.dataType??'ENUM';
     const field={
@@ -235,16 +235,19 @@ export function applySalesRequestExtension(state, input, contract, master=null) 
   }
 
   for(const definition of contract.valueAugmentations??[]){
-    if(!requestFieldApplies(definition,state))continue;
+    if(!requestFieldApplies(definition,state,input))continue;
     const choices=requestChoices(definition);
     augmentations[definition.field]=choices;
     const raw=input[definition.field];
     const extraSet=new Set(choices.map(row=>row.value));
     if(Array.isArray(raw)){
       const extras=raw.filter(value=>extraSet.has(value));
+      const formalAllowed=new Set(state.fields[definition.field]?.allowed_values??[]);
+      const formalFromInput=raw.filter(value=>!extraSet.has(value)&&formalAllowed.has(value));
+      const formalFromState=Array.isArray(state.fields[definition.field]?.value)?state.fields[definition.field].value:[];
+      const merged=uniqueValues([...formalFromState,...formalFromInput,...extras]);
+      if(merged.length)selection[definition.field]=merged;
       if(extras.length){
-        const formal=Array.isArray(state.fields[definition.field]?.value)?state.fields[definition.field].value:[];
-        selection[definition.field]=uniqueValues([...formal,...extras]);
         handoff[definition.handoffKey]=extras;
         if(choices.some(row=>extras.includes(row.value)&&row.manualCheck))requiresManual=true;
       }
