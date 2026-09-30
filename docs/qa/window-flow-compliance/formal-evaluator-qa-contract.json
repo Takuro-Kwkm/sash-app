@@ -1,13 +1,13 @@
 {
   "schema": "UCHIRIMO_SELECTOR_DEPENDENCY_CONTRACT_V1",
-  "scope": "Historical frozen Slim source-evaluator regression only. R4 display-label precedence, R5 adopted-runtime identity pin, and the 2026-09-30 presentation-only Japanese glazing label localization are reviewed; current canonical semantics require independent QA and are not inferred from this witness.",
+  "scope": "Historical frozen Slim source-evaluator regression only. R4 display-label precedence, R5 adopted-runtime identity pin, Japanese glazing label localization, and the 2026-09-30 final custom-dimension presentation order are reviewed; current canonical semantics require independent QA and are not inferred from this witness.",
   "source_sha256": {
     "src/catalog/runtime-master/uchirimo-tabular-v1-adapter.mjs": "a6f3cdca31609a2cde44e11c972b2446440e31cf988f1a1908aff6ecfde971ee",
     "src/catalog/runtime-master/uchirimo-glass-rule-model.mjs": "0e8b1e37a05d25f80e7fc7f9a930c4349f8f97b5c43e9706c8aa99d1904c88b7",
     "src/catalog/runtime-master/runtime-app-bridge.mjs": "1e654159b95b61c9db2455e4f5b1564326ef6f96a5c45073e239c4e961b6a14f",
     "src/catalog/runtime-master/new-construction-sash-runtime-ui-contract.mjs": "7f7cec995f75b6b74f6b1fdafb6968051d4fed8772be26a473728886437b8f91",
     "scripts/governance/uchirimo-selector-batch-runner.mjs": "29f26ef702d4c505ed3ab27de35eafc36b63f24bbbfe0d7fbaa55b631f920d74",
-    "src/catalog/runtime-master/inner-window-runtime-ui-contract.mjs": "0d558f0a361da50446442dc9a7d5b6dc795b5f10fb0e29ebe56eed9b8d22b4a6",
+    "src/catalog/runtime-master/inner-window-runtime-ui-contract.mjs": "19f627d442129bc98b4f3900907bf543915523f1cb62456b477d4a46588c4880",
     "src/catalog/runtime-master/global-window-selection-flow-engine.mjs": "e95f567131fd7ecc47c50f6b674b826aea9ab3508a938e9a5fc37f889097ebe1",
     "src/catalog/runtime-master/canonical-window-semantic-schema.mjs": "03ace90218363f62ad89280c77a328bb2e05efd362f6b17eca8989f0d52edeb7",
     "data/uchirimo-slim/runtime-support.json": "25eaf0a65482aed99a37852c1b1c5c7d4c60de54c1a3954923abb4f11b7e4a1d",
@@ -33,7 +33,7 @@
       {
         "file": "src/catalog/runtime-master/inner-window-runtime-ui-contract.mjs",
         "baseline_sha256": "e7075aaafb832d93f54bf67c74ca52a9345a9b714c01277337c3a9fe3b1beaff",
-        "candidate_sha256": "43fa435165d9938cdde3aa8330c81808408d60d789677baa201bd54bf6278627"
+        "candidate_sha256": "19f627d442129bc98b4f3900907bf543915523f1cb62456b477d4a46588c4880"
       },
       {
         "file": "src/catalog/runtime-master/global-window-selection-flow-engine.mjs",
@@ -56,6 +56,7 @@
     "canonical_frame_r3": "New public frame wrapper does not run in the historical witness. Current registered R3 package/adopted runtime has separate exact identity and semantic tests. Historical extraction explicitly reconstructs its old last-role-wins view; live loader preserves every component. The explicit support-component projection/60 incompatibility is consumed only by the new canonical-frame contract; the historical witness has no such contract and is unchanged. Fresh R3 integration tests cover that dependency.",
     "canonical_frame_r4": "Uchirimo R4 restores fukashi_sides from EV-UCH-028 and preserves clear as the Formal label クリア. Current registered R4 package has exact identity, semantic tests and downstream-clear QA; the historical factorized witness is not used as R4 proof.",
     "canonical_frame_r5": "Uchirimo R5 restores explicit middle_rail_option なし/あり from EV-UCH-029. The adopted-runtime source pin changed only to the current Runtime revision identity; selector dependency reads/writes in the historical witness are unchanged. Fresh R5 Runtime/UI and downstream-clear QA provide current proof.",
-    "ui_glazing_localization_20260930": "Mapped raw presentation tokens for glass family, Low-E, coating color, glass surface, safety treatment, spacer, cavity gas, grille/muntin and vacuum-glass product. Glass construction codes remain codes. No Product Master, Formal Runtime, Registry, dependency or selection-value mutation."
+    "ui_glazing_localization_20260930": "Mapped raw presentation tokens for glass family, Low-E, coating color, glass surface, safety treatment, spacer, cavity gas, grille/muntin and vacuum-glass product. Glass construction codes remain codes. No Product Master, Formal Runtime, Registry, dependency or selection-value mutation.",
+    "ui_final_dimension_order_20260930": "Inner-window custom W/H fields retain semanticStage=SIZE and all existing validation/dependency behavior, but their presentationSlot moves from pre-option to the final sales-input step after OPTION. The renderer separately groups discrete OPTION-stage fields under an オプション heading when no aggregate option_items selector exists; this adds no product-specific selection branch and does not mutate Product Master, Formal Runtime, Registry, selection values, dependencies, validation or estimate handoff."
   }
 }
