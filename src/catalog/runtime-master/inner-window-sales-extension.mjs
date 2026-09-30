@@ -1,16 +1,4 @@
 // App-side estimate-request vocabulary. These are requests, never product facts.
-export const INPLUS_SALES_GLAZING_REQUEST = Object.freeze({
-  suppressedFields:['supply_form','glass_detail'],
-  fields:[],
-  hiddenDetailConfirmation:Object.freeze({
-    code:'INPLUS_GLASS_DETAIL_ESTIMATE_CONFIRM',
-    confirmationTo:'積算／LIXIL',
-    handoffKey:'glass_configuration_detail',
-    handoffValue:'ESTIMATE_CONFIRM_REQUIRED',
-    message:'供給形態と最終ガラス構成は営業では選択せず、積算／メーカー見積で確定します。',
-  }),
-});
-
 export const SALES_GLAZING_REQUEST = Object.freeze({
   suppressedFields:['glass_structure','glass_structure_code','glass_spec_id','glass_size_constraint_group','glass_surface_type','spacer_type','gas_fill','cavity_thickness_mm'],
   handoffDefaults:{glass_structure:'MANUFACTURER_ESTIMATE_CONFIRMATION'},
@@ -25,15 +13,17 @@ export const SALES_GLAZING_REQUEST = Object.freeze({
 
 export const UCHIRIMO_SALES_REQUEST = Object.freeze({
   ...SALES_GLAZING_REQUEST,
+  confirmationTo:'積算／YKK AP',
+  confirmationCode:'UCHIRIMO_SALES_REQUEST_CONFIRM',
   fields:Object.freeze([
     ...SALES_GLAZING_REQUEST.fields,
     {
       key:'fukashi_curtain_rail',
       displayLabel:'カーテンレール対応',
       handoffKey:'fukashi_curtain_rail_request',
-      when:{fukashi_presence:'present'},
+      when:{fukashi_presence:'present',fukashi_depth:['25','40']},
       values:[['none','なし',false],['enabled','あり',true]],
-      helpText:'ふかし枠を使用する場合のカーテンレール対応を見積依頼へ引き継ぎます。',
+      helpText:'現行YKK AP現場調査資料でカーテンレール対応が確認できるふかし枠25/40で表示します。',
     },
   ]),
 });
@@ -45,6 +35,8 @@ export const INPLUS_SALES_REQUEST = Object.freeze({
     glass_detail:'MANUFACTURER_ESTIMATE_CONFIRMATION',
   },
   manualWarning:'営業入力で確定しない仕様は、選択した希望条件を積算／LIXIL確認事項として見積依頼へ引き継ぎます。',
+  confirmationTo:'積算／LIXIL',
+  confirmationCode:'INPLUS_SALES_REQUEST_CONFIRM',
   requireManufacturerGlassDetail:true,
   fields:Object.freeze([
     {
@@ -68,9 +60,10 @@ export const INPLUS_SALES_REQUEST = Object.freeze({
       key:'fukashi_curtain_rail',
       displayLabel:'カーテンレール対応',
       handoffKey:'fukashi_curtain_rail_request',
-      when:{fukashi_presence:'present'},
+      when:{fukashi_presence:'present',fukashi_depth:['20','40','50','70']},
+      unless:{fukashi_reinforcement:'corner'},
       values:[['none','なし',false],['enabled','あり',true]],
-      helpText:'ふかし枠のカーテンレール仕様を見積依頼へ引き継ぎます。',
+      helpText:'正式資料でカーテンレール仕様が確認できるふかし枠20/40/50/70系で表示します。',
     },
     {
       key:'sales_installation_auxiliaries',
@@ -101,6 +94,10 @@ function requestFieldApplies(definition,state){
   for(const [key,expected] of Object.entries(definition.when??{})){
     const allowed=Array.isArray(expected)?expected:[expected];
     if(!allowed.some(value=>Object.is(value,selected[key])))return false;
+  }
+  for(const [key,excluded] of Object.entries(definition.unless??{})){
+    const denied=Array.isArray(excluded)?excluded:[excluded];
+    if(denied.some(value=>Object.is(value,selected[key])))return false;
   }
   return true;
 }
@@ -168,15 +165,23 @@ export function applySalesRequestExtension(state, input, contract) {
     requiresManual=true;
   }
 
-  if(Object.keys(selection).length){
-    state.sales_request_handoff=handoff;
-    if(requiresManual){
-      state.manual_warnings=[...(state.manual_warnings??[]),contract.manualWarning??'選択した希望条件はメーカー見積で確認します。'];
-      if(!['INVALID','BLOCKED'].includes(state.status))state.status='MANUAL_CHECK';
-      state.order_ready=false;
-    }
-    if(!state.missing_required_fields.length&&['PASS','REVIEW_REQUIRED'].includes(state.dimension_result?.status)&&!state.errors?.length)state.sales_request_state='READY_FOR_MANUFACTURER_ESTIMATE';
+  if(Object.keys(handoff).length)state.sales_request_handoff=handoff;
+  if(requiresManual){
+    const warning=contract.manualWarning??'選択した希望条件はメーカー見積で確認します。';
+    state.manual_warnings=[...(state.manual_warnings??[]),warning];
+    state.confirmation_requests=[
+      ...(state.confirmation_requests??[]),
+      {
+        code:contract.confirmationCode??'INNER_WINDOW_SALES_REQUEST_CONFIRM',
+        status:'ESTIMATE_CONFIRM_REQUIRED',
+        confirmation_to:contract.confirmationTo??'積算／メーカー',
+        message:warning,
+      },
+    ].filter((row,index,all)=>all.findIndex(other=>JSON.stringify(other)===JSON.stringify(row))===index);
+    if(!['INVALID','BLOCKED'].includes(state.status))state.status='MANUAL_CHECK';
+    state.order_ready=false;
   }
+  if(Object.keys(handoff).length&&!state.missing_required_fields.length&&['PASS','REVIEW_REQUIRED'].includes(state.dimension_result?.status)&&!state.errors?.length)state.sales_request_state='READY_FOR_MANUFACTURER_ESTIMATE';
   return state;
 }
 
