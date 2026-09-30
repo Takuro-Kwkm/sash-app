@@ -161,10 +161,10 @@ export class ProductConfigurationEditor {
       const product=this.state.products.find((row)=>row.id===this.state.productId);this.state.productSource=product?.sourceType??'CATALOG';
       await this.resolve({notify:true});return;
     }
-    const multiGroup=target.closest?.('[data-multi-enum="true"][data-spec-key]')??null;
+    const multiGroup=target.closest?.('[data-multi-enum="true"][data-multi-key]')??null;
     const control=multiGroup??target;
-    if(!control.matches?.('[data-spec-key]'))return;
-    const key=control.dataset.specKey;
+    if(!multiGroup&&!control.matches?.('[data-spec-key]'))return;
+    const key=multiGroup?.dataset.multiKey??control.dataset.specKey;
     const field=this.state.resolved?.fields?.find((row)=>row.key===key);
     const canonicalChoice=(raw)=>{
       const match=field?.values?.find((row)=>String(row.value)===String(raw));
@@ -174,6 +174,8 @@ export class ProductConfigurationEditor {
     if(multiGroup){
       const values=[...multiGroup.querySelectorAll('input[data-multi-value]:checked')].map((input)=>canonicalChoice(input.value));
       if(values.length)this.state.selection[key]=values;else delete this.state.selection[key];
+      const native=multiGroup.closest('.field')?.querySelector('select[data-spec-key]');
+      if(native)for(const option of native.options)option.selected=values.some(value=>String(value)===String(option.value));
     }else if(target.type==='number'){
       if(target.value!=='')this.state.selection[key]=Number(target.value);else delete this.state.selection[key];
     }else if(target.multiple){
@@ -223,7 +225,8 @@ export class ProductConfigurationEditor {
     const multi=field.dataType==='MULTI_ENUM';
     if(multi){
       const choices=field.values.map((value)=>`<label class="multi-enum-option"><input type="checkbox" data-multi-value="true" value="${esc(value.value)}"${value.disabled||field.disabled||field.readOnly?' disabled':''}${selected.some((one)=>String(one)===String(value.value))?' checked':''}><span>${esc(value.displayLabel)}${value.manualCheck?'（要確認）':''}</span></label>`).join('');
-      return `<div class="field" data-key="${esc(field.key)}"><label>${esc(field.displayLabel)}${required}</label><div class="multi-enum-group" role="group" aria-label="${esc(field.displayLabel)}" data-spec-key="${esc(field.key)}" data-multi-enum="true" ${dataAttributes}>${choices}</div><small class="field-help">${esc(field.helpText??'複数選択できます')}</small></div>`;
+      const nativeOptions=field.values.map((value)=>`<option value="${esc(value.value)}"${value.disabled?' disabled':''}${selected.some((one)=>String(one)===String(value.value))?' selected':''}>${esc(value.displayLabel)}</option>`).join('');
+      return `<div class="field" data-key="${esc(field.key)}"><label>${esc(field.displayLabel)}${required}</label><select class="multi-enum-native-control" data-spec-key="${esc(field.key)}" ${attributes} multiple aria-hidden="true" tabindex="-1">${nativeOptions}</select><div class="multi-enum-group" role="group" aria-label="${esc(field.displayLabel)}" data-multi-enum="true" data-multi-key="${esc(field.key)}">${choices}</div><small class="field-help">${esc(field.helpText??'複数選択できます')}</small></div>`;
     }
     const options=field.values.map((value)=>`<option value="${esc(value.value)}"${value.disabled?' disabled':''}${selected.some((one)=>String(one)===String(value.value))?' selected':''}>${esc(value.displayLabel)}${value.manualCheck?'（要確認）':''}</option>`).join('');
     return `<div class="field" data-key="${esc(field.key)}"><label>${esc(field.displayLabel)}${required}</label><select data-spec-key="${esc(field.key)}" ${attributes}><option value="">選択してください</option>${options}</select>${field.helpText?`<small class="field-help">${esc(field.helpText)}</small>`:''}</div>`;
