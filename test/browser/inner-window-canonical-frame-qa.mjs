@@ -96,7 +96,7 @@ for(const width of [1440,768,390]){
   if(available.length>=2){
    for(const value of available.slice(0,2)){
     rev=await page.locator('#dynamicForm').getAttribute('data-resolve-revision');
-    await page.locator(`#dynamicForm [data-multi-key="option_items"] input[value="\${value}"]`).check();
+    await page.locator(`#dynamicForm [data-multi-key="option_items"] input[value="${value}"]`).check();
     await page.waitForFunction(r=>document.querySelector('#dynamicForm').dataset.resolveRevision!==r,rev);
    }
    const multi=await page.evaluate(()=>window.frameEditor.state.selection.option_items);
