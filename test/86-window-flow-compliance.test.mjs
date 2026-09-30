@@ -14,11 +14,11 @@ test('sales extensions are API fields with canonical slots; invalid requests cle
  const snap=createProductConfigurationSnapshot({product:{id},result:changed});assert.equal(snap.configuration.sales_spacer_type,undefined);assert.equal(snap.display_summary.some(f=>f.key==='sales_spacer_type'),false);
  const invalid=await resolveRuntimeAppProduct(id,{...seed,glass_family:'insulating_glass',sales_glass_appearance:'washi'});assert.equal(invalid.selection.sales_glass_appearance,undefined);
 });
-test('inner dimensions retain SIZE semantics in the approved pre-option slot; internal selectors never render',async()=>{
+test('inner dimensions retain SIZE semantics and render as the final sales-input step; internal selectors never render',async()=>{
  for(const [product,selection] of [[id,seed],['SER-LIXIL-INPLUS',{window_type:'引違い窓',sash_configuration:'2枚建',upper_frame_spec:'標準',order_width:1000,order_height:1000}]]){
   const r=await resolveRuntimeAppProduct(product,selection);assert.equal(r.fields.some(f=>['size_mode','size_class'].includes(f.key)),false);assert.ok(r.selection.size_mode);
-  const dimension=r.fields.filter(f=>f.presentationSlot==='INNER_WINDOW_PRE_OPTION_DIMENSION');assert.equal(dimension.length,2);assert.ok(dimension.every(f=>f.semanticStage==='SIZE'));
-  const last=r.fields.indexOf(dimension.at(-1));assert.ok(r.fields.slice(last+1).every(f=>f.semanticStage==='OPTION'));
+  const dimension=r.fields.filter(f=>f.presentationSlot==='INNER_WINDOW_FINAL_DIMENSION');assert.equal(dimension.length,2);assert.ok(dimension.every(f=>f.semanticStage==='SIZE'));
+  assert.deepEqual(r.fields.slice(-dimension.length).map(f=>f.key),dimension.map(f=>f.key));
  }
 });
 test('renderer, summary and estimate contain no product-specific flow overrides or field mutations',()=>{
