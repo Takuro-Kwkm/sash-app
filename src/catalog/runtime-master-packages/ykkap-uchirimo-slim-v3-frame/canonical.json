@@ -3,8 +3,8 @@
     "manufacturer": "YKK AP",
     "series": "ウチリモ 内窓",
     "product_id": "PROD-YKKAP-UCHIRIMO",
-    "version": "v1.0-P7R1-R3",
-    "generated_at": "2026-09-29T20:29:00.100476+00:00",
+    "version": "v1.0-P7R1-R4",
+    "generated_at": "2026-09-29T23:50:06.318405+00:00",
     "primary_source": {
       "title": "ウチリモ 内窓 業務用",
       "catalog_code": "XAAAA-H26-067-2",
@@ -13,7 +13,7 @@
       "status": "CURRENT_CONFIRMED_2026-09-07"
     },
     "phase_status": "CURRENT_CANONICAL_QA_PASS",
-    "runtime_revision": "SLIM-V3-INNER-WINDOW-CANONICAL-FRAME-20260929"
+    "runtime_revision": "SLIM-V4-INNER-WINDOW-CANONICAL-FRAME-20260930"
   },
   "product_nodes": [
     {
@@ -1086,9 +1086,9 @@
       "field_name": "fukashi_sides",
       "domain": "INSTALLATION",
       "value_type": "enum",
-      "runtime_status": "NOT_APPLICABLE",
+      "runtime_status": "SELECTABLE",
       "display_name": "ふかし枠構成",
-      "note": "Public canonical contract/1.1",
+      "note": "Public canonical contract/1.1 / EV-UCH-028",
       "canonical": true
     },
     {
@@ -3255,6 +3255,22 @@
       "status": "ACTIVE",
       "scope": "CANONICAL_CONTRACT",
       "source_basis": "inner_window_frame_contract/1.1"
+    },
+    {
+      "field_name": "fukashi_sides",
+      "allowed_value": "three_side",
+      "display_name": "三方",
+      "status": "ACTIVE",
+      "scope": "CANONICAL_CONTRACT / residential / fukashi_present",
+      "source_basis": "EV-UCH-028"
+    },
+    {
+      "field_name": "fukashi_sides",
+      "allowed_value": "four_side",
+      "display_name": "四方",
+      "status": "ACTIVE",
+      "scope": "CANONICAL_CONTRACT / residential / fukashi_present",
+      "source_basis": "EV-UCH-028"
     }
   ],
   "dependency_rules": [
@@ -5606,6 +5622,17 @@
       "page": "P34-P36",
       "url": "https://webcatalog.ykkap.co.jp/iportal/CatalogDetail.do?catalogID=13069220000&designID=pro&method=initial_screen&volumeID=YKKAPDC1",
       "evidence": "外窓/クレセント/ドアクローザー/ハンドル干渉確認。干渉時は逆勝手・枠持出し・ふかし枠等の回避検討。",
+      "verification_status": "VERIFIED_OFFICIAL"
+    },
+    {
+      "source_id": "EV-UCH-028",
+      "source_type": "SITE_SURVEY",
+      "title": "かんたんウチリモ内窓 現場調査説明書",
+      "catalog_code": "XAAAA-K25-527F2",
+      "publication": "2026-02",
+      "page": "P21",
+      "url": "https://webcatalog.ykkap.co.jp/iportal/CatalogDetail.do?catalogID=13069220000&designID=pro&method=initial_screen&volumeID=YKKAPDC1",
+      "evidence": "かんたんウチリモ現場調査シートで、ふかし枠の有無・種類（無/25/40/60）に続き「三方/四方」を選択することを明記。fukashi_sides の直接Evidence。",
       "verification_status": "VERIFIED_OFFICIAL"
     }
   ],
@@ -14332,10 +14359,34 @@
         "field_name": "fukashi_sides",
         "display_label": "ふかし枠構成",
         "stage": "INSTALLATION_SURVEY",
-        "selection_mode": "NOT_APPLICABLE",
-        "values": [],
+        "when": {
+          "field": "fukashi_presence",
+          "eq": "present"
+        },
+        "required_when": {
+          "field": "fukashi_presence",
+          "eq": "present"
+        },
+        "values": [
+          {
+            "value": "three_side",
+            "label": "三方",
+            "evidence": [
+              "EV-UCH-028"
+            ]
+          },
+          {
+            "value": "four_side",
+            "label": "四方",
+            "evidence": [
+              "EV-UCH-028"
+            ]
+          }
+        ],
+        "selection_mode": "SELECTABLE",
         "parent_fields": [
-          "window_type"
+          "window_type",
+          "fukashi_presence"
         ],
         "required": false
       },
@@ -14676,14 +14727,15 @@
       "P5-UCH-201",
       "P5-UCH-202",
       "P5-UCH-203",
-      "P5-UCH-204"
+      "P5-UCH-204",
+      "EV-UCH-028"
     ],
     "authoring_contract_sheet": "Canonical_Execution_Contract",
     "authority": "AUTHORITATIVE_PUBLIC_SELECTION_CONTRACT",
     "scope_identity": {
       "manufacturer": "YKK AP",
       "series": "ウチリモ 内窓",
-      "revision": "v1.0-P7R1-R3",
+      "revision": "v1.0-P7R1-R4",
       "business_scope": "SALES_ESTIMATE_REQUEST",
       "runtime_scope": "INCLUDED",
       "excluded_scope": [
@@ -15155,10 +15207,34 @@
       "field_name": "fukashi_sides",
       "display_label": "ふかし枠構成",
       "stage": "INSTALLATION_SURVEY",
-      "selection_mode": "NOT_APPLICABLE",
-      "values": [],
+      "when": {
+        "field": "fukashi_presence",
+        "eq": "present"
+      },
+      "required_when": {
+        "field": "fukashi_presence",
+        "eq": "present"
+      },
+      "values": [
+        {
+          "value": "three_side",
+          "label": "三方",
+          "evidence": [
+            "EV-UCH-028"
+          ]
+        },
+        {
+          "value": "four_side",
+          "label": "四方",
+          "evidence": [
+            "EV-UCH-028"
+          ]
+        }
+      ],
+      "selection_mode": "SELECTABLE",
       "parent_fields": [
-        "window_type"
+        "window_type",
+        "fukashi_presence"
       ],
       "required": false
     },
@@ -15490,7 +15566,7 @@
     }
   ],
   "current_change_scope": {
-    "revision": "InnerWindowCanonicalFrame_R1",
+    "revision": "InnerWindowCanonicalFrame_R1 / UchirimoFukashiSidesRecovery_R1",
     "baseline_role": "FORMAL_CANDIDATE",
     "qa_status": "PASS_CURRENT_AFFECTED_SCOPE",
     "runtime_scope": "INCLUDED",
@@ -15511,16 +15587,15 @@
     "qa_pass": "PASS",
     "formal_status": "REFER_TO_RUNTIME_MANIFEST_ADOPTION_RECORD",
     "qa_records": [
-      "product-runtime-qa.json",
-      "authoring-parity-qa.json",
-      "canonical-runtime-qa.json"
-    ]
+      "uchirimo-product-change-qa-r4.json"
+    ],
+    "carry_forward": "R3 unchanged product facts/evidence/rules retained; fukashi_sides and label-boundary only revalidated."
   },
   "source_authoring": {
-    "file_name": "YKKAP_ウチリモ内窓_商品マスター_v1.0-P7R1-R3_InnerWindowCanonicalFrame_R1_FORMAL.xlsx",
-    "drive_file_id": "1WQS-CNFaOghkLaWnaDaohxrvqTV8TcBT",
-    "package_version": "v1.0-P7R1-R3",
-    "sha256": "2232fdaccf66f2485606f0e7ce53c19b628a0faec78539712c6601e676ec8700",
+    "file_name": "YKKAP_ウチリモ内窓_商品マスター_v1.0-P7R1-R4_InnerWindowCanonicalFrame_R1_FORMAL.xlsx",
+    "drive_file_id": "17j_kWiJW9TrbkopivSBA-aZXc1MNueYq",
+    "package_version": "v1.0-P7R1-R4",
+    "sha256": "d77b824a20f193f51d7771b3b2e987d52de2bc675b7a85eb79a33f0e9feea8f2",
     "source_revision": "InnerWindowCanonicalFrame_R1",
     "base_formal_authoring_file_id": "11p2SkAXYNAAJwWYGBjmWOTVO6rZquyJf",
     "base_formal_package_version": "v1.0-P7R1-R2"

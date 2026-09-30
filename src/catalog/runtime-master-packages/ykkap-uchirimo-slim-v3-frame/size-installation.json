@@ -1,6 +1,6 @@
 {
   "master": "YKK AP ウチリモ 内窓 Size / Installation Dependency Master",
-  "version": "v1.0-P7R1-R3",
+  "version": "v1.0-P7R1-R4",
   "status": {
     "phase_3_r2": "FORMAL_PASS",
     "phase_3": "FORMAL_PASS",
@@ -174,7 +174,7 @@
     ]
   },
   "vacuum_curve_artifact": "uchiremo_phase3_r2_vacuum_curve_master.json",
-  "carried_forward_from": "v1.0-P7R1-R2",
+  "carried_forward_from": "v1.0-P7R1-R3",
   "carry_forward_reason": "InnerWindowCanonicalFrame_R1: product facts unchanged; package identity synchronized.",
   "manual_check_policy": {
     "human_approved_gsc": [
@@ -938,8 +938,8 @@
   },
   "public_selection_contract": {
     "version": "inner_window_frame_contract/1.1",
-    "canonical_file": "YKKAP_ウチリモ内窓_Slim_Canonical_v3_InnerWindowCanonicalFrame_R1_FORMAL.json",
+    "canonical_file": "YKKAP_ウチリモ内窓_Slim_Canonical_v4_InnerWindowCanonicalFrame_R1_FORMAL.json",
     "legacy_fields": "INTERNAL_SOURCE_ONLY",
-    "qa_status": "PASS_CURRENT_BASELINE"
+    "qa_status": "PASS_R4_AFFECTED_SCOPE"
   }
 }

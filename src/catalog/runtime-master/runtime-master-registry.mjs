@@ -91,13 +91,13 @@ export const runtimeMasterInventory = Object.freeze([
     }),
   }),
   Object.freeze({
-    manufacturer:'YKK AP', series:'ウチリモ 内窓', masterVersion:'v1.0-P7R1-R3', schemaVersion:'2.0', packageType:'RUNTIME_MANIFEST_V2', adapterType:'UCHIRIMO_TABULAR_V1', requireRuntimeContract:false, enforceComponentSchemaVersion:false, runtimeRevision:'SLIM-V3-INNER-WINDOW-CANONICAL-FRAME-20260929', packageRoot:UCHIRIMO_SLIM_ROOT,
-    runtimeManifestPath:join(UCHIRIMO_SLIM_ROOT,'runtime_manifest.json'), runtimeManifestDriveFileId:'1Khn16tbOnmykUpJ5SRR93mNs4CTbHcvU', runtimeManifestSha256:'730986d6f9e852759b8259587f7ded9255bf052130c8faa083b4fce1fc45c968',
+    manufacturer:'YKK AP', series:'ウチリモ 内窓', masterVersion:'v1.0-P7R1-R4', schemaVersion:'2.0', packageType:'RUNTIME_MANIFEST_V2', adapterType:'UCHIRIMO_TABULAR_V1', requireRuntimeContract:false, enforceComponentSchemaVersion:false, runtimeRevision:'SLIM-V4-INNER-WINDOW-CANONICAL-FRAME-20260930', packageRoot:UCHIRIMO_SLIM_ROOT,
+    runtimeManifestPath:join(UCHIRIMO_SLIM_ROOT,'runtime_manifest.json'), runtimeManifestDriveFileId:'10wOlwX4c0E0lCRuCKl-EdrW0vwwHTEGV', runtimeManifestSha256:'6fc2e5fa375930198ef7d9639fca7998d3fbb6e5ee2a412b6652514ed27ce24b',
     materializedFiles:Object.freeze({
-      '1Jcn3NSLIQsiRpHJgFVrUNRLntTAYbLDc':Object.freeze({codec:'identity',paths:Object.freeze([join(UCHIRIMO_SLIM_ROOT,'canonical.json')])}),
-      '1DZAw4iHWubamImzYXMesfEcGUmxW6Vy1':Object.freeze({codec:'identity',paths:Object.freeze([join(UCHIRIMO_SLIM_ROOT,'size-installation.json')])}),
-      '1j-UTb1WohZfUdAOUJ_n_q5FmAs2qtdQm':Object.freeze({codec:'identity',paths:Object.freeze([join(UCHIRIMO_SLIM_ROOT,'vacuum-glass.json')])}),
-      '1_WcgxnTujQaoQmyOdSuOXX31-Curpqka':Object.freeze({codec:'identity',paths:Object.freeze([join(UCHIRIMO_SLIM_ROOT,'judgment-engine.json')])}),
+      '1K_JE1OP07uoIQQKojZWp2cNqv2ZNY9WH':Object.freeze({codec:'identity',paths:Object.freeze([join(UCHIRIMO_SLIM_ROOT,'canonical.json')])}),
+      '1XDEsvqz5l7VGkoHXnyZ5WpFwEQy4qDIe':Object.freeze({codec:'identity',paths:Object.freeze([join(UCHIRIMO_SLIM_ROOT,'size-installation.json')])}),
+      '1wm6kPViHaIOb_-pfkKuJurV9H2TjNTrS':Object.freeze({codec:'identity',paths:Object.freeze([join(UCHIRIMO_SLIM_ROOT,'vacuum-glass.json')])}),
+      '1wn8gKt6vwzCRbw1CrATq7aKtzx1UIvlK':Object.freeze({codec:'identity',paths:Object.freeze([join(UCHIRIMO_SLIM_ROOT,'judgment-engine.json')])}),
     }),
   }),
   Object.freeze({

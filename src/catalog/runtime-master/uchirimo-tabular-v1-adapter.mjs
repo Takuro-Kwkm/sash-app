@@ -44,7 +44,7 @@ function fail(code, message, details = {}) {
 const has = (value) => value !== null && value !== undefined && value !== '';
 const same = (a, b) => Object.is(a, b) || String(a) === String(b);
 const unique = (rows) => [...new Map(rows.map((row) => [JSON.stringify(row), row])).values()];
-const valueLabel = (value, fallback) => VALUE_LABELS[value] ?? fallback ?? String(value);
+const valueLabel = (value, fallback) => fallback ?? VALUE_LABELS[value] ?? String(value);
 
 function canonicalDocument(documents) {
   return documents.canonical_runtime ?? documents.canonical_master ??
