@@ -31,6 +31,7 @@ test('theme controller persists explicit choice and follows system preference',a
 test('dark mode covers app shell, forms, cards, notices and print reset',async()=>{
   const css=await readFile(THEME_CSS,'utf8');
   for(const selector of [
+    'html[data-theme="dark"]{',
     'html[data-theme="dark"] body',
     'html[data-theme="dark"] .topbar',
     'html[data-theme="dark"] input',
@@ -39,6 +40,8 @@ test('dark mode covers app shell, forms, cards, notices and print reset',async()
     'html[data-theme="dark"] .estimate-summary th',
     '@media print',
   ]) assert.ok(css.includes(selector),`missing theme rule: ${selector}`);
+  assert.match(css,/html\[data-theme="dark"\]\{[\s\S]*background:#111315;/);
+  assert.match(css,/html\[data-theme="dark"\] body\{min-height:100vh;background:#111315/);
 });
 
 
