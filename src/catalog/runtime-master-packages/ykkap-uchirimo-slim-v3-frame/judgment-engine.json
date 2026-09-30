@@ -2,9 +2,9 @@
   "schema_version": "1.0",
   "manufacturer": "YKK AP",
   "series": "ウチリモ 内窓",
-  "engine_version": "v1.0-P7R1-R4",
+  "engine_version": "v1.0-P7R1-R5",
   "engine_role": "SALES_LEVEL_JUDGMENT_ENGINE",
-  "source_package_version": "v1.0-P7R1-R4",
+  "source_package_version": "v1.0-P7R1-R5",
   "scope": {
     "sales_level": true,
     "order_ready": false,
@@ -638,6 +638,7 @@
       "P5-UCH-118",
       "P5-UCH-119",
       "P5-UCH-120",
+      "P5-UCH-121",
       "P5-UCH-201",
       "P5-UCH-202",
       "P5-UCH-203",
@@ -859,7 +860,7 @@
     "parent_verification": "PASS",
     "working_savepoint_gate": "PASS"
   },
-  "updated_at": "2026-09-29T23:50:06.318405+00:00",
+  "updated_at": "2026-09-30T01:43:55.195537Z",
   "formalization_authorization": {
     "final_human_approval": "PASS",
     "approved_at": "2026-09-08T20:24:28+09:00",
@@ -961,12 +962,22 @@
     "human_approval": "PASS",
     "formalization_status": "FORMAL_PASS"
   },
-  "source_manifest_file_name": "YKKAP_ウチリモ内窓_runtime_manifest_v1.0-P7R1-R4_InnerWindowCanonicalFrame_R1_FORMAL.json",
+  "source_manifest_file_name": "YKKAP_ウチリモ内窓_runtime_manifest_v1.0-P7R1-R5_InnerWindowCanonicalFrame_R1_FORMAL.json",
   "public_selection_contract": {
     "version": "inner_window_frame_contract/1.1",
-    "canonical_file": "YKKAP_ウチリモ内窓_Slim_Canonical_v4_InnerWindowCanonicalFrame_R1_FORMAL.json",
+    "canonical_file": "YKKAP_ウチリモ内窓_Slim_Canonical_v5_InnerWindowCanonicalFrame_R1_FORMAL.json",
     "legacy_fields": "INTERNAL_SOURCE_ONLY",
-    "qa_status": "PASS_R4_AFFECTED_SCOPE"
+    "qa_status": "PASS_R5_AFFECTED_SCOPE"
   },
-  "manifest_binding": "CONTAINING_RUNTIME_MANIFEST"
+  "manifest_binding": "CONTAINING_RUNTIME_MANIFEST",
+  "r5_change_scope": {
+    "middle_rail_option": [
+      "none",
+      "enabled"
+    ],
+    "middle_rail_position_requires": "middle_rail_option=enabled",
+    "dependency_rule": "P5-UCH-121",
+    "evidence": "EV-UCH-029",
+    "status": "PASS"
+  }
 }

@@ -3,8 +3,8 @@
     "manufacturer": "YKK AP",
     "series": "ウチリモ 内窓",
     "product_id": "PROD-YKKAP-UCHIRIMO",
-    "version": "v1.0-P7R1-R4",
-    "generated_at": "2026-09-29T23:50:06.318405+00:00",
+    "version": "v1.0-P7R1-R5",
+    "generated_at": "2026-09-30T01:43:55.195537Z",
     "primary_source": {
       "title": "ウチリモ 内窓 業務用",
       "catalog_code": "XAAAA-H26-067-2",
@@ -13,7 +13,7 @@
       "status": "CURRENT_CONFIRMED_2026-09-07"
     },
     "phase_status": "CURRENT_CANONICAL_QA_PASS",
-    "runtime_revision": "SLIM-V4-INNER-WINDOW-CANONICAL-FRAME-20260930"
+    "runtime_revision": "SLIM-V5-INNER-WINDOW-CANONICAL-FRAME-20260930"
   },
   "product_nodes": [
     {
@@ -2323,10 +2323,10 @@
     {
       "field_name": "middle_rail_option",
       "allowed_value": "enabled",
-      "display_name": "中桟",
+      "display_name": "あり",
       "status": "ACTIVE",
       "scope": "residential sliding",
-      "source_basis": "Phase4-R1"
+      "source_basis": "Phase4-R1 / R5 EV-UCH-029"
     },
     {
       "field_name": "ventilator_option",
@@ -3271,6 +3271,14 @@
       "status": "ACTIVE",
       "scope": "CANONICAL_CONTRACT / residential / fukashi_present",
       "source_basis": "EV-UCH-028"
+    },
+    {
+      "field_name": "middle_rail_option",
+      "allowed_value": "none",
+      "display_name": "なし",
+      "status": "ACTIVE",
+      "scope": "residential sliding",
+      "source_basis": "R5 / EV-UCH-029"
     }
   ],
   "dependency_rules": [
@@ -3931,6 +3939,28 @@
         "status": "MANUAL_CHECK_REQUIRED"
       },
       "source_id": "PHASE3-R2",
+      "verification_status": "VERIFIED_OFFICIAL"
+    },
+    {
+      "rule_id": "P5-UCH-121",
+      "category": "OPTION",
+      "priority": 90,
+      "conditions": [
+        {
+          "field": "middle_rail_option",
+          "op": "eq",
+          "value": "enabled"
+        }
+      ],
+      "effect": {
+        "target_field": "middle_rail_position",
+        "action": "require",
+        "values": [
+          "standard",
+          "custom"
+        ]
+      },
+      "source_id": "EV-UCH-029",
       "verification_status": "VERIFIED_OFFICIAL"
     }
   ],
@@ -4873,7 +4903,7 @@
       "pull_handle_type": "REQUIRED",
       "pull_handle_position": "REQUIRED",
       "middle_rail_option": "CONDITIONAL",
-      "middle_rail_position": "CONDITIONAL",
+      "middle_rail_position": "NOT_APPLICABLE",
       "ventilator_option": "CONDITIONAL",
       "bottom_rail_type": "REQUIRED",
       "operating_handle_type": "NOT_APPLICABLE",
@@ -4900,7 +4930,7 @@
       "pull_handle_type": "REQUIRED",
       "pull_handle_position": "REQUIRED",
       "middle_rail_option": "CONDITIONAL",
-      "middle_rail_position": "CONDITIONAL",
+      "middle_rail_position": "NOT_APPLICABLE",
       "ventilator_option": "CONDITIONAL",
       "bottom_rail_type": "REQUIRED",
       "operating_handle_type": "NOT_APPLICABLE",
@@ -4927,7 +4957,7 @@
       "pull_handle_type": "REQUIRED",
       "pull_handle_position": "REQUIRED",
       "middle_rail_option": "CONDITIONAL",
-      "middle_rail_position": "CONDITIONAL",
+      "middle_rail_position": "NOT_APPLICABLE",
       "ventilator_option": "CONDITIONAL",
       "bottom_rail_type": "REQUIRED",
       "operating_handle_type": "NOT_APPLICABLE",
@@ -4954,7 +4984,7 @@
       "pull_handle_type": "REQUIRED",
       "pull_handle_position": "REQUIRED",
       "middle_rail_option": "CONDITIONAL",
-      "middle_rail_position": "CONDITIONAL",
+      "middle_rail_position": "NOT_APPLICABLE",
       "ventilator_option": "CONDITIONAL",
       "bottom_rail_type": "REQUIRED",
       "operating_handle_type": "NOT_APPLICABLE",
@@ -4981,7 +5011,7 @@
       "pull_handle_type": "REQUIRED",
       "pull_handle_position": "REQUIRED",
       "middle_rail_option": "CONDITIONAL",
-      "middle_rail_position": "CONDITIONAL",
+      "middle_rail_position": "NOT_APPLICABLE",
       "ventilator_option": "CONDITIONAL",
       "bottom_rail_type": "REQUIRED",
       "operating_handle_type": "NOT_APPLICABLE",
@@ -5008,7 +5038,7 @@
       "pull_handle_type": "REQUIRED",
       "pull_handle_position": "REQUIRED",
       "middle_rail_option": "CONDITIONAL",
-      "middle_rail_position": "CONDITIONAL",
+      "middle_rail_position": "NOT_APPLICABLE",
       "ventilator_option": "CONDITIONAL",
       "bottom_rail_type": "REQUIRED",
       "operating_handle_type": "NOT_APPLICABLE",
@@ -5035,7 +5065,7 @@
       "pull_handle_type": "REQUIRED",
       "pull_handle_position": "REQUIRED",
       "middle_rail_option": "CONDITIONAL",
-      "middle_rail_position": "CONDITIONAL",
+      "middle_rail_position": "NOT_APPLICABLE",
       "ventilator_option": "CONDITIONAL",
       "bottom_rail_type": "REQUIRED",
       "operating_handle_type": "NOT_APPLICABLE",
@@ -5062,7 +5092,7 @@
       "pull_handle_type": "REQUIRED",
       "pull_handle_position": "REQUIRED",
       "middle_rail_option": "CONDITIONAL",
-      "middle_rail_position": "CONDITIONAL",
+      "middle_rail_position": "NOT_APPLICABLE",
       "ventilator_option": "CONDITIONAL",
       "bottom_rail_type": "REQUIRED",
       "operating_handle_type": "NOT_APPLICABLE",
@@ -5089,7 +5119,7 @@
       "pull_handle_type": "REQUIRED",
       "pull_handle_position": "REQUIRED",
       "middle_rail_option": "CONDITIONAL",
-      "middle_rail_position": "CONDITIONAL",
+      "middle_rail_position": "NOT_APPLICABLE",
       "ventilator_option": "CONDITIONAL",
       "bottom_rail_type": "REQUIRED",
       "operating_handle_type": "NOT_APPLICABLE",
@@ -5116,7 +5146,7 @@
       "pull_handle_type": "REQUIRED",
       "pull_handle_position": "REQUIRED",
       "middle_rail_option": "CONDITIONAL",
-      "middle_rail_position": "CONDITIONAL",
+      "middle_rail_position": "NOT_APPLICABLE",
       "ventilator_option": "CONDITIONAL",
       "bottom_rail_type": "REQUIRED",
       "operating_handle_type": "NOT_APPLICABLE",
@@ -5633,6 +5663,17 @@
       "page": "P21",
       "url": "https://webcatalog.ykkap.co.jp/iportal/CatalogDetail.do?catalogID=13069220000&designID=pro&method=initial_screen&volumeID=YKKAPDC1",
       "evidence": "かんたんウチリモ現場調査シートで、ふかし枠の有無・種類（無/25/40/60）に続き「三方/四方」を選択することを明記。fukashi_sides の直接Evidence。",
+      "verification_status": "VERIFIED_OFFICIAL"
+    },
+    {
+      "source_id": "EV-UCH-029",
+      "source_type": "OFFICIAL_PRODUCT_LIST",
+      "title": "先進的窓リノベ2026事業 / みらいエコ住宅2026事業 補助対象製品",
+      "catalog_code": "住宅省エネ2026 対象製品一覧",
+      "publication": "2026-04-17",
+      "page": "P1",
+      "url": "https://www.ykkap.co.jp/consumer_business/satellite/law/subsidy2026/item/asset/pdf/summary_sumb_02.pdf",
+      "evidence": "ウチリモ 内窓の引違い窓を「中桟無」「中桟付」に分けて公式掲載。middle_rail_option の none/enabled 二状態を直接証明。",
       "verification_status": "VERIFIED_OFFICIAL"
     }
   ],
@@ -7019,7 +7060,7 @@
     "scope": "SALES_LEVEL_JUDGMENT_ENGINE",
     "product_data_mutation": "NONE; existing product facts/rules are re-versioned for Phase7 Runtime package consumption.",
     "rule_sources": {
-      "dependency_rules": 29,
+      "dependency_rules": 30,
       "measurement_rules": 5,
       "size_rules": 15,
       "glass_size_rules": 23,
@@ -15722,5 +15763,36 @@
       "formalization_permitted": false,
       "next_phase_gate": "OPEN"
     }
+  },
+  "r5_change_scope": {
+    "revision": "v1.0-P7R1-R5",
+    "business_scope": "営業見積依頼",
+    "reason": "Human Flow Reviewで middle_rail_option が enabled のみと判明",
+    "middle_rail_option": {
+      "previous": [
+        "enabled"
+      ],
+      "current": [
+        "none",
+        "enabled"
+      ],
+      "display_values": [
+        "なし",
+        "あり"
+      ],
+      "evidence": "EV-UCH-029",
+      "status": "PASS"
+    },
+    "middle_rail_position": {
+      "when": "middle_rail_option=enabled",
+      "values": [
+        "standard",
+        "custom"
+      ],
+      "when_none": "HIDE_AND_CLEAR",
+      "dependency_rule": "P5-UCH-121",
+      "status": "PASS"
+    },
+    "carry_forward": "R4 unaffected product facts/evidence/rules"
   }
 }

@@ -116,6 +116,28 @@ test('manual and special-check routes remain non-PASS while ORDER_READY stays fa
   assert.ok(result.notices.some((message) => message.includes('ORDER_READY = false')));
 });
 
+test('middle rail explicitly selects なし/あり and position is enabled-only with stale clear', async () => {
+  const node = { room_specification:'residential', window_type:'sliding_window', sash_configuration:'two_panel', size_class:'window' };
+  let result = await resolveRuntimeAppProduct(PRODUCT, node);
+  const option = field(result, 'middle_rail_option');
+  assert.ok(option);
+  assert.deepEqual(new Set(values(result, 'middle_rail_option')), new Set(['none', 'enabled']));
+  assert.deepEqual(Object.fromEntries(option.values.map((row) => [row.value, row.displayLabel])), { enabled:'あり', none:'なし' });
+  assert.equal(result.selection.middle_rail_option, undefined, '中桟は初期値を自動選択しない');
+
+  result = await resolveRuntimeAppProduct(PRODUCT, { ...node, middle_rail_option:'none' });
+  assert.equal(field(result, 'middle_rail_position'), undefined);
+
+  result = await resolveRuntimeAppProduct(PRODUCT, { ...node, middle_rail_option:'enabled' });
+  assert.ok(field(result, 'middle_rail_position'));
+  assert.equal(field(result, 'middle_rail_position').required, true);
+  assert.deepEqual(new Set(values(result, 'middle_rail_position')), new Set(['standard', 'custom']));
+
+  result = await resolveRuntimeAppProduct(PRODUCT, { ...node, middle_rail_option:'none', middle_rail_position:'custom' });
+  assert.equal(result.selection.middle_rail_position, undefined);
+  assert.ok(result.clearedFields.some((row) => row.field === 'middle_rail_position'));
+});
+
 test('unknown installation state remains MANUAL_CHECK and fukashi inputs are conditional', async () => {
   const result = await resolveRuntimeAppProduct(PRODUCT, { ...baseNode, extension_frame_type: 'fukashi_60', extension_frame_reinforcement: 'reinforcement_square_pipe', floor_support_condition: 'unknown' });
   assert.ok(field(result, 'fukashi_reinforcement'));
