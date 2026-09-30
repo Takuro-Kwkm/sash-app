@@ -1,10 +1,10 @@
 {
   "schema": "APP_PRODUCTION_HOTFIX_V1",
   "scope": "NON_PRODUCT_MASTER_UI",
-  "change": "OPENING_FLOOR_FIELD",
-  "date": "2026-09-29",
-  "source_commit": "f998121eefdea89513033bc3c787ae5a2a3232df",
-  "notes": "Opening metadata changed to floor/room/location/memo. Floor uses a 1階-20階 selector. Legacy opening_name remains stored only for backward compatibility.",
-  "attempt": 3,
+  "change": "DARK_MODE_UI",
+  "date": "2026-09-30",
+  "source_commit": "8e24ccc94d176519dcd1f90848e0b1c81852029b",
+  "notes": "Add System/Light/Dark theme switching, persistent preference, low-glare dark styling, print light reset, and browser QA. Product Master and Runtime data are unchanged.",
+  "attempt": 1,
   "trigger": "PR_MERGE_PUSH"
 }
