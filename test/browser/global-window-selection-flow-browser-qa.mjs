@@ -21,7 +21,7 @@ function assertSemanticOrder(result,label){
     assert.ok(field.semanticSlot,`${label}:${field.key}:semanticSlot missing`);
     assert.ok(field.semanticStage,`${label}:${field.key}:semanticStage missing`);
     assert.equal(String(field.semanticSlot).startsWith('other:'),false,`${label}:${field.key}:other fallback`);
-    const current=field.presentationSlot==='INNER_WINDOW_FINAL_DIMENSION'?9:STAGE_INDEX.get(field.semanticStage);
+    const current=field.presentationSlot==='INNER_WINDOW_FINAL_DIMENSION'?9:field.presentationSlot==='INNER_WINDOW_POST_DIMENSION_CRESCENT_P'?10:STAGE_INDEX.get(field.semanticStage);
     assert.notEqual(current,undefined,`${label}:${field.key}:unknown stage ${field.semanticStage}`);
     assert.ok(current>=previous,`${label}:${field.key}:stage inversion`);
     previous=current;
@@ -31,16 +31,27 @@ function assertSemanticOrder(result,label){
 const report={status:'RUNNING',exactHead:process.env.HEAD_SHA??process.env.GITHUB_SHA??null,viewportResults:{},consoleErrors:[],pageErrors:[],failedResponses:[],integrationCount:0,windowCoverageChecks:0,transitionChecks:0,domSignatureChecks:0};
 const browser=await chromium.launch({headless:true});
 
+// A response can arrive before the editor has applied it. Do not operate on
+// selectors from the previous product/state while the next render is pending.
+async function resolveAndRender(page,action){
+  const revision=await page.locator('#dynamicForm').getAttribute('data-resolve-revision');
+  const response=page.waitForResponse(r=>r.url().includes('/api/runtime-master/resolve')&&r.status()===200);
+  await action();
+  const result=await (await response).json();
+  await page.waitForFunction(previous=>{
+    const current=document.querySelector('#dynamicForm')?.getAttribute('data-resolve-revision');
+    return current!==null&&current!==previous;
+  },revision);
+  return result;
+}
+
 async function installAndSelect(page,integration){
   const entry=SHARE_TOKEN?`${BASE}/runtime-lab?_vercel_share=${encodeURIComponent(SHARE_TOKEN)}`:`${BASE}/runtime-lab`;
   await page.goto(entry,{waitUntil:'networkidle'});
   await page.waitForFunction(()=>document.querySelector('#status')?.textContent==='CATALOG CONNECTED');
   await page.selectOption('#manufacturer',integration.manufacturer);
   await page.waitForFunction((id)=>[...document.querySelectorAll('#product option')].some((option)=>option.value===id),integration.id);
-  const resolved=page.waitForResponse((response)=>response.url().includes('/api/runtime-master/resolve')&&response.status()===200);
-  await page.selectOption('#product',integration.id);
-  const response=await resolved;
-  return response.json();
+  return resolveAndRender(page,()=>page.selectOption('#product',integration.id));
 }
 
 async function assertDomSignature(page,result,label){
@@ -72,14 +83,11 @@ async function runViewport(name,contextOptions,integrations){
       let windowChecks=0,transitions=0;
       const signatures=new Set();
       for(const choice of windowChoices){
-        const reset=page.waitForResponse(r=>r.url().includes('/api/runtime-master/resolve')&&r.status()===200);
-        await page.selectOption('#product',integration.id);await reset;
+        await resolveAndRender(page,()=>page.selectOption('#product',integration.id));
         await page.waitForFunction(()=>document.querySelector('#dynamicForm [data-spec-key="window_type"]'));
         const locator=page.locator('#dynamicForm [data-spec-key="window_type"]');
         assert.equal(await locator.count(),1,`${name}:${integration.id}:window_type DOM selector missing`);
-        const responsePromise=page.waitForResponse((response)=>response.url().includes('/api/runtime-master/resolve')&&response.status()===200);
-        await locator.selectOption(String(choice.value));
-        result=await (await responsePromise).json();
+        result=await resolveAndRender(page,()=>locator.selectOption(String(choice.value)));
         assert.equal(String(result.selection?.window_type),String(choice.value),`${name}:${integration.id}:${choice.value}:window selection did not stick`);
         await assertDomSignature(page,result,`${name}:${integration.id}:window:${choice.value}`);
         windowChecks+=1;
@@ -97,17 +105,13 @@ async function runViewport(name,contextOptions,integrations){
         const locator=page.locator(`#dynamicForm [data-spec-key="${field.key}"]`);
         if(await locator.count()===0)continue;
         const first=field.dataType==='MULTI_ENUM'?[String(choices[0].value)]:String(choices[0].value);
-        const responsePromise=page.waitForResponse((response)=>response.url().includes('/api/runtime-master/resolve')&&response.status()===200);
-        await locator.selectOption(first);
-        result=await (await responsePromise).json();
+        result=await resolveAndRender(page,()=>locator.selectOption(first));
         await assertDomSignature(page,result,`${name}:${integration.id}:set:${field.key}`);
         transitions+=1;report.transitionChecks+=1;
 
         if(choices.length>1&&await page.locator(`#dynamicForm [data-spec-key="${field.key}"]`).count()){
           const second=field.dataType==='MULTI_ENUM'?[String(choices[1].value)]:String(choices[1].value);
-          const changePromise=page.waitForResponse((response)=>response.url().includes('/api/runtime-master/resolve')&&response.status()===200);
-          await page.locator(`#dynamicForm [data-spec-key="${field.key}"]`).selectOption(second);
-          result=await (await changePromise).json();
+          result=await resolveAndRender(page,()=>page.locator(`#dynamicForm [data-spec-key="${field.key}"]`).selectOption(second));
           await assertDomSignature(page,result,`${name}:${integration.id}:change:${field.key}`);
           transitions+=1;report.transitionChecks+=1;
         }
