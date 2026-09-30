@@ -32,6 +32,11 @@ const RUNTIME_UI_VALUE_LABELS=Object.freeze({
 });
 function runtimeUiValueLabel(fieldName,row,value){
   const sourceLabel=labelFrom(row,String(value));
+  if(fieldName==='cavity_fill'){
+    const text=`${sourceLabel} ${String(value)}`;
+    if(/乾燥空気/.test(text))return '乾燥空気';
+    if(/アルゴン/.test(text))return 'アルゴンガス';
+  }
   if(sourceLabel!==String(value))return sourceLabel;
   return RUNTIME_UI_VALUE_LABELS[fieldName]?.[String(value)]??sourceLabel;
 }
