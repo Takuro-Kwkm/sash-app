@@ -55,6 +55,57 @@ for(const width of [1440,768,390]){
    report.cases.push({width,product:spec.id,transition:key,to:value,cleared:absent,status:'PASS'});
   }
  }
+
+ // Requested Inplus sales-flow controls: hidden estimator-owned glass details,
+ // estimate-confirm special orders, and additive multi-option checkboxes.
+ await page.evaluate(async ()=>{
+  const id='SER-LIXIL-INPLUS';
+  const {ProductConfigurationEditor}=await import('/product-configuration-editor.mjs');
+  const{createProductConfigurationSnapshot}=await import('/work-management/domain.mjs');
+  const inventory=await(await fetch('/api/runtime-master/integrations')).json(),product=inventory.find(x=>x.id===id);
+  const seed={window_type:'引違い窓',sash_configuration:'2枚建',glass_family:'Low-E複層',glass_type:'透明',fukashi_presence:'present',fukashi_sides:'three_side',fukashi_depth:'40'};
+  const result=await(await fetch('/api/runtime-master/resolve?'+new URLSearchParams({productId:id,selection:JSON.stringify(seed)}))).json();
+  const snapshot=createProductConfigurationSnapshot({product,result});
+  window.frameEditor?.destroy();document.body.innerHTML='<main id="qaRoot"></main>';
+  window.frameEditor=new ProductConfigurationEditor(document.querySelector('#qaRoot'),{initialSnapshot:snapshot});await window.frameEditor.mount();
+ });
+ assert.equal(await page.locator('#dynamicForm [data-key="supply_form"]').count(),0);
+ assert.equal(await page.locator('#dynamicForm [data-key="glass_detail"]').count(),0);
+ assert.equal(await page.locator('#dynamicForm [data-key="crescent_presence"]').count(),1);
+ assert.equal(await page.locator('#dynamicForm [data-key="fukashi_curtain_rail"]').count(),1);
+ const aux=page.locator('#dynamicForm [data-multi-key="sales_installation_auxiliaries"]');
+ assert.equal(await aux.count(),1);
+ assert.equal(await aux.locator('input[data-multi-value]').count(),3);
+ let rev=await page.locator('#dynamicForm').getAttribute('data-resolve-revision');
+ await aux.locator('input[value="OP-STEP"]').check();
+ await page.waitForFunction(r=>document.querySelector('#dynamicForm').dataset.resolveRevision!==r,rev);
+ rev=await page.locator('#dynamicForm').getAttribute('data-resolve-revision');
+ await page.locator('#dynamicForm [data-multi-key="sales_installation_auxiliaries"] input[value="TRUE_WALL_SCREW"]').check();
+ await page.waitForFunction(r=>document.querySelector('#dynamicForm').dataset.resolveRevision!==r,rev);
+ let salesState=await page.evaluate(()=>window.frameEditor.state);
+ assert.deepEqual(new Set(salesState.selection.sales_installation_auxiliaries),new Set(['OP-STEP','TRUE_WALL_SCREW']));
+ rev=await page.locator('#dynamicForm').getAttribute('data-resolve-revision');
+ await page.locator('#dynamicForm [data-spec-key="crescent_presence"]').selectOption('crescentless_special_order');
+ await page.waitForFunction(r=>document.querySelector('#dynamicForm').dataset.resolveRevision!==r,rev);
+ salesState=await page.evaluate(()=>window.frameEditor.state);
+ assert.equal(salesState.selection.crescent_presence,'crescentless_special_order');
+ assert.ok(salesState.resolved.confirmationRequests.some(row=>row.code==='INPLUS_SALES_REQUEST_CONFIRM'));
+ const formalOptions=page.locator('#dynamicForm [data-multi-key="option_items"]');
+ if(await formalOptions.count()){
+  const available=await formalOptions.locator('input[data-multi-value]:not(:disabled)').evaluateAll(nodes=>nodes.map(n=>n.value));
+  if(available.length>=2){
+   for(const value of available.slice(0,2)){
+    rev=await page.locator('#dynamicForm').getAttribute('data-resolve-revision');
+    await page.locator(`#dynamicForm [data-multi-key="option_items"] input[value="\${value}"]`).check();
+    await page.waitForFunction(r=>document.querySelector('#dynamicForm').dataset.resolveRevision!==r,rev);
+   }
+   const multi=await page.evaluate(()=>window.frameEditor.state.selection.option_items);
+   assert.equal(Array.isArray(multi),true);assert.ok(multi.length>=2);
+  }
+ }
+ const overflowRequested=await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth);assert.ok(overflowRequested<=1);
+ report.cases.push({width,product:'SER-LIXIL-INPLUS',transition:'requested-sales-controls',status:'PASS'});
+
  await page.close();
 }
 assert.deepEqual(report.errors,[]);report.status='PASS';
