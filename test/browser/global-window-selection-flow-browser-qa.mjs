@@ -21,7 +21,7 @@ function assertSemanticOrder(result,label){
     assert.ok(field.semanticSlot,`${label}:${field.key}:semanticSlot missing`);
     assert.ok(field.semanticStage,`${label}:${field.key}:semanticStage missing`);
     assert.equal(String(field.semanticSlot).startsWith('other:'),false,`${label}:${field.key}:other fallback`);
-    const current=field.presentationSlot==='INNER_WINDOW_PRE_OPTION_DIMENSION'?7.5:STAGE_INDEX.get(field.semanticStage);
+    const current=field.presentationSlot==='INNER_WINDOW_FINAL_DIMENSION'?9:STAGE_INDEX.get(field.semanticStage);
     assert.notEqual(current,undefined,`${label}:${field.key}:unknown stage ${field.semanticStage}`);
     assert.ok(current>=previous,`${label}:${field.key}:stage inversion`);
     previous=current;
