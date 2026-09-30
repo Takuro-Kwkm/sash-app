@@ -161,15 +161,20 @@ export class ProductConfigurationEditor {
       const product=this.state.products.find((row)=>row.id===this.state.productId);this.state.productSource=product?.sourceType??'CATALOG';
       await this.resolve({notify:true});return;
     }
-    if(!target.matches('[data-spec-key]'))return;
-    const key=target.dataset.specKey;
+    const multiGroup=target.closest?.('[data-multi-enum="true"][data-spec-key]')??null;
+    const control=multiGroup??target;
+    if(!control.matches?.('[data-spec-key]'))return;
+    const key=control.dataset.specKey;
     const field=this.state.resolved?.fields?.find((row)=>row.key===key);
     const canonicalChoice=(raw)=>{
       const match=field?.values?.find((row)=>String(row.value)===String(raw));
       if(!match)throw new Error(`Runtime option is not available for ${key}: ${raw}`);
       return match.value;
     };
-    if(target.type==='number'){
+    if(multiGroup){
+      const values=[...multiGroup.querySelectorAll('input[data-multi-value]:checked')].map((input)=>canonicalChoice(input.value));
+      if(values.length)this.state.selection[key]=values;else delete this.state.selection[key];
+    }else if(target.type==='number'){
       if(target.value!=='')this.state.selection[key]=Number(target.value);else delete this.state.selection[key];
     }else if(target.multiple){
       const values=[...target.selectedOptions].map((option)=>canonicalChoice(option.value));
@@ -209,14 +214,19 @@ export class ProductConfigurationEditor {
   }
 
   renderField(field){
-    const attributes=`data-semantic-stage="${esc(field.semanticStage)}" data-semantic-slot="${esc(field.semanticSlot)}" data-label="${esc(field.displayLabel)}" data-read-only="${Boolean(field.readOnly)}"${field.required?' required':''}${field.disabled?' disabled':''}`;
+    const dataAttributes=`data-semantic-stage="${esc(field.semanticStage)}" data-semantic-slot="${esc(field.semanticSlot)}" data-label="${esc(field.displayLabel)}" data-read-only="${Boolean(field.readOnly)}"`;
+    const attributes=`${dataAttributes}${field.required?' required':''}${field.disabled?' disabled':''}`;
     const required=field.required?'<span class="required">必須</span>':'';
     if(field.dataType==='NUMBER')return `<div class="field" data-key="${esc(field.key)}"><label>${esc(field.displayLabel)}${required}</label><div class="number-input"><input type="number" inputmode="numeric" step="1" data-spec-key="${esc(field.key)}" ${attributes} value="${esc(this.state.selection[field.key]??'')}" placeholder="数値を入力">${field.unit?`<span>${esc(field.unit)}</span>`:''}</div></div>`;
     if(field.dataType==='TEXT')return `<div class="field" data-key="${esc(field.key)}"><label>${esc(field.displayLabel)}${required}</label><input type="text" data-spec-key="${esc(field.key)}" ${attributes} value="${esc(this.state.selection[field.key]??'')}" placeholder="入力してください"></div>`;
     const selected=Array.isArray(this.state.selection[field.key])?this.state.selection[field.key]:[this.state.selection[field.key]];
-    const options=field.values.map((value)=>`<option value="${esc(value.value)}"${value.disabled?' disabled':''}${selected.some((one)=>String(one)===String(value.value))?' selected':''}>${esc(value.displayLabel)}${value.manualCheck?'（要確認）':''}</option>`).join('');
     const multi=field.dataType==='MULTI_ENUM';
-    return `<div class="field" data-key="${esc(field.key)}"><label>${esc(field.displayLabel)}${required}</label><select data-spec-key="${esc(field.key)}" ${attributes}${multi?' multiple size="5"':''}>${multi?'':'<option value="">選択してください</option>'}${options}</select>${field.helpText?`<small class="field-help">${esc(field.helpText)}</small>`:multi?'<small class="field-help">複数選択できます</small>':''}</div>`;
+    if(multi){
+      const choices=field.values.map((value)=>`<label class="multi-enum-option"><input type="checkbox" data-multi-value="true" value="${esc(value.value)}"${value.disabled||field.disabled||field.readOnly?' disabled':''}${selected.some((one)=>String(one)===String(value.value))?' checked':''}><span>${esc(value.displayLabel)}${value.manualCheck?'（要確認）':''}</span></label>`).join('');
+      return `<div class="field" data-key="${esc(field.key)}"><label>${esc(field.displayLabel)}${required}</label><div class="multi-enum-group" role="group" aria-label="${esc(field.displayLabel)}" data-spec-key="${esc(field.key)}" data-multi-enum="true" ${dataAttributes}>${choices}</div><small class="field-help">${esc(field.helpText??'複数選択できます')}</small></div>`;
+    }
+    const options=field.values.map((value)=>`<option value="${esc(value.value)}"${value.disabled?' disabled':''}${selected.some((one)=>String(one)===String(value.value))?' selected':''}>${esc(value.displayLabel)}${value.manualCheck?'（要確認）':''}</option>`).join('');
+    return `<div class="field" data-key="${esc(field.key)}"><label>${esc(field.displayLabel)}${required}</label><select data-spec-key="${esc(field.key)}" ${attributes}><option value="">選択してください</option>${options}</select>${field.helpText?`<small class="field-help">${esc(field.helpText)}</small>`:''}</div>`;
   }
 
   renderWarnings(result){
