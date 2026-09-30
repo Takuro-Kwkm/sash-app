@@ -3,6 +3,9 @@ name: Dark Mode Preview Verification
 on:
   push:
     branches: [feat/dark-mode-ui-20260930]
+  pull_request:
+    branches: [main]
+    types: [opened, reopened, synchronize]
   workflow_dispatch:
 
 permissions:
@@ -13,6 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     env:
+      HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
       VERCEL_ORG_ID: team_AkuHacuJlCl8LuvaFpCzFmbv
       VERCEL_PROJECT_ID: prj_4z0zqW6yKyPuFINODfGX8LPBuJRP
       VERCEL_PROJECT_NAME: sash-app-wave3-preview
@@ -24,7 +28,7 @@ jobs:
       - name: Checkout exact HEAD
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.sha }}
+          ref: ${{ env.HEAD_SHA }}
           fetch-depth: 0
 
       - uses: actions/setup-node@v4
@@ -70,7 +74,7 @@ jobs:
           echo "VERCEL_TOKEN_EFFECTIVE=$token" >> "$GITHUB_ENV"
 
       - name: Deploy exact HEAD to Preview
-        run: node scripts/vercel-rest-deploy.mjs preview artifacts/theme-browser-qa/deployment.json
+        run: GITHUB_SHA="$HEAD_SHA" node scripts/vercel-rest-deploy.mjs preview artifacts/theme-browser-qa/deployment.json
 
       - name: Verify Preview identity
         shell: bash
@@ -79,7 +83,7 @@ jobs:
           node --input-type=module <<'NODE'
           import {readFileSync} from 'node:fs';
           const d=JSON.parse(readFileSync('artifacts/theme-browser-qa/deployment.json','utf8'));
-          if(d.readyState!=='READY'||d.githubSha!==process.env.GITHUB_SHA||d.releaseCommitSha!==process.env.GITHUB_SHA||d.mode!=='preview')throw new Error('DARK_MODE_PREVIEW_IDENTITY_INVALID');
+          if(d.readyState!=='READY'||d.githubSha!==process.env.HEAD_SHA||d.releaseCommitSha!==process.env.HEAD_SHA||d.mode!=='preview')throw new Error('DARK_MODE_PREVIEW_IDENTITY_INVALID');
           console.log('DARK_MODE_PREVIEW_GATE=PASS '+d.deploymentUrl);
           NODE
 
@@ -87,7 +91,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: dark-mode-preview-${{ github.sha }}
+          name: dark-mode-preview-${{ env.HEAD_SHA }}
           path: |
             artifacts/theme-browser-qa/
             /tmp/sash-theme-server.log
