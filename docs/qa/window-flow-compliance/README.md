@@ -23,7 +23,7 @@ See flow-overrides.json for exact baseline conditional occurrences and identity-
 - Sales glazing requests are declared in App metadata, normalized before Global Flow, mapped to INNER_WINDOW glass_type/spacer_type/gas_fill slots. API owns selection and manufacturer-estimate handoff. No Uchirimo Browser parity exceptions.
 - Global Engine emits visible/required/readOnly/disabled/semanticStage/semanticSlot, matched by actual controls. Summary follows the same fields sequence.
 - Internal size mode comes from the formal CUSTOM-only capability. Size class evaluates formal candidates; ambiguous paths remain MANUAL_CHECK, never automatic order-ready. No fixed height threshold.
-- W/H keep SIZE semantics and use INNER_WINDOW_PRE_OPTION_DIMENSION after installation, before options.
+- W/H keep SIZE semantics and use INNER_WINDOW_FINAL_DIMENSION as the final sales-input step after options.
 - Removed unconditional client descendant deletion; runtime revalidation preserves still-valid values.
 - Eight-series business QA now includes Inplus, Excel, PDF and Print. Self-contained eight-series HTML uses the same modules/runtime.
 
