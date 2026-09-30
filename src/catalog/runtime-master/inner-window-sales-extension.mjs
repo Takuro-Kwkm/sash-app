@@ -29,7 +29,7 @@ export const UCHIRIMO_SALES_REQUEST = Object.freeze({
 });
 
 export const INPLUS_SALES_REQUEST = Object.freeze({
-  suppressedFields:['supply_form','glass_detail','spacer'],
+  suppressedFields:['supply_form','glass_detail','spacer','crescent_position'],
   handoffDefaults:{
     supply_form:'ESTIMATION_RESPONSIBILITY',
     glass_detail:'MANUFACTURER_ESTIMATE_CONFIRMATION',
@@ -38,6 +38,25 @@ export const INPLUS_SALES_REQUEST = Object.freeze({
   confirmationTo:'積算／LIXIL',
   confirmationCode:'INPLUS_SALES_REQUEST_CONFIRM',
   alwaysConfirm:true,
+  valueAugmentations:Object.freeze([
+    {
+      field:'fukashi_reinforcement',
+      handoffKey:'fukashi_reinforcement_request',
+      when:{fukashi_depth:['40','50','70']},
+      values:[['lower_reinforcement','ふかし枠下部補強部材',true]],
+    },
+    {
+      field:'option_items',
+      handoffKey:'additional_option_items',
+      when:{window_type:['引違い窓','FIX窓','開き窓','テラスドア']},
+      values:[
+        ['OP-STEP','段差スペーサー',true],
+        ['OP-EMBED-RESIN','埋め木樹脂材',true],
+        ['OP-TRUE-WALL-SCREW','真壁取付用ねじ',true],
+        ['OP-REPLACEMENT-CRESCENT','外窓用 交換用クレセント（汎用クレセント）',true],
+      ],
+    },
+  ]),
   fields:Object.freeze([
     {
       key:'sales_spacer_type',
@@ -50,11 +69,40 @@ export const INPLUS_SALES_REQUEST = Object.freeze({
     },
     {
       key:'crescent_presence',
-      displayLabel:'クレセント',
-      handoffKey:'crescent_request',
+      displayLabel:'クレセント有無',
+      handoffKey:'crescent_presence',
       when:{window_type:'引違い窓'},
       values:[['installed','あり',false],['crescentless_special_order','なし（特注・要確認）',true]],
       helpText:'クレセントなしは特注対応可能ですが基本性能を満足しないため、積算／LIXIL確認事項として扱います。',
+    },
+    {
+      key:'crescent_type',
+      displayLabel:'クレセント種類',
+      handoffKey:'crescent_type',
+      when:{window_type:'引違い窓',crescent_presence:'installed'},
+      values:[['standard','標準クレセント',false],['keyed','キー付きクレセント',true]],
+      helpText:'キー付きクレセントはLIXIL現行有償品。詳細な適用・手配は積算／LIXILで確認します。',
+    },
+    {
+      key:'crescent_position_mode',
+      displayLabel:'クレセント位置',
+      handoffKey:'crescent_position_mode',
+      when:{window_type:'引違い窓',crescent_presence:'installed'},
+      values:[['standard','標準位置',false],['custom','位置指定',true]],
+      helpText:'位置指定を選ぶと、特注W/Hの後にクレセント位置Pを入力します。',
+    },
+    {
+      key:'crescent_position_p_mm',
+      displayLabel:'クレセント位置P',
+      dataType:'NUMBER',
+      unit:'mm',
+      step:0.5,
+      required:true,
+      manualCheck:true,
+      validator:'INPLUS_CRESCENT_P',
+      handoffKey:'crescent_position_p_mm',
+      when:{crescent_position_mode:'custom'},
+      helpText:'窓枠上面からクレセント中心までのP寸法。正式P寸法Ruleで範囲判定し、最終製作可否はLIXIL確認へ引き継ぎます。',
     },
     {
       key:'fukashi_curtain_rail',
@@ -64,19 +112,6 @@ export const INPLUS_SALES_REQUEST = Object.freeze({
       unless:{fukashi_reinforcement:'corner'},
       values:[['none','なし',false],['enabled','あり',true]],
       helpText:'正式資料でカーテンレール仕様が確認できるふかし枠20/40/50/70系で表示します。',
-    },
-    {
-      key:'sales_installation_auxiliaries',
-      displayLabel:'施工用選択品・確認事項',
-      dataType:'MULTI_ENUM',
-      handoffKey:'installation_auxiliaries',
-      when:{window_type:['引違い窓','FIX窓','開き窓','テラスドア']},
-      values:[
-        ['OP-STEP','段差スペーサー',true],
-        ['TRUE_WALL_SCREW','真壁取付用ねじ',true],
-        ['JAPANESE_ROOM_GROOVE_INFIL','和室溝の埋木対応',true],
-      ],
-      helpText:'複数選択できます。現場条件に応じて積算／LIXIL確認へ引き継ぎます。',
     },
   ]),
 });
@@ -109,44 +144,114 @@ function requestChoices(definition){
   });
 }
 
-export function applySalesRequestExtension(state, input, contract) {
+function uniqueValues(values){
+  const out=[];const seen=new Set();
+  for(const value of values??[]){const key=JSON.stringify(value);if(seen.has(key))continue;seen.add(key);out.push(value);}
+  return out;
+}
+
+function validateInplusCrescentP(master,state,value){
+  const p=Number(value),h=Number(state.fields.order_height?.value);
+  if(!Number.isFinite(p))return{ok:false,message:'クレセント位置Pは数値で入力してください。'};
+  if(!Number.isFinite(h))return{ok:true,pending:true,message:'特注H入力後にクレセント位置Pを再評価します。'};
+  const sizeClass=state.fields.size_class?.value;
+  const upper=state.fields.upper_frame_spec?.value==='adjust_upper_frame'?'アジャスト上枠':'標準';
+  const size=sizeClass==='テラスタイプ'?'テラスタイプ':'窓タイプ';
+  const rows=master?.document?.tables?.pf_position_rules?.records??[];
+  const candidates=rows.filter(row=>row['指定項目']==='クレセント位置P'&&row['上枠']===upper&&row['サイズ区分']===size&&h>=Number(row.H_min??-Infinity)&&(row.H_max===null||row.H_max===undefined||h<=Number(row.H_max)));
+  if(candidates.length!==1)return{ok:true,pending:true,message:'クレセント位置Pの最終範囲は積算／LIXIL確認へ引き継ぎます。'};
+  const expr=String(candidates[0]['判定式']??'').replace(/\s+/g,'');
+  let ok=false;
+  let m=expr.match(/^([0-9.]+)<=P<=([0-9.]+)$/);
+  if(m)ok=p>=Number(m[1])&&p<=Number(m[2]);
+  m=expr.match(/^H\/4<=P<=3H\/4ANDH-P<=([0-9.]+)$/);
+  if(m)ok=p>=h/4&&p<=3*h/4&&h-p<=Number(m[1]);
+  m=expr.match(/^\(H\+2\)\/4<=P<=3\*\(H\+2\)\/4ANDH-P<=([0-9.]+)$/);
+  if(m){const hp=h+2;ok=p>=hp/4&&p<=3*hp/4&&h-p<=Number(m[1]);}
+  if(!m&&!/^([0-9.]+)<=P<=([0-9.]+)$/.test(expr)&&!/^H\/4<=P<=3H\/4ANDH-P<=([0-9.]+)$/.test(expr))return{ok:true,pending:true,message:'クレセント位置Pの式を自動評価できないため積算／LIXIL確認へ引き継ぎます。'};
+  return{ok,ruleId:candidates[0].rule_id,message:ok?`クレセント位置Pは正式範囲内です。（${candidates[0].rule_id}）`:`クレセント位置Pが正式範囲外です。（${candidates[0].rule_id}: ${candidates[0]['判定式']}）`};
+}
+
+export function applySalesRequestExtension(state, input, contract, master=null) {
   if (!contract) return state;
   const fields=[], selection={}, handoff={...(contract.handoffDefaults??{})};
+  const augmentations={};
   let requiresManual=Boolean(contract.alwaysConfirm);
+  let presentationMissing=false;
 
   for(const definition of contract.fields??[]){
     if(!requestFieldApplies(definition,state))continue;
     const family=state.fields.glass_family?.value;
-    const values=requestChoices(definition)
-      .filter(({value})=>!definition.excludeUnless?.[value]||definition.excludeUnless[value].includes(family));
     const dataType=definition.dataType??'ENUM';
-    fields.push({
+    const field={
       key:definition.key,
       displayLabel:definition.displayLabel,
       dataType,
+      unit:definition.unit??null,
+      step:definition.step??null,
       required:Boolean(definition.required),
-      values,
+      values:dataType==='NUMBER'?[]:requestChoices(definition).filter(({value})=>!definition.excludeUnless?.[value]||definition.excludeUnless[value].includes(family)),
       parentFields:definition.parentFields??Object.keys(definition.when??{}),
       helpText:definition.helpText??'希望を見積依頼へ引き継ぎ、成立はメーカー見積で確認します。',
-    });
-
+    };
+    fields.push(field);
     const raw=input[definition.key];
-    if(dataType==='MULTI_ENUM'){
-      const allowed=new Set(values.map(row=>row.value));
-      const selected=(Array.isArray(raw)?raw:[]).filter(value=>allowed.has(value));
-      if(selected.length){
-        selection[definition.key]=selected;
-        handoff[definition.handoffKey]=selected;
-        if(values.some(row=>selected.includes(row.value)&&row.manualCheck))requiresManual=true;
+
+    if(dataType==='NUMBER'){
+      if(raw===null||raw===undefined||raw===''){
+        if(definition.required){state.missing_required_fields=[...new Set([...(state.missing_required_fields??[]),definition.key])];presentationMissing=true;}
+        continue;
+      }
+      const number=Number(raw);
+      if(!Number.isFinite(number)){
+        state.errors=[...(state.errors??[]),{code:'PRESENTATION_NUMBER_INVALID',field:definition.key,message:`${definition.displayLabel}は数値で入力してください。`}];
+        continue;
+      }
+      selection[definition.key]=number;handoff[definition.handoffKey]=number;
+      if(definition.manualCheck)requiresManual=true;
+      if(definition.validator==='INPLUS_CRESCENT_P'){
+        const result=validateInplusCrescentP(master,state,number);
+        if(!result.ok)state.errors=[...(state.errors??[]),{code:'INPLUS_CRESCENT_POSITION_OUT_OF_RANGE',field:definition.key,message:result.message}];
+        else if(result.pending)requiresManual=true;
       }
       continue;
     }
 
+    const values=field.values;
+    if(dataType==='MULTI_ENUM'){
+      const allowed=new Set(values.map(row=>row.value));
+      const selected=(Array.isArray(raw)?raw:[]).filter(value=>allowed.has(value));
+      if(selected.length){
+        selection[definition.key]=selected;handoff[definition.handoffKey]=selected;
+        if(values.some(row=>selected.includes(row.value)&&row.manualCheck))requiresManual=true;
+      }
+      continue;
+    }
     const chosen=values.find(row=>Object.is(row.value,raw));
     if(chosen){
-      selection[definition.key]=raw;
-      handoff[definition.handoffKey]=raw;
+      selection[definition.key]=raw;handoff[definition.handoffKey]=raw;
       if(chosen.manualCheck)requiresManual=true;
+    }
+  }
+
+  for(const definition of contract.valueAugmentations??[]){
+    if(!requestFieldApplies(definition,state))continue;
+    const choices=requestChoices(definition);
+    augmentations[definition.field]=choices;
+    const raw=input[definition.field];
+    const extraSet=new Set(choices.map(row=>row.value));
+    if(Array.isArray(raw)){
+      const extras=raw.filter(value=>extraSet.has(value));
+      if(extras.length){
+        const formal=Array.isArray(state.fields[definition.field]?.value)?state.fields[definition.field].value:[];
+        selection[definition.field]=uniqueValues([...formal,...extras]);
+        handoff[definition.handoffKey]=extras;
+        if(choices.some(row=>extras.includes(row.value)&&row.manualCheck))requiresManual=true;
+      }
+    }else if(extraSet.has(raw)){
+      selection[definition.field]=raw;
+      handoff[definition.handoffKey]=raw;
+      if(choices.find(row=>Object.is(row.value,raw))?.manualCheck)requiresManual=true;
     }
   }
 
@@ -155,9 +260,13 @@ export function applySalesRequestExtension(state, input, contract) {
   state.missing_required_fields=(state.missing_required_fields??[]).filter(key=>!suppressed.has(key));
   state.presentationFields=fields;
   state.presentationSelection=selection;
+  state.presentationValueAugmentations=augmentations;
 
   if(Object.keys(handoff).length)state.sales_request_handoff=handoff;
-  if(requiresManual){
+  const hasErrors=(state.errors??[]).length>0;
+  if(hasErrors)state.status='INVALID';
+  else if(presentationMissing&&!['INVALID','BLOCKED'].includes(state.status))state.status='INCOMPLETE';
+  else if(requiresManual){
     const warning=contract.manualWarning??'選択した希望条件はメーカー見積で確認します。';
     state.manual_warnings=[...(state.manual_warnings??[]),warning];
     state.confirmation_requests=[
@@ -169,12 +278,13 @@ export function applySalesRequestExtension(state, input, contract) {
         message:warning,
       },
     ].filter((row,index,all)=>all.findIndex(other=>JSON.stringify(other)===JSON.stringify(row))===index);
-    if(!['INVALID','BLOCKED'].includes(state.status))state.status='MANUAL_CHECK';
+    if(!['INVALID','BLOCKED','INCOMPLETE'].includes(state.status))state.status='MANUAL_CHECK';
     state.order_ready=false;
   }
   if(Object.keys(handoff).length&&!state.missing_required_fields.length&&['PASS','REVIEW_REQUIRED'].includes(state.dimension_result?.status)&&!state.errors?.length)state.sales_request_state='READY_FOR_MANUFACTURER_ESTIMATE';
   return state;
 }
+
 
 // Evaluate each formal size-class candidate through the existing resolver. No
 // height threshold or invented classification is introduced by presentation.
@@ -231,7 +341,7 @@ function evaluateInnerWindowPass(master, input, resolve, sales=null) {
     }
   }
   if(size?.standardSupported===false&&size.allowedModes?.length===1&&state.fields[size.modeField])state.fields[size.modeField]={...state.fields[size.modeField],readOnly:true,derived_by_rule:true};
-  return applySalesRequestExtension(state,input,sales);
+  return applySalesRequestExtension(state,input,sales,master);
 }
 
 export function evaluateInnerWindowPresentation(master,input,resolve,sales=null){
