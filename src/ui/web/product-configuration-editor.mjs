@@ -187,13 +187,23 @@ export class ProductConfigurationEditor {
     if(revision!==this.state.resolveRevision||productId!==this.state.productId)return;
     this.state.selection=result.selection;this.state.resolved=result;
     const dynamicForm=this.root.querySelector('#dynamicForm');
-    dynamicForm.innerHTML=result.fields.map((field)=>this.renderField(field)).join('');
+    dynamicForm.innerHTML=this.renderFields(result.fields);
     dynamicForm.dataset.resolveRevision=String(revision);
     this.renderWarnings(result);this.renderSummary(result);this.renderProductCodes(result);
     const product=this.state.products.find((row)=>row.id===productId);
     this.state.snapshot=createProductConfigurationSnapshot({product,result});
     const badge=this.root.querySelector('#runtimeVersionBadge');badge.hidden=false;badge.textContent=`${this.state.snapshot.source_mode==='CANONICAL_RUNTIME'?'Runtime':'Legacy'} ${this.state.snapshot.package_version}`;
     if(notify)this.onSnapshot(this.state.snapshot,result);
+  }
+
+  renderFields(fields=[]){
+    const hasAggregateOption=fields.some((field)=>field.key==='option_items');
+    let optionHeadingShown=false;
+    return fields.map((field)=>{
+      const showOptionHeading=!hasAggregateOption&&!optionHeadingShown&&field.semanticStage==='OPTION';
+      if(showOptionHeading)optionHeadingShown=true;
+      return `${showOptionHeading?'<div class="runtime-field-group-heading" data-semantic-group="OPTION">オプション</div>':''}${this.renderField(field)}`;
+    }).join('');
   }
 
   renderField(field){
