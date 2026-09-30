@@ -42,7 +42,7 @@ function assertGlobalFlow(fields) {
   for (const field of fields) {
     assert.ok(field.semanticSlot, `unmapped semantic slot: ${field.key}`);
     assert.ok(field.semanticStage, `unmapped semantic stage: ${field.key}`);
-    const index = field.presentationSlot==='INNER_WINDOW_PRE_OPTION_DIMENSION'?7.5:GLOBAL_WINDOW_STAGE_ORDER.indexOf(field.semanticStage);
+    const index = field.presentationSlot==='INNER_WINDOW_FINAL_DIMENSION'?9:GLOBAL_WINDOW_STAGE_ORDER.indexOf(field.semanticStage);
     assert.ok(index >= 0, `unknown global stage ${field.semanticStage} for ${field.key}`);
     assert.ok(index >= previous, `stage inversion at ${field.key}: ${field.semanticStage}`);
     previous = index;
