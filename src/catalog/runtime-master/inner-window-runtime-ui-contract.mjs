@@ -177,6 +177,6 @@ export function applyInnerWindowUiOrder(fields = []) {
     approvedExtensionForField: approvedInnerWindowExtensionForField,
     shouldExposeField: shouldExposeInnerWindowRuntimeField,
     standardLabelForField: standardLabelForInnerWindowField,
-    presentationExtensionForField: key => ['size_w','size_h','order_width','order_height','sash_width_allocation','sash_w1','sash_w2','sash_w3','sash_w4'].includes(key) ? {slot:'INNER_WINDOW_PRE_OPTION_DIMENSION',order:7.5} : null,
+    presentationExtensionForField: key => ['size_w','size_h','order_width','order_height','sash_width_allocation','sash_w1','sash_w2','sash_w3','sash_w4'].includes(key) ? {slot:'INNER_WINDOW_FINAL_DIMENSION',order:9} : null,
   });
 }
