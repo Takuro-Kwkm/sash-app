@@ -1,4 +1,16 @@
 // App-side estimate-request vocabulary. These are requests, never product facts.
+export const INPLUS_SALES_GLAZING_REQUEST = Object.freeze({
+  suppressedFields:['supply_form','glass_detail'],
+  fields:[],
+  hiddenDetailConfirmation:Object.freeze({
+    code:'INPLUS_GLASS_DETAIL_ESTIMATE_CONFIRM',
+    confirmationTo:'積算／LIXIL',
+    handoffKey:'glass_configuration_detail',
+    handoffValue:'ESTIMATE_CONFIRM_REQUIRED',
+    message:'供給形態と最終ガラス構成は営業では選択せず、積算／メーカー見積で確定します。',
+  }),
+});
+
 export const SALES_GLAZING_REQUEST = Object.freeze({
   suppressedFields:['glass_structure','glass_structure_code','glass_spec_id','glass_size_constraint_group','glass_surface_type','spacer_type','gas_fill','cavity_thickness_mm'],
   fields:[
@@ -24,6 +36,16 @@ export function applySalesRequestExtension(state, input, contract) {
   for(const key of suppressed)if(state.fields[key])state.fields[key]={...state.fields[key],value:null,visibility:'HIDE',required:false,readOnly:false,derived_by_rule:false,resolved_by_rule:false};
   state.missing_required_fields=(state.missing_required_fields??[]).filter(key=>!suppressed.has(key));
   state.presentationFields=fields;state.presentationSelection=selection;
+  const hiddenDetailConfirmation=contract.hiddenDetailConfirmation;
+  if(family&&hiddenDetailConfirmation){
+    const confirmation={code:hiddenDetailConfirmation.code,status:'ESTIMATE_CONFIRM_REQUIRED',confirmation_to:hiddenDetailConfirmation.confirmationTo,message:hiddenDetailConfirmation.message};
+    state.confirmation_requests=[...(state.confirmation_requests??[]),confirmation].filter((row,index,all)=>all.findIndex(other=>JSON.stringify(other)===JSON.stringify(row))===index);
+    state.manual_warnings=[...(state.manual_warnings??[]),hiddenDetailConfirmation.message].filter((value,index,all)=>all.indexOf(value)===index);
+    state.sales_request_handoff={...(state.sales_request_handoff??{}),[hiddenDetailConfirmation.handoffKey]:hiddenDetailConfirmation.handoffValue};
+    if(state.status==='INCOMPLETE'&&!state.missing_required_fields.length)state.status='MANUAL_CHECK';
+    if(!['INVALID','BLOCKED'].includes(state.status)&&state.status==='VALID')state.status='MANUAL_CHECK';
+    state.order_ready=false;
+  }
   if(Object.keys(selection).length){
     state.sales_request_handoff=handoff;
     state.manual_warnings=[...(state.manual_warnings??[]),'ガラスの厚みと最終仕様はメーカー見積で確認します。選択した見た目・スペーサー・中空層は希望として見積依頼に引き継ぎます。'];
