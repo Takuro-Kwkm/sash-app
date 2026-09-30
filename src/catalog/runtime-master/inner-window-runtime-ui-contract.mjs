@@ -102,6 +102,8 @@ const APPROVED_INNER_WINDOW_EXTENSIONS = Object.freeze({
   fukashi_curtain_rail: installationExtension('fukashi_curtain_rail', 246),
   crescent_presence: optionExtension('crescent_presence', 300),
   crescent_type: optionExtension('crescent_type', 301),
+  crescent_position_mode: optionExtension('crescent_position_mode', 302),
+  crescent_position_p_mm: installationExtension('crescent_position_p_mm', 247),
   pull_handle_type: optionExtension('pull_handle_type', 302),
   pull_handle_position: optionExtension('pull_handle_position', 303),
   operating_handle_type: optionExtension('operating_handle_type', 304),
@@ -111,7 +113,6 @@ const APPROVED_INNER_WINDOW_EXTENSIONS = Object.freeze({
   bottom_rail_type: optionExtension('bottom_rail_type', 308),
   arm_stopper_option: optionExtension('arm_stopper_option', 309),
   outside_handle_option: optionExtension('outside_handle_option', 310),
-  sales_installation_auxiliaries: optionExtension('sales_installation_auxiliaries', 311),
 });
 
 const INNER_WINDOW_TECHNICAL_EXACT = new Set([
@@ -141,6 +142,7 @@ const STANDARD_LABELS = Object.freeze({
   frame_color:'本体色', body_color:'本体色', glass_family:'ガラス仕様', glass_type:'ガラス種', low_e_type:'Low-E性能', lowe_color:'Low-E性能',
   spacer_type:'スペーサー', spacer:'スペーサー', gas_fill:'中空層', cavity_fill:'中空層', frame_installation_mode:'枠仕様', frame_install_spec:'枠・納まり仕様（区分分離未対応）', bathroom_installation_type:'設置環境', installation_environment:'設置環境',
   frame_spec:'枠仕様',upper_frame_spec:'上枠仕様',lower_frame_spec:'下枠仕様',fukashi_presence:'ふかし枠',fukashi_sides:'ふかし枠構成',fukashi_depth:'ふかし枠寸法',fukashi_reinforcement:'ふかし枠詳細 / 補強',
+  crescent_presence:'クレセント有無',crescent_type:'クレセント種類',crescent_position_mode:'クレセント位置',crescent_position_p_mm:'クレセント位置P',
   option_items:'オプション',
 });
 
@@ -179,6 +181,6 @@ export function applyInnerWindowUiOrder(fields = []) {
     approvedExtensionForField: approvedInnerWindowExtensionForField,
     shouldExposeField: shouldExposeInnerWindowRuntimeField,
     standardLabelForField: standardLabelForInnerWindowField,
-    presentationExtensionForField: key => ['size_w','size_h','order_width','order_height','sash_width_allocation','sash_w1','sash_w2','sash_w3','sash_w4'].includes(key) ? {slot:'INNER_WINDOW_FINAL_DIMENSION',order:9} : null,
+    presentationExtensionForField: key => ['size_w','size_h','order_width','order_height','sash_width_allocation','sash_w1','sash_w2','sash_w3','sash_w4'].includes(key) ? {slot:'INNER_WINDOW_FINAL_DIMENSION',order:9} : key==='crescent_position_p_mm' ? {slot:'INNER_WINDOW_POST_DIMENSION_CRESCENT_P',order:10} : null,
   });
 }
