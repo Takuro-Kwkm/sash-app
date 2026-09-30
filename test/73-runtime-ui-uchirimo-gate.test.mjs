@@ -52,6 +52,34 @@ test('Low-E block, spacer and cavity are separate Runtime dependencies', async (
   assert.equal(field(result, 'gas_fill'), undefined);
 });
 
+test('Uchirimo glazing choices expose Japanese UI labels instead of canonical English tokens', async () => {
+  let result = await resolveRuntimeAppProduct(PRODUCT, baseNode);
+  assert.deepEqual(
+    Object.fromEntries(field(result, 'glass_family').values.map((row) => [row.value, row.displayLabel])),
+    { insulating_glass:'複層ガラス', single_glazing:'単板ガラス', vacuum_glass:'真空ガラス' },
+  );
+
+  result = await resolveRuntimeAppProduct(PRODUCT, { ...baseNode, glass_family:'insulating_glass', glass_structure:'P3P3' });
+  const lowE = Object.fromEntries(field(result, 'low_e_type').values.map((row) => [row.value, row.displayLabel]));
+  assert.equal(lowE.insulating, '断熱タイプ');
+  assert.equal(lowE.solar_control, '遮熱タイプ');
+  assert.equal(lowE.none, 'なし');
+
+  const spacer = Object.fromEntries(field(result, 'spacer_type').values.map((row) => [row.value, row.displayLabel]));
+  assert.equal(spacer.aluminum, 'アルミスペーサー');
+  assert.equal(spacer.resin, '樹脂スペーサー');
+
+  const gas = Object.fromEntries(field(result, 'gas_fill').values.map((row) => [row.value, row.displayLabel]));
+  assert.equal(gas.air, '空気層');
+  assert.equal(gas.argon, 'アルゴンガス入り');
+
+  result = await resolveRuntimeAppProduct(PRODUCT, {
+    ...baseNode, glass_family:'insulating_glass', glass_structure:'P3P3', low_e_type:'insulating',
+  });
+  const coating = Object.fromEntries(field(result, 'glass_coating_color').values.map((row) => [row.value, row.displayLabel]));
+  for (const [value, label] of Object.entries(coating)) assert.notEqual(label, value, `raw glass coating token leaked: ${value}`);
+});
+
 test('v1.9 keeps semantic SIZE with pre-option dimension presentation', async () => {
   const result = await resolveRuntimeAppProduct(PRODUCT, { ...baseNode, glass_family: 'insulating_glass', glass_structure: 'P3P3', low_e_type: 'insulating' });
   const order = result.fields.map((row) => row.key);
