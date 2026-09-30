@@ -15,10 +15,13 @@ const currentRun=Number(process.env.GITHUB_RUN_ID??0);
 const token=String(process.env.GH_TOKEN??process.env.GITHUB_TOKEN??'');
 const api=String(process.env.GITHUB_API_URL??'https://api.github.com');
 const branch=String(process.env.HEAD_BRANCH??process.env.GITHUB_HEAD_REF??process.env.GITHUB_REF_NAME??'');
+const pinnedRunId=Number(process.env.UCHIRIMO_CHECKPOINT_SOURCE_RUN_ID??0);
+const pinnedArtifactId=Number(process.env.UCHIRIMO_CHECKPOINT_SOURCE_ARTIFACT_ID??0);
 const out=String(process.env.UCHIRIMO_V12_CONTROLLER_OUT??'artifacts/uchirimo-v12-controller');
 const plan=JSON.parse(readFileSync(process.env.UCHIRIMO_V12_PARENT_PLAN??'artifacts/uchirimo-v12-parent-plan/all-partitions.json','utf8'));
 const headers={Authorization:'Bearer '+token,Accept:'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'};
 if(!/^[0-9a-f]{40}$/.test(head)||!repo||!token||!currentRun||!branch)throw new Error('UCHIRIMO_CHECKPOINT_DISCOVERY_ENV');
+if((pinnedRunId&&!Number.isSafeInteger(pinnedRunId))||(pinnedArtifactId&&!Number.isSafeInteger(pinnedArtifactId))||Boolean(pinnedRunId)!==Boolean(pinnedArtifactId))throw new Error('UCHIRIMO_CHECKPOINT_PIN_INVALID');
 const git=args=>execFileSync('git',args,{encoding:'utf8',maxBuffer:64*1024*1024}).trim();
 const show=(ref,path)=>git(['show',ref+':'+path]);
 const output=(key,value)=>{if(process.env.GITHUB_OUTPUT)appendFileSync(process.env.GITHUB_OUTPUT,key+'='+String(value)+'\n');};
@@ -46,18 +49,20 @@ if(!runtime?.sourcePackageIntegrity?.match)throw new Error('UCHIRIMO_CHECKPOINT_
 const runtimeHash=String(runtime.sourcePackageIntegrity.actual);
 const population=parentPopulationHash(plan);
 const planner=sha256({controller_contract_version:CONTROLLER_CONTRACT_VERSION,parent_population_sha256:population});
-const runs=(await json('actions/workflows/project-governance-gate.yml/runs?branch='+encodeURIComponent(branch)+'&per_page=100')).workflow_runs??[];
+const runs=pinnedRunId?[await json('actions/runs/'+pinnedRunId)]:(await json('actions/workflows/project-governance-gate.yml/runs?branch='+encodeURIComponent(branch)+'&per_page=100')).workflow_runs??[];
 const candidates=[];
 for(const run of runs){
+ if(pinnedRunId&&(Number(run.id)!==pinnedRunId||run.head_branch!==branch))throw new Error('UCHIRIMO_CHECKPOINT_PIN_RUN_MISMATCH');
  if(Number(run.id)===currentRun||!run.head_sha)continue;
  if(spawnSync('git',['merge-base','--is-ancestor',run.head_sha,head]).status!==0)continue;
  let compatible;try{compatible=executionFilesIdentical(run.head_sha);}catch(error){console.log('UCHIRIMO_CHECKPOINT_INCOMPATIBLE_SOURCE='+run.id+' reason='+String(error.message).split('\n')[0]);compatible=false;}if(!compatible)continue;
  for(let page=1;;page++){
   const listing=await json('actions/runs/'+run.id+'/artifacts?per_page=100&page='+page);const rows=listing.artifacts??[];
-  for(const artifact of rows)if(!artifact.expired&&new RegExp('^uchirimo-v12-controller-state-'+run.head_sha+'-g[0-9]+$').test(artifact.name))candidates.push({run,artifact});
+  for(const artifact of rows)if(!artifact.expired&&(!pinnedArtifactId||Number(artifact.id)===pinnedArtifactId)&&new RegExp('^uchirimo-v12-controller-state-'+run.head_sha+'-g[0-9]+$').test(artifact.name))candidates.push({run,artifact});
   if(rows.length<100||page*100>=listing.total_count)break;
  }
 }
+if(pinnedArtifactId&&(candidates.length!==1||Number(candidates[0].artifact.id)!==pinnedArtifactId))throw new Error('UCHIRIMO_CHECKPOINT_PIN_ARTIFACT_MISSING');
 candidates.sort((a,b)=>Date.parse(b.artifact.created_at)-Date.parse(a.artifact.created_at));
 const temporary=mkdtempSync(join(tmpdir(),'uchirimo-checkpoint-'));
 const valid=[];

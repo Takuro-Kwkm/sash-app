@@ -1,0 +1,138 @@
+name: Uchirimo V12 Sales UI Integration
+
+on:
+  push:
+    branches: [integration/uchirimo-sales-ui-v12-20260929]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  browser-qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: npm install --ignore-scripts
+      - run: npm run lint && npm run typecheck && npm test
+      - run: |
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+      - name: Exercise actual Runtime on desktop and mobile
+        env:
+          HEAD_SHA: ${{ github.sha }}
+        run: |
+          npm run start:qa > /tmp/sash-v12-sales-ui.log 2>&1 &
+          pid=$!
+          trap 'kill "$pid" || true' EXIT
+          for i in {1..60}; do
+            if curl -fsS http://127.0.0.1:4173/api/health >/dev/null; then break; fi
+            sleep 1
+          done
+          node test/browser/uchirimo-runtime-browser-qa.mjs
+          node test/browser/global-window-selection-flow-browser-qa.mjs
+          node test/browser/release-regression-browser-qa.mjs
+          npm run test:browser:work
+          npm run test:browser:estimate-output
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: uchirimo-v12-sales-ui-browser-qa-${{ github.sha }}
+          path: |
+            artifacts/uchirimo-runtime-browser-qa/
+            artifacts/global-window-selection-flow-browser-qa/
+            artifacts/release-regression-browser-qa/
+            artifacts/work-management-browser-qa/
+            artifacts/estimate-output-browser-qa/
+          if-no-files-found: warn
+
+  checkpoint-bind:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      HEAD_SHA: ${{ github.sha }}
+      HEAD_BRANCH: feat/new-construction-runtime-ui-v16-20260910
+      GH_TOKEN: ${{ github.token }}
+      UCHIRIMO_SELECTOR_CURRENT_PLAN: artifacts/uchirimo-v12-parent-plan/all-partitions.json
+      UCHIRIMO_V12_PARENT_PLAN: artifacts/uchirimo-v12-parent-plan/all-partitions.json
+      UCHIRIMO_V12_CONTROLLER_OUT: artifacts/uchirimo-v12-ui-checkpoint
+      UCHIRIMO_CHECKPOINT_SOURCE_RUN_ID: '36521352366'
+      UCHIRIMO_CHECKPOINT_SOURCE_ARTIFACT_ID: '11013298429'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: npm install --ignore-scripts
+      - name: Build frozen canonical denominator
+        env:
+          UCHIRIMO_SELECTOR_MODE: plan-all
+          UCHIRIMO_FULL_SELECTOR_OUT: artifacts/uchirimo-v12-parent-plan
+        run: node scripts/uchirimo-full-selector-proof.mjs
+      - name: Import compatible cumulative checkpoint to this HEAD
+        run: node scripts/governance/uchirimo-controller-checkpoint-discovery.mjs
+      - name: Require parent evidence and unchanged execution dependencies
+        run: |
+          node --input-type=module <<'NODE'
+          import {readFileSync} from 'node:fs';
+          const base='artifacts/uchirimo-v12-ui-checkpoint/';
+          const report=JSON.parse(readFileSync(base+'checkpoint-import-report.json'));
+          const state=JSON.parse(readFileSync(base+'controller-state.json'));
+          const frontier=JSON.parse(readFileSync(base+'preflight-report.json'));
+          if(state.exact_head!==process.env.HEAD_SHA||state.closed_parent_count<3832||frontier.status!=='PASS')throw new Error('V12_CHECKPOINT_BINDING_FAILED');
+          console.log(JSON.stringify({exactHead:state.exact_head,closed:state.closed_parent_count,passUnits:state.pass_unit_count,source:report.source,frontier:frontier.status}));
+          NODE
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: uchirimo-v12-ui-checkpoint-${{ github.sha }}
+          path: artifacts/uchirimo-v12-ui-checkpoint/
+          if-no-files-found: warn
+
+  preview:
+    needs: [browser-qa, checkpoint-bind]
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      VERCEL_ORG_ID: team_AkuHacuJlCl8LuvaFpCzFmbv
+      VERCEL_PROJECT_ID: prj_4z0zqW6yKyPuFINODfGX8LPBuJRP
+      VERCEL_PROJECT_NAME: sash-app-wave3-preview
+      RELEASE_SERIES: UCHIRIMO_V12_SALES_UI
+      RELEASE_PACKAGE_VERSION: integration-preview
+      VERCEL_DEPLOY_SOURCE: files
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Prepare Vercel credential
+        env:
+          VERCEL_TOKEN_PRIMARY: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_TOKEN_FALLBACK: ${{ secrets.VERCEL_ACCESS_TOKEN }}
+        run: |
+          token="${VERCEL_TOKEN_PRIMARY:-${VERCEL_TOKEN_FALLBACK:-}}"
+          if [[ -z "$token" ]]; then echo 'VERCEL_CREDENTIAL_GATE=BLOCKED'; exit 42; fi
+          echo "VERCEL_TOKEN_EFFECTIVE=$token" >> "$GITHUB_ENV"
+      - name: Deploy exact HEAD preview
+        run: node scripts/vercel-rest-deploy.mjs preview artifacts/uchirimo-v12-sales-ui/deployment.json
+      - name: Verify preview identity and service
+        run: |
+          node --input-type=module <<'NODE'
+          import {readFileSync} from 'node:fs';
+          const d=JSON.parse(readFileSync('artifacts/uchirimo-v12-sales-ui/deployment.json'));
+          if(d.readyState!=='READY'||d.githubSha!==process.env.GITHUB_SHA||d.releaseCommitSha!==process.env.GITHUB_SHA||d.mode!=='preview')throw new Error('PREVIEW_IDENTITY_INVALID');
+          console.log('PREVIEW_IDENTITY=PASS '+d.deploymentUrl);
+          NODE
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: uchirimo-v12-sales-ui-preview-${{ github.sha }}
+          path: artifacts/uchirimo-v12-sales-ui/
+          if-no-files-found: warn
