@@ -30,13 +30,19 @@ try{
   assert.equal(await page.evaluate(()=>document.documentElement.dataset.theme),'dark');
   assert.equal(await page.evaluate(()=>localStorage.getItem('sash.theme.v1')),'dark');
   const darkColors=await page.evaluate(()=>({
+    html:getComputedStyle(document.documentElement).backgroundColor,
     body:getComputedStyle(document.body).backgroundColor,
+    bodyHeight:document.body.getBoundingClientRect().height,
+    viewportHeight:window.innerHeight,
     topbar:getComputedStyle(document.querySelector('.topbar')).backgroundColor,
     select:getComputedStyle(document.querySelector('#themePreference')).backgroundColor,
   }));
+  assert.equal(darkColors.html,'rgb(17, 19, 21)');
   assert.equal(darkColors.body,'rgb(17, 19, 21)');
+  assert.ok(darkColors.bodyHeight>=darkColors.viewportHeight,'body must fill the viewport in dark mode');
   assert.equal(darkColors.topbar,'rgb(23, 26, 30)');
   assert.equal(darkColors.select,'rgb(34, 39, 44)');
+  report.scenarios.DARK_FULL_VIEWPORT_BACKGROUND='PASS';
   await page.screenshot({path:`${OUT}/dark-desktop-1440x1000.png`,fullPage:true});
   report.scenarios.DARK_VISUAL_TOKENS='PASS';
 
