@@ -99,6 +99,7 @@ const APPROVED_INNER_WINDOW_EXTENSIONS = Object.freeze({
   existing_angle_tip_mm: installationExtension('existing_angle_tip_mm', 243),
   system_bath_component_screw_interference: installationExtension('system_bath_component_screw_interference', 244),
   existing_window_to_jamb_step_large: installationExtension('existing_window_to_jamb_step_large', 245),
+  fukashi_curtain_rail: installationExtension('fukashi_curtain_rail', 246),
   crescent_presence: optionExtension('crescent_presence', 300),
   crescent_type: optionExtension('crescent_type', 301),
   pull_handle_type: optionExtension('pull_handle_type', 302),
@@ -110,6 +111,7 @@ const APPROVED_INNER_WINDOW_EXTENSIONS = Object.freeze({
   bottom_rail_type: optionExtension('bottom_rail_type', 308),
   arm_stopper_option: optionExtension('arm_stopper_option', 309),
   outside_handle_option: optionExtension('outside_handle_option', 310),
+  sales_installation_auxiliaries: optionExtension('sales_installation_auxiliaries', 311),
 });
 
 const INNER_WINDOW_TECHNICAL_EXACT = new Set([
