@@ -18,6 +18,17 @@ export const UCHIRIMO_SALES_REQUEST = Object.freeze({
   fields:Object.freeze([
     ...SALES_GLAZING_REQUEST.fields,
     {
+      key:'crescent_position_custom_mm',
+      displayLabel:'クレセント位置（mm）',
+      dataType:'NUMBER',
+      unit:'mm',
+      required:true,
+      manualCheck:true,
+      handoffKey:'crescent_position_custom_mm',
+      when:{crescent_position:'custom'},
+      helpText:'位置指定時の数値を入力します。特注W/H入力後に表示し、最終製作可否は積算／YKK AP確認へ引き継ぎます。',
+    },
+    {
       key:'fukashi_curtain_rail',
       displayLabel:'カーテンレール対応',
       handoffKey:'fukashi_curtain_rail_request',
@@ -87,7 +98,8 @@ export const INPLUS_SALES_REQUEST = Object.freeze({
       key:'crescent_position_mode',
       displayLabel:'クレセント位置',
       handoffKey:'crescent_position_mode',
-      when:{window_type:'引違い窓',crescent_presence:'installed'},
+      when:{window_type:'引違い窓'},
+      unless:{crescent_presence:'crescentless_special_order'},
       values:[['standard','標準位置',false],['custom','位置指定',true]],
       helpText:'位置指定を選ぶと、特注W/Hの後にクレセント位置Pを入力します。',
     },
