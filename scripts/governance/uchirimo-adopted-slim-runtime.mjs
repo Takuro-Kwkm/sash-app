@@ -11,7 +11,7 @@ export async function loadAdoptedSlimQaRuntime(){
  const bytes=readFileSync('src/catalog/runtime-master-packages/ykkap-uchirimo-slim-v3-frame/canonical.json');
  const candidate={canonical:JSON.parse(bytes)};
  const entry=getRuntimeMasterEntry('YKK AP','ウチリモ 内窓');
- assert.equal(entry.runtimeRevision,'SLIM-V3-INNER-WINDOW-CANONICAL-FRAME-20260929');
+ assert.equal(entry.runtimeRevision,'SLIM-V4-INNER-WINDOW-CANONICAL-FRAME-20260930');
  const pkg=await loadCanonicalWorkbookRuntimePackage(entry);
  assert.deepEqual(pkg.documents.canonical_runtime,candidate.canonical,'ADOPTED_SLIM_DATA_DRIFT');
  assert.ok(!pkg.documents.canonical_runtime.glass_node_matrix,'LEGACY_MATRIX_REGISTERED');

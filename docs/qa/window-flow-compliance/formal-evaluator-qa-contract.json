@@ -1,8 +1,8 @@
 {
   "schema": "UCHIRIMO_SELECTOR_DEPENDENCY_CONTRACT_V1",
-  "scope": "Historical frozen Slim V2 source-evaluator regression only. R3 canonical frame semantics require fresh independent QA; this witness is not carried forward as R3 PASS.",
+  "scope": "Historical frozen Slim source-evaluator regression only. R4 display-label precedence is freshly pinned; R4 canonical frame semantics require independent QA and are not inferred from this witness.",
   "source_sha256": {
-    "src/catalog/runtime-master/uchirimo-tabular-v1-adapter.mjs": "d56efc591a648ec3379e6bba0fe8261de933cdcada4ac9439b34fd280dd14c50",
+    "src/catalog/runtime-master/uchirimo-tabular-v1-adapter.mjs": "a6f3cdca31609a2cde44e11c972b2446440e31cf988f1a1908aff6ecfde971ee",
     "src/catalog/runtime-master/uchirimo-glass-rule-model.mjs": "0e8b1e37a05d25f80e7fc7f9a930c4349f8f97b5c43e9706c8aa99d1904c88b7",
     "src/catalog/runtime-master/runtime-app-bridge.mjs": "ae020559dde2379d3c5e6f315006d1b2ccecef30425aa599d90080b6268aae76",
     "src/catalog/runtime-master/new-construction-sash-runtime-ui-contract.mjs": "7f7cec995f75b6b74f6b1fdafb6968051d4fed8772be26a473728886437b8f91",
@@ -14,12 +14,17 @@
     "scripts/governance/uchirimo-slim-runtime-support.mjs": "39344a263b8b0dab5ced1528c569f82d651e4b2e6f102f4ff692e75a56561fe1",
     "scripts/governance/uchirimo-slim-factorized-selector.mjs": "a2fb337342762b4ff7012fc8bdd10eecfa1b72810a08d2f23703d2be4de84d79",
     "scripts/governance/uchirimo-frozen-migration-entry.mjs": "e0e5f78b2a51b9154bed8d07cde609768c3a0eb5ce53ef3cba7dc33f3a804d9e",
-    "scripts/governance/uchirimo-adopted-slim-runtime.mjs": "873dd4d7d862303d1936d5620dccac86c67ca053896db4d1a6d441e3cc0e136b",
+    "scripts/governance/uchirimo-adopted-slim-runtime.mjs": "6c19055c86a6c8b4166b52434297758bcb40e629aec759aa0979e39259d31776",
     "scripts/governance/formal-selector-qa-projection.mjs": "f1acb09facd8cec0781a8a3e09398a338226bdb8008089f39264d00bf5035f8b"
   },
   "review": {
     "baseline_contract": "data/uchirimo-slim/selector-dependency-contract.json",
     "changed_source_pins": [
+      {
+        "file": "src/catalog/runtime-master/uchirimo-tabular-v1-adapter.mjs",
+        "baseline_sha256": "d56efc591a648ec3379e6bba0fe8261de933cdcada4ac9439b34fd280dd14c50",
+        "candidate_sha256": "a6f3cdca31609a2cde44e11c972b2446440e31cf988f1a1908aff6ecfde971ee"
+      },
       {
         "file": "src/catalog/runtime-master/runtime-app-bridge.mjs",
         "baseline_sha256": "ceedd90b52559eb082696421a2fb6843e248c8886257a6b84ed0a11b1fefd7eb",
@@ -38,7 +43,7 @@
       {
         "file": "scripts/governance/uchirimo-adopted-slim-runtime.mjs",
         "baseline_sha256": "781d6177c537af344ada8d951ec8fd3c33a906c22768917be65fd9ced9f109b2",
-        "candidate_sha256": "03173318330cb1a2d000dbb8f6c3c00aed12da9f80bf4d3e95d7601c5034fa5a"
+        "candidate_sha256": "6c19055c86a6c8b4166b52434297758bcb40e629aec759aa0979e39259d31776"
       },
       {
         "file": "scripts/governance/formal-selector-qa-projection.mjs",
@@ -46,8 +51,9 @@
         "candidate_sha256": "f1acb09facd8cec0781a8a3e09398a338226bdb8008089f39264d00bf5035f8b"
       }
     ],
-    "dependency_edge_review": "Adapter, glass model, runtime data, dependencyGraph and source resolver unchanged. toRuntimeUiResult adds presentation metadata/order only for raw formal states; presentationFields is absent on this QA boundary. No new read/write dependency edges in the evaluated Formal resolver. Public evaluateInnerWindowPresentation is intentionally covered by App tests and browser QA, not this factorized proof.",
+    "dependency_edge_review": "Adapter change is limited to display-label precedence: explicit Formal display_name wins and the generic dictionary is fallback-only. Resolver dependency reads/writes, glass model, runtime data and dependencyGraph are unchanged; R4 dependency behavior is covered by fresh canonical and browser QA.",
     "qa_projection": "Test-only projection exposes source-proven internal size selectors to the Formal enumeration driver. It does not alter their values, domains, dependencies or source evaluator. Public UI remains hidden and is tested separately.",
-    "canonical_frame_r3": "New public frame wrapper does not run in the historical witness. Current registered R3 package/adopted runtime has separate exact identity and semantic tests. Historical extraction explicitly reconstructs its old last-role-wins view; live loader preserves every component. The explicit support-component projection/60 incompatibility is consumed only by the new canonical-frame contract; the historical witness has no such contract and is unchanged. Fresh R3 integration tests cover that dependency."
+    "canonical_frame_r3": "New public frame wrapper does not run in the historical witness. Current registered R3 package/adopted runtime has separate exact identity and semantic tests. Historical extraction explicitly reconstructs its old last-role-wins view; live loader preserves every component. The explicit support-component projection/60 incompatibility is consumed only by the new canonical-frame contract; the historical witness has no such contract and is unchanged. Fresh R3 integration tests cover that dependency.",
+    "canonical_frame_r4": "Uchirimo R4 restores fukashi_sides from EV-UCH-028 and preserves clear as the Formal label クリア. Current registered R4 package has exact identity, semantic tests and downstream-clear QA; the historical factorized witness is not used as R4 proof."
   }
 }
