@@ -71,10 +71,12 @@ export function createRecoveryRequestHandler({backend="node:http recovery server
     if(url.pathname==="/app.js") return staticFile(res,"app.js","text/javascript; charset=utf-8");
     if(url.pathname==="/product-configuration-editor.mjs") return staticFile(res,"product-configuration-editor.mjs","text/javascript; charset=utf-8");
     if(url.pathname==="/estimate-output-integration.mjs") return staticFile(res,"estimate-output-integration.mjs","text/javascript; charset=utf-8");
+    if(url.pathname==="/theme.js") return staticFile(res,"theme.js","text/javascript; charset=utf-8");
     if(url.pathname==="/styles.css") return staticFile(res,"styles.css","text/css; charset=utf-8");
     if(url.pathname==="/styles-wave3.css") return staticFile(res,"styles-wave3.css","text/css; charset=utf-8");
     if(url.pathname==="/work-management.css") return staticFile(res,"work-management.css","text/css; charset=utf-8");
     if(url.pathname==="/estimate-output.css") return staticFile(res,"estimate-output.css","text/css; charset=utf-8");
+    if(url.pathname==="/theme.css") return staticFile(res,"theme.css","text/css; charset=utf-8");
     const workModule=url.pathname.match(/^\/work-management\/(domain|storage|repositories|service)\.mjs$/)?.[1];
     if(workModule)return staticFileAt(res,join(root,"src","work-management",`${workModule}.mjs`),"text/javascript; charset=utf-8");
     const estimateModule=url.pathname.match(/^\/estimate-output\/(model|pdf-renderer|xlsx-renderer)\.mjs$/)?.[1];
