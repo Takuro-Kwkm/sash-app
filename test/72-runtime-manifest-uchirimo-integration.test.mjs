@@ -7,14 +7,14 @@ import { adaptUchirimoTabularV1 } from '../src/catalog/runtime-master/uchirimo-t
 import { getRuntimeAppIntegration, resolveRuntimeAppProduct } from '../src/catalog/runtime-master/runtime-app-bridge.mjs';
 
 const PRODUCT = 'SER-YKKAP-UCHIRIMO';
-const MANIFEST_SHA = '6fc2e5fa375930198ef7d9639fca7998d3fbb6e5ee2a412b6652514ed27ce24b';
+const MANIFEST_SHA = '9da322b90cacd3b0657c3fffb4baadf1d2a9b7e2e197553191b568173283fa18';
 
-test('Uchirimo is declaratively registered from the formal v1.0-P7R1-R4 manifest', () => {
+test('Uchirimo is declaratively registered from the formal v1.0-P7R1-R5 manifest', () => {
   const integration = getRuntimeAppIntegration(PRODUCT);
   assert.deepEqual({ manufacturer: integration.manufacturer, series: integration.series, packageVersion: integration.packageVersion, schemaVersion: integration.schemaVersion, uiCategory: integration.uiCategory, adapterType: integration.adapterType }, {
-    manufacturer: 'YKK AP', series: 'ウチリモ 内窓', packageVersion: 'v1.0-P7R1-R4', schemaVersion: '2.0', uiCategory: 'INNER_WINDOW', adapterType: 'UCHIRIMO_TABULAR_V1',
+    manufacturer: 'YKK AP', series: 'ウチリモ 内窓', packageVersion: 'v1.0-P7R1-R5', schemaVersion: '2.0', uiCategory: 'INNER_WINDOW', adapterType: 'UCHIRIMO_TABULAR_V1',
   });
-  assert.equal(integration.canonicalRuntimeReference.runtimeManifestDriveFileId, '10wOlwX4c0E0lCRuCKl-EdrW0vwwHTEGV');
+  assert.equal(integration.canonicalRuntimeReference.runtimeManifestDriveFileId, '1o_Pz5vBYy6xXJOUWxKHtlZqL24sqaP_p');
   assert.equal(integration.canonicalRuntimeReference.canonicalFolderId, '1-flyN0KX2zdqXbebX2kVF4VRW0jTSrQu');
   assert.equal(integration.sourceHash, MANIFEST_SHA);
 });
@@ -28,7 +28,7 @@ test('manifest is the only package entry and all four declared component bytes p
   assert.equal(runtime.sourcePackageIntegrity.match, true);
   assert.equal(runtime.sourcePackageIntegrity.files.length, 4);
   assert.deepEqual(runtime.sourcePackageIntegrity.files.map((row) => row.fileId), [
-    '1K_JE1OP07uoIQQKojZWp2cNqv2ZNY9WH', '1XDEsvqz5l7VGkoHXnyZ5WpFwEQy4qDIe', '1wm6kPViHaIOb_-pfkKuJurV9H2TjNTrS', '1wn8gKt6vwzCRbw1CrATq7aKtzx1UIvlK',
+    '1qPZQqOUERTb0sjREicbOwNVLtnqelxl3', '1NIaLgsC1570H-8aOEyf8GjofjvTT729x', '11A8Y5_b3C-qwPzt-UcFMFjZqUBzT5BDd', '1ZvTp_9bNJsqM9nPIy5yh8bJyW-V37sWk',
   ]);
   assert.ok(runtime.sourcePackageIntegrity.files.every((row) => row.match && ['brotli','identity'].includes(row.codec)));
 });
@@ -38,7 +38,7 @@ test('schema adapter preserves formal inventories and does not invent standard s
   assert.equal(master.canonical.product_nodes.length, 15);
   assert.equal(master.canonical.glass_rule_model.identities.length, 566);
   assert.equal(master.canonical.glass_node_matrix, undefined);
-  assert.equal(master.canonical.dependency_rules.length, 29);
+  assert.equal(master.canonical.dependency_rules.length, 30);
   assert.equal(master.canonical.option_master.length, 9);
   assert.equal(master.capabilities.standardSizeRecords, 0);
   assert.equal(master.capabilities.sizeMode, 'custom');
