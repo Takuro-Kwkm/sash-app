@@ -7,7 +7,7 @@
     "src/catalog/runtime-master/runtime-app-bridge.mjs": "d85009e03f163c0fffe5658b049ab7d0b271ea54b6188b2cb0619ecd1b54bec4",
     "src/catalog/runtime-master/new-construction-sash-runtime-ui-contract.mjs": "7f7cec995f75b6b74f6b1fdafb6968051d4fed8772be26a473728886437b8f91",
     "scripts/governance/uchirimo-selector-batch-runner.mjs": "29f26ef702d4c505ed3ab27de35eafc36b63f24bbbfe0d7fbaa55b631f920d74",
-    "src/catalog/runtime-master/inner-window-runtime-ui-contract.mjs": "3f8c74de7872adaac2b59d93fb85a6ae9092024b1614c0cef4e5b91bfa6fce0b",
+    "src/catalog/runtime-master/inner-window-runtime-ui-contract.mjs": "31bd8cc0c5906b5f5220fabefd562267432d492d8b133c06771922627c3c30ad",
     "src/catalog/runtime-master/global-window-selection-flow-engine.mjs": "e95f567131fd7ecc47c50f6b674b826aea9ab3508a938e9a5fc37f889097ebe1",
     "src/catalog/runtime-master/canonical-window-semantic-schema.mjs": "03ace90218363f62ad89280c77a328bb2e05efd362f6b17eca8989f0d52edeb7",
     "data/uchirimo-slim/runtime-support.json": "25eaf0a65482aed99a37852c1b1c5c7d4c60de54c1a3954923abb4f11b7e4a1d",
@@ -33,7 +33,7 @@
       {
         "file": "src/catalog/runtime-master/inner-window-runtime-ui-contract.mjs",
         "baseline_sha256": "e7075aaafb832d93f54bf67c74ca52a9345a9b714c01277337c3a9fe3b1beaff",
-        "candidate_sha256": "3f8c74de7872adaac2b59d93fb85a6ae9092024b1614c0cef4e5b91bfa6fce0b"
+        "candidate_sha256": "31bd8cc0c5906b5f5220fabefd562267432d492d8b133c06771922627c3c30ad"
       },
       {
         "file": "src/catalog/runtime-master/global-window-selection-flow-engine.mjs",
