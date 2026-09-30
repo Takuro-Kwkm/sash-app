@@ -26,7 +26,7 @@ for(const width of [1440,768,390]){
    const before=await capture();
    const order=before.result.fields.filter(f=>common.includes(f.key)).map(f=>f.key);assert.deepEqual(order,common.filter(k=>order.includes(k)));
    for(const k of legacy)assert.ok(!before.result.fields.some(f=>f.key===k));
-   if(spec.id==='SER-YKKAP-UCHIRIMO'){assert.ok(!before.result.fields.some(f=>f.key==='upper_frame_spec'));const sides=before.result.fields.find(f=>f.key==='fukashi_sides');assert.ok(sides);assert.deepEqual(sides.values.filter(v=>!v.disabled).map(v=>v.value),['three_side','four_side']);}
+   if(spec.id==='SER-YKKAP-UCHIRIMO'){assert.ok(!before.result.fields.some(f=>f.key==='upper_frame_spec'));const sides=before.result.fields.find(f=>f.key==='fukashi_sides');assert.ok(sides);assert.deepEqual(sides.values.filter(v=>!v.disabled).map(v=>v.value),['three_side','four_side']);const middle=before.result.fields.find(f=>f.key==='middle_rail_option');assert.ok(middle);assert.deepEqual(new Set(middle.values.filter(v=>!v.disabled).map(v=>v.value)),new Set(['none','enabled']));assert.equal(before.result.fields.some(f=>f.key==='middle_rail_position'),false);const middleLabels=(await page.locator('#dynamicForm [data-spec-key="middle_rail_option"] option').allTextContents()).filter(x=>x!=='選択してください');assert.deepEqual(new Set(middleLabels),new Set(['なし','あり']));}
    const revision=await page.locator('#dynamicForm').getAttribute('data-resolve-revision');
    await page.locator(`[data-spec-key="${key}"]`).selectOption(value);
    await page.waitForFunction(r=>document.querySelector('#dynamicForm').dataset.resolveRevision!==r,revision);
