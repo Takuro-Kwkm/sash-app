@@ -83,7 +83,7 @@ await editor.resolve();
 `;
 let html=readFileSync('src/ui/web/index.html','utf8');
 html=html.replace(/<link rel="stylesheet" href="\/([^\"]+)">/g,(_,name)=>'<style>'+readFileSync('src/ui/web/'+name,'utf8')+'</style>');
-html=html.replace('<script type="module" src="/theme.js"></script>',()=>'<script type="module">'+readFileSync('src/ui/web/theme.js','utf8')+'</script>');
+html=html.replace(/<script(?: type="module")? src="\/theme\.js"><\/script>/,()=>'<script type="module">'+readFileSync('src/ui/web/theme.js','utf8')+'</script>');
 const heading=focus==='handing'?'インプラス — 勝手の選択・対象構成確認':focus==='bathroom'?'浴室仕様 — 見積／現場調査の責務分離':focus==='inplus'?'インプラス — 中桟の希望・H後判定確認':'ウチリモ — ガラスデザイン・R6オプション確認';
 const version=focus==='bathroom'?'インプラス浴室 Formal v1.0 / ウチリモ Formal R6（変更なし）':['inplus','handing'].includes(focus)?'インプラス Runtime v0.4-R3':'Product Master v1.0-P7R1-R6 / Runtime v1.0-P7R1-R5';
 html=html.replace('<main id="appMain" aria-live="polite"></main>',`<section class="card compact"><h2>${heading}</h2><p>8シリーズの配置版と同じマスター・Adapter・選択処理を使用。${focus==='inplus'?'中桟の希望と位置を選択済みです。W/Hを入力して判定表示を確認できます。':''}</p><p>このHTMLは商品選定の確認用です。API通信をブラウザ内処理に置き換えています。案件保存・見積出力は配置版で利用できます。</p><small>App 0.2.0-recovery | ${version} | Preview Build: ${identity.slice(0,16)}<br>HEAD: ${exactHead}<br>生成: ${generatedAt}</small></section><main id="appMain" aria-live="polite"></main>`);

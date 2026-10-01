@@ -116,6 +116,11 @@ jobs:
           npm run test:browser:work
           npm run test:browser:estimate-output
           node test/browser/eight-series-business-flow-qa.mjs
+          node test/browser/inplus-reverse-handing-browser-qa.mjs
+          node test/browser/inplus-accessory-request-browser-qa.mjs
+          node test/browser/bathroom-estimate-workflow-browser-qa.mjs
+          node test/browser/inner-window-canonical-frame-qa.mjs
+          node test/browser/release-regression-browser-qa.mjs
           echo 'PRODUCTION_BROWSER_QA_GATE=PASS'
 
       - name: Upload hotfix evidence
