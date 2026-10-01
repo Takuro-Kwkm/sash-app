@@ -1,4 +1,5 @@
 import { normalizeFrameInput } from './inner-window-frame-engine.mjs';
+import { isBathroomEstimateContext, splitWorkflowSelection, projectEstimateResult } from '../../work-management/field-workflow-scope.mjs';
 import { INNER_WINDOW_INTERNAL_SELECTION_FIELDS } from './inner-window-runtime-ui-contract.mjs';
 import { evaluateInnerWindowPresentation } from './inner-window-sales-extension.mjs';
 import { resolveLowEPresentationLabel } from './inplus-presentation-rules.mjs';
@@ -83,4 +84,29 @@ function resolveProductVariantAdapter(integration,variant,selection){
   const error=new Error(`Unsupported product variant adapter: ${definition.adapterType}`);error.code='PRODUCT_VARIANT_ADAPTER_NOT_REGISTERED';throw error;
 }
 
-export async function resolveRuntimeAppProduct(productId,selection={}){const integration=getRuntimeAppIntegration(productId);if(!integration){const error=new Error(`Unknown Runtime app product: ${productId}`);error.code='RUNTIME_APP_PRODUCT_NOT_FOUND';throw error;}if(!integration.selectable){const error=new Error(integration.blockReason??`Runtime app product is blocked: ${productId}`);error.code='RUNTIME_MASTER_NOT_REGISTERED';error.integration=integration;throw error;}const variant=selectedProductVariant(integration,selection);const variantRaw=variant?resolveProductVariantAdapter(integration,variant,selection):null;if(variantRaw)return withProductVariant(toDirectUiResolverResult(variantRaw,integration),integration,variant);const entry=getRuntimeMasterEntry(integration.manufacturer,integration.series);if(!entry){const error=new Error(`Runtime Master Registry entry disappeared: ${integration.manufacturer}/${integration.series}`);error.code='RUNTIME_MASTER_NOT_REGISTERED';throw error;}const runtime=await loadRegisteredRuntime(integration.manufacturer,integration.series);if(!runtime){const error=new Error(`Runtime Master could not be loaded: ${integration.manufacturer}/${integration.series}`);error.code='RUNTIME_MASTER_LOAD_FAILED';throw error;}let result;if(runtime.uiResolver)result=toDirectUiResolverResult(runtime.uiResolver(selection??{}),integration,runtime.sourcePackageIntegrity);else{const normalized=normalizeRuntimeSelection(runtime.master,selection);const evaluate=(value)=>runtime.resolver?runtime.resolver(value):evaluateConfiguration(runtime.master,value);const state=integration.uiCategory==='INNER_WINDOW'?evaluateInnerWindowPresentation(runtime.master,{...normalized,...Object.fromEntries(Object.entries(selection).filter(([key])=>integration.salesRequestExtension?.fields.some(field=>field.key===key)))},evaluate,integration.salesRequestExtension):evaluate(normalized);result=toRuntimeUiResult(runtime.master,state,integration,runtime.sourcePackageIntegrity);}return variant?withProductVariant(result,integration,variant):result;}
+async function resolveProductFacts(productId,selection={}){const integration=getRuntimeAppIntegration(productId);if(!integration){const error=new Error(`Unknown Runtime app product: ${productId}`);error.code='RUNTIME_APP_PRODUCT_NOT_FOUND';throw error;}if(!integration.selectable){const error=new Error(integration.blockReason??`Runtime app product is blocked: ${productId}`);error.code='RUNTIME_MASTER_NOT_REGISTERED';error.integration=integration;throw error;}const variant=selectedProductVariant(integration,selection);const variantRaw=variant?resolveProductVariantAdapter(integration,variant,selection):null;if(variantRaw)return withProductVariant(toDirectUiResolverResult(variantRaw,integration),integration,variant);const entry=getRuntimeMasterEntry(integration.manufacturer,integration.series);if(!entry){const error=new Error(`Runtime Master Registry entry disappeared: ${integration.manufacturer}/${integration.series}`);error.code='RUNTIME_MASTER_NOT_REGISTERED';throw error;}const runtime=await loadRegisteredRuntime(integration.manufacturer,integration.series);if(!runtime){const error=new Error(`Runtime Master could not be loaded: ${integration.manufacturer}/${integration.series}`);error.code='RUNTIME_MASTER_LOAD_FAILED';throw error;}let result;if(runtime.uiResolver)result=toDirectUiResolverResult(runtime.uiResolver(selection??{}),integration,runtime.sourcePackageIntegrity);else{const normalized=normalizeRuntimeSelection(runtime.master,selection);const evaluate=(value)=>runtime.resolver?runtime.resolver(value):evaluateConfiguration(runtime.master,value);const state=integration.uiCategory==='INNER_WINDOW'?evaluateInnerWindowPresentation(runtime.master,{...normalized,...Object.fromEntries(Object.entries(selection).filter(([key])=>integration.salesRequestExtension?.fields.some(field=>field.key===key)))},evaluate,integration.salesRequestExtension):evaluate(normalized);result=toRuntimeUiResult(runtime.master,state,integration,runtime.sourcePackageIntegrity);}return variant?withProductVariant(result,integration,variant):result;}
+
+export async function resolveRuntimeAppProduct(productId,selection={}, {workflowScope='estimate'}={}){
+  if(workflowScope!=='estimate'&&workflowScope!=='site_survey')throw new TypeError('Unknown workflow scope');
+  if(workflowScope==='site_survey'||!isBathroomEstimateContext(productId,selection))return resolveProductFacts(productId,selection);
+  const estimate=splitWorkflowSelection(selection).estimate;
+  let result=await resolveProductFacts(productId,estimate);
+  // A survey-only installation discriminator can select different Formal size
+  // ranges. Evaluate every allowed branch, never guess or persist its value.
+  const discriminator=result.fields.find(field=>field.key==='installation_environment'||field.key==='bathroom_installation_type');
+  if(discriminator&&result.dimensionResult?.status==='PENDING'&&estimate.size_w!==undefined&&estimate.size_h!==undefined){
+    const candidates=await Promise.all(discriminator.values.filter(value=>!value.disabled).map(async value=>{
+      const branch=await resolveProductFacts(productId,{...estimate,[discriminator.key]:value.value});
+      return {value:value.value,dimension:branch.dimensionResult};
+    }));
+    const dimensions=candidates.map(row=>row.dimension).filter(Boolean);
+    if(dimensions.length){
+      const blocked=dimensions.filter(row=>['BLOCK','BLOCKED'].includes(row.status));
+      const unanimous=dimensions.every(row=>row.status==='PASS');
+      result={...result,dimensionResult:blocked.length===dimensions.length?blocked[0]:unanimous?{...dimensions[0],message:'現場条件を仮確定せず、正式Runtimeの全納まり候補で寸法範囲を確認しました。'}:{status:'REVIEW_REQUIRED',message:'寸法は正式Runtimeの候補範囲内です。最終納まりは現場調査後に確認します。',matchedRuleIds:[...new Set(dimensions.flatMap(row=>row.matchedRuleIds??[]))]},
+        workflowDimensionAssessment:{method:'ALL_FORMAL_DISCRIMINATOR_BRANCHES',field:discriminator.key,candidates}};
+      if(blocked.length===dimensions.length)result.validation={...result.validation,errors:[...result.validation.errors,{errorCode:'ESTIMATE_DIMENSION_OUT_OF_ALL_FORMAL_RANGES',field:'size_w',message:blocked[0].message}]};
+    }
+  }
+  return projectEstimateResult(result,selection);
+}

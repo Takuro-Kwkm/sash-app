@@ -4,7 +4,8 @@
   "source_sha256": {
     "src/catalog/runtime-master/uchirimo-tabular-v1-adapter.mjs": "a6f3cdca31609a2cde44e11c972b2446440e31cf988f1a1908aff6ecfde971ee",
     "src/catalog/runtime-master/uchirimo-glass-rule-model.mjs": "0e8b1e37a05d25f80e7fc7f9a930c4349f8f97b5c43e9706c8aa99d1904c88b7",
-    "src/catalog/runtime-master/runtime-app-bridge.mjs": "4adb8dc6372c9cf906205e0d22eaf8312d7f8aafd0d8d4e9bf5568c955014e62",
+    "src/catalog/runtime-master/runtime-app-bridge.mjs": "3a487b20cd440d30919a076b9d66b3d97d5d64c0d9afd8fb22c33d74e5851570",
+    "src/work-management/field-workflow-scope.mjs": "7afa16757ad1e84ee423c0033798da8ec45dca21674894dfc3f6cafb19841431",
     "src/catalog/runtime-master/new-construction-sash-runtime-ui-contract.mjs": "55f4f3f93be026614f4ab4b0a6df318777d33146743c1588bc1552e1ebaeeef7",
     "scripts/governance/uchirimo-selector-batch-runner.mjs": "29f26ef702d4c505ed3ab27de35eafc36b63f24bbbfe0d7fbaa55b631f920d74",
     "src/catalog/runtime-master/inner-window-runtime-ui-contract.mjs": "1c753f798e9f68e459506cd9f8f91b4dae3e8c0cd794863c6ddadb25c9c0a580",
@@ -20,6 +21,7 @@
     "src/catalog/runtime-master/inner-window-sales-extension.mjs": "1dc5aebdb2aaeb2d972ccb5b6595b986fed817f7a0fc4379d5de0b7003d85dfe"
   },
   "review": {
+    "bathroom_workflow_separation_20261001": "App-side estimate/site_survey scope only. Historical witness calls normalizeRuntimeSelection and raw resolver, which are unchanged. Current bathroom estimate wrapper detaches audited survey values, excludes their Required/output scope, and evaluates all allowed Formal installation discriminator branches for W/H without selecting an environment. Independent tests 91 cover both current products, preserved legacy values, forbidden raw survey rules, all-branch bounds and retained product hardware selectors; browser suite covers actual save/reload/handoff and variant transitions. No Formal Product Master, Runtime package, rule or Registry mutation. Pin guard remains exact.",
     "baseline_contract": "data/uchirimo-slim/selector-dependency-contract.json",
     "changed_source_pins": [
       {

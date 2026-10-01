@@ -145,6 +145,9 @@ export class ProductConfigurationEditor {
     this.state.stale=identityFor(product,snapshot.configuration)!==snapshot.runtime_manifest_identity||String(packageVersionFor(product,snapshot.configuration))!==String(snapshot.package_version);
     if(this.state.stale){this.renderFrozenSnapshot('旧Runtimeで作成された設定です。保存時Snapshotは自動更新されません。',true);return;}
     await this.resolve({notify:false});
+    // Persist a semantic workflow migration on reload, including detached legacy
+    // survey values, even when the user does not edit a visible product field.
+    if(this.state.resolved?.workflowScope==='estimate')this.onSnapshot(this.state.snapshot,this.state.resolved);
   }
 
   renderFrozenSnapshot(message,canRevalidate=false){
@@ -214,7 +217,7 @@ export class ProductConfigurationEditor {
     dynamicForm.dataset.resolveRevision=String(revision);
     this.renderWarnings(result);this.renderSummary(result);this.renderProductCodes(result);
     const product=this.state.products.find((row)=>row.id===productId);
-    this.state.snapshot=createProductConfigurationSnapshot({product,result});
+    this.state.snapshot=createProductConfigurationSnapshot({product,result,previousSnapshot:this.state.snapshot});
     const badge=this.root.querySelector('#runtimeVersionBadge');badge.hidden=false;badge.textContent=`${this.state.snapshot.source_mode==='CANONICAL_RUNTIME'?'Runtime':'Legacy'} ${this.state.snapshot.package_version}`;
     if(notify)this.onSnapshot(this.state.snapshot,result);
   }

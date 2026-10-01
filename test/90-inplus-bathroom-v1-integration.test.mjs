@@ -95,14 +95,14 @@ test('variant switching removes stale fields from selection and handoff in both 
 });
 
 test('explicit forbidden conditions block instead of becoming estimate confirmation',async()=>{
-  const result=await resolveRuntimeAppProduct(PRODUCT,{...COMPLETE_SLIDING,bath_bay_window:'present'});
+  const result=await resolveRuntimeAppProduct(PRODUCT,{...COMPLETE_SLIDING,bath_bay_window:'present'},{workflowScope:'site_survey'});
   assert.equal(result.validation.status,'INVALID');
   assert.ok(result.validation.errors.some((row)=>row.errorCode==='INPLUS_BATHROOM_BAY_WINDOW_FORBIDDEN'));
   assert.notEqual(result.sales_request_state,'READY_FOR_MANUFACTURER_ESTIMATE');
 });
 
 test('all seven Controlled Unresolved records remain non-VERIFIED and hand off status/question/contact',async()=>{
-  const result=await resolveRuntimeAppProduct(PRODUCT,{...COMPLETE_SLIDING,special_request:'キー付きクレセント希望'});
+  const result=await resolveRuntimeAppProduct(PRODUCT,{...COMPLETE_SLIDING,special_request:'キー付きクレセント希望'},{workflowScope:'site_survey'});
   const gaps=result.sales_request_handoff.controlled_unresolved;
   assert.equal(gaps.length,7);
   assert.ok(gaps.every((row)=>row.status!=='VERIFIED'&&row.auto_resolved===false));

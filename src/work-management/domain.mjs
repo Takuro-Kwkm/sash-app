@@ -1,3 +1,4 @@
+import { mergeWorkflowData, isBathroomEstimateContext, splitWorkflowSelection, workflowContextKey } from './field-workflow-scope.mjs';
 export const WORK_SCHEMA_VERSION = '1.0';
 
 export const ProjectStatus = Object.freeze({
@@ -131,7 +132,7 @@ function validationState(result) {
   return ValidationState.VALID;
 }
 
-export function createProductConfigurationSnapshot({product,result,clock}) {
+export function createProductConfigurationSnapshot({product,result,clock,previousSnapshot=null}) {
   if(!product||!result)throw new ValidationError('商品設定Snapshotには商品とRuntime評価結果が必要です。');
   const runtime=result.runtimeMaster??null;
   const packageVersion=runtime?.packageVersion??product.source?.version??product.version??'LEGACY-UNVERSIONED';
@@ -142,6 +143,11 @@ export function createProductConfigurationSnapshot({product,result,clock}) {
     ??null;
   const canonical=result.source==='RUNTIME_MASTER';
   const runtimeIdentity=manifestId??(!canonical?product.source?.id??null:null);
+  let workflowData=mergeWorkflowData(previousSnapshot?.workflow_data,result.workflow_data);
+  if(previousSnapshot&&isBathroomEstimateContext(previousSnapshot.product_id,previousSnapshot.configuration)){
+    const values=splitWorkflowSelection(previousSnapshot.configuration).siteSurvey;
+    workflowData=mergeWorkflowData(workflowData,{site_survey:{contexts:{[workflowContextKey(previousSnapshot.product_id,previousSnapshot.configuration)]:{values}}}});
+  }
   return {
     schema_version:WORK_SCHEMA_VERSION,
     manufacturer:result.manufacturer??product.manufacturer,
@@ -150,6 +156,7 @@ export function createProductConfigurationSnapshot({product,result,clock}) {
     runtime_manifest_identity:runtimeIdentity,
     runtime_integrity_hash:sourceHash,
     configuration:cloneValue(result.selection??{}),
+    ...(Object.keys(workflowData).length?{workflow_data:cloneValue(workflowData)}:{}),
     ...(result.confirmationRequests?.length?{confirmation_requests:cloneValue(result.confirmationRequests)}:{}),
     ...(result.sales_request_handoff?{sales_request_handoff:cloneValue(result.sales_request_handoff),sales_request_state:result.sales_request_state}:{}),
     display_summary:displaySummary(result),

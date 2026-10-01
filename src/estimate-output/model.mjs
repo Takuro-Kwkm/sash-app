@@ -1,3 +1,4 @@
+import { projectEstimateSnapshot } from '../work-management/field-workflow-scope.mjs';
 export const EstimateOutputState=Object.freeze({
   COMPLETE:'COMPLETE',
   INCOMPLETE:'INCOMPLETE',
@@ -100,7 +101,7 @@ export function createEstimateOutputModel({project,estimate,openings,generatedAt
   if(estimate.project_id&&estimate.project_id!==project.project_id)throw new TypeError('estimate does not belong to project');
   const source=Array.isArray(openings)?openings:[];
   const rows=source.map((opening,index)=>{
-    const snapshot=opening?.product_configuration_snapshot??null;
+    const snapshot=projectEstimateSnapshot(opening?.product_configuration_snapshot??null);
     const price=extractPrice(snapshot);
     const classification=classifyRow(opening,snapshot,price);
     const audit=snapshot?{

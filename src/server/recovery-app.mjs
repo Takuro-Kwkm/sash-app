@@ -77,7 +77,7 @@ export function createRecoveryRequestHandler({backend="node:http recovery server
     if(url.pathname==="/work-management.css") return staticFile(res,"work-management.css","text/css; charset=utf-8");
     if(url.pathname==="/estimate-output.css") return staticFile(res,"estimate-output.css","text/css; charset=utf-8");
     if(url.pathname==="/theme.css") return staticFile(res,"theme.css","text/css; charset=utf-8");
-    const workModule=url.pathname.match(/^\/work-management\/(domain|storage|repositories|service)\.mjs$/)?.[1];
+    const workModule=url.pathname.match(/^\/work-management\/(domain|storage|repositories|service|field-workflow-scope)\.mjs$/)?.[1];
     if(workModule)return staticFileAt(res,join(root,"src","work-management",`${workModule}.mjs`),"text/javascript; charset=utf-8");
     const estimateModule=url.pathname.match(/^\/estimate-output\/(model|pdf-renderer|xlsx-renderer)\.mjs$/)?.[1];
     if(estimateModule)return staticFileAt(res,join(estimateOutputRoot,`${estimateModule}.mjs`),"text/javascript; charset=utf-8");

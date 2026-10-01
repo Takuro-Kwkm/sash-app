@@ -59,7 +59,7 @@ async function persistAndReload(page,seed,tag){
   const restored=await page.evaluate(()=>({selection:window.__sashWorkApp.readDatabase().openings[0].product_configuration_snapshot.configuration,snapshot:window.__sashWorkApp.readDatabase().openings[0].product_configuration_snapshot}));
   assert.deepEqual(restored.selection,before.selection);
   assert.equal(restored.snapshot.runtime_manifest_identity,'1GJknHnjU0-hvNvTS2X8fajuTkE0SvX0m');
-  assert.equal(restored.snapshot.sales_request_handoff.controlled_unresolved.length,7);
+  assert.equal(restored.snapshot.sales_request_handoff.controlled_unresolved.length,4);
   assert.ok(restored.snapshot.sales_request_handoff.controlled_unresolved.every(row=>row.status!=='VERIFIED'&&row.auto_resolved===false));
   return {ids,before,restored};
 }
@@ -123,13 +123,16 @@ try{
       for(const key of ['frame_spec','fukashi_presence','order_width','order_height'])assert.equal(current.selection[key],undefined,key);
       report.scenarios.push({id:'E',flow:'標準仕様→浴室仕様→標準専用State除外',status:'PASS'});
 
-      await mount(page,{...SLIDING,special_request:'キー付きクレセント希望'});
+      await mount(page,{...SLIDING,position_mode:'custom',crescent_p:500,special_request:'設定表証明希望'});
       current=await state(page);
       const gaps=current.snapshot.sales_request_handoff.controlled_unresolved;
-      assert.equal(gaps.length,7);
+      assert.equal(gaps.length,4);
       assert.ok(gaps.every(row=>row.status!=='VERIFIED'&&row.auto_resolved===false&&row.confirmation_question&&row.confirmation_to));
-      assert.ok(current.result.confirmationRequests.some(row=>row.code==='IB-G006'));
-      report.scenarios.push({id:'F',flow:'Controlled Unresolved→非自動確定→質問/確認先Handoff',count:7,status:'PASS'});
+      assert.ok(current.result.confirmationRequests.some(row=>row.code==='IB-G004'));
+      const deferred=Object.values(current.snapshot.workflow_data.site_survey.contexts)[0].controlled_unresolved;
+      assert.equal(deferred.length,3);
+      assert.ok(deferred.every(row=>row.status!=='VERIFIED'&&row.auto_resolved===false));
+      report.scenarios.push({id:'F',flow:'商品Controlled Unresolved→質問Handoff／現場調査3件→保持・未確定',count:7,status:'PASS'});
     }
 
     for(const mode of ['system','light','dark']){
