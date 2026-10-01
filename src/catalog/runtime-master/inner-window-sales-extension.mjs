@@ -29,6 +29,28 @@ export const UCHIRIMO_SALES_REQUEST = Object.freeze({
       helpText:'位置指定時の数値を入力します。特注W/H入力後に表示し、最終製作可否は積算／YKK AP確認へ引き継ぎます。',
     },
     {
+      key:'pull_handle_position_custom_mm',
+      displayLabel:'引手位置（mm）',
+      dataType:'NUMBER',
+      unit:'mm',
+      required:true,
+      manualCheck:true,
+      handoffKey:'pull_handle_position_custom_mm',
+      when:{pull_handle_position:'custom'},
+      helpText:'位置指定時の引手位置寸法を入力します。クレセント位置入力の後に表示し、最終製作可否は積算／YKK AP確認へ引き継ぎます。',
+    },
+    {
+      key:'middle_rail_position_custom_mm',
+      displayLabel:'中桟位置（mm）',
+      dataType:'NUMBER',
+      unit:'mm',
+      required:true,
+      manualCheck:true,
+      handoffKey:'middle_rail_position_custom_mm',
+      when:{middle_rail_option:'enabled',middle_rail_position:'custom'},
+      helpText:'中桟あり・位置指定時の中桟位置寸法を入力します。引手位置入力の後に表示し、最終製作可否は積算／YKK AP確認へ引き継ぎます。',
+    },
+    {
       key:'fukashi_curtain_rail',
       displayLabel:'カーテンレール対応',
       handoffKey:'fukashi_curtain_rail_request',
@@ -40,7 +62,7 @@ export const UCHIRIMO_SALES_REQUEST = Object.freeze({
 });
 
 export const INPLUS_SALES_REQUEST = Object.freeze({
-  suppressedFields:['supply_form','glass_detail','spacer','crescent_position'],
+  suppressedFields:['supply_form','glass_detail','spacer','cavity_fill','crescent_position'],
   handoffDefaults:{
     supply_form:'ESTIMATION_RESPONSIBILITY',
     glass_detail:'MANUFACTURER_ESTIMATE_CONFIRMATION',
@@ -77,6 +99,15 @@ export const INPLUS_SALES_REQUEST = Object.freeze({
       families:['Low-E複層','一般複層'],
       values:[['aluminum','アルミスペーサー',true],['resin','樹脂スペーサー',true]],
       helpText:'供給形態は営業では選択しません。スペーサーの希望のみ見積依頼へ引き継ぎ、成立は積算／LIXILで確認します。',
+    },
+    {
+      key:'sales_gas_fill',
+      displayLabel:'中空層',
+      slot:'gas_fill',
+      handoffKey:'gas_fill_request',
+      families:['Low-E複層','一般複層'],
+      values:[['air','乾燥空気',true],['argon','アルゴンガス',true]],
+      helpText:'営業では空気層厚を指定せず、乾燥空気／アルゴンガスの希望だけを見積依頼へ引き継ぎます。最終ガラス構成は積算／LIXILで確認します。',
     },
     {
       key:'crescent_presence',
