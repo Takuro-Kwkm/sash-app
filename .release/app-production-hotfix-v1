@@ -1,10 +1,9 @@
 {
   "schema": "APP_PRODUCTION_HOTFIX_V1",
   "scope": "NON_PRODUCT_MASTER_UI",
-  "change": "OPENING_FLOOR_FIELD",
-  "date": "2026-09-29",
-  "source_commit": "f998121eefdea89513033bc3c787ae5a2a3232df",
-  "notes": "Opening metadata changed to floor/room/location/memo. Floor uses a 1階-20階 selector. Legacy opening_name remains stored only for backward compatibility.",
-  "attempt": 3,
+  "change": "PR56_INNER_WINDOW_FINAL_RELEASE",
+  "date": "2026-10-02",
+  "source_commit": "a088435640a91f4f3807a41d1bfbc48e0547e4b9",
+  "notes": "Release approved PR #56 through established production workflow; retain main dark-mode and exact-source upload fallback. Product data is read-only.",
   "trigger": "PR_MERGE_PUSH"
 }

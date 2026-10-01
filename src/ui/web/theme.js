@@ -1,40 +1,57 @@
-const STORAGE_KEY='sash.theme';
-const MODES=new Set(['system','light','dark']);
-const media=matchMedia('(prefers-color-scheme: dark)');
+(() => {
+  const STORAGE_KEY='sash.theme.v1';
+  const ALLOWED=new Set(['system','light','dark']);
+  const media=window.matchMedia?.('(prefers-color-scheme: dark)');
 
-function storedMode(){
-  const value=localStorage.getItem(STORAGE_KEY);
-  return MODES.has(value)?value:'system';
-}
+  function readPreference(){
+    try {
+      const stored=localStorage.getItem(STORAGE_KEY);
+      if(ALLOWED.has(stored)) return stored;
+    } catch {}
+    const seeded=document.documentElement.dataset.themePreference;
+    return ALLOWED.has(seeded)?seeded:'system';
+  }
 
-function resolvedMode(mode){
-  return mode==='system'?(media.matches?'dark':'light'):mode;
-}
+  function resolvedTheme(preference){
+    if(preference==='dark') return 'dark';
+    if(preference==='light') return 'light';
+    return media?.matches?'dark':'light';
+  }
 
-export function applyTheme(mode=storedMode()){
-  const normalized=MODES.has(mode)?mode:'system';
-  document.documentElement.dataset.themeMode=normalized;
-  document.documentElement.dataset.theme=resolvedMode(normalized);
-  document.documentElement.style.colorScheme=resolvedMode(normalized);
-  const select=document.querySelector('#themeMode');
-  if(select)select.value=normalized;
-  return normalized;
-}
+  function apply(preference,{persist=false}={}){
+    const safe=ALLOWED.has(preference)?preference:'system';
+    const resolved=resolvedTheme(safe);
+    document.documentElement.dataset.themePreference=safe;
+    document.documentElement.dataset.theme=resolved;
+    document.documentElement.style.colorScheme=resolved;
+    if(persist){
+      try { localStorage.setItem(STORAGE_KEY,safe); } catch {}
+    }
+    const picker=document.querySelector('#themePreference');
+    if(picker&&picker.value!==safe) picker.value=safe;
+    window.dispatchEvent(new CustomEvent('sash-theme-change',{detail:{preference:safe,resolved}}));
+    return resolved;
+  }
 
-applyTheme();
+  function handleSystemChange(){
+    if(readPreference()==='system') apply('system');
+  }
 
-document.addEventListener('DOMContentLoaded',()=>{
-  const select=document.querySelector('#themeMode');
-  if(!select)return;
-  select.value=storedMode();
-  select.addEventListener('change',()=>{
-    localStorage.setItem(STORAGE_KEY,select.value);
-    applyTheme(select.value);
-  });
-});
+  function init(){
+    apply(readPreference());
+    const picker=document.querySelector('#themePreference');
+    picker?.addEventListener('change',()=>apply(picker.value,{persist:true}));
+    if(media?.addEventListener) media.addEventListener('change',handleSystemChange);
+    else media?.addListener?.(handleSystemChange);
+  }
 
-media.addEventListener('change',()=>{
-  if(storedMode()==='system')applyTheme('system');
-});
+  window.__sashTheme={
+    storageKey:STORAGE_KEY,
+    getPreference:readPreference,
+    setPreference:(preference)=>apply(preference,{persist:true}),
+    getResolvedTheme:()=>document.documentElement.dataset.theme,
+  };
 
-window.__sashTheme={applyTheme,storageKey:STORAGE_KEY,getMode:storedMode};
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',init,{once:true});
+  else init();
+})();

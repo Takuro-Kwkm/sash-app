@@ -136,8 +136,8 @@ try{
     }
 
     for(const mode of ['system','light','dark']){
-      await page.locator('#themeMode').selectOption(mode);
-      const theme=await page.evaluate(()=>({mode:document.documentElement.dataset.themeMode,resolved:document.documentElement.dataset.theme,body:getComputedStyle(document.body).backgroundColor,card:getComputedStyle(document.querySelector('.card')).backgroundColor,text:getComputedStyle(document.querySelector('.card')).color}));
+      await page.locator('#themePreference').selectOption(mode);
+      const theme=await page.evaluate(()=>({mode:document.documentElement.dataset.themePreference,resolved:document.documentElement.dataset.theme,body:getComputedStyle(document.body).backgroundColor,card:getComputedStyle(document.querySelector('.card')).backgroundColor,text:getComputedStyle(document.querySelector('.card')).color}));
       assert.equal(theme.mode,mode);
       assert.equal(theme.resolved,mode==='light'?'light':'dark');
       if(theme.resolved==='dark'){
@@ -147,7 +147,7 @@ try{
       }
       report.themes.push({width,mode,...theme,status:'PASS'});
     }
-    await page.locator('#themeMode').selectOption('dark');
+    await page.locator('#themePreference').selectOption('dark');
     await page.screenshot({path:`${OUT}/bathroom-${width}-dark.png`,fullPage:true});
     await page.close();
   }

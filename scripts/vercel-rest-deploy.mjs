@@ -46,6 +46,7 @@ if (!['inline', 'files', 'gitSource'].includes(deploySource)) {
 if (mode === 'production' && deploySource !== 'files') {
   throw new Error('Production deployment must use the established files source');
 }
+let effectiveDeploySource = deploySource;
 
 const files = execFileSync('git', ['ls-files', '-z'], { encoding: 'buffer' })
   .toString('utf8')
@@ -96,7 +97,18 @@ if (deploySource === 'inline') {
       deploymentFiles[index] = await uploadOne(fileBuffers[index]);
     }
   });
-  await Promise.all(workers);
+  try {
+    await Promise.all(workers);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    if (mode === 'production' && message.includes('Vercel file upload failed (429)')) {
+      effectiveDeploySource = 'gitSource';
+      deploymentFiles = [];
+      console.log('VERCEL_FILE_UPLOAD_RATE_LIMIT_FALLBACK=gitSource');
+    } else {
+      throw error;
+    }
+  }
 }
 
 const payload = {
@@ -110,7 +122,7 @@ const payload = {
   },
 };
 
-if (deploySource === 'gitSource') {
+if (effectiveDeploySource === 'gitSource') {
   const numericRepositoryId = Number(repositoryId);
   if (!Number.isSafeInteger(numericRepositoryId) || numericRepositoryId <= 0) {
     throw new Error(`Invalid GitHub repository id: ${repositoryId}`);
@@ -119,6 +131,7 @@ if (deploySource === 'gitSource') {
     type: 'github',
     repoId: numericRepositoryId,
     ref: githubRefName,
+    sha: githubSha,
   };
 } else {
   payload.files = deploymentFiles;
@@ -176,10 +189,10 @@ if (finalState !== 'READY') {
 
 const deploymentGitSha = deployment.meta?.githubCommitSha ?? created.meta?.githubCommitSha ?? null;
 const releaseCommitSha = deployment.meta?.releaseCommitSha ?? created.meta?.releaseCommitSha ?? null;
-if (deploySource === 'gitSource' && deploymentGitSha !== githubSha) {
+if (effectiveDeploySource === 'gitSource' && deploymentGitSha !== githubSha) {
   throw new Error(`Vercel Git source SHA mismatch: deployment=${deploymentGitSha ?? 'missing'} expected=${githubSha}`);
 }
-if (deploySource !== 'gitSource' && releaseCommitSha !== githubSha) {
+if (effectiveDeploySource !== 'gitSource' && releaseCommitSha !== githubSha) {
   throw new Error(`Vercel release SHA mismatch: deployment=${releaseCommitSha ?? 'missing'} expected=${githubSha}`);
 }
 
@@ -195,7 +208,7 @@ const result = {
   githubRefName,
   deploymentGitSha,
   releaseCommitSha,
-  deploySource,
+  deploySource: effectiveDeploySource,
   projectId,
   teamId,
   fileCount: files.length,

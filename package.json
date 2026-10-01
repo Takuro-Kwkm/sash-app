@@ -9,7 +9,7 @@
     "build:release": "node scripts/build-tw-runtime-review-preview.mjs",
     "build:uchirimo-review": "node scripts/build-uchirimo-runtime-review-preview.mjs",
     "build:work-preview": "node scripts/build-work-management-review-preview.mjs",
-    "test:browser:work": "node test/browser/work-management-browser-qa.mjs",
+    "test:browser:work": "node test/browser/work-management-browser-qa.mjs && node test/browser/theme-browser-qa.mjs",
     "test:browser:estimate-output": "node test/browser/estimate-output-browser-qa.mjs",
     "test:browser:inplus-bathroom": "node test/browser/inplus-bathroom-v1-browser-qa.mjs",
     "start": "node scripts/start-step8-ui.mjs",
