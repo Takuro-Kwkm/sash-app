@@ -181,6 +181,49 @@ for(const width of [1440,768,390]){
  assert.equal(uchState.selection.middle_rail_position_custom_mm,540);
  report.cases.push({width,product:'SER-YKKAP-UCHIRIMO',transition:'custom-position-measurements',status:'PASS'});
 
+ async function changeUchirimo(key,value){
+  await page.locator(`[data-spec-key="${key}"]`).selectOption(value);
+  await page.waitForFunction(({key,value})=>window.frameEditor.state.selection[key]===value&&document.querySelector('#dynamicForm').dataset.resolveRevision===String(window.frameEditor.state.resolveRevision),{key,value});
+ }
+ await changeUchirimo('sales_glass_pattern','aramagoushi');
+ await changeUchirimo('sales_glass_design','grid');
+ assert.equal((await page.evaluate(()=>window.frameEditor.state.selection)).sales_glass_pattern,undefined);
+ await changeUchirimo('sales_glass_pattern','wa01_resin');
+ for(const value of ['jamb_step_spacer','outer_window_replacement_crescent','outer_window_universal_handle']){
+  const revision=await page.locator('#dynamicForm').getAttribute('data-resolve-revision');
+  await page.locator(`[data-multi-key="option_items"] input[value="${value}"]`).check();
+  await page.waitForFunction(old=>document.querySelector('#dynamicForm').dataset.resolveRevision!==old,revision);
+ }
+ const r6State=await page.evaluate(()=>window.frameEditor.state);
+ assert.equal(r6State.resolved.runtimeMaster.packageVersion,'v1.0-P7R1-R5');
+ assert.equal(r6State.resolved.runtimeMaster.productMasterFormalReference.packageVersion,'v1.0-P7R1-R6');
+ assert.equal(r6State.resolved.runtimeMaster.productMasterFormalReference.runtimeScope,'NOT_INCLUDED_IN_PRODUCT_MASTER_FORMAL');
+ assert.equal(r6State.resolved.orderReady,false);
+ assert.ok(r6State.resolved.confirmationRequests.some(row=>row.status==='ESTIMATE_CONFIRM_REQUIRED'));
+ assert.deepEqual(new Set(r6State.selection.option_items),new Set(['jamb_step_spacer','outer_window_replacement_crescent','outer_window_universal_handle']));
+ await page.evaluate(async()=>{
+  localStorage.setItem('r6-review-snapshot',JSON.stringify(window.frameEditor.getSnapshot()));
+  const saved=JSON.parse(localStorage.getItem('r6-review-snapshot'));
+  const {ProductConfigurationEditor}=await import('/product-configuration-editor.mjs');
+  window.frameEditor.destroy();window.frameEditor=new ProductConfigurationEditor(document.querySelector('#qaRoot'),{initialSnapshot:saved});await window.frameEditor.mount();
+ });
+ assert.deepEqual((await page.evaluate(()=>window.frameEditor.state.selection)),r6State.selection);
+ await changeUchirimo('glass_family','single_glazing');
+ const single=await page.evaluate(()=>window.frameEditor.state);
+ for(const key of ['sales_glass_design','sales_glass_pattern']){
+  assert.equal(single.selection[key],undefined);
+  assert.equal(single.snapshot.display_summary.some(row=>row.key===key),false);
+ }
+ await changeUchirimo('sash_configuration','three_panel');
+ assert.equal(await page.locator('[data-multi-key="option_items"] input[value="meeting_stile_exterior_pull"]').count(),1);
+ await changeUchirimo('room_specification','bathroom');
+ const bath=await page.evaluate(()=>window.frameEditor.state);
+ assert.equal(bath.selection.option_items.includes('jamb_step_spacer'),false);
+ assert.ok(bath.selection.option_items.includes('outer_window_universal_handle'));
+ assert.equal(await page.locator('[data-multi-key="option_items"] input[value="cover_material"]').count(),1);
+ assert.equal(await page.locator('[data-multi-key="option_items"] input[value="meeting_stile_exterior_pull"]').count(),0);
+ report.cases.push({width,product:'SER-YKKAP-UCHIRIMO',transition:'R6-design-option-clear-retain-save-identity',status:'PASS'});
+
  await page.close();
 }
 assert.deepEqual(report.errors,[]);report.status='PASS';

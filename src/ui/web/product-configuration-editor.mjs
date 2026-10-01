@@ -206,8 +206,7 @@ export class ProductConfigurationEditor {
 
   renderFields(fields=[]){
     const product=this.state.products.find((row)=>row.id===this.state.productId);
-    const hasAggregateOption=fields.some((field)=>field.key==='option_items');
-    const groupIndividualOptions=product?.uiCategory==='INNER_WINDOW'&&!hasAggregateOption;
+    const groupIndividualOptions=product?.uiCategory==='INNER_WINDOW';
     let optionHeadingShown=false;
     return fields.map((field)=>{
       const showOptionHeading=groupIndividualOptions&&!optionHeadingShown&&field.semanticStage==='OPTION';

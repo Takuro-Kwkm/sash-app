@@ -55,11 +55,30 @@ try{
     await response;
     await page.waitForFunction(old=>document.querySelector('#dynamicForm')?.dataset.resolveRevision!==old,revision);
    }
+   if(id==='SER-YKKAP-UCHIRIMO'){
+    for(const [key,value]of [['glass_family','insulating_glass'],['sales_glass_design','grid'],['sales_glass_pattern','wa01_resin']]){
+     const revision=await page.locator('#dynamicForm').getAttribute('data-resolve-revision');
+     await page.locator(`[data-spec-key="${key}"]`).selectOption(value);
+     await page.waitForFunction(old=>document.querySelector('#dynamicForm').dataset.resolveRevision!==old,revision);
+    }
+    for(const value of ['outer_window_replacement_crescent','outer_window_universal_handle']){
+     const revision=await page.locator('#dynamicForm').getAttribute('data-resolve-revision');
+     await page.locator(`[data-multi-key="option_items"] input[value="${value}"]`).check();
+     await page.waitForFunction(old=>document.querySelector('#dynamicForm').dataset.resolveRevision!==old,revision);
+    }
+   }
    assert.ok(await page.locator('#selectionSummary').innerText());
    await page.getByRole('button',{name:'この開口部を保存'}).click();await page.waitForURL(estimateUrl);
    const saved=await page.evaluate(product=>window.__sashWorkApp.readDatabase().openings.find(o=>!o.deleted_at&&o.product_configuration_snapshot?.product_id===product)?.product_configuration_snapshot,id);
    assert.ok(saved,`${id}:snapshot missing`);assert.notEqual(saved.validation_state,"INVALID",`${id}:invalid business fixture`);assert.equal(saved.manufacturer,manufacturer);
    assert.ok(Object.keys(saved.configuration).length>0,`${id}:empty selection`);
+   if(id==='SER-YKKAP-UCHIRIMO'){
+    assert.equal(saved.package_version,'v1.0-P7R1-R5');
+    assert.equal(saved.configuration.sales_glass_pattern,'wa01_resin');
+    assert.ok(saved.configuration.option_items.includes('outer_window_replacement_crescent'));
+    assert.ok(saved.configuration.option_items.includes('outer_window_universal_handle'));
+    assert.ok(saved.confirmation_requests.some(row=>row.status==='ESTIMATE_CONFIRM_REQUIRED'));
+   }
    await page.locator('.opening-card').last().getByRole('button',{name:'編集'}).click();
    await page.waitForSelector('#selectionSummary');
    await page.reload({waitUntil:'networkidle'});
@@ -75,8 +94,11 @@ try{
   assert.equal(await page.locator('.estimate-output-table-wrap tbody tr').count(),8);
   const output=await page.locator('.estimate-output-table-wrap').innerText();
   for(const label of ['TW','EW','サーモス','430','431','ウチリモ','インプラス'])assert.ok(output.includes(label),`output missing ${label}`);
+  for(const label of ['洋風タイプ WA01（樹脂格子）','外窓用 取替用クレセント（汎用クレセント）','外窓用汎用ハンドル'])assert.ok(output.includes(label),`R6 output missing ${label}`);
   const pending=page.waitForEvent('download');await page.click('#estimateOutputExcel');const download=await pending;
   assert.match(download.suggestedFilename(),/\.xlsx$/);assert.equal(await download.failure(),null);
+  const excelText=(await readFile(await download.path())).toString('utf8');
+  for(const label of ['洋風タイプ WA01（樹脂格子）','外窓用 取替用クレセント（汎用クレセント）','外窓用汎用ハンドル','メーカー見積で確認'])assert.ok(excelText.includes(label),`R6 Excel missing ${label}`);
   await page.evaluate(()=>{
    window.__pdfText=[];window.__pdfBounds=[];
    const fill=CanvasRenderingContext2D.prototype.fillText,stroke=CanvasRenderingContext2D.prototype.strokeRect;
