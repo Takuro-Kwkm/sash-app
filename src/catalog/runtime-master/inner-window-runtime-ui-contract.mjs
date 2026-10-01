@@ -109,6 +109,7 @@ const APPROVED_INNER_WINDOW_EXTENSIONS = Object.freeze({
   crescent_presence: optionExtension('crescent_presence', 300),
   crescent_type: optionExtension('crescent_type', 301),
   crescent_position_mode: optionExtension('crescent_position_mode', 302),
+  sales_midrail_request: installationExtension('sales_midrail_request', INNER_WINDOW_UI_STANDARD_ORDER.indexOf('sash_midrail')),
   middle_rail_position_mode: installationExtension('middle_rail_position_mode', INNER_WINDOW_UI_STANDARD_ORDER.indexOf('sash_midrail')+0.1),
   middle_rail_position_f_mm: installationExtension('middle_rail_position_f_mm', 251),
   crescent_position_p_mm: installationExtension('crescent_position_p_mm', 247),

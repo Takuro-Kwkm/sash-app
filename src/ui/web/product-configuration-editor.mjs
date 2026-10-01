@@ -211,7 +211,8 @@ export class ProductConfigurationEditor {
     return fields.map((field)=>{
       const showOptionHeading=groupIndividualOptions&&!optionHeadingShown&&field.semanticStage==='OPTION';
       if(showOptionHeading)optionHeadingShown=true;
-      return `${showOptionHeading?'<div class="runtime-field-group-heading" data-semantic-group="OPTION">オプション</div>':''}${this.renderField(field)}`;
+      const feedback=field.feedback;
+      return `${showOptionHeading?'<div class="runtime-field-group-heading" data-semantic-group="OPTION">オプション</div>':''}${this.renderField(field)}${feedback?`<div class="notice ${feedback.severity==='error'?'error':'warning'}" data-field-feedback="${esc(field.key)}" role="status">${esc(feedback.message)}</div>`:''}`;
     }).join('');
   }
 

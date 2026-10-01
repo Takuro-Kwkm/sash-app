@@ -228,9 +228,15 @@ export const INPLUS_SALES_REQUEST = Object.freeze({
       helpText:'窓枠上面からクレセント中心までのP寸法。正式P寸法Ruleで範囲判定し、最終製作可否はLIXIL確認へ引き継ぎます。',
     },
     {
+      key:'sales_midrail_request',displayLabel:'障子中桟',
+      intentOnly:true,when:{window_type:'引違い窓'},
+      unless:{sash_configuration:'4枚建（障子W指定）'},
+      values:[['なし','なし',false],['あり','あり',false]],
+      helpText:'中桟の希望を先に選びます。適用可否は特注H入力後に正式ルールで確認します。',
+    },
+    {
       key:'middle_rail_position_mode',displayLabel:'中桟位置',
-      handoffKey:'middle_rail_position_mode',formalField:'sash_midrail',
-      when:{sash_midrail:'あり'},required:true,
+      handoffKey:'middle_rail_position_mode',when:{sales_midrail_request:'あり'},required:true,
       values:[['standard','標準位置',false],['custom','位置指定',true]],
       helpText:'位置指定を選ぶと、特注W/Hとクレセント位置Pの後に中桟位置Fを入力します。',
     },
@@ -262,6 +268,11 @@ function selectedRuntimeValues(state){
 
 function requestFieldApplies(definition,state,input={}){
   const selected={...selectedRuntimeValues(state),...(state.presentationSelection??{}),...input};
+  // A requested position is selectable before H, but an inapplicable H clears
+  // its dependent mode/F without changing Formal Runtime visibility.
+  if(definition.key==='middle_rail_position_mode'
+    &&state.fields.order_height?.value!=null
+    &&state.fields.sash_midrail?.visibility==='HIDE')return false;
   if(definition.formalField){
     const formal=state.fields[definition.formalField];
     if(!formal||formal.visibility==='HIDE'||!formal.allowed_values?.length)return false;
@@ -388,7 +399,8 @@ export function applySalesRequestExtension(state, input, contract, master=null) 
     }
     const chosen=values.find(row=>Object.is(row.value,raw));
     if(chosen){
-      selection[definition.key]=raw;handoff[definition.handoffKey]=raw;
+      selection[definition.key]=raw;
+      if(!definition.intentOnly&&(definition.key!=='middle_rail_position_mode'||state.fields.sash_midrail?.value==='あり'))handoff[definition.handoffKey]=raw;
       if(chosen.manualCheck)requiresManual=true;
     }else if(definition.required){
       state.missing_required_fields=[...new Set([...(state.missing_required_fields??[]),definition.key])];presentationMissing=true;
@@ -426,6 +438,22 @@ export function applySalesRequestExtension(state, input, contract, master=null) 
   state.presentationSelection=selection;
   state.presentationValueAugmentations=augmentations;
 
+  if(contract===INPLUS_SALES_REQUEST&&selection.sales_midrail_request==='あり'
+    &&state.fields.sash_midrail?.value!=='あり'){
+    const hasHeight=state.fields.order_height?.value!=null;
+    const inapplicable=hasHeight&&state.fields.sash_midrail?.visibility==='HIDE';
+    const message=inapplicable
+      ?'この寸法・障子構成では障子中桟を選択できません。中桟の希望は正式仕様・見積依頼へ反映していません。'
+      :'中桟の希望は未確定です。Hと窓／テラス区分の確定後に正式な適用条件を確認します。';
+    state.manual_warnings=[...(state.manual_warnings??[]),message];
+    if(inapplicable)state.errors=[...(state.errors??[]),{code:'INPLUS_MIDRAIL_NOT_APPLICABLE',field:'sales_midrail_request',message}];
+    state.sales_request_state='PENDING_FORMAL_MIDRAIL_APPLICABILITY';
+    state.presentationFeedback={order_height:{severity:inapplicable?'error':'warning',message}};
+  }
+  if(contract===INPLUS_SALES_REQUEST&&selection.sales_midrail_request==='あり'
+    &&state.fields.sash_midrail?.value==='あり')
+    state.presentationFeedback={order_height:{severity:'info',message:'中桟の適用条件を確認しました。位置指定の場合は下のF寸法を入力してください。'}};
+
   if(Object.keys(handoff).length)state.sales_request_handoff=handoff;
   const hasErrors=(state.errors??[]).length>0;
   if(hasErrors)state.status='INVALID';
@@ -445,7 +473,7 @@ export function applySalesRequestExtension(state, input, contract, master=null) 
     if(!['INVALID','BLOCKED','INCOMPLETE'].includes(state.status))state.status='MANUAL_CHECK';
     state.order_ready=false;
   }
-  if(Object.keys(handoff).length&&!state.missing_required_fields.length&&['PASS','REVIEW_REQUIRED'].includes(state.dimension_result?.status)&&!state.errors?.length)state.sales_request_state='READY_FOR_MANUFACTURER_ESTIMATE';
+  if(Object.keys(handoff).length&&!state.missing_required_fields.length&&['PASS','REVIEW_REQUIRED'].includes(state.dimension_result?.status)&&!state.errors?.length&&state.sales_request_state!=='PENDING_FORMAL_MIDRAIL_APPLICABILITY')state.sales_request_state='READY_FOR_MANUFACTURER_ESTIMATE';
   return state;
 }
 
@@ -505,11 +533,19 @@ function evaluateInnerWindowPass(master, input, resolve, sales=null) {
     }
   }
   if(size?.standardSupported===false&&size.allowedModes?.length===1&&state.fields[size.modeField])state.fields[size.modeField]={...state.fields[size.modeField],readOnly:true,derived_by_rule:true};
+  if(sales===INPLUS_SALES_REQUEST&&input.sales_midrail_request
+    &&state.fields.size_class?.value==='テラスタイプ'
+    &&state.fields.sash_midrail?.visibility!=='HIDE'
+    &&state.fields.sash_midrail?.allowed_values?.includes(input.sales_midrail_request)
+    &&state.fields.sash_midrail.value!==input.sales_midrail_request)
+    return evaluateInnerWindowPass(master,{...input,sash_midrail:input.sales_midrail_request},resolve,sales);
   return applySalesRequestExtension(state,input,sales,master);
 }
 
 export function evaluateInnerWindowPresentation(master,input,resolve,sales=null){
   let requested={...input};
+  if(sales===INPLUS_SALES_REQUEST&&requested.sales_midrail_request==null&&requested.sash_midrail!=null)
+    requested.sales_midrail_request=requested.sash_midrail;
   const cleared=new Set();
   const identity=value=>JSON.stringify(Object.entries(value).sort(([a],[b])=>a.localeCompare(b)));
   for(let pass=0;pass<=master.fields.length;pass++){

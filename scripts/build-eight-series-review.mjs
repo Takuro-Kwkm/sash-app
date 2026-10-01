@@ -48,6 +48,10 @@ const identity=createHash('sha256').update(JSON.stringify(modules)).update(packe
 const exactHead=execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim();
 const generatedAt=new Date().toISOString();
 const safe=x=>JSON.stringify(x).replaceAll('</script','<\\/script');
+const focus=process.argv[3]==='inplus'?'inplus':'uchirimo';
+const demo=focus==='inplus'
+ ?{manufacturer:'LIXIL',product:'SER-LIXIL-INPLUS',selection:{window_type:'引違い窓',sash_configuration:'2枚建',sales_midrail_request:'あり',middle_rail_position_mode:'custom',glass_family:'Low-E複層',glass_type:'透明',frame_spec:'standard',upper_frame_spec:'standard',lower_frame_spec:'general',fukashi_presence:'none'}}
+ :{manufacturer:'YKK AP',product:'SER-YKKAP-UCHIRIMO',selection:{room_specification:'residential',window_type:'sliding_window',sash_configuration:'two_panel',frame_color:'white',glass_family:'insulating_glass',sales_glass_design:'grid',sales_glass_pattern:'wa01_resin',fukashi_presence:'none',size_w:1000,size_h:1000}};
 const bootstrap=`
 const bytes=Uint8Array.from(atob(${safe(packed)}),c=>c.charCodeAt(0));
 window.__eightPackages=JSON.parse(await new Response(new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'))).text());
@@ -66,14 +70,16 @@ return new Response(JSON.stringify(data),{headers:{'content-type':'application/j
 await import(moduleUrl('src/ui/web/app.js'));
 await new Promise((resolve,reject)=>{const deadline=Date.now()+10000;function ready(){if(window.__eightPreviewEditor)return resolve();if(Date.now()>deadline)return reject(new Error('Preview editor did not mount'));setTimeout(ready,10);}ready();});
 const editor=window.__eightPreviewEditor;
-const manufacturer=document.querySelector('#manufacturer');manufacturer.value='YKK AP';await editor.handleChange({target:manufacturer});
-const product=document.querySelector('#product');product.value='SER-YKKAP-UCHIRIMO';await editor.handleChange({target:product});
-editor.state.selection={room_specification:'residential',window_type:'sliding_window',sash_configuration:'two_panel',frame_color:'white',glass_family:'insulating_glass',sales_glass_design:'grid',sales_glass_pattern:'wa01_resin',fukashi_presence:'none',size_w:1000,size_h:1000};
+const manufacturer=document.querySelector('#manufacturer');manufacturer.value=${safe(demo.manufacturer)};await editor.handleChange({target:manufacturer});
+const product=document.querySelector('#product');product.value=${safe(demo.product)};await editor.handleChange({target:product});
+editor.state.selection=${safe(demo.selection)};
 await editor.resolve();
 `;
 let html=readFileSync('src/ui/web/index.html','utf8');
 html=html.replace(/<link rel="stylesheet" href="\/([^\"]+)">/g,(_,name)=>'<style>'+readFileSync('src/ui/web/'+name,'utf8')+'</style>');
-html=html.replace('<main id="appMain" aria-live="polite"></main>',`<section class="card compact"><h2>ウチリモ — ガラスデザイン・R6オプション確認</h2><p>8シリーズの配置版と同じマスター・Adapter・選択処理を使用。</p><p>このHTMLは商品選定の確認用です。API通信をブラウザ内処理に置き換えています。案件保存・見積出力は配置版で利用できます。</p><small>App 0.2.0-recovery | Product Master v1.0-P7R1-R6 / Runtime v1.0-P7R1-R5 | Preview Build: ${identity.slice(0,16)}<br>HEAD: ${exactHead}<br>生成: ${generatedAt}</small></section><main id="appMain" aria-live="polite"></main>`);
+const heading=focus==='inplus'?'インプラス — 中桟の希望・H後判定確認':'ウチリモ — ガラスデザイン・R6オプション確認';
+const version=focus==='inplus'?'インプラス Runtime v0.4-R3':'Product Master v1.0-P7R1-R6 / Runtime v1.0-P7R1-R5';
+html=html.replace('<main id="appMain" aria-live="polite"></main>',`<section class="card compact"><h2>${heading}</h2><p>8シリーズの配置版と同じマスター・Adapter・選択処理を使用。${focus==='inplus'?'中桟の希望と位置を選択済みです。W/Hを入力して判定表示を確認できます。':''}</p><p>このHTMLは商品選定の確認用です。API通信をブラウザ内処理に置き換えています。案件保存・見積出力は配置版で利用できます。</p><small>App 0.2.0-recovery | ${version} | Preview Build: ${identity.slice(0,16)}<br>HEAD: ${exactHead}<br>生成: ${generatedAt}</small></section><main id="appMain" aria-live="polite"></main>`);
 html=html.replace('<script type="module" src="/app.js"></script>',()=>'<script type="module">'+bootstrap+'</script>').replace('<script type="module" src="/estimate-output-integration.mjs"></script>','');
 const out=resolve(process.argv[2]??'artifacts/eight-series-review/index.html');mkdirSync(dirname(out),{recursive:true});writeFileSync(out,html);
 writeFileSync(dirname(out)+'/identity.json',JSON.stringify({identity,exactHead,generatedAt,productMasterVersion:'v1.0-P7R1-R6',uchirimoRuntimeVersion:'v1.0-P7R1-R5',series:[...series],runtimeIdentities:entries.map(e=>({series:e.series,manifestSha256:e.runtimeManifestSha256})),bytes:Buffer.byteLength(html)},null,2)+'\n');

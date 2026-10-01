@@ -24,8 +24,10 @@ test('Low-E labels use current glass construction and retain canonical colors',a
 test('middle rail branches, required input, flow order, and handoff',async()=>{
   const r=await resolve({crescent_presence:'installed',crescent_position_mode:'custom',crescent_position_p_mm:800});
   const keys=r.fields.map(f=>f.key);
-  const ordered=['sash_midrail','middle_rail_position_mode','option_items','order_width','order_height','crescent_position_p_mm','middle_rail_position_f_mm'];
+  const ordered=['sales_midrail_request','middle_rail_position_mode','option_items','order_width','order_height','crescent_position_p_mm','middle_rail_position_f_mm'];
   for(let i=1;i<ordered.length;i++)assert.ok(keys.indexOf(ordered[i-1])<keys.indexOf(ordered[i]));
+  assert.equal(field(r,'sash_midrail'),undefined);
+  assert.equal(r.selection.sash_midrail,'あり');
   assert.equal(field(r,'middle_rail_position_f_mm').unit,'mm');
   assert.equal(r.sales_request_handoff.middle_rail_position_f_mm,1000);
   assert.deepEqual(r.sales_request_handoff.middle_rail_position_validation.rule_ids,['PF-006','PF-008']);
@@ -76,7 +78,7 @@ test('missing context or unsupported formal formula goes to estimate confirmatio
 });
 test('all upstream reset paths remove hidden position values and handoff',async()=>{
   const original=await resolve();
-  for(const patch of [{middle_rail_position_mode:'standard'},{sash_midrail:'なし'},{order_height:1000},{window_type:'FIX窓'},{sash_configuration:'4枚建（障子W指定）'}]){
+  for(const patch of [{middle_rail_position_mode:'standard'},{sales_midrail_request:'なし'},{order_height:1000},{window_type:'FIX窓'},{sash_configuration:'4枚建（障子W指定）'}]){
     const r=await resolveRuntimeAppProduct(id,{...original.selection,...patch});
     assert.equal(r.selection.middle_rail_position_f_mm,undefined);
     assert.equal(r.sales_request_handoff.middle_rail_position_f_mm,undefined);
@@ -85,4 +87,33 @@ test('all upstream reset paths remove hidden position values and handoff',async(
     if(!patch.middle_rail_position_mode)assert.equal(r.selection.middle_rail_position_mode,undefined);
     if(patch.order_height||patch.window_type||patch.sash_configuration)assert.equal(r.selection.sash_midrail,undefined);
   }
+});
+test('cold start accepts the request and position before W/H but only projects eligible Formal midrail',async()=>{
+  const first=await resolveRuntimeAppProduct(id,{window_type:'引違い窓',sash_configuration:'2枚建'});
+  assert.ok(field(first,'sales_midrail_request'));
+  assert.equal(field(first,'sash_midrail'),undefined);
+  const requested=await resolveRuntimeAppProduct(id,{...first.selection,sales_midrail_request:'あり',middle_rail_position_mode:'custom'});
+  assert.ok(field(requested,'middle_rail_position_mode'));
+  assert.equal(field(requested,'middle_rail_position_f_mm'),undefined);
+  assert.equal(requested.selection.sash_midrail,undefined);
+  assert.equal(requested.sales_request_handoff.middle_rail_position_mode,undefined);
+  assert.equal(requested.sales_request_state,'PENDING_FORMAL_MIDRAIL_APPLICABILITY');
+  const eligible=await resolveRuntimeAppProduct(id,{...requested.selection,...seed,sash_midrail:undefined,order_height:1800,sales_midrail_request:'あり'});
+  assert.equal(eligible.selection.sash_midrail,'あり');
+  assert.ok(field(eligible,'middle_rail_position_f_mm'));
+  assert.equal(eligible.sales_request_handoff.middle_rail_position_mode,'custom');
+  const windowType=await resolveRuntimeAppProduct(id,{...eligible.selection,order_height:1000});
+  assert.equal(windowType.selection.sales_midrail_request,'あり');
+  assert.equal(windowType.selection.sash_midrail,undefined);
+  assert.equal(windowType.selection.middle_rail_position_mode,undefined);
+  assert.equal(windowType.selection.middle_rail_position_f_mm,undefined);
+  assert.equal(windowType.sales_request_handoff.middle_rail_position_mode,undefined);
+  assert.ok(windowType.validation.errors.some(error=>error.errorCode==='INPLUS_MIDRAIL_NOT_APPLICABLE'));
+  const restored=await resolveRuntimeAppProduct(id,{...windowType.selection,order_height:1800});
+  assert.equal(restored.selection.sash_midrail,'あり');
+  assert.ok(field(restored,'middle_rail_position_mode'));
+  const ambiguous=await resolveRuntimeAppProduct(id,{...requested.selection,...seed,order_height:1300,sash_midrail:undefined});
+  assert.equal(ambiguous.selection.sash_midrail,undefined);
+  assert.equal(ambiguous.sales_request_handoff.middle_rail_position_mode,undefined);
+  assert.equal(ambiguous.sales_request_state,'PENDING_FORMAL_MIDRAIL_APPLICABILITY');
 });
