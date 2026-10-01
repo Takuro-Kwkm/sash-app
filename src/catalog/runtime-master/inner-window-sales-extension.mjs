@@ -13,10 +13,61 @@ export const SALES_GLAZING_REQUEST = Object.freeze({
 
 export const UCHIRIMO_SALES_REQUEST = Object.freeze({
   ...SALES_GLAZING_REQUEST,
+  suppressedFields:Object.freeze([...SALES_GLAZING_REQUEST.suppressedFields,'grille_type','grille_material','muntin_type']),
   confirmationTo:'積算／YKK AP',
   confirmationCode:'UCHIRIMO_SALES_REQUEST_CONFIRM',
   fields:Object.freeze([
     ...SALES_GLAZING_REQUEST.fields,
+    {
+      key:'sales_glass_design',
+      displayLabel:'ガラスデザイン',
+      handoffKey:'glass_design_request',
+      families:['insulating_glass'],
+      values:[
+        ['standard','標準複層ガラス',false],
+        ['grid','格子入り複層ガラス',false],
+        ['japanese','和室用複層ガラス',false],
+      ],
+      valueWhen:{
+        grid:{room_specification:'residential',window_type:['sliding_window','fix_window']},
+        japanese:{room_specification:'residential',window_type:['sliding_window','fix_window']},
+      },
+      helpText:'格子入り／和室用のデザイン区分を選択します。選択後に対応するデザイン詳細を表示します。',
+    },
+    {
+      key:'sales_glass_pattern',
+      displayLabel:'デザイン',
+      handoffKey:'glass_design_detail_request',
+      families:['insulating_glass'],
+      when:{sales_glass_design:['grid','japanese']},
+      values:[
+        ['plain','プレーンタイプ',false],
+        ['elegant','エレガントタイプ',false],
+        ['wa01_aluminum','洋風タイプ WA01（アルミ格子）',false],
+        ['wa01_resin','洋風タイプ WA01（樹脂格子）',false],
+        ['wa02','洋風タイプ WA02',false],
+        ['pa01','プレーリータイプ PA01',false],
+        ['pa02','プレーリータイプ PA02',false],
+        ['wp01','洋風タイプ WP01',false],
+        ['aramagoushi','荒間格子',false],
+        ['yokoshige_fukiyose','横繁吹寄格子',false],
+        ['tateshige_fukiyose','たて繁吹寄格子',false],
+      ],
+      valueWhen:{
+        plain:{sales_glass_design:'grid'},
+        elegant:{sales_glass_design:'grid'},
+        wa01_aluminum:{sales_glass_design:'grid'},
+        wa01_resin:{sales_glass_design:'grid'},
+        wa02:{sales_glass_design:'grid'},
+        pa01:{sales_glass_design:'grid'},
+        pa02:{sales_glass_design:'grid'},
+        wp01:{sales_glass_design:'grid'},
+        aramagoushi:{sales_glass_design:'japanese'},
+        yokoshige_fukiyose:{sales_glass_design:'japanese'},
+        tateshige_fukiyose:{sales_glass_design:'japanese'},
+      },
+      helpText:'R5 Formalに保持されている格子・和室用デザインを営業見積依頼用に選択します。',
+    },
     {
       key:'crescent_position_custom_mm',
       displayLabel:'クレセント位置（mm）',
@@ -49,6 +100,34 @@ export const UCHIRIMO_SALES_REQUEST = Object.freeze({
       handoffKey:'middle_rail_position_custom_mm',
       when:{middle_rail_option:'enabled',middle_rail_position:'custom'},
       helpText:'中桟あり・位置指定時の中桟位置寸法を入力します。引手位置入力の後に表示し、最終製作可否は積算／YKK AP確認へ引き継ぎます。',
+    },
+    {
+      key:'option_items',
+      displayLabel:'オプション',
+      dataType:'MULTI_ENUM',
+      handoffKey:'option_items',
+      values:[
+        ['jamb_step_spacer','額縁段差スペーサー',false],
+        ['sweep_attachment','掃き出しアタッチメント',false],
+        ['meeting_stile_exterior_pull','突合せ框専用外部引手',false],
+        ['sash_stopper','障子ストッパー',false],
+        ['washitsu_filler','和障子用埋め木',false],
+        ['decorative_jamb','化粧額縁',false],
+        ['outer_window_replacement_crescent','外窓用 取替用クレセント（汎用クレセント）',true],
+        ['outer_window_universal_handle','外窓用汎用ハンドル',true],
+        ['adjustment_material','調整材',false],
+        ['cover_material','カバー材',false],
+      ],
+      valueWhen:{
+        jamb_step_spacer:{room_specification:'residential'},
+        sweep_attachment:{room_specification:'residential',window_type:'sliding_window'},
+        meeting_stile_exterior_pull:{room_specification:'residential',window_type:'sliding_window',sash_configuration:['three_panel','four_panel_equal','offset_four_panel']},
+        sash_stopper:{window_type:'sliding_window'},
+        washitsu_filler:{room_specification:'residential',window_type:'sliding_window'},
+        decorative_jamb:{room_specification:'residential',window_type:'sliding_window',fukashi_presence:'none'},
+        cover_material:{room_specification:'bathroom'},
+      },
+      helpText:'R6 Formal Product Masterの公式アクセサリを複数選択できます。既設外窓条件が必要な取替用クレセント／汎用ハンドルは積算・YKK AP確認へ引き継ぎます。',
     },
     {
       key:'fukashi_curtain_rail',
@@ -180,11 +259,20 @@ function requestFieldApplies(definition,state,input={}){
   return true;
 }
 
-function requestChoices(definition){
+function conditionObjectMatches(conditions,selected){
+  for(const [key,expected] of Object.entries(conditions??{})){
+    const allowed=Array.isArray(expected)?expected:[expected];
+    if(!allowed.some(value=>Object.is(value,selected[key])))return false;
+  }
+  return true;
+}
+
+function requestChoices(definition,state,input={}){
+  const selected={...selectedRuntimeValues(state),...(state.presentationSelection??{}),...input};
   return (definition.values??[]).map((row)=>{
     const [value,displayLabel,manualCheck=true]=row;
     return {value,displayLabel,manualCheck:Boolean(manualCheck)};
-  });
+  }).filter(({value})=>conditionObjectMatches(definition.valueWhen?.[value],selected));
 }
 
 function uniqueValues(values){
@@ -233,7 +321,7 @@ export function applySalesRequestExtension(state, input, contract, master=null) 
       unit:definition.unit??null,
       step:definition.step??null,
       required:Boolean(definition.required),
-      values:dataType==='NUMBER'?[]:requestChoices(definition).filter(({value})=>!definition.excludeUnless?.[value]||definition.excludeUnless[value].includes(family)),
+      values:dataType==='NUMBER'?[]:requestChoices(definition,state,input).filter(({value})=>!definition.excludeUnless?.[value]||definition.excludeUnless[value].includes(family)),
       parentFields:definition.parentFields??Object.keys(definition.when??{}),
       helpText:definition.helpText??'希望を見積依頼へ引き継ぎ、成立はメーカー見積で確認します。',
     };
@@ -279,7 +367,7 @@ export function applySalesRequestExtension(state, input, contract, master=null) 
 
   for(const definition of contract.valueAugmentations??[]){
     if(!requestFieldApplies(definition,state,input))continue;
-    const choices=requestChoices(definition);
+    const choices=requestChoices(definition,state,input);
     augmentations[definition.field]=choices;
     const raw=input[definition.field];
     const extraSet=new Set(choices.map(row=>row.value));
