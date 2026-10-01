@@ -110,7 +110,7 @@ for(const width of [1440,768,390]){
  rev=await page.locator('#dynamicForm').getAttribute('data-resolve-revision');
  await pField.fill('550');
  await pField.dispatchEvent('change');
- await page.waitForFunction(r=>document.querySelector('#dynamicForm').dataset.resolveRevision!==r,rev);
+ await page.waitForFunction(()=>window.frameEditor.state.selection.crescent_position_p_mm===550&&document.querySelector('#dynamicForm').dataset.resolveRevision===String(window.frameEditor.state.resolveRevision));
  salesState=await page.evaluate(()=>window.frameEditor.state);
  assert.equal(salesState.selection.crescent_position_p_mm,550);
  assert.ok(salesState.resolved.confirmationRequests.some(row=>row.code==='INPLUS_SALES_REQUEST_CONFIRM'));
@@ -166,15 +166,15 @@ for(const width of [1440,768,390]){
  assert.deepEqual(customPositionOrder,{crescentAfterH:true,pullAfterCrescent:true,middleAfterPull:true});
  let uchRev=await page.locator('#dynamicForm').getAttribute('data-resolve-revision');
  await uchCrescent.fill('500');await uchCrescent.dispatchEvent('change');
- await page.waitForFunction(r=>document.querySelector('#dynamicForm').dataset.resolveRevision!==r,uchRev);
+ await page.waitForFunction(()=>window.frameEditor.state.selection.crescent_position_custom_mm===500&&document.querySelector('#dynamicForm').dataset.resolveRevision===String(window.frameEditor.state.resolveRevision));
  uchRev=await page.locator('#dynamicForm').getAttribute('data-resolve-revision');
  await page.locator('#dynamicForm [data-spec-key="pull_handle_position_custom_mm"]').fill('520');
  await page.locator('#dynamicForm [data-spec-key="pull_handle_position_custom_mm"]').dispatchEvent('change');
- await page.waitForFunction(r=>document.querySelector('#dynamicForm').dataset.resolveRevision!==r,uchRev);
+ await page.waitForFunction(()=>window.frameEditor.state.selection.pull_handle_position_custom_mm===520&&document.querySelector('#dynamicForm').dataset.resolveRevision===String(window.frameEditor.state.resolveRevision));
  uchRev=await page.locator('#dynamicForm').getAttribute('data-resolve-revision');
  await page.locator('#dynamicForm [data-spec-key="middle_rail_position_custom_mm"]').fill('540');
  await page.locator('#dynamicForm [data-spec-key="middle_rail_position_custom_mm"]').dispatchEvent('change');
- await page.waitForFunction(r=>document.querySelector('#dynamicForm').dataset.resolveRevision!==r,uchRev);
+ await page.waitForFunction(()=>window.frameEditor.state.selection.middle_rail_position_custom_mm===540&&document.querySelector('#dynamicForm').dataset.resolveRevision===String(window.frameEditor.state.resolveRevision));
  const uchState=await page.evaluate(()=>window.frameEditor.state);
  assert.equal(uchState.selection.crescent_position_custom_mm,500);
  assert.equal(uchState.selection.pull_handle_position_custom_mm,520);
