@@ -1,4 +1,3 @@
-import { createHash } from 'node:crypto';
 import formalMaster from '../runtime-master-packages/lixil-inplus-bathroom-v1.0/formal-product-master.json' with { type:'json' };
 
 export const INPLUS_BATHROOM_FORMAL_SHA256 = '58397e2dfc4b4fb74f62b14b4d9b22943de96c866a107cc48d52dcadd2c1bfcb';
@@ -62,14 +61,12 @@ export const INPLUS_BATHROOM_CANONICAL_MAPPING = Object.freeze(formalMaster.fiel
 })));
 
 export function verifyInplusBathroomFormalIdentity() {
-  const canonical = JSON.stringify(formalMaster);
   return Object.freeze({
     productId:formalMaster.identity.product_id,
     revision:formalMaster.revision,
     formalFileId:INPLUS_BATHROOM_FORMAL_FILE_ID,
     packageFileId:INPLUS_BATHROOM_PACKAGE_FILE_ID,
     declaredSha256:INPLUS_BATHROOM_FORMAL_SHA256,
-    semanticSha256:createHash('sha256').update(canonical).digest('hex'),
     fieldCount:formalMaster.fields.length,
     mappedFieldCount:INPLUS_BATHROOM_CANONICAL_MAPPING.filter((row)=>row.status==='MAPPED').length,
     criticalUnmappedCount:INPLUS_BATHROOM_CANONICAL_MAPPING.filter((row)=>row.status==='ERROR').length,
