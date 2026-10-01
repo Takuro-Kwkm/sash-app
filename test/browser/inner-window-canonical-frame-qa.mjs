@@ -76,8 +76,9 @@ for(const width of [1440,768,390]){
  assert.equal((await page.evaluate(()=>window.frameEditor.state.resolved.fields.find(f=>f.key==='crescent_presence').values.find(v=>v.value==='crescentless_special_order').manualCheck)),true);
  assert.equal(await page.locator('#dynamicForm [data-key="fukashi_curtain_rail"]').count(),1);
  assert.equal(await page.locator('#dynamicForm [data-key="crescent_position_mode"]').count(),1);
- const cavityLabels=(await page.locator('#dynamicForm [data-spec-key="cavity_fill"] option').allTextContents()).filter(text=>text!=='選択してください');
- assert.ok(cavityLabels.every(text=>!/\b(?:A|Ar)\d+(?:\.\d+)?\b/.test(text)));
+ assert.equal(await page.locator('#dynamicForm [data-key="cavity_fill"]').count(),0);
+ const gasLabels=(await page.locator('#dynamicForm [data-spec-key="sales_gas_fill"] option').allTextContents()).filter(text=>text!=='選択してください');
+ assert.deepEqual(gasLabels,['乾燥空気','アルゴンガス']);
  const railImmediatelyAfterPresence=await page.evaluate(()=>{const keys=[...document.querySelectorAll('#dynamicForm .field[data-key]')].map(node=>node.dataset.key);return keys.indexOf('fukashi_curtain_rail')===keys.indexOf('fukashi_presence')+1;});
  assert.equal(railImmediatelyAfterPresence,true);
  const reinforcement=page.locator('#dynamicForm [data-spec-key="fukashi_reinforcement"]');
@@ -123,22 +124,43 @@ for(const width of [1440,768,390]){
   const {ProductConfigurationEditor}=await import('/product-configuration-editor.mjs');
   const{createProductConfigurationSnapshot}=await import('/work-management/domain.mjs');
   const inventory=await(await fetch('/api/runtime-master/integrations')).json(),product=inventory.find(x=>x.id===id);
-  const seed={room_specification:'residential',window_type:'sliding_window',sash_configuration:'two_panel',size_w:1000,size_h:1000,crescent_presence:'installed',crescent_position:'custom'};
+  const seed={room_specification:'residential',window_type:'sliding_window',sash_configuration:'two_panel',size_w:1000,size_h:1000,crescent_presence:'installed',crescent_position:'custom',pull_handle_type:'safety_stop_pull',pull_handle_position:'custom',middle_rail_option:'enabled',middle_rail_position:'custom'};
   const result=await(await fetch('/api/runtime-master/resolve?'+new URLSearchParams({productId:id,selection:JSON.stringify(seed)}))).json();
   const snapshot=createProductConfigurationSnapshot({product,result});
   window.frameEditor?.destroy();document.body.innerHTML='<main id="qaRoot"></main>';
   window.frameEditor=new ProductConfigurationEditor(document.querySelector('#qaRoot'),{initialSnapshot:snapshot});await window.frameEditor.mount();
  });
- const uchPosition=page.locator('#dynamicForm [data-spec-key="crescent_position_custom_mm"]');
- assert.equal(await uchPosition.count(),1);
- const uchPositionAfterH=await page.evaluate(()=>{const p=document.querySelector('[data-key="crescent_position_custom_mm"]'),h=document.querySelector('[data-key="size_h"]');return Boolean(p&&h&&(h.compareDocumentPosition(p)&Node.DOCUMENT_POSITION_FOLLOWING));});
- assert.equal(uchPositionAfterH,true);
+ const uchCrescent=page.locator('#dynamicForm [data-spec-key="crescent_position_custom_mm"]');
+ const uchPull=page.locator('#dynamicForm [data-spec-key="pull_handle_position_custom_mm"]');
+ const uchMiddle=page.locator('#dynamicForm [data-spec-key="middle_rail_position_custom_mm"]');
+ assert.equal(await uchCrescent.count(),1);
+ assert.equal(await uchPull.count(),1);
+ assert.equal(await uchMiddle.count(),1);
+ const customPositionOrder=await page.evaluate(()=>{
+  const keys=[...document.querySelectorAll('#dynamicForm .field[data-key]')].map(node=>node.dataset.key);
+  return {
+   crescentAfterH:keys.indexOf('crescent_position_custom_mm')>keys.indexOf('size_h'),
+   pullAfterCrescent:keys.indexOf('pull_handle_position_custom_mm')>keys.indexOf('crescent_position_custom_mm'),
+   middleAfterPull:keys.indexOf('middle_rail_position_custom_mm')>keys.indexOf('pull_handle_position_custom_mm'),
+  };
+ });
+ assert.deepEqual(customPositionOrder,{crescentAfterH:true,pullAfterCrescent:true,middleAfterPull:true});
  let uchRev=await page.locator('#dynamicForm').getAttribute('data-resolve-revision');
- await uchPosition.fill('500');await uchPosition.dispatchEvent('change');
+ await uchCrescent.fill('500');await uchCrescent.dispatchEvent('change');
+ await page.waitForFunction(r=>document.querySelector('#dynamicForm').dataset.resolveRevision!==r,uchRev);
+ uchRev=await page.locator('#dynamicForm').getAttribute('data-resolve-revision');
+ await page.locator('#dynamicForm [data-spec-key="pull_handle_position_custom_mm"]').fill('520');
+ await page.locator('#dynamicForm [data-spec-key="pull_handle_position_custom_mm"]').dispatchEvent('change');
+ await page.waitForFunction(r=>document.querySelector('#dynamicForm').dataset.resolveRevision!==r,uchRev);
+ uchRev=await page.locator('#dynamicForm').getAttribute('data-resolve-revision');
+ await page.locator('#dynamicForm [data-spec-key="middle_rail_position_custom_mm"]').fill('540');
+ await page.locator('#dynamicForm [data-spec-key="middle_rail_position_custom_mm"]').dispatchEvent('change');
  await page.waitForFunction(r=>document.querySelector('#dynamicForm').dataset.resolveRevision!==r,uchRev);
  const uchState=await page.evaluate(()=>window.frameEditor.state);
  assert.equal(uchState.selection.crescent_position_custom_mm,500);
- report.cases.push({width,product:'SER-YKKAP-UCHIRIMO',transition:'custom-crescent-position',status:'PASS'});
+ assert.equal(uchState.selection.pull_handle_position_custom_mm,520);
+ assert.equal(uchState.selection.middle_rail_position_custom_mm,540);
+ report.cases.push({width,product:'SER-YKKAP-UCHIRIMO',transition:'custom-position-measurements',status:'PASS'});
 
  await page.close();
 }
