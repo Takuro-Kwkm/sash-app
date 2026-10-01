@@ -115,7 +115,7 @@ test('Uchirimo exposes glass design branches from the existing Formal glass fact
   assert.deepEqual(field(bathroom,'sales_glass_design')?.values.map(row=>row.displayLabel),['標準複層ガラス']);
 });
 
-test('both inner windows finish options before dimensions; Uchirimo preserves appearance across design resets',async()=>{
+test('both inner windows finish dropdown options then checkboxes then dimensions; Uchirimo retains appearance',async()=>{
   const inplus=await resolveRuntimeAppProduct(INPLUS,{
     window_type:'引違い窓',sash_configuration:'2枚建',glass_family:'Low-E複層',
     order_width:1000,order_height:1000,
@@ -123,7 +123,12 @@ test('both inner windows finish options before dimensions; Uchirimo preserves ap
   const inplusKeys=inplus.fields.map(row=>row.key);
   const inplusOptionIndexes=inplus.fields.flatMap((row,index)=>row.semanticStage==='OPTION'?[index]:[]);
   assert.ok(inplusOptionIndexes.length>0);
-  assert.ok(Math.max(...inplusOptionIndexes)<inplusKeys.indexOf('order_width'));
+  const inplusCheckbox=inplusKeys.indexOf('option_items');
+  const inplusDropdowns=inplus.fields.flatMap((row,index)=>row.semanticStage==='OPTION'&&row.dataType==='ENUM'?[index]:[]);
+  assert.ok(inplusDropdowns.length>0);
+  assert.ok(Math.max(...inplusDropdowns)<inplusCheckbox);
+  assert.ok(inplusCheckbox<inplusKeys.indexOf('order_width'));
+  assert.equal(inplus.fields[inplusCheckbox].semanticStage,'OPTION');
   assert.ok(inplusKeys.indexOf('order_width')<inplusKeys.indexOf('order_height'));
 
   const seed={room_specification:'residential',window_type:'sliding_window',sash_configuration:'two_panel',
@@ -139,7 +144,12 @@ test('both inner windows finish options before dimensions; Uchirimo preserves ap
     ['荒間格子','横繁吹寄格子','たて繁吹寄格子']);
   const optionIndexes=japanese.fields.flatMap((row,index)=>row.semanticStage==='OPTION'?[index]:[]);
   assert.ok(optionIndexes.length>0);
-  assert.ok(Math.max(...optionIndexes)<keys.indexOf('size_w'));
+  const checkbox=keys.indexOf('option_items');
+  const dropdowns=japanese.fields.flatMap((row,index)=>row.semanticStage==='OPTION'&&row.dataType==='ENUM'?[index]:[]);
+  assert.ok(dropdowns.length>0);
+  assert.ok(Math.max(...dropdowns)<checkbox);
+  assert.ok(checkbox<keys.indexOf('size_w'));
+  assert.equal(japanese.fields[checkbox].semanticStage,'OPTION');
   assert.ok(keys.indexOf('size_w')<keys.indexOf('size_h'));
 
   const grid=await resolveRuntimeAppProduct(UCHIRIMO,{...japanese.selection,sales_glass_design:'grid'});

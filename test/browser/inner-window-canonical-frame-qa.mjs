@@ -9,6 +9,47 @@ const specs=[{id:'SER-LIXIL-INPLUS',seed:{window_type:'引違い窓',sash_config
 await mkdir(OUT,{recursive:true});
 const report={status:'RUNNING',exactHead:process.env.GITHUB_SHA??null,cases:[],apiDomMismatch:0,staleValues:0,errors:[]};
 const browser=await chromium.launch();
+
+async function assertCheckboxFinalOption(page, product, width, state) {
+ const proof=await page.evaluate(({wKey,hKey})=>{
+  const form=document.querySelector('#dynamicForm');
+  const optionKeys=new Set(window.frameEditor.state.resolved.fields.filter(f=>f.semanticStage==='OPTION').map(f=>f.key));
+  const visible=node=>node&&node.getClientRects().length>0;
+  const nodes=[...form.querySelectorAll('[data-spec-key]:not(.multi-enum-native-control), [data-multi-key]')].filter(visible);
+  const keys=nodes.map(n=>n.dataset.specKey??n.dataset.multiKey);
+  const checkbox=form.querySelector('[data-multi-key="option_items"]');
+  const w=form.querySelector(`[data-key="${wKey}"]`),h=form.querySelector(`[data-key="${hKey}"]`);
+  const dropdowns=nodes.filter(n=>n.tagName==='SELECT'&&optionKeys.has(n.dataset.specKey));
+  const before=(a,b)=>Boolean(a&&b&&(a.compareDocumentPosition(b)&Node.DOCUMENT_POSITION_FOLLOWING));
+  const between=dropdowns.filter(n=>before(checkbox,n)&&before(n,w)).map(n=>n.dataset.specKey);
+  const afterCheckbox=dropdowns.filter(n=>before(checkbox,n)).map(n=>n.dataset.specKey);
+  const rect=node=>{const r=node.getBoundingClientRect();return {top:r.top,bottom:r.bottom,left:r.left};};
+  const last=dropdowns.at(-1);
+  const positions=nodes.filter(n=>n.tagName==='INPUT'&&/position.*(?:mm|_p_mm)$/.test(n.dataset.specKey));
+  return {domOrder:keys,dropdownOptionKeys:dropdowns.map(n=>n.dataset.specKey),betweenCheckboxAndDimension:between,
+   optionDropdownsAfterCheckbox:afterCheckbox,
+   lastDropdownOptionIndex:keys.indexOf(last?.dataset.specKey),checkboxIndex:keys.indexOf('option_items'),widthIndex:keys.indexOf(wKey),heightIndex:keys.indexOf(hKey),
+   checkboxVisible:visible(checkbox),domOrderCorrect:dropdowns.length>0&&before(last,checkbox)&&before(checkbox,w)&&before(w,h),
+   visualOrderCorrect:dropdowns.length>0&&rect(last).bottom<=rect(checkbox).top&&rect(checkbox).bottom<=rect(w).top&&rect(w).bottom<=rect(h).top,
+   positionFieldsAfterHeight:positions.every(n=>before(h,n)&&rect(h).bottom<=rect(n).top),
+   rects:{lastDropdown:rect(last),checkbox:rect(checkbox),width:rect(w),height:rect(h)},positionKeys:positions.map(n=>n.dataset.specKey)};
+ },product==='SER-LIXIL-INPLUS'?{wKey:'order_width',hKey:'order_height'}:{wKey:'size_w',hKey:'size_h'});
+ assert.equal(proof.checkboxVisible,true);
+ assert.ok(proof.lastDropdownOptionIndex<proof.checkboxIndex);
+ assert.ok(proof.checkboxIndex<proof.widthIndex&&proof.widthIndex<proof.heightIndex);
+ assert.deepEqual(proof.betweenCheckboxAndDimension,[]);
+ assert.deepEqual(proof.optionDropdownsAfterCheckbox,[]);
+ assert.equal(proof.domOrderCorrect,true);
+ assert.equal(proof.visualOrderCorrect,true);
+ assert.equal(proof.positionFieldsAfterHeight,true);
+ report.cases.push({width,product,transition:'checkbox-final-option',state,proof,status:'PASS'});
+ if(width===1440&&state==='custom-positions'){
+  await page.locator('[data-semantic-group="OPTION"]').scrollIntoViewIfNeeded();
+  await page.screenshot({path:`${OUT}/${product}-checkbox-final-desktop.png`,fullPage:true});
+ }
+ return proof;
+}
+
 try{
 for(const width of [1440,768,390]){
  const page=await browser.newPage({viewport:{width,height:1000}});page.on('pageerror',e=>report.errors.push(e.message));page.on('console',m=>{if(m.type()==='error')report.errors.push(m.text());});
@@ -85,19 +126,7 @@ for(const width of [1440,768,390]){
  assert.ok((await reinforcement.locator('option').allTextContents()).some(text=>text.includes('ふかし枠下部補強部材')));
  const options=page.locator('#dynamicForm [data-multi-key="option_items"]');
  assert.equal(await options.count(),1);
- const inplusFlow=await page.evaluate(()=>{
-  const fields=window.frameEditor.state.resolved.fields;
-  const keys=fields.map(field=>field.key);
-  const lastOption=Math.max(...fields.flatMap((field,index)=>field.semanticStage==='OPTION'?[index]:[]));
-  const heading=document.querySelector('#dynamicForm [data-semantic-group="OPTION"]');
-  const checkbox=document.querySelector('#dynamicForm [data-multi-key="option_items"] input[type="checkbox"]');
-  const width=document.querySelector('#dynamicForm [data-key="order_width"]');
-  return {lastOptionBeforeWidth:lastOption<keys.indexOf('order_width'),widthBeforeHeight:keys.indexOf('order_width')<keys.indexOf('order_height'),
-   headingBeforeCheckbox:Boolean(heading&&checkbox&&(heading.compareDocumentPosition(checkbox)&Node.DOCUMENT_POSITION_FOLLOWING)),
-   checkboxBeforeWidth:Boolean(checkbox&&width&&(checkbox.compareDocumentPosition(width)&Node.DOCUMENT_POSITION_FOLLOWING)),
-   visuallyBeforeWidth:Boolean(checkbox&&width&&checkbox.getBoundingClientRect().top<width.getBoundingClientRect().top)};
- });
- assert.deepEqual(inplusFlow,{lastOptionBeforeWidth:true,widthBeforeHeight:true,headingBeforeCheckbox:true,checkboxBeforeWidth:true,visuallyBeforeWidth:true});
+ await assertCheckboxFinalOption(page,'SER-LIXIL-INPLUS',width,'initial');
  for(const value of ['OP-STEP','OP-EMBED-RESIN','OP-TRUE-WALL-SCREW','OP-REPLACEMENT-CRESCENT'])assert.equal(await options.locator(`input[value="${value}"]`).count(),1,value);
  let rev=await page.locator('#dynamicForm').getAttribute('data-resolve-revision');
  await options.locator('input[value="OP-EMBED-RESIN"]').check();
@@ -120,6 +149,7 @@ for(const width of [1440,768,390]){
  assert.equal(await pField.getAttribute('step'),'0.5');
  const pAfterH=await page.evaluate(()=>{const p=document.querySelector('[data-key="crescent_position_p_mm"]'),h=document.querySelector('[data-key="order_height"]');return Boolean(p&&h&&(h.compareDocumentPosition(p)&Node.DOCUMENT_POSITION_FOLLOWING));});
  assert.equal(pAfterH,true);
+ await assertCheckboxFinalOption(page,'SER-LIXIL-INPLUS',width,'custom-positions');
  rev=await page.locator('#dynamicForm').getAttribute('data-resolve-revision');
  await pField.fill('550');
  await pField.dispatchEvent('change');
@@ -148,19 +178,7 @@ for(const width of [1440,768,390]){
  assert.deepEqual((await glassDesign.locator('option').allTextContents()).filter(text=>text!=='選択してください'),['標準複層ガラス','格子入り複層ガラス','和室用複層ガラス']);
  const uchOptions=page.locator('#dynamicForm [data-multi-key="option_items"]');
  assert.equal(await uchOptions.count(),1);
- const uchFlow=await page.evaluate(()=>{
-  const fields=window.frameEditor.state.resolved.fields;
-  const keys=fields.map(field=>field.key);
-  const lastOption=Math.max(...fields.flatMap((field,index)=>field.semanticStage==='OPTION'?[index]:[]));
-  const heading=document.querySelector('#dynamicForm [data-semantic-group="OPTION"]');
-  const checkbox=document.querySelector('#dynamicForm [data-multi-key="option_items"] input[type="checkbox"]');
-  const width=document.querySelector('#dynamicForm [data-key="size_w"]');
-  return {lastOptionBeforeWidth:lastOption<keys.indexOf('size_w'),widthBeforeHeight:keys.indexOf('size_w')<keys.indexOf('size_h'),
-   headingBeforeCheckbox:Boolean(heading&&checkbox&&(heading.compareDocumentPosition(checkbox)&Node.DOCUMENT_POSITION_FOLLOWING)),
-   checkboxBeforeWidth:Boolean(checkbox&&width&&(checkbox.compareDocumentPosition(width)&Node.DOCUMENT_POSITION_FOLLOWING)),
-   visuallyBeforeWidth:Boolean(checkbox&&width&&checkbox.getBoundingClientRect().top<width.getBoundingClientRect().top)};
- });
- assert.deepEqual(uchFlow,{lastOptionBeforeWidth:true,widthBeforeHeight:true,headingBeforeCheckbox:true,checkboxBeforeWidth:true,visuallyBeforeWidth:true});
+ await assertCheckboxFinalOption(page,'SER-YKKAP-UCHIRIMO',width,'initial');
  for(const value of ['jamb_step_spacer','sweep_attachment','sash_stopper','washitsu_filler','decorative_jamb','outer_window_replacement_crescent','outer_window_universal_handle','adjustment_material'])assert.equal(await uchOptions.locator(`input[value="${value}"]`).count(),1,value);
  assert.equal(await uchOptions.locator('input[value="arm_stopper_option"]').count(),0);
  assert.equal(await uchOptions.locator('input[value="outside_handle_option"]').count(),0);
@@ -215,6 +233,7 @@ for(const width of [1440,768,390]){
  assert.equal(uchState.selection.crescent_position_custom_mm,500);
  assert.equal(uchState.selection.pull_handle_position_custom_mm,520);
  assert.equal(uchState.selection.middle_rail_position_custom_mm,540);
+ await assertCheckboxFinalOption(page,'SER-YKKAP-UCHIRIMO',width,'custom-positions');
  report.cases.push({width,product:'SER-YKKAP-UCHIRIMO',transition:'custom-position-measurements',status:'PASS'});
 
  async function changeUchirimo(key,value){

@@ -7,7 +7,7 @@
     "src/catalog/runtime-master/runtime-app-bridge.mjs": "1145fdc6b6580b752e1ad642323e4d7184456b4e0e8915ac6c05467a5bd71656",
     "src/catalog/runtime-master/new-construction-sash-runtime-ui-contract.mjs": "55f4f3f93be026614f4ab4b0a6df318777d33146743c1588bc1552e1ebaeeef7",
     "scripts/governance/uchirimo-selector-batch-runner.mjs": "29f26ef702d4c505ed3ab27de35eafc36b63f24bbbfe0d7fbaa55b631f920d74",
-    "src/catalog/runtime-master/inner-window-runtime-ui-contract.mjs": "08973e0b34d82ce1f134c4062c467a5814b5f686b7c039f56849de508566536c",
+    "src/catalog/runtime-master/inner-window-runtime-ui-contract.mjs": "0f76df4be907fd1b7ca74bfb9cfcd4a2ee932517fce8ef719f864815738301d0",
     "src/catalog/runtime-master/global-window-selection-flow-engine.mjs": "2ef247ea40f4be459da5b37a524c2c1baf9f3e449d2a3e1a29436db69a7d4271",
     "src/catalog/runtime-master/canonical-window-semantic-schema.mjs": "03ace90218363f62ad89280c77a328bb2e05efd362f6b17eca8989f0d52edeb7",
     "data/uchirimo-slim/runtime-support.json": "25eaf0a65482aed99a37852c1b1c5c7d4c60de54c1a3954923abb4f11b7e4a1d",
@@ -33,7 +33,7 @@
       {
         "file": "src/catalog/runtime-master/inner-window-runtime-ui-contract.mjs",
         "baseline_sha256": "e7075aaafb832d93f54bf67c74ca52a9345a9b714c01277337c3a9fe3b1beaff",
-        "candidate_sha256": "08973e0b34d82ce1f134c4062c467a5814b5f686b7c039f56849de508566536c"
+        "candidate_sha256": "0f76df4be907fd1b7ca74bfb9cfcd4a2ee932517fce8ef719f864815738301d0"
       },
       {
         "file": "src/catalog/runtime-master/global-window-selection-flow-engine.mjs",
@@ -74,6 +74,14 @@
       "source_diff": "Adds declarative crescent_position_mode/P slots and Japanese crescent labels, places P after final W/H, and removes the replaced sales_installation_auxiliaries slot. No changes to existing canonical fields, values, dependency evaluation, Formal bytes or the historical Uchirimo dependency graph.",
       "verification": "test/84-uchirimo-factorized-selector.test.mjs still verifies all explicit historical terminals, rejects unknown actions, altered source hashes and undeclared side effects. Current frame and sales-control tests independently verify current UI behavior. Hash verification remains exact; no test is removed, skipped or weakened.",
       "product_master_mutation": 0
+    },
+    "checkbox_final_option_presentation": {
+      "baseline_commit": "0f4bd2298840301b1104545b047038c9cf701551",
+      "previous_reviewed_sha256": "08973e0b34d82ce1f134c4062c467a5814b5f686b7c039f56849de508566536c",
+      "source_diff": "option_items uses the final OPTION presentation rank. Semantic stage, slot, choice values, dependencies, shared global stage order and Formal bytes unchanged.",
+      "independent_regression": "88-inner-window-sales-request-controls and actual DOM/bounding rectangles in inner-window-canonical-frame-qa assert last dropdown < checkbox < W < H and zero dropdowns after checkbox.",
+      "product_master_mutation": 0,
+      "formal_runtime_mutation": 0
     }
   }
 }

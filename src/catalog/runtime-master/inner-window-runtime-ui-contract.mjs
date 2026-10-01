@@ -191,9 +191,12 @@ export function applyInnerWindowUiOrder(fields = [], integration = {}) {
     approvedExtensionForField: approvedInnerWindowExtensionForField,
     shouldExposeField: shouldExposeInnerWindowRuntimeField,
     standardLabelForField: standardLabelForInnerWindowField,
-    presentationRankForField: integration.id==='SER-YKKAP-UCHIRIMO'
-      ? key => UCHIRIMO_GLASS_RANK[key] ?? null
-      : () => null,
+    // End OPTION with the multi-select cards, after every dedicated selector.
+    // Ranking is stage-local: semanticSlot/semanticStage and the shared stage
+    // sequence stay unchanged; final W/H retains its presentation extension.
+    presentationRankForField: key => key === 'option_items'
+      ? Number.MAX_SAFE_INTEGER
+      : integration.id === 'SER-YKKAP-UCHIRIMO' ? UCHIRIMO_GLASS_RANK[key] ?? null : null,
     presentationExtensionForField: key => ['size_w','size_h','order_width','order_height','sash_width_allocation','sash_w1','sash_w2','sash_w3','sash_w4'].includes(key) ? {slot:'INNER_WINDOW_FINAL_DIMENSION',order:9} : ['crescent_position_p_mm','crescent_position_custom_mm'].includes(key) ? {slot:'INNER_WINDOW_POST_DIMENSION_CRESCENT_P',order:10} : key==='pull_handle_position_custom_mm' ? {slot:'INNER_WINDOW_POST_DIMENSION_CRESCENT_P',order:11} : key==='middle_rail_position_custom_mm' ? {slot:'INNER_WINDOW_POST_DIMENSION_CRESCENT_P',order:12} : null,
   });
 }
