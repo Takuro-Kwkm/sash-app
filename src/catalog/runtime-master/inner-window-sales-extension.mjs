@@ -166,6 +166,7 @@ export const INPLUS_SALES_REQUEST = Object.freeze({
         ['OP-STEP','段差スペーサー',true],
         ['OP-EMBED-RESIN','埋め木樹脂材',true],
         ['OP-TRUE-WALL-SCREW','真壁取付用ねじ',true],
+        ['OP-REPLACEMENT-CRESCENT','外窓用 交換用クレセント（汎用クレセント）',true],
       ],
     },
   ]),

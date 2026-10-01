@@ -4,7 +4,7 @@
   "source_sha256": {
     "src/catalog/runtime-master/uchirimo-tabular-v1-adapter.mjs": "a6f3cdca31609a2cde44e11c972b2446440e31cf988f1a1908aff6ecfde971ee",
     "src/catalog/runtime-master/uchirimo-glass-rule-model.mjs": "0e8b1e37a05d25f80e7fc7f9a930c4349f8f97b5c43e9706c8aa99d1904c88b7",
-    "src/catalog/runtime-master/runtime-app-bridge.mjs": "3a487b20cd440d30919a076b9d66b3d97d5d64c0d9afd8fb22c33d74e5851570",
+    "src/catalog/runtime-master/runtime-app-bridge.mjs": "b3ae6520ebbd8a712c43af311e9df4aec6d28388775730f7ac31b9b17c7abed3",
     "src/work-management/field-workflow-scope.mjs": "7afa16757ad1e84ee423c0033798da8ec45dca21674894dfc3f6cafb19841431",
     "src/catalog/runtime-master/new-construction-sash-runtime-ui-contract.mjs": "55f4f3f93be026614f4ab4b0a6df318777d33146743c1588bc1552e1ebaeeef7",
     "scripts/governance/uchirimo-selector-batch-runner.mjs": "29f26ef702d4c505ed3ab27de35eafc36b63f24bbbfe0d7fbaa55b631f920d74",
@@ -18,7 +18,7 @@
     "scripts/governance/uchirimo-adopted-slim-runtime.mjs": "6e543bb9365f09bdb78446acefbc541a343b67719f5489ae2a37973238c46c51",
     "scripts/governance/formal-selector-qa-projection.mjs": "f1acb09facd8cec0781a8a3e09398a338226bdb8008089f39264d00bf5035f8b",
     "src/catalog/runtime-master/inplus-presentation-rules.mjs": "a23f03edd5b0beecb932f18305aba17dce078c6cd1ea895cef8f816b7f21d388",
-    "src/catalog/runtime-master/inner-window-sales-extension.mjs": "1dc5aebdb2aaeb2d972ccb5b6595b986fed817f7a0fc4379d5de0b7003d85dfe"
+    "src/catalog/runtime-master/inner-window-sales-extension.mjs": "94254f6c7eb8e646ea44bc324bcec3359d2695c15d3236f02ef783440a230b03"
   },
   "review": {
     "bathroom_workflow_separation_20261001": "App-side estimate/site_survey scope only. Historical witness calls normalizeRuntimeSelection and raw resolver, which are unchanged. Current bathroom estimate wrapper detaches audited survey values, excludes their Required/output scope, and evaluates all allowed Formal installation discriminator branches for W/H without selecting an environment. Independent tests 91 cover both current products, preserved legacy values, forbidden raw survey rules, all-branch bounds and retained product hardware selectors; browser suite covers actual save/reload/handoff and variant transitions. No Formal Product Master, Runtime package, rule or Registry mutation. Pin guard remains exact.",
@@ -88,6 +88,21 @@
       "product_master_mutation": 0,
       "formal_runtime_mutation": 0
     },
-    "inplus_presentation_change": "2026-10-01: context-dependent Low-E labels and Formal PF midrail position projection; source tables read-only. New adapter and extension are hash guarded. Unit and real DOM QA verify change scope."
+    "inplus_presentation_change": "2026-10-01: context-dependent Low-E labels and Formal PF midrail position projection; source tables read-only. New adapter and extension are hash guarded. Unit and real DOM QA verify change scope.",
+    "inplus_accessory_requests_20261002": {
+      "scope": "Sales estimate only, Inplus standard and bathroom. Strip requested outer-window accessory IDs before manufacturer evaluation; project a single MULTI_ENUM and estimator confirmation afterward. Raw Uchirimo evaluator, normalizeRuntimeSelection and package bytes are unchanged. Existing standard site_survey extension keeps its previous replacement-crescent choice. No manufacturer Fact or shared schema mutation. Tests 92 independently verify new sales scope; unchanged Uchirimo regression stays enabled. Exact source-pin guard and negative tests retained.",
+      "changed_source_pins": [
+        {
+          "file": "src/catalog/runtime-master/runtime-app-bridge.mjs",
+          "baseline_sha256": "3a487b20cd440d30919a076b9d66b3d97d5d64c0d9afd8fb22c33d74e5851570",
+          "candidate_sha256": "b3ae6520ebbd8a712c43af311e9df4aec6d28388775730f7ac31b9b17c7abed3"
+        },
+        {
+          "file": "src/catalog/runtime-master/inner-window-sales-extension.mjs",
+          "baseline_sha256": "1dc5aebdb2aaeb2d972ccb5b6595b986fed817f7a0fc4379d5de0b7003d85dfe",
+          "candidate_sha256": "94254f6c7eb8e646ea44bc324bcec3359d2695c15d3236f02ef783440a230b03"
+        }
+      ]
+    }
   }
 }
