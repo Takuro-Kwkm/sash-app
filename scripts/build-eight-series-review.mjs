@@ -34,7 +34,9 @@ function sourcePath(importer,specifier){
 }
 function collect(path){
  if(Object.hasOwn(modules,path))return;
- let source=path===registryPath?registry:readFileSync(path,'utf8');
+	let source=path===registryPath?registry:readFileSync(path,'utf8');
+	if(path.endsWith('.json'))source=`export default ${source.trim()};`;
+	else source=source.replace(/(from\s*['"][^'"]+\.json['"])\s+with\s*\{\s*type\s*:\s*['"]json['"]\s*\}/g,'$1');
  if(path==='src/catalog/runtime-master/uchirimo-glass-rule-model.mjs')source=source.replace("import { createHash } from 'node:crypto';","const createHash=()=>{throw new Error('Authoring normalization is not part of this read-only preview');};");
  if(path==='src/ui/web/app.js')source=source.replace("const parts=location.pathname.split('/').filter(Boolean);","const parts=['runtime-lab'];").replace('{showInventory:true});await activeProductEditor.mount();','{showInventory:true});await activeProductEditor.mount();window.__eightPreviewEditor=activeProductEditor;');
  modules[path]=source;dependencies[path]={};
@@ -77,6 +79,7 @@ await editor.resolve();
 `;
 let html=readFileSync('src/ui/web/index.html','utf8');
 html=html.replace(/<link rel="stylesheet" href="\/([^\"]+)">/g,(_,name)=>'<style>'+readFileSync('src/ui/web/'+name,'utf8')+'</style>');
+html=html.replace('<script type="module" src="/theme.js"></script>',()=>'<script type="module">'+readFileSync('src/ui/web/theme.js','utf8')+'</script>');
 const heading=focus==='inplus'?'インプラス — 中桟の希望・H後判定確認':'ウチリモ — ガラスデザイン・R6オプション確認';
 const version=focus==='inplus'?'インプラス Runtime v0.4-R3':'Product Master v1.0-P7R1-R6 / Runtime v1.0-P7R1-R5';
 html=html.replace('<main id="appMain" aria-live="polite"></main>',`<section class="card compact"><h2>${heading}</h2><p>8シリーズの配置版と同じマスター・Adapter・選択処理を使用。${focus==='inplus'?'中桟の希望と位置を選択済みです。W/Hを入力して判定表示を確認できます。':''}</p><p>このHTMLは商品選定の確認用です。API通信をブラウザ内処理に置き換えています。案件保存・見積出力は配置版で利用できます。</p><small>App 0.2.0-recovery | ${version} | Preview Build: ${identity.slice(0,16)}<br>HEAD: ${exactHead}<br>生成: ${generatedAt}</small></section><main id="appMain" aria-live="polite"></main>`);
