@@ -82,6 +82,81 @@ test('Inplus crescent P appears after custom W/H and validates formal P rules',a
   assert.ok(invalid.validation.errors.some(error=>error.errorCode==='INPLUS_CRESCENT_POSITION_OUT_OF_RANGE'));
 });
 
+test('Uchirimo exposes glass design branches from the existing Formal glass facts',async()=>{
+  const seed={
+    room_specification:'residential',window_type:'sliding_window',sash_configuration:'two_panel',
+    size_w:1000,size_h:1000,glass_family:'insulating_glass',
+  };
+  const base=await resolveRuntimeAppProduct(UCHIRIMO,seed);
+  assert.deepEqual(field(base,'sales_glass_design')?.values.map(row=>row.displayLabel),[
+    '標準複層ガラス','格子入り複層ガラス','和室用複層ガラス',
+  ]);
+  assert.equal(field(base,'sales_glass_pattern'),undefined);
+
+  const grid=await resolveRuntimeAppProduct(UCHIRIMO,{...base.selection,sales_glass_design:'grid'});
+  assert.deepEqual(field(grid,'sales_glass_pattern')?.values.map(row=>row.displayLabel),[
+    'プレーンタイプ','エレガントタイプ','洋風タイプ WA01（アルミ格子）','洋風タイプ WA01（樹脂格子）',
+    '洋風タイプ WA02','プレーリータイプ PA01','プレーリータイプ PA02','洋風タイプ WP01',
+  ]);
+  const gridSelected=await resolveRuntimeAppProduct(UCHIRIMO,{...grid.selection,sales_glass_pattern:'wa01_resin'});
+  assert.equal(gridSelected.sales_request_handoff?.glass_design_request,'grid');
+  assert.equal(gridSelected.sales_request_handoff?.glass_design_detail_request,'wa01_resin');
+
+  const japanese=await resolveRuntimeAppProduct(UCHIRIMO,{...gridSelected.selection,sales_glass_design:'japanese'});
+  assert.deepEqual(field(japanese,'sales_glass_pattern')?.values.map(row=>row.displayLabel),[
+    '荒間格子','横繁吹寄格子','たて繁吹寄格子',
+  ]);
+  assert.equal(japanese.selection.sales_glass_pattern,undefined);
+
+  const bathroom=await resolveRuntimeAppProduct(UCHIRIMO,{
+    room_specification:'bathroom',window_type:'sliding_window',sash_configuration:'two_panel',
+    size_w:1000,size_h:1000,glass_family:'insulating_glass',
+  });
+  assert.deepEqual(field(bathroom,'sales_glass_design')?.values.map(row=>row.displayLabel),['標準複層ガラス']);
+});
+
+test('Uchirimo projects R6 Formal accessory options with applicability and estimate-confirm boundaries',async()=>{
+  const seed={
+    room_specification:'residential',window_type:'sliding_window',sash_configuration:'three_panel',
+    size_w:1400,size_h:1000,fukashi_presence:'none',
+  };
+  const base=await resolveRuntimeAppProduct(UCHIRIMO,seed);
+  const option=field(base,'option_items');
+  assert.equal(option?.dataType,'MULTI_ENUM');
+  const optionValues=values(base,'option_items');
+  for(const value of [
+    'jamb_step_spacer','sweep_attachment','meeting_stile_exterior_pull','sash_stopper',
+    'washitsu_filler','decorative_jamb','outer_window_replacement_crescent',
+    'outer_window_universal_handle','adjustment_material',
+  ])assert.ok(optionValues.includes(value),value);
+  assert.equal(optionValues.includes('cover_material'),false);
+  assert.equal(optionValues.includes('arm_stopper_option'),false);
+  assert.equal(optionValues.includes('outside_handle_option'),false);
+
+  const selected=await resolveRuntimeAppProduct(UCHIRIMO,{
+    ...base.selection,
+    option_items:['jamb_step_spacer','meeting_stile_exterior_pull','decorative_jamb','outer_window_replacement_crescent'],
+  });
+  assert.deepEqual(new Set(selected.selection.option_items),new Set([
+    'jamb_step_spacer','meeting_stile_exterior_pull','decorative_jamb','outer_window_replacement_crescent',
+  ]));
+  assert.deepEqual(new Set(selected.sales_request_handoff?.option_items),new Set([
+    'jamb_step_spacer','meeting_stile_exterior_pull','decorative_jamb','outer_window_replacement_crescent',
+  ]));
+  assert.ok(selected.confirmationRequests.some(row=>row.code==='UCHIRIMO_SALES_REQUEST_CONFIRM'));
+
+  const fukashi=await resolveRuntimeAppProduct(UCHIRIMO,{...selected.selection,fukashi_presence:'present',fukashi_sides:'three_side',fukashi_depth:'25'});
+  assert.equal(fukashi.selection.option_items.includes('decorative_jamb'),false);
+
+  const bathroom=await resolveRuntimeAppProduct(UCHIRIMO,{
+    room_specification:'bathroom',window_type:'sliding_window',sash_configuration:'two_panel',
+    size_w:900,size_h:900,
+  });
+  assert.ok(values(bathroom,'option_items').includes('cover_material'));
+  assert.ok(values(bathroom,'option_items').includes('sash_stopper'));
+  assert.equal(values(bathroom,'option_items').includes('sweep_attachment'),false);
+});
+
 test('Uchirimo custom crescent, pull-handle and middle-rail positions appear in requested order',async()=>{
   const seed={
     room_specification:'residential',window_type:'sliding_window',sash_configuration:'two_panel',
