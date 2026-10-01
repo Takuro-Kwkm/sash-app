@@ -122,7 +122,7 @@ const INNER_WINDOW_TECHNICAL_EXACT = new Set([
 ]);
 
 export function semanticSlotForInnerWindowField(key) {
-  const salesSlot={sales_glass_appearance:'glass_type',sales_spacer_type:'spacer_type',sales_gas_fill:'gas_fill'}[key];
+  const salesSlot={sales_glass_appearance:'glass_type',sales_glass_design:'decorative_pattern',sales_glass_pattern:'grille_type',sales_spacer_type:'spacer_type',sales_gas_fill:'gas_fill'}[key];
   if(salesSlot)return salesSlot;
   if (key === 'bathroom_installation_type') return 'installation_environment';
   return INNER_WINDOW_UI_STANDARD_ORDER.includes(key) ? key : null;
@@ -144,6 +144,7 @@ const STANDARD_LABELS = Object.freeze({
   frame_color:'本体色', body_color:'本体色', glass_family:'ガラス仕様', glass_type:'ガラス種', low_e_type:'Low-E性能', lowe_color:'Low-E性能',
   spacer_type:'スペーサー', spacer:'スペーサー', gas_fill:'中空層', cavity_fill:'中空層', frame_installation_mode:'枠仕様', frame_install_spec:'枠・納まり仕様（区分分離未対応）', bathroom_installation_type:'設置環境', installation_environment:'設置環境',
   frame_spec:'枠仕様',upper_frame_spec:'上枠仕様',lower_frame_spec:'下枠仕様',fukashi_presence:'ふかし枠',fukashi_sides:'ふかし枠構成',fukashi_depth:'ふかし枠寸法',fukashi_reinforcement:'ふかし枠詳細 / 補強',
+  sales_glass_design:'ガラスデザイン',sales_glass_pattern:'デザイン',
   crescent_presence:'クレセント有無',crescent_type:'クレセント種類',crescent_position_mode:'クレセント位置',crescent_position_p_mm:'クレセント位置P',crescent_position_custom_mm:'クレセント位置（mm）',pull_handle_position_custom_mm:'引手位置（mm）',middle_rail_position_custom_mm:'中桟位置（mm）',
   option_items:'オプション',
 });
