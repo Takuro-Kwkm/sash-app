@@ -106,7 +106,7 @@ export const INPLUS_SALES_REQUEST = Object.freeze({
       slot:'gas_fill',
       handoffKey:'gas_fill_request',
       families:['Low-E複層','一般複層'],
-      values:[['air','乾燥空気',true],['argon','アルゴンガス',true]],
+      values:[['air','乾燥空気',false],['argon','アルゴンガス',false]],
       helpText:'営業では空気層厚を指定せず、乾燥空気／アルゴンガスの希望だけを見積依頼へ引き継ぎます。最終ガラス構成は積算／LIXILで確認します。',
     },
     {
