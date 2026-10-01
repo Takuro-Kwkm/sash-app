@@ -160,6 +160,56 @@ for(const width of [1440,768,390]){
  const overflowRequested=await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth);assert.ok(overflowRequested<=1);
  report.cases.push({width,product:'SER-LIXIL-INPLUS',transition:'requested-sales-controls',status:'PASS'});
 
+ // Inplus Low-E construction labels and Formal midrail F sales projection.
+ await page.evaluate(async ()=>{
+  const id='SER-LIXIL-INPLUS';
+  const {ProductConfigurationEditor}=await import('/product-configuration-editor.mjs');
+  const {createProductConfigurationSnapshot}=await import('/work-management/domain.mjs');
+  const product=(await(await fetch('/api/runtime-master/integrations')).json()).find(x=>x.id===id);
+  const seed={window_type:'引違い窓',sash_configuration:'2枚建',order_width:1600,order_height:1800,upper_frame_spec:'standard',frame_spec:'standard',lower_frame_spec:'general',fukashi_presence:'none',glass_family:'Low-E複層',glass_type:'透明',lowe_color:'クリア',crescent_presence:'installed',crescent_position_mode:'custom',crescent_position_p_mm:800};
+  const result=await(await fetch('/api/runtime-master/resolve?'+new URLSearchParams({productId:id,selection:JSON.stringify(seed)}))).json();
+  window.frameEditor.destroy();document.body.innerHTML='<main id="qaRoot"></main>';
+  window.frameEditor=new ProductConfigurationEditor(document.querySelector('#qaRoot'),{initialSnapshot:createProductConfigurationSnapshot({product,result})});await window.frameEditor.mount();
+ });
+ async function chooseInplus(key,value){
+  const revision=await page.locator('#dynamicForm').getAttribute('data-resolve-revision');
+  await page.locator(`[data-spec-key="${key}"]`).selectOption(value);
+  await page.waitForFunction(r=>document.querySelector('#dynamicForm').dataset.resolveRevision!==r,revision);
+ }
+ const lowLabels=async()=>page.locator('[data-spec-key="lowe_color"] option').allTextContents();
+ assert.deepEqual((await lowLabels()).slice(1),['高遮熱（グリーン）','断熱（クリア）']);
+ await chooseInplus('sash_midrail','あり');
+ assert.equal(await page.locator('[data-spec-key="middle_rail_position_f_mm"]').count(),0);
+ await chooseInplus('middle_rail_position_mode','custom');
+ const fInput=page.locator('[data-spec-key="middle_rail_position_f_mm"]');
+ assert.equal(await fInput.count(),1);
+ await fInput.fill('1000');await fInput.dispatchEvent('change');
+ await page.waitForFunction(()=>window.frameEditor.state.selection.middle_rail_position_f_mm===1000&&document.querySelector('#dynamicForm').dataset.resolveRevision===String(window.frameEditor.state.resolveRevision));
+ const fState=await page.evaluate(()=>({snapshot:window.frameEditor.getSnapshot(),result:window.frameEditor.state.resolved}));
+ assert.deepEqual(fState.result.sales_request_handoff.middle_rail_position_validation.rule_ids,['PF-006','PF-008']);
+ const fKeys=fState.result.fields.map(f=>f.key);
+ for(const [a,b] of [['sash_midrail','middle_rail_position_mode'],['middle_rail_position_mode','option_items'],['option_items','order_width'],['order_width','order_height'],['order_height','crescent_position_p_mm'],['crescent_position_p_mm','middle_rail_position_f_mm']])assert.ok(fKeys.indexOf(a)<fKeys.indexOf(b));
+ await assertCheckboxFinalOption(page,'SER-LIXIL-INPLUS',width,'midrail-custom');
+ assert.ok(fState.snapshot.display_summary.some(f=>f.key==='middle_rail_position_f_mm'&&String(f.display_value??f.value).includes('1000')));
+ const fOutput=createEstimateOutputModel({project:{project_id:'midrail-qa'},estimate:{estimate_id:'midrail-qa',project_id:'midrail-qa'},openings:[{opening_id:'midrail-qa',status:'COMPLETE',product_configuration_snapshot:fState.snapshot}]});
+ assert.ok(fOutput.rows[0].display_summary.some(f=>f.key==='middle_rail_position_f_mm'));
+ await page.evaluate(async snapshot=>{localStorage.setItem('midrail-qa',JSON.stringify(snapshot));const {ProductConfigurationEditor}=await import('/product-configuration-editor.mjs');window.frameEditor.destroy();window.frameEditor=new ProductConfigurationEditor(document.querySelector('#qaRoot'),{initialSnapshot:JSON.parse(localStorage.getItem('midrail-qa'))});await window.frameEditor.mount();},fState.snapshot);
+ assert.equal(await page.locator('[data-spec-key="middle_rail_position_f_mm"]').inputValue(),'1000');
+ if(width===1440)await page.screenshot({path:`${OUT}/inplus-lowe-midrail-desktop.png`,fullPage:true});
+ await chooseInplus('glass_type','和紙調・格子入り');
+ assert.deepEqual((await lowLabels()).slice(1),['グリーン','クリア']);
+ assert.equal(await page.locator('[data-spec-key="lowe_color"]').inputValue(),'クリア');
+ await chooseInplus('glass_type','透明');
+ assert.deepEqual((await lowLabels()).slice(1),['高遮熱（グリーン）','断熱（クリア）']);
+ await chooseInplus('middle_rail_position_mode','standard');
+ assert.equal(await fInput.count(),0);
+ assert.equal(await page.evaluate(()=>window.frameEditor.state.selection.middle_rail_position_f_mm),undefined);
+ await chooseInplus('sash_midrail','なし');
+ assert.equal(await page.locator('[data-spec-key="middle_rail_position_mode"]').count(),0);
+ assert.equal(await page.evaluate(()=>window.frameEditor.getSnapshot().sales_request_handoff.middle_rail_position_f_mm),undefined);
+ assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth<=1));
+ report.cases.push({width,product:'SER-LIXIL-INPLUS',transition:'lowe-midrail-formal-pf-save-reopen-reset',status:'PASS'});
+
  // Uchirimo custom crescent position: position mode stays Formal, numeric request is app-side
  // and must render only after the final custom W/H controls.
  await page.evaluate(async ()=>{

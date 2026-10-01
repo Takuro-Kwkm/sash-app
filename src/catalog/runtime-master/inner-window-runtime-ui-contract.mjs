@@ -109,6 +109,8 @@ const APPROVED_INNER_WINDOW_EXTENSIONS = Object.freeze({
   crescent_presence: optionExtension('crescent_presence', 300),
   crescent_type: optionExtension('crescent_type', 301),
   crescent_position_mode: optionExtension('crescent_position_mode', 302),
+  middle_rail_position_mode: installationExtension('middle_rail_position_mode', INNER_WINDOW_UI_STANDARD_ORDER.indexOf('sash_midrail')+0.1),
+  middle_rail_position_f_mm: installationExtension('middle_rail_position_f_mm', 251),
   crescent_position_p_mm: installationExtension('crescent_position_p_mm', 247),
   crescent_position_custom_mm: installationExtension('crescent_position_custom_mm', 248),
   pull_handle_position_custom_mm: installationExtension('pull_handle_position_custom_mm', 249),
@@ -197,6 +199,6 @@ export function applyInnerWindowUiOrder(fields = [], integration = {}) {
     presentationRankForField: key => key === 'option_items'
       ? Number.MAX_SAFE_INTEGER
       : integration.id === 'SER-YKKAP-UCHIRIMO' ? UCHIRIMO_GLASS_RANK[key] ?? null : null,
-    presentationExtensionForField: key => ['size_w','size_h','order_width','order_height','sash_width_allocation','sash_w1','sash_w2','sash_w3','sash_w4'].includes(key) ? {slot:'INNER_WINDOW_FINAL_DIMENSION',order:9} : ['crescent_position_p_mm','crescent_position_custom_mm'].includes(key) ? {slot:'INNER_WINDOW_POST_DIMENSION_CRESCENT_P',order:10} : key==='pull_handle_position_custom_mm' ? {slot:'INNER_WINDOW_POST_DIMENSION_CRESCENT_P',order:11} : key==='middle_rail_position_custom_mm' ? {slot:'INNER_WINDOW_POST_DIMENSION_CRESCENT_P',order:12} : null,
+    presentationExtensionForField: key => ['size_w','size_h','order_width','order_height','sash_width_allocation','sash_w1','sash_w2','sash_w3','sash_w4'].includes(key) ? {slot:'INNER_WINDOW_FINAL_DIMENSION',order:9} : ['crescent_position_p_mm','crescent_position_custom_mm'].includes(key) ? {slot:'INNER_WINDOW_POST_DIMENSION_CRESCENT_P',order:10} : key==='pull_handle_position_custom_mm' ? {slot:'INNER_WINDOW_POST_DIMENSION_CRESCENT_P',order:11} : ['middle_rail_position_custom_mm','middle_rail_position_f_mm'].includes(key) ? {slot:'INNER_WINDOW_POST_DIMENSION_CRESCENT_P',order:12} : null,
   });
 }

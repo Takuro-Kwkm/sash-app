@@ -1,3 +1,4 @@
+import { validateInplusMidrailF } from './inplus-presentation-rules.mjs';
 // App-side estimate-request vocabulary. These are requests, never product facts.
 export const SALES_GLAZING_REQUEST = Object.freeze({
   suppressedFields:['glass_structure','glass_structure_code','glass_spec_id','glass_size_constraint_group','glass_surface_type','spacer_type','gas_fill','cavity_thickness_mm'],
@@ -227,6 +228,21 @@ export const INPLUS_SALES_REQUEST = Object.freeze({
       helpText:'窓枠上面からクレセント中心までのP寸法。正式P寸法Ruleで範囲判定し、最終製作可否はLIXIL確認へ引き継ぎます。',
     },
     {
+      key:'middle_rail_position_mode',displayLabel:'中桟位置',
+      handoffKey:'middle_rail_position_mode',formalField:'sash_midrail',
+      when:{sash_midrail:'あり'},required:true,
+      values:[['standard','標準位置',false],['custom','位置指定',true]],
+      helpText:'位置指定を選ぶと、特注W/Hとクレセント位置Pの後に中桟位置Fを入力します。',
+    },
+    {
+      key:'middle_rail_position_f_mm',displayLabel:'中桟位置F（mm）',
+      dataType:'NUMBER',unit:'mm',step:'any',required:true,manualCheck:true,
+      validator:'INPLUS_MIDRAIL_F',handoffKey:'middle_rail_position_f_mm',
+      formalField:'sash_midrail',when:{sash_midrail:'あり',middle_rail_position_mode:'custom'},
+      parentFields:['sash_midrail','middle_rail_position_mode','order_height','upper_frame_spec','glass_family','crescent_position_mode','crescent_position_p_mm'],
+      helpText:'中桟位置Fを正式PFルールで検証します。式や区分を確定できない場合は積算／LIXIL確認へ引き継ぎます。',
+    },
+    {
       key:'fukashi_curtain_rail',
       displayLabel:'カーテンレール対応',
       handoffKey:'fukashi_curtain_rail_request',
@@ -246,6 +262,11 @@ function selectedRuntimeValues(state){
 
 function requestFieldApplies(definition,state,input={}){
   const selected={...selectedRuntimeValues(state),...(state.presentationSelection??{}),...input};
+  if(definition.formalField){
+    const formal=state.fields[definition.formalField];
+    if(!formal||formal.visibility==='HIDE'||!formal.allowed_values?.length)return false;
+    selected[definition.formalField]=formal.value;
+  }
   const family=selected.glass_family;
   if(definition.families&&!definition.families.includes(family))return false;
   for(const [key,expected] of Object.entries(definition.when??{})){
@@ -345,6 +366,13 @@ export function applySalesRequestExtension(state, input, contract, master=null) 
         if(!result.ok)state.errors=[...(state.errors??[]),{code:'INPLUS_CRESCENT_POSITION_OUT_OF_RANGE',field:definition.key,message:result.message}];
         else if(result.pending)requiresManual=true;
       }
+      if(definition.validator==='INPLUS_MIDRAIL_F'){
+        const result=validateInplusMidrailF(master,state,number,input);
+        handoff.middle_rail_position_validation={status:result.ok?(result.pending?'ESTIMATE_CONFIRM_REQUIRED':'FORMAL_RULE_RANGE_VALID'):'INVALID',rule_ids:result.ruleIds,message:result.message};
+        if(result.linkedP!==undefined)handoff.middle_rail_linked_crescent_p={value:result.linkedP,unit:'mm',rule_id:result.linkRuleId,status:'ESTIMATE_CONFIRM_REQUIRED'};
+        if(!result.ok)state.errors=[...(state.errors??[]),{code:'INPLUS_MIDRAIL_POSITION_OUT_OF_RANGE',field:definition.key,message:result.message}];
+        if(result.pending){requiresManual=true;state.confirmation_requests=[...(state.confirmation_requests??[]),{code:'INPLUS_MIDRAIL_F_CONFIRM',status:'ESTIMATE_CONFIRM_REQUIRED',confirmation_to:'積算／LIXIL',message:result.message}];}
+      }
       continue;
     }
 
@@ -362,6 +390,8 @@ export function applySalesRequestExtension(state, input, contract, master=null) 
     if(chosen){
       selection[definition.key]=raw;handoff[definition.handoffKey]=raw;
       if(chosen.manualCheck)requiresManual=true;
+    }else if(definition.required){
+      state.missing_required_fields=[...new Set([...(state.missing_required_fields??[]),definition.key])];presentationMissing=true;
     }
   }
 
