@@ -39,6 +39,13 @@ export const INNER_WINDOW_UI_STANDARD_ORDER = Object.freeze([
   'option_items',
 ]);
 
+// The Uchirimo sales sequence is a presentation preference. Canonical glass
+// slots and the Runtime's choice/dependency rules retain their own identities.
+const UCHIRIMO_GLASS_RANK = Object.freeze(Object.fromEntries(
+  ['sales_glass_design','sales_glass_appearance','sales_glass_pattern','low_e_type']
+    .map((key,index)=>[key,INNER_WINDOW_UI_STANDARD_ORDER.indexOf('glass_family')+(index+1)/10]),
+));
+
 const CONFIGURATION_SLOTS = new Set(['room_specification','sash_configuration','reverse_handing','three_panel_layout','hinge_side','frame_angle']);
 const SIZE_SLOTS = new Set(['size_class','size_mode','size_w','size_h','order_width','order_height','sash_width_allocation','sash_w1','sash_w2','sash_w3','sash_w4']);
 const FINISH_SLOTS = new Set(['frame_color','body_color']);
@@ -175,7 +182,7 @@ export function shouldExposeInnerWindowRuntimeField(field = {}) {
   return true;
 }
 
-export function applyInnerWindowUiOrder(fields = []) {
+export function applyInnerWindowUiOrder(fields = [], integration = {}) {
   return applyGlobalWindowSelectionFlow(fields, {
     uiCategory: INNER_WINDOW_UI_CATEGORY,
     canonicalSlotOrder: INNER_WINDOW_UI_STANDARD_ORDER,
@@ -184,6 +191,9 @@ export function applyInnerWindowUiOrder(fields = []) {
     approvedExtensionForField: approvedInnerWindowExtensionForField,
     shouldExposeField: shouldExposeInnerWindowRuntimeField,
     standardLabelForField: standardLabelForInnerWindowField,
+    presentationRankForField: integration.id==='SER-YKKAP-UCHIRIMO'
+      ? key => UCHIRIMO_GLASS_RANK[key] ?? null
+      : () => null,
     presentationExtensionForField: key => ['size_w','size_h','order_width','order_height','sash_width_allocation','sash_w1','sash_w2','sash_w3','sash_w4'].includes(key) ? {slot:'INNER_WINDOW_FINAL_DIMENSION',order:9} : ['crescent_position_p_mm','crescent_position_custom_mm'].includes(key) ? {slot:'INNER_WINDOW_POST_DIMENSION_CRESCENT_P',order:10} : key==='pull_handle_position_custom_mm' ? {slot:'INNER_WINDOW_POST_DIMENSION_CRESCENT_P',order:11} : key==='middle_rail_position_custom_mm' ? {slot:'INNER_WINDOW_POST_DIMENSION_CRESCENT_P',order:12} : null,
   });
 }

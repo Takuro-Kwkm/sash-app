@@ -115,6 +115,42 @@ test('Uchirimo exposes glass design branches from the existing Formal glass fact
   assert.deepEqual(field(bathroom,'sales_glass_design')?.values.map(row=>row.displayLabel),['標準複層ガラス']);
 });
 
+test('both inner windows finish options before dimensions; Uchirimo preserves appearance across design resets',async()=>{
+  const inplus=await resolveRuntimeAppProduct(INPLUS,{
+    window_type:'引違い窓',sash_configuration:'2枚建',glass_family:'Low-E複層',
+    order_width:1000,order_height:1000,
+  });
+  const inplusKeys=inplus.fields.map(row=>row.key);
+  const inplusOptionIndexes=inplus.fields.flatMap((row,index)=>row.semanticStage==='OPTION'?[index]:[]);
+  assert.ok(inplusOptionIndexes.length>0);
+  assert.ok(Math.max(...inplusOptionIndexes)<inplusKeys.indexOf('order_width'));
+  assert.ok(inplusKeys.indexOf('order_width')<inplusKeys.indexOf('order_height'));
+
+  const seed={room_specification:'residential',window_type:'sliding_window',sash_configuration:'two_panel',
+    glass_family:'insulating_glass',sales_glass_appearance:'frosted',sales_glass_design:'japanese',
+    sales_glass_pattern:'aramagoushi',size_w:1000,size_h:1000};
+  const japanese=await resolveRuntimeAppProduct(UCHIRIMO,seed);
+  const keys=japanese.fields.map(row=>row.key);
+  const glass=['glass_family','sales_glass_design','sales_glass_appearance','sales_glass_pattern',
+    'low_e_type','sales_spacer_type','sales_gas_fill'];
+  assert.deepEqual(keys.filter(key=>glass.includes(key)),glass);
+  assert.equal(japanese.selection.sales_glass_appearance,'frosted');
+  assert.deepEqual(field(japanese,'sales_glass_pattern')?.values.map(row=>row.displayLabel),
+    ['荒間格子','横繁吹寄格子','たて繁吹寄格子']);
+  const optionIndexes=japanese.fields.flatMap((row,index)=>row.semanticStage==='OPTION'?[index]:[]);
+  assert.ok(optionIndexes.length>0);
+  assert.ok(Math.max(...optionIndexes)<keys.indexOf('size_w'));
+  assert.ok(keys.indexOf('size_w')<keys.indexOf('size_h'));
+
+  const grid=await resolveRuntimeAppProduct(UCHIRIMO,{...japanese.selection,sales_glass_design:'grid'});
+  assert.equal(grid.selection.sales_glass_pattern,undefined);
+  assert.equal(grid.selection.sales_glass_appearance,'frosted');
+  const standard=await resolveRuntimeAppProduct(UCHIRIMO,{...grid.selection,sales_glass_design:'standard'});
+  assert.equal(field(standard,'sales_glass_pattern'),undefined);
+  assert.equal(standard.selection.sales_glass_pattern,undefined);
+  assert.equal(standard.selection.sales_glass_appearance,'frosted');
+});
+
 test('Uchirimo projects R6 Formal accessory options with applicability and estimate-confirm boundaries',async()=>{
   const seed={
     room_specification:'residential',window_type:'sliding_window',sash_configuration:'three_panel',

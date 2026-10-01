@@ -85,6 +85,19 @@ for(const width of [1440,768,390]){
  assert.ok((await reinforcement.locator('option').allTextContents()).some(text=>text.includes('ふかし枠下部補強部材')));
  const options=page.locator('#dynamicForm [data-multi-key="option_items"]');
  assert.equal(await options.count(),1);
+ const inplusFlow=await page.evaluate(()=>{
+  const fields=window.frameEditor.state.resolved.fields;
+  const keys=fields.map(field=>field.key);
+  const lastOption=Math.max(...fields.flatMap((field,index)=>field.semanticStage==='OPTION'?[index]:[]));
+  const heading=document.querySelector('#dynamicForm [data-semantic-group="OPTION"]');
+  const checkbox=document.querySelector('#dynamicForm [data-multi-key="option_items"] input[type="checkbox"]');
+  const width=document.querySelector('#dynamicForm [data-key="order_width"]');
+  return {lastOptionBeforeWidth:lastOption<keys.indexOf('order_width'),widthBeforeHeight:keys.indexOf('order_width')<keys.indexOf('order_height'),
+   headingBeforeCheckbox:Boolean(heading&&checkbox&&(heading.compareDocumentPosition(checkbox)&Node.DOCUMENT_POSITION_FOLLOWING)),
+   checkboxBeforeWidth:Boolean(checkbox&&width&&(checkbox.compareDocumentPosition(width)&Node.DOCUMENT_POSITION_FOLLOWING)),
+   visuallyBeforeWidth:Boolean(checkbox&&width&&checkbox.getBoundingClientRect().top<width.getBoundingClientRect().top)};
+ });
+ assert.deepEqual(inplusFlow,{lastOptionBeforeWidth:true,widthBeforeHeight:true,headingBeforeCheckbox:true,checkboxBeforeWidth:true,visuallyBeforeWidth:true});
  for(const value of ['OP-STEP','OP-EMBED-RESIN','OP-TRUE-WALL-SCREW','OP-REPLACEMENT-CRESCENT'])assert.equal(await options.locator(`input[value="${value}"]`).count(),1,value);
  let rev=await page.locator('#dynamicForm').getAttribute('data-resolve-revision');
  await options.locator('input[value="OP-EMBED-RESIN"]').check();
@@ -135,9 +148,24 @@ for(const width of [1440,768,390]){
  assert.deepEqual((await glassDesign.locator('option').allTextContents()).filter(text=>text!=='選択してください'),['標準複層ガラス','格子入り複層ガラス','和室用複層ガラス']);
  const uchOptions=page.locator('#dynamicForm [data-multi-key="option_items"]');
  assert.equal(await uchOptions.count(),1);
+ const uchFlow=await page.evaluate(()=>{
+  const fields=window.frameEditor.state.resolved.fields;
+  const keys=fields.map(field=>field.key);
+  const lastOption=Math.max(...fields.flatMap((field,index)=>field.semanticStage==='OPTION'?[index]:[]));
+  const heading=document.querySelector('#dynamicForm [data-semantic-group="OPTION"]');
+  const checkbox=document.querySelector('#dynamicForm [data-multi-key="option_items"] input[type="checkbox"]');
+  const width=document.querySelector('#dynamicForm [data-key="size_w"]');
+  return {lastOptionBeforeWidth:lastOption<keys.indexOf('size_w'),widthBeforeHeight:keys.indexOf('size_w')<keys.indexOf('size_h'),
+   headingBeforeCheckbox:Boolean(heading&&checkbox&&(heading.compareDocumentPosition(checkbox)&Node.DOCUMENT_POSITION_FOLLOWING)),
+   checkboxBeforeWidth:Boolean(checkbox&&width&&(checkbox.compareDocumentPosition(width)&Node.DOCUMENT_POSITION_FOLLOWING)),
+   visuallyBeforeWidth:Boolean(checkbox&&width&&checkbox.getBoundingClientRect().top<width.getBoundingClientRect().top)};
+ });
+ assert.deepEqual(uchFlow,{lastOptionBeforeWidth:true,widthBeforeHeight:true,headingBeforeCheckbox:true,checkboxBeforeWidth:true,visuallyBeforeWidth:true});
  for(const value of ['jamb_step_spacer','sweep_attachment','sash_stopper','washitsu_filler','decorative_jamb','outer_window_replacement_crescent','outer_window_universal_handle','adjustment_material'])assert.equal(await uchOptions.locator(`input[value="${value}"]`).count(),1,value);
  assert.equal(await uchOptions.locator('input[value="arm_stopper_option"]').count(),0);
  assert.equal(await uchOptions.locator('input[value="outside_handle_option"]').count(),0);
+ await page.locator('#dynamicForm [data-spec-key="sales_glass_appearance"]').selectOption('frosted');
+ await page.waitForFunction(()=>window.frameEditor.state.selection.sales_glass_appearance==='frosted'&&document.querySelector('#dynamicForm').dataset.resolveRevision===String(window.frameEditor.state.resolveRevision));
  let designRev=await page.locator('#dynamicForm').getAttribute('data-resolve-revision');
  await glassDesign.selectOption('grid');
  await page.waitForFunction(r=>document.querySelector('#dynamicForm').dataset.resolveRevision!==r,designRev);
@@ -148,6 +176,14 @@ for(const width of [1440,768,390]){
  await page.waitForFunction(r=>document.querySelector('#dynamicForm').dataset.resolveRevision!==r,designRev);
  designLabels=(await page.locator('#dynamicForm [data-spec-key="sales_glass_pattern"] option').allTextContents()).filter(text=>text!=='選択してください');
  assert.deepEqual(designLabels,['荒間格子','横繁吹寄格子','たて繁吹寄格子']);
+ const glassFlow=await page.evaluate(()=>{
+  const keys=window.frameEditor.state.resolved.fields.map(field=>field.key);
+  const expected=['glass_family','sales_glass_design','sales_glass_appearance','sales_glass_pattern','low_e_type','sales_spacer_type','sales_gas_fill'];
+  const nodes=expected.map(key=>document.querySelector(`#dynamicForm .field[data-key="${key}"]`));
+  return {keys:keys.filter(key=>expected.includes(key)),appearance:window.frameEditor.state.selection.sales_glass_appearance,
+   visualOrder:nodes.every((node,index)=>index===0||Boolean(node&&nodes[index-1]&&nodes[index-1].getBoundingClientRect().top<node.getBoundingClientRect().top))};
+ });
+ assert.deepEqual(glassFlow,{keys:['glass_family','sales_glass_design','sales_glass_appearance','sales_glass_pattern','low_e_type','sales_spacer_type','sales_gas_fill'],appearance:'frosted',visualOrder:true});
 
  const uchCrescent=page.locator('#dynamicForm [data-spec-key="crescent_position_custom_mm"]');
  const uchPull=page.locator('#dynamicForm [data-spec-key="pull_handle_position_custom_mm"]');
@@ -188,6 +224,10 @@ for(const width of [1440,768,390]){
  await changeUchirimo('sales_glass_pattern','aramagoushi');
  await changeUchirimo('sales_glass_design','grid');
  assert.equal((await page.evaluate(()=>window.frameEditor.state.selection)).sales_glass_pattern,undefined);
+ await changeUchirimo('sales_glass_design','standard');
+ assert.equal(await page.locator('#dynamicForm [data-spec-key="sales_glass_pattern"]').count(),0);
+ assert.deepEqual(await page.evaluate(()=>({appearance:window.frameEditor.state.selection.sales_glass_appearance,pattern:window.frameEditor.state.selection.sales_glass_pattern})),{appearance:'frosted',pattern:undefined});
+ await changeUchirimo('sales_glass_design','grid');
  await changeUchirimo('sales_glass_pattern','wa01_resin');
  for(const value of ['jamb_step_spacer','outer_window_replacement_crescent','outer_window_universal_handle']){
   const revision=await page.locator('#dynamicForm').getAttribute('data-resolve-revision');

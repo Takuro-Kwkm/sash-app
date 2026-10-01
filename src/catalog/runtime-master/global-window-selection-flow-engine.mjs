@@ -31,6 +31,7 @@ export function applyGlobalWindowSelectionFlow(fields = [], contract = {}) {
     approvedExtensionForField,
     shouldExposeField = () => true,
     presentationExtensionForField = () => null,
+    presentationRankForField = () => null,
     standardLabelForField = (_key, fallback) => fallback,
   } = contract;
 
@@ -64,6 +65,7 @@ export function applyGlobalWindowSelectionFlow(fields = [], contract = {}) {
       const slotIndex = SLOT_INDEX.has(semanticSlot)
         ? SLOT_INDEX.get(semanticSlot)
         : canonicalSlotOrder.length + Number(extensionOrder ?? field.displayOrder ?? 1000 + inputIndex) / 100000;
+      const presentationRank = presentationRankForField(key, field);
 
       return {
         ...field,
@@ -76,7 +78,7 @@ export function applyGlobalWindowSelectionFlow(fields = [], contract = {}) {
         disabled: Boolean(field.disabled || field.readOnly || (['ENUM','MULTI_ENUM'].includes(field.dataType) && !field.values?.length)),
         displayLabel: standardLabelForField(key, field.displayLabel),
         __stageIndex: presentationExtensionForField(key)?.order ?? stageIndex,
-        __slotIndex: slotIndex,
+        __slotIndex: Number.isFinite(presentationRank) ? presentationRank : slotIndex,
         __runtimeOrder: Number(field.displayOrder ?? 1000 + inputIndex),
         __inputIndex: inputIndex,
       };

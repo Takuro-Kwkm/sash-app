@@ -75,6 +75,36 @@ test('inner-window fields use the same global stage sequence', () => {
   assert.equal(INNER_WINDOW_UI_CATEGORY, 'INNER_WINDOW');
 });
 
+test('Uchirimo glass ranking changes presentation only and leaves Inplus slot order intact', () => {
+  const source=[
+    {key:'sales_glass_pattern',displayOrder:10},
+    {key:'low_e_type',displayOrder:20},
+    {key:'sales_glass_appearance',displayOrder:30},
+    {key:'glass_family',displayOrder:40},
+    {key:'sales_glass_design',displayOrder:50},
+    {key:'sales_spacer_type',displayOrder:60},
+    {key:'sales_gas_fill',displayOrder:70},
+  ];
+  const uchirimo=applyInnerWindowUiOrder(source,{id:'SER-YKKAP-UCHIRIMO'});
+  assert.deepEqual(keys(uchirimo),[
+    'glass_family','sales_glass_design','sales_glass_appearance','sales_glass_pattern',
+    'low_e_type','sales_spacer_type','sales_gas_fill',
+  ]);
+  assert.deepEqual(uchirimo.map(row=>[row.key,row.semanticSlot,row.semanticStage]),[
+    ['glass_family','glass_family','GLAZING'],
+    ['sales_glass_design','decorative_pattern','GLAZING'],
+    ['sales_glass_appearance','glass_type','GLAZING'],
+    ['sales_glass_pattern','grille_type','GLAZING'],
+    ['low_e_type','low_e_type','GLAZING'],
+    ['sales_spacer_type','spacer_type','GLAZING'],
+    ['sales_gas_fill','gas_fill','GLAZING'],
+  ]);
+  assert.deepEqual(keys(applyInnerWindowUiOrder(source,{id:'SER-LIXIL-INPLUS'})),[
+    'glass_family','sales_glass_appearance','sales_glass_design','low_e_type',
+    'sales_glass_pattern','sales_spacer_type','sales_gas_fill',
+  ]);
+});
+
 test('unknown user-facing fields fail closed even when they carry a familiar domain', () => {
   assert.throws(
     () => applyNewConstructionSashUiOrder([{ key: 'mystery_user_field', domain:'INSTALLATION', displayOrder: 10 }]),
