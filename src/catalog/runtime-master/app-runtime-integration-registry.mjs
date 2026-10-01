@@ -11,8 +11,15 @@ export const appRuntimeIntegrationRegistry = Object.freeze([
   Object.freeze({
     id:'SER-LIXIL-INPLUS', salesRequestExtension:INPLUS_SALES_REQUEST, manufacturer:'LIXIL', series:'インプラス', displayName:'インプラス', productCategory:'sash', uiCategory:'INNER_WINDOW', registrySeriesKey:'LIXIL::インプラス',
     canonicalRuntimeReference:Object.freeze({ runtimeManifestDriveFileId:'1N1sQQM616oeuQm7kehqaz3EMQDrNzfhy', runtimeJsonDriveFileId:'19OtDgWSQFehEmxFYFIqxZGZCFXyzJaZ4', runtimeSchemaDriveFileId:'1d61bdbtl9LafVMgwzu2rduwMieB8kKtf', canonicalFolderId:'1NPW7cUbaC1JRvIaJrltFkoYUiLyPwJa1' }),
-    packageVersion:'v0.4-R3', schemaVersion:'2.0', sourceHash:'d408bd64237ba5d44f9ebbf3ab3c869e9b64864ff0da28609568718b881607d1', adapterType:'SEMANTIC_TABLE_BUNDLE_V2', uiStandardSpec:'サッシ情報管理アプリ_UI実装標準仕様書_v1.9',
-    uiContractSource:Object.freeze({ uiStandardDriveFileId:'1BVFe2qZXlLUVhz37trFUjz6mJOwjvW0P', runtimeManifestDriveFileId:'1N1sQQM616oeuQm7kehqaz3EMQDrNzfhy', packageVersion:'v0.4-R3' }),
+    packageVersion:'v0.4-R3', schemaVersion:'2.0', sourceHash:'d408bd64237ba5d44f9ebbf3ab3c869e9b64864ff0da28609568718b881607d1', adapterType:'SEMANTIC_TABLE_BUNDLE_V2', uiStandardSpec:'サッシ情報管理アプリ_UI実装標準仕様書_v2.1',
+    uiContractSource:Object.freeze({ uiStandardDriveFileId:'1IjO6n-GmGFwCqb3XxQRnt5hMP5O-L7kT', runtimeManifestDriveFileId:'1N1sQQM616oeuQm7kehqaz3EMQDrNzfhy', packageVersion:'v0.4-R3' }),
+    productVariantContract:Object.freeze({
+      fieldKey:'product_variant',displayLabel:'商品仕様',defaultVariant:'standard',
+      variants:Object.freeze([
+        Object.freeze({value:'standard',displayLabel:'標準仕様',packageVersion:'v0.4-R3',adapterType:'SEMANTIC_TABLE_BUNDLE_V2',identity:'1N1sQQM616oeuQm7kehqaz3EMQDrNzfhy'}),
+        Object.freeze({value:'bathroom',displayLabel:'浴室仕様',packageVersion:'v1.0',adapterType:'INPLUS_BATHROOM_FORMAL_V1',identity:'1GJknHnjU0-hvNvTS2X8fajuTkE0SvX0m',formalPackageFileId:'1NqtsDPZNOil3YUXTarIylFTrvipkNcdt',formalSha256:'58397e2dfc4b4fb74f62b14b4d9b22943de96c866a107cc48d52dcadd2c1bfcb',formalProductId:'LIXIL_INPLUS_BATHROOM',businessScope:'営業見積依頼'}),
+      ]),
+    }),
   }),
 ]);
 

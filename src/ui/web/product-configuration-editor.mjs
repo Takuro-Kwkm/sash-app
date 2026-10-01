@@ -54,10 +54,23 @@ function fill(select,rows,placeholder='選択してください'){
   if(rows.some((row)=>String(row.value)===String(current)&&!row.disabled))select.value=current;
 }
 
-function identityFor(product){
+function variantDefinitionFor(product,configuration={}){
+  const contract=product?.productVariantContract;
+  if(!contract)return null;
+  const value=configuration?.[contract.fieldKey]??contract.defaultVariant;
+  return contract.variants?.find((row)=>row.value===value)??null;
+}
+
+function identityFor(product,configuration={}){
+  const variant=variantDefinitionFor(product,configuration);
+  if(variant?.identity)return variant.identity;
   const canonical=product.sourceType==='RUNTIME_MASTER';
   return product.canonicalRuntimeReference?.runtimeManifestDriveFileId
     ??(!canonical?product.source?.id??null:null);
+}
+
+function packageVersionFor(product,configuration={}){
+  return variantDefinitionFor(product,configuration)?.packageVersion??product.packageVersion??product.source?.version??'LEGACY-UNVERSIONED';
 }
 
 export class ProductConfigurationEditor {
@@ -129,7 +142,7 @@ export class ProductConfigurationEditor {
       const value=snapshot.sales_request_handoff?.[field.handoffKey];
       if(this.state.selection[field.key]===undefined&&value!==undefined)this.state.selection[field.key]=value;
     }
-    this.state.stale=identityFor(product)!==snapshot.runtime_manifest_identity||String(product.packageVersion??product.source?.version??'LEGACY-UNVERSIONED')!==String(snapshot.package_version);
+    this.state.stale=identityFor(product,snapshot.configuration)!==snapshot.runtime_manifest_identity||String(packageVersionFor(product,snapshot.configuration))!==String(snapshot.package_version);
     if(this.state.stale){this.renderFrozenSnapshot('旧Runtimeで作成された設定です。保存時Snapshotは自動更新されません。',true);return;}
     await this.resolve({notify:false});
   }
@@ -179,6 +192,8 @@ export class ProductConfigurationEditor {
       if(native)for(const option of native.options)option.selected=values.some(value=>String(value)===String(option.value));
     }else if(target.type==='number'){
       if(target.value!=='')this.state.selection[key]=Number(target.value);else delete this.state.selection[key];
+    }else if(target.type==='text'){
+      if(target.value.trim()!=='')this.state.selection[key]=target.value;else delete this.state.selection[key];
     }else if(target.multiple){
       const values=[...target.selectedOptions].map((option)=>canonicalChoice(option.value));
       if(values.length)this.state.selection[key]=values;else delete this.state.selection[key];

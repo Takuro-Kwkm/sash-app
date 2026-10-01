@@ -126,11 +126,13 @@ test('approved category extensions are exact declarative Uchirimo fields', () =>
   assert.equal(rows[1].semanticSlot, 'extension:option:arm_stopper_option');
 });
 
-test('all registered window integrations point to UI standard v1.9 and resolve through canonical stages', async () => {
+test('registered window integrations resolve through their current canonical UI standard', async () => {
   const integrations = windowIntegrations();
   assert.equal(integrations.length, 8, 'Global Window Flow population must remain the eight registered window integrations');
   for (const integration of integrations) {
-    assert.equal(integration.uiStandardSpec, 'サッシ情報管理アプリ_UI実装標準仕様書_v1.9', integration.id);
+    assert.equal(integration.uiStandardSpec, integration.id==='SER-LIXIL-INPLUS'
+      ?'サッシ情報管理アプリ_UI実装標準仕様書_v2.1'
+      :'サッシ情報管理アプリ_UI実装標準仕様書_v1.9', integration.id);
     const result = await resolveRuntimeAppProduct(integration.id, {});
     assert.equal(result.productId, integration.id);
     assertCanonicalStageOrder(result.fields, integration.id);

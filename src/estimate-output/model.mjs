@@ -72,8 +72,7 @@ function classifyRow(opening,snapshot,price){
     issues.push({code:'OPENING_INCOMPLETE',message:'開口部入力が未完了です。'});
     return {state:EstimateOutputState.INCOMPLETE,issues};
   }
-  if(snapshot.sales_request_state==='READY_FOR_MANUFACTURER_ESTIMATE'
-    &&snapshot.sales_request_handoff?.glass_structure==='MANUFACTURER_ESTIMATE_CONFIRMATION'){
+  if(snapshot.sales_request_state==='READY_FOR_MANUFACTURER_ESTIMATE'){
     return {state:EstimateOutputState.NEEDS_CONFIRMATION,issues};
   }
   if(snapshot.validation_state&&snapshot.validation_state!=='VALID'){
@@ -122,9 +121,11 @@ export function createEstimateOutputModel({project,estimate,openings,generatedAt
       memo:nullable(opening?.memo),
       manufacturer:nullable(snapshot?.manufacturer),
       series:nullable(snapshot?.series),
+      product_variant:nullable(summaryValue(snapshot,['product_variant'])??snapshot?.configuration?.product_variant),
       opening_type:nullable(summaryValue(snapshot,['window_type','opening_type','door_type'])),
       major_specifications:majorSpecificationText(snapshot),
       size:sizeText(snapshot),
+      request_quantity:Number(snapshot?.configuration?.quantity??snapshot?.sales_request_handoff?.quantity??1),
       price,
       state:classification.state,
       issues:classification.issues,

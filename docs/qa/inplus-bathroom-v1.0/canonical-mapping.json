@@ -1,0 +1,1008 @@
+{
+  "schema_version": "INPLUS_BATHROOM_CANONICAL_MAPPING_V1",
+  "task_classification": "NON_PRODUCT_MASTER",
+  "product_master_mutation": 0,
+  "identity": {
+    "manufacturer": "LIXIL",
+    "product": "インプラス",
+    "product_variant": "浴室仕様",
+    "formal_product_id": "LIXIL_INPLUS_BATHROOM",
+    "formal_revision": "v1.0",
+    "formal_file_id": "1GJknHnjU0-hvNvTS2X8fajuTkE0SvX0m",
+    "formal_sha256": "58397e2dfc4b4fb74f62b14b4d9b22943de96c866a107cc48d52dcadd2c1bfcb",
+    "formal_package_file_id": "1NqtsDPZNOil3YUXTarIylFTrvipkNcdt"
+  },
+  "summary": {
+    "formal_field_count": 40,
+    "mapped_count": 40,
+    "not_applicable_count": 0,
+    "controlled_unresolved_count": 7,
+    "error_count": 0,
+    "critical_unmapped_count": 0
+  },
+  "fields": [
+    {
+      "formalFieldId": "window_type",
+      "canonicalField": "window_type",
+      "runtimeKey": "window_type",
+      "uiControl": "SELECT",
+      "valueMapping": "IDENTITY_WITH_JAPANESE_LABEL",
+      "applicability": true,
+      "required": true,
+      "dependency": [],
+      "resetRule": "clear_if_inapplicable_or_invalid; retain_if_still_valid",
+      "handoffKey": "window_type",
+      "role": "SELECTOR",
+      "status": "MAPPED"
+    },
+    {
+      "formalFieldId": "fit",
+      "canonicalField": "fit",
+      "runtimeKey": "fit",
+      "uiControl": "SELECT",
+      "valueMapping": "IDENTITY_WITH_JAPANESE_LABEL",
+      "applicability": true,
+      "required": true,
+      "dependency": [],
+      "resetRule": "clear_if_inapplicable_or_invalid; retain_if_still_valid",
+      "handoffKey": "fit",
+      "role": "SELECTOR",
+      "status": "MAPPED"
+    },
+    {
+      "formalFieldId": "unit_pattern",
+      "canonicalField": "unit_pattern",
+      "runtimeKey": "unit_pattern",
+      "uiControl": "SELECT",
+      "valueMapping": "IDENTITY_WITH_JAPANESE_LABEL",
+      "applicability": {
+        "all": [
+          {
+            "eq": [
+              "window_type",
+              "sliding"
+            ]
+          },
+          {
+            "eq": [
+              "fit",
+              "unit_bath"
+            ]
+          }
+        ]
+      },
+      "required": {
+        "all": [
+          {
+            "eq": [
+              "window_type",
+              "sliding"
+            ]
+          },
+          {
+            "eq": [
+              "fit",
+              "unit_bath"
+            ]
+          }
+        ]
+      },
+      "dependency": [
+        "window_type",
+        "fit"
+      ],
+      "resetRule": "clear_if_inapplicable_or_invalid; retain_if_still_valid",
+      "handoffKey": "unit_pattern",
+      "role": "SELECTOR",
+      "status": "MAPPED"
+    },
+    {
+      "formalFieldId": "panel_count",
+      "canonicalField": "panel_count",
+      "runtimeKey": "panel_count",
+      "uiControl": "READ_ONLY",
+      "valueMapping": "IDENTITY_WITH_JAPANESE_LABEL",
+      "applicability": {
+        "eq": [
+          "window_type",
+          "sliding"
+        ]
+      },
+      "required": false,
+      "dependency": [
+        "window_type"
+      ],
+      "resetRule": "clear_if_inapplicable_or_invalid; retain_if_still_valid",
+      "handoffKey": "panel_count",
+      "role": "DERIVED",
+      "status": "MAPPED"
+    },
+    {
+      "formalFieldId": "hinge",
+      "canonicalField": "hinge",
+      "runtimeKey": "hinge",
+      "uiControl": "SELECT",
+      "valueMapping": "IDENTITY_WITH_JAPANESE_LABEL",
+      "applicability": {
+        "eq": [
+          "window_type",
+          "casement"
+        ]
+      },
+      "required": {
+        "eq": [
+          "window_type",
+          "casement"
+        ]
+      },
+      "dependency": [
+        "window_type"
+      ],
+      "resetRule": "clear_if_inapplicable_or_invalid; retain_if_still_valid",
+      "handoffKey": "hinge",
+      "role": "SELECTOR",
+      "status": "MAPPED"
+    },
+    {
+      "formalFieldId": "handle",
+      "canonicalField": "handle",
+      "runtimeKey": "handle",
+      "uiControl": "READ_ONLY",
+      "valueMapping": "IDENTITY_WITH_JAPANESE_LABEL",
+      "applicability": {
+        "eq": [
+          "window_type",
+          "casement"
+        ]
+      },
+      "required": false,
+      "dependency": [
+        "window_type"
+      ],
+      "resetRule": "clear_if_inapplicable_or_invalid; retain_if_still_valid",
+      "handoffKey": "handle",
+      "role": "DERIVED",
+      "status": "MAPPED"
+    },
+    {
+      "formalFieldId": "frame",
+      "canonicalField": "frame",
+      "runtimeKey": "frame",
+      "uiControl": "READ_ONLY",
+      "valueMapping": "window_type: sliding=partition; casement=bath_casement",
+      "applicability": true,
+      "required": false,
+      "dependency": [],
+      "resetRule": "clear_if_inapplicable_or_invalid; retain_if_still_valid",
+      "handoffKey": "frame",
+      "role": "DERIVED",
+      "status": "MAPPED"
+    },
+    {
+      "formalFieldId": "color",
+      "canonicalField": "color",
+      "runtimeKey": "color",
+      "uiControl": "READ_ONLY",
+      "valueMapping": "IDENTITY_WITH_JAPANESE_LABEL",
+      "applicability": true,
+      "required": false,
+      "dependency": [],
+      "resetRule": "clear_if_inapplicable_or_invalid; retain_if_still_valid",
+      "handoffKey": "color",
+      "role": "DERIVED",
+      "status": "MAPPED"
+    },
+    {
+      "formalFieldId": "glass_family",
+      "canonicalField": "glass_family",
+      "runtimeKey": "glass_family",
+      "uiControl": "SELECT",
+      "valueMapping": "IDENTITY_WITH_JAPANESE_LABEL",
+      "applicability": true,
+      "required": true,
+      "dependency": [],
+      "resetRule": "clear_if_inapplicable_or_invalid; retain_if_still_valid",
+      "handoffKey": "glass_family",
+      "role": "SELECTOR",
+      "status": "MAPPED"
+    },
+    {
+      "formalFieldId": "glass_design",
+      "canonicalField": "glass_design",
+      "runtimeKey": "glass_design",
+      "uiControl": "SELECT",
+      "valueMapping": "glass_variants",
+      "applicability": true,
+      "required": true,
+      "dependency": [],
+      "resetRule": "clear_if_inapplicable_or_invalid; retain_if_still_valid",
+      "handoffKey": "glass_design",
+      "role": "SELECTOR",
+      "status": "MAPPED"
+    },
+    {
+      "formalFieldId": "low_e_color",
+      "canonicalField": "low_e_color",
+      "runtimeKey": "low_e_color",
+      "uiControl": "SELECT",
+      "valueMapping": "IDENTITY_WITH_JAPANESE_LABEL",
+      "applicability": {
+        "eq": [
+          "glass_family",
+          "low_e_double"
+        ]
+      },
+      "required": {
+        "eq": [
+          "glass_family",
+          "low_e_double"
+        ]
+      },
+      "dependency": [
+        "glass_family"
+      ],
+      "resetRule": "clear_if_inapplicable_or_invalid; retain_if_still_valid",
+      "handoffKey": "low_e_color",
+      "role": "SELECTOR",
+      "status": "MAPPED"
+    },
+    {
+      "formalFieldId": "gas",
+      "canonicalField": "gas",
+      "runtimeKey": "gas",
+      "uiControl": "SELECT",
+      "valueMapping": "glass_variants",
+      "applicability": {
+        "in": [
+          "glass_family",
+          [
+            "low_e_double",
+            "ordinary_double"
+          ]
+        ]
+      },
+      "required": {
+        "in": [
+          "glass_family",
+          [
+            "low_e_double",
+            "ordinary_double"
+          ]
+        ]
+      },
+      "dependency": [
+        "glass_family"
+      ],
+      "resetRule": "clear_if_inapplicable_or_invalid; retain_if_still_valid",
+      "handoffKey": "gas",
+      "role": "SELECTOR",
+      "status": "MAPPED"
+    },
+    {
+      "formalFieldId": "single_thickness",
+      "canonicalField": "single_thickness",
+      "runtimeKey": "single_thickness",
+      "uiControl": "SELECT",
+      "valueMapping": "glass_variants",
+      "applicability": {
+        "eq": [
+          "glass_family",
+          "single"
+        ]
+      },
+      "required": {
+        "eq": [
+          "glass_family",
+          "single"
+        ]
+      },
+      "dependency": [
+        "glass_family"
+      ],
+      "resetRule": "clear_if_inapplicable_or_invalid; retain_if_still_valid",
+      "handoffKey": "single_thickness",
+      "role": "SELECTOR",
+      "status": "MAPPED"
+    },
+    {
+      "formalFieldId": "position_mode",
+      "canonicalField": "position_mode",
+      "runtimeKey": "position_mode",
+      "uiControl": "SELECT",
+      "valueMapping": "IDENTITY_WITH_JAPANESE_LABEL",
+      "applicability": {
+        "eq": [
+          "window_type",
+          "sliding"
+        ]
+      },
+      "required": {
+        "eq": [
+          "window_type",
+          "sliding"
+        ]
+      },
+      "dependency": [
+        "window_type"
+      ],
+      "resetRule": "clear_if_inapplicable_or_invalid; retain_if_still_valid",
+      "handoffKey": "position_mode",
+      "role": "SELECTOR",
+      "status": "MAPPED"
+    },
+    {
+      "formalFieldId": "crescent_p",
+      "canonicalField": "crescent_p",
+      "runtimeKey": "crescent_p",
+      "uiControl": "NUMBER",
+      "valueMapping": "DIRECT",
+      "applicability": {
+        "all": [
+          {
+            "eq": [
+              "window_type",
+              "sliding"
+            ]
+          },
+          {
+            "eq": [
+              "position_mode",
+              "custom"
+            ]
+          }
+        ]
+      },
+      "required": {
+        "all": [
+          {
+            "eq": [
+              "window_type",
+              "sliding"
+            ]
+          },
+          {
+            "eq": [
+              "position_mode",
+              "custom"
+            ]
+          }
+        ]
+      },
+      "dependency": [
+        "window_type",
+        "position_mode"
+      ],
+      "resetRule": "clear_if_inapplicable_or_invalid; retain_if_still_valid",
+      "handoffKey": "crescent_p",
+      "role": "SELECTOR",
+      "status": "MAPPED"
+    },
+    {
+      "formalFieldId": "handle_position_mode",
+      "canonicalField": "handle_position_mode",
+      "runtimeKey": "handle_position_mode",
+      "uiControl": "SELECT",
+      "valueMapping": "IDENTITY_WITH_JAPANESE_LABEL",
+      "applicability": {
+        "eq": [
+          "window_type",
+          "casement"
+        ]
+      },
+      "required": {
+        "eq": [
+          "window_type",
+          "casement"
+        ]
+      },
+      "dependency": [
+        "window_type"
+      ],
+      "resetRule": "clear_if_inapplicable_or_invalid; retain_if_still_valid",
+      "handoffKey": "handle_position_mode",
+      "role": "SELECTOR",
+      "status": "MAPPED"
+    },
+    {
+      "formalFieldId": "handle_p",
+      "canonicalField": "handle_p",
+      "runtimeKey": "handle_p",
+      "uiControl": "NUMBER",
+      "valueMapping": "DIRECT",
+      "applicability": {
+        "all": [
+          {
+            "eq": [
+              "window_type",
+              "casement"
+            ]
+          },
+          {
+            "eq": [
+              "handle_position_mode",
+              "custom"
+            ]
+          }
+        ]
+      },
+      "required": {
+        "all": [
+          {
+            "eq": [
+              "window_type",
+              "casement"
+            ]
+          },
+          {
+            "eq": [
+              "handle_position_mode",
+              "custom"
+            ]
+          }
+        ]
+      },
+      "dependency": [
+        "window_type",
+        "handle_position_mode"
+      ],
+      "resetRule": "clear_if_inapplicable_or_invalid; retain_if_still_valid",
+      "handoffKey": "handle_p",
+      "role": "SELECTOR",
+      "status": "MAPPED"
+    },
+    {
+      "formalFieldId": "water_prevention",
+      "canonicalField": "water_prevention",
+      "runtimeKey": "water_prevention",
+      "uiControl": "SELECT",
+      "valueMapping": "IDENTITY_WITH_JAPANESE_LABEL",
+      "applicability": {
+        "all": [
+          {
+            "eq": [
+              "window_type",
+              "sliding"
+            ]
+          },
+          {
+            "eq": [
+              "fit",
+              "tile"
+            ]
+          }
+        ]
+      },
+      "required": false,
+      "dependency": [
+        "window_type",
+        "fit"
+      ],
+      "resetRule": "clear_if_inapplicable_or_invalid; retain_if_still_valid",
+      "handoffKey": "water_prevention",
+      "role": "SELECTOR",
+      "status": "MAPPED"
+    },
+    {
+      "formalFieldId": "step_relief",
+      "canonicalField": "step_relief",
+      "runtimeKey": "step_relief",
+      "uiControl": "SELECT",
+      "valueMapping": "IDENTITY_WITH_JAPANESE_LABEL",
+      "applicability": {
+        "eq": [
+          "window_type",
+          "casement"
+        ]
+      },
+      "required": false,
+      "dependency": [
+        "window_type"
+      ],
+      "resetRule": "clear_if_inapplicable_or_invalid; retain_if_still_valid",
+      "handoffKey": "step_relief",
+      "role": "SELECTOR",
+      "status": "MAPPED"
+    },
+    {
+      "formalFieldId": "grille_request",
+      "canonicalField": "grille_request",
+      "runtimeKey": "grille_request",
+      "uiControl": "SELECT",
+      "valueMapping": "IDENTITY_WITH_JAPANESE_LABEL",
+      "applicability": {
+        "all": [
+          {
+            "eq": [
+              "window_type",
+              "sliding"
+            ]
+          },
+          {
+            "eq": [
+              "glass_family",
+              "single"
+            ]
+          }
+        ]
+      },
+      "required": false,
+      "dependency": [
+        "window_type",
+        "glass_family"
+      ],
+      "resetRule": "clear_if_inapplicable_or_invalid; retain_if_still_valid",
+      "handoffKey": "grille_request",
+      "role": "SELECTOR",
+      "status": "MAPPED"
+    },
+    {
+      "formalFieldId": "width",
+      "canonicalField": "width",
+      "runtimeKey": "width",
+      "uiControl": "NUMBER",
+      "valueMapping": "DIRECT",
+      "applicability": true,
+      "required": true,
+      "dependency": [],
+      "resetRule": "clear_if_inapplicable_or_invalid; retain_if_still_valid",
+      "handoffKey": "width",
+      "role": "SELECTOR",
+      "status": "MAPPED"
+    },
+    {
+      "formalFieldId": "height",
+      "canonicalField": "height",
+      "runtimeKey": "height",
+      "uiControl": "NUMBER",
+      "valueMapping": "DIRECT",
+      "applicability": true,
+      "required": true,
+      "dependency": [],
+      "resetRule": "clear_if_inapplicable_or_invalid; retain_if_still_valid",
+      "handoffKey": "height",
+      "role": "SELECTOR",
+      "status": "MAPPED"
+    },
+    {
+      "formalFieldId": "quantity",
+      "canonicalField": "quantity",
+      "runtimeKey": "quantity",
+      "uiControl": "NUMBER",
+      "valueMapping": "DIRECT",
+      "applicability": true,
+      "required": true,
+      "dependency": [],
+      "resetRule": "clear_if_inapplicable_or_invalid; retain_if_still_valid",
+      "handoffKey": "quantity",
+      "role": "SELECTOR",
+      "status": "MAPPED"
+    },
+    {
+      "formalFieldId": "effective_depth",
+      "canonicalField": "effective_depth",
+      "runtimeKey": "effective_depth",
+      "uiControl": "NUMBER",
+      "valueMapping": "DIRECT",
+      "applicability": true,
+      "required": false,
+      "dependency": [],
+      "resetRule": "clear_if_inapplicable_or_invalid; retain_if_still_valid",
+      "handoffKey": "effective_depth",
+      "role": "SELECTOR",
+      "status": "MAPPED"
+    },
+    {
+      "formalFieldId": "unit_lower_step",
+      "canonicalField": "unit_lower_step",
+      "runtimeKey": "unit_lower_step",
+      "uiControl": "NUMBER",
+      "valueMapping": "DIRECT",
+      "applicability": {
+        "all": [
+          {
+            "eq": [
+              "window_type",
+              "sliding"
+            ]
+          },
+          {
+            "eq": [
+              "fit",
+              "unit_bath"
+            ]
+          },
+          {
+            "in": [
+              "unit_pattern",
+              [
+                "B",
+                "C"
+              ]
+            ]
+          }
+        ]
+      },
+      "required": false,
+      "dependency": [
+        "window_type",
+        "fit",
+        "unit_pattern"
+      ],
+      "resetRule": "clear_if_inapplicable_or_invalid; retain_if_still_valid",
+      "handoffKey": "unit_lower_step",
+      "role": "SELECTOR",
+      "status": "MAPPED"
+    },
+    {
+      "formalFieldId": "resin_trim_clearance",
+      "canonicalField": "resin_trim_clearance",
+      "runtimeKey": "resin_trim_clearance",
+      "uiControl": "NUMBER",
+      "valueMapping": "DIRECT",
+      "applicability": {
+        "all": [
+          {
+            "eq": [
+              "window_type",
+              "casement"
+            ]
+          },
+          {
+            "eq": [
+              "fit",
+              "unit_bath"
+            ]
+          },
+          {
+            "eq": [
+              "surround_material",
+              "resin"
+            ]
+          }
+        ]
+      },
+      "required": false,
+      "dependency": [
+        "window_type",
+        "fit",
+        "surround_material"
+      ],
+      "resetRule": "clear_if_inapplicable_or_invalid; retain_if_still_valid",
+      "handoffKey": "resin_trim_clearance",
+      "role": "SELECTOR",
+      "status": "MAPPED"
+    },
+    {
+      "formalFieldId": "outer_angle_height",
+      "canonicalField": "outer_angle_height",
+      "runtimeKey": "outer_angle_height",
+      "uiControl": "NUMBER",
+      "valueMapping": "DIRECT",
+      "applicability": {
+        "all": [
+          {
+            "eq": [
+              "window_type",
+              "casement"
+            ]
+          },
+          {
+            "eq": [
+              "step_relief",
+              "requested"
+            ]
+          }
+        ]
+      },
+      "required": false,
+      "dependency": [
+        "window_type",
+        "step_relief"
+      ],
+      "resetRule": "clear_if_inapplicable_or_invalid; retain_if_still_valid",
+      "handoffKey": "outer_angle_height",
+      "role": "SELECTOR",
+      "status": "MAPPED"
+    },
+    {
+      "formalFieldId": "water_slope_deg",
+      "canonicalField": "water_slope_deg",
+      "runtimeKey": "water_slope_deg",
+      "uiControl": "NUMBER",
+      "valueMapping": "DIRECT",
+      "applicability": true,
+      "required": false,
+      "dependency": [],
+      "resetRule": "clear_if_inapplicable_or_invalid; retain_if_still_valid",
+      "handoffKey": "water_slope_deg",
+      "role": "SELECTOR",
+      "status": "MAPPED"
+    },
+    {
+      "formalFieldId": "surround_material",
+      "canonicalField": "surround_material",
+      "runtimeKey": "surround_material",
+      "uiControl": "SELECT",
+      "valueMapping": "IDENTITY_WITH_JAPANESE_LABEL",
+      "applicability": true,
+      "required": false,
+      "dependency": [],
+      "resetRule": "clear_if_inapplicable_or_invalid; retain_if_still_valid",
+      "handoffKey": "surround_material",
+      "role": "SELECTOR",
+      "status": "MAPPED"
+    },
+    {
+      "formalFieldId": "outer_sash_material",
+      "canonicalField": "outer_sash_material",
+      "runtimeKey": "outer_sash_material",
+      "uiControl": "SELECT",
+      "valueMapping": "IDENTITY_WITH_JAPANESE_LABEL",
+      "applicability": true,
+      "required": false,
+      "dependency": [],
+      "resetRule": "clear_if_inapplicable_or_invalid; retain_if_still_valid",
+      "handoffKey": "outer_sash_material",
+      "role": "SELECTOR",
+      "status": "MAPPED"
+    },
+    {
+      "formalFieldId": "outer_angle",
+      "canonicalField": "outer_angle",
+      "runtimeKey": "outer_angle",
+      "uiControl": "SELECT",
+      "valueMapping": "IDENTITY_WITH_JAPANESE_LABEL",
+      "applicability": {
+        "eq": [
+          "window_type",
+          "casement"
+        ]
+      },
+      "required": false,
+      "dependency": [
+        "window_type"
+      ],
+      "resetRule": "clear_if_inapplicable_or_invalid; retain_if_still_valid",
+      "handoffKey": "outer_angle",
+      "role": "SELECTOR",
+      "status": "MAPPED"
+    },
+    {
+      "formalFieldId": "mounting_surface_step",
+      "canonicalField": "mounting_surface_step",
+      "runtimeKey": "mounting_surface_step",
+      "uiControl": "SELECT",
+      "valueMapping": "IDENTITY_WITH_JAPANESE_LABEL",
+      "applicability": true,
+      "required": false,
+      "dependency": [],
+      "resetRule": "clear_if_inapplicable_or_invalid; retain_if_still_valid",
+      "handoffKey": "mounting_surface_step",
+      "role": "SELECTOR",
+      "status": "MAPPED"
+    },
+    {
+      "formalFieldId": "bath_bay_window",
+      "canonicalField": "bath_bay_window",
+      "runtimeKey": "bath_bay_window",
+      "uiControl": "SELECT",
+      "valueMapping": "IDENTITY_WITH_JAPANESE_LABEL",
+      "applicability": true,
+      "required": false,
+      "dependency": [],
+      "resetRule": "clear_if_inapplicable_or_invalid; retain_if_still_valid",
+      "handoffKey": "bath_bay_window",
+      "role": "SELECTOR",
+      "status": "MAPPED"
+    },
+    {
+      "formalFieldId": "support_checked",
+      "canonicalField": "support_checked",
+      "runtimeKey": "support_checked",
+      "uiControl": "SELECT",
+      "valueMapping": "IDENTITY_WITH_JAPANESE_LABEL",
+      "applicability": true,
+      "required": false,
+      "dependency": [],
+      "resetRule": "clear_if_inapplicable_or_invalid; retain_if_still_valid",
+      "handoffKey": "support_checked",
+      "role": "SELECTOR",
+      "status": "MAPPED"
+    },
+    {
+      "formalFieldId": "raw_widths",
+      "canonicalField": [
+        "raw_width_1",
+        "raw_width_2",
+        "raw_width_3"
+      ],
+      "runtimeKey": [
+        "raw_width_1",
+        "raw_width_2",
+        "raw_width_3"
+      ],
+      "uiControl": "NUMBER_GROUP",
+      "valueMapping": "DIRECT",
+      "applicability": true,
+      "required": false,
+      "dependency": [],
+      "resetRule": "clear_if_inapplicable_or_invalid; retain_if_still_valid",
+      "handoffKey": "raw_widths",
+      "role": "SELECTOR_DECOMPOSED",
+      "status": "MAPPED"
+    },
+    {
+      "formalFieldId": "raw_heights",
+      "canonicalField": [
+        "raw_height_1",
+        "raw_height_2",
+        "raw_height_3"
+      ],
+      "runtimeKey": [
+        "raw_height_1",
+        "raw_height_2",
+        "raw_height_3"
+      ],
+      "uiControl": "NUMBER_GROUP",
+      "valueMapping": "DIRECT",
+      "applicability": true,
+      "required": false,
+      "dependency": [],
+      "resetRule": "clear_if_inapplicable_or_invalid; retain_if_still_valid",
+      "handoffKey": "raw_heights",
+      "role": "SELECTOR_DECOMPOSED",
+      "status": "MAPPED"
+    },
+    {
+      "formalFieldId": "raw_diagonals",
+      "canonicalField": [
+        "raw_diagonal_1",
+        "raw_diagonal_2"
+      ],
+      "runtimeKey": [
+        "raw_diagonal_1",
+        "raw_diagonal_2"
+      ],
+      "uiControl": "NUMBER_GROUP",
+      "valueMapping": "DIRECT",
+      "applicability": true,
+      "required": false,
+      "dependency": [],
+      "resetRule": "clear_if_inapplicable_or_invalid; retain_if_still_valid",
+      "handoffKey": "raw_diagonals",
+      "role": "SELECTOR_DECOMPOSED",
+      "status": "MAPPED"
+    },
+    {
+      "formalFieldId": "edge_bends",
+      "canonicalField": [
+        "edge_bend_top",
+        "edge_bend_right",
+        "edge_bend_bottom",
+        "edge_bend_left"
+      ],
+      "runtimeKey": [
+        "edge_bend_top",
+        "edge_bend_right",
+        "edge_bend_bottom",
+        "edge_bend_left"
+      ],
+      "uiControl": "NUMBER_GROUP",
+      "valueMapping": "DIRECT",
+      "applicability": {
+        "eq": [
+          "window_type",
+          "casement"
+        ]
+      },
+      "required": false,
+      "dependency": [
+        "window_type"
+      ],
+      "resetRule": "clear_if_inapplicable_or_invalid; retain_if_still_valid",
+      "handoffKey": "edge_bends",
+      "role": "SELECTOR_DECOMPOSED",
+      "status": "MAPPED"
+    },
+    {
+      "formalFieldId": "site_notes",
+      "canonicalField": "site_notes",
+      "runtimeKey": "site_notes",
+      "uiControl": "TEXT",
+      "valueMapping": "DIRECT",
+      "applicability": true,
+      "required": false,
+      "dependency": [],
+      "resetRule": "clear_if_inapplicable_or_invalid; retain_if_still_valid",
+      "handoffKey": "site_notes",
+      "role": "HANDOFF_ONLY",
+      "status": "MAPPED"
+    },
+    {
+      "formalFieldId": "special_request",
+      "canonicalField": "special_request",
+      "runtimeKey": "special_request",
+      "uiControl": "TEXT",
+      "valueMapping": "DIRECT",
+      "applicability": true,
+      "required": false,
+      "dependency": [],
+      "resetRule": "clear_if_inapplicable_or_invalid; retain_if_still_valid",
+      "handoffKey": "special_request",
+      "role": "HANDOFF_ONLY",
+      "status": "MAPPED"
+    }
+  ],
+  "controlled_unresolved": [
+    {
+      "gap_id": "IB-G001",
+      "status": "MANUAL_CHECK",
+      "classification": "NONBLOCKING_ESTIMATE_CONFIRM",
+      "target_condition": "引違い斜辺・強化タイルW<584/H353～366",
+      "auto_resolved": false,
+      "confirmation_question": "この窓種・納まり・ガラスの正式W/H製作範囲と斜辺の基準寸法は何か。強化タイルの353～366の可否は。",
+      "confirmation_to": "積算担当→LIXIL技術窓口",
+      "reopen_condition": "公式資料改版・メーカー回答・対象scope変更・新矛盾Evidence"
+    },
+    {
+      "gap_id": "IB-G002",
+      "status": "NEEDS_MFR_CONFIRMATION",
+      "classification": "NONBLOCKING_ESTIMATE_CONFIRM",
+      "target_condition": "引違いユニットB/C段差=10/20/25mm",
+      "auto_resolved": false,
+      "confirmation_question": "この実測段差ちょうど10/20/25mmの適正パイプと必要個数は。",
+      "confirmation_to": "積算担当→LIXIL技術窓口",
+      "reopen_condition": "公式資料改版・メーカー回答・対象scope変更・新矛盾Evidence"
+    },
+    {
+      "gap_id": "IB-G003",
+      "status": "ESTIMATE_CONFIRM_REQUIRED",
+      "classification": "NONBLOCKING_ESTIMATE_CONFIRM",
+      "target_condition": "ND、Low-E・アルゴン・安全合わせ透明/型/フロスト等でp113構成に直接一致しない",
+      "auto_resolved": false,
+      "confirmation_question": "指定ガラスのW/Hに対する完成品/NDの製作範囲と正式構成を確認してください。",
+      "confirmation_to": "積算担当→LIXIL技術窓口",
+      "reopen_condition": "公式資料改版・メーカー回答・対象scope変更・新矛盾Evidence"
+    },
+    {
+      "gap_id": "IB-G004",
+      "status": "MANUAL_CHECK",
+      "classification": "NONBLOCKING_ESTIMATE_CONFIRM",
+      "target_condition": "引違い位置指定のP基準面、単板格子希望",
+      "auto_resolved": false,
+      "confirmation_question": "位置指定の採寸基準を確認してください。格子希望の別手配構成は成立するか。",
+      "confirmation_to": "積算担当→LIXIL技術窓口",
+      "reopen_condition": "公式資料改版・メーカー回答・対象scope変更・新矛盾Evidence"
+    },
+    {
+      "gap_id": "IB-G005",
+      "status": "ESTIMATE_CONFIRM_REQUIRED",
+      "classification": "NONBLOCKING_ESTIMATE_CONFIRM",
+      "target_condition": "現場条件未採寸・未確認、勾配ちょうど1度",
+      "auto_resolved": false,
+      "confirmation_question": "取付奥行き、外窓材質、下地支持、取付面段差、勾配、干渉、シーリング、各実測値を確認してください。",
+      "confirmation_to": "営業現場担当→積算担当",
+      "reopen_condition": "公式資料改版・メーカー回答・対象scope変更・新矛盾Evidence"
+    },
+    {
+      "gap_id": "IB-G006",
+      "status": "SOURCE_NOT_SUFFICIENT",
+      "classification": "NONBLOCKING_ESTIMATE_CONFIRM",
+      "target_condition": "クレセント無し/鍵付/中桟等設定未証明の特別希望",
+      "auto_resolved": false,
+      "confirmation_question": "浴室仕様で希望の機構・意匠・ブロンズ等設定があるか。対応不可なら代替を確認してください。",
+      "confirmation_to": "積算担当→LIXIL技術窓口",
+      "reopen_condition": "公式資料改版・メーカー回答・対象scope変更・新矛盾Evidence"
+    },
+    {
+      "gap_id": "IB-G007",
+      "status": "ESTIMATE_CONFIRM_REQUIRED",
+      "classification": "NONBLOCKING_ESTIMATE_CONFIRM",
+      "target_condition": "正式価格、BOM、部材数量、コード、最終発注可否、190mm超段差緩和部材",
+      "auto_resolved": false,
+      "confirmation_question": "正式見積、部材拾い、数量、コード、190mm超の部材納まりを確定してください。",
+      "confirmation_to": "積算担当",
+      "reopen_condition": "公式資料改版・メーカー回答・対象scope変更・新矛盾Evidence"
+    }
+  ]
+}

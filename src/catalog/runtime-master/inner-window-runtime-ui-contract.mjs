@@ -26,14 +26,19 @@ export function innerWindowDisplayOrder(field, index = 0) {
 // both current Uchirimo and Inplus user-facing Runtime fields. Unknown fields do
 // not fall through by domain: they fail FLOW_SCHEMA_UNMAPPED_FIELD_GATE instead.
 export const INNER_WINDOW_UI_STANDARD_ORDER = Object.freeze([
+  'product_variant',
   'window_type',
-  'room_specification','sash_configuration','reverse_handing','three_panel_layout','hinge_side','frame_angle',
-  'size_class','size_mode','size_w','size_h','order_width','order_height','sash_width_allocation','sash_w1','sash_w2','sash_w3','sash_w4',
-  'frame_color','body_color',
-  'glass_family','glass_structure','glass_type','supply_form','glass_detail','decorative_pattern','low_e_type','lowe_color','glass_coating_color','glass_surface_type','safety_treatment',
+  'room_specification','fit','unit_pattern','sash_configuration','panel_count','reverse_handing','three_panel_layout','hinge_side','hinge','handle','frame_angle',
+  'size_class','size_mode','size_w','size_h','order_width','order_height','width','height','quantity','sash_width_allocation','sash_w1','sash_w2','sash_w3','sash_w4',
+  'frame_color','body_color','color',
+  'glass_family','glass_structure','glass_type','glass_design','supply_form','glass_detail','decorative_pattern','low_e_type','lowe_color','low_e_color','glass_coating_color','glass_surface_type','safety_treatment','single_thickness',
   'grille_type','grille_material','muntin_type','vacuum_glass_product','spacer_type','spacer','gas_fill','cavity_fill','cavity_thickness_mm',
-  'frame_spec','upper_frame_spec','lower_frame_spec','fukashi_presence','fukashi_curtain_rail','fukashi_sides','fukashi_depth','fukashi_reinforcement','installation_environment',
+  'gas','frame_spec','frame','upper_frame_spec','lower_frame_spec','fukashi_presence','fukashi_curtain_rail','fukashi_sides','fukashi_depth','fukashi_reinforcement','installation_environment',
   'frame_projection','sash_midrail','crescent_position','joint_layout',
+  'position_mode','handle_position_mode','water_prevention','step_relief','grille_request',
+  'effective_depth','unit_lower_step','resin_trim_clearance','outer_angle_height','water_slope_deg','surround_material','outer_sash_material','outer_angle','mounting_surface_step','bath_bay_window','support_checked',
+  'raw_width_1','raw_width_2','raw_width_3','raw_height_1','raw_height_2','raw_height_3','raw_diagonal_1','raw_diagonal_2','edge_bend_top','edge_bend_right','edge_bend_bottom','edge_bend_left','site_notes','special_request',
+  'crescent_p','handle_p',
   // Historical source-evaluator QA only: current canonical masters remove these.
   'frame_installation_mode','extension_frame_type','extension_frame_reinforcement','frame_install_spec','fukashi_spec',
   'option_items',
@@ -46,12 +51,13 @@ const UCHIRIMO_GLASS_RANK = Object.freeze(Object.fromEntries(
     .map((key,index)=>[key,INNER_WINDOW_UI_STANDARD_ORDER.indexOf('glass_family')+(index+1)/10]),
 ));
 
-const CONFIGURATION_SLOTS = new Set(['room_specification','sash_configuration','reverse_handing','three_panel_layout','hinge_side','frame_angle']);
-const SIZE_SLOTS = new Set(['size_class','size_mode','size_w','size_h','order_width','order_height','sash_width_allocation','sash_w1','sash_w2','sash_w3','sash_w4']);
-const FINISH_SLOTS = new Set(['frame_color','body_color']);
-const GLAZING_SLOTS = new Set(['glass_family','glass_structure','glass_type','supply_form','glass_detail','decorative_pattern','low_e_type','lowe_color','glass_coating_color','glass_surface_type','safety_treatment','grille_type','grille_material','muntin_type','vacuum_glass_product','spacer_type','spacer','gas_fill','cavity_fill','cavity_thickness_mm']);
-const INSTALLATION_SLOTS = new Set(['frame_spec','lower_frame_spec','fukashi_presence','fukashi_curtain_rail','fukashi_sides','fukashi_depth','fukashi_reinforcement','frame_installation_mode','frame_projection','extension_frame_type','extension_frame_reinforcement','installation_environment','upper_frame_spec','sash_midrail','crescent_position','frame_install_spec','fukashi_spec','joint_layout']);
-const OPTION_SLOTS = new Set(['option_items']);
+const PRODUCT_SLOTS = new Set(['product_variant']);
+const CONFIGURATION_SLOTS = new Set(['room_specification','fit','unit_pattern','sash_configuration','panel_count','reverse_handing','three_panel_layout','hinge_side','hinge','handle','frame_angle']);
+const SIZE_SLOTS = new Set(['size_class','size_mode','size_w','size_h','order_width','order_height','width','height','quantity','sash_width_allocation','sash_w1','sash_w2','sash_w3','sash_w4']);
+const FINISH_SLOTS = new Set(['frame_color','body_color','color']);
+const GLAZING_SLOTS = new Set(['glass_family','glass_structure','glass_type','glass_design','supply_form','glass_detail','decorative_pattern','low_e_type','lowe_color','low_e_color','glass_coating_color','glass_surface_type','safety_treatment','single_thickness','grille_type','grille_material','muntin_type','vacuum_glass_product','spacer_type','spacer','gas_fill','gas','cavity_fill','cavity_thickness_mm']);
+const INSTALLATION_SLOTS = new Set(['frame_spec','frame','lower_frame_spec','fukashi_presence','fukashi_curtain_rail','fukashi_sides','fukashi_depth','fukashi_reinforcement','frame_installation_mode','frame_projection','extension_frame_type','extension_frame_reinforcement','installation_environment','upper_frame_spec','sash_midrail','crescent_position','frame_install_spec','fukashi_spec','joint_layout','effective_depth','unit_lower_step','resin_trim_clearance','outer_angle_height','water_slope_deg','surround_material','outer_sash_material','outer_angle','mounting_surface_step','bath_bay_window','support_checked','raw_width_1','raw_width_2','raw_width_3','raw_height_1','raw_height_2','raw_height_3','raw_diagonal_1','raw_diagonal_2','edge_bend_top','edge_bend_right','edge_bend_bottom','edge_bend_left','site_notes','special_request']);
+const OPTION_SLOTS = new Set(['option_items','position_mode','handle_position_mode','water_prevention','step_relief','grille_request','crescent_p','handle_p']);
 
 const installationExtension = (key, order) => Object.freeze({ slot:`extension:installation:${key}`, stage:'INSTALLATION_SURVEY', order });
 const optionExtension = (key, order) => Object.freeze({ slot:`extension:option:${key}`, stage:'OPTION', order });
@@ -139,6 +145,7 @@ export function semanticSlotForInnerWindowField(key) {
 }
 
 export function semanticStageForInnerWindowSlot(slot) {
+  if (PRODUCT_SLOTS.has(slot)) return 'PRODUCT';
   if (slot === 'window_type') return 'OPENING';
   if (CONFIGURATION_SLOTS.has(slot)) return 'CONFIGURATION';
   if (SIZE_SLOTS.has(slot)) return 'SIZE';
@@ -150,6 +157,7 @@ export function semanticStageForInnerWindowSlot(slot) {
 }
 
 const STANDARD_LABELS = Object.freeze({
+  product_variant:'商品仕様',
   window_type:'窓種類', frame_angle:'枠アングル', size_mode:'サイズ方式', size_w:'特注W（mm）', size_h:'特注H（mm）', order_width:'特注W（mm）', order_height:'特注H（mm）',
   frame_color:'本体色', body_color:'本体色', glass_family:'ガラス仕様', glass_type:'ガラス種', low_e_type:'Low-E性能', lowe_color:'Low-E性能',
   spacer_type:'スペーサー', spacer:'スペーサー', gas_fill:'中空層', cavity_fill:'中空層', frame_installation_mode:'枠仕様', frame_install_spec:'枠・納まり仕様（区分分離未対応）', bathroom_installation_type:'設置環境', installation_environment:'設置環境',
@@ -200,6 +208,6 @@ export function applyInnerWindowUiOrder(fields = [], integration = {}) {
     presentationRankForField: key => key === 'option_items'
       ? Number.MAX_SAFE_INTEGER
       : integration.id === 'SER-YKKAP-UCHIRIMO' ? UCHIRIMO_GLASS_RANK[key] ?? null : null,
-    presentationExtensionForField: key => ['size_w','size_h','order_width','order_height','sash_width_allocation','sash_w1','sash_w2','sash_w3','sash_w4'].includes(key) ? {slot:'INNER_WINDOW_FINAL_DIMENSION',order:9} : ['crescent_position_p_mm','crescent_position_custom_mm'].includes(key) ? {slot:'INNER_WINDOW_POST_DIMENSION_CRESCENT_P',order:10} : key==='pull_handle_position_custom_mm' ? {slot:'INNER_WINDOW_POST_DIMENSION_CRESCENT_P',order:11} : ['middle_rail_position_custom_mm','middle_rail_position_f_mm'].includes(key) ? {slot:'INNER_WINDOW_POST_DIMENSION_CRESCENT_P',order:12} : null,
+    presentationExtensionForField: key => ['size_w','size_h','order_width','order_height','width','height','quantity','sash_width_allocation','sash_w1','sash_w2','sash_w3','sash_w4'].includes(key) ? {slot:'INNER_WINDOW_FINAL_DIMENSION',order:9} : ['crescent_position_p_mm','crescent_position_custom_mm','crescent_p'].includes(key) ? {slot:'INNER_WINDOW_POST_DIMENSION_CRESCENT_P',order:10} : ['pull_handle_position_custom_mm','handle_p'].includes(key) ? {slot:'INNER_WINDOW_POST_DIMENSION_CRESCENT_P',order:11} : ['middle_rail_position_custom_mm','middle_rail_position_f_mm'].includes(key) ? {slot:'INNER_WINDOW_POST_DIMENSION_CRESCENT_P',order:12} : null,
   });
 }

@@ -95,13 +95,13 @@ test('Inplus v0.4-R3 exposes Formal CUSTOM-only size capability', async () => {
   assert.equal(custom.clearRules.upstream_selector_change, 'CLEAR_INVALID_DOWNSTREAM_AND_REEVALUATE');
 });
 
-test('Inplus v0.4-R3 uses UI v1.9 Global Window Selection Flow with no series template', async () => {
+test('Inplus variants use current UI v2.1 Global Window Selection Flow with no series template', async () => {
   const integration = getRuntimeAppIntegration(PRODUCT_ID);
   assert.ok(integration);
   assert.equal(integration.packageVersion, 'v0.4-R3');
   assert.equal(integration.uiCategory, 'INNER_WINDOW');
   assert.equal(integration.uiTemplate, undefined);
-  assert.equal(integration.uiStandardSpec, 'サッシ情報管理アプリ_UI実装標準仕様書_v1.9');
+  assert.equal(integration.uiStandardSpec, 'サッシ情報管理アプリ_UI実装標準仕様書_v2.1');
   assert.equal(integration.sourceHash, MANIFEST_SHA);
   assert.equal(integration.canonicalRuntimeReference.runtimeManifestDriveFileId, MANIFEST_ID);
   assert.equal(integration.canonicalRuntimeReference.runtimeJsonDriveFileId, RUNTIME_ID);

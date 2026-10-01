@@ -35,3 +35,12 @@ test('estimate output browser integration and stylesheet are served',async()=>{
   assert.equal(moduleResponse.status,200);assert.match(moduleResponse.body.toString('utf8'),/createEstimateOutputModel/);
   assert.equal(cssResponse.status,200);assert.match(cssResponse.headers['content-type'],/text\/css/);
 });
+
+test('theme implementation is served for System, Light and Dark browser QA',async()=>{
+  const jsResponse=await invoke('/api/index.mjs?__path=theme.js');
+  assert.equal(jsResponse.status,200);
+  assert.match(jsResponse.body.toString('utf8'),/sash\.theme/);
+  const cssResponse=await invoke('/api/index.mjs?__path=theme.css');
+  assert.equal(cssResponse.status,200);
+  assert.match(cssResponse.body.toString('utf8'),/data-theme="dark"/);
+});

@@ -1,0 +1,3682 @@
+{
+  "schema_version": "INPLUS_BATHROOM_AUTHORING/1.0",
+  "package_role": "FORMAL_PRODUCT_MASTER",
+  "identity": {
+    "product_id": "LIXIL_INPLUS_BATHROOM",
+    "manufacturer": "LIXIL",
+    "series": "インプラス 浴室仕様",
+    "category": "内窓",
+    "variant": "浴室仕様",
+    "installation_environment": "BATHROOM"
+  },
+  "revision": "v1.0",
+  "business_scope": "営業見積依頼",
+  "target_gate": "FORMAL",
+  "state": "FORMAL",
+  "formal_adoption": true,
+  "production_runtime": false,
+  "baseline": {
+    "primary_source": "IB-S001",
+    "source_retrieval_date": "2026-10-01",
+    "authority_files": [
+      {
+        "id": "G-MANIFEST",
+        "drive_file_id": "1xZ7gbinFDTL_Gm1XKwEP95aXQGxzKHH_IiwxZj2dg4A",
+        "revision": "v1.5 ACTIVE"
+      },
+      {
+        "id": "G-PURPOSE",
+        "drive_file_id": "1_kKAVLQe2cJeKspQE6fYqnUl2_rSjlCGpxZVwIu4YsY",
+        "revision": "v1.1 FORMAL"
+      },
+      {
+        "id": "G-STANDARD",
+        "drive_file_id": "1dFNkgVQP8dBfuWNG5UhumGBeVZvVOVzih4FHB9PZ0MU",
+        "revision": "v2.0"
+      },
+      {
+        "id": "G-COMPLETION",
+        "drive_file_id": "1v2fTNZZq1VxbrDK5MixM_OZTP4KftejRhERIMNMAAqQ",
+        "revision": "v3.0"
+      },
+      {
+        "id": "G-UNRESOLVED",
+        "drive_file_id": "1ZZUD4FNCYQRe48FLzW43mcewS_bCi5gVVuvffrO-NF4",
+        "revision": "v2.0"
+      },
+      {
+        "id": "G-STORAGE",
+        "drive_file_id": "1X8qLOZ1y6QpqwD1l4VOq3m6ow8-eGNDJppVeEWEluo4",
+        "revision": "v2.2"
+      },
+      {
+        "id": "G-COMMON",
+        "drive_file_id": "1MfixkbV1cZ__DtBknEKsix_nnrXQqjc-LZtXUHwJv_A",
+        "revision": "v0.3"
+      },
+      {
+        "id": "G-DICTIONARY",
+        "drive_file_id": "1YQzUudx8ft3igY-vvEFtnqHzgsVj6udV7jGOaaNnM38",
+        "revision": "current ACTIVE"
+      },
+      {
+        "id": "G-UI",
+        "drive_file_id": "1IjO6n-GmGFwCqb3XxQRnt5hMP5O-L7kT",
+        "revision": "v2.1"
+      },
+      {
+        "id": "G-REGISTRY",
+        "drive_file_id": "1HMMZ8JdsbJPtL_8LjQfxMF8P_Zb4-LReqvPMFn1pJks",
+        "revision": "v2.0 read-only"
+      }
+    ]
+  },
+  "sources": [
+    {
+      "id": "IB-S001",
+      "title": "インプラス 商品カタログ",
+      "catalog_code": "SN4200",
+      "publication": "2026/09",
+      "price_edition": "2026年10月価格掲載",
+      "official": true,
+      "page_count": 192,
+      "url": "https://webcatalog.lixil.co.jp/iportal/CatalogDetail.do?method=initial_screen&catalogID=18527030000&volumeID=LXL13001&designID=newinter",
+      "download_url": "https://webcatalog.lixil.co.jp/iportal/CatalogDownload.do?method=downloadPdfCatalog&type=downloadPdfCatalog&volumeID=LXL13001&catalogID=18527030000&designID=newinter",
+      "drive_file_id": "1_Krcfj5VWzFVEP5crYAa-AFj7vctOhs6",
+      "bytes": 73890548,
+      "sha256": "e785e5bb6b1f67e06bed20a63a2d1e2614b79eaeb156fe1632427ba02415ef8a",
+      "page_map": "PDF physical page = printed page + 4 for cited pages"
+    },
+    {
+      "id": "IB-S002",
+      "title": "LIXIL公式 インプラス浴室仕様",
+      "official": true,
+      "url": "https://www.lixil.co.jp/lineup/window/inplus/variation-bathroom/",
+      "role": "corroboration; primary fact rows use SN4200"
+    },
+    {
+      "id": "IB-S003",
+      "title": "インプラス SN2300 2026/03",
+      "official": true,
+      "role": "historical locator only; superseded baseline, no unverified carry-forward",
+      "drive_file_id": "1jNJ_o48_tKHxS556XkJfAHVQ4N8pEXZ5"
+    }
+  ],
+  "labels": {
+    "sliding": "引違い窓",
+    "casement": "開き窓",
+    "unit_bath": "ユニットバス納まり",
+    "tile": "タイル納まり",
+    "A": "A：外窓アングル付・既存ユニットアタッチ有",
+    "B": "B：外窓アングル付・既存ユニットアタッチ無",
+    "C": "C：外窓アングル無",
+    "L": "左吊元（室外側から見る）",
+    "R": "右吊元（室外側から見る）",
+    "low_e_double": "Low-E複層ガラス",
+    "ordinary_double": "一般複層ガラス",
+    "single": "単板ガラス",
+    "transparent": "透明",
+    "patterned": "型板",
+    "frost": "フロスト",
+    "laminated_clear": "安全合わせ 透明",
+    "laminated_milky": "安全合わせ 乳白",
+    "laminated_patterned": "安全合わせ 型板",
+    "laminated_frost": "安全合わせ フロスト",
+    "tempered_clear": "強化 透明",
+    "tempered_patterned": "強化 型板",
+    "blind_in": "ブラインドイン",
+    "clear": "クリア",
+    "green": "グリーン（高遮熱仕様）",
+    "argon": "アルゴンガス",
+    "dry_air": "乾燥空気",
+    "default": "標準位置",
+    "custom": "位置指定",
+    "none": "なし",
+    "requested": "希望あり",
+    "aluminum": "アルミ",
+    "resin": "樹脂",
+    "other": "その他",
+    "unknown": "未確認",
+    "present": "あり",
+    "absent": "なし",
+    "confirmed": "確認済み",
+    "unverified": "未確認",
+    "precious_white_p": "プレシャスホワイトP",
+    "two_panels": "2枚建",
+    "cam_latch": "カムラッチハンドル",
+    "partition": "間仕切り下枠（標準）",
+    "bath_casement": "浴室仕様開き窓枠",
+    "water_prevention": "水たまり防止部材",
+    "height_pipe": "高さ調整パイプ",
+    "step_relief": "段差緩和部材",
+    "aluminum_screws": "アルミ額縁用取付ねじセット",
+    "finished": "ガラス入り完成品",
+    "knockdown": "ノックダウン品"
+  },
+  "fields": [
+    {
+      "id": "window_type",
+      "label": "窓種",
+      "type": "enum",
+      "allowed_values": [
+        "sliding",
+        "casement"
+      ],
+      "applies_when": true,
+      "required_when": true,
+      "evidence_ids": [
+        "IB-E001"
+      ],
+      "reset_policy": "clear_if_inapplicable_or_invalid; retain_if_still_valid"
+    },
+    {
+      "id": "fit",
+      "label": "納まり",
+      "type": "enum",
+      "allowed_values": [
+        "unit_bath",
+        "tile"
+      ],
+      "applies_when": true,
+      "required_when": true,
+      "evidence_ids": [
+        "IB-E002"
+      ],
+      "reset_policy": "clear_if_inapplicable_or_invalid; retain_if_still_valid"
+    },
+    {
+      "id": "unit_pattern",
+      "label": "既存外窓・ユニットアタッチの納まりパターン",
+      "type": "enum",
+      "allowed_values": [
+        "A",
+        "B",
+        "C"
+      ],
+      "applies_when": {
+        "all": [
+          {
+            "eq": [
+              "window_type",
+              "sliding"
+            ]
+          },
+          {
+            "eq": [
+              "fit",
+              "unit_bath"
+            ]
+          }
+        ]
+      },
+      "required_when": {
+        "all": [
+          {
+            "eq": [
+              "window_type",
+              "sliding"
+            ]
+          },
+          {
+            "eq": [
+              "fit",
+              "unit_bath"
+            ]
+          }
+        ]
+      },
+      "evidence_ids": [
+        "IB-E014"
+      ],
+      "reset_policy": "clear_if_inapplicable_or_invalid; retain_if_still_valid"
+    },
+    {
+      "id": "panel_count",
+      "label": "枚建",
+      "type": "fixed",
+      "allowed_values": [
+        "two_panels"
+      ],
+      "applies_when": {
+        "eq": [
+          "window_type",
+          "sliding"
+        ]
+      },
+      "required_when": false,
+      "evidence_ids": [
+        "IB-E001"
+      ],
+      "reset_policy": "clear_if_inapplicable_or_invalid; retain_if_still_valid",
+      "fixed_value": "two_panels"
+    },
+    {
+      "id": "hinge",
+      "label": "吊元",
+      "type": "enum",
+      "allowed_values": [
+        "L",
+        "R"
+      ],
+      "applies_when": {
+        "eq": [
+          "window_type",
+          "casement"
+        ]
+      },
+      "required_when": {
+        "eq": [
+          "window_type",
+          "casement"
+        ]
+      },
+      "evidence_ids": [
+        "IB-E016"
+      ],
+      "reset_policy": "clear_if_inapplicable_or_invalid; retain_if_still_valid"
+    },
+    {
+      "id": "handle",
+      "label": "ハンドル",
+      "type": "fixed",
+      "allowed_values": [
+        "cam_latch"
+      ],
+      "applies_when": {
+        "eq": [
+          "window_type",
+          "casement"
+        ]
+      },
+      "required_when": false,
+      "evidence_ids": [
+        "IB-E001"
+      ],
+      "reset_policy": "clear_if_inapplicable_or_invalid; retain_if_still_valid",
+      "fixed_value": "cam_latch"
+    },
+    {
+      "id": "frame",
+      "label": "浴室専用枠",
+      "type": "derived",
+      "allowed_values": null,
+      "applies_when": true,
+      "required_when": false,
+      "evidence_ids": [
+        "IB-E007",
+        "IB-E014",
+        "IB-E002"
+      ],
+      "reset_policy": "clear_if_inapplicable_or_invalid; retain_if_still_valid",
+      "value_source": "window_type: sliding=partition; casement=bath_casement"
+    },
+    {
+      "id": "color",
+      "label": "色",
+      "type": "fixed",
+      "allowed_values": [
+        "precious_white_p"
+      ],
+      "applies_when": true,
+      "required_when": false,
+      "evidence_ids": [
+        "IB-E001"
+      ],
+      "reset_policy": "clear_if_inapplicable_or_invalid; retain_if_still_valid",
+      "fixed_value": "precious_white_p"
+    },
+    {
+      "id": "glass_family",
+      "label": "ガラス体系",
+      "type": "enum",
+      "allowed_values": [
+        "low_e_double",
+        "ordinary_double",
+        "single"
+      ],
+      "applies_when": true,
+      "required_when": true,
+      "evidence_ids": [
+        "IB-E003"
+      ],
+      "reset_policy": "clear_if_inapplicable_or_invalid; retain_if_still_valid"
+    },
+    {
+      "id": "glass_design",
+      "label": "ガラス種類",
+      "type": "dependent_enum",
+      "allowed_values": null,
+      "applies_when": true,
+      "required_when": true,
+      "evidence_ids": [
+        "IB-E003"
+      ],
+      "reset_policy": "clear_if_inapplicable_or_invalid; retain_if_still_valid",
+      "value_source": "glass_variants"
+    },
+    {
+      "id": "low_e_color",
+      "label": "Low-E色",
+      "type": "enum",
+      "allowed_values": [
+        "clear",
+        "green"
+      ],
+      "applies_when": {
+        "eq": [
+          "glass_family",
+          "low_e_double"
+        ]
+      },
+      "required_when": {
+        "eq": [
+          "glass_family",
+          "low_e_double"
+        ]
+      },
+      "evidence_ids": [
+        "IB-E003",
+        "IB-E004"
+      ],
+      "reset_policy": "clear_if_inapplicable_or_invalid; retain_if_still_valid"
+    },
+    {
+      "id": "gas",
+      "label": "中空層",
+      "type": "dependent_enum",
+      "allowed_values": null,
+      "applies_when": {
+        "in": [
+          "glass_family",
+          [
+            "low_e_double",
+            "ordinary_double"
+          ]
+        ]
+      },
+      "required_when": {
+        "in": [
+          "glass_family",
+          [
+            "low_e_double",
+            "ordinary_double"
+          ]
+        ]
+      },
+      "evidence_ids": [
+        "IB-E003"
+      ],
+      "reset_policy": "clear_if_inapplicable_or_invalid; retain_if_still_valid",
+      "value_source": "glass_variants"
+    },
+    {
+      "id": "single_thickness",
+      "label": "単板厚さ（mm）",
+      "type": "dependent_enum",
+      "allowed_values": null,
+      "applies_when": {
+        "eq": [
+          "glass_family",
+          "single"
+        ]
+      },
+      "required_when": {
+        "eq": [
+          "glass_family",
+          "single"
+        ]
+      },
+      "evidence_ids": [
+        "IB-E003"
+      ],
+      "reset_policy": "clear_if_inapplicable_or_invalid; retain_if_still_valid",
+      "value_source": "glass_variants",
+      "unit": "mm"
+    },
+    {
+      "id": "position_mode",
+      "label": "クレセント位置",
+      "type": "enum",
+      "allowed_values": [
+        "default",
+        "custom"
+      ],
+      "applies_when": {
+        "eq": [
+          "window_type",
+          "sliding"
+        ]
+      },
+      "required_when": {
+        "eq": [
+          "window_type",
+          "sliding"
+        ]
+      },
+      "evidence_ids": [
+        "IB-E011"
+      ],
+      "reset_policy": "clear_if_inapplicable_or_invalid; retain_if_still_valid"
+    },
+    {
+      "id": "crescent_p",
+      "label": "指定クレセント位置P",
+      "type": "number",
+      "allowed_values": null,
+      "applies_when": {
+        "all": [
+          {
+            "eq": [
+              "window_type",
+              "sliding"
+            ]
+          },
+          {
+            "eq": [
+              "position_mode",
+              "custom"
+            ]
+          }
+        ]
+      },
+      "required_when": {
+        "all": [
+          {
+            "eq": [
+              "window_type",
+              "sliding"
+            ]
+          },
+          {
+            "eq": [
+              "position_mode",
+              "custom"
+            ]
+          }
+        ]
+      },
+      "evidence_ids": [
+        "IB-E011",
+        "IB-E014"
+      ],
+      "reset_policy": "clear_if_inapplicable_or_invalid; retain_if_still_valid",
+      "unit": "mm",
+      "precision": 0.5
+    },
+    {
+      "id": "handle_position_mode",
+      "label": "ハンドル位置",
+      "type": "enum",
+      "allowed_values": [
+        "default",
+        "custom"
+      ],
+      "applies_when": {
+        "eq": [
+          "window_type",
+          "casement"
+        ]
+      },
+      "required_when": {
+        "eq": [
+          "window_type",
+          "casement"
+        ]
+      },
+      "evidence_ids": [
+        "IB-E010"
+      ],
+      "reset_policy": "clear_if_inapplicable_or_invalid; retain_if_still_valid"
+    },
+    {
+      "id": "handle_p",
+      "label": "指定ハンドル位置P",
+      "type": "number",
+      "allowed_values": null,
+      "applies_when": {
+        "all": [
+          {
+            "eq": [
+              "window_type",
+              "casement"
+            ]
+          },
+          {
+            "eq": [
+              "handle_position_mode",
+              "custom"
+            ]
+          }
+        ]
+      },
+      "required_when": {
+        "all": [
+          {
+            "eq": [
+              "window_type",
+              "casement"
+            ]
+          },
+          {
+            "eq": [
+              "handle_position_mode",
+              "custom"
+            ]
+          }
+        ]
+      },
+      "evidence_ids": [
+        "IB-E012",
+        "IB-E015"
+      ],
+      "reset_policy": "clear_if_inapplicable_or_invalid; retain_if_still_valid",
+      "unit": "mm",
+      "precision": 0.5
+    },
+    {
+      "id": "water_prevention",
+      "label": "水たまり防止部材",
+      "type": "enum",
+      "allowed_values": [
+        "none",
+        "requested"
+      ],
+      "applies_when": {
+        "all": [
+          {
+            "eq": [
+              "window_type",
+              "sliding"
+            ]
+          },
+          {
+            "eq": [
+              "fit",
+              "tile"
+            ]
+          }
+        ]
+      },
+      "required_when": false,
+      "evidence_ids": [
+        "IB-E005"
+      ],
+      "reset_policy": "clear_if_inapplicable_or_invalid; retain_if_still_valid",
+      "default": "none"
+    },
+    {
+      "id": "step_relief",
+      "label": "段差緩和部材",
+      "type": "enum",
+      "allowed_values": [
+        "none",
+        "requested"
+      ],
+      "applies_when": {
+        "eq": [
+          "window_type",
+          "casement"
+        ]
+      },
+      "required_when": false,
+      "evidence_ids": [
+        "IB-E005"
+      ],
+      "reset_policy": "clear_if_inapplicable_or_invalid; retain_if_still_valid",
+      "default": "none"
+    },
+    {
+      "id": "grille_request",
+      "label": "格子（特別確認）",
+      "type": "enum",
+      "allowed_values": [
+        "none",
+        "requested"
+      ],
+      "applies_when": {
+        "all": [
+          {
+            "eq": [
+              "window_type",
+              "sliding"
+            ]
+          },
+          {
+            "eq": [
+              "glass_family",
+              "single"
+            ]
+          }
+        ]
+      },
+      "required_when": false,
+      "evidence_ids": [
+        "IB-E007"
+      ],
+      "reset_policy": "clear_if_inapplicable_or_invalid; retain_if_still_valid",
+      "default": "none",
+      "fulfillment": "finished glass + requested BLOCK; separate supply inquiry in special_request; never automatically fulfilled"
+    },
+    {
+      "id": "width",
+      "label": "発注W",
+      "type": "number",
+      "allowed_values": null,
+      "applies_when": true,
+      "required_when": true,
+      "evidence_ids": [
+        "IB-E006",
+        "IB-E014",
+        "IB-E015"
+      ],
+      "reset_policy": "clear_if_inapplicable_or_invalid; retain_if_still_valid",
+      "unit": "mm",
+      "min": 1,
+      "dimension_semantics": "opening minimum at mounting position; no generic subtraction"
+    },
+    {
+      "id": "height",
+      "label": "発注H",
+      "type": "number",
+      "allowed_values": null,
+      "applies_when": true,
+      "required_when": true,
+      "evidence_ids": [
+        "IB-E006",
+        "IB-E014",
+        "IB-E015"
+      ],
+      "reset_policy": "clear_if_inapplicable_or_invalid; retain_if_still_valid",
+      "unit": "mm",
+      "min": 1,
+      "dimension_semantics": "opening minimum at mounting position; no generic subtraction"
+    },
+    {
+      "id": "quantity",
+      "label": "窓の数量",
+      "type": "integer",
+      "allowed_values": null,
+      "applies_when": true,
+      "required_when": true,
+      "evidence_ids": [
+        "G-PURPOSE"
+      ],
+      "reset_policy": "clear_if_inapplicable_or_invalid; retain_if_still_valid",
+      "min": 1
+    },
+    {
+      "id": "effective_depth",
+      "label": "有効取付奥行き",
+      "type": "number",
+      "allowed_values": null,
+      "applies_when": true,
+      "required_when": false,
+      "evidence_ids": [
+        "IB-E014"
+      ],
+      "reset_policy": "clear_if_inapplicable_or_invalid; retain_if_still_valid",
+      "unit": "mm",
+      "unknown_behavior": "IB-G005 estimator confirmation; never convert unknown to zero"
+    },
+    {
+      "id": "unit_lower_step",
+      "label": "外窓下枠上端から額縁上面の段差",
+      "type": "number",
+      "allowed_values": null,
+      "applies_when": {
+        "all": [
+          {
+            "eq": [
+              "window_type",
+              "sliding"
+            ]
+          },
+          {
+            "eq": [
+              "fit",
+              "unit_bath"
+            ]
+          },
+          {
+            "in": [
+              "unit_pattern",
+              [
+                "B",
+                "C"
+              ]
+            ]
+          }
+        ]
+      },
+      "required_when": false,
+      "evidence_ids": [
+        "IB-E014"
+      ],
+      "reset_policy": "clear_if_inapplicable_or_invalid; retain_if_still_valid",
+      "unit": "mm",
+      "unknown_behavior": "IB-G005 estimator confirmation; never convert unknown to zero"
+    },
+    {
+      "id": "resin_trim_clearance",
+      "label": "樹脂額縁室内面からの距離",
+      "type": "number",
+      "allowed_values": null,
+      "applies_when": {
+        "all": [
+          {
+            "eq": [
+              "window_type",
+              "casement"
+            ]
+          },
+          {
+            "eq": [
+              "fit",
+              "unit_bath"
+            ]
+          },
+          {
+            "eq": [
+              "surround_material",
+              "resin"
+            ]
+          }
+        ]
+      },
+      "required_when": false,
+      "evidence_ids": [
+        "IB-E015"
+      ],
+      "reset_policy": "clear_if_inapplicable_or_invalid; retain_if_still_valid",
+      "unit": "mm",
+      "unknown_behavior": "IB-G005 estimator confirmation; never convert unknown to zero"
+    },
+    {
+      "id": "outer_angle_height",
+      "label": "既存外窓アングル高さ",
+      "type": "number",
+      "allowed_values": null,
+      "applies_when": {
+        "all": [
+          {
+            "eq": [
+              "window_type",
+              "casement"
+            ]
+          },
+          {
+            "eq": [
+              "step_relief",
+              "requested"
+            ]
+          }
+        ]
+      },
+      "required_when": false,
+      "evidence_ids": [
+        "IB-E015"
+      ],
+      "reset_policy": "clear_if_inapplicable_or_invalid; retain_if_still_valid",
+      "unit": "mm",
+      "unknown_behavior": "IB-G005 estimator confirmation; never convert unknown to zero"
+    },
+    {
+      "id": "water_slope_deg",
+      "label": "水勾配",
+      "type": "number",
+      "allowed_values": null,
+      "applies_when": true,
+      "required_when": false,
+      "evidence_ids": [
+        "IB-E014"
+      ],
+      "reset_policy": "clear_if_inapplicable_or_invalid; retain_if_still_valid",
+      "unit": "degree",
+      "unknown_behavior": "IB-G005 estimator confirmation; never convert unknown to zero"
+    },
+    {
+      "id": "surround_material",
+      "label": "既存額縁材質",
+      "type": "enum",
+      "allowed_values": [
+        "aluminum",
+        "resin",
+        "other",
+        "unknown"
+      ],
+      "applies_when": true,
+      "required_when": false,
+      "evidence_ids": [
+        "IB-E005"
+      ],
+      "reset_policy": "clear_if_inapplicable_or_invalid; retain_if_still_valid",
+      "default": "unknown"
+    },
+    {
+      "id": "outer_sash_material",
+      "label": "既存外窓材質",
+      "type": "enum",
+      "allowed_values": [
+        "aluminum",
+        "resin",
+        "other",
+        "unknown"
+      ],
+      "applies_when": true,
+      "required_when": false,
+      "evidence_ids": [
+        "IB-E014"
+      ],
+      "reset_policy": "clear_if_inapplicable_or_invalid; retain_if_still_valid",
+      "default": "unknown"
+    },
+    {
+      "id": "outer_angle",
+      "label": "既存外窓アングル",
+      "type": "enum",
+      "allowed_values": [
+        "present",
+        "absent",
+        "unknown"
+      ],
+      "applies_when": {
+        "eq": [
+          "window_type",
+          "casement"
+        ]
+      },
+      "required_when": false,
+      "evidence_ids": [
+        "IB-E002"
+      ],
+      "reset_policy": "clear_if_inapplicable_or_invalid; retain_if_still_valid",
+      "default": "unknown"
+    },
+    {
+      "id": "mounting_surface_step",
+      "label": "取付面段差",
+      "type": "enum",
+      "allowed_values": [
+        "present",
+        "absent",
+        "unknown"
+      ],
+      "applies_when": true,
+      "required_when": false,
+      "evidence_ids": [
+        "IB-E014",
+        "IB-E015"
+      ],
+      "reset_policy": "clear_if_inapplicable_or_invalid; retain_if_still_valid",
+      "default": "unknown"
+    },
+    {
+      "id": "bath_bay_window",
+      "label": "浴室出窓",
+      "type": "enum",
+      "allowed_values": [
+        "present",
+        "absent",
+        "unknown"
+      ],
+      "applies_when": true,
+      "required_when": false,
+      "evidence_ids": [
+        "IB-E013"
+      ],
+      "reset_policy": "clear_if_inapplicable_or_invalid; retain_if_still_valid",
+      "default": "unknown"
+    },
+    {
+      "id": "support_checked",
+      "label": "支持下地・タイル下地・シーリング確認",
+      "type": "enum",
+      "allowed_values": [
+        "confirmed",
+        "unverified"
+      ],
+      "applies_when": true,
+      "required_when": false,
+      "evidence_ids": [
+        "IB-E013"
+      ],
+      "reset_policy": "clear_if_inapplicable_or_invalid; retain_if_still_valid",
+      "default": "unverified"
+    },
+    {
+      "id": "raw_widths",
+      "label": "W1,W2,W3",
+      "type": "number_array",
+      "allowed_values": null,
+      "applies_when": true,
+      "required_when": false,
+      "evidence_ids": [
+        "IB-E014",
+        "IB-E015"
+      ],
+      "reset_policy": "clear_if_inapplicable_or_invalid; retain_if_still_valid",
+      "unit": "mm",
+      "length": 3
+    },
+    {
+      "id": "raw_heights",
+      "label": "H1,H2,H3",
+      "type": "number_array",
+      "allowed_values": null,
+      "applies_when": true,
+      "required_when": false,
+      "evidence_ids": [
+        "IB-E014",
+        "IB-E015"
+      ],
+      "reset_policy": "clear_if_inapplicable_or_invalid; retain_if_still_valid",
+      "unit": "mm",
+      "length": 3
+    },
+    {
+      "id": "raw_diagonals",
+      "label": "対角L1,L2",
+      "type": "number_array",
+      "allowed_values": null,
+      "applies_when": true,
+      "required_when": false,
+      "evidence_ids": [
+        "IB-E014",
+        "IB-E015"
+      ],
+      "reset_policy": "clear_if_inapplicable_or_invalid; retain_if_still_valid",
+      "unit": "mm",
+      "length": 2
+    },
+    {
+      "id": "edge_bends",
+      "label": "各辺のたわみ",
+      "type": "number_array",
+      "allowed_values": null,
+      "applies_when": {
+        "eq": [
+          "window_type",
+          "casement"
+        ]
+      },
+      "required_when": false,
+      "evidence_ids": [
+        "IB-E015"
+      ],
+      "reset_policy": "clear_if_inapplicable_or_invalid; retain_if_still_valid",
+      "unit": "mm",
+      "length": 4
+    },
+    {
+      "id": "site_notes",
+      "label": "干渉・水掛かり・シーリング・写真参照",
+      "type": "text",
+      "allowed_values": null,
+      "applies_when": true,
+      "required_when": false,
+      "evidence_ids": [
+        "IB-E013",
+        "IB-E015",
+        "IB-E018"
+      ],
+      "reset_policy": "clear_if_inapplicable_or_invalid; retain_if_still_valid"
+    },
+    {
+      "id": "special_request",
+      "label": "設定未証明の希望・現場不明事項",
+      "type": "text",
+      "allowed_values": null,
+      "applies_when": true,
+      "required_when": false,
+      "evidence_ids": [
+        "G-PURPOSE"
+      ],
+      "reset_policy": "clear_if_inapplicable_or_invalid; retain_if_still_valid",
+      "unknown_behavior": "IB-G006 explicit question; no invented selectable product"
+    }
+  ],
+  "glass_variants": [
+    {
+      "id": "IB-V001",
+      "window_type": "sliding",
+      "glass_family": "low_e_double",
+      "glass_design": "transparent",
+      "gas": "argon",
+      "low_e_color": "clear",
+      "single_thickness": null,
+      "supply": "finished",
+      "evidence_ids": [
+        "IB-E003"
+      ],
+      "size_rule": "IB-R-SIZE",
+      "final_glass_construction": "estimator confirms actual thickness/orientation; no automatic BOM"
+    },
+    {
+      "id": "IB-V002",
+      "window_type": "sliding",
+      "glass_family": "low_e_double",
+      "glass_design": "transparent",
+      "gas": "argon",
+      "low_e_color": "green",
+      "single_thickness": null,
+      "supply": "finished",
+      "evidence_ids": [
+        "IB-E003"
+      ],
+      "size_rule": "IB-R-SIZE",
+      "final_glass_construction": "estimator confirms actual thickness/orientation; no automatic BOM"
+    },
+    {
+      "id": "IB-V003",
+      "window_type": "sliding",
+      "glass_family": "low_e_double",
+      "glass_design": "transparent",
+      "gas": "dry_air",
+      "low_e_color": "clear",
+      "single_thickness": null,
+      "supply": "finished",
+      "evidence_ids": [
+        "IB-E003"
+      ],
+      "size_rule": "IB-R-SIZE",
+      "final_glass_construction": "estimator confirms actual thickness/orientation; no automatic BOM"
+    },
+    {
+      "id": "IB-V004",
+      "window_type": "sliding",
+      "glass_family": "low_e_double",
+      "glass_design": "transparent",
+      "gas": "dry_air",
+      "low_e_color": "green",
+      "single_thickness": null,
+      "supply": "finished",
+      "evidence_ids": [
+        "IB-E003"
+      ],
+      "size_rule": "IB-R-SIZE",
+      "final_glass_construction": "estimator confirms actual thickness/orientation; no automatic BOM"
+    },
+    {
+      "id": "IB-V005",
+      "window_type": "sliding",
+      "glass_family": "low_e_double",
+      "glass_design": "patterned",
+      "gas": "argon",
+      "low_e_color": "clear",
+      "single_thickness": null,
+      "supply": "finished",
+      "evidence_ids": [
+        "IB-E003"
+      ],
+      "size_rule": "IB-R-SIZE",
+      "final_glass_construction": "estimator confirms actual thickness/orientation; no automatic BOM"
+    },
+    {
+      "id": "IB-V006",
+      "window_type": "sliding",
+      "glass_family": "low_e_double",
+      "glass_design": "patterned",
+      "gas": "argon",
+      "low_e_color": "green",
+      "single_thickness": null,
+      "supply": "finished",
+      "evidence_ids": [
+        "IB-E003"
+      ],
+      "size_rule": "IB-R-SIZE",
+      "final_glass_construction": "estimator confirms actual thickness/orientation; no automatic BOM"
+    },
+    {
+      "id": "IB-V007",
+      "window_type": "sliding",
+      "glass_family": "low_e_double",
+      "glass_design": "patterned",
+      "gas": "dry_air",
+      "low_e_color": "clear",
+      "single_thickness": null,
+      "supply": "finished",
+      "evidence_ids": [
+        "IB-E003"
+      ],
+      "size_rule": "IB-R-SIZE",
+      "final_glass_construction": "estimator confirms actual thickness/orientation; no automatic BOM"
+    },
+    {
+      "id": "IB-V008",
+      "window_type": "sliding",
+      "glass_family": "low_e_double",
+      "glass_design": "patterned",
+      "gas": "dry_air",
+      "low_e_color": "green",
+      "single_thickness": null,
+      "supply": "finished",
+      "evidence_ids": [
+        "IB-E003"
+      ],
+      "size_rule": "IB-R-SIZE",
+      "final_glass_construction": "estimator confirms actual thickness/orientation; no automatic BOM"
+    },
+    {
+      "id": "IB-V009",
+      "window_type": "sliding",
+      "glass_family": "low_e_double",
+      "glass_design": "frost",
+      "gas": "argon",
+      "low_e_color": "clear",
+      "single_thickness": null,
+      "supply": "finished",
+      "evidence_ids": [
+        "IB-E003"
+      ],
+      "size_rule": "IB-R-SIZE",
+      "final_glass_construction": "estimator confirms actual thickness/orientation; no automatic BOM"
+    },
+    {
+      "id": "IB-V010",
+      "window_type": "sliding",
+      "glass_family": "low_e_double",
+      "glass_design": "frost",
+      "gas": "argon",
+      "low_e_color": "green",
+      "single_thickness": null,
+      "supply": "finished",
+      "evidence_ids": [
+        "IB-E003"
+      ],
+      "size_rule": "IB-R-SIZE",
+      "final_glass_construction": "estimator confirms actual thickness/orientation; no automatic BOM"
+    },
+    {
+      "id": "IB-V011",
+      "window_type": "sliding",
+      "glass_family": "low_e_double",
+      "glass_design": "frost",
+      "gas": "dry_air",
+      "low_e_color": "clear",
+      "single_thickness": null,
+      "supply": "finished",
+      "evidence_ids": [
+        "IB-E003"
+      ],
+      "size_rule": "IB-R-SIZE",
+      "final_glass_construction": "estimator confirms actual thickness/orientation; no automatic BOM"
+    },
+    {
+      "id": "IB-V012",
+      "window_type": "sliding",
+      "glass_family": "low_e_double",
+      "glass_design": "frost",
+      "gas": "dry_air",
+      "low_e_color": "green",
+      "single_thickness": null,
+      "supply": "finished",
+      "evidence_ids": [
+        "IB-E003"
+      ],
+      "size_rule": "IB-R-SIZE",
+      "final_glass_construction": "estimator confirms actual thickness/orientation; no automatic BOM"
+    },
+    {
+      "id": "IB-V013",
+      "window_type": "sliding",
+      "glass_family": "low_e_double",
+      "glass_design": "laminated_clear",
+      "gas": "argon",
+      "low_e_color": "clear",
+      "single_thickness": null,
+      "supply": "finished",
+      "evidence_ids": [
+        "IB-E003"
+      ],
+      "size_rule": "IB-R-SIZE",
+      "final_glass_construction": "estimator confirms actual thickness/orientation; no automatic BOM"
+    },
+    {
+      "id": "IB-V014",
+      "window_type": "sliding",
+      "glass_family": "low_e_double",
+      "glass_design": "laminated_clear",
+      "gas": "argon",
+      "low_e_color": "green",
+      "single_thickness": null,
+      "supply": "finished",
+      "evidence_ids": [
+        "IB-E003"
+      ],
+      "size_rule": "IB-R-SIZE",
+      "final_glass_construction": "estimator confirms actual thickness/orientation; no automatic BOM"
+    },
+    {
+      "id": "IB-V015",
+      "window_type": "sliding",
+      "glass_family": "low_e_double",
+      "glass_design": "laminated_clear",
+      "gas": "dry_air",
+      "low_e_color": "clear",
+      "single_thickness": null,
+      "supply": "finished",
+      "evidence_ids": [
+        "IB-E003"
+      ],
+      "size_rule": "IB-R-SIZE",
+      "final_glass_construction": "estimator confirms actual thickness/orientation; no automatic BOM"
+    },
+    {
+      "id": "IB-V016",
+      "window_type": "sliding",
+      "glass_family": "low_e_double",
+      "glass_design": "laminated_clear",
+      "gas": "dry_air",
+      "low_e_color": "green",
+      "single_thickness": null,
+      "supply": "finished",
+      "evidence_ids": [
+        "IB-E003"
+      ],
+      "size_rule": "IB-R-SIZE",
+      "final_glass_construction": "estimator confirms actual thickness/orientation; no automatic BOM"
+    },
+    {
+      "id": "IB-V017",
+      "window_type": "sliding",
+      "glass_family": "low_e_double",
+      "glass_design": "laminated_milky",
+      "gas": "argon",
+      "low_e_color": "clear",
+      "single_thickness": null,
+      "supply": "finished",
+      "evidence_ids": [
+        "IB-E003"
+      ],
+      "size_rule": "IB-R-SIZE",
+      "final_glass_construction": "estimator confirms actual thickness/orientation; no automatic BOM"
+    },
+    {
+      "id": "IB-V018",
+      "window_type": "sliding",
+      "glass_family": "low_e_double",
+      "glass_design": "laminated_milky",
+      "gas": "argon",
+      "low_e_color": "green",
+      "single_thickness": null,
+      "supply": "finished",
+      "evidence_ids": [
+        "IB-E003"
+      ],
+      "size_rule": "IB-R-SIZE",
+      "final_glass_construction": "estimator confirms actual thickness/orientation; no automatic BOM"
+    },
+    {
+      "id": "IB-V019",
+      "window_type": "sliding",
+      "glass_family": "low_e_double",
+      "glass_design": "laminated_milky",
+      "gas": "dry_air",
+      "low_e_color": "clear",
+      "single_thickness": null,
+      "supply": "finished",
+      "evidence_ids": [
+        "IB-E003"
+      ],
+      "size_rule": "IB-R-SIZE",
+      "final_glass_construction": "estimator confirms actual thickness/orientation; no automatic BOM"
+    },
+    {
+      "id": "IB-V020",
+      "window_type": "sliding",
+      "glass_family": "low_e_double",
+      "glass_design": "laminated_milky",
+      "gas": "dry_air",
+      "low_e_color": "green",
+      "single_thickness": null,
+      "supply": "finished",
+      "evidence_ids": [
+        "IB-E003"
+      ],
+      "size_rule": "IB-R-SIZE",
+      "final_glass_construction": "estimator confirms actual thickness/orientation; no automatic BOM"
+    },
+    {
+      "id": "IB-V021",
+      "window_type": "sliding",
+      "glass_family": "low_e_double",
+      "glass_design": "laminated_patterned",
+      "gas": "argon",
+      "low_e_color": "clear",
+      "single_thickness": null,
+      "supply": "knockdown",
+      "evidence_ids": [
+        "IB-E003"
+      ],
+      "size_rule": "IB-R-SIZE",
+      "final_glass_construction": "estimator confirms actual thickness/orientation; no automatic BOM"
+    },
+    {
+      "id": "IB-V022",
+      "window_type": "sliding",
+      "glass_family": "low_e_double",
+      "glass_design": "laminated_patterned",
+      "gas": "argon",
+      "low_e_color": "green",
+      "single_thickness": null,
+      "supply": "knockdown",
+      "evidence_ids": [
+        "IB-E003"
+      ],
+      "size_rule": "IB-R-SIZE",
+      "final_glass_construction": "estimator confirms actual thickness/orientation; no automatic BOM"
+    },
+    {
+      "id": "IB-V023",
+      "window_type": "sliding",
+      "glass_family": "low_e_double",
+      "glass_design": "laminated_patterned",
+      "gas": "dry_air",
+      "low_e_color": "clear",
+      "single_thickness": null,
+      "supply": "knockdown",
+      "evidence_ids": [
+        "IB-E003"
+      ],
+      "size_rule": "IB-R-SIZE",
+      "final_glass_construction": "estimator confirms actual thickness/orientation; no automatic BOM"
+    },
+    {
+      "id": "IB-V024",
+      "window_type": "sliding",
+      "glass_family": "low_e_double",
+      "glass_design": "laminated_patterned",
+      "gas": "dry_air",
+      "low_e_color": "green",
+      "single_thickness": null,
+      "supply": "knockdown",
+      "evidence_ids": [
+        "IB-E003"
+      ],
+      "size_rule": "IB-R-SIZE",
+      "final_glass_construction": "estimator confirms actual thickness/orientation; no automatic BOM"
+    },
+    {
+      "id": "IB-V025",
+      "window_type": "sliding",
+      "glass_family": "low_e_double",
+      "glass_design": "tempered_clear",
+      "gas": "argon",
+      "low_e_color": "clear",
+      "single_thickness": null,
+      "supply": "finished",
+      "evidence_ids": [
+        "IB-E003"
+      ],
+      "size_rule": "IB-R-SIZE",
+      "final_glass_construction": "estimator confirms actual thickness/orientation; no automatic BOM"
+    },
+    {
+      "id": "IB-V026",
+      "window_type": "sliding",
+      "glass_family": "low_e_double",
+      "glass_design": "tempered_clear",
+      "gas": "argon",
+      "low_e_color": "green",
+      "single_thickness": null,
+      "supply": "finished",
+      "evidence_ids": [
+        "IB-E003"
+      ],
+      "size_rule": "IB-R-SIZE",
+      "final_glass_construction": "estimator confirms actual thickness/orientation; no automatic BOM"
+    },
+    {
+      "id": "IB-V027",
+      "window_type": "sliding",
+      "glass_family": "low_e_double",
+      "glass_design": "tempered_clear",
+      "gas": "dry_air",
+      "low_e_color": "clear",
+      "single_thickness": null,
+      "supply": "finished",
+      "evidence_ids": [
+        "IB-E003"
+      ],
+      "size_rule": "IB-R-SIZE",
+      "final_glass_construction": "estimator confirms actual thickness/orientation; no automatic BOM"
+    },
+    {
+      "id": "IB-V028",
+      "window_type": "sliding",
+      "glass_family": "low_e_double",
+      "glass_design": "tempered_clear",
+      "gas": "dry_air",
+      "low_e_color": "green",
+      "single_thickness": null,
+      "supply": "finished",
+      "evidence_ids": [
+        "IB-E003"
+      ],
+      "size_rule": "IB-R-SIZE",
+      "final_glass_construction": "estimator confirms actual thickness/orientation; no automatic BOM"
+    },
+    {
+      "id": "IB-V029",
+      "window_type": "sliding",
+      "glass_family": "low_e_double",
+      "glass_design": "tempered_patterned",
+      "gas": "argon",
+      "low_e_color": "clear",
+      "single_thickness": null,
+      "supply": "finished",
+      "evidence_ids": [
+        "IB-E003"
+      ],
+      "size_rule": "IB-R-SIZE",
+      "final_glass_construction": "estimator confirms actual thickness/orientation; no automatic BOM"
+    },
+    {
+      "id": "IB-V030",
+      "window_type": "sliding",
+      "glass_family": "low_e_double",
+      "glass_design": "tempered_patterned",
+      "gas": "argon",
+      "low_e_color": "green",
+      "single_thickness": null,
+      "supply": "finished",
+      "evidence_ids": [
+        "IB-E003"
+      ],
+      "size_rule": "IB-R-SIZE",
+      "final_glass_construction": "estimator confirms actual thickness/orientation; no automatic BOM"
+    },
+    {
+      "id": "IB-V031",
+      "window_type": "sliding",
+      "glass_family": "low_e_double",
+      "glass_design": "tempered_patterned",
+      "gas": "dry_air",
+      "low_e_color": "clear",
+      "single_thickness": null,
+      "supply": "finished",
+      "evidence_ids": [
+        "IB-E003"
+      ],
+      "size_rule": "IB-R-SIZE",
+      "final_glass_construction": "estimator confirms actual thickness/orientation; no automatic BOM"
+    },
+    {
+      "id": "IB-V032",
+      "window_type": "sliding",
+      "glass_family": "low_e_double",
+      "glass_design": "tempered_patterned",
+      "gas": "dry_air",
+      "low_e_color": "green",
+      "single_thickness": null,
+      "supply": "finished",
+      "evidence_ids": [
+        "IB-E003"
+      ],
+      "size_rule": "IB-R-SIZE",
+      "final_glass_construction": "estimator confirms actual thickness/orientation; no automatic BOM"
+    },
+    {
+      "id": "IB-V033",
+      "window_type": "sliding",
+      "glass_family": "low_e_double",
+      "glass_design": "blind_in",
+      "gas": "dry_air",
+      "low_e_color": "clear",
+      "single_thickness": null,
+      "supply": "knockdown",
+      "evidence_ids": [
+        "IB-E003"
+      ],
+      "size_rule": "IB-R-SIZE",
+      "final_glass_construction": "estimator confirms actual thickness/orientation; no automatic BOM"
+    },
+    {
+      "id": "IB-V034",
+      "window_type": "sliding",
+      "glass_family": "low_e_double",
+      "glass_design": "blind_in",
+      "gas": "dry_air",
+      "low_e_color": "green",
+      "single_thickness": null,
+      "supply": "knockdown",
+      "evidence_ids": [
+        "IB-E003"
+      ],
+      "size_rule": "IB-R-SIZE",
+      "final_glass_construction": "estimator confirms actual thickness/orientation; no automatic BOM"
+    },
+    {
+      "id": "IB-V035",
+      "window_type": "sliding",
+      "glass_family": "ordinary_double",
+      "glass_design": "transparent",
+      "gas": "argon",
+      "low_e_color": null,
+      "single_thickness": null,
+      "supply": "finished",
+      "evidence_ids": [
+        "IB-E003"
+      ],
+      "size_rule": "IB-R-SIZE",
+      "final_glass_construction": "estimator confirms actual thickness/orientation; no automatic BOM"
+    },
+    {
+      "id": "IB-V036",
+      "window_type": "sliding",
+      "glass_family": "ordinary_double",
+      "glass_design": "transparent",
+      "gas": "dry_air",
+      "low_e_color": null,
+      "single_thickness": null,
+      "supply": "finished",
+      "evidence_ids": [
+        "IB-E003"
+      ],
+      "size_rule": "IB-R-SIZE",
+      "final_glass_construction": "estimator confirms actual thickness/orientation; no automatic BOM"
+    },
+    {
+      "id": "IB-V037",
+      "window_type": "sliding",
+      "glass_family": "ordinary_double",
+      "glass_design": "patterned",
+      "gas": "argon",
+      "low_e_color": null,
+      "single_thickness": null,
+      "supply": "finished",
+      "evidence_ids": [
+        "IB-E003"
+      ],
+      "size_rule": "IB-R-SIZE",
+      "final_glass_construction": "estimator confirms actual thickness/orientation; no automatic BOM"
+    },
+    {
+      "id": "IB-V038",
+      "window_type": "sliding",
+      "glass_family": "ordinary_double",
+      "glass_design": "patterned",
+      "gas": "dry_air",
+      "low_e_color": null,
+      "single_thickness": null,
+      "supply": "finished",
+      "evidence_ids": [
+        "IB-E003"
+      ],
+      "size_rule": "IB-R-SIZE",
+      "final_glass_construction": "estimator confirms actual thickness/orientation; no automatic BOM"
+    },
+    {
+      "id": "IB-V039",
+      "window_type": "sliding",
+      "glass_family": "ordinary_double",
+      "glass_design": "frost",
+      "gas": "argon",
+      "low_e_color": null,
+      "single_thickness": null,
+      "supply": "knockdown",
+      "evidence_ids": [
+        "IB-E003"
+      ],
+      "size_rule": "IB-R-SIZE",
+      "final_glass_construction": "estimator confirms actual thickness/orientation; no automatic BOM"
+    },
+    {
+      "id": "IB-V040",
+      "window_type": "sliding",
+      "glass_family": "ordinary_double",
+      "glass_design": "frost",
+      "gas": "dry_air",
+      "low_e_color": null,
+      "single_thickness": null,
+      "supply": "finished",
+      "evidence_ids": [
+        "IB-E003"
+      ],
+      "size_rule": "IB-R-SIZE",
+      "final_glass_construction": "estimator confirms actual thickness/orientation; no automatic BOM"
+    },
+    {
+      "id": "IB-V041",
+      "window_type": "sliding",
+      "glass_family": "ordinary_double",
+      "glass_design": "laminated_clear",
+      "gas": "argon",
+      "low_e_color": null,
+      "single_thickness": null,
+      "supply": "knockdown",
+      "evidence_ids": [
+        "IB-E003"
+      ],
+      "size_rule": "IB-R-SIZE",
+      "final_glass_construction": "estimator confirms actual thickness/orientation; no automatic BOM"
+    },
+    {
+      "id": "IB-V042",
+      "window_type": "sliding",
+      "glass_family": "ordinary_double",
+      "glass_design": "laminated_clear",
+      "gas": "dry_air",
+      "low_e_color": null,
+      "single_thickness": null,
+      "supply": "finished",
+      "evidence_ids": [
+        "IB-E003"
+      ],
+      "size_rule": "IB-R-SIZE",
+      "final_glass_construction": "estimator confirms actual thickness/orientation; no automatic BOM"
+    },
+    {
+      "id": "IB-V043",
+      "window_type": "sliding",
+      "glass_family": "ordinary_double",
+      "glass_design": "laminated_milky",
+      "gas": "argon",
+      "low_e_color": null,
+      "single_thickness": null,
+      "supply": "knockdown",
+      "evidence_ids": [
+        "IB-E003"
+      ],
+      "size_rule": "IB-R-SIZE",
+      "final_glass_construction": "estimator confirms actual thickness/orientation; no automatic BOM"
+    },
+    {
+      "id": "IB-V044",
+      "window_type": "sliding",
+      "glass_family": "ordinary_double",
+      "glass_design": "laminated_milky",
+      "gas": "dry_air",
+      "low_e_color": null,
+      "single_thickness": null,
+      "supply": "finished",
+      "evidence_ids": [
+        "IB-E003"
+      ],
+      "size_rule": "IB-R-SIZE",
+      "final_glass_construction": "estimator confirms actual thickness/orientation; no automatic BOM"
+    },
+    {
+      "id": "IB-V045",
+      "window_type": "sliding",
+      "glass_family": "ordinary_double",
+      "glass_design": "laminated_patterned",
+      "gas": "argon",
+      "low_e_color": null,
+      "single_thickness": null,
+      "supply": "knockdown",
+      "evidence_ids": [
+        "IB-E003"
+      ],
+      "size_rule": "IB-R-SIZE",
+      "final_glass_construction": "estimator confirms actual thickness/orientation; no automatic BOM"
+    },
+    {
+      "id": "IB-V046",
+      "window_type": "sliding",
+      "glass_family": "ordinary_double",
+      "glass_design": "laminated_patterned",
+      "gas": "dry_air",
+      "low_e_color": null,
+      "single_thickness": null,
+      "supply": "knockdown",
+      "evidence_ids": [
+        "IB-E003"
+      ],
+      "size_rule": "IB-R-SIZE",
+      "final_glass_construction": "estimator confirms actual thickness/orientation; no automatic BOM"
+    },
+    {
+      "id": "IB-V047",
+      "window_type": "sliding",
+      "glass_family": "ordinary_double",
+      "glass_design": "tempered_clear",
+      "gas": "argon",
+      "low_e_color": null,
+      "single_thickness": null,
+      "supply": "knockdown",
+      "evidence_ids": [
+        "IB-E003"
+      ],
+      "size_rule": "IB-R-SIZE",
+      "final_glass_construction": "estimator confirms actual thickness/orientation; no automatic BOM"
+    },
+    {
+      "id": "IB-V048",
+      "window_type": "sliding",
+      "glass_family": "ordinary_double",
+      "glass_design": "tempered_clear",
+      "gas": "dry_air",
+      "low_e_color": null,
+      "single_thickness": null,
+      "supply": "finished",
+      "evidence_ids": [
+        "IB-E003"
+      ],
+      "size_rule": "IB-R-SIZE",
+      "final_glass_construction": "estimator confirms actual thickness/orientation; no automatic BOM"
+    },
+    {
+      "id": "IB-V049",
+      "window_type": "sliding",
+      "glass_family": "ordinary_double",
+      "glass_design": "tempered_patterned",
+      "gas": "argon",
+      "low_e_color": null,
+      "single_thickness": null,
+      "supply": "knockdown",
+      "evidence_ids": [
+        "IB-E003"
+      ],
+      "size_rule": "IB-R-SIZE",
+      "final_glass_construction": "estimator confirms actual thickness/orientation; no automatic BOM"
+    },
+    {
+      "id": "IB-V050",
+      "window_type": "sliding",
+      "glass_family": "ordinary_double",
+      "glass_design": "tempered_patterned",
+      "gas": "dry_air",
+      "low_e_color": null,
+      "single_thickness": null,
+      "supply": "finished",
+      "evidence_ids": [
+        "IB-E003"
+      ],
+      "size_rule": "IB-R-SIZE",
+      "final_glass_construction": "estimator confirms actual thickness/orientation; no automatic BOM"
+    },
+    {
+      "id": "IB-V051",
+      "window_type": "sliding",
+      "glass_family": "ordinary_double",
+      "glass_design": "laminated_frost",
+      "gas": "argon",
+      "low_e_color": null,
+      "single_thickness": null,
+      "supply": "knockdown",
+      "evidence_ids": [
+        "IB-E003"
+      ],
+      "size_rule": "IB-R-SIZE",
+      "final_glass_construction": "estimator confirms actual thickness/orientation; no automatic BOM"
+    },
+    {
+      "id": "IB-V052",
+      "window_type": "sliding",
+      "glass_family": "ordinary_double",
+      "glass_design": "laminated_frost",
+      "gas": "dry_air",
+      "low_e_color": null,
+      "single_thickness": null,
+      "supply": "knockdown",
+      "evidence_ids": [
+        "IB-E003"
+      ],
+      "size_rule": "IB-R-SIZE",
+      "final_glass_construction": "estimator confirms actual thickness/orientation; no automatic BOM"
+    },
+    {
+      "id": "IB-V053",
+      "window_type": "sliding",
+      "glass_family": "ordinary_double",
+      "glass_design": "blind_in",
+      "gas": "dry_air",
+      "low_e_color": null,
+      "single_thickness": null,
+      "supply": "finished",
+      "evidence_ids": [
+        "IB-E003"
+      ],
+      "size_rule": "IB-R-SIZE",
+      "final_glass_construction": "estimator confirms actual thickness/orientation; no automatic BOM"
+    },
+    {
+      "id": "IB-V054",
+      "window_type": "sliding",
+      "glass_family": "single",
+      "glass_design": "transparent",
+      "gas": null,
+      "low_e_color": null,
+      "single_thickness": 3,
+      "supply": "finished",
+      "evidence_ids": [
+        "IB-E003"
+      ],
+      "size_rule": "IB-R-SIZE",
+      "final_glass_construction": "catalog single thickness"
+    },
+    {
+      "id": "IB-V055",
+      "window_type": "sliding",
+      "glass_family": "single",
+      "glass_design": "transparent",
+      "gas": null,
+      "low_e_color": null,
+      "single_thickness": 5,
+      "supply": "finished",
+      "evidence_ids": [
+        "IB-E003"
+      ],
+      "size_rule": "IB-R-SIZE",
+      "final_glass_construction": "catalog single thickness"
+    },
+    {
+      "id": "IB-V056",
+      "window_type": "sliding",
+      "glass_family": "single",
+      "glass_design": "patterned",
+      "gas": null,
+      "low_e_color": null,
+      "single_thickness": 4,
+      "supply": "finished",
+      "evidence_ids": [
+        "IB-E003"
+      ],
+      "size_rule": "IB-R-SIZE",
+      "final_glass_construction": "catalog single thickness"
+    },
+    {
+      "id": "IB-V057",
+      "window_type": "sliding",
+      "glass_family": "single",
+      "glass_design": "tempered_clear",
+      "gas": null,
+      "low_e_color": null,
+      "single_thickness": 4,
+      "supply": "finished",
+      "evidence_ids": [
+        "IB-E003"
+      ],
+      "size_rule": "IB-R-SIZE",
+      "final_glass_construction": "catalog single thickness"
+    },
+    {
+      "id": "IB-V058",
+      "window_type": "sliding",
+      "glass_family": "single",
+      "glass_design": "tempered_patterned",
+      "gas": null,
+      "low_e_color": null,
+      "single_thickness": 4,
+      "supply": "finished",
+      "evidence_ids": [
+        "IB-E003"
+      ],
+      "size_rule": "IB-R-SIZE",
+      "final_glass_construction": "catalog single thickness"
+    },
+    {
+      "id": "IB-V059",
+      "window_type": "casement",
+      "glass_family": "low_e_double",
+      "glass_design": "transparent",
+      "gas": "argon",
+      "low_e_color": "clear",
+      "single_thickness": null,
+      "supply": "finished",
+      "evidence_ids": [
+        "IB-E003"
+      ],
+      "size_rule": "IB-R-SIZE",
+      "final_glass_construction": "estimator confirms actual thickness/orientation; no automatic BOM"
+    },
+    {
+      "id": "IB-V060",
+      "window_type": "casement",
+      "glass_family": "low_e_double",
+      "glass_design": "transparent",
+      "gas": "argon",
+      "low_e_color": "green",
+      "single_thickness": null,
+      "supply": "finished",
+      "evidence_ids": [
+        "IB-E003"
+      ],
+      "size_rule": "IB-R-SIZE",
+      "final_glass_construction": "estimator confirms actual thickness/orientation; no automatic BOM"
+    },
+    {
+      "id": "IB-V061",
+      "window_type": "casement",
+      "glass_family": "low_e_double",
+      "glass_design": "transparent",
+      "gas": "dry_air",
+      "low_e_color": "clear",
+      "single_thickness": null,
+      "supply": "finished",
+      "evidence_ids": [
+        "IB-E003"
+      ],
+      "size_rule": "IB-R-SIZE",
+      "final_glass_construction": "estimator confirms actual thickness/orientation; no automatic BOM"
+    },
+    {
+      "id": "IB-V062",
+      "window_type": "casement",
+      "glass_family": "low_e_double",
+      "glass_design": "transparent",
+      "gas": "dry_air",
+      "low_e_color": "green",
+      "single_thickness": null,
+      "supply": "finished",
+      "evidence_ids": [
+        "IB-E003"
+      ],
+      "size_rule": "IB-R-SIZE",
+      "final_glass_construction": "estimator confirms actual thickness/orientation; no automatic BOM"
+    },
+    {
+      "id": "IB-V063",
+      "window_type": "casement",
+      "glass_family": "low_e_double",
+      "glass_design": "patterned",
+      "gas": "argon",
+      "low_e_color": "clear",
+      "single_thickness": null,
+      "supply": "finished",
+      "evidence_ids": [
+        "IB-E003"
+      ],
+      "size_rule": "IB-R-SIZE",
+      "final_glass_construction": "estimator confirms actual thickness/orientation; no automatic BOM"
+    },
+    {
+      "id": "IB-V064",
+      "window_type": "casement",
+      "glass_family": "low_e_double",
+      "glass_design": "patterned",
+      "gas": "argon",
+      "low_e_color": "green",
+      "single_thickness": null,
+      "supply": "finished",
+      "evidence_ids": [
+        "IB-E003"
+      ],
+      "size_rule": "IB-R-SIZE",
+      "final_glass_construction": "estimator confirms actual thickness/orientation; no automatic BOM"
+    },
+    {
+      "id": "IB-V065",
+      "window_type": "casement",
+      "glass_family": "low_e_double",
+      "glass_design": "patterned",
+      "gas": "dry_air",
+      "low_e_color": "clear",
+      "single_thickness": null,
+      "supply": "finished",
+      "evidence_ids": [
+        "IB-E003"
+      ],
+      "size_rule": "IB-R-SIZE",
+      "final_glass_construction": "estimator confirms actual thickness/orientation; no automatic BOM"
+    },
+    {
+      "id": "IB-V066",
+      "window_type": "casement",
+      "glass_family": "low_e_double",
+      "glass_design": "patterned",
+      "gas": "dry_air",
+      "low_e_color": "green",
+      "single_thickness": null,
+      "supply": "finished",
+      "evidence_ids": [
+        "IB-E003"
+      ],
+      "size_rule": "IB-R-SIZE",
+      "final_glass_construction": "estimator confirms actual thickness/orientation; no automatic BOM"
+    },
+    {
+      "id": "IB-V067",
+      "window_type": "casement",
+      "glass_family": "low_e_double",
+      "glass_design": "frost",
+      "gas": "argon",
+      "low_e_color": "clear",
+      "single_thickness": null,
+      "supply": "finished",
+      "evidence_ids": [
+        "IB-E003"
+      ],
+      "size_rule": "IB-R-SIZE",
+      "final_glass_construction": "estimator confirms actual thickness/orientation; no automatic BOM"
+    },
+    {
+      "id": "IB-V068",
+      "window_type": "casement",
+      "glass_family": "low_e_double",
+      "glass_design": "frost",
+      "gas": "argon",
+      "low_e_color": "green",
+      "single_thickness": null,
+      "supply": "finished",
+      "evidence_ids": [
+        "IB-E003"
+      ],
+      "size_rule": "IB-R-SIZE",
+      "final_glass_construction": "estimator confirms actual thickness/orientation; no automatic BOM"
+    },
+    {
+      "id": "IB-V069",
+      "window_type": "casement",
+      "glass_family": "low_e_double",
+      "glass_design": "frost",
+      "gas": "dry_air",
+      "low_e_color": "clear",
+      "single_thickness": null,
+      "supply": "finished",
+      "evidence_ids": [
+        "IB-E003"
+      ],
+      "size_rule": "IB-R-SIZE",
+      "final_glass_construction": "estimator confirms actual thickness/orientation; no automatic BOM"
+    },
+    {
+      "id": "IB-V070",
+      "window_type": "casement",
+      "glass_family": "low_e_double",
+      "glass_design": "frost",
+      "gas": "dry_air",
+      "low_e_color": "green",
+      "single_thickness": null,
+      "supply": "finished",
+      "evidence_ids": [
+        "IB-E003"
+      ],
+      "size_rule": "IB-R-SIZE",
+      "final_glass_construction": "estimator confirms actual thickness/orientation; no automatic BOM"
+    },
+    {
+      "id": "IB-V071",
+      "window_type": "casement",
+      "glass_family": "low_e_double",
+      "glass_design": "laminated_clear",
+      "gas": "argon",
+      "low_e_color": "clear",
+      "single_thickness": null,
+      "supply": "finished",
+      "evidence_ids": [
+        "IB-E003"
+      ],
+      "size_rule": "IB-R-SIZE",
+      "final_glass_construction": "estimator confirms actual thickness/orientation; no automatic BOM"
+    },
+    {
+      "id": "IB-V072",
+      "window_type": "casement",
+      "glass_family": "low_e_double",
+      "glass_design": "laminated_clear",
+      "gas": "argon",
+      "low_e_color": "green",
+      "single_thickness": null,
+      "supply": "finished",
+      "evidence_ids": [
+        "IB-E003"
+      ],
+      "size_rule": "IB-R-SIZE",
+      "final_glass_construction": "estimator confirms actual thickness/orientation; no automatic BOM"
+    },
+    {
+      "id": "IB-V073",
+      "window_type": "casement",
+      "glass_family": "low_e_double",
+      "glass_design": "laminated_clear",
+      "gas": "dry_air",
+      "low_e_color": "clear",
+      "single_thickness": null,
+      "supply": "finished",
+      "evidence_ids": [
+        "IB-E003"
+      ],
+      "size_rule": "IB-R-SIZE",
+      "final_glass_construction": "estimator confirms actual thickness/orientation; no automatic BOM"
+    },
+    {
+      "id": "IB-V074",
+      "window_type": "casement",
+      "glass_family": "low_e_double",
+      "glass_design": "laminated_clear",
+      "gas": "dry_air",
+      "low_e_color": "green",
+      "single_thickness": null,
+      "supply": "finished",
+      "evidence_ids": [
+        "IB-E003"
+      ],
+      "size_rule": "IB-R-SIZE",
+      "final_glass_construction": "estimator confirms actual thickness/orientation; no automatic BOM"
+    },
+    {
+      "id": "IB-V075",
+      "window_type": "casement",
+      "glass_family": "low_e_double",
+      "glass_design": "laminated_milky",
+      "gas": "argon",
+      "low_e_color": "clear",
+      "single_thickness": null,
+      "supply": "finished",
+      "evidence_ids": [
+        "IB-E003"
+      ],
+      "size_rule": "IB-R-SIZE",
+      "final_glass_construction": "estimator confirms actual thickness/orientation; no automatic BOM"
+    },
+    {
+      "id": "IB-V076",
+      "window_type": "casement",
+      "glass_family": "low_e_double",
+      "glass_design": "laminated_milky",
+      "gas": "argon",
+      "low_e_color": "green",
+      "single_thickness": null,
+      "supply": "finished",
+      "evidence_ids": [
+        "IB-E003"
+      ],
+      "size_rule": "IB-R-SIZE",
+      "final_glass_construction": "estimator confirms actual thickness/orientation; no automatic BOM"
+    },
+    {
+      "id": "IB-V077",
+      "window_type": "casement",
+      "glass_family": "low_e_double",
+      "glass_design": "laminated_milky",
+      "gas": "dry_air",
+      "low_e_color": "clear",
+      "single_thickness": null,
+      "supply": "finished",
+      "evidence_ids": [
+        "IB-E003"
+      ],
+      "size_rule": "IB-R-SIZE",
+      "final_glass_construction": "estimator confirms actual thickness/orientation; no automatic BOM"
+    },
+    {
+      "id": "IB-V078",
+      "window_type": "casement",
+      "glass_family": "low_e_double",
+      "glass_design": "laminated_milky",
+      "gas": "dry_air",
+      "low_e_color": "green",
+      "single_thickness": null,
+      "supply": "finished",
+      "evidence_ids": [
+        "IB-E003"
+      ],
+      "size_rule": "IB-R-SIZE",
+      "final_glass_construction": "estimator confirms actual thickness/orientation; no automatic BOM"
+    },
+    {
+      "id": "IB-V079",
+      "window_type": "casement",
+      "glass_family": "low_e_double",
+      "glass_design": "laminated_patterned",
+      "gas": "argon",
+      "low_e_color": "clear",
+      "single_thickness": null,
+      "supply": "knockdown",
+      "evidence_ids": [
+        "IB-E003"
+      ],
+      "size_rule": "IB-R-SIZE",
+      "final_glass_construction": "estimator confirms actual thickness/orientation; no automatic BOM"
+    },
+    {
+      "id": "IB-V080",
+      "window_type": "casement",
+      "glass_family": "low_e_double",
+      "glass_design": "laminated_patterned",
+      "gas": "argon",
+      "low_e_color": "green",
+      "single_thickness": null,
+      "supply": "knockdown",
+      "evidence_ids": [
+        "IB-E003"
+      ],
+      "size_rule": "IB-R-SIZE",
+      "final_glass_construction": "estimator confirms actual thickness/orientation; no automatic BOM"
+    },
+    {
+      "id": "IB-V081",
+      "window_type": "casement",
+      "glass_family": "low_e_double",
+      "glass_design": "laminated_patterned",
+      "gas": "dry_air",
+      "low_e_color": "clear",
+      "single_thickness": null,
+      "supply": "knockdown",
+      "evidence_ids": [
+        "IB-E003"
+      ],
+      "size_rule": "IB-R-SIZE",
+      "final_glass_construction": "estimator confirms actual thickness/orientation; no automatic BOM"
+    },
+    {
+      "id": "IB-V082",
+      "window_type": "casement",
+      "glass_family": "low_e_double",
+      "glass_design": "laminated_patterned",
+      "gas": "dry_air",
+      "low_e_color": "green",
+      "single_thickness": null,
+      "supply": "knockdown",
+      "evidence_ids": [
+        "IB-E003"
+      ],
+      "size_rule": "IB-R-SIZE",
+      "final_glass_construction": "estimator confirms actual thickness/orientation; no automatic BOM"
+    },
+    {
+      "id": "IB-V083",
+      "window_type": "casement",
+      "glass_family": "low_e_double",
+      "glass_design": "tempered_clear",
+      "gas": "argon",
+      "low_e_color": "clear",
+      "single_thickness": null,
+      "supply": "finished",
+      "evidence_ids": [
+        "IB-E003"
+      ],
+      "size_rule": "IB-R-SIZE",
+      "final_glass_construction": "estimator confirms actual thickness/orientation; no automatic BOM"
+    },
+    {
+      "id": "IB-V084",
+      "window_type": "casement",
+      "glass_family": "low_e_double",
+      "glass_design": "tempered_clear",
+      "gas": "argon",
+      "low_e_color": "green",
+      "single_thickness": null,
+      "supply": "finished",
+      "evidence_ids": [
+        "IB-E003"
+      ],
+      "size_rule": "IB-R-SIZE",
+      "final_glass_construction": "estimator confirms actual thickness/orientation; no automatic BOM"
+    },
+    {
+      "id": "IB-V085",
+      "window_type": "casement",
+      "glass_family": "low_e_double",
+      "glass_design": "tempered_clear",
+      "gas": "dry_air",
+      "low_e_color": "clear",
+      "single_thickness": null,
+      "supply": "finished",
+      "evidence_ids": [
+        "IB-E003"
+      ],
+      "size_rule": "IB-R-SIZE",
+      "final_glass_construction": "estimator confirms actual thickness/orientation; no automatic BOM"
+    },
+    {
+      "id": "IB-V086",
+      "window_type": "casement",
+      "glass_family": "low_e_double",
+      "glass_design": "tempered_clear",
+      "gas": "dry_air",
+      "low_e_color": "green",
+      "single_thickness": null,
+      "supply": "finished",
+      "evidence_ids": [
+        "IB-E003"
+      ],
+      "size_rule": "IB-R-SIZE",
+      "final_glass_construction": "estimator confirms actual thickness/orientation; no automatic BOM"
+    },
+    {
+      "id": "IB-V087",
+      "window_type": "casement",
+      "glass_family": "low_e_double",
+      "glass_design": "tempered_patterned",
+      "gas": "argon",
+      "low_e_color": "clear",
+      "single_thickness": null,
+      "supply": "finished",
+      "evidence_ids": [
+        "IB-E003"
+      ],
+      "size_rule": "IB-R-SIZE",
+      "final_glass_construction": "estimator confirms actual thickness/orientation; no automatic BOM"
+    },
+    {
+      "id": "IB-V088",
+      "window_type": "casement",
+      "glass_family": "low_e_double",
+      "glass_design": "tempered_patterned",
+      "gas": "argon",
+      "low_e_color": "green",
+      "single_thickness": null,
+      "supply": "finished",
+      "evidence_ids": [
+        "IB-E003"
+      ],
+      "size_rule": "IB-R-SIZE",
+      "final_glass_construction": "estimator confirms actual thickness/orientation; no automatic BOM"
+    },
+    {
+      "id": "IB-V089",
+      "window_type": "casement",
+      "glass_family": "low_e_double",
+      "glass_design": "tempered_patterned",
+      "gas": "dry_air",
+      "low_e_color": "clear",
+      "single_thickness": null,
+      "supply": "finished",
+      "evidence_ids": [
+        "IB-E003"
+      ],
+      "size_rule": "IB-R-SIZE",
+      "final_glass_construction": "estimator confirms actual thickness/orientation; no automatic BOM"
+    },
+    {
+      "id": "IB-V090",
+      "window_type": "casement",
+      "glass_family": "low_e_double",
+      "glass_design": "tempered_patterned",
+      "gas": "dry_air",
+      "low_e_color": "green",
+      "single_thickness": null,
+      "supply": "finished",
+      "evidence_ids": [
+        "IB-E003"
+      ],
+      "size_rule": "IB-R-SIZE",
+      "final_glass_construction": "estimator confirms actual thickness/orientation; no automatic BOM"
+    },
+    {
+      "id": "IB-V091",
+      "window_type": "casement",
+      "glass_family": "ordinary_double",
+      "glass_design": "transparent",
+      "gas": "argon",
+      "low_e_color": null,
+      "single_thickness": null,
+      "supply": "finished",
+      "evidence_ids": [
+        "IB-E003"
+      ],
+      "size_rule": "IB-R-SIZE",
+      "final_glass_construction": "estimator confirms actual thickness/orientation; no automatic BOM"
+    },
+    {
+      "id": "IB-V092",
+      "window_type": "casement",
+      "glass_family": "ordinary_double",
+      "glass_design": "transparent",
+      "gas": "dry_air",
+      "low_e_color": null,
+      "single_thickness": null,
+      "supply": "finished",
+      "evidence_ids": [
+        "IB-E003"
+      ],
+      "size_rule": "IB-R-SIZE",
+      "final_glass_construction": "estimator confirms actual thickness/orientation; no automatic BOM"
+    },
+    {
+      "id": "IB-V093",
+      "window_type": "casement",
+      "glass_family": "ordinary_double",
+      "glass_design": "patterned",
+      "gas": "argon",
+      "low_e_color": null,
+      "single_thickness": null,
+      "supply": "finished",
+      "evidence_ids": [
+        "IB-E003"
+      ],
+      "size_rule": "IB-R-SIZE",
+      "final_glass_construction": "estimator confirms actual thickness/orientation; no automatic BOM"
+    },
+    {
+      "id": "IB-V094",
+      "window_type": "casement",
+      "glass_family": "ordinary_double",
+      "glass_design": "patterned",
+      "gas": "dry_air",
+      "low_e_color": null,
+      "single_thickness": null,
+      "supply": "finished",
+      "evidence_ids": [
+        "IB-E003"
+      ],
+      "size_rule": "IB-R-SIZE",
+      "final_glass_construction": "estimator confirms actual thickness/orientation; no automatic BOM"
+    },
+    {
+      "id": "IB-V095",
+      "window_type": "casement",
+      "glass_family": "ordinary_double",
+      "glass_design": "frost",
+      "gas": "argon",
+      "low_e_color": null,
+      "single_thickness": null,
+      "supply": "knockdown",
+      "evidence_ids": [
+        "IB-E003"
+      ],
+      "size_rule": "IB-R-SIZE",
+      "final_glass_construction": "estimator confirms actual thickness/orientation; no automatic BOM"
+    },
+    {
+      "id": "IB-V096",
+      "window_type": "casement",
+      "glass_family": "ordinary_double",
+      "glass_design": "frost",
+      "gas": "dry_air",
+      "low_e_color": null,
+      "single_thickness": null,
+      "supply": "finished",
+      "evidence_ids": [
+        "IB-E003"
+      ],
+      "size_rule": "IB-R-SIZE",
+      "final_glass_construction": "estimator confirms actual thickness/orientation; no automatic BOM"
+    },
+    {
+      "id": "IB-V097",
+      "window_type": "casement",
+      "glass_family": "ordinary_double",
+      "glass_design": "laminated_clear",
+      "gas": "argon",
+      "low_e_color": null,
+      "single_thickness": null,
+      "supply": "knockdown",
+      "evidence_ids": [
+        "IB-E003"
+      ],
+      "size_rule": "IB-R-SIZE",
+      "final_glass_construction": "estimator confirms actual thickness/orientation; no automatic BOM"
+    },
+    {
+      "id": "IB-V098",
+      "window_type": "casement",
+      "glass_family": "ordinary_double",
+      "glass_design": "laminated_clear",
+      "gas": "dry_air",
+      "low_e_color": null,
+      "single_thickness": null,
+      "supply": "finished",
+      "evidence_ids": [
+        "IB-E003"
+      ],
+      "size_rule": "IB-R-SIZE",
+      "final_glass_construction": "estimator confirms actual thickness/orientation; no automatic BOM"
+    },
+    {
+      "id": "IB-V099",
+      "window_type": "casement",
+      "glass_family": "ordinary_double",
+      "glass_design": "laminated_milky",
+      "gas": "argon",
+      "low_e_color": null,
+      "single_thickness": null,
+      "supply": "knockdown",
+      "evidence_ids": [
+        "IB-E003"
+      ],
+      "size_rule": "IB-R-SIZE",
+      "final_glass_construction": "estimator confirms actual thickness/orientation; no automatic BOM"
+    },
+    {
+      "id": "IB-V100",
+      "window_type": "casement",
+      "glass_family": "ordinary_double",
+      "glass_design": "laminated_milky",
+      "gas": "dry_air",
+      "low_e_color": null,
+      "single_thickness": null,
+      "supply": "finished",
+      "evidence_ids": [
+        "IB-E003"
+      ],
+      "size_rule": "IB-R-SIZE",
+      "final_glass_construction": "estimator confirms actual thickness/orientation; no automatic BOM"
+    },
+    {
+      "id": "IB-V101",
+      "window_type": "casement",
+      "glass_family": "ordinary_double",
+      "glass_design": "laminated_patterned",
+      "gas": "argon",
+      "low_e_color": null,
+      "single_thickness": null,
+      "supply": "knockdown",
+      "evidence_ids": [
+        "IB-E003"
+      ],
+      "size_rule": "IB-R-SIZE",
+      "final_glass_construction": "estimator confirms actual thickness/orientation; no automatic BOM"
+    },
+    {
+      "id": "IB-V102",
+      "window_type": "casement",
+      "glass_family": "ordinary_double",
+      "glass_design": "laminated_patterned",
+      "gas": "dry_air",
+      "low_e_color": null,
+      "single_thickness": null,
+      "supply": "knockdown",
+      "evidence_ids": [
+        "IB-E003"
+      ],
+      "size_rule": "IB-R-SIZE",
+      "final_glass_construction": "estimator confirms actual thickness/orientation; no automatic BOM"
+    },
+    {
+      "id": "IB-V103",
+      "window_type": "casement",
+      "glass_family": "ordinary_double",
+      "glass_design": "tempered_clear",
+      "gas": "argon",
+      "low_e_color": null,
+      "single_thickness": null,
+      "supply": "knockdown",
+      "evidence_ids": [
+        "IB-E003"
+      ],
+      "size_rule": "IB-R-SIZE",
+      "final_glass_construction": "estimator confirms actual thickness/orientation; no automatic BOM"
+    },
+    {
+      "id": "IB-V104",
+      "window_type": "casement",
+      "glass_family": "ordinary_double",
+      "glass_design": "tempered_clear",
+      "gas": "dry_air",
+      "low_e_color": null,
+      "single_thickness": null,
+      "supply": "finished",
+      "evidence_ids": [
+        "IB-E003"
+      ],
+      "size_rule": "IB-R-SIZE",
+      "final_glass_construction": "estimator confirms actual thickness/orientation; no automatic BOM"
+    },
+    {
+      "id": "IB-V105",
+      "window_type": "casement",
+      "glass_family": "ordinary_double",
+      "glass_design": "tempered_patterned",
+      "gas": "argon",
+      "low_e_color": null,
+      "single_thickness": null,
+      "supply": "knockdown",
+      "evidence_ids": [
+        "IB-E003"
+      ],
+      "size_rule": "IB-R-SIZE",
+      "final_glass_construction": "estimator confirms actual thickness/orientation; no automatic BOM"
+    },
+    {
+      "id": "IB-V106",
+      "window_type": "casement",
+      "glass_family": "ordinary_double",
+      "glass_design": "tempered_patterned",
+      "gas": "dry_air",
+      "low_e_color": null,
+      "single_thickness": null,
+      "supply": "finished",
+      "evidence_ids": [
+        "IB-E003"
+      ],
+      "size_rule": "IB-R-SIZE",
+      "final_glass_construction": "estimator confirms actual thickness/orientation; no automatic BOM"
+    },
+    {
+      "id": "IB-V107",
+      "window_type": "casement",
+      "glass_family": "ordinary_double",
+      "glass_design": "laminated_frost",
+      "gas": "argon",
+      "low_e_color": null,
+      "single_thickness": null,
+      "supply": "knockdown",
+      "evidence_ids": [
+        "IB-E003"
+      ],
+      "size_rule": "IB-R-SIZE",
+      "final_glass_construction": "estimator confirms actual thickness/orientation; no automatic BOM"
+    },
+    {
+      "id": "IB-V108",
+      "window_type": "casement",
+      "glass_family": "ordinary_double",
+      "glass_design": "laminated_frost",
+      "gas": "dry_air",
+      "low_e_color": null,
+      "single_thickness": null,
+      "supply": "knockdown",
+      "evidence_ids": [
+        "IB-E003"
+      ],
+      "size_rule": "IB-R-SIZE",
+      "final_glass_construction": "estimator confirms actual thickness/orientation; no automatic BOM"
+    },
+    {
+      "id": "IB-V109",
+      "window_type": "casement",
+      "glass_family": "single",
+      "glass_design": "transparent",
+      "gas": null,
+      "low_e_color": null,
+      "single_thickness": 3,
+      "supply": "finished",
+      "evidence_ids": [
+        "IB-E003"
+      ],
+      "size_rule": "IB-R-SIZE",
+      "final_glass_construction": "catalog single thickness"
+    },
+    {
+      "id": "IB-V110",
+      "window_type": "casement",
+      "glass_family": "single",
+      "glass_design": "transparent",
+      "gas": null,
+      "low_e_color": null,
+      "single_thickness": 5,
+      "supply": "finished",
+      "evidence_ids": [
+        "IB-E003"
+      ],
+      "size_rule": "IB-R-SIZE",
+      "final_glass_construction": "catalog single thickness"
+    },
+    {
+      "id": "IB-V111",
+      "window_type": "casement",
+      "glass_family": "single",
+      "glass_design": "patterned",
+      "gas": null,
+      "low_e_color": null,
+      "single_thickness": 4,
+      "supply": "finished",
+      "evidence_ids": [
+        "IB-E003"
+      ],
+      "size_rule": "IB-R-SIZE",
+      "final_glass_construction": "catalog single thickness"
+    },
+    {
+      "id": "IB-V112",
+      "window_type": "casement",
+      "glass_family": "single",
+      "glass_design": "tempered_clear",
+      "gas": null,
+      "low_e_color": null,
+      "single_thickness": 4,
+      "supply": "finished",
+      "evidence_ids": [
+        "IB-E003"
+      ],
+      "size_rule": "IB-R-SIZE",
+      "final_glass_construction": "catalog single thickness"
+    },
+    {
+      "id": "IB-V113",
+      "window_type": "casement",
+      "glass_family": "single",
+      "glass_design": "tempered_patterned",
+      "gas": null,
+      "low_e_color": null,
+      "single_thickness": 4,
+      "supply": "finished",
+      "evidence_ids": [
+        "IB-E003"
+      ],
+      "size_rule": "IB-R-SIZE",
+      "final_glass_construction": "catalog single thickness"
+    }
+  ],
+  "options": [
+    {
+      "id": "IB-O01",
+      "option": "water_prevention",
+      "applies_when": {
+        "all": [
+          {
+            "eq": [
+              "window_type",
+              "sliding"
+            ]
+          },
+          {
+            "eq": [
+              "fit",
+              "tile"
+            ]
+          }
+        ]
+      },
+      "required_when": false,
+      "order_basis": "opening W",
+      "shipping_length": "opening W-6mm (this component only)",
+      "type": "20mm",
+      "evidence_ids": [
+        "IB-E005",
+        "IB-E014"
+      ]
+    },
+    {
+      "id": "IB-O02",
+      "option": "height_pipe",
+      "applies_when": {
+        "all": [
+          {
+            "eq": [
+              "window_type",
+              "sliding"
+            ]
+          },
+          {
+            "eq": [
+              "fit",
+              "unit_bath"
+            ]
+          }
+        ]
+      },
+      "required_when": {
+        "all": [
+          {
+            "eq": [
+              "window_type",
+              "sliding"
+            ]
+          },
+          {
+            "eq": [
+              "fit",
+              "unit_bath"
+            ]
+          },
+          {
+            "in": [
+              "unit_pattern",
+              [
+                "B",
+                "C"
+              ]
+            ]
+          },
+          {
+            "gte": [
+              "unit_lower_step",
+              3.5
+            ]
+          }
+        ]
+      },
+      "bands": [
+        {
+          "raw": "3.5～10mm",
+          "code": "Z-01-CFMJ"
+        },
+        {
+          "raw": "10～20mm",
+          "code": "Z-02-CFMJ"
+        },
+        {
+          "raw": "20～25mm",
+          "code": "Z-03-CFMJ"
+        },
+        {
+          "raw": "25mm以上",
+          "code": "Z-04-CFMJ"
+        }
+      ],
+      "quantity": "ESTIMATE_CONFIRM_REQUIRED",
+      "shared_endpoints": "IB-G002; no automatic code at 10/20/25mm",
+      "evidence_ids": [
+        "IB-E005",
+        "IB-E014"
+      ]
+    },
+    {
+      "id": "IB-O03",
+      "option": "aluminum_screws",
+      "applies_when": true,
+      "required_when": {
+        "eq": [
+          "surround_material",
+          "aluminum"
+        ]
+      },
+      "codes": {
+        "sliding/unit_bath": "F-01-CFJP",
+        "sliding/tile": "F-02-CFJP",
+        "casement/unit_bath": "F-01-CGYW",
+        "casement/tile": "F-01-CGYW"
+      },
+      "quantity": "ESTIMATE_CONFIRM_REQUIRED",
+      "evidence_ids": [
+        "IB-E005"
+      ]
+    },
+    {
+      "id": "IB-O04",
+      "option": "step_relief",
+      "applies_when": {
+        "eq": [
+          "window_type",
+          "casement"
+        ]
+      },
+      "required_when": false,
+      "type": "180mm",
+      "code": "F-12-CGYX",
+      "order_basis": "opening W",
+      "shipping_length": "opening W-6mm (this component only)",
+      "angle_limit_mm": 3,
+      "one_piece_depth_limit_mm": 190,
+      "above_190": "2 pieces possible; quantity/layout manufacturer confirmation",
+      "evidence_ids": [
+        "IB-E005",
+        "IB-E015"
+      ]
+    }
+  ],
+  "dimensions": [
+    {
+      "id": "IB-D-unit_bath-0",
+      "window_type": "sliding",
+      "fit": "unit_bath",
+      "glass_design_is_blind": false,
+      "width_min": 550,
+      "width_max": 1690,
+      "height_min": 272,
+      "height_max": 1300,
+      "sloped_label": "H=1.7W",
+      "graph_vertices": [
+        [
+          550,
+          949
+        ],
+        [
+          757,
+          1300
+        ]
+      ],
+      "scope": "finished constructions specifically listed in p113; other constructions/ND require confirmation",
+      "slope_behavior": "IB-G001 manual near slope; above all documented interpretations blocked",
+      "evidence_ids": [
+        "IB-E006"
+      ]
+    },
+    {
+      "id": "IB-D-unit_bath-1",
+      "window_type": "sliding",
+      "fit": "unit_bath",
+      "glass_design_is_blind": true,
+      "width_min": 679,
+      "width_max": 1690,
+      "height_min": 612,
+      "height_max": 1300,
+      "sloped_label": "H=1.7W",
+      "graph_vertices": [
+        [
+          679,
+          1168
+        ],
+        [
+          757,
+          1300
+        ]
+      ],
+      "scope": "finished constructions specifically listed in p113; other constructions/ND require confirmation",
+      "slope_behavior": "IB-G001 manual near slope; above all documented interpretations blocked",
+      "evidence_ids": [
+        "IB-E006"
+      ]
+    },
+    {
+      "id": "IB-D-tile-0",
+      "window_type": "sliding",
+      "fit": "tile",
+      "glass_design_is_blind": false,
+      "width_min": 550,
+      "width_max": 2000,
+      "height_min": 258,
+      "height_max": 1300,
+      "sloped_label": "H=1.7W",
+      "graph_vertices": [
+        [
+          550,
+          935
+        ],
+        [
+          765,
+          1300
+        ]
+      ],
+      "scope": "finished constructions specifically listed in p113; other constructions/ND require confirmation",
+      "slope_behavior": "IB-G001 manual near slope; above all documented interpretations blocked",
+      "evidence_ids": [
+        "IB-E006"
+      ]
+    },
+    {
+      "id": "IB-D-tile-1",
+      "window_type": "sliding",
+      "fit": "tile",
+      "glass_design_is_blind": true,
+      "width_min": 679,
+      "width_max": 2000,
+      "height_min": 598,
+      "height_max": 1300,
+      "sloped_label": "H=1.7W",
+      "graph_vertices": [
+        [
+          679,
+          1154
+        ],
+        [
+          765,
+          1300
+        ]
+      ],
+      "scope": "finished constructions specifically listed in p113; other constructions/ND require confirmation",
+      "slope_behavior": "IB-G001 manual near slope; above all documented interpretations blocked",
+      "evidence_ids": [
+        "IB-E006"
+      ]
+    },
+    {
+      "id": "IB-D-casement",
+      "window_type": "casement",
+      "fit": [
+        "unit_bath",
+        "tile"
+      ],
+      "width_min": 230,
+      "width_max": 700,
+      "height_min": 360,
+      "height_max": 1200,
+      "scope": "finished constructions specifically listed p113; other constructions/ND confirm",
+      "evidence_ids": [
+        "IB-E006"
+      ]
+    }
+  ],
+  "rules": [
+    {
+      "id": "IB-R-GLASS",
+      "handler": "glass_variant_match",
+      "message": "浴室の窓種・ガラス・中空層・Low-E色・単板厚さが公式表の組合せに一致すること",
+      "evidence_ids": [
+        "IB-E003"
+      ]
+    },
+    {
+      "id": "IB-R-SIZE",
+      "handler": "dimension_envelope",
+      "dimensions": "dimensions",
+      "message": "発注W/H範囲。価格表で製作可否を判定しない",
+      "evidence_ids": [
+        "IB-E006"
+      ]
+    },
+    {
+      "id": "IB-R-TEMPERED",
+      "handler": "tempered_lower_exclusion",
+      "sliding_double": [
+        584,
+        367
+      ],
+      "casement_double": [
+        385,
+        441
+      ],
+      "casement_single": [
+        365,
+        421
+      ],
+      "operator": "W<limit AND H<limit",
+      "tile_conflict": "p113図H353と本文H367を保持。本文の禁止を制御し353～366はメーカー再確認まで成立しない",
+      "evidence_ids": [
+        "IB-E006"
+      ]
+    },
+    {
+      "id": "IB-R-OPTIONS",
+      "handler": "option_applicability",
+      "forbidden_standard_options": [
+        "adjust_upper_frame",
+        "fukashi_frame",
+        "integral_reinforced_fukashi",
+        "fukashi_install_helper",
+        "corner_fukashi",
+        "stack_ventilation",
+        "sweeper_attachment",
+        "decorative_trim",
+        "decorative_cover",
+        "joining_mullion",
+        "stack_transom",
+        "corner_mullion",
+        "mansion_frame",
+        "aluminum_rail_frame",
+        "limit_arm",
+        "exterior_handle",
+        "outer_sash_stopper",
+        "aluminum_flat_sheet",
+        "trim_edging"
+      ],
+      "finished_grille_forbidden": true,
+      "casement_partition_frame_forbidden": true,
+      "evidence_ids": [
+        "IB-E007",
+        "IB-E005"
+      ]
+    },
+    {
+      "id": "IB-R-DEPTH",
+      "handler": "site_depth",
+      "sliding_unit": {
+        "A": 103,
+        "B": 119,
+        "C": 105
+      },
+      "sliding_tile": 70,
+      "sliding_tile_water": 100,
+      "casement_unit": 110,
+      "casement_tile": 80,
+      "evidence_ids": [
+        "IB-E014",
+        "IB-E015"
+      ]
+    },
+    {
+      "id": "IB-R-SITE",
+      "handler": "site_exclusions",
+      "unit_sliding_outer_resin_forbidden": true,
+      "bay_window_forbidden": true,
+      "water_slope_max_deg": 1,
+      "mounting_surface_step_forbidden": true,
+      "casement_resin_clearance_min": 30,
+      "step_relief_angle_max": 3,
+      "evidence_ids": [
+        "IB-E013",
+        "IB-E014",
+        "IB-E015"
+      ]
+    },
+    {
+      "id": "IB-R-MEASURE",
+      "handler": "survey_dimensions",
+      "max_spread_mm": 3,
+      "casement_max_abs_bend_mm": 1.5,
+      "adopt": "min(raw widths), min(raw heights)",
+      "subtract_from_window_order": 0,
+      "evidence_ids": [
+        "IB-E014",
+        "IB-E015"
+      ]
+    },
+    {
+      "id": "IB-R-POSITION",
+      "handler": "hardware_position",
+      "default_sliding": "H/2-37.5",
+      "default_casement": [
+        {
+          "H": [
+            360,
+            533
+          ],
+          "P": 158
+        },
+        {
+          "H": [
+            534,
+            1200
+          ],
+          "P": "H/2"
+        }
+      ],
+      "sliding_custom": {
+        "tile": [
+          {
+            "H": [
+              258,
+              331
+            ],
+            "Pmin": 91.5,
+            "Pmax": 146
+          },
+          {
+            "H": [
+              332,
+              480
+            ],
+            "Pmin": 120,
+            "Pmax": 220
+          },
+          {
+            "H": [
+              481,
+              1300
+            ],
+            "Pmin": "H/4",
+            "Pmax": "3H/4",
+            "HminusPmax": 800
+          }
+        ],
+        "unit_bath": [
+          {
+            "H": [
+              272,
+              345
+            ],
+            "Pmin": 105.5,
+            "Pmax": 160
+          },
+          {
+            "H": [
+              346,
+              494
+            ],
+            "Pmin": 134,
+            "Pmax": 234
+          },
+          {
+            "H": [
+              495,
+              1300
+            ],
+            "Pmin": "H/4+14",
+            "Pmax": "3H/4+14",
+            "HminusPmax": 800
+          }
+        ]
+      },
+      "all_sliding_HminusP_min": 166.5,
+      "casement_custom": [
+        {
+          "H": [
+            360,
+            519
+          ],
+          "Pmin": 130,
+          "Pmax": "H-130"
+        },
+        {
+          "H": [
+            520,
+            1200
+          ],
+          "Pmin": "H/4",
+          "Pmax": "3H/4"
+        }
+      ],
+      "precision_mm": 0.5,
+      "evidence_ids": [
+        "IB-E008",
+        "IB-E009",
+        "IB-E010",
+        "IB-E011",
+        "IB-E012"
+      ]
+    }
+  ],
+  "evidence": [
+    {
+      "id": "IB-E001",
+      "source_id": "IB-S001",
+      "printed_page": 58,
+      "pdf_page": 62,
+      "section": "インプラス 浴室仕様 商品概要",
+      "supported_fact": "浴室専用。引違い窓2枚建と開き窓。色はプレシャスホワイトP。開き窓カムラッチハンドル。",
+      "evidence_state": "VERIFIED",
+      "method": "PDF text extraction; bath-specific section; graph/matrix p63,p113,p117 also visually verified"
+    },
+    {
+      "id": "IB-E002",
+      "source_id": "IB-S001",
+      "printed_page": 59,
+      "pdf_page": 63,
+      "section": "浴室仕様 納まり・専用有償品",
+      "supported_fact": "ユニットバス納まりとタイル納まり。開き窓段差緩和部材は外窓アングル付きに使用。詳細適用はp105を優先。",
+      "evidence_state": "VERIFIED",
+      "method": "PDF text extraction; bath-specific section; graph/matrix p63,p113,p117 also visually verified"
+    },
+    {
+      "id": "IB-E003",
+      "source_id": "IB-S001",
+      "printed_page": 63,
+      "pdf_page": 67,
+      "section": "ガラス設定一覧 インプラス 浴室仕様",
+      "supported_fact": "窓種・ガラス・中空層・完成品/ノックダウンの設定表。単板は完成品のみ。ブラインドイン開き窓なし。",
+      "evidence_state": "VERIFIED",
+      "method": "PDF text extraction; bath-specific section; graph/matrix p63,p113,p117 also visually verified"
+    },
+    {
+      "id": "IB-E004",
+      "source_id": "IB-S001",
+      "printed_page": 38,
+      "pdf_page": 42,
+      "section": "Low-E複層ガラス",
+      "supported_fact": "グリーンは高遮熱仕様。クリアに未証明の高断熱仕様名称を付加しない。浴室の色適用はp63。",
+      "evidence_state": "VERIFIED",
+      "method": "PDF text extraction; bath-specific section; graph/matrix p63,p113,p117 also visually verified"
+    },
+    {
+      "id": "IB-E005",
+      "source_id": "IB-S001",
+      "printed_page": 105,
+      "pdf_page": 109,
+      "section": "有償品価格表 インプラス 浴室仕様",
+      "supported_fact": "水たまり防止部材=引違いタイル。高さ調整パイプ=引違いユニット。ねじセット=両窓種両納まり。段差緩和部材=開き両納まり。",
+      "evidence_state": "VERIFIED",
+      "method": "PDF text extraction; bath-specific section; graph/matrix p63,p113,p117 also visually verified"
+    },
+    {
+      "id": "IB-E006",
+      "source_id": "IB-S001",
+      "printed_page": 113,
+      "pdf_page": 117,
+      "section": "寸法特注範囲 インプラス 浴室仕様",
+      "supported_fact": "H/Wは発注寸法。引違い納まり別・ブラインド別図。開きW230～700,H360～1200。強化小寸法の禁止。NDは事前確認。",
+      "evidence_state": "VERIFIED",
+      "method": "PDF text extraction; bath-specific section; graph/matrix p63,p113,p117 also visually verified"
+    },
+    {
+      "id": "IB-E007",
+      "source_id": "IB-S001",
+      "printed_page": 117,
+      "pdf_page": 121,
+      "section": "選択品・有償品取付可否表 浴室仕様行",
+      "supported_fact": "標準ふかし枠・連段等×。単板引違い格子△注1ガラス入り完成品不可。浴室引違い間仕切り下枠標準（注11）。",
+      "evidence_state": "VERIFIED",
+      "method": "PDF text extraction; bath-specific section; graph/matrix p63,p113,p117 also visually verified"
+    },
+    {
+      "id": "IB-E008",
+      "source_id": "IB-S001",
+      "printed_page": 146,
+      "pdf_page": 150,
+      "section": "浴室仕様 引違い窓 基本寸法図",
+      "supported_fact": "ユニットバスA/B/Cの標準クレセント位置P=H/2−37.5。",
+      "evidence_state": "VERIFIED",
+      "method": "PDF text extraction; bath-specific section; graph/matrix p63,p113,p117 also visually verified"
+    },
+    {
+      "id": "IB-E009",
+      "source_id": "IB-S001",
+      "printed_page": 147,
+      "pdf_page": 151,
+      "section": "浴室仕様 引違い窓 基本寸法図",
+      "supported_fact": "タイル納まり標準クレセント位置P=H/2−37.5。",
+      "evidence_state": "VERIFIED",
+      "method": "PDF text extraction; bath-specific section; graph/matrix p63,p113,p117 also visually verified"
+    },
+    {
+      "id": "IB-E010",
+      "source_id": "IB-S001",
+      "printed_page": 148,
+      "pdf_page": 152,
+      "section": "浴室仕様 開き窓 基本寸法図",
+      "supported_fact": "H360～533の標準P158。H534以上はH/2。製作上限はp113のH1200。",
+      "evidence_state": "VERIFIED",
+      "method": "PDF text extraction; bath-specific section; graph/matrix p63,p113,p117 also visually verified"
+    },
+    {
+      "id": "IB-E011",
+      "source_id": "IB-S001",
+      "printed_page": 153,
+      "pdf_page": 157,
+      "section": "クレセント位置 特注範囲 浴室仕様",
+      "supported_fact": "ユニット・タイルでH別P制限。現場採寸p166との基準面整合は確認要求として保持。",
+      "evidence_state": "VERIFIED",
+      "method": "PDF text extraction; bath-specific section; graph/matrix p63,p113,p117 also visually verified"
+    },
+    {
+      "id": "IB-E012",
+      "source_id": "IB-S001",
+      "printed_page": 154,
+      "pdf_page": 158,
+      "section": "ハンドル位置 特注範囲",
+      "supported_fact": "開き窓H360～519 P130～H−130。H520以上 P=H/4～3H/4。浴室開き指定位置採寸はp167。",
+      "evidence_state": "VERIFIED",
+      "method": "PDF text extraction; bath-specific section; graph/matrix p63,p113,p117 also visually verified"
+    },
+    {
+      "id": "IB-E013",
+      "source_id": "IB-S001",
+      "printed_page": 154,
+      "pdf_page": 158,
+      "section": "発注・施工上のご注意 浴室仕様",
+      "supported_fact": "浴室出窓取付不可。タイルは十分なモルタルまたは木下地。ユニットは荷重支持。開き窓水掛かり・外窓交換制限。",
+      "evidence_state": "VERIFIED",
+      "method": "PDF text extraction; bath-specific section; graph/matrix p63,p113,p117 also visually verified"
+    },
+    {
+      "id": "IB-E014",
+      "source_id": "IB-S001",
+      "printed_page": 166,
+      "pdf_page": 170,
+      "section": "現場調査 浴室仕様 引違い窓",
+      "supported_fact": "ユニットA103/B119/C105mm。タイル70/水たまり防止100mm。B/C高さ3.5mm以上パイプ。ユニット外窓樹脂サッシ取付不可。寸法差3mm以内。",
+      "evidence_state": "VERIFIED",
+      "method": "PDF text extraction; bath-specific section; graph/matrix p63,p113,p117 also visually verified"
+    },
+    {
+      "id": "IB-E015",
+      "source_id": "IB-S001",
+      "printed_page": 167,
+      "pdf_page": 171,
+      "section": "現場調査 浴室仕様 開き窓",
+      "supported_fact": "奥行きユニット110/タイル80mm。ユニット樹脂額縁室内面から30mm。差3mm、たわみ±1.5mm。段差緩和アングル3mm以下。既存窓交換制限。",
+      "evidence_state": "VERIFIED",
+      "method": "PDF text extraction; bath-specific section; graph/matrix p63,p113,p117 also visually verified"
+    },
+    {
+      "id": "IB-E016",
+      "source_id": "IB-S001",
+      "printed_page": 169,
+      "pdf_page": 173,
+      "section": "浴室仕様 現場調査シート",
+      "supported_fact": "窓種・納まり・ガラス・吊元・位置指定・有償品。外観左吊元L/右吊元R。",
+      "evidence_state": "VERIFIED",
+      "method": "PDF text extraction; bath-specific section; graph/matrix p63,p113,p117 also visually verified"
+    },
+    {
+      "id": "IB-E017",
+      "source_id": "IB-S001",
+      "printed_page": 96,
+      "pdf_page": 100,
+      "section": "浴室仕様 ガラス入り完成品価格表 p96～103",
+      "supported_fact": "価格は未転記。完成品の構成厚さを参考確認。製作可否はp113優先。",
+      "evidence_state": "VERIFIED",
+      "method": "PDF text extraction; bath-specific section; graph/matrix p63,p113,p117 also visually verified"
+    },
+    {
+      "id": "IB-E018",
+      "source_id": "IB-S001",
+      "printed_page": 59,
+      "pdf_page": 63,
+      "section": "浴室仕様 納まり図",
+      "supported_fact": "ユニットバス・タイル納まり断面のシーリング位置。施工方法・数量は積算施工担当が図面確認。",
+      "evidence_state": "VERIFIED",
+      "method": "PDF text extraction; bath-specific section; graph/matrix p63,p113,p117 also visually verified"
+    }
+  ],
+  "controlled_unresolved": [
+    {
+      "id": "IB-G001",
+      "target_condition": "引違い斜辺・強化タイルW<584/H353～366",
+      "original_status": "CONFLICT",
+      "status": "MANUAL_CHECK",
+      "reason": "p113 H=1.7Wの表示と座標の14mm差、整数境界、強化タイル図353/本文367の差を原記載のまま保持。",
+      "evidence_state": "CONFLICT",
+      "target_gate": "QA_READY",
+      "classification": "NONBLOCKING_ESTIMATE_CONFIRM",
+      "expected_behavior": "斜辺付近は発注可と自動判定しない。図と式の双方を超える寸法はBLOCK。強化本文禁止は維持。",
+      "confirmation_contact": "積算担当→LIXIL技術窓口",
+      "confirmation_question": "この窓種・納まり・ガラスの正式W/H製作範囲と斜辺の基準寸法は何か。強化タイルの353～366の可否は。",
+      "evidence_ids": [
+        "IB-E006"
+      ],
+      "source": "IB-S001",
+      "revision": "v0.1-R1",
+      "reopen_condition": "公式資料改版・メーカー回答・対象scope変更・新矛盾Evidence",
+      "critical": false
+    },
+    {
+      "id": "IB-G002",
+      "target_condition": "引違いユニットB/C段差=10/20/25mm",
+      "original_status": "SOURCE_NOT_SUFFICIENT",
+      "status": "NEEDS_MFR_CONFIRMATION",
+      "reason": "p105/p166の隣接パイプ範囲に共通端点がある。",
+      "evidence_state": "SOURCE_NOT_SUFFICIENT",
+      "target_gate": "QA_READY",
+      "classification": "NONBLOCKING_ESTIMATE_CONFIRM",
+      "expected_behavior": "パイプ必要性は確定。端点の商品コードと個数は未確定のまま手配確認。",
+      "confirmation_contact": "積算担当→LIXIL技術窓口",
+      "confirmation_question": "この実測段差ちょうど10/20/25mmの適正パイプと必要個数は。",
+      "evidence_ids": [
+        "IB-E005",
+        "IB-E014"
+      ],
+      "source": "IB-S001",
+      "revision": "v0.1-R1",
+      "reopen_condition": "公式資料改版・メーカー回答・対象scope変更・新矛盾Evidence",
+      "critical": false
+    },
+    {
+      "id": "IB-G003",
+      "target_condition": "ND、Low-E・アルゴン・安全合わせ透明/型/フロスト等でp113構成に直接一致しない",
+      "original_status": "SOURCE_NOT_SUFFICIENT",
+      "status": "ESTIMATE_CONFIRM_REQUIRED",
+      "reason": "ガラス設定はp63で証明済み。p113完成品列挙構成以外の製作制限は直接証明できない。",
+      "evidence_state": "SOURCE_NOT_SUFFICIENT",
+      "target_gate": "QA_READY",
+      "classification": "NONBLOCKING_ESTIMATE_CONFIRM",
+      "expected_behavior": "設定候補の見積依頼は可能。具体W/H製作可否・ガラス構成は積算確認。注文可を出さない。",
+      "confirmation_contact": "積算担当→LIXIL技術窓口",
+      "confirmation_question": "指定ガラスのW/Hに対する完成品/NDの製作範囲と正式構成を確認してください。",
+      "evidence_ids": [
+        "IB-E003",
+        "IB-E006"
+      ],
+      "source": "IB-S001",
+      "revision": "v0.1-R1",
+      "reopen_condition": "公式資料改版・メーカー回答・対象scope変更・新矛盾Evidence",
+      "critical": false
+    },
+    {
+      "id": "IB-G004",
+      "target_condition": "引違い位置指定のP基準面、単板格子希望",
+      "original_status": "CONFLICT",
+      "status": "MANUAL_CHECK",
+      "reason": "p153のP基準表記と現場調査p166の下端取付面基準を照合する必要あり。格子は△だがガラス入り完成品不可・単板通常設定は完成品のみ。",
+      "evidence_state": "CONFLICT",
+      "target_gate": "QA_READY",
+      "classification": "NONBLOCKING_ESTIMATE_CONFIRM",
+      "expected_behavior": "Pは基準面付きで渡す。格子希望は通常完成品と分離し自動付属不可。",
+      "confirmation_contact": "積算担当→LIXIL技術窓口",
+      "confirmation_question": "位置指定の採寸基準を確認してください。格子希望の別手配構成は成立するか。",
+      "evidence_ids": [
+        "IB-E011",
+        "IB-E014",
+        "IB-E007",
+        "IB-E003"
+      ],
+      "source": "IB-S001",
+      "revision": "v0.1-R1",
+      "reopen_condition": "公式資料改版・メーカー回答・対象scope変更・新矛盾Evidence",
+      "critical": false
+    },
+    {
+      "id": "IB-G005",
+      "target_condition": "現場条件未採寸・未確認、勾配ちょうど1度",
+      "original_status": "UNKNOWN",
+      "status": "ESTIMATE_CONFIRM_REQUIRED",
+      "reason": "奥行き・下地・干渉・既設材質・採寸差等を現場で確認する。本文1度以内と図1度以上調整の境界を保持。",
+      "evidence_state": "UNKNOWN",
+      "target_gate": "QA_READY",
+      "classification": "NONBLOCKING_ESTIMATE_CONFIRM",
+      "expected_behavior": "未測定はnullと確認要求。明確な禁止は確認待ちへ置換しない。既知不足はBLOCK。",
+      "confirmation_contact": "営業現場担当→積算担当",
+      "confirmation_question": "取付奥行き、外窓材質、下地支持、取付面段差、勾配、干渉、シーリング、各実測値を確認してください。",
+      "evidence_ids": [
+        "IB-E014",
+        "IB-E015",
+        "IB-E013"
+      ],
+      "source": "IB-S001",
+      "revision": "v0.1-R1",
+      "reopen_condition": "公式資料改版・メーカー回答・対象scope変更・新矛盾Evidence",
+      "critical": false
+    },
+    {
+      "id": "IB-G006",
+      "target_condition": "クレセント無し/鍵付/中桟等設定未証明の特別希望",
+      "original_status": "SOURCE_NOT_SUFFICIENT",
+      "status": "SOURCE_NOT_SUFFICIENT",
+      "reason": "浴室専用の直接適用Evidenceがない。標準の選択肢をコピーしない。",
+      "evidence_state": "SOURCE_NOT_SUFFICIENT",
+      "target_gate": "QA_READY",
+      "classification": "NONBLOCKING_ESTIMATE_CONFIRM",
+      "expected_behavior": "通常候補に追加せず、希望内容・未証明状態・確認先をHandoff。",
+      "confirmation_contact": "積算担当→LIXIL技術窓口",
+      "confirmation_question": "浴室仕様で希望の機構・意匠・ブロンズ等設定があるか。対応不可なら代替を確認してください。",
+      "evidence_ids": [
+        "IB-E016",
+        "IB-E007"
+      ],
+      "source": "IB-S001",
+      "revision": "v0.1-R1",
+      "reopen_condition": "公式資料改版・メーカー回答・対象scope変更・新矛盾Evidence",
+      "critical": false
+    },
+    {
+      "id": "IB-G007",
+      "target_condition": "正式価格、BOM、部材数量、コード、最終発注可否、190mm超段差緩和部材",
+      "original_status": "UNKNOWN",
+      "status": "ESTIMATE_CONFIRM_REQUIRED",
+      "reason": "営業見積依頼scope外。窓数量は必須入力、部材数量は積算責務。",
+      "evidence_state": "UNKNOWN",
+      "target_gate": "QA_READY",
+      "classification": "NONBLOCKING_ESTIMATE_CONFIRM",
+      "expected_behavior": "価格0円/推定BOMを出さない。部材数量と正式見積・注文可は未確定。",
+      "confirmation_contact": "積算担当",
+      "confirmation_question": "正式見積、部材拾い、数量、コード、190mm超の部材納まりを確定してください。",
+      "evidence_ids": [
+        "IB-E005",
+        "IB-E015"
+      ],
+      "source": "IB-S001",
+      "revision": "v0.1-R1",
+      "reopen_condition": "公式資料改版・メーカー回答・対象scope変更・新矛盾Evidence",
+      "critical": false
+    }
+  ],
+  "dependency_contract": {
+    "selection_order": [
+      "window_type",
+      "fit",
+      "unit_pattern/panel_count/hinge",
+      "glass_family",
+      "glass_design",
+      "low_e_color/gas/single_thickness",
+      "color",
+      "position/option",
+      "width/height/quantity",
+      "site conditions"
+    ],
+    "dependent_enum_keys": [
+      "window_type",
+      "glass_family",
+      "glass_design",
+      "gas",
+      "low_e_color",
+      "single_thickness"
+    ],
+    "transition": "evaluate fields in declaration order; clear inapplicable/invalid downstream; missing upstream empties dependent candidates; do not auto choose another glass; revalidate dimensions and P; retain unrelated still-valid values",
+    "confirmation_persistence": "recompute active confirmation records from normalized state; retain unresolved original status and contact; no N/A substitution",
+    "dimension_policy": "dimensions and general raw opening measurements retained as measured numeric facts across selector changes; invalid new envelope blocks handoff until corrected",
+    "context_switch_resets": [
+      "fit: pattern/unit_lower_step/conditional water_prevention/step fields",
+      "window: panel_count/hinge/handle/crescent_p/handle_p/edge_bends/site-dependent measurements",
+      "glass: invalid gas/Low-E/thickness/design"
+    ]
+  },
+  "handoff_contract": {
+    "minimum_required": [
+      "window_type",
+      "fit",
+      "glass_family",
+      "glass_design",
+      "width",
+      "height",
+      "quantity",
+      "conditional hinge/unit_pattern/gas/low_e_color/single_thickness/position_mode"
+    ],
+    "fixed_identity_fields": [
+      "manufacturer",
+      "series",
+      "variant",
+      "category",
+      "color"
+    ],
+    "dimensions": {
+      "raw": "preserve W1-3/H1-3/L1-2 and unit mm",
+      "adopted": "minimum measured at mounting position",
+      "order": "W/H explicit; no general subtraction"
+    },
+    "include": [
+      "applicable normalized fields",
+      "derived frame/hardware/options",
+      "glass supply reference",
+      "active gaps with original status and contact/question",
+      "source_ids/evidence_ids/revision"
+    ],
+    "exclude": [
+      "inapplicable fields",
+      "unknown product options presented as verified",
+      "stale downstream values",
+      "price/BOM/automatic order claim"
+    ],
+    "known_forbidden": "BLOCK; handoff cannot mark request ready",
+    "unknown_site": "ESTIMATE_CONFIRM_REQUIRED; missing principal selectors or W/H/quantity BLOCK",
+    "order_ready": false,
+    "engine_scope": "authoring QA reference evaluator only; not production runtime"
+  },
+  "future_integration_note": {
+    "candidate_root": [
+      "インプラス",
+      "仕様：居室仕様/浴室仕様",
+      "窓種",
+      "Variant別選択フロー"
+    ],
+    "shared_field_candidates": [
+      "manufacturer/category/quantity/raw measurement schema/width/height identity types"
+    ],
+    "bathroom_only": [
+      "unit_pattern/existing unit_attach context/height pipe/water prevention/step relief/site support and depth"
+    ],
+    "shared_values_different_dependencies": [
+      "sliding/casement/glass family/clear-green/gas/L-R/position mode"
+    ],
+    "variant_scope_required": [
+      "allowed window types/colors/glass variants/frames/options/size tables/site conditions/P rules"
+    ],
+    "must_not_share_by_inheritance": [
+      "standard fukashi/join-stack/options colors/dimension rules/frame-angle semantics"
+    ],
+    "integration_executed": false
+  },
+  "storage": {
+    "manufacturer_folder_id": "1TPaSG9ufcfOZISRXlvOW38JuUu01xqjH",
+    "product_folder_id": "1RcK52QI0tkqAOg6ZX02ZeOEYOO4z2Yrn",
+    "working_folder_id": "1FSMQaUEdPjj4TyHWK_XqCp5WuAsUIjf3",
+    "working_folder_name": "90_作業中",
+    "formal_folder_used": true,
+    "canonical_folder_id": "1y8nI5wjVfrOpGoMEzUUkANY63udNZ5Jq",
+    "old_folder_id": "1uVduVC0LJ-8xsTKp8Ha_FLxvfGBNxUcM"
+  },
+  "source_working_revision": "v0.1-R1",
+  "source_working_sha256": "b9b308b2866b3fbfc9b8b33081e316c56f6a7a094db52ae0199a252cb2b67fcb",
+  "runtime_scope": "NOT_INCLUDED_IN_PRODUCT_MASTER_FORMAL",
+  "formal_selection_scope_id": "LIXIL_INPLUS_BATHROOM_FORMAL_SELECTION_SCOPE_v1.0",
+  "formal_selection_scope_sha256": "f660b9a99d1e833fa732e6a93d3450741f469f6da31c5b52973fce07ad595336",
+  "evidence_identity": "e3146bf47b8bfd89098374ea6164c35e066c1fbe1465f3b352ca67e174416e63",
+  "formal_content_gate": "QA_PASS",
+  "formal_content_result": "PASS",
+  "adoption_completion_authority": "FORMAL_Adoption_PostSave_Report_v1.0.json (external Registry/Storage verification required; this master alone does not prove final Gate)",
+  "historical_read_only_baseline": {
+    "standard_formal": "1bDisz0WrUGgb3qx5bT_QS6TXG0wDNIK-",
+    "standard_runtime": "19OtDgWSQFehEmxFYFIqxZGZCFXyzJaZ4",
+    "standard_manifest": "1N1sQQM616oeuQm7kehqaz3EMQDrNzfhy",
+    "standard_runtime_sha256": "bd3b00f673ad3dc77b593c4818fe9d4e92c074c7fc96e9f8919a43d56c8d5ec2",
+    "standard_mutation": 0,
+    "registry_mutation": 0,
+    "formal_adoption": 0,
+    "PR56_integration": 0,
+    "main_merge": 0,
+    "deployment": 0
+  }
+}

@@ -8,14 +8,19 @@
   <link rel="stylesheet" href="/styles-wave3.css">
   <link rel="stylesheet" href="/work-management.css">
   <link rel="stylesheet" href="/estimate-output.css">
+  <link rel="stylesheet" href="/theme.css">
 </head>
 <body>
 <header class="topbar">
   <a class="brand" href="/" data-nav="/"><strong>サッシ情報管理アプリ</strong><span id="headerContext" class="sub">案件一覧</span></a>
-  <span id="status" class="badge">loading</span>
+  <div class="topbar-tools">
+    <label class="theme-control" for="themeMode"><span>表示</span><select id="themeMode" aria-label="表示テーマ"><option value="system">System</option><option value="light">Light</option><option value="dark">Dark</option></select></label>
+    <span id="status" class="badge">loading</span>
+  </div>
 </header>
 <main id="appMain" aria-live="polite"></main>
 <footer id="build">Build identity loading...</footer>
+<script type="module" src="/theme.js"></script>
 <script type="module" src="/app.js"></script>
 <script type="module" src="/estimate-output-integration.mjs"></script>
 </body>

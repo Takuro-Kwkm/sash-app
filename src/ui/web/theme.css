@@ -1,0 +1,44 @@
+.topbar-tools{display:flex;align-items:center;justify-content:flex-end;gap:10px}.theme-control{display:flex;align-items:center;gap:6px;color:var(--muted,#697786);font-size:10px;font-weight:800}.theme-control select{width:auto;min-height:34px;padding:5px 28px 5px 9px;border-radius:9px;font-size:12px}
+
+html[data-theme="dark"]{--ink:#edf3f8;--muted:#a8b5c2;--line:#354352;--surface:#141d27;--soft:#1c2733;--accent:#4bc0a6;--accent-dark:#83dac7;--danger:#ff9a9a;--warning:#e7c46b;color-scheme:dark}
+html[data-theme="dark"] body{background:#0b1118;color:var(--ink)}
+html[data-theme="dark"] .topbar{background:#101821;border-bottom-color:var(--line)}
+html[data-theme="dark"] .card,
+html[data-theme="dark"] .project-card,
+html[data-theme="dark"] .estimate-card,
+html[data-theme="dark"] .opening-card,
+html[data-theme="dark"] .summary-table-wrap,
+html[data-theme="dark"] .estimate-output-counts>div{background:var(--surface);border-color:var(--line);box-shadow:none}
+html[data-theme="dark"] input,
+html[data-theme="dark"] textarea,
+html[data-theme="dark"] select,
+html[data-theme="dark"] .multi-enum-group,
+html[data-theme="dark"] .button{background:#101821;color:var(--ink);border-color:#465667}
+html[data-theme="dark"] select:disabled,
+html[data-theme="dark"] input:disabled,
+html[data-theme="dark"] textarea:disabled{background:#1a232d;color:#778594}
+html[data-theme="dark"] .multi-enum-option{border-color:#354352}
+html[data-theme="dark"] .multi-enum-option:has(input:checked){background:#16342e;border-color:#4bc0a6}
+html[data-theme="dark"] .button.primary{background:#20806d;border-color:#20806d;color:#fff}
+html[data-theme="dark"] .button.primary:hover{background:#2d9a83}
+html[data-theme="dark"] .empty-state{background:rgba(20,29,39,.7);border-color:#465667}
+html[data-theme="dark"] .opening-number{background:#19352f;color:#83dac7}
+html[data-theme="dark"] .sticky-save{background:rgba(16,24,33,.96);border-color:var(--line);box-shadow:0 10px 32px rgba(0,0,0,.35)}
+html[data-theme="dark"] .estimate-summary th{background:#1a2530;color:#bcc8d3}
+html[data-theme="dark"] .estimate-summary td,
+html[data-theme="dark"] .detail-grid>div,
+html[data-theme="dark"] .inventory-row,
+html[data-theme="dark"] .summary>div{border-color:#2d3946}
+html[data-theme="dark"] .notice{background:#152b38;border-color:#31566c;color:#d8ebf5}
+html[data-theme="dark"] .notice.warning,
+html[data-theme="dark"] .notice.dimension.review_required,
+html[data-theme="dark"] .notice.dimension.pending{background:#342c19;border-color:#6e5a2e;color:#f1dda5}
+html[data-theme="dark"] .notice.error,
+html[data-theme="dark"] .notice.dimension.block{background:#371f23;border-color:#714148;color:#ffbfc4}
+html[data-theme="dark"] .notice.success,
+html[data-theme="dark"] .notice.dimension.pass{background:#173128;border-color:#32664f;color:#b9ead3}
+html[data-theme="dark"] footer{background:rgba(11,17,24,.96);border-top-color:var(--line);color:var(--muted)}
+html[data-theme="dark"] .badge{background:#24303d;color:#c2ccd6}
+html[data-theme="dark"] .badge.ok{background:#173629;color:#a8dfc2}
+
+@media(max-width:560px){.topbar-tools{gap:6px}.theme-control>span{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}.theme-control select{max-width:86px}.topbar-tools .badge{display:none}}
