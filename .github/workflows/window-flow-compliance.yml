@@ -38,6 +38,7 @@ jobs:
           node test/browser/estimate-output-browser-qa.mjs
           node scripts/build-eight-series-review.mjs
           node test/browser/eight-series-preview-qa.mjs
+          node scripts/build-eight-series-review.mjs artifacts/bathroom-estimate-review/index.html bathroom
       - if: always()
         uses: actions/upload-artifact@v4
         with:

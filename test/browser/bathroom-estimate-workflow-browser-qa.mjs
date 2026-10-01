@@ -53,11 +53,6 @@ try{
     const values=Object.values(snapshot.workflow_data.site_survey.contexts)[0].values;
     assert.deepEqual(values,row.survey);
     assert.equal(snapshot.display_summary.some(row=>isSiteSurveyField(row.key)),false);
-    await choose(page,row.variant,row.standard);
-    assert.equal(await page.locator(`[data-spec-key="${row.variant}"]`).inputValue(),row.standard);
-    await choose(page,row.variant,'bathroom');
-    keys=await page.locator('#dynamicForm [data-spec-key]').evaluateAll(nodes=>nodes.map(node=>node.dataset.specKey));
-    assert.equal(keys.some(isSiteSurveyField),false);
     await page.goto(`${BASE}/projects/${ids.project}/estimates/${ids.estimate}/summary`,{waitUntil:'networkidle'});
     assert.equal(await page.locator('body').innerText().then(text=>/現場写真参照|設定表証明希望|hardware_tip_mounting|raw_width_1/.test(text)),false);
     // Output model uses the exact persisted case, no fake confirmation of site facts.
@@ -71,6 +66,14 @@ try{
     assert.ok(output.rows[0].major_specifications.includes('ガラス'));
     await page.goto(openingUrl,{waitUntil:'networkidle'});await page.waitForSelector('#dynamicForm[data-resolve-revision]');
     await page.screenshot({path:`${OUT}/${row.id}-desktop.png`,fullPage:true});
+    // Evaluate the completed saved case BEFORE variant reset. Switching specs
+    // legitimately clears inapplicable product choices and may make it DRAFT;
+    // that is not a hidden survey Required blocker.
+    await choose(page,row.variant,row.standard);
+    assert.equal(await page.locator(`[data-spec-key="${row.variant}"]`).inputValue(),row.standard);
+    await choose(page,row.variant,'bathroom');
+    keys=await page.locator('#dynamicForm [data-spec-key]').evaluateAll(nodes=>nodes.map(node=>node.dataset.specKey));
+    assert.equal(keys.some(isSiteSurveyField),false);
     report.products.push({productId:row.id,hiddenSurvey:true,nonRequired:true,saveWithoutSurvey:'PASS',legacyValuesPreserved:'PASS',reload:'PASS',switching:'PASS',handoff:'PASS',normalRegression:'PASS',status:'PASS'});
     await page.close();
   }
