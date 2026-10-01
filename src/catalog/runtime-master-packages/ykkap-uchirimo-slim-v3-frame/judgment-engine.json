@@ -1,0 +1,983 @@
+{
+  "schema_version": "1.0",
+  "manufacturer": "YKK AP",
+  "series": "ウチリモ 内窓",
+  "engine_version": "v1.0-P7R1-R5",
+  "engine_role": "SALES_LEVEL_JUDGMENT_ENGINE",
+  "source_package_version": "v1.0-P7R1-R5",
+  "scope": {
+    "sales_level": true,
+    "order_ready": false,
+    "manufacturer_final_quote_confirmation_required": true,
+    "formalization_authority": false
+  },
+  "authoritative_runtime_roles": {
+    "canonical_runtime": "YKKAP_ウチリモ内窓_Canonical_Master_v1.0-P7R1.json",
+    "size_installation_dependency": "YKKAP_ウチリモ内窓_Size_Installation_Dependency_Master_v1.0-P7R1.json",
+    "vacuum_glass_curve": "YKKAP_ウチリモ内窓_Vacuum_Glass_Curve_Master_v1.0-P7R1.json"
+  },
+  "evaluation_order": [
+    "INPUT_COMPLETENESS",
+    "PRODUCT_NODE_RESOLUTION",
+    "FIELD_REQUIREMENT_FILTER",
+    "DEPENDENCY_RULES",
+    "MEASUREMENT_RULES",
+    "BASE_SIZE_RULE",
+    "GLASS_NODE_MATRIX",
+    "GLASS_MANUFACTURING_RULE",
+    "INSTALLATION_RULES",
+    "EXCEPTION_ROUTING",
+    "OUTPUT_AGGREGATION"
+  ],
+  "component_statuses": {
+    "input": [
+      "PASS",
+      "INPUT_REQUIRED"
+    ],
+    "compatibility": [
+      "PASS",
+      "INCOMPATIBLE"
+    ],
+    "measurement": [
+      "PASS",
+      "INPUT_REQUIRED",
+      "REQUIRED_PASS_FAILED"
+    ],
+    "size": [
+      "PASS",
+      "OUT_OF_RANGE",
+      "MANUAL_CHECK_REQUIRED",
+      "SPECIAL_CHECK_REQUIRED"
+    ],
+    "glass": [
+      "PASS",
+      "INCOMPATIBLE",
+      "MANUAL_CHECK_REQUIRED",
+      "SPECIAL_CHECK_REQUIRED"
+    ],
+    "installation": [
+      "PASS",
+      "INPUT_REQUIRED",
+      "REQUIRES_OPTION",
+      "REQUIRES_REINFORCEMENT",
+      "INCOMPATIBLE",
+      "MANUAL_CHECK_REQUIRED"
+    ]
+  },
+  "overall_status_precedence": [
+    "INCOMPATIBLE",
+    "REQUIRED_PASS_FAILED",
+    "MANUAL_CHECK_REQUIRED",
+    "SPECIAL_CHECK_REQUIRED",
+    "REQUIRES_REINFORCEMENT",
+    "REQUIRES_OPTION",
+    "INPUT_REQUIRED",
+    "SALES_READY"
+  ],
+  "output_contract": {
+    "overall_status": "one of overall_status_precedence",
+    "node_id": "resolved product node",
+    "missing_fields": [],
+    "auto_calculated_values": {},
+    "excluded_candidates": {},
+    "size_judgment": {},
+    "glass_judgment": {},
+    "installation_judgment": {},
+    "required_parts": [],
+    "manual_checks": [],
+    "special_checks": [],
+    "warnings": [],
+    "quotation_conditions": [],
+    "next_action": "string"
+  },
+  "node_field_requirements": {
+    "UCH-RES-SL2-W": {
+      "required": [
+        "frame_color",
+        "glass_spec_id",
+        "crescent_presence",
+        "crescent_position",
+        "pull_handle_type",
+        "pull_handle_position",
+        "bottom_rail_type",
+        "reverse_handing",
+        "size_w",
+        "size_h"
+      ],
+      "conditional": [
+        "grille_type",
+        "muntin_type",
+        "middle_rail_option",
+        "middle_rail_position",
+        "ventilator_option"
+      ],
+      "auto_or_fixed": [
+        "hardware_color"
+      ],
+      "optional": [
+        "crescent_type"
+      ],
+      "not_applicable": [
+        "operating_handle_type",
+        "arm_stopper_option",
+        "outside_handle_option",
+        "three_panel_layout",
+        "hinge_side",
+        "sash_width_allocation"
+      ]
+    },
+    "UCH-RES-SL2-T": {
+      "required": [
+        "frame_color",
+        "glass_spec_id",
+        "crescent_presence",
+        "crescent_position",
+        "pull_handle_type",
+        "pull_handle_position",
+        "bottom_rail_type",
+        "reverse_handing",
+        "size_w",
+        "size_h"
+      ],
+      "conditional": [
+        "grille_type",
+        "muntin_type",
+        "middle_rail_option",
+        "middle_rail_position",
+        "ventilator_option"
+      ],
+      "auto_or_fixed": [
+        "hardware_color"
+      ],
+      "optional": [
+        "crescent_type"
+      ],
+      "not_applicable": [
+        "operating_handle_type",
+        "arm_stopper_option",
+        "outside_handle_option",
+        "three_panel_layout",
+        "hinge_side",
+        "sash_width_allocation"
+      ]
+    },
+    "UCH-RES-SLO2-W": {
+      "required": [
+        "frame_color",
+        "glass_spec_id",
+        "crescent_presence",
+        "crescent_position",
+        "pull_handle_type",
+        "pull_handle_position",
+        "bottom_rail_type",
+        "reverse_handing",
+        "sash_width_allocation",
+        "size_w",
+        "size_h"
+      ],
+      "conditional": [
+        "grille_type",
+        "muntin_type",
+        "middle_rail_option",
+        "middle_rail_position",
+        "ventilator_option"
+      ],
+      "auto_or_fixed": [
+        "hardware_color"
+      ],
+      "optional": [
+        "crescent_type"
+      ],
+      "not_applicable": [
+        "operating_handle_type",
+        "arm_stopper_option",
+        "outside_handle_option",
+        "three_panel_layout",
+        "hinge_side"
+      ]
+    },
+    "UCH-RES-SLO2-T": {
+      "required": [
+        "frame_color",
+        "glass_spec_id",
+        "crescent_presence",
+        "crescent_position",
+        "pull_handle_type",
+        "pull_handle_position",
+        "bottom_rail_type",
+        "reverse_handing",
+        "sash_width_allocation",
+        "size_w",
+        "size_h"
+      ],
+      "conditional": [
+        "grille_type",
+        "muntin_type",
+        "middle_rail_option",
+        "middle_rail_position",
+        "ventilator_option"
+      ],
+      "auto_or_fixed": [
+        "hardware_color"
+      ],
+      "optional": [
+        "crescent_type"
+      ],
+      "not_applicable": [
+        "operating_handle_type",
+        "arm_stopper_option",
+        "outside_handle_option",
+        "three_panel_layout",
+        "hinge_side"
+      ]
+    },
+    "UCH-RES-SL3-W": {
+      "required": [
+        "frame_color",
+        "glass_spec_id",
+        "crescent_presence",
+        "crescent_position",
+        "pull_handle_type",
+        "pull_handle_position",
+        "bottom_rail_type",
+        "three_panel_layout",
+        "sash_width_allocation",
+        "size_w",
+        "size_h"
+      ],
+      "conditional": [
+        "grille_type",
+        "muntin_type",
+        "middle_rail_option",
+        "middle_rail_position",
+        "ventilator_option"
+      ],
+      "auto_or_fixed": [
+        "hardware_color"
+      ],
+      "optional": [
+        "crescent_type"
+      ],
+      "not_applicable": [
+        "operating_handle_type",
+        "arm_stopper_option",
+        "outside_handle_option",
+        "reverse_handing",
+        "hinge_side"
+      ]
+    },
+    "UCH-RES-SL3-T": {
+      "required": [
+        "frame_color",
+        "glass_spec_id",
+        "crescent_presence",
+        "crescent_position",
+        "pull_handle_type",
+        "pull_handle_position",
+        "bottom_rail_type",
+        "three_panel_layout",
+        "sash_width_allocation",
+        "size_w",
+        "size_h"
+      ],
+      "conditional": [
+        "grille_type",
+        "muntin_type",
+        "middle_rail_option",
+        "middle_rail_position",
+        "ventilator_option"
+      ],
+      "auto_or_fixed": [
+        "hardware_color"
+      ],
+      "optional": [
+        "crescent_type"
+      ],
+      "not_applicable": [
+        "operating_handle_type",
+        "arm_stopper_option",
+        "outside_handle_option",
+        "reverse_handing",
+        "hinge_side"
+      ]
+    },
+    "UCH-RES-SL4-W": {
+      "required": [
+        "frame_color",
+        "glass_spec_id",
+        "crescent_presence",
+        "crescent_position",
+        "pull_handle_type",
+        "pull_handle_position",
+        "bottom_rail_type",
+        "reverse_handing",
+        "size_w",
+        "size_h"
+      ],
+      "conditional": [
+        "grille_type",
+        "muntin_type",
+        "middle_rail_option",
+        "middle_rail_position",
+        "ventilator_option"
+      ],
+      "auto_or_fixed": [
+        "hardware_color",
+        "sash_width_allocation"
+      ],
+      "optional": [
+        "crescent_type"
+      ],
+      "not_applicable": [
+        "operating_handle_type",
+        "arm_stopper_option",
+        "outside_handle_option",
+        "three_panel_layout",
+        "hinge_side"
+      ]
+    },
+    "UCH-RES-SL4-T": {
+      "required": [
+        "frame_color",
+        "glass_spec_id",
+        "crescent_presence",
+        "crescent_position",
+        "pull_handle_type",
+        "pull_handle_position",
+        "bottom_rail_type",
+        "reverse_handing",
+        "size_w",
+        "size_h"
+      ],
+      "conditional": [
+        "grille_type",
+        "muntin_type",
+        "middle_rail_option",
+        "middle_rail_position",
+        "ventilator_option"
+      ],
+      "auto_or_fixed": [
+        "hardware_color",
+        "sash_width_allocation"
+      ],
+      "optional": [
+        "crescent_type"
+      ],
+      "not_applicable": [
+        "operating_handle_type",
+        "arm_stopper_option",
+        "outside_handle_option",
+        "three_panel_layout",
+        "hinge_side"
+      ]
+    },
+    "UCH-RES-SLO4-W": {
+      "required": [
+        "frame_color",
+        "glass_spec_id",
+        "crescent_presence",
+        "crescent_position",
+        "pull_handle_type",
+        "pull_handle_position",
+        "bottom_rail_type",
+        "reverse_handing",
+        "sash_width_allocation",
+        "size_w",
+        "size_h"
+      ],
+      "conditional": [
+        "grille_type",
+        "muntin_type",
+        "middle_rail_option",
+        "middle_rail_position",
+        "ventilator_option"
+      ],
+      "auto_or_fixed": [
+        "hardware_color"
+      ],
+      "optional": [
+        "crescent_type"
+      ],
+      "not_applicable": [
+        "operating_handle_type",
+        "arm_stopper_option",
+        "outside_handle_option",
+        "three_panel_layout",
+        "hinge_side"
+      ]
+    },
+    "UCH-RES-SLO4-T": {
+      "required": [
+        "frame_color",
+        "glass_spec_id",
+        "crescent_presence",
+        "crescent_position",
+        "pull_handle_type",
+        "pull_handle_position",
+        "bottom_rail_type",
+        "reverse_handing",
+        "sash_width_allocation",
+        "size_w",
+        "size_h"
+      ],
+      "conditional": [
+        "grille_type",
+        "muntin_type",
+        "middle_rail_option",
+        "middle_rail_position",
+        "ventilator_option"
+      ],
+      "auto_or_fixed": [
+        "hardware_color"
+      ],
+      "optional": [
+        "crescent_type"
+      ],
+      "not_applicable": [
+        "operating_handle_type",
+        "arm_stopper_option",
+        "outside_handle_option",
+        "three_panel_layout",
+        "hinge_side"
+      ]
+    },
+    "UCH-RES-FIX": {
+      "required": [
+        "frame_color",
+        "glass_spec_id",
+        "size_w",
+        "size_h"
+      ],
+      "conditional": [
+        "grille_type",
+        "muntin_type"
+      ],
+      "auto_or_fixed": [
+        "operating_handle_type",
+        "hardware_color"
+      ],
+      "optional": [],
+      "not_applicable": [
+        "crescent_presence",
+        "crescent_type",
+        "crescent_position",
+        "pull_handle_type",
+        "pull_handle_position",
+        "middle_rail_option",
+        "middle_rail_position",
+        "ventilator_option",
+        "bottom_rail_type",
+        "arm_stopper_option",
+        "outside_handle_option",
+        "reverse_handing",
+        "three_panel_layout",
+        "hinge_side",
+        "sash_width_allocation"
+      ]
+    },
+    "UCH-RES-IN": {
+      "required": [
+        "frame_color",
+        "glass_spec_id",
+        "hinge_side",
+        "size_w",
+        "size_h"
+      ],
+      "conditional": [],
+      "auto_or_fixed": [
+        "operating_handle_type",
+        "hardware_color"
+      ],
+      "optional": [
+        "arm_stopper_option"
+      ],
+      "not_applicable": [
+        "grille_type",
+        "muntin_type",
+        "crescent_presence",
+        "crescent_type",
+        "crescent_position",
+        "pull_handle_type",
+        "pull_handle_position",
+        "middle_rail_option",
+        "middle_rail_position",
+        "ventilator_option",
+        "bottom_rail_type",
+        "outside_handle_option",
+        "reverse_handing",
+        "three_panel_layout",
+        "sash_width_allocation"
+      ]
+    },
+    "UCH-RES-OT": {
+      "required": [
+        "frame_color",
+        "glass_spec_id",
+        "hinge_side",
+        "size_w",
+        "size_h"
+      ],
+      "conditional": [],
+      "auto_or_fixed": [
+        "operating_handle_type",
+        "hardware_color"
+      ],
+      "optional": [
+        "arm_stopper_option",
+        "outside_handle_option"
+      ],
+      "not_applicable": [
+        "grille_type",
+        "muntin_type",
+        "crescent_presence",
+        "crescent_type",
+        "crescent_position",
+        "pull_handle_type",
+        "pull_handle_position",
+        "middle_rail_option",
+        "middle_rail_position",
+        "ventilator_option",
+        "bottom_rail_type",
+        "reverse_handing",
+        "three_panel_layout",
+        "sash_width_allocation"
+      ]
+    },
+    "UCH-BATH-SL2-W": {
+      "required": [
+        "frame_color",
+        "glass_spec_id",
+        "crescent_presence",
+        "crescent_position",
+        "pull_handle_type",
+        "pull_handle_position",
+        "reverse_handing",
+        "size_w",
+        "size_h"
+      ],
+      "conditional": [],
+      "auto_or_fixed": [
+        "bottom_rail_type",
+        "hardware_color"
+      ],
+      "optional": [
+        "crescent_type"
+      ],
+      "not_applicable": [
+        "grille_type",
+        "muntin_type",
+        "middle_rail_option",
+        "middle_rail_position",
+        "ventilator_option",
+        "operating_handle_type",
+        "arm_stopper_option",
+        "outside_handle_option",
+        "three_panel_layout",
+        "hinge_side",
+        "sash_width_allocation"
+      ]
+    },
+    "UCH-BATH-IN": {
+      "required": [
+        "frame_color",
+        "glass_spec_id",
+        "hinge_side",
+        "size_w",
+        "size_h"
+      ],
+      "conditional": [],
+      "auto_or_fixed": [
+        "operating_handle_type",
+        "hardware_color"
+      ],
+      "optional": [],
+      "not_applicable": [
+        "grille_type",
+        "muntin_type",
+        "crescent_presence",
+        "crescent_type",
+        "crescent_position",
+        "pull_handle_type",
+        "pull_handle_position",
+        "middle_rail_option",
+        "middle_rail_position",
+        "ventilator_option",
+        "bottom_rail_type",
+        "arm_stopper_option",
+        "outside_handle_option",
+        "reverse_handing",
+        "three_panel_layout",
+        "sash_width_allocation"
+      ]
+    }
+  },
+  "rule_references": {
+    "dependency_rule_ids": [
+      "P5-UCH-001",
+      "P5-UCH-002",
+      "P5-UCH-003",
+      "P5-UCH-004",
+      "P5-UCH-005",
+      "P5-UCH-101",
+      "P5-UCH-102",
+      "P5-UCH-103",
+      "P5-UCH-104",
+      "P5-UCH-105",
+      "P5-UCH-106",
+      "P5-UCH-107",
+      "P5-UCH-108",
+      "P5-UCH-109",
+      "P5-UCH-110",
+      "P5-UCH-111",
+      "P5-UCH-112",
+      "P5-UCH-113",
+      "P5-UCH-114",
+      "P5-UCH-115",
+      "P5-UCH-116",
+      "P5-UCH-117",
+      "P5-UCH-118",
+      "P5-UCH-119",
+      "P5-UCH-120",
+      "P5-UCH-121",
+      "P5-UCH-201",
+      "P5-UCH-202",
+      "P5-UCH-203",
+      "P5-UCH-204"
+    ],
+    "measurement_rule_ids": [
+      "MEAS-UCH-001",
+      "MEAS-UCH-002",
+      "MEAS-UCH-003",
+      "MEAS-UCH-004",
+      "MEAS-UCH-005"
+    ],
+    "size_rule_ids": [
+      "SZ-UCH-RES-SL2-W",
+      "SZ-UCH-RES-SL2-T",
+      "SZ-UCH-RES-SLO2-W",
+      "SZ-UCH-RES-SLO2-T",
+      "SZ-UCH-RES-SL3-W",
+      "SZ-UCH-RES-SL3-T",
+      "SZ-UCH-RES-SL4-W",
+      "SZ-UCH-RES-SL4-T",
+      "SZ-UCH-RES-SLO4-W",
+      "SZ-UCH-RES-SLO4-T",
+      "SZ-UCH-RES-FIX",
+      "SZ-UCH-RES-IN",
+      "SZ-UCH-RES-OT",
+      "SZ-UCH-BATH-SL2-W",
+      "SZ-UCH-BATH-IN"
+    ],
+    "glass_size_rule_ids": [
+      "SZR-IGU-P3P3",
+      "SZR-IGU-P4P4",
+      "SZR-IGU-F4P3",
+      "SZR-IGU-G5P3",
+      "SZR-IGU-P5P3",
+      "SZR-IGU-P3XA",
+      "SZR-IGU-P3XJ",
+      "SZR-SG-P3",
+      "SZR-SG-P5",
+      "SZR-SG-P6",
+      "SZR-SG-F4",
+      "SZR-SG-XA",
+      "SZR-SG-XJ",
+      "SZR-SG-T4",
+      "SZR-SG-K4",
+      "SZR-GRID-P3P3",
+      "SZR-GRID-G4P3",
+      "SZR-JAPANESE-G4P3",
+      "SZR-SG-W3",
+      "SZR-SG-W5",
+      "SZR-IGU-G4P3",
+      "SZR-VAC-SPACIA_COOL",
+      "SZR-VAC-GLAVENIR"
+    ],
+    "installation_rule_ids": [
+      "INST-F60-reinforcement_square_pipe",
+      "INST-F60-reinforcement_bracket",
+      "INST-F60-reinforcement_bundle",
+      "INST-F60-construction_material_floor_supported",
+      "INST-F60-stepped_fukashi_60",
+      "INST-BATH-COMMON",
+      "INST-BATH-UB-SL",
+      "INST-BATH-UB-IN",
+      "INST-BATH-TILE-SL",
+      "INST-BATH-TILE-IN",
+      "INST-F60-square-pipe-sill-c0-30",
+      "INST-F60-square-pipe-sill-c30-45",
+      "INST-F60-square-pipe-sill-cgt45",
+      "INST-F60-bracket-wood-stud-spacing",
+      "INST-F60-bracket-tool-clearance",
+      "INST-BATH-UB-COMMON-SURVEY",
+      "INST-BATH-UB-RESIN-JAMB",
+      "INST-BATH-TILE-COMMON-SURVEY"
+    ]
+  },
+  "measurement_contract": {
+    "required_site_measurements": [
+      "opening_w_top",
+      "opening_w_middle",
+      "opening_w_bottom",
+      "opening_h_left",
+      "opening_h_middle",
+      "opening_h_right",
+      "diagonal_1",
+      "diagonal_2"
+    ],
+    "rules": [
+      {
+        "rule_id": "MEAS-UCH-001",
+        "target": "size_w",
+        "expression": "MIN(opening_w_top,opening_w_middle,opening_w_bottom)",
+        "result_requirement": "AUTO_CALCULATED"
+      },
+      {
+        "rule_id": "MEAS-UCH-002",
+        "target": "size_h",
+        "expression": "MIN(opening_h_left,opening_h_middle,opening_h_right)",
+        "result_requirement": "AUTO_CALCULATED"
+      },
+      {
+        "rule_id": "MEAS-UCH-003",
+        "target": "squareness_w",
+        "expression": "MAX(W points)-MIN(W points)<=3",
+        "result_requirement": "REQUIRED_PASS"
+      },
+      {
+        "rule_id": "MEAS-UCH-004",
+        "target": "squareness_h",
+        "expression": "MAX(H points)-MIN(H points)<=3",
+        "result_requirement": "REQUIRED_PASS"
+      },
+      {
+        "rule_id": "MEAS-UCH-005",
+        "target": "diagonal",
+        "expression": "ABS(diagonal_1-diagonal_2)<=3",
+        "result_requirement": "REQUIRED_PASS"
+      }
+    ]
+  },
+  "manual_check_routes": [
+    {
+      "id": "P5R1G-MC-01",
+      "gsc_id": "GSC-GRID-G4P3",
+      "status": "MANUAL_CHECK_HUMAN_APPROVED",
+      "sales_input_allowed": true,
+      "manufacturer_quote_recheck_required": true,
+      "final_manufacturability_claim": "PROHIBITED"
+    },
+    {
+      "id": "P5R1G-MC-02",
+      "gsc_id": "GSC-IGU-G4P3",
+      "status": "MANUAL_CHECK_HUMAN_APPROVED",
+      "sales_input_allowed": true,
+      "manufacturer_quote_recheck_required": true,
+      "final_manufacturability_claim": "PROHIBITED"
+    },
+    {
+      "id": "P5R1G-MC-03",
+      "gsc_id": "GSC-SG-W3",
+      "status": "MANUAL_CHECK_HUMAN_APPROVED",
+      "sales_input_allowed": true,
+      "manufacturer_quote_recheck_required": true,
+      "final_manufacturability_claim": "PROHIBITED"
+    },
+    {
+      "id": "P5R1G-MC-04",
+      "gsc_id": "GSC-SG-W5",
+      "status": "MANUAL_CHECK_HUMAN_APPROVED",
+      "sales_input_allowed": true,
+      "manufacturer_quote_recheck_required": true,
+      "final_manufacturability_claim": "PROHIBITED"
+    }
+  ],
+  "special_check_routes": [
+    {
+      "rule_id": "P5-UCH-117",
+      "when": {
+        "window_type": "sliding_window",
+        "glass_size_constraint_group": [
+          "GSC-IGU-P5P3",
+          "GSC-IGU-G5P3"
+        ]
+      },
+      "status": "SPECIAL_CHECK_REQUIRED",
+      "note": "Glass manufacturing range is serialized; sliding high-W/H sash load exception remains separate."
+    },
+    {
+      "rule_id": "P5-UCH-204",
+      "when": {
+        "extension_frame_type": "fukashi_60",
+        "floor_support_condition": "unknown"
+      },
+      "status": "MANUAL_CHECK_REQUIRED"
+    }
+  ],
+  "glass_gap_policy": {
+    "partial_or_blocked_gsc": [
+      "GSC-GRID-G4P3",
+      "GSC-IGU-G4P3",
+      "GSC-SG-W3",
+      "GSC-SG-W5"
+    ],
+    "sales_level_disposition": "MANUAL_CHECK_HUMAN_APPROVED",
+    "inference_prohibited": true,
+    "manufacturer_quote_recheck_required": true
+  },
+  "fail_closed": {
+    "unknown_node_id": "ENGINE_BLOCKED",
+    "unknown_rule_reference": "ENGINE_BLOCKED",
+    "missing_runtime_component": "ENGINE_BLOCKED",
+    "do_not_infer_missing_manufacturer_limits": true,
+    "unknown_installation_input": "MANUAL_CHECK_REQUIRED",
+    "missing_installation_input": "MANUAL_CHECK_REQUIRED"
+  },
+  "qa_expectations": {
+    "product_node_count": 15,
+    "glass_spec_count": 566,
+    "node_glass_row_count": 8490,
+    "dependency_rule_count": 29,
+    "measurement_rule_count": 5,
+    "base_size_rule_count": 15,
+    "glass_size_rule_count": 23,
+    "installation_rule_count": 10,
+    "human_approved_manual_check_count": 4,
+    "special_check_gsc": [
+      "GSC-IGU-P5P3",
+      "GSC-IGU-G5P3"
+    ],
+    "size_mode_reachable": true,
+    "standard_size_records_generated": 0,
+    "installation_constraint_input_map_complete": true
+  },
+  "generated_at": "2026-09-08T20:24:28+09:00",
+  "working_folder_id": "1ToOa_3UStpMJfUzW5Dl0Ah_Q-kkX88n3",
+  "working_savepoint": {
+    "source_phase_revision": "Phase9-R2",
+    "source_drive_file_id": "1ox6ds6NjOJNdzdPgfJFrN6UT1u4kuf6y",
+    "working_folder_id": "1ToOa_3UStpMJfUzW5Dl0Ah_Q-kkX88n3",
+    "parent_verification": "PASS",
+    "working_savepoint_gate": "PASS"
+  },
+  "updated_at": "2026-09-30T01:43:55.195537Z",
+  "formalization_authorization": {
+    "final_human_approval": "PASS",
+    "approved_at": "2026-09-08T20:24:28+09:00",
+    "previous_formal_package_version": "v1.0-P7R1",
+    "approved_candidate_package_version": "v1.0-P7R1-R2-WORKING",
+    "formal_package_version": "v1.0-P7R1-R2",
+    "product_rule_mutation": "YES_PHASE9_R1_R2",
+    "manual_check_preserved": true,
+    "formal_storage_authorized": true,
+    "human_approval": "PASS",
+    "storage_status": "CANONICAL_PARENT_VERIFIED"
+  },
+  "canonical_storage": {
+    "previous_canonical_drive_file_id": "1SjVLSqqBmoOcMDasfqhW_lQ1fptFnBdz",
+    "target_parent_folder_id": "1-flyN0KX2zdqXbebX2kVF4VRW0jTSrQu",
+    "storage_gate_status": "CANONICAL_PARENT_VERIFIED",
+    "verified_parent_folder_id": "1-flyN0KX2zdqXbebX2kVF4VRW0jTSrQu",
+    "verified_at": "2026-09-08T20:34:37+09:00"
+  },
+  "phase9_r1_runtime_reference_repair": {
+    "allowed_value_repairs": [
+      "ventilator_option:none",
+      "outside_handle_option:none",
+      "floor_support_condition:unknown"
+    ],
+    "remaining_blockers": [],
+    "human_approval": "PASS_SUPERSEDED_BY_PHASE9_R2_APPROVAL"
+  },
+  "size_selection_contract": {
+    "mode_field": "size_mode",
+    "fixed_value": "custom",
+    "standard_size_records_status": "NOT_APPLICABLE",
+    "dimension_validation": "size_rules + glass_size_rules",
+    "evidence": [
+      "EV-UCH-023"
+    ]
+  },
+  "installation_input_contract": {
+    "source_component_role": "size_installation_dependency",
+    "raw_input_count": 33,
+    "required_raw_fields": [
+      "construction",
+      "jamb_projection_a_mm",
+      "jamb_face_b_mm",
+      "jamb_height_h_mm",
+      "jamb_height_h1_mm",
+      "jamb_height_h2_mm",
+      "jamb_height_h3_mm",
+      "sill_upper_c_mm",
+      "sill_lower_d_mm",
+      "vertical_horizontal_jamb_step_e_mm",
+      "lower_resin_jamb_space_mm",
+      "lower_jamb_a_mm",
+      "lower_jamb_a_prime_mm",
+      "hardware_tip_mounting_depth_A_mm",
+      "existing_angle_height_mm",
+      "existing_angle_tip_mm",
+      "wall_surface_for_reinforcement_available",
+      "substrate_present",
+      "substrate_wall_gap_present",
+      "substrate_or_structure_present",
+      "substrate_or_structure_wall_gap_present",
+      "stud_spacing_condition_met",
+      "tool_floor_interference",
+      "floor_supports_load",
+      "floor_screw_holding",
+      "baseboard_interference",
+      "lower_mounting_surface_horizontal_or_adjustable",
+      "mounting_surface_flat",
+      "mounting_surface_damage_protection",
+      "resin_jamb_face_screw_fixed",
+      "existing_lower_jamb_angle_present",
+      "system_bath_component_screw_interference",
+      "existing_window_to_jamb_step_large"
+    ],
+    "constraint_key_map_complete": true,
+    "missing_or_unknown_required_input": "MANUAL_CHECK_REQUIRED",
+    "do_not_infer": true
+  },
+  "phase9_r2_input_contract_recovery": {
+    "resolved": [
+      "P9R1-BLOCK-01",
+      "P9R1-BLOCK-02"
+    ],
+    "technical_blockers_remaining": [],
+    "size_mode": "custom",
+    "standard_size_records_status": "NOT_APPLICABLE",
+    "installation_raw_input_count": 33,
+    "new_installation_rules": [
+      "INST-F60-square-pipe-sill-c0-30",
+      "INST-F60-square-pipe-sill-c30-45",
+      "INST-F60-square-pipe-sill-cgt45",
+      "INST-F60-bracket-wood-stud-spacing",
+      "INST-F60-bracket-tool-clearance",
+      "INST-BATH-UB-COMMON-SURVEY",
+      "INST-BATH-UB-RESIN-JAMB",
+      "INST-BATH-TILE-COMMON-SURVEY"
+    ],
+    "human_approval": "PASS",
+    "formalization_status": "FORMAL_PASS"
+  },
+  "source_manifest_file_name": "YKKAP_ウチリモ内窓_runtime_manifest_v1.0-P7R1-R5_InnerWindowCanonicalFrame_R1_FORMAL.json",
+  "public_selection_contract": {
+    "version": "inner_window_frame_contract/1.1",
+    "canonical_file": "YKKAP_ウチリモ内窓_Slim_Canonical_v5_InnerWindowCanonicalFrame_R1_FORMAL.json",
+    "legacy_fields": "INTERNAL_SOURCE_ONLY",
+    "qa_status": "PASS_R5_AFFECTED_SCOPE"
+  },
+  "manifest_binding": "CONTAINING_RUNTIME_MANIFEST",
+  "r5_change_scope": {
+    "middle_rail_option": [
+      "none",
+      "enabled"
+    ],
+    "middle_rail_position_requires": "middle_rail_option=enabled",
+    "dependency_rule": "P5-UCH-121",
+    "evidence": "EV-UCH-029",
+    "status": "PASS"
+  }
+}

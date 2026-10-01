@@ -16,13 +16,6 @@ function base64Bytes(value){
   return out;
 }
 
-export function paginateEstimateOutput(model,{rowsPerPage=10}={}){
-  const rows=Array.isArray(model?.rows)?model.rows:[];const pages=[];
-  for(let index=0;index<rows.length;index+=rowsPerPage)pages.push(rows.slice(index,index+rowsPerPage));
-  if(!pages.length)pages.push([]);
-  return pages;
-}
-
 function drawText(ctx,text,x,y,{font='24px sans-serif',maxWidth,align='left'}={}){
   ctx.font=font;ctx.textAlign=align;ctx.textBaseline='top';ctx.fillStyle='#17212b';
   ctx.fillText(String(text??''),x,y,maxWidth);
@@ -42,6 +35,22 @@ function rowLine(row){
   return [row.manufacturer,row.series,row.opening_type,row.major_specifications,row.size].filter(Boolean).join(' / ')||'商品仕様未入力';
 }
 
+export function layoutEstimatePdfRows(model,ctx,{rowsPerPage=10}={}){
+  const pages=[];let page=[],used=0;
+  ctx.font='19px sans-serif';
+  for(const row of model.rows??[]){
+    const text=[rowLine(row),...(row.issues??[]).map(issue=>`確認事項: ${issue.message}`)].join(' / ');
+    const all=wrapText(ctx,text,900);
+    for(let start=0;start<all.length;start+=52){
+      const lines=all.slice(start,start+52),height=Math.max(120,91+lines.length*23);
+      if(page.length&&(page.length>=rowsPerPage||used+height>1340)){pages.push(page);page=[];used=0;}
+      page.push({...row,pdfLines:lines,pdfHeight:height,continued:start>0});used+=height+10;
+    }
+  }
+  if(page.length||!pages.length)pages.push(page);
+  return pages;
+}
+
 function renderCanvasPage(model,rows,pageIndex,pageCount,documentRef){
   const canvas=documentRef.createElement('canvas');canvas.width=1240;canvas.height=1754;
   const ctx=canvas.getContext('2d');if(!ctx)throw new Error('Canvas 2D context is unavailable');
@@ -54,15 +63,15 @@ function renderCanvasPage(model,rows,pageIndex,pageCount,documentRef){
   drawText(ctx,`${pageIndex+1} / ${pageCount}`,1168,68,{font:'20px sans-serif',align:'right'});
   let y=310;
   for(const row of rows){
-    ctx.strokeStyle='#d9e1e7';ctx.lineWidth=2;ctx.strokeRect(72,y,1096,126);
-    drawText(ctx,String(row.opening_no).padStart(2,'0'),92,y+18,{font:'bold 25px sans-serif'});
+    ctx.strokeStyle='#d9e1e7';ctx.lineWidth=2;ctx.strokeRect(72,y,1096,row.pdfHeight);
+    drawText(ctx,String(row.opening_no).padStart(2,'0')+(row.continued?'続':''),92,y+18,{font:'bold 25px sans-serif'});
     drawText(ctx,[row.floor,row.room_name,row.location].filter(Boolean).join(' / ')||'開口部',150,y+16,{font:'bold 23px sans-serif',maxWidth:780});
     drawText(ctx,outputStateLabel(row.state),1140,y+18,{font:'bold 19px sans-serif',align:'right'});
-    ctx.font='19px sans-serif';const lines=wrapText(ctx,rowLine(row),900).slice(0,2);
-    lines.forEach((line,index)=>drawText(ctx,line,150,y+54+index*27,{font:'19px sans-serif',maxWidth:900}));
+    const lines=row.pdfLines;
+    lines.forEach((line,index)=>drawText(ctx,line,150,y+54+index*23,{font:'19px sans-serif',maxWidth:900}));
     const price=row.price===null?'金額: 要確認':`金額: ¥${Number(row.price).toLocaleString('ja-JP')}`;
-    drawText(ctx,price,1140,y+88,{font:'18px sans-serif',align:'right'});
-    y+=140;
+    drawText(ctx,price,1140,y+row.pdfHeight-28,{font:'18px sans-serif',align:'right'});
+    y+=row.pdfHeight+10;
   }
   drawText(ctx,'※ 金額未保持の場合は0円へ置換せず「要確認」として出力しています。',72,1688,{font:'18px sans-serif'});
   return canvas;
@@ -93,7 +102,9 @@ export function buildPdfFromJpegPages(pages){
 
 export function createEstimatePdfBytes(model,{documentRef=globalThis.document,rowsPerPage=10,quality=.9}={}){
   if(!documentRef?.createElement)throw new Error('PDF canvas rendering requires a browser document');
-  const pages=paginateEstimateOutput(model,{rowsPerPage});
+  const measure=documentRef.createElement('canvas').getContext('2d');
+  if(!measure)throw new Error('Canvas 2D context is unavailable');
+  const pages=layoutEstimatePdfRows(model,measure,{rowsPerPage});
   const rendered=pages.map((rows,index)=>{
     const canvas=renderCanvasPage(model,rows,index,pages.length,documentRef);
     const encoded=canvas.toDataURL('image/jpeg',quality).split(',')[1];

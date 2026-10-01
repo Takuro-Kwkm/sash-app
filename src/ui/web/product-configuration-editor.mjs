@@ -1,37 +1,13 @@
 import { createProductConfigurationSnapshot } from '/work-management/domain.mjs';
 
 const esc=(value)=>String(value??'').replace(/[&<>'\"]/g,(character)=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'\"':"&quot;"})[character]);
+const reviewChoiceLabel=(value)=>`${esc(value.displayLabel)}${value.manualCheck&&!String(value.displayLabel).includes('要確認')?'（要確認）':''}`;
 const TECHNICAL_TOKEN=/\b(?:CUSTOM_DIMENSION|RUNTIME|ORDER_READY|[A-Z][A-Z0-9]+(?:_[A-Z0-9]+){1,})\b/;
 const STATUS_LABELS=Object.freeze({
   BLOCK:'製作範囲外',BLOCKED:'選択できません',REVIEW_REQUIRED:'要確認',MANUAL_CHECK:'要確認',
   PENDING:'確認待ち',INCOMPLETE:'入力が必要です',INVALID:'入力内容を確認してください',
   PASS:'入力可能',VALID:'入力可能',ACCEPTED:'入力可能',
 });
-const UCHIRIMO_PRODUCT_ID='SER-YKKAP-UCHIRIMO';
-const UCHIRIMO_APPEARANCE_KEY='sales_glass_appearance';
-const UCHIRIMO_SPACER_KEY='sales_spacer_type';
-const UCHIRIMO_GAS_KEY='sales_gas_fill';
-const UCHIRIMO_APPEARANCES=Object.freeze([
-  {value:'clear',displayLabel:'透明ガラス'},
-  {value:'pattern',displayLabel:'型板ガラス'},
-  {value:'frosted',displayLabel:'すり板ガラス'},
-  {value:'washi',displayLabel:'和紙調ガラス（単板のみ）'},
-]);
-const UCHIRIMO_GLASS_DETAILS=new Set([
-  'glass_structure','glass_structure_code','glass_spec_id','glass_size_constraint_group',
-  'glass_surface_type','spacer_type','gas_fill','cavity_thickness_mm',
-]);
-const UCHIRIMO_SALES_CAVITY_FIELDS=Object.freeze([
-  {key:UCHIRIMO_SPACER_KEY,displayLabel:'スペーサー',dataType:'ENUM',required:false,values:[
-    {value:'aluminum',displayLabel:'アルミスペーサー'},
-    {value:'resin',displayLabel:'樹脂スペーサー'},
-  ],semanticStage:'GLAZING',semanticSlot:'spacer_type',displayOrder:1},
-  {key:UCHIRIMO_GAS_KEY,displayLabel:'中空層',dataType:'ENUM',required:false,values:[
-    {value:'air',displayLabel:'空気層'},
-    {value:'argon',displayLabel:'アルゴンガス入り'},
-  ],semanticStage:'GLAZING',semanticSlot:'gas_fill',displayOrder:2},
-]);
-
 function runtimeFieldLabel(result,key){
   return result.fields?.find((field)=>field.key===key)?.displayLabel
     ??({custom_width:'特注W',custom_height:'特注H',size_mode:'サイズ方式',size:'規格サイズ'})[key]
@@ -78,16 +54,29 @@ function fill(select,rows,placeholder='選択してください'){
   if(rows.some((row)=>String(row.value)===String(current)&&!row.disabled))select.value=current;
 }
 
-function identityFor(product){
+function variantDefinitionFor(product,configuration={}){
+  const contract=product?.productVariantContract;
+  if(!contract)return null;
+  const value=configuration?.[contract.fieldKey]??contract.defaultVariant;
+  return contract.variants?.find((row)=>row.value===value)??null;
+}
+
+function identityFor(product,configuration={}){
+  const variant=variantDefinitionFor(product,configuration);
+  if(variant?.identity)return variant.identity;
   const canonical=product.sourceType==='RUNTIME_MASTER';
   return product.canonicalRuntimeReference?.runtimeManifestDriveFileId
     ??(!canonical?product.source?.id??null:null);
 }
 
+function packageVersionFor(product,configuration={}){
+  return variantDefinitionFor(product,configuration)?.packageVersion??product.packageVersion??product.source?.version??'LEGACY-UNVERSIONED';
+}
+
 export class ProductConfigurationEditor {
   constructor(root,{initialSnapshot=null,onSnapshot=()=>{},showInventory=false}={}){
     this.root=root;this.initialSnapshot=initialSnapshot;this.onSnapshot=onSnapshot;this.showInventory=showInventory;
-    this.state={products:[],productId:null,productSource:'CATALOG',selection:{},resolved:null,resolveRevision:0,snapshot:initialSnapshot,stale:false,salesGlassAppearance:initialSnapshot?.configuration?.[UCHIRIMO_APPEARANCE_KEY]??null,salesSpacerType:initialSnapshot?.configuration?.[UCHIRIMO_SPACER_KEY]??null,salesGasFill:initialSnapshot?.configuration?.[UCHIRIMO_GAS_KEY]??null};
+    this.state={products:[],productId:null,productSource:'CATALOG',selection:{},resolved:null,resolveRevision:0,snapshot:initialSnapshot,stale:false};
     this.boundChange=(event)=>this.handleChange(event);
     this.boundClick=(event)=>this.handleClick(event);
   }
@@ -149,14 +138,16 @@ export class ProductConfigurationEditor {
     this.selectManufacturer(product.manufacturer);
     this.root.querySelector('#product').value=product.id;
     this.state.productId=product.id;this.state.productSource=product.sourceType;this.state.selection={...snapshot.configuration};
-    const salesHandoff=snapshot.sales_request_handoff??{};
-    this.state.salesGlassAppearance=product.id===UCHIRIMO_PRODUCT_ID?(salesHandoff.glass_appearance??this.state.selection[UCHIRIMO_APPEARANCE_KEY]??null):null;
-    this.state.salesSpacerType=product.id===UCHIRIMO_PRODUCT_ID?(salesHandoff.spacer_type_request??this.state.selection[UCHIRIMO_SPACER_KEY]??null):null;
-    this.state.salesGasFill=product.id===UCHIRIMO_PRODUCT_ID?(salesHandoff.gas_fill_request??this.state.selection[UCHIRIMO_GAS_KEY]??null):null;
-    for(const key of [UCHIRIMO_APPEARANCE_KEY,UCHIRIMO_SPACER_KEY,UCHIRIMO_GAS_KEY])delete this.state.selection[key];
-    this.state.stale=identityFor(product)!==snapshot.runtime_manifest_identity||String(product.packageVersion??product.source?.version??'LEGACY-UNVERSIONED')!==String(snapshot.package_version);
+    for(const field of product.salesRequestExtension?.fields??[]){
+      const value=snapshot.sales_request_handoff?.[field.handoffKey];
+      if(this.state.selection[field.key]===undefined&&value!==undefined)this.state.selection[field.key]=value;
+    }
+    this.state.stale=identityFor(product,snapshot.configuration)!==snapshot.runtime_manifest_identity||String(packageVersionFor(product,snapshot.configuration))!==String(snapshot.package_version);
     if(this.state.stale){this.renderFrozenSnapshot('旧Runtimeで作成された設定です。保存時Snapshotは自動更新されません。',true);return;}
     await this.resolve({notify:false});
+    // Persist a semantic workflow migration on reload, including detached legacy
+    // survey values, even when the user does not edit a visible product field.
+    if(this.state.resolved?.workflowScope==='estimate')this.onSnapshot(this.state.snapshot,this.state.resolved);
   }
 
   renderFrozenSnapshot(message,canRevalidate=false){
@@ -173,60 +164,39 @@ export class ProductConfigurationEditor {
     await this.resolve({notify:true});
   }
 
-  clearRuntimeDescendants(key){
-    const rows=this.state.resolved?.dependencyFields??[];
-    const children=new Map();
-    for(const row of rows){
-      for(const parent of row.parentFields??[]){
-        if(!children.has(parent))children.set(parent,new Set());
-        children.get(parent).add(row.key);
-      }
-    }
-    const queue=[...(children.get(key)??[])],seen=new Set();
-    while(queue.length){
-      const child=queue.shift();
-      if(seen.has(child))continue;
-      seen.add(child);delete this.state.selection[child];
-      queue.push(...(children.get(child)??[]));
-    }
-  }
-
   async handleChange(event){
     const target=event.target;
     if(target.id==='manufacturer'){
-      this.state.resolveRevision+=1;this.state.productId=null;this.state.selection={};this.state.resolved=null;this.state.snapshot=null;this.state.stale=false;this.state.salesGlassAppearance=null;this.state.salesSpacerType=null;this.state.salesGasFill=null;
+      this.state.resolveRevision+=1;this.state.productId=null;this.state.selection={};this.state.resolved=null;this.state.snapshot=null;this.state.stale=false;
       this.selectManufacturer(target.value);
       this.root.querySelector('#dynamicForm').innerHTML='';this.root.querySelector('#warnings').innerHTML='';
       this.root.querySelector('#selectionSummary').textContent='商品を選択してください。';this.root.querySelector('#productCodeCard').hidden=true;
       this.onSnapshot(null);return;
     }
     if(target.id==='product'){
-      this.state.productId=target.value||null;this.state.selection={};this.state.resolved=null;this.state.snapshot=null;this.state.stale=false;this.state.salesGlassAppearance=null;this.state.salesSpacerType=null;this.state.salesGasFill=null;
+      this.state.productId=target.value||null;this.state.selection={};this.state.resolved=null;this.state.snapshot=null;this.state.stale=false;
       const product=this.state.products.find((row)=>row.id===this.state.productId);this.state.productSource=product?.sourceType??'CATALOG';
       await this.resolve({notify:true});return;
     }
-    if(!target.matches('[data-spec-key]'))return;
-    const key=target.dataset.specKey;
-    if(this.state.productId===UCHIRIMO_PRODUCT_ID&&key===UCHIRIMO_APPEARANCE_KEY){
-      this.state.salesGlassAppearance=target.value||null;
-      for(const detail of UCHIRIMO_GLASS_DETAILS)delete this.state.selection[detail];
-      await this.resolve({notify:true});return;
-    }
-    if(this.state.productId===UCHIRIMO_PRODUCT_ID&&(key===UCHIRIMO_SPACER_KEY||key===UCHIRIMO_GAS_KEY)){
-      const field=UCHIRIMO_SALES_CAVITY_FIELDS.find((row)=>row.key===key);
-      if(target.value&&!field.values.some((row)=>row.value===target.value))throw new Error(`Sales option is not available for ${key}: ${target.value}`);
-      this.state[key===UCHIRIMO_SPACER_KEY?'salesSpacerType':'salesGasFill']=target.value||null;
-      await this.resolve({notify:true});return;
-    }
-    if(this.state.productSource==='RUNTIME_MASTER')this.clearRuntimeDescendants(key);
+    const multiGroup=target.closest?.('[data-multi-enum="true"][data-multi-key]')??null;
+    const control=multiGroup??target;
+    if(!multiGroup&&!control.matches?.('[data-spec-key]'))return;
+    const key=multiGroup?.dataset.multiKey??control.dataset.specKey;
     const field=this.state.resolved?.fields?.find((row)=>row.key===key);
     const canonicalChoice=(raw)=>{
       const match=field?.values?.find((row)=>String(row.value)===String(raw));
       if(!match)throw new Error(`Runtime option is not available for ${key}: ${raw}`);
       return match.value;
     };
-    if(target.type==='number'){
+    if(multiGroup){
+      const values=[...multiGroup.querySelectorAll('input[data-multi-value]:checked')].map((input)=>canonicalChoice(input.value));
+      if(values.length)this.state.selection[key]=values;else delete this.state.selection[key];
+      const native=multiGroup.closest('.field')?.querySelector('select[data-spec-key]');
+      if(native)for(const option of native.options)option.selected=values.some(value=>String(value)===String(option.value));
+    }else if(target.type==='number'){
       if(target.value!=='')this.state.selection[key]=Number(target.value);else delete this.state.selection[key];
+    }else if(target.type==='text'){
+      if(target.value.trim()!=='')this.state.selection[key]=target.value;else delete this.state.selection[key];
     }else if(target.multiple){
       const values=[...target.selectedOptions].map((option)=>canonicalChoice(option.value));
       if(values.length)this.state.selection[key]=values;else delete this.state.selection[key];
@@ -237,68 +207,48 @@ export class ProductConfigurationEditor {
   async resolve({notify=true}={}){
     const revision=++this.state.resolveRevision,productId=this.state.productId;
     if(!productId){this.root.querySelector('#dynamicForm').innerHTML='';return;}
-    if(productId===UCHIRIMO_PRODUCT_ID)for(const detail of [...UCHIRIMO_GLASS_DETAILS,UCHIRIMO_APPEARANCE_KEY,UCHIRIMO_SPACER_KEY,UCHIRIMO_GAS_KEY])delete this.state.selection[detail];
     const query=new URLSearchParams({productId,selection:JSON.stringify(this.state.selection)});
     const endpoint=this.state.productSource==='RUNTIME_MASTER'?'/api/runtime-master/resolve':'/api/catalog/resolve';
     let result=await getJson(`${endpoint}?${query}`);
     if(revision!==this.state.resolveRevision||productId!==this.state.productId)return;
-    if(productId===UCHIRIMO_PRODUCT_ID){
-      const family=result.selection.glass_family;
-      if(this.state.salesGlassAppearance==='washi'&&family&&family!=='single_glazing')this.state.salesGlassAppearance=null;
-      if(family!=='insulating_glass'){this.state.salesSpacerType=null;this.state.salesGasFill=null;}
-      const chosen=this.state.salesGlassAppearance;
-      const offered=UCHIRIMO_APPEARANCES.filter((value)=>value.value!=='washi'||!family||family==='single_glazing');
-      const displayField={key:UCHIRIMO_APPEARANCE_KEY,displayLabel:'希望するガラスの見た目',dataType:'ENUM',required:false,values:offered,semanticStage:'GLAZING',semanticSlot:'glass_type',displayOrder:0};
-      const glassIndex=result.fields.findIndex((field)=>field.key==='glass_structure');
-      if(glassIndex>=0)result.fields.splice(glassIndex,0,displayField);
-      else if(family)result.fields.splice(result.fields.findIndex((field)=>field.key==='glass_family')+1,0,displayField);
-      if(family==='insulating_glass'){
-        const index=result.fields.findIndex((field)=>field.key===UCHIRIMO_APPEARANCE_KEY);
-        result.fields.splice(index+1,0,...UCHIRIMO_SALES_CAVITY_FIELDS);
-        if(this.state.salesSpacerType)result.selection={...result.selection,[UCHIRIMO_SPACER_KEY]:this.state.salesSpacerType};
-        if(this.state.salesGasFill)result.selection={...result.selection,[UCHIRIMO_GAS_KEY]:this.state.salesGasFill};
-      }
-      if(chosen)result.selection={...result.selection,[UCHIRIMO_APPEARANCE_KEY]:chosen};
-      if(chosen)result.manualWarnings=[...(result.manualWarnings??[]),'ガラスの厚みと最終仕様はメーカー見積で確認します。選択した見た目・スペーサー・中空層は希望として見積依頼に引き継ぎます。'];
-    }
     this.state.selection=result.selection;this.state.resolved=result;
     const dynamicForm=this.root.querySelector('#dynamicForm');
-    if(productId===UCHIRIMO_PRODUCT_ID){
-      const others=result.fields.filter((field)=>!UCHIRIMO_GLASS_DETAILS.has(field.key));
-      dynamicForm.innerHTML=others.map((field)=>this.renderField(field)).join('');
-    }else dynamicForm.innerHTML=result.fields.map((field)=>this.renderField(field)).join('');
+    dynamicForm.innerHTML=this.renderFields(result.fields);
     dynamicForm.dataset.resolveRevision=String(revision);
     this.renderWarnings(result);this.renderSummary(result);this.renderProductCodes(result);
     const product=this.state.products.find((row)=>row.id===productId);
-    this.state.snapshot=createProductConfigurationSnapshot({product,result});
-    if(productId===UCHIRIMO_PRODUCT_ID){
-      for(const key of [...UCHIRIMO_GLASS_DETAILS,UCHIRIMO_APPEARANCE_KEY,UCHIRIMO_SPACER_KEY,UCHIRIMO_GAS_KEY])delete this.state.snapshot.configuration[key];
-      this.state.snapshot.display_summary=this.state.snapshot.display_summary.filter((row)=>!UCHIRIMO_GLASS_DETAILS.has(row.key));
-      if(this.state.salesGlassAppearance){
-        this.state.snapshot.sales_request_handoff={glass_appearance:this.state.salesGlassAppearance,spacer_type_request:this.state.salesSpacerType,gas_fill_request:this.state.salesGasFill,glass_structure:'MANUFACTURER_ESTIMATE_CONFIRMATION'};
-        this.state.snapshot.validation_state='NEEDS_REVALIDATION';
-        const missingSalesField=(result.validation?.missingRequiredFields??[]).some((key)=>!UCHIRIMO_GLASS_DETAILS.has(key))
-          ||result.fields.some((field)=>field.required&&!UCHIRIMO_GLASS_DETAILS.has(field.key)
-            &&(result.selection[field.key]===undefined||result.selection[field.key]===null||result.selection[field.key]===''));
-        const dimensionReady=['PASS','REVIEW_REQUIRED'].includes(result.dimensionResult?.status);
-        if(!missingSalesField&&dimensionReady&&!(result.validation?.errors??[]).length
-          &&!['INVALID','BLOCKED'].includes(result.validation?.status)){
-          this.state.snapshot.sales_request_state='READY_FOR_MANUFACTURER_ESTIMATE';
-        }
-      }
-    }
+    this.state.snapshot=createProductConfigurationSnapshot({product,result,previousSnapshot:this.state.snapshot});
     const badge=this.root.querySelector('#runtimeVersionBadge');badge.hidden=false;badge.textContent=`${this.state.snapshot.source_mode==='CANONICAL_RUNTIME'?'Runtime':'Legacy'} ${this.state.snapshot.package_version}`;
     if(notify)this.onSnapshot(this.state.snapshot,result);
   }
 
+  renderFields(fields=[]){
+    const product=this.state.products.find((row)=>row.id===this.state.productId);
+    const groupIndividualOptions=product?.uiCategory==='INNER_WINDOW';
+    let optionHeadingShown=false;
+    return fields.map((field)=>{
+      const showOptionHeading=groupIndividualOptions&&!optionHeadingShown&&field.semanticStage==='OPTION';
+      if(showOptionHeading)optionHeadingShown=true;
+      const feedback=field.feedback;
+      return `${showOptionHeading?'<div class="runtime-field-group-heading" data-semantic-group="OPTION">オプション</div>':''}${this.renderField(field)}${feedback?`<div class="notice ${feedback.severity==='error'?'error':'warning'}" data-field-feedback="${esc(field.key)}" role="status">${esc(feedback.message)}</div>`:''}`;
+    }).join('');
+  }
+
   renderField(field){
+    const dataAttributes=`data-semantic-stage="${esc(field.semanticStage)}" data-semantic-slot="${esc(field.semanticSlot)}" data-label="${esc(field.displayLabel)}" data-read-only="${Boolean(field.readOnly)}"`;
+    const attributes=`${dataAttributes}${field.required?' required':''}${field.disabled?' disabled':''}`;
     const required=field.required?'<span class="required">必須</span>':'';
-    if(field.dataType==='NUMBER')return `<div class="field" data-key="${esc(field.key)}"><label>${esc(field.displayLabel)}${required}</label><div class="number-input"><input type="number" inputmode="numeric" step="1" data-spec-key="${esc(field.key)}" value="${esc(this.state.selection[field.key]??'')}" placeholder="数値を入力">${field.unit?`<span>${esc(field.unit)}</span>`:''}</div></div>`;
-    if(field.dataType==='TEXT')return `<div class="field" data-key="${esc(field.key)}"><label>${esc(field.displayLabel)}${required}</label><input type="text" data-spec-key="${esc(field.key)}" value="${esc(this.state.selection[field.key]??'')}" placeholder="入力してください"></div>`;
+    if(field.dataType==='NUMBER')return `<div class="field" data-key="${esc(field.key)}"><label>${esc(field.displayLabel)}${required}</label><div class="number-input"><input type="number" inputmode="decimal" step="${esc(field.step??'any')}" data-spec-key="${esc(field.key)}" ${attributes} value="${esc(this.state.selection[field.key]??'')}" placeholder="数値を入力">${field.unit?`<span>${esc(field.unit)}</span>`:''}</div>${field.helpText?`<small class="field-help">${esc(field.helpText)}</small>`:''}</div>`;
+    if(field.dataType==='TEXT')return `<div class="field" data-key="${esc(field.key)}"><label>${esc(field.displayLabel)}${required}</label><input type="text" data-spec-key="${esc(field.key)}" ${attributes} value="${esc(this.state.selection[field.key]??'')}" placeholder="入力してください"></div>`;
     const selected=Array.isArray(this.state.selection[field.key])?this.state.selection[field.key]:[this.state.selection[field.key]];
-    const options=field.values.map((value)=>`<option value="${esc(value.value)}"${selected.some((one)=>String(one)===String(value.value))?' selected':''}>${esc(value.displayLabel)}${value.manualCheck?'（要確認）':''}</option>`).join('');
     const multi=field.dataType==='MULTI_ENUM';
-    return `<div class="field" data-key="${esc(field.key)}"><label>${esc(field.displayLabel)}${required}</label><select data-spec-key="${esc(field.key)}"${multi?' multiple size="5"':''}${field.readOnly||!field.values.length?' disabled':''}>${multi?'':'<option value="">選択してください</option>'}${options}</select>${field.key===UCHIRIMO_APPEARANCE_KEY?'<small class="field-help">ガラスの厚みはメーカー見積で確認します。</small>':field.key===UCHIRIMO_SPACER_KEY||field.key===UCHIRIMO_GAS_KEY?'<small class="field-help">希望を見積依頼へ引き継ぎ、成立はメーカー見積で確認します。</small>':multi?'<small class="field-help">複数選択できます</small>':''}</div>`;
+    if(multi){
+      const choices=field.values.map((value)=>`<label class="multi-enum-option"><input type="checkbox" data-multi-value="true" value="${esc(value.value)}"${value.disabled||field.disabled||field.readOnly?' disabled':''}${selected.some((one)=>String(one)===String(value.value))?' checked':''}><span>${reviewChoiceLabel(value)}</span></label>`).join('');
+      const nativeOptions=field.values.map((value)=>`<option value="${esc(value.value)}"${value.disabled?' disabled':''}${selected.some((one)=>String(one)===String(value.value))?' selected':''}>${esc(value.displayLabel)}</option>`).join('');
+      return `<div class="field" data-key="${esc(field.key)}"><label>${esc(field.displayLabel)}${required}</label><select class="multi-enum-native-control" data-spec-key="${esc(field.key)}" ${attributes} multiple aria-hidden="true" tabindex="-1">${nativeOptions}</select><div class="multi-enum-group" role="group" aria-label="${esc(field.displayLabel)}" data-multi-enum="true" data-multi-key="${esc(field.key)}">${choices}</div><small class="field-help">${esc(field.helpText??'複数選択できます')}</small></div>`;
+    }
+    const options=field.values.map((value)=>`<option value="${esc(value.value)}"${value.disabled?' disabled':''}${selected.some((one)=>String(one)===String(value.value))?' selected':''}>${reviewChoiceLabel(value)}</option>`).join('');
+    return `<div class="field" data-key="${esc(field.key)}"><label>${esc(field.displayLabel)}${required}</label><select data-spec-key="${esc(field.key)}" ${attributes}><option value="">選択してください</option>${options}</select>${field.helpText?`<small class="field-help">${esc(field.helpText)}</small>`:''}</div>`;
   }
 
   renderWarnings(result){
@@ -314,7 +264,7 @@ export class ProductConfigurationEditor {
 
   renderSummary(result){
     const product=this.state.products.find((row)=>row.id===this.state.productId);
-    const rows=createProductConfigurationSnapshot({product,result}).display_summary.filter((row)=>this.state.productId!==UCHIRIMO_PRODUCT_ID||!UCHIRIMO_GLASS_DETAILS.has(row.key));
+    const rows=createProductConfigurationSnapshot({product,result}).display_summary;
     const target=this.root.querySelector('#selectionSummary');target.classList.toggle('muted',!rows.length);
     target.innerHTML=rows.length?rows.map((row)=>`<div><span>${esc(row.label)}</span><strong>${esc(row.value)}</strong></div>`).join(''):'項目を選択してください。';
   }

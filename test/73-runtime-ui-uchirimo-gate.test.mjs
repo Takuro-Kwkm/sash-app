@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { loadRegisteredRuntime } from '../src/catalog/runtime-master/runtime-master-registry.mjs';
-import { resolveRuntimeAppProduct } from '../src/catalog/runtime-master/runtime-app-bridge.mjs';
+import { resolveFormalRuntimeProduct as resolveRuntimeAppProduct } from './helpers/formal-runtime-result.mjs';
 
 const PRODUCT = 'SER-YKKAP-UCHIRIMO';
 const field = (result, key) => result.fields.find((row) => row.key === key);
@@ -20,13 +20,13 @@ async function complete(seed, preferences = {}) {
   throw new Error('Uchirimo representative configuration did not converge');
 }
 
-test('initial inner-window flow follows v1.8 global OPENING then CONFIGURATION stage order', async () => {
+test('initial inner-window flow follows v1.9 global OPENING then CONFIGURATION stage order', async () => {
   const result = await resolveRuntimeAppProduct(PRODUCT, {});
-  assert.deepEqual(result.fields.map((row) => row.key), ['window_type', 'room_specification', 'size_mode']);
+  assert.deepEqual(result.fields.map((row) => row.key), ['window_type', 'room_specification', 'frame_spec', 'fukashi_presence']);
   assert.deepEqual(values(result, 'room_specification'), ['residential', 'bathroom']);
   assert.deepEqual(values(result, 'window_type'), ['sliding_window', 'fix_window', 'inward_opening_window', 'opening_window_terrace']);
-  assert.deepEqual(values(result, 'size_mode'), ['custom']);
-  assert.equal(field(result, 'size_mode').readOnly, true);
+  assert.equal(result.selection.size_mode,'custom');
+  assert.equal(field(result, 'size_mode'), undefined);
 });
 
 test('glass_spec_id resolves internally and never appears as a giant dropdown', async () => {
@@ -52,10 +52,38 @@ test('Low-E block, spacer and cavity are separate Runtime dependencies', async (
   assert.equal(field(result, 'gas_fill'), undefined);
 });
 
-test('v1.8 global order keeps configuration and size before finish/glazing/installation', async () => {
+test('Uchirimo glazing choices expose Japanese UI labels instead of canonical English tokens', async () => {
+  let result = await resolveRuntimeAppProduct(PRODUCT, baseNode);
+  assert.deepEqual(
+    Object.fromEntries(field(result, 'glass_family').values.map((row) => [row.value, row.displayLabel])),
+    { insulating_glass:'複層ガラス', single_glazing:'単板ガラス', vacuum_glass:'真空ガラス' },
+  );
+
+  result = await resolveRuntimeAppProduct(PRODUCT, { ...baseNode, glass_family:'insulating_glass', glass_structure:'P3P3' });
+  const lowE = Object.fromEntries(field(result, 'low_e_type').values.map((row) => [row.value, row.displayLabel]));
+  assert.equal(lowE.insulating, '断熱タイプ');
+  assert.equal(lowE.solar_control, '遮熱タイプ');
+  assert.equal(lowE.none, 'なし');
+
+  const spacer = Object.fromEntries(field(result, 'spacer_type').values.map((row) => [row.value, row.displayLabel]));
+  assert.equal(spacer.aluminum, 'アルミスペーサー');
+  assert.equal(spacer.resin, '樹脂スペーサー');
+
+  const gas = Object.fromEntries(field(result, 'gas_fill').values.map((row) => [row.value, row.displayLabel]));
+  assert.equal(gas.air, '空気層');
+  assert.equal(gas.argon, 'アルゴンガス入り');
+
+  result = await resolveRuntimeAppProduct(PRODUCT, {
+    ...baseNode, glass_family:'insulating_glass', glass_structure:'P3P3', low_e_type:'insulating',
+  });
+  const coating = Object.fromEntries(field(result, 'glass_coating_color').values.map((row) => [row.value, row.displayLabel]));
+  for (const [value, label] of Object.entries(coating)) assert.notEqual(label, value, `raw glass coating token leaked: ${value}`);
+});
+
+test('v1.9 keeps semantic SIZE while presenting custom dimensions as the final input step', async () => {
   const result = await resolveRuntimeAppProduct(PRODUCT, { ...baseNode, glass_family: 'insulating_glass', glass_structure: 'P3P3', low_e_type: 'insulating' });
   const order = result.fields.map((row) => row.key);
-  for (const [a, b] of [['window_type','room_specification'],['room_specification','size_mode'],['size_mode','frame_color'],['frame_color','glass_family'],['glass_family','low_e_type'],['low_e_type','spacer_type'],['spacer_type','gas_fill'],['gas_fill','frame_installation_mode']]) assert.ok(order.indexOf(a) < order.indexOf(b), `${a} before ${b}`);
+  for (const [a, b] of [['window_type','room_specification'],['room_specification','frame_color'],['frame_color','glass_family'],['glass_family','low_e_type'],['low_e_type','spacer_type'],['spacer_type','gas_fill'],['gas_fill','frame_spec']]) assert.ok(order.indexOf(a) < order.indexOf(b), `${a} before ${b}`);
 });
 
 test('bathroom dependency exposes only formal colors and clears stale residential color', async () => {
@@ -68,8 +96,8 @@ test('bathroom dependency exposes only formal colors and clears stale residentia
 
 test('custom size exposes no standard records or synthetic W×H combinations', async () => {
   const result = await resolveRuntimeAppProduct(PRODUCT, baseNode);
-  assert.equal(field(result, 'size_mode').readOnly, true);
-  assert.deepEqual(values(result, 'size_mode'), ['custom']);
+  assert.equal(field(result, 'size_mode'), undefined);
+  assert.equal(result.selection.size_mode,'custom');
   assert.ok(field(result, 'size_w')); assert.ok(field(result, 'size_h'));
   assert.equal(result.fields.some((row) => row.key === 'size'), false);
   assert.equal(result.runtimeCapabilities.standardSizeRecords, 0);
@@ -94,7 +122,7 @@ test('upstream changes remove invalid downstream values', async () => {
 
 test('formal fixed/derived values are read-only', async () => {
   const result = await resolveRuntimeAppProduct(PRODUCT, baseNode);
-  assert.equal(field(result, 'size_mode').readOnly, true);
+  assert.equal(field(result, 'size_mode'), undefined);
   assert.equal(field(result, 'operating_handle_type').readOnly, true);
   assert.deepEqual(values(result, 'operating_handle_type'), ['detachable_handle']);
 });
@@ -116,9 +144,31 @@ test('manual and special-check routes remain non-PASS while ORDER_READY stays fa
   assert.ok(result.notices.some((message) => message.includes('ORDER_READY = false')));
 });
 
+test('middle rail explicitly selects なし/あり and position is enabled-only with stale clear', async () => {
+  const node = { room_specification:'residential', window_type:'sliding_window', sash_configuration:'two_panel', size_class:'window' };
+  let result = await resolveRuntimeAppProduct(PRODUCT, node);
+  const option = field(result, 'middle_rail_option');
+  assert.ok(option);
+  assert.deepEqual(new Set(values(result, 'middle_rail_option')), new Set(['none', 'enabled']));
+  assert.deepEqual(Object.fromEntries(option.values.map((row) => [row.value, row.displayLabel])), { enabled:'あり', none:'なし' });
+  assert.equal(result.selection.middle_rail_option, undefined, '中桟は初期値を自動選択しない');
+
+  result = await resolveRuntimeAppProduct(PRODUCT, { ...node, middle_rail_option:'none' });
+  assert.equal(field(result, 'middle_rail_position'), undefined);
+
+  result = await resolveRuntimeAppProduct(PRODUCT, { ...node, middle_rail_option:'enabled' });
+  assert.ok(field(result, 'middle_rail_position'));
+  assert.equal(field(result, 'middle_rail_position').required, true);
+  assert.deepEqual(new Set(values(result, 'middle_rail_position')), new Set(['standard', 'custom']));
+
+  result = await resolveRuntimeAppProduct(PRODUCT, { ...node, middle_rail_option:'none', middle_rail_position:'custom' });
+  assert.equal(result.selection.middle_rail_position, undefined);
+  assert.ok(result.clearedFields.some((row) => row.field === 'middle_rail_position'));
+});
+
 test('unknown installation state remains MANUAL_CHECK and fukashi inputs are conditional', async () => {
   const result = await resolveRuntimeAppProduct(PRODUCT, { ...baseNode, extension_frame_type: 'fukashi_60', extension_frame_reinforcement: 'reinforcement_square_pipe', floor_support_condition: 'unknown' });
-  assert.ok(field(result, 'extension_frame_reinforcement'));
+  assert.ok(field(result, 'fukashi_reinforcement'));
   assert.ok(field(result, 'construction'));
   assert.equal(result.validation.status, 'MANUAL_CHECK');
   assert.ok(result.manualWarnings.some((message) => message.includes('P5-UCH-204')));

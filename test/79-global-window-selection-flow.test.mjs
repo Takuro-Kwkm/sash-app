@@ -23,7 +23,7 @@ function assertCanonicalStageOrder(rows, label) {
   for (const field of rows) {
     assert.ok(field.semanticSlot, `${label}:${field.key} missing semanticSlot`);
     assert.ok(field.semanticStage, `${label}:${field.key} missing semanticStage`);
-    const current = STAGE_INDEX.get(field.semanticStage);
+    const current = field.presentationSlot==='INNER_WINDOW_FINAL_DIMENSION'?9:STAGE_INDEX.get(field.semanticStage);
     assert.notEqual(current, undefined, `${label}:${field.key} unknown stage ${field.semanticStage}`);
     assert.ok(current >= previous, `${label}:${field.key} stage order regressed`);
     previous = current;
@@ -56,8 +56,8 @@ test('new-construction fields use the single global stage sequence', () => {
 
 test('inner-window fields use the same global stage sequence', () => {
   const rows = applyInnerWindowUiOrder([
-    { key: 'frame_installation_mode', field_name: 'frame_installation_mode', domain: 'INSTALLATION', displayOrder: 90 },
-    { key: 'bathroom_installation_type', field_name: 'bathroom_installation_type', domain: 'INSTALLATION', displayOrder: 94 },
+    { key: 'frame_spec', field_name: 'frame_spec', domain: 'INSTALLATION', displayOrder: 90 },
+    { key: 'installation_environment', field_name: 'installation_environment', domain: 'INSTALLATION', displayOrder: 94 },
     { key: 'glass_family', field_name: 'glass_family', domain: 'GLASS', displayOrder: 40 },
     { key: 'frame_color', field_name: 'frame_color', domain: 'COLOR', displayOrder: 80 },
     { key: 'size_w', field_name: 'size_w', domain: 'SIZE', displayOrder: 101 },
@@ -66,13 +66,43 @@ test('inner-window fields use the same global stage sequence', () => {
     { key: 'window_type', field_name: 'window_type', domain: 'PRODUCT', displayOrder: 30 },
   ]);
   assert.deepEqual(stages(rows), [
-    'OPENING', 'CONFIGURATION', 'SIZE', 'SIZE', 'FINISH', 'GLAZING', 'INSTALLATION_SURVEY', 'INSTALLATION_SURVEY',
+    'OPENING', 'CONFIGURATION', 'FINISH', 'GLAZING', 'INSTALLATION_SURVEY', 'INSTALLATION_SURVEY', 'SIZE',
   ]);
   assert.deepEqual(keys(rows), [
-    'window_type', 'room_specification', 'size_mode', 'size_w', 'frame_color', 'glass_family', 'frame_installation_mode', 'bathroom_installation_type',
+    'window_type', 'room_specification', 'frame_color', 'glass_family', 'frame_spec', 'installation_environment', 'size_w',
   ]);
-  assert.equal(rows.find((row)=>row.key==='bathroom_installation_type').semanticSlot, 'installation_environment');
+  assert.equal(rows.find((row)=>row.key==='installation_environment').semanticSlot, 'installation_environment');
   assert.equal(INNER_WINDOW_UI_CATEGORY, 'INNER_WINDOW');
+});
+
+test('Uchirimo glass ranking changes presentation only and leaves Inplus slot order intact', () => {
+  const source=[
+    {key:'sales_glass_pattern',displayOrder:10},
+    {key:'low_e_type',displayOrder:20},
+    {key:'sales_glass_appearance',displayOrder:30},
+    {key:'glass_family',displayOrder:40},
+    {key:'sales_glass_design',displayOrder:50},
+    {key:'sales_spacer_type',displayOrder:60},
+    {key:'sales_gas_fill',displayOrder:70},
+  ];
+  const uchirimo=applyInnerWindowUiOrder(source,{id:'SER-YKKAP-UCHIRIMO'});
+  assert.deepEqual(keys(uchirimo),[
+    'glass_family','sales_glass_design','sales_glass_appearance','sales_glass_pattern',
+    'low_e_type','sales_spacer_type','sales_gas_fill',
+  ]);
+  assert.deepEqual(uchirimo.map(row=>[row.key,row.semanticSlot,row.semanticStage]),[
+    ['glass_family','glass_family','GLAZING'],
+    ['sales_glass_design','decorative_pattern','GLAZING'],
+    ['sales_glass_appearance','glass_type','GLAZING'],
+    ['sales_glass_pattern','grille_type','GLAZING'],
+    ['low_e_type','low_e_type','GLAZING'],
+    ['sales_spacer_type','spacer_type','GLAZING'],
+    ['sales_gas_fill','gas_fill','GLAZING'],
+  ]);
+  assert.deepEqual(keys(applyInnerWindowUiOrder(source,{id:'SER-LIXIL-INPLUS'})),[
+    'glass_family','sales_glass_appearance','sales_glass_design','low_e_type',
+    'sales_glass_pattern','sales_spacer_type','sales_gas_fill',
+  ]);
 });
 
 test('unknown user-facing fields fail closed even when they carry a familiar domain', () => {
@@ -96,11 +126,13 @@ test('approved category extensions are exact declarative Uchirimo fields', () =>
   assert.equal(rows[1].semanticSlot, 'extension:option:arm_stopper_option');
 });
 
-test('all registered window integrations point to UI standard v1.8 and resolve through canonical stages', async () => {
+test('registered window integrations resolve through their current canonical UI standard', async () => {
   const integrations = windowIntegrations();
   assert.equal(integrations.length, 8, 'Global Window Flow population must remain the eight registered window integrations');
   for (const integration of integrations) {
-    assert.equal(integration.uiStandardSpec, 'サッシ情報管理アプリ_UI実装標準仕様書_v1.8', integration.id);
+    assert.equal(integration.uiStandardSpec, integration.id==='SER-LIXIL-INPLUS'
+      ?'サッシ情報管理アプリ_UI実装標準仕様書_v2.1'
+      :'サッシ情報管理アプリ_UI実装標準仕様書_v1.9', integration.id);
     const result = await resolveRuntimeAppProduct(integration.id, {});
     assert.equal(result.productId, integration.id);
     assertCanonicalStageOrder(result.fields, integration.id);

@@ -76,7 +76,7 @@ export function standardSizeMetadataFromRuntimeValue(row={}){const objects=[row.
 export function formatStandardSizeLabel(metadata){if(!metadata){const error=new Error('Standard size display requires formal Runtime callCode/nominal dimensions and actualW/actualH.');error.code='RUNTIME_SIZE_DISPLAY_DATA_MISSING';throw error;}return `${metadata.callCode} ｜ W ${metadata.actualW} × H ${metadata.actualH}`;}
 export function formatAndSortStandardSizeChoices(choices=[]){return choices.map((choice,index)=>{const metadata=standardSizeMetadataFromRuntimeValue(choice.runtimeValueRow??choice);return{...choice,displayLabel:formatStandardSizeLabel(metadata),sizeMetadata:metadata,__stableIndex:index};}).sort((a,b)=>a.sizeMetadata.actualW-b.sizeMetadata.actualW||a.sizeMetadata.actualH-b.sizeMetadata.actualH||a.__stableIndex-b.__stableIndex).map(({runtimeValueRow,__stableIndex,...choice})=>choice);}
 export function applyRuntimeUiCategoryOrder(fields=[],integration={}){
-  if(integration.uiCategory===INNER_WINDOW_UI_CATEGORY)return applyInnerWindowUiOrder(fields);
+  if(integration.uiCategory===INNER_WINDOW_UI_CATEGORY)return applyInnerWindowUiOrder(fields,integration);
   if(integration.uiCategory===NEW_CONSTRUCTION_EXTERIOR_WINDOW_UI_CATEGORY)return applyNewConstructionSashUiOrder(fields);
   if(integration.uiCategory===ENTRY_DOOR_COVER_UI_CATEGORY)return applyEntryDoorCoverUiOrder(fields);
   const error=new Error(`Runtime UI category is not mapped to the Global Window Selection Flow: ${integration.uiCategory??'UNKNOWN'}`);

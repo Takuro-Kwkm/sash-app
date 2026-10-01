@@ -75,9 +75,8 @@ export class WorkManagementService {
     if(current.estimate_id!==estimateId)throw new Error('Opening does not belong to Estimate');
     const hasSnapshot=Object.prototype.hasOwnProperty.call(patch,'product_configuration_snapshot');
     const snapshot=patch.product_configuration_snapshot;
-    const salesHandoffReady=snapshot?.product_id==='SER-YKKAP-UCHIRIMO'
-      &&snapshot?.sales_request_state==='READY_FOR_MANUFACTURER_ESTIMATE'
-      &&snapshot?.sales_request_handoff?.glass_structure==='MANUFACTURER_ESTIMATE_CONFIRMATION';
+    const salesHandoffReady=snapshot?.sales_request_state==='READY_FOR_MANUFACTURER_ESTIMATE'
+      &&snapshot?.validation_state!==ValidationState.INVALID;
     const status=hasSnapshot?(snapshot?.validation_state===ValidationState.VALID||salesHandoffReady?OpeningStatus.COMPLETE:OpeningStatus.DRAFT):current.status;
     return this.repositories.openings.update(openingId,{...patch,status},options);
   }

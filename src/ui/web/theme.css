@@ -154,3 +154,7 @@ html[data-theme="dark"] .breadcrumbs a{color:#70cbb3}
     box-shadow:none!important;
   }
 }
+
+html[data-theme="dark"] .multi-enum-group{background:#22272c;color:var(--ink);border-color:#3a444d}
+html[data-theme="dark"] .multi-enum-option{border-color:#3a444d}
+html[data-theme="dark"] .multi-enum-option:has(input:checked){background:#18382f;border-color:var(--accent)}

@@ -228,6 +228,7 @@ export async function loadManifestRuntimePackage(entry) {
   // Accept only explicit PASS/CANONICAL evidence; never infer readiness from file
   // location or package name.
   const storageReady = manifest.storageStatus === 'PASS'
+    || manifest.storageStatus === 'PASS_CANONICAL'
     || manifest.storageStatus === 'CANONICAL'
     || (manifest.storageStatus === 'DRIVE_CANONICAL' && manifest.storageGate === 'PASS');
   const registryReady = manifest.registryGate

@@ -1,3 +1,4 @@
+import { projectEstimateSnapshot } from '../work-management/field-workflow-scope.mjs';
 export const EstimateOutputState=Object.freeze({
   COMPLETE:'COMPLETE',
   INCOMPLETE:'INCOMPLETE',
@@ -10,7 +11,7 @@ const nullable=(value)=>text(value)||null;
 const clone=(value)=>globalThis.structuredClone?globalThis.structuredClone(value):JSON.parse(JSON.stringify(value));
 
 const TYPE_KEYS=new Set(['window_type','opening_type','door_type']);
-const SIZE_KEYS=new Set(['size','custom_width','width','custom_height','height','size_w','size_h']);
+const SIZE_KEYS=new Set(['size','custom_width','width','custom_height','height','size_w','size_h','order_width','order_height']);
 const OMIT_MAJOR_KEYS=new Set([...TYPE_KEYS,...SIZE_KEYS]);
 
 function summaryRows(snapshot){
@@ -26,16 +27,8 @@ function summaryValue(snapshot,keys){
 
 function majorSpecificationText(snapshot){
   const rows=summaryRows(snapshot);
-  if(snapshot?.product_id==='SER-YKKAP-UCHIRIMO'){
-    const priority=['sales_glass_appearance','sales_spacer_type','sales_gas_fill'];
-    rows.sort((a,b)=>{
-      const left=priority.indexOf(a.key),right=priority.indexOf(b.key);
-      return (left<0?priority.length:left)-(right<0?priority.length:right);
-    });
-  }
   return rows
     .filter((row)=>!OMIT_MAJOR_KEYS.has(row.key))
-    .slice(0,8)
     .map((row)=>`${row.label??row.key}: ${row.value}`)
     .join(' / ')||null;
 }
@@ -43,8 +36,8 @@ function majorSpecificationText(snapshot){
 function sizeText(snapshot){
   const size=summaryValue(snapshot,['size']);
   if(size)return text(size);
-  const width=summaryValue(snapshot,['custom_width','width','size_w'])??snapshot?.configuration?.custom_width??snapshot?.configuration?.width??snapshot?.configuration?.size_w??null;
-  const height=summaryValue(snapshot,['custom_height','height','size_h'])??snapshot?.configuration?.custom_height??snapshot?.configuration?.height??snapshot?.configuration?.size_h??null;
+  const width=summaryValue(snapshot,['custom_width','width','size_w','order_width'])??snapshot?.configuration?.custom_width??snapshot?.configuration?.width??snapshot?.configuration?.size_w??snapshot?.configuration?.order_width??null;
+  const height=summaryValue(snapshot,['custom_height','height','size_h','order_height'])??snapshot?.configuration?.custom_height??snapshot?.configuration?.height??snapshot?.configuration?.size_h??snapshot?.configuration?.order_height??null;
   if(width!==null&&height!==null)return `${text(width)} × ${text(height)}`;
   if(width!==null)return text(width);
   return null;
@@ -70,6 +63,7 @@ function classifyRow(opening,snapshot,price){
     issues.push({code:'PRODUCT_SNAPSHOT_MISSING',message:'商品仕様Snapshotが保存されていません。'});
     return {state:EstimateOutputState.INCOMPLETE,issues};
   }
+  issues.push(...(snapshot.confirmation_requests??[]));
   if(snapshot.sales_request_handoff?.glass_structure==='MANUFACTURER_ESTIMATE_CONFIRMATION')issues.push({code:'GLASS_STRUCTURE_MANUFACTURER_ESTIMATE',message:'ガラスの厚みと最終仕様はメーカー見積で確認してください。'});
   if(snapshot.validation_state==='INVALID'){
     issues.push({code:'PRODUCT_SNAPSHOT_INVALID',message:'保存SnapshotがINVALIDです。'});
@@ -79,14 +73,14 @@ function classifyRow(opening,snapshot,price){
     issues.push({code:'OPENING_INCOMPLETE',message:'開口部入力が未完了です。'});
     return {state:EstimateOutputState.INCOMPLETE,issues};
   }
-  if(snapshot.sales_request_state==='READY_FOR_MANUFACTURER_ESTIMATE'
-    &&snapshot.sales_request_handoff?.glass_structure==='MANUFACTURER_ESTIMATE_CONFIRMATION'){
+  if(snapshot.sales_request_state==='READY_FOR_MANUFACTURER_ESTIMATE'){
     return {state:EstimateOutputState.NEEDS_CONFIRMATION,issues};
   }
   if(snapshot.validation_state&&snapshot.validation_state!=='VALID'){
     issues.push({code:'SNAPSHOT_REVALIDATION_REQUIRED',message:'商品仕様Snapshotの再確認が必要です。'});
     return {state:EstimateOutputState.NEEDS_CONFIRMATION,issues};
   }
+  if(snapshot.confirmation_requests?.length)return {state:EstimateOutputState.NEEDS_CONFIRMATION,issues};
   if(price===null){
     issues.push({code:'PRICE_NOT_STORED',message:'金額は保存Snapshotに保持されていません。0円には置換せず要確認として出力します。'});
     return {state:EstimateOutputState.NEEDS_CONFIRMATION,issues};
@@ -107,7 +101,7 @@ export function createEstimateOutputModel({project,estimate,openings,generatedAt
   if(estimate.project_id&&estimate.project_id!==project.project_id)throw new TypeError('estimate does not belong to project');
   const source=Array.isArray(openings)?openings:[];
   const rows=source.map((opening,index)=>{
-    const snapshot=opening?.product_configuration_snapshot??null;
+    const snapshot=projectEstimateSnapshot(opening?.product_configuration_snapshot??null);
     const price=extractPrice(snapshot);
     const classification=classifyRow(opening,snapshot,price);
     const audit=snapshot?{
@@ -128,9 +122,11 @@ export function createEstimateOutputModel({project,estimate,openings,generatedAt
       memo:nullable(opening?.memo),
       manufacturer:nullable(snapshot?.manufacturer),
       series:nullable(snapshot?.series),
+      product_variant:nullable(summaryValue(snapshot,['product_variant'])??snapshot?.configuration?.product_variant),
       opening_type:nullable(summaryValue(snapshot,['window_type','opening_type','door_type'])),
       major_specifications:majorSpecificationText(snapshot),
       size:sizeText(snapshot),
+      request_quantity:Number(snapshot?.configuration?.quantity??snapshot?.sales_request_handoff?.quantity??1),
       price,
       state:classification.state,
       issues:classification.issues,

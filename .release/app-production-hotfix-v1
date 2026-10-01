@@ -1,10 +1,9 @@
 {
   "schema": "APP_PRODUCTION_HOTFIX_V1",
   "scope": "NON_PRODUCT_MASTER_UI",
-  "change": "DARK_MODE_FULL_VIEWPORT",
-  "date": "2026-09-30",
-  "source_commit": "a7aaaf654302279eed8d4314f06fe4f43f544f13",
-  "notes": "Retry dark full viewport production hotfix. Primary files deployment remains authoritative, with exact Git source fallback only when Vercel returns HTTP 429 upload rate limiting. Product Master and Runtime data are unchanged.",
-  "attempt": 2,
+  "change": "PR56_INNER_WINDOW_FINAL_RELEASE",
+  "date": "2026-10-02",
+  "source_commit": "a088435640a91f4f3807a41d1bfbc48e0547e4b9",
+  "notes": "Release approved PR #56 through established production workflow; retain main dark-mode and exact-source upload fallback. Product data is read-only.",
   "trigger": "PR_MERGE_PUSH"
 }

@@ -1,0 +1,101 @@
+{
+  "formal": "PASS",
+  "package_gate": "PASS",
+  "storage_gate": "PASS",
+  "registry_gate": "PASS",
+  "post_save_verification": "PASS",
+  "human_flow_review": "PENDING",
+  "app_integration_ready": false,
+  "files": [
+    {
+      "file_name": "LIXIL_インプラス_商品マスター_v0.4-R3_InnerWindowCanonicalFrame_R1_FORMAL.xlsx",
+      "file_id": "1bDisz0WrUGgb3qx5bT_QS6TXG0wDNIK-",
+      "sha256": "64da594b198289ccde8f289d6fa77553ff81475d6bc0113a8a9d37b11a68fe11",
+      "status": "PASS"
+    },
+    {
+      "file_name": "YKKAP_ウチリモ内窓_商品マスター_v1.0-P7R1-R4_InnerWindowCanonicalFrame_R1_FORMAL.xlsx",
+      "file_id": "17j_kWiJW9TrbkopivSBA-aZXc1MNueYq",
+      "sha256": "d77b824a20f193f51d7771b3b2e987d52de2bc675b7a85eb79a33f0e9feea8f2",
+      "status": "PASS"
+    },
+    {
+      "file_name": "YKKAP_ウチリモ内窓_Slim_Canonical_v4_InnerWindowCanonicalFrame_R1_FORMAL.json",
+      "file_id": "1K_JE1OP07uoIQQKojZWp2cNqv2ZNY9WH",
+      "sha256": "b8c3e6c17c970132e7702e5772b6956a91052271712f28b860e55ef324bdd1fe",
+      "status": "PASS"
+    },
+    {
+      "file_name": "YKKAP_ウチリモ内窓_Size_Installation_Dependency_Master_v1.0-P7R1-R4_FORMAL.json",
+      "file_id": "1XDEsvqz5l7VGkoHXnyZ5WpFwEQy4qDIe",
+      "sha256": "3139765290acf9ce14c132c8640cea6f17ada1319d8d5352d02148add0326aeb",
+      "status": "PASS"
+    },
+    {
+      "file_name": "uchirimo-product-change-qa-r4.json",
+      "file_id": "1uSgph6Cfkn39242ouRrY9CXKqayWhEZc",
+      "sha256": "85e581f8f0e28f5170bec0d84d26fc1bfbe6544e5cef27bbc5c6807bbec57814",
+      "status": "PASS"
+    },
+    {
+      "file_name": "YKKAP_ウチリモ内窓_Vacuum_Glass_Curve_Master_v1.0-P7R1-R4_FORMAL.json",
+      "file_id": "1wm6kPViHaIOb_-pfkKuJurV9H2TjNTrS",
+      "sha256": "d38c0d7b998f28ff2e3de860d2ead04ecfc870944c5dfea36175ae70b53d058d",
+      "status": "PASS"
+    },
+    {
+      "file_name": "inplus-runtime.schema.json",
+      "file_id": "1d61bdbtl9LafVMgwzu2rduwMieB8kKtf",
+      "sha256": "351569028723f9e92392a1741f7134886d602dccba406260f385ef5bc3618740",
+      "status": "PASS"
+    },
+    {
+      "file_name": "YKKAP_ウチリモ内窓_Judgment_Engine_v1.0-P7R1-R4_FORMAL.json",
+      "file_id": "1wn8gKt6vwzCRbw1CrATq7aKtzx1UIvlK",
+      "sha256": "d0232fad8737671cc4dbccd23d54933d3fb0d9052dbe38cf03a2fc78d4f90683",
+      "status": "PASS"
+    },
+    {
+      "file_name": "inplus-product-change-qa.json",
+      "file_id": "1oTFRyW0ru7otOYBdxRJdKl0VV_mYHFGg",
+      "sha256": "fa8b792381bed0911ba286177586cb129147b794a6babfcc3f8c309d23f403e7",
+      "status": "PASS"
+    },
+    {
+      "file_name": "uchirimo-runtime.schema.json",
+      "file_id": "1H_MUnOHMH35YW3q73F28BvyWgJaWTJKh",
+      "sha256": "5d1311334c426a2c151827b948675de811b8839da356f42fd2ec7ffe60b1dd5f",
+      "status": "PASS"
+    },
+    {
+      "file_name": "LIXIL_インプラス_runtime_v0.4-R3_InnerWindowCanonicalFrame_R1_FORMAL.json",
+      "file_id": "19OtDgWSQFehEmxFYFIqxZGZCFXyzJaZ4",
+      "sha256": "bd3b00f673ad3dc77b593c4818fe9d4e92c074c7fc96e9f8919a43d56c8d5ec2",
+      "status": "PASS"
+    },
+    {
+      "file_name": "LIXIL_インプラス_PRODUCT_MASTER_MANIFEST_v0.4-R3_InnerWindowCanonicalFrame_R1_FORMAL.md",
+      "file_id": "1J5FS6sEmkZbzSQMaxKLwsq2PvJSbU1Oo",
+      "sha256": "51d837825b2a545b4aa7bf4dd0a7706947de1bbb321c59eaf387a15a2e10e244",
+      "status": "PASS"
+    },
+    {
+      "file_name": "LIXIL_インプラス_runtime_manifest_v0.4-R3_InnerWindowCanonicalFrame_R1_FORMAL.json",
+      "file_id": "1N1sQQM616oeuQm7kehqaz3EMQDrNzfhy",
+      "sha256": "d408bd64237ba5d44f9ebbf3ab3c869e9b64864ff0da28609568718b881607d1",
+      "status": "PASS"
+    },
+    {
+      "file_name": "YKKAP_ウチリモ内窓_PRODUCT_MASTER_MANIFEST_v1.0-P7R1-R4_InnerWindowCanonicalFrame_R1_FORMAL.md",
+      "file_id": "19mMid5eg4RjeOObiiUNJvaj8jO6KIbmF",
+      "sha256": "b4079838a254a7e2bbe04ab22ad9531ccaea2566468dafc6115c6f0b845cf153",
+      "status": "PASS"
+    },
+    {
+      "file_name": "YKKAP_ウチリモ内窓_runtime_manifest_v1.0-P7R1-R4_InnerWindowCanonicalFrame_R1_FORMAL.json",
+      "file_id": "10wOlwX4c0E0lCRuCKl-EdrW0vwwHTEGV",
+      "sha256": "6fc2e5fa375930198ef7d9639fca7998d3fbb6e5ee2a412b6652514ed27ce24b",
+      "status": "PASS"
+    }
+  ]
+}

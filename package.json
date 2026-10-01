@@ -11,6 +11,7 @@
     "build:work-preview": "node scripts/build-work-management-review-preview.mjs",
     "test:browser:work": "node test/browser/work-management-browser-qa.mjs && node test/browser/theme-browser-qa.mjs",
     "test:browser:estimate-output": "node test/browser/estimate-output-browser-qa.mjs",
+    "test:browser:inplus-bathroom": "node test/browser/inplus-bathroom-v1-browser-qa.mjs",
     "start": "node scripts/start-step8-ui.mjs",
     "start:qa": "HOST=0.0.0.0 node scripts/start-step8-ui.mjs",
     "test": "node --test test/*.test.mjs"

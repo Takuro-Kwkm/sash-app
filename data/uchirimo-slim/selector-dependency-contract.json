@@ -4,7 +4,7 @@
   "source_sha256": {
     "src/catalog/runtime-master/uchirimo-tabular-v1-adapter.mjs": "807bb549684d5fb122e4534e19df1a3440e496e4a1bb9ff7f08b2adc34b1ef38",
     "src/catalog/runtime-master/uchirimo-glass-rule-model.mjs": "0e8b1e37a05d25f80e7fc7f9a930c4349f8f97b5c43e9706c8aa99d1904c88b7",
-    "src/catalog/runtime-master/runtime-app-bridge.mjs": "ceedd90b52559eb082696421a2fb6843e248c8886257a6b84ed0a11b1fefd7eb",
+    "src/catalog/runtime-master/runtime-app-bridge.mjs": "2c89650b6a0177ff1252db2537a1bd59e93ff5210baeb07e3a8b5c66708efcaa",
     "src/catalog/runtime-master/new-construction-sash-runtime-ui-contract.mjs": "7f7cec995f75b6b74f6b1fdafb6968051d4fed8772be26a473728886437b8f91",
     "scripts/governance/uchirimo-selector-batch-runner.mjs": "29f26ef702d4c505ed3ab27de35eafc36b63f24bbbfe0d7fbaa55b631f920d74",
     "src/catalog/runtime-master/inner-window-runtime-ui-contract.mjs": "e7075aaafb832d93f54bf67c74ca52a9345a9b714c01277337c3a9fe3b1beaff",

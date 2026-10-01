@@ -51,7 +51,7 @@ function assertCanonical(rows,label){
   for(const row of rows){
     assert.ok(row.semanticSlot,`${label}:${row.key}:semanticSlot`);
     assert.ok(row.semanticStage,`${label}:${row.key}:semanticStage`);
-    const current=stageIndex.get(row.semanticStage);
+    const current=row.presentationSlot==='INNER_WINDOW_FINAL_DIMENSION'?9:row.presentationSlot==='INNER_WINDOW_POST_DIMENSION_CRESCENT_P'?9.1:stageIndex.get(row.semanticStage);
     assert.notEqual(current,undefined,`${label}:${row.key}:unknown-stage:${row.semanticStage}`);
     assert.ok(current>=previous,`${label}:${row.key}:stage-inversion`);
     previous=current;

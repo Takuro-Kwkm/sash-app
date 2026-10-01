@@ -1,0 +1,108 @@
+{
+  "schema": "UCHIRIMO_SELECTOR_DEPENDENCY_CONTRACT_V1",
+  "scope": "Historical frozen Slim source-evaluator regression only. R4 display-label precedence, R5 adopted-runtime identity pin, Japanese glazing label localization, the 2026-09-30 final custom-dimension presentation order, and the 2026-10-01 Uchirimo glass presentation order are reviewed; current canonical semantics require independent QA and are not inferred from this witness.",
+  "source_sha256": {
+    "src/catalog/runtime-master/uchirimo-tabular-v1-adapter.mjs": "a6f3cdca31609a2cde44e11c972b2446440e31cf988f1a1908aff6ecfde971ee",
+    "src/catalog/runtime-master/uchirimo-glass-rule-model.mjs": "0e8b1e37a05d25f80e7fc7f9a930c4349f8f97b5c43e9706c8aa99d1904c88b7",
+    "src/catalog/runtime-master/runtime-app-bridge.mjs": "b3ae6520ebbd8a712c43af311e9df4aec6d28388775730f7ac31b9b17c7abed3",
+    "src/work-management/field-workflow-scope.mjs": "7afa16757ad1e84ee423c0033798da8ec45dca21674894dfc3f6cafb19841431",
+    "src/catalog/runtime-master/new-construction-sash-runtime-ui-contract.mjs": "55f4f3f93be026614f4ab4b0a6df318777d33146743c1588bc1552e1ebaeeef7",
+    "scripts/governance/uchirimo-selector-batch-runner.mjs": "29f26ef702d4c505ed3ab27de35eafc36b63f24bbbfe0d7fbaa55b631f920d74",
+    "src/catalog/runtime-master/inner-window-runtime-ui-contract.mjs": "1c753f798e9f68e459506cd9f8f91b4dae3e8c0cd794863c6ddadb25c9c0a580",
+    "src/catalog/runtime-master/global-window-selection-flow-engine.mjs": "2ef247ea40f4be459da5b37a524c2c1baf9f3e449d2a3e1a29436db69a7d4271",
+    "src/catalog/runtime-master/canonical-window-semantic-schema.mjs": "03ace90218363f62ad89280c77a328bb2e05efd362f6b17eca8989f0d52edeb7",
+    "data/uchirimo-slim/runtime-support.json": "25eaf0a65482aed99a37852c1b1c5c7d4c60de54c1a3954923abb4f11b7e4a1d",
+    "scripts/governance/uchirimo-slim-runtime-support.mjs": "39344a263b8b0dab5ced1528c569f82d651e4b2e6f102f4ff692e75a56561fe1",
+    "scripts/governance/uchirimo-slim-factorized-selector.mjs": "a2fb337342762b4ff7012fc8bdd10eecfa1b72810a08d2f23703d2be4de84d79",
+    "scripts/governance/uchirimo-frozen-migration-entry.mjs": "e0e5f78b2a51b9154bed8d07cde609768c3a0eb5ce53ef3cba7dc33f3a804d9e",
+    "scripts/governance/uchirimo-adopted-slim-runtime.mjs": "6e543bb9365f09bdb78446acefbc541a343b67719f5489ae2a37973238c46c51",
+    "scripts/governance/formal-selector-qa-projection.mjs": "f1acb09facd8cec0781a8a3e09398a338226bdb8008089f39264d00bf5035f8b",
+    "src/catalog/runtime-master/inplus-presentation-rules.mjs": "a23f03edd5b0beecb932f18305aba17dce078c6cd1ea895cef8f816b7f21d388",
+    "src/catalog/runtime-master/inner-window-sales-extension.mjs": "94254f6c7eb8e646ea44bc324bcec3359d2695c15d3236f02ef783440a230b03"
+  },
+  "review": {
+    "bathroom_workflow_separation_20261001": "App-side estimate/site_survey scope only. Historical witness calls normalizeRuntimeSelection and raw resolver, which are unchanged. Current bathroom estimate wrapper detaches audited survey values, excludes their Required/output scope, and evaluates all allowed Formal installation discriminator branches for W/H without selecting an environment. Independent tests 91 cover both current products, preserved legacy values, forbidden raw survey rules, all-branch bounds and retained product hardware selectors; browser suite covers actual save/reload/handoff and variant transitions. No Formal Product Master, Runtime package, rule or Registry mutation. Pin guard remains exact.",
+    "baseline_contract": "data/uchirimo-slim/selector-dependency-contract.json",
+    "changed_source_pins": [
+      {
+        "file": "src/catalog/runtime-master/uchirimo-tabular-v1-adapter.mjs",
+        "baseline_sha256": "d56efc591a648ec3379e6bba0fe8261de933cdcada4ac9439b34fd280dd14c50",
+        "candidate_sha256": "a6f3cdca31609a2cde44e11c972b2446440e31cf988f1a1908aff6ecfde971ee"
+      },
+      {
+        "file": "src/catalog/runtime-master/runtime-app-bridge.mjs",
+        "baseline_sha256": "ceedd90b52559eb082696421a2fb6843e248c8886257a6b84ed0a11b1fefd7eb",
+        "candidate_sha256": "6628ddcd01f1b4f1225ced1434c9e390b3a8c9177ccb6ece3f561c02715e3ebe"
+      },
+      {
+        "file": "src/catalog/runtime-master/inner-window-runtime-ui-contract.mjs",
+        "baseline_sha256": "e7075aaafb832d93f54bf67c74ca52a9345a9b714c01277337c3a9fe3b1beaff",
+        "candidate_sha256": "99171a44706cf354a5548f84957e4c35996eb38a992191e61e17cc59b08bda7c"
+      },
+      {
+        "file": "src/catalog/runtime-master/global-window-selection-flow-engine.mjs",
+        "baseline_sha256": "a02b361d265d139ffa037cb16c0e19167db01c126d8b5d0110238653490fe678",
+        "candidate_sha256": "2ef247ea40f4be459da5b37a524c2c1baf9f3e449d2a3e1a29436db69a7d4271"
+      },
+      {
+        "file": "src/catalog/runtime-master/new-construction-sash-runtime-ui-contract.mjs",
+        "baseline_sha256": "7f7cec995f75b6b74f6b1fdafb6968051d4fed8772be26a473728886437b8f91",
+        "candidate_sha256": "55f4f3f93be026614f4ab4b0a6df318777d33146743c1588bc1552e1ebaeeef7"
+      },
+      {
+        "file": "scripts/governance/uchirimo-adopted-slim-runtime.mjs",
+        "baseline_sha256": "781d6177c537af344ada8d951ec8fd3c33a906c22768917be65fd9ced9f109b2",
+        "candidate_sha256": "6e543bb9365f09bdb78446acefbc541a343b67719f5489ae2a37973238c46c51"
+      },
+      {
+        "file": "scripts/governance/formal-selector-qa-projection.mjs",
+        "baseline_sha256": null,
+        "candidate_sha256": "f1acb09facd8cec0781a8a3e09398a338226bdb8008089f39264d00bf5035f8b"
+      }
+    ],
+    "dependency_edge_review": "Runtime bridge localization remains presentation-only for generic raw glass tokens. The 2026-10-01 Inplus correction no longer exposes cavity_fill canonical thickness variants in the sales UI; cavity_fill is suppressed from the presentation/input path and an app-side sales_gas_fill request carries only air/argon preference to estimate handoff, so no representative Formal cavity thickness is inferred. Formal Runtime bytes, dependency rules, validation data and Product Master remain unchanged. Fresh inner-window UI regression asserts exactly one 乾燥空気 and one アルゴンガス choice and the separate handoff value.",
+    "qa_projection": "Test-only projection exposes source-proven internal size selectors to the Formal enumeration driver. It does not alter their values, domains, dependencies or source evaluator. Public UI remains hidden and is tested separately.",
+    "canonical_frame_r3": "New public frame wrapper does not run in the historical witness. Current registered R3 package/adopted runtime has separate exact identity and semantic tests. Historical extraction explicitly reconstructs its old last-role-wins view; live loader preserves every component. The explicit support-component projection/60 incompatibility is consumed only by the new canonical-frame contract; the historical witness has no such contract and is unchanged. Fresh R3 integration tests cover that dependency.",
+    "canonical_frame_r4": "Uchirimo R4 restores fukashi_sides from EV-UCH-028 and preserves clear as the Formal label クリア. Current registered R4 package has exact identity, semantic tests and downstream-clear QA; the historical factorized witness is not used as R4 proof.",
+    "canonical_frame_r5": "Uchirimo R5 restores explicit middle_rail_option なし/あり from EV-UCH-029. The adopted-runtime source pin changed only to the current Runtime revision identity; selector dependency reads/writes in the historical witness are unchanged. Fresh R5 Runtime/UI and downstream-clear QA provide current proof.",
+    "ui_glazing_localization_20260930": "Mapped raw presentation tokens for glass family, Low-E, coating color, glass surface, safety treatment, spacer, cavity gas, grille/muntin and vacuum-glass product. Glass construction codes remain codes. No Product Master, Formal Runtime, Registry, dependency or selection-value mutation.",
+    "ui_final_dimension_order_20260930": "Inner-window custom W/H fields retain semanticStage=SIZE and all existing validation/dependency behavior, but their presentationSlot moves from pre-option to the final sales-input step after OPTION. The renderer separately groups discrete OPTION-stage fields under an オプション heading when no aggregate option_items selector exists; this adds no product-specific selection branch and does not mutate Product Master, Formal Runtime, Registry, selection values, dependencies, validation or estimate handoff.",
+    "ui_sales_request_controls_20260930": "Reviewed 2026-09-30 Inplus/UI correction adds evidence-backed sales-request presentation and value augmentation only: fukashi lower reinforcement request, crescent presence/type/position/P input, and official installation option names. These additions do not change the historical Uchirimo source evaluator dependency graph; current Inplus behavior is covered by dedicated runtime/UI tests.",
+    "ui_inner_window_human_review_corrections_20261001": "Human review corrections only. Inplus crescent-position mode is exposed for sliding windows unless crescentless special order is selected; its numeric P request remains after final custom W/H. Inplus cavity_fill thickness variants are removed from the sales input surface and replaced by exactly one 乾燥空気 / one アルゴンガス estimate-request choice; no Formal thickness value is guessed. Uchirimo adds app-side numeric requests after final W/H for custom crescent position, custom pull-handle position and custom middle-rail position, ordered crescent → pull handle → middle rail. Current R6 Product Master Formal (v1.0-P7R1-R6 / OptionCompleteness_R1) is read-only in this integration task and is explicitly bound as a productMasterFormalReference while the existing R5 Runtime remains the technical runtime baseline because R6 Formal declares Runtime Scope NOT_INCLUDED_IN_PRODUCT_MASTER_FORMAL. Uchirimo sales presentation now exposes the existing Formal grid/Japanese glass facts as ガラスデザイン → デザイン branches and projects the 10 R6 accessory options into additive MULTI_ENUM estimate-request UI. Existing arm-stopper/outside-handle dedicated selectors are not duplicated; replacement crescent/universal handle remain ESTIMATE_CONFIRM_REQUIRED. Product facts are not inferred in UI.",
+    "ui_order_refinement_20261001": "Reviewed source pins for product-scoped presentation ranking: Uchirimo insulating glass now displays glass_family → sales_glass_design → sales_glass_appearance → sales_glass_pattern → low_e_type, while preserving canonical semanticSlot/semanticStage, conditional pattern visibility and reset, appearance value, and Inplus glass order. Option fields already preceded final W/H for both products; regression tests now lock that existing order including checkbox options and Uchirimo position dimensions. No Product Master, Formal Runtime, Registry, selection-value, dependency, validation or estimate-handoff mutation. The exact historical source hash guard and independent current UI/browser regression remain enabled.",
+    "ui_inplus_midrail_request_20261001": "Reviewed Inplus-only app presentation and handoff guard: sales_midrail_request and middle_rail_position_mode are selected before W/H as an intent, while sash_midrail is hidden from duplicate UI and remains an internal Formal selection only after the existing terrace/H/runtime visibility permits it. Inapplicable H clears dependent mode/F and blocks their handoff with a visible validation error; unresolved size class is pending, not a Formal assertion. The renderer shows feedback immediately after final H. No Formal Runtime, Product Master, Registry, Uchirimo rule, or manufacturer PF range is changed. Cold-start and three-width browser regressions cover ordering, applicability, resets, save/reopen and output.",
+    "ui_standard_v21_source_pin_recovery": {
+      "reviewed_base_commit": "b06e1e7938891bfdbb7b69f3e980fdd2a626b9b4",
+      "reviewed_candidate_commit": "a21fec05534c0a309ff805d8fbdca7d6916d5704",
+      "previous_reviewed_sha256": "935ae47f954a2d058c45e41109b906773a63c105fb929b2ccc252381a5824e85",
+      "authority": "CURRENT_INFORMATION_SOURCE_MANIFEST v1.4 / SASH_UI_STANDARD v2.1 / Drive 1IjO6n-GmGFwCqb3XxQRnt5hMP5O-L7kT, sections 23.1-23.2",
+      "source_diff": "Adds declarative crescent_position_mode/P slots and Japanese crescent labels, places P after final W/H, and removes the replaced sales_installation_auxiliaries slot. No changes to existing canonical fields, values, dependency evaluation, Formal bytes or the historical Uchirimo dependency graph.",
+      "verification": "test/84-uchirimo-factorized-selector.test.mjs still verifies all explicit historical terminals, rejects unknown actions, altered source hashes and undeclared side effects. Current frame and sales-control tests independently verify current UI behavior. Hash verification remains exact; no test is removed, skipped or weakened.",
+      "product_master_mutation": 0
+    },
+    "checkbox_final_option_presentation": {
+      "baseline_commit": "0f4bd2298840301b1104545b047038c9cf701551",
+      "previous_reviewed_sha256": "08973e0b34d82ce1f134c4062c467a5814b5f686b7c039f56849de508566536c",
+      "source_diff": "option_items uses the final OPTION presentation rank. Semantic stage, slot, choice values, dependencies, shared global stage order and Formal bytes unchanged.",
+      "independent_regression": "88-inner-window-sales-request-controls and actual DOM/bounding rectangles in inner-window-canonical-frame-qa assert last dropdown < checkbox < W < H and zero dropdowns after checkbox.",
+      "product_master_mutation": 0,
+      "formal_runtime_mutation": 0
+    },
+    "inplus_presentation_change": "2026-10-01: context-dependent Low-E labels and Formal PF midrail position projection; source tables read-only. New adapter and extension are hash guarded. Unit and real DOM QA verify change scope.",
+    "inplus_accessory_requests_20261002": {
+      "scope": "Sales estimate only, Inplus standard and bathroom. Strip requested outer-window accessory IDs before manufacturer evaluation; project a single MULTI_ENUM and estimator confirmation afterward. Raw Uchirimo evaluator, normalizeRuntimeSelection and package bytes are unchanged. Existing standard site_survey extension keeps its previous replacement-crescent choice. No manufacturer Fact or shared schema mutation. Tests 92 independently verify new sales scope; unchanged Uchirimo regression stays enabled. Exact source-pin guard and negative tests retained.",
+      "changed_source_pins": [
+        {
+          "file": "src/catalog/runtime-master/runtime-app-bridge.mjs",
+          "baseline_sha256": "3a487b20cd440d30919a076b9d66b3d97d5d64c0d9afd8fb22c33d74e5851570",
+          "candidate_sha256": "b3ae6520ebbd8a712c43af311e9df4aec6d28388775730f7ac31b9b17c7abed3"
+        },
+        {
+          "file": "src/catalog/runtime-master/inner-window-sales-extension.mjs",
+          "baseline_sha256": "1dc5aebdb2aaeb2d972ccb5b6595b986fed817f7a0fc4379d5de0b7003d85dfe",
+          "candidate_sha256": "94254f6c7eb8e646ea44bc324bcec3359d2695c15d3236f02ef783440a230b03"
+        }
+      ]
+    }
+  }
+}

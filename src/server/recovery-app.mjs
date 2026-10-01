@@ -16,9 +16,9 @@ const catalog=createCatalog(CURRENT_WINDOW_SERIES_MODULES);
 const runtimeIntegrationDeclarations=runtimeAppIntegrationInventory();
 const runtimeMasterIntegrations=runtimeIntegrationDeclarations.filter((row)=>row.status==='READY'&&row.selectable);
 const buildTimestamp=new Date().toISOString();
-const buildIdentity={appVersion:"work-management-v1.0+estimate-output-v1.0",workSchemaVersion:WORK_SCHEMA_VERSION,catalog,runtimeMasterIntegrations:runtimeIntegrationDeclarations.map(({id,packageVersion,sourceHash,status,selectable})=>({id,packageVersion,sourceHash,status,selectable}))};
+const buildIdentity={appVersion:"work-management-v1.0+estimate-output-v1.0+inplus-bathroom-v1.0",workSchemaVersion:WORK_SCHEMA_VERSION,catalog,runtimeMasterIntegrations:runtimeIntegrationDeclarations.map(({id,packageVersion,sourceHash,status,selectable,productVariantContract})=>({id,packageVersion,sourceHash,status,selectable,productVariantContract}))};
 const buildId=`SASH-WORK-V1-${createHash("sha256").update(JSON.stringify(buildIdentity)).digest("hex").slice(0,12)}`;
-const catalogVersion="7シリーズ統合 / TW integrated-v0.4 / EW v1.3 / サーモスⅡH v0.9-R4 / サーモスL v0.7-R2 / APW430 20260918-R3 / APW431 v1.2 / ウチリモ Slim V2";
+const catalogVersion="8シリーズ統合 / TW integrated-v0.4 / EW v1.3 / サーモスⅡH v0.9-R4 / サーモスL v0.7-R2 / APW430 20260918-R3 / APW431 v1.2 / ウチリモ Slim V3 / インプラス v0.4-R3 + 浴室仕様 v1.0";
 
 export const releaseBuildMetadata=Object.freeze({buildId,buildTimestamp,catalogVersion});
 
@@ -46,7 +46,7 @@ export function createRecoveryRequestHandler({backend="node:http recovery server
     const url=requestUrl(req);
     if(url.pathname==="/health"||url.pathname==="/api/health"){
       return json(res,200,{ok:true,buildId,buildTimestamp,catalogVersion,entrypoint,frontendRoot:"src/ui/web",backend,
-        features:{estimateOutput:"1.0"},persistence:{type:"BROWSER_LOCAL_STORAGE",schemaVersion:WORK_SCHEMA_VERSION,key:"sash.work-management.v1",multiDevice:false},databasePath:null,
+        features:{estimateOutput:"1.0",inplusBathroom:"v1.0",themeModes:["system","light","dark"]},persistence:{type:"BROWSER_LOCAL_STORAGE",schemaVersion:WORK_SCHEMA_VERSION,key:"sash.work-management.v1",multiDevice:false},databasePath:null,
         inventory:catalogInventory(catalog),runtimeMasterIntegrations});
     }
     if(url.pathname==="/api/catalog/products") return json(res,200,catalog.products);
@@ -69,15 +69,15 @@ export function createRecoveryRequestHandler({backend="node:http recovery server
     }
     if(url.pathname==="/api/catalog") return json(res,200,catalog);
     if(url.pathname==="/app.js") return staticFile(res,"app.js","text/javascript; charset=utf-8");
+    if(url.pathname==="/theme.js") return staticFile(res,"theme.js","text/javascript; charset=utf-8");
     if(url.pathname==="/product-configuration-editor.mjs") return staticFile(res,"product-configuration-editor.mjs","text/javascript; charset=utf-8");
     if(url.pathname==="/estimate-output-integration.mjs") return staticFile(res,"estimate-output-integration.mjs","text/javascript; charset=utf-8");
-    if(url.pathname==="/theme.js") return staticFile(res,"theme.js","text/javascript; charset=utf-8");
     if(url.pathname==="/styles.css") return staticFile(res,"styles.css","text/css; charset=utf-8");
     if(url.pathname==="/styles-wave3.css") return staticFile(res,"styles-wave3.css","text/css; charset=utf-8");
     if(url.pathname==="/work-management.css") return staticFile(res,"work-management.css","text/css; charset=utf-8");
     if(url.pathname==="/estimate-output.css") return staticFile(res,"estimate-output.css","text/css; charset=utf-8");
     if(url.pathname==="/theme.css") return staticFile(res,"theme.css","text/css; charset=utf-8");
-    const workModule=url.pathname.match(/^\/work-management\/(domain|storage|repositories|service)\.mjs$/)?.[1];
+    const workModule=url.pathname.match(/^\/work-management\/(domain|storage|repositories|service|field-workflow-scope)\.mjs$/)?.[1];
     if(workModule)return staticFileAt(res,join(root,"src","work-management",`${workModule}.mjs`),"text/javascript; charset=utf-8");
     const estimateModule=url.pathname.match(/^\/estimate-output\/(model|pdf-renderer|xlsx-renderer)\.mjs$/)?.[1];
     if(estimateModule)return staticFileAt(res,join(estimateOutputRoot,`${estimateModule}.mjs`),"text/javascript; charset=utf-8");

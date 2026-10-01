@@ -155,7 +155,10 @@ export async function loadCanonicalWorkbookRuntimePackage(entry) {
       requireRuntimeContract: entry.requireRuntimeContract !== false,
       enforceSchemaVersion: entry.enforceComponentSchemaVersion !== false,
     });
-    loadedByRole.set(row.role, loaded.json);
+    // A support role may contain multiple manifest-listed components.
+    // Preserve each document rather than silently replacing the earlier one.
+    const documentKey = loadedByRole.has(row.role) ? `${row.role}:${row.fileId}` : row.role;
+    loadedByRole.set(documentKey, loaded.json);
     files.push({
       role: row.role, fileName: row.fileName, fileId: row.fileId,
       expected: row.sha256, actual: loaded.actualSha256, match: true,

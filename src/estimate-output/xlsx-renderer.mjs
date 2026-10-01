@@ -68,7 +68,7 @@ function buildWorkbookParts(model){
     if(!index.has(key)){index.set(key,shared.length);shared.push(key);}
     return index.get(key);
   };
-  const headers=['No.','階数','部屋 / 位置','メーカー','シリーズ','窓・ドア種類','主要仕様','サイズ','出力状態','金額','Runtime Package','Runtime Identity','Validation','Source Mode'];
+  const headers=['No.','階数','部屋 / 位置','メーカー','シリーズ','窓・ドア種類','主要仕様','サイズ','出力状態','金額','Runtime Package','Runtime Identity','Validation','Source Mode','確認事項'];
   const rows=[headers,...model.rows.map((row)=>[
     row.opening_no,
     row.floor??'',
@@ -84,6 +84,7 @@ function buildWorkbookParts(model){
     row.audit?.runtime_manifest_identity??'',
     row.audit?.validation_state??'',
     row.audit?.source_mode??'',
+    (row.issues??[]).map(issue=>issue.message).join(' / '),
   ])];
 
   const rowXml=rows.map((row,rowIndex)=>{

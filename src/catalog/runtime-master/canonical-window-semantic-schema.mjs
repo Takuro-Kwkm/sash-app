@@ -18,6 +18,8 @@ export const CANONICAL_WINDOW_SLOT_STAGE = Object.freeze({
   screen_presence:'SCREEN', screen_form:'SCREEN', screen_midrail:'SCREEN', screen_net:'SCREEN',
   glass_base:'GLAZING', glass_type:'GLAZING', glass_detail:'GLAZING', glass_function:'GLAZING', glass_spacer:'GLAZING', glass_air_layer:'GLAZING',
   installation:'INSTALLATION_SURVEY', installation_environment:'INSTALLATION_SURVEY', option:'OPTION',
+  frame_spec:'INSTALLATION_SURVEY', upper_frame_spec:'INSTALLATION_SURVEY', lower_frame_spec:'INSTALLATION_SURVEY',
+  fukashi_presence:'INSTALLATION_SURVEY', fukashi_sides:'INSTALLATION_SURVEY', fukashi_depth:'INSTALLATION_SURVEY', fukashi_reinforcement:'INSTALLATION_SURVEY',
 });
 
 export const NEW_CONSTRUCTION_CANONICAL_SLOT_ORDER = Object.freeze([

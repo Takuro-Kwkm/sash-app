@@ -1,0 +1,23 @@
+{
+  "schema_version": "INPLUS_BATHROOM_RUNTIME_ADAPTER_MANIFEST_V1",
+  "task_classification": "NON_PRODUCT_MASTER",
+  "product_master_mutation": 0,
+  "manufacturer": "LIXIL",
+  "product": "インプラス",
+  "product_variant": "浴室仕様",
+  "formal_revision": "v1.0",
+  "formal_product_id": "LIXIL_INPLUS_BATHROOM",
+  "formal_product_master_file_id": "1GJknHnjU0-hvNvTS2X8fajuTkE0SvX0m",
+  "formal_product_master_sha256": "58397e2dfc4b4fb74f62b14b4d9b22943de96c866a107cc48d52dcadd2c1bfcb",
+  "formal_package_file_id": "1NqtsDPZNOil3YUXTarIylFTrvipkNcdt",
+  "formal_scope_id": "LIXIL_INPLUS_BATHROOM_FORMAL_SELECTION_SCOPE_v1.0",
+  "baseline": "LIXIL SN4200 2026年09月版",
+  "adapter_type": "INPLUS_BATHROOM_FORMAL_V1",
+  "integration_product_id": "SER-LIXIL-INPLUS",
+  "variant_field": "product_variant",
+  "variant_value": "bathroom",
+  "standard_variant_runtime_mutation": 0,
+  "controlled_unresolved_count": 7,
+  "controlled_unresolved_auto_resolution": false,
+  "runtime_scope_note": "Formal Product Master is read-only input. This manifest identifies only the downstream Runtime Adapter integration."
+}

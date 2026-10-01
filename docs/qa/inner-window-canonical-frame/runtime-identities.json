@@ -1,0 +1,220 @@
+[
+  {
+    "id": "SER-LIX-EW",
+    "previous": {
+      "id": "SER-LIX-EW",
+      "packageVersion": "v1.3",
+      "sourceHash": "a59848642ae301dcf8a275b7a43bdceb64a7d9e6488a5c79eca21584178be830",
+      "canonicalRuntimeReference": {
+        "runtimeManifestDriveFileId": "140pCgz2uhukjOjd1wymuISuAMjhaBpCS",
+        "runtimeDriveFileId": "11ZmCPKceAmp3OEyJIXy79VoO8PEk_oYw",
+        "canonicalFolderId": "1mDsi9amFdD5A9N8XrommExB_EMZDQiqu"
+      },
+      "status": "READY"
+    },
+    "current": {
+      "id": "SER-LIX-EW",
+      "packageVersion": "v1.3",
+      "sourceHash": "a59848642ae301dcf8a275b7a43bdceb64a7d9e6488a5c79eca21584178be830",
+      "canonicalRuntimeReference": {
+        "runtimeManifestDriveFileId": "140pCgz2uhukjOjd1wymuISuAMjhaBpCS",
+        "runtimeDriveFileId": "11ZmCPKceAmp3OEyJIXy79VoO8PEk_oYw",
+        "canonicalFolderId": "1mDsi9amFdD5A9N8XrommExB_EMZDQiqu"
+      },
+      "status": "READY"
+    },
+    "unchanged": true
+  },
+  {
+    "id": "SER-LIXIL-TW",
+    "previous": {
+      "id": "SER-LIXIL-TW",
+      "packageVersion": "integrated-v0.4",
+      "sourceHash": "95380f5cab261edf03bf868e0f2120b9d57e941d6618b4543afe7a6ffd00c68e",
+      "canonicalRuntimeReference": {
+        "runtimeManifestDriveFileId": "13doEdTkUlQNu4Dm-SNwkeUg8RkrjS5G0",
+        "runtimeJsonDriveFileId": "1hWy1coHWTsuXYXGLRxZ0a2vJEmSIvg5p",
+        "canonicalFolderId": "1oLex2SCEIKoH5mDMtbMasJXglPF-n-a"
+      },
+      "status": "READY"
+    },
+    "current": {
+      "id": "SER-LIXIL-TW",
+      "packageVersion": "integrated-v0.4",
+      "sourceHash": "95380f5cab261edf03bf868e0f2120b9d57e941d6618b4543afe7a6ffd00c68e",
+      "canonicalRuntimeReference": {
+        "runtimeManifestDriveFileId": "13doEdTkUlQNu4Dm-SNwkeUg8RkrjS5G0",
+        "runtimeJsonDriveFileId": "1hWy1coHWTsuXYXGLRxZ0a2vJEmSIvg5p",
+        "canonicalFolderId": "1oLex2SCEIKoH5mDMtbMasJXglPF-n-a"
+      },
+      "status": "READY"
+    },
+    "unchanged": true
+  },
+  {
+    "id": "SER-LIXIL-INPLUS",
+    "previous": {
+      "id": "SER-LIXIL-INPLUS",
+      "packageVersion": "v0.4-R2",
+      "sourceHash": "cbbdb6ba315c985f7d27f75a237e861be8ce635962ce1cd5a746d7f152c8e1f8",
+      "canonicalRuntimeReference": {
+        "runtimeManifestDriveFileId": "1TokjIpcipm8TPxwrSO0FjyPxxvhCq5iZ",
+        "runtimeJsonDriveFileId": "16dqUaVFp0YW3PqJ-A9tR0fAV0KT7WZML",
+        "runtimeSchemaDriveFileId": "1Qov5w3pNrU9om40OLJikJv7B8klK1RNz",
+        "canonicalFolderId": "1NPW7cUbaC1JRvIaJrltFkoYUiLyPwJa1"
+      },
+      "status": "READY"
+    },
+    "current": {
+      "id": "SER-LIXIL-INPLUS",
+      "packageVersion": "v0.4-R3",
+      "sourceHash": "d408bd64237ba5d44f9ebbf3ab3c869e9b64864ff0da28609568718b881607d1",
+      "canonicalRuntimeReference": {
+        "runtimeManifestDriveFileId": "1N1sQQM616oeuQm7kehqaz3EMQDrNzfhy",
+        "runtimeJsonDriveFileId": "19OtDgWSQFehEmxFYFIqxZGZCFXyzJaZ4",
+        "runtimeSchemaDriveFileId": "1d61bdbtl9LafVMgwzu2rduwMieB8kKtf",
+        "canonicalFolderId": "1NPW7cUbaC1JRvIaJrltFkoYUiLyPwJa1"
+      },
+      "status": "READY"
+    },
+    "unchanged": false
+  },
+  {
+    "id": "SER-LIX-SAMOS2H",
+    "previous": {
+      "id": "SER-LIX-SAMOS2H",
+      "packageVersion": "v0.9-R4",
+      "sourceHash": "993481b2f0ab1d519a091e1b9f99a329eef7c67ec89cd1c82ddfab0d3c624955",
+      "canonicalRuntimeReference": {
+        "runtimeManifestDriveFileId": "1_yIaBpnfppnj36IcuRoX9FBJhtrNngin",
+        "runtimeDriveFileId": "1Cqy4X23hWNFuhmKMzI7iTtUqOaH_N5S_",
+        "runtimeSchemaDriveFileId": "1mGXoPvmeEN-clO2mrvQ6R1bVtmVP0uIW",
+        "canonicalFolderId": "1pmCvqkh39bZibmpk-ugRFvJLEowITBmP"
+      },
+      "status": "READY"
+    },
+    "current": {
+      "id": "SER-LIX-SAMOS2H",
+      "packageVersion": "v0.9-R4",
+      "sourceHash": "993481b2f0ab1d519a091e1b9f99a329eef7c67ec89cd1c82ddfab0d3c624955",
+      "canonicalRuntimeReference": {
+        "runtimeManifestDriveFileId": "1_yIaBpnfppnj36IcuRoX9FBJhtrNngin",
+        "runtimeDriveFileId": "1Cqy4X23hWNFuhmKMzI7iTtUqOaH_N5S_",
+        "runtimeSchemaDriveFileId": "1mGXoPvmeEN-clO2mrvQ6R1bVtmVP0uIW",
+        "canonicalFolderId": "1pmCvqkh39bZibmpk-ugRFvJLEowITBmP"
+      },
+      "status": "READY"
+    },
+    "unchanged": true
+  },
+  {
+    "id": "SER-LIX-SAMOSL",
+    "previous": {
+      "id": "SER-LIX-SAMOSL",
+      "packageVersion": "v0.7-R2",
+      "sourceHash": "4cf2a4b1572f68288fa108ccd33d30cc80d5170f2f5303864ca56ca67c34cec3",
+      "canonicalRuntimeReference": {
+        "runtimeManifestDriveFileId": "1c-VIgwTqPDTkas0apYqx30AN3PVa71p1",
+        "runtimeDriveFileId": "12G_Edo55NWgu38gJjTGcqDZ7HsdpAH2I",
+        "canonicalFolderId": "1H83njk7Gww0RJOZKntYBp5VxdaJD9Jc4"
+      },
+      "status": "READY"
+    },
+    "current": {
+      "id": "SER-LIX-SAMOSL",
+      "packageVersion": "v0.7-R2",
+      "sourceHash": "4cf2a4b1572f68288fa108ccd33d30cc80d5170f2f5303864ca56ca67c34cec3",
+      "canonicalRuntimeReference": {
+        "runtimeManifestDriveFileId": "1c-VIgwTqPDTkas0apYqx30AN3PVa71p1",
+        "runtimeDriveFileId": "12G_Edo55NWgu38gJjTGcqDZ7HsdpAH2I",
+        "canonicalFolderId": "1H83njk7Gww0RJOZKntYBp5VxdaJD9Jc4"
+      },
+      "status": "READY"
+    },
+    "unchanged": true
+  },
+  {
+    "id": "SER-YKK-APW430",
+    "previous": {
+      "id": "SER-YKK-APW430",
+      "packageVersion": "20260918-R3",
+      "sourceHash": "e2755a735fc3a7c94afacc58175a390bf00784cf1f13521a1263076d7bfae1c7",
+      "canonicalRuntimeReference": {
+        "runtimeManifestDriveFileId": "1hyX2Fgu1m28xmkM5I53GZ-xC3PX0b9Hk",
+        "coreRuntimeDriveFileId": "1S5Vo-rF1wpQDsNOQr0jMTAaRlvnx3MCF",
+        "dimensionsRuntimeDriveFileId": "1llpTNz_CweEF7vZxP0XRRwzTG4kBF8AX",
+        "optionsRuntimeDriveFileId": "1gb1rWWxNC0Wd6mvZ1ZfqPYrsYyUPGGM_",
+        "canonicalFolderId": "1Cd4_yiAB0Zy6Yb1xo_7ihB4KA44wtUkY"
+      },
+      "status": "READY"
+    },
+    "current": {
+      "id": "SER-YKK-APW430",
+      "packageVersion": "20260918-R3",
+      "sourceHash": "e2755a735fc3a7c94afacc58175a390bf00784cf1f13521a1263076d7bfae1c7",
+      "canonicalRuntimeReference": {
+        "runtimeManifestDriveFileId": "1hyX2Fgu1m28xmkM5I53GZ-xC3PX0b9Hk",
+        "coreRuntimeDriveFileId": "1S5Vo-rF1wpQDsNOQr0jMTAaRlvnx3MCF",
+        "dimensionsRuntimeDriveFileId": "1llpTNz_CweEF7vZxP0XRRwzTG4kBF8AX",
+        "optionsRuntimeDriveFileId": "1gb1rWWxNC0Wd6mvZ1ZfqPYrsYyUPGGM_",
+        "canonicalFolderId": "1Cd4_yiAB0Zy6Yb1xo_7ihB4KA44wtUkY"
+      },
+      "status": "READY"
+    },
+    "unchanged": true
+  },
+  {
+    "id": "SER-YKK-APW431",
+    "previous": {
+      "id": "SER-YKK-APW431",
+      "packageVersion": "v1.2",
+      "sourceHash": "b8927a51a5e31b0c7a89a98b65833cf4f7e0e641c52316cecce4f493399eb1f9",
+      "canonicalRuntimeReference": {
+        "runtimeManifestDriveFileId": "16-hPgdJYmkl30MvonP_natv3bPV1C-3x",
+        "coreRuntimeDriveFileId": "1Tdc-M1JWXOvFhDYiYpwlaVm2QJ_-BujQ",
+        "dimensionsRuntimeDriveFileId": "1nJjAqm23gaMdIYUaTrFQzq6pKZsFTiUJ",
+        "optionsRuntimeDriveFileId": "18Q8MkacIL5W-kXFlo2bcdK_G3ypj1Ady",
+        "canonicalFolderId": "16SO5cC-ix7F_vwGLqAyrr62zwDRjXBCB"
+      },
+      "status": "READY"
+    },
+    "current": {
+      "id": "SER-YKK-APW431",
+      "packageVersion": "v1.2",
+      "sourceHash": "b8927a51a5e31b0c7a89a98b65833cf4f7e0e641c52316cecce4f493399eb1f9",
+      "canonicalRuntimeReference": {
+        "runtimeManifestDriveFileId": "16-hPgdJYmkl30MvonP_natv3bPV1C-3x",
+        "coreRuntimeDriveFileId": "1Tdc-M1JWXOvFhDYiYpwlaVm2QJ_-BujQ",
+        "dimensionsRuntimeDriveFileId": "1nJjAqm23gaMdIYUaTrFQzq6pKZsFTiUJ",
+        "optionsRuntimeDriveFileId": "18Q8MkacIL5W-kXFlo2bcdK_G3ypj1Ady",
+        "canonicalFolderId": "16SO5cC-ix7F_vwGLqAyrr62zwDRjXBCB"
+      },
+      "status": "READY"
+    },
+    "unchanged": true
+  },
+  {
+    "id": "SER-YKKAP-UCHIRIMO",
+    "previous": {
+      "id": "SER-YKKAP-UCHIRIMO",
+      "packageVersion": "v1.0-P7R1-R4",
+      "sourceHash": "6fc2e5fa375930198ef7d9639fca7998d3fbb6e5ee2a412b6652514ed27ce24b",
+      "canonicalRuntimeReference": {
+        "runtimeManifestDriveFileId": "10wOlwX4c0E0lCRuCKl-EdrW0vwwHTEGV",
+        "canonicalFolderId": "1-flyN0KX2zdqXbebX2kVF4VRW0jTSrQu"
+      },
+      "status": "READY"
+    },
+    "current": {
+      "id": "SER-YKKAP-UCHIRIMO",
+      "packageVersion": "v1.0-P7R1-R5",
+      "sourceHash": "9da322b90cacd3b0657c3fffb4baadf1d2a9b7e2e197553191b568173283fa18",
+      "canonicalRuntimeReference": {
+        "runtimeManifestDriveFileId": "1o_Pz5vBYy6xXJOUWxKHtlZqL24sqaP_p",
+        "canonicalFolderId": "1-flyN0KX2zdqXbebX2kVF4VRW0jTSrQu"
+      },
+      "status": "READY"
+    },
+    "unchanged": false
+  }
+]

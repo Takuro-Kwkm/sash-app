@@ -44,7 +44,7 @@ function fail(code, message, details = {}) {
 const has = (value) => value !== null && value !== undefined && value !== '';
 const same = (a, b) => Object.is(a, b) || String(a) === String(b);
 const unique = (rows) => [...new Map(rows.map((row) => [JSON.stringify(row), row])).values()];
-const valueLabel = (value, fallback) => VALUE_LABELS[value] ?? fallback ?? String(value);
+const valueLabel = (value, fallback) => fallback ?? VALUE_LABELS[value] ?? String(value);
 
 function canonicalDocument(documents) {
   return documents.canonical_runtime ?? documents.canonical_master ??
@@ -129,7 +129,8 @@ function buildModel(runtimePackage) {
   const glassRuleIndex = sourceCanonical?.glass_rule_model ? compileGlassRuleModel(sourceCanonical) : null;
   const canonical = glassRuleIndex ? { ...sourceCanonical, allowed_values: projectGlassAllowedValues(sourceCanonical) } : sourceCanonical;
   const judgment = roleDocument(runtimePackage.documents, (value) => value?.engine_role === 'SALES_LEVEL_JUDGMENT_ENGINE');
-  const sizeInstallation = roleDocument(runtimePackage.documents, (value) => value?.size_selection_contract && value?.installation_input_contract);
+  const sizeInstallation = roleDocument(runtimePackage.documents, (value) => value?.size_selection_contract && value?.installation_input_contract && value?.fukashi_60)
+    ?? roleDocument(runtimePackage.documents, (value) => value?.size_selection_contract && value?.installation_input_contract);
   const vacuum = roleDocument(runtimePackage.documents, (value) => Array.isArray(value?.curves));
   if (!canonical || !judgment || !sizeInstallation || !vacuum) fail('RUNTIME_COMPONENT_RESOLUTION_ERROR', 'The four manifest-declared Runtime roles could not be resolved');
   validateReferences(canonical, judgment);
@@ -386,6 +387,11 @@ function applyRules(model, selection, visible, required, allowed, derived, notic
   // Slim selector traversal revisits many states with the same short rule
   // sequence. Keep the effective selection current as rules derive values,
   // instead of copying every field once per rule. The FORMAL path is intact.
+  // The canonical frame contract delegates manufacturer dependencies to this
+  // source adapter. Read the explicit support-component incompatibility.
+  if(model.canonical.inner_window_frame_contract && model.sizeInstallation.fukashi_60?.frame_projection_compatibility==='INCOMPATIBLE' && selection.frame_installation_mode==='frame_projection'){
+    allowed.set('extension_frame_type',(allowed.get('extension_frame_type')??[]).filter(value=>value!=='fukashi_60'));
+  }
   const effective = model.glassFacetCache ? { ...selection, ...derived } : null;
   for (const rule of model.sortedDependencyRules) {
     if (!ruleMatches(rule, effective ?? { ...selection, ...derived })) continue;

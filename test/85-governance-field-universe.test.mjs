@@ -14,10 +14,10 @@ const assertSubset = (left, right, label) => {
   for (const key of left) assert.ok(right.has(key), `${label}: ${key}`);
 };
 
-const IDENTITY_FIELDS = ['manufacturer', 'series', 'product_category'];
+const IDENTITY_FIELDS = ['manufacturer', 'series', 'product_category','size_mode','size_class'];
 const INPLUS_CONDITIONAL_FIELDS = [
-  'size_class', 'reverse_handing', 'order_width', 'order_height',
-  'sash_midrail', 'crescent_position', 'fukashi_spec', 'joint_layout',
+  'reverse_handing', 'order_width', 'order_height',
+  'sash_midrail', 'crescent_position', 'fukashi_presence','fukashi_sides','fukashi_depth','fukashi_reinforcement', 'joint_layout',
   'lowe_color', 'cavity_fill', 'supply_form', 'glass_detail',
   'decorative_pattern', 'spacer',
 ];

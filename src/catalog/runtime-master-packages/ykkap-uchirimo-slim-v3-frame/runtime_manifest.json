@@ -1,0 +1,74 @@
+{
+  "schema_version": "2.0",
+  "manufacturer": "YKK AP",
+  "series": "ウチリモ 内窓",
+  "package_version": "v1.0-P7R1-R5",
+  "authoring_mode": "FILE",
+  "authoring_file_name": "YKKAP_ウチリモ内窓_商品マスター_v1.0-P7R1-R5_InnerWindowCanonicalFrame_R1_FORMAL.xlsx",
+  "authoring_file_id": "1DtC99nlOLeGZwh5EYK7japUcF5utwDIS",
+  "authoring_source_version": "v1.0-P7R1-R5",
+  "authoring_alignment_status": "PASS",
+  "runtime_status": "READY",
+  "runtime_files": [
+    {
+      "file_name": "YKKAP_ウチリモ内窓_Slim_Canonical_v5_InnerWindowCanonicalFrame_R1_FORMAL.json",
+      "file_id": "1qPZQqOUERTb0sjREicbOwNVLtnqelxl3",
+      "sha256": "ddd08feab5ddcfec0cd874c3659ffb03ed29173e58f0635d297abdfef5ae5b4a",
+      "role": "canonical_runtime"
+    },
+    {
+      "file_name": "YKKAP_ウチリモ内窓_Size_Installation_Dependency_Master_v1.0-P7R1-R5_FORMAL.json",
+      "file_id": "1NIaLgsC1570H-8aOEyf8GjofjvTT729x",
+      "sha256": "289331ba885fd31700bc1ab7d1df1ea094553f4afb58c641eedb8f1c7d867861",
+      "role": "support_component"
+    },
+    {
+      "file_name": "YKKAP_ウチリモ内窓_Vacuum_Glass_Curve_Master_v1.0-P7R1-R5_FORMAL.json",
+      "file_id": "11A8Y5_b3C-qwPzt-UcFMFjZqUBzT5BDd",
+      "sha256": "4126ea454edd5d3848ee7f7d1c60e3bbbe5de9b37d1c12f62a7f6bb7c20a390f",
+      "role": "support_component"
+    },
+    {
+      "file_name": "YKKAP_ウチリモ内窓_Judgment_Engine_v1.0-P7R1-R5_FORMAL.json",
+      "file_id": "1ZvTp_9bNJsqM9nPIy5yh8bJyW-V37sWk",
+      "sha256": "b8c40e741f8ff07e58d9bebf9ac691b01b2c3ca536bf6ad36dc2a3fc141ec102",
+      "role": "judgment_engine"
+    }
+  ],
+  "runtime_file_count": 4,
+  "storage_status": "PASS_CANONICAL",
+  "working_folder_id": "1ToOa_3UStpMJfUzW5Dl0Ah_Q-kkX88n3",
+  "canonical_folder_id": "1-flyN0KX2zdqXbebX2kVF4VRW0jTSrQu",
+  "package_gate": "PASS",
+  "registry_gate": "PASS",
+  "formalization_status": "FORMAL_PASS",
+  "formal_pass": true,
+  "runtime_revision": "SLIM-V5-INNER-WINDOW-CANONICAL-FRAME-20260930",
+  "authoring_sha256": "fa22fe7ab6621607f432be4f14eb6f5ac7838e48735e6bcdb9a34452ee42cfca",
+  "schema_file": {
+    "file_name": "uchirimo-runtime.schema.json",
+    "file_id": "1H_MUnOHMH35YW3q73F28BvyWgJaWTJKh",
+    "sha256": "5d1311334c426a2c151827b948675de811b8839da356f42fd2ec7ffe60b1dd5f"
+  },
+  "storage_gate": "PASS",
+  "order_ready": false,
+  "qa_ready": "PASS",
+  "qa_pass": "PASS",
+  "package_revision": "InnerWindowCanonicalFrame_R1",
+  "runtime_scope": "INCLUDED",
+  "human_flow_review": "PENDING",
+  "app_integration_ready": false,
+  "updated_at": "2026-09-30T01:50:50.480469Z",
+  "qa_record": {
+    "file_name": "uchirimo-product-change-qa-r5.json",
+    "file_id": "1aL8Y-wIIqGU5e5aDpoFru1eFsm3mlLpJ",
+    "sha256": "ef1954f17c2ae5514063a7544edb31a3933381996f2f1bb4f1e24eee8d7f699d"
+  },
+  "documentation_file_id": "1MapmV8HyWMxLKrc9UpjD2MLDaK17ywMx",
+  "documentation_file_name": "YKKAP_ウチリモ内窓_PRODUCT_MASTER_MANIFEST_v1.0-P7R1-R5_InnerWindowCanonicalFrame_R1_FORMAL.md",
+  "registry_status": "PASS",
+  "adopted_at": "2026-09-30T01:50:50.480469Z",
+  "post_save_verification": "PASS",
+  "duplicate_check": "PASS",
+  "version_check": "PASS"
+}
