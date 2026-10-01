@@ -160,7 +160,7 @@ function fieldRows(selection) {
       values:allowed.map((value)=>({value,displayLabel:displayLabel(value),manualCheck:false,disabled:false})),
       parentFields:unique([...conditionKeys(field.applies_when),...(field.value_source==='glass_variants'?glassAxes.filter((key)=>key!==field.id):[])]),
       formalFieldId:field.id,
-      helpText:field.unknown_behavior??null,
+      helpText:field.unknown_behavior?'未確認の値は0に置き換えず、積算確認事項として引き継ぎます。':null,
     });
   }
   return rows;
@@ -298,7 +298,7 @@ export function resolveInplusBathroomFormal(input={}) {
     sales_request_handoff:handoff(selection,controlled,glassVariants,dimensionResult),
     sales_request_state:ready?'READY_FOR_MANUFACTURER_ESTIMATE':'INCOMPLETE',
     notices:['浴室仕様 Formal v1.0 / LIXIL SN4200 2026年09月版','営業見積依頼用。価格・BOM・最終発注可否は積算確認へ引き継ぎます。'],
-    manualWarnings:active.length?[`Controlled Unresolved ${active.length}件を自動確定せず、確認事項として引き継ぎます。`]:[],
+    manualWarnings:active.length?[`未確定事項 ${active.length}件を自動確定せず、確認事項として引き継ぎます。`]:[],
     validation:{status,errors,missingRequiredFields},clearedFields:Object.keys(input).filter((key)=>key!=='product_variant'&&selection[key]===undefined),
     orderReady:false,dimensionResult,
     runtimeMaster:{

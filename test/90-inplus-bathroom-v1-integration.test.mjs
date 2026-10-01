@@ -30,6 +30,9 @@ test('bathroom v1.0 uses the exact read-only Formal file and maps all 40 Formal 
   assert.equal(INPLUS_BATHROOM_CANONICAL_MAPPING.length,40);
   assert.equal(INPLUS_BATHROOM_CANONICAL_MAPPING.filter((row)=>row.status==='MAPPED').length,40);
   assert.equal(INPLUS_BATHROOM_CANONICAL_MAPPING.filter((row)=>row.status==='ERROR').length,0);
+  const initial=await resolveRuntimeAppProduct(PRODUCT,{product_variant:'bathroom'});
+  assert.ok(initial.fields.filter((field)=>field.helpText).every((field)=>!/[A-Z]{2,}-G\d|estimator|unknown/i.test(field.helpText)));
+  assert.ok(initial.manualWarnings.every((message)=>!message.includes('Controlled Unresolved')));
 });
 
 test('Inplus remains one top-level product and exposes standard/bathroom as product variants',async()=>{
