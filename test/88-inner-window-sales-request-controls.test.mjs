@@ -8,20 +8,22 @@ const UCHIRIMO='SER-YKKAP-UCHIRIMO';
 function field(result,key){return result.fields.find(row=>row.key===key);}
 function values(result,key){return field(result,key)?.values?.map(row=>row.value)??[];}
 
-test('Inplus sales UI hides supply/detail and keeps Low-E -> spacer -> cavity flow',async()=>{
+test('Inplus sales UI exposes one dry-air and one argon request without cavity thickness',async()=>{
   const result=await resolveRuntimeAppProduct(INPLUS,{
     window_type:'引違い窓',sash_configuration:'2枚建',
-    glass_family:'Low-E複層',glass_type:'透明',lowe_color:'クリア',cavity_fill:'乾燥空気 A12',
+    glass_family:'Low-E複層',glass_type:'透明',lowe_color:'クリア',
   });
   const keys=result.fields.map(row=>row.key);
   assert.equal(keys.includes('supply_form'),false);
   assert.equal(keys.includes('glass_detail'),false);
+  assert.equal(keys.includes('cavity_fill'),false);
   assert.ok(keys.indexOf('lowe_color')<keys.indexOf('sales_spacer_type'));
-  assert.ok(keys.indexOf('sales_spacer_type')<keys.indexOf('cavity_fill'));
-  const cavity=field(result,'cavity_fill');
-  const selected=cavity.values.find(row=>row.value==='乾燥空気 A12');
-  assert.equal(selected?.displayLabel,'乾燥空気');
-  assert.ok(cavity.values.every(row=>!/\b(?:A|Ar)\d+(?:\.\d+)?\b/.test(row.displayLabel)));
+  assert.ok(keys.indexOf('sales_spacer_type')<keys.indexOf('sales_gas_fill'));
+  assert.deepEqual(values(result,'sales_gas_fill'),['air','argon']);
+  assert.deepEqual(field(result,'sales_gas_fill').values.map(row=>row.displayLabel),['乾燥空気','アルゴンガス']);
+  const selected=await resolveRuntimeAppProduct(INPLUS,{...result.selection,sales_gas_fill:'argon'});
+  assert.equal(selected.selection.sales_gas_fill,'argon');
+  assert.equal(selected.sales_request_handoff?.gas_fill_request,'argon');
 });
 
 test('Inplus fukashi 40/50/70 exposes lower reinforcement inside fukashi detail',async()=>{
@@ -80,23 +82,45 @@ test('Inplus crescent P appears after custom W/H and validates formal P rules',a
   assert.ok(invalid.validation.errors.some(error=>error.errorCode==='INPLUS_CRESCENT_POSITION_OUT_OF_RANGE'));
 });
 
-test('Uchirimo custom crescent position appears after custom W/H and is handed off for estimate confirmation',async()=>{
+test('Uchirimo custom crescent, pull-handle and middle-rail positions appear in requested order',async()=>{
   const seed={
     room_specification:'residential',window_type:'sliding_window',sash_configuration:'two_panel',
-    size_w:1000,size_h:1000,crescent_presence:'installed',crescent_position:'custom',
+    size_w:1000,size_h:1000,
+    crescent_presence:'installed',crescent_position:'custom',
+    pull_handle_type:'safety_stop_pull',pull_handle_position:'custom',
+    middle_rail_option:'enabled',middle_rail_position:'custom',
   };
   const pending=await resolveRuntimeAppProduct(UCHIRIMO,seed);
   const keys=pending.fields.map(row=>row.key);
-  assert.ok(keys.includes('crescent_position_custom_mm'));
+  for(const key of ['crescent_position_custom_mm','pull_handle_position_custom_mm','middle_rail_position_custom_mm']){
+    assert.ok(keys.includes(key),key);
+    assert.equal(field(pending,key)?.dataType,'NUMBER',key);
+  }
   assert.ok(keys.indexOf('crescent_position_custom_mm')>keys.indexOf('size_h'));
-  assert.equal(field(pending,'crescent_position_custom_mm')?.dataType,'NUMBER');
-  const entered=await resolveRuntimeAppProduct(UCHIRIMO,{...pending.selection,crescent_position_custom_mm:500});
+  assert.ok(keys.indexOf('pull_handle_position_custom_mm')>keys.indexOf('crescent_position_custom_mm'));
+  assert.ok(keys.indexOf('middle_rail_position_custom_mm')>keys.indexOf('pull_handle_position_custom_mm'));
+
+  const entered=await resolveRuntimeAppProduct(UCHIRIMO,{
+    ...pending.selection,
+    crescent_position_custom_mm:500,
+    pull_handle_position_custom_mm:520,
+    middle_rail_position_custom_mm:540,
+  });
   assert.equal(entered.selection.crescent_position_custom_mm,500);
+  assert.equal(entered.selection.pull_handle_position_custom_mm,520);
+  assert.equal(entered.selection.middle_rail_position_custom_mm,540);
   assert.equal(entered.sales_request_handoff?.crescent_position_custom_mm,500);
+  assert.equal(entered.sales_request_handoff?.pull_handle_position_custom_mm,520);
+  assert.equal(entered.sales_request_handoff?.middle_rail_position_custom_mm,540);
   assert.ok(entered.confirmationRequests.some(row=>row.code==='UCHIRIMO_SALES_REQUEST_CONFIRM'));
-  const standard=await resolveRuntimeAppProduct(UCHIRIMO,{...entered.selection,crescent_position:'standard'});
-  assert.equal(field(standard,'crescent_position_custom_mm'),undefined);
-  assert.equal(standard.selection.crescent_position_custom_mm,undefined);
+
+  const standardPull=await resolveRuntimeAppProduct(UCHIRIMO,{...entered.selection,pull_handle_position:'standard'});
+  assert.equal(field(standardPull,'pull_handle_position_custom_mm'),undefined);
+  assert.equal(standardPull.selection.pull_handle_position_custom_mm,undefined);
+
+  const noMiddle=await resolveRuntimeAppProduct(UCHIRIMO,{...entered.selection,middle_rail_option:'none'});
+  assert.equal(field(noMiddle,'middle_rail_position_custom_mm'),undefined);
+  assert.equal(noMiddle.selection.middle_rail_position_custom_mm,undefined);
 });
 
 test('Inplus options include official missing items and preserve multiple selection',async()=>{
