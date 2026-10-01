@@ -1,7 +1,7 @@
 import { normalizeFrameInput } from './inner-window-frame-engine.mjs';
 import { isBathroomEstimateContext, splitWorkflowSelection, projectEstimateResult } from '../../work-management/field-workflow-scope.mjs';
 import { INNER_WINDOW_INTERNAL_SELECTION_FIELDS } from './inner-window-runtime-ui-contract.mjs';
-import { evaluateInnerWindowPresentation } from './inner-window-sales-extension.mjs';
+import { evaluateInnerWindowPresentation, withoutInplusAccessoryRequests, projectInplusAccessoryRequests } from './inner-window-sales-extension.mjs';
 import { resolveLowEPresentationLabel } from './inplus-presentation-rules.mjs';
 import { resolveInplusBathroomFormal } from './inplus-bathroom-formal-adapter.mjs';
 import { evaluateConfiguration } from './generic-rule-engine.mjs';
@@ -88,7 +88,16 @@ async function resolveProductFacts(productId,selection={}){const integration=get
 
 export async function resolveRuntimeAppProduct(productId,selection={}, {workflowScope='estimate'}={}){
   if(workflowScope!=='estimate'&&workflowScope!=='site_survey')throw new TypeError('Unknown workflow scope');
-  if(workflowScope==='site_survey'||!isBathroomEstimateContext(productId,selection))return resolveProductFacts(productId,selection);
+  if(workflowScope==='site_survey')return resolveProductFacts(productId,selection);
+  const input=selection;
+  const inplus=productId==='SER-LIXIL-INPLUS';
+  if(inplus)selection=withoutInplusAccessoryRequests(selection);
+  const projectSales=(result)=>{
+    if(!inplus)return result;
+    const projected=projectInplusAccessoryRequests(result,input);
+    return {...projected,fields:applyRuntimeUiCategoryOrder(projected.fields,getRuntimeAppIntegration(productId))};
+  };
+  if(!isBathroomEstimateContext(productId,selection))return projectSales(await resolveProductFacts(productId,selection));
   const estimate=splitWorkflowSelection(selection).estimate;
   let result=await resolveProductFacts(productId,estimate);
   // A survey-only installation discriminator can select different Formal size
@@ -108,5 +117,5 @@ export async function resolveRuntimeAppProduct(productId,selection={}, {workflow
       if(blocked.length===dimensions.length)result.validation={...result.validation,errors:[...result.validation.errors,{errorCode:'ESTIMATE_DIMENSION_OUT_OF_ALL_FORMAL_RANGES',field:'size_w',message:blocked[0].message}]};
     }
   }
-  return projectEstimateResult(result,selection);
+  return projectSales(projectEstimateResult(result,selection));
 }

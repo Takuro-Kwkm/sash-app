@@ -166,7 +166,6 @@ export const INPLUS_SALES_REQUEST = Object.freeze({
         ['OP-STEP','段差スペーサー',true],
         ['OP-EMBED-RESIN','埋め木樹脂材',true],
         ['OP-TRUE-WALL-SCREW','真壁取付用ねじ',true],
-        ['OP-REPLACEMENT-CRESCENT','外窓用 交換用クレセント（汎用クレセント）',true],
       ],
     },
   ]),
@@ -259,6 +258,51 @@ export const INPLUS_SALES_REQUEST = Object.freeze({
     },
   ]),
 });
+
+// Sales requests for the EXISTING outer window, never Inplus product facts.
+// Keep the existing replacement-crescent ID for saved request compatibility.
+export const INPLUS_OUTER_WINDOW_ACCESSORIES = Object.freeze([
+  Object.freeze({id:'OP-REPLACEMENT-CRESCENT',displayLabel:'外窓用 交換用クレセント（汎用クレセント）',manufacturer:null,source_product:'ADDITIONAL_ACCESSORY_REQUEST',confirmation_to:'積算／メーカー'}),
+  Object.freeze({id:'OP-YKKAP-GENERIC-HANDLE',displayLabel:'外窓用 汎用ハンドル（YKK AP製）',manufacturer:'YKK AP',source_product:'CROSS_MANUFACTURER_ACCESSORY',confirmation_to:'積算／YKK AP'}),
+]);
+const outerAccessoryIds = new Set(INPLUS_OUTER_WINDOW_ACCESSORIES.map(row=>row.id));
+
+export function withoutInplusAccessoryRequests(selection={}) {
+  if(!Array.isArray(selection.option_items))return selection;
+  const productOptions=selection.option_items.filter(id=>!outerAccessoryIds.has(id));
+  const productSelection={...selection};
+  if(productOptions.length)productSelection.option_items=productOptions;
+  else delete productSelection.option_items;
+  return productSelection;
+}
+
+export function projectInplusAccessoryRequests(result,input={}) {
+  const selectedIds=new Set(Array.isArray(input.option_items)?input.option_items:[]);
+  const requested=INPLUS_OUTER_WINDOW_ACCESSORIES.filter(row=>selectedIds.has(row.id));
+  const existing=result.fields.find(field=>field.key==='option_items');
+  const values=[...(existing?.values??[]).filter(row=>!outerAccessoryIds.has(row.value)),...INPLUS_OUTER_WINDOW_ACCESSORIES.map(row=>({value:row.id,displayLabel:row.displayLabel,manualCheck:true,disabled:false}))];
+  const field={...existing,key:'option_items',displayLabel:'オプション',dataType:'MULTI_ENUM',selectionMode:'MULTI_ENUM',required:false,readOnly:false,parentFields:existing?.parentFields??[],values};
+  const productOptions=Array.isArray(result.selection.option_items)?result.selection.option_items.filter(id=>!outerAccessoryIds.has(id)):[];
+  const optionItems=[...new Set([...productOptions,...requested.map(row=>row.id)])];
+  const selection={...result.selection};
+  if(optionItems.length)selection.option_items=optionItems;else delete selection.option_items;
+  const fields=[...result.fields.filter(field=>field.key!=='option_items'),field];
+  if(!requested.length)return {...result,selection,fields};
+  const accessoryRequests=requested.map(row=>({
+    requested_item_id:row.id,displayLabel:row.displayLabel,manufacturer:row.manufacturer,
+    accessory_scope:'EXISTING_OUTER_WINDOW',source_product:row.source_product,
+    status:'ESTIMATE_CONFIRM_REQUIRED',auto_resolved:false,confirmation_to:row.confirmation_to,
+    question:`${row.displayLabel}の既設外窓への適合・取付可否・手配品番を確認してください。`,
+  }));
+  const confirmationRequests=[...(result.confirmationRequests??[]),...accessoryRequests.map(row=>({code:`INPLUS_ACCESSORY_${row.requested_item_id}`,status:row.status,confirmation_to:row.confirmation_to,message:row.question}))];
+  return {...result,selection,fields,confirmationRequests,orderReady:false,
+    sales_request_handoff:{...(result.sales_request_handoff??{}),
+      additional_option_items:[...new Set([...(result.sales_request_handoff?.additional_option_items??[]),...requested.map(row=>row.id)])],
+      additional_accessory_requests:accessoryRequests,
+    },
+    validation:{...result.validation,status:['INVALID','BLOCKED','INCOMPLETE'].includes(result.validation.status)?result.validation.status:'MANUAL_CHECK'},
+  };
+}
 
 function selectedRuntimeValues(state){
   return Object.fromEntries(Object.entries(state.fields??{})
