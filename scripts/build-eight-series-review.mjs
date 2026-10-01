@@ -50,9 +50,11 @@ const identity=createHash('sha256').update(JSON.stringify(modules)).update(packe
 const exactHead=execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim();
 const generatedAt=new Date().toISOString();
 const safe=x=>JSON.stringify(x).replaceAll('</script','<\\/script');
-const focus=['inplus','bathroom'].includes(process.argv[3])?process.argv[3]:'uchirimo';
+const focus=['inplus','bathroom','handing'].includes(process.argv[3])?process.argv[3]:'uchirimo';
 const demo=focus==='bathroom'
  ?{manufacturer:'LIXIL',product:'SER-LIXIL-INPLUS',selection:{product_variant:'bathroom',window_type:'sliding',fit:'tile',glass_family:'ordinary_double',glass_design:'transparent',gas:'dry_air',position_mode:'default',width:1000,height:1000,quantity:2}}
+ :focus==='handing'
+ ?{manufacturer:'LIXIL',product:'SER-LIXIL-INPLUS',selection:{product_variant:'standard',window_type:'引違い窓',sash_configuration:'2枚建',reverse_handing:'逆勝手',glass_family:'一般複層',glass_type:'透明',frame_spec:'standard',upper_frame_spec:'standard',lower_frame_spec:'general',fukashi_presence:'none',order_width:1000,order_height:1000}}
  :focus==='inplus'
  ?{manufacturer:'LIXIL',product:'SER-LIXIL-INPLUS',selection:{window_type:'引違い窓',sash_configuration:'2枚建',sales_midrail_request:'あり',middle_rail_position_mode:'custom',glass_family:'Low-E複層',glass_type:'透明',frame_spec:'standard',upper_frame_spec:'standard',lower_frame_spec:'general',fukashi_presence:'none'}}
  :{manufacturer:'YKK AP',product:'SER-YKKAP-UCHIRIMO',selection:{room_specification:'residential',window_type:'sliding_window',sash_configuration:'two_panel',frame_color:'white',glass_family:'insulating_glass',sales_glass_design:'grid',sales_glass_pattern:'wa01_resin',fukashi_presence:'none',size_w:1000,size_h:1000}};
@@ -82,8 +84,8 @@ await editor.resolve();
 let html=readFileSync('src/ui/web/index.html','utf8');
 html=html.replace(/<link rel="stylesheet" href="\/([^\"]+)">/g,(_,name)=>'<style>'+readFileSync('src/ui/web/'+name,'utf8')+'</style>');
 html=html.replace('<script type="module" src="/theme.js"></script>',()=>'<script type="module">'+readFileSync('src/ui/web/theme.js','utf8')+'</script>');
-const heading=focus==='bathroom'?'浴室仕様 — 見積／現場調査の責務分離':focus==='inplus'?'インプラス — 中桟の希望・H後判定確認':'ウチリモ — ガラスデザイン・R6オプション確認';
-const version=focus==='bathroom'?'インプラス浴室 Formal v1.0 / ウチリモ Formal R6（変更なし）':focus==='inplus'?'インプラス Runtime v0.4-R3':'Product Master v1.0-P7R1-R6 / Runtime v1.0-P7R1-R5';
+const heading=focus==='handing'?'インプラス — 勝手の選択・対象構成確認':focus==='bathroom'?'浴室仕様 — 見積／現場調査の責務分離':focus==='inplus'?'インプラス — 中桟の希望・H後判定確認':'ウチリモ — ガラスデザイン・R6オプション確認';
+const version=focus==='bathroom'?'インプラス浴室 Formal v1.0 / ウチリモ Formal R6（変更なし）':['inplus','handing'].includes(focus)?'インプラス Runtime v0.4-R3':'Product Master v1.0-P7R1-R6 / Runtime v1.0-P7R1-R5';
 html=html.replace('<main id="appMain" aria-live="polite"></main>',`<section class="card compact"><h2>${heading}</h2><p>8シリーズの配置版と同じマスター・Adapter・選択処理を使用。${focus==='inplus'?'中桟の希望と位置を選択済みです。W/Hを入力して判定表示を確認できます。':''}</p><p>このHTMLは商品選定の確認用です。API通信をブラウザ内処理に置き換えています。案件保存・見積出力は配置版で利用できます。</p><small>App 0.2.0-recovery | ${version} | Preview Build: ${identity.slice(0,16)}<br>HEAD: ${exactHead}<br>生成: ${generatedAt}</small></section><main id="appMain" aria-live="polite"></main>`);
 html=html.replace('<script type="module" src="/app.js"></script>',()=>'<script type="module">'+bootstrap+'</script>').replace('<script type="module" src="/estimate-output-integration.mjs"></script>','');
 const out=resolve(process.argv[2]??'artifacts/eight-series-review/index.html');mkdirSync(dirname(out),{recursive:true});writeFileSync(out,html);

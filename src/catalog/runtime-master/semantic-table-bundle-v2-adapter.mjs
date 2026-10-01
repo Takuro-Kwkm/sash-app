@@ -30,6 +30,20 @@ function sizeModeLabel(value) {
   if (value === 'CUSTOM') return '特注';
   return value;
 }
+// Canonical presentation only; the Formal values and applicability stay intact.
+const CONFIGURATION_PRESENTATION = Object.freeze({
+  reverse_handing: Object.freeze({ label:'勝手', valueLabels:Object.freeze({ '標準':'標準勝手' }) }),
+});
+function conditionFields(condition) {
+  if (!condition || typeof condition !== 'object') return [];
+  return unique([condition.field, ...(condition.all ?? []).flatMap(conditionFields), ...(condition.any ?? []).flatMap(conditionFields)]);
+}
+function configurationParents(document, field) {
+  if (!CONFIGURATION_PRESENTATION[field]) return [];
+  return unique((document.semantic_contract?.normalized_dependency_rules ?? [])
+    .filter((rule) => rule.state === 'VERIFIED' && (rule.actions ?? []).some((action) => action.type === 'SHOW_FIELD' && action.field === field))
+    .flatMap((rule) => conditionFields(rule.condition)).filter((key) => key !== field));
+}
 function valuesFor(document, aliasRuntimeToUi) {
   const out = [], seen = new Set();
   for (const row of rows(document, 'window_types')) {
@@ -62,7 +76,7 @@ function valuesFor(document, aliasRuntimeToUi) {
     for (const action of [...(rule.actions ?? []), ...(rule.else_actions ?? [])]) {
       if (!action.field) continue;
       const field = aliasRuntimeToUi.get(action.field) ?? action.field;
-      for (const value of action.values ?? []) addValue(out, seen, field, value);
+      for (const value of action.values ?? []) addValue(out, seen, field, value, CONFIGURATION_PRESENTATION[field]?.valueLabels[value] ?? value);
       if (present(action.value) && action.value !== 'NOT_APPLICABLE') addValue(out, seen, field, action.value);
     }
   }
@@ -83,10 +97,10 @@ function fieldDefinitions(document, aliasRows) {
     const ui = String(row?.UI ?? '条件表示');
     const parentFields = ['order_width', 'order_height'].includes(field)
       ? unique(['size_mode', ...dimensionUpstream].filter((name) => name !== field))
-      : [];
+      : configurationParents(document, field);
     return {
       field_name: field,
-      display_label: row?.['表示名'] ?? (field === 'spacer' ? 'スペーサー' : field),
+      display_label: CONFIGURATION_PRESENTATION[field]?.label ?? row?.['表示名'] ?? (field === 'spacer' ? 'スペーサー' : field),
       display_order: Number(row?.['順序'] ?? index + 1),
       data_type: ['order_width','order_height'].includes(field) ? 'number' : field === 'option_items' ? 'array' : 'enum',
       selection_mode: Object.prototype.hasOwnProperty.call(fixed, field) ? 'FIXED' : 'SELECTABLE',

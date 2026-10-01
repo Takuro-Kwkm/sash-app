@@ -32,6 +32,7 @@ jobs:
           node test/browser/inplus-bathroom-v1-browser-qa.mjs
           node test/browser/bathroom-estimate-workflow-browser-qa.mjs
           node test/browser/inplus-accessory-request-browser-qa.mjs
+          node test/browser/inplus-reverse-handing-browser-qa.mjs
           node test/browser/window-flow-downstream-qa.mjs
           node test/browser/eight-series-business-flow-qa.mjs
           node test/browser/release-regression-browser-qa.mjs
@@ -40,6 +41,7 @@ jobs:
           node scripts/build-eight-series-review.mjs
           node test/browser/eight-series-preview-qa.mjs
           node scripts/build-eight-series-review.mjs artifacts/bathroom-estimate-review/index.html bathroom
+          node scripts/build-eight-series-review.mjs artifacts/inplus-reverse-handing-review/index.html handing
       - if: always()
         uses: actions/upload-artifact@v4
         with:
