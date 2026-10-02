@@ -7,8 +7,9 @@ import {isSiteSurveyField} from '../../src/work-management/field-workflow-scope.
 const BASE=process.env.QA_BASE_URL??'http://127.0.0.1:4173',OUT='artifacts/rechent-estimate-integration';
 const SHARE_TOKEN=process.env.VERCEL_SHARE_TOKEN;
 const READER_LABELS={OUTDOOR_READER:'屋外リーダー用',KEYPAD_OUTDOOR_READER:'テンキー付屋外リーダー用'};
+const TRIM_LABELS={'150':'150 長（分割タイプ）','125':'125 長（分割タイプ）','100':'100 長（分割タイプ）','75':'75 長（分割タイプ）','50_LONG':'50 長（分割タイプ）','50_SHORT':'50 短（一体タイプ）','25_LONG':'25 長（分割タイプ）','25_SHORT':'25 短（一体タイプ）'};
 await mkdir(OUT,{recursive:true});
-const report={status:'RUNNING',exactHead:process.env.GITHUB_SHA??null,baseUrl:BASE,cases:[],errors:[],failedResponses:[]};
+const report={status:'RUNNING',appIntegrationReady:'BLOCKED_PRODUCT_MASTER_DEFECT',blockingItem:'RE3NF_FRAME_COLOR_THERMAL_SCOPE',exactHead:process.env.GITHUB_SHA??null,baseUrl:BASE,cases:[],errors:[],failedResponses:[]};
 const browser=await chromium.launch();
 const dimensions={desktop:{width:1440,height:1000},tablet:{width:768,height:1024},mobile:{width:390,height:844}};
 async function selectAndResolve(page,key,value){
@@ -63,6 +64,16 @@ try{
    const thermalOptions=await page.locator('[data-spec-key="thermal_spec"] option').evaluateAll(nodes=>nodes.map(n=>({value:n.value,label:n.textContent.trim()})).filter(row=>row.value));
    assert.deepEqual(thermalOptions.map(row=>row.value),['HIGH_INSULATION','INSULATION_K2','INSULATION_K4','ALUMINUM']);
    assert.deepEqual(thermalOptions.map(row=>row.label),['高断熱仕様','断熱仕様 k2','断熱仕様 k4','アルミ仕様']);
+   const frameOptions=await page.locator('[data-spec-key="frame_color"] option').evaluateAll(nodes=>nodes.filter(n=>n.value).map(n=>({value:n.value,label:n.textContent.trim()})));
+   assert.deepEqual(frameOptions,completed.fields.find(row=>row.key==='frame_color').values.map(row=>({value:row.value,label:row.displayLabel})));
+   if(name==='k2-s14-required-frame')assert.deepEqual(frameOptions.map(row=>row.value),['AA']);
+   if(name==='k4-g78-required-frame')assert.deepEqual(frameOptions.map(row=>row.value),['AK']);
+   if(name==='k2-m78-recommended-frame')assert.equal(frameOptions.length,17); // Formal default defect remains recorded, not hidden.
+   const trimOptions=await page.locator('[data-spec-key="exterior_trim"] option').evaluateAll(nodes=>nodes.filter(n=>n.value).map(n=>[n.value,n.textContent.trim()]));
+   assert.deepEqual(Object.fromEntries(trimOptions),TRIM_LABELS);
+   assert.equal(await page.locator('[data-spec-key="exterior_trim"] option:checked').innerText(),TRIM_LABELS[completed.selection.exterior_trim]);
+   assert.doesNotMatch(await page.locator('body').innerText(),/(?:25|50)_(?:LONG|SHORT)|OUTDOOR_READER|\bBATTERY\b/);
+   if(name==='k2-trim-50_LONG'||name==='k2-s14-required-frame')await page.screenshot({path:`${OUT}/${device}-${name}-color-trim.png`,fullPage:true});
    assert.equal(await page.locator('#warnings .notice.error').count(),0,name);
    assert.equal(await page.locator('#productEditor :invalid').count(),0,name);
    if(name.includes('manual-check'))assert.match(await page.locator('#warnings').innerText(),/第二扉/);
@@ -91,6 +102,9 @@ try{
    assert.equal(snapshot.configuration.handing,'L');assert.equal(Object.keys(snapshot.configuration).some(isSiteSurveyField),false);
    assert.equal(snapshot.configuration.thermal_spec,seed.thermal_spec);
    assert.equal(snapshot.configuration.glass_spec,completed.selection.glass_spec);
+   assert.equal(snapshot.configuration.exterior_trim,completed.selection.exterior_trim);
+   assert.equal(snapshot.display_summary.find(row=>row.key==='exterior_trim').value,TRIM_LABELS[completed.selection.exterior_trim]);
+   assert.equal(await page.locator('[data-spec-key="exterior_trim"] option:checked').innerText(),TRIM_LABELS[completed.selection.exterior_trim]);
    if(seed.lock_type==='FAMILOCK'){
     assert.equal(snapshot.configuration.electric_lock_power,seed.electric_lock_power);
     assert.equal(snapshot.configuration.electric_lock_reader,completed.selection.electric_lock_reader);
@@ -103,6 +117,24 @@ try{
    assert.notEqual(output.state,'INCOMPLETE',name);assert.notEqual(output.state,'INVALID',name);assert.equal(Object.keys(output.rows[0].configuration).some(isSiteSurveyField),false);assert.equal(output.rows[0].display_summary.some(r=>isSiteSurveyField(r.key)),false);
    assert.equal(output.rows[0].configuration.thermal_spec,seed.thermal_spec);
    assert.equal(output.rows[0].configuration.glass_spec,completed.selection.glass_spec);
+   assert.equal(output.rows[0].configuration.exterior_trim,completed.selection.exterior_trim);
+   assert.equal(output.rows[0].display_summary.find(row=>row.key==='exterior_trim').value,TRIM_LABELS[completed.selection.exterior_trim]);
+   if(name==='k4-g78-required-frame'){
+    const next=await selectAndResolve(page,'body_color','BB');
+    assert.equal(Object.hasOwn(next.selection,'frame_color'),false);
+    assert.deepEqual(next.fields.find(row=>row.key==='frame_color').values.map(row=>row.value),['AA']);
+    await selectAndResolve(page,'frame_color','AA');
+    const original=await selectAndResolve(page,'body_color','CB');
+    assert.equal(Object.hasOwn(original.selection,'frame_color'),false);
+   }
+   if(name==='k2-s14-required-frame'){
+    const next=await selectAndResolve(page,'design','G12');
+    assert.equal(next.selection.frame_color,'AA');
+    await selectAndResolve(page,'frame_color','HC');
+    const required=await selectAndResolve(page,'design','S14');
+    assert.equal(Object.hasOwn(required.selection,'frame_color'),false);
+    assert.deepEqual(required.fields.find(row=>row.key==='frame_color').values.map(row=>row.value),['AA']);
+   }
    if(seed.lock_type==='FAMILOCK'){
     assert.equal(output.rows[0].configuration.electric_lock_reader,completed.selection.electric_lock_reader);
     assert.equal(output.rows[0].display_summary.find(row=>row.key==='electric_lock_reader').value,READER_LABELS[completed.selection.electric_lock_reader]);
@@ -132,7 +164,7 @@ try{
      assert.equal(Object.hasOwn(manual.selection,key),false,key);assert.equal(await page.locator(`[data-spec-key="${key}"]`).count(),0,key);
     }
    }
-   if(seed.thermal_spec==='INSULATION_K2'&&seed.opening_type==='SINGLE'){
+   if(seed.thermal_spec==='INSULATION_K2'&&seed.opening_type==='SINGLE'&&seed.design==='G12'){
     await page.screenshot({path:`${OUT}/${device}-k2.png`,fullPage:true});
     const k4=await selectAndResolve(page,'thermal_spec','INSULATION_K4');
     assert.equal(k4.selection.design,'G12');assert.equal(k4.selection.glass_spec,'IGU_A16');

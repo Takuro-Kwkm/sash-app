@@ -1,5 +1,9 @@
 # リシェント玄関ドア3 非防火 — 営業見積依頼の統合差分
 
+Current Human Review Gate: **APP_INTEGRATION_READY = BLOCKED_PRODUCT_MASTER_DEFECT**。
+枠色の熱仕様別Scope不足を公式DL2100 p181で確認。過去のReader差分PASSは履歴として保持し、
+現在のGateを上書きしない。詳細・許可範囲の修正・QA境界は [Color / Exterior Trim closure](rechent-color-trim-closure.md)。
+
 NON-PRODUCT-MASTER TASK。Canonical Product `LIXIL_RECHENT_DOOR3_NON_FIRE` / App Product `SER-LIXIL-RECHENT-D3-NF`。Formal v0.8-R7 / FORMAL_PASSをcarry-forwardする。Formal Product Master、8 Runtime documents、メーカーDependency、Evidence、PRODUCT_MASTER_CANONICAL_REGISTRYは変更しない。
 
 ## Authorityとbaseline
