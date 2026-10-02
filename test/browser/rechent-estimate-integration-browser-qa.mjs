@@ -73,9 +73,14 @@ try{
    const saved=await page.evaluate(()=>window.__sashWorkApp.readDatabase().openings[0]);
    assert.equal(saved.status,'COMPLETE',name);const snapshot=saved.product_configuration_snapshot;
    assert.equal(snapshot.configuration.handing,'L');assert.equal(Object.keys(snapshot.configuration).some(isSiteSurveyField),false);
+   assert.equal(snapshot.configuration.thermal_spec,seed.thermal_spec);
+   assert.equal(snapshot.configuration.glass_spec,completed.selection.glass_spec);
+   if(seed.lock_type==='FAMILOCK')assert.equal(snapshot.configuration.electric_lock_power,seed.electric_lock_power);
    assert.deepEqual(Object.values(snapshot.workflow_data.site_survey.contexts)[0].values,row.survey);
    const output=await page.evaluate(async()=>{const {createEstimateOutputModel}=await import('/estimate-output/model.mjs');const db=window.__sashWorkApp.readDatabase();return createEstimateOutputModel({project:db.projects[0],estimate:db.estimates[0],openings:db.openings});});
    assert.notEqual(output.state,'INCOMPLETE',name);assert.notEqual(output.state,'INVALID',name);assert.equal(Object.keys(output.rows[0].configuration).some(isSiteSurveyField),false);assert.equal(output.rows[0].display_summary.some(r=>isSiteSurveyField(r.key)),false);
+   assert.equal(output.rows[0].configuration.thermal_spec,seed.thermal_spec);
+   assert.equal(output.rows[0].configuration.glass_spec,completed.selection.glass_spec);
    if(name.includes('manual-check'))assert.ok(output.rows[0].issues.some(r=>r.code==='HIGH_SIZE_DOUBLE_CHILD_RANGE_UNVERIFIED'));
    const revision=await page.locator('#dynamicForm').getAttribute('data-resolve-revision');
    await page.locator('[data-spec-key="size_w"]').fill('1');await page.locator('[data-spec-key="size_w"]').dispatchEvent('change');
@@ -89,14 +94,24 @@ try{
     const power=page.locator('[data-spec-key="electric_lock_power"]');
     const powerOptions=await power.locator('option').evaluateAll(nodes=>nodes.map(n=>({value:n.value,label:n.textContent.trim()})).filter(row=>row.value));
     assert.equal(powerOptions.find(row=>row.value==='BATTERY')?.label,'電池式');
-    assert.equal(powerOptions.find(row=>row.value==='AC100V')?.label,'AC100V');
+    const expectedPower=completed.fields.find(row=>row.key==='electric_lock_power').values;
+    assert.deepEqual(powerOptions,expectedPower.map(row=>({value:row.value,label:row.displayLabel})));
+    assert.equal(powerOptions.some(row=>row.label==='BATTERY'),false);
     const alternatives=powerOptions.map(row=>row.value);
     const next=alternatives.find(value=>value!==seed.electric_lock_power);
     if(next)await selectAndResolve(page,'electric_lock_power',next);
+    if(seed.thermal_spec==='INSULATION_K4')await page.screenshot({path:`${OUT}/${device}-k4-familock.png`,fullPage:true});
     const manual=await selectAndResolve(page,'lock_type','MANUAL');
     for(const key of ['electric_lock_power','electric_lock_reader','electric_lock_plan','key_set','additional_key']){
      assert.equal(Object.hasOwn(manual.selection,key),false,key);assert.equal(await page.locator(`[data-spec-key="${key}"]`).count(),0,key);
     }
+   }
+   if(seed.thermal_spec==='INSULATION_K2'&&seed.opening_type==='SINGLE'){
+    await page.screenshot({path:`${OUT}/${device}-k2.png`,fullPage:true});
+    const k4=await selectAndResolve(page,'thermal_spec','INSULATION_K4');
+    assert.equal(k4.selection.design,'G12');assert.equal(k4.selection.glass_spec,'IGU_A16');
+    const k2=await selectAndResolve(page,'thermal_spec','INSULATION_K2');
+    assert.equal(k2.selection.design,'G12');assert.equal(k2.selection.glass_spec,'LOW_E_IGU_A16');
    }
    if(seed.opening_type!=='SINGLE'){
     const single=await selectAndResolve(page,'opening_type','SINGLE');

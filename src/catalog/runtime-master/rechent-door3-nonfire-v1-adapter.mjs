@@ -19,6 +19,8 @@ const asNumber = (value) => value === '' || value === null || value === undefine
 const choice = (value, displayLabel = String(value), extra = {}) => ({ value, displayLabel, manualCheck:false, disabled:false, ...extra });
 const labelMap = (pairs) => new Map(pairs);
 const SPLIT_INSULATION_VALUES = new Set(['INSULATION_K2','INSULATION_K4']);
+// Business values remain distinct in UI, persistence and handoff. A grouped
+// Formal scope is only a shared rule; it never selects the other grade's rows.
 const formalThermalScope = (value) => SPLIT_INSULATION_VALUES.has(value) ? 'INSULATION_K2_K4' : value;
 const thermalScopeMatches = (rowScope, selectedScope) => !selectedScope || rowScope===selectedScope || rowScope===formalThermalScope(selectedScope);
 
@@ -83,7 +85,7 @@ function transomChoices(product, selection) {
 }
 function thermalChoices(product){
   const formalScopes=uniq(product.design_master.map((row)=>row.thermal_scope));
-  return formalScopes.flatMap((v)=>v==='INSULATION_K2_K4'?['INSULATION_K2','INSULATION_K4']:[v]).map((v)=>choice(v,LABELS.thermal_spec.get(v)??v));
+  return uniq(formalScopes.flatMap((v)=>v==='INSULATION_K2_K4'?['INSULATION_K2','INSULATION_K4']:[v])).map((v)=>choice(v,LABELS.thermal_spec.get(v)??v));
 }
 function designChoices(product,selection){
   const allowed=new Set(frameAllowedRows(product,{...selection,design:null}).filter(row=>!selection.opening_type||row.frame_configuration===selection.opening_type).map(row=>row.design_id));
@@ -110,9 +112,8 @@ function trimChoices(installation,kind){
 }
 function optionChoices(option,selection,category){return option.user_options.filter((row)=>{if(category==='additional_key'&&!['RE3NF-OPT-CARD-BK','RE3NF-OPT-CARD-LG','RE3NF-OPT-TAG','RE3NF-OPT-REMOTE'].includes(row.option_id))return false;if(category==='option'&&['RE3NF-OPT-CARD-BK','RE3NF-OPT-CARD-LG','RE3NF-OPT-TAG','RE3NF-OPT-REMOTE'].includes(row.option_id))return false;try{const c=JSON.parse(row.visible_when??'{}');if(c.entry_system&&selection.lock_type!==c.entry_system)return false;if(c.door_color_not?.includes(selection.body_color))return false;}catch{}return true;}).map((row)=>choice(row.option_id,row.official_name));}
 function glassSpecChoice(product,selection){
-  if(!selection.design)return[];
-  const scopes = selection.thermal_spec==='INSULATION_K2_K4'?['INSULATION_K2','INSULATION_K4']:[selection.thermal_spec,formalThermalScope(selection.thermal_spec)];
-  const rows=product.glass_master.filter((row)=>scopes.includes(row.thermal_scope)&&row.component==='BODY'&&splitCsv(row.design_scope).includes(selection.design));
+  if(!selection.design||!selection.thermal_spec)return[];
+  const rows=product.glass_master.filter((row)=>thermalScopeMatches(row.thermal_scope,selection.thermal_spec)&&row.component==='BODY'&&splitCsv(row.design_scope).includes(selection.design));
   return uniq(rows.map((row)=>row.glass_spec)).map((v)=>choice(v,LABELS.glass_spec.get(v)??v));
 }
 function glassSafetyApplicable(dependency,selection){

@@ -55,7 +55,7 @@ const generatedAt=new Date().toISOString();
 const safe=x=>JSON.stringify(x).replaceAll('</script','<\\/script');
 const focus=['inplus','bathroom','handing','rechent'].includes(process.argv[3])?process.argv[3]:'uchirimo';
 const demo=focus==='rechent'
- ?{manufacturer:'LIXIL',product:'SER-LIXIL-RECHENT-D3-NF',selection:{thermal_spec:'INSULATION_K2_K4',opening_type:'SINGLE',design:'G12',transom:'NONE',size_w:800,size_h:2100}}
+ ?{manufacturer:'LIXIL',product:'SER-LIXIL-RECHENT-D3-NF',selection:{thermal_spec:'INSULATION_K2',opening_type:'SINGLE',design:'G12',transom:'NONE',size_w:800,size_h:2100,lock_type:'FAMILOCK',electric_lock_power:'BATTERY'}}
  :focus==='bathroom'
  ?{manufacturer:'LIXIL',product:'SER-LIXIL-INPLUS',selection:{product_variant:'bathroom',window_type:'sliding',fit:'tile',glass_family:'ordinary_double',glass_design:'transparent',gas:'dry_air',position_mode:'default',width:1000,height:1000,quantity:2}}
  :focus==='handing'

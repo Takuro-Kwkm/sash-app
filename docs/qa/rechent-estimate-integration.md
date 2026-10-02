@@ -48,7 +48,7 @@ NON-PRODUCT-MASTER TASK。Canonical Product `LIXIL_RECHENT_DOOR3_NON_FIRE` / App
 - Hardwareの `STANDARD,HIGH_SIZE` scopeをCSVとして解釈。錠候補は現在の錠自身で絞らず、Formal hardware relationから算出。
 - Design候補を正式Frame atomic ALLOW relationで絞る。上流変更後は固定点まで再評価し、成立値を保持、非成立/非該当値をclearする。
 - OTHER_FRAME範囲を親子に流用せず、HIGH_SIZEの該当Formal寸法行を使用。範囲外、0、非有限値をinvalidとする。
-- K2/K4のFormal grouped specificationでガラスが一意にならない場合、断熱等級の確認を `ESTIMATE_CONFIRM_REQUIRED` で引き渡す。代表ガラスを推測しない。
+- 営業断熱値は `HIGH_INSULATION` / `INSULATION_K2` / `INSULATION_K4` / `ALUMINUM`。K2/K4の共有Formal scopeはAdapterで両方から参照し、個別scopeは選択等級だけを参照する。ガラスはK2/K4をUnionせず、正式Glass Masterから個別に導出する。旧grouped保存値は等級を推測移行せず再選択を要求する。
 - G12/G15 × HIGH_SIZE × DOUBLEの第二扉範囲は `MANUAL_CHECK_REQUIRED` / `automatic_orderability:false` として確認先（積算 / LIXIL）付きで保存・Handoff。寸法を追加しない。
 - 内額縁のEXTRA_LARGE/LARGE/SMALLを特大/大/小へ表示翻訳。保存するFormal値は維持。
 
@@ -65,3 +65,17 @@ Uchirimoの既存Exact Source QA pinは、Rechent専用bridge分岐とSurvey met
 専用CI `Rechent Estimate Integration` はlint/typecheck/full test、Formal/Registry read-only差分、build、local Browser/Regression、自己完結HTML parity、Vercel Preview READY / commit一致、deployed Browserを順に実行する。最終判定は実行結果に基づく。自己完結HTMLは選択/UI確認用で、案件保存・出力は実Previewで確認する。
 
 Production merge/deployは対象外。FORMAL、APP_INTEGRATION_READY、RELEASEDを区別する。
+
+## Human Review Selection Flow refinement — 2026-10-02
+
+先行Candidate `f2193dd16d464f16c673d516844064010fce6c0f` を実取得・検証し、分離・表示・順序変更をcarry-forwardする。無条件RollbackやFormal変更は行わない。
+
+- `BATTERY`は保存・Dependency keyを維持し、表示だけ「電池式」へ。`AC100V`はそのまま。Formal Hardwareはアルミ仕様でBATTERYのみであり、AC100Vを追加しない。
+- category Presentation Contractは `錠仕様 → キーセット → シリンダー → 電源 / プラン → FamiLockリーダー → FamiLockプラン → 追加キー`。手動錠では専用5項目を非表示・clearする。
+- Governance run `36965535863` / job `110708365842` はmetadata不足や一時障害ではなく、旧grouped値を入力した `test/82` の不整合。K2/K4それぞれで同じFormal manual-check例外を維持するテストへ更新。
+- Integration run `36965532722` / preview job `110708359301` はアルミFamiLockにもAC100Vを要求したQA不整合。実DOMの電源domainをFormal-derived domain全体と比較し、候補の追加・欠落と英語表示を検出する。
+- `test/97` は58個の正式K2/K4ガラス・デザイン経路、シリアライズ保存後の再評価、K2↔K4でのガラス再導出と共通値保持、旧grouped値の再選択、共有/個別scope混在時の候補・色・寸法非混線を検証する。Synthetic fixtureはメモリ内のテスト専用で正式商品事実として保存しない。
+- Browserは14業務構成 × desktop 1440 / tablet 768 / mobile 390 = 42ケース。K2/K4保存・再読込・Handoffの個別値、ガラス、FamiLock電源、錠切替clear、K2↔K4ガラス変更、dark、表示順、overflowを実Renderで検証。HTMLは1280 / 768 / 390でRuntime parityを検証する。
+- Drive Current Manifest v1.5、共通開発標準 v2.0、Runtime UI v1.8、UI標準v2.1、Formal Authoring v0.8-R7を取得。Drive Canonical runtime_manifestのSHA256はrepoの `6c189dff2197ab095168c308fb6733bd1a0f5a2f336a3352a39ce536ee08230d` と一致。
+
+最終APP_INTEGRATION_READY判定は最新commitの全CI・Governance・SHA一致Preview Browser結果を確認してPR本文に記録する。古いPR本文のPASSを新Candidateへ継承しない。

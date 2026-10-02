@@ -104,12 +104,14 @@ test('Survey Layer delegated fields fail closed until common Survey source is co
 });
 
 test('G12/G15 high-size double keeps the formal manual-check safety exception',async()=>{
+ for(const thermal_spec of ['INSULATION_K2','INSULATION_K4']){
   const result=await resolveRuntimeAppProduct(PRODUCT_ID,{
-    thermal_spec:'INSULATION_K2_K4',
+    thermal_spec,
     opening_type:'DOUBLE',
     design:'G12',transom:'NONE',lock_type:'MANUAL',
     size_h:2440,
   });
   assert.ok((result.confirmationRequests??[]).some(row=>row.code==='HIGH_SIZE_DOUBLE_CHILD_RANGE_UNVERIFIED'));
   assert.equal(result.orderReady,false);
+ }
 });
