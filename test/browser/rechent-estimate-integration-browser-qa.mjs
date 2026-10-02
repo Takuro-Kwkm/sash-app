@@ -59,6 +59,9 @@ try{
    const keys=await page.locator('#dynamicForm .field[data-key]').evaluateAll(nodes=>nodes.map(n=>n.dataset.key));
    assert.equal(keys.some(isSiteSurveyField),false);
    assert.deepEqual(keys,[...keys].sort((a,b)=>ENTRY_DOOR_COVER_PRESENTATION_ORDER.indexOf(a)-ENTRY_DOOR_COVER_PRESENTATION_ORDER.indexOf(b)));
+   const thermalOptions=await page.locator('[data-spec-key="thermal_spec"] option').evaluateAll(nodes=>nodes.map(n=>({value:n.value,label:n.textContent.trim()})).filter(row=>row.value));
+   assert.deepEqual(thermalOptions.map(row=>row.value),['HIGH_INSULATION','INSULATION_K2','INSULATION_K4','ALUMINUM']);
+   assert.deepEqual(thermalOptions.map(row=>row.label),['高断熱仕様','断熱仕様 k2','断熱仕様 k4','アルミ仕様']);
    assert.equal(await page.locator('#warnings .notice.error').count(),0,name);
    assert.equal(await page.locator('#productEditor :invalid').count(),0,name);
    if(name.includes('manual-check'))assert.match(await page.locator('#warnings').innerText(),/第二扉/);
@@ -81,8 +84,13 @@ try{
    assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth-window.innerWidth)<=1);
    if(name==='high-single-manual')await page.screenshot({path:`${OUT}/${device}-dark.png`,fullPage:true});
    if(seed.lock_type==='FAMILOCK'){
+    const visibleKeys=await page.locator('#dynamicForm .field[data-key]').evaluateAll(nodes=>nodes.map(n=>n.dataset.key));
+    assert.equal(visibleKeys.indexOf('key_set'),visibleKeys.indexOf('lock_type')+1);
     const power=page.locator('[data-spec-key="electric_lock_power"]');
-    const alternatives=await power.locator('option').evaluateAll(nodes=>nodes.map(n=>n.value).filter(Boolean));
+    const powerOptions=await power.locator('option').evaluateAll(nodes=>nodes.map(n=>({value:n.value,label:n.textContent.trim()})).filter(row=>row.value));
+    assert.equal(powerOptions.find(row=>row.value==='BATTERY')?.label,'電池式');
+    assert.equal(powerOptions.find(row=>row.value==='AC100V')?.label,'AC100V');
+    const alternatives=powerOptions.map(row=>row.value);
     const next=alternatives.find(value=>value!==seed.electric_lock_power);
     if(next)await selectAndResolve(page,'electric_lock_power',next);
     const manual=await selectAndResolve(page,'lock_type','MANUAL');
