@@ -23,12 +23,16 @@ test('every Formal frame/design and hardware group is selectable without manufac
  const p=await loadFormalProductRuntimeV2Package(getRuntimeMasterEntry('LIXIL','リシェント玄関ドア3 非防火'));
  const product=p.documentsByFileName['product_rules.json'],hardware=p.documentsByFileName['hardware_rules.json'];
  for(const frame of product.frame_atomic_rules.filter(row=>row.result==='ALLOW')){
-  const seed={thermal_spec:frame.thermal_scope,opening_type:frame.frame_configuration,design:frame.design_id};
-  const result=await resolveRuntimeAppProduct(RECHENT_ID,seed);
-  assert.equal(result.selection.design,frame.design_id,JSON.stringify(seed));
-  const expected=hardware.hardware_atomic_rules.filter(row=>row.result==='ALLOW'&&row.thermal_scope===frame.thermal_scope&&row.design_id===frame.design_id);
-  assert.ok(expected.length);
-  assert.deepEqual(new Set(result.fields.find(row=>row.key==='handle_type').values.map(row=>row.value)),new Set(expected.map(row=>row.handle_type)));
+  const uiThermals=frame.thermal_scope==='INSULATION_K2_K4'?['INSULATION_K2','INSULATION_K4']:[frame.thermal_scope];
+  for(const thermal_spec of uiThermals){
+   const seed={thermal_spec,opening_type:frame.frame_configuration,design:frame.design_id};
+   const result=await resolveRuntimeAppProduct(RECHENT_ID,seed);
+   assert.equal(result.selection.thermal_spec,thermal_spec,JSON.stringify(seed));
+   assert.equal(result.selection.design,frame.design_id,JSON.stringify(seed));
+   const expected=hardware.hardware_atomic_rules.filter(row=>row.result==='ALLOW'&&row.thermal_scope===frame.thermal_scope&&row.design_id===frame.design_id);
+   assert.ok(expected.length);
+   assert.deepEqual(new Set(result.fields.find(row=>row.key==='handle_type').values.map(row=>row.value)),new Set(expected.map(row=>row.handle_type)));
+  }
  }
 });
 
@@ -46,6 +50,23 @@ test('legacy Survey mode cannot leak to estimate validation, saved payload or ou
  assert.equal(Object.keys(projected.configuration).some(isSiteSurveyField),false);assert.deepEqual(projected.display_summary,[]);
  const survey=await resolveRuntimeAppProduct(RECHENT_ID,legacy,{workflowScope:'site_survey'});
  assert.ok(survey.validation.errors.some(row=>row.errorCode==='SURVEY_LAYER_VALUE_SOURCE_REQUIRED'));
+});
+
+test('K2 and K4 are separate business selections, battery is localized, and key set follows lock type',async()=>{
+ const initial=await resolveRuntimeAppProduct(RECHENT_ID,{});
+ const thermal=initial.fields.find(row=>row.key==='thermal_spec').values;
+ assert.deepEqual(thermal.map(row=>row.value),['HIGH_INSULATION','INSULATION_K2','INSULATION_K4','ALUMINUM']);
+ assert.deepEqual(thermal.map(row=>row.displayLabel),['高断熱仕様','断熱仕様 k2','断熱仕様 k4','アルミ仕様']);
+ assert.equal(thermal.some(row=>row.value==='INSULATION_K2_K4'),false);
+ for(const thermal_spec of ['INSULATION_K2','INSULATION_K4']){
+  const result=await completeRechent({thermal_spec,opening_type:'PARENT_CHILD',design:'G12',lock_type:'FAMILOCK'});
+  assert.equal(result.selection.thermal_spec,thermal_spec);
+  const power=result.fields.find(row=>row.key==='electric_lock_power');
+  assert.equal(power.values.find(row=>row.value==='BATTERY')?.displayLabel,'電池式');
+  assert.equal(power.values.find(row=>row.value==='AC100V')?.displayLabel,'AC100V');
+  const keys=result.fields.map(row=>row.key);
+  assert.equal(keys.indexOf('key_set'),keys.indexOf('lock_type')+1);
+ }
 });
 
 test('FamiLock/manual, frame/design and flat transitions clear inapplicable children to a fixed point',async()=>{
