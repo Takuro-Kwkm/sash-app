@@ -97,6 +97,12 @@ export async function resolveRuntimeAppProduct(productId,selection={}, {workflow
     const projected=projectInplusAccessoryRequests(result,input);
     return {...projected,fields:applyRuntimeUiCategoryOrder(projected.fields,getRuntimeAppIntegration(productId))};
   };
+  if(getRuntimeAppIntegration(productId)?.adapterType==='RECHENT_DOOR3_NONFIRE_V1'){
+    const estimate=splitWorkflowSelection(selection).estimate;
+    // The mode is app workflow metadata. Legacy Survey snapshots cannot turn
+    // an estimate request into a Site Survey evaluation.
+    return projectEstimateResult(await resolveProductFacts(productId,{...estimate,runtime_mode:'PRODUCT_SELECTION'}),selection);
+  }
   if(!isBathroomEstimateContext(productId,selection))return projectSales(await resolveProductFacts(productId,selection));
   const estimate=splitWorkflowSelection(selection).estimate;
   let result=await resolveProductFacts(productId,estimate);

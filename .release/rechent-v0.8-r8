@@ -1,0 +1,12 @@
+{
+  "scope": "NON_PRODUCT_MASTER_INTEGRATION",
+  "product": "SER-LIXIL-RECHENT-D3-NF",
+  "formal_version": "v0.8-R8",
+  "approved_application_head": "fca365888d197c79ebc0caa56ad18e64b8485364",
+  "approved_preview_run": 37006158890,
+  "approved_governance_run": 37006164036,
+  "evidence_identity": "RE3NF-R8-FRAME-e87c32b30096671d",
+  "manifest_sha256": "1da09541a4ddf234314d8f082b792c2fb2cbab90ef5c6d70b32ff39706e145db",
+  "human_authorization": "User explicitly approved PR61 merge and production deployment in this Codex chat on 2026-10-02",
+  "previous_production_deployment": "dpl_Fj5j97YRxSQ6mgX1jdB1kKsfcmeW"
+}

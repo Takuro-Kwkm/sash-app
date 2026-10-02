@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { chromium } from 'playwright';
+import {ENTRY_DOOR_COVER_PRESENTATION_ORDER} from '../../src/catalog/runtime-master/entry-door-cover-runtime-ui-contract.mjs';
 
 const BASE=process.env.QA_BASE_URL??'http://127.0.0.1:4173';
 const SHARE_TOKEN=process.env.VERCEL_SHARE_TOKEN;
@@ -10,6 +11,7 @@ const STAGES=['PRODUCT','OPENING','CONFIGURATION','SIZE','FINISH','SCREEN','GLAZ
 const STAGE_INDEX=new Map(STAGES.map((stage,index)=>[stage,index]));
 const VIEWPORTS={
   desktop:{viewport:{width:1440,height:1000}},
+  tablet:{viewport:{width:768,height:1024}},
   smartphone:{viewport:{width:390,height:844},isMobile:true,hasTouch:true},
 };
 await mkdir(OUT,{recursive:true});
@@ -20,14 +22,15 @@ function assertSemanticOrder(result,label){
     assert.ok(field.semanticSlot,`${label}:${field.key}:semanticSlot missing`);
     assert.ok(field.semanticStage,`${label}:${field.key}:semanticStage missing`);
     assert.equal(String(field.semanticSlot).startsWith('other:'),false,`${label}:${field.key}:other fallback`);
-    const current=STAGE_INDEX.get(field.semanticStage);
+    assert.ok(STAGE_INDEX.has(field.semanticStage));
+    const current=ENTRY_DOOR_COVER_PRESENTATION_ORDER.indexOf(field.key);
     assert.notEqual(current,undefined,`${label}:${field.key}:unknown stage ${field.semanticStage}`);
     assert.ok(current>=previous,`${label}:${field.key}:stage inversion`);
     previous=current;
   }
 }
 
-const report={status:'RUNNING',productId:PRODUCT_ID,viewportResults:{},consoleErrors:[],pageErrors:[],failedResponses:[],transitionChecks:0,domSignatureChecks:0};
+const report={status:'RUNNING',exactHead:process.env.GITHUB_SHA??null,baseUrl:BASE,productId:PRODUCT_ID,viewportResults:{},consoleErrors:[],pageErrors:[],failedResponses:[],transitionChecks:0,domSignatureChecks:0};
 const browser=await chromium.launch({headless:true});
 
 async function assertDomSignature(page,result,label){
@@ -67,6 +70,7 @@ async function installAndSelect(page){
 
 async function runViewport(name,options){
   const context=await browser.newContext(options);
+  if(SHARE_TOKEN)await context.request.get(`${BASE}/?_vercel_share=${encodeURIComponent(SHARE_TOKEN)}`);
   const page=await context.newPage();
   page.on('console',(message)=>{if(message.type()==='error')report.consoleErrors.push({viewport:name,text:message.text()});});
   page.on('pageerror',(error)=>report.pageErrors.push({viewport:name,text:error.message}));
@@ -103,6 +107,7 @@ async function runViewport(name,options){
 
 try{
   const requestContext=await browser.newContext();
+  if(SHARE_TOKEN)await requestContext.request.get(`${BASE}/?_vercel_share=${encodeURIComponent(SHARE_TOKEN)}`);
   const integrationsResponse=await requestContext.request.get(`${BASE}/api/runtime-master/integrations`);
   assert.equal(integrationsResponse.status(),200);
   const integrations=await integrationsResponse.json();

@@ -1,0 +1,215 @@
+import assert from 'node:assert/strict';
+import {mkdir,writeFile} from 'node:fs/promises';
+import {chromium} from 'playwright';
+import {RECHENT_ID,completeRechent,RECHENT_BUSINESS_CASES} from '../helpers/rechent-estimate-cases.mjs';
+import {ENTRY_DOOR_COVER_PRESENTATION_ORDER} from '../../src/catalog/runtime-master/entry-door-cover-runtime-ui-contract.mjs';
+import {isSiteSurveyField} from '../../src/work-management/field-workflow-scope.mjs';
+const BASE=process.env.QA_BASE_URL??'http://127.0.0.1:4173',OUT='artifacts/rechent-estimate-integration';
+const SHARE_TOKEN=process.env.VERCEL_SHARE_TOKEN;
+const READER_LABELS={OUTDOOR_READER:'屋外リーダー用',KEYPAD_OUTDOOR_READER:'テンキー付屋外リーダー用'};
+const TRIM_LABELS={'150':'150 長（分割タイプ）','125':'125 長（分割タイプ）','100':'100 長（分割タイプ）','75':'75 長（分割タイプ）','50_LONG':'50 長（分割タイプ）','50_SHORT':'50 短（一体タイプ）','25_LONG':'25 長（分割タイプ）','25_SHORT':'25 短（一体タイプ）'};
+await mkdir(OUT,{recursive:true});
+const report={status:'RUNNING',appIntegrationReady:'EVALUATED_BY_SEPARATE_GATE',formalVersion:'v0.8-R8',evidenceIdentity:'RE3NF-R8-FRAME-e87c32b30096671d',exactHead:process.env.GITHUB_SHA??null,baseUrl:BASE,cases:[],errors:[],failedResponses:[]};
+const browser=await chromium.launch();
+const dimensions={desktop:{width:1440,height:1000},tablet:{width:768,height:1024},mobile:{width:390,height:844}};
+async function selectAndResolve(page,key,value){
+ const revision=await page.locator('#dynamicForm').getAttribute('data-resolve-revision');
+ const response=page.waitForResponse(r=>{
+  if(!r.url().includes('/api/runtime-master/resolve')||r.status()!==200)return false;
+  const sent=JSON.parse(new URL(r.url()).searchParams.get('selection'));
+  return String(sent[key])===String(value);
+ });
+ await page.locator(`[data-spec-key="${key}"]`).selectOption(value);
+ const result=await(await response).json();
+ await page.waitForFunction(old=>document.querySelector('#dynamicForm').dataset.resolveRevision!==old,revision);
+ assert.equal(String(result.selection[key]),String(value),`${key}: received another selection response`);
+ await page.waitForFunction(({key,value})=>document.querySelector(`[data-spec-key="${key}"]`)?.value===String(value),{key,value});
+ assert.equal(Object.keys(result.selection).some(isSiteSurveyField),false);
+ for(const field of result.fields.filter(f=>!f.readOnly&&f.values?.length)){
+  const value=result.selection[field.key];if(value===undefined)continue;
+  for(const item of Array.isArray(value)?value:[value])assert.ok(field.values.some(choice=>choice.value===item),`${key} leaves invalid ${field.key}`);
+ }
+ return result;
+}
+try{
+ for(const [device,viewport] of Object.entries(dimensions)){
+  const context=await browser.newContext({viewport,isMobile:device==='mobile',hasTouch:device==='mobile'});
+  if(SHARE_TOKEN)await context.request.get(`${BASE}/?_vercel_share=${encodeURIComponent(SHARE_TOKEN)}`);
+  const page=await context.newPage();page.on('pageerror',e=>report.errors.push(e.message));page.on('console',m=>{if(m.type()==='error')report.errors.push(m.text());});page.on('response',r=>{if(r.status()>=400&&!r.url().includes('favicon'))report.failedResponses.push({status:r.status(),url:r.url()});});
+  await page.goto(BASE,{waitUntil:'networkidle'});
+  const identity=await page.evaluate(async()=>{const rows=await(await fetch('/api/runtime-master/integrations')).json();return rows.find(row=>row.id==='SER-LIXIL-RECHENT-D3-NF');});
+  assert.equal(identity.packageVersion,'v0.8-R8');
+  assert.equal(identity.sourceHash,'1da09541a4ddf234314d8f082b792c2fb2cbab90ef5c6d70b32ff39706e145db');
+  report.runtimeIdentity=identity;
+  const runtime=await page.evaluate(async()=>{const result=await(await fetch('/api/runtime-master/resolve?'+new URLSearchParams({productId:'SER-LIXIL-RECHENT-D3-NF',selection:'{}'}))).json();return result.runtimeMaster;});
+  assert.equal(runtime.packageVersion,'v0.8-R8');assert.equal(runtime.sourcePackageIntegrity.actual,identity.sourceHash);
+  assert.equal(runtime.sourcePackageIntegrity.files.length,8);assert.ok(runtime.sourcePackageIntegrity.files.every(row=>row.match&&row.actual===row.expected));
+  report.serverRuntimeIntegrity=runtime.sourcePackageIntegrity;
+  for(const {name,...seed} of RECHENT_BUSINESS_CASES){
+   const completed=await completeRechent(seed);
+   const row={id:RECHENT_ID,selection:completed.selection,survey:{existing_frame_material:'old-material',existing_frame_type:'old-type',fastening_method:'old-method',existing_opening_w1:999,fit_result:'OLD_FAILURE'}};
+   const ids=await page.evaluate(async row=>{
+    localStorage.removeItem('sash.work-management.v1');
+    const {createProductConfigurationSnapshot}=await import('/work-management/domain.mjs');
+    const {BrowserStorageDocumentStore}=await import('/work-management/storage.mjs');
+    const {createRepositoryBundle}=await import('/work-management/repositories.mjs');
+    const {WorkManagementService}=await import('/work-management/service.mjs');
+    const products=await(await fetch('/api/runtime-master/integrations')).json();
+    const result=await(await fetch('/api/runtime-master/resolve?'+new URLSearchParams({productId:row.id,selection:JSON.stringify(row.selection)}))).json();
+    const snapshot=createProductConfigurationSnapshot({product:products.find(p=>p.id===row.id),result});
+    snapshot.configuration={...snapshot.configuration,...row.survey,runtime_mode:'SURVEY_LINKED'};delete snapshot.workflow_data;
+    snapshot.display_summary.push(...Object.entries(row.survey).map(([key,value])=>({key,label:key,value:String(value)})));
+    const service=new WorkManagementService(createRepositoryBundle(new BrowserStorageDocumentStore(localStorage)));
+    const {project,estimate}=await service.createProject({project_name:'リシェント見積QA'});
+    const opening=await service.createOpening(project.project_id,estimate.estimate_id,{room_name:'玄関',product_configuration_snapshot:snapshot});
+    return {project:project.project_id,estimate:estimate.estimate_id,opening:opening.opening_id};
+   },row);
+   const url=`${BASE}/projects/${ids.project}/estimates/${ids.estimate}/openings/${ids.opening}`;
+   await page.goto(url,{waitUntil:'networkidle'});await page.waitForSelector('#dynamicForm[data-resolve-revision]');
+   const keys=await page.locator('#dynamicForm .field[data-key]').evaluateAll(nodes=>nodes.map(n=>n.dataset.key));
+   assert.equal(keys.some(isSiteSurveyField),false);
+   assert.deepEqual(keys,[...keys].sort((a,b)=>ENTRY_DOOR_COVER_PRESENTATION_ORDER.indexOf(a)-ENTRY_DOOR_COVER_PRESENTATION_ORDER.indexOf(b)));
+   const thermalOptions=await page.locator('[data-spec-key="thermal_spec"] option').evaluateAll(nodes=>nodes.map(n=>({value:n.value,label:n.textContent.trim()})).filter(row=>row.value));
+   assert.deepEqual(thermalOptions.map(row=>row.value),['HIGH_INSULATION','INSULATION_K2','INSULATION_K4','ALUMINUM']);
+   assert.deepEqual(thermalOptions.map(row=>row.label),['高断熱仕様','断熱仕様 k2','断熱仕様 k4','アルミ仕様']);
+   const frameOptions=await page.locator('[data-spec-key="frame_color"] option').evaluateAll(nodes=>nodes.filter(n=>n.value).map(n=>({value:n.value,label:n.textContent.trim()})));
+   assert.deepEqual(frameOptions,completed.fields.find(row=>row.key==='frame_color').values.map(row=>({value:row.value,label:row.displayLabel})));
+   if(name==='k2-s14-required-frame')assert.deepEqual(frameOptions.map(row=>row.value),['AA']);
+   if(name==='k4-g78-required-frame')assert.deepEqual(frameOptions.map(row=>row.value),['AK']);
+   if(name==='k2-m78-recommended-frame')assert.equal(frameOptions.length,15);
+   if(name==='high-single-manual')assert.equal(frameOptions.length,8);
+   if(name==='insulated-single-manual'||seed.thermal_spec==='ALUMINUM')assert.equal(frameOptions.length,15);
+   assert.equal(frameOptions.some(row=>['BG','FK'].includes(row.value)),false);
+   const trimOptions=await page.locator('[data-spec-key="exterior_trim"] option').evaluateAll(nodes=>nodes.filter(n=>n.value).map(n=>[n.value,n.textContent.trim()]));
+   assert.deepEqual(Object.fromEntries(trimOptions),TRIM_LABELS);
+   assert.equal(await page.locator('[data-spec-key="exterior_trim"] option:checked').innerText(),TRIM_LABELS[completed.selection.exterior_trim]);
+   assert.doesNotMatch(await page.locator('body').innerText(),/(?:25|50)_(?:LONG|SHORT)|OUTDOOR_READER|\bBATTERY\b/);
+   if(['k2-trim-50_LONG','k2-s14-required-frame','k2-m78-recommended-frame','high-single-manual','aluminum-single-familock'].includes(name))await page.screenshot({path:`${OUT}/${device}-${name}-color-trim.png`,fullPage:true});
+   assert.equal(await page.locator('#warnings .notice.error').count(),0,name);
+   assert.equal(await page.locator('#productEditor :invalid').count(),0,name);
+   if(name.includes('manual-check'))assert.match(await page.locator('#warnings').innerText(),/第二扉/);
+   if(seed.lock_type==='FAMILOCK'){
+    const readerOptions=await page.locator('[data-spec-key="electric_lock_reader"] option').evaluateAll(nodes=>nodes.filter(n=>n.value).map(n=>({value:n.value,label:n.textContent.trim()})));
+    assert.deepEqual(readerOptions,completed.fields.find(row=>row.key==='electric_lock_reader').values.map(row=>({value:row.value,label:READER_LABELS[row.value]})));
+    assert.equal(await page.locator('[data-spec-key="electric_lock_reader"]').inputValue(),completed.selection.electric_lock_reader);
+    assert.doesNotMatch(await page.locator('body').innerText(),/OUTDOOR_READER/);
+    if(seed.electric_lock_reader==='KEYPAD_OUTDOOR_READER'){
+     for(const reader of Object.keys(READER_LABELS)){
+      const resolved=await selectAndResolve(page,'electric_lock_reader',reader);
+      assert.equal(resolved.selection.electric_lock_reader,reader);
+      assert.equal(await page.locator('[data-spec-key="electric_lock_reader"] option:checked').innerText(),READER_LABELS[reader]);
+      assert.doesNotMatch(await page.locator('body').innerText(),/OUTDOOR_READER/);
+     }
+     await page.screenshot({path:`${OUT}/${device}-${name}-reader.png`,fullPage:true});
+    }
+   }
+   const changed=await page.locator('#dynamicForm').getAttribute('data-resolve-revision');
+   await page.locator('[data-spec-key="handing"]').selectOption('L');
+   await page.waitForFunction(old=>document.querySelector('#dynamicForm').dataset.resolveRevision!==old,changed);
+   await page.locator('#saveOpening').click();await page.waitForURL(`**/projects/${ids.project}/estimates/${ids.estimate}`);
+   await page.goto(url,{waitUntil:'networkidle'});await page.waitForSelector('#dynamicForm[data-resolve-revision]');await page.reload({waitUntil:'networkidle'});await page.waitForSelector('#dynamicForm[data-resolve-revision]');
+   const saved=await page.evaluate(()=>window.__sashWorkApp.readDatabase().openings[0]);
+   assert.equal(saved.status,'COMPLETE',name);const snapshot=saved.product_configuration_snapshot;
+   assert.equal(snapshot.configuration.handing,'L');assert.equal(Object.keys(snapshot.configuration).some(isSiteSurveyField),false);
+   assert.equal(snapshot.configuration.thermal_spec,seed.thermal_spec);
+   assert.equal(snapshot.configuration.glass_spec,completed.selection.glass_spec);
+   assert.equal(snapshot.configuration.frame_color,completed.selection.frame_color);
+   assert.equal(snapshot.display_summary.find(row=>row.key==='frame_color').value,completed.fields.find(row=>row.key==='frame_color').values.find(row=>row.value===completed.selection.frame_color).displayLabel);
+   assert.equal(await page.locator('[data-spec-key="frame_color"]').inputValue(),completed.selection.frame_color);
+   assert.equal(snapshot.configuration.exterior_trim,completed.selection.exterior_trim);
+   assert.equal(snapshot.display_summary.find(row=>row.key==='exterior_trim').value,TRIM_LABELS[completed.selection.exterior_trim]);
+   assert.equal(await page.locator('[data-spec-key="exterior_trim"] option:checked').innerText(),TRIM_LABELS[completed.selection.exterior_trim]);
+   if(seed.lock_type==='FAMILOCK'){
+    assert.equal(snapshot.configuration.electric_lock_power,seed.electric_lock_power);
+    assert.equal(snapshot.configuration.electric_lock_reader,completed.selection.electric_lock_reader);
+    assert.equal(snapshot.display_summary.find(row=>row.key==='electric_lock_reader').value,READER_LABELS[completed.selection.electric_lock_reader]);
+    assert.equal(await page.locator('[data-spec-key="electric_lock_reader"] option:checked').innerText(),READER_LABELS[completed.selection.electric_lock_reader]);
+    assert.doesNotMatch(await page.locator('body').innerText(),/OUTDOOR_READER/);
+   }
+   assert.deepEqual(Object.values(snapshot.workflow_data.site_survey.contexts)[0].values,row.survey);
+   const output=await page.evaluate(async()=>{const {createEstimateOutputModel}=await import('/estimate-output/model.mjs');const db=window.__sashWorkApp.readDatabase();return createEstimateOutputModel({project:db.projects[0],estimate:db.estimates[0],openings:db.openings});});
+   assert.notEqual(output.state,'INCOMPLETE',name);assert.notEqual(output.state,'INVALID',name);assert.equal(Object.keys(output.rows[0].configuration).some(isSiteSurveyField),false);assert.equal(output.rows[0].display_summary.some(r=>isSiteSurveyField(r.key)),false);
+   assert.equal(output.rows[0].configuration.thermal_spec,seed.thermal_spec);
+   assert.equal(output.rows[0].configuration.glass_spec,completed.selection.glass_spec);
+   assert.equal(output.rows[0].configuration.frame_color,completed.selection.frame_color);
+   assert.equal(output.rows[0].display_summary.find(row=>row.key==='frame_color').value,snapshot.display_summary.find(row=>row.key==='frame_color').value);
+   assert.equal(Object.keys(output.rows[0].configuration).some(key=>key.toLowerCase().includes('recommend')),false);
+   assert.equal(output.rows[0].configuration.exterior_trim,completed.selection.exterior_trim);
+   assert.equal(output.rows[0].display_summary.find(row=>row.key==='exterior_trim').value,TRIM_LABELS[completed.selection.exterior_trim]);
+   if(name==='k4-g78-required-frame'){
+    const next=await selectAndResolve(page,'body_color','BB');
+    assert.equal(Object.hasOwn(next.selection,'frame_color'),false);
+    assert.deepEqual(next.fields.find(row=>row.key==='frame_color').values.map(row=>row.value),['AA']);
+    await selectAndResolve(page,'frame_color','AA');
+    const original=await selectAndResolve(page,'body_color','CB');
+    assert.equal(Object.hasOwn(original.selection,'frame_color'),false);
+   }
+   if(name==='k2-s14-required-frame'){
+    const next=await selectAndResolve(page,'design','G12');
+    assert.equal(next.selection.frame_color,'AA');
+    await selectAndResolve(page,'frame_color','HC');
+    const required=await selectAndResolve(page,'design','S14');
+    assert.equal(Object.hasOwn(required.selection,'frame_color'),false);
+    assert.deepEqual(required.fields.find(row=>row.key==='frame_color').values.map(row=>row.value),['AA']);
+   }
+   if(seed.lock_type==='FAMILOCK'){
+    assert.equal(output.rows[0].configuration.electric_lock_reader,completed.selection.electric_lock_reader);
+    assert.equal(output.rows[0].display_summary.find(row=>row.key==='electric_lock_reader').value,READER_LABELS[completed.selection.electric_lock_reader]);
+   }
+   if(name.includes('manual-check'))assert.ok(output.rows[0].issues.some(r=>r.code==='HIGH_SIZE_DOUBLE_CHILD_RANGE_UNVERIFIED'));
+   const revision=await page.locator('#dynamicForm').getAttribute('data-resolve-revision');
+   await page.locator('[data-spec-key="size_w"]').fill('1');await page.locator('[data-spec-key="size_w"]').dispatchEvent('change');
+   await page.waitForFunction(old=>document.querySelector('#dynamicForm').dataset.resolveRevision!==old,revision);assert.equal(await page.locator('#warnings .notice.error').count(),1);
+   await page.evaluate(()=>window.__sashTheme.setPreference('dark'));assert.equal(await page.evaluate(()=>document.documentElement.dataset.theme),'dark');
+   assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth-window.innerWidth)<=1);
+   if(name==='high-single-manual')await page.screenshot({path:`${OUT}/${device}-dark.png`,fullPage:true});
+   if(seed.lock_type==='FAMILOCK'){
+    const visibleKeys=await page.locator('#dynamicForm .field[data-key]').evaluateAll(nodes=>nodes.map(n=>n.dataset.key));
+    assert.equal(visibleKeys.indexOf('key_set'),visibleKeys.indexOf('lock_type')+1);
+    const power=page.locator('[data-spec-key="electric_lock_power"]');
+    const powerOptions=await power.locator('option').evaluateAll(nodes=>nodes.map(n=>({value:n.value,label:n.textContent.trim()})).filter(row=>row.value));
+    assert.equal(powerOptions.find(row=>row.value==='BATTERY')?.label,'電池式');
+    const expectedPower=completed.fields.find(row=>row.key==='electric_lock_power').values;
+    assert.deepEqual(powerOptions,expectedPower.map(row=>({value:row.value,label:row.displayLabel})));
+    assert.equal(powerOptions.some(row=>row.label==='BATTERY'),false);
+    const alternatives=powerOptions.map(row=>row.value);
+    const next=alternatives.find(value=>value!==seed.electric_lock_power);
+    if(next)await selectAndResolve(page,'electric_lock_power',next);
+    if(seed.thermal_spec==='INSULATION_K4')await page.screenshot({path:`${OUT}/${device}-k4-familock.png`,fullPage:true});
+    const manual=await selectAndResolve(page,'lock_type','MANUAL');
+    for(const key of ['electric_lock_power','electric_lock_reader','electric_lock_plan','key_set','additional_key']){
+     assert.equal(Object.hasOwn(manual.selection,key),false,key);assert.equal(await page.locator(`[data-spec-key="${key}"]`).count(),0,key);
+    }
+   }
+   if(seed.thermal_spec==='INSULATION_K2'&&seed.opening_type==='SINGLE'&&seed.design==='G12'){
+    await page.screenshot({path:`${OUT}/${device}-k2.png`,fullPage:true});
+    const k4=await selectAndResolve(page,'thermal_spec','INSULATION_K4');
+    assert.equal(k4.selection.design,'G12');assert.equal(k4.selection.frame_color,completed.selection.frame_color);assert.equal(k4.fields.find(row=>row.key==='frame_color').values.length,15);assert.equal(k4.selection.glass_spec,'IGU_A16');
+    const k2=await selectAndResolve(page,'thermal_spec','INSULATION_K2');
+    assert.equal(k2.selection.design,'G12');assert.equal(k2.selection.frame_color,completed.selection.frame_color);assert.equal(k2.selection.glass_spec,'LOW_E_IGU_A16');
+   }
+   if(seed.opening_type!=='SINGLE'){
+    const single=await selectAndResolve(page,'opening_type','SINGLE');
+    for(const key of ['child_door','sidelight_spec'])assert.equal(Object.hasOwn(single.selection,key),false,key);
+   }
+   const nextThermal=seed.thermal_spec==='HIGH_INSULATION'?'ALUMINUM':'HIGH_INSULATION';
+   const thermal=await selectAndResolve(page,'thermal_spec',nextThermal);
+   assert.equal(Object.hasOwn(thermal.selection,'design'),false);
+   assert.equal(Object.hasOwn(thermal.selection,'frame_color'),false);
+   if(name==='high-single-manual'){
+    await selectAndResolve(page,'design','C12N');await selectAndResolve(page,'body_color','CB');
+    const alu=await selectAndResolve(page,'frame_color','AA');assert.equal(alu.fields.find(f=>f.key==='frame_color').values.length,15);
+    const high=await selectAndResolve(page,'thermal_spec','HIGH_INSULATION');assert.equal(Object.hasOwn(high.selection,'frame_color'),false);
+    await selectAndResolve(page,'design','17H');await selectAndResolve(page,'body_color','CB');await selectAndResolve(page,'frame_color','CB');
+    const standard=await selectAndResolve(page,'design','12N');assert.equal(standard.selection.frame_color,'CB');
+    assert.equal(standard.fields.find(f=>f.key==='frame_color').values.length,8);
+    const grade=await selectAndResolve(page,'design','17H');assert.equal(grade.selection.frame_color,'CB');
+   }
+   if(nextThermal==='HIGH_INSULATION')assert.equal(Object.hasOwn(thermal.selection,'threshold_flat_material'),false);
+   report.cases.push({name,device,selection:'PASS',presentation:'PASS',legacyMigration:'PASS',saveReload:'PASS',handoff:'PASS',invalidDimension:'PASS',dark:'PASS',upstreamReset:'PASS'});
+  }
+  await context.close();
+ }
+ assert.deepEqual(report.errors,[]);assert.deepEqual(report.failedResponses,[]);report.status='PASS';
+}catch(e){report.status='FAIL';report.failure=e.stack;throw e;}
+finally{await writeFile(`${OUT}/report.json`,JSON.stringify(report,null,2));await browser.close();console.log(JSON.stringify({status:report.status,cases:report.cases.length,failure:report.failure}));}

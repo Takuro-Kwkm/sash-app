@@ -2,7 +2,7 @@ import { applyGlobalWindowSelectionFlow } from './global-window-selection-flow-e
 
 export const ENTRY_DOOR_COVER_UI_CATEGORY = 'ENTRY_DOOR_COVER';
 
-// UI実装標準仕様書 v1.8 section 11 normalized to the single Global Window
+// UI実装標準仕様書 v2.1 section 11 normalized to the single Global Window
 // Selection Flow. Category differences are declarative semantic slots only;
 // no manufacturer/series/product branching belongs here.
 export const ENTRY_DOOR_COVER_UI_STANDARD_ORDER = Object.freeze([
@@ -17,6 +17,21 @@ export const ENTRY_DOOR_COVER_UI_STANDARD_ORDER = Object.freeze([
   'existing_opening_w1','existing_opening_w2','existing_opening_w_correction','existing_opening_h1','existing_opening_h2',
   'exterior_trim_a','exterior_trim_b','exterior_trim_c','interior_trim_d','interior_trim_e','interior_trim_j','interior_trim_k','existing_threshold_g','fit_result',
   'additional_key','option',
+]);
+
+// Presentation follows the entrance cover contract while semantic stages remain
+// stable. The shared engine already supports category presentation extensions.
+export const ENTRY_DOOR_COVER_PRESENTATION_ORDER = Object.freeze([
+  'thermal_spec','transom','opening_type','design','child_door',
+  'sidelight_spec','glass_spec','glass_safety','body_color','frame_color','handing',
+  'door_closer','handle_type','handle_surface','handle_color','interior_handle',
+  'lock_type','key_set','cylinder','electric_lock_power','electric_lock_reader','electric_lock_plan','additional_key',
+  'exterior_trim','interior_trim','existing_threshold_treatment','threshold_flat_material','threshold_step_mitigation',
+  'size_w','size_h',
+  'existing_frame_material','existing_frame_type','fastening_method',
+  'existing_opening_w1','existing_opening_w2','existing_opening_w_correction','existing_opening_h1','existing_opening_h2',
+  'exterior_trim_a','exterior_trim_b','exterior_trim_c','interior_trim_d','interior_trim_e','interior_trim_j','interior_trim_k','existing_threshold_g','fit_result',
+  'option',
 ]);
 
 const OPENING = new Set(['opening_type']);
@@ -74,5 +89,7 @@ export function applyEntryDoorCoverUiOrder(fields = []) {
     semanticStageForSlot: semanticStageForEntryDoorCoverSlot,
     approvedExtensionForField: () => null,
     standardLabelForField: standardLabelForEntryDoorCoverField,
+    presentationExtensionForField: (key) => ({slot:key,order:0}),
+    presentationRankForField: (key) => ENTRY_DOOR_COVER_PRESENTATION_ORDER.indexOf(key),
   });
 }

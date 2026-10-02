@@ -1,0 +1,120 @@
+name: Rechent Estimate Integration
+on:
+  push:
+    branches: [integration/rechent-estimate-flow-20261002]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: rechent-estimate-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      HEAD_SHA: ${{ github.sha }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: npm run lint && npm run typecheck && npm test
+      - name: Official R8 adoption and unrelated-series protection
+        run: |
+          git fetch origin 7584ed0a9e37f12e448e1d17303bd149200cb6b1
+          node scripts/verify-rechent-r8-adoption.mjs
+      - run: npm run build:release
+      - run: npm install --no-save playwright@1.55.0 && npx playwright install --with-deps chromium
+      - name: Browser journeys and shared workflow regression
+        run: |
+          npm run start:qa > /tmp/rechent-qa.log 2>&1 &
+          pid=$!
+          trap 'kill "$pid" || true' EXIT
+          for i in {1..60}; do
+            if curl -fsS http://127.0.0.1:4173/api/health >/dev/null; then break; fi
+            sleep 1
+          done
+          node test/browser/rechent-entry-door-cover-global-flow-browser-qa.mjs
+          node test/browser/rechent-estimate-integration-browser-qa.mjs
+          node test/browser/eight-series-business-flow-qa.mjs
+          node test/browser/bathroom-estimate-workflow-browser-qa.mjs
+          node test/browser/work-management-browser-qa.mjs
+          node test/browser/estimate-output-browser-qa.mjs
+          node test/browser/theme-browser-qa.mjs
+          node scripts/build-eight-series-review.mjs artifacts/rechent-review/index.html rechent
+          node test/browser/rechent-inline-preview-qa.mjs
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: rechent-local-qa-${{ github.sha }}
+          path: artifacts/
+  preview:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      VERCEL_ORG_ID: team_AkuHacuJlCl8LuvaFpCzFmbv
+      VERCEL_PROJECT_ID: prj_4z0zqW6yKyPuFINODfGX8LPBuJRP
+      VERCEL_PROJECT_NAME: sash-app-wave3-preview
+      RELEASE_SERIES: LIXIL_RECHENT_DOOR3_NON_FIRE
+      RELEASE_PACKAGE_VERSION: v0.8-R8
+      VERCEL_DEPLOY_SOURCE: gitSource
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Prepare preview credential
+        env:
+          VERCEL_TOKEN_PRIMARY: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_TOKEN_FALLBACK: ${{ secrets.VERCEL_ACCESS_TOKEN }}
+        run: |
+          token="${VERCEL_TOKEN_PRIMARY:-${VERCEL_TOKEN_FALLBACK:-}}"
+          if [[ -z "$token" ]]; then echo 'VERCEL_CREDENTIAL_GATE=BLOCKED'; exit 42; fi
+          echo "VERCEL_TOKEN_EFFECTIVE=$token" >> "$GITHUB_ENV"
+      - run: node scripts/vercel-rest-deploy.mjs preview artifacts/rechent-preview/deployment.json
+      - run: node scripts/prepare-rechent-preview-access.mjs artifacts/rechent-preview/deployment.json
+      - run: npm install --no-save playwright@1.55.0 && npx playwright install --with-deps chromium
+      - name: Exact commit deployed browser gate
+        env:
+          QA_BASE_URL: ${{ env.DEPLOY_URL }}
+        run: |
+          node -e 'const d=require("./artifacts/rechent-preview/deployment.json"); if(d.readyState!=="READY"||d.githubSha!==process.env.GITHUB_SHA||d.deploymentGitSha!==process.env.GITHUB_SHA||d.mode!=="preview") process.exit(1)'
+          node test/browser/rechent-entry-door-cover-global-flow-browser-qa.mjs
+          node test/browser/rechent-estimate-integration-browser-qa.mjs
+          echo 'DEPLOYED_BROWSER_GATE=PASS_ADAPTER_REGRESSION_SCOPE'
+          echo 'PRODUCT_MASTER_MUTATION=0'
+          echo 'PRODUCTION_DEPLOY=NOT_EXECUTED'
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: rechent-deployed-qa-${{ github.sha }}
+          path: |
+            artifacts/rechent-preview/
+            artifacts/rechent-estimate-integration/
+            artifacts/rechent-entry-door-cover-global-flow-browser-qa/
+  integration-ready:
+    needs: [qa, preview]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - uses: actions/download-artifact@v4
+        with:
+          name: rechent-local-qa-${{ github.sha }}
+          path: artifacts/gate-input/local
+      - uses: actions/download-artifact@v4
+        with:
+          name: rechent-deployed-qa-${{ github.sha }}
+          path: artifacts/gate-input/deployed
+      - name: Evaluate verified integration gates
+        run: |
+          # Keep only deployed browser reports to prevent local/deployed ambiguity.
+          rm -rf artifacts/gate-input/local/rechent-estimate-integration artifacts/gate-input/local/rechent-entry-door-cover-global-flow-browser-qa
+          node scripts/evaluate-rechent-r8-integration-ready.mjs
+      - uses: actions/upload-artifact@v4
+        with:
+          name: rechent-integration-ready-${{ github.sha }}
+          path: artifacts/rechent-integration-ready/

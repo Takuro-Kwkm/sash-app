@@ -1,0 +1,122 @@
+name: Rechent R8 Production Release
+on:
+  push:
+    branches: [main]
+    paths: ['.release/rechent-v0.8-r8']
+permissions:
+  contents: read
+  actions: read
+concurrency:
+  group: sash-app-production
+  cancel-in-progress: false
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    environment: production
+    env:
+      VERCEL_ORG_ID: team_AkuHacuJlCl8LuvaFpCzFmbv
+      VERCEL_PROJECT_ID: prj_4z0zqW6yKyPuFINODfGX8LPBuJRP
+      VERCEL_PROJECT_NAME: sash-app-wave3-preview
+      VERCEL_DEPLOY_SOURCE: files
+      RELEASE_SERIES: LIXIL_RECHENT_DOOR3_NON_FIRE
+      RELEASE_PACKAGE_VERSION: v0.8-R8
+      PRODUCTION_URL: https://sash-app-wave3-preview.vercel.app
+      PRODUCTION_HOST: sash-app-wave3-preview.vercel.app
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Verify user-approved application identity and prior gates
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          node --input-type=module <<'NODE'
+          import assert from 'node:assert/strict';
+          import {readFileSync} from 'node:fs';
+          import {execFileSync} from 'node:child_process';
+          const git=(...args)=>execFileSync('git',args,{encoding:'utf8'}).trim();
+          const marker=JSON.parse(readFileSync('.release/rechent-v0.8-r8','utf8'));
+          assert.equal(marker.scope,'NON_PRODUCT_MASTER_INTEGRATION');
+          assert.equal(marker.formal_version,'v0.8-R8');
+          assert.equal(marker.approved_application_head,'fca365888d197c79ebc0caa56ad18e64b8485364');
+          assert.equal(git('rev-parse','HEAD'),process.env.GITHUB_SHA);
+          assert.ok(marker.human_authorization);
+          const allowed=new Set(['.release/rechent-v0.8-r8','.github/workflows/rechent-production.yml']);
+          assert.ok(git('diff','--name-only',marker.approved_application_head,'HEAD').split('\n').filter(Boolean).every(path=>allowed.has(path)),'application differs from approved Preview');
+          for(const id of [marker.approved_preview_run,marker.approved_governance_run]){
+            const response=await fetch(`https://api.github.com/repos/${process.env.GITHUB_REPOSITORY}/actions/runs/${id}`,{headers:{Authorization:`Bearer ${process.env.GH_TOKEN}`}});
+            assert.ok(response.ok);const run=await response.json();
+            assert.equal(run.head_sha,marker.approved_application_head);assert.equal(run.conclusion,'success');
+          }
+          console.log('APPROVED_APPLICATION_GATE=PASS '+marker.approved_application_head);
+          NODE
+      - name: Application, R8 adoption, build and governance
+        run: |
+          npm run lint
+          npm run typecheck
+          npm test
+          node scripts/verify-rechent-r8-adoption.mjs
+          npm run build:release
+          node scripts/governance/inner-window-frame-integration-qa.mjs
+      - name: Prepare existing production credential
+        env:
+          VERCEL_TOKEN_PRIMARY: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_TOKEN_FALLBACK: ${{ secrets.VERCEL_ACCESS_TOKEN }}
+        run: |
+          token="${VERCEL_TOKEN_PRIMARY:-${VERCEL_TOKEN_FALLBACK:-}}"
+          if [[ -z "$token" ]]; then echo 'VERCEL_CREDENTIAL_GATE=BLOCKED'; exit 42; fi
+          echo "VERCEL_TOKEN_EFFECTIVE=$token" >> "$GITHUB_ENV"
+      - name: Deploy exact merged SHA
+        run: node scripts/vercel-rest-deploy.mjs production artifacts/rechent-production/deployment.json
+      - name: Verify Production identity, alias and R8 metadata
+        run: |
+          curl -fsS -H "Authorization: Bearer $VERCEL_TOKEN_EFFECTIVE" "https://api.vercel.com/v13/deployments/$DEPLOY_ID?teamId=$VERCEL_ORG_ID" > artifacts/rechent-production/vercel-deployment.json
+          node --input-type=module <<'NODE'
+          import assert from 'node:assert/strict';
+          import {readFileSync} from 'node:fs';
+          const d=JSON.parse(readFileSync('artifacts/rechent-production/vercel-deployment.json'));
+          assert.equal(d.readyState,'READY');assert.equal(d.target,'production');
+          assert.equal(d.meta.releaseCommitSha,process.env.GITHUB_SHA);
+          assert.equal(d.meta.releasePackageVersion,'v0.8-R8');
+          assert.ok(d.alias.includes(process.env.PRODUCTION_HOST));
+          console.log('PRODUCTION_IDENTITY_ALIAS_GATE=PASS');
+          NODE
+      - name: Production health and runtime identity
+        run: |
+          curl -fsS "$PRODUCTION_URL/api/health" > artifacts/rechent-production/health.json
+          curl -fsS "$PRODUCTION_URL/api/runtime-master/integrations" > artifacts/rechent-production/integrations.json
+          node --input-type=module <<'NODE'
+          import assert from 'node:assert/strict';
+          import {readFileSync} from 'node:fs';
+          const h=JSON.parse(readFileSync('artifacts/rechent-production/health.json'));
+          assert.ok(h.ok);const rows=JSON.parse(readFileSync('artifacts/rechent-production/integrations.json'));
+          const r=rows.find(row=>row.id==='SER-LIXIL-RECHENT-D3-NF');
+          assert.equal(r.packageVersion,'v0.8-R8');assert.equal(r.status,'READY');assert.equal(r.selectable,true);
+          assert.equal(r.sourceHash,'1da09541a4ddf234314d8f082b792c2fb2cbab90ef5c6d70b32ff39706e145db');
+          assert.ok(rows.filter(row=>row.status==='READY'&&row.selectable).length>=9);
+          console.log('PRODUCTION_RUNTIME_GATE=PASS');
+          NODE
+      - run: npm install --no-save playwright@1.55.0 && npx playwright install --with-deps chromium
+      - name: Production browser and shared business-flow regression
+        env:
+          QA_BASE_URL: ${{ env.PRODUCTION_URL }}
+        run: |
+          node test/browser/rechent-entry-door-cover-global-flow-browser-qa.mjs
+          node test/browser/rechent-estimate-integration-browser-qa.mjs
+          node test/browser/eight-series-business-flow-qa.mjs
+          node test/browser/bathroom-estimate-workflow-browser-qa.mjs
+          node test/browser/work-management-browser-qa.mjs
+          node test/browser/estimate-output-browser-qa.mjs
+          node test/browser/theme-browser-qa.mjs
+          echo 'RECHENT_R8_PRODUCTION_BROWSER_GATE=PASS'
+          echo 'RELEASED=TRUE'
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: rechent-production-${{ github.sha }}
+          path: artifacts/

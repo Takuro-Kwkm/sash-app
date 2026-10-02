@@ -18,9 +18,14 @@ const uniq = (values) => [...new Set(values.filter((v)=>v !== undefined && v !==
 const asNumber = (value) => value === '' || value === null || value === undefined ? null : (Number.isFinite(Number(value)) ? Number(value) : null);
 const choice = (value, displayLabel = String(value), extra = {}) => ({ value, displayLabel, manualCheck:false, disabled:false, ...extra });
 const labelMap = (pairs) => new Map(pairs);
+const SPLIT_INSULATION_VALUES = new Set(['INSULATION_K2','INSULATION_K4']);
+// Business values remain distinct in UI, persistence and handoff. A grouped
+// Formal scope is only a shared rule; it never selects the other grade's rows.
+const formalThermalScope = (value) => SPLIT_INSULATION_VALUES.has(value) ? 'INSULATION_K2_K4' : value;
+const thermalScopeMatches = (rowScope, selectedScope) => !selectedScope || rowScope===selectedScope || rowScope===formalThermalScope(selectedScope);
 
 const LABELS = Object.freeze({
-  thermal_spec: labelMap([['HIGH_INSULATION','高断熱仕様'],['INSULATION_K2_K4','断熱仕様（k2/k4）'],['ALUMINUM','アルミ仕様']]),
+  thermal_spec: labelMap([['HIGH_INSULATION','高断熱仕様'],['INSULATION_K2','断熱仕様 k2'],['INSULATION_K4','断熱仕様 k4'],['ALUMINUM','アルミ仕様']]),
   transom: labelMap([['NONE','なし'],['PRESENT','あり']]),
   opening_type: labelMap([['SINGLE','片開き'],['PARENT_CHILD','親子'],['DOUBLE','両開き'],['SINGLE_SIDELIGHT','片袖'],['DOUBLE_SIDELIGHT','両袖']]),
   handing: labelMap([['R','右吊元'],['L','左吊元']]),
@@ -29,6 +34,10 @@ const LABELS = Object.freeze({
   handle_surface: labelMap([['GENERAL','一般仕様'],['KIETECHNO_COAT','キエテクノコート']]),
   handle_color: labelMap([['1','ブラストシルバー'],['2','サテンゴールド'],['3','シルキーマットブラック']]),
   cylinder: labelMap([['DN','DNシリンダー'],['W','Wシリンダー']]),
+  electric_lock_power: labelMap([['BATTERY','電池式'],['AC100V','AC100V']]),
+  // IG3700 (2026/04), RD-4/RD-12: door-body reader specification labels.
+  // Hardware candidate codes remain the Formal Runtime identifiers.
+  electric_lock_reader: labelMap([['OUTDOOR_READER','屋外リーダー用'],['KEYPAD_OUTDOOR_READER','テンキー付屋外リーダー用']]),
   door_closer: labelMap([['TWO_STOP','2ストップ'],['FREE_STOP','フリーストップ']]),
   glass_safety: labelMap([['SAFETY_LAMINATED','安全合わせ']]),
   glass_spec: labelMap([['NOT_APPLICABLE','ガラスなし'],['LOW_E_IGU_A16_ARGON','Low-E複層（A16アルゴン）'],['LOW_E_IGU_A16','Low-E複層（A16）'],['LOW_E_IGU_ARGON','Low-E複層（アルゴン）'],['IGU_A16','複層（A16）'],['IGU_REDUCED_AIR','複層'],['LAMINATED_PATTERNED','合わせガラス'],['SEPARATE_GLASS','別途ガラス']]),
@@ -49,22 +58,22 @@ function docs(runtimePackage) {
 }
 
 function currentDesign(product, selection) {
-  return product.design_master.find((row)=>row.design_id===selection.design && (!selection.thermal_spec || row.thermal_scope===selection.thermal_spec)) ?? null;
+  return product.design_master.find((row)=>row.design_id===selection.design && thermalScopeMatches(row.thermal_scope,selection.thermal_spec)) ?? null;
 }
 function modelVariant(product, selection) { return currentDesign(product, selection)?.base_model_variant ?? null; }
 function frameAllowedRows(product, selection) {
   const model = modelVariant(product, selection);
   return product.frame_atomic_rules.filter((row)=>row.result==='ALLOW'
-    && (!selection.thermal_spec || row.thermal_scope===selection.thermal_spec)
+    && thermalScopeMatches(row.thermal_scope,selection.thermal_spec)
     && (!selection.design || row.design_id===selection.design)
     && (!model || row.model_variant===model));
 }
 function hardwareRows(hardware, product, selection) {
   const model = modelVariant(product, selection);
   return hardware.hardware_atomic_rules.filter((row)=>row.result==='ALLOW'
-    && (!selection.thermal_spec || row.thermal_scope===selection.thermal_spec)
+    && thermalScopeMatches(row.thermal_scope,selection.thermal_spec)
     && (!selection.design || row.design_id===selection.design)
-    && (!model || row.model_variant_scope===model)
+    && (!model || splitCsv(row.model_variant_scope).includes(model))
     && (!selection.handle_type || row.handle_type===selection.handle_type)
     && (!selection.lock_type || row.entry_system===selection.lock_type));
 }
@@ -73,42 +82,76 @@ function fieldById(canonical, id) { return canonical.fields.find((row)=>row.fiel
 function canonicalField(canonical,key){const id=Object.entries(FIELD_KEY_BY_ID).find(([,mapped])=>mapped===key)?.[0]; return id?fieldById(canonical,id):null;}
 
 function transomChoices(product, selection) {
-  const rows = product.dimension_ranges.filter((row)=>!selection.thermal_spec || row.thermal_scope===selection.thermal_spec);
+  const rows = product.dimension_ranges.filter((row)=>thermalScopeMatches(row.thermal_scope,selection.thermal_spec));
   const values = uniq(rows.flatMap((row)=>row.transom==='ANY'?['NONE','PRESENT']:[row.transom]).filter((v)=>v!=='ANY'));
   return values.map((v)=>choice(v,LABELS.transom.get(v)??v));
 }
-function thermalChoices(product){return uniq(product.design_master.map((row)=>row.thermal_scope)).map((v)=>choice(v,LABELS.thermal_spec.get(v)??v));}
-function designChoices(product,selection){return product.design_master.filter((row)=>!selection.thermal_spec||row.thermal_scope===selection.thermal_spec).map((row)=>choice(row.design_id,row.design_id));}
-function openingChoices(product,selection){return uniq(frameAllowedRows(product,selection).map((row)=>row.frame_configuration)).map((v)=>choice(v,LABELS.opening_type.get(v)??v));}
-function childDoorChoices(product,selection){return product.child_doors.filter((row)=>!selection.thermal_spec||row.thermal_scope===selection.thermal_spec).map((row)=>choice(row.child_design,row.child_design));}
+function thermalChoices(product){
+  const formalScopes=uniq(product.design_master.map((row)=>row.thermal_scope));
+  return uniq(formalScopes.flatMap((v)=>v==='INSULATION_K2_K4'?['INSULATION_K2','INSULATION_K4']:[v])).map((v)=>choice(v,LABELS.thermal_spec.get(v)??v));
+}
+function designChoices(product,selection){
+  const allowed=new Set(frameAllowedRows(product,{...selection,design:null}).filter(row=>!selection.opening_type||row.frame_configuration===selection.opening_type).map(row=>row.design_id));
+  return product.design_master.filter(row=>thermalScopeMatches(row.thermal_scope,selection.thermal_spec)&&allowed.has(row.design_id)).map(row=>choice(row.design_id,row.design_id));
+}
+function openingChoices(product,selection){return uniq(frameAllowedRows(product,{...selection,design:null}).map((row)=>row.frame_configuration)).map((v)=>choice(v,LABELS.opening_type.get(v)??v));}
+function childDoorChoices(product,selection){return product.child_doors.filter((row)=>thermalScopeMatches(row.thermal_scope,selection.thermal_spec)).map((row)=>choice(row.child_design,row.child_design));}
 function sidelightChoices(canonical){return optionFromValueMaster(canonicalField(canonical,'sidelight_spec'));}
 function colorChoices(product,selection,kind){
   const master = kind==='body'?product.door_colors:product.frame_colors;
   let allowed = null;
-  if(kind==='body'&&selection.design){const row=product.design_color_allow.find((r)=>r.design_id===selection.design&&(!selection.thermal_spec||r.thermal_scope===selection.thermal_spec));if(row)allowed=new Set(splitCsv(row.allowed_door_colors));}
-  if(kind==='frame'&&selection.design&&selection.body_color){
-    const required=product.frame_color_rules.find((r)=>r.constraint==='REQUIRED'&&splitCsv(r.design_scope).includes(selection.design)&&splitCsv(r.door_color_scope).includes(selection.body_color));
-    if(required)allowed=new Set(splitCsv(required.frame_color_result));
+  if(kind==='body'&&selection.design){const row=product.design_color_allow.find((r)=>r.design_id===selection.design&&thermalScopeMatches(r.thermal_scope,selection.thermal_spec));if(row)allowed=new Set(splitCsv(row.allowed_door_colors));}
+  let recommended = new Set();
+  if(kind==='frame'){
+    if(!selection.thermal_spec||!selection.design||!selection.body_color)return[];
+    const scopeMatches=(scope,value)=>!scope||scope==='ANY'||Boolean(value&&String(scope).split(/[,/]/).map(part=>part.trim()).includes(value));
+    const model=modelVariant(product,selection);
+    const rows=product.frame_color_rules.filter(row=>(!row.thermal_scope||row.thermal_scope==='ANY'||thermalScopeMatches(row.thermal_scope,selection.thermal_spec))
+      &&scopeMatches(row.design_scope,selection.design)&&scopeMatches(row.door_color_scope,selection.body_color)
+      &&scopeMatches(row.model_variant_scope??row.model_variant,model));
+    // The Formal default explicitly names the complete master. Specific ALLOW /
+    // ALLOWED rows replace that default; recommendations never restrict it.
+    const isBase=row=>/^BASE_FRAME_COLOR_SET=\d+ colors$/.test(row.frame_color_result);
+    const permitted=rows.filter(row=>['ALLOW','ALLOWED'].includes(row.constraint)&&!isBase(row));
+    if(permitted.length)allowed=new Set(permitted.flatMap(row=>splitCsv(row.frame_color_result)));
+    else if(!rows.some(row=>(['ALLOW','ALLOWED'].includes(row.constraint)&&isBase(row))||row.constraint==='REQUIRED'))allowed=new Set();
+    for(const row of rows.filter(row=>row.constraint==='REQUIRED')){
+      const required=new Set(splitCsv(row.frame_color_result));
+      allowed=allowed?new Set([...allowed].filter(value=>required.has(value))):required;
+    }
+    recommended=new Set(rows.filter(row=>row.constraint==='RECOMMENDED').flatMap(row=>splitCsv(row.frame_color_result)));
   }
-  return master.filter((row)=>!allowed||allowed.has(row.code)).map((row)=>choice(row.code,row.official_name??row.code));
+  return master.filter((row)=>!allowed||allowed.has(row.code)).map((row)=>choice(row.code,row.official_name??row.code,recommended.has(row.code)?{recommended:true}:{}));
 }
 function hardwareChoice(rows,key,labelKey=key){return uniq(rows.flatMap((row)=>splitCsv(row[key]))).map((v)=>choice(v,LABELS[labelKey]?.get(v)??v));}
 function handleColors(hardware){return hardware.hardware_recovery_reference.filter((row)=>row.field_or_rule==='handle_color_code'&&row.status==='VERIFIED').map((row)=>choice(String(row.value_or_scope),row.result));}
-function trimChoices(installation,kind){return (kind==='exterior'?installation.exterior_trim:installation.interior_trim).map((row)=>choice(row.trim_id,row.trim_id));}
+function trimChoices(installation,kind){
+  // IG3700 (2026/04), RD-40: 呼称. LONG / SHORT denote 長 / 短,
+  // with 分割タイプ / 一体タイプ, not a translated product name.
+  const labels=kind==='exterior'
+    ?{'150':'150 長（分割タイプ）','125':'125 長（分割タイプ）','100':'100 長（分割タイプ）','75':'75 長（分割タイプ）',
+      '50_LONG':'50 長（分割タイプ）','50_SHORT':'50 短（一体タイプ）','25_LONG':'25 長（分割タイプ）','25_SHORT':'25 短（一体タイプ）'}
+    :{EXTRA_LARGE:'特大',LARGE:'大',SMALL:'小'};
+  return (kind==='exterior'?installation.exterior_trim:installation.interior_trim).map(row=>{
+    const label=row.official_name??row.label_ja??labels[row.trim_id];
+    if(!label){const error=new Error('Official trim label missing');error.code='RECHENT_TRIM_LABEL_MISSING';throw error;}
+    return choice(row.trim_id,label);
+  });
+}
 function optionChoices(option,selection,category){return option.user_options.filter((row)=>{if(category==='additional_key'&&!['RE3NF-OPT-CARD-BK','RE3NF-OPT-CARD-LG','RE3NF-OPT-TAG','RE3NF-OPT-REMOTE'].includes(row.option_id))return false;if(category==='option'&&['RE3NF-OPT-CARD-BK','RE3NF-OPT-CARD-LG','RE3NF-OPT-TAG','RE3NF-OPT-REMOTE'].includes(row.option_id))return false;try{const c=JSON.parse(row.visible_when??'{}');if(c.entry_system&&selection.lock_type!==c.entry_system)return false;if(c.door_color_not?.includes(selection.body_color))return false;}catch{}return true;}).map((row)=>choice(row.option_id,row.official_name));}
 function glassSpecChoice(product,selection){
-  if(!selection.design)return[];
-  const scopes = selection.thermal_spec==='INSULATION_K2_K4'?['INSULATION_K2','INSULATION_K4']:[selection.thermal_spec];
-  const rows=product.glass_master.filter((row)=>scopes.includes(row.thermal_scope)&&row.component==='BODY'&&splitCsv(row.design_scope).includes(selection.design));
+  if(!selection.design||!selection.thermal_spec)return[];
+  const rows=product.glass_master.filter((row)=>thermalScopeMatches(row.thermal_scope,selection.thermal_spec)&&row.component==='BODY'&&splitCsv(row.design_scope).includes(selection.design));
   return uniq(rows.map((row)=>row.glass_spec)).map((v)=>choice(v,LABELS.glass_spec.get(v)??v));
 }
 function glassSafetyApplicable(dependency,selection){
   if(!selection.design||!selection.thermal_spec)return false;
   const component = selection.opening_type==='DOUBLE'?'DOUBLE':selection.opening_type==='PARENT_CHILD'?'CHILD':'BODY';
+  const targetDesign=component==='CHILD'?selection.child_door:selection.design;
   const rows=dependency.predicates.filter((row)=>row.predicate_id==='glass_safety_applicable'
-    && (row.thermal_scope==='ANY'||row.thermal_scope===selection.thermal_spec)
+    && (row.thermal_scope==='ANY'||thermalScopeMatches(row.thermal_scope,selection.thermal_spec))
     && (row.component_scope==='ANY'||row.component_scope===component)
-    && (row.design_scope==='ANY'||splitCsv(row.design_scope).includes(selection.design)))
+    && (row.design_scope==='ANY'||splitCsv(row.design_scope).includes(targetDesign)))
     .sort((a,b)=>Number(b.priority)-Number(a.priority));
   return rows[0]?.result==='TRUE';
 }
@@ -125,21 +168,40 @@ function sizeScope(selection){
   return selection.opening_type;
 }
 function matchingDimensionRows(product,selection,field){
-  const scope=sizeScope(selection);const entry=selection.lock_type??'ANY';const transom=selection.transom??'ANY';
-  return product.dimension_ranges.filter((row)=>row.field===field&&(!selection.thermal_spec||row.thermal_scope===selection.thermal_spec)
-    && (row.frame_scope==='ANY'||row.frame_scope===scope||row.frame_scope===(['PARENT_CHILD','DOUBLE'].includes(scope)?'PARENT_CHILD_OR_DOUBLE':null)||row.frame_scope==='OTHER_FRAME')
-    && (row.transom==='ANY'||row.transom===transom)&&(row.entry==='ANY'||row.entry===entry)&&!String(row.frame_scope).startsWith('HIGH_SIZE'));
+  const scope=sizeScope(selection), entry=selection.lock_type, transom=selection.transom;
+  if(!selection.thermal_spec||!scope||!transom||!entry)return [];
+  const height=asNumber(selection.size_h);
+  const highRows=product.dimension_ranges.filter(row=>row.field==='frame_h'&&row.frame_scope==='HIGH_SIZE'&&thermalScopeMatches(row.thermal_scope,selection.thermal_spec)&&row.transom===transom);
+  const highSize=Boolean(currentDesign(product,selection)?.high_size_scope)&&highRows.some(row=>height!==null&&height>=row.min);
+  return product.dimension_ranges.filter(row=>row.field===field&&thermalScopeMatches(row.thermal_scope,selection.thermal_spec)
+    && (row.transom==='ANY'||row.transom===transom)&&(row.entry==='ANY'||row.entry===entry)
+    && (highSize
+      ? row.frame_scope===(field==='frame_h'?'HIGH_SIZE':`HIGH_SIZE_${scope}`)
+      : !String(row.frame_scope).startsWith('HIGH_SIZE')&&(row.frame_scope==='ANY'||row.frame_scope===scope
+        ||(['PARENT_CHILD','DOUBLE'].includes(scope)&&row.frame_scope==='PARENT_CHILD_OR_DOUBLE')
+        ||(!['SINGLE','PARENT_CHILD'].includes(scope)&&row.frame_scope==='OTHER_FRAME'))));
 }
 function validateDimensions(product,selection){
-  const errors=[]; const w=asNumber(selection.size_w),h=asNumber(selection.size_h);
-  if(w!==null){const rows=matchingDimensionRows(product,selection,'frame_w');if(rows.length&&!rows.some((r)=>w>=r.min&&w<=r.max))errors.push({errorCode:'WIDTH_OUT_OF_RANGE',field:'size_w',message:'Wが正式Runtimeの製作範囲外です。'});}
-  if(h!==null){const rows=matchingDimensionRows(product,selection,'frame_h');if(rows.length&&!rows.some((r)=>h>=r.min&&h<=r.max))errors.push({errorCode:'HEIGHT_OUT_OF_RANGE',field:'size_h',message:'Hが正式Runtimeの製作範囲外です。'});}
+  const errors=[];
+  for(const [key,field] of [['size_w','frame_w'],['size_h','frame_h']]){
+    const value=asNumber(selection[key]);
+    if(selection[key]!==undefined&&(value===null||value<=0)){
+      errors.push({errorCode:'DIMENSION_INVALID',field:key,message:'寸法は正の数値で入力してください。'});continue;
+    }
+    if(value===null)continue;
+    const rows=matchingDimensionRows(product,selection,field);
+    if(rows.length&&!rows.some(row=>value>=row.min&&value<=row.max))errors.push({errorCode:key==='size_w'?'WIDTH_OUT_OF_RANGE':'HEIGHT_OUT_OF_RANGE',field:key,message:'入力寸法が正式Runtimeの製作範囲外です。'});
+    else if(!rows.length&&selection.thermal_spec&&selection.opening_type&&selection.transom&&selection.lock_type)errors.push({errorCode:'DIMENSION_RULE_UNRESOLVED',field:key,message:'この構成の寸法は積算・メーカーへの確認が必要です。',estimateConfirmation:true});
+  }
   return errors;
 }
-function manualWarnings(_evidence,selection){
-  const warnings=[]; const h=asNumber(selection.size_h); const highSize=selection.thermal_spec==='INSULATION_K2_K4'&&h!==null&&h>=2440;
-  if(['G12','G15'].includes(selection.design)&&highSize&&selection.opening_type==='DOUBLE')warnings.push('MANUAL_CHECK HIGH_SIZE_DOUBLE_CHILD_RANGE_UNVERIFIED: G12/G15 × HIGH_SIZE × DOUBLE の第二扉製作範囲は発注前確認が必要です。');
-  return warnings;
+function manualWarnings(evidence,product,selection){
+  const exception=evidence.active_safety_exception;
+  const ranges=matchingDimensionRows(product,selection,'frame_h');
+  const highSize=ranges.some(row=>row.frame_scope==='HIGH_SIZE');
+  return exception&&highSize&&['G12','G15'].includes(selection.design)&&selection.opening_type==='DOUBLE'
+    ? [{code:exception.reason_code,message:'G12/G15の高サイズ・両開きは、第二扉の製作範囲を積算・LIXILへ確認してください。',status:exception.runtime_behavior,confirmation_target:'積算 / LIXIL',source:'evidence_manual_checks.json#active_safety_exception',automatic_orderability:false,numeric_range_inferred:false}]
+    : [];
 }
 function valuesFor(key,d,selection){
   const {canonical,product,hardware,installation,option,dependency}=d;
@@ -151,12 +213,12 @@ function valuesFor(key,d,selection){
     case 'design': return designChoices(product,selection);
     case 'body_color': return colorChoices(product,selection,'body');
     case 'frame_color': return colorChoices(product,selection,'frame');
-    case 'handing': return optionFromValueMaster(canonicalField(canonical,'handing'));
+    case 'handing': return optionFromValueMaster(canonicalField(canonical,'handing')).map(row=>({...row,displayLabel:LABELS.handing.get(row.value)??row.displayLabel}));
     case 'child_door': return childDoorChoices(product,selection);
     case 'sidelight_spec': return sidelightChoices(canonical);
     case 'glass_spec': return glassSpecChoice(product,selection);
     case 'glass_safety': return glassSafetyApplicable(dependency,selection)?[choice('SAFETY_LAMINATED','安全合わせ')]:[];
-    case 'lock_type': return uniq(hw.map((row)=>row.entry_system)).map((v)=>choice(v,LABELS.lock_type.get(v)??v));
+    case 'lock_type': return uniq(hardwareRows(hardware,product,{...selection,lock_type:null}).map((row)=>row.entry_system)).map((v)=>choice(v,LABELS.lock_type.get(v)??v));
     case 'handle_type': return uniq(hardwareRows(hardware,product,{...selection,handle_type:null,lock_type:null}).map((row)=>row.handle_type)).map((v)=>choice(v,LABELS.handle_type.get(v)??v));
     case 'handle_surface': return hardwareChoice(hw,'allowed_handle_surfaces','handle_surface');
     case 'handle_color': return handleColors(hardware);
@@ -179,6 +241,7 @@ function valuesFor(key,d,selection){
 }
 function isVisible(key,selection,d){
   if(HIDDEN_RUNTIME_KEYS.has(key))return false;
+  if(key==='fit_result')return selection.runtime_mode==='SURVEY_LINKED';
   if(key==='child_door')return selection.opening_type==='PARENT_CHILD';
   if(key==='sidelight_spec')return ['SINGLE_SIDELIGHT','DOUBLE_SIDELIGHT'].includes(selection.opening_type);
   if(key==='glass_safety')return glassSafetyApplicable(d.dependency,selection);
@@ -189,7 +252,7 @@ function isVisible(key,selection,d){
   return true;
 }
 function isRequired(key,selection,_d){
-  if(['thermal_spec','opening_type','design','body_color','frame_color','handing','lock_type','handle_type','handle_surface','handle_color','interior_handle','cylinder','exterior_trim','interior_trim','threshold_step_mitigation'].includes(key))return true;
+  if(['thermal_spec','transom','opening_type','design','body_color','frame_color','handing','lock_type','handle_type','handle_surface','handle_color','interior_handle','cylinder','exterior_trim','interior_trim','threshold_step_mitigation'].includes(key))return true;
   if(['size_w','size_h'].includes(key))return selection.runtime_mode==='PRODUCT_SELECTION';
   if(key==='child_door')return selection.opening_type==='PARENT_CHILD';
   if(key==='sidelight_spec')return ['SINGLE_SIDELIGHT','DOUBLE_SIDELIGHT'].includes(selection.opening_type);
@@ -199,16 +262,32 @@ function isRequired(key,selection,_d){
   return false;
 }
 function dataTypeFor(valueType){if(valueType==='NUMBER_MM')return'NUMBER';if(valueType==='MULTI_OPTION')return'MULTI_ENUM';if(valueType==='VALIDATION_RESULT')return'TEXT';return'ENUM';}
+function parentFieldsFor(key){
+  const parents={transom:['thermal_spec'],opening_type:['thermal_spec'],design:['thermal_spec','opening_type'],
+    child_door:['thermal_spec','opening_type','design'],body_color:['thermal_spec','design'],frame_color:['thermal_spec','design','body_color'],
+    glass_safety:['thermal_spec','opening_type','design','child_door'],sidelight_spec:['opening_type'],
+    handle_type:['thermal_spec','design'],lock_type:['thermal_spec','design','handle_type'],
+    handle_surface:['thermal_spec','design','handle_type','lock_type'],interior_handle:['handle_surface'],
+    cylinder:['thermal_spec','design','handle_type','lock_type'],electric_lock_power:['lock_type','handle_type'],
+    electric_lock_reader:['lock_type','handle_type'],electric_lock_plan:['lock_type','electric_lock_power'],
+    key_set:['lock_type'],additional_key:['lock_type'],threshold_flat_material:['thermal_spec'],
+    existing_threshold_treatment:['threshold_flat_material'],size_w:['thermal_spec','opening_type','sidelight_spec','transom','lock_type','size_h'],
+    size_h:['thermal_spec','opening_type','transom','lock_type','design'],option:['lock_type','body_color']};
+  return parents[key]??[];
+}
 function buildFields(d,selection){
   const fields=[];
   for(const def of d.canonical.fields){
     const key=FIELD_KEY_BY_ID[def.field_id]; if(!key||!isVisible(key,selection,d))continue;
     if(['model_variant','secondary_door','order_configuration','input_mode'].includes(key))continue;
-    fields.push({key,displayLabel:def.display_name,displayOrder:fields.length+1,dataType:dataTypeFor(def.value_type),unit:def.value_type==='NUMBER_MM'?'mm':null,required:isRequired(key,selection,d),values:valuesFor(key,d,selection),selectionMode:def.selection_mode,readOnly:def.selection_mode==='AUTO_DERIVED'||def.selection_mode==='SYSTEM_VALIDATED',parentFields:[]});
+    fields.push({key,displayLabel:def.display_name,displayOrder:fields.length+1,dataType:dataTypeFor(def.value_type),unit:def.value_type==='NUMBER_MM'?'mm':null,required:isRequired(key,selection,d),values:valuesFor(key,d,selection),selectionMode:def.selection_mode,readOnly:def.selection_mode==='AUTO_DERIVED'||def.selection_mode==='SYSTEM_VALIDATED',parentFields:parentFieldsFor(key)});
   }
   const lockIndex=fields.findIndex((f)=>f.key==='handle_type');
   if(lockIndex>=0){const v=valuesFor('door_closer',d,selection);if(v.length)fields.splice(lockIndex,0,{key:'door_closer',displayLabel:'ドアクローザ',displayOrder:lockIndex+0.5,dataType:'ENUM',required:true,values:v,selectionMode:'USER_SELECTABLE',readOnly:false,parentFields:['thermal_spec','design','handle_type','lock_type']});}
   const gv=valuesFor('glass_spec',d,selection); if(gv.length){fields.push({key:'glass_spec',displayLabel:'ガラス',displayOrder:99,dataType:'ENUM',required:false,values:gv,selectionMode:'DERIVED',readOnly:true,parentFields:['thermal_spec','design']});}
+  const frame=fields.find(field=>field.key==='frame_color');
+  const recommendedFrames=frame?.values.filter(row=>row.recommended)??[];
+  if(recommendedFrames.length)frame.helpText='推奨枠色：'+recommendedFrames.map(row=>row.displayLabel).join(' / ');
   return fields;
 }
 function clearInvalidSelections(fields,selection){
@@ -229,17 +308,31 @@ export function adaptRechentDoor3NonFireV1(runtimePackage, _entry={}) {
   if(d.qa.all_pass!==true){const e=new Error('Rechent formal Runtime QA is not PASS.');e.code='RECHENT_RUNTIME_QA_NOT_PASS';throw e;}
   const uiResolver=(rawSelection={})=>{
     const withMode={runtime_mode:rawSelection.runtime_mode??'PRODUCT_SELECTION',...rawSelection};
-    let fields=buildFields(d,withMode);
-    const cleared=clearInvalidSelections(fields,withMode);
-    const selection=cleared.selection;
+    let selection=withMode,fields,clearedFields=[];
+    for(let pass=0;pass<=d.canonical.fields.length;pass+=1){
+      fields=buildFields(d,selection);
+      const cleared=clearInvalidSelections(fields,selection);
+      if(!cleared.clearedFields.length)break;
+      clearedFields.push(...cleared.clearedFields);selection=cleared.selection;
+      if(pass===d.canonical.fields.length)throw new Error('Rechent dependency evaluation did not converge');
+    }
     fields=buildFields(d,selection);
-    const errors=validateDimensions(d.product,selection);
+    const derivedGlass=fields.find(field=>field.key==='glass_spec');
+    if(derivedGlass?.values.length===1)selection={...selection,glass_spec:derivedGlass.values[0].value};
+    else if(derivedGlass)delete selection.glass_spec;
+    const dimensionIssues=validateDimensions(d.product,selection);
+    const errors=dimensionIssues.filter(row=>!row.estimateConfirmation);
     const missingRequiredFields=fields.filter((f)=>f.required&&!f.readOnly&&(selection[f.key]===undefined||selection[f.key]===null||selection[f.key]==='')).map((f)=>f.key);
     const delegated=fields.filter((f)=>SURVEY_DELEGATED_ENUM_KEYS.has(f.key)&&f.values.length===0).map((f)=>f.key);
     if(delegated.length)errors.push({errorCode:'SURVEY_LAYER_VALUE_SOURCE_REQUIRED',field:delegated[0],message:`Survey Layerの共通値Source未接続: ${delegated.join(', ')}`});
-    const manual=manualWarnings(d.evidence,selection);
+    const confirmationRequests=[...manualWarnings(d.evidence,d.product,selection),...dimensionIssues.filter(row=>row.estimateConfirmation).map(row=>({...row,code:row.errorCode,status:'ESTIMATE_CONFIRM_REQUIRED',confirmation_target:'積算 / LIXIL',automatic_orderability:false}))];
+    if(derivedGlass?.values.length>1){
+      derivedGlass.helpText='ガラス最終仕様は積算・LIXILへ確認してください。候補：'+derivedGlass.values.map(row=>row.displayLabel).join(' / ');
+      confirmationRequests.push({code:'DERIVED_GLASS_REQUIRES_THERMAL_CONFIRMATION',message:derivedGlass.helpText,status:'ESTIMATE_CONFIRM_REQUIRED',confirmation_target:'積算 / LIXIL',field:'glass_spec',automatic_orderability:false});
+    }
+    const manual=confirmationRequests.map(row=>row.message);
     const status=errors.length?'INVALID':missingRequiredFields.length?'INCOMPLETE':'VALID';
-    return {selection,fields,dependencyFields:fields.map((f)=>({key:f.key,parentFields:f.parentFields??[]})),notices:delegated.length?['Survey Layer委譲fieldは共通Survey Layer接続まで選択不可です。']:[],manualWarnings:manual,validation:{status,errors,missingRequiredFields},clearedFields:cleared.clearedFields,orderReady:status==='VALID'&&manual.length===0,runtimeCapabilities:{presentationOrderAuthority:'GLOBAL_WINDOW_SELECTION_FLOW_ENGINE',surveyLayerDelegatedFields:[...SURVEY_DELEGATED_ENUM_KEYS]},dimensionResult:{width:asNumber(selection.size_w),height:asNumber(selection.size_h)}};
+    return {selection,fields,dependencyFields:fields.map((f)=>({key:f.key,parentFields:f.parentFields??[]})),notices:delegated.length?['Survey Layer委譲fieldは共通Survey Layer接続まで選択不可です。']:[],manualWarnings:manual,validation:{status,errors,missingRequiredFields},clearedFields:uniq(clearedFields),confirmationRequests,orderReady:status==='VALID'&&manual.length===0,runtimeCapabilities:{presentationOrderAuthority:'GLOBAL_WINDOW_SELECTION_FLOW_ENGINE',surveyLayerDelegatedFields:[...SURVEY_DELEGATED_ENUM_KEYS]},dimensionResult:{width:asNumber(selection.size_w),height:asNumber(selection.size_h)}};
   };
   return Object.freeze({master:null,uiResolver});
 }
