@@ -1,9 +1,12 @@
 import { createServer } from "node:http";
 import { createRecoveryRequestHandler, releaseBuildMetadata } from "../src/server/recovery-app.mjs";
+import { createSecurePublicSaaSRequestHandler } from "../src/public-saas/security-boundary.mjs";
 
-const server=createServer(createRecoveryRequestHandler({
-  backend:"node:http recovery server",
-  entrypoint:"scripts/start-step8-ui.mjs",
+const server=createServer(createSecurePublicSaaSRequestHandler({
+  delegate:createRecoveryRequestHandler({
+    backend:"node:http recovery server",
+    entrypoint:"scripts/start-step8-ui.mjs",
+  }),
 }));
 
 const host=process.env.HOST??"127.0.0.1";
