@@ -1,0 +1,133 @@
+{
+  "manifest_schema": "PRODUCT_MASTER_RUNTIME_MANIFEST_v2.0",
+  "schema_version": "PRODUCT_MASTER_RUNTIME_v2.0",
+  "manufacturer": "LIXIL",
+  "series": "リシェント玄関ドア3 非防火",
+  "series_key": "LIXIL::リシェント玄関ドア3 非防火",
+  "package_version": "v0.8-R8",
+  "authoring_mode": "STANDALONE",
+  "authoring_file_name": "LIXIL_リシェント玄関ドア3非防火_CUMULATIVE_AUTHORING_MASTER_v0.8-R8_FORMAL.xlsx",
+  "authoring_file_id": "1qAtYHbKxlcE_lXLFUc60YSzgxtYh7r1e",
+  "runtime_status": "READY",
+  "entry_point": "runtime_manifest.json",
+  "runtime_file_count": 8,
+  "runtime_files": [
+    {
+      "file_name": "canonical_fields.json",
+      "sha256": "cb367f53f2f722248c719428d82aad7ac802d4112bb1e4d3a79482b790951356",
+      "role": "RUNTIME_JSON",
+      "package_version": "v0.8-R8",
+      "drive_file_id": "1IsGJqbsd9KDToVQCCUlpHoVI445kA4hY"
+    },
+    {
+      "file_name": "product_rules.json",
+      "sha256": "47cd67de8a86b647f5bd600c28f2d4739002aa862bc27c423ea1d3193acc3d0c",
+      "role": "RUNTIME_JSON",
+      "package_version": "v0.8-R8",
+      "drive_file_id": "1bs0Kt0jfi9CHFX10NcJMyFCqrKWG3haY"
+    },
+    {
+      "file_name": "hardware_rules.json",
+      "sha256": "2fcbf726c5704edce0ed2ecb24eb5910390cbd5d20820b95b5c164109f78feed",
+      "role": "RUNTIME_JSON",
+      "package_version": "v0.8-R8",
+      "drive_file_id": "1aYwKaskxH57xb_bE7Zhxjor5wXCWT9BT"
+    },
+    {
+      "file_name": "installation_rules.json",
+      "sha256": "d8037a344efeb572d065215cd003ae6688aa5870ba3b27e803e2b5c92f646439",
+      "role": "RUNTIME_JSON",
+      "package_version": "v0.8-R8",
+      "drive_file_id": "1vy07lc8KupHXU3-8bIYXgT_30ADJAP0m"
+    },
+    {
+      "file_name": "option_order_rules.json",
+      "sha256": "916bf67e4b2cf1d6797abab044bd6f35aaf66ce58dcaa7dcd688375e081dd923",
+      "role": "RUNTIME_JSON",
+      "package_version": "v0.8-R8",
+      "drive_file_id": "1z1uXhkaTigYqnNHSVV1I2hMUvdLWi4XM"
+    },
+    {
+      "file_name": "dependency_rules.json",
+      "sha256": "a74a1df731026a86e02213ff448eeb9313e5edda950d8153efdf778570d565d4",
+      "role": "RUNTIME_JSON",
+      "package_version": "v0.8-R8",
+      "drive_file_id": "120naMRJ4eebp7CzY_-OkJ-n8vDotiwbc"
+    },
+    {
+      "file_name": "evidence_manual_checks.json",
+      "sha256": "3c7f9ccfdf63f0a3a01919c23f0e5bbccddfccac346d57f16be6c613648d1326",
+      "role": "RUNTIME_JSON",
+      "package_version": "v0.8-R8",
+      "drive_file_id": "1-jc9iaYTDaUrq40LoIOHFeTSEQ-PtBwo"
+    },
+    {
+      "file_name": "runtime_qa.json",
+      "sha256": "7063bd06c3536eef4c391431aec4925f7141e2e3a462ea2370390f5a94b42050",
+      "role": "RUNTIME_QA",
+      "package_version": "v0.8-R8",
+      "drive_file_id": "1DlSl7003X3nJrVM3582HJwt1qdbU0sHz"
+    }
+  ],
+  "documentation_file": "PRODUCT_MASTER_MANIFEST.md",
+  "storage_status": "CANONICAL_01_正本",
+  "package_gate": "PASS",
+  "generated_at": "2026-10-02T11:23:49.015626+00:00",
+  "presentation_order_authority": "GLOBAL_WINDOW_SELECTION_FLOW_ENGINE",
+  "manual_check_policy": {
+    "G12_G15_HIGH_SIZE_DOUBLE_secondary_door_range": "MANUAL_CHECK_REQUIRED",
+    "blocking": false,
+    "automatic_orderability": false,
+    "numeric_range_inferred": false
+  },
+  "canonical_folder_id": "1wNyL_JFz4wMFfV4zRbcahqCbU24K-n_G",
+  "runtime_manifest_file_id": "1D-mMuj98S5Iq9sHsXOkdJeUa185zlXjs",
+  "registry_status": "PASS",
+  "formal_status": "FORMAL_PASS",
+  "documentation_file_id": "1y_mhe0IPMvjkU-WEgONtIlYZR6Qp2_J0",
+  "evidence_identity": "RE3NF-R8-FRAME-e87c32b30096671d",
+  "RUNTIME_SCOPE": "INCLUDED_IN_PRODUCT_MASTER_FORMAL",
+  "previous_formal_revision": "v0.8-R7",
+  "defect": "RE3NF_FRAME_COLOR_THERMAL_SCOPE",
+  "defect_status": "CLOSED",
+  "storage_gate": "PASS",
+  "duplicate_check": "PASS",
+  "version_check": "PASS",
+  "authoring_sha256": "269572fc7434a54d1aa062adb1dfb7f6c3e2cc374b872e7ad25f9e970a7c9591",
+  "qa_artifact_drive_file_id": "1Ks-WUgEffk9Em8WP2dcbD8y3H26Rb2Cs",
+  "evidence_source_artifacts": [
+    {
+      "source_id": "DL2100-2026-09",
+      "publisher": "LIXIL",
+      "catalog_code": "DL2100",
+      "edition": "2026-09",
+      "price_edition": "2026-10",
+      "official_pdf_url": "https://d3d7fu4tsvqpj5.cloudfront.net/cachepdf/LXL13001/7AE6C1352DEB0D9923A0CDDB2A931B2BA0075B8B/DL2100.pdf",
+      "original_sha256": "a739a552af5190e136062255914271eea611626d86f9d2cf5e4d3ffa82e12816",
+      "excerpt_file_name": "DL2100-202609-frame-evidence.pdf",
+      "excerpt_sha256": "f985d4029d5ce371472d33e19d57e25aae6539f80fb1eedfe6f15a58b377330e",
+      "retrieved_at": "2026-10-02T11:02:51.836528+00:00",
+      "excerpt_drive_file_id": "13aGRsc01h8bEnMWqbdy9kUApXeBsMgEv"
+    },
+    {
+      "source_id": "IG3700-2026-04",
+      "publisher": "LIXIL",
+      "catalog_code": "IG3700",
+      "edition": "2026-04",
+      "price_edition": "2026-05",
+      "official_pdf_url": "https://d3d7fu4tsvqpj5.cloudfront.net/cachepdf/LXL13001/D12AE6CB06794D1F40F6CBBC5EAEE7BE2B822896/IG3700.pdf",
+      "original_sha256": "113c2cfab4fe0e3651f08e2418e72af9285573c4299aaec1d45570e9598c2101",
+      "excerpt_file_name": "IG3700-202604-frame-evidence.pdf",
+      "excerpt_sha256": "c8a6ff54b3a251a4bb940d13b32c9c1fc57a42e5b54e5d1b02923f10dce8bf2a",
+      "retrieved_at": "2026-10-02T11:02:51.836528+00:00",
+      "excerpt_drive_file_id": "1DZxX4sW5UfqioGarbZLHlYyjVUbyqiDx"
+    }
+  ],
+  "formal_selection_scope": "Existing54 designs STANDARD/HIGH_GRADE across HIGH_INSULATION, INSULATION_K2, INSULATION_K4, ALUMINUM; frame membership/rules/reset",
+  "excluded_scope": [
+    "XE not in existing design universe",
+    "Unproven FK model applicability",
+    "Prices/BOM/order codes unaffected payload carry-forward",
+    "APP_INTEGRATION_READY and deployment"
+  ]
+}

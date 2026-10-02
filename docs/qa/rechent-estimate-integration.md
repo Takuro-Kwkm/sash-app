@@ -1,3 +1,5 @@
+> Historical R7 evidence below (through 7584ed0). Current R8 adoption and gate: [R8 downstream integration](rechent-r8-adoption.md). Historical BLOCKED statements do not describe the current R8 run.
+
 # リシェント玄関ドア3 非防火 — 営業見積依頼の統合差分
 
 Current Human Review Gate: **APP_INTEGRATION_READY = BLOCKED_PRODUCT_MASTER_DEFECT**。

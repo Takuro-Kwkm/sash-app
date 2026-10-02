@@ -9,6 +9,9 @@ import {createEstimateOutputModel} from '../src/estimate-output/model.mjs';
 import {RECHENT_ID,completeRechent} from './helpers/rechent-estimate-cases.mjs';
 
 const packageForTest=()=>loadFormalProductRuntimeV2Package(getRuntimeMasterEntry('LIXIL','リシェント玄関ドア3 非防火'));
+const HIGH=['ED','AK','CB','BB','BC','CC','BA','AG'];
+const GENERAL=['ER','EA','ED','AK','HC','CC','BA','CB','CJ','BB','BC','CA','CD','AG','AA'];
+const sameColors=(actual,expected)=>assert.deepEqual([...actual].sort(),[...expected].sort());
 const field=(result,key)=>result.fields.find(row=>row.key===key);
 const values=(result,key)=>field(result,key)?.values.map(row=>row.value)??[];
 // IG3700 RD-40, 呼称 columns (2026/04); no Runtime identifiers translated.
@@ -30,22 +33,22 @@ test('real Formal frame requirements, ANY scopes and recommendation remain disti
    }
   }
   const recommended=resolver({thermal_spec:grade,opening_type:'SINGLE',design:'M78',body_color:'BB'});
-  assert.deepEqual(values(recommended,'frame_color'),product.frame_colors.map(row=>row.code));
+  sameColors(values(recommended,'frame_color'),GENERAL);
   assert.deepEqual(field(recommended,'frame_color').values.filter(row=>row.recommended).map(row=>row.value),['AK','AA','AG']);
   assert.match(field(recommended,'frame_color').helpText,/推奨枠色：シャイングレー \/ マットブラック \/ オータムブラウン/);
  }
  for(const [thermal_spec,design,body_color] of [['HIGH_INSULATION','17H','ED'],['INSULATION_K2','G12','CB'],['INSULATION_K4','G12','CB'],['ALUMINUM','C12N','CB']]){
   const result=resolver({thermal_spec,opening_type:'SINGLE',design,body_color});
-  assert.deepEqual(values(result,'frame_color'),product.frame_colors.map(row=>row.code));
+  sameColors(values(result,'frame_color'),thermal_spec==='HIGH_INSULATION'?HIGH:GENERAL);
  }
- // This proves faithful Formal projection, NOT official candidate correctness.
- // DEFAULT's thermal scope defect remains explicitly blocked in the QA report.
+ // Official R8 thermal sets exclude inventory-only BG/FK.
  assert.deepEqual(values(resolver({thermal_spec:'INSULATION_K2',design:'G12'}),'frame_color'),[]);
 });
 
 test('scoped ALLOW/ALLOWED and REQUIRED intersect; RECOMMENDED never removes permitted colors',async()=>{
  const pkg=structuredClone(await packageForTest());
- const rules=pkg.documentsByFileName['product_rules.json'].frame_color_rules;
+ const rules=pkg.documentsByFileName['product_rules.json'].frame_color_rules.filter(row=>!['ALLOW','ALLOWED'].includes(row.constraint));
+ pkg.documentsByFileName['product_rules.json'].frame_color_rules=rules;
  // In-memory contract fixtures only: never written to Formal Runtime / Registry.
  rules.push({rule_id:'TEST-K2',thermal_scope:'INSULATION_K2',design_scope:'G12',door_color_scope:'CB',model_variant_scope:'STANDARD',constraint:'ALLOWED',frame_color_result:'AK,AA'});
  rules.push({rule_id:'TEST-K4',thermal_scope:'INSULATION_K4',design_scope:'G12',door_color_scope:'CB',model_variant_scope:'STANDARD',constraint:'ALLOW',frame_color_result:'AA'});
@@ -62,7 +65,7 @@ test('scoped ALLOW/ALLOWED and REQUIRED intersect; RECOMMENDED never removes per
  assert.equal(resolver({...selection,frame_color:'AA',thermal_spec:'INSULATION_K4'}).selection.frame_color,'AA');
  rules.push({rule_id:'TEST-REQUIRE',thermal_scope:'INSULATION_K2',design_scope:'G12',door_color_scope:'ANY',constraint:'REQUIRED',frame_color_result:'AA'});
  assert.deepEqual(values(adaptRechentDoor3NonFireV1(pkg).uiResolver(selection),'frame_color'),['AA']);
- pkg.documentsByFileName['product_rules.json'].frame_color_rules=rules.filter(row=>row.rule_id!=='DEFAULT');
+
  assert.deepEqual(values(adaptRechentDoor3NonFireV1(pkg).uiResolver({thermal_spec:'INSULATION_K2',opening_type:'SINGLE',design:'S14',body_color:'BB'}),'frame_color'),['AA']);
 });
 
@@ -103,4 +106,28 @@ test('all exterior trims preserve IDs, official labels, save/reload and estimate
  assert.equal(field(adaptRechentDoor3NonFireV1(pkg).uiResolver({}),'exterior_trim').values[0].displayLabel,'公式名称フィールド');
  pkg.documentsByFileName['installation_rules.json'].exterior_trim.push({trim_id:'UNKNOWN'});
  assert.throws(()=>adaptRechentDoor3NonFireV1(pkg).uiResolver({}),{code:'RECHENT_TRIM_LABEL_MISSING'});
+});
+
+// Integration reset coverage, not a repeat of Product Master selection-universe QA.
+test('R8 thermal/model transitions keep valid frames and clear invalid inventory values',async()=>{
+ const resolver=adaptRechentDoor3NonFireV1(await packageForTest()).uiResolver;
+ const contexts=[['HIGH_INSULATION','17H'],['INSULATION_K2','G12'],['INSULATION_K4','G12'],['ALUMINUM','C12N']];
+ for(const [thermal_spec,design] of contexts){
+  const base={thermal_spec,opening_type:'SINGLE',design,body_color:'CB'};
+  for(const frame_color of ['BG','FK']){
+   const result=resolver({...base,frame_color});
+   assert.equal(Object.hasOwn(result.selection,'frame_color'),false);
+   assert.ok(result.clearedFields.includes('frame_color'));
+  }
+  for(const [nextThermal,nextDesign] of contexts){
+   const result=resolver({...base,thermal_spec:nextThermal,design:nextDesign,frame_color:'CB'});
+   assert.equal(result.selection.frame_color,'CB');
+   sameColors(values(result,'frame_color'),nextThermal==='HIGH_INSULATION'?HIGH:GENERAL);
+  }
+ }
+ const invalid=resolver({thermal_spec:'HIGH_INSULATION',opening_type:'SINGLE',design:'17H',body_color:'CB',frame_color:'AA'});
+ assert.equal(Object.hasOwn(invalid.selection,'frame_color'),false);
+ const model=resolver({thermal_spec:'HIGH_INSULATION',opening_type:'SINGLE',design:'12N',body_color:'CB',frame_color:'CB',model_variant:'HIGH_GRADE'});
+ assert.equal(model.selection.frame_color,'CB');
+ assert.equal(Object.hasOwn(model.selection,'model_variant'),false);
 });

@@ -30,7 +30,7 @@ const UCHIRIMO_SLIM_ROOT = join(HERE, '../runtime-master-packages/ykkap-uchirimo
 const INPLUS_ROOT = join(HERE, '../runtime-master-packages/lixil-inplus-v0.4-r3-frame');
 const SAMOS2H_ROOT = join(HERE, '../runtime-master-packages/lixil-samos2h-v0.9-r4');
 const THERMOSL_ROOT = join(HERE, '../runtime-master-packages/lixil-thermosl-v0.7-r2');
-const RECHENT_ROOT = join(HERE, '../runtime-master-packages/lixil-rechent-door3-nonfire-v0.8-r7');
+const RECHENT_ROOT = join(HERE, '../runtime-master-packages/lixil-rechent-door3-nonfire-v0.8-r8');
 const APW430_ROOT = join(HERE, '../runtime-master-packages/ykkap-apw430-20260918-r3');
 const APW431_ROOT = join(HERE, '../runtime-master-packages/ykkap-apw431-v1.2');
 
@@ -59,17 +59,17 @@ export const runtimeMasterInventory = Object.freeze([
     }),
   }),
   Object.freeze({
-    manufacturer:'LIXIL', series:'リシェント玄関ドア3 非防火', productId:'SER-LIXIL-RECHENT-D3-NF', masterVersion:'v0.8-R7', schemaVersion:'PRODUCT_MASTER_RUNTIME_v2.0', packageType:'FORMAL_PRODUCT_RUNTIME', adapterType:'RECHENT_DOOR3_NONFIRE_V1', packageRoot:RECHENT_ROOT,
-    runtimeManifestPath:join(RECHENT_ROOT,'runtime_manifest.json'), runtimeManifestDriveFileId:'11P1jHLQs4KO9ZiHxF7ofvqDcwtuoNxbU', runtimeManifestSha256:'6c189dff2197ab095168c308fb6733bd1a0f5a2f336a3352a39ce536ee08230d',
+    manufacturer:'LIXIL', series:'リシェント玄関ドア3 非防火', productId:'SER-LIXIL-RECHENT-D3-NF', masterVersion:'v0.8-R8', schemaVersion:'PRODUCT_MASTER_RUNTIME_v2.0', packageType:'FORMAL_PRODUCT_RUNTIME', adapterType:'RECHENT_DOOR3_NONFIRE_V1', packageRoot:RECHENT_ROOT,
+    runtimeManifestPath:join(RECHENT_ROOT,'runtime_manifest.json'), runtimeManifestDriveFileId:'1D-mMuj98S5Iq9sHsXOkdJeUa185zlXjs', runtimeManifestSha256:'1da09541a4ddf234314d8f082b792c2fb2cbab90ef5c6d70b32ff39706e145db',
     materializedFiles:Object.freeze({
-      '108R0Z930JszTM4mfARfSGw4bw6F6310V':Object.freeze({codec:'brotli',paths:Object.freeze([join(RECHENT_ROOT,'canonical_fields.json.br.b64')])}),
-      '1Cfkm1zJmHJnR20m991b_etJL5qBbntvY':Object.freeze({codec:'brotli',paths:Object.freeze([join(RECHENT_ROOT,'product_rules.json.br.b64')])}),
-      '10S2KNvbPO1d-LrbA03r4l-PRoOQgRUJY':Object.freeze({codec:'brotli',paths:Object.freeze([join(RECHENT_ROOT,'hardware_rules.json.br.b64')])}),
-      '1pDEugu7eI7Jp8wJekUbdsCS8q67m-jmI':Object.freeze({codec:'brotli',paths:Object.freeze([join(RECHENT_ROOT,'installation_rules.json.br.b64')])}),
-      '1wTEwz9htm8lbeBTLln0vZI0g26G1-DZr':Object.freeze({codec:'brotli',paths:Object.freeze([join(RECHENT_ROOT,'option_order_rules.json.br.b64')])}),
-      '1nshH_nznz5RRl4s7Ttbubd3WCcKlzu3e':Object.freeze({codec:'brotli',paths:Object.freeze([join(RECHENT_ROOT,'dependency_rules.json.br.b64')])}),
-      '121e7h1Vn3m0hj4qLOwS5I1BbthyO-60N':Object.freeze({codec:'brotli',paths:Object.freeze([join(RECHENT_ROOT,'evidence_manual_checks.json.br.b64')])}),
-      '1NcP_BF6t1i4b2mcKefw6DC6Ue2sUfKFd':Object.freeze({codec:'brotli',paths:Object.freeze([join(RECHENT_ROOT,'runtime_qa.json.br.b64')])}),
+      '1IsGJqbsd9KDToVQCCUlpHoVI445kA4hY':Object.freeze({codec:'brotli',paths:Object.freeze([join(RECHENT_ROOT,'canonical_fields.json.br.b64')])}),
+      '1bs0Kt0jfi9CHFX10NcJMyFCqrKWG3haY':Object.freeze({codec:'brotli',paths:Object.freeze([join(RECHENT_ROOT,'product_rules.json.br.b64')])}),
+      '1aYwKaskxH57xb_bE7Zhxjor5wXCWT9BT':Object.freeze({codec:'brotli',paths:Object.freeze([join(RECHENT_ROOT,'hardware_rules.json.br.b64')])}),
+      '1vy07lc8KupHXU3-8bIYXgT_30ADJAP0m':Object.freeze({codec:'brotli',paths:Object.freeze([join(RECHENT_ROOT,'installation_rules.json.br.b64')])}),
+      '1z1uXhkaTigYqnNHSVV1I2hMUvdLWi4XM':Object.freeze({codec:'brotli',paths:Object.freeze([join(RECHENT_ROOT,'option_order_rules.json.br.b64')])}),
+      '120naMRJ4eebp7CzY_-OkJ-n8vDotiwbc':Object.freeze({codec:'brotli',paths:Object.freeze([join(RECHENT_ROOT,'dependency_rules.json.br.b64')])}),
+      '1-jc9iaYTDaUrq40LoIOHFeTSEQ-PtBwo':Object.freeze({codec:'brotli',paths:Object.freeze([join(RECHENT_ROOT,'evidence_manual_checks.json.br.b64')])}),
+      '1DlSl7003X3nJrVM3582HJwt1qdbU0sHz':Object.freeze({codec:'brotli',paths:Object.freeze([join(RECHENT_ROOT,'runtime_qa.json.br.b64')])}),
     }),
   }),
   Object.freeze({

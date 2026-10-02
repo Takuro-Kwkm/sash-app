@@ -9,7 +9,7 @@ const SHARE_TOKEN=process.env.VERCEL_SHARE_TOKEN;
 const READER_LABELS={OUTDOOR_READER:'屋外リーダー用',KEYPAD_OUTDOOR_READER:'テンキー付屋外リーダー用'};
 const TRIM_LABELS={'150':'150 長（分割タイプ）','125':'125 長（分割タイプ）','100':'100 長（分割タイプ）','75':'75 長（分割タイプ）','50_LONG':'50 長（分割タイプ）','50_SHORT':'50 短（一体タイプ）','25_LONG':'25 長（分割タイプ）','25_SHORT':'25 短（一体タイプ）'};
 await mkdir(OUT,{recursive:true});
-const report={status:'RUNNING',appIntegrationReady:'BLOCKED_PRODUCT_MASTER_DEFECT',blockingItem:'RE3NF_FRAME_COLOR_THERMAL_SCOPE',exactHead:process.env.GITHUB_SHA??null,baseUrl:BASE,cases:[],errors:[],failedResponses:[]};
+const report={status:'RUNNING',appIntegrationReady:'EVALUATED_BY_SEPARATE_GATE',formalVersion:'v0.8-R8',evidenceIdentity:'RE3NF-R8-FRAME-e87c32b30096671d',exactHead:process.env.GITHUB_SHA??null,baseUrl:BASE,cases:[],errors:[],failedResponses:[]};
 const browser=await chromium.launch();
 const dimensions={desktop:{width:1440,height:1000},tablet:{width:768,height:1024},mobile:{width:390,height:844}};
 async function selectAndResolve(page,key,value){
@@ -37,6 +37,14 @@ try{
   if(SHARE_TOKEN)await context.request.get(`${BASE}/?_vercel_share=${encodeURIComponent(SHARE_TOKEN)}`);
   const page=await context.newPage();page.on('pageerror',e=>report.errors.push(e.message));page.on('console',m=>{if(m.type()==='error')report.errors.push(m.text());});page.on('response',r=>{if(r.status()>=400&&!r.url().includes('favicon'))report.failedResponses.push({status:r.status(),url:r.url()});});
   await page.goto(BASE,{waitUntil:'networkidle'});
+  const identity=await page.evaluate(async()=>{const rows=await(await fetch('/api/runtime-master/integrations')).json();return rows.find(row=>row.id==='SER-LIXIL-RECHENT-D3-NF');});
+  assert.equal(identity.packageVersion,'v0.8-R8');
+  assert.equal(identity.sourceHash,'1da09541a4ddf234314d8f082b792c2fb2cbab90ef5c6d70b32ff39706e145db');
+  report.runtimeIdentity=identity;
+  const runtime=await page.evaluate(async()=>{const result=await(await fetch('/api/runtime-master/resolve?'+new URLSearchParams({productId:'SER-LIXIL-RECHENT-D3-NF',selection:'{}'}))).json();return result.runtimeMaster;});
+  assert.equal(runtime.packageVersion,'v0.8-R8');assert.equal(runtime.sourcePackageIntegrity.actual,identity.sourceHash);
+  assert.equal(runtime.sourcePackageIntegrity.files.length,8);assert.ok(runtime.sourcePackageIntegrity.files.every(row=>row.match&&row.actual===row.expected));
+  report.serverRuntimeIntegrity=runtime.sourcePackageIntegrity;
   for(const {name,...seed} of RECHENT_BUSINESS_CASES){
    const completed=await completeRechent(seed);
    const row={id:RECHENT_ID,selection:completed.selection,survey:{existing_frame_material:'old-material',existing_frame_type:'old-type',fastening_method:'old-method',existing_opening_w1:999,fit_result:'OLD_FAILURE'}};
@@ -68,12 +76,15 @@ try{
    assert.deepEqual(frameOptions,completed.fields.find(row=>row.key==='frame_color').values.map(row=>({value:row.value,label:row.displayLabel})));
    if(name==='k2-s14-required-frame')assert.deepEqual(frameOptions.map(row=>row.value),['AA']);
    if(name==='k4-g78-required-frame')assert.deepEqual(frameOptions.map(row=>row.value),['AK']);
-   if(name==='k2-m78-recommended-frame')assert.equal(frameOptions.length,17); // Formal default defect remains recorded, not hidden.
+   if(name==='k2-m78-recommended-frame')assert.equal(frameOptions.length,15);
+   if(name==='high-single-manual')assert.equal(frameOptions.length,8);
+   if(name==='insulated-single-manual'||seed.thermal_spec==='ALUMINUM')assert.equal(frameOptions.length,15);
+   assert.equal(frameOptions.some(row=>['BG','FK'].includes(row.value)),false);
    const trimOptions=await page.locator('[data-spec-key="exterior_trim"] option').evaluateAll(nodes=>nodes.filter(n=>n.value).map(n=>[n.value,n.textContent.trim()]));
    assert.deepEqual(Object.fromEntries(trimOptions),TRIM_LABELS);
    assert.equal(await page.locator('[data-spec-key="exterior_trim"] option:checked').innerText(),TRIM_LABELS[completed.selection.exterior_trim]);
    assert.doesNotMatch(await page.locator('body').innerText(),/(?:25|50)_(?:LONG|SHORT)|OUTDOOR_READER|\bBATTERY\b/);
-   if(name==='k2-trim-50_LONG'||name==='k2-s14-required-frame')await page.screenshot({path:`${OUT}/${device}-${name}-color-trim.png`,fullPage:true});
+   if(['k2-trim-50_LONG','k2-s14-required-frame','k2-m78-recommended-frame','high-single-manual','aluminum-single-familock'].includes(name))await page.screenshot({path:`${OUT}/${device}-${name}-color-trim.png`,fullPage:true});
    assert.equal(await page.locator('#warnings .notice.error').count(),0,name);
    assert.equal(await page.locator('#productEditor :invalid').count(),0,name);
    if(name.includes('manual-check'))assert.match(await page.locator('#warnings').innerText(),/第二扉/);
@@ -102,6 +113,9 @@ try{
    assert.equal(snapshot.configuration.handing,'L');assert.equal(Object.keys(snapshot.configuration).some(isSiteSurveyField),false);
    assert.equal(snapshot.configuration.thermal_spec,seed.thermal_spec);
    assert.equal(snapshot.configuration.glass_spec,completed.selection.glass_spec);
+   assert.equal(snapshot.configuration.frame_color,completed.selection.frame_color);
+   assert.equal(snapshot.display_summary.find(row=>row.key==='frame_color').value,completed.fields.find(row=>row.key==='frame_color').values.find(row=>row.value===completed.selection.frame_color).displayLabel);
+   assert.equal(await page.locator('[data-spec-key="frame_color"]').inputValue(),completed.selection.frame_color);
    assert.equal(snapshot.configuration.exterior_trim,completed.selection.exterior_trim);
    assert.equal(snapshot.display_summary.find(row=>row.key==='exterior_trim').value,TRIM_LABELS[completed.selection.exterior_trim]);
    assert.equal(await page.locator('[data-spec-key="exterior_trim"] option:checked').innerText(),TRIM_LABELS[completed.selection.exterior_trim]);
@@ -117,6 +131,9 @@ try{
    assert.notEqual(output.state,'INCOMPLETE',name);assert.notEqual(output.state,'INVALID',name);assert.equal(Object.keys(output.rows[0].configuration).some(isSiteSurveyField),false);assert.equal(output.rows[0].display_summary.some(r=>isSiteSurveyField(r.key)),false);
    assert.equal(output.rows[0].configuration.thermal_spec,seed.thermal_spec);
    assert.equal(output.rows[0].configuration.glass_spec,completed.selection.glass_spec);
+   assert.equal(output.rows[0].configuration.frame_color,completed.selection.frame_color);
+   assert.equal(output.rows[0].display_summary.find(row=>row.key==='frame_color').value,snapshot.display_summary.find(row=>row.key==='frame_color').value);
+   assert.equal(Object.keys(output.rows[0].configuration).some(key=>key.toLowerCase().includes('recommend')),false);
    assert.equal(output.rows[0].configuration.exterior_trim,completed.selection.exterior_trim);
    assert.equal(output.rows[0].display_summary.find(row=>row.key==='exterior_trim').value,TRIM_LABELS[completed.selection.exterior_trim]);
    if(name==='k4-g78-required-frame'){
@@ -167,9 +184,9 @@ try{
    if(seed.thermal_spec==='INSULATION_K2'&&seed.opening_type==='SINGLE'&&seed.design==='G12'){
     await page.screenshot({path:`${OUT}/${device}-k2.png`,fullPage:true});
     const k4=await selectAndResolve(page,'thermal_spec','INSULATION_K4');
-    assert.equal(k4.selection.design,'G12');assert.equal(k4.selection.glass_spec,'IGU_A16');
+    assert.equal(k4.selection.design,'G12');assert.equal(k4.selection.frame_color,completed.selection.frame_color);assert.equal(k4.fields.find(row=>row.key==='frame_color').values.length,15);assert.equal(k4.selection.glass_spec,'IGU_A16');
     const k2=await selectAndResolve(page,'thermal_spec','INSULATION_K2');
-    assert.equal(k2.selection.design,'G12');assert.equal(k2.selection.glass_spec,'LOW_E_IGU_A16');
+    assert.equal(k2.selection.design,'G12');assert.equal(k2.selection.frame_color,completed.selection.frame_color);assert.equal(k2.selection.glass_spec,'LOW_E_IGU_A16');
    }
    if(seed.opening_type!=='SINGLE'){
     const single=await selectAndResolve(page,'opening_type','SINGLE');
@@ -178,6 +195,16 @@ try{
    const nextThermal=seed.thermal_spec==='HIGH_INSULATION'?'ALUMINUM':'HIGH_INSULATION';
    const thermal=await selectAndResolve(page,'thermal_spec',nextThermal);
    assert.equal(Object.hasOwn(thermal.selection,'design'),false);
+   assert.equal(Object.hasOwn(thermal.selection,'frame_color'),false);
+   if(name==='high-single-manual'){
+    await selectAndResolve(page,'design','C12N');await selectAndResolve(page,'body_color','CB');
+    const alu=await selectAndResolve(page,'frame_color','AA');assert.equal(alu.fields.find(f=>f.key==='frame_color').values.length,15);
+    const high=await selectAndResolve(page,'thermal_spec','HIGH_INSULATION');assert.equal(Object.hasOwn(high.selection,'frame_color'),false);
+    await selectAndResolve(page,'design','17H');await selectAndResolve(page,'body_color','CB');await selectAndResolve(page,'frame_color','CB');
+    const standard=await selectAndResolve(page,'design','12N');assert.equal(standard.selection.frame_color,'CB');
+    assert.equal(standard.fields.find(f=>f.key==='frame_color').values.length,8);
+    const grade=await selectAndResolve(page,'design','17H');assert.equal(grade.selection.frame_color,'CB');
+   }
    if(nextThermal==='HIGH_INSULATION')assert.equal(Object.hasOwn(thermal.selection,'threshold_flat_material'),false);
    report.cases.push({name,device,selection:'PASS',presentation:'PASS',legacyMigration:'PASS',saveReload:'PASS',handoff:'PASS',invalidDimension:'PASS',dark:'PASS',upstreamReset:'PASS'});
   }

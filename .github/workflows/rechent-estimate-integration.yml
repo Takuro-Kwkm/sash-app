@@ -20,10 +20,10 @@ jobs:
         with:
           node-version: 24
       - run: npm run lint && npm run typecheck && npm test
-      - name: Formal and Registry read-only check
+      - name: Official R8 adoption and unrelated-series protection
         run: |
-          git fetch origin f9c5019661bee9f87d6cd657c4fce070fe2cbc10
-          test -z "$(git diff --name-only f9c5019661bee9f87d6cd657c4fce070fe2cbc10 HEAD -- src/catalog/runtime-master-packages src/catalog/runtime-master/runtime-master-registry.mjs data)"
+          git fetch origin 7584ed0a9e37f12e448e1d17303bd149200cb6b1
+          node scripts/verify-rechent-r8-adoption.mjs
       - run: npm run build:release
       - run: npm install --no-save playwright@1.55.0 && npx playwright install --with-deps chromium
       - name: Browser journeys and shared workflow regression
@@ -57,7 +57,7 @@ jobs:
       VERCEL_PROJECT_ID: prj_4z0zqW6yKyPuFINODfGX8LPBuJRP
       VERCEL_PROJECT_NAME: sash-app-wave3-preview
       RELEASE_SERIES: LIXIL_RECHENT_DOOR3_NON_FIRE
-      RELEASE_PACKAGE_VERSION: v0.8-R7
+      RELEASE_PACKAGE_VERSION: v0.8-R8
       VERCEL_DEPLOY_SOURCE: gitSource
     steps:
       - uses: actions/checkout@v4
@@ -97,10 +97,24 @@ jobs:
     needs: [qa, preview]
     runs-on: ubuntu-latest
     steps:
-      - run: |
-          # Technical CI does not close the independently proven Formal defect.
-          # See docs/qa/rechent-color-trim-closure.md (DL2100 p181).
-          echo 'APP_INTEGRATION_READY=BLOCKED_PRODUCT_MASTER_DEFECT'
-          echo 'BLOCKING_ITEM=RE3NF_FRAME_COLOR_THERMAL_SCOPE'
-          echo 'PRODUCT_MASTER_MUTATION=0'
-          echo 'PRODUCTION_DEPLOY=NOT_EXECUTED'
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - uses: actions/download-artifact@v4
+        with:
+          name: rechent-local-qa-${{ github.sha }}
+          path: artifacts/gate-input/local
+      - uses: actions/download-artifact@v4
+        with:
+          name: rechent-deployed-qa-${{ github.sha }}
+          path: artifacts/gate-input/deployed
+      - name: Evaluate verified integration gates
+        run: |
+          # Keep only deployed browser reports to prevent local/deployed ambiguity.
+          rm -rf artifacts/gate-input/local/rechent-estimate-integration artifacts/gate-input/local/rechent-entry-door-cover-global-flow-browser-qa
+          node scripts/evaluate-rechent-r8-integration-ready.mjs
+      - uses: actions/upload-artifact@v4
+        with:
+          name: rechent-integration-ready-${{ github.sha }}
+          path: artifacts/rechent-integration-ready/

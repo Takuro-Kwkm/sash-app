@@ -30,7 +30,7 @@ function assertSemanticOrder(result,label){
   }
 }
 
-const report={status:'RUNNING',productId:PRODUCT_ID,viewportResults:{},consoleErrors:[],pageErrors:[],failedResponses:[],transitionChecks:0,domSignatureChecks:0};
+const report={status:'RUNNING',exactHead:process.env.GITHUB_SHA??null,baseUrl:BASE,productId:PRODUCT_ID,viewportResults:{},consoleErrors:[],pageErrors:[],failedResponses:[],transitionChecks:0,domSignatureChecks:0};
 const browser=await chromium.launch({headless:true});
 
 async function assertDomSignature(page,result,label){

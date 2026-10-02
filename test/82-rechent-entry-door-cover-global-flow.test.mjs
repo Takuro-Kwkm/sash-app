@@ -33,12 +33,12 @@ function relativeOrder(rows,a,b){
   return Math.sign(keys.indexOf(a)-keys.indexOf(b));
 }
 
-test('Rechent v0.8-R7 is registered read-only through ENTRY_DOOR_COVER',async()=>{
+test('Rechent v0.8-R8 is registered read-only through ENTRY_DOOR_COVER',async()=>{
   const integration=appRuntimeIntegrationRegistry.find((row)=>row.id===PRODUCT_ID);
   assert.ok(integration);
   assert.equal(integration.uiCategory,ENTRY_DOOR_COVER_UI_CATEGORY);
-  assert.equal(integration.packageVersion,'v0.8-R7');
-  assert.equal(integration.sourceHash,'6c189dff2197ab095168c308fb6733bd1a0f5a2f336a3352a39ce536ee08230d');
+  assert.equal(integration.packageVersion,'v0.8-R8');
+  assert.equal(integration.sourceHash,'1da09541a4ddf234314d8f082b792c2fb2cbab90ef5c6d70b32ff39706e145db');
   const runtime=await loadRegisteredRuntime(integration.manufacturer,integration.series);
   assert.ok(runtime);
   assert.equal(runtime.sourcePackageIntegrity?.match,true);
