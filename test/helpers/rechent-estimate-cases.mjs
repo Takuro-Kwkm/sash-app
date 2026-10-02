@@ -26,4 +26,6 @@ export const RECHENT_BUSINESS_CASES=[
  {name:'aluminum-double',thermal_spec:'ALUMINUM',opening_type:'DOUBLE',design:'C12N',size_w:1600},
  {name:'aluminum-single-sidelight',thermal_spec:'ALUMINUM',opening_type:'SINGLE_SIDELIGHT',design:'C12N',size_w:1100},
  {name:'aluminum-double-sidelight',thermal_spec:'ALUMINUM',opening_type:'DOUBLE_SIDELIGHT',design:'C12N',size_w:1500},
+ {name:'k2-familock-keypad-battery',thermal_spec:'INSULATION_K2',opening_type:'SINGLE',design:'G12',size_w:800,handle_type:'A',lock_type:'FAMILOCK',electric_lock_power:'BATTERY',electric_lock_reader:'KEYPAD_OUTDOOR_READER'},
+ {name:'k4-familock-keypad-ac',thermal_spec:'INSULATION_K4',opening_type:'PARENT_CHILD',design:'G12',size_w:1100,handle_type:'A',lock_type:'FAMILOCK',electric_lock_power:'AC100V',electric_lock_plan:'BASIC',electric_lock_reader:'KEYPAD_OUTDOOR_READER'},
 ];

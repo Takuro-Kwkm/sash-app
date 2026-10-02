@@ -35,6 +35,9 @@ const LABELS = Object.freeze({
   handle_color: labelMap([['1','ブラストシルバー'],['2','サテンゴールド'],['3','シルキーマットブラック']]),
   cylinder: labelMap([['DN','DNシリンダー'],['W','Wシリンダー']]),
   electric_lock_power: labelMap([['BATTERY','電池式'],['AC100V','AC100V']]),
+  // IG3700 (2026/04), RD-4/RD-12: door-body reader specification labels.
+  // Hardware candidate codes remain the Formal Runtime identifiers.
+  electric_lock_reader: labelMap([['OUTDOOR_READER','屋外リーダー用'],['KEYPAD_OUTDOOR_READER','テンキー付屋外リーダー用']]),
   door_closer: labelMap([['TWO_STOP','2ストップ'],['FREE_STOP','フリーストップ']]),
   glass_safety: labelMap([['SAFETY_LAMINATED','安全合わせ']]),
   glass_spec: labelMap([['NOT_APPLICABLE','ガラスなし'],['LOW_E_IGU_A16_ARGON','Low-E複層（A16アルゴン）'],['LOW_E_IGU_A16','Low-E複層（A16）'],['LOW_E_IGU_ARGON','Low-E複層（アルゴン）'],['IGU_A16','複層（A16）'],['IGU_REDUCED_AIR','複層'],['LAMINATED_PATTERNED','合わせガラス'],['SEPARATE_GLASS','別途ガラス']]),

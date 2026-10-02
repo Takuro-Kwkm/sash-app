@@ -6,6 +6,7 @@ import {ENTRY_DOOR_COVER_PRESENTATION_ORDER} from '../../src/catalog/runtime-mas
 import {isSiteSurveyField} from '../../src/work-management/field-workflow-scope.mjs';
 const BASE=process.env.QA_BASE_URL??'http://127.0.0.1:4173',OUT='artifacts/rechent-estimate-integration';
 const SHARE_TOKEN=process.env.VERCEL_SHARE_TOKEN;
+const READER_LABELS={OUTDOOR_READER:'屋外リーダー用',KEYPAD_OUTDOOR_READER:'テンキー付屋外リーダー用'};
 await mkdir(OUT,{recursive:true});
 const report={status:'RUNNING',exactHead:process.env.GITHUB_SHA??null,baseUrl:BASE,cases:[],errors:[],failedResponses:[]};
 const browser=await chromium.launch();
@@ -65,6 +66,21 @@ try{
    assert.equal(await page.locator('#warnings .notice.error').count(),0,name);
    assert.equal(await page.locator('#productEditor :invalid').count(),0,name);
    if(name.includes('manual-check'))assert.match(await page.locator('#warnings').innerText(),/第二扉/);
+   if(seed.lock_type==='FAMILOCK'){
+    const readerOptions=await page.locator('[data-spec-key="electric_lock_reader"] option').evaluateAll(nodes=>nodes.filter(n=>n.value).map(n=>({value:n.value,label:n.textContent.trim()})));
+    assert.deepEqual(readerOptions,completed.fields.find(row=>row.key==='electric_lock_reader').values.map(row=>({value:row.value,label:READER_LABELS[row.value]})));
+    assert.equal(await page.locator('[data-spec-key="electric_lock_reader"]').inputValue(),completed.selection.electric_lock_reader);
+    assert.doesNotMatch(await page.locator('body').innerText(),/OUTDOOR_READER/);
+    if(seed.electric_lock_reader==='KEYPAD_OUTDOOR_READER'){
+     for(const reader of Object.keys(READER_LABELS)){
+      const resolved=await selectAndResolve(page,'electric_lock_reader',reader);
+      assert.equal(resolved.selection.electric_lock_reader,reader);
+      assert.equal(await page.locator('[data-spec-key="electric_lock_reader"] option:checked').innerText(),READER_LABELS[reader]);
+      assert.doesNotMatch(await page.locator('body').innerText(),/OUTDOOR_READER/);
+     }
+     await page.screenshot({path:`${OUT}/${device}-${name}-reader.png`,fullPage:true});
+    }
+   }
    const changed=await page.locator('#dynamicForm').getAttribute('data-resolve-revision');
    await page.locator('[data-spec-key="handing"]').selectOption('L');
    await page.waitForFunction(old=>document.querySelector('#dynamicForm').dataset.resolveRevision!==old,changed);
@@ -75,12 +91,22 @@ try{
    assert.equal(snapshot.configuration.handing,'L');assert.equal(Object.keys(snapshot.configuration).some(isSiteSurveyField),false);
    assert.equal(snapshot.configuration.thermal_spec,seed.thermal_spec);
    assert.equal(snapshot.configuration.glass_spec,completed.selection.glass_spec);
-   if(seed.lock_type==='FAMILOCK')assert.equal(snapshot.configuration.electric_lock_power,seed.electric_lock_power);
+   if(seed.lock_type==='FAMILOCK'){
+    assert.equal(snapshot.configuration.electric_lock_power,seed.electric_lock_power);
+    assert.equal(snapshot.configuration.electric_lock_reader,completed.selection.electric_lock_reader);
+    assert.equal(snapshot.display_summary.find(row=>row.key==='electric_lock_reader').value,READER_LABELS[completed.selection.electric_lock_reader]);
+    assert.equal(await page.locator('[data-spec-key="electric_lock_reader"] option:checked').innerText(),READER_LABELS[completed.selection.electric_lock_reader]);
+    assert.doesNotMatch(await page.locator('body').innerText(),/OUTDOOR_READER/);
+   }
    assert.deepEqual(Object.values(snapshot.workflow_data.site_survey.contexts)[0].values,row.survey);
    const output=await page.evaluate(async()=>{const {createEstimateOutputModel}=await import('/estimate-output/model.mjs');const db=window.__sashWorkApp.readDatabase();return createEstimateOutputModel({project:db.projects[0],estimate:db.estimates[0],openings:db.openings});});
    assert.notEqual(output.state,'INCOMPLETE',name);assert.notEqual(output.state,'INVALID',name);assert.equal(Object.keys(output.rows[0].configuration).some(isSiteSurveyField),false);assert.equal(output.rows[0].display_summary.some(r=>isSiteSurveyField(r.key)),false);
    assert.equal(output.rows[0].configuration.thermal_spec,seed.thermal_spec);
    assert.equal(output.rows[0].configuration.glass_spec,completed.selection.glass_spec);
+   if(seed.lock_type==='FAMILOCK'){
+    assert.equal(output.rows[0].configuration.electric_lock_reader,completed.selection.electric_lock_reader);
+    assert.equal(output.rows[0].display_summary.find(row=>row.key==='electric_lock_reader').value,READER_LABELS[completed.selection.electric_lock_reader]);
+   }
    if(name.includes('manual-check'))assert.ok(output.rows[0].issues.some(r=>r.code==='HIGH_SIZE_DOUBLE_CHILD_RANGE_UNVERIFIED'));
    const revision=await page.locator('#dynamicForm').getAttribute('data-resolve-revision');
    await page.locator('[data-spec-key="size_w"]').fill('1');await page.locator('[data-spec-key="size_w"]').dispatchEvent('change');

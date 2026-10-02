@@ -79,3 +79,13 @@ Production merge/deployは対象外。FORMAL、APP_INTEGRATION_READY、RELEASED�
 - Drive Current Manifest v1.5、共通開発標準 v2.0、Runtime UI v1.8、UI標準v2.1、Formal Authoring v0.8-R7を取得。Drive Canonical runtime_manifestのSHA256はrepoの `6c189dff2197ab095168c308fb6733bd1a0f5a2f336a3352a39ce536ee08230d` と一致。
 
 最終APP_INTEGRATION_READY判定は最新commitの全CI・Governance・SHA一致Preview Browser結果を確認してPR本文に記録する。古いPR本文のPASSを新Candidateへ継承しない。
+
+## FamiLock reader official label refinement (2026-10-02)
+
+This continuation changes only the Adapter's reader presentation mapping. `OUTDOOR_READER` and `KEYPAD_OUTDOOR_READER` remain the Runtime, dependency, saved-configuration and handoff identifiers. Hardware rules and Formal packages are unchanged.
+
+Official source checked: LIXIL **リシェント受発注資料集 IG3700**, 2026/04, 2026年5月価格掲載版. LIXIL's product document listing identifies it as current: https://kinken.lixil.co.jp/e/products/CSSERESDET_777922/documents/webcatalog . The complete manufacturer PDF was read from the existing Drive original `202604_LIXIL_リシェント_業務用資料集.pdf` (Drive ID `1NBm3G1nzmFI4T6miuEiqp-nEQeLQpln_`). **RD-4 / RD-12** (PDF pages 20 / 28), FamiLock 部材価格表, 基本部材 → ドア本体, prints **屋外リーダー用** and **テンキー付屋外リーダー用**. These specification labels are adopted exactly.
+
+Cross-check: current LIXIL **リシェント玄関ドア3 DL2100**, 2026/09, 2026年10月価格掲載版, https://webcatalog.lixil.co.jp/cgi-bin/openDetailBL.cgi?c=DL2100 , **206–207** (FamiLock プラン一覧 → 3. 屋外リーダーを選ぶ). The device names there are 屋外リーダー and テンキー付屋外リーダー/ワイヤレス屋内ボタンセット; the ordering specification labels above come from the higher-priority IG3700 component table. No new component, pairing, eligibility or price is inferred from this cross-check.
+
+The Formal canonical field already has Japanese device names. The UI defect arose because `hardwareChoice` returned Hardware allow-rule codes without a reader label mapping. This is an Adapter presentation defect, not a Product Master defect. `test/98` covers both reader values with K2/K4 and BATTERY/AC100V, saved snapshots, reload, estimate output and manual-lock clear. S-handle keypad exclusion remains enforced. The deployed browser gate checks option text and rendered text, both reader selections, saved/handoff identifiers and labels at 1440 / 768 / 390px.
