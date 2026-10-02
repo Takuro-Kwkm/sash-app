@@ -1,0 +1,67 @@
+# リシェント玄関ドア3 非防火 — 営業見積依頼の統合差分
+
+NON-PRODUCT-MASTER TASK。Canonical Product `LIXIL_RECHENT_DOOR3_NON_FIRE` / App Product `SER-LIXIL-RECHENT-D3-NF`。Formal v0.8-R7 / FORMAL_PASSをcarry-forwardする。Formal Product Master、8 Runtime documents、メーカーDependency、Evidence、PRODUCT_MASTER_CANONICAL_REGISTRYは変更しない。
+
+## Authorityとbaseline
+
+- Project Instructions v2.0: Drive `1vuexA-sGCeoO6gOeqogvdQvHpDmAr0wia14tRPYen1k`
+- CURRENT_INFORMATION_SOURCE_MANIFEST v1.5 ACTIVE: `1xZ7gbinFDTL_Gm1XKwEP95aXQGxzKHH_IiwxZj2dg4A`
+- 営業見積依頼責務境界 v1.1: `1_kKAVLQe2cJeKspQE6fYqnUl2_rSjlCGpxZVwIu4YsY`
+- UI実装標準 v2.1 section 11: `1IjO6n-GmGFwCqb3XxQRnt5hMP5O-L7kT`
+- Canonical Registry v2.0: `1HMMZ8JdsbJPtL_8LjQfxMF8P_Zb4-LReqvPMFn1pJks`
+- Formal Authoring Master: `1L2JxjIxbfITjVvCg46RwKkg2I9hDbYWa`
+- Canonical Runtime Manifest: `11P1jHLQs4KO9ZiHxF7ofvqDcwtuoNxbU`; SHA256 `6c189dff2197ab095168c308fb6733bd1a0f5a2f336a3352a39ce536ee08230d`
+- Canonical folder: `1wNyL_JFz4wMFfV4zRbcahqCbU24K-n_G`
+- Sash main / production baseline: `f9c5019661bee9f87d6cd657c4fce070fe2cbc10`, PR #56。CURRENT_RELEASE_MANIFESTとAPP_CHANGE_GUARDRAIL取得結果はINTERIOR向けであり、サッシのrelease authorityとして流用しない。RepositoryとVercel production metadataからbaseline一致を確認。
+
+旧Product Selection GateのSurvey Layer Gapは、営業見積依頼の統合Blockerとして機械的に継承しない。明示的な `workflowScope:site_survey` は従来通りSource不足をfail closedする。
+
+## Legacy Survey項目の再分類
+
+全17項目はC: 現場調査時のみ必要。営業見積では入力、Required、Validation、Handoff、保存configurationから除外する。既存値は `workflow_data.site_survey.contexts[productId::standard].values` へ分離して保持。未検証のまま `DEFERRED_NOT_VERIFIED` とする。
+
+| Field | 内容 | 分類 |
+|---|---|---|
+| existing_frame_material | 既設枠材質 | C / FUTURE_SOURCE_PENDING |
+| existing_frame_type | 既設枠タイプ | C / FUTURE_SOURCE_PENDING |
+| fastening_method | 固定方式 | C / FUTURE_SOURCE_PENDING |
+| existing_opening_w1 | 既設開口W1 | C |
+| existing_opening_w2 | 既設開口W2 | C |
+| existing_opening_w_correction | 既設開口W補正 | C |
+| existing_opening_h1 | 既設開口H1 | C |
+| existing_opening_h2 | 既設開口H2 | C |
+| exterior_trim_a | 外額縁寸法a | C |
+| exterior_trim_b | 外額縁寸法b | C |
+| exterior_trim_c | 外額縁寸法c | C |
+| interior_trim_d | 内額縁寸法d | C |
+| interior_trim_e | 内額縁寸法e | C |
+| interior_trim_j | 内額縁寸法j | C |
+| interior_trim_k | 内額縁寸法k | C |
+| existing_threshold_g | 既設下枠寸法g | C |
+| fit_result | 施工Fit判定 | C / FUTURE_SOURCE_PENDING |
+
+製品W/H、額縁選択、既設下枠処理、下枠フラット材、段差緩和材は商品選択なのでEstimateへ残す。FamiLock下位仕様、子扉、袖仕様、安全ガラス、オプションはFormal成立条件に従うB。リモコンキー数量0/1/2は現在Runtimeに独立Selectorが存在せず追加しない。
+
+## Integrationの修正
+
+- 共通Global Flow Engineのcategory presentation extensionを利用し、断熱→開き形式→デザイン→ガラス/色→ハンドル/錠→額縁/下枠→W/H→オプションの表示順に変更。Canonical semantic stageは維持する。
+- Hardwareの `STANDARD,HIGH_SIZE` scopeをCSVとして解釈。錠候補は現在の錠自身で絞らず、Formal hardware relationから算出。
+- Design候補を正式Frame atomic ALLOW relationで絞る。上流変更後は固定点まで再評価し、成立値を保持、非成立/非該当値をclearする。
+- OTHER_FRAME範囲を親子に流用せず、HIGH_SIZEの該当Formal寸法行を使用。範囲外、0、非有限値をinvalidとする。
+- K2/K4のFormal grouped specificationでガラスが一意にならない場合、断熱等級の確認を `ESTIMATE_CONFIRM_REQUIRED` で引き渡す。代表ガラスを推測しない。
+- G12/G15 × HIGH_SIZE × DOUBLEの第二扉範囲は `MANUAL_CHECK_REQUIRED` / `automatic_orderability:false` として確認先（積算 / LIXIL）付きで保存・Handoff。寸法を追加しない。
+- 内額縁のEXTRA_LARGE/LARGE/SMALLを特大/大/小へ表示翻訳。保存するFormal値は維持。
+
+## QA scopeと証拠
+
+`test/96-rechent-estimate-integration.test.mjs` は14業務経路、全Frame/Hardware relationの候補、寸法境界、非該当clear、Legacy Survey移行を検証。
+
+`test/browser/rechent-estimate-integration-browser-qa.mjs` は14経路 × desktop/tablet/mobile = 42ケース。実Renderer、ブラウザ保存、再読込、見積出力モデル、手動確認伝達、範囲外、ダーク表示、錠/電源/開き形式/断熱変更を検証。完成配置のseedはFormal候補からテスト用に構築するもので、製品UIにdefaultを追加しない。
+
+別Global Flow browser suiteはUIから順次選択しDOMとResolverの一致を確認。既存8シリーズ業務flow、浴室見積、案件管理、見積出力、themeの回帰を実行。現Inventoryで他LIXIL/YKK玄関カバーと新築玄関の正式Runtime integrationは存在しないため、それらのBrowser PASSを主張しない。共通Renderer本体は変更せず、category contractと見積workflowの影響範囲を検証する。
+
+Uchirimoの既存Exact Source QA pinは、Rechent専用bridge分岐とSurvey metadata追加の影響レビュー後、2ファイルだけ更新する。未知Rule拒否・source変更検出のnegative guardは維持。商品Formal contractではなくアプリQA witnessである。
+
+専用CI `Rechent Estimate Integration` はlint/typecheck/full test、Formal/Registry read-only差分、build、local Browser/Regression、自己完結HTML parity、Vercel Preview READY / commit一致、deployed Browserを順に実行する。最終判定は実行結果に基づく。自己完結HTMLは選択/UI確認用で、案件保存・出力は実Previewで確認する。
+
+Production merge/deployは対象外。FORMAL、APP_INTEGRATION_READY、RELEASEDを区別する。

@@ -1,4 +1,4 @@
-import { mergeWorkflowData, isBathroomEstimateContext, splitWorkflowSelection, workflowContextKey } from './field-workflow-scope.mjs';
+import { mergeWorkflowData, isSeparatedEstimateContext, splitWorkflowSelection, workflowContextKey } from './field-workflow-scope.mjs';
 export const WORK_SCHEMA_VERSION = '1.0';
 
 export const ProjectStatus = Object.freeze({
@@ -144,7 +144,7 @@ export function createProductConfigurationSnapshot({product,result,clock,previou
   const canonical=result.source==='RUNTIME_MASTER';
   const runtimeIdentity=manifestId??(!canonical?product.source?.id??null:null);
   let workflowData=mergeWorkflowData(previousSnapshot?.workflow_data,result.workflow_data);
-  if(previousSnapshot&&isBathroomEstimateContext(previousSnapshot.product_id,previousSnapshot.configuration)){
+  if(previousSnapshot&&isSeparatedEstimateContext(previousSnapshot.product_id,previousSnapshot.configuration)){
     const values=splitWorkflowSelection(previousSnapshot.configuration).siteSurvey;
     workflowData=mergeWorkflowData(workflowData,{site_survey:{contexts:{[workflowContextKey(previousSnapshot.product_id,previousSnapshot.configuration)]:{values}}}});
   }

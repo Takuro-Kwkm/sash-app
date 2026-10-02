@@ -4,8 +4,8 @@
   "source_sha256": {
     "src/catalog/runtime-master/uchirimo-tabular-v1-adapter.mjs": "a6f3cdca31609a2cde44e11c972b2446440e31cf988f1a1908aff6ecfde971ee",
     "src/catalog/runtime-master/uchirimo-glass-rule-model.mjs": "0e8b1e37a05d25f80e7fc7f9a930c4349f8f97b5c43e9706c8aa99d1904c88b7",
-    "src/catalog/runtime-master/runtime-app-bridge.mjs": "b3ae6520ebbd8a712c43af311e9df4aec6d28388775730f7ac31b9b17c7abed3",
-    "src/work-management/field-workflow-scope.mjs": "7afa16757ad1e84ee423c0033798da8ec45dca21674894dfc3f6cafb19841431",
+    "src/catalog/runtime-master/runtime-app-bridge.mjs": "3f61f87dc9e2a5cb2f64999d8989c5486b6b9747cd74e1639198725ae2dc3c33",
+    "src/work-management/field-workflow-scope.mjs": "6458a62cbbc2bbf29f541ab6d5faea3698f085cb2fdbb739ce435dc24fd5f905",
     "src/catalog/runtime-master/new-construction-sash-runtime-ui-contract.mjs": "55f4f3f93be026614f4ab4b0a6df318777d33146743c1588bc1552e1ebaeeef7",
     "scripts/governance/uchirimo-selector-batch-runner.mjs": "29f26ef702d4c505ed3ab27de35eafc36b63f24bbbfe0d7fbaa55b631f920d74",
     "src/catalog/runtime-master/inner-window-runtime-ui-contract.mjs": "1c753f798e9f68e459506cd9f8f91b4dae3e8c0cd794863c6ddadb25c9c0a580",
@@ -103,6 +103,7 @@
           "candidate_sha256": "94254f6c7eb8e646ea44bc324bcec3359d2695c15d3236f02ef783440a230b03"
         }
       ]
-    }
+    },
+    "rechent_estimate_separation_20261002": "Reviewed app-only RECHENT_DOOR3_NONFIRE_V1 wrapper: forces estimate PRODUCT_SELECTION and uses existing workflow projection; explicit site_survey still uses raw resolver. Added Rechent site-only metadata keys and product context; Uchirimo raw evaluator and existing bathroom branches are unchanged. Fresh Rechent tests cover Formal frame/hardware domains, 14 business paths, exact dimensions, resets and legacy migration; 42 browser cases cover save/reload/handoff. Eight-series business-flow, bathroom estimate, work-management, estimate-output and theme browser regressions pass. Formal Runtime, Product Master, canonical Registry and Evidence unchanged. Exact-source negative guard retained."
   }
 }

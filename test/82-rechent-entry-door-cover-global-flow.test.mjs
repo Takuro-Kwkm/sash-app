@@ -6,6 +6,7 @@ import { resolveRuntimeAppProduct } from '../src/catalog/runtime-master/runtime-
 import {
   ENTRY_DOOR_COVER_UI_CATEGORY,
   ENTRY_DOOR_COVER_UI_STANDARD_ORDER,
+  ENTRY_DOOR_COVER_PRESENTATION_ORDER,
   applyEntryDoorCoverUiOrder,
 } from '../src/catalog/runtime-master/entry-door-cover-runtime-ui-contract.mjs';
 import { GLOBAL_WINDOW_STAGE_ORDER } from '../src/catalog/runtime-master/global-window-selection-flow-engine.mjs';
@@ -19,7 +20,8 @@ function assertCanonical(rows,label){
     assert.ok(row.semanticSlot,`${label}:${row.key}:semanticSlot`);
     assert.ok(row.semanticStage,`${label}:${row.key}:semanticStage`);
     assert.equal(String(row.semanticSlot).startsWith('other:'),false,`${label}:${row.key}:other-fallback`);
-    const current=STAGE_INDEX.get(row.semanticStage);
+    const current=ENTRY_DOOR_COVER_PRESENTATION_ORDER.indexOf(row.key);
+    assert.ok(STAGE_INDEX.has(row.semanticStage));
     assert.notEqual(current,undefined,`${label}:${row.key}:unknown-stage:${row.semanticStage}`);
     assert.ok(current>=previous,`${label}:${row.key}:stage-inversion`);
     previous=current;
@@ -94,7 +96,7 @@ test('Rechent resolver output always passes Global Window Selection Flow',async(
 });
 
 test('Survey Layer delegated fields fail closed until common Survey source is connected',async()=>{
-  const result=await resolveRuntimeAppProduct(PRODUCT_ID,{runtime_mode:'SURVEY_LINKED'});
+  const result=await resolveRuntimeAppProduct(PRODUCT_ID,{runtime_mode:'SURVEY_LINKED'},{workflowScope:'site_survey'});
   const delegated=['existing_frame_material','existing_frame_type','fastening_method'];
   for(const key of delegated)assert.ok((result.fields??[]).some((field)=>field.key===key),`missing delegated field ${key}`);
   assert.ok((result.validation?.errors??[]).some((row)=>row.errorCode==='SURVEY_LAYER_VALUE_SOURCE_REQUIRED'));
@@ -105,9 +107,9 @@ test('G12/G15 high-size double keeps the formal manual-check safety exception',a
   const result=await resolveRuntimeAppProduct(PRODUCT_ID,{
     thermal_spec:'INSULATION_K2_K4',
     opening_type:'DOUBLE',
-    design:'G12',
+    design:'G12',transom:'NONE',lock_type:'MANUAL',
     size_h:2440,
   });
-  assert.ok((result.manualWarnings??[]).some((text)=>String(text).includes('HIGH_SIZE_DOUBLE_CHILD_RANGE_UNVERIFIED')));
+  assert.ok((result.confirmationRequests??[]).some(row=>row.code==='HIGH_SIZE_DOUBLE_CHILD_RANGE_UNVERIFIED'));
   assert.equal(result.orderReady,false);
 });
