@@ -11,10 +11,15 @@ const response=await fetch(`https://api.vercel.com/aliases/${encodeURIComponent(
  method:'PATCH',headers:{Authorization:`Bearer ${process.env.VERCEL_TOKEN_EFFECTIVE}`,'Content-Type':'application/json'},body:JSON.stringify({ttl:3600}),
 });
 if(!response.ok)throw new Error(`Temporary Preview access failed: HTTP ${response.status}`);
-// The REST response schema is a JSON string. Some SDK wrappers expose value.
+// Vercel's public SDK permits an open response object; accept its token or the
+// deployment's explicit shareable-link entry. Never use an automation bypass.
 const payload=await response.json();
-const value=typeof payload==='string'?payload:payload?.value;
-assert.ok(typeof value==='string'&&value.length>0);
+const share=Object.entries(payload?.protectionBypass??{}).find(([,entry])=>entry?.scope==='shareable-link');
+const value=typeof payload==='string'?payload:payload?.secret??payload?.value??share?.[0];
+if(typeof value!=='string'||!value.length){
+ const shape=Object.entries(payload??{}).map(([key,item])=>({field:key.length<24?key:'opaque-key',type:typeof item}));
+ throw new Error('Unrecognized Preview access response shape: '+JSON.stringify(shape));
+}
 assert.equal(/[\r\n]/.test(value),false);
 console.log(`::add-mask::${value}`);
 await appendFile(process.env.GITHUB_ENV,`VERCEL_SHARE_TOKEN=${value}\n`);

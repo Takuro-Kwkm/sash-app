@@ -50,7 +50,6 @@ jobs:
           name: rechent-local-qa-${{ github.sha }}
           path: artifacts/
   preview:
-    needs: qa
     runs-on: ubuntu-latest
     timeout-minutes: 25
     env:
