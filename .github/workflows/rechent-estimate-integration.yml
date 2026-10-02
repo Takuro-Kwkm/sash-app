@@ -82,7 +82,7 @@ jobs:
           node -e 'const d=require("./artifacts/rechent-preview/deployment.json"); if(d.readyState!=="READY"||d.githubSha!==process.env.GITHUB_SHA||d.deploymentGitSha!==process.env.GITHUB_SHA||d.mode!=="preview") process.exit(1)'
           node test/browser/rechent-entry-door-cover-global-flow-browser-qa.mjs
           node test/browser/rechent-estimate-integration-browser-qa.mjs
-          echo 'APP_INTEGRATION_READY=PASS_ESTIMATE_SCOPE'
+          echo 'DEPLOYED_BROWSER_GATE=PASS_ESTIMATE_SCOPE'
           echo 'PRODUCT_MASTER_MUTATION=0'
           echo 'PRODUCTION_DEPLOY=NOT_EXECUTED'
       - if: always()
@@ -93,3 +93,11 @@ jobs:
             artifacts/rechent-preview/
             artifacts/rechent-estimate-integration/
             artifacts/rechent-entry-door-cover-global-flow-browser-qa/
+  integration-ready:
+    needs: [qa, preview]
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          echo 'APP_INTEGRATION_READY=PASS_ESTIMATE_SCOPE'
+          echo 'PRODUCT_MASTER_MUTATION=0'
+          echo 'PRODUCTION_DEPLOY=NOT_EXECUTED'
