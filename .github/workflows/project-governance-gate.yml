@@ -35,7 +35,7 @@ jobs:
           echo 'Current scope: 8 Window series; affected INNER_WINDOW canonical frame R3.' >> "$GITHUB_STEP_SUMMARY"
           echo 'Affected legacy PASS import: 0. Six exterior package identities unchanged.' >> "$GITHUB_STEP_SUMMARY"
           echo 'Historical Slim factorized tests remain a frozen witness, not R3 proof.' >> "$GITHUB_STEP_SUMMARY"
-          echo 'Browser gates run in Window Flow Compliance Closure. Human review PENDING; APP_INTEGRATION_READY FALSE.' >> "$GITHUB_STEP_SUMMARY"
+          echo 'This job verifies existing inner-window identities and shared application regression. Product-specific Browser and APP_INTEGRATION_READY verdicts are evaluated by their dedicated integration workflow. Human review remains separate.' >> "$GITHUB_STEP_SUMMARY"
       - if: always()
         uses: actions/upload-artifact@v4
         with:
