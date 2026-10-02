@@ -11,7 +11,10 @@ const response=await fetch(`https://api.vercel.com/aliases/${encodeURIComponent(
  method:'PATCH',headers:{Authorization:`Bearer ${process.env.VERCEL_TOKEN_EFFECTIVE}`,'Content-Type':'application/json'},body:JSON.stringify({ttl:3600}),
 });
 if(!response.ok)throw new Error(`Temporary Preview access failed: HTTP ${response.status}`);
-const {value}=await response.json();assert.ok(typeof value==='string'&&value.length>0);
+// The REST response schema is a JSON string. Some SDK wrappers expose value.
+const payload=await response.json();
+const value=typeof payload==='string'?payload:payload?.value;
+assert.ok(typeof value==='string'&&value.length>0);
 assert.equal(/[\r\n]/.test(value),false);
 console.log(`::add-mask::${value}`);
 await appendFile(process.env.GITHUB_ENV,`VERCEL_SHARE_TOKEN=${value}\n`);
