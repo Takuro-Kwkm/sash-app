@@ -12,10 +12,16 @@ const browser=await chromium.launch();
 const dimensions={desktop:{width:1440,height:1000},tablet:{width:768,height:1024},mobile:{width:390,height:844}};
 async function selectAndResolve(page,key,value){
  const revision=await page.locator('#dynamicForm').getAttribute('data-resolve-revision');
- const response=page.waitForResponse(r=>r.url().includes('/api/runtime-master/resolve')&&r.status()===200);
+ const response=page.waitForResponse(r=>{
+  if(!r.url().includes('/api/runtime-master/resolve')||r.status()!==200)return false;
+  const sent=JSON.parse(new URL(r.url()).searchParams.get('selection'));
+  return String(sent[key])===String(value);
+ });
  await page.locator(`[data-spec-key="${key}"]`).selectOption(value);
  const result=await(await response).json();
  await page.waitForFunction(old=>document.querySelector('#dynamicForm').dataset.resolveRevision!==old,revision);
+ assert.equal(String(result.selection[key]),String(value),`${key}: received another selection response`);
+ await page.waitForFunction(({key,value})=>document.querySelector(`[data-spec-key="${key}"]`)?.value===String(value),{key,value});
  assert.equal(Object.keys(result.selection).some(isSiteSurveyField),false);
  for(const field of result.fields.filter(f=>!f.readOnly&&f.values?.length)){
   const value=result.selection[field.key];if(value===undefined)continue;
