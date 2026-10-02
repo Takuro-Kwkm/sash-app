@@ -25,7 +25,7 @@ export const ENTRY_DOOR_COVER_PRESENTATION_ORDER = Object.freeze([
   'thermal_spec','transom','opening_type','design','child_door',
   'sidelight_spec','glass_spec','glass_safety','body_color','frame_color','handing',
   'door_closer','handle_type','handle_surface','handle_color','interior_handle',
-  'lock_type','cylinder','electric_lock_power','electric_lock_reader','electric_lock_plan','key_set','additional_key',
+  'lock_type','key_set','cylinder','electric_lock_power','electric_lock_reader','electric_lock_plan','additional_key',
   'exterior_trim','interior_trim','existing_threshold_treatment','threshold_flat_material','threshold_step_mitigation',
   'size_w','size_h',
   'existing_frame_material','existing_frame_type','fastening_method',
