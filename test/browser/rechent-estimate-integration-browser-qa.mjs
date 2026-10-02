@@ -5,6 +5,7 @@ import {RECHENT_ID,completeRechent,RECHENT_BUSINESS_CASES} from '../helpers/rech
 import {ENTRY_DOOR_COVER_PRESENTATION_ORDER} from '../../src/catalog/runtime-master/entry-door-cover-runtime-ui-contract.mjs';
 import {isSiteSurveyField} from '../../src/work-management/field-workflow-scope.mjs';
 const BASE=process.env.QA_BASE_URL??'http://127.0.0.1:4173',OUT='artifacts/rechent-estimate-integration';
+const SHARE_TOKEN=process.env.VERCEL_SHARE_TOKEN;
 await mkdir(OUT,{recursive:true});
 const report={status:'RUNNING',exactHead:process.env.GITHUB_SHA??null,baseUrl:BASE,cases:[],errors:[],failedResponses:[]};
 const browser=await chromium.launch();
@@ -25,6 +26,7 @@ async function selectAndResolve(page,key,value){
 try{
  for(const [device,viewport] of Object.entries(dimensions)){
   const context=await browser.newContext({viewport,isMobile:device==='mobile',hasTouch:device==='mobile'});
+  if(SHARE_TOKEN)await context.request.get(`${BASE}/?_vercel_share=${encodeURIComponent(SHARE_TOKEN)}`);
   const page=await context.newPage();page.on('pageerror',e=>report.errors.push(e.message));page.on('console',m=>{if(m.type()==='error')report.errors.push(m.text());});page.on('response',r=>{if(r.status()>=400&&!r.url().includes('favicon'))report.failedResponses.push({status:r.status(),url:r.url()});});
   await page.goto(BASE,{waitUntil:'networkidle'});
   for(const {name,...seed} of RECHENT_BUSINESS_CASES){

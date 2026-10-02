@@ -74,6 +74,7 @@ jobs:
           if [[ -z "$token" ]]; then echo 'VERCEL_CREDENTIAL_GATE=BLOCKED'; exit 42; fi
           echo "VERCEL_TOKEN_EFFECTIVE=$token" >> "$GITHUB_ENV"
       - run: node scripts/vercel-rest-deploy.mjs preview artifacts/rechent-preview/deployment.json
+      - run: node scripts/prepare-rechent-preview-access.mjs artifacts/rechent-preview/deployment.json
       - run: npm install --no-save playwright@1.55.0 && npx playwright install --with-deps chromium
       - name: Exact commit deployed browser gate
         env:

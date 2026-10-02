@@ -70,6 +70,7 @@ async function installAndSelect(page){
 
 async function runViewport(name,options){
   const context=await browser.newContext(options);
+  if(SHARE_TOKEN)await context.request.get(`${BASE}/?_vercel_share=${encodeURIComponent(SHARE_TOKEN)}`);
   const page=await context.newPage();
   page.on('console',(message)=>{if(message.type()==='error')report.consoleErrors.push({viewport:name,text:message.text()});});
   page.on('pageerror',(error)=>report.pageErrors.push({viewport:name,text:error.message}));
@@ -106,6 +107,7 @@ async function runViewport(name,options){
 
 try{
   const requestContext=await browser.newContext();
+  if(SHARE_TOKEN)await requestContext.request.get(`${BASE}/?_vercel_share=${encodeURIComponent(SHARE_TOKEN)}`);
   const integrationsResponse=await requestContext.request.get(`${BASE}/api/runtime-master/integrations`);
   assert.equal(integrationsResponse.status(),200);
   const integrations=await integrationsResponse.json();
