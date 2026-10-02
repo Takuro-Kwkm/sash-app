@@ -18,9 +18,12 @@ const uniq = (values) => [...new Set(values.filter((v)=>v !== undefined && v !==
 const asNumber = (value) => value === '' || value === null || value === undefined ? null : (Number.isFinite(Number(value)) ? Number(value) : null);
 const choice = (value, displayLabel = String(value), extra = {}) => ({ value, displayLabel, manualCheck:false, disabled:false, ...extra });
 const labelMap = (pairs) => new Map(pairs);
+const SPLIT_INSULATION_VALUES = new Set(['INSULATION_K2','INSULATION_K4']);
+const formalThermalScope = (value) => SPLIT_INSULATION_VALUES.has(value) ? 'INSULATION_K2_K4' : value;
+const thermalScopeMatches = (rowScope, selectedScope) => !selectedScope || rowScope===selectedScope || rowScope===formalThermalScope(selectedScope);
 
 const LABELS = Object.freeze({
-  thermal_spec: labelMap([['HIGH_INSULATION','高断熱仕様'],['INSULATION_K2_K4','断熱仕様（k2/k4）'],['ALUMINUM','アルミ仕様']]),
+  thermal_spec: labelMap([['HIGH_INSULATION','高断熱仕様'],['INSULATION_K2','断熱仕様 k2'],['INSULATION_K4','断熱仕様 k4'],['ALUMINUM','アルミ仕様']]),
   transom: labelMap([['NONE','なし'],['PRESENT','あり']]),
   opening_type: labelMap([['SINGLE','片開き'],['PARENT_CHILD','親子'],['DOUBLE','両開き'],['SINGLE_SIDELIGHT','片袖'],['DOUBLE_SIDELIGHT','両袖']]),
   handing: labelMap([['R','右吊元'],['L','左吊元']]),
@@ -29,6 +32,7 @@ const LABELS = Object.freeze({
   handle_surface: labelMap([['GENERAL','一般仕様'],['KIETECHNO_COAT','キエテクノコート']]),
   handle_color: labelMap([['1','ブラストシルバー'],['2','サテンゴールド'],['3','シルキーマットブラック']]),
   cylinder: labelMap([['DN','DNシリンダー'],['W','Wシリンダー']]),
+  electric_lock_power: labelMap([['BATTERY','電池式'],['AC100V','AC100V']]),
   door_closer: labelMap([['TWO_STOP','2ストップ'],['FREE_STOP','フリーストップ']]),
   glass_safety: labelMap([['SAFETY_LAMINATED','安全合わせ']]),
   glass_spec: labelMap([['NOT_APPLICABLE','ガラスなし'],['LOW_E_IGU_A16_ARGON','Low-E複層（A16アルゴン）'],['LOW_E_IGU_A16','Low-E複層（A16）'],['LOW_E_IGU_ARGON','Low-E複層（アルゴン）'],['IGU_A16','複層（A16）'],['IGU_REDUCED_AIR','複層'],['LAMINATED_PATTERNED','合わせガラス'],['SEPARATE_GLASS','別途ガラス']]),
@@ -49,20 +53,20 @@ function docs(runtimePackage) {
 }
 
 function currentDesign(product, selection) {
-  return product.design_master.find((row)=>row.design_id===selection.design && (!selection.thermal_spec || row.thermal_scope===selection.thermal_spec)) ?? null;
+  return product.design_master.find((row)=>row.design_id===selection.design && thermalScopeMatches(row.thermal_scope,selection.thermal_spec)) ?? null;
 }
 function modelVariant(product, selection) { return currentDesign(product, selection)?.base_model_variant ?? null; }
 function frameAllowedRows(product, selection) {
   const model = modelVariant(product, selection);
   return product.frame_atomic_rules.filter((row)=>row.result==='ALLOW'
-    && (!selection.thermal_spec || row.thermal_scope===selection.thermal_spec)
+    && thermalScopeMatches(row.thermal_scope,selection.thermal_spec)
     && (!selection.design || row.design_id===selection.design)
     && (!model || row.model_variant===model));
 }
 function hardwareRows(hardware, product, selection) {
   const model = modelVariant(product, selection);
   return hardware.hardware_atomic_rules.filter((row)=>row.result==='ALLOW'
-    && (!selection.thermal_spec || row.thermal_scope===selection.thermal_spec)
+    && thermalScopeMatches(row.thermal_scope,selection.thermal_spec)
     && (!selection.design || row.design_id===selection.design)
     && (!model || splitCsv(row.model_variant_scope).includes(model))
     && (!selection.handle_type || row.handle_type===selection.handle_type)
@@ -73,22 +77,25 @@ function fieldById(canonical, id) { return canonical.fields.find((row)=>row.fiel
 function canonicalField(canonical,key){const id=Object.entries(FIELD_KEY_BY_ID).find(([,mapped])=>mapped===key)?.[0]; return id?fieldById(canonical,id):null;}
 
 function transomChoices(product, selection) {
-  const rows = product.dimension_ranges.filter((row)=>!selection.thermal_spec || row.thermal_scope===selection.thermal_spec);
+  const rows = product.dimension_ranges.filter((row)=>thermalScopeMatches(row.thermal_scope,selection.thermal_spec));
   const values = uniq(rows.flatMap((row)=>row.transom==='ANY'?['NONE','PRESENT']:[row.transom]).filter((v)=>v!=='ANY'));
   return values.map((v)=>choice(v,LABELS.transom.get(v)??v));
 }
-function thermalChoices(product){return uniq(product.design_master.map((row)=>row.thermal_scope)).map((v)=>choice(v,LABELS.thermal_spec.get(v)??v));}
+function thermalChoices(product){
+  const formalScopes=uniq(product.design_master.map((row)=>row.thermal_scope));
+  return formalScopes.flatMap((v)=>v==='INSULATION_K2_K4'?['INSULATION_K2','INSULATION_K4']:[v]).map((v)=>choice(v,LABELS.thermal_spec.get(v)??v));
+}
 function designChoices(product,selection){
   const allowed=new Set(frameAllowedRows(product,{...selection,design:null}).filter(row=>!selection.opening_type||row.frame_configuration===selection.opening_type).map(row=>row.design_id));
-  return product.design_master.filter(row=>(!selection.thermal_spec||row.thermal_scope===selection.thermal_spec)&&allowed.has(row.design_id)).map(row=>choice(row.design_id,row.design_id));
+  return product.design_master.filter(row=>thermalScopeMatches(row.thermal_scope,selection.thermal_spec)&&allowed.has(row.design_id)).map(row=>choice(row.design_id,row.design_id));
 }
 function openingChoices(product,selection){return uniq(frameAllowedRows(product,{...selection,design:null}).map((row)=>row.frame_configuration)).map((v)=>choice(v,LABELS.opening_type.get(v)??v));}
-function childDoorChoices(product,selection){return product.child_doors.filter((row)=>!selection.thermal_spec||row.thermal_scope===selection.thermal_spec).map((row)=>choice(row.child_design,row.child_design));}
+function childDoorChoices(product,selection){return product.child_doors.filter((row)=>thermalScopeMatches(row.thermal_scope,selection.thermal_spec)).map((row)=>choice(row.child_design,row.child_design));}
 function sidelightChoices(canonical){return optionFromValueMaster(canonicalField(canonical,'sidelight_spec'));}
 function colorChoices(product,selection,kind){
   const master = kind==='body'?product.door_colors:product.frame_colors;
   let allowed = null;
-  if(kind==='body'&&selection.design){const row=product.design_color_allow.find((r)=>r.design_id===selection.design&&(!selection.thermal_spec||r.thermal_scope===selection.thermal_spec));if(row)allowed=new Set(splitCsv(row.allowed_door_colors));}
+  if(kind==='body'&&selection.design){const row=product.design_color_allow.find((r)=>r.design_id===selection.design&&thermalScopeMatches(r.thermal_scope,selection.thermal_spec));if(row)allowed=new Set(splitCsv(row.allowed_door_colors));}
   if(kind==='frame'&&selection.design&&selection.body_color){
     const required=product.frame_color_rules.find((r)=>r.constraint==='REQUIRED'&&splitCsv(r.design_scope).includes(selection.design)&&splitCsv(r.door_color_scope).includes(selection.body_color));
     if(required)allowed=new Set(splitCsv(required.frame_color_result));
@@ -104,7 +111,7 @@ function trimChoices(installation,kind){
 function optionChoices(option,selection,category){return option.user_options.filter((row)=>{if(category==='additional_key'&&!['RE3NF-OPT-CARD-BK','RE3NF-OPT-CARD-LG','RE3NF-OPT-TAG','RE3NF-OPT-REMOTE'].includes(row.option_id))return false;if(category==='option'&&['RE3NF-OPT-CARD-BK','RE3NF-OPT-CARD-LG','RE3NF-OPT-TAG','RE3NF-OPT-REMOTE'].includes(row.option_id))return false;try{const c=JSON.parse(row.visible_when??'{}');if(c.entry_system&&selection.lock_type!==c.entry_system)return false;if(c.door_color_not?.includes(selection.body_color))return false;}catch{}return true;}).map((row)=>choice(row.option_id,row.official_name));}
 function glassSpecChoice(product,selection){
   if(!selection.design)return[];
-  const scopes = selection.thermal_spec==='INSULATION_K2_K4'?['INSULATION_K2','INSULATION_K4']:[selection.thermal_spec];
+  const scopes = selection.thermal_spec==='INSULATION_K2_K4'?['INSULATION_K2','INSULATION_K4']:[selection.thermal_spec,formalThermalScope(selection.thermal_spec)];
   const rows=product.glass_master.filter((row)=>scopes.includes(row.thermal_scope)&&row.component==='BODY'&&splitCsv(row.design_scope).includes(selection.design));
   return uniq(rows.map((row)=>row.glass_spec)).map((v)=>choice(v,LABELS.glass_spec.get(v)??v));
 }
@@ -113,7 +120,7 @@ function glassSafetyApplicable(dependency,selection){
   const component = selection.opening_type==='DOUBLE'?'DOUBLE':selection.opening_type==='PARENT_CHILD'?'CHILD':'BODY';
   const targetDesign=component==='CHILD'?selection.child_door:selection.design;
   const rows=dependency.predicates.filter((row)=>row.predicate_id==='glass_safety_applicable'
-    && (row.thermal_scope==='ANY'||row.thermal_scope===selection.thermal_spec)
+    && (row.thermal_scope==='ANY'||thermalScopeMatches(row.thermal_scope,selection.thermal_spec))
     && (row.component_scope==='ANY'||row.component_scope===component)
     && (row.design_scope==='ANY'||splitCsv(row.design_scope).includes(targetDesign)))
     .sort((a,b)=>Number(b.priority)-Number(a.priority));
@@ -135,9 +142,9 @@ function matchingDimensionRows(product,selection,field){
   const scope=sizeScope(selection), entry=selection.lock_type, transom=selection.transom;
   if(!selection.thermal_spec||!scope||!transom||!entry)return [];
   const height=asNumber(selection.size_h);
-  const highRows=product.dimension_ranges.filter(row=>row.field==='frame_h'&&row.frame_scope==='HIGH_SIZE'&&row.thermal_scope===selection.thermal_spec&&row.transom===transom);
+  const highRows=product.dimension_ranges.filter(row=>row.field==='frame_h'&&row.frame_scope==='HIGH_SIZE'&&thermalScopeMatches(row.thermal_scope,selection.thermal_spec)&&row.transom===transom);
   const highSize=Boolean(currentDesign(product,selection)?.high_size_scope)&&highRows.some(row=>height!==null&&height>=row.min);
-  return product.dimension_ranges.filter(row=>row.field===field&&row.thermal_scope===selection.thermal_spec
+  return product.dimension_ranges.filter(row=>row.field===field&&thermalScopeMatches(row.thermal_scope,selection.thermal_spec)
     && (row.transom==='ANY'||row.transom===transom)&&(row.entry==='ANY'||row.entry===entry)
     && (highSize
       ? row.frame_scope===(field==='frame_h'?'HIGH_SIZE':`HIGH_SIZE_${scope}`)
