@@ -1,0 +1,10 @@
+{
+  "product_id": "SER-LIX-SAMOSL",
+  "version": "v0.7-R3",
+  "field": "options",
+  "master_file_id": "19sjSAPwyd30fF5akazldGs0wkhOGZF9v",
+  "runtime_manifest_id": "18OV2YEEaYCFBAlB6ZR-1uCulEuxYSfNu",
+  "parent_version": "v0.7-R2",
+  "scope": "ONE_OPTION_ONLY",
+  "source_scope": "IS8900 P55/P59 only; other facts retain accepted lineage"
+}

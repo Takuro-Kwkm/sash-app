@@ -1,0 +1,24 @@
+{
+  "product_id": "SER-LIX-SAMOSL",
+  "revision": "v0.7-R3",
+  "lifecycle_state": "FORMAL",
+  "parent_formal_version": "v0.7-R2",
+  "source_scope": "ONE_OPTION_ONLY",
+  "artifacts": {
+    "formal/PHASE3-THERMOSL-IS8900-20261006/LIXIL_ThermosL_AUTHORING_MASTER_v0.7-R3.xlsx": "42a1a159c199ac0290f4862b20381abf2450b686ae8a8a2abdaa2d428a8c73f8",
+    "formal/PHASE3-THERMOSL-IS8900-20261006/LIXIL_ThermosL_runtime_v0.7-R3.json": "1fd121e1dbcd0acc90eeb53dd5faed1a3193ff16b46159efee3ae0c1dcf12fd9",
+    "formal/PHASE3-THERMOSL-IS8900-20261006/LIXIL_ThermosL_runtime_manifest_v0.7-R3.json": "0fed18a4d317fa03cb0ef0463a0c17eb9f83e1bb84baa6628a6bdce73de62257",
+    "formal/PHASE3-THERMOSL-IS8900-20261006/LIXIL_ThermosL_PRODUCT_MASTER_MANIFEST_v0.7-R3.md": "4bed0044d7538f83538dd979e12c90c038b5dbebcd323722b957b28af535c107",
+    "formal/PHASE3-THERMOSL-IS8900-20261006/field-state.json": "2507072d66a0ed392808613722e4a2d4578385cdc960b93cb1d6908ec7672336",
+    "formal/PHASE3-THERMOSL-IS8900-20261006/evidence-acceptance.json": "dd81841b0141e9386b98b4230793ae5a689ba3a65c8810686cd1bb5e7cc5df3b",
+    "formal/PHASE3-THERMOSL-IS8900-20261006/promotion.json": "8a932ad9b0a2622166a1773e101e5d5b8cc0603e80c0fd06d1efbb3e522f2acb",
+    "formal/PHASE3-THERMOSL-IS8900-20261006/product-registry.json": "4ee309e98388e731a6a4828512200c07e9b3249cf5bc9d71dde208c18cc133df",
+    "formal/PHASE3-THERMOSL-IS8900-20261006/authority.json": "b35e934067a26e5910bcacbd887d487731012a18824232648460e747f0d953fa",
+    "formal/PHASE3-THERMOSL-IS8900-20261006/source-baseline.json": "1993271f1677fda4710eba394cdc6619797269a3bf50e1420bccfaadf13a297c"
+  },
+  "human_decision": {
+    "path": "formal/PHASE3-THERMOSL-IS8900-20261006/human-decision.json",
+    "sha256": "517ec4d2a576369c3d85b69654be13cb3b4165677a2060cfcc09f9ef964926fe",
+    "decision_ref": "CHAT_USER_APPROVAL_2026-10-06T22:36:21+09:00_PHASE3_THERMOSL"
+  }
+}

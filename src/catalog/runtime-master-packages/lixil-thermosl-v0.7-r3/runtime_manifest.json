@@ -1,0 +1,105 @@
+{
+  "schema_version": "1.0",
+  "manufacturer": "LIXIL",
+  "series": "サーモスL",
+  "target_formal_version": "v0.7-R3",
+  "package_version": "v0.7-R3",
+  "authoring_mode": "STANDALONE",
+  "authoring_file_name": "LIXIL_ThermosL_AUTHORING_MASTER_v0.7-R3.xlsx",
+  "authoring_file_id": "19sjSAPwyd30fF5akazldGs0wkhOGZF9v",
+  "authoring_sha256": "42a1a159c199ac0290f4862b20381abf2450b686ae8a8a2abdaa2d428a8c73f8",
+  "runtime_status": "READY",
+  "runtime_files": [
+    {
+      "role": "RUNTIME_JSON_PACKAGE",
+      "file_name": "LIXIL_ThermosL_runtime_v0.7-R3.json",
+      "file_id": "1l35TQI_sQJnd5191Us9kt2PMgnV71U7e",
+      "sha256": "1fd121e1dbcd0acc90eeb53dd5faed1a3193ff16b46159efee3ae0c1dcf12fd9",
+      "size_bytes": 5149779,
+      "entrypoint": true
+    }
+  ],
+  "runtime_qa": {
+    "file_name": "LIXIL_サーモスL_RUNTIME_QA_v0.7-R2.md",
+    "file_id": "15OqI2iWLFxECGjHXH1uGZeKOklPbwkgq",
+    "sha256": "3fb6c287df7d278bc7f22885f7be28b100287b0fb4dde3d0b8933f34bda4b186",
+    "size_bytes": 2959,
+    "structural_qa": "PASS",
+    "formal_qa": "PASS"
+  },
+  "qa_metrics": {
+    "active_window_types": 17,
+    "standard_size_records": 1644,
+    "selectable_standard_size_records": 1495,
+    "custom_dimension_rules": 50,
+    "golden_tests": "46/46 PASS",
+    "safe_standard_direct_evidence": 523,
+    "safe_standard_allowed": 517,
+    "safe_standard_blocked": 6,
+    "safe_standard_residual_ecr": 1121,
+    "standard_selector_combinations": 374166,
+    "custom_selector_combinations": 11700,
+    "unverified_qa_case_count": 0,
+    "estimate_confirm_auto_activation_violations": 0
+  },
+  "official_evidence": {
+    "SN1400": {
+      "file_id": "1y0AXa3iB5ycoFMqPGdXPgK1bC9pk3-_G",
+      "role": "PRIMARY_OFFICIAL_PDF_REFERENCE_ONLY",
+      "direct_delegation": true,
+      "pages": [
+        "P1/PDF3",
+        "P26/PDF30",
+        "P34/PDF38",
+        "P76/PDF80",
+        "P94/PDF98"
+      ]
+    },
+    "SDC0003156": "VERIFIED_SAFE_STANDARD_PARTIAL_MATRIX",
+    "SDC0003157": "VERIFIED_SAFE_STANDARD_PARTIAL_MATRIX"
+  },
+  "section20": {
+    "official_direct_delegation_evidence_found": true,
+    "result": "PASS",
+    "confirmation_route": "LIXIL見積システム",
+    "automatic_activation": false,
+    "formal_fallback_applied": true
+  },
+  "documentation_file": "LIXIL_ThermosL_PRODUCT_MASTER_MANIFEST_v0.7-R3.md",
+  "documentation_file_id": "1pCW4HViuxJkxyzc67fSqlBhL_8PxSzYR",
+  "storage_status": "DRIVE_CANONICAL",
+  "working_folder_id": "1PqgX6VbCBmdz121DgLG2xF-Z7aK-pbah",
+  "canonical_folder_id": "1H83njk7Gww0RJOZKntYBp5VxdaJD9Jc4",
+  "old_folder_id": "1LFQOkjIm_INOIu2muWyw6iCN3hqX9c7g",
+  "canonical_registry_status": "v0.7-R3_FORMAL_PASS",
+  "package_gate": "PASS_CONTENT_DEPENDENCY_QA",
+  "formal_pass": true,
+  "formal_adoption_permitted": true,
+  "blocking_items": [],
+  "generated_at": "2026-10-06T12:31:00Z",
+  "working_artifact_package_gate": "PASS",
+  "working_savepoint_gate": "PASS",
+  "formal_storage_gate": "PASS",
+  "registry_gate": "PASS",
+  "documentation_sha256": "4bed0044d7538f83538dd979e12c90c038b5dbebcd323722b957b28af535c107",
+  "current_canonical_package_count": 1,
+  "old_v0_7_R1_archived": true,
+  "scoped_change": {
+    "work_id": "PHASE3-THERMOSL-IS8900-20261006",
+    "parent_formal": "v0.7-R2",
+    "field": "options",
+    "new_value": "OP-SL-EMERGENCY-SKIRT",
+    "source_id": "1nxDq-qDTb3Gi_s8qPT6d3WpT5MzahCSe",
+    "source_sha256": "f9f6cdf5a86471fc634c9693ce5adc5bca47935c4ca9c4edcec2ab3061e5596c",
+    "source_pages": [
+      57,
+      61
+    ],
+    "scope": "MANUAL_STANDARD_ONLY",
+    "whole_catalogue_adoption": false,
+    "legacy_qa": "CARRY_FORWARD_UNCHANGED_MODULE_FACTS",
+    "changed_qa": "5/5 ACTUAL_RUNTIME_CANDIDATE_TESTS",
+    "decision_path": "formal/PHASE3-THERMOSL-IS8900-20261006/human-decision.json",
+    "publication_condition": "SAME_PACKET_HUMAN_APPROVAL_AND_NATIVE_READBACK_REQUIRED"
+  }
+}

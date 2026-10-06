@@ -28,7 +28,8 @@ const UCHIRIMO_ROOT = join(HERE, '../runtime-master-packages/ykkap-uchirimo-v1.0
 const UCHIRIMO_SLIM_ROOT = join(HERE, '../runtime-master-packages/ykkap-uchirimo-slim-v3-frame');
 const INPLUS_ROOT = join(HERE, '../runtime-master-packages/lixil-inplus-v0.4-r3-frame');
 const SAMOS2H_ROOT = join(HERE, '../runtime-master-packages/lixil-samos2h-v0.9-r4');
-const THERMOSL_ROOT = join(HERE, '../runtime-master-packages/lixil-thermosl-v0.7-r2');
+const THERMOSL_ROOT = join(HERE, '../runtime-master-packages/lixil-thermosl-v0.7-r3');
+const THERMOSL_BASE_ROOT = join(HERE, '../runtime-master-packages/lixil-thermosl-v0.7-r2');
 const RECHENT_ROOT = join(HERE, '../runtime-master-packages/lixil-rechent-door3-nonfire-v0.8-r8');
 const APW430_ROOT = join(HERE, '../runtime-master-packages/ykkap-apw430-20260918-r3');
 const APW431_ROOT = join(HERE, '../runtime-master-packages/ykkap-apw431-v1.2');
@@ -44,10 +45,10 @@ export const runtimeMasterInventory = Object.freeze([
     }),
   }),
   Object.freeze({
-    manufacturer:'LIXIL', series:'サーモスL', productId:'SER-LIX-SAMOSL', masterVersion:'v0.7-R2', schemaVersion:'2.0', packageType:'FORMAL_PRODUCT_RUNTIME', adapterType:'PRODUCT_MODULE_RUNTIME_V1', productModuleRole:'RUNTIME_JSON_PACKAGE', packageRoot:THERMOSL_ROOT,
-    runtimeManifestPath:join(THERMOSL_ROOT,'runtime_manifest.json'), runtimeManifestDriveFileId:'1c-VIgwTqPDTkas0apYqx30AN3PVa71p1', runtimeManifestSha256:'4cf2a4b1572f68288fa108ccd33d30cc80d5170f2f5303864ca56ca67c34cec3',
+    manufacturer:'LIXIL', series:'サーモスL', productId:'SER-LIX-SAMOSL', masterVersion:'v0.7-R3', schemaVersion:'2.0', packageType:'FORMAL_PRODUCT_RUNTIME', adapterType:'PRODUCT_MODULE_RUNTIME_V1', productModuleRole:'RUNTIME_JSON_PACKAGE', packageRoot:THERMOSL_ROOT,
+    runtimeManifestPath:join(THERMOSL_ROOT,'runtime_manifest.json'), runtimeManifestDriveFileId:'18OV2YEEaYCFBAlB6ZR-1uCulEuxYSfNu', runtimeManifestSha256:'0fed18a4d317fa03cb0ef0463a0c17eb9f83e1bb84baa6628a6bdce73de62257',
     materializedFiles:Object.freeze({
-      '12G_Edo55NWgu38gJjTGcqDZ7HsdpAH2I':Object.freeze({codec:'brotli',paths:Object.freeze([join(THERMOSL_ROOT,'LIXIL_サーモスL_runtime_v0.7-R2.json.br.b64.parts/part-00')])}),
+      '1l35TQI_sQJnd5191Us9kt2PMgnV71U7e':Object.freeze({codec:'json-transform-v1',base:Object.freeze({codec:'brotli',paths:Object.freeze([join(THERMOSL_BASE_ROOT,'LIXIL_サーモスL_runtime_v0.7-R2.json.br.b64.parts/part-00')])}),transformPath:join(THERMOSL_ROOT,'runtime-transform.json')}),
     }),
   }),
   Object.freeze({
@@ -168,3 +169,4 @@ export async function loadRegisteredRuntime(manufacturer, series) {
   if (!runtimePromises.has(key)) runtimePromises.set(key, loadRuntime(entry).catch((error) => { runtimePromises.delete(key); throw error; }));
   return runtimePromises.get(key);
 }
+

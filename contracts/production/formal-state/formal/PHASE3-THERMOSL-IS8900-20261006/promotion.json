@@ -1,0 +1,8 @@
+{
+  "product_id": "SER-LIX-SAMOSL",
+  "from_version": "v0.7-R2",
+  "to_version": "v0.7-R3",
+  "work_id": "PHASE3-THERMOSL-IS8900-20261006",
+  "state": "FORMAL",
+  "decision_path": "formal/PHASE3-THERMOSL-IS8900-20261006/human-decision.json"
+}

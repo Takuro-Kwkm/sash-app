@@ -1,0 +1,11 @@
+{
+  "field_id": "sash-app:SER-LIX-SAMOSL:options",
+  "lifecycle_state": "FORMAL",
+  "promotion_work": "PHASE3-THERMOSL-IS8900-20261006",
+  "new_value": "OP-SL-EMERGENCY-SKIRT",
+  "evidence_ids": [
+    "EV-SL-IS8900-EMERGENCY-SKIRT"
+  ],
+  "confirmation_required": true,
+  "human_decision_path": "formal/PHASE3-THERMOSL-IS8900-20261006/human-decision.json"
+}
