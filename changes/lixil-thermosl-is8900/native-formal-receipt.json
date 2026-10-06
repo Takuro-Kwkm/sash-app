@@ -1,0 +1,47 @@
+{
+  "status": "POST_SAVE_VERIFIED",
+  "plan_sha256": "a4404e1643230ed057571758fbc6ce9d347d48d09b2bd69630d8b6596e6337a8",
+  "decision_ref": "CHAT_USER_APPROVAL_2026-10-06T22:36:21+09:00_PHASE3_THERMOSL",
+  "registry_entry": {
+    "": "4",
+    "manufacturer": "LIXIL",
+    "series": "サーモスL",
+    "package_version": "v0.7-R3",
+    "master_status": "FORMAL_PASS",
+    "authoring_status": "PASS",
+    "authoring_file_name": "LIXIL_ThermosL_AUTHORING_MASTER_v0.7-R3.xlsx",
+    "authoring_file_id": "19sjSAPwyd30fF5akazldGs0wkhOGZF9v",
+    "runtime_status": "READY",
+    "runtime_manifest_id": "18OV2YEEaYCFBAlB6ZR-1uCulEuxYSfNu",
+    "runtime_file_count": "1",
+    "documentation_status": "PASS",
+    "documentation_file_id": "1pCW4HViuxJkxyzc67fSqlBhL_8PxSzYR",
+    "package_gate": "PASS",
+    "storage_gate": "PASS",
+    "duplicate_check": "PASS",
+    "version_check": "PASS",
+    "canonical_folder": "04_商品マスター/01_LIXIL/サーモスL/01_正本",
+    "canonical_folder_id": "1H83njk7Gww0RJOZKntYBp5VxdaJD9Jc4",
+    "working_folder_id": "1PqgX6VbCBmdz121DgLG2xF-Z7aK-pbah",
+    "old_folder_id": "1LFQOkjIm_INOIu2muWyw6iCN3hqX9c7g",
+    "blocking_category": "",
+    "blocking_items": "",
+    "updated_at": "2026-10-06",
+    "next_action": "v0.7-R3: IS8900代替進入口用幅木仕様・手動標準のみ。製作・組合せ・価格確認継続。その他カタログ改訂は未採用。"
+  },
+  "downloaded_artifact_hashes": {
+    "19sjSAPwyd30fF5akazldGs0wkhOGZF9v": "42a1a159c199ac0290f4862b20381abf2450b686ae8a8a2abdaa2d428a8c73f8",
+    "1l35TQI_sQJnd5191Us9kt2PMgnV71U7e": "1fd121e1dbcd0acc90eeb53dd5faed1a3193ff16b46159efee3ae0c1dcf12fd9",
+    "18OV2YEEaYCFBAlB6ZR-1uCulEuxYSfNu": "0fed18a4d317fa03cb0ef0463a0c17eb9f83e1bb84baa6628a6bdce73de62257",
+    "1pCW4HViuxJkxyzc67fSqlBhL_8PxSzYR": "4bed0044d7538f83538dd979e12c90c038b5dbebcd323722b957b28af535c107"
+  },
+  "raw_connector_refs": [
+    "Drive savepoint: exact raw connector observations and downloads archived separately"
+  ],
+  "native_partial_save_recovery": {
+    "status": "PASS",
+    "partial_count": 1,
+    "expected_count": 4,
+    "blocked_before_promotion": true
+  }
+}

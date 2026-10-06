@@ -1,24 +1,108 @@
 {
   "registry_id": "window-production-connections-v2",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "status": "CURRENT",
-  "change_triggers": ["変更", "改訂", "更新", "反映", "再開", "正式採用", "catalog change"],
+  "change_triggers": [
+    "変更",
+    "改訂",
+    "更新",
+    "反映",
+    "再開",
+    "正式採用",
+    "catalog change"
+  ],
   "products": [
     {
       "product_id": "SER-LIX-EW",
-      "aliases": ["EW", "LIXIL EW"],
+      "aliases": [
+        "EW",
+        "LIXIL EW"
+      ],
       "repository": "Takuro-Kwkm/sash-app",
       "connection_state": "CONNECTED",
       "default_gate": "FORMAL_CHANGE_ADOPTION",
-      "baseline_selector": {"registry_id": "1HMMZ8JdsbJPtL_8LjQfxMF8P_Zb4-LReqvPMFn1pJks", "manufacturer": "LIXIL", "series": "EW"},
-      "source_selector": {"from": "CURRENT_FORMAL.runtime_manifest.catalog_change", "role": "CURRENT_ADOPTED", "official_scope": "東北以南・通常EW・EW防火戸除外"},
+      "baseline_selector": {
+        "registry_id": "1HMMZ8JdsbJPtL_8LjQfxMF8P_Zb4-LReqvPMFn1pJks",
+        "manufacturer": "LIXIL",
+        "series": "EW"
+      },
+      "source_selector": {
+        "from": "CURRENT_FORMAL.runtime_manifest.catalog_change",
+        "role": "CURRENT_ADOPTED",
+        "official_scope": "東北以南・通常EW・EW防火戸除外"
+      },
       "native_adapter": "scripts/production/ew-change.py",
-      "validators": ["native-package-integrity", "native-registry-identity", "official-source-identity", "ew-runtime-parity", "window-selection-contract", "scoped-regression"],
+      "validators": [
+        "native-package-integrity",
+        "native-registry-identity",
+        "official-source-identity",
+        "ew-runtime-parity",
+        "window-selection-contract",
+        "scoped-regression"
+      ],
       "resume_selector": "work_id + immutable spec hash + source/master/authority/runtime byte hashes"
     },
-    {"product_id":"SER-LIX-EW-FIRE","aliases":["EW防火戸"],"repository":"Takuro-Kwkm/sash-app","connection_state":"ADAPTER_PENDING"},
-    {"product_id":"SER-LIX-TW","aliases":["TW"],"repository":"Takuro-Kwkm/sash-app","connection_state":"ADAPTER_PENDING"},
-    {"product_id":"LIXIL-LASISSA-S-PARENT-CHILD","aliases":["親子ドア"],"repository":"Takuro-Kwkm/interior-estimator","connection_state":"ADAPTER_PENDING"},
-    {"product_id":"LIXIL-CARPORT-SC","aliases":["SC","カーポートSC"],"repository":"Takuro-Kwkm/exterior-estimator","connection_state":"ADAPTER_PENDING"}
+    {
+      "product_id": "SER-LIX-SAMOSL",
+      "aliases": [
+        "サーモスL",
+        "サーモスＬ",
+        "ThermosL"
+      ],
+      "repository": "Takuro-Kwkm/sash-app",
+      "connection_state": "CONNECTED",
+      "default_gate": "FORMAL_CHANGE_ADOPTION",
+      "baseline_selector": {
+        "manufacturer": "LIXIL",
+        "series": "サーモスL",
+        "registry_id": "1HMMZ8JdsbJPtL_8LjQfxMF8P_Zb4-LReqvPMFn1pJks"
+      },
+      "source_selector": {
+        "official_id": "1nxDq-qDTb3Gi_s8qPT6d3WpT5MzahCSe",
+        "scope": "ONE_OPTION_ONLY"
+      },
+      "native_adapter": "scripts/production/thermosl-change.py",
+      "validators": [
+        "native-sheet-preservation",
+        "scoped-official-claim",
+        "actual-runtime-ui-candidate"
+      ],
+      "resume_selector": "IMMUTABLE_SPEC_AND_JOURNAL",
+      "current_formal_selector": "contracts/production/formal-state/current/SER-LIX-SAMOSL.json",
+      "formal_state_root": "contracts/production/formal-state"
+    },
+    {
+      "product_id": "SER-LIX-EW-FIRE",
+      "aliases": [
+        "EW防火戸"
+      ],
+      "repository": "Takuro-Kwkm/sash-app",
+      "connection_state": "ADAPTER_PENDING"
+    },
+    {
+      "product_id": "SER-LIX-TW",
+      "aliases": [
+        "TW"
+      ],
+      "repository": "Takuro-Kwkm/sash-app",
+      "connection_state": "ADAPTER_PENDING"
+    },
+    {
+      "product_id": "LIXIL-LASISSA-S-PARENT-CHILD",
+      "aliases": [
+        "親子ドア"
+      ],
+      "repository": "Takuro-Kwkm/interior-estimator",
+      "connection_state": "ADAPTER_PENDING"
+    },
+    {
+      "product_id": "LIXIL-CARPORT-SC",
+      "aliases": [
+        "SC",
+        "カーポートSC"
+      ],
+      "repository": "Takuro-Kwkm/exterior-estimator",
+      "connection_state": "ADAPTER_PENDING"
+    }
   ]
 }

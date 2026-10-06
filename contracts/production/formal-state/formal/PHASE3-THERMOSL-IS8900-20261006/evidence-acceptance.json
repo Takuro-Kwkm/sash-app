@@ -1,0 +1,10 @@
+{
+  "evidence_id": "EV-SL-IS8900-EMERGENCY-SKIRT",
+  "accepted_source_sha256": "f9f6cdf5a86471fc634c9693ce5adc5bca47935c4ca9c4edcec2ab3061e5596c",
+  "pages": [
+    57,
+    61
+  ],
+  "scope": "MANUAL_STANDARD_ONLY",
+  "decision_required": true
+}

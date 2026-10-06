@@ -1,7 +1,7 @@
 {
   "scope_product_id": "SER-LIX-SAMOSL",
   "work_id": "PHASE3-THERMOSL-IS8900-20261006",
-  "status": "PROPOSED_PENDING_HUMAN",
+  "status": "ADOPTED",
   "before": {
     "id": "SER-LIX-SAMOSL",
     "packageVersion": "v0.7-R2",
@@ -25,6 +25,10 @@
     "status": "READY"
   },
   "runtime_sha256": "1fd121e1dbcd0acc90eeb53dd5faed1a3193ff16b46159efee3ae0c1dcf12fd9",
-  "human_decision_ref": null,
-  "native_formal_readback": null
+  "human_decision_ref": "CHAT_USER_APPROVAL_2026-10-06T22:36:21+09:00_PHASE3_THERMOSL",
+  "native_formal_readback": {
+    "status": "POST_SAVE_VERIFIED",
+    "receipt": "changes/lixil-thermosl-is8900/native-formal-receipt.json"
+  },
+  "current_formal_selector": "contracts/production/formal-state/current/SER-LIX-SAMOSL.json"
 }
