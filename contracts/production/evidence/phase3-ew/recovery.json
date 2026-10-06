@@ -1,0 +1,56 @@
+{
+  "full_gate": "NOT_PASS",
+  "conditions": [
+    {
+      "condition": "stale_branch",
+      "mode": "INJECTED_ON_REAL_PRODUCTION_BOUND_CHECKPOINT",
+      "result": "RECOVERABLE_BLOCKED",
+      "blocker": "REPOSITORY_HEAD_CHANGED",
+      "completed_journal_preserved": true
+    },
+    {
+      "condition": "repository_HEAD_change",
+      "mode": "INJECTED_ON_REAL_PRODUCTION_BOUND_CHECKPOINT",
+      "result": "RECOVERABLE_BLOCKED",
+      "blocker": "REPOSITORY_HEAD_CHANGED",
+      "completed_journal_preserved": true
+    },
+    {
+      "condition": "source_fetch_failure",
+      "mode": "INJECTED_ON_REAL_PRODUCTION_BOUND_CHECKPOINT",
+      "result": "RECOVERABLE_BLOCKED",
+      "blocker": "CONNECTOR_FAILURE",
+      "completed_journal_preserved": true
+    },
+    {
+      "condition": "changed_authority",
+      "mode": "INJECTED_ON_REAL_PRODUCTION_BOUND_CHECKPOINT",
+      "result": "RECOVERABLE_BLOCKED",
+      "blocker": "LIVE_AUTHORITY_CHANGED",
+      "completed_journal_preserved": true
+    },
+    {
+      "condition": "unavailable_source",
+      "mode": "REAL_CAPTURED_SOURCE_TEMPORARILY_UNAVAILABLE",
+      "result": "RECOVERABLE_BLOCKED",
+      "blocker": "REFERENCE_MISSING",
+      "completed_journal_preserved": true
+    },
+    {
+      "condition": "CI_failure",
+      "result": "NOT_VERIFIED_IN_REAL_PRODUCTION_DAG"
+    },
+    {
+      "condition": "validator_failure",
+      "result": "NOT_VERIFIED_IN_REAL_PRODUCTION_DAG"
+    },
+    {
+      "condition": "partial_save",
+      "result": "NOT_VERIFIED_IN_REAL_PRODUCTION_DAG"
+    },
+    {
+      "condition": "git_conflict",
+      "result": "NOT_VERIFIED_IN_REAL_PRODUCTION_DAG"
+    }
+  ]
+}

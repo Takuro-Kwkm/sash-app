@@ -1,0 +1,39 @@
+{
+  "status": "PASS",
+  "widths": [
+    {
+      "width": 1280,
+      "standard": "PASS",
+      "custom_boundary": "PASS",
+      "fire_exclusion": "PASS",
+      "save": "PASS",
+      "reload": "PASS",
+      "estimate": "PASS",
+      "overflow": "PASS",
+      "package_version": "v1.4"
+    },
+    {
+      "width": 768,
+      "standard": "PASS",
+      "custom_boundary": "PASS",
+      "fire_exclusion": "PASS",
+      "save": "PASS",
+      "reload": "PASS",
+      "estimate": "PASS",
+      "overflow": "PASS",
+      "package_version": "v1.4"
+    },
+    {
+      "width": 390,
+      "standard": "PASS",
+      "custom_boundary": "PASS",
+      "fire_exclusion": "PASS",
+      "save": "PASS",
+      "reload": "PASS",
+      "estimate": "PASS",
+      "overflow": "PASS",
+      "package_version": "v1.4"
+    }
+  ],
+  "errors": []
+}

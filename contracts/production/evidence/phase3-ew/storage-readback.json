@@ -1,0 +1,166 @@
+{
+  "status": "LOCAL_SAVED_AND_READ_BACK",
+  "cloud": "PENDING",
+  "native_saved_artifacts": [
+    {
+      "path": "PRODUCTION_RESOLUTION.json",
+      "sha256": "d70b994aee4114fda2485ba0a11d040bdae2df0da066359256c4bb044e32505e",
+      "bytes": 2442
+    },
+    {
+      "path": "BASELINE_RESOLUTION.json",
+      "sha256": "a18b72b54c232613e74eae0b83559eeff91d4ac01627a7f2c21809192b53a3ca",
+      "bytes": 3073
+    },
+    {
+      "path": "SOURCE_RESOLUTION.json",
+      "sha256": "c87c82cb2ab2e9585e4e4cab8c6c5f5e27832fae6b5f5e65afd636af80dd4a87",
+      "bytes": 2011
+    },
+    {
+      "path": "SOURCE_DELTA.json",
+      "sha256": "c87c82cb2ab2e9585e4e4cab8c6c5f5e27832fae6b5f5e65afd636af80dd4a87",
+      "bytes": 2011
+    },
+    {
+      "path": "IMPACT_SCOPE.json",
+      "sha256": "5ca9c1e598ef4f5fe755b9e0e16a49356f408b9010b9c0c27f9c518e26953003",
+      "bytes": 1957
+    },
+    {
+      "path": "CARRY_FORWARD.json",
+      "sha256": "3dad4083a0595b123bf6735019d7ab4b6b2cc586fe8b7f9767a6792f522ce981",
+      "bytes": 1410
+    },
+    {
+      "path": "CHANGE_APPLICATION.json",
+      "sha256": "6a4c746937871eb813a95261203166b90a7fe6383efeeebe111db515dd3b2dfc",
+      "bytes": 202
+    },
+    {
+      "path": "NATIVE_QA.json",
+      "sha256": "30533311efb2686de166b5c9841fbe5b03cf5b8cca4cad8c09adbf4c0b85125e",
+      "bytes": 2340
+    },
+    {
+      "path": "QA_READY.json",
+      "sha256": "e52984b674a9c9f1c0eeb9a902fc101662bfcb64a0414347ff60a6cfd0cca7b2",
+      "bytes": 168
+    },
+    {
+      "path": "FORMAL_REVIEW.json",
+      "sha256": "b52cddde008a19be7c31a0678ca45e07a66a75208c32b9cf282bec3d2c3adfdd",
+      "bytes": 7054
+    },
+    {
+      "path": "FORMAL_ADOPTION.json",
+      "sha256": "c55fd5d206a14beed27b8cc98babc787fbe898c773ab984004764323f55c4b51",
+      "bytes": 266
+    },
+    {
+      "path": "DOWNSTREAM_IMPACT.json",
+      "sha256": "64253e8e843252d3635c0f909896bbe8308d68d0c42aa1cb426f4ab03d82502f",
+      "bytes": 1975
+    },
+    {
+      "path": "selected-master.zip",
+      "sha256": "31e889e2358dce97c432652df5bb640816f207752ff7765379ddf6167f637fd0",
+      "bytes": 614512
+    },
+    {
+      "path": "runtime-parity.json",
+      "sha256": "e1049036db4f8953927a1aa3f91c2b5a41f53469492d8a3e7fac5914e9892a68",
+      "bytes": 1165
+    }
+  ],
+  "checkpoint_files": {
+    "FORMAL_ADOPTION.json": {
+      "sha256": "c55fd5d206a14beed27b8cc98babc787fbe898c773ab984004764323f55c4b51",
+      "bytes": 266
+    },
+    "DOWNSTREAM_IMPACT.json": {
+      "sha256": "64253e8e843252d3635c0f909896bbe8308d68d0c42aa1cb426f4ab03d82502f",
+      "bytes": 1975
+    },
+    "workflow-result.json": {
+      "sha256": "7f369b6eeebdb6e5feb3c29806f48cbd87e03ec2c132672f90664943d27e723a",
+      "bytes": 11149
+    },
+    "PRODUCTION_RESOLUTION.json": {
+      "sha256": "d70b994aee4114fda2485ba0a11d040bdae2df0da066359256c4bb044e32505e",
+      "bytes": 2442
+    },
+    "SOURCE_RESOLUTION.json": {
+      "sha256": "c87c82cb2ab2e9585e4e4cab8c6c5f5e27832fae6b5f5e65afd636af80dd4a87",
+      "bytes": 2011
+    },
+    "SOURCE_DELTA.json": {
+      "sha256": "c87c82cb2ab2e9585e4e4cab8c6c5f5e27832fae6b5f5e65afd636af80dd4a87",
+      "bytes": 2011
+    },
+    "resume-spec.json": {
+      "sha256": "b13f9fa13b57429ce6b3f33d7c4df2bbb55321c9a1753cce8b49930eb86841dd",
+      "bytes": 18511
+    },
+    "NATIVE_READBACK.json": {
+      "sha256": "25373087c5f093f8e10b2f29216d1416e76c786a462e3398d4a2763074e17748",
+      "bytes": 3431
+    },
+    "NATIVE_QA.json": {
+      "sha256": "30533311efb2686de166b5c9841fbe5b03cf5b8cca4cad8c09adbf4c0b85125e",
+      "bytes": 2340
+    },
+    "QA_READY.json": {
+      "sha256": "e52984b674a9c9f1c0eeb9a902fc101662bfcb64a0414347ff60a6cfd0cca7b2",
+      "bytes": 168
+    },
+    "CARRY_FORWARD.json": {
+      "sha256": "3dad4083a0595b123bf6735019d7ab4b6b2cc586fe8b7f9767a6792f522ce981",
+      "bytes": 1410
+    },
+    "selected-master.zip": {
+      "sha256": "31e889e2358dce97c432652df5bb640816f207752ff7765379ddf6167f637fd0",
+      "bytes": 614512
+    },
+    "workflow-events.json": {
+      "sha256": "d2c2d46566cd88e6c3b8bfb22c0e3a172afc2791b0fbdf14a7cd1b97e129f4d9",
+      "bytes": 67021
+    },
+    "IMPACT_SCOPE.json": {
+      "sha256": "5ca9c1e598ef4f5fe755b9e0e16a49356f408b9010b9c0c27f9c518e26953003",
+      "bytes": 1957
+    },
+    "production-result.json": {
+      "sha256": "7f369b6eeebdb6e5feb3c29806f48cbd87e03ec2c132672f90664943d27e723a",
+      "bytes": 11149
+    },
+    "runtime-parity.json": {
+      "sha256": "e1049036db4f8953927a1aa3f91c2b5a41f53469492d8a3e7fac5914e9892a68",
+      "bytes": 1165
+    },
+    "workflow-binding.json": {
+      "sha256": "f7122131a7714d96c81cd85221fab8f0eca78f045c0eb71f8dceb7fa27295a8d",
+      "bytes": 21818
+    },
+    "FORMAL_REVIEW.json": {
+      "sha256": "b52cddde008a19be7c31a0678ca45e07a66a75208c32b9cf282bec3d2c3adfdd",
+      "bytes": 7054
+    },
+    "COMPLETION.json": {
+      "sha256": "74454ee575ba13a7be7c2d48074c7cf29cb46e839d7d34a17faecef303665a89",
+      "bytes": 2677
+    },
+    "authority-snapshot.json": {
+      "sha256": "7c09b5ec3cdaaf03edc85f18a3e46fd42daeb9c2beb34bb2deb2cc2b2fec2c62",
+      "bytes": 9747
+    },
+    "BASELINE_RESOLUTION.json": {
+      "sha256": "a18b72b54c232613e74eae0b83559eeff91d4ac01627a7f2c21809192b53a3ca",
+      "bytes": 3073
+    },
+    "CHANGE_APPLICATION.json": {
+      "sha256": "6a4c746937871eb813a95261203166b90a7fe6383efeeebe111db515dd3b2dfc",
+      "bytes": 202
+    }
+  }
+}

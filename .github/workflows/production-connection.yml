@@ -1,0 +1,46 @@
+name: Production Connection EW
+on:
+  pull_request:
+    paths: ['contracts/production/**', 'scripts/production/**', '.github/workflows/production-connection.yml']
+  push:
+    branches: [main, 'feat/phase3-ew-production-connection']
+    paths: ['contracts/production/**', 'scripts/production/**', '.github/workflows/production-connection.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  production-compatibility:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    env:
+      HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.HEAD_SHA }}
+      - run: test "$(git rev-parse HEAD)" = "$HEAD_SHA"
+      - uses: actions/setup-node@v4
+        with: {node-version: 24}
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12.14'}
+      - name: Check native adapters and existing application
+        run: |
+          python -m py_compile scripts/production/*.py
+          npm run lint
+          npm run typecheck
+          npm test
+          node scripts/production/ew-parity.mjs artifacts/production/ew-parity.json
+      - run: npm install --no-save playwright@1.58.2 && npx playwright install --with-deps chromium
+      - name: Build actual EW Runtime and verify three UI widths
+        env:
+          EW_PREVIEW_HTML: artifacts/production/index.html
+          EW_QA_OUTPUT: artifacts/production/browser
+        run: |
+          node scripts/build-ew-runtime-review-preview.mjs artifacts/production/index.html
+          node test/browser/ew-october-2026-browser-qa.mjs
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: production-ew-${{ env.HEAD_SHA }}
+          path: artifacts/production/
+          if-no-files-found: error

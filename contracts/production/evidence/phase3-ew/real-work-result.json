@@ -1,0 +1,46 @@
+{
+  "phase": "Phase 3",
+  "full_completion_gate": "NOT_PASS",
+  "repository": "Takuro-Kwkm/sash-app",
+  "product": "SER-LIX-EW",
+  "starting_head": "c9972b0dc841456648c23796a4239c9e2ca8b91e",
+  "source": "IS8800 2026-10 708 pages",
+  "source_sha256": "1c3e420f8377df161be4b9995f03d016badd0b7930403a9adfa61f53bd939686",
+  "source_bytes": 41640041,
+  "current_formal_package_sha256": "31e889e2358dce97c432652df5bb640816f207752ff7765379ddf6167f637fd0",
+  "native_authoring_sheets_equal": 51,
+  "source_delta": "UNCHANGED",
+  "impacted_fields": 0,
+  "carry_forward_fields": 29,
+  "qa_ready": "PASS_CURRENT_NO_CHANGE_SCOPE",
+  "formal_adoption": "EXISTING_FORMAL_MAINTAINED; NO_NEW_PROMOTION",
+  "downstream": "15/15 NO_CHANGE_REQUIRED",
+  "real_work_dag": "COMPLETED 29 steps",
+  "runtime_parity": "PASS 7 checks",
+  "browser": "PASS 1280/768/390px",
+  "production_regression": {
+    "status": "PASS",
+    "tests": 622
+  },
+  "central_regression": {
+    "test_count": 452,
+    "pass_count": 452,
+    "fail_count": 0,
+    "error_count": 0,
+    "skip_count": 0,
+    "status": "PASS",
+    "negative_test_count": 130
+  },
+  "not_verified": [
+    "changed-field Formal adoption",
+    "changed downstream production update",
+    "future source discovery beyond accepted Current source",
+    "multi-product adapters",
+    "CI failure recovery",
+    "validator failure recovery",
+    "partial save recovery",
+    "Git conflict recovery"
+  ],
+  "architecture_deviation": 0,
+  "PR_CI_POSTMERGE": "PENDING"
+}
