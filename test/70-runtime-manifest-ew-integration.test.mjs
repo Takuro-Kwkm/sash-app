@@ -7,8 +7,8 @@ import { NEW_CONSTRUCTION_SASH_UI_STANDARD_ORDER } from '../src/catalog/runtime-
 const PRODUCT_ID='SER-LIX-EW';
 const TARGET_WINDOW='WT-EW-TATE-SUBERI';
 const TARGET_SPEC='SP-EW-TATE-T';
-const RUNTIME_SHA='a59848642ae301dcf8a275b7a43bdceb64a7d9e6488a5c79eca21584178be830';
-const MANIFEST_ID='140pCgz2uhukjOjd1wymuISuAMjhaBpCS';
+const RUNTIME_SHA='e3c5976d46268cb9e670491e2256613330ab776c1fb0cc9e6ad5b8e65bb01199';
+const MANIFEST_ID='1J57G8UG_oJJ4dMgnCh6WsUx9e-tcjLvZ';
 
 const field=(result,key)=>result.fields.find((row)=>row.key===key);
 const values=(result,key)=>field(result,key)?.values?.map((row)=>row.value)??[];
@@ -31,12 +31,12 @@ async function targetStandardSelection(){
   return {selection:{...base,size,exterior_color:exterior,interior_color:interior,glass_base:glass},result};
 }
 
-test('EW v1.3 canonical manifest and Runtime bytes load read-only with exact identity and SHA',async()=>{
+test('EW v1.4 canonical manifest and Runtime bytes load read-only with exact identity and SHA',async()=>{
   const runtime=await loadRegisteredRuntime('LIXIL','EW');
   assert.ok(runtime);
   assert.equal(runtime.normalizedManifest.manufacturer,'LIXIL');
   assert.equal(runtime.normalizedManifest.series,'EW');
-  assert.equal(runtime.normalizedManifest.packageVersion,'v1.3');
+  assert.equal(runtime.normalizedManifest.packageVersion,'v1.4');
   assert.equal(runtime.normalizedManifest.schemaVersion,'2.0');
   assert.equal(runtime.normalizedManifest.runtimeStatus,'READY');
   assert.equal(runtime.normalizedManifest.formalPass,true);
@@ -59,14 +59,14 @@ test('EW is registered declaratively as a ready new-construction exterior-window
   assert.equal(ew.selectable,true);
   assert.equal(ew.manufacturer,'LIXIL');
   assert.equal(ew.series,'EW');
-  assert.equal(ew.packageVersion,'v1.3');
+  assert.equal(ew.packageVersion,'v1.4');
   assert.equal(ew.schemaVersion,'2.0');
   assert.equal(ew.uiCategory,'NEW_CONSTRUCTION_EXTERIOR_WINDOW');
   assert.equal(ew.adapterType,'CANONICAL_WORKBOOK_REFERENCE_V1');
   assert.equal(ew.sourceHash,RUNTIME_SHA);
 });
 
-test('EW canonical adapter preserves formal v1.3 source counts without inventing standard size records',async()=>{
+test('EW canonical adapter preserves formal v1.4 source counts without inventing standard size records',async()=>{
   const runtime=await loadRegisteredRuntime('LIXIL','EW');
   assert.equal(runtime.master.capabilities.runtimeContract,'canonical_workbook_reference_v1');
   assert.equal(runtime.master.capabilities.sourceStandardSizeRows,1721);

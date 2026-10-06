@@ -1,0 +1,31 @@
+{
+  "work_id": "EW-CATALOG-202610-R1",
+  "status": "FORMAL_ADOPTED",
+  "scope_product_id": "SER-LIX-EW",
+  "before": {
+    "id": "SER-LIX-EW",
+    "packageVersion": "v1.3",
+    "sourceHash": "a59848642ae301dcf8a275b7a43bdceb64a7d9e6488a5c79eca21584178be830",
+    "canonicalRuntimeReference": {
+      "runtimeManifestDriveFileId": "140pCgz2uhukjOjd1wymuISuAMjhaBpCS",
+      "runtimeDriveFileId": "11ZmCPKceAmp3OEyJIXy79VoO8PEk_oYw",
+      "canonicalFolderId": "1mDsi9amFdD5A9N8XrommExB_EMZDQiqu"
+    },
+    "status": "READY"
+  },
+  "after": {
+    "id": "SER-LIX-EW",
+    "packageVersion": "v1.4",
+    "sourceHash": "e3c5976d46268cb9e670491e2256613330ab776c1fb0cc9e6ad5b8e65bb01199",
+    "canonicalRuntimeReference": {
+      "runtimeManifestDriveFileId": "1J57G8UG_oJJ4dMgnCh6WsUx9e-tcjLvZ",
+      "runtimeDriveFileId": "1xn99vpPVAk0hyOWOa38pBKdLhEIZxqi5",
+      "canonicalFolderId": "1mDsi9amFdD5A9N8XrommExB_EMZDQiqu"
+    },
+    "status": "READY"
+  },
+  "runtime_sha256": "e3c5976d46268cb9e670491e2256613330ab776c1fb0cc9e6ad5b8e65bb01199",
+  "authorization": "USER_EXPLICIT_FULL_CHANGE_ADOPTION_20261006",
+  "central_commit": "0e500aed262edf82a40aa4e3786952efefad7be9",
+  "source_registry_drive_file_id": "1HMMZ8JdsbJPtL_8LjQfxMF8P_Zb4-LReqvPMFn1pJks"
+}
