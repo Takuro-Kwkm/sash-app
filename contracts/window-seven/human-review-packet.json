@@ -3,7 +3,7 @@
   "authority_sha": "53a1c39d475acafc09da4b6c13811cdf0bfefd23",
   "application_baseline_sha": "af4f30983cc3d9a24ca1a7eb54fab834f024d0fc",
   "scope": "Application Selection Field governance only; no Runtime/Product Master mutation or manufacturer orderability approval.",
-  "evidence_candidates_sha256": "99fdae359d55171419dd9b198856734f69a9a3339b4ca88ef0844d843d92834f",
+  "evidence_candidates_sha256": "d884a25f3925b63db2a13b816c0912e2650565b755d7a5e1bf5b059db447c0c1",
   "inventory_sha256": "2b32674f116c21897b77eca655b2981abf00b2dee01f2606f77fd347615f5047",
   "existing_decisions_requiring_reapproval": 0,
   "fields": [
@@ -36579,5 +36579,5 @@
     }
   ],
   "human_decision": null,
-  "packet_content_sha256": "4a1ae1319eceedb3a113898c32410dba95207311e057415e9b7e4792b3700400"
+  "packet_content_sha256": "591f11c7bd90a819d39f0e936209dce465a5e099cf7b5fd5a60ab68cf6999636"
 }

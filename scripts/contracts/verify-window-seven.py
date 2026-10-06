@@ -71,6 +71,8 @@ with tempfile.TemporaryDirectory() as td:
     for e in candidates:
         v=dict(e);h=v.pop('payload_sha256');check(digest(v)==h,'Candidate payload changed')
         check(e['status']=='CANDIDATE_NOT_ACCEPTED' and e['decision'] is None,'Invented evidence acceptance')
+        extra=e['source_identity'].get('current_formal_option_authority')
+        if extra:check(sha(ROOT/extra['path'])==extra['sha256'],'Current R6 Formal option evidence changed')
     diff=subprocess.check_output(['git','diff','--name-only',a['application_baseline_sha'],'--'],cwd=ROOT,text=True).splitlines()
     unexpected=[p for p in diff if not p.startswith(('contracts/window-seven/','scripts/contracts/','.github/workflows/window-seven-contracts.yml'))]
     check(not unexpected,'Runtime or existing validation changed: '+str(unexpected))

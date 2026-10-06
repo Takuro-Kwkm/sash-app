@@ -136,6 +136,9 @@ for a in audit:
     inventory.append(row)
     runtime_ref=ref('contracts/window-seven/evidence/independent-runtime-replay.json','/fields/'+str(proofs[fid][0])) if fid in proofs else ref('contracts/window-seven/evidence/runtime-observations.json','/sash/'+str(list(observed).index(pid)))
     responsibility_source={'documents':source['documents'],'section':key,'manifest':source['manifest'],'source_trace_product':pid}
+    if pid=='SER-YKKAP-UCHIRIMO' and key=='option_items':
+        responsibility_source['current_formal_option_authority']=ref('contracts/window-seven/evidence/uchirimo-r6-option-readback.json')
+        responsibility_source['section']='R6 Option Master / option_items AllowedValues / EV-UCH-030..031 / Formal Selection Scope'
     if sales_def:
         responsibility_source={'declarative_app_contract':ref('src/catalog/runtime-master/inner-window-sales-extension.mjs'),'section':'UCHIRIMO_SALES_REQUEST fields / '+key,'authority_registration':'REQUIRES_INDEPENDENT_HUMAN_ACCEPTANCE_AS_APPLICATION_REQUEST_CONTRACT','product_formal_reference':source['integration'].get('productMasterFormalReference')}
     groups=[('CONTRACT',needed[:0]+policy['common_claims']+policy['mapping_claims'][base_type],{'path':adoption['archive'],'sha256':adoption['archive_sha256'],'section':'authority/audit/FIELD_INVENTORY.json / '+fid},'AUDITED_MAPPING'),
@@ -146,7 +149,7 @@ for a in audit:
         eid='WINDOW7-'+hashlib.sha256((fid+':'+label).encode()).hexdigest()[:20]
         e={'evidence_id':eid,'manufacturer':a['manufacturer'],'product':a['series'],'product_id':pid,'field_id':fid,'claims':sorted(set(claims)),
           'source_identity':source_ref,'official_authority':source_class,'document':source_ref.get('path',source['manifest']['path']),
-          'edition':source['integration']['packageVersion'] if label=='RESPONSIBILITY' else adoption['authority_sha'] if label=='CONTRACT' else adoption['application_baseline_sha'],
+          'edition':'v1.0-P7R1-R6 / OptionCompleteness_R1' if label=='RESPONSIBILITY' and pid=='SER-YKKAP-UCHIRIMO' and key=='option_items' else source['integration']['packageVersion'] if label=='RESPONSIBILITY' else adoption['authority_sha'] if label=='CONTRACT' else adoption['application_baseline_sha'],
           'page_section':source_ref.get('section',source_ref.get('pointer','')),'scope':{'field_id':fid,'category':c['category'],'purpose':'APPLICATION_FIELD'},
           'supporting_fact':relation if label=='CONTRACT' else {'fact_kind':kind,'definition':sales_def or defs.get(key),'product_scope':pid,'unconditional_manufacturability_claim':False} if label=='RESPONSIBILITY' else {'sample_count':len(observed[pid]['samples']),'observation_coverage':row['observation_coverage'],'runtime_code_changed':False,'independent_replay':proofs.get(fid,(None,None))[1]},
           'applicability':relation['applicability'],'status':'CANDIDATE_NOT_ACCEPTED',

@@ -41412,7 +41412,7 @@
       },
       "official_authority": "CONTRACT_AUTHORITY",
       "document": "src/catalog/runtime-master-packages/ykkap-uchirimo-slim-v3-frame/runtime_manifest.json",
-      "edition": "v1.0-P7R1-R5",
+      "edition": "v1.0-P7R1-R6 / OptionCompleteness_R1",
       "page_section": "UCHIRIMO_SALES_REQUEST fields / option_items",
       "scope": {
         "field_id": "sash-app:SER-YKKAP-UCHIRIMO:option_items",
@@ -41526,7 +41526,7 @@
       "verification_state": "INHERITED_SOURCE_IDENTITY_VERIFIED_NOT_ACCEPTED",
       "reviewer": null,
       "decision": null,
-      "payload_sha256": "f2557a7cd075cd10ead3bc92da7875dc81a6330066bd29cb8922a73bcac261d1"
+      "payload_sha256": "de9c1ad206a9f20409a6bbc25de993c85c20dce4f427de71bea8ba2742be7bf5"
     },
     {
       "evidence_id": "WINDOW7-46bc6b3bb5bfdeb4b361",

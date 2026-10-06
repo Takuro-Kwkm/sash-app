@@ -1118,6 +1118,6 @@
       "message": "FORMAL requires exactly one content-bound dossier and approval"
     }
   ],
-  "git_head": "af4f30983cc3d9a24ca1a7eb54fab834f024d0fc",
-  "packet_content_sha256": "4a1ae1319eceedb3a113898c32410dba95207311e057415e9b7e4792b3700400"
+  "git_head": "ccc18ddec2f9b5719fac36255f68fe153babff6a",
+  "packet_content_sha256": "591f11c7bd90a819d39f0e936209dce465a5e099cf7b5fd5a60ab68cf6999636"
 }
