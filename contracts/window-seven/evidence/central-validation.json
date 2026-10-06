@@ -1,0 +1,91 @@
+{
+  "status": "PASS",
+  "error_count": 0,
+  "validators": {
+    "schema": [],
+    "mapping": [],
+    "selection-contract": [],
+    "dependency": [],
+    "reset": [],
+    "ui-standard": [],
+    "category-flow": [],
+    "exceptions": [],
+    "authority": [],
+    "coverage": [],
+    "output": [],
+    "presentation-resolution": [],
+    "evidence-acceptance": [],
+    "formal-promotion": [],
+    "carport-authority": []
+  },
+  "browser_tests": "CONTRACT_ONLY_NOT_RUN",
+  "layers": {
+    "schema": [
+      "SCHEMA"
+    ],
+    "mapping": [
+      "STATIC",
+      "UNIT TEST"
+    ],
+    "selection-contract": [
+      "SCHEMA",
+      "STATIC",
+      "UNIT TEST"
+    ],
+    "dependency": [
+      "STATIC",
+      "UNIT TEST"
+    ],
+    "reset": [
+      "SCHEMA",
+      "STATIC",
+      "UNIT TEST",
+      "BROWSER TEST"
+    ],
+    "ui-standard": [
+      "SCHEMA",
+      "STATIC",
+      "UNIT TEST",
+      "BROWSER TEST"
+    ],
+    "category-flow": [
+      "SCHEMA",
+      "STATIC",
+      "UNIT TEST",
+      "BROWSER TEST"
+    ],
+    "exceptions": [
+      "SCHEMA",
+      "STATIC",
+      "UNIT TEST"
+    ],
+    "authority": [
+      "STATIC",
+      "UNIT TEST"
+    ],
+    "coverage": [
+      "STATIC",
+      "UNIT TEST"
+    ],
+    "output": [
+      "STATIC",
+      "UNIT TEST",
+      "BROWSER TEST"
+    ],
+    "presentation-resolution": [
+      "SCHEMA",
+      "STATIC",
+      "UNIT TEST"
+    ],
+    "evidence-acceptance": [
+      "SCHEMA",
+      "STATIC",
+      "UNIT TEST"
+    ],
+    "formal-promotion": [
+      "SCHEMA",
+      "STATIC",
+      "UNIT TEST"
+    ]
+  }
+}

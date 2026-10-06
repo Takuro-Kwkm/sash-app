@@ -1,0 +1,23 @@
+{
+  "schema": "WINDOW_SEVEN_CENTRAL_ADOPTION_V1",
+  "starting_authority_sha": "eac705297a0b938b4014b733b98c4a0f626d15ce",
+  "authority_sha": "53a1c39d475acafc09da4b6c13811cdf0bfefd23",
+  "application_baseline_sha": "af4f30983cc3d9a24ca1a7eb54fab834f024d0fc",
+  "repository": "Takuro-Kwkm/product-ui-contracts",
+  "archive": "contracts/window-seven/central-snapshot.tar.gz",
+  "archive_sha256": "6dd641fcfa8edd45c08c0efd3d683ef9b233c03b546d6d6bf86ab600d80d317f",
+  "authority_diff": [
+    "authority/authority-registry.v0.1.json",
+    "authority/carport/body-class-adoption.v0.1.json",
+    "mappings/semantic-role-registry.v0.1.json",
+    "registries/category-flow/carport.v0.1.json",
+    "scripts/body_class_adoption.py",
+    "scripts/build-foundation.py",
+    "scripts/carport_authority.py",
+    "scripts/contracts.py",
+    "tests/test_body_class_adoption.py"
+  ],
+  "central_changes": "NONE_WINDOW_ROLES_ALREADY_REGISTERED",
+  "consumption": "OFFLINE_FIXED_BYTES_SHADOW_VALIDATION",
+  "runtime_change": 0
+}

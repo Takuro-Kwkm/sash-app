@@ -1,0 +1,5180 @@
+{
+  "products": [
+    {
+      "product_id": "SER-LIX-SAMOS2H",
+      "manufacturer": "LIXIL",
+      "product": "サーモスⅡ-H",
+      "integration": {
+        "id": "SER-LIX-SAMOS2H",
+        "manufacturer": "LIXIL",
+        "series": "サーモスⅡ-H",
+        "displayName": "サーモスⅡ-H",
+        "productCategory": "sash",
+        "uiCategory": "NEW_CONSTRUCTION_EXTERIOR_WINDOW",
+        "registrySeriesKey": "LIXIL::サーモスⅡH",
+        "canonicalRuntimeReference": {
+          "runtimeManifestDriveFileId": "1_yIaBpnfppnj36IcuRoX9FBJhtrNngin",
+          "runtimeDriveFileId": "1Cqy4X23hWNFuhmKMzI7iTtUqOaH_N5S_",
+          "runtimeSchemaDriveFileId": "1mGXoPvmeEN-clO2mrvQ6R1bVtmVP0uIW",
+          "canonicalFolderId": "1pmCvqkh39bZibmpk-ugRFvJLEowITBmP"
+        },
+        "packageVersion": "v0.9-R4",
+        "schemaVersion": "2.0",
+        "sourceHash": "993481b2f0ab1d519a091e1b9f99a329eef7c67ec89cd1c82ddfab0d3c624955",
+        "adapterType": "PRODUCT_MODULE_RUNTIME_V1",
+        "uiStandardSpec": "サッシ情報管理アプリ_UI実装標準仕様書_v1.9"
+      },
+      "manifest": {
+        "path": "src/catalog/runtime-master-packages/lixil-samos2h-v0.9-r4/runtime_manifest.json",
+        "sha256": "993481b2f0ab1d519a091e1b9f99a329eef7c67ec89cd1c82ddfab0d3c624955",
+        "content": {
+          "schema_version": "2.0",
+          "manufacturer": "LIXIL",
+          "series": "サーモスⅡH",
+          "display_series": "サーモスⅡ-H",
+          "package_version": "v0.9-R4",
+          "authoring_mode": "STANDALONE",
+          "authoring_file_name": "LIXIL_サーモスⅡH_AUTHORING_MASTER_v0.9-R4.xlsx",
+          "authoring_file_id": "1_p-xJ9Mv7FecoR8Me0E43f3LEEkpVQSP",
+          "authoring_file_revision_id": "0B1PsqngSohhlKzEwUmhVQ3poa3I3bkdyTUt6MG00UmU5L1ZnPQ",
+          "authoring_sha256": "eeb285689a1e8a78469d5d13d1e015083d7f2e71ab274427dcfd413e33adc8e4",
+          "runtime_status": "READY",
+          "runtime_files": [
+            {
+              "role": "RUNTIME_JSON_PACKAGE",
+              "name": "LIXIL_サーモスⅡH_runtime_v0.9-R4.json",
+              "id": "1Cqy4X23hWNFuhmKMzI7iTtUqOaH_N5S_",
+              "sha256": "b12ed0a5184da2cfa39a16133079e52f14a301030ed1d230e471b18af6f8d7fd",
+              "size_bytes": 7578445
+            },
+            {
+              "role": "RUNTIME_SCHEMA",
+              "name": "samos2h_runtime_package_v0.9-R4.schema.json",
+              "id": "1mGXoPvmeEN-clO2mrvQ6R1bVtmVP0uIW",
+              "sha256": "8db1faafaf013054c6b22a7c006b93c82dce26821c1abe0c52ffcb7b8cc52c30",
+              "size_bytes": 3862
+            }
+          ],
+          "documentation_file": {
+            "name": "LIXIL_サーモスⅡH_PRODUCT_MASTER_MANIFEST_v0.9-R4.md",
+            "id": "1oI0vjopyANouNoE_Ht1droqeGTNjfH3v",
+            "sha256": "7ee32778a57492283db3638cecf4abe554af73f1d233f14b233bad73a05448a3",
+            "size_bytes": 3913
+          },
+          "qa_file": {
+            "name": "LIXIL_サーモスⅡH_RUNTIME_QA_v0.9-R4.md",
+            "id": "1PX-603uB1QSIsYZWixEs6LI-xcCad6Qm",
+            "sha256": "f846069c12117ce4fba2444ca13c93006e91c45b7ad28801ae2159699b46c5b7",
+            "size_bytes": 3647
+          },
+          "storage_status": "DRIVE_CANONICAL",
+          "package_gate": "PASS",
+          "storage_gate": "PASS",
+          "registry_gate": "PASS",
+          "blocking_items": [],
+          "generated_at": "2026-09-18T13:31:57+09:00",
+          "spec_version": "PRODUCT_MASTER_PACKAGE_STORAGE_COMPLETION_GATE_v2.0",
+          "qa_summary": {
+            "status": "PASS",
+            "formal_gate_effect": "PASS_WITH_ESTIMATE_CONFIRMATION_FALLBACK",
+            "checks": {
+              "authoring_integrity": true,
+              "runtime_schema": true,
+              "standard_size_rows_full_coverage": true,
+              "panel_count_semantic_classification": true,
+              "panel_count_size_projection": true,
+              "panel_count_dependencies": true,
+              "panel_count_transition_clear": true,
+              "custom_source_graph_fail_closed": true,
+              "non_panel_semantic_invariance": true,
+              "change_scope": true
+            },
+            "record_counts": {
+              "active_window_types": 17,
+              "base_window_count": 17,
+              "standard_size_rows": 2309,
+              "panel_count_mapped_standard_rows": 1549,
+              "panel_count_2_rows": 1398,
+              "panel_count_4_rows": 151,
+              "qa_case_count": 2407,
+              "qa_pass": 2407,
+              "qa_fail": 0,
+              "unverified_qa_case_count": 0,
+              "dependencies_total": 36,
+              "panel_count_dependency_contracts": 8,
+              "allowed_values": 2570,
+              "rule_sets": 7,
+              "evidence": 19
+            },
+            "safety": {
+              "no_frontend_size_string_inference": true,
+              "no_custom_geometry_invention": true,
+              "source_graph_gate_fail_closed": true,
+              "existing_estimate_confirm_required_not_auto_promoted": true
+            }
+          },
+          "panel_count_semantics": {
+            "classification": "CONDITIONAL_USER_SELECTABLE",
+            "official_terms": [
+              "2枚建",
+              "4枚建"
+            ],
+            "canonical_values": [
+              2,
+              4
+            ],
+            "applicable_window_type_count": 5,
+            "not_applicable_window_type_count": 12,
+            "size_stage_order": [
+              "size_mode",
+              "panel_count",
+              "size"
+            ]
+          },
+          "official_sources": [
+            {
+              "title": "202604_LIXIL_サーモスⅡ－Ｈ_業務用資料集_完成品価格表.pdf",
+              "drive_file_id": "1x4lovMcyfkyFzulYiQIv8OE5dpq6wDor"
+            },
+            {
+              "title": "LIXIL SDC0003156",
+              "url": "https://www2-t.lixil.co.jp/rp/dfw/lixila1330ex/metalproductinfo/files/technical/document/SDC0003156.pdf"
+            },
+            {
+              "title": "LIXIL SDC0003158",
+              "url": "https://www2-t.lixil.co.jp/rp/dfw/lixila1330ex/metalproductinfo/files/technical/document/SDC0003158.pdf"
+            },
+            {
+              "title": "LIXIL official image service — 面格子付引違い窓 4枚建",
+              "asset": "1907_SA_BAC_10426a.jpg"
+            }
+          ],
+          "formal_status": "FORMAL_PASS",
+          "canonical_folder_id": "1pmCvqkh39bZibmpk-ugRFvJLEowITBmP",
+          "working_folder_id": "17B04JT0R1PvfihsDOe_qTxo-Ens9sptL",
+          "old_folder_id": "1gGn454dYF7UQU56-uMCeXo6m_EfHtTH9",
+          "formalized_at": "2026-09-18T13:31:57+09:00"
+        }
+      },
+      "original_source_integrity": {
+        "expected": "993481b2f0ab1d519a091e1b9f99a329eef7c67ec89cd1c82ddfab0d3c624955",
+        "actual": "993481b2f0ab1d519a091e1b9f99a329eef7c67ec89cd1c82ddfab0d3c624955",
+        "match": true,
+        "manifestDriveFileId": "1_yIaBpnfppnj36IcuRoX9FBJhtrNngin",
+        "files": [
+          {
+            "role": "RUNTIME_JSON_PACKAGE",
+            "fileName": "LIXIL_サーモスⅡH_runtime_v0.9-R4.json",
+            "fileId": "1Cqy4X23hWNFuhmKMzI7iTtUqOaH_N5S_",
+            "expected": "b12ed0a5184da2cfa39a16133079e52f14a301030ed1d230e471b18af6f8d7fd",
+            "actual": "b12ed0a5184da2cfa39a16133079e52f14a301030ed1d230e471b18af6f8d7fd",
+            "match": true,
+            "bytes": 7578445,
+            "codec": "raw-parts"
+          },
+          {
+            "role": "RUNTIME_SCHEMA",
+            "fileName": "samos2h_runtime_package_v0.9-R4.schema.json",
+            "fileId": "1mGXoPvmeEN-clO2mrvQ6R1bVtmVP0uIW",
+            "expected": "8db1faafaf013054c6b22a7c006b93c82dce26821c1abe0c52ffcb7b8cc52c30",
+            "actual": "8db1faafaf013054c6b22a7c006b93c82dce26821c1abe0c52ffcb7b8cc52c30",
+            "match": true,
+            "bytes": 3862,
+            "codec": "raw-file"
+          }
+        ]
+      },
+      "documents": [
+        {
+          "role": "RUNTIME_JSON_PACKAGE",
+          "path": "contracts/window-seven/sources/SER-LIX-SAMOS2H/RUNTIME_JSON_PACKAGE.json.gz",
+          "sha256": "7df66d32c7106a73cdb5a26815321cacb499dcb55b1624e3deef73bfaac15639",
+          "decoded_sha256": "4050587cde480481748770373cebc2bb13bbf9eccc17bd5080c17178388ac96d",
+          "bytes": 222638
+        }
+      ],
+      "runtime_definitions": [],
+      "sales_request_extension": null,
+      "frame_contract": null,
+      "cache_note": "Decoded existing Formal master projection, not newly retrieved manufacturer original. Existing loader verifies original component hashes before capture; cached serialization hash is distinct."
+    },
+    {
+      "product_id": "SER-LIX-SAMOSL",
+      "manufacturer": "LIXIL",
+      "product": "サーモスL",
+      "integration": {
+        "id": "SER-LIX-SAMOSL",
+        "manufacturer": "LIXIL",
+        "series": "サーモスL",
+        "displayName": "サーモスL",
+        "productCategory": "sash",
+        "uiCategory": "NEW_CONSTRUCTION_EXTERIOR_WINDOW",
+        "registrySeriesKey": "LIXIL::サーモスL",
+        "canonicalRuntimeReference": {
+          "runtimeManifestDriveFileId": "1c-VIgwTqPDTkas0apYqx30AN3PVa71p1",
+          "runtimeDriveFileId": "12G_Edo55NWgu38gJjTGcqDZ7HsdpAH2I",
+          "canonicalFolderId": "1H83njk7Gww0RJOZKntYBp5VxdaJD9Jc4"
+        },
+        "packageVersion": "v0.7-R2",
+        "schemaVersion": "2.0",
+        "sourceHash": "4cf2a4b1572f68288fa108ccd33d30cc80d5170f2f5303864ca56ca67c34cec3",
+        "adapterType": "PRODUCT_MODULE_RUNTIME_V1",
+        "uiStandardSpec": "サッシ情報管理アプリ_UI実装標準仕様書_v1.9"
+      },
+      "manifest": {
+        "path": "src/catalog/runtime-master-packages/lixil-thermosl-v0.7-r2/runtime_manifest.json",
+        "sha256": "4cf2a4b1572f68288fa108ccd33d30cc80d5170f2f5303864ca56ca67c34cec3",
+        "content": {
+          "schema_version": "1.0",
+          "manufacturer": "LIXIL",
+          "series": "サーモスL",
+          "target_formal_version": "v0.7-R2",
+          "package_version": "v0.7-R2",
+          "authoring_mode": "STANDALONE",
+          "authoring_file_name": "LIXIL_サーモスL_AUTHORING_MASTER_v0.7-R2.xlsx",
+          "authoring_file_id": "1EqEHI8TlP7ZmWAZQSssAEgrRmBlvj9_q",
+          "authoring_sha256": "6eb13ce12cee968527ea591d608da21036b2eca9f98149ce9f966778a8ff4e91",
+          "runtime_status": "READY",
+          "runtime_files": [
+            {
+              "role": "RUNTIME_JSON_PACKAGE",
+              "file_name": "LIXIL_サーモスL_runtime_v0.7-R2.json",
+              "file_id": "12G_Edo55NWgu38gJjTGcqDZ7HsdpAH2I",
+              "sha256": "e0b84fd83a1a2e3c078db357c67ac7bb751b34860c05a2321e1466c5cad97525",
+              "size_bytes": 5147529,
+              "entrypoint": true
+            }
+          ],
+          "runtime_qa": {
+            "file_name": "LIXIL_サーモスL_RUNTIME_QA_v0.7-R2.md",
+            "file_id": "15OqI2iWLFxECGjHXH1uGZeKOklPbwkgq",
+            "sha256": "3fb6c287df7d278bc7f22885f7be28b100287b0fb4dde3d0b8933f34bda4b186",
+            "size_bytes": 2959,
+            "structural_qa": "PASS",
+            "formal_qa": "PASS"
+          },
+          "qa_metrics": {
+            "active_window_types": 17,
+            "standard_size_records": 1644,
+            "selectable_standard_size_records": 1495,
+            "custom_dimension_rules": 50,
+            "golden_tests": "46/46 PASS",
+            "safe_standard_direct_evidence": 523,
+            "safe_standard_allowed": 517,
+            "safe_standard_blocked": 6,
+            "safe_standard_residual_ecr": 1121,
+            "standard_selector_combinations": 374166,
+            "custom_selector_combinations": 11700,
+            "unverified_qa_case_count": 0,
+            "estimate_confirm_auto_activation_violations": 0
+          },
+          "official_evidence": {
+            "SN1400": {
+              "file_id": "1y0AXa3iB5ycoFMqPGdXPgK1bC9pk3-_G",
+              "role": "PRIMARY_OFFICIAL_PDF_REFERENCE_ONLY",
+              "direct_delegation": true,
+              "pages": [
+                "P1/PDF3",
+                "P26/PDF30",
+                "P34/PDF38",
+                "P76/PDF80",
+                "P94/PDF98"
+              ]
+            },
+            "SDC0003156": "VERIFIED_SAFE_STANDARD_PARTIAL_MATRIX",
+            "SDC0003157": "VERIFIED_SAFE_STANDARD_PARTIAL_MATRIX"
+          },
+          "section20": {
+            "official_direct_delegation_evidence_found": true,
+            "result": "PASS",
+            "confirmation_route": "LIXIL見積システム",
+            "automatic_activation": false,
+            "formal_fallback_applied": true
+          },
+          "documentation_file": "LIXIL_サーモスL_PRODUCT_MASTER_MANIFEST_v0.7-R2.md",
+          "documentation_file_id": "1qQ73l6WNFzAh-xeCENM7ySWHC1m7i1cq",
+          "storage_status": "DRIVE_CANONICAL",
+          "working_folder_id": "1PqgX6VbCBmdz121DgLG2xF-Z7aK-pbah",
+          "canonical_folder_id": "1H83njk7Gww0RJOZKntYBp5VxdaJD9Jc4",
+          "old_folder_id": "1LFQOkjIm_INOIu2muWyw6iCN3hqX9c7g",
+          "canonical_registry_status": "v0.7-R2_FORMAL_PASS",
+          "package_gate": "PASS_CONTENT_DEPENDENCY_QA",
+          "formal_pass": true,
+          "formal_adoption_permitted": true,
+          "blocking_items": [],
+          "generated_at": "2026-09-16T16:13:22.108Z",
+          "working_artifact_package_gate": "PASS",
+          "working_savepoint_gate": "PASS",
+          "formal_storage_gate": "PASS",
+          "registry_gate": "PASS",
+          "documentation_sha256": "48f42847d5965a902520bf25b52b7353e2081bbaad852f15611530422e77be8b",
+          "manifest_file_id": "1c-VIgwTqPDTkas0apYqx30AN3PVa71p1",
+          "current_canonical_package_count": 1,
+          "old_v0_7_R1_archived": true
+        }
+      },
+      "original_source_integrity": {
+        "expected": "4cf2a4b1572f68288fa108ccd33d30cc80d5170f2f5303864ca56ca67c34cec3",
+        "actual": "4cf2a4b1572f68288fa108ccd33d30cc80d5170f2f5303864ca56ca67c34cec3",
+        "match": true,
+        "manifestDriveFileId": "1c-VIgwTqPDTkas0apYqx30AN3PVa71p1",
+        "files": [
+          {
+            "role": "RUNTIME_JSON_PACKAGE",
+            "fileName": "LIXIL_サーモスL_runtime_v0.7-R2.json",
+            "fileId": "12G_Edo55NWgu38gJjTGcqDZ7HsdpAH2I",
+            "expected": "e0b84fd83a1a2e3c078db357c67ac7bb751b34860c05a2321e1466c5cad97525",
+            "actual": "e0b84fd83a1a2e3c078db357c67ac7bb751b34860c05a2321e1466c5cad97525",
+            "match": true,
+            "bytes": 5147529,
+            "codec": "brotli"
+          }
+        ]
+      },
+      "documents": [
+        {
+          "role": "RUNTIME_JSON_PACKAGE",
+          "path": "contracts/window-seven/sources/SER-LIX-SAMOSL/RUNTIME_JSON_PACKAGE.json.gz",
+          "sha256": "b60fa25aec5f8ffb14c52952173e26da82a011f5d72ce8d5463d4f6f745ec30c",
+          "decoded_sha256": "34471338399f34f2afcef4d71c126b0616628dcee676c747704892d561884b23",
+          "bytes": 168528
+        }
+      ],
+      "runtime_definitions": [],
+      "sales_request_extension": null,
+      "frame_contract": null,
+      "cache_note": "Decoded existing Formal master projection, not newly retrieved manufacturer original. Existing loader verifies original component hashes before capture; cached serialization hash is distinct."
+    },
+    {
+      "product_id": "SER-LIX-EW",
+      "manufacturer": "LIXIL",
+      "product": "EW",
+      "integration": {
+        "id": "SER-LIX-EW",
+        "manufacturer": "LIXIL",
+        "series": "EW",
+        "displayName": "EW",
+        "productCategory": "sash",
+        "uiCategory": "NEW_CONSTRUCTION_EXTERIOR_WINDOW",
+        "registrySeriesKey": "LIXIL::EW",
+        "canonicalRuntimeReference": {
+          "runtimeManifestDriveFileId": "140pCgz2uhukjOjd1wymuISuAMjhaBpCS",
+          "runtimeDriveFileId": "11ZmCPKceAmp3OEyJIXy79VoO8PEk_oYw",
+          "canonicalFolderId": "1mDsi9amFdD5A9N8XrommExB_EMZDQiqu"
+        },
+        "packageVersion": "v1.3",
+        "schemaVersion": "2.0",
+        "sourceHash": "a59848642ae301dcf8a275b7a43bdceb64a7d9e6488a5c79eca21584178be830",
+        "adapterType": "CANONICAL_WORKBOOK_REFERENCE_V1",
+        "uiStandardSpec": "サッシ情報管理アプリ_UI実装標準仕様書_v1.9"
+      },
+      "manifest": {
+        "path": "src/catalog/runtime-master-packages/lixil-ew-v1.3/runtime_manifest.json",
+        "sha256": "eb8bce59f249faea5cfc8e3d4b75e44f74ee960eacbdc21e25864b7d8dd08662",
+        "content": {
+          "schema_version": "2.0",
+          "manufacturer": "LIXIL",
+          "series": "EW",
+          "package_version": "v1.3",
+          "authoring_mode": "GOOGLE_SHEETS",
+          "authoring_file_name": "LIXIL_EW_商品マスター_v1.3",
+          "authoring_file_id": "1rcFrtl4b3CKJDE3ubZLi11vwHJqNs1iu7xEh1dAA6ik",
+          "authoring_sha256": "765e75fbb0c07eb261525acfc4835fddb7561118e453c4628e0c3e1372523404",
+          "runtime_status": "READY",
+          "runtime_files": [
+            {
+              "file_name": "LIXIL_EW_runtime_v1.3.json",
+              "file_id": "11ZmCPKceAmp3OEyJIXy79VoO8PEk_oYw",
+              "sha256": "a59848642ae301dcf8a275b7a43bdceb64a7d9e6488a5c79eca21584178be830",
+              "size_bytes": 2674515,
+              "status": "READY",
+              "role": "runtime_master"
+            }
+          ],
+          "documentation_file": {
+            "file_name": "LIXIL_EW_PRODUCT_MASTER_MANIFEST_v1.3.md",
+            "file_id": "15Q1UpYp3EApuxg-6Aekdg5AijmxRMvNA"
+          },
+          "storage_status": "DRIVE_CANONICAL",
+          "package_gate": "PASS",
+          "content_gate": "PASS",
+          "dependency_gate": "PASS",
+          "qa_gate": "PASS_WITH_ESTIMATE_CONFIRMATION_FALLBACK",
+          "official_source_scope_gate": "PASS",
+          "estimate_confirmation_contract": {
+            "state": "ESTIMATE_CONFIRM_REQUIRED",
+            "automatic_activation": false,
+            "policy": "MANUFACTURER_ESTIMATE_SYSTEM_DEPENDENCY_EXCEPTION",
+            "meaning": "Manufacturer estimate confirmation required where public official sources do not close exact manufacturability; not ALLOWED by default."
+          },
+          "semantic_recovery": {
+            "slot": "frame_angle",
+            "values": [
+              "WITH_ANGLE",
+              "WITHOUT_ANGLE"
+            ],
+            "classification": {
+              "USER_SELECTABLE": 12,
+              "FIXED_WITHOUT_ANGLE": 3
+            },
+            "installation_environment": {
+              "slot": "installation_environment",
+              "stage": "INSTALLATION_SURVEY",
+              "values": [
+                "BATHROOM",
+                "NON_BATHROOM"
+              ],
+              "formal_adoption_exact_head": "dcb79a7dc17bb20ef0321f2211411896420e71c9",
+              "human_review_artifact": "HFR-f77cf0e713cf845844f10ac02ee952aad17b97736ed9369d22bf45e878614d1c"
+            }
+          },
+          "baseline": {
+            "package_version": "v1.2",
+            "authoring_file_id": "1hKLlzCqi52tgOPtTHj8iyllN9vtQlF8ABrsCKkRLDsc",
+            "runtime_file_id": "1tHWCWnS-f_R6-IvT0KgA7l1smPQm6dd8",
+            "runtime_manifest_id": "1D-n_dwXfl8M6BjHQqIO6QV7u9FjjRUuU",
+            "documentation_file_id": "18WPQDF2YPDFRPC3noy6ewmC01cBrz6Cp"
+          },
+          "target_storage": {
+            "canonical_folder_id": "1mDsi9amFdD5A9N8XrommExB_EMZDQiqu",
+            "old_folder_id": "1rGW_ZFtAYG4oWNRJqSqrqBT5aVQEpxwc",
+            "working_folder_id": "1T_KEc2-27lU6yddCka1ZqI289qolVwmB"
+          },
+          "qa_artifacts": {
+            "cases_file_name": "LIXIL_EW_FRAME_ANGLE_QA_CASES_v1.3.json",
+            "cases_file_id": "1F1e3eLto_SOHkyrMmfmRoqEQWMTWm9y9",
+            "cases_sha256": "0310ff8a5d580a8b52c001f913d35b8efe9b0f0b697dabb8640f427975d3488a",
+            "report_file_name": "LIXIL_EW_FRAME_ANGLE_RUNTIME_QA_v1.3.md",
+            "report_file_id": "14hRsNZJPsq9GP3PVi-ZgKFsovrhdRJTt",
+            "build_script_file_id": "1per6HeKaKT6yoFOGs-g-3RczG4faKLM8"
+          },
+          "qa_summary": {
+            "full_coverage": "15120/15120 PASS",
+            "fail_count": 0,
+            "unverified_count": 0,
+            "standard_rows": 1721,
+            "custom_rules": 70,
+            "custom_boundary": "877/877 PASS",
+            "hiki_selector_full_cross_product": "288/288 evaluated",
+            "shutter_dependency": "123/123 PASS",
+            "glass_weight_limit_evidence": "262/262 PASS",
+            "glass_manufacturability": "PASS_WITH_ESTIMATE_CONFIRMATION_FALLBACK"
+          },
+          "requested_diff_coverage": "PASS",
+          "unrequested_diff_count": 0,
+          "generated_at": "2026-09-18T20:44:00+09:00",
+          "registry_gate": "PASS",
+          "formal_pass": true,
+          "storage_gate": "PASS",
+          "formalization_status": "FORMAL_PASS",
+          "formal_adoption": {
+            "registry_file_id": "1HMMZ8JdsbJPtL_8LjQfxMF8P_Zb4-LReqvPMFn1pJks",
+            "registry_sheet": "正本Registry",
+            "registry_row": 4,
+            "canonical_folder_id": "1mDsi9amFdD5A9N8XrommExB_EMZDQiqu",
+            "old_folder_id": "1rGW_ZFtAYG4oWNRJqSqrqBT5aVQEpxwc",
+            "working_folder_id": "1T_KEc2-27lU6yddCka1ZqI289qolVwmB",
+            "duplicate_canonical_folder_scan_count": 33,
+            "duplicate_canonical_package_count": 0,
+            "adopted_at": "2026-09-18T21:10:00+09:00"
+          }
+        }
+      },
+      "original_source_integrity": {
+        "expected": "eb8bce59f249faea5cfc8e3d4b75e44f74ee960eacbdc21e25864b7d8dd08662",
+        "actual": "eb8bce59f249faea5cfc8e3d4b75e44f74ee960eacbdc21e25864b7d8dd08662",
+        "match": true,
+        "manifestDriveFileId": "140pCgz2uhukjOjd1wymuISuAMjhaBpCS",
+        "files": [
+          {
+            "role": "runtime_master",
+            "fileName": "LIXIL_EW_runtime_v1.3.json",
+            "fileId": "11ZmCPKceAmp3OEyJIXy79VoO8PEk_oYw",
+            "expected": "a59848642ae301dcf8a275b7a43bdceb64a7d9e6488a5c79eca21584178be830",
+            "actual": "a59848642ae301dcf8a275b7a43bdceb64a7d9e6488a5c79eca21584178be830",
+            "match": true,
+            "bytes": 2674515,
+            "codec": "base64"
+          }
+        ]
+      },
+      "documents": [
+        {
+          "role": "runtime_master",
+          "path": "contracts/window-seven/sources/SER-LIX-EW/runtime_master.json.gz",
+          "sha256": "31347642480e95342f7c5d86af37734f6151843147585a7b7ea59b6854bec58c",
+          "decoded_sha256": "4f7aa10aafa605c4fcce7d4ee6f6e25a3ddcc67615a56a4eb2bb1788e87d5303",
+          "bytes": 116811
+        }
+      ],
+      "runtime_definitions": [
+        {
+          "field_name": "window_type",
+          "display_label": "窓種類",
+          "display_order": 30,
+          "data_type": "enum",
+          "parent_fields": [],
+          "required_mode": "REQUIRED",
+          "selection_mode": "USER_SELECTABLE",
+          "runtime_included": true
+        },
+        {
+          "field_name": "window_spec",
+          "display_label": "窓種固有仕様",
+          "display_order": 40,
+          "data_type": "enum",
+          "parent_fields": [
+            "window_type"
+          ],
+          "required_mode": "REQUIRED",
+          "selection_mode": "USER_SELECTABLE",
+          "runtime_included": true
+        },
+        {
+          "field_name": "variant",
+          "display_label": "商品バリエーション",
+          "display_order": 45,
+          "data_type": "enum",
+          "parent_fields": [
+            "window_type",
+            "window_spec"
+          ],
+          "required_mode": "OPTIONAL",
+          "selection_mode": "USER_SELECTABLE",
+          "runtime_included": true
+        },
+        {
+          "field_name": "handing",
+          "display_label": "開き勝手（吊元）",
+          "display_order": 50,
+          "data_type": "enum",
+          "parent_fields": [
+            "window_type",
+            "window_spec"
+          ],
+          "required_mode": "OPTIONAL",
+          "selection_mode": "USER_SELECTABLE",
+          "runtime_included": true
+        },
+        {
+          "field_name": "size_mode",
+          "display_label": "サイズ方式",
+          "display_order": 60,
+          "data_type": "enum",
+          "parent_fields": [
+            "window_type",
+            "window_spec"
+          ],
+          "required_mode": "REQUIRED",
+          "selection_mode": "USER_SELECTABLE",
+          "runtime_included": true
+        },
+        {
+          "field_name": "panel_count",
+          "display_label": "建具・枚数",
+          "display_order": 65,
+          "data_type": "enum",
+          "parent_fields": [
+            "window_type",
+            "window_spec"
+          ],
+          "required_mode": "OPTIONAL",
+          "selection_mode": "USER_SELECTABLE",
+          "runtime_included": true
+        },
+        {
+          "field_name": "size",
+          "display_label": "サイズ",
+          "display_order": 80,
+          "data_type": "enum",
+          "parent_fields": [
+            "window_type",
+            "window_spec",
+            "size_mode"
+          ],
+          "required_mode": "OPTIONAL",
+          "selection_mode": "USER_SELECTABLE",
+          "runtime_included": true
+        },
+        {
+          "field_name": "custom_w",
+          "display_label": "特注W",
+          "display_order": 81,
+          "data_type": "number",
+          "parent_fields": [
+            "window_type",
+            "window_spec",
+            "size_mode"
+          ],
+          "required_mode": "OPTIONAL",
+          "selection_mode": "USER_SELECTABLE",
+          "runtime_included": true,
+          "unit": "mm"
+        },
+        {
+          "field_name": "custom_h",
+          "display_label": "特注H",
+          "display_order": 82,
+          "data_type": "number",
+          "parent_fields": [
+            "window_type",
+            "window_spec",
+            "size_mode"
+          ],
+          "required_mode": "OPTIONAL",
+          "selection_mode": "USER_SELECTABLE",
+          "runtime_included": true,
+          "unit": "mm"
+        },
+        {
+          "field_name": "exterior_color",
+          "display_label": "外観色",
+          "display_order": 90,
+          "data_type": "enum",
+          "parent_fields": [
+            "window_type",
+            "window_spec"
+          ],
+          "required_mode": "REQUIRED",
+          "selection_mode": "USER_SELECTABLE",
+          "runtime_included": true
+        },
+        {
+          "field_name": "interior_color",
+          "display_label": "内観色",
+          "display_order": 100,
+          "data_type": "enum",
+          "parent_fields": [
+            "exterior_color"
+          ],
+          "required_mode": "REQUIRED",
+          "selection_mode": "USER_SELECTABLE",
+          "runtime_included": true
+        },
+        {
+          "field_name": "screen_presence",
+          "display_label": "網戸",
+          "display_order": 110,
+          "data_type": "enum",
+          "parent_fields": [
+            "window_type"
+          ],
+          "required_mode": "OPTIONAL",
+          "selection_mode": "USER_SELECTABLE",
+          "runtime_included": true
+        },
+        {
+          "field_name": "screen_form",
+          "display_label": "網戸形式",
+          "display_order": 112,
+          "data_type": "enum",
+          "parent_fields": [
+            "window_type",
+            "screen_presence"
+          ],
+          "required_mode": "OPTIONAL",
+          "selection_mode": "USER_SELECTABLE",
+          "runtime_included": true
+        },
+        {
+          "field_name": "screen_midrail",
+          "display_label": "網戸中桟",
+          "display_order": 114,
+          "data_type": "enum",
+          "parent_fields": [
+            "window_type",
+            "screen_presence",
+            "screen_form"
+          ],
+          "required_mode": "OPTIONAL",
+          "selection_mode": "USER_SELECTABLE",
+          "runtime_included": true
+        },
+        {
+          "field_name": "screen_net",
+          "display_label": "網戸ネット",
+          "display_order": 116,
+          "data_type": "enum",
+          "parent_fields": [
+            "window_type",
+            "screen_presence",
+            "screen_form"
+          ],
+          "required_mode": "OPTIONAL",
+          "selection_mode": "USER_SELECTABLE",
+          "runtime_included": true
+        },
+        {
+          "field_name": "glass_base",
+          "display_label": "ガラス",
+          "display_order": 120,
+          "data_type": "enum",
+          "parent_fields": [
+            "window_type",
+            "window_spec",
+            "size_mode"
+          ],
+          "required_mode": "REQUIRED",
+          "selection_mode": "USER_SELECTABLE",
+          "runtime_included": true
+        },
+        {
+          "field_name": "glass_spacer",
+          "display_label": "スペーサー",
+          "display_order": 160,
+          "data_type": "enum",
+          "parent_fields": [
+            "glass_base",
+            "glass_detail"
+          ],
+          "required_mode": "OPTIONAL",
+          "selection_mode": "AUTO_RESOLVE",
+          "runtime_included": true
+        },
+        {
+          "field_name": "glass_air_layer",
+          "display_label": "中空層",
+          "display_order": 170,
+          "data_type": "enum",
+          "parent_fields": [
+            "glass_base",
+            "glass_detail"
+          ],
+          "required_mode": "OPTIONAL",
+          "selection_mode": "AUTO_RESOLVE",
+          "runtime_included": true
+        },
+        {
+          "field_name": "option",
+          "display_label": "その他オプション",
+          "display_order": 210,
+          "data_type": "array",
+          "parent_fields": [
+            "window_type",
+            "window_spec"
+          ],
+          "required_mode": "OPTIONAL",
+          "selection_mode": "USER_SELECTABLE",
+          "runtime_included": true
+        },
+        {
+          "field_name": "frame_angle",
+          "display_label": "frame_angle",
+          "display_order": 55,
+          "data_type": "enum",
+          "parent_fields": [
+            "window_type",
+            "window_spec"
+          ],
+          "required_mode": "OPTIONAL",
+          "selection_mode": "USER_SELECTABLE",
+          "runtime_included": true
+        },
+        {
+          "field_name": "installation_environment",
+          "display_label": "installation_environment",
+          "display_order": 200,
+          "data_type": "enum",
+          "parent_fields": [
+            "window_type",
+            "frame_angle"
+          ],
+          "required_mode": "OPTIONAL",
+          "selection_mode": "USER_SELECTABLE",
+          "runtime_included": true
+        },
+        {
+          "field_name": "glass_configuration",
+          "display_label": "ガラス構成",
+          "display_order": 41,
+          "data_type": "enum",
+          "parent_fields": [
+            "window_type"
+          ],
+          "required_mode": "OPTIONAL",
+          "selection_mode": "USER_SELECTABLE",
+          "runtime_included": true
+        },
+        {
+          "field_name": "profile",
+          "display_label": "枠・障子プロファイル",
+          "display_order": 42,
+          "data_type": "enum",
+          "parent_fields": [
+            "window_type"
+          ],
+          "required_mode": "OPTIONAL",
+          "selection_mode": "USER_SELECTABLE",
+          "runtime_included": true
+        },
+        {
+          "field_name": "opening_class",
+          "display_label": "開口区分",
+          "display_order": 43,
+          "data_type": "enum",
+          "parent_fields": [
+            "window_type"
+          ],
+          "required_mode": "OPTIONAL",
+          "selection_mode": "USER_SELECTABLE",
+          "runtime_included": true
+        },
+        {
+          "field_name": "sill",
+          "display_label": "下枠",
+          "display_order": 45,
+          "data_type": "enum",
+          "parent_fields": [
+            "window_type"
+          ],
+          "required_mode": "OPTIONAL",
+          "selection_mode": "USER_SELECTABLE",
+          "runtime_included": true
+        },
+        {
+          "field_name": "wall_finish",
+          "display_label": "壁仕上げ",
+          "display_order": 46,
+          "data_type": "enum",
+          "parent_fields": [
+            "window_type"
+          ],
+          "required_mode": "OPTIONAL",
+          "selection_mode": "USER_SELECTABLE",
+          "runtime_included": true
+        },
+        {
+          "field_name": "configuration_variant",
+          "display_label": "バリアント",
+          "display_order": 47,
+          "data_type": "enum",
+          "parent_fields": [
+            "window_type"
+          ],
+          "required_mode": "OPTIONAL",
+          "selection_mode": "USER_SELECTABLE",
+          "runtime_included": true
+        },
+        {
+          "field_name": "glass_type",
+          "display_label": "ガラス種別",
+          "display_order": 130,
+          "data_type": "enum",
+          "parent_fields": [
+            "glass_base"
+          ],
+          "required_mode": "OPTIONAL",
+          "selection_mode": "USER_SELECTABLE",
+          "runtime_included": true
+        },
+        {
+          "field_name": "glass_detail",
+          "display_label": "ガラス詳細",
+          "display_order": 140,
+          "data_type": "enum",
+          "parent_fields": [
+            "glass_base"
+          ],
+          "required_mode": "OPTIONAL",
+          "selection_mode": "USER_SELECTABLE",
+          "runtime_included": true
+        },
+        {
+          "field_name": "glass_function",
+          "display_label": "ガラス追加機能",
+          "display_order": 150,
+          "data_type": "array",
+          "parent_fields": [
+            "glass_base"
+          ],
+          "required_mode": "OPTIONAL",
+          "selection_mode": "USER_SELECTABLE",
+          "runtime_included": true
+        }
+      ],
+      "sales_request_extension": null,
+      "frame_contract": null,
+      "cache_note": "Decoded existing Formal master projection, not newly retrieved manufacturer original. Existing loader verifies original component hashes before capture; cached serialization hash is distinct."
+    },
+    {
+      "product_id": "SER-LIXIL-TW",
+      "manufacturer": "LIXIL",
+      "product": "TW",
+      "integration": {
+        "id": "SER-LIXIL-TW",
+        "manufacturer": "LIXIL",
+        "series": "TW",
+        "displayName": "TW",
+        "productCategory": "sash",
+        "uiCategory": "NEW_CONSTRUCTION_EXTERIOR_WINDOW",
+        "registrySeriesKey": "LIXIL::TW",
+        "canonicalRuntimeReference": {
+          "runtimeManifestDriveFileId": "13doEdTkUlQNu4Dm-SNwkeUg8RkrjS5G0",
+          "runtimeJsonDriveFileId": "1hWy1coHWTsuXYXGLRxZ0a2vJEmSIvg5p",
+          "canonicalFolderId": "1oLex2SCEIKoH5mDMtbMasJXglPF-n-a"
+        },
+        "packageVersion": "integrated-v0.4",
+        "schemaVersion": "2.0",
+        "sourceHash": "95380f5cab261edf03bf868e0f2120b9d57e941d6618b4543afe7a6ffd00c68e",
+        "adapterType": "TW_CANONICAL_WORKBOOK_REFERENCE_V2",
+        "uiStandardSpec": "サッシ情報管理アプリ_UI実装標準仕様書_v1.9"
+      },
+      "manifest": {
+        "path": "src/catalog/runtime-master-packages/lixil-tw-integrated-v0.4/runtime_manifest.json",
+        "sha256": "4ca87f7fc327f798da9ac0e39d4aa7ba4e8bda1e5635cc91959fe241059aa7d7",
+        "content": {
+          "schema_version": "2.0",
+          "manufacturer": "LIXIL",
+          "series": "TW",
+          "package_version": "integrated-v0.4",
+          "authoring_mode": "INTEGRATED_REFERENCE",
+          "authoring_file_name": "サッシ商品マスター_v0.4.xlsx",
+          "authoring_file_id": "1Jchl9UiiFbCDeiTNLTaWlVRJmNVr1DZA",
+          "runtime_status": "READY",
+          "runtime_files": [
+            {
+              "name": "LIXIL_TW_runtime_integrated-v0.4.json",
+              "id": "1hWy1coHWTsuXYXGLRxZ0a2vJEmSIvg5p",
+              "role": "runtime_master",
+              "sha256": "602201ee4bc834490fae609f97dfa5194bfab88beea6520f642c8ddb22bbafed",
+              "bytes": 2486012
+            }
+          ],
+          "documentation_file": "LIXIL_TW_PRODUCT_MASTER_MANIFEST_integrated-v0.4.md",
+          "documentation_file_id": "1mIDte7Q701MWd-ralMVPy6TRSu2LxKi2",
+          "storage_status": "DRIVE_CANONICAL",
+          "package_gate": "PASS",
+          "storage_gate": "PASS",
+          "registry_gate": "PASS",
+          "master_status": "FORMAL_PASS",
+          "human_approval": "USER_CONTINUATION_AUTHORIZED_20260917",
+          "known_source_limitations": [
+            "OP-LIX-TW-CAT-28322",
+            "OP-LIX-TW-CAT-28323",
+            "CUSTOM_DIMENSION_GRAPH_INTERIORS_REQUIRE_REVIEW"
+          ],
+          "manual_checks": [
+            "TW custom dimensions: outside verified catalog outer envelope = BLOCK; inside = REVIEW_REQUIRED/MANUAL_CHECK."
+          ],
+          "generated_at": "2026-09-17T11:50:22+09:00",
+          "spec_version": "PRODUCT_MASTER_PACKAGE_STORAGE_COMPLETION_GATE_v2.0",
+          "change_control": {
+            "change_id": "LIXIL-TW-GRILLE-R1",
+            "authoring_revision": "TW-GRILLE-R1",
+            "previous_package_version": "integrated-v0.3",
+            "working_qa_drive_file_id": "1gA37k4sJbAJeZajOl85sMtBg37XRxZhZ",
+            "requested_diff_coverage": "PASS",
+            "unrequested_diff_count": 0
+          },
+          "registry_file_id": "1HMMZ8JdsbJPtL_8LjQfxMF8P_Zb4-LReqvPMFn1pJks",
+          "canonical_folder_id": "1oLex2SCEIKoH5mDMtbMasJXglPF-n-a",
+          "old_folder_id": "1K_fgs055I9_Psx6Co5Qn1F1B-Ujpv25L",
+          "working_folder_id": "1uO6KjlmyJKALcFOTOkS96BuV1WzHBULD",
+          "formal_gate_summary": {
+            "content": "PASS",
+            "dependency": "PASS",
+            "qa": "PASS",
+            "artifact_package": "PASS",
+            "storage": "PASS",
+            "registry": "PASS"
+          }
+        }
+      },
+      "original_source_integrity": {
+        "expected": "4ca87f7fc327f798da9ac0e39d4aa7ba4e8bda1e5635cc91959fe241059aa7d7",
+        "actual": "4ca87f7fc327f798da9ac0e39d4aa7ba4e8bda1e5635cc91959fe241059aa7d7",
+        "match": true,
+        "manifestDriveFileId": "13doEdTkUlQNu4Dm-SNwkeUg8RkrjS5G0",
+        "files": [
+          {
+            "role": "runtime_master",
+            "fileName": "LIXIL_TW_runtime_integrated-v0.4.json",
+            "fileId": "1hWy1coHWTsuXYXGLRxZ0a2vJEmSIvg5p",
+            "expected": "602201ee4bc834490fae609f97dfa5194bfab88beea6520f642c8ddb22bbafed",
+            "actual": "602201ee4bc834490fae609f97dfa5194bfab88beea6520f642c8ddb22bbafed",
+            "match": true,
+            "bytes": 2486012,
+            "codec": "json-transform-chain-v1"
+          }
+        ]
+      },
+      "documents": [
+        {
+          "role": "runtime_master",
+          "path": "contracts/window-seven/sources/SER-LIXIL-TW/runtime_master.json.gz",
+          "sha256": "efb5e6792711e30bcd5afb966b11ec4d92705cc181c2bec9f7e5ea65d1435061",
+          "decoded_sha256": "96fabaca0fa4c67785adcf6c0e11e551a7a24c2e5f28539ce2fac855fc7698f4",
+          "bytes": 137593
+        }
+      ],
+      "runtime_definitions": [
+        {
+          "field_id": "runtime:window_type",
+          "field_name": "window_type",
+          "display_label": "窓種類",
+          "display_order": 10,
+          "data_type": "enum",
+          "required_mode": "REQUIRED",
+          "parent_fields": [],
+          "selection_mode": "USER_SELECTABLE",
+          "visibility_mode": "CONDITIONAL",
+          "runtime_included": true
+        },
+        {
+          "field_id": "runtime:shutter_type",
+          "field_name": "shutter_type",
+          "display_label": "シャッター種類",
+          "display_order": 20,
+          "data_type": "enum",
+          "required_mode": "REQUIRED",
+          "parent_fields": [
+            "window_type"
+          ],
+          "selection_mode": "USER_SELECTABLE",
+          "visibility_mode": "CONDITIONAL",
+          "runtime_included": true
+        },
+        {
+          "field_id": "runtime:grille_type",
+          "field_name": "grille_type",
+          "display_label": "面格子種類",
+          "display_order": 21,
+          "data_type": "enum",
+          "required_mode": "REQUIRED",
+          "parent_fields": [
+            "window_type"
+          ],
+          "selection_mode": "USER_SELECTABLE",
+          "visibility_mode": "CONDITIONAL",
+          "runtime_included": true
+        },
+        {
+          "field_id": "runtime:operation_type",
+          "field_name": "operation_type",
+          "display_label": "操作仕様",
+          "display_order": 22,
+          "data_type": "enum",
+          "required_mode": "REQUIRED",
+          "parent_fields": [
+            "window_type"
+          ],
+          "selection_mode": "USER_SELECTABLE",
+          "visibility_mode": "CONDITIONAL",
+          "runtime_included": true
+        },
+        {
+          "field_id": "runtime:door_grille_type",
+          "field_name": "door_grille_type",
+          "display_label": "網付格子種類",
+          "display_order": 23,
+          "data_type": "enum",
+          "required_mode": "REQUIRED",
+          "parent_fields": [
+            "window_type"
+          ],
+          "selection_mode": "USER_SELECTABLE",
+          "visibility_mode": "CONDITIONAL",
+          "runtime_included": true
+        },
+        {
+          "field_id": "runtime:operator_position",
+          "field_name": "operator_position",
+          "display_label": "オペレーター位置",
+          "display_order": 29,
+          "data_type": "enum",
+          "required_mode": "REQUIRED",
+          "parent_fields": [
+            "window_type"
+          ],
+          "selection_mode": "USER_SELECTABLE",
+          "visibility_mode": "CONDITIONAL",
+          "runtime_included": true
+        },
+        {
+          "field_id": "runtime:handing",
+          "field_name": "handing",
+          "display_label": "開き勝手（吊元）",
+          "display_order": 30,
+          "data_type": "enum",
+          "required_mode": "REQUIRED",
+          "parent_fields": [
+            "window_type"
+          ],
+          "selection_mode": "USER_SELECTABLE",
+          "visibility_mode": "CONDITIONAL",
+          "runtime_included": true
+        },
+        {
+          "field_id": "runtime:size_mode",
+          "field_name": "size_mode",
+          "display_label": "サイズ方式",
+          "display_order": 40,
+          "data_type": "enum",
+          "required_mode": "REQUIRED",
+          "parent_fields": [
+            "window_type"
+          ],
+          "selection_mode": "USER_SELECTABLE",
+          "visibility_mode": "CONDITIONAL",
+          "runtime_included": true
+        },
+        {
+          "field_id": "runtime:panel_count",
+          "field_name": "panel_count",
+          "display_label": "建具・枚数",
+          "display_order": 50,
+          "data_type": "enum",
+          "required_mode": "REQUIRED",
+          "parent_fields": [
+            "window_type",
+            "size_mode"
+          ],
+          "selection_mode": "USER_SELECTABLE",
+          "visibility_mode": "CONDITIONAL",
+          "runtime_included": true
+        },
+        {
+          "field_id": "runtime:size",
+          "field_name": "size",
+          "display_label": "サイズ",
+          "display_order": 60,
+          "data_type": "enum",
+          "required_mode": "REQUIRED",
+          "parent_fields": [
+            "window_type",
+            "size_mode",
+            "panel_count"
+          ],
+          "selection_mode": "USER_SELECTABLE",
+          "visibility_mode": "CONDITIONAL",
+          "runtime_included": true
+        },
+        {
+          "field_id": "runtime:custom_width",
+          "field_name": "custom_width",
+          "display_label": "特注W（mm）",
+          "display_order": 61,
+          "data_type": "number",
+          "required_mode": "REQUIRED",
+          "parent_fields": [
+            "window_type",
+            "size_mode"
+          ],
+          "selection_mode": "USER_SELECTABLE",
+          "visibility_mode": "CONDITIONAL",
+          "runtime_included": true,
+          "unit": "mm"
+        },
+        {
+          "field_id": "runtime:custom_height",
+          "field_name": "custom_height",
+          "display_label": "特注H（mm）",
+          "display_order": 62,
+          "data_type": "number",
+          "required_mode": "REQUIRED",
+          "parent_fields": [
+            "window_type",
+            "size_mode"
+          ],
+          "selection_mode": "USER_SELECTABLE",
+          "visibility_mode": "CONDITIONAL",
+          "runtime_included": true,
+          "unit": "mm"
+        },
+        {
+          "field_id": "runtime:exterior_color",
+          "field_name": "exterior_color",
+          "display_label": "外観色",
+          "display_order": 70,
+          "data_type": "enum",
+          "required_mode": "REQUIRED",
+          "parent_fields": [
+            "window_type",
+            "size"
+          ],
+          "selection_mode": "USER_SELECTABLE",
+          "visibility_mode": "CONDITIONAL",
+          "runtime_included": true
+        },
+        {
+          "field_id": "runtime:interior_color",
+          "field_name": "interior_color",
+          "display_label": "内観色",
+          "display_order": 80,
+          "data_type": "enum",
+          "required_mode": "REQUIRED",
+          "parent_fields": [
+            "window_type",
+            "size",
+            "exterior_color"
+          ],
+          "selection_mode": "USER_SELECTABLE",
+          "visibility_mode": "CONDITIONAL",
+          "runtime_included": true
+        },
+        {
+          "field_id": "runtime:screen_presence",
+          "field_name": "screen_presence",
+          "display_label": "網戸",
+          "display_order": 90,
+          "data_type": "enum",
+          "required_mode": "REQUIRED",
+          "parent_fields": [
+            "window_type",
+            "size",
+            "exterior_color",
+            "interior_color"
+          ],
+          "selection_mode": "USER_SELECTABLE",
+          "visibility_mode": "CONDITIONAL",
+          "runtime_included": true
+        },
+        {
+          "field_id": "runtime:screen_type",
+          "field_name": "screen_type",
+          "display_label": "網戸形式",
+          "display_order": 100,
+          "data_type": "enum",
+          "required_mode": "REQUIRED",
+          "parent_fields": [
+            "window_type",
+            "size",
+            "screen_presence"
+          ],
+          "selection_mode": "USER_SELECTABLE",
+          "visibility_mode": "CONDITIONAL",
+          "runtime_included": true
+        },
+        {
+          "field_id": "runtime:screen_midrail",
+          "field_name": "screen_midrail",
+          "display_label": "網戸中桟",
+          "display_order": 110,
+          "data_type": "enum",
+          "required_mode": "REQUIRED",
+          "parent_fields": [
+            "window_type",
+            "size",
+            "screen_presence",
+            "screen_type"
+          ],
+          "selection_mode": "USER_SELECTABLE",
+          "visibility_mode": "CONDITIONAL",
+          "runtime_included": true
+        },
+        {
+          "field_id": "runtime:screen_net",
+          "field_name": "screen_net",
+          "display_label": "網戸ネット",
+          "display_order": 120,
+          "data_type": "enum",
+          "required_mode": "REQUIRED",
+          "parent_fields": [
+            "window_type",
+            "size",
+            "screen_presence",
+            "screen_type"
+          ],
+          "selection_mode": "USER_SELECTABLE",
+          "visibility_mode": "CONDITIONAL",
+          "runtime_included": true
+        },
+        {
+          "field_id": "runtime:glass_base",
+          "field_name": "glass_base",
+          "display_label": "ガラス",
+          "display_order": 130,
+          "data_type": "enum",
+          "required_mode": "REQUIRED",
+          "parent_fields": [
+            "window_type",
+            "size"
+          ],
+          "selection_mode": "USER_SELECTABLE",
+          "visibility_mode": "CONDITIONAL",
+          "runtime_included": true
+        },
+        {
+          "field_id": "runtime:glass_type",
+          "field_name": "glass_type",
+          "display_label": "ガラス種",
+          "display_order": 140,
+          "data_type": "enum",
+          "required_mode": "REQUIRED",
+          "parent_fields": [
+            "window_type",
+            "size",
+            "glass_base"
+          ],
+          "selection_mode": "USER_SELECTABLE",
+          "visibility_mode": "CONDITIONAL",
+          "runtime_included": true
+        },
+        {
+          "field_id": "runtime:glass_detail",
+          "field_name": "glass_detail",
+          "display_label": "ガラス詳細",
+          "display_order": 150,
+          "data_type": "enum",
+          "required_mode": "REQUIRED",
+          "parent_fields": [
+            "window_type",
+            "size",
+            "glass_base",
+            "glass_type"
+          ],
+          "selection_mode": "USER_SELECTABLE",
+          "visibility_mode": "CONDITIONAL",
+          "runtime_included": true
+        },
+        {
+          "field_id": "runtime:glass_function",
+          "field_name": "glass_function",
+          "display_label": "ガラス追加機能",
+          "display_order": 160,
+          "data_type": "enum",
+          "required_mode": "REQUIRED",
+          "parent_fields": [
+            "window_type",
+            "size",
+            "glass_base",
+            "glass_type"
+          ],
+          "selection_mode": "USER_SELECTABLE",
+          "visibility_mode": "CONDITIONAL",
+          "runtime_included": true
+        },
+        {
+          "field_id": "runtime:glass_spacer",
+          "field_name": "glass_spacer",
+          "display_label": "スペーサー",
+          "display_order": 170,
+          "data_type": "enum",
+          "required_mode": "REQUIRED",
+          "parent_fields": [
+            "window_type",
+            "size",
+            "glass_base",
+            "glass_type",
+            "glass_detail"
+          ],
+          "selection_mode": "USER_SELECTABLE",
+          "visibility_mode": "CONDITIONAL",
+          "runtime_included": true
+        },
+        {
+          "field_id": "runtime:glass_air_layer",
+          "field_name": "glass_air_layer",
+          "display_label": "中空層",
+          "display_order": 180,
+          "data_type": "enum",
+          "required_mode": "REQUIRED",
+          "parent_fields": [
+            "window_type",
+            "size",
+            "glass_base",
+            "glass_type",
+            "glass_detail",
+            "glass_spacer"
+          ],
+          "selection_mode": "USER_SELECTABLE",
+          "visibility_mode": "CONDITIONAL",
+          "runtime_included": true
+        },
+        {
+          "field_id": "runtime:option",
+          "field_name": "option",
+          "display_label": "その他オプション",
+          "display_order": 190,
+          "data_type": "array",
+          "required_mode": "OPTIONAL",
+          "parent_fields": [
+            "window_type",
+            "size",
+            "exterior_color",
+            "interior_color",
+            "glass_base"
+          ],
+          "selection_mode": "USER_SELECTABLE",
+          "visibility_mode": "CONDITIONAL",
+          "runtime_included": true
+        }
+      ],
+      "sales_request_extension": null,
+      "frame_contract": null,
+      "cache_note": "Decoded existing Formal master projection, not newly retrieved manufacturer original. Existing loader verifies original component hashes before capture; cached serialization hash is distinct."
+    },
+    {
+      "product_id": "SER-YKK-APW430",
+      "manufacturer": "YKK AP",
+      "product": "APW430",
+      "integration": {
+        "id": "SER-YKK-APW430",
+        "manufacturer": "YKK AP",
+        "series": "APW430",
+        "displayName": "APW 430",
+        "productCategory": "sash",
+        "uiCategory": "NEW_CONSTRUCTION_EXTERIOR_WINDOW",
+        "registrySeriesKey": "YKK AP::APW430",
+        "canonicalRuntimeReference": {
+          "runtimeManifestDriveFileId": "1hyX2Fgu1m28xmkM5I53GZ-xC3PX0b9Hk",
+          "coreRuntimeDriveFileId": "1S5Vo-rF1wpQDsNOQr0jMTAaRlvnx3MCF",
+          "dimensionsRuntimeDriveFileId": "1llpTNz_CweEF7vZxP0XRRwzTG4kBF8AX",
+          "optionsRuntimeDriveFileId": "1gb1rWWxNC0Wd6mvZ1ZfqPYrsYyUPGGM_",
+          "canonicalFolderId": "1Cd4_yiAB0Zy6Yb1xo_7ihB4KA44wtUkY"
+        },
+        "packageVersion": "20260918-R3",
+        "schemaVersion": "product-master-runtime-manifest/1.0",
+        "sourceHash": "e2755a735fc3a7c94afacc58175a390bf00784cf1f13521a1263076d7bfae1c7",
+        "adapterType": "APW430_FORMAL_SPLIT_V1",
+        "uiStandardSpec": "サッシ情報管理アプリ_UI実装標準仕様書_v1.9"
+      },
+      "manifest": {
+        "path": "src/catalog/runtime-master-packages/ykkap-apw430-20260918-r3/runtime_manifest.json",
+        "sha256": "e2755a735fc3a7c94afacc58175a390bf00784cf1f13521a1263076d7bfae1c7",
+        "content": {
+          "schema_version": "product-master-runtime-manifest/1.0",
+          "manufacturer": "YKK AP",
+          "series": "APW430",
+          "product_id": "SER-YKK-APW430",
+          "package_version": "20260918-R3",
+          "authoring_mode": "DIRECT_AUTHORING_MASTER",
+          "authoring_file_name": "YKKAP_APW430_AUTHORING_MASTER_20260918-R3",
+          "authoring_file_id": "13pORfVXbbab2MFx8v_42kqeE2fVaqI2h5rRvxCe1mz4",
+          "authoring_export_sha256": "f0e52e58c9c9ea5aa78386e66069ff2109d8031c888b70005cac09365bd35752",
+          "authoring_export_snapshot_at": "2026-09-18T14:28:46+09:00",
+          "runtime_status": "READY",
+          "runtime_files": [
+            {
+              "role": "CORE",
+              "file_name": "apw430_core_20260918-R3.json",
+              "file_id": "1S5Vo-rF1wpQDsNOQr0jMTAaRlvnx3MCF",
+              "sha256": "05ee0db4ceb17a0043372ee7b888ee4ac94f7dc170d08ccf4b1f356fdef17340",
+              "bytes": 87168
+            },
+            {
+              "role": "DIMENSIONS",
+              "file_name": "apw430_dimensions_20260918-R3.json",
+              "file_id": "1llpTNz_CweEF7vZxP0XRRwzTG4kBF8AX",
+              "sha256": "e50d8099a2fec74e5b211508256ecee6805ef5227d814198c0a7319b88ca0262",
+              "bytes": 974838
+            },
+            {
+              "role": "OPTIONS",
+              "file_name": "apw430_options_20260918-R3.json",
+              "file_id": "1gb1rWWxNC0Wd6mvZ1ZfqPYrsYyUPGGM_",
+              "sha256": "c2a5f32a7b553c183c58f2aa18726dc200d4ef396e5bf6b0c35a52ef48dafe38",
+              "bytes": 3447531
+            }
+          ],
+          "documentation_file": {
+            "file_name": "PRODUCT_MASTER_MANIFEST.md",
+            "file_id": "1pvcuXMLm8NCIRoO39Ei97wfqiNEIeKb_",
+            "status": "FORMAL_PASS"
+          },
+          "storage_status": "CANONICAL",
+          "package_gate": "PASS",
+          "generated_at": "2026-09-18T14:28:46+09:00",
+          "working_folder_id": "1aPJlt5dTFHKqS5Koaino9PLqaH4DUB7m",
+          "canonical_folder_id": "1Cd4_yiAB0Zy6Yb1xo_7ihB4KA44wtUkY",
+          "old_folder_id": "1s3T__4JWrX7TrVVTAPaozordvIWzlGzj",
+          "qa_report": {
+            "file_name": "YKKAP_APW430_RUNTIME_QA_20260918-R3.md",
+            "file_id": "1NdVjDAP4DR9gyG7SQ8nJ704crk2tbRBP",
+            "detailed_cases_file_id": "15qcMIAqRMlmCUH7l505cyPk15Om_Doko",
+            "status": "PASS",
+            "case_count": 2484,
+            "pass_count": 2484,
+            "fail_count": 0,
+            "unverified_count": 0
+          },
+          "record_counts": {
+            "series": 1,
+            "windows_common": 8,
+            "series_windows": 26,
+            "active_series_windows": 25,
+            "specific_specs": 12,
+            "relations": 12,
+            "dimension_dictionary": 151,
+            "standard_sizes_history": 718,
+            "active_standard_sizes": 715,
+            "inactive_standard_sizes": 3,
+            "custom_dimension_rules": 25,
+            "colors": 5,
+            "color_rules": 3,
+            "glass": 4,
+            "glass_applicability": 25,
+            "glass_size_rules": 715,
+            "glass_additional_options": 4,
+            "glass_appearances": 3,
+            "glass_manufacturability_rules": 824,
+            "glass_symbol_legend": 25,
+            "glass_symbol_matrix": 715,
+            "grid_window_rules": 25,
+            "standard_grid_count_matrix": 715,
+            "standard_size_glass_dependencies": 715,
+            "custom_glass_dependencies": 25,
+            "screens": 12,
+            "screen_forms": 36,
+            "screen_size_rules": 140,
+            "options": 2,
+            "option_dependencies": 4,
+            "spec_size_rules": 15,
+            "special_spec_rules": 3,
+            "golden_tests": 17,
+            "frame_angle_rules": 25,
+            "screen_midrail_rules": 25
+          },
+          "semantic_recovery": {
+            "screen_midrail": {
+              "classification": {
+                "USER_SELECTABLE": 3,
+                "NOT_APPLICABLE": 22
+              },
+              "allowed_values": [
+                "中桟なし",
+                "中桟付き"
+              ],
+              "applicable_window_count": 3
+            },
+            "frame_angle": {
+              "classification": {
+                "USER_SELECTABLE": 20,
+                "FIXED": 5,
+                "NOT_APPLICABLE": 0
+              },
+              "allowed_values": [
+                "WITH_ANGLE",
+                "WITHOUT_ANGLE"
+              ],
+              "with_angle_applicable_count": 22,
+              "without_angle_applicable_count": 23,
+              "fixed_with_angle_count": 2,
+              "fixed_without_angle_count": 3
+            }
+          },
+          "blocking_items": [],
+          "verification_revision": "20260918-R3-SCREEN-MIDRAIL-FRAME-ANGLE-RECOVERY",
+          "drive_roundtrip_verified": true,
+          "canonical_storage_verified": true,
+          "registry_gate": "PASS",
+          "requested_diff_coverage": "PASS",
+          "unrequested_diff_count": 0,
+          "formalized_at": "2026-09-18T14:35:29+09:00"
+        }
+      },
+      "original_source_integrity": {
+        "expected": "e2755a735fc3a7c94afacc58175a390bf00784cf1f13521a1263076d7bfae1c7",
+        "actual": "e2755a735fc3a7c94afacc58175a390bf00784cf1f13521a1263076d7bfae1c7",
+        "match": true,
+        "manifestDriveFileId": "1hyX2Fgu1m28xmkM5I53GZ-xC3PX0b9Hk",
+        "files": [
+          {
+            "role": "CORE",
+            "fileName": "apw430_core_20260918-R3.json",
+            "fileId": "1S5Vo-rF1wpQDsNOQr0jMTAaRlvnx3MCF",
+            "expected": "05ee0db4ceb17a0043372ee7b888ee4ac94f7dc170d08ccf4b1f356fdef17340",
+            "actual": "05ee0db4ceb17a0043372ee7b888ee4ac94f7dc170d08ccf4b1f356fdef17340",
+            "match": true,
+            "bytes": 87168,
+            "codec": "raw-file"
+          },
+          {
+            "role": "DIMENSIONS",
+            "fileName": "apw430_dimensions_20260918-R3.json",
+            "fileId": "1llpTNz_CweEF7vZxP0XRRwzTG4kBF8AX",
+            "expected": "e50d8099a2fec74e5b211508256ecee6805ef5227d814198c0a7319b88ca0262",
+            "actual": "e50d8099a2fec74e5b211508256ecee6805ef5227d814198c0a7319b88ca0262",
+            "match": true,
+            "bytes": 974838,
+            "codec": "raw-file"
+          },
+          {
+            "role": "OPTIONS",
+            "fileName": "apw430_options_20260918-R3.json",
+            "fileId": "1gb1rWWxNC0Wd6mvZ1ZfqPYrsYyUPGGM_",
+            "expected": "c2a5f32a7b553c183c58f2aa18726dc200d4ef396e5bf6b0c35a52ef48dafe38",
+            "actual": "c2a5f32a7b553c183c58f2aa18726dc200d4ef396e5bf6b0c35a52ef48dafe38",
+            "match": true,
+            "bytes": 3447531,
+            "codec": "raw-parts"
+          }
+        ]
+      },
+      "documents": [
+        {
+          "role": "CORE",
+          "path": "contracts/window-seven/sources/SER-YKK-APW430/CORE.json.gz",
+          "sha256": "a7b21cc8c098e634172a3c2614c2f4f32ef5448a2b0695649abf44b78f4004fb",
+          "decoded_sha256": "8d6f6898bd0b94953399a0f1ba183c47112317b41784c086cb960cae67146f8b",
+          "bytes": 9552
+        },
+        {
+          "role": "DIMENSIONS",
+          "path": "contracts/window-seven/sources/SER-YKK-APW430/DIMENSIONS.json.gz",
+          "sha256": "5816761cecf0bccc8ba2f3ab9f1124da160fe379dc4b69415454000dff0a29b3",
+          "decoded_sha256": "d372cbbcbb8737e97814ce6b0e5d4e7d88a57385a54c908b35ec1579ef682c1c",
+          "bytes": 22889
+        },
+        {
+          "role": "OPTIONS",
+          "path": "contracts/window-seven/sources/SER-YKK-APW430/OPTIONS.json.gz",
+          "sha256": "9431095f418636c6b0b6e3f1669a191d67b858554bf6cadc42703084fe9c9d57",
+          "decoded_sha256": "88ec092ea20d6172b72938fd14dc61707e6ed686b91cd2839ae3ade1b5ed0183",
+          "bytes": 75347
+        }
+      ],
+      "runtime_definitions": [],
+      "sales_request_extension": null,
+      "frame_contract": null,
+      "cache_note": "Decoded existing Formal master projection, not newly retrieved manufacturer original. Existing loader verifies original component hashes before capture; cached serialization hash is distinct."
+    },
+    {
+      "product_id": "SER-YKK-APW431",
+      "manufacturer": "YKK AP",
+      "product": "APW431",
+      "integration": {
+        "id": "SER-YKK-APW431",
+        "manufacturer": "YKK AP",
+        "series": "APW431",
+        "displayName": "APW 431",
+        "productCategory": "sash",
+        "uiCategory": "NEW_CONSTRUCTION_EXTERIOR_WINDOW",
+        "registrySeriesKey": "YKK AP::APW431",
+        "canonicalRuntimeReference": {
+          "runtimeManifestDriveFileId": "16-hPgdJYmkl30MvonP_natv3bPV1C-3x",
+          "coreRuntimeDriveFileId": "1Tdc-M1JWXOvFhDYiYpwlaVm2QJ_-BujQ",
+          "dimensionsRuntimeDriveFileId": "1nJjAqm23gaMdIYUaTrFQzq6pKZsFTiUJ",
+          "optionsRuntimeDriveFileId": "18Q8MkacIL5W-kXFlo2bcdK_G3ypj1Ady",
+          "canonicalFolderId": "16SO5cC-ix7F_vwGLqAyrr62zwDRjXBCB"
+        },
+        "packageVersion": "v1.2",
+        "schemaVersion": "product-master-runtime-manifest/2.0",
+        "sourceHash": "b8927a51a5e31b0c7a89a98b65833cf4f7e0e641c52316cecce4f493399eb1f9",
+        "adapterType": "APW431_FORMAL_SPLIT_V1",
+        "uiStandardSpec": "サッシ情報管理アプリ_UI実装標準仕様書_v1.9"
+      },
+      "manifest": {
+        "path": "src/catalog/runtime-master-packages/ykkap-apw431-v1.2/runtime_manifest.json",
+        "sha256": "b8927a51a5e31b0c7a89a98b65833cf4f7e0e641c52316cecce4f493399eb1f9",
+        "content": {
+          "schema_version": "product-master-runtime-manifest/2.0",
+          "manufacturer": "YKK AP",
+          "series": "APW431",
+          "series_key": "YKK AP::APW431",
+          "package_version": "v1.2",
+          "verification_revision": "20260918-FRAME-ANGLE-R1",
+          "authoring": {
+            "file_name": "YKKAP_APW431_AUTHORING_MASTER_v1.2_FRAME_ANGLE_RECOVERY.xlsx",
+            "file_id": "1LbcIptIWOYogqCF9OPhGQ3L6itox0yND",
+            "sha256": "f6e8a4e0b55179d7f26bd6f446e563efcb2b3b5988d7c28e219aed5f9949a1ab",
+            "bytes": 226881
+          },
+          "runtime_status": "READY",
+          "runtime_files": [
+            {
+              "role": "CORE",
+              "file_name": "apw431_core_v1.2.json",
+              "file_id": "1Tdc-M1JWXOvFhDYiYpwlaVm2QJ_-BujQ",
+              "sha256": "33db499b08c4d987d3979219daf0428d277d6aff0c3ee5453cf21795826069f6",
+              "bytes": 71538
+            },
+            {
+              "role": "DIMENSIONS",
+              "file_name": "apw431_dimensions_v1.2.json",
+              "file_id": "1nJjAqm23gaMdIYUaTrFQzq6pKZsFTiUJ",
+              "sha256": "5a00cb3e2350f5a5a651b2195673aef0de594d41a1e1630eb4ee7a8237342cf3",
+              "bytes": 1818834
+            },
+            {
+              "role": "OPTIONS",
+              "file_name": "apw431_options_v1.2.json",
+              "file_id": "18Q8MkacIL5W-kXFlo2bcdK_G3ypj1Ady",
+              "sha256": "7a2d6a7556b2f0d852aa1b5119dbe3767505aa64fe56fa9dfa970c30a1413101",
+              "bytes": 127549
+            }
+          ],
+          "qa": {
+            "report_file_id": "1sDdkvtXGbGSfoJpqTaCXAKj6olMzJ2WC",
+            "cases_file_id": "18zAqx_MYOwp4Z8uMbMMOWbCMyE42-oTz",
+            "case_count": 1179,
+            "pass_count": 1179,
+            "fail_count": 0,
+            "unverified_count": 0,
+            "status": "PASS"
+          },
+          "semantic_recovery": {
+            "canonical_field": "frame_angle",
+            "stage": "CONFIGURATION",
+            "canonical_values": [
+              "WITH_ANGLE",
+              "WITHOUT_ANGLE"
+            ],
+            "base_window_count": 6,
+            "window_classification": {
+              "CONDITIONAL_USER_SELECTABLE": 4,
+              "FIXED": 2,
+              "USER_SELECTABLE": 0,
+              "NOT_APPLICABLE": 0
+            },
+            "with_angle_applicable_window_count": 4,
+            "without_angle_applicable_window_count": 6,
+            "fixed_with_angle_count": 0,
+            "fixed_without_angle_count": 2,
+            "standard_projection_count": 332,
+            "custom_projection_count": 29,
+            "unknown_fallback": "FORBIDDEN"
+          },
+          "documentation_file": {
+            "file_name": "PRODUCT_MASTER_MANIFEST.md",
+            "file_id": "1emxbMVPK6yjV2s8YeBHPAD7ppePFE8j4",
+            "status": "FORMAL_PASS"
+          },
+          "package_gate": "PASS",
+          "storage_status": "CANONICAL",
+          "registry_gate": "PASS",
+          "canonical_storage_verified": true,
+          "drive_roundtrip_verified": true,
+          "working_folder_id": "12-asRdFp58GmOSJqYXhVPfg4PKQ9afOq",
+          "canonical_folder_id": "16SO5cC-ix7F_vwGLqAyrr62zwDRjXBCB",
+          "old_folder_id": "1VElfoWdIXoXS1wK6qQ6NolSObKHkm6nq",
+          "primary_official_evidence": [
+            {
+              "file_id": "1j9PtW8yoKBZ4Nodm58wU3QtOCvxlEja9",
+              "title": "202607_YKKAP_APW430_商品カタログ.pdf",
+              "pages": [
+                "P.32",
+                "P.80-P.84",
+                "P.100",
+                "P.104",
+                "P.108",
+                "P.112-P.114"
+              ]
+            }
+          ],
+          "requested_diff_coverage": "PASS",
+          "unrequested_diff_count": 0,
+          "other_series_changed_files": 0,
+          "global_flow_changed_files": 0,
+          "ui_changed_files": 0,
+          "blocking_items": [],
+          "generated_at": "2026-09-18T15:20:00+09:00",
+          "formalized_at": "2026-09-18T15:21:56+09:00"
+        }
+      },
+      "original_source_integrity": {
+        "expected": "b8927a51a5e31b0c7a89a98b65833cf4f7e0e641c52316cecce4f493399eb1f9",
+        "actual": "b8927a51a5e31b0c7a89a98b65833cf4f7e0e641c52316cecce4f493399eb1f9",
+        "match": true,
+        "manifestDriveFileId": "16-hPgdJYmkl30MvonP_natv3bPV1C-3x",
+        "files": [
+          {
+            "role": "CORE",
+            "fileName": "apw431_core_v1.2.json",
+            "fileId": "1Tdc-M1JWXOvFhDYiYpwlaVm2QJ_-BujQ",
+            "expected": "33db499b08c4d987d3979219daf0428d277d6aff0c3ee5453cf21795826069f6",
+            "actual": "33db499b08c4d987d3979219daf0428d277d6aff0c3ee5453cf21795826069f6",
+            "match": true,
+            "bytes": 71538,
+            "codec": "raw-file"
+          },
+          {
+            "role": "DIMENSIONS",
+            "fileName": "apw431_dimensions_v1.2.json",
+            "fileId": "1nJjAqm23gaMdIYUaTrFQzq6pKZsFTiUJ",
+            "expected": "5a00cb3e2350f5a5a651b2195673aef0de594d41a1e1630eb4ee7a8237342cf3",
+            "actual": "5a00cb3e2350f5a5a651b2195673aef0de594d41a1e1630eb4ee7a8237342cf3",
+            "match": true,
+            "bytes": 1818834,
+            "codec": "raw-parts"
+          },
+          {
+            "role": "OPTIONS",
+            "fileName": "apw431_options_v1.2.json",
+            "fileId": "18Q8MkacIL5W-kXFlo2bcdK_G3ypj1Ady",
+            "expected": "7a2d6a7556b2f0d852aa1b5119dbe3767505aa64fe56fa9dfa970c30a1413101",
+            "actual": "7a2d6a7556b2f0d852aa1b5119dbe3767505aa64fe56fa9dfa970c30a1413101",
+            "match": true,
+            "bytes": 127549,
+            "codec": "raw-file"
+          }
+        ]
+      },
+      "documents": [
+        {
+          "role": "CORE",
+          "path": "contracts/window-seven/sources/SER-YKK-APW431/CORE.json.gz",
+          "sha256": "86dd3796057a86f4d5e2c05979d37de3ecf1dfbd3f4ed211a3359b4f857023b1",
+          "decoded_sha256": "78d503c89200ff2d1efe716ba7b0dfe5ed90721ca5135833a594e3d740425d6a",
+          "bytes": 11017
+        },
+        {
+          "role": "DIMENSIONS",
+          "path": "contracts/window-seven/sources/SER-YKK-APW431/DIMENSIONS.json.gz",
+          "sha256": "8a2bb051990dced48c3927ea8ac8b4cf60611cad9d6f63696b275b5ec162442f",
+          "decoded_sha256": "65ec9b1bae918ab46215a2b28b13a92a5f731790c7f1307745f825feb145bc78",
+          "bytes": 37517
+        },
+        {
+          "role": "OPTIONS",
+          "path": "contracts/window-seven/sources/SER-YKK-APW431/OPTIONS.json.gz",
+          "sha256": "f679d7867304f98fab347ab9f2b181383227dfb51f67405806a8d88a83b2dc09",
+          "decoded_sha256": "139b6db79d9fcfc7c64778022a78de8b028241acdfe977d1fa417eb3dcc6ad10",
+          "bytes": 12022
+        }
+      ],
+      "runtime_definitions": [],
+      "sales_request_extension": null,
+      "frame_contract": null,
+      "cache_note": "Decoded existing Formal master projection, not newly retrieved manufacturer original. Existing loader verifies original component hashes before capture; cached serialization hash is distinct."
+    },
+    {
+      "product_id": "SER-YKKAP-UCHIRIMO",
+      "manufacturer": "YKK AP",
+      "product": "ウチリモ 内窓",
+      "integration": {
+        "id": "SER-YKKAP-UCHIRIMO",
+        "salesRequestExtension": {
+          "suppressedFields": [
+            "glass_structure",
+            "glass_structure_code",
+            "glass_spec_id",
+            "glass_size_constraint_group",
+            "glass_surface_type",
+            "spacer_type",
+            "gas_fill",
+            "cavity_thickness_mm",
+            "grille_type",
+            "grille_material",
+            "muntin_type"
+          ],
+          "handoffDefaults": {
+            "glass_structure": "MANUFACTURER_ESTIMATE_CONFIRMATION"
+          },
+          "manualWarning": "ガラスの厚みと最終仕様はメーカー見積で確認します。選択した見た目・スペーサー・中空層は希望として見積依頼に引き継ぎます。",
+          "requireManufacturerGlassDetail": true,
+          "fields": [
+            {
+              "key": "sales_glass_appearance",
+              "displayLabel": "希望するガラスの見た目",
+              "slot": "glass_type",
+              "handoffKey": "glass_appearance",
+              "values": [
+                [
+                  "clear",
+                  "透明ガラス"
+                ],
+                [
+                  "pattern",
+                  "型板ガラス"
+                ],
+                [
+                  "frosted",
+                  "すり板ガラス"
+                ],
+                [
+                  "washi",
+                  "和紙調ガラス（単板のみ）"
+                ]
+              ],
+              "excludeUnless": {
+                "washi": [
+                  "single_glazing"
+                ]
+              }
+            },
+            {
+              "key": "sales_spacer_type",
+              "displayLabel": "スペーサー",
+              "slot": "spacer_type",
+              "handoffKey": "spacer_type_request",
+              "families": [
+                "insulating_glass"
+              ],
+              "values": [
+                [
+                  "aluminum",
+                  "アルミスペーサー"
+                ],
+                [
+                  "resin",
+                  "樹脂スペーサー"
+                ]
+              ]
+            },
+            {
+              "key": "sales_gas_fill",
+              "displayLabel": "中空層",
+              "slot": "gas_fill",
+              "handoffKey": "gas_fill_request",
+              "families": [
+                "insulating_glass"
+              ],
+              "values": [
+                [
+                  "air",
+                  "空気層"
+                ],
+                [
+                  "argon",
+                  "アルゴンガス入り"
+                ]
+              ]
+            },
+            {
+              "key": "sales_glass_design",
+              "displayLabel": "ガラスデザイン",
+              "handoffKey": "glass_design_request",
+              "families": [
+                "insulating_glass"
+              ],
+              "values": [
+                [
+                  "standard",
+                  "標準複層ガラス",
+                  false
+                ],
+                [
+                  "grid",
+                  "格子入り複層ガラス",
+                  false
+                ],
+                [
+                  "japanese",
+                  "和室用複層ガラス",
+                  false
+                ]
+              ],
+              "valueWhen": {
+                "grid": {
+                  "room_specification": "residential",
+                  "window_type": [
+                    "sliding_window",
+                    "fix_window"
+                  ]
+                },
+                "japanese": {
+                  "room_specification": "residential",
+                  "window_type": [
+                    "sliding_window",
+                    "fix_window"
+                  ]
+                }
+              },
+              "helpText": "格子入り／和室用のデザイン区分を選択します。選択後に対応するデザイン詳細を表示します。"
+            },
+            {
+              "key": "sales_glass_pattern",
+              "displayLabel": "デザイン",
+              "handoffKey": "glass_design_detail_request",
+              "families": [
+                "insulating_glass"
+              ],
+              "when": {
+                "sales_glass_design": [
+                  "grid",
+                  "japanese"
+                ]
+              },
+              "values": [
+                [
+                  "plain",
+                  "プレーンタイプ",
+                  false
+                ],
+                [
+                  "elegant",
+                  "エレガントタイプ",
+                  false
+                ],
+                [
+                  "wa01_aluminum",
+                  "洋風タイプ WA01（アルミ格子）",
+                  false
+                ],
+                [
+                  "wa01_resin",
+                  "洋風タイプ WA01（樹脂格子）",
+                  false
+                ],
+                [
+                  "wa02",
+                  "洋風タイプ WA02",
+                  false
+                ],
+                [
+                  "pa01",
+                  "プレーリータイプ PA01",
+                  false
+                ],
+                [
+                  "pa02",
+                  "プレーリータイプ PA02",
+                  false
+                ],
+                [
+                  "wp01",
+                  "洋風タイプ WP01",
+                  false
+                ],
+                [
+                  "aramagoushi",
+                  "荒間格子",
+                  false
+                ],
+                [
+                  "yokoshige_fukiyose",
+                  "横繁吹寄格子",
+                  false
+                ],
+                [
+                  "tateshige_fukiyose",
+                  "たて繁吹寄格子",
+                  false
+                ]
+              ],
+              "valueWhen": {
+                "plain": {
+                  "sales_glass_design": "grid"
+                },
+                "elegant": {
+                  "sales_glass_design": "grid"
+                },
+                "wa01_aluminum": {
+                  "sales_glass_design": "grid"
+                },
+                "wa01_resin": {
+                  "sales_glass_design": "grid"
+                },
+                "wa02": {
+                  "sales_glass_design": "grid"
+                },
+                "pa01": {
+                  "sales_glass_design": "grid"
+                },
+                "pa02": {
+                  "sales_glass_design": "grid"
+                },
+                "wp01": {
+                  "sales_glass_design": "grid"
+                },
+                "aramagoushi": {
+                  "sales_glass_design": "japanese"
+                },
+                "yokoshige_fukiyose": {
+                  "sales_glass_design": "japanese"
+                },
+                "tateshige_fukiyose": {
+                  "sales_glass_design": "japanese"
+                }
+              },
+              "helpText": "R5 Formalに保持されている格子・和室用デザインを営業見積依頼用に選択します。"
+            },
+            {
+              "key": "crescent_position_custom_mm",
+              "displayLabel": "クレセント位置（mm）",
+              "dataType": "NUMBER",
+              "unit": "mm",
+              "required": true,
+              "manualCheck": true,
+              "handoffKey": "crescent_position_custom_mm",
+              "when": {
+                "crescent_position": "custom"
+              },
+              "helpText": "位置指定時の数値を入力します。特注W/H入力後に表示し、最終製作可否は積算／YKK AP確認へ引き継ぎます。"
+            },
+            {
+              "key": "pull_handle_position_custom_mm",
+              "displayLabel": "引手位置（mm）",
+              "dataType": "NUMBER",
+              "unit": "mm",
+              "required": true,
+              "manualCheck": true,
+              "handoffKey": "pull_handle_position_custom_mm",
+              "when": {
+                "pull_handle_position": "custom"
+              },
+              "helpText": "位置指定時の引手位置寸法を入力します。クレセント位置入力の後に表示し、最終製作可否は積算／YKK AP確認へ引き継ぎます。"
+            },
+            {
+              "key": "middle_rail_position_custom_mm",
+              "displayLabel": "中桟位置（mm）",
+              "dataType": "NUMBER",
+              "unit": "mm",
+              "required": true,
+              "manualCheck": true,
+              "handoffKey": "middle_rail_position_custom_mm",
+              "when": {
+                "middle_rail_option": "enabled",
+                "middle_rail_position": "custom"
+              },
+              "helpText": "中桟あり・位置指定時の中桟位置寸法を入力します。引手位置入力の後に表示し、最終製作可否は積算／YKK AP確認へ引き継ぎます。"
+            },
+            {
+              "key": "option_items",
+              "displayLabel": "オプション",
+              "dataType": "MULTI_ENUM",
+              "handoffKey": "option_items",
+              "values": [
+                [
+                  "jamb_step_spacer",
+                  "額縁段差スペーサー",
+                  false
+                ],
+                [
+                  "sweep_attachment",
+                  "掃き出しアタッチメント",
+                  false
+                ],
+                [
+                  "meeting_stile_exterior_pull",
+                  "突合せ框専用外部引手",
+                  false
+                ],
+                [
+                  "sash_stopper",
+                  "障子ストッパー",
+                  false
+                ],
+                [
+                  "washitsu_filler",
+                  "和障子用埋め木",
+                  false
+                ],
+                [
+                  "decorative_jamb",
+                  "化粧額縁",
+                  false
+                ],
+                [
+                  "outer_window_replacement_crescent",
+                  "外窓用 取替用クレセント（汎用クレセント）",
+                  true
+                ],
+                [
+                  "outer_window_universal_handle",
+                  "外窓用汎用ハンドル",
+                  true
+                ],
+                [
+                  "adjustment_material",
+                  "調整材",
+                  false
+                ],
+                [
+                  "cover_material",
+                  "カバー材",
+                  false
+                ]
+              ],
+              "valueWhen": {
+                "jamb_step_spacer": {
+                  "room_specification": "residential"
+                },
+                "sweep_attachment": {
+                  "room_specification": "residential",
+                  "window_type": "sliding_window"
+                },
+                "meeting_stile_exterior_pull": {
+                  "room_specification": "residential",
+                  "window_type": "sliding_window",
+                  "sash_configuration": [
+                    "three_panel",
+                    "four_panel_equal",
+                    "offset_four_panel"
+                  ]
+                },
+                "sash_stopper": {
+                  "window_type": "sliding_window"
+                },
+                "washitsu_filler": {
+                  "room_specification": "residential",
+                  "window_type": "sliding_window"
+                },
+                "decorative_jamb": {
+                  "room_specification": "residential",
+                  "window_type": "sliding_window",
+                  "fukashi_presence": "none"
+                },
+                "cover_material": {
+                  "room_specification": "bathroom"
+                }
+              },
+              "helpText": "R6 Formal Product Masterの公式アクセサリを複数選択できます。既設外窓条件が必要な取替用クレセント／汎用ハンドルは積算・YKK AP確認へ引き継ぎます。"
+            },
+            {
+              "key": "fukashi_curtain_rail",
+              "displayLabel": "カーテンレール対応",
+              "handoffKey": "fukashi_curtain_rail_request",
+              "when": {
+                "fukashi_presence": "present",
+                "fukashi_depth": [
+                  "25",
+                  "40"
+                ]
+              },
+              "values": [
+                [
+                  "none",
+                  "なし",
+                  false
+                ],
+                [
+                  "enabled",
+                  "あり",
+                  true
+                ]
+              ],
+              "helpText": "現行YKK AP現場調査資料でカーテンレール対応が確認できるふかし枠25/40で表示します。"
+            }
+          ],
+          "confirmationTo": "積算／YKK AP",
+          "confirmationCode": "UCHIRIMO_SALES_REQUEST_CONFIRM"
+        },
+        "manufacturer": "YKK AP",
+        "series": "ウチリモ 内窓",
+        "displayName": "ウチリモ 内窓",
+        "productCategory": "sash",
+        "uiCategory": "INNER_WINDOW",
+        "registrySeriesKey": "YKK AP::ウチリモ 内窓",
+        "canonicalRuntimeReference": {
+          "runtimeManifestDriveFileId": "1o_Pz5vBYy6xXJOUWxKHtlZqL24sqaP_p",
+          "canonicalFolderId": "1-flyN0KX2zdqXbebX2kVF4VRW0jTSrQu"
+        },
+        "productMasterFormalReference": {
+          "packageVersion": "v1.0-P7R1-R6",
+          "revision": "OptionCompleteness_R1",
+          "authoringDriveFileId": "1GSL6asITPt7ygs_MT_BxCyhGD2dkLV8U",
+          "qaDriveFileId": "1WLRooezkcXkM-Z3wZAXgV38qTW509NA6",
+          "documentationDriveFileId": "1wTxAQwrVBlHBTcdA4JvvlC-UD9ysNB93",
+          "runtimeScope": "NOT_INCLUDED_IN_PRODUCT_MASTER_FORMAL",
+          "authoringSha256": "d1af22609b4a96491163ee076f27aeab1a8e7bef184c04ff3a33bfd970f95d84"
+        },
+        "packageVersion": "v1.0-P7R1-R5",
+        "schemaVersion": "2.0",
+        "sourceHash": "9da322b90cacd3b0657c3fffb4baadf1d2a9b7e2e197553191b568173283fa18",
+        "adapterType": "UCHIRIMO_TABULAR_V1",
+        "uiStandardSpec": "サッシ情報管理アプリ_UI実装標準仕様書_v1.9"
+      },
+      "manifest": {
+        "path": "src/catalog/runtime-master-packages/ykkap-uchirimo-slim-v3-frame/runtime_manifest.json",
+        "sha256": "9da322b90cacd3b0657c3fffb4baadf1d2a9b7e2e197553191b568173283fa18",
+        "content": {
+          "schema_version": "2.0",
+          "manufacturer": "YKK AP",
+          "series": "ウチリモ 内窓",
+          "package_version": "v1.0-P7R1-R5",
+          "authoring_mode": "FILE",
+          "authoring_file_name": "YKKAP_ウチリモ内窓_商品マスター_v1.0-P7R1-R5_InnerWindowCanonicalFrame_R1_FORMAL.xlsx",
+          "authoring_file_id": "1DtC99nlOLeGZwh5EYK7japUcF5utwDIS",
+          "authoring_source_version": "v1.0-P7R1-R5",
+          "authoring_alignment_status": "PASS",
+          "runtime_status": "READY",
+          "runtime_files": [
+            {
+              "file_name": "YKKAP_ウチリモ内窓_Slim_Canonical_v5_InnerWindowCanonicalFrame_R1_FORMAL.json",
+              "file_id": "1qPZQqOUERTb0sjREicbOwNVLtnqelxl3",
+              "sha256": "ddd08feab5ddcfec0cd874c3659ffb03ed29173e58f0635d297abdfef5ae5b4a",
+              "role": "canonical_runtime"
+            },
+            {
+              "file_name": "YKKAP_ウチリモ内窓_Size_Installation_Dependency_Master_v1.0-P7R1-R5_FORMAL.json",
+              "file_id": "1NIaLgsC1570H-8aOEyf8GjofjvTT729x",
+              "sha256": "289331ba885fd31700bc1ab7d1df1ea094553f4afb58c641eedb8f1c7d867861",
+              "role": "support_component"
+            },
+            {
+              "file_name": "YKKAP_ウチリモ内窓_Vacuum_Glass_Curve_Master_v1.0-P7R1-R5_FORMAL.json",
+              "file_id": "11A8Y5_b3C-qwPzt-UcFMFjZqUBzT5BDd",
+              "sha256": "4126ea454edd5d3848ee7f7d1c60e3bbbe5de9b37d1c12f62a7f6bb7c20a390f",
+              "role": "support_component"
+            },
+            {
+              "file_name": "YKKAP_ウチリモ内窓_Judgment_Engine_v1.0-P7R1-R5_FORMAL.json",
+              "file_id": "1ZvTp_9bNJsqM9nPIy5yh8bJyW-V37sWk",
+              "sha256": "b8c40e741f8ff07e58d9bebf9ac691b01b2c3ca536bf6ad36dc2a3fc141ec102",
+              "role": "judgment_engine"
+            }
+          ],
+          "runtime_file_count": 4,
+          "storage_status": "PASS_CANONICAL",
+          "working_folder_id": "1ToOa_3UStpMJfUzW5Dl0Ah_Q-kkX88n3",
+          "canonical_folder_id": "1-flyN0KX2zdqXbebX2kVF4VRW0jTSrQu",
+          "package_gate": "PASS",
+          "registry_gate": "PASS",
+          "formalization_status": "FORMAL_PASS",
+          "formal_pass": true,
+          "runtime_revision": "SLIM-V5-INNER-WINDOW-CANONICAL-FRAME-20260930",
+          "authoring_sha256": "fa22fe7ab6621607f432be4f14eb6f5ac7838e48735e6bcdb9a34452ee42cfca",
+          "schema_file": {
+            "file_name": "uchirimo-runtime.schema.json",
+            "file_id": "1H_MUnOHMH35YW3q73F28BvyWgJaWTJKh",
+            "sha256": "5d1311334c426a2c151827b948675de811b8839da356f42fd2ec7ffe60b1dd5f"
+          },
+          "storage_gate": "PASS",
+          "order_ready": false,
+          "qa_ready": "PASS",
+          "qa_pass": "PASS",
+          "package_revision": "InnerWindowCanonicalFrame_R1",
+          "runtime_scope": "INCLUDED",
+          "human_flow_review": "PENDING",
+          "app_integration_ready": false,
+          "updated_at": "2026-09-30T01:50:50.480469Z",
+          "qa_record": {
+            "file_name": "uchirimo-product-change-qa-r5.json",
+            "file_id": "1aL8Y-wIIqGU5e5aDpoFru1eFsm3mlLpJ",
+            "sha256": "ef1954f17c2ae5514063a7544edb31a3933381996f2f1bb4f1e24eee8d7f699d"
+          },
+          "documentation_file_id": "1MapmV8HyWMxLKrc9UpjD2MLDaK17ywMx",
+          "documentation_file_name": "YKKAP_ウチリモ内窓_PRODUCT_MASTER_MANIFEST_v1.0-P7R1-R5_InnerWindowCanonicalFrame_R1_FORMAL.md",
+          "registry_status": "PASS",
+          "adopted_at": "2026-09-30T01:50:50.480469Z",
+          "post_save_verification": "PASS",
+          "duplicate_check": "PASS",
+          "version_check": "PASS"
+        }
+      },
+      "original_source_integrity": {
+        "expected": "9da322b90cacd3b0657c3fffb4baadf1d2a9b7e2e197553191b568173283fa18",
+        "actual": "9da322b90cacd3b0657c3fffb4baadf1d2a9b7e2e197553191b568173283fa18",
+        "match": true,
+        "manifestDriveFileId": "1o_Pz5vBYy6xXJOUWxKHtlZqL24sqaP_p",
+        "files": [
+          {
+            "role": "canonical_runtime",
+            "fileName": "YKKAP_ウチリモ内窓_Slim_Canonical_v5_InnerWindowCanonicalFrame_R1_FORMAL.json",
+            "fileId": "1qPZQqOUERTb0sjREicbOwNVLtnqelxl3",
+            "expected": "ddd08feab5ddcfec0cd874c3659ffb03ed29173e58f0635d297abdfef5ae5b4a",
+            "actual": "ddd08feab5ddcfec0cd874c3659ffb03ed29173e58f0635d297abdfef5ae5b4a",
+            "match": true,
+            "bytes": 570514,
+            "codec": "identity"
+          },
+          {
+            "role": "support_component",
+            "fileName": "YKKAP_ウチリモ内窓_Size_Installation_Dependency_Master_v1.0-P7R1-R5_FORMAL.json",
+            "fileId": "1NIaLgsC1570H-8aOEyf8GjofjvTT729x",
+            "expected": "289331ba885fd31700bc1ab7d1df1ea094553f4afb58c641eedb8f1c7d867861",
+            "actual": "289331ba885fd31700bc1ab7d1df1ea094553f4afb58c641eedb8f1c7d867861",
+            "match": true,
+            "bytes": 29715,
+            "codec": "identity"
+          },
+          {
+            "role": "support_component",
+            "fileName": "YKKAP_ウチリモ内窓_Vacuum_Glass_Curve_Master_v1.0-P7R1-R5_FORMAL.json",
+            "fileId": "11A8Y5_b3C-qwPzt-UcFMFjZqUBzT5BDd",
+            "expected": "4126ea454edd5d3848ee7f7d1c60e3bbbe5de9b37d1c12f62a7f6bb7c20a390f",
+            "actual": "4126ea454edd5d3848ee7f7d1c60e3bbbe5de9b37d1c12f62a7f6bb7c20a390f",
+            "match": true,
+            "bytes": 111040,
+            "codec": "identity"
+          },
+          {
+            "role": "judgment_engine",
+            "fileName": "YKKAP_ウチリモ内窓_Judgment_Engine_v1.0-P7R1-R5_FORMAL.json",
+            "fileId": "1ZvTp_9bNJsqM9nPIy5yh8bJyW-V37sWk",
+            "expected": "b8c40e741f8ff07e58d9bebf9ac691b01b2c3ca536bf6ad36dc2a3fc141ec102",
+            "actual": "b8c40e741f8ff07e58d9bebf9ac691b01b2c3ca536bf6ad36dc2a3fc141ec102",
+            "match": true,
+            "bytes": 25716,
+            "codec": "identity"
+          }
+        ]
+      },
+      "documents": [
+        {
+          "role": "canonical_runtime",
+          "path": "contracts/window-seven/sources/SER-YKKAP-UCHIRIMO/canonical_runtime.json.gz",
+          "sha256": "83a70ddb0e72d19b4939dbac45f8fd5787c7d11854698d15d6b2065cf9127e3c",
+          "decoded_sha256": "00ec017fab36be469a00e9e2235096946d570a39eeccd38749db005c3d5ee2f5",
+          "bytes": 43685
+        },
+        {
+          "role": "support_component",
+          "path": "contracts/window-seven/sources/SER-YKKAP-UCHIRIMO/support_component.json.gz",
+          "sha256": "f5253946158067b490f63f2a667fe0113063db46519c282eebb21f23fda6aa18",
+          "decoded_sha256": "5306afdc8c9074249a69b6ebd39da308ba38b0e8dcdce21c46bdcded9aab9a6f",
+          "bytes": 4071
+        },
+        {
+          "role": "support_component:11A8Y5_b3C-qwPzt-UcFMFjZqUBzT5BDd",
+          "path": "contracts/window-seven/sources/SER-YKKAP-UCHIRIMO/support_component-11A8Y5_b3C-qwPzt-UcFMFjZqUBzT5BDd.json.gz",
+          "sha256": "50edd06cffc7fa325684a560a050956a44c7b42971e431f89d1e89fe01fc3491",
+          "decoded_sha256": "6952cb9299e69872add86811913ce719d0bb803baf88c7a921d39609f55a82d7",
+          "bytes": 16712
+        },
+        {
+          "role": "judgment_engine",
+          "path": "contracts/window-seven/sources/SER-YKKAP-UCHIRIMO/judgment_engine.json.gz",
+          "sha256": "688247aa74d021b5382a87006453bad7b549d2040360425ca83420cffebb0eb7",
+          "decoded_sha256": "29f9a4f5fa89a2a8431637ad25565d6211c4c76332c7e28e92f162eac0c74224",
+          "bytes": 3934
+        }
+      ],
+      "runtime_definitions": [
+        {
+          "field_name": "manufacturer",
+          "domain": "PRODUCT_STRUCTURE",
+          "data_type": "string",
+          "selection_mode": "FIXED",
+          "required_mode": "OPTIONAL",
+          "visibility_mode": "HIDDEN",
+          "default_value": "YKK AP",
+          "display_label": "メーカー",
+          "display_order": 1000,
+          "unit": null,
+          "runtime_included": true,
+          "show_read_only": false,
+          "parent_fields": []
+        },
+        {
+          "field_name": "series",
+          "domain": "PRODUCT_STRUCTURE",
+          "data_type": "string",
+          "selection_mode": "FIXED",
+          "required_mode": "OPTIONAL",
+          "visibility_mode": "HIDDEN",
+          "default_value": "ウチリモ 内窓",
+          "display_label": "シリーズ",
+          "display_order": 1001,
+          "unit": null,
+          "runtime_included": true,
+          "show_read_only": false,
+          "parent_fields": []
+        },
+        {
+          "field_name": "product_category",
+          "domain": "PRODUCT_STRUCTURE",
+          "data_type": "enum",
+          "selection_mode": "FIXED",
+          "required_mode": "OPTIONAL",
+          "visibility_mode": "HIDDEN",
+          "default_value": "inner_window",
+          "display_label": "商品カテゴリ",
+          "display_order": 1002,
+          "unit": null,
+          "runtime_included": true,
+          "show_read_only": false,
+          "parent_fields": []
+        },
+        {
+          "field_name": "room_specification",
+          "domain": "PRODUCT_STRUCTURE",
+          "data_type": "enum",
+          "selection_mode": "USER_SELECTABLE",
+          "required_mode": "REQUIRED",
+          "visibility_mode": "CONDITIONAL",
+          "default_value": null,
+          "display_label": "仕様",
+          "display_order": 25,
+          "unit": null,
+          "runtime_included": true,
+          "show_read_only": false,
+          "parent_fields": []
+        },
+        {
+          "field_name": "window_type",
+          "domain": "PRODUCT_STRUCTURE",
+          "data_type": "enum",
+          "selection_mode": "USER_SELECTABLE",
+          "required_mode": "REQUIRED",
+          "visibility_mode": "CONDITIONAL",
+          "default_value": null,
+          "display_label": "窓種類",
+          "display_order": 30,
+          "unit": null,
+          "runtime_included": true,
+          "show_read_only": false,
+          "parent_fields": []
+        },
+        {
+          "field_name": "sash_configuration",
+          "domain": "PRODUCT_STRUCTURE",
+          "data_type": "enum",
+          "selection_mode": "CONDITIONAL_SELECTABLE",
+          "required_mode": "OPTIONAL",
+          "visibility_mode": "CONDITIONAL",
+          "default_value": null,
+          "display_label": "障子構成",
+          "display_order": 32,
+          "unit": null,
+          "runtime_included": true,
+          "show_read_only": false,
+          "parent_fields": []
+        },
+        {
+          "field_name": "size_class",
+          "domain": "PRODUCT_STRUCTURE",
+          "data_type": "enum",
+          "selection_mode": "CONDITIONAL_SELECTABLE",
+          "required_mode": "OPTIONAL",
+          "visibility_mode": "CONDITIONAL",
+          "default_value": null,
+          "display_label": "窓/テラス区分",
+          "display_order": 34,
+          "unit": null,
+          "runtime_included": true,
+          "show_read_only": false,
+          "parent_fields": []
+        },
+        {
+          "field_name": "reverse_handing",
+          "domain": "PRODUCT_STRUCTURE",
+          "data_type": "enum",
+          "selection_mode": "CONDITIONAL_SELECTABLE",
+          "required_mode": "OPTIONAL",
+          "visibility_mode": "CONDITIONAL",
+          "default_value": null,
+          "display_label": "逆勝手",
+          "display_order": 36,
+          "unit": null,
+          "runtime_included": true,
+          "show_read_only": false,
+          "parent_fields": []
+        },
+        {
+          "field_name": "three_panel_layout",
+          "domain": "PRODUCT_STRUCTURE",
+          "data_type": "enum",
+          "selection_mode": "CONDITIONAL_SELECTABLE",
+          "required_mode": "OPTIONAL",
+          "visibility_mode": "CONDITIONAL",
+          "default_value": null,
+          "display_label": "3枚建構成",
+          "display_order": 37,
+          "unit": null,
+          "runtime_included": true,
+          "show_read_only": false,
+          "parent_fields": []
+        },
+        {
+          "field_name": "hinge_side",
+          "domain": "PRODUCT_STRUCTURE",
+          "data_type": "enum",
+          "selection_mode": "CONDITIONAL_SELECTABLE",
+          "required_mode": "OPTIONAL",
+          "visibility_mode": "CONDITIONAL",
+          "default_value": null,
+          "display_label": "吊元",
+          "display_order": 38,
+          "unit": null,
+          "runtime_included": true,
+          "show_read_only": false,
+          "parent_fields": []
+        },
+        {
+          "field_name": "size_w",
+          "domain": "SIZE",
+          "data_type": "number",
+          "selection_mode": "USER_SELECTABLE",
+          "required_mode": "REQUIRED",
+          "visibility_mode": "CONDITIONAL",
+          "default_value": null,
+          "display_label": "製品W",
+          "display_order": 101,
+          "unit": "mm",
+          "runtime_included": true,
+          "show_read_only": false,
+          "parent_fields": []
+        },
+        {
+          "field_name": "size_h",
+          "domain": "SIZE",
+          "data_type": "number",
+          "selection_mode": "USER_SELECTABLE",
+          "required_mode": "REQUIRED",
+          "visibility_mode": "CONDITIONAL",
+          "default_value": null,
+          "display_label": "製品H",
+          "display_order": 102,
+          "unit": "mm",
+          "runtime_included": true,
+          "show_read_only": false,
+          "parent_fields": []
+        },
+        {
+          "field_name": "sash_width_allocation",
+          "domain": "ALLOCATION",
+          "data_type": "enum",
+          "selection_mode": "CONDITIONAL_SELECTABLE",
+          "required_mode": "OPTIONAL",
+          "visibility_mode": "CONDITIONAL",
+          "default_value": null,
+          "display_label": "障子割付方式",
+          "display_order": 105,
+          "unit": null,
+          "runtime_included": true,
+          "show_read_only": false,
+          "parent_fields": []
+        },
+        {
+          "field_name": "sash_w1",
+          "domain": "ALLOCATION",
+          "data_type": "number",
+          "selection_mode": "CONDITIONAL_SELECTABLE",
+          "required_mode": "OPTIONAL",
+          "visibility_mode": "CONDITIONAL",
+          "default_value": null,
+          "display_label": "障子W1",
+          "display_order": 106,
+          "unit": "mm",
+          "runtime_included": true,
+          "show_read_only": false,
+          "parent_fields": []
+        },
+        {
+          "field_name": "sash_w2",
+          "domain": "ALLOCATION",
+          "data_type": "number",
+          "selection_mode": "CONDITIONAL_SELECTABLE",
+          "required_mode": "OPTIONAL",
+          "visibility_mode": "CONDITIONAL",
+          "default_value": null,
+          "display_label": "障子W2",
+          "display_order": 107,
+          "unit": "mm",
+          "runtime_included": true,
+          "show_read_only": false,
+          "parent_fields": []
+        },
+        {
+          "field_name": "sash_w3",
+          "domain": "ALLOCATION",
+          "data_type": "number",
+          "selection_mode": "CONDITIONAL_SELECTABLE",
+          "required_mode": "OPTIONAL",
+          "visibility_mode": "CONDITIONAL",
+          "default_value": null,
+          "display_label": "障子W3",
+          "display_order": 108,
+          "unit": "mm",
+          "runtime_included": true,
+          "show_read_only": false,
+          "parent_fields": []
+        },
+        {
+          "field_name": "sash_w4",
+          "domain": "ALLOCATION",
+          "data_type": "number",
+          "selection_mode": "CONDITIONAL_SELECTABLE",
+          "required_mode": "OPTIONAL",
+          "visibility_mode": "CONDITIONAL",
+          "default_value": null,
+          "display_label": "障子W4",
+          "display_order": 109,
+          "unit": "mm",
+          "runtime_included": true,
+          "show_read_only": false,
+          "parent_fields": []
+        },
+        {
+          "field_name": "frame_color",
+          "domain": "COLOR",
+          "data_type": "enum",
+          "selection_mode": "USER_SELECTABLE",
+          "required_mode": "REQUIRED",
+          "visibility_mode": "CONDITIONAL",
+          "default_value": null,
+          "display_label": "本体色",
+          "display_order": 80,
+          "unit": null,
+          "runtime_included": true,
+          "show_read_only": false,
+          "parent_fields": []
+        },
+        {
+          "field_name": "glass_family",
+          "domain": "GLASS",
+          "data_type": "enum",
+          "selection_mode": "CONDITIONAL_SELECTABLE",
+          "required_mode": "OPTIONAL",
+          "visibility_mode": "CONDITIONAL",
+          "default_value": null,
+          "display_label": "ガラス仕様",
+          "display_order": 40,
+          "unit": null,
+          "runtime_included": true,
+          "show_read_only": false,
+          "parent_fields": []
+        },
+        {
+          "field_name": "low_e_type",
+          "domain": "GLASS",
+          "data_type": "enum",
+          "selection_mode": "CONDITIONAL_SELECTABLE",
+          "required_mode": "OPTIONAL",
+          "visibility_mode": "CONDITIONAL",
+          "default_value": null,
+          "display_label": "Low-E性能",
+          "display_order": 50,
+          "unit": null,
+          "runtime_included": true,
+          "show_read_only": false,
+          "parent_fields": []
+        },
+        {
+          "field_name": "glass_coating_color",
+          "domain": "GLASS",
+          "data_type": "enum",
+          "selection_mode": "CONDITIONAL_SELECTABLE",
+          "required_mode": "OPTIONAL",
+          "visibility_mode": "CONDITIONAL",
+          "default_value": null,
+          "display_label": "Low-E膜色",
+          "display_order": 52,
+          "unit": null,
+          "runtime_included": true,
+          "show_read_only": false,
+          "parent_fields": []
+        },
+        {
+          "field_name": "glass_surface_type",
+          "domain": "GLASS",
+          "data_type": "enum",
+          "selection_mode": "CONDITIONAL_SELECTABLE",
+          "required_mode": "OPTIONAL",
+          "visibility_mode": "CONDITIONAL",
+          "default_value": null,
+          "display_label": "ガラス表面",
+          "display_order": 54,
+          "unit": null,
+          "runtime_included": true,
+          "show_read_only": false,
+          "parent_fields": []
+        },
+        {
+          "field_name": "safety_treatment",
+          "domain": "GLASS",
+          "data_type": "enum",
+          "selection_mode": "CONDITIONAL_SELECTABLE",
+          "required_mode": "OPTIONAL",
+          "visibility_mode": "CONDITIONAL",
+          "default_value": null,
+          "display_label": "安全仕様",
+          "display_order": 56,
+          "unit": null,
+          "runtime_included": true,
+          "show_read_only": false,
+          "parent_fields": []
+        },
+        {
+          "field_name": "glass_structure",
+          "domain": "GLASS",
+          "data_type": "enum",
+          "selection_mode": "CONDITIONAL_SELECTABLE",
+          "required_mode": "OPTIONAL",
+          "visibility_mode": "CONDITIONAL",
+          "default_value": null,
+          "display_label": "ガラス構成",
+          "display_order": 42,
+          "unit": null,
+          "runtime_included": true,
+          "show_read_only": false,
+          "parent_fields": []
+        },
+        {
+          "field_name": "glass_structure_code",
+          "domain": "GLASS",
+          "data_type": "string",
+          "selection_mode": "CONDITIONAL_SELECTABLE",
+          "required_mode": "OPTIONAL",
+          "visibility_mode": "CONDITIONAL",
+          "default_value": null,
+          "display_label": "ガラス構成記号",
+          "display_order": 1024,
+          "unit": null,
+          "runtime_included": true,
+          "show_read_only": false,
+          "parent_fields": []
+        },
+        {
+          "field_name": "cavity_thickness_mm",
+          "domain": "GLASS",
+          "data_type": "number",
+          "selection_mode": "CONDITIONAL_SELECTABLE",
+          "required_mode": "OPTIONAL",
+          "visibility_mode": "CONDITIONAL",
+          "default_value": null,
+          "display_label": "中空層厚",
+          "display_order": 72,
+          "unit": "mm",
+          "runtime_included": true,
+          "show_read_only": false,
+          "parent_fields": []
+        },
+        {
+          "field_name": "gas_fill",
+          "domain": "GLASS",
+          "data_type": "enum",
+          "selection_mode": "CONDITIONAL_SELECTABLE",
+          "required_mode": "OPTIONAL",
+          "visibility_mode": "CONDITIONAL",
+          "default_value": null,
+          "display_label": "中空層",
+          "display_order": 70,
+          "unit": null,
+          "runtime_included": true,
+          "show_read_only": false,
+          "parent_fields": []
+        },
+        {
+          "field_name": "spacer_type",
+          "domain": "GLASS",
+          "data_type": "enum",
+          "selection_mode": "CONDITIONAL_SELECTABLE",
+          "required_mode": "OPTIONAL",
+          "visibility_mode": "CONDITIONAL",
+          "default_value": null,
+          "display_label": "スペーサー",
+          "display_order": 60,
+          "unit": null,
+          "runtime_included": true,
+          "show_read_only": false,
+          "parent_fields": []
+        },
+        {
+          "field_name": "grille_type",
+          "domain": "GLASS",
+          "data_type": "enum",
+          "selection_mode": "CONDITIONAL_SELECTABLE",
+          "required_mode": "OPTIONAL",
+          "visibility_mode": "CONDITIONAL",
+          "default_value": null,
+          "display_label": "格子デザイン",
+          "display_order": 57,
+          "unit": null,
+          "runtime_included": true,
+          "show_read_only": false,
+          "parent_fields": []
+        },
+        {
+          "field_name": "grille_material",
+          "domain": "GLASS",
+          "data_type": "enum",
+          "selection_mode": "CONDITIONAL_SELECTABLE",
+          "required_mode": "OPTIONAL",
+          "visibility_mode": "CONDITIONAL",
+          "default_value": null,
+          "display_label": "格子材質",
+          "display_order": 58,
+          "unit": null,
+          "runtime_included": true,
+          "show_read_only": false,
+          "parent_fields": []
+        },
+        {
+          "field_name": "muntin_type",
+          "domain": "GLASS",
+          "data_type": "enum",
+          "selection_mode": "CONDITIONAL_SELECTABLE",
+          "required_mode": "OPTIONAL",
+          "visibility_mode": "CONDITIONAL",
+          "default_value": null,
+          "display_label": "組子",
+          "display_order": 59,
+          "unit": null,
+          "runtime_included": true,
+          "show_read_only": false,
+          "parent_fields": []
+        },
+        {
+          "field_name": "vacuum_glass_product",
+          "domain": "GLASS",
+          "data_type": "enum",
+          "selection_mode": "CONDITIONAL_SELECTABLE",
+          "required_mode": "OPTIONAL",
+          "visibility_mode": "CONDITIONAL",
+          "default_value": null,
+          "display_label": "真空ガラス商品",
+          "display_order": 59.5,
+          "unit": null,
+          "runtime_included": true,
+          "show_read_only": false,
+          "parent_fields": []
+        },
+        {
+          "field_name": "glass_spec_id",
+          "domain": "GLASS",
+          "data_type": "string",
+          "selection_mode": "USER_SELECTABLE",
+          "required_mode": "REQUIRED",
+          "visibility_mode": "CONDITIONAL",
+          "default_value": null,
+          "display_label": "CanonicalガラスID",
+          "display_order": 1032,
+          "unit": null,
+          "runtime_included": true,
+          "show_read_only": false,
+          "parent_fields": []
+        },
+        {
+          "field_name": "glass_size_constraint_group",
+          "domain": "SIZE",
+          "data_type": "string",
+          "selection_mode": "CONDITIONAL_SELECTABLE",
+          "required_mode": "OPTIONAL",
+          "visibility_mode": "CONDITIONAL",
+          "default_value": null,
+          "display_label": "ガラスSize Group",
+          "display_order": 1033,
+          "unit": null,
+          "runtime_included": true,
+          "show_read_only": false,
+          "parent_fields": []
+        },
+        {
+          "field_name": "crescent_presence",
+          "domain": "HARDWARE",
+          "data_type": "enum",
+          "selection_mode": "CONDITIONAL_SELECTABLE",
+          "required_mode": "OPTIONAL",
+          "visibility_mode": "CONDITIONAL",
+          "default_value": null,
+          "display_label": "クレセント有無",
+          "display_order": 1034,
+          "unit": null,
+          "runtime_included": true,
+          "show_read_only": false,
+          "parent_fields": []
+        },
+        {
+          "field_name": "crescent_type",
+          "domain": "HARDWARE",
+          "data_type": "enum",
+          "selection_mode": "CONDITIONAL_SELECTABLE",
+          "required_mode": "OPTIONAL",
+          "visibility_mode": "CONDITIONAL",
+          "default_value": null,
+          "display_label": "クレセント種類",
+          "display_order": 1035,
+          "unit": null,
+          "runtime_included": true,
+          "show_read_only": false,
+          "parent_fields": []
+        },
+        {
+          "field_name": "crescent_position",
+          "domain": "HARDWARE",
+          "data_type": "enum",
+          "selection_mode": "CONDITIONAL_SELECTABLE",
+          "required_mode": "OPTIONAL",
+          "visibility_mode": "CONDITIONAL",
+          "default_value": null,
+          "display_label": "クレセント位置",
+          "display_order": 97,
+          "unit": null,
+          "runtime_included": true,
+          "show_read_only": false,
+          "parent_fields": []
+        },
+        {
+          "field_name": "pull_handle_type",
+          "domain": "HARDWARE",
+          "data_type": "enum",
+          "selection_mode": "CONDITIONAL_SELECTABLE",
+          "required_mode": "OPTIONAL",
+          "visibility_mode": "CONDITIONAL",
+          "default_value": null,
+          "display_label": "引手種類",
+          "display_order": 1037,
+          "unit": null,
+          "runtime_included": true,
+          "show_read_only": false,
+          "parent_fields": []
+        },
+        {
+          "field_name": "pull_handle_position",
+          "domain": "HARDWARE",
+          "data_type": "enum",
+          "selection_mode": "CONDITIONAL_SELECTABLE",
+          "required_mode": "OPTIONAL",
+          "visibility_mode": "CONDITIONAL",
+          "default_value": null,
+          "display_label": "引手位置",
+          "display_order": 1038,
+          "unit": null,
+          "runtime_included": true,
+          "show_read_only": false,
+          "parent_fields": []
+        },
+        {
+          "field_name": "middle_rail_option",
+          "domain": "OPTION",
+          "data_type": "enum",
+          "selection_mode": "CONDITIONAL_SELECTABLE",
+          "required_mode": "OPTIONAL",
+          "visibility_mode": "CONDITIONAL",
+          "default_value": null,
+          "display_label": "中桟",
+          "display_order": 1039,
+          "unit": null,
+          "runtime_included": true,
+          "show_read_only": false,
+          "parent_fields": []
+        },
+        {
+          "field_name": "middle_rail_position",
+          "domain": "OPTION",
+          "data_type": "enum",
+          "selection_mode": "CONDITIONAL_SELECTABLE",
+          "required_mode": "OPTIONAL",
+          "visibility_mode": "CONDITIONAL",
+          "default_value": null,
+          "display_label": "中桟位置",
+          "display_order": 1040,
+          "unit": null,
+          "runtime_included": true,
+          "show_read_only": false,
+          "parent_fields": []
+        },
+        {
+          "field_name": "ventilator_option",
+          "domain": "OPTION",
+          "data_type": "enum",
+          "selection_mode": "CONDITIONAL_SELECTABLE",
+          "required_mode": "OPTIONAL",
+          "visibility_mode": "CONDITIONAL",
+          "default_value": null,
+          "display_label": "換気框",
+          "display_order": 1041,
+          "unit": null,
+          "runtime_included": true,
+          "show_read_only": false,
+          "parent_fields": []
+        },
+        {
+          "field_name": "operating_handle_type",
+          "domain": "HARDWARE",
+          "data_type": "enum",
+          "selection_mode": "CONDITIONAL_SELECTABLE",
+          "required_mode": "OPTIONAL",
+          "visibility_mode": "CONDITIONAL",
+          "default_value": null,
+          "display_label": "操作ハンドル",
+          "display_order": 1043,
+          "unit": null,
+          "runtime_included": true,
+          "show_read_only": false,
+          "parent_fields": []
+        },
+        {
+          "field_name": "arm_stopper_option",
+          "domain": "OPTION",
+          "data_type": "enum",
+          "selection_mode": "CONDITIONAL_SELECTABLE",
+          "required_mode": "OPTIONAL",
+          "visibility_mode": "CONDITIONAL",
+          "default_value": null,
+          "display_label": "アームストッパー",
+          "display_order": 1044,
+          "unit": null,
+          "runtime_included": true,
+          "show_read_only": false,
+          "parent_fields": []
+        },
+        {
+          "field_name": "outside_handle_option",
+          "domain": "OPTION",
+          "data_type": "enum",
+          "selection_mode": "CONDITIONAL_SELECTABLE",
+          "required_mode": "OPTIONAL",
+          "visibility_mode": "CONDITIONAL",
+          "default_value": null,
+          "display_label": "室外側ハンドル",
+          "display_order": 1045,
+          "unit": null,
+          "runtime_included": true,
+          "show_read_only": false,
+          "parent_fields": []
+        },
+        {
+          "field_name": "opening_w_top",
+          "domain": "MEASUREMENT",
+          "data_type": "number",
+          "selection_mode": "CONDITIONAL_SELECTABLE",
+          "required_mode": "OPTIONAL",
+          "visibility_mode": "CONDITIONAL",
+          "default_value": null,
+          "display_label": "開口W上",
+          "display_order": 1046,
+          "unit": "mm",
+          "runtime_included": true,
+          "show_read_only": false,
+          "parent_fields": []
+        },
+        {
+          "field_name": "opening_w_middle",
+          "domain": "MEASUREMENT",
+          "data_type": "number",
+          "selection_mode": "CONDITIONAL_SELECTABLE",
+          "required_mode": "OPTIONAL",
+          "visibility_mode": "CONDITIONAL",
+          "default_value": null,
+          "display_label": "開口W中",
+          "display_order": 1047,
+          "unit": "mm",
+          "runtime_included": true,
+          "show_read_only": false,
+          "parent_fields": []
+        },
+        {
+          "field_name": "opening_w_bottom",
+          "domain": "MEASUREMENT",
+          "data_type": "number",
+          "selection_mode": "CONDITIONAL_SELECTABLE",
+          "required_mode": "OPTIONAL",
+          "visibility_mode": "CONDITIONAL",
+          "default_value": null,
+          "display_label": "開口W下",
+          "display_order": 1048,
+          "unit": "mm",
+          "runtime_included": true,
+          "show_read_only": false,
+          "parent_fields": []
+        },
+        {
+          "field_name": "opening_h_left",
+          "domain": "MEASUREMENT",
+          "data_type": "number",
+          "selection_mode": "CONDITIONAL_SELECTABLE",
+          "required_mode": "OPTIONAL",
+          "visibility_mode": "CONDITIONAL",
+          "default_value": null,
+          "display_label": "開口H左",
+          "display_order": 1049,
+          "unit": "mm",
+          "runtime_included": true,
+          "show_read_only": false,
+          "parent_fields": []
+        },
+        {
+          "field_name": "opening_h_middle",
+          "domain": "MEASUREMENT",
+          "data_type": "number",
+          "selection_mode": "CONDITIONAL_SELECTABLE",
+          "required_mode": "OPTIONAL",
+          "visibility_mode": "CONDITIONAL",
+          "default_value": null,
+          "display_label": "開口H中",
+          "display_order": 1050,
+          "unit": "mm",
+          "runtime_included": true,
+          "show_read_only": false,
+          "parent_fields": []
+        },
+        {
+          "field_name": "opening_h_right",
+          "domain": "MEASUREMENT",
+          "data_type": "number",
+          "selection_mode": "CONDITIONAL_SELECTABLE",
+          "required_mode": "OPTIONAL",
+          "visibility_mode": "CONDITIONAL",
+          "default_value": null,
+          "display_label": "開口H右",
+          "display_order": 1051,
+          "unit": "mm",
+          "runtime_included": true,
+          "show_read_only": false,
+          "parent_fields": []
+        },
+        {
+          "field_name": "diagonal_1",
+          "domain": "MEASUREMENT",
+          "data_type": "number",
+          "selection_mode": "CONDITIONAL_SELECTABLE",
+          "required_mode": "OPTIONAL",
+          "visibility_mode": "CONDITIONAL",
+          "default_value": null,
+          "display_label": "対角1",
+          "display_order": 1052,
+          "unit": "mm",
+          "runtime_included": true,
+          "show_read_only": false,
+          "parent_fields": []
+        },
+        {
+          "field_name": "diagonal_2",
+          "domain": "MEASUREMENT",
+          "data_type": "number",
+          "selection_mode": "CONDITIONAL_SELECTABLE",
+          "required_mode": "OPTIONAL",
+          "visibility_mode": "CONDITIONAL",
+          "default_value": null,
+          "display_label": "対角2",
+          "display_order": 1053,
+          "unit": "mm",
+          "runtime_included": true,
+          "show_read_only": false,
+          "parent_fields": []
+        },
+        {
+          "field_name": "available_mounting_depth",
+          "domain": "INSTALLATION",
+          "data_type": "number",
+          "selection_mode": "CONDITIONAL_SELECTABLE",
+          "required_mode": "OPTIONAL",
+          "visibility_mode": "CONDITIONAL",
+          "default_value": null,
+          "display_label": "取付可能見込A",
+          "display_order": 1054,
+          "unit": "mm",
+          "runtime_included": true,
+          "show_read_only": false,
+          "parent_fields": []
+        },
+        {
+          "field_name": "frame_projection",
+          "domain": "INSTALLATION",
+          "data_type": "number",
+          "selection_mode": "CONDITIONAL_SELECTABLE",
+          "required_mode": "OPTIONAL",
+          "visibility_mode": "CONDITIONAL",
+          "default_value": null,
+          "display_label": "枠持出し",
+          "display_order": 91,
+          "unit": "mm",
+          "runtime_included": true,
+          "show_read_only": false,
+          "parent_fields": []
+        },
+        {
+          "field_name": "existing_window_interference",
+          "domain": "INSTALLATION",
+          "data_type": "enum",
+          "selection_mode": "CONDITIONAL_SELECTABLE",
+          "required_mode": "OPTIONAL",
+          "visibility_mode": "CONDITIONAL",
+          "default_value": null,
+          "display_label": "既設窓干渉",
+          "display_order": 1060,
+          "unit": null,
+          "runtime_included": true,
+          "show_read_only": false,
+          "parent_fields": []
+        },
+        {
+          "field_name": "existing_hardware_interference",
+          "domain": "INSTALLATION",
+          "data_type": "enum",
+          "selection_mode": "CONDITIONAL_SELECTABLE",
+          "required_mode": "OPTIONAL",
+          "visibility_mode": "CONDITIONAL",
+          "default_value": null,
+          "display_label": "既設部品干渉",
+          "display_order": 1061,
+          "unit": null,
+          "runtime_included": true,
+          "show_read_only": false,
+          "parent_fields": []
+        },
+        {
+          "field_name": "structural_support_condition",
+          "domain": "INSTALLATION",
+          "data_type": "enum",
+          "selection_mode": "CONDITIONAL_SELECTABLE",
+          "required_mode": "OPTIONAL",
+          "visibility_mode": "CONDITIONAL",
+          "default_value": null,
+          "display_label": "下地・支持条件",
+          "display_order": 1062,
+          "unit": null,
+          "runtime_included": true,
+          "show_read_only": false,
+          "parent_fields": []
+        },
+        {
+          "field_name": "floor_support_condition",
+          "domain": "INSTALLATION",
+          "data_type": "enum",
+          "selection_mode": "CONDITIONAL_SELECTABLE",
+          "required_mode": "OPTIONAL",
+          "visibility_mode": "CONDITIONAL",
+          "default_value": null,
+          "display_label": "床支持条件",
+          "display_order": 1063,
+          "unit": null,
+          "runtime_included": true,
+          "show_read_only": false,
+          "parent_fields": []
+        },
+        {
+          "field_name": "size_mode",
+          "domain": "SIZE",
+          "data_type": "enum",
+          "selection_mode": "FIXED",
+          "required_mode": "OPTIONAL",
+          "visibility_mode": "CONDITIONAL",
+          "default_value": "custom",
+          "display_label": "特注サイズ",
+          "display_order": 100,
+          "unit": null,
+          "runtime_included": true,
+          "show_read_only": true,
+          "parent_fields": []
+        },
+        {
+          "field_name": "construction",
+          "domain": "INSTALLATION",
+          "data_type": "enum",
+          "selection_mode": "CONDITIONAL_SELECTABLE",
+          "required_mode": "OPTIONAL",
+          "visibility_mode": "CONDITIONAL",
+          "default_value": null,
+          "display_label": "構造種別",
+          "display_order": 1065,
+          "unit": null,
+          "runtime_included": true,
+          "show_read_only": false,
+          "parent_fields": []
+        },
+        {
+          "field_name": "jamb_projection_a_mm",
+          "domain": "INSTALLATION",
+          "data_type": "number",
+          "selection_mode": "CONDITIONAL_SELECTABLE",
+          "required_mode": "OPTIONAL",
+          "visibility_mode": "CONDITIONAL",
+          "default_value": null,
+          "display_label": "額縁出幅a",
+          "display_order": 1066,
+          "unit": "mm",
+          "runtime_included": true,
+          "show_read_only": false,
+          "parent_fields": []
+        },
+        {
+          "field_name": "jamb_face_b_mm",
+          "domain": "INSTALLATION",
+          "data_type": "number",
+          "selection_mode": "CONDITIONAL_SELECTABLE",
+          "required_mode": "OPTIONAL",
+          "visibility_mode": "CONDITIONAL",
+          "default_value": null,
+          "display_label": "額縁見付b",
+          "display_order": 1067,
+          "unit": "mm",
+          "runtime_included": true,
+          "show_read_only": false,
+          "parent_fields": []
+        },
+        {
+          "field_name": "jamb_height_h_mm",
+          "domain": "INSTALLATION",
+          "data_type": "number",
+          "selection_mode": "CONDITIONAL_SELECTABLE",
+          "required_mode": "OPTIONAL",
+          "visibility_mode": "CONDITIONAL",
+          "default_value": null,
+          "display_label": "額縁高さh",
+          "display_order": 1068,
+          "unit": "mm",
+          "runtime_included": true,
+          "show_read_only": false,
+          "parent_fields": []
+        },
+        {
+          "field_name": "jamb_height_h1_mm",
+          "domain": "INSTALLATION",
+          "data_type": "number",
+          "selection_mode": "CONDITIONAL_SELECTABLE",
+          "required_mode": "OPTIONAL",
+          "visibility_mode": "CONDITIONAL",
+          "default_value": null,
+          "display_label": "額縁高さh1",
+          "display_order": 1069,
+          "unit": "mm",
+          "runtime_included": true,
+          "show_read_only": false,
+          "parent_fields": []
+        },
+        {
+          "field_name": "jamb_height_h2_mm",
+          "domain": "INSTALLATION",
+          "data_type": "number",
+          "selection_mode": "CONDITIONAL_SELECTABLE",
+          "required_mode": "OPTIONAL",
+          "visibility_mode": "CONDITIONAL",
+          "default_value": null,
+          "display_label": "額縁高さh2",
+          "display_order": 1070,
+          "unit": "mm",
+          "runtime_included": true,
+          "show_read_only": false,
+          "parent_fields": []
+        },
+        {
+          "field_name": "jamb_height_h3_mm",
+          "domain": "INSTALLATION",
+          "data_type": "number",
+          "selection_mode": "CONDITIONAL_SELECTABLE",
+          "required_mode": "OPTIONAL",
+          "visibility_mode": "CONDITIONAL",
+          "default_value": null,
+          "display_label": "額縁高さh3",
+          "display_order": 1071,
+          "unit": "mm",
+          "runtime_included": true,
+          "show_read_only": false,
+          "parent_fields": []
+        },
+        {
+          "field_name": "sill_upper_c_mm",
+          "domain": "INSTALLATION",
+          "data_type": "number",
+          "selection_mode": "CONDITIONAL_SELECTABLE",
+          "required_mode": "OPTIONAL",
+          "visibility_mode": "CONDITIONAL",
+          "default_value": null,
+          "display_label": "窓台上端位置c",
+          "display_order": 1072,
+          "unit": "mm",
+          "runtime_included": true,
+          "show_read_only": false,
+          "parent_fields": []
+        },
+        {
+          "field_name": "sill_lower_d_mm",
+          "domain": "INSTALLATION",
+          "data_type": "number",
+          "selection_mode": "CONDITIONAL_SELECTABLE",
+          "required_mode": "OPTIONAL",
+          "visibility_mode": "CONDITIONAL",
+          "default_value": null,
+          "display_label": "窓台下端位置d",
+          "display_order": 1073,
+          "unit": "mm",
+          "runtime_included": true,
+          "show_read_only": false,
+          "parent_fields": []
+        },
+        {
+          "field_name": "wall_surface_for_reinforcement_available",
+          "domain": "INSTALLATION",
+          "data_type": "enum",
+          "selection_mode": "CONDITIONAL_SELECTABLE",
+          "required_mode": "OPTIONAL",
+          "visibility_mode": "CONDITIONAL",
+          "default_value": null,
+          "display_label": "補強部品取付内壁面",
+          "display_order": 1074,
+          "unit": null,
+          "runtime_included": true,
+          "show_read_only": false,
+          "parent_fields": []
+        },
+        {
+          "field_name": "substrate_present",
+          "domain": "INSTALLATION",
+          "data_type": "enum",
+          "selection_mode": "CONDITIONAL_SELECTABLE",
+          "required_mode": "OPTIONAL",
+          "visibility_mode": "CONDITIONAL",
+          "default_value": null,
+          "display_label": "下地材有無",
+          "display_order": 1075,
+          "unit": null,
+          "runtime_included": true,
+          "show_read_only": false,
+          "parent_fields": []
+        },
+        {
+          "field_name": "substrate_wall_gap_present",
+          "domain": "INSTALLATION",
+          "data_type": "enum",
+          "selection_mode": "CONDITIONAL_SELECTABLE",
+          "required_mode": "OPTIONAL",
+          "visibility_mode": "CONDITIONAL",
+          "default_value": null,
+          "display_label": "下地材-内壁すき間",
+          "display_order": 1076,
+          "unit": null,
+          "runtime_included": true,
+          "show_read_only": false,
+          "parent_fields": []
+        },
+        {
+          "field_name": "substrate_or_structure_present",
+          "domain": "INSTALLATION",
+          "data_type": "enum",
+          "selection_mode": "CONDITIONAL_SELECTABLE",
+          "required_mode": "OPTIONAL",
+          "visibility_mode": "CONDITIONAL",
+          "default_value": null,
+          "display_label": "下地材/構造体有無",
+          "display_order": 1077,
+          "unit": null,
+          "runtime_included": true,
+          "show_read_only": false,
+          "parent_fields": []
+        },
+        {
+          "field_name": "substrate_or_structure_wall_gap_present",
+          "domain": "INSTALLATION",
+          "data_type": "enum",
+          "selection_mode": "CONDITIONAL_SELECTABLE",
+          "required_mode": "OPTIONAL",
+          "visibility_mode": "CONDITIONAL",
+          "default_value": null,
+          "display_label": "下地材/構造体-内壁すき間",
+          "display_order": 1078,
+          "unit": null,
+          "runtime_included": true,
+          "show_read_only": false,
+          "parent_fields": []
+        },
+        {
+          "field_name": "stud_spacing_condition_met",
+          "domain": "INSTALLATION",
+          "data_type": "enum",
+          "selection_mode": "CONDITIONAL_SELECTABLE",
+          "required_mode": "OPTIONAL",
+          "visibility_mode": "CONDITIONAL",
+          "default_value": null,
+          "display_label": "間柱間隔条件",
+          "display_order": 1079,
+          "unit": null,
+          "runtime_included": true,
+          "show_read_only": false,
+          "parent_fields": []
+        },
+        {
+          "field_name": "tool_floor_interference",
+          "domain": "INSTALLATION",
+          "data_type": "enum",
+          "selection_mode": "CONDITIONAL_SELECTABLE",
+          "required_mode": "OPTIONAL",
+          "visibility_mode": "CONDITIONAL",
+          "default_value": null,
+          "display_label": "施工工具と床の干渉",
+          "display_order": 1080,
+          "unit": null,
+          "runtime_included": true,
+          "show_read_only": false,
+          "parent_fields": []
+        },
+        {
+          "field_name": "floor_supports_load",
+          "domain": "INSTALLATION",
+          "data_type": "enum",
+          "selection_mode": "CONDITIONAL_SELECTABLE",
+          "required_mode": "OPTIONAL",
+          "visibility_mode": "CONDITIONAL",
+          "default_value": null,
+          "display_label": "床荷重支持",
+          "display_order": 1081,
+          "unit": null,
+          "runtime_included": true,
+          "show_read_only": false,
+          "parent_fields": []
+        },
+        {
+          "field_name": "floor_screw_holding",
+          "domain": "INSTALLATION",
+          "data_type": "enum",
+          "selection_mode": "CONDITIONAL_SELECTABLE",
+          "required_mode": "OPTIONAL",
+          "visibility_mode": "CONDITIONAL",
+          "default_value": null,
+          "display_label": "床ねじ保持",
+          "display_order": 1082,
+          "unit": null,
+          "runtime_included": true,
+          "show_read_only": false,
+          "parent_fields": []
+        },
+        {
+          "field_name": "baseboard_interference",
+          "domain": "INSTALLATION",
+          "data_type": "enum",
+          "selection_mode": "CONDITIONAL_SELECTABLE",
+          "required_mode": "OPTIONAL",
+          "visibility_mode": "CONDITIONAL",
+          "default_value": null,
+          "display_label": "束と幅木の干渉",
+          "display_order": 1083,
+          "unit": null,
+          "runtime_included": true,
+          "show_read_only": false,
+          "parent_fields": []
+        },
+        {
+          "field_name": "vertical_horizontal_jamb_step_e_mm",
+          "domain": "INSTALLATION",
+          "data_type": "number",
+          "selection_mode": "CONDITIONAL_SELECTABLE",
+          "required_mode": "OPTIONAL",
+          "visibility_mode": "CONDITIONAL",
+          "default_value": null,
+          "display_label": "縦横額縁段差e",
+          "display_order": 1084,
+          "unit": "mm",
+          "runtime_included": true,
+          "show_read_only": false,
+          "parent_fields": []
+        },
+        {
+          "field_name": "lower_mounting_surface_horizontal_or_adjustable",
+          "domain": "INSTALLATION",
+          "data_type": "enum",
+          "selection_mode": "CONDITIONAL_SELECTABLE",
+          "required_mode": "OPTIONAL",
+          "visibility_mode": "CONDITIONAL",
+          "default_value": null,
+          "display_label": "下枠取付面水平",
+          "display_order": 1085,
+          "unit": null,
+          "runtime_included": true,
+          "show_read_only": false,
+          "parent_fields": []
+        },
+        {
+          "field_name": "mounting_surface_flat",
+          "domain": "INSTALLATION",
+          "data_type": "enum",
+          "selection_mode": "CONDITIONAL_SELECTABLE",
+          "required_mode": "OPTIONAL",
+          "visibility_mode": "CONDITIONAL",
+          "default_value": null,
+          "display_label": "取付面凹凸なし",
+          "display_order": 1086,
+          "unit": null,
+          "runtime_included": true,
+          "show_read_only": false,
+          "parent_fields": []
+        },
+        {
+          "field_name": "mounting_surface_damage_protection",
+          "domain": "INSTALLATION",
+          "data_type": "enum",
+          "selection_mode": "CONDITIONAL_SELECTABLE",
+          "required_mode": "OPTIONAL",
+          "visibility_mode": "CONDITIONAL",
+          "default_value": null,
+          "display_label": "取付面変形損傷対策",
+          "display_order": 1087,
+          "unit": null,
+          "runtime_included": true,
+          "show_read_only": false,
+          "parent_fields": []
+        },
+        {
+          "field_name": "resin_jamb_face_screw_fixed",
+          "domain": "INSTALLATION",
+          "data_type": "enum",
+          "selection_mode": "CONDITIONAL_SELECTABLE",
+          "required_mode": "OPTIONAL",
+          "visibility_mode": "CONDITIONAL",
+          "default_value": null,
+          "display_label": "樹脂額縁見付面ねじ固定",
+          "display_order": 1088,
+          "unit": null,
+          "runtime_included": true,
+          "show_read_only": false,
+          "parent_fields": []
+        },
+        {
+          "field_name": "lower_resin_jamb_space_mm",
+          "domain": "INSTALLATION",
+          "data_type": "number",
+          "selection_mode": "CONDITIONAL_SELECTABLE",
+          "required_mode": "OPTIONAL",
+          "visibility_mode": "CONDITIONAL",
+          "default_value": null,
+          "display_label": "樹脂下額縁下スペース",
+          "display_order": 1089,
+          "unit": "mm",
+          "runtime_included": true,
+          "show_read_only": false,
+          "parent_fields": []
+        },
+        {
+          "field_name": "existing_lower_jamb_angle_present",
+          "domain": "INSTALLATION",
+          "data_type": "enum",
+          "selection_mode": "CONDITIONAL_SELECTABLE",
+          "required_mode": "OPTIONAL",
+          "visibility_mode": "CONDITIONAL",
+          "default_value": null,
+          "display_label": "既設下枠アングル有無",
+          "display_order": 1090,
+          "unit": null,
+          "runtime_included": true,
+          "show_read_only": false,
+          "parent_fields": []
+        },
+        {
+          "field_name": "lower_jamb_a_mm",
+          "domain": "INSTALLATION",
+          "data_type": "number",
+          "selection_mode": "CONDITIONAL_SELECTABLE",
+          "required_mode": "OPTIONAL",
+          "visibility_mode": "CONDITIONAL",
+          "default_value": null,
+          "display_label": "下額縁取付寸法a",
+          "display_order": 1091,
+          "unit": "mm",
+          "runtime_included": true,
+          "show_read_only": false,
+          "parent_fields": []
+        },
+        {
+          "field_name": "lower_jamb_a_prime_mm",
+          "domain": "INSTALLATION",
+          "data_type": "number",
+          "selection_mode": "CONDITIONAL_SELECTABLE",
+          "required_mode": "OPTIONAL",
+          "visibility_mode": "CONDITIONAL",
+          "default_value": null,
+          "display_label": "下額縁取付寸法a'",
+          "display_order": 1092,
+          "unit": "mm",
+          "runtime_included": true,
+          "show_read_only": false,
+          "parent_fields": []
+        },
+        {
+          "field_name": "hardware_tip_mounting_depth_A_mm",
+          "domain": "INSTALLATION",
+          "data_type": "number",
+          "selection_mode": "CONDITIONAL_SELECTABLE",
+          "required_mode": "OPTIONAL",
+          "visibility_mode": "CONDITIONAL",
+          "default_value": null,
+          "display_label": "操作部品先端から取付寸法A",
+          "display_order": 1093,
+          "unit": "mm",
+          "runtime_included": true,
+          "show_read_only": false,
+          "parent_fields": []
+        },
+        {
+          "field_name": "existing_angle_height_mm",
+          "domain": "INSTALLATION",
+          "data_type": "number",
+          "selection_mode": "CONDITIONAL_SELECTABLE",
+          "required_mode": "OPTIONAL",
+          "visibility_mode": "CONDITIONAL",
+          "default_value": null,
+          "display_label": "既設アングル高さ",
+          "display_order": 1094,
+          "unit": "mm",
+          "runtime_included": true,
+          "show_read_only": false,
+          "parent_fields": []
+        },
+        {
+          "field_name": "existing_angle_tip_mm",
+          "domain": "INSTALLATION",
+          "data_type": "number",
+          "selection_mode": "CONDITIONAL_SELECTABLE",
+          "required_mode": "OPTIONAL",
+          "visibility_mode": "CONDITIONAL",
+          "default_value": null,
+          "display_label": "既設アングル先端",
+          "display_order": 1095,
+          "unit": "mm",
+          "runtime_included": true,
+          "show_read_only": false,
+          "parent_fields": []
+        },
+        {
+          "field_name": "system_bath_component_screw_interference",
+          "domain": "INSTALLATION",
+          "data_type": "enum",
+          "selection_mode": "CONDITIONAL_SELECTABLE",
+          "required_mode": "OPTIONAL",
+          "visibility_mode": "CONDITIONAL",
+          "default_value": null,
+          "display_label": "システムバス部材とねじ干渉",
+          "display_order": 1096,
+          "unit": null,
+          "runtime_included": true,
+          "show_read_only": false,
+          "parent_fields": []
+        },
+        {
+          "field_name": "existing_window_to_jamb_step_large",
+          "domain": "INSTALLATION",
+          "data_type": "enum",
+          "selection_mode": "CONDITIONAL_SELECTABLE",
+          "required_mode": "OPTIONAL",
+          "visibility_mode": "CONDITIONAL",
+          "default_value": null,
+          "display_label": "外窓-額縁大段差",
+          "display_order": 1097,
+          "unit": null,
+          "runtime_included": true,
+          "show_read_only": false,
+          "parent_fields": []
+        },
+        {
+          "field_name": "frame_spec",
+          "display_label": "枠仕様",
+          "display_order": 0,
+          "data_type": "enum",
+          "selection_mode": "SELECTABLE",
+          "runtime_included": true,
+          "parent_fields": [
+            "window_type"
+          ],
+          "initial_visibility": "HIDE"
+        },
+        {
+          "field_name": "upper_frame_spec",
+          "display_label": "上枠仕様",
+          "display_order": 0,
+          "data_type": "enum",
+          "selection_mode": "NOT_APPLICABLE",
+          "runtime_included": true,
+          "parent_fields": [
+            "window_type"
+          ],
+          "initial_visibility": "HIDE"
+        },
+        {
+          "field_name": "lower_frame_spec",
+          "display_label": "下枠仕様",
+          "display_order": 0,
+          "data_type": "enum",
+          "selection_mode": "SELECTABLE",
+          "runtime_included": true,
+          "parent_fields": [
+            "window_type"
+          ],
+          "initial_visibility": "HIDE"
+        },
+        {
+          "field_name": "fukashi_presence",
+          "display_label": "ふかし枠",
+          "display_order": 0,
+          "data_type": "enum",
+          "selection_mode": "SELECTABLE",
+          "runtime_included": true,
+          "parent_fields": [
+            "window_type"
+          ],
+          "initial_visibility": "HIDE"
+        },
+        {
+          "field_name": "fukashi_sides",
+          "display_label": "ふかし枠構成",
+          "display_order": 0,
+          "data_type": "enum",
+          "selection_mode": "SELECTABLE",
+          "runtime_included": true,
+          "parent_fields": [
+            "window_type",
+            "fukashi_presence"
+          ],
+          "initial_visibility": "HIDE"
+        },
+        {
+          "field_name": "fukashi_depth",
+          "display_label": "ふかし枠寸法",
+          "display_order": 0,
+          "data_type": "enum",
+          "selection_mode": "SELECTABLE",
+          "runtime_included": true,
+          "parent_fields": [
+            "window_type",
+            "fukashi_presence"
+          ],
+          "initial_visibility": "HIDE"
+        },
+        {
+          "field_name": "fukashi_reinforcement",
+          "display_label": "ふかし枠詳細 / 補強",
+          "display_order": 0,
+          "data_type": "enum",
+          "selection_mode": "SELECTABLE",
+          "runtime_included": true,
+          "parent_fields": [
+            "window_type",
+            "fukashi_depth"
+          ],
+          "initial_visibility": "HIDE"
+        },
+        {
+          "field_name": "installation_environment",
+          "display_label": "設置環境",
+          "display_order": 0,
+          "data_type": "enum",
+          "selection_mode": "SELECTABLE",
+          "runtime_included": true,
+          "parent_fields": [
+            "window_type",
+            "room_specification"
+          ],
+          "initial_visibility": "HIDE"
+        }
+      ],
+      "sales_request_extension": {
+        "suppressedFields": [
+          "glass_structure",
+          "glass_structure_code",
+          "glass_spec_id",
+          "glass_size_constraint_group",
+          "glass_surface_type",
+          "spacer_type",
+          "gas_fill",
+          "cavity_thickness_mm",
+          "grille_type",
+          "grille_material",
+          "muntin_type"
+        ],
+        "handoffDefaults": {
+          "glass_structure": "MANUFACTURER_ESTIMATE_CONFIRMATION"
+        },
+        "manualWarning": "ガラスの厚みと最終仕様はメーカー見積で確認します。選択した見た目・スペーサー・中空層は希望として見積依頼に引き継ぎます。",
+        "requireManufacturerGlassDetail": true,
+        "fields": [
+          {
+            "key": "sales_glass_appearance",
+            "displayLabel": "希望するガラスの見た目",
+            "slot": "glass_type",
+            "handoffKey": "glass_appearance",
+            "values": [
+              [
+                "clear",
+                "透明ガラス"
+              ],
+              [
+                "pattern",
+                "型板ガラス"
+              ],
+              [
+                "frosted",
+                "すり板ガラス"
+              ],
+              [
+                "washi",
+                "和紙調ガラス（単板のみ）"
+              ]
+            ],
+            "excludeUnless": {
+              "washi": [
+                "single_glazing"
+              ]
+            }
+          },
+          {
+            "key": "sales_spacer_type",
+            "displayLabel": "スペーサー",
+            "slot": "spacer_type",
+            "handoffKey": "spacer_type_request",
+            "families": [
+              "insulating_glass"
+            ],
+            "values": [
+              [
+                "aluminum",
+                "アルミスペーサー"
+              ],
+              [
+                "resin",
+                "樹脂スペーサー"
+              ]
+            ]
+          },
+          {
+            "key": "sales_gas_fill",
+            "displayLabel": "中空層",
+            "slot": "gas_fill",
+            "handoffKey": "gas_fill_request",
+            "families": [
+              "insulating_glass"
+            ],
+            "values": [
+              [
+                "air",
+                "空気層"
+              ],
+              [
+                "argon",
+                "アルゴンガス入り"
+              ]
+            ]
+          },
+          {
+            "key": "sales_glass_design",
+            "displayLabel": "ガラスデザイン",
+            "handoffKey": "glass_design_request",
+            "families": [
+              "insulating_glass"
+            ],
+            "values": [
+              [
+                "standard",
+                "標準複層ガラス",
+                false
+              ],
+              [
+                "grid",
+                "格子入り複層ガラス",
+                false
+              ],
+              [
+                "japanese",
+                "和室用複層ガラス",
+                false
+              ]
+            ],
+            "valueWhen": {
+              "grid": {
+                "room_specification": "residential",
+                "window_type": [
+                  "sliding_window",
+                  "fix_window"
+                ]
+              },
+              "japanese": {
+                "room_specification": "residential",
+                "window_type": [
+                  "sliding_window",
+                  "fix_window"
+                ]
+              }
+            },
+            "helpText": "格子入り／和室用のデザイン区分を選択します。選択後に対応するデザイン詳細を表示します。"
+          },
+          {
+            "key": "sales_glass_pattern",
+            "displayLabel": "デザイン",
+            "handoffKey": "glass_design_detail_request",
+            "families": [
+              "insulating_glass"
+            ],
+            "when": {
+              "sales_glass_design": [
+                "grid",
+                "japanese"
+              ]
+            },
+            "values": [
+              [
+                "plain",
+                "プレーンタイプ",
+                false
+              ],
+              [
+                "elegant",
+                "エレガントタイプ",
+                false
+              ],
+              [
+                "wa01_aluminum",
+                "洋風タイプ WA01（アルミ格子）",
+                false
+              ],
+              [
+                "wa01_resin",
+                "洋風タイプ WA01（樹脂格子）",
+                false
+              ],
+              [
+                "wa02",
+                "洋風タイプ WA02",
+                false
+              ],
+              [
+                "pa01",
+                "プレーリータイプ PA01",
+                false
+              ],
+              [
+                "pa02",
+                "プレーリータイプ PA02",
+                false
+              ],
+              [
+                "wp01",
+                "洋風タイプ WP01",
+                false
+              ],
+              [
+                "aramagoushi",
+                "荒間格子",
+                false
+              ],
+              [
+                "yokoshige_fukiyose",
+                "横繁吹寄格子",
+                false
+              ],
+              [
+                "tateshige_fukiyose",
+                "たて繁吹寄格子",
+                false
+              ]
+            ],
+            "valueWhen": {
+              "plain": {
+                "sales_glass_design": "grid"
+              },
+              "elegant": {
+                "sales_glass_design": "grid"
+              },
+              "wa01_aluminum": {
+                "sales_glass_design": "grid"
+              },
+              "wa01_resin": {
+                "sales_glass_design": "grid"
+              },
+              "wa02": {
+                "sales_glass_design": "grid"
+              },
+              "pa01": {
+                "sales_glass_design": "grid"
+              },
+              "pa02": {
+                "sales_glass_design": "grid"
+              },
+              "wp01": {
+                "sales_glass_design": "grid"
+              },
+              "aramagoushi": {
+                "sales_glass_design": "japanese"
+              },
+              "yokoshige_fukiyose": {
+                "sales_glass_design": "japanese"
+              },
+              "tateshige_fukiyose": {
+                "sales_glass_design": "japanese"
+              }
+            },
+            "helpText": "R5 Formalに保持されている格子・和室用デザインを営業見積依頼用に選択します。"
+          },
+          {
+            "key": "crescent_position_custom_mm",
+            "displayLabel": "クレセント位置（mm）",
+            "dataType": "NUMBER",
+            "unit": "mm",
+            "required": true,
+            "manualCheck": true,
+            "handoffKey": "crescent_position_custom_mm",
+            "when": {
+              "crescent_position": "custom"
+            },
+            "helpText": "位置指定時の数値を入力します。特注W/H入力後に表示し、最終製作可否は積算／YKK AP確認へ引き継ぎます。"
+          },
+          {
+            "key": "pull_handle_position_custom_mm",
+            "displayLabel": "引手位置（mm）",
+            "dataType": "NUMBER",
+            "unit": "mm",
+            "required": true,
+            "manualCheck": true,
+            "handoffKey": "pull_handle_position_custom_mm",
+            "when": {
+              "pull_handle_position": "custom"
+            },
+            "helpText": "位置指定時の引手位置寸法を入力します。クレセント位置入力の後に表示し、最終製作可否は積算／YKK AP確認へ引き継ぎます。"
+          },
+          {
+            "key": "middle_rail_position_custom_mm",
+            "displayLabel": "中桟位置（mm）",
+            "dataType": "NUMBER",
+            "unit": "mm",
+            "required": true,
+            "manualCheck": true,
+            "handoffKey": "middle_rail_position_custom_mm",
+            "when": {
+              "middle_rail_option": "enabled",
+              "middle_rail_position": "custom"
+            },
+            "helpText": "中桟あり・位置指定時の中桟位置寸法を入力します。引手位置入力の後に表示し、最終製作可否は積算／YKK AP確認へ引き継ぎます。"
+          },
+          {
+            "key": "option_items",
+            "displayLabel": "オプション",
+            "dataType": "MULTI_ENUM",
+            "handoffKey": "option_items",
+            "values": [
+              [
+                "jamb_step_spacer",
+                "額縁段差スペーサー",
+                false
+              ],
+              [
+                "sweep_attachment",
+                "掃き出しアタッチメント",
+                false
+              ],
+              [
+                "meeting_stile_exterior_pull",
+                "突合せ框専用外部引手",
+                false
+              ],
+              [
+                "sash_stopper",
+                "障子ストッパー",
+                false
+              ],
+              [
+                "washitsu_filler",
+                "和障子用埋め木",
+                false
+              ],
+              [
+                "decorative_jamb",
+                "化粧額縁",
+                false
+              ],
+              [
+                "outer_window_replacement_crescent",
+                "外窓用 取替用クレセント（汎用クレセント）",
+                true
+              ],
+              [
+                "outer_window_universal_handle",
+                "外窓用汎用ハンドル",
+                true
+              ],
+              [
+                "adjustment_material",
+                "調整材",
+                false
+              ],
+              [
+                "cover_material",
+                "カバー材",
+                false
+              ]
+            ],
+            "valueWhen": {
+              "jamb_step_spacer": {
+                "room_specification": "residential"
+              },
+              "sweep_attachment": {
+                "room_specification": "residential",
+                "window_type": "sliding_window"
+              },
+              "meeting_stile_exterior_pull": {
+                "room_specification": "residential",
+                "window_type": "sliding_window",
+                "sash_configuration": [
+                  "three_panel",
+                  "four_panel_equal",
+                  "offset_four_panel"
+                ]
+              },
+              "sash_stopper": {
+                "window_type": "sliding_window"
+              },
+              "washitsu_filler": {
+                "room_specification": "residential",
+                "window_type": "sliding_window"
+              },
+              "decorative_jamb": {
+                "room_specification": "residential",
+                "window_type": "sliding_window",
+                "fukashi_presence": "none"
+              },
+              "cover_material": {
+                "room_specification": "bathroom"
+              }
+            },
+            "helpText": "R6 Formal Product Masterの公式アクセサリを複数選択できます。既設外窓条件が必要な取替用クレセント／汎用ハンドルは積算・YKK AP確認へ引き継ぎます。"
+          },
+          {
+            "key": "fukashi_curtain_rail",
+            "displayLabel": "カーテンレール対応",
+            "handoffKey": "fukashi_curtain_rail_request",
+            "when": {
+              "fukashi_presence": "present",
+              "fukashi_depth": [
+                "25",
+                "40"
+              ]
+            },
+            "values": [
+              [
+                "none",
+                "なし",
+                false
+              ],
+              [
+                "enabled",
+                "あり",
+                true
+              ]
+            ],
+            "helpText": "現行YKK AP現場調査資料でカーテンレール対応が確認できるふかし枠25/40で表示します。"
+          }
+        ],
+        "confirmationTo": "積算／YKK AP",
+        "confirmationCode": "UCHIRIMO_SALES_REQUEST_CONFIRM"
+      },
+      "frame_contract": {
+        "contract_version": "inner_window_frame_contract/1.1",
+        "category": "INNER_WINDOW",
+        "canonical_field_order": [
+          "frame_spec",
+          "upper_frame_spec",
+          "lower_frame_spec",
+          "fukashi_presence",
+          "fukashi_sides",
+          "fukashi_depth",
+          "fukashi_reinforcement"
+        ],
+        "legacy_internal_fields": [
+          "frame_installation_mode",
+          "bottom_rail_type",
+          "extension_frame_type",
+          "extension_frame_reinforcement",
+          "bathroom_installation_type"
+        ],
+        "combination_policy": "BASE_RUNTIME",
+        "fields": [
+          {
+            "field_name": "frame_spec",
+            "display_label": "枠仕様",
+            "stage": "INSTALLATION_SURVEY",
+            "source_field": "frame_installation_mode",
+            "values": [
+              {
+                "value": "standard",
+                "label": "標準枠",
+                "source_value": "standard",
+                "evidence": [
+                  "EV-UCH-002",
+                  "EV-UCH-006",
+                  "EV-UCH-024",
+                  "EV-UCH-025",
+                  "EV-UCH-026",
+                  "P5-UCH-112",
+                  "P5-UCH-201",
+                  "P5-UCH-202",
+                  "P5-UCH-203",
+                  "P5-UCH-204"
+                ],
+                "source_record": {
+                  "table": "allowed_values",
+                  "field_name": "frame_installation_mode",
+                  "values": [
+                    "standard"
+                  ]
+                }
+              },
+              {
+                "value": "frame_projection",
+                "label": "持ち出し枠",
+                "source_value": "frame_projection",
+                "evidence": [
+                  "EV-UCH-002",
+                  "EV-UCH-006",
+                  "EV-UCH-024",
+                  "EV-UCH-025",
+                  "EV-UCH-026",
+                  "P5-UCH-112",
+                  "P5-UCH-201",
+                  "P5-UCH-202",
+                  "P5-UCH-203",
+                  "P5-UCH-204"
+                ],
+                "when": {
+                  "field": "room_specification",
+                  "eq": "residential"
+                },
+                "source_record": {
+                  "table": "allowed_values",
+                  "field_name": "frame_installation_mode",
+                  "values": [
+                    "frame_projection"
+                  ]
+                }
+              }
+            ],
+            "selection_mode": "SELECTABLE",
+            "parent_fields": [
+              "window_type"
+            ],
+            "required": true
+          },
+          {
+            "field_name": "upper_frame_spec",
+            "display_label": "上枠仕様",
+            "stage": "INSTALLATION_SURVEY",
+            "selection_mode": "NOT_APPLICABLE",
+            "values": [],
+            "parent_fields": [
+              "window_type"
+            ],
+            "required": false
+          },
+          {
+            "field_name": "lower_frame_spec",
+            "display_label": "下枠仕様",
+            "stage": "INSTALLATION_SURVEY",
+            "source_field": "bottom_rail_type",
+            "when": {
+              "field": "window_type",
+              "eq": "sliding_window"
+            },
+            "values": [
+              {
+                "value": "standard",
+                "label": "一般枠",
+                "source_value": "standard",
+                "evidence": [
+                  "EV-UCH-002",
+                  "EV-UCH-006",
+                  "EV-UCH-024",
+                  "EV-UCH-025",
+                  "EV-UCH-026",
+                  "P5-UCH-112",
+                  "P5-UCH-201",
+                  "P5-UCH-202",
+                  "P5-UCH-203",
+                  "P5-UCH-204"
+                ],
+                "when": {
+                  "field": "room_specification",
+                  "eq": "residential"
+                },
+                "source_record": {
+                  "table": "allowed_values",
+                  "field_name": "bottom_rail_type",
+                  "values": [
+                    "standard"
+                  ]
+                }
+              },
+              {
+                "value": "partition_lower_rail",
+                "label": "間仕切り",
+                "source_value": "partition_lower_rail",
+                "evidence": [
+                  "EV-UCH-002",
+                  "EV-UCH-006",
+                  "EV-UCH-024",
+                  "EV-UCH-025",
+                  "EV-UCH-026",
+                  "P5-UCH-112",
+                  "P5-UCH-201",
+                  "P5-UCH-202",
+                  "P5-UCH-203",
+                  "P5-UCH-204"
+                ],
+                "when": {
+                  "field": "room_specification",
+                  "eq": "residential"
+                },
+                "source_record": {
+                  "table": "allowed_values",
+                  "field_name": "bottom_rail_type",
+                  "values": [
+                    "partition_lower_rail"
+                  ]
+                }
+              },
+              {
+                "value": "aluminum_rail",
+                "label": "アルミレール",
+                "source_value": "aluminum_rail",
+                "evidence": [
+                  "EV-UCH-002",
+                  "EV-UCH-006",
+                  "EV-UCH-024",
+                  "EV-UCH-025",
+                  "EV-UCH-026",
+                  "P5-UCH-112",
+                  "P5-UCH-201",
+                  "P5-UCH-202",
+                  "P5-UCH-203",
+                  "P5-UCH-204"
+                ],
+                "when": {
+                  "field": "room_specification",
+                  "eq": "residential"
+                },
+                "source_record": {
+                  "table": "allowed_values",
+                  "field_name": "bottom_rail_type",
+                  "values": [
+                    "aluminum_rail"
+                  ]
+                }
+              },
+              {
+                "value": "bathroom_integrated_aluminum_rail",
+                "label": "アタッチメント一体型アルミ下枠",
+                "source_value": "bathroom_integrated_aluminum_rail",
+                "evidence": [
+                  "EV-UCH-002",
+                  "EV-UCH-006",
+                  "EV-UCH-024",
+                  "EV-UCH-025",
+                  "EV-UCH-026",
+                  "P5-UCH-112",
+                  "P5-UCH-201",
+                  "P5-UCH-202",
+                  "P5-UCH-203",
+                  "P5-UCH-204"
+                ],
+                "when": {
+                  "field": "room_specification",
+                  "eq": "bathroom"
+                },
+                "source_record": {
+                  "table": "allowed_values",
+                  "field_name": "bottom_rail_type",
+                  "values": [
+                    "bathroom_integrated_aluminum_rail"
+                  ]
+                }
+              }
+            ],
+            "selection_mode": "SELECTABLE",
+            "parent_fields": [
+              "window_type"
+            ],
+            "required": true
+          },
+          {
+            "field_name": "fukashi_presence",
+            "display_label": "ふかし枠",
+            "stage": "INSTALLATION_SURVEY",
+            "source_field": "extension_frame_type",
+            "values": [
+              {
+                "value": "none",
+                "label": "なし",
+                "source_value": "none",
+                "evidence": [
+                  "EV-UCH-002",
+                  "EV-UCH-006",
+                  "EV-UCH-024",
+                  "EV-UCH-025",
+                  "EV-UCH-026",
+                  "P5-UCH-112",
+                  "P5-UCH-201",
+                  "P5-UCH-202",
+                  "P5-UCH-203",
+                  "P5-UCH-204"
+                ],
+                "source_record": {
+                  "table": "allowed_values",
+                  "field_name": "extension_frame_type",
+                  "values": [
+                    "none"
+                  ]
+                }
+              },
+              {
+                "value": "present",
+                "label": "あり",
+                "derive_from_source_values": [
+                  "fukashi_25",
+                  "fukashi_40",
+                  "fukashi_60"
+                ],
+                "evidence": [
+                  "EV-UCH-002",
+                  "EV-UCH-006",
+                  "EV-UCH-024",
+                  "EV-UCH-025",
+                  "EV-UCH-026",
+                  "P5-UCH-112",
+                  "P5-UCH-201",
+                  "P5-UCH-202",
+                  "P5-UCH-203",
+                  "P5-UCH-204"
+                ],
+                "when": {
+                  "field": "room_specification",
+                  "eq": "residential"
+                },
+                "source_record": {
+                  "table": "allowed_values",
+                  "field_name": "extension_frame_type",
+                  "values": [
+                    "fukashi_25",
+                    "fukashi_40",
+                    "fukashi_60"
+                  ]
+                }
+              }
+            ],
+            "selection_mode": "SELECTABLE",
+            "parent_fields": [
+              "window_type"
+            ],
+            "required": true
+          },
+          {
+            "field_name": "fukashi_sides",
+            "display_label": "ふかし枠構成",
+            "stage": "INSTALLATION_SURVEY",
+            "when": {
+              "field": "fukashi_presence",
+              "eq": "present"
+            },
+            "required_when": {
+              "field": "fukashi_presence",
+              "eq": "present"
+            },
+            "values": [
+              {
+                "value": "three_side",
+                "label": "三方",
+                "evidence": [
+                  "EV-UCH-028"
+                ]
+              },
+              {
+                "value": "four_side",
+                "label": "四方",
+                "evidence": [
+                  "EV-UCH-028"
+                ]
+              }
+            ],
+            "selection_mode": "SELECTABLE",
+            "parent_fields": [
+              "window_type",
+              "fukashi_presence"
+            ],
+            "required": false
+          },
+          {
+            "field_name": "fukashi_depth",
+            "display_label": "ふかし枠寸法",
+            "stage": "INSTALLATION_SURVEY",
+            "source_field": "extension_frame_type",
+            "when": {
+              "field": "fukashi_presence",
+              "eq": "present"
+            },
+            "required_when": {
+              "field": "fukashi_presence",
+              "eq": "present"
+            },
+            "values": [
+              {
+                "value": "25",
+                "label": "ふかし枠25",
+                "source_value": "fukashi_25",
+                "evidence": [
+                  "EV-UCH-002",
+                  "EV-UCH-006",
+                  "EV-UCH-024",
+                  "EV-UCH-025",
+                  "EV-UCH-026",
+                  "P5-UCH-112",
+                  "P5-UCH-201",
+                  "P5-UCH-202",
+                  "P5-UCH-203",
+                  "P5-UCH-204"
+                ],
+                "source_record": {
+                  "table": "allowed_values",
+                  "field_name": "extension_frame_type",
+                  "values": [
+                    "fukashi_25"
+                  ]
+                }
+              },
+              {
+                "value": "40",
+                "label": "ふかし枠40",
+                "source_value": "fukashi_40",
+                "evidence": [
+                  "EV-UCH-002",
+                  "EV-UCH-006",
+                  "EV-UCH-024",
+                  "EV-UCH-025",
+                  "EV-UCH-026",
+                  "P5-UCH-112",
+                  "P5-UCH-201",
+                  "P5-UCH-202",
+                  "P5-UCH-203",
+                  "P5-UCH-204"
+                ],
+                "source_record": {
+                  "table": "allowed_values",
+                  "field_name": "extension_frame_type",
+                  "values": [
+                    "fukashi_40"
+                  ]
+                }
+              },
+              {
+                "value": "60",
+                "label": "ふかし枠60",
+                "source_value": "fukashi_60",
+                "evidence": [
+                  "EV-UCH-002",
+                  "EV-UCH-006",
+                  "EV-UCH-024",
+                  "EV-UCH-025",
+                  "EV-UCH-026",
+                  "P5-UCH-112",
+                  "P5-UCH-201",
+                  "P5-UCH-202",
+                  "P5-UCH-203",
+                  "P5-UCH-204"
+                ],
+                "source_record": {
+                  "table": "allowed_values",
+                  "field_name": "extension_frame_type",
+                  "values": [
+                    "fukashi_60"
+                  ]
+                }
+              }
+            ],
+            "selection_mode": "SELECTABLE",
+            "parent_fields": [
+              "window_type",
+              "fukashi_presence"
+            ],
+            "required": false
+          },
+          {
+            "field_name": "fukashi_reinforcement",
+            "display_label": "ふかし枠詳細 / 補強",
+            "stage": "INSTALLATION_SURVEY",
+            "source_field": "extension_frame_reinforcement",
+            "when": {
+              "field": "fukashi_depth",
+              "eq": "60"
+            },
+            "values": [
+              {
+                "value": "none",
+                "label": "なし",
+                "source_value": "none",
+                "evidence": [
+                  "EV-UCH-002",
+                  "EV-UCH-006",
+                  "EV-UCH-024",
+                  "EV-UCH-025",
+                  "EV-UCH-026",
+                  "P5-UCH-112",
+                  "P5-UCH-201",
+                  "P5-UCH-202",
+                  "P5-UCH-203",
+                  "P5-UCH-204"
+                ],
+                "source_record": {
+                  "table": "allowed_values",
+                  "field_name": "extension_frame_reinforcement",
+                  "values": [
+                    "none"
+                  ]
+                }
+              },
+              {
+                "value": "reinforcement_square_pipe",
+                "label": "補強角パイプ",
+                "source_value": "reinforcement_square_pipe",
+                "evidence": [
+                  "EV-UCH-002",
+                  "EV-UCH-006",
+                  "EV-UCH-024",
+                  "EV-UCH-025",
+                  "EV-UCH-026",
+                  "P5-UCH-112",
+                  "P5-UCH-201",
+                  "P5-UCH-202",
+                  "P5-UCH-203",
+                  "P5-UCH-204"
+                ],
+                "source_record": {
+                  "table": "allowed_values",
+                  "field_name": "extension_frame_reinforcement",
+                  "values": [
+                    "reinforcement_square_pipe"
+                  ]
+                }
+              },
+              {
+                "value": "reinforcement_bracket",
+                "label": "補強ブラケット",
+                "source_value": "reinforcement_bracket",
+                "evidence": [
+                  "EV-UCH-002",
+                  "EV-UCH-006",
+                  "EV-UCH-024",
+                  "EV-UCH-025",
+                  "EV-UCH-026",
+                  "P5-UCH-112",
+                  "P5-UCH-201",
+                  "P5-UCH-202",
+                  "P5-UCH-203",
+                  "P5-UCH-204"
+                ],
+                "source_record": {
+                  "table": "allowed_values",
+                  "field_name": "extension_frame_reinforcement",
+                  "values": [
+                    "reinforcement_bracket"
+                  ]
+                }
+              },
+              {
+                "value": "reinforcement_bundle",
+                "label": "補強束",
+                "source_value": "reinforcement_bundle",
+                "evidence": [
+                  "EV-UCH-002",
+                  "EV-UCH-006",
+                  "EV-UCH-024",
+                  "EV-UCH-025",
+                  "EV-UCH-026",
+                  "P5-UCH-112",
+                  "P5-UCH-201",
+                  "P5-UCH-202",
+                  "P5-UCH-203",
+                  "P5-UCH-204"
+                ],
+                "source_record": {
+                  "table": "allowed_values",
+                  "field_name": "extension_frame_reinforcement",
+                  "values": [
+                    "reinforcement_bundle"
+                  ]
+                }
+              },
+              {
+                "value": "construction_material_floor_supported",
+                "label": "建材床支持",
+                "source_value": "construction_material_floor_supported",
+                "evidence": [
+                  "EV-UCH-002",
+                  "EV-UCH-006",
+                  "EV-UCH-024",
+                  "EV-UCH-025",
+                  "EV-UCH-026",
+                  "P5-UCH-112",
+                  "P5-UCH-201",
+                  "P5-UCH-202",
+                  "P5-UCH-203",
+                  "P5-UCH-204"
+                ],
+                "source_record": {
+                  "table": "allowed_values",
+                  "field_name": "extension_frame_reinforcement",
+                  "values": [
+                    "construction_material_floor_supported"
+                  ]
+                }
+              },
+              {
+                "value": "stepped_fukashi_60",
+                "label": "段差ふかし枠60",
+                "source_value": "stepped_fukashi_60",
+                "evidence": [
+                  "EV-UCH-002",
+                  "EV-UCH-006",
+                  "EV-UCH-024",
+                  "EV-UCH-025",
+                  "EV-UCH-026",
+                  "P5-UCH-112",
+                  "P5-UCH-201",
+                  "P5-UCH-202",
+                  "P5-UCH-203",
+                  "P5-UCH-204"
+                ],
+                "source_record": {
+                  "table": "allowed_values",
+                  "field_name": "extension_frame_reinforcement",
+                  "values": [
+                    "stepped_fukashi_60"
+                  ]
+                }
+              }
+            ],
+            "selection_mode": "SELECTABLE",
+            "parent_fields": [
+              "window_type",
+              "fukashi_depth"
+            ],
+            "required": false,
+            "required_when": {
+              "field": "fukashi_depth",
+              "eq": "60"
+            }
+          },
+          {
+            "field_name": "installation_environment",
+            "display_label": "設置環境",
+            "stage": "INSTALLATION_SURVEY",
+            "source_field": "bathroom_installation_type",
+            "when": {
+              "field": "room_specification",
+              "eq": "bathroom"
+            },
+            "values": [
+              {
+                "value": "tile",
+                "label": "タイル",
+                "source_value": "tile",
+                "evidence": [
+                  "EV-UCH-002",
+                  "EV-UCH-006",
+                  "EV-UCH-024",
+                  "EV-UCH-025",
+                  "EV-UCH-026",
+                  "P5-UCH-112",
+                  "P5-UCH-201",
+                  "P5-UCH-202",
+                  "P5-UCH-203",
+                  "P5-UCH-204"
+                ],
+                "source_record": {
+                  "table": "allowed_values",
+                  "field_name": "bathroom_installation_type",
+                  "values": [
+                    "tile"
+                  ]
+                }
+              },
+              {
+                "value": "unit_bath",
+                "label": "ユニットバス",
+                "source_value": "unit_bath",
+                "evidence": [
+                  "EV-UCH-002",
+                  "EV-UCH-006",
+                  "EV-UCH-024",
+                  "EV-UCH-025",
+                  "EV-UCH-026",
+                  "P5-UCH-112",
+                  "P5-UCH-201",
+                  "P5-UCH-202",
+                  "P5-UCH-203",
+                  "P5-UCH-204"
+                ],
+                "source_record": {
+                  "table": "allowed_values",
+                  "field_name": "bathroom_installation_type",
+                  "values": [
+                    "unit_bath"
+                  ]
+                }
+              }
+            ],
+            "selection_mode": "SELECTABLE",
+            "parent_fields": [
+              "window_type",
+              "room_specification"
+            ],
+            "required": false
+          }
+        ],
+        "source_evidence": [
+          "EV-UCH-002",
+          "EV-UCH-006",
+          "EV-UCH-024",
+          "EV-UCH-025",
+          "EV-UCH-026",
+          "P5-UCH-112",
+          "P5-UCH-201",
+          "P5-UCH-202",
+          "P5-UCH-203",
+          "P5-UCH-204",
+          "EV-UCH-028"
+        ],
+        "authoring_contract_sheet": "Canonical_Execution_Contract",
+        "authority": "AUTHORITATIVE_PUBLIC_SELECTION_CONTRACT",
+        "scope_identity": {
+          "manufacturer": "YKK AP",
+          "series": "ウチリモ 内窓",
+          "revision": "v1.0-P7R1-R4",
+          "business_scope": "SALES_ESTIMATE_REQUEST",
+          "runtime_scope": "INCLUDED",
+          "excluded_scope": [
+            "AUTOMATIC_MANUFACTURER_ORDER",
+            "AUTOMATIC_PRICE",
+            "AUTOMATIC_BOM"
+          ]
+        },
+        "legacy_policy": "READ_ONLY_SOURCE_BINDINGS; NEVER_PUBLIC_OUTPUT; MIGRATE_ONCE_AT_INPUT_BOUNDARY",
+        "size_presentation": {
+          "internal_fields": [
+            "size_mode",
+            "size_class"
+          ],
+          "dimension_slot": "INNER_WINDOW_PRE_OPTION_DIMENSION",
+          "classification": "EVALUATE_ALL_FORMAL_CLASS_CANDIDATES; AMBIGUOUS=MANUAL_CHECK"
+        },
+        "rules": [
+          {
+            "id": "IWC-UCH-BATH-RAIL",
+            "when": {
+              "all": [
+                {
+                  "field": "room_specification",
+                  "eq": "bathroom"
+                },
+                {
+                  "field": "window_type",
+                  "eq": "sliding_window"
+                }
+              ]
+            },
+            "action": "fixed",
+            "field": "lower_frame_spec",
+            "value": "bathroom_integrated_aluminum_rail",
+            "evidence": [
+              "P5-UCH-112",
+              "EV-UCH-006"
+            ]
+          },
+          {
+            "id": "IWC-UCH-BATH-FRAME",
+            "when": {
+              "field": "room_specification",
+              "eq": "bathroom"
+            },
+            "action": "fixed",
+            "field": "frame_spec",
+            "value": "standard",
+            "evidence": [
+              "P5-UCH-201"
+            ]
+          },
+          {
+            "id": "IWC-UCH-BATH-FUKASHI",
+            "when": {
+              "field": "room_specification",
+              "eq": "bathroom"
+            },
+            "action": "fixed",
+            "field": "fukashi_presence",
+            "value": "none",
+            "evidence": [
+              "P5-UCH-202"
+            ]
+          }
+        ],
+        "controlled_unresolved": [
+          {
+            "id": "P5R1G-MC-01",
+            "status": "MANUAL_CHECK",
+            "target_gate": "NONBLOCKING_ESTIMATE_CONFIRM",
+            "source_record": {
+              "id": "P5R1G-MC-01",
+              "scope": "GSC-GRID-G4P3 pattern/F4P3 exact grid manufacturing range",
+              "status": "MANUAL_CHECK_HUMAN_APPROVED",
+              "subcheck_status": "SALES_LEVEL_ALLOWED_MANUFACTURER_QUOTE_RECHECK_REQUIRED",
+              "reason": "Current Uchirimo business WEB catalog/P99/P115 and product catalog were rechecked. P115 explicitly distinguishes transparent/frosted grid ranges but does not publish an independent pattern/F4P3 range.",
+              "human_approval": "PASS",
+              "final_manufacturability_claim": "PROHIBITED",
+              "manufacturer_quote_recheck_required": true
+            },
+            "behavior": "PRESERVE_EXISTING_FAIL_CLOSED",
+            "confirmation_to": "積算／YKK AP"
+          },
+          {
+            "id": "P5R1G-MC-02",
+            "status": "MANUAL_CHECK",
+            "target_gate": "NONBLOCKING_ESTIMATE_CONFIRM",
+            "source_record": {
+              "id": "P5R1G-MC-02",
+              "scope": "GSC-IGU-G4P3 tempered IGU reverse-orientation-safe manufacturing range",
+              "status": "MANUAL_CHECK_HUMAN_APPROVED",
+              "subcheck_status": "SALES_LEVEL_ALLOWED_MANUFACTURER_QUOTE_RECHECK_REQUIRED",
+              "reason": "Current common glass P65 lists T4P3/K4P3 but no P3T4/P3K4 or explicit Uchirimo reverse-orientation equivalence. A legacy Plamado-U notation was found but rejected as non-applicable cross-series evidence.",
+              "human_approval": "PASS",
+              "final_manufacturability_claim": "PROHIBITED",
+              "manufacturer_quote_recheck_required": true
+            },
+            "behavior": "PRESERVE_EXISTING_FAIL_CLOSED",
+            "confirmation_to": "積算／YKK AP"
+          },
+          {
+            "id": "P5R1G-MC-03",
+            "status": "MANUAL_CHECK",
+            "target_gate": "NONBLOCKING_ESTIMATE_CONFIRM",
+            "source_record": {
+              "id": "P5R1G-MC-03",
+              "scope": "GSC-SG-W3 plain/no-muntin exact glass manufacturing range",
+              "status": "MANUAL_CHECK_HUMAN_APPROVED",
+              "subcheck_status": "SALES_LEVEL_ALLOWED_MANUFACTURER_QUOTE_RECHECK_REQUIRED",
+              "reason": "Current Uchirimo P99 independent single-pane table omits W3. Current FAQ/product catalog confirm category/orderability but provide no independent W3 manufacturing dimensions.",
+              "human_approval": "PASS",
+              "final_manufacturability_claim": "PROHIBITED",
+              "manufacturer_quote_recheck_required": true
+            },
+            "behavior": "PRESERVE_EXISTING_FAIL_CLOSED",
+            "confirmation_to": "積算／YKK AP"
+          },
+          {
+            "id": "P5R1G-MC-04",
+            "status": "MANUAL_CHECK",
+            "target_gate": "NONBLOCKING_ESTIMATE_CONFIRM",
+            "source_record": {
+              "id": "P5R1G-MC-04",
+              "scope": "GSC-SG-W5 plain/no-muntin exact glass manufacturing range",
+              "status": "MANUAL_CHECK_HUMAN_APPROVED",
+              "subcheck_status": "SALES_LEVEL_ALLOWED_MANUFACTURER_QUOTE_RECHECK_REQUIRED",
+              "reason": "Current Uchirimo P99 independent single-pane table omits W5. Current FAQ/product catalog confirm category/orderability but provide no independent W5 manufacturing dimensions.",
+              "human_approval": "PASS",
+              "final_manufacturability_claim": "PROHIBITED",
+              "manufacturer_quote_recheck_required": true
+            },
+            "behavior": "PRESERVE_EXISTING_FAIL_CLOSED",
+            "confirmation_to": "積算／YKK AP"
+          }
+        ],
+        "source_field_bindings": {
+          "frame_spec": {
+            "target": "frame_installation_mode",
+            "values": {
+              "standard": "standard",
+              "frame_projection": "frame_projection"
+            }
+          },
+          "lower_frame_spec": {
+            "target": "bottom_rail_type",
+            "values": {
+              "standard": "standard",
+              "partition_lower_rail": "partition_lower_rail",
+              "aluminum_rail": "aluminum_rail",
+              "bathroom_integrated_aluminum_rail": "bathroom_integrated_aluminum_rail"
+            }
+          },
+          "fukashi_presence": {
+            "target": "extension_frame_type",
+            "values": {
+              "none": "none"
+            },
+            "clear_before_bind": true
+          },
+          "fukashi_depth": {
+            "target": "extension_frame_type",
+            "values": {
+              "25": "fukashi_25",
+              "40": "fukashi_40",
+              "60": "fukashi_60"
+            }
+          },
+          "fukashi_reinforcement": {
+            "target": "extension_frame_reinforcement",
+            "values": {
+              "none": "none",
+              "reinforcement_square_pipe": "reinforcement_square_pipe",
+              "reinforcement_bracket": "reinforcement_bracket",
+              "reinforcement_bundle": "reinforcement_bundle",
+              "construction_material_floor_supported": "construction_material_floor_supported",
+              "stepped_fukashi_60": "stepped_fukashi_60"
+            }
+          },
+          "installation_environment": {
+            "target": "bathroom_installation_type",
+            "values": {
+              "tile": "tile",
+              "unit_bath": "unit_bath"
+            }
+          }
+        },
+        "option_field": "option_items"
+      },
+      "cache_note": "Decoded existing Formal master projection, not newly retrieved manufacturer original. Existing loader verifies original component hashes before capture; cached serialization hash is distinct."
+    }
+  ]
+}

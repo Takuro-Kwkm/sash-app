@@ -1,0 +1,37 @@
+{
+  "status": "PASS_ADOPTION_INTEGRITY",
+  "completion": "FORMAL_VALIDATION_PASS",
+  "total_field_count": 217,
+  "manufacturer_counts": {
+    "LIXIL": 112,
+    "YKK AP": 105
+  },
+  "product_counts": {
+    "SER-LIX-EW": 29,
+    "SER-LIXIL-TW": 25,
+    "SER-LIX-SAMOS2H": 30,
+    "SER-LIX-SAMOSL": 28,
+    "SER-YKK-APW430": 16,
+    "SER-YKK-APW431": 16,
+    "SER-YKKAP-UCHIRIMO": 73
+  },
+  "mapping_counts": {
+    "EXACT": 114,
+    "SEMANTIC": 52,
+    "PRODUCT_SPECIFIC": 48,
+    "EXCEPTION": 3
+  },
+  "statuses": {
+    "FORMAL": 217
+  },
+  "evidence_accepted_application": 651,
+  "missing_claims": 0,
+  "runtime_unverified_fields": [],
+  "central_authority_sha": "53a1c39d475acafc09da4b6c13811cdf0bfefd23",
+  "runtime_diff": 0,
+  "central_validator_count": 15,
+  "promotion_dry_run_error_count": 0,
+  "promotion_dry_run_errors": [],
+  "git_head": "a727b90c99550f7b5f0f7d2f288d0df9afc394f4",
+  "packet_content_sha256": "591f11c7bd90a819d39f0e936209dce465a5e099cf7b5fd5a60ab68cf6999636"
+}

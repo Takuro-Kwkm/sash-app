@@ -1,0 +1,9 @@
+{
+  "status": "PASS",
+  "runtime_source_head": "af4f30983cc3d9a24ca1a7eb54fab834f024d0fc",
+  "command": "npm test",
+  "test_count": 613,
+  "pass": 613,
+  "fail": 0,
+  "log_sha256": "c238a1292857cac898ccdafab245c61db2087d7cd6864f9414e956d6cd54c024"
+}

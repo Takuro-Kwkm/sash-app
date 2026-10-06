@@ -1,0 +1,72 @@
+WINDOW 7 PRODUCT SELECTION CONTRACT FORMALIZATION = FORMAL_PASS_PENDING_MERGE
+Business Scope: application Selection Contract; status-only promotion; Runtime/Product Master/Canonical Mapping diff 0
+
+{
+  "status": "FORMAL_PROMOTED_PENDING_MERGE",
+  "product_field_counts": {
+    "SER-LIX-EW": 29,
+    "SER-LIXIL-TW": 25,
+    "SER-LIX-SAMOS2H": 30,
+    "SER-LIX-SAMOSL": 28,
+    "SER-YKK-APW430": 16,
+    "SER-YKK-APW431": 16,
+    "SER-YKKAP-UCHIRIMO": 73
+  },
+  "manufacturer_field_counts": {
+    "LIXIL": 112,
+    "YKK AP": 105
+  },
+  "total_field_count": 217,
+  "excluded_field_count": 27,
+  "mapping_counts": {
+    "EXACT": 114,
+    "SEMANTIC": 52,
+    "PRODUCT_SPECIFIC": 48,
+    "EXCEPTION": 3
+  },
+  "central_mapping_counts": {
+    "EXACT": 117,
+    "SEMANTIC": 52,
+    "PRODUCT_SPECIFIC": 48
+  },
+  "classification_counts": {
+    "GLOBAL EXACT": 0,
+    "MANUFACTURER SHARED": 18,
+    "CATEGORY SHARED": 96,
+    "SEMANTIC EQUIVALENT": 52,
+    "PRODUCT SPECIFIC": 48,
+    "EXCEPTION": 3
+  },
+  "before": {
+    "FORMAL": 0,
+    "PROVISIONAL": 217
+  },
+  "after": {
+    "FORMAL": 217,
+    "PROVISIONAL": 0
+  },
+  "evidence_accepted": 651,
+  "evidence_rejected": 0,
+  "evidence_candidates": 651,
+  "missing_claims": 0,
+  "blocked_fields": 0,
+  "pending_fields": 0,
+  "promotion_approval_count": 217,
+  "mapping_gap": 0,
+  "semantic_gap": 0,
+  "central_changes": "NONE_WINDOW_ROLES_ALREADY_REGISTERED",
+  "central_authority_sha": "53a1c39d475acafc09da4b6c13811cdf0bfefd23",
+  "starting_authority_sha": "eac705297a0b938b4014b733b98c4a0f626d15ce",
+  "runtime_diff": 0,
+  "packet_content_sha256": "591f11c7bd90a819d39f0e936209dce465a5e099cf7b5fd5a60ab68cf6999636",
+  "runtime_browser_regression": "SEE_EXECUTION_RECORD",
+  "merge": "NOT_EXECUTED",
+  "post_merge": "NOT_EXECUTED",
+  "promotion_review_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+}
+
+Both independent human decisions are recorded and bind the original fixed acceptance Packet and the fixed Promotion Packet.
+Evidence Accepted 651 / Rejected 0; Missing Claims 0; 217 FORMAL / 0 PROVISIONAL / 0 BLOCKED / 0 PENDING.
+All 15 central validators PASS; 1704-state Runtime replay PASS; 613 existing tests PASS; six adversarial governance tests PASS.
+Browser regression for unchanged Runtime carried forward: 1280/768/390; save/reload, estimate, Excel/PDF, print dispatch/CSS. Native OS print not executed.
+Merge and post-merge validation are still pending. Final execution readback is saved separately from this commit.

@@ -1,0 +1,19 @@
+{
+  "version": "0.1",
+  "authorities": [
+    {
+      "authority_id": "WINDOW7-HUMAN-INDEPENDENT-PROMOTION",
+      "kind": "REVIEW_AUTHORITY",
+      "status": "CURRENT",
+      "identity": {
+        "path": "contracts/window-seven/evidence/human-promotion-decisions.json",
+        "pointer": "",
+        "sha256": "7ee1550bbe0d1494d1680abf0fb48012c49ab64585e8b2dcecd8fdf70039abce"
+      },
+      "source_classes": [],
+      "purposes": [
+        "APPLICATION_FIELD"
+      ]
+    }
+  ]
+}

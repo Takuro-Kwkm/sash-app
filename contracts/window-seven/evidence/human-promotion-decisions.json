@@ -1,0 +1,3266 @@
+{
+  "version": "0.1",
+  "human_review_authority": "Direct human user in this Codex chat",
+  "human_statement": "217件の独立Promotion Approvalを承認",
+  "interpreted_scope": "Independent approval of 217 fixed promotion dossiers, target Contracts and ordered Accepted Evidence hashes.",
+  "recorded_at_utc": "2026-10-06T02:50:09Z",
+  "approved_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82",
+  "attestation_type": "HUMAN_MESSAGE_RECORD_NOT_CRYPTOGRAPHIC_IDENTITY",
+  "decisions": [
+    {
+      "decision_id": "WINDOW7-PROMOTION-7dc45e36e2add87fcd25-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-7dc45e36e2add87fcd25",
+        "field_id": "sash-app:SER-LIX-EW:window_type",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "f404b3b795eb2a7d93ce0ec158886789ded05756d3c23b9715a648b21212caa6",
+        "evidence_sha256": "dc91dc42ab86cb33576197b19b6bdc7c3032fb98ca6ecff9f1e410867fa7d2d2",
+        "dossier_sha256": "cf4c922fb056e7b66f026f9fda367784f91afdbb10c7b4393f0a39031ec623d9"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-28c3ecb6c0a98c8af6a5-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-28c3ecb6c0a98c8af6a5",
+        "field_id": "sash-app:SER-LIX-EW:window_spec",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "4aa2f2ac86ce2780a8658cc53f9e0ea08820c994ab927b885bbdb85c2d55f280",
+        "evidence_sha256": "55b55230700d958c9b3c14ce7e57eb23a41fb7480b341f9b4f06b0f6af9582ec",
+        "dossier_sha256": "985d46da670f475cbd377a9f017ed014ceeb56baec66d4ddf1ae050d576ac78e"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-3be2ca5d7792ba1d4451-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-3be2ca5d7792ba1d4451",
+        "field_id": "sash-app:SER-LIX-EW:variant",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "56f53445d32116c6d754eba31988e1745070f2f4347b9150bc5b1d726bafa7d4",
+        "evidence_sha256": "2a49b536ca76e91a7a40b2f2afb2d9ac810c12fbce14ca56c71185d69cb3f47a",
+        "dossier_sha256": "27370f8fdd928e1b754dffe8d1946906e6fb61827b9ea4707054932febf8755c"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-d9e30d9a87b135c184f0-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-d9e30d9a87b135c184f0",
+        "field_id": "sash-app:SER-LIX-EW:frame_angle",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "09e88a64e8278a40ed1f8dc482b162cc9b37c522070810a7e591abcef6f75a15",
+        "evidence_sha256": "3b7cd6d4ae76e83353b8b8b1c4d0e49f059e18f0237e81c8b0ca701fc9874641",
+        "dossier_sha256": "d6466e77cbadbd92bbd04be961b978dde46122687b63edab32adc4b3605b4281"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-b6692dd6d8298f1543f0-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-b6692dd6d8298f1543f0",
+        "field_id": "sash-app:SER-LIX-EW:exterior_color",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "b8e949bf8b92f658c498accdbd7689de2cdb610ebe5a13b9e74ea3a5c2ab4a0b",
+        "evidence_sha256": "59d7f231924c77f9ecdbde5fd2d230dc56b4cbd440c604bf3851d7a324da76d7",
+        "dossier_sha256": "5a4c7c84171b311cb07bf8f048ef589f9584663ec6ef3092d9efb5e1d0601fc8"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-d558924c3411da94e961-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-d558924c3411da94e961",
+        "field_id": "sash-app:SER-LIX-EW:screen_presence",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "09b5566d955ef9470495a93a42a83b4f7e0b570ef0deb781ad67b39240e6fb30",
+        "evidence_sha256": "05a2400cafe4ea0a8b5b54775132623aba795bab954f0ae3cc39d27e9a520986",
+        "dossier_sha256": "6c27e2ece39d9c5f19a4947fdff46d563851cda1843952745377a3bd90410ca8"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-f047015a4078863660f5-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-f047015a4078863660f5",
+        "field_id": "sash-app:SER-LIX-EW:glass_base",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "8bb65f18568fecb7334c247599b0ccb146536af08bb81c6bb40e38a0d556afa0",
+        "evidence_sha256": "52b1177563fb9b55d61f34756720b72645797f02fa9ce3161e327ceceaeb7733",
+        "dossier_sha256": "ec2d2d2b8831e7c35b09e7683c310319ad9841b6030e7f8784f02b0867801d47"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-606f53c691910b52314b-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-606f53c691910b52314b",
+        "field_id": "sash-app:SER-LIX-EW:installation_environment",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "57faa21b03a1566bf70ee58a322dc7c51f3072f290d57d367afe2ba5ed0c8836",
+        "evidence_sha256": "1c1ffdb6925bba2706cee29ffe11baf20d3d83b1d923547631b331c3cf83979a",
+        "dossier_sha256": "e74cc3ad7a38205c6d8c07eaab25f0c9ba9e02f88bfbc4539885b30d5eac1ba8"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-0862778a64bec1fe91b8-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-0862778a64bec1fe91b8",
+        "field_id": "sash-app:SER-LIX-EW:option",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "6fb80622ce29ac0aaae7bef3f83876783f6ac303cfe7c0f878a14449f96abd9a",
+        "evidence_sha256": "40c238733f7ad7cd05c547c0b2e1b0d755e7731408487c77cde55352d086c66b",
+        "dossier_sha256": "359ea8380c5d46586e571c62d356d9d22cba3c25516c7db9422f7817e9fa5dba"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-73e69cfbe32b38e16452-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-73e69cfbe32b38e16452",
+        "field_id": "sash-app:SER-LIX-EW:handing",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "e3cd7d5a7be4c6fd7cd6fd9f1c416c0edaf682f97eeb70b62e0c6f8305f521bd",
+        "evidence_sha256": "af2870241f9dda04383a62dc80b147e6ff80ffd19fd4315a0d3b40beab459626",
+        "dossier_sha256": "33c1e30f87111c8b512aed581bfc7f942ae503741f72ae2c4cb140baa400fc4f"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-b58c12bac7dbcab64017-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-b58c12bac7dbcab64017",
+        "field_id": "sash-app:SER-LIX-EW:size_mode",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "18063f315b11e0e0c80a02830219a8dd229ae6791ca538d286603cd7a5be1436",
+        "evidence_sha256": "90284a831bffb64dc59cec1de5388fd4333fac48b890d7c44cc927da34ed5fae",
+        "dossier_sha256": "754a3a84624f17dfa65fe0543687f35590cb1485f4ac32c7a9ccd995948c9c0b"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-8e4924b78a5b7cdfe099-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-8e4924b78a5b7cdfe099",
+        "field_id": "sash-app:SER-LIX-EW:interior_color",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "2fc466e0a4e27fbd4117e0b258dda704ac1fc556fdbd9e48c2dbdf4e324e266a",
+        "evidence_sha256": "a0acd3439dae95a0aed5d97900bda4fbabea5de52aa647fcf1e34688d07d00f1",
+        "dossier_sha256": "e2f646e4f1f07ed286b4bb1d66f0836b081c14f665a2a49058dcf10c9af273b9"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-2ba965257ca341bca630-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-2ba965257ca341bca630",
+        "field_id": "sash-app:SER-LIX-EW:glass_type",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "ab38e6c955153c18db3888275a5dcec058ca34f10b543aa2d44130525185b3a9",
+        "evidence_sha256": "7e42e87c9a3da3ac9124e2be5cf8fee50f5de817c02645dbcd1565324dc39290",
+        "dossier_sha256": "b6edc2c0f49de80b1a5fc84506f14a41f027778bc5d93d02599b5fb978d051a2"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-8a09164539d520bc86fd-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-8a09164539d520bc86fd",
+        "field_id": "sash-app:SER-LIX-EW:glass_detail",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "1a4e1150cbe5d20bd5a229786b8541996f56146250e3ab2ca6a3219b70f17bef",
+        "evidence_sha256": "06d5c462e6ce087609aec0c535535898eb0d67a92625624392115d2bfb57b3c4",
+        "dossier_sha256": "db62d86bc1109ec00a9a4c561944fe71ae3fe6b9096beabeade34eac51cef6cb"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-678bb538ac0f93a688a1-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-678bb538ac0f93a688a1",
+        "field_id": "sash-app:SER-LIX-EW:glass_function",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "dc51bb2ca16b7ea4ef199c0fa0773b20d0f6a2b2da60424df6ada38b3df79eea",
+        "evidence_sha256": "6801d330140a6d980c8916689b6f0ad934cf3ed4b4ea0ecaa1f761dc33ce8f41",
+        "dossier_sha256": "d6cb73ed7224f2c1e50b5133d2c807279d814c022dd9248fc67727d0585d68e0"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-83d954463b6d118b7ea7-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-83d954463b6d118b7ea7",
+        "field_id": "sash-app:SER-LIX-EW:glass_spacer",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "9898b0e8e95e1711ba422a1f4d2ee061b259a101b52847f6d8fe80d5b9c18229",
+        "evidence_sha256": "6d23867a38a666efe5f342a08a18d7984ab43b0b88b1b6898b465490fe0a60e0",
+        "dossier_sha256": "bd97304a0618ea509562c575ad888e9e33978b6e1d4977a586f3906656ac32ab"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-ce0260eff1d7f39b84c1-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-ce0260eff1d7f39b84c1",
+        "field_id": "sash-app:SER-LIX-EW:glass_air_layer",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "a4e4454aae67d87601edb167f495548e3b1ade5fe051dcdac829e55520c9e095",
+        "evidence_sha256": "1fb4c34318c5988d741eafc409a2667092fe719f7b6870f40164150ed29a873b",
+        "dossier_sha256": "ef7faf123e4331ba35999e68a308741f300655a3f6a0e80d60f3c608719ee4fe"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-7eedd2d1604174f9f989-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-7eedd2d1604174f9f989",
+        "field_id": "sash-app:SER-LIX-EW:size",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "87ab7f3ce012a3af57e85552167309255f2dec0e63373afcac5b356b40eaa030",
+        "evidence_sha256": "8b62afe10b0279a781f3b27c9eb1a4b43091569709e6f29d4b22ca42ea5694c6",
+        "dossier_sha256": "705103ad293d77bcf5b9dec1069cbb075ce9bb4531ffc22c9dd3a8453a69b031"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-3469cb48ec3c58161fa2-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-3469cb48ec3c58161fa2",
+        "field_id": "sash-app:SER-LIX-EW:custom_w",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "08fbb13840c2deddde56fd4cd4056dbd687055f9b8c6fcfc23a64e0c6461f748",
+        "evidence_sha256": "2fd389f05a82a39f2912d369aff9ee7b2ce413a1608794dd32911db3f7bb8ac3",
+        "dossier_sha256": "55e82768a15651afd5cb62563072a69ec4bb0592a0986ddf4975b423d758584e"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-d91faf92ad0157efe488-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-d91faf92ad0157efe488",
+        "field_id": "sash-app:SER-LIX-EW:custom_h",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "d704b43e343f605c8955fa0038113d4a1e04d7b00d36f466f4d38b497d1f2278",
+        "evidence_sha256": "1182d446097e1b5a6e54ae15aac5cae7a219b893e8742c289acaebdef7d16a2f",
+        "dossier_sha256": "b81383d45c8cb44f4f34742f757efe3b0d2a4bb705233b54704d2b73446370a9"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-0505393a15e7226f2057-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-0505393a15e7226f2057",
+        "field_id": "sash-app:SER-LIX-EW:configuration_variant",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "fccedddde682745837bf460ab44de91e47ff3e3618775cdff8d9ab4a9ec72b22",
+        "evidence_sha256": "52e972e63375d51cd2f8b5122fe3f80751d10edb7cc224fbc212169806eb25dd",
+        "dossier_sha256": "2f618e3d33f38479780f238f5c38a960344dcc5b036658f9814406f0688e3e3a"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-6dd9c7a840471a3b9074-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-6dd9c7a840471a3b9074",
+        "field_id": "sash-app:SER-LIX-EW:glass_configuration",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "7508149f3371bd97d424adb5f50d325dff1e722d7f8e458249655cc0d1a12d74",
+        "evidence_sha256": "c27e0dfe79a94176fc0f27a123860d3f1a9f07c09010bea70fba9eca63b738c0",
+        "dossier_sha256": "60af8e4a2954bcf15ceb26769edd49dc101b3fb0ee49645cfca63a0c487da66d"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-d91a54e5e314729a6d86-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-d91a54e5e314729a6d86",
+        "field_id": "sash-app:SER-LIX-EW:profile",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "790d7dd5ca3c9de98365379979936b33deaeba8af4d73bc0cdc0a06bdde3b2b8",
+        "evidence_sha256": "b3e27de5fb1b81fe073e6fbfc5619b0859a6cff588b872b781ec10346466967a",
+        "dossier_sha256": "f60645b87b1f338a4ffa69b206cdffbac2e9013882ae97e6e0af79e17ad33ae4"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-90b2d8c3eadaff295ca7-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-90b2d8c3eadaff295ca7",
+        "field_id": "sash-app:SER-LIX-EW:opening_class",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "cba4d69bf7323bbc774e3a4bd2ecd4adfe814c3524b19364ecd40425fde525b9",
+        "evidence_sha256": "fbf35a7d039e18d64b14d153019dfa60070e6894d0382bd336ba9f32f00d4f42",
+        "dossier_sha256": "463df3e94bfc5cd702620d73d02cd990dd7cb9d223dd3db6e29de3fb09b62605"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-42846f5410c2448e881a-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-42846f5410c2448e881a",
+        "field_id": "sash-app:SER-LIX-EW:sill",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "6744afe9add6406090fb992fdfd0176204caf109f26e34990f241d2da4690ca4",
+        "evidence_sha256": "a3a1aa71eac23b674d1d6a502ff01ad9eb7549f398cf5a78a063a4f5c47c0ba0",
+        "dossier_sha256": "9410f951ca8b3e3ddcc4dc9da4dc99aded24b867935e2aff40db85272e7d7528"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-bb9051704a3094942588-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-bb9051704a3094942588",
+        "field_id": "sash-app:SER-LIX-EW:wall_finish",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "32a8fd12acf0faa6400489315eb59129278e07d827ffe082f478a8ad35817810",
+        "evidence_sha256": "669871f43477578997347b918b51220d24f7bb7b7415ca299051a937c0eae43e",
+        "dossier_sha256": "4bea7b448c9f11b3d426abec630ba01ced46207042d49e6137133ecd799cd8a0"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-3f222bc8e8bde1f3dbde-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-3f222bc8e8bde1f3dbde",
+        "field_id": "sash-app:SER-LIX-EW:panel_count",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "293e53a8106a3b5aa2877936780cbdf37f1765f47c6c2c8a17dad9112f855e3d",
+        "evidence_sha256": "f83cd28520d68f4655780d2e0ace05deebd64d14c4a9d8939faa36f417210dd6",
+        "dossier_sha256": "b07c15b135d106bd0e39e0c96c4a6380354a590468a9a0fa0b75b20532b50fca"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-4ec265d557a8fbdc52f9-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-4ec265d557a8fbdc52f9",
+        "field_id": "sash-app:SER-LIX-EW:screen_form",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "67fefbc7e43b3d10b16f670b31d83e8178f9d6fe761f2bf5b83cd501d29723a7",
+        "evidence_sha256": "374760fc413e86338a4ec5d7e903f94092f82fd823a5d4cebb524dfd37a27c75",
+        "dossier_sha256": "38b4ad1dc71f816f4d56f18acc85f88e008e1267672fee30551aec4b3576ca57"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-b6d64c1035a1603d6224-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-b6d64c1035a1603d6224",
+        "field_id": "sash-app:SER-LIX-EW:screen_net",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "65dc9124cba3f40a6455a0e4bd5dc248cae09fb2b6d6858927cbae2b22fed8c4",
+        "evidence_sha256": "8334c07b3547f98779884b0d5d9cbe8d7ff3dba75a43e4640331b47519f7da85",
+        "dossier_sha256": "1128220d8e3eb022a46a73774f7088e0b8bcca1715368c1f33f619624a259f71"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-f2ba84dba4603381683a-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-f2ba84dba4603381683a",
+        "field_id": "sash-app:SER-LIXIL-TW:window_type",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "d10a8cec83fc9213644d8a8952831d2ada36fc7962fa88dc9141088061cd1b53",
+        "evidence_sha256": "3291739375f8c04a7aafc49e2cbfcb24eb7fe07ed279de766c30048fd0ee5e39",
+        "dossier_sha256": "88650cd4137c77ca6c6f89a85e3ea83e800bb452dc7df32090039a3150267e1f"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-4615d3c7f0ff8ee8fbfa-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-4615d3c7f0ff8ee8fbfa",
+        "field_id": "sash-app:SER-LIXIL-TW:size_mode",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "81faaffbad407c1a6abf1850d4cb7cb0b2a33dc4b5f3ed2b35dfc813e1ed5959",
+        "evidence_sha256": "9ca9a72b87ca40856e45824447e7b86a655ac3b3b3a2eabbcb24913520072756",
+        "dossier_sha256": "14d2331cd3ea481b45810f8b969ec0e12bd6ed56398dae762df997751b26810a"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-f5a0d24280c0af39fcbf-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-f5a0d24280c0af39fcbf",
+        "field_id": "sash-app:SER-LIXIL-TW:panel_count",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "91e144fe0bdb87cc025942dc4b721883c23bf82f237fa80e628062c7e22bd913",
+        "evidence_sha256": "a0af39f79f86f5ac27b95466c16a0da4134afe3e11462ebfc3b1563083b10223",
+        "dossier_sha256": "bcf1230555785b0f538d0d704c3b91f59283a8d765ad34d475dbd75c43769ee8"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-f63f6b2fcf7231228a7c-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-f63f6b2fcf7231228a7c",
+        "field_id": "sash-app:SER-LIXIL-TW:size",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "5b9035a07b3e77403ef227f2a05860ee31378f08db4b433f59a222874ac2afb2",
+        "evidence_sha256": "00cb0e28f8a578382efe6f1247c57bf36ae94dad8aee4eaf9c337da0dc00c1c0",
+        "dossier_sha256": "9e6fa5891fd6c9a7c4a71c83a9f8b1398479fc22e881aafc292a5251a6230522"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-383d88e5ce4c31b7d333-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-383d88e5ce4c31b7d333",
+        "field_id": "sash-app:SER-LIXIL-TW:exterior_color",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "cbd8b5ee08d09073ff79889722f62b85f3f063be2c2f3832cd49c728f5d56f4c",
+        "evidence_sha256": "d850f68ffb176b005266baa684530776f5f06216115aa9355016fb8de2a23cfd",
+        "dossier_sha256": "db8cf0ee22cb42427f3521ee0b36e51dbd570bbf1a556bc4dc0fb0c4b4fe4944"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-f0af9f2211e20331af54-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-f0af9f2211e20331af54",
+        "field_id": "sash-app:SER-LIXIL-TW:glass_base",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "7a276dd0eb27128c4f104d3dcd784229af3ba49cd57f34e45460f4da0a0e5cec",
+        "evidence_sha256": "75bc90280393cb0d08bdfe44689bc9d3afa2b30a9c30dcf1783156ba2d569a29",
+        "dossier_sha256": "6448826f10ce55fe42ea6ec80429e005c28ff8c53f68d1a6158a5d96b876a479"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-983aacc335d99af330f8-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-983aacc335d99af330f8",
+        "field_id": "sash-app:SER-LIXIL-TW:interior_color",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "4889c61720c2ce6aa868755d9bb68589416113cad7efdcc53531793a10c97144",
+        "evidence_sha256": "b10fed5750586f571bf9508389d7c290e89fc83481c8100a0a8ed1b9511555df",
+        "dossier_sha256": "559706bec2e1bd30b9dc153fca70c5aeda71aa426c4cccc57166a627adf9f505"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-2f315d0b347e7596fb93-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-2f315d0b347e7596fb93",
+        "field_id": "sash-app:SER-LIXIL-TW:glass_type",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "c909b5cb2d892ab2e3a552b6e48d4c1786cde670dd94778a4ddf43312a031f07",
+        "evidence_sha256": "1aeea93cb3e723798a91943c4ddd8eae107c2b242399b366715610acdc79ac88",
+        "dossier_sha256": "836e96d0a6f8563ab26445b2d544d9750b9a8bafb58f93d09f650a1038d631c3"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-68d7d6ce5cd120e6e827-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-68d7d6ce5cd120e6e827",
+        "field_id": "sash-app:SER-LIXIL-TW:screen_presence",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "1974c0ef91c05cb91c1eb9c609bee585990c9e19e9b5b9cb7fd5260e68652783",
+        "evidence_sha256": "d5af3e45549e035d30d05b2044c0038c86cae58e935bb965640210f59b394f49",
+        "dossier_sha256": "42db6ac29412f47118bdc36e5824a2b0cbb925a91f34002ea8ffff8165fb7a36"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-02f7743bc31c30cdf3d5-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-02f7743bc31c30cdf3d5",
+        "field_id": "sash-app:SER-LIXIL-TW:glass_detail",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "eb5ea6ccce2fe5bf809cab87fa21e5dfd2e57125197b6c243a0b9d71f195aa04",
+        "evidence_sha256": "dc488d61b1e39710e29b598e0a1fe9373574c091d1f067660c9716cd55348975",
+        "dossier_sha256": "ba966545970c742b9136e3bc97cdf4450451557631c3f806ff414de7336db55d"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-0b724da762eeb5034992-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-0b724da762eeb5034992",
+        "field_id": "sash-app:SER-LIXIL-TW:glass_function",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "656113cd07900982356caa2ef54a1ff4fca3f3f2b970806e6c22b2ec9d7c8910",
+        "evidence_sha256": "d8c1aba6ce5e8e348b65282ec0294bb81a69a58b436b5c2a35bcb291a1711c87",
+        "dossier_sha256": "9ada9250a61d378a1329b6bc57041e1a96c3d1911cd9c4139d414ce2eadf48ef"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-1987a15b656d0ede3974-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-1987a15b656d0ede3974",
+        "field_id": "sash-app:SER-LIXIL-TW:option",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "8073d98debf88b1c185891c5f9ae4804c5fbd29b9b2aa65cd6a7c80d08aafa78",
+        "evidence_sha256": "a909a5fceca0bacacf3f7ceff7c69ee44148bb072f4dfd5b21e95c5cadd15ca4",
+        "dossier_sha256": "825e5e938e671bda181d2bd91c207b47e1d08f25fe28ee1b337b14d27dc058fb"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-75f5ebb3d35a8d703761-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-75f5ebb3d35a8d703761",
+        "field_id": "sash-app:SER-LIXIL-TW:glass_spacer",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "010f7c72b34bbaa719d7e131ad63dca33398f2ca092dba99e2d105c272a11c41",
+        "evidence_sha256": "2cf06554ba97eb2db1ef2f6a5209ae219dd73df562a62d074696eb6c7934eaaf",
+        "dossier_sha256": "b601b799a9906d50e755e34689272e6d8439415f6580d8f8cde5d247f7dbc538"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-d39134cc6ccf0f1acbdb-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-d39134cc6ccf0f1acbdb",
+        "field_id": "sash-app:SER-LIXIL-TW:glass_air_layer",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "28feccd2e72546966c6ff72e2f15cc40300895de5008bc29b60927e7a7167037",
+        "evidence_sha256": "7c79ad539d89464900fe78c2560b48d2428f04cc7b3a241433b00f190fae18c8",
+        "dossier_sha256": "326ccb4136988c0480574e570be8d2a85be29e62748efd78dfa5b6f9486ab14f"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-9c06351313e84e7986a1-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-9c06351313e84e7986a1",
+        "field_id": "sash-app:SER-LIXIL-TW:shutter_type",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "ba563324cf7f315419d44da2b78925b3d56f51417dee80eee65f40cac19b05a9",
+        "evidence_sha256": "0f039f68456972d772b08ad32bb293c1706b6540b8c40ba5c74352d1378f07f5",
+        "dossier_sha256": "f2d2263ff4de1d49ef3164af3144d5bf238bcac7e66477cb306ba59af86290c7"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-45af33b0ebbb60d8296e-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-45af33b0ebbb60d8296e",
+        "field_id": "sash-app:SER-LIXIL-TW:grille_type",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "79339d65542ef51bc79174836e29e11c039990cc503d263fcd13970f0966dba8",
+        "evidence_sha256": "43d92348eafe0f37e27b3a6a6ec184308f83087c582f136b1dc7186cdcd6f7d4",
+        "dossier_sha256": "a37a7be6dbc286698c2197a19f06543863136afe42272e17ab3d37ec2c8659b0"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-d53edc4afe4345941b74-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-d53edc4afe4345941b74",
+        "field_id": "sash-app:SER-LIXIL-TW:handing",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "857f9c78b13c61c791aebab0d56b09310fe4d7513020a3430b6894583098f5d3",
+        "evidence_sha256": "629b755a8b60ccb4bc6de5e62b1a33043ab9f71bbd64d446c6524ab9a052cbe7",
+        "dossier_sha256": "c562ccfe88e4731ed248c24b8bfa6c3f210afcfbca1668f97e989374e4a95bf5"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-d60bdb21e6d3aea0f1c4-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-d60bdb21e6d3aea0f1c4",
+        "field_id": "sash-app:SER-LIXIL-TW:operation_type",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "1c8b4f61a733f25765590dc01f2d8ad9529e27abbf502aab99bb57c8a93329a3",
+        "evidence_sha256": "598b70c1d37b0e2affebfe07daad5249ae042721e3e60cff5e5751fed8e38f6a",
+        "dossier_sha256": "fd8756b364548167929074572f5a559d2b00c5739f5aa42189b6054f5961636d"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-17679c9faa9f568d2d6e-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-17679c9faa9f568d2d6e",
+        "field_id": "sash-app:SER-LIXIL-TW:operator_position",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "9f0fca7dbc62da7962e01487760f8a966b38e17621e19a74327732c2c4705513",
+        "evidence_sha256": "2bd6c990600b29d09b5571fcf5b0f92736becc4ae571d45e77c7f54aa26cd900",
+        "dossier_sha256": "bf41e8520fe2bb6bfbe0c771e75ff84f77f165cc70430cfa439abbfa75190dd5"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-86fbb3003ce6c1005bb2-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-86fbb3003ce6c1005bb2",
+        "field_id": "sash-app:SER-LIXIL-TW:door_grille_type",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "65da7389ab48a1d2b538d95c6d6836ae399d1cbc68de74ba74af64c503b9fbc8",
+        "evidence_sha256": "19826cf236c499574bbea91089a5ac52df46ea3564fc20ce83805f1fc86e2347",
+        "dossier_sha256": "f08031c6c58ebe733029c73b7b0ab523789a5ab0d3aac51958ffff998b797405"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-fadaaa10084424e56b01-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-fadaaa10084424e56b01",
+        "field_id": "sash-app:SER-LIXIL-TW:screen_type",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "90bcab7fa94b1f9a614f8cbc3d753099f7cc229964584d56a2405e076f89a312",
+        "evidence_sha256": "484461e25ccb23255c9f539f76261b0d72b31087e1d61cde0427f143c55e28fc",
+        "dossier_sha256": "fabe441f972b4da6d4e1bc9c80ca006d4052d3c896c0477b8c1e4d48be467760"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-315edd4c87376d2fc7df-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-315edd4c87376d2fc7df",
+        "field_id": "sash-app:SER-LIXIL-TW:custom_width",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "5f451b1df09770f63ffbd55a51b377af54b38a0146df49238b4a1b26b6010463",
+        "evidence_sha256": "17cb1927f78af739dadf437007ba3dfda25436dda8d86201f53a119332b3ae52",
+        "dossier_sha256": "9ede2337bf14ac66be8c61299d23458a36dd040e8a1a4299d5896126b9ba9d2d"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-9f434eb95e65933c84c1-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-9f434eb95e65933c84c1",
+        "field_id": "sash-app:SER-LIXIL-TW:custom_height",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "3d54bbaecb95cbd7a011e90b449cdd3da33b9d357bc19cd1920aa6aa4e4f2561",
+        "evidence_sha256": "57d0c8a54b4fc74399b0d89eb9d1ab03d275fd9f68bd24074d580efc1f7078d1",
+        "dossier_sha256": "f372ff32be98e26c43a33c0c4cf353c458dd03f87c10fde20a050897c386f04a"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-40ff5361d61c69bf7e13-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-40ff5361d61c69bf7e13",
+        "field_id": "sash-app:SER-LIXIL-TW:screen_midrail",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "d8ab9eb334086a91666bb0e79ec42fc69621adb5185208cf352cf49d314207b1",
+        "evidence_sha256": "4b9dad53639b82f8b92bb4749bfc88030da648c95678788511629df476f33856",
+        "dossier_sha256": "37c661d589339ba89712d7b1bdb45d2fe37c04bd3e4d3a49e67e5d31fc5b8634"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-741126c1d2de046e40cb-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-741126c1d2de046e40cb",
+        "field_id": "sash-app:SER-LIXIL-TW:screen_net",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "cf717cf259c423c4ff4fdc8116e9e45e8eeb4e4ae9a9aa5f1dda55e295e57f11",
+        "evidence_sha256": "d747667f6d32ca1ecdc7349a052320c550dfb6910c6954fcb65f013565b435c2",
+        "dossier_sha256": "60ad802d87da37c8a29c2a260c2403149ca3f9feaa5f01e3211821682a23c171"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-786f5d48ae5ded7a13f9-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-786f5d48ae5ded7a13f9",
+        "field_id": "sash-app:SER-LIX-SAMOS2H:window_type",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "97beb3d53ca1413b12ea08ecc4af4c6331ecd7b1001e90e63e77a486802eaedf",
+        "evidence_sha256": "ed0182cd0fbdf3fe97b0528a0e587d3ba801fa5b8cd2ddaa743926f04aaca999",
+        "dossier_sha256": "ced56d91322a0aae87cb3d0be9e58808a8c0a86944922a72a35d437018af980c"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-e2893bcd8e3b08a4832c-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-e2893bcd8e3b08a4832c",
+        "field_id": "sash-app:SER-LIX-SAMOS2H:size_mode",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "35590407ec73a9dfda7a6e1295365931d83c2a30b0c3fc7c84a0f98a564d4072",
+        "evidence_sha256": "c43efb6882807b797e0eda026eacdb213802fb6b5d6064c738be5a2a33154b04",
+        "dossier_sha256": "a7fb7aea8d83507860d626af0b14685f7bbccfa7bf3336b25dd8b9e54afb5348"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-5d2d6c9d62e3b9414f79-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-5d2d6c9d62e3b9414f79",
+        "field_id": "sash-app:SER-LIX-SAMOS2H:exterior_color",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "fe6b126c39c869c23a2c453aacefb9d8b6b149e23e4f9d94ed34840f5956903d",
+        "evidence_sha256": "75d9d20b3558c7cbe5d4b5143692a8dab175e3dc2905b9a7f93358e34e21a74f",
+        "dossier_sha256": "3a573b5356b9e065aaf98e6a9fd4e28ed32f9e3c482aaec00b6aa93a3949f118"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-9dddefde2fced43888e0-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-9dddefde2fced43888e0",
+        "field_id": "sash-app:SER-LIX-SAMOS2H:interior_color",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "44eefed14fac5f673ea7a078c955f1233d4d8325be4bc608cbd328311543a866",
+        "evidence_sha256": "0d761cccdbb54108ba6cfa393aef5aac79652b222938900cc4c3662ece8d89f6",
+        "dossier_sha256": "0b7cf8b03439f9018ff7e73d3287f7a65335d9597963c33e5a368f2b272021be"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-9b5dc3a61087a600e9c5-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-9b5dc3a61087a600e9c5",
+        "field_id": "sash-app:SER-LIX-SAMOS2H:glass_base",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "f7a0b756e63427a8295a4357fac92e30928390606af96e69a67dad469818b9ac",
+        "evidence_sha256": "0b37fae61698a87f66bcb022e22ad8595b37140f6575f7aeee2444891f2b6031",
+        "dossier_sha256": "300ac518f666c152b13883ec0848872179a312fc0fdf384ea620f462187e0d15"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-5bb6fd146b588e6ff5ef-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-5bb6fd146b588e6ff5ef",
+        "field_id": "sash-app:SER-LIX-SAMOS2H:glass_type",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "e12eaf766eecd7940002db0fdc08152d09ac0d13e40cb1ead9b11e82b0246b88",
+        "evidence_sha256": "19ec3dd58aff120b89174f8a754d70283b5e7b24eb2fe576730d75fc7f668dc8",
+        "dossier_sha256": "510081725951d48f1ef1642fe9fb7032bcdc690459d5a45c7f01301d1334beed"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-c0cf6526fd784d4f8fee-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-c0cf6526fd784d4f8fee",
+        "field_id": "sash-app:SER-LIX-SAMOS2H:glass_detail",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "b04b9f9d3fb394b0db8969ee2a4dae9d446c11517b764bf19d7ab4f4753b3f66",
+        "evidence_sha256": "9d8645aebc6c6bbda60a2cd195559b7c192c59f29fba6dded88708f0ba87d840",
+        "dossier_sha256": "f4341df48b291cad92bf94c90f3982285121f598d3da5f18e252d65ba6bf2e20"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-4a4d9c2eb1c45d082079-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-4a4d9c2eb1c45d082079",
+        "field_id": "sash-app:SER-LIX-SAMOS2H:glass_function",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "07f42eccd7a0eceb7e71db7950818c27f6ad4db980e1f9d76110e405d178fcca",
+        "evidence_sha256": "bf6f7b4403f220aafb9047030c1c11bf53b17be4e98bda6dc30dbc43309c7fdf",
+        "dossier_sha256": "785632796f147a7340623d2c0e58234ff46f6fa1e897bf85377771ce8c81d82f"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-9490bf994df8e1e414ad-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-9490bf994df8e1e414ad",
+        "field_id": "sash-app:SER-LIX-SAMOS2H:glass_spacer",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "2513ab73bc1dc885c315c05b29ac2221003bbb956332e52e3f0e47d89b8c2edd",
+        "evidence_sha256": "b73f2c333ca3d44e15a58882258fe4d9e5d996892dc488cc3651dc783c4e44e4",
+        "dossier_sha256": "f1152d0d11e46be032a126005a721c1d5612ba3e56c28e22ee4697815fb64e87"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-50e6e6b4bfc1343b142e-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-50e6e6b4bfc1343b142e",
+        "field_id": "sash-app:SER-LIX-SAMOS2H:glass_gas",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "34118e55d47429c1c83cc87f726aefbeb3240fea8af83c1db8432d29a9c1dab9",
+        "evidence_sha256": "f18254898e1a8ddb893ec683b03cc0ff13572a686fae8c3fce81bd332cfb9057",
+        "dossier_sha256": "7763337652f9f64db9580cd46448657e51c77046c8e4c15e5d3792caca8ef0d7"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-a767522e7a2689d73fff-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-a767522e7a2689d73fff",
+        "field_id": "sash-app:SER-LIX-SAMOS2H:options",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "a9b481f111b76a10e6ad7fceeef45f68b1b065fb6e39cf70048a8d49bcd7b0fa",
+        "evidence_sha256": "613b86c6834520f5b0d84ca2a80a6347b45c3615dfd1aa2d081e1c2b41de34f6",
+        "dossier_sha256": "256dcd91f5e1bdba40e3de429bbc7afb77650a9841bc79c51f182e333fa7222f"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-5e7667253d981f471a03-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-5e7667253d981f471a03",
+        "field_id": "sash-app:SER-LIX-SAMOS2H:panel_count",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "9c549665e6f2a3959eb8acaca53e4ce8bd173888badd56fb53fe3157ade2d4ab",
+        "evidence_sha256": "d592782227c4e568eff1c4b5f22a452cc847ff17fcb1a76afec1fea88939f7e7",
+        "dossier_sha256": "145ea9bf677d71602e283a97ad8909b2841ac50369623765a66df3a3aa31827d"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-53404a59a0e445f5fa14-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-53404a59a0e445f5fa14",
+        "field_id": "sash-app:SER-LIX-SAMOS2H:size",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "85a51c496b8ca905f23be050b8c6e75aeb273c048aca97286b966eb0ae8abaaf",
+        "evidence_sha256": "6db2bc741ade8138d4d035faef17ecdaba1128117586ac9f119c1a3bdbb30d3e",
+        "dossier_sha256": "90550a441a3b34bae0f60742d64312499d28155c0ba35301ca78ddb20f390576"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-59dee380c8f574202ca2-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-59dee380c8f574202ca2",
+        "field_id": "sash-app:SER-LIX-SAMOS2H:screen_presence",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "66679abda3c76e967da1be3f3832c8379d15d72f12dc6b3478c40ab56a893437",
+        "evidence_sha256": "6902ce7ddda7db03a7eb2353249efd13f476be64ee1818e6015eaf6022d5f947",
+        "dossier_sha256": "5ace846a197d1c1bbf0b76fac65acb1626278cb10fc598085bd95ab57a1d233a"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-c7aa658ac883583aade0-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-c7aa658ac883583aade0",
+        "field_id": "sash-app:SER-LIX-SAMOS2H:shutter_type",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "b4956d171ac371f866781df00ec87aa954a98063f1bd06f1be4db198dc6ddbc2",
+        "evidence_sha256": "42fc002a67f98bd6f507caed1b4c4ed33cd90c855189d83c406e5c883d3514cb",
+        "dossier_sha256": "faa435a82ea6e8e679072f62e5fdcb8249a659751751deadfaa4f3b5545156a2"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-3c3a2e5c11f890c5aa62-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-3c3a2e5c11f890c5aa62",
+        "field_id": "sash-app:SER-LIX-SAMOS2H:rain_shutter_type",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "d749702e4a3a98a253668eed611e8b4dfdfa6429c0135c7ffbc4aa5b852aee90",
+        "evidence_sha256": "bd587d59d33e63e561faff4b09d49b52a79318cbb2fe32a23c2926d152137083",
+        "dossier_sha256": "2e53b0b17d1574fab0254b842ccd28fe1867135ff04c593da7379bcfd34540f1"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-ad0cbb4ff3b916e65f8d-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-ad0cbb4ff3b916e65f8d",
+        "field_id": "sash-app:SER-LIX-SAMOS2H:grille_type",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "ac0ef87c2ad88eb2541d13592511dca2b3c6de9e64ec6c21c3dd2d395e9fb950",
+        "evidence_sha256": "379670783f2dbb2aadb7611222e210a4a7af7d03b77b74f0335314c5ee822aa8",
+        "dossier_sha256": "8174d2b52b28035434c4baa144dd6a7299ea660e4c34c4486c5b3fd7272ba38f"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-dc75270d6df6426aa2e5-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-dc75270d6df6426aa2e5",
+        "field_id": "sash-app:SER-LIX-SAMOS2H:handle_configuration",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "7e9efce4767784583342f7486a3fd35d555f57a55e2629411aee5482ae171fb2",
+        "evidence_sha256": "ef235db47c022fa372ea194970cc0b0af4c48fc51a30279913a8b0091d1730c1",
+        "dossier_sha256": "7bcca02dc6c747b77944346e98e31e02135816660dc87606970508f687c85d7c"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-40f5d60dbe9da7d157eb-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-40f5d60dbe9da7d157eb",
+        "field_id": "sash-app:SER-LIX-SAMOS2H:handing",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "76cd79c9db078d3c6507c562a6a34ebd42383bf3c139a366f6e51f3e5c9db26a",
+        "evidence_sha256": "1e5553c355293ee852c98bfa84be0eec7b494a252d5d10a380326dcfc0d7fccb",
+        "dossier_sha256": "e50c73f1dc7512ed0f200846b2e435750f6e14f8797f5474f02fb8c4cc47c045"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-dd009c0cad65596fb9ac-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-dd009c0cad65596fb9ac",
+        "field_id": "sash-app:SER-LIX-SAMOS2H:handle_type",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "a656330c7234839b340c442a17137764f2543ff84d74d01e56b54e87e754cbf2",
+        "evidence_sha256": "a7c4edbb181d667ac51d03f8b1105313988dda784846b8d6cc7013d660026191",
+        "dossier_sha256": "dc897115fcad27700f3bbf40d512d820139c962b1f74ea456a0d8ac35a438d37"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-e87efc634a43775e3651-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-e87efc634a43775e3651",
+        "field_id": "sash-app:SER-LIX-SAMOS2H:operation_method",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "61f64dc892222f80d776456f918467ab95a777648d3343cc7e7dbf24b6533fdf",
+        "evidence_sha256": "e738b4e0bc8e33e3e9b9b6cd238b0105066b4a2ddd445de3ed249a55b9e1b73f",
+        "dossier_sha256": "16e84c24d96259441c63a810feab7c02627da762e9a69e78ac400aa6894a48c7"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-ac302c5ac33aad38b60a-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-ac302c5ac33aad38b60a",
+        "field_id": "sash-app:SER-LIX-SAMOS2H:composition_type",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "d48d36c365d06b3b36b00f37eae2bb2ca5a4d74714a6da246df6c0191f448140",
+        "evidence_sha256": "8ecd6327d12f3954003f5fc3d1e38092546c34552c29dbd74ccc3437e2328ce2",
+        "dossier_sha256": "d34062148de885c26079cfd4c171643de2b083af94fd914c2299c3474b41fe12"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-1f4b2cc71d3f5442f621-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-1f4b2cc71d3f5442f621",
+        "field_id": "sash-app:SER-LIX-SAMOS2H:joinery_configuration",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "8487a69d44d840465bbebc9798a6572680e803cef39574b19d06641d3d849296",
+        "evidence_sha256": "b435de95c882ebe3400172a7b5df7ee5e9c55483510db3c0fbf3f8aa26a0e3cb",
+        "dossier_sha256": "155e97d3f520b6f681aceb9cd63f0e3d2160671ccb0ca09eac7cc30b985d5f81"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-21f3618f4010e586adf8-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-21f3618f4010e586adf8",
+        "field_id": "sash-app:SER-LIX-SAMOS2H:door_installation",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "07321426c792a4acb63ece5cc3fbb91f01094096ecde48833286583b24944318",
+        "evidence_sha256": "e4ed175ca856c64796e8bac418f556baf459434e8f6f8b4c3f486a5d7676f9a4",
+        "dossier_sha256": "3c194f2a93725e73d9b9904d850c065c33bbc0b778eb4fbf512d88ff2d2caccd"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-902cc787d7803894e46b-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-902cc787d7803894e46b",
+        "field_id": "sash-app:SER-LIX-SAMOS2H:screen_form",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "9450ffc3043b208af81d687afea95f57c43b44ab9130cefad6681d76362304a2",
+        "evidence_sha256": "bd129266f7322e943276e5b2e1d20962837629786c044821eb079564ac20a323",
+        "dossier_sha256": "d156d3f72e3111263817d0c0fb33378bca15bc03b0fbc2da4faf22bc9a7dfe18"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-7f60cf63f17b01e4e993-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-7f60cf63f17b01e4e993",
+        "field_id": "sash-app:SER-LIX-SAMOS2H:screen_variant",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "718f78baec33fbb9bb4cd167c9a69378973aeb70cefef4fa1132c23e8a822521",
+        "evidence_sha256": "52cea54a63c17b43a12c6b80e6f580a59a836a95a996cd55152330263b299021",
+        "dossier_sha256": "87ecbf0ca16a534da5bcc7295ec156f2b7c2fa625738b3b56ae3cdcbc9d81148"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-77978259ccb7c2a44eea-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-77978259ccb7c2a44eea",
+        "field_id": "sash-app:SER-LIX-SAMOS2H:screen_net",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "f2c4d58425cb82c3a2778abd0b62fab8b71d094daca48af8eaa5199713e217a9",
+        "evidence_sha256": "4e13710c0411611fc85d6ff6a984689a793f7f4cce4f07de11909fbbe163cefd",
+        "dossier_sha256": "117bf71a73c9e85fa742b475c60717f559e48f4e500654b93facc2798baf2a5c"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-9d00382682db340e2ba8-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-9d00382682db340e2ba8",
+        "field_id": "sash-app:SER-LIX-SAMOS2H:door_type",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "65ae81381e30c32b8a0dba56c454cdd0b8bcb28f975b1921870aa09521af16fc",
+        "evidence_sha256": "9403fb58abd17d7aa4422b36fd29e775fc8e158ee7b977be1ab49f1849af2585",
+        "dossier_sha256": "f7fac233d5dbf69b649a9081fda5402c06e3cb28ec5ea8a6b62087518654ad43"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-81f5dae2c7c2329d7f27-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-81f5dae2c7c2329d7f27",
+        "field_id": "sash-app:SER-LIX-SAMOS2H:custom_width",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "0655366170892ddee33e3d539fcc05bb65dbca8ce9e7c35deb7ea3007bde3d17",
+        "evidence_sha256": "9fa4fb21d67af14eaf113b5d6057d891b858c30f90f7f78739fbc28ff07e3e04",
+        "dossier_sha256": "cb08a5605b0b31c1f82c33469414cbef3d2dccba6db0e0a7dcf1d50a61026f0f"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-0ff46b5619ff2c4224f0-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-0ff46b5619ff2c4224f0",
+        "field_id": "sash-app:SER-LIX-SAMOS2H:custom_height",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "4bbffd7af9a5b0588cff43841776d79a4f4442ca3196efc0b0f18b366ee63b86",
+        "evidence_sha256": "6192cdb94ec4af161fe64dc3dde418994edec3f15958d9e87230fa722d7eb63d",
+        "dossier_sha256": "1f3d01bd6ff3fd2b1fec5e6be1f3105a0caf3f2eab119cad165f1f0f7e1820ab"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-9658398899eaee4d210c-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-9658398899eaee4d210c",
+        "field_id": "sash-app:SER-LIX-SAMOSL:window_type",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "2f7242812c1a02f4a868d2d283ab25af5f7febf9de9390ca27edc4cd3c83be77",
+        "evidence_sha256": "8a6f335606723d2cb55aa42a2e01bb6cf455cc408392b20d3daaab1d6ab4f53d",
+        "dossier_sha256": "da1cc8a5866842c3c0283994cf288e14a368a76facdf06bab5213568dc6b0ba5"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-251b8753733a02554bef-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-251b8753733a02554bef",
+        "field_id": "sash-app:SER-LIX-SAMOSL:door_grille_type",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "f6b915513a72cb39e90ec96ec45cabd5e9f6a8e5afaada999caebe1e1865e754",
+        "evidence_sha256": "5fea83b1b5a964ae40605ca84235cd74e3689e6f976131f31aec823341558406",
+        "dossier_sha256": "64cd85b07c4cdcc306f0642c08be547b4fe3b58b9944bfe1f46b6bbac4c4261c"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-c71024caa147eb5dedce-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-c71024caa147eb5dedce",
+        "field_id": "sash-app:SER-LIX-SAMOSL:size_mode",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "becd7ef9dd188dff5cd168ff1668ef9657c6178a8e8f013262a80b164e6a2a85",
+        "evidence_sha256": "86e77b6ec244558917268edae6d3e66552cec0e6e7831c252875648f4215984e",
+        "dossier_sha256": "d082f2ea7f73c802f2fa9b441f6966fe1e30b1acba090ddc9261102ecdfe3557"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-a4785b43737497166ebe-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-a4785b43737497166ebe",
+        "field_id": "sash-app:SER-LIX-SAMOSL:exterior_color",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "58ff5bb4d2373fa9b477e30525705362a270c4c28f73ebfaff0e2411dbfb84c1",
+        "evidence_sha256": "63b7f2f5d7072b8e71f429b751b21e5e06f751fddc621fb41a7541945c2edd15",
+        "dossier_sha256": "4daaeea0683e8e530ca8fc86f341db802336092536434d7cdb75d89aa388e072"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-d714ddf8608c8650ac80-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-d714ddf8608c8650ac80",
+        "field_id": "sash-app:SER-LIX-SAMOSL:interior_color",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "9c66effcd35221a6e9d180dc75965dd73c5270fd7f4b35a192c7590a48d341d4",
+        "evidence_sha256": "2156d0c7b37aaa8c81b073d700b84f7cf2c5362915f6c358930d41672a85ddcd",
+        "dossier_sha256": "ec0c2f47c8f2a990e24335d9fde15f5d246fc465863a16617f8d7d3733957415"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-b424d7c00240b92bc2e2-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-b424d7c00240b92bc2e2",
+        "field_id": "sash-app:SER-LIX-SAMOSL:glass_base",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "cd33a377b5d77336d055d114ad6884995c48cb06fdb655d9b04342fec5381a7a",
+        "evidence_sha256": "3dc493e3382136c3eece5b8c23c9ef02f9f004160e0c724c3a8f4f27fc250db4",
+        "dossier_sha256": "36c765b3e262441c11d4094b26cc50ff55520999712756cf4706b8f9faf3e980"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-e9f305a02ec2236b458c-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-e9f305a02ec2236b458c",
+        "field_id": "sash-app:SER-LIX-SAMOSL:glass_type",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "4328b841ca11a45c35aa9f550f5bb00e893c682d3d60ca360ce4931f02121d67",
+        "evidence_sha256": "3282d88c9e0a1fa8eb9f30d5dcd32154d2a283068859b04ddd89624d199c5574",
+        "dossier_sha256": "15c6e5f71ae99c2fd95ad20d1a2d85622d3471fc845deb6291c4bcf88250cc81"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-c705d3088d4e589e3580-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-c705d3088d4e589e3580",
+        "field_id": "sash-app:SER-LIX-SAMOSL:glass_detail",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "181ab2d8ea7115b0ad822a331e64ee4163ca23b2cae7e1b599267de33c7f2fb4",
+        "evidence_sha256": "a7207b75f97b50bb9ffa3c93afada6a18dfa04474152897190baf0427a43beb4",
+        "dossier_sha256": "53241fc003cb7a5151be5fb34c4f9aa2def6c06ec4ca688bae2896c13251741f"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-9d5825685c0a9da24af9-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-9d5825685c0a9da24af9",
+        "field_id": "sash-app:SER-LIX-SAMOSL:glass_function",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "7289827023196bab1b02fd7fa33744db0d1c840fe5eea275ad6ee4a121e0a06c",
+        "evidence_sha256": "4c84f727465a1a17231cbd520c776c7d2d450276e77bdad7e4b86e7835a36638",
+        "dossier_sha256": "997ff76d612bc08ab9055e57207ae3ce06d9002c93abe671dd3e6db507e38a2b"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-725031986fc4c28c1bd1-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-725031986fc4c28c1bd1",
+        "field_id": "sash-app:SER-LIX-SAMOSL:glass_spacer",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "e0922c0a317e653bb0ef01c8f2c3b20967f03066ebc6c528850414f717b1cd18",
+        "evidence_sha256": "ca22143c09d72917c782df67cc427c616e6e5784aac63ad71f61d1fbb8ee0d38",
+        "dossier_sha256": "4231a1e94da31f4804cfba860d2a38eef74fb98c0bcace7b5d69dbfc21ffd6d2"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-6a89e15d0a1d4858394d-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-6a89e15d0a1d4858394d",
+        "field_id": "sash-app:SER-LIX-SAMOSL:glass_air_layer",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "9e5e4e908d99d96e2f749d45021a45f727152c0e98bb1f7bdb657a81ca7d6963",
+        "evidence_sha256": "561123b8985c9de53fb37235703f3da2f72ef207cb5383cbdfb8088528e39c01",
+        "dossier_sha256": "bc6a7dbbd2bf466aacf9a70637903bcb73756951c76cf7b2d08e04da0539c621"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-22181213ec2b28d71d7f-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-22181213ec2b28d71d7f",
+        "field_id": "sash-app:SER-LIX-SAMOSL:options",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "6a9daae4b1ae720555c6f764f9d6008bbe17dca8b733e9dbae4072e04ee45bfa",
+        "evidence_sha256": "c6f29ce5119f7b387ab7e2542b7a4518ad5fba22e2ae09655eba2b9424677ff6",
+        "dossier_sha256": "67454dfa99664c9ab7742e3f955da5c506e370a028555b8395df7a7d93b6a31d"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-72d03e33144bf242ac9e-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-72d03e33144bf242ac9e",
+        "field_id": "sash-app:SER-LIX-SAMOSL:size",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "6892be0b3eac1dd4cdb8daf46e9cc83ba7df80285f218d227e0f29e01db02e24",
+        "evidence_sha256": "5335d2384be9434006724576241b141e510651fb34f98fe6429994cba6af588c",
+        "dossier_sha256": "b72446fd8f2efd41088e3dab829481cf0e9714a27e973e8b89ab29a2f4a44735"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-cc320ea3d570645bf3a6-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-cc320ea3d570645bf3a6",
+        "field_id": "sash-app:SER-LIX-SAMOSL:screen_presence",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "2f57e3d1dad0374c0be98c6ce334cc97201ec905edc55e30d6d5b9cc570413ab",
+        "evidence_sha256": "059948898e653976cbd9695db61d92fed4efe1349ff15787d110125cb930d6af",
+        "dossier_sha256": "fe4da5141875ff80f152111f7c64274765eaa57cdbe5cf8ffe72ce69c43a78e7"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-c240c3350a445ccbad5a-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-c240c3350a445ccbad5a",
+        "field_id": "sash-app:SER-LIX-SAMOSL:shutter_type",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "131e655d2186dfac9d939b05cdb43004906a6597c8c6e2ee5f2216b4f1327985",
+        "evidence_sha256": "df7218209e9f559e68af539eaf658421aba16204d3a161d5921841750cdfc1af",
+        "dossier_sha256": "6472770c8ef5bcf51f8fa5c4ef0b81b1dd669b9a599508c3eba32b404ec336c5"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-c70b2a52a78d9c960ef0-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-c70b2a52a78d9c960ef0",
+        "field_id": "sash-app:SER-LIX-SAMOSL:rain_shutter_type",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "d0eb1977d179dac9366baabaafb82f1729fbc1d22fccd8807b76ca8dfc1a550d",
+        "evidence_sha256": "b0db546226f257546e1f2ad4f29c04d7e2ef2092d98b26d4d37b7210c5cfebe4",
+        "dossier_sha256": "97f956340abd6cc209aab0877eb90755674cf36b238bfcf3e8d155c45e6f7883"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-709c5b6c872b81c5b0ff-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-709c5b6c872b81c5b0ff",
+        "field_id": "sash-app:SER-LIX-SAMOSL:grille_type",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "0022e4084eb4f59c6860e9fef90de04ed3600145d5c01c56a904c9c440186703",
+        "evidence_sha256": "0aec1af212a4a0d4995a9f86906afe34985e0c28554ce0f8f73499cc449a9904",
+        "dossier_sha256": "7c8a271ceeede07c64aff7fd8f386c5b8248d08a8337d0f35329589c672bebd8"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-d8d48b46e212dd5df19c-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-d8d48b46e212dd5df19c",
+        "field_id": "sash-app:SER-LIX-SAMOSL:handle_configuration",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "3397e6f987e4e37aa3562dcc4ea2bf570c71b9612dab44b84d936eb17b15004d",
+        "evidence_sha256": "5f81e6b47e7a97070eee048459dd0dfc3026acf9af6d84630155d0bc5fd54b83",
+        "dossier_sha256": "95a3c6ede6e8441969151b784fb7d12bf9a774ad4306549608ede4ea6cbd97b7"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-39ed6be5c0723985ba84-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-39ed6be5c0723985ba84",
+        "field_id": "sash-app:SER-LIX-SAMOSL:handing",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "cc27b28abd5b1845feb92055c16737bd3d8857ac113634ea2959a654e4ef2fba",
+        "evidence_sha256": "1d05e9fc613664cee4a27778f6d23696797f72454ed0da40f48022e676b380a3",
+        "dossier_sha256": "222ef8dbffd6cdb7f16666fd760951eaece6d83a742fd8879ff5b1baa5926c6f"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-f9414c8ad8098d1a570b-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-f9414c8ad8098d1a570b",
+        "field_id": "sash-app:SER-LIX-SAMOSL:handle_type",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "8b555d5098dc1df13d54ce332f9f233989dc6c356a88b7a3e0dca60ef6bd5eaa",
+        "evidence_sha256": "7d78c7535980810d67e2ed7dbe507dbe08c4ba183b51b9053c1d3aed68b23af4",
+        "dossier_sha256": "eeec06836606aa263239829e67a1f538c56e46d7a97bacd0ef9f6f259e7704a3"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-3c8a1dcc1c91a13ff76a-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-3c8a1dcc1c91a13ff76a",
+        "field_id": "sash-app:SER-LIX-SAMOSL:operation_method",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "81d4d1b2c8ec2a041d0106dbc81972a7ef5a3d19b5af688d0e65d5122319a7b7",
+        "evidence_sha256": "ef37f312f6dcb2cbd84ac486091854368756df942bc9108418dbbde790f370ee",
+        "dossier_sha256": "dfa43129c248bcb979a1e1cc13750cc6ccd525a6584b9751f401e18b9138194e"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-32ba9a51b002ecb68436-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-32ba9a51b002ecb68436",
+        "field_id": "sash-app:SER-LIX-SAMOSL:composition_type",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "f3a08761380d6e7226a75e5494d724cbfa324b1e9c89ff7f8feaac666aec142e",
+        "evidence_sha256": "4693b21c30e6cde733abc6cdc7b4fc1b51a24edc2d91bf47abac87ca8a1f315e",
+        "dossier_sha256": "e8c9db9f9f2ce7abec0568d42e4b3535a14291cf54541a1c5ae41496b52ca9d2"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-2dc7291331543e82f959-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-2dc7291331543e82f959",
+        "field_id": "sash-app:SER-LIX-SAMOSL:joinery_configuration",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "c585ecb87c9f0d09c9742272133336754a89141b5ed03bc506c88d9b1783c891",
+        "evidence_sha256": "42d55929ff584e9b4c05ea2a3922a0fd6bc0ae8575c96dcd786cff996f917df9",
+        "dossier_sha256": "21195c0b19453e4f0b93e6995cda565a2e4ea63c27bbcd894a062588f7954b43"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-9fa388bb0593d6e0e5b6-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-9fa388bb0593d6e0e5b6",
+        "field_id": "sash-app:SER-LIX-SAMOSL:screen_form",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "e6bc7b9479f8774b9c034fb568e239c0bead50a5ee416683bb38d9ebe777f10f",
+        "evidence_sha256": "523e1bcbb55e402b094f3bd3f0c1fd38392c8cb7f9d037ea696e20125c040ed9",
+        "dossier_sha256": "0eaba12460e421c5214d335bfc3688fc87616bede2596f552624c209d582fd81"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-2d331a6c24b0d7d32c90-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-2d331a6c24b0d7d32c90",
+        "field_id": "sash-app:SER-LIX-SAMOSL:screen_net",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "d1eedfa32df21e1add2d6fb772e894bad6a7ce8ee3b3ec7b043686fa95b42d59",
+        "evidence_sha256": "de1a2d43317c2d94657a994b5684aecc6aee917b587a6ffc9aaa695cf47ea85a",
+        "dossier_sha256": "8e10006a1a4e6f1c5509885b6fb152aac0c5eaadd813d6d4c20cce9c0fc84971"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-c6189b0f61fe9c5067f2-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-c6189b0f61fe9c5067f2",
+        "field_id": "sash-app:SER-LIX-SAMOSL:door_type",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "bbbcf1ae4d916faececcb9de6a406cc325501b0d9f3bbe5eb9b55337d05888e7",
+        "evidence_sha256": "39c455f7c6c03ec7d8a4ef4767ae6900fa37997a08629162b4b911b48eca0912",
+        "dossier_sha256": "f26df9c7380ae7b9d3747d945069a65d119a6607126a6b72a4caa59dd25f8ebe"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-4a7ca81bdd3733922abb-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-4a7ca81bdd3733922abb",
+        "field_id": "sash-app:SER-LIX-SAMOSL:custom_width",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "d88c2d544d1dc288edf21dd0ba19945ba7d58e657e1a780742a1deb34d3a275d",
+        "evidence_sha256": "c0c8e464ce6db5e71b9fddc7dbc3194ad86c488b34e64580dca178aade44d70d",
+        "dossier_sha256": "7573b32b91052ec1d4a25531909f48ce845fd81781dc0f3eacfc66aa51914b11"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-b997b3fff624a8063b7e-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-b997b3fff624a8063b7e",
+        "field_id": "sash-app:SER-LIX-SAMOSL:custom_height",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "570448d3dd6ae2a1982c7e1e18af75d3da209734e62a4349f66dc000771d227c",
+        "evidence_sha256": "3d28804837014dd1ffa2232def99172cd7311b57924556c614509fb649f21e77",
+        "dossier_sha256": "4a7e1be8ee37897e493929d21597298a264d018c5eb13617a9f298285d8aee5c"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-5269e7ce493a82607b9a-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-5269e7ce493a82607b9a",
+        "field_id": "sash-app:SER-YKK-APW430:window_type",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "99b9e29c682f4a072dbbf083dea7ef83d51b5798d3eecf840244ed604dd6e9fa",
+        "evidence_sha256": "70ddd14ba38abfdd392c8156c045e56d4d3728b992205d16c2624673c83eed64",
+        "dossier_sha256": "ddf12d5965306e4affdb4d44e6e76d9b4b8e66cdbc65ebb7dbdc761f11f7af7c"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-686fdb8599289a23e2c8-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-686fdb8599289a23e2c8",
+        "field_id": "sash-app:SER-YKK-APW430:size_mode",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "be676d76b0c99835ce4c09f85854ae7d0408d6228f4a015cfb08ace9322d4fcd",
+        "evidence_sha256": "66ee66ba048640d3125786095f80453ce8e846837e729037681c73cce7273c3e",
+        "dossier_sha256": "90a7aff228b6bacaaa182ad0f2ca01ad7b124217b72c54845814e2116a04aee1"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-0bf0d42985bfce845dde-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-0bf0d42985bfce845dde",
+        "field_id": "sash-app:SER-YKK-APW430:size",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "95a2f8dabc358ee5016078f373319ba8878a408bfc1276b63efb6bcabe6ea45d",
+        "evidence_sha256": "b54063d353ab27bd3647e3d104e03f5c6d23d34cc28ec6b10487c48fb22ea003",
+        "dossier_sha256": "0acf1f285f9fbfada894a86e622afc6c4a4d7936c1241e2dba9d0d469df5783c"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-a0461efae97c3052fe4a-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-a0461efae97c3052fe4a",
+        "field_id": "sash-app:SER-YKK-APW430:exterior_color",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "9681e739a4158686b8eed7a550f529f252f8e8febed7a4e3accca1e2dcce00cf",
+        "evidence_sha256": "7f1d3d842cb9e07634155c74748693da68d8704b50e8108042fb2290cecd48f5",
+        "dossier_sha256": "52ad35fb19481b192a6e56def4cd73999f44deaef15effbc2d015ef62c03faa0"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-d1fc3933fe837964b98d-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-d1fc3933fe837964b98d",
+        "field_id": "sash-app:SER-YKK-APW430:interior_color",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "f15a9c9f2bf8397d380ed7fb305ba56c67ca30c2230a0b815aad83a7997914e0",
+        "evidence_sha256": "84b5402a339389876cf97156033a09ced69eb280edcf778c8d7ca97820bb1103",
+        "dossier_sha256": "0da923d04d4476217e0a09a37a62cd7d97e3df34b0cbe6b458cadf7374cae328"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-690a4913c724346f29b1-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-690a4913c724346f29b1",
+        "field_id": "sash-app:SER-YKK-APW430:glass_type",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "df1ee461716b1ab922138c1dd5141b7fa80cd2d77b40ee2fefa50c97e4cb84d6",
+        "evidence_sha256": "36a9645a4c6dba1e6268f09f5b02daef600d4979d5901fa8efc785404e509168",
+        "dossier_sha256": "43d2c50a14c4ba0f64e798ea47edd7a9b4bad40fc9cee1b0eaf2b9cba9e3bb92"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-eeddcca36b8b1e6d211e-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-eeddcca36b8b1e6d211e",
+        "field_id": "sash-app:SER-YKK-APW430:option",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "f3a9a2fe5c06dde84c5f9f44140502e91eb1cbc22453358a544fe31fa1477af2",
+        "evidence_sha256": "6b2d08f342101064a2204f4b24f3bebcb7d6f77ae5923bcf38d48c149d7a5b0a",
+        "dossier_sha256": "14e93ff19e3758ac4798e42825640abd2184d407194806421ed3e9ff461e1df0"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-bb96a72add897992c940-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-bb96a72add897992c940",
+        "field_id": "sash-app:SER-YKK-APW430:glass_detail",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "7cd77ca2b726b3108a8380a98a45c4b39c722055fac23b27c52468f387592095",
+        "evidence_sha256": "097e97728ec894a52a998b59bdb44875f37a12438b313a18c8aeb6b3d1397616",
+        "dossier_sha256": "57b83c24a9a4c5a33bf5305de6a5e662a043f05694cebc8d3592375e1d91db01"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-f118e3bbe3bac39b06f3-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-f118e3bbe3bac39b06f3",
+        "field_id": "sash-app:SER-YKK-APW430:glass_function",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "abfd778f1cfe7ea52ebcc90db8944505206ab71bb8176ce303e29dfb11304287",
+        "evidence_sha256": "848d9206dc21c9a90c917d4c3f27d2509cdd8ac20caeeb631f1ac230d1ca38d0",
+        "dossier_sha256": "0c4995165fdfd8bda7c3b90f521fea8904935a97af2a8eb5056a4f944ac7789d"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-127eece42459f75caff3-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-127eece42459f75caff3",
+        "field_id": "sash-app:SER-YKK-APW430:screen_presence",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "29aec62203f4e96a568058078643411a38876e76e406dd1d2119a90c02084d8c",
+        "evidence_sha256": "c15dff08bc6c16ba727d329e37f5928251dd88eba870787abfb5e01f97d238bb",
+        "dossier_sha256": "ff9d8560db31dbc666b16ace34e0d5ce59a13159af3dd9fca7b24ae93cf51f4b"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-3674941a4f23dc7b5638-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-3674941a4f23dc7b5638",
+        "field_id": "sash-app:SER-YKK-APW430:window_configuration",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "43958513ddee53999a3ae7c92fe2c53823fbf6f92ce2962a765c250de98fee95",
+        "evidence_sha256": "5364f48a7581176e349a4936954ca376cf8dbdf07ce61d8b701c5f957255535f",
+        "dossier_sha256": "0fa1dd16c20260a17a85b5a4fe035dca5075f854a747630c45a50130424cfe48"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-eb4bbc29bb4a72d20432-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-eb4bbc29bb4a72d20432",
+        "field_id": "sash-app:SER-YKK-APW430:handing",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "f389d748ada496103dda2e3ed2895edea17408809501771626b6df8d9e3d6cdd",
+        "evidence_sha256": "febcaa0245755a1f4138180d5edc1ad792678bbab9546a916dd4ab12a9a49ba6",
+        "dossier_sha256": "4a5a7bbc0ca0d11cdb47be76c4b9b62d4696580e0f08db9e39178c19b617a5bb"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-77835f16b47287a7b652-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-77835f16b47287a7b652",
+        "field_id": "sash-app:SER-YKK-APW430:window_spec",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "9dce1663e6b0614ee67e6469f6a68c36f2887f2b3238697dd7b2647cba5f2750",
+        "evidence_sha256": "dcf7fd7a6f68325f30df77d352c9aecf68cf7865621089b46ce27ab6452a9a71",
+        "dossier_sha256": "d8967e2413085bf6994453bb033d591c4f317c1e3112fb4341a58cf87c5df930"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-7e49a7faf5092a495d24-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-7e49a7faf5092a495d24",
+        "field_id": "sash-app:SER-YKK-APW430:panel_count",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "245c2938ab608e6472218cac7eeb3cb799fe8cfd220b99ef0c36427efcf69360",
+        "evidence_sha256": "6ca4feebbf4c64153445fca17df6eacc4b2253e28f56eb16c36e6e9c6a51faba",
+        "dossier_sha256": "5b4c5c0f88b181e59231ae4ee0f8a64310a4ad742df630562a6568ce8c774c6d"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-dd411b41658cf8eb6d35-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-dd411b41658cf8eb6d35",
+        "field_id": "sash-app:SER-YKK-APW430:custom_width",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "8f32cfa165c767aeda4a8bf7ae2857e2b99093b4e0a1efa6d6ceeadc86eab3df",
+        "evidence_sha256": "20bb4457832c08068dfa623eea89b44dc96e1b891753a98eb4424cbae07a66d3",
+        "dossier_sha256": "d5d1040a87b36a5814b95e88dd478af976d03eaed02fe3a86304a57f8b49bcfc"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-5f1677b0d7854ac383c2-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-5f1677b0d7854ac383c2",
+        "field_id": "sash-app:SER-YKK-APW430:custom_height",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "e8e2c6a311adc276c85d5efc63d37e045490baa289c30e59cf6d4e234cf4f900",
+        "evidence_sha256": "c1bfdb55d66cbb3f74b1c636adddac3bde280a9d335d06ce18dc64446dabb2e9",
+        "dossier_sha256": "d677bb0697d2434183c9d8fe309370bae09d04301561f96fd9d7b77f426dc13f"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-5f8d3ea2e2570949e0c2-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-5f8d3ea2e2570949e0c2",
+        "field_id": "sash-app:SER-YKK-APW431:window_type",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "71253b2b88c965748b3926d49c13c70edcf6b7c487e92627c71dada7a0727f21",
+        "evidence_sha256": "b23c56e43de3042b1d1a02d10529f7ab0d1a61248adeb8d8950bb2610d64f7d5",
+        "dossier_sha256": "ac5f58622681fb5aea0937a1e6967f7f3a0bb518e42be26c1e2aa5af164edef2"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-4f1eb57e2185e8bc7252-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-4f1eb57e2185e8bc7252",
+        "field_id": "sash-app:SER-YKK-APW431:region_standard",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "4e783ad5fcfd9e379a2071f273822f30747e58b9317f6869c4f2a29fe6e1c999",
+        "evidence_sha256": "e3abffa974a0965e2f71925e82c054a6bc6beb3226b94bdb23d5e11bd53f194a",
+        "dossier_sha256": "e6ba5616146a40bb84ce1436aedd3c19f7f9744d0ee9fd72b570b348a907a840"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-63f95b565eb259c9c800-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-63f95b565eb259c9c800",
+        "field_id": "sash-app:SER-YKK-APW431:panel_count",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "6632db62a7519d37d27b283b62aad3bcc4914fc7571cca642f54018ca59473c7",
+        "evidence_sha256": "04b3fa2290aab786b3631f1e97085da96d5755cb7ca3ea98cd790b9c4a536bae",
+        "dossier_sha256": "960f76331c34c9233f4e76bf7c4c389f707946f956dc293222bc97632b958c1f"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-8b802920c3f67075ccab-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-8b802920c3f67075ccab",
+        "field_id": "sash-app:SER-YKK-APW431:size_mode",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "2001c991962eb2a0201968445760d8557f3798185b43caaa2529fae57b5c52ee",
+        "evidence_sha256": "a4d74df74dbcd5888db28554ee2f0c743045e287f8d424d45b68613e7d035a94",
+        "dossier_sha256": "00b835ece7283a58c78243d71387b88958c3ca440fb30de955b39b0cf8a26a81"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-256299c35f603c3e962d-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-256299c35f603c3e962d",
+        "field_id": "sash-app:SER-YKK-APW431:size",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "6607afd4737f8456a08276defb8b4efa36c4890b71c33a0bb5ba9b6690cf40b8",
+        "evidence_sha256": "5f4fd0fb08c3a05782e070f214c3eed53d258c95f288e19163f079fddb7d4c08",
+        "dossier_sha256": "0d725141930a4747f149b31e540f95d9d8288cf7ba58e7738f7add9c1b99bcd3"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-3991599a7c38b017398b-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-3991599a7c38b017398b",
+        "field_id": "sash-app:SER-YKK-APW431:exterior_color",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "5a6fac2dd0c3cf397adcbdaafd79d9833faffcf1a89cc5c496f7987fd74b132d",
+        "evidence_sha256": "ba8e54dcfa2f4dc5f7e411bd341eb714b6a0751bd65b6d79f0c332e97d69893a",
+        "dossier_sha256": "d870d1bd403fe042c9561b0804d71786d1b9020c2eed62332227ae7998523821"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-ab80c7f9fc04fc277306-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-ab80c7f9fc04fc277306",
+        "field_id": "sash-app:SER-YKK-APW431:interior_color",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "fccdd857d54569cbd10bbdb6cc313f5a13735bd25e0cc06652525f91b59ad77b",
+        "evidence_sha256": "2cd02c1e2d70f9b21e1c0e2776cf4749afad8616050975b3526670cc4c5cf3d9",
+        "dossier_sha256": "ca8699e064f75757e61aeb8a9cb7594c11531a0de996e4d523e72f44b793fef9"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-ac9a8d93f861ee3d2565-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-ac9a8d93f861ee3d2565",
+        "field_id": "sash-app:SER-YKK-APW431:screen_presence",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "e426f96895b31d969b4dfec6d2b798b0f9065798c6c2e12401ef40cf158c2879",
+        "evidence_sha256": "9865ad3ce9e3101b36869bcd2cf2d385611a92df7690a0d958493980b06774fb",
+        "dossier_sha256": "b1bf83af01d4bad4e57a0e849e3a9c98856cc3b61e30695036abd1002ab1760a"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-86b158cb4bddb4375fe3-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-86b158cb4bddb4375fe3",
+        "field_id": "sash-app:SER-YKK-APW431:glass_type",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "c57640818dba5d79828c6ffcc7424ff775a33a311b79d3403bfa07fef49fb201",
+        "evidence_sha256": "f58b33c0be8a6655d013124b9353bfcd91a9113ab16c5020cf907abe09ed8b26",
+        "dossier_sha256": "8458f60cd07926c96b141beba847b90b30227b039c26022748491dde33c65c3f"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-a586b897fa5a267bdbe2-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-a586b897fa5a267bdbe2",
+        "field_id": "sash-app:SER-YKK-APW431:glass_detail",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "ae4fdbaad0dfe35c8ba13a55ba8bb487c456fbdae831878abbfe7be0c7544363",
+        "evidence_sha256": "45447e591e0033911e498324d782d58774a399ce9d9450ad17bb59d30cb00627",
+        "dossier_sha256": "4fa216337590d64e55abeb6b55d0bff11d08d59c71ae6f384d9faababb785409"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-8d6322e27a7e7b34b720-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-8d6322e27a7e7b34b720",
+        "field_id": "sash-app:SER-YKK-APW431:glass_function",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "9a38bfb4e66de3dd1b17457867d60aa68dff323e8204630f5a87be2a0953e03e",
+        "evidence_sha256": "6910055485c9a5e4c64993edf8753df05c587088ad2292e0eab4bd26be2adfe6",
+        "dossier_sha256": "de7fb98c64f75d44ec48e699c918604dc7279c5a632529a70e14f4e0ec0ea0b2"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-42d7e7487ba99a227450-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-42d7e7487ba99a227450",
+        "field_id": "sash-app:SER-YKK-APW431:option",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "9c5e8c356265bd009229a90b84394a975a2b909432b9641df3a39ecd1a6d1468",
+        "evidence_sha256": "0e49b92e5e5b618939da07dd9800124989f5f40decf7fce8b9f4c933eea927b3",
+        "dossier_sha256": "51fb8865a53f695a242eceb127cd9470e75f72738fc5b02f7ab529c313049a6a"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-22cd0e59f0bcf65014e7-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-22cd0e59f0bcf65014e7",
+        "field_id": "sash-app:SER-YKK-APW431:shutter_type",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "9b58cb3351fa798cdde987f201fcbd9ead97b0b717ee07370ab52f2f59223a01",
+        "evidence_sha256": "c063b51bfdd2a86fc4374e0091472c0c526d05144e85ea832d34a45a014d0bf9",
+        "dossier_sha256": "393234d8b7fe05b2227cb502ee605c66ddd982bd0b8a6902d3bf682f73af3868"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-f90720f4cfdc68062003-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-f90720f4cfdc68062003",
+        "field_id": "sash-app:SER-YKK-APW431:window_configuration",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "84a9e7fc69948bb605b1c5874a685b5ba153961731c86d1f478e36cbaf8a4c7d",
+        "evidence_sha256": "8e319472cbac8e9fec6785b92bce44a1b7a4b44d5e54b3722c0a49a5e6cff1e1",
+        "dossier_sha256": "2d720c31f2c655473392090a99f1dbfde2963de92ecf93f504d71e07384cf14b"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-7baa52e6f9b882a7a137-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-7baa52e6f9b882a7a137",
+        "field_id": "sash-app:SER-YKK-APW431:custom_width",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "7fa435e8719736d37c0293bcbfa2221e9f321c90e78d79d97d357a96cb24a81c",
+        "evidence_sha256": "bd3f4fb53ad29f4f2583214c124b95997aabf1ddebe515c726df53b8249b15b4",
+        "dossier_sha256": "4b47169aa1982d74a20088e095e42197906d1926802671cfd722b6aa09e991b5"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-535c9925d46772c2b267-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-535c9925d46772c2b267",
+        "field_id": "sash-app:SER-YKK-APW431:custom_height",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "b7ec9ac160a75eb9a84438f9dd308b8e89b94d10fa9d10e8b5af4ceef0263087",
+        "evidence_sha256": "cc5e89a8f2eac62b780a25d926b974d065159692086a44c8c716567101e9291c",
+        "dossier_sha256": "63b816c940ee2cf596828b39891a1035d79a2c7680c8c797256cbdbb52486781"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-8c349663968ef89ce45c-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-8c349663968ef89ce45c",
+        "field_id": "sash-app:SER-YKKAP-UCHIRIMO:window_type",
+        "category": "interior_window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "1e0b7b26b9951759391e0bf6547b12859529e2d21f448839abe4da95ad898536",
+        "evidence_sha256": "4b675880da0041e4b260f6668e99ca0a2f6a33ed15b80eb45e7e0e96436925ec",
+        "dossier_sha256": "dfb1f3ac173102579971a90fdacbb29a398581a7cccad0fded4dc0b04b21a3c5"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-a8d969a6d15eec466cf7-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-a8d969a6d15eec466cf7",
+        "field_id": "sash-app:SER-YKKAP-UCHIRIMO:room_specification",
+        "category": "interior_window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "3349f46cca4c0fa6e4fe92a600ef3f35ab56836bf5087c3a518fa6ecc66b1ed8",
+        "evidence_sha256": "61e98f2ee8cdd898cd4a1dd98257ea009c293e2bac768ed5af0933a873e7aef5",
+        "dossier_sha256": "ab9c1cf33c056263601b5f48eda2e9bedf2a278c40c1abd4e704f2506e87f01a"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-2515ea1b9aae62d56f39-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-2515ea1b9aae62d56f39",
+        "field_id": "sash-app:SER-YKKAP-UCHIRIMO:sales_glass_appearance",
+        "category": "interior_window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "f2127d33cc90807b185f7bf0c19dabcfefef00d34dbd4960d18c2f6ac6fe1fa6",
+        "evidence_sha256": "1635b75ca70c4c9ff9a82141cdfbf23a99e76579b711505af1d750d98fb0ca72",
+        "dossier_sha256": "e98439d8d2688cc22149b348fccd5325930e8f978b9ef0caf06fd914914734c1"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-5936f9f40b2b8e3393ef-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-5936f9f40b2b8e3393ef",
+        "field_id": "sash-app:SER-YKKAP-UCHIRIMO:frame_spec",
+        "category": "interior_window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "001e94f77eae5b244c3f63cf7cac2cc4fa9c49fe2243b33ff1f834f8532db54f",
+        "evidence_sha256": "d88c37d7889928201f762664139a9944a6a2bdc4378e7eb9a8224fc2318a1488",
+        "dossier_sha256": "a3fea60dd97a424b14d7e23e1ba6e350cbb25547d3664bda2ec4e18873acfdfa"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-9c0aa9538d7b7e706226-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-9c0aa9538d7b7e706226",
+        "field_id": "sash-app:SER-YKKAP-UCHIRIMO:fukashi_presence",
+        "category": "interior_window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "f9a911916f9b90fa9dd4a0138769ea602d9d9c9836938f9929cf33333f13d19d",
+        "evidence_sha256": "ab190037cabae2451760f3edadc4f75c8d6c81c20407a589941851a0d324c931",
+        "dossier_sha256": "94a840e1faedfb731fb3124b1b274dae21ddbd698845af378b30d3487ce506c4"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-bcdc91b5d78e89ac2368-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-bcdc91b5d78e89ac2368",
+        "field_id": "sash-app:SER-YKKAP-UCHIRIMO:option_items",
+        "category": "interior_window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "a66302943b639fe797513c4026b1c875f5a6f476e3caabe7522ba462329c700a",
+        "evidence_sha256": "5f835883cac6a614e3e521c9fccde5cab4045598626ce955d964a5f53be4c3e7",
+        "dossier_sha256": "26243d05189fc08660aa430938f22b4a8bd17422da5c99a4723ee67e57b365b0"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-7607ca116f78c6f166c1-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-7607ca116f78c6f166c1",
+        "field_id": "sash-app:SER-YKKAP-UCHIRIMO:sash_configuration",
+        "category": "interior_window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "50ec2a8ad183fa8495f83bd5c053b5a4f803dc654417ee698eda1f48d2df6b28",
+        "evidence_sha256": "28b0dcce4e1277768b43771930df9b8c367d276c178d45ee941ae61d29deea84",
+        "dossier_sha256": "187090c7ba5a87ef1ca92ba0c43e47813e4e9d62f1ebd5646740aa2fec956cf1"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-16b023675c61c3518ac3-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-16b023675c61c3518ac3",
+        "field_id": "sash-app:SER-YKKAP-UCHIRIMO:lower_frame_spec",
+        "category": "interior_window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "4411dccacec57b24779b34de1cbb8d9c738217ddfb395aa375e9b4a909f4fe66",
+        "evidence_sha256": "db7cb467c211d04a2830aeb00ed07d1d226649b4157a439711f4b8b4a0d2f6dd",
+        "dossier_sha256": "674e50dbb6e69dee74bab777a4b6267ce1eaf91818419f72bd4b53e969886978"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-08adacca7f0098bbe88c-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-08adacca7f0098bbe88c",
+        "field_id": "sash-app:SER-YKKAP-UCHIRIMO:reverse_handing",
+        "category": "interior_window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "992af04947a662e372a8cd38004fdb069059f79f837e2165b6f2b35cbaded8c1",
+        "evidence_sha256": "3d2deebc7e86513debc083126d85a529779cbf8d102e66c87e7933d52dd7bcc9",
+        "dossier_sha256": "28fb153a5a036b5b01c14d70fd19512315bebeb9ed48d5e2cb35a2066766b2e1"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-848e1b0309f660040888-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-848e1b0309f660040888",
+        "field_id": "sash-app:SER-YKKAP-UCHIRIMO:frame_color",
+        "category": "interior_window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "695d224cbc04dd54701e41a0c038481c3b82c4728b75394de059d2ae29865f18",
+        "evidence_sha256": "d8d0f515c3c0b5b1aac74c933cf76c31bd07ff20131edd25893cd98974adec21",
+        "dossier_sha256": "98e4d4149746d23f9ddaacc40f4e224ee505316f5a268bdb9b9cfa2aa17c399e"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-3262856981cba8f0da6e-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-3262856981cba8f0da6e",
+        "field_id": "sash-app:SER-YKKAP-UCHIRIMO:glass_family",
+        "category": "interior_window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "eda94c023a97dcd1e60cbeafd5294e5b559a86b4477d7d8d741a235275964a72",
+        "evidence_sha256": "1f93dcf6ffd833f1c54564fbcf90fca68beb309bb9949aedb6c14510e2fed402",
+        "dossier_sha256": "bf4ee90732ff2aff0670aaca4baf762ef1db2d3b2eedcd3e3676f571f7a7406e"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-b21b36d2217618511628-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-b21b36d2217618511628",
+        "field_id": "sash-app:SER-YKKAP-UCHIRIMO:crescent_position",
+        "category": "interior_window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "1d0a45aa946ed0069388bb58773563b2b27e574593975937592d5fbe272ae231",
+        "evidence_sha256": "03cd3f8bca7f8bf1a044794f3e4f797041ef37a715fb226ba9dd1fac7240617e",
+        "dossier_sha256": "0d1b5b2d94017f166787552b1020257ce028f97a2f06431e231bd22413837c58"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-6494123b19943d5a77fe-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-6494123b19943d5a77fe",
+        "field_id": "sash-app:SER-YKKAP-UCHIRIMO:crescent_presence",
+        "category": "interior_window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "5554f646c57d75bd204e520ac3175c1cab3d7510f12a84098265c7a04fda5863",
+        "evidence_sha256": "32a24dae94f69b181cc728f04e45c802a7c0c97cf056f49777dc6a6ff6710c7f",
+        "dossier_sha256": "4ac508c99bc9d7e50e8500aec7ff3767104336ecf0a5b5ace60e54431d6bffef"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-2025846b493c3e1f22ec-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-2025846b493c3e1f22ec",
+        "field_id": "sash-app:SER-YKKAP-UCHIRIMO:crescent_type",
+        "category": "interior_window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "2808dcf2e6ed95b038556e2e35af5b5d493a6b8694d6b32cf53f5d7bc3b65e6f",
+        "evidence_sha256": "3df64be79ae0fe68af106635ddda4e8bc6d350e8d5f98f60e96eab5c696c6f24",
+        "dossier_sha256": "c57159cd5cd987a64b976b37629e174eed2d04672cbce1fe8dc29cd2619a9523"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-2cdb13f6e43775034260-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-2cdb13f6e43775034260",
+        "field_id": "sash-app:SER-YKKAP-UCHIRIMO:pull_handle_type",
+        "category": "interior_window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "5ac82681af8f0b25db24740f4505238abf69f77882a27af7f23c6f1b974ad1bb",
+        "evidence_sha256": "2f9044aaee188c17890de3659d49a51cef6df6cdeeb9b0bc0b6afbf90366811f",
+        "dossier_sha256": "efae399cbbd82f9dcc0e1efc9236775eb449b6a490b748125fc20b5cd2967c98"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-bbb244e0db467b17ead5-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-bbb244e0db467b17ead5",
+        "field_id": "sash-app:SER-YKKAP-UCHIRIMO:pull_handle_position",
+        "category": "interior_window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "86f27250edccd74274445d1359b4f97ee225ac60d07ad7d1f669f323b69cca8c",
+        "evidence_sha256": "c0352a8d7b1635b614e1e535f373dd64165a8ea8df742d4035d62473fe10bbb6",
+        "dossier_sha256": "0e6eb887e568246eeb9fc6a08a85736200ae00677f49358e5e2c7e37965de304"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-5a8985a8e2a0fb2fe180-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-5a8985a8e2a0fb2fe180",
+        "field_id": "sash-app:SER-YKKAP-UCHIRIMO:middle_rail_option",
+        "category": "interior_window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "16518d344c25e774c258b4d25af5d7fa11f911dc857857f1d1fa368da43f1160",
+        "evidence_sha256": "b21de793eaa235ae114456328a329c1dde928654a92832a96e0bd1b6d0c2cf25",
+        "dossier_sha256": "4a1ba7574f695a024ba5ccaa5abc4c3caec7def55338245e0464c71002bce6d0"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-bc3dbf5285d9ab20bf45-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-bc3dbf5285d9ab20bf45",
+        "field_id": "sash-app:SER-YKKAP-UCHIRIMO:ventilator_option",
+        "category": "interior_window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "a44fccedbd550b633d8c4d9a38db05961a58d4e2db404f0857b7729564f25ebf",
+        "evidence_sha256": "c8c5379901ec7d78f0fdbef3ae0f1512dc3d8c9f34040bf274f84d18ddbb02d8",
+        "dossier_sha256": "a54413ed5e11afe490c57f21d016fcde7b9e4df166d7b1bb0e08650e4e383164"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-69353bb1aa85213876b5-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-69353bb1aa85213876b5",
+        "field_id": "sash-app:SER-YKKAP-UCHIRIMO:size_w",
+        "category": "interior_window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "c72b81f2654295040e1e5c11cffac74b827923a3441224405b4d235bb9d7c56a",
+        "evidence_sha256": "7e33eb11903136efae00ef369b83966744c5420501ea7d36a202c073dd21762f",
+        "dossier_sha256": "bb4c0f5796cecfa117752db810f87d48d94ca696995366f7c5a9de1a3d7131f7"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-e579a51bd7ca9be3e030-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-e579a51bd7ca9be3e030",
+        "field_id": "sash-app:SER-YKKAP-UCHIRIMO:size_h",
+        "category": "interior_window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "07df010503ab9c3225d5be5e9f55348fed4e9435766a6009eac51170a1f9a117",
+        "evidence_sha256": "afc870014945f0785ade6187a608eac07e66e8a754e2014a8770deecf99bb559",
+        "dossier_sha256": "0a97786dafc5f1e4870a41bc5fb548165804261c724dfdcc37febce3982d18d1"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-2de97fd08e93e4ddc1a4-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-2de97fd08e93e4ddc1a4",
+        "field_id": "sash-app:SER-YKKAP-UCHIRIMO:operating_handle_type",
+        "category": "interior_window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "9e335e2e8a7d90a3b1df9b5e6af79f45d6be036a5c6df190c04ca83c2c1a4abd",
+        "evidence_sha256": "1e7bb048a2e0fa171c95afdd0370e862ec42278fcb1e56abb6c04edb652068db",
+        "dossier_sha256": "37f8350e98a8a4cf14c988f01d0677b861e06c7b121afd64aecfe366878cb379"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-043bed73099d41968b55-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-043bed73099d41968b55",
+        "field_id": "sash-app:SER-YKKAP-UCHIRIMO:hinge_side",
+        "category": "interior_window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "1be125808bbd5393d053821d79ca009da225cfcd099c85f63ef1090696399915",
+        "evidence_sha256": "9e09ce54ed49156c437948b11080fe0717f0c2c3b802d39d1fc5d5a1537be4d0",
+        "dossier_sha256": "919f9001a68ccc895e501e43188d92ef40c01b50309d808bf8cc364bd9c45d0d"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-1fed2805cb51b83c87ea-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-1fed2805cb51b83c87ea",
+        "field_id": "sash-app:SER-YKKAP-UCHIRIMO:arm_stopper_option",
+        "category": "interior_window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "f4a4b10c4e347a8af10f5d56153f786b2415b5e428373a66c17eeb4780252af1",
+        "evidence_sha256": "7da5d6f1cf19cc2678a934ce8b408b3194ead41b6efafffd2af2bfd903e75ef9",
+        "dossier_sha256": "98909b0faaee5438087e42957f068d225c0921351f0c5c06ac4d436f73d983fc"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-42b5a8cec09f773b1498-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-42b5a8cec09f773b1498",
+        "field_id": "sash-app:SER-YKKAP-UCHIRIMO:outside_handle_option",
+        "category": "interior_window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "7e7d90105c5cab8385fd433cbce66b9be11290a6d2eef9c8c2d1c309d454db8d",
+        "evidence_sha256": "909df05b7168d687017dfaa62268996174c3df1741978ffe8e707987fd6c36f7",
+        "dossier_sha256": "02a3a3f334eecceb955a8fe6274779a029044913839576dadbea457a1029cd0c"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-f8ba8aeb17400d283075-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-f8ba8aeb17400d283075",
+        "field_id": "sash-app:SER-YKKAP-UCHIRIMO:sales_glass_design",
+        "category": "interior_window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "94656bcbe2f0100f189cdb24bb6c96bd331f94b9548b82c3784e20b32d8b9d49",
+        "evidence_sha256": "9490811d98654fcbd1333fff62804cb1cb0233d49548e23ee721f31eec781ae2",
+        "dossier_sha256": "993d8f0c8698bdb6d64cdc4763220c9196c4ca4fc82143cbee31225e4413ccac"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-cec225c57f9f36715e6a-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-cec225c57f9f36715e6a",
+        "field_id": "sash-app:SER-YKKAP-UCHIRIMO:low_e_type",
+        "category": "interior_window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "5d157543f6dda6e76ed98003ff97f0dd3f308babddfb36a0a51e71bbd7231002",
+        "evidence_sha256": "79f181907bc0482292351b9d9f27603e65a21eaef0d22158b0df13e81de1f9f4",
+        "dossier_sha256": "ac24346ca231141bb9082e46d7d6642e0a6fa674c2cb8321fd0364ca6f3477fb"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-da6765d151e9e6a290ee-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-da6765d151e9e6a290ee",
+        "field_id": "sash-app:SER-YKKAP-UCHIRIMO:sales_spacer_type",
+        "category": "interior_window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "5e955f405052426dbfdd6b018fbb7c455d3ccf7a24f2cc88a4057332d9429f2b",
+        "evidence_sha256": "527036b1f654c787be94b829526680fe7bf80753bce9cda1d49a3dbc3efff17b",
+        "dossier_sha256": "4bbfb32990aa940c7cbd854aea7bcf7fb82ee2ad573efe618570d6a79635171d"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-b311f1deb91344cdea75-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-b311f1deb91344cdea75",
+        "field_id": "sash-app:SER-YKKAP-UCHIRIMO:sales_gas_fill",
+        "category": "interior_window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "2985ec3f77ec514412d3acb7dc26e8043e2cdec52b584e0ef5d3e737ec3674a6",
+        "evidence_sha256": "6ef4c26116a37e3887c76f8ca433f15712e9021e5aac6e9cd1a2e345d70cdad8",
+        "dossier_sha256": "a6a48ccbe829cf2980ce9c1a61c8168cd3a5286b202af804dac7f13aa91ea7ba"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-ac27c7627e54dbe0393f-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-ac27c7627e54dbe0393f",
+        "field_id": "sash-app:SER-YKKAP-UCHIRIMO:safety_treatment",
+        "category": "interior_window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "4e2b014d8c59343adcb58f9edfc0a5468b96995f9a2102f9f35991e25ff621cf",
+        "evidence_sha256": "36e0086d9db4d7689344a45fff0926708ba9d33f080899036f06708b6b21ce0e",
+        "dossier_sha256": "514af22e354a75c8c245317cd84f1c88a51fae8d65f56e47d13b68d11d3db68d"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-8eb445b86a17609b2c73-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-8eb445b86a17609b2c73",
+        "field_id": "sash-app:SER-YKKAP-UCHIRIMO:vacuum_glass_product",
+        "category": "interior_window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "e0d3a94e4bfe2d1ef3755d283b1793f0413378391c9898f3b0721273b83e15cf",
+        "evidence_sha256": "62ad60b2fd007ec8f2278bdca7d27c6fafb3c06c4398467fc1906648f03a1946",
+        "dossier_sha256": "b9950e6db740bd9bdadff66d4a6d858693a9587a316d803702839d51a6bae2e5"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-39a63597116bd0281c60-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-39a63597116bd0281c60",
+        "field_id": "sash-app:SER-YKKAP-UCHIRIMO:fukashi_sides",
+        "category": "interior_window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "ee08267a15271e9b3e95de1ba02047a52e7e6431c067f3c98f5bd552d2fe9022",
+        "evidence_sha256": "e696ded7114f8b430abca6fb91c2507e2ca418f1f9afa3bee3c69afd2ba2c778",
+        "dossier_sha256": "2f3bd17b5ab6253f855929db4ca29472a8477e254eab43d10a888e1b5fbcd3fe"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-956bd7002383e47cef8e-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-956bd7002383e47cef8e",
+        "field_id": "sash-app:SER-YKKAP-UCHIRIMO:fukashi_depth",
+        "category": "interior_window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "e39f3b126b589c996e61826d2067cb73ee21a25d9607f3321778094f868d088f",
+        "evidence_sha256": "c1f04f1f6b2dfb878a3858a2e9d48bd4cda99a3827bb4670c4fd67a5d2700589",
+        "dossier_sha256": "9298b096c69ecd753771fac8886cce66c8c4dd8e60ed50113ee88e1a498b403c"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-f8f9d58fc49d844177b2-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-f8f9d58fc49d844177b2",
+        "field_id": "sash-app:SER-YKKAP-UCHIRIMO:fukashi_curtain_rail",
+        "category": "interior_window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "85841bff61ba4b28e389d0c52f75419bc82290df581577548ae19af2c76a1c2e",
+        "evidence_sha256": "33da86ed4890f858d62440df299621daacf5e08f68c7ef559ddf464f4b42b16a",
+        "dossier_sha256": "48b588c15e2eebd1b3acc25d976ed80e0283c158304751955376eedd91523dc2"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-b02dfd2dec27cea104ba-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-b02dfd2dec27cea104ba",
+        "field_id": "sash-app:SER-YKKAP-UCHIRIMO:sash_width_allocation",
+        "category": "interior_window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "655b8406458a43c97800f46bf8fde1a94fc2127171bee287bf72d5991d3c18ca",
+        "evidence_sha256": "36b8aca29be22d2a61974fab3dc57ad3390333784b221160a7a21073191764b8",
+        "dossier_sha256": "e520c37a1eed1245ae0cb1b73ed5115766d81798a896fc321f481e14463bb25c"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-73ebf869a3cf6c679482-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-73ebf869a3cf6c679482",
+        "field_id": "sash-app:SER-YKKAP-UCHIRIMO:three_panel_layout",
+        "category": "interior_window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "a6938cb6c3bb6987212f118fed35f145c01527a4e88f2510e398ba34a530d8b6",
+        "evidence_sha256": "7d01cc85b92f95a721125b6cb8bb80b3be9fc191d9d5a75a01e7ac1e5e86a9f1",
+        "dossier_sha256": "f948e7ed004fd7f930bce08fa73c9acf3b11021dc4f85fa1840b5ffa1a21d0f2"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-28d9ba1bd80e9884dfaf-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-28d9ba1bd80e9884dfaf",
+        "field_id": "sash-app:SER-YKKAP-UCHIRIMO:glass_coating_color",
+        "category": "interior_window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "da3efac5bb0078e813ac38b31ba4ece8a1a183539beec2b707e5cbe9fe190685",
+        "evidence_sha256": "1bca99cacb784f7417dcf17e16683ebb44a0425610fe2016d340238f50782a03",
+        "dossier_sha256": "415183551f947445c4975d5ae9ecfdddb163ff4bbfe96c4f033ad2b59e4aa2e1"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-dc1b3ed40041c74aef9d-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-dc1b3ed40041c74aef9d",
+        "field_id": "sash-app:SER-YKKAP-UCHIRIMO:middle_rail_position",
+        "category": "interior_window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "aa29ba9c30f3f0535eacda581f6d373b0e3e5fd63140a8a062240fe4beef9cef",
+        "evidence_sha256": "e7e7b408cd921680ad08a156c5593765c3b02b4c2468233bd0d79bd3aab3aed8",
+        "dossier_sha256": "ae3cf8d5427645e4b2d68bf073d77340d3227acfba5e462c2d2ed78f80e66e11"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-04b04d26238b2b9f4f70-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-04b04d26238b2b9f4f70",
+        "field_id": "sash-app:SER-YKKAP-UCHIRIMO:frame_projection",
+        "category": "interior_window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "018dd07176c1046406bd5dfe79ca4b15de727cbb990ec4828f1b31b594779445",
+        "evidence_sha256": "b85b69c79024ff829d30f2503cdd455e4f309f5e09ec4dcf01473ae23ee5401c",
+        "dossier_sha256": "8f206d43282e1af1fc6e723dd52e9f8ebf87ea774edc03c02649514b325175aa"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-a4034c617362a3d7141a-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-a4034c617362a3d7141a",
+        "field_id": "sash-app:SER-YKKAP-UCHIRIMO:construction",
+        "category": "interior_window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "bc503d3c1eeea94faf0f5a690727577cb578706da8e513c1272cafa87cbd7338",
+        "evidence_sha256": "0107e1f0797e89d177674f5d6c724cd3abc673c7cf848cac5a71ccbddc7c9aee",
+        "dossier_sha256": "3725fb3a580fe77d69f19a331703cf98ebf85d13f5fcc0a3414614a3a8babc1a"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-a1af67265b13bc329919-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-a1af67265b13bc329919",
+        "field_id": "sash-app:SER-YKKAP-UCHIRIMO:jamb_projection_a_mm",
+        "category": "interior_window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "0f4c71ff3b9c3ce5efce3c5b8f277fab4c4020669c4ad0cb2ffa96a1e7db1d99",
+        "evidence_sha256": "80ee0ee13ed44bb5b502583ab37e9c4fa2354c3dc1dfe7d03dc204be38cc92e1",
+        "dossier_sha256": "10c0d378b7bb0b4970ddcbe99a798bdd9754684324823a5b4f3e343a75ac311f"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-7ecc6ece161b3a3f52c0-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-7ecc6ece161b3a3f52c0",
+        "field_id": "sash-app:SER-YKKAP-UCHIRIMO:jamb_face_b_mm",
+        "category": "interior_window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "3b5a68037d0ed42b4788d9b32e1eb662df3089e25cee06bfe7fc16653f2be85f",
+        "evidence_sha256": "f95d56c4d56fef516c1d2605574694795510c2aac17d91ef17c04c987f750063",
+        "dossier_sha256": "4482143cc7fec07c69868acae01ea1a0ea4307bcb07dfa9d91bf5c890d3d8437"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-960db3f5ab0297bc06a8-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-960db3f5ab0297bc06a8",
+        "field_id": "sash-app:SER-YKKAP-UCHIRIMO:jamb_height_h_mm",
+        "category": "interior_window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "f7e0379dec4eff9165d40c97b4e688e24177b750f2f6951236380de9238fbeea",
+        "evidence_sha256": "3a8e75526a6340f0c8dcdd0afcf7722b2456ca1688b656d002f51068dab95a38",
+        "dossier_sha256": "a1ca9e61ff18319b22ea81e9e73700b0b42106afef752f58a98dd9cc18f49d16"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-e6d0c71342050d38b577-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-e6d0c71342050d38b577",
+        "field_id": "sash-app:SER-YKKAP-UCHIRIMO:jamb_height_h1_mm",
+        "category": "interior_window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "e1dace7affdf9e3c64481fa622c678f1973dd1a6198cd2e77f064d1ca35189b7",
+        "evidence_sha256": "6330b447018ed53ea8e930a3b8db112a18eac228754aa1c7ef4aab5f8e92bea3",
+        "dossier_sha256": "f026ecb505122b516545f7df6aa521d5816257c62f518bd9cb36a01b9680c5da"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-2180b0bdf123657abf8a-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-2180b0bdf123657abf8a",
+        "field_id": "sash-app:SER-YKKAP-UCHIRIMO:jamb_height_h2_mm",
+        "category": "interior_window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "5b30e9e6f0865b3ed7329a032958f995efc9c9157e8ee7630476b8a46189e809",
+        "evidence_sha256": "5bf23676c3a814c2274661d38335619f3624c10c331b53dc552f2f5176d7da22",
+        "dossier_sha256": "ee015fb31dbda008cc9ed9632af6eea289ec285814d47dbf8aba9e1f645e0568"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-de4e80a322c6b01407b8-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-de4e80a322c6b01407b8",
+        "field_id": "sash-app:SER-YKKAP-UCHIRIMO:jamb_height_h3_mm",
+        "category": "interior_window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "330a3fb0ce62bac8333bf75c06ee38061905519fc7947733dae0b363d8451c80",
+        "evidence_sha256": "8a98b47887ee46edd58ca39be08bfcea42a7e031171a3aee067265dfc3f6d610",
+        "dossier_sha256": "612a0fa70a7bff78af43764a25069941568527c72c62ac688b890bb227b310e8"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-2520870036db93c0711d-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-2520870036db93c0711d",
+        "field_id": "sash-app:SER-YKKAP-UCHIRIMO:sill_upper_c_mm",
+        "category": "interior_window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "016e52bc985385025371e38653573ef4fcb4ac226bb0dd7a60fb55a79657942c",
+        "evidence_sha256": "fa7cb4a456b652364b7b813b03506a0953786617cc899c2c8710e93847686c0a",
+        "dossier_sha256": "2cc20f2ebe84078c512c966f72fedb953d5458877a1bb42cfe89d912b807f157"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-2d598fe6a46964c5eeae-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-2d598fe6a46964c5eeae",
+        "field_id": "sash-app:SER-YKKAP-UCHIRIMO:sill_lower_d_mm",
+        "category": "interior_window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "34f154fe7553dc0a3426153aab4aa315382f60730c9dd050886f4cb7d12bafb5",
+        "evidence_sha256": "39eaebd17377eeb1c6e2ad8fa877c9476509e1b26c7cf9dbd2e5a60e98553c07",
+        "dossier_sha256": "d61bc84376cc75f321f8e7009aeaa05c701ba9d0e2162ba32a4e6b9a730d50e9"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-6ff476ef7a3414a100ed-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-6ff476ef7a3414a100ed",
+        "field_id": "sash-app:SER-YKKAP-UCHIRIMO:wall_surface_for_reinforcement_available",
+        "category": "interior_window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "89e16c9a1ad5873a746413343453961219aee5d159a4f9912b568d8b49a23a9d",
+        "evidence_sha256": "0e053bfd172ec958a90fe3f36dee2ca7c8013ca9e6f002809b09e24d8d52e2f2",
+        "dossier_sha256": "956fc95af9bc71ffd30dce70348be378ef4d4fb2d1bbf8ed6237d612d1a8c691"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-e08c6b3d275f2cda9ff9-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-e08c6b3d275f2cda9ff9",
+        "field_id": "sash-app:SER-YKKAP-UCHIRIMO:substrate_present",
+        "category": "interior_window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "f854078eca88d5882ab4c5a3d5730e713d63f9e1715a04d45df0db84cfb38661",
+        "evidence_sha256": "4b8bfa10de02bdbd49c089dd5a8f0daed668a197b65511529df71d2701486032",
+        "dossier_sha256": "31208d26a7122b0c082969d2d7e8777fc9497b456a779abaab7218053c448464"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-4180e84bb3ffadc065f5-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-4180e84bb3ffadc065f5",
+        "field_id": "sash-app:SER-YKKAP-UCHIRIMO:substrate_wall_gap_present",
+        "category": "interior_window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "e4f6d81ead025e27f24a13752bff0c2e15433e44de369a6bd8e7b2cb19452ffe",
+        "evidence_sha256": "9725762ba1ddacab14cf7adff03e732416a0db5ac65280864b9871ecaacdc7d2",
+        "dossier_sha256": "78301c6aa180e5ca6412b0a29394f9f5085358e486cb86e40d5743a608770ed1"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-4dafc3d0bc96b8db0630-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-4dafc3d0bc96b8db0630",
+        "field_id": "sash-app:SER-YKKAP-UCHIRIMO:substrate_or_structure_present",
+        "category": "interior_window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "c4520164ab0ada484bc3280dc53225eb1c7c7fc79fd3c77dd1e2514b9298e19b",
+        "evidence_sha256": "7f03133142ac10d75f2bf43b36fa51573036626c4434e7fb64f95e4877bab848",
+        "dossier_sha256": "09a0e81b712a637fe75929148174a9f268f3092b9b2adfbfc146947255ac81a4"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-83123c1e64cad0809ecb-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-83123c1e64cad0809ecb",
+        "field_id": "sash-app:SER-YKKAP-UCHIRIMO:substrate_or_structure_wall_gap_present",
+        "category": "interior_window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "0119a077b7297e65a01c56e30529ad04b0f247a3bd22b11efcf17a467541d9eb",
+        "evidence_sha256": "6ebd745a1b205d7c11b5683fc27424f56e493662b8bd2c8ef175c203e95d4f29",
+        "dossier_sha256": "f21d55229525a559e6c44d25a6763784b3a2407673d7be75d87bd8d9ea4ae604"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-f157a986910b75c64c26-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-f157a986910b75c64c26",
+        "field_id": "sash-app:SER-YKKAP-UCHIRIMO:stud_spacing_condition_met",
+        "category": "interior_window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "7e0a78fcd6035ec6e8705659d5244a7ffa29340fe58989430bb1879f0eb155fd",
+        "evidence_sha256": "0202eb7e370c47cd0201cfe9133d62281ad557388d00ad14474ae1773b7fbb3a",
+        "dossier_sha256": "e70812e98685a6db3e0a18b268c3f7363518a00c40d1ef75d5dd002eb3097834"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-27929cab9dbce6b3d597-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-27929cab9dbce6b3d597",
+        "field_id": "sash-app:SER-YKKAP-UCHIRIMO:tool_floor_interference",
+        "category": "interior_window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "db91c0489c986e2f66b16746bb715d3f9eb1f1dac9a0247f2f04d8eabb061bf8",
+        "evidence_sha256": "8706eb3e4edf3209de83267a357b26ef2074bce66fa38f0d19d274806dd6469d",
+        "dossier_sha256": "004025a6894b8a32fb8c68b579ed942350ffeeb6f05f38c7076c1f6eb67b0c35"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-6a4c73520e390aeebff7-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-6a4c73520e390aeebff7",
+        "field_id": "sash-app:SER-YKKAP-UCHIRIMO:floor_supports_load",
+        "category": "interior_window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "37a59a3f3595c748287a008095959fe21f360b6616b8e99a02647e6f0532d13b",
+        "evidence_sha256": "bbb0c59dc7162abe35fe8306e2fdcba746810c2b7d6b670b6b6729a93e7a3e15",
+        "dossier_sha256": "574dbebb3b675d735a599383567456c385dd03a0411d2c87f6d6a194c0585d9a"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-2882309ec1784dd9f863-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-2882309ec1784dd9f863",
+        "field_id": "sash-app:SER-YKKAP-UCHIRIMO:floor_screw_holding",
+        "category": "interior_window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "c3f5b762ca13ecc94a68d540313a8dbc0dd2019f9c0b41ca2887298279410907",
+        "evidence_sha256": "7a8fef0d5bb5f9a1451a41535a46b38cd307817b3013175a0774ab0efaab2561",
+        "dossier_sha256": "086f13a362ba8b510c10290e009e084ba056fcdab53d2ac9203861e98f56f24c"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-d42df3ad9079983c5424-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-d42df3ad9079983c5424",
+        "field_id": "sash-app:SER-YKKAP-UCHIRIMO:baseboard_interference",
+        "category": "interior_window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "3aeb466bd896f8dd2fc19b625070ceb82aefe9f4174d498046ffa49806c64a9f",
+        "evidence_sha256": "16871dabc1eff449440a6866bf15dc69888fb15e28e44dbd22bd3ad5352a972d",
+        "dossier_sha256": "1e4e7c544c1a6ea711dfeff4fba18aa5fee9cb22596cdb72bbc1ecd37c14d9e4"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-1dcf311a3f28e81af72d-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-1dcf311a3f28e81af72d",
+        "field_id": "sash-app:SER-YKKAP-UCHIRIMO:vertical_horizontal_jamb_step_e_mm",
+        "category": "interior_window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "f8d5b30f1682cc782ee2f9f6a4b54f1bb9deea33fb633aaefaa9edfdd84e5ffb",
+        "evidence_sha256": "891f8acf234ae50fd2dcabe0f28e29adf7047bd60d1a6de380d53350f43ad508",
+        "dossier_sha256": "580d85aa8c110d86b5c05521418ce2f4c56e0546fe1ab868baab2ccf966e7a08"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-8c535a98cef6bc63f6f0-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-8c535a98cef6bc63f6f0",
+        "field_id": "sash-app:SER-YKKAP-UCHIRIMO:lower_mounting_surface_horizontal_or_adjustable",
+        "category": "interior_window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "24017f5b49c1fae543e1ebab93b6a88ca805055cfac2751a8a6ce20a42e367f1",
+        "evidence_sha256": "2033fe9251438157e3a6927beb4a385f08844c56a04af8bf0957a77888ee5328",
+        "dossier_sha256": "9a5712506b2c5504b471b5989734ba55c10d58a25b2f7f93f3b1f7f872fa6857"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-0537c322073e9f1c6854-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-0537c322073e9f1c6854",
+        "field_id": "sash-app:SER-YKKAP-UCHIRIMO:mounting_surface_flat",
+        "category": "interior_window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "f456143e8f7edfba286f385bc494d6bf75d8091a0aac8d83534ded6c16b9c4fd",
+        "evidence_sha256": "bab66ff7a613f919feb2efd567cced0bd8d5cc7ec2d3f603c712032e3561650e",
+        "dossier_sha256": "a50b0c193ee94444ca98202fc65b8a62a8fef59ec30f5a5367086440ad8fa357"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-36af243b21727b26c154-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-36af243b21727b26c154",
+        "field_id": "sash-app:SER-YKKAP-UCHIRIMO:mounting_surface_damage_protection",
+        "category": "interior_window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "5c6b388b061ede925a51bdd06bb99981aef802bed81cbf481e939c945dc41a5b",
+        "evidence_sha256": "3b3aabd0ea28bdc211a10d433312ca0ea0bdcba9180e1669e5858b627d506ff1",
+        "dossier_sha256": "ff545fbbd9ce3e8d18aaaca32572cb5afd92879e114c1697fe0c38c46bbe82f4"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-1bf15bb348c7898e2968-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-1bf15bb348c7898e2968",
+        "field_id": "sash-app:SER-YKKAP-UCHIRIMO:resin_jamb_face_screw_fixed",
+        "category": "interior_window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "e2de8e20c4fe06eba0662347edde0565efe0d7f0bdda2cb9518bda80cee47c7a",
+        "evidence_sha256": "d923278d2649ea56d47d2e271a33f8d89ca9ac2edee4d0a8a85176c2a45ebc75",
+        "dossier_sha256": "bb3becb2413f7dd3761d432b37bd235e56de303a55a4199793aab6774f5f70cf"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-939dec2ba46c40f1abd7-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-939dec2ba46c40f1abd7",
+        "field_id": "sash-app:SER-YKKAP-UCHIRIMO:lower_resin_jamb_space_mm",
+        "category": "interior_window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "0189854be8cd50051d698894e882687f698d08a28e31b2e78c5cfa5b6e1f35b4",
+        "evidence_sha256": "0bdc60dd16f32709b925d39efcfc5f9eaf14e2adb4fa16e7e05413b21e659344",
+        "dossier_sha256": "f1d11d0fdd9f4865373a61e00456bd3e404d96e10c729ac4c31e4017dc190735"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-775edce40d27e871b182-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-775edce40d27e871b182",
+        "field_id": "sash-app:SER-YKKAP-UCHIRIMO:existing_lower_jamb_angle_present",
+        "category": "interior_window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "2e7197a0f21ac6cff8e53d675ea1bb26aa95345f4abc99bcd4701f6b09e8d31d",
+        "evidence_sha256": "4d062e64a7cffcb7593c6652ea4f4011cd165798eb4a021265c08b7d8af4982d",
+        "dossier_sha256": "bb4ce1c2cb67d17b46ab12e2022138de8cd22cd4239e28192f40fa7992103aff"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-dbe8e879b02b026cd2df-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-dbe8e879b02b026cd2df",
+        "field_id": "sash-app:SER-YKKAP-UCHIRIMO:lower_jamb_a_mm",
+        "category": "interior_window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "e30965a9b400a7dd2142b1d43b28843a31ee088daa0b97a3e8a13b067a2f2a10",
+        "evidence_sha256": "6bfec782bae13b361fa19a149fc71bea80faa48d013a2f16036ba25429e1a9c2",
+        "dossier_sha256": "ff621ab8a5369908a9e6175900645cbe6b3741c6a4fc4ee4ad09219d21471eac"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-8c5b5f2f485a6b716b0d-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-8c5b5f2f485a6b716b0d",
+        "field_id": "sash-app:SER-YKKAP-UCHIRIMO:lower_jamb_a_prime_mm",
+        "category": "interior_window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "1f18f4d6af19943c57153e97868e6d2147a86bf11023b336552709caac680481",
+        "evidence_sha256": "8903bc3139cde25a3c8399625f153063dd07aacbc566b463f3bfd029b287a5ee",
+        "dossier_sha256": "945fe3eb3b6fc9a098bde064670dd0d001c4aaf20d69f8fc659f764f1c8e3f76"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-aedb7e8cd124698dc7f3-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-aedb7e8cd124698dc7f3",
+        "field_id": "sash-app:SER-YKKAP-UCHIRIMO:hardware_tip_mounting_depth_A_mm",
+        "category": "interior_window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "b45d2d9fb7c1be92ddcbb78a709078c970c5dcf4c7a1fc6b1bb2c20a8db241d2",
+        "evidence_sha256": "9998a2221bcf12db9eff4826b4ee49eb53407ccb5eefd7b1e14f54e1f1389fd6",
+        "dossier_sha256": "c1b15fa8daf993cd79ef133851d55b5d7a357d20dc80d23b62ad6b9d84ff294c"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-ccbda5ff3a14a8f6e1d2-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-ccbda5ff3a14a8f6e1d2",
+        "field_id": "sash-app:SER-YKKAP-UCHIRIMO:existing_angle_height_mm",
+        "category": "interior_window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "a11090fd0ffc2699979bdccf333eeb1c29cb94cd6f87473a581e3f9a41c71497",
+        "evidence_sha256": "40e9853c464ce2b05c9e684f2de5aa440ebdd89f1a581fb6d017016e86bd368c",
+        "dossier_sha256": "a976bbe23d716c0a3c35e4bcfff81ab5c4dc153521f87d35453b2994ad60d21b"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-fb8b6df6be6e633a4e11-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-fb8b6df6be6e633a4e11",
+        "field_id": "sash-app:SER-YKKAP-UCHIRIMO:existing_angle_tip_mm",
+        "category": "interior_window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "8722dca389e8c254931b9a1da0d16ce25c15787b6311a436499371ff5a7a95e9",
+        "evidence_sha256": "2c648ee46f06b6e16c91bcac698f1445a1181ace2ba8fe22370e4467ca3b40fc",
+        "dossier_sha256": "2f435e1281d44fa77fd49703670cc2b69a6314be95e8358e0a7b98f5d84b0248"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-d0cf7d8b184f5775d586-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-d0cf7d8b184f5775d586",
+        "field_id": "sash-app:SER-YKKAP-UCHIRIMO:system_bath_component_screw_interference",
+        "category": "interior_window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "d29c9f693266cd9ec1cc5da561726f919e3a467a4291c3bbeeb072984815c2be",
+        "evidence_sha256": "9c49423e81ea06eb330b8487caa1f821b1245e5e7bf0be6ef6a197f1f781e8c1",
+        "dossier_sha256": "db4cbf7b667c6eaaec658b40a9e5af4e0225cd3e01c3a90fd94ad6da42c47000"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-d9b3432c640fada92652-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-d9b3432c640fada92652",
+        "field_id": "sash-app:SER-YKKAP-UCHIRIMO:existing_window_to_jamb_step_large",
+        "category": "interior_window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "ecdfa9ef64727571a3fa1ab5dc4f0dba3bbd12a7d1ab2586cfa45f7810e4d8cd",
+        "evidence_sha256": "3081a92ea1de0c995d54717fb71cf1d34d822815273369a520c483e90fa31e89",
+        "dossier_sha256": "727fad3a34146aa7f71a193289e55ba20bd2a7ff6fec9d65aff3ab784f18176f"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-2d7de87756ebeac74cb0-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-2d7de87756ebeac74cb0",
+        "field_id": "sash-app:SER-YKKAP-UCHIRIMO:fukashi_reinforcement",
+        "category": "interior_window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "612996cbd7ce68a6168e078fa0db3df78779888d205f729fd7db603f6f4cb289",
+        "evidence_sha256": "60d438a0b28880e026fcfd151eb93666f6c6f1be89409d1f5e66cefa4f27d663",
+        "dossier_sha256": "7587ed66feda9a5575299feb884a31f52943c5469e143d2657f21d060a2ad7d6"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    },
+    {
+      "decision_id": "WINDOW7-PROMOTION-c965fde76981d44c94ff-HUMAN-APPROVE",
+      "status": "APPROVED",
+      "payload": {
+        "approval_id": "WINDOW7-PROMOTION-c965fde76981d44c94ff",
+        "field_id": "sash-app:SER-YKKAP-UCHIRIMO:installation_environment",
+        "category": "interior_window",
+        "purpose": "APPLICATION_FIELD",
+        "status": "APPROVED",
+        "contract_sha256": "0da452b154c90fe2e35e7ea9dfa29f2cf4754cbd3a1600ba4dabb89a9e78514f",
+        "evidence_sha256": "4556221ad036cce6dba34e8c1dfb4d4fd1ecae036488f144f050da60087666e1",
+        "dossier_sha256": "b2453d46a91029faa69bece4b8360fcd636196dcd35d5931731756e2d8a55588"
+      },
+      "approved_promotion_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
+    }
+  ]
+}
