@@ -32,7 +32,12 @@ jobs:
           python -m pip install -r contracts/tw-202610/central-snapshot/requirements.txt
           python contracts/tw-202610/central-snapshot/scripts/validate-tw-202610.py --report "$GITHUB_WORKSPACE/artifacts/tw-202610/central-contract-validation.json"
       - name: Verify TW delta and unchanged product behavior
-        run: node --test test/70-runtime-manifest-tw-integration.test.mjs test/71-runtime-ui-tw-gate.test.mjs test/76-tw-october-2026-delta.test.mjs
+        run: |
+          npm run lint
+          npm run typecheck
+          npm test
+          node scripts/governance/inner-window-frame-integration-qa.mjs
+          node scripts/build-eight-series-review.mjs
       - name: Install browser validation dependencies
         run: npm install --no-save playwright@1.58.2 && npx playwright install --with-deps chromium
       - name: Build actual current-or-candidate TW preview

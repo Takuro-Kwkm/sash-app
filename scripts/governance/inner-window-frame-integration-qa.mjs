@@ -6,7 +6,18 @@ import {loadRegisteredRuntime} from '../../src/catalog/runtime-master/runtime-ma
 const out='artifacts/inner-window-frame-integration';mkdirSync(out,{recursive:true});
 const expected=JSON.parse(readFileSync('docs/qa/inner-window-canonical-frame/runtime-identities.json'));
 const current=runtimeAppIntegrationInventory();const identities=[];
-for(const row of expected){const integration=current.find(p=>p.id===row.id);assert.ok(integration);for(const key of ['packageVersion','sourceHash','status','canonicalRuntimeReference'])assert.deepEqual(integration[key],row.current[key],`${row.id}:${key}`);identities.push({id:row.id,packageVersion:integration.packageVersion,sourceHash:integration.sourceHash,unchangedFromPreviousApp:row.unchanged});}
+const adoption=JSON.parse(readFileSync('changes/lixil-tw-202610/runtime-identity-adoption.json'));
+assert.equal(adoption.scope_product_id,'SER-LIXIL-TW');assert.equal(adoption.status,'FORMAL_ADOPTED');
+assert.equal(adoption.central_commit,'6efc459f231fd5bd254c36ab9b8d3c6d589da51a');
+for(const row of expected){
+ const integration=current.find(p=>p.id===row.id);assert.ok(integration);
+ const changed=row.id===adoption.scope_product_id;
+ if(changed)assert.deepEqual(adoption.before,row.current,'Frozen previous TW identity');
+ const pinned=changed?adoption.after:row.current;
+ for(const key of ['packageVersion','sourceHash','status','canonicalRuntimeReference'])assert.deepEqual(integration[key],pinned[key],`${row.id}:${key}`);
+ if(changed){const runtime=await loadRegisteredRuntime('LIXIL','TW');assert.ok(runtime.normalizedManifest.formalPass&&runtime.sourcePackageIntegrity.match);assert.equal(runtime.sourcePackageIntegrity.files[0].actual,adoption.runtime_sha256);assert.equal(runtime.normalizedManifest.packageVersion,pinned.packageVersion);}
+ identities.push({id:row.id,packageVersion:integration.packageVersion,sourceHash:integration.sourceHash,unchangedFromPreviousApp:changed?false:row.unchanged,...(changed?{declaredSourceAdoption:adoption.work_id}:{})});
+}
 const fields=['frame_spec','upper_frame_spec','lower_frame_spec','fukashi_presence','fukashi_sides','fukashi_depth','fukashi_reinforcement'];
 for(const [manufacturer,series] of [['LIXIL','インプラス'],['YKK AP','ウチリモ 内窓']]){const r=await loadRegisteredRuntime(manufacturer,series);assert.ok(r.normalizedManifest.formalPass&&r.sourcePackageIntegrity.match);assert.deepEqual(r.master.innerWindowFrameContract.canonical_field_order,fields);assert.equal(new Set(r.master.fields.map(f=>f.field_name)).size,r.master.fields.length);assert.ok(r.sourcePackageIntegrity.files.every(f=>f.match));}
 const run=spawnSync(process.execPath,['--test','--test-reporter=tap','test/87-inner-window-canonical-frame.test.mjs'],{encoding:'utf8'});writeFileSync(`${out}/canonical-tests.tap`,run.stdout+run.stderr);assert.equal(run.status,0,run.stdout+run.stderr);

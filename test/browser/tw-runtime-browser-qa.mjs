@@ -94,7 +94,7 @@ async function exercise(page) {
     result = await choose(page, key, field.values[0].value);
   }
   result = await choose(page, 'option', ['OP-LIX-TW-CAT-28303','OP-LIX-TW-CAT-28509']);
-  assert.equal(result.optionCodeLinkageCount, 196);
+  assert.equal(result.optionCodeLinkageCount, 247);
   assert.equal(result.optionCodeResults.find((row) => row.optionId === 'OP-LIX-TW-CAT-28303').status, 'SPECIAL_ORDER_NO_STANDARD_SKU');
   assert.equal(await page.locator('#productCodeCard').isVisible(), true);
 
