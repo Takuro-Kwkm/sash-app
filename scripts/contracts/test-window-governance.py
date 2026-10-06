@@ -36,6 +36,10 @@ class GovernanceBinding(unittest.TestCase):
             sys.path.insert(0,str(stage/'scripts'))
             from contracts import load_bundle,validate_bundle
             bundle=apply_decisions(load_bundle(stage),ROOT,stage)
+            actual=validate_bundle(bundle)
+            self.assertEqual(actual['error_count'],0,actual['validators'])
+            bundle['field_promotions']['approvals']=[a for a in bundle['field_promotions']['approvals'] if not a['approval_id'].startswith('WINDOW7-PROMOTION-')]
+            bundle['field_promotions']['dossiers']=[d for d in bundle['field_promotions']['dossiers'] if not d['dossier_id'].startswith('WINDOW7-DOSSIER-')]
             prepared=read(OUT/'promotion-review-packet.json')['fields']
             # Fixtures below are not admitted to the application registry.
             name='TEST_ONLY_SYNTHETIC_NOT_HUMAN_PROMOTION'

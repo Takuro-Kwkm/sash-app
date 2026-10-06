@@ -1,5 +1,5 @@
 {
-  "status": "EVIDENCE_ACCEPTED_PENDING_INDEPENDENT_PROMOTION_APPROVAL",
+  "status": "FORMAL_PROMOTED_PENDING_MERGE",
   "product_field_counts": {
     "SER-LIX-EW": 29,
     "SER-LIXIL-TW": 25,
@@ -39,16 +39,16 @@
     "PROVISIONAL": 217
   },
   "after": {
-    "FORMAL": 0,
-    "PROVISIONAL": 217
+    "FORMAL": 217,
+    "PROVISIONAL": 0
   },
   "evidence_accepted": 651,
   "evidence_rejected": 0,
   "evidence_candidates": 651,
   "missing_claims": 0,
   "blocked_fields": 0,
-  "pending_fields": 217,
-  "promotion_approval_count": 0,
+  "pending_fields": 0,
+  "promotion_approval_count": 217,
   "mapping_gap": 0,
   "semantic_gap": 0,
   "central_changes": "NONE_WINDOW_ROLES_ALREADY_REGISTERED",

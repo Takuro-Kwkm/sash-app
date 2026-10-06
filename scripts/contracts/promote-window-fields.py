@@ -30,7 +30,7 @@ for row in packet['fields']:
     decisions.append({'decision_id':a['approval_id']+'-HUMAN-APPROVE','status':'APPROVED','payload':a.copy(),'approved_promotion_packet_content_sha256':bound})
     dossiers.append(d);approvals.append(a.copy());targets.append(target)
 path='contracts/window-seven/evidence/human-promotion-decisions.json'
-write(ROOT/path,{'version':'0.1','human_review_authority':'Direct human user in this Codex chat','human_statement':'承認',
+write(ROOT/path,{'version':'0.1','human_review_authority':'Direct human user in this Codex chat','human_statement':'217件の独立Promotion Approvalを承認',
  'interpreted_scope':'Independent approval of 217 fixed promotion dossiers, target Contracts and ordered Accepted Evidence hashes.',
  'recorded_at_utc':args.recorded_at_utc,'approved_packet_content_sha256':bound,'attestation_type':'HUMAN_MESSAGE_RECORD_NOT_CRYPTOGRAPHIC_IDENTITY','decisions':decisions})
 for i,a in enumerate(approvals):a['review']={'authority_id':review_id,'decision_id':decisions[i]['decision_id'],'decision_ref':ref(path,'/decisions/'+str(i))}

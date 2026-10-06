@@ -1,7 +1,8 @@
-WINDOW 7 PRODUCT SELECTION CONTRACT FORMALIZATION = PENDING_INDEPENDENT_PROMOTION_APPROVAL
+WINDOW 7 PRODUCT SELECTION CONTRACT FORMALIZATION = FORMAL_PASS_PENDING_MERGE
+Business Scope: application Selection Contract; status-only promotion; Runtime/Product Master/Canonical Mapping diff 0
 
 {
-  "status": "EVIDENCE_ACCEPTED_PENDING_INDEPENDENT_PROMOTION_APPROVAL",
+  "status": "FORMAL_PROMOTED_PENDING_MERGE",
   "product_field_counts": {
     "SER-LIX-EW": 29,
     "SER-LIXIL-TW": 25,
@@ -41,16 +42,16 @@ WINDOW 7 PRODUCT SELECTION CONTRACT FORMALIZATION = PENDING_INDEPENDENT_PROMOTIO
     "PROVISIONAL": 217
   },
   "after": {
-    "FORMAL": 0,
-    "PROVISIONAL": 217
+    "FORMAL": 217,
+    "PROVISIONAL": 0
   },
   "evidence_accepted": 651,
   "evidence_rejected": 0,
   "evidence_candidates": 651,
   "missing_claims": 0,
   "blocked_fields": 0,
-  "pending_fields": 217,
-  "promotion_approval_count": 0,
+  "pending_fields": 0,
+  "promotion_approval_count": 217,
   "mapping_gap": 0,
   "semantic_gap": 0,
   "central_changes": "NONE_WINDOW_ROLES_ALREADY_REGISTERED",
@@ -64,7 +65,8 @@ WINDOW 7 PRODUCT SELECTION CONTRACT FORMALIZATION = PENDING_INDEPENDENT_PROMOTIO
   "promotion_review_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
 }
 
-Evidence Acceptance: direct human approval recorded; accepted 651; rejected 0; Missing Claims 0.
-Promotion: 217 content-bound dossiers prepared; independent approval not yet recorded; all Fields remain PROVISIONAL.
-Runtime Diff 0; existing browser/source QA carry-forward applies to unchanged Runtime bytes.
-See promotion-review.html and promotion-review-packet.json.
+Both independent human decisions are recorded and bind the original fixed acceptance Packet and the fixed Promotion Packet.
+Evidence Accepted 651 / Rejected 0; Missing Claims 0; 217 FORMAL / 0 PROVISIONAL / 0 BLOCKED / 0 PENDING.
+All 15 central validators PASS; 1704-state Runtime replay PASS; 613 existing tests PASS; six adversarial governance tests PASS.
+Browser regression for unchanged Runtime carried forward: 1280/768/390; save/reload, estimate, Excel/PDF, print dispatch/CSS. Native OS print not executed.
+Merge and post-merge validation are still pending. Final execution readback is saved separately from this commit.

@@ -96,6 +96,9 @@ with tempfile.TemporaryDirectory() as td:
             check(digest(d)==payload['dossier_sha256'] and digest(target)==payload['contract_sha256']==d['contract_sha256'],'Promotion dossier/target binding stale')
             check(digest([accepted_by_id[eid] for eid in d['evidence_ids']])==payload['evidence_sha256'],'Promotion evidence binding stale')
             check({k:v for k,v in target.items() if k!='status'}=={k:v for k,v in baseline[row['field_id']].items() if k!='status'},'Promotion changes semantics')
+        if (OUT/'formal-promotions.json').exists():
+            decision=read(OUT/'evidence/human-promotion-decisions.json')
+            check(decision['approved_packet_content_sha256']==prepared_sha and decision['human_statement']=='217件の独立Promotion Approvalを承認','Independent human Promotion Approval is not bound to the fixed Packet')
     diff=subprocess.check_output(['git','diff','--name-only',a['application_baseline_sha'],'--'],cwd=ROOT,text=True).splitlines()
     unexpected=[p for p in diff if not p.startswith(('contracts/window-seven/','scripts/contracts/','.github/workflows/window-seven-contracts.yml'))]
     check(not unexpected,'Runtime or existing validation changed: '+str(unexpected))
@@ -108,7 +111,7 @@ with tempfile.TemporaryDirectory() as td:
     missing_claims=sum(len(v) for v in current_missing.values())
     unverified=[f['field_id'] for f in replay['fields'] if f['runtime_parity']!='PASS']
     actual_formal=sum(c['status']=='FORMAL' for c in contract_rows)
-    result={'status':'PASS_ADOPTION_INTEGRITY','completion':'COMPLETE' if actual_formal==len(fields) and not dry_errors and not missing_claims and not unverified else 'PENDING_INDEPENDENT_PROMOTION_APPROVAL' if acceptance_path.exists() else 'PENDING_HUMAN_DECISION','total_field_count':len(fields),
+    result={'status':'PASS_ADOPTION_INTEGRITY','completion':'FORMAL_VALIDATION_PASS' if actual_formal==len(fields) and not dry_errors and not missing_claims and not unverified else 'PENDING_INDEPENDENT_PROMOTION_APPROVAL' if acceptance_path.exists() else 'PENDING_HUMAN_DECISION','total_field_count':len(fields),
         'manufacturer_counts':dict(collections.Counter(f['manufacturer'] for f in fields)),
         'product_counts':dict(collections.Counter(f['product_id'] for f in fields)),
         'mapping_counts':dict(collections.Counter(f['mapping_type'] for f in fields)),
