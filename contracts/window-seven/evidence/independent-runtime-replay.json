@@ -1,0 +1,1525 @@
+{
+  "status": "PASS",
+  "replayed_states": 1704,
+  "fields": [
+    {
+      "field_id": "sash-app:SER-LIX-EW:window_type",
+      "runtime_identity_sha256": "b0f710feeb2a5a951da19986f95c50882c8fd42db1c68d5f9f616ea64331634b",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-LIX-EW:window_spec",
+      "runtime_identity_sha256": "7b1a9380d13ec8e6c772e360ebdc56fff331b395fca606c5d6629a68bbedee58",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-LIX-EW:variant",
+      "runtime_identity_sha256": "5be678e38a64ae9819f71664f5f6694f2df5ba056700843d7bd78c5f9a7b289a",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-LIX-EW:frame_angle",
+      "runtime_identity_sha256": "6b27f7751cd2e6862695e45d0a3515dec79d1dc2dae03b04413e18fc7f3c2ecb",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-LIX-EW:exterior_color",
+      "runtime_identity_sha256": "4bb2edfe34056161c9c8331c14d798dc1fd85a03672103dc76dcba722f9ad2c3",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-LIX-EW:screen_presence",
+      "runtime_identity_sha256": "9a45bdb72dc5805f7c037b535a8cbbdf52884aa9591ccf11e69c62995f4bf51c",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-LIX-EW:glass_base",
+      "runtime_identity_sha256": "fc8495f022dd17ae97edcd0e649bca2a2e79d10a1bb6d00c6b5d737def81a5aa",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-LIX-EW:installation_environment",
+      "runtime_identity_sha256": "ea5ff8b730299e15185ed46ee9a590d27c108d3345e1315854af095bfe37b33c",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-LIX-EW:option",
+      "runtime_identity_sha256": "3e804fa11b14f4e4112e9b5de4682b85a9975dc0e79beed8273b68b1ce8ca767",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-LIX-EW:handing",
+      "runtime_identity_sha256": "dfa043ba19f48094777ea590e647a596b0f7de89bcd23724c3efec4af29fefaf",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-LIX-EW:size_mode",
+      "runtime_identity_sha256": "9445f3b9cab831706c4404142b6ee6982abb6aa30e77c2998ddb06ff8dd5c36f",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-LIX-EW:interior_color",
+      "runtime_identity_sha256": "4de889f18c806218db21f1ea262c1f18bc6763f868beeb5f27f869c378440bf7",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-LIX-EW:glass_type",
+      "runtime_identity_sha256": "2b0e24ab8d9e1148197402da8a893ff706e933521a041bc16d8066e730cdcff4",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-LIX-EW:glass_detail",
+      "runtime_identity_sha256": "602e56ee92bae68cf66224037236888bb2ec99cbd17be0ba708c975f34e93e82",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-LIX-EW:glass_function",
+      "runtime_identity_sha256": "c2d80a29449a8467af8701043cdf86cf2d76619d6ea872b77632f169de91d5be",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-LIX-EW:glass_spacer",
+      "runtime_identity_sha256": "67b06fe346fab52c6ba65fce70b46d449f98ec1ff2adef664cfad4f66810a3aa",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-LIX-EW:glass_air_layer",
+      "runtime_identity_sha256": "cd3f3be19f64c202726c1c8d802d8a2248d12c0cedaa5e7abbbb1e77f19825f4",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-LIX-EW:size",
+      "runtime_identity_sha256": "a2c1ec2b886d385e7085b5c2123f0d9740cb15fda3eb853e4021377f050435cc",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-LIX-EW:custom_w",
+      "runtime_identity_sha256": "ba176fbce1a6bdc2b4adb063dab4590f1de74eb0af51c76dabb49fe61491c69b",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-LIX-EW:custom_h",
+      "runtime_identity_sha256": "2fac971bedea21d8834b8c829b11352f8035d208639db5d366a7c573b42b44fb",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-LIX-EW:configuration_variant",
+      "runtime_identity_sha256": "69dacc0f419c5c5a470a8f9eb1955e0b03fc78f880219fb196b2ca1fbff3381c",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-LIX-EW:glass_configuration",
+      "runtime_identity_sha256": "be74f864515da7bf8bd72f7cc981b8ee386cec2cbc03b6acb428afd13fd5564b",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-LIX-EW:profile",
+      "runtime_identity_sha256": "7ba7778014fd75f3655ac3980244de010dc2bcf0172a6c3585cf99dfda1bfcb3",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-LIX-EW:opening_class",
+      "runtime_identity_sha256": "7bc6eb75810aa41056b86b11814fae59518055edcc4e3613358d6016e9f2b404",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-LIX-EW:sill",
+      "runtime_identity_sha256": "ff266f66e4fef716761b039214ca87db3fe3f3d462a484f47388d2bb5d9e42a2",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-LIX-EW:wall_finish",
+      "runtime_identity_sha256": "c36bfe181798e96afc798c616183a94b44b07bc6f30526b25dc728836a8c1453",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-LIX-EW:panel_count",
+      "runtime_identity_sha256": "a478c547946a60a2e2793c5ce5a5eb30305e560064e827b4d55f831f8ef96faa",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-LIX-EW:screen_form",
+      "runtime_identity_sha256": "cd33070e923ae4bce20ec2ad2a9f90d21a8c75dd8f87009493706f9068fd0cf8",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-LIX-EW:screen_net",
+      "runtime_identity_sha256": "1d47b7ba1a19e41ad6a5b1cb26a581a4d89dda758ac95c89756997156d28877c",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-LIXIL-TW:window_type",
+      "runtime_identity_sha256": "a9e75b67ec1d79565ad7236222942c8b66a206402dbf49fc39cba1c1c17f2155",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-LIXIL-TW:size_mode",
+      "runtime_identity_sha256": "23fd15d7da7f067d40389d0f516b75184d6c85a3483e8e401f38536ddcaef271",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-LIXIL-TW:panel_count",
+      "runtime_identity_sha256": "abda3f623a2322dda339c1182dceb0927e5bb4271a77960946321d46aa378e65",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-LIXIL-TW:size",
+      "runtime_identity_sha256": "fcde03666859ce159834887547dff76f92e2de29d52d566ac20c249ead7bc128",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-LIXIL-TW:exterior_color",
+      "runtime_identity_sha256": "2e53417ca7f92ce534459e4d8df19537a70e68b9c67879de67804fe3bf97c355",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-LIXIL-TW:glass_base",
+      "runtime_identity_sha256": "ae603ce0019c0fcfbb2742cdbbee023b1529489e12e6d3c4b6c303db79ed6098",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-LIXIL-TW:interior_color",
+      "runtime_identity_sha256": "b777e39f746fe870cee76c551184074b6f0763ab58640411735db1f8142e41b5",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-LIXIL-TW:glass_type",
+      "runtime_identity_sha256": "7f63d91bdaf430e124709f785838b892a41baf17751b64151179eebf3a11640f",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-LIXIL-TW:screen_presence",
+      "runtime_identity_sha256": "5664565bb542673aa2d0de3c918aa5a2e9ff3c70b87f730079e6ae6cf26568b7",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-LIXIL-TW:glass_detail",
+      "runtime_identity_sha256": "5ba027493e56f85628422dcfeb627496f695c892261e8ba810d5e934135297f8",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-LIXIL-TW:glass_function",
+      "runtime_identity_sha256": "f3ee4a6cb110502c4558cdad558c338b0c8d8e9d91fc45f17fd7927a6970ba40",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-LIXIL-TW:option",
+      "runtime_identity_sha256": "b35b42283c9fba901b656f2f982218eb9eac97225914d66e1112d5e7facf5a5c",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-LIXIL-TW:glass_spacer",
+      "runtime_identity_sha256": "9679516b0b72643f756ad83c54db30eeb9302ee5aaf4e71da181f1cab5c0208f",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-LIXIL-TW:glass_air_layer",
+      "runtime_identity_sha256": "ab18d2bfb3e193cfda60470a83e811ea21aa5d27dda53b6f7d6f067930de537f",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-LIXIL-TW:shutter_type",
+      "runtime_identity_sha256": "74c349f51e973cfc2506f9e5e6f54a4ca0571228e1926c746da04b62273b6456",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-LIXIL-TW:grille_type",
+      "runtime_identity_sha256": "6a3e913ceae9a281c09ff3e84b72c2a2c4387ba8dafe9ad022acee6e8ab6076b",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-LIXIL-TW:handing",
+      "runtime_identity_sha256": "3c3f3c350f7ba14431347d78c514d9d36511d1242276388744692c8951d57844",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-LIXIL-TW:operation_type",
+      "runtime_identity_sha256": "3ae24ccafebf75727577da743c411e27ed8613b192014694e91fc93114077fc9",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-LIXIL-TW:operator_position",
+      "runtime_identity_sha256": "1c7be3056798b51152ba21555280e55125f665124d8d9098ee0598cd64b50b29",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-LIXIL-TW:door_grille_type",
+      "runtime_identity_sha256": "14a4e8b189c58374930381ab7c84c7e1807cf7fc71b5ad11bf813778d2f89d5c",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-LIXIL-TW:screen_type",
+      "runtime_identity_sha256": "4648fb5655bb570c6cf9be5520d2531f466748ebd2fc37fb5306949d8927f31c",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-LIXIL-TW:custom_width",
+      "runtime_identity_sha256": "566283e76ac2869ba3f97d651d6122df141e1511d89359f0db5db8806f2c1255",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-LIXIL-TW:custom_height",
+      "runtime_identity_sha256": "0966b3f2faa7bca4cfa4366330b89c58cb48b4db75e33b44cd88c91084eb5a5a",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-LIXIL-TW:screen_midrail",
+      "runtime_identity_sha256": "42ccb43f2696cb03a9ea9450633533cb383d4ffdbe2415d7ed9022e2a6f72392",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-LIXIL-TW:screen_net",
+      "runtime_identity_sha256": "057255db787f13686f894b1d0e8369e4db4604d9319cb0556784b69c7eb0606a",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-LIX-SAMOS2H:window_type",
+      "runtime_identity_sha256": "a1ec4eb812613b56feae6a5e75c7066ba4765460057d07126423943a0589eabd",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-LIX-SAMOS2H:size_mode",
+      "runtime_identity_sha256": "afb2f5e53205cea112d3128bd6f8848e57fd208c72e82ff2707f274cdfddeb80",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-LIX-SAMOS2H:exterior_color",
+      "runtime_identity_sha256": "cd4c8e8ae076fe04682bf3f6f7dcbbfad66a6be6847cde9b08cdceb9c246039c",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-LIX-SAMOS2H:interior_color",
+      "runtime_identity_sha256": "14430cf7948eb737bec1bae642ddac6e42cf0f6d057ea422121ca0a78d0282f7",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-LIX-SAMOS2H:glass_base",
+      "runtime_identity_sha256": "a23005d61e1fa573df52d8e79b87f1b5886c5da37da4d1dc0c2924ac6d1cba77",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-LIX-SAMOS2H:glass_type",
+      "runtime_identity_sha256": "d22c1ddc81a3c6008e154c09462ae35580265c2915ada73681b7fadb73495959",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-LIX-SAMOS2H:glass_detail",
+      "runtime_identity_sha256": "e9fc1cd26a8b8afa13d0a84aba29a756ee3dce16385c93c31c0c32b94ee1ec6a",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-LIX-SAMOS2H:glass_function",
+      "runtime_identity_sha256": "127bc440adb49e22e9c61ba76a43dfd39e2dd91108378b00a32e19ace9146c3d",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-LIX-SAMOS2H:glass_spacer",
+      "runtime_identity_sha256": "45e666e3379b125ecc09e2b3814a16ded1d500f3affd03dcba53163f3ed60cbd",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-LIX-SAMOS2H:glass_gas",
+      "runtime_identity_sha256": "911552336ccf3fe17ce6dae68135fad38572ccbf3ba3a902e7e9a5f15506fb41",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-LIX-SAMOS2H:options",
+      "runtime_identity_sha256": "c49e2e967bdaa28a0756f050c40114008b35fdb787e2fc4b76b3be318f62607e",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-LIX-SAMOS2H:panel_count",
+      "runtime_identity_sha256": "4563ddad42caec5de980809c67c7b0ddc96ba9a4c66d8d34e04064471a619781",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-LIX-SAMOS2H:size",
+      "runtime_identity_sha256": "b8be2fd2dadc6576e191aa7de315261feedcd9f3fd87475bb38e950e25d617d7",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-LIX-SAMOS2H:screen_presence",
+      "runtime_identity_sha256": "faf19faa2a2c570291932c49eaa482d05d50a47eda6885c707bd494e6c91f23e",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-LIX-SAMOS2H:shutter_type",
+      "runtime_identity_sha256": "b3c9bf1281d3e032f9067ec4455b3cca0797ff202479f5dec87818f12d0ffbfb",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-LIX-SAMOS2H:rain_shutter_type",
+      "runtime_identity_sha256": "54809eb00d3aaab5a3ff6794994e902a43ad1b4b055256069d195f99c3d24005",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-LIX-SAMOS2H:grille_type",
+      "runtime_identity_sha256": "f4681ad4bfa439a7871056162747833cb4019269c24ed819e94f74c13f8a5bf7",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-LIX-SAMOS2H:handle_configuration",
+      "runtime_identity_sha256": "37bbc686622554562a1a0e1c3ffa16fd73dbf028851093364935c8732cf12394",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-LIX-SAMOS2H:handing",
+      "runtime_identity_sha256": "554b6d12e9b723cb37057832c35321d60f2b801edbec859df24b31b7bf0e35ee",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-LIX-SAMOS2H:handle_type",
+      "runtime_identity_sha256": "62179ab1822e08d0ff859e6968ae5b44fe6f4bc01ee049e0188bf7737d1da7f5",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-LIX-SAMOS2H:operation_method",
+      "runtime_identity_sha256": "7b5fe148ef02c9de4049bbbaa05b48e539b4b7bb95a4668f60fb1569a81fcb8c",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-LIX-SAMOS2H:composition_type",
+      "runtime_identity_sha256": "2429bc4de7f6a7e2d3e4fe0665c71b54ab413484f6dac0fa70f3aaa11139105e",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-LIX-SAMOS2H:joinery_configuration",
+      "runtime_identity_sha256": "600b5173ffe4ca57ae073de5c8358bb4ab4b81f7fa4d56f084f861b6b5ea6157",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-LIX-SAMOS2H:door_installation",
+      "runtime_identity_sha256": "9bbeb7f4a3036223cba9fc278656b5554808a497d7e0b4291d2446455df35b53",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-LIX-SAMOS2H:screen_form",
+      "runtime_identity_sha256": "fbb0993beaec545fa855ca902377c3fecca68280fb67e3667d7cb442703714e6",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-LIX-SAMOS2H:screen_variant",
+      "runtime_identity_sha256": "3d372d8392d9bd4ec5624ebf3b94ae14987ceadfa9551d52f7cf472145bf2af2",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-LIX-SAMOS2H:screen_net",
+      "runtime_identity_sha256": "fc53f8b40340d92bcff930b1c74fa0875e41a8e97cfdd1161d757f8c9c0510ec",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-LIX-SAMOS2H:door_type",
+      "runtime_identity_sha256": "0df1b3de946a2ce203d365dbb8e40338e0ee4152219be8334880b5313affcf59",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-LIX-SAMOS2H:custom_width",
+      "runtime_identity_sha256": "53bc9b2e7a7c9fdf904b5bfeee2cda166ff873912692479507043bb84db85467",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-LIX-SAMOS2H:custom_height",
+      "runtime_identity_sha256": "cedfbfa46a71fa40b1319056a32509aed24f16666a8c92d869d2dbe4059e7535",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-LIX-SAMOSL:window_type",
+      "runtime_identity_sha256": "f9123a79cd1d68f1ca816c44fcd484c7c672e024671c7130e1e15e6d52cbce7e",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-LIX-SAMOSL:door_grille_type",
+      "runtime_identity_sha256": "cb0153fe025c21128a7541b005e103fe90e3921ec3b178213cd10443bda1fb58",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-LIX-SAMOSL:size_mode",
+      "runtime_identity_sha256": "16c036afb6419fbedf96623019cbe410fcaac0cbff737a999bec54c0edf651e4",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-LIX-SAMOSL:exterior_color",
+      "runtime_identity_sha256": "4ed6905348d058551a6aa2c9c1d0bd4e91e24f2ccac09e3a86cf415d48435eb7",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-LIX-SAMOSL:interior_color",
+      "runtime_identity_sha256": "acab965d0e151510da59eec443a5ec9d29088b80a605b727c05f6cf209aadb3d",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-LIX-SAMOSL:glass_base",
+      "runtime_identity_sha256": "1a809301c39fb4f8928ff365ebff46f2ff7414f6a77d28f61c62c7f1935abcdb",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-LIX-SAMOSL:glass_type",
+      "runtime_identity_sha256": "74c745c5e8ee5480a360b019cea57a0cf191df33c65e52eb9df34cc936937e25",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-LIX-SAMOSL:glass_detail",
+      "runtime_identity_sha256": "b6f7c8134b946cb76c2a321641cd41806652570096b44af65688dc5cd84467f6",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-LIX-SAMOSL:glass_function",
+      "runtime_identity_sha256": "cf980b115e177535944a30f98563d6760c979dd21ec2f705b543e624fe6341e1",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-LIX-SAMOSL:glass_spacer",
+      "runtime_identity_sha256": "059e2a2058a1bf35d3807290731bb42810e686112a70f6fef9d4ee9ee8b7a5ee",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-LIX-SAMOSL:glass_air_layer",
+      "runtime_identity_sha256": "84a8f897f78d0f1d253f4876d050d10914f5694a1f406b6b6bdb13cb29763fbe",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-LIX-SAMOSL:options",
+      "runtime_identity_sha256": "db8d4e7bb2d04e5e667c95d01c5d5d6e1c36da36a5e0b9c70370f815557811ee",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-LIX-SAMOSL:size",
+      "runtime_identity_sha256": "c07e1a4cdb165ff966a7a2f02325ecbe0831b3096fda43cbb8603b462e83b77d",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-LIX-SAMOSL:screen_presence",
+      "runtime_identity_sha256": "14df2f305639fef459fbbd45fc0a2a96ee2cc0ac74654337561746096a8fcee1",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-LIX-SAMOSL:shutter_type",
+      "runtime_identity_sha256": "aa0c99d6952468ad6559138967dc27a0995b1885079c7b8baca2d5c8d7e09182",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-LIX-SAMOSL:rain_shutter_type",
+      "runtime_identity_sha256": "084c26b68d37f185d759693a0538de038d0f009e322f692988fff3756ef6818e",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-LIX-SAMOSL:grille_type",
+      "runtime_identity_sha256": "7ecf8d43ae1b51fde6e348420650ae393d551cb5c9d11dc159ef45541e5cb907",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-LIX-SAMOSL:handle_configuration",
+      "runtime_identity_sha256": "ef2c0f295a1d8676228767be139e648699abb99365685f275cb42a311c948e9c",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-LIX-SAMOSL:handing",
+      "runtime_identity_sha256": "f3a9a8769fc8c66d9b09bd4a35a0a92fc9556cd609d8ea8c219024071128625c",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-LIX-SAMOSL:handle_type",
+      "runtime_identity_sha256": "9ceb6faa6f01a6f6ada15600bf0d3dab4bf51ea733857430a6c9689c9cef9135",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-LIX-SAMOSL:operation_method",
+      "runtime_identity_sha256": "5ad195c15c1fe9fc3b7e44e14c5b143db8ddd92757022eb84b570742602f24a5",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-LIX-SAMOSL:composition_type",
+      "runtime_identity_sha256": "dbd8b3e1ea65a0fe6be755eec24f05251a3361bdefcee48cadee9acbc332c3c3",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-LIX-SAMOSL:joinery_configuration",
+      "runtime_identity_sha256": "e4654a8dd344b01592204a0d1e6bbb60619a3fc881d1311a0c269543cbca10c7",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-LIX-SAMOSL:screen_form",
+      "runtime_identity_sha256": "8f2473d0bb8c502acec88c97333956d6189cd41fb20e82d3db11d3e0d9abe963",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-LIX-SAMOSL:screen_net",
+      "runtime_identity_sha256": "b0485a8afc4caecbd4a2cd0e15cf08085625de03ae373dd37245ec807999fa89",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-LIX-SAMOSL:door_type",
+      "runtime_identity_sha256": "b551e6e5120a757ad108ba53661eb3065aa19f6a157b3f5b3c26a549da939b80",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-LIX-SAMOSL:custom_width",
+      "runtime_identity_sha256": "9f7a99807f1e1a8e8760543f2cc5c2f68865c78672a82803d1976e23c565657d",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-LIX-SAMOSL:custom_height",
+      "runtime_identity_sha256": "3a035ce38e2dae19db9d82a04325b992c6a7d7b45d4c1c67b5e67f5790505087",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-YKK-APW430:window_type",
+      "runtime_identity_sha256": "53bf2c3edb3f1b2064c454ec44bd5ff74d2e007eef679606a0a1a4d5b0c22c3b",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-YKK-APW430:size_mode",
+      "runtime_identity_sha256": "ee6b19cfa12de3f42520ae380fdabedc28bc1eac9797dd4b40ebfa92ff7d8662",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-YKK-APW430:size",
+      "runtime_identity_sha256": "36cdae5349d76e6df53cc7da1f13e32362b1ed80430432f8d2a5c6fe4bbdaae8",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-YKK-APW430:exterior_color",
+      "runtime_identity_sha256": "d47036e2ec19c3e2e97f0c38966fca6cf6674cdf31efee7b8b29fa81980edf7e",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-YKK-APW430:interior_color",
+      "runtime_identity_sha256": "8b7eeff7646da85f32b03d3c9e6d08d366c60865087efb2e3cb63415afdf8a66",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-YKK-APW430:glass_type",
+      "runtime_identity_sha256": "e569f6b9fb5ba82ed0b5ddcd0f141718e4f5d8b73b9eff504ffda4627cd7aa85",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-YKK-APW430:option",
+      "runtime_identity_sha256": "013d30fef04cf1a77d1eb8ca46abb8327ad14a755dfe4f16c72ec7cb5b6a276b",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-YKK-APW430:glass_detail",
+      "runtime_identity_sha256": "a396281450064a1d0b6cc75e29422bb614dcbc111ad35da2ff4b78d6d9acbe7b",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-YKK-APW430:glass_function",
+      "runtime_identity_sha256": "a215a05d6fc2dcc4342d296a91dfe46c2e5bdc5ec2d7871ecd6778222c3924ab",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-YKK-APW430:screen_presence",
+      "runtime_identity_sha256": "7d28a14149d65ebf130be2c4f666a8ad3636e9b5ef9b1156465643b13b94167b",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-YKK-APW430:window_configuration",
+      "runtime_identity_sha256": "ff3aaef05ea6901c828abc03a9738cb55e307b6c5f7386a41420b8e3ab70ca60",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-YKK-APW430:handing",
+      "runtime_identity_sha256": "c221e464265daa760688d41b67b1763f1906b826880c0b8c6b971f1e8c535992",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-YKK-APW430:window_spec",
+      "runtime_identity_sha256": "dbe7a597b1cc5715cbc1802f7d07cda0e8ca25958e1e711084ad8295d91a028c",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-YKK-APW430:panel_count",
+      "runtime_identity_sha256": "7876dd91193816d20f2d2439b9425bc970843916f71d984642aafd112b780fd0",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-YKK-APW430:custom_width",
+      "runtime_identity_sha256": "9fca381f2f2152bc7b953efe150cc8ab5bc7be1c2e8839a93676f670682c4741",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-YKK-APW430:custom_height",
+      "runtime_identity_sha256": "6e3454a4b8d3ab7c2b966ddc7d84b19f5b61c67e6158e91f6d7ef1329beeecab",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-YKK-APW431:window_type",
+      "runtime_identity_sha256": "1369f52690d6f9ff70651595a812a7a3b44fd2ba574230b1ca187e8804bd9f7c",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-YKK-APW431:region_standard",
+      "runtime_identity_sha256": "9083f2d74f20d3a1377de3c01f646702a5c426e86633697ccf0dd8da8684ce02",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-YKK-APW431:panel_count",
+      "runtime_identity_sha256": "be08f058210c316f9468621a46377625841a6d65ceb58b6e74784bf0d446af8b",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-YKK-APW431:size_mode",
+      "runtime_identity_sha256": "a76931f24cc6d3735c2afca24ffb4565c36b7d1ecb6bc0c96ab52cdab5eb6c4d",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-YKK-APW431:size",
+      "runtime_identity_sha256": "0a63020495e6d7821a37c514ba10a5aa03b95c396d59a935b7c0ce3f6ada0286",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-YKK-APW431:exterior_color",
+      "runtime_identity_sha256": "fec6caed48cc3e7940b5cfbde85ca6a5845170f76b5bad1c5dc5efaee86da29e",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-YKK-APW431:interior_color",
+      "runtime_identity_sha256": "5588ae72b25a8c5b406ae61a37c8d34223b0a4e4ba2a5f93c94b9551b66f51f5",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-YKK-APW431:screen_presence",
+      "runtime_identity_sha256": "b1f1f00745e289a5639185d18208fe76550021142b975b4d10bb753c75f2cad0",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-YKK-APW431:glass_type",
+      "runtime_identity_sha256": "a6b0cab2f148c1f4c374e4b9ae3bf79bc46b4cef15fe56f884cbf77d4b7eba95",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-YKK-APW431:glass_detail",
+      "runtime_identity_sha256": "172531bf00446c34e533154f6d6790fc4a0486a67db4fe61fe9445215004c200",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-YKK-APW431:glass_function",
+      "runtime_identity_sha256": "7749dfeb0ff54772baaa3fa53352f38b222284d56690cd7d2c039d9841ed8a7e",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-YKK-APW431:option",
+      "runtime_identity_sha256": "b695484d5d3608bf0e4aaeb49d0c315d6b6f9b5ee5ffc174bc5bdb3fd75e36fb",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-YKK-APW431:shutter_type",
+      "runtime_identity_sha256": "81207963301080e9f0cc0e08f83265a99662de7854996cd1dc7127ded6159df4",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-YKK-APW431:window_configuration",
+      "runtime_identity_sha256": "15ad6e8e4867847638c6a799c01b10b3cf7bd3d078cbbbf7401cc069c2213b29",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-YKK-APW431:custom_width",
+      "runtime_identity_sha256": "dc99d8d3882085dc236b54aa436d46d6a6943690bc28c77d601451562dc3c8e9",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-YKK-APW431:custom_height",
+      "runtime_identity_sha256": "7275919827b6972555d8ed2bbe4c3bfe183552cc3a4de01eef5ddd09125412fb",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-YKKAP-UCHIRIMO:window_type",
+      "runtime_identity_sha256": "277b21b0b1a036b9ef88664508e69dc8f69be722bd2d39387e96a2e32a31e598",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-YKKAP-UCHIRIMO:room_specification",
+      "runtime_identity_sha256": "c4b0b28b4ae94e04581ebd532a9d8c0cc10073efa96cd1fe22d14976ef55608e",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-YKKAP-UCHIRIMO:sales_glass_appearance",
+      "runtime_identity_sha256": "0876563d2a73794e3e40bd40ae782fea5750ca647e300240008d858aeb1be166",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-YKKAP-UCHIRIMO:frame_spec",
+      "runtime_identity_sha256": "8bb08d8bb5ba51e6fc61479f91e7864d28704e796d06b61dfc601293175d6d20",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-YKKAP-UCHIRIMO:fukashi_presence",
+      "runtime_identity_sha256": "061e5e70913c5fa5b4151abaa967d40fade375ed2a968e3cdd13682024d07ada",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-YKKAP-UCHIRIMO:option_items",
+      "runtime_identity_sha256": "99343963c980a65e24ed26a37aea25acd7c52fdf5152f83e3fab8c79b7593ca9",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-YKKAP-UCHIRIMO:sash_configuration",
+      "runtime_identity_sha256": "9935dae57a6951c61aaa66f61a6e5c84284ee0442615fe4b69411c0c09381e94",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-YKKAP-UCHIRIMO:lower_frame_spec",
+      "runtime_identity_sha256": "88be9aa23c40819f86f6f3ee25c2983f2bc3ac9671ae89a369161b8a322785b4",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-YKKAP-UCHIRIMO:reverse_handing",
+      "runtime_identity_sha256": "d05f74e5bb1cb0378342c99a133dd3d33fffe444f10acd5d47014d180cc1d88e",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-YKKAP-UCHIRIMO:frame_color",
+      "runtime_identity_sha256": "106c41d91d547d6ebc02ab984cb63889f8b3db48e2ab55b165ee333a2b3df218",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-YKKAP-UCHIRIMO:glass_family",
+      "runtime_identity_sha256": "94aff673aee7c11d8d47bc1c9f5dfff7e0377eb955637d5b833b3e20f7084d6c",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-YKKAP-UCHIRIMO:crescent_position",
+      "runtime_identity_sha256": "c8e03bf4c05f2d06825a7450db3431499f0e5f69eecfabedb05ee6e0c18b8003",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-YKKAP-UCHIRIMO:crescent_presence",
+      "runtime_identity_sha256": "b0be38138f1b6eb83e957fc5bd86def56bb28ece7a8e0dff1162e91a3aa91dc8",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-YKKAP-UCHIRIMO:crescent_type",
+      "runtime_identity_sha256": "fa9154f1abaacbda27c86c7d069e7639008d42bfe20c316d6e4a746c0f96b66a",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-YKKAP-UCHIRIMO:pull_handle_type",
+      "runtime_identity_sha256": "3500f1d97f81eb39a6315d4fcf25b8d42ee597475043c9c240b00a7bfc592dc7",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-YKKAP-UCHIRIMO:pull_handle_position",
+      "runtime_identity_sha256": "b816eaf0863b5b3fd9594b9483a0cbbbccb9c0b9a33b301c6e0841e823e5a5d1",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-YKKAP-UCHIRIMO:middle_rail_option",
+      "runtime_identity_sha256": "a7c7f7f81b946607261e2fff45874c95f203c0ed1427ee4439ba407464db7272",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-YKKAP-UCHIRIMO:ventilator_option",
+      "runtime_identity_sha256": "3bbffda03ef4bc4097a4ad2f92abf5b848e5ad2adbc287b6e2461eb1856b29c1",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-YKKAP-UCHIRIMO:size_w",
+      "runtime_identity_sha256": "dfaf889bbfb49f4c47f6f33c358920407864960b5f9b7e148d66424d58359f09",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-YKKAP-UCHIRIMO:size_h",
+      "runtime_identity_sha256": "85d19b33143fe5da3ad8df9cec1ef2b67e1a4826d08a2a4d6d08808f8272e598",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-YKKAP-UCHIRIMO:operating_handle_type",
+      "runtime_identity_sha256": "560addc591191fd892cc4d211a4a34cd918836299179467b806c7ba0de543c50",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-YKKAP-UCHIRIMO:hinge_side",
+      "runtime_identity_sha256": "3343d65e7936f025ae5bec2b5928181fde166e8ce4d11811515d597d13971179",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-YKKAP-UCHIRIMO:arm_stopper_option",
+      "runtime_identity_sha256": "2803503e297301e78109804f946c2bab4b795423aff50748d378e795b7be0c10",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-YKKAP-UCHIRIMO:outside_handle_option",
+      "runtime_identity_sha256": "09899ff09e9134c1acbbb2f160b6bb43762cf775259241a6ed61fe531b80a523",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-YKKAP-UCHIRIMO:sales_glass_design",
+      "runtime_identity_sha256": "c52d57e34da5271ce5dce726227d5bb979fb5af2283844ceda75b032edfa2c12",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-YKKAP-UCHIRIMO:low_e_type",
+      "runtime_identity_sha256": "96ed0fd2e35499988580dcbcd91ac299cc9381c4df951d4ba93da526dba2bed3",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-YKKAP-UCHIRIMO:sales_spacer_type",
+      "runtime_identity_sha256": "d89b7a870a2296d06add19881d8323bf4b6304d0d2427369ee3ee921a4a208d8",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-YKKAP-UCHIRIMO:sales_gas_fill",
+      "runtime_identity_sha256": "3bdb879d9ea3dee7545ba415ef4d423d75df841ea19bab4b61553f043fb8e34e",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-YKKAP-UCHIRIMO:safety_treatment",
+      "runtime_identity_sha256": "d68cedf5fc3bd56c34925b9ad5f295c21890046296cbc18ca4c3b39edccbe671",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-YKKAP-UCHIRIMO:vacuum_glass_product",
+      "runtime_identity_sha256": "81c3d72eeb59c2aceb062056ff0cdde2b37f152fedca0d0a37a4eac6ff77f594",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-YKKAP-UCHIRIMO:fukashi_sides",
+      "runtime_identity_sha256": "167cc8b91a9540da562629b540798f0f4e3c79acc5a101ef329943b050303a9b",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-YKKAP-UCHIRIMO:fukashi_depth",
+      "runtime_identity_sha256": "56d4e3407b7e3ecaa54aaff5f5a09d9687f16c527006e4516bcd5921c2e54e9a",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-YKKAP-UCHIRIMO:fukashi_curtain_rail",
+      "runtime_identity_sha256": "90d75e5eea8137e0c2c3c59361c26cd319e721eed71c63c5390acd98ac65cba1",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-YKKAP-UCHIRIMO:sash_width_allocation",
+      "runtime_identity_sha256": "4142f2c85871e16b87181282126197c0dd2711fff83449cae7ba0dd7f200f26e",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-YKKAP-UCHIRIMO:three_panel_layout",
+      "runtime_identity_sha256": "1318ddabe4d6a7eff49be6c8657b396422d734c8d575c40265a24a77057c3ea0",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-YKKAP-UCHIRIMO:glass_coating_color",
+      "runtime_identity_sha256": "a9a4cd0f1e861cb2fe948dd7369b5a0923cdd72999c793207ed4ab7d0c9966c5",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-YKKAP-UCHIRIMO:middle_rail_position",
+      "runtime_identity_sha256": "9385a7edc39fbd811039092d97de0763d9170ac241d59aeb395884d0915eaebb",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-YKKAP-UCHIRIMO:frame_projection",
+      "runtime_identity_sha256": "2286c1976a3b4e5eea5b181fa8a78bb7ad18f7eb994843c299ae7140e71c0859",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-YKKAP-UCHIRIMO:construction",
+      "runtime_identity_sha256": "7c34ae7baf8a86b95f1978e7415c688bc66b71fb712badeae47b03eaa393b402",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-YKKAP-UCHIRIMO:jamb_projection_a_mm",
+      "runtime_identity_sha256": "da111d8f6a6574e44138be7ca8d28e11608eb2dd11124db59c32f20175b2f007",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-YKKAP-UCHIRIMO:jamb_face_b_mm",
+      "runtime_identity_sha256": "88df092845ceefcde577b2754192f129a1afeb14c70d01b9cf6905cfeff37130",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-YKKAP-UCHIRIMO:jamb_height_h_mm",
+      "runtime_identity_sha256": "b8e4645df27998ce02b89ed3a853d64c4bec816c2b1fedb99f6e66b6fa4d64dc",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-YKKAP-UCHIRIMO:jamb_height_h1_mm",
+      "runtime_identity_sha256": "76f6ce930c07cbceffc02e143b47219df3ff17080226295e721f18c4212b6395",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-YKKAP-UCHIRIMO:jamb_height_h2_mm",
+      "runtime_identity_sha256": "ee4b84b762f6d52678f5e67428333aeb682aee3ea2d1e8c192e6a7a8d0a34cce",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-YKKAP-UCHIRIMO:jamb_height_h3_mm",
+      "runtime_identity_sha256": "29822c8e707286db1c7eb6581fbaf2cf2383182951cd3abcf985b2c39dc31004",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-YKKAP-UCHIRIMO:sill_upper_c_mm",
+      "runtime_identity_sha256": "fa533e68f2bc563868c7907e14d2d96ad94ef04a93133e53d56380eae43c8939",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-YKKAP-UCHIRIMO:sill_lower_d_mm",
+      "runtime_identity_sha256": "b182f523c127d950ea6731d4815892eca168f446f4a156debee2a209f0f0dadb",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-YKKAP-UCHIRIMO:wall_surface_for_reinforcement_available",
+      "runtime_identity_sha256": "18c9f238892300ba3ee960ac5e3995148495c9ed4ff1aebeac7c71ff13b911cf",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-YKKAP-UCHIRIMO:substrate_present",
+      "runtime_identity_sha256": "c688608c72c43e70270a891954652ffbc4dc83839390508243e7d196a4c991bf",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-YKKAP-UCHIRIMO:substrate_wall_gap_present",
+      "runtime_identity_sha256": "7e295ff54edf1138ae189b026320491f384fdd75d27ae7474c62d2fbb4cc3d89",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-YKKAP-UCHIRIMO:substrate_or_structure_present",
+      "runtime_identity_sha256": "f9756f6f851fa1977cab2984c41011eae5cbc1c941fb486e18e3572021d8081c",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-YKKAP-UCHIRIMO:substrate_or_structure_wall_gap_present",
+      "runtime_identity_sha256": "e9f513a78b64535c614c471d94187c47873205dd75e94ba90a63477799d69863",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-YKKAP-UCHIRIMO:stud_spacing_condition_met",
+      "runtime_identity_sha256": "18189122ae3796f82fdd0f9569f4c2566aa06a633cf4965a842e10b33d31363c",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-YKKAP-UCHIRIMO:tool_floor_interference",
+      "runtime_identity_sha256": "3ef1bb5a85ae525e490eb2a243b6b3dad113db8fbfe1fbc19f79e93230948d82",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-YKKAP-UCHIRIMO:floor_supports_load",
+      "runtime_identity_sha256": "7ad30584bf0649136f2c0201f8a46281286b736f6431abd11604ca641094bd5d",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-YKKAP-UCHIRIMO:floor_screw_holding",
+      "runtime_identity_sha256": "80806fd8124fc02f232dab3bd0899fccb4534044009453d21ee38228e2253a29",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-YKKAP-UCHIRIMO:baseboard_interference",
+      "runtime_identity_sha256": "e5ebb0e0a9e1af2e2104fa93a1fbf84bbd25a67ac37a2c035982f47fcb5bbca8",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-YKKAP-UCHIRIMO:vertical_horizontal_jamb_step_e_mm",
+      "runtime_identity_sha256": "efafd4cff26f7b66ae5c61785e8d949ff14bd6640ce992a0597c25a9068bb85f",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-YKKAP-UCHIRIMO:lower_mounting_surface_horizontal_or_adjustable",
+      "runtime_identity_sha256": "570367f08dd25d5dbaef5af7c272f9f1547cad55a13cb04cc61cea21e44d347c",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-YKKAP-UCHIRIMO:mounting_surface_flat",
+      "runtime_identity_sha256": "08b545b8058f682a1f313145a59867d61bc0e4528c81c57e106f6621edc5b304",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-YKKAP-UCHIRIMO:mounting_surface_damage_protection",
+      "runtime_identity_sha256": "6da374cd86a1906363278e9939356cb6011c0136d14fa946ac71f56081ae4965",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-YKKAP-UCHIRIMO:resin_jamb_face_screw_fixed",
+      "runtime_identity_sha256": "f7b3069757b76941e50eee6f629592b6d26edef95b30cd5276eebc9c882c021d",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-YKKAP-UCHIRIMO:lower_resin_jamb_space_mm",
+      "runtime_identity_sha256": "abd8e99beb2e9f8f1ed1c3c5c9ce848eebba7204c77c6a55cbe50566a1c18853",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-YKKAP-UCHIRIMO:existing_lower_jamb_angle_present",
+      "runtime_identity_sha256": "90b0d0f586fb7217ca960525ce15f74eff445c17c6b3c92a46b6beeee40a7c13",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-YKKAP-UCHIRIMO:lower_jamb_a_mm",
+      "runtime_identity_sha256": "a6d3b1abaf60ac5ce288a31ee1921a731a7b3e606b9bc565b027cb55c8c3146c",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-YKKAP-UCHIRIMO:lower_jamb_a_prime_mm",
+      "runtime_identity_sha256": "dcc9d2add617ed918765119df796d5e10c9b0117a029d792754f30a300449d9b",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-YKKAP-UCHIRIMO:hardware_tip_mounting_depth_A_mm",
+      "runtime_identity_sha256": "ba31c139beff0973e9702b238242d6521396a61b74339ce3ce639d766dc55dd8",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-YKKAP-UCHIRIMO:existing_angle_height_mm",
+      "runtime_identity_sha256": "8f2b6352120f52712548c187ea28078ebe78bd2d1696101bb76230c14ce53f39",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-YKKAP-UCHIRIMO:existing_angle_tip_mm",
+      "runtime_identity_sha256": "a0856f780913a7208f6b7de9c1c3ba35a416e5c93cba73742eab951774d70855",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-YKKAP-UCHIRIMO:system_bath_component_screw_interference",
+      "runtime_identity_sha256": "9070bd70c4369dfcc5f38308f8506544800fd97422313c6f15d8d739d380a52f",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-YKKAP-UCHIRIMO:existing_window_to_jamb_step_large",
+      "runtime_identity_sha256": "cc948f4a055553a80fcbb67ad6f500c11c4a8c0e7bf4814a84025964c4145289",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-YKKAP-UCHIRIMO:fukashi_reinforcement",
+      "runtime_identity_sha256": "e3d2ad287373a7b3562862ac3c70f37b633b225d506c34725dfd2bab72c6d5d0",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    },
+    {
+      "field_id": "sash-app:SER-YKKAP-UCHIRIMO:installation_environment",
+      "runtime_identity_sha256": "8829fb54c072f520705852931c20f4d8c0b2b90be650ed15b39ac43de37d9665",
+      "runtime_parity": "PASS",
+      "flow_parity": "PASS",
+      "basis": "Current-code replay of captured branch selections; not exhaustive manufacturability coverage."
+    }
+  ]
+}

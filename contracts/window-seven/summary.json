@@ -1,0 +1,62 @@
+{
+  "status": "PENDING_HUMAN_REVIEW_NOT_COMPLETE",
+  "product_field_counts": {
+    "SER-LIX-EW": 29,
+    "SER-LIXIL-TW": 25,
+    "SER-LIX-SAMOS2H": 30,
+    "SER-LIX-SAMOSL": 28,
+    "SER-YKK-APW430": 16,
+    "SER-YKK-APW431": 16,
+    "SER-YKKAP-UCHIRIMO": 73
+  },
+  "manufacturer_field_counts": {
+    "LIXIL": 112,
+    "YKK AP": 105
+  },
+  "total_field_count": 217,
+  "excluded_field_count": 27,
+  "mapping_counts": {
+    "EXACT": 114,
+    "SEMANTIC": 52,
+    "PRODUCT_SPECIFIC": 48,
+    "EXCEPTION": 3
+  },
+  "central_mapping_counts": {
+    "EXACT": 117,
+    "SEMANTIC": 52,
+    "PRODUCT_SPECIFIC": 48
+  },
+  "classification_counts": {
+    "GLOBAL EXACT": 0,
+    "MANUFACTURER SHARED": 18,
+    "CATEGORY SHARED": 96,
+    "SEMANTIC EQUIVALENT": 52,
+    "PRODUCT SPECIFIC": 48,
+    "EXCEPTION": 3
+  },
+  "before": {
+    "FORMAL": 0,
+    "PROVISIONAL": 217
+  },
+  "after": {
+    "FORMAL": 0,
+    "PROVISIONAL": 217
+  },
+  "evidence_accepted": 0,
+  "evidence_rejected": 0,
+  "evidence_candidates": 651,
+  "missing_claims": 1836,
+  "blocked_fields": 0,
+  "pending_fields": 217,
+  "promotion_approval_count": 0,
+  "mapping_gap": 0,
+  "semantic_gap": 0,
+  "central_changes": "NONE_WINDOW_ROLES_ALREADY_REGISTERED",
+  "central_authority_sha": "53a1c39d475acafc09da4b6c13811cdf0bfefd23",
+  "starting_authority_sha": "eac705297a0b938b4014b733b98c4a0f626d15ce",
+  "runtime_diff": 0,
+  "packet_content_sha256": "4a1ae1319eceedb3a113898c32410dba95207311e057415e9b7e4792b3700400",
+  "runtime_browser_regression": "SEE_EXECUTION_RECORD",
+  "merge": "NOT_EXECUTED",
+  "post_merge": "NOT_EXECUTED"
+}

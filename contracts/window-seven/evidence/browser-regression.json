@@ -1,0 +1,178 @@
+{
+  "status": "PASS",
+  "exactHead": "af4f30983cc3d9a24ca1a7eb54fab834f024d0fc",
+  "viewports": [
+    {
+      "width": 1280,
+      "products": [
+        {
+          "id": "SER-LIXIL-TW",
+          "selectedFields": 14,
+          "validationState": "VALID",
+          "saveReopen": "PASS"
+        },
+        {
+          "id": "SER-LIX-EW",
+          "selectedFields": 18,
+          "validationState": "VALID",
+          "saveReopen": "PASS"
+        },
+        {
+          "id": "SER-LIX-SAMOS2H",
+          "selectedFields": 14,
+          "validationState": "VALID",
+          "saveReopen": "PASS"
+        },
+        {
+          "id": "SER-LIX-SAMOSL",
+          "selectedFields": 13,
+          "validationState": "VALID",
+          "saveReopen": "PASS"
+        },
+        {
+          "id": "SER-YKK-APW430",
+          "selectedFields": 9,
+          "validationState": "VALID",
+          "saveReopen": "PASS"
+        },
+        {
+          "id": "SER-YKK-APW431",
+          "selectedFields": 13,
+          "validationState": "VALID",
+          "saveReopen": "PASS"
+        },
+        {
+          "id": "SER-YKKAP-UCHIRIMO",
+          "selectedFields": 27,
+          "validationState": "NEEDS_REVALIDATION",
+          "saveReopen": "PASS"
+        },
+        {
+          "id": "SER-LIXIL-INPLUS",
+          "selectedFields": 26,
+          "validationState": "NEEDS_REVALIDATION",
+          "saveReopen": "PASS"
+        }
+      ],
+      "outputRows": 8,
+      "excel": "PASS",
+      "pdf": "PASS",
+      "print": "PASS"
+    },
+    {
+      "width": 768,
+      "products": [
+        {
+          "id": "SER-LIXIL-TW",
+          "selectedFields": 14,
+          "validationState": "VALID",
+          "saveReopen": "PASS"
+        },
+        {
+          "id": "SER-LIX-EW",
+          "selectedFields": 18,
+          "validationState": "VALID",
+          "saveReopen": "PASS"
+        },
+        {
+          "id": "SER-LIX-SAMOS2H",
+          "selectedFields": 14,
+          "validationState": "VALID",
+          "saveReopen": "PASS"
+        },
+        {
+          "id": "SER-LIX-SAMOSL",
+          "selectedFields": 13,
+          "validationState": "VALID",
+          "saveReopen": "PASS"
+        },
+        {
+          "id": "SER-YKK-APW430",
+          "selectedFields": 9,
+          "validationState": "VALID",
+          "saveReopen": "PASS"
+        },
+        {
+          "id": "SER-YKK-APW431",
+          "selectedFields": 13,
+          "validationState": "VALID",
+          "saveReopen": "PASS"
+        },
+        {
+          "id": "SER-YKKAP-UCHIRIMO",
+          "selectedFields": 27,
+          "validationState": "NEEDS_REVALIDATION",
+          "saveReopen": "PASS"
+        },
+        {
+          "id": "SER-LIXIL-INPLUS",
+          "selectedFields": 26,
+          "validationState": "NEEDS_REVALIDATION",
+          "saveReopen": "PASS"
+        }
+      ],
+      "outputRows": 8,
+      "excel": "PASS",
+      "pdf": "PASS",
+      "print": "PASS"
+    },
+    {
+      "width": 390,
+      "products": [
+        {
+          "id": "SER-LIXIL-TW",
+          "selectedFields": 14,
+          "validationState": "VALID",
+          "saveReopen": "PASS"
+        },
+        {
+          "id": "SER-LIX-EW",
+          "selectedFields": 18,
+          "validationState": "VALID",
+          "saveReopen": "PASS"
+        },
+        {
+          "id": "SER-LIX-SAMOS2H",
+          "selectedFields": 14,
+          "validationState": "VALID",
+          "saveReopen": "PASS"
+        },
+        {
+          "id": "SER-LIX-SAMOSL",
+          "selectedFields": 13,
+          "validationState": "VALID",
+          "saveReopen": "PASS"
+        },
+        {
+          "id": "SER-YKK-APW430",
+          "selectedFields": 9,
+          "validationState": "VALID",
+          "saveReopen": "PASS"
+        },
+        {
+          "id": "SER-YKK-APW431",
+          "selectedFields": 13,
+          "validationState": "VALID",
+          "saveReopen": "PASS"
+        },
+        {
+          "id": "SER-YKKAP-UCHIRIMO",
+          "selectedFields": 27,
+          "validationState": "NEEDS_REVALIDATION",
+          "saveReopen": "PASS"
+        },
+        {
+          "id": "SER-LIXIL-INPLUS",
+          "selectedFields": 26,
+          "validationState": "NEEDS_REVALIDATION",
+          "saveReopen": "PASS"
+        }
+      ],
+      "outputRows": 8,
+      "excel": "PASS",
+      "pdf": "PASS",
+      "print": "PASS"
+    }
+  ],
+  "errors": []
+}

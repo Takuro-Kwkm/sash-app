@@ -1,0 +1,48 @@
+name: Window Seven Selection Contracts
+on:
+  pull_request:
+    paths: ['contracts/window-seven/**', 'scripts/contracts/**', '.github/workflows/window-seven-contracts.yml']
+  push:
+    branches: [main, 'contracts/window-seven-formalization-20261006']
+    paths: ['contracts/window-seven/**', 'scripts/contracts/**', '.github/workflows/window-seven-contracts.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  adoption-integrity:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0}
+      - uses: actions/setup-node@v4
+        with: {node-version: 24}
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12.14'}
+      - run: python -m pip install -r contracts/window-seven/requirements.txt
+      - name: Replay current Runtime against fixed branch observations
+        run: node scripts/contracts/verify-window-runtime.mjs
+      - name: Central validators, evidence, inventory and Runtime invariants
+        run: python scripts/contracts/verify-window-seven.py
+      - name: Existing QA invariants
+        run: npm test
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: window-seven-integrity-${{ github.sha }}
+          path: contracts/window-seven/evidence/*verification.json
+  formal-completion:
+    needs: adoption-integrity
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0}
+      - uses: actions/setup-node@v4
+        with: {node-version: 24}
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12.14'}
+      - run: python -m pip install -r contracts/window-seven/requirements.txt
+      - run: node scripts/contracts/verify-window-runtime.mjs
+      - name: Do not certify missing Human Decisions or unresolved Field parity
+        run: python scripts/contracts/verify-window-seven.py --require-complete
