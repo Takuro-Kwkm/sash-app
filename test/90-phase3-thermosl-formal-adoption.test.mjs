@@ -33,7 +33,7 @@ test('promotion, adopted runtime identity and native readback refer to the same 
   assert.equal(promotion.decision_path, current.human_decision.path);
   const adoption = JSON.parse(readFileSync(new URL('../changes/lixil-thermosl-is8900/runtime-identity-adoption.json', import.meta.url)));
   const receipt = JSON.parse(readFileSync(new URL('../changes/lixil-thermosl-is8900/native-formal-receipt.json', import.meta.url)));
-  assert.equal(adoption.status, 'ADOPTED');
+  assert.equal(adoption.status, 'FORMAL_ADOPTED');
   assert.equal(adoption.after.packageVersion, current.revision);
   assert.equal(adoption.human_decision_ref, current.human_decision.decision_ref);
   assert.equal(receipt.status, 'POST_SAVE_VERIFIED');

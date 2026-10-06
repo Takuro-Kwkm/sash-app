@@ -1,7 +1,7 @@
 {
   "scope_product_id": "SER-LIX-SAMOSL",
   "work_id": "PHASE3-THERMOSL-IS8900-20261006",
-  "status": "ADOPTED",
+  "status": "FORMAL_ADOPTED",
   "before": {
     "id": "SER-LIX-SAMOSL",
     "packageVersion": "v0.7-R2",
