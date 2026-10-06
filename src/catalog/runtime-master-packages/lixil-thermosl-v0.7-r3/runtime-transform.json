@@ -1,0 +1,150 @@
+{
+  "format": "formal-runtime-json-transform/1.0",
+  "source": {
+    "sha256": "e0b84fd83a1a2e3c078db357c67ac7bb751b34860c05a2321e1466c5cad97525"
+  },
+  "serialization": {
+    "indent": 2,
+    "trailing_newline": true
+  },
+  "operations": [
+    {
+      "op": "append",
+      "pointer": "/product_module/allowedValues",
+      "values": [
+        {
+          "id": "SER-LIX-SAMOSL:options:OP-SL-EMERGENCY-SKIRT:OP-SL-EMERGENCY-SKIRT",
+          "productId": "SER-LIX-SAMOSL",
+          "specificationKey": "options",
+          "value": "OP-SL-EMERGENCY-SKIRT",
+          "displayLabel": "代替進入口用幅木仕様",
+          "displayOrder": 190,
+          "status": "MANUAL_CHECK",
+          "selector": {
+            "window_type": "WT-SL-SHUTTER-HIKI",
+            "specific_spec": "SP-SL-SHUT-M-STD"
+          },
+          "evidenceIds": [
+            "EV-SL-IS8900-EMERGENCY-SKIRT"
+          ],
+          "metadata": {
+            "sourceFile": "LIXIL_ThermosL_AUTHORING_MASTER_v0.7-R3.xlsx",
+            "sourceSheet": "10_その他OP",
+            "sourceRow": 201,
+            "usage": "見積選択",
+            "manualCheck": "代替進入口用幅木仕様は手動・標準タイプのみ。製作可否・組合せ・価格は見積先へ確認してください。",
+            "state": "公式資料確認済み"
+          }
+        }
+      ]
+    },
+    {
+      "op": "append",
+      "pointer": "/product_module/evidence",
+      "values": [
+        {
+          "sourceId": "1nxDq-qDTb3Gi_s8qPT6d3WpT5MzahCSe",
+          "sha256": "f9f6cdf5a86471fc634c9693ce5adc5bca47935c4ca9c4edcec2ab3061e5596c",
+          "id": "EV-SL-IS8900-EMERGENCY-SKIRT",
+          "productId": "SER-LIX-SAMOSL",
+          "sourceType": "OFFICIAL_CATALOG",
+          "title": "サーモスL 業務用資料集（完成品価格表）IS8900",
+          "version": "2026-09 / 2026-10価格",
+          "pdfPages": [
+            57,
+            61
+          ],
+          "printedPages": [
+            55,
+            59
+          ],
+          "status": "VERIFIED_SCOPED_SOURCE",
+          "claim": "手動シャッター付引違い窓の標準タイプに代替進入口用幅木仕様を追加。製作・組合せ・価格確認は継続。"
+        }
+      ]
+    },
+    {
+      "op": "set",
+      "pointer": "/package_version",
+      "value": "v0.7-R3"
+    },
+    {
+      "op": "set",
+      "pointer": "/formal_closure",
+      "value": {
+        "task_classification": "PRODUCT_MASTER_TASK",
+        "target_version": "v0.7-R2",
+        "governing_spec": "PRODUCT_MASTER_PACKAGE_STORAGE_COMPLETION_GATE_v2.0",
+        "content_gate": "PASS",
+        "dependency_gate": "PASS",
+        "runtime_structural_qa": "PASS",
+        "official_source_scope_gate": "PASS",
+        "section20_direct_delegation_gate": "PASS",
+        "artifact_gate": "PASS",
+        "storage_gate": "PASS",
+        "registry_gate": "PASS",
+        "formal_pass": true,
+        "formal_adoption_permitted": true,
+        "working_savepoint_gate": "PASS",
+        "working_file_ids": {
+          "authoring": "1AyArKvnhCzElrKO3WoH71mXTuBE8pY6S",
+          "runtime": "1lXE8IYeN6fFw-LFbZxuJZ0EGqxRtTXBG",
+          "qa": "1LVH8eUzNexwJqR2XGyOwb1VZPxpTtHJH",
+          "runtimeManifest": "1iV1xEbsVXt-nx32RSm3IsmgLvxSzfuWN",
+          "productManifest": "1KEoJwC7CymTqNWOh0boye9q364zoPBAd",
+          "audit": "1vosZLEHv3YvcYndizG6pB2lUF7TNkcq4"
+        },
+        "formal_file_ids": {
+          "authoring": "1EqEHI8TlP7ZmWAZQSssAEgrRmBlvj9_q",
+          "runtime": "12G_Edo55NWgu38gJjTGcqDZ7HsdpAH2I",
+          "qa": "15OqI2iWLFxECGjHXH1uGZeKOklPbwkgq",
+          "runtimeManifest": "1c-VIgwTqPDTkas0apYqx30AN3PVa71p1",
+          "productManifest": "1qQ73l6WNFzAh-xeCENM7ySWHC1m7i1cq"
+        },
+        "current_canonical_package_count": 1,
+        "old_v0_7_R1_archived": true,
+        "unverified_qa_case_count": 0,
+        "ecr_automatic_allow": 0,
+        "completed_at": "2026-09-16",
+        "scoped_change_work": {
+          "work_id": "PHASE3-THERMOSL-IS8900-20261006",
+          "scope": "OP-SL-EMERGENCY-SKIRT",
+          "parent_formal": "v0.7-R2",
+          "adoption_reference": "formal/PHASE3-THERMOSL-IS8900-20261006/human-decision.json"
+        }
+      }
+    },
+    {
+      "op": "set",
+      "pointer": "/product_module/stats/packageVersion",
+      "value": "v0.7-R3"
+    },
+    {
+      "op": "set",
+      "pointer": "/product_module/stats/normalEstimateOptions",
+      "value": 46
+    },
+    {
+      "op": "set",
+      "pointer": "/authoring_binding",
+      "value": {
+        "file_id": "1EqEHI8TlP7ZmWAZQSssAEgrRmBlvj9_q",
+        "file_name": "LIXIL_サーモスL_AUTHORING_MASTER_v0.7-R2.xlsx",
+        "sha256": "6eb13ce12cee968527ea591d608da21036b2eca9f98149ce9f966778a8ff4e91",
+        "parent_folder_id": "1H83njk7Gww0RJOZKntYBp5VxdaJD9Jc4",
+        "status": "VERIFIED_FORMAL_ARTIFACT",
+        "scoped_successor": {
+          "file_id": "19sjSAPwyd30fF5akazldGs0wkhOGZF9v",
+          "sha256": "42a1a159c199ac0290f4862b20381abf2450b686ae8a8a2abdaa2d428a8c73f8",
+          "version": "v0.7-R3",
+          "parent_version": "v0.7-R2",
+          "change_scope": "OP-SL-EMERGENCY-SKIRT"
+        }
+      }
+    }
+  ],
+  "target": {
+    "sha256": "1fd121e1dbcd0acc90eeb53dd5faed1a3193ff16b46159efee3ae0c1dcf12fd9",
+    "size_bytes": 5149779
+  }
+}
