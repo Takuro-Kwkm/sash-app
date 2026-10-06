@@ -1,5 +1,5 @@
 {
-  "status": "PENDING_HUMAN_REVIEW_NOT_COMPLETE",
+  "status": "EVIDENCE_ACCEPTED_PENDING_INDEPENDENT_PROMOTION_APPROVAL",
   "product_field_counts": {
     "SER-LIX-EW": 29,
     "SER-LIXIL-TW": 25,
@@ -42,10 +42,10 @@
     "FORMAL": 0,
     "PROVISIONAL": 217
   },
-  "evidence_accepted": 0,
+  "evidence_accepted": 651,
   "evidence_rejected": 0,
   "evidence_candidates": 651,
-  "missing_claims": 1836,
+  "missing_claims": 0,
   "blocked_fields": 0,
   "pending_fields": 217,
   "promotion_approval_count": 0,
@@ -58,5 +58,6 @@
   "packet_content_sha256": "591f11c7bd90a819d39f0e936209dce465a5e099cf7b5fd5a60ab68cf6999636",
   "runtime_browser_regression": "SEE_EXECUTION_RECORD",
   "merge": "NOT_EXECUTED",
-  "post_merge": "NOT_EXECUTED"
+  "post_merge": "NOT_EXECUTED",
+  "promotion_review_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
 }

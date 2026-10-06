@@ -1,17 +1,7 @@
-WINDOW 7 PRODUCT SELECTION CONTRACT FORMALIZATION = PENDING_HUMAN_DECISION
-Revision: WINDOW7-CONTRACT-ADOPTION-20261006-R1
-Business scope: existing application Selection Contracts; Runtime / Product Master / Canonical Mapping changes = 0
-
-LIXIL / EW / SER-LIX-EW: 29
-LIXIL / TW / SER-LIXIL-TW: 25
-LIXIL / サーモスⅡ-H / SER-LIX-SAMOS2H: 30
-LIXIL / サーモスL / SER-LIX-SAMOSL: 28
-YKK AP / APW430 / SER-YKK-APW430: 16
-YKK AP / APW431 / SER-YKK-APW431: 16
-YKK AP / ウチリモ 内窓 / SER-YKKAP-UCHIRIMO: 73
+WINDOW 7 PRODUCT SELECTION CONTRACT FORMALIZATION = PENDING_INDEPENDENT_PROMOTION_APPROVAL
 
 {
-  "status": "PENDING_HUMAN_REVIEW_NOT_COMPLETE",
+  "status": "EVIDENCE_ACCEPTED_PENDING_INDEPENDENT_PROMOTION_APPROVAL",
   "product_field_counts": {
     "SER-LIX-EW": 29,
     "SER-LIXIL-TW": 25,
@@ -54,10 +44,10 @@ YKK AP / ウチリモ 内窓 / SER-YKKAP-UCHIRIMO: 73
     "FORMAL": 0,
     "PROVISIONAL": 217
   },
-  "evidence_accepted": 0,
+  "evidence_accepted": 651,
   "evidence_rejected": 0,
   "evidence_candidates": 651,
-  "missing_claims": 1836,
+  "missing_claims": 0,
   "blocked_fields": 0,
   "pending_fields": 217,
   "promotion_approval_count": 0,
@@ -70,15 +60,11 @@ YKK AP / ウチリモ 内窓 / SER-YKKAP-UCHIRIMO: 73
   "packet_content_sha256": "591f11c7bd90a819d39f0e936209dce465a5e099cf7b5fd5a60ab68cf6999636",
   "runtime_browser_regression": "SEE_EXECUTION_RECORD",
   "merge": "NOT_EXECUTED",
-  "post_merge": "NOT_EXECUTED"
+  "post_merge": "NOT_EXECUTED",
+  "promotion_review_packet_content_sha256": "a282c31fceaaa0eca7338cfe27cbb2f2c256ecf2472a49d9d0c95b21c0733c82"
 }
 
-Independent current-code replay: 1704 states / all 217 Fields reached and matched.
-Existing unit tests: 613 PASS; lint/typecheck/release build PASS.
-Central validators: 15 PASS.
-Browser regression: 1280/768/390; seven target products + unchanged Inplus control; save/reload, estimate, Excel/PDF, print dispatch/CSS PASS.
-Native OS print dialog: not executed.
-Human Review: 651 candidate Evidence records, then independent target Contract/dossier/accepted evidence Approval. Existing reference-only certifications are not application decisions.
-Formalization remains PROVISIONAL until accepted claims and promotion approval are complete.
-Ready/Review/Merge only after all gates PASS; then fetch remote main and execute exact-HEAD CI, validators, Runtime replay and readback.
-Final pre-merge HEAD / PR / merge commit / main HEAD / exact-HEAD CI / post-merge: see final-execution.json from GitHub readback.
+Evidence Acceptance: direct human approval recorded; accepted 651; rejected 0; Missing Claims 0.
+Promotion: 217 content-bound dossiers prepared; independent approval not yet recorded; all Fields remain PROVISIONAL.
+Runtime Diff 0; existing browser/source QA carry-forward applies to unchanged Runtime bytes.
+See promotion-review.html and promotion-review-packet.json.

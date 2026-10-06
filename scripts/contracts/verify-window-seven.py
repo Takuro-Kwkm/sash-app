@@ -9,6 +9,7 @@ import subprocess
 import sys
 import tarfile
 import tempfile
+from window_adoption import apply_decisions,check_acceptance_binding
 ROOT=pathlib.Path(__file__).resolve().parents[2]
 OUT=ROOT/'contracts/window-seven'
 def read(p):return json.loads(pathlib.Path(p).read_text())
@@ -27,7 +28,7 @@ with tempfile.TemporaryDirectory() as td:
     sys.path.insert(0,str(central/'scripts'))
     from contracts import load_bundle,validate_bundle
     from formal_promotion import validate_promotion,CLASSIFICATION
-    bundle=load_bundle(central)
+    bundle=apply_decisions(load_bundle(central),ROOT,central)
     validation=validate_bundle(bundle)
     check(validation['status']=='PASS',json.dumps(validation['validators']))
     (OUT/'evidence/central-validation.json').write_text(json.dumps(validation,indent=2)+'\n')
@@ -42,19 +43,22 @@ with tempfile.TemporaryDirectory() as td:
     check(len(targetids)==7,'Wrong product universe')
     check(len(fids)==len(fields)==len(selected),'Duplicate or missing Field')
     check(fids.isdisjoint(excluded) and fids|excluded==audited,'Audit Field coverage missing or duplicated')
-    baseline={f['field_id']:f for f in bundle['fields']}
+    baseline={f['field_id']:f for f in read(central/'fixtures/current-selection-baseline.v0.1.json')['fields']}
+    current_missing={}
     m={r['field_id']:r for r in bundle['mapping']['fields']}
     for f in fields:
         c=selected[f['field_id']]
-        check(c==baseline[c['field_id']],'Current Contract differs from fixed central authority')
-        check(f['contract_sha256']==digest(c),'Stale Contract hash')
+        prior=baseline[c['field_id']]
+        check({k:v for k,v in c.items() if k!='status'}=={k:v for k,v in prior.items() if k!='status'},'Contract semantics differ from fixed central authority')
+        check(f['contract_sha256']==digest(prior),'Stale approved baseline Contract hash')
         check(f['canonical_mapping']==m[c['field_id']],'Mapping changed')
         check(c['runtime_key']==f['internal_key'],'Runtime binding changed')
         base=CLASSIFICATION[m[c['field_id']]['mapping_type']]
         needed=set(bundle['promotion_policy']['common_claims']+bundle['promotion_policy']['mapping_claims'][base])
         needed.add({'PRODUCT_FACT':'PRODUCT_FACT','BUSINESS_INPUT':'FIELD_RESPONSIBILITY','DERIVED':'DERIVATION_AUTHORITY'}[f['fact_kind']]);needed.add('RUNTIME_PARITY')
         accepted={cl for e in bundle['field_evidence']['evidence'] if e['status']=='ACCEPTED' and e['scope']=={'field_id':f['field_id'],'category':c['category'],'purpose':'APPLICATION_FIELD'} for cl in e['claims']}
-        check(sorted(needed)==f['required_claims'] and sorted(needed-accepted)==f['missing_claims'],'Claim audit changed')
+        check(sorted(needed)==f['required_claims'],'Required Claim audit changed')
+        current_missing[f['field_id']]=sorted(needed-accepted)
     source_index=read(OUT/'evidence/source-index.json')
     for product in source_index['products']:
         check(sha(ROOT/product['manifest']['path'])==product['manifest']['sha256'],'Runtime manifest changed')
@@ -66,13 +70,32 @@ with tempfile.TemporaryDirectory() as td:
     check(packet['inventory_sha256']==sha(OUT/'field-inventory.json'),'Packet inventory stale')
     check(packet['evidence_candidates_sha256']==sha(OUT/'evidence/evidence-candidates.json'),'Packet evidence stale')
     check(packet['human_decision'] is None,'Unregistered human decision')
+    acceptance_path=OUT/'evidence-acceptance.json'
+    if acceptance_path.exists():
+        record=read(OUT/'evidence/human-acceptance-decisions.json')
+        check(record['approved_packet_content_sha256']==bound and record['human_statement']=='承認','Human acceptance does not bind this Packet')
+        check(record['promotion_approval_granted'] is False,'Evidence Acceptance cannot impersonate independent Promotion Approval')
     candidates=read(OUT/'evidence/evidence-candidates.json')['candidates']
+    if acceptance_path.exists():
+        check_acceptance_binding(read(acceptance_path),candidates,record['decisions'],bound)
     check(len({e['evidence_id'] for e in candidates})==len(candidates),'Duplicate candidate ID')
     for e in candidates:
         v=dict(e);h=v.pop('payload_sha256');check(digest(v)==h,'Candidate payload changed')
         check(e['status']=='CANDIDATE_NOT_ACCEPTED' and e['decision'] is None,'Invented evidence acceptance')
         extra=e['source_identity'].get('current_formal_option_authority')
         if extra:check(sha(ROOT/extra['path'])==extra['sha256'],'Current R6 Formal option evidence changed')
+    promotion_packet=OUT/'promotion-review-packet.json'
+    if promotion_packet.exists():
+        prepared=read(promotion_packet);prepared_sha=prepared.pop('packet_content_sha256')
+        check(digest(prepared)==prepared_sha,'Promotion Packet hash changed')
+        check(prepared['accepted_evidence_sha256']==sha(acceptance_path),'Promotion Packet acceptance hash stale')
+        accepted_by_id={e['evidence_id']:e for e in read(acceptance_path)['evidence']}
+        check({x['field_id'] for x in prepared['fields']}==fids,'Promotion Packet Field universe changed')
+        for row in prepared['fields']:
+            d,payload,target=row['dossier'],row['proposed_approval_payload'],row['target_contract']
+            check(digest(d)==payload['dossier_sha256'] and digest(target)==payload['contract_sha256']==d['contract_sha256'],'Promotion dossier/target binding stale')
+            check(digest([accepted_by_id[eid] for eid in d['evidence_ids']])==payload['evidence_sha256'],'Promotion evidence binding stale')
+            check({k:v for k,v in target.items() if k!='status'}=={k:v for k,v in baseline[row['field_id']].items() if k!='status'},'Promotion changes semantics')
     diff=subprocess.check_output(['git','diff','--name-only',a['application_baseline_sha'],'--'],cwd=ROOT,text=True).splitlines()
     unexpected=[p for p in diff if not p.startswith(('contracts/window-seven/','scripts/contracts/','.github/workflows/window-seven-contracts.yml'))]
     check(not unexpected,'Runtime or existing validation changed: '+str(unexpected))
@@ -82,9 +105,10 @@ with tempfile.TemporaryDirectory() as td:
     dry += [(c,'CONTRACT_REFERENCE') for c in bundle['references']]
     dry += [(x['contract'],'APPLICATION_FIELD') for x in bundle['presentation_fixtures']]
     dry_errors=validate_promotion(bundle['promotion_policy'],bundle['field_evidence'],bundle['field_promotions'],dry,central,validation['validators'],m,exception_records=bundle['exceptions']['exceptions'])
-    missing_claims=sum(len(f['missing_claims']) for f in fields)
+    missing_claims=sum(len(v) for v in current_missing.values())
     unverified=[f['field_id'] for f in replay['fields'] if f['runtime_parity']!='PASS']
-    result={'status':'PASS_ADOPTION_INTEGRITY','completion':'PENDING_HUMAN_DECISION','total_field_count':len(fields),
+    actual_formal=sum(c['status']=='FORMAL' for c in contract_rows)
+    result={'status':'PASS_ADOPTION_INTEGRITY','completion':'COMPLETE' if actual_formal==len(fields) and not dry_errors and not missing_claims and not unverified else 'PENDING_INDEPENDENT_PROMOTION_APPROVAL' if acceptance_path.exists() else 'PENDING_HUMAN_DECISION','total_field_count':len(fields),
         'manufacturer_counts':dict(collections.Counter(f['manufacturer'] for f in fields)),
         'product_counts':dict(collections.Counter(f['product_id'] for f in fields)),
         'mapping_counts':dict(collections.Counter(f['mapping_type'] for f in fields)),
@@ -96,4 +120,4 @@ with tempfile.TemporaryDirectory() as td:
         'git_head':subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),'packet_content_sha256':bound}
     (OUT/'evidence/independent-verification.json').write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n')
     print(json.dumps({k:v for k,v in result.items() if k!='promotion_dry_run_errors'},ensure_ascii=False,indent=2))
-    if args.require_complete and (dry_errors or missing_claims or unverified):sys.exit(2)
+    if args.require_complete and (dry_errors or missing_claims or unverified or actual_formal!=len(fields)):sys.exit(2)

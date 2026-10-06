@@ -1,6 +1,6 @@
 {
   "status": "PASS_ADOPTION_INTEGRITY",
-  "completion": "PENDING_HUMAN_DECISION",
+  "completion": "PENDING_INDEPENDENT_PROMOTION_APPROVAL",
   "total_field_count": 217,
   "manufacturer_counts": {
     "LIXIL": 112,
@@ -24,8 +24,8 @@
   "statuses": {
     "PROVISIONAL": 217
   },
-  "evidence_accepted_application": 0,
-  "missing_claims": 1836,
+  "evidence_accepted_application": 651,
+  "missing_claims": 0,
   "runtime_unverified_fields": [],
   "central_authority_sha": "53a1c39d475acafc09da4b6c13811cdf0bfefd23",
   "runtime_diff": 0,
@@ -1118,6 +1118,6 @@
       "message": "FORMAL requires exactly one content-bound dossier and approval"
     }
   ],
-  "git_head": "ccc18ddec2f9b5719fac36255f68fe153babff6a",
+  "git_head": "a307482e571a88e708d00723a1e3c739d5cae593",
   "packet_content_sha256": "591f11c7bd90a819d39f0e936209dce465a5e099cf7b5fd5a60ab68cf6999636"
 }

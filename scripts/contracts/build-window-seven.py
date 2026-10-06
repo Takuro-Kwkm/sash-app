@@ -13,6 +13,8 @@ import tempfile
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 OUT = ROOT / 'contracts/window-seven'
+if (OUT/'evidence-acceptance.json').exists():
+    raise SystemExit('Human-accepted Packet and baseline are immutable. Use the decision/promotion continuation, not inventory regeneration.')
 def read(p): return json.loads(pathlib.Path(p).read_text())
 def digest(x): return hashlib.sha256(json.dumps(x, sort_keys=True, ensure_ascii=False, separators=(',', ':')).encode()).hexdigest()
 def sha(p): return hashlib.sha256(pathlib.Path(p).read_bytes()).hexdigest()

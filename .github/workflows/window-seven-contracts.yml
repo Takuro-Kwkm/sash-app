@@ -24,6 +24,8 @@ jobs:
         run: node scripts/contracts/verify-window-runtime.mjs
       - name: Central validators, evidence, inventory and Runtime invariants
         run: python scripts/contracts/verify-window-seven.py
+      - name: Evidence binding and isolated promotion adversarial checks
+        run: python scripts/contracts/test-window-governance.py
       - name: Existing QA invariants
         run: npm test
       - uses: actions/upload-artifact@v4
