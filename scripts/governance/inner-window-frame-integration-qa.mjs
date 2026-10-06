@@ -27,7 +27,7 @@ for(const row of expected){
  if(changed)assert.deepEqual(scopedAdoption.before,row.current,`Frozen previous ${row.id} identity`);
  const pinned=changed?scopedAdoption.after:row.current;
  for(const key of ['packageVersion','sourceHash','status','canonicalRuntimeReference'])assert.deepEqual(integration[key],pinned[key],`${row.id}:${key}`);
- if(changed){const runtime=await loadRegisteredRuntime('LIXIL',row.id===ewAdoption.scope_product_id?'EW':row.id===thermosAdoption.scope_product_id?'サーモスL':'TW');assert.ok(runtime.normalizedManifest.formalPass&&runtime.sourcePackageIntegrity.match);assert.equal(runtime.sourcePackageIntegrity.files[0].actual,scopedAdoption.runtime_sha256);assert.equal(runtime.normalizedManifest.packageVersion,pinned.packageVersion);}
+ if(changed){const runtime=await loadRegisteredRuntime('LIXIL',row.id===ewAdoption.scope_product_id?'EW':row.id===thermosAdoption.scope_product_id?'サーモスL':'TW');const nativeThermos=row.id===thermosAdoption.scope_product_id;assert.ok((nativeThermos?runtime.normalizedManifest.formal_pass:runtime.normalizedManifest.formalPass)&&runtime.sourcePackageIntegrity.match);assert.equal(runtime.sourcePackageIntegrity.files[0].actual,scopedAdoption.runtime_sha256);assert.equal(nativeThermos?runtime.normalizedManifest.package_version:runtime.normalizedManifest.packageVersion,pinned.packageVersion);}
  identities.push({id:row.id,packageVersion:integration.packageVersion,sourceHash:integration.sourceHash,unchangedFromPreviousApp:changed?false:row.unchanged,...(changed?{declaredSourceAdoption:scopedAdoption.work_id}:{})});
 }
 const fields=['frame_spec','upper_frame_spec','lower_frame_spec','fukashi_presence','fukashi_sides','fukashi_depth','fukashi_reinforcement'];
