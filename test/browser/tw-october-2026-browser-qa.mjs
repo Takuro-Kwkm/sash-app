@@ -21,6 +21,18 @@ for(const width of [1280,768,390]){
  });
  const last=()=>page.evaluate(()=>window.__qaResult);
  async function change(key,value){
+  if(Array.isArray(value)){
+   const group=page.locator(`[data-multi-key="${key}"]`);await group.waitFor();
+   for(const previous of (await last())?.selection?.[key]??[]){
+    if(value.includes(previous))continue;
+    await page.evaluate(()=>{window.__qaResult=null;});await group.locator(`input[value="${previous}"]`).uncheck();await page.waitForFunction(()=>window.__qaResult?.fields);
+   }
+   for(const next of value){
+    if(((await last())?.selection?.[key]??[]).includes(next))continue;
+    await page.evaluate(()=>{window.__qaResult=null;});await group.locator(`input[value="${next}"]`).check();await page.waitForFunction(()=>window.__qaResult?.fields);
+   }
+   return last();
+  }
   const element=page.locator(`[data-spec-key="${key}"]`);await element.waitFor();
   await page.evaluate(()=>{window.__qaResult=null;});
   if(await element.evaluate(e=>e.tagName==='SELECT'))await element.selectOption(value);
@@ -40,7 +52,9 @@ for(const width of [1280,768,390]){
   r=await change('custom_height_secondary',149);assert.equal(r.dimensionResult.status,'BLOCK');assert.ok(!r.fields.some(f=>f.key==='exterior_color'));
   await change('custom_height_secondary',1250);r=await complete();assert.equal(r.validation.missingRequiredFields.length,0);assert.equal(r.orderReady,false);assert.equal(r.dimensionResult.status,'REVIEW_REQUIRED');
   const seq=r.fields.map(f=>f.key);assert.ok(seq.indexOf('custom_height')<seq.indexOf('custom_height_secondary')&&seq.indexOf('custom_height_secondary')<seq.indexOf('exterior_color'));
+  assert.match(await page.locator('#warnings').innerText(),/メーカー.*確認/);
   assert.match(await page.locator('#warnings').innerText(),/専用ガラス/);
+  assert.ok(r.confirmationRequests.some(q=>q.code==='TW_TRAPEZOID_GLASS_AND_BEAD'));
   return r;
  }
  await page.goto(route('/runtime-lab'),{waitUntil:'networkidle'});await mount();let r=await trapezoid();
