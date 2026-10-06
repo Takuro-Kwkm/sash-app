@@ -1,0 +1,293 @@
+{
+  "document_number": "SN4100",
+  "edition": "0110L26",
+  "publication_date": "2026-10",
+  "official_url": "https://webcatalog.lixil.co.jp/cgi-bin/openDetailBL.cgi?c=SN4100",
+  "source_parts": [
+    {
+      "role": "CURRENT_PRODUCT_A",
+      "document_identity": "LIXIL:SN4100",
+      "document_number": "SN4100",
+      "edition": "0110L26",
+      "publication_date": "2026-10",
+      "applicable_period": "2026-10",
+      "official_url": "https://webcatalog.lixil.co.jp/cgi-bin/openDetailBL.cgi?c=SN4100",
+      "drive_file_id": "1EK_JPBEORDWWv_8V-Xist6lwOdU4Co19",
+      "drive_url": "https://drive.google.com/file/d/1EK_JPBEORDWWv_8V-Xist6lwOdU4Co19/view",
+      "file_name": "202610_LIXIL_TW・TW防火戸_商品カタログ_SN4100_p1-230.pdf",
+      "sha256": "54d565492dc8849ffd79ca9b470aeb9f7248b886cc48e64e9e967848080a1dbb",
+      "bytes": 84678662,
+      "pdf_pages": 230,
+      "global_pdf_pages": [
+        1,
+        230
+      ],
+      "identity_note": null
+    },
+    {
+      "role": "CURRENT_PRODUCT_B",
+      "document_identity": "LIXIL:SN4100",
+      "document_number": "SN4100",
+      "edition": "0110L26",
+      "publication_date": "2026-10",
+      "applicable_period": "2026-10",
+      "official_url": "https://webcatalog.lixil.co.jp/cgi-bin/openDetailBL.cgi?c=SN4100",
+      "drive_file_id": "1chZY3oeL8YTkm42ZvCbfaNaN96ocryY7",
+      "drive_url": "https://drive.google.com/file/d/1chZY3oeL8YTkm42ZvCbfaNaN96ocryY7/view",
+      "file_name": "202610_LIXIL_TW・TW防火戸_商品カタログ_SN4100_p231-460.pdf",
+      "sha256": "20090885e4300144be68a4f26a70f0ff3c7bf506187e67c57359a9251c069f0c",
+      "bytes": 54082490,
+      "pdf_pages": 230,
+      "global_pdf_pages": [
+        231,
+        460
+      ],
+      "identity_note": null
+    }
+  ],
+  "facts": [
+    {
+      "fact_id": "TW-202610-TRAP-WINDOW",
+      "classification": "VALUE_ADDED",
+      "entity": "LIXIL::TW",
+      "canonical_field_name": "window_type",
+      "previous_value": null,
+      "current_value": {
+        "id": "SWT-LIX-TW-FIX-TRAPEZOID-IN",
+        "label": "台形FIX窓（内押縁タイプ）",
+        "opening": "FIX",
+        "common_window_id": "WT-FIX",
+        "TW_fire": false
+      },
+      "effective_period": "2026-09",
+      "applicability": "LIXIL::TW",
+      "status": "FORMAL_SOURCE_VERIFIED",
+      "evidence": {
+        "document_identity": "LIXIL:SN4100",
+        "document_number": "SN4100",
+        "edition": "0110L26",
+        "drive_file_id": "1chZY3oeL8YTkm42ZvCbfaNaN96ocryY7",
+        "source_sha256": "20090885e4300144be68a4f26a70f0ff3c7bf506187e67c57359a9251c069f0c",
+        "printed_pages": [
+          232,
+          233
+        ],
+        "global_pdf_pages": [
+          236,
+          237
+        ],
+        "source_parts": [
+          {
+            "drive_file_id": "1chZY3oeL8YTkm42ZvCbfaNaN96ocryY7",
+            "sha256": "20090885e4300144be68a4f26a70f0ff3c7bf506187e67c57359a9251c069f0c",
+            "global_pdf_pages": [
+              236,
+              237
+            ],
+            "local_pdf_pages": [
+              6,
+              7
+            ]
+          }
+        ],
+        "publication_date": "2026-10",
+        "applicable_period": "2026-10",
+        "official_url": "https://webcatalog.lixil.co.jp/cgi-bin/openDetailBL.cgi?c=SN4100",
+        "previous_printed_pages": null
+      },
+      "adoption": "SOURCE_DELTA_ONLY"
+    },
+    {
+      "fact_id": "TW-202610-TRAP-BOUND",
+      "classification": "RANGE_CHANGED",
+      "entity": "LIXIL::TW",
+      "canonical_field_name": "custom_dimension_range",
+      "previous_value": null,
+      "current_value": {
+        "W": [
+          270,
+          2453
+        ],
+        "H": [
+          150,
+          2455
+        ],
+        "step": {
+          "W_max": 1884,
+          "H_max_when_W_above": 1861
+        },
+        "angle_degrees": {
+          "exclusive_min": 0,
+          "inclusive_max": 45
+        },
+        "H_for_range": "max(H1,H2)",
+        "automatic_manufacturability": false
+      },
+      "effective_period": "2026-10",
+      "applicability": "LIXIL::TW",
+      "status": "FORMAL_SOURCE_VERIFIED",
+      "evidence": {
+        "document_identity": "LIXIL:SN4100",
+        "document_number": "SN4100",
+        "edition": "0110L26",
+        "drive_file_id": "1chZY3oeL8YTkm42ZvCbfaNaN96ocryY7",
+        "source_sha256": "20090885e4300144be68a4f26a70f0ff3c7bf506187e67c57359a9251c069f0c",
+        "printed_pages": [
+          233
+        ],
+        "global_pdf_pages": [
+          237
+        ],
+        "source_parts": [
+          {
+            "drive_file_id": "1chZY3oeL8YTkm42ZvCbfaNaN96ocryY7",
+            "sha256": "20090885e4300144be68a4f26a70f0ff3c7bf506187e67c57359a9251c069f0c",
+            "global_pdf_pages": [
+              237
+            ],
+            "local_pdf_pages": [
+              7
+            ]
+          }
+        ],
+        "publication_date": "2026-10",
+        "applicable_period": "2026-10",
+        "official_url": "https://webcatalog.lixil.co.jp/cgi-bin/openDetailBL.cgi?c=SN4100",
+        "previous_printed_pages": null
+      },
+      "adoption": "SOURCE_DELTA_ONLY"
+    },
+    {
+      "fact_id": "TW-202610-TRAP-MEASUREMENT",
+      "classification": "VALIDATION_CHANGED",
+      "entity": "LIXIL::TW",
+      "canonical_field_name": "required_measurements",
+      "previous_value": null,
+      "current_value": {
+        "W": "custom_width",
+        "H1": "custom_height",
+        "H2": "custom_height_secondary",
+        "required_all": true,
+        "unit": "mm"
+      },
+      "effective_period": "2026-10",
+      "applicability": "LIXIL::TW",
+      "status": "FORMAL_SOURCE_VERIFIED",
+      "evidence": {
+        "document_identity": "LIXIL:SN4100",
+        "document_number": "SN4100",
+        "edition": "0110L26",
+        "drive_file_id": "1EK_JPBEORDWWv_8V-Xist6lwOdU4Co19",
+        "source_sha256": "54d565492dc8849ffd79ca9b470aeb9f7248b886cc48e64e9e967848080a1dbb",
+        "printed_pages": [
+          "NEWS1",
+          233
+        ],
+        "global_pdf_pages": [
+          4,
+          237
+        ],
+        "source_parts": [
+          {
+            "drive_file_id": "1EK_JPBEORDWWv_8V-Xist6lwOdU4Co19",
+            "sha256": "54d565492dc8849ffd79ca9b470aeb9f7248b886cc48e64e9e967848080a1dbb",
+            "global_pdf_pages": [
+              4
+            ],
+            "local_pdf_pages": [
+              4
+            ]
+          },
+          {
+            "drive_file_id": "1chZY3oeL8YTkm42ZvCbfaNaN96ocryY7",
+            "sha256": "20090885e4300144be68a4f26a70f0ff3c7bf506187e67c57359a9251c069f0c",
+            "global_pdf_pages": [
+              237
+            ],
+            "local_pdf_pages": [
+              7
+            ]
+          }
+        ],
+        "publication_date": "2026-10",
+        "applicable_period": "2026-10",
+        "official_url": "https://webcatalog.lixil.co.jp/cgi-bin/openDetailBL.cgi?c=SN4100",
+        "previous_printed_pages": null
+      },
+      "adoption": "SOURCE_DELTA_ONLY"
+    }
+  ],
+  "exact_pages": [
+    {
+      "printed_page": "NEWS1",
+      "pdf_page": 4,
+      "text": "NEWS\n\n  高性能窓 TW\n                                                           2026年                                            9月発売  台形FIX窓（内押縁タイプ）新発売    TWに、台形FIX窓（内押縁タイプ）がラインアップ。通常の四角形のFIX窓より採光面積を確保し、天井・屋根のライン\n   と揃えることで建物全体に統一感をもたらします。（特注サイズのみとなります。）\n\n          Low-Eトリプルガラス           （アルゴンガス入り）\n        熱貫流率\n     0.90               W/(㎡・Ｋ)※\n           Low-E複層ガラス           （アルゴンガス入り）\n        熱貫流率\n     1.35               W/(㎡・Ｋ)※\n\n\n\n\n\n        ※JIS A 4710に基づく代表試験体による社内試験値         代表試験体は、国立研究開発法人 建築研究所ホームページ内「窓・ドアの熱貫流率に関し試験体と同等の性能を有すると認められる評価品の範囲を定める基準」に基づく          詳細は、当社オフィシャルサイト（https://www.lixil.co.jp）内のビジネス向けページをご確認ください。\n    上部 [特注品]台形FIX窓（内押縁タイプ）連窓Ｄタイプ Ｗ1290×H➀1480×H➁1250（寸法特注）／Ｗ1290×H➀1230×Ｈ➁990（寸法特注）\n    下部 単体引違い窓 Ｗ2600×Ｈ2230　外観色：ダスクグレー\n              連窓・段窓にもフレキシブルに対応\n                          専用の部材を使用すれば連窓や段窓にも対応可能です。\n                           デザイン性を高めながら明るさを確保します。\n\n                         連窓                           段窓\n\n\n\n       内観色：プレシャスホワイトP\n                                 Dタイプ              Eタイプ\n\n                                                                   詳しくはP.232をご確認ください。\n\n         商品の色は、印刷の特性上実物とは多少異なる場合がございますのでご了承ください。NEWS1",
+      "text_sha256": "af375070c631918a15242b45c8e80eb8c60545bba8c4dd504600dcb01f46348b",
+      "source": {
+        "document_identity": "LIXIL:SN4100",
+        "document_number": "SN4100",
+        "edition": "0110L26",
+        "drive_file_id": "1EK_JPBEORDWWv_8V-Xist6lwOdU4Co19",
+        "source_sha256": "54d565492dc8849ffd79ca9b470aeb9f7248b886cc48e64e9e967848080a1dbb",
+        "printed_pages": [
+          "NEWS1"
+        ],
+        "global_pdf_pages": [
+          4
+        ],
+        "source_parts": [
+          {
+            "drive_file_id": "1EK_JPBEORDWWv_8V-Xist6lwOdU4Co19",
+            "sha256": "54d565492dc8849ffd79ca9b470aeb9f7248b886cc48e64e9e967848080a1dbb",
+            "global_pdf_pages": [
+              4
+            ],
+            "local_pdf_pages": [
+              4
+            ]
+          }
+        ],
+        "publication_date": "2026-10",
+        "applicable_period": "2026-10",
+        "official_url": "https://webcatalog.lixil.co.jp/cgi-bin/openDetailBL.cgi?c=SN4100",
+        "previous_printed_pages": null
+      }
+    },
+    {
+      "printed_page": 233,
+      "pdf_page": 237,
+      "text": "                                                                                                              TW\n                                                                                           TW防火戸\n                                                                                 引違い窓 寸法特注範囲              仕様                               TW                                                         単体引違い窓［トリプルガラス仕様・複層ガラス］                                                                          （フラットタイプ）                                                       開口部の熱貫流率・開口部の日  ※寸法特注範囲は耐風圧性能：S-1(80)等級範囲を示す。                                             断熱性能       射熱取得率は、巻末の断熱性能      シャッター付 ※ガラスの構成によって製作できない場合があります。                                                                      引違い窓                                                            についてをご参照ください。          （フラットタイプ）                                      基本性能                                                                                  S－4（200）等級                                                    TW    耐風圧性能     ↑\n     サ           [mm]                                             F                                             気密性能                                                                              A－4（2）等級                 単体引違い窓     ッ                                                    （）内は旧等級を示す\n     シ                                                   右記性能については                                             水密性能                                                                             W－5（50）等級       H                                                                                                             シャッター付                                                   一部該当しない機種                      °＜θ≦°                                                                                                    引違い窓                                                             等級3（住宅性能表示）              （寸勾配～                      寸勾配）                       があります。                                                                                     TG                 ※勾配は製作不可                                       …試験結果による         MAX:                                     遮音性能※                                面格子付                                                                等級2・等級3（住宅性能表示）       引違い窓                                                                                  PG                                                         …住宅型式性能認定による\n                                                             専用トリプルガラス           装飾窓                                                                                                  TG    クリプトンガス：総厚27mm                                      使用可能                                                                TW           アルゴンガス：総厚35mm           縦すべり出し窓                                        ガラス厚                                                （グレモン）                                                          専用複層ガラス                                                                                  PG                                                                        総厚22〜27mm                                                                                                            縦すべり出し窓                                      使用対象    木造                                       （オペレーター）\n                                      主材質     本体          アルミ形材、硬質塩ビ材                                                                                                            横すべり出し窓                                           ※遮音性能等級に適合するガラスは、当社オフィシャルサイト                   （グレモン）                                                           　（https://www.lixil.co.jp/）内のビジネス向けページをご確認ください。          MIN:                                                                                                横すべり出し窓                                                                                                              （オペレーター）                   MIN:                     MAX:       [mm]                                    サッシW→                                                                                                     高所用                                                                                                            横すべり出し窓\n                                                                                                   上げ下げ窓\n                                                    TW ご注意                 部材構成図                                     面格子付                                                                                                   上げ下げ窓\n       ガラス   専用トリプルガラス・複層ガラスをご使用ください。       仕様       本体※1           ガラス                      FIX窓      躯体掛かり                                                                                        （内押縁タイプ）             躯体掛かり寸法は36mmになります。      寸法                                通常品       本体          専用ガラス※2            浴室にご使用の場合は、必ず浴室用防水部品セット                                                        （内押縁タイプ）台形FIX窓 施工上の      をご使用ください。使用しない場合、漏水の原因とな                                      防犯建物部品     通常品      専用安全合わせガラス※3                                                                                                          開き窓テラス ご注意        るおそれがあります。                                                                                                                （フリクション      浴室での            浴室用防水部品セットをご使用の際でも、シャワー水    ※1 全てのサイズでガラス無完成品の出荷となります。                      アームタイプ）      ご使用            など大量の水が直接かかることのないようご注意くだ    ※2 ガラスの種類についてはP.58をご参照ください。                       開き窓テラス\n             さい。漏水の原因となるおそれがあります。（ユニットバ    ※3 安全合わせトリプルガラス／複層ガラスにのみCP表示がされます。            （ドアクローザタイプ）            ス用アタッチメントを使用の場合は不要となります。）\n             上枠組立ねじがサッシWから両端最大9.4mm飛び出                                                                （フラットタイプ）引違い窓            すため、躯体と干渉するおそれがあります。            躯体寸法よりサッシWを10mm以上小さく発注くだ            さい。                                                                                 引違い窓\n                                                                                                       連窓・\n 発注上の                                                                                           段窓部材                     性能区分一覧表（耐風圧性能・水密性能） ご注意                                                                  TW                                                                                      ドア             躯体                  躯体  ［トリプルガラス仕様／複層ガラス仕様］                                            ※サッシ本体サイズおよびガラスの構成によって下記性能と異なる場合があります。                         サッシW\n                   mm以上      mm以上                                                                   テラスドア                                                                        W780       W781                                              以下     以上                          採風             後付ビードは同梱されていません。別途ご注文ください。                                                               勝手口ドアFS                                                                  H1370     S-4（200）  S-3（160）以下                                        以下      W-5（50）    W-4（35）\n                                                                  H1371   S-3（160）以下 S-3（160）以下                        勝手口ドア                                        以上      W-4（35）    W-4（35）\n                                                                                共通有償品\n                                                                                     納まり図\n                                                                                                       ねじ付                                                                                                           アングル\n                                                                                                          ねじレス                                                                                                           アングル                                                                                                      代表納まり図\n                                                                                                   関連情報\n\n\n\n\n\n                                                                              説明画像 ・ イラストはTWを使用                                                                                                          233",
+      "text_sha256": "60f4d7b7a11efd8406b359eda992e99dc0b7a938fddb73bd7580f261c66f2092",
+      "source": {
+        "document_identity": "LIXIL:SN4100",
+        "document_number": "SN4100",
+        "edition": "0110L26",
+        "drive_file_id": "1chZY3oeL8YTkm42ZvCbfaNaN96ocryY7",
+        "source_sha256": "20090885e4300144be68a4f26a70f0ff3c7bf506187e67c57359a9251c069f0c",
+        "printed_pages": [
+          233
+        ],
+        "global_pdf_pages": [
+          237
+        ],
+        "source_parts": [
+          {
+            "drive_file_id": "1chZY3oeL8YTkm42ZvCbfaNaN96ocryY7",
+            "sha256": "20090885e4300144be68a4f26a70f0ff3c7bf506187e67c57359a9251c069f0c",
+            "global_pdf_pages": [
+              237
+            ],
+            "local_pdf_pages": [
+              7
+            ]
+          }
+        ],
+        "publication_date": "2026-10",
+        "applicable_period": "2026-10",
+        "official_url": "https://webcatalog.lixil.co.jp/cgi-bin/openDetailBL.cgi?c=SN4100",
+        "previous_printed_pages": null
+      }
+    }
+  ],
+  "verification": "Actual original PDF bytes downloaded; catalog pages text and rendered figure inspected. Snapshot is an excerpt with original document hashes, not the original PDF."
+}

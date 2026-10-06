@@ -1,0 +1,3465 @@
+{
+  "package_version": "integrated-v0.4",
+  "app_main_sha": "de1842d6f1b0f982b0491c4e168770b20cb31413",
+  "central_main_sha": "53a1c39d475acafc09da4b6c13811cdf0bfefd23",
+  "fields": [
+    {
+      "field_id": "sash-app:SER-LIXIL-TW:window_type",
+      "semantic_role": "window:2e82c4ecefd5e077",
+      "scope": {
+        "app": "sash-app",
+        "product": "SER-LIXIL-TW",
+        "kind": "CURRENT_AUDIT_BASELINE"
+      },
+      "category": "window",
+      "runtime_key": "window_type",
+      "canonical_key": "window_type",
+      "display_label": [
+        "窓種類"
+      ],
+      "control_type": "SELECT",
+      "allowed_control_types": [
+        "SELECT"
+      ],
+      "conditional_presentations": {
+        "observed_types": [
+          "SELECT"
+        ],
+        "source": {
+          "observed": [
+            "USER_SELECTABLE"
+          ],
+          "current": "Runtime determines readonly/fixed values; category contract excludes technical and fixed hidden fields"
+        },
+        "requires_contract_change": true
+      },
+      "option_source": {
+        "policy": "PRODUCT_AUTHORITY_PER_SELECTION",
+        "authority": "AUDIT-5a6fe6a098746e8dda9f",
+        "observed_union_is_allowed_set": false
+      },
+      "label_value_contract": {
+        "separate": true,
+        "raw_value_fallback": false,
+        "official_code_label_requires_authority": true
+      },
+      "group": {
+        "kind": "SEMANTIC_STAGE",
+        "id": "OPENING"
+      },
+      "order": {
+        "mode": "CATEGORY_AUTHORITY",
+        "evidence": {
+          "semantic_slot": "window_type",
+          "display_order": [
+            10
+          ],
+          "presentation_slot": [
+            "window_type"
+          ],
+          "definition_order_is_ui_order": false
+        }
+      },
+      "required": {
+        "policy": "APPLICABLE_AND_PRODUCT_RULE",
+        "observation": {
+          "observed": [
+            true
+          ],
+          "runtime_rule": "REQUIRED"
+        }
+      },
+      "visibility": {
+        "policy": "PRODUCT_AUTHORITY",
+        "non_applicable": "HIDE_AND_EXCLUDE"
+      },
+      "applicability": {
+        "policy": "PRODUCT_AUTHORITY",
+        "business_output": "EXCLUDE_IF_NON_APPLICABLE"
+      },
+      "dependency": {
+        "mode": "DECLARED_BOUNDARY",
+        "exhaustive": false
+      },
+      "upstream_fields": [],
+      "reset_behavior": {
+        "on_upstream_change": "REEVALUATE",
+        "valid": "KEEP_VALID",
+        "invalid": "CLEAR_RESELECT",
+        "non_applicable": "HIDE_AND_EXCLUDE"
+      },
+      "formatter": {
+        "policy": "CATEGORY_AUTHORITY",
+        "value_kind": "PRODUCT_AUTHORITY"
+      },
+      "unit": {
+        "policy": "SEPARATE_NUMBER_AND_UNIT",
+        "observation": "N/A"
+      },
+      "output": {
+        "policy": "APPLICABILITY_AND_DESTINATION",
+        "exclude_hidden_selection": true,
+        "exclude_non_applicable": true
+      },
+      "persistence": {
+        "policy": "SELECTION_IDENTITY_WITH_SOURCE_AND_RUNTIME",
+        "invisible_context_separate": true
+      },
+      "validation": {
+        "policy": "PRODUCT_AUTHORITY",
+        "critical_unknown": "FORBIDDEN_IN_FORMAL"
+      },
+      "default": {
+        "policy": "PRODUCT_AUTHORITY_NO_UI_GUESS"
+      },
+      "empty_state": {
+        "policy": "DISTINCT_FROM_ERROR_AND_CONFIRMATION",
+        "placeholder_role": "ORDINARY_SELECT_PLACEHOLDER",
+        "placeholder": "選択してください"
+      },
+      "error_state": {
+        "policy": "CATEGORY_APP_ERROR_AUTHORITY"
+      },
+      "authority": [
+        "AUDIT-5a6fe6a098746e8dda9f",
+        "HUMAN-ADOPTION"
+      ],
+      "source_revision": "af4f30983cc3d9a24ca1a7eb54fab834f024d0fc",
+      "exception_id": null,
+      "status": "FORMAL",
+      "audit_observations": {
+        "control_types": [
+          "SELECT"
+        ],
+        "placeholder": "選択してください",
+        "classification": "CATEGORY",
+        "observation_coverage": "RESOLVER_SAMPLES"
+      }
+    },
+    {
+      "field_id": "sash-app:SER-LIXIL-TW:size_mode",
+      "semantic_role": "window:8e84710921694a38",
+      "scope": {
+        "app": "sash-app",
+        "product": "SER-LIXIL-TW",
+        "kind": "CURRENT_AUDIT_BASELINE"
+      },
+      "category": "window",
+      "runtime_key": "size_mode",
+      "canonical_key": "size_mode",
+      "display_label": [
+        "サイズ方式"
+      ],
+      "control_type": "SELECT",
+      "allowed_control_types": [
+        "SELECT"
+      ],
+      "conditional_presentations": {
+        "observed_types": [
+          "SELECT"
+        ],
+        "source": {
+          "observed": [
+            "USER_SELECTABLE"
+          ],
+          "current": "Runtime determines readonly/fixed values; category contract excludes technical and fixed hidden fields"
+        },
+        "requires_contract_change": true
+      },
+      "option_source": {
+        "policy": "PRODUCT_AUTHORITY_PER_SELECTION",
+        "authority": "AUDIT-fe016013ff49e4f485dd",
+        "observed_union_is_allowed_set": false
+      },
+      "label_value_contract": {
+        "separate": true,
+        "raw_value_fallback": false,
+        "official_code_label_requires_authority": true
+      },
+      "group": {
+        "kind": "SEMANTIC_STAGE",
+        "id": "SIZE"
+      },
+      "order": {
+        "mode": "CATEGORY_AUTHORITY",
+        "evidence": {
+          "semantic_slot": "size_mode",
+          "display_order": [
+            20,
+            30,
+            40
+          ],
+          "presentation_slot": [
+            "size_mode"
+          ],
+          "definition_order_is_ui_order": false
+        }
+      },
+      "required": {
+        "policy": "APPLICABLE_AND_PRODUCT_RULE",
+        "observation": {
+          "observed": [
+            true
+          ],
+          "runtime_rule": "REQUIRED"
+        }
+      },
+      "visibility": {
+        "policy": "PRODUCT_AUTHORITY",
+        "non_applicable": "HIDE_AND_EXCLUDE"
+      },
+      "applicability": {
+        "policy": "PRODUCT_AUTHORITY",
+        "business_output": "EXCLUDE_IF_NON_APPLICABLE"
+      },
+      "dependency": {
+        "mode": "DECLARED_BOUNDARY",
+        "exhaustive": false
+      },
+      "upstream_fields": [
+        "sash-app:SER-LIXIL-TW:window_type"
+      ],
+      "reset_behavior": {
+        "on_upstream_change": "REEVALUATE",
+        "valid": "KEEP_VALID",
+        "invalid": "CLEAR_RESELECT",
+        "non_applicable": "HIDE_AND_EXCLUDE"
+      },
+      "formatter": {
+        "policy": "CATEGORY_AUTHORITY",
+        "value_kind": "PRODUCT_AUTHORITY"
+      },
+      "unit": {
+        "policy": "SEPARATE_NUMBER_AND_UNIT",
+        "observation": "N/A"
+      },
+      "output": {
+        "policy": "APPLICABILITY_AND_DESTINATION",
+        "exclude_hidden_selection": true,
+        "exclude_non_applicable": true
+      },
+      "persistence": {
+        "policy": "SELECTION_IDENTITY_WITH_SOURCE_AND_RUNTIME",
+        "invisible_context_separate": true
+      },
+      "validation": {
+        "policy": "PRODUCT_AUTHORITY",
+        "critical_unknown": "FORBIDDEN_IN_FORMAL"
+      },
+      "default": {
+        "policy": "PRODUCT_AUTHORITY_NO_UI_GUESS"
+      },
+      "empty_state": {
+        "policy": "DISTINCT_FROM_ERROR_AND_CONFIRMATION",
+        "placeholder_role": "ORDINARY_SELECT_PLACEHOLDER",
+        "placeholder": "選択してください"
+      },
+      "error_state": {
+        "policy": "CATEGORY_APP_ERROR_AUTHORITY"
+      },
+      "authority": [
+        "AUDIT-fe016013ff49e4f485dd",
+        "HUMAN-ADOPTION"
+      ],
+      "source_revision": "af4f30983cc3d9a24ca1a7eb54fab834f024d0fc",
+      "exception_id": null,
+      "status": "FORMAL",
+      "audit_observations": {
+        "control_types": [
+          "SELECT"
+        ],
+        "placeholder": "選択してください",
+        "classification": "CATEGORY",
+        "observation_coverage": "RESOLVER_SAMPLES"
+      }
+    },
+    {
+      "field_id": "sash-app:SER-LIXIL-TW:panel_count",
+      "semantic_role": "window:b1e09b22f7994c9e",
+      "scope": {
+        "app": "sash-app",
+        "product": "SER-LIXIL-TW",
+        "kind": "CURRENT_AUDIT_BASELINE"
+      },
+      "category": "window",
+      "runtime_key": "panel_count",
+      "canonical_key": "panel_count",
+      "display_label": [
+        "建具・枚数"
+      ],
+      "control_type": "SELECT",
+      "allowed_control_types": [
+        "SELECT"
+      ],
+      "conditional_presentations": {
+        "observed_types": [
+          "SELECT"
+        ],
+        "source": {
+          "observed": [
+            "USER_SELECTABLE"
+          ],
+          "current": "Runtime determines readonly/fixed values; category contract excludes technical and fixed hidden fields"
+        },
+        "requires_contract_change": true
+      },
+      "option_source": {
+        "policy": "PRODUCT_AUTHORITY_PER_SELECTION",
+        "authority": "AUDIT-f852d27079bb713fb755",
+        "observed_union_is_allowed_set": false
+      },
+      "label_value_contract": {
+        "separate": true,
+        "raw_value_fallback": false,
+        "official_code_label_requires_authority": true
+      },
+      "group": {
+        "kind": "SEMANTIC_STAGE",
+        "id": "SIZE"
+      },
+      "order": {
+        "mode": "CATEGORY_AUTHORITY",
+        "evidence": {
+          "semantic_slot": "panel_count",
+          "display_order": [
+            30,
+            40
+          ],
+          "presentation_slot": [
+            "panel_count"
+          ],
+          "definition_order_is_ui_order": false
+        }
+      },
+      "required": {
+        "policy": "APPLICABLE_AND_PRODUCT_RULE",
+        "observation": {
+          "observed": [
+            true
+          ],
+          "runtime_rule": "REQUIRED"
+        }
+      },
+      "visibility": {
+        "policy": "PRODUCT_AUTHORITY",
+        "non_applicable": "HIDE_AND_EXCLUDE"
+      },
+      "applicability": {
+        "policy": "PRODUCT_AUTHORITY",
+        "business_output": "EXCLUDE_IF_NON_APPLICABLE"
+      },
+      "dependency": {
+        "mode": "DECLARED_BOUNDARY",
+        "exhaustive": false
+      },
+      "upstream_fields": [
+        "sash-app:SER-LIXIL-TW:size_mode",
+        "sash-app:SER-LIXIL-TW:window_type"
+      ],
+      "reset_behavior": {
+        "on_upstream_change": "REEVALUATE",
+        "valid": "KEEP_VALID",
+        "invalid": "CLEAR_RESELECT",
+        "non_applicable": "HIDE_AND_EXCLUDE"
+      },
+      "formatter": {
+        "policy": "CATEGORY_AUTHORITY",
+        "value_kind": "PRODUCT_AUTHORITY"
+      },
+      "unit": {
+        "policy": "SEPARATE_NUMBER_AND_UNIT",
+        "observation": "N/A"
+      },
+      "output": {
+        "policy": "APPLICABILITY_AND_DESTINATION",
+        "exclude_hidden_selection": true,
+        "exclude_non_applicable": true
+      },
+      "persistence": {
+        "policy": "SELECTION_IDENTITY_WITH_SOURCE_AND_RUNTIME",
+        "invisible_context_separate": true
+      },
+      "validation": {
+        "policy": "PRODUCT_AUTHORITY",
+        "critical_unknown": "FORBIDDEN_IN_FORMAL"
+      },
+      "default": {
+        "policy": "PRODUCT_AUTHORITY_NO_UI_GUESS"
+      },
+      "empty_state": {
+        "policy": "DISTINCT_FROM_ERROR_AND_CONFIRMATION",
+        "placeholder_role": "ORDINARY_SELECT_PLACEHOLDER",
+        "placeholder": "選択してください"
+      },
+      "error_state": {
+        "policy": "CATEGORY_APP_ERROR_AUTHORITY"
+      },
+      "authority": [
+        "AUDIT-f852d27079bb713fb755",
+        "HUMAN-ADOPTION"
+      ],
+      "source_revision": "af4f30983cc3d9a24ca1a7eb54fab834f024d0fc",
+      "exception_id": null,
+      "status": "FORMAL",
+      "audit_observations": {
+        "control_types": [
+          "SELECT"
+        ],
+        "placeholder": "選択してください",
+        "classification": "CATEGORY",
+        "observation_coverage": "RESOLVER_SAMPLES"
+      }
+    },
+    {
+      "field_id": "sash-app:SER-LIXIL-TW:size",
+      "semantic_role": "window:7f13d04e78498b38",
+      "scope": {
+        "app": "sash-app",
+        "product": "SER-LIXIL-TW",
+        "kind": "CURRENT_AUDIT_BASELINE"
+      },
+      "category": "window",
+      "runtime_key": "size",
+      "canonical_key": "size",
+      "display_label": [
+        "サイズ"
+      ],
+      "control_type": "SELECT",
+      "allowed_control_types": [
+        "SELECT"
+      ],
+      "conditional_presentations": {
+        "observed_types": [
+          "SELECT"
+        ],
+        "source": {
+          "observed": [
+            "USER_SELECTABLE"
+          ],
+          "current": "Runtime determines readonly/fixed values; category contract excludes technical and fixed hidden fields"
+        },
+        "requires_contract_change": true
+      },
+      "option_source": {
+        "policy": "PRODUCT_AUTHORITY_PER_SELECTION",
+        "authority": "AUDIT-137a0fbd72241df185f1",
+        "observed_union_is_allowed_set": false
+      },
+      "label_value_contract": {
+        "separate": true,
+        "raw_value_fallback": false,
+        "official_code_label_requires_authority": true
+      },
+      "group": {
+        "kind": "SEMANTIC_STAGE",
+        "id": "SIZE"
+      },
+      "order": {
+        "mode": "CATEGORY_AUTHORITY",
+        "evidence": {
+          "semantic_slot": "size",
+          "display_order": [
+            40,
+            50,
+            30
+          ],
+          "presentation_slot": [
+            "size"
+          ],
+          "definition_order_is_ui_order": false
+        }
+      },
+      "required": {
+        "policy": "APPLICABLE_AND_PRODUCT_RULE",
+        "observation": {
+          "observed": [
+            true
+          ],
+          "runtime_rule": "REQUIRED"
+        }
+      },
+      "visibility": {
+        "policy": "PRODUCT_AUTHORITY",
+        "non_applicable": "HIDE_AND_EXCLUDE"
+      },
+      "applicability": {
+        "policy": "PRODUCT_AUTHORITY",
+        "business_output": "EXCLUDE_IF_NON_APPLICABLE"
+      },
+      "dependency": {
+        "mode": "DECLARED_BOUNDARY",
+        "exhaustive": false
+      },
+      "upstream_fields": [
+        "sash-app:SER-LIXIL-TW:panel_count",
+        "sash-app:SER-LIXIL-TW:size_mode",
+        "sash-app:SER-LIXIL-TW:window_type"
+      ],
+      "reset_behavior": {
+        "on_upstream_change": "REEVALUATE",
+        "valid": "KEEP_VALID",
+        "invalid": "CLEAR_RESELECT",
+        "non_applicable": "HIDE_AND_EXCLUDE"
+      },
+      "formatter": {
+        "policy": "CATEGORY_AUTHORITY",
+        "value_kind": "PRODUCT_AUTHORITY"
+      },
+      "unit": {
+        "policy": "SEPARATE_NUMBER_AND_UNIT",
+        "observation": "N/A"
+      },
+      "output": {
+        "policy": "APPLICABILITY_AND_DESTINATION",
+        "exclude_hidden_selection": true,
+        "exclude_non_applicable": true
+      },
+      "persistence": {
+        "policy": "SELECTION_IDENTITY_WITH_SOURCE_AND_RUNTIME",
+        "invisible_context_separate": true
+      },
+      "validation": {
+        "policy": "PRODUCT_AUTHORITY",
+        "critical_unknown": "FORBIDDEN_IN_FORMAL"
+      },
+      "default": {
+        "policy": "PRODUCT_AUTHORITY_NO_UI_GUESS"
+      },
+      "empty_state": {
+        "policy": "DISTINCT_FROM_ERROR_AND_CONFIRMATION",
+        "placeholder_role": "ORDINARY_SELECT_PLACEHOLDER",
+        "placeholder": "選択してください"
+      },
+      "error_state": {
+        "policy": "CATEGORY_APP_ERROR_AUTHORITY"
+      },
+      "authority": [
+        "AUDIT-137a0fbd72241df185f1",
+        "HUMAN-ADOPTION"
+      ],
+      "source_revision": "af4f30983cc3d9a24ca1a7eb54fab834f024d0fc",
+      "exception_id": null,
+      "status": "FORMAL",
+      "audit_observations": {
+        "control_types": [
+          "SELECT"
+        ],
+        "placeholder": "選択してください",
+        "classification": "CATEGORY",
+        "observation_coverage": "RESOLVER_SAMPLES"
+      }
+    },
+    {
+      "field_id": "sash-app:SER-LIXIL-TW:exterior_color",
+      "semantic_role": "window:2c42b9214e494017",
+      "scope": {
+        "app": "sash-app",
+        "product": "SER-LIXIL-TW",
+        "kind": "CURRENT_AUDIT_BASELINE"
+      },
+      "category": "window",
+      "runtime_key": "exterior_color",
+      "canonical_key": "exterior_color",
+      "display_label": [
+        "外観色"
+      ],
+      "control_type": "SELECT",
+      "allowed_control_types": [
+        "SELECT"
+      ],
+      "conditional_presentations": {
+        "observed_types": [
+          "SELECT"
+        ],
+        "source": {
+          "observed": [
+            "USER_SELECTABLE"
+          ],
+          "current": "Runtime determines readonly/fixed values; category contract excludes technical and fixed hidden fields"
+        },
+        "requires_contract_change": true
+      },
+      "option_source": {
+        "policy": "PRODUCT_AUTHORITY_PER_SELECTION",
+        "authority": "AUDIT-23037557cdce235e6de8",
+        "observed_union_is_allowed_set": false
+      },
+      "label_value_contract": {
+        "separate": true,
+        "raw_value_fallback": false,
+        "official_code_label_requires_authority": true
+      },
+      "group": {
+        "kind": "SEMANTIC_STAGE",
+        "id": "FINISH"
+      },
+      "order": {
+        "mode": "CATEGORY_AUTHORITY",
+        "evidence": {
+          "semantic_slot": "exterior_color",
+          "display_order": [
+            50,
+            60,
+            40
+          ],
+          "presentation_slot": [
+            "exterior_color"
+          ],
+          "definition_order_is_ui_order": false
+        }
+      },
+      "required": {
+        "policy": "APPLICABLE_AND_PRODUCT_RULE",
+        "observation": {
+          "observed": [
+            true
+          ],
+          "runtime_rule": "REQUIRED"
+        }
+      },
+      "visibility": {
+        "policy": "PRODUCT_AUTHORITY",
+        "non_applicable": "HIDE_AND_EXCLUDE"
+      },
+      "applicability": {
+        "policy": "PRODUCT_AUTHORITY",
+        "business_output": "EXCLUDE_IF_NON_APPLICABLE"
+      },
+      "dependency": {
+        "mode": "DECLARED_BOUNDARY",
+        "exhaustive": false
+      },
+      "upstream_fields": [
+        "sash-app:SER-LIXIL-TW:size",
+        "sash-app:SER-LIXIL-TW:window_type"
+      ],
+      "reset_behavior": {
+        "on_upstream_change": "REEVALUATE",
+        "valid": "KEEP_VALID",
+        "invalid": "CLEAR_RESELECT",
+        "non_applicable": "HIDE_AND_EXCLUDE"
+      },
+      "formatter": {
+        "policy": "CATEGORY_AUTHORITY",
+        "value_kind": "PRODUCT_AUTHORITY"
+      },
+      "unit": {
+        "policy": "SEPARATE_NUMBER_AND_UNIT",
+        "observation": "N/A"
+      },
+      "output": {
+        "policy": "APPLICABILITY_AND_DESTINATION",
+        "exclude_hidden_selection": true,
+        "exclude_non_applicable": true
+      },
+      "persistence": {
+        "policy": "SELECTION_IDENTITY_WITH_SOURCE_AND_RUNTIME",
+        "invisible_context_separate": true
+      },
+      "validation": {
+        "policy": "PRODUCT_AUTHORITY",
+        "critical_unknown": "FORBIDDEN_IN_FORMAL"
+      },
+      "default": {
+        "policy": "PRODUCT_AUTHORITY_NO_UI_GUESS"
+      },
+      "empty_state": {
+        "policy": "DISTINCT_FROM_ERROR_AND_CONFIRMATION",
+        "placeholder_role": "ORDINARY_SELECT_PLACEHOLDER",
+        "placeholder": "選択してください"
+      },
+      "error_state": {
+        "policy": "CATEGORY_APP_ERROR_AUTHORITY"
+      },
+      "authority": [
+        "AUDIT-23037557cdce235e6de8",
+        "HUMAN-ADOPTION"
+      ],
+      "source_revision": "af4f30983cc3d9a24ca1a7eb54fab834f024d0fc",
+      "exception_id": null,
+      "status": "FORMAL",
+      "audit_observations": {
+        "control_types": [
+          "SELECT"
+        ],
+        "placeholder": "選択してください",
+        "classification": "CATEGORY",
+        "observation_coverage": "RESOLVER_SAMPLES"
+      }
+    },
+    {
+      "field_id": "sash-app:SER-LIXIL-TW:glass_base",
+      "semantic_role": "window:c2d8e20e1ceb2fce",
+      "scope": {
+        "app": "sash-app",
+        "product": "SER-LIXIL-TW",
+        "kind": "CURRENT_AUDIT_BASELINE"
+      },
+      "category": "window",
+      "runtime_key": "glass_base",
+      "canonical_key": "glass_base",
+      "display_label": [
+        "ガラス"
+      ],
+      "control_type": "SELECT",
+      "allowed_control_types": [
+        "SELECT"
+      ],
+      "conditional_presentations": {
+        "observed_types": [
+          "SELECT"
+        ],
+        "source": {
+          "observed": [
+            "USER_SELECTABLE"
+          ],
+          "current": "Runtime determines readonly/fixed values; category contract excludes technical and fixed hidden fields"
+        },
+        "requires_contract_change": true
+      },
+      "option_source": {
+        "policy": "PRODUCT_AUTHORITY_PER_SELECTION",
+        "authority": "AUDIT-21aefe04129677ea97c1",
+        "observed_union_is_allowed_set": false
+      },
+      "label_value_contract": {
+        "separate": true,
+        "raw_value_fallback": false,
+        "official_code_label_requires_authority": true
+      },
+      "group": {
+        "kind": "SEMANTIC_STAGE",
+        "id": "GLAZING"
+      },
+      "order": {
+        "mode": "CATEGORY_AUTHORITY",
+        "evidence": {
+          "semantic_slot": "glass_base",
+          "display_order": [
+            60,
+            70,
+            80,
+            90,
+            50,
+            100
+          ],
+          "presentation_slot": [
+            "glass_base"
+          ],
+          "definition_order_is_ui_order": false
+        }
+      },
+      "required": {
+        "policy": "APPLICABLE_AND_PRODUCT_RULE",
+        "observation": {
+          "observed": [
+            true
+          ],
+          "runtime_rule": "REQUIRED"
+        }
+      },
+      "visibility": {
+        "policy": "PRODUCT_AUTHORITY",
+        "non_applicable": "HIDE_AND_EXCLUDE"
+      },
+      "applicability": {
+        "policy": "PRODUCT_AUTHORITY",
+        "business_output": "EXCLUDE_IF_NON_APPLICABLE"
+      },
+      "dependency": {
+        "mode": "DECLARED_BOUNDARY",
+        "exhaustive": false
+      },
+      "upstream_fields": [
+        "sash-app:SER-LIXIL-TW:size",
+        "sash-app:SER-LIXIL-TW:window_type"
+      ],
+      "reset_behavior": {
+        "on_upstream_change": "REEVALUATE",
+        "valid": "KEEP_VALID",
+        "invalid": "CLEAR_RESELECT",
+        "non_applicable": "HIDE_AND_EXCLUDE"
+      },
+      "formatter": {
+        "policy": "CATEGORY_AUTHORITY",
+        "value_kind": "PRODUCT_AUTHORITY"
+      },
+      "unit": {
+        "policy": "SEPARATE_NUMBER_AND_UNIT",
+        "observation": "N/A"
+      },
+      "output": {
+        "policy": "APPLICABILITY_AND_DESTINATION",
+        "exclude_hidden_selection": true,
+        "exclude_non_applicable": true
+      },
+      "persistence": {
+        "policy": "SELECTION_IDENTITY_WITH_SOURCE_AND_RUNTIME",
+        "invisible_context_separate": true
+      },
+      "validation": {
+        "policy": "PRODUCT_AUTHORITY",
+        "critical_unknown": "FORBIDDEN_IN_FORMAL"
+      },
+      "default": {
+        "policy": "PRODUCT_AUTHORITY_NO_UI_GUESS"
+      },
+      "empty_state": {
+        "policy": "DISTINCT_FROM_ERROR_AND_CONFIRMATION",
+        "placeholder_role": "ORDINARY_SELECT_PLACEHOLDER",
+        "placeholder": "選択してください"
+      },
+      "error_state": {
+        "policy": "CATEGORY_APP_ERROR_AUTHORITY"
+      },
+      "authority": [
+        "AUDIT-21aefe04129677ea97c1",
+        "HUMAN-ADOPTION"
+      ],
+      "source_revision": "af4f30983cc3d9a24ca1a7eb54fab834f024d0fc",
+      "exception_id": null,
+      "status": "FORMAL",
+      "audit_observations": {
+        "control_types": [
+          "SELECT"
+        ],
+        "placeholder": "選択してください",
+        "classification": "CATEGORY",
+        "observation_coverage": "RESOLVER_SAMPLES"
+      }
+    },
+    {
+      "field_id": "sash-app:SER-LIXIL-TW:interior_color",
+      "semantic_role": "window:82a86ba487ecde55",
+      "scope": {
+        "app": "sash-app",
+        "product": "SER-LIXIL-TW",
+        "kind": "CURRENT_AUDIT_BASELINE"
+      },
+      "category": "window",
+      "runtime_key": "interior_color",
+      "canonical_key": "interior_color",
+      "display_label": [
+        "内観色"
+      ],
+      "control_type": "SELECT",
+      "allowed_control_types": [
+        "SELECT"
+      ],
+      "conditional_presentations": {
+        "observed_types": [
+          "SELECT"
+        ],
+        "source": {
+          "observed": [
+            "USER_SELECTABLE"
+          ],
+          "current": "Runtime determines readonly/fixed values; category contract excludes technical and fixed hidden fields"
+        },
+        "requires_contract_change": true
+      },
+      "option_source": {
+        "policy": "PRODUCT_AUTHORITY_PER_SELECTION",
+        "authority": "AUDIT-97a53377f643dc9a88ee",
+        "observed_union_is_allowed_set": false
+      },
+      "label_value_contract": {
+        "separate": true,
+        "raw_value_fallback": false,
+        "official_code_label_requires_authority": true
+      },
+      "group": {
+        "kind": "SEMANTIC_STAGE",
+        "id": "FINISH"
+      },
+      "order": {
+        "mode": "CATEGORY_AUTHORITY",
+        "evidence": {
+          "semantic_slot": "interior_color",
+          "display_order": [
+            60,
+            70,
+            50
+          ],
+          "presentation_slot": [
+            "interior_color"
+          ],
+          "definition_order_is_ui_order": false
+        }
+      },
+      "required": {
+        "policy": "APPLICABLE_AND_PRODUCT_RULE",
+        "observation": {
+          "observed": [
+            true
+          ],
+          "runtime_rule": "REQUIRED"
+        }
+      },
+      "visibility": {
+        "policy": "PRODUCT_AUTHORITY",
+        "non_applicable": "HIDE_AND_EXCLUDE"
+      },
+      "applicability": {
+        "policy": "PRODUCT_AUTHORITY",
+        "business_output": "EXCLUDE_IF_NON_APPLICABLE"
+      },
+      "dependency": {
+        "mode": "DECLARED_BOUNDARY",
+        "exhaustive": false
+      },
+      "upstream_fields": [
+        "sash-app:SER-LIXIL-TW:exterior_color",
+        "sash-app:SER-LIXIL-TW:size",
+        "sash-app:SER-LIXIL-TW:window_type"
+      ],
+      "reset_behavior": {
+        "on_upstream_change": "REEVALUATE",
+        "valid": "KEEP_VALID",
+        "invalid": "CLEAR_RESELECT",
+        "non_applicable": "HIDE_AND_EXCLUDE"
+      },
+      "formatter": {
+        "policy": "CATEGORY_AUTHORITY",
+        "value_kind": "PRODUCT_AUTHORITY"
+      },
+      "unit": {
+        "policy": "SEPARATE_NUMBER_AND_UNIT",
+        "observation": "N/A"
+      },
+      "output": {
+        "policy": "APPLICABILITY_AND_DESTINATION",
+        "exclude_hidden_selection": true,
+        "exclude_non_applicable": true
+      },
+      "persistence": {
+        "policy": "SELECTION_IDENTITY_WITH_SOURCE_AND_RUNTIME",
+        "invisible_context_separate": true
+      },
+      "validation": {
+        "policy": "PRODUCT_AUTHORITY",
+        "critical_unknown": "FORBIDDEN_IN_FORMAL"
+      },
+      "default": {
+        "policy": "PRODUCT_AUTHORITY_NO_UI_GUESS"
+      },
+      "empty_state": {
+        "policy": "DISTINCT_FROM_ERROR_AND_CONFIRMATION",
+        "placeholder_role": "ORDINARY_SELECT_PLACEHOLDER",
+        "placeholder": "選択してください"
+      },
+      "error_state": {
+        "policy": "CATEGORY_APP_ERROR_AUTHORITY"
+      },
+      "authority": [
+        "AUDIT-97a53377f643dc9a88ee",
+        "HUMAN-ADOPTION"
+      ],
+      "source_revision": "af4f30983cc3d9a24ca1a7eb54fab834f024d0fc",
+      "exception_id": null,
+      "status": "FORMAL",
+      "audit_observations": {
+        "control_types": [
+          "SELECT"
+        ],
+        "placeholder": "選択してください",
+        "classification": "CATEGORY",
+        "observation_coverage": "RESOLVER_SAMPLES"
+      }
+    },
+    {
+      "field_id": "sash-app:SER-LIXIL-TW:glass_type",
+      "semantic_role": "window:d8005df40291b481",
+      "scope": {
+        "app": "sash-app",
+        "product": "SER-LIXIL-TW",
+        "kind": "CURRENT_AUDIT_BASELINE"
+      },
+      "category": "window",
+      "runtime_key": "glass_type",
+      "canonical_key": "glass_type",
+      "display_label": [
+        "ガラス種"
+      ],
+      "control_type": "SELECT",
+      "allowed_control_types": [
+        "SELECT"
+      ],
+      "conditional_presentations": {
+        "observed_types": [
+          "SELECT"
+        ],
+        "source": {
+          "observed": [
+            "USER_SELECTABLE"
+          ],
+          "current": "Runtime determines readonly/fixed values; category contract excludes technical and fixed hidden fields"
+        },
+        "requires_contract_change": true
+      },
+      "option_source": {
+        "policy": "PRODUCT_AUTHORITY_PER_SELECTION",
+        "authority": "AUDIT-432c387f4dfea394e44f",
+        "observed_union_is_allowed_set": false
+      },
+      "label_value_contract": {
+        "separate": true,
+        "raw_value_fallback": false,
+        "official_code_label_requires_authority": true
+      },
+      "group": {
+        "kind": "SEMANTIC_STAGE",
+        "id": "GLAZING"
+      },
+      "order": {
+        "mode": "CATEGORY_AUTHORITY",
+        "evidence": {
+          "semantic_slot": "glass_type",
+          "display_order": [
+            80,
+            90,
+            100,
+            70,
+            110
+          ],
+          "presentation_slot": [
+            "glass_type"
+          ],
+          "definition_order_is_ui_order": false
+        }
+      },
+      "required": {
+        "policy": "APPLICABLE_AND_PRODUCT_RULE",
+        "observation": {
+          "observed": [
+            true
+          ],
+          "runtime_rule": "REQUIRED"
+        }
+      },
+      "visibility": {
+        "policy": "PRODUCT_AUTHORITY",
+        "non_applicable": "HIDE_AND_EXCLUDE"
+      },
+      "applicability": {
+        "policy": "PRODUCT_AUTHORITY",
+        "business_output": "EXCLUDE_IF_NON_APPLICABLE"
+      },
+      "dependency": {
+        "mode": "DECLARED_BOUNDARY",
+        "exhaustive": false
+      },
+      "upstream_fields": [
+        "sash-app:SER-LIXIL-TW:glass_base",
+        "sash-app:SER-LIXIL-TW:size",
+        "sash-app:SER-LIXIL-TW:window_type"
+      ],
+      "reset_behavior": {
+        "on_upstream_change": "REEVALUATE",
+        "valid": "KEEP_VALID",
+        "invalid": "CLEAR_RESELECT",
+        "non_applicable": "HIDE_AND_EXCLUDE"
+      },
+      "formatter": {
+        "policy": "CATEGORY_AUTHORITY",
+        "value_kind": "PRODUCT_AUTHORITY"
+      },
+      "unit": {
+        "policy": "SEPARATE_NUMBER_AND_UNIT",
+        "observation": "N/A"
+      },
+      "output": {
+        "policy": "APPLICABILITY_AND_DESTINATION",
+        "exclude_hidden_selection": true,
+        "exclude_non_applicable": true
+      },
+      "persistence": {
+        "policy": "SELECTION_IDENTITY_WITH_SOURCE_AND_RUNTIME",
+        "invisible_context_separate": true
+      },
+      "validation": {
+        "policy": "PRODUCT_AUTHORITY",
+        "critical_unknown": "FORBIDDEN_IN_FORMAL"
+      },
+      "default": {
+        "policy": "PRODUCT_AUTHORITY_NO_UI_GUESS"
+      },
+      "empty_state": {
+        "policy": "DISTINCT_FROM_ERROR_AND_CONFIRMATION",
+        "placeholder_role": "ORDINARY_SELECT_PLACEHOLDER",
+        "placeholder": "選択してください"
+      },
+      "error_state": {
+        "policy": "CATEGORY_APP_ERROR_AUTHORITY"
+      },
+      "authority": [
+        "AUDIT-432c387f4dfea394e44f",
+        "HUMAN-ADOPTION"
+      ],
+      "source_revision": "af4f30983cc3d9a24ca1a7eb54fab834f024d0fc",
+      "exception_id": null,
+      "status": "FORMAL",
+      "audit_observations": {
+        "control_types": [
+          "SELECT"
+        ],
+        "placeholder": "選択してください",
+        "classification": "CATEGORY",
+        "observation_coverage": "RESOLVER_SAMPLES"
+      }
+    },
+    {
+      "field_id": "sash-app:SER-LIXIL-TW:screen_presence",
+      "semantic_role": "window:914e3816d53602d8",
+      "scope": {
+        "app": "sash-app",
+        "product": "SER-LIXIL-TW",
+        "kind": "CURRENT_AUDIT_BASELINE"
+      },
+      "category": "window",
+      "runtime_key": "screen_presence",
+      "canonical_key": "screen_presence",
+      "display_label": [
+        "網戸"
+      ],
+      "control_type": "SELECT",
+      "allowed_control_types": [
+        "SELECT"
+      ],
+      "conditional_presentations": {
+        "observed_types": [
+          "SELECT"
+        ],
+        "source": {
+          "observed": [
+            "USER_SELECTABLE"
+          ],
+          "current": "Runtime determines readonly/fixed values; category contract excludes technical and fixed hidden fields"
+        },
+        "requires_contract_change": true
+      },
+      "option_source": {
+        "policy": "PRODUCT_AUTHORITY_PER_SELECTION",
+        "authority": "AUDIT-6e8930abcc30bb91a0a2",
+        "observed_union_is_allowed_set": false
+      },
+      "label_value_contract": {
+        "separate": true,
+        "raw_value_fallback": false,
+        "official_code_label_requires_authority": true
+      },
+      "group": {
+        "kind": "SEMANTIC_STAGE",
+        "id": "SCREEN"
+      },
+      "order": {
+        "mode": "CATEGORY_AUTHORITY",
+        "evidence": {
+          "semantic_slot": "screen_presence",
+          "display_order": [
+            70,
+            80,
+            60
+          ],
+          "presentation_slot": [
+            "screen_presence"
+          ],
+          "definition_order_is_ui_order": false
+        }
+      },
+      "required": {
+        "policy": "APPLICABLE_AND_PRODUCT_RULE",
+        "observation": {
+          "observed": [
+            true
+          ],
+          "runtime_rule": "REQUIRED"
+        }
+      },
+      "visibility": {
+        "policy": "PRODUCT_AUTHORITY",
+        "non_applicable": "HIDE_AND_EXCLUDE"
+      },
+      "applicability": {
+        "policy": "PRODUCT_AUTHORITY",
+        "business_output": "EXCLUDE_IF_NON_APPLICABLE"
+      },
+      "dependency": {
+        "mode": "DECLARED_BOUNDARY",
+        "exhaustive": false
+      },
+      "upstream_fields": [
+        "sash-app:SER-LIXIL-TW:exterior_color",
+        "sash-app:SER-LIXIL-TW:interior_color",
+        "sash-app:SER-LIXIL-TW:size",
+        "sash-app:SER-LIXIL-TW:window_type"
+      ],
+      "reset_behavior": {
+        "on_upstream_change": "REEVALUATE",
+        "valid": "KEEP_VALID",
+        "invalid": "CLEAR_RESELECT",
+        "non_applicable": "HIDE_AND_EXCLUDE"
+      },
+      "formatter": {
+        "policy": "CATEGORY_AUTHORITY",
+        "value_kind": "PRODUCT_AUTHORITY"
+      },
+      "unit": {
+        "policy": "SEPARATE_NUMBER_AND_UNIT",
+        "observation": "N/A"
+      },
+      "output": {
+        "policy": "APPLICABILITY_AND_DESTINATION",
+        "exclude_hidden_selection": true,
+        "exclude_non_applicable": true
+      },
+      "persistence": {
+        "policy": "SELECTION_IDENTITY_WITH_SOURCE_AND_RUNTIME",
+        "invisible_context_separate": true
+      },
+      "validation": {
+        "policy": "PRODUCT_AUTHORITY",
+        "critical_unknown": "FORBIDDEN_IN_FORMAL"
+      },
+      "default": {
+        "policy": "PRODUCT_AUTHORITY_NO_UI_GUESS"
+      },
+      "empty_state": {
+        "policy": "DISTINCT_FROM_ERROR_AND_CONFIRMATION",
+        "placeholder_role": "ORDINARY_SELECT_PLACEHOLDER",
+        "placeholder": "選択してください"
+      },
+      "error_state": {
+        "policy": "CATEGORY_APP_ERROR_AUTHORITY"
+      },
+      "authority": [
+        "AUDIT-6e8930abcc30bb91a0a2",
+        "HUMAN-ADOPTION"
+      ],
+      "source_revision": "af4f30983cc3d9a24ca1a7eb54fab834f024d0fc",
+      "exception_id": null,
+      "status": "FORMAL",
+      "audit_observations": {
+        "control_types": [
+          "SELECT"
+        ],
+        "placeholder": "選択してください",
+        "classification": "CATEGORY",
+        "observation_coverage": "RESOLVER_SAMPLES"
+      }
+    },
+    {
+      "field_id": "sash-app:SER-LIXIL-TW:glass_detail",
+      "semantic_role": "window:4fa461e0f6e6b017",
+      "scope": {
+        "app": "sash-app",
+        "product": "SER-LIXIL-TW",
+        "kind": "CURRENT_AUDIT_BASELINE"
+      },
+      "category": "window",
+      "runtime_key": "glass_detail",
+      "canonical_key": "glass_detail",
+      "display_label": [
+        "ガラス詳細"
+      ],
+      "control_type": "SELECT",
+      "allowed_control_types": [
+        "SELECT"
+      ],
+      "conditional_presentations": {
+        "observed_types": [
+          "SELECT"
+        ],
+        "source": {
+          "observed": [
+            "USER_SELECTABLE"
+          ],
+          "current": "Runtime determines readonly/fixed values; category contract excludes technical and fixed hidden fields"
+        },
+        "requires_contract_change": true
+      },
+      "option_source": {
+        "policy": "PRODUCT_AUTHORITY_PER_SELECTION",
+        "authority": "AUDIT-0efa1991904bcbd9cae0",
+        "observed_union_is_allowed_set": false
+      },
+      "label_value_contract": {
+        "separate": true,
+        "raw_value_fallback": false,
+        "official_code_label_requires_authority": true
+      },
+      "group": {
+        "kind": "SEMANTIC_STAGE",
+        "id": "GLAZING"
+      },
+      "order": {
+        "mode": "CATEGORY_AUTHORITY",
+        "evidence": {
+          "semantic_slot": "glass_detail",
+          "display_order": [
+            100,
+            110,
+            90,
+            80,
+            120
+          ],
+          "presentation_slot": [
+            "glass_detail"
+          ],
+          "definition_order_is_ui_order": false
+        }
+      },
+      "required": {
+        "policy": "APPLICABLE_AND_PRODUCT_RULE",
+        "observation": {
+          "observed": [
+            true
+          ],
+          "runtime_rule": "REQUIRED"
+        }
+      },
+      "visibility": {
+        "policy": "PRODUCT_AUTHORITY",
+        "non_applicable": "HIDE_AND_EXCLUDE"
+      },
+      "applicability": {
+        "policy": "PRODUCT_AUTHORITY",
+        "business_output": "EXCLUDE_IF_NON_APPLICABLE"
+      },
+      "dependency": {
+        "mode": "DECLARED_BOUNDARY",
+        "exhaustive": false
+      },
+      "upstream_fields": [
+        "sash-app:SER-LIXIL-TW:glass_base",
+        "sash-app:SER-LIXIL-TW:glass_type",
+        "sash-app:SER-LIXIL-TW:size",
+        "sash-app:SER-LIXIL-TW:window_type"
+      ],
+      "reset_behavior": {
+        "on_upstream_change": "REEVALUATE",
+        "valid": "KEEP_VALID",
+        "invalid": "CLEAR_RESELECT",
+        "non_applicable": "HIDE_AND_EXCLUDE"
+      },
+      "formatter": {
+        "policy": "CATEGORY_AUTHORITY",
+        "value_kind": "PRODUCT_AUTHORITY"
+      },
+      "unit": {
+        "policy": "SEPARATE_NUMBER_AND_UNIT",
+        "observation": "N/A"
+      },
+      "output": {
+        "policy": "APPLICABILITY_AND_DESTINATION",
+        "exclude_hidden_selection": true,
+        "exclude_non_applicable": true
+      },
+      "persistence": {
+        "policy": "SELECTION_IDENTITY_WITH_SOURCE_AND_RUNTIME",
+        "invisible_context_separate": true
+      },
+      "validation": {
+        "policy": "PRODUCT_AUTHORITY",
+        "critical_unknown": "FORBIDDEN_IN_FORMAL"
+      },
+      "default": {
+        "policy": "PRODUCT_AUTHORITY_NO_UI_GUESS"
+      },
+      "empty_state": {
+        "policy": "DISTINCT_FROM_ERROR_AND_CONFIRMATION",
+        "placeholder_role": "ORDINARY_SELECT_PLACEHOLDER",
+        "placeholder": "選択してください"
+      },
+      "error_state": {
+        "policy": "CATEGORY_APP_ERROR_AUTHORITY"
+      },
+      "authority": [
+        "AUDIT-0efa1991904bcbd9cae0",
+        "HUMAN-ADOPTION"
+      ],
+      "source_revision": "af4f30983cc3d9a24ca1a7eb54fab834f024d0fc",
+      "exception_id": null,
+      "status": "FORMAL",
+      "audit_observations": {
+        "control_types": [
+          "SELECT"
+        ],
+        "placeholder": "選択してください",
+        "classification": "CATEGORY",
+        "observation_coverage": "RESOLVER_SAMPLES"
+      }
+    },
+    {
+      "field_id": "sash-app:SER-LIXIL-TW:glass_function",
+      "semantic_role": "window:93cb76469f7c0e41",
+      "scope": {
+        "app": "sash-app",
+        "product": "SER-LIXIL-TW",
+        "kind": "CURRENT_AUDIT_BASELINE"
+      },
+      "category": "window",
+      "runtime_key": "glass_function",
+      "canonical_key": "glass_function",
+      "display_label": [
+        "ガラス追加機能"
+      ],
+      "control_type": "SELECT",
+      "allowed_control_types": [
+        "SELECT"
+      ],
+      "conditional_presentations": {
+        "observed_types": [
+          "SELECT"
+        ],
+        "source": {
+          "observed": [
+            "USER_SELECTABLE"
+          ],
+          "current": "Runtime determines readonly/fixed values; category contract excludes technical and fixed hidden fields"
+        },
+        "requires_contract_change": true
+      },
+      "option_source": {
+        "policy": "PRODUCT_AUTHORITY_PER_SELECTION",
+        "authority": "AUDIT-91237005a79fa8ed492e",
+        "observed_union_is_allowed_set": false
+      },
+      "label_value_contract": {
+        "separate": true,
+        "raw_value_fallback": false,
+        "official_code_label_requires_authority": true
+      },
+      "group": {
+        "kind": "SEMANTIC_STAGE",
+        "id": "GLAZING"
+      },
+      "order": {
+        "mode": "CATEGORY_AUTHORITY",
+        "evidence": {
+          "semantic_slot": "glass_function",
+          "display_order": [
+            110,
+            120,
+            100,
+            90,
+            130
+          ],
+          "presentation_slot": [
+            "glass_function"
+          ],
+          "definition_order_is_ui_order": false
+        }
+      },
+      "required": {
+        "policy": "APPLICABLE_AND_PRODUCT_RULE",
+        "observation": {
+          "observed": [
+            true
+          ],
+          "runtime_rule": "REQUIRED"
+        }
+      },
+      "visibility": {
+        "policy": "PRODUCT_AUTHORITY",
+        "non_applicable": "HIDE_AND_EXCLUDE"
+      },
+      "applicability": {
+        "policy": "PRODUCT_AUTHORITY",
+        "business_output": "EXCLUDE_IF_NON_APPLICABLE"
+      },
+      "dependency": {
+        "mode": "DECLARED_BOUNDARY",
+        "exhaustive": false
+      },
+      "upstream_fields": [
+        "sash-app:SER-LIXIL-TW:glass_base",
+        "sash-app:SER-LIXIL-TW:glass_type",
+        "sash-app:SER-LIXIL-TW:size",
+        "sash-app:SER-LIXIL-TW:window_type"
+      ],
+      "reset_behavior": {
+        "on_upstream_change": "REEVALUATE",
+        "valid": "KEEP_VALID",
+        "invalid": "CLEAR_RESELECT",
+        "non_applicable": "HIDE_AND_EXCLUDE"
+      },
+      "formatter": {
+        "policy": "CATEGORY_AUTHORITY",
+        "value_kind": "PRODUCT_AUTHORITY"
+      },
+      "unit": {
+        "policy": "SEPARATE_NUMBER_AND_UNIT",
+        "observation": "N/A"
+      },
+      "output": {
+        "policy": "APPLICABILITY_AND_DESTINATION",
+        "exclude_hidden_selection": true,
+        "exclude_non_applicable": true
+      },
+      "persistence": {
+        "policy": "SELECTION_IDENTITY_WITH_SOURCE_AND_RUNTIME",
+        "invisible_context_separate": true
+      },
+      "validation": {
+        "policy": "PRODUCT_AUTHORITY",
+        "critical_unknown": "FORBIDDEN_IN_FORMAL"
+      },
+      "default": {
+        "policy": "PRODUCT_AUTHORITY_NO_UI_GUESS"
+      },
+      "empty_state": {
+        "policy": "DISTINCT_FROM_ERROR_AND_CONFIRMATION",
+        "placeholder_role": "ORDINARY_SELECT_PLACEHOLDER",
+        "placeholder": "選択してください"
+      },
+      "error_state": {
+        "policy": "CATEGORY_APP_ERROR_AUTHORITY"
+      },
+      "authority": [
+        "AUDIT-91237005a79fa8ed492e",
+        "HUMAN-ADOPTION"
+      ],
+      "source_revision": "af4f30983cc3d9a24ca1a7eb54fab834f024d0fc",
+      "exception_id": null,
+      "status": "FORMAL",
+      "audit_observations": {
+        "control_types": [
+          "SELECT"
+        ],
+        "placeholder": "選択してください",
+        "classification": "CATEGORY",
+        "observation_coverage": "RESOLVER_SAMPLES"
+      }
+    },
+    {
+      "field_id": "sash-app:SER-LIXIL-TW:option",
+      "semantic_role": "window:c9fe4157989217a0",
+      "scope": {
+        "app": "sash-app",
+        "product": "SER-LIXIL-TW",
+        "kind": "CURRENT_AUDIT_BASELINE"
+      },
+      "category": "window",
+      "runtime_key": "option",
+      "canonical_key": "option",
+      "display_label": [
+        "その他オプション"
+      ],
+      "control_type": "CHECKBOX_GROUP_WITH_HIDDEN_MULTIPLE_SELECT",
+      "allowed_control_types": [
+        "CHECKBOX_GROUP_WITH_HIDDEN_MULTIPLE_SELECT"
+      ],
+      "conditional_presentations": {
+        "observed_types": [
+          "CHECKBOX_GROUP_WITH_HIDDEN_MULTIPLE_SELECT"
+        ],
+        "source": {
+          "observed": [
+            "USER_SELECTABLE"
+          ],
+          "current": "Runtime determines readonly/fixed values; category contract excludes technical and fixed hidden fields"
+        },
+        "requires_contract_change": true
+      },
+      "option_source": {
+        "policy": "PRODUCT_AUTHORITY_PER_SELECTION",
+        "authority": "AUDIT-be743758c8f2802931b5",
+        "observed_union_is_allowed_set": false
+      },
+      "label_value_contract": {
+        "separate": true,
+        "raw_value_fallback": false,
+        "official_code_label_requires_authority": true
+      },
+      "group": {
+        "kind": "SEMANTIC_STAGE",
+        "id": "OPTION"
+      },
+      "order": {
+        "mode": "CATEGORY_AUTHORITY",
+        "evidence": {
+          "semantic_slot": "option",
+          "display_order": [
+            120,
+            130,
+            140,
+            150,
+            110,
+            100,
+            160
+          ],
+          "presentation_slot": [
+            "option"
+          ],
+          "definition_order_is_ui_order": false
+        }
+      },
+      "required": {
+        "policy": "APPLICABLE_AND_PRODUCT_RULE",
+        "observation": {
+          "observed": [
+            false
+          ],
+          "runtime_rule": "OPTIONAL"
+        }
+      },
+      "visibility": {
+        "policy": "PRODUCT_AUTHORITY",
+        "non_applicable": "HIDE_AND_EXCLUDE"
+      },
+      "applicability": {
+        "policy": "PRODUCT_AUTHORITY",
+        "business_output": "EXCLUDE_IF_NON_APPLICABLE"
+      },
+      "dependency": {
+        "mode": "DECLARED_BOUNDARY",
+        "exhaustive": false
+      },
+      "upstream_fields": [
+        "sash-app:SER-LIXIL-TW:exterior_color",
+        "sash-app:SER-LIXIL-TW:glass_base",
+        "sash-app:SER-LIXIL-TW:interior_color",
+        "sash-app:SER-LIXIL-TW:size",
+        "sash-app:SER-LIXIL-TW:window_type"
+      ],
+      "reset_behavior": {
+        "on_upstream_change": "REEVALUATE",
+        "valid": "KEEP_VALID",
+        "invalid": "CLEAR_RESELECT",
+        "non_applicable": "HIDE_AND_EXCLUDE"
+      },
+      "formatter": {
+        "policy": "CATEGORY_AUTHORITY",
+        "value_kind": "PRODUCT_AUTHORITY"
+      },
+      "unit": {
+        "policy": "SEPARATE_NUMBER_AND_UNIT",
+        "observation": "N/A"
+      },
+      "output": {
+        "policy": "APPLICABILITY_AND_DESTINATION",
+        "exclude_hidden_selection": true,
+        "exclude_non_applicable": true
+      },
+      "persistence": {
+        "policy": "SELECTION_IDENTITY_WITH_SOURCE_AND_RUNTIME",
+        "invisible_context_separate": true
+      },
+      "validation": {
+        "policy": "PRODUCT_AUTHORITY",
+        "critical_unknown": "FORBIDDEN_IN_FORMAL"
+      },
+      "default": {
+        "policy": "PRODUCT_AUTHORITY_NO_UI_GUESS"
+      },
+      "empty_state": {
+        "policy": "DISTINCT_FROM_ERROR_AND_CONFIRMATION",
+        "placeholder_role": "NOT_APPLICABLE",
+        "placeholder": null
+      },
+      "error_state": {
+        "policy": "CATEGORY_APP_ERROR_AUTHORITY"
+      },
+      "authority": [
+        "AUDIT-be743758c8f2802931b5",
+        "HUMAN-ADOPTION"
+      ],
+      "source_revision": "af4f30983cc3d9a24ca1a7eb54fab834f024d0fc",
+      "exception_id": null,
+      "status": "FORMAL",
+      "audit_observations": {
+        "control_types": [
+          "CHECKBOX_GROUP_WITH_HIDDEN_MULTIPLE_SELECT"
+        ],
+        "placeholder": "N/A",
+        "classification": "CATEGORY",
+        "observation_coverage": "RESOLVER_SAMPLES"
+      }
+    },
+    {
+      "field_id": "sash-app:SER-LIXIL-TW:glass_spacer",
+      "semantic_role": "window:58033aa54301becc",
+      "scope": {
+        "app": "sash-app",
+        "product": "SER-LIXIL-TW",
+        "kind": "CURRENT_AUDIT_BASELINE"
+      },
+      "category": "window",
+      "runtime_key": "glass_spacer",
+      "canonical_key": "glass_spacer",
+      "display_label": [
+        "スペーサー"
+      ],
+      "control_type": "SELECT",
+      "allowed_control_types": [
+        "SELECT"
+      ],
+      "conditional_presentations": {
+        "observed_types": [
+          "SELECT"
+        ],
+        "source": {
+          "observed": [
+            "USER_SELECTABLE"
+          ],
+          "current": "Runtime determines readonly/fixed values; category contract excludes technical and fixed hidden fields"
+        },
+        "requires_contract_change": true
+      },
+      "option_source": {
+        "policy": "PRODUCT_AUTHORITY_PER_SELECTION",
+        "authority": "AUDIT-10ad8d07e22d4ec4f8e6",
+        "observed_union_is_allowed_set": false
+      },
+      "label_value_contract": {
+        "separate": true,
+        "raw_value_fallback": false,
+        "official_code_label_requires_authority": true
+      },
+      "group": {
+        "kind": "SEMANTIC_STAGE",
+        "id": "GLAZING"
+      },
+      "order": {
+        "mode": "CATEGORY_AUTHORITY",
+        "evidence": {
+          "semantic_slot": "glass_spacer",
+          "display_order": [
+            120,
+            130,
+            110,
+            100,
+            140
+          ],
+          "presentation_slot": [
+            "glass_spacer"
+          ],
+          "definition_order_is_ui_order": false
+        }
+      },
+      "required": {
+        "policy": "APPLICABLE_AND_PRODUCT_RULE",
+        "observation": {
+          "observed": [
+            true
+          ],
+          "runtime_rule": "REQUIRED"
+        }
+      },
+      "visibility": {
+        "policy": "PRODUCT_AUTHORITY",
+        "non_applicable": "HIDE_AND_EXCLUDE"
+      },
+      "applicability": {
+        "policy": "PRODUCT_AUTHORITY",
+        "business_output": "EXCLUDE_IF_NON_APPLICABLE"
+      },
+      "dependency": {
+        "mode": "DECLARED_BOUNDARY",
+        "exhaustive": false
+      },
+      "upstream_fields": [
+        "sash-app:SER-LIXIL-TW:glass_base",
+        "sash-app:SER-LIXIL-TW:glass_detail",
+        "sash-app:SER-LIXIL-TW:glass_type",
+        "sash-app:SER-LIXIL-TW:size",
+        "sash-app:SER-LIXIL-TW:window_type"
+      ],
+      "reset_behavior": {
+        "on_upstream_change": "REEVALUATE",
+        "valid": "KEEP_VALID",
+        "invalid": "CLEAR_RESELECT",
+        "non_applicable": "HIDE_AND_EXCLUDE"
+      },
+      "formatter": {
+        "policy": "CATEGORY_AUTHORITY",
+        "value_kind": "PRODUCT_AUTHORITY"
+      },
+      "unit": {
+        "policy": "SEPARATE_NUMBER_AND_UNIT",
+        "observation": "N/A"
+      },
+      "output": {
+        "policy": "APPLICABILITY_AND_DESTINATION",
+        "exclude_hidden_selection": true,
+        "exclude_non_applicable": true
+      },
+      "persistence": {
+        "policy": "SELECTION_IDENTITY_WITH_SOURCE_AND_RUNTIME",
+        "invisible_context_separate": true
+      },
+      "validation": {
+        "policy": "PRODUCT_AUTHORITY",
+        "critical_unknown": "FORBIDDEN_IN_FORMAL"
+      },
+      "default": {
+        "policy": "PRODUCT_AUTHORITY_NO_UI_GUESS"
+      },
+      "empty_state": {
+        "policy": "DISTINCT_FROM_ERROR_AND_CONFIRMATION",
+        "placeholder_role": "ORDINARY_SELECT_PLACEHOLDER",
+        "placeholder": "選択してください"
+      },
+      "error_state": {
+        "policy": "CATEGORY_APP_ERROR_AUTHORITY"
+      },
+      "authority": [
+        "AUDIT-10ad8d07e22d4ec4f8e6",
+        "HUMAN-ADOPTION"
+      ],
+      "source_revision": "af4f30983cc3d9a24ca1a7eb54fab834f024d0fc",
+      "exception_id": null,
+      "status": "FORMAL",
+      "audit_observations": {
+        "control_types": [
+          "SELECT"
+        ],
+        "placeholder": "選択してください",
+        "classification": "CATEGORY",
+        "observation_coverage": "RESOLVER_SAMPLES"
+      }
+    },
+    {
+      "field_id": "sash-app:SER-LIXIL-TW:glass_air_layer",
+      "semantic_role": "window:7fc12fe6385a6445",
+      "scope": {
+        "app": "sash-app",
+        "product": "SER-LIXIL-TW",
+        "kind": "CURRENT_AUDIT_BASELINE"
+      },
+      "category": "window",
+      "runtime_key": "glass_air_layer",
+      "canonical_key": "glass_air_layer",
+      "display_label": [
+        "中空層"
+      ],
+      "control_type": "SELECT",
+      "allowed_control_types": [
+        "SELECT"
+      ],
+      "conditional_presentations": {
+        "observed_types": [
+          "SELECT"
+        ],
+        "source": {
+          "observed": [
+            "USER_SELECTABLE"
+          ],
+          "current": "Runtime determines readonly/fixed values; category contract excludes technical and fixed hidden fields"
+        },
+        "requires_contract_change": true
+      },
+      "option_source": {
+        "policy": "PRODUCT_AUTHORITY_PER_SELECTION",
+        "authority": "AUDIT-382da2ef019790ffc230",
+        "observed_union_is_allowed_set": false
+      },
+      "label_value_contract": {
+        "separate": true,
+        "raw_value_fallback": false,
+        "official_code_label_requires_authority": true
+      },
+      "group": {
+        "kind": "SEMANTIC_STAGE",
+        "id": "GLAZING"
+      },
+      "order": {
+        "mode": "CATEGORY_AUTHORITY",
+        "evidence": {
+          "semantic_slot": "glass_air_layer",
+          "display_order": [
+            130,
+            140,
+            120,
+            110,
+            150
+          ],
+          "presentation_slot": [
+            "glass_air_layer"
+          ],
+          "definition_order_is_ui_order": false
+        }
+      },
+      "required": {
+        "policy": "APPLICABLE_AND_PRODUCT_RULE",
+        "observation": {
+          "observed": [
+            true
+          ],
+          "runtime_rule": "REQUIRED"
+        }
+      },
+      "visibility": {
+        "policy": "PRODUCT_AUTHORITY",
+        "non_applicable": "HIDE_AND_EXCLUDE"
+      },
+      "applicability": {
+        "policy": "PRODUCT_AUTHORITY",
+        "business_output": "EXCLUDE_IF_NON_APPLICABLE"
+      },
+      "dependency": {
+        "mode": "DECLARED_BOUNDARY",
+        "exhaustive": false
+      },
+      "upstream_fields": [
+        "sash-app:SER-LIXIL-TW:glass_base",
+        "sash-app:SER-LIXIL-TW:glass_detail",
+        "sash-app:SER-LIXIL-TW:glass_spacer",
+        "sash-app:SER-LIXIL-TW:glass_type",
+        "sash-app:SER-LIXIL-TW:size",
+        "sash-app:SER-LIXIL-TW:window_type"
+      ],
+      "reset_behavior": {
+        "on_upstream_change": "REEVALUATE",
+        "valid": "KEEP_VALID",
+        "invalid": "CLEAR_RESELECT",
+        "non_applicable": "HIDE_AND_EXCLUDE"
+      },
+      "formatter": {
+        "policy": "CATEGORY_AUTHORITY",
+        "value_kind": "PRODUCT_AUTHORITY"
+      },
+      "unit": {
+        "policy": "SEPARATE_NUMBER_AND_UNIT",
+        "observation": "N/A"
+      },
+      "output": {
+        "policy": "APPLICABILITY_AND_DESTINATION",
+        "exclude_hidden_selection": true,
+        "exclude_non_applicable": true
+      },
+      "persistence": {
+        "policy": "SELECTION_IDENTITY_WITH_SOURCE_AND_RUNTIME",
+        "invisible_context_separate": true
+      },
+      "validation": {
+        "policy": "PRODUCT_AUTHORITY",
+        "critical_unknown": "FORBIDDEN_IN_FORMAL"
+      },
+      "default": {
+        "policy": "PRODUCT_AUTHORITY_NO_UI_GUESS"
+      },
+      "empty_state": {
+        "policy": "DISTINCT_FROM_ERROR_AND_CONFIRMATION",
+        "placeholder_role": "ORDINARY_SELECT_PLACEHOLDER",
+        "placeholder": "選択してください"
+      },
+      "error_state": {
+        "policy": "CATEGORY_APP_ERROR_AUTHORITY"
+      },
+      "authority": [
+        "AUDIT-382da2ef019790ffc230",
+        "HUMAN-ADOPTION"
+      ],
+      "source_revision": "af4f30983cc3d9a24ca1a7eb54fab834f024d0fc",
+      "exception_id": null,
+      "status": "FORMAL",
+      "audit_observations": {
+        "control_types": [
+          "SELECT"
+        ],
+        "placeholder": "選択してください",
+        "classification": "CATEGORY",
+        "observation_coverage": "RESOLVER_SAMPLES"
+      }
+    },
+    {
+      "field_id": "sash-app:SER-LIXIL-TW:shutter_type",
+      "semantic_role": "window:02fc936b33311e77",
+      "scope": {
+        "app": "sash-app",
+        "product": "SER-LIXIL-TW",
+        "kind": "CURRENT_AUDIT_BASELINE"
+      },
+      "category": "window",
+      "runtime_key": "shutter_type",
+      "canonical_key": "shutter_type",
+      "display_label": [
+        "シャッター種類"
+      ],
+      "control_type": "SELECT",
+      "allowed_control_types": [
+        "SELECT"
+      ],
+      "conditional_presentations": {
+        "observed_types": [
+          "SELECT"
+        ],
+        "source": {
+          "observed": [
+            "USER_SELECTABLE"
+          ],
+          "current": "Runtime determines readonly/fixed values; category contract excludes technical and fixed hidden fields"
+        },
+        "requires_contract_change": true
+      },
+      "option_source": {
+        "policy": "PRODUCT_AUTHORITY_PER_SELECTION",
+        "authority": "AUDIT-9c7efdaa2dcff4b29e93",
+        "observed_union_is_allowed_set": false
+      },
+      "label_value_contract": {
+        "separate": true,
+        "raw_value_fallback": false,
+        "official_code_label_requires_authority": true
+      },
+      "group": {
+        "kind": "SEMANTIC_STAGE",
+        "id": "CONFIGURATION"
+      },
+      "order": {
+        "mode": "CATEGORY_AUTHORITY",
+        "evidence": {
+          "semantic_slot": "window_spec",
+          "display_order": [
+            20
+          ],
+          "presentation_slot": [
+            "window_spec"
+          ],
+          "definition_order_is_ui_order": false
+        }
+      },
+      "required": {
+        "policy": "APPLICABLE_AND_PRODUCT_RULE",
+        "observation": {
+          "observed": [
+            true
+          ],
+          "runtime_rule": "REQUIRED"
+        }
+      },
+      "visibility": {
+        "policy": "PRODUCT_AUTHORITY",
+        "non_applicable": "HIDE_AND_EXCLUDE"
+      },
+      "applicability": {
+        "policy": "PRODUCT_AUTHORITY",
+        "business_output": "EXCLUDE_IF_NON_APPLICABLE"
+      },
+      "dependency": {
+        "mode": "DECLARED_BOUNDARY",
+        "exhaustive": false
+      },
+      "upstream_fields": [
+        "sash-app:SER-LIXIL-TW:window_type"
+      ],
+      "reset_behavior": {
+        "on_upstream_change": "REEVALUATE",
+        "valid": "KEEP_VALID",
+        "invalid": "CLEAR_RESELECT",
+        "non_applicable": "HIDE_AND_EXCLUDE"
+      },
+      "formatter": {
+        "policy": "CATEGORY_AUTHORITY",
+        "value_kind": "PRODUCT_AUTHORITY"
+      },
+      "unit": {
+        "policy": "SEPARATE_NUMBER_AND_UNIT",
+        "observation": "N/A"
+      },
+      "output": {
+        "policy": "APPLICABILITY_AND_DESTINATION",
+        "exclude_hidden_selection": true,
+        "exclude_non_applicable": true
+      },
+      "persistence": {
+        "policy": "SELECTION_IDENTITY_WITH_SOURCE_AND_RUNTIME",
+        "invisible_context_separate": true
+      },
+      "validation": {
+        "policy": "PRODUCT_AUTHORITY",
+        "critical_unknown": "FORBIDDEN_IN_FORMAL"
+      },
+      "default": {
+        "policy": "PRODUCT_AUTHORITY_NO_UI_GUESS"
+      },
+      "empty_state": {
+        "policy": "DISTINCT_FROM_ERROR_AND_CONFIRMATION",
+        "placeholder_role": "ORDINARY_SELECT_PLACEHOLDER",
+        "placeholder": "選択してください"
+      },
+      "error_state": {
+        "policy": "CATEGORY_APP_ERROR_AUTHORITY"
+      },
+      "authority": [
+        "AUDIT-9c7efdaa2dcff4b29e93",
+        "HUMAN-ADOPTION"
+      ],
+      "source_revision": "af4f30983cc3d9a24ca1a7eb54fab834f024d0fc",
+      "exception_id": null,
+      "status": "FORMAL",
+      "audit_observations": {
+        "control_types": [
+          "SELECT"
+        ],
+        "placeholder": "選択してください",
+        "classification": "CATEGORY",
+        "observation_coverage": "RESOLVER_SAMPLES"
+      }
+    },
+    {
+      "field_id": "sash-app:SER-LIXIL-TW:grille_type",
+      "semantic_role": "window:02fc936b33311e77",
+      "scope": {
+        "app": "sash-app",
+        "product": "SER-LIXIL-TW",
+        "kind": "CURRENT_AUDIT_BASELINE"
+      },
+      "category": "window",
+      "runtime_key": "grille_type",
+      "canonical_key": "grille_type",
+      "display_label": [
+        "面格子種類"
+      ],
+      "control_type": "SELECT",
+      "allowed_control_types": [
+        "SELECT"
+      ],
+      "conditional_presentations": {
+        "observed_types": [
+          "SELECT"
+        ],
+        "source": {
+          "observed": [
+            "USER_SELECTABLE"
+          ],
+          "current": "Runtime determines readonly/fixed values; category contract excludes technical and fixed hidden fields"
+        },
+        "requires_contract_change": true
+      },
+      "option_source": {
+        "policy": "PRODUCT_AUTHORITY_PER_SELECTION",
+        "authority": "AUDIT-0c9d2b4f6e568c3c2363",
+        "observed_union_is_allowed_set": false
+      },
+      "label_value_contract": {
+        "separate": true,
+        "raw_value_fallback": false,
+        "official_code_label_requires_authority": true
+      },
+      "group": {
+        "kind": "SEMANTIC_STAGE",
+        "id": "CONFIGURATION"
+      },
+      "order": {
+        "mode": "CATEGORY_AUTHORITY",
+        "evidence": {
+          "semantic_slot": "window_spec",
+          "display_order": [
+            20
+          ],
+          "presentation_slot": [
+            "window_spec"
+          ],
+          "definition_order_is_ui_order": false
+        }
+      },
+      "required": {
+        "policy": "APPLICABLE_AND_PRODUCT_RULE",
+        "observation": {
+          "observed": [
+            true
+          ],
+          "runtime_rule": "REQUIRED"
+        }
+      },
+      "visibility": {
+        "policy": "PRODUCT_AUTHORITY",
+        "non_applicable": "HIDE_AND_EXCLUDE"
+      },
+      "applicability": {
+        "policy": "PRODUCT_AUTHORITY",
+        "business_output": "EXCLUDE_IF_NON_APPLICABLE"
+      },
+      "dependency": {
+        "mode": "DECLARED_BOUNDARY",
+        "exhaustive": false
+      },
+      "upstream_fields": [
+        "sash-app:SER-LIXIL-TW:window_type"
+      ],
+      "reset_behavior": {
+        "on_upstream_change": "REEVALUATE",
+        "valid": "KEEP_VALID",
+        "invalid": "CLEAR_RESELECT",
+        "non_applicable": "HIDE_AND_EXCLUDE"
+      },
+      "formatter": {
+        "policy": "CATEGORY_AUTHORITY",
+        "value_kind": "PRODUCT_AUTHORITY"
+      },
+      "unit": {
+        "policy": "SEPARATE_NUMBER_AND_UNIT",
+        "observation": "N/A"
+      },
+      "output": {
+        "policy": "APPLICABILITY_AND_DESTINATION",
+        "exclude_hidden_selection": true,
+        "exclude_non_applicable": true
+      },
+      "persistence": {
+        "policy": "SELECTION_IDENTITY_WITH_SOURCE_AND_RUNTIME",
+        "invisible_context_separate": true
+      },
+      "validation": {
+        "policy": "PRODUCT_AUTHORITY",
+        "critical_unknown": "FORBIDDEN_IN_FORMAL"
+      },
+      "default": {
+        "policy": "PRODUCT_AUTHORITY_NO_UI_GUESS"
+      },
+      "empty_state": {
+        "policy": "DISTINCT_FROM_ERROR_AND_CONFIRMATION",
+        "placeholder_role": "ORDINARY_SELECT_PLACEHOLDER",
+        "placeholder": "選択してください"
+      },
+      "error_state": {
+        "policy": "CATEGORY_APP_ERROR_AUTHORITY"
+      },
+      "authority": [
+        "AUDIT-0c9d2b4f6e568c3c2363",
+        "HUMAN-ADOPTION"
+      ],
+      "source_revision": "af4f30983cc3d9a24ca1a7eb54fab834f024d0fc",
+      "exception_id": null,
+      "status": "FORMAL",
+      "audit_observations": {
+        "control_types": [
+          "SELECT"
+        ],
+        "placeholder": "選択してください",
+        "classification": "CATEGORY",
+        "observation_coverage": "RESOLVER_SAMPLES"
+      }
+    },
+    {
+      "field_id": "sash-app:SER-LIXIL-TW:handing",
+      "semantic_role": "window:56be6bec3ff3d1d1",
+      "scope": {
+        "app": "sash-app",
+        "product": "SER-LIXIL-TW",
+        "kind": "CURRENT_AUDIT_BASELINE"
+      },
+      "category": "window",
+      "runtime_key": "handing",
+      "canonical_key": "handing",
+      "display_label": [
+        "開き勝手（吊元）"
+      ],
+      "control_type": "SELECT",
+      "allowed_control_types": [
+        "SELECT"
+      ],
+      "conditional_presentations": {
+        "observed_types": [
+          "SELECT"
+        ],
+        "source": {
+          "observed": [
+            "USER_SELECTABLE"
+          ],
+          "current": "Runtime determines readonly/fixed values; category contract excludes technical and fixed hidden fields"
+        },
+        "requires_contract_change": true
+      },
+      "option_source": {
+        "policy": "PRODUCT_AUTHORITY_PER_SELECTION",
+        "authority": "AUDIT-9122637ee4b2f90646fb",
+        "observed_union_is_allowed_set": false
+      },
+      "label_value_contract": {
+        "separate": true,
+        "raw_value_fallback": false,
+        "official_code_label_requires_authority": true
+      },
+      "group": {
+        "kind": "SEMANTIC_STAGE",
+        "id": "CONFIGURATION"
+      },
+      "order": {
+        "mode": "CATEGORY_AUTHORITY",
+        "evidence": {
+          "semantic_slot": "handing",
+          "display_order": [
+            20,
+            30
+          ],
+          "presentation_slot": [
+            "handing"
+          ],
+          "definition_order_is_ui_order": false
+        }
+      },
+      "required": {
+        "policy": "APPLICABLE_AND_PRODUCT_RULE",
+        "observation": {
+          "observed": [
+            true
+          ],
+          "runtime_rule": "REQUIRED"
+        }
+      },
+      "visibility": {
+        "policy": "PRODUCT_AUTHORITY",
+        "non_applicable": "HIDE_AND_EXCLUDE"
+      },
+      "applicability": {
+        "policy": "PRODUCT_AUTHORITY",
+        "business_output": "EXCLUDE_IF_NON_APPLICABLE"
+      },
+      "dependency": {
+        "mode": "DECLARED_BOUNDARY",
+        "exhaustive": false
+      },
+      "upstream_fields": [
+        "sash-app:SER-LIXIL-TW:window_type"
+      ],
+      "reset_behavior": {
+        "on_upstream_change": "REEVALUATE",
+        "valid": "KEEP_VALID",
+        "invalid": "CLEAR_RESELECT",
+        "non_applicable": "HIDE_AND_EXCLUDE"
+      },
+      "formatter": {
+        "policy": "CATEGORY_AUTHORITY",
+        "value_kind": "PRODUCT_AUTHORITY"
+      },
+      "unit": {
+        "policy": "SEPARATE_NUMBER_AND_UNIT",
+        "observation": "N/A"
+      },
+      "output": {
+        "policy": "APPLICABILITY_AND_DESTINATION",
+        "exclude_hidden_selection": true,
+        "exclude_non_applicable": true
+      },
+      "persistence": {
+        "policy": "SELECTION_IDENTITY_WITH_SOURCE_AND_RUNTIME",
+        "invisible_context_separate": true
+      },
+      "validation": {
+        "policy": "PRODUCT_AUTHORITY",
+        "critical_unknown": "FORBIDDEN_IN_FORMAL"
+      },
+      "default": {
+        "policy": "PRODUCT_AUTHORITY_NO_UI_GUESS"
+      },
+      "empty_state": {
+        "policy": "DISTINCT_FROM_ERROR_AND_CONFIRMATION",
+        "placeholder_role": "ORDINARY_SELECT_PLACEHOLDER",
+        "placeholder": "選択してください"
+      },
+      "error_state": {
+        "policy": "CATEGORY_APP_ERROR_AUTHORITY"
+      },
+      "authority": [
+        "AUDIT-9122637ee4b2f90646fb",
+        "HUMAN-ADOPTION"
+      ],
+      "source_revision": "af4f30983cc3d9a24ca1a7eb54fab834f024d0fc",
+      "exception_id": null,
+      "status": "FORMAL",
+      "audit_observations": {
+        "control_types": [
+          "SELECT"
+        ],
+        "placeholder": "選択してください",
+        "classification": "CATEGORY",
+        "observation_coverage": "RESOLVER_SAMPLES"
+      }
+    },
+    {
+      "field_id": "sash-app:SER-LIXIL-TW:operation_type",
+      "semantic_role": "window:02fc936b33311e77",
+      "scope": {
+        "app": "sash-app",
+        "product": "SER-LIXIL-TW",
+        "kind": "CURRENT_AUDIT_BASELINE"
+      },
+      "category": "window",
+      "runtime_key": "operation_type",
+      "canonical_key": "operation_type",
+      "display_label": [
+        "操作仕様"
+      ],
+      "control_type": "SELECT",
+      "allowed_control_types": [
+        "SELECT"
+      ],
+      "conditional_presentations": {
+        "observed_types": [
+          "SELECT"
+        ],
+        "source": {
+          "observed": [
+            "USER_SELECTABLE"
+          ],
+          "current": "Runtime determines readonly/fixed values; category contract excludes technical and fixed hidden fields"
+        },
+        "requires_contract_change": true
+      },
+      "option_source": {
+        "policy": "PRODUCT_AUTHORITY_PER_SELECTION",
+        "authority": "AUDIT-7d980a36cf066f5f404c",
+        "observed_union_is_allowed_set": false
+      },
+      "label_value_contract": {
+        "separate": true,
+        "raw_value_fallback": false,
+        "official_code_label_requires_authority": true
+      },
+      "group": {
+        "kind": "SEMANTIC_STAGE",
+        "id": "CONFIGURATION"
+      },
+      "order": {
+        "mode": "CATEGORY_AUTHORITY",
+        "evidence": {
+          "semantic_slot": "window_spec",
+          "display_order": [
+            20
+          ],
+          "presentation_slot": [
+            "window_spec"
+          ],
+          "definition_order_is_ui_order": false
+        }
+      },
+      "required": {
+        "policy": "APPLICABLE_AND_PRODUCT_RULE",
+        "observation": {
+          "observed": [
+            true
+          ],
+          "runtime_rule": "REQUIRED"
+        }
+      },
+      "visibility": {
+        "policy": "PRODUCT_AUTHORITY",
+        "non_applicable": "HIDE_AND_EXCLUDE"
+      },
+      "applicability": {
+        "policy": "PRODUCT_AUTHORITY",
+        "business_output": "EXCLUDE_IF_NON_APPLICABLE"
+      },
+      "dependency": {
+        "mode": "DECLARED_BOUNDARY",
+        "exhaustive": false
+      },
+      "upstream_fields": [
+        "sash-app:SER-LIXIL-TW:window_type"
+      ],
+      "reset_behavior": {
+        "on_upstream_change": "REEVALUATE",
+        "valid": "KEEP_VALID",
+        "invalid": "CLEAR_RESELECT",
+        "non_applicable": "HIDE_AND_EXCLUDE"
+      },
+      "formatter": {
+        "policy": "CATEGORY_AUTHORITY",
+        "value_kind": "PRODUCT_AUTHORITY"
+      },
+      "unit": {
+        "policy": "SEPARATE_NUMBER_AND_UNIT",
+        "observation": "N/A"
+      },
+      "output": {
+        "policy": "APPLICABILITY_AND_DESTINATION",
+        "exclude_hidden_selection": true,
+        "exclude_non_applicable": true
+      },
+      "persistence": {
+        "policy": "SELECTION_IDENTITY_WITH_SOURCE_AND_RUNTIME",
+        "invisible_context_separate": true
+      },
+      "validation": {
+        "policy": "PRODUCT_AUTHORITY",
+        "critical_unknown": "FORBIDDEN_IN_FORMAL"
+      },
+      "default": {
+        "policy": "PRODUCT_AUTHORITY_NO_UI_GUESS"
+      },
+      "empty_state": {
+        "policy": "DISTINCT_FROM_ERROR_AND_CONFIRMATION",
+        "placeholder_role": "ORDINARY_SELECT_PLACEHOLDER",
+        "placeholder": "選択してください"
+      },
+      "error_state": {
+        "policy": "CATEGORY_APP_ERROR_AUTHORITY"
+      },
+      "authority": [
+        "AUDIT-7d980a36cf066f5f404c",
+        "HUMAN-ADOPTION"
+      ],
+      "source_revision": "af4f30983cc3d9a24ca1a7eb54fab834f024d0fc",
+      "exception_id": null,
+      "status": "FORMAL",
+      "audit_observations": {
+        "control_types": [
+          "SELECT"
+        ],
+        "placeholder": "選択してください",
+        "classification": "CATEGORY",
+        "observation_coverage": "RESOLVER_SAMPLES"
+      }
+    },
+    {
+      "field_id": "sash-app:SER-LIXIL-TW:operator_position",
+      "semantic_role": "window:02fc936b33311e77",
+      "scope": {
+        "app": "sash-app",
+        "product": "SER-LIXIL-TW",
+        "kind": "CURRENT_AUDIT_BASELINE"
+      },
+      "category": "window",
+      "runtime_key": "operator_position",
+      "canonical_key": "operator_position",
+      "display_label": [
+        "オペレーター位置"
+      ],
+      "control_type": "SELECT",
+      "allowed_control_types": [
+        "SELECT"
+      ],
+      "conditional_presentations": {
+        "observed_types": [
+          "SELECT"
+        ],
+        "source": {
+          "observed": [
+            "USER_SELECTABLE"
+          ],
+          "current": "Runtime determines readonly/fixed values; category contract excludes technical and fixed hidden fields"
+        },
+        "requires_contract_change": true
+      },
+      "option_source": {
+        "policy": "PRODUCT_AUTHORITY_PER_SELECTION",
+        "authority": "AUDIT-bc30dd2656194eeccdc6",
+        "observed_union_is_allowed_set": false
+      },
+      "label_value_contract": {
+        "separate": true,
+        "raw_value_fallback": false,
+        "official_code_label_requires_authority": true
+      },
+      "group": {
+        "kind": "SEMANTIC_STAGE",
+        "id": "CONFIGURATION"
+      },
+      "order": {
+        "mode": "CATEGORY_AUTHORITY",
+        "evidence": {
+          "semantic_slot": "window_spec",
+          "display_order": [
+            30
+          ],
+          "presentation_slot": [
+            "window_spec"
+          ],
+          "definition_order_is_ui_order": false
+        }
+      },
+      "required": {
+        "policy": "APPLICABLE_AND_PRODUCT_RULE",
+        "observation": {
+          "observed": [
+            true
+          ],
+          "runtime_rule": "REQUIRED"
+        }
+      },
+      "visibility": {
+        "policy": "PRODUCT_AUTHORITY",
+        "non_applicable": "HIDE_AND_EXCLUDE"
+      },
+      "applicability": {
+        "policy": "PRODUCT_AUTHORITY",
+        "business_output": "EXCLUDE_IF_NON_APPLICABLE"
+      },
+      "dependency": {
+        "mode": "DECLARED_BOUNDARY",
+        "exhaustive": false
+      },
+      "upstream_fields": [
+        "sash-app:SER-LIXIL-TW:window_type"
+      ],
+      "reset_behavior": {
+        "on_upstream_change": "REEVALUATE",
+        "valid": "KEEP_VALID",
+        "invalid": "CLEAR_RESELECT",
+        "non_applicable": "HIDE_AND_EXCLUDE"
+      },
+      "formatter": {
+        "policy": "CATEGORY_AUTHORITY",
+        "value_kind": "PRODUCT_AUTHORITY"
+      },
+      "unit": {
+        "policy": "SEPARATE_NUMBER_AND_UNIT",
+        "observation": "N/A"
+      },
+      "output": {
+        "policy": "APPLICABILITY_AND_DESTINATION",
+        "exclude_hidden_selection": true,
+        "exclude_non_applicable": true
+      },
+      "persistence": {
+        "policy": "SELECTION_IDENTITY_WITH_SOURCE_AND_RUNTIME",
+        "invisible_context_separate": true
+      },
+      "validation": {
+        "policy": "PRODUCT_AUTHORITY",
+        "critical_unknown": "FORBIDDEN_IN_FORMAL"
+      },
+      "default": {
+        "policy": "PRODUCT_AUTHORITY_NO_UI_GUESS"
+      },
+      "empty_state": {
+        "policy": "DISTINCT_FROM_ERROR_AND_CONFIRMATION",
+        "placeholder_role": "ORDINARY_SELECT_PLACEHOLDER",
+        "placeholder": "選択してください"
+      },
+      "error_state": {
+        "policy": "CATEGORY_APP_ERROR_AUTHORITY"
+      },
+      "authority": [
+        "AUDIT-bc30dd2656194eeccdc6",
+        "HUMAN-ADOPTION"
+      ],
+      "source_revision": "af4f30983cc3d9a24ca1a7eb54fab834f024d0fc",
+      "exception_id": null,
+      "status": "FORMAL",
+      "audit_observations": {
+        "control_types": [
+          "SELECT"
+        ],
+        "placeholder": "選択してください",
+        "classification": "CATEGORY",
+        "observation_coverage": "RESOLVER_SAMPLES"
+      }
+    },
+    {
+      "field_id": "sash-app:SER-LIXIL-TW:door_grille_type",
+      "semantic_role": "window:02fc936b33311e77",
+      "scope": {
+        "app": "sash-app",
+        "product": "SER-LIXIL-TW",
+        "kind": "CURRENT_AUDIT_BASELINE"
+      },
+      "category": "window",
+      "runtime_key": "door_grille_type",
+      "canonical_key": "door_grille_type",
+      "display_label": [
+        "網付格子種類"
+      ],
+      "control_type": "SELECT",
+      "allowed_control_types": [
+        "SELECT"
+      ],
+      "conditional_presentations": {
+        "observed_types": [
+          "SELECT"
+        ],
+        "source": {
+          "observed": [
+            "USER_SELECTABLE"
+          ],
+          "current": "Runtime determines readonly/fixed values; category contract excludes technical and fixed hidden fields"
+        },
+        "requires_contract_change": true
+      },
+      "option_source": {
+        "policy": "PRODUCT_AUTHORITY_PER_SELECTION",
+        "authority": "AUDIT-1c6087c1b5c4b3805e12",
+        "observed_union_is_allowed_set": false
+      },
+      "label_value_contract": {
+        "separate": true,
+        "raw_value_fallback": false,
+        "official_code_label_requires_authority": true
+      },
+      "group": {
+        "kind": "SEMANTIC_STAGE",
+        "id": "CONFIGURATION"
+      },
+      "order": {
+        "mode": "CATEGORY_AUTHORITY",
+        "evidence": {
+          "semantic_slot": "window_spec",
+          "display_order": [
+            20
+          ],
+          "presentation_slot": [
+            "window_spec"
+          ],
+          "definition_order_is_ui_order": false
+        }
+      },
+      "required": {
+        "policy": "APPLICABLE_AND_PRODUCT_RULE",
+        "observation": {
+          "observed": [
+            true
+          ],
+          "runtime_rule": "REQUIRED"
+        }
+      },
+      "visibility": {
+        "policy": "PRODUCT_AUTHORITY",
+        "non_applicable": "HIDE_AND_EXCLUDE"
+      },
+      "applicability": {
+        "policy": "PRODUCT_AUTHORITY",
+        "business_output": "EXCLUDE_IF_NON_APPLICABLE"
+      },
+      "dependency": {
+        "mode": "DECLARED_BOUNDARY",
+        "exhaustive": false
+      },
+      "upstream_fields": [
+        "sash-app:SER-LIXIL-TW:window_type"
+      ],
+      "reset_behavior": {
+        "on_upstream_change": "REEVALUATE",
+        "valid": "KEEP_VALID",
+        "invalid": "CLEAR_RESELECT",
+        "non_applicable": "HIDE_AND_EXCLUDE"
+      },
+      "formatter": {
+        "policy": "CATEGORY_AUTHORITY",
+        "value_kind": "PRODUCT_AUTHORITY"
+      },
+      "unit": {
+        "policy": "SEPARATE_NUMBER_AND_UNIT",
+        "observation": "N/A"
+      },
+      "output": {
+        "policy": "APPLICABILITY_AND_DESTINATION",
+        "exclude_hidden_selection": true,
+        "exclude_non_applicable": true
+      },
+      "persistence": {
+        "policy": "SELECTION_IDENTITY_WITH_SOURCE_AND_RUNTIME",
+        "invisible_context_separate": true
+      },
+      "validation": {
+        "policy": "PRODUCT_AUTHORITY",
+        "critical_unknown": "FORBIDDEN_IN_FORMAL"
+      },
+      "default": {
+        "policy": "PRODUCT_AUTHORITY_NO_UI_GUESS"
+      },
+      "empty_state": {
+        "policy": "DISTINCT_FROM_ERROR_AND_CONFIRMATION",
+        "placeholder_role": "ORDINARY_SELECT_PLACEHOLDER",
+        "placeholder": "選択してください"
+      },
+      "error_state": {
+        "policy": "CATEGORY_APP_ERROR_AUTHORITY"
+      },
+      "authority": [
+        "AUDIT-1c6087c1b5c4b3805e12",
+        "HUMAN-ADOPTION"
+      ],
+      "source_revision": "af4f30983cc3d9a24ca1a7eb54fab834f024d0fc",
+      "exception_id": null,
+      "status": "FORMAL",
+      "audit_observations": {
+        "control_types": [
+          "SELECT"
+        ],
+        "placeholder": "選択してください",
+        "classification": "CATEGORY",
+        "observation_coverage": "RESOLVER_SAMPLES"
+      }
+    },
+    {
+      "field_id": "sash-app:SER-LIXIL-TW:screen_type",
+      "semantic_role": "window:cc7d7fb2904047bd",
+      "scope": {
+        "app": "sash-app",
+        "product": "SER-LIXIL-TW",
+        "kind": "CURRENT_AUDIT_BASELINE"
+      },
+      "category": "window",
+      "runtime_key": "screen_type",
+      "canonical_key": "screen_type",
+      "display_label": [
+        "網戸形式"
+      ],
+      "control_type": "SELECT",
+      "allowed_control_types": [
+        "SELECT"
+      ],
+      "conditional_presentations": {
+        "observed_types": [
+          "SELECT"
+        ],
+        "source": {
+          "observed": [
+            "USER_SELECTABLE"
+          ],
+          "current": "Runtime determines readonly/fixed values; category contract excludes technical and fixed hidden fields"
+        },
+        "requires_contract_change": true
+      },
+      "option_source": {
+        "policy": "PRODUCT_AUTHORITY_PER_SELECTION",
+        "authority": "AUDIT-47f649c9c09b2e461237",
+        "observed_union_is_allowed_set": false
+      },
+      "label_value_contract": {
+        "separate": true,
+        "raw_value_fallback": false,
+        "official_code_label_requires_authority": true
+      },
+      "group": {
+        "kind": "SEMANTIC_STAGE",
+        "id": "SCREEN"
+      },
+      "order": {
+        "mode": "CATEGORY_AUTHORITY",
+        "evidence": {
+          "semantic_slot": "screen_form",
+          "display_order": [
+            90
+          ],
+          "presentation_slot": [
+            "screen_form"
+          ],
+          "definition_order_is_ui_order": false
+        }
+      },
+      "required": {
+        "policy": "APPLICABLE_AND_PRODUCT_RULE",
+        "observation": {
+          "observed": [
+            true
+          ],
+          "runtime_rule": "REQUIRED"
+        }
+      },
+      "visibility": {
+        "policy": "PRODUCT_AUTHORITY",
+        "non_applicable": "HIDE_AND_EXCLUDE"
+      },
+      "applicability": {
+        "policy": "PRODUCT_AUTHORITY",
+        "business_output": "EXCLUDE_IF_NON_APPLICABLE"
+      },
+      "dependency": {
+        "mode": "DECLARED_BOUNDARY",
+        "exhaustive": false
+      },
+      "upstream_fields": [
+        "sash-app:SER-LIXIL-TW:screen_presence",
+        "sash-app:SER-LIXIL-TW:size",
+        "sash-app:SER-LIXIL-TW:window_type"
+      ],
+      "reset_behavior": {
+        "on_upstream_change": "REEVALUATE",
+        "valid": "KEEP_VALID",
+        "invalid": "CLEAR_RESELECT",
+        "non_applicable": "HIDE_AND_EXCLUDE"
+      },
+      "formatter": {
+        "policy": "CATEGORY_AUTHORITY",
+        "value_kind": "PRODUCT_AUTHORITY"
+      },
+      "unit": {
+        "policy": "SEPARATE_NUMBER_AND_UNIT",
+        "observation": "N/A"
+      },
+      "output": {
+        "policy": "APPLICABILITY_AND_DESTINATION",
+        "exclude_hidden_selection": true,
+        "exclude_non_applicable": true
+      },
+      "persistence": {
+        "policy": "SELECTION_IDENTITY_WITH_SOURCE_AND_RUNTIME",
+        "invisible_context_separate": true
+      },
+      "validation": {
+        "policy": "PRODUCT_AUTHORITY",
+        "critical_unknown": "FORBIDDEN_IN_FORMAL"
+      },
+      "default": {
+        "policy": "PRODUCT_AUTHORITY_NO_UI_GUESS"
+      },
+      "empty_state": {
+        "policy": "DISTINCT_FROM_ERROR_AND_CONFIRMATION",
+        "placeholder_role": "ORDINARY_SELECT_PLACEHOLDER",
+        "placeholder": "選択してください"
+      },
+      "error_state": {
+        "policy": "CATEGORY_APP_ERROR_AUTHORITY"
+      },
+      "authority": [
+        "AUDIT-47f649c9c09b2e461237",
+        "HUMAN-ADOPTION"
+      ],
+      "source_revision": "af4f30983cc3d9a24ca1a7eb54fab834f024d0fc",
+      "exception_id": null,
+      "status": "FORMAL",
+      "audit_observations": {
+        "control_types": [
+          "SELECT"
+        ],
+        "placeholder": "選択してください",
+        "classification": "CATEGORY",
+        "observation_coverage": "RESOLVER_SAMPLES"
+      }
+    },
+    {
+      "field_id": "sash-app:SER-LIXIL-TW:custom_width",
+      "semantic_role": "window:7f13d04e78498b38",
+      "scope": {
+        "app": "sash-app",
+        "product": "SER-LIXIL-TW",
+        "kind": "CURRENT_AUDIT_BASELINE"
+      },
+      "category": "window",
+      "runtime_key": "custom_width",
+      "canonical_key": "custom_width",
+      "display_label": [
+        "特注W（mm）"
+      ],
+      "control_type": "NUMBER",
+      "allowed_control_types": [
+        "NUMBER"
+      ],
+      "conditional_presentations": {
+        "observed_types": [
+          "NUMBER"
+        ],
+        "source": {
+          "observed": [
+            "USER_SELECTABLE"
+          ],
+          "current": "Runtime determines readonly/fixed values; category contract excludes technical and fixed hidden fields"
+        },
+        "requires_contract_change": true
+      },
+      "option_source": {
+        "policy": "PRODUCT_AUTHORITY_PER_SELECTION",
+        "authority": "AUDIT-082e37c036d5d531e359",
+        "observed_union_is_allowed_set": false
+      },
+      "label_value_contract": {
+        "separate": true,
+        "raw_value_fallback": false,
+        "official_code_label_requires_authority": true
+      },
+      "group": {
+        "kind": "SEMANTIC_STAGE",
+        "id": "SIZE"
+      },
+      "order": {
+        "mode": "CATEGORY_AUTHORITY",
+        "evidence": {
+          "semantic_slot": "size",
+          "display_order": [
+            40
+          ],
+          "presentation_slot": [
+            "size"
+          ],
+          "definition_order_is_ui_order": false
+        }
+      },
+      "required": {
+        "policy": "APPLICABLE_AND_PRODUCT_RULE",
+        "observation": {
+          "observed": [
+            true
+          ],
+          "runtime_rule": "REQUIRED"
+        }
+      },
+      "visibility": {
+        "policy": "PRODUCT_AUTHORITY",
+        "non_applicable": "HIDE_AND_EXCLUDE"
+      },
+      "applicability": {
+        "policy": "PRODUCT_AUTHORITY",
+        "business_output": "EXCLUDE_IF_NON_APPLICABLE"
+      },
+      "dependency": {
+        "mode": "DECLARED_BOUNDARY",
+        "exhaustive": false
+      },
+      "upstream_fields": [
+        "sash-app:SER-LIXIL-TW:size_mode",
+        "sash-app:SER-LIXIL-TW:window_type"
+      ],
+      "reset_behavior": {
+        "on_upstream_change": "REEVALUATE",
+        "valid": "KEEP_VALID",
+        "invalid": "CLEAR_RESELECT",
+        "non_applicable": "HIDE_AND_EXCLUDE"
+      },
+      "formatter": {
+        "policy": "CATEGORY_AUTHORITY",
+        "value_kind": "PRODUCT_AUTHORITY"
+      },
+      "unit": {
+        "policy": "SEPARATE_NUMBER_AND_UNIT",
+        "observation": [
+          "mm"
+        ]
+      },
+      "output": {
+        "policy": "APPLICABILITY_AND_DESTINATION",
+        "exclude_hidden_selection": true,
+        "exclude_non_applicable": true
+      },
+      "persistence": {
+        "policy": "SELECTION_IDENTITY_WITH_SOURCE_AND_RUNTIME",
+        "invisible_context_separate": true
+      },
+      "validation": {
+        "policy": "PRODUCT_AUTHORITY",
+        "critical_unknown": "FORBIDDEN_IN_FORMAL"
+      },
+      "default": {
+        "policy": "PRODUCT_AUTHORITY_NO_UI_GUESS"
+      },
+      "empty_state": {
+        "policy": "DISTINCT_FROM_ERROR_AND_CONFIRMATION",
+        "placeholder_role": "NOT_APPLICABLE",
+        "placeholder": null
+      },
+      "error_state": {
+        "policy": "CATEGORY_APP_ERROR_AUTHORITY"
+      },
+      "authority": [
+        "AUDIT-082e37c036d5d531e359",
+        "HUMAN-ADOPTION"
+      ],
+      "source_revision": "af4f30983cc3d9a24ca1a7eb54fab834f024d0fc",
+      "exception_id": null,
+      "status": "FORMAL",
+      "audit_observations": {
+        "control_types": [
+          "NUMBER"
+        ],
+        "placeholder": "数値を入力",
+        "classification": "CATEGORY",
+        "observation_coverage": "RESOLVER_SAMPLES"
+      }
+    },
+    {
+      "field_id": "sash-app:SER-LIXIL-TW:custom_height",
+      "semantic_role": "window:7f13d04e78498b38",
+      "scope": {
+        "app": "sash-app",
+        "product": "SER-LIXIL-TW",
+        "kind": "CURRENT_AUDIT_BASELINE"
+      },
+      "category": "window",
+      "runtime_key": "custom_height",
+      "canonical_key": "custom_height",
+      "display_label": [
+        "特注H（mm）"
+      ],
+      "control_type": "NUMBER",
+      "allowed_control_types": [
+        "NUMBER"
+      ],
+      "conditional_presentations": {
+        "observed_types": [
+          "NUMBER"
+        ],
+        "source": {
+          "observed": [
+            "USER_SELECTABLE"
+          ],
+          "current": "Runtime determines readonly/fixed values; category contract excludes technical and fixed hidden fields"
+        },
+        "requires_contract_change": true
+      },
+      "option_source": {
+        "policy": "PRODUCT_AUTHORITY_PER_SELECTION",
+        "authority": "AUDIT-4b87642e60c18439540f",
+        "observed_union_is_allowed_set": false
+      },
+      "label_value_contract": {
+        "separate": true,
+        "raw_value_fallback": false,
+        "official_code_label_requires_authority": true
+      },
+      "group": {
+        "kind": "SEMANTIC_STAGE",
+        "id": "SIZE"
+      },
+      "order": {
+        "mode": "CATEGORY_AUTHORITY",
+        "evidence": {
+          "semantic_slot": "size",
+          "display_order": [
+            50
+          ],
+          "presentation_slot": [
+            "size"
+          ],
+          "definition_order_is_ui_order": false
+        }
+      },
+      "required": {
+        "policy": "APPLICABLE_AND_PRODUCT_RULE",
+        "observation": {
+          "observed": [
+            true
+          ],
+          "runtime_rule": "REQUIRED"
+        }
+      },
+      "visibility": {
+        "policy": "PRODUCT_AUTHORITY",
+        "non_applicable": "HIDE_AND_EXCLUDE"
+      },
+      "applicability": {
+        "policy": "PRODUCT_AUTHORITY",
+        "business_output": "EXCLUDE_IF_NON_APPLICABLE"
+      },
+      "dependency": {
+        "mode": "DECLARED_BOUNDARY",
+        "exhaustive": false
+      },
+      "upstream_fields": [
+        "sash-app:SER-LIXIL-TW:size_mode",
+        "sash-app:SER-LIXIL-TW:window_type"
+      ],
+      "reset_behavior": {
+        "on_upstream_change": "REEVALUATE",
+        "valid": "KEEP_VALID",
+        "invalid": "CLEAR_RESELECT",
+        "non_applicable": "HIDE_AND_EXCLUDE"
+      },
+      "formatter": {
+        "policy": "CATEGORY_AUTHORITY",
+        "value_kind": "PRODUCT_AUTHORITY"
+      },
+      "unit": {
+        "policy": "SEPARATE_NUMBER_AND_UNIT",
+        "observation": [
+          "mm"
+        ]
+      },
+      "output": {
+        "policy": "APPLICABILITY_AND_DESTINATION",
+        "exclude_hidden_selection": true,
+        "exclude_non_applicable": true
+      },
+      "persistence": {
+        "policy": "SELECTION_IDENTITY_WITH_SOURCE_AND_RUNTIME",
+        "invisible_context_separate": true
+      },
+      "validation": {
+        "policy": "PRODUCT_AUTHORITY",
+        "critical_unknown": "FORBIDDEN_IN_FORMAL"
+      },
+      "default": {
+        "policy": "PRODUCT_AUTHORITY_NO_UI_GUESS"
+      },
+      "empty_state": {
+        "policy": "DISTINCT_FROM_ERROR_AND_CONFIRMATION",
+        "placeholder_role": "NOT_APPLICABLE",
+        "placeholder": null
+      },
+      "error_state": {
+        "policy": "CATEGORY_APP_ERROR_AUTHORITY"
+      },
+      "authority": [
+        "AUDIT-4b87642e60c18439540f",
+        "HUMAN-ADOPTION"
+      ],
+      "source_revision": "af4f30983cc3d9a24ca1a7eb54fab834f024d0fc",
+      "exception_id": null,
+      "status": "FORMAL",
+      "audit_observations": {
+        "control_types": [
+          "NUMBER"
+        ],
+        "placeholder": "数値を入力",
+        "classification": "CATEGORY",
+        "observation_coverage": "RESOLVER_SAMPLES"
+      }
+    },
+    {
+      "field_id": "sash-app:SER-LIXIL-TW:screen_midrail",
+      "semantic_role": "window:ee9cf2d2d57ebbdd",
+      "scope": {
+        "app": "sash-app",
+        "product": "SER-LIXIL-TW",
+        "kind": "CURRENT_AUDIT_BASELINE"
+      },
+      "category": "window",
+      "runtime_key": "screen_midrail",
+      "canonical_key": "screen_midrail",
+      "display_label": [
+        "網戸中桟"
+      ],
+      "control_type": "SELECT",
+      "allowed_control_types": [
+        "SELECT"
+      ],
+      "conditional_presentations": {
+        "observed_types": [
+          "SELECT"
+        ],
+        "source": {
+          "observed": "UNKNOWN",
+          "current": "Runtime determines readonly/fixed values; category contract excludes technical and fixed hidden fields"
+        },
+        "requires_contract_change": true
+      },
+      "option_source": {
+        "policy": "PRODUCT_AUTHORITY_PER_SELECTION",
+        "authority": "AUDIT-43d7e46445f9808542a4",
+        "observed_union_is_allowed_set": false
+      },
+      "label_value_contract": {
+        "separate": true,
+        "raw_value_fallback": false,
+        "official_code_label_requires_authority": true
+      },
+      "group": {
+        "kind": "SEMANTIC_STAGE",
+        "id": "SCREEN"
+      },
+      "order": {
+        "mode": "CATEGORY_AUTHORITY",
+        "evidence": {
+          "semantic_slot": "screen_midrail",
+          "display_order": [
+            10
+          ],
+          "presentation_slot": [
+            "screen_midrail"
+          ],
+          "definition_order_is_ui_order": false
+        }
+      },
+      "required": {
+        "policy": "APPLICABLE_AND_PRODUCT_RULE",
+        "observation": {
+          "observed": [
+            true
+          ],
+          "runtime_rule": "REQUIRED"
+        }
+      },
+      "visibility": {
+        "policy": "PRODUCT_AUTHORITY",
+        "non_applicable": "HIDE_AND_EXCLUDE"
+      },
+      "applicability": {
+        "policy": "PRODUCT_AUTHORITY",
+        "business_output": "EXCLUDE_IF_NON_APPLICABLE"
+      },
+      "dependency": {
+        "mode": "DECLARED_BOUNDARY",
+        "exhaustive": false
+      },
+      "upstream_fields": [
+        "sash-app:SER-LIXIL-TW:screen_presence",
+        "sash-app:SER-LIXIL-TW:screen_type",
+        "sash-app:SER-LIXIL-TW:size",
+        "sash-app:SER-LIXIL-TW:window_type"
+      ],
+      "reset_behavior": {
+        "on_upstream_change": "REEVALUATE",
+        "valid": "KEEP_VALID",
+        "invalid": "CLEAR_RESELECT",
+        "non_applicable": "HIDE_AND_EXCLUDE"
+      },
+      "formatter": {
+        "policy": "CATEGORY_AUTHORITY",
+        "value_kind": "PRODUCT_AUTHORITY"
+      },
+      "unit": {
+        "policy": "SEPARATE_NUMBER_AND_UNIT",
+        "observation": "N/A"
+      },
+      "output": {
+        "policy": "APPLICABILITY_AND_DESTINATION",
+        "exclude_hidden_selection": true,
+        "exclude_non_applicable": true
+      },
+      "persistence": {
+        "policy": "SELECTION_IDENTITY_WITH_SOURCE_AND_RUNTIME",
+        "invisible_context_separate": true
+      },
+      "validation": {
+        "policy": "PRODUCT_AUTHORITY",
+        "critical_unknown": "FORBIDDEN_IN_FORMAL"
+      },
+      "default": {
+        "policy": "PRODUCT_AUTHORITY_NO_UI_GUESS"
+      },
+      "empty_state": {
+        "policy": "DISTINCT_FROM_ERROR_AND_CONFIRMATION",
+        "placeholder_role": "ORDINARY_SELECT_PLACEHOLDER",
+        "placeholder": "選択してください"
+      },
+      "error_state": {
+        "policy": "CATEGORY_APP_ERROR_AUTHORITY"
+      },
+      "authority": [
+        "AUDIT-43d7e46445f9808542a4",
+        "HUMAN-ADOPTION"
+      ],
+      "source_revision": "af4f30983cc3d9a24ca1a7eb54fab834f024d0fc",
+      "exception_id": null,
+      "status": "FORMAL",
+      "audit_observations": {
+        "control_types": [
+          "SELECT"
+        ],
+        "placeholder": "選択してください",
+        "classification": "CATEGORY",
+        "observation_coverage": "DECLARED_CONTRACT_ONLY"
+      }
+    },
+    {
+      "field_id": "sash-app:SER-LIXIL-TW:screen_net",
+      "semantic_role": "window:0419ba86af07bd55",
+      "scope": {
+        "app": "sash-app",
+        "product": "SER-LIXIL-TW",
+        "kind": "CURRENT_AUDIT_BASELINE"
+      },
+      "category": "window",
+      "runtime_key": "screen_net",
+      "canonical_key": "screen_net",
+      "display_label": [
+        "網戸ネット"
+      ],
+      "control_type": "SELECT",
+      "allowed_control_types": [
+        "SELECT"
+      ],
+      "conditional_presentations": {
+        "observed_types": [
+          "SELECT"
+        ],
+        "source": {
+          "observed": "UNKNOWN",
+          "current": "Runtime determines readonly/fixed values; category contract excludes technical and fixed hidden fields"
+        },
+        "requires_contract_change": true
+      },
+      "option_source": {
+        "policy": "PRODUCT_AUTHORITY_PER_SELECTION",
+        "authority": "AUDIT-8e232c74d075156510a3",
+        "observed_union_is_allowed_set": false
+      },
+      "label_value_contract": {
+        "separate": true,
+        "raw_value_fallback": false,
+        "official_code_label_requires_authority": true
+      },
+      "group": {
+        "kind": "SEMANTIC_STAGE",
+        "id": "SCREEN"
+      },
+      "order": {
+        "mode": "CATEGORY_AUTHORITY",
+        "evidence": {
+          "semantic_slot": "screen_net",
+          "display_order": [
+            10
+          ],
+          "presentation_slot": [
+            "screen_net"
+          ],
+          "definition_order_is_ui_order": false
+        }
+      },
+      "required": {
+        "policy": "APPLICABLE_AND_PRODUCT_RULE",
+        "observation": {
+          "observed": [
+            true
+          ],
+          "runtime_rule": "REQUIRED"
+        }
+      },
+      "visibility": {
+        "policy": "PRODUCT_AUTHORITY",
+        "non_applicable": "HIDE_AND_EXCLUDE"
+      },
+      "applicability": {
+        "policy": "PRODUCT_AUTHORITY",
+        "business_output": "EXCLUDE_IF_NON_APPLICABLE"
+      },
+      "dependency": {
+        "mode": "DECLARED_BOUNDARY",
+        "exhaustive": false
+      },
+      "upstream_fields": [
+        "sash-app:SER-LIXIL-TW:screen_presence",
+        "sash-app:SER-LIXIL-TW:screen_type",
+        "sash-app:SER-LIXIL-TW:size",
+        "sash-app:SER-LIXIL-TW:window_type"
+      ],
+      "reset_behavior": {
+        "on_upstream_change": "REEVALUATE",
+        "valid": "KEEP_VALID",
+        "invalid": "CLEAR_RESELECT",
+        "non_applicable": "HIDE_AND_EXCLUDE"
+      },
+      "formatter": {
+        "policy": "CATEGORY_AUTHORITY",
+        "value_kind": "PRODUCT_AUTHORITY"
+      },
+      "unit": {
+        "policy": "SEPARATE_NUMBER_AND_UNIT",
+        "observation": "N/A"
+      },
+      "output": {
+        "policy": "APPLICABILITY_AND_DESTINATION",
+        "exclude_hidden_selection": true,
+        "exclude_non_applicable": true
+      },
+      "persistence": {
+        "policy": "SELECTION_IDENTITY_WITH_SOURCE_AND_RUNTIME",
+        "invisible_context_separate": true
+      },
+      "validation": {
+        "policy": "PRODUCT_AUTHORITY",
+        "critical_unknown": "FORBIDDEN_IN_FORMAL"
+      },
+      "default": {
+        "policy": "PRODUCT_AUTHORITY_NO_UI_GUESS"
+      },
+      "empty_state": {
+        "policy": "DISTINCT_FROM_ERROR_AND_CONFIRMATION",
+        "placeholder_role": "ORDINARY_SELECT_PLACEHOLDER",
+        "placeholder": "選択してください"
+      },
+      "error_state": {
+        "policy": "CATEGORY_APP_ERROR_AUTHORITY"
+      },
+      "authority": [
+        "AUDIT-8e232c74d075156510a3",
+        "HUMAN-ADOPTION"
+      ],
+      "source_revision": "af4f30983cc3d9a24ca1a7eb54fab834f024d0fc",
+      "exception_id": null,
+      "status": "FORMAL",
+      "audit_observations": {
+        "control_types": [
+          "SELECT"
+        ],
+        "placeholder": "選択してください",
+        "classification": "CATEGORY",
+        "observation_coverage": "DECLARED_CONTRACT_ONLY"
+      }
+    }
+  ],
+  "adoption": "FORMAL_CARRY_FORWARD; historic central audit and app adoption remain intact"
+}

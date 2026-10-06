@@ -21,7 +21,7 @@ import { adaptFrameRuntime } from './frame-runtime-adapter.mjs';
 const HERE = dirname(fileURLToPath(import.meta.url));
 const EW_ROOT = join(HERE, '../runtime-master-packages/lixil-ew-v1.3');
 const EW_RUNTIME_PARTS = Object.freeze(Array.from({ length: 8 }, (_, index) => `part-${String(index).padStart(2,'0')}`));
-const TW_ROOT = join(HERE, '../runtime-master-packages/lixil-tw-integrated-v0.4');
+const TW_ROOT = join(HERE, '../runtime-master-packages/lixil-tw-integrated-v0.5');
 const TW_V03_ROOT = join(HERE, '../runtime-master-packages/lixil-tw-integrated-v0.3');
 const TW_V02_ROOT = join(HERE, '../runtime-master-packages/lixil-tw-integrated-v0.2');
 const TW_TRANSFORM_PARTS = Object.freeze(Array.from({ length: 19 }, (_, index) => `part-${String(index).padStart(2,'0')}`));
@@ -109,17 +109,10 @@ export const runtimeMasterInventory = Object.freeze([
     }),
   }),
   Object.freeze({
-    manufacturer:'LIXIL', series:'TW', masterVersion:'integrated-v0.4', schemaVersion:'2.0', packageType:'RUNTIME_MANIFEST_V1', adapterType:'TW_CANONICAL_WORKBOOK_REFERENCE_V2', packageRoot:TW_ROOT,
-    runtimeManifestPath:join(TW_ROOT,'runtime_manifest.json'), runtimeManifestDriveFileId:'13doEdTkUlQNu4Dm-SNwkeUg8RkrjS5G0', runtimeManifestSha256:'4ca87f7fc327f798da9ac0e39d4aa7ba4e8bda1e5635cc91959fe241059aa7d7',
+    manufacturer:'LIXIL', series:'TW', masterVersion:'integrated-v0.5', schemaVersion:'2.0', packageType:'RUNTIME_MANIFEST_V1', adapterType:'TW_CANONICAL_WORKBOOK_REFERENCE_V2', packageRoot:TW_ROOT,
+    runtimeManifestPath:join(TW_ROOT,'runtime_manifest.json'), runtimeManifestDriveFileId:'1AH-m4HCVuP15kdJqF0kebOtbZp2whqPW', runtimeManifestSha256:'783b6d1c705adc5dc31d504373a4a86e3ce498a75a570e67dd15cd8d2ee148d3',
     materializedFiles:Object.freeze({
-      '1hWy1coHWTsuXYXGLRxZ0a2vJEmSIvg5p':Object.freeze({
-        codec:'json-transform-chain-v1',
-        base:Object.freeze({codec:'brotli',paths:Object.freeze([join(TW_V02_ROOT,'LIXIL_TW_runtime_integrated-v0.2.json.br.b64.parts/part-00')])}),
-        stages:Object.freeze([
-          Object.freeze({transformPaths:Object.freeze(TW_TRANSFORM_PARTS.map((name)=>join(TW_V03_ROOT,`runtime_transform.json.parts/${name}`)))}),
-          Object.freeze({transformPath:join(TW_ROOT,'runtime_transform.json')}),
-        ]),
-      }),
+      '1r946VJlEi_qmIFrV-TULmfgJ8XhYV230':Object.freeze({codec:'brotli',paths:Object.freeze([join(TW_ROOT,'LIXIL_TW_runtime_integrated-v0.5.json.br.b64')])}),
     }),
   }),
 ]);

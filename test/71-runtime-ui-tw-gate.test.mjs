@@ -43,7 +43,7 @@ async function completeCustomUpstream(windowType) {
 test('TW starts with manufacturer/product/window context and exposes formal STANDARD/CUSTOM size modes in UI Standard order', async () => {
   const initial = await resolveRuntimeAppProduct(PRODUCT, {});
   assert.deepEqual(initial.fields.map((field) => field.key), ['window_type']);
-  assert.equal(initial.fields[0].values.length, 25);
+  assert.equal(initial.fields[0].values.length, 26);
 
   const { result } = await complete('SWT-LIX-TW-UNIT-HIKI', { glass_base: 'Low-E複層ガラス' });
   const keys = result.fields.map((field) => field.key);
@@ -121,7 +121,7 @@ test('TW CUSTOM continues downstream only when the entered dimensions are inside
 
 test('all 25 TW formal CUSTOM rules continue in-range and stop out-of-range', async () => {
   const runtime = await loadRegisteredRuntime('LIXIL','TW');
-  const rules = runtime.master.customDimensionRules;
+  const rules = runtime.master.customDimensionRules.filter(rule => rule.productNode !== 'SWT-LIX-TW-FIX-TRAPEZOID-IN');
   assert.equal(rules.length, 25);
   for (const rule of rules) {
     const windowType = String(rule.productNode ?? rule.windowId ?? rule.selector?.window_type ?? '');
@@ -202,7 +202,7 @@ test('formal option-code linkages resolve fixed dimensions and preserve special/
     ...completeResult.selection,
     option: ['OP-LIX-TW-CAT-28303','OP-LIX-TW-CAT-28322','OP-LIX-TW-CAT-28509'],
   });
-  assert.equal(result.optionCodeLinkageCount, 196);
+  assert.equal(result.optionCodeLinkageCount, 247);
   const byId = new Map(result.optionCodeResults.map((row) => [row.optionId, row]));
   assert.equal(byId.get('OP-LIX-TW-CAT-28303').status, 'SPECIAL_ORDER_NO_STANDARD_SKU');
   assert.equal(byId.get('OP-LIX-TW-CAT-28303').productCode, null);

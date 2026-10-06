@@ -1,0 +1,1353 @@
+{
+  "type": "object",
+  "properties": {
+    "field_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "semantic_role": {
+      "type": "string",
+      "minLength": 1
+    },
+    "scope": {
+      "type": "object",
+      "properties": {
+        "app": {
+          "enum": [
+            "sash-app",
+            "exterior-estimator",
+            "interior-estimator"
+          ]
+        },
+        "product": {
+          "type": "string",
+          "minLength": 1
+        },
+        "kind": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "app",
+        "product",
+        "kind"
+      ],
+      "additionalProperties": false
+    },
+    "category": {
+      "type": "string",
+      "minLength": 1
+    },
+    "runtime_key": {
+      "type": "string",
+      "minLength": 1
+    },
+    "canonical_key": {
+      "type": "string",
+      "minLength": 1
+    },
+    "display_label": {
+      "oneOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1
+        }
+      ]
+    },
+    "control_type": {
+      "enum": [
+        "SELECT",
+        "RADIO",
+        "NUMBER",
+        "TEXT",
+        "TEXTAREA",
+        "CHECKBOX",
+        "MULTI_SELECT",
+        "SUMMARY",
+        "GROUP",
+        "CARD_SELECT",
+        "READONLY",
+        "READONLY_INPUT",
+        "DATE",
+        "MODULE_CHOICES",
+        "CHECKBOX_GROUP_WITH_HIDDEN_MULTIPLE_SELECT",
+        "UNKNOWN"
+      ]
+    },
+    "allowed_control_types": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "SELECT",
+          "RADIO",
+          "NUMBER",
+          "TEXT",
+          "TEXTAREA",
+          "CHECKBOX",
+          "MULTI_SELECT",
+          "SUMMARY",
+          "GROUP",
+          "CARD_SELECT",
+          "READONLY",
+          "READONLY_INPUT",
+          "DATE",
+          "MODULE_CHOICES",
+          "CHECKBOX_GROUP_WITH_HIDDEN_MULTIPLE_SELECT",
+          "UNKNOWN"
+        ]
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "conditional_presentations": {
+      "type": "object",
+      "properties": {
+        "observed_types": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "SELECT",
+              "RADIO",
+              "NUMBER",
+              "TEXT",
+              "TEXTAREA",
+              "CHECKBOX",
+              "MULTI_SELECT",
+              "SUMMARY",
+              "GROUP",
+              "CARD_SELECT",
+              "READONLY",
+              "READONLY_INPUT",
+              "DATE",
+              "MODULE_CHOICES",
+              "CHECKBOX_GROUP_WITH_HIDDEN_MULTIPLE_SELECT"
+            ]
+          },
+          "minItems": 1
+        },
+        "source": {},
+        "requires_contract_change": {
+          "const": true
+        }
+      },
+      "required": [
+        "observed_types",
+        "source",
+        "requires_contract_change"
+      ],
+      "additionalProperties": false
+    },
+    "option_source": {
+      "type": "object",
+      "properties": {
+        "policy": {
+          "enum": [
+            "PRODUCT_AUTHORITY_PER_SELECTION",
+            "UNKNOWN"
+          ]
+        },
+        "authority": {
+          "type": "string",
+          "minLength": 1
+        },
+        "observed_union_is_allowed_set": {
+          "const": false
+        }
+      },
+      "required": [
+        "policy",
+        "authority",
+        "observed_union_is_allowed_set"
+      ],
+      "additionalProperties": false
+    },
+    "label_value_contract": {
+      "type": "object",
+      "properties": {
+        "separate": {
+          "type": "boolean"
+        },
+        "raw_value_fallback": {
+          "type": "boolean"
+        },
+        "official_code_label_requires_authority": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "separate",
+        "raw_value_fallback",
+        "official_code_label_requires_authority"
+      ],
+      "additionalProperties": false
+    },
+    "group": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "enum": [
+            "SEMANTIC_STAGE",
+            "PRESENTATION_GROUP"
+          ]
+        },
+        "id": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "kind",
+        "id"
+      ],
+      "additionalProperties": false
+    },
+    "order": {
+      "type": "object",
+      "properties": {
+        "mode": {
+          "enum": [
+            "CATEGORY_AUTHORITY",
+            "UNKNOWN"
+          ]
+        },
+        "evidence": {}
+      },
+      "required": [
+        "mode",
+        "evidence"
+      ],
+      "additionalProperties": false
+    },
+    "required": {
+      "type": "object",
+      "properties": {
+        "policy": {
+          "enum": [
+            "APPLICABLE_AND_PRODUCT_RULE",
+            "UNKNOWN"
+          ]
+        },
+        "observation": {}
+      },
+      "required": [
+        "policy",
+        "observation"
+      ],
+      "additionalProperties": false
+    },
+    "visibility": {
+      "type": "object",
+      "properties": {
+        "policy": {
+          "enum": [
+            "PRODUCT_AUTHORITY",
+            "UNKNOWN"
+          ]
+        },
+        "non_applicable": {
+          "enum": [
+            "HIDE_AND_EXCLUDE",
+            "UNKNOWN"
+          ]
+        }
+      },
+      "required": [
+        "policy",
+        "non_applicable"
+      ],
+      "additionalProperties": false
+    },
+    "applicability": {
+      "type": "object",
+      "properties": {
+        "policy": {
+          "enum": [
+            "PRODUCT_AUTHORITY",
+            "UNKNOWN"
+          ]
+        },
+        "business_output": {
+          "enum": [
+            "EXCLUDE_IF_NON_APPLICABLE",
+            "UNKNOWN"
+          ]
+        }
+      },
+      "required": [
+        "policy",
+        "business_output"
+      ],
+      "additionalProperties": false
+    },
+    "dependency": {
+      "type": "object",
+      "properties": {
+        "mode": {
+          "enum": [
+            "DECLARED_BOUNDARY",
+            "NONE",
+            "UNKNOWN"
+          ]
+        },
+        "exhaustive": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "mode",
+        "exhaustive"
+      ],
+      "additionalProperties": false
+    },
+    "upstream_fields": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "reset_behavior": {
+      "type": "object",
+      "properties": {
+        "on_upstream_change": {
+          "const": "REEVALUATE"
+        },
+        "valid": {
+          "enum": [
+            "KEEP_VALID",
+            "REPLACE_STANDARD"
+          ]
+        },
+        "invalid": {
+          "enum": [
+            "CLEAR_RESELECT",
+            "CLEAR",
+            "RESELECT"
+          ]
+        },
+        "non_applicable": {
+          "const": "HIDE_AND_EXCLUDE"
+        }
+      },
+      "required": [
+        "on_upstream_change",
+        "valid",
+        "invalid",
+        "non_applicable"
+      ],
+      "additionalProperties": false
+    },
+    "formatter": {
+      "type": "object",
+      "properties": {
+        "policy": {
+          "enum": [
+            "CATEGORY_AUTHORITY",
+            "UNKNOWN"
+          ]
+        },
+        "value_kind": {
+          "enum": [
+            "DERIVED",
+            "PRODUCT_AUTHORITY",
+            "UNKNOWN"
+          ]
+        }
+      },
+      "required": [
+        "policy",
+        "value_kind"
+      ],
+      "additionalProperties": false
+    },
+    "unit": {
+      "type": "object",
+      "properties": {
+        "policy": {
+          "enum": [
+            "SEPARATE_NUMBER_AND_UNIT",
+            "UNKNOWN"
+          ]
+        },
+        "observation": {}
+      },
+      "required": [
+        "policy",
+        "observation"
+      ],
+      "additionalProperties": false
+    },
+    "output": {
+      "type": "object",
+      "properties": {
+        "policy": {
+          "enum": [
+            "APPLICABILITY_AND_DESTINATION",
+            "UNKNOWN"
+          ]
+        },
+        "exclude_hidden_selection": {
+          "type": "boolean"
+        },
+        "exclude_non_applicable": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "policy",
+        "exclude_hidden_selection",
+        "exclude_non_applicable"
+      ],
+      "additionalProperties": false
+    },
+    "persistence": {
+      "type": "object",
+      "properties": {
+        "policy": {
+          "enum": [
+            "SELECTION_IDENTITY_WITH_SOURCE_AND_RUNTIME",
+            "UNKNOWN"
+          ]
+        },
+        "invisible_context_separate": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "policy",
+        "invisible_context_separate"
+      ],
+      "additionalProperties": false
+    },
+    "validation": {
+      "type": "object",
+      "properties": {
+        "policy": {
+          "enum": [
+            "PRODUCT_AUTHORITY",
+            "UNKNOWN"
+          ]
+        },
+        "critical_unknown": {
+          "const": "FORBIDDEN_IN_FORMAL"
+        }
+      },
+      "required": [
+        "policy",
+        "critical_unknown"
+      ],
+      "additionalProperties": false
+    },
+    "default": {
+      "type": "object",
+      "properties": {
+        "policy": {
+          "enum": [
+            "PRODUCT_AUTHORITY_NO_UI_GUESS",
+            "UNKNOWN"
+          ]
+        }
+      },
+      "required": [
+        "policy"
+      ],
+      "additionalProperties": false
+    },
+    "empty_state": {
+      "type": "object",
+      "properties": {
+        "policy": {
+          "enum": [
+            "DISTINCT_FROM_ERROR_AND_CONFIRMATION",
+            "UNKNOWN"
+          ]
+        },
+        "placeholder_role": {
+          "enum": [
+            "ORDINARY_SELECT_PLACEHOLDER",
+            "NOT_APPLICABLE",
+            "UNKNOWN"
+          ]
+        },
+        "placeholder": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "policy",
+        "placeholder_role",
+        "placeholder"
+      ],
+      "additionalProperties": false
+    },
+    "error_state": {
+      "type": "object",
+      "properties": {
+        "policy": {
+          "enum": [
+            "CATEGORY_APP_ERROR_AUTHORITY",
+            "UNKNOWN"
+          ]
+        }
+      },
+      "required": [
+        "policy"
+      ],
+      "additionalProperties": false
+    },
+    "authority": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true,
+      "minItems": 1
+    },
+    "source_revision": {
+      "oneOf": [
+        {
+          "type": "string",
+          "pattern": "^[a-f0-9]{40}$"
+        },
+        {
+          "const": "UNKNOWN"
+        }
+      ]
+    },
+    "exception_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "status": {
+      "enum": [
+        "FORMAL",
+        "PROVISIONAL",
+        "DRAFT",
+        "LEGACY_PENDING_MAPPING",
+        "UNKNOWN"
+      ]
+    },
+    "audit_observations": {
+      "type": "object"
+    },
+    "presentation_resolution": {
+      "type": "object",
+      "properties": {
+        "version": {
+          "const": "0.1"
+        },
+        "semantic_role": {
+          "type": "string",
+          "minLength": 1
+        },
+        "authority": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "default": {
+          "oneOf": [
+            {
+              "type": "object",
+              "properties": {
+                "state": {
+                  "const": "SELECTABLE"
+                },
+                "control_type": {
+                  "enum": [
+                    "CARD_SELECT",
+                    "CHECKBOX",
+                    "CHECKBOX_GROUP_WITH_HIDDEN_MULTIPLE_SELECT",
+                    "DATE",
+                    "MODULE_CHOICES",
+                    "MULTI_SELECT",
+                    "NUMBER",
+                    "RADIO",
+                    "SELECT",
+                    "TEXT",
+                    "TEXTAREA"
+                  ]
+                }
+              },
+              "required": [
+                "state",
+                "control_type"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "state": {
+                  "const": "FIXED"
+                },
+                "control_type": {
+                  "enum": [
+                    "READONLY",
+                    "READONLY_INPUT",
+                    "SUMMARY"
+                  ]
+                }
+              },
+              "required": [
+                "state",
+                "control_type"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "state": {
+                  "const": "CONTAINER"
+                },
+                "control_type": {
+                  "const": "GROUP"
+                }
+              },
+              "required": [
+                "state",
+                "control_type"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "state": {
+                  "enum": [
+                    "NOT_APPLICABLE",
+                    "EMPTY",
+                    "MANUAL_CONFIRMATION",
+                    "ERROR"
+                  ]
+                },
+                "control_type": {
+                  "type": "null"
+                }
+              },
+              "required": [
+                "state",
+                "control_type"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        },
+        "fallback": {
+          "oneOf": [
+            {
+              "type": "object",
+              "properties": {
+                "state": {
+                  "const": "SELECTABLE"
+                },
+                "control_type": {
+                  "enum": [
+                    "CARD_SELECT",
+                    "CHECKBOX",
+                    "CHECKBOX_GROUP_WITH_HIDDEN_MULTIPLE_SELECT",
+                    "DATE",
+                    "MODULE_CHOICES",
+                    "MULTI_SELECT",
+                    "NUMBER",
+                    "RADIO",
+                    "SELECT",
+                    "TEXT",
+                    "TEXTAREA"
+                  ]
+                }
+              },
+              "required": [
+                "state",
+                "control_type"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "state": {
+                  "const": "FIXED"
+                },
+                "control_type": {
+                  "enum": [
+                    "READONLY",
+                    "READONLY_INPUT",
+                    "SUMMARY"
+                  ]
+                }
+              },
+              "required": [
+                "state",
+                "control_type"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "state": {
+                  "const": "CONTAINER"
+                },
+                "control_type": {
+                  "const": "GROUP"
+                }
+              },
+              "required": [
+                "state",
+                "control_type"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "state": {
+                  "enum": [
+                    "NOT_APPLICABLE",
+                    "EMPTY",
+                    "MANUAL_CONFIRMATION",
+                    "ERROR"
+                  ]
+                },
+                "control_type": {
+                  "type": "null"
+                }
+              },
+              "required": [
+                "state",
+                "control_type"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        },
+        "rules": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "rule_id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "when": {
+                "type": "object",
+                "properties": {
+                  "candidate_count": {
+                    "type": "object",
+                    "properties": {
+                      "min": {
+                        "type": "integer",
+                        "minimum": 0
+                      },
+                      "max": {
+                        "anyOf": [
+                          {
+                            "type": "integer",
+                            "minimum": 0
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      }
+                    },
+                    "required": [
+                      "min",
+                      "max"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "applicable": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [],
+                "additionalProperties": false,
+                "minProperties": 1
+              },
+              "result": {
+                "oneOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "state": {
+                        "const": "SELECTABLE"
+                      },
+                      "control_type": {
+                        "enum": [
+                          "CARD_SELECT",
+                          "CHECKBOX",
+                          "CHECKBOX_GROUP_WITH_HIDDEN_MULTIPLE_SELECT",
+                          "DATE",
+                          "MODULE_CHOICES",
+                          "MULTI_SELECT",
+                          "NUMBER",
+                          "RADIO",
+                          "SELECT",
+                          "TEXT",
+                          "TEXTAREA"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "state",
+                      "control_type"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "state": {
+                        "const": "FIXED"
+                      },
+                      "control_type": {
+                        "enum": [
+                          "READONLY",
+                          "READONLY_INPUT",
+                          "SUMMARY"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "state",
+                      "control_type"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "state": {
+                        "const": "CONTAINER"
+                      },
+                      "control_type": {
+                        "const": "GROUP"
+                      }
+                    },
+                    "required": [
+                      "state",
+                      "control_type"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "state": {
+                        "enum": [
+                          "NOT_APPLICABLE",
+                          "EMPTY",
+                          "MANUAL_CONFIRMATION",
+                          "ERROR"
+                        ]
+                      },
+                      "control_type": {
+                        "type": "null"
+                      }
+                    },
+                    "required": [
+                      "state",
+                      "control_type"
+                    ],
+                    "additionalProperties": false
+                  }
+                ]
+              }
+            },
+            "required": [
+              "rule_id",
+              "when",
+              "result"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "overrides": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "rule_id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "when": {
+                "type": "object",
+                "properties": {
+                  "candidate_count": {
+                    "type": "object",
+                    "properties": {
+                      "min": {
+                        "type": "integer",
+                        "minimum": 0
+                      },
+                      "max": {
+                        "anyOf": [
+                          {
+                            "type": "integer",
+                            "minimum": 0
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      }
+                    },
+                    "required": [
+                      "min",
+                      "max"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "applicable": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [],
+                "additionalProperties": false,
+                "minProperties": 1
+              },
+              "result": {
+                "oneOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "state": {
+                        "const": "SELECTABLE"
+                      },
+                      "control_type": {
+                        "enum": [
+                          "CARD_SELECT",
+                          "CHECKBOX",
+                          "CHECKBOX_GROUP_WITH_HIDDEN_MULTIPLE_SELECT",
+                          "DATE",
+                          "MODULE_CHOICES",
+                          "MULTI_SELECT",
+                          "NUMBER",
+                          "RADIO",
+                          "SELECT",
+                          "TEXT",
+                          "TEXTAREA"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "state",
+                      "control_type"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "state": {
+                        "const": "FIXED"
+                      },
+                      "control_type": {
+                        "enum": [
+                          "READONLY",
+                          "READONLY_INPUT",
+                          "SUMMARY"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "state",
+                      "control_type"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "state": {
+                        "const": "CONTAINER"
+                      },
+                      "control_type": {
+                        "const": "GROUP"
+                      }
+                    },
+                    "required": [
+                      "state",
+                      "control_type"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "state": {
+                        "enum": [
+                          "NOT_APPLICABLE",
+                          "EMPTY",
+                          "MANUAL_CONFIRMATION",
+                          "ERROR"
+                        ]
+                      },
+                      "control_type": {
+                        "type": "null"
+                      }
+                    },
+                    "required": [
+                      "state",
+                      "control_type"
+                    ],
+                    "additionalProperties": false
+                  }
+                ]
+              }
+            },
+            "required": [
+              "rule_id",
+              "when",
+              "result"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": [
+        "version",
+        "semantic_role",
+        "authority"
+      ],
+      "additionalProperties": false,
+      "anyOf": [
+        {
+          "required": [
+            "default"
+          ]
+        },
+        {
+          "required": [
+            "fallback"
+          ]
+        },
+        {
+          "required": [
+            "rules"
+          ],
+          "properties": {
+            "rules": {
+              "minItems": 1
+            }
+          }
+        },
+        {
+          "required": [
+            "overrides"
+          ],
+          "properties": {
+            "overrides": {
+              "minItems": 1
+            }
+          }
+        }
+      ]
+    }
+  },
+  "required": [
+    "field_id",
+    "semantic_role",
+    "scope",
+    "category",
+    "runtime_key",
+    "canonical_key",
+    "display_label",
+    "control_type",
+    "allowed_control_types",
+    "option_source",
+    "label_value_contract",
+    "group",
+    "order",
+    "required",
+    "visibility",
+    "applicability",
+    "dependency",
+    "upstream_fields",
+    "reset_behavior",
+    "formatter",
+    "unit",
+    "output",
+    "persistence",
+    "validation",
+    "default",
+    "empty_state",
+    "error_state",
+    "authority",
+    "source_revision",
+    "exception_id",
+    "status"
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "noUnknown": {
+      "not": {
+        "enum": [
+          "UNKNOWN",
+          "N/A",
+          ""
+        ]
+      },
+      "allOf": [
+        {
+          "if": {
+            "type": "object"
+          },
+          "then": {
+            "properties": {
+              "observation": {},
+              "evidence": {}
+            },
+            "additionalProperties": {
+              "$ref": "#/$defs/noUnknown"
+            }
+          }
+        },
+        {
+          "if": {
+            "type": "array"
+          },
+          "then": {
+            "items": {
+              "$ref": "#/$defs/noUnknown"
+            }
+          }
+        }
+      ]
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "FORMAL"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "then": {
+        "properties": {
+          "field_id": {
+            "allOf": [
+              {
+                "$ref": "#/$defs/noUnknown"
+              }
+            ]
+          },
+          "semantic_role": {
+            "allOf": [
+              {
+                "$ref": "#/$defs/noUnknown"
+              }
+            ]
+          },
+          "scope": {
+            "allOf": [
+              {
+                "$ref": "#/$defs/noUnknown"
+              }
+            ]
+          },
+          "category": {
+            "allOf": [
+              {
+                "$ref": "#/$defs/noUnknown"
+              }
+            ]
+          },
+          "runtime_key": {
+            "allOf": [
+              {
+                "$ref": "#/$defs/noUnknown"
+              }
+            ]
+          },
+          "canonical_key": {
+            "allOf": [
+              {
+                "$ref": "#/$defs/noUnknown"
+              }
+            ]
+          },
+          "display_label": {
+            "allOf": [
+              {
+                "$ref": "#/$defs/noUnknown"
+              }
+            ]
+          },
+          "control_type": {
+            "allOf": [
+              {
+                "$ref": "#/$defs/noUnknown"
+              }
+            ]
+          },
+          "allowed_control_types": {
+            "allOf": [
+              {
+                "$ref": "#/$defs/noUnknown"
+              }
+            ]
+          },
+          "option_source": {
+            "allOf": [
+              {
+                "$ref": "#/$defs/noUnknown"
+              }
+            ]
+          },
+          "group": {
+            "allOf": [
+              {
+                "$ref": "#/$defs/noUnknown"
+              }
+            ]
+          },
+          "order": {
+            "allOf": [
+              {
+                "$ref": "#/$defs/noUnknown"
+              }
+            ]
+          },
+          "required": {
+            "allOf": [
+              {
+                "$ref": "#/$defs/noUnknown"
+              }
+            ]
+          },
+          "visibility": {
+            "allOf": [
+              {
+                "$ref": "#/$defs/noUnknown"
+              }
+            ]
+          },
+          "applicability": {
+            "allOf": [
+              {
+                "$ref": "#/$defs/noUnknown"
+              }
+            ]
+          },
+          "dependency": {
+            "allOf": [
+              {
+                "$ref": "#/$defs/noUnknown"
+              }
+            ]
+          },
+          "reset_behavior": {
+            "allOf": [
+              {
+                "$ref": "#/$defs/noUnknown"
+              }
+            ]
+          },
+          "formatter": {
+            "allOf": [
+              {
+                "$ref": "#/$defs/noUnknown"
+              }
+            ]
+          },
+          "unit": {
+            "allOf": [
+              {
+                "$ref": "#/$defs/noUnknown"
+              }
+            ]
+          },
+          "output": {
+            "allOf": [
+              {
+                "$ref": "#/$defs/noUnknown"
+              }
+            ]
+          },
+          "persistence": {
+            "allOf": [
+              {
+                "$ref": "#/$defs/noUnknown"
+              }
+            ]
+          },
+          "validation": {
+            "allOf": [
+              {
+                "$ref": "#/$defs/noUnknown"
+              }
+            ]
+          },
+          "default": {
+            "allOf": [
+              {
+                "$ref": "#/$defs/noUnknown"
+              }
+            ]
+          },
+          "empty_state": {
+            "allOf": [
+              {
+                "$ref": "#/$defs/noUnknown"
+              }
+            ]
+          },
+          "error_state": {
+            "allOf": [
+              {
+                "$ref": "#/$defs/noUnknown"
+              }
+            ]
+          },
+          "authority": {
+            "allOf": [
+              {
+                "$ref": "#/$defs/noUnknown"
+              }
+            ]
+          },
+          "source_revision": {
+            "allOf": [
+              {
+                "$ref": "#/$defs/noUnknown"
+              }
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://product-ui-contracts.local/schemas/selection-contract.schema.json"
+}

@@ -1,0 +1,201 @@
+{
+  "version": "0.1",
+  "approvals": [
+    {
+      "approval_id": "TW-202610-H2-APPROVAL",
+      "field_id": "sash-app:SER-LIXIL-TW:custom_height_secondary",
+      "category": "window",
+      "purpose": "APPLICATION_FIELD",
+      "status": "APPROVED",
+      "contract_sha256": "191260a2ef7597ef344984d0b57f9924c86940bd13e83703b09bbba04287b893",
+      "evidence_sha256": "0d69f39cc24a0a802a5fc6b9f20fdcbd08b8e9f472385ff450227e1896b23774",
+      "dossier_sha256": "ab6de55ae980e5769d517bc344adad2a85f29bb662aba1df177534fca482ac7e",
+      "review": {
+        "authority_id": "TW-202610-USER-DELEGATED-PROMOTION-REVIEW",
+        "decision_id": "TW-202610-H2-PROMOTE",
+        "decision_ref": {
+          "path": "authority/products/lixil-tw/202610/promotion-decision.json",
+          "pointer": "",
+          "sha256": "2384fd59fe5c55b0d23721898677593eeb22106802d3284ab3ee7ed7378fd10a"
+        }
+      }
+    }
+  ],
+  "dossiers": [
+    {
+      "dossier_id": "TW-202610-H2-FORMAL",
+      "field_id": "sash-app:SER-LIXIL-TW:custom_height_secondary",
+      "category": "window",
+      "purpose": "APPLICATION_FIELD",
+      "fact_kind": "BUSINESS_INPUT",
+      "mapping_classification": "PRODUCT_SPECIFIC",
+      "mapping_rationale": "The official trapezoid has two independent end heights. Existing custom_height remains H1; H2 is a conditional second raw sash-height input, scoped to TW trapezoid CUSTOM.",
+      "evidence_ids": [
+        "TW-202610-H2-CATALOG-EVIDENCE",
+        "TW-202610-H2-RESPONSIBILITY-EVIDENCE",
+        "TW-202610-H2-RUNTIME-EVIDENCE"
+      ],
+      "approval_id": "TW-202610-H2-APPROVAL",
+      "contract_sha256": "191260a2ef7597ef344984d0b57f9924c86940bd13e83703b09bbba04287b893",
+      "transition": {
+        "from": "PROVISIONAL",
+        "to": "FORMAL",
+        "operation": "STATUS_TRANSITION",
+        "reason": "Official October catalog directly confirms both heights; runtime input, reset, storage and output verified under the user authorization.",
+        "previous_contract": {
+          "field_id": "sash-app:SER-LIXIL-TW:custom_height_secondary",
+          "semantic_role": "window:custom_height_secondary",
+          "scope": {
+            "app": "sash-app",
+            "product": "SER-LIXIL-TW",
+            "kind": "PRODUCT_SPECIFIC_CATALOG_EXTENSION"
+          },
+          "category": "window",
+          "runtime_key": "custom_height_secondary",
+          "canonical_key": "custom_height_secondary",
+          "display_label": [
+            "台形のもう一方の高さ H2（mm）"
+          ],
+          "control_type": "NUMBER",
+          "allowed_control_types": [
+            "NUMBER"
+          ],
+          "conditional_presentations": {
+            "observed_types": [
+              "NUMBER"
+            ],
+            "source": {
+              "observed": [
+                "USER_SELECTABLE"
+              ],
+              "current": "Only trapezoid CUSTOM; no inferred value; hidden/excluded for every other TW window."
+            },
+            "requires_contract_change": true
+          },
+          "option_source": {
+            "policy": "PRODUCT_AUTHORITY_PER_SELECTION",
+            "authority": "LIXIL-SN4100-0110L26-TW-TRAPEZOID",
+            "observed_union_is_allowed_set": false
+          },
+          "label_value_contract": {
+            "separate": true,
+            "raw_value_fallback": false,
+            "official_code_label_requires_authority": true
+          },
+          "group": {
+            "kind": "SEMANTIC_STAGE",
+            "id": "SIZE"
+          },
+          "order": {
+            "mode": "CATEGORY_AUTHORITY",
+            "evidence": {
+              "semantic_slot": "size",
+              "display_order": [
+                63
+              ],
+              "presentation_slot": [
+                "size"
+              ],
+              "definition_order_is_ui_order": false,
+              "position": "After custom_height H1 in SIZE stage; before colors/glass/options"
+            }
+          },
+          "required": {
+            "policy": "APPLICABLE_AND_PRODUCT_RULE",
+            "observation": {
+              "observed": [
+                true
+              ],
+              "runtime_rule": "REQUIRED",
+              "when": {
+                "window_type": "SWT-LIX-TW-FIX-TRAPEZOID-IN",
+                "size_mode": "CUSTOM"
+              }
+            }
+          },
+          "visibility": {
+            "policy": "PRODUCT_AUTHORITY",
+            "non_applicable": "HIDE_AND_EXCLUDE"
+          },
+          "applicability": {
+            "policy": "PRODUCT_AUTHORITY",
+            "business_output": "EXCLUDE_IF_NON_APPLICABLE"
+          },
+          "dependency": {
+            "mode": "DECLARED_BOUNDARY",
+            "exhaustive": true
+          },
+          "upstream_fields": [
+            "sash-app:SER-LIXIL-TW:window_type",
+            "sash-app:SER-LIXIL-TW:size_mode"
+          ],
+          "reset_behavior": {
+            "on_upstream_change": "REEVALUATE",
+            "valid": "KEEP_VALID",
+            "invalid": "CLEAR_RESELECT",
+            "non_applicable": "HIDE_AND_EXCLUDE"
+          },
+          "formatter": {
+            "policy": "CATEGORY_AUTHORITY",
+            "value_kind": "PRODUCT_AUTHORITY"
+          },
+          "unit": {
+            "policy": "SEPARATE_NUMBER_AND_UNIT",
+            "observation": [
+              "mm"
+            ]
+          },
+          "output": {
+            "policy": "APPLICABILITY_AND_DESTINATION",
+            "exclude_hidden_selection": true,
+            "exclude_non_applicable": true
+          },
+          "persistence": {
+            "policy": "SELECTION_IDENTITY_WITH_SOURCE_AND_RUNTIME",
+            "invisible_context_separate": true
+          },
+          "validation": {
+            "policy": "PRODUCT_AUTHORITY",
+            "critical_unknown": "FORBIDDEN_IN_FORMAL"
+          },
+          "default": {
+            "policy": "PRODUCT_AUTHORITY_NO_UI_GUESS"
+          },
+          "empty_state": {
+            "policy": "DISTINCT_FROM_ERROR_AND_CONFIRMATION",
+            "placeholder_role": "NOT_APPLICABLE",
+            "placeholder": null
+          },
+          "error_state": {
+            "policy": "CATEGORY_APP_ERROR_AUTHORITY"
+          },
+          "authority": [
+            "LIXIL-SN4100-0110L26-TW-TRAPEZOID",
+            "TW-202610-USER-DELEGATED-EXECUTION"
+          ],
+          "source_revision": "de1842d6f1b0f982b0491c4e168770b20cb31413",
+          "exception_id": null,
+          "status": "PROVISIONAL",
+          "audit_observations": {
+            "control_types": [
+              "NUMBER"
+            ],
+            "placeholder": "数値を入力",
+            "classification": "PRODUCT_SPECIFIC",
+            "observation_coverage": "CANDIDATE_RUNTIME_WITH_TWO_HEIGHTS_SAVE_RELOAD_OUTPUT"
+          }
+        },
+        "previous_contract_sha256": "87bd2caf718b1353b55a904aacbad1a2e76fccd5f60f917f8e0445bc40ea675d"
+      },
+      "product_specific": {
+        "reason": "Second independent height is required by the TW trapezoid window.",
+        "why_global_role_insufficient": "A single generic rectangular custom_height cannot represent both sloped-side end heights without losing meaning.",
+        "owner": "TW-202610-USER-DELEGATED-EVIDENCE-REVIEW",
+        "source": "TW-202610-H2-CATALOG",
+        "status": "REVIEWED",
+        "review_condition": "Only TW trapezoid CUSTOM; no inferred H2; fail closed outside envelope/angle; dedicated glass and full dimension graph remain manufacturer review."
+      }
+    }
+  ],
+  "blockers": []
+}

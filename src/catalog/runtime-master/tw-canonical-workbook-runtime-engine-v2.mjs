@@ -47,7 +47,7 @@ function exposeFormalCustomMode(master, fields, windowType) {
     ...fields,
     size_mode: {
       ...fields.size_mode,
-      allowed_values: ['STANDARD','CUSTOM'],
+      allowed_values: rule.allowedSizeModes ?? ['STANDARD','CUSTOM'],
       resolved_by_rule: null,
     },
   };
@@ -206,7 +206,7 @@ function continuationMaster(master, input, width, height) {
 }
 
 function customBaseInput(input) {
-  return without(input, ['size_mode','size','custom_width','custom_height']);
+  return without(input, ['size_mode','size','custom_width','custom_height','custom_height_secondary']);
 }
 
 function evaluateCustomContinuation(master, input, width, height) {
@@ -226,19 +226,31 @@ function clearContextSize(fields) {
   };
 }
 
+function confirmationRequests(master, selection) {
+  return (master.catalogDeltaRules?.confirmation_rules ?? []).filter((rule) =>
+    (!rule.window_ids || rule.window_ids.includes(selection.window_type)) &&
+    (!rule.option_ids || rule.option_ids.some((id) => (selection.option ?? []).includes(id)))
+  ).map((rule) => ({code:rule.code,message:rule.message,evidence:rule.evidence,
+    target_gate:'NONBLOCKING_ESTIMATE_CONFIRM',status:'NEEDS_MFR_CONFIRMATION'}));
+}
+
 export function evaluateTwCanonicalWorkbookRuntimeV2(master, input = {}) {
-  const mode = input.size_mode === 'CUSTOM' ? 'CUSTOM' : 'STANDARD';
+  const selectedRule = customRule(master, input.window_type);
+  const allowedModes = selectedRule?.allowedSizeModes ?? ['STANDARD','CUSTOM'];
+  const mode = allowedModes.length === 1 ? allowedModes[0] : input.size_mode === 'CUSTOM' ? 'CUSTOM' : 'STANDARD';
   if (mode === 'STANDARD') {
-    const normalized = canonicalizeStandardInput(master, without(input, ['custom_width','custom_height']));
+    const normalized = canonicalizeStandardInput(master, without(input, ['custom_width','custom_height','custom_height_secondary']));
     const base = evaluateCanonicalWorkbookRuntime(master, normalized.input);
     const sizeFields = dedupeStandardSizeField(master, { ...base.fields });
     return {
       ...base,
+      confirmation_requests:confirmationRequests(master, Object.fromEntries(Object.entries(base.fields).map(([key,row]) => [key,row.value]))),
       fields: exposeFormalCustomMode(master, sizeFields, normalized.input.window_type),
       cleared_fields: [
         ...(base.cleared_fields ?? []),
         ...(normalized.canonicalized ? [normalized.canonicalized] : []),
         ...clearedFromModeSwitch(input, 'STANDARD'),
+        ...(present(input.custom_height_secondary) ? [{field:'custom_height_secondary',reason:'NOT_APPLICABLE',removed:input.custom_height_secondary}] : []),
       ],
     };
   }
@@ -247,20 +259,31 @@ export function evaluateTwCanonicalWorkbookRuntimeV2(master, input = {}) {
   const height = present(input.custom_height) ? Number(input.custom_height) : null;
   const rule = customRule(master, input.window_type);
   const bounds = boundsFor(rule);
-  const dimensionComplete = Number.isFinite(width) && Number.isFinite(height);
-  const dimensionInside = dimensionComplete && Boolean(rule) && Boolean(bounds) && inside(width, height, bounds);
+  const extraFields = (rule?.requiredMeasurements ?? []).filter((key) => !['custom_width','custom_height'].includes(key));
+  const extras = Object.fromEntries(extraFields.map((key) => [key,present(input[key]) ? Number(input[key]) : null]));
+  const dimensionComplete = Number.isFinite(width) && Number.isFinite(height) && Object.values(extras).every(Number.isFinite);
+  const heights = [height,...Object.values(extras)].filter(Number.isFinite);
+  const maxHeight = heights.length ? Math.max(...heights) : height;
+  let dimensionInside = dimensionComplete && Boolean(rule) && Boolean(bounds) && inside(width, maxHeight, bounds) && heights.every((h) => h >= bounds.minH);
+  const step = rule?.geometryRule?.step;
+  if (dimensionInside && step && width > step.width && maxHeight > step.maxHeightAboveWidth) dimensionInside = false;
+  const slope = rule?.geometryRule?.slope;
+  if (dimensionInside && slope && heights.length === 2) {
+    const angle = Math.atan(Math.abs(heights[0]-heights[1])/width)*180/Math.PI;
+    dimensionInside = angle > slope.minExclusive && angle <= slope.maxInclusive;
+  }
 
   // CUSTOM is allowed to continue through the ordinary dependency graph only after the
   // formal outer-envelope check succeeds. The context size is evaluation-only and is
   // never exposed or persisted as a standard-size selection.
   const base = dimensionInside
-    ? evaluateCustomContinuation(master, input, width, height)
+    ? evaluateCustomContinuation(master, input, width, maxHeight)
     : evaluateCanonicalWorkbookRuntime(master, customBaseInput(input));
   let fields = clearContextSize({ ...base.fields });
 
   fields.size_mode = {
     ...(fields.size_mode ?? {}), value:'CUSTOM', state:'SELECTED', visibility:'SHOW', required:true,
-    allowed_values:['STANDARD','CUSTOM'], resolved_by_rule:null,
+    allowed_values:allowedModes, resolved_by_rule:null,
   };
   fields.custom_width = {
     ...(fields.custom_width ?? {}), value:Number.isFinite(width) ? width : null,
@@ -270,10 +293,15 @@ export function evaluateTwCanonicalWorkbookRuntimeV2(master, input = {}) {
     ...(fields.custom_height ?? {}), value:Number.isFinite(height) ? height : null,
     state:Number.isFinite(height) ? 'SELECTED' : 'UNSET', visibility:'SHOW', required:true, allowed_values:[], unit:'mm',
   };
+  for (const [key,value] of Object.entries(extras)) fields[key] = {
+    ...(fields[key] ?? {}), value:Number.isFinite(value) ? value : null,
+    state:Number.isFinite(value) ? 'SELECTED' : 'UNSET',visibility:'SHOW',required:true,allowed_values:[],unit:'mm',
+  };
 
   const missing = (base.missing_required_fields ?? []).filter((key) => !['size_mode','size','custom_width','custom_height'].includes(key));
   if (!Number.isFinite(width)) missing.push('custom_width');
   if (!Number.isFinite(height)) missing.push('custom_height');
+  for (const [key,value] of Object.entries(extras)) if (!Number.isFinite(value)) missing.push(key);
 
   let dimensionResult = null;
   let status = (base.errors ?? []).length ? 'INVALID' : missing.length ? 'INCOMPLETE' : 'MANUAL_CHECK';
@@ -309,11 +337,13 @@ export function evaluateTwCanonicalWorkbookRuntimeV2(master, input = {}) {
 
   return {
     ...base,
+    confirmation_requests:confirmationRequests(master, {...input,...Object.fromEntries(Object.entries(base.fields).filter(([,row])=>row.value!==null).map(([key,row])=>[key,row.value]))}),
     fields,
     errors,
     status,
     missing_required_fields:[...new Set(missing)],
-    cleared_fields:[...(base.cleared_fields ?? []).filter((row) => row?.removed !== CUSTOM_CONTEXT_SIZE_ID), ...clearedFromModeSwitch(input, 'CUSTOM')],
+    cleared_fields:[...(base.cleared_fields ?? []).filter((row) => row?.removed !== CUSTOM_CONTEXT_SIZE_ID), ...clearedFromModeSwitch(input, 'CUSTOM'),
+      ...(!extraFields.includes('custom_height_secondary') && present(input.custom_height_secondary) ? [{field:'custom_height_secondary',reason:'NOT_APPLICABLE',removed:input.custom_height_secondary}] : [])],
     manual_warnings:[...new Set(manualWarnings)],
     dimension_result:dimensionResult,
     order_ready:false,

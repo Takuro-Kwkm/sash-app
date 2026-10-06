@@ -1,0 +1,189 @@
+{
+  "version": "0.1",
+  "authorities": [
+    {
+      "authority_id": "TW-202610-H2-CATALOG",
+      "kind": "EVIDENCE_SOURCE",
+      "status": "CURRENT",
+      "identity": {
+        "path": "authority/products/lixil-tw/202610/official-source-snapshot.json",
+        "pointer": "",
+        "sha256": "49662225aa77db2711b84d103794c314d88e973b89918160a7016d42edce5fbf"
+      },
+      "source_classes": [
+        "OFFICIAL_CATALOG"
+      ],
+      "purposes": [
+        "APPLICATION_FIELD"
+      ]
+    },
+    {
+      "authority_id": "TW-202610-H2-RESPONSIBILITY",
+      "kind": "EVIDENCE_SOURCE",
+      "status": "CURRENT",
+      "identity": {
+        "path": "authority/products/lixil-tw/202610/field-responsibility.json",
+        "pointer": "",
+        "sha256": "742374030471d8c4bd6b508fea4fcd811967318a3ea0c058e6391936ede1c98c"
+      },
+      "source_classes": [
+        "CONTRACT_AUTHORITY"
+      ],
+      "purposes": [
+        "APPLICATION_FIELD"
+      ]
+    },
+    {
+      "authority_id": "TW-202610-H2-RUNTIME",
+      "kind": "EVIDENCE_SOURCE",
+      "status": "CURRENT",
+      "identity": {
+        "path": "authority/products/lixil-tw/202610/runtime-proof.json",
+        "pointer": "",
+        "sha256": "fffc6bcfa3bb4d473d7bcb55996e72db112ff3c218887e91cf0fed418e08c11c"
+      },
+      "source_classes": [
+        "VERIFIED_RUNTIME_BEHAVIOR"
+      ],
+      "purposes": [
+        "APPLICATION_FIELD"
+      ]
+    },
+    {
+      "authority_id": "TW-202610-USER-DELEGATED-EVIDENCE-REVIEW",
+      "kind": "REVIEW_AUTHORITY",
+      "status": "CURRENT",
+      "identity": {
+        "path": "authority/products/lixil-tw/202610/evidence-acceptance-decisions.json",
+        "pointer": "",
+        "sha256": "601f09ae509d6132f522c1f3ef922b152d02998bd0661a29f15eb8bd7f9597f0"
+      },
+      "source_classes": [],
+      "purposes": [
+        "APPLICATION_FIELD"
+      ]
+    },
+    {
+      "authority_id": "TW-202610-USER-DELEGATED-PROMOTION-REVIEW",
+      "kind": "REVIEW_AUTHORITY",
+      "status": "CURRENT",
+      "identity": {
+        "path": "authority/products/lixil-tw/202610/promotion-decision.json",
+        "pointer": "",
+        "sha256": "2384fd59fe5c55b0d23721898677593eeb22106802d3284ab3ee7ed7378fd10a"
+      },
+      "source_classes": [],
+      "purposes": [
+        "APPLICATION_FIELD"
+      ]
+    }
+  ],
+  "evidence": [
+    {
+      "evidence_id": "TW-202610-H2-CATALOG-EVIDENCE",
+      "source_class": "OFFICIAL_CATALOG",
+      "source_authority": "TW-202610-H2-CATALOG",
+      "source_identifier": "LIXIL SN4100 0110L26; TW catalog change R1 / CATALOG",
+      "document_version": "2026-10 / integrated-v0.5",
+      "page_or_section": "NEWS1 (global PDF4), printed 233 /  additional_definitions / exact Runtime H2 identity",
+      "captured_date": "2026-10-06",
+      "verification_state": "VERIFIED",
+      "status": "ACCEPTED",
+      "source_ref": {
+        "path": "authority/products/lixil-tw/202610/official-source-snapshot.json",
+        "pointer": "",
+        "sha256": "49662225aa77db2711b84d103794c314d88e973b89918160a7016d42edce5fbf"
+      },
+      "scope": {
+        "field_id": "sash-app:SER-LIXIL-TW:custom_height_secondary",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD"
+      },
+      "claims": [
+        "SEMANTIC_IDENTITY",
+        "PRODUCT_SPECIFIC_IDENTITY",
+        "PRODUCT_FACT",
+        "DEPENDENCY"
+      ],
+      "review": {
+        "authority_id": "TW-202610-USER-DELEGATED-EVIDENCE-REVIEW",
+        "decision_id": "TW-202610-H2-CATALOG-ACCEPT",
+        "decision_ref": {
+          "path": "authority/products/lixil-tw/202610/evidence-acceptance-decisions.json",
+          "pointer": "/decisions/0",
+          "sha256": "601f09ae509d6132f522c1f3ef922b152d02998bd0661a29f15eb8bd7f9597f0"
+        }
+      }
+    },
+    {
+      "evidence_id": "TW-202610-H2-RESPONSIBILITY-EVIDENCE",
+      "source_class": "CONTRACT_AUTHORITY",
+      "source_authority": "TW-202610-H2-RESPONSIBILITY",
+      "source_identifier": "LIXIL SN4100 0110L26; TW catalog change R1 / RESPONSIBILITY",
+      "document_version": "2026-10 / integrated-v0.5",
+      "page_or_section": "field-responsibility.json",
+      "captured_date": "2026-10-06",
+      "verification_state": "VERIFIED",
+      "status": "ACCEPTED",
+      "source_ref": {
+        "path": "authority/products/lixil-tw/202610/field-responsibility.json",
+        "pointer": "",
+        "sha256": "742374030471d8c4bd6b508fea4fcd811967318a3ea0c058e6391936ede1c98c"
+      },
+      "scope": {
+        "field_id": "sash-app:SER-LIXIL-TW:custom_height_secondary",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD"
+      },
+      "claims": [
+        "MAPPING",
+        "FIELD_RESPONSIBILITY",
+        "PRESENTATION",
+        "RULE_CONFORMITY",
+        "EXCEPTION_REVIEW"
+      ],
+      "review": {
+        "authority_id": "TW-202610-USER-DELEGATED-EVIDENCE-REVIEW",
+        "decision_id": "TW-202610-H2-RESPONSIBILITY-ACCEPT",
+        "decision_ref": {
+          "path": "authority/products/lixil-tw/202610/evidence-acceptance-decisions.json",
+          "pointer": "/decisions/1",
+          "sha256": "601f09ae509d6132f522c1f3ef922b152d02998bd0661a29f15eb8bd7f9597f0"
+        }
+      }
+    },
+    {
+      "evidence_id": "TW-202610-H2-RUNTIME-EVIDENCE",
+      "source_class": "VERIFIED_RUNTIME_BEHAVIOR",
+      "source_authority": "TW-202610-H2-RUNTIME",
+      "source_identifier": "LIXIL SN4100 0110L26; TW catalog change R1 / RUNTIME",
+      "document_version": "2026-10 / integrated-v0.5",
+      "page_or_section": "runtime-proof.json",
+      "captured_date": "2026-10-06",
+      "verification_state": "VERIFIED",
+      "status": "ACCEPTED",
+      "source_ref": {
+        "path": "authority/products/lixil-tw/202610/runtime-proof.json",
+        "pointer": "",
+        "sha256": "fffc6bcfa3bb4d473d7bcb55996e72db112ff3c218887e91cf0fed418e08c11c"
+      },
+      "scope": {
+        "field_id": "sash-app:SER-LIXIL-TW:custom_height_secondary",
+        "category": "window",
+        "purpose": "APPLICATION_FIELD"
+      },
+      "claims": [
+        "RUNTIME_PARITY"
+      ],
+      "review": {
+        "authority_id": "TW-202610-USER-DELEGATED-EVIDENCE-REVIEW",
+        "decision_id": "TW-202610-H2-RUNTIME-ACCEPT",
+        "decision_ref": {
+          "path": "authority/products/lixil-tw/202610/evidence-acceptance-decisions.json",
+          "pointer": "/decisions/2",
+          "sha256": "601f09ae509d6132f522c1f3ef922b152d02998bd0661a29f15eb8bd7f9597f0"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "field_id": "sash-app:SER-LIXIL-TW:custom_height_secondary",
+  "runtime_identity_sha256": "3aafa7f61a9983ded513f6ec6e8be048f68259b9a1dc3bac715fa7c401e5f533",
+  "runtime_parity": "PASS",
+  "flow_parity": "PASS",
+  "candidate_runtime_sha256": "c7125d06f2c4d443660dd8c5126252558c9d9b200c438ff11945c7a2538aed84",
+  "code_sha256": {
+    "src/catalog/runtime-master/tw-canonical-workbook-runtime-engine-v2.mjs": "c2a53ca7106e0f32f195766f9e780ac440ddbe8f3ea8ee05c595dcdff7085278",
+    "src/catalog/runtime-master/tw-canonical-workbook-reference-v2-adapter.mjs": "844ea7067ae3606161bd30f0bcb46358b95c6bfcc7644f41cfe009e0cd7dcee7",
+    "src/catalog/runtime-master/new-construction-sash-runtime-ui-contract.mjs": "c6718a2b8b742867647881582328c4a65c4481bde80c163a6e9c335daf636a2c",
+    "src/catalog/runtime-master/runtime-app-bridge.mjs": "3f61f87dc9e2a5cb2f64999d8989c5486b6b9747cd74e1639198725ae2dc3c33",
+    "src/work-management/domain.mjs": "ec77668d877126b656382ca2105842f37e1fd4a188fb51fadf5c42d4d1368f41",
+    "src/estimate-output/model.mjs": "5c8f2869524464ee821536207bf7b1fbcc741ebc7b6eb3ab57323b9fcfecea22"
+  },
+  "checks": {
+    "schema_control_type": "NUMBER",
+    "required_when_applicable": true,
+    "semantic_slot": "size",
+    "label": "台形のもう一方の高さ H2（mm）",
+    "display_sequence": [
+      "window_type",
+      "size_mode",
+      "custom_width",
+      "custom_height",
+      "custom_height_secondary",
+      "exterior_color",
+      "interior_color",
+      "glass_base",
+      "glass_type",
+      "glass_detail",
+      "glass_function",
+      "glass_spacer",
+      "glass_air_layer",
+      "option"
+    ],
+    "missing_H2_blocks_downstream": true,
+    "outside_bounds_blocks": true,
+    "valid_geometry_requires_manufacturer_confirmation": true,
+    "non_applicable_H2_cleared": true,
+    "save_reload_value": 1250,
+    "rerender_value": 1250,
+    "output_size": "W 1290 × H1 1480 / H2 1250",
+    "confirmation_codes": [
+      "TW_TRAPEZOID_GLASS_AND_BEAD",
+      "TW_TRAPEZOID_BATHROOM"
+    ]
+  },
+  "source_revision": "de1842d6f1b0f982b0491c4e168770b20cb31413",
+  "generated_at": "2026-10-06T04:25:26.996Z",
+  "proof_type": "ACTUAL_CANDIDATE_RESOLVER_SNAPSHOT_OUTPUT_EXECUTION; browser and final repository CI are separate release gates"
+}

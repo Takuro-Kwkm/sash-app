@@ -1,0 +1,31 @@
+{
+  "work_id": "TW-CATALOG-202610-R1",
+  "status": "FORMAL_ADOPTED",
+  "scope_product_id": "SER-LIXIL-TW",
+  "before": {
+    "id": "SER-LIXIL-TW",
+    "packageVersion": "integrated-v0.4",
+    "sourceHash": "95380f5cab261edf03bf868e0f2120b9d57e941d6618b4543afe7a6ffd00c68e",
+    "canonicalRuntimeReference": {
+      "runtimeManifestDriveFileId": "13doEdTkUlQNu4Dm-SNwkeUg8RkrjS5G0",
+      "runtimeJsonDriveFileId": "1hWy1coHWTsuXYXGLRxZ0a2vJEmSIvg5p",
+      "canonicalFolderId": "1oLex2SCEIKoH5mDMtbMasJXglPF-n-a"
+    },
+    "status": "READY"
+  },
+  "after": {
+    "id": "SER-LIXIL-TW",
+    "packageVersion": "integrated-v0.5",
+    "sourceHash": "783b6d1c705adc5dc31d504373a4a86e3ce498a75a570e67dd15cd8d2ee148d3",
+    "canonicalRuntimeReference": {
+      "runtimeManifestDriveFileId": "1AH-m4HCVuP15kdJqF0kebOtbZp2whqPW",
+      "runtimeJsonDriveFileId": "1r946VJlEi_qmIFrV-TULmfgJ8XhYV230",
+      "canonicalFolderId": "1oLex2SCEIKoH5mDMGtbMasJXglPF-n-a"
+    },
+    "status": "READY"
+  },
+  "runtime_sha256": "17e2a7468f5f9a2c6bfdd275281307c6a9739b994a18faa6fef90dc6fddb4491",
+  "authorization": "USER_EXPLICIT_FULL_CHANGE_ADOPTION_20261006",
+  "central_commit": "6efc459f231fd5bd254c36ab9b8d3c6d589da51a",
+  "source_registry_drive_file_id": "1Zr4QCM02iQf6vPcafM9n8y40ldBEkXi6"
+}

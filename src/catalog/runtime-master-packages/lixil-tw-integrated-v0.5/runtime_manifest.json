@@ -1,0 +1,68 @@
+{
+  "schema_version": "2.0",
+  "manufacturer": "LIXIL",
+  "series": "TW",
+  "package_version": "integrated-v0.5",
+  "authoring_mode": "INTEGRATED_REFERENCE",
+  "authoring_file_name": "サッシ商品マスター_v0.5_TW202610.xlsx",
+  "authoring_file_id": "10-ygy_wcdXN2u9brqU1AhucboJv5N5qk",
+  "runtime_status": "READY",
+  "runtime_files": [
+    {
+      "name": "LIXIL_TW_runtime_integrated-v0.5.json",
+      "id": "1r946VJlEi_qmIFrV-TULmfgJ8XhYV230",
+      "role": "runtime_master",
+      "sha256": "17e2a7468f5f9a2c6bfdd275281307c6a9739b994a18faa6fef90dc6fddb4491",
+      "bytes": 3764442
+    }
+  ],
+  "documentation_file": "LIXIL_TW_PRODUCT_MASTER_MANIFEST_integrated-v0.5.md",
+  "documentation_file_id": "1vDMACR5w97erbLTHIgRzvpHb9UE-J2eh",
+  "storage_status": "DRIVE_CANONICAL",
+  "package_gate": "PASS",
+  "storage_gate": "PASS",
+  "registry_gate": "PASS",
+  "master_status": "FORMAL_PASS",
+  "human_approval": "USER_EXPLICIT_FULL_CHANGE_ADOPTION_20261006",
+  "known_source_limitations": [
+    "OP-LIX-TW-CAT-28322",
+    "OP-LIX-TW-CAT-28323",
+    "CUSTOM_DIMENSION_GRAPH_INTERIORS_REQUIRE_REVIEW"
+  ],
+  "manual_checks": [
+    "TW custom dimensions: outside verified catalog outer envelope = BLOCK; inside = REVIEW_REQUIRED/MANUAL_CHECK."
+  ],
+  "generated_at": "2026-10-06T00:00:00Z",
+  "spec_version": "PRODUCT_MASTER_PACKAGE_STORAGE_COMPLETION_GATE_v2.2",
+  "change_control": {
+    "change_id": "TW-CATALOG-202610-R1",
+    "previous_package_version": "integrated-v0.4",
+    "formalization_status": "FORMAL_PASS",
+    "scope": "2026-10 official catalog delta; unchanged Formal facts retained",
+    "authorization": "USER_EXPLICIT_FULL_CHANGE_ADOPTION_20261006",
+    "baseline_runtime_sha256": "602201ee4bc834490fae609f97dfa5194bfab88beea6520f642c8ddb22bbafed",
+    "unrequested_diff_count": 0,
+    "conditional_field_authority": {
+      "repository": "Takuro-Kwkm/product-ui-contracts",
+      "commit": "6efc459f231fd5bd254c36ab9b8d3c6d589da51a",
+      "PR": 8,
+      "status": "FORMAL",
+      "existing_fields_carry_forward": 25,
+      "additional_conditional_H2": 1
+    },
+    "runtime_file_id": "1r946VJlEi_qmIFrV-TULmfgJ8XhYV230",
+    "working_qa_drive_file_id": "1DAHlX6DvVZ1RN0SFwv0Dy1PmULONohnF"
+  },
+  "registry_file_id": "1HMMZ8JdsbJPtL_8LjQfxMF8P_Zb4-LReqvPMFn1pJks",
+  "canonical_folder_id": "1oLex2SCEIKoH5mDMGtbMasJXglPF-n-a",
+  "old_folder_id": "1K_fgs055I9_Psx6Co5Qn1F1B-Ujpv25L",
+  "working_folder_id": "1uO6KjlmyJKALcFOTOkS96BuV1WzHBULD",
+  "formal_gate_summary": {
+    "content": "PASS",
+    "dependency": "PASS",
+    "qa": "PASS",
+    "artifact_package": "PASS",
+    "storage": "PASS",
+    "registry": "PASS"
+  }
+}

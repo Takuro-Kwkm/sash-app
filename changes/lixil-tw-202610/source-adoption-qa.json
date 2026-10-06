@@ -1,0 +1,151 @@
+{
+  "work_id": "TW-CATALOG-202610-R1",
+  "source_audit_scope": {
+    "product_catalog": {
+      "old_total_pdf_pages": 448,
+      "new_total_pdf_pages": 460,
+      "compared_old_pages": 448,
+      "accounted_new_pages": 460
+    },
+    "price_catalog": {
+      "old_total_pages": 764,
+      "new_total_pages": 764,
+      "TW_old_page_range": [
+        1,
+        410
+      ],
+      "TW_new_page_range": [
+        1,
+        412
+      ],
+      "TW_price_cells_matched": 29492,
+      "TW_unmatched_old": 0,
+      "TW_unmatched_new": 0,
+      "outside_scope": "TW Fire/WOOD compared but not adopted to their registries"
+    }
+  },
+  "core_inventory_formal_carry_forward_counts": {
+    "windows": 25,
+    "sizes": 1112,
+    "color_relations": 30,
+    "screens": 25,
+    "glass": 12,
+    "options": 107
+  },
+  "original_code_identity_retained": 196,
+  "original_formal_custom_rules_geometry_unchanged": 25,
+  "original_selection_fields_formal_carry_forward": 25,
+  "authoring_original_sheet_count": 36,
+  "authoring_out_of_scope_cell_value_delta": 0,
+  "authoring_out_of_scope_cell_style_delta": 0,
+  "checks": {
+    "Required_Fact_completeness": "PASS",
+    "Source_traceability": "PASS",
+    "Evidence_validity": "PASS",
+    "No_stale_old_catalog_fact": "PASS_CURRENT_FACT_LEDGER_WITH_HISTORICAL_REFERENCES_RETAINED",
+    "Current_catalog_applicability": "PASS",
+    "Original_Formal_carry_forward": "PASS",
+    "Unrequested_diff": "PASS",
+    "Dependency_consistency": "PASS",
+    "Validation_consistency": "PASS",
+    "Selection_completeness": "PASS",
+    "No_orphan_value": "PASS_SCOPED_NEW_ENTITIES_AND_ORIGINAL_INVENTORY",
+    "No_dead_dependency": "PASS_SCOPE_AND_RESET_VERIFIED"
+  },
+  "remaining_gates": [
+    "Registered Runtime live integration",
+    "Exact HEAD and post-merge CI"
+  ],
+  "QA_READY": "PASS",
+  "QA_PASS": "PASS",
+  "FORMAL": "PASS",
+  "central_contract": {
+    "commit": "6efc459f231fd5bd254c36ab9b8d3c6d589da51a",
+    "status": "PASS",
+    "existing_formal_fields": 25,
+    "additional_conditional_formal_fields": 1
+  },
+  "selection_dependency_tests": {
+    "count": 18,
+    "status": "PASS"
+  },
+  "shared_application_regression": {
+    "tests": 619,
+    "status": "PASS",
+    "run": 37414940997,
+    "head": "2aafd349bdb6b1f85f585533e876d5ec3f009bc4"
+  },
+  "candidate_browser": {
+    "run": 37414783459,
+    "head": "0233bbd76012fa99273bc971fdc1b3f1b00da514",
+    "artifact": 11390238293,
+    "artifact_sha256": "9892c10d82b6cf4853f38a130b8912eb7224d460d0bef58fbed8f63068065fb2",
+    "result": {
+      "status": "PASS",
+      "mode": "ACTUAL_MODULES_SELF_CONTAINED_PREVIEW",
+      "widths": [
+        {
+          "width": 1280,
+          "geometry_missing_H2": "PASS",
+          "geometry_outside": "PASS",
+          "selection_reset": "PASS",
+          "save": "PASS",
+          "reload": "PASS",
+          "redisplay": "PASS",
+          "estimate": "PASS",
+          "print": "PASS",
+          "selection_dependency": "PASS",
+          "overflow": "PASS",
+          "package_version": "integrated-v0.5"
+        },
+        {
+          "width": 768,
+          "geometry_missing_H2": "PASS",
+          "geometry_outside": "PASS",
+          "selection_reset": "PASS",
+          "save": "PASS",
+          "reload": "PASS",
+          "redisplay": "PASS",
+          "estimate": "PASS",
+          "print": "PASS",
+          "selection_dependency": "PASS",
+          "overflow": "PASS",
+          "package_version": "integrated-v0.5"
+        },
+        {
+          "width": 390,
+          "geometry_missing_H2": "PASS",
+          "geometry_outside": "PASS",
+          "selection_reset": "PASS",
+          "save": "PASS",
+          "reload": "PASS",
+          "redisplay": "PASS",
+          "estimate": "PASS",
+          "print": "PASS",
+          "selection_dependency": "PASS",
+          "overflow": "PASS",
+          "package_version": "integrated-v0.5"
+        }
+      ],
+      "errors": [],
+      "downloads": {
+        "xlsx": "PASS",
+        "pdf": "PASS_WITH_ACTUAL_CANVAS_TEXT"
+      }
+    }
+  },
+  "storage_and_registry": {
+    "package_gate": "PASS",
+    "storage_gate": "PASS",
+    "registry_gate": "PASS",
+    "canonical_file_parent_readback_count": 11,
+    "authoring_sha256_saved_readback": "5062503d3387999c2eed0862b3386e5248ae131008cbc37975956d709d598ba6",
+    "runtime_sha256_saved_readback": "17e2a7468f5f9a2c6bfdd275281307c6a9739b994a18faa6fef90dc6fddb4491",
+    "price_fact_sha256_saved_readback": "5afa842a7b6b1631b8bc1bac9fbf8a326f33d5b49a4ac6b79b135d35329370a5",
+    "registry_row": "正本Registry!A2:X2",
+    "other_product_row_unchanged": true,
+    "format_unchanged": true,
+    "old_specific_files_moved_to_previous": true,
+    "shared_old_workbook_preserved_by_reference": true
+  }
+}

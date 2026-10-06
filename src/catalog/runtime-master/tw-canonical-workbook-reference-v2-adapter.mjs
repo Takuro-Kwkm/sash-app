@@ -57,12 +57,16 @@ export function adaptTwCanonicalWorkbookReferenceV2(runtimePackage) {
     customField('custom_width', '特注W（mm）', 61),
     customField('custom_height', '特注H（mm）', 62),
   );
+  fields.splice(sizeIndex + 3, 0, ...(document.additional_measurement_fields ?? []).map((field) => ({
+    ...field, field_id:`runtime:${field.field_name}`,
+  })));
 
   return Object.freeze({
     ...base,
     fields,
     values: [...base.values, customValue],
     customDimensionRules: rules,
+    catalogDeltaRules: document.catalog_delta_rules ?? null,
     canonicalWorkbook: Object.freeze({ customRanges: customRanges(rules) }),
     capabilities: Object.freeze({
       ...base.capabilities,

@@ -256,7 +256,8 @@ export class ProductConfigurationEditor {
     const dimensionCode=String(dimension?.code??'');
     const visibleErrors=dimensionCode?errors.filter((error)=>runtimeErrorCode(error)!==dimensionCode):errors;
     const friendly=dimension?friendlyDimension(dimension):null;
-    const notices=uniqueFriendlyNotices([...(result.notices??[]),...(result.manualWarnings??[])]);
+    const catalogConfirmations=result.confirmationRequests??[];
+    const notices=uniqueFriendlyNotices([...(result.notices??[]),...(result.manualWarnings??[]),...catalogConfirmations]);
     this.root.querySelector('#warnings').innerHTML=(visibleErrors.length?`<div class="notice error"><strong>入力内容を確認してください</strong>${visibleErrors.map((error)=>`<span>${esc(friendlyValidationError(error,result))}</span>`).join('')}</div>`:'')
       +(dimension?`<div class="notice dimension ${esc(String(dimension.status).toLowerCase())}"><strong>${esc(friendly.status)}</strong>${friendly.message?`<span>${esc(friendly.message)}</span>`:''}</div>`:'')
       +(notices.length?`<div class="notice warning">${notices.map(esc).join('<br>')}</div>`:'');

@@ -1,0 +1,21 @@
+{
+  "classification": "SOURCE_ONLY",
+  "change_id": "TW-202610-SOURCE-LOCATOR-CORRECTION",
+  "previous_central_commit": "35bed56c0dae7bf10785454f6dd446117fbc0fb4",
+  "field_contract_change": false,
+  "FORMAL_status": "CARRY_FORWARD",
+  "existing_25_fields": "FORMAL_25_25_CARRY_FORWARD",
+  "conditional_H2": "FORMAL_CARRY_FORWARD",
+  "old_locator": {
+    "printed_page": 1,
+    "global_pdf_page": 5,
+    "reason": "NEWS page incorrectly treated as ordinary numbered page"
+  },
+  "current_locator": {
+    "printed_page": "NEWS1",
+    "global_pdf_page": 4,
+    "source": "SN4100 0110L26, part A",
+    "fact": "W1290 × H①1480 × H②1250 official example"
+  },
+  "effect": "Current evidence source and approval byte bindings refreshed; no semantic change, no new promotion/demotion."
+}

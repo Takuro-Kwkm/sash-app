@@ -1,0 +1,143 @@
+{
+  "field_id": "sash-app:SER-LIXIL-TW:custom_height_secondary",
+  "semantic_role": "window:custom_height_secondary",
+  "scope": {
+    "app": "sash-app",
+    "product": "SER-LIXIL-TW",
+    "kind": "PRODUCT_SPECIFIC_CATALOG_EXTENSION"
+  },
+  "category": "window",
+  "runtime_key": "custom_height_secondary",
+  "canonical_key": "custom_height_secondary",
+  "display_label": [
+    "台形のもう一方の高さ H2（mm）"
+  ],
+  "control_type": "NUMBER",
+  "allowed_control_types": [
+    "NUMBER"
+  ],
+  "conditional_presentations": {
+    "observed_types": [
+      "NUMBER"
+    ],
+    "source": {
+      "observed": [
+        "USER_SELECTABLE"
+      ],
+      "current": "Only trapezoid CUSTOM; no inferred value; hidden/excluded for every other TW window."
+    },
+    "requires_contract_change": true
+  },
+  "option_source": {
+    "policy": "PRODUCT_AUTHORITY_PER_SELECTION",
+    "authority": "LIXIL-SN4100-0110L26-TW-TRAPEZOID",
+    "observed_union_is_allowed_set": false
+  },
+  "label_value_contract": {
+    "separate": true,
+    "raw_value_fallback": false,
+    "official_code_label_requires_authority": true
+  },
+  "group": {
+    "kind": "SEMANTIC_STAGE",
+    "id": "SIZE"
+  },
+  "order": {
+    "mode": "CATEGORY_AUTHORITY",
+    "evidence": {
+      "semantic_slot": "size",
+      "display_order": [
+        63
+      ],
+      "presentation_slot": [
+        "size"
+      ],
+      "definition_order_is_ui_order": false,
+      "position": "After custom_height H1 in SIZE stage; before colors/glass/options"
+    }
+  },
+  "required": {
+    "policy": "APPLICABLE_AND_PRODUCT_RULE",
+    "observation": {
+      "observed": [
+        true
+      ],
+      "runtime_rule": "REQUIRED",
+      "when": {
+        "window_type": "SWT-LIX-TW-FIX-TRAPEZOID-IN",
+        "size_mode": "CUSTOM"
+      }
+    }
+  },
+  "visibility": {
+    "policy": "PRODUCT_AUTHORITY",
+    "non_applicable": "HIDE_AND_EXCLUDE"
+  },
+  "applicability": {
+    "policy": "PRODUCT_AUTHORITY",
+    "business_output": "EXCLUDE_IF_NON_APPLICABLE"
+  },
+  "dependency": {
+    "mode": "DECLARED_BOUNDARY",
+    "exhaustive": true
+  },
+  "upstream_fields": [
+    "sash-app:SER-LIXIL-TW:window_type",
+    "sash-app:SER-LIXIL-TW:size_mode"
+  ],
+  "reset_behavior": {
+    "on_upstream_change": "REEVALUATE",
+    "valid": "KEEP_VALID",
+    "invalid": "CLEAR_RESELECT",
+    "non_applicable": "HIDE_AND_EXCLUDE"
+  },
+  "formatter": {
+    "policy": "CATEGORY_AUTHORITY",
+    "value_kind": "PRODUCT_AUTHORITY"
+  },
+  "unit": {
+    "policy": "SEPARATE_NUMBER_AND_UNIT",
+    "observation": [
+      "mm"
+    ]
+  },
+  "output": {
+    "policy": "APPLICABILITY_AND_DESTINATION",
+    "exclude_hidden_selection": true,
+    "exclude_non_applicable": true
+  },
+  "persistence": {
+    "policy": "SELECTION_IDENTITY_WITH_SOURCE_AND_RUNTIME",
+    "invisible_context_separate": true
+  },
+  "validation": {
+    "policy": "PRODUCT_AUTHORITY",
+    "critical_unknown": "FORBIDDEN_IN_FORMAL"
+  },
+  "default": {
+    "policy": "PRODUCT_AUTHORITY_NO_UI_GUESS"
+  },
+  "empty_state": {
+    "policy": "DISTINCT_FROM_ERROR_AND_CONFIRMATION",
+    "placeholder_role": "NOT_APPLICABLE",
+    "placeholder": null
+  },
+  "error_state": {
+    "policy": "CATEGORY_APP_ERROR_AUTHORITY"
+  },
+  "authority": [
+    "LIXIL-SN4100-0110L26-TW-TRAPEZOID",
+    "TW-202610-USER-DELEGATED-EXECUTION"
+  ],
+  "source_revision": "de1842d6f1b0f982b0491c4e168770b20cb31413",
+  "exception_id": null,
+  "status": "FORMAL",
+  "audit_observations": {
+    "control_types": [
+      "NUMBER"
+    ],
+    "placeholder": "数値を入力",
+    "classification": "PRODUCT_SPECIFIC",
+    "observation_coverage": "CANDIDATE_RUNTIME_WITH_TWO_HEIGHTS_SAVE_RELOAD_OUTPUT"
+  }
+}

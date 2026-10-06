@@ -6,7 +6,7 @@
     "src/catalog/runtime-master/uchirimo-glass-rule-model.mjs": "0e8b1e37a05d25f80e7fc7f9a930c4349f8f97b5c43e9706c8aa99d1904c88b7",
     "src/catalog/runtime-master/runtime-app-bridge.mjs": "3f61f87dc9e2a5cb2f64999d8989c5486b6b9747cd74e1639198725ae2dc3c33",
     "src/work-management/field-workflow-scope.mjs": "6458a62cbbc2bbf29f541ab6d5faea3698f085cb2fdbb739ce435dc24fd5f905",
-    "src/catalog/runtime-master/new-construction-sash-runtime-ui-contract.mjs": "55f4f3f93be026614f4ab4b0a6df318777d33146743c1588bc1552e1ebaeeef7",
+    "src/catalog/runtime-master/new-construction-sash-runtime-ui-contract.mjs": "c6718a2b8b742867647881582328c4a65c4481bde80c163a6e9c335daf636a2c",
     "scripts/governance/uchirimo-selector-batch-runner.mjs": "29f26ef702d4c505ed3ab27de35eafc36b63f24bbbfe0d7fbaa55b631f920d74",
     "src/catalog/runtime-master/inner-window-runtime-ui-contract.mjs": "1c753f798e9f68e459506cd9f8f91b4dae3e8c0cd794863c6ddadb25c9c0a580",
     "src/catalog/runtime-master/global-window-selection-flow-engine.mjs": "2ef247ea40f4be459da5b37a524c2c1baf9f3e449d2a3e1a29436db69a7d4271",
@@ -104,6 +104,15 @@
         }
       ]
     },
-    "rechent_estimate_separation_20261002": "Reviewed app-only RECHENT_DOOR3_NONFIRE_V1 wrapper: forces estimate PRODUCT_SELECTION and uses existing workflow projection; explicit site_survey still uses raw resolver. Added Rechent site-only metadata keys and product context; Uchirimo raw evaluator and existing bathroom branches are unchanged. Fresh Rechent tests cover Formal frame/hardware domains, 14 business paths, exact dimensions, resets and legacy migration; 42 browser cases cover save/reload/handoff. Eight-series business-flow, bathroom estimate, work-management, estimate-output and theme browser regressions pass. Formal Runtime, Product Master, canonical Registry and Evidence unchanged. Exact-source negative guard retained."
+    "rechent_estimate_separation_20261002": "Reviewed app-only RECHENT_DOOR3_NONFIRE_V1 wrapper: forces estimate PRODUCT_SELECTION and uses existing workflow projection; explicit site_survey still uses raw resolver. Added Rechent site-only metadata keys and product context; Uchirimo raw evaluator and existing bathroom branches are unchanged. Fresh Rechent tests cover Formal frame/hardware domains, 14 business paths, exact dimensions, resets and legacy migration; 42 browser cases cover save/reload/handoff. Eight-series business-flow, bathroom estimate, work-management, estimate-output and theme browser regressions pass. Formal Runtime, Product Master, canonical Registry and Evidence unchanged. Exact-source negative guard retained.",
+    "tw_202610_H2_shared_alias": {
+      "baseline_sha256": "55f4f3f93be026614f4ab4b0a6df318777d33146743c1588bc1552e1ebaeeef7",
+      "candidate_sha256": "c6718a2b8b742867647881582328c4a65c4481bde80c163a6e9c335daf636a2c",
+      "exact_delta": "Add custom_height_secondary:'size' only; stripping this property reproduces the previous reviewed bytes exactly.",
+      "scope": "LIXIL TW trapezoid H2 semantic size alias; Uchirimo domains, dependencies and Runtime facts unchanged",
+      "authority": "product-ui-contracts@6efc459f231fd5bd254c36ab9b8d3c6d589da51a",
+      "authorization": "USER_EXPLICIT_TW_CATALOG_CHANGE_20261006",
+      "review_type": "AUTOMATED_EXACT_BYTE_DELTA_AND_SHARED_REGRESSION"
+    }
   }
 }

@@ -18,7 +18,7 @@ const runtimeMasterIntegrations=runtimeIntegrationDeclarations.filter((row)=>row
 const buildTimestamp=new Date().toISOString();
 const buildIdentity={appVersion:"work-management-v1.0+estimate-output-v1.0+inplus-bathroom-v1.0",workSchemaVersion:WORK_SCHEMA_VERSION,catalog,runtimeMasterIntegrations:runtimeIntegrationDeclarations.map(({id,packageVersion,sourceHash,status,selectable,productVariantContract})=>({id,packageVersion,sourceHash,status,selectable,productVariantContract}))};
 const buildId=`SASH-WORK-V1-${createHash("sha256").update(JSON.stringify(buildIdentity)).digest("hex").slice(0,12)}`;
-const catalogVersion="8シリーズ統合 / TW integrated-v0.4 / EW v1.3 / サーモスⅡH v0.9-R4 / サーモスL v0.7-R2 / APW430 20260918-R3 / APW431 v1.2 / ウチリモ Slim V3 / インプラス v0.4-R3 + 浴室仕様 v1.0";
+const catalogVersion="8シリーズ統合 / TW integrated-v0.5 / EW v1.3 / サーモスⅡH v0.9-R4 / サーモスL v0.7-R2 / APW430 20260918-R3 / APW431 v1.2 / ウチリモ Slim V3 / インプラス v0.4-R3 + 浴室仕様 v1.0";
 
 export const releaseBuildMetadata=Object.freeze({buildId,buildTimestamp,catalogVersion});
 

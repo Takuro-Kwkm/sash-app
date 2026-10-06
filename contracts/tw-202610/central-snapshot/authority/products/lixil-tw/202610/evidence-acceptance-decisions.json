@@ -1,0 +1,109 @@
+{
+  "authorization": {
+    "authorization_kind": "EXPLICIT_USER_TASK_APPROVAL_WITH_OFFICIAL_SOURCE_CONDITIONS",
+    "approval_statement": "今回の指示は、公式カタログ差分に基づくProduct Master変更、Formal更新、Registry更新、保存、必要なGit Mergeまで進める承認として扱う。",
+    "automatic_formal_statement": "公式Sourceで直接確認でき、既存GovernanceのFormal条件を満たした変更については追加確認待ちで停止せずFormalへ更新する。",
+    "reviewer": "Codex executing the explicitly delegated source verification and change adoption",
+    "human_review_of_exact_generated_payload": false,
+    "decision_method": "SOURCE_VERIFICATION_AND_EXISTING_GOVERNANCE_GATES_UNDER_EXPLICIT_USER_AUTHORIZATION",
+    "scope": {
+      "field_id": "sash-app:SER-LIXIL-TW:custom_height_secondary",
+      "category": "window",
+      "purpose": "APPLICATION_FIELD"
+    },
+    "conditions": "Only directly confirmed official Source facts; all existing 25 Formal fields carry forward; no inference of manufacturing acceptance."
+  },
+  "decisions": [
+    {
+      "decision_id": "TW-202610-H2-CATALOG-ACCEPT",
+      "status": "APPROVED",
+      "payload": {
+        "evidence_id": "TW-202610-H2-CATALOG-EVIDENCE",
+        "source_class": "OFFICIAL_CATALOG",
+        "source_authority": "TW-202610-H2-CATALOG",
+        "source_identifier": "LIXIL SN4100 0110L26; TW catalog change R1 / CATALOG",
+        "document_version": "2026-10 / integrated-v0.5",
+        "page_or_section": "NEWS1 (global PDF4), printed 233 /  additional_definitions / exact Runtime H2 identity",
+        "captured_date": "2026-10-06",
+        "verification_state": "VERIFIED",
+        "status": "ACCEPTED",
+        "source_ref": {
+          "path": "authority/products/lixil-tw/202610/official-source-snapshot.json",
+          "pointer": "",
+          "sha256": "49662225aa77db2711b84d103794c314d88e973b89918160a7016d42edce5fbf"
+        },
+        "scope": {
+          "field_id": "sash-app:SER-LIXIL-TW:custom_height_secondary",
+          "category": "window",
+          "purpose": "APPLICATION_FIELD"
+        },
+        "claims": [
+          "SEMANTIC_IDENTITY",
+          "PRODUCT_SPECIFIC_IDENTITY",
+          "PRODUCT_FACT",
+          "DEPENDENCY"
+        ]
+      }
+    },
+    {
+      "decision_id": "TW-202610-H2-RESPONSIBILITY-ACCEPT",
+      "status": "APPROVED",
+      "payload": {
+        "evidence_id": "TW-202610-H2-RESPONSIBILITY-EVIDENCE",
+        "source_class": "CONTRACT_AUTHORITY",
+        "source_authority": "TW-202610-H2-RESPONSIBILITY",
+        "source_identifier": "LIXIL SN4100 0110L26; TW catalog change R1 / RESPONSIBILITY",
+        "document_version": "2026-10 / integrated-v0.5",
+        "page_or_section": "field-responsibility.json",
+        "captured_date": "2026-10-06",
+        "verification_state": "VERIFIED",
+        "status": "ACCEPTED",
+        "source_ref": {
+          "path": "authority/products/lixil-tw/202610/field-responsibility.json",
+          "pointer": "",
+          "sha256": "742374030471d8c4bd6b508fea4fcd811967318a3ea0c058e6391936ede1c98c"
+        },
+        "scope": {
+          "field_id": "sash-app:SER-LIXIL-TW:custom_height_secondary",
+          "category": "window",
+          "purpose": "APPLICATION_FIELD"
+        },
+        "claims": [
+          "MAPPING",
+          "FIELD_RESPONSIBILITY",
+          "PRESENTATION",
+          "RULE_CONFORMITY",
+          "EXCEPTION_REVIEW"
+        ]
+      }
+    },
+    {
+      "decision_id": "TW-202610-H2-RUNTIME-ACCEPT",
+      "status": "APPROVED",
+      "payload": {
+        "evidence_id": "TW-202610-H2-RUNTIME-EVIDENCE",
+        "source_class": "VERIFIED_RUNTIME_BEHAVIOR",
+        "source_authority": "TW-202610-H2-RUNTIME",
+        "source_identifier": "LIXIL SN4100 0110L26; TW catalog change R1 / RUNTIME",
+        "document_version": "2026-10 / integrated-v0.5",
+        "page_or_section": "runtime-proof.json",
+        "captured_date": "2026-10-06",
+        "verification_state": "VERIFIED",
+        "status": "ACCEPTED",
+        "source_ref": {
+          "path": "authority/products/lixil-tw/202610/runtime-proof.json",
+          "pointer": "",
+          "sha256": "fffc6bcfa3bb4d473d7bcb55996e72db112ff3c218887e91cf0fed418e08c11c"
+        },
+        "scope": {
+          "field_id": "sash-app:SER-LIXIL-TW:custom_height_secondary",
+          "category": "window",
+          "purpose": "APPLICATION_FIELD"
+        },
+        "claims": [
+          "RUNTIME_PARITY"
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,96 @@
+{
+  "status": "ACTIVE",
+  "work_id": "TW-CATALOG-202610-R1",
+  "repository": "Takuro-Kwkm/product-ui-contracts",
+  "commit": "6efc459f231fd5bd254c36ab9b8d3c6d589da51a",
+  "central_PR": 8,
+  "central_exact_head": "e646939df01f2034c6b71149fb2334a3e43e4276",
+  "central_exact_HEAD_CI": {
+    "run": 37413688213,
+    "status": "PASS"
+  },
+  "central_post_merge_CI": {
+    "run": 37413802555,
+    "status": "PASS"
+  },
+  "central_main_readback": "PASS",
+  "existing_formal_fields": 25,
+  "additional_conditional_fields": 1,
+  "baseline_adoption_preserved": "contracts/window-seven/adoption.json",
+  "files": {
+    "authority/products/lixil-tw/202610/evidence-acceptance-decisions.json": {
+      "sha256": "601f09ae509d6132f522c1f3ef922b152d02998bd0661a29f15eb8bd7f9597f0",
+      "git_blob_sha": "a2e8c943afd342f86aa302ccd523e1773098cb09"
+    },
+    "authority/products/lixil-tw/202610/runtime-proof.json": {
+      "sha256": "fffc6bcfa3bb4d473d7bcb55996e72db112ff3c218887e91cf0fed418e08c11c",
+      "git_blob_sha": "a98d5737692afcda45bb10d091c3a19809b43d12"
+    },
+    "authority/products/lixil-tw/202610/baseline-25-fields.json": {
+      "sha256": "51956141384abc03d083946d1ddc47c1b155346d9dfbee07b5638d72656aefa4",
+      "git_blob_sha": "c5535c806c68287aaf1b4415b4e6a6e04c287930"
+    },
+    "authority/products/lixil-tw/202610/formal-promotion.json": {
+      "sha256": "1de02f0e5c887f29712bab50efe6c08c3d85515a590da074ca20c69fb5df3568",
+      "git_blob_sha": "cb32c1137f7349a3324c9cd7ee5085e4b79db1d8"
+    },
+    "authority/products/lixil-tw/202610/mapping.json": {
+      "sha256": "e8181d5054d14b68c309da1b3769176e991069a835466b879b1a0bb6a3e5f9e0",
+      "git_blob_sha": "7c985c1d762337e4020db8c7d74635ecd011f28b"
+    },
+    "authority/products/lixil-tw/202610/field-contract.json": {
+      "sha256": "9f48a4f7b4327bbca0aeb63d9976afe6072961cc76871fd95493d4ceb9ab77d9",
+      "git_blob_sha": "5b422322810490371befd628aec9734b91f821b1"
+    },
+    "authority/products/lixil-tw/202610/field-responsibility.json": {
+      "sha256": "742374030471d8c4bd6b508fea4fcd811967318a3ea0c058e6391936ede1c98c",
+      "git_blob_sha": "bb292a83cc2abb1d2572e4dd432ce53db1f862f0"
+    },
+    "authority/products/lixil-tw/202610/active-manifest.json": {
+      "sha256": "99a65ad98bec75edc16dea614e0417263300608cbfeb4b1e20b69c3ce0fb2138",
+      "git_blob_sha": "bce20268852a575aae33dbd071a2b582b4bec283"
+    },
+    "authority/products/lixil-tw/202610/promotion-decision.json": {
+      "sha256": "2384fd59fe5c55b0d23721898677593eeb22106802d3284ab3ee7ed7378fd10a",
+      "git_blob_sha": "27def071b27ace6d12254ba2feddd5a5dcb883c0"
+    },
+    "authority/products/lixil-tw/202610/official-source-snapshot.json": {
+      "sha256": "49662225aa77db2711b84d103794c314d88e973b89918160a7016d42edce5fbf",
+      "git_blob_sha": "a6fffbb2cfaa2f55d0d7a06e86af0ca91d8dc0b3"
+    },
+    "authority/products/lixil-tw/202610/evidence-acceptance.json": {
+      "sha256": "de74757ec48427a7f2e81709bdcb279338d0d6f0eac1c427121b841bbdc97ad6",
+      "git_blob_sha": "0a67cd3cfdd2c052c561e3cc6b9acde58362672a"
+    },
+    "scripts/formal_promotion.py": {
+      "sha256": "8370f7b437ed566ba87887c32ec6f91069757b96ee35300325a82c681e627baa",
+      "git_blob_sha": "9463d8d98d63d5a142e06b53112914f58ef3065d"
+    },
+    "scripts/validate-tw-202610.py": {
+      "sha256": "dc5a3e0fd248b9414447dabcfa4e528859e421040a4b86193e21ef47af9639f0",
+      "git_blob_sha": "a42bb234becd05df521048f32b3432f5e722d478"
+    },
+    "schemas/selection-contract.schema.json": {
+      "sha256": "cc4a86147e73aa3d28f703fa6702a4d042d9e1e35451880f2cbcebc5a9bd75c4",
+      "git_blob_sha": "0182c10983f5a4d130bf686fc685ecec6995be8d"
+    },
+    "registries/formal-promotion/governance.v0.1.json": {
+      "sha256": "b2107c1c6c7b5fe9f2208f52bf4a40944f66516a7ca0f36a0663eb565d2d2c58",
+      "git_blob_sha": "a5984b673948a63ab6289bae4a66c9223dbc189e"
+    },
+    "requirements.txt": {
+      "sha256": "8908b8dde5f6a9d0cfb025ef464134e3b40197e4a2757ac573917e4ec7643a2c",
+      "git_blob_sha": "0f87e2cb5caae330a1bf7d296971afffb4160587"
+    },
+    "authority/products/lixil-tw/202610/source-locator-correction.json": {
+      "sha256": "9c5d03c2ba3805f6b2a0808d94c131d2be8990493563737d8877799a0d432b07",
+      "git_blob_sha": "86e5f8821fbc827dcfd0cbcd87a00487786139d0"
+    }
+  },
+  "initial_promotion_history": {
+    "PR": 7,
+    "merge": "35bed56c0dae7bf10785454f6dd446117fbc0fb4",
+    "post_merge_CI": 37413028725
+  },
+  "source_locator_correction": "NEWS1 global PDF4; same Formal field semantic identity"
+}

@@ -37,6 +37,14 @@ function scopedOptions(master, fieldName, windowId, selection = {}) {
     if (!scope || ![...scope.standardWindows, ...scope.specialOrderWindows].includes(windowId)) return false;
     if (String(scope.note ?? '').includes('トリプルガラス不可') && selection.glass_base === 'トリプルガラス') return false;
     const size = master.provider.sizes.find((candidate) => candidate.id === selection.size);
+    const catalogRule = master.catalogDeltaRules?.option_rules?.find((rule) => rule.option_id === row.canonical_value);
+    if (catalogRule?.glass_base && selection.glass_base !== catalogRule.glass_base) return false;
+    if (catalogRule?.requires_options?.some((id) => !(selection.option ?? []).includes(id))) return false;
+    const range = catalogRule?.dimension_ranges?.[windowId];
+    if (range) {
+      const actual = Number(range.axis === 'W' ? size?.actual_w : size?.actual_h);
+      if (!Number.isFinite(actual) || actual < range.minimum || actual > range.maximum) return false;
+    }
     return !master.sourceRows.optionDependencies.some((rule) => {
       if (rule['対象option_id'] !== row.canonical_value || rule['アクション'] !== '選択不可') return false;
       if (!String(rule['対象シリーズ窓種ID'] ?? '').split('|').includes(windowId)) return false;

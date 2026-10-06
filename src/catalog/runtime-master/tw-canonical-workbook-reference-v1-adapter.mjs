@@ -152,6 +152,7 @@ export function adaptTwCanonicalWorkbookReferenceV1(runtimePackage) {
     fields,
     values: buildValues(document),
     provider: document.provider,
+    catalogDeltaRules: document.catalog_delta_rules ?? null,
     sourceRows: Object.freeze({
       specs: sourceRows(document, '04_窓種固有仕様').filter((row) => row['シリーズID'] === document.series_id && row['有効'] !== false),
       glassApplicability: sourceRows(document, '08A_ガラス適用条件').filter((row) => row['シリーズID'] === document.series_id && row['有効'] !== false),

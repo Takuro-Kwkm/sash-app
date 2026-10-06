@@ -7,7 +7,7 @@ const PRODUCTS = [
   { id:'SER-LIX-SAMOS2H', manufacturer:'LIXIL', series:'サーモスⅡ-H', windows:17 },
   { id:'SER-LIX-SAMOSL', manufacturer:'LIXIL', series:'サーモスL', windows:17 },
   { id:'SER-LIX-EW', manufacturer:'LIXIL', series:'EW', windows:15 },
-  { id:'SER-LIXIL-TW', manufacturer:'LIXIL', series:'TW', windows:25 },
+  { id:'SER-LIXIL-TW', manufacturer:'LIXIL', series:'TW', windows:26 },
   { id:'SER-YKK-APW430', manufacturer:'YKK AP', series:'APW430', windows:25 },
   { id:'SER-YKK-APW431', manufacturer:'YKK AP', series:'APW431', windows:6 },
 ];
@@ -126,7 +126,7 @@ function assertSizeFrontier(product, windowValue, frontier, sourceById) {
   }
 }
 
-test('Stage A size display full coverage: all 6 series × all 105 windows × all STANDARD selector frontiers', async () => {
+test('Stage A size display full coverage: all 6 series × all 106 windows × all STANDARD selector frontiers', async () => {
   let baseWindows = 0;
   let standardWindows = 0;
   let frontierCount = 0;
@@ -160,7 +160,7 @@ test('Stage A size display full coverage: all 6 series × all 105 windows × all
     }
     perSeries.push({series:product.series,baseWindows:windows.length,standardWindows:seriesStandardWindows,frontiers:seriesFrontiers,sizeChoices:seriesSizes});
   }
-  assert.equal(baseWindows,105,'Stage A BASE_WINDOW_COUNT must remain 105');
+  assert.equal(baseWindows,106,'Stage A adds only the custom-only TW trapezoid');
   assert.equal(standardWindows,103,'Stage A STANDARD_WINDOW_COUNT must remain 103');
   assert.ok(frontierCount > 0);
   assert.ok(sizeChoiceCount > 0);

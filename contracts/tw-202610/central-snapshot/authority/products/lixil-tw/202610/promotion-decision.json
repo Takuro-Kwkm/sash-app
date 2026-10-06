@@ -1,0 +1,28 @@
+{
+  "authorization": {
+    "authorization_kind": "EXPLICIT_USER_TASK_APPROVAL_WITH_OFFICIAL_SOURCE_CONDITIONS",
+    "approval_statement": "今回の指示は、公式カタログ差分に基づくProduct Master変更、Formal更新、Registry更新、保存、必要なGit Mergeまで進める承認として扱う。",
+    "automatic_formal_statement": "公式Sourceで直接確認でき、既存GovernanceのFormal条件を満たした変更については追加確認待ちで停止せずFormalへ更新する。",
+    "reviewer": "Codex executing the explicitly delegated source verification and change adoption",
+    "human_review_of_exact_generated_payload": false,
+    "decision_method": "SOURCE_VERIFICATION_AND_EXISTING_GOVERNANCE_GATES_UNDER_EXPLICIT_USER_AUTHORIZATION",
+    "scope": {
+      "field_id": "sash-app:SER-LIXIL-TW:custom_height_secondary",
+      "category": "window",
+      "purpose": "APPLICATION_FIELD"
+    },
+    "conditions": "Only directly confirmed official Source facts; all existing 25 Formal fields carry forward; no inference of manufacturing acceptance."
+  },
+  "decision_id": "TW-202610-H2-PROMOTE",
+  "status": "APPROVED",
+  "payload": {
+    "approval_id": "TW-202610-H2-APPROVAL",
+    "field_id": "sash-app:SER-LIXIL-TW:custom_height_secondary",
+    "category": "window",
+    "purpose": "APPLICATION_FIELD",
+    "status": "APPROVED",
+    "contract_sha256": "191260a2ef7597ef344984d0b57f9924c86940bd13e83703b09bbba04287b893",
+    "evidence_sha256": "0d69f39cc24a0a802a5fc6b9f20fdcbd08b8e9f472385ff450227e1896b23774",
+    "dossier_sha256": "ab6de55ae980e5769d517bc344adad2a85f29bb662aba1df177534fca482ac7e"
+  }
+}
