@@ -30,7 +30,7 @@ test('Vercel repository adapter health preserves loaded READY Runtime identities
   const byId=new Map(health.runtimeMasterIntegrations.map((row)=>[row.id,row]));
   assert.equal(byId.get('SER-LIX-EW').sourceHash,'e3c5976d46268cb9e670491e2256613330ab776c1fb0cc9e6ad5b8e65bb01199');
   assert.equal(byId.get('SER-LIX-SAMOS2H').sourceHash,'993481b2f0ab1d519a091e1b9f99a329eef7c67ec89cd1c82ddfab0d3c624955');
-  assert.equal(byId.get('SER-LIX-SAMOSL').sourceHash,'4cf2a4b1572f68288fa108ccd33d30cc80d5170f2f5303864ca56ca67c34cec3');
+  assert.equal(byId.get('SER-LIX-SAMOSL').sourceHash,'0fed18a4d317fa03cb0ef0463a0c17eb9f83e1bb84baa6628a6bdce73de62257');
   assert.equal(byId.get('SER-LIXIL-TW').sourceHash,'783b6d1c705adc5dc31d504373a4a86e3ce498a75a570e67dd15cd8d2ee148d3');
   assert.equal(byId.get('SER-LIXIL-INPLUS').sourceHash,'d408bd64237ba5d44f9ebbf3ab3c869e9b64864ff0da28609568718b881607d1');
   assert.equal(byId.get('SER-YKK-APW430').sourceHash,'e2755a735fc3a7c94afacc58175a390bf00784cf1f13521a1263076d7bfae1c7');
@@ -48,3 +48,4 @@ test('Vercel Runtime integration route includes all registered READY identities'
   assert.deepEqual(new Set(ready),READY_IDS);
   assert.deepEqual(new Set(blocked),BLOCKED_IDS);
 });
+
