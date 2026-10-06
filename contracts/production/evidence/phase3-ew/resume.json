@@ -1,0 +1,18 @@
+{
+  "status": "PASS",
+  "initial_stop_completed_gates": [
+    "PRODUCTION_RESOLUTION",
+    "BASELINE_RESOLUTION",
+    "SOURCE_RESOLUTION",
+    "SOURCE_DELTA",
+    "IMPACT_SCOPE"
+  ],
+  "initial_saved_journal_rows": 2,
+  "initial_saved_prefix_preserved": true,
+  "completed_gate_count": 29,
+  "completed_resume_journal_sha256": "d2c2d46566cd88e6c3b8bfb22c0e3a172afc2791b0fbdf14a7cd1b97e129f4d9",
+  "completed_resume_journal_byte_identical": true,
+  "accepted_new_human_decisions": 0,
+  "current_formal_fields_preserved": 29,
+  "CI_result_replay": "NOT_APPLICABLE_LOCAL_PRE_PR_CHECKPOINT"
+}

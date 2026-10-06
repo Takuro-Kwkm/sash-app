@@ -1,0 +1,7 @@
+{
+  "status": "PASS",
+  "QA_READY": true,
+  "authority": "SALES_ESTIMATE_REQUEST_BOUNDARY",
+  "evidence": "NATIVE_QA.json",
+  "scope_id": "LIXIL-EW-29-FORMAL-202610"
+}

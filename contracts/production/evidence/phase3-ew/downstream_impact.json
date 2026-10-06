@@ -1,0 +1,57 @@
+{
+  "status": "PASS",
+  "components": {
+    "Product Master": "NO_CHANGE_REQUIRED",
+    "Evidence": "NO_CHANGE_REQUIRED",
+    "Dependency": "NO_CHANGE_REQUIRED",
+    "Constraints": "NO_CHANGE_REQUIRED",
+    "Selection Contract": "NO_CHANGE_REQUIRED",
+    "Canonical Mapping": "NO_CHANGE_REQUIRED",
+    "Runtime": "NO_CHANGE_REQUIRED",
+    "Global Flow": "NO_CHANGE_REQUIRED",
+    "UI": "NO_CHANGE_REQUIRED",
+    "Storage": "NO_CHANGE_REQUIRED",
+    "Readback": "NO_CHANGE_REQUIRED",
+    "Estimate Output": "NO_CHANGE_REQUIRED",
+    "Print": "NO_CHANGE_REQUIRED",
+    "Resume": "NO_CHANGE_REQUIRED",
+    "Regression Tests": "NO_CHANGE_REQUIRED"
+  },
+  "production_behavior_change": 0,
+  "runtime_parity": {
+    "status": "PASS",
+    "product_id": "SER-LIX-EW",
+    "revision": "v1.4",
+    "runtime_sha256": "e3c5976d46268cb9e670491e2256613330ab776c1fb0cc9e6ad5b8e65bb01199",
+    "checks": [
+      "actual runtime byte integrity",
+      "formal selector identity",
+      "registered UI bridge",
+      "native window count",
+      "valid complete selection",
+      "JSON storage/reload parity",
+      "fire-scope isolation"
+    ],
+    "sourcePackageIntegrity": {
+      "expected": "8fea71eb4f51f2014e2cae5abd732ccfe0b36224171c0edc24ac5368789f9d47",
+      "actual": "8fea71eb4f51f2014e2cae5abd732ccfe0b36224171c0edc24ac5368789f9d47",
+      "match": true,
+      "manifestDriveFileId": "1J57G8UG_oJJ4dMgnCh6WsUx9e-tcjLvZ",
+      "files": [
+        {
+          "role": "runtime_master",
+          "fileName": "LIXIL_EW_runtime_v1.4.json",
+          "fileId": "1xn99vpPVAk0hyOWOa38pBKdLhEIZxqi5",
+          "expected": "e3c5976d46268cb9e670491e2256613330ab776c1fb0cc9e6ad5b8e65bb01199",
+          "actual": "e3c5976d46268cb9e670491e2256613330ab776c1fb0cc9e6ad5b8e65bb01199",
+          "match": true,
+          "bytes": 2678300,
+          "codec": "brotli"
+        }
+      ]
+    },
+    "selection_roundtrip": "PASS",
+    "formal_mutation": 0
+  },
+  "formal_payload_preserved": true
+}

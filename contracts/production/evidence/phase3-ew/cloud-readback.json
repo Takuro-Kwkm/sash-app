@@ -1,0 +1,13 @@
+{
+  "status": "PASS",
+  "file_id": "1kzRgwlpO7_j5QWXHZmjlrG2bXdZC6LRf",
+  "parent_id": "1T_KEc2-27lU6yddCka1ZqI289qolVwmB",
+  "sha256": "3505326a58a5bf1b892de6cb1223a761ce1627fe6e3114045f4b41395b695710",
+  "bytes": 2732148,
+  "hash_kind": "FRESHLY_DOWNLOADED_BYTES_SHA256",
+  "zip_entries": 125,
+  "checkpoint_files_exact": 22,
+  "master_delta_impact_qa_formal_result_registry_authority_checkpoint": "ORIGINAL_EXACT_BYTES_IN_DOWNLOADED_ZIP",
+  "new_human_decision": "NONE_REQUIRED_UNCHANGED_FORMAL",
+  "restore_execution_from_downloaded_checkpoint": "NOT_VERIFIED_CROSS_HOST"
+}

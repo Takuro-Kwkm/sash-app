@@ -1,0 +1,65 @@
+{
+  "status": "PASS",
+  "native_package": {
+    "package_sha256": "31e889e2358dce97c432652df5bb640816f207752ff7765379ddf6167f637fd0",
+    "package_identity": "LIXIL::EW::v1.4::202610",
+    "revision": "v1.4",
+    "manufacturer": "LIXIL",
+    "series": "EW",
+    "evidence_identity": "af35759f5472f99970ea4ae809b4c2e21ee1f752c6dce9a751d19cc5d6b9db08",
+    "scope_sha256": "8e284a522bd4aad8f5aa7c64570d8109043b37f668dbe810823f8297e818b099",
+    "qa_sha256": "ee2a14310016568eb50db58c9c42838f4beb64f4641b3f25dd1e83ffc518271f",
+    "member_count": 16,
+    "content_gate": "QA_PASS",
+    "content_validation": "IMPORTED_CONTENT_BOUND_QA_PROOF",
+    "product_qa_rerun": false,
+    "storage_gate": "NOT_CHECKED",
+    "registry_gate": "NOT_CHECKED"
+  },
+  "native_qa": {
+    "UNKNOWN": 0,
+    "UNMAPPED": 0,
+    "SCHEMA_ERROR": 0,
+    "DUPLICATE_ID": 0,
+    "CRITICAL_VALIDATION_ERROR": 0
+  },
+  "checks": 56,
+  "formal_fields": 29,
+  "runtime": {
+    "status": "PASS",
+    "product_id": "SER-LIX-EW",
+    "revision": "v1.4",
+    "runtime_sha256": "e3c5976d46268cb9e670491e2256613330ab776c1fb0cc9e6ad5b8e65bb01199",
+    "checks": [
+      "actual runtime byte integrity",
+      "formal selector identity",
+      "registered UI bridge",
+      "native window count",
+      "valid complete selection",
+      "JSON storage/reload parity",
+      "fire-scope isolation"
+    ],
+    "sourcePackageIntegrity": {
+      "expected": "8fea71eb4f51f2014e2cae5abd732ccfe0b36224171c0edc24ac5368789f9d47",
+      "actual": "8fea71eb4f51f2014e2cae5abd732ccfe0b36224171c0edc24ac5368789f9d47",
+      "match": true,
+      "manifestDriveFileId": "1J57G8UG_oJJ4dMgnCh6WsUx9e-tcjLvZ",
+      "files": [
+        {
+          "role": "runtime_master",
+          "fileName": "LIXIL_EW_runtime_v1.4.json",
+          "fileId": "1xn99vpPVAk0hyOWOa38pBKdLhEIZxqi5",
+          "expected": "e3c5976d46268cb9e670491e2256613330ab776c1fb0cc9e6ad5b8e65bb01199",
+          "actual": "e3c5976d46268cb9e670491e2256613330ab776c1fb0cc9e6ad5b8e65bb01199",
+          "match": true,
+          "bytes": 2678300,
+          "codec": "brotli"
+        }
+      ]
+    },
+    "selection_roundtrip": "PASS",
+    "formal_mutation": 0
+  },
+  "QA_READY": "PASS",
+  "schema_required_source_evidence_dependency_applicability_forbidden_mapping": "EXACT_NATIVE_PROOF_CARRY_FORWARD_PLUS_EXECUTED_RUNTIME_PARITY"
+}
