@@ -33,7 +33,7 @@ jobs:
       - name: Governance summary
         run: |
           echo 'Current scope: 8 Window series; affected INNER_WINDOW canonical frame R3.' >> "$GITHUB_STEP_SUMMARY"
-          echo 'Affected legacy PASS import: 0. TW October catalog identity adoption is verified separately; five other exterior identities and both inner-window identities retain their frozen pins.' >> "$GITHUB_STEP_SUMMARY"
+          echo 'Affected legacy PASS import: 0. TW and EW October catalog identity adoptions are verified separately; four other exterior identities and both inner-window identities retain their frozen pins.' >> "$GITHUB_STEP_SUMMARY"
           echo 'Historical Slim factorized tests remain a frozen witness, not R3 proof.' >> "$GITHUB_STEP_SUMMARY"
           echo 'This job verifies existing inner-window identities and shared application regression. Product-specific Browser and APP_INTEGRATION_READY verdicts are evaluated by their dedicated integration workflow. Human review remains separate.' >> "$GITHUB_STEP_SUMMARY"
       - if: always()

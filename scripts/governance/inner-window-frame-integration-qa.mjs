@@ -9,14 +9,18 @@ const current=runtimeAppIntegrationInventory();const identities=[];
 const adoption=JSON.parse(readFileSync('changes/lixil-tw-202610/runtime-identity-adoption.json'));
 assert.equal(adoption.scope_product_id,'SER-LIXIL-TW');assert.equal(adoption.status,'FORMAL_ADOPTED');
 assert.equal(adoption.central_commit,'6efc459f231fd5bd254c36ab9b8d3c6d589da51a');
+const ewAdoption=JSON.parse(readFileSync('changes/lixil-ew-202610/runtime-identity-adoption.json'));
+assert.equal(ewAdoption.scope_product_id,'SER-LIX-EW');assert.equal(ewAdoption.status,'FORMAL_ADOPTED');
+assert.equal(ewAdoption.central_commit,'0e500aed262edf82a40aa4e3786952efefad7be9');
 for(const row of expected){
  const integration=current.find(p=>p.id===row.id);assert.ok(integration);
- const changed=row.id===adoption.scope_product_id;
- if(changed)assert.deepEqual(adoption.before,row.current,'Frozen previous TW identity');
- const pinned=changed?adoption.after:row.current;
+ const scopedAdoption=row.id===adoption.scope_product_id?adoption:row.id===ewAdoption.scope_product_id?ewAdoption:null;
+ const changed=Boolean(scopedAdoption);
+ if(changed)assert.deepEqual(scopedAdoption.before,row.current,`Frozen previous ${row.id} identity`);
+ const pinned=changed?scopedAdoption.after:row.current;
  for(const key of ['packageVersion','sourceHash','status','canonicalRuntimeReference'])assert.deepEqual(integration[key],pinned[key],`${row.id}:${key}`);
- if(changed){const runtime=await loadRegisteredRuntime('LIXIL','TW');assert.ok(runtime.normalizedManifest.formalPass&&runtime.sourcePackageIntegrity.match);assert.equal(runtime.sourcePackageIntegrity.files[0].actual,adoption.runtime_sha256);assert.equal(runtime.normalizedManifest.packageVersion,pinned.packageVersion);}
- identities.push({id:row.id,packageVersion:integration.packageVersion,sourceHash:integration.sourceHash,unchangedFromPreviousApp:changed?false:row.unchanged,...(changed?{declaredSourceAdoption:adoption.work_id}:{})});
+ if(changed){const runtime=await loadRegisteredRuntime('LIXIL',row.id===ewAdoption.scope_product_id?'EW':'TW');assert.ok(runtime.normalizedManifest.formalPass&&runtime.sourcePackageIntegrity.match);assert.equal(runtime.sourcePackageIntegrity.files[0].actual,scopedAdoption.runtime_sha256);assert.equal(runtime.normalizedManifest.packageVersion,pinned.packageVersion);}
+ identities.push({id:row.id,packageVersion:integration.packageVersion,sourceHash:integration.sourceHash,unchangedFromPreviousApp:changed?false:row.unchanged,...(changed?{declaredSourceAdoption:scopedAdoption.work_id}:{})});
 }
 const fields=['frame_spec','upper_frame_spec','lower_frame_spec','fukashi_presence','fukashi_sides','fukashi_depth','fukashi_reinforcement'];
 for(const [manufacturer,series] of [['LIXIL','インプラス'],['YKK AP','ウチリモ 内窓']]){const r=await loadRegisteredRuntime(manufacturer,series);assert.ok(r.normalizedManifest.formalPass&&r.sourcePackageIntegrity.match);assert.deepEqual(r.master.innerWindowFrameContract.canonical_field_order,fields);assert.equal(new Set(r.master.fields.map(f=>f.field_name)).size,r.master.fields.length);assert.ok(r.sourcePackageIntegrity.files.every(f=>f.match));}
