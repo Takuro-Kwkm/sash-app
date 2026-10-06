@@ -29,6 +29,7 @@ jobs:
           npm run lint
           npm run typecheck
           npm test
+          mkdir -p artifacts/production
           node scripts/production/ew-parity.mjs artifacts/production/ew-parity.json
       - run: npm install --no-save playwright@1.58.2 && npx playwright install --with-deps chromium
       - name: Build actual EW Runtime and verify three UI widths
