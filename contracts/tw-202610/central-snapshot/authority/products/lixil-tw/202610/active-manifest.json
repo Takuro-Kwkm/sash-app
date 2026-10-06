@@ -1,0 +1,26 @@
+{
+  "status": "ACTIVE",
+  "scope": "LIXIL::TW",
+  "version": "TW-202610-R1",
+  "previous_field_count": 25,
+  "existing_formal_carry_forward": 25,
+  "additional_conditional_fields": 1,
+  "total_formal_fields": 26,
+  "catalog_source": "SN4100 0110L26",
+  "not_a_rewrite_of_fixed_global_audit": true,
+  "baseline_central_main": "53a1c39d475acafc09da4b6c13811cdf0bfefd23",
+  "files": {
+    "evidence-acceptance-decisions.json": "601f09ae509d6132f522c1f3ef922b152d02998bd0661a29f15eb8bd7f9597f0",
+    "runtime-proof.json": "fffc6bcfa3bb4d473d7bcb55996e72db112ff3c218887e91cf0fed418e08c11c",
+    "baseline-25-fields.json": "51956141384abc03d083946d1ddc47c1b155346d9dfbee07b5638d72656aefa4",
+    "formal-promotion.json": "1de02f0e5c887f29712bab50efe6c08c3d85515a590da074ca20c69fb5df3568",
+    "mapping.json": "e8181d5054d14b68c309da1b3769176e991069a835466b879b1a0bb6a3e5f9e0",
+    "field-contract.json": "9f48a4f7b4327bbca0aeb63d9976afe6072961cc76871fd95493d4ceb9ab77d9",
+    "field-responsibility.json": "742374030471d8c4bd6b508fea4fcd811967318a3ea0c058e6391936ede1c98c",
+    "promotion-decision.json": "2384fd59fe5c55b0d23721898677593eeb22106802d3284ab3ee7ed7378fd10a",
+    "official-source-snapshot.json": "49662225aa77db2711b84d103794c314d88e973b89918160a7016d42edce5fbf",
+    "evidence-acceptance.json": "de74757ec48427a7f2e81709bdcb279338d0d6f0eac1c427121b841bbdc97ad6",
+    "source-locator-correction.json": "9c5d03c2ba3805f6b2a0808d94c131d2be8990493563737d8877799a0d432b07"
+  },
+  "source_locator_correction": "TW-202610-SOURCE-LOCATOR-CORRECTION"
+}

@@ -1,0 +1,27 @@
+{
+  "scope": "LIXIL::TW",
+  "base_dictionary": {
+    "drive_file_id": "1YQzUudx8ft3igY-vvEFtnqHzgsVj6udV7jGOaaNnM38",
+    "version": "1.0",
+    "status": "CURRENT"
+  },
+  "additional_definitions": [
+    {
+      "canonical_key": "custom_height_secondary",
+      "runtime_key": "custom_height_secondary",
+      "data_type": "number",
+      "unit": "mm",
+      "label": "台形のもう一方の高さ H2（mm）",
+      "scope_window": "SWT-LIX-TW-FIX-TRAPEZOID-IN",
+      "business_purpose": "営業見積依頼：台形両端高さの入力",
+      "meaning": "custom_height is H1; custom_height_secondary is H2. Both are raw adopted sash dimensions, not computed glass dimensions or manufacturer order acceptance.",
+      "required_if": {
+        "window_type": "SWT-LIX-TW-FIX-TRAPEZOID-IN",
+        "size_mode": "CUSTOM"
+      },
+      "null_policy": "Hide, clear and exclude when non-applicable; no H2 inferred from H1.",
+      "validation_authority": "CR-TW-026; dedicated graph and glass remain manufacturer confirmation",
+      "history": "New conditional definition; all existing 25 definitions preserved"
+    }
+  ]
+}

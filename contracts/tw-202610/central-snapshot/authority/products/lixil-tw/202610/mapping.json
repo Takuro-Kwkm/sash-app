@@ -1,0 +1,12 @@
+{
+  "sash-app:SER-LIXIL-TW:custom_height_secondary": {
+    "field_id": "sash-app:SER-LIXIL-TW:custom_height_secondary",
+    "category": "window",
+    "semantic_role": "window:custom_height_secondary",
+    "runtime_key": "custom_height_secondary",
+    "canonical_key": "custom_height_secondary",
+    "app": "sash-app",
+    "product": "SER-LIXIL-TW",
+    "mapping_type": "product specific"
+  }
+}

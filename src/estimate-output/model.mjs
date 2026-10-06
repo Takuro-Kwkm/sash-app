@@ -38,6 +38,8 @@ function sizeText(snapshot){
   if(size)return text(size);
   const width=summaryValue(snapshot,['custom_width','width','size_w','order_width'])??snapshot?.configuration?.custom_width??snapshot?.configuration?.width??snapshot?.configuration?.size_w??snapshot?.configuration?.order_width??null;
   const height=summaryValue(snapshot,['custom_height','height','size_h','order_height'])??snapshot?.configuration?.custom_height??snapshot?.configuration?.height??snapshot?.configuration?.size_h??snapshot?.configuration?.order_height??null;
+  const secondaryHeight=summaryValue(snapshot,['custom_height_secondary'])??snapshot?.configuration?.custom_height_secondary??null;
+  if(width!==null&&height!==null&&secondaryHeight!==null)return `W ${text(width)} × H1 ${text(height)} / H2 ${text(secondaryHeight)}`;
   if(width!==null&&height!==null)return `${text(width)} × ${text(height)}`;
   if(width!==null)return text(width);
   return null;

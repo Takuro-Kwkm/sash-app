@@ -1,0 +1,74 @@
+name: TW October 2026 Change Gate
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: tw-202610-${{ github.event.pull_request.head.ref || github.ref_name }}
+  cancel-in-progress: true
+jobs:
+  tw-change:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    env:
+      HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.HEAD_SHA }}
+          fetch-depth: 0
+      - name: Verify exact HEAD
+        run: test "$(git rev-parse HEAD)" = "$HEAD_SHA"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Verify exact merged central contract and unchanged 25 Fields
+        run: |
+          node scripts/verify-tw-202610-adoption.mjs
+          python -m pip install -r contracts/tw-202610/central-snapshot/requirements.txt
+          python contracts/tw-202610/central-snapshot/scripts/validate-tw-202610.py --report "$GITHUB_WORKSPACE/artifacts/tw-202610/central-contract-validation.json"
+      - name: Verify TW delta and unchanged product behavior
+        run: node --test test/70-runtime-manifest-tw-integration.test.mjs test/71-runtime-ui-tw-gate.test.mjs test/76-tw-october-2026-delta.test.mjs
+      - name: Install browser validation dependencies
+        run: npm install --no-save playwright@1.58.2 && npx playwright install --with-deps chromium
+      - name: Build actual current-or-candidate TW preview
+        run: |
+          node --input-type=module - <<'JS'
+          import {readFileSync,writeFileSync,mkdirSync} from 'node:fs';
+          import {brotliDecompressSync} from 'node:zlib';
+          import {getRuntimeAppIntegration} from './src/catalog/runtime-master/runtime-app-bridge.mjs';
+          import {spawnSync} from 'node:child_process';
+          const current=getRuntimeAppIntegration('SER-LIXIL-TW').packageVersion==='integrated-v0.5';
+          mkdirSync('artifacts/tw-202610',{recursive:true});
+          if(!current)writeFileSync('artifacts/tw-202610/candidate.json',brotliDecompressSync(Buffer.from(readFileSync('changes/lixil-tw-202610/candidate-runtime.json.br.b64','utf8'),'base64')));
+          const result=spawnSync(process.execPath,['scripts/build-tw-runtime-review-preview.mjs','artifacts/tw-202610/index.html'],{stdio:'inherit',env:{...process.env,...(!current?{TW_CANDIDATE_JSON:'artifacts/tw-202610/candidate.json'}:{})}});
+          process.exit(result.status??1);
+          JS
+      - name: Verify three widths, real storage, reload, estimate, PDF, Excel, print and dependency
+        env:
+          TW_PREVIEW_HTML: artifacts/tw-202610/index.html
+        run: node test/browser/tw-october-2026-browser-qa.mjs
+      - name: Verify live registered Runtime when v0.5 is active
+        run: |
+          VERSION=$(node --input-type=module -e "import {getRuntimeAppIntegration} from './src/catalog/runtime-master/runtime-app-bridge.mjs';console.log(getRuntimeAppIntegration('SER-LIXIL-TW').packageVersion)")
+          if [ "$VERSION" = "integrated-v0.5" ]; then
+            node scripts/start-step8-ui.mjs > artifacts/tw-202610/server.log 2>&1 &
+            for i in $(seq 1 30); do curl --fail --silent http://127.0.0.1:4173/api/health > /dev/null && break; sleep 1; done
+            TW_QA_OUTPUT=artifacts/tw-202610-live node test/browser/tw-october-2026-browser-qa.mjs
+            node test/browser/tw-runtime-browser-qa.mjs
+            node test/browser/estimate-output-browser-qa.mjs
+          fi
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: tw-202610-${{ env.HEAD_SHA }}
+          path: |
+            artifacts/tw-202610/
+            artifacts/tw-202610-browser/
+            artifacts/tw-202610-live/
+            artifacts/tw-runtime-browser-qa/
+            artifacts/estimate-output-browser-qa/

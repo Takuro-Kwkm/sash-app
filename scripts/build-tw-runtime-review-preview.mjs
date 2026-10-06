@@ -1,60 +1,51 @@
-import { createHash } from 'node:crypto';
-import { mkdir, readFile, writeFile } from 'node:fs/promises';
-import { dirname, join, resolve } from 'node:path';
-import { fileURLToPath } from 'node:url';
-import { loadRegisteredRuntime } from '../src/catalog/runtime-master/runtime-master-registry.mjs';
-import { getRuntimeAppIntegration } from '../src/catalog/runtime-master/runtime-app-bridge.mjs';
-
-const here = dirname(fileURLToPath(import.meta.url));
-const root = join(here, '..');
-const webRoot = join(root, 'src', 'ui', 'web');
-const output = resolve(process.argv[2] ?? join(root, 'artifacts', 'tw-runtime-ui-preview', 'index.html'));
-const runtime = await loadRegisteredRuntime('LIXIL', 'TW');
-const integration = getRuntimeAppIntegration('SER-LIXIL-TW');
-const [htmlSource, appSource, styles, waveStyles, engineSource] = await Promise.all([
-  readFile(join(webRoot, 'index.html'), 'utf8'), readFile(join(webRoot, 'app.js'), 'utf8'),
-  readFile(join(webRoot, 'styles.css'), 'utf8'), readFile(join(webRoot, 'styles-wave3.css'), 'utf8'),
-  readFile(join(root, 'src/catalog/runtime-master/canonical-workbook-runtime-engine.mjs'), 'utf8'),
-]);
-const generatedAt = new Date().toISOString();
-const buildId = `TW-UI-${createHash('sha256').update(appSource).update(engineSource).update(JSON.stringify(runtime.master)).digest('hex').slice(0, 12)}`;
-const json = (value) => JSON.stringify(value).replaceAll('</script', '<\\/script');
-const browserEngine = engineSource.replace('export function evaluateCanonicalWorkbookRuntime', 'export function evaluateCanonicalWorkbookRuntime');
-const bootstrap = `
-const master=${json(runtime.master)};
-const integration=${json(integration)};
-const integrity=${json(runtime.sourcePackageIntegrity)};
-const engineUrl=URL.createObjectURL(new Blob([${json(browserEngine)}],{type:"text/javascript"}));
-const {evaluateCanonicalWorkbookRuntime}=await import(engineUrl);
-const label=(row,fallback)=>row?.display_label??row?.displayLabel??row?.label??fallback;
-const valuesFor=(name)=>master.values.filter(row=>row.field_name===name&&row.status==="CURRENT"&&row.runtime_selectable!==false);
-function toUi(state){
-  const fields=master.fields.flatMap((def,index)=>{
-    const fieldState=state.fields[def.field_name];
-    if(!fieldState||fieldState.visibility==="HIDE"||def.runtime_included===false)return [];
-    const byValue=new Map(valuesFor(def.field_name).map(row=>[JSON.stringify(row.canonical_value),row]));
-    return [{key:def.field_name,displayLabel:label(def,def.field_name),displayOrder:Number(def.display_order??index+1),dataType:def.data_type==="array"?"MULTI_ENUM":"ENUM",required:Boolean(fieldState.required),values:(fieldState.allowed_values??[]).map(value=>{const row=byValue.get(JSON.stringify(value));return{value,displayLabel:label(row,String(value)),manualCheck:Boolean(row?.manual_check),disabled:row?.user_selectable===false};}),selectionMode:def.selection_mode,runtimeState:fieldState.state,readOnly:def.selection_mode==="AUTO_RESOLVE"&&(fieldState.allowed_values??[]).length===1,parentFields:def.parent_fields??[]}];
-  }).sort((a,b)=>a.displayOrder-b.displayOrder);
-  const visible=new Set(fields.map(field=>field.key));
-  const selection=Object.fromEntries(Object.entries(state.fields).filter(([name,row])=>visible.has(name)&&row.value!==null&&row.value!==undefined).map(([name,row])=>[name,row.value]));
-  return{productId:integration.id,manufacturer:"LIXIL",series:"TW",source:"RUNTIME_MASTER",status:"READY",selection,fields,notices:(state.warnings??[]).map(row=>row.message??String(row)),manualWarnings:[],validation:{status:state.status,errors:(state.errors??[]).map(error=>({errorCode:error.code,field:error.field,message:(error.field?error.field+": ":"")+(error.code??"入力値が成立しません")})),missingRequiredFields:state.missing_required_fields??[]},derivedEntities:[],derivedComponents:[],derivedOptions:state.derived_options??[],clearedFields:state.cleared_fields??[],optionCodeResults:state.option_code_results??[],optionCodeLinkageCount:state.option_code_linkage_count??0,runtimeCapabilities:master.capabilities,runtimeMaster:{masterVersion:"integrated-v0.2",packageVersion:"integrated-v0.2",schemaVersion:"2.0",adapterType:"CANONICAL_WORKBOOK_REFERENCE_V1",sourceHash:integration.sourceHash,canonicalRuntimeReference:integration.canonicalRuntimeReference,sourcePackageIntegrity:integrity}};
+import {createHash} from 'node:crypto';
+import {mkdir,readFile,writeFile} from 'node:fs/promises';
+import {dirname,join,resolve,relative} from 'node:path';
+import {fileURLToPath} from 'node:url';
+import {getRuntimeMasterEntry} from '../src/catalog/runtime-master/runtime-master-registry.mjs';
+import {loadManifestRuntimePackage} from '../src/catalog/runtime-master/runtime-manifest-loader.mjs';
+import {getRuntimeAppIntegration} from '../src/catalog/runtime-master/runtime-app-bridge.mjs';
+const root=resolve(dirname(fileURLToPath(import.meta.url)),'..'),web=join(root,'src/ui/web');
+const output=resolve(process.argv[2]??join(root,'artifacts/tw-runtime-ui-preview/index.html'));
+const json=x=>JSON.stringify(x).replaceAll('</script','<\\/script');
+let document,manifest,integrity,integration;
+if(process.env.TW_CANDIDATE_JSON){
+ const bytes=await readFile(process.env.TW_CANDIDATE_JSON);document=JSON.parse(bytes);manifest={packageVersion:document.package_version};
+ const sha=createHash('sha256').update(bytes).digest('hex');integrity={match:true,files:[{role:'runtime_master',actual:sha,expected:sha,match:true,bytes:bytes.length}]};
+ integration={...getRuntimeAppIntegration('SER-LIXIL-TW'),packageVersion:document.package_version,masterVersion:document.package_version,sourceHash:sha,canonicalRuntimeReference:{candidateRuntimeSha256:sha,authoringDriveFileId:document.authoring_source.file_id},previewStatus:'CANDIDATE_QA'};
+}else{
+ const pkg=await loadManifestRuntimePackage(getRuntimeMasterEntry('LIXIL','TW'));document=pkg.documents.runtime_master;manifest=pkg.manifest;integrity=pkg.integrity;integration=getRuntimeAppIntegration('SER-LIXIL-TW');
 }
-const reply=(body,status=200)=>Promise.resolve(new Response(JSON.stringify(body),{status,headers:{"content-type":"application/json; charset=utf-8"}}));
-window.fetch=(input)=>{const url=new URL(typeof input==="string"?input:input.url,location.href);
-  if(url.pathname==="/api/health")return reply({ok:true,buildId:${json(buildId)},buildTimestamp:${json(generatedAt)},catalogVersion:"TW integrated-v0.2 Review Build",inventory:[],runtimeMasterIntegrations:[integration]});
-  if(url.pathname==="/api/catalog/products")return reply([]);
-  if(url.pathname==="/api/runtime-master/integrations")return reply([integration]);
-  if(url.pathname==="/api/runtime-master/resolve"){let selection={};try{selection=JSON.parse(url.searchParams.get("selection")??"{}");}catch{}return reply(toUi(evaluateCanonicalWorkbookRuntime(master,selection)));}
-  return reply({error:"Review Preview endpoint not found"},404);
+const modules={},entry={manufacturer:'LIXIL',series:'TW',masterVersion:document.package_version,schemaVersion:'2.0',packageType:'RUNTIME_MANIFEST_V1',adapterType:'TW_CANONICAL_WORKBOOK_REFERENCE_V2'};
+const overrides={
+ 'src/catalog/runtime-master/runtime-master-registry.mjs':`import {adaptTwCanonicalWorkbookReferenceV2} from './tw-canonical-workbook-reference-v2-adapter.mjs';\nimport {evaluateTwCanonicalWorkbookRuntimeV2} from './tw-canonical-workbook-runtime-engine-v2.mjs';\nconst document=${json(document)};\nconst master=adaptTwCanonicalWorkbookReferenceV2({documents:{runtime_master:document},manifest:${json(manifest)}});\nconst entry=${json(entry)};\nexport const runtimeMasterInventory=[entry];\nexport const getRuntimeMasterEntry=(manufacturer,series)=>manufacturer==='LIXIL'&&series==='TW'?entry:null;\nexport async function loadRegisteredRuntime(manufacturer,series){return getRuntimeMasterEntry(manufacturer,series)?{master,resolver:selection=>evaluateTwCanonicalWorkbookRuntimeV2(master,selection),sourcePackageIntegrity:${json(integrity)}}:null;}`,
+ 'src/catalog/runtime-master/app-runtime-integration-registry.mjs':`export const appRuntimeIntegrationRegistry=[${json(integration)}];`,
 };
-await import(URL.createObjectURL(new Blob([${json(appSource)}],{type:"text/javascript"})));
-`;
-const banner = `<section class="card compact review-build-note"><h2>TW Runtime UI Review Build</h2><p class="lead"><strong>REVIEW IN PROGRESS</strong> — LIXIL TW / 新築系外窓（一般サッシ） / integrated-v0.2 / UI Standard v1.5</p><p class="lead">生成: ${generatedAt} · データ: 正式RuntimeのRepository transport fixture（SHA検証済み） · APIのみブラウザ内stub。保存・外部通信は行いません。</p></section>`;
-const html = htmlSource
-  .replace('<link rel="stylesheet" href="/styles.css">', `<style>${styles}</style>`)
-  .replace('<link rel="stylesheet" href="/styles-wave3.css">', `<style>${waveStyles}.review-build-note strong{color:#9b6210}</style>`)
-  .replace('<main>', `<main>${banner}`)
-  .replace('<script type="module" src="/app.js"></script>', `<script type="module">${bootstrap}</script>`);
-await mkdir(dirname(output), { recursive:true });
-await writeFile(output, html);
-console.log(JSON.stringify({ output, buildId, generatedAt, bytes:Buffer.byteLength(html), windowTypes:runtime.master.provider.windows.length, sizes:runtime.master.provider.sizes.length, optionCodeLinkages:runtime.master.optionCodeLinkages.length }));
+const specPattern=/\b(?:from\s*|import\s*\()(['"])([^'"]+)\1/g;
+function target(spec,parent){
+ if(spec.startsWith('node:'))throw Error('Node-only module in browser preview: '+spec);
+ if(spec.startsWith('/work-management/')||spec.startsWith('/estimate-output/'))return 'src'+spec;
+ if(spec.startsWith('/'))return relative(root,join(web,spec.slice(1)));
+ if(spec.startsWith('.'))return relative(root,resolve(root,dirname(parent),spec));
+ throw Error('Unbundled external module in browser preview: '+spec);
+}
+async function collect(id){
+ if(modules[id])return;
+ let source=overrides[id]??await readFile(join(root,id),'utf8');
+ if(id.endsWith('.json'))source='export default '+source.trim()+';';
+ // File-only routing adapter; product/UI/save/output logic stays in actual modules.
+ if(id==='src/ui/web/app.js'||id==='src/ui/web/estimate-output-integration.mjs')source=source.replaceAll('location.pathname',"(new URLSearchParams(location.search).get('route')||'/runtime-lab')");
+ if(id==='src/ui/web/estimate-output-integration.mjs')source=source.replaceAll('url.pathname',"(url.searchParams.get('route')||url.pathname)");
+ const deps=[];source=source.replace(specPattern,(whole,quote,spec)=>{const dep=target(spec,id),token='TW_MODULE_'+deps.length+'_END';deps.push({token,dep});return whole.replace(spec,token);}).replace(/\s+with\s*\{\s*type\s*:\s*['"]json['"]\s*\}/g,'');
+ modules[id]={source,deps};for(const{dep}of deps)await collect(dep);
+}
+for(const path of ['src/catalog/runtime-master/runtime-app-bridge.mjs','src/ui/web/app.js','src/ui/web/estimate-output-integration.mjs'])await collect(path);
+const generatedAt=new Date().toISOString(),buildId='TW-202610-'+createHash('sha256').update(json(modules)).digest('hex').slice(0,12);
+const bootstrap=`const modules=${json(modules)};\nconst urls=new Map(),building=new Set();\nfunction moduleUrl(id){if(urls.has(id))return urls.get(id);if(building.has(id))throw Error('Cyclic preview module: '+id);building.add(id);const item=modules[id];let source=item.source;for(const{token,dep}of item.deps)source=source.replaceAll(token,moduleUrl(dep));const url=URL.createObjectURL(new Blob([source],{type:'text/javascript'}));urls.set(id,url);building.delete(id);return url;}\nfor(const name of ['pushState','replaceState']){const original=history[name].bind(history);history[name]=(state,title,path)=>{const isUrl=path instanceof URL||/^https?:/.test(String(path));const url=isUrl?new URL(String(path),location.href):new URL(location.href);if(!isUrl){url.searchParams.set('route',String(path));url.searchParams.delete('estimateOutput');}return original(state,title,url.href);};}\nconst bridge=await import(moduleUrl('src/catalog/runtime-master/runtime-app-bridge.mjs'));\nconst integrations=bridge.runtimeAppIntegrationInventory();\nconst reply=(body,status=200)=>new Response(JSON.stringify(body),{status,headers:{'content-type':'application/json; charset=utf-8'}});\nwindow.fetch=async input=>{const url=new URL(typeof input==='string'?input:input.url,location.href);if(url.pathname==='/api/health')return reply({ok:true,buildId:${json(buildId)},buildTimestamp:${json(generatedAt)},catalogVersion:${json('TW '+document.package_version+' / 2026-10 Source Delta')},inventory:[],runtimeMasterIntegrations:integrations});if(url.pathname==='/api/catalog/products')return reply([]);if(url.pathname==='/api/runtime-master/integrations')return reply(integrations);if(url.pathname==='/api/runtime-master/resolve'){try{return reply(await bridge.resolveRuntimeAppProduct(url.searchParams.get('productId'),JSON.parse(url.searchParams.get('selection')??'{}')));}catch(e){return reply({error:e.message},400);}}return reply({error:'Unavailable preview endpoint'},404);};\nwindow.__TWPreview={buildId:${json(buildId)},integrity:${json(integrity)},resolve:selection=>bridge.resolveRuntimeAppProduct('SER-LIXIL-TW',selection),moduleUrl};\nawait import(moduleUrl('src/ui/web/app.js'));await import(moduleUrl('src/ui/web/estimate-output-integration.mjs'));`;
+let html=await readFile(join(web,'index.html'),'utf8');
+for(const name of ['styles.css','styles-wave3.css','work-management.css','estimate-output.css','theme.css'])html=html.replace(`<link rel="stylesheet" href="/${name}">`,`<style>${await readFile(join(web,name),'utf8')}</style>`);
+html=html.replace('<script src="/theme.js"></script>',`<script>${await readFile(join(web,'theme.js'),'utf8')}</script>`).replace('<script type="module" src="/app.js"></script>',`<script type="module">${bootstrap}</script>`).replace('<script type="module" src="/estimate-output-integration.mjs"></script>','');
+const note=`<aside style="padding:12px 20px;background:#eef5f2;color:#214d3c;font-size:13px;border-bottom:1px solid #c8ded2">LIXIL TW · 2026年10月カタログ改訂 · ${document.package_version} · ${process.env.TW_CANDIDATE_JSON?'変更候補QA':'正式Runtime'}<br>実装のUI・商品判定・保存・帳票を収録。TWのみ表示。APIはファイル内で処理し、入力はこのブラウザに保存されます。 ${buildId}</aside>`;
+html=html.replace('<body>','<body>'+note);await mkdir(dirname(output),{recursive:true});await writeFile(output,html);
+const result={output,buildId,generatedAt,bytes:Buffer.byteLength(html),actualSourceModules:Object.keys(modules).length,windowTypes:document.provider.windows.length,sizes:document.provider.sizes.length,optionCodeLinkages:document.provider.option_code_linkages.length,sourcePackageIntegrity:integrity};
+await writeFile(output.replace(/\.html$/,'.build.json'),JSON.stringify(result,null,2)+'\n');console.log(JSON.stringify(result));

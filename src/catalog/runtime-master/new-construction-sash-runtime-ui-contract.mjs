@@ -22,7 +22,7 @@ const SLOT_ALIASES = Object.freeze({
   region_standard:'window_spec',door_installation:'window_spec',
   handing:'handing',frame_angle:'frame_angle',
   sash_count:'panel_count',panel_count:'panel_count',leaf_configuration:'panel_count',
-  size_mode:'size_mode',size:'size',standard_size:'size',size_id:'size',custom_width:'size',custom_height:'size',custom_w:'size',custom_h:'size',
+  size_mode:'size_mode',size:'size',standard_size:'size',size_id:'size',custom_width:'size',custom_height:'size',custom_height_secondary:'size',custom_w:'size',custom_h:'size',
   exterior_color:'exterior_color',interior_color:'interior_color',
   screen:'screen_presence',screen_presence:'screen_presence',screen_type:'screen_form',screen_form:'screen_form',screen_variant:'screen_form',screen_midrail:'screen_midrail',screen_net:'screen_net',
   glass:'glass_base',glass_base:'glass_base',glass_type:'glass_type',glass_detail:'glass_detail',glass_function:'glass_function',glass_additional:'glass_function',
