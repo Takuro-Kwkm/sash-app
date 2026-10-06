@@ -12,14 +12,22 @@ assert.equal(adoption.central_commit,'6efc459f231fd5bd254c36ab9b8d3c6d589da51a')
 const ewAdoption=JSON.parse(readFileSync('changes/lixil-ew-202610/runtime-identity-adoption.json'));
 assert.equal(ewAdoption.scope_product_id,'SER-LIX-EW');assert.equal(ewAdoption.status,'FORMAL_ADOPTED');
 assert.equal(ewAdoption.central_commit,'0e500aed262edf82a40aa4e3786952efefad7be9');
+const thermosAdoption=JSON.parse(readFileSync('changes/lixil-thermosl-is8900/runtime-identity-adoption.json'));
+assert.equal(thermosAdoption.scope_product_id,'SER-LIX-SAMOSL');
+if(thermosAdoption.status!=='FORMAL_ADOPTED'){
+ assert.equal(thermosAdoption.status,'PROPOSED_PENDING_HUMAN');
+ assert.equal(process.env.GITHUB_EVENT_NAME,'pull_request','Proposed product adoption cannot pass main CI');
+}else{
+ assert.ok(thermosAdoption.human_decision_ref&&thermosAdoption.native_formal_readback,'Formal adoption requires external decision/native readback');
+}
 for(const row of expected){
  const integration=current.find(p=>p.id===row.id);assert.ok(integration);
- const scopedAdoption=row.id===adoption.scope_product_id?adoption:row.id===ewAdoption.scope_product_id?ewAdoption:null;
+ const scopedAdoption=row.id===adoption.scope_product_id?adoption:row.id===ewAdoption.scope_product_id?ewAdoption:row.id===thermosAdoption.scope_product_id?thermosAdoption:null;
  const changed=Boolean(scopedAdoption);
  if(changed)assert.deepEqual(scopedAdoption.before,row.current,`Frozen previous ${row.id} identity`);
  const pinned=changed?scopedAdoption.after:row.current;
  for(const key of ['packageVersion','sourceHash','status','canonicalRuntimeReference'])assert.deepEqual(integration[key],pinned[key],`${row.id}:${key}`);
- if(changed){const runtime=await loadRegisteredRuntime('LIXIL',row.id===ewAdoption.scope_product_id?'EW':'TW');assert.ok(runtime.normalizedManifest.formalPass&&runtime.sourcePackageIntegrity.match);assert.equal(runtime.sourcePackageIntegrity.files[0].actual,scopedAdoption.runtime_sha256);assert.equal(runtime.normalizedManifest.packageVersion,pinned.packageVersion);}
+ if(changed){const runtime=await loadRegisteredRuntime('LIXIL',row.id===ewAdoption.scope_product_id?'EW':row.id===thermosAdoption.scope_product_id?'サーモスL':'TW');assert.ok(runtime.normalizedManifest.formalPass&&runtime.sourcePackageIntegrity.match);assert.equal(runtime.sourcePackageIntegrity.files[0].actual,scopedAdoption.runtime_sha256);assert.equal(runtime.normalizedManifest.packageVersion,pinned.packageVersion);}
  identities.push({id:row.id,packageVersion:integration.packageVersion,sourceHash:integration.sourceHash,unchangedFromPreviousApp:changed?false:row.unchanged,...(changed?{declaredSourceAdoption:scopedAdoption.work_id}:{})});
 }
 const fields=['frame_spec','upper_frame_spec','lower_frame_spec','fukashi_presence','fukashi_sides','fukashi_depth','fukashi_reinforcement'];
