@@ -1,0 +1,142 @@
+{
+  "PACKAGE_SAVED": {
+    "request_id": "LIXIL-EW-202610-CW:PACKAGE_SAVED",
+    "work_binding_sha256": "f16c299a0107e2c080643ad0ec8f0645d125e463996176f7d947be695d757643",
+    "stage": "PACKAGE_SAVED",
+    "package": {
+      "file_id": "1-mvYbYGhgPRXAmTEaC9SME4yHRaycXfH",
+      "parent_id": "1mDsi9amFdD5A9N8XrommExB_EMZDQiqu",
+      "name": "LIXIL_EW_202610_FORMAL_v1.4.zip",
+      "sha256": "31e889e2358dce97c432652df5bb640816f207752ff7765379ddf6167f637fd0"
+    },
+    "observed_at": "2026-10-06T07:02:24.029436+00:00",
+    "connector_result_ref": "out/package-upload-receipt.json + out/package-metadata-receipt.json",
+    "hash_kind": "UPLOAD_BYTES_SHA256"
+  },
+  "REGISTRY_UPDATED": {
+    "request_id": "LIXIL-EW-202610-CW:REGISTRY_UPDATED",
+    "work_binding_sha256": "f16c299a0107e2c080643ad0ec8f0645d125e463996176f7d947be695d757643",
+    "stage": "REGISTRY_UPDATED",
+    "package": {
+      "file_id": "1-mvYbYGhgPRXAmTEaC9SME4yHRaycXfH",
+      "parent_id": "1mDsi9amFdD5A9N8XrommExB_EMZDQiqu",
+      "name": "LIXIL_EW_202610_FORMAL_v1.4.zip",
+      "sha256": "31e889e2358dce97c432652df5bb640816f207752ff7765379ddf6167f637fd0"
+    },
+    "registry": {
+      "file_id": "1HMMZ8JdsbJPtL_8LjQfxMF8P_Zb4-LReqvPMFn1pJks",
+      "range": "'正本Registry'!A4:X4",
+      "entry": {
+        "product_id": "SER-LIX-EW",
+        "evidence_identity": "af35759f5472f99970ea4ae809b4c2e21ee1f752c6dce9a751d19cc5d6b9db08",
+        "manufacturer": "LIXIL",
+        "package_identity": "LIXIL::EW::v1.4::202610",
+        "package_sha256": "31e889e2358dce97c432652df5bb640816f207752ff7765379ddf6167f637fd0",
+        "qa_sha256": "ee2a14310016568eb50db58c9c42838f4beb64f4641b3f25dd1e83ffc518271f",
+        "revision": "v1.4",
+        "scope_sha256": "8e284a522bd4aad8f5aa7c64570d8109043b37f668dbe810823f8297e818b099",
+        "series": "EW",
+        "lifecycle": "FORMAL",
+        "package_location": {
+          "name": "LIXIL_EW_202610_FORMAL_v1.4.zip",
+          "parent_id": "1mDsi9amFdD5A9N8XrommExB_EMZDQiqu"
+        },
+        "adapter": "drive_bridge"
+      },
+      "native_row": [
+        "LIXIL",
+        "EW",
+        "v1.4",
+        "FORMAL_PASS",
+        "PASS",
+        "LIXIL_EW_商品マスター_v1.4",
+        "1zjkU81jvKNZyTZMDFhs5AyyMZAnCzMGDP5pnyEWv3ag",
+        "READY",
+        "1J57G8UG_oJJ4dMgnCh6WsUx9e-tcjLvZ",
+        1,
+        "PASS",
+        "11Z6EUSyTuawRcSWO09Pk2V1H5rOvKLRt",
+        "PASS",
+        "PASS",
+        "PASS",
+        "PASS",
+        "04_商品マスター/01_LIXIL/EW/01_正本",
+        "1mDsi9amFdD5A9N8XrommExB_EMZDQiqu",
+        "1T_KEc2-27lU6yddCka1ZqI289qolVwmB",
+        "1rGW_ZFtAYG4oWNRJqSqrqBT5aVQEpxwc",
+        "NONE",
+        "NONE",
+        "2026-10-06T07:02:24.453Z",
+        "202610 EW Product Master v1.4 FORMAL; price delta QA PASS; 29 Field FORMAL 29/29 carry-forward; Runtime/Git closure in progress"
+      ],
+      "normalization": "Native product Registry identity joined to saved hash-bound PackageManifest; native schema has no package-hash columns"
+    },
+    "registry_before_sha256": "69f8c4878a87f010f669ce0650bd1431e2ef9d12bbda47effb364e28da35fc77",
+    "unrelated_rows_before_sha256": "51b52a55aef783079e2150d8051cb0a019f39e5d29963f7dfc8af80453d0aae3",
+    "unrelated_rows_after_sha256": "51b52a55aef783079e2150d8051cb0a019f39e5d29963f7dfc8af80453d0aae3",
+    "observed_at": "2026-10-06T07:02:57.225362+00:00",
+    "connector_result_ref": "out/registry-update-receipt.json + out/registry-values-after.json",
+    "hash_kind": "UPLOAD_BYTES_SHA256"
+  },
+  "POST_SAVE_VERIFIED": {
+    "request_id": "LIXIL-EW-202610-CW:POST_SAVE_VERIFIED",
+    "work_binding_sha256": "f16c299a0107e2c080643ad0ec8f0645d125e463996176f7d947be695d757643",
+    "stage": "POST_SAVE_VERIFIED",
+    "package": {
+      "file_id": "1-mvYbYGhgPRXAmTEaC9SME4yHRaycXfH",
+      "parent_id": "1mDsi9amFdD5A9N8XrommExB_EMZDQiqu",
+      "name": "LIXIL_EW_202610_FORMAL_v1.4.zip",
+      "sha256": "31e889e2358dce97c432652df5bb640816f207752ff7765379ddf6167f637fd0"
+    },
+    "registry": {
+      "file_id": "1HMMZ8JdsbJPtL_8LjQfxMF8P_Zb4-LReqvPMFn1pJks",
+      "range": "'正本Registry'!A4:X4",
+      "entry": {
+        "product_id": "SER-LIX-EW",
+        "evidence_identity": "af35759f5472f99970ea4ae809b4c2e21ee1f752c6dce9a751d19cc5d6b9db08",
+        "manufacturer": "LIXIL",
+        "package_identity": "LIXIL::EW::v1.4::202610",
+        "package_sha256": "31e889e2358dce97c432652df5bb640816f207752ff7765379ddf6167f637fd0",
+        "qa_sha256": "ee2a14310016568eb50db58c9c42838f4beb64f4641b3f25dd1e83ffc518271f",
+        "revision": "v1.4",
+        "scope_sha256": "8e284a522bd4aad8f5aa7c64570d8109043b37f668dbe810823f8297e818b099",
+        "series": "EW",
+        "lifecycle": "FORMAL",
+        "package_location": {
+          "name": "LIXIL_EW_202610_FORMAL_v1.4.zip",
+          "parent_id": "1mDsi9amFdD5A9N8XrommExB_EMZDQiqu"
+        },
+        "adapter": "drive_bridge"
+      },
+      "native_row": [
+        "LIXIL",
+        "EW",
+        "v1.4",
+        "FORMAL_PASS",
+        "PASS",
+        "LIXIL_EW_商品マスター_v1.4",
+        "1zjkU81jvKNZyTZMDFhs5AyyMZAnCzMGDP5pnyEWv3ag",
+        "READY",
+        "1J57G8UG_oJJ4dMgnCh6WsUx9e-tcjLvZ",
+        1,
+        "PASS",
+        "11Z6EUSyTuawRcSWO09Pk2V1H5rOvKLRt",
+        "PASS",
+        "PASS",
+        "PASS",
+        "PASS",
+        "04_商品マスター/01_LIXIL/EW/01_正本",
+        "1mDsi9amFdD5A9N8XrommExB_EMZDQiqu",
+        "1T_KEc2-27lU6yddCka1ZqI289qolVwmB",
+        "1rGW_ZFtAYG4oWNRJqSqrqBT5aVQEpxwc",
+        "NONE",
+        "NONE",
+        "2026-10-06T07:02:24.453Z",
+        "202610 EW Product Master v1.4 FORMAL; price delta QA PASS; 29 Field FORMAL 29/29 carry-forward; Runtime/Git closure in progress"
+      ]
+    },
+    "hash_kind": "DOWNLOADED_BYTES_SHA256",
+    "observed_at": "2026-10-06T07:05:07.748059+00:00",
+    "connector_result_ref": "Fresh Drive package raw fetch/download + out/storage-metadata-readback.json + out/registry-values-after.json"
+  }
+}

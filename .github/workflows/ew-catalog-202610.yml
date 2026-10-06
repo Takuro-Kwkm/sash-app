@@ -1,0 +1,47 @@
+name: EW October 2026 Change Gate
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+permissions:
+  contents: read
+concurrency:
+  group: ew-202610-${{ github.event.pull_request.head.ref || github.ref_name }}
+  cancel-in-progress: true
+jobs:
+  ew-change:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.HEAD_SHA }}
+      - name: Verify exact HEAD
+        run: test "$(git rev-parse HEAD)" = "$HEAD_SHA"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Verify runtime integrity and unchanged 29 formal Fields
+        run: |
+          npm run lint
+          npm run typecheck
+          npm test
+      - name: Install browser validation dependencies
+        run: npm install --no-save playwright@1.58.2 && npx playwright install --with-deps chromium
+      - name: Build actual EW v1.4 Runtime preview
+        run: node scripts/build-ew-runtime-review-preview.mjs artifacts/ew-202610/index.html
+      - name: Verify three widths, custom limits, normal EW scope, save, reload and estimate output
+        env:
+          EW_PREVIEW_HTML: artifacts/ew-202610/index.html
+          EW_QA_OUTPUT: artifacts/ew-202610-browser
+        run: node test/browser/ew-october-2026-browser-qa.mjs
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ew-202610-${{ env.HEAD_SHA }}
+          path: |
+            artifacts/ew-202610/
+            artifacts/ew-202610-browser/

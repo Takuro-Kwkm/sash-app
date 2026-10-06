@@ -1,0 +1,17 @@
+{
+  "product": "SER-LIX-EW",
+  "packageVersion": "v1.4",
+  "centralRepository": "Takuro-Kwkm/product-ui-contracts",
+  "centralMergedCommit": "0e500aed262edf82a40aa4e3786952efefad7be9",
+  "centralPR": 11,
+  "centralRecord": "docs/harness/work-records/lixil-ew-202610",
+  "selectionContract": "FORMAL 29/29",
+  "selectionContractChange": false,
+  "formalDrivePackageFileId": "1-mvYbYGhgPRXAmTEaC9SME4yHRaycXfH",
+  "runtimeManifestDriveFileId": "1J57G8UG_oJJ4dMgnCh6WsUx9e-tcjLvZ",
+  "runtimeDriveFileId": "1xn99vpPVAk0hyOWOa38pBKdLhEIZxqi5",
+  "fireScope": "EXCLUDED",
+  "sourceCode": "IS8800",
+  "sourceDate": "2026-10",
+  "runtimeSha256": "e3c5976d46268cb9e670491e2256613330ab776c1fb0cc9e6ad5b8e65bb01199"
+}

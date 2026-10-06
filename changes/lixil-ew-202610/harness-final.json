@@ -1,0 +1,20 @@
+{
+  "work_id": "LIXIL-EW-202610-CW",
+  "product_id": "SER-LIX-EW",
+  "binding_sha256": "f16c299a0107e2c080643ad0ec8f0645d125e463996176f7d947be695d757643",
+  "completed": [
+    "QA_PASS",
+    "PACKAGE_SAVED",
+    "REGISTRY_UPDATED",
+    "POST_SAVE_VERIFIED"
+  ],
+  "next_stage": null,
+  "status": "POST_SAVE_VERIFIED",
+  "adapter": "drive_bridge",
+  "required_action": null,
+  "review_payload_sha256": "3e63167fb859c6f8e4a7bf367a4306f09f2e41db17f9fa943c2218be1431542b",
+  "qa_reuse": "CONTENT_BOUND; NO PRODUCT QA RERUN",
+  "target_gate": "POST_SAVE_VERIFIED",
+  "verification_mode": "HOST_ADMITTED_CONNECTOR_RECEIPTS",
+  "last_verified_at": "2026-10-06T07:05:07.748059+00:00"
+}

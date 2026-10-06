@@ -19,8 +19,7 @@ import { guardFormalCustomDimensionUiResolver } from './formal-custom-dimension-
 import { adaptFrameRuntime } from './frame-runtime-adapter.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
-const EW_ROOT = join(HERE, '../runtime-master-packages/lixil-ew-v1.3');
-const EW_RUNTIME_PARTS = Object.freeze(Array.from({ length: 8 }, (_, index) => `part-${String(index).padStart(2,'0')}`));
+const EW_ROOT = join(HERE, '../runtime-master-packages/lixil-ew-v1.4');
 const TW_ROOT = join(HERE, '../runtime-master-packages/lixil-tw-integrated-v0.5');
 const TW_V03_ROOT = join(HERE, '../runtime-master-packages/lixil-tw-integrated-v0.3');
 const TW_V02_ROOT = join(HERE, '../runtime-master-packages/lixil-tw-integrated-v0.2');
@@ -52,10 +51,10 @@ export const runtimeMasterInventory = Object.freeze([
     }),
   }),
   Object.freeze({
-    manufacturer:'LIXIL', series:'EW', masterVersion:'v1.3', schemaVersion:'2.0', packageType:'RUNTIME_MANIFEST_V2', adapterType:'CANONICAL_WORKBOOK_REFERENCE_V1', packageRoot:EW_ROOT,
-    runtimeManifestPath:join(EW_ROOT,'runtime_manifest.json'), runtimeManifestDriveFileId:'140pCgz2uhukjOjd1wymuISuAMjhaBpCS', runtimeManifestSha256:'eb8bce59f249faea5cfc8e3d4b75e44f74ee960eacbdc21e25864b7d8dd08662',
+    manufacturer:'LIXIL', series:'EW', masterVersion:'v1.4', schemaVersion:'2.0', packageType:'RUNTIME_MANIFEST_V2', adapterType:'CANONICAL_WORKBOOK_REFERENCE_V1', packageRoot:EW_ROOT,
+    runtimeManifestPath:join(EW_ROOT,'runtime_manifest.json'), runtimeManifestDriveFileId:'1J57G8UG_oJJ4dMgnCh6WsUx9e-tcjLvZ', runtimeManifestSha256:'8fea71eb4f51f2014e2cae5abd732ccfe0b36224171c0edc24ac5368789f9d47',
     materializedFiles:Object.freeze({
-      '11ZmCPKceAmp3OEyJIXy79VoO8PEk_oYw':Object.freeze({codec:'base64',paths:Object.freeze(EW_RUNTIME_PARTS.map((name)=>join(EW_ROOT,`LIXIL_EW_runtime_v1.3.json.b64.parts/${name}`)))}),
+      '1xn99vpPVAk0hyOWOa38pBKdLhEIZxqi5':Object.freeze({codec:'brotli',paths:Object.freeze([join(EW_ROOT,'runtime.json.br.b64')])}),
     }),
   }),
   Object.freeze({

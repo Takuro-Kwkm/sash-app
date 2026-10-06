@@ -1,0 +1,677 @@
+{
+  "work_id": "LIXIL-EW-202610-CW",
+  "result": "CHANGE",
+  "revision": "v1.4",
+  "baseline_revision": "v1.3",
+  "acquired_at": "2026-10-06T06:56:57.454162+00:00",
+  "sources": [
+    {
+      "source": "IS8800",
+      "request_url": "https://webcatalog.lixil.co.jp/iportal/CatalogDownload.do?method=downloadPdfCatalog&type=downloadPdfCatalog&volumeID=LXL13001&catalogID=18578080000&designID=newinter",
+      "resolved_url": "https://d3d7fu4tsvqpj5.cloudfront.net/cachepdf/LXL13001/6769660ADD21B64F5DFC283AD9EA4DB2EE0B275E/IS8800.pdf",
+      "bytes": 41640041,
+      "content_type": "application/pdf",
+      "sha256": "1c3e420f8377df161be4b9995f03d016badd0b7930403a9adfa61f53bd939686",
+      "pdf": true
+    },
+    {
+      "source": "IS6400",
+      "request_url": "https://webcatalog.lixil.co.jp/iportal/CatalogDownload.do?method=downloadPdfCatalog&type=downloadPdfCatalog&volumeID=LXL13001&catalogID=18114070000&designID=newinter",
+      "resolved_url": "https://d3d7fu4tsvqpj5.cloudfront.net/cachepdf/LXL13001/F2D6825F6C287850492FEBC8ACBB38F07B176306/IS6400.pdf",
+      "bytes": 41210697,
+      "content_type": "application/pdf",
+      "sha256": "2b320f11b74eb8124792a49f77a5a9e3f7fb9739d82ad97755ba0489585e0e4a",
+      "pdf": true
+    }
+  ],
+  "current_source_file_id": "15Kq1VFoJMbEie3iDy68rYe7Kc0-t471d",
+  "previous_source_file_id": "1hrY-gYvpklVNcXYmfDhitWrdT5LvYoK5",
+  "catalog_SN1900_sha256": "bf6d1718b79199bb9dc21cf6776917aa625fbf0a98387aa92d94d8378d6681cb",
+  "source_comparison": {
+    "old_pages": 708,
+    "new_pages": 708,
+    "screening_methods": [
+      "sorted text nonprice character inventory",
+      "PDF line/spans nonprice inventory; join price typography only within the line"
+    ],
+    "passed_either_screening": 698,
+    "residual_pages": [
+      1,
+      2,
+      3,
+      298,
+      299,
+      514,
+      538,
+      539,
+      707,
+      708
+    ],
+    "residual_disposition": {
+      "1": "cover and issue date/price date",
+      "2": "added custom-product price-nonpublication note",
+      "3": "price revision date May→October",
+      "298": "visible price overlay; same size/code/product layout; old hidden layer retained in PDF",
+      "299": "visible price overlay; same size/code/product layout",
+      "514": "price revision; new +10,900 omits yen glyph after label, confirmed visually",
+      "538": "unavailable-cell dash glyph formatting; prices changed",
+      "539": "unavailable-cell dash glyph formatting; prices changed",
+      "707": "issue/price date",
+      "708": "IS6400→IS8800/catalog identity"
+    },
+    "screening_limitation": "Character inventory is a screening check, not by itself a complete relational fact test; preserved table hashes, exact price-code checks and visible residual review support adoption."
+  },
+  "responsibility_audit": [
+    {
+      "domain": "商品体系",
+      "result": "NO_CHANGE",
+      "sheets": [
+        "02_シリーズ",
+        "02B_商品バリエーション",
+        "02C_バリエーション適用",
+        "02D_バリエーション除外条件"
+      ],
+      "adoption": "FORMAL_CARRY_FORWARD",
+      "evidence": "SN1900 retained EW-only product sections; IS6400/IS8800 all-page comparison; identical v1.3→v1.4 sheet values"
+    },
+    {
+      "domain": "窓種/開閉形式",
+      "result": "NO_CHANGE",
+      "sheets": [
+        "03_窓種",
+        "04_窓種固有仕様"
+      ],
+      "adoption": "FORMAL_CARRY_FORWARD",
+      "evidence": "SN1900 retained EW-only product sections; IS6400/IS8800 all-page comparison; identical v1.3→v1.4 sheet values"
+    },
+    {
+      "domain": "フレーム構成",
+      "result": "NO_CHANGE",
+      "sheets": [
+        "23_FRAME_ANGLE",
+        "23B_FRAME_DEPENDENCY"
+      ],
+      "adoption": "FORMAL_CARRY_FORWARD",
+      "evidence": "SN1900 retained EW-only product sections; IS6400/IS8800 all-page comparison; identical v1.3→v1.4 sheet values"
+    },
+    {
+      "domain": "ガラス/性能",
+      "result": "NO_CHANGE",
+      "sheets": [
+        "08_ガラス",
+        "08B_ガラス詳細",
+        "08C_ガラス追加機能",
+        "08D_UIガラスSemantic",
+        "21F_GLASS_WEIGHT_LIMIT"
+      ],
+      "adoption": "FORMAL_CARRY_FORWARD",
+      "evidence": "SN1900 retained EW-only product sections; IS6400/IS8800 all-page comparison; identical v1.3→v1.4 sheet values"
+    },
+    {
+      "domain": "色",
+      "result": "NO_CHANGE",
+      "sheets": [
+        "07_色",
+        "07B_EWforDesign色"
+      ],
+      "adoption": "FORMAL_CARRY_FORWARD",
+      "evidence": "SN1900 retained EW-only product sections; IS6400/IS8800 all-page comparison; identical v1.3→v1.4 sheet values"
+    },
+    {
+      "domain": "規格サイズ/呼称",
+      "result": "NO_CHANGE",
+      "sheets": [
+        "06_サイズ",
+        "06B_サイズ制限"
+      ],
+      "adoption": "FORMAL_CARRY_FORWARD",
+      "evidence": "SN1900 retained EW-only product sections; IS6400/IS8800 all-page comparison; identical v1.3→v1.4 sheet values"
+    },
+    {
+      "domain": "特注/組合せ",
+      "result": "NO_CHANGE",
+      "sheets": [
+        "06C_特注寸法範囲",
+        "06D_シャッター条件",
+        "21B_HIKI_SELECTOR_DEF",
+        "21C_HIKI_SELECTOR_COMBO",
+        "21D_HIKI_DEPENDENCY",
+        "21E_SHUTTER_INTERSECT"
+      ],
+      "adoption": "FORMAL_CARRY_FORWARD",
+      "evidence": "SN1900 retained EW-only product sections; IS6400/IS8800 all-page comparison; identical v1.3→v1.4 sheet values"
+    },
+    {
+      "domain": "OP/網戸適用",
+      "result": "NO_CHANGE",
+      "sheets": [
+        "09_網戸",
+        "09B_網戸ネット仕様",
+        "09C_網戸適用ルール",
+        "09F_機能性ネット発注条件",
+        "10_その他OP",
+        "16_オプション適用"
+      ],
+      "adoption": "FORMAL_CARRY_FORWARD",
+      "evidence": "SN1900 retained EW-only product sections; IS6400/IS8800 all-page comparison; identical v1.3→v1.4 sheet values"
+    },
+    {
+      "domain": "品番・追加廃止",
+      "result": "NO_CHANGE",
+      "sheets": [
+        "06_サイズ",
+        "02B_商品バリエーション",
+        "03_窓種"
+      ],
+      "adoption": "FORMAL_CARRY_FORWARD",
+      "evidence": "SN1900 retained EW-only product sections; IS6400/IS8800 all-page comparison; identical v1.3→v1.4 sheet values"
+    },
+    {
+      "domain": "見積入力/Dependency/Validation",
+      "result": "NO_CHANGE",
+      "sheets": [
+        "01_入力フロー",
+        "01B_拡張入力項目",
+        "05_設定可否関係",
+        "15_Validation",
+        "22_PREREQ_DEPENDENCY"
+      ],
+      "adoption": "FORMAL_CARRY_FORWARD",
+      "evidence": "SN1900 retained EW-only product sections; IS6400/IS8800 all-page comparison; identical v1.3→v1.4 sheet values"
+    }
+  ],
+  "changed_facts": {
+    "reference_prices": [
+      {
+        "fact_id": "MAT-EW-STD-BK-910",
+        "code": "A1Y80",
+        "price": 16700,
+        "pdf_page": 151,
+        "actual": "PASS"
+      },
+      {
+        "fact_id": "MAT-EW-STD-BK-970",
+        "code": "A1Y81",
+        "price": 18700,
+        "pdf_page": 151,
+        "actual": "PASS"
+      },
+      {
+        "fact_id": "MAT-EW-STD-GR-910",
+        "code": "A1Y88",
+        "price": 16700,
+        "pdf_page": 151,
+        "actual": "PASS"
+      },
+      {
+        "fact_id": "MAT-EW-STD-GR-970",
+        "code": "A1Y89",
+        "price": 18700,
+        "pdf_page": 151,
+        "actual": "PASS"
+      },
+      {
+        "fact_id": "MAT-EW-CLEAN-BK-910",
+        "code": "A1Y55",
+        "price": 31600,
+        "pdf_page": 151,
+        "actual": "PASS"
+      },
+      {
+        "fact_id": "MAT-EW-BUG-BK-880",
+        "code": "A1Y66",
+        "price": 66800,
+        "pdf_page": 151,
+        "actual": "PASS"
+      },
+      {
+        "fact_id": "MAT-EW-PET-BK-910-30",
+        "code": "A1Y67",
+        "price": 143000,
+        "pdf_page": 151,
+        "actual": "PASS"
+      },
+      {
+        "fact_id": "MAT-EW-PET-BK-910-5",
+        "code": "A1Y78",
+        "price": 25600,
+        "pdf_page": 151,
+        "actual": "PASS"
+      },
+      {
+        "fact_id": "SPL-EW-STD-BUG",
+        "code": "A1Y34",
+        "price": 10000,
+        "pdf_page": 150,
+        "actual": "PASS"
+      },
+      {
+        "fact_id": "SPL-EW-CLEAN",
+        "code": "A1Y46",
+        "price": 16500,
+        "pdf_page": 150,
+        "actual": "PASS"
+      },
+      {
+        "fact_id": "SPL-EW-PET-300",
+        "code": "A1Y41",
+        "price": 20200,
+        "pdf_page": 150,
+        "actual": "PASS"
+      },
+      {
+        "fact_id": "SPL-EW-PET-20",
+        "code": "A1Y42",
+        "price": 1700,
+        "pdf_page": 150,
+        "actual": "PASS"
+      },
+      {
+        "fact_id": "PRICE-EW-TATE-T-TG",
+        "surcharge": 12100,
+        "pdf_pages": [
+          334,
+          335
+        ],
+        "actual": "PASS"
+      },
+      {
+        "fact_id": "PRICE-EW-TATE-TF-TG",
+        "surcharge": 12800,
+        "pdf_pages": [
+          336,
+          337
+        ],
+        "actual": "PASS"
+      },
+      {
+        "fact_id": "PRICE-EW-TATE-TFT-TG",
+        "surcharge": 25400,
+        "pdf_pages": [
+          338,
+          339
+        ],
+        "actual": "PASS"
+      },
+      {
+        "fact_id": "PRICE-EW-TATE-TFSLASH-TG",
+        "surcharge": 12100,
+        "pdf_pages": [
+          340,
+          341
+        ],
+        "actual": "PASS"
+      },
+      {
+        "fact_id": "PRICE-EW-TATE-T-PG",
+        "surcharge": 12100,
+        "pdf_pages": [
+          422,
+          423,
+          424,
+          425
+        ],
+        "actual": "PASS"
+      },
+      {
+        "fact_id": "PRICE-EW-TATE-TF-PG",
+        "surcharge": 12800,
+        "pdf_pages": [
+          426,
+          427
+        ],
+        "actual": "PASS"
+      },
+      {
+        "fact_id": "PRICE-EW-TATE-TFT-PG",
+        "surcharge": 25400,
+        "pdf_pages": [
+          428,
+          429
+        ],
+        "actual": "PASS"
+      },
+      {
+        "fact_id": "PRICE-EW-TATE-TFSLASH-PG",
+        "surcharge": 12100,
+        "pdf_pages": [
+          430,
+          431
+        ],
+        "actual": "PASS"
+      }
+    ],
+    "no_published_price_note": {
+      "meaning": "SS/FF/外倒し/突出しは特注品のため価格非掲載。選択禁止や新規必須Fieldを意味しない。",
+      "automatic_price": false,
+      "source_pdf_page": 2,
+      "official_terms": [
+        "横すべり出し窓(SS)",
+        "FIX窓(FF)",
+        "外倒し窓",
+        "突出し窓"
+      ]
+    }
+  },
+  "field_impact": {
+    "revision": "v1.4",
+    "scope_id": "LIXIL-EW-29-FORMAL-202610",
+    "counts": {
+      "DIRECT": 0,
+      "INDIRECT": 9,
+      "NO_IMPACT": 20
+    },
+    "fields": [
+      {
+        "field_id": "sash-app:SER-LIX-EW:window_type",
+        "runtime_key": "window_type",
+        "impact": "INDIRECT",
+        "reason": "価格非掲載の窓種注記。選択可否は不変",
+        "formal_status": "FORMAL",
+        "contract_changed": false
+      },
+      {
+        "field_id": "sash-app:SER-LIX-EW:window_spec",
+        "runtime_key": "window_spec",
+        "impact": "INDIRECT",
+        "reason": "SS/FFの価格非掲載注記。構成/特注条件は不変",
+        "formal_status": "FORMAL",
+        "contract_changed": false
+      },
+      {
+        "field_id": "sash-app:SER-LIX-EW:variant",
+        "runtime_key": "variant",
+        "impact": "INDIRECT",
+        "reason": "EW/for Designの完成品価格改訂。体系・適用色は不変",
+        "formal_status": "FORMAL",
+        "contract_changed": false
+      },
+      {
+        "field_id": "sash-app:SER-LIX-EW:frame_angle",
+        "runtime_key": "frame_angle",
+        "impact": "NO_IMPACT",
+        "reason": "商品Fact/AllowedValue/Dependency/Validationに変更なし。正式v1.3をcarry-forward",
+        "formal_status": "FORMAL",
+        "contract_changed": false
+      },
+      {
+        "field_id": "sash-app:SER-LIX-EW:exterior_color",
+        "runtime_key": "exterior_color",
+        "impact": "NO_IMPACT",
+        "reason": "商品Fact/AllowedValue/Dependency/Validationに変更なし。正式v1.3をcarry-forward",
+        "formal_status": "FORMAL",
+        "contract_changed": false
+      },
+      {
+        "field_id": "sash-app:SER-LIX-EW:screen_presence",
+        "runtime_key": "screen_presence",
+        "impact": "NO_IMPACT",
+        "reason": "商品Fact/AllowedValue/Dependency/Validationに変更なし。正式v1.3をcarry-forward",
+        "formal_status": "FORMAL",
+        "contract_changed": false
+      },
+      {
+        "field_id": "sash-app:SER-LIX-EW:glass_base",
+        "runtime_key": "glass_base",
+        "impact": "INDIRECT",
+        "reason": "TG/PGの完成品価格Evidence更新。候補・条件は不変",
+        "formal_status": "FORMAL",
+        "contract_changed": false
+      },
+      {
+        "field_id": "sash-app:SER-LIX-EW:installation_environment",
+        "runtime_key": "installation_environment",
+        "impact": "NO_IMPACT",
+        "reason": "商品Fact/AllowedValue/Dependency/Validationに変更なし。正式v1.3をcarry-forward",
+        "formal_status": "FORMAL",
+        "contract_changed": false
+      },
+      {
+        "field_id": "sash-app:SER-LIX-EW:option",
+        "runtime_key": "option",
+        "impact": "INDIRECT",
+        "reason": "小開口アーム価格改訂。選択/Dependencyは不変",
+        "formal_status": "FORMAL",
+        "contract_changed": false
+      },
+      {
+        "field_id": "sash-app:SER-LIX-EW:handing",
+        "runtime_key": "handing",
+        "impact": "NO_IMPACT",
+        "reason": "商品Fact/AllowedValue/Dependency/Validationに変更なし。正式v1.3をcarry-forward",
+        "formal_status": "FORMAL",
+        "contract_changed": false
+      },
+      {
+        "field_id": "sash-app:SER-LIX-EW:size_mode",
+        "runtime_key": "size_mode",
+        "impact": "INDIRECT",
+        "reason": "特注品の価格非掲載注記。STANDARD/CUSTOM条件は不変",
+        "formal_status": "FORMAL",
+        "contract_changed": false
+      },
+      {
+        "field_id": "sash-app:SER-LIX-EW:interior_color",
+        "runtime_key": "interior_color",
+        "impact": "NO_IMPACT",
+        "reason": "商品Fact/AllowedValue/Dependency/Validationに変更なし。正式v1.3をcarry-forward",
+        "formal_status": "FORMAL",
+        "contract_changed": false
+      },
+      {
+        "field_id": "sash-app:SER-LIX-EW:glass_type",
+        "runtime_key": "glass_type",
+        "impact": "INDIRECT",
+        "reason": "ガラス仕様別完成品価格Evidence更新。種類・構成条件は不変",
+        "formal_status": "FORMAL",
+        "contract_changed": false
+      },
+      {
+        "field_id": "sash-app:SER-LIX-EW:glass_detail",
+        "runtime_key": "glass_detail",
+        "impact": "NO_IMPACT",
+        "reason": "商品Fact/AllowedValue/Dependency/Validationに変更なし。正式v1.3をcarry-forward",
+        "formal_status": "FORMAL",
+        "contract_changed": false
+      },
+      {
+        "field_id": "sash-app:SER-LIX-EW:glass_function",
+        "runtime_key": "glass_function",
+        "impact": "NO_IMPACT",
+        "reason": "商品Fact/AllowedValue/Dependency/Validationに変更なし。正式v1.3をcarry-forward",
+        "formal_status": "FORMAL",
+        "contract_changed": false
+      },
+      {
+        "field_id": "sash-app:SER-LIX-EW:glass_spacer",
+        "runtime_key": "glass_spacer",
+        "impact": "NO_IMPACT",
+        "reason": "商品Fact/AllowedValue/Dependency/Validationに変更なし。正式v1.3をcarry-forward",
+        "formal_status": "FORMAL",
+        "contract_changed": false
+      },
+      {
+        "field_id": "sash-app:SER-LIX-EW:glass_air_layer",
+        "runtime_key": "glass_air_layer",
+        "impact": "NO_IMPACT",
+        "reason": "商品Fact/AllowedValue/Dependency/Validationに変更なし。正式v1.3をcarry-forward",
+        "formal_status": "FORMAL",
+        "contract_changed": false
+      },
+      {
+        "field_id": "sash-app:SER-LIX-EW:size",
+        "runtime_key": "size",
+        "impact": "INDIRECT",
+        "reason": "呼称別価格表改訂。1721規格行・寸法は不変",
+        "formal_status": "FORMAL",
+        "contract_changed": false
+      },
+      {
+        "field_id": "sash-app:SER-LIX-EW:custom_w",
+        "runtime_key": "custom_w",
+        "impact": "NO_IMPACT",
+        "reason": "商品Fact/AllowedValue/Dependency/Validationに変更なし。正式v1.3をcarry-forward",
+        "formal_status": "FORMAL",
+        "contract_changed": false
+      },
+      {
+        "field_id": "sash-app:SER-LIX-EW:custom_h",
+        "runtime_key": "custom_h",
+        "impact": "NO_IMPACT",
+        "reason": "商品Fact/AllowedValue/Dependency/Validationに変更なし。正式v1.3をcarry-forward",
+        "formal_status": "FORMAL",
+        "contract_changed": false
+      },
+      {
+        "field_id": "sash-app:SER-LIX-EW:configuration_variant",
+        "runtime_key": "configuration_variant",
+        "impact": "NO_IMPACT",
+        "reason": "商品Fact/AllowedValue/Dependency/Validationに変更なし。正式v1.3をcarry-forward",
+        "formal_status": "FORMAL",
+        "contract_changed": false
+      },
+      {
+        "field_id": "sash-app:SER-LIX-EW:glass_configuration",
+        "runtime_key": "glass_configuration",
+        "impact": "NO_IMPACT",
+        "reason": "商品Fact/AllowedValue/Dependency/Validationに変更なし。正式v1.3をcarry-forward",
+        "formal_status": "FORMAL",
+        "contract_changed": false
+      },
+      {
+        "field_id": "sash-app:SER-LIX-EW:profile",
+        "runtime_key": "profile",
+        "impact": "NO_IMPACT",
+        "reason": "商品Fact/AllowedValue/Dependency/Validationに変更なし。正式v1.3をcarry-forward",
+        "formal_status": "FORMAL",
+        "contract_changed": false
+      },
+      {
+        "field_id": "sash-app:SER-LIX-EW:opening_class",
+        "runtime_key": "opening_class",
+        "impact": "NO_IMPACT",
+        "reason": "商品Fact/AllowedValue/Dependency/Validationに変更なし。正式v1.3をcarry-forward",
+        "formal_status": "FORMAL",
+        "contract_changed": false
+      },
+      {
+        "field_id": "sash-app:SER-LIX-EW:sill",
+        "runtime_key": "sill",
+        "impact": "NO_IMPACT",
+        "reason": "商品Fact/AllowedValue/Dependency/Validationに変更なし。正式v1.3をcarry-forward",
+        "formal_status": "FORMAL",
+        "contract_changed": false
+      },
+      {
+        "field_id": "sash-app:SER-LIX-EW:wall_finish",
+        "runtime_key": "wall_finish",
+        "impact": "NO_IMPACT",
+        "reason": "商品Fact/AllowedValue/Dependency/Validationに変更なし。正式v1.3をcarry-forward",
+        "formal_status": "FORMAL",
+        "contract_changed": false
+      },
+      {
+        "field_id": "sash-app:SER-LIX-EW:panel_count",
+        "runtime_key": "panel_count",
+        "impact": "NO_IMPACT",
+        "reason": "商品Fact/AllowedValue/Dependency/Validationに変更なし。正式v1.3をcarry-forward",
+        "formal_status": "FORMAL",
+        "contract_changed": false
+      },
+      {
+        "field_id": "sash-app:SER-LIX-EW:screen_form",
+        "runtime_key": "screen_form",
+        "impact": "NO_IMPACT",
+        "reason": "商品Fact/AllowedValue/Dependency/Validationに変更なし。正式v1.3をcarry-forward",
+        "formal_status": "FORMAL",
+        "contract_changed": false
+      },
+      {
+        "field_id": "sash-app:SER-LIX-EW:screen_net",
+        "runtime_key": "screen_net",
+        "impact": "INDIRECT",
+        "reason": "防虫網材料/網押し棒参考価格改訂。ネット候補・材質・幅・可否は不変",
+        "formal_status": "FORMAL",
+        "contract_changed": false
+      }
+    ]
+  },
+  "fire_boundary": {
+    "EW_fire_Product": "SEPARATE_NO_TOUCH",
+    "EW_fire_Runtime": "SEPARATE_NO_TOUCH",
+    "EW_fire_Package": "SEPARATE_NO_TOUCH",
+    "excluded_source": "IT0600",
+    "shared_catalog_rule": "SN1900 EW normal-product sections only; fire-only facts never imported",
+    "fire_registry_row_unchanged_required": true
+  },
+  "scope": "EW 東北以南 現行正式商品のProduct Master責務。北海道独立版は新たに追加しない。",
+  "controlled_unresolved": "Existing ESTIMATE_CONFIRM_REQUIRED remains; no auto pricing/order; no standalone-body-price inference",
+  "dependency_delta": "NO_CHANGE",
+  "validation_delta": "NO_CHANGE",
+  "selection_delta": "NO_CHANGE; FORMAL 29/29",
+  "isolation": {
+    "changed_sheets": [
+      "00_README",
+      "12_Evidence",
+      "09D_防虫網材料",
+      "09E_網押し棒",
+      "17_価格Evidence",
+      "18_EW-P01_Evidence",
+      "20_PACKAGE_META"
+    ],
+    "unchanged_sheets": [
+      "01_入力フロー",
+      "02_シリーズ",
+      "03_窓種",
+      "04_窓種固有仕様",
+      "05_設定可否関係",
+      "06_サイズ",
+      "06B_サイズ制限",
+      "07_色",
+      "08_ガラス",
+      "08B_ガラス詳細",
+      "08C_ガラス追加機能",
+      "09_網戸",
+      "09B_網戸ネット仕様",
+      "10_その他OP",
+      "11_見積入力テスト",
+      "13_QA",
+      "04B_高所操作条件",
+      "06C_特注寸法範囲",
+      "06D_シャッター条件",
+      "01B_拡張入力項目",
+      "02B_商品バリエーション",
+      "02C_バリエーション適用",
+      "02D_バリエーション除外条件",
+      "07B_EWforDesign色",
+      "09C_網戸適用ルール",
+      "14_DataContract",
+      "09F_機能性ネット発注条件",
+      "15_Validation",
+      "16_オプション適用",
+      "19_EW-P01_QA",
+      "08D_UIガラスSemantic",
+      "06E_特注CoverageAudit",
+      "21_SEMANTIC_CUSTOM_RECOVERY",
+      "21B_HIKI_SELECTOR_DEF",
+      "21C_HIKI_SELECTOR_COMBO",
+      "21D_HIKI_DEPENDENCY",
+      "21E_SHUTTER_INTERSECT",
+      "21F_GLASS_WEIGHT_LIMIT",
+      "22_PREREQ_DEPENDENCY",
+      "22B_PREREQ_QA",
+      "23_FRAME_ANGLE",
+      "23B_FRAME_DEPENDENCY",
+      "23C_FRAME_EVIDENCE",
+      "23D_FRAME_QA"
+    ],
+    "baseline_sheet_count": 51,
+    "patch_cells": 168,
+    "semantic_sha256_before": "67e22b1a5e32d2f4dd75f970097dc28268641a40e06fcc8750d27489492cb1b3",
+    "semantic_sha256_after": "67e22b1a5e32d2f4dd75f970097dc28268641a40e06fcc8750d27489492cb1b3",
+    "selection_contract_sha256": "49866341dd1c2a3efb1794a997e97eff2d2ac2a328646fec6c341048edb5b52d",
+    "dependency_changed": false,
+    "validation_changed": false,
+    "UNREQUESTED_DIFF_COUNT": 0
+  }
+}
