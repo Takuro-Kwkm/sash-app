@@ -32,6 +32,10 @@ def plan(harness_root, instruction, registry_observation, work_root):
     require(all(len(r) == len(rows[0]) for r in rows[1:]),
             'CURRENT_REGISTRY_UNVERIFIED', 'Truncated or malformed Registry', 'PLANNING')
     records = [dict(zip(rows[0], r)) for r in rows[1:]]
+    require(records and all(r.get('manufacturer') and r.get('series') for r in records),
+            'CURRENT_REGISTRY_UNVERIFIED', 'Complete populated identity rows required', 'PLANNING')
+    identities = [(r['manufacturer'], r['series']) for r in records]
+    require(len(set(identities)) == len(identities), 'PRODUCT_REGISTRY_DRIFT', 'Duplicate native identity', 'PLANNING')
     label = route['requested_product']
     existing = [r for r in records if label == (r['manufacturer'] + ' ' + r['series'])]
     require(len(existing) <= 1, 'PRODUCT_REGISTRY_DRIFT', 'Duplicate native identity', 'PLANNING')
@@ -60,26 +64,26 @@ def plan(harness_root, instruction, registry_observation, work_root):
 
 
 def main():
-    parser = argparse.ArgumentParser(description=__doc__)
+    # Production execution is shared; this repository only supplies native planning/QA.
+    parser = argparse.ArgumentParser(add_help=False)
     parser.add_argument('--harness-root', required=True)
-    parser.add_argument('--instruction', required=True)
-    parser.add_argument('--registry-observation', required=True)
-    parser.add_argument('--work-root', required=True)
-    parser.add_argument('--out', required=True)
-    args = parser.parse_args()
-    try:
-        result = plan(args.harness_root, args.instruction, args.registry_observation, args.work_root)
-    except Exception as error:
-        result = {'status': 'FAIL_CLOSED', 'blocking_reason': getattr(error, 'data', {
-            'code': 'AUTHORITY_ACQUISITION_REQUIRED', 'reason': str(error)}), 'native_registry_writes': 0}
-    output = Path(args.out).resolve()
-    if not output.is_relative_to(Path(args.work_root).resolve()) or output.is_relative_to(ROOT) or output.is_symlink():
-        raise ValueError('Planning output must belong to an external Work root')
-    output.parent.mkdir(parents=True, exist_ok=True)
-    output.write_text(json.dumps(result, ensure_ascii=False, indent=2) + '\n')
-    print(json.dumps({k: v for k, v in result.items() if k not in ('route', 'destinations', 'validators')}, ensure_ascii=False))
-    return 0 if result['status'] == 'PASS' else 2
-
+    parser.add_argument('--plan-only', action='store_true')
+    known, remaining = parser.parse_known_args()
+    sys.path.insert(0, str(Path(known.harness_root).resolve()))
+    if known.plan_only:
+        p = argparse.ArgumentParser()
+        for key in ('instruction', 'registry-observation', 'work-root', 'out'):
+            p.add_argument('--' + key, required=True)
+        a = p.parse_args(remaining)
+        result = plan(known.harness_root, a.instruction, a.registry_observation, a.work_root)
+        output = Path(a.out).resolve()
+        if output.is_symlink() or not output.is_relative_to(Path(a.work_root).resolve()) or output.is_relative_to(ROOT):
+            raise ValueError('External Work output required')
+        output.parent.mkdir(parents=True, exist_ok=True)
+        output.write_text(json.dumps(result, ensure_ascii=False, indent=2) + '\n')
+        return 0
+    from product_master.execution import main as shared_execution
+    return shared_execution(['--harness-root', known.harness_root, '--checkout', str(ROOT)] + remaining)
 
 if __name__ == '__main__':
     raise SystemExit(main())
