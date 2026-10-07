@@ -14,6 +14,8 @@
     "test:browser:inplus-bathroom": "node test/browser/inplus-bathroom-v1-browser-qa.mjs",
     "start": "node scripts/start-step8-ui.mjs",
     "start:qa": "HOST=0.0.0.0 node scripts/start-step8-ui.mjs",
+    "verify:app-release": "node scripts/production/verify-app-release.mjs",
+    "test:browser:release": "node test/browser/eight-series-business-flow-qa.mjs && node test/browser/release-regression-browser-qa.mjs",
     "test": "node --test test/*.test.mjs"
   },
   "engines": { "node": "24.x" }

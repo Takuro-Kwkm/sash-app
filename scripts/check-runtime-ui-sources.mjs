@@ -1,6 +1,9 @@
 import { spawnSync } from 'node:child_process';
 
 const files = [
+  'src/server/recovery-app.mjs',
+  'scripts/production/verify-app-release.mjs',
+  'scripts/vercel-rest-deploy.mjs',
   'src/catalog/runtime-master/app-runtime-integration-registry.mjs',
   'src/catalog/runtime-master/canonical-workbook-reference-v1-adapter.mjs',
   'src/catalog/runtime-master/tw-canonical-workbook-reference-v1-adapter.mjs',

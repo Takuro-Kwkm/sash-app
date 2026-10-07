@@ -20,6 +20,22 @@ test('health advertises estimate output v1.0',async()=>{
   assert.equal(health.features.estimateOutput,'1.0');
 });
 
+test('health identifies the served release commit without conflating it with Runtime build identity',async()=>{
+  const prior=process.env.SASH_RELEASE_COMMIT_SHA;
+  try {
+    process.env.SASH_RELEASE_COMMIT_SHA='a'.repeat(40);
+    const health=JSON.parse((await invoke('/api/health')).body.toString('utf8'));
+    assert.equal(health.releaseCommitSha,'a'.repeat(40));
+    assert.match(health.catalogVersion,/EW v1\.4/);
+    assert.match(health.catalogVersion,/TW integrated-v0\.5/);
+    assert.match(health.catalogVersion,/サーモスL v0\.7-R3/);
+    assert.doesNotMatch(health.catalogVersion,/EW v1\.3|サーモスL v0\.7-R2/);
+  } finally {
+    if(prior===undefined)delete process.env.SASH_RELEASE_COMMIT_SHA;
+    else process.env.SASH_RELEASE_COMMIT_SHA=prior;
+  }
+});
+
 for(const file of ['model.mjs','pdf-renderer.mjs','xlsx-renderer.mjs']){
   test(`Vercel rewrite serves estimate-output/${file} as JavaScript`,async()=>{
     const response=await invoke(`/api/index.mjs?__path=estimate-output/${file}`);
