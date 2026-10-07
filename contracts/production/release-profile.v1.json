@@ -32,12 +32,12 @@
   "boundary_policy": "Actual native evidence only; Print requires inspected PDF/Print Preview; localStorage is not live DB E2E",
   "shared_contract": {
     "repository": "Takuro-Kwkm/product-ui-contracts",
-    "ref": "d253834004d5f4c8ec0a86eeb3aa6fbcbaef1a16",
+    "ref": "d8a03c52b86a7a0f8ce3e4f8243a18b07bd3a285",
     "entry": "scripts/release-contract.py",
     "files": {
       "contracts/common-release.v1.json": "826328619c8a465f389472537396e1564fc00f0fe8820d6e7963fb878c0663c4",
       "schemas/common-release.v1.schema.json": "a15705dfe0334796c08e80e107955d2d931aab557742096f587085d1c2effd78",
-      "harness/release.py": "68405156380c7c58e7c3975e0877210e6294193b07bb376d3335c7d5ac4672c2",
+      "harness/release.py": "9be0679de8c37488b89fb9c3d1324b7aa52124f4bfb844fa02308806ae67e4c6",
       "scripts/release-contract.py": "6f7b77fe5ab50dd4286a5007d18cab5c5f911ba3bd36128b66ae97350980b322",
       "harness/workflow.py": "2e243c9616dc55c25b2d00f242968d762965bae61bb98431ba1b3aa47cfaf209",
       "harness/core.py": "e35467a495a4c800fc5dc4bc642fad234f1fc3da07a7bf39727eefd4112bb203",
