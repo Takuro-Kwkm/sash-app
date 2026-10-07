@@ -1,0 +1,85 @@
+{
+  "profile_id": "sash-native-catalogue-audit-v1",
+  "version": "1.0.0",
+  "product_id": "SER-LIX-SAMOS2H",
+  "aliases": [
+    "サーモスⅡ-H",
+    "サーモスⅡH"
+  ],
+  "manufacturer": "LIXIL",
+  "registry_series": "サーモスⅡH",
+  "formal_revision": "v0.9-R4",
+  "mutation_policy": "NONE",
+  "admitted_target_gate": "SOURCE_AUDIT_VERIFIED",
+  "native_sheets": [
+    "00_README",
+    "01_入力フロー",
+    "02_シリーズ",
+    "03_窓種",
+    "04_窓種固有仕様",
+    "05_設定可否関係",
+    "06_サイズ",
+    "07_色",
+    "08_ガラス",
+    "09_網戸",
+    "10_その他OP",
+    "11_見積入力テスト",
+    "12_根拠・投入管理",
+    "03A_品種記号",
+    "07A_色制約",
+    "06A_シャッター設定可否",
+    "08A_サイズ別ガラス条件",
+    "08B_ガラス記号凡例",
+    "13_投入サマリー",
+    "06B_雨戸設定可否",
+    "06C_面格子設定可否",
+    "06D_高所用電動設定可否",
+    "08C_ガラス凡例補完",
+    "09B_網戸ネット",
+    "09C_網戸サイズ制御",
+    "10A_有償品適用ルール",
+    "14_APP_候補制御",
+    "15_変更履歴",
+    "09A_網戸種類",
+    "09D_網戸ネット設定可否",
+    "09E_採風勝手口網付格子",
+    "10B_枠付面格子",
+    "09F_全窓種網戸格子監査",
+    "10C_ドア納まり",
+    "06E_特注寸法範囲",
+    "08D_UIガラスセマンティック",
+    "08E_フロスト製作条件",
+    "06F_panel_count",
+    "06G_panel_count_size_map",
+    "06H_panel_count_dependency"
+  ],
+  "source_before": {
+    "file_id": "1x4lovMcyfkyFzulYiQIv8OE5dpq6wDor",
+    "code": "IS6600",
+    "issue": "2026-04",
+    "price_edition": "2026-05"
+  },
+  "source_after": {
+    "file_id": "18UFIudvFxFKNVzxOdn_ZIOyR8doze8xJ",
+    "code": "IS9000",
+    "issue": "2026-09",
+    "price_edition": "2026-10"
+  },
+  "source_discovery": {
+    "official_index_url": "https://ctlgsearch.lixil.co.jp/public/index.php?freeword=IS9000&publicStatus=new",
+    "official_catalogue_url": "https://webcatalog.lixil.co.jp/iportal/CatalogDetail.do?method=initial_screen&catalogID=18548990000&volumeID=LXL13001&designID=newinter",
+    "policy": "Reacquire live official index and full PDF on every new immutable Work; never infer latest from filenames or this snapshot"
+  },
+  "scope": "ENTIRE_PRIMARY_PRICE_CATALOGUE; other source revisions are separately scoped",
+  "requirements": [
+    "openpyxl==3.1.5",
+    "pypdfium2==5.13.0"
+  ],
+  "unsupported_operations": [
+    "FORMAL_ADOPTION",
+    "SOURCE_ADOPTION",
+    "PRODUCT_MASTER_CHANGE",
+    "RUNTIME_UI_CHANGE"
+  ],
+  "resume_policy": "EXACT_SPEC_AND_JOURNAL; changed head or source requires a successor"
+}

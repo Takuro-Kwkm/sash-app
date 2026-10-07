@@ -1,0 +1,2792 @@
+{
+  "before_sha256": "315ef7aff810a8b04b380fc7e77e3abc03724277de6f98c4222887a609b5f0a5",
+  "after_sha256": "c40f860c79229555aaffea0eaf03445be956a80344dff5631fd29fae20413f0e",
+  "renderer": "pypdfium2 at 72dpi; union of currency amount rectangles masked; no specification/diagram mask",
+  "pages": [
+    {
+      "pdf_page": 1,
+      "nonprice_visual_changed": true,
+      "difference_bbox": [
+        42,
+        29,
+        596,
+        809
+      ],
+      "before_masked_pixels_sha256": "de507aba5a9de7384456b3660acdf8d2c0b192b14e1bdce3436e2094da77d30c",
+      "after_masked_pixels_sha256": "99d61790923033b8c39ee48c89bc6aa4e5e366f057ede3c7210718a267a1d4c9"
+    },
+    {
+      "pdf_page": 2,
+      "nonprice_visual_changed": true,
+      "difference_bbox": [
+        59,
+        764,
+        319,
+        809
+      ],
+      "before_masked_pixels_sha256": "2a7d2e324cee62ba5720b2cb742f10c0bf55454132aa1b0f802bcdc6419ef294",
+      "after_masked_pixels_sha256": "ec321e5bd489384bbad719ba7cd6980b06e713aeadd65756ca447094891696a8"
+    },
+    {
+      "pdf_page": 3,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "aa9454ada0be60625ae6a96a61bfcf53ad13adea1ee7c599c465030d6556bb74",
+      "after_masked_pixels_sha256": "aa9454ada0be60625ae6a96a61bfcf53ad13adea1ee7c599c465030d6556bb74"
+    },
+    {
+      "pdf_page": 4,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "2f15f027af32f532ef1f80c84466753907d4ea43ec05315b5bdfa44624dee65f",
+      "after_masked_pixels_sha256": "2f15f027af32f532ef1f80c84466753907d4ea43ec05315b5bdfa44624dee65f"
+    },
+    {
+      "pdf_page": 5,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "8c1fc19002a25e839e4c2f8147f7dc386b8de9299ddc5e06179ac5a338dff791",
+      "after_masked_pixels_sha256": "8c1fc19002a25e839e4c2f8147f7dc386b8de9299ddc5e06179ac5a338dff791"
+    },
+    {
+      "pdf_page": 6,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "f62614f803e13825ca669f658790c76fb516e4a878a9b9b24a1a0b56cfbf0b99",
+      "after_masked_pixels_sha256": "f62614f803e13825ca669f658790c76fb516e4a878a9b9b24a1a0b56cfbf0b99"
+    },
+    {
+      "pdf_page": 7,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "8f90b083932b40d2938b0a1820cbd55880d5624f782d531feae24b897c423eab",
+      "after_masked_pixels_sha256": "8f90b083932b40d2938b0a1820cbd55880d5624f782d531feae24b897c423eab"
+    },
+    {
+      "pdf_page": 8,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "cd6c44ef2d6cda6aa44d88832d02dfd6ffb9bfc9c3ea56f49e200f26e87a4834",
+      "after_masked_pixels_sha256": "cd6c44ef2d6cda6aa44d88832d02dfd6ffb9bfc9c3ea56f49e200f26e87a4834"
+    },
+    {
+      "pdf_page": 9,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "6f6d0c8f0e45cd1b5b60bb0933aa02512e646cbc46612d679de66f3482d3ba5c",
+      "after_masked_pixels_sha256": "6f6d0c8f0e45cd1b5b60bb0933aa02512e646cbc46612d679de66f3482d3ba5c"
+    },
+    {
+      "pdf_page": 10,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "0c0480f9a2a54d87920fcd711a0e224912356c7169f4c320572067e4b4a17024",
+      "after_masked_pixels_sha256": "0c0480f9a2a54d87920fcd711a0e224912356c7169f4c320572067e4b4a17024"
+    },
+    {
+      "pdf_page": 11,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "b1531a2616ae3fcb9a7b316782c17c2104aa12ba8b71a2b0421b4666591085a1",
+      "after_masked_pixels_sha256": "b1531a2616ae3fcb9a7b316782c17c2104aa12ba8b71a2b0421b4666591085a1"
+    },
+    {
+      "pdf_page": 12,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "3ea468a193ca09d880e9d77e23a9a21177a6bc5f2ec64978c4a296844e28d218",
+      "after_masked_pixels_sha256": "3ea468a193ca09d880e9d77e23a9a21177a6bc5f2ec64978c4a296844e28d218"
+    },
+    {
+      "pdf_page": 13,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "0720cc8abd70fa7da1715359aa7fbb5ce69820862b76ed6ad229a6b984fd471e",
+      "after_masked_pixels_sha256": "0720cc8abd70fa7da1715359aa7fbb5ce69820862b76ed6ad229a6b984fd471e"
+    },
+    {
+      "pdf_page": 14,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "9b7730ecf4dd791dfbdd59d94920eabaed5c857ae72f58f53c356792539904ea",
+      "after_masked_pixels_sha256": "9b7730ecf4dd791dfbdd59d94920eabaed5c857ae72f58f53c356792539904ea"
+    },
+    {
+      "pdf_page": 15,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "9cedb37dfdaccbf05ae67597aa9e1dc1e253f26a7badf5b5c603002909930958",
+      "after_masked_pixels_sha256": "9cedb37dfdaccbf05ae67597aa9e1dc1e253f26a7badf5b5c603002909930958"
+    },
+    {
+      "pdf_page": 16,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "a0ca0ca4c0bb833234ad998f17781466c60017f8bd13c237fcfdec8b7bf6d906",
+      "after_masked_pixels_sha256": "a0ca0ca4c0bb833234ad998f17781466c60017f8bd13c237fcfdec8b7bf6d906"
+    },
+    {
+      "pdf_page": 17,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "c1980d8ca5ef90d60d473f41a44f27228e5d686ff0dd3d531fa1f4be8264181a",
+      "after_masked_pixels_sha256": "c1980d8ca5ef90d60d473f41a44f27228e5d686ff0dd3d531fa1f4be8264181a"
+    },
+    {
+      "pdf_page": 18,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "ddbb92be96151ae45dbec2b749df558c0a67e539b5d3f395f545749b54f3529e",
+      "after_masked_pixels_sha256": "ddbb92be96151ae45dbec2b749df558c0a67e539b5d3f395f545749b54f3529e"
+    },
+    {
+      "pdf_page": 19,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "d6be93aee6997c1fd1dcc95e8e4e2aada3fb81de83ce0e4b2127000b8d87746e",
+      "after_masked_pixels_sha256": "d6be93aee6997c1fd1dcc95e8e4e2aada3fb81de83ce0e4b2127000b8d87746e"
+    },
+    {
+      "pdf_page": 20,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "bf8ac23f9ae86f449cc6991954cfcda58d990add9b9708769f87fe067aa9210b",
+      "after_masked_pixels_sha256": "bf8ac23f9ae86f449cc6991954cfcda58d990add9b9708769f87fe067aa9210b"
+    },
+    {
+      "pdf_page": 21,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "cffdf01ea51e623323e8476f95e1f4b360716685ebedf968347f2312f924e8c2",
+      "after_masked_pixels_sha256": "cffdf01ea51e623323e8476f95e1f4b360716685ebedf968347f2312f924e8c2"
+    },
+    {
+      "pdf_page": 22,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "ceb705c99abfe26842304263dcc62c7609551c026a9f7eaf6f32665703725dad",
+      "after_masked_pixels_sha256": "ceb705c99abfe26842304263dcc62c7609551c026a9f7eaf6f32665703725dad"
+    },
+    {
+      "pdf_page": 23,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "b837c95271dd42aa437d107846df641c4306c23e1f3653e09009c6707719f41e",
+      "after_masked_pixels_sha256": "b837c95271dd42aa437d107846df641c4306c23e1f3653e09009c6707719f41e"
+    },
+    {
+      "pdf_page": 24,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "2a3962be5a412078da629e4e4093305029871ddbfa50820dcdd145c74ac38f89",
+      "after_masked_pixels_sha256": "2a3962be5a412078da629e4e4093305029871ddbfa50820dcdd145c74ac38f89"
+    },
+    {
+      "pdf_page": 25,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "b9ca5fb03ca4d4a7adc7dbf9d68045e81504fde18324b4eacddb965f79868420",
+      "after_masked_pixels_sha256": "b9ca5fb03ca4d4a7adc7dbf9d68045e81504fde18324b4eacddb965f79868420"
+    },
+    {
+      "pdf_page": 26,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "7e310573741ccfb0814c9bb63fe552466453f9d5efe69efb8a1b000da15ec47c",
+      "after_masked_pixels_sha256": "7e310573741ccfb0814c9bb63fe552466453f9d5efe69efb8a1b000da15ec47c"
+    },
+    {
+      "pdf_page": 27,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "6fba6dd1802722f943c63449f4dfef181d202ddffaddcdf0d8a97a9483216e9e",
+      "after_masked_pixels_sha256": "6fba6dd1802722f943c63449f4dfef181d202ddffaddcdf0d8a97a9483216e9e"
+    },
+    {
+      "pdf_page": 28,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "16fbe1e8139af6ad4ead004f2b4d58ebf8300f029129629b116535343cc45d13",
+      "after_masked_pixels_sha256": "16fbe1e8139af6ad4ead004f2b4d58ebf8300f029129629b116535343cc45d13"
+    },
+    {
+      "pdf_page": 29,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "3add5a4c3a9ed35f1c4d3545c110408f9e7260b488de648b63f19041c58efe64",
+      "after_masked_pixels_sha256": "3add5a4c3a9ed35f1c4d3545c110408f9e7260b488de648b63f19041c58efe64"
+    },
+    {
+      "pdf_page": 30,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "664a0b3307f3452a01207c9f0d1385dd4d823b0cbccffd8b46dad65440429b1f",
+      "after_masked_pixels_sha256": "664a0b3307f3452a01207c9f0d1385dd4d823b0cbccffd8b46dad65440429b1f"
+    },
+    {
+      "pdf_page": 31,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "02d72d8c7728780cac4b07ac193e6eb37f5be2c3e4fc5f6ac8cc6f02a4f2af52",
+      "after_masked_pixels_sha256": "02d72d8c7728780cac4b07ac193e6eb37f5be2c3e4fc5f6ac8cc6f02a4f2af52"
+    },
+    {
+      "pdf_page": 32,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "a35a09c0524f2ffb17df37d792e09244ba3b6dd3e7f67256baf8fb831f391b8e",
+      "after_masked_pixels_sha256": "a35a09c0524f2ffb17df37d792e09244ba3b6dd3e7f67256baf8fb831f391b8e"
+    },
+    {
+      "pdf_page": 33,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "e307fd2486688804cdff2d2c5bc8d46d77d3c273df89b436c51858e96dfce25c",
+      "after_masked_pixels_sha256": "e307fd2486688804cdff2d2c5bc8d46d77d3c273df89b436c51858e96dfce25c"
+    },
+    {
+      "pdf_page": 34,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "bad8c5ce69133e4f2be4c84a79be3499488ebf5466ae683e756f97f639ef2c89",
+      "after_masked_pixels_sha256": "bad8c5ce69133e4f2be4c84a79be3499488ebf5466ae683e756f97f639ef2c89"
+    },
+    {
+      "pdf_page": 35,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "9e3b4ced373e884603923db9b0b07adc235bd1978591df3963ca178082d0d960",
+      "after_masked_pixels_sha256": "9e3b4ced373e884603923db9b0b07adc235bd1978591df3963ca178082d0d960"
+    },
+    {
+      "pdf_page": 36,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "0f7f6454238454bb1697b5cee5aa4caa512fa8004e6bdb8c6bd24040f805bb24",
+      "after_masked_pixels_sha256": "0f7f6454238454bb1697b5cee5aa4caa512fa8004e6bdb8c6bd24040f805bb24"
+    },
+    {
+      "pdf_page": 37,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "c33205328a77f9213123f3cd697b8ce2301996179c55453f55b73d3fb52d02ea",
+      "after_masked_pixels_sha256": "c33205328a77f9213123f3cd697b8ce2301996179c55453f55b73d3fb52d02ea"
+    },
+    {
+      "pdf_page": 38,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "7d479afc55d38a4a9ba09a216ca2083c2d5209e9186abe16fad89bdedbeece61",
+      "after_masked_pixels_sha256": "7d479afc55d38a4a9ba09a216ca2083c2d5209e9186abe16fad89bdedbeece61"
+    },
+    {
+      "pdf_page": 39,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "0ca522b980d1c213c1e6758dac7a590f37a34d86ef0b8ab843e2f0f66ead122d",
+      "after_masked_pixels_sha256": "0ca522b980d1c213c1e6758dac7a590f37a34d86ef0b8ab843e2f0f66ead122d"
+    },
+    {
+      "pdf_page": 40,
+      "nonprice_visual_changed": true,
+      "difference_bbox": [
+        323,
+        632,
+        389,
+        633
+      ],
+      "before_masked_pixels_sha256": "a34d7e929bed027ed9ef60e6fd47fe8644b8892fa4dab51d3bf467a971b9d4cd",
+      "after_masked_pixels_sha256": "138bb7b3ab05e98629c7875886ffdba699c198fba5706a73085095d716cecbf2"
+    },
+    {
+      "pdf_page": 41,
+      "nonprice_visual_changed": true,
+      "difference_bbox": [
+        51,
+        401,
+        215,
+        711
+      ],
+      "before_masked_pixels_sha256": "eb5237d486f02d98fd87f7e7a1b81b5857a3336d039e84af85c90ad6e481c398",
+      "after_masked_pixels_sha256": "2099bec7503dfd16187a1c9380ceeccb25682482708fff93e21549a18af2901a"
+    },
+    {
+      "pdf_page": 42,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "a28436b41db8a1c14b01452b6a9e3165b2f6581a8d64b28deca7f9d98bf5715c",
+      "after_masked_pixels_sha256": "a28436b41db8a1c14b01452b6a9e3165b2f6581a8d64b28deca7f9d98bf5715c"
+    },
+    {
+      "pdf_page": 43,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "b575d1321728b3649d3c17a7478cad34f468e06036e6afaf82f479d1499fdb73",
+      "after_masked_pixels_sha256": "b575d1321728b3649d3c17a7478cad34f468e06036e6afaf82f479d1499fdb73"
+    },
+    {
+      "pdf_page": 44,
+      "nonprice_visual_changed": true,
+      "difference_bbox": [
+        289,
+        482,
+        323,
+        598
+      ],
+      "before_masked_pixels_sha256": "618827e8807837b3e9477b19e90f73d993d14d97f8eb2f992db9a5b02b096a60",
+      "after_masked_pixels_sha256": "e77ab20467e8c055fc8c1c2e3b650d450ce6d192c1558ae220ab22ec83a7a5fc"
+    },
+    {
+      "pdf_page": 45,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "e4997f7dfebb75ec4ef5e2ae2acbd0f9621ac6ff0d7f419c1501f2f6ef1c29d0",
+      "after_masked_pixels_sha256": "e4997f7dfebb75ec4ef5e2ae2acbd0f9621ac6ff0d7f419c1501f2f6ef1c29d0"
+    },
+    {
+      "pdf_page": 46,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "d44e8e199b2908455ac108e27a188d98b10ead8d8e96364d2dc9d809c65ed135",
+      "after_masked_pixels_sha256": "d44e8e199b2908455ac108e27a188d98b10ead8d8e96364d2dc9d809c65ed135"
+    },
+    {
+      "pdf_page": 47,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "c2fb091c43789290d471c25740d561cbe0fcc76909a68eaf21f675c654b21b34",
+      "after_masked_pixels_sha256": "c2fb091c43789290d471c25740d561cbe0fcc76909a68eaf21f675c654b21b34"
+    },
+    {
+      "pdf_page": 48,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "77408f8027c25802dca8fd146532ab48b369a3071779525a277849bc1e2a613e",
+      "after_masked_pixels_sha256": "77408f8027c25802dca8fd146532ab48b369a3071779525a277849bc1e2a613e"
+    },
+    {
+      "pdf_page": 49,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "7c6f55ed672c1c24d25340eaa2ec7fc1954886a4cae238acc0cdb7148ae9e7e0",
+      "after_masked_pixels_sha256": "7c6f55ed672c1c24d25340eaa2ec7fc1954886a4cae238acc0cdb7148ae9e7e0"
+    },
+    {
+      "pdf_page": 50,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "b9cae13df529c2eab9afa60323b8dff1e8196a0935d0365aa36fd853d279068b",
+      "after_masked_pixels_sha256": "b9cae13df529c2eab9afa60323b8dff1e8196a0935d0365aa36fd853d279068b"
+    },
+    {
+      "pdf_page": 51,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "f070dd3bb0b182c10da665eb2c2628f19863f78218c8ef322e213f457fab1761",
+      "after_masked_pixels_sha256": "f070dd3bb0b182c10da665eb2c2628f19863f78218c8ef322e213f457fab1761"
+    },
+    {
+      "pdf_page": 52,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "db3525dcbb008069f829e02e0eddfb5d7b82bd94a88c2806840b778bdfdff1c8",
+      "after_masked_pixels_sha256": "db3525dcbb008069f829e02e0eddfb5d7b82bd94a88c2806840b778bdfdff1c8"
+    },
+    {
+      "pdf_page": 53,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "d09de6e90609bd95b326a098af59e01793dcfda6a551966ece8d175ee1697502",
+      "after_masked_pixels_sha256": "d09de6e90609bd95b326a098af59e01793dcfda6a551966ece8d175ee1697502"
+    },
+    {
+      "pdf_page": 54,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "05cb704100a37794a74bb1b7fd799dc7c230574a81c153d9483ae9985dcf82bb",
+      "after_masked_pixels_sha256": "05cb704100a37794a74bb1b7fd799dc7c230574a81c153d9483ae9985dcf82bb"
+    },
+    {
+      "pdf_page": 55,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "540c2128d0ca7283ac83ced349a6fc9352abfb79407326779226403c67d10048",
+      "after_masked_pixels_sha256": "540c2128d0ca7283ac83ced349a6fc9352abfb79407326779226403c67d10048"
+    },
+    {
+      "pdf_page": 56,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "26ba90b39ed6f9c2940709abc04418f8f5678c03014db7db7490d6a46c17e200",
+      "after_masked_pixels_sha256": "26ba90b39ed6f9c2940709abc04418f8f5678c03014db7db7490d6a46c17e200"
+    },
+    {
+      "pdf_page": 57,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "dca9da9ae823b2f1b483cb9471d60bd8063ee7ed7b21be203278804f503dad35",
+      "after_masked_pixels_sha256": "dca9da9ae823b2f1b483cb9471d60bd8063ee7ed7b21be203278804f503dad35"
+    },
+    {
+      "pdf_page": 58,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "321585a01cc7890d7473ba197af6411f20650719250ae1794e2b99e1310c234d",
+      "after_masked_pixels_sha256": "321585a01cc7890d7473ba197af6411f20650719250ae1794e2b99e1310c234d"
+    },
+    {
+      "pdf_page": 59,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "58f33bbb2fa1c4da876f4822ddce7e7f1eb8362eaef4e3551886af843df48b26",
+      "after_masked_pixels_sha256": "58f33bbb2fa1c4da876f4822ddce7e7f1eb8362eaef4e3551886af843df48b26"
+    },
+    {
+      "pdf_page": 60,
+      "nonprice_visual_changed": true,
+      "difference_bbox": [
+        322,
+        631,
+        388,
+        632
+      ],
+      "before_masked_pixels_sha256": "7d685478a08425c19d7716a36927a7346b04e09c61d3f4bbead500c4f42485aa",
+      "after_masked_pixels_sha256": "ae853b461652e54ad039cbeb0a1c97dafcd699cd51f8dfcdd6217e52db829e22"
+    },
+    {
+      "pdf_page": 61,
+      "nonprice_visual_changed": true,
+      "difference_bbox": [
+        51,
+        401,
+        215,
+        710
+      ],
+      "before_masked_pixels_sha256": "d311bdbf33e4b24aadb99a665b0f32eb674cf11941da0e86daf4daa5833cf1be",
+      "after_masked_pixels_sha256": "1f537e20fe98b555758aee8b42fe4def990bdf6152cd646d6da1cbd5438af889"
+    },
+    {
+      "pdf_page": 62,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "799235ba89c4b55922c7f8263969afccfad7d8533e8fdaf70bbf1007c70d2545",
+      "after_masked_pixels_sha256": "799235ba89c4b55922c7f8263969afccfad7d8533e8fdaf70bbf1007c70d2545"
+    },
+    {
+      "pdf_page": 63,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "c13e08c346378d1fd7f6386afcd75f3359381bcc54d5c89dbc0594b172829978",
+      "after_masked_pixels_sha256": "c13e08c346378d1fd7f6386afcd75f3359381bcc54d5c89dbc0594b172829978"
+    },
+    {
+      "pdf_page": 64,
+      "nonprice_visual_changed": true,
+      "difference_bbox": [
+        291,
+        481,
+        324,
+        596
+      ],
+      "before_masked_pixels_sha256": "afae04bc49457533fb3c7ff4c217002377615b9897c6c5e13b18921d35fab3aa",
+      "after_masked_pixels_sha256": "0a03d2acdf7a02e23411c0dac3d259d216b7934792da162ed74c4937d801978f"
+    },
+    {
+      "pdf_page": 65,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "31ad3de7c1004eadeb9d2d2414d886167246afbfbf87494d8c4573f565fc5dd2",
+      "after_masked_pixels_sha256": "31ad3de7c1004eadeb9d2d2414d886167246afbfbf87494d8c4573f565fc5dd2"
+    },
+    {
+      "pdf_page": 66,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "50bd6db09f31edb38ec07b549c76b6f39cf7f15d5df327dea89f58541275bf40",
+      "after_masked_pixels_sha256": "50bd6db09f31edb38ec07b549c76b6f39cf7f15d5df327dea89f58541275bf40"
+    },
+    {
+      "pdf_page": 67,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "5f315c81ad91714467bab6669dab85abc4416778a209b084ba672ec26a03c653",
+      "after_masked_pixels_sha256": "5f315c81ad91714467bab6669dab85abc4416778a209b084ba672ec26a03c653"
+    },
+    {
+      "pdf_page": 68,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "d5081650a3d49c5a67d76969ca61faa996f51acb3467e4ae5e7e6e58761f8bd3",
+      "after_masked_pixels_sha256": "d5081650a3d49c5a67d76969ca61faa996f51acb3467e4ae5e7e6e58761f8bd3"
+    },
+    {
+      "pdf_page": 69,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "2a307f07ac702a52c021df2c2db91c0a17786308995fd824536c8f417102ff5a",
+      "after_masked_pixels_sha256": "2a307f07ac702a52c021df2c2db91c0a17786308995fd824536c8f417102ff5a"
+    },
+    {
+      "pdf_page": 70,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "10db9ffdf6d0b29002ff5a1d551f0622a66e0ca7ab9825b698f42eafee83d786",
+      "after_masked_pixels_sha256": "10db9ffdf6d0b29002ff5a1d551f0622a66e0ca7ab9825b698f42eafee83d786"
+    },
+    {
+      "pdf_page": 71,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "379b069f71ed5b2d2b3ab1dd761f337128b569cf4124eb333fc8461e2b353f3f",
+      "after_masked_pixels_sha256": "379b069f71ed5b2d2b3ab1dd761f337128b569cf4124eb333fc8461e2b353f3f"
+    },
+    {
+      "pdf_page": 72,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "6d0ca327bceb7f037a2c620ffe4ee775364b1452b720f0e068674c8fc0b20a0d",
+      "after_masked_pixels_sha256": "6d0ca327bceb7f037a2c620ffe4ee775364b1452b720f0e068674c8fc0b20a0d"
+    },
+    {
+      "pdf_page": 73,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "f16f630a45ab87d0a1968743e2bbdb3d291ac5a9dbaca3d7a1db808e1bbf3b71",
+      "after_masked_pixels_sha256": "f16f630a45ab87d0a1968743e2bbdb3d291ac5a9dbaca3d7a1db808e1bbf3b71"
+    },
+    {
+      "pdf_page": 74,
+      "nonprice_visual_changed": true,
+      "difference_bbox": [
+        271,
+        648,
+        274,
+        653
+      ],
+      "before_masked_pixels_sha256": "1f1f153f447ebad1d45766d040f1205147eb7d2e974095cc499afb4a0f9a47a5",
+      "after_masked_pixels_sha256": "93fb63a0add66c66c4ca10c785dec5ce97f30586836f33d0258f5c85b5255698"
+    },
+    {
+      "pdf_page": 75,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "c533b27e758d376fc4e2f68e04a3333f65699ee8d8fabeb94bd3397d34748518",
+      "after_masked_pixels_sha256": "c533b27e758d376fc4e2f68e04a3333f65699ee8d8fabeb94bd3397d34748518"
+    },
+    {
+      "pdf_page": 76,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "4544fa14208ba386a4dbf53b60f4ac1388ff7bd6867cfe43a415b55099242726",
+      "after_masked_pixels_sha256": "4544fa14208ba386a4dbf53b60f4ac1388ff7bd6867cfe43a415b55099242726"
+    },
+    {
+      "pdf_page": 77,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "d20473d2f3708c5134e5e7ee0d9a4dc2b0c4ea08a16d593a51400fbabb28b5c7",
+      "after_masked_pixels_sha256": "d20473d2f3708c5134e5e7ee0d9a4dc2b0c4ea08a16d593a51400fbabb28b5c7"
+    },
+    {
+      "pdf_page": 78,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "c0a4c94845129ee15f00ca30cae765159a2118953bad075b0e5ad1bc60be43b8",
+      "after_masked_pixels_sha256": "c0a4c94845129ee15f00ca30cae765159a2118953bad075b0e5ad1bc60be43b8"
+    },
+    {
+      "pdf_page": 79,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "bcabbe04c08c67c384dc2a2785927dacd2b1efd89ac431009eb710573051838d",
+      "after_masked_pixels_sha256": "bcabbe04c08c67c384dc2a2785927dacd2b1efd89ac431009eb710573051838d"
+    },
+    {
+      "pdf_page": 80,
+      "nonprice_visual_changed": true,
+      "difference_bbox": [
+        322,
+        655,
+        540,
+        798
+      ],
+      "before_masked_pixels_sha256": "98374d7b7a47a59ccd0337b7b1ecaf1923075eb175ef6a2f659a8ce8ba777524",
+      "after_masked_pixels_sha256": "28a563f5a12e8efcf2adb8bb60495cb0083c7b46643d474661d2d8ae64076e7b"
+    },
+    {
+      "pdf_page": 81,
+      "nonprice_visual_changed": true,
+      "difference_bbox": [
+        51,
+        453,
+        215,
+        724
+      ],
+      "before_masked_pixels_sha256": "d4a96bbd4080a2509b6e91473a1208ce64695f06cf0e8fd91b52b4f0559ae5a6",
+      "after_masked_pixels_sha256": "6ca8a619981d18976cddb86c475fb46ed04e51dafcc5edc93847d0f7f0ac17f2"
+    },
+    {
+      "pdf_page": 82,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "dd16fb4d1ae3dc74dfdd7ea7d4ee10cbf0cfac7c97ad6399c9ea97f7a91fdab4",
+      "after_masked_pixels_sha256": "dd16fb4d1ae3dc74dfdd7ea7d4ee10cbf0cfac7c97ad6399c9ea97f7a91fdab4"
+    },
+    {
+      "pdf_page": 83,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "e585665ed617936eb449013e11058daf5477751f23797c2d6035b6a069074352",
+      "after_masked_pixels_sha256": "e585665ed617936eb449013e11058daf5477751f23797c2d6035b6a069074352"
+    },
+    {
+      "pdf_page": 84,
+      "nonprice_visual_changed": true,
+      "difference_bbox": [
+        290,
+        470,
+        324,
+        578
+      ],
+      "before_masked_pixels_sha256": "ed3509948415ab24e2df4f6bb6dd78c292f246bf8d5722b14c418dabb1297ab7",
+      "after_masked_pixels_sha256": "a373810e5795a1beeb3608b65b146021bcac366af9221ff60a50f3fe10da03b6"
+    },
+    {
+      "pdf_page": 85,
+      "nonprice_visual_changed": true,
+      "difference_bbox": [
+        379,
+        501,
+        537,
+        707
+      ],
+      "before_masked_pixels_sha256": "14a4eb0e395880253ebb841cb8fb645aae0e1dfd4a7587b840f4162578e791b7",
+      "after_masked_pixels_sha256": "a0a5683c96428424c2f639c9785f41ac372e797e5c95dc65310c138449a241c7"
+    },
+    {
+      "pdf_page": 86,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "2b06727953eabc62094d74fe7b60bedfb20f6ea676a38ef73737b8a7ca83c9ef",
+      "after_masked_pixels_sha256": "2b06727953eabc62094d74fe7b60bedfb20f6ea676a38ef73737b8a7ca83c9ef"
+    },
+    {
+      "pdf_page": 87,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "7db38addb3629ad2566215d040bb5d30d9c018d5c3144321bdc9682ed92e3c6e",
+      "after_masked_pixels_sha256": "7db38addb3629ad2566215d040bb5d30d9c018d5c3144321bdc9682ed92e3c6e"
+    },
+    {
+      "pdf_page": 88,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "a4a50af77e6efd238a960160dd4b3c2fd336e74c8e16651bffe3535d3ac9d0f2",
+      "after_masked_pixels_sha256": "a4a50af77e6efd238a960160dd4b3c2fd336e74c8e16651bffe3535d3ac9d0f2"
+    },
+    {
+      "pdf_page": 89,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "9f4d810348962c0286444c6ab7f01192bc969863686bbd2d69ad849825579d59",
+      "after_masked_pixels_sha256": "9f4d810348962c0286444c6ab7f01192bc969863686bbd2d69ad849825579d59"
+    },
+    {
+      "pdf_page": 90,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "bd64fec8b94d651031bf54028f10915df2f865ac700a943ef7b95e6ed8a85dfc",
+      "after_masked_pixels_sha256": "bd64fec8b94d651031bf54028f10915df2f865ac700a943ef7b95e6ed8a85dfc"
+    },
+    {
+      "pdf_page": 91,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "a4edd72b9b4b9372d9a37ff8e7b50c70569980d7a275fcc9f91a5c59966f982c",
+      "after_masked_pixels_sha256": "a4edd72b9b4b9372d9a37ff8e7b50c70569980d7a275fcc9f91a5c59966f982c"
+    },
+    {
+      "pdf_page": 92,
+      "nonprice_visual_changed": true,
+      "difference_bbox": [
+        322,
+        655,
+        540,
+        797
+      ],
+      "before_masked_pixels_sha256": "2087192ab0de9ce9ab178795ea70a35936dcd64ca09f0e27f9168f1e45e8f9e3",
+      "after_masked_pixels_sha256": "cc77bb27df940bc522e41c07865a4b2d395bc31193c4212e868fcfc8d4d603d9"
+    },
+    {
+      "pdf_page": 93,
+      "nonprice_visual_changed": true,
+      "difference_bbox": [
+        45,
+        452,
+        210,
+        725
+      ],
+      "before_masked_pixels_sha256": "e5404467f9d5c0f972e5c572b2e6fadd1e3cbc5e06ca11e671b3a24f7fcc4abe",
+      "after_masked_pixels_sha256": "4e524f3765654ddc0cf33d6834f131fb58b737800a78081e095d535278293d71"
+    },
+    {
+      "pdf_page": 94,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "461bb586958c14404ef2f03b8163b8d1ea14cdd6cd4f4504bbf80e58436ab5cd",
+      "after_masked_pixels_sha256": "461bb586958c14404ef2f03b8163b8d1ea14cdd6cd4f4504bbf80e58436ab5cd"
+    },
+    {
+      "pdf_page": 95,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "106c12f1f964df11d44afe91fe07cefe96557997934a8915755bebb32802bf23",
+      "after_masked_pixels_sha256": "106c12f1f964df11d44afe91fe07cefe96557997934a8915755bebb32802bf23"
+    },
+    {
+      "pdf_page": 96,
+      "nonprice_visual_changed": true,
+      "difference_bbox": [
+        290,
+        470,
+        324,
+        578
+      ],
+      "before_masked_pixels_sha256": "3183817ca122bcd82ba9b70a1e6703c2d01075a7c268fd38c4f34b3a027224e6",
+      "after_masked_pixels_sha256": "4771d7797efd33137ed530321f90ede3cd5dde39b0f68eadcec67800a86cf489"
+    },
+    {
+      "pdf_page": 97,
+      "nonprice_visual_changed": true,
+      "difference_bbox": [
+        379,
+        501,
+        537,
+        707
+      ],
+      "before_masked_pixels_sha256": "4cd3ad7c4ead61c36c583291f4250cb9788198042761f04054b23139cdd66a93",
+      "after_masked_pixels_sha256": "f654d7f1fba6fe6f0da55cdbffed88e5b29ae5ed7d3b0135513ff28fe4727797"
+    },
+    {
+      "pdf_page": 98,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "a2f8349bf4aba20edfa690e69e69294ed6efd9ff7ea4d08926876ecec93a122d",
+      "after_masked_pixels_sha256": "a2f8349bf4aba20edfa690e69e69294ed6efd9ff7ea4d08926876ecec93a122d"
+    },
+    {
+      "pdf_page": 99,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "e77347efd0f03cd4356c5115dbac7485f694311856f5c76d039eac01ed08cf2c",
+      "after_masked_pixels_sha256": "e77347efd0f03cd4356c5115dbac7485f694311856f5c76d039eac01ed08cf2c"
+    },
+    {
+      "pdf_page": 100,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "3a2455c1e65ac9a331fc0565e13da02c5e74b7609968964e5e0f583c87d92236",
+      "after_masked_pixels_sha256": "3a2455c1e65ac9a331fc0565e13da02c5e74b7609968964e5e0f583c87d92236"
+    },
+    {
+      "pdf_page": 101,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "63b78343541d51fff582d2ac2aef25cff9c26aef8015884298868eb50512c819",
+      "after_masked_pixels_sha256": "63b78343541d51fff582d2ac2aef25cff9c26aef8015884298868eb50512c819"
+    },
+    {
+      "pdf_page": 102,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "f4e7227a06fc4b978b8cfff4345bfda772924e9d86d5e9140775032d42469a99",
+      "after_masked_pixels_sha256": "f4e7227a06fc4b978b8cfff4345bfda772924e9d86d5e9140775032d42469a99"
+    },
+    {
+      "pdf_page": 103,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "108c93ec928ef645834732d6334ed1f04801c447759357b2407b779d6f20eaf9",
+      "after_masked_pixels_sha256": "108c93ec928ef645834732d6334ed1f04801c447759357b2407b779d6f20eaf9"
+    },
+    {
+      "pdf_page": 104,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "00471e5d2c24d0623e4435f7ee950141a841e789e8c8c82bb16f750134644d3e",
+      "after_masked_pixels_sha256": "00471e5d2c24d0623e4435f7ee950141a841e789e8c8c82bb16f750134644d3e"
+    },
+    {
+      "pdf_page": 105,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "1f3424bb234e6c80b8aa4319b0fb0462a41e106955797c07b34b77536ea7540e",
+      "after_masked_pixels_sha256": "1f3424bb234e6c80b8aa4319b0fb0462a41e106955797c07b34b77536ea7540e"
+    },
+    {
+      "pdf_page": 106,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "25a0611556f09120b47faa559c38737c8c22368d808ae401738606ae6d909030",
+      "after_masked_pixels_sha256": "25a0611556f09120b47faa559c38737c8c22368d808ae401738606ae6d909030"
+    },
+    {
+      "pdf_page": 107,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "1748a13a19ff1083b079da04138c7bdce318f7bb332a575f4d03b15f6e18f62f",
+      "after_masked_pixels_sha256": "1748a13a19ff1083b079da04138c7bdce318f7bb332a575f4d03b15f6e18f62f"
+    },
+    {
+      "pdf_page": 108,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "314fab6a661df9659b7666ec87653a683cae2462b5173eeea5289c7d4b0e9fac",
+      "after_masked_pixels_sha256": "314fab6a661df9659b7666ec87653a683cae2462b5173eeea5289c7d4b0e9fac"
+    },
+    {
+      "pdf_page": 109,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "c0a2ebec366e7542c3065ac093babf286bd2785fb1580849158cedb017f7b87e",
+      "after_masked_pixels_sha256": "c0a2ebec366e7542c3065ac093babf286bd2785fb1580849158cedb017f7b87e"
+    },
+    {
+      "pdf_page": 110,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "907c0f387713fc0057c644b8d97e6c657bd6c7a03f5328a5b451d8dd4ef450b7",
+      "after_masked_pixels_sha256": "907c0f387713fc0057c644b8d97e6c657bd6c7a03f5328a5b451d8dd4ef450b7"
+    },
+    {
+      "pdf_page": 111,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "926ed743368133895e898e4a7e177e62df1d71f0579fb35602d05bd996012c70",
+      "after_masked_pixels_sha256": "926ed743368133895e898e4a7e177e62df1d71f0579fb35602d05bd996012c70"
+    },
+    {
+      "pdf_page": 112,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "3b85923217beea533b90d78db0e690b8a868eae7071ed5df91a64ea1935dd18a",
+      "after_masked_pixels_sha256": "3b85923217beea533b90d78db0e690b8a868eae7071ed5df91a64ea1935dd18a"
+    },
+    {
+      "pdf_page": 113,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "9d3781d3a1fa4ada7b4b99eb3189f2c94730e54cc59f46bcb1df27c81d396b01",
+      "after_masked_pixels_sha256": "9d3781d3a1fa4ada7b4b99eb3189f2c94730e54cc59f46bcb1df27c81d396b01"
+    },
+    {
+      "pdf_page": 114,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "ae5a2c3c659697af13c229e9b2e64874913110cc75adfe82abe4183b109f3185",
+      "after_masked_pixels_sha256": "ae5a2c3c659697af13c229e9b2e64874913110cc75adfe82abe4183b109f3185"
+    },
+    {
+      "pdf_page": 115,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "84d40441f03f70144d6ee85609386e1cb1d1a319fba430a67b40380e21adc1dd",
+      "after_masked_pixels_sha256": "84d40441f03f70144d6ee85609386e1cb1d1a319fba430a67b40380e21adc1dd"
+    },
+    {
+      "pdf_page": 116,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "868e89e54c393744de64650074f97fd5c62e09fc2f094a9ec8105f950ac7c7a1",
+      "after_masked_pixels_sha256": "868e89e54c393744de64650074f97fd5c62e09fc2f094a9ec8105f950ac7c7a1"
+    },
+    {
+      "pdf_page": 117,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "ea26407cceef0dc67c0cf012c9a5d51fb6c3898d74f6391f080d518b150f577e",
+      "after_masked_pixels_sha256": "ea26407cceef0dc67c0cf012c9a5d51fb6c3898d74f6391f080d518b150f577e"
+    },
+    {
+      "pdf_page": 118,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "571506206117a24daa26c3bd87d44830b0bcd21472d1a884ad832a4fab849748",
+      "after_masked_pixels_sha256": "571506206117a24daa26c3bd87d44830b0bcd21472d1a884ad832a4fab849748"
+    },
+    {
+      "pdf_page": 119,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "863bdb54c169eafd7d5d178e305d2b7b277c8a9e37340d4fd46a7b5ae4afef23",
+      "after_masked_pixels_sha256": "863bdb54c169eafd7d5d178e305d2b7b277c8a9e37340d4fd46a7b5ae4afef23"
+    },
+    {
+      "pdf_page": 120,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "142026b5949be303f59d71cb75e5aaef6bc1b819acd75705f8ac468e02131277",
+      "after_masked_pixels_sha256": "142026b5949be303f59d71cb75e5aaef6bc1b819acd75705f8ac468e02131277"
+    },
+    {
+      "pdf_page": 121,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "4305eaa95647b4c7c221d78c034946d01fcf98dca040d4f28da311ee0f29ed2b",
+      "after_masked_pixels_sha256": "4305eaa95647b4c7c221d78c034946d01fcf98dca040d4f28da311ee0f29ed2b"
+    },
+    {
+      "pdf_page": 122,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "17235b8f93e7df9d31b878dd862877ba8ed995467ffcdc8ca739403bb31d54bf",
+      "after_masked_pixels_sha256": "17235b8f93e7df9d31b878dd862877ba8ed995467ffcdc8ca739403bb31d54bf"
+    },
+    {
+      "pdf_page": 123,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "4c42f6b50da678c1ed633d946d7ab0bfc458f5c6b54155808cc683dd36e6ae88",
+      "after_masked_pixels_sha256": "4c42f6b50da678c1ed633d946d7ab0bfc458f5c6b54155808cc683dd36e6ae88"
+    },
+    {
+      "pdf_page": 124,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "95b3452baa7b42294d24a317ca5576b809215b6866299b913e13e682bd395077",
+      "after_masked_pixels_sha256": "95b3452baa7b42294d24a317ca5576b809215b6866299b913e13e682bd395077"
+    },
+    {
+      "pdf_page": 125,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "ea4fc595a9d8e507692afcea62cfb4d2dd3934918096e6bd8ecd1fd3d93d9972",
+      "after_masked_pixels_sha256": "ea4fc595a9d8e507692afcea62cfb4d2dd3934918096e6bd8ecd1fd3d93d9972"
+    },
+    {
+      "pdf_page": 126,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "642a4f2beb3ab58986fb516e6c4c7ef9f78c33e8c954097ff6b650697e17599c",
+      "after_masked_pixels_sha256": "642a4f2beb3ab58986fb516e6c4c7ef9f78c33e8c954097ff6b650697e17599c"
+    },
+    {
+      "pdf_page": 127,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "88ffe7536594a1f9a7752a9d099b4ca00728042cef70747d11ad4173cb3cc1bd",
+      "after_masked_pixels_sha256": "88ffe7536594a1f9a7752a9d099b4ca00728042cef70747d11ad4173cb3cc1bd"
+    },
+    {
+      "pdf_page": 128,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "0b4042ee856512834f82c94ce8a03182e32774d28399e622d82b8fdc3cb09b39",
+      "after_masked_pixels_sha256": "0b4042ee856512834f82c94ce8a03182e32774d28399e622d82b8fdc3cb09b39"
+    },
+    {
+      "pdf_page": 129,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "e7834d347cf47b3bcb37a3dd7fc0c01f35860a5964ff796b7cc095922193a382",
+      "after_masked_pixels_sha256": "e7834d347cf47b3bcb37a3dd7fc0c01f35860a5964ff796b7cc095922193a382"
+    },
+    {
+      "pdf_page": 130,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "db428bd900249f572796aa8db9edab40329ac560ed3b917e0280d0848f53fbce",
+      "after_masked_pixels_sha256": "db428bd900249f572796aa8db9edab40329ac560ed3b917e0280d0848f53fbce"
+    },
+    {
+      "pdf_page": 131,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "db4498c084af88158b0b939889ad5f51f756c9307c20df03a81bb24b932c60cc",
+      "after_masked_pixels_sha256": "db4498c084af88158b0b939889ad5f51f756c9307c20df03a81bb24b932c60cc"
+    },
+    {
+      "pdf_page": 132,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "1260fe67b124185d873d9b7d071294cabc21c814cb646f0139628a73b695c3af",
+      "after_masked_pixels_sha256": "1260fe67b124185d873d9b7d071294cabc21c814cb646f0139628a73b695c3af"
+    },
+    {
+      "pdf_page": 133,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "6e05e0a8d7fafe14534b29eaebf628dcb8d1ea49b37ff95132596c6f6506d199",
+      "after_masked_pixels_sha256": "6e05e0a8d7fafe14534b29eaebf628dcb8d1ea49b37ff95132596c6f6506d199"
+    },
+    {
+      "pdf_page": 134,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "48d01218844be730e03dd27a7b0d51c798d8257311fd7dac3be2a0d79b023880",
+      "after_masked_pixels_sha256": "48d01218844be730e03dd27a7b0d51c798d8257311fd7dac3be2a0d79b023880"
+    },
+    {
+      "pdf_page": 135,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "ae3af763cd46d2b2b725c18c65e414faa0dbd085429491bfbc3254c26386a364",
+      "after_masked_pixels_sha256": "ae3af763cd46d2b2b725c18c65e414faa0dbd085429491bfbc3254c26386a364"
+    },
+    {
+      "pdf_page": 136,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "7fabe4e92ad75447cb945c1e58b5bb3e284a5a096df029bd242a99ff0d489938",
+      "after_masked_pixels_sha256": "7fabe4e92ad75447cb945c1e58b5bb3e284a5a096df029bd242a99ff0d489938"
+    },
+    {
+      "pdf_page": 137,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "7cb476b7e66176dbaf7277b583641e2547e0858f5ab4cb7ade71f99316c8de14",
+      "after_masked_pixels_sha256": "7cb476b7e66176dbaf7277b583641e2547e0858f5ab4cb7ade71f99316c8de14"
+    },
+    {
+      "pdf_page": 138,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "e4d74836d142753a3302b1298e89ddfb42ea21b110719cd8b740ddb1d1d03702",
+      "after_masked_pixels_sha256": "e4d74836d142753a3302b1298e89ddfb42ea21b110719cd8b740ddb1d1d03702"
+    },
+    {
+      "pdf_page": 139,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "d8133b33892b36d5101f2f4646972be9a94a840117bb6e99b20a52735bfa9951",
+      "after_masked_pixels_sha256": "d8133b33892b36d5101f2f4646972be9a94a840117bb6e99b20a52735bfa9951"
+    },
+    {
+      "pdf_page": 140,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "a293cfabf754c420ff4b95e914e7837220abfc9ebd3b2a77e2cd21baa371c169",
+      "after_masked_pixels_sha256": "a293cfabf754c420ff4b95e914e7837220abfc9ebd3b2a77e2cd21baa371c169"
+    },
+    {
+      "pdf_page": 141,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "59483e836a3dbb07d587db8293b416def8467a4f173890110a87388922451fc7",
+      "after_masked_pixels_sha256": "59483e836a3dbb07d587db8293b416def8467a4f173890110a87388922451fc7"
+    },
+    {
+      "pdf_page": 142,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "6b1f933e7a0797bec88d2dfed390163556ebee77ca7aa5135583ea183105cae4",
+      "after_masked_pixels_sha256": "6b1f933e7a0797bec88d2dfed390163556ebee77ca7aa5135583ea183105cae4"
+    },
+    {
+      "pdf_page": 143,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "5f7e4c7383a17550175703ca49be12f7d0ea133c3f5d778ca46128379df22cca",
+      "after_masked_pixels_sha256": "5f7e4c7383a17550175703ca49be12f7d0ea133c3f5d778ca46128379df22cca"
+    },
+    {
+      "pdf_page": 144,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "ac01b138ceea76883393619dcda551ade6daf325a2b8a7f01dc9311e937eb7c2",
+      "after_masked_pixels_sha256": "ac01b138ceea76883393619dcda551ade6daf325a2b8a7f01dc9311e937eb7c2"
+    },
+    {
+      "pdf_page": 145,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "0a853108bba9d88f4a6f52e35229d1a34419d43a4b2aad2a1cddcd30985d05d7",
+      "after_masked_pixels_sha256": "0a853108bba9d88f4a6f52e35229d1a34419d43a4b2aad2a1cddcd30985d05d7"
+    },
+    {
+      "pdf_page": 146,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "7f0edb9127a98f34d8ae80574332709e5e93a22f86480148342e3edb5ef42c5f",
+      "after_masked_pixels_sha256": "7f0edb9127a98f34d8ae80574332709e5e93a22f86480148342e3edb5ef42c5f"
+    },
+    {
+      "pdf_page": 147,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "d7baf624867f5e8a262146a7f1d4baab80026c9a74fddb5132655c8049f436d9",
+      "after_masked_pixels_sha256": "d7baf624867f5e8a262146a7f1d4baab80026c9a74fddb5132655c8049f436d9"
+    },
+    {
+      "pdf_page": 148,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "d7fc452d9bf52adec9ffca09f80ad4cf0a6fc3b7c2e75e960d4461fdff08047d",
+      "after_masked_pixels_sha256": "d7fc452d9bf52adec9ffca09f80ad4cf0a6fc3b7c2e75e960d4461fdff08047d"
+    },
+    {
+      "pdf_page": 149,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "daa43f0854bab91f933db2e2df78e3b1caeebd73298af8eda39acc5a0903292f",
+      "after_masked_pixels_sha256": "daa43f0854bab91f933db2e2df78e3b1caeebd73298af8eda39acc5a0903292f"
+    },
+    {
+      "pdf_page": 150,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "a1b3df1d48f48cc6bfbb63aebeb8f54ad542cf40bf9d9ff90afe9d2b3aa9dbe6",
+      "after_masked_pixels_sha256": "a1b3df1d48f48cc6bfbb63aebeb8f54ad542cf40bf9d9ff90afe9d2b3aa9dbe6"
+    },
+    {
+      "pdf_page": 151,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "9554be92a3d0ad64995ddd9fbc22eb143608d8f4c85c887bf3da0aad79ed6931",
+      "after_masked_pixels_sha256": "9554be92a3d0ad64995ddd9fbc22eb143608d8f4c85c887bf3da0aad79ed6931"
+    },
+    {
+      "pdf_page": 152,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "155168766edd1b5d8ec5b50c81f67ad8c460180e26863776a54f1180f4b756b4",
+      "after_masked_pixels_sha256": "155168766edd1b5d8ec5b50c81f67ad8c460180e26863776a54f1180f4b756b4"
+    },
+    {
+      "pdf_page": 153,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "beb135e2799d701e5fcb43d23d9ffd1d4bbf806cc4b0f0d13042ed206022d432",
+      "after_masked_pixels_sha256": "beb135e2799d701e5fcb43d23d9ffd1d4bbf806cc4b0f0d13042ed206022d432"
+    },
+    {
+      "pdf_page": 154,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "b07182440091ffcd868af5e4ae550f79bbacbb5596be54618a8f6e2b296e602a",
+      "after_masked_pixels_sha256": "b07182440091ffcd868af5e4ae550f79bbacbb5596be54618a8f6e2b296e602a"
+    },
+    {
+      "pdf_page": 155,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "15a427cdf4c877e358d9beb30edef62c80b770d8a2695b677ef96a0e1f5635cd",
+      "after_masked_pixels_sha256": "15a427cdf4c877e358d9beb30edef62c80b770d8a2695b677ef96a0e1f5635cd"
+    },
+    {
+      "pdf_page": 156,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "72477cd3a1ec2620c19fd29cc36c932809f5c9d4f381ec18e744c4bd3d06fac4",
+      "after_masked_pixels_sha256": "72477cd3a1ec2620c19fd29cc36c932809f5c9d4f381ec18e744c4bd3d06fac4"
+    },
+    {
+      "pdf_page": 157,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "7cef9711fdc84a2e7941268ad949b7911bc6b165471c2b1d45779380285683b3",
+      "after_masked_pixels_sha256": "7cef9711fdc84a2e7941268ad949b7911bc6b165471c2b1d45779380285683b3"
+    },
+    {
+      "pdf_page": 158,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "01dcdf244528119a5006f81c0c45e7bbfb9df9686bbe002fb2de4ac1503371f7",
+      "after_masked_pixels_sha256": "01dcdf244528119a5006f81c0c45e7bbfb9df9686bbe002fb2de4ac1503371f7"
+    },
+    {
+      "pdf_page": 159,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "640ba83a0560afa7bb4e8c499e3a5dc6e0c07ad5cb1ad5a5ff60dba8d6b18653",
+      "after_masked_pixels_sha256": "640ba83a0560afa7bb4e8c499e3a5dc6e0c07ad5cb1ad5a5ff60dba8d6b18653"
+    },
+    {
+      "pdf_page": 160,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "c1fc4ddf2ea75a2ddbb21dbe4ff478720830790f74a29e609c3928aeacf50cbb",
+      "after_masked_pixels_sha256": "c1fc4ddf2ea75a2ddbb21dbe4ff478720830790f74a29e609c3928aeacf50cbb"
+    },
+    {
+      "pdf_page": 161,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "5d30609bb24dc819ad95714706976e283c6dce6c68e07549bfec1cd8563d64ef",
+      "after_masked_pixels_sha256": "5d30609bb24dc819ad95714706976e283c6dce6c68e07549bfec1cd8563d64ef"
+    },
+    {
+      "pdf_page": 162,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "39510055af5f23d76185370b5d126a400f5f5805ad7d7601355abdb7f51b9928",
+      "after_masked_pixels_sha256": "39510055af5f23d76185370b5d126a400f5f5805ad7d7601355abdb7f51b9928"
+    },
+    {
+      "pdf_page": 163,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "7e79674503f26370e4557f02bdd1492af9e452943ee0550151f0978596574dfb",
+      "after_masked_pixels_sha256": "7e79674503f26370e4557f02bdd1492af9e452943ee0550151f0978596574dfb"
+    },
+    {
+      "pdf_page": 164,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "177cae0d7981ff9859ff20bc2a08e9b018d6e91d6c119c8ea77c510461953f2b",
+      "after_masked_pixels_sha256": "177cae0d7981ff9859ff20bc2a08e9b018d6e91d6c119c8ea77c510461953f2b"
+    },
+    {
+      "pdf_page": 165,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "36a341d6d1b9c2755c739da9e466f4717b215ef9b32c6a922ee425ce27f9e704",
+      "after_masked_pixels_sha256": "36a341d6d1b9c2755c739da9e466f4717b215ef9b32c6a922ee425ce27f9e704"
+    },
+    {
+      "pdf_page": 166,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "d1a0739cdb91b8d1106715a775a9806f64925cbeefc6ceb37b178e6a22fe4b1e",
+      "after_masked_pixels_sha256": "d1a0739cdb91b8d1106715a775a9806f64925cbeefc6ceb37b178e6a22fe4b1e"
+    },
+    {
+      "pdf_page": 167,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "2e6826588316faf7dc16cb841e194ebf2ecbd93b27740316559db3f9c4ad7c1a",
+      "after_masked_pixels_sha256": "2e6826588316faf7dc16cb841e194ebf2ecbd93b27740316559db3f9c4ad7c1a"
+    },
+    {
+      "pdf_page": 168,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "ad4269ffa8cc2611df0c4372fc50fe54a2854d4e2f22ba62468bbbcbb1ab5e5e",
+      "after_masked_pixels_sha256": "ad4269ffa8cc2611df0c4372fc50fe54a2854d4e2f22ba62468bbbcbb1ab5e5e"
+    },
+    {
+      "pdf_page": 169,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "2f23c50cb38d3fc23658c197ac6a0eb21427dd0df5062286f73ffcd1a49add90",
+      "after_masked_pixels_sha256": "2f23c50cb38d3fc23658c197ac6a0eb21427dd0df5062286f73ffcd1a49add90"
+    },
+    {
+      "pdf_page": 170,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "c62c8466287ab432aa399b14751327ad0b79b434bdc1862572de3789231bf8b9",
+      "after_masked_pixels_sha256": "c62c8466287ab432aa399b14751327ad0b79b434bdc1862572de3789231bf8b9"
+    },
+    {
+      "pdf_page": 171,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "6dd700a7b276e399693c29c7a24f1c1c129ed94e26b4b670bd039c2b2e3a7053",
+      "after_masked_pixels_sha256": "6dd700a7b276e399693c29c7a24f1c1c129ed94e26b4b670bd039c2b2e3a7053"
+    },
+    {
+      "pdf_page": 172,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "ca4d9c43c0b6fe9c189dd2b007f7337a444964275ee2462f5e5bb351662e867c",
+      "after_masked_pixels_sha256": "ca4d9c43c0b6fe9c189dd2b007f7337a444964275ee2462f5e5bb351662e867c"
+    },
+    {
+      "pdf_page": 173,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "815c1514db1037e628acd4db224671cb8017b804e2f6e78cd26e32e4ed0d15d0",
+      "after_masked_pixels_sha256": "815c1514db1037e628acd4db224671cb8017b804e2f6e78cd26e32e4ed0d15d0"
+    },
+    {
+      "pdf_page": 174,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "740c49552a31ffab88f93371c9635b3b73232d2e3134d7a2a04f02b97d7cb2b7",
+      "after_masked_pixels_sha256": "740c49552a31ffab88f93371c9635b3b73232d2e3134d7a2a04f02b97d7cb2b7"
+    },
+    {
+      "pdf_page": 175,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "36139ae98e3d5f1e0b71262bb4b23526cf608194d995a4a776ac738c84ca39f2",
+      "after_masked_pixels_sha256": "36139ae98e3d5f1e0b71262bb4b23526cf608194d995a4a776ac738c84ca39f2"
+    },
+    {
+      "pdf_page": 176,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "02b8d7426bbc997d7418973b3a19e74cd14af503c301b5ea272771e829fa3979",
+      "after_masked_pixels_sha256": "02b8d7426bbc997d7418973b3a19e74cd14af503c301b5ea272771e829fa3979"
+    },
+    {
+      "pdf_page": 177,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "d13d57c65ad4ef3a0351817296e49c26e0d15aae14ce6dc733621bf9f8902d18",
+      "after_masked_pixels_sha256": "d13d57c65ad4ef3a0351817296e49c26e0d15aae14ce6dc733621bf9f8902d18"
+    },
+    {
+      "pdf_page": 178,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "531cb2b869fe17086b53c0648a6ece6fef9bba16d03909e53a09652ce4eb4557",
+      "after_masked_pixels_sha256": "531cb2b869fe17086b53c0648a6ece6fef9bba16d03909e53a09652ce4eb4557"
+    },
+    {
+      "pdf_page": 179,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "3393cb7e3787d015192a900cab3bc13c387b8d148d35546a6c89e82357416441",
+      "after_masked_pixels_sha256": "3393cb7e3787d015192a900cab3bc13c387b8d148d35546a6c89e82357416441"
+    },
+    {
+      "pdf_page": 180,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "de417e4449d4f77eb76036c66b09310cba9d94f3945cf06aca29646518d879dd",
+      "after_masked_pixels_sha256": "de417e4449d4f77eb76036c66b09310cba9d94f3945cf06aca29646518d879dd"
+    },
+    {
+      "pdf_page": 181,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "c087b519d7eaf9f0e663e70c4795c0a01f4799d114339d46037123f27e17b190",
+      "after_masked_pixels_sha256": "c087b519d7eaf9f0e663e70c4795c0a01f4799d114339d46037123f27e17b190"
+    },
+    {
+      "pdf_page": 182,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "f055ebd488408fbcf051569120490038e21b4aa3eba64d1f535cc6093ac4fc8d",
+      "after_masked_pixels_sha256": "f055ebd488408fbcf051569120490038e21b4aa3eba64d1f535cc6093ac4fc8d"
+    },
+    {
+      "pdf_page": 183,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "231872d0ef974ed70b7b0f3fe8ca64eb943e514890b8d2bb715908d70f0fc473",
+      "after_masked_pixels_sha256": "231872d0ef974ed70b7b0f3fe8ca64eb943e514890b8d2bb715908d70f0fc473"
+    },
+    {
+      "pdf_page": 184,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "2707738e08effae45738f3ff5d0d088cf5a81ee072ae0f4b97a1db09d2d88074",
+      "after_masked_pixels_sha256": "2707738e08effae45738f3ff5d0d088cf5a81ee072ae0f4b97a1db09d2d88074"
+    },
+    {
+      "pdf_page": 185,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "8a5713db1bbbf6559382a1a90cc9bce802449bb8be14f05ee9363bff8ab656c5",
+      "after_masked_pixels_sha256": "8a5713db1bbbf6559382a1a90cc9bce802449bb8be14f05ee9363bff8ab656c5"
+    },
+    {
+      "pdf_page": 186,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "c33b1422ae35bc460555bb95e90c2f87f7349300a3b62bc78edd6e3b6a38b80d",
+      "after_masked_pixels_sha256": "c33b1422ae35bc460555bb95e90c2f87f7349300a3b62bc78edd6e3b6a38b80d"
+    },
+    {
+      "pdf_page": 187,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "4b267fe9e7ade29bdf427410205c1d47181d6d1aef09f37ad4cfb090878f4d79",
+      "after_masked_pixels_sha256": "4b267fe9e7ade29bdf427410205c1d47181d6d1aef09f37ad4cfb090878f4d79"
+    },
+    {
+      "pdf_page": 188,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "44edc4edcf7218c19ce1eea24c4084c0ad5da3628ab6cb92b54a8fe4e8882105",
+      "after_masked_pixels_sha256": "44edc4edcf7218c19ce1eea24c4084c0ad5da3628ab6cb92b54a8fe4e8882105"
+    },
+    {
+      "pdf_page": 189,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "f792cf99102ecadc20b06d62c193c7dd5bda671b61543410ee281699250f7ac7",
+      "after_masked_pixels_sha256": "f792cf99102ecadc20b06d62c193c7dd5bda671b61543410ee281699250f7ac7"
+    },
+    {
+      "pdf_page": 190,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "de0fa203026e9efbafeb4e76c8f22d86713045f8f6163066fc402f22a456b4a0",
+      "after_masked_pixels_sha256": "de0fa203026e9efbafeb4e76c8f22d86713045f8f6163066fc402f22a456b4a0"
+    },
+    {
+      "pdf_page": 191,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "cb11b46279e40c752e187a6ad7dafa31f7e27f8cd375cb4c4d46e6412961b9c7",
+      "after_masked_pixels_sha256": "cb11b46279e40c752e187a6ad7dafa31f7e27f8cd375cb4c4d46e6412961b9c7"
+    },
+    {
+      "pdf_page": 192,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "c3e6069d79af86f9485762c10d4e3584db076233ae7e39e00b6f3c3756dfe6d3",
+      "after_masked_pixels_sha256": "c3e6069d79af86f9485762c10d4e3584db076233ae7e39e00b6f3c3756dfe6d3"
+    },
+    {
+      "pdf_page": 193,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "0f81c61ebf50926b359a624bcddabdaebf871affc2849df9ad55768308f8e48d",
+      "after_masked_pixels_sha256": "0f81c61ebf50926b359a624bcddabdaebf871affc2849df9ad55768308f8e48d"
+    },
+    {
+      "pdf_page": 194,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "9d24c5ce972a41a117c8805a28d7d6fc03f9ee3a7a8bab00e690ab7f2206d281",
+      "after_masked_pixels_sha256": "9d24c5ce972a41a117c8805a28d7d6fc03f9ee3a7a8bab00e690ab7f2206d281"
+    },
+    {
+      "pdf_page": 195,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "3f461265ce73298d474067a2651b8a69fb89006546a7323bf36fb99b6fc08e6a",
+      "after_masked_pixels_sha256": "3f461265ce73298d474067a2651b8a69fb89006546a7323bf36fb99b6fc08e6a"
+    },
+    {
+      "pdf_page": 196,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "f3ba4047b0d47aa6d9bb9c5319eab5cb1b87d0607b8f4f74c640eee55894af97",
+      "after_masked_pixels_sha256": "f3ba4047b0d47aa6d9bb9c5319eab5cb1b87d0607b8f4f74c640eee55894af97"
+    },
+    {
+      "pdf_page": 197,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "3347119a075ddcab874fbb8011af073332217466c3894a0bdd0d0d4125381ed4",
+      "after_masked_pixels_sha256": "3347119a075ddcab874fbb8011af073332217466c3894a0bdd0d0d4125381ed4"
+    },
+    {
+      "pdf_page": 198,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "07ba7954b66a2a2a4cd727b78dad79b5981b2118bc80e89f8c15bbcf609bf20c",
+      "after_masked_pixels_sha256": "07ba7954b66a2a2a4cd727b78dad79b5981b2118bc80e89f8c15bbcf609bf20c"
+    },
+    {
+      "pdf_page": 199,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "7352afbfc204c4c276ac56f38a371849d6e9701452e9ff155d38e65a8ea2f70d",
+      "after_masked_pixels_sha256": "7352afbfc204c4c276ac56f38a371849d6e9701452e9ff155d38e65a8ea2f70d"
+    },
+    {
+      "pdf_page": 200,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "786bf6629cd9dee953a116e7420579c638375a579f65e9012a4abb25d04b0e3c",
+      "after_masked_pixels_sha256": "786bf6629cd9dee953a116e7420579c638375a579f65e9012a4abb25d04b0e3c"
+    },
+    {
+      "pdf_page": 201,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "8b1f77d56389abf9424d69e0ad38d1ddcc0ec750e65dea9bbb5ac1db81e537ad",
+      "after_masked_pixels_sha256": "8b1f77d56389abf9424d69e0ad38d1ddcc0ec750e65dea9bbb5ac1db81e537ad"
+    },
+    {
+      "pdf_page": 202,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "5e20b6309a3aa6175364110758de56e39b45054a42b822380e32e0ae517cf632",
+      "after_masked_pixels_sha256": "5e20b6309a3aa6175364110758de56e39b45054a42b822380e32e0ae517cf632"
+    },
+    {
+      "pdf_page": 203,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "670f230b1ca57207b494e8111f2e1118c923d4d7f9187362e0017fd09928695c",
+      "after_masked_pixels_sha256": "670f230b1ca57207b494e8111f2e1118c923d4d7f9187362e0017fd09928695c"
+    },
+    {
+      "pdf_page": 204,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "766c8ac6805ad4d4463ceff1d441c700527603e8be753c5baec2de54d7ba990b",
+      "after_masked_pixels_sha256": "766c8ac6805ad4d4463ceff1d441c700527603e8be753c5baec2de54d7ba990b"
+    },
+    {
+      "pdf_page": 205,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "a8c8bd52de53fadebd0e175c72d5faa9e0ff8ab0fb4ea7b27c377e719d36bb17",
+      "after_masked_pixels_sha256": "a8c8bd52de53fadebd0e175c72d5faa9e0ff8ab0fb4ea7b27c377e719d36bb17"
+    },
+    {
+      "pdf_page": 206,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "3e16255b4afadefe2654e14935cbcf9c5715cb5ba0b3139ca6a8601722c85a62",
+      "after_masked_pixels_sha256": "3e16255b4afadefe2654e14935cbcf9c5715cb5ba0b3139ca6a8601722c85a62"
+    },
+    {
+      "pdf_page": 207,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "574661bfd4d443e88a5ec79a7ddbda6869f2c2c58624a85e52c937e8d485dfd2",
+      "after_masked_pixels_sha256": "574661bfd4d443e88a5ec79a7ddbda6869f2c2c58624a85e52c937e8d485dfd2"
+    },
+    {
+      "pdf_page": 208,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "c7efd345eb5405a6fffa9b0d68801af655fcd46804c5a465e45f43d54ae5ae41",
+      "after_masked_pixels_sha256": "c7efd345eb5405a6fffa9b0d68801af655fcd46804c5a465e45f43d54ae5ae41"
+    },
+    {
+      "pdf_page": 209,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "0f576815cb46af06906bd6cbe48511dc4698351a407a54f99ae6229defce928f",
+      "after_masked_pixels_sha256": "0f576815cb46af06906bd6cbe48511dc4698351a407a54f99ae6229defce928f"
+    },
+    {
+      "pdf_page": 210,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "1a8ea481d033c58e949992292dd7cd778ca5e83eabe231f95ad886d7a902e720",
+      "after_masked_pixels_sha256": "1a8ea481d033c58e949992292dd7cd778ca5e83eabe231f95ad886d7a902e720"
+    },
+    {
+      "pdf_page": 211,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "bf06ad90c3a761a4caae4962c166cf84d3a62153afcf071f917dee8e6ed176ee",
+      "after_masked_pixels_sha256": "bf06ad90c3a761a4caae4962c166cf84d3a62153afcf071f917dee8e6ed176ee"
+    },
+    {
+      "pdf_page": 212,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "9fb21d56e0e726621088dbabdbcc57d9c00d2fc666c6742ec2e8772db787ee60",
+      "after_masked_pixels_sha256": "9fb21d56e0e726621088dbabdbcc57d9c00d2fc666c6742ec2e8772db787ee60"
+    },
+    {
+      "pdf_page": 213,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "9bbe219a4aab8c8ee03fc53bfeb6ba56a468535be66224ef6f6d9015ed1af28e",
+      "after_masked_pixels_sha256": "9bbe219a4aab8c8ee03fc53bfeb6ba56a468535be66224ef6f6d9015ed1af28e"
+    },
+    {
+      "pdf_page": 214,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "6d5272749de3b4d60d3f0f9d02b0bdb2d699facac9f8d335cda7c68b9eb98abb",
+      "after_masked_pixels_sha256": "6d5272749de3b4d60d3f0f9d02b0bdb2d699facac9f8d335cda7c68b9eb98abb"
+    },
+    {
+      "pdf_page": 215,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "8d06894376db8842e246b26c03a9475de1e19f6cba6131ed0a4c81d0c4dad78a",
+      "after_masked_pixels_sha256": "8d06894376db8842e246b26c03a9475de1e19f6cba6131ed0a4c81d0c4dad78a"
+    },
+    {
+      "pdf_page": 216,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "6abafce4e5a7c9b443a53cfcbfb9c0228a2e470a3a3b3b08b6efff8397bab6be",
+      "after_masked_pixels_sha256": "6abafce4e5a7c9b443a53cfcbfb9c0228a2e470a3a3b3b08b6efff8397bab6be"
+    },
+    {
+      "pdf_page": 217,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "174e45deebab640c09d2b0aeff33c863f603a69461e46f5fbf318b54241b4397",
+      "after_masked_pixels_sha256": "174e45deebab640c09d2b0aeff33c863f603a69461e46f5fbf318b54241b4397"
+    },
+    {
+      "pdf_page": 218,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "7762f584f9687c85a68cae88f748630e5d100ebb0a4920809c3f838f8da05fc1",
+      "after_masked_pixels_sha256": "7762f584f9687c85a68cae88f748630e5d100ebb0a4920809c3f838f8da05fc1"
+    },
+    {
+      "pdf_page": 219,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "ec19d4a208f993028e1b7ff672d7cb9e1cd125d9fdab787c34979804d6f4a691",
+      "after_masked_pixels_sha256": "ec19d4a208f993028e1b7ff672d7cb9e1cd125d9fdab787c34979804d6f4a691"
+    },
+    {
+      "pdf_page": 220,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "ac6f484c90aa178e83279c2417c7dd79537fdcb9dc05953f75a253a948033f77",
+      "after_masked_pixels_sha256": "ac6f484c90aa178e83279c2417c7dd79537fdcb9dc05953f75a253a948033f77"
+    },
+    {
+      "pdf_page": 221,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "f126fc5be4080e5fdec4a9b3dfc8434206118e4bdea0ff632092e5572310befd",
+      "after_masked_pixels_sha256": "f126fc5be4080e5fdec4a9b3dfc8434206118e4bdea0ff632092e5572310befd"
+    },
+    {
+      "pdf_page": 222,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "344b7774303e88d2d8951ded01c684183842d76121d1be0ac66b82378b225151",
+      "after_masked_pixels_sha256": "344b7774303e88d2d8951ded01c684183842d76121d1be0ac66b82378b225151"
+    },
+    {
+      "pdf_page": 223,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "2aaeda45e53bf3b2d1f74fca4379e0106cdf41677c4072c5edcf6921cc8b5b36",
+      "after_masked_pixels_sha256": "2aaeda45e53bf3b2d1f74fca4379e0106cdf41677c4072c5edcf6921cc8b5b36"
+    },
+    {
+      "pdf_page": 224,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "b9c6cd9e48d18d94b654b09add08a485a19a00eeed1fea544632b38fc423938b",
+      "after_masked_pixels_sha256": "b9c6cd9e48d18d94b654b09add08a485a19a00eeed1fea544632b38fc423938b"
+    },
+    {
+      "pdf_page": 225,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "16e25653427cbc74d58306ef1f40e3a1b9b1f4cf3888620e27155a2f36422eb4",
+      "after_masked_pixels_sha256": "16e25653427cbc74d58306ef1f40e3a1b9b1f4cf3888620e27155a2f36422eb4"
+    },
+    {
+      "pdf_page": 226,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "4254019532254c1f218b66d9cdbb1dfa788381d37d61de127397a6d8ef7f2813",
+      "after_masked_pixels_sha256": "4254019532254c1f218b66d9cdbb1dfa788381d37d61de127397a6d8ef7f2813"
+    },
+    {
+      "pdf_page": 227,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "7ebc4a731e06a2d5d738e22201c6ca6be3ad0380eee30ba2691fb10e9a05e587",
+      "after_masked_pixels_sha256": "7ebc4a731e06a2d5d738e22201c6ca6be3ad0380eee30ba2691fb10e9a05e587"
+    },
+    {
+      "pdf_page": 228,
+      "nonprice_visual_changed": true,
+      "difference_bbox": [
+        128,
+        619,
+        315,
+        661
+      ],
+      "before_masked_pixels_sha256": "d871b54aee7504f34c4d0194f3351810c1d6bf46b0e72dd2986b251a4aa9da94",
+      "after_masked_pixels_sha256": "24b42102aaf87267b6bdfd54f304112017cc924f871db72e92ece67b413bd0e9"
+    },
+    {
+      "pdf_page": 229,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "a5c47a4c1b2ac966cacdc90b73de5fb2ca818fd4f48b5618742c2757956e9fde",
+      "after_masked_pixels_sha256": "a5c47a4c1b2ac966cacdc90b73de5fb2ca818fd4f48b5618742c2757956e9fde"
+    },
+    {
+      "pdf_page": 230,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "7e7a9f6ea6ab46f7ffacec894b7e93e2c47850cf41297cb5f40a57564ff877d2",
+      "after_masked_pixels_sha256": "7e7a9f6ea6ab46f7ffacec894b7e93e2c47850cf41297cb5f40a57564ff877d2"
+    },
+    {
+      "pdf_page": 231,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "340b11ef821dfa9c7d35929dee42ad9d4e0163a8d458a1147f5fcb6a536c90ed",
+      "after_masked_pixels_sha256": "340b11ef821dfa9c7d35929dee42ad9d4e0163a8d458a1147f5fcb6a536c90ed"
+    },
+    {
+      "pdf_page": 232,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "c91a10045e9c10350dde52ee3667581c1c6094e33c8a240484b85e21df0424a8",
+      "after_masked_pixels_sha256": "c91a10045e9c10350dde52ee3667581c1c6094e33c8a240484b85e21df0424a8"
+    },
+    {
+      "pdf_page": 233,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "033b0ac725c24129e76f7dcfffd3c4209c341867f13a3244b5e00a047fd517e8",
+      "after_masked_pixels_sha256": "033b0ac725c24129e76f7dcfffd3c4209c341867f13a3244b5e00a047fd517e8"
+    },
+    {
+      "pdf_page": 234,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "6c793d605101391003eb0251a18ca564b04dac3a0a4550ca7eeed411172a9929",
+      "after_masked_pixels_sha256": "6c793d605101391003eb0251a18ca564b04dac3a0a4550ca7eeed411172a9929"
+    },
+    {
+      "pdf_page": 235,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "50a5cec4f96aece502a06a173c742da1aacec38039734df6c59178436b4069ca",
+      "after_masked_pixels_sha256": "50a5cec4f96aece502a06a173c742da1aacec38039734df6c59178436b4069ca"
+    },
+    {
+      "pdf_page": 236,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "a8d02896194eb1919d3fe021ae7058ef0a8d1f4aea2cc43973fbcd99eaae1c57",
+      "after_masked_pixels_sha256": "a8d02896194eb1919d3fe021ae7058ef0a8d1f4aea2cc43973fbcd99eaae1c57"
+    },
+    {
+      "pdf_page": 237,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "cea52eed90c358d8670cc2a44d79a173e05344420a6306dfa3ffd87ca64780ec",
+      "after_masked_pixels_sha256": "cea52eed90c358d8670cc2a44d79a173e05344420a6306dfa3ffd87ca64780ec"
+    },
+    {
+      "pdf_page": 238,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "d464ddbf63b14be08f4cd25cba07e2a8d31f66366bda3f82671850a066b122ce",
+      "after_masked_pixels_sha256": "d464ddbf63b14be08f4cd25cba07e2a8d31f66366bda3f82671850a066b122ce"
+    },
+    {
+      "pdf_page": 239,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "cdd2361ab42b6388c489380e7b439bac17d6e5ac6ca66f6ec4a55ac982081487",
+      "after_masked_pixels_sha256": "cdd2361ab42b6388c489380e7b439bac17d6e5ac6ca66f6ec4a55ac982081487"
+    },
+    {
+      "pdf_page": 240,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "3144621201ff94badcdd7d5bf74a82cad5783f8f7f8a389b07b9950d1a9b2465",
+      "after_masked_pixels_sha256": "3144621201ff94badcdd7d5bf74a82cad5783f8f7f8a389b07b9950d1a9b2465"
+    },
+    {
+      "pdf_page": 241,
+      "nonprice_visual_changed": true,
+      "difference_bbox": [
+        291,
+        599,
+        333,
+        600
+      ],
+      "before_masked_pixels_sha256": "7e3b858fe4a6e9be1b7e46e68294756127e87fab3a0afa9a4026b426beb6319f",
+      "after_masked_pixels_sha256": "a69463a1e2ce06e2325fddf775fd390a6f189b7ae8de0f3537a16dc1c2e3fe58"
+    },
+    {
+      "pdf_page": 242,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "f523019ff0a22905638091c1d04fe5a30679e47b44b740e4c6855efa9f0e0e90",
+      "after_masked_pixels_sha256": "f523019ff0a22905638091c1d04fe5a30679e47b44b740e4c6855efa9f0e0e90"
+    },
+    {
+      "pdf_page": 243,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "767e9047039d8f8e331a7637e475100a18ed756c0bf943248438fafe7b938e97",
+      "after_masked_pixels_sha256": "767e9047039d8f8e331a7637e475100a18ed756c0bf943248438fafe7b938e97"
+    },
+    {
+      "pdf_page": 244,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "b4a1b1c5417cf80ead146dd2083c9c48c36f3db58712429f9664b5eae5d575f0",
+      "after_masked_pixels_sha256": "b4a1b1c5417cf80ead146dd2083c9c48c36f3db58712429f9664b5eae5d575f0"
+    },
+    {
+      "pdf_page": 245,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "c70522bb63e809b5281cda95d8c1c4164582be1c9ab89a9221151c7a179ee192",
+      "after_masked_pixels_sha256": "c70522bb63e809b5281cda95d8c1c4164582be1c9ab89a9221151c7a179ee192"
+    },
+    {
+      "pdf_page": 246,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "96e9e57bd3ce688b4a64a72dec3ec641190008ec0c2e6f0069334f1785e50d5f",
+      "after_masked_pixels_sha256": "96e9e57bd3ce688b4a64a72dec3ec641190008ec0c2e6f0069334f1785e50d5f"
+    },
+    {
+      "pdf_page": 247,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "87bdf0a3ac1901d594d262012a730252424e4a0f4d55d29eb4e856674057743e",
+      "after_masked_pixels_sha256": "87bdf0a3ac1901d594d262012a730252424e4a0f4d55d29eb4e856674057743e"
+    },
+    {
+      "pdf_page": 248,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "b9dcf6b8cb67ad7cff0fe49ef35f9cc658df0ff3d816c049133bfb8ab9a045a9",
+      "after_masked_pixels_sha256": "b9dcf6b8cb67ad7cff0fe49ef35f9cc658df0ff3d816c049133bfb8ab9a045a9"
+    },
+    {
+      "pdf_page": 249,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "cf0d96f3b8159d631f965b06be9d74079e203e7abfa124dd577f87ba2ff1040b",
+      "after_masked_pixels_sha256": "cf0d96f3b8159d631f965b06be9d74079e203e7abfa124dd577f87ba2ff1040b"
+    },
+    {
+      "pdf_page": 250,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "0890ec0a40679891a25d2fa00853568322aa7ba292efd00f80bfb97f08791515",
+      "after_masked_pixels_sha256": "0890ec0a40679891a25d2fa00853568322aa7ba292efd00f80bfb97f08791515"
+    },
+    {
+      "pdf_page": 251,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "cdef14f5895a2794f6d1bafec9e97d0e6aba592d80259da3c0c43beffc8d8957",
+      "after_masked_pixels_sha256": "cdef14f5895a2794f6d1bafec9e97d0e6aba592d80259da3c0c43beffc8d8957"
+    },
+    {
+      "pdf_page": 252,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "ced547131009ce42d8ee00e4976694cc5079e2516332a1a079d9a8f9965d0a40",
+      "after_masked_pixels_sha256": "ced547131009ce42d8ee00e4976694cc5079e2516332a1a079d9a8f9965d0a40"
+    },
+    {
+      "pdf_page": 253,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "3a95f68f73a31c7da0748ba97025a2cde72001d5056e8394e7b81ee2047447e1",
+      "after_masked_pixels_sha256": "3a95f68f73a31c7da0748ba97025a2cde72001d5056e8394e7b81ee2047447e1"
+    },
+    {
+      "pdf_page": 254,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "43344c3d7b808860fd0ac89dca6389d7ed39b1fe0a897c1bed8d36ee3566e8f7",
+      "after_masked_pixels_sha256": "43344c3d7b808860fd0ac89dca6389d7ed39b1fe0a897c1bed8d36ee3566e8f7"
+    },
+    {
+      "pdf_page": 255,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "e9eff2b3cc11cebdee21d796cc7c7bc68ba12d21463431e109c2a1754bc12477",
+      "after_masked_pixels_sha256": "e9eff2b3cc11cebdee21d796cc7c7bc68ba12d21463431e109c2a1754bc12477"
+    },
+    {
+      "pdf_page": 256,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "7f94e2986fdc5317dce6b2e62ee5e5c3c430792d6bf9e205310044cd43e33f88",
+      "after_masked_pixels_sha256": "7f94e2986fdc5317dce6b2e62ee5e5c3c430792d6bf9e205310044cd43e33f88"
+    },
+    {
+      "pdf_page": 257,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "7606e662293f882ae18eb3a0676bc0ee323de476609ea4f5b674448bbb6740a8",
+      "after_masked_pixels_sha256": "7606e662293f882ae18eb3a0676bc0ee323de476609ea4f5b674448bbb6740a8"
+    },
+    {
+      "pdf_page": 258,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "492841b996e50f742fabd2601ad681a817e416c16d317ffa94d6b4ffc6e590bf",
+      "after_masked_pixels_sha256": "492841b996e50f742fabd2601ad681a817e416c16d317ffa94d6b4ffc6e590bf"
+    },
+    {
+      "pdf_page": 259,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "64584d03bb717bac632909d7c2e63d2ff21bdb4494c034ad50c77283652f7f28",
+      "after_masked_pixels_sha256": "64584d03bb717bac632909d7c2e63d2ff21bdb4494c034ad50c77283652f7f28"
+    },
+    {
+      "pdf_page": 260,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "1d3243ca311c22cd44ae410abb5e26c9222e85f5c9004feffe9ef4e1538ae153",
+      "after_masked_pixels_sha256": "1d3243ca311c22cd44ae410abb5e26c9222e85f5c9004feffe9ef4e1538ae153"
+    },
+    {
+      "pdf_page": 261,
+      "nonprice_visual_changed": true,
+      "difference_bbox": [
+        291,
+        588,
+        333,
+        589
+      ],
+      "before_masked_pixels_sha256": "5e6f180434b96800274a8a6573d4ff8686296e9b248cc207506e4422f6053226",
+      "after_masked_pixels_sha256": "dc7078199c67b958827e13d6709e52dd7d6efb0b128730522ee413ebd994effd"
+    },
+    {
+      "pdf_page": 262,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "2ff6e27104d0d84f7c65af45e6aeda14e919d1c650709ab96fcea05e0296c660",
+      "after_masked_pixels_sha256": "2ff6e27104d0d84f7c65af45e6aeda14e919d1c650709ab96fcea05e0296c660"
+    },
+    {
+      "pdf_page": 263,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "a1b892221a5f0f7fc147bd40198e4a5e4393a743d232c1a88a025fa0a0bbc661",
+      "after_masked_pixels_sha256": "a1b892221a5f0f7fc147bd40198e4a5e4393a743d232c1a88a025fa0a0bbc661"
+    },
+    {
+      "pdf_page": 264,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "5822166cac9931fd584a310f512fa9b612ad71964c0a6f6fa33bfc386f0a87c2",
+      "after_masked_pixels_sha256": "5822166cac9931fd584a310f512fa9b612ad71964c0a6f6fa33bfc386f0a87c2"
+    },
+    {
+      "pdf_page": 265,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "2a977834604d0196c3666acb9d95bb84072e02a7a105e87d1101360cf56d31a8",
+      "after_masked_pixels_sha256": "2a977834604d0196c3666acb9d95bb84072e02a7a105e87d1101360cf56d31a8"
+    },
+    {
+      "pdf_page": 266,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "1fb92bf23fd253f7702511ed9cb639de8360a1d4966d3d3964da8bbe7689573f",
+      "after_masked_pixels_sha256": "1fb92bf23fd253f7702511ed9cb639de8360a1d4966d3d3964da8bbe7689573f"
+    },
+    {
+      "pdf_page": 267,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "2439ccfd5f100f682530f3bf72418ec788c2760c13cfea5493b25da0c87e138c",
+      "after_masked_pixels_sha256": "2439ccfd5f100f682530f3bf72418ec788c2760c13cfea5493b25da0c87e138c"
+    },
+    {
+      "pdf_page": 268,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "812c353dffee32f7c5fc914c565b0e103e5bb171138b3aef1277b84cef1cd7ca",
+      "after_masked_pixels_sha256": "812c353dffee32f7c5fc914c565b0e103e5bb171138b3aef1277b84cef1cd7ca"
+    },
+    {
+      "pdf_page": 269,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "eb0252b80b86a30fee7cdacf5eb52b3039d3f0d090b5c09c682c0b313f524700",
+      "after_masked_pixels_sha256": "eb0252b80b86a30fee7cdacf5eb52b3039d3f0d090b5c09c682c0b313f524700"
+    },
+    {
+      "pdf_page": 270,
+      "nonprice_visual_changed": true,
+      "difference_bbox": [
+        74,
+        617,
+        264,
+        694
+      ],
+      "before_masked_pixels_sha256": "e707a3f8f587cf09a94e574eecb8373b17881ef40db1042b690ff969f7955385",
+      "after_masked_pixels_sha256": "0001a3c07eaf4b770d489fb890c2e18a823a65c0159dc840a611f41df37c4f74"
+    },
+    {
+      "pdf_page": 271,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "8efabb4153eb7265ec17c513652919f2aa3daa272b666b1c7e3e5046f1e3aec8",
+      "after_masked_pixels_sha256": "8efabb4153eb7265ec17c513652919f2aa3daa272b666b1c7e3e5046f1e3aec8"
+    },
+    {
+      "pdf_page": 272,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "8ea5eb931cb27f7b40cacd51a95b04b9a40d24b303041b98392b31dbc939d3b7",
+      "after_masked_pixels_sha256": "8ea5eb931cb27f7b40cacd51a95b04b9a40d24b303041b98392b31dbc939d3b7"
+    },
+    {
+      "pdf_page": 273,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "c60b7629deb661abf1baa0a6dd127986069d0ae8af567cd83c2f44b3b5ad1a3d",
+      "after_masked_pixels_sha256": "c60b7629deb661abf1baa0a6dd127986069d0ae8af567cd83c2f44b3b5ad1a3d"
+    },
+    {
+      "pdf_page": 274,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "db2989ad35597ae4d086a73f0add333dd30ab7e80edfdf2dd02b6bdcb8f152c8",
+      "after_masked_pixels_sha256": "db2989ad35597ae4d086a73f0add333dd30ab7e80edfdf2dd02b6bdcb8f152c8"
+    },
+    {
+      "pdf_page": 275,
+      "nonprice_visual_changed": true,
+      "difference_bbox": [
+        58,
+        747,
+        251,
+        764
+      ],
+      "before_masked_pixels_sha256": "239384028f088338569819ef2abd6caf833a2387298a797e5567f5e74a4f5c27",
+      "after_masked_pixels_sha256": "adc040363d8c2124c7636f9129a88c02d2996a8fa89e53f2a434507382dc7793"
+    },
+    {
+      "pdf_page": 276,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "e2888ad2e20ca4144e09c286b27a3b7a36ee1635d4a613ab721a4ffaf8dcefaa",
+      "after_masked_pixels_sha256": "e2888ad2e20ca4144e09c286b27a3b7a36ee1635d4a613ab721a4ffaf8dcefaa"
+    },
+    {
+      "pdf_page": 277,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "fcfcfd7ce9d4a71f7b1912bcbda8c34f3cde475f02ac69add85b5e7cd2ce747f",
+      "after_masked_pixels_sha256": "fcfcfd7ce9d4a71f7b1912bcbda8c34f3cde475f02ac69add85b5e7cd2ce747f"
+    },
+    {
+      "pdf_page": 278,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "a4f08c52bc207a1ebb245180d09f935dffc38a24985406698e86273f3dd806a4",
+      "after_masked_pixels_sha256": "a4f08c52bc207a1ebb245180d09f935dffc38a24985406698e86273f3dd806a4"
+    },
+    {
+      "pdf_page": 279,
+      "nonprice_visual_changed": true,
+      "difference_bbox": [
+        225,
+        664,
+        284,
+        668
+      ],
+      "before_masked_pixels_sha256": "298f2610fc8f2b13d77515c71f8c9cb8a718da3ab11de0677659216affae15e1",
+      "after_masked_pixels_sha256": "68484d293c5dba1831573ab981b654a3262672d761aed67a2b6db204958dbd2a"
+    },
+    {
+      "pdf_page": 280,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "b8e357e1095b55c6e10f7665eaeb0275534ce97806528073266e5c8eef66182f",
+      "after_masked_pixels_sha256": "b8e357e1095b55c6e10f7665eaeb0275534ce97806528073266e5c8eef66182f"
+    },
+    {
+      "pdf_page": 281,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "fde8ac230d2b1582c8c718acf19f542e17589919edb8e1a36dd28078087f7da1",
+      "after_masked_pixels_sha256": "fde8ac230d2b1582c8c718acf19f542e17589919edb8e1a36dd28078087f7da1"
+    },
+    {
+      "pdf_page": 282,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "e8b8c3dccbc7ce2160353087875fa58604d74b259272a655c18c6aee281c1d2d",
+      "after_masked_pixels_sha256": "e8b8c3dccbc7ce2160353087875fa58604d74b259272a655c18c6aee281c1d2d"
+    },
+    {
+      "pdf_page": 283,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "cf97c5bf1c20f0efb8b9dfd39bc605d235d8f075582ebea3682c94f199203b3c",
+      "after_masked_pixels_sha256": "cf97c5bf1c20f0efb8b9dfd39bc605d235d8f075582ebea3682c94f199203b3c"
+    },
+    {
+      "pdf_page": 284,
+      "nonprice_visual_changed": true,
+      "difference_bbox": [
+        244,
+        793,
+        291,
+        797
+      ],
+      "before_masked_pixels_sha256": "7efede309eb8c6b9a40b2888c6b99328d3446957c8c9384821096c305fd0a8e4",
+      "after_masked_pixels_sha256": "26d3d6e35f5d3403c7fd29e802264956ee4c85ed66cb915cc5d9151120b346a9"
+    },
+    {
+      "pdf_page": 285,
+      "nonprice_visual_changed": true,
+      "difference_bbox": [
+        214,
+        594,
+        261,
+        598
+      ],
+      "before_masked_pixels_sha256": "38ee276481820eb5cb5262e009b7c7c346a6b04467479d364d0a901a0d68d49d",
+      "after_masked_pixels_sha256": "507540e895662adc75505d91d253b78bc1f7d1ed13c33d78e78d26d897be7124"
+    },
+    {
+      "pdf_page": 286,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "01d6b1a1010b04e256c2c0a70e7dc6e86fc49e8c6ab423c4cb31890dffcbdecf",
+      "after_masked_pixels_sha256": "01d6b1a1010b04e256c2c0a70e7dc6e86fc49e8c6ab423c4cb31890dffcbdecf"
+    },
+    {
+      "pdf_page": 287,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "e707051ea1aab9e57ea0499be64af2a4327861479fdcaa7cf7c7da622b30c389",
+      "after_masked_pixels_sha256": "e707051ea1aab9e57ea0499be64af2a4327861479fdcaa7cf7c7da622b30c389"
+    },
+    {
+      "pdf_page": 288,
+      "nonprice_visual_changed": true,
+      "difference_bbox": [
+        255,
+        595,
+        313,
+        599
+      ],
+      "before_masked_pixels_sha256": "41beec5d6a0ae49f0cf8e8d58a436c3608ad7a67607cc363c2e160f4f6e0eec3",
+      "after_masked_pixels_sha256": "8243d9455d9f6f7114a41ac779fd62999b976a8be14d26d1092236ffca0a3587"
+    },
+    {
+      "pdf_page": 289,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "44b9fa0649be02ec8b05c3e705ba710a0ac59833b87923382ea0445295f49164",
+      "after_masked_pixels_sha256": "44b9fa0649be02ec8b05c3e705ba710a0ac59833b87923382ea0445295f49164"
+    },
+    {
+      "pdf_page": 290,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "062787158b9afc2a3c2876f311c210b5bdaf4aa645c5cb34b7b5fbc950e6ba97",
+      "after_masked_pixels_sha256": "062787158b9afc2a3c2876f311c210b5bdaf4aa645c5cb34b7b5fbc950e6ba97"
+    },
+    {
+      "pdf_page": 291,
+      "nonprice_visual_changed": true,
+      "difference_bbox": [
+        225,
+        595,
+        284,
+        599
+      ],
+      "before_masked_pixels_sha256": "ba047477a38503db5f86513cfc70bd7a60d78e8fbe63f4fdc80594baf76355d8",
+      "after_masked_pixels_sha256": "d85897d3e46e83358f64a2d571d3dd6fb57380d176d361809940f5079ebf330a"
+    },
+    {
+      "pdf_page": 292,
+      "nonprice_visual_changed": true,
+      "difference_bbox": [
+        10,
+        28,
+        548,
+        822
+      ],
+      "before_masked_pixels_sha256": "e1f7a1a58c7944f1e06f3d3f5fefac3118288f8efc11f7141ac55d56a023fdd1",
+      "after_masked_pixels_sha256": "8d4a128105ea22daee526a9d4820989549d081c1dd547db9de354ee435cd5944"
+    },
+    {
+      "pdf_page": 293,
+      "nonprice_visual_changed": true,
+      "difference_bbox": [
+        49,
+        28,
+        583,
+        822
+      ],
+      "before_masked_pixels_sha256": "fefc5b697728b9f23da78acdd4109ec20d44a76a0bb1787f531e7d3989671f06",
+      "after_masked_pixels_sha256": "89d5f28005a993cc46d6ecd7bdef4cb4f76a40135f42eea30b5cde3dd7a0e5a0"
+    },
+    {
+      "pdf_page": 294,
+      "nonprice_visual_changed": true,
+      "difference_bbox": [
+        10,
+        28,
+        546,
+        822
+      ],
+      "before_masked_pixels_sha256": "75830cb26cb9145cfd719c564b945272d7bf04f387d0d81a946d723a8c1910dd",
+      "after_masked_pixels_sha256": "44a77cf45cb03cdbaeff514817354bbd250d3fbefec4f3b1ef926d52f1e91d25"
+    },
+    {
+      "pdf_page": 295,
+      "nonprice_visual_changed": true,
+      "difference_bbox": [
+        50,
+        28,
+        583,
+        822
+      ],
+      "before_masked_pixels_sha256": "3b31a840118a8c78d0f8ba4809bc658febf6d5ba9d77bd4adcc080636433ff2f",
+      "after_masked_pixels_sha256": "89523179845728b07a8c18bbada5a6fb4260b734e6acf5e83bccc06b10265ed0"
+    },
+    {
+      "pdf_page": 296,
+      "nonprice_visual_changed": true,
+      "difference_bbox": [
+        10,
+        28,
+        558,
+        822
+      ],
+      "before_masked_pixels_sha256": "2c25c555c5caaf11a167084be2740b6c13460dbb11dad18f2c65a2682e0dcc8d",
+      "after_masked_pixels_sha256": "854f9ab70215254aaa2c634631c52ddd39709b3cf3d4cfb0615333e6eb8171e1"
+    },
+    {
+      "pdf_page": 297,
+      "nonprice_visual_changed": true,
+      "difference_bbox": [
+        50,
+        28,
+        583,
+        822
+      ],
+      "before_masked_pixels_sha256": "72142131ca0216260975cbc9b8d54520984eb80f9f0022935b328bf0831f4a27",
+      "after_masked_pixels_sha256": "e888050bb3bab02922ee102cdb7357122a05a2b625a13b005727c9f1e0ae439e"
+    },
+    {
+      "pdf_page": 298,
+      "nonprice_visual_changed": true,
+      "difference_bbox": [
+        10,
+        28,
+        502,
+        822
+      ],
+      "before_masked_pixels_sha256": "3d73caa7633d6c5b78abe9f87612ee0f6746c71c3fa1e40f5d67c4ef68d3a868",
+      "after_masked_pixels_sha256": "eb2d99c20787e20fbafba2ddbfc3e7c9aecc0e0d0d995248e1c75b35c117e8c9"
+    },
+    {
+      "pdf_page": 299,
+      "nonprice_visual_changed": true,
+      "difference_bbox": [
+        55,
+        28,
+        583,
+        822
+      ],
+      "before_masked_pixels_sha256": "ba676b0c57776c0c71d340fec2d618526870ce10a99449e20c01e9e705b7f485",
+      "after_masked_pixels_sha256": "1803f1f1baf31e5f300bc68bfface660c357747a11078ba3bbe015ac1e02200a"
+    },
+    {
+      "pdf_page": 300,
+      "nonprice_visual_changed": true,
+      "difference_bbox": [
+        10,
+        28,
+        539,
+        822
+      ],
+      "before_masked_pixels_sha256": "87aeb1338f52aa5ad74dd74f7d14b182b10e975645d9496db76f81375880eca3",
+      "after_masked_pixels_sha256": "12efe4097777b238cc04db66768b75517879b641a2e79f1eca919b41319d0b15"
+    },
+    {
+      "pdf_page": 301,
+      "nonprice_visual_changed": true,
+      "difference_bbox": [
+        48,
+        28,
+        583,
+        822
+      ],
+      "before_masked_pixels_sha256": "c3a8935cae556ee9e0677d532de7b664b47e174449cca5100645bb8308b71ae6",
+      "after_masked_pixels_sha256": "b866dc130b9fe06cab8c41d26f1578b72f17f928a09ec0816527b4fb96359a87"
+    },
+    {
+      "pdf_page": 302,
+      "nonprice_visual_changed": true,
+      "difference_bbox": [
+        10,
+        28,
+        549,
+        822
+      ],
+      "before_masked_pixels_sha256": "1001b447abe2a460000a922c92e9ece98c12da56c88782398ec82989b925bca6",
+      "after_masked_pixels_sha256": "bfc3f2e9aacf7484eba0ba1f91df50778ebb269fbd624ee9af63d59e4b7ab2f8"
+    },
+    {
+      "pdf_page": 303,
+      "nonprice_visual_changed": true,
+      "difference_bbox": [
+        71,
+        28,
+        583,
+        822
+      ],
+      "before_masked_pixels_sha256": "1d7445ff198a7400f39d6e8802150c7d9177aae13627633aa224a8ce83a87043",
+      "after_masked_pixels_sha256": "89ec18a0e3986296972f736e5960c37e6ff5d9506f270b274e3641913bfced61"
+    },
+    {
+      "pdf_page": 304,
+      "nonprice_visual_changed": true,
+      "difference_bbox": [
+        10,
+        28,
+        548,
+        822
+      ],
+      "before_masked_pixels_sha256": "baf07466d98c88621be22ae33593a34ac85795585a1ed62cb2781f3c58819e19",
+      "after_masked_pixels_sha256": "0ac6f4d4d5c096f78253d3389b43aaeb3f0439f288cdf25e0061d36484b9c030"
+    },
+    {
+      "pdf_page": 305,
+      "nonprice_visual_changed": true,
+      "difference_bbox": [
+        70,
+        28,
+        583,
+        822
+      ],
+      "before_masked_pixels_sha256": "6140c1b1cda1e744e0a704a585d162e51cd06ce1171f16a7e65ecf8e18f54796",
+      "after_masked_pixels_sha256": "e82bb93709392c6bae14b40bf1e12b86a3aa94c025d3911cd964adc9dd561b21"
+    },
+    {
+      "pdf_page": 306,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "93c73d8155e0f7dea284b93da5032331ce308ace21de72df6074c93a72688802",
+      "after_masked_pixels_sha256": "93c73d8155e0f7dea284b93da5032331ce308ace21de72df6074c93a72688802"
+    },
+    {
+      "pdf_page": 307,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "19cf6bc641597b225ee75d2a44c1b28e1715081f893d99fbd742cc453074ab24",
+      "after_masked_pixels_sha256": "19cf6bc641597b225ee75d2a44c1b28e1715081f893d99fbd742cc453074ab24"
+    },
+    {
+      "pdf_page": 308,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "20b6d78203540b2408bd8e56ea50249da1150883df5d30e190b425ab1e5e0a94",
+      "after_masked_pixels_sha256": "20b6d78203540b2408bd8e56ea50249da1150883df5d30e190b425ab1e5e0a94"
+    },
+    {
+      "pdf_page": 309,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "2a63d2134348b7e3f5def1459b5654220a6a30da53301ed281fd58867fcd0534",
+      "after_masked_pixels_sha256": "2a63d2134348b7e3f5def1459b5654220a6a30da53301ed281fd58867fcd0534"
+    },
+    {
+      "pdf_page": 310,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "dff53f833890864fe26fced5c848a74ab7972e4352248db246f83878ec48caff",
+      "after_masked_pixels_sha256": "dff53f833890864fe26fced5c848a74ab7972e4352248db246f83878ec48caff"
+    },
+    {
+      "pdf_page": 311,
+      "nonprice_visual_changed": true,
+      "difference_bbox": [
+        131,
+        518,
+        491,
+        799
+      ],
+      "before_masked_pixels_sha256": "0f6cf03439d9408a9943673b0d195581cc873211cbe1696f1fedc1d2e9cf2d42",
+      "after_masked_pixels_sha256": "3e15e73c1c25c320c58b0dc565c9beb5624708a8d67b3c264006c533f5360db5"
+    },
+    {
+      "pdf_page": 312,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "31a50c3064ed844b9c543c6b5f5e0928e29944f2ee9b62cde41957354be02637",
+      "after_masked_pixels_sha256": "31a50c3064ed844b9c543c6b5f5e0928e29944f2ee9b62cde41957354be02637"
+    },
+    {
+      "pdf_page": 313,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "326c247e6f5748a6bb896d3924fa65d9569354aaddd391e8806c9eefc4353d10",
+      "after_masked_pixels_sha256": "326c247e6f5748a6bb896d3924fa65d9569354aaddd391e8806c9eefc4353d10"
+    },
+    {
+      "pdf_page": 314,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "22f0bc4180892420e71f5c1fca7ea9ef93f9175a681310df486c9340f44b49d6",
+      "after_masked_pixels_sha256": "22f0bc4180892420e71f5c1fca7ea9ef93f9175a681310df486c9340f44b49d6"
+    },
+    {
+      "pdf_page": 315,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "90b03b43037795f0818fc24cb4077064d13a8cdb18e4a4146198d69c8c792fe6",
+      "after_masked_pixels_sha256": "90b03b43037795f0818fc24cb4077064d13a8cdb18e4a4146198d69c8c792fe6"
+    },
+    {
+      "pdf_page": 316,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "e73bc20939dd135257d2c437b36fa6386396312cfce4e875b0021bf843ffefec",
+      "after_masked_pixels_sha256": "e73bc20939dd135257d2c437b36fa6386396312cfce4e875b0021bf843ffefec"
+    },
+    {
+      "pdf_page": 317,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "7242dda7b3446d7751f1ffe602bc455c146bf9e39d55d8568b67459f53e8137b",
+      "after_masked_pixels_sha256": "7242dda7b3446d7751f1ffe602bc455c146bf9e39d55d8568b67459f53e8137b"
+    },
+    {
+      "pdf_page": 318,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "4391a78983898118984fe5e003185658c366815a9d797744b0cb60532b06830e",
+      "after_masked_pixels_sha256": "4391a78983898118984fe5e003185658c366815a9d797744b0cb60532b06830e"
+    },
+    {
+      "pdf_page": 319,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "432f7f641d3bb310db2a7a597a2359e75543f7712d04da30370b80aae8289253",
+      "after_masked_pixels_sha256": "432f7f641d3bb310db2a7a597a2359e75543f7712d04da30370b80aae8289253"
+    },
+    {
+      "pdf_page": 320,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "718e32c3032a7c26ddf945058a3044540748cbb3ca91c8ab1960716104d46d0c",
+      "after_masked_pixels_sha256": "718e32c3032a7c26ddf945058a3044540748cbb3ca91c8ab1960716104d46d0c"
+    },
+    {
+      "pdf_page": 321,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "856eedaeeed464096f0c34f7f7087687d3ecc8daaa1d61cc335d2a863efb2e8a",
+      "after_masked_pixels_sha256": "856eedaeeed464096f0c34f7f7087687d3ecc8daaa1d61cc335d2a863efb2e8a"
+    },
+    {
+      "pdf_page": 322,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "275bd032f1e94304a36353b8e6ebae70f321606871231908d61ca0cb34cdedf0",
+      "after_masked_pixels_sha256": "275bd032f1e94304a36353b8e6ebae70f321606871231908d61ca0cb34cdedf0"
+    },
+    {
+      "pdf_page": 323,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "cc209f694ff83702e0df5dfc85c0c82daf7747810f37ca6b0b2aab25321bbd33",
+      "after_masked_pixels_sha256": "cc209f694ff83702e0df5dfc85c0c82daf7747810f37ca6b0b2aab25321bbd33"
+    },
+    {
+      "pdf_page": 324,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "b1eb2ec8b32c2cc63228677b85d337527a46db5f3ce4328fd1c62f8dd3fd5356",
+      "after_masked_pixels_sha256": "b1eb2ec8b32c2cc63228677b85d337527a46db5f3ce4328fd1c62f8dd3fd5356"
+    },
+    {
+      "pdf_page": 325,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "391aca6d3fcd839c7ad303f3a22e95b6ec348807933212ddf96846a862398920",
+      "after_masked_pixels_sha256": "391aca6d3fcd839c7ad303f3a22e95b6ec348807933212ddf96846a862398920"
+    },
+    {
+      "pdf_page": 326,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "9b513bdb4434fa6843adab2cec3a034494601b963cc93cf4d51f02f814e62e4b",
+      "after_masked_pixels_sha256": "9b513bdb4434fa6843adab2cec3a034494601b963cc93cf4d51f02f814e62e4b"
+    },
+    {
+      "pdf_page": 327,
+      "nonprice_visual_changed": true,
+      "difference_bbox": [
+        254,
+        415,
+        280,
+        422
+      ],
+      "before_masked_pixels_sha256": "f13f8c37588a3c8098cafef700f1ae09cf1ddd98d73a5b3614ac1e3849183be8",
+      "after_masked_pixels_sha256": "70e7d74805585a69f65afbe062163f44570f3f5d52ed12996c49dfd27cf84a32"
+    },
+    {
+      "pdf_page": 328,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "86df476779077fd54c4f05a2af5addb7c2917df5f42c859425b8c7b4fe418046",
+      "after_masked_pixels_sha256": "86df476779077fd54c4f05a2af5addb7c2917df5f42c859425b8c7b4fe418046"
+    },
+    {
+      "pdf_page": 329,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "8663f63b4ca22d2e7c14ef9ecf3aba541ad658607a45dbe2934da508223fb16f",
+      "after_masked_pixels_sha256": "8663f63b4ca22d2e7c14ef9ecf3aba541ad658607a45dbe2934da508223fb16f"
+    },
+    {
+      "pdf_page": 330,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "10155ffeb2cc97e1b22314aafb97532d5c9db7a5e44acb8e714834de9a6e9b7b",
+      "after_masked_pixels_sha256": "10155ffeb2cc97e1b22314aafb97532d5c9db7a5e44acb8e714834de9a6e9b7b"
+    },
+    {
+      "pdf_page": 331,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "4aeade64e1801480a099981174d8d0acbce483dcf30abc670883e5f416610150",
+      "after_masked_pixels_sha256": "4aeade64e1801480a099981174d8d0acbce483dcf30abc670883e5f416610150"
+    },
+    {
+      "pdf_page": 332,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "0d782f3e8e24aef0cc436405a7a4e48b2b001197791f3bfcfd3ef2e72c3f88f7",
+      "after_masked_pixels_sha256": "0d782f3e8e24aef0cc436405a7a4e48b2b001197791f3bfcfd3ef2e72c3f88f7"
+    },
+    {
+      "pdf_page": 333,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "a85ad727cf5d56b6b4925793d3dbfef36574d6ffde415d029ed5a52ae527e547",
+      "after_masked_pixels_sha256": "a85ad727cf5d56b6b4925793d3dbfef36574d6ffde415d029ed5a52ae527e547"
+    },
+    {
+      "pdf_page": 334,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "be05d0ca5c226bd47970609b401d3479e87a0a5d0481622443ca1d980b539066",
+      "after_masked_pixels_sha256": "be05d0ca5c226bd47970609b401d3479e87a0a5d0481622443ca1d980b539066"
+    },
+    {
+      "pdf_page": 335,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "2eddcc1f52ae006e7116d6990961e1099a714a24002f5aaa67cb82715d5eb093",
+      "after_masked_pixels_sha256": "2eddcc1f52ae006e7116d6990961e1099a714a24002f5aaa67cb82715d5eb093"
+    },
+    {
+      "pdf_page": 336,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "16ddd7429d45e1788d4d23ef76cb6da0e4f07dc4d73f33ebf4cff7b8c74c6bc7",
+      "after_masked_pixels_sha256": "16ddd7429d45e1788d4d23ef76cb6da0e4f07dc4d73f33ebf4cff7b8c74c6bc7"
+    },
+    {
+      "pdf_page": 337,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "080d90978dfa687ca1622afbb4977518a2e3b9e72c81684ec14ece146b792e10",
+      "after_masked_pixels_sha256": "080d90978dfa687ca1622afbb4977518a2e3b9e72c81684ec14ece146b792e10"
+    },
+    {
+      "pdf_page": 338,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "eedb22bb1a43a713dc034f83317439d11db9f44c0d2a89e083444ba1976da9de",
+      "after_masked_pixels_sha256": "eedb22bb1a43a713dc034f83317439d11db9f44c0d2a89e083444ba1976da9de"
+    },
+    {
+      "pdf_page": 339,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "ad0517bb338fa78695c3fe8b40f3b8aeb5d49fd79d9b15fe3bae77389160a7b9",
+      "after_masked_pixels_sha256": "ad0517bb338fa78695c3fe8b40f3b8aeb5d49fd79d9b15fe3bae77389160a7b9"
+    },
+    {
+      "pdf_page": 340,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "b98bbdc4f46904399ab35d70d4cebfe47b475775ca0a4bd9a88801a10a295293",
+      "after_masked_pixels_sha256": "b98bbdc4f46904399ab35d70d4cebfe47b475775ca0a4bd9a88801a10a295293"
+    },
+    {
+      "pdf_page": 341,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "2be6372bdde785fd7082766c6e04ad65142fde7690689322a03545c723912d97",
+      "after_masked_pixels_sha256": "2be6372bdde785fd7082766c6e04ad65142fde7690689322a03545c723912d97"
+    },
+    {
+      "pdf_page": 342,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "eb69c0905411132171ea599e6fc8800f169132832aa422d421002ab55bc62393",
+      "after_masked_pixels_sha256": "eb69c0905411132171ea599e6fc8800f169132832aa422d421002ab55bc62393"
+    },
+    {
+      "pdf_page": 343,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "40bfb1fbf0cb49f69629cfc6d5b63b9d41774f1bfbddd51eb1b0e25167572a14",
+      "after_masked_pixels_sha256": "40bfb1fbf0cb49f69629cfc6d5b63b9d41774f1bfbddd51eb1b0e25167572a14"
+    },
+    {
+      "pdf_page": 344,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "6e9adcb88ed94470bba0825dac34ff74d12904abe48658ab2689402779539b46",
+      "after_masked_pixels_sha256": "6e9adcb88ed94470bba0825dac34ff74d12904abe48658ab2689402779539b46"
+    },
+    {
+      "pdf_page": 345,
+      "nonprice_visual_changed": true,
+      "difference_bbox": [
+        109,
+        190,
+        486,
+        227
+      ],
+      "before_masked_pixels_sha256": "f7799beff5d7f78dc56d57a1112424cd5bc690626d7cc6e9ca6a64c8b6800a12",
+      "after_masked_pixels_sha256": "774daedcb096b974cb482b5de3be451d4e730cf3dba5b5f0d43f842786c8a2a2"
+    },
+    {
+      "pdf_page": 346,
+      "nonprice_visual_changed": true,
+      "difference_bbox": [
+        191,
+        113,
+        246,
+        121
+      ],
+      "before_masked_pixels_sha256": "035485ee90002f35ba7916d9e8458208b8aaa255f33bf6d24ea27619c66dc90d",
+      "after_masked_pixels_sha256": "f89726091e473cfb1d8a66d222fde3116968a33fbbe8a11494fca1b9503f9464"
+    },
+    {
+      "pdf_page": 347,
+      "nonprice_visual_changed": true,
+      "difference_bbox": [
+        45,
+        113,
+        450,
+        761
+      ],
+      "before_masked_pixels_sha256": "c7b95028d172ce372ad9d7af68c0dc0ca3c21addce80e595de79463882b5b80f",
+      "after_masked_pixels_sha256": "3987e2a7e1016521744a337dd72317d2222c84c46cee0d9a465f4916cfee7009"
+    },
+    {
+      "pdf_page": 348,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "7e068d6b0b6188e3f85609691c0375076b0d6c14bdfbc297b87b595af44846f6",
+      "after_masked_pixels_sha256": "7e068d6b0b6188e3f85609691c0375076b0d6c14bdfbc297b87b595af44846f6"
+    },
+    {
+      "pdf_page": 349,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "4a3739de87dcdcd17cdb0b3909a11c49de89b845b363abb07bdf17b67dc0abeb",
+      "after_masked_pixels_sha256": "4a3739de87dcdcd17cdb0b3909a11c49de89b845b363abb07bdf17b67dc0abeb"
+    },
+    {
+      "pdf_page": 350,
+      "nonprice_visual_changed": true,
+      "difference_bbox": [
+        10,
+        28,
+        545,
+        822
+      ],
+      "before_masked_pixels_sha256": "15b6c7dd22439fa25fef338fcf9d4b591b946294dbbe309451a657a8b484abc9",
+      "after_masked_pixels_sha256": "af347cdda78b2a0c0d12d7f60a9f2384151e5d7a2fe3978b9f15e8f0bec39528"
+    },
+    {
+      "pdf_page": 351,
+      "nonprice_visual_changed": true,
+      "difference_bbox": [
+        46,
+        28,
+        583,
+        822
+      ],
+      "before_masked_pixels_sha256": "674337a3c2efd8f40e02de4545d256135d84bfec89f5822fa56bf06cec78d562",
+      "after_masked_pixels_sha256": "fb92b3a936499bc8e7116c6c7279cd280652ad2bb97025bc94cd41b623af6b2d"
+    },
+    {
+      "pdf_page": 352,
+      "nonprice_visual_changed": true,
+      "difference_bbox": [
+        10,
+        28,
+        520,
+        822
+      ],
+      "before_masked_pixels_sha256": "27a220bea0e994bd4a8302d9743d9b3b25ac7c872d04a38bbe5886c19ff2ef72",
+      "after_masked_pixels_sha256": "ad28ab7d039cd3c30531af5b4b8c44c6c2f3df7ae818043ecae3ef2c5f3f796e"
+    },
+    {
+      "pdf_page": 353,
+      "nonprice_visual_changed": true,
+      "difference_bbox": [
+        45,
+        28,
+        583,
+        821
+      ],
+      "before_masked_pixels_sha256": "29bc0f91d4e71cfba72d19b68fb136d3d8369ad413ec1c99c66c02e2121c75ab",
+      "after_masked_pixels_sha256": "ada8a82d7f8770a1705eb5339c440b799c9a84136f564869ffc4c9b76b9297a4"
+    },
+    {
+      "pdf_page": 354,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "74ee1814f82e95832eab83a146ed625b50223b1d769b79baedacade28ec82576",
+      "after_masked_pixels_sha256": "74ee1814f82e95832eab83a146ed625b50223b1d769b79baedacade28ec82576"
+    },
+    {
+      "pdf_page": 355,
+      "nonprice_visual_changed": true,
+      "difference_bbox": [
+        287,
+        208,
+        512,
+        370
+      ],
+      "before_masked_pixels_sha256": "115da2962c5b2e9e1b776d134352b360f967d787d5780867a8a21739c7fe4b39",
+      "after_masked_pixels_sha256": "f9abbf6c34053e3bf4d8b976b9fc792fe381a51b8f862366065fc7e5ee3d988f"
+    },
+    {
+      "pdf_page": 356,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "b1fca2db3c5e7e63b057610a8a48fb67cf6966eb8ba0bdbecbc56517bfad4651",
+      "after_masked_pixels_sha256": "b1fca2db3c5e7e63b057610a8a48fb67cf6966eb8ba0bdbecbc56517bfad4651"
+    },
+    {
+      "pdf_page": 357,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "f28997b62d2eaa89b95c6d60027c774878f9a2302cb3834c6154c4fcedb173c7",
+      "after_masked_pixels_sha256": "f28997b62d2eaa89b95c6d60027c774878f9a2302cb3834c6154c4fcedb173c7"
+    },
+    {
+      "pdf_page": 358,
+      "nonprice_visual_changed": false,
+      "difference_bbox": null,
+      "before_masked_pixels_sha256": "100d811fb7146bdad3ebd146dba04152aa8d5da38609578cd2a85766d9892ec2",
+      "after_masked_pixels_sha256": "100d811fb7146bdad3ebd146dba04152aa8d5da38609578cd2a85766d9892ec2"
+    },
+    {
+      "pdf_page": 359,
+      "nonprice_visual_changed": true,
+      "difference_bbox": [
+        237,
+        710,
+        535,
+        718
+      ],
+      "before_masked_pixels_sha256": "0786b578603862ddc472fd2f88e67732759cc75994959076dfe5a231907705d8",
+      "after_masked_pixels_sha256": "774b880358ca0bce734be0ec16e3c5658aa85aeadf2c63bdbb616c0a54d6c638"
+    },
+    {
+      "pdf_page": 360,
+      "nonprice_visual_changed": true,
+      "difference_bbox": [
+        169,
+        519,
+        539,
+        659
+      ],
+      "before_masked_pixels_sha256": "a3c68b912c1b8bec2861efe4d3a96b0fc13603c7f071f3b6ce25af99e7c0359a",
+      "after_masked_pixels_sha256": "732aa6b8b95093220ae8c4d7c730966d84cf89565a65c57ac6f1653cf85fdc00"
+    }
+  ]
+}
