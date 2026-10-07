@@ -18,7 +18,10 @@ const runtimeMasterIntegrations=runtimeIntegrationDeclarations.filter((row)=>row
 const buildTimestamp=new Date().toISOString();
 const buildIdentity={appVersion:"work-management-v1.0+estimate-output-v1.0+inplus-bathroom-v1.0",workSchemaVersion:WORK_SCHEMA_VERSION,catalog,runtimeMasterIntegrations:runtimeIntegrationDeclarations.map(({id,packageVersion,sourceHash,status,selectable,productVariantContract})=>({id,packageVersion,sourceHash,status,selectable,productVariantContract}))};
 const buildId=`SASH-WORK-V1-${createHash("sha256").update(JSON.stringify(buildIdentity)).digest("hex").slice(0,12)}`;
-const catalogVersion="8シリーズ統合 / TW integrated-v0.5 / EW v1.3 / サーモスⅡH v0.9-R4 / サーモスL v0.7-R2 / APW430 20260918-R3 / APW431 v1.2 / ウチリモ Slim V3 / インプラス v0.4-R3 + 浴室仕様 v1.0";
+const catalogVersion=runtimeMasterIntegrations.flatMap(row=>[
+  `${row.displayName??row.series} ${row.packageVersion}`,
+  ...(row.productVariantContract?.variants??[]).filter(v=>v.value!==row.productVariantContract.defaultVariant).map(v=>`${row.displayName??row.series} ${v.displayLabel} ${v.packageVersion}`),
+]).join(' / ');
 
 export const releaseBuildMetadata=Object.freeze({buildId,buildTimestamp,catalogVersion});
 
@@ -45,7 +48,7 @@ export function createRecoveryRequestHandler({backend="node:http recovery server
   return async function recoveryRequestHandler(req,res){
     const url=requestUrl(req);
     if(url.pathname==="/health"||url.pathname==="/api/health"){
-      return json(res,200,{ok:true,buildId,buildTimestamp,catalogVersion,entrypoint,frontendRoot:"src/ui/web",backend,
+      return json(res,200,{ok:true,buildId,buildTimestamp,catalogVersion,releaseCommitSha:process.env.SASH_RELEASE_COMMIT_SHA??process.env.VERCEL_GIT_COMMIT_SHA??null,entrypoint,frontendRoot:"src/ui/web",backend,
         features:{estimateOutput:"1.0",inplusBathroom:"v1.0",themeModes:["system","light","dark"]},persistence:{type:"BROWSER_LOCAL_STORAGE",schemaVersion:WORK_SCHEMA_VERSION,key:"sash.work-management.v1",multiDevice:false},databasePath:null,
         inventory:catalogInventory(catalog),runtimeMasterIntegrations});
     }

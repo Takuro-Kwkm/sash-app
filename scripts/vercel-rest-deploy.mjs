@@ -26,6 +26,12 @@ const actualSha = execFileSync('git', ['rev-parse', 'HEAD'], { encoding: 'utf8' 
 if (actualSha !== githubSha) {
   throw new Error(`Git SHA mismatch: checkout=${actualSha} event=${githubSha}`);
 }
+execFileSync('git', ['diff', '--exit-code', 'HEAD', '--'], { stdio: 'pipe' });
+const releaseTarget=JSON.parse(await readFile('contracts/production/app-release.v1.json','utf8'));
+if (repository!==releaseTarget.repository || teamId!==releaseTarget.deployment.team_id || projectId!==releaseTarget.deployment.project_id || projectName!==releaseTarget.deployment.project_name) {
+  throw new Error('APP_RELEASE_TARGET_MISMATCH');
+}
+if (mode==='production' && githubRefName!==releaseTarget.production_branch) throw new Error('PRODUCTION_MAIN_REQUIRED');
 
 const api = async (url, init = {}) => fetch(url, {
   ...init,
@@ -114,6 +120,7 @@ if (deploySource === 'inline') {
 const payload = {
   name: projectName,
   project: projectId,
+  env: { SASH_RELEASE_COMMIT_SHA: githubSha },
   meta: {
     releaseCommitSha: githubSha,
     releaseSeries: process.env.RELEASE_SERIES ?? 'LIXIL EW',

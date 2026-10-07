@@ -1,0 +1,21 @@
+{
+  "schema": "SASH_APP_RELEASE_V1",
+  "repository": "Takuro-Kwkm/sash-app",
+  "production_branch": "main",
+  "deployment": {
+    "provider": "VERCEL",
+    "team_id": "team_AkuHacuJlCl8LuvaFpCzFmbv",
+    "project_id": "prj_4z0zqW6yKyPuFINODfGX8LPBuJRP",
+    "project_name": "sash-app-wave3-preview",
+    "production_url": "https://sash-app-wave3-preview.vercel.app",
+    "executor": "scripts/vercel-rest-deploy.mjs",
+    "workflow": ".github/workflows/app-production-hotfix.yml",
+    "environment": "production"
+  },
+  "local": { "node": "24.x", "url": "http://127.0.0.1:4173", "start": "npm start" },
+  "runtime_registry": "src/catalog/runtime-master/app-runtime-integration-registry.mjs",
+  "authority_pointer": "contracts/production/current-architecture.json",
+  "persistence": "BROWSER_LOCAL_STORAGE",
+  "policy": "Release adopted application bytes only. Product Formal decisions, native Work and Human Flow Review remain separately required for changed product/flow scope. QA_READY alone never authorizes adoption.",
+  "verification": "npm run verify:app-release -- --url URL --require-release-commit"
+}

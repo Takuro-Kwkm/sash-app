@@ -1,9 +1,9 @@
 {
   "schema": "APP_PRODUCTION_HOTFIX_V1",
   "scope": "NON_PRODUCT_MASTER_UI",
-  "change": "PR56_INNER_WINDOW_FINAL_RELEASE",
-  "date": "2026-10-02",
-  "source_commit": "a088435640a91f4f3807a41d1bfbc48e0547e4b9",
-  "notes": "Release approved PR #56 through established production workflow; retain main dark-mode and exact-source upload fallback. Product data is read-only.",
+  "change": "LOCAL_PROJECT_RELEASE_CONNECTION_AND_ADOPTED_MAIN_SYNC",
+  "date": "2026-10-07",
+  "source_commit": "a46104cd7ba52184473ef6f87790a2664810cb31",
+  "notes": "User requested local UI-to-production completion. Release already adopted main through existing production workflow; verify exact merged commit, Runtime identities and UI bytes. No new product Facts or Formal/Human decision. Preserve pending routes and existing confirmation requirements.",
   "trigger": "PR_MERGE_PUSH"
 }
