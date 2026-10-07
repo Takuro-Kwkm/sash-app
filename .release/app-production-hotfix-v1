@@ -1,9 +1,9 @@
 {
   "schema": "APP_PRODUCTION_HOTFIX_V1",
   "scope": "NON_PRODUCT_MASTER_UI",
-  "change": "LOCAL_PROJECT_RELEASE_CONNECTION_AND_ADOPTED_MAIN_SYNC",
+  "change": "ORDER2_THERMOSL_R3_SAME_BYTES_COMMON_RELEASE",
   "date": "2026-10-07",
-  "source_commit": "a46104cd7ba52184473ef6f87790a2664810cb31",
-  "notes": "User requested local UI-to-production completion. Release already adopted main through existing production workflow; verify exact merged commit, Runtime identities and UI bytes. No new product Facts or Formal/Human decision. Preserve pending routes and existing confirmation requirements.",
-  "trigger": "PR_MERGE_PUSH"
+  "source_commit": "53fdabda20bfd2bbcee64b0b2c94e3640af7f411",
+  "notes": "Infrastructure release successor. Carry Forward ThermosL v0.7-R3 OP-SL-EMERGENCY-SKIRT / MANUAL_STANDARD_ONLY with identical Formal/Runtime/UI/Output bytes and original product Decision. Merge is gated by actual Human Release Decision on fixed common payload and PR HEAD; marker itself is not approval. Use existing production workflow and save release receipts/readback. No product mutation, DB migration or protection changes.",
+  "trigger": "PR_MERGE_PUSH_AFTER_FIXED_HUMAN_RELEASE_DECISION"
 }
