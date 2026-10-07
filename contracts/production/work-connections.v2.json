@@ -682,7 +682,7 @@
   ],
   "shared_authority": {
     "repository": "Takuro-Kwkm/product-ui-contracts",
-    "commit": "ad1c508f5f2714dc84918ff6ef4be5ceb8e87351",
+    "commit": "68f2fe69831a33ab92789526bdcd7a49446122a2",
     "harness_revision": "7293f818685bbd1e7386d78757fb82b930af5572",
     "entry_point": "scripts/production-work.py",
     "current_router": "scripts/architecture-work.py",
@@ -693,6 +693,6 @@
   "new_product_build_profile": {
     "profile_id": "sash-new-product-master-v1",
     "path": "contracts/production/product-master-build-profile.v1.json",
-    "sha256": "982306e14f5a8aac5a8fb675bf294ee3941a75c3e0fb46d5d76f5f0fadcec32c"
+    "sha256": "9d22ba1fe2ae26fd91bba6d04ed8e29764178f94c020c1a0d18843bdbed4fb57"
   }
 }

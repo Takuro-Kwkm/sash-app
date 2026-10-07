@@ -4,12 +4,12 @@
   "repository": "Takuro-Kwkm/sash-app",
   "status": "ADOPTED",
   "work_skill": "product-master-builder",
-  "mode": "NEW_PRODUCT_BOOTSTRAP_PLANNING",
+  "mode": "NEW_PRODUCT_MASTER_BUILD",
   "refs": {
     "native_planner": {
       "owner": "native",
       "path": "scripts/production/product-master-build.py",
-      "sha256": "ac04652ffe56656f1d17d64fd5bd1514bf3dbfaa3822d4cd86d64be6bc0f6825"
+      "sha256": "be272ec4ccdb82aebcad735b8ef2791d50b3dfff3475f29a831d514430a906b3"
     },
     "native_validator": {
       "owner": "native",
@@ -50,6 +50,16 @@
       "owner": "shared",
       "path": "harness/production.py",
       "sha256": "fd34204892b420587a7c9c744473980c392a0ec48c7f6b05e5e16ce3a17b57f6"
+    },
+    "execution": {
+      "owner": "shared",
+      "path": "product_master/execution.py",
+      "sha256": "6f399aa09dbd35b07ef6ec6532047f881850efa8f148503dd6fbc8b5231a095e"
+    },
+    "current_authority": {
+      "owner": "shared",
+      "path": "harness/current_authority.py",
+      "sha256": "5abfa5de32893cd7db21446c4b4382c3d265950b5402dca4ae9f0c5b20f5c184"
     }
   },
   "contracts": {
@@ -152,7 +162,16 @@
       "formal_writes": 0,
       "runtime_ui_writes": 0,
       "release_writes": 0,
-      "planning_not_qa_or_formal": true
+      "planning_not_qa_or_formal": false,
+      "execution_writes": "Work-local candidate/QA/checkpoint only; no Formal/Runtime/Release"
+    },
+    "execution": {
+      "entrypoint": "native_planner default actual mode; --plan-only is explicit diagnostic",
+      "owner": "product_master/execution.py -> harness/workflow.py",
+      "target": "QA_READY",
+      "facts": "Work Skill reviewed source-bound observations; no manufacturer inference",
+      "source_pending": "Persisted acquisition requests, immutable Current binding and checkpoint; resume same Work",
+      "formal": "Existing admitted transaction after external same-payload Human Decision only"
     }
   }
 }

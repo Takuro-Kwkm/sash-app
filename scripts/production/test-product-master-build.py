@@ -80,6 +80,15 @@ class NativeProfileAcceptance(unittest.TestCase):
         self.raw['structuredContent']['content'] += '1,TEST,Truncated\n'; self.save()
         with self.assertRaises(Blocked): self.plan()
 
+    def test_header_only_registry_is_not_absence(self):
+        self.raw['structuredContent']['content'] = self.raw['structuredContent']['content'].splitlines()[0] + '\n'; self.save()
+        with self.assertRaises(Blocked): self.plan()
+
+    def test_duplicate_native_registry_identity_is_not_absence(self):
+        lines = self.raw['structuredContent']['content'].splitlines()
+        self.raw['structuredContent']['content'] += lines[1] + '\n'; self.save()
+        with self.assertRaises(Blocked): self.plan()
+
     def test_thermosl_change_keeps_existing_adapter(self):
         r = route_instruction(CENTRAL, {'Takuro-Kwkm/sash-app': str(ROOT)}, 'サーモスLの最新版変更を確認して')
         self.assertEqual(r['work_skill'], 'product-change-work')

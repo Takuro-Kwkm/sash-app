@@ -1,0 +1,31 @@
+name: Actual New Product Master Build
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  actual-native-build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    env:
+      EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+      SHARED_HARNESS_ROOT: /tmp/shared-build-authority
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.EXPECTED_HEAD }}
+      - run: test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12.14'}
+      - name: Read back exact adopted shared dependency snapshot
+        run: python -B scripts/production/unpack-build-authority.py "$SHARED_HARNESS_ROOT"
+      - run: python -m pip install -r "$SHARED_HARNESS_ROOT/requirements.txt"
+      - name: Real native profile, failure safety and actual isolated E2E
+        run: |
+          python -B scripts/production/validate-architecture-connection.py
+          python -B scripts/production/validate-product-master-profile.py
+          python -B scripts/production/test-product-master-build.py
+          python -B scripts/production/test_actual_build.py

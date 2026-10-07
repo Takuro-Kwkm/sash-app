@@ -19,7 +19,7 @@ def validate(root):
     profile = json.loads(path.read_text())
     assert profile['repository'] == 'Takuro-Kwkm/sash-app'
     assert profile['profile_id'] == entry['profile_id'] == 'sash-new-product-master-v1'
-    assert profile['status'] == 'ADOPTED' and profile['mode'] == 'NEW_PRODUCT_BOOTSTRAP_PLANNING'
+    assert profile['status'] == 'ADOPTED' and profile['mode'] == 'NEW_PRODUCT_MASTER_BUILD'
     assert profile['work_skill'] == 'product-master-builder'
     assert profile['contracts']['registry_bootstrap']['absent_is_normal'] is True
     assert profile['contracts']['output_boundary']['formal_writes'] == 0
