@@ -682,12 +682,17 @@
   ],
   "shared_authority": {
     "repository": "Takuro-Kwkm/product-ui-contracts",
-    "commit": "7e7c67f0b51bde9e87e405640685032128a8166d",
+    "commit": "ad1c508f5f2714dc84918ff6ef4be5ceb8e87351",
     "harness_revision": "7293f818685bbd1e7386d78757fb82b930af5572",
     "entry_point": "scripts/production-work.py",
     "current_router": "scripts/architecture-work.py",
     "policy": "PINNED_SHARED_ENGINE_NATIVE_ADAPTERS_ONLY"
   },
   "current_architecture_pointer": "contracts/production/current-architecture.json",
-  "ga_adapter_policy": "CONNECTED_NATIVE_SCOPE_OR_EXPLICIT_FAIL_CLOSED; NO_REFERENCE_OR_LEGACY_FALLBACK"
+  "ga_adapter_policy": "CONNECTED_NATIVE_SCOPE_OR_EXPLICIT_FAIL_CLOSED; NO_REFERENCE_OR_LEGACY_FALLBACK",
+  "new_product_build_profile": {
+    "profile_id": "sash-new-product-master-v1",
+    "path": "contracts/production/product-master-build-profile.v1.json",
+    "sha256": "982306e14f5a8aac5a8fb675bf294ee3941a75c3e0fb46d5d76f5f0fadcec32c"
+  }
 }

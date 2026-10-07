@@ -1,0 +1,406 @@
+{
+  "scope": "PROFILE_ADOPTION_ONLY; existing native package/Source bytes not modified",
+  "starting_sash_head": "5a1823d5b9c421bda8e2952af5786a628d0e73ec",
+  "starting_remote_main": "7e677bbf98f61a83d7c29f3fd0e082a7df626dee",
+  "central_current_acquired_head": "784afba8fe277b92031da6158c25721a25aafd78",
+  "ga_index_id": "1DnJflUJAIS5UfisxQa-AgTI6BPtZsoeI",
+  "ga_index_state": "ARCHITECTURE_V2_GA_COMPLETED",
+  "ga_index_sha256": "fa0a66403ef90626a52b6bfe047d7a4150fb83d833856bac66c43c91e0d00fea",
+  "ga_index_policy": "Inherited immutable completion is inspected, not reactivated or replayed",
+  "registry_readback": {
+    "id": "1HMMZ8JdsbJPtL_8LjQfxMF8P_Zb4-LReqvPMFn1pJks",
+    "content_sha256": "0ee108534e2021962d15aa66a2171abbb78c8dc1d9fd67de8111cd1f2e0fa589",
+    "rows": 36
+  },
+  "native_package_structures": [
+    {
+      "manufacturer": "LIXIL",
+      "series": "TW",
+      "registry_revision": "integrated-v0.5",
+      "canonical_folder_id": "1oLex2SCEIKoH5mDMGtbMasJXglPF-n-a",
+      "working_folder_id": "1uO6KjlmyJKALcFOTOkS96BuV1WzHBULD",
+      "layout": "04_商品マスター/01_LIXIL/TW/01_正本",
+      "files_inspected": [
+        {
+          "name": "LIXIL_TW_202610_CATALOG_DELTA_FACTS.json",
+          "sha256": "bbeb37ca052a1ec8bc997871cec960cf86333bc5771ea539b3783df0d26cdd2d",
+          "bytes": 1473375
+        },
+        {
+          "name": "LIXIL_TW_202610_CATALOG_PRICE_FACTS.json",
+          "sha256": "5afa842a7b6b1631b8bc1bac9fbf8a326f33d5b49a4ac6b79b135d35329370a5",
+          "bytes": 12365932
+        },
+        {
+          "name": "LIXIL_TW_202610_DATA_DICTIONARY_EXTENSION.json",
+          "sha256": "742374030471d8c4bd6b508fea4fcd811967318a3ea0c058e6391936ede1c98c",
+          "bytes": 1126
+        },
+        {
+          "name": "LIXIL_TW_202610_EVIDENCE_REGISTRY.json",
+          "sha256": "0c14bd9774dfc8191f7551f8065ce85a8411075a0800b18ec966e81e079460e9",
+          "bytes": 1258293
+        },
+        {
+          "name": "LIXIL_TW_202610_FINAL_CLOSURE.json",
+          "sha256": "1f218f041c66c89edda488a92e211a96b105f3344feaf943be606513d2e907bf",
+          "bytes": 17457
+        },
+        {
+          "name": "LIXIL_TW_202610_FORMAL_CLOSURE_REPORT.md",
+          "sha256": "e6e7a34e4e6637c27daf56a670e2c6423f9f7ea50fd0940559650e61e3ed56bf",
+          "bytes": 22075
+        },
+        {
+          "name": "LIXIL_TW_202610_SELECTION_25_FIELD_IMPACT.json",
+          "sha256": "70cf3c2421f4882cb5560121050ed3a822e8bf71e415de1c93892c7c683d7155",
+          "bytes": 10723
+        },
+        {
+          "name": "LIXIL_TW_202610_SOURCE_ADOPTION_QA.json",
+          "sha256": "28cda53bfb2b07ac1fea8956a0cf3eebe5f358ba36c800fe3bf55dbd9915e7c5",
+          "bytes": 4733
+        },
+        {
+          "name": "LIXIL_TW_202610_SOURCE_FILE_NAME_HISTORY.json",
+          "sha256": "6656b449b76a75b850f8ae979152092211fcf89ff5ce73bf1de17eccf7adeb49",
+          "bytes": 703
+        },
+        {
+          "name": "LIXIL_TW_202610_SOURCE_REGISTRY.json",
+          "sha256": "2361fb07926f333402f96be6b33709ca61066fd11152fd122c69d89691f540f5",
+          "bytes": 4382
+        },
+        {
+          "name": "LIXIL_TW_CURRENT_FORMAL.json",
+          "sha256": "af069b26b2f7d2eac264970869dc13f32c1fe3f25d01aedf4b290a4574c55000",
+          "bytes": 1642
+        },
+        {
+          "name": "LIXIL_TW_CURRENT_RELEASE_MANIFEST.json",
+          "sha256": "9fb9c5e7e2690dcb0460c0381cfa002bf1230c7c769c9f64f764ceee0bbfa874",
+          "bytes": 4589
+        },
+        {
+          "name": "LIXIL_TW_CURRENT_SOURCE.json",
+          "sha256": "eaaff86b6bd546409eeb9ce3d8924a3154c7e58de09c10c5d31a91cd1b4a8e68",
+          "bytes": 4901
+        },
+        {
+          "name": "LIXIL_TW_PRODUCT_MASTER_MANIFEST_integrated-v0.5.md",
+          "sha256": "a87bab620b916c723b97a06c35798eb3d67e6d3e47c387f0295901f254eb2ead",
+          "bytes": 3362
+        },
+        {
+          "name": "LIXIL_TW_PRODUCT_MASTER_REGISTRY_integrated-v0.5.json",
+          "sha256": "b5656bdd27baceb2003d440406d973e0e0fdc49ca12496a0a48ce8c4209fde5b",
+          "bytes": 2274
+        },
+        {
+          "name": "LIXIL_TW_runtime_integrated-v0.5.json",
+          "sha256": "17e2a7468f5f9a2c6bfdd275281307c6a9739b994a18faa6fef90dc6fddb4491",
+          "bytes": 3764442
+        },
+        {
+          "name": "runtime_manifest_TW_integrated-v0.5.json",
+          "sha256": "783b6d1c705adc5dc31d504373a4a86e3ce498a75a570e67dd15cd8d2ee148d3",
+          "bytes": 2644
+        },
+        {
+          "name": "サッシ商品マスター_v0.5_TW202610.xlsx",
+          "sha256": "5062503d3387999c2eed0862b3386e5248ae131008cbc37975956d709d598ba6",
+          "bytes": 600183
+        }
+      ]
+    },
+    {
+      "manufacturer": "LIXIL",
+      "series": "EW",
+      "registry_revision": "v1.4",
+      "canonical_folder_id": "1mDsi9amFdD5A9N8XrommExB_EMZDQiqu",
+      "working_folder_id": "1T_KEc2-27lU6yddCka1ZqI289qolVwmB",
+      "layout": "04_商品マスター/01_LIXIL/EW/01_正本",
+      "files_inspected": [
+        {
+          "name": "LIXIL_EW_202610_Change_Work_完了報告_v1.4.md",
+          "sha256": "7738bc68b5124749a8e4d663b3052ed55e624bff4ad27a398e3a3bc6201fabe1",
+          "bytes": 11742
+        },
+        {
+          "name": "LIXIL_EW_202610_FORMAL_v1.4.zip",
+          "sha256": "31e889e2358dce97c432652df5bb640816f207752ff7765379ddf6167f637fd0",
+          "bytes": 614512
+        },
+        {
+          "name": "LIXIL_EW_202610_Post_Merge_Main_Readback.zip",
+          "sha256": "039a0969f3e99aff3b9188f85f756dcba8e3e901e2a9ee97dfddebcbfe2e9c72",
+          "bytes": 55994
+        },
+        {
+          "name": "LIXIL_EW_PRODUCT_MASTER_MANIFEST_v1.4.md",
+          "sha256": "98162f858b31ee965fb669127f912d93c2f6a046d7bd2b26147f818968a74722",
+          "bytes": 2131
+        },
+        {
+          "name": "LIXIL_EW_runtime_manifest_v1.4.json",
+          "sha256": "8fea71eb4f51f2014e2cae5abd732ccfe0b36224171c0edc24ac5368789f9d47",
+          "bytes": 4627
+        },
+        {
+          "name": "LIXIL_EW_runtime_v1.4.json",
+          "sha256": "e3c5976d46268cb9e670491e2256613330ab776c1fb0cc9e6ad5b8e65bb01199",
+          "bytes": 2678300
+        }
+      ]
+    },
+    {
+      "manufacturer": "LIXIL",
+      "series": "サーモスL",
+      "registry_revision": "v0.7-R3",
+      "canonical_folder_id": "1H83njk7Gww0RJOZKntYBp5VxdaJD9Jc4",
+      "working_folder_id": "1PqgX6VbCBmdz121DgLG2xF-Z7aK-pbah",
+      "layout": "04_商品マスター/01_LIXIL/サーモスL/01_正本",
+      "files_inspected": [
+        {
+          "name": "LIXIL_ThermosL_AUTHORING_MASTER_v0.7-R3.xlsx",
+          "sha256": "42a1a159c199ac0290f4862b20381abf2450b686ae8a8a2abdaa2d428a8c73f8",
+          "bytes": 886084
+        },
+        {
+          "name": "LIXIL_ThermosL_PRODUCT_MASTER_MANIFEST_v0.7-R3.md",
+          "sha256": "4bed0044d7538f83538dd979e12c90c038b5dbebcd323722b957b28af535c107",
+          "bytes": 1035
+        },
+        {
+          "name": "LIXIL_ThermosL_runtime_manifest_v0.7-R3.json",
+          "sha256": "0fed18a4d317fa03cb0ef0463a0c17eb9f83e1bb84baa6628a6bdce73de62257",
+          "bytes": 3867
+        },
+        {
+          "name": "LIXIL_ThermosL_runtime_v0.7-R3.json",
+          "sha256": "1fd121e1dbcd0acc90eeb53dd5faed1a3193ff16b46159efee3ae0c1dcf12fd9",
+          "bytes": 5149779
+        },
+        {
+          "name": "LIXIL_サーモスL_RUNTIME_QA_v0.7-R2.md",
+          "sha256": "3fb6c287df7d278bc7f22885f7be28b100287b0fb4dde3d0b8933f34bda4b186",
+          "bytes": 2959
+        }
+      ]
+    },
+    {
+      "manufacturer": "LIXIL",
+      "series": "サーモスⅡH",
+      "registry_revision": "v0.9-R4",
+      "canonical_folder_id": "1pmCvqkh39bZibmpk-ugRFvJLEowITBmP",
+      "working_folder_id": "17B04JT0R1PvfihsDOe_qTxo-Ens9sptL",
+      "layout": "04_商品マスター/01_LIXIL/サーモスⅡH/01_正本",
+      "files_inspected": [
+        {
+          "name": "LIXIL_サーモスⅡH_AUTHORING_MASTER_v0.9-R4.xlsx",
+          "sha256": "eeb285689a1e8a78469d5d13d1e015083d7f2e71ab274427dcfd413e33adc8e4",
+          "bytes": 661883
+        },
+        {
+          "name": "LIXIL_サーモスⅡH_PRODUCT_MASTER_MANIFEST_v0.9-R4.md",
+          "sha256": "7ee32778a57492283db3638cecf4abe554af73f1d233f14b233bad73a05448a3",
+          "bytes": 3913
+        },
+        {
+          "name": "LIXIL_サーモスⅡH_RUNTIME_QA_v0.9-R4.md",
+          "sha256": "f846069c12117ce4fba2444ca13c93006e91c45b7ad28801ae2159699b46c5b7",
+          "bytes": 3647
+        },
+        {
+          "name": "LIXIL_サーモスⅡH_runtime_manifest_v0.9-R4.json",
+          "sha256": "993481b2f0ab1d519a091e1b9f99a329eef7c67ec89cd1c82ddfab0d3c624955",
+          "bytes": 4427
+        },
+        {
+          "name": "LIXIL_サーモスⅡH_runtime_v0.9-R4.json",
+          "sha256": "b12ed0a5184da2cfa39a16133079e52f14a301030ed1d230e471b18af6f8d7fd",
+          "bytes": 7578445
+        },
+        {
+          "name": "samos2h_runtime_package_v0.9-R4.schema.json",
+          "sha256": "8db1faafaf013054c6b22a7c006b93c82dce26821c1abe0c52ffcb7b8cc52c30",
+          "bytes": 3862
+        }
+      ]
+    },
+    {
+      "manufacturer": "YKK AP",
+      "series": "APW430",
+      "registry_revision": "20260918-R3",
+      "canonical_folder_id": "1Cd4_yiAB0Zy6Yb1xo_7ihB4KA44wtUkY",
+      "working_folder_id": "1aPJlt5dTFHKqS5Koaino9PLqaH4DUB7m",
+      "layout": "04_商品マスター/02_YKK AP/APW430/01_正本",
+      "files_inspected": [
+        {
+          "name": "PRODUCT_MASTER_MANIFEST.md",
+          "sha256": "01c1922d76142274f9f0918338acba8d51e4e0110cb929e1d4fa0dd67b8704e3",
+          "bytes": 4078
+        },
+        {
+          "name": "YKKAP_APW430_RUNTIME_QA_20260918-R3.md",
+          "sha256": "ec1bbfce53820c97a0413c401e5aea3ccb737cfffca9e68dff2611aa795f21b0",
+          "bytes": 1465
+        },
+        {
+          "name": "YKKAP_APW430_RUNTIME_QA_CASES_20260918-R3.json",
+          "sha256": "d67827b0729961b3330415651a8af44178cc3ebed4de9775b05df13a0acc357d",
+          "bytes": 1460063
+        },
+        {
+          "name": "apw430_core_20260918-R3.json",
+          "sha256": "05ee0db4ceb17a0043372ee7b888ee4ac94f7dc170d08ccf4b1f356fdef17340",
+          "bytes": 87168
+        },
+        {
+          "name": "apw430_dimensions_20260918-R3.json",
+          "sha256": "e50d8099a2fec74e5b211508256ecee6805ef5227d814198c0a7319b88ca0262",
+          "bytes": 974838
+        },
+        {
+          "name": "apw430_options_20260918-R3.json",
+          "sha256": "c2a5f32a7b553c183c58f2aa18726dc200d4ef396e5bf6b0c35a52ef48dafe38",
+          "bytes": 3447531
+        },
+        {
+          "name": "runtime_manifest.json",
+          "sha256": "e2755a735fc3a7c94afacc58175a390bf00784cf1f13521a1263076d7bfae1c7",
+          "bytes": 4107
+        }
+      ]
+    },
+    {
+      "manufacturer": "YKK AP",
+      "series": "APW431",
+      "registry_revision": "v1.2",
+      "canonical_folder_id": "16SO5cC-ix7F_vwGLqAyrr62zwDRjXBCB",
+      "working_folder_id": "12-asRdFp58GmOSJqYXhVPfg4PKQ9afOq",
+      "layout": "04_商品マスター/02_YKK AP/APW431/01_正本",
+      "files_inspected": [
+        {
+          "name": "PRODUCT_MASTER_MANIFEST.md",
+          "sha256": "55ffc1b8c527e71a0a435db1afa825ed7402309e5462684ebb2c77f312a48958",
+          "bytes": 3804
+        },
+        {
+          "name": "YKKAP_APW431_AUTHORING_MASTER_v1.2_FRAME_ANGLE_RECOVERY.xlsx",
+          "sha256": "3f6d80b610f1c1f02a0f8e8ae7ea59d79f6d56d7eb726ff8aa31c45e9474fbb6",
+          "bytes": 256183
+        },
+        {
+          "name": "YKKAP_APW431_FRAME_ANGLE_QA_CASES_v1.2.json",
+          "sha256": "6ce970e2d5edffbcaf6f289bbcd8816ad9e392794260f1024a42b9a1043adec7",
+          "bytes": 185739
+        },
+        {
+          "name": "YKKAP_APW431_FRAME_ANGLE_RUNTIME_QA_v1.2.md",
+          "sha256": "c94ffb42e334337d58659bd629e83161033acf571e943859d48cde5ab64bb8a9",
+          "bytes": 1687
+        },
+        {
+          "name": "apw431_core_v1.2.json",
+          "sha256": "33db499b08c4d987d3979219daf0428d277d6aff0c3ee5453cf21795826069f6",
+          "bytes": 71538
+        },
+        {
+          "name": "apw431_dimensions_v1.2.json",
+          "sha256": "5a00cb3e2350f5a5a651b2195673aef0de594d41a1e1630eb4ee7a8237342cf3",
+          "bytes": 1818834
+        },
+        {
+          "name": "apw431_options_v1.2.json",
+          "sha256": "7a2d6a7556b2f0d852aa1b5119dbe3767505aa64fe56fa9dfa970c30a1413101",
+          "bytes": 127549
+        },
+        {
+          "name": "runtime_manifest.json",
+          "sha256": "54ab51e9936ef6d249a16e3a9b4a31dd934cd176e2c081b2cf64f53b340ec57f",
+          "bytes": 3666
+        }
+      ]
+    },
+    {
+      "manufacturer": "YKK AP",
+      "series": "ウチリモ 内窓",
+      "registry_revision": "v1.0-P7R1-R6",
+      "canonical_folder_id": "1-flyN0KX2zdqXbebX2kVF4VRW0jTSrQu",
+      "working_folder_id": "1ToOa_3UStpMJfUzW5Dl0Ah_Q-kkX88n3",
+      "layout": "04_商品マスター/02_YKK AP/ウチリモ 内窓/01_正本",
+      "files_inspected": [
+        {
+          "name": "YKKAP_ウチリモ内窓_Judgment_Engine_v1.0-P7R1-R4_FORMAL.json",
+          "sha256": "d0232fad8737671cc4dbccd23d54933d3fb0d9052dbe38cf03a2fc78d4f90683",
+          "bytes": 25452
+        },
+        {
+          "name": "YKKAP_ウチリモ内窓_PRODUCT_MASTER_MANIFEST_v1.0-P7R1-R4_InnerWindowCanonicalFrame_R1_FORMAL.md",
+          "sha256": "b4079838a254a7e2bbe04ab22ad9531ccaea2566468dafc6115c6f0b845cf153",
+          "bytes": 8469
+        },
+        {
+          "name": "YKKAP_ウチリモ内窓_PRODUCT_MASTER_MANIFEST_v1.0-P7R1-R6_OptionCompleteness_R1_FORMAL.md",
+          "sha256": "d1d6d8df57a64f0a6403c98baebfd9ba47d851f342ab19d003d202139c0e9bcb",
+          "bytes": 3346
+        },
+        {
+          "name": "YKKAP_ウチリモ内窓_Size_Installation_Dependency_Master_v1.0-P7R1-R4_FORMAL.json",
+          "sha256": "3139765290acf9ce14c132c8640cea6f17ada1319d8d5352d02148add0326aeb",
+          "bytes": 29693
+        },
+        {
+          "name": "YKKAP_ウチリモ内窓_Slim_Canonical_v4_InnerWindowCanonicalFrame_R1_FORMAL.json",
+          "sha256": "b8c3e6c17c970132e7702e5772b6956a91052271712f28b860e55ef324bdd1fe",
+          "bytes": 568327
+        },
+        {
+          "name": "YKKAP_ウチリモ内窓_Vacuum_Glass_Curve_Master_v1.0-P7R1-R4_FORMAL.json",
+          "sha256": "d38c0d7b998f28ff2e3de860d2ead04ecfc870944c5dfea36175ae70b53d058d",
+          "bytes": 111023
+        },
+        {
+          "name": "YKKAP_ウチリモ内窓_runtime_manifest_v1.0-P7R1-R4_InnerWindowCanonicalFrame_R1_FORMAL.json",
+          "sha256": "6fc2e5fa375930198ef7d9639fca7998d3fbb6e5ee2a412b6652514ed27ce24b",
+          "bytes": 3158
+        },
+        {
+          "name": "YKKAP_ウチリモ内窓_商品マスター_v1.0-P7R1-R4_InnerWindowCanonicalFrame_R1_FORMAL.xlsx",
+          "sha256": "d77b824a20f193f51d7771b3b2e987d52de2bc675b7a85eb79a33f0e9feea8f2",
+          "bytes": 354761
+        },
+        {
+          "name": "YKKAP_ウチリモ内窓_商品マスター_v1.0-P7R1-R6_OptionCompleteness_R1_FORMAL.xlsx",
+          "sha256": "d1af22609b4a96491163ee076f27aeab1a8e7bef184c04ff3a33bfd970f95d84",
+          "bytes": 363623
+        },
+        {
+          "name": "uchirimo-product-change-qa-r4.json",
+          "sha256": "85e581f8f0e28f5170bec0d84d26fc1bfbe6544e5cef27bbc5c6807bbec57814",
+          "bytes": 47183
+        },
+        {
+          "name": "uchirimo-product-change-qa-r6-formal.json",
+          "sha256": "1fd4726b369a7f33c336f7b20aac669f75417b9d676669595aa1a01b8f6b315d",
+          "bytes": 5485
+        },
+        {
+          "name": "uchirimo-runtime.schema.json",
+          "sha256": "5d1311334c426a2c151827b948675de811b8839da356f42fd2ec7ffe60b1dd5f",
+          "bytes": 1887
+        }
+      ]
+    }
+  ],
+  "preserved": [
+    "Existing Formal",
+    "Source/Evidence IDs",
+    "Canonical Skills",
+    "frozen Shared Harness",
+    "AGENTS.md integrated text",
+    "Release",
+    "Runtime/UI"
+  ]
+}

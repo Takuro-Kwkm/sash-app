@@ -1,0 +1,158 @@
+{
+  "schema_version": "1.0",
+  "profile_id": "sash-new-product-master-v1",
+  "repository": "Takuro-Kwkm/sash-app",
+  "status": "ADOPTED",
+  "work_skill": "product-master-builder",
+  "mode": "NEW_PRODUCT_BOOTSTRAP_PLANNING",
+  "refs": {
+    "native_planner": {
+      "owner": "native",
+      "path": "scripts/production/product-master-build.py",
+      "sha256": "ac04652ffe56656f1d17d64fd5bd1514bf3dbfaa3822d4cd86d64be6bc0f6825"
+    },
+    "native_validator": {
+      "owner": "native",
+      "path": "scripts/production/validate-product-master-build.py",
+      "sha256": "e27ec8b9469f24b420103777ad0b3aef8a705ea272ee8afdc867da7d6e182ed5"
+    },
+    "native_schema": {
+      "owner": "native",
+      "path": "contracts/production/product-master-build-contract.json",
+      "sha256": "aebd2274460e9b0b8224452b1742ed4c7d7f8e567f9bf5e5b5f80fb9aa8cd5b7"
+    },
+    "domain_schema": {
+      "owner": "shared",
+      "path": "product_master/schemas/work-package.schema.json",
+      "sha256": "edf1ddee5ab9ac172d493de94b4d68cebf554933b6d6951e36cb0b67a4c2b63b"
+    },
+    "domain_builder": {
+      "owner": "shared",
+      "path": "product_master/build.py",
+      "sha256": "499242953b818d8d233d909ac82c3f92e3697a7458861ed7f845653b4daf6632"
+    },
+    "domain_validator": {
+      "owner": "shared",
+      "path": "product_master/validators/validate.py",
+      "sha256": "dd9bd9d19700819efd9e71fc90a02bfec3f61096dab932ee17e72a3a951c1049"
+    },
+    "workflow": {
+      "owner": "shared",
+      "path": "harness/workflow.py",
+      "sha256": "2e243c9616dc55c25b2d00f242968d762965bae61bb98431ba1b3aa47cfaf209"
+    },
+    "storage": {
+      "owner": "shared",
+      "path": "harness/core.py",
+      "sha256": "e35467a495a4c800fc5dc4bc642fad234f1fc3da07a7bf39727eefd4112bb203"
+    },
+    "resume": {
+      "owner": "shared",
+      "path": "harness/production.py",
+      "sha256": "fd34204892b420587a7c9c744473980c392a0ec48c7f6b05e5e16ce3a17b57f6"
+    }
+  },
+  "contracts": {
+    "registry_bootstrap": {
+      "authority_id": "1HMMZ8JdsbJPtL_8LjQfxMF8P_Zb4-LReqvPMFn1pJks",
+      "match": "manufacturer + series in complete authenticated CSV",
+      "absent_is_normal": true,
+      "candidate_state": "ABSENT/DRAFT",
+      "acquisition_failure": "CURRENT_REGISTRY_UNVERIFIED",
+      "existing_row": "EXISTING_PRODUCT_PLANNING; never overwrite; use product_master/domain.py",
+      "write": "Work-local normalized candidate only; native Registry remains read-only until fixed Formal transaction"
+    },
+    "storage": {
+      "local_root": "{work_root}/{candidate_id}/{revision}",
+      "candidate": "candidate/product-master.json",
+      "source": "sources/{source_id}",
+      "evidence": "evidence/observations.json",
+      "qa": "qa/native-qa.json",
+      "formal_candidate": "review/formal-candidate",
+      "checkpoint": "checkpoint",
+      "canonical_layout": "04_商品マスター/{manufacturer_folder}/{series}/01_正本",
+      "working_layout": "04_商品マスター/{manufacturer_folder}/{series}/90_作業中",
+      "old_layout": "04_商品マスター/{manufacturer_folder}/{series}/00_旧版",
+      "destination_resolution": "Resolve/create exact native folders via Drive, bind actual File IDs/parents; never infer folder IDs from labels"
+    },
+    "source_identity": {
+      "authority": "manufacturer official text/table/diagram/notes",
+      "required": [
+        "source_id",
+        "manufacturer",
+        "product_id",
+        "version",
+        "scope",
+        "locator",
+        "content_sha256"
+      ],
+      "acquisition": "local first; official discovery + connected retrieval; freeze actual bytes",
+      "failure": "SOURCE_ACQUISITION_REQUIRED; not Registry absence"
+    },
+    "evidence": {
+      "required": [
+        "evidence_id",
+        "source_id",
+        "locator",
+        "claim",
+        "applicable_fields",
+        "decision_status",
+        "decision_ref"
+      ],
+      "owner": "harness/resolvers.py + native governing rules",
+      "no_fact_inference": true
+    },
+    "qa": {
+      "schema": "domain_schema",
+      "validator": "native_validator",
+      "domain_validator": "domain_validator",
+      "QA_READY": "Business-scope handoff + native project QA; no unconditional Runtime/Price/BOM/Registry requirement",
+      "QA_PASS": "Formal Selection Scope UNKNOWN/UNMAPPED/Critical=0; excluded Controlled Unresolved isolated"
+    },
+    "human_review": {
+      "candidate": "fixed bytes + scope + QA + identity + destination Packet",
+      "decision": "External same-payload decision; AI cannot issue Human Decision",
+      "owner": "harness/workflow.py"
+    },
+    "formal_persistence": {
+      "owner": "harness/core.py admitted drive_bridge transaction",
+      "gate": "QA_PASS + fixed external Decision + package/storage/registry/identity PASS",
+      "readback": [
+        "File ID",
+        "parent",
+        "revision",
+        "name",
+        "downloaded bytes SHA256",
+        "Registry exact row",
+        "duplicate check"
+      ],
+      "scope": "native Product Master only"
+    },
+    "current_update": {
+      "order": "Persist/readback candidate then bind Formal transaction, preserve unrelated rows, update Current last",
+      "production_adapter": "New product remains ADAPTER_PENDING until separately admitted",
+      "release": false
+    },
+    "resume": {
+      "owner": "harness/workflow.py inspect + harness/production.py live_guard",
+      "checkpoint": "scripts/production-work.py checkpoint",
+      "binding": [
+        "work_id",
+        "immutable spec",
+        "Current HEAD",
+        "authority",
+        "source/master bytes",
+        "journal",
+        "receipts"
+      ],
+      "terminal": "INSPECT_ONLY; successor required"
+    },
+    "output_boundary": {
+      "planner_writes": "explicit Work output only",
+      "formal_writes": 0,
+      "runtime_ui_writes": 0,
+      "release_writes": 0,
+      "planning_not_qa_or_formal": true
+    }
+  }
+}
