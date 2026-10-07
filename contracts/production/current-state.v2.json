@@ -1,0 +1,31 @@
+{
+  "registry_id": "sash-app-native-current-state",
+  "status": "CURRENT",
+  "products": {
+    "SER-LIX-EW": {
+      "product_id": "SER-LIX-EW",
+      "formal_revision": "v1.4",
+      "native_registry_selector": {
+        "manufacturer": "LIXIL",
+        "series": "EW"
+      },
+      "native_registry_expected": {
+        "package_version": "v1.4",
+        "master_status": "FORMAL_PASS"
+      },
+      "immutable_files": {
+        "src/catalog/runtime-master-packages/lixil-ew-v1.4/runtime_manifest.json": "8fea71eb4f51f2014e2cae5abd732ccfe0b36224171c0edc24ac5368789f9d47",
+        "contracts/ew-202610/adoption.json": "d4e5a5adf0cba0ffd5b5569f7c537b419abe05db5dfae6cd394b6e2ce6d449e3"
+      },
+      "native_validator_files": [
+        "scripts/production/ew-change.py",
+        "scripts/production/ew-parity.mjs"
+      ],
+      "scope": "CURRENT_ADOPTED_ONLY; not a fresh latest catalog claim",
+      "mutation_policy": "NONE",
+      "adopted_source_byte_hashes": {
+        "15Kq1VFoJMbEie3iDy68rYe7Kc0-t471d": "1c3e420f8377df161be4b9995f03d016badd0b7930403a9adfa61f53bd939686"
+      }
+    }
+  }
+}

@@ -1,3 +1,11 @@
+# Current production entry
+
+Acquire `current-architecture.json` first. Its pinned shared `scripts/architecture-work.py` is the Current router. `work-connections.v2.json` contains native scope and explicit safe failure for every registered production product. `validator-registry.v2.json` resolves native checks. Architecture GA does not publish a product or application release.
+
+## Retained historical connection record
+
+The following describes the original connection, not the Current router or later completion state.
+
 # Production EW connection
 
 This is the native consumer adapter for the existing central Shared Harness v2.
@@ -40,3 +48,7 @@ remain byte-identical to the starting production commit.
 `Production Connection EW` CI checks the real existing runtime, application
 tests, build and three-width browser behavior. It grants no release/deployment
 authority and does not mutate the native product Registry.
+
+## Current-state acceptance
+
+The shared `scripts/prepare-current-state.py` binds `current-state.v2.json` to fresh native Registry, source bytes and HEAD observations. It dispatches read-only acceptance through the existing production runner. `SOURCE_UNCHANGED` is limited to Current adopted inputs, not latest catalog discovery. Its completed journal is inspected and future changes get a new immutable binding.

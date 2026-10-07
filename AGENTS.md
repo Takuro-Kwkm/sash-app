@@ -1,0 +1,3 @@
+# Current App Development Architecture
+
+All product development starts by acquiring `contracts/production/current-architecture.json` and its exact shared Authority revision. Resolve short instructions through the shared `scripts/architecture-work.py`. The existing `scripts/production-work.py` executes the resolved native profile; it remains the single v2 DAG/Resume/Formal/CI implementation. Do not choose migration/reference profiles as the Current production workflow. PENDING products must return the declared FAIL_CLOSED contract without legacy or fixture fallback. Completed Work is inspected, never re-adopted.
