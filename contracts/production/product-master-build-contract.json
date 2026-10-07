@@ -1,0 +1,110 @@
+{
+  "contract_id": "sash-native-product-master-build-v1",
+  "version": "1.0",
+  "repository": "Takuro-Kwkm/sash-app",
+  "governance": {
+    "manifest": {
+      "id": "1xZ7gbinFDTL_Gm1XKwEP95aXQGxzKHH_IiwxZj2dg4A",
+      "version": "1.5",
+      "modified_time": "2026-10-02T01:39:33.513Z",
+      "parent_ids": [
+        "13a4_M4zgcpumZkxGSNNXfhyGKCemQlSE"
+      ],
+      "content_sha256": "9aee94c5c13ed7fe5676ff3236bdc9079286c7ed276e2f0e1ef032477be8c2cf",
+      "read_policy": "Reacquire ACTIVE Current per Work; this is a verified adoption observation, not a floating fact authority"
+    },
+    "common": {
+      "id": "1MfixkbV1cZ__DtBknEKsix_nnrXQqjc-LZtXUHwJv_A",
+      "version": "0.3",
+      "modified_time": "2026-09-27T11:46:20.062Z",
+      "parent_ids": [
+        "1JlOSFJjFXklOVOo4nwDdaOed1EBq05xd"
+      ],
+      "content_sha256": "2ddb3f2062afdc39177aef7bbb735a4ff5f8d3f992a12083310912ffa1991268",
+      "read_policy": "Reacquire ACTIVE Current per Work; this is a verified adoption observation, not a floating fact authority"
+    },
+    "data-dictionary": {
+      "id": "1YQzUudx8ft3igY-vvEFtnqHzgsVj6udV7jGOaaNnM38",
+      "version": "1.0",
+      "modified_time": "2026-08-27T22:19:34.958Z",
+      "parent_ids": [
+        "12Pk7V2nfJv_h3ROT4P8KAcPsAH45agC-"
+      ],
+      "content_sha256": "7e55018e561740891ccc2159cf64fac6857b8e8835ac82425ada01f2cf4f38d3",
+      "read_policy": "Reacquire ACTIVE Current per Work; this is a verified adoption observation, not a floating fact authority"
+    },
+    "boundary": {
+      "id": "1_kKAVLQe2cJeKspQE6fYqnUl2_rSjlCGpxZVwIu4YsY",
+      "version": "1.1",
+      "modified_time": "2026-09-29T07:38:13.395Z",
+      "parent_ids": [
+        "1yXknyFyioI_PWYVCYJoH-D1cGpzENdMl"
+      ],
+      "content_sha256": "703ae881cdb313dc3b83bb17cf86ffbfee350b04687747ee27892da944e651b9",
+      "read_policy": "Reacquire ACTIVE Current per Work; this is a verified adoption observation, not a floating fact authority"
+    },
+    "policy": {
+      "id": "1v2fTNZZq1VxbrDK5MixM_OZTP4KftejRhERIMNMAAqQ",
+      "version": "3.0",
+      "modified_time": "2026-09-29T07:38:16.349Z",
+      "parent_ids": [
+        "1R40fN2qDHqwQlRnuOeu4urTIPavSs6Ra"
+      ],
+      "content_sha256": "3b41c273b19804a68b8663ae5c8f120aa09565a8d8b219bb9aa02ceb2d416d80",
+      "read_policy": "Reacquire ACTIVE Current per Work; this is a verified adoption observation, not a floating fact authority"
+    },
+    "storage": {
+      "id": "1X8qLOZ1y6QpqwD1l4VOq3m6ow8-eGNDJppVeEWEluo4",
+      "version": "2.2",
+      "modified_time": "2026-09-29T07:38:18.627Z",
+      "parent_ids": [
+        "1R40fN2qDHqwQlRnuOeu4urTIPavSs6Ra"
+      ],
+      "content_sha256": "b862051bcd52c00aa6df5ae02770e194c979a263e8046ad8ff0e278d54717cae",
+      "read_policy": "Reacquire ACTIVE Current per Work; this is a verified adoption observation, not a floating fact authority"
+    },
+    "unresolved": {
+      "id": "1ZZUD4FNCYQRe48FLzW43mcewS_bCi5gVVuvffrO-NF4",
+      "version": "2.0",
+      "modified_time": "2026-09-27T11:48:14.284Z",
+      "parent_ids": [
+        "1yXknyFyioI_PWYVCYJoH-D1cGpzENdMl"
+      ],
+      "content_sha256": "e09c54d58b482e95797e1490def0364bc335e9d19d6cc6e550eec734db551b37",
+      "read_policy": "Reacquire ACTIVE Current per Work; this is a verified adoption observation, not a floating fact authority"
+    },
+    "project": {
+      "id": "1vuexA-sGCeoO6gOeqogvdQvHpDmAr0wia14tRPYen1k",
+      "version": "2.0",
+      "modified_time": "2026-09-29T07:38:11.223Z",
+      "parent_ids": [
+        "18MTeTVCt08AdkQbn50bVe258av7uDxxC"
+      ],
+      "content_sha256": "397a0cbb9a569cc418eff8fbf74bb4d82ae019a50ef6b6267b1d3e6845bcd4a3",
+      "read_policy": "Reacquire ACTIVE Current per Work; this is a verified adoption observation, not a floating fact authority"
+    }
+  },
+  "registry_id": "1HMMZ8JdsbJPtL_8LjQfxMF8P_Zb4-LReqvPMFn1pJks",
+  "business_scope": "SALES_ESTIMATE_REQUEST",
+  "runtime_scope": "NOT_INCLUDED_IN_PRODUCT_MASTER_FORMAL",
+  "candidate_format": "SHARED_WORK_PACKAGE_1.0 + native governing selection-scope records; existing workbook sheets are references, not a mandatory template",
+  "identity": "NEW-CANDIDATE- + SHA256(exact normalized requested label); provisional only, final product ID requires official identity review",
+  "unknown_policy": [
+    "NULL",
+    "HOLD",
+    "MANUAL_CHECK",
+    "ESTIMATE_CONFIRM_REQUIRED",
+    "SOURCE_NOT_SUFFICIENT",
+    "FUTURE_SOURCE_PENDING"
+  ],
+  "formal_requirements": [
+    "QA_PASS",
+    "FORMAL_SELECTION_SCOPE_CONTENT",
+    "DEPENDENCY",
+    "ARTIFACT_PACKAGE",
+    "STORAGE",
+    "REGISTRY",
+    "FIXED_PACKET_HUMAN_DECISION"
+  ],
+  "runtime_required_only_when_explicitly_in_formal_scope": true
+}

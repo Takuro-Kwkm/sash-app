@@ -188,5 +188,12 @@
       "validators": [],
       "no_fallback": true
     }
+  },
+  "build_profiles": {
+    "sash-new-product-master-v1": {
+      "state": "READY",
+      "validator": "scripts/production/validate-product-master-build.py",
+      "no_fallback": true
+    }
   }
 }

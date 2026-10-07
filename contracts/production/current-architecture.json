@@ -3,7 +3,7 @@
   "version": "2.0.0",
   "architecture_authority": {
     "repository": "Takuro-Kwkm/product-ui-contracts",
-    "ref": "7e7c67f0b51bde9e87e405640685032128a8166d",
+    "ref": "ad1c508f5f2714dc84918ff6ef4be5ceb8e87351",
     "path": "registries/current-architecture.v2.json",
     "scope_axis": "CONSUMER_ADOPTED_IMPLEMENTATION",
     "live_current_selector": "live_architecture_selector"
@@ -16,7 +16,7 @@
   "legacy_selection": 0,
   "terminal_policy": "Inspect completed Work; next change must acquire Current and create a new immutable binding",
   "shared_router_files": {
-    "harness/architecture.py": "f18203cb7f16f3155378d810c33961c373641b3fbc8da08b47491f9ac2ea36ef",
+    "harness/architecture.py": "e41224932a76e06f868a0a95153888d1e56b65afffecdc5d6308b045205fcd9f",
     "scripts/architecture-work.py": "7722d8e93431a705bb782bf9384612f478c5fcb6d989b8fe5d6fc2b4f44fb4e7",
     "scripts/production-work.py": "d6b157c982be933ad91a80708b7b042216a6762d4a98be639c45768415c1723b",
     "scripts/prepare-current-state.py": "a2937c61b0c3d3bba44c896eb520391bb7b355794ca54e318468dec71c07185d",
@@ -27,5 +27,10 @@
     "selector": "REMOTE_DEFAULT_BRANCH:registries/current-architecture.v2.json",
     "scope_axis": "PROJECT_CURRENT",
     "policy": "Acquire fresh Current HEAD and content; freeze that observation into the Work separately from consumer implementation adoption"
+  },
+  "new_product_build_profile": {
+    "profile_id": "sash-new-product-master-v1",
+    "path": "contracts/production/product-master-build-profile.v1.json",
+    "sha256": "982306e14f5a8aac5a8fb675bf294ee3941a75c3e0fb46d5d76f5f0fadcec32c"
   }
 }
