@@ -1,5 +1,26 @@
 # 共通リリース契約 — native接続
 
+## Current互換性 successor v1
+
+元の `current-authority-adoption.json` は保持し、
+`current-authority-successor.json` が
+`authority-successors/common-release.v1.json` の固定bytesを選ぶ。
+Architecture implementationとRelease implementationを変更せず、追加Release契約と
+2つのCurrent compatibility checker変更だけを、別の固定implementationで採用する。
+実Git・semantic snapshot・依存hash・未知selectorの拒否は中央の既存
+`harness.current_authority.compatibility` が担当する。
+
+`python -B scripts/production/validate-current-authority-successor.py` はnative宣言のみ。
+`--central ACQUIRED_CURRENT` は中央checkerへ委譲して実Git/bytesを確認する。
+中央の `verify-ga-index.py --consumer-scope Takuro-Kwkm/sash-app` は4 Mainの履歴・
+committed bytesを取得し、Current互換性の採用Scopeをサッシへ限定する。
+Interior/ExteriorのCurrent readinessや採用を主張しない。
+
+順序2はサーモスL R3、OP-SL-EMERGENCY-SKIRT / MANUAL_STANDARD_ONLYの同一bytesを継承する。
+新商品差分・再採用は0。修復後に新Release bindingを固定し、実HEADのPreview/CIと
+固定Human Release Decisionを取得してから既存本番workflowへ進む。
+旧Draft、元Decision、完了journal、GA indexは改変しない。
+
 順序1の契約・証跡検証だけを追加する。中央live Currentとprofileが採用する固定implementation SHAを区別する。既存Current/Product/Adapter/Validator/Formal/Source/ResumeとEvidenceを変更しない。
 
 ## 固定実装と入口
