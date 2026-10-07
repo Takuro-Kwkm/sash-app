@@ -34,9 +34,22 @@
       "no_fallback": true
     },
     "SER-LIX-SAMOS2H": {
-      "state": "FAIL_CLOSED",
-      "validators": [],
-      "no_fallback": true
+      "state": "READY",
+      "scope": "SOURCE_AUDIT_ONLY",
+      "validators": [
+        "native-formal-byte-identity",
+        "complete-catalogue-text-and-visual-review",
+        "native-impact-mapping",
+        "no-formal-runtime-mutation"
+      ],
+      "no_fallback": true,
+      "mutation_policy": "NONE",
+      "profile": {
+        "path": "contracts/production/catalogue-audit/SER-LIX-SAMOS2H/profile.json",
+        "sha256": "081a71b91990169136bbec0adb129c1610c5bd29c1c1b75cf7c31e8813d8bca8",
+        "mutation_policy": "NONE",
+        "target_gate": "SOURCE_AUDIT_VERIFIED"
+      }
     },
     "SER-LIXIL-RECHENT-D3-NF": {
       "state": "FAIL_CLOSED",

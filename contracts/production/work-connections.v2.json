@@ -129,19 +129,39 @@
         "サーモスⅡH"
       ],
       "repository": "Takuro-Kwkm/sash-app",
-      "connection_state": "ADAPTER_PENDING",
+      "connection_state": "CONNECTED",
       "current_runtime_version": "v0.9-R4",
       "current_formal_version": "v0.9-R4",
       "formal_registry_selector": "LIXIL::サーモスⅡH",
       "runtime_adapter": "PRODUCT_MODULE_RUNTIME_V1",
       "runtime_source": "src/catalog/runtime-master/app-runtime-integration-registry.mjs",
-      "safe_failure": {
-        "state": "FAIL_CLOSED",
-        "code": "NATIVE_ADAPTER_UNAVAILABLE",
-        "target_gate": "ROUTER",
-        "writes": 0,
-        "fallback": false,
-        "next_action": "Acquire and review a native adapter successor Work; Current Formal/Runtime remain read-only"
+      "default_gate": "SOURCE_AUDIT_VERIFIED",
+      "baseline_selector": {
+        "registry_id": "1HMMZ8JdsbJPtL_8LjQfxMF8P_Zb4-LReqvPMFn1pJks",
+        "manufacturer": "LIXIL",
+        "series": "サーモスⅡH"
+      },
+      "source_selector": {
+        "role": "CURRENT_ADOPTED_PLUS_NEW_CANDIDATE",
+        "current_official_id": "1x4lovMcyfkyFzulYiQIv8OE5dpq6wDor",
+        "candidate_official_id": "18UFIudvFxFKNVzxOdn_ZIOyR8doze8xJ",
+        "scope": "ENTIRE_PRIMARY_PRICE_CATALOGUE; other source revisions are separately scoped",
+        "latest_discovery": "LIVE_OFFICIAL_INDEX_REQUIRED"
+      },
+      "native_adapter": "scripts/production/catalog-change-audit.py",
+      "native_prepare": "scripts/production/prepare-catalog-change-audit.py",
+      "validators": [
+        "native-formal-byte-identity",
+        "complete-catalogue-text-and-visual-review",
+        "native-impact-mapping",
+        "no-formal-runtime-mutation"
+      ],
+      "resume_selector": "IMMUTABLE_SPEC_AND_HASH_JOURNAL",
+      "catalogue_audit_profile": {
+        "path": "contracts/production/catalogue-audit/SER-LIX-SAMOS2H/profile.json",
+        "sha256": "081a71b91990169136bbec0adb129c1610c5bd29c1c1b75cf7c31e8813d8bca8",
+        "mutation_policy": "NONE",
+        "target_gate": "SOURCE_AUDIT_VERIFIED"
       }
     },
     {
