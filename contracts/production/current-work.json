@@ -1,0 +1,19 @@
+{
+  "registry_id": "WINDOW_PRODUCTION_CURRENT_WORK",
+  "status": "CURRENT",
+  "work_selection": "PER_PRODUCT_NATIVE_CURRENT; never select an arbitrary latest chat",
+  "products": {
+    "SER-LIX-EW": {
+      "state": "COMPLETED",
+      "evidence": "contracts/production/evidence/phase3-ew",
+      "checkpoint_file_id": "1kzRgwlpO7_j5QWXHZmjlrG2bXdZC6LRf",
+      "checkpoint_sha256": "3505326a58a5bf1b892de6cb1223a761ce1627fe6e3114045f4b41395b695710"
+    },
+    "SER-LIX-SAMOSL": {
+      "state": "COMPLETED",
+      "formal_current": "contracts/production/formal-state/current/SER-LIX-SAMOSL.json"
+    }
+  },
+  "terminal_policy": "Inspect completed immutable Work; bind a new successor to current HEAD for new changes",
+  "adapter_registry": "contracts/production/work-connections.v2.json"
+}

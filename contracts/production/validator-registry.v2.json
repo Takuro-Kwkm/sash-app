@@ -1,0 +1,192 @@
+{
+  "registry_id": "sash-app-validators-v2",
+  "status": "CURRENT",
+  "products": {
+    "SER-LIX-EW": {
+      "state": "READY",
+      "validators": [
+        "native-package-integrity",
+        "native-registry-identity",
+        "official-source-identity",
+        "ew-runtime-parity",
+        "window-selection-contract",
+        "scoped-regression"
+      ],
+      "no_fallback": true
+    },
+    "SER-LIX-SAMOSL": {
+      "state": "READY",
+      "validators": [
+        "native-sheet-preservation",
+        "scoped-official-claim",
+        "actual-runtime-ui-candidate"
+      ],
+      "no_fallback": true
+    },
+    "SER-LIX-EW-FIRE": {
+      "state": "FAIL_CLOSED",
+      "validators": [],
+      "no_fallback": true
+    },
+    "SER-LIXIL-TW": {
+      "state": "FAIL_CLOSED",
+      "validators": [],
+      "no_fallback": true
+    },
+    "SER-LIX-SAMOS2H": {
+      "state": "FAIL_CLOSED",
+      "validators": [],
+      "no_fallback": true
+    },
+    "SER-LIXIL-RECHENT-D3-NF": {
+      "state": "FAIL_CLOSED",
+      "validators": [],
+      "no_fallback": true
+    },
+    "SER-YKK-APW430": {
+      "state": "FAIL_CLOSED",
+      "validators": [],
+      "no_fallback": true
+    },
+    "SER-YKK-APW431": {
+      "state": "FAIL_CLOSED",
+      "validators": [],
+      "no_fallback": true
+    },
+    "SER-YKKAP-UCHIRIMO": {
+      "state": "FAIL_CLOSED",
+      "validators": [],
+      "no_fallback": true
+    },
+    "SER-LIXIL-INPLUS": {
+      "state": "FAIL_CLOSED",
+      "validators": [],
+      "no_fallback": true
+    },
+    "LIXIL_INPLUS_BATHROOM": {
+      "state": "FAIL_CLOSED",
+      "validators": [],
+      "no_fallback": true
+    },
+    "NATIVE_REGISTRY:LIXIL::TW防火戸": {
+      "state": "FAIL_CLOSED",
+      "validators": [],
+      "no_fallback": true
+    },
+    "NATIVE_REGISTRY:LIXIL::リプラス": {
+      "state": "FAIL_CLOSED",
+      "validators": [],
+      "no_fallback": true
+    },
+    "NATIVE_REGISTRY:LIXIL::ジエスタ2": {
+      "state": "FAIL_CLOSED",
+      "validators": [],
+      "no_fallback": true
+    },
+    "NATIVE_REGISTRY:LIXIL::エルムーブ2": {
+      "state": "FAIL_CLOSED",
+      "validators": [],
+      "no_fallback": true
+    },
+    "NATIVE_REGISTRY:LIXIL::サーモスA": {
+      "state": "FAIL_CLOSED",
+      "validators": [],
+      "no_fallback": true
+    },
+    "NATIVE_REGISTRY:LIXIL::玄関ドアXE": {
+      "state": "FAIL_CLOSED",
+      "validators": [],
+      "no_fallback": true
+    },
+    "NATIVE_REGISTRY:YKK AP::APW330": {
+      "state": "FAIL_CLOSED",
+      "validators": [],
+      "no_fallback": true
+    },
+    "NATIVE_REGISTRY:YKK AP::APW331": {
+      "state": "FAIL_CLOSED",
+      "validators": [],
+      "no_fallback": true
+    },
+    "NATIVE_REGISTRY:YKK AP::マドリモ 戸建用": {
+      "state": "FAIL_CLOSED",
+      "validators": [],
+      "no_fallback": true
+    },
+    "NATIVE_REGISTRY:YKK AP::コンコードS30": {
+      "state": "FAIL_CLOSED",
+      "validators": [],
+      "no_fallback": true
+    },
+    "NATIVE_REGISTRY:LIXIL::リシェント玄関引戸2": {
+      "state": "FAIL_CLOSED",
+      "validators": [],
+      "no_fallback": true
+    },
+    "NATIVE_REGISTRY:YKK AP::エピソードⅡ": {
+      "state": "FAIL_CLOSED",
+      "validators": [],
+      "no_fallback": true
+    },
+    "NATIVE_REGISTRY:LIXIL::リフォームシャッター": {
+      "state": "FAIL_CLOSED",
+      "validators": [],
+      "no_fallback": true
+    },
+    "NATIVE_REGISTRY:YKK AP::ドアリモ玄関引戸": {
+      "state": "FAIL_CLOSED",
+      "validators": [],
+      "no_fallback": true
+    },
+    "NATIVE_REGISTRY:YKK AP::ドアリモ アウトセット玄関引戸": {
+      "state": "FAIL_CLOSED",
+      "validators": [],
+      "no_fallback": true
+    },
+    "NATIVE_REGISTRY:LIXIL::防火戸FG-H": {
+      "state": "FAIL_CLOSED",
+      "validators": [],
+      "no_fallback": true
+    },
+    "NATIVE_REGISTRY:LIXIL::リシェント浴室ドア": {
+      "state": "FAIL_CLOSED",
+      "validators": [],
+      "no_fallback": true
+    },
+    "NATIVE_REGISTRY:LIXIL::リフォーム雨戸（雨戸一筋）": {
+      "state": "FAIL_CLOSED",
+      "validators": [],
+      "no_fallback": true
+    },
+    "NATIVE_REGISTRY:YKK AP::イノベスト": {
+      "state": "FAIL_CLOSED",
+      "validators": [],
+      "no_fallback": true
+    },
+    "NATIVE_REGISTRY:LIXIL::防火戸FG-L": {
+      "state": "FAIL_CLOSED",
+      "validators": [],
+      "no_fallback": true
+    },
+    "NATIVE_REGISTRY:LIXIL::グランデル2": {
+      "state": "FAIL_CLOSED",
+      "validators": [],
+      "no_fallback": true
+    },
+    "NATIVE_REGISTRY:LIXIL::店舗・汎用ドア・引戸": {
+      "state": "FAIL_CLOSED",
+      "validators": [],
+      "no_fallback": true
+    },
+    "NATIVE_REGISTRY:YKK AP::ドアリモ玄関ドア 非防火": {
+      "state": "FAIL_CLOSED",
+      "validators": [],
+      "no_fallback": true
+    },
+    "NATIVE_REGISTRY:YKK AP::ヴェナートD30": {
+      "state": "FAIL_CLOSED",
+      "validators": [],
+      "no_fallback": true
+    }
+  }
+}
