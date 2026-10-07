@@ -192,9 +192,15 @@
       "no_fallback": true
     },
     "NATIVE_REGISTRY:YKK AP::ドアリモ玄関ドア 非防火": {
-      "state": "FAIL_CLOSED",
-      "validators": [],
-      "no_fallback": true
+      "state": "READY",
+      "scope": "STRUCTURAL_DRAFT_RECOVERY_ONLY",
+      "validators": ["native-working-identity", "native-authoring-parity", "native-structural-recovery"],
+      "no_fallback": true,
+      "native_profile": {
+        "profile_id": "sash-working-master-recovery-v1",
+        "path": "contracts/production/working-master-recovery/doorremo-nonfire.v1.json",
+        "sha256": "de0aadf76563f9d09faacaa1d97ee0c34f77a6186396cd469e4cc7b9763564da"
+      }
     },
     "NATIVE_REGISTRY:YKK AP::ヴェナートD30": {
       "state": "FAIL_CLOSED",
