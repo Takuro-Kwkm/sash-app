@@ -1,10 +1,10 @@
 name: Common Release Contract
 on:
   pull_request:
-    paths: ['contracts/production/release-profile.v1.json', 'contracts/production/current-authority-successor.json', 'contracts/production/authority-successors/**', 'scripts/production/validate-current-authority-successor.py', 'scripts/production/release-contract.py', 'scripts/production/ignore-contract-only-build.mjs', 'docs/COMMON_RELEASE.md', '.github/workflows/common-release-contract.yml', 'vercel.json', 'apps/web/vercel.json']
+    paths: ['.release/app-production-hotfix-v1', 'contracts/production/release-profile.v1.json', 'contracts/production/current-authority-successor.json', 'contracts/production/authority-successors/**', 'scripts/production/validate-current-authority-successor.py', 'scripts/production/release-contract.py', 'scripts/production/ignore-contract-only-build.mjs', 'docs/COMMON_RELEASE.md', '.github/workflows/common-release-contract.yml', 'vercel.json', 'apps/web/vercel.json']
   push:
     branches: [main]
-    paths: ['contracts/production/release-profile.v1.json', 'contracts/production/current-authority-successor.json', 'contracts/production/authority-successors/**', 'scripts/production/validate-current-authority-successor.py', 'scripts/production/release-contract.py', 'scripts/production/ignore-contract-only-build.mjs', 'docs/COMMON_RELEASE.md', '.github/workflows/common-release-contract.yml', 'vercel.json', 'apps/web/vercel.json']
+    paths: ['.release/app-production-hotfix-v1', 'contracts/production/release-profile.v1.json', 'contracts/production/current-authority-successor.json', 'contracts/production/authority-successors/**', 'scripts/production/validate-current-authority-successor.py', 'scripts/production/release-contract.py', 'scripts/production/ignore-contract-only-build.mjs', 'docs/COMMON_RELEASE.md', '.github/workflows/common-release-contract.yml', 'vercel.json', 'apps/web/vercel.json']
 permissions:
   contents: read
 jobs:
