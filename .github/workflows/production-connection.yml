@@ -1,10 +1,10 @@
 name: Production Connection EW
 on:
   pull_request:
-    paths: ['contracts/production/**', 'scripts/production/**', '.github/workflows/production-connection.yml']
+    paths: ['.release/app-production-hotfix-v1', 'contracts/production/**', 'scripts/production/**', '.github/workflows/production-connection.yml']
   push:
     branches: [main, 'feat/phase3-ew-production-connection']
-    paths: ['contracts/production/**', 'scripts/production/**', '.github/workflows/production-connection.yml']
+    paths: ['.release/app-production-hotfix-v1', 'contracts/production/**', 'scripts/production/**', '.github/workflows/production-connection.yml']
   workflow_dispatch:
 permissions:
   contents: read
