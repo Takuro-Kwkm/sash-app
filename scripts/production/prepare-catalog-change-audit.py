@@ -67,7 +67,12 @@ def prepare(harness_root, checkout, captures, destination, instruction):
     spec = {'workflow_id': c['work_id'], 'work_skill': 'product-change-work', 'target': route['product_id'], 'target_gate': 'SOURCE_AUDIT_VERIFIED',
             'skill_root': str(checkout/'scripts/production'), 'authority_index': ref(root/'authority-index.json'), 'authorities': authorities,
             'registry': ref(root/'registry.json'), 'sources': sources, 'workflow': ref(root/'workflow.json'), 'input': ref(root/'contract.json'),
-            'runtime_refs': [ref(checkout/p) for p in c['captured_paths']] + contract['preserved_refs'] + [profile_ref, contract['review'], contract['visual_comparison']],
+            'runtime_refs': [ref(checkout/p) for p in c['captured_paths']] + contract['preserved_refs']
+                            + [v for v in contract.values() if isinstance(v, dict) and set(v) == {'path', 'sha256'}]
+                            + [ref(p) for p in sorted((harness_root/'harness').glob('*.py'))]
+                            + [ref(harness_root/p) for p in ('registries/current-architecture.v2.json', 'registries/skill-authority.v2.json',
+                                                            'scripts/architecture-work.py', 'scripts/production-work.py',
+                                                            'work_skills/product-change-work/SKILL.md')],
             'storage_root': str(root/'saved'), 'production_binding': ref(root/'production-binding.json'),
             'production_routing': ref(checkout/'contracts/production/work-connections.v2.json')}
     write_json(root/'spec.json', spec)
