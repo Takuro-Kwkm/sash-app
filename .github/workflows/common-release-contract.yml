@@ -1,0 +1,25 @@
+name: Common Release Contract
+on:
+  pull_request:
+    paths: ['contracts/production/release-profile.v1.json', 'scripts/production/release-contract.py', 'scripts/production/ignore-contract-only-build.mjs', 'docs/COMMON_RELEASE.md', '.github/workflows/common-release-contract.yml', 'vercel.json', 'apps/web/vercel.json']
+  push:
+    branches: [main]
+    paths: ['contracts/production/release-profile.v1.json', 'scripts/production/release-contract.py', 'scripts/production/ignore-contract-only-build.mjs', 'docs/COMMON_RELEASE.md', '.github/workflows/common-release-contract.yml', 'vercel.json', 'apps/web/vercel.json']
+permissions:
+  contents: read
+jobs:
+  release-connection:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+      - name: Exact candidate identity
+        env:
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12.14'}
+      - run: python -B scripts/production/release-contract.py --check
+      - run: python -B scripts/production/validate-architecture-connection.py
