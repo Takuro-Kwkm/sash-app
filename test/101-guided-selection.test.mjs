@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { resolveRuntimeAppProduct as resolve, runtimeAppIntegrationInventory } from '../src/catalog/runtime-master/runtime-app-bridge.mjs';
 import { guidedSelectionContract as contract } from '../src/ui/web/guided-selection-contract.mjs';
-import { admittedGuidedProducts, guidedOpeningChoices, recommendGuidedProducts, nextGuidedQuestion, applyGuidedCandidate } from '../src/ui/web/guided-selection-engine.mjs';
+import { admittedGuidedProducts, guidedOpeningChoices, recommendGuidedProducts, nextGuidedQuestion, applyGuidedCandidate, reconcileGuidedAcknowledgements } from '../src/ui/web/guided-selection-engine.mjs';
 const inventory = runtimeAppIntegrationInventory();
 const answers = { purpose: 'new_exterior', priority: 'price', opening: 'WT-SL-HIKICHIGAI' };
 
@@ -16,6 +16,13 @@ test('only explicitly admitted verified Formal Runtime is a candidate; blocked/c
   assert.equal(choices.length, 17);
   assert.ok(choices.every(c => c.label && c.value));
   assert.deepEqual((await recommendGuidedProducts({ inventory, resolve, answers: { ...answers, purpose: 'other' } })).candidates, []);
+});
+
+test('optional question acknowledgements resume unchanged and reopen after upstream edits', async () => {
+  const first = await resolve('SER-LIX-SAMOSL', { window_type: answers.opening });
+  assert.deepEqual(reconcileGuidedAcknowledgements(first, first, ['options']), ['options']);
+  const changed = await resolve('SER-LIX-SAMOSL', { window_type: 'WT-SL-FIX-OUT' });
+  assert.deepEqual(reconcileGuidedAcknowledgements(first, changed, ['options']), []);
 });
 
 test('reasons are versioned and separate from facts; price/thermal are unknown for every priority', async () => {

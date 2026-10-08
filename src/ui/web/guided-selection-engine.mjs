@@ -77,6 +77,16 @@ export function nextGuidedQuestion(result, acknowledged = []) {
       || (!hasValue(result.selection?.[field.key]) && !acknowledged.includes(field.key)))) ?? null;
 }
 
+export function reconcileGuidedAcknowledgements(previous, result, acknowledged = []) {
+  if (!previous) return acknowledged;
+  const changedOrders = (result.fields ?? []).filter(field =>
+    JSON.stringify(previous.selection?.[field.key]) !== JSON.stringify(result.selection?.[field.key]))
+    .map(field => field.displayOrder ?? Infinity);
+  const earliest = Math.min(Infinity, ...changedOrders);
+  return acknowledged.filter(key => !(result.clearedFields ?? []).includes(key)
+    && (result.fields.find(field => field.key === key)?.displayOrder ?? Infinity) < earliest);
+}
+
 // Only the existing Runtime writes the authoritative Selection State.
 export async function applyGuidedCandidate({ candidate, currentSelection, resolve }) {
   const result = await resolve(candidate.productId, { ...currentSelection, ...candidate.patch });

@@ -1,6 +1,9 @@
 import { spawnSync } from 'node:child_process';
 
 const files = [
+  'src/ui/web/guided-selection-contract.mjs',
+  'src/ui/web/guided-selection-engine.mjs',
+  'src/ui/web/guided-selection-ui.mjs',
   'src/server/recovery-app.mjs',
   'scripts/production/verify-app-release.mjs',
   'scripts/vercel-rest-deploy.mjs',
