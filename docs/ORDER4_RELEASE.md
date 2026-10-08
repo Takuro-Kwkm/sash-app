@@ -25,3 +25,15 @@ readback, production QA, immutable storage/readback and versioned Resume Index
 remain necessary. BROWSER_LOCAL_STORAGE is not DB E2E. Formal Runtime, the
 existing PDF background-only second page, and Exterior /app new DB E2E remain
 separate Scopes. No new DB/schema/RLS/Protection/plan/product facts are changed.
+
+## Exact-head CI selection correction
+
+The predecessor profile requires Common Release Contract and Production
+Connection EW; both remain mandatory. Actual New Product Master Build is
+additionally required. The initially proposed V2 Recovery CI addition was
+removed before Release approval: its preserved legacy workflow is callable
+only through the separate Human Flow governance controller and is not an
+automatically emitted candidate/Main check. No legacy governance workflow,
+Human Flow Decision, or parallel product work is changed. Project Governance
+Gate and PR Adopted App Production Release results are also recorded when
+they actually execute; neither is renamed into a V2 Recovery CI receipt.

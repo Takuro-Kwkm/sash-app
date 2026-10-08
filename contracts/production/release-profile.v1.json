@@ -71,7 +71,6 @@
   "required_ci": [
     "Common Release Contract",
     "Production Connection EW",
-    "V2 Recovery CI",
     "Actual New Product Master Build"
   ],
   "native_paths": [
@@ -106,7 +105,7 @@
     "contracts/production/shared-release-authority.v1.bundle": "59b1e2ea1dd731e435ee6125832e0839280d8a7b8bcccf7c33a62e7160eeb971",
     "scripts/production/validate-order4-release.py": "a729a962973e08039764376e79e51048028325ddd018e3586d6eafa688eca300",
     "contracts/production/order4-release-scope.v1.json": "7ed794ae8b9fbee4f0a962f9c9bec1d3168e67fbe69919101ad9c437a2afd51f",
-    "docs/ORDER4_RELEASE.md": "4e1cbc539bcbb7fadd3c399db4a80fa6eadc86f4635238de1b4e1cc4a279f95d",
+    "docs/ORDER4_RELEASE.md": "b54f3ff89380a79f4df687efecbb0c3ae2e8a1b4ccca6c1d332b466c9f13a787",
     "test/browser/eight-series-business-flow-qa.mjs": "e531d024a1527aac3800cf659ecc32cc736dbfe949e9329400450538997112af",
     "scripts/vercel-rest-deploy.mjs": "a78286a84f7f48dd5fc7028e02e4e7fcad9564b9e02cd5d4059860cb4f1232f5"
   },
