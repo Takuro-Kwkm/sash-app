@@ -1,0 +1,88 @@
+{
+  "schema": "NATIVE_RELEASE_PROFILE_V1",
+  "version": "1.0.0",
+  "status": "CURRENT",
+  "approval_roles": [
+    "Formal",
+    "UI",
+    "Output",
+    "Release"
+  ],
+  "mandatory_approvals": [
+    "Release"
+  ],
+  "gate_approval_roles": {
+    "FORMAL_ADOPTED": [
+      "Formal"
+    ],
+    "APP_INTEGRATION_READY": [
+      "UI",
+      "Output",
+      "Release"
+    ]
+  },
+  "minimum_qa": [
+    "release_identity",
+    "health",
+    "browser",
+    "output",
+    "persistence_boundary",
+    "deployment_logs"
+  ],
+  "boundary_policy": "Actual native evidence only; Print requires inspected PDF/Print Preview; localStorage is not live DB E2E",
+  "shared_contract": {
+    "repository": "Takuro-Kwkm/product-ui-contracts",
+    "ref": "d8a03c52b86a7a0f8ce3e4f8243a18b07bd3a285",
+    "entry": "scripts/release-contract.py",
+    "files": {
+      "contracts/common-release.v1.json": "826328619c8a465f389472537396e1564fc00f0fe8820d6e7963fb878c0663c4",
+      "schemas/common-release.v1.schema.json": "a15705dfe0334796c08e80e107955d2d931aab557742096f587085d1c2effd78",
+      "harness/release.py": "9be0679de8c37488b89fb9c3d1324b7aa52124f4bfb844fa02308806ae67e4c6",
+      "scripts/release-contract.py": "6f7b77fe5ab50dd4286a5007d18cab5c5f911ba3bd36128b66ae97350980b322",
+      "harness/workflow.py": "2e243c9616dc55c25b2d00f242968d762965bae61bb98431ba1b3aa47cfaf209",
+      "harness/core.py": "e35467a495a4c800fc5dc4bc642fad234f1fc3da07a7bf39727eefd4112bb203",
+      "harness/resolvers.py": "cb1704e92446cb6552f9da80ad30928928ed1aa4d05aedcce13ee69e07229a57",
+      "harness/artifacts.py": "cf264fe46b02451613e6229b5c6127f2a7c4383802f630814b5ce3546d386ded",
+      "harness/production.py": "fd34204892b420587a7c9c744473980c392a0ec48c7f6b05e5e16ce3a17b57f6",
+      "harness/github_bridge.py": "4a544f318c2cc9b2e8ebb55ac0a290607c83ed41092495c35087260014564cce"
+    }
+  },
+  "live_current": {
+    "repository": "Takuro-Kwkm/product-ui-contracts",
+    "selector": "REMOTE_DEFAULT_BRANCH:registries/current-architecture.v2.json"
+  },
+  "terminal_policy": "INSPECT_ONLY; changed input/payload/profile creates successor binding",
+  "evidence_storage": "Reuse native Work storage/readback; downloaded bytes plus File ID/parent/revision for cloud",
+  "execution": "READ_ONLY_RECEIPT_VALIDATOR; no deployment, DB or Human Decision issuance",
+  "destination": {
+    "provider": "VERCEL",
+    "project_id": "prj_4z0zqW6yKyPuFINODfGX8LPBuJRP",
+    "team_id": "team_AkuHacuJlCl8LuvaFpCzFmbv",
+    "alias": "https://sash-app-wave3-preview.vercel.app",
+    "production_branch": "main"
+  },
+  "required_ci": [
+    "Common Release Contract",
+    "Production Connection EW"
+  ],
+  "native_paths": [
+    "contracts/production/app-release.v1.json",
+    "scripts/production/verify-app-release.mjs",
+    ".github/workflows/app-production-hotfix.yml",
+    "test/browser/release-regression-browser-qa.mjs"
+  ],
+  "deployment_executor": ".github/workflows/app-production-hotfix.yml -> scripts/vercel-rest-deploy.mjs",
+  "identity_command": "npm run verify:app-release -- --url URL --expect-commit SHA --require-release-commit --output EVIDENCE_JSON",
+  "qa_command": "QA_BASE_URL=URL npm run test:browser:release",
+  "persistence_boundary": "BROWSER_LOCAL_STORAGE",
+  "residual_gaps": [
+    "Import existing workflow artifact receipts into common record; not automatically release-closed by workflow success"
+  ],
+  "repository": "Takuro-Kwkm/sash-app",
+  "native_files": {
+    "contracts/production/app-release.v1.json": "ac6cd995b53c3669587c2a05b8ecec0b9bffd46906d623a340771d2598e45914",
+    "scripts/production/verify-app-release.mjs": "0e5f3301de89c6b9cf041ada3683b3bfa1056727598ed41342606267d3e101ba",
+    ".github/workflows/app-production-hotfix.yml": "ca6d42817391448754219e36b9015dd1b613075f9f4af7bd5f54df2dec726ad1",
+    "test/browser/release-regression-browser-qa.mjs": "786bd575e4546aa82cb6f37238d7f455e4cd169c54e5758eb31c4deda14fbb7a"
+  }
+}

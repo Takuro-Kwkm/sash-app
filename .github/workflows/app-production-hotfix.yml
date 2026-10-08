@@ -11,8 +11,14 @@ on:
       - '.release/app-production-hotfix-v1'
   workflow_dispatch:
     inputs:
+      deployment_mode:
+        description: 'Existing executor build only; production is staged until Shared authorization'
+        type: choice
+        options: [preview, production]
+        default: preview
+        required: true
       expected_sha:
-        description: 'Reviewed exact main commit to deploy'
+        description: 'Exact candidate for preview, or reviewed Main for staged production'
         required: true
         type: string
       approval_reference:
@@ -90,6 +96,7 @@ jobs:
       VERCEL_PROJECT_NAME: sash-app-wave3-preview
       VERCEL_TOKEN_PRIMARY: ${{ secrets.VERCEL_TOKEN }}
       VERCEL_TOKEN_FALLBACK: ${{ secrets.VERCEL_ACCESS_TOKEN }}
+      DEPLOY_MODE: ${{ inputs.deployment_mode || 'production' }}
       VERCEL_DEPLOY_SOURCE: files
       RELEASE_SERIES: APP_NON_PRODUCT_MASTER_UI
       RELEASE_PACKAGE_VERSION: adopted-app-release-v1
@@ -100,7 +107,7 @@ jobs:
       - name: Checkout exact main hotfix SHA
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
-          ref: ${{ github.sha }}
+          ref: ${{ inputs.expected_sha || github.sha }}
           fetch-depth: 0
 
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
@@ -112,7 +119,7 @@ jobs:
         run: |
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
-          test "$GITHUB_REF" = 'refs/heads/main'
+          if [[ "$DEPLOY_MODE" == 'production' ]]; then test "$GITHUB_REF" = 'refs/heads/main'; fi
           if [[ "$GITHUB_EVENT_NAME" == 'workflow_dispatch' ]]; then
             node --input-type=module <<'NODE'
           import {readFileSync} from 'node:fs';
@@ -167,56 +174,25 @@ jobs:
           node -e 'const p=require("/tmp/vercel-project.json"); if(p.id!==process.env.VERCEL_PROJECT_ID||p.accountId!==process.env.VERCEL_ORG_ID) process.exit(1)'
           echo 'VERCEL_CREDENTIAL_GATE=PASS'
 
-      - name: Deploy exact hotfix SHA to Production
-        run: node scripts/vercel-rest-deploy.mjs production artifacts/app-hotfix-production/deployment.json
+      - name: Build exact candidate Preview or exact Main staged Production
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ "$DEPLOY_MODE" == 'preview' ]]; then export VERCEL_DEPLOY_SOURCE=inline; fi
+          node scripts/vercel-rest-deploy.mjs "$DEPLOY_MODE" artifacts/app-hotfix-production/deployment.json
 
-      - name: Verify Production identity and alias
+      - name: Verify staged build and preserved production alias
         shell: bash
         run: |
           set -euo pipefail
           node --input-type=module <<'NODE'
           import {readFileSync} from 'node:fs';
           const d=JSON.parse(readFileSync('artifacts/app-hotfix-production/deployment.json','utf8'));
-          if(d.readyState!=='READY'||d.githubSha!==process.env.GITHUB_SHA||d.releaseCommitSha!==process.env.GITHUB_SHA||d.mode!=='production')throw new Error('PRODUCTION_IDENTITY_INVALID');
-          console.log('PRODUCTION_IDENTITY_GATE=PASS '+d.deploymentUrl);
+          if(d.readyState!=='READY'||d.githubSha!==process.env.GITHUB_SHA||d.releaseCommitSha!==process.env.GITHUB_SHA||d.mode!==process.env.DEPLOY_MODE)throw new Error('STAGED_IDENTITY_INVALID');
+          if(process.env.DEPLOY_MODE==='preview'){if(d.releaseState!=='PREVIEW_READY')throw new Error('PREVIEW_IDENTITY_INVALID');console.log('PREVIEW_READY; QA_AND_FIXED_PACKET_REQUIRED');process.exit(0);}
+          if(d.releaseState!=='STAGED_NOT_RELEASED'||d.autoAssignCustomDomains!==false||d.aliasBefore.deploymentId!==d.aliasAfter.deploymentId)throw new Error('PRODUCTION_ALIAS_HOLD_REQUIRED');
+          console.log('STAGED_NOT_RELEASED: new staged native QA, exact Main CI and actual fixed Release packet required before Shared authorize-publication and existing provider promotion');
           NODE
-          status="$(curl -sS -o artifacts/app-hotfix-production/vercel-deployment.json -w '%{http_code}' -H "Authorization: Bearer $VERCEL_TOKEN_EFFECTIVE" "https://api.vercel.com/v13/deployments/$DEPLOY_ID?teamId=$VERCEL_ORG_ID")"
-          test "$status" = "200"
-          node -e 'const d=require("./artifacts/app-hotfix-production/vercel-deployment.json"); if(d.readyState!=="READY"||d.target!=="production"||d.meta?.releaseCommitSha!==process.env.GITHUB_SHA||!Array.isArray(d.alias)||!d.alias.includes(process.env.PRODUCTION_HOST)) process.exit(1)'
-          echo 'PRODUCTION_ALIAS_GATE=PASS'
-
-      - name: Production health smoke
-        shell: bash
-        run: |
-          set -euo pipefail
-          mkdir -p artifacts/app-hotfix-production
-          curl -fsS "$PRODUCTION_URL/api/health" > artifacts/app-hotfix-production/health.json
-          node --input-type=module <<'NODE'
-          import {readFileSync} from 'node:fs';
-          const h=JSON.parse(readFileSync('artifacts/app-hotfix-production/health.json','utf8'));
-          if(!h.ok)throw new Error('PRODUCTION_HEALTH_FAILED');
-          const expected=['SER-LIXIL-TW','SER-LIX-EW','SER-LIX-SAMOS2H','SER-LIX-SAMOSL','SER-YKK-APW430','SER-YKK-APW431','SER-YKKAP-UCHIRIMO'];
-          const byId=new Map((h.runtimeMasterIntegrations??[]).map(x=>[x.id,x]));
-          if(expected.some(id=>!byId.has(id)||byId.get(id).status!=='READY'||byId.get(id).selectable!==true))throw new Error('SEVEN_SERIES_RUNTIME_SMOKE_FAILED');
-          console.log('PRODUCTION_HEALTH_GATE=PASS');
-          NODE
-
-      - name: Compare deployed commit, Runtime identities and UI bytes
-        run: npm run verify:app-release -- --url "$PRODUCTION_URL" --require-release-commit --output artifacts/app-hotfix-production/production-verification.json
-
-      - name: Production UI and business-flow QA
-        env:
-          QA_BASE_URL: ${{ env.PRODUCTION_URL }}
-        run: |
-          npm run test:browser:work
-          npm run test:browser:estimate-output
-          node test/browser/eight-series-business-flow-qa.mjs
-          node test/browser/inplus-reverse-handing-browser-qa.mjs
-          node test/browser/inplus-accessory-request-browser-qa.mjs
-          node test/browser/bathroom-estimate-workflow-browser-qa.mjs
-          node test/browser/inner-window-canonical-frame-qa.mjs
-          node test/browser/release-regression-browser-qa.mjs
-          echo 'PRODUCTION_BROWSER_QA_GATE=PASS'
 
       - name: Upload hotfix evidence
         if: always()

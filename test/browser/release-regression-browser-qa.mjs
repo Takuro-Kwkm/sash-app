@@ -5,11 +5,11 @@ import { appRuntimeIntegrationRegistry } from '../../src/catalog/runtime-master/
 
 const BASE=process.env.QA_BASE_URL??'http://127.0.0.1:4173';
 const SHARE_TOKEN=process.env.VERCEL_SHARE_TOKEN;
-const OUT='artifacts/release-regression-browser-qa';
+const OUT=process.env.QA_OUTPUT_DIR??'artifacts/release-regression-browser-qa';
 await mkdir(OUT,{recursive:true});
-const report={status:'RUNNING',products:[],runtimeIntegrations:[],consoleErrors:[],pageErrors:[],failedResponses:[]};
-const browser=await chromium.launch({headless:true});
-const context=await browser.newContext({viewport:{width:1440,height:1000}});
+const report={status:'RUNNING',url:BASE,observedAt:new Date().toISOString(),persistence:'BROWSER_LOCAL_STORAGE',products:[],runtimeIntegrations:[],consoleErrors:[],pageErrors:[],failedResponses:[]};
+const browser=await chromium.launch({headless:true,executablePath:process.env.CHROME_EXECUTABLE_PATH||undefined});
+const context=await browser.newContext({storageState:process.env.PLAYWRIGHT_STORAGE_STATE||undefined,viewport:{width:1440,height:1000}});
 const page=await context.newPage();
 page.on('console',(message)=>{if(message.type()==='error')report.consoleErrors.push(message.text());});
 page.on('pageerror',(error)=>report.pageErrors.push(error.message));
@@ -17,6 +17,11 @@ page.on('response',(response)=>{if(response.status()>=400)report.failedResponses
 
 try {
   if(SHARE_TOKEN)await page.goto(`${BASE}/?_vercel_share=${encodeURIComponent(SHARE_TOKEN)}`,{waitUntil:'networkidle'});
+  const healthResponse=await context.request.get(`${BASE}/api/health`);assert.equal(healthResponse.status(),200);
+  const health=await healthResponse.json();assert.equal(health.ok,true);
+  if(process.env.QA_EXPECTED_COMMIT)assert.equal(health.releaseCommitSha,process.env.QA_EXPECTED_COMMIT);
+  report.observedCommit=health.releaseCommitSha??null;
+  await writeFile(`${OUT}/health.json`,JSON.stringify(health,null,2)+'\n');
   const [catalogApi,runtimeApi]=await Promise.all([
     context.request.get(`${BASE}/api/catalog/products`),
     context.request.get(`${BASE}/api/runtime-master/integrations`),
@@ -80,7 +85,8 @@ try {
   assert.deepEqual(report.consoleErrors,[]);
   assert.deepEqual(report.pageErrors,[]);
   assert.deepEqual(report.failedResponses,[]);
-  report.status='PASS';
+  report.checks=[...report.products.map(p=>({name:'catalog-'+p.id,result:p.status==='RUNTIME_READY'?'PASS':p.status,detail:p})),...report.runtimeIntegrations.map(p=>({name:'runtime-'+p.id,result:p.status==='READY'&&p.selectable?'PASS':'FAIL',detail:p}))];
+  report.check_count=report.checks.length;report.status='PASS';
   await writeFile(`${OUT}/report.json`,JSON.stringify(report,null,2));
   console.log(JSON.stringify(report,null,2));
 } catch(error){

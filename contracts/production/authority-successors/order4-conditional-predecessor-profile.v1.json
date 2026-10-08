@@ -1,6 +1,6 @@
 {
   "schema": "NATIVE_RELEASE_PROFILE_V1",
-  "version": "1.3.0",
+  "version": "1.2.0",
   "status": "CURRENT",
   "approval_roles": [
     "Formal",
@@ -32,26 +32,24 @@
   "boundary_policy": "Actual native evidence only; Print requires inspected PDF/Print Preview; localStorage is not live DB E2E",
   "shared_contract": {
     "repository": "Takuro-Kwkm/product-ui-contracts",
-    "ref": "f0936024536cf5fd8ce7a120b25acfa20569d641",
+    "ref": "8898402b65a498821bd22c39313c7c6eac9ebdf7",
     "entry": "scripts/release-contract.py",
     "files": {
       "contracts/common-release.v1.json": "826328619c8a465f389472537396e1564fc00f0fe8820d6e7963fb878c0663c4",
-      "contracts/order4-conditional-human-release-policy.v1.json": "8e12fe69164451c863bc36d671128d0e7362a2a5fd3475998e28b85579ab0ce9",
-      "docs/evidence/order4/conditional-human-source.v1.md": "745fa3ac77cb64146076269bd934622628ff5e535cf80060fba38ef373061b63",
       "harness/artifacts.py": "cf264fe46b02451613e6229b5c6127f2a7c4383802f630814b5ce3546d386ded",
       "harness/core.py": "e35467a495a4c800fc5dc4bc642fad234f1fc3da07a7bf39727eefd4112bb203",
-      "harness/current_authority.py": "b4421835433173b9fe18e0c9e0e0c44024636b3be982d0872f917a47a1e7c5af",
+      "harness/current_authority.py": "24ec022ef8f0efe858cbabe7058e337406385f337be8e87c37e965163a80dc70",
       "harness/github_bridge.py": "4a544f318c2cc9b2e8ebb55ac0a290607c83ed41092495c35087260014564cce",
       "harness/production.py": "fd34204892b420587a7c9c744473980c392a0ec48c7f6b05e5e16ce3a17b57f6",
-      "harness/release.py": "0cc0d42f711d7fb52ef6bd781505a20ea27753031abc225ab6286c94c7cf1538",
-      "harness/release_admission.py": "16d658105b8e51c88b24d1394a1049f834b77c9661337474fe61aab3cba7cf0d",
-      "harness/release_publication.py": "2026ce72941999380d3b5cddb9bc4d5e3b39a289b91fcf0b966279061a4ad2e6",
+      "harness/release.py": "9bb1b7f346d6599a480261d59572f8f4be976aedd453879cc9fac08041247025",
+      "harness/release_admission.py": "24de9d886d332eed644ab015bc038488c0d66f2a7be6be48c40a0e3a36f5e9b5",
+      "harness/release_publication.py": "dbb83866168e6dee8bd2442592d4a9024de1b96f0e67581c75dab8c18f8cd5e9",
       "harness/release_restore.py": "a9631838a72a0f86dff422c0ac666a9bb41897192509d194386a03679ee5ecf1",
       "harness/resolvers.py": "cb1704e92446cb6552f9da80ad30928928ed1aa4d05aedcce13ee69e07229a57",
       "harness/workflow.py": "2e243c9616dc55c25b2d00f242968d762965bae61bb98431ba1b3aa47cfaf209",
       "registries/current-architecture.v2.json": "a548dc7c213af0a1d01fda34febb7e4d596e52e372c6b936304281cd49b68d75",
       "schemas/common-release.v1.schema.json": "a15705dfe0334796c08e80e107955d2d931aab557742096f587085d1c2effd78",
-      "scripts/release-contract.py": "ae65ba3d5e3008c9c23fdb05d1dde748e70d6526bd3558bf84d272a493262c58",
+      "scripts/release-contract.py": "2e7332d62a00830038670ebcf2ed18c7d4da9ed1cdf300fd29b6fe6e3f6497b3",
       "scripts/release-provider-host.mjs": "1fdad496cf83c95d94e314b9fd06887f8a079c7de10fc9fa9f915c073603f6dc",
       "scripts/release-restore.py": "cd758a8a81b22ba2480338a137317806d26a0fa9d5bc5348bdf41ff9b5802e4e"
     }
@@ -103,11 +101,11 @@
     ".github/workflows/app-production-hotfix.yml": "1cd7d4d20d5a61d5a1c3215191ff91a6f5dc39015576ac8303087641fefceabd",
     "test/browser/release-regression-browser-qa.mjs": "855d124bfcc79ef444a1bfabb2000261bab775f1a75116f04bf66a379c0e17b4",
     "scripts/production/unpack-release-authority.py": "e6d4380146821597adf01dba0787c8892f929bee356a6a33105cc94c24fc8eb5",
-    "contracts/production/shared-release-authority.v1.json": "c603cba291e2f0ce05f29cd39ba763ee84fa56e7625b927e4486a347a8a9a38a",
-    "contracts/production/shared-release-authority.v1.bundle": "39a2caf1e0d936f201224a59aaf6b40897e38092ebd808b7d42516a8040ff010",
-    "scripts/production/validate-order4-release.py": "5c1afe6bd38da984d4742ee48732a7d614df460c547b1ce6d3a1862f1015ad16",
-    "contracts/production/order4-release-scope.v1.json": "14aec30175b54b19154dc934941bf10d727215540afcd985a660386a3da3d05d",
-    "docs/ORDER4_RELEASE.md": "77d717f5040ff09fde86935387fb3347411dade5cb67b645803b220b2c45334e",
+    "contracts/production/shared-release-authority.v1.json": "90dcd10fb6c9c6535932a3716582e33c1c06da06c2797ee0893ee8c0ce62c5e4",
+    "contracts/production/shared-release-authority.v1.bundle": "59b1e2ea1dd731e435ee6125832e0839280d8a7b8bcccf7c33a62e7160eeb971",
+    "scripts/production/validate-order4-release.py": "a729a962973e08039764376e79e51048028325ddd018e3586d6eafa688eca300",
+    "contracts/production/order4-release-scope.v1.json": "7ed794ae8b9fbee4f0a962f9c9bec1d3168e67fbe69919101ad9c437a2afd51f",
+    "docs/ORDER4_RELEASE.md": "b54f3ff89380a79f4df687efecbb0c3ae2e8a1b4ccca6c1d332b466c9f13a787",
     "test/browser/eight-series-business-flow-qa.mjs": "e531d024a1527aac3800cf659ecc32cc736dbfe949e9329400450538997112af",
     "scripts/vercel-rest-deploy.mjs": "a78286a84f7f48dd5fc7028e02e4e7fcad9564b9e02cd5d4059860cb4f1232f5"
   },
@@ -650,12 +648,5 @@
   "recovery_policy": {
     "mode": "VERIFIED_TARGET_ALIAS_RECOVERY_V1",
     "isolated_alias_prefix": "order4-sash-recovery-"
-  },
-  "conditional_release_policy": {
-    "mode": "ORDER4_CONDITIONAL_HUMAN_POLICY_V1",
-    "policy_path": "contracts/order4-conditional-human-release-policy.v1.json",
-    "policy_sha256": "8e12fe69164451c863bc36d671128d0e7362a2a5fd3475998e28b85579ab0ce9",
-    "source_path": "docs/evidence/order4/conditional-human-source.v1.md",
-    "source_sha256": "745fa3ac77cb64146076269bd934622628ff5e535cf80060fba38ef373061b63"
   }
 }
