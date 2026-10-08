@@ -1,0 +1,6 @@
+{
+  "schema": "CURRENT_AUTHORITY_SUCCESSOR_SELECTION_V1",
+  "path": "contracts/production/authority-successors/order4-release-enforcement.v3.json",
+  "sha256": "c0cb2be37b8c386d2a5ddbdff82cdf0ce82f30a9f940634a1805cd542f6ed183",
+  "implementation_sha": "8898402b65a498821bd22c39313c7c6eac9ebdf7"
+}

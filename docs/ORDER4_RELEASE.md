@@ -37,3 +37,16 @@ automatically emitted candidate/Main check. No legacy governance workflow,
 Human Flow Decision, or parallel product work is changed. Project Governance
 Gate and PR Adopted App Production Release results are also recorded when
 they actually execute; neither is renamed into a V2 Recovery CI receipt.
+
+## Order 4 conditional Human policy successor V5
+
+For this same-byte Infrastructure Scope only, the actual Human approved the
+immutable Order 4 conditional policy. A candidate-specific packet is verified
+by CODEX and recorded as POLICY_APPLICATION with individual_human_approval=false.
+It is not a separate Human approval. Exact candidate CI, Preview QA/HTTP bytes,
+original native approval carriers and assets, Main correspondence/CI and staged
+provider/alias/publication gates remain mandatory. Other product Work and sealed
+completions retain their original approval contracts and fixed implementation.
+Temporary QA access is fixed to acquired target identity, at most one hour, and
+only the newly created access is revoked at QA end/expiry. Production recovery
+and rollback are excluded from this conditional authorization.
