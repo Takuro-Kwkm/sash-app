@@ -1,0 +1,158 @@
+{
+  "schema": "GUIDED_SELECTION_AUDIT_V1",
+  "observed_at": "2026-10-08T05:42:31.431843+00:00",
+  "scope": "Phase0 read-only; Phase1 app UI candidate only",
+  "repositories": {
+    "product-ui-contracts": {
+      "remote": "https://github.com/Takuro-Kwkm/product-ui-contracts.git",
+      "remote_default_branch": "main",
+      "acquired_head": "2eae38b851cc55b02a30f03792f05385f4b2e39c",
+      "files": {
+        "registries/current-architecture.v2.json": "a548dc7c213af0a1d01fda34febb7e4d596e52e372c6b936304281cd49b68d75",
+        "registries/skill-authority.v2.json": "39efeca95214ea29816c6666b53c8127e665c821e74e34de3738761cc797e7d3"
+      }
+    },
+    "sash-app": {
+      "remote": "https://github.com/Takuro-Kwkm/sash-app.git",
+      "remote_default_branch": "main",
+      "acquired_head": "866b98bab41c090e2ed62d9d1e2dd9989670d2a6",
+      "files": {
+        "contracts/production/current-architecture.json": "2fd9a982bcc167c49a27a84c69513d43b21994c3f67bf8630249f5c1ed478dab",
+        "contracts/production/current-work.json": "df21a3bd4bbf0d8a66872167faaaa0e4417c42ee254ce74ebbe937cca0e78e3d",
+        "contracts/production/work-connections.v2.json": "ff10cd174c18e4bc58a25cbb62acaed4909fa16f6cc254e3c8e24a87c95fad08",
+        "contracts/production/validator-registry.v2.json": "41ec879efb5d26ed5f4fd59e528bd25a18c6ac76cc71d80d4340ed3e4a697b6a"
+      },
+      "original_checkout": {
+        "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a8e78ec8bec8191b356a969fd0beef1/sash-app",
+        "head": "1b1f061f05a98df46849cc31d0d614db87803f7b",
+        "branch": "codex/local-product-release-connection-20261007",
+        "status": [
+          "M contracts/production/validator-registry.v2.json",
+          " M contracts/production/work-connections.v2.json",
+          "?? contracts/production/catalogue-audit/",
+          "?? scripts/production/catalog-change-audit.py",
+          "?? scripts/production/prepare-catalog-change-audit.py",
+          "?? scripts/production/test-catalog-change-audit.py",
+          "?? scripts/production/validate-catalogue-audit-profile.py",
+          "?? test/100-catalogue-audit-connection.test.mjs"
+        ]
+      }
+    },
+    "interior-estimator": {
+      "remote": "https://github.com/Takuro-Kwkm/interior-estimator.git",
+      "remote_default_branch": "main",
+      "acquired_head": "f56a36d0852bfba9c5202e6754cb2ad65ada05ae",
+      "files": {
+        "contracts/production/current-architecture.json": "bc259902660f1e008e5b8a03a2f8a358a87dc6a8b9b22c70103db728c775891e",
+        "contracts/production/current-work.json": "4799d9b0f9f8f2df6773e5e71fdc1bff3e9afaab656dfa00f2dc83e10fc81718",
+        "contracts/production/work-connections.v2.json": "3c70dd91df0a4d012851d49a1996a62d66862f2384877c9d2241a63448ab23c7",
+        "contracts/production/validator-registry.v2.json": "1b7d366d2d7b2adaf7b46aeb38b687368893600e39fa747a7cb9efc4a6ef9fc6"
+      },
+      "original_checkout": {
+        "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a86925e8bc88191abbc5949d379c2bc/interior-estimator",
+        "head": "7cff62fac88c716ada9d3f25eb520cff4a3be48b",
+        "branch": "codex/lasissa-s-top-hung-ui",
+        "status": [
+          "?? candidate/top-hung-r2/",
+          "?? candidate/top-hung-r3/",
+          "?? candidate/top-hung/",
+          "?? packages/interior-runtime-adapter/work-package-candidate.mjs"
+        ]
+      }
+    },
+    "exterior-estimator": {
+      "remote": "https://github.com/Takuro-Kwkm/exterior-estimator.git",
+      "remote_default_branch": "main",
+      "acquired_head": "d45e27f05c0078be59975a26122bec5bf5c04012",
+      "files": {
+        "contracts/production/current-architecture.json": "d9d54e497107578bd835d96fa38f1f76fdd4f1983e9fabc90ee00a3074df2ef7",
+        "contracts/production/current-work.json": "43ae9fe851ef5c311fbf6166259f05c959b4674a3190e098a751d2c8cca41c7d",
+        "contracts/production/work-connections.v2.json": "badfcdef50dff17e646e90adee7b288682a6d95a04e269d66c8d600ddf7d619d",
+        "contracts/production/validator-registry.v2.json": "8ec85407dd29e07b73034492306b6caff4a8241d4fc7b75b2df4d6fca2c5af43"
+      },
+      "original_checkout": {
+        "path": "/Users/takuro/.codex/.chatgpt-projects/g-p-6a7adca2a8b881919e6c410778ccee00/exterior-estimator",
+        "head": "3ad037bd214a7e5a691fa22cb60e202da67b3023",
+        "branch": "codex/carport-native-adapters-20261007",
+        "status": [
+          "M .github/workflows/ci.yml",
+          " M README.md",
+          " M contracts/production/README.md",
+          " M contracts/production/current-state.v2.json",
+          " M contracts/production/validator-registry.v2.json",
+          " M contracts/production/work-connections.v2.json",
+          " M docs/deploy/README.md",
+          " M public/candidate/carport/build-identity.json",
+          " M scripts/check-native.mjs",
+          " M scripts/production/validate-exterior-connection.py",
+          " M src/app/app/actions.ts",
+          " M src/app/app/projects/[projectId]/items/new/page.tsx",
+          " M src/features/runtime/carport/adapters.ts",
+          " M src/features/runtime/carport/engine.ts",
+          " M src/features/runtime/carport/review-app.tsx",
+          " M tests/ef-first-integration.test.mjs",
+          "?? contracts/carport/plain-roof/",
+          "?? contracts/production/carport-change/",
+          "?? contracts/production/plain-roof-ui-review-profile.v1.json",
+          "?? contracts/production/plain-roof-ui-review-profile.v2.json",
+          "?? outputs/",
+          "?? scripts/generate-plain-roof-review.mjs",
+          "?? scripts/production/carport-change-adapter.py",
+          "?? scripts/production/prepare-carport-change.py",
+          "?? scripts/production/prepare-plain-roof-ui-review.py",
+          "?? scripts/production/test_carport_change_adapter.py",
+          "?? scripts/production/validate-carport-change-connection.py",
+          "?? scripts/production/validate-plain-roof-ui.py",
+          "?? src/app/review/plain-roof/",
+          "?? src/features/runtime/plain-roof/",
+          "?? test-results/sc/",
+          "?? tests/plain-roof-ui.test.mjs"
+        ]
+      }
+    }
+  },
+  "ga_index": {
+    "file_id": "1DnJflUJAIS5UfisxQa-AgTI6BPtZsoeI",
+    "sha256": "fa0a66403ef90626a52b6bfe047d7a4150fb83d833856bac66c43c91e0d00fea",
+    "verification": {
+      "status": "FAIL_CLOSED",
+      "blocking_reason": {
+        "code": "CURRENT_AUTHORITY_INCOMPATIBLE",
+        "reason": "Unadopted Release implementation bytes: scripts/release-contract.py",
+        "target_gate": "INITIALIZATION",
+        "resolution_condition": "Correct the named input; resume the same work."
+      }
+    }
+  },
+  "native_route": {
+    "repository": "Takuro-Kwkm/sash-app",
+    "product_id": "SER-LIX-SAMOSL",
+    "work_skill": "product-change-work",
+    "work_type": "PRODUCT_MASTER_CHANGE",
+    "target_gate": "CURRENT_STATE_VERIFIED",
+    "operation": "CURRENT_STATE",
+    "baseline_selector": {
+      "manufacturer": "LIXIL",
+      "series": "サーモスL",
+      "registry_id": "1HMMZ8JdsbJPtL_8LjQfxMF8P_Zb4-LReqvPMFn1pJks"
+    },
+    "source_selector": {
+      "official_id": "1nxDq-qDTb3Gi_s8qPT6d3WpT5MzahCSe",
+      "scope": "ONE_OPTION_ONLY"
+    },
+    "native_adapter": "scripts/production/thermosl-change.py",
+    "validators": [
+      "native-sheet-preservation",
+      "scoped-official-claim",
+      "actual-runtime-ui-candidate"
+    ],
+    "resume_selector": "IMMUTABLE_SPEC_AND_JOURNAL",
+    "acceptance_contract": "contracts/production/current-state.v2.json",
+    "source_scope": "CURRENT_ADOPTED_ONLY; NOT_LATEST_MANUFACTURER_DISCOVERY",
+    "current_architecture": "APP_DEVELOPMENT_SKILL_ARCHITECTURE_V2",
+    "current_router": "scripts/architecture-work.py",
+    "shared_harness_sha": "7293f818685bbd1e7386d78757fb82b930af5572",
+    "legacy_selection": 0
+  },
+  "mutation_boundary": "No Formal, Registry, Shared Harness, authority adoption, Human Decision, Merge or Release writes"
+}
