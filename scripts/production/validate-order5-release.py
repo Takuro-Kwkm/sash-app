@@ -1,0 +1,30 @@
+"""Native byte guard. Shared Harness owns Decisions, CI, Work, resume and publication."""
+import hashlib,json,subprocess,sys
+from pathlib import Path
+root=Path(__file__).resolve().parents[2]
+scope=json.loads((root/'contracts/production/order5-release-scope.v1.json').read_text())
+assets=json.loads((root/'contracts/production/order5-assets.v1.json').read_text())
+profile=json.loads((root/'contracts/production/release-profile.v1.json').read_text())
+def digest(b):return hashlib.sha256(b).hexdigest()
+def git(*args):return subprocess.check_output(['git',*args],cwd=root,stderr=subprocess.PIPE)
+errors=[]
+try:
+ assert scope['schema']=='ORDER5_NATIVE_CONNECTION_SCOPE_V1' and scope['product_fact_mutation_allowed'] is False
+ assert assets['product_id']==scope['product_id']==profile['scope_admission']['product_id']
+ assert assets['scope']==scope['scope']==profile['scope_admission']['scope']
+ assert 'conditional_release_policy' not in profile,'EXPIRED_ORDER4_APPROVAL'
+ names=git('ls-tree','-rz','--name-only',scope['starting_main']).decode().split('\0')[:-1]
+ expected={p:digest(git('show',scope['starting_main']+':'+p)) for p in names if p not in scope['allowed_paths']}
+ assert expected==scope['protected_sha256'],'INCOMPLETE_NATIVE_PROTECTION'
+ assert profile['publication_policy']['protected_files']==expected,'PUBLICATION_PROTECTION_CHANGED'
+ for p,h in expected.items():
+  f=root/p
+  if not f.is_file() or f.is_symlink() or digest(f.read_bytes())!=h:errors.append('PROTECTED_DRIFT:'+p)
+ changed=git('diff','--name-only',scope['starting_main']).decode().splitlines()+git('ls-files','--others','--exclude-standard').decode().splitlines()
+ if any(p not in scope['allowed_paths'] for p in changed):errors.append('UNAUTHORIZED_NATIVE_PATH')
+ for name,asset in assets['assets'].items():
+  assert digest((root/asset['path']).read_bytes())==asset['sha256'],name
+  assert {k:v for k,v in asset.items() if k!='path'}==profile['scope_admission']['asset_identities'][name],name
+except (AssertionError,OSError,KeyError,ValueError,subprocess.CalledProcessError) as e:errors.append(str(e))
+result={'status':'FAIL_CLOSED' if errors else 'PASS','product_id':scope['product_id'],'scope':scope['scope'],'protected_files':len(scope['protected_sha256']),'errors':errors,'product_fact_mutations':0,'deployment':'NOT_EXECUTED','human_decision':'NEW_FIXED_PACKET_REQUIRED'}
+print(json.dumps(result));sys.exit(2 if errors else 0)

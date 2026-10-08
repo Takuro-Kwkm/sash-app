@@ -1,0 +1,37 @@
+{
+  "schema": "ORDER5_ASSET_READBACK_V1",
+  "product_id": "SER-LIX-EW",
+  "scope": "EW_NORMAL_29_FIELDS_ORDER5_BATCH1_V1",
+  "assets": {
+    "Source": {
+      "path": "contracts/production/order5-ew-assets/source-identity.json",
+      "state": "KNOWN",
+      "version": "v1.4 / Source",
+      "sha256": "af35759f5472f99970ea4ae809b4c2e21ee1f752c6dce9a751d19cc5d6b9db08"
+    },
+    "Formal": {
+      "path": "contracts/production/order5-ew-assets/PRODUCT_MASTER_MANIFEST.json",
+      "state": "KNOWN",
+      "version": "v1.4 / Formal",
+      "sha256": "156ea3d28b9dcb6b03d7d05d613ca122259be535d517e4474fbdd355c62c753d"
+    },
+    "Contract": {
+      "path": "contracts/production/order5-ew-assets/selection-scope.json",
+      "state": "KNOWN",
+      "version": "v1.4 / Contract",
+      "sha256": "8e284a522bd4aad8f5aa7c64570d8109043b37f668dbe810823f8297e818b099"
+    },
+    "Runtime": {
+      "path": "src/catalog/runtime-master-packages/lixil-ew-v1.4/runtime.json.br.b64",
+      "state": "KNOWN",
+      "version": "v1.4 / Runtime",
+      "sha256": "7206d1d1a813487b501beb29ea95d3913788a8b67baae0a66656b04d2a3c2feb"
+    },
+    "UI": {
+      "path": "src/server/recovery-app.mjs",
+      "state": "KNOWN",
+      "version": "v1.4 / UI",
+      "sha256": "0a5ea33effbab5c890570da08134b1bc7482b18e0d1e7f33ac84ede97b582c6f"
+    }
+  }
+}
