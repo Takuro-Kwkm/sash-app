@@ -1,6 +1,6 @@
 {
   "schema": "CURRENT_AUTHORITY_SUCCESSOR_SELECTION_V1",
-  "path": "contracts/production/authority-successors/common-release.v1.json",
-  "sha256": "02151c2300e8d1f72120df3a07f0b97db795ac7a8c69f834ea799e8dd6a3680c",
-  "implementation_sha": "f3fe8cb2541a90488368a3487397ed3d216c5b97"
+  "path": "contracts/production/authority-successors/order4-release-enforcement.v3.json",
+  "sha256": "10728ed8aa9e427e6569e8257e9d2e34a6505b243dd33ee1efc6d28d2f29202a",
+  "implementation_sha": "8898402b65a498821bd22c39313c7c6eac9ebdf7"
 }

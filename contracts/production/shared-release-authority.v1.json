@@ -1,0 +1,8 @@
+{
+  "schema": "IMMUTABLE_SHARED_RELEASE_GIT_CARRIER_V1",
+  "repository": "Takuro-Kwkm/product-ui-contracts",
+  "source_commit": "8898402b65a498821bd22c39313c7c6eac9ebdf7",
+  "sha256": "59b1e2ea1dd731e435ee6125832e0839280d8a7b8bcccf7c33a62e7160eeb971",
+  "bytes": 1286095,
+  "scope": "ISOLATED_CI_DEPENDENCY_ACQUISITION; no credentials/config/installed Skill"
+}

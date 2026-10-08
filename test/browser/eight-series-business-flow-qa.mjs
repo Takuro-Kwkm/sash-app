@@ -3,20 +3,27 @@ import {mkdir,writeFile,readFile} from 'node:fs/promises';
 import {chromium} from 'playwright';
 
 const BASE=process.env.QA_BASE_URL??'http://127.0.0.1:4173';
-const OUT='artifacts/eight-series-business-flow';
+const OUT=process.env.QA_OUTPUT_DIR??'artifacts/eight-series-business-flow';
 const products=[['LIXIL','SER-LIXIL-TW'],['LIXIL','SER-LIX-EW'],['LIXIL','SER-LIX-SAMOS2H'],['LIXIL','SER-LIX-SAMOSL'],['YKK AP','SER-YKK-APW430'],['YKK AP','SER-YKK-APW431'],['YKK AP','SER-YKKAP-UCHIRIMO'],['LIXIL','SER-LIXIL-INPLUS']];
-const report={status:'RUNNING',exactHead:process.env.GITHUB_SHA??null,viewports:[],errors:[]};
+const report={status:'RUNNING',url:BASE,observedAt:new Date().toISOString(),persistence:'BROWSER_LOCAL_STORAGE',exactHead:process.env.GITHUB_SHA??null,viewports:[],errors:[]};
 await mkdir(OUT,{recursive:true});
-const browser=await chromium.launch({headless:true});
+const browser=await chromium.launch({headless:true,executablePath:process.env.CHROME_EXECUTABLE_PATH||undefined});
 try{
  for(const width of [1280,768,390]){
-  const context=await browser.newContext({viewport:{width,height:900},acceptDownloads:true});
+  const context=await browser.newContext({storageState:process.env.PLAYWRIGHT_STORAGE_STATE||undefined,viewport:{width,height:900},acceptDownloads:true});
   const page=await context.newPage();
   page.on('response',r=>{if(r.status()>=400)report.errors.push(`${r.status()} ${r.url()}`);});
   page.on('pageerror',e=>report.errors.push(e.message));
   page.on('console',m=>{if(m.type()==='error')report.errors.push(m.text());});
   const entry=process.env.VERCEL_SHARE_TOKEN?`${BASE}/?_vercel_share=${encodeURIComponent(process.env.VERCEL_SHARE_TOKEN)}`:BASE;
   await page.goto(entry,{waitUntil:'networkidle'});
+  assert.equal(new URL(page.url()).origin,new URL(BASE).origin,'QA origin changed');
+  const identityResponse=await context.request.get(`${BASE}/api/health`);
+  assert.equal(identityResponse.status(),200);
+  const identity=await identityResponse.json();assert.equal(identity.ok,true);
+  if(process.env.QA_EXPECTED_COMMIT)assert.equal(identity.releaseCommitSha,process.env.QA_EXPECTED_COMMIT);
+  report.observedCommit=identity.releaseCommitSha??null;
+  await writeFile(`${OUT}/health-${width}.json`,JSON.stringify(identity,null,2)+'\n');
   await page.getByRole('button',{name:'新しい案件'}).first().click();
   await page.locator('[name="project_name"]').fill(`8シリーズ統合QA ${width}`);
   const address=`熊本県熊本市中央区QA-${width}-1-2-3 テスト101号`;
@@ -97,7 +104,9 @@ try{
   for(const label of ['洋風タイプ WA01（樹脂格子）','外窓用 取替用クレセント（汎用クレセント）','外窓用汎用ハンドル'])assert.ok(output.includes(label),`R6 output missing ${label}`);
   const pending=page.waitForEvent('download');await page.click('#estimateOutputExcel');const download=await pending;
   assert.match(download.suggestedFilename(),/\.xlsx$/);assert.equal(await download.failure(),null);
-  const excelText=(await readFile(await download.path())).toString('utf8');
+  const excelBytes=await readFile(await download.path());
+  await writeFile(`${OUT}/output-${width}.xlsx`,excelBytes);
+  const excelText=excelBytes.toString('utf8');
   for(const label of ['洋風タイプ WA01（樹脂格子）','外窓用 取替用クレセント（汎用クレセント）','外窓用汎用ハンドル','メーカー見積で確認'])assert.ok(excelText.includes(label),`R6 Excel missing ${label}`);
   await page.evaluate(()=>{
    window.__pdfText=[];window.__pdfBounds=[];
@@ -107,6 +116,7 @@ try{
   });
   const pdfPending=page.waitForEvent('download');await page.click('#estimateOutputPdf');const pdf=await pdfPending;
   assert.match(pdf.suggestedFilename(),/\.pdf$/);const pdfBytes=await readFile(await pdf.path());assert.equal(pdfBytes.subarray(0,8).toString(),'%PDF-1.4');
+  await writeFile(`${OUT}/output-${width}.pdf`,pdfBytes);
   const pdfEvidence=await page.evaluate(()=>({text:window.__pdfText.join(''),bounds:window.__pdfBounds,summaries:window.__sashWorkApp.readDatabase().openings.filter(o=>!o.deleted_at).flatMap(o=>o.product_configuration_snapshot?.display_summary??[])}));
   const dimensionKeys=new Set(['window_type','opening_type','door_type','size','custom_width','width','custom_height','height','size_w','size_h','order_width','order_height']);
   for(const row of pdfEvidence.summaries.filter(r=>!dimensionKeys.has(r.key)))assert.ok(pdfEvidence.text.includes(`${row.label}: ${row.value}`),`PDF truncated ${row.key}`);
@@ -118,7 +128,10 @@ try{
   report.viewports.push({width,products:checks,outputRows:8,excel:'PASS',pdf:'PASS',print:'PASS'});
   await context.close();
  }
- assert.deepEqual(report.errors,[]);report.status='PASS';
+ assert.deepEqual(report.errors,[]);
+ report.results=report.viewports.flatMap(v=>v.products.map(p=>({name:`save-reopen-${v.width}-${p.id}`,status:p.saveReopen,selectedFields:p.selectedFields})));
+ report.pass=report.results.filter(row=>row.status==='PASS').length;
+ assert.equal(report.pass,24);report.status='PASS';
 }catch(error){report.status='FAIL';report.failure=error.stack;throw error;}
 finally{await writeFile(`${OUT}/report.json`,JSON.stringify(report,null,2)+'\n');await browser.close();}
 console.log(JSON.stringify(report));

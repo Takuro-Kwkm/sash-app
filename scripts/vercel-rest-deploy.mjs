@@ -33,6 +33,17 @@ if (repository!==releaseTarget.repository || teamId!==releaseTarget.deployment.t
 }
 if (mode==='production' && githubRefName!==releaseTarget.production_branch) throw new Error('PRODUCTION_MAIN_REQUIRED');
 
+// The existing executor persists the provider operation before writing its
+// caller's result file. A successful create is inspected before any retry.
+const operationPath=outputPath+'.operation.json';
+let previous=null;
+try {previous=JSON.parse(await readFile(operationPath,'utf8'));}
+catch(error) {if(error.code!=='ENOENT')throw error;}
+if(previous && (previous.schema!=='VERCEL_STAGED_BUILD_OPERATION_V1' ||
+  previous.githubSha!==githubSha || previous.projectId!==projectId || previous.teamId!==teamId || previous.mode!==mode)) {
+  throw new Error('EXISTING_BUILD_OPERATION_IDENTITY_MISMATCH');
+}
+if(previous && !previous.providerResponse?.id) throw new Error('EXISTING_BUILD_OPERATION_UNRESOLVED: inspect provider before retry');
 const api = async (url, init = {}) => fetch(url, {
   ...init,
   headers: {
@@ -41,6 +52,16 @@ const api = async (url, init = {}) => fetch(url, {
   },
 });
 
+const aliasHost=new URL(releaseTarget.deployment.production_url).hostname;
+const acquireAlias=async()=>{
+  const response=await api(`https://api.vercel.com/v4/aliases/${aliasHost}?teamId=${encodeURIComponent(teamId)}`);
+  const raw=await response.text();
+  if(!response.ok)throw new Error(`ALIAS_ACQUISITION_FAILED:${response.status}`);
+  const result=JSON.parse(raw);
+  if(result.alias!==aliasHost || result.projectId!==projectId || !result.deploymentId)throw new Error('ALIAS_IDENTITY_REQUIRED');
+  return result;
+};
+const aliasBefore=mode==='production'?await acquireAlias():null;
 const commitMessage = execFileSync('git', ['log', '-1', '--format=%s'], { encoding: 'utf8' }).trim();
 const authorName = execFileSync('git', ['log', '-1', '--format=%an'], { encoding: 'utf8' }).trim();
 const authorEmail = execFileSync('git', ['log', '-1', '--format=%ae'], { encoding: 'utf8' }).trim();
@@ -52,7 +73,7 @@ if (!['inline', 'files', 'gitSource'].includes(deploySource)) {
 if (mode === 'production' && deploySource !== 'files') {
   throw new Error('Production deployment must use the established files source');
 }
-let effectiveDeploySource = deploySource;
+let effectiveDeploySource = previous?.deploySource??deploySource;
 
 const files = execFileSync('git', ['ls-files', '-z'], { encoding: 'buffer' })
   .toString('utf8')
@@ -61,18 +82,18 @@ const files = execFileSync('git', ['ls-files', '-z'], { encoding: 'buffer' })
   .sort();
 if (!files.length) throw new Error('No tracked files found for deployment');
 
-const fileBuffers = await Promise.all(files.map(async (file) => ({ file, data: await readFile(file) })));
-const totalBytes = fileBuffers.reduce((sum, row) => sum + row.data.byteLength, 0);
+const fileBuffers = previous?[]:await Promise.all(files.map(async (file) => ({ file, data: await readFile(file) })));
+const totalBytes = previous?.totalBytes??fileBuffers.reduce((sum, row) => sum + row.data.byteLength, 0);
 let deploymentFiles = [];
 
-if (deploySource === 'inline') {
+if (!previous && deploySource === 'inline') {
   deploymentFiles = fileBuffers.map(({ file, data }) => ({
     file,
     data: data.toString('base64'),
     encoding: 'base64',
   }));
   console.log(`VERCEL_INLINE_DEPLOYMENT files=${deploymentFiles.length} bytes=${totalBytes}`);
-} else if (deploySource === 'files') {
+} else if (!previous && deploySource === 'files') {
   const uploadOne = async ({ file, data }) => {
     const sha = createHash('sha1').update(data).digest('hex');
     const response = await api(`https://api.vercel.com/v2/files?teamId=${encodeURIComponent(teamId)}`, {
@@ -157,22 +178,29 @@ if (effectiveDeploySource === 'gitSource') {
     rootDirectory: '',
   };
 }
-if (mode === 'production') payload.target = 'production';
+if (mode === 'production') {
+  payload.target = 'production';
+  payload.autoAssignCustomDomains = false;
+}
 
-const createResponse = await api(`https://api.vercel.com/v13/deployments?forceNew=1&skipAutoDetectionConfirmation=1&teamId=${encodeURIComponent(teamId)}`, {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify(payload),
-});
-const createdText = await createResponse.text();
-let created;
-try { created = JSON.parse(createdText); } catch { created = { raw: createdText }; }
-if (!createResponse.ok) {
-  throw new Error(`Vercel deployment creation failed (${createResponse.status}): ${createdText.slice(0, 1000)}`);
+await mkdir(path.dirname(operationPath), { recursive: true });
+const intent=previous??{schema:'VERCEL_STAGED_BUILD_OPERATION_V1',mode,githubSha,projectId,teamId,
+  aliasBefore,totalBytes,fileCount:files.length,deploySource:effectiveDeploySource,autoAssignCustomDomains:mode==='production'?false:null,
+  state:'CREATE_INTENT_SAVED',external_create_operations:0};
+if(!previous)await writeFile(operationPath,JSON.stringify(intent,null,2)+'\n');
+let created=previous?.providerResponse;
+if(!created) {
+  const createResponse=await api(`https://api.vercel.com/v13/deployments?forceNew=1&skipAutoDetectionConfirmation=1&teamId=${encodeURIComponent(teamId)}`, {
+    method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+  const createdText=await createResponse.text();
+  try {created=JSON.parse(createdText);} catch {throw new Error('DEPLOYMENT_CREATE_RESPONSE_INVALID');}
+  await writeFile(operationPath,JSON.stringify({...intent,state:createResponse.ok?'PROVIDER_RETURNED':'PROVIDER_FAILED',
+    providerHttpStatus:createResponse.status,providerResponse:created,external_create_operations:1},null,2)+'\n');
+  if(!createResponse.ok)throw new Error(`Vercel deployment creation failed (${createResponse.status})`);
 }
 
 const deploymentId = created.id;
-if (!deploymentId) throw new Error(`Deployment response missing id: ${createdText.slice(0, 1000)}`);
+if (!deploymentId) throw new Error(`Deployment response missing id: ${JSON.stringify({id:created.id,readyState:created.readyState})}`);
 
 let deployment = created;
 const terminalFailure = new Set(['ERROR', 'CANCELED']);
@@ -206,7 +234,18 @@ if (effectiveDeploySource !== 'gitSource' && releaseCommitSha !== githubSha) {
 const deploymentUrl = deployment.url ? `https://${deployment.url}` : created.url ? `https://${created.url}` : null;
 if (!deploymentUrl) throw new Error('READY deployment has no URL');
 
+const aliasAfter=mode==='production'?await acquireAlias():null;
+const savedOperation=JSON.parse(await readFile(operationPath,'utf8'));
+await writeFile(operationPath,JSON.stringify({...savedOperation,state:'DEPLOYMENT_ACQUIRED',
+  acquiredDeployment:deployment,aliasAfter},null,2)+'\n');
+if(mode==='production' && aliasAfter.deploymentId!==aliasBefore.deploymentId)throw new Error('ALIAS_DRIFT: staged build unexpectedly changed production alias');
 const result = {
+  releaseState:mode==='production'?'STAGED_NOT_RELEASED':'PREVIEW_READY',
+  publication:'NOT_EXECUTED',
+  autoAssignCustomDomains:mode==='production'?false:null,
+  aliasBefore,aliasAfter,
+  externalCreateOperations:previous?0:1,
+  resumedExistingOperation:Boolean(previous),
   mode,
   deploymentId,
   deploymentUrl,
