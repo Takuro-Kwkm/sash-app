@@ -154,5 +154,79 @@
     "shared_harness_sha": "7293f818685bbd1e7386d78757fb82b930af5572",
     "legacy_selection": 0
   },
-  "mutation_boundary": "No Formal, Registry, Shared Harness, authority adoption, Human Decision, Merge or Release writes"
+  "mutation_boundary": "No Formal, Registry, Shared Harness, authority adoption, Human Decision, Merge or Release writes",
+  "thermosl_drive_readback": {
+    "manifest": {
+      "metadata": {
+        "id": "18OV2YEEaYCFBAlB6ZR-1uCulEuxYSfNu",
+        "title": "LIXIL_ThermosL_runtime_manifest_v0.7-R3.json",
+        "mime_type": "application/json",
+        "size": null,
+        "url": null,
+        "file_or_folder": "file",
+        "created_time": null,
+        "modified_time": "2026-10-06T13:39:34.192Z",
+        "parent_ids": [
+          "1H83njk7Gww0RJOZKntYBp5VxdaJD9Jc4"
+        ],
+        "drive_id": null,
+        "current_user_can_share": null,
+        "has_augmented_permissions": null,
+        "shared": null,
+        "permissions": null,
+        "source_visibility_status": "access_not_verified"
+      },
+      "sha256": "0fed18a4d317fa03cb0ef0463a0c17eb9f83e1bb84baa6628a6bdce73de62257",
+      "same_as_git_bytes": true
+    },
+    "registry": {
+      "metadata": {
+        "id": "1HMMZ8JdsbJPtL_8LjQfxMF8P_Zb4-LReqvPMFn1pJks",
+        "title": "PRODUCT_MASTER_CANONICAL_REGISTRY_v2.0",
+        "mime_type": "application/vnd.google-apps.spreadsheet",
+        "size": null,
+        "url": null,
+        "file_or_folder": "file",
+        "created_time": null,
+        "modified_time": "2026-10-06T13:41:04.765Z",
+        "parent_ids": [
+          "1R40fN2qDHqwQlRnuOeu4urTIPavSs6Ra"
+        ],
+        "drive_id": null,
+        "current_user_can_share": null,
+        "has_augmented_permissions": null,
+        "shared": null,
+        "permissions": null,
+        "source_visibility_status": "access_not_verified"
+      },
+      "row": {
+        "": "4",
+        "manufacturer": "LIXIL",
+        "series": "サーモスL",
+        "package_version": "v0.7-R3",
+        "master_status": "FORMAL_PASS",
+        "authoring_status": "PASS",
+        "authoring_file_name": "LIXIL_ThermosL_AUTHORING_MASTER_v0.7-R3.xlsx",
+        "authoring_file_id": "19sjSAPwyd30fF5akazldGs0wkhOGZF9v",
+        "runtime_status": "READY",
+        "runtime_manifest_id": "18OV2YEEaYCFBAlB6ZR-1uCulEuxYSfNu",
+        "runtime_file_count": "1",
+        "documentation_status": "PASS",
+        "documentation_file_id": "1pCW4HViuxJkxyzc67fSqlBhL_8PxSzYR",
+        "package_gate": "PASS",
+        "storage_gate": "PASS",
+        "duplicate_check": "PASS",
+        "version_check": "PASS",
+        "canonical_folder": "04_商品マスター/01_LIXIL/サーモスL/01_正本",
+        "canonical_folder_id": "1H83njk7Gww0RJOZKntYBp5VxdaJD9Jc4",
+        "working_folder_id": "1PqgX6VbCBmdz121DgLG2xF-Z7aK-pbah",
+        "old_folder_id": "1LFQOkjIm_INOIu2muWyw6iCN3hqX9c7g",
+        "blocking_category": "",
+        "blocking_items": "",
+        "updated_at": "2026-10-06",
+        "next_action": "v0.7-R3: IS8900代替進入口用幅木仕様・手動標準のみ。製作・組合せ・価格確認継続。その他カタログ改訂は未採用。"
+      },
+      "read_boundary": "Connector CSV projection; canonical selected product row readback"
+    }
+  }
 }

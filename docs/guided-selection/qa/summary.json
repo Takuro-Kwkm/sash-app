@@ -1,0 +1,30 @@
+{
+  "status": "LOCAL_MVP_QA_PASS",
+  "observed_at": "2026-10-08T05:54:32.511144+00:00",
+  "native": {
+    "lint": "PASS (29 source files)",
+    "typecheck": "PASS",
+    "tests": 638,
+    "passed": 638,
+    "failed": 0,
+    "pointer_adapter_contract": "PASS (35 products, 3 connected)",
+    "existing_frame_integration": "PASS (287 checks); HUMAN_REVIEW_PENDING; not app integration adoption"
+  },
+  "browser": {
+    "guided": [
+      1440,
+      768,
+      390
+    ],
+    "normal_regression": "PASS",
+    "work_management": "PASS",
+    "errors": 0,
+    "visual_inspection": [
+      "comparison-390.png",
+      "complete-1440.png"
+    ]
+  },
+  "existing_assets": "Formal, Runtime, Source, Shared Harness, Output and domain unchanged from acquired Main",
+  "architecture_activation": "FAIL_CLOSED: CURRENT_AUTHORITY_INCOMPATIBLE; Release implementation drift",
+  "publication": "PR_CANDIDATE_ONLY; no Merge or Production Release"
+}

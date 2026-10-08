@@ -1,0 +1,92 @@
+{
+  "status": "PASS",
+  "products": [
+    {
+      "id": "SER-LIX-SAMOS2H",
+      "manufacturer": "LIXIL",
+      "series": "サーモスⅡ-H",
+      "status": "RUNTIME_READY",
+      "reason": null
+    },
+    {
+      "id": "SER-LIX-SAMOSL",
+      "manufacturer": "LIXIL",
+      "series": "サーモスL",
+      "status": "RUNTIME_READY",
+      "reason": null
+    },
+    {
+      "id": "SER-YKK-APW430",
+      "manufacturer": "YKK AP",
+      "series": "APW 430",
+      "status": "RUNTIME_READY",
+      "reason": null
+    },
+    {
+      "id": "SER-YKK-APW431",
+      "manufacturer": "YKK AP",
+      "series": "APW 431",
+      "status": "RUNTIME_READY",
+      "reason": null
+    }
+  ],
+  "runtimeIntegrations": [
+    {
+      "id": "SER-LIX-EW",
+      "status": "READY",
+      "selectable": true,
+      "blockReason": null
+    },
+    {
+      "id": "SER-LIXIL-TW",
+      "status": "READY",
+      "selectable": true,
+      "blockReason": null
+    },
+    {
+      "id": "SER-LIXIL-INPLUS",
+      "status": "READY",
+      "selectable": true,
+      "blockReason": null
+    },
+    {
+      "id": "SER-LIX-SAMOS2H",
+      "status": "READY",
+      "selectable": true,
+      "blockReason": null
+    },
+    {
+      "id": "SER-LIX-SAMOSL",
+      "status": "READY",
+      "selectable": true,
+      "blockReason": null
+    },
+    {
+      "id": "SER-LIXIL-RECHENT-D3-NF",
+      "status": "READY",
+      "selectable": true,
+      "blockReason": null
+    },
+    {
+      "id": "SER-YKK-APW430",
+      "status": "READY",
+      "selectable": true,
+      "blockReason": null
+    },
+    {
+      "id": "SER-YKK-APW431",
+      "status": "READY",
+      "selectable": true,
+      "blockReason": null
+    },
+    {
+      "id": "SER-YKKAP-UCHIRIMO",
+      "status": "READY",
+      "selectable": true,
+      "blockReason": null
+    }
+  ],
+  "consoleErrors": [],
+  "pageErrors": [],
+  "failedResponses": []
+}

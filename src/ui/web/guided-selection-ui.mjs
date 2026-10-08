@@ -26,6 +26,9 @@ export class GuidedSelectionUI {
   afterResolve(result) {
     this.session.acknowledged = reconcileGuidedAcknowledgements(this.previousResult, result, this.session.acknowledged);
     this.previousResult = result;
+    if (this.session.candidate?.patch && Object.entries(this.session.candidate.patch).some(([key, value]) => result.selection[key] !== value)) {
+      this.session.candidate.status = 'REVALIDATION_REQUIRED';
+    }
     this.editKey = null; this.persist(); this.render();
   }
   notify() { this.persist(); if (this.editor.state.snapshot && !this.editor.state.stale) this.editor.onSnapshot(this.editor.state.snapshot, this.editor.state.resolved); }
@@ -68,7 +71,7 @@ export class GuidedSelectionUI {
       if (!candidate) return;
       this.busy = true; this.render();
       await this.editor.applyGuidedCandidate(candidate);
-      this.session.candidate = { productId: candidate.productId, identity: candidate.identity,
+      this.session.candidate = { productId: candidate.productId, identity: candidate.identity, patch: candidate.patch,
         recommendationId: candidate.recommendation.id, recommendationVersion: candidate.recommendation.version,
         selectedAt: new Date().toISOString(), dimension: candidate.dimension, status: 'SELECTED_FOR_DRAFT' };
       this.session.searching = false; this.session.acknowledged = []; this.busy = false; this.notify(); this.render(); return;

@@ -22,7 +22,9 @@ GitHub live Main CIは各取得HEADのsuccessを観測。中央routerはThermosL
 - exterior: `src/features/product-registry` / `runtime/carport/engine.ts` / snapshot/outputを将来のport実装へ使う。
 - ThermosL: 正式manifestとRuntime JSONのhashを照合。17開閉形式、規格寸法のactualW/actualH、色、ガラス、オプション、特注判定は既存Runtimeから取得できる。呼称から実寸を計算しない。
 - 価格は推薦用の正規化済比較データがなく未確認。断熱性能の共通測定条件・数値順位も未整備。最安/高性能/バランス最良は表示しない。納まりの現地適合は別確認。既存Evidence/Controlled UnresolvedをCarry-Forward。
-- Phase0はGitと指定GA indexの実取得、およびアプリ接続監査。全商品のDrive Registry行、最新メーカー全カタログ、live DB E2Eの監査は今回実施していない。
+- ThermosLのDrive Canonical Registry選択行を読み戻し、v0.7-R3 / FORMAL_PASS / READYとmanifest IDを確認。Drive manifestを取得しGit配置bytesと同一hashを確認した。
+- interiorは選定/依存/実寸欄があるが、価格・Code・BOMは自動確定禁止のControlled Unresolvedを保持。exteriorにはNesca価格表の実寸とFIRSTのactual_width_mm/actual_depth_mmがあり、価格はnative Validationでnumberまたはnull。車種・支持・施工条件ごとの比較が必要で、今回新しい横断順位は作らない。
+- Phase0はGitと指定GA index/対象ThermosLの実取得、およびアプリ接続監査。全商品のDrive Registry行、最新メーカー全カタログ、live DB E2Eの監査は今回実施していない。
 
 ## Integration contract
 

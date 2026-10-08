@@ -1,0 +1,19 @@
+{
+  "status": "PASS",
+  "scenarios": {
+    "A": "PASS",
+    "B": "PASS",
+    "TW_CUSTOM_CONTINUE_AND_SAVE": "PASS",
+    "C": "PASS",
+    "D": "PASS",
+    "E": "PASS",
+    "F": "PASS",
+    "G": "PASS",
+    "SAVE_NAVIGATION_RACE": "PASS",
+    "H": "PASS",
+    "I": "PASS"
+  },
+  "consoleErrors": [],
+  "pageErrors": [],
+  "failedResponses": []
+}

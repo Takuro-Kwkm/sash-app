@@ -1,0 +1,76 @@
+{
+  "status": "PASS",
+  "widths": [
+    {
+      "width": 1440,
+      "status": "PASS",
+      "seen": [
+        "exterior_color",
+        "interior_color",
+        "screen_presence",
+        "glass_base",
+        "glass_type",
+        "glass_detail",
+        "glass_function",
+        "glass_spacer",
+        "glass_air_layer",
+        "options"
+      ],
+      "exact_actual_dimensions": true,
+      "oversized_rejected": true,
+      "education_disclosure": true,
+      "mode_values_preserved": true,
+      "saved_reload": true,
+      "dependency_reset": true,
+      "stale_snapshot_preserved": true
+    },
+    {
+      "width": 768,
+      "status": "PASS",
+      "seen": [
+        "exterior_color",
+        "interior_color",
+        "screen_presence",
+        "glass_base",
+        "glass_type",
+        "glass_detail",
+        "glass_function",
+        "glass_spacer",
+        "glass_air_layer",
+        "options"
+      ],
+      "exact_actual_dimensions": true,
+      "oversized_rejected": true,
+      "education_disclosure": true,
+      "mode_values_preserved": true,
+      "saved_reload": true,
+      "dependency_reset": true,
+      "stale_snapshot_preserved": true
+    },
+    {
+      "width": 390,
+      "status": "PASS",
+      "seen": [
+        "exterior_color",
+        "interior_color",
+        "screen_presence",
+        "glass_base",
+        "glass_type",
+        "glass_detail",
+        "glass_function",
+        "glass_spacer",
+        "glass_air_layer",
+        "options"
+      ],
+      "exact_actual_dimensions": true,
+      "oversized_rejected": true,
+      "education_disclosure": true,
+      "mode_values_preserved": true,
+      "saved_reload": true,
+      "dependency_reset": true,
+      "stale_snapshot_preserved": true
+    }
+  ],
+  "errors": [],
+  "boundary": "BROWSER_LOCAL_STORAGE; no formal estimate approval"
+}

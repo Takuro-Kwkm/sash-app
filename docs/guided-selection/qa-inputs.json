@@ -1,0 +1,15 @@
+{
+  "scope": "Phase1 UI candidate",
+  "files": {
+    "src/ui/web/guided-selection-contract.mjs": "8d63b11648810c5f47542ec4bac216d30e5a2fa3a0d7502f759961fe815fde1b",
+    "src/ui/web/guided-selection-engine.mjs": "86c2ab6b8d45885254239d9fcfdbf1edf2dbece4a1ef511d619c563157a059fb",
+    "src/ui/web/guided-selection-ui.mjs": "a0ff6afa4a227bc394744130cdc65d8296e951ade86f4d9b43d4c9933f331d87",
+    "src/ui/web/product-configuration-editor.mjs": "99414d6924c84e9fc742daa0a6d4c08b83b009d721eb7a672397d3e4e91937fd",
+    "src/ui/web/work-management.css": "3dabe6174324efc01c701b82aaa9492d5d675747db2142e24ecfa4a47a254eec",
+    "src/server/recovery-app.mjs": "a64f0581a47c9006b714f41af4eb625ac3e8d00b6e428c779db93bc9894831a6",
+    "test/101-guided-selection.test.mjs": "3821320a3f92fb1b0e39e1f08939999653aa2bafa06a92d469ff2868f8df8999",
+    "test/browser/guided-selection-browser-qa.mjs": "d92868ad1a0ff53536bec67a92dd7ed700c51cc5002af54779497067b6d52df6",
+    "scripts/check-runtime-ui-sources.mjs": "b39b897d7c2b782c08432fd2b4d6c01749ff7ddb28d88c2aa24d2a5b06a235e1",
+    "package.json": "5d93a9e24f594ca8d4d84cc3f657558ae01195dc0bb005d036b539a47ab620b1"
+  }
+}
