@@ -138,7 +138,7 @@
     "contracts/production/work-connections.v2.json": "0eb89d7e06449037ad3ea00b6038a5d0aa577d6405adb32a1e4b6129ea4b8a86",
     "contracts/production/validator-registry.v2.json": "26b8e831fdef5c3a9fa7e010eca566c6bae5b30a5d3ba48a6cc4cfa964050c10",
     "scripts/production/test_ew_output_successor.py": "349a151c91da240e1321ff4c4d55282fced0a02d570a4b93e90254a8724f380d",
-    ".github/workflows/ew-output-successor.yml": "6337b41700b99e107ee34070d44d59fa71c06b79ca86a7584efc1a0d2f051b9f",
+    ".github/workflows/ew-output-successor.yml": "8efd66b381957da107cd2f4947030038a91bf69c3c87da9755fb2aa7243689b0",
     "src/estimate-output/xlsx-renderer.mjs": "0c23b759e306f87ce5e7fd04316d6378d5135c45aaa56d2ab71ffc7c2dbd8508",
     "test/74-estimate-output.test.mjs": "32148d4ec4c15394fc4a63ccb6afcd9fc430ad068ca0f6c492794fb0ec2ba470"
   },
