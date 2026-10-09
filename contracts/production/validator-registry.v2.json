@@ -87,8 +87,22 @@
       "no_fallback": true
     },
     "NATIVE_REGISTRY:LIXIL::リプラス": {
-      "state": "FAIL_CLOSED",
-      "validators": [],
+      "state": "READY",
+      "scope": "EXISTING_PACKAGE_AUDIT_ONLY",
+      "validators": [
+        "seven-component-formal-identity",
+        "all-authoring-runtime-cell-parity",
+        "native-evidence-reference-inventory",
+        "no-mutation-capability-refusal"
+      ],
+      "profile": {
+        "path": "contracts/production/replus/profile.v1.json",
+        "sha256": "0d2d00094389de83ab72075e08ad9edd2efbe56fcaaffc6ce67be4d567d01316",
+        "target_gate": "REPLUS_PACKAGE_AUDITED",
+        "mutation_policy": "NONE"
+      },
+      "mutation_policy": "NONE",
+      "product_qa": "NOT_REISSUED",
       "no_fallback": true
     },
     "NATIVE_REGISTRY:LIXIL::ジエスタ2": {

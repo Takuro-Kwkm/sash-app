@@ -314,16 +314,35 @@
         "リプラス"
       ],
       "repository": "Takuro-Kwkm/sash-app",
-      "connection_state": "ADAPTER_PENDING",
+      "connection_state": "CONNECTED",
       "current_formal_version": "v1.1",
       "formal_registry_selector": "LIXIL::リプラス",
       "safe_failure": {
         "state": "FAIL_CLOSED",
-        "code": "NATIVE_ADAPTER_UNAVAILABLE",
+        "code": "NATIVE_OPERATION_UNSUPPORTED",
         "writes": 0,
         "fallback": false,
-        "next_action": "Registry-only product: bind a native adapter successor before mutation"
-      }
+        "next_action": "Scope successor needs full official review, native domain projection, product QA and new Human Decision"
+      },
+      "native_adapter": "scripts/production/replus-work.py",
+      "native_prepare": "scripts/production/prepare-replus-package.py",
+      "native_worker": "scripts/production/replus-package.py",
+      "default_gate": "REPLUS_PACKAGE_AUDITED",
+      "baseline_selector": "LIVE_CURRENT_REGISTRY_AND_SEVEN_SAME_BYTE_FORMAL_COMPONENTS",
+      "source_selector": "ARCHIVED_DECLARATIONS_ONLY; FULL_OFFICIAL_REVIEW_NOT_ADMITTED",
+      "resume_selector": "EXPLICIT_IMMUTABLE_WORK_ID; INSPECT_ONLY_AFTER_COMPLETION",
+      "existing_package_profile": {
+        "path": "contracts/production/replus/profile.v1.json",
+        "sha256": "0d2d00094389de83ab72075e08ad9edd2efbe56fcaaffc6ce67be4d567d01316",
+        "target_gate": "REPLUS_PACKAGE_AUDITED",
+        "mutation_policy": "NONE"
+      },
+      "validators": [
+        "seven-component-formal-identity",
+        "all-authoring-runtime-cell-parity",
+        "native-evidence-reference-inventory",
+        "no-mutation-capability-refusal"
+      ]
     },
     {
       "product_id": "NATIVE_REGISTRY:LIXIL::ジエスタ2",

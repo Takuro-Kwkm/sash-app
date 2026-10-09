@@ -1,0 +1,155 @@
+{
+  "schema_version": "2.0",
+  "manufacturer": "LIXIL",
+  "series": "リプラス",
+  "package_version": "v1.1",
+  "authoring_mode": "MULTI_AUTHORING",
+  "authoring_files": [
+    {
+      "component_id": "RPL_ROOM",
+      "component_version": "v1.0",
+      "file_name": "20260830_LIXIL_リプラス_居室仕様_商品マスター_v1.0_完成版.xlsx",
+      "file_id": "1uTlmHsO_czluTsfdpGMarw_q8qe43cp9"
+    },
+    {
+      "component_id": "RPL_TW",
+      "component_version": "v1.0",
+      "file_name": "20260830_LIXIL_リプラス_居室仕様_TWタイプ_商品マスター_v1.0_完成版.xlsx",
+      "file_id": "1LYznqKExqc4rkII0g3vj27bpjbPufToU"
+    },
+    {
+      "component_id": "RPL_EW",
+      "component_version": "v1.0",
+      "file_name": "20260831_LIXIL_リプラス_居室仕様_EWタイプ_商品マスター_v1.0_完成版.xlsx",
+      "file_id": "1yb2JYoVJj5yArDBHHQ6JX_XXH3kYpfiL"
+    },
+    {
+      "component_id": "RPL_BATH",
+      "component_version": "v1.0",
+      "file_name": "20260831_LIXIL_リプラス_浴室仕様_商品マスター_v1.0_完成版.xlsx",
+      "file_id": "1wzsMPYxS0fcxOtXcrQ4gtKDND0HHs5jc"
+    },
+    {
+      "component_id": "RPL_ATT_TW",
+      "component_version": "v1.0",
+      "file_name": "20260831_LIXIL_リプラス_アタッチ枠（TW用）_商品マスター_v1.0_完成版.xlsx",
+      "file_id": "18mtqC0LAcphRALtDlx_PMQlJuOHk1mBn"
+    },
+    {
+      "component_id": "RPL_ATT_TH",
+      "component_version": "v1.1",
+      "file_name": "20260901_LIXIL_リプラス_アタッチ枠（サーモス用）_商品マスター_v1.1_完成版.xlsx",
+      "file_id": "1HLX85PAM3Hvp7eCNz1bBecvuHzd06Yr_"
+    },
+    {
+      "component_id": "RPL_CUT_MALL",
+      "component_version": "v1.0",
+      "file_name": "20260901_LIXIL_リプラス_汎用カットモール_商品マスター_v1.0_完成版.xlsx",
+      "file_id": "1RDR5StrhnOLi6DUBtdrGKqsb1mcXZDLi"
+    }
+  ],
+  "runtime_status": "READY",
+  "runtime_entry_point": {
+    "file_name": "LIXIL_リプラス_runtime_index_v1.1.json",
+    "file_id": "1H6yQ4C8NV2BYAiMLwwLPENomgSKt1xLu"
+  },
+  "runtime_files": [
+    {
+      "role": "ENTRY_INDEX",
+      "component_id": "SERIES_INDEX",
+      "file_name": "LIXIL_リプラス_runtime_index_v1.1.json",
+      "file_id": "1H6yQ4C8NV2BYAiMLwwLPENomgSKt1xLu",
+      "sha256": "16611cfa4ce549dc13686be5f7cb39f6181229c1c3af5434f5e0bf3eb87c15a7"
+    },
+    {
+      "role": "COMPONENT_RUNTIME",
+      "component_id": "RPL_ROOM",
+      "file_name": "LIXIL_リプラス_RPL_ROOM_runtime_v1.1.json",
+      "file_id": "152AxI2y9pzFWWo3ZHX0orVpOAzTxzIqC",
+      "sha256": "bf8c26c5c139a12162b25851b65aa7ae39892bea6cb962c4b400bd7194882313"
+    },
+    {
+      "role": "COMPONENT_RUNTIME",
+      "component_id": "RPL_TW",
+      "file_name": "LIXIL_リプラス_RPL_TW_runtime_v1.1.json",
+      "file_id": "1EEzihvTxYgKxSqtLnkCRvi3QuXSKWFkh",
+      "sha256": "5700bd83280a7d20e233116a22ffc8137a274412529513052bd303b7a0634e74"
+    },
+    {
+      "role": "COMPONENT_RUNTIME",
+      "component_id": "RPL_EW",
+      "file_name": "LIXIL_リプラス_RPL_EW_runtime_v1.1.json",
+      "file_id": "1a74wrwovnvNQmNurGb3OgZwFCXfFPolp",
+      "sha256": "add0ed3eaafc45cca0db683dbeb0a54bc408ab1a4270c109905c0d84d55df473"
+    },
+    {
+      "role": "COMPONENT_RUNTIME",
+      "component_id": "RPL_BATH",
+      "file_name": "LIXIL_リプラス_RPL_BATH_runtime_v1.1.json",
+      "file_id": "1DXBJTAqjPZsC1pHrBpgCrNN7eZ-8PNPI",
+      "sha256": "e96a29afcfe83d3707823c1b01b8b0b2bf227ea0b9d9971bf2d48e04e2927f00"
+    },
+    {
+      "role": "COMPONENT_RUNTIME",
+      "component_id": "RPL_ATT_TW",
+      "file_name": "LIXIL_リプラス_RPL_ATT_TW_runtime_v1.1.json",
+      "file_id": "1IJWILF8cSqKaLM_uVbixm4T-0cnKfYiP",
+      "sha256": "7f93dfc7874ad874a72096be5839ced3e8269c6d9abdc1b1cb1e804f710059f1"
+    },
+    {
+      "role": "COMPONENT_RUNTIME",
+      "component_id": "RPL_ATT_TH",
+      "file_name": "LIXIL_リプラス_RPL_ATT_TH_runtime_v1.1.json",
+      "file_id": "184NoOfMQ4q6asC72ewWWNA48pZwh3wpv",
+      "sha256": "64ba5575015706f485909406f7ed8dbb5b86000554534546a3f30fd229ffe71f"
+    },
+    {
+      "role": "COMPONENT_RUNTIME",
+      "component_id": "RPL_CUT_MALL",
+      "file_name": "LIXIL_リプラス_RPL_CUT_MALL_runtime_v1.1.json",
+      "file_id": "182tZYMkcZyjTqOrU3seJizY6bcdhxC59",
+      "sha256": "874fb588a399c30f90cd3d745d5479cd74ddf8e1cdb08357613ee272022f6270"
+    }
+  ],
+  "documentation_file": {
+    "file_name": "LIXIL_リプラス_PRODUCT_MASTER_MANIFEST_v1.1.md",
+    "file_id": "1whrtMK-GJqWkDj4VorROf3ZA6k56GSpH"
+  },
+  "storage_status": "DRIVE_CANONICAL",
+  "package_gate": "PASS",
+  "storage_gate": "PASS",
+  "blocking_items": [],
+  "generated_at": "2026-09-01",
+  "spec_version": "PRODUCT_MASTER_PACKAGE_STORAGE_GATE_v2.0",
+  "runtime_manifest_file_id": "1zaT1brMwlqB7BnMaCvfaStRXXSkLbViw",
+  "apg_audit": {
+    "APG-01": "PASS",
+    "APG-02": "PASS",
+    "APG-03": "PASS",
+    "APG-04": "PASS",
+    "APG-05": "PASS",
+    "APG-06": "PASS",
+    "APG-07": "PASS",
+    "APG-08": "PASS"
+  },
+  "master_status": "FORMAL_PASS",
+  "duplicate_check": "PASS",
+  "registry_status": "CURRENT",
+  "canonical_folder_id": "14clTAIiq1GUot4dyyzCFy1CBrsFIjWDV",
+  "old_folder_id": "1v0ZNnp2KsJBLtYtetCTGEkV4KbBWXFMa",
+  "working_folder_id": "1XG0T0FCC-zge3InI_ZVDw9kprwRRHevK",
+  "final_drive_reread": "PASS",
+  "updated_at": "2026-09-01",
+  "storage_gate_audit": {
+    "SG-01": "PASS",
+    "SG-02": "PASS",
+    "SG-03": "PASS",
+    "SG-04": "PASS",
+    "SG-05": "PASS",
+    "SG-06": "PASS",
+    "SG-07": "PASS",
+    "SG-08": "PASS",
+    "SG-09": "PASS",
+    "SG-10": "PASS"
+  }
+}

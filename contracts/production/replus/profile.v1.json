@@ -1,0 +1,391 @@
+{
+  "schema": "NATIVE_EXISTING_MULTI_AUTHORING_PROFILE_V1",
+  "profile_id": "sash-replus-existing-package-audit-v1",
+  "repository": "Takuro-Kwkm/sash-app",
+  "product_id": "NATIVE_REGISTRY:LIXIL::リプラス",
+  "aliases": [
+    "リプラス"
+  ],
+  "manufacturer": "LIXIL",
+  "registry_series": "リプラス",
+  "formal_package_version": "v1.1",
+  "mutation_policy": "NONE",
+  "admitted_target_gate": "REPLUS_PACKAGE_AUDITED",
+  "scope": "ALL_SEVEN_COMPONENTS_PACKAGE_IDENTITY_TABLE_PARITY_EVIDENCE_REFERENCE_INVENTORY",
+  "unsupported_operations": {
+    "PRODUCT_MASTER_BUILD": "EXISTING_FORMAL_PRESENT",
+    "PRODUCT_MASTER_CHANGE": "OFFICIAL_SOURCE_SEMANTIC_REVIEW_AND_ACCEPTED_LINEAGE_REQUIRED",
+    "FORMAL_CHANGE_ADOPTION": "NO_ADMITTED_FACT_CANDIDATE_OR_NEW_HUMAN_DECISION",
+    "RUNTIME_UI_CHANGE": "DECLARATIVE_SELECTOR_DEPENDENCY_PROJECTION_AND_PRODUCT_QA_REQUIRED",
+    "RELEASE": "NATIVE_RELEASE_SCOPE_NOT_ADMITTED"
+  },
+  "components": [
+    {
+      "component_id": "RPL_ROOM",
+      "component_version": "v1.0",
+      "authoring_file_id": "1uTlmHsO_czluTsfdpGMarw_q8qe43cp9",
+      "authoring": {
+        "path": "contracts/production/replus/baseline/RPL_ROOM.xlsx",
+        "sha256": "661924505a71551cc600647daeea3134f5dc1d2615833ce6125007824840ae39"
+      },
+      "runtime_file_id": "152AxI2y9pzFWWo3ZHX0orVpOAzTxzIqC",
+      "runtime": {
+        "path": "contracts/production/replus/baseline/RPL_ROOM.json",
+        "sha256": "bf8c26c5c139a12162b25851b65aa7ae39892bea6cb962c4b400bd7194882313"
+      },
+      "tables": {
+        "90_Evidence": "A1:I26",
+        "00_INDEX": "A1:D13",
+        "00_README": "A1:B18",
+        "01_入力フロー": "A1:E16",
+        "02_取替方式": "A1:H7",
+        "02A_仕様区分": "A1:G7",
+        "03_窓種": "A1:G12",
+        "03A_枠仕様": "A1:F5",
+        "03B_窓種枠設定": "A1:F13",
+        "04_窓種固有仕様": "A1:H13",
+        "05_サイズルール": "A1:R21",
+        "05A_サイズ区間": "A1:J16",
+        "05B_境界ルール": "A1:H16",
+        "06_色": "A1:H29",
+        "06A_色適用条件": "A1:I5",
+        "07_網戸": "A1:I11",
+        "07A_網戸適用条件": "A1:I13",
+        "08_ガラス": "A1:H11",
+        "08A_ガラス適用条件": "A1:H42",
+        "09_その他OP": "A1:F17",
+        "09A_OP依存関係": "A1:H15",
+        "10_適用条件": "A1:G14",
+        "10A_既設窓互換": "A1:H15",
+        "10B_現調項目": "A1:I14",
+        "99_QA": "A1:F20",
+        "04A_開口構成": "A1:F7",
+        "11_見積入力テスト": "A1:F13",
+        "10C_化粧カバー見付": "A1:I16"
+      }
+    },
+    {
+      "component_id": "RPL_TW",
+      "component_version": "v1.0",
+      "authoring_file_id": "1LYznqKExqc4rkII0g3vj27bpjbPufToU",
+      "authoring": {
+        "path": "contracts/production/replus/baseline/RPL_TW.xlsx",
+        "sha256": "847b44f46d2eb8cb083d0c5d062e06981e09bb6dfe06e9b72817efe7042c4331"
+      },
+      "runtime_file_id": "1EEzihvTxYgKxSqtLnkCRvi3QuXSKWFkh",
+      "runtime": {
+        "path": "contracts/production/replus/baseline/RPL_TW.json",
+        "sha256": "5700bd83280a7d20e233116a22ffc8137a274412529513052bd303b7a0634e74"
+      },
+      "tables": {
+        "90_Evidence": "A1:I17",
+        "00_INDEX": "A1:D17",
+        "00_README": "A1:B18",
+        "01_入力フロー": "A1:E22",
+        "02_取替方式": "A1:G5",
+        "02A_仕様区分": "A1:G4",
+        "03_窓種": "A1:G5",
+        "03A_枠仕様": "A1:G4",
+        "03B_窓種枠設定": "A1:G4",
+        "04_窓種固有仕様": "A1:H10",
+        "05_サイズルール": "A1:R11",
+        "05A_サイズ区間": "A1:K18",
+        "05B_境界ルール": "A1:I10",
+        "06_色": "A1:H23",
+        "06A_色適用条件": "A1:J4",
+        "07_網戸": "A1:H6",
+        "07A_網戸適用条件": "A1:H7",
+        "08_ガラス": "A1:G21",
+        "08A_ガラス適用条件": "A1:H13",
+        "09_その他OP": "A1:G22",
+        "09A_OP依存関係": "A1:H16",
+        "10_適用条件": "A1:H11",
+        "10A_既設窓互換": "A1:G4",
+        "10B_現調項目": "A1:I13",
+        "99_QA": "A1:F20",
+        "04A_開口構成": "A1:F6",
+        "11_見積入力テスト": "A1:G16",
+        "10C_化粧カバー見付": "A1:H11",
+        "12_共通参照": "A1:H7"
+      }
+    },
+    {
+      "component_id": "RPL_EW",
+      "component_version": "v1.0",
+      "authoring_file_id": "1yb2JYoVJj5yArDBHHQ6JX_XXH3kYpfiL",
+      "authoring": {
+        "path": "contracts/production/replus/baseline/RPL_EW.xlsx",
+        "sha256": "d37175d063e0bd75d8c073238b4b25037ef8b7ab1cd8d6bdea20290216b12044"
+      },
+      "runtime_file_id": "1a74wrwovnvNQmNurGb3OgZwFCXfFPolp",
+      "runtime": {
+        "path": "contracts/production/replus/baseline/RPL_EW.json",
+        "sha256": "add0ed3eaafc45cca0db683dbeb0a54bc408ab1a4270c109905c0d84d55df473"
+      },
+      "tables": {
+        "90_Evidence": "A1:I16",
+        "00_INDEX": "A1:D17",
+        "00_README": "A1:B20",
+        "01_入力フロー": "A1:E23",
+        "02_取替方式": "A1:G6",
+        "02A_仕様区分": "A1:G4",
+        "03_窓種": "A1:G5",
+        "03A_枠仕様": "A1:G4",
+        "03B_窓種枠設定": "A1:G4",
+        "04_窓種固有仕様": "A1:H12",
+        "05_サイズルール": "A1:R12",
+        "05A_サイズ区間": "A1:K19",
+        "05B_境界ルール": "A1:I8",
+        "06_色": "A1:H13",
+        "06A_色適用条件": "A1:J4",
+        "07_網戸": "A1:H6",
+        "07A_網戸適用条件": "A1:H6",
+        "08_ガラス": "A1:G21",
+        "08A_ガラス適用条件": "A1:H10",
+        "09_その他OP": "A1:G15",
+        "09A_OP依存関係": "A1:H12",
+        "10_適用条件": "A1:H13",
+        "10A_既設窓互換": "A1:G11",
+        "10B_現調項目": "A1:I13",
+        "99_QA": "A1:F22",
+        "04A_開口構成": "A1:F7",
+        "11_見積入力テスト": "A1:G18",
+        "10C_化粧カバー見付": "A1:H7",
+        "12_共通参照": "A1:H7",
+        "08B_地域条件": "A1:G7",
+        "09B_室内樹脂カバー": "A1:H7"
+      }
+    },
+    {
+      "component_id": "RPL_BATH",
+      "component_version": "v1.0",
+      "authoring_file_id": "1wzsMPYxS0fcxOtXcrQ4gtKDND0HHs5jc",
+      "authoring": {
+        "path": "contracts/production/replus/baseline/RPL_BATH.xlsx",
+        "sha256": "4f91a9313165023ae48f065053bffcb45cdc4d78a9a554c69f027885f2c521b3"
+      },
+      "runtime_file_id": "1DXBJTAqjPZsC1pHrBpgCrNN7eZ-8PNPI",
+      "runtime": {
+        "path": "contracts/production/replus/baseline/RPL_BATH.json",
+        "sha256": "e96a29afcfe83d3707823c1b01b8b0b2bf227ea0b9d9971bf2d48e04e2927f00"
+      },
+      "tables": {
+        "90_Evidence": "A1:I16",
+        "00_INDEX": "A1:D19",
+        "00_README": "A1:B19",
+        "01_入力フロー": "A1:E22",
+        "02_取替方式": "A1:F6",
+        "02A_仕様区分": "A1:F4",
+        "03_窓種": "A1:G11",
+        "03A_枠仕様": "A1:G5",
+        "03B_窓種枠設定": "A1:G19",
+        "04_窓種固有仕様": "A1:H11",
+        "05_サイズルール": "A1:O61",
+        "05A_サイズ区間": "A1:J11",
+        "05B_境界ルール": "A1:H14",
+        "06_色": "A1:H17",
+        "06A_色適用条件": "A1:I6",
+        "07_網戸": "A1:H11",
+        "07A_網戸適用条件": "A1:H12",
+        "08_ガラス": "A1:H18",
+        "08A_ガラス適用条件": "A1:I12",
+        "09_その他OP": "A1:G17",
+        "09A_OP依存関係": "A1:G13",
+        "10_適用条件": "A1:G10",
+        "10A_既設窓互換": "A1:F11",
+        "10B_現調項目": "A1:H14",
+        "99_QA": "A1:F22",
+        "04A_開口構成": "A1:F11",
+        "11_見積入力テスト": "A1:G19",
+        "10C_化粧カバー見付": "A1:H17",
+        "04B_浴室改修モード": "A1:G5",
+        "04C_既設開口パターン": "A1:G11",
+        "04D_開口縮小部材": "A1:G8",
+        "05C_開口ポイント": "A1:H21",
+        "10D_浴室現場条件": "A1:G12",
+        "12_共通参照": "A1:F8"
+      }
+    },
+    {
+      "component_id": "RPL_ATT_TW",
+      "component_version": "v1.0",
+      "authoring_file_id": "18mtqC0LAcphRALtDlx_PMQlJuOHk1mBn",
+      "authoring": {
+        "path": "contracts/production/replus/baseline/RPL_ATT_TW.xlsx",
+        "sha256": "dbb33692b5903450f33f8e92f73b149a261fed37b8101095f981990a57b837cd"
+      },
+      "runtime_file_id": "1IJWILF8cSqKaLM_uVbixm4T-0cnKfYiP",
+      "runtime": {
+        "path": "contracts/production/replus/baseline/RPL_ATT_TW.json",
+        "sha256": "7f93dfc7874ad874a72096be5839ced3e8269c6d9abdc1b1cb1e804f710059f1"
+      },
+      "tables": {
+        "90_Evidence": "A1:I19",
+        "00_INDEX": "A1:D20",
+        "00_README": "A1:B20",
+        "01_入力フロー": "A1:E18",
+        "02_取替方式": "A1:G6",
+        "02A_仕様区分": "A1:G4",
+        "03_窓種": "A1:F11",
+        "03A_枠仕様": "A1:G5",
+        "03B_窓種枠設定": "A1:G5",
+        "04_窓種固有仕様": "A1:H6",
+        "05_サイズルール": "A1:G8",
+        "05A_サイズ区間": "A1:H5",
+        "05B_境界ルール": "A1:G7",
+        "06_色": "A1:H16",
+        "06A_色適用条件": "A1:H4",
+        "07_網戸": "A1:G4",
+        "07A_網戸適用条件": "A1:F5",
+        "08_ガラス": "A1:G4",
+        "08A_ガラス適用条件": "A1:F5",
+        "09_その他OP": "A1:G16",
+        "09A_OP依存関係": "A1:G8",
+        "10_適用条件": "A1:G15",
+        "10A_既設窓互換": "A1:F14",
+        "10B_現調項目": "A1:H14",
+        "99_QA": "A1:F22",
+        "04A_開口構成": "A1:E6",
+        "11_見積入力テスト": "A1:G22",
+        "10C_化粧カバー見付": "A1:H7",
+        "02B_参照商品": "A1:I5",
+        "02C_新設サッシ手配方式": "A1:F5",
+        "03C_対応TW窓種": "A1:H17",
+        "03D_TW参照制限": "A1:G10",
+        "05C_寸法変換": "A1:H7",
+        "12_共通参照": "A1:F9"
+      }
+    },
+    {
+      "component_id": "RPL_ATT_TH",
+      "component_version": "v1.1",
+      "authoring_file_id": "1HLX85PAM3Hvp7eCNz1bBecvuHzd06Yr_",
+      "authoring": {
+        "path": "contracts/production/replus/baseline/RPL_ATT_TH.xlsx",
+        "sha256": "4da490d5562d9f366e11d844e3d640f2703a63258bf78bafb1ef548c94f301a4"
+      },
+      "runtime_file_id": "184NoOfMQ4q6asC72ewWWNA48pZwh3wpv",
+      "runtime": {
+        "path": "contracts/production/replus/baseline/RPL_ATT_TH.json",
+        "sha256": "64ba5575015706f485909406f7ed8dbb5b86000554534546a3f30fd229ffe71f"
+      },
+      "tables": {
+        "90_Evidence": "A1:I22",
+        "00_INDEX": "A1:D23",
+        "00_README": "A1:B24",
+        "01_入力フロー": "A1:E19",
+        "02_取替方式": "A1:G6",
+        "02A_仕様区分": "A1:G4",
+        "03_窓種": "A1:F12",
+        "03A_枠仕様": "A1:G5",
+        "03B_窓種枠設定": "A1:G5",
+        "04_窓種固有仕様": "A1:G8",
+        "05_サイズルール": "A1:G10",
+        "05A_サイズ区間": "A1:I7",
+        "05B_境界ルール": "A1:G9",
+        "06_色": "A1:H20",
+        "06A_色適用条件": "A1:G7",
+        "07_網戸": "A1:G6",
+        "07A_網戸適用条件": "A1:F6",
+        "08_ガラス": "A1:G6",
+        "08A_ガラス適用条件": "A1:F7",
+        "09_その他OP": "A1:G17",
+        "09A_OP依存関係": "A1:G12",
+        "10_適用条件": "A1:H12",
+        "10A_既設窓互換": "A1:G9",
+        "10B_現調項目": "A1:H15",
+        "99_QA": "A1:F26",
+        "04A_開口構成": "A1:F7",
+        "11_見積入力テスト": "A1:Q13",
+        "10C_化粧カバー見付": "A1:H7",
+        "02B_参照商品": "A1:K8",
+        "02C_新設サッシ手配方式": "A1:G5",
+        "03C_対応サーモス窓種": "A1:I28",
+        "03D_サーモス参照制限": "A1:H13",
+        "05C_寸法変換": "A1:H8",
+        "12_共通参照": "A1:F8",
+        "02D_対応シリーズ": "A1:I6",
+        "12A_ATT_TW比較": "A1:F19",
+        "13_参照整合性監査": "A1:J7"
+      }
+    },
+    {
+      "component_id": "RPL_CUT_MALL",
+      "component_version": "v1.0",
+      "authoring_file_id": "1RDR5StrhnOLi6DUBtdrGKqsb1mcXZDLi",
+      "authoring": {
+        "path": "contracts/production/replus/baseline/RPL_CUT_MALL.xlsx",
+        "sha256": "b08107290df4faf50389becf733e4ac02e4d4a188f7799470c95fdb7de76fa79"
+      },
+      "runtime_file_id": "182tZYMkcZyjTqOrU3seJizY6bcdhxC59",
+      "runtime": {
+        "path": "contracts/production/replus/baseline/RPL_CUT_MALL.json",
+        "sha256": "874fb588a399c30f90cd3d745d5479cd74ddf8e1cdb08357613ee272022f6270"
+      },
+      "tables": {
+        "00_INDEX": "A1:D15",
+        "00_README": "A1:B15",
+        "01_入力フロー": "A1:E12",
+        "02_取替方式": "A1:G3",
+        "02A_商品構造": "A1:F6",
+        "02B_参照商品": "A1:I6",
+        "02C_供給方式": "A1:G4",
+        "02D_対応シリーズ": "A1:I6",
+        "03_対応窓種": "A1:H36",
+        "04_窓種固有仕様": "A1:G7",
+        "05_サイズルール": "A1:F7",
+        "05B_カットモール寸法": "A1:K23",
+        "06_色": "A1:G30",
+        "07_網戸参照": "A1:F4",
+        "08_ガラス参照": "A1:F4",
+        "09_施工部材": "A1:G9",
+        "09A_OP依存関係": "A1:F10",
+        "10_適用条件": "A1:G15",
+        "10B_現調項目": "A1:G10",
+        "10C_施工スペース": "A1:G6",
+        "10D_施工条件": "A1:F8",
+        "11_見積入力テスト": "A1:P7",
+        "12_共通参照": "A1:F4",
+        "12A_他取替方式比較": "A1:G7",
+        "13_参照整合性監査": "A1:G6",
+        "90_Evidence": "A1:I18",
+        "99_QA": "A1:F18"
+      }
+    }
+  ],
+  "manifests": {
+    "runtime-manifest.json": {
+      "path": "contracts/production/replus/baseline/runtime-manifest.json",
+      "sha256": "011e910837d3825e3d036f38149bdff3701ef4fb857ad5a671f7b874cbb6d505"
+    },
+    "runtime-index.json": {
+      "path": "contracts/production/replus/baseline/runtime-index.json",
+      "sha256": "16611cfa4ce549dc13686be5f7cb39f6181229c1c3af5434f5e0bf3eb87c15a7"
+    },
+    "product-manifest.md": {
+      "path": "contracts/production/replus/baseline/product-manifest.md",
+      "sha256": "46c8071fae3992b619ae3c95c75ed454e59ff0619fbbbd2ac8e41f90735f61c4"
+    }
+  },
+  "evidence_headers": {
+    "id": [
+      "evidence_id"
+    ],
+    "source": [
+      "URL",
+      "source"
+    ],
+    "locator": [
+      "ページ/箇所",
+      "page/sheet"
+    ],
+    "version": [
+      "発行年月",
+      "publication/version"
+    ]
+  },
+  "reference_policy": "Inventory legacy refs; never rewrite or auto-adopt a current referenced product",
+  "source_policy": "Archive locator is not a Current adoption. Missing complete official bytes/review stays unresolved.",
+  "qa_policy": "Cell parity and original QA labels do not assert product semantics, Browser, PDF, DB or Release QA",
+  "terminal_policy": "Completed audit INSPECT_ONLY; every content or integration change requires a new immutable binding"
+}
