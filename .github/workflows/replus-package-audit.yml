@@ -1,0 +1,35 @@
+name: Replus Native Package Audit
+on:
+  pull_request:
+    paths: ['contracts/production/replus/**', 'scripts/production/*replus*.py', 'contracts/production/work-connections.v2.json', 'contracts/production/validator-registry.v2.json', 'test/101-replus-package-connection.test.mjs', '.github/workflows/replus-package-audit.yml']
+  push:
+    branches: [main]
+    paths: ['contracts/production/replus/**', 'scripts/production/*replus*.py', 'contracts/production/work-connections.v2.json', 'contracts/production/validator-registry.v2.json', '.github/workflows/replus-package-audit.yml']
+permissions:
+  contents: read
+jobs:
+  actual-native-package:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - name: Verify exact candidate HEAD
+        env:
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12.14'}
+      - run: python -m pip install openpyxl==3.1.5
+      - uses: actions/setup-node@v4
+        with: {node-version: '24'}
+      - name: All seven actual native baselines and adversarial refusal
+        run: |
+          python -B scripts/production/test-replus-package.py
+          node --test test/101-replus-package-connection.test.mjs
+          python -B scripts/production/validate-architecture-connection.py
+      - name: Existing application contracts
+        run: |
+          npm run lint
+          npm run typecheck
