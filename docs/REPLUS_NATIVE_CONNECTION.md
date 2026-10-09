@@ -22,7 +22,7 @@
 
 ## 限定修正候補
 
-`candidates/cut-mall-r1/`のAuthoringとRuntimeは新しいWorking。既設外付サッシの一律UNAVAILABLE/HIDEを、公式図表の外付型一致条件を確認するCONDITIONAL/MANUAL_CHECKへ変更。雨戸付の鏡板付戸袋必須と戸袋側W+cの確認を追加。CM-EV-017は候補Evidence。価格/BOM/Set Codeを確定しない。自動発注false、QA_READY/FORMAL/Release false。
+`candidates/cut-mall-r1-v2/`のAuthoringとRuntimeは新しいWorking。既設外付サッシの一律UNAVAILABLE/HIDEを、公式図表の外付型一致条件を確認するCONDITIONAL/MANUAL_CHECKへ変更。雨戸付の鏡板付戸袋必須と戸袋側W+cの確認を追加。CM-EV-017は候補Evidence。価格/BOM/Set Codeを確定しない。自動発注false、QA_READY/FORMAL/Release false。
 
 Spreadsheetsのartifact-toolで編集・再計算・出力し、元27シートの全セルを照合した。変更48セル、Scope外値/書式/数式/native feature差分0、数式エラー/未cache0。変更4シートを視覚確認。他6構成は元bytesを保持するが、全商品Factに影響なしと判定した意味ではない。
 
@@ -45,3 +45,5 @@ root存在時のprepareは拒否。completed auditはINSPECT_ONLY。native wrapp
 商品Browser 1280/768/390、選択Clear/保存/再表示/固有PDF・XLSX、DB/複数端末E2EはNOT_EXECUTED。技術候補のlint/typecheckと636既存テスト、13 native実データ/拒否テスト、2宣言テストはPASS。新規PR CIの実完了は別の証跡で固定する。
 
 現在はSource/参照Projection不足で正式承認資料未成立。公開先・固定Deployment・復旧packetを備える正式Release要求は未作成。Merge/Main/公開alias/Current selector変更0、一時QAアクセス作成0。本番復旧も未実行。元Formal/旧Evidence ID/採用履歴/Unknownを維持した。
+
+The accepted technical review carrier is Working R1 packet V2: native table addresses are preserved except the four explicitly extended tables. V1 Runtime serialization was rejected; its bytes are retained as evidence. No Working Fact revision or Formal adoption is added by this carrier repair.

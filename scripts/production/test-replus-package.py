@@ -83,7 +83,7 @@ class NativePackage(unittest.TestCase):
 
     def test_quarantined_correction_preserves_all_unaffected_cells(self):
         import openpyxl
-        folder = ROOT/'contracts/production/replus/candidates/cut-mall-r1'
+        folder = ROOT/'contracts/production/replus/candidates/cut-mall-r1-v2'
         plan = json.loads((folder/'patch-plan.json').read_text())
         allowed = {(p['sheet'],p['address']):p for p in plan['patches']}
         before = openpyxl.load_workbook(ROOT/'contracts/production/replus/baseline/RPL_CUT_MALL.xlsx', data_only=False)
@@ -108,7 +108,7 @@ class NativePackage(unittest.TestCase):
             before.close();after.close()
 
     def test_quarantined_runtime_cannot_masquerade_as_ready(self):
-        folder = ROOT/'contracts/production/replus/candidates/cut-mall-r1'
+        folder = ROOT/'contracts/production/replus/candidates/cut-mall-r1-v2'
         runtime = json.loads((folder/'runtime-candidate.json').read_text())
         manifest = json.loads((folder/'candidate-manifest.json').read_text())
         self.assertEqual(runtime['runtime_status'],'CANDIDATE_BLOCKED')

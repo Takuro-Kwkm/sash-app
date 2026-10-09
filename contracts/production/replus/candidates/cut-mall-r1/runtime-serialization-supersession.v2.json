@@ -1,0 +1,7 @@
+{
+  "state": "RUNTIME_REJECTED_TABLE_RANGE_EXPANSION",
+  "original_runtime_sha256": "6a151cfc886e3f847a3bbc4d9453619fe027261f70165df3e4ada74b4765c132",
+  "authoring_bytes_preserved": true,
+  "successor": "../cut-mall-r1-v2/runtime-candidate.json",
+  "reason": "Serializer used formatted worksheet extent; corrected successor uses only baseline table address plus explicit patches. V1 bytes are retained; no adoption."
+}
