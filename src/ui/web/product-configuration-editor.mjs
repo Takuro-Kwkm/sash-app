@@ -1,4 +1,6 @@
 import { createProductConfigurationSnapshot } from '/work-management/domain.mjs';
+import { GuidedSelectionUI } from './guided-selection-ui.mjs';
+import { applyGuidedCandidate } from './guided-selection-engine.mjs';
 
 const esc=(value)=>String(value??'').replace(/[&<>'\"]/g,(character)=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'\"':"&quot;"})[character]);
 const reviewChoiceLabel=(value)=>`${esc(value.displayLabel)}${value.manualCheck&&!String(value.displayLabel).includes('要確認')?'（要確認）':''}`;
@@ -86,15 +88,21 @@ export class ProductConfigurationEditor {
       <section class="card runtime-editor">
         <div class="section-heading"><div><h2>商品仕様</h2><p class="lead">正式Runtime / 既存共通Catalogから商品設定を入力します。</p></div><span id="runtimeVersionBadge" class="version-badge" hidden></span></div>
         <div id="runtimeStaleNotice"></div>
+        <div class="guided-mode-switch" role="group" aria-label="商品入力モード">
+          <button class="button secondary" type="button" data-guided-action="normal" aria-pressed="true">通常入力</button>
+          <button class="button secondary" type="button" data-guided-action="guided" aria-pressed="false">かんたん商品選定</button>
+        </div>
+        <div id="normalProductInputs">
         <div class="field"><label for="manufacturer">メーカー</label><select id="manufacturer"><option value="">選択してください</option></select></div>
         <div class="field"><label for="product">商品</label><select id="product" disabled><option value="">選択してください</option></select></div>
-        <div id="dynamicForm"></div><div id="warnings"></div>
+        <div id="dynamicForm"></div></div><div id="guidedPanel" hidden></div><div id="warnings"></div>
       </section>
       <section class="card compact"><h2>選択内容</h2><div id="selectionSummary" class="summary muted">商品を選択してください。</div></section>
       <section id="productCodeCard" class="card compact" hidden><h2>品番結果</h2><div id="productCodeResults" class="summary"></div></section>
       ${this.showInventory?'<section class="card compact"><h2>Runtime Catalog</h2><div id="inventory"></div></section>':''}`;
     this.root.addEventListener('change',this.boundChange);
     this.root.addEventListener('click',this.boundClick);
+    this.guided=new GuidedSelectionUI(this,(productId,selection)=>this.resolveRuntime(productId,selection));
     const [catalogProducts,runtimeProducts,health]=await Promise.all([
       getJson('/api/catalog/products'),getJson('/api/runtime-master/integrations'),getJson('/api/health'),
     ]);
@@ -113,9 +121,10 @@ export class ProductConfigurationEditor {
     const build=document.querySelector('#build');
     if(build)build.textContent=`${health.buildId} · ${health.catalogVersion}`;
     await this.restoreSnapshot();
+    this.guided.render();
   }
 
-  destroy(){this.root.removeEventListener('change',this.boundChange);this.root.removeEventListener('click',this.boundClick);}
+  destroy(){this.guided?.destroy();this.root.removeEventListener('change',this.boundChange);this.root.removeEventListener('click',this.boundClick);}
   getSnapshot(){return this.state.snapshot;}
 
   productsForManufacturer(manufacturer){return this.state.products.filter((row)=>row.manufacturer===manufacturer);}
@@ -211,6 +220,25 @@ export class ProductConfigurationEditor {
     const endpoint=this.state.productSource==='RUNTIME_MASTER'?'/api/runtime-master/resolve':'/api/catalog/resolve';
     let result=await getJson(`${endpoint}?${query}`);
     if(revision!==this.state.resolveRevision||productId!==this.state.productId)return;
+    this.renderResolved(result,{notify,revision});
+  }
+
+  resolveRuntime(productId,selection){
+    return getJson(`/api/runtime-master/resolve?${new URLSearchParams({productId,selection:JSON.stringify(selection)})}`);
+  }
+
+  async applyGuidedCandidate(candidate){
+    const revision=++this.state.resolveRevision;
+    const result=await applyGuidedCandidate({candidate,currentSelection:this.state.selection,resolve:(id,selection)=>this.resolveRuntime(id,selection)});
+    if(revision!==this.state.resolveRevision)return;
+    const product=this.state.products.find(row=>row.id===candidate.productId);
+    this.state.productId=product.id;this.state.productSource=product.sourceType;this.state.stale=false;
+    this.selectManufacturer(product.manufacturer);this.root.querySelector('#product').value=product.id;
+    this.renderResolved(result,{notify:true,revision});
+  }
+
+  renderResolved(result,{notify=true,revision=this.state.resolveRevision}={}){
+    const productId=this.state.productId;
     this.state.selection=result.selection;this.state.resolved=result;
     const dynamicForm=this.root.querySelector('#dynamicForm');
     dynamicForm.innerHTML=this.renderFields(result.fields);
@@ -219,6 +247,7 @@ export class ProductConfigurationEditor {
     const product=this.state.products.find((row)=>row.id===productId);
     this.state.snapshot=createProductConfigurationSnapshot({product,result,previousSnapshot:this.state.snapshot});
     const badge=this.root.querySelector('#runtimeVersionBadge');badge.hidden=false;badge.textContent=`${this.state.snapshot.source_mode==='CANONICAL_RUNTIME'?'Runtime':'Legacy'} ${this.state.snapshot.package_version}`;
+    this.guided?.afterResolve(result);
     if(notify)this.onSnapshot(this.state.snapshot,result);
   }
 

@@ -1,5 +1,7 @@
 # サッシ情報管理アプリ V2
 
+かんたん商品選定モードのPhase1 PR候補は [実装・QA報告](docs/guided-selection/implementation-report.md) を参照。通常入力と同じRuntime/Snapshotを使い、サーモスL1シリーズの質問選定と段階的な理由説明を追加する。正式採用・本番Releaseは別判断。
+
 ローカルでの商品変更、Current Authority取得、UI接続、起動、Browser QA、PR・CI・本番配信と読み戻しは [ローカル商品変更から本番確認まで](docs/LOCAL_PRODUCT_RELEASE.md) を参照。配信先設定は `contracts/production/app-release.v1.json`、接続検証は既存native Validator、リリース後照合は `npm run verify:app-release` を使う。
 
 このRepositoryは、2026-08-26時点で検証済みだった「サッシ情報管理アプリ V2」を、保存済みGate Report・Runtime監査・商品マスターから復元し、今後の正本として継続管理するためのRepositoryです。
