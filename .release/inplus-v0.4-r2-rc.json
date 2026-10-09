@@ -1,0 +1,43 @@
+{
+  "series": "LIXIL インプラス",
+  "packageVersion": "v0.4-R2",
+  "sizeCapabilityRevision": "SizeCapability_R1",
+  "sourceMainSha": "3b457316b8e7b40186a54346c55e75dd5b83584e",
+  "taskClassification": "NON-PRODUCT-MASTER",
+  "productMasterMutation": 0,
+  "runtimeManifestSha256": "cbbdb6ba315c985f7d27f75a237e861be8ce635962ce1cd5a746d7f152c8e1f8",
+  "runtimeJsonSha256": "6b225c76cbec1364473da2f8b74ca9b738d70f74baf4151f574c25415ca5fae9",
+  "schemaSha256": "75a6a775229d48e2338a529b7d9b4fee2cb90fb4fe9809ff941151d90bb7154c",
+  "qa": {
+    "baseWindowCount": 8,
+    "logicalQaCaseCount": 1148,
+    "verifiedQaCaseCount": 1148,
+    "unverifiedQaCaseCount": 0,
+    "browserStateChecks": 3350,
+    "desktop": "PASS",
+    "smartphone": "PASS",
+    "regression": "PASS"
+  },
+  "gates": {
+    "appIntegrationReady": true,
+    "fullWindowCoverage": "PASS",
+    "customSizeCoverage": "PASS",
+    "fullBrowserQa": "PASS",
+    "repository": "PASS",
+    "releaseInput": "BLOCKED",
+    "productionReady": false,
+    "released": false
+  },
+  "releaseBlocker": {
+    "service": "Vercel",
+    "failureType": "PLAN_LIMITATION",
+    "route": "REST API deployment creation",
+    "code": "api-deployments-free-per-day",
+    "limit": 100,
+    "remaining": 0,
+    "retryAuthorized": false,
+    "authRetryGate": "CLOSED",
+    "reopenCondition": "Provider quota reset or plan-state change with new evidence",
+    "knownResetAtJst": "2026-09-16T17:40:21.495+09:00"
+  }
+}
