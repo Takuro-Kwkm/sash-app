@@ -686,15 +686,35 @@
         "ドアリモ玄関ドア 非防火"
       ],
       "repository": "Takuro-Kwkm/sash-app",
-      "connection_state": "ADAPTER_PENDING",
-      "current_formal_version": "v1.0-LEGACY-RECOVERY",
+      "connection_state": "CONNECTED",
+      "connection_scope": "STRUCTURAL_DRAFT_RECOVERY_ONLY",
+      "current_working_version": "v1.0-LEGACY-RECOVERY",
       "formal_registry_selector": "YKK AP::ドアリモ玄関ドア 非防火",
-      "safe_failure": {
-        "state": "FAIL_CLOSED",
-        "code": "NATIVE_ADAPTER_UNAVAILABLE",
-        "writes": 0,
-        "fallback": false,
-        "next_action": "Registry-only product: bind a native adapter successor before mutation"
+      "default_gate": "WORKING_STRUCTURE_VERIFIED",
+      "baseline_selector": {
+        "registry_id": "1HMMZ8JdsbJPtL_8LjQfxMF8P_Zb4-LReqvPMFn1pJks",
+        "manufacturer": "YKK AP",
+        "series": "ドアリモ玄関ドア 非防火",
+        "state": "WORKING_RECOVERY"
+      },
+      "source_selector": {
+        "from": "LIVE_NATIVE_AUTHORING.Evidence_Master + captured official baseline",
+        "role": "INHERITED_REVIEW_REQUIRED",
+        "scope": "Existing non-fire Working Master; no automatic Source/price adoption"
+      },
+      "native_adapter": "scripts/production/working-master-recovery.py",
+      "prepare_adapter": "scripts/production/prepare-working-master-recovery.py",
+      "validators": ["native-working-identity", "native-authoring-parity", "native-structural-recovery"],
+      "resume_selector": "IMMUTABLE_SPEC_AND_SHARED_V2_JOURNAL; completed recovery is INSPECT_ONLY",
+      "build_profile": {
+        "profile_id": "sash-working-master-recovery-v1",
+        "path": "contracts/production/working-master-recovery/doorremo-nonfire.v1.json",
+        "sha256": "de0aadf76563f9d09faacaa1d97ee0c34f77a6186396cd469e4cc7b9763564da"
+      },
+      "unsupported_gates": {
+        "QA_READY": "NATIVE_BUSINESS_QA_PROFILE_REQUIRED",
+        "FORMAL": "NATIVE_FORMAL_PROFILE_AND_EXTERNAL_DECISION_REQUIRED",
+        "INTEGRATION": "NATIVE_RUNTIME_ADAPTER_UNAVAILABLE"
       }
     },
     {

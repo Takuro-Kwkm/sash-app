@@ -1,0 +1,28 @@
+name: Working Product Master Recovery
+on:
+  pull_request:
+    paths: ['contracts/production/**', 'scripts/production/**', '.github/workflows/working-master-recovery.yml']
+  push:
+    branches: [main]
+    paths: ['contracts/production/**', 'scripts/production/**', '.github/workflows/working-master-recovery.yml']
+permissions:
+  contents: read
+jobs:
+  native-recovery:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    env:
+      EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+      SHARED_HARNESS_ROOT: /tmp/shared-recovery-authority
+    steps:
+      - uses: actions/checkout@v4
+        with: {ref: '${{ env.EXPECTED_HEAD }}'}
+      - run: test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12.14'}
+      - run: python -B scripts/production/unpack-build-authority.py "$SHARED_HARNESS_ROOT"
+      - run: python -m pip install -r "$SHARED_HARNESS_ROOT/requirements.txt" openpyxl==3.1.5
+      - run: |
+          python -B scripts/production/validate-architecture-connection.py
+          python -B scripts/production/validate-working-master-recovery.py
+          python -B scripts/production/test-working-master-recovery.py "$SHARED_HARNESS_ROOT"
