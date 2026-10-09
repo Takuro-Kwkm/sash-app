@@ -1,0 +1,642 @@
+{
+  "target_gate": "QA_PASS",
+  "result": "PASS",
+  "scope_id": "LIXIL-EW-29-FORMAL-202610",
+  "revision": "v1.4",
+  "gate_history": [
+    "QA_READY",
+    "QA_PASS"
+  ],
+  "checks": [
+    {
+      "check_id": "PRICE-01",
+      "actual": "PASS",
+      "proof": {
+        "fact_id": "MAT-EW-STD-BK-910",
+        "code": "A1Y80",
+        "price": 16700,
+        "pdf_page": 151,
+        "actual": "PASS"
+      }
+    },
+    {
+      "check_id": "PRICE-02",
+      "actual": "PASS",
+      "proof": {
+        "fact_id": "MAT-EW-STD-BK-970",
+        "code": "A1Y81",
+        "price": 18700,
+        "pdf_page": 151,
+        "actual": "PASS"
+      }
+    },
+    {
+      "check_id": "PRICE-03",
+      "actual": "PASS",
+      "proof": {
+        "fact_id": "MAT-EW-STD-GR-910",
+        "code": "A1Y88",
+        "price": 16700,
+        "pdf_page": 151,
+        "actual": "PASS"
+      }
+    },
+    {
+      "check_id": "PRICE-04",
+      "actual": "PASS",
+      "proof": {
+        "fact_id": "MAT-EW-STD-GR-970",
+        "code": "A1Y89",
+        "price": 18700,
+        "pdf_page": 151,
+        "actual": "PASS"
+      }
+    },
+    {
+      "check_id": "PRICE-05",
+      "actual": "PASS",
+      "proof": {
+        "fact_id": "MAT-EW-CLEAN-BK-910",
+        "code": "A1Y55",
+        "price": 31600,
+        "pdf_page": 151,
+        "actual": "PASS"
+      }
+    },
+    {
+      "check_id": "PRICE-06",
+      "actual": "PASS",
+      "proof": {
+        "fact_id": "MAT-EW-BUG-BK-880",
+        "code": "A1Y66",
+        "price": 66800,
+        "pdf_page": 151,
+        "actual": "PASS"
+      }
+    },
+    {
+      "check_id": "PRICE-07",
+      "actual": "PASS",
+      "proof": {
+        "fact_id": "MAT-EW-PET-BK-910-30",
+        "code": "A1Y67",
+        "price": 143000,
+        "pdf_page": 151,
+        "actual": "PASS"
+      }
+    },
+    {
+      "check_id": "PRICE-08",
+      "actual": "PASS",
+      "proof": {
+        "fact_id": "MAT-EW-PET-BK-910-5",
+        "code": "A1Y78",
+        "price": 25600,
+        "pdf_page": 151,
+        "actual": "PASS"
+      }
+    },
+    {
+      "check_id": "PRICE-09",
+      "actual": "PASS",
+      "proof": {
+        "fact_id": "SPL-EW-STD-BUG",
+        "code": "A1Y34",
+        "price": 10000,
+        "pdf_page": 150,
+        "actual": "PASS"
+      }
+    },
+    {
+      "check_id": "PRICE-10",
+      "actual": "PASS",
+      "proof": {
+        "fact_id": "SPL-EW-CLEAN",
+        "code": "A1Y46",
+        "price": 16500,
+        "pdf_page": 150,
+        "actual": "PASS"
+      }
+    },
+    {
+      "check_id": "PRICE-11",
+      "actual": "PASS",
+      "proof": {
+        "fact_id": "SPL-EW-PET-300",
+        "code": "A1Y41",
+        "price": 20200,
+        "pdf_page": 150,
+        "actual": "PASS"
+      }
+    },
+    {
+      "check_id": "PRICE-12",
+      "actual": "PASS",
+      "proof": {
+        "fact_id": "SPL-EW-PET-20",
+        "code": "A1Y42",
+        "price": 1700,
+        "pdf_page": 150,
+        "actual": "PASS"
+      }
+    },
+    {
+      "check_id": "PRICE-13",
+      "actual": "PASS",
+      "proof": {
+        "fact_id": "PRICE-EW-TATE-T-TG",
+        "surcharge": 12100,
+        "pdf_pages": [
+          334,
+          335
+        ],
+        "actual": "PASS"
+      }
+    },
+    {
+      "check_id": "PRICE-14",
+      "actual": "PASS",
+      "proof": {
+        "fact_id": "PRICE-EW-TATE-TF-TG",
+        "surcharge": 12800,
+        "pdf_pages": [
+          336,
+          337
+        ],
+        "actual": "PASS"
+      }
+    },
+    {
+      "check_id": "PRICE-15",
+      "actual": "PASS",
+      "proof": {
+        "fact_id": "PRICE-EW-TATE-TFT-TG",
+        "surcharge": 25400,
+        "pdf_pages": [
+          338,
+          339
+        ],
+        "actual": "PASS"
+      }
+    },
+    {
+      "check_id": "PRICE-16",
+      "actual": "PASS",
+      "proof": {
+        "fact_id": "PRICE-EW-TATE-TFSLASH-TG",
+        "surcharge": 12100,
+        "pdf_pages": [
+          340,
+          341
+        ],
+        "actual": "PASS"
+      }
+    },
+    {
+      "check_id": "PRICE-17",
+      "actual": "PASS",
+      "proof": {
+        "fact_id": "PRICE-EW-TATE-T-PG",
+        "surcharge": 12100,
+        "pdf_pages": [
+          422,
+          423,
+          424,
+          425
+        ],
+        "actual": "PASS"
+      }
+    },
+    {
+      "check_id": "PRICE-18",
+      "actual": "PASS",
+      "proof": {
+        "fact_id": "PRICE-EW-TATE-TF-PG",
+        "surcharge": 12800,
+        "pdf_pages": [
+          426,
+          427
+        ],
+        "actual": "PASS"
+      }
+    },
+    {
+      "check_id": "PRICE-19",
+      "actual": "PASS",
+      "proof": {
+        "fact_id": "PRICE-EW-TATE-TFT-PG",
+        "surcharge": 25400,
+        "pdf_pages": [
+          428,
+          429
+        ],
+        "actual": "PASS"
+      }
+    },
+    {
+      "check_id": "PRICE-20",
+      "actual": "PASS",
+      "proof": {
+        "fact_id": "PRICE-EW-TATE-TFSLASH-PG",
+        "surcharge": 12100,
+        "pdf_pages": [
+          430,
+          431
+        ],
+        "actual": "PASS"
+      }
+    },
+    {
+      "check_id": "FIELD-01",
+      "actual": "PASS",
+      "proof": {
+        "field_id": "sash-app:SER-LIX-EW:window_type",
+        "runtime_key": "window_type",
+        "impact": "INDIRECT",
+        "reason": "価格非掲載の窓種注記。選択可否は不変",
+        "formal_status": "FORMAL",
+        "contract_changed": false
+      }
+    },
+    {
+      "check_id": "FIELD-02",
+      "actual": "PASS",
+      "proof": {
+        "field_id": "sash-app:SER-LIX-EW:window_spec",
+        "runtime_key": "window_spec",
+        "impact": "INDIRECT",
+        "reason": "SS/FFの価格非掲載注記。構成/特注条件は不変",
+        "formal_status": "FORMAL",
+        "contract_changed": false
+      }
+    },
+    {
+      "check_id": "FIELD-03",
+      "actual": "PASS",
+      "proof": {
+        "field_id": "sash-app:SER-LIX-EW:variant",
+        "runtime_key": "variant",
+        "impact": "INDIRECT",
+        "reason": "EW/for Designの完成品価格改訂。体系・適用色は不変",
+        "formal_status": "FORMAL",
+        "contract_changed": false
+      }
+    },
+    {
+      "check_id": "FIELD-04",
+      "actual": "PASS",
+      "proof": {
+        "field_id": "sash-app:SER-LIX-EW:frame_angle",
+        "runtime_key": "frame_angle",
+        "impact": "NO_IMPACT",
+        "reason": "商品Fact/AllowedValue/Dependency/Validationに変更なし。正式v1.3をcarry-forward",
+        "formal_status": "FORMAL",
+        "contract_changed": false
+      }
+    },
+    {
+      "check_id": "FIELD-05",
+      "actual": "PASS",
+      "proof": {
+        "field_id": "sash-app:SER-LIX-EW:exterior_color",
+        "runtime_key": "exterior_color",
+        "impact": "NO_IMPACT",
+        "reason": "商品Fact/AllowedValue/Dependency/Validationに変更なし。正式v1.3をcarry-forward",
+        "formal_status": "FORMAL",
+        "contract_changed": false
+      }
+    },
+    {
+      "check_id": "FIELD-06",
+      "actual": "PASS",
+      "proof": {
+        "field_id": "sash-app:SER-LIX-EW:screen_presence",
+        "runtime_key": "screen_presence",
+        "impact": "NO_IMPACT",
+        "reason": "商品Fact/AllowedValue/Dependency/Validationに変更なし。正式v1.3をcarry-forward",
+        "formal_status": "FORMAL",
+        "contract_changed": false
+      }
+    },
+    {
+      "check_id": "FIELD-07",
+      "actual": "PASS",
+      "proof": {
+        "field_id": "sash-app:SER-LIX-EW:glass_base",
+        "runtime_key": "glass_base",
+        "impact": "INDIRECT",
+        "reason": "TG/PGの完成品価格Evidence更新。候補・条件は不変",
+        "formal_status": "FORMAL",
+        "contract_changed": false
+      }
+    },
+    {
+      "check_id": "FIELD-08",
+      "actual": "PASS",
+      "proof": {
+        "field_id": "sash-app:SER-LIX-EW:installation_environment",
+        "runtime_key": "installation_environment",
+        "impact": "NO_IMPACT",
+        "reason": "商品Fact/AllowedValue/Dependency/Validationに変更なし。正式v1.3をcarry-forward",
+        "formal_status": "FORMAL",
+        "contract_changed": false
+      }
+    },
+    {
+      "check_id": "FIELD-09",
+      "actual": "PASS",
+      "proof": {
+        "field_id": "sash-app:SER-LIX-EW:option",
+        "runtime_key": "option",
+        "impact": "INDIRECT",
+        "reason": "小開口アーム価格改訂。選択/Dependencyは不変",
+        "formal_status": "FORMAL",
+        "contract_changed": false
+      }
+    },
+    {
+      "check_id": "FIELD-10",
+      "actual": "PASS",
+      "proof": {
+        "field_id": "sash-app:SER-LIX-EW:handing",
+        "runtime_key": "handing",
+        "impact": "NO_IMPACT",
+        "reason": "商品Fact/AllowedValue/Dependency/Validationに変更なし。正式v1.3をcarry-forward",
+        "formal_status": "FORMAL",
+        "contract_changed": false
+      }
+    },
+    {
+      "check_id": "FIELD-11",
+      "actual": "PASS",
+      "proof": {
+        "field_id": "sash-app:SER-LIX-EW:size_mode",
+        "runtime_key": "size_mode",
+        "impact": "INDIRECT",
+        "reason": "特注品の価格非掲載注記。STANDARD/CUSTOM条件は不変",
+        "formal_status": "FORMAL",
+        "contract_changed": false
+      }
+    },
+    {
+      "check_id": "FIELD-12",
+      "actual": "PASS",
+      "proof": {
+        "field_id": "sash-app:SER-LIX-EW:interior_color",
+        "runtime_key": "interior_color",
+        "impact": "NO_IMPACT",
+        "reason": "商品Fact/AllowedValue/Dependency/Validationに変更なし。正式v1.3をcarry-forward",
+        "formal_status": "FORMAL",
+        "contract_changed": false
+      }
+    },
+    {
+      "check_id": "FIELD-13",
+      "actual": "PASS",
+      "proof": {
+        "field_id": "sash-app:SER-LIX-EW:glass_type",
+        "runtime_key": "glass_type",
+        "impact": "INDIRECT",
+        "reason": "ガラス仕様別完成品価格Evidence更新。種類・構成条件は不変",
+        "formal_status": "FORMAL",
+        "contract_changed": false
+      }
+    },
+    {
+      "check_id": "FIELD-14",
+      "actual": "PASS",
+      "proof": {
+        "field_id": "sash-app:SER-LIX-EW:glass_detail",
+        "runtime_key": "glass_detail",
+        "impact": "NO_IMPACT",
+        "reason": "商品Fact/AllowedValue/Dependency/Validationに変更なし。正式v1.3をcarry-forward",
+        "formal_status": "FORMAL",
+        "contract_changed": false
+      }
+    },
+    {
+      "check_id": "FIELD-15",
+      "actual": "PASS",
+      "proof": {
+        "field_id": "sash-app:SER-LIX-EW:glass_function",
+        "runtime_key": "glass_function",
+        "impact": "NO_IMPACT",
+        "reason": "商品Fact/AllowedValue/Dependency/Validationに変更なし。正式v1.3をcarry-forward",
+        "formal_status": "FORMAL",
+        "contract_changed": false
+      }
+    },
+    {
+      "check_id": "FIELD-16",
+      "actual": "PASS",
+      "proof": {
+        "field_id": "sash-app:SER-LIX-EW:glass_spacer",
+        "runtime_key": "glass_spacer",
+        "impact": "NO_IMPACT",
+        "reason": "商品Fact/AllowedValue/Dependency/Validationに変更なし。正式v1.3をcarry-forward",
+        "formal_status": "FORMAL",
+        "contract_changed": false
+      }
+    },
+    {
+      "check_id": "FIELD-17",
+      "actual": "PASS",
+      "proof": {
+        "field_id": "sash-app:SER-LIX-EW:glass_air_layer",
+        "runtime_key": "glass_air_layer",
+        "impact": "NO_IMPACT",
+        "reason": "商品Fact/AllowedValue/Dependency/Validationに変更なし。正式v1.3をcarry-forward",
+        "formal_status": "FORMAL",
+        "contract_changed": false
+      }
+    },
+    {
+      "check_id": "FIELD-18",
+      "actual": "PASS",
+      "proof": {
+        "field_id": "sash-app:SER-LIX-EW:size",
+        "runtime_key": "size",
+        "impact": "INDIRECT",
+        "reason": "呼称別価格表改訂。1721規格行・寸法は不変",
+        "formal_status": "FORMAL",
+        "contract_changed": false
+      }
+    },
+    {
+      "check_id": "FIELD-19",
+      "actual": "PASS",
+      "proof": {
+        "field_id": "sash-app:SER-LIX-EW:custom_w",
+        "runtime_key": "custom_w",
+        "impact": "NO_IMPACT",
+        "reason": "商品Fact/AllowedValue/Dependency/Validationに変更なし。正式v1.3をcarry-forward",
+        "formal_status": "FORMAL",
+        "contract_changed": false
+      }
+    },
+    {
+      "check_id": "FIELD-20",
+      "actual": "PASS",
+      "proof": {
+        "field_id": "sash-app:SER-LIX-EW:custom_h",
+        "runtime_key": "custom_h",
+        "impact": "NO_IMPACT",
+        "reason": "商品Fact/AllowedValue/Dependency/Validationに変更なし。正式v1.3をcarry-forward",
+        "formal_status": "FORMAL",
+        "contract_changed": false
+      }
+    },
+    {
+      "check_id": "FIELD-21",
+      "actual": "PASS",
+      "proof": {
+        "field_id": "sash-app:SER-LIX-EW:configuration_variant",
+        "runtime_key": "configuration_variant",
+        "impact": "NO_IMPACT",
+        "reason": "商品Fact/AllowedValue/Dependency/Validationに変更なし。正式v1.3をcarry-forward",
+        "formal_status": "FORMAL",
+        "contract_changed": false
+      }
+    },
+    {
+      "check_id": "FIELD-22",
+      "actual": "PASS",
+      "proof": {
+        "field_id": "sash-app:SER-LIX-EW:glass_configuration",
+        "runtime_key": "glass_configuration",
+        "impact": "NO_IMPACT",
+        "reason": "商品Fact/AllowedValue/Dependency/Validationに変更なし。正式v1.3をcarry-forward",
+        "formal_status": "FORMAL",
+        "contract_changed": false
+      }
+    },
+    {
+      "check_id": "FIELD-23",
+      "actual": "PASS",
+      "proof": {
+        "field_id": "sash-app:SER-LIX-EW:profile",
+        "runtime_key": "profile",
+        "impact": "NO_IMPACT",
+        "reason": "商品Fact/AllowedValue/Dependency/Validationに変更なし。正式v1.3をcarry-forward",
+        "formal_status": "FORMAL",
+        "contract_changed": false
+      }
+    },
+    {
+      "check_id": "FIELD-24",
+      "actual": "PASS",
+      "proof": {
+        "field_id": "sash-app:SER-LIX-EW:opening_class",
+        "runtime_key": "opening_class",
+        "impact": "NO_IMPACT",
+        "reason": "商品Fact/AllowedValue/Dependency/Validationに変更なし。正式v1.3をcarry-forward",
+        "formal_status": "FORMAL",
+        "contract_changed": false
+      }
+    },
+    {
+      "check_id": "FIELD-25",
+      "actual": "PASS",
+      "proof": {
+        "field_id": "sash-app:SER-LIX-EW:sill",
+        "runtime_key": "sill",
+        "impact": "NO_IMPACT",
+        "reason": "商品Fact/AllowedValue/Dependency/Validationに変更なし。正式v1.3をcarry-forward",
+        "formal_status": "FORMAL",
+        "contract_changed": false
+      }
+    },
+    {
+      "check_id": "FIELD-26",
+      "actual": "PASS",
+      "proof": {
+        "field_id": "sash-app:SER-LIX-EW:wall_finish",
+        "runtime_key": "wall_finish",
+        "impact": "NO_IMPACT",
+        "reason": "商品Fact/AllowedValue/Dependency/Validationに変更なし。正式v1.3をcarry-forward",
+        "formal_status": "FORMAL",
+        "contract_changed": false
+      }
+    },
+    {
+      "check_id": "FIELD-27",
+      "actual": "PASS",
+      "proof": {
+        "field_id": "sash-app:SER-LIX-EW:panel_count",
+        "runtime_key": "panel_count",
+        "impact": "NO_IMPACT",
+        "reason": "商品Fact/AllowedValue/Dependency/Validationに変更なし。正式v1.3をcarry-forward",
+        "formal_status": "FORMAL",
+        "contract_changed": false
+      }
+    },
+    {
+      "check_id": "FIELD-28",
+      "actual": "PASS",
+      "proof": {
+        "field_id": "sash-app:SER-LIX-EW:screen_form",
+        "runtime_key": "screen_form",
+        "impact": "NO_IMPACT",
+        "reason": "商品Fact/AllowedValue/Dependency/Validationに変更なし。正式v1.3をcarry-forward",
+        "formal_status": "FORMAL",
+        "contract_changed": false
+      }
+    },
+    {
+      "check_id": "FIELD-29",
+      "actual": "PASS",
+      "proof": {
+        "field_id": "sash-app:SER-LIX-EW:screen_net",
+        "runtime_key": "screen_net",
+        "impact": "INDIRECT",
+        "reason": "防虫網材料/網押し棒参考価格改訂。ネット候補・材質・幅・可否は不変",
+        "formal_status": "FORMAL",
+        "contract_changed": false
+      }
+    },
+    {
+      "check_id": "SOURCE-OFFICIAL-BYTES",
+      "actual": "PASS"
+    },
+    {
+      "check_id": "SOURCE-708-PAGES",
+      "actual": "PASS"
+    },
+    {
+      "check_id": "SOURCE-RESIDUAL-VISUAL",
+      "actual": "PASS"
+    },
+    {
+      "check_id": "NO-FIRE-PRODUCT-MIX",
+      "actual": "PASS"
+    },
+    {
+      "check_id": "SEMANTIC-CARRY-FORWARD",
+      "actual": "PASS"
+    },
+    {
+      "check_id": "DEPENDENCY-VALIDATION-CARRY-FORWARD",
+      "actual": "PASS"
+    },
+    {
+      "check_id": "AUTHORING-PATCH-ISOLATION",
+      "actual": "PASS"
+    }
+  ],
+  "formal_pass_count": 56,
+  "formal_additional_checks": 56,
+  "metrics": {
+    "UNKNOWN": 0,
+    "UNMAPPED": 0,
+    "SCHEMA_ERROR": 0,
+    "DUPLICATE_ID": 0,
+    "CRITICAL_VALIDATION_ERROR": 0
+  },
+  "metrics_scope": "Changed facts and required 29 Field formal scope; existing controlled unresolved outside exact auto-manufacturability scope retained",
+  "inherited_qa": {
+    "v1.3_frame_angle": 15120,
+    "rerun": false,
+    "basis": "Canonical selection/rules dependency content hash identical; price/evidence delta QA newly executed"
+  },
+  "authorization": "EXPLICIT_USER_SCOPE; user requested full Formal/Storage/Git/Merge chain; no new human packet review represented"
+}

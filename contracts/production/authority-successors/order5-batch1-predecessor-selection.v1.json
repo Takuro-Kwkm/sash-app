@@ -1,0 +1,6 @@
+{
+  "schema": "CURRENT_AUTHORITY_SUCCESSOR_SELECTION_V1",
+  "path": "contracts/production/authority-successors/order4-conditional-human-policy.v5.json",
+  "sha256": "90ee3fe2d85d05a5b55dfdece6bfee59cf3925bb08721f42901bc8ddf33496dd",
+  "implementation_sha": "f0936024536cf5fd8ce7a120b25acfa20569d641"
+}

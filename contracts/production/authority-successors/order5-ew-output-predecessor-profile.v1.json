@@ -1,6 +1,6 @@
 {
   "schema": "NATIVE_RELEASE_PROFILE_V1",
-  "version": "1.5.0",
+  "version": "1.4.0",
   "status": "CURRENT",
   "approval_roles": [
     "Formal",
@@ -73,8 +73,7 @@
   "required_ci": [
     "Common Release Contract",
     "Production Connection EW",
-    "Actual New Product Master Build",
-    "EW Output Successor"
+    "Actual New Product Master Build"
   ],
   "native_paths": [
     "contracts/production/app-release.v1.json",
@@ -90,20 +89,10 @@
     "test/browser/eight-series-business-flow-qa.mjs",
     "scripts/vercel-rest-deploy.mjs",
     "scripts/production/validate-order5-release.py",
+    "contracts/production/order5-release-scope.v1.json",
+    "contracts/production/order5-assets.v1.json",
     "docs/ORDER5_BATCH1.md",
-    "test/browser/ew-october-2026-browser-qa.mjs",
-    "contracts/production/order5-release-scope.v2.json",
-    "contracts/production/order5-assets.v2.json",
-    "contracts/production/order5-ew-output.v2.json",
-    "scripts/production/ew-change.py",
-    "scripts/production/prepare-ew.py",
-    "scripts/production/release-contract.py",
-    "contracts/production/work-connections.v2.json",
-    "contracts/production/validator-registry.v2.json",
-    "scripts/production/test_ew_output_successor.py",
-    ".github/workflows/ew-output-successor.yml",
-    "src/estimate-output/xlsx-renderer.mjs",
-    "test/74-estimate-output.test.mjs"
+    "test/browser/ew-october-2026-browser-qa.mjs"
   ],
   "deployment_executor": "Existing Vercel REST/files executor; explicit autoAssignCustomDomains=false; Shared gate -> existing fixed-ID provider promotion",
   "identity_command": "npm run verify:app-release -- --url URL --expect-commit SHA --require-release-commit --output EVIDENCE_JSON",
@@ -126,26 +115,16 @@
     "docs/ORDER4_RELEASE.md": "77d717f5040ff09fde86935387fb3347411dade5cb67b645803b220b2c45334e",
     "test/browser/eight-series-business-flow-qa.mjs": "e531d024a1527aac3800cf659ecc32cc736dbfe949e9329400450538997112af",
     "scripts/vercel-rest-deploy.mjs": "a78286a84f7f48dd5fc7028e02e4e7fcad9564b9e02cd5d4059860cb4f1232f5",
-    "scripts/production/validate-order5-release.py": "84a4e7d5e83701ab42bc5a4e83381435e80ddc21fe98cecc18cb16a114ef6cd9",
-    "docs/ORDER5_BATCH1.md": "85ffed1da89d426ec9af5360b8bb0e7af200dac31b71dd25b1a7b5f4fffcd6ac",
-    "test/browser/ew-october-2026-browser-qa.mjs": "2b83118bc51b190608f054d7a4f5b02c0c25f28f163fb152dd6c7d5c612a995a",
-    "contracts/production/order5-release-scope.v2.json": "1c24439d74e3641a2c5caeeae6cb4e57b75994f8e7fc267c2dae46c90da9bc45",
-    "contracts/production/order5-assets.v2.json": "60e2e16f88338581cc4e8ed29534d9867906af30601c55b9dbc46fd5377e22a2",
-    "contracts/production/order5-ew-output.v2.json": "38e47f4fc9076eb041a8feb23dbe40d7c120e201b451d93b372ba808f951719f",
-    "scripts/production/ew-change.py": "e932b6001ac38bffb0da4719dd864f131e4e511905eea0a86fa46f2bc58f4fa1",
-    "scripts/production/prepare-ew.py": "6d1497c7e48650cf32d7106972270b7c9e6a14d9a080fb53a29cc651a9014e4c",
-    "scripts/production/release-contract.py": "3229631943ee0e50c10ab59bfb15dacf253873581b7cd9225d179bf8d22f7fc3",
-    "contracts/production/work-connections.v2.json": "0eb89d7e06449037ad3ea00b6038a5d0aa577d6405adb32a1e4b6129ea4b8a86",
-    "contracts/production/validator-registry.v2.json": "26b8e831fdef5c3a9fa7e010eca566c6bae5b30a5d3ba48a6cc4cfa964050c10",
-    "scripts/production/test_ew_output_successor.py": "349a151c91da240e1321ff4c4d55282fced0a02d570a4b93e90254a8724f380d",
-    ".github/workflows/ew-output-successor.yml": "8efd66b381957da107cd2f4947030038a91bf69c3c87da9755fb2aa7243689b0",
-    "src/estimate-output/xlsx-renderer.mjs": "0c23b759e306f87ce5e7fd04316d6378d5135c45aaa56d2ab71ffc7c2dbd8508",
-    "test/74-estimate-output.test.mjs": "32148d4ec4c15394fc4a63ccb6afcd9fc430ad068ca0f6c492794fb0ec2ba470"
+    "scripts/production/validate-order5-release.py": "fe7f8d43246aa3c1087542c15d1715ef32b75d8be286ccbfe0b423e9860d755e",
+    "contracts/production/order5-release-scope.v1.json": "a2c69f43d5747b7f86a69b632868dc92930924fc2eaf5dcf03da1447fc7057dc",
+    "contracts/production/order5-assets.v1.json": "04536db3e515a07339d2675d269882308616e91662e42728daeae8f96e88db35",
+    "docs/ORDER5_BATCH1.md": "db1697eda7f8f2a6c1500ce0f761fcd381076293ce07d8ac585f4d6c9a046397",
+    "test/browser/ew-october-2026-browser-qa.mjs": "2b83118bc51b190608f054d7a4f5b02c0c25f28f163fb152dd6c7d5c612a995a"
   },
   "scope_admission": {
-    "mode": "REVIEWED_UI_OUTPUT_SUCCESSOR_V1",
+    "mode": "INFRASTRUCTURE_RELEASE_SAME_BYTES",
     "product_id": "SER-LIX-EW",
-    "scope": "EW_NORMAL_29_FIELDS_XLSX_ORDER5_BATCH1_V2",
+    "scope": "EW_NORMAL_29_FIELDS_ORDER5_BATCH1_V1",
     "public_path": "/runtime-lab",
     "product_fact_mutation_allowed": false,
     "asset_identities": {
@@ -171,38 +150,11 @@
       },
       "UI": {
         "state": "KNOWN",
-        "version": "v1.4 / UI-XLSX-v2",
-        "sha256": "0c23b759e306f87ce5e7fd04316d6378d5135c45aaa56d2ab71ffc7c2dbd8508"
-      }
-    },
-    "scope_guard": "contracts/production/order5-release-scope.v2.json",
-    "predecessor_asset_identities": {
-      "Source": {
-        "state": "KNOWN",
-        "version": "v1.4 / Source",
-        "sha256": "af35759f5472f99970ea4ae809b4c2e21ee1f752c6dce9a751d19cc5d6b9db08"
-      },
-      "Formal": {
-        "state": "KNOWN",
-        "version": "v1.4 / Formal",
-        "sha256": "156ea3d28b9dcb6b03d7d05d613ca122259be535d517e4474fbdd355c62c753d"
-      },
-      "Contract": {
-        "state": "KNOWN",
-        "version": "v1.4 / Contract",
-        "sha256": "8e284a522bd4aad8f5aa7c64570d8109043b37f668dbe810823f8297e818b099"
-      },
-      "Runtime": {
-        "state": "KNOWN",
-        "version": "v1.4 / Runtime",
-        "sha256": "7206d1d1a813487b501beb29ea95d3913788a8b67baae0a66656b04d2a3c2feb"
-      },
-      "UI": {
-        "state": "KNOWN",
         "version": "v1.4 / UI",
         "sha256": "0a5ea33effbab5c890570da08134b1bc7482b18e0d1e7f33ac84ede97b582c6f"
       }
-    }
+    },
+    "scope_guard": "contracts/production/order5-release-scope.v1.json"
   },
   "publication_policy": {
     "mode": "VERCEL_STAGED_PROMOTE_V1",
@@ -366,6 +318,8 @@
       "contracts/production/product-master-build-profile.v1.json": "9d22ba1fe2ae26fd91bba6d04ed8e29764178f94c020c1a0d18843bdbed4fb57",
       "contracts/production/shared-build-authority.json": "1b0efa9c5989bfe6d23fee77a7520e8d1731da4adf1565ce2b43a9f2cb8a5696",
       "contracts/production/shared-build-authority.tar.gz": "e5a53219c94ace9ae6ebcf7e965a2d6b94ea4315a3ea84e93a9ef21764214083",
+      "contracts/production/validator-registry.v2.json": "41ec879efb5d26ed5f4fd59e528bd25a18c6ac76cc71d80d4340ed3e4a697b6a",
+      "contracts/production/work-connections.v2.json": "ff10cd174c18e4bc58a25cbb62acaed4909fa16f6cc254e3c8e24a87c95fad08",
       "contracts/tw-202610/adoption.json": "74174c7a1e205568f5d2298664aeabe16b0bc3f370445bd8926d976d56aa84a6",
       "contracts/tw-202610/central-snapshot/authority/products/lixil-tw/202610/active-manifest.json": "99a65ad98bec75edc16dea614e0417263300608cbfeb4b1e20b69c3ce0fb2138",
       "contracts/tw-202610/central-snapshot/authority/products/lixil-tw/202610/baseline-25-fields.json": "51956141384abc03d083946d1ddc47c1b155346d9dfbee07b5638d72656aefa4",
@@ -575,9 +529,12 @@
       "scripts/governance/verify-workflow-authority.py": "5006fd883131db3281a6c727e55471d9a930fa70f69db70a7b3958fff529e486",
       "scripts/prepare-rechent-preview-access.mjs": "541bf7287feb1dfb2c9a85f19b01a393aa06f14a7f505099a0b26f676f99a0f7",
       "scripts/production/catalog-change-audit.py": "04192f0f1b10ad6636c9ec04e3dba1099dc6f4d8056d7c30fc315753a7cd1a6d",
+      "scripts/production/ew-change.py": "722953fdf99293402e7790d5e8cb01073b338d102c933f82dbbd8f35e0f06279",
       "scripts/production/ew-parity.mjs": "bc18f4442fc4d647d9e1e16554020ac00bcef1f5d7785670f5cdf9621121a0e9",
       "scripts/production/prepare-catalog-change-audit.py": "ffe0e31b675a205386fbb0e5dc2940fde73478e1ceeb03ea9c4515ec19cdd995",
+      "scripts/production/prepare-ew.py": "ec53dba97956cc7014067bb70674636d81bd533f8d20413f1d583ca3ab5c3ff6",
       "scripts/production/product-master-build.py": "be272ec4ccdb82aebcad735b8ef2791d50b3dfff3475f29a831d514430a906b3",
+      "scripts/production/release-contract.py": "22dd0b41776b39f762106be28dccfa492601033fad482e52294810ab518ca901",
       "scripts/production/resolve-current-formal.py": "5887926375647f36880e4e37f8111f8a9d842b64f26c6d21ed83facee0eb45db",
       "scripts/production/test-catalog-change-audit.py": "966af7866759167435ba0f93ab512b0e2b759079b97e9e431a2e562c06be9a6b",
       "scripts/production/test-product-master-build.py": "3d0b1990516ae2cdbcb6e66953bb925cb3c846584c5f2245574ea675ff8f7d4c",
@@ -980,6 +937,7 @@
       "src/catalog/selector.mjs": "ecfe3d8863040080a63a2897b80b8edbdd74a976a11b538eccb15a47b5a470c7",
       "src/estimate-output/model.mjs": "5c8f2869524464ee821536207bf7b1fbcc741ebc7b6eb3ab57323b9fcfecea22",
       "src/estimate-output/pdf-renderer.mjs": "df0c6fd852fb0d60f0e00634f928850c589a59d9c5469806279c4a65a74206ae",
+      "src/estimate-output/xlsx-renderer.mjs": "a49884805d9610e8d56bac0866b7ab56f8b7ac6fbccc8063c35def652c15eeba",
       "src/server/recovery-app.mjs": "0a5ea33effbab5c890570da08134b1bc7482b18e0d1e7f33ac84ede97b582c6f",
       "src/ui/web/app.js": "d53a1e3a54561c9e5492d0142f69ba403c1b954858900e69c119ed40cf3c9825",
       "src/ui/web/estimate-output-integration.mjs": "0088dca6579f734ffc8b9b09373bbdd39b0b7f63c489ccef05d615996add8c24",
@@ -1009,6 +967,7 @@
       "test/72-runtime-manifest-uchirimo-integration.test.mjs": "fd72ea2b8a292ac434df2cd372877213593ffc8a4d101885d191b2e65f195c32",
       "test/72-work-management.test.mjs": "10a3a5a16514ba6fd05e752ea72580e29cd0e673524e47a0f584312ce27549d3",
       "test/73-runtime-ui-uchirimo-gate.test.mjs": "8dea7c8da867a07cf3cd93b8eca6e7d1c0dd4dea7009297ee97c613daee3246b",
+      "test/74-estimate-output.test.mjs": "8e5f09147b8a0bbd59519c168a73028d2cde1002fc10bbb6f2c3f23659f51ead",
       "test/74-new-construction-ui-v16.test.mjs": "60d19f09e97522fef89d677bd9889b704cea140f4ee1c5fbf36040b32562c9f8",
       "test/75-formal-runtime-resync.test.mjs": "5ba82b6fc22d010f2cf3bb0dc9734326f46066956adc357e7f5bfc283fb5f216",
       "test/75-runtime-ui-inplus-v04r2-gate.test.mjs": "a9f1394900c2aa0bd22235da0b276abe3a2c908f42a565f9be0b39384c301013",
@@ -1096,8 +1055,7 @@
       "/product-configuration-editor.mjs": "06082e4bef9704326468e6a9aeb2969fea2f339185e385fbdd596cef34a8545b",
       "/estimate-output-integration.mjs": "0088dca6579f734ffc8b9b09373bbdd39b0b7f63c489ccef05d615996add8c24",
       "/work-management/service.mjs": "79e1451ea52a3bf66dfca4184b70e3ed21526ac21cf20c8c9008a2cfff3d7cf9",
-      "/estimate-output/model.mjs": "5c8f2869524464ee821536207bf7b1fbcc741ebc7b6eb3ab57323b9fcfecea22",
-      "/estimate-output/xlsx-renderer.mjs": "0c23b759e306f87ce5e7fd04316d6378d5135c45aaa56d2ab71ffc7c2dbd8508"
+      "/estimate-output/model.mjs": "5c8f2869524464ee821536207bf7b1fbcc741ebc7b6eb3ab57323b9fcfecea22"
     },
     "build_identity": {
       "path": "/api/health",
@@ -1273,85 +1231,6 @@
               "pass"
             ],
             "value": 27
-          }
-        ],
-        "results_pointer": [
-          "results"
-        ],
-        "result_state_key": "status",
-        "count_pointer": [
-          "pass"
-        ]
-      },
-      "ew_output": {
-        "url_pointer": [
-          "url"
-        ],
-        "sha_pointer": [
-          "observedCommit"
-        ],
-        "claims": [
-          {
-            "pointer": [
-              "status"
-            ],
-            "value": "PASS"
-          },
-          {
-            "pointer": [
-              "errors"
-            ],
-            "value": []
-          },
-          {
-            "pointer": [
-              "product_id"
-            ],
-            "value": "SER-LIX-EW"
-          },
-          {
-            "pointer": [
-              "scope"
-            ],
-            "value": "EW_NORMAL_29_FIELDS_XLSX_ORDER5_BATCH1_V2"
-          },
-          {
-            "pointer": [
-              "xlsx_visual"
-            ],
-            "value": "PASS"
-          },
-          {
-            "pointer": [
-              "xlsx_content"
-            ],
-            "value": "PASS"
-          },
-          {
-            "pointer": [
-              "pdf_visual"
-            ],
-            "value": "PASS"
-          },
-          {
-            "pointer": [
-              "eight_series_regression"
-            ],
-            "value": "PASS"
-          },
-          {
-            "pointer": [
-              "output_code_sha256"
-            ],
-            "value": "0c23b759e306f87ce5e7fd04316d6378d5135c45aaa56d2ab71ffc7c2dbd8508"
-          }
-        ],
-        "minimums": [
-          {
-            "pointer": [
-              "pass"
-            ],
-            "value": 6
           }
         ],
         "results_pointer": [

@@ -6,6 +6,59 @@ import sys
 from pathlib import Path
 
 
+def prepare_output(args):
+    """A native output successor on the existing Shared DAG; completed Current stays inspect-only."""
+    central=Path(args.harness_root).resolve();sys.path.insert(0,str(central))
+    from harness.core import read_json, write_json, sha, require
+    import re
+    require(bool(re.fullmatch('[0-9a-f]{40}',args.release_candidate_sha or '')),
+            'CANDIDATE_SHA_REQUIRED','Bind the actual rendered fixed candidate SHA','PREPARE')
+    root=Path(args.destination).resolve();require(not root.exists(),'WORK_EXISTS','Use a new immutable Work binding','PREPARE');root.mkdir()
+    def ref(path):
+        path=Path(path).resolve();return {'path':str(path),'sha256':sha(path.read_bytes())}
+    old=Path(args.current_work).resolve();oldspec=read_json(old/'spec.json')
+    require(oldspec['target']=='SER-LIX-EW','NATIVE_PRODUCT','EW Current Work required','PREPARE')
+    for value in [args.output_profile,args.candidate,args.downstream,args.downstream_plan,args.browser_report]:
+        require(value is not None,'OUTPUT_INPUT_REQUIRED','Bind all native output inputs','PREPARE')
+    worker=ref(Path(__file__).with_name('ew-change.py'))
+    data={'product_id':'SER-LIX-EW','checkout':str(Path(args.checkout).resolve()),'release_candidate_sha':args.release_candidate_sha,
+          'current_work_spec':ref(old/'spec.json'),'current_work_checkpoint':str(old/'checkpoint'),
+          'output_profile':ref(args.output_profile),'output_candidate':str(Path(args.candidate).resolve()),
+          'output_plan':ref(args.downstream_plan),'output_browser_report':ref(args.browser_report)}
+    write_json(root/'input.json',data)
+    steps=[]
+    for gate in ['OUTPUT_BASELINE','OUTPUT_IMPACT','OUTPUT_QA','OUTPUT_REVIEW']:
+        steps.append({'id':gate,'kind':'build' if gate=='OUTPUT_REVIEW' else 'validator',
+                      'needs':[steps[-1]['id']] if steps else [],'script':worker,
+                      'args':['--harness-root',str(central),'--contract','{input}','--stage',gate,'--work','{work}','--out','{work}/'+gate+'.json'],
+                      'output':'{work}/'+gate+'.json','result_path':['status'],'expected_result':'PASS','timeout_seconds':180})
+    steps.extend([{'id':'HUMAN_RUNTIME_UI_ADOPTION','kind':'human','needs':['OUTPUT_REVIEW'],
+                   'packet':'{work}/OUTPUT_REVIEW.json','packet_destination':'{workflow_id}/human-review.json'},
+                  {'id':'DOWNSTREAM_ADOPTION','kind':'downstream-change','needs':['HUMAN_RUNTIME_UI_ADOPTION'],
+                   'plan':data['output_plan'],'formal_result':'OUTPUT_BASELINE.json'}])
+    for gate in ['OUTPUT_BASELINE','OUTPUT_IMPACT','OUTPUT_QA','OUTPUT_REVIEW','DOWNSTREAM_ADOPTION']:
+        steps.append({'id':'SAVE_'+gate,'kind':'storage','needs':[steps[-1]['id']],
+                      'source':'{work}/'+gate+'.json','destination':'{workflow_id}/'+gate+'.json'})
+    workflow={'workflow_id':'EW_NATIVE_OUTPUT_SUCCESSOR_V1','version':'1.0.0','status':'CURRENT',
+              'work_skill':'product-change-work','steps':steps,'targets':{'EW_NATIVE_OUTPUT_ADOPTION':['SAVE_DOWNSTREAM_ADOPTION']}}
+    write_json(root/'workflow.json',workflow)
+    authorities=oldspec['authorities']+[dict(ref(root/'workflow.json'),authority_id='EW_NATIVE_OUTPUT_WORKFLOW',
+        authority_type='WORKFLOW',repository='Takuro-Kwkm/sash-app',version='1.0.0',status='CURRENT',
+        scope_axis='PROJECT_CURRENT',resolution_source='FIXED_TECHNICAL_PR_CANDIDATE')]
+    write_json(root/'authority-index.json',{'status':'CURRENT','entries':authorities})
+    runtime=oldspec['runtime_refs']+[worker,ref(__file__),data['output_profile'],data['output_plan'],data['output_browser_report']]
+    runtime.extend(u['source'] for u in read_json(args.downstream_plan)['updates'])
+    runtime.extend(read_json(args.browser_report)['evidence_refs'])
+    runtime.extend(ref(old/'checkpoint'/p) for p in ['workflow-events.json','workflow-binding.json','workflow-result.json'])
+    spec={**oldspec,'workflow_id':root.name,'target_gate':'EW_NATIVE_OUTPUT_ADOPTION','authority_index':ref(root/'authority-index.json'),
+          'authorities':authorities,'input':ref(root/'input.json'),'workflow':ref(root/'workflow.json'),
+          'runtime_refs':runtime,'storage_root':str(root/'saved'),'downstream_checkout':str(Path(args.downstream).resolve()),
+          'decisions':{'HUMAN_RUNTIME_UI_ADOPTION':str(root/'human-runtime-ui-decision.json')}}
+    write_json(root/'spec.json',spec);write_json(root/'live-state.json',read_json(old/'live-state.json'))
+    return {'status':'PREPARED_NOT_APPROVED','spec':str(root/'spec.json'),'scope':'EW_NORMAL_29_FIELDS_XLSX_ORDER5_BATCH1_V2',
+            'formal_mutations':0,'human_decisions_generated':0,'external_operations':0}
+
+
 def prepare(harness_root, checkout, captures, destination, instruction):
     harness_root, checkout, root = map(lambda p: Path(p).resolve(), (harness_root, checkout, destination))
     sys.path.insert(0, str(harness_root))
@@ -94,5 +147,8 @@ def prepare(harness_root, checkout, captures, destination, instruction):
 
 if __name__=='__main__':
     p=argparse.ArgumentParser();p.add_argument('--harness-root',required=True);p.add_argument('--checkout',required=True)
-    p.add_argument('--captures',required=True);p.add_argument('--destination',required=True);p.add_argument('--instruction',required=True)
-    a=p.parse_args();print(json.dumps(prepare(a.harness_root,a.checkout,a.captures,a.destination,a.instruction),ensure_ascii=False,indent=2))
+    p.add_argument('--captures');p.add_argument('--destination',required=True);p.add_argument('--instruction',required=True)
+    for name in ['current-work','output-profile','candidate','downstream','downstream-plan','browser-report','release-candidate-sha']:p.add_argument('--'+name)
+    a=p.parse_args()
+    result=prepare_output(a) if a.output_profile else prepare(a.harness_root,a.checkout,a.captures,a.destination,a.instruction)
+    print(json.dumps(result,ensure_ascii=False,indent=2))

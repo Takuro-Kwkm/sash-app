@@ -1,0 +1,43 @@
+{
+  "scope_id": "LIXIL-EW-29-FORMAL-202610",
+  "revision": "v1.4",
+  "product": "SER-LIX-EW",
+  "fields": [
+    "sash-app:SER-LIX-EW:window_type",
+    "sash-app:SER-LIX-EW:window_spec",
+    "sash-app:SER-LIX-EW:variant",
+    "sash-app:SER-LIX-EW:frame_angle",
+    "sash-app:SER-LIX-EW:exterior_color",
+    "sash-app:SER-LIX-EW:screen_presence",
+    "sash-app:SER-LIX-EW:glass_base",
+    "sash-app:SER-LIX-EW:installation_environment",
+    "sash-app:SER-LIX-EW:option",
+    "sash-app:SER-LIX-EW:handing",
+    "sash-app:SER-LIX-EW:size_mode",
+    "sash-app:SER-LIX-EW:interior_color",
+    "sash-app:SER-LIX-EW:glass_type",
+    "sash-app:SER-LIX-EW:glass_detail",
+    "sash-app:SER-LIX-EW:glass_function",
+    "sash-app:SER-LIX-EW:glass_spacer",
+    "sash-app:SER-LIX-EW:glass_air_layer",
+    "sash-app:SER-LIX-EW:size",
+    "sash-app:SER-LIX-EW:custom_w",
+    "sash-app:SER-LIX-EW:custom_h",
+    "sash-app:SER-LIX-EW:configuration_variant",
+    "sash-app:SER-LIX-EW:glass_configuration",
+    "sash-app:SER-LIX-EW:profile",
+    "sash-app:SER-LIX-EW:opening_class",
+    "sash-app:SER-LIX-EW:sill",
+    "sash-app:SER-LIX-EW:wall_finish",
+    "sash-app:SER-LIX-EW:panel_count",
+    "sash-app:SER-LIX-EW:screen_form",
+    "sash-app:SER-LIX-EW:screen_net"
+  ],
+  "formal": 29,
+  "excluded": [
+    "EW防火戸",
+    "EW北海道版",
+    "automatic-order",
+    "independent-body-price-inference"
+  ]
+}

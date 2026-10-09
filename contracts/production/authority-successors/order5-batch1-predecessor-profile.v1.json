@@ -1,0 +1,661 @@
+{
+  "schema": "NATIVE_RELEASE_PROFILE_V1",
+  "version": "1.3.0",
+  "status": "CURRENT",
+  "approval_roles": [
+    "Formal",
+    "UI",
+    "Output",
+    "Release"
+  ],
+  "mandatory_approvals": [
+    "Release"
+  ],
+  "gate_approval_roles": {
+    "FORMAL_ADOPTED": [
+      "Formal"
+    ],
+    "APP_INTEGRATION_READY": [
+      "UI",
+      "Output",
+      "Release"
+    ]
+  },
+  "minimum_qa": [
+    "release_identity",
+    "health",
+    "browser",
+    "output",
+    "persistence_boundary",
+    "deployment_logs"
+  ],
+  "boundary_policy": "Actual native evidence only; Print requires inspected PDF/Print Preview; localStorage is not live DB E2E",
+  "shared_contract": {
+    "repository": "Takuro-Kwkm/product-ui-contracts",
+    "ref": "f0936024536cf5fd8ce7a120b25acfa20569d641",
+    "entry": "scripts/release-contract.py",
+    "files": {
+      "contracts/common-release.v1.json": "826328619c8a465f389472537396e1564fc00f0fe8820d6e7963fb878c0663c4",
+      "contracts/order4-conditional-human-release-policy.v1.json": "8e12fe69164451c863bc36d671128d0e7362a2a5fd3475998e28b85579ab0ce9",
+      "docs/evidence/order4/conditional-human-source.v1.md": "745fa3ac77cb64146076269bd934622628ff5e535cf80060fba38ef373061b63",
+      "harness/artifacts.py": "cf264fe46b02451613e6229b5c6127f2a7c4383802f630814b5ce3546d386ded",
+      "harness/core.py": "e35467a495a4c800fc5dc4bc642fad234f1fc3da07a7bf39727eefd4112bb203",
+      "harness/current_authority.py": "b4421835433173b9fe18e0c9e0e0c44024636b3be982d0872f917a47a1e7c5af",
+      "harness/github_bridge.py": "4a544f318c2cc9b2e8ebb55ac0a290607c83ed41092495c35087260014564cce",
+      "harness/production.py": "fd34204892b420587a7c9c744473980c392a0ec48c7f6b05e5e16ce3a17b57f6",
+      "harness/release.py": "0cc0d42f711d7fb52ef6bd781505a20ea27753031abc225ab6286c94c7cf1538",
+      "harness/release_admission.py": "16d658105b8e51c88b24d1394a1049f834b77c9661337474fe61aab3cba7cf0d",
+      "harness/release_publication.py": "2026ce72941999380d3b5cddb9bc4d5e3b39a289b91fcf0b966279061a4ad2e6",
+      "harness/release_restore.py": "a9631838a72a0f86dff422c0ac666a9bb41897192509d194386a03679ee5ecf1",
+      "harness/resolvers.py": "cb1704e92446cb6552f9da80ad30928928ed1aa4d05aedcce13ee69e07229a57",
+      "harness/workflow.py": "2e243c9616dc55c25b2d00f242968d762965bae61bb98431ba1b3aa47cfaf209",
+      "registries/current-architecture.v2.json": "a548dc7c213af0a1d01fda34febb7e4d596e52e372c6b936304281cd49b68d75",
+      "schemas/common-release.v1.schema.json": "a15705dfe0334796c08e80e107955d2d931aab557742096f587085d1c2effd78",
+      "scripts/release-contract.py": "ae65ba3d5e3008c9c23fdb05d1dde748e70d6526bd3558bf84d272a493262c58",
+      "scripts/release-provider-host.mjs": "1fdad496cf83c95d94e314b9fd06887f8a079c7de10fc9fa9f915c073603f6dc",
+      "scripts/release-restore.py": "cd758a8a81b22ba2480338a137317806d26a0fa9d5bc5348bdf41ff9b5802e4e"
+    }
+  },
+  "live_current": {
+    "repository": "Takuro-Kwkm/product-ui-contracts",
+    "selector": "REMOTE_DEFAULT_BRANCH:registries/current-architecture.v2.json"
+  },
+  "terminal_policy": "INSPECT_ONLY; changed input/payload/profile creates successor binding",
+  "evidence_storage": "Reuse native Work storage/readback; downloaded bytes plus File ID/parent/revision for cloud",
+  "execution": "READ_ONLY_RECEIPT_VALIDATOR; no deployment, DB or Human Decision issuance",
+  "destination": {
+    "provider": "VERCEL",
+    "project_id": "prj_4z0zqW6yKyPuFINODfGX8LPBuJRP",
+    "team_id": "team_AkuHacuJlCl8LuvaFpCzFmbv",
+    "alias": "https://sash-app-wave3-preview.vercel.app",
+    "production_branch": "main"
+  },
+  "required_ci": [
+    "Common Release Contract",
+    "Production Connection EW",
+    "Actual New Product Master Build"
+  ],
+  "native_paths": [
+    "contracts/production/app-release.v1.json",
+    "scripts/production/verify-app-release.mjs",
+    ".github/workflows/app-production-hotfix.yml",
+    "test/browser/release-regression-browser-qa.mjs",
+    "scripts/production/unpack-release-authority.py",
+    "contracts/production/shared-release-authority.v1.json",
+    "contracts/production/shared-release-authority.v1.bundle",
+    "scripts/production/validate-order4-release.py",
+    "contracts/production/order4-release-scope.v1.json",
+    "docs/ORDER4_RELEASE.md",
+    "test/browser/eight-series-business-flow-qa.mjs",
+    "scripts/vercel-rest-deploy.mjs"
+  ],
+  "deployment_executor": "Existing Vercel REST/files executor; explicit autoAssignCustomDomains=false; Shared gate -> existing fixed-ID provider promotion",
+  "identity_command": "npm run verify:app-release -- --url URL --expect-commit SHA --require-release-commit --output EVIDENCE_JSON",
+  "qa_command": "QA_BASE_URL=URL npm run test:browser:release",
+  "persistence_boundary": "BROWSER_LOCAL_STORAGE",
+  "residual_gaps": [
+    "Import existing workflow artifact receipts into common record; not automatically release-closed by workflow success"
+  ],
+  "repository": "Takuro-Kwkm/sash-app",
+  "native_files": {
+    "contracts/production/app-release.v1.json": "ac6cd995b53c3669587c2a05b8ecec0b9bffd46906d623a340771d2598e45914",
+    "scripts/production/verify-app-release.mjs": "0e5f3301de89c6b9cf041ada3683b3bfa1056727598ed41342606267d3e101ba",
+    ".github/workflows/app-production-hotfix.yml": "1cd7d4d20d5a61d5a1c3215191ff91a6f5dc39015576ac8303087641fefceabd",
+    "test/browser/release-regression-browser-qa.mjs": "855d124bfcc79ef444a1bfabb2000261bab775f1a75116f04bf66a379c0e17b4",
+    "scripts/production/unpack-release-authority.py": "e6d4380146821597adf01dba0787c8892f929bee356a6a33105cc94c24fc8eb5",
+    "contracts/production/shared-release-authority.v1.json": "c603cba291e2f0ce05f29cd39ba763ee84fa56e7625b927e4486a347a8a9a38a",
+    "contracts/production/shared-release-authority.v1.bundle": "39a2caf1e0d936f201224a59aaf6b40897e38092ebd808b7d42516a8040ff010",
+    "scripts/production/validate-order4-release.py": "5c1afe6bd38da984d4742ee48732a7d614df460c547b1ce6d3a1862f1015ad16",
+    "contracts/production/order4-release-scope.v1.json": "14aec30175b54b19154dc934941bf10d727215540afcd985a660386a3da3d05d",
+    "docs/ORDER4_RELEASE.md": "77d717f5040ff09fde86935387fb3347411dade5cb67b645803b220b2c45334e",
+    "test/browser/eight-series-business-flow-qa.mjs": "e531d024a1527aac3800cf659ecc32cc736dbfe949e9329400450538997112af",
+    "scripts/vercel-rest-deploy.mjs": "a78286a84f7f48dd5fc7028e02e4e7fcad9564b9e02cd5d4059860cb4f1232f5"
+  },
+  "scope_admission": {
+    "mode": "INFRASTRUCTURE_RELEASE_SAME_BYTES",
+    "product_id": "SER-LIX-SAMOSL",
+    "scope": "SAMOSL_SAME_BYTES_ORDER4_V1",
+    "public_path": "/",
+    "product_fact_mutation_allowed": false,
+    "asset_identities": {
+      "Source": {
+        "state": "KNOWN",
+        "version": "IS8900 2026-09 / 2026-10価格, P55/P59 ONLY",
+        "sha256": "f9f6cdf5a86471fc634c9693ce5adc5bca47935c4ca9c4edcec2ab3061e5596c"
+      },
+      "Formal": {
+        "state": "KNOWN",
+        "version": "v0.7-R3",
+        "sha256": "42a1a159c199ac0290f4862b20381abf2450b686ae8a8a2abdaa2d428a8c73f8"
+      },
+      "Contract": {
+        "state": "KNOWN",
+        "version": "v0.7-R3 options FORMAL",
+        "sha256": "2507072d66a0ed392808613722e4a2d4578385cdc960b93cb1d6908ec7672336"
+      },
+      "Runtime": {
+        "state": "KNOWN",
+        "version": "v0.7-R3",
+        "sha256": "1fd121e1dbcd0acc90eeb53dd5faed1a3193ff16b46159efee3ae0c1dcf12fd9"
+      },
+      "UI": {
+        "state": "KNOWN",
+        "version": "SASH-WORK-V1-d73c98745f42 / native UI spec v1.9",
+        "sha256": "06082e4bef9704326468e6a9aeb2969fea2f339185e385fbdd596cef34a8545b"
+      }
+    },
+    "scope_guard": "contracts/production/order4-release-scope.v1.json"
+  },
+  "publication_policy": {
+    "mode": "VERCEL_STAGED_PROMOTE_V1",
+    "auto_assign_custom_domains": false,
+    "allowed_merge_differences": [],
+    "protected_files": {
+      "api/index.mjs": "09fa1aea3e8d5bd02b8fffbf84d22e41331637db35a972103265627363c95ba3",
+      "data/seven-series-slim-release-scope.json": "fc6ab521d55fa0f24f5e15c4eb8e085c073ee1911c3bb17b24475f4c86534342",
+      "data/uchirimo-slim/FACTORIZED_QA.md": "ae00c2d53cf9ba25bb93e51d845ecd65db0c8bb72f4196d13be0e9ee07e9f333",
+      "data/uchirimo-slim/GLASS_NORMALIZATION.md": "9660a7f4e5737c185b656c55199cbc7463294be5aeddcf1e8d14378ccb1dfec3",
+      "data/uchirimo-slim/runtime-support.json": "25eaf0a65482aed99a37852c1b1c5c7d4c60de54c1a3954923abb4f11b7e4a1d",
+      "data/uchirimo-slim/selector-dependency-contract.json": "d8e36be88064ea01047fb6e7fd7422f30e8d1cb39b40dd7e3141289076688c8c",
+      "data/uchirimo-slim/working-candidate.json": "4a3518c3f5706aa4cff6ddcc10532edcade4f00f84a81ad63e3d74fa98d85930",
+      "src/catalog/catalog-adapter.mjs": "3a89f08835ece9b522e18a79259b8aa395aa975166d3647cd0da0aad3a2481ec",
+      "src/catalog/catalog-resolver.mjs": "5113368b0e5352ed21b12e87eaaafdd92d710e0b5601e5fcaeb25a70e00a9465",
+      "src/catalog/catalog-roles.mjs": "da2368ca4be4f0cc3161b7a922a09134434c8dd61428064a4559fce4e91805f7",
+      "src/catalog/catalog-validation.mjs": "076b352a7074d112d4f78ef7d431565f653c4ff9e423914703ede770fe53adbe",
+      "src/catalog/dimension-resolver.mjs": "cab3841254d161a5f2c9992735ca619f52ffb524be26eb5c30720b086dfdb3ac",
+      "src/catalog/modules/current-window-series.mjs": "d5e0b6bc30fe98002290aeacbf694954c2834bda09aa4b3d3d34e2b5b7053260",
+      "src/catalog/modules/samos2h-assembly.mjs": "dc3a86d026bbf5d5d6ffbef3b5ae6286f96307f401565dec0085cb416c39a12a",
+      "src/catalog/modules/samos2h-base-core.mjs": "4cab64bbe8008eb20dd5c32d0e5248909a869617db977951f9a0bd0364ce23c1",
+      "src/catalog/modules/samos2h-base.mjs": "dbd881d0acf11c5e4e51b7a496bbe146e4e07a8e17503ba74df01db9534c8493",
+      "src/catalog/modules/samos2h-color.mjs": "33ce4c763f7efbba8235aabfe5acf8542035de64764c7833531850869c552fa9",
+      "src/catalog/modules/samos2h-compat-core.mjs": "97877154136b42d2a955c8bdb133bfde1480e7b1d99df871b90282a1176a0329",
+      "src/catalog/modules/samos2h-compat-features.mjs": "8a33507e41f4365d2032306b96208c85a24f1b506ea424bd21bf081909640f5a",
+      "src/catalog/modules/samos2h-compat-size.mjs": "dd818bdacd03f691d1b07c7d37d5706d89bfe6076734583fcb9538f8487cde1c",
+      "src/catalog/modules/samos2h-data/part-01.mjs": "8751e9381a75261b080805f8c89c21e7e7970c1f21fa009b64fda965bc591bd8",
+      "src/catalog/modules/samos2h-data/part-02.mjs": "c149cff88717c774dda88392c1630a0e3213ea918b6cf209b8ad4973598b4ddf",
+      "src/catalog/modules/samos2h-data/part-03.mjs": "faa86512e01fc1cf4583c19a7069c69466a86079422110c7d32b92f42bd6d3e3",
+      "src/catalog/modules/samos2h-data/part-04.mjs": "4cd8b771d67c1b19191b5de29c7402dbe641eb5e1498430edac933080dd9e866",
+      "src/catalog/modules/samos2h-data/part-05.mjs": "ed280bde4a0ee31c065437a809b416ddf3e8cba04e74f2f5e50a0ee89bb7fbbc",
+      "src/catalog/modules/samos2h-data/part-06.mjs": "9b247eed03c55cd5a313ab4c90f0f878ad1e950e709f74ff5ef5fe853b175e68",
+      "src/catalog/modules/samos2h-data/part-07.mjs": "e0b273a86f69a2d1881215d0aca53d9fbdff18745563fd2c6e9068dd336ff076",
+      "src/catalog/modules/samos2h-data/part-08.mjs": "8c371d03a79d35453ff980b22f2597382ef52f02ccf431f7e1b01ae33994d948",
+      "src/catalog/modules/samos2h-data/part-09.mjs": "2b3a0c88c84d23e09014ae5d184e08dd1e0d30314e381a7f3062ce1b567b5175",
+      "src/catalog/modules/samos2h-data/part-10.mjs": "da4f01d9b7cf7b6036aec0ec4b04fef92ef33afba421fa55452657a54e263b7e",
+      "src/catalog/modules/samos2h-data/part-11.mjs": "a4c1375f46749e7407de8233bc73d91816a172ab0034d3765fb7a0a8a24e8e96",
+      "src/catalog/modules/samos2h-data/part-12.mjs": "c995ae371094274e77a975c666e6fad63fce500af7cf29c524628642fe3043f3",
+      "src/catalog/modules/samos2h-data/part-13.mjs": "b7f092f25203d5812afd9b2643f4b2805f2ee7557fa75eb500ade9b3ccffb445",
+      "src/catalog/modules/samos2h-data/part-14.mjs": "0bebec78fa53cd82d9070edf371bfa8a787f5675ed22bcab790c16c69ae68340",
+      "src/catalog/modules/samos2h-data/part-15.mjs": "6d01f28ebea0ddfba6ce90ba2d7d75eacba0a48b415cba0d40a310e671bad1b1",
+      "src/catalog/modules/samos2h-data/part-16.mjs": "bbee817dc5ece6f23f6685a86df7680f97bbf9c0ccb2576ec81aae55bc362691",
+      "src/catalog/modules/samos2h-data/part-17.mjs": "6b1fa800e07008854da271e9cb4a56e22e9f370780e3d427459ec4917bf77935",
+      "src/catalog/modules/samos2h-data/part-18.mjs": "befa3bf42d0958a0a4fa4fce45211ddd821780f51f9bf1149b9a56361507c314",
+      "src/catalog/modules/samos2h-data/part-19.mjs": "da53bfb66cdeb6b4b80b14dab27ffcbb4add87f95cfa0302e11ad0ef440442dd",
+      "src/catalog/modules/samos2h-data/part-20.mjs": "5187e21bc3b43d2676d067432ba4de13cba94418d327002351f814c29de6597b",
+      "src/catalog/modules/samos2h-dependencies.mjs": "3f15d37c0063277a9a0a75498b95323bf16d7cccb41bb8bce7299b6acbb64374",
+      "src/catalog/modules/samos2h-evidence-a.mjs": "c0a54874a9362f3434afd1fa0c0ce8dfeef4b7ef7a746b6a16ef7ebc5de359d7",
+      "src/catalog/modules/samos2h-evidence-b.mjs": "4b2277a28c0b18ae9e719aad5895fee333a2fb5fa70ae462beb44270b29ec48e",
+      "src/catalog/modules/samos2h-evidence-c.mjs": "6782ec104644e30004d9798eedbbd564ee05c9f176063820804f9582f2ee4aed",
+      "src/catalog/modules/samos2h-evidence.mjs": "3cb1a68053b162cc1304013b840a60522f42ac5bfc6dd57f901a918766c11569",
+      "src/catalog/modules/samos2h-features.mjs": "553c2885bf2594460a493be4a5d070bfeaa31a2b72a6a76e29d0b430fa4d97c9",
+      "src/catalog/modules/samos2h-glass.mjs": "914e41c3966ea64bf0ef6f108389169e4f74bc4caef9e368159fdb2f1c7f00df",
+      "src/catalog/modules/samos2h-module.mjs": "3113fecdbc1d4d4b9a1d71c28c5dd70edd1fdfcb2d1873af33fe0e0555d8d914",
+      "src/catalog/modules/samos2h-option.mjs": "e98d58d7d89007d2bf168ef47cf566971f3d98025c2036133a90b9ce3e911d96",
+      "src/catalog/modules/samos2h-rules.mjs": "fc9ee645ec7ad81d7b8dccba8074122d76bfcff4c05ee07a4d88c5caddea3920",
+      "src/catalog/modules/samos2h-schema.mjs": "fe6aadc9412ea0c0ee1effb3ce8547e7e3e4f8643e5f71e883bd6dcc46df2492",
+      "src/catalog/modules/samos2h-screen.mjs": "cffd36c98043872dc02a03f1bc33ac59dba67928a4060fbaa565bdf4a00fa21e",
+      "src/catalog/modules/samos2h-size.mjs": "59bea68af42a98ff6823ab8f9e1673b7140ae25a806b67d1dcaf364b5dfc377d",
+      "src/catalog/modules/samos2h-source.mjs": "5b47ed10068998731f973b9642fe9613f2247d5878b961bd86ad2d33602aaf94",
+      "src/catalog/modules/thermosl-data/part-01.mjs": "6e1508331c4feadccde7a602f85dccdeedb7883f000b0509f4a570772cd432cd",
+      "src/catalog/modules/thermosl-data/part-02.mjs": "ad911ee8837ab6e87de63d307c51195a16654802c319f000d67e8bef040b9806",
+      "src/catalog/modules/thermosl-data/part-03.mjs": "d791e64781c99cc7a0942b572fdeb1500b8e10aaee921b39c14d26beb070e4d9",
+      "src/catalog/modules/thermosl-data/part-04.mjs": "f19eba1bb70c597b903a492a5dff61804296e58fb61f3de0b3fd32bc18844434",
+      "src/catalog/modules/thermosl-data/part-05.mjs": "65d4dd734b8415aa3e0097a9dfc737fdf60a9178185b3198f8bb16bf00265817",
+      "src/catalog/modules/thermosl-data/part-06.mjs": "fd54013d3d05b7b79c4d008d330d1cbfdf689b573bfcf23311e48b7d71c98fd3",
+      "src/catalog/modules/thermosl-data/part-07.mjs": "e0a1f7118e2bafee92c943a079b19564e5b6d32f94ed46199f18ce5159ecbb32",
+      "src/catalog/modules/thermosl-data/part-08.mjs": "a133a1a2a1e87225925e9653fab87fdfbe0b47439074885cb09f460cc8702bbe",
+      "src/catalog/modules/thermosl-data/part-09.mjs": "887bef8f74c57f7ee8fa9288a39905783d0e4197a61eb949afeb92c2f7efad5a",
+      "src/catalog/modules/thermosl-data/part-10.mjs": "7c0379386321d742f054ee85739d529e5e5d7c2a5731558186644ecf0911b014",
+      "src/catalog/modules/thermosl-data/part-11.mjs": "9f5c3df90f6c3affd687803a282763ab67f1db94480a19c451d9de77fc42ffa8",
+      "src/catalog/modules/thermosl-data/part-12.mjs": "c5575247cc69c4b04a71ac3bd0a41b08c2ea9a53253c734373b7ce480aed5a8b",
+      "src/catalog/modules/thermosl-data/part-13.mjs": "0821f7d565e6b23b4f2f2d3ba6c6611763b94c1c9cf669ddb67146af6e737f9b",
+      "src/catalog/modules/thermosl-data/part-14.mjs": "b5ae317fa3c344d1fe29d356d802a83b42fcf92e60f2d97e807d6268e227cf74",
+      "src/catalog/modules/thermosl-module.mjs": "561ff748babb7bf12f10e21799fc4e442bccd60a6e1f1f5c5f17e245327423ed",
+      "src/catalog/modules/thermosl-source.mjs": "d1c207b340fc37f6617cf6ca881a5dd76aaf0db8864fb33cf0fc7c7179f0a5e9",
+      "src/catalog/resolver-auto.mjs": "78ff3f8c8d3a62a59bd8ed0fc43eab129774ce5596665f289da753abfe25c406",
+      "src/catalog/resolver-fields.mjs": "f952c45eefeb96c55aa8cfe4de19a3dba8621f3549cd8e27511decd0105010a1",
+      "src/catalog/resolver-values.mjs": "157bbe9f82a740b272f77e0dae8a00ad0f974e65332ff4c4e66b19e8efc5fbe5",
+      "src/catalog/runtime-master-packages/lixil-ew-v1.1/LIXIL_EW_runtime_v1.1.json.br.b64.parts/part-00": "897d7bcce6ecff6bb1895afad3691d9a6f2db8ffa371369c8fe55cba470ba9c6",
+      "src/catalog/runtime-master-packages/lixil-ew-v1.1/LIXIL_EW_runtime_v1.1.json.br.b64.parts/part-01": "febe8bb6ead5106ddc1d0f63d01f7e08f78cf144bdbaa73fc98a5dcbf7fb35f6",
+      "src/catalog/runtime-master-packages/lixil-ew-v1.1/LIXIL_EW_runtime_v1.1.json.br.b64.parts/part-02": "716192b97e1313cab389b75c9a1b2ad42e49fbd0e034b758b38b89395d726577",
+      "src/catalog/runtime-master-packages/lixil-ew-v1.1/LIXIL_EW_runtime_v1.1.json.br.b64.parts/part-03": "5d4b0862649d3b5944ad5160709b0ee414fcfd5c15e374e2363422c66eb73b2a",
+      "src/catalog/runtime-master-packages/lixil-ew-v1.1/LIXIL_EW_runtime_v1.1.json.br.b64.segments/seg-00": "c948cc42540bd89bbecee2063204200586440df882ab1673f787c0362bbd4c1e",
+      "src/catalog/runtime-master-packages/lixil-ew-v1.1/LIXIL_EW_runtime_v1.1.json.br.b64.segments/seg-01": "14b1584ddf64e5269cbf8ec5de56b99cbb6f7c23b86b88184908b23fb8f13be1",
+      "src/catalog/runtime-master-packages/lixil-ew-v1.1/LIXIL_EW_runtime_v1.1.json.br.b64.segments/seg-02": "3f98167d29e90d31a5c7c010a352105398524bb556d0e91028bce4ab80b793d6",
+      "src/catalog/runtime-master-packages/lixil-ew-v1.1/LIXIL_EW_runtime_v1.1.json.br.b64.segments/seg-03": "f7aabb780b976ce3fe2d784be88457691ce22a6afb9112eb6028a3669bdecd47",
+      "src/catalog/runtime-master-packages/lixil-ew-v1.1/LIXIL_EW_runtime_v1.1.json.br.b64.segments/seg-04": "6dae15bb2ddf0ec12f444753095b4b136e170b9dced787cc80f813f1e0925033",
+      "src/catalog/runtime-master-packages/lixil-ew-v1.1/LIXIL_EW_runtime_v1.1.json.br.b64.segments/seg-05": "1a39975572e3f06d6437a8b3e24131929ad9c60ffcae622a03e279929d0a45c5",
+      "src/catalog/runtime-master-packages/lixil-ew-v1.1/LIXIL_EW_runtime_v1.1.json.br.b64.segments/seg-06": "dbd711bdb0b7e8c927d17ad314e6c0ac0e3249f05b147b65055aa3e5867718c1",
+      "src/catalog/runtime-master-packages/lixil-ew-v1.1/LIXIL_EW_runtime_v1.1.json.br.b64.segments/seg-07": "ee369440a4a8f9f8765c9ad55587e2f9bb1c5b1715536369e3511cec4fa7e82a",
+      "src/catalog/runtime-master-packages/lixil-ew-v1.1/LIXIL_EW_runtime_v1.1.json.br.b64.segments/seg-08a": "93bbe61f03b1d83db535dff9d50cc1e70ee558a2e2ac1746b9e7360f92204c43",
+      "src/catalog/runtime-master-packages/lixil-ew-v1.1/LIXIL_EW_runtime_v1.1.json.br.b64.segments/seg-08b": "06a359e40bdb1ecbdc2a853756efa41b0688c8b8b1dba2b3dbe99a41f33ccd94",
+      "src/catalog/runtime-master-packages/lixil-ew-v1.1/LIXIL_EW_runtime_v1.1.json.br.b64.segments/seg-08c": "a49674758b24de1843ee9a345588da68ba0cda3b95cefd268aee72ae23619229",
+      "src/catalog/runtime-master-packages/lixil-ew-v1.1/LIXIL_EW_runtime_v1.1.json.br.b64.segments/seg-08d": "1649912ac0b44478dd403683860108218c174740f6f148c17a80db3840812d6b",
+      "src/catalog/runtime-master-packages/lixil-ew-v1.1/runtime_manifest.json": "8646bfd5f4a3d2184f2dbcb5b28f6e7dca995c9e11d53ec273a158588b5cdbed",
+      "src/catalog/runtime-master-packages/lixil-ew-v1.2/.materialization-marker": "c4822b7f5f0988a1cba97c2f16c204f19f32b75c9487614178b178d37c965f61",
+      "src/catalog/runtime-master-packages/lixil-ew-v1.2/LIXIL_EW_runtime_v1.2.json.br.b64.parts/canonical-01-00": "55d7dc86e19d9aa5a4bfd401f53ee120314752c5a6ce4adae199ce1213295248",
+      "src/catalog/runtime-master-packages/lixil-ew-v1.2/LIXIL_EW_runtime_v1.2.json.br.b64.parts/canonical-01-01": "c782f0859eb2d7bafba0c6c2be8c17c7e322d9fee14540b987b7e1653d38a501",
+      "src/catalog/runtime-master-packages/lixil-ew-v1.2/LIXIL_EW_runtime_v1.2.json.br.b64.parts/canonical-01-02": "eca6798f06eea18338a0fc55d234fd17bf85a4b44a507ca79ec44159faeac2b0",
+      "src/catalog/runtime-master-packages/lixil-ew-v1.2/LIXIL_EW_runtime_v1.2.json.br.b64.parts/canonical-01-03": "619d051f219dc5d045243319c4bc23b76f989288a7016c859b925eda737908ff",
+      "src/catalog/runtime-master-packages/lixil-ew-v1.2/LIXIL_EW_runtime_v1.2.json.br.b64.parts/canonical-01-04": "6f204384f1848038d15559fb1813bbbaf7c046ed056dd884ceb2134f6d61811d",
+      "src/catalog/runtime-master-packages/lixil-ew-v1.2/LIXIL_EW_runtime_v1.2.json.br.b64.parts/canonical-01-05": "b71c846e7207da5093b898bc793d52370e12ce2ad346d71f29bd053f8a28d6a1",
+      "src/catalog/runtime-master-packages/lixil-ew-v1.2/LIXIL_EW_runtime_v1.2.json.br.b64.parts/canonical-01-06": "100c1d26ca2d846f3c0f0d0c3b2f370fbc791c5d381cbb7c9dcefa0f56495754",
+      "src/catalog/runtime-master-packages/lixil-ew-v1.2/LIXIL_EW_runtime_v1.2.json.br.b64.parts/canonical-01-07": "5f3a443c760074160667b8b381d6e43ffab007bd42e469a59270ae74f8853ebd",
+      "src/catalog/runtime-master-packages/lixil-ew-v1.2/LIXIL_EW_runtime_v1.2.json.br.b64.parts/canonical-01-08": "3b4bb8ff2f4197ab6b1208fad966f8c80ea1b361e7c8b3295a63ec1fff0a19c7",
+      "src/catalog/runtime-master-packages/lixil-ew-v1.2/LIXIL_EW_runtime_v1.2.json.br.b64.parts/canonical-01-09": "af9175dc88a538bad83f17dbfff9aa9b6b45728277c8360c038a92882bb204b7",
+      "src/catalog/runtime-master-packages/lixil-ew-v1.2/LIXIL_EW_runtime_v1.2.json.br.b64.parts/canonical-01-10": "b6a04e56169421784f6f49e45eea287d7c6e627f4a7c7baeaaccd8a911576189",
+      "src/catalog/runtime-master-packages/lixil-ew-v1.2/LIXIL_EW_runtime_v1.2.json.br.b64.parts/canonical-01-11": "d50e98785ae832a47bafe6252e412ed61568c6496345c779569e46e07e0055ef",
+      "src/catalog/runtime-master-packages/lixil-ew-v1.2/LIXIL_EW_runtime_v1.2.json.br.b64.parts/canonical-02-00": "2ce65cd6d36f20858e4625c48c94955ea0b6e854f3b4c353a958832ac6fa22b1",
+      "src/catalog/runtime-master-packages/lixil-ew-v1.2/LIXIL_EW_runtime_v1.2.json.br.b64.parts/canonical-02-01": "1a343e9b3c9c120c70ba7f7ed5ec21a69c73cb761aa9290aca9a025c430a809f",
+      "src/catalog/runtime-master-packages/lixil-ew-v1.2/LIXIL_EW_runtime_v1.2.json.br.b64.parts/canonical-02-02": "0e0e99de42af76d21450878d8622c07053cd5cc36bd02240f98c55c2246c4eba",
+      "src/catalog/runtime-master-packages/lixil-ew-v1.2/LIXIL_EW_runtime_v1.2.json.br.b64.parts/canonical-02-03": "2f48cac99b8db81d05b013d6a5384e615f9a2c88eb0f0e8834e9d162533ed43a",
+      "src/catalog/runtime-master-packages/lixil-ew-v1.2/LIXIL_EW_runtime_v1.2.json.br.b64.parts/canonical-02-04": "03bbd0f98f0ecb3004ed03a9a19fe0f97ca4a5c02cad4a88347af309175a353f",
+      "src/catalog/runtime-master-packages/lixil-ew-v1.2/LIXIL_EW_runtime_v1.2.json.br.b64.parts/canonical-02-05": "bc281c5671378880faa60adbb91507d8e8abab77d6971a6e5b355ffd97db4f71",
+      "src/catalog/runtime-master-packages/lixil-ew-v1.2/LIXIL_EW_runtime_v1.2.json.br.b64.parts/canonical-02-06": "5037772cab39365e3a1a19df513a09883332905e0e4b5cb69a93e3986691c3f0",
+      "src/catalog/runtime-master-packages/lixil-ew-v1.2/LIXIL_EW_runtime_v1.2.json.br.b64.parts/canonical-02-07": "a79ddbb047e7f6cb63af0b902db411da75e25297bc9dfa34618ebda0b4a660f9",
+      "src/catalog/runtime-master-packages/lixil-ew-v1.2/LIXIL_EW_runtime_v1.2.json.br.b64.parts/canonical-02-08": "de00e7d0bdfc1ffa0cfa456113c623e3ca6aa9518314770f381fca4e6dbb76b9",
+      "src/catalog/runtime-master-packages/lixil-ew-v1.2/LIXIL_EW_runtime_v1.2.json.br.b64.parts/canonical-02-09": "c7645053c4787134860ebd5625065c36d594d2f82286608d9b4144f84d73637f",
+      "src/catalog/runtime-master-packages/lixil-ew-v1.2/LIXIL_EW_runtime_v1.2.json.br.b64.parts/canonical-02-10": "4433ccc193aaafa36210cf49f66e1913868b3153441b595b99a64aebf92489db",
+      "src/catalog/runtime-master-packages/lixil-ew-v1.2/LIXIL_EW_runtime_v1.2.json.br.b64.parts/canonical-02-11": "6697898959ffbe18731fd7abd82509e4acea17e707e1f60de269ab47b086f8ff",
+      "src/catalog/runtime-master-packages/lixil-ew-v1.2/LIXIL_EW_runtime_v1.2.json.br.b64.parts/canonical-02-12": "40a6514f2dabf401c2b77bb2a41ad0dcd1741c3d78a8ec15f371d78b8e668c26",
+      "src/catalog/runtime-master-packages/lixil-ew-v1.2/LIXIL_EW_runtime_v1.2.json.br.b64.parts/canonical-02-13": "f500003a104378d09eae1074117b58ae2724467a5630eb0bfc1118c2e8cfa380",
+      "src/catalog/runtime-master-packages/lixil-ew-v1.2/LIXIL_EW_runtime_v1.2.json.br.b64.parts/canonical-02-14": "56d4de021844ee3a2042ad571eda2d713556578a03d103212d66abd8e9d918c8",
+      "src/catalog/runtime-master-packages/lixil-ew-v1.2/LIXIL_EW_runtime_v1.2.json.br.b64.parts/canonical-02-15": "eed1bd72c806fe9831606a8a2804d8c9869b52b995e728edde3f29eccca15b76",
+      "src/catalog/runtime-master-packages/lixil-ew-v1.2/LIXIL_EW_runtime_v1.2.json.br.b64.parts/canonical-02-16": "bb38efe6ada275d3895255ce14dd800e74bd20a730b2adf01d95e3c29b202d58",
+      "src/catalog/runtime-master-packages/lixil-ew-v1.2/LIXIL_EW_runtime_v1.2.json.br.b64.parts/canonical-02-17": "e7285dfc3e7622cdcfd6bea68a24b91101bcce5d539051e991809b12ce7b0953",
+      "src/catalog/runtime-master-packages/lixil-ew-v1.2/LIXIL_EW_runtime_v1.2.json.br.b64.parts/canonical-02-18": "5ba6c72e126551421df1ca717a6c83cb616e4aae81a936332f9832c06674ef4f",
+      "src/catalog/runtime-master-packages/lixil-ew-v1.2/LIXIL_EW_runtime_v1.2.json.br.b64.parts/canonical-02-19": "f4bdfa058e9a8e425262b37c82a39352aa72170b21936dd4436c0573a07c0de4",
+      "src/catalog/runtime-master-packages/lixil-ew-v1.2/LIXIL_EW_runtime_v1.2.json.br.b64.parts/canonical-02-20": "bc4de497ec1d6e326981f4e1b036fb36ff14694806b964c26a81126ff10b6547",
+      "src/catalog/runtime-master-packages/lixil-ew-v1.2/LIXIL_EW_runtime_v1.2.json.br.b64.parts/canonical-02-21": "ea7f526fa9ea25fa122899244ccf97649148ac619a39f4db7a89a40f423f54a3",
+      "src/catalog/runtime-master-packages/lixil-ew-v1.2/LIXIL_EW_runtime_v1.2.json.br.b64.parts/canonical-02-22": "6aa2fc4a0009c581fe68ec6272af4b85bbc0928f1dab8b97f502425dcf9eb7ab",
+      "src/catalog/runtime-master-packages/lixil-ew-v1.2/LIXIL_EW_runtime_v1.2.json.br.b64.parts/canonical-02-23": "bc32665e832760357d410f207d0f0f8959bef00eb8d43652ba2d7fa8719e1991",
+      "src/catalog/runtime-master-packages/lixil-ew-v1.2/LIXIL_EW_runtime_v1.2.json.br.b64.parts/canonical-02-24": "c73f3b6610426a6402418ef452cacb6eab4f1409ddcc5fca7f1159aa8a5596f5",
+      "src/catalog/runtime-master-packages/lixil-ew-v1.2/LIXIL_EW_runtime_v1.2.json.br.b64.parts/canonical-02-25": "49fba63969da59fcc611d618a7a381c7217df86bb3423f6b984795691d781f08",
+      "src/catalog/runtime-master-packages/lixil-ew-v1.2/LIXIL_EW_runtime_v1.2.json.br.b64.parts/canonical-02-26": "df0c1aab32eda1ca6f4b49779a601e946a9e9d15c6eaee67a8d3df8d02053bda",
+      "src/catalog/runtime-master-packages/lixil-ew-v1.2/LIXIL_EW_runtime_v1.2.json.br.b64.parts/canonical-02-27": "c7a6c8ff52a80af0c9a0729044bdf170072c6b13e45771d31bcf0709d2e7a78e",
+      "src/catalog/runtime-master-packages/lixil-ew-v1.2/LIXIL_EW_runtime_v1.2.json.br.b64.parts/canonical-02-28": "30f246c385ec40e4b91cf4b7435c612fd3e27608f284263b334222552e8393c2",
+      "src/catalog/runtime-master-packages/lixil-ew-v1.2/LIXIL_EW_runtime_v1.2.json.br.b64.parts/canonical-02-29": "c4e8f334a5de500612afb423230b37b344fc85225b1c69501ce817d073d0ed68",
+      "src/catalog/runtime-master-packages/lixil-ew-v1.2/LIXIL_EW_runtime_v1.2.json.br.b64.parts/canonical-02-30": "731abeaa9ed00e031321d10ffee5c5cc972b5c118b3603dc1a1cac4b10ccef33",
+      "src/catalog/runtime-master-packages/lixil-ew-v1.2/LIXIL_EW_runtime_v1.2.json.br.b64.parts/canonical-02-31": "c1ed8f964db756c5613324b024faf625496d0ccb9b95ebda4c8bd2513babe795",
+      "src/catalog/runtime-master-packages/lixil-ew-v1.2/LIXIL_EW_runtime_v1.2.json.br.b64.parts/canonical-02-32": "07a9057c01c52b49c2ac812bda0fefc71857a8314816a6463cfbff91cfcef8a6",
+      "src/catalog/runtime-master-packages/lixil-ew-v1.2/LIXIL_EW_runtime_v1.2.json.br.b64.parts/canonical-02-33": "46b836cacb235d9ef013abc6cdb36c42f6996502cd25894900e3a09a3d703fb1",
+      "src/catalog/runtime-master-packages/lixil-ew-v1.2/LIXIL_EW_runtime_v1.2.json.br.b64.parts/canonical-02-34": "cff0be00688d99b2c379b41bef4a1bcce69dda063edcc03ac840186caccdd2b4",
+      "src/catalog/runtime-master-packages/lixil-ew-v1.2/LIXIL_EW_runtime_v1.2.json.br.b64.parts/canonical-02-35": "9ee881680ef77cc0a2e9ac44bceb00322afb65393b22a29c881f6939b689652c",
+      "src/catalog/runtime-master-packages/lixil-ew-v1.2/LIXIL_EW_runtime_v1.2.json.br.b64.parts/canonical-02-36": "156116a843aec37a1a57a4ca503bd20ba4a3fd7037a64c578ce9e922511c6dcf",
+      "src/catalog/runtime-master-packages/lixil-ew-v1.2/LIXIL_EW_runtime_v1.2.json.br.b64.parts/part-00": "6ad36d796447c925618daeaf3ecaddd7a5f14e139587a607ed4844a418d6c349",
+      "src/catalog/runtime-master-packages/lixil-ew-v1.2/LIXIL_EW_runtime_v1.2.json.br.b64.parts/part-01": "b4140033f64898bdd450ce2e29469ecfefbb06e2a0f9090815a14db476f2ec70",
+      "src/catalog/runtime-master-packages/lixil-ew-v1.2/LIXIL_EW_runtime_v1.2.json.br.b64.parts/part-02": "19d86aa5d7ddf32bc30bbd1f1b0766d0fa952c1fa7f2035914c9d06959e140e4",
+      "src/catalog/runtime-master-packages/lixil-ew-v1.2/LIXIL_EW_runtime_v1.2.json.br.b64.parts/part-03": "27f5fc0fd4387e05345880079f7e460487d3d1f99dcf18020b55d28b27d5bb32",
+      "src/catalog/runtime-master-packages/lixil-ew-v1.2/runtime_manifest.json": "d24c5175b1635dd3215294076a18a5adc0e7149f0c9790082a28df9ea115c68c",
+      "src/catalog/runtime-master-packages/lixil-ew-v1.3/LIXIL_EW_runtime_v1.3.json.b64.parts/part-00": "9b583af3135b68506e7c0292d3693d86ba3e60c79ab1b2e2f13a5a18b326602b",
+      "src/catalog/runtime-master-packages/lixil-ew-v1.3/LIXIL_EW_runtime_v1.3.json.b64.parts/part-01": "58b00d526b47703d1278b894b9167fb95a8baa85f13836779616b9319d5158e9",
+      "src/catalog/runtime-master-packages/lixil-ew-v1.3/LIXIL_EW_runtime_v1.3.json.b64.parts/part-02": "d5d06a73fa42180fa2582aace663f4920633c409012ff023303616b93d3b3171",
+      "src/catalog/runtime-master-packages/lixil-ew-v1.3/LIXIL_EW_runtime_v1.3.json.b64.parts/part-03": "d6a68747c48f722dbcfcc6c5ff33827f69828508c440382936929830a5948219",
+      "src/catalog/runtime-master-packages/lixil-ew-v1.3/LIXIL_EW_runtime_v1.3.json.b64.parts/part-04": "5addf31d575bfe3c99e7ced5cdbd2ff468ea32cf17dc13356cddd82c6e0f3d01",
+      "src/catalog/runtime-master-packages/lixil-ew-v1.3/LIXIL_EW_runtime_v1.3.json.b64.parts/part-05": "ea94e92c5bfccdfb9518cd31f45b00cbd5ed714ce3a5439db476c2749a2d89b3",
+      "src/catalog/runtime-master-packages/lixil-ew-v1.3/LIXIL_EW_runtime_v1.3.json.b64.parts/part-06": "b5c889e7da828546630631c4f25b392b7856d0343bb9c6273912f307530e9828",
+      "src/catalog/runtime-master-packages/lixil-ew-v1.3/LIXIL_EW_runtime_v1.3.json.b64.parts/part-07": "d96989afe07ddbdac6ab80d0548172a79470f78733ab1c98c1b9f6ee8f1e0203",
+      "src/catalog/runtime-master-packages/lixil-ew-v1.3/runtime_manifest.json": "eb8bce59f249faea5cfc8e3d4b75e44f74ee960eacbdc21e25864b7d8dd08662",
+      "src/catalog/runtime-master-packages/lixil-ew-v1.4/runtime.json.br.b64": "7206d1d1a813487b501beb29ea95d3913788a8b67baae0a66656b04d2a3c2feb",
+      "src/catalog/runtime-master-packages/lixil-ew-v1.4/runtime_manifest.json": "8fea71eb4f51f2014e2cae5abd732ccfe0b36224171c0edc24ac5368789f9d47",
+      "src/catalog/runtime-master-packages/lixil-inplus-bathroom-v1.0/formal-product-master.json": "58397e2dfc4b4fb74f62b14b4d9b22943de96c866a107cc48d52dcadd2c1bfcb",
+      "src/catalog/runtime-master-packages/lixil-inplus-bathroom-v1.0/runtime-adapter-manifest.json": "6337e58790af473cd1ec2dcb8f33901556156d385383531675e7eb35e5e306da",
+      "src/catalog/runtime-master-packages/lixil-inplus-v0.4-r2/LIXIL_インプラス_runtime_v0.4-R2.json.gz.b64.parts/part-00a": "20bd4ccb25eff43a5e944625a5be088665177311b8dd171b5dedb8f8856021b4",
+      "src/catalog/runtime-master-packages/lixil-inplus-v0.4-r2/LIXIL_インプラス_runtime_v0.4-R2.json.gz.b64.parts/part-00b": "3d16eef55cad63df5bded01850c9751d9bf4608606628220f7c4b33c3b7fb566",
+      "src/catalog/runtime-master-packages/lixil-inplus-v0.4-r2/LIXIL_インプラス_runtime_v0.4-R2.json.gz.b64.parts/part-00c": "58d2edb30fcf0fd20b1c78ab87739f971119d2f269dc7da17dd5bf9bd8ad159a",
+      "src/catalog/runtime-master-packages/lixil-inplus-v0.4-r2/LIXIL_インプラス_runtime_v0.4-R2.json.gz.b64.parts/part-01": "8558124aae2ac6dfa40236031b97e29de0f49ca71c3fb3bfec8d226edb38dc21",
+      "src/catalog/runtime-master-packages/lixil-inplus-v0.4-r2/LIXIL_インプラス_runtime_v0.4-R2.json.gz.b64.parts/part-02a": "835da454ce085bc5bd14604129283ce33d3afd88243d5dff752d16170bc27f7f",
+      "src/catalog/runtime-master-packages/lixil-inplus-v0.4-r2/LIXIL_インプラス_runtime_v0.4-R2.json.gz.b64.parts/part-02b": "b75269d2d9e1074420df8c8f4bc3f326368875f1cd755ba86d8b6a1f6de449e0",
+      "src/catalog/runtime-master-packages/lixil-inplus-v0.4-r2/LIXIL_インプラス_runtime_v0.4-R2.json.gz.b64.parts/part-02c": "efa8fa2acb22a36a885a3b067327b610df36ac1a8b2dea1d500946243b145801",
+      "src/catalog/runtime-master-packages/lixil-inplus-v0.4-r2/LIXIL_インプラス_runtime_v0.4-R2.json.gz.b64.parts/part-03": "8f15e2d2ec74f85d3fbbec06bafb6996c03a5f7017b07da3d6d19c9db1fa2510",
+      "src/catalog/runtime-master-packages/lixil-inplus-v0.4-r2/LIXIL_インプラス_runtime_v0.4-R2.schema.json.gz.b64": "55ff8feb17716a6e96df0810385b8c351694026f50bd5fb9d494049dee191632",
+      "src/catalog/runtime-master-packages/lixil-inplus-v0.4-r2/runtime_manifest.json": "cbbdb6ba315c985f7d27f75a237e861be8ce635962ce1cd5a746d7f152c8e1f8",
+      "src/catalog/runtime-master-packages/lixil-inplus-v0.4-r3-frame/canonical.json.gz.b64": "099eb970fe00e35692251095350cd0a1093260a8325c8414b8c4e82ea0ca71d5",
+      "src/catalog/runtime-master-packages/lixil-inplus-v0.4-r3-frame/runtime.schema.json.gz.b64": "8f0df69e1db7fb141d5f1ebebbaad36ae35986200df180feb084b64e5880545f",
+      "src/catalog/runtime-master-packages/lixil-inplus-v0.4-r3-frame/runtime_manifest.json": "d408bd64237ba5d44f9ebbf3ab3c869e9b64864ff0da28609568718b881607d1",
+      "src/catalog/runtime-master-packages/lixil-rechent-door3-nonfire-v0.8-r7/canonical_fields.json.br.b64": "df382b49b614c902833f36231ef4ab8a7994f1bde2c9d45390e407e541a5bf5d",
+      "src/catalog/runtime-master-packages/lixil-rechent-door3-nonfire-v0.8-r7/dependency_rules.json.br.b64": "78c8eef6833674ac88c7e66c8deb0ea42699391276e9f80cfc58d5d66d9109bd",
+      "src/catalog/runtime-master-packages/lixil-rechent-door3-nonfire-v0.8-r7/evidence_manual_checks.json.br.b64": "7d50af83f2cec710f5886e06e369921493e44e7f6dddf3939c5ec3cfd721adbd",
+      "src/catalog/runtime-master-packages/lixil-rechent-door3-nonfire-v0.8-r7/hardware_rules.json.br.b64": "d7f5d55049d4216431d0a909a4d786c8cd8066ea433fe108b044820ae5515383",
+      "src/catalog/runtime-master-packages/lixil-rechent-door3-nonfire-v0.8-r7/hardware_rules.json.br.b64.parts/part-00": "0aa775f6b5566643bc863ebc5db8b3a8501a5187d473c4e54ad2e69ce928f291",
+      "src/catalog/runtime-master-packages/lixil-rechent-door3-nonfire-v0.8-r7/hardware_rules.json.br.b64.parts/part-01": "e4a9037c8c9fb18d7409dc1194374ea01a2797d41e96f4ed77a73474245c5585",
+      "src/catalog/runtime-master-packages/lixil-rechent-door3-nonfire-v0.8-r7/hardware_rules.json.br.b64.parts/part-02": "b8dd5472b80e88ef42596cf9e28b2d81f936baadbdc58760de74ae4eaef789ae",
+      "src/catalog/runtime-master-packages/lixil-rechent-door3-nonfire-v0.8-r7/installation_rules.json.br.b64": "1fa809bba05172c088449fdf5c88c0ce8c9129339ef699e6761a2278ed4c7b31",
+      "src/catalog/runtime-master-packages/lixil-rechent-door3-nonfire-v0.8-r7/option_order_rules.json.br.b64": "5fffdc2fe3c7aa0c455d279ec9f12084b005bb1a31753d50b042164a72e404d2",
+      "src/catalog/runtime-master-packages/lixil-rechent-door3-nonfire-v0.8-r7/product_rules.json.br.b64": "f3bc0f09b512bd5759cd3143184a0d4c986baad9d754724255c782c036fa762b",
+      "src/catalog/runtime-master-packages/lixil-rechent-door3-nonfire-v0.8-r7/runtime_manifest.json": "6c189dff2197ab095168c308fb6733bd1a0f5a2f336a3352a39ce536ee08230d",
+      "src/catalog/runtime-master-packages/lixil-rechent-door3-nonfire-v0.8-r7/runtime_qa.json.br.b64": "83692a81ac0cc04ba52ec886a98a4336a75d18b9ce7f8ec464e06d9ded62921f",
+      "src/catalog/runtime-master-packages/lixil-rechent-door3-nonfire-v0.8-r8/canonical_fields.json.br.b64": "dc2659c51fcd3c036f05c4fcc409235c8c01e06ca14adc41949cff8bbb6c4c8b",
+      "src/catalog/runtime-master-packages/lixil-rechent-door3-nonfire-v0.8-r8/dependency_rules.json.br.b64": "42f1d00ef01a328ea94421d59f386d569106a30bebbd095b0a88a8b5e9c7e08a",
+      "src/catalog/runtime-master-packages/lixil-rechent-door3-nonfire-v0.8-r8/evidence_manual_checks.json.br.b64": "55608281b53861276ed489ce61b160014b950a8667e1727d4b1e0b9c9ccc0ab4",
+      "src/catalog/runtime-master-packages/lixil-rechent-door3-nonfire-v0.8-r8/hardware_rules.json.br.b64": "b307434fba97803e4b6049e117721021184877da7d53b19f6ab1a2c3a3d90f00",
+      "src/catalog/runtime-master-packages/lixil-rechent-door3-nonfire-v0.8-r8/installation_rules.json.br.b64": "9015c7de487149c6ead8f1689222e84c63bc243d66a3f47ab5861eae1c26d211",
+      "src/catalog/runtime-master-packages/lixil-rechent-door3-nonfire-v0.8-r8/option_order_rules.json.br.b64": "e58e1580ab623d40e56d1ed09c9b69c1f9e608646992c3afe09daed3c65ad136",
+      "src/catalog/runtime-master-packages/lixil-rechent-door3-nonfire-v0.8-r8/product_rules.json.br.b64": "20b3aa51c0ebfd5c4ab5c5b16b47565029326ac40251d49f68ef17622491502a",
+      "src/catalog/runtime-master-packages/lixil-rechent-door3-nonfire-v0.8-r8/runtime_manifest.json": "1da09541a4ddf234314d8f082b792c2fb2cbab90ef5c6d70b32ff39706e145db",
+      "src/catalog/runtime-master-packages/lixil-rechent-door3-nonfire-v0.8-r8/runtime_qa.json.br.b64": "f61c9abd877d3080540ad54b588dfb281da80901d3b4384cc6114f9be4fda540",
+      "src/catalog/runtime-master-packages/lixil-samos2h-v0.9-r1/LIXIL_サーモスⅡH_runtime_v0.9-R1.json.br.b64.parts/part-00": "8f5c50302518f172352c219a8c942445cfe1a9ed80325a5db43364690239e38c",
+      "src/catalog/runtime-master-packages/lixil-samos2h-v0.9-r1/runtime_manifest.json": "4e912379d05395d2f96403040c2eaa1b68c4124f4af2116a5b2fae53c004efd9",
+      "src/catalog/runtime-master-packages/lixil-samos2h-v0.9-r1/samos2h_runtime_package_v0.9-R1.schema.json.br.b64.parts/part-00": "64fe700c7efd9e36613abd9415f48a0fd85f464141672e8313b1ffbf6e1517db",
+      "src/catalog/runtime-master-packages/lixil-samos2h-v0.9-r2/runtime_manifest.json": "8b9b991e0c4949adffa8d63ed20124ac0a4e8c5d243e30740b0bc84122718120",
+      "src/catalog/runtime-master-packages/lixil-samos2h-v0.9-r2/runtime_transform.json": "8db3208aadf3ea4e6587351194187cc59331cb7b184f11978169b59d54b3948b",
+      "src/catalog/runtime-master-packages/lixil-samos2h-v0.9-r2/samos2h_runtime_package_v0.9-R2.schema.json.br.b64.parts/part-00": "4cbfa14603cac79f0523b51e6f9651b04df51bb646a072be3ede90cc404e9f79",
+      "src/catalog/runtime-master-packages/lixil-samos2h-v0.9-r3/LIXIL_サーモスⅡH_runtime_v0.9-R3.json.br.b64.parts/part-00": "0f56557ee4fdd55e8d3ee40e9dea705f8be2c5aeafa552b0769518e68370c9d1",
+      "src/catalog/runtime-master-packages/lixil-samos2h-v0.9-r3/runtime_manifest.json": "cfc55020035df809b83c0f4a25dc0e0b717854344fdb815be8e9a848c2d889c8",
+      "src/catalog/runtime-master-packages/lixil-samos2h-v0.9-r3/samos2h_runtime_package_v0.9-R3.schema.json.br.b64.parts/part-00": "34dabc94cd2f3b06e2bd0671bf7bb598d0ec647004e12215ccf619ad78e3d9e7",
+      "src/catalog/runtime-master-packages/lixil-samos2h-v0.9-r4/LIXIL_サーモスⅡH_runtime_v0.9-R4.json.parts/part-00": "eb25ddad525a8f97065e18e2211793e2bb25757f4fd8586ca163629c3088aa96",
+      "src/catalog/runtime-master-packages/lixil-samos2h-v0.9-r4/LIXIL_サーモスⅡH_runtime_v0.9-R4.json.parts/part-01": "a70fd394b43d445ae01981113fbad8affe0b53568322ecc9ece342d7727fc4b9",
+      "src/catalog/runtime-master-packages/lixil-samos2h-v0.9-r4/LIXIL_サーモスⅡH_runtime_v0.9-R4.json.parts/part-02": "5ee872adcaf650235a26a7eff364e2bdc0ea2c10436cc350050f8282e6f387af",
+      "src/catalog/runtime-master-packages/lixil-samos2h-v0.9-r4/LIXIL_サーモスⅡH_runtime_v0.9-R4.json.parts/part-03": "a10a08cb67181962f5f467a5adbfda1f38c365b502761c3570a989354571e069",
+      "src/catalog/runtime-master-packages/lixil-samos2h-v0.9-r4/LIXIL_サーモスⅡH_runtime_v0.9-R4.json.parts/part-04": "9d1365446d55da5d52766749c7ea09e112f03bbbcea3cd812eec2e4dbf79c402",
+      "src/catalog/runtime-master-packages/lixil-samos2h-v0.9-r4/LIXIL_サーモスⅡH_runtime_v0.9-R4.json.parts/part-05": "b149ed53ac8eab76a88c484a72e458a765b4146ded38f4f2c5da8e29cd9093e7",
+      "src/catalog/runtime-master-packages/lixil-samos2h-v0.9-r4/runtime_manifest.json": "993481b2f0ab1d519a091e1b9f99a329eef7c67ec89cd1c82ddfab0d3c624955",
+      "src/catalog/runtime-master-packages/lixil-samos2h-v0.9-r4/samos2h_runtime_package_v0.9-R4.schema.json": "8db1faafaf013054c6b22a7c006b93c82dce26821c1abe0c52ffcb7b8cc52c30",
+      "src/catalog/runtime-master-packages/lixil-thermosl-v0.7-r1/LIXIL_サーモスL_runtime_v0.7-R1.json.br.b64.parts/part-00": "9c91de5f0df3dca549317ab19264a2cc8c77d25984bcc773b37c32e7c910353d",
+      "src/catalog/runtime-master-packages/lixil-thermosl-v0.7-r1/runtime_manifest.json": "29d1ef4725d7b277b468034cba07bfaba1202d8bf62e5180d4e38ec2fd4a64cd",
+      "src/catalog/runtime-master-packages/lixil-thermosl-v0.7-r1/thermosl_runtime_package_v0.7-R1.schema.json.br.b64.parts/part-00": "4d40a99c5409e4589af52129ff31d9a2407c825f826b9e7b4addc227e4c0e5d3",
+      "src/catalog/runtime-master-packages/lixil-thermosl-v0.7-r2/LIXIL_サーモスL_runtime_v0.7-R2.json.br.b64.parts/part-00": "af8cf80671ad70a18da7ed1e177dd4fbc4f5538782022a351dc51c1c2db5aef7",
+      "src/catalog/runtime-master-packages/lixil-thermosl-v0.7-r2/runtime_manifest.json": "4cf2a4b1572f68288fa108ccd33d30cc80d5170f2f5303864ca56ca67c34cec3",
+      "src/catalog/runtime-master-packages/lixil-thermosl-v0.7-r3/runtime-transform.json": "c98a51973061e9f2a503bd6d5dd74c477fc630bb3956f43ab1646ea0e12f64df",
+      "src/catalog/runtime-master-packages/lixil-thermosl-v0.7-r3/runtime_manifest.json": "0fed18a4d317fa03cb0ef0463a0c17eb9f83e1bb84baa6628a6bdce73de62257",
+      "src/catalog/runtime-master-packages/lixil-tw-integrated-v0.2/LIXIL_TW_runtime_integrated-v0.2.json.br.b64.parts/part-00": "7a1a421a6d63605da7574c0c8e1bcb1199f6a92d48ac863db1bc4f051e17f0f4",
+      "src/catalog/runtime-master-packages/lixil-tw-integrated-v0.2/runtime_manifest.json": "52af3e462f940df67c267de5f715250290136afdd67a70611e684fcc3d5d064e",
+      "src/catalog/runtime-master-packages/lixil-tw-integrated-v0.3/runtime_manifest.json": "c4980f45fdf57afe1512f2ca42da0eca53d9facc1f555734f7d89b347a808ee0",
+      "src/catalog/runtime-master-packages/lixil-tw-integrated-v0.3/runtime_transform.json.parts/part-00": "49d258e198892c2d05fac1af6bad0b7ea6955f7b6c521056011aa46d927a9770",
+      "src/catalog/runtime-master-packages/lixil-tw-integrated-v0.3/runtime_transform.json.parts/part-01": "7965e4eed78c518c3fcb7d4a07138ae0c7f6ee471ec9db43af68a3684a68e721",
+      "src/catalog/runtime-master-packages/lixil-tw-integrated-v0.3/runtime_transform.json.parts/part-02": "7590dcc2f247f1e7777d899800fb53052a79f030adf1af4f90706311149549e5",
+      "src/catalog/runtime-master-packages/lixil-tw-integrated-v0.3/runtime_transform.json.parts/part-03": "61ca9816717eebbf6ed3adba91aced0246c48df51a0b1b5cb54583c77ff2fdbc",
+      "src/catalog/runtime-master-packages/lixil-tw-integrated-v0.3/runtime_transform.json.parts/part-04": "f4702ec38cefc8def60524b625610b10df966835bf7ab0b70dc191e6c481ce2f",
+      "src/catalog/runtime-master-packages/lixil-tw-integrated-v0.3/runtime_transform.json.parts/part-05": "83831a6c53193ac60760d7c8005c1b9dfcc548bc59b55b8ba765ee65856130f6",
+      "src/catalog/runtime-master-packages/lixil-tw-integrated-v0.3/runtime_transform.json.parts/part-06": "3f2e83c8264429ffb143d93da2fccea00e2dac8a759d2711125eee256ad2a74a",
+      "src/catalog/runtime-master-packages/lixil-tw-integrated-v0.3/runtime_transform.json.parts/part-07": "d523ce40457aa5628488afb6fa07faec36f90d0d8c9320361b8ec34d09c5c3ed",
+      "src/catalog/runtime-master-packages/lixil-tw-integrated-v0.3/runtime_transform.json.parts/part-08": "dab7c2997d62708f5b8d1ff2ce0d652e4776f1eb02c1d72c6553af3c6f361da7",
+      "src/catalog/runtime-master-packages/lixil-tw-integrated-v0.3/runtime_transform.json.parts/part-09": "c2b33f05eddd276fbb5c040df2dd410f1f91f9b95451490e21a732bbea4f9a42",
+      "src/catalog/runtime-master-packages/lixil-tw-integrated-v0.3/runtime_transform.json.parts/part-10": "14c477658500beec8e8779683d5dccfa70456ee2a6d5094d5ee741e6ab6fd8f5",
+      "src/catalog/runtime-master-packages/lixil-tw-integrated-v0.3/runtime_transform.json.parts/part-11": "908051d4d49e2a6ec1cbcfadf0a0095942541ce26c1192b587288a50e5a2e1f7",
+      "src/catalog/runtime-master-packages/lixil-tw-integrated-v0.3/runtime_transform.json.parts/part-12": "4fd6e9ea5a2553055d6ff2c68f7ceb9213afc467a05b87049269884cec3e641e",
+      "src/catalog/runtime-master-packages/lixil-tw-integrated-v0.3/runtime_transform.json.parts/part-13": "aaa18ffa1d6a8ffbeee9937bc4fe3a7d96e3e7876db48de2cf162d8d116c2119",
+      "src/catalog/runtime-master-packages/lixil-tw-integrated-v0.3/runtime_transform.json.parts/part-14": "9bf399e4adab97304f34b15b4f0ec9aab990bfa5ea6b179d7fdd7b05ee75d811",
+      "src/catalog/runtime-master-packages/lixil-tw-integrated-v0.3/runtime_transform.json.parts/part-15": "d9ac7e39d23b04e62cbe1356c33a04b2ed4f6007ae328ff03dedcaa797b78188",
+      "src/catalog/runtime-master-packages/lixil-tw-integrated-v0.3/runtime_transform.json.parts/part-16": "044c2c97de5bbdcc773c5172941107917dfdae1281cd9435c199441cc063ca85",
+      "src/catalog/runtime-master-packages/lixil-tw-integrated-v0.3/runtime_transform.json.parts/part-17": "2fe4e599e30c2daa40221598d9888f196905d35cea636fd2a6f01d96e2d4604f",
+      "src/catalog/runtime-master-packages/lixil-tw-integrated-v0.3/runtime_transform.json.parts/part-18": "93b1e9879f1b9fab9b17927f870d7701c6fd0013c12dd457a3330460487239d1",
+      "src/catalog/runtime-master-packages/lixil-tw-integrated-v0.4/runtime_manifest.json": "4ca87f7fc327f798da9ac0e39d4aa7ba4e8bda1e5635cc91959fe241059aa7d7",
+      "src/catalog/runtime-master-packages/lixil-tw-integrated-v0.4/runtime_transform.json": "5d066ef93dc2f9baa3a3bd693d25778149312d034f5304d3478f3be563440859",
+      "src/catalog/runtime-master-packages/lixil-tw-integrated-v0.5/LIXIL_TW_runtime_integrated-v0.5.json.br.b64": "bde30c6aa3bceb5a303e68cf2bcbfe495157a3e222ff27fb3640a6413d3fc8c7",
+      "src/catalog/runtime-master-packages/lixil-tw-integrated-v0.5/runtime_manifest.json": "783b6d1c705adc5dc31d504373a4a86e3ce498a75a570e67dd15cd8d2ee148d3",
+      "src/catalog/runtime-master-packages/ykkap-apw430-20260830-r1/apw430_core_20260830-R1.json.br.b64.parts/part-00": "84f2c3de32840760908d721718cfa458c14b4a24bd6d762a52db5bd9f196adcc",
+      "src/catalog/runtime-master-packages/ykkap-apw430-20260830-r1/apw430_dimensions_20260830-R1.json.br.b64.parts/part-00": "4107ae7ae9c39eeaf665dba2a2d1c431e45a326889c105088ce4952e5d7595d2",
+      "src/catalog/runtime-master-packages/ykkap-apw430-20260830-r1/apw430_options_20260830-R1.json.br.b64.parts/part-00": "a13c21c20846c7bface5d045c8fbacc3c35c597103c9d8ea9de96c95f5dcae3b",
+      "src/catalog/runtime-master-packages/ykkap-apw430-20260830-r1/runtime_manifest.json": "08f3ad4bef73e32b00e9a69af7e0278539bc8899d64713c8f903924cd43de78b",
+      "src/catalog/runtime-master-packages/ykkap-apw430-20260917-r2/apw430_core_20260917-R2.json": "c685d3a96d2007c6d78f43893aeaf1bbc139892ad79698e3a97a087fd2690884",
+      "src/catalog/runtime-master-packages/ykkap-apw430-20260917-r2/apw430_dimensions_20260917-R2.json": "f731cadc95e72ac9ad75986d49cc630319538e3b2d6c3cec8b4e60a54747ca0f",
+      "src/catalog/runtime-master-packages/ykkap-apw430-20260917-r2/apw430_options_20260917-R2.json.parts/part-00": "fe4ed510b093bf22486a10f4a07d67b803054e2b14d21a6cbafb509f9440b6ae",
+      "src/catalog/runtime-master-packages/ykkap-apw430-20260917-r2/apw430_options_20260917-R2.json.parts/part-01": "4bf2b0ba2b13c9295383f67bfc177eb754a8c06d9aa755b08a0b1b405a432ed4",
+      "src/catalog/runtime-master-packages/ykkap-apw430-20260917-r2/apw430_options_20260917-R2.json.parts/part-02": "22021dcde55376030703fbde94837a647575a809d24fe0d6dc359be8d4f2aece",
+      "src/catalog/runtime-master-packages/ykkap-apw430-20260917-r2/apw430_options_20260917-R2.json.parts/part-03": "73027289e086b8ca67930ff37468c2aac863c35b6b5d7f09877355416e5faff1",
+      "src/catalog/runtime-master-packages/ykkap-apw430-20260917-r2/apw430_options_20260917-R2.json.parts/part-04": "3d2b5c36cec338ed7b49f7f6197b3af1c0c48f10ae56fc53695041b52aef18a8",
+      "src/catalog/runtime-master-packages/ykkap-apw430-20260917-r2/apw430_options_20260917-R2.json.parts/part-05": "5bad7615026fa94b7fb401491fef78ead48cc6bd7e9424d43b89c6491dba46cf",
+      "src/catalog/runtime-master-packages/ykkap-apw430-20260917-r2/runtime_manifest.json": "1b012a78abfbbb2a6647272f92126d37c3a75d0a52d8b03de4d30e2afe9bcfcc",
+      "src/catalog/runtime-master-packages/ykkap-apw430-20260918-r3/apw430_core_20260918-R3.json": "05ee0db4ceb17a0043372ee7b888ee4ac94f7dc170d08ccf4b1f356fdef17340",
+      "src/catalog/runtime-master-packages/ykkap-apw430-20260918-r3/apw430_dimensions_20260918-R3.json": "e50d8099a2fec74e5b211508256ecee6805ef5227d814198c0a7319b88ca0262",
+      "src/catalog/runtime-master-packages/ykkap-apw430-20260918-r3/apw430_options_20260918-R3.json.parts/part-00": "ad37e20588d20ba77d70576725569de3ab69388c4c36ff45387ff3b690ca940b",
+      "src/catalog/runtime-master-packages/ykkap-apw430-20260918-r3/apw430_options_20260918-R3.json.parts/part-01": "bcbd9b854436fa24c9bb87bdf722d6011be0f9197bb4021eb12e4d87607a2fe9",
+      "src/catalog/runtime-master-packages/ykkap-apw430-20260918-r3/apw430_options_20260918-R3.json.parts/part-02": "71498eacf8111ce9eefda3b1b86cc5452e341dd64f07695a6026f129c56fb939",
+      "src/catalog/runtime-master-packages/ykkap-apw430-20260918-r3/runtime_manifest.json": "e2755a735fc3a7c94afacc58175a390bf00784cf1f13521a1263076d7bfae1c7",
+      "src/catalog/runtime-master-packages/ykkap-apw431-v1.0-r1/apw431_core_v1.0-R1.json.br.b64.parts/part-00": "bc267f112b788030f2c9270a12805552527a4b315fdb11d23eee28b3087c63b9",
+      "src/catalog/runtime-master-packages/ykkap-apw431-v1.0-r1/apw431_dimensions_v1.0-R1.json.br.b64.parts/part-00": "0a531db6fb24e2928d350261dd7e6d3933ad23efaf14e13879df4ced6bfe0edb",
+      "src/catalog/runtime-master-packages/ykkap-apw431-v1.0-r1/apw431_dimensions_v1.0-R1.json.br.b64.parts/part-01": "fb885e8e27ffd6f31553127d97dbeab88fa0fce6a8fc954a9c2898b5a37a7f9f",
+      "src/catalog/runtime-master-packages/ykkap-apw431-v1.0-r1/apw431_dimensions_v1.0-R1.json.br.b64.parts/part-02": "bfa96fe8826f163de2d0f5b463d2cb284550b38bfcbc633eac0bd074e1389838",
+      "src/catalog/runtime-master-packages/ykkap-apw431-v1.0-r1/apw431_dimensions_v1.0-R1.json.br.b64.parts/part-03": "de9c9b39f04e658ae6028125e1f933417079cc878c0e5a42ccd72bc2f30e41bc",
+      "src/catalog/runtime-master-packages/ykkap-apw431-v1.0-r1/apw431_dimensions_v1.0-R1.json.br.b64.parts/part-04": "d1f9e88eaeef8e14d0e5f48374a879fe11e61058b8dcfd088df86e12d3a87fc7",
+      "src/catalog/runtime-master-packages/ykkap-apw431-v1.0-r1/apw431_options_v1.0-R1.json.br.b64.parts/part-00": "dfa9b09af5a4e1de9e4df591c96d08cda690fd616670dfc628a95ce260c2396a",
+      "src/catalog/runtime-master-packages/ykkap-apw431-v1.0-r1/apw431_options_v1.0-R1.json.br.b64.parts/part-01": "0dadac2388aaa8f32ad78eb380957bc721fd054031bd33a5c76b4d4f227df292",
+      "src/catalog/runtime-master-packages/ykkap-apw431-v1.0-r1/runtime_manifest.json": "f83998aa540ff39907627089adbe84eae32ba9850b36fa8ad7f40a30e2502511",
+      "src/catalog/runtime-master-packages/ykkap-apw431-v1.1/apw431_core_v1.1.json": "9fff49082f4a0b1026a86baf24fc2cfd112d0d03193124f5f96777b05b694a4a",
+      "src/catalog/runtime-master-packages/ykkap-apw431-v1.1/apw431_dimensions_v1.1.json": "386e9abccdc4ba15c1dcfd5bf722cf48f45f4b277e2c6f87182cb215acc8b171",
+      "src/catalog/runtime-master-packages/ykkap-apw431-v1.1/apw431_options_v1.1.json": "b14489ab792536b74b0d013020f8a4b9366d5b2b6e501b94f0ac274f8e95bcf9",
+      "src/catalog/runtime-master-packages/ykkap-apw431-v1.1/runtime_manifest.json": "7b4331b62d80a356fdd39549c942bb30db8a6e34e9e7d0fd2277c0bccc4f4f27",
+      "src/catalog/runtime-master-packages/ykkap-apw431-v1.2/apw431_core_v1.2.json": "33db499b08c4d987d3979219daf0428d277d6aff0c3ee5453cf21795826069f6",
+      "src/catalog/runtime-master-packages/ykkap-apw431-v1.2/apw431_dimensions_v1.1_to_v1.2.transform.json": "f163e1254e3a2c8fd012230cd185b80fd5d2c64c8fe52653c618962c3d4e8f45",
+      "src/catalog/runtime-master-packages/ykkap-apw431-v1.2/apw431_dimensions_v1.2.json.parts/part-00": "df51370895e77eaf2d1c86a0fde3330f61277776e086082855fe00c59387dc8f",
+      "src/catalog/runtime-master-packages/ykkap-apw431-v1.2/apw431_dimensions_v1.2.json.parts/part-01": "1c1898cab5cde011fec8d4320363a36cf6b1a6e118dc4bb5a1c0c192b3d47e52",
+      "src/catalog/runtime-master-packages/ykkap-apw431-v1.2/apw431_options_v1.2.json": "7a2d6a7556b2f0d852aa1b5119dbe3767505aa64fe56fa9dfa970c30a1413101",
+      "src/catalog/runtime-master-packages/ykkap-apw431-v1.2/runtime_manifest.json": "b8927a51a5e31b0c7a89a98b65833cf4f7e0e641c52316cecce4f493399eb1f9",
+      "src/catalog/runtime-master-packages/ykkap-uchirimo-slim-v2-20260929/PRODUCT_MASTER_MANIFEST.md": "f3476939f5b5e488eab4a323fb5cfa5b0c83a310f208df73c36c64d08b7f4cdb",
+      "src/catalog/runtime-master-packages/ykkap-uchirimo-slim-v2-20260929/adoption-content-qa.json": "c9f3b6c4ee8b575875ae45faf0159781100a49a34586fbd861a0734e9bf4f144",
+      "src/catalog/runtime-master-packages/ykkap-uchirimo-slim-v2-20260929/canonical.json": "4522b7ad065d53370ce25a257b989b01994fbf0c1c11be76f4f1bff013353116",
+      "src/catalog/runtime-master-packages/ykkap-uchirimo-slim-v2-20260929/runtime_manifest.json": "3e2f2960a3761bc14a6c0ac3c9d9ee6d5c3e8f3b43bdee2bab81de7297afb5d4",
+      "src/catalog/runtime-master-packages/ykkap-uchirimo-slim-v3-frame/canonical.json": "ddd08feab5ddcfec0cd874c3659ffb03ed29173e58f0635d297abdfef5ae5b4a",
+      "src/catalog/runtime-master-packages/ykkap-uchirimo-slim-v3-frame/judgment-engine.json": "b8c40e741f8ff07e58d9bebf9ac691b01b2c3ca536bf6ad36dc2a3fc141ec102",
+      "src/catalog/runtime-master-packages/ykkap-uchirimo-slim-v3-frame/runtime_manifest.json": "9da322b90cacd3b0657c3fffb4baadf1d2a9b7e2e197553191b568173283fa18",
+      "src/catalog/runtime-master-packages/ykkap-uchirimo-slim-v3-frame/size-installation.json": "289331ba885fd31700bc1ab7d1df1ea094553f4afb58c641eedb8f1c7d867861",
+      "src/catalog/runtime-master-packages/ykkap-uchirimo-slim-v3-frame/vacuum-glass.json": "4126ea454edd5d3848ee7f7d1c60e3bbbe5de9b37d1c12f62a7f6bb7c20a390f",
+      "src/catalog/runtime-master-packages/ykkap-uchirimo-v1.0-p7r1-r2/canonical.json.br.b64.parts/part-00": "8b46361f06e0071a63cebe435d96d9de29b7412717976ac66c37e0437bb5d0eb",
+      "src/catalog/runtime-master-packages/ykkap-uchirimo-v1.0-p7r1-r2/judgment-engine.json.br.b64.parts/part-00": "dc6ab36c62f67895b26e79fab5098fbfcb98934c190b6780dc6de67414897c2b",
+      "src/catalog/runtime-master-packages/ykkap-uchirimo-v1.0-p7r1-r2/runtime_manifest.json": "be4f1f77727424dc06ddf9de947201f33d4aee5219b182e37d0f178e1fb7147d",
+      "src/catalog/runtime-master-packages/ykkap-uchirimo-v1.0-p7r1-r2/size-installation.json.br.b64.parts/part-00": "f8c986424001f1fcc6cbc9724078f6e9fde028a4ee190e8d2af391ecafc8d722",
+      "src/catalog/runtime-master-packages/ykkap-uchirimo-v1.0-p7r1-r2/vacuum-glass.json.br.b64.parts/part-00": "766dc47cb485d7b5ad24e9d256ef406acf82ebd9e998d11fae3f32c4fbf0ff08",
+      "src/catalog/runtime-master/app-runtime-integration-registry.mjs": "96d4175c27d645f5436090dcf5581327bdb9de43686d9e65f5ced8f84cc8b698",
+      "src/catalog/runtime-master/apw430-formal-split-v1-adapter.mjs": "6ea8608112ba7f3df9adc3eff7d1c8fc9d2c4c0ae72240627c5dc89dbfbd6828",
+      "src/catalog/runtime-master/apw431-formal-split-v1-adapter.mjs": "01d4f803f0001e583ad706fd8dddf9637d4902f1fa37bee985f751a7c9f7e7b1",
+      "src/catalog/runtime-master/canonical-runtime-manifest-loader.mjs": "c86533d113f2684700fb708068f9581ccbd8937116848572541fb76118c6456e",
+      "src/catalog/runtime-master/canonical-window-semantic-schema.mjs": "03ace90218363f62ad89280c77a328bb2e05efd362f6b17eca8989f0d52edeb7",
+      "src/catalog/runtime-master/canonical-workbook-reference-v1-adapter.mjs": "784eacdcc5c5f58ec54b6cf901637e3bae8378e10a6a96d4390e41cc28b922aa",
+      "src/catalog/runtime-master/canonical-workbook-reference-v1-behavior-normalizer.mjs": "4038e77bd1c2a492d573e6e9f5da9fa308c6fecd410f30db967bee194b1da6ce",
+      "src/catalog/runtime-master/canonical-workbook-reference-v1-formal-geometry-normalizer.mjs": "019764d165c2830f12b08a1aeb4fd6c2dfdde910ffcb62fcaf893d8386d08a98",
+      "src/catalog/runtime-master/canonical-workbook-reference-v1-model.mjs": "73f18aff9baab307e669b66511413e728ce31226694dd97a9faea8bdbaa3466c",
+      "src/catalog/runtime-master/canonical-workbook-runtime-engine.mjs": "837aa2be2ff9de5dea7c4181c62bcb6830b38b7436298bc0bc4ede60a4a020b9",
+      "src/catalog/runtime-master/entry-door-cover-runtime-ui-contract.mjs": "0c4545dc0065f55682ede1e514383f16ad98169b5574c5430bee0102e16ecce5",
+      "src/catalog/runtime-master/formal-custom-dimension-safety.mjs": "ac8d8bbe7e4d3133dc70c30a5377c7893c75db6321473139a7af2a7a5b1cd35a",
+      "src/catalog/runtime-master/formal-product-runtime-loader.mjs": "3f0972606431cfba75a00bf33256ed0429ac310e8fbdfc821300a69776ec9b02",
+      "src/catalog/runtime-master/formal-product-runtime-v2-loader.mjs": "712be9e1bbd0a6c00df945961da085a132db8c1b704a468ef9ca750a0032034c",
+      "src/catalog/runtime-master/formal-runtime-json-transform.mjs": "3252087865ecdf53c899a674615f422b3691e32b669a1d77f6774631840237f4",
+      "src/catalog/runtime-master/frame-runtime-adapter.mjs": "dc10717857a2a3744cb727cbb8643bfc0729feb2d80419a7d99831924e30e074",
+      "src/catalog/runtime-master/generic-rule-engine.mjs": "b48e53ca77fcbf5d1866e5d8e8c8f6c3a7f20bf0558510d767c0a27d506e7618",
+      "src/catalog/runtime-master/global-window-selection-flow-engine.mjs": "2ef247ea40f4be459da5b37a524c2c1baf9f3e449d2a3e1a29436db69a7d4271",
+      "src/catalog/runtime-master/inner-window-frame-engine.mjs": "c4cb2203063e1cf30885302d5ada7bec5e190b6826af65cec3baf79cc409bec0",
+      "src/catalog/runtime-master/inner-window-runtime-ui-contract.mjs": "1c753f798e9f68e459506cd9f8f91b4dae3e8c0cd794863c6ddadb25c9c0a580",
+      "src/catalog/runtime-master/inner-window-sales-extension.mjs": "94254f6c7eb8e646ea44bc324bcec3359d2695c15d3236f02ef783440a230b03",
+      "src/catalog/runtime-master/inplus-bathroom-formal-adapter.mjs": "9ee330cbefa8f2064cfe019d7a16b8009087d195507946967b9c918116437fd7",
+      "src/catalog/runtime-master/inplus-presentation-rules.mjs": "a23f03edd5b0beecb932f18305aba17dce078c6cd1ea895cef8f816b7f21d388",
+      "src/catalog/runtime-master/new-construction-sash-runtime-ui-contract.mjs": "c6718a2b8b742867647881582328c4a65c4481bde80c163a6e9c335daf636a2c",
+      "src/catalog/runtime-master/product-module-glass-manufacturability.mjs": "16197c2faec52686637275d83ab627c08fd9c715523cd02eef0a09e51a15edec",
+      "src/catalog/runtime-master/product-module-glazing-normalizer.mjs": "9147610f1c483da226180648f29a9442a79d2ff40411e94bbfdb860ede3544b5",
+      "src/catalog/runtime-master/product-module-runtime-adapter.mjs": "b6b57efcd812011ece4a98ae38ddf89fb011ec8aa6c6b6509aa212e2c6ed216d",
+      "src/catalog/runtime-master/rechent-door3-nonfire-v1-adapter.mjs": "7b64e9ba66841753e10a52e1407139829c501c2059c7b1020eb99eb0165047e1",
+      "src/catalog/runtime-master/runtime-app-bridge.mjs": "3f61f87dc9e2a5cb2f64999d8989c5486b6b9747cd74e1639198725ae2dc3c33",
+      "src/catalog/runtime-master/runtime-condition.mjs": "8b59e3aa1593fba333286d9aab1d289bc6415c42151bb5aad1b25848b0c082f2",
+      "src/catalog/runtime-master/runtime-effects.mjs": "261c361345e605f48a943ca02bdf66255ac4823883877836ba4e3befd39d24bc",
+      "src/catalog/runtime-master/runtime-manifest-loader.mjs": "9382cc6b5ef3949e4e78e2d26bc4c4c8a79762d32369727c407eb5bc0808ac43",
+      "src/catalog/runtime-master/runtime-master-registry.mjs": "8ee62eeb6fd9f80d0290ed4febc269d5bfda153f82167e9277b8210a4ddb39a4",
+      "src/catalog/runtime-master/runtime-state.mjs": "0b8ce17322d2e51fe914af1f0bfa7c8a9787e51695762d67ecd622bd0244a2b9",
+      "src/catalog/runtime-master/semantic-table-bundle-v2-adapter.mjs": "a2e0f1dd967e3101cfae2365fb48a3d89e8565528231ccbcab186084e586b564",
+      "src/catalog/runtime-master/semantic-table-bundle-v2-engine-core.mjs": "ac4fa09ea599de2824e816974aacb4ab45de9cd17f7f8e77c34953d6518fcaac",
+      "src/catalog/runtime-master/semantic-table-bundle-v2-engine.mjs": "51b70556ff13a5d9a31197837c8a0fe9e5b1949a4f0ceca58f4fb8a8b5c0a5d5",
+      "src/catalog/runtime-master/tw-canonical-workbook-reference-v1-adapter.mjs": "b2d11c56620e6f130dc7ece3b65c00b318930701242b6e664b949dc6d57e4f0c",
+      "src/catalog/runtime-master/tw-canonical-workbook-reference-v2-adapter.mjs": "844ea7067ae3606161bd30f0bcb46358b95c6bfcc7644f41cfe009e0cd7dcee7",
+      "src/catalog/runtime-master/tw-canonical-workbook-runtime-engine-v2.mjs": "c2a53ca7106e0f32f195766f9e780ac440ddbe8f3ea8ee05c595dcdff7085278",
+      "src/catalog/runtime-master/uchirimo-glass-rule-model.mjs": "0e8b1e37a05d25f80e7fc7f9a930c4349f8f97b5c43e9706c8aa99d1904c88b7",
+      "src/catalog/runtime-master/uchirimo-slim-canonical.mjs": "ae8b4595bf5d86b3c08380cd4ff62790481a54256166faf923a92ec26ccb9cad",
+      "src/catalog/runtime-master/uchirimo-tabular-v1-adapter.mjs": "a6f3cdca31609a2cde44e11c972b2446440e31cf988f1a1908aff6ecfde971ee",
+      "src/catalog/selector-ops.mjs": "58090dcc6f9a26b1abfc5f3778705e2cae46ed7ed561d2350ea7c192e8c21de4",
+      "src/catalog/selector.mjs": "ecfe3d8863040080a63a2897b80b8edbdd74a976a11b538eccb15a47b5a470c7",
+      "src/estimate-output/model.mjs": "5c8f2869524464ee821536207bf7b1fbcc741ebc7b6eb3ab57323b9fcfecea22",
+      "src/estimate-output/pdf-renderer.mjs": "df0c6fd852fb0d60f0e00634f928850c589a59d9c5469806279c4a65a74206ae",
+      "src/estimate-output/xlsx-renderer.mjs": "a49884805d9610e8d56bac0866b7ab56f8b7ac6fbccc8063c35def652c15eeba",
+      "src/server/recovery-app.mjs": "0a5ea33effbab5c890570da08134b1bc7482b18e0d1e7f33ac84ede97b582c6f",
+      "src/ui/web/app.js": "d53a1e3a54561c9e5492d0142f69ba403c1b954858900e69c119ed40cf3c9825",
+      "src/ui/web/estimate-output-integration.mjs": "0088dca6579f734ffc8b9b09373bbdd39b0b7f63c489ccef05d615996add8c24",
+      "src/ui/web/estimate-output.css": "f705f00eaf2af35cc6ccafe53923c7ff6667847fa5c27f9b60045b14488287fb",
+      "src/ui/web/index.html": "3ddd021c6b9019c51e4becc7afc5e615637c96df1e9775910e9c5c9d3e981e49",
+      "src/ui/web/product-configuration-editor.mjs": "06082e4bef9704326468e6a9aeb2969fea2f339185e385fbdd596cef34a8545b",
+      "src/ui/web/styles-wave3.css": "fc3762eeccd205f404a7f2f4df58d3b1e1b0f95e5bfac88294eb0763a6e40dbe",
+      "src/ui/web/styles.css": "588d38f8f4d704c0fd8bde39e95a60b50e4392bcc6e3ec79125ffbbe3ab80409",
+      "src/ui/web/theme.css": "8687198f6e0b3484b61283b082cdbaa86b4ab153680558c4025eba2886b2cc1c",
+      "src/ui/web/theme.js": "08277fed67573ad5d116c41b340474a430ba9fa00fae2f78158a3f75ca462ec6",
+      "src/ui/web/work-management.css": "de09e507b7f4e9cb06dc555c1983be54d6e236d03a11597d0f01fa8ab1a9fd03",
+      "src/work-management/domain.mjs": "ec77668d877126b656382ca2105842f37e1fd4a188fb51fadf5c42d4d1368f41",
+      "src/work-management/field-workflow-scope.mjs": "6458a62cbbc2bbf29f541ab6d5faea3698f085cb2fdbb739ce435dc24fd5f905",
+      "src/work-management/repositories.mjs": "bf565ff5144157b58fc8b82e3c5f5436426ed16fd7cfa49635f1d43d7d0cbc17",
+      "src/work-management/service.mjs": "79e1451ea52a3bf66dfca4184b70e3ed21526ac21cf20c8c9008a2cfff3d7cf9",
+      "src/work-management/storage.mjs": "823d8e2aa316602024751f844096ff9078d2da58f58869e5e0b9af7c04d4dfb8"
+    },
+    "http_artifacts": {
+      "/": "3ddd021c6b9019c51e4becc7afc5e615637c96df1e9775910e9c5c9d3e981e49",
+      "/app.js": "d53a1e3a54561c9e5492d0142f69ba403c1b954858900e69c119ed40cf3c9825",
+      "/styles.css": "588d38f8f4d704c0fd8bde39e95a60b50e4392bcc6e3ec79125ffbbe3ab80409",
+      "/product-configuration-editor.mjs": "06082e4bef9704326468e6a9aeb2969fea2f339185e385fbdd596cef34a8545b",
+      "/estimate-output-integration.mjs": "0088dca6579f734ffc8b9b09373bbdd39b0b7f63c489ccef05d615996add8c24",
+      "/work-management/service.mjs": "79e1451ea52a3bf66dfca4184b70e3ed21526ac21cf20c8c9008a2cfff3d7cf9",
+      "/estimate-output/model.mjs": "5c8f2869524464ee821536207bf7b1fbcc741ebc7b6eb3ab57323b9fcfecea22"
+    },
+    "build_identity": {
+      "path": "/api/health",
+      "sha_pointer": [
+        "releaseCommitSha"
+      ],
+      "repository_identity_source": "PROVIDER_PROJECT_BOUND_NATIVE_GIT",
+      "claims": [
+        {
+          "pointer": [
+            "ok"
+          ],
+          "value": true
+        },
+        {
+          "pointer": [
+            "persistence",
+            "type"
+          ],
+          "value": "BROWSER_LOCAL_STORAGE"
+        }
+      ]
+    },
+    "native_qa_bindings": {
+      "browser": {
+        "url_pointer": [
+          "url"
+        ],
+        "sha_pointer": [
+          "observedCommit"
+        ],
+        "claims": [
+          {
+            "pointer": [
+              "status"
+            ],
+            "value": "PASS"
+          },
+          {
+            "pointer": [
+              "errors"
+            ],
+            "value": []
+          },
+          {
+            "pointer": [
+              "persistence"
+            ],
+            "value": "BROWSER_LOCAL_STORAGE"
+          }
+        ],
+        "minimums": [
+          {
+            "pointer": [
+              "pass"
+            ],
+            "value": 24
+          }
+        ],
+        "results_pointer": [
+          "results"
+        ],
+        "result_state_key": "status",
+        "count_pointer": [
+          "pass"
+        ]
+      },
+      "regression": {
+        "url_pointer": [
+          "url"
+        ],
+        "sha_pointer": [
+          "observedCommit"
+        ],
+        "claims": [
+          {
+            "pointer": [
+              "status"
+            ],
+            "value": "PASS"
+          },
+          {
+            "pointer": [
+              "pageErrors"
+            ],
+            "value": []
+          },
+          {
+            "pointer": [
+              "consoleErrors"
+            ],
+            "value": []
+          }
+        ],
+        "minimums": [
+          {
+            "pointer": [
+              "check_count"
+            ],
+            "value": 12
+          }
+        ],
+        "results_pointer": [
+          "checks"
+        ],
+        "result_state_key": "result",
+        "count_pointer": [
+          "check_count"
+        ]
+      },
+      "release_identity": {
+        "url_pointer": [
+          "url"
+        ],
+        "sha_pointer": [
+          "releaseCommitSha"
+        ],
+        "claims": [
+          {
+            "pointer": [
+              "status"
+            ],
+            "value": "PASS"
+          }
+        ]
+      }
+    },
+    "production_rollback": "SEPARATE_FIXED_RECOVERY_PACKET_AND_ACTUAL_HUMAN_DECISION_REQUIRED"
+  },
+  "recovery_policy": {
+    "mode": "VERIFIED_TARGET_ALIAS_RECOVERY_V1",
+    "isolated_alias_prefix": "order4-sash-recovery-"
+  },
+  "conditional_release_policy": {
+    "mode": "ORDER4_CONDITIONAL_HUMAN_POLICY_V1",
+    "policy_path": "contracts/order4-conditional-human-release-policy.v1.json",
+    "policy_sha256": "8e12fe69164451c863bc36d671128d0e7362a2a5fd3475998e28b85579ab0ce9",
+    "source_path": "docs/evidence/order4/conditional-human-source.v1.md",
+    "source_sha256": "745fa3ac77cb64146076269bd934622628ff5e535cf80060fba38ef373061b63"
+  }
+}
