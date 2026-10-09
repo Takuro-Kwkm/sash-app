@@ -20,7 +20,7 @@
   },
   "release_profile": {
     "path": "contracts/production/release-profile.v1.json",
-    "sha256": "5f801a282af62bacf1764ac6fc9c2dbc4809cd41394339b26506a0863732ff9d"
+    "sha256": "e6fa6febc762f878fde6a5977f3c8ae7a7bf1440ca1003db0296841bb37ca8e3"
   },
   "semantic_delta": {
     "added": {},
