@@ -17,6 +17,8 @@
     "contracts/production/order5-ew-assets/source-identity.json",
     "contracts/production/order5-release-scope.v1.json",
     "contracts/production/release-profile.v1.json",
+    "contracts/production/shared-release-authority.v1.bundle",
+    "contracts/production/shared-release-authority.v1.json",
     "docs/ORDER5_BATCH1.md",
     "scripts/production/validate-order5-release.py",
     "test/browser/ew-october-2026-browser-qa.mjs"
@@ -179,8 +181,6 @@
     "contracts/production/product-master-build-profile.v1.json": "9d22ba1fe2ae26fd91bba6d04ed8e29764178f94c020c1a0d18843bdbed4fb57",
     "contracts/production/shared-build-authority.json": "1b0efa9c5989bfe6d23fee77a7520e8d1731da4adf1565ce2b43a9f2cb8a5696",
     "contracts/production/shared-build-authority.tar.gz": "e5a53219c94ace9ae6ebcf7e965a2d6b94ea4315a3ea84e93a9ef21764214083",
-    "contracts/production/shared-release-authority.v1.bundle": "39a2caf1e0d936f201224a59aaf6b40897e38092ebd808b7d42516a8040ff010",
-    "contracts/production/shared-release-authority.v1.json": "c603cba291e2f0ce05f29cd39ba763ee84fa56e7625b927e4486a347a8a9a38a",
     "contracts/production/validator-registry.v2.json": "41ec879efb5d26ed5f4fd59e528bd25a18c6ac76cc71d80d4340ed3e4a697b6a",
     "contracts/production/work-connections.v2.json": "ff10cd174c18e4bc58a25cbb62acaed4909fa16f6cc254e3c8e24a87c95fad08",
     "contracts/tw-202610/adoption.json": "74174c7a1e205568f5d2298664aeabe16b0bc3f370445bd8926d976d56aa84a6",

@@ -16,15 +16,20 @@
   },
   "compatibility_implementation": {
     "repository": "Takuro-Kwkm/product-ui-contracts",
-    "ref": "f0936024536cf5fd8ce7a120b25acfa20569d641"
+    "ref": "41b709ce80de9b82d56f72678576c49975249cf7"
   },
   "release_profile": {
     "path": "contracts/production/release-profile.v1.json",
-    "sha256": "ebd8a67ed5a65cd3cd953da194390aac648f354278c4ccac4225c29da70bce38"
+    "sha256": "47e6b5958fd741720c64d170c234da4a3df2a0626209cb730a3e1bedce7ac8fa"
   },
   "semantic_delta": {
     "added": {},
-    "replaced": {}
+    "replaced": {
+      "harness/release_admission.py": {
+        "before": "16d658105b8e51c88b24d1394a1049f834b77c9661337474fe61aab3cba7cf0d",
+        "after": "6fed05d5c3218bfe45d007d7ce582b4726fbf97fc6c323318dbb5236f40e9158"
+      }
+    }
   },
   "adoption": {
     "central_repository": "Takuro-Kwkm/product-ui-contracts",
@@ -70,7 +75,7 @@
       "harness/production.py": "fd34204892b420587a7c9c744473980c392a0ec48c7f6b05e5e16ce3a17b57f6",
       "harness/production_recovery.py": "8b2703a504d7574bf03460c944e75975efba31f1172ae7976450ef19713a1f1f",
       "harness/release.py": "0cc0d42f711d7fb52ef6bd781505a20ea27753031abc225ab6286c94c7cf1538",
-      "harness/release_admission.py": "16d658105b8e51c88b24d1394a1049f834b77c9661337474fe61aab3cba7cf0d",
+      "harness/release_admission.py": "6fed05d5c3218bfe45d007d7ce582b4726fbf97fc6c323318dbb5236f40e9158",
       "harness/release_publication.py": "2026ce72941999380d3b5cddb9bc4d5e3b39a289b91fcf0b966279061a4ad2e6",
       "harness/release_restore.py": "a9631838a72a0f86dff422c0ac666a9bb41897192509d194386a03679ee5ecf1",
       "harness/resolvers.py": "cb1704e92446cb6552f9da80ad30928928ed1aa4d05aedcce13ee69e07229a57",
