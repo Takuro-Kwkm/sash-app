@@ -21,7 +21,7 @@ def main():
  assert doc['minimum_qa'] and doc['mandatory_approvals']==['Release']
  assert doc['shared_contract']['files']
  admission=doc.get('scope_admission')
- assert admission and admission['mode']=='INFRASTRUCTURE_RELEASE_SAME_BYTES'
+ assert admission and admission['mode']=='REVIEWED_UI_OUTPUT_SUCCESSOR_V1'
  assert admission['product_fact_mutation_allowed'] is False
  assert admission['product_id'] and admission['scope'] and admission['public_path']
 

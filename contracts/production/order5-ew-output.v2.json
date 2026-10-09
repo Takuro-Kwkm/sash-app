@@ -1,0 +1,19 @@
+{
+  "schema": "EW_OUTPUT_SUCCESSOR_V1",
+  "product_id": "SER-LIX-EW",
+  "scope": "EW_NORMAL_29_FIELDS_XLSX_ORDER5_BATCH1_V2",
+  "predecessor_commit": "8540167f0fc49f03a88f94b11e6fba8dd9314102",
+  "product_fact_mutation_allowed": false,
+  "changes": {
+    "src/estimate-output/xlsx-renderer.mjs": {
+      "before_sha256": "a49884805d9610e8d56bac0866b7ab56f8b7ac6fbccc8063c35def652c15eeba",
+      "after_sha256": "0c23b759e306f87ce5e7fd04316d6378d5135c45aaa56d2ab71ffc7c2dbd8508"
+    },
+    "test/74-estimate-output.test.mjs": {
+      "before_sha256": "8e5f09147b8a0bbd59519c168a73028d2cde1002fc10bbb6f2c3f23659f51ead",
+      "after_sha256": "32148d4ec4c15394fc4a63ccb6afcd9fc430ad068ca0f6c492794fb0ec2ba470"
+    }
+  },
+  "ui_asset_version": "v1.4 / UI-XLSX-v2",
+  "scope_boundary": "Generic XLSX wrapping, row heights and confirmation-column filter. No price, BOM, selection, Runtime or product Fact changes. Required eight-series regression."
+}

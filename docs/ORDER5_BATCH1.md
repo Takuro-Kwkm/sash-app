@@ -9,3 +9,7 @@ Source/Formal/Contract/Runtime/UIの固定byte参照は order5-assets.v1.json。
 QAは1280/768/390px、依存、無効組合せ、Clear、保存、再表示、商品出力、必要な回帰。PDF全ページを視覚確認し、未解決ページを明記。保存はローカル/Drive/bytes読み戻しを区別し、隔離rootの新規Workと完了Work INSPECT_ONLYを確認する。
 
 継承残課題: 原CI ZIP取得HTTP403、本番rollback未実施、Sash/Interior実alias復旧未実施、Exterior /app新規DB E2E、Formal Runtime登録、Exterior背景のみ2頁目。今回必要なQAで実証した範囲のみ更新する。BROWSER_LOCAL_STORAGEはDB E2Eを意味しない。価格/製作等のControlled Unresolvedと確認要求は保持する。
+
+## EW Output successor V2
+
+The prior candidate is preserved at 8540167f0fc49f03a88f94b11e6fba8dd9314102. The V2 Scope adds only generic XLSX wrapping, measured row height and the confirmation-column filter, plus its regression test. Source/Formal/Contract/Runtime and selection Engine bytes remain exact. The native EW Adapter uses the existing Shared DAG, inspects completed Current Work, prepares a fixed UI/Output packet and applies a bounded downstream plan only after fresh Human admission. New UI/Output/Release Decisions and EW Output Successor CI are required. Order4 approval is expired. Long cell contents remain complete; Excel row-height limit is 409 points, and batch acceptance covers the actual rendered EW exports and eight-series output regression.

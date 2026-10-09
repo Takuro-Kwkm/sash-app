@@ -61,6 +61,15 @@ function columnName(index){
   return name;
 }
 
+// Excel column widths count Latin glyphs; Japanese glyphs need about two units.
+// Preserve complete stored text and account for wrapping and explicit newlines.
+function wrappedLineCount(value,width){
+  return String(value??'').split(/\r?\n/).reduce((total,line)=>{
+    const units=Array.from(line).reduce((sum,char)=>sum+(char.codePointAt(0)>255?2:1),0);
+    return total+Math.max(1,Math.ceil(units/Math.max(1,width-2)));
+  },0);
+}
+
 function buildWorkbookParts(model){
   const shared=[];const index=new Map();
   const sharedIndex=(value)=>{
@@ -69,6 +78,7 @@ function buildWorkbookParts(model){
     return index.get(key);
   };
   const headers=['No.','階数','部屋 / 位置','メーカー','シリーズ','窓・ドア種類','主要仕様','サイズ','出力状態','金額','Runtime Package','Runtime Identity','Validation','Source Mode','確認事項'];
+  const widths=[7,10,24,18,22,22,60,28,16,14,28,48,24,28,48];
   const rows=[headers,...model.rows.map((row)=>[
     row.opening_no,
     row.floor??'',
@@ -94,11 +104,13 @@ function buildWorkbookParts(model){
       if(typeof value==='number'&&Number.isFinite(value))return `<c r="${ref}"${rowIndex===0?' s="1"':''}><v>${value}</v></c>`;
       return `<c r="${ref}" t="s"${rowIndex===0?' s="1"':''}><v>${sharedIndex(value)}</v></c>`;
     }).join('');
-    return `<row r="${rowIndex+1}">${cells}</row>`;
+    const lines=Math.max(...row.map((value,index)=>wrappedLineCount(value,widths[index])));
+    const height=Math.min(409,Math.max(rowIndex===0?32:24,lines*18+8));
+    return `<row r="${rowIndex+1}" ht="${height}" customHeight="1">${cells}</row>`;
   }).join('');
 
   const sheet=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetViews><sheetView workbookViewId="0"><pane ySplit="1" topLeftCell="A2" activePane="bottomLeft" state="frozen"/></sheetView></sheetViews><cols><col min="1" max="1" width="7" customWidth="1"/><col min="2" max="2" width="10" customWidth="1"/><col min="3" max="3" width="24" customWidth="1"/><col min="4" max="8" width="22" customWidth="1"/><col min="9" max="9" width="14" customWidth="1"/><col min="10" max="10" width="14" customWidth="1"/><col min="11" max="14" width="24" customWidth="1"/></cols><sheetData>${rowXml}</sheetData><autoFilter ref="A1:N${rows.length}"/></worksheet>`;
+<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetViews><sheetView workbookViewId="0"><pane ySplit="1" topLeftCell="A2" activePane="bottomLeft" state="frozen"/></sheetView></sheetViews><cols>${widths.map((width,index)=>`<col min="${index+1}" max="${index+1}" width="${width}" customWidth="1"/>`).join('')}</cols><sheetData>${rowXml}</sheetData><autoFilter ref="A1:${columnName(headers.length-1)}${rows.length}"/></worksheet>`;
   const sharedStrings=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <sst xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" count="${shared.length}" uniqueCount="${shared.length}">${shared.map((value)=>`<si><t xml:space="preserve">${xml(value)}</t></si>`).join('')}</sst>`;
   return {sheet,sharedStrings};
@@ -113,7 +125,7 @@ export function createEstimateXlsxBytes(model){
     {name:'xl/_rels/workbook.xml.rels',data:`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/sharedStrings" Target="sharedStrings.xml"/><Relationship Id="rId3" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/></Relationships>`},
     {name:'xl/worksheets/sheet1.xml',data:sheet},
     {name:'xl/sharedStrings.xml',data:sharedStrings},
-    {name:'xl/styles.xml',data:`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><fonts count="2"><font><sz val="11"/><name val="Yu Gothic"/></font><font><b/><sz val="11"/><name val="Yu Gothic"/></font></fonts><fills count="2"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill></fills><borders count="1"><border><left/><right/><top/><bottom/><diagonal/></border></borders><cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs><cellXfs count="2"><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/><xf numFmtId="0" fontId="1" fillId="0" borderId="0" xfId="0" applyFont="1"/></cellXfs><cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles></styleSheet>`},
+    {name:'xl/styles.xml',data:`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><fonts count="2"><font><sz val="11"/><name val="Yu Gothic"/></font><font><b/><sz val="11"/><name val="Yu Gothic"/></font></fonts><fills count="2"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill></fills><borders count="1"><border><left/><right/><top/><bottom/><diagonal/></border></borders><cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs><cellXfs count="2"><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0" applyAlignment="1"><alignment vertical="top" wrapText="1"/></xf><xf numFmtId="0" fontId="1" fillId="0" borderId="0" xfId="0" applyFont="1" applyAlignment="1"><alignment vertical="top" wrapText="1"/></xf></cellXfs><cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles></styleSheet>`},
   ];
   return createStoredZip(entries);
 }

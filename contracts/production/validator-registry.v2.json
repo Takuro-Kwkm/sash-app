@@ -12,7 +12,17 @@
         "window-selection-contract",
         "scoped-regression"
       ],
-      "no_fallback": true
+      "no_fallback": true,
+      "native_output_successor": {
+        "profile": "contracts/production/order5-ew-output.v2.json",
+        "stages": [
+          "OUTPUT_BASELINE",
+          "OUTPUT_IMPACT",
+          "OUTPUT_QA",
+          "OUTPUT_REVIEW"
+        ],
+        "ready_state": "REQUIRES_ACTUAL_QA_AND_FRESH_HUMAN_DECISION"
+      }
     },
     "SER-LIX-SAMOSL": {
       "state": "READY",

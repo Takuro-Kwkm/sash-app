@@ -49,7 +49,22 @@
       "current_formal_version": "v1.4",
       "formal_registry_selector": "LIXIL::EW",
       "runtime_adapter": "CANONICAL_WORKBOOK_REFERENCE_V1",
-      "runtime_source": "src/catalog/runtime-master/app-runtime-integration-registry.mjs"
+      "runtime_source": "src/catalog/runtime-master/app-runtime-integration-registry.mjs",
+      "native_output_successor": {
+        "profile": "contracts/production/order5-ew-output.v2.json",
+        "scope": "EW_NORMAL_29_FIELDS_XLSX_ORDER5_BATCH1_V2",
+        "native_preparer": "scripts/production/prepare-ew.py --output-profile",
+        "native_adapter": "scripts/production/ew-change.py",
+        "target_gate": "EW_NATIVE_OUTPUT_ADOPTION",
+        "ready_conditions": [
+          "EXACT_CURRENT_FORMAL_CARRY_FORWARD",
+          "COMPLETE_UNCHANGED_FILE_COVERAGE",
+          "SOURCE_BOUND_BROWSER_OUTPUT_QA",
+          "FRESH_HUMAN_RUNTIME_UI_ADOPTION",
+          "SHARED_DOWNSTREAM_READBACK"
+        ],
+        "unsupported_scope": "All other output, engine, manufacturer and product changes rejected"
+      }
     },
     {
       "product_id": "SER-LIX-SAMOSL",

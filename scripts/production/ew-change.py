@@ -19,6 +19,7 @@ STAGES = ('PRODUCTION_RESOLUTION', 'BASELINE_RESOLUTION', 'SOURCE_RESOLUTION',
           'SOURCE_DELTA', 'IMPACT_SCOPE', 'CARRY_FORWARD', 'CHANGE_APPLICATION',
           'NATIVE_QA', 'QA_READY', 'FORMAL_REVIEW', 'FORMAL_ADOPTION',
           'DOWNSTREAM_IMPACT', 'NATIVE_READBACK', 'COMPLETION')
+OUTPUT_STAGES = ('OUTPUT_BASELINE', 'OUTPUT_IMPACT', 'OUTPUT_QA', 'OUTPUT_REVIEW')
 
 
 def setup(harness_root):
@@ -33,6 +34,86 @@ def verified(ref):
     b = p.read_bytes()
     require(sha(b) == ref['sha256'], 'NATIVE_REF_CHANGED', str(p), 'ACQUISITION')
     return b
+
+
+def output_plan(c):
+    """One reviewed formatter and its regression test; no selection or product mutations."""
+    import subprocess
+    profile = json.loads(verified(c['output_profile']))
+    require(profile['schema'] == 'EW_OUTPUT_SUCCESSOR_V1'
+            and profile['product_id'] == 'SER-LIX-EW'
+            and profile['scope'] == 'EW_NORMAL_29_FIELDS_XLSX_ORDER5_BATCH1_V2'
+            and profile['predecessor_commit'] == '8540167f0fc49f03a88f94b11e6fba8dd9314102'
+            and profile['product_fact_mutation_allowed'] is False,
+            'NATIVE_OUTPUT_SCOPE', 'Only the fixed EW XLSX successor is admitted', 'OUTPUT_IMPACT')
+    plan = json.loads(verified(c['output_plan']))
+    before, candidate = Path(c['checkout']).resolve(), Path(c['output_candidate']).resolve()
+    require(before != candidate and plan['product_id'] == profile['product_id']
+            and plan['revision'] == 'v1.4', 'ISOLATED_CANDIDATE_REQUIRED', 'Preserve existing Formal', 'OUTPUT_IMPACT')
+    allowed = {'src/estimate-output/xlsx-renderer.mjs', 'test/74-estimate-output.test.mjs'}
+    require(set(profile['changes']) == allowed and {u['path'] for u in plan['updates']} == allowed
+            and len(plan['updates']) == len(allowed), 'NATIVE_OUTPUT_SCOPE', 'Unexpected changed path', 'OUTPUT_IMPACT')
+    tracked = subprocess.check_output(['git', 'ls-files', '-z'], cwd=before).decode().split('\0')[:-1]
+    require(subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=before, text=True).strip()
+            == profile['predecessor_commit'], 'NATIVE_OUTPUT_BASELINE', 'Fixed predecessor required', 'OUTPUT_IMPACT')
+    for update in plan['updates']:
+        path = update['path']; identity = profile['changes'][path]
+        require(update['component'] == ('UI' if path == 'src/estimate-output/xlsx-renderer.mjs' else 'Regression Tests')
+                and identity == {'before_sha256': update['before_sha256'], 'after_sha256': update['after_sha256']}
+                and sha(subprocess.check_output(['git','show',profile['predecessor_commit']+':'+path],cwd=before)) == update['before_sha256']
+                and sha((before/path).read_bytes()) == update['before_sha256']
+                and sha(verified(update['source'])) == update['after_sha256']
+                and (candidate/path).read_bytes() == verified(update['source']),
+                'NATIVE_OUTPUT_BYTES', path, 'OUTPUT_IMPACT')
+    unchanged = {p: sha(subprocess.check_output(['git','show',profile['predecessor_commit']+':'+p],cwd=before)) for p in tracked if p not in allowed}
+    require(plan['unchanged_paths'] == unchanged and all((candidate/p).is_file()
+            and sha((candidate/p).read_bytes()) == h and sha((before/p).read_bytes()) == h for p,h in unchanged.items()),
+            'NATIVE_OUTPUT_COVERAGE', 'Every unaffected file must retain fixed bytes', 'OUTPUT_IMPACT')
+    untracked = subprocess.check_output(['git','ls-files','--others','--exclude-standard','-z'],cwd=candidate).decode().split('\0')[:-1]
+    require(not untracked, 'NATIVE_OUTPUT_SCOPE', 'Untracked candidate files are not admitted', 'OUTPUT_IMPACT')
+    return profile, plan
+
+
+def output_stage(c, gate, work):
+    if gate == 'OUTPUT_BASELINE':
+        from harness.workflow import inspect
+        spec = json.loads(verified(c['current_work_spec']))
+        journal = Path(c['current_work_checkpoint'])/'workflow-events.json'
+        before = sha(journal.read_bytes())
+        state, _, _ = inspect(Path(spec['skill_root']), Path(c['current_work_checkpoint']), spec)
+        require(state['state'] == 'COMPLETED' and before == sha(journal.read_bytes())
+                and spec['target'] == 'SER-LIX-EW', 'CURRENT_WORK_REQUIRED', 'Completed Current Work remains INSPECT_ONLY', gate)
+        return {'status':'PASS','current':{'product_id':'SER-LIX-EW','revision':'v1.4','lifecycle_state':'FORMAL'},
+                'current_work_journal_sha256':before,'policy':'INSPECT_ONLY','formal_mutations':0,'external_operations':0}
+    profile, plan = output_plan(c)
+    if gate == 'OUTPUT_IMPACT':
+        return {'status':'PASS','scope':profile['scope'],'updates':plan['updates'],
+                'unchanged_file_count':len(plan['unchanged_paths']),'product_fact_mutations':0,'selection_engine_mutations':0}
+    if gate == 'OUTPUT_QA':
+        import subprocess
+        result = subprocess.run(['node','--test','test/74-estimate-output.test.mjs'],cwd=c['output_candidate'],capture_output=True,text=True,timeout=120)
+        (work/'output-native-tests.log').write_text(result.stdout+result.stderr)
+        require(result.returncode == 0,'NATIVE_OUTPUT_QA',result.stderr[-1000:],gate)
+        browser = json.loads(verified(c['output_browser_report']))
+        require(browser['status'] == 'PASS' and browser['product_id'] == 'SER-LIX-EW'
+                and browser['scope'] == profile['scope'] and browser['errors'] == []
+                and browser['observedCommit'] == c['release_candidate_sha']
+                and browser['changed_file_hashes'] == {u['path']:u['after_sha256'] for u in plan['updates']}
+                and sorted(browser['viewports']) == [390,768,1280]
+                and all(browser[k] == 'PASS' for k in ['selection','dependency_clear','save_reload','pdf_visual','xlsx_content','xlsx_visual','eight_series_regression']),
+                'NATIVE_OUTPUT_BROWSER_REQUIRED','Actual fixed candidate browser/output QA required',gate)
+        for proof in browser['evidence_refs']: verified(proof)
+        require(browser['evidence_refs'], 'NATIVE_OUTPUT_BROWSER_REQUIRED','Bind native reports and inspected output bytes',gate)
+        return {'status':'PASS','native_tests_exit_code':result.returncode,'browser_report':c['output_browser_report'],'formal_fact_carry_forward':True}
+    if gate == 'OUTPUT_REVIEW':
+        packet={'status':'PREPARED_NOT_APPROVED','product_id':'SER-LIX-EW','scope':profile['scope'],
+                'change_kind':'XLSX_DISPLAY_ONLY','changed_paths':list(profile['changes']),
+                'output_plan_sha256':fingerprint(plan),'browser_report_sha256':c['output_browser_report']['sha256'],
+                'asset_candidates':{'UI':{'version':profile['ui_asset_version'],
+                                        'sha256':profile['changes']['src/estimate-output/xlsx-renderer.mjs']['after_sha256']}},
+                'formal_new_decision_required':False,'new_ui_output_decision_required':True,'deployment_authorized':False}
+        return {**packet,'payload_sha256':fingerprint(packet)}
+    raise ValueError(gate)
 
 
 def package(ref):
@@ -112,6 +193,8 @@ def source_delta(c, files, pm):
 
 
 def stage(c, gate, work):
+    if gate in OUTPUT_STAGES:
+        return output_stage(c, gate, work)
     _, files, pm = package(c['formal_package'])
     scope = json.loads(files['selection-scope.json'])
     def previous(g): return read_json(work / (g + '.json'))
@@ -228,7 +311,7 @@ def stage(c, gate, work):
 def main():
     p = argparse.ArgumentParser()
     p.add_argument('--harness-root', required=True); p.add_argument('--contract', required=True)
-    p.add_argument('--stage', choices=STAGES, required=True); p.add_argument('--work', required=True); p.add_argument('--out', required=True)
+    p.add_argument('--stage', choices=STAGES+OUTPUT_STAGES, required=True); p.add_argument('--work', required=True); p.add_argument('--out', required=True)
     a = p.parse_args(); setup(a.harness_root)
     try:
         result = stage(read_json(a.contract), a.stage, Path(a.work))

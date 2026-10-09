@@ -1,0 +1,575 @@
+{
+  "schema": "CURRENT_AUTHORITY_RELEASE_ENFORCEMENT_MAINTENANCE_V4",
+  "baseline": {
+    "path": "contracts/production/current-authority-adoption.json",
+    "sha256": "0541a759e74bdcd1700da09756b4b68efe648ee4d60e6045d6f8efdbf07c7a5b",
+    "implementation_sha": "68f2fe69831a33ab92789526bdcd7a49446122a2"
+  },
+  "predecessor_native_commit": "8540167f0fc49f03a88f94b11e6fba8dd9314102",
+  "predecessor_profile": {
+    "path": "contracts/production/authority-successors/order5-ew-output-predecessor-profile.v1.json",
+    "sha256": "b1a3099dbf383e28a55a7ba93c05d0e862e62510a553d852a350450d1fcce614"
+  },
+  "predecessor_selection": {
+    "path": "contracts/production/authority-successors/order5-ew-output-predecessor-selection.v1.json",
+    "sha256": "8604b1d6560b919ad7a763c22d441e2837804d778e4c274e9f15eab4d9f10361"
+  },
+  "compatibility_implementation": {
+    "repository": "Takuro-Kwkm/product-ui-contracts",
+    "ref": "41b709ce80de9b82d56f72678576c49975249cf7"
+  },
+  "release_profile": {
+    "path": "contracts/production/release-profile.v1.json",
+    "sha256": "ffcac674682095b2539093ab9b802aa91f13f4cca4001255219bd7455f428a96"
+  },
+  "semantic_delta": {
+    "added": {},
+    "replaced": {}
+  },
+  "adoption": {
+    "central_repository": "Takuro-Kwkm/product-ui-contracts",
+    "current_architecture": "APP_DEVELOPMENT_SKILL_ARCHITECTURE_V2",
+    "current_router": "scripts/architecture-work.py",
+    "frozen_engine": {
+      "revision": "7293f818685bbd1e7386d78757fb82b930af5572",
+      "files": {
+        "harness/changed_path.py": "bccb5c91c2a2f6055286a914fd0afa88159b97b5e4622f5a711638f6a65471d0",
+        "harness/production_recovery.py": "8b2703a504d7574bf03460c944e75975efba31f1172ae7976450ef19713a1f1f",
+        "harness/approved_continuation.py": "a7dc753387de7c7e434a2f4944f46e76ee005933f27c272d98d154ab92d3d8d5",
+        "harness/resolvers.py": "cb1704e92446cb6552f9da80ad30928928ed1aa4d05aedcce13ee69e07229a57",
+        "harness/__init__.py": "93ad39fb60540fe9d283decf284486166826c9b7f81efbf856e3778e50ec3082",
+        "harness/core.py": "e35467a495a4c800fc5dc4bc642fad234f1fc3da07a7bf39727eefd4112bb203",
+        "harness/verified_downstream_continuation.py": "6f504b820f823594e950e790cd0ac6c9eada57465b3ab1548f1e1ce61b310e22",
+        "harness/cli.py": "66f77f109e3980c1a48d8c8c2907dc677b118a8b466bcd8e45d252a7b04e1f8f",
+        "harness/artifacts.py": "cf264fe46b02451613e6229b5c6127f2a7c4383802f630814b5ce3546d386ded",
+        "harness/workflow.py": "2e243c9616dc55c25b2d00f242968d762965bae61bb98431ba1b3aa47cfaf209",
+        "harness/production.py": "fd34204892b420587a7c9c744473980c392a0ec48c7f6b05e5e16ce3a17b57f6",
+        "harness/github_bridge.py": "4a544f318c2cc9b2e8ebb55ac0a290607c83ed41092495c35087260014564cce",
+        "product_master/build.py": "499242953b818d8d233d909ac82c3f92e3697a7458861ed7f845653b4daf6632",
+        "product_master/domain.py": "eca8b034cce8901ccac02ec7b1dcbe0f30f3efc14333669f86dbcea34c31c1e4",
+        "product_master/evaluate_gate.py": "e4776afebd33673a46bb135ab184ad2029574de104ccc19539d7523c6bac1a26",
+        "product_master/reference.py": "99088995e5fa78366a364b598a16fe5017afe2857455885f93ce5b95d4f41381",
+        "product_master/identity.py": "88e3f5c8118e33298366569079e6d2ae76fe2f06892fae1bd13db2dc6b24b7e7",
+        "product_master/validators/validate.py": "dd9bd9d19700819efd9e71fc90a02bfec3f61096dab932ee17e72a3a951c1049",
+        "product_change/worker.py": "fdb109c220994798ca2a41a2ac2790e6d2c485d83e8f0b8810b49a0b1956bc69",
+        "product_change/domain.py": "1fad310958e456912ab6dd8c887549e23e5b3cc93a376561c4107287c9995541",
+        "product_change/reference.py": "c4b4945b214261f11421b7117ecb74fdcb3ef45ffddcd8d346993183d58c696e"
+      },
+      "policy": "Versioned, regression protected; review required; additive native profiles preserve immutable journals and prior adopters; incompatible semantics require successor binding"
+    },
+    "semantic_hashes": {
+      "harness/__init__.py": "93ad39fb60540fe9d283decf284486166826c9b7f81efbf856e3778e50ec3082",
+      "harness/approved_continuation.py": "a7dc753387de7c7e434a2f4944f46e76ee005933f27c272d98d154ab92d3d8d5",
+      "harness/architecture.py": "b25215311e6f89ca078d2a8e720bf25948e7ead3f2b9e1c345cd215913203d27",
+      "harness/artifacts.py": "cf264fe46b02451613e6229b5c6127f2a7c4383802f630814b5ce3546d386ded",
+      "harness/changed_path.py": "bccb5c91c2a2f6055286a914fd0afa88159b97b5e4622f5a711638f6a65471d0",
+      "harness/cli.py": "66f77f109e3980c1a48d8c8c2907dc677b118a8b466bcd8e45d252a7b04e1f8f",
+      "harness/core.py": "e35467a495a4c800fc5dc4bc642fad234f1fc3da07a7bf39727eefd4112bb203",
+      "harness/current_authority.py": "b4421835433173b9fe18e0c9e0e0c44024636b3be982d0872f917a47a1e7c5af",
+      "harness/github_bridge.py": "4a544f318c2cc9b2e8ebb55ac0a290607c83ed41092495c35087260014564cce",
+      "harness/production.py": "fd34204892b420587a7c9c744473980c392a0ec48c7f6b05e5e16ce3a17b57f6",
+      "harness/production_recovery.py": "8b2703a504d7574bf03460c944e75975efba31f1172ae7976450ef19713a1f1f",
+      "harness/release.py": "0cc0d42f711d7fb52ef6bd781505a20ea27753031abc225ab6286c94c7cf1538",
+      "harness/release_admission.py": "6fed05d5c3218bfe45d007d7ce582b4726fbf97fc6c323318dbb5236f40e9158",
+      "harness/release_publication.py": "2026ce72941999380d3b5cddb9bc4d5e3b39a289b91fcf0b966279061a4ad2e6",
+      "harness/release_restore.py": "a9631838a72a0f86dff422c0ac666a9bb41897192509d194386a03679ee5ecf1",
+      "harness/resolvers.py": "cb1704e92446cb6552f9da80ad30928928ed1aa4d05aedcce13ee69e07229a57",
+      "harness/verified_downstream_continuation.py": "6f504b820f823594e950e790cd0ac6c9eada57465b3ab1548f1e1ce61b310e22",
+      "harness/workflow.py": "2e243c9616dc55c25b2d00f242968d762965bae61bb98431ba1b3aa47cfaf209",
+      "product_change/domain.py": "1fad310958e456912ab6dd8c887549e23e5b3cc93a376561c4107287c9995541",
+      "product_change/reference.py": "c4b4945b214261f11421b7117ecb74fdcb3ef45ffddcd8d346993183d58c696e",
+      "product_change/schemas/change-work.schema.json": "f74dc433977666b79329ed036e09932790d04649788f6bfdebc5cb73fe0559e5",
+      "product_change/schemas/impact-scope.schema.json": "47e6d5ad93d9bbccc3e9571fd9a2ed4818c15fe18eb2a7ab7cb53e3b9a9fbdf8",
+      "product_change/schemas/source-delta.schema.json": "3014d725abc3ecf70efdec6c029442c2fa0f73fe9743b995f636c31223ce4dc8",
+      "product_change/worker.py": "fdb109c220994798ca2a41a2ac2790e6d2c485d83e8f0b8810b49a0b1956bc69",
+      "product_master/build.py": "499242953b818d8d233d909ac82c3f92e3697a7458861ed7f845653b4daf6632",
+      "product_master/domain.py": "eca8b034cce8901ccac02ec7b1dcbe0f30f3efc14333669f86dbcea34c31c1e4",
+      "product_master/evaluate_gate.py": "e4776afebd33673a46bb135ab184ad2029574de104ccc19539d7523c6bac1a26",
+      "product_master/execution.py": "6f399aa09dbd35b07ef6ec6532047f881850efa8f148503dd6fbc8b5231a095e",
+      "product_master/execution_fixture.py": "47c1f5ba0382b36ae77650ddab5665ba48292f5a1fa56cec4e5a37b87933cf58",
+      "product_master/fixtures/baseline.json": "3f57094e61e9d8e8405e2c922e56ac37750b0c2bc427e9af27fcdaddbbf61e72",
+      "product_master/fixtures/carry-forward-context.json": "ab01999cfe5c62740fbd9b53e7066831f20bc4737eb4119e924b406b60951a8d",
+      "product_master/fixtures/carry-forward.json": "34679c82d43cf7a6578424948d99c1523fcf82f6f4bc14f85116c61a023d44b5",
+      "product_master/fixtures/catalog-change-context.json": "cad4592d34e48c0f4bf46d30d6a1dd35318ccb83737002bb753acec1d0186d01",
+      "product_master/fixtures/catalog-change.json": "fd8091e223ef985a13b86a6b93cb14b86bc1e684474970b97550dcaeb32b17c7",
+      "product_master/fixtures/inspection.json": "b3484e311cc7e15c77dbc3d7b2ed466032c3db29717b22dad8ae972499b4fba1",
+      "product_master/fixtures/new-product-context.json": "44561d0e1127fbbe0cdeb8377560b68f1e3c2d12528d89af83ebd32994181bf5",
+      "product_master/fixtures/new-product.json": "87f3a111290a0a20b37a46087e9916f855f73b339d409119e9894c1cf5651e84",
+      "product_master/fixtures/source-observations.json": "7e3cb1c666802400c3cbcb9c62f8c99f91b3ea8c8c68fd3ade9d567cef73a178",
+      "product_master/identity.py": "88e3f5c8118e33298366569079e6d2ae76fe2f06892fae1bd13db2dc6b24b7e7",
+      "product_master/reference.py": "99088995e5fa78366a364b598a16fe5017afe2857455885f93ce5b95d4f41381",
+      "product_master/schemas/work-package.schema.json": "edf1ddee5ab9ac172d493de94b4d68cebf554933b6d6951e36cb0b67a4c2b63b",
+      "product_master/validators/validate.py": "dd9bd9d19700819efd9e71fc90a02bfec3f61096dab932ee17e72a3a951c1049",
+      "registries/production-boundaries.v2.json": "9e2fdda7a60ed86d8416604a24a00f95427318b90429d1945161704a3cbd4fc9",
+      "registries/work-routing.v2.json": "ad68b906b8160f9a192fb75300625d7705f033e0702815074ddc20483b390dd0",
+      "schemas/active-manifest.schema.json": "931f11b45e5452a0fa5f8c2a9ee9263351db5ed77a51b2d45d4620fc3b054c83",
+      "schemas/authority.schema.json": "757c3315cbb7f2069f1457d80e1458b972e59c471f648ba5ace1392df8b21af7",
+      "schemas/carport-derivation.schema.json": "1de4298ec59dd5e9dd12a96600fa446564d947c2a71c1de9c0613e8f7a874ae7",
+      "schemas/carport-responsibility.schema.json": "c93eea01957b76f4e171c270fbfd2fe71a25075cd0d5dea22eaf9f42ef95217b",
+      "schemas/carport-semantic.schema.json": "33ee4e521a3516206dcf9dc1a3231f57bbf01c2c45a2e6dea339c54607b82505",
+      "schemas/category-flow.schema.json": "bb3bf706c78d7d1160becbeed2137df23b3830e453ec6be9ee7a0952a227ba5f",
+      "schemas/common-release.v1.schema.json": "a15705dfe0334796c08e80e107955d2d931aab557742096f587085d1c2effd78",
+      "schemas/coverage.schema.json": "ff4125900c56aea67f8f65102f332390e0b5deb8376e9e9e4f7b9c2c301556d8",
+      "schemas/dependency-baseline.schema.json": "3f49da32ee4d3e79d94cf3941d56ee8b9db9b05dafac46e375a5541cf4385006",
+      "schemas/evidence-acceptance.schema.json": "d048ce8c215d3eecc4af91ffa318a50181f1fad25ef13b89140cb72eee316708",
+      "schemas/exception.schema.json": "0c1a59721d332345ab1275b588be32c139be9686e3756f2738808fc8e61800d6",
+      "schemas/field-mapping.schema.json": "25986f6606f971c9e9be317465b00bec3888524b8a84bcd43bb80b2c06634ad2",
+      "schemas/formal-promotion-governance.schema.json": "1b7be03ae37410282b82b9dbffdbb40b4c7a7800ef4d8b56ff180cd9237dfdae",
+      "schemas/formal-promotion.schema.json": "72aeb7991527b6f41ca853f39decffabbe3a318361e641211e089d834f640f0f",
+      "schemas/native-product-master-build-profile.v1.schema.json": "ab5f0a0a45b52bd854dbf2ec70958a72203e66a14e5bfa97aa4caaa9e5410fa2",
+      "schemas/not-formalized.schema.json": "92d0d547f305637de84a0b1026e9c80c51c48efd1bd5e1142165b446a3c43711",
+      "schemas/presentation-resolution.schema.json": "61444322ddeb4921299531677ddcb365689709a309c3c0f1241617db5aef3de9",
+      "schemas/product-work-input.schema.json": "354a9d8bc43595c54617d83290b7b0a836792b0056f6f9a5f26f70ca235f0e26",
+      "schemas/sc-field-authority.schema.json": "41b509154bb9e95b2a096e1c6d156b63594d13c8e95676b61d4f44101cfb3b21",
+      "schemas/selection-baseline.schema.json": "f28d4e79546ef1a6f4a86b7b32ab418a0118c80f9cbdfb6560002ca41a2ec329",
+      "schemas/selection-contract.schema.json": "cc4a86147e73aa3d28f703fa6702a4d042d9e1e35451880f2cbcebc5a9bd75c4",
+      "schemas/semantic-role.schema.json": "e97671feb805e60388bbdafe77e6ca549c2eaa9b2b2692629d76f3388390a6a8",
+      "schemas/snapshot.schema.json": "8bdb47bf5cc8f767cd113ba4c2a807e8fd15f72b1fc0bb70ccbded1e5845ae63",
+      "schemas/ui-standard.schema.json": "8835ea37fddb1352cf38c8ddca06a22d6e4903c86b7ff007685b1bd51cb26895",
+      "scripts/architecture-work.py": "7722d8e93431a705bb782bf9384612f478c5fcb6d989b8fe5d6fc2b4f44fb4e7",
+      "scripts/prepare-current-state.py": "a2937c61b0c3d3bba44c896eb520391bb7b355794ca54e318468dec71c07185d",
+      "scripts/production-work.py": "d6b157c982be933ad91a80708b7b042216a6762d4a98be639c45768415c1723b",
+      "scripts/verify-current-state.py": "dc3ece58fda11ecc11c857fa5cc132aae6c3043a7cb1d8c073ba2419256a0234",
+      "scripts/verify-ga-index.py": "5a9260ec5c2d4656c64e149949dc6a838065f4d0e15de969e7fd0429e6b49d89",
+      "work_skills/app-quality-review/SKILL.md": "9fae2596e8972a066cd5c1c69c05388dce02df699b51c1e0abb5fedb4aefb5eb",
+      "work_skills/architecture-router/SKILL.md": "9264b007d09747648520fe399765a4b979c4ac7fc9ef9465fad1614bd9c2d58b",
+      "work_skills/architecture-router/scripts/route-intent.py": "e7ce0b209c04870d0c1287f2e23216298754abb4b5e8a82cb7843d53a2923ae9",
+      "work_skills/product-change-work/SKILL.md": "5aa334ccbd3630334b935999f9ac57238b84050dfc09f014b5c69bd1a4c087ad",
+      "work_skills/product-change-work/references/catalog-diff-legacy.md": "ddba7d3d83855eb85c8574ea4600c9f0e7db4283ff6eaa6dd386128d8392f645",
+      "work_skills/product-change-work/references/change-contract.md": "91643326f819af175280c0626b210d4a1dab76830b3a6da2112deb3280157e79",
+      "work_skills/product-change-work/scripts/run.py": "85c1feac518b885ba0cce9292d478a25f52048c14387c6424c136e0c2c431ee5",
+      "work_skills/product-master-builder/SKILL.md": "ea2284a0ac8eced3783af4ec319fd32dac9d2846a5472836ee720ca7f7e06fc9"
+    },
+    "required_current_entries": {
+      "product_routes": [
+        {
+          "repository": "Takuro-Kwkm/sash-app",
+          "product_id": "SER-LIX-EW",
+          "aliases": [
+            "EW",
+            "LIXIL EW"
+          ]
+        },
+        {
+          "repository": "Takuro-Kwkm/sash-app",
+          "product_id": "SER-LIX-SAMOSL",
+          "aliases": [
+            "サーモスL",
+            "サーモスＬ",
+            "ThermosL"
+          ]
+        },
+        {
+          "repository": "Takuro-Kwkm/sash-app",
+          "product_id": "SER-LIX-EW-FIRE",
+          "aliases": [
+            "EW防火戸"
+          ]
+        },
+        {
+          "repository": "Takuro-Kwkm/sash-app",
+          "product_id": "SER-LIXIL-TW",
+          "aliases": [
+            "TW"
+          ]
+        },
+        {
+          "repository": "Takuro-Kwkm/sash-app",
+          "product_id": "SER-LIX-SAMOS2H",
+          "aliases": [
+            "サーモスⅡ-H",
+            "サーモスⅡH"
+          ]
+        },
+        {
+          "repository": "Takuro-Kwkm/sash-app",
+          "product_id": "SER-LIXIL-RECHENT-D3-NF",
+          "aliases": [
+            "リシェント玄関ドア3 非防火"
+          ]
+        },
+        {
+          "repository": "Takuro-Kwkm/sash-app",
+          "product_id": "SER-YKK-APW430",
+          "aliases": [
+            "APW430"
+          ]
+        },
+        {
+          "repository": "Takuro-Kwkm/sash-app",
+          "product_id": "SER-YKK-APW431",
+          "aliases": [
+            "APW431"
+          ]
+        },
+        {
+          "repository": "Takuro-Kwkm/sash-app",
+          "product_id": "SER-YKKAP-UCHIRIMO",
+          "aliases": [
+            "ウチリモ 内窓",
+            "ウチリモ"
+          ]
+        },
+        {
+          "repository": "Takuro-Kwkm/sash-app",
+          "product_id": "SER-LIXIL-INPLUS",
+          "aliases": [
+            "インプラス"
+          ]
+        },
+        {
+          "repository": "Takuro-Kwkm/sash-app",
+          "product_id": "LIXIL_INPLUS_BATHROOM",
+          "aliases": [
+            "インプラス 浴室仕様",
+            "インプラス浴室"
+          ],
+          "native_registry_aliases": [
+            "インプラス 浴室仕様"
+          ]
+        },
+        {
+          "repository": "Takuro-Kwkm/interior-estimator",
+          "product_id": "P_LIXIL_LASISSA_S_STD_DOOR_PARENT_CHILD",
+          "aliases": [
+            "ラシッサS 親子ドア",
+            "親子ドア"
+          ]
+        },
+        {
+          "repository": "Takuro-Kwkm/interior-estimator",
+          "product_id": "P_LIXIL_LASISSA_S_STD_DOOR",
+          "aliases": [
+            "ラシッサS 標準ドア",
+            "標準ドア"
+          ]
+        },
+        {
+          "repository": "Takuro-Kwkm/interior-estimator",
+          "product_id": "P_LIXIL_LASISSA_S_VRAIL",
+          "aliases": [
+            "ラシッサS 室内引戸 Vレール方式",
+            "Vレール"
+          ],
+          "native_registry_aliases": [
+            "ラシッサS 室内引戸 Vレール方式"
+          ]
+        },
+        {
+          "repository": "Takuro-Kwkm/exterior-estimator",
+          "product_id": "lixil.carport_sc",
+          "aliases": [
+            "カーポートSC",
+            "SC"
+          ]
+        },
+        {
+          "repository": "Takuro-Kwkm/exterior-estimator",
+          "product_id": "PRD-LIXIL-NESCA",
+          "aliases": [
+            "ネスカ"
+          ]
+        },
+        {
+          "repository": "Takuro-Kwkm/exterior-estimator",
+          "product_id": "PRD-LIXIL-FUGO",
+          "aliases": [
+            "フーゴ"
+          ]
+        },
+        {
+          "repository": "Takuro-Kwkm/exterior-estimator",
+          "product_id": "PRD-YKKAP-EF-FIRST",
+          "aliases": [
+            "FIRST",
+            "エフルージュ"
+          ]
+        },
+        {
+          "repository": "Takuro-Kwkm/sash-app",
+          "product_id": "NATIVE_REGISTRY:LIXIL::TW防火戸",
+          "aliases": [
+            "TW防火戸"
+          ]
+        },
+        {
+          "repository": "Takuro-Kwkm/sash-app",
+          "product_id": "NATIVE_REGISTRY:LIXIL::リプラス",
+          "aliases": [
+            "リプラス"
+          ]
+        },
+        {
+          "repository": "Takuro-Kwkm/sash-app",
+          "product_id": "NATIVE_REGISTRY:LIXIL::ジエスタ2",
+          "aliases": [
+            "ジエスタ2"
+          ]
+        },
+        {
+          "repository": "Takuro-Kwkm/sash-app",
+          "product_id": "NATIVE_REGISTRY:LIXIL::エルムーブ2",
+          "aliases": [
+            "エルムーブ2"
+          ]
+        },
+        {
+          "repository": "Takuro-Kwkm/sash-app",
+          "product_id": "NATIVE_REGISTRY:LIXIL::サーモスA",
+          "aliases": [
+            "サーモスA"
+          ]
+        },
+        {
+          "repository": "Takuro-Kwkm/sash-app",
+          "product_id": "NATIVE_REGISTRY:LIXIL::玄関ドアXE",
+          "aliases": [
+            "玄関ドアXE"
+          ]
+        },
+        {
+          "repository": "Takuro-Kwkm/sash-app",
+          "product_id": "NATIVE_REGISTRY:YKK AP::APW330",
+          "aliases": [
+            "APW330"
+          ]
+        },
+        {
+          "repository": "Takuro-Kwkm/sash-app",
+          "product_id": "NATIVE_REGISTRY:YKK AP::APW331",
+          "aliases": [
+            "APW331"
+          ]
+        },
+        {
+          "repository": "Takuro-Kwkm/sash-app",
+          "product_id": "NATIVE_REGISTRY:YKK AP::マドリモ 戸建用",
+          "aliases": [
+            "マドリモ 戸建用"
+          ]
+        },
+        {
+          "repository": "Takuro-Kwkm/sash-app",
+          "product_id": "NATIVE_REGISTRY:YKK AP::コンコードS30",
+          "aliases": [
+            "コンコードS30"
+          ]
+        },
+        {
+          "repository": "Takuro-Kwkm/sash-app",
+          "product_id": "NATIVE_REGISTRY:LIXIL::リシェント玄関引戸2",
+          "aliases": [
+            "リシェント玄関引戸2"
+          ]
+        },
+        {
+          "repository": "Takuro-Kwkm/sash-app",
+          "product_id": "NATIVE_REGISTRY:YKK AP::エピソードⅡ",
+          "aliases": [
+            "エピソードⅡ"
+          ]
+        },
+        {
+          "repository": "Takuro-Kwkm/sash-app",
+          "product_id": "NATIVE_REGISTRY:LIXIL::リフォームシャッター",
+          "aliases": [
+            "リフォームシャッター"
+          ]
+        },
+        {
+          "repository": "Takuro-Kwkm/sash-app",
+          "product_id": "NATIVE_REGISTRY:YKK AP::ドアリモ玄関引戸",
+          "aliases": [
+            "ドアリモ玄関引戸"
+          ]
+        },
+        {
+          "repository": "Takuro-Kwkm/sash-app",
+          "product_id": "NATIVE_REGISTRY:YKK AP::ドアリモ アウトセット玄関引戸",
+          "aliases": [
+            "ドアリモ アウトセット玄関引戸"
+          ]
+        },
+        {
+          "repository": "Takuro-Kwkm/sash-app",
+          "product_id": "NATIVE_REGISTRY:LIXIL::防火戸FG-H",
+          "aliases": [
+            "防火戸FG-H"
+          ]
+        },
+        {
+          "repository": "Takuro-Kwkm/sash-app",
+          "product_id": "NATIVE_REGISTRY:LIXIL::リシェント浴室ドア",
+          "aliases": [
+            "リシェント浴室ドア"
+          ]
+        },
+        {
+          "repository": "Takuro-Kwkm/sash-app",
+          "product_id": "NATIVE_REGISTRY:LIXIL::リフォーム雨戸（雨戸一筋）",
+          "aliases": [
+            "リフォーム雨戸（雨戸一筋）"
+          ]
+        },
+        {
+          "repository": "Takuro-Kwkm/sash-app",
+          "product_id": "NATIVE_REGISTRY:YKK AP::イノベスト",
+          "aliases": [
+            "イノベスト"
+          ]
+        },
+        {
+          "repository": "Takuro-Kwkm/sash-app",
+          "product_id": "NATIVE_REGISTRY:LIXIL::防火戸FG-L",
+          "aliases": [
+            "防火戸FG-L"
+          ]
+        },
+        {
+          "repository": "Takuro-Kwkm/sash-app",
+          "product_id": "NATIVE_REGISTRY:LIXIL::グランデル2",
+          "aliases": [
+            "グランデル2"
+          ]
+        },
+        {
+          "repository": "Takuro-Kwkm/sash-app",
+          "product_id": "NATIVE_REGISTRY:LIXIL::店舗・汎用ドア・引戸",
+          "aliases": [
+            "店舗・汎用ドア・引戸"
+          ]
+        },
+        {
+          "repository": "Takuro-Kwkm/sash-app",
+          "product_id": "NATIVE_REGISTRY:YKK AP::ドアリモ玄関ドア 非防火",
+          "aliases": [
+            "ドアリモ玄関ドア 非防火"
+          ]
+        },
+        {
+          "repository": "Takuro-Kwkm/sash-app",
+          "product_id": "NATIVE_REGISTRY:YKK AP::ヴェナートD30",
+          "aliases": [
+            "ヴェナートD30"
+          ]
+        }
+      ],
+      "new_product_build_profiles": {
+        "Takuro-Kwkm/sash-app": {
+          "profile_id": "sash-new-product-master-v1",
+          "schema": "schemas/native-product-master-build-profile.v1.schema.json",
+          "policy": "ACTUAL_NEW_PRODUCT_BUILD; verified native Registry absence; Shared v2 execution to QA_READY; Human Formal gate"
+        },
+        "Takuro-Kwkm/interior-estimator": {
+          "profile_id": "interior-new-product-master-v1",
+          "schema": "schemas/native-product-master-build-profile.v1.schema.json",
+          "policy": "ACTUAL_NEW_PRODUCT_BUILD; verified native Registry absence; Shared v2 execution to QA_READY; Human Formal gate"
+        },
+        "Takuro-Kwkm/exterior-estimator": {
+          "profile_id": "exterior-new-product-master-v1",
+          "schema": "schemas/native-product-master-build-profile.v1.schema.json",
+          "policy": "ACTUAL_NEW_PRODUCT_BUILD; verified native Registry absence; Shared v2 execution to QA_READY; Human Formal gate"
+        }
+      },
+      "supported_repositories": [
+        "Takuro-Kwkm/sash-app",
+        "Takuro-Kwkm/interior-estimator",
+        "Takuro-Kwkm/exterior-estimator"
+      ]
+    },
+    "architecture_contract": {
+      "registry_id": "CURRENT_APP_DEVELOPMENT_ARCHITECTURE",
+      "current_architecture": "APP_DEVELOPMENT_SKILL_ARCHITECTURE_V2",
+      "version": "2.0.0",
+      "status": "GA",
+      "effective_at": "READ_LIVE_COMPLETED_GA_INDEX:effective_at",
+      "authority_sha": "RESOLVE_FROM_IMMUTABLE_GIT_COMMIT_CONTAINING_THIS_REGISTRY",
+      "current_router": "scripts/architecture-work.py",
+      "router_version": "2.0.0",
+      "current_shared_harness": "scripts/production-work.py",
+      "current_work_dag": "harness/workflow.py",
+      "current_evidence_contract": "harness/resolvers.py + native Evidence governance",
+      "current_formal_save_contract": "harness/changed_path.py + harness/core.py admitted native storage subflow",
+      "current_resume_contract": "harness/workflow.py:inspect + harness/production.py:live_guard",
+      "current_failure_recovery_contract": "harness/production_recovery.py",
+      "current_ci_bridge": "harness/github_bridge.py",
+      "current_adapter_registry": {
+        "sash-app": "contracts/production/work-connections.v2.json",
+        "interior-estimator": "contracts/production/work-connections.v2.json",
+        "exterior-estimator": "contracts/production/work-connections.v2.json"
+      },
+      "current_validator_registry": {
+        "sash-app": "contracts/production/validator-registry.v2.json",
+        "interior-estimator": "contracts/production/validator-registry.v2.json",
+        "exterior-estimator": "contracts/production/validator-registry.v2.json"
+      },
+      "supported_work_types": [
+        "PRODUCT_MASTER_BUILD_WITH_ADMITTED_NATIVE_PROFILE",
+        "PRODUCT_MASTER_CHANGE",
+        "RUNTIME_UI_CHANGE_WITH_ADMITTED_NATIVE_PROFILE",
+        "CURRENT_STATE_VERIFICATION",
+        "IMMUTABLE_WORK_RESUME"
+      ],
+      "frozen_engine": {
+        "revision": "7293f818685bbd1e7386d78757fb82b930af5572",
+        "files": {
+          "harness/changed_path.py": "bccb5c91c2a2f6055286a914fd0afa88159b97b5e4622f5a711638f6a65471d0",
+          "harness/production_recovery.py": "8b2703a504d7574bf03460c944e75975efba31f1172ae7976450ef19713a1f1f",
+          "harness/approved_continuation.py": "a7dc753387de7c7e434a2f4944f46e76ee005933f27c272d98d154ab92d3d8d5",
+          "harness/resolvers.py": "cb1704e92446cb6552f9da80ad30928928ed1aa4d05aedcce13ee69e07229a57",
+          "harness/__init__.py": "93ad39fb60540fe9d283decf284486166826c9b7f81efbf856e3778e50ec3082",
+          "harness/core.py": "e35467a495a4c800fc5dc4bc642fad234f1fc3da07a7bf39727eefd4112bb203",
+          "harness/verified_downstream_continuation.py": "6f504b820f823594e950e790cd0ac6c9eada57465b3ab1548f1e1ce61b310e22",
+          "harness/cli.py": "66f77f109e3980c1a48d8c8c2907dc677b118a8b466bcd8e45d252a7b04e1f8f",
+          "harness/artifacts.py": "cf264fe46b02451613e6229b5c6127f2a7c4383802f630814b5ce3546d386ded",
+          "harness/workflow.py": "2e243c9616dc55c25b2d00f242968d762965bae61bb98431ba1b3aa47cfaf209",
+          "harness/production.py": "fd34204892b420587a7c9c744473980c392a0ec48c7f6b05e5e16ce3a17b57f6",
+          "harness/github_bridge.py": "4a544f318c2cc9b2e8ebb55ac0a290607c83ed41092495c35087260014564cce",
+          "product_master/build.py": "499242953b818d8d233d909ac82c3f92e3697a7458861ed7f845653b4daf6632",
+          "product_master/domain.py": "eca8b034cce8901ccac02ec7b1dcbe0f30f3efc14333669f86dbcea34c31c1e4",
+          "product_master/evaluate_gate.py": "e4776afebd33673a46bb135ab184ad2029574de104ccc19539d7523c6bac1a26",
+          "product_master/reference.py": "99088995e5fa78366a364b598a16fe5017afe2857455885f93ce5b95d4f41381",
+          "product_master/identity.py": "88e3f5c8118e33298366569079e6d2ae76fe2f06892fae1bd13db2dc6b24b7e7",
+          "product_master/validators/validate.py": "dd9bd9d19700819efd9e71fc90a02bfec3f61096dab932ee17e72a3a951c1049",
+          "product_change/worker.py": "fdb109c220994798ca2a41a2ac2790e6d2c485d83e8f0b8810b49a0b1956bc69",
+          "product_change/domain.py": "1fad310958e456912ab6dd8c887549e23e5b3cc93a376561c4107287c9995541",
+          "product_change/reference.py": "c4b4945b214261f11421b7117ecb74fdcb3ef45ffddcd8d346993183d58c696e"
+        },
+        "policy": "Versioned, regression protected; review required; additive native profiles preserve immutable journals and prior adopters; incompatible semantics require successor binding"
+      },
+      "adapter_policy": "Connected scopes are READY; pending/Registry-only scopes fail closed. GA does not claim all future product-authoring adapters exist.",
+      "legacy_policy": "Referenced v0.1 Formal storage and v1 native domain helpers are KEEP compatibility dependencies, not competing architecture authorities. Reference-only routing is not Current production selection.",
+      "change_policy": "Native product Facts/FORMAL/Release remain separately gated. New Work binds current immutable inputs; terminal Work never reopens.",
+      "ga_evidence": "docs/architecture-v2/phase6-current-index.json",
+      "shared_implementation_sha": "7e7c67f0b51bde9e87e405640685032128a8166d",
+      "ga_activation_contract": {
+        "provider": "GOOGLE_DRIVE",
+        "file_id": "1DnJflUJAIS5UfisxQa-AgTI6BPtZsoeI",
+        "terminal_state": "ARCHITECTURE_V2_GA_COMPLETED",
+        "policy": "This versioned GA declaration activates only after the live index verifies all merges, exact Main CI, final regression and checkpoint readback. Registry status alone is not completion evidence.",
+        "verification": "scripts/verify-ga-index.py --index CURRENT_BYTES --metadata NATIVE_METADATA --main-observations FRESH_FOUR_MAIN_RESPONSES"
+      },
+      "existing_route_compatibility": {
+        "harness/architecture.py": {
+          "scope": "EXISTING_ROUTES_ONLY",
+          "prior_sha256": "f18203cb7f16f3155378d810c33961c373641b3fbc8da08b47491f9ac2ea36ef",
+          "current_sha256": "b25215311e6f89ca078d2a8e720bf25948e7ead3f2b9e1c345cd215913203d27",
+          "prior_ref": "784afba8fe277b92031da6158c25721a25aafd78",
+          "policy": "Only acquired consumers without new-product profile use retained existing routes; new bootstrap requires explicit profile adoption"
+        }
+      },
+      "current_release_contract": {
+        "version": "1.0.0",
+        "contract": "contracts/common-release.v1.json",
+        "validator": "harness/release.py",
+        "entry": "scripts/release-contract.py",
+        "execution": "ADDITIVE_VALIDATOR_STEPS_IN_EXISTING_V2_DAG",
+        "native_profiles": "contracts/production/release-profile.v1.json",
+        "merge_boundary": "MERGE_CLOSED remains NOT_RELEASED; production alias/QA/storage required",
+        "authority_policy": "Live Current selects contract; consumers adopt immutable implementation independently"
+      }
+    },
+    "skill_authority_sha256": "39efeca95214ea29816c6666b53c8127e665c821e74e34de3738761cc797e7d3"
+  },
+  "terminal_policy": "Completed Order4 Work INSPECT_ONLY; fresh single-product Order5 binding and fixed Human Decision required"
+}
