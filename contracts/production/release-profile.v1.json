@@ -119,7 +119,7 @@
     "contracts/production/order5-release-scope.v1.json": "a2c69f43d5747b7f86a69b632868dc92930924fc2eaf5dcf03da1447fc7057dc",
     "contracts/production/order5-assets.v1.json": "04536db3e515a07339d2675d269882308616e91662e42728daeae8f96e88db35",
     "docs/ORDER5_BATCH1.md": "db1697eda7f8f2a6c1500ce0f761fcd381076293ce07d8ac585f4d6c9a046397",
-    "test/browser/ew-october-2026-browser-qa.mjs": "e332d43b1719214af39abe80d8319f23af263f003c3ecb580e92bac5cd7b46b7"
+    "test/browser/ew-october-2026-browser-qa.mjs": "61f0fef9d4e5f1ee5f07986f5ab11bd8ab0dae1203dfbf8249643d62352ab638"
   },
   "scope_admission": {
     "mode": "INFRASTRUCTURE_RELEASE_SAME_BYTES",
