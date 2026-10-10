@@ -4,6 +4,8 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "build:deployment": "node scripts/prepare-deployment-static.mjs",
+    "publish:release": "node scripts/production/publish-release.mjs",
     "lint": "node scripts/check-runtime-ui-sources.mjs",
     "typecheck": "node scripts/check-runtime-ui-contracts.mjs",
     "build:release": "node scripts/build-tw-runtime-review-preview.mjs",

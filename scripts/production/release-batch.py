@@ -10,7 +10,7 @@ try:
  sys.path.insert(0,str(central));from harness.release_admission import adopted_profile
  adopted_profile(profile,doc,{'repository':doc['repository'],'product_id':a.product,'scope':entries[0]['scope'],'execution_mode':'REAL'})
  from importlib.util import spec_from_file_location,module_from_spec
- s=spec_from_file_location('scope',ROOT/'scripts/production/order5-batch3-scope.py');m=module_from_spec(s);s.loader.exec_module(m);result=m.validate(ROOT);assert result['status']=='PASS',result['errors']
+ s=spec_from_file_location('scope',ROOT/'scripts/production/order5-batch4-scope.py');m=module_from_spec(s);s.loader.exec_module(m);result=m.validate(ROOT);assert result['status']=='PASS',result['errors']
  if a.check:print(json.dumps({'status':'PASS','product_id':a.product,'scope':entries[0]['scope'],'deployment':'NOT_EXECUTED'}))
  else:
   args=a.args[1:] if a.args and a.args[0]=='--' else a.args;assert args,'RELEASE_ARGS_REQUIRED'

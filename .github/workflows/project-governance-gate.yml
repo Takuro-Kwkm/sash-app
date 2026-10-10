@@ -7,7 +7,7 @@ permissions:
   contents: read
   actions: read
 concurrency:
-  group: project-governance-${{ github.event.pull_request.head.ref || github.ref_name }}-${{ github.event.pull_request.head.sha || github.sha }}
+  group: project-governance-${{ github.event.pull_request.number || github.ref_name }}
   cancel-in-progress: true
 jobs:
   governance:
@@ -43,3 +43,4 @@ jobs:
           path: |
             artifacts/inner-window-frame-integration/
             artifacts/eight-series-review/
+          retention-days: 14

@@ -7,6 +7,11 @@ on:
       - 'contracts/production/app-release.v1.json'
       - 'scripts/production/verify-app-release.mjs'
       - 'scripts/vercel-rest-deploy.mjs'
+      - 'scripts/prepare-deployment-static.mjs'
+      - 'scripts/production/publish-release.mjs'
+      - 'scripts/production/test_publish_release.py'
+      - 'vercel.json'
+      - 'package.json'
       - 'src/server/recovery-app.mjs'
       - '.release/app-production-hotfix-v1'
   workflow_dispatch:
@@ -83,7 +88,12 @@ jobs:
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: app-release-review-${{ github.event.pull_request.head.sha }}
-          path: artifacts/
+          path: |
+            artifacts/app-release/
+            artifacts/eight-series-business-flow/
+            artifacts/release-regression-browser-qa/
+            artifacts/deployment-static-receipt.json
+          retention-days: 14
 
   production-hotfix:
     if: github.event_name != 'pull_request'
@@ -199,5 +209,10 @@ jobs:
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: app-production-hotfix-${{ github.sha }}
-          path: artifacts/
+          path: |
+            artifacts/app-hotfix-production/
+            artifacts/eight-series-business-flow/
+            artifacts/release-regression-browser-qa/
+            artifacts/deployment-static-receipt.json
+          retention-days: 90
           if-no-files-found: warn

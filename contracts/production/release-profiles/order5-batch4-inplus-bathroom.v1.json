@@ -236,66 +236,70 @@
   },
   "scope_admission": {
     "mode": "INFRASTRUCTURE_RELEASE_SAME_BYTES",
-    "product_id": "SER-LIX-SAMOSL",
-    "scope": "THERMOSL_UNCHANGED_FORMAL_SELECTION_SAVE_OUTPUT_ORDER5_BATCH4_V1",
-    "public_path": "/runtime-lab?product=SER-LIX-SAMOSL",
+    "product_id": "LIXIL_INPLUS_BATHROOM",
+    "scope": "INPLUS_BATHROOM_UNCHANGED_FORMAL_SELECTION_SAVE_OUTPUT_ORDER5_BATCH4_V1",
+    "public_path": "/runtime-lab?product=SER-LIXIL-INPLUS",
     "product_fact_mutation_allowed": false,
     "asset_identities": {
       "Source": {
         "state": "KNOWN",
-        "version": "v0.7-R3 / Source",
-        "sha256": "0fed18a4d317fa03cb0ef0463a0c17eb9f83e1bb84baa6628a6bdce73de62257"
+        "version": "v1.0 / Source",
+        "sha256": "58397e2dfc4b4fb74f62b14b4d9b22943de96c866a107cc48d52dcadd2c1bfcb"
       },
       "Formal": {
         "state": "KNOWN",
-        "version": "v0.7-R3 / Formal",
-        "sha256": "0fed18a4d317fa03cb0ef0463a0c17eb9f83e1bb84baa6628a6bdce73de62257"
+        "version": "v1.0 / Formal",
+        "sha256": "58397e2dfc4b4fb74f62b14b4d9b22943de96c866a107cc48d52dcadd2c1bfcb"
       },
       "Runtime": {
         "state": "KNOWN",
-        "version": "v0.7-R3 / Runtime",
-        "sha256": "0fed18a4d317fa03cb0ef0463a0c17eb9f83e1bb84baa6628a6bdce73de62257"
+        "version": "v1.0 / Runtime",
+        "sha256": "9ee330cbefa8f2064cfe019d7a16b8009087d195507946967b9c918116437fd7"
       },
       "Contract": {
         "state": "KNOWN",
-        "version": "v0.7-R3 / Contract",
-        "sha256": "0fed18a4d317fa03cb0ef0463a0c17eb9f83e1bb84baa6628a6bdce73de62257"
+        "version": "v1.0 / Contract",
+        "sha256": "6337e58790af473cd1ec2dcb8f33901556156d385383531675e7eb35e5e306da"
       },
       "UI": {
         "state": "KNOWN",
-        "version": "v0.7-R3 / UI",
+        "version": "v1.0 / UI",
         "sha256": "4d454860646085bdad132916217a470bb95daab6672944928b65eb8669b1b96d"
       }
     },
     "predecessor_asset_identities": {
       "Source": {
         "state": "KNOWN",
-        "version": "v0.7-R3 / Source",
-        "sha256": "0fed18a4d317fa03cb0ef0463a0c17eb9f83e1bb84baa6628a6bdce73de62257"
+        "version": "v1.0 / Source",
+        "sha256": "58397e2dfc4b4fb74f62b14b4d9b22943de96c866a107cc48d52dcadd2c1bfcb"
       },
       "Formal": {
         "state": "KNOWN",
-        "version": "v0.7-R3 / Formal",
-        "sha256": "0fed18a4d317fa03cb0ef0463a0c17eb9f83e1bb84baa6628a6bdce73de62257"
+        "version": "v1.0 / Formal",
+        "sha256": "58397e2dfc4b4fb74f62b14b4d9b22943de96c866a107cc48d52dcadd2c1bfcb"
       },
       "Runtime": {
         "state": "KNOWN",
-        "version": "v0.7-R3 / Runtime",
-        "sha256": "0fed18a4d317fa03cb0ef0463a0c17eb9f83e1bb84baa6628a6bdce73de62257"
+        "version": "v1.0 / Runtime",
+        "sha256": "9ee330cbefa8f2064cfe019d7a16b8009087d195507946967b9c918116437fd7"
       },
       "Contract": {
         "state": "KNOWN",
-        "version": "v0.7-R3 / Contract",
-        "sha256": "0fed18a4d317fa03cb0ef0463a0c17eb9f83e1bb84baa6628a6bdce73de62257"
+        "version": "v1.0 / Contract",
+        "sha256": "6337e58790af473cd1ec2dcb8f33901556156d385383531675e7eb35e5e306da"
       },
       "UI": {
         "state": "KNOWN",
-        "version": "v0.7-R3 / UI",
+        "version": "v1.0 / UI",
         "sha256": "4d454860646085bdad132916217a470bb95daab6672944928b65eb8669b1b96d"
       }
     },
     "scope_guard": "contracts/production/order5-batch4-scope.v1.json",
-    "current_native_predecessor": "36ac2ad2f615f107c1742240a2a255136ad12cec"
+    "current_native_predecessor": "36ac2ad2f615f107c1742240a2a255136ad12cec",
+    "runtime_selector": {
+      "product_id": "SER-LIXIL-INPLUS",
+      "product_variant": "bathroom"
+    }
   },
   "publication_policy": {
     "mode": "VERCEL_STAGED_PROMOTE_V1",
@@ -1302,13 +1306,13 @@
             "pointer": [
               "product_id"
             ],
-            "value": "SER-LIX-SAMOSL"
+            "value": "LIXIL_INPLUS_BATHROOM"
           },
           {
             "pointer": [
               "scope"
             ],
-            "value": "THERMOSL_UNCHANGED_FORMAL_SELECTION_SAVE_OUTPUT_ORDER5_BATCH4_V1"
+            "value": "INPLUS_BATHROOM_UNCHANGED_FORMAL_SELECTION_SAVE_OUTPUT_ORDER5_BATCH4_V1"
           },
           {
             "pointer": [
@@ -1331,6 +1335,18 @@
               "runtime_errors"
             ],
             "value": 0
+          },
+          {
+            "pointer": [
+              "runtime_product_id"
+            ],
+            "value": "SER-LIXIL-INPLUS"
+          },
+          {
+            "pointer": [
+              "selection_variant"
+            ],
+            "value": "bathroom"
           }
         ],
         "minimums": [

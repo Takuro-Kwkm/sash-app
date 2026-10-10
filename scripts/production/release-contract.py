@@ -23,7 +23,7 @@ def main():
  admission=doc.get('scope_admission')
  assert admission and admission['mode']=='INFRASTRUCTURE_RELEASE_SAME_BYTES'
  assert admission['product_fact_mutation_allowed'] is False
- assert admission['product_id']=='SER-LIX-SAMOSL' and admission['scope']=='THERMOSL_UNCHANGED_FORMAL_SELECTION_SAVE_OUTPUT_ORDER5_BATCH3_V1'
+ assert admission['product_id']=='SER-LIX-SAMOSL' and admission['scope']=='THERMOSL_UNCHANGED_FORMAL_SELECTION_SAVE_OUTPUT_ORDER5_BATCH4_V1'
 
  def admitted(arguments):
   # Native identity check only; the Shared engine owns schema, assets, receipt

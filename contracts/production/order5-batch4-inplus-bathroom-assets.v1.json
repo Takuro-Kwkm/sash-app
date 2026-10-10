@@ -1,0 +1,80 @@
+{
+  "schema": "ORDER5_NATIVE_ASSET_BINDINGS_V1",
+  "product_id": "LIXIL_INPLUS_BATHROOM",
+  "scope": "INPLUS_BATHROOM_UNCHANGED_FORMAL_SELECTION_SAVE_OUTPUT_ORDER5_BATCH4_V1",
+  "formal_product_id": "LIXIL_INPLUS_BATHROOM",
+  "runtime_selector": {
+    "product_id": "SER-LIXIL-INPLUS",
+    "product_variant": "bathroom"
+  },
+  "assets": {
+    "Source": {
+      "state": "KNOWN",
+      "version": "v1.0 / Source",
+      "path": "src/catalog/runtime-master-packages/lixil-inplus-bathroom-v1.0/formal-product-master.json",
+      "sha256": "58397e2dfc4b4fb74f62b14b4d9b22943de96c866a107cc48d52dcadd2c1bfcb"
+    },
+    "Formal": {
+      "state": "KNOWN",
+      "version": "v1.0 / Formal",
+      "path": "src/catalog/runtime-master-packages/lixil-inplus-bathroom-v1.0/formal-product-master.json",
+      "sha256": "58397e2dfc4b4fb74f62b14b4d9b22943de96c866a107cc48d52dcadd2c1bfcb"
+    },
+    "Runtime": {
+      "state": "KNOWN",
+      "version": "v1.0 / Runtime",
+      "path": "src/catalog/runtime-master/inplus-bathroom-formal-adapter.mjs",
+      "sha256": "9ee330cbefa8f2064cfe019d7a16b8009087d195507946967b9c918116437fd7"
+    },
+    "Contract": {
+      "state": "KNOWN",
+      "version": "v1.0 / Contract",
+      "path": "src/catalog/runtime-master-packages/lixil-inplus-bathroom-v1.0/runtime-adapter-manifest.json",
+      "sha256": "6337e58790af473cd1ec2dcb8f33901556156d385383531675e7eb35e5e306da"
+    },
+    "UI": {
+      "state": "KNOWN",
+      "version": "v1.0 / UI",
+      "path": "src/ui/web/product-configuration-editor.mjs",
+      "sha256": "4d454860646085bdad132916217a470bb95daab6672944928b65eb8669b1b96d"
+    }
+  },
+  "predecessor_assets": {
+    "Source": {
+      "state": "KNOWN",
+      "version": "v1.0 / Source",
+      "path": "src/catalog/runtime-master-packages/lixil-inplus-bathroom-v1.0/formal-product-master.json",
+      "sha256": "58397e2dfc4b4fb74f62b14b4d9b22943de96c866a107cc48d52dcadd2c1bfcb"
+    },
+    "Formal": {
+      "state": "KNOWN",
+      "version": "v1.0 / Formal",
+      "path": "src/catalog/runtime-master-packages/lixil-inplus-bathroom-v1.0/formal-product-master.json",
+      "sha256": "58397e2dfc4b4fb74f62b14b4d9b22943de96c866a107cc48d52dcadd2c1bfcb"
+    },
+    "Runtime": {
+      "state": "KNOWN",
+      "version": "v1.0 / Runtime",
+      "path": "src/catalog/runtime-master/inplus-bathroom-formal-adapter.mjs",
+      "sha256": "9ee330cbefa8f2064cfe019d7a16b8009087d195507946967b9c918116437fd7"
+    },
+    "Contract": {
+      "state": "KNOWN",
+      "version": "v1.0 / Contract",
+      "path": "src/catalog/runtime-master-packages/lixil-inplus-bathroom-v1.0/runtime-adapter-manifest.json",
+      "sha256": "6337e58790af473cd1ec2dcb8f33901556156d385383531675e7eb35e5e306da"
+    },
+    "UI": {
+      "state": "KNOWN",
+      "version": "v1.0 / UI",
+      "path": "src/ui/web/product-configuration-editor.mjs",
+      "sha256": "4d454860646085bdad132916217a470bb95daab6672944928b65eb8669b1b96d"
+    }
+  },
+  "formal_file_id": "1GJknHnjU0-hvNvTS2X8fajuTkE0SvX0m",
+  "formal_package_file_id": "1NqtsDPZNOil3YUXTarIylFTrvipkNcdt",
+  "source_proof_index": "outputs/BATHROOM_FORMAL_CARRY_FORWARD.json",
+  "controlled_unresolved_count": 7,
+  "unresolved_auto_resolution": false,
+  "fact_mutations": 0
+}

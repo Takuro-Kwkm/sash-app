@@ -4,6 +4,8 @@ import {chromium} from 'playwright';
 
 const BASE=process.env.QA_BASE_URL??'http://127.0.0.1:4173';
 const OUT='artifacts/inplus-bathroom-v1';
+const DESKTOP_WIDTH=Number(process.env.QA_DESKTOP_WIDTH??1440);
+assert.ok([1280,1440].includes(DESKTOP_WIDTH));
 const PRODUCT='SER-LIXIL-INPLUS';
 const SLIDING={product_variant:'bathroom',window_type:'sliding',fit:'tile',glass_family:'ordinary_double',glass_design:'transparent',gas:'dry_air',position_mode:'default',width:1000,height:1000,quantity:2,effective_depth:100,water_slope_deg:0,surround_material:'aluminum',outer_sash_material:'aluminum',outer_angle:'present',mounting_surface_step:'absent',bath_bay_window:'absent',support_checked:'confirmed'};
 const CASEMENT={...SLIDING,window_type:'casement',fit:'unit_bath',hinge:'L',handle_position_mode:'custom',handle_p:500,width:600,effective_depth:120};
@@ -71,7 +73,7 @@ function luminance(rgb){
 }
 
 try{
-  for(const width of [1440,768,390]){
+  for(const width of [DESKTOP_WIDTH,768,390]){
     const page=await browser.newPage({viewport:{width,height:1000},colorScheme:'dark'});
     page.on('pageerror',error=>report.errors.push(error.message));
     page.on('console',message=>{if(message.type()==='error')report.errors.push(message.text());});
@@ -93,7 +95,7 @@ try{
     assert.ok(overflow<=1,`viewport ${width} overflow=${overflow}`);
     report.viewports.push({width,overflow,status:'PASS'});
 
-    if(width===1440){
+    if(width===DESKTOP_WIDTH){
       const a=await persistAndReload(page,SLIDING,'Scenario A 引違い窓2枚建');
       assert.equal(a.restored.snapshot.sales_request_handoff.quantity,2);
       report.scenarios.push({id:'A',flow:'引違い窓2枚建→タイル納まり→保存→再表示→見積Handoff',status:'PASS'});
