@@ -4,12 +4,12 @@
   "series": "APW431",
   "series_key": "YKK AP::APW431",
   "package_version": "v1.2",
-  "verification_revision": "20260918-FRAME-ANGLE-R1",
+  "verification_revision": "20260918-FRAME-ANGLE-FORMAL-REPROOF-MR1",
   "authoring": {
     "file_name": "YKKAP_APW431_AUTHORING_MASTER_v1.2_FRAME_ANGLE_RECOVERY.xlsx",
     "file_id": "1LbcIptIWOYogqCF9OPhGQ3L6itox0yND",
-    "sha256": "f6e8a4e0b55179d7f26bd6f446e563efcb2b3b5988d7c28e219aed5f9949a1ab",
-    "bytes": 226881
+    "sha256": "3f6d80b610f1c1f02a0f8e8ae7ea59d79f6d56d7eb726ff8aa31c45e9474fbb6",
+    "bytes": 256183
   },
   "runtime_status": "READY",
   "runtime_files": [
@@ -47,10 +47,7 @@
   "semantic_recovery": {
     "canonical_field": "frame_angle",
     "stage": "CONFIGURATION",
-    "canonical_values": [
-      "WITH_ANGLE",
-      "WITHOUT_ANGLE"
-    ],
+    "canonical_values": ["WITH_ANGLE", "WITHOUT_ANGLE"],
     "base_window_count": 6,
     "window_classification": {
       "CONDITIONAL_USER_SELECTABLE": 4,
@@ -79,20 +76,11 @@
   "working_folder_id": "12-asRdFp58GmOSJqYXhVPfg4PKQ9afOq",
   "canonical_folder_id": "16SO5cC-ix7F_vwGLqAyrr62zwDRjXBCB",
   "old_folder_id": "1VElfoWdIXoXS1wK6qQ6NolSObKHkm6nq",
-  "primary_official_evidence": [
-    {
-      "file_id": "1j9PtW8yoKBZ4Nodm58wU3QtOCvxlEja9",
-      "title": "202607_YKKAP_APW430_商品カタログ.pdf",
-      "pages": [
-        "P.32",
-        "P.80-P.84",
-        "P.100",
-        "P.104",
-        "P.108",
-        "P.112-P.114"
-      ]
-    }
-  ],
+  "primary_official_evidence": [{
+    "file_id": "1j9PtW8yoKBZ4Nodm58wU3QtOCvxlEja9",
+    "title": "202607_YKKAP_APW430_商品カタログ.pdf",
+    "pages": ["P.32", "P.80-P.84", "P.100", "P.104", "P.108", "P.112-P.114"]
+  }],
   "requested_diff_coverage": "PASS",
   "unrequested_diff_count": 0,
   "other_series_changed_files": 0,
@@ -100,5 +88,16 @@
   "ui_changed_files": 0,
   "blocking_items": [],
   "generated_at": "2026-09-18T15:20:00+09:00",
-  "formalized_at": "2026-09-18T15:21:56+09:00"
+  "formalized_at": "2026-09-18T15:21:56+09:00",
+  "metadata_repair": {
+    "revision": "v1.2-MR1",
+    "scope": "AUTHORING_FORMAL_STATE_METADATA_ONLY",
+    "authoring_value_diff_count": 24,
+    "authoring_style_diff_count": 0,
+    "runtime_payload_changed": false,
+    "qa_reproof_report_file_id": "1yzZsCGdESw235CXD7Jnh8EGoHQ4QctpC",
+    "requested_diff_coverage": "PASS",
+    "unrequested_diff_count": 0
+  },
+  "last_reproof_at": "2026-09-18T18:46:33+09:00"
 }
