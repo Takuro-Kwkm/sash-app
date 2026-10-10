@@ -74,8 +74,8 @@ function packageVersionFor(product,configuration={}){
 }
 
 export class ProductConfigurationEditor {
-  constructor(root,{initialSnapshot=null,onSnapshot=()=>{},showInventory=false}={}){
-    this.root=root;this.initialSnapshot=initialSnapshot;this.onSnapshot=onSnapshot;this.showInventory=showInventory;
+  constructor(root,{initialSnapshot=null,initialProductId=null,onSnapshot=()=>{},showInventory=false}={}){
+    this.root=root;this.initialSnapshot=initialSnapshot;this.initialProductId=initialProductId;this.onSnapshot=onSnapshot;this.showInventory=showInventory;
     this.state={products:[],productId:null,productSource:'CATALOG',selection:{},resolved:null,resolveRevision:0,snapshot:initialSnapshot,stale:false};
     this.boundChange=(event)=>this.handleChange(event);
     this.boundClick=(event)=>this.handleClick(event);
@@ -113,6 +113,14 @@ export class ProductConfigurationEditor {
     const build=document.querySelector('#build');
     if(build)build.textContent=`${health.buildId} · ${health.catalogVersion}`;
     await this.restoreSnapshot();
+    if(!this.initialSnapshot&&this.initialProductId){
+      const product=this.state.products.find(row=>row.id===this.initialProductId);
+      if(!product||product.selectable===false)throw Error('指定した商品Runtimeを利用できません。');
+      this.selectManufacturer(product.manufacturer);
+      this.root.querySelector('#product').value=product.id;
+      this.state.productId=product.id;this.state.productSource=product.sourceType;
+      await this.resolve({notify:false});
+    }
   }
 
   destroy(){this.root.removeEventListener('change',this.boundChange);this.root.removeEventListener('click',this.boundClick);}
