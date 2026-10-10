@@ -229,7 +229,7 @@ async function renderSummary(projectId,estimateId){
 
 async function renderRuntimeLab(){
   setHeader('商品Runtime UI 単体確認','LOADING');$('#appMain').innerHTML='<div class="breadcrumbs"><a href="/" data-nav="/">案件一覧へ戻る</a></div><div class="page-heading"><div><h1>商品Runtime UI 単体確認</h1><p class="lead">開発・QA用ルートです。ここでの入力は案件へ保存されません。</p></div></div><div id="runtimeLab"></div>';
-  activeProductEditor=new ProductConfigurationEditor($('#runtimeLab'),{showInventory:true});await activeProductEditor.mount();
+  activeProductEditor=new ProductConfigurationEditor($('#runtimeLab'),{showInventory:true,initialProductId:new URL(location.href).searchParams.get('product')});await activeProductEditor.mount();
 }
 
 async function renderRoute(){

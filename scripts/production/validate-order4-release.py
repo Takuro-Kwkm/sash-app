@@ -7,6 +7,11 @@ ALLOWED={'scripts/production/release-contract.py', 'contracts/production/release
 def git(root,*args):return subprocess.check_output(['git',*args],cwd=root,stderr=subprocess.PIPE)
 def digest(data):return hashlib.sha256(data).hexdigest()
 def validate(root):
+ if (Path(root)/'contracts/production/order5-batch2-scope.v1.json').exists():
+  import importlib.util
+  spec=importlib.util.spec_from_file_location('batch2_scope',Path(root)/'scripts/production/order5-batch2-scope.py')
+  native=importlib.util.module_from_spec(spec);spec.loader.exec_module(native)
+  return native.validate(root)
  root=Path(root);doc=json.loads((root/'contracts/production/order4-release-scope.v1.json').read_bytes());errors=[]
  if doc.get('starting_main')!=BASELINE or doc.get('scope_id')!=SCOPE or doc.get('product_fact_mutation_allowed') is not False or set(doc.get('allowed_paths',[]))!=ALLOWED:
   return {'status':'FAIL_CLOSED','errors':['ORDER4_SCOPE_IDENTITY']}
