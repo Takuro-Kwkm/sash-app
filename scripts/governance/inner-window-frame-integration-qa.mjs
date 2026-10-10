@@ -38,7 +38,14 @@ for(const row of expected){
  const scopedAdoption=row.id===adoption.scope_product_id?adoption:row.id===ewAdoption.scope_product_id?ewAdoption:row.id===thermosAdoption.scope_product_id?thermosAdoption:null;
  const changed=Boolean(scopedAdoption);
  if(changed)assert.deepEqual(scopedAdoption.before,row.current,`Frozen previous ${row.id} identity`);
- const pinned=changed?scopedAdoption.after:row.current;
+ let pinned=changed?scopedAdoption.after:row.current;
+ if(row.id==='SER-YKK-APW431'&&integration.sourceHash!==pinned.sourceHash){
+  const base='src/catalog/runtime-master-packages/ykkap-apw431-v1.2/';const previous=readFileSync(base+'runtime_manifest.json');const repaired=readFileSync(base+'runtime_manifest.metadata-repair-v1.json');
+  assert.equal(createHash('sha256').update(previous).digest('hex'),pinned.sourceHash,'Fixed historical APW431 metadata');
+  assert.equal(createHash('sha256').update(repaired).digest('hex'),'54ab51e9936ef6d249a16e3a9b4a31dd934cd176e2c081b2cf64f53b340ec57f','Acquired canonical MR1 metadata');
+  assert.deepEqual(JSON.parse(repaired.toString('utf8').replace(/^\uFEFF/,'')).runtime_files,JSON.parse(previous.toString('utf8').replace(/^\uFEFF/,'')).runtime_files,'APW431 payload facts must remain byte-identical');
+  pinned={...pinned,sourceHash:'54ab51e9936ef6d249a16e3a9b4a31dd934cd176e2c081b2cf64f53b340ec57f'};
+ }
  for(const key of ['packageVersion','sourceHash','status','canonicalRuntimeReference'])assert.deepEqual(integration[key],pinned[key],`${row.id}:${key}`);
  if(changed){const runtime=await loadRegisteredRuntime('LIXIL',row.id===ewAdoption.scope_product_id?'EW':row.id===thermosAdoption.scope_product_id?'サーモスL':'TW');const nativeThermos=row.id===thermosAdoption.scope_product_id;assert.ok((nativeThermos?runtime.normalizedManifest.formal_pass:runtime.normalizedManifest.formalPass)&&runtime.sourcePackageIntegrity.match);assert.equal(runtime.sourcePackageIntegrity.files[0].actual,scopedAdoption.runtime_sha256);assert.equal(nativeThermos?runtime.normalizedManifest.package_version:runtime.normalizedManifest.packageVersion,pinned.packageVersion);}
  identities.push({id:row.id,packageVersion:integration.packageVersion,sourceHash:integration.sourceHash,unchangedFromPreviousApp:changed?false:row.unchanged,...(changed?{declaredSourceAdoption:scopedAdoption.work_id}:{})});

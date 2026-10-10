@@ -5,11 +5,13 @@ s=importlib.util.spec_from_file_location('batch3',ROOT/'scripts/production/order
 class ScopeTest(unittest.TestCase):
  def setUp(self):
   t=tempfile.TemporaryDirectory();self.addCleanup(t.cleanup);self.root=Path(t.name)/'repo';subprocess.run(['git','clone','--quiet','--shared',str(ROOT),str(self.root)],check=True);subprocess.run(['git','checkout','--quiet','--detach',guard.BASE],cwd=self.root,check=True)
-  for p in guard.ALLOWED:
+  actual=set(subprocess.check_output(['git','ls-files','-z','--cached','--others','--exclude-standard'],cwd=ROOT).decode().split('\0')[:-1])
+  for p in actual:
    target=self.root/p;target.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(ROOT/p,target)
  def reject(self):
   r=guard.validate(self.root);self.assertEqual(r['status'],'FAIL_CLOSED',r);self.assertEqual(r['authorized_paths'],[])
  def test_exact_all_product_profiles(self):self.assertEqual(guard.validate(self.root)['status'],'PASS')
+ def test_actual_candidate_is_admitted(self):self.assertEqual(guard.validate(ROOT)['status'],'PASS')
  def test_other_scope(self):
   p=self.root/'contracts/production/release-profiles.v1.json';d=json.loads(p.read_bytes());d['profiles'][0]['scope']='UNADMITTED';p.write_text(json.dumps(d));self.reject()
  def test_formal_change(self):
