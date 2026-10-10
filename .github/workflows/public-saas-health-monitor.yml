@@ -1,0 +1,69 @@
+name: Public SaaS Health Monitor
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '17 * * * *'
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  monitor:
+    runs-on: ubuntu-latest
+    environment: production
+    env:
+      VERCEL_ORG_ID: team_AkuHacuJlCl8LuvaFpCzFmbv
+      VERCEL_PROJECT_ID: prj_4z0zqW6yKyPuFINODfGX8LPBuJRP
+      VERCEL_TOKEN_PRIMARY: ${{ secrets.VERCEL_TOKEN }}
+      VERCEL_TOKEN_FALLBACK: ${{ secrets.VERCEL_ACCESS_TOKEN }}
+      PUBLIC_SAAS_HEAD_REF: ${{ vars.PUBLIC_SAAS_MONITOR_BRANCH || 'feat/public-saas-foundation-a1' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Vercel credential preflight
+        shell: bash
+        run: |
+          set -euo pipefail
+          token="${VERCEL_TOKEN_PRIMARY:-${VERCEL_TOKEN_FALLBACK:-}}"
+          if [[ -z "$token" ]]; then
+            echo "VERCEL_CREDENTIAL_GATE=BLOCKED"
+            exit 42
+          fi
+          echo "VERCEL_TOKEN_EFFECTIVE=$token" >> "$GITHUB_ENV"
+
+      - name: Monitor latest READY Public SaaS Preview
+        id: public_saas_health
+        continue-on-error: true
+        run: |
+          mkdir -p artifacts/public-saas-health
+          node scripts/public-saas-health-monitor.mjs artifacts/public-saas-health/health.json
+
+      - name: Route P0/P1 failure to GitHub Issue
+        if: steps.public_saas_health.outcome == 'failure'
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: node scripts/public-saas-github-alert.mjs failure artifacts/public-saas-health/health.json
+
+      - name: Close recovered monitor issue
+        if: steps.public_saas_health.outcome == 'success'
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: node scripts/public-saas-github-alert.mjs recovery artifacts/public-saas-health/health.json
+
+      - name: Upload health evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: public-saas-health-monitor
+          path: artifacts/public-saas-health/
+          if-no-files-found: warn
+
+      - name: Enforce health monitor gate
+        if: steps.public_saas_health.outcome == 'failure'
+        run: exit 1
