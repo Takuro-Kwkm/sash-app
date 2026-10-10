@@ -1,0 +1,9 @@
+node_modules/
+artifacts/
+outputs/
+private/
+*.log
+*.zip
+*.tar.gz
+
+*.bundle
