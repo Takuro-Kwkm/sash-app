@@ -83,7 +83,7 @@ export const runtimeMasterInventory = Object.freeze([
   }),
   Object.freeze({
     manufacturer:'YKK AP', series:'APW431', productId:'SER-YKK-APW431', masterVersion:'v1.2', schemaVersion:'product-master-runtime-manifest/2.0', packageType:'FORMAL_PRODUCT_RUNTIME', adapterType:'APW431_FORMAL_SPLIT_V1', packageRoot:APW431_ROOT,
-    runtimeManifestPath:join(APW431_ROOT,'runtime_manifest.json'), runtimeManifestDriveFileId:'16-hPgdJYmkl30MvonP_natv3bPV1C-3x', runtimeManifestSha256:'b8927a51a5e31b0c7a89a98b65833cf4f7e0e641c52316cecce4f493399eb1f9',
+    runtimeManifestPath:join(APW431_ROOT,'runtime_manifest.metadata-repair-v1.json'), runtimeManifestDriveFileId:'16-hPgdJYmkl30MvonP_natv3bPV1C-3x', runtimeManifestSha256:'54ab51e9936ef6d249a16e3a9b4a31dd934cd176e2c081b2cf64f53b340ec57f',
     materializedFiles:Object.freeze({
       '1Tdc-M1JWXOvFhDYiYpwlaVm2QJ_-BujQ':Object.freeze({codec:'raw-file',paths:Object.freeze([join(APW431_ROOT,'apw431_core_v1.2.json')])}),
       '1nJjAqm23gaMdIYUaTrFQzq6pKZsFTiUJ':Object.freeze({codec:'raw-parts',paths:Object.freeze(Array.from({length:2},(_,index)=>join(APW431_ROOT,`apw431_dimensions_v1.2.json.parts/part-${String(index).padStart(2,'0')}`)))}),

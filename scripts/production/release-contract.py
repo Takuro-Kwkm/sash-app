@@ -21,9 +21,9 @@ def main():
  assert doc['minimum_qa'] and doc['mandatory_approvals']==['Release']
  assert doc['shared_contract']['files']
  admission=doc.get('scope_admission')
- assert admission and admission['mode']=='REVIEWED_UI_OUTPUT_SUCCESSOR_V1'
+ assert admission and admission['mode']=='INFRASTRUCTURE_RELEASE_SAME_BYTES'
  assert admission['product_fact_mutation_allowed'] is False
- assert admission['product_id']=='SER-LIX-SAMOS2H' and admission['scope']=='SAMOS2H_V09R4_SELECTION_SAVE_OUTPUT_ORDER5_BATCH2_V1'
+ assert admission['product_id']=='SER-LIX-SAMOSL' and admission['scope']=='THERMOSL_UNCHANGED_FORMAL_SELECTION_SAVE_OUTPUT_ORDER5_BATCH3_V1'
 
  def admitted(arguments):
   # Native identity check only; the Shared engine owns schema, assets, receipt

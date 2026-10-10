@@ -1,0 +1,69 @@
+{
+  "product_id": "SER-YKK-APW431",
+  "scope": "APW431_UNCHANGED_FORMAL_SELECTION_SAVE_OUTPUT_ORDER5_BATCH3_V1",
+  "assets": {
+    "Source": {
+      "path": "src/catalog/runtime-master-packages/ykkap-apw431-v1.2/runtime_manifest.metadata-repair-v1.json",
+      "state": "KNOWN",
+      "version": "v1.2-MR1 / Source",
+      "sha256": "54ab51e9936ef6d249a16e3a9b4a31dd934cd176e2c081b2cf64f53b340ec57f"
+    },
+    "Formal": {
+      "path": "src/catalog/runtime-master-packages/ykkap-apw431-v1.2/runtime_manifest.metadata-repair-v1.json",
+      "state": "KNOWN",
+      "version": "v1.2-MR1 / Formal",
+      "sha256": "54ab51e9936ef6d249a16e3a9b4a31dd934cd176e2c081b2cf64f53b340ec57f"
+    },
+    "Runtime": {
+      "path": "src/catalog/runtime-master-packages/ykkap-apw431-v1.2/runtime_manifest.metadata-repair-v1.json",
+      "state": "KNOWN",
+      "version": "v1.2-MR1 / Runtime",
+      "sha256": "54ab51e9936ef6d249a16e3a9b4a31dd934cd176e2c081b2cf64f53b340ec57f"
+    },
+    "Contract": {
+      "path": "src/catalog/runtime-master-packages/ykkap-apw431-v1.2/runtime_manifest.metadata-repair-v1.json",
+      "state": "KNOWN",
+      "version": "v1.2-MR1 / Contract",
+      "sha256": "54ab51e9936ef6d249a16e3a9b4a31dd934cd176e2c081b2cf64f53b340ec57f"
+    },
+    "UI": {
+      "path": "src/ui/web/product-configuration-editor.mjs",
+      "state": "KNOWN",
+      "version": "v1.2-MR1 / UI",
+      "sha256": "4d454860646085bdad132916217a470bb95daab6672944928b65eb8669b1b96d"
+    }
+  },
+  "predecessor_assets": {
+    "Source": {
+      "path": "src/catalog/runtime-master-packages/ykkap-apw431-v1.2/runtime_manifest.metadata-repair-v1.json",
+      "state": "KNOWN",
+      "version": "v1.2-MR1 / Source",
+      "sha256": "54ab51e9936ef6d249a16e3a9b4a31dd934cd176e2c081b2cf64f53b340ec57f"
+    },
+    "Formal": {
+      "path": "src/catalog/runtime-master-packages/ykkap-apw431-v1.2/runtime_manifest.metadata-repair-v1.json",
+      "state": "KNOWN",
+      "version": "v1.2-MR1 / Formal",
+      "sha256": "54ab51e9936ef6d249a16e3a9b4a31dd934cd176e2c081b2cf64f53b340ec57f"
+    },
+    "Runtime": {
+      "path": "src/catalog/runtime-master-packages/ykkap-apw431-v1.2/runtime_manifest.metadata-repair-v1.json",
+      "state": "KNOWN",
+      "version": "v1.2-MR1 / Runtime",
+      "sha256": "54ab51e9936ef6d249a16e3a9b4a31dd934cd176e2c081b2cf64f53b340ec57f"
+    },
+    "Contract": {
+      "path": "src/catalog/runtime-master-packages/ykkap-apw431-v1.2/runtime_manifest.metadata-repair-v1.json",
+      "state": "KNOWN",
+      "version": "v1.2-MR1 / Contract",
+      "sha256": "54ab51e9936ef6d249a16e3a9b4a31dd934cd176e2c081b2cf64f53b340ec57f"
+    },
+    "UI": {
+      "path": "src/ui/web/product-configuration-editor.mjs",
+      "state": "KNOWN",
+      "version": "v1.2-MR1 / UI",
+      "sha256": "4d454860646085bdad132916217a470bb95daab6672944928b65eb8669b1b96d"
+    }
+  },
+  "product_fact_mutation_allowed": false
+}
