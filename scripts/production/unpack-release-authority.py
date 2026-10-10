@@ -20,8 +20,16 @@ else:
  destination.mkdir(parents=True);git('init','-q')
  if metadata['schema']=='IMMUTABLE_SHARED_GIT_REFERENCE_V1':
   assert metadata['repository']=='Takuro-Kwkm/product-ui-contracts'
+  bridge=metadata['offline_bridge']
+  # Private cross-repository CI has no credential; reuse sealed Git bytes.
+  raw=subprocess.check_output(['git','show',bridge['predecessor_commit']+':'+bridge['predecessor_path']],cwd=root)
+  assert hashlib.sha256(raw).hexdigest()==bridge['predecessor_sha256']
+  ancestor=destination.parent/(destination.name+'-ancestor.bundle');ancestor.write_bytes(raw)
+  git('bundle','verify',str(ancestor));git('fetch','--quiet',str(ancestor),bridge['predecessor_source_commit'])
+  ancestor.unlink()
+  delta=root/bridge['delta_path'];assert hashlib.sha256(delta.read_bytes()).hexdigest()==bridge['delta_sha256']
+  git('bundle','verify',str(delta));git('fetch','--quiet',str(delta),metadata['source_commit'])
   git('remote','add','origin','https://github.com/'+metadata['repository']+'.git')
-  git('fetch','--quiet','--depth=1','origin',metadata['source_commit'])
  else:
   assert metadata['schema']=='IMMUTABLE_SHARED_RELEASE_GIT_CARRIER_V1'
   assert hashlib.sha256(carrier.read_bytes()).hexdigest()==metadata['sha256']

@@ -5,3 +5,5 @@ private/
 *.log
 *.zip
 *.tar.gz
+
+*.bundle
