@@ -28,7 +28,9 @@
     "scripts/production/test_order5_batch3_scope.py",
     "scripts/production/validate-order4-release.py",
     "scripts/production/validate-order5-release.py",
-    "src/catalog/runtime-master-packages/ykkap-apw431-v1.2/runtime_manifest.json"
+    "src/catalog/runtime-master-packages/ykkap-apw431-v1.2/runtime_manifest.json",
+    "src/catalog/runtime-master/app-runtime-integration-registry.mjs",
+    "src/catalog/runtime-master/runtime-master-registry.mjs"
   ],
   "protected_sha256": {
     ".github/workflows/app-production-hotfix.yml": "1cd7d4d20d5a61d5a1c3215191ff91a6f5dc39015576ac8303087641fefceabd",
@@ -786,7 +788,6 @@
     "src/catalog/runtime-master-packages/ykkap-uchirimo-v1.0-p7r1-r2/runtime_manifest.json": "be4f1f77727424dc06ddf9de947201f33d4aee5219b182e37d0f178e1fb7147d",
     "src/catalog/runtime-master-packages/ykkap-uchirimo-v1.0-p7r1-r2/size-installation.json.br.b64.parts/part-00": "f8c986424001f1fcc6cbc9724078f6e9fde028a4ee190e8d2af391ecafc8d722",
     "src/catalog/runtime-master-packages/ykkap-uchirimo-v1.0-p7r1-r2/vacuum-glass.json.br.b64.parts/part-00": "766dc47cb485d7b5ad24e9d256ef406acf82ebd9e998d11fae3f32c4fbf0ff08",
-    "src/catalog/runtime-master/app-runtime-integration-registry.mjs": "96d4175c27d645f5436090dcf5581327bdb9de43686d9e65f5ced8f84cc8b698",
     "src/catalog/runtime-master/apw430-formal-split-v1-adapter.mjs": "6ea8608112ba7f3df9adc3eff7d1c8fc9d2c4c0ae72240627c5dc89dbfbd6828",
     "src/catalog/runtime-master/apw431-formal-split-v1-adapter.mjs": "01d4f803f0001e583ad706fd8dddf9637d4902f1fa37bee985f751a7c9f7e7b1",
     "src/catalog/runtime-master/canonical-runtime-manifest-loader.mjs": "c86533d113f2684700fb708068f9581ccbd8937116848572541fb76118c6456e",
@@ -818,7 +819,6 @@
     "src/catalog/runtime-master/runtime-condition.mjs": "8b59e3aa1593fba333286d9aab1d289bc6415c42151bb5aad1b25848b0c082f2",
     "src/catalog/runtime-master/runtime-effects.mjs": "261c361345e605f48a943ca02bdf66255ac4823883877836ba4e3befd39d24bc",
     "src/catalog/runtime-master/runtime-manifest-loader.mjs": "9382cc6b5ef3949e4e78e2d26bc4c4c8a79762d32369727c407eb5bc0808ac43",
-    "src/catalog/runtime-master/runtime-master-registry.mjs": "8ee62eeb6fd9f80d0290ed4febc269d5bfda153f82167e9277b8210a4ddb39a4",
     "src/catalog/runtime-master/runtime-state.mjs": "0b8ce17322d2e51fe914af1f0bfa7c8a9787e51695762d67ecd622bd0244a2b9",
     "src/catalog/runtime-master/semantic-table-bundle-v2-adapter.mjs": "a2e0f1dd967e3101cfae2365fb48a3d89e8565528231ccbcab186084e586b564",
     "src/catalog/runtime-master/semantic-table-bundle-v2-engine-core.mjs": "ac4fa09ea599de2824e816974aacb4ab45de9cd17f7f8e77c34953d6518fcaac",
@@ -957,12 +957,14 @@
     "contracts/production/shared-release-authority.v1.bundle": "12bd3c5dd4ca5783639e5045229b882a54c64a30b8e234dfbc3c6990edd77963",
     "contracts/production/shared-release-authority.v1.json": "193abac365c21002bcec3c948f5798da2fade61bbff0bbeabba5321a34152273",
     "docs/ORDER5_BATCH3.md": "bb8d2ccb8e78c82a47a9d4cedf581eb1f862df4ee31a2cbcfb3d2746b05c80f8",
-    "scripts/production/order5-batch3-scope.py": "241db03aeb5f1d01f1955b45b9d8150d5826231e7304d84f838db75ca07165b4",
+    "scripts/production/order5-batch3-scope.py": "ede1912dc6e8ce1bff116654af377caf16c01693d71e1c65b899bfaa5f913f16",
     "scripts/production/release-batch.py": "fbde50dfef3c53df4610845acf47b7040125a43c5fe1951b35876c499b18fe69",
     "scripts/production/release-contract.py": "eede0bf2868f76f8779d8958987fb0ac8e42dcd310d8db0cc4d4f64dc9905da8",
     "scripts/production/test_order5_batch3_scope.py": "b889c894cd7a30b76a44fe62ad3cb632ac6697e56bc3ee9fdace2661a6396574",
     "scripts/production/validate-order4-release.py": "e55960d3aee70154ded73c30858240fbce44f624626af7ad648a08f12cb2778d",
     "scripts/production/validate-order5-release.py": "6e5adfd56b2f0321d4e4afba6fa83ae7c8d59604efe3c44d26dfbbdc65ba6e10",
-    "src/catalog/runtime-master-packages/ykkap-apw431-v1.2/runtime_manifest.json": "54ab51e9936ef6d249a16e3a9b4a31dd934cd176e2c081b2cf64f53b340ec57f"
+    "src/catalog/runtime-master-packages/ykkap-apw431-v1.2/runtime_manifest.json": "54ab51e9936ef6d249a16e3a9b4a31dd934cd176e2c081b2cf64f53b340ec57f",
+    "src/catalog/runtime-master/app-runtime-integration-registry.mjs": "e69de24ec0899f00387a9e4b9f6051b98e732e2ce9179d09faf183a795f67d5c",
+    "src/catalog/runtime-master/runtime-master-registry.mjs": "d359b8aedfc50976e8e7fba15b5c23b4ae36e42f509d875b66950a862056b8fc"
   }
 }
