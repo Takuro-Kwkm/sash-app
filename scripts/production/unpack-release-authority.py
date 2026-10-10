@@ -28,6 +28,16 @@ else:
   git('bundle','verify',str(carrier));git('fetch','--quiet',str(carrier),metadata['source_commit'])
   git('remote','add','origin','https://github.com/'+metadata['repository']+'.git')
  git('checkout','--quiet','--detach',metadata['source_commit'])
+# Acquire only the immutable predecessor revisions required by compatibility.
+references={metadata['source_commit']}
+references.add(json.loads((root/'contracts/production/current-architecture.json').read_bytes())['architecture_authority']['ref'])
+selection=json.loads((root/'contracts/production/current-authority-successor.json').read_bytes())
+record=json.loads((root/selection['path']).read_bytes())
+prior=json.loads((root/record['predecessor_selection']['path']).read_bytes())
+references.add(prior['implementation_sha'])
+for ref in sorted(references):
+ try:git('cat-file','-e',ref+'^{commit}')
+ except subprocess.CalledProcessError:git('fetch','--quiet','--depth=1','origin',ref)
 for name,digest in profile['shared_contract']['files'].items():
  assert hashlib.sha256((destination/name).read_bytes()).hexdigest()==digest,name
 sys.path.insert(0,str(destination))

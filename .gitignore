@@ -1,2 +1,7 @@
 node_modules/
 artifacts/
+
+# Shared QA dependency roots are local only, including a symlink root.
+node_modules
+outputs/
+private/
