@@ -150,17 +150,20 @@ const payload = {
   },
 };
 
-if (effectiveDeploySource === 'gitSource') {
+const gitSourceForHead = () => {
   const numericRepositoryId = Number(repositoryId);
   if (!Number.isSafeInteger(numericRepositoryId) || numericRepositoryId <= 0) {
     throw new Error(`Invalid GitHub repository id: ${repositoryId}`);
   }
-  payload.gitSource = {
+  return {
     type: 'github',
     repoId: numericRepositoryId,
     ref: githubRefName,
     sha: githubSha,
   };
+};
+if (effectiveDeploySource === 'gitSource') {
+  payload.gitSource = gitSourceForHead();
 } else {
   payload.files = deploymentFiles;
   payload.gitMetadata = {
@@ -183,10 +186,23 @@ if (mode === 'production') {
   payload.autoAssignCustomDomains = false;
 }
 
+// The provider limits a create body to 10 MB. Select the established exact-SHA
+// Git source before any create, rather than sending an oversized inline body.
+if (!previous && mode === 'preview' && effectiveDeploySource === 'inline' &&
+    Buffer.byteLength(JSON.stringify(payload)) > 10_000_000) {
+  effectiveDeploySource = 'gitSource';
+  delete payload.files;
+  delete payload.gitMetadata;
+  payload.gitSource = gitSourceForHead();
+  console.log('VERCEL_INLINE_BODY_LIMIT_SOURCE=gitSource');
+}
+const payloadBytes = Buffer.byteLength(JSON.stringify(payload));
+if (!previous && payloadBytes > 10_000_000) throw new Error('DEPLOYMENT_CREATE_BODY_TOO_LARGE');
+
 await mkdir(path.dirname(operationPath), { recursive: true });
 const intent=previous??{schema:'VERCEL_STAGED_BUILD_OPERATION_V1',mode,githubSha,projectId,teamId,
   aliasBefore,totalBytes,fileCount:files.length,deploySource:effectiveDeploySource,autoAssignCustomDomains:mode==='production'?false:null,
-  state:'CREATE_INTENT_SAVED',external_create_operations:0};
+  payloadBytes,state:'CREATE_INTENT_SAVED',external_create_operations:0};
 if(!previous)await writeFile(operationPath,JSON.stringify(intent,null,2)+'\n');
 let created=previous?.providerResponse;
 if(!created) {

@@ -7,3 +7,5 @@ Publication entry: `npm run publish:release -- --central <exact-shared-checkout>
 Product-master bytes are read-only. Bathroom identity is LIXIL_INPLUS_BATHROOM, runtime product SER-LIXIL-INPLUS, variant bathroom; seven unresolved items remain. Prior incidents and corrective publication records remain separate immutable references at the starting Resume Index.
 
 Old carrier archive is retained at the predecessor Git commit and fixed Drive restore package. The new checkout acquires a single exact Shared Git reference and verifies all pinned files; the same exact checkout is reusable. No Git history is rewritten.
+
+Preview creation measures the serialized provider body before create. Above the provider's 10 MB limit, the existing executor uses the exact Git SHA without file-upload requests. Preview forceNew is disabled. Production remains the existing staged files route with autoAssignCustomDomains=false and an unchanged alias; publication uses the gated entry separately.

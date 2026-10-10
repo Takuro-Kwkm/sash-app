@@ -148,6 +148,7 @@
     "test/browser/ew-october-2026-browser-qa.mjs",
     "test/browser/inplus-bathroom-v1-browser-qa.mjs",
     "test/browser/release-regression-browser-qa.mjs",
+    "test/vercel-staged-executor.test.mjs",
     "vercel.json"
   ],
   "deployment_executor": "Existing Vercel REST/files executor; explicit autoAssignCustomDomains=false; Shared gate -> existing fixed-ID provider promotion",
@@ -195,14 +196,14 @@
     "docs/ORDER5_BATCH1.md": "85ffed1da89d426ec9af5360b8bb0e7af200dac31b71dd25b1a7b5f4fffcd6ac",
     "docs/ORDER5_BATCH2.md": "c2386296fb9c85a95ce7514224726e3b8b99e970e21d4851dca843f696dc7ba4",
     "docs/ORDER5_BATCH3.md": "bb8d2ccb8e78c82a47a9d4cedf581eb1f862df4ee31a2cbcfb3d2746b05c80f8",
-    "docs/ORDER5_BATCH4_COST_PUBLICATION.md": "cd3405871a0faf01abd188e303fec690b6f1ede0f2a49be5227e8efe059b58ae",
+    "docs/ORDER5_BATCH4_COST_PUBLICATION.md": "ea4210a2b6939ccea908e4c5e373d2e4b41ee4070039e5f55a6a32d617e9b169",
     "package.json": "e571938766d14d0a43a001637dec59c04aa28f9403dd768a4ebd99ccc6f06272",
     "scripts/governance/inner-window-frame-integration-qa.mjs": "28cdb32d16f93190ae5991468f9914ebcc313ab4d9806ca32a34c6aa2eae3863",
     "scripts/prepare-deployment-static.mjs": "688c7206cf360a95a821c7c8bdb5af0a084f54e990d716c9574dd9b3ea4e8704",
     "scripts/production/ew-change.py": "e932b6001ac38bffb0da4719dd864f131e4e511905eea0a86fa46f2bc58f4fa1",
     "scripts/production/order5-batch2-scope.py": "3cc2ae1d7a7b6dc510a4ab34894eafc8df162abe311944a2f34502d8284d1c4a",
     "scripts/production/order5-batch3-scope.py": "db6c9bdfc02ff6cfa9c63584c543d972d9ccc148aa1b6c96f14c3b0e005e7736",
-    "scripts/production/order5-batch4-scope.py": "74cb737c16f3e034bb27bda8d3f2da29635eea02c0c1eeb09f3aaee4b4e98e2a",
+    "scripts/production/order5-batch4-scope.py": "dd8e432b9eb336f8427ebc066c5aa8b2446f1e59c3c7f376636c70f10a163fd0",
     "scripts/production/prepare-ew.py": "6d1497c7e48650cf32d7106972270b7c9e6a14d9a080fb53a29cc651a9014e4c",
     "scripts/production/publish-release.mjs": "ae269cdabb83e63d531cc3413ef4af1d88a083c367e96dfe860cc73518460e79",
     "scripts/production/release-batch.py": "c5d14b687d225b708aa744011163bad60a24910e4bcfca72fce4b1c2ce71db40",
@@ -216,7 +217,7 @@
     "scripts/production/validate-order4-release.py": "959f28d8f53b9a2ec123359875619933e1fb9ffcf980e1db502a11655ddebec0",
     "scripts/production/validate-order5-release.py": "aadfc8466e5cdb9855c15d6dfa95abf437a6bcce25a44636c77225cc78c9d7c6",
     "scripts/production/verify-app-release.mjs": "0e5f3301de89c6b9cf041ada3683b3bfa1056727598ed41342606267d3e101ba",
-    "scripts/vercel-rest-deploy.mjs": "d987e1a4f123a124c5194e7c4c5dc98933a082d343bb59968f5207c47787137d",
+    "scripts/vercel-rest-deploy.mjs": "d3ecde8eaa5900cf6da8cd587fa501a49da9e4d1dc120d6099f8997bac7fcb6c",
     "src/catalog/runtime-master-packages/ykkap-apw431-v1.2/runtime_manifest.metadata-repair-v1.json": "54ab51e9936ef6d249a16e3a9b4a31dd934cd176e2c081b2cf64f53b340ec57f",
     "src/catalog/runtime-master/app-runtime-integration-registry.mjs": "e69de24ec0899f00387a9e4b9f6051b98e732e2ce9179d09faf183a795f67d5c",
     "src/catalog/runtime-master/runtime-master-registry.mjs": "610fc876a2ac15840aa62c0536622e3197ab723ec16527afc9308c0aa09bc357",
@@ -230,6 +231,7 @@
     "test/browser/ew-october-2026-browser-qa.mjs": "2b83118bc51b190608f054d7a4f5b02c0c25f28f163fb152dd6c7d5c612a995a",
     "test/browser/inplus-bathroom-v1-browser-qa.mjs": "d06c525a1e7bcc52afa6c8991893a1e65980d7b2c5b3b84f8ca3a7826c056b38",
     "test/browser/release-regression-browser-qa.mjs": "855d124bfcc79ef444a1bfabb2000261bab775f1a75116f04bf66a379c0e17b4",
+    "test/vercel-staged-executor.test.mjs": "bcc8e06e09f39654e0b9678a5fcee004a74ceb85e7a187fae45bc9fa39cd962b",
     "vercel.json": "1d2210ec1d8fd44369362cc4939804e424a474f5487950c80a599aa80163d768"
   },
   "scope_admission": {
@@ -1223,8 +1225,7 @@
       "test/fixtures/uchirimo-slim/residual-3797-g9.json": "5e5845c8b361ba7b8d69333f13f23aa567a74b7125259301106e67d1fb10eec3",
       "test/helpers/formal-runtime-result.mjs": "c5aaf4faa76aa46537b1e1bb40c1cab26a93cf1d066f71cfd51d4d9d3b8d46d5",
       "test/helpers/legacy-inplus-source-result.mjs": "cec2e9da2d452659601bd160f93023af1c7abe5780c3973e20b8de3d2525c04a",
-      "test/helpers/rechent-estimate-cases.mjs": "fa549d51db5e72c52e22cd91013e2b7cae6761e0e5e69eea735c642a4e38ac28",
-      "test/vercel-staged-executor.test.mjs": "c1ee42543f0aee8d757117810fe55d61d068900b16fe7cede3ebc7fbadc223f3"
+      "test/helpers/rechent-estimate-cases.mjs": "fa549d51db5e72c52e22cd91013e2b7cae6761e0e5e69eea735c642a4e38ac28"
     },
     "http_artifacts": {
       "/": "3ddd021c6b9019c51e4becc7afc5e615637c96df1e9775910e9c5c9d3e981e49",

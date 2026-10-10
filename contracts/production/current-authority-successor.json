@@ -1,6 +1,6 @@
 {
   "schema": "CURRENT_AUTHORITY_SUCCESSOR_SELECTION_V1",
   "path": "contracts/production/authority-successors/order5-batch4.v1.json",
-  "sha256": "16cde402a4e395906ff11455c5e9a2a3078e0a2a0cd4bd751a8de4e63b516d61",
+  "sha256": "e835d73887cee70553f7b649515b1db7f84b91a105eb6c36c38f16003978c814",
   "implementation_sha": "1b2c311606b1d12ef1ba3d6daf39a52358c9cb7f"
 }

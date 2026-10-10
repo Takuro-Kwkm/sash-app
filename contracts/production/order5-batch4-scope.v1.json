@@ -39,6 +39,7 @@
     "scripts/production/validate-order5-release.py",
     "scripts/vercel-rest-deploy.mjs",
     "test/browser/inplus-bathroom-v1-browser-qa.mjs",
+    "test/vercel-staged-executor.test.mjs",
     "vercel.json"
   ],
   "protected_sha256": {
@@ -961,8 +962,7 @@
     "test/fixtures/uchirimo-slim/residual-3797-g9.json": "5e5845c8b361ba7b8d69333f13f23aa567a74b7125259301106e67d1fb10eec3",
     "test/helpers/formal-runtime-result.mjs": "c5aaf4faa76aa46537b1e1bb40c1cab26a93cf1d066f71cfd51d4d9d3b8d46d5",
     "test/helpers/legacy-inplus-source-result.mjs": "cec2e9da2d452659601bd160f93023af1c7abe5780c3973e20b8de3d2525c04a",
-    "test/helpers/rechent-estimate-cases.mjs": "fa549d51db5e72c52e22cd91013e2b7cae6761e0e5e69eea735c642a4e38ac28",
-    "test/vercel-staged-executor.test.mjs": "c1ee42543f0aee8d757117810fe55d61d068900b16fe7cede3ebc7fbadc223f3"
+    "test/helpers/rechent-estimate-cases.mjs": "fa549d51db5e72c52e22cd91013e2b7cae6761e0e5e69eea735c642a4e38ac28"
   },
   "candidate_files_sha256": {
     ".github/workflows/app-production-hotfix.yml": "e885cfcd9347134a7153d41be1a70d129ddeb4cf415389d32c8273e2b968e070",
@@ -977,10 +977,10 @@
     "contracts/production/release-profiles.v1.json": "bcbe5212b9bdc9457a9d450b139774fdf4edc9938ddffd67a593e4a889902418",
     "contracts/production/shared-release-authority.delta.bundle": "3811feec8e1fe1ab6545218d78f83d7050e96b8a4fb99a690612545a37182e1e",
     "contracts/production/shared-release-authority.v1.json": "4ccc57dd6cc0b9c9531552ad8e08b0b8b6b7e5db2cb77019f3154465d1768265",
-    "docs/ORDER5_BATCH4_COST_PUBLICATION.md": "cd3405871a0faf01abd188e303fec690b6f1ede0f2a49be5227e8efe059b58ae",
+    "docs/ORDER5_BATCH4_COST_PUBLICATION.md": "ea4210a2b6939ccea908e4c5e373d2e4b41ee4070039e5f55a6a32d617e9b169",
     "package.json": "e571938766d14d0a43a001637dec59c04aa28f9403dd768a4ebd99ccc6f06272",
     "scripts/prepare-deployment-static.mjs": "688c7206cf360a95a821c7c8bdb5af0a084f54e990d716c9574dd9b3ea4e8704",
-    "scripts/production/order5-batch4-scope.py": "74cb737c16f3e034bb27bda8d3f2da29635eea02c0c1eeb09f3aaee4b4e98e2a",
+    "scripts/production/order5-batch4-scope.py": "dd8e432b9eb336f8427ebc066c5aa8b2446f1e59c3c7f376636c70f10a163fd0",
     "scripts/production/publish-release.mjs": "ae269cdabb83e63d531cc3413ef4af1d88a083c367e96dfe860cc73518460e79",
     "scripts/production/release-batch.py": "c5d14b687d225b708aa744011163bad60a24910e4bcfca72fce4b1c2ce71db40",
     "scripts/production/release-contract.py": "c7dcc401125fe262c88b4432853100889a105f4181c44f9b7a20b55e0d64ab51",
@@ -989,8 +989,9 @@
     "scripts/production/unpack-release-authority.py": "ee1d321d9be5970583b26181d8f0841fb358baad2711d7da1b0a3913476b6836",
     "scripts/production/validate-order4-release.py": "959f28d8f53b9a2ec123359875619933e1fb9ffcf980e1db502a11655ddebec0",
     "scripts/production/validate-order5-release.py": "aadfc8466e5cdb9855c15d6dfa95abf437a6bcce25a44636c77225cc78c9d7c6",
-    "scripts/vercel-rest-deploy.mjs": "d987e1a4f123a124c5194e7c4c5dc98933a082d343bb59968f5207c47787137d",
+    "scripts/vercel-rest-deploy.mjs": "d3ecde8eaa5900cf6da8cd587fa501a49da9e4d1dc120d6099f8997bac7fcb6c",
     "test/browser/inplus-bathroom-v1-browser-qa.mjs": "d06c525a1e7bcc52afa6c8991893a1e65980d7b2c5b3b84f8ca3a7826c056b38",
+    "test/vercel-staged-executor.test.mjs": "bcc8e06e09f39654e0b9678a5fcee004a74ceb85e7a187fae45bc9fa39cd962b",
     "vercel.json": "1d2210ec1d8fd44369362cc4939804e424a474f5487950c80a599aa80163d768"
   }
 }

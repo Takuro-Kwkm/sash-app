@@ -47,3 +47,44 @@ test('existing executor holds alias and resumes created Deployment after only re
     assert.equal(requests.filter(r=>r.url.includes('/promote')||r.method==='POST'&&r.url.includes('/aliases')).length,0);
   } finally {await rm(root,{recursive:true,force:true});}
 });
+
+test('oversized preview selects exact Git SHA before one provider create',async()=>{
+  const root=await mkdtemp(path.join(tmpdir(),'order5-preview-body-'));
+  try {
+    const native=path.join(root,'native');
+    await mkdir(path.join(native,'contracts/production'),{recursive:true});
+    await mkdir(path.join(native,'scripts'));
+    const target=JSON.parse(await readFile(new URL('../contracts/production/app-release.v1.json',import.meta.url),'utf8'));
+    await writeFile(path.join(native,'contracts/production/app-release.v1.json'),JSON.stringify(target));
+    await writeFile(path.join(native,'scripts/vercel-rest-deploy.mjs'),await readFile(new URL('../scripts/vercel-rest-deploy.mjs',import.meta.url)));
+    await writeFile(path.join(native,'large-source.bin'),Buffer.alloc(7_500_000,65));
+    const git=(...args)=>execFileSync('git',args,{cwd:native,encoding:'utf8',stdio:['ignore','pipe','pipe']}).trim();
+    git('init','-b','review');git('add','.');
+    git('-c','user.name=Isolated Test','-c','user.email=test@example.invalid','commit','-m','isolated oversized source');
+    const head=git('rev-parse','HEAD'),log=path.join(root,'requests.jsonl'),stub=path.join(root,'provider-stub.mjs');
+    await writeFile(stub,`
+      import assert from 'node:assert/strict';import {appendFileSync} from 'node:fs';
+      globalThis.fetch=async(url,init={})=>{
+        const p=JSON.parse(init.body);assert.equal(init.method,'POST');assert.ok(url.includes('/deployments?'));
+        assert.ok(!url.includes('forceNew=1'));assert.equal(p.gitSource.sha,process.env.GITHUB_SHA);
+        assert.equal(p.gitSource.ref,'review');assert.equal(p.gitSource.repoId,1351370514);
+        assert.equal(p.target,undefined);assert.equal(p.files,undefined);
+        assert.ok(Buffer.byteLength(init.body)<10_000_000);
+        appendFileSync(process.env.REQUEST_LOG,JSON.stringify({url,bodyBytes:Buffer.byteLength(init.body)})+'\\n');
+        return new Response(JSON.stringify({id:'isolated-preview',url:'isolated.invalid',readyState:'READY',meta:{...p.meta,githubCommitSha:p.gitSource.sha}}),{status:200});
+      };
+    `);
+    const out=path.join(root,'result.json');
+    const env={...process.env,GITHUB_SHA:head,GITHUB_REF_NAME:'review',GITHUB_REPOSITORY:target.repository,
+      GITHUB_REPOSITORY_ID:'1351370514',VERCEL_TOKEN_EFFECTIVE:'ISOLATED_NOT_A_CREDENTIAL',
+      VERCEL_ORG_ID:target.deployment.team_id,VERCEL_PROJECT_ID:target.deployment.project_id,
+      VERCEL_PROJECT_NAME:target.deployment.project_name,VERCEL_DEPLOY_SOURCE:'inline',REQUEST_LOG:log};
+    delete env.GITHUB_ENV;
+    const run=spawnSync(process.execPath,['--import',stub,'scripts/vercel-rest-deploy.mjs','preview',out],{cwd:native,env,encoding:'utf8'});
+    assert.equal(run.status,0,run.stderr);
+    const result=JSON.parse(await readFile(out,'utf8'));
+    assert.equal(result.deploySource,'gitSource');assert.equal(result.releaseState,'PREVIEW_READY');
+    assert.equal(result.externalCreateOperations,1);
+    assert.equal((await readFile(log,'utf8')).trim().split('\n').length,1);
+  } finally {await rm(root,{recursive:true,force:true});}
+});
