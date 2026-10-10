@@ -230,61 +230,61 @@
   },
   "scope_admission": {
     "mode": "INFRASTRUCTURE_RELEASE_SAME_BYTES",
-    "product_id": "SER-LIX-SAMOSL",
-    "scope": "THERMOSL_UNCHANGED_FORMAL_SELECTION_SAVE_OUTPUT_ORDER5_BATCH4_V1",
-    "public_path": "/runtime-lab?product=SER-LIX-SAMOSL",
+    "product_id": "SER-YKK-APW430",
+    "scope": "APW430_UNCHANGED_FORMAL_SELECTION_SAVE_OUTPUT_ORDER5_BATCH4_V1",
+    "public_path": "/runtime-lab?product=SER-YKK-APW430",
     "product_fact_mutation_allowed": false,
     "asset_identities": {
       "Source": {
         "state": "KNOWN",
-        "version": "v0.7-R3 / Source",
-        "sha256": "0fed18a4d317fa03cb0ef0463a0c17eb9f83e1bb84baa6628a6bdce73de62257"
+        "version": "20260918-R3 / Source",
+        "sha256": "e2755a735fc3a7c94afacc58175a390bf00784cf1f13521a1263076d7bfae1c7"
       },
       "Formal": {
         "state": "KNOWN",
-        "version": "v0.7-R3 / Formal",
-        "sha256": "0fed18a4d317fa03cb0ef0463a0c17eb9f83e1bb84baa6628a6bdce73de62257"
+        "version": "20260918-R3 / Formal",
+        "sha256": "e2755a735fc3a7c94afacc58175a390bf00784cf1f13521a1263076d7bfae1c7"
       },
       "Runtime": {
         "state": "KNOWN",
-        "version": "v0.7-R3 / Runtime",
-        "sha256": "0fed18a4d317fa03cb0ef0463a0c17eb9f83e1bb84baa6628a6bdce73de62257"
+        "version": "20260918-R3 / Runtime",
+        "sha256": "e2755a735fc3a7c94afacc58175a390bf00784cf1f13521a1263076d7bfae1c7"
       },
       "Contract": {
         "state": "KNOWN",
-        "version": "v0.7-R3 / Contract",
-        "sha256": "0fed18a4d317fa03cb0ef0463a0c17eb9f83e1bb84baa6628a6bdce73de62257"
+        "version": "20260918-R3 / Contract",
+        "sha256": "e2755a735fc3a7c94afacc58175a390bf00784cf1f13521a1263076d7bfae1c7"
       },
       "UI": {
         "state": "KNOWN",
-        "version": "v0.7-R3 / UI",
+        "version": "20260918-R3 / UI",
         "sha256": "4d454860646085bdad132916217a470bb95daab6672944928b65eb8669b1b96d"
       }
     },
     "predecessor_asset_identities": {
       "Source": {
         "state": "KNOWN",
-        "version": "v0.7-R3 / Source",
-        "sha256": "0fed18a4d317fa03cb0ef0463a0c17eb9f83e1bb84baa6628a6bdce73de62257"
+        "version": "20260918-R3 / Source",
+        "sha256": "e2755a735fc3a7c94afacc58175a390bf00784cf1f13521a1263076d7bfae1c7"
       },
       "Formal": {
         "state": "KNOWN",
-        "version": "v0.7-R3 / Formal",
-        "sha256": "0fed18a4d317fa03cb0ef0463a0c17eb9f83e1bb84baa6628a6bdce73de62257"
+        "version": "20260918-R3 / Formal",
+        "sha256": "e2755a735fc3a7c94afacc58175a390bf00784cf1f13521a1263076d7bfae1c7"
       },
       "Runtime": {
         "state": "KNOWN",
-        "version": "v0.7-R3 / Runtime",
-        "sha256": "0fed18a4d317fa03cb0ef0463a0c17eb9f83e1bb84baa6628a6bdce73de62257"
+        "version": "20260918-R3 / Runtime",
+        "sha256": "e2755a735fc3a7c94afacc58175a390bf00784cf1f13521a1263076d7bfae1c7"
       },
       "Contract": {
         "state": "KNOWN",
-        "version": "v0.7-R3 / Contract",
-        "sha256": "0fed18a4d317fa03cb0ef0463a0c17eb9f83e1bb84baa6628a6bdce73de62257"
+        "version": "20260918-R3 / Contract",
+        "sha256": "e2755a735fc3a7c94afacc58175a390bf00784cf1f13521a1263076d7bfae1c7"
       },
       "UI": {
         "state": "KNOWN",
-        "version": "v0.7-R3 / UI",
+        "version": "20260918-R3 / UI",
         "sha256": "4d454860646085bdad132916217a470bb95daab6672944928b65eb8669b1b96d"
       }
     },
@@ -1298,13 +1298,13 @@
             "pointer": [
               "product_id"
             ],
-            "value": "SER-LIX-SAMOSL"
+            "value": "SER-YKK-APW430"
           },
           {
             "pointer": [
               "scope"
             ],
-            "value": "THERMOSL_UNCHANGED_FORMAL_SELECTION_SAVE_OUTPUT_ORDER5_BATCH4_V1"
+            "value": "APW430_UNCHANGED_FORMAL_SELECTION_SAVE_OUTPUT_ORDER5_BATCH4_V1"
           },
           {
             "pointer": [

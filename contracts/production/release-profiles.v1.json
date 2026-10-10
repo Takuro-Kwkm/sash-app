@@ -4,28 +4,34 @@
   "profiles": [
     {
       "product_id": "SER-LIX-SAMOSL",
-      "scope": "THERMOSL_UNCHANGED_FORMAL_SELECTION_SAVE_OUTPUT_ORDER5_BATCH3_V1",
-      "path": "contracts/production/release-profiles/order5-batch3-thermosl.v1.json",
+      "scope": "THERMOSL_UNCHANGED_FORMAL_SELECTION_SAVE_OUTPUT_ORDER5_BATCH4_V1",
+      "path": "contracts/production/release-profiles/order5-batch4-thermosl.v1.json",
       "row": 2
     },
     {
       "product_id": "SER-LIXIL-TW",
-      "scope": "TW_UNCHANGED_FORMAL_SELECTION_SAVE_OUTPUT_ORDER5_BATCH3_V1",
-      "path": "contracts/production/release-profiles/order5-batch3-tw.v1.json",
+      "scope": "TW_UNCHANGED_FORMAL_SELECTION_SAVE_OUTPUT_ORDER5_BATCH4_V1",
+      "path": "contracts/production/release-profiles/order5-batch4-tw.v1.json",
       "row": 4
     },
     {
       "product_id": "SER-YKK-APW430",
-      "scope": "APW430_UNCHANGED_FORMAL_SELECTION_SAVE_OUTPUT_ORDER5_BATCH3_V1",
-      "path": "contracts/production/release-profiles/order5-batch3-apw430.v1.json",
+      "scope": "APW430_UNCHANGED_FORMAL_SELECTION_SAVE_OUTPUT_ORDER5_BATCH4_V1",
+      "path": "contracts/production/release-profiles/order5-batch4-apw430.v1.json",
       "row": 7
     },
     {
       "product_id": "SER-YKK-APW431",
-      "scope": "APW431_UNCHANGED_FORMAL_SELECTION_SAVE_OUTPUT_ORDER5_BATCH3_V1",
-      "path": "contracts/production/release-profiles/order5-batch3-apw431.v1.json",
+      "scope": "APW431_UNCHANGED_FORMAL_SELECTION_SAVE_OUTPUT_ORDER5_BATCH4_V1",
+      "path": "contracts/production/release-profiles/order5-batch4-apw431.v1.json",
       "row": 8
+    },
+    {
+      "product_id": "LIXIL_INPLUS_BATHROOM",
+      "scope": "INPLUS_BATHROOM_UNCHANGED_FORMAL_SELECTION_SAVE_OUTPUT_ORDER5_BATCH4_V1",
+      "path": "contracts/production/release-profiles/order5-batch4-inplus-bathroom.v1.json",
+      "row": 11
     }
   ],
-  "publication": "NEW_EXACT_PRODUCT_SCOPE_HUMAN_DECISION_REQUIRED"
+  "publication": "ALL_CURRENT_PRODUCT_SCOPES_VIA_PUBLISH_RELEASE_ENTRY; NEW_EXACT_HUMAN_DECISION_REQUIRED"
 }

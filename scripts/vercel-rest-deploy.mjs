@@ -190,7 +190,8 @@ const intent=previous??{schema:'VERCEL_STAGED_BUILD_OPERATION_V1',mode,githubSha
 if(!previous)await writeFile(operationPath,JSON.stringify(intent,null,2)+'\n');
 let created=previous?.providerResponse;
 if(!created) {
-  const createResponse=await api(`https://api.vercel.com/v13/deployments?forceNew=1&skipAutoDetectionConfirmation=1&teamId=${encodeURIComponent(teamId)}`, {
+  const forceNew=mode==='production'?'forceNew=1&':'';
+  const createResponse=await api(`https://api.vercel.com/v13/deployments?${forceNew}skipAutoDetectionConfirmation=1&teamId=${encodeURIComponent(teamId)}`, {
     method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
   const createdText=await createResponse.text();
   try {created=JSON.parse(createdText);} catch {throw new Error('DEPLOYMENT_CREATE_RESPONSE_INVALID');}

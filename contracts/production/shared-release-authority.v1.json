@@ -1,8 +1,13 @@
 {
-  "schema": "IMMUTABLE_SHARED_RELEASE_GIT_CARRIER_V1",
+  "schema": "IMMUTABLE_SHARED_GIT_REFERENCE_V1",
   "repository": "Takuro-Kwkm/product-ui-contracts",
-  "source_commit": "746a74065e56c6be32f766043654cd3838a9aec3",
-  "sha256": "eb428b9361323f01e5aa7b6b873ce9e1e77acd399ad3c54756fde9df9bb1be53",
-  "bytes": 1366072,
-  "scope": "ISOLATED_CI_DEPENDENCY_ACQUISITION"
+  "source_commit": "1b2c311606b1d12ef1ba3d6daf39a52358c9cb7f",
+  "scope": "ISOLATED_CI_DEPENDENCY_ACQUISITION",
+  "predecessor_carrier": {
+    "commit": "36ac2ad2f615f107c1742240a2a255136ad12cec",
+    "path": "contracts/production/shared-release-authority.v1.bundle",
+    "sha256": "eb428b9361323f01e5aa7b6b873ce9e1e77acd399ad3c54756fde9df9bb1be53",
+    "bytes": 1366072
+  },
+  "restore_reference": "Fixed starting Drive Resume Index / common carrier; acquire once for a shared restore root"
 }

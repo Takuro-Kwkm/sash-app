@@ -7,6 +7,11 @@ ALLOWED={'scripts/production/release-contract.py', 'contracts/production/release
 def git(root,*args):return subprocess.check_output(['git',*args],cwd=root,stderr=subprocess.PIPE)
 def digest(data):return hashlib.sha256(data).hexdigest()
 def validate(root):
+ if (Path(root)/'contracts/production/order5-batch4-scope.v1.json').exists():
+  import importlib.util
+  spec=importlib.util.spec_from_file_location('batch4_scope',Path(root)/'scripts/production/order5-batch4-scope.py')
+  native=importlib.util.module_from_spec(spec);spec.loader.exec_module(native)
+  return native.validate(root)
  if (Path(root)/'contracts/production/order5-batch3-scope.v1.json').exists():
   import importlib.util
   spec=importlib.util.spec_from_file_location('batch3_scope',Path(root)/'scripts/production/order5-batch3-scope.py')
