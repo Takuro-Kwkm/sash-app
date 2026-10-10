@@ -1,0 +1,69 @@
+{
+  "product_id": "SER-LIX-SAMOSL",
+  "scope": "THERMOSL_UNCHANGED_FORMAL_SELECTION_SAVE_OUTPUT_ORDER5_BATCH3_V1",
+  "assets": {
+    "Source": {
+      "path": "src/catalog/runtime-master-packages/lixil-thermosl-v0.7-r3/runtime_manifest.json",
+      "state": "KNOWN",
+      "version": "v0.7-R3 / Source",
+      "sha256": "0fed18a4d317fa03cb0ef0463a0c17eb9f83e1bb84baa6628a6bdce73de62257"
+    },
+    "Formal": {
+      "path": "src/catalog/runtime-master-packages/lixil-thermosl-v0.7-r3/runtime_manifest.json",
+      "state": "KNOWN",
+      "version": "v0.7-R3 / Formal",
+      "sha256": "0fed18a4d317fa03cb0ef0463a0c17eb9f83e1bb84baa6628a6bdce73de62257"
+    },
+    "Runtime": {
+      "path": "src/catalog/runtime-master-packages/lixil-thermosl-v0.7-r3/runtime_manifest.json",
+      "state": "KNOWN",
+      "version": "v0.7-R3 / Runtime",
+      "sha256": "0fed18a4d317fa03cb0ef0463a0c17eb9f83e1bb84baa6628a6bdce73de62257"
+    },
+    "Contract": {
+      "path": "src/catalog/runtime-master-packages/lixil-thermosl-v0.7-r3/runtime_manifest.json",
+      "state": "KNOWN",
+      "version": "v0.7-R3 / Contract",
+      "sha256": "0fed18a4d317fa03cb0ef0463a0c17eb9f83e1bb84baa6628a6bdce73de62257"
+    },
+    "UI": {
+      "path": "src/ui/web/product-configuration-editor.mjs",
+      "state": "KNOWN",
+      "version": "v0.7-R3 / UI",
+      "sha256": "4d454860646085bdad132916217a470bb95daab6672944928b65eb8669b1b96d"
+    }
+  },
+  "predecessor_assets": {
+    "Source": {
+      "path": "src/catalog/runtime-master-packages/lixil-thermosl-v0.7-r3/runtime_manifest.json",
+      "state": "KNOWN",
+      "version": "v0.7-R3 / Source",
+      "sha256": "0fed18a4d317fa03cb0ef0463a0c17eb9f83e1bb84baa6628a6bdce73de62257"
+    },
+    "Formal": {
+      "path": "src/catalog/runtime-master-packages/lixil-thermosl-v0.7-r3/runtime_manifest.json",
+      "state": "KNOWN",
+      "version": "v0.7-R3 / Formal",
+      "sha256": "0fed18a4d317fa03cb0ef0463a0c17eb9f83e1bb84baa6628a6bdce73de62257"
+    },
+    "Runtime": {
+      "path": "src/catalog/runtime-master-packages/lixil-thermosl-v0.7-r3/runtime_manifest.json",
+      "state": "KNOWN",
+      "version": "v0.7-R3 / Runtime",
+      "sha256": "0fed18a4d317fa03cb0ef0463a0c17eb9f83e1bb84baa6628a6bdce73de62257"
+    },
+    "Contract": {
+      "path": "src/catalog/runtime-master-packages/lixil-thermosl-v0.7-r3/runtime_manifest.json",
+      "state": "KNOWN",
+      "version": "v0.7-R3 / Contract",
+      "sha256": "0fed18a4d317fa03cb0ef0463a0c17eb9f83e1bb84baa6628a6bdce73de62257"
+    },
+    "UI": {
+      "path": "src/ui/web/product-configuration-editor.mjs",
+      "state": "KNOWN",
+      "version": "v0.7-R3 / UI",
+      "sha256": "4d454860646085bdad132916217a470bb95daab6672944928b65eb8669b1b96d"
+    }
+  },
+  "product_fact_mutation_allowed": false
+}

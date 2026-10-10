@@ -1,0 +1,31 @@
+{
+  "schema": "NATIVE_RELEASE_PROFILE_REGISTRY_V1",
+  "repository": "Takuro-Kwkm/sash-app",
+  "profiles": [
+    {
+      "product_id": "SER-LIX-SAMOSL",
+      "scope": "THERMOSL_UNCHANGED_FORMAL_SELECTION_SAVE_OUTPUT_ORDER5_BATCH3_V1",
+      "path": "contracts/production/release-profiles/order5-batch3-thermosl.v1.json",
+      "row": 2
+    },
+    {
+      "product_id": "SER-LIXIL-TW",
+      "scope": "TW_UNCHANGED_FORMAL_SELECTION_SAVE_OUTPUT_ORDER5_BATCH3_V1",
+      "path": "contracts/production/release-profiles/order5-batch3-tw.v1.json",
+      "row": 4
+    },
+    {
+      "product_id": "SER-YKK-APW430",
+      "scope": "APW430_UNCHANGED_FORMAL_SELECTION_SAVE_OUTPUT_ORDER5_BATCH3_V1",
+      "path": "contracts/production/release-profiles/order5-batch3-apw430.v1.json",
+      "row": 7
+    },
+    {
+      "product_id": "SER-YKK-APW431",
+      "scope": "APW431_UNCHANGED_FORMAL_SELECTION_SAVE_OUTPUT_ORDER5_BATCH3_V1",
+      "path": "contracts/production/release-profiles/order5-batch3-apw431.v1.json",
+      "row": 8
+    }
+  ],
+  "publication": "NEW_EXACT_PRODUCT_SCOPE_HUMAN_DECISION_REQUIRED"
+}

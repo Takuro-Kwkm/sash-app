@@ -192,61 +192,61 @@
   },
   "scope_admission": {
     "mode": "INFRASTRUCTURE_RELEASE_SAME_BYTES",
-    "product_id": "SER-LIX-SAMOSL",
-    "scope": "THERMOSL_UNCHANGED_FORMAL_SELECTION_SAVE_OUTPUT_ORDER5_BATCH3_V1",
-    "public_path": "/runtime-lab?product=SER-LIX-SAMOSL",
+    "product_id": "SER-LIXIL-TW",
+    "scope": "TW_UNCHANGED_FORMAL_SELECTION_SAVE_OUTPUT_ORDER5_BATCH3_V1",
+    "public_path": "/runtime-lab?product=SER-LIXIL-TW",
     "product_fact_mutation_allowed": false,
     "asset_identities": {
       "Source": {
         "state": "KNOWN",
-        "version": "v0.7-R3 / Source",
-        "sha256": "0fed18a4d317fa03cb0ef0463a0c17eb9f83e1bb84baa6628a6bdce73de62257"
+        "version": "integrated-v0.5 / Source",
+        "sha256": "783b6d1c705adc5dc31d504373a4a86e3ce498a75a570e67dd15cd8d2ee148d3"
       },
       "Formal": {
         "state": "KNOWN",
-        "version": "v0.7-R3 / Formal",
-        "sha256": "0fed18a4d317fa03cb0ef0463a0c17eb9f83e1bb84baa6628a6bdce73de62257"
+        "version": "integrated-v0.5 / Formal",
+        "sha256": "783b6d1c705adc5dc31d504373a4a86e3ce498a75a570e67dd15cd8d2ee148d3"
       },
       "Runtime": {
         "state": "KNOWN",
-        "version": "v0.7-R3 / Runtime",
-        "sha256": "0fed18a4d317fa03cb0ef0463a0c17eb9f83e1bb84baa6628a6bdce73de62257"
+        "version": "integrated-v0.5 / Runtime",
+        "sha256": "783b6d1c705adc5dc31d504373a4a86e3ce498a75a570e67dd15cd8d2ee148d3"
       },
       "Contract": {
         "state": "KNOWN",
-        "version": "v0.7-R3 / Contract",
-        "sha256": "0fed18a4d317fa03cb0ef0463a0c17eb9f83e1bb84baa6628a6bdce73de62257"
+        "version": "integrated-v0.5 / Contract",
+        "sha256": "783b6d1c705adc5dc31d504373a4a86e3ce498a75a570e67dd15cd8d2ee148d3"
       },
       "UI": {
         "state": "KNOWN",
-        "version": "v0.7-R3 / UI",
+        "version": "integrated-v0.5 / UI",
         "sha256": "4d454860646085bdad132916217a470bb95daab6672944928b65eb8669b1b96d"
       }
     },
     "predecessor_asset_identities": {
       "Source": {
         "state": "KNOWN",
-        "version": "v0.7-R3 / Source",
-        "sha256": "0fed18a4d317fa03cb0ef0463a0c17eb9f83e1bb84baa6628a6bdce73de62257"
+        "version": "integrated-v0.5 / Source",
+        "sha256": "783b6d1c705adc5dc31d504373a4a86e3ce498a75a570e67dd15cd8d2ee148d3"
       },
       "Formal": {
         "state": "KNOWN",
-        "version": "v0.7-R3 / Formal",
-        "sha256": "0fed18a4d317fa03cb0ef0463a0c17eb9f83e1bb84baa6628a6bdce73de62257"
+        "version": "integrated-v0.5 / Formal",
+        "sha256": "783b6d1c705adc5dc31d504373a4a86e3ce498a75a570e67dd15cd8d2ee148d3"
       },
       "Runtime": {
         "state": "KNOWN",
-        "version": "v0.7-R3 / Runtime",
-        "sha256": "0fed18a4d317fa03cb0ef0463a0c17eb9f83e1bb84baa6628a6bdce73de62257"
+        "version": "integrated-v0.5 / Runtime",
+        "sha256": "783b6d1c705adc5dc31d504373a4a86e3ce498a75a570e67dd15cd8d2ee148d3"
       },
       "Contract": {
         "state": "KNOWN",
-        "version": "v0.7-R3 / Contract",
-        "sha256": "0fed18a4d317fa03cb0ef0463a0c17eb9f83e1bb84baa6628a6bdce73de62257"
+        "version": "integrated-v0.5 / Contract",
+        "sha256": "783b6d1c705adc5dc31d504373a4a86e3ce498a75a570e67dd15cd8d2ee148d3"
       },
       "UI": {
         "state": "KNOWN",
-        "version": "v0.7-R3 / UI",
+        "version": "integrated-v0.5 / UI",
         "sha256": "4d454860646085bdad132916217a470bb95daab6672944928b65eb8669b1b96d"
       }
     },
@@ -1251,13 +1251,13 @@
             "pointer": [
               "product_id"
             ],
-            "value": "SER-LIX-SAMOSL"
+            "value": "SER-LIXIL-TW"
           },
           {
             "pointer": [
               "scope"
             ],
-            "value": "THERMOSL_UNCHANGED_FORMAL_SELECTION_SAVE_OUTPUT_ORDER5_BATCH3_V1"
+            "value": "TW_UNCHANGED_FORMAL_SELECTION_SAVE_OUTPUT_ORDER5_BATCH3_V1"
           },
           {
             "pointer": [
