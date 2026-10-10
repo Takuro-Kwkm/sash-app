@@ -1,0 +1,10 @@
+{
+  "schema": "NATIVE_UI_PREDECESSOR_V1",
+  "product_id": "SER-LIX-SAMOS2H",
+  "scope": "SAMOS2H_V09R4_SELECTION_SAVE_OUTPUT_ORDER5_BATCH2_V1",
+  "baseline_sha": "1b0bdb270a88e2540f79352cdb4f58730cff4c3c",
+  "ui_files_sha256": {
+    "src/ui/web/app.js": "d53a1e3a54561c9e5492d0142f69ba403c1b954858900e69c119ed40cf3c9825",
+    "src/ui/web/product-configuration-editor.mjs": "06082e4bef9704326468e6a9aeb2969fea2f339185e385fbdd596cef34a8545b"
+  }
+}

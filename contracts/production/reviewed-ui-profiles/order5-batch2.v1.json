@@ -1,0 +1,47 @@
+{
+  "schema": "NATIVE_REVIEWED_UI_PROFILE_V1",
+  "status": "CANDIDATE",
+  "repository": "Takuro-Kwkm/sash-app",
+  "product_id": "SER-LIX-SAMOS2H",
+  "scope": "SAMOS2H_V09R4_SELECTION_SAVE_OUTPUT_ORDER5_BATCH2_V1",
+  "formal_revision": "v0.9-R4",
+  "baseline_sha": "1b0bdb270a88e2540f79352cdb4f58730cff4c3c",
+  "candidate_sha": "2ab91f8ee89825b1118cd17178609fb2f2a7f41d",
+  "product_fact_mutation_allowed": false,
+  "ui_paths": [
+    "src/ui/web/app.js",
+    "src/ui/web/product-configuration-editor.mjs"
+  ],
+  "candidate_ui_sha256": {
+    "src/ui/web/app.js": "8767f968393bd0dd3df15da9906525939002ca58ff5dca0560b744e1a85b39eb",
+    "src/ui/web/product-configuration-editor.mjs": "4d454860646085bdad132916217a470bb95daab6672944928b65eb8669b1b96d"
+  },
+  "formal_runtime_sha256": {
+    "src/catalog/runtime-master-packages/lixil-samos2h-v0.9-r4/LIXIL_サーモスⅡH_runtime_v0.9-R4.json.parts/part-00": "eb25ddad525a8f97065e18e2211793e2bb25757f4fd8586ca163629c3088aa96",
+    "src/catalog/runtime-master-packages/lixil-samos2h-v0.9-r4/LIXIL_サーモスⅡH_runtime_v0.9-R4.json.parts/part-01": "a70fd394b43d445ae01981113fbad8affe0b53568322ecc9ece342d7727fc4b9",
+    "src/catalog/runtime-master-packages/lixil-samos2h-v0.9-r4/LIXIL_サーモスⅡH_runtime_v0.9-R4.json.parts/part-02": "5ee872adcaf650235a26a7eff364e2bdc0ea2c10436cc350050f8282e6f387af",
+    "src/catalog/runtime-master-packages/lixil-samos2h-v0.9-r4/LIXIL_サーモスⅡH_runtime_v0.9-R4.json.parts/part-03": "a10a08cb67181962f5f467a5adbfda1f38c365b502761c3570a989354571e069",
+    "src/catalog/runtime-master-packages/lixil-samos2h-v0.9-r4/LIXIL_サーモスⅡH_runtime_v0.9-R4.json.parts/part-04": "9d1365446d55da5d52766749c7ea09e112f03bbbcea3cd812eec2e4dbf79c402",
+    "src/catalog/runtime-master-packages/lixil-samos2h-v0.9-r4/LIXIL_サーモスⅡH_runtime_v0.9-R4.json.parts/part-05": "b149ed53ac8eab76a88c484a72e458a765b4146ded38f4f2c5da8e29cd9093e7",
+    "src/catalog/runtime-master-packages/lixil-samos2h-v0.9-r4/runtime_manifest.json": "993481b2f0ab1d519a091e1b9f99a329eef7c67ec89cd1c82ddfab0d3c624955",
+    "src/catalog/runtime-master-packages/lixil-samos2h-v0.9-r4/samos2h_runtime_package_v0.9-R4.schema.json": "8db1faafaf013054c6b22a7c006b93c82dce26821c1abe0c52ffcb7b8cc52c30"
+  },
+  "unknowns": [
+    "custom SOURCE_GRAPH_GATE retained",
+    "price/BOM/Set Code not inferred"
+  ],
+  "public_origin": "https://sash-app-wave3-preview.vercel.app",
+  "public_path": "/runtime-lab?product=SER-LIX-SAMOS2H",
+  "supported_operations": [
+    "REVIEWED_UI_ADOPTION"
+  ],
+  "unsupported_operations": {
+    "MANUFACTURER_FACT_CHANGE": "UPSTREAM_FORMAL_CHANGE_REQUIRED",
+    "OTHER_SCOPE": "FAIL_CLOSED"
+  },
+  "required_decisions": [
+    "NEW_UI_OUTPUT_ADOPTION",
+    "NEW_RELEASE"
+  ],
+  "terminal_policy": "INSPECT_ONLY; immutable Shared journal; no duplicate external operations"
+}

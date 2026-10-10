@@ -1,0 +1,70 @@
+{
+  "schema": "ORDER5_ASSET_READBACK_V1",
+  "product_id": "SER-LIX-SAMOS2H",
+  "scope": "SAMOS2H_V09R4_SELECTION_SAVE_OUTPUT_ORDER5_BATCH2_V1",
+  "assets": {
+    "Source": {
+      "path": "src/catalog/runtime-master-packages/lixil-samos2h-v0.9-r4/runtime_manifest.json",
+      "state": "KNOWN",
+      "version": "v0.9-R4 / Source",
+      "sha256": "993481b2f0ab1d519a091e1b9f99a329eef7c67ec89cd1c82ddfab0d3c624955"
+    },
+    "Formal": {
+      "path": "src/catalog/runtime-master-packages/lixil-samos2h-v0.9-r4/runtime_manifest.json",
+      "state": "KNOWN",
+      "version": "v0.9-R4 / Formal",
+      "sha256": "993481b2f0ab1d519a091e1b9f99a329eef7c67ec89cd1c82ddfab0d3c624955"
+    },
+    "Runtime": {
+      "path": "src/catalog/runtime-master-packages/lixil-samos2h-v0.9-r4/runtime_manifest.json",
+      "state": "KNOWN",
+      "version": "v0.9-R4 / Runtime",
+      "sha256": "993481b2f0ab1d519a091e1b9f99a329eef7c67ec89cd1c82ddfab0d3c624955"
+    },
+    "Contract": {
+      "path": "src/catalog/runtime-master-packages/lixil-samos2h-v0.9-r4/samos2h_runtime_package_v0.9-R4.schema.json",
+      "state": "KNOWN",
+      "version": "v0.9-R4 / Contract",
+      "sha256": "8db1faafaf013054c6b22a7c006b93c82dce26821c1abe0c52ffcb7b8cc52c30"
+    },
+    "UI": {
+      "path": "src/ui/web/product-configuration-editor.mjs",
+      "state": "KNOWN",
+      "version": "v0.9-R4",
+      "sha256": "4d454860646085bdad132916217a470bb95daab6672944928b65eb8669b1b96d"
+    }
+  },
+  "predecessor_assets": {
+    "Source": {
+      "path": "src/catalog/runtime-master-packages/lixil-samos2h-v0.9-r4/runtime_manifest.json",
+      "state": "KNOWN",
+      "version": "v0.9-R4 / Source",
+      "sha256": "993481b2f0ab1d519a091e1b9f99a329eef7c67ec89cd1c82ddfab0d3c624955"
+    },
+    "Formal": {
+      "path": "src/catalog/runtime-master-packages/lixil-samos2h-v0.9-r4/runtime_manifest.json",
+      "state": "KNOWN",
+      "version": "v0.9-R4 / Formal",
+      "sha256": "993481b2f0ab1d519a091e1b9f99a329eef7c67ec89cd1c82ddfab0d3c624955"
+    },
+    "Runtime": {
+      "path": "src/catalog/runtime-master-packages/lixil-samos2h-v0.9-r4/runtime_manifest.json",
+      "state": "KNOWN",
+      "version": "v0.9-R4 / Runtime",
+      "sha256": "993481b2f0ab1d519a091e1b9f99a329eef7c67ec89cd1c82ddfab0d3c624955"
+    },
+    "Contract": {
+      "path": "src/catalog/runtime-master-packages/lixil-samos2h-v0.9-r4/samos2h_runtime_package_v0.9-R4.schema.json",
+      "state": "KNOWN",
+      "version": "v0.9-R4 / Contract",
+      "sha256": "8db1faafaf013054c6b22a7c006b93c82dce26821c1abe0c52ffcb7b8cc52c30"
+    },
+    "UI": {
+      "path": "contracts/production/order5-batch2-assets/predecessor-ui.json",
+      "state": "KNOWN",
+      "version": "v0.9-R4",
+      "sha256": "3821f5b3355eeee0246c79ab4ada22f68eeb721068316c861ac97de59c70cc39"
+    }
+  },
+  "product_fact_mutation_allowed": false
+}

@@ -177,6 +177,14 @@
         "sha256": "081a71b91990169136bbec0adb129c1610c5bd29c1c1b75cf7c31e8813d8bca8",
         "mutation_policy": "NONE",
         "target_gate": "SOURCE_AUDIT_VERIFIED"
+      },
+      "reviewed_ui_profile": {
+        "path": "contracts/production/reviewed-ui-profiles/order5-batch2.v1.json",
+        "sha256": "335f6bca06e1816e21a66317be5fc12d7fba8388e23665674f5b6c9d1920e64a",
+        "scope": "SAMOS2H_V09R4_SELECTION_SAVE_OUTPUT_ORDER5_BATCH2_V1",
+        "status": "FIXED_CANDIDATE",
+        "workflow": "SHARED:production-work/REVIEWED_UI_ADOPTION",
+        "publication": "FRESH_HUMAN_RELEASE_REQUIRED"
       }
     },
     {

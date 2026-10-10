@@ -1,6 +1,6 @@
 {
   "schema": "NATIVE_RELEASE_PROFILE_V1",
-  "version": "1.6.0-order5-batch2",
+  "version": "1.5.0",
   "status": "CURRENT",
   "approval_roles": [
     "Formal",
@@ -32,7 +32,7 @@
   "boundary_policy": "Actual native evidence only; Print requires inspected PDF/Print Preview; localStorage is not live DB E2E",
   "shared_contract": {
     "repository": "Takuro-Kwkm/product-ui-contracts",
-    "ref": "2e2d761e03c6f486d53824fb2544a7936c21002d",
+    "ref": "41b709ce80de9b82d56f72678576c49975249cf7",
     "entry": "scripts/release-contract.py",
     "files": {
       "contracts/common-release.v1.json": "826328619c8a465f389472537396e1564fc00f0fe8820d6e7963fb878c0663c4",
@@ -49,7 +49,7 @@
       "harness/release_restore.py": "a9631838a72a0f86dff422c0ac666a9bb41897192509d194386a03679ee5ecf1",
       "harness/resolvers.py": "cb1704e92446cb6552f9da80ad30928928ed1aa4d05aedcce13ee69e07229a57",
       "harness/workflow.py": "2e243c9616dc55c25b2d00f242968d762965bae61bb98431ba1b3aa47cfaf209",
-      "registries/current-architecture.v2.json": "fe757a41bbc3534f138770653e1781afd75767c0a423bbcab45ee4287243d584",
+      "registries/current-architecture.v2.json": "a548dc7c213af0a1d01fda34febb7e4d596e52e372c6b936304281cd49b68d75",
       "schemas/common-release.v1.schema.json": "a15705dfe0334796c08e80e107955d2d931aab557742096f587085d1c2effd78",
       "scripts/release-contract.py": "ae65ba3d5e3008c9c23fdb05d1dde748e70d6526bd3558bf84d272a493262c58",
       "scripts/release-provider-host.mjs": "1fdad496cf83c95d94e314b9fd06887f8a079c7de10fc9fa9f915c073603f6dc",
@@ -77,45 +77,33 @@
     "EW Output Successor"
   ],
   "native_paths": [
-    ".github/workflows/app-production-hotfix.yml",
-    ".github/workflows/common-release-contract.yml",
-    ".github/workflows/ew-output-successor.yml",
     "contracts/production/app-release.v1.json",
-    "contracts/production/authority-successors/order5-batch2-predecessor-profile.v1.json",
-    "contracts/production/authority-successors/order5-batch2-predecessor-selection.v1.json",
-    "contracts/production/order4-release-scope.v1.json",
-    "contracts/production/order5-assets.v2.json",
-    "contracts/production/order5-batch2-assets.v1.json",
-    "contracts/production/order5-batch2-assets/predecessor-ui.json",
-    "contracts/production/order5-batch2-scope.v1.json",
-    "contracts/production/order5-ew-output.v2.json",
-    "contracts/production/order5-release-scope.v2.json",
-    "contracts/production/reviewed-ui-profiles/order5-batch2.v1.json",
-    "contracts/production/shared-release-authority.v1.bundle",
+    "scripts/production/verify-app-release.mjs",
+    ".github/workflows/app-production-hotfix.yml",
+    "test/browser/release-regression-browser-qa.mjs",
+    "scripts/production/unpack-release-authority.py",
     "contracts/production/shared-release-authority.v1.json",
-    "contracts/production/validator-registry.v2.json",
-    "contracts/production/work-connections.v2.json",
+    "contracts/production/shared-release-authority.v1.bundle",
+    "scripts/production/validate-order4-release.py",
+    "contracts/production/order4-release-scope.v1.json",
     "docs/ORDER4_RELEASE.md",
+    "test/browser/eight-series-business-flow-qa.mjs",
+    "scripts/vercel-rest-deploy.mjs",
+    "scripts/production/validate-order5-release.py",
     "docs/ORDER5_BATCH1.md",
-    "docs/ORDER5_BATCH2.md",
+    "test/browser/ew-october-2026-browser-qa.mjs",
+    "contracts/production/order5-release-scope.v2.json",
+    "contracts/production/order5-assets.v2.json",
+    "contracts/production/order5-ew-output.v2.json",
     "scripts/production/ew-change.py",
-    "scripts/production/order5-batch2-scope.py",
     "scripts/production/prepare-ew.py",
     "scripts/production/release-contract.py",
+    "contracts/production/work-connections.v2.json",
+    "contracts/production/validator-registry.v2.json",
     "scripts/production/test_ew_output_successor.py",
-    "scripts/production/test_order5_batch2_scope.py",
-    "scripts/production/unpack-release-authority.py",
-    "scripts/production/validate-order4-release.py",
-    "scripts/production/validate-order5-release.py",
-    "scripts/production/verify-app-release.mjs",
-    "scripts/vercel-rest-deploy.mjs",
+    ".github/workflows/ew-output-successor.yml",
     "src/estimate-output/xlsx-renderer.mjs",
-    "src/ui/web/app.js",
-    "src/ui/web/product-configuration-editor.mjs",
-    "test/74-estimate-output.test.mjs",
-    "test/browser/eight-series-business-flow-qa.mjs",
-    "test/browser/ew-october-2026-browser-qa.mjs",
-    "test/browser/release-regression-browser-qa.mjs"
+    "test/74-estimate-output.test.mjs"
   ],
   "deployment_executor": "Existing Vercel REST/files executor; explicit autoAssignCustomDomains=false; Shared gate -> existing fixed-ID provider promotion",
   "identity_command": "npm run verify:app-release -- --url URL --expect-commit SHA --require-release-commit --output EVIDENCE_JSON",
@@ -126,108 +114,95 @@
   ],
   "repository": "Takuro-Kwkm/sash-app",
   "native_files": {
-    ".github/workflows/app-production-hotfix.yml": "1cd7d4d20d5a61d5a1c3215191ff91a6f5dc39015576ac8303087641fefceabd",
-    ".github/workflows/common-release-contract.yml": "1338eb474956a1cf11c538e634c00b751656b05f56f3231f1a8c41ca30400fe2",
-    ".github/workflows/ew-output-successor.yml": "8efd66b381957da107cd2f4947030038a91bf69c3c87da9755fb2aa7243689b0",
     "contracts/production/app-release.v1.json": "ac6cd995b53c3669587c2a05b8ecec0b9bffd46906d623a340771d2598e45914",
-    "contracts/production/authority-successors/order5-batch2-predecessor-profile.v1.json": "a656847760866a474120cfa1f36a7152d46d953b9901c6a1ac554abff8cd5f37",
-    "contracts/production/authority-successors/order5-batch2-predecessor-selection.v1.json": "0ef0ac7ec0188735433403dc11c734540f060298d6d470bf46d6ff2bdd150f0a",
-    "contracts/production/order4-release-scope.v1.json": "14aec30175b54b19154dc934941bf10d727215540afcd985a660386a3da3d05d",
-    "contracts/production/order5-assets.v2.json": "60e2e16f88338581cc4e8ed29534d9867906af30601c55b9dbc46fd5377e22a2",
-    "contracts/production/order5-batch2-assets.v1.json": "6f8cb964b3d4e13c7bbe603701da56770c246ef77f69b084c55d154e30bc1bc9",
-    "contracts/production/order5-batch2-assets/predecessor-ui.json": "3821f5b3355eeee0246c79ab4ada22f68eeb721068316c861ac97de59c70cc39",
-    "contracts/production/order5-batch2-scope.v1.json": "833e68ae4b3bb814fe8f6e9f03292b60271139ea40dba914424028c01354f18b",
-    "contracts/production/order5-ew-output.v2.json": "38e47f4fc9076eb041a8feb23dbe40d7c120e201b451d93b372ba808f951719f",
-    "contracts/production/order5-release-scope.v2.json": "1c24439d74e3641a2c5caeeae6cb4e57b75994f8e7fc267c2dae46c90da9bc45",
-    "contracts/production/reviewed-ui-profiles/order5-batch2.v1.json": "335f6bca06e1816e21a66317be5fc12d7fba8388e23665674f5b6c9d1920e64a",
-    "contracts/production/shared-release-authority.v1.bundle": "97a6a7e048057ebb0bd91d537469485e28dcfb2671703ce8fa4c0b959951fc0e",
-    "contracts/production/shared-release-authority.v1.json": "9733719e820337aaa38f9324264efbae73a59eff96d579254a709600b2dc24b0",
-    "contracts/production/validator-registry.v2.json": "26b8e831fdef5c3a9fa7e010eca566c6bae5b30a5d3ba48a6cc4cfa964050c10",
-    "contracts/production/work-connections.v2.json": "b73ea98cfc72685a3d41ed116e5692a3f2c9d07713c73656fa7a75ec0fcefa2e",
-    "docs/ORDER4_RELEASE.md": "77d717f5040ff09fde86935387fb3347411dade5cb67b645803b220b2c45334e",
-    "docs/ORDER5_BATCH1.md": "85ffed1da89d426ec9af5360b8bb0e7af200dac31b71dd25b1a7b5f4fffcd6ac",
-    "docs/ORDER5_BATCH2.md": "c2386296fb9c85a95ce7514224726e3b8b99e970e21d4851dca843f696dc7ba4",
-    "scripts/production/ew-change.py": "e932b6001ac38bffb0da4719dd864f131e4e511905eea0a86fa46f2bc58f4fa1",
-    "scripts/production/order5-batch2-scope.py": "3cc2ae1d7a7b6dc510a4ab34894eafc8df162abe311944a2f34502d8284d1c4a",
-    "scripts/production/prepare-ew.py": "6d1497c7e48650cf32d7106972270b7c9e6a14d9a080fb53a29cc651a9014e4c",
-    "scripts/production/release-contract.py": "ff2507d7152e0bd7a87a5a97796c3051677a3f01eb6c4f2bc22b763b724cd3ae",
-    "scripts/production/test_ew_output_successor.py": "349a151c91da240e1321ff4c4d55282fced0a02d570a4b93e90254a8724f380d",
-    "scripts/production/test_order5_batch2_scope.py": "1af909977ee6084655b15178f4b8cbee76e0316859be9f55ba63a1464f2ff43f",
-    "scripts/production/unpack-release-authority.py": "e6d4380146821597adf01dba0787c8892f929bee356a6a33105cc94c24fc8eb5",
-    "scripts/production/validate-order4-release.py": "4bac390f624490922763ec27d654b7496f61c1186c081e487c46e6212960da17",
-    "scripts/production/validate-order5-release.py": "cf6e1f534393f00fc25d2ca7bf06691661078749513c5ae389a725d150262788",
     "scripts/production/verify-app-release.mjs": "0e5f3301de89c6b9cf041ada3683b3bfa1056727598ed41342606267d3e101ba",
-    "scripts/vercel-rest-deploy.mjs": "a78286a84f7f48dd5fc7028e02e4e7fcad9564b9e02cd5d4059860cb4f1232f5",
-    "src/estimate-output/xlsx-renderer.mjs": "0c23b759e306f87ce5e7fd04316d6378d5135c45aaa56d2ab71ffc7c2dbd8508",
-    "src/ui/web/app.js": "8767f968393bd0dd3df15da9906525939002ca58ff5dca0560b744e1a85b39eb",
-    "src/ui/web/product-configuration-editor.mjs": "4d454860646085bdad132916217a470bb95daab6672944928b65eb8669b1b96d",
-    "test/74-estimate-output.test.mjs": "32148d4ec4c15394fc4a63ccb6afcd9fc430ad068ca0f6c492794fb0ec2ba470",
+    ".github/workflows/app-production-hotfix.yml": "1cd7d4d20d5a61d5a1c3215191ff91a6f5dc39015576ac8303087641fefceabd",
+    "test/browser/release-regression-browser-qa.mjs": "855d124bfcc79ef444a1bfabb2000261bab775f1a75116f04bf66a379c0e17b4",
+    "scripts/production/unpack-release-authority.py": "e6d4380146821597adf01dba0787c8892f929bee356a6a33105cc94c24fc8eb5",
+    "contracts/production/shared-release-authority.v1.json": "b93e022fd0824d93ad17787691078a0d020543c8205a1c402ba96acdc20454b5",
+    "contracts/production/shared-release-authority.v1.bundle": "b0ffc0b5f41bb2062cf2aacf403486b9671975a473cc45e75c00112764b32a2e",
+    "scripts/production/validate-order4-release.py": "5c1afe6bd38da984d4742ee48732a7d614df460c547b1ce6d3a1862f1015ad16",
+    "contracts/production/order4-release-scope.v1.json": "14aec30175b54b19154dc934941bf10d727215540afcd985a660386a3da3d05d",
+    "docs/ORDER4_RELEASE.md": "77d717f5040ff09fde86935387fb3347411dade5cb67b645803b220b2c45334e",
     "test/browser/eight-series-business-flow-qa.mjs": "e531d024a1527aac3800cf659ecc32cc736dbfe949e9329400450538997112af",
+    "scripts/vercel-rest-deploy.mjs": "a78286a84f7f48dd5fc7028e02e4e7fcad9564b9e02cd5d4059860cb4f1232f5",
+    "scripts/production/validate-order5-release.py": "84a4e7d5e83701ab42bc5a4e83381435e80ddc21fe98cecc18cb16a114ef6cd9",
+    "docs/ORDER5_BATCH1.md": "85ffed1da89d426ec9af5360b8bb0e7af200dac31b71dd25b1a7b5f4fffcd6ac",
     "test/browser/ew-october-2026-browser-qa.mjs": "2b83118bc51b190608f054d7a4f5b02c0c25f28f163fb152dd6c7d5c612a995a",
-    "test/browser/release-regression-browser-qa.mjs": "855d124bfcc79ef444a1bfabb2000261bab775f1a75116f04bf66a379c0e17b4"
+    "contracts/production/order5-release-scope.v2.json": "1c24439d74e3641a2c5caeeae6cb4e57b75994f8e7fc267c2dae46c90da9bc45",
+    "contracts/production/order5-assets.v2.json": "60e2e16f88338581cc4e8ed29534d9867906af30601c55b9dbc46fd5377e22a2",
+    "contracts/production/order5-ew-output.v2.json": "38e47f4fc9076eb041a8feb23dbe40d7c120e201b451d93b372ba808f951719f",
+    "scripts/production/ew-change.py": "e932b6001ac38bffb0da4719dd864f131e4e511905eea0a86fa46f2bc58f4fa1",
+    "scripts/production/prepare-ew.py": "6d1497c7e48650cf32d7106972270b7c9e6a14d9a080fb53a29cc651a9014e4c",
+    "scripts/production/release-contract.py": "3229631943ee0e50c10ab59bfb15dacf253873581b7cd9225d179bf8d22f7fc3",
+    "contracts/production/work-connections.v2.json": "0eb89d7e06449037ad3ea00b6038a5d0aa577d6405adb32a1e4b6129ea4b8a86",
+    "contracts/production/validator-registry.v2.json": "26b8e831fdef5c3a9fa7e010eca566c6bae5b30a5d3ba48a6cc4cfa964050c10",
+    "scripts/production/test_ew_output_successor.py": "349a151c91da240e1321ff4c4d55282fced0a02d570a4b93e90254a8724f380d",
+    ".github/workflows/ew-output-successor.yml": "8efd66b381957da107cd2f4947030038a91bf69c3c87da9755fb2aa7243689b0",
+    "src/estimate-output/xlsx-renderer.mjs": "0c23b759e306f87ce5e7fd04316d6378d5135c45aaa56d2ab71ffc7c2dbd8508",
+    "test/74-estimate-output.test.mjs": "32148d4ec4c15394fc4a63ccb6afcd9fc430ad068ca0f6c492794fb0ec2ba470"
   },
   "scope_admission": {
     "mode": "REVIEWED_UI_OUTPUT_SUCCESSOR_V1",
-    "product_id": "SER-LIX-SAMOS2H",
-    "scope": "SAMOS2H_V09R4_SELECTION_SAVE_OUTPUT_ORDER5_BATCH2_V1",
-    "public_path": "/runtime-lab?product=SER-LIX-SAMOS2H",
+    "product_id": "SER-LIX-EW",
+    "scope": "EW_NORMAL_29_FIELDS_XLSX_ORDER5_BATCH1_V2",
+    "public_path": "/runtime-lab",
     "product_fact_mutation_allowed": false,
     "asset_identities": {
       "Source": {
         "state": "KNOWN",
-        "version": "v0.9-R4 / Source",
-        "sha256": "993481b2f0ab1d519a091e1b9f99a329eef7c67ec89cd1c82ddfab0d3c624955"
+        "version": "v1.4 / Source",
+        "sha256": "af35759f5472f99970ea4ae809b4c2e21ee1f752c6dce9a751d19cc5d6b9db08"
       },
       "Formal": {
         "state": "KNOWN",
-        "version": "v0.9-R4 / Formal",
-        "sha256": "993481b2f0ab1d519a091e1b9f99a329eef7c67ec89cd1c82ddfab0d3c624955"
-      },
-      "Runtime": {
-        "state": "KNOWN",
-        "version": "v0.9-R4 / Runtime",
-        "sha256": "993481b2f0ab1d519a091e1b9f99a329eef7c67ec89cd1c82ddfab0d3c624955"
+        "version": "v1.4 / Formal",
+        "sha256": "156ea3d28b9dcb6b03d7d05d613ca122259be535d517e4474fbdd355c62c753d"
       },
       "Contract": {
         "state": "KNOWN",
-        "version": "v0.9-R4 / Contract",
-        "sha256": "8db1faafaf013054c6b22a7c006b93c82dce26821c1abe0c52ffcb7b8cc52c30"
+        "version": "v1.4 / Contract",
+        "sha256": "8e284a522bd4aad8f5aa7c64570d8109043b37f668dbe810823f8297e818b099"
+      },
+      "Runtime": {
+        "state": "KNOWN",
+        "version": "v1.4 / Runtime",
+        "sha256": "7206d1d1a813487b501beb29ea95d3913788a8b67baae0a66656b04d2a3c2feb"
       },
       "UI": {
         "state": "KNOWN",
-        "version": "v0.9-R4",
-        "sha256": "4d454860646085bdad132916217a470bb95daab6672944928b65eb8669b1b96d"
+        "version": "v1.4 / UI-XLSX-v2",
+        "sha256": "0c23b759e306f87ce5e7fd04316d6378d5135c45aaa56d2ab71ffc7c2dbd8508"
       }
     },
+    "scope_guard": "contracts/production/order5-release-scope.v2.json",
     "predecessor_asset_identities": {
       "Source": {
         "state": "KNOWN",
-        "version": "v0.9-R4 / Source",
-        "sha256": "993481b2f0ab1d519a091e1b9f99a329eef7c67ec89cd1c82ddfab0d3c624955"
+        "version": "v1.4 / Source",
+        "sha256": "af35759f5472f99970ea4ae809b4c2e21ee1f752c6dce9a751d19cc5d6b9db08"
       },
       "Formal": {
         "state": "KNOWN",
-        "version": "v0.9-R4 / Formal",
-        "sha256": "993481b2f0ab1d519a091e1b9f99a329eef7c67ec89cd1c82ddfab0d3c624955"
-      },
-      "Runtime": {
-        "state": "KNOWN",
-        "version": "v0.9-R4 / Runtime",
-        "sha256": "993481b2f0ab1d519a091e1b9f99a329eef7c67ec89cd1c82ddfab0d3c624955"
+        "version": "v1.4 / Formal",
+        "sha256": "156ea3d28b9dcb6b03d7d05d613ca122259be535d517e4474fbdd355c62c753d"
       },
       "Contract": {
         "state": "KNOWN",
-        "version": "v0.9-R4 / Contract",
-        "sha256": "8db1faafaf013054c6b22a7c006b93c82dce26821c1abe0c52ffcb7b8cc52c30"
+        "version": "v1.4 / Contract",
+        "sha256": "8e284a522bd4aad8f5aa7c64570d8109043b37f668dbe810823f8297e818b099"
+      },
+      "Runtime": {
+        "state": "KNOWN",
+        "version": "v1.4 / Runtime",
+        "sha256": "7206d1d1a813487b501beb29ea95d3913788a8b67baae0a66656b04d2a3c2feb"
       },
       "UI": {
         "state": "KNOWN",
-        "version": "v0.9-R4",
-        "sha256": "3821f5b3355eeee0246c79ab4ada22f68eeb721068316c861ac97de59c70cc39"
+        "version": "v1.4 / UI",
+        "sha256": "0a5ea33effbab5c890570da08134b1bc7482b18e0d1e7f33ac84ede97b582c6f"
       }
-    },
-    "scope_guard": "contracts/production/order5-batch2-scope.v1.json",
-    "current_native_predecessor": "1b0bdb270a88e2540f79352cdb4f58730cff4c3c"
+    }
   },
   "publication_policy": {
     "mode": "VERCEL_STAGED_PROMOTE_V1",
@@ -240,7 +215,6 @@
       ".github/workflows/estimate-output-production.yml": "673a591f1b8da995358911fc14a1e6fb27a62aac6c551e9d665d8433c7ee8757",
       ".github/workflows/estimate-output-qa.yml": "e5afe16765747e27f82a2fdf8eee8180ed5567ee1bceac761ce98b60abe2c6e6",
       ".github/workflows/ew-catalog-202610.yml": "e05f8d3dbbe633d57a988c4d20f64f69e989e3f58d0aac7c37d3cd9116d120e3",
-      ".github/workflows/ew-output-successor.yml": "8efd66b381957da107cd2f4947030038a91bf69c3c87da9755fb2aa7243689b0",
       ".github/workflows/ew-production-finalize.yml": "61e74232dcf43c657db52e93bda5b735cadf9ff99ee881b61ac1c9d966082e2e",
       ".github/workflows/global-window-selection-flow-gate.yml": "cf288f70ca2234e8ce9820a2d917004b74b236548a141407f1368dea3cb733e6",
       ".github/workflows/governance-authorization.yml": "5e974cdb5b35d1014adde4242cb7b1604de6032b5002019816eb295ee5acfc07",
@@ -351,12 +325,6 @@
       "contracts/production/authority-successors/order4-predecessor-release-profile.v1.json": "a48b2c5be326b5039e7739fee187bfd897638f4eaf03fdac17ee98fc1d54ef56",
       "contracts/production/authority-successors/order4-predecessor-selection.v1.json": "bb910d4fd946ce0b832621c83711d5f1ea737aec1aae7fa01074f0ee7a95cfc2",
       "contracts/production/authority-successors/order4-release-enforcement.v3.json": "c0cb2be37b8c386d2a5ddbdff82cdf0ce82f30a9f940634a1805cd542f6ed183",
-      "contracts/production/authority-successors/order5-batch1-predecessor-profile.v1.json": "0ba3659f678bd04c4f892138c470f6545e91ba46cbed7a72676ff5c213581cd4",
-      "contracts/production/authority-successors/order5-batch1-predecessor-selection.v1.json": "0256aa62bbca4e3d5ab37b376cc195527c56bf7c206d2a9208dbfd7c2a4d94e5",
-      "contracts/production/authority-successors/order5-batch1.v4.json": "b406f17b8dc54cc1d12d8d839e66d729d61e5a968d7b75a590edbcd595798331",
-      "contracts/production/authority-successors/order5-ew-output-predecessor-profile.v1.json": "b1a3099dbf383e28a55a7ba93c05d0e862e62510a553d852a350450d1fcce614",
-      "contracts/production/authority-successors/order5-ew-output-predecessor-selection.v1.json": "8604b1d6560b919ad7a763c22d441e2837804d778e4c274e9f15eab4d9f10361",
-      "contracts/production/authority-successors/order5-ew-output.v4.json": "337fd0ff3e28f5fcb4ba0d9e282e48f5a29fc16915053bc0da220de61c7e6b1f",
       "contracts/production/catalogue-audit/README.md": "36729033531f2ac9f02f1585bd09d88d650f25c257a6056dad4ee960215d6fd1",
       "contracts/production/catalogue-audit/SER-LIX-SAMOS2H/baseline-runtime-manifest.json": "993481b2f0ab1d519a091e1b9f99a329eef7c67ec89cd1c82ddfab0d3c624955",
       "contracts/production/catalogue-audit/SER-LIX-SAMOS2H/official-locator.json": "0c0b6f9225e694fb00f9889bcfc01c36c9aed11d7d9daafd8c35235ad030f5ed",
@@ -394,21 +362,10 @@
       "contracts/production/formal-state/formal/PHASE3-THERMOSL-IS8900-20261006/promotion.json": "8a932ad9b0a2622166a1773e101e5d5b8cc0603e80c0fd06d1efbb3e522f2acb",
       "contracts/production/formal-state/formal/PHASE3-THERMOSL-IS8900-20261006/source-baseline.json": "1993271f1677fda4710eba394cdc6619797269a3bf50e1420bccfaadf13a297c",
       "contracts/production/order4-release-scope.v1.json": "14aec30175b54b19154dc934941bf10d727215540afcd985a660386a3da3d05d",
-      "contracts/production/order5-assets.v1.json": "04536db3e515a07339d2675d269882308616e91662e42728daeae8f96e88db35",
-      "contracts/production/order5-assets.v2.json": "60e2e16f88338581cc4e8ed29534d9867906af30601c55b9dbc46fd5377e22a2",
-      "contracts/production/order5-ew-assets/PRODUCT_MASTER_MANIFEST.json": "156ea3d28b9dcb6b03d7d05d613ca122259be535d517e4474fbdd355c62c753d",
-      "contracts/production/order5-ew-assets/PackageManifest.json": "e643de8253d4878872b676cc99fe19dd41c380b1e6d1510c8349e49093c45ee2",
-      "contracts/production/order5-ew-assets/content-qa.json": "ee2a14310016568eb50db58c9c42838f4beb64f4641b3f25dd1e83ffc518271f",
-      "contracts/production/order5-ew-assets/selection-scope.json": "8e284a522bd4aad8f5aa7c64570d8109043b37f668dbe810823f8297e818b099",
-      "contracts/production/order5-ew-assets/source-identity.json": "af35759f5472f99970ea4ae809b4c2e21ee1f752c6dce9a751d19cc5d6b9db08",
-      "contracts/production/order5-ew-output.v2.json": "38e47f4fc9076eb041a8feb23dbe40d7c120e201b451d93b372ba808f951719f",
-      "contracts/production/order5-release-scope.v1.json": "a2c69f43d5747b7f86a69b632868dc92930924fc2eaf5dcf03da1447fc7057dc",
-      "contracts/production/order5-release-scope.v2.json": "1c24439d74e3641a2c5caeeae6cb4e57b75994f8e7fc267c2dae46c90da9bc45",
       "contracts/production/product-master-build-contract.json": "aebd2274460e9b0b8224452b1742ed4c7d7f8e567f9bf5e5b5f80fb9aa8cd5b7",
       "contracts/production/product-master-build-profile.v1.json": "9d22ba1fe2ae26fd91bba6d04ed8e29764178f94c020c1a0d18843bdbed4fb57",
       "contracts/production/shared-build-authority.json": "1b0efa9c5989bfe6d23fee77a7520e8d1731da4adf1565ce2b43a9f2cb8a5696",
       "contracts/production/shared-build-authority.tar.gz": "e5a53219c94ace9ae6ebcf7e965a2d6b94ea4315a3ea84e93a9ef21764214083",
-      "contracts/production/validator-registry.v2.json": "26b8e831fdef5c3a9fa7e010eca566c6bae5b30a5d3ba48a6cc4cfa964050c10",
       "contracts/tw-202610/adoption.json": "74174c7a1e205568f5d2298664aeabe16b0bc3f370445bd8926d976d56aa84a6",
       "contracts/tw-202610/central-snapshot/authority/products/lixil-tw/202610/active-manifest.json": "99a65ad98bec75edc16dea614e0417263300608cbfeb4b1e20b69c3ce0fb2138",
       "contracts/tw-202610/central-snapshot/authority/products/lixil-tw/202610/baseline-25-fields.json": "51956141384abc03d083946d1ddc47c1b155346d9dfbee07b5638d72656aefa4",
@@ -486,7 +443,6 @@
       "docs/ESTIMATE_OUTPUT_COMMON_SPEC_V1.md": "f1eefa36c73cedf9923d8028377251e2c1746e12aab0c6c3016443fd9fb1c34f",
       "docs/LOCAL_PRODUCT_RELEASE.md": "d824d5d67ac5800bcf92dd68d18ce3393f6715c20ca613cd919bd4211fb340d0",
       "docs/ORDER4_RELEASE.md": "77d717f5040ff09fde86935387fb3347411dade5cb67b645803b220b2c45334e",
-      "docs/ORDER5_BATCH1.md": "85ffed1da89d426ec9af5360b8bb0e7af200dac31b71dd25b1a7b5f4fffcd6ac",
       "docs/PROJECT_GOVERNANCE_FOUNDATION.md": "924857c767e4a8be69796a7fee2faad1e3862d51fd390de1f6b7b32dea5a8b26",
       "docs/RECOVERY_BASELINE.md": "0e8114666069b67ed5c02489846baa0954449386d7331aeab73cbb19910c096c",
       "docs/WORK_MANAGEMENT_V1_HANDOFF.md": "023ea5810370c3af58f439d60d535da6f9625482138cd1fe4fe005443f718929",
@@ -619,16 +575,13 @@
       "scripts/governance/verify-workflow-authority.py": "5006fd883131db3281a6c727e55471d9a930fa70f69db70a7b3958fff529e486",
       "scripts/prepare-rechent-preview-access.mjs": "541bf7287feb1dfb2c9a85f19b01a393aa06f14a7f505099a0b26f676f99a0f7",
       "scripts/production/catalog-change-audit.py": "04192f0f1b10ad6636c9ec04e3dba1099dc6f4d8056d7c30fc315753a7cd1a6d",
-      "scripts/production/ew-change.py": "e932b6001ac38bffb0da4719dd864f131e4e511905eea0a86fa46f2bc58f4fa1",
       "scripts/production/ew-parity.mjs": "bc18f4442fc4d647d9e1e16554020ac00bcef1f5d7785670f5cdf9621121a0e9",
       "scripts/production/prepare-catalog-change-audit.py": "ffe0e31b675a205386fbb0e5dc2940fde73478e1ceeb03ea9c4515ec19cdd995",
-      "scripts/production/prepare-ew.py": "6d1497c7e48650cf32d7106972270b7c9e6a14d9a080fb53a29cc651a9014e4c",
       "scripts/production/product-master-build.py": "be272ec4ccdb82aebcad735b8ef2791d50b3dfff3475f29a831d514430a906b3",
       "scripts/production/resolve-current-formal.py": "5887926375647f36880e4e37f8111f8a9d842b64f26c6d21ed83facee0eb45db",
       "scripts/production/test-catalog-change-audit.py": "966af7866759167435ba0f93ab512b0e2b759079b97e9e431a2e562c06be9a6b",
       "scripts/production/test-product-master-build.py": "3d0b1990516ae2cdbcb6e66953bb925cb3c846584c5f2245574ea675ff8f7d4c",
       "scripts/production/test_actual_build.py": "a4ce74e1d1459dc8b59542c64e7f7aa7003d36a94d626f8a055fb0459ca83f9b",
-      "scripts/production/test_ew_output_successor.py": "349a151c91da240e1321ff4c4d55282fced0a02d570a4b93e90254a8724f380d",
       "scripts/production/thermosl-change.py": "f2c33764c986245924fd01b6abbf1cf4b111cd11f72d1dc42b7e1cbb7f3686fa",
       "scripts/production/thermosl-option-change.mjs": "7a394f1d2b4b14b2bfc6e2bfe894440b6844ebc71f341afc925bfd78095d243e",
       "scripts/production/unpack-build-authority.py": "df8ea342573dbf4b492acba873f4cf778fe1f19dab47c137f11ed1b48fb3b857",
@@ -636,6 +589,7 @@
       "scripts/production/validate-architecture-connection.py": "71c896aef4b0bb1d8ef99480958ac494fda132ed1891d159d2b72c98131e45e7",
       "scripts/production/validate-catalogue-audit-profile.py": "1e9e3cc0802ca90f363eb81f56a2a96f03743471ffc139c16298de1c48aed01b",
       "scripts/production/validate-current-authority-successor.py": "35b38b2f906202cea36ef07f6f12a3b83cb4f8291d382d750910fa5f7f98b083",
+      "scripts/production/validate-order4-release.py": "5c1afe6bd38da984d4742ee48732a7d614df460c547b1ce6d3a1862f1015ad16",
       "scripts/production/validate-product-master-build.py": "e27ec8b9469f24b420103777ad0b3aef8a705ea272ee8afdc867da7d6e182ed5",
       "scripts/production/validate-product-master-profile.py": "aec961f3ea8d7ac09f775c5fe8eb192d2c786cd1ca8c7ab38714774d8a6ce45a",
       "scripts/production/verify-app-release.mjs": "0e5f3301de89c6b9cf041ada3683b3bfa1056727598ed41342606267d3e101ba",
@@ -1026,11 +980,12 @@
       "src/catalog/selector.mjs": "ecfe3d8863040080a63a2897b80b8edbdd74a976a11b538eccb15a47b5a470c7",
       "src/estimate-output/model.mjs": "5c8f2869524464ee821536207bf7b1fbcc741ebc7b6eb3ab57323b9fcfecea22",
       "src/estimate-output/pdf-renderer.mjs": "df0c6fd852fb0d60f0e00634f928850c589a59d9c5469806279c4a65a74206ae",
-      "src/estimate-output/xlsx-renderer.mjs": "0c23b759e306f87ce5e7fd04316d6378d5135c45aaa56d2ab71ffc7c2dbd8508",
       "src/server/recovery-app.mjs": "0a5ea33effbab5c890570da08134b1bc7482b18e0d1e7f33ac84ede97b582c6f",
+      "src/ui/web/app.js": "d53a1e3a54561c9e5492d0142f69ba403c1b954858900e69c119ed40cf3c9825",
       "src/ui/web/estimate-output-integration.mjs": "0088dca6579f734ffc8b9b09373bbdd39b0b7f63c489ccef05d615996add8c24",
       "src/ui/web/estimate-output.css": "f705f00eaf2af35cc6ccafe53923c7ff6667847fa5c27f9b60045b14488287fb",
       "src/ui/web/index.html": "3ddd021c6b9019c51e4becc7afc5e615637c96df1e9775910e9c5c9d3e981e49",
+      "src/ui/web/product-configuration-editor.mjs": "06082e4bef9704326468e6a9aeb2969fea2f339185e385fbdd596cef34a8545b",
       "src/ui/web/styles-wave3.css": "fc3762eeccd205f404a7f2f4df58d3b1e1b0f95e5bfac88294eb0763a6e40dbe",
       "src/ui/web/styles.css": "588d38f8f4d704c0fd8bde39e95a60b50e4392bcc6e3ec79125ffbbe3ab80409",
       "src/ui/web/theme.css": "8687198f6e0b3484b61283b082cdbaa86b4ab153680558c4025eba2886b2cc1c",
@@ -1054,7 +1009,6 @@
       "test/72-runtime-manifest-uchirimo-integration.test.mjs": "fd72ea2b8a292ac434df2cd372877213593ffc8a4d101885d191b2e65f195c32",
       "test/72-work-management.test.mjs": "10a3a5a16514ba6fd05e752ea72580e29cd0e673524e47a0f584312ce27549d3",
       "test/73-runtime-ui-uchirimo-gate.test.mjs": "8dea7c8da867a07cf3cd93b8eca6e7d1c0dd4dea7009297ee97c613daee3246b",
-      "test/74-estimate-output.test.mjs": "32148d4ec4c15394fc4a63ccb6afcd9fc430ad068ca0f6c492794fb0ec2ba470",
       "test/74-new-construction-ui-v16.test.mjs": "60d19f09e97522fef89d677bd9889b704cea140f4ee1c5fbf36040b32562c9f8",
       "test/75-formal-runtime-resync.test.mjs": "5ba82b6fc22d010f2cf3bb0dc9734326f46066956adc357e7f5bfc283fb5f216",
       "test/75-runtime-ui-inplus-v04r2-gate.test.mjs": "a9f1394900c2aa0bd22235da0b276abe3a2c908f42a565f9be0b39384c301013",
@@ -1098,7 +1052,6 @@
       "test/browser/eight-series-business-flow-qa.mjs": "e531d024a1527aac3800cf659ecc32cc736dbfe949e9329400450538997112af",
       "test/browser/eight-series-preview-qa.mjs": "6bce8d421c768985a1651618e83a0ba95a2130e4aad1d8d1d5909546d902ca76",
       "test/browser/estimate-output-browser-qa.mjs": "73e182c335a074cd9937f6bca7c675e806d085176e261595905d4db6bf746895",
-      "test/browser/ew-october-2026-browser-qa.mjs": "2b83118bc51b190608f054d7a4f5b02c0c25f28f163fb152dd6c7d5c612a995a",
       "test/browser/ew-runtime-browser-qa.mjs": "2fdb031189f55424c7ce19d12dbfbc624f7f88b0105c2f18443a900bbc8e941d",
       "test/browser/formal-runtime-resync-browser-qa.mjs": "5b41dc739e078416783bcd104be529124ae20ca3a830b5313e29cf807cc7b2f1",
       "test/browser/global-window-selection-flow-browser-qa.mjs": "16884a881ed2aa86fbfa6b241f14545a60bb412754d82b75082e40eb9f17b3d0",
@@ -1138,9 +1091,9 @@
     },
     "http_artifacts": {
       "/": "3ddd021c6b9019c51e4becc7afc5e615637c96df1e9775910e9c5c9d3e981e49",
-      "/app.js": "8767f968393bd0dd3df15da9906525939002ca58ff5dca0560b744e1a85b39eb",
+      "/app.js": "d53a1e3a54561c9e5492d0142f69ba403c1b954858900e69c119ed40cf3c9825",
       "/styles.css": "588d38f8f4d704c0fd8bde39e95a60b50e4392bcc6e3ec79125ffbbe3ab80409",
-      "/product-configuration-editor.mjs": "4d454860646085bdad132916217a470bb95daab6672944928b65eb8669b1b96d",
+      "/product-configuration-editor.mjs": "06082e4bef9704326468e6a9aeb2969fea2f339185e385fbdd596cef34a8545b",
       "/estimate-output-integration.mjs": "0088dca6579f734ffc8b9b09373bbdd39b0b7f63c489ccef05d615996add8c24",
       "/work-management/service.mjs": "79e1451ea52a3bf66dfca4184b70e3ed21526ac21cf20c8c9008a2cfff3d7cf9",
       "/estimate-output/model.mjs": "5c8f2869524464ee821536207bf7b1fbcc741ebc7b6eb3ab57323b9fcfecea22",
@@ -1169,20 +1122,14 @@
       ]
     },
     "native_qa_bindings": {
-      "batch2_product": {
+      "browser": {
         "url_pointer": [
           "url"
         ],
         "sha_pointer": [
-          "observed_commit"
+          "observedCommit"
         ],
         "claims": [
-          {
-            "pointer": [
-              "schema"
-            ],
-            "value": "ORDER5_BATCH2_EXECUTED_PRODUCT_QA_V1"
-          },
           {
             "pointer": [
               "status"
@@ -1197,15 +1144,111 @@
           },
           {
             "pointer": [
-              "product_id"
+              "persistence"
             ],
-            "value": "SER-LIX-SAMOS2H"
+            "value": "BROWSER_LOCAL_STORAGE"
+          }
+        ],
+        "minimums": [
+          {
+            "pointer": [
+              "pass"
+            ],
+            "value": 24
+          }
+        ],
+        "results_pointer": [
+          "results"
+        ],
+        "result_state_key": "status",
+        "count_pointer": [
+          "pass"
+        ]
+      },
+      "regression": {
+        "url_pointer": [
+          "url"
+        ],
+        "sha_pointer": [
+          "observedCommit"
+        ],
+        "claims": [
+          {
+            "pointer": [
+              "status"
+            ],
+            "value": "PASS"
           },
           {
             "pointer": [
-              "scope"
+              "pageErrors"
             ],
-            "value": "SAMOS2H_V09R4_SELECTION_SAVE_OUTPUT_ORDER5_BATCH2_V1"
+            "value": []
+          },
+          {
+            "pointer": [
+              "consoleErrors"
+            ],
+            "value": []
+          }
+        ],
+        "minimums": [
+          {
+            "pointer": [
+              "check_count"
+            ],
+            "value": 12
+          }
+        ],
+        "results_pointer": [
+          "checks"
+        ],
+        "result_state_key": "result",
+        "count_pointer": [
+          "check_count"
+        ]
+      },
+      "release_identity": {
+        "url_pointer": [
+          "url"
+        ],
+        "sha_pointer": [
+          "releaseCommitSha"
+        ],
+        "claims": [
+          {
+            "pointer": [
+              "status"
+            ],
+            "value": "PASS"
+          }
+        ]
+      },
+      "ew_product": {
+        "url_pointer": [
+          "url"
+        ],
+        "sha_pointer": [
+          "observedCommit"
+        ],
+        "claims": [
+          {
+            "pointer": [
+              "status"
+            ],
+            "value": "PASS"
+          },
+          {
+            "pointer": [
+              "errors"
+            ],
+            "value": []
+          },
+          {
+            "pointer": [
+              "product_scope"
+            ],
+            "value": "SER-LIX-EW v1.4"
           },
           {
             "pointer": [
@@ -1222,29 +1265,14 @@
               "persistence"
             ],
             "value": "BROWSER_LOCAL_STORAGE"
-          },
-          {
-            "pointer": [
-              "runtime_errors"
-            ],
-            "value": 0
-          },
-          {
-            "pointer": [
-              "candidate_ui_sha256"
-            ],
-            "value": {
-              "src/ui/web/app.js": "8767f968393bd0dd3df15da9906525939002ca58ff5dca0560b744e1a85b39eb",
-              "src/ui/web/product-configuration-editor.mjs": "4d454860646085bdad132916217a470bb95daab6672944928b65eb8669b1b96d"
-            }
           }
         ],
         "minimums": [
           {
             "pointer": [
-              "case_count"
+              "pass"
             ],
-            "value": 3
+            "value": 27
           }
         ],
         "results_pointer": [
@@ -1252,15 +1280,15 @@
         ],
         "result_state_key": "status",
         "count_pointer": [
-          "case_count"
+          "pass"
         ]
       },
-      "release_identity": {
+      "ew_output": {
         "url_pointer": [
-          "origin"
+          "url"
         ],
         "sha_pointer": [
-          "commit"
+          "observedCommit"
         ],
         "claims": [
           {
@@ -1268,7 +1296,70 @@
               "status"
             ],
             "value": "PASS"
+          },
+          {
+            "pointer": [
+              "errors"
+            ],
+            "value": []
+          },
+          {
+            "pointer": [
+              "product_id"
+            ],
+            "value": "SER-LIX-EW"
+          },
+          {
+            "pointer": [
+              "scope"
+            ],
+            "value": "EW_NORMAL_29_FIELDS_XLSX_ORDER5_BATCH1_V2"
+          },
+          {
+            "pointer": [
+              "xlsx_visual"
+            ],
+            "value": "PASS"
+          },
+          {
+            "pointer": [
+              "xlsx_content"
+            ],
+            "value": "PASS"
+          },
+          {
+            "pointer": [
+              "pdf_visual"
+            ],
+            "value": "PASS"
+          },
+          {
+            "pointer": [
+              "eight_series_regression"
+            ],
+            "value": "PASS"
+          },
+          {
+            "pointer": [
+              "output_code_sha256"
+            ],
+            "value": "0c23b759e306f87ce5e7fd04316d6378d5135c45aaa56d2ab71ffc7c2dbd8508"
           }
+        ],
+        "minimums": [
+          {
+            "pointer": [
+              "pass"
+            ],
+            "value": 6
+          }
+        ],
+        "results_pointer": [
+          "results"
+        ],
+        "result_state_key": "status",
+        "count_pointer": [
+          "pass"
         ]
       }
     },

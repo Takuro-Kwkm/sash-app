@@ -24,5 +24,6 @@ jobs:
       - run: python -B scripts/production/unpack-release-authority.py /tmp/order4-shared-release
       - run: python -B scripts/production/release-contract.py --central /tmp/order4-shared-release --check
       - run: python -B scripts/production/validate-order5-release.py
+      - run: python -B -m unittest discover -s scripts/production -p test_order5_batch2_scope.py
       - run: python -B scripts/production/validate-architecture-connection.py
       - run: python -B scripts/production/validate-current-authority-successor.py --central /tmp/order4-shared-release
