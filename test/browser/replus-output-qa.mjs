@@ -22,7 +22,8 @@ try{
   return {model,pdf:Array.from(createEstimatePdfBytes(model)),xlsx:Array.from(createEstimateXlsxBytes(model))};
  },seeds);
  assert.equal(result.model.rows.length,7);assert.ok(result.model.rows.every(r=>r.price===null));assert.equal(result.model.counts.complete,0);
- assert.ok(result.model.rows.every(r=>r.audit.runtime_manifest_identity==='1QC4ZIiQfLe-I9qHoXuUkBrhKSk82AGGp'));
+ assert.ok(process.env.SASH_CANDIDATE_MANIFEST_FILE_ID,'Saved candidate identity required');
+ assert.ok(result.model.rows.every(r=>r.audit.runtime_manifest_identity===process.env.SASH_CANDIDATE_MANIFEST_FILE_ID));
  await writeFile(OUT+'/replus-candidate-estimate.pdf',new Uint8Array(result.pdf));
  await writeFile(OUT+'/replus-candidate-estimate.xlsx',new Uint8Array(result.xlsx));
  await writeFile(OUT+'/output-model.json',JSON.stringify(result.model,null,2));

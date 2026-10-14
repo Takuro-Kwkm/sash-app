@@ -1,6 +1,6 @@
 {
   "schema": "PRODUCT_MODULE_CANDIDATE_V1",
-  "candidate_revision": "REPLUS_RUNTIME_UI_V5_20261014",
+  "candidate_revision": "REPLUS_SEMANTIC_FLOW_V7_R2_20261014",
   "baseline": {
     "path": "candidates/RPL_ROOM.json",
     "component_id": "RPL_ROOM",
@@ -16,7 +16,7 @@
       "displayName": "リプラス 居室仕様",
       "source": {
         "id": "RPL_ROOM",
-        "version": "REPLUS_RUNTIME_UI_V5_20261014"
+        "version": "REPLUS_SEMANTIC_FLOW_V7_R2_20261014"
       }
     },
     "specificationDefinitions": [
@@ -52,7 +52,7 @@
       },
       {
         "key": "spec_panel_configuration",
-        "displayLabel": "枚数",
+        "displayLabel": "建数",
         "dataType": "ENUM",
         "displayOrder": 30,
         "autoSelectSingle": false,
@@ -97,6 +97,8 @@
         "displayOrder": 50,
         "autoSelectSingle": false,
         "parentFields": [
+          "spec_height_category",
+          "spec_panel_configuration",
           "window_type"
         ],
         "selector": {
@@ -137,8 +139,8 @@
         "displayOrder": 70,
         "autoSelectSingle": false,
         "parentFields": [
-          "window_type",
-          "spec_height_category"
+          "spec_height_category",
+          "window_type"
         ],
         "selector": {
           "window_type": {
@@ -157,26 +159,8 @@
         "status": "ACTIVE"
       },
       {
-        "key": "glass",
-        "displayLabel": "ガラス",
-        "dataType": "ENUM",
-        "displayOrder": 80,
-        "autoSelectSingle": false,
-        "parentFields": [
-          "window_type"
-        ],
-        "selector": {
-          "window_type": {
-            "$exists": true
-          }
-        },
-        "id": "CANDIDATE:RPL_ROOM:field:glass",
-        "productId": "CANDIDATE:RPL_ROOM",
-        "status": "ACTIVE"
-      },
-      {
         "key": "size_mode",
-        "displayLabel": "寸法指定",
+        "displayLabel": "寸法の指定方法",
         "dataType": "ENUM",
         "displayOrder": 90,
         "autoSelectSingle": false,
@@ -188,11 +172,13 @@
       },
       {
         "key": "custom_width",
-        "displayLabel": "仕上がり幅 W（mm）",
+        "displayLabel": "製品仕上がり幅 W（mm）",
         "dataType": "NUMBER",
         "displayOrder": 100,
         "autoSelectSingle": false,
-        "parentFields": [],
+        "parentFields": [
+          "size_mode"
+        ],
         "selector": {
           "size_mode": "CUSTOM"
         },
@@ -202,11 +188,13 @@
       },
       {
         "key": "custom_height",
-        "displayLabel": "仕上がり高さ H（mm）",
+        "displayLabel": "製品仕上がり高さ H（mm）",
         "dataType": "NUMBER",
         "displayOrder": 110,
         "autoSelectSingle": false,
-        "parentFields": [],
+        "parentFields": [
+          "size_mode"
+        ],
         "selector": {
           "size_mode": "CUSTOM"
         },
@@ -268,7 +256,9 @@
         "dataType": "ENUM",
         "displayOrder": 160,
         "autoSelectSingle": false,
-        "parentFields": [],
+        "parentFields": [
+          "options"
+        ],
         "selector": {
           "options": {
             "$contains": "OP-COVER-CASING"
@@ -284,7 +274,9 @@
         "dataType": "MULTI_ENUM",
         "displayOrder": 170,
         "autoSelectSingle": false,
-        "parentFields": [],
+        "parentFields": [
+          "window_type"
+        ],
         "selector": {},
         "id": "CANDIDATE:RPL_ROOM:field:options",
         "productId": "CANDIDATE:RPL_ROOM",
@@ -316,7 +308,7 @@
       },
       {
         "key": "installation_room",
-        "displayLabel": "施工条件",
+        "displayLabel": "設置場所",
         "dataType": "ENUM",
         "displayOrder": 200,
         "autoSelectSingle": false,
@@ -328,13 +320,69 @@
       },
       {
         "key": "work_space",
-        "displayLabel": "施工条件",
+        "displayLabel": "新設枠の振出し条件",
         "dataType": "ENUM",
         "displayOrder": 210,
         "autoSelectSingle": false,
         "parentFields": [],
         "selector": {},
         "id": "CANDIDATE:RPL_ROOM:field:work_space",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "status": "ACTIVE"
+      },
+      {
+        "key": "glass_category",
+        "displayLabel": "ガラス種類",
+        "dataType": "ENUM",
+        "displayOrder": 700,
+        "autoSelectSingle": false,
+        "parentFields": [
+          "window_type"
+        ],
+        "selector": {
+          "window_type": {
+            "$exists": true
+          }
+        },
+        "id": "CANDIDATE:RPL_ROOM:field:glass_category",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "status": "ACTIVE"
+      },
+      {
+        "key": "glass",
+        "displayLabel": "ガラス詳細・Low-E仕様",
+        "dataType": "ENUM",
+        "displayOrder": 700,
+        "autoSelectSingle": false,
+        "parentFields": [
+          "glass_category",
+          "window_type"
+        ],
+        "selector": {
+          "glass_category": {
+            "$exists": true
+          }
+        },
+        "id": "CANDIDATE:RPL_ROOM:field:glass",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "status": "ACTIVE"
+      },
+      {
+        "key": "glass_function",
+        "displayLabel": "ガラス追加機能",
+        "dataType": "ENUM",
+        "displayOrder": 700,
+        "autoSelectSingle": false,
+        "parentFields": [
+          "glass",
+          "window_type"
+        ],
+        "selector": {
+          "glass": {
+            "$exists": true
+          }
+        },
+        "id": "CANDIDATE:RPL_ROOM:field:glass_function",
         "productId": "CANDIDATE:RPL_ROOM",
         "status": "ACTIVE"
       }
@@ -613,7 +661,8 @@
           "EV-006,007"
         ],
         "selector": {
-          "window_type": "RPL_ROOM_SLD"
+          "window_type": "RPL_ROOM_SLD",
+          "spec_height_category": "SS-SLD-TER"
         },
         "metadata": {
           "manualCheck": false,
@@ -631,7 +680,8 @@
           "EV-006,007"
         ],
         "selector": {
-          "window_type": "RPL_ROOM_SLD"
+          "window_type": "RPL_ROOM_SLD",
+          "spec_panel_configuration": "SS-SLD-PANEL-2"
         },
         "metadata": {
           "manualCheck": false,
@@ -833,669 +883,6 @@
         "id": "CANDIDATE:RPL_ROOM:value:screen:7",
         "productId": "CANDIDATE:RPL_ROOM",
         "specificationKey": "screen",
-        "status": "ACTIVE"
-      },
-      {
-        "value": "GL-PG",
-        "displayLabel": "一般複層ガラス",
-        "evidenceIds": [
-          "EV-020"
-        ],
-        "selector": {
-          "window_type": "RPL_ROOM_SLD"
-        },
-        "metadata": {
-          "manualCheck": true
-        },
-        "id": "CANDIDATE:RPL_ROOM:value:glass:0",
-        "productId": "CANDIDATE:RPL_ROOM",
-        "specificationKey": "glass",
-        "status": "ACTIVE"
-      },
-      {
-        "value": "GL-PG",
-        "displayLabel": "一般複層ガラス",
-        "evidenceIds": [
-          "EV-020"
-        ],
-        "selector": {
-          "window_type": "RPL_ROOM_VS_OP"
-        },
-        "metadata": {
-          "manualCheck": true
-        },
-        "id": "CANDIDATE:RPL_ROOM:value:glass:1",
-        "productId": "CANDIDATE:RPL_ROOM",
-        "specificationKey": "glass",
-        "status": "ACTIVE"
-      },
-      {
-        "value": "GL-PG",
-        "displayLabel": "一般複層ガラス",
-        "evidenceIds": [
-          "EV-020"
-        ],
-        "selector": {
-          "window_type": "RPL_ROOM_VS_CAM"
-        },
-        "metadata": {
-          "manualCheck": true
-        },
-        "id": "CANDIDATE:RPL_ROOM:value:glass:2",
-        "productId": "CANDIDATE:RPL_ROOM",
-        "specificationKey": "glass",
-        "status": "ACTIVE"
-      },
-      {
-        "value": "GL-PG",
-        "displayLabel": "一般複層ガラス",
-        "evidenceIds": [
-          "EV-020"
-        ],
-        "selector": {
-          "window_type": "RPL_ROOM_HS_OP"
-        },
-        "metadata": {
-          "manualCheck": true
-        },
-        "id": "CANDIDATE:RPL_ROOM:value:glass:3",
-        "productId": "CANDIDATE:RPL_ROOM",
-        "specificationKey": "glass",
-        "status": "ACTIVE"
-      },
-      {
-        "value": "GL-PG",
-        "displayLabel": "一般複層ガラス",
-        "evidenceIds": [
-          "EV-020"
-        ],
-        "selector": {
-          "window_type": "RPL_ROOM_HS_CAM"
-        },
-        "metadata": {
-          "manualCheck": true
-        },
-        "id": "CANDIDATE:RPL_ROOM:value:glass:4",
-        "productId": "CANDIDATE:RPL_ROOM",
-        "specificationKey": "glass",
-        "status": "ACTIVE"
-      },
-      {
-        "value": "GL-PG",
-        "displayLabel": "一般複層ガラス",
-        "evidenceIds": [
-          "EV-020"
-        ],
-        "selector": {
-          "window_type": "RPL_ROOM_FIX_OUT"
-        },
-        "metadata": {
-          "manualCheck": true
-        },
-        "id": "CANDIDATE:RPL_ROOM:value:glass:5",
-        "productId": "CANDIDATE:RPL_ROOM",
-        "specificationKey": "glass",
-        "status": "ACTIVE"
-      },
-      {
-        "value": "GL-PG",
-        "displayLabel": "一般複層ガラス",
-        "evidenceIds": [
-          "EV-020"
-        ],
-        "selector": {
-          "window_type": "RPL_ROOM_FIX_IN"
-        },
-        "metadata": {
-          "manualCheck": true
-        },
-        "id": "CANDIDATE:RPL_ROOM:value:glass:6",
-        "productId": "CANDIDATE:RPL_ROOM",
-        "specificationKey": "glass",
-        "status": "ACTIVE"
-      },
-      {
-        "value": "GL-PG",
-        "displayLabel": "一般複層ガラス",
-        "evidenceIds": [
-          "EV-020"
-        ],
-        "selector": {
-          "window_type": "RPL_ROOM_DHFS"
-        },
-        "metadata": {
-          "manualCheck": true
-        },
-        "id": "CANDIDATE:RPL_ROOM:value:glass:7",
-        "productId": "CANDIDATE:RPL_ROOM",
-        "specificationKey": "glass",
-        "status": "ACTIVE"
-      },
-      {
-        "value": "GL-LOWE-CLEAR",
-        "displayLabel": "Low-E複層ガラス クリア",
-        "evidenceIds": [
-          "EV-020"
-        ],
-        "selector": {
-          "window_type": "RPL_ROOM_SLD"
-        },
-        "metadata": {
-          "manualCheck": true
-        },
-        "id": "CANDIDATE:RPL_ROOM:value:glass:8",
-        "productId": "CANDIDATE:RPL_ROOM",
-        "specificationKey": "glass",
-        "status": "ACTIVE"
-      },
-      {
-        "value": "GL-LOWE-CLEAR",
-        "displayLabel": "Low-E複層ガラス クリア",
-        "evidenceIds": [
-          "EV-020"
-        ],
-        "selector": {
-          "window_type": "RPL_ROOM_VS_OP"
-        },
-        "metadata": {
-          "manualCheck": true
-        },
-        "id": "CANDIDATE:RPL_ROOM:value:glass:9",
-        "productId": "CANDIDATE:RPL_ROOM",
-        "specificationKey": "glass",
-        "status": "ACTIVE"
-      },
-      {
-        "value": "GL-LOWE-CLEAR",
-        "displayLabel": "Low-E複層ガラス クリア",
-        "evidenceIds": [
-          "EV-020"
-        ],
-        "selector": {
-          "window_type": "RPL_ROOM_VS_CAM"
-        },
-        "metadata": {
-          "manualCheck": true
-        },
-        "id": "CANDIDATE:RPL_ROOM:value:glass:10",
-        "productId": "CANDIDATE:RPL_ROOM",
-        "specificationKey": "glass",
-        "status": "ACTIVE"
-      },
-      {
-        "value": "GL-LOWE-CLEAR",
-        "displayLabel": "Low-E複層ガラス クリア",
-        "evidenceIds": [
-          "EV-020"
-        ],
-        "selector": {
-          "window_type": "RPL_ROOM_HS_OP"
-        },
-        "metadata": {
-          "manualCheck": true
-        },
-        "id": "CANDIDATE:RPL_ROOM:value:glass:11",
-        "productId": "CANDIDATE:RPL_ROOM",
-        "specificationKey": "glass",
-        "status": "ACTIVE"
-      },
-      {
-        "value": "GL-LOWE-CLEAR",
-        "displayLabel": "Low-E複層ガラス クリア",
-        "evidenceIds": [
-          "EV-020"
-        ],
-        "selector": {
-          "window_type": "RPL_ROOM_HS_CAM"
-        },
-        "metadata": {
-          "manualCheck": true
-        },
-        "id": "CANDIDATE:RPL_ROOM:value:glass:12",
-        "productId": "CANDIDATE:RPL_ROOM",
-        "specificationKey": "glass",
-        "status": "ACTIVE"
-      },
-      {
-        "value": "GL-LOWE-CLEAR",
-        "displayLabel": "Low-E複層ガラス クリア",
-        "evidenceIds": [
-          "EV-020"
-        ],
-        "selector": {
-          "window_type": "RPL_ROOM_FIX_OUT"
-        },
-        "metadata": {
-          "manualCheck": true
-        },
-        "id": "CANDIDATE:RPL_ROOM:value:glass:13",
-        "productId": "CANDIDATE:RPL_ROOM",
-        "specificationKey": "glass",
-        "status": "ACTIVE"
-      },
-      {
-        "value": "GL-LOWE-CLEAR",
-        "displayLabel": "Low-E複層ガラス クリア",
-        "evidenceIds": [
-          "EV-020"
-        ],
-        "selector": {
-          "window_type": "RPL_ROOM_FIX_IN"
-        },
-        "metadata": {
-          "manualCheck": true
-        },
-        "id": "CANDIDATE:RPL_ROOM:value:glass:14",
-        "productId": "CANDIDATE:RPL_ROOM",
-        "specificationKey": "glass",
-        "status": "ACTIVE"
-      },
-      {
-        "value": "GL-LOWE-CLEAR",
-        "displayLabel": "Low-E複層ガラス クリア",
-        "evidenceIds": [
-          "EV-020"
-        ],
-        "selector": {
-          "window_type": "RPL_ROOM_DHFS"
-        },
-        "metadata": {
-          "manualCheck": true
-        },
-        "id": "CANDIDATE:RPL_ROOM:value:glass:15",
-        "productId": "CANDIDATE:RPL_ROOM",
-        "specificationKey": "glass",
-        "status": "ACTIVE"
-      },
-      {
-        "value": "GL-LOWE-GREEN",
-        "displayLabel": "Low-E複層ガラス グリーン",
-        "evidenceIds": [
-          "EV-020"
-        ],
-        "selector": {
-          "window_type": "RPL_ROOM_SLD"
-        },
-        "metadata": {
-          "manualCheck": true
-        },
-        "id": "CANDIDATE:RPL_ROOM:value:glass:16",
-        "productId": "CANDIDATE:RPL_ROOM",
-        "specificationKey": "glass",
-        "status": "ACTIVE"
-      },
-      {
-        "value": "GL-LOWE-GREEN",
-        "displayLabel": "Low-E複層ガラス グリーン",
-        "evidenceIds": [
-          "EV-020"
-        ],
-        "selector": {
-          "window_type": "RPL_ROOM_VS_OP"
-        },
-        "metadata": {
-          "manualCheck": true
-        },
-        "id": "CANDIDATE:RPL_ROOM:value:glass:17",
-        "productId": "CANDIDATE:RPL_ROOM",
-        "specificationKey": "glass",
-        "status": "ACTIVE"
-      },
-      {
-        "value": "GL-LOWE-GREEN",
-        "displayLabel": "Low-E複層ガラス グリーン",
-        "evidenceIds": [
-          "EV-020"
-        ],
-        "selector": {
-          "window_type": "RPL_ROOM_VS_CAM"
-        },
-        "metadata": {
-          "manualCheck": true
-        },
-        "id": "CANDIDATE:RPL_ROOM:value:glass:18",
-        "productId": "CANDIDATE:RPL_ROOM",
-        "specificationKey": "glass",
-        "status": "ACTIVE"
-      },
-      {
-        "value": "GL-LOWE-GREEN",
-        "displayLabel": "Low-E複層ガラス グリーン",
-        "evidenceIds": [
-          "EV-020"
-        ],
-        "selector": {
-          "window_type": "RPL_ROOM_HS_OP"
-        },
-        "metadata": {
-          "manualCheck": true
-        },
-        "id": "CANDIDATE:RPL_ROOM:value:glass:19",
-        "productId": "CANDIDATE:RPL_ROOM",
-        "specificationKey": "glass",
-        "status": "ACTIVE"
-      },
-      {
-        "value": "GL-LOWE-GREEN",
-        "displayLabel": "Low-E複層ガラス グリーン",
-        "evidenceIds": [
-          "EV-020"
-        ],
-        "selector": {
-          "window_type": "RPL_ROOM_HS_CAM"
-        },
-        "metadata": {
-          "manualCheck": true
-        },
-        "id": "CANDIDATE:RPL_ROOM:value:glass:20",
-        "productId": "CANDIDATE:RPL_ROOM",
-        "specificationKey": "glass",
-        "status": "ACTIVE"
-      },
-      {
-        "value": "GL-LOWE-GREEN",
-        "displayLabel": "Low-E複層ガラス グリーン",
-        "evidenceIds": [
-          "EV-020"
-        ],
-        "selector": {
-          "window_type": "RPL_ROOM_FIX_OUT"
-        },
-        "metadata": {
-          "manualCheck": true
-        },
-        "id": "CANDIDATE:RPL_ROOM:value:glass:21",
-        "productId": "CANDIDATE:RPL_ROOM",
-        "specificationKey": "glass",
-        "status": "ACTIVE"
-      },
-      {
-        "value": "GL-LOWE-GREEN",
-        "displayLabel": "Low-E複層ガラス グリーン",
-        "evidenceIds": [
-          "EV-020"
-        ],
-        "selector": {
-          "window_type": "RPL_ROOM_FIX_IN"
-        },
-        "metadata": {
-          "manualCheck": true
-        },
-        "id": "CANDIDATE:RPL_ROOM:value:glass:22",
-        "productId": "CANDIDATE:RPL_ROOM",
-        "specificationKey": "glass",
-        "status": "ACTIVE"
-      },
-      {
-        "value": "GL-LOWE-GREEN",
-        "displayLabel": "Low-E複層ガラス グリーン",
-        "evidenceIds": [
-          "EV-020"
-        ],
-        "selector": {
-          "window_type": "RPL_ROOM_DHFS"
-        },
-        "metadata": {
-          "manualCheck": true
-        },
-        "id": "CANDIDATE:RPL_ROOM:value:glass:23",
-        "productId": "CANDIDATE:RPL_ROOM",
-        "specificationKey": "glass",
-        "status": "ACTIVE"
-      },
-      {
-        "value": "GL-LOWE-GREEN-HS",
-        "displayLabel": "Low-E複層ガラス グリーン（高遮熱仕様）",
-        "evidenceIds": [
-          "EV-020"
-        ],
-        "selector": {
-          "window_type": "RPL_ROOM_SLD"
-        },
-        "metadata": {
-          "manualCheck": true
-        },
-        "id": "CANDIDATE:RPL_ROOM:value:glass:24",
-        "productId": "CANDIDATE:RPL_ROOM",
-        "specificationKey": "glass",
-        "status": "ACTIVE"
-      },
-      {
-        "value": "GL-LOWE-GREEN-HS",
-        "displayLabel": "Low-E複層ガラス グリーン（高遮熱仕様）",
-        "evidenceIds": [
-          "EV-020"
-        ],
-        "selector": {
-          "window_type": "RPL_ROOM_VS_OP"
-        },
-        "metadata": {
-          "manualCheck": true
-        },
-        "id": "CANDIDATE:RPL_ROOM:value:glass:25",
-        "productId": "CANDIDATE:RPL_ROOM",
-        "specificationKey": "glass",
-        "status": "ACTIVE"
-      },
-      {
-        "value": "GL-LOWE-GREEN-HS",
-        "displayLabel": "Low-E複層ガラス グリーン（高遮熱仕様）",
-        "evidenceIds": [
-          "EV-020"
-        ],
-        "selector": {
-          "window_type": "RPL_ROOM_VS_CAM"
-        },
-        "metadata": {
-          "manualCheck": true
-        },
-        "id": "CANDIDATE:RPL_ROOM:value:glass:26",
-        "productId": "CANDIDATE:RPL_ROOM",
-        "specificationKey": "glass",
-        "status": "ACTIVE"
-      },
-      {
-        "value": "GL-LOWE-GREEN-HS",
-        "displayLabel": "Low-E複層ガラス グリーン（高遮熱仕様）",
-        "evidenceIds": [
-          "EV-020"
-        ],
-        "selector": {
-          "window_type": "RPL_ROOM_HS_OP"
-        },
-        "metadata": {
-          "manualCheck": true
-        },
-        "id": "CANDIDATE:RPL_ROOM:value:glass:27",
-        "productId": "CANDIDATE:RPL_ROOM",
-        "specificationKey": "glass",
-        "status": "ACTIVE"
-      },
-      {
-        "value": "GL-LOWE-GREEN-HS",
-        "displayLabel": "Low-E複層ガラス グリーン（高遮熱仕様）",
-        "evidenceIds": [
-          "EV-020"
-        ],
-        "selector": {
-          "window_type": "RPL_ROOM_HS_CAM"
-        },
-        "metadata": {
-          "manualCheck": true
-        },
-        "id": "CANDIDATE:RPL_ROOM:value:glass:28",
-        "productId": "CANDIDATE:RPL_ROOM",
-        "specificationKey": "glass",
-        "status": "ACTIVE"
-      },
-      {
-        "value": "GL-LOWE-GREEN-HS",
-        "displayLabel": "Low-E複層ガラス グリーン（高遮熱仕様）",
-        "evidenceIds": [
-          "EV-020"
-        ],
-        "selector": {
-          "window_type": "RPL_ROOM_FIX_OUT"
-        },
-        "metadata": {
-          "manualCheck": true
-        },
-        "id": "CANDIDATE:RPL_ROOM:value:glass:29",
-        "productId": "CANDIDATE:RPL_ROOM",
-        "specificationKey": "glass",
-        "status": "ACTIVE"
-      },
-      {
-        "value": "GL-LOWE-GREEN-HS",
-        "displayLabel": "Low-E複層ガラス グリーン（高遮熱仕様）",
-        "evidenceIds": [
-          "EV-020"
-        ],
-        "selector": {
-          "window_type": "RPL_ROOM_FIX_IN"
-        },
-        "metadata": {
-          "manualCheck": true
-        },
-        "id": "CANDIDATE:RPL_ROOM:value:glass:30",
-        "productId": "CANDIDATE:RPL_ROOM",
-        "specificationKey": "glass",
-        "status": "ACTIVE"
-      },
-      {
-        "value": "GL-LOWE-GREEN-HS",
-        "displayLabel": "Low-E複層ガラス グリーン（高遮熱仕様）",
-        "evidenceIds": [
-          "EV-020"
-        ],
-        "selector": {
-          "window_type": "RPL_ROOM_DHFS"
-        },
-        "metadata": {
-          "manualCheck": true
-        },
-        "id": "CANDIDATE:RPL_ROOM:value:glass:31",
-        "productId": "CANDIDATE:RPL_ROOM",
-        "specificationKey": "glass",
-        "status": "ACTIVE"
-      },
-      {
-        "value": "GL-SAFETY",
-        "displayLabel": "安全合わせ複層ガラス",
-        "evidenceIds": [
-          "EV-020"
-        ],
-        "selector": {
-          "window_type": "RPL_ROOM_SLD"
-        },
-        "metadata": {
-          "manualCheck": true
-        },
-        "id": "CANDIDATE:RPL_ROOM:value:glass:32",
-        "productId": "CANDIDATE:RPL_ROOM",
-        "specificationKey": "glass",
-        "status": "ACTIVE"
-      },
-      {
-        "value": "GL-SAFETY",
-        "displayLabel": "安全合わせ複層ガラス",
-        "evidenceIds": [
-          "EV-020"
-        ],
-        "selector": {
-          "window_type": "RPL_ROOM_VS_OP"
-        },
-        "metadata": {
-          "manualCheck": true
-        },
-        "id": "CANDIDATE:RPL_ROOM:value:glass:33",
-        "productId": "CANDIDATE:RPL_ROOM",
-        "specificationKey": "glass",
-        "status": "ACTIVE"
-      },
-      {
-        "value": "GL-SAFETY",
-        "displayLabel": "安全合わせ複層ガラス",
-        "evidenceIds": [
-          "EV-020"
-        ],
-        "selector": {
-          "window_type": "RPL_ROOM_VS_CAM"
-        },
-        "metadata": {
-          "manualCheck": true
-        },
-        "id": "CANDIDATE:RPL_ROOM:value:glass:34",
-        "productId": "CANDIDATE:RPL_ROOM",
-        "specificationKey": "glass",
-        "status": "ACTIVE"
-      },
-      {
-        "value": "GL-SAFETY",
-        "displayLabel": "安全合わせ複層ガラス",
-        "evidenceIds": [
-          "EV-020"
-        ],
-        "selector": {
-          "window_type": "RPL_ROOM_HS_OP"
-        },
-        "metadata": {
-          "manualCheck": true
-        },
-        "id": "CANDIDATE:RPL_ROOM:value:glass:35",
-        "productId": "CANDIDATE:RPL_ROOM",
-        "specificationKey": "glass",
-        "status": "ACTIVE"
-      },
-      {
-        "value": "GL-SAFETY",
-        "displayLabel": "安全合わせ複層ガラス",
-        "evidenceIds": [
-          "EV-020"
-        ],
-        "selector": {
-          "window_type": "RPL_ROOM_HS_CAM"
-        },
-        "metadata": {
-          "manualCheck": true
-        },
-        "id": "CANDIDATE:RPL_ROOM:value:glass:36",
-        "productId": "CANDIDATE:RPL_ROOM",
-        "specificationKey": "glass",
-        "status": "ACTIVE"
-      },
-      {
-        "value": "GL-SAFETY",
-        "displayLabel": "安全合わせ複層ガラス",
-        "evidenceIds": [
-          "EV-020"
-        ],
-        "selector": {
-          "window_type": "RPL_ROOM_DHFS"
-        },
-        "metadata": {
-          "manualCheck": true
-        },
-        "id": "CANDIDATE:RPL_ROOM:value:glass:37",
-        "productId": "CANDIDATE:RPL_ROOM",
-        "specificationKey": "glass",
-        "status": "ACTIVE"
-      },
-      {
-        "value": "GL-TRIPLE-DHFS",
-        "displayLabel": "トリプルガラス",
-        "evidenceIds": [
-          "EV-014,020"
-        ],
-        "selector": {
-          "window_type": "RPL_ROOM_DHFS"
-        },
-        "metadata": {
-          "manualCheck": true
-        },
-        "id": "CANDIDATE:RPL_ROOM:value:glass:38",
-        "productId": "CANDIDATE:RPL_ROOM",
-        "specificationKey": "glass",
         "status": "ACTIVE"
       },
       {
@@ -2368,6 +1755,1009 @@
         "id": "CANDIDATE:RPL_ROOM:value:work_space:0",
         "productId": "CANDIDATE:RPL_ROOM",
         "specificationKey": "work_space",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "複層ガラス",
+        "displayLabel": "一般複層ガラス",
+        "evidenceIds": [
+          "EV-020"
+        ],
+        "selector": {
+          "window_type": "RPL_ROOM_SLD"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:glass_category:0",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "glass_category",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "複層ガラス",
+        "displayLabel": "一般複層ガラス",
+        "evidenceIds": [
+          "EV-020"
+        ],
+        "selector": {
+          "window_type": "RPL_ROOM_VS_OP"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:glass_category:1",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "glass_category",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "複層ガラス",
+        "displayLabel": "一般複層ガラス",
+        "evidenceIds": [
+          "EV-020"
+        ],
+        "selector": {
+          "window_type": "RPL_ROOM_VS_CAM"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:glass_category:2",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "glass_category",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "複層ガラス",
+        "displayLabel": "一般複層ガラス",
+        "evidenceIds": [
+          "EV-020"
+        ],
+        "selector": {
+          "window_type": "RPL_ROOM_HS_OP"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:glass_category:3",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "glass_category",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "複層ガラス",
+        "displayLabel": "一般複層ガラス",
+        "evidenceIds": [
+          "EV-020"
+        ],
+        "selector": {
+          "window_type": "RPL_ROOM_HS_CAM"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:glass_category:4",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "glass_category",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "複層ガラス",
+        "displayLabel": "一般複層ガラス",
+        "evidenceIds": [
+          "EV-020"
+        ],
+        "selector": {
+          "window_type": "RPL_ROOM_FIX_OUT"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:glass_category:5",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "glass_category",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "複層ガラス",
+        "displayLabel": "一般複層ガラス",
+        "evidenceIds": [
+          "EV-020"
+        ],
+        "selector": {
+          "window_type": "RPL_ROOM_FIX_IN"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:glass_category:6",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "glass_category",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "複層ガラス",
+        "displayLabel": "一般複層ガラス",
+        "evidenceIds": [
+          "EV-020"
+        ],
+        "selector": {
+          "window_type": "RPL_ROOM_DHFS"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:glass_category:7",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "glass_category",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "Low-E複層ガラス",
+        "displayLabel": "Low-E複層ガラス",
+        "evidenceIds": [
+          "EV-020"
+        ],
+        "selector": {
+          "window_type": "RPL_ROOM_SLD"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:glass_category:8",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "glass_category",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "Low-E複層ガラス",
+        "displayLabel": "Low-E複層ガラス",
+        "evidenceIds": [
+          "EV-020"
+        ],
+        "selector": {
+          "window_type": "RPL_ROOM_VS_OP"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:glass_category:9",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "glass_category",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "Low-E複層ガラス",
+        "displayLabel": "Low-E複層ガラス",
+        "evidenceIds": [
+          "EV-020"
+        ],
+        "selector": {
+          "window_type": "RPL_ROOM_VS_CAM"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:glass_category:10",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "glass_category",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "Low-E複層ガラス",
+        "displayLabel": "Low-E複層ガラス",
+        "evidenceIds": [
+          "EV-020"
+        ],
+        "selector": {
+          "window_type": "RPL_ROOM_HS_OP"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:glass_category:11",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "glass_category",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "Low-E複層ガラス",
+        "displayLabel": "Low-E複層ガラス",
+        "evidenceIds": [
+          "EV-020"
+        ],
+        "selector": {
+          "window_type": "RPL_ROOM_HS_CAM"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:glass_category:12",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "glass_category",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "Low-E複層ガラス",
+        "displayLabel": "Low-E複層ガラス",
+        "evidenceIds": [
+          "EV-020"
+        ],
+        "selector": {
+          "window_type": "RPL_ROOM_FIX_OUT"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:glass_category:13",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "glass_category",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "Low-E複層ガラス",
+        "displayLabel": "Low-E複層ガラス",
+        "evidenceIds": [
+          "EV-020"
+        ],
+        "selector": {
+          "window_type": "RPL_ROOM_FIX_IN"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:glass_category:14",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "glass_category",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "Low-E複層ガラス",
+        "displayLabel": "Low-E複層ガラス",
+        "evidenceIds": [
+          "EV-020"
+        ],
+        "selector": {
+          "window_type": "RPL_ROOM_DHFS"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:glass_category:15",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "glass_category",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "トリプル",
+        "displayLabel": "トリプルガラス",
+        "evidenceIds": [
+          "EV-014,020"
+        ],
+        "selector": {
+          "window_type": "RPL_ROOM_DHFS"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:glass_category:16",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "glass_category",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "GL-PG",
+        "displayLabel": "一般複層ガラス",
+        "evidenceIds": [
+          "EV-020"
+        ],
+        "selector": {
+          "window_type": "RPL_ROOM_SLD",
+          "glass_category": "複層ガラス"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:glass:0",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "glass",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "GL-PG",
+        "displayLabel": "一般複層ガラス",
+        "evidenceIds": [
+          "EV-020"
+        ],
+        "selector": {
+          "window_type": "RPL_ROOM_VS_OP",
+          "glass_category": "複層ガラス"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:glass:1",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "glass",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "GL-PG",
+        "displayLabel": "一般複層ガラス",
+        "evidenceIds": [
+          "EV-020"
+        ],
+        "selector": {
+          "window_type": "RPL_ROOM_VS_CAM",
+          "glass_category": "複層ガラス"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:glass:2",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "glass",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "GL-PG",
+        "displayLabel": "一般複層ガラス",
+        "evidenceIds": [
+          "EV-020"
+        ],
+        "selector": {
+          "window_type": "RPL_ROOM_HS_OP",
+          "glass_category": "複層ガラス"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:glass:3",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "glass",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "GL-PG",
+        "displayLabel": "一般複層ガラス",
+        "evidenceIds": [
+          "EV-020"
+        ],
+        "selector": {
+          "window_type": "RPL_ROOM_HS_CAM",
+          "glass_category": "複層ガラス"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:glass:4",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "glass",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "GL-PG",
+        "displayLabel": "一般複層ガラス",
+        "evidenceIds": [
+          "EV-020"
+        ],
+        "selector": {
+          "window_type": "RPL_ROOM_FIX_OUT",
+          "glass_category": "複層ガラス"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:glass:5",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "glass",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "GL-PG",
+        "displayLabel": "一般複層ガラス",
+        "evidenceIds": [
+          "EV-020"
+        ],
+        "selector": {
+          "window_type": "RPL_ROOM_FIX_IN",
+          "glass_category": "複層ガラス"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:glass:6",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "glass",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "GL-PG",
+        "displayLabel": "一般複層ガラス",
+        "evidenceIds": [
+          "EV-020"
+        ],
+        "selector": {
+          "window_type": "RPL_ROOM_DHFS",
+          "glass_category": "複層ガラス"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:glass:7",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "glass",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "GL-LOWE-CLEAR",
+        "displayLabel": "Low-E複層ガラス クリア",
+        "evidenceIds": [
+          "EV-020"
+        ],
+        "selector": {
+          "window_type": "RPL_ROOM_SLD",
+          "glass_category": "Low-E複層ガラス"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:glass:8",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "glass",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "GL-LOWE-CLEAR",
+        "displayLabel": "Low-E複層ガラス クリア",
+        "evidenceIds": [
+          "EV-020"
+        ],
+        "selector": {
+          "window_type": "RPL_ROOM_VS_OP",
+          "glass_category": "Low-E複層ガラス"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:glass:9",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "glass",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "GL-LOWE-CLEAR",
+        "displayLabel": "Low-E複層ガラス クリア",
+        "evidenceIds": [
+          "EV-020"
+        ],
+        "selector": {
+          "window_type": "RPL_ROOM_VS_CAM",
+          "glass_category": "Low-E複層ガラス"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:glass:10",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "glass",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "GL-LOWE-CLEAR",
+        "displayLabel": "Low-E複層ガラス クリア",
+        "evidenceIds": [
+          "EV-020"
+        ],
+        "selector": {
+          "window_type": "RPL_ROOM_HS_OP",
+          "glass_category": "Low-E複層ガラス"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:glass:11",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "glass",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "GL-LOWE-CLEAR",
+        "displayLabel": "Low-E複層ガラス クリア",
+        "evidenceIds": [
+          "EV-020"
+        ],
+        "selector": {
+          "window_type": "RPL_ROOM_HS_CAM",
+          "glass_category": "Low-E複層ガラス"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:glass:12",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "glass",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "GL-LOWE-CLEAR",
+        "displayLabel": "Low-E複層ガラス クリア",
+        "evidenceIds": [
+          "EV-020"
+        ],
+        "selector": {
+          "window_type": "RPL_ROOM_FIX_OUT",
+          "glass_category": "Low-E複層ガラス"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:glass:13",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "glass",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "GL-LOWE-CLEAR",
+        "displayLabel": "Low-E複層ガラス クリア",
+        "evidenceIds": [
+          "EV-020"
+        ],
+        "selector": {
+          "window_type": "RPL_ROOM_FIX_IN",
+          "glass_category": "Low-E複層ガラス"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:glass:14",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "glass",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "GL-LOWE-CLEAR",
+        "displayLabel": "Low-E複層ガラス クリア",
+        "evidenceIds": [
+          "EV-020"
+        ],
+        "selector": {
+          "window_type": "RPL_ROOM_DHFS",
+          "glass_category": "Low-E複層ガラス"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:glass:15",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "glass",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "GL-LOWE-GREEN",
+        "displayLabel": "Low-E複層ガラス グリーン",
+        "evidenceIds": [
+          "EV-020"
+        ],
+        "selector": {
+          "window_type": "RPL_ROOM_SLD",
+          "glass_category": "Low-E複層ガラス"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:glass:16",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "glass",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "GL-LOWE-GREEN",
+        "displayLabel": "Low-E複層ガラス グリーン",
+        "evidenceIds": [
+          "EV-020"
+        ],
+        "selector": {
+          "window_type": "RPL_ROOM_VS_OP",
+          "glass_category": "Low-E複層ガラス"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:glass:17",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "glass",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "GL-LOWE-GREEN",
+        "displayLabel": "Low-E複層ガラス グリーン",
+        "evidenceIds": [
+          "EV-020"
+        ],
+        "selector": {
+          "window_type": "RPL_ROOM_VS_CAM",
+          "glass_category": "Low-E複層ガラス"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:glass:18",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "glass",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "GL-LOWE-GREEN",
+        "displayLabel": "Low-E複層ガラス グリーン",
+        "evidenceIds": [
+          "EV-020"
+        ],
+        "selector": {
+          "window_type": "RPL_ROOM_HS_OP",
+          "glass_category": "Low-E複層ガラス"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:glass:19",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "glass",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "GL-LOWE-GREEN",
+        "displayLabel": "Low-E複層ガラス グリーン",
+        "evidenceIds": [
+          "EV-020"
+        ],
+        "selector": {
+          "window_type": "RPL_ROOM_HS_CAM",
+          "glass_category": "Low-E複層ガラス"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:glass:20",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "glass",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "GL-LOWE-GREEN",
+        "displayLabel": "Low-E複層ガラス グリーン",
+        "evidenceIds": [
+          "EV-020"
+        ],
+        "selector": {
+          "window_type": "RPL_ROOM_FIX_OUT",
+          "glass_category": "Low-E複層ガラス"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:glass:21",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "glass",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "GL-LOWE-GREEN",
+        "displayLabel": "Low-E複層ガラス グリーン",
+        "evidenceIds": [
+          "EV-020"
+        ],
+        "selector": {
+          "window_type": "RPL_ROOM_FIX_IN",
+          "glass_category": "Low-E複層ガラス"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:glass:22",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "glass",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "GL-LOWE-GREEN",
+        "displayLabel": "Low-E複層ガラス グリーン",
+        "evidenceIds": [
+          "EV-020"
+        ],
+        "selector": {
+          "window_type": "RPL_ROOM_DHFS",
+          "glass_category": "Low-E複層ガラス"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:glass:23",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "glass",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "GL-LOWE-GREEN-HS",
+        "displayLabel": "Low-E複層ガラス グリーン（高遮熱仕様）",
+        "evidenceIds": [
+          "EV-020"
+        ],
+        "selector": {
+          "window_type": "RPL_ROOM_SLD",
+          "glass_category": "Low-E複層ガラス"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:glass:24",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "glass",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "GL-LOWE-GREEN-HS",
+        "displayLabel": "Low-E複層ガラス グリーン（高遮熱仕様）",
+        "evidenceIds": [
+          "EV-020"
+        ],
+        "selector": {
+          "window_type": "RPL_ROOM_VS_OP",
+          "glass_category": "Low-E複層ガラス"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:glass:25",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "glass",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "GL-LOWE-GREEN-HS",
+        "displayLabel": "Low-E複層ガラス グリーン（高遮熱仕様）",
+        "evidenceIds": [
+          "EV-020"
+        ],
+        "selector": {
+          "window_type": "RPL_ROOM_VS_CAM",
+          "glass_category": "Low-E複層ガラス"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:glass:26",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "glass",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "GL-LOWE-GREEN-HS",
+        "displayLabel": "Low-E複層ガラス グリーン（高遮熱仕様）",
+        "evidenceIds": [
+          "EV-020"
+        ],
+        "selector": {
+          "window_type": "RPL_ROOM_HS_OP",
+          "glass_category": "Low-E複層ガラス"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:glass:27",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "glass",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "GL-LOWE-GREEN-HS",
+        "displayLabel": "Low-E複層ガラス グリーン（高遮熱仕様）",
+        "evidenceIds": [
+          "EV-020"
+        ],
+        "selector": {
+          "window_type": "RPL_ROOM_HS_CAM",
+          "glass_category": "Low-E複層ガラス"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:glass:28",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "glass",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "GL-LOWE-GREEN-HS",
+        "displayLabel": "Low-E複層ガラス グリーン（高遮熱仕様）",
+        "evidenceIds": [
+          "EV-020"
+        ],
+        "selector": {
+          "window_type": "RPL_ROOM_FIX_OUT",
+          "glass_category": "Low-E複層ガラス"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:glass:29",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "glass",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "GL-LOWE-GREEN-HS",
+        "displayLabel": "Low-E複層ガラス グリーン（高遮熱仕様）",
+        "evidenceIds": [
+          "EV-020"
+        ],
+        "selector": {
+          "window_type": "RPL_ROOM_FIX_IN",
+          "glass_category": "Low-E複層ガラス"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:glass:30",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "glass",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "GL-LOWE-GREEN-HS",
+        "displayLabel": "Low-E複層ガラス グリーン（高遮熱仕様）",
+        "evidenceIds": [
+          "EV-020"
+        ],
+        "selector": {
+          "window_type": "RPL_ROOM_DHFS",
+          "glass_category": "Low-E複層ガラス"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:glass:31",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "glass",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "GL-TRIPLE-DHFS",
+        "displayLabel": "トリプルガラス",
+        "evidenceIds": [
+          "EV-014,020"
+        ],
+        "selector": {
+          "window_type": "RPL_ROOM_DHFS",
+          "glass_category": "トリプル"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:glass:32",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "glass",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "GL-SAFETY",
+        "displayLabel": "安全合わせ複層ガラス",
+        "evidenceIds": [
+          "EV-020"
+        ],
+        "selector": {
+          "window_type": "RPL_ROOM_SLD",
+          "glass": {
+            "$exists": true
+          }
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:glass_function:0",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "glass_function",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "GL-SAFETY",
+        "displayLabel": "安全合わせ複層ガラス",
+        "evidenceIds": [
+          "EV-020"
+        ],
+        "selector": {
+          "window_type": "RPL_ROOM_VS_OP",
+          "glass": {
+            "$exists": true
+          }
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:glass_function:1",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "glass_function",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "GL-SAFETY",
+        "displayLabel": "安全合わせ複層ガラス",
+        "evidenceIds": [
+          "EV-020"
+        ],
+        "selector": {
+          "window_type": "RPL_ROOM_VS_CAM",
+          "glass": {
+            "$exists": true
+          }
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:glass_function:2",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "glass_function",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "GL-SAFETY",
+        "displayLabel": "安全合わせ複層ガラス",
+        "evidenceIds": [
+          "EV-020"
+        ],
+        "selector": {
+          "window_type": "RPL_ROOM_HS_OP",
+          "glass": {
+            "$exists": true
+          }
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:glass_function:3",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "glass_function",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "GL-SAFETY",
+        "displayLabel": "安全合わせ複層ガラス",
+        "evidenceIds": [
+          "EV-020"
+        ],
+        "selector": {
+          "window_type": "RPL_ROOM_HS_CAM",
+          "glass": {
+            "$exists": true
+          }
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:glass_function:4",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "glass_function",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "GL-SAFETY",
+        "displayLabel": "安全合わせ複層ガラス",
+        "evidenceIds": [
+          "EV-020"
+        ],
+        "selector": {
+          "window_type": "RPL_ROOM_DHFS",
+          "glass": {
+            "$exists": true
+          }
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:glass_function:5",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "glass_function",
         "status": "ACTIVE"
       }
     ],
@@ -3928,6 +4318,48 @@
     {
       "sheet": "10C_化粧カバー見付",
       "reason": "NATIVE_PROSE_OR_COMPOUND_RULE_REQUIRES_MANUAL_REVIEW"
+    }
+  ],
+  "selection_migrations": [
+    {
+      "source": "glass",
+      "value": "GL-PG",
+      "assign": {
+        "glass_category": "複層ガラス"
+      },
+      "clearSource": false
+    },
+    {
+      "source": "glass",
+      "value": "GL-LOWE-CLEAR",
+      "assign": {
+        "glass_category": "Low-E複層ガラス"
+      },
+      "clearSource": false
+    },
+    {
+      "source": "glass",
+      "value": "GL-LOWE-GREEN",
+      "assign": {
+        "glass_category": "Low-E複層ガラス"
+      },
+      "clearSource": false
+    },
+    {
+      "source": "glass",
+      "value": "GL-LOWE-GREEN-HS",
+      "assign": {
+        "glass_category": "Low-E複層ガラス"
+      },
+      "clearSource": false
+    },
+    {
+      "source": "glass",
+      "value": "GL-TRIPLE-DHFS",
+      "assign": {
+        "glass_category": "トリプル"
+      },
+      "clearSource": false
     }
   ],
   "formal_adoption": false,

@@ -268,6 +268,7 @@ export class ProductConfigurationEditor {
     const revision=++this.state.resolveRevision,productId=this.state.productId;
     if(!productId){this.root.querySelector('#dynamicForm').innerHTML='';return;}
     const query=new URLSearchParams({productId,selection:JSON.stringify(this.state.selection)});
+    if(this.state.snapshot?.product_id===productId&&this.state.snapshot.package_version)query.set('configurationVersion',this.state.snapshot.package_version);
     const endpoint=this.state.productSource==='RUNTIME_MASTER'?'/api/runtime-master/resolve':'/api/catalog/resolve';
     let result=await getJson(`${endpoint}?${query}`);
     if(revision!==this.state.resolveRevision||productId!==this.state.productId)return;
@@ -285,12 +286,15 @@ export class ProductConfigurationEditor {
   renderFields(fields=[]){
     const product=this.state.products.find((row)=>row.id===this.state.productId);
     const groupIndividualOptions=product?.uiCategory==='INNER_WINDOW';
-    let optionHeadingShown=false;
+    let optionHeadingShown=false,previousGroup=null;
     return fields.map((field)=>{
-      const showOptionHeading=groupIndividualOptions&&!optionHeadingShown&&field.semanticStage==='OPTION';
+      const group=field.presentationGroup;
+      const showGroup=group?.id&&group.id!==previousGroup;
+      if(group?.id)previousGroup=group.id;
+      const showOptionHeading=!group&&groupIndividualOptions&&!optionHeadingShown&&field.semanticStage==='OPTION';
       if(showOptionHeading)optionHeadingShown=true;
       const feedback=field.feedback;
-      return `${showOptionHeading?'<div class="runtime-field-group-heading" data-semantic-group="OPTION">オプション</div>':''}${this.renderField(field)}${feedback?`<div class="notice ${feedback.severity==='error'?'error':'warning'}" data-field-feedback="${esc(field.key)}" role="status">${esc(feedback.message)}</div>`:''}`;
+      return `${showGroup?`<div class="runtime-field-group-heading" data-semantic-group="${esc(group.id)}">${esc(group.label)}</div>`:''}${showOptionHeading?'<div class="runtime-field-group-heading" data-semantic-group="OPTION">オプション</div>':''}${this.renderField(field)}${feedback?`<div class="notice ${feedback.severity==='error'?'error':'warning'}" data-field-feedback="${esc(field.key)}" role="status">${esc(feedback.message)}</div>`:''}`;
     }).join('');
   }
 

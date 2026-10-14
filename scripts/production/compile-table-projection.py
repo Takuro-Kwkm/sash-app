@@ -41,6 +41,7 @@ def compile_profile(profile, root):
         'baseline':profile['source'],'scope':profile['scope'],'product_module':module,
         'composition':profile.get('composition'),'numeric_constraints':profile.get('numeric_constraints',[]),
         'linear_transforms':profile.get('linear_transforms',[]),'unsupported_rules':profile.get('unsupported_rules',[]),
+        'selection_migrations':profile.get('selection_migrations',[]),
         'formal_adoption':False,'source_adoption':False,'pricing':{'price':None,'bom':None,'set_code':None}}
 
 if __name__ == '__main__':

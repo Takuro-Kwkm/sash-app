@@ -1,13 +1,13 @@
 {
   "schema": "NATIVE_TABLE_PROJECTION_V1",
-  "candidate_revision": "REPLUS_RUNTIME_UI_V5_20261014",
+  "candidate_revision": "REPLUS_SEMANTIC_FLOW_V7_R2_20261014",
   "product": {
     "id": "CANDIDATE:RPL_CUT_MALL",
     "manufacturer": "LIXIL",
     "displayName": "リプラス 汎用カットモール",
     "source": {
       "id": "RPL_CUT_MALL",
-      "version": "REPLUS_RUNTIME_UI_V5_20261014"
+      "version": "REPLUS_SEMANTIC_FLOW_V7_R2_20261014"
     }
   },
   "source": {
@@ -879,7 +879,7 @@
     },
     {
       "key": "existing_sash_mount",
-      "displayLabel": "既設サッシ取付",
+      "displayLabel": "既設サッシの取付方式",
       "dataType": "ENUM",
       "displayOrder": 80,
       "choices": [
@@ -970,7 +970,7 @@
     },
     {
       "key": "new_sash_mount",
-      "displayLabel": "新設サッシ取付",
+      "displayLabel": "新設サッシの取付方式",
       "dataType": "ENUM",
       "displayOrder": 110,
       "choices": [
@@ -997,7 +997,7 @@
     },
     {
       "key": "rain_pocket",
-      "displayLabel": "雨戸の戸袋",
+      "displayLabel": "雨戸の戸袋仕様",
       "dataType": "ENUM",
       "displayOrder": 120,
       "choices": [

@@ -1,13 +1,13 @@
 {
   "schema": "NATIVE_TABLE_PROJECTION_V1",
-  "candidate_revision": "REPLUS_RUNTIME_UI_V5_20261014",
+  "candidate_revision": "REPLUS_SEMANTIC_FLOW_V7_R2_20261014",
   "product": {
     "id": "CANDIDATE:RPL_TW",
     "manufacturer": "LIXIL",
     "displayName": "リプラス 居室仕様 TWタイプ",
     "source": {
       "id": "RPL_TW",
-      "version": "REPLUS_RUNTIME_UI_V5_20261014"
+      "version": "REPLUS_SEMANTIC_FLOW_V7_R2_20261014"
     }
   },
   "source": {
@@ -79,7 +79,7 @@
     },
     {
       "key": "spec_panel_configuration",
-      "displayLabel": "枚数",
+      "displayLabel": "建数",
       "dataType": "ENUM",
       "displayOrder": 30,
       "choices": [
@@ -200,7 +200,8 @@
             "TW-EV-005,007"
           ],
           "selector": {
-            "window_type": "RPL_TW_SLD"
+            "window_type": "RPL_TW_SLD",
+            "spec_height_category": "TW-SS-TER"
           },
           "metadata": {
             "manualCheck": false,
@@ -214,7 +215,9 @@
             "TW-EV-005,007"
           ],
           "selector": {
-            "window_type": "RPL_TW_SLD"
+            "window_type": "RPL_TW_SLD",
+            "spec_height_category": "TW-SS-TER",
+            "spec_panel_configuration": "TW-SS-PANEL-2"
           },
           "metadata": {
             "manualCheck": false,
@@ -225,6 +228,8 @@
       "required": true,
       "autoSelectSingle": false,
       "parentFields": [
+        "spec_height_category",
+        "spec_panel_configuration",
         "window_type"
       ],
       "selector": {
@@ -284,8 +289,8 @@
       "required": false,
       "autoSelectSingle": false,
       "parentFields": [
-        "window_type",
-        "spec_height_category"
+        "spec_height_category",
+        "window_type"
       ],
       "selector": {
         "window_type": {
@@ -296,143 +301,8 @@
       }
     },
     {
-      "key": "glass",
-      "displayLabel": "ガラス",
-      "dataType": "ENUM",
-      "displayOrder": 70,
-      "choices": [
-        {
-          "value": "TW-GL-TRIPLE",
-          "displayLabel": "Low-Eトリプルガラス（ダブルLow-E）",
-          "evidenceIds": [
-            "TW-EV-004,008"
-          ],
-          "selector": {
-            "window_type": "RPL_TW_SLD"
-          },
-          "metadata": {
-            "manualCheck": true
-          }
-        },
-        {
-          "value": "TW-GL-CC",
-          "displayLabel": "クリア×クリア",
-          "evidenceIds": [
-            "TW-EV-004,008"
-          ],
-          "selector": {
-            "window_type": "RPL_TW_SLD"
-          },
-          "metadata": {
-            "manualCheck": true
-          }
-        },
-        {
-          "value": "TW-GL-GG",
-          "displayLabel": "グリーン×グリーン",
-          "evidenceIds": [
-            "TW-EV-004,008"
-          ],
-          "selector": {
-            "window_type": "RPL_TW_SLD"
-          },
-          "metadata": {
-            "manualCheck": true
-          }
-        },
-        {
-          "value": "TW-GL-CG",
-          "displayLabel": "クリア×グリーン",
-          "evidenceIds": [
-            "TW-EV-004,008"
-          ],
-          "selector": {
-            "window_type": "RPL_TW_SLD"
-          },
-          "metadata": {
-            "manualCheck": true
-          }
-        },
-        {
-          "value": "TW-GL-CB",
-          "displayLabel": "クリア×ブロンズ",
-          "evidenceIds": [
-            "TW-EV-008"
-          ],
-          "selector": {
-            "window_type": "RPL_TW_SLD"
-          },
-          "metadata": {
-            "manualCheck": true
-          }
-        },
-        {
-          "value": "TW-GL-GENERAL-CLEAR",
-          "displayLabel": "一般×クリア",
-          "evidenceIds": [
-            "TW-EV-008"
-          ],
-          "selector": {
-            "window_type": "RPL_TW_SLD"
-          },
-          "metadata": {
-            "manualCheck": true
-          }
-        },
-        {
-          "value": "TW-GAS-ARGON",
-          "displayLabel": "アルゴンガス",
-          "evidenceIds": [
-            "TW-EV-005,006,008"
-          ],
-          "selector": {
-            "window_type": "RPL_TW_SLD"
-          },
-          "metadata": {
-            "manualCheck": true
-          }
-        },
-        {
-          "value": "TW-GAS-KRYPTON",
-          "displayLabel": "クリプトンガス",
-          "evidenceIds": [
-            "TW-EV-005,006,008"
-          ],
-          "selector": {
-            "window_type": "RPL_TW_SLD"
-          },
-          "metadata": {
-            "manualCheck": true
-          }
-        },
-        {
-          "value": "TW-SPACER-RESIN",
-          "displayLabel": "樹脂スペーサー",
-          "evidenceIds": [
-            "TW-EV-005,008"
-          ],
-          "selector": {
-            "window_type": "RPL_TW_SLD"
-          },
-          "metadata": {
-            "manualCheck": true
-          }
-        }
-      ],
-      "required": false,
-      "autoSelectSingle": false,
-      "parentFields": [
-        "window_type"
-      ],
-      "selector": {
-        "window_type": {
-          "$exists": true
-        }
-      }
-    },
-    {
       "key": "size_mode",
-      "displayLabel": "寸法指定",
+      "displayLabel": "寸法の指定方法",
       "dataType": "ENUM",
       "displayOrder": 80,
       "choices": [
@@ -455,26 +325,30 @@
     },
     {
       "key": "custom_width",
-      "displayLabel": "仕上がり幅 W（mm）",
+      "displayLabel": "製品仕上がり幅 W（mm）",
       "dataType": "NUMBER",
       "displayOrder": 90,
       "choices": [],
       "required": true,
       "autoSelectSingle": false,
-      "parentFields": [],
+      "parentFields": [
+        "size_mode"
+      ],
       "selector": {
         "size_mode": "CUSTOM"
       }
     },
     {
       "key": "custom_height",
-      "displayLabel": "仕上がり高さ H（mm）",
+      "displayLabel": "製品仕上がり高さ H（mm）",
       "dataType": "NUMBER",
       "displayOrder": 100,
       "choices": [],
       "required": true,
       "autoSelectSingle": false,
-      "parentFields": [],
+      "parentFields": [
+        "size_mode"
+      ],
       "selector": {
         "size_mode": "CUSTOM"
       }
@@ -822,7 +696,9 @@
       ],
       "required": false,
       "autoSelectSingle": false,
-      "parentFields": [],
+      "parentFields": [
+        "options"
+      ],
       "selector": {
         "options": {
           "$contains": "TW-OP-CASING"
@@ -1082,7 +958,9 @@
       ],
       "required": false,
       "autoSelectSingle": false,
-      "parentFields": [],
+      "parentFields": [
+        "window_type"
+      ],
       "selector": {}
     },
     {
@@ -1121,7 +999,7 @@
     },
     {
       "key": "installation_method",
-      "displayLabel": "施工条件",
+      "displayLabel": "施工方法",
       "dataType": "ENUM",
       "displayOrder": 180,
       "choices": [
@@ -1141,6 +1019,251 @@
       "autoSelectSingle": false,
       "parentFields": [],
       "selector": {}
+    },
+    {
+      "key": "installation_region",
+      "displayLabel": "設置地域",
+      "dataType": "ENUM",
+      "displayOrder": 700,
+      "choices": [
+        {
+          "value": "北海道",
+          "displayLabel": "北海道",
+          "evidenceIds": [
+            "TW-EV-004,008"
+          ],
+          "selector": {},
+          "metadata": {
+            "manualCheck": true
+          }
+        },
+        {
+          "value": "東北",
+          "displayLabel": "東北",
+          "evidenceIds": [
+            "TW-EV-004,008"
+          ],
+          "selector": {},
+          "metadata": {
+            "manualCheck": true
+          }
+        },
+        {
+          "value": "その他地域",
+          "displayLabel": "その他地域",
+          "evidenceIds": [
+            "TW-EV-004,008"
+          ],
+          "selector": {},
+          "metadata": {
+            "manualCheck": true
+          }
+        }
+      ],
+      "required": false,
+      "autoSelectSingle": false,
+      "parentFields": [],
+      "selector": {}
+    },
+    {
+      "key": "glass_category",
+      "displayLabel": "ガラス種類",
+      "dataType": "ENUM",
+      "displayOrder": 700,
+      "choices": [
+        {
+          "value": "TW-GL-TRIPLE",
+          "displayLabel": "Low-Eトリプルガラス（ダブルLow-E）",
+          "evidenceIds": [
+            "TW-EV-004,008"
+          ],
+          "selector": {
+            "window_type": "RPL_TW_SLD"
+          },
+          "metadata": {
+            "manualCheck": false
+          }
+        }
+      ],
+      "required": false,
+      "autoSelectSingle": true,
+      "parentFields": [
+        "window_type"
+      ],
+      "selector": {
+        "window_type": {
+          "$exists": true
+        }
+      }
+    },
+    {
+      "key": "glass",
+      "displayLabel": "Low-E構成",
+      "dataType": "ENUM",
+      "displayOrder": 700,
+      "choices": [
+        {
+          "value": "TW-GL-CC",
+          "displayLabel": "クリア×クリア",
+          "evidenceIds": [
+            "TW-EV-004,008"
+          ],
+          "selector": {
+            "window_type": "RPL_TW_SLD",
+            "glass_category": "TW-GL-TRIPLE"
+          },
+          "metadata": {
+            "manualCheck": true
+          }
+        },
+        {
+          "value": "TW-GL-GG",
+          "displayLabel": "グリーン×グリーン",
+          "evidenceIds": [
+            "TW-EV-004,008"
+          ],
+          "selector": {
+            "window_type": "RPL_TW_SLD",
+            "glass_category": "TW-GL-TRIPLE"
+          },
+          "metadata": {
+            "manualCheck": true
+          }
+        },
+        {
+          "value": "TW-GL-CG",
+          "displayLabel": "クリア×グリーン",
+          "evidenceIds": [
+            "TW-EV-004,008"
+          ],
+          "selector": {
+            "window_type": "RPL_TW_SLD",
+            "glass_category": "TW-GL-TRIPLE"
+          },
+          "metadata": {
+            "manualCheck": true
+          }
+        },
+        {
+          "value": "TW-GL-CB",
+          "displayLabel": "クリア×ブロンズ",
+          "evidenceIds": [
+            "TW-EV-008"
+          ],
+          "selector": {
+            "window_type": "RPL_TW_SLD",
+            "glass_category": "TW-GL-TRIPLE",
+            "installation_region": {
+              "$in": [
+                "北海道",
+                "東北"
+              ]
+            }
+          },
+          "metadata": {
+            "manualCheck": true
+          }
+        }
+      ],
+      "required": false,
+      "autoSelectSingle": false,
+      "parentFields": [
+        "glass_category",
+        "installation_region",
+        "window_type"
+      ],
+      "selector": {
+        "glass_category": {
+          "$exists": true
+        }
+      }
+    },
+    {
+      "key": "glass_gas",
+      "displayLabel": "ガス",
+      "dataType": "ENUM",
+      "displayOrder": 700,
+      "choices": [
+        {
+          "value": "TW-GAS-ARGON",
+          "displayLabel": "アルゴンガス",
+          "evidenceIds": [
+            "TW-EV-005,006,008"
+          ],
+          "selector": {
+            "window_type": "RPL_TW_SLD",
+            "glass_category": {
+              "$exists": true
+            }
+          },
+          "metadata": {
+            "manualCheck": true
+          }
+        },
+        {
+          "value": "TW-GAS-KRYPTON",
+          "displayLabel": "クリプトンガス",
+          "evidenceIds": [
+            "TW-EV-005,006,008"
+          ],
+          "selector": {
+            "window_type": "RPL_TW_SLD",
+            "glass_category": {
+              "$exists": true
+            }
+          },
+          "metadata": {
+            "manualCheck": true
+          }
+        }
+      ],
+      "required": false,
+      "autoSelectSingle": false,
+      "parentFields": [
+        "glass_category",
+        "window_type"
+      ],
+      "selector": {
+        "glass_category": {
+          "$exists": true
+        }
+      }
+    },
+    {
+      "key": "glass_spacer",
+      "displayLabel": "スペーサー",
+      "dataType": "ENUM",
+      "displayOrder": 700,
+      "choices": [
+        {
+          "value": "TW-SPACER-RESIN",
+          "displayLabel": "樹脂スペーサー",
+          "evidenceIds": [
+            "TW-EV-005,008"
+          ],
+          "selector": {
+            "window_type": "RPL_TW_SLD",
+            "glass_category": {
+              "$exists": true
+            }
+          },
+          "metadata": {
+            "manualCheck": false
+          }
+        }
+      ],
+      "required": false,
+      "autoSelectSingle": true,
+      "parentFields": [
+        "glass_category",
+        "glass_gas",
+        "window_type"
+      ],
+      "selector": {
+        "glass_category": {
+          "$exists": true
+        }
+      }
     }
   ],
   "dependencies": [
@@ -2058,6 +2181,72 @@
     {
       "sheet": "12_共通参照",
       "reason": "NATIVE_PROSE_OR_COMPOUND_RULE_REQUIRES_MANUAL_REVIEW"
+    }
+  ],
+  "selection_migrations": [
+    {
+      "source": "glass",
+      "value": "TW-GL-TRIPLE",
+      "assign": {
+        "glass_category": "TW-GL-TRIPLE"
+      },
+      "clearSource": true
+    },
+    {
+      "source": "glass",
+      "value": "TW-GL-CC",
+      "assign": {
+        "glass_category": "TW-GL-TRIPLE"
+      },
+      "clearSource": false
+    },
+    {
+      "source": "glass",
+      "value": "TW-GL-GG",
+      "assign": {
+        "glass_category": "TW-GL-TRIPLE"
+      },
+      "clearSource": false
+    },
+    {
+      "source": "glass",
+      "value": "TW-GL-CG",
+      "assign": {
+        "glass_category": "TW-GL-TRIPLE"
+      },
+      "clearSource": false
+    },
+    {
+      "source": "glass",
+      "value": "TW-GL-CB",
+      "assign": {
+        "glass_category": "TW-GL-TRIPLE"
+      },
+      "clearSource": false
+    },
+    {
+      "source": "glass",
+      "value": "TW-GAS-ARGON",
+      "assign": {
+        "glass_gas": "TW-GAS-ARGON"
+      },
+      "clearSource": true
+    },
+    {
+      "source": "glass",
+      "value": "TW-GAS-KRYPTON",
+      "assign": {
+        "glass_gas": "TW-GAS-KRYPTON"
+      },
+      "clearSource": true
+    },
+    {
+      "source": "glass",
+      "value": "TW-SPACER-RESIN",
+      "assign": {
+        "glass_spacer": "TW-SPACER-RESIN"
+      },
+      "clearSource": true
     }
   ]
 }

@@ -2,6 +2,21 @@ import {adaptProductModuleRuntimeV1} from './product-module-runtime-adapter.mjs'
 
 const has=value=>value!==undefined&&value!==null&&value!=='';
 const own=(object,key)=>Object.prototype.hasOwnProperty.call(object,key);
+export function migrateCandidateSelection(input,migrations=[]){
+  const selection={...input};
+  for(const migration of migrations){
+    if(input?.[migration.source]!==migration.value)continue;
+    if(migration.clearSource)delete selection[migration.source];
+    for(const [key,value] of Object.entries(migration.assign))if(!own(selection,key))selection[key]=value;
+  }
+  return selection;
+}
+export function resolveMigratedCandidateSelection(reader,input,migrations=[]){
+  const migrated=migrateCandidateSelection(input,migrations);
+  // Only defaults from the existing resolver supply prerequisite context.
+  const prepared=reader.uiResolver(migrated).selection;
+  return reader.uiResolver({...prepared,...migrated});
+}
 export async function adaptComposedProductRuntime(document,entry,loadReference){
   if(document.formal_adoption!==false||document.source_adoption!==false||document.schema!=='PRODUCT_MODULE_CANDIDATE_V1')throw Object.assign(new Error('CANDIDATE_SCOPE_INVALID'),{code:'CANDIDATE_SCOPE_INVALID'});
   const references=new Map();

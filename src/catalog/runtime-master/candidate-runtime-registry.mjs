@@ -4,6 +4,11 @@ import {resolve,dirname,relative,isAbsolute} from 'node:path';
 
 const digest=bytes=>createHash('sha256').update(bytes).digest('hex');
 function fail(code){throw Object.assign(new Error(code),{code});}
+function verifyFlowSource(entry,root){
+  if(entry.uiFlowContract?.schema!=='REVIEWED_WINDOW_FLOW_V2')return;
+  const source=entry.uiFlowContract.sourceFlow,path=resolve(root,source.path),rel=relative(root,path);
+  if(rel.startsWith('..')||isAbsolute(rel)||lstatSync(path).isSymbolicLink()||digest(readFileSync(path))!==source.sha256)fail('WINDOW_FLOW_SOURCE_BYTES_CHANGED');
+}
 function readIndex(){
   const path=process.env.SASH_CANDIDATE_RUNTIME_INDEX;
   if(!path)return [];
@@ -21,6 +26,7 @@ function readIndex(){
     seen.add(row.id);
     const modulePath=resolve(root,row.path),rel=relative(root,modulePath);
     if(rel.startsWith('..')||isAbsolute(rel)||lstatSync(modulePath).isSymbolicLink()||digest(readFileSync(modulePath))!==row.sha256)fail('CANDIDATE_MODULE_BYTES_CHANGED');
+    verifyFlowSource(row,root);
     return Object.freeze({...row,series:row.series+'（候補）',displayName:row.displayName+'（候補）',productId:row.id,packageType:'CANDIDATE_PRODUCT_MODULE',modulePath,
       runtimeManifestSha256:row.sha256,canonicalRuntimeReference:{runtimeManifestDriveFileId:manifestFileId,candidateSha256:row.sha256,candidateRevision:index.revision,adoption:'CANDIDATE_ONLY'},
       candidateRuntimeReference:{revision:index.revision,sha256:row.sha256,indexSha256:digest(bytes)},
@@ -29,6 +35,7 @@ function readIndex(){
 }
 export const candidateRuntimeEntries=Object.freeze(readIndex());
 export function readCandidateModule(entry){
+  verifyFlowSource(entry,dirname(resolve(process.env.SASH_CANDIDATE_RUNTIME_INDEX)));
   if(lstatSync(entry.modulePath).isSymbolicLink())fail('CANDIDATE_SYMLINK_REFUSED');
   const bytes=readFileSync(entry.modulePath);
   if(digest(bytes)!==entry.sha256)fail('CANDIDATE_MODULE_BYTES_CHANGED');

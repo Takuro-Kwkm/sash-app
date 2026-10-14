@@ -1,13 +1,13 @@
 {
   "schema": "NATIVE_TABLE_PROJECTION_V1",
-  "candidate_revision": "REPLUS_RUNTIME_UI_V5_20261014",
+  "candidate_revision": "REPLUS_SEMANTIC_FLOW_V7_R2_20261014",
   "product": {
     "id": "CANDIDATE:RPL_ATT_TW",
     "manufacturer": "LIXIL",
     "displayName": "リプラス アタッチ枠（TW用）",
     "source": {
       "id": "RPL_ATT_TW",
-      "version": "REPLUS_RUNTIME_UI_V5_20261014"
+      "version": "REPLUS_SEMANTIC_FLOW_V7_R2_20261014"
     }
   },
   "source": {
@@ -438,7 +438,9 @@
       ],
       "required": false,
       "autoSelectSingle": false,
-      "parentFields": [],
+      "parentFields": [
+        "options"
+      ],
       "selector": {
         "options": {
           "$contains": "RPL_ATT_TW-OP-V5-CASING"
@@ -669,7 +671,7 @@
     },
     {
       "key": "lower_frame_rise",
-      "displayLabel": "下枠立上り（mm）",
+      "displayLabel": "既設下枠の立上り（mm）",
       "dataType": "NUMBER",
       "displayOrder": 100,
       "choices": [],
@@ -680,7 +682,7 @@
     },
     {
       "key": "existing_frame_depth",
-      "displayLabel": "既設枠奥行（mm）",
+      "displayLabel": "既設枠見込み（mm）",
       "dataType": "NUMBER",
       "displayOrder": 110,
       "choices": [],

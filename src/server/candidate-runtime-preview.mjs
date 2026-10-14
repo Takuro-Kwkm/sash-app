@@ -1,7 +1,7 @@
 import {createHash} from 'node:crypto';
 import {createRecoveryRequestHandler,releaseBuildMetadata} from './recovery-app.mjs';
 import {candidateRuntimeEntries,readCandidateModule} from '../catalog/runtime-master/candidate-runtime-registry.mjs';
-import {adaptComposedProductRuntime} from '../catalog/runtime-master/composed-product-runtime-adapter.mjs';
+import {adaptComposedProductRuntime,resolveMigratedCandidateSelection} from '../catalog/runtime-master/composed-product-runtime-adapter.mjs';
 import {runtimeMasterInventory,loadRegisteredRuntime} from '../catalog/runtime-master/runtime-master-registry.mjs';
 import {runtimeAppIntegrationInventory,getRuntimeAppIntegration} from '../catalog/runtime-master/runtime-app-bridge.mjs';
 import {applyDeclaredWindowFlow} from '../catalog/runtime-master/declared-window-flow.mjs';
@@ -29,7 +29,14 @@ export function createCandidateRuntimePreview(){
           // Recheck complete candidate bytes on every request, including cached readers.
           const doc=readCandidateModule(entry);
           if(!adapters.has(entry.id))adapters.set(entry.id,await adaptComposedProductRuntime(doc,entry,loadReference));
-          const result=adapters.get(entry.id).uiResolver(JSON.parse(url.searchParams.get('selection')??'{}'));
+          const input=JSON.parse(url.searchParams.get('selection')??'{}'),version=url.searchParams.get('configurationVersion');
+          const legacy=Boolean(version&&version!==entry.packageVersion);
+          const reader=adapters.get(entry.id);
+          const result=legacy?resolveMigratedCandidateSelection(reader,input,doc.selection_migrations):reader.uiResolver(input);
+          if(legacy&&Object.hasOwn(input,'glass')){
+            result.configurationMigration={from:version,to:entry.packageVersion,originalSelection:input};
+            result.manualWarnings.push('保存済みのガラス選択を項目の意味に沿って整理しました。ガラスの種類・詳細・ガス・スペーサーを確認してください。');
+          }
           return json(res,200,{...result,productId:entry.id,manufacturer:entry.manufacturer,series:entry.series,source:'RUNTIME_MASTER',status:'CANDIDATE_LOCAL_READY',fields:applyDeclaredWindowFlow(result.fields,entry)});
         }catch(error){return json(res,400,{code:error.code??'CANDIDATE_RESOLVE_FAILED',error:error.message});}
       }

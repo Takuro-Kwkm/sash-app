@@ -1,6 +1,6 @@
 {
   "schema": "PRODUCT_MODULE_CANDIDATE_V1",
-  "candidate_revision": "REPLUS_RUNTIME_UI_V5_20261014",
+  "candidate_revision": "REPLUS_SEMANTIC_FLOW_V7_R2_20261014",
   "baseline": {
     "path": "candidates/RPL_BATH.json",
     "component_id": "RPL_BATH",
@@ -16,7 +16,7 @@
       "displayName": "リプラス 浴室仕様",
       "source": {
         "id": "RPL_BATH",
-        "version": "REPLUS_RUNTIME_UI_V5_20261014"
+        "version": "REPLUS_SEMANTIC_FLOW_V7_R2_20261014"
       }
     },
     "specificationDefinitions": [
@@ -52,7 +52,7 @@
       },
       {
         "key": "spec_panel_configuration",
-        "displayLabel": "枚数",
+        "displayLabel": "建数",
         "dataType": "ENUM",
         "displayOrder": 30,
         "autoSelectSingle": false,
@@ -120,8 +120,7 @@
         "displayOrder": 60,
         "autoSelectSingle": false,
         "parentFields": [
-          "window_type",
-          "spec_height_category"
+          "window_type"
         ],
         "selector": {
           "window_type": {
@@ -140,7 +139,7 @@
       },
       {
         "key": "size_mode",
-        "displayLabel": "寸法指定",
+        "displayLabel": "寸法の指定方法",
         "dataType": "ENUM",
         "displayOrder": 70,
         "autoSelectSingle": false,
@@ -152,11 +151,13 @@
       },
       {
         "key": "custom_width",
-        "displayLabel": "仕上がり幅 W（mm）",
+        "displayLabel": "製品仕上がり幅 W（mm）",
         "dataType": "NUMBER",
         "displayOrder": 80,
         "autoSelectSingle": false,
-        "parentFields": [],
+        "parentFields": [
+          "size_mode"
+        ],
         "selector": {
           "size_mode": "CUSTOM"
         },
@@ -166,11 +167,13 @@
       },
       {
         "key": "custom_height",
-        "displayLabel": "仕上がり高さ H（mm）",
+        "displayLabel": "製品仕上がり高さ H（mm）",
         "dataType": "NUMBER",
         "displayOrder": 90,
         "autoSelectSingle": false,
-        "parentFields": [],
+        "parentFields": [
+          "size_mode"
+        ],
         "selector": {
           "size_mode": "CUSTOM"
         },
@@ -240,13 +243,121 @@
       },
       {
         "key": "bathroom_remodel_mode",
-        "displayLabel": "施工条件",
+        "displayLabel": "浴室改修モード",
         "dataType": "ENUM",
         "displayOrder": 150,
         "autoSelectSingle": false,
         "parentFields": [],
         "selector": {},
         "id": "CANDIDATE:RPL_BATH:field:bathroom_remodel_mode",
+        "productId": "CANDIDATE:RPL_BATH",
+        "status": "ACTIVE"
+      },
+      {
+        "key": "installation_region",
+        "displayLabel": "設置地域",
+        "dataType": "ENUM",
+        "displayOrder": 700,
+        "autoSelectSingle": false,
+        "parentFields": [],
+        "selector": {},
+        "id": "CANDIDATE:RPL_BATH:field:installation_region",
+        "productId": "CANDIDATE:RPL_BATH",
+        "status": "ACTIVE"
+      },
+      {
+        "key": "glass_category",
+        "displayLabel": "ガラス種類",
+        "dataType": "ENUM",
+        "displayOrder": 700,
+        "autoSelectSingle": false,
+        "parentFields": [
+          "frame_type",
+          "installation_region",
+          "window_type"
+        ],
+        "selector": {
+          "frame_type": {
+            "$exists": true
+          }
+        },
+        "id": "CANDIDATE:RPL_BATH:field:glass_category",
+        "productId": "CANDIDATE:RPL_BATH",
+        "status": "ACTIVE"
+      },
+      {
+        "key": "glass",
+        "displayLabel": "ガラス詳細・Low-E仕様",
+        "dataType": "ENUM",
+        "displayOrder": 700,
+        "autoSelectSingle": false,
+        "parentFields": [
+          "frame_type",
+          "glass_category",
+          "installation_region",
+          "window_type"
+        ],
+        "selector": {
+          "glass_category": {
+            "$exists": true
+          }
+        },
+        "id": "CANDIDATE:RPL_BATH:field:glass",
+        "productId": "CANDIDATE:RPL_BATH",
+        "status": "ACTIVE"
+      },
+      {
+        "key": "glass_gas",
+        "displayLabel": "ガス",
+        "dataType": "ENUM",
+        "displayOrder": 700,
+        "autoSelectSingle": false,
+        "parentFields": [
+          "frame_type",
+          "glass_category"
+        ],
+        "selector": {
+          "glass_category": {
+            "$exists": true
+          }
+        },
+        "id": "CANDIDATE:RPL_BATH:field:glass_gas",
+        "productId": "CANDIDATE:RPL_BATH",
+        "status": "ACTIVE"
+      },
+      {
+        "key": "glass_spacer",
+        "displayLabel": "スペーサー",
+        "dataType": "ENUM",
+        "displayOrder": 700,
+        "autoSelectSingle": false,
+        "parentFields": [
+          "frame_type",
+          "glass_category",
+          "glass_gas"
+        ],
+        "selector": {
+          "glass_gas": {
+            "$exists": true
+          }
+        },
+        "id": "CANDIDATE:RPL_BATH:field:glass_spacer",
+        "productId": "CANDIDATE:RPL_BATH",
+        "status": "ACTIVE"
+      },
+      {
+        "key": "bathroom_opening_pattern",
+        "displayLabel": "既設開口パターン",
+        "dataType": "ENUM",
+        "displayOrder": 25,
+        "autoSelectSingle": false,
+        "parentFields": [
+          "bathroom_remodel_mode"
+        ],
+        "selector": {
+          "bathroom_remodel_mode": "SYSTEM_BATH_SIMULTANEOUS"
+        },
+        "id": "CANDIDATE:RPL_BATH:field:bathroom_opening_pattern",
         "productId": "CANDIDATE:RPL_BATH",
         "status": "ACTIVE"
       }
@@ -1078,6 +1189,685 @@
         "productId": "CANDIDATE:RPL_BATH",
         "specificationKey": "bathroom_remodel_mode",
         "status": "ACTIVE"
+      },
+      {
+        "value": "北海道",
+        "displayLabel": "北海道",
+        "evidenceIds": [
+          "BATH-EV-010"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_BATH:value:installation_region:0",
+        "productId": "CANDIDATE:RPL_BATH",
+        "specificationKey": "installation_region",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "東北",
+        "displayLabel": "東北",
+        "evidenceIds": [
+          "BATH-EV-010"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_BATH:value:installation_region:1",
+        "productId": "CANDIDATE:RPL_BATH",
+        "specificationKey": "installation_region",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "その他地域",
+        "displayLabel": "その他地域",
+        "evidenceIds": [
+          "BATH-EV-010"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_BATH:value:installation_region:2",
+        "productId": "CANDIDATE:RPL_BATH",
+        "specificationKey": "installation_region",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "GENERAL_DOUBLE",
+        "displayLabel": "一般複層ガラス",
+        "evidenceIds": [
+          "BATH-EV-004,010"
+        ],
+        "selector": {
+          "window_type": {
+            "$exists": true
+          },
+          "frame_type": "BATH-STD"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_BATH:value:glass_category:0",
+        "productId": "CANDIDATE:RPL_BATH",
+        "specificationKey": "glass_category",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "LOW_E_DOUBLE",
+        "displayLabel": "Low-E複層ガラス",
+        "evidenceIds": [
+          "BATH-EV-004,010"
+        ],
+        "selector": {
+          "window_type": {
+            "$exists": true
+          },
+          "frame_type": {
+            "$exists": true
+          }
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_BATH:value:glass_category:1",
+        "productId": "CANDIDATE:RPL_BATH",
+        "specificationKey": "glass_category",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "LOW_E_DOUBLE",
+        "displayLabel": "Low-E複層ガラス",
+        "evidenceIds": [
+          "BATH-EV-010"
+        ],
+        "selector": {
+          "window_type": {
+            "$exists": true
+          },
+          "frame_type": {
+            "$exists": true
+          },
+          "installation_region": {
+            "$in": [
+              "北海道",
+              "東北"
+            ]
+          }
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_BATH:value:glass_category:2",
+        "productId": "CANDIDATE:RPL_BATH",
+        "specificationKey": "glass_category",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "TRIPLE",
+        "displayLabel": "トリプルガラス",
+        "evidenceIds": [
+          "BATH-EV-004,010"
+        ],
+        "selector": {
+          "window_type": "RPL_BATH_DHFS",
+          "frame_type": {
+            "$exists": true
+          }
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_BATH:value:glass_category:3",
+        "productId": "CANDIDATE:RPL_BATH",
+        "specificationKey": "glass_category",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "TRIPLE",
+        "displayLabel": "トリプルガラス",
+        "evidenceIds": [
+          "BATH-EV-010"
+        ],
+        "selector": {
+          "window_type": "RPL_BATH_DHFS",
+          "frame_type": {
+            "$exists": true
+          }
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_BATH:value:glass_category:4",
+        "productId": "CANDIDATE:RPL_BATH",
+        "specificationKey": "glass_category",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "TRIPLE",
+        "displayLabel": "トリプルガラス",
+        "evidenceIds": [
+          "BATH-EV-010"
+        ],
+        "selector": {
+          "window_type": "RPL_BATH_DHFS",
+          "frame_type": {
+            "$exists": true
+          },
+          "installation_region": {
+            "$in": [
+              "北海道",
+              "東北"
+            ]
+          }
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_BATH:value:glass_category:5",
+        "productId": "CANDIDATE:RPL_BATH",
+        "specificationKey": "glass_category",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "BATH-GL-GENERAL",
+        "displayLabel": "一般複層ガラス",
+        "evidenceIds": [
+          "BATH-EV-004,010"
+        ],
+        "selector": {
+          "window_type": {
+            "$exists": true
+          },
+          "frame_type": "BATH-STD",
+          "glass_category": "GENERAL_DOUBLE"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_BATH:value:glass:0",
+        "productId": "CANDIDATE:RPL_BATH",
+        "specificationKey": "glass",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "BATH-GL-LOWE-CLEAR",
+        "displayLabel": "Low-E複層 クリア",
+        "evidenceIds": [
+          "BATH-EV-004,010"
+        ],
+        "selector": {
+          "window_type": {
+            "$exists": true
+          },
+          "frame_type": {
+            "$exists": true
+          },
+          "glass_category": "LOW_E_DOUBLE"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_BATH:value:glass:1",
+        "productId": "CANDIDATE:RPL_BATH",
+        "specificationKey": "glass",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "BATH-GL-LOWE-GREEN",
+        "displayLabel": "Low-E複層 グリーン",
+        "evidenceIds": [
+          "BATH-EV-004,010"
+        ],
+        "selector": {
+          "window_type": {
+            "$exists": true
+          },
+          "frame_type": {
+            "$exists": true
+          },
+          "glass_category": "LOW_E_DOUBLE"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_BATH:value:glass:2",
+        "productId": "CANDIDATE:RPL_BATH",
+        "specificationKey": "glass",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "BATH-GL-LOWE-HS",
+        "displayLabel": "Low-E複層 グリーン（高遮熱仕様）",
+        "evidenceIds": [
+          "BATH-EV-004,010"
+        ],
+        "selector": {
+          "window_type": {
+            "$exists": true
+          },
+          "frame_type": {
+            "$exists": true
+          },
+          "glass_category": "LOW_E_DOUBLE"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_BATH:value:glass:3",
+        "productId": "CANDIDATE:RPL_BATH",
+        "specificationKey": "glass",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "BATH-GL-LOWE-BRONZE",
+        "displayLabel": "Low-E複層 ブロンズ",
+        "evidenceIds": [
+          "BATH-EV-010"
+        ],
+        "selector": {
+          "window_type": {
+            "$exists": true
+          },
+          "frame_type": {
+            "$exists": true
+          },
+          "installation_region": {
+            "$in": [
+              "北海道",
+              "東北"
+            ]
+          },
+          "glass_category": "LOW_E_DOUBLE"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_BATH:value:glass:4",
+        "productId": "CANDIDATE:RPL_BATH",
+        "specificationKey": "glass",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "BATH-GL-T-CC",
+        "displayLabel": "トリプル クリア×クリア",
+        "evidenceIds": [
+          "BATH-EV-004,010"
+        ],
+        "selector": {
+          "window_type": "RPL_BATH_DHFS",
+          "frame_type": {
+            "$exists": true
+          },
+          "glass_category": "TRIPLE"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_BATH:value:glass:5",
+        "productId": "CANDIDATE:RPL_BATH",
+        "specificationKey": "glass",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "BATH-GL-T-GG",
+        "displayLabel": "トリプル グリーン×グリーン",
+        "evidenceIds": [
+          "BATH-EV-004,010"
+        ],
+        "selector": {
+          "window_type": "RPL_BATH_DHFS",
+          "frame_type": {
+            "$exists": true
+          },
+          "glass_category": "TRIPLE"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_BATH:value:glass:6",
+        "productId": "CANDIDATE:RPL_BATH",
+        "specificationKey": "glass",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "BATH-GL-T-CG",
+        "displayLabel": "トリプル クリア×グリーン",
+        "evidenceIds": [
+          "BATH-EV-010"
+        ],
+        "selector": {
+          "window_type": "RPL_BATH_DHFS",
+          "frame_type": {
+            "$exists": true
+          },
+          "glass_category": "TRIPLE"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_BATH:value:glass:7",
+        "productId": "CANDIDATE:RPL_BATH",
+        "specificationKey": "glass",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "BATH-GL-T-CB",
+        "displayLabel": "トリプル クリア×ブロンズ",
+        "evidenceIds": [
+          "BATH-EV-010"
+        ],
+        "selector": {
+          "window_type": "RPL_BATH_DHFS",
+          "frame_type": {
+            "$exists": true
+          },
+          "installation_region": {
+            "$in": [
+              "北海道",
+              "東北"
+            ]
+          },
+          "glass_category": "TRIPLE"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_BATH:value:glass:8",
+        "productId": "CANDIDATE:RPL_BATH",
+        "specificationKey": "glass",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "DRY_AIR",
+        "displayLabel": "乾燥空気",
+        "evidenceIds": [
+          "BATH-EV-010"
+        ],
+        "selector": {
+          "glass_category": "GENERAL_DOUBLE"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_BATH:value:glass_gas:0",
+        "productId": "CANDIDATE:RPL_BATH",
+        "specificationKey": "glass_gas",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "ARGON",
+        "displayLabel": "アルゴンガス",
+        "evidenceIds": [
+          "BATH-EV-010"
+        ],
+        "selector": {
+          "glass_category": "LOW_E_DOUBLE"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_BATH:value:glass_gas:1",
+        "productId": "CANDIDATE:RPL_BATH",
+        "specificationKey": "glass_gas",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "DRY_AIR",
+        "displayLabel": "乾燥空気",
+        "evidenceIds": [
+          "BATH-EV-010"
+        ],
+        "selector": {
+          "glass_category": "LOW_E_DOUBLE",
+          "frame_type": "BATH-STD"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_BATH:value:glass_gas:2",
+        "productId": "CANDIDATE:RPL_BATH",
+        "specificationKey": "glass_gas",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "ARGON",
+        "displayLabel": "アルゴンガス",
+        "evidenceIds": [
+          "BATH-EV-010"
+        ],
+        "selector": {
+          "glass_category": "TRIPLE"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_BATH:value:glass_gas:3",
+        "productId": "CANDIDATE:RPL_BATH",
+        "specificationKey": "glass_gas",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "KRYPTON",
+        "displayLabel": "クリプトンガス",
+        "evidenceIds": [
+          "BATH-EV-010"
+        ],
+        "selector": {
+          "glass_category": "TRIPLE"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_BATH:value:glass_gas:4",
+        "productId": "CANDIDATE:RPL_BATH",
+        "specificationKey": "glass_gas",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "ALUMINUM",
+        "displayLabel": "アルミスペーサー",
+        "evidenceIds": [
+          "BATH-EV-010"
+        ],
+        "selector": {
+          "glass_category": "GENERAL_DOUBLE",
+          "glass_gas": "DRY_AIR",
+          "frame_type": "BATH-STD"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_BATH:value:glass_spacer:0",
+        "productId": "CANDIDATE:RPL_BATH",
+        "specificationKey": "glass_spacer",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "ALUMINUM",
+        "displayLabel": "アルミスペーサー",
+        "evidenceIds": [
+          "BATH-EV-010"
+        ],
+        "selector": {
+          "glass_category": "LOW_E_DOUBLE",
+          "glass_gas": {
+            "$in": [
+              "ARGON",
+              "DRY_AIR"
+            ]
+          },
+          "frame_type": "BATH-STD"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_BATH:value:glass_spacer:1",
+        "productId": "CANDIDATE:RPL_BATH",
+        "specificationKey": "glass_spacer",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "RESIN",
+        "displayLabel": "樹脂スペーサー",
+        "evidenceIds": [
+          "BATH-EV-010"
+        ],
+        "selector": {
+          "glass_category": "LOW_E_DOUBLE",
+          "glass_gas": "ARGON"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_BATH:value:glass_spacer:2",
+        "productId": "CANDIDATE:RPL_BATH",
+        "specificationKey": "glass_spacer",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "RESIN",
+        "displayLabel": "樹脂スペーサー",
+        "evidenceIds": [
+          "BATH-EV-010"
+        ],
+        "selector": {
+          "glass_category": "TRIPLE",
+          "glass_gas": {
+            "$in": [
+              "ARGON",
+              "KRYPTON"
+            ]
+          }
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_BATH:value:glass_spacer:3",
+        "productId": "CANDIDATE:RPL_BATH",
+        "specificationKey": "glass_spacer",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "FULL95",
+        "displayLabel": "全面開口（見付95）",
+        "evidenceIds": [
+          "BATH-EV-003,009"
+        ],
+        "selector": {
+          "bathroom_remodel_mode": "SYSTEM_BATH_SIMULTANEOUS"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_BATH:value:bathroom_opening_pattern:0",
+        "productId": "CANDIDATE:RPL_BATH",
+        "specificationKey": "bathroom_opening_pattern",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "FULL195",
+        "displayLabel": "全面開口（見付195）",
+        "evidenceIds": [
+          "BATH-EV-003,009"
+        ],
+        "selector": {
+          "bathroom_remodel_mode": "SYSTEM_BATH_SIMULTANEOUS"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_BATH:value:bathroom_opening_pattern:1",
+        "productId": "CANDIDATE:RPL_BATH",
+        "specificationKey": "bathroom_opening_pattern",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "OFFSET_L95",
+        "displayLabel": "片寄開口 左寄（見付95）",
+        "evidenceIds": [
+          "BATH-EV-003,009"
+        ],
+        "selector": {
+          "bathroom_remodel_mode": "SYSTEM_BATH_SIMULTANEOUS"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_BATH:value:bathroom_opening_pattern:2",
+        "productId": "CANDIDATE:RPL_BATH",
+        "specificationKey": "bathroom_opening_pattern",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "OFFSET_L195",
+        "displayLabel": "片寄開口 左寄（見付195）",
+        "evidenceIds": [
+          "BATH-EV-003,009"
+        ],
+        "selector": {
+          "bathroom_remodel_mode": "SYSTEM_BATH_SIMULTANEOUS"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_BATH:value:bathroom_opening_pattern:3",
+        "productId": "CANDIDATE:RPL_BATH",
+        "specificationKey": "bathroom_opening_pattern",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "OFFSET_R95",
+        "displayLabel": "片寄開口 右寄（見付95）",
+        "evidenceIds": [
+          "BATH-EV-003,009"
+        ],
+        "selector": {
+          "bathroom_remodel_mode": "SYSTEM_BATH_SIMULTANEOUS"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_BATH:value:bathroom_opening_pattern:4",
+        "productId": "CANDIDATE:RPL_BATH",
+        "specificationKey": "bathroom_opening_pattern",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "OFFSET_R195",
+        "displayLabel": "片寄開口 右寄（見付195）",
+        "evidenceIds": [
+          "BATH-EV-003,009"
+        ],
+        "selector": {
+          "bathroom_remodel_mode": "SYSTEM_BATH_SIMULTANEOUS"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_BATH:value:bathroom_opening_pattern:5",
+        "productId": "CANDIDATE:RPL_BATH",
+        "specificationKey": "bathroom_opening_pattern",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "CUTOUT",
+        "displayLabel": "くり抜き開口",
+        "evidenceIds": [
+          "BATH-EV-003,009"
+        ],
+        "selector": {
+          "bathroom_remodel_mode": "SYSTEM_BATH_SIMULTANEOUS"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_BATH:value:bathroom_opening_pattern:6",
+        "productId": "CANDIDATE:RPL_BATH",
+        "specificationKey": "bathroom_opening_pattern",
+        "status": "ACTIVE"
       }
     ],
     "requiredFieldRules": [
@@ -1164,6 +1954,22 @@
         "required": true,
         "selector": {
           "size_mode": "CUSTOM"
+        }
+      },
+      {
+        "id": "CANDIDATE:RPL_BATH:required:bathroom_remodel_mode",
+        "productId": "CANDIDATE:RPL_BATH",
+        "specificationKey": "bathroom_remodel_mode",
+        "required": true,
+        "selector": {}
+      },
+      {
+        "id": "CANDIDATE:RPL_BATH:required:bathroom_opening_pattern",
+        "productId": "CANDIDATE:RPL_BATH",
+        "specificationKey": "bathroom_opening_pattern",
+        "required": true,
+        "selector": {
+          "bathroom_remodel_mode": "SYSTEM_BATH_SIMULTANEOUS"
         }
       }
     ],
@@ -3263,6 +4069,7 @@
       "reason": "NATIVE_PROSE_OR_COMPOUND_RULE_REQUIRES_MANUAL_REVIEW"
     }
   ],
+  "selection_migrations": [],
   "formal_adoption": false,
   "source_adoption": false,
   "pricing": {

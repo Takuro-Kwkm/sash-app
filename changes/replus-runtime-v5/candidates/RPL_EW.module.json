@@ -1,6 +1,6 @@
 {
   "schema": "PRODUCT_MODULE_CANDIDATE_V1",
-  "candidate_revision": "REPLUS_RUNTIME_UI_V5_20261014",
+  "candidate_revision": "REPLUS_SEMANTIC_FLOW_V7_R2_20261014",
   "baseline": {
     "path": "candidates/RPL_EW.json",
     "component_id": "RPL_EW",
@@ -16,7 +16,7 @@
       "displayName": "リプラス 居室仕様 EWタイプ",
       "source": {
         "id": "RPL_EW",
-        "version": "REPLUS_RUNTIME_UI_V5_20261014"
+        "version": "REPLUS_SEMANTIC_FLOW_V7_R2_20261014"
       }
     },
     "specificationDefinitions": [
@@ -52,7 +52,7 @@
       },
       {
         "key": "spec_panel_configuration",
-        "displayLabel": "枚数",
+        "displayLabel": "建数",
         "dataType": "ENUM",
         "displayOrder": 30,
         "autoSelectSingle": false,
@@ -112,7 +112,7 @@
       },
       {
         "key": "spec_crescent_position",
-        "displayLabel": "窓種固有仕様",
+        "displayLabel": "クレセント位置",
         "dataType": "ENUM",
         "displayOrder": 60,
         "autoSelectSingle": false,
@@ -137,8 +137,8 @@
         "displayOrder": 70,
         "autoSelectSingle": false,
         "parentFields": [
-          "window_type",
-          "spec_height_category"
+          "spec_height_category",
+          "window_type"
         ],
         "selector": {
           "window_type": {
@@ -152,26 +152,8 @@
         "status": "ACTIVE"
       },
       {
-        "key": "glass",
-        "displayLabel": "ガラス",
-        "dataType": "ENUM",
-        "displayOrder": 80,
-        "autoSelectSingle": false,
-        "parentFields": [
-          "window_type"
-        ],
-        "selector": {
-          "window_type": {
-            "$exists": true
-          }
-        },
-        "id": "CANDIDATE:RPL_EW:field:glass",
-        "productId": "CANDIDATE:RPL_EW",
-        "status": "ACTIVE"
-      },
-      {
         "key": "size_mode",
-        "displayLabel": "寸法指定",
+        "displayLabel": "寸法の指定方法",
         "dataType": "ENUM",
         "displayOrder": 90,
         "autoSelectSingle": false,
@@ -183,11 +165,13 @@
       },
       {
         "key": "custom_width",
-        "displayLabel": "仕上がり幅 W（mm）",
+        "displayLabel": "製品仕上がり幅 W（mm）",
         "dataType": "NUMBER",
         "displayOrder": 100,
         "autoSelectSingle": false,
-        "parentFields": [],
+        "parentFields": [
+          "size_mode"
+        ],
         "selector": {
           "size_mode": "CUSTOM"
         },
@@ -197,11 +181,13 @@
       },
       {
         "key": "custom_height",
-        "displayLabel": "仕上がり高さ H（mm）",
+        "displayLabel": "製品仕上がり高さ H（mm）",
         "dataType": "NUMBER",
         "displayOrder": 110,
         "autoSelectSingle": false,
-        "parentFields": [],
+        "parentFields": [
+          "size_mode"
+        ],
         "selector": {
           "size_mode": "CUSTOM"
         },
@@ -247,7 +233,7 @@
       },
       {
         "key": "interior_resin_cover_color",
-        "displayLabel": "部材色",
+        "displayLabel": "内観樹脂カバー色",
         "dataType": "ENUM",
         "displayOrder": 150,
         "autoSelectSingle": false,
@@ -263,7 +249,9 @@
         "dataType": "ENUM",
         "displayOrder": 160,
         "autoSelectSingle": false,
-        "parentFields": [],
+        "parentFields": [
+          "options"
+        ],
         "selector": {
           "options": {
             "$contains": "EW-OP-CASING"
@@ -287,13 +275,103 @@
       },
       {
         "key": "installation_method",
-        "displayLabel": "施工条件",
+        "displayLabel": "施工方法",
         "dataType": "ENUM",
         "displayOrder": 180,
         "autoSelectSingle": false,
         "parentFields": [],
         "selector": {},
         "id": "CANDIDATE:RPL_EW:field:installation_method",
+        "productId": "CANDIDATE:RPL_EW",
+        "status": "ACTIVE"
+      },
+      {
+        "key": "installation_region",
+        "displayLabel": "設置地域",
+        "dataType": "ENUM",
+        "displayOrder": 700,
+        "autoSelectSingle": false,
+        "parentFields": [],
+        "selector": {},
+        "id": "CANDIDATE:RPL_EW:field:installation_region",
+        "productId": "CANDIDATE:RPL_EW",
+        "status": "ACTIVE"
+      },
+      {
+        "key": "glass_category",
+        "displayLabel": "ガラス種類",
+        "dataType": "ENUM",
+        "displayOrder": 700,
+        "autoSelectSingle": true,
+        "parentFields": [
+          "spec_sash_configuration",
+          "window_type"
+        ],
+        "selector": {
+          "spec_sash_configuration": {
+            "$exists": true
+          }
+        },
+        "id": "CANDIDATE:RPL_EW:field:glass_category",
+        "productId": "CANDIDATE:RPL_EW",
+        "status": "ACTIVE"
+      },
+      {
+        "key": "glass",
+        "displayLabel": "Low-E構成",
+        "dataType": "ENUM",
+        "displayOrder": 700,
+        "autoSelectSingle": false,
+        "parentFields": [
+          "glass_category",
+          "installation_region",
+          "window_type"
+        ],
+        "selector": {
+          "glass_category": {
+            "$exists": true
+          }
+        },
+        "id": "CANDIDATE:RPL_EW:field:glass",
+        "productId": "CANDIDATE:RPL_EW",
+        "status": "ACTIVE"
+      },
+      {
+        "key": "glass_gas",
+        "displayLabel": "ガス",
+        "dataType": "ENUM",
+        "displayOrder": 700,
+        "autoSelectSingle": true,
+        "parentFields": [
+          "glass_category",
+          "window_type"
+        ],
+        "selector": {
+          "glass_category": {
+            "$exists": true
+          }
+        },
+        "id": "CANDIDATE:RPL_EW:field:glass_gas",
+        "productId": "CANDIDATE:RPL_EW",
+        "status": "ACTIVE"
+      },
+      {
+        "key": "glass_spacer",
+        "displayLabel": "スペーサー",
+        "dataType": "ENUM",
+        "displayOrder": 700,
+        "autoSelectSingle": true,
+        "parentFields": [
+          "glass_category",
+          "glass_gas",
+          "window_type"
+        ],
+        "selector": {
+          "glass_category": {
+            "$exists": true
+          }
+        },
+        "id": "CANDIDATE:RPL_EW:field:glass_spacer",
         "productId": "CANDIDATE:RPL_EW",
         "status": "ACTIVE"
       }
@@ -546,125 +624,6 @@
         "id": "CANDIDATE:RPL_EW:value:screen:2",
         "productId": "CANDIDATE:RPL_EW",
         "specificationKey": "screen",
-        "status": "ACTIVE"
-      },
-      {
-        "value": "EW-GL-DOUBLE",
-        "displayLabel": "Low-E複層ガラス",
-        "evidenceIds": [
-          "EW-EV-004,008"
-        ],
-        "selector": {
-          "window_type": "RPL_EW_SLD"
-        },
-        "metadata": {
-          "manualCheck": true
-        },
-        "id": "CANDIDATE:RPL_EW:value:glass:0",
-        "productId": "CANDIDATE:RPL_EW",
-        "specificationKey": "glass",
-        "status": "ACTIVE"
-      },
-      {
-        "value": "EW-GL-TRIPLE",
-        "displayLabel": "Low-Eトリプルガラス",
-        "evidenceIds": [
-          "EW-EV-004,008"
-        ],
-        "selector": {
-          "window_type": "RPL_EW_SLD"
-        },
-        "metadata": {
-          "manualCheck": true
-        },
-        "id": "CANDIDATE:RPL_EW:value:glass:1",
-        "productId": "CANDIDATE:RPL_EW",
-        "specificationKey": "glass",
-        "status": "ACTIVE"
-      },
-      {
-        "value": "EW-D-BRONZE",
-        "displayLabel": "ブロンズ",
-        "evidenceIds": [
-          "EW-EV-004,008"
-        ],
-        "selector": {
-          "window_type": "RPL_EW_SLD"
-        },
-        "metadata": {
-          "manualCheck": true
-        },
-        "id": "CANDIDATE:RPL_EW:value:glass:2",
-        "productId": "CANDIDATE:RPL_EW",
-        "specificationKey": "glass",
-        "status": "ACTIVE"
-      },
-      {
-        "value": "EW-T-CB",
-        "displayLabel": "クリア×ブロンズ",
-        "evidenceIds": [
-          "EW-EV-004,008"
-        ],
-        "selector": {
-          "window_type": "RPL_EW_SLD"
-        },
-        "metadata": {
-          "manualCheck": true
-        },
-        "id": "CANDIDATE:RPL_EW:value:glass:3",
-        "productId": "CANDIDATE:RPL_EW",
-        "specificationKey": "glass",
-        "status": "ACTIVE"
-      },
-      {
-        "value": "EW-T-GENERAL-CLEAR",
-        "displayLabel": "一般×クリア",
-        "evidenceIds": [
-          "EW-EV-008"
-        ],
-        "selector": {
-          "window_type": "RPL_EW_SLD"
-        },
-        "metadata": {
-          "manualCheck": true
-        },
-        "id": "CANDIDATE:RPL_EW:value:glass:4",
-        "productId": "CANDIDATE:RPL_EW",
-        "specificationKey": "glass",
-        "status": "ACTIVE"
-      },
-      {
-        "value": "EW-GAS-ARGON",
-        "displayLabel": "アルゴンガス",
-        "evidenceIds": [
-          "EW-EV-005,008"
-        ],
-        "selector": {
-          "window_type": "RPL_EW_SLD"
-        },
-        "metadata": {
-          "manualCheck": true
-        },
-        "id": "CANDIDATE:RPL_EW:value:glass:5",
-        "productId": "CANDIDATE:RPL_EW",
-        "specificationKey": "glass",
-        "status": "ACTIVE"
-      },
-      {
-        "value": "EW-SPACER-RESIN",
-        "displayLabel": "樹脂スペーサー",
-        "evidenceIds": [
-          "EW-EV-005,008"
-        ],
-        "selector": {
-          "window_type": "RPL_EW_SLD"
-        },
-        "metadata": {
-          "manualCheck": true
-        },
-        "id": "CANDIDATE:RPL_EW:value:glass:6",
-        "productId": "CANDIDATE:RPL_EW",
-        "specificationKey": "glass",
         "status": "ACTIVE"
       },
       {
@@ -1100,6 +1059,293 @@
         "id": "CANDIDATE:RPL_EW:value:installation_method:0",
         "productId": "CANDIDATE:RPL_EW",
         "specificationKey": "installation_method",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "北海道",
+        "displayLabel": "北海道",
+        "evidenceIds": [
+          "EW-EV-004,008"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_EW:value:installation_region:0",
+        "productId": "CANDIDATE:RPL_EW",
+        "specificationKey": "installation_region",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "東北",
+        "displayLabel": "東北",
+        "evidenceIds": [
+          "EW-EV-004,008"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_EW:value:installation_region:1",
+        "productId": "CANDIDATE:RPL_EW",
+        "specificationKey": "installation_region",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "その他地域",
+        "displayLabel": "その他地域",
+        "evidenceIds": [
+          "EW-EV-004,008"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_EW:value:installation_region:2",
+        "productId": "CANDIDATE:RPL_EW",
+        "specificationKey": "installation_region",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "EW-GL-DOUBLE",
+        "displayLabel": "Low-E複層ガラス",
+        "evidenceIds": [
+          "EW-EV-004,008"
+        ],
+        "selector": {
+          "window_type": "RPL_EW_SLD",
+          "spec_sash_configuration": {
+            "$in": [
+              "EW-SS-PG",
+              "EW-SS-PGSEL"
+            ]
+          }
+        },
+        "metadata": {
+          "manualCheck": false
+        },
+        "id": "CANDIDATE:RPL_EW:value:glass_category:0",
+        "productId": "CANDIDATE:RPL_EW",
+        "specificationKey": "glass_category",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "EW-GL-TRIPLE",
+        "displayLabel": "Low-Eトリプルガラス",
+        "evidenceIds": [
+          "EW-EV-004,008"
+        ],
+        "selector": {
+          "window_type": "RPL_EW_SLD",
+          "spec_sash_configuration": {
+            "$in": [
+              "EW-SS-TG",
+              "EW-SS-TGSEL"
+            ]
+          }
+        },
+        "metadata": {
+          "manualCheck": false
+        },
+        "id": "CANDIDATE:RPL_EW:value:glass_category:1",
+        "productId": "CANDIDATE:RPL_EW",
+        "specificationKey": "glass_category",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "EW-D-CLEAR",
+        "displayLabel": "クリア",
+        "evidenceIds": [
+          "EW-EV-004,008"
+        ],
+        "selector": {
+          "window_type": "RPL_EW_SLD",
+          "glass_category": "EW-GL-DOUBLE"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_EW:value:glass:0",
+        "productId": "CANDIDATE:RPL_EW",
+        "specificationKey": "glass",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "EW-D-GREEN",
+        "displayLabel": "グリーン",
+        "evidenceIds": [
+          "EW-EV-004,008"
+        ],
+        "selector": {
+          "window_type": "RPL_EW_SLD",
+          "glass_category": "EW-GL-DOUBLE"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_EW:value:glass:1",
+        "productId": "CANDIDATE:RPL_EW",
+        "specificationKey": "glass",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "EW-D-GREEN-HS",
+        "displayLabel": "グリーン（高遮熱仕様）",
+        "evidenceIds": [
+          "EW-EV-004,008"
+        ],
+        "selector": {
+          "window_type": "RPL_EW_SLD",
+          "glass_category": "EW-GL-DOUBLE"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_EW:value:glass:2",
+        "productId": "CANDIDATE:RPL_EW",
+        "specificationKey": "glass",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "EW-D-BRONZE",
+        "displayLabel": "ブロンズ",
+        "evidenceIds": [
+          "EW-EV-004,008"
+        ],
+        "selector": {
+          "window_type": "RPL_EW_SLD",
+          "glass_category": "EW-GL-DOUBLE",
+          "installation_region": {
+            "$in": [
+              "北海道",
+              "東北"
+            ]
+          }
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_EW:value:glass:3",
+        "productId": "CANDIDATE:RPL_EW",
+        "specificationKey": "glass",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "EW-T-CC",
+        "displayLabel": "クリア×クリア",
+        "evidenceIds": [
+          "EW-EV-004,008"
+        ],
+        "selector": {
+          "window_type": "RPL_EW_SLD",
+          "glass_category": "EW-GL-TRIPLE"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_EW:value:glass:4",
+        "productId": "CANDIDATE:RPL_EW",
+        "specificationKey": "glass",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "EW-T-GG",
+        "displayLabel": "グリーン×グリーン",
+        "evidenceIds": [
+          "EW-EV-004,008"
+        ],
+        "selector": {
+          "window_type": "RPL_EW_SLD",
+          "glass_category": "EW-GL-TRIPLE"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_EW:value:glass:5",
+        "productId": "CANDIDATE:RPL_EW",
+        "specificationKey": "glass",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "EW-T-CG",
+        "displayLabel": "クリア×グリーン",
+        "evidenceIds": [
+          "EW-EV-004,008"
+        ],
+        "selector": {
+          "window_type": "RPL_EW_SLD",
+          "glass_category": "EW-GL-TRIPLE"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_EW:value:glass:6",
+        "productId": "CANDIDATE:RPL_EW",
+        "specificationKey": "glass",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "EW-T-CB",
+        "displayLabel": "クリア×ブロンズ",
+        "evidenceIds": [
+          "EW-EV-004,008"
+        ],
+        "selector": {
+          "window_type": "RPL_EW_SLD",
+          "glass_category": "EW-GL-TRIPLE",
+          "installation_region": {
+            "$in": [
+              "北海道",
+              "東北"
+            ]
+          }
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_EW:value:glass:7",
+        "productId": "CANDIDATE:RPL_EW",
+        "specificationKey": "glass",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "EW-GAS-ARGON",
+        "displayLabel": "アルゴンガス",
+        "evidenceIds": [
+          "EW-EV-005,008"
+        ],
+        "selector": {
+          "window_type": "RPL_EW_SLD",
+          "glass_category": {
+            "$exists": true
+          }
+        },
+        "metadata": {
+          "manualCheck": false
+        },
+        "id": "CANDIDATE:RPL_EW:value:glass_gas:0",
+        "productId": "CANDIDATE:RPL_EW",
+        "specificationKey": "glass_gas",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "EW-SPACER-RESIN",
+        "displayLabel": "樹脂スペーサー",
+        "evidenceIds": [
+          "EW-EV-005,008"
+        ],
+        "selector": {
+          "window_type": "RPL_EW_SLD",
+          "glass_category": {
+            "$exists": true
+          }
+        },
+        "metadata": {
+          "manualCheck": false
+        },
+        "id": "CANDIDATE:RPL_EW:value:glass_spacer:0",
+        "productId": "CANDIDATE:RPL_EW",
+        "specificationKey": "glass_spacer",
         "status": "ACTIVE"
       }
     ],
@@ -2024,6 +2270,104 @@
     {
       "sheet": "12_共通参照",
       "reason": "NATIVE_PROSE_OR_COMPOUND_RULE_REQUIRES_MANUAL_REVIEW"
+    }
+  ],
+  "selection_migrations": [
+    {
+      "source": "glass",
+      "value": "EW-GL-DOUBLE",
+      "assign": {
+        "glass_category": "EW-GL-DOUBLE"
+      },
+      "clearSource": true
+    },
+    {
+      "source": "glass",
+      "value": "EW-GL-TRIPLE",
+      "assign": {
+        "glass_category": "EW-GL-TRIPLE"
+      },
+      "clearSource": true
+    },
+    {
+      "source": "glass",
+      "value": "EW-D-CLEAR",
+      "assign": {
+        "glass_category": "EW-GL-DOUBLE"
+      },
+      "clearSource": false
+    },
+    {
+      "source": "glass",
+      "value": "EW-D-GREEN",
+      "assign": {
+        "glass_category": "EW-GL-DOUBLE"
+      },
+      "clearSource": false
+    },
+    {
+      "source": "glass",
+      "value": "EW-D-GREEN-HS",
+      "assign": {
+        "glass_category": "EW-GL-DOUBLE"
+      },
+      "clearSource": false
+    },
+    {
+      "source": "glass",
+      "value": "EW-D-BRONZE",
+      "assign": {
+        "glass_category": "EW-GL-DOUBLE"
+      },
+      "clearSource": false
+    },
+    {
+      "source": "glass",
+      "value": "EW-T-CC",
+      "assign": {
+        "glass_category": "EW-GL-TRIPLE"
+      },
+      "clearSource": false
+    },
+    {
+      "source": "glass",
+      "value": "EW-T-GG",
+      "assign": {
+        "glass_category": "EW-GL-TRIPLE"
+      },
+      "clearSource": false
+    },
+    {
+      "source": "glass",
+      "value": "EW-T-CG",
+      "assign": {
+        "glass_category": "EW-GL-TRIPLE"
+      },
+      "clearSource": false
+    },
+    {
+      "source": "glass",
+      "value": "EW-T-CB",
+      "assign": {
+        "glass_category": "EW-GL-TRIPLE"
+      },
+      "clearSource": false
+    },
+    {
+      "source": "glass",
+      "value": "EW-GAS-ARGON",
+      "assign": {
+        "glass_gas": "EW-GAS-ARGON"
+      },
+      "clearSource": true
+    },
+    {
+      "source": "glass",
+      "value": "EW-SPACER-RESIN",
+      "assign": {
+        "glass_spacer": "EW-SPACER-RESIN"
+      },
+      "clearSource": true
     }
   ],
   "formal_adoption": false,
