@@ -21,12 +21,16 @@ jobs:
       - run: test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
       - uses: actions/setup-python@v5
         with: {python-version: '3.12.14'}
+      - uses: actions/setup-node@v4
+        with: {node-version: '24'}
       - name: Read back exact adopted shared dependency snapshot
         run: python -B scripts/production/unpack-build-authority.py "$SHARED_HARNESS_ROOT"
       - run: python -m pip install -r "$SHARED_HARNESS_ROOT/requirements.txt"
+      - run: python -m pip install openpyxl==3.1.5
       - name: Real native profile, failure safety and actual isolated E2E
         run: |
           python -B scripts/production/validate-architecture-connection.py
           python -B scripts/production/validate-product-master-profile.py
           python -B scripts/production/test-product-master-build.py
           python -B scripts/production/test_actual_build.py
+          python -B scripts/production/test_table_package_change.py

@@ -97,9 +97,21 @@
       "no_fallback": true
     },
     "NATIVE_REGISTRY:LIXIL::リプラス": {
-      "state": "FAIL_CLOSED",
-      "validators": [],
-      "no_fallback": true
+      "state": "READY",
+      "scope": "REPLUS_V13_SALES_SELECTION_MASTER_CHANGE",
+      "validators": [
+        "native-table-parity",
+        "official-evidence-identity",
+        "reviewed-flow-registration",
+        "controlled-unresolved-handoff",
+        "shared-human-formal-save"
+      ],
+      "no_fallback": true,
+      "profile": {
+        "path": "contracts/production/native-change-profiles/replus-v13.json",
+        "sha256": "bfdbf6947ae998c2cd70d47c941b08651c7890c8653cfd2c410de79fb65a77a0"
+      },
+      "formal_requires": "FRESH_NATIVE_QA_PLUS_EXACT_HUMAN_PACKET_PLUS_DRIVE_READBACK"
     },
     "NATIVE_REGISTRY:LIXIL::ジエスタ2": {
       "state": "FAIL_CLOSED",

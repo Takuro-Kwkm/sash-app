@@ -24,7 +24,7 @@ class LifecycleScopeTest(unittest.TestCase):
             if source.exists():
                 target = self.root / name
                 target.parent.mkdir(parents=True, exist_ok=True)
-                shutil.copyfile(source, target)
+                target.write_bytes(subprocess.check_output(['git','show','8152f03883430716f520168ff01d60738e4a4b8f:'+name],cwd=ROOT))
 
     def rejected(self):
         result = guard.validate(self.root)
