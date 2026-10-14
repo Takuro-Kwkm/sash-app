@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {resolve} from 'node:path';
-import {readFileSync,writeFileSync,mkdtempSync,cpSync,rmSync} from 'node:fs';
+import {readFileSync,writeFileSync,mkdtempSync,mkdirSync,cpSync,rmSync} from 'node:fs';
 import {createHash} from 'node:crypto';
 import {spawnSync} from 'node:child_process';
 import {tmpdir} from 'node:os';
@@ -37,6 +37,7 @@ async function complete(row,seed={}){
  }
  throw new Error('Selection did not converge: '+row.id);
 }
+mkdirSync(resolve('artifacts/replus-runtime-v5'),{recursive:true});
 for(const row of rows)test(row.id+' shared module and evidence',async()=>{
  const d=JSON.parse(readFileSync(resolve(root,row.path)));
  assert.equal(digest(readFileSync(resolve(root,row.path))),row.sha256);
