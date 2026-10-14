@@ -1,0 +1,88 @@
+{
+  "schema": "NATIVE_PUBLICATION_LIFECYCLE_V1",
+  "repository": "Takuro-Kwkm/sash-app",
+  "target_gate": "RELEASE_COMPLETED",
+  "destination_source": {
+    "path": "contracts/production/app-release.v1.json",
+    "pointers": {
+      "alias": [
+        "deployment",
+        "production_url"
+      ],
+      "project_id": [
+        "deployment",
+        "project_id"
+      ],
+      "team_id": [
+        "deployment",
+        "team_id"
+      ],
+      "provider": [
+        "deployment",
+        "provider"
+      ],
+      "production_branch": [
+        "production_branch"
+      ]
+    }
+  },
+  "connections": [
+    {
+      "product_id": "SER-LIX-SAMOSL",
+      "scope": "THERMOSL_UNCHANGED_FORMAL_SELECTION_SAVE_OUTPUT_ORDER5_BATCH3_V1",
+      "connection_product_id": "SER-LIX-SAMOSL"
+    },
+    {
+      "product_id": "SER-LIXIL-TW",
+      "scope": "TW_UNCHANGED_FORMAL_SELECTION_SAVE_OUTPUT_ORDER5_BATCH3_V1",
+      "connection_product_id": "SER-LIXIL-TW"
+    },
+    {
+      "product_id": "SER-YKK-APW430",
+      "scope": "APW430_UNCHANGED_FORMAL_SELECTION_SAVE_OUTPUT_ORDER5_BATCH3_V1",
+      "connection_product_id": "SER-YKK-APW430"
+    },
+    {
+      "product_id": "SER-YKK-APW431",
+      "scope": "APW431_UNCHANGED_FORMAL_SELECTION_SAVE_OUTPUT_ORDER5_BATCH3_V1",
+      "connection_product_id": "SER-YKK-APW431"
+    }
+  ],
+  "release_profile_registry": "contracts/production/release-profiles.v1.json",
+  "shared_entry": "scripts/release-contract.py",
+  "preflight_command": [
+    "python3",
+    "-B",
+    "{shared}/scripts/release-contract.py",
+    "preflight",
+    "--native",
+    "{native}",
+    "--plan",
+    "{plan}"
+  ],
+  "qa_command": [
+    "node",
+    "scripts/production/publication-lifecycle-qa.mjs",
+    "--profile",
+    "{profile}",
+    "--url",
+    "{url}",
+    "--expect-commit",
+    "{sha}",
+    "--output-dir",
+    "{output}"
+  ],
+  "qa_evidence": "{output}/evidence.json",
+  "native_qa_keys": [
+    "release_identity",
+    "batch3_product"
+  ],
+  "scope_guard": "contracts/production/publication-lifecycle-scope.v1.json",
+  "scope_validator": "scripts/production/publication-lifecycle-scope.py",
+  "state_owner": "Shared Harness v2; no native DAG or approval issuer",
+  "upstream_policy": "Inspect completed Work; preserve exact Formal, Evidence and Human Decisions",
+  "checkpoint_policy": "Shared release-contract checkpoint and native Work storage readback",
+  "deployment_policy": "Reuse verified existing deployment; fixed-ID promotion only after Shared authorization",
+  "persistence_boundary": "BROWSER_LOCAL_STORAGE",
+  "print_boundary": "Existing PDF visual acceptance is separate from automated print handler and CSS checks"
+}
