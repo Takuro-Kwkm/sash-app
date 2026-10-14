@@ -14,6 +14,7 @@ SCOPE_PATH = 'contracts/production/publication-lifecycle-scope.v1.json'
 ALLOWED = {
     '.github/workflows/common-release-contract.yml',
     '.github/workflows/ew-output-successor.yml',
+    '.github/workflows/new-product-actual-build.yml',
     'contracts/production/authority-successors/publication-lifecycle-predecessor-profile.v1.json',
     'contracts/production/authority-successors/publication-lifecycle-predecessor-selection.v1.json',
     'contracts/production/authority-successors/publication-lifecycle-predecessor-build-profile.v1.json',
