@@ -3,6 +3,7 @@ import { stabilizeSelection } from '../catalog-resolver.mjs';
 import { buildCatalogContext, selectorMatches } from '../selector.mjs';
 import { createProductModuleGlazingBridge } from './product-module-glazing-normalizer.mjs';
 import { createProductModuleGlassManufacturability } from './product-module-glass-manufacturability.mjs';
+import { classifyDeclaredFields } from './declared-selection-policy.mjs';
 
 const has = (value) => value !== undefined && value !== null && value !== '';
 const same = (a, b) => Object.is(a, b) || String(a) === String(b);
@@ -196,7 +197,8 @@ export function adaptProductModuleRuntimeV1(runtimePackage, entry) {
     const original = { ...(inputSelection ?? {}) };
     delete original.construction;
     delete original.internal_construction;
-    let working = glazingBridge.toSourceSelection(original);
+    const classification = classifyDeclaredFields(module, glazingBridge.toSourceSelection(original));
+    let working = classification.selection;
 
     // Derive the hidden construction from the selected formal STANDARD size before stabilization.
     // Otherwise construction-dependent downstream values can be cleared by the first resolver pass
@@ -205,8 +207,10 @@ export function adaptProductModuleRuntimeV1(runtimePackage, entry) {
     if (preDerivedConstruction) working.construction = preDerivedConstruction;
 
     let result = stabilizeSelection(catalog, productId, working);
-    let dimensionOverride = null;
+    const ambiguousClassifications=classification.results.filter(row=>row.candidateCount>1);
+    let dimensionOverride = ambiguousClassifications.length ? {status:'REVIEW_REQUIRED',code:'INTERNAL_CLASSIFICATION_AMBIGUOUS',message:'寸法範囲が重なるため窓の区分は現調・積算で確認してください。',matchedRuleIds:ambiguousClassifications.flatMap(row=>row.ruleIds)} : null;
     const manualWarnings = [...(result.manualWarnings ?? [])];
+    if (classification.results.some(row => row.status === 'REVIEW_REQUIRED')) manualWarnings.push('寸法による窓の区分を一意に決定できません。現調・積算で確認してください。');
 
     let derivedConstruction = preDerivedConstruction ?? deriveStandardConstruction(module, result.selection, constructionDefault);
     if (!derivedConstruction && customConstructionResolutionEnabled && result.selection.size_mode === 'CUSTOM' && finite(result.selection.custom_width) && finite(result.selection.custom_height)) {
@@ -283,6 +287,7 @@ export function adaptProductModuleRuntimeV1(runtimePackage, entry) {
       notices: [...(result.notices ?? []), ...(glassResult?.status === 'ESTIMATE_CONFIRM_REQUIRED' && glassResult.message ? [glassResult.message] : [])],
       manualWarnings,
       dimensionResult,
+      internalClassifications: classification.results,
       glassManufacturability: glassResult,
       clearedFields,
       validation: { status: validationStatus, errors: validationErrors, missingRequiredFields },

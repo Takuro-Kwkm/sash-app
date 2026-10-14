@@ -1,19 +1,19 @@
 {
   "schema": "NATIVE_TABLE_PROJECTION_V1",
-  "candidate_revision": "REPLUS_GLASS_FLOW_V8_20261014",
+  "candidate_revision": "REPLUS_GLOBAL_FLOW_V9_20261014",
   "product": {
     "id": "CANDIDATE:RPL_ATT_TH",
     "manufacturer": "LIXIL",
     "displayName": "リプラス アタッチ枠（サーモス用）",
     "source": {
       "id": "RPL_ATT_TH",
-      "version": "REPLUS_GLASS_FLOW_V8_20261014"
+      "version": "REPLUS_GLOBAL_FLOW_V9_20261014"
     }
   },
   "source": {
     "path": "candidates/RPL_ATT_TH.json",
     "component_id": "RPL_ATT_TH",
-    "sha256": "113c407c5e3e9292135d061dc3e674316444481c94dc624f9a4545385fb3e107",
+    "sha256": "dee7395ecb971d66d147f2469f0550d13dc59d046ac38fb8ed7ccf8eeec572ef",
     "baseline_sha256": "64ba5575015706f485909406f7ed8dbb5b86000554534546a3f30fd229ffe71f",
     "baseline_component_version": "v1.1"
   },
@@ -396,7 +396,7 @@
     },
     {
       "key": "exterior_cover_color",
-      "displayLabel": "化粧カバー外観色",
+      "displayLabel": "化粧カバー色（外観色に連動）",
       "dataType": "ENUM",
       "displayOrder": 30,
       "choices": [
@@ -408,7 +408,7 @@
           ],
           "selector": {},
           "metadata": {
-            "manualCheck": true
+            "manualCheck": false
           }
         },
         {
@@ -419,7 +419,7 @@
           ],
           "selector": {},
           "metadata": {
-            "manualCheck": true
+            "manualCheck": false
           }
         },
         {
@@ -430,7 +430,7 @@
           ],
           "selector": {},
           "metadata": {
-            "manualCheck": true
+            "manualCheck": false
           }
         },
         {
@@ -441,7 +441,7 @@
           ],
           "selector": {},
           "metadata": {
-            "manualCheck": true
+            "manualCheck": false
           }
         },
         {
@@ -452,18 +452,20 @@
           ],
           "selector": {},
           "metadata": {
-            "manualCheck": true
+            "manualCheck": false
           }
         }
       ],
       "required": false,
       "autoSelectSingle": false,
-      "parentFields": [],
+      "parentFields": [
+        "new_sash_exterior_color"
+      ],
       "selector": {}
     },
     {
       "key": "interior_cover_color",
-      "displayLabel": "化粧カバー内観色",
+      "displayLabel": "室内カバー色（内観色に連動）",
       "dataType": "ENUM",
       "displayOrder": 40,
       "choices": [
@@ -475,7 +477,7 @@
           ],
           "selector": {},
           "metadata": {
-            "manualCheck": true
+            "manualCheck": false
           }
         },
         {
@@ -486,7 +488,7 @@
           ],
           "selector": {},
           "metadata": {
-            "manualCheck": true
+            "manualCheck": false
           }
         },
         {
@@ -497,7 +499,7 @@
           ],
           "selector": {},
           "metadata": {
-            "manualCheck": true
+            "manualCheck": false
           }
         },
         {
@@ -508,7 +510,7 @@
           ],
           "selector": {},
           "metadata": {
-            "manualCheck": true
+            "manualCheck": false
           }
         },
         {
@@ -519,7 +521,7 @@
           ],
           "selector": {},
           "metadata": {
-            "manualCheck": true
+            "manualCheck": false
           }
         },
         {
@@ -530,7 +532,7 @@
           ],
           "selector": {},
           "metadata": {
-            "manualCheck": true
+            "manualCheck": false
           }
         },
         {
@@ -541,7 +543,7 @@
           ],
           "selector": {},
           "metadata": {
-            "manualCheck": true
+            "manualCheck": false
           }
         },
         {
@@ -552,7 +554,7 @@
           ],
           "selector": {},
           "metadata": {
-            "manualCheck": true
+            "manualCheck": false
           }
         },
         {
@@ -563,13 +565,15 @@
           ],
           "selector": {},
           "metadata": {
-            "manualCheck": true
+            "manualCheck": false
           }
         }
       ],
       "required": false,
       "autoSelectSingle": false,
-      "parentFields": [],
+      "parentFields": [
+        "new_sash_interior_color"
+      ],
       "selector": {}
     },
     {
@@ -662,28 +666,6 @@
       "dataType": "MULTI_ENUM",
       "displayOrder": 60,
       "choices": [
-        {
-          "value": "ATT-TH-OP-ANGLE-MITER",
-          "displayLabel": "樹脂アングルカバー（見切材付）",
-          "evidenceIds": [
-            "ATT-TH-EV-002,012"
-          ],
-          "selector": {},
-          "metadata": {
-            "manualCheck": true
-          }
-        },
-        {
-          "value": "ATT-TH-OP-ANGLE-NOMITER",
-          "displayLabel": "樹脂アングルカバー（見切材無）",
-          "evidenceIds": [
-            "ATT-TH-EV-012"
-          ],
-          "selector": {},
-          "metadata": {
-            "manualCheck": true
-          }
-        },
         {
           "value": "ATT-TH-OP-MULLION",
           "displayLabel": "連窓方立（装飾窓用）",
@@ -821,6 +803,257 @@
       "autoSelectSingle": false,
       "parentFields": [],
       "selector": {}
+    },
+    {
+      "key": "interior_cover_type",
+      "displayLabel": "室内側の仕上げ仕様",
+      "dataType": "ENUM",
+      "displayOrder": 900,
+      "choices": [
+        {
+          "value": "ATT-TH-OP-ANGLE-MITER",
+          "displayLabel": "樹脂アングルカバー（見切材付）",
+          "evidenceIds": [
+            "ATT-TH-EV-002,012"
+          ],
+          "selector": {},
+          "metadata": {
+            "manualCheck": true
+          }
+        },
+        {
+          "value": "ATT-TH-OP-ANGLE-NOMITER",
+          "displayLabel": "樹脂アングルカバー（見切材無）",
+          "evidenceIds": [
+            "ATT-TH-EV-012"
+          ],
+          "selector": {},
+          "metadata": {
+            "manualCheck": true
+          }
+        }
+      ],
+      "required": false,
+      "autoSelectSingle": false,
+      "parentFields": [],
+      "selector": {}
+    },
+    {
+      "key": "exterior_cover_type",
+      "displayLabel": "化粧カバーの大きさ・組合せ",
+      "dataType": "ENUM",
+      "displayOrder": 900,
+      "choices": [
+        {
+          "value": "ATT-TH-COV-L",
+          "displayLabel": "大",
+          "selector": {
+            "all": [
+              {
+                "any": [
+                  {
+                    "survey_cover_top": {
+                      "$exists": false
+                    }
+                  },
+                  {
+                    "survey_cover_top": {
+                      "$lte": 71.5
+                    }
+                  }
+                ]
+              },
+              {
+                "any": [
+                  {
+                    "survey_cover_bottom": {
+                      "$exists": false
+                    }
+                  },
+                  {
+                    "survey_cover_bottom": {
+                      "$lte": 96
+                    }
+                  }
+                ]
+              },
+              {
+                "any": [
+                  {
+                    "survey_cover_side": {
+                      "$exists": false
+                    }
+                  },
+                  {
+                    "survey_cover_side": {
+                      "$lte": 34
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "evidenceIds": [
+            "ATT-TH-EV-011"
+          ],
+          "metadata": {
+            "manualCheck": false
+          }
+        },
+        {
+          "value": "ATT-TH-COV-M",
+          "displayLabel": "中",
+          "selector": {
+            "all": [
+              {
+                "any": [
+                  {
+                    "survey_cover_top": {
+                      "$exists": false
+                    }
+                  },
+                  {
+                    "survey_cover_top": {
+                      "$lte": 36.5
+                    }
+                  }
+                ]
+              },
+              {
+                "any": [
+                  {
+                    "survey_cover_bottom": {
+                      "$exists": false
+                    }
+                  },
+                  {
+                    "survey_cover_bottom": {
+                      "$lte": 61
+                    }
+                  }
+                ]
+              },
+              {
+                "any": [
+                  {
+                    "survey_cover_side": {
+                      "$exists": false
+                    }
+                  },
+                  {
+                    "survey_cover_side": {
+                      "$lte": 34
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "evidenceIds": [
+            "ATT-TH-EV-011"
+          ],
+          "metadata": {
+            "manualCheck": false
+          }
+        },
+        {
+          "value": "ATT-TH-COV-S",
+          "displayLabel": "小",
+          "selector": {
+            "all": [
+              {
+                "any": [
+                  {
+                    "survey_cover_top": {
+                      "$exists": false
+                    }
+                  },
+                  {
+                    "survey_cover_top": {
+                      "$lte": 16.5
+                    }
+                  }
+                ]
+              },
+              {
+                "any": [
+                  {
+                    "survey_cover_bottom": {
+                      "$exists": false
+                    }
+                  },
+                  {
+                    "survey_cover_bottom": {
+                      "$lte": 41
+                    }
+                  }
+                ]
+              },
+              {
+                "any": [
+                  {
+                    "survey_cover_side": {
+                      "$exists": false
+                    }
+                  },
+                  {
+                    "survey_cover_side": {
+                      "$lte": 9
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "evidenceIds": [
+            "ATT-TH-EV-011"
+          ],
+          "metadata": {
+            "manualCheck": false
+          }
+        }
+      ],
+      "required": true,
+      "autoSelectSingle": false,
+      "parentFields": [
+        "survey_cover_top",
+        "survey_cover_bottom",
+        "survey_cover_side"
+      ],
+      "selector": {}
+    },
+    {
+      "key": "survey_cover_top",
+      "displayLabel": "既設上枠の見付（mm）",
+      "dataType": "NUMBER",
+      "displayOrder": 900,
+      "choices": [],
+      "required": true,
+      "autoSelectSingle": false,
+      "parentFields": [],
+      "selector": {}
+    },
+    {
+      "key": "survey_cover_bottom",
+      "displayLabel": "既設下枠の見付（mm）",
+      "dataType": "NUMBER",
+      "displayOrder": 900,
+      "choices": [],
+      "required": true,
+      "autoSelectSingle": false,
+      "parentFields": [],
+      "selector": {}
+    },
+    {
+      "key": "survey_cover_side",
+      "displayLabel": "既設縦枠の見付（mm）",
+      "dataType": "NUMBER",
+      "displayOrder": 900,
+      "choices": [],
+      "required": true,
+      "autoSelectSingle": false,
+      "parentFields": [],
+      "selector": {}
     }
   ],
   "dependencies": [
@@ -831,7 +1064,376 @@
       "message": "施工可否・図形境界・ガラス構成・部材数量・価格・発注コードは積算確認が必要です。候補のため正式採用・自動注文はできません。"
     }
   ],
-  "ruleSets": [],
+  "ruleSets": [
+    {
+      "id": "cover-color-links",
+      "type": "SELECTION_LINKS",
+      "status": "ACTIVE",
+      "payload": [
+        {
+          "targetField": "exterior_cover_color",
+          "parents": [
+            "new_sash_exterior_color"
+          ],
+          "cases": [
+            {
+              "when": {
+                "new_sash_exterior_color": "BLACK"
+              },
+              "value": "T"
+            },
+            {
+              "when": {
+                "new_sash_exterior_color": "T"
+              },
+              "value": "T"
+            },
+            {
+              "when": {
+                "new_sash_exterior_color": "EXT-T"
+              },
+              "value": "T"
+            },
+            {
+              "when": {
+                "new_sash_exterior_color": "EXT-LIX-T"
+              },
+              "value": "T"
+            },
+            {
+              "when": {
+                "new_sash_exterior_color": "AUTUMN_BROWN"
+              },
+              "value": "G"
+            },
+            {
+              "when": {
+                "new_sash_exterior_color": "G"
+              },
+              "value": "G"
+            },
+            {
+              "when": {
+                "new_sash_exterior_color": "EXT-G"
+              },
+              "value": "G"
+            },
+            {
+              "when": {
+                "new_sash_exterior_color": "EXT-LIX-G"
+              },
+              "value": "G"
+            },
+            {
+              "when": {
+                "new_sash_exterior_color": "SHINE_GRAY"
+              },
+              "value": "K"
+            },
+            {
+              "when": {
+                "new_sash_exterior_color": "K"
+              },
+              "value": "K"
+            },
+            {
+              "when": {
+                "new_sash_exterior_color": "EXT-K"
+              },
+              "value": "K"
+            },
+            {
+              "when": {
+                "new_sash_exterior_color": "EXT-LIX-K"
+              },
+              "value": "K"
+            },
+            {
+              "when": {
+                "new_sash_exterior_color": "NATURAL_SILVER"
+              },
+              "value": "D"
+            },
+            {
+              "when": {
+                "new_sash_exterior_color": "D"
+              },
+              "value": "D"
+            },
+            {
+              "when": {
+                "new_sash_exterior_color": "EXT-D"
+              },
+              "value": "D"
+            },
+            {
+              "when": {
+                "new_sash_exterior_color": "EXT-LIX-D"
+              },
+              "value": "D"
+            },
+            {
+              "when": {
+                "new_sash_exterior_color": "WHITE"
+              },
+              "value": "W"
+            },
+            {
+              "when": {
+                "new_sash_exterior_color": "W"
+              },
+              "value": "W"
+            },
+            {
+              "when": {
+                "new_sash_exterior_color": "EXT-W"
+              },
+              "value": "W"
+            },
+            {
+              "when": {
+                "new_sash_exterior_color": "EXT-LIX-W"
+              },
+              "value": "W"
+            }
+          ],
+          "resolvedMessage": "本体外観色に連動しています。",
+          "pendingMessage": "サッシ本体の色を選択してください。",
+          "unavailableMessage": "本体色に対応するカバー部材の確認が必要です。"
+        },
+        {
+          "targetField": "interior_cover_color",
+          "parents": [
+            "new_sash_interior_color"
+          ],
+          "cases": [
+            {
+              "when": {
+                "new_sash_interior_color": "BLACK"
+              },
+              "value": "M"
+            },
+            {
+              "when": {
+                "new_sash_interior_color": "M"
+              },
+              "value": "M"
+            },
+            {
+              "when": {
+                "new_sash_interior_color": "INT-M"
+              },
+              "value": "M"
+            },
+            {
+              "when": {
+                "new_sash_interior_color": "INT-LIX-M"
+              },
+              "value": "M"
+            },
+            {
+              "when": {
+                "new_sash_interior_color": "AUTUMN_BROWN"
+              },
+              "value": "G"
+            },
+            {
+              "when": {
+                "new_sash_interior_color": "G"
+              },
+              "value": "G"
+            },
+            {
+              "when": {
+                "new_sash_interior_color": "INT-G"
+              },
+              "value": "G"
+            },
+            {
+              "when": {
+                "new_sash_interior_color": "INT-LIX-G"
+              },
+              "value": "G"
+            },
+            {
+              "when": {
+                "new_sash_interior_color": "SHINE_GRAY"
+              },
+              "value": "K"
+            },
+            {
+              "when": {
+                "new_sash_interior_color": "K"
+              },
+              "value": "K"
+            },
+            {
+              "when": {
+                "new_sash_interior_color": "INT-K"
+              },
+              "value": "K"
+            },
+            {
+              "when": {
+                "new_sash_interior_color": "INT-LIX-K"
+              },
+              "value": "K"
+            },
+            {
+              "when": {
+                "new_sash_interior_color": "NATURAL_SILVER"
+              },
+              "value": "D"
+            },
+            {
+              "when": {
+                "new_sash_interior_color": "D"
+              },
+              "value": "D"
+            },
+            {
+              "when": {
+                "new_sash_interior_color": "INT-D"
+              },
+              "value": "D"
+            },
+            {
+              "when": {
+                "new_sash_interior_color": "INT-LIX-D"
+              },
+              "value": "D"
+            },
+            {
+              "when": {
+                "new_sash_interior_color": "WHITE"
+              },
+              "value": "W"
+            },
+            {
+              "when": {
+                "new_sash_interior_color": "W"
+              },
+              "value": "W"
+            },
+            {
+              "when": {
+                "new_sash_interior_color": "INT-W"
+              },
+              "value": "W"
+            },
+            {
+              "when": {
+                "new_sash_interior_color": "INT-LIX-W"
+              },
+              "value": "W"
+            },
+            {
+              "when": {
+                "new_sash_interior_color": "CREA_MOCHA"
+              },
+              "value": "C"
+            },
+            {
+              "when": {
+                "new_sash_interior_color": "C"
+              },
+              "value": "C"
+            },
+            {
+              "when": {
+                "new_sash_interior_color": "INT-C"
+              },
+              "value": "C"
+            },
+            {
+              "when": {
+                "new_sash_interior_color": "INT-LIX-C"
+              },
+              "value": "C"
+            },
+            {
+              "when": {
+                "new_sash_interior_color": "CREA_RUSK"
+              },
+              "value": "B"
+            },
+            {
+              "when": {
+                "new_sash_interior_color": "B"
+              },
+              "value": "B"
+            },
+            {
+              "when": {
+                "new_sash_interior_color": "INT-B"
+              },
+              "value": "B"
+            },
+            {
+              "when": {
+                "new_sash_interior_color": "INT-LIX-B"
+              },
+              "value": "B"
+            },
+            {
+              "when": {
+                "new_sash_interior_color": "CREA_PALE"
+              },
+              "value": "P"
+            },
+            {
+              "when": {
+                "new_sash_interior_color": "P"
+              },
+              "value": "P"
+            },
+            {
+              "when": {
+                "new_sash_interior_color": "INT-P"
+              },
+              "value": "P"
+            },
+            {
+              "when": {
+                "new_sash_interior_color": "INT-LIX-P"
+              },
+              "value": "P"
+            },
+            {
+              "when": {
+                "new_sash_interior_color": "PRECIOUS_WHITE"
+              },
+              "value": "F"
+            },
+            {
+              "when": {
+                "new_sash_interior_color": "F"
+              },
+              "value": "F"
+            },
+            {
+              "when": {
+                "new_sash_interior_color": "INT-F"
+              },
+              "value": "F"
+            },
+            {
+              "when": {
+                "new_sash_interior_color": "INT-LIX-F"
+              },
+              "value": "F"
+            }
+          ],
+          "resolvedMessage": "本体内観色に連動しています。",
+          "pendingMessage": "サッシ本体の色を選択してください。",
+          "unavailableMessage": "本体色に対応するカバー部材の確認が必要です。"
+        }
+      ],
+      "evidenceIds": [
+        "APP-POLICY-V9"
+      ]
+    }
+  ],
   "evidence": [
     {
       "id": "ATT-TH-EV-001",
@@ -1206,6 +1808,35 @@
         "確認日": "2026-10-14",
         "確度": "HIGH",
         "根拠内容": "1aae676ab404e9110ec6bb5aab522c6c0dc2fdc856a0d7c734fd2561fc5dfe47"
+      }
+    },
+    {
+      "id": "APP-POLICY-V9",
+      "source_id": "APP-POLICY-V9",
+      "payload": {
+        "schema": "USER_SELECTION_POLICY_V1",
+        "revision": "REPLUS_GLOBAL_FLOW_V9_20261014",
+        "decision": "User requested both covers follow sash colors on 2026-10-14; implementation and QA subsequently authorized.",
+        "manufacturer_same_color_required": null,
+        "mapping_basis": "Existing official component color palettes, explicit product-specific value mappings. No equality based on code or label heuristics.",
+        "source_catalog": "SN1200",
+        "source_sha256": "b837ce209c8b55b2b66b412a4e3c2694a78fd5de823efc7b2b960688a5668098",
+        "scope": "LOCAL_CANDIDATE_ONLY",
+        "formal_adoption": false,
+        "flow_order": [
+          "context",
+          "opening",
+          "finish",
+          "screen",
+          "glazing",
+          "interior_finish",
+          "exterior_finish",
+          "native_options",
+          "options",
+          "part_detail",
+          "survey",
+          "size"
+        ]
       }
     }
   ],
@@ -4284,6 +4915,33 @@
       "evidenceIds": [
         "ATT-TH-EV-010"
       ]
+    },
+    {
+      "id": "nonnegative-survey_cover_top",
+      "field": "survey_cover_top",
+      "min": 0,
+      "outside": "BLOCK",
+      "evidenceIds": [
+        "APP-POLICY-V9"
+      ]
+    },
+    {
+      "id": "nonnegative-survey_cover_bottom",
+      "field": "survey_cover_bottom",
+      "min": 0,
+      "outside": "BLOCK",
+      "evidenceIds": [
+        "APP-POLICY-V9"
+      ]
+    },
+    {
+      "id": "nonnegative-survey_cover_side",
+      "field": "survey_cover_side",
+      "min": 0,
+      "outside": "BLOCK",
+      "evidenceIds": [
+        "APP-POLICY-V9"
+      ]
     }
   ],
   "linear_transforms": [
@@ -4376,6 +5034,26 @@
     {
       "sheet": "12A_ATT_TW比較",
       "reason": "NATIVE_PROSE_OR_COMPOUND_RULE_REQUIRES_MANUAL_REVIEW"
+    }
+  ],
+  "selection_migrations": [
+    {
+      "source": "options",
+      "match": "CONTAINS",
+      "value": "ATT-TH-OP-ANGLE-MITER",
+      "clearValue": true,
+      "assign": {
+        "interior_cover_type": "ATT-TH-OP-ANGLE-MITER"
+      }
+    },
+    {
+      "source": "options",
+      "match": "CONTAINS",
+      "value": "ATT-TH-OP-ANGLE-NOMITER",
+      "clearValue": true,
+      "assign": {
+        "interior_cover_type": "ATT-TH-OP-ANGLE-NOMITER"
+      }
     }
   ]
 }

@@ -33,9 +33,9 @@ export function createCandidateRuntimePreview(){
           const legacy=Boolean(version&&version!==entry.packageVersion);
           const reader=adapters.get(entry.id);
           const result=legacy?resolveMigratedCandidateSelection(reader,input,doc.selection_migrations):reader.uiResolver(input);
-          if(legacy&&Object.hasOwn(input,'glass')){
+          if(legacy&&doc.selection_migrations?.length){
             result.configurationMigration={from:version,to:entry.packageVersion,originalSelection:input};
-            result.manualWarnings.push('保存済みのガラス選択を項目の意味に沿って整理しました。ガラスの種類・詳細・ガス・スペーサーを確認してください。');
+            result.manualWarnings.push('保存済みの選択を現在の項目に整理しました。本体色・カバー仕様・ガラスを確認してください。');
           }
           return json(res,200,{...result,productId:entry.id,manufacturer:entry.manufacturer,series:entry.series,source:'RUNTIME_MASTER',status:'CANDIDATE_LOCAL_READY',fields:applyDeclaredWindowFlow(result.fields,entry)});
         }catch(error){return json(res,400,{code:error.code??'CANDIDATE_RESOLVE_FAILED',error:error.message});}

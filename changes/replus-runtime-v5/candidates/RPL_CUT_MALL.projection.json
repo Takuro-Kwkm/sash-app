@@ -1,19 +1,19 @@
 {
   "schema": "NATIVE_TABLE_PROJECTION_V1",
-  "candidate_revision": "REPLUS_GLASS_FLOW_V8_20261014",
+  "candidate_revision": "REPLUS_GLOBAL_FLOW_V9_20261014",
   "product": {
     "id": "CANDIDATE:RPL_CUT_MALL",
     "manufacturer": "LIXIL",
     "displayName": "リプラス 汎用カットモール",
     "source": {
       "id": "RPL_CUT_MALL",
-      "version": "REPLUS_GLASS_FLOW_V8_20261014"
+      "version": "REPLUS_GLOBAL_FLOW_V9_20261014"
     }
   },
   "source": {
     "path": "candidates/RPL_CUT_MALL.json",
     "component_id": "RPL_CUT_MALL",
-    "sha256": "874e773568046afed9709a3e451ad6a3a2f9372c26c1e4eee665f8b110f53331",
+    "sha256": "bf22de82bca25104a18c93c4fe9a833d7d4d88ec45850f53d51205917382793b",
     "baseline_sha256": "874fb588a399c30f90cd3d745d5479cd74ddf8e1cdb08357613ee272022f6270",
     "baseline_component_version": "v1.0"
   },
@@ -511,7 +511,7 @@
     },
     {
       "key": "cut_mall_color",
-      "displayLabel": "カットモール色",
+      "displayLabel": "化粧カバー色（外観色に連動）",
       "dataType": "ENUM",
       "displayOrder": 30,
       "choices": [
@@ -523,7 +523,7 @@
           ],
           "selector": {},
           "metadata": {
-            "manualCheck": true
+            "manualCheck": false
           }
         },
         {
@@ -534,7 +534,7 @@
           ],
           "selector": {},
           "metadata": {
-            "manualCheck": true
+            "manualCheck": false
           }
         },
         {
@@ -545,7 +545,7 @@
           ],
           "selector": {},
           "metadata": {
-            "manualCheck": true
+            "manualCheck": false
           }
         },
         {
@@ -556,7 +556,7 @@
           ],
           "selector": {},
           "metadata": {
-            "manualCheck": true
+            "manualCheck": false
           }
         },
         {
@@ -567,13 +567,15 @@
           ],
           "selector": {},
           "metadata": {
-            "manualCheck": true
+            "manualCheck": false
           }
         }
       ],
       "required": false,
       "autoSelectSingle": false,
-      "parentFields": [],
+      "parentFields": [
+        "new_sash_exterior_color"
+      ],
       "selector": {}
     },
     {
@@ -667,7 +669,7 @@
     },
     {
       "key": "interior_adjustment_angle_color",
-      "displayLabel": "内装調整アングル色",
+      "displayLabel": "室内カバー色（内観色に連動）",
       "dataType": "ENUM",
       "displayOrder": 50,
       "choices": [
@@ -679,7 +681,7 @@
           ],
           "selector": {},
           "metadata": {
-            "manualCheck": true
+            "manualCheck": false
           }
         },
         {
@@ -690,7 +692,7 @@
           ],
           "selector": {},
           "metadata": {
-            "manualCheck": true
+            "manualCheck": false
           }
         },
         {
@@ -701,7 +703,7 @@
           ],
           "selector": {},
           "metadata": {
-            "manualCheck": true
+            "manualCheck": false
           }
         },
         {
@@ -712,7 +714,7 @@
           ],
           "selector": {},
           "metadata": {
-            "manualCheck": true
+            "manualCheck": false
           }
         },
         {
@@ -723,7 +725,7 @@
           ],
           "selector": {},
           "metadata": {
-            "manualCheck": true
+            "manualCheck": false
           }
         },
         {
@@ -734,7 +736,7 @@
           ],
           "selector": {},
           "metadata": {
-            "manualCheck": true
+            "manualCheck": false
           }
         },
         {
@@ -745,7 +747,7 @@
           ],
           "selector": {},
           "metadata": {
-            "manualCheck": true
+            "manualCheck": false
           }
         },
         {
@@ -756,7 +758,7 @@
           ],
           "selector": {},
           "metadata": {
-            "manualCheck": true
+            "manualCheck": false
           }
         },
         {
@@ -767,13 +769,15 @@
           ],
           "selector": {},
           "metadata": {
-            "manualCheck": true
+            "manualCheck": false
           }
         }
       ],
       "required": false,
       "autoSelectSingle": false,
-      "parentFields": [],
+      "parentFields": [
+        "new_sash_interior_color"
+      ],
       "selector": {}
     },
     {
@@ -1073,7 +1077,376 @@
       "message": "施工可否・図形境界・ガラス構成・部材数量・価格・発注コードは積算確認が必要です。候補のため正式採用・自動注文はできません。"
     }
   ],
-  "ruleSets": [],
+  "ruleSets": [
+    {
+      "id": "cover-color-links",
+      "type": "SELECTION_LINKS",
+      "status": "ACTIVE",
+      "payload": [
+        {
+          "targetField": "cut_mall_color",
+          "parents": [
+            "new_sash_exterior_color"
+          ],
+          "cases": [
+            {
+              "when": {
+                "new_sash_exterior_color": "BLACK"
+              },
+              "value": "T"
+            },
+            {
+              "when": {
+                "new_sash_exterior_color": "T"
+              },
+              "value": "T"
+            },
+            {
+              "when": {
+                "new_sash_exterior_color": "EXT-T"
+              },
+              "value": "T"
+            },
+            {
+              "when": {
+                "new_sash_exterior_color": "EXT-LIX-T"
+              },
+              "value": "T"
+            },
+            {
+              "when": {
+                "new_sash_exterior_color": "AUTUMN_BROWN"
+              },
+              "value": "G"
+            },
+            {
+              "when": {
+                "new_sash_exterior_color": "G"
+              },
+              "value": "G"
+            },
+            {
+              "when": {
+                "new_sash_exterior_color": "EXT-G"
+              },
+              "value": "G"
+            },
+            {
+              "when": {
+                "new_sash_exterior_color": "EXT-LIX-G"
+              },
+              "value": "G"
+            },
+            {
+              "when": {
+                "new_sash_exterior_color": "SHINE_GRAY"
+              },
+              "value": "K"
+            },
+            {
+              "when": {
+                "new_sash_exterior_color": "K"
+              },
+              "value": "K"
+            },
+            {
+              "when": {
+                "new_sash_exterior_color": "EXT-K"
+              },
+              "value": "K"
+            },
+            {
+              "when": {
+                "new_sash_exterior_color": "EXT-LIX-K"
+              },
+              "value": "K"
+            },
+            {
+              "when": {
+                "new_sash_exterior_color": "NATURAL_SILVER"
+              },
+              "value": "D"
+            },
+            {
+              "when": {
+                "new_sash_exterior_color": "D"
+              },
+              "value": "D"
+            },
+            {
+              "when": {
+                "new_sash_exterior_color": "EXT-D"
+              },
+              "value": "D"
+            },
+            {
+              "when": {
+                "new_sash_exterior_color": "EXT-LIX-D"
+              },
+              "value": "D"
+            },
+            {
+              "when": {
+                "new_sash_exterior_color": "WHITE"
+              },
+              "value": "W"
+            },
+            {
+              "when": {
+                "new_sash_exterior_color": "W"
+              },
+              "value": "W"
+            },
+            {
+              "when": {
+                "new_sash_exterior_color": "EXT-W"
+              },
+              "value": "W"
+            },
+            {
+              "when": {
+                "new_sash_exterior_color": "EXT-LIX-W"
+              },
+              "value": "W"
+            }
+          ],
+          "resolvedMessage": "本体外観色に連動しています。",
+          "pendingMessage": "サッシ本体の色を選択してください。",
+          "unavailableMessage": "本体色に対応するカバー部材の確認が必要です。"
+        },
+        {
+          "targetField": "interior_adjustment_angle_color",
+          "parents": [
+            "new_sash_interior_color"
+          ],
+          "cases": [
+            {
+              "when": {
+                "new_sash_interior_color": "BLACK"
+              },
+              "value": "T"
+            },
+            {
+              "when": {
+                "new_sash_interior_color": "M"
+              },
+              "value": "T"
+            },
+            {
+              "when": {
+                "new_sash_interior_color": "INT-M"
+              },
+              "value": "T"
+            },
+            {
+              "when": {
+                "new_sash_interior_color": "INT-LIX-M"
+              },
+              "value": "T"
+            },
+            {
+              "when": {
+                "new_sash_interior_color": "AUTUMN_BROWN"
+              },
+              "value": "G"
+            },
+            {
+              "when": {
+                "new_sash_interior_color": "G"
+              },
+              "value": "G"
+            },
+            {
+              "when": {
+                "new_sash_interior_color": "INT-G"
+              },
+              "value": "G"
+            },
+            {
+              "when": {
+                "new_sash_interior_color": "INT-LIX-G"
+              },
+              "value": "G"
+            },
+            {
+              "when": {
+                "new_sash_interior_color": "SHINE_GRAY"
+              },
+              "value": "K"
+            },
+            {
+              "when": {
+                "new_sash_interior_color": "K"
+              },
+              "value": "K"
+            },
+            {
+              "when": {
+                "new_sash_interior_color": "INT-K"
+              },
+              "value": "K"
+            },
+            {
+              "when": {
+                "new_sash_interior_color": "INT-LIX-K"
+              },
+              "value": "K"
+            },
+            {
+              "when": {
+                "new_sash_interior_color": "NATURAL_SILVER"
+              },
+              "value": "D"
+            },
+            {
+              "when": {
+                "new_sash_interior_color": "D"
+              },
+              "value": "D"
+            },
+            {
+              "when": {
+                "new_sash_interior_color": "INT-D"
+              },
+              "value": "D"
+            },
+            {
+              "when": {
+                "new_sash_interior_color": "INT-LIX-D"
+              },
+              "value": "D"
+            },
+            {
+              "when": {
+                "new_sash_interior_color": "WHITE"
+              },
+              "value": "W"
+            },
+            {
+              "when": {
+                "new_sash_interior_color": "W"
+              },
+              "value": "W"
+            },
+            {
+              "when": {
+                "new_sash_interior_color": "INT-W"
+              },
+              "value": "W"
+            },
+            {
+              "when": {
+                "new_sash_interior_color": "INT-LIX-W"
+              },
+              "value": "W"
+            },
+            {
+              "when": {
+                "new_sash_interior_color": "CREA_MOCHA"
+              },
+              "value": "C"
+            },
+            {
+              "when": {
+                "new_sash_interior_color": "C"
+              },
+              "value": "C"
+            },
+            {
+              "when": {
+                "new_sash_interior_color": "INT-C"
+              },
+              "value": "C"
+            },
+            {
+              "when": {
+                "new_sash_interior_color": "INT-LIX-C"
+              },
+              "value": "C"
+            },
+            {
+              "when": {
+                "new_sash_interior_color": "CREA_RUSK"
+              },
+              "value": "B"
+            },
+            {
+              "when": {
+                "new_sash_interior_color": "B"
+              },
+              "value": "B"
+            },
+            {
+              "when": {
+                "new_sash_interior_color": "INT-B"
+              },
+              "value": "B"
+            },
+            {
+              "when": {
+                "new_sash_interior_color": "INT-LIX-B"
+              },
+              "value": "B"
+            },
+            {
+              "when": {
+                "new_sash_interior_color": "CREA_PALE"
+              },
+              "value": "P"
+            },
+            {
+              "when": {
+                "new_sash_interior_color": "P"
+              },
+              "value": "P"
+            },
+            {
+              "when": {
+                "new_sash_interior_color": "INT-P"
+              },
+              "value": "P"
+            },
+            {
+              "when": {
+                "new_sash_interior_color": "INT-LIX-P"
+              },
+              "value": "P"
+            },
+            {
+              "when": {
+                "new_sash_interior_color": "PRECIOUS_WHITE"
+              },
+              "value": "F"
+            },
+            {
+              "when": {
+                "new_sash_interior_color": "F"
+              },
+              "value": "F"
+            },
+            {
+              "when": {
+                "new_sash_interior_color": "INT-F"
+              },
+              "value": "F"
+            },
+            {
+              "when": {
+                "new_sash_interior_color": "INT-LIX-F"
+              },
+              "value": "F"
+            }
+          ],
+          "resolvedMessage": "本体内観色に連動しています。",
+          "pendingMessage": "サッシ本体の色を選択してください。",
+          "unavailableMessage": "本体色に対応するカバー部材の確認が必要です。"
+        }
+      ],
+      "evidenceIds": [
+        "APP-POLICY-V9"
+      ]
+    }
+  ],
   "evidence": [
     {
       "id": "CM-EV-001",
@@ -1403,6 +1776,35 @@
         "checked_at": "2026-10-14",
         "confidence": "HIGH",
         "summary": "外付→外付新設、雨戸は鏡板付戸袋のみ、取付幅W+c。自動施工可にしない"
+      }
+    },
+    {
+      "id": "APP-POLICY-V9",
+      "source_id": "APP-POLICY-V9",
+      "payload": {
+        "schema": "USER_SELECTION_POLICY_V1",
+        "revision": "REPLUS_GLOBAL_FLOW_V9_20261014",
+        "decision": "User requested both covers follow sash colors on 2026-10-14; implementation and QA subsequently authorized.",
+        "manufacturer_same_color_required": null,
+        "mapping_basis": "Existing official component color palettes, explicit product-specific value mappings. No equality based on code or label heuristics.",
+        "source_catalog": "SN1200",
+        "source_sha256": "b837ce209c8b55b2b66b412a4e3c2694a78fd5de823efc7b2b960688a5668098",
+        "scope": "LOCAL_CANDIDATE_ONLY",
+        "formal_adoption": false,
+        "flow_order": [
+          "context",
+          "opening",
+          "finish",
+          "screen",
+          "glazing",
+          "interior_finish",
+          "exterior_finish",
+          "native_options",
+          "options",
+          "part_detail",
+          "survey",
+          "size"
+        ]
       }
     }
   ],

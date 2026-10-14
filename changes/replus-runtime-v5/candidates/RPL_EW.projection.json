@@ -1,19 +1,19 @@
 {
   "schema": "NATIVE_TABLE_PROJECTION_V1",
-  "candidate_revision": "REPLUS_GLASS_FLOW_V8_20261014",
+  "candidate_revision": "REPLUS_GLOBAL_FLOW_V9_20261014",
   "product": {
     "id": "CANDIDATE:RPL_EW",
     "manufacturer": "LIXIL",
     "displayName": "リプラス 居室仕様 EWタイプ",
     "source": {
       "id": "RPL_EW",
-      "version": "REPLUS_GLASS_FLOW_V8_20261014"
+      "version": "REPLUS_GLOBAL_FLOW_V9_20261014"
     }
   },
   "source": {
     "path": "candidates/RPL_EW.json",
     "component_id": "RPL_EW",
-    "sha256": "1feae3d5a1fbc2f658829ee7b195ca472febb91ae0ad309ed450cca783d58747",
+    "sha256": "808833da35fe0fddcb2ecaae3092d30fae24ba62f87a6d268f878f197a17b575",
     "baseline_sha256": "add0ed3eaafc45cca0db683dbeb0a54bc408ab1a4270c109905c0d84d55df473",
     "baseline_component_version": "v1.0"
   },
@@ -146,10 +146,12 @@
           }
         }
       ],
-      "required": true,
+      "required": false,
       "autoSelectSingle": false,
       "parentFields": [
-        "window_type"
+        "window_type",
+        "custom_width",
+        "custom_height"
       ],
       "selector": {
         "window_type": {
@@ -157,7 +159,8 @@
             "RPL_EW_SLD"
           ]
         }
-      }
+      },
+      "internal": true
     },
     {
       "key": "spec_sash_configuration",
@@ -454,7 +457,7 @@
     },
     {
       "key": "exterior_cover_color",
-      "displayLabel": "化粧カバー外観色",
+      "displayLabel": "化粧カバー色（外観色に連動）",
       "dataType": "ENUM",
       "displayOrder": 130,
       "choices": [
@@ -466,7 +469,7 @@
           ],
           "selector": {},
           "metadata": {
-            "manualCheck": true
+            "manualCheck": false
           }
         },
         {
@@ -477,7 +480,7 @@
           ],
           "selector": {},
           "metadata": {
-            "manualCheck": true
+            "manualCheck": false
           }
         },
         {
@@ -488,7 +491,7 @@
           ],
           "selector": {},
           "metadata": {
-            "manualCheck": true
+            "manualCheck": false
           }
         },
         {
@@ -499,13 +502,15 @@
           ],
           "selector": {},
           "metadata": {
-            "manualCheck": true
+            "manualCheck": false
           }
         }
       ],
       "required": false,
       "autoSelectSingle": false,
-      "parentFields": [],
+      "parentFields": [
+        "sash_exterior_color"
+      ],
       "selector": {}
     },
     {
@@ -522,18 +527,18 @@
           ],
           "selector": {},
           "metadata": {
-            "manualCheck": true
+            "manualCheck": false
           }
         }
       ],
       "required": false,
-      "autoSelectSingle": false,
+      "autoSelectSingle": true,
       "parentFields": [],
       "selector": {}
     },
     {
       "key": "interior_resin_cover_color",
-      "displayLabel": "内観樹脂カバー色",
+      "displayLabel": "室内カバー色（内観色に連動）",
       "dataType": "ENUM",
       "displayOrder": 150,
       "choices": [
@@ -545,13 +550,15 @@
           ],
           "selector": {},
           "metadata": {
-            "manualCheck": true
+            "manualCheck": false
           }
         }
       ],
       "required": false,
       "autoSelectSingle": false,
-      "parentFields": [],
+      "parentFields": [
+        "sash_interior_color"
+      ],
       "selector": {}
     },
     {
@@ -649,17 +656,6 @@
           "displayLabel": "既設上枠ベース材",
           "evidenceIds": [
             "EW-EV-005,011"
-          ],
-          "selector": {},
-          "metadata": {
-            "manualCheck": true
-          }
-        },
-        {
-          "value": "EW-OP-INTERIOR-RESIN-COVER",
-          "displayLabel": "室内樹脂カバー",
-          "evidenceIds": [
-            "EW-EV-005,009,011"
           ],
           "selector": {},
           "metadata": {
@@ -1352,6 +1348,288 @@
           "displayOrder": 4
         }
       ]
+    },
+    {
+      "key": "interior_cover_type",
+      "displayLabel": "室内側の仕上げ仕様",
+      "dataType": "ENUM",
+      "displayOrder": 900,
+      "choices": [
+        {
+          "value": "EW-OP-INTERIOR-RESIN-COVER",
+          "displayLabel": "室内樹脂カバー",
+          "evidenceIds": [
+            "EW-EV-005,009,011"
+          ],
+          "selector": {},
+          "metadata": {
+            "manualCheck": true
+          }
+        }
+      ],
+      "required": false,
+      "autoSelectSingle": false,
+      "parentFields": [],
+      "selector": {}
+    },
+    {
+      "key": "exterior_cover_type",
+      "displayLabel": "化粧カバーの大きさ・組合せ",
+      "dataType": "ENUM",
+      "displayOrder": 900,
+      "choices": [
+        {
+          "value": "EW-COV-LARGE",
+          "displayLabel": "大",
+          "selector": {
+            "all": [
+              {
+                "any": [
+                  {
+                    "survey_cover_top": {
+                      "$exists": false
+                    }
+                  },
+                  {
+                    "survey_cover_top": {
+                      "$lte": 84.5
+                    }
+                  }
+                ]
+              },
+              {
+                "any": [
+                  {
+                    "survey_cover_bottom": {
+                      "$exists": false
+                    }
+                  },
+                  {
+                    "survey_cover_bottom": {
+                      "$lte": 98.5
+                    }
+                  }
+                ]
+              },
+              {
+                "any": [
+                  {
+                    "survey_cover_side": {
+                      "$exists": false
+                    }
+                  },
+                  {
+                    "survey_cover_side": {
+                      "$lte": 82.5
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "evidenceIds": [
+            "EW-EV-011"
+          ],
+          "metadata": {
+            "manualCheck": false
+          }
+        },
+        {
+          "value": "EW-COV-MID",
+          "displayLabel": "中",
+          "selector": {
+            "all": [
+              {
+                "any": [
+                  {
+                    "survey_cover_top": {
+                      "$exists": false
+                    }
+                  },
+                  {
+                    "survey_cover_top": {
+                      "$lte": 49.5
+                    }
+                  }
+                ]
+              },
+              {
+                "any": [
+                  {
+                    "survey_cover_bottom": {
+                      "$exists": false
+                    }
+                  },
+                  {
+                    "survey_cover_bottom": {
+                      "$lte": 63.5
+                    }
+                  }
+                ]
+              },
+              {
+                "any": [
+                  {
+                    "survey_cover_side": {
+                      "$exists": false
+                    }
+                  },
+                  {
+                    "survey_cover_side": {
+                      "$lte": 32.5
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "evidenceIds": [
+            "EW-EV-011"
+          ],
+          "metadata": {
+            "manualCheck": false
+          }
+        },
+        {
+          "value": "EW-COV-SMALL",
+          "displayLabel": "小",
+          "selector": {
+            "all": [
+              {
+                "any": [
+                  {
+                    "survey_cover_top": {
+                      "$exists": false
+                    }
+                  },
+                  {
+                    "survey_cover_top": {
+                      "$lte": 24.5
+                    }
+                  }
+                ]
+              },
+              {
+                "any": [
+                  {
+                    "survey_cover_bottom": {
+                      "$exists": false
+                    }
+                  },
+                  {
+                    "survey_cover_bottom": {
+                      "$lte": 38.5
+                    }
+                  }
+                ]
+              },
+              {
+                "any": [
+                  {
+                    "survey_cover_side": {
+                      "$exists": false
+                    }
+                  },
+                  {
+                    "survey_cover_side": {
+                      "$lte": 7.5
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "evidenceIds": [
+            "EW-EV-011"
+          ],
+          "metadata": {
+            "manualCheck": false
+          }
+        },
+        {
+          "value": "EW-COV-XS",
+          "displayLabel": "特小",
+          "selector": {
+            "all": [
+              {
+                "any": [
+                  {
+                    "survey_cover_top": {
+                      "$exists": false
+                    }
+                  },
+                  {
+                    "survey_cover_top": {
+                      "$lte": 24.5
+                    }
+                  }
+                ]
+              },
+              {
+                "any": [
+                  {
+                    "survey_cover_bottom": {
+                      "$exists": false
+                    }
+                  },
+                  {
+                    "survey_cover_bottom": {
+                      "$lte": 38.5
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "evidenceIds": [
+            "EW-EV-011"
+          ],
+          "metadata": {
+            "manualCheck": true
+          }
+        }
+      ],
+      "required": true,
+      "autoSelectSingle": false,
+      "parentFields": [
+        "survey_cover_top",
+        "survey_cover_bottom",
+        "survey_cover_side"
+      ],
+      "selector": {}
+    },
+    {
+      "key": "survey_cover_top",
+      "displayLabel": "既設上枠の見付（mm）",
+      "dataType": "NUMBER",
+      "displayOrder": 900,
+      "choices": [],
+      "required": true,
+      "autoSelectSingle": false,
+      "parentFields": [],
+      "selector": {}
+    },
+    {
+      "key": "survey_cover_bottom",
+      "displayLabel": "既設下枠の見付（mm）",
+      "dataType": "NUMBER",
+      "displayOrder": 900,
+      "choices": [],
+      "required": true,
+      "autoSelectSingle": false,
+      "parentFields": [],
+      "selector": {}
+    },
+    {
+      "key": "survey_cover_side",
+      "displayLabel": "既設縦枠の見付（mm）",
+      "dataType": "NUMBER",
+      "displayOrder": 900,
+      "choices": [],
+      "required": true,
+      "autoSelectSingle": false,
+      "parentFields": [],
+      "selector": {}
     }
   ],
   "dependencies": [
@@ -1375,7 +1653,7 @@
           "$contains": "EW-OP-CASING"
         }
       },
-      "targetField": "options",
+      "targetField": "interior_cover_type",
       "action": "deny_candidate",
       "targetValue": "EW-OP-INTERIOR-RESIN-COVER"
     },
@@ -1845,6 +2123,241 @@
           }
         }
       ]
+    },
+    {
+      "id": "cover-color-links",
+      "type": "SELECTION_LINKS",
+      "status": "ACTIVE",
+      "payload": [
+        {
+          "targetField": "exterior_cover_color",
+          "parents": [
+            "sash_exterior_color"
+          ],
+          "cases": [
+            {
+              "when": {
+                "sash_exterior_color": "T"
+              },
+              "value": "T"
+            },
+            {
+              "when": {
+                "sash_exterior_color": "G"
+              },
+              "value": "G"
+            },
+            {
+              "when": {
+                "sash_exterior_color": "C"
+              },
+              "value": "C"
+            },
+            {
+              "when": {
+                "sash_exterior_color": "F"
+              },
+              "value": "F"
+            }
+          ],
+          "resolvedMessage": "本体外観色に連動しています。",
+          "pendingMessage": "サッシ本体の色を選択してください。",
+          "unavailableMessage": "本体色に対応するカバー部材の確認が必要です。"
+        },
+        {
+          "targetField": "interior_resin_cover_color",
+          "parents": [
+            "sash_interior_color"
+          ],
+          "cases": [
+            {
+              "when": {
+                "sash_interior_color": "F"
+              },
+              "value": "F"
+            }
+          ],
+          "resolvedMessage": "本体内観色に連動しています。",
+          "pendingMessage": "サッシ本体の色を選択してください。",
+          "unavailableMessage": "本体色に対応するカバー部材の確認が必要です。"
+        }
+      ],
+      "evidenceIds": [
+        "APP-POLICY-V9"
+      ]
+    },
+    {
+      "id": "internal-height-category",
+      "type": "INTERNAL_CLASSIFICATIONS",
+      "status": "ACTIVE",
+      "payload": [
+        {
+          "targetField": "spec_height_category",
+          "widthField": "custom_width",
+          "heightField": "custom_height",
+          "applicability": {
+            "window_type": {
+              "$in": [
+                "RPL_EW_SLD"
+              ]
+            }
+          },
+          "cases": [
+            {
+              "id": "EW-SZ-MAD-PG",
+              "when": {
+                "window_type": "RPL_EW_SLD",
+                "frame_type": "RPL_EW_FRAME",
+                "panel_configuration": {
+                  "$in": [
+                    "2枚建"
+                  ]
+                }
+              },
+              "bounds": {
+                "minW": 666,
+                "maxW": 2636,
+                "minH": 526,
+                "maxH": 1596
+              },
+              "value": "EW-SS-MAD"
+            },
+            {
+              "id": "EW-SZ-TER-PG",
+              "when": {
+                "window_type": "RPL_EW_SLD",
+                "frame_type": "RPL_EW_FRAME",
+                "panel_configuration": {
+                  "$in": [
+                    "2枚建"
+                  ]
+                }
+              },
+              "bounds": {
+                "minW": 909,
+                "maxW": 2636,
+                "minH": 1597,
+                "maxH": 2296
+              },
+              "value": "EW-SS-TER"
+            },
+            {
+              "id": "EW-SZ-MAD-TG",
+              "when": {
+                "window_type": "RPL_EW_SLD",
+                "frame_type": "RPL_EW_FRAME",
+                "panel_configuration": {
+                  "$in": [
+                    "2枚建"
+                  ]
+                }
+              },
+              "bounds": {
+                "minW": 666,
+                "maxW": 2636,
+                "minH": 526,
+                "maxH": 1596
+              },
+              "value": "EW-SS-MAD"
+            },
+            {
+              "id": "EW-SZ-TER-TG",
+              "when": {
+                "window_type": "RPL_EW_SLD",
+                "frame_type": "RPL_EW_FRAME",
+                "panel_configuration": {
+                  "$in": [
+                    "2枚建"
+                  ]
+                }
+              },
+              "bounds": {
+                "minW": 909,
+                "maxW": 2636,
+                "minH": 1597,
+                "maxH": 2296
+              },
+              "value": "EW-SS-TER"
+            },
+            {
+              "id": "EW-SZ-MAD-PGS",
+              "when": {
+                "window_type": "RPL_EW_SLD",
+                "frame_type": "RPL_EW_FRAME",
+                "panel_configuration": {
+                  "$in": [
+                    "2枚建"
+                  ]
+                }
+              },
+              "bounds": {
+                "minW": 666,
+                "maxW": 2636,
+                "minH": 526,
+                "maxH": 1596
+              },
+              "value": "EW-SS-MAD"
+            },
+            {
+              "id": "EW-SZ-TER-PGS",
+              "when": {
+                "window_type": "RPL_EW_SLD",
+                "frame_type": "RPL_EW_FRAME",
+                "panel_configuration": {
+                  "$in": [
+                    "2枚建"
+                  ]
+                }
+              },
+              "bounds": {
+                "minW": 909,
+                "maxW": 2636,
+                "minH": 1597,
+                "maxH": 2296
+              },
+              "value": "EW-SS-TER"
+            },
+            {
+              "id": "EW-SZ-MAD-TGS",
+              "when": {
+                "window_type": "RPL_EW_SLD",
+                "frame_type": "RPL_EW_FRAME",
+                "panel_configuration": {
+                  "$in": [
+                    "2枚建"
+                  ]
+                }
+              },
+              "bounds": {
+                "minW": 666,
+                "maxW": 2636,
+                "minH": 526,
+                "maxH": 1596
+              },
+              "value": "EW-SS-MAD"
+            },
+            {
+              "id": "EW-SZ-TER-TGS",
+              "when": {
+                "window_type": "RPL_EW_SLD",
+                "frame_type": "RPL_EW_FRAME",
+                "panel_configuration": {
+                  "$in": [
+                    "2枚建"
+                  ]
+                }
+              },
+              "bounds": {
+                "minW": 909,
+                "maxW": 2636,
+                "minH": 1597,
+                "maxH": 2296
+              },
+              "value": "EW-SS-TER"
+            }
+          ]
+        }
+      ]
     }
   ],
   "evidence": [
@@ -2117,10 +2630,67 @@
         "sha256": "b837ce209c8b55b2b66b412a4e3c2694a78fd5de823efc7b2b960688a5668098",
         "根拠内容": "公式ガラス体系図から候補UI投影を補完。組合せ・寸法は見積確認。価格/BOM/SetCode未確定。"
       }
+    },
+    {
+      "id": "APP-POLICY-V9",
+      "source_id": "APP-POLICY-V9",
+      "payload": {
+        "schema": "USER_SELECTION_POLICY_V1",
+        "revision": "REPLUS_GLOBAL_FLOW_V9_20261014",
+        "decision": "User requested both covers follow sash colors on 2026-10-14; implementation and QA subsequently authorized.",
+        "manufacturer_same_color_required": null,
+        "mapping_basis": "Existing official component color palettes, explicit product-specific value mappings. No equality based on code or label heuristics.",
+        "source_catalog": "SN1200",
+        "source_sha256": "b837ce209c8b55b2b66b412a4e3c2694a78fd5de823efc7b2b960688a5668098",
+        "scope": "LOCAL_CANDIDATE_ONLY",
+        "formal_adoption": false,
+        "flow_order": [
+          "context",
+          "opening",
+          "finish",
+          "screen",
+          "glazing",
+          "interior_finish",
+          "exterior_finish",
+          "native_options",
+          "options",
+          "part_detail",
+          "survey",
+          "size"
+        ]
+      }
     }
   ],
   "composition": null,
-  "numeric_constraints": [],
+  "numeric_constraints": [
+    {
+      "id": "nonnegative-survey_cover_top",
+      "field": "survey_cover_top",
+      "min": 0,
+      "outside": "BLOCK",
+      "evidenceIds": [
+        "APP-POLICY-V9"
+      ]
+    },
+    {
+      "id": "nonnegative-survey_cover_bottom",
+      "field": "survey_cover_bottom",
+      "min": 0,
+      "outside": "BLOCK",
+      "evidenceIds": [
+        "APP-POLICY-V9"
+      ]
+    },
+    {
+      "id": "nonnegative-survey_cover_side",
+      "field": "survey_cover_side",
+      "min": 0,
+      "outside": "BLOCK",
+      "evidenceIds": [
+        "APP-POLICY-V9"
+      ]
+    }
+  ],
   "linear_transforms": [],
   "unsupported_rules": [
     {
@@ -2264,6 +2834,15 @@
         "glass_spacer": "EW-SPACER-RESIN"
       },
       "clearSource": true
+    },
+    {
+      "source": "options",
+      "match": "CONTAINS",
+      "value": "EW-OP-INTERIOR-RESIN-COVER",
+      "clearValue": true,
+      "assign": {
+        "interior_cover_type": "EW-OP-INTERIOR-RESIN-COVER"
+      }
     }
   ]
 }

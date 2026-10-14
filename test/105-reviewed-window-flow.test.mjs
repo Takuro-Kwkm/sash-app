@@ -35,7 +35,7 @@ test('cycles, undeclared parents and canonical semantic drift are refused',()=>{
 test('installation labels are distinct and survey dimensions are not production dimensions',async()=>{
  const room=await ui('RPL_ROOM');assert.equal(field(room,'installation_room').displayLabel,'設置場所');assert.equal(field(room,'work_space').displayLabel,'新設枠の振出し条件');
  const attach=await ui('RPL_ATT_TH');assert.equal(field(attach,'survey_w').presentationGroup.id,'survey');assert.match(field(attach,'survey_w').fieldMeaning,/製品仕上がり寸法とは区別/);
- const ew=await ui('RPL_EW',{window_type:'RPL_EW_SLD'});assert.equal(field(ew,'spec_crescent_position').displayLabel,'クレセント位置');assert.equal(field(ew,'interior_resin_cover_color').displayLabel,'内観樹脂カバー色');
+ const ew=await ui('RPL_EW',{window_type:'RPL_EW_SLD'});assert.equal(field(ew,'spec_crescent_position').displayLabel,'クレセント位置');assert.equal(field(ew,'interior_resin_cover_color').displayLabel,'室内カバー色（内観色に連動）');
 });
 test('selected part precedes its color, and removing the part clears its color',async()=>{
  for(const component of ['RPL_ROOM','RPL_TW','RPL_EW','RPL_ATT_TW','RPL_ATT_TH']){
@@ -76,7 +76,7 @@ test('fixed native reference standard and custom paths preserve semantic order',
    for(const mode of [null,'STANDARD','CUSTOM']){
     if(mode)input.new_sash_size_mode=mode;
     const r=await ui(doc.baseline.component_id,input),p=positions(r);
-    for(const f of r.fields)for(const parent of f.parentFields??[])if(p.has(parent))assert.ok(p.get(parent)<p.get(f.key),binding.window_id+':'+parent+'>'+f.key);
+    for(const f of r.fields)for(const parent of f.parentFields??[])if(p.has(parent)&&!row.uiFlowContract.fields[f.key]?.deferredEvaluationParents?.includes(parent))assert.ok(p.get(parent)<p.get(f.key),binding.window_id+':'+parent+'>'+f.key);
     if(mode==='CUSTOM'&&field(r,'new_sash_custom_width'))assert.equal(field(r,'new_sash_custom_width').presentationGroup.id,'size');
     assert.equal(r.orderReady,false);
    }
@@ -91,10 +91,10 @@ test('legacy glazing migration is explicit, preserves matching details and canno
  assert.deepEqual(migrateCandidateSelection({glass:'UNKNOWN'},module.selection_migrations),{glass:'UNKNOWN'});
 });
 test('sash choices follow the declared panel and height prerequisites',async()=>{
- let r=await ui('RPL_TW',{window_type:'RPL_TW_SLD',spec_panel_configuration:'TW-SS-PANEL-2',spec_height_category:'TW-SS-TER',spec_sash_configuration:'TW-SS-WASHI'});assert.equal(r.selection.spec_sash_configuration,'TW-SS-WASHI');
+ let r=await ui('RPL_TW',{window_type:'RPL_TW_SLD',spec_panel_configuration:'TW-SS-PANEL-2',frame_type:'RPL_TW_FRAME',size_mode:'CUSTOM',custom_width:1000,custom_height:1800,spec_sash_configuration:'TW-SS-WASHI'});assert.equal(r.selection.spec_sash_configuration,'TW-SS-WASHI');
  r=await ui('RPL_TW',{...r.selection,spec_panel_configuration:'TW-SS-PANEL-4'});assert.equal(r.selection.spec_sash_configuration,undefined);assert.ok(!field(r,'spec_sash_configuration').values.some(v=>v.value==='TW-SS-WASHI'));
- r=await ui('RPL_TW',{...r.selection,spec_height_category:'TW-SS-MAD',spec_sash_configuration:'TW-SS-HANDLE'});assert.deepEqual(field(r,'spec_sash_configuration').values.map(v=>v.value),['TW-SS-TG']);assert.equal(r.selection.spec_sash_configuration,undefined);
- const room=await ui('RPL_ROOM',{window_type:'RPL_ROOM_SLD',spec_height_category:'SS-SLD-MAD',spec_panel_configuration:'SS-SLD-PANEL-4'});assert.deepEqual(field(room,'spec_sash_configuration').values.map(v=>v.value),['SS-SLD-PG']);
+ r=await ui('RPL_TW',{...r.selection,custom_width:2500,custom_height:1200,spec_sash_configuration:'TW-SS-HANDLE'});assert.deepEqual(field(r,'spec_sash_configuration').values.map(v=>v.value),['TW-SS-TG']);assert.equal(r.selection.spec_sash_configuration,undefined);
+ const room=await ui('RPL_ROOM',{window_type:'RPL_ROOM_SLD',frame_type:'RPL_STD',size_mode:'CUSTOM',custom_width:2000,custom_height:1000,spec_panel_configuration:'SS-SLD-PANEL-4'});assert.deepEqual(field(room,'spec_sash_configuration').values.map(v=>v.value),['SS-SLD-PG']);
 });
 test('bathroom mode precedes opening pattern; a mode change clears the pattern',async()=>{
  let r=await ui('RPL_BATH',{bathroom_remodel_mode:'SYSTEM_BATH_SIMULTANEOUS',bathroom_opening_pattern:'FULL95'}),p=positions(r);assert.ok(p.get('bathroom_remodel_mode')<p.get('bathroom_opening_pattern'));assert.equal(r.selection.bathroom_opening_pattern,'FULL95');

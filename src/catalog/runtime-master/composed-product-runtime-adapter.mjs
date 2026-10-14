@@ -1,12 +1,15 @@
 import {adaptProductModuleRuntimeV1} from './product-module-runtime-adapter.mjs';
+import {applyDeclaredSelectionLinks} from './declared-selection-policy.mjs';
 
 const has=value=>value!==undefined&&value!==null&&value!=='';
 const own=(object,key)=>Object.prototype.hasOwnProperty.call(object,key);
 export function migrateCandidateSelection(input,migrations=[]){
   const selection={...input};
   for(const migration of migrations){
-    if(input?.[migration.source]!==migration.value)continue;
-    if(migration.clearSource)delete selection[migration.source];
+    const match = migration.match === 'CONTAINS' ? Array.isArray(input?.[migration.source]) && input[migration.source].includes(migration.value) : input?.[migration.source]===migration.value;
+    if(!match)continue;
+    if(migration.clearValue)selection[migration.source]=selection[migration.source].filter(value=>value!==migration.value);
+    else if(migration.clearSource)delete selection[migration.source];
     for(const [key,value] of Object.entries(migration.assign))if(!own(selection,key))selection[key]=value;
   }
   return selection;
@@ -86,6 +89,8 @@ export async function adaptComposedProductRuntime(document,entry,loadReference){
         }
       }
     }
+    result.manualWarnings=warnings;
+    applyDeclaredSelectionLinks(result, document.product_module);
     result.clearedFields=Object.keys(input??{}).filter(key=>!own(result.selection,key));
     result.manualWarnings=[...new Set(warnings)];result.derivedMeasurements=transforms;
     result.validation.errors=errors;

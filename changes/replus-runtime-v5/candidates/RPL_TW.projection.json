@@ -1,19 +1,19 @@
 {
   "schema": "NATIVE_TABLE_PROJECTION_V1",
-  "candidate_revision": "REPLUS_GLASS_FLOW_V8_20261014",
+  "candidate_revision": "REPLUS_GLOBAL_FLOW_V9_20261014",
   "product": {
     "id": "CANDIDATE:RPL_TW",
     "manufacturer": "LIXIL",
     "displayName": "リプラス 居室仕様 TWタイプ",
     "source": {
       "id": "RPL_TW",
-      "version": "REPLUS_GLASS_FLOW_V8_20261014"
+      "version": "REPLUS_GLOBAL_FLOW_V9_20261014"
     }
   },
   "source": {
     "path": "candidates/RPL_TW.json",
     "component_id": "RPL_TW",
-    "sha256": "1dccfc6c4e8713b552dd29b8149fea4a630801bcb2772b5b21b0c00dfd8f358a",
+    "sha256": "a34c1a2428079dac864356ae67c89992e45ea7187a2e3cf0476fefa68cbb99b8",
     "baseline_sha256": "5700bd83280a7d20e233116a22ffc8137a274412529513052bd303b7a0634e74",
     "baseline_component_version": "v1.0"
   },
@@ -160,10 +160,12 @@
           }
         }
       ],
-      "required": true,
+      "required": false,
       "autoSelectSingle": false,
       "parentFields": [
-        "window_type"
+        "window_type",
+        "custom_width",
+        "custom_height"
       ],
       "selector": {
         "window_type": {
@@ -171,7 +173,8 @@
             "RPL_TW_SLD"
           ]
         }
-      }
+      },
+      "internal": true
     },
     {
       "key": "spec_sash_configuration",
@@ -200,8 +203,18 @@
             "TW-EV-005,007"
           ],
           "selector": {
-            "window_type": "RPL_TW_SLD",
-            "spec_height_category": "TW-SS-TER"
+            "any": [
+              {
+                "window_type": "RPL_TW_SLD",
+                "spec_height_category": "TW-SS-TER"
+              },
+              {
+                "window_type": "RPL_TW_SLD",
+                "spec_height_category": {
+                  "$exists": false
+                }
+              }
+            ]
           },
           "metadata": {
             "manualCheck": false,
@@ -215,9 +228,20 @@
             "TW-EV-005,007"
           ],
           "selector": {
-            "window_type": "RPL_TW_SLD",
-            "spec_height_category": "TW-SS-TER",
-            "spec_panel_configuration": "TW-SS-PANEL-2"
+            "any": [
+              {
+                "window_type": "RPL_TW_SLD",
+                "spec_height_category": "TW-SS-TER",
+                "spec_panel_configuration": "TW-SS-PANEL-2"
+              },
+              {
+                "window_type": "RPL_TW_SLD",
+                "spec_panel_configuration": "TW-SS-PANEL-2",
+                "spec_height_category": {
+                  "$exists": false
+                }
+              }
+            ]
           },
           "metadata": {
             "manualCheck": false,
@@ -422,7 +446,7 @@
     },
     {
       "key": "exterior_cover_color",
-      "displayLabel": "化粧カバー外観色",
+      "displayLabel": "化粧カバー色（外観色に連動）",
       "dataType": "ENUM",
       "displayOrder": 120,
       "choices": [
@@ -434,7 +458,7 @@
           ],
           "selector": {},
           "metadata": {
-            "manualCheck": true
+            "manualCheck": false
           }
         },
         {
@@ -445,7 +469,7 @@
           ],
           "selector": {},
           "metadata": {
-            "manualCheck": true
+            "manualCheck": false
           }
         },
         {
@@ -456,7 +480,7 @@
           ],
           "selector": {},
           "metadata": {
-            "manualCheck": true
+            "manualCheck": false
           }
         },
         {
@@ -467,7 +491,7 @@
           ],
           "selector": {},
           "metadata": {
-            "manualCheck": true
+            "manualCheck": false
           }
         },
         {
@@ -478,13 +502,15 @@
           ],
           "selector": {},
           "metadata": {
-            "manualCheck": true
+            "manualCheck": false
           }
         }
       ],
       "required": false,
       "autoSelectSingle": false,
-      "parentFields": [],
+      "parentFields": [
+        "sash_exterior_color"
+      ],
       "selector": {}
     },
     {
@@ -556,7 +582,7 @@
     },
     {
       "key": "interior_cover_color",
-      "displayLabel": "化粧カバー内観色",
+      "displayLabel": "室内カバー色（内観色に連動）",
       "dataType": "ENUM",
       "displayOrder": 140,
       "choices": [
@@ -568,7 +594,7 @@
           ],
           "selector": {},
           "metadata": {
-            "manualCheck": true
+            "manualCheck": false
           }
         },
         {
@@ -579,7 +605,7 @@
           ],
           "selector": {},
           "metadata": {
-            "manualCheck": true
+            "manualCheck": false
           }
         },
         {
@@ -590,7 +616,7 @@
           ],
           "selector": {},
           "metadata": {
-            "manualCheck": true
+            "manualCheck": false
           }
         },
         {
@@ -601,7 +627,7 @@
           ],
           "selector": {},
           "metadata": {
-            "manualCheck": true
+            "manualCheck": false
           }
         },
         {
@@ -612,13 +638,15 @@
           ],
           "selector": {},
           "metadata": {
-            "manualCheck": true
+            "manualCheck": false
           }
         }
       ],
       "required": false,
       "autoSelectSingle": false,
-      "parentFields": [],
+      "parentFields": [
+        "sash_interior_color"
+      ],
       "selector": {}
     },
     {
@@ -716,39 +744,6 @@
           "displayLabel": "既設上枠ベース材",
           "evidenceIds": [
             "TW-EV-005,006"
-          ],
-          "selector": {},
-          "metadata": {
-            "manualCheck": true
-          }
-        },
-        {
-          "value": "TW-OP-ANGLE-MITER",
-          "displayLabel": "樹脂アングルカバー（見切材付）",
-          "evidenceIds": [
-            "TW-EV-009,011"
-          ],
-          "selector": {},
-          "metadata": {
-            "manualCheck": true
-          }
-        },
-        {
-          "value": "TW-OP-ANGLE-NOMITER",
-          "displayLabel": "樹脂アングルカバー（見切材無）",
-          "evidenceIds": [
-            "TW-EV-009,011"
-          ],
-          "selector": {},
-          "metadata": {
-            "manualCheck": true
-          }
-        },
-        {
-          "value": "TW-OP-ANGLE-TER",
-          "displayLabel": "樹脂アングルカバー テラス用（見切材付）",
-          "evidenceIds": [
-            "TW-EV-009,011"
           ],
           "selector": {},
           "metadata": {
@@ -1471,6 +1466,478 @@
           "displayOrder": 4
         }
       ]
+    },
+    {
+      "key": "interior_cover_type",
+      "displayLabel": "室内側の仕上げ仕様",
+      "dataType": "ENUM",
+      "displayOrder": 900,
+      "choices": [
+        {
+          "value": "TW-OP-ANGLE-MITER",
+          "displayLabel": "樹脂アングルカバー（見切材付）",
+          "evidenceIds": [
+            "TW-EV-009,011"
+          ],
+          "selector": {},
+          "metadata": {
+            "manualCheck": true
+          }
+        },
+        {
+          "value": "TW-OP-ANGLE-NOMITER",
+          "displayLabel": "樹脂アングルカバー（見切材無）",
+          "evidenceIds": [
+            "TW-EV-009,011"
+          ],
+          "selector": {},
+          "metadata": {
+            "manualCheck": true
+          }
+        },
+        {
+          "value": "TW-OP-ANGLE-TER",
+          "displayLabel": "樹脂アングルカバー テラス用（見切材付）",
+          "evidenceIds": [
+            "TW-EV-009,011"
+          ],
+          "selector": {},
+          "metadata": {
+            "manualCheck": true
+          }
+        }
+      ],
+      "required": false,
+      "autoSelectSingle": false,
+      "parentFields": [],
+      "selector": {}
+    },
+    {
+      "key": "exterior_cover_type",
+      "displayLabel": "化粧カバーの大きさ・組合せ",
+      "dataType": "ENUM",
+      "displayOrder": 900,
+      "choices": [
+        {
+          "value": "TW-COV-LARGE",
+          "displayLabel": "大",
+          "selector": {
+            "all": [
+              {
+                "any": [
+                  {
+                    "survey_cover_top": {
+                      "$exists": false
+                    }
+                  },
+                  {
+                    "survey_cover_top": {
+                      "$lte": 84.5
+                    }
+                  }
+                ]
+              },
+              {
+                "any": [
+                  {
+                    "survey_cover_bottom": {
+                      "$exists": false
+                    }
+                  },
+                  {
+                    "survey_cover_bottom": {
+                      "$lte": 98.5
+                    }
+                  }
+                ]
+              },
+              {
+                "any": [
+                  {
+                    "survey_cover_side": {
+                      "$exists": false
+                    }
+                  },
+                  {
+                    "survey_cover_side": {
+                      "$lte": 82.5
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "evidenceIds": [
+            "TW-EV-011"
+          ],
+          "metadata": {
+            "manualCheck": false
+          }
+        },
+        {
+          "value": "TW-COV-LARGE-VMID",
+          "displayLabel": "大（縦のみ中）",
+          "selector": {
+            "all": [
+              {
+                "any": [
+                  {
+                    "survey_cover_top": {
+                      "$exists": false
+                    }
+                  },
+                  {
+                    "survey_cover_top": {
+                      "$lte": 84.5
+                    }
+                  }
+                ]
+              },
+              {
+                "any": [
+                  {
+                    "survey_cover_bottom": {
+                      "$exists": false
+                    }
+                  },
+                  {
+                    "survey_cover_bottom": {
+                      "$lte": 98.5
+                    }
+                  }
+                ]
+              },
+              {
+                "any": [
+                  {
+                    "survey_cover_side": {
+                      "$exists": false
+                    }
+                  },
+                  {
+                    "survey_cover_side": {
+                      "$lte": 32.5
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "evidenceIds": [
+            "TW-EV-011"
+          ],
+          "metadata": {
+            "manualCheck": false
+          }
+        },
+        {
+          "value": "TW-COV-MID",
+          "displayLabel": "中",
+          "selector": {
+            "all": [
+              {
+                "any": [
+                  {
+                    "survey_cover_top": {
+                      "$exists": false
+                    }
+                  },
+                  {
+                    "survey_cover_top": {
+                      "$lte": 49.5
+                    }
+                  }
+                ]
+              },
+              {
+                "any": [
+                  {
+                    "survey_cover_bottom": {
+                      "$exists": false
+                    }
+                  },
+                  {
+                    "survey_cover_bottom": {
+                      "$lte": 63.5
+                    }
+                  }
+                ]
+              },
+              {
+                "any": [
+                  {
+                    "survey_cover_side": {
+                      "$exists": false
+                    }
+                  },
+                  {
+                    "survey_cover_side": {
+                      "$lte": 32.5
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "evidenceIds": [
+            "TW-EV-011"
+          ],
+          "metadata": {
+            "manualCheck": false
+          }
+        },
+        {
+          "value": "TW-COV-MID-VLARGE",
+          "displayLabel": "中（縦のみ大）",
+          "selector": {
+            "all": [
+              {
+                "any": [
+                  {
+                    "survey_cover_top": {
+                      "$exists": false
+                    }
+                  },
+                  {
+                    "survey_cover_top": {
+                      "$lte": 49.5
+                    }
+                  }
+                ]
+              },
+              {
+                "any": [
+                  {
+                    "survey_cover_bottom": {
+                      "$exists": false
+                    }
+                  },
+                  {
+                    "survey_cover_bottom": {
+                      "$lte": 63.5
+                    }
+                  }
+                ]
+              },
+              {
+                "any": [
+                  {
+                    "survey_cover_side": {
+                      "$exists": false
+                    }
+                  },
+                  {
+                    "survey_cover_side": {
+                      "$lte": 82.5
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "evidenceIds": [
+            "TW-EV-011"
+          ],
+          "metadata": {
+            "manualCheck": false
+          }
+        },
+        {
+          "value": "TW-COV-SMALL",
+          "displayLabel": "小",
+          "selector": {
+            "all": [
+              {
+                "any": [
+                  {
+                    "survey_cover_top": {
+                      "$exists": false
+                    }
+                  },
+                  {
+                    "survey_cover_top": {
+                      "$lte": 24.5
+                    }
+                  }
+                ]
+              },
+              {
+                "any": [
+                  {
+                    "survey_cover_bottom": {
+                      "$exists": false
+                    }
+                  },
+                  {
+                    "survey_cover_bottom": {
+                      "$lte": 38.5
+                    }
+                  }
+                ]
+              },
+              {
+                "any": [
+                  {
+                    "survey_cover_side": {
+                      "$exists": false
+                    }
+                  },
+                  {
+                    "survey_cover_side": {
+                      "$lte": 7.5
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "evidenceIds": [
+            "TW-EV-011"
+          ],
+          "metadata": {
+            "manualCheck": false
+          }
+        },
+        {
+          "value": "TW-COV-SMALL-BMID",
+          "displayLabel": "小（下のみ中）",
+          "selector": {
+            "all": [
+              {
+                "any": [
+                  {
+                    "survey_cover_top": {
+                      "$exists": false
+                    }
+                  },
+                  {
+                    "survey_cover_top": {
+                      "$lte": 24.5
+                    }
+                  }
+                ]
+              },
+              {
+                "any": [
+                  {
+                    "survey_cover_bottom": {
+                      "$exists": false
+                    }
+                  },
+                  {
+                    "survey_cover_bottom": {
+                      "$lte": 63.5
+                    }
+                  }
+                ]
+              },
+              {
+                "any": [
+                  {
+                    "survey_cover_side": {
+                      "$exists": false
+                    }
+                  },
+                  {
+                    "survey_cover_side": {
+                      "$lte": 7.5
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "evidenceIds": [
+            "TW-EV-011"
+          ],
+          "metadata": {
+            "manualCheck": false
+          }
+        },
+        {
+          "value": "TW-COV-XS",
+          "displayLabel": "特小",
+          "selector": {
+            "all": [
+              {
+                "any": [
+                  {
+                    "survey_cover_top": {
+                      "$exists": false
+                    }
+                  },
+                  {
+                    "survey_cover_top": {
+                      "$lte": 24.5
+                    }
+                  }
+                ]
+              },
+              {
+                "any": [
+                  {
+                    "survey_cover_bottom": {
+                      "$exists": false
+                    }
+                  },
+                  {
+                    "survey_cover_bottom": {
+                      "$lte": 38.5
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "evidenceIds": [
+            "TW-EV-011"
+          ],
+          "metadata": {
+            "manualCheck": true
+          }
+        }
+      ],
+      "required": true,
+      "autoSelectSingle": false,
+      "parentFields": [
+        "survey_cover_top",
+        "survey_cover_bottom",
+        "survey_cover_side"
+      ],
+      "selector": {}
+    },
+    {
+      "key": "survey_cover_top",
+      "displayLabel": "既設上枠の見付（mm）",
+      "dataType": "NUMBER",
+      "displayOrder": 900,
+      "choices": [],
+      "required": true,
+      "autoSelectSingle": false,
+      "parentFields": [],
+      "selector": {}
+    },
+    {
+      "key": "survey_cover_bottom",
+      "displayLabel": "既設下枠の見付（mm）",
+      "dataType": "NUMBER",
+      "displayOrder": 900,
+      "choices": [],
+      "required": true,
+      "autoSelectSingle": false,
+      "parentFields": [],
+      "selector": {}
+    },
+    {
+      "key": "survey_cover_side",
+      "displayLabel": "既設縦枠の見付（mm）",
+      "dataType": "NUMBER",
+      "displayOrder": 900,
+      "choices": [],
+      "required": true,
+      "autoSelectSingle": false,
+      "parentFields": [],
+      "selector": {}
     }
   ],
   "dependencies": [
@@ -2067,6 +2534,252 @@
           }
         }
       ]
+    },
+    {
+      "id": "cover-color-links",
+      "type": "SELECTION_LINKS",
+      "status": "ACTIVE",
+      "payload": [
+        {
+          "targetField": "exterior_cover_color",
+          "parents": [
+            "sash_exterior_color"
+          ],
+          "cases": [
+            {
+              "when": {
+                "sash_exterior_color": "T"
+              },
+              "value": "T"
+            },
+            {
+              "when": {
+                "sash_exterior_color": "G"
+              },
+              "value": "G"
+            },
+            {
+              "when": {
+                "sash_exterior_color": "K"
+              },
+              "value": "K"
+            },
+            {
+              "when": {
+                "sash_exterior_color": "D"
+              },
+              "value": "D"
+            },
+            {
+              "when": {
+                "sash_exterior_color": "W"
+              },
+              "value": "W"
+            }
+          ],
+          "resolvedMessage": "本体外観色に連動しています。",
+          "pendingMessage": "サッシ本体の色を選択してください。",
+          "unavailableMessage": "本体色に対応するカバー部材の確認が必要です。"
+        },
+        {
+          "targetField": "interior_cover_color",
+          "parents": [
+            "sash_interior_color"
+          ],
+          "cases": [
+            {
+              "when": {
+                "sash_interior_color": "M"
+              },
+              "value": "M"
+            },
+            {
+              "when": {
+                "sash_interior_color": "C"
+              },
+              "value": "C"
+            },
+            {
+              "when": {
+                "sash_interior_color": "B"
+              },
+              "value": "B"
+            },
+            {
+              "when": {
+                "sash_interior_color": "P"
+              },
+              "value": "P"
+            },
+            {
+              "when": {
+                "sash_interior_color": "F"
+              },
+              "value": "F"
+            }
+          ],
+          "resolvedMessage": "本体内観色に連動しています。",
+          "pendingMessage": "サッシ本体の色を選択してください。",
+          "unavailableMessage": "本体色に対応するカバー部材の確認が必要です。"
+        }
+      ],
+      "evidenceIds": [
+        "APP-POLICY-V9"
+      ]
+    },
+    {
+      "id": "internal-height-category",
+      "type": "INTERNAL_CLASSIFICATIONS",
+      "status": "ACTIVE",
+      "payload": [
+        {
+          "targetField": "spec_height_category",
+          "widthField": "custom_width",
+          "heightField": "custom_height",
+          "applicability": {
+            "window_type": {
+              "$in": [
+                "RPL_TW_SLD"
+              ]
+            }
+          },
+          "cases": [
+            {
+              "id": "TW-SZ-MAD2",
+              "when": {
+                "window_type": "RPL_TW_SLD",
+                "frame_type": "RPL_TW_FRAME",
+                "panel_configuration": {
+                  "$in": [
+                    "2枚建"
+                  ]
+                }
+              },
+              "bounds": {
+                "minW": 647,
+                "maxW": 3017,
+                "minH": 347,
+                "maxH": 1647
+              },
+              "value": "TW-SS-MAD"
+            },
+            {
+              "id": "TW-SZ-MAD4",
+              "when": {
+                "window_type": "RPL_TW_SLD",
+                "frame_type": "RPL_TW_FRAME",
+                "panel_configuration": {
+                  "$in": [
+                    "4枚建"
+                  ]
+                }
+              },
+              "bounds": {
+                "minW": 1394,
+                "maxW": 4017,
+                "minH": 1167,
+                "maxH": 1647
+              },
+              "value": "TW-SS-MAD"
+            },
+            {
+              "id": "TW-SZ-TER2-TG",
+              "when": {
+                "window_type": "RPL_TW_SLD",
+                "frame_type": "RPL_TW_FRAME",
+                "panel_configuration": {
+                  "$in": [
+                    "2枚建"
+                  ]
+                }
+              },
+              "bounds": {
+                "minW": 977,
+                "maxW": 3017,
+                "minH": 1547,
+                "maxH": 2527
+              },
+              "value": "TW-SS-TER"
+            },
+            {
+              "id": "TW-SZ-TER4-TG",
+              "when": {
+                "window_type": "RPL_TW_SLD",
+                "frame_type": "RPL_TW_FRAME",
+                "panel_configuration": {
+                  "$in": [
+                    "4枚建"
+                  ]
+                }
+              },
+              "bounds": {
+                "minW": 1897,
+                "maxW": 4017,
+                "minH": 1547,
+                "maxH": 2527
+              },
+              "value": "TW-SS-TER"
+            },
+            {
+              "id": "TW-SZ-TER2-HANDLE",
+              "when": {
+                "window_type": "RPL_TW_SLD",
+                "frame_type": "RPL_TW_FRAME",
+                "panel_configuration": {
+                  "$in": [
+                    "2枚建"
+                  ]
+                }
+              },
+              "bounds": {
+                "minW": 977,
+                "maxW": 3017,
+                "minH": 1547,
+                "maxH": 2527
+              },
+              "value": "TW-SS-TER"
+            },
+            {
+              "id": "TW-SZ-TER4-HANDLE",
+              "when": {
+                "window_type": "RPL_TW_SLD",
+                "frame_type": "RPL_TW_FRAME",
+                "panel_configuration": {
+                  "$in": [
+                    "4枚建"
+                  ]
+                }
+              },
+              "bounds": {
+                "minW": 1897,
+                "maxW": 4017,
+                "minH": 1547,
+                "maxH": 2527
+              },
+              "value": "TW-SS-TER"
+            },
+            {
+              "id": "TW-SZ-TER2-WASHI",
+              "when": {
+                "window_type": "RPL_TW_SLD",
+                "frame_type": "RPL_TW_FRAME",
+                "panel_configuration": {
+                  "$in": [
+                    "2枚建"
+                  ]
+                }
+              },
+              "bounds": {
+                "minW": 977,
+                "maxW": 3017,
+                "minH": 1547,
+                "maxH": 2527
+              },
+              "value": "TW-SS-TER"
+            }
+          ]
+        }
+      ]
     }
   ],
   "evidence": [
@@ -2354,10 +3067,67 @@
         "sha256": "b837ce209c8b55b2b66b412a4e3c2694a78fd5de823efc7b2b960688a5668098",
         "根拠内容": "公式ガラス体系図から候補UI投影を補完。組合せ・寸法は見積確認。価格/BOM/SetCode未確定。"
       }
+    },
+    {
+      "id": "APP-POLICY-V9",
+      "source_id": "APP-POLICY-V9",
+      "payload": {
+        "schema": "USER_SELECTION_POLICY_V1",
+        "revision": "REPLUS_GLOBAL_FLOW_V9_20261014",
+        "decision": "User requested both covers follow sash colors on 2026-10-14; implementation and QA subsequently authorized.",
+        "manufacturer_same_color_required": null,
+        "mapping_basis": "Existing official component color palettes, explicit product-specific value mappings. No equality based on code or label heuristics.",
+        "source_catalog": "SN1200",
+        "source_sha256": "b837ce209c8b55b2b66b412a4e3c2694a78fd5de823efc7b2b960688a5668098",
+        "scope": "LOCAL_CANDIDATE_ONLY",
+        "formal_adoption": false,
+        "flow_order": [
+          "context",
+          "opening",
+          "finish",
+          "screen",
+          "glazing",
+          "interior_finish",
+          "exterior_finish",
+          "native_options",
+          "options",
+          "part_detail",
+          "survey",
+          "size"
+        ]
+      }
     }
   ],
   "composition": null,
-  "numeric_constraints": [],
+  "numeric_constraints": [
+    {
+      "id": "nonnegative-survey_cover_top",
+      "field": "survey_cover_top",
+      "min": 0,
+      "outside": "BLOCK",
+      "evidenceIds": [
+        "APP-POLICY-V9"
+      ]
+    },
+    {
+      "id": "nonnegative-survey_cover_bottom",
+      "field": "survey_cover_bottom",
+      "min": 0,
+      "outside": "BLOCK",
+      "evidenceIds": [
+        "APP-POLICY-V9"
+      ]
+    },
+    {
+      "id": "nonnegative-survey_cover_side",
+      "field": "survey_cover_side",
+      "min": 0,
+      "outside": "BLOCK",
+      "evidenceIds": [
+        "APP-POLICY-V9"
+      ]
+    }
+  ],
   "linear_transforms": [],
   "unsupported_rules": [
     {
@@ -2469,6 +3239,33 @@
         "glass_spacer": "TW-SPACER-RESIN"
       },
       "clearSource": true
+    },
+    {
+      "source": "options",
+      "match": "CONTAINS",
+      "value": "TW-OP-ANGLE-MITER",
+      "clearValue": true,
+      "assign": {
+        "interior_cover_type": "TW-OP-ANGLE-MITER"
+      }
+    },
+    {
+      "source": "options",
+      "match": "CONTAINS",
+      "value": "TW-OP-ANGLE-NOMITER",
+      "clearValue": true,
+      "assign": {
+        "interior_cover_type": "TW-OP-ANGLE-NOMITER"
+      }
+    },
+    {
+      "source": "options",
+      "match": "CONTAINS",
+      "value": "TW-OP-ANGLE-TER",
+      "clearValue": true,
+      "assign": {
+        "interior_cover_type": "TW-OP-ANGLE-TER"
+      }
     }
   ]
 }

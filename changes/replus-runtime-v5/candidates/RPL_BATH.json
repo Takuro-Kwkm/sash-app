@@ -426,158 +426,106 @@
       "address": "A1:E22",
       "values": [
         [
-          "01_入力フロー｜浴室仕様",
-          null,
-          null,
-          null,
-          null
+          "リプラス住宅用・グローバルセレクションフロー"
         ],
+        [],
         [
-          null,
-          null,
-          null,
-          null,
-          null
-        ],
-        [
-          "順序",
+          "順番",
           "表示項目",
           "データキー",
           "候補/入力",
-          "制御"
+          "制御方針"
         ],
         [
           1,
-          "取替方式",
-          "installation_system_id",
-          "RPL_DIRECT",
-          "固定"
+          "商品・リプラス仕様",
+          "product / specification",
+          "リプラス住宅用 → 仕様",
+          "今回承認されたアプリ運用ルール"
         ],
         [
           2,
-          "仕様区分",
-          "variation_id",
-          "RPL_BATH",
-          "固定"
+          "設置・施工条件",
+          "context",
+          "選択・確認",
+          "対応する項目のみ表示"
         ],
         [
           3,
-          "浴室改修モード",
-          "bathroom_remodel_mode",
-          "SB同時交換 / 窓単独交換",
-          "浴室現調と連動"
+          "窓種・基本仕様",
+          "opening",
+          "選択・確認",
+          "対応する項目のみ表示"
         ],
         [
           4,
-          "既設開口パターン",
-          "bathroom_opening_pattern",
-          "全面/片寄左右/くり抜き",
-          "SB同時交換時"
+          "本体色",
+          "finish",
+          "選択・確認",
+          "対応する項目のみ表示"
         ],
         [
           5,
-          "開口構成",
-          "opening_configuration",
-          "単窓/開口縮小/連窓/段窓",
-          "必要時表示"
+          "網戸",
+          "screen",
+          "選択・確認",
+          "対応する項目のみ表示"
         ],
         [
           6,
-          "窓種",
-          "window_type_id",
-          "浴室8窓種",
-          "条件で絞込"
+          "ガラス",
+          "glazing",
+          "選択・確認",
+          "対応する項目のみ表示"
         ],
         [
           7,
-          "枠",
-          "frame_type",
-          "標準 / ブリッジ",
-          "引違いのみブリッジ表示"
+          "室内側の仕上げ・アングルカバー",
+          "interior_finish",
+          "選択・確認",
+          "本体色に連動"
         ],
         [
           8,
-          "窓種固有仕様",
-          "window_specific",
-          "操作方式・建数等",
-          "引違い2枚建固定"
+          "室外側の仕上げ・化粧カバー",
+          "exterior_finish",
+          "選択・確認",
+          "本体色に連動"
         ],
         [
           9,
-          "採寸W/H",
-          "survey_w / survey_h",
-          "現場入力",
-          "3点採寸"
+          "新設サッシのオプション",
+          "native_options",
+          "選択・確認",
+          "対応する項目のみ表示"
         ],
         [
           10,
-          "出来寸W/H",
-          "finished_w / finished_h",
-          "自動算出",
-          "WD=WS-10 / HD=HS-10"
+          "追加部材・オプション",
+          "options",
+          "選択・確認",
+          "対応する項目のみ表示"
         ],
         [
           11,
-          "外観色",
-          "sash_exterior_color",
-          "5色",
-          "公式色"
+          "選択した部材の仕様",
+          "part_detail",
+          "選択・確認",
+          "対応する項目のみ表示"
         ],
         [
           12,
-          "内観色",
-          "sash_interior_color",
-          "ブラック/プレシャスホワイトP",
-          "外観と自由組合せ"
+          "現場採寸・取付条件",
+          "survey",
+          "選択・確認",
+          "採寸後に再評価"
         ],
         [
           13,
-          "網戸",
-          "screen_configuration",
-          "窓種別形式",
-          "FIX非表示"
-        ],
-        [
-          14,
-          "ネット",
-          "screen_mesh",
-          "標準/きれい/虫イヤ/ペット",
-          "網戸形式で絞込"
-        ],
-        [
-          15,
-          "ガラス大分類",
-          "glass_category",
-          "一般複層/Low-E複層/トリプル",
-          "トリプルはDHFSのみ"
-        ],
-        [
-          16,
-          "ガラス詳細",
-          "glass_detail",
-          "色・仕上げ・追加機能",
-          "条件絞込"
-        ],
-        [
-          17,
-          "中空層/スペーサー",
-          "gas/spacer",
-          "公式組合せ",
-          "ブリッジは樹脂スペーサー固定"
-        ],
-        [
-          18,
-          "オプション",
-          "option_id",
-          "浴室適用品のみ",
-          "依存ルール"
-        ],
-        [
-          19,
-          "浴室現場・施工判定",
-          "bathroom/survey/installation_condition",
-          "別UI",
-          "商品仕様と分離"
+          "製品寸法",
+          "size",
+          "選択・確認",
+          "採寸後に再評価"
         ]
       ]
     },
@@ -5122,9 +5070,269 @@
           "COMPLETE"
         ]
       ]
+    },
+    "14_UI選択契約": {
+      "values": [
+        [
+          "リプラス住宅用・共通UI選択契約",
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        [
+          "分類",
+          "対象",
+          "依存元",
+          "処理",
+          "根拠区分",
+          "revision"
+        ],
+        [
+          "色連動",
+          "exterior_cover_color",
+          "sash_exterior_color",
+          "{\"targetField\": \"exterior_cover_color\", \"parents\": [\"sash_exterior_color\"], \"cases\": [{\"when\": {\"sash_exterior_color\": \"T\"}, \"value\": \"T\"}, {\"when\": {\"sash_exterior_color\": \"G\"}, \"value\": \"G\"}, {\"when\": {\"sash_exterior_color\": \"K\"}, \"value\": \"K\"}, {\"when\": {\"sash_exterior_color\": \"D\"}, \"value\": \"D\"}, {\"when\": {\"sash_exterior_color\": \"W\"}, \"value\": \"W\"}], \"resolvedMessage\": \"本体外観色に連動しています。\", \"pendingMessage\": \"サッシ本体の色を選択してください。\", \"unavailableMessage\": \"本体色に対応するカバー部材の確認が必要です。\"}",
+          "USER_APPLICATION_POLICY",
+          "REPLUS_GLOBAL_FLOW_V9_20261014"
+        ],
+        [
+          "色連動",
+          "interior_cover_color",
+          "sash_interior_color",
+          "{\"targetField\": \"interior_cover_color\", \"parents\": [\"sash_interior_color\"], \"cases\": [{\"when\": {\"sash_interior_color\": \"M\"}, \"value\": \"M\"}, {\"when\": {\"sash_interior_color\": \"F\"}, \"value\": \"F\"}], \"resolvedMessage\": \"本体内観色に連動しています。\", \"pendingMessage\": \"サッシ本体の色を選択してください。\", \"unavailableMessage\": \"本体色に対応するカバー部材の確認が必要です。\"}",
+          "USER_APPLICATION_POLICY",
+          "REPLUS_GLOBAL_FLOW_V9_20261014"
+        ],
+        [
+          "フロー",
+          "window_type",
+          "",
+          "{\"label\": \"窓種\", \"group\": \"opening\", \"internal\": false}",
+          "UI_PRESENTATION",
+          "REPLUS_GLOBAL_FLOW_V9_20261014"
+        ],
+        [
+          "フロー",
+          "frame_type",
+          "window_type",
+          "{\"label\": \"枠仕様\", \"group\": \"opening\", \"internal\": false}",
+          "UI_PRESENTATION",
+          "REPLUS_GLOBAL_FLOW_V9_20261014"
+        ],
+        [
+          "フロー",
+          "spec_panel_configuration",
+          "window_type",
+          "{\"label\": \"建数\", \"group\": \"opening\", \"internal\": false}",
+          "UI_PRESENTATION",
+          "REPLUS_GLOBAL_FLOW_V9_20261014"
+        ],
+        [
+          "フロー",
+          "spec_sash_configuration",
+          "window_type",
+          "{\"label\": \"障子仕様\", \"group\": \"opening\", \"internal\": false}",
+          "UI_PRESENTATION",
+          "REPLUS_GLOBAL_FLOW_V9_20261014"
+        ],
+        [
+          "フロー",
+          "spec_operation_type",
+          "window_type",
+          "{\"label\": \"操作方式\", \"group\": \"opening\", \"internal\": false}",
+          "UI_PRESENTATION",
+          "REPLUS_GLOBAL_FLOW_V9_20261014"
+        ],
+        [
+          "フロー",
+          "screen",
+          "window_type",
+          "{\"label\": \"網戸\", \"group\": \"screen\", \"internal\": false}",
+          "UI_PRESENTATION",
+          "REPLUS_GLOBAL_FLOW_V9_20261014"
+        ],
+        [
+          "フロー",
+          "size_mode",
+          "",
+          "{\"label\": \"寸法の指定方法\", \"group\": \"size\", \"internal\": false}",
+          "UI_PRESENTATION",
+          "REPLUS_GLOBAL_FLOW_V9_20261014"
+        ],
+        [
+          "フロー",
+          "custom_width",
+          "size_mode",
+          "{\"label\": \"製品仕上がり幅 W（mm）\", \"group\": \"size\", \"internal\": false}",
+          "UI_PRESENTATION",
+          "REPLUS_GLOBAL_FLOW_V9_20261014"
+        ],
+        [
+          "フロー",
+          "custom_height",
+          "size_mode",
+          "{\"label\": \"製品仕上がり高さ H（mm）\", \"group\": \"size\", \"internal\": false}",
+          "UI_PRESENTATION",
+          "REPLUS_GLOBAL_FLOW_V9_20261014"
+        ],
+        [
+          "フロー",
+          "sash_exterior_color",
+          "",
+          "{\"label\": \"本体外観色\", \"group\": \"finish\", \"internal\": false}",
+          "UI_PRESENTATION",
+          "REPLUS_GLOBAL_FLOW_V9_20261014"
+        ],
+        [
+          "フロー",
+          "exterior_cover_color",
+          "sash_exterior_color",
+          "{\"label\": \"化粧カバー色（外観色に連動）\", \"group\": \"exterior_finish\", \"internal\": false}",
+          "UI_PRESENTATION",
+          "REPLUS_GLOBAL_FLOW_V9_20261014"
+        ],
+        [
+          "フロー",
+          "sash_interior_color",
+          "",
+          "{\"label\": \"本体内観色\", \"group\": \"finish\", \"internal\": false}",
+          "UI_PRESENTATION",
+          "REPLUS_GLOBAL_FLOW_V9_20261014"
+        ],
+        [
+          "フロー",
+          "interior_cover_color",
+          "sash_interior_color",
+          "{\"label\": \"室内カバー色（内観色に連動）\", \"group\": \"interior_finish\", \"internal\": false}",
+          "UI_PRESENTATION",
+          "REPLUS_GLOBAL_FLOW_V9_20261014"
+        ],
+        [
+          "フロー",
+          "options",
+          "",
+          "{\"label\": \"追加部材・オプション\", \"group\": \"options\", \"internal\": false}",
+          "UI_PRESENTATION",
+          "REPLUS_GLOBAL_FLOW_V9_20261014"
+        ],
+        [
+          "フロー",
+          "bathroom_remodel_mode",
+          "",
+          "{\"label\": \"浴室改修モード\", \"group\": \"context\", \"internal\": false}",
+          "UI_PRESENTATION",
+          "REPLUS_GLOBAL_FLOW_V9_20261014"
+        ],
+        [
+          "フロー",
+          "installation_region",
+          "",
+          "{\"label\": \"設置地域\", \"group\": \"context\", \"internal\": false}",
+          "UI_PRESENTATION",
+          "REPLUS_GLOBAL_FLOW_V9_20261014"
+        ],
+        [
+          "フロー",
+          "glass_category",
+          "frame_type,installation_region,window_type",
+          "{\"label\": \"ガラス種類\", \"group\": \"glazing\", \"internal\": false}",
+          "UI_PRESENTATION",
+          "REPLUS_GLOBAL_FLOW_V9_20261014"
+        ],
+        [
+          "フロー",
+          "glass",
+          "frame_type,glass_category,installation_region,window_type",
+          "{\"label\": \"ガラス詳細・Low-E仕様\", \"group\": \"glazing\", \"internal\": false}",
+          "UI_PRESENTATION",
+          "REPLUS_GLOBAL_FLOW_V9_20261014"
+        ],
+        [
+          "フロー",
+          "glass_gas",
+          "frame_type,glass_category",
+          "{\"label\": \"中空層\", \"group\": \"glazing\", \"internal\": false}",
+          "UI_PRESENTATION",
+          "REPLUS_GLOBAL_FLOW_V9_20261014"
+        ],
+        [
+          "フロー",
+          "glass_spacer",
+          "frame_type,glass_category,glass_gas",
+          "{\"label\": \"スペーサー\", \"group\": \"glazing\", \"internal\": false}",
+          "UI_PRESENTATION",
+          "REPLUS_GLOBAL_FLOW_V9_20261014"
+        ],
+        [
+          "フロー",
+          "bathroom_opening_pattern",
+          "bathroom_remodel_mode",
+          "{\"label\": \"既設開口パターン\", \"group\": \"context\", \"internal\": false}",
+          "UI_PRESENTATION",
+          "REPLUS_GLOBAL_FLOW_V9_20261014"
+        ],
+        [
+          "フロー",
+          "glass_function",
+          "glass_category,glass,window_type",
+          "{\"label\": \"ガラス追加機能\", \"group\": \"glazing\", \"internal\": false}",
+          "UI_PRESENTATION",
+          "REPLUS_GLOBAL_FLOW_V9_20261014"
+        ],
+        [
+          "フロー",
+          "glass_appearance",
+          "glass,glass_function",
+          "{\"label\": \"ガラス仕上げ・目隠し\", \"group\": \"glazing\", \"internal\": false}",
+          "UI_PRESENTATION",
+          "REPLUS_GLOBAL_FLOW_V9_20261014"
+        ],
+        [
+          "フロー",
+          "interior_cover_type",
+          "bathroom_remodel_mode",
+          "{\"label\": \"室内側の仕上げ仕様\", \"group\": \"interior_finish\", \"internal\": false}",
+          "UI_PRESENTATION",
+          "REPLUS_GLOBAL_FLOW_V9_20261014"
+        ],
+        [
+          "フロー",
+          "exterior_cover_type",
+          "frame_type,survey_cover_top,survey_cover_bottom,survey_cover_side",
+          "{\"label\": \"化粧カバーの大きさ・組合せ\", \"group\": \"exterior_finish\", \"internal\": false}",
+          "UI_PRESENTATION",
+          "REPLUS_GLOBAL_FLOW_V9_20261014"
+        ],
+        [
+          "フロー",
+          "survey_cover_top",
+          "",
+          "{\"label\": \"既設上枠の見付（mm）\", \"group\": \"survey\", \"internal\": false}",
+          "UI_PRESENTATION",
+          "REPLUS_GLOBAL_FLOW_V9_20261014"
+        ],
+        [
+          "フロー",
+          "survey_cover_bottom",
+          "",
+          "{\"label\": \"既設下枠の見付（mm）\", \"group\": \"survey\", \"internal\": false}",
+          "UI_PRESENTATION",
+          "REPLUS_GLOBAL_FLOW_V9_20261014"
+        ],
+        [
+          "フロー",
+          "survey_cover_side",
+          "",
+          "{\"label\": \"既設縦枠の見付（mm）\", \"group\": \"survey\", \"internal\": false}",
+          "UI_PRESENTATION",
+          "REPLUS_GLOBAL_FLOW_V9_20261014"
+        ]
+      ]
     }
   },
   "generated_at": "2026-09-01",
   "spec_version": "PRODUCT_MASTER_PACKAGE_STORAGE_GATE_v2.0",
-  "candidate_revision": "REPLUS_RUNTIME_UI_V5_20261014"
+  "candidate_revision": "REPLUS_GLOBAL_FLOW_V9_20261014"
 }

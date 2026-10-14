@@ -273,6 +273,8 @@ export class ProductConfigurationEditor {
     const endpoint=this.state.productSource==='RUNTIME_MASTER'?'/api/runtime-master/resolve':'/api/catalog/resolve';
     let result=await getJson(`${endpoint}?${query}`);
     if(revision!==this.state.resolveRevision||productId!==this.state.productId)return;
+    const clearedLabels=(result.clearedFields??[]).map(key=>this.state.resolved?.fields?.find(field=>field.key===key)?.displayLabel).filter(Boolean);
+    if(clearedLabels.length)result.notices=[...(result.notices??[]),`条件変更により解除しました：${clearedLabels.join('、')}。必要な項目を再選択してください。`];
     this.state.selection=result.selection;this.state.resolved=result;
     const dynamicForm=this.root.querySelector('#dynamicForm');
     dynamicForm.innerHTML=this.renderFields(result.fields);
@@ -295,7 +297,7 @@ export class ProductConfigurationEditor {
       const showOptionHeading=!group&&groupIndividualOptions&&!optionHeadingShown&&field.semanticStage==='OPTION';
       if(showOptionHeading)optionHeadingShown=true;
       const feedback=field.feedback;
-      return `${showGroup?`<div class="runtime-field-group-heading" data-semantic-group="${esc(group.id)}">${esc(group.label)}</div>`:''}${showOptionHeading?'<div class="runtime-field-group-heading" data-semantic-group="OPTION">オプション</div>':''}${this.renderField(field)}${feedback?`<div class="notice ${feedback.severity==='error'?'error':'warning'}" data-field-feedback="${esc(field.key)}" role="status">${esc(feedback.message)}</div>`:''}`;
+      return `${showGroup?`<div class="runtime-field-group-heading" data-semantic-group="${esc(group.id)}">${esc(group.label)}</div>`:''}${showOptionHeading?'<div class="runtime-field-group-heading" data-semantic-group="OPTION">オプション</div>':''}${this.renderField(field)}${feedback?`<div class="notice ${feedback.severity==='error'?'error':feedback.severity==='warning'?'warning':''}" data-field-feedback="${esc(field.key)}" role="status">${esc(feedback.message)}</div>`:''}`;
     }).join('');
   }
 
@@ -303,6 +305,10 @@ export class ProductConfigurationEditor {
     const dataAttributes=`data-semantic-stage="${esc(field.semanticStage)}" data-semantic-slot="${esc(field.semanticSlot)}" data-label="${esc(field.displayLabel)}" data-read-only="${Boolean(field.readOnly)}"`;
     const attributes=`${dataAttributes}${field.required?' required':''}${field.disabled?' disabled':''}`;
     const required=field.required?'<span class="required">必須</span>':'';
+    if(field.readOnly&&field.selectionMode==='DERIVED'){
+      const choice=field.values.find(value=>String(value.value)===String(this.state.selection[field.key]));
+      return `<div class="field" data-key="${esc(field.key)}"><label>${esc(field.displayLabel)}</label><output class="runtime-derived-value" data-spec-key="${esc(field.key)}" ${dataAttributes}>${esc(choice?.displayLabel??'本体色の選択後に表示')}</output>${field.helpText?`<small class="field-help">${esc(field.helpText)}</small>`:''}</div>`;
+    }
     if(field.dataType==='NUMBER')return `<div class="field" data-key="${esc(field.key)}"><label>${esc(field.displayLabel)}${required}</label><div class="number-input"><input type="number" inputmode="decimal" step="${esc(field.step??'any')}" data-spec-key="${esc(field.key)}" ${attributes} value="${esc(this.state.selection[field.key]??'')}" placeholder="数値を入力">${field.unit?`<span>${esc(field.unit)}</span>`:''}</div>${field.helpText?`<small class="field-help">${esc(field.helpText)}</small>`:''}</div>`;
     if(field.dataType==='TEXT')return `<div class="field" data-key="${esc(field.key)}"><label>${esc(field.displayLabel)}${required}</label><input type="text" data-spec-key="${esc(field.key)}" ${attributes} value="${esc(this.state.selection[field.key]??'')}" placeholder="入力してください"></div>`;
     const selected=Array.isArray(this.state.selection[field.key])?this.state.selection[field.key]:[this.state.selection[field.key]];

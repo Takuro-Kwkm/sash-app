@@ -1,10 +1,10 @@
 {
   "schema": "PRODUCT_MODULE_CANDIDATE_V1",
-  "candidate_revision": "REPLUS_GLASS_FLOW_V8_20261014",
+  "candidate_revision": "REPLUS_GLOBAL_FLOW_V9_20261014",
   "baseline": {
     "path": "candidates/RPL_BATH.json",
     "component_id": "RPL_BATH",
-    "sha256": "adc2f9abf3ef5c2bc602eaa64057f4db8479d25d91e89e08a27578ade0fa78b4",
+    "sha256": "3b57aa1f1b2206246ad03b5ec4aa3033807f133fc2cab02e19c84f2b43c50b63",
     "baseline_sha256": "e96a29afcfe83d3707823c1b01b8b0b2bf227ea0b9d9971bf2d48e04e2927f00",
     "baseline_component_version": "v1.0"
   },
@@ -16,7 +16,7 @@
       "displayName": "リプラス 浴室仕様",
       "source": {
         "id": "RPL_BATH",
-        "version": "REPLUS_GLASS_FLOW_V8_20261014"
+        "version": "REPLUS_GLOBAL_FLOW_V9_20261014"
       }
     },
     "specificationDefinitions": [
@@ -195,11 +195,13 @@
       },
       {
         "key": "exterior_cover_color",
-        "displayLabel": "化粧カバー外観色",
+        "displayLabel": "化粧カバー色（外観色に連動）",
         "dataType": "ENUM",
         "displayOrder": 110,
         "autoSelectSingle": false,
-        "parentFields": [],
+        "parentFields": [
+          "sash_exterior_color"
+        ],
         "selector": {},
         "id": "CANDIDATE:RPL_BATH:field:exterior_cover_color",
         "productId": "CANDIDATE:RPL_BATH",
@@ -219,12 +221,16 @@
       },
       {
         "key": "interior_cover_color",
-        "displayLabel": "化粧カバー内観色",
+        "displayLabel": "室内カバー色（内観色に連動）",
         "dataType": "ENUM",
         "displayOrder": 130,
         "autoSelectSingle": false,
-        "parentFields": [],
-        "selector": {},
+        "parentFields": [
+          "sash_interior_color"
+        ],
+        "selector": {
+          "bathroom_remodel_mode": "WINDOW_ONLY"
+        },
         "id": "CANDIDATE:RPL_BATH:field:interior_cover_color",
         "productId": "CANDIDATE:RPL_BATH",
         "status": "ACTIVE"
@@ -397,6 +403,75 @@
           }
         },
         "id": "CANDIDATE:RPL_BATH:field:glass_appearance",
+        "productId": "CANDIDATE:RPL_BATH",
+        "status": "ACTIVE"
+      },
+      {
+        "key": "interior_cover_type",
+        "displayLabel": "室内側の仕上げ仕様",
+        "dataType": "ENUM",
+        "displayOrder": 900,
+        "autoSelectSingle": false,
+        "parentFields": [
+          "bathroom_remodel_mode"
+        ],
+        "selector": {
+          "bathroom_remodel_mode": "WINDOW_ONLY"
+        },
+        "id": "CANDIDATE:RPL_BATH:field:interior_cover_type",
+        "productId": "CANDIDATE:RPL_BATH",
+        "status": "ACTIVE"
+      },
+      {
+        "key": "exterior_cover_type",
+        "displayLabel": "化粧カバーの大きさ・組合せ",
+        "dataType": "ENUM",
+        "displayOrder": 900,
+        "autoSelectSingle": false,
+        "parentFields": [
+          "frame_type",
+          "survey_cover_top",
+          "survey_cover_bottom",
+          "survey_cover_side"
+        ],
+        "selector": {},
+        "id": "CANDIDATE:RPL_BATH:field:exterior_cover_type",
+        "productId": "CANDIDATE:RPL_BATH",
+        "status": "ACTIVE"
+      },
+      {
+        "key": "survey_cover_top",
+        "displayLabel": "既設上枠の見付（mm）",
+        "dataType": "NUMBER",
+        "displayOrder": 900,
+        "autoSelectSingle": false,
+        "parentFields": [],
+        "selector": {},
+        "id": "CANDIDATE:RPL_BATH:field:survey_cover_top",
+        "productId": "CANDIDATE:RPL_BATH",
+        "status": "ACTIVE"
+      },
+      {
+        "key": "survey_cover_bottom",
+        "displayLabel": "既設下枠の見付（mm）",
+        "dataType": "NUMBER",
+        "displayOrder": 900,
+        "autoSelectSingle": false,
+        "parentFields": [],
+        "selector": {},
+        "id": "CANDIDATE:RPL_BATH:field:survey_cover_bottom",
+        "productId": "CANDIDATE:RPL_BATH",
+        "status": "ACTIVE"
+      },
+      {
+        "key": "survey_cover_side",
+        "displayLabel": "既設縦枠の見付（mm）",
+        "dataType": "NUMBER",
+        "displayOrder": 900,
+        "autoSelectSingle": false,
+        "parentFields": [],
+        "selector": {},
+        "id": "CANDIDATE:RPL_BATH:field:survey_cover_side",
         "productId": "CANDIDATE:RPL_BATH",
         "status": "ACTIVE"
       }
@@ -862,7 +937,7 @@
         ],
         "selector": {},
         "metadata": {
-          "manualCheck": true
+          "manualCheck": false
         },
         "id": "CANDIDATE:RPL_BATH:value:exterior_cover_color:0",
         "productId": "CANDIDATE:RPL_BATH",
@@ -877,7 +952,7 @@
         ],
         "selector": {},
         "metadata": {
-          "manualCheck": true
+          "manualCheck": false
         },
         "id": "CANDIDATE:RPL_BATH:value:exterior_cover_color:1",
         "productId": "CANDIDATE:RPL_BATH",
@@ -892,7 +967,7 @@
         ],
         "selector": {},
         "metadata": {
-          "manualCheck": true
+          "manualCheck": false
         },
         "id": "CANDIDATE:RPL_BATH:value:exterior_cover_color:2",
         "productId": "CANDIDATE:RPL_BATH",
@@ -907,7 +982,7 @@
         ],
         "selector": {},
         "metadata": {
-          "manualCheck": true
+          "manualCheck": false
         },
         "id": "CANDIDATE:RPL_BATH:value:exterior_cover_color:3",
         "productId": "CANDIDATE:RPL_BATH",
@@ -922,7 +997,7 @@
         ],
         "selector": {},
         "metadata": {
-          "manualCheck": true
+          "manualCheck": false
         },
         "id": "CANDIDATE:RPL_BATH:value:exterior_cover_color:4",
         "productId": "CANDIDATE:RPL_BATH",
@@ -967,7 +1042,7 @@
         ],
         "selector": {},
         "metadata": {
-          "manualCheck": true
+          "manualCheck": false
         },
         "id": "CANDIDATE:RPL_BATH:value:interior_cover_color:0",
         "productId": "CANDIDATE:RPL_BATH",
@@ -982,7 +1057,7 @@
         ],
         "selector": {},
         "metadata": {
-          "manualCheck": true
+          "manualCheck": false
         },
         "id": "CANDIDATE:RPL_BATH:value:interior_cover_color:1",
         "productId": "CANDIDATE:RPL_BATH",
@@ -1005,21 +1080,6 @@
         "status": "ACTIVE"
       },
       {
-        "value": "BATH-OP-ANGLE-NOMITER",
-        "displayLabel": "樹脂アングルカバー（見切材無）",
-        "evidenceIds": [
-          "BATH-EV-003,005"
-        ],
-        "selector": {},
-        "metadata": {
-          "manualCheck": true
-        },
-        "id": "CANDIDATE:RPL_BATH:value:options:1",
-        "productId": "CANDIDATE:RPL_BATH",
-        "specificationKey": "options",
-        "status": "ACTIVE"
-      },
-      {
         "value": "BATH-OP-CASING",
         "displayLabel": "カバー用ケーシング",
         "evidenceIds": [
@@ -1029,7 +1089,7 @@
         "metadata": {
           "manualCheck": true
         },
-        "id": "CANDIDATE:RPL_BATH:value:options:2",
+        "id": "CANDIDATE:RPL_BATH:value:options:1",
         "productId": "CANDIDATE:RPL_BATH",
         "specificationKey": "options",
         "status": "ACTIVE"
@@ -1044,7 +1104,7 @@
         "metadata": {
           "manualCheck": true
         },
-        "id": "CANDIDATE:RPL_BATH:value:options:3",
+        "id": "CANDIDATE:RPL_BATH:value:options:2",
         "productId": "CANDIDATE:RPL_BATH",
         "specificationKey": "options",
         "status": "ACTIVE"
@@ -1059,7 +1119,7 @@
         "metadata": {
           "manualCheck": true
         },
-        "id": "CANDIDATE:RPL_BATH:value:options:4",
+        "id": "CANDIDATE:RPL_BATH:value:options:3",
         "productId": "CANDIDATE:RPL_BATH",
         "specificationKey": "options",
         "status": "ACTIVE"
@@ -1074,7 +1134,7 @@
         "metadata": {
           "manualCheck": true
         },
-        "id": "CANDIDATE:RPL_BATH:value:options:5",
+        "id": "CANDIDATE:RPL_BATH:value:options:4",
         "productId": "CANDIDATE:RPL_BATH",
         "specificationKey": "options",
         "status": "ACTIVE"
@@ -1089,7 +1149,7 @@
         "metadata": {
           "manualCheck": true
         },
-        "id": "CANDIDATE:RPL_BATH:value:options:6",
+        "id": "CANDIDATE:RPL_BATH:value:options:5",
         "productId": "CANDIDATE:RPL_BATH",
         "specificationKey": "options",
         "status": "ACTIVE"
@@ -1104,7 +1164,7 @@
         "metadata": {
           "manualCheck": true
         },
-        "id": "CANDIDATE:RPL_BATH:value:options:7",
+        "id": "CANDIDATE:RPL_BATH:value:options:6",
         "productId": "CANDIDATE:RPL_BATH",
         "specificationKey": "options",
         "status": "ACTIVE"
@@ -1119,7 +1179,7 @@
         "metadata": {
           "manualCheck": true
         },
-        "id": "CANDIDATE:RPL_BATH:value:options:8",
+        "id": "CANDIDATE:RPL_BATH:value:options:7",
         "productId": "CANDIDATE:RPL_BATH",
         "specificationKey": "options",
         "status": "ACTIVE"
@@ -1134,7 +1194,7 @@
         "metadata": {
           "manualCheck": true
         },
-        "id": "CANDIDATE:RPL_BATH:value:options:9",
+        "id": "CANDIDATE:RPL_BATH:value:options:8",
         "productId": "CANDIDATE:RPL_BATH",
         "specificationKey": "options",
         "status": "ACTIVE"
@@ -1149,7 +1209,7 @@
         "metadata": {
           "manualCheck": true
         },
-        "id": "CANDIDATE:RPL_BATH:value:options:10",
+        "id": "CANDIDATE:RPL_BATH:value:options:9",
         "productId": "CANDIDATE:RPL_BATH",
         "specificationKey": "options",
         "status": "ACTIVE"
@@ -1164,7 +1224,7 @@
         "metadata": {
           "manualCheck": true
         },
-        "id": "CANDIDATE:RPL_BATH:value:options:11",
+        "id": "CANDIDATE:RPL_BATH:value:options:10",
         "productId": "CANDIDATE:RPL_BATH",
         "specificationKey": "options",
         "status": "ACTIVE"
@@ -1179,7 +1239,7 @@
         "metadata": {
           "manualCheck": true
         },
-        "id": "CANDIDATE:RPL_BATH:value:options:12",
+        "id": "CANDIDATE:RPL_BATH:value:options:11",
         "productId": "CANDIDATE:RPL_BATH",
         "specificationKey": "options",
         "status": "ACTIVE"
@@ -1194,7 +1254,7 @@
         "metadata": {
           "manualCheck": true
         },
-        "id": "CANDIDATE:RPL_BATH:value:options:13",
+        "id": "CANDIDATE:RPL_BATH:value:options:12",
         "productId": "CANDIDATE:RPL_BATH",
         "specificationKey": "options",
         "status": "ACTIVE"
@@ -2381,6 +2441,847 @@
         "productId": "CANDIDATE:RPL_BATH",
         "specificationKey": "glass_appearance",
         "status": "ACTIVE"
+      },
+      {
+        "value": "BATH-OP-ANGLE-NOMITER",
+        "displayLabel": "樹脂アングルカバー（見切材無）",
+        "evidenceIds": [
+          "BATH-EV-003,005"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_BATH:value:interior_cover_type:0",
+        "productId": "CANDIDATE:RPL_BATH",
+        "specificationKey": "interior_cover_type",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "BATH-COV-STD-L",
+        "displayLabel": "大",
+        "selector": {
+          "frame_type": "BATH-STD",
+          "all": [
+            {
+              "any": [
+                {
+                  "survey_cover_top": {
+                    "$exists": false
+                  }
+                },
+                {
+                  "survey_cover_top": {
+                    "$lte": 84.5
+                  }
+                }
+              ]
+            },
+            {
+              "any": [
+                {
+                  "survey_cover_bottom": {
+                    "$exists": false
+                  }
+                },
+                {
+                  "survey_cover_bottom": {
+                    "$lte": 98.5
+                  }
+                }
+              ]
+            },
+            {
+              "any": [
+                {
+                  "survey_cover_side": {
+                    "$exists": false
+                  }
+                },
+                {
+                  "survey_cover_side": {
+                    "$lte": 82.5
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "evidenceIds": [
+          "BATH-EV-009"
+        ],
+        "metadata": {
+          "manualCheck": false
+        },
+        "id": "CANDIDATE:RPL_BATH:value:exterior_cover_type:0",
+        "productId": "CANDIDATE:RPL_BATH",
+        "specificationKey": "exterior_cover_type",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "BATH-COV-STD-LVM",
+        "displayLabel": "大（縦のみ中）",
+        "selector": {
+          "frame_type": "BATH-STD",
+          "all": [
+            {
+              "any": [
+                {
+                  "survey_cover_top": {
+                    "$exists": false
+                  }
+                },
+                {
+                  "survey_cover_top": {
+                    "$lte": 84.5
+                  }
+                }
+              ]
+            },
+            {
+              "any": [
+                {
+                  "survey_cover_bottom": {
+                    "$exists": false
+                  }
+                },
+                {
+                  "survey_cover_bottom": {
+                    "$lte": 98.5
+                  }
+                }
+              ]
+            },
+            {
+              "any": [
+                {
+                  "survey_cover_side": {
+                    "$exists": false
+                  }
+                },
+                {
+                  "survey_cover_side": {
+                    "$lte": 32.5
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "evidenceIds": [
+          "BATH-EV-009"
+        ],
+        "metadata": {
+          "manualCheck": false
+        },
+        "id": "CANDIDATE:RPL_BATH:value:exterior_cover_type:1",
+        "productId": "CANDIDATE:RPL_BATH",
+        "specificationKey": "exterior_cover_type",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "BATH-COV-STD-M",
+        "displayLabel": "中",
+        "selector": {
+          "frame_type": "BATH-STD",
+          "all": [
+            {
+              "any": [
+                {
+                  "survey_cover_top": {
+                    "$exists": false
+                  }
+                },
+                {
+                  "survey_cover_top": {
+                    "$lte": 49.5
+                  }
+                }
+              ]
+            },
+            {
+              "any": [
+                {
+                  "survey_cover_bottom": {
+                    "$exists": false
+                  }
+                },
+                {
+                  "survey_cover_bottom": {
+                    "$lte": 63.5
+                  }
+                }
+              ]
+            },
+            {
+              "any": [
+                {
+                  "survey_cover_side": {
+                    "$exists": false
+                  }
+                },
+                {
+                  "survey_cover_side": {
+                    "$lte": 32.5
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "evidenceIds": [
+          "BATH-EV-009"
+        ],
+        "metadata": {
+          "manualCheck": false
+        },
+        "id": "CANDIDATE:RPL_BATH:value:exterior_cover_type:2",
+        "productId": "CANDIDATE:RPL_BATH",
+        "specificationKey": "exterior_cover_type",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "BATH-COV-STD-MVL",
+        "displayLabel": "中（縦のみ大）",
+        "selector": {
+          "frame_type": "BATH-STD",
+          "all": [
+            {
+              "any": [
+                {
+                  "survey_cover_top": {
+                    "$exists": false
+                  }
+                },
+                {
+                  "survey_cover_top": {
+                    "$lte": 49.5
+                  }
+                }
+              ]
+            },
+            {
+              "any": [
+                {
+                  "survey_cover_bottom": {
+                    "$exists": false
+                  }
+                },
+                {
+                  "survey_cover_bottom": {
+                    "$lte": 63.5
+                  }
+                }
+              ]
+            },
+            {
+              "any": [
+                {
+                  "survey_cover_side": {
+                    "$exists": false
+                  }
+                },
+                {
+                  "survey_cover_side": {
+                    "$lte": 82.5
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "evidenceIds": [
+          "BATH-EV-009"
+        ],
+        "metadata": {
+          "manualCheck": false
+        },
+        "id": "CANDIDATE:RPL_BATH:value:exterior_cover_type:3",
+        "productId": "CANDIDATE:RPL_BATH",
+        "specificationKey": "exterior_cover_type",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "BATH-COV-STD-S",
+        "displayLabel": "小",
+        "selector": {
+          "frame_type": "BATH-STD",
+          "all": [
+            {
+              "any": [
+                {
+                  "survey_cover_top": {
+                    "$exists": false
+                  }
+                },
+                {
+                  "survey_cover_top": {
+                    "$lte": 24.5
+                  }
+                }
+              ]
+            },
+            {
+              "any": [
+                {
+                  "survey_cover_bottom": {
+                    "$exists": false
+                  }
+                },
+                {
+                  "survey_cover_bottom": {
+                    "$lte": 38.5
+                  }
+                }
+              ]
+            },
+            {
+              "any": [
+                {
+                  "survey_cover_side": {
+                    "$exists": false
+                  }
+                },
+                {
+                  "survey_cover_side": {
+                    "$lte": 7.5
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "evidenceIds": [
+          "BATH-EV-009"
+        ],
+        "metadata": {
+          "manualCheck": false
+        },
+        "id": "CANDIDATE:RPL_BATH:value:exterior_cover_type:4",
+        "productId": "CANDIDATE:RPL_BATH",
+        "specificationKey": "exterior_cover_type",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "BATH-COV-STD-SBM",
+        "displayLabel": "小（下のみ中）",
+        "selector": {
+          "frame_type": "BATH-STD",
+          "all": [
+            {
+              "any": [
+                {
+                  "survey_cover_top": {
+                    "$exists": false
+                  }
+                },
+                {
+                  "survey_cover_top": {
+                    "$lte": 24.5
+                  }
+                }
+              ]
+            },
+            {
+              "any": [
+                {
+                  "survey_cover_bottom": {
+                    "$exists": false
+                  }
+                },
+                {
+                  "survey_cover_bottom": {
+                    "$lte": 63.5
+                  }
+                }
+              ]
+            },
+            {
+              "any": [
+                {
+                  "survey_cover_side": {
+                    "$exists": false
+                  }
+                },
+                {
+                  "survey_cover_side": {
+                    "$lte": 7.5
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "evidenceIds": [
+          "BATH-EV-009"
+        ],
+        "metadata": {
+          "manualCheck": false
+        },
+        "id": "CANDIDATE:RPL_BATH:value:exterior_cover_type:5",
+        "productId": "CANDIDATE:RPL_BATH",
+        "specificationKey": "exterior_cover_type",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "BATH-COV-STD-XS",
+        "displayLabel": "特小",
+        "selector": {
+          "frame_type": "BATH-STD",
+          "all": [
+            {
+              "any": [
+                {
+                  "survey_cover_top": {
+                    "$exists": false
+                  }
+                },
+                {
+                  "survey_cover_top": {
+                    "$lte": 24.5
+                  }
+                }
+              ]
+            },
+            {
+              "any": [
+                {
+                  "survey_cover_bottom": {
+                    "$exists": false
+                  }
+                },
+                {
+                  "survey_cover_bottom": {
+                    "$lte": 38.5
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "evidenceIds": [
+          "BATH-EV-009"
+        ],
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_BATH:value:exterior_cover_type:6",
+        "productId": "CANDIDATE:RPL_BATH",
+        "specificationKey": "exterior_cover_type",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "BATH-COV-BRG-L",
+        "displayLabel": "大",
+        "selector": {
+          "frame_type": "BATH-BRG",
+          "all": [
+            {
+              "any": [
+                {
+                  "survey_cover_top": {
+                    "$exists": false
+                  }
+                },
+                {
+                  "survey_cover_top": {
+                    "$lte": 84.5
+                  }
+                }
+              ]
+            },
+            {
+              "any": [
+                {
+                  "survey_cover_bottom": {
+                    "$exists": false
+                  }
+                },
+                {
+                  "survey_cover_bottom": {
+                    "$lte": 93.5
+                  }
+                }
+              ]
+            },
+            {
+              "any": [
+                {
+                  "survey_cover_side": {
+                    "$exists": false
+                  }
+                },
+                {
+                  "survey_cover_side": {
+                    "$lte": 82.5
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "evidenceIds": [
+          "BATH-EV-009"
+        ],
+        "metadata": {
+          "manualCheck": false
+        },
+        "id": "CANDIDATE:RPL_BATH:value:exterior_cover_type:7",
+        "productId": "CANDIDATE:RPL_BATH",
+        "specificationKey": "exterior_cover_type",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "BATH-COV-BRG-LVM",
+        "displayLabel": "大（縦のみ中）",
+        "selector": {
+          "frame_type": "BATH-BRG",
+          "all": [
+            {
+              "any": [
+                {
+                  "survey_cover_top": {
+                    "$exists": false
+                  }
+                },
+                {
+                  "survey_cover_top": {
+                    "$lte": 84.5
+                  }
+                }
+              ]
+            },
+            {
+              "any": [
+                {
+                  "survey_cover_bottom": {
+                    "$exists": false
+                  }
+                },
+                {
+                  "survey_cover_bottom": {
+                    "$lte": 93.5
+                  }
+                }
+              ]
+            },
+            {
+              "any": [
+                {
+                  "survey_cover_side": {
+                    "$exists": false
+                  }
+                },
+                {
+                  "survey_cover_side": {
+                    "$lte": 32.5
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "evidenceIds": [
+          "BATH-EV-009"
+        ],
+        "metadata": {
+          "manualCheck": false
+        },
+        "id": "CANDIDATE:RPL_BATH:value:exterior_cover_type:8",
+        "productId": "CANDIDATE:RPL_BATH",
+        "specificationKey": "exterior_cover_type",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "BATH-COV-BRG-M",
+        "displayLabel": "中",
+        "selector": {
+          "frame_type": "BATH-BRG",
+          "all": [
+            {
+              "any": [
+                {
+                  "survey_cover_top": {
+                    "$exists": false
+                  }
+                },
+                {
+                  "survey_cover_top": {
+                    "$lte": 49.5
+                  }
+                }
+              ]
+            },
+            {
+              "any": [
+                {
+                  "survey_cover_bottom": {
+                    "$exists": false
+                  }
+                },
+                {
+                  "survey_cover_bottom": {
+                    "$lte": 58.5
+                  }
+                }
+              ]
+            },
+            {
+              "any": [
+                {
+                  "survey_cover_side": {
+                    "$exists": false
+                  }
+                },
+                {
+                  "survey_cover_side": {
+                    "$lte": 32.5
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "evidenceIds": [
+          "BATH-EV-009"
+        ],
+        "metadata": {
+          "manualCheck": false
+        },
+        "id": "CANDIDATE:RPL_BATH:value:exterior_cover_type:9",
+        "productId": "CANDIDATE:RPL_BATH",
+        "specificationKey": "exterior_cover_type",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "BATH-COV-BRG-MVL",
+        "displayLabel": "中（縦のみ大）",
+        "selector": {
+          "frame_type": "BATH-BRG",
+          "all": [
+            {
+              "any": [
+                {
+                  "survey_cover_top": {
+                    "$exists": false
+                  }
+                },
+                {
+                  "survey_cover_top": {
+                    "$lte": 49.5
+                  }
+                }
+              ]
+            },
+            {
+              "any": [
+                {
+                  "survey_cover_bottom": {
+                    "$exists": false
+                  }
+                },
+                {
+                  "survey_cover_bottom": {
+                    "$lte": 58.5
+                  }
+                }
+              ]
+            },
+            {
+              "any": [
+                {
+                  "survey_cover_side": {
+                    "$exists": false
+                  }
+                },
+                {
+                  "survey_cover_side": {
+                    "$lte": 82.5
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "evidenceIds": [
+          "BATH-EV-009"
+        ],
+        "metadata": {
+          "manualCheck": false
+        },
+        "id": "CANDIDATE:RPL_BATH:value:exterior_cover_type:10",
+        "productId": "CANDIDATE:RPL_BATH",
+        "specificationKey": "exterior_cover_type",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "BATH-COV-BRG-S",
+        "displayLabel": "小",
+        "selector": {
+          "frame_type": "BATH-BRG",
+          "all": [
+            {
+              "any": [
+                {
+                  "survey_cover_top": {
+                    "$exists": false
+                  }
+                },
+                {
+                  "survey_cover_top": {
+                    "$lte": 24.5
+                  }
+                }
+              ]
+            },
+            {
+              "any": [
+                {
+                  "survey_cover_bottom": {
+                    "$exists": false
+                  }
+                },
+                {
+                  "survey_cover_bottom": {
+                    "$lte": 33.5
+                  }
+                }
+              ]
+            },
+            {
+              "any": [
+                {
+                  "survey_cover_side": {
+                    "$exists": false
+                  }
+                },
+                {
+                  "survey_cover_side": {
+                    "$lte": 7.5
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "evidenceIds": [
+          "BATH-EV-009"
+        ],
+        "metadata": {
+          "manualCheck": false
+        },
+        "id": "CANDIDATE:RPL_BATH:value:exterior_cover_type:11",
+        "productId": "CANDIDATE:RPL_BATH",
+        "specificationKey": "exterior_cover_type",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "BATH-COV-BRG-SBM",
+        "displayLabel": "小（下のみ中）",
+        "selector": {
+          "frame_type": "BATH-BRG",
+          "all": [
+            {
+              "any": [
+                {
+                  "survey_cover_top": {
+                    "$exists": false
+                  }
+                },
+                {
+                  "survey_cover_top": {
+                    "$lte": 24.5
+                  }
+                }
+              ]
+            },
+            {
+              "any": [
+                {
+                  "survey_cover_bottom": {
+                    "$exists": false
+                  }
+                },
+                {
+                  "survey_cover_bottom": {
+                    "$lte": 58.5
+                  }
+                }
+              ]
+            },
+            {
+              "any": [
+                {
+                  "survey_cover_side": {
+                    "$exists": false
+                  }
+                },
+                {
+                  "survey_cover_side": {
+                    "$lte": 7.5
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "evidenceIds": [
+          "BATH-EV-009"
+        ],
+        "metadata": {
+          "manualCheck": false
+        },
+        "id": "CANDIDATE:RPL_BATH:value:exterior_cover_type:12",
+        "productId": "CANDIDATE:RPL_BATH",
+        "specificationKey": "exterior_cover_type",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "BATH-COV-BRG-XS",
+        "displayLabel": "特小",
+        "selector": {
+          "frame_type": "BATH-BRG",
+          "all": [
+            {
+              "any": [
+                {
+                  "survey_cover_top": {
+                    "$exists": false
+                  }
+                },
+                {
+                  "survey_cover_top": {
+                    "$lte": 24.5
+                  }
+                }
+              ]
+            },
+            {
+              "any": [
+                {
+                  "survey_cover_bottom": {
+                    "$exists": false
+                  }
+                },
+                {
+                  "survey_cover_bottom": {
+                    "$lte": 33.5
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "evidenceIds": [
+          "BATH-EV-009"
+        ],
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_BATH:value:exterior_cover_type:13",
+        "productId": "CANDIDATE:RPL_BATH",
+        "specificationKey": "exterior_cover_type",
+        "status": "ACTIVE"
       }
     ],
     "requiredFieldRules": [
@@ -2484,6 +3385,34 @@
         "selector": {
           "bathroom_remodel_mode": "SYSTEM_BATH_SIMULTANEOUS"
         }
+      },
+      {
+        "id": "CANDIDATE:RPL_BATH:required:exterior_cover_type",
+        "productId": "CANDIDATE:RPL_BATH",
+        "specificationKey": "exterior_cover_type",
+        "required": true,
+        "selector": {}
+      },
+      {
+        "id": "CANDIDATE:RPL_BATH:required:survey_cover_top",
+        "productId": "CANDIDATE:RPL_BATH",
+        "specificationKey": "survey_cover_top",
+        "required": true,
+        "selector": {}
+      },
+      {
+        "id": "CANDIDATE:RPL_BATH:required:survey_cover_bottom",
+        "productId": "CANDIDATE:RPL_BATH",
+        "specificationKey": "survey_cover_bottom",
+        "required": true,
+        "selector": {}
+      },
+      {
+        "id": "CANDIDATE:RPL_BATH:required:survey_cover_side",
+        "productId": "CANDIDATE:RPL_BATH",
+        "specificationKey": "survey_cover_side",
+        "required": true,
+        "selector": {}
       }
     ],
     "ruleSets": [
@@ -4261,6 +5190,81 @@
           }
         ],
         "productId": "CANDIDATE:RPL_BATH"
+      },
+      {
+        "id": "CANDIDATE:RPL_BATH:ruleSets:cover-color-links",
+        "type": "SELECTION_LINKS",
+        "status": "ACTIVE",
+        "payload": [
+          {
+            "targetField": "exterior_cover_color",
+            "parents": [
+              "sash_exterior_color"
+            ],
+            "cases": [
+              {
+                "when": {
+                  "sash_exterior_color": "T"
+                },
+                "value": "T"
+              },
+              {
+                "when": {
+                  "sash_exterior_color": "G"
+                },
+                "value": "G"
+              },
+              {
+                "when": {
+                  "sash_exterior_color": "K"
+                },
+                "value": "K"
+              },
+              {
+                "when": {
+                  "sash_exterior_color": "D"
+                },
+                "value": "D"
+              },
+              {
+                "when": {
+                  "sash_exterior_color": "W"
+                },
+                "value": "W"
+              }
+            ],
+            "resolvedMessage": "本体外観色に連動しています。",
+            "pendingMessage": "サッシ本体の色を選択してください。",
+            "unavailableMessage": "本体色に対応するカバー部材の確認が必要です。"
+          },
+          {
+            "targetField": "interior_cover_color",
+            "parents": [
+              "sash_interior_color"
+            ],
+            "cases": [
+              {
+                "when": {
+                  "sash_interior_color": "M"
+                },
+                "value": "M"
+              },
+              {
+                "when": {
+                  "sash_interior_color": "F"
+                },
+                "value": "F"
+              }
+            ],
+            "resolvedMessage": "本体内観色に連動しています。",
+            "pendingMessage": "サッシ本体の色を選択してください。",
+            "unavailableMessage": "本体色に対応するカバー部材の確認が必要です。"
+          }
+        ],
+        "evidenceIds": [
+          "APP-POLICY-V9"
+        ],
+        "productId": "CANDIDATE:RPL_BATH"
       }
     ],
     "dependencies": [
@@ -4272,7 +5276,7 @@
             "$contains": "BATH-OP-CASING"
           }
         },
-        "targetField": "options",
+        "targetField": "interior_cover_type",
         "action": "deny_candidate",
         "targetValue": "BATH-OP-ANGLE-NOMITER",
         "productId": "CANDIDATE:RPL_BATH"
@@ -4538,11 +5542,69 @@
           "根拠内容": "公式ガラス体系図から候補UI投影を補完。組合せ・寸法は見積確認。価格/BOM/SetCode未確定。"
         },
         "productId": "CANDIDATE:RPL_BATH"
+      },
+      {
+        "id": "CANDIDATE:RPL_BATH:evidence:APP-POLICY-V9",
+        "source_id": "APP-POLICY-V9",
+        "payload": {
+          "schema": "USER_SELECTION_POLICY_V1",
+          "revision": "REPLUS_GLOBAL_FLOW_V9_20261014",
+          "decision": "User requested both covers follow sash colors on 2026-10-14; implementation and QA subsequently authorized.",
+          "manufacturer_same_color_required": null,
+          "mapping_basis": "Existing official component color palettes, explicit product-specific value mappings. No equality based on code or label heuristics.",
+          "source_catalog": "SN1200",
+          "source_sha256": "b837ce209c8b55b2b66b412a4e3c2694a78fd5de823efc7b2b960688a5668098",
+          "scope": "LOCAL_CANDIDATE_ONLY",
+          "formal_adoption": false,
+          "flow_order": [
+            "context",
+            "opening",
+            "finish",
+            "screen",
+            "glazing",
+            "interior_finish",
+            "exterior_finish",
+            "native_options",
+            "options",
+            "part_detail",
+            "survey",
+            "size"
+          ]
+        },
+        "productId": "CANDIDATE:RPL_BATH"
       }
     ]
   },
   "composition": null,
-  "numeric_constraints": [],
+  "numeric_constraints": [
+    {
+      "id": "nonnegative-survey_cover_top",
+      "field": "survey_cover_top",
+      "min": 0,
+      "outside": "BLOCK",
+      "evidenceIds": [
+        "APP-POLICY-V9"
+      ]
+    },
+    {
+      "id": "nonnegative-survey_cover_bottom",
+      "field": "survey_cover_bottom",
+      "min": 0,
+      "outside": "BLOCK",
+      "evidenceIds": [
+        "APP-POLICY-V9"
+      ]
+    },
+    {
+      "id": "nonnegative-survey_cover_side",
+      "field": "survey_cover_side",
+      "min": 0,
+      "outside": "BLOCK",
+      "evidenceIds": [
+        "APP-POLICY-V9"
+      ]
+    }
+  ],
   "linear_transforms": [],
   "unsupported_rules": [
     {
@@ -4598,7 +5660,17 @@
       "reason": "NATIVE_PROSE_OR_COMPOUND_RULE_REQUIRES_MANUAL_REVIEW"
     }
   ],
-  "selection_migrations": [],
+  "selection_migrations": [
+    {
+      "source": "options",
+      "match": "CONTAINS",
+      "value": "BATH-OP-ANGLE-NOMITER",
+      "clearValue": true,
+      "assign": {
+        "interior_cover_type": "BATH-OP-ANGLE-NOMITER"
+      }
+    }
+  ],
   "formal_adoption": false,
   "source_adoption": false,
   "pricing": {

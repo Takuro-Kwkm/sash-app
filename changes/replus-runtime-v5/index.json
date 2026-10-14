@@ -1,6 +1,6 @@
 {
   "schema": "CANDIDATE_RUNTIME_INDEX_V1",
-  "revision": "REPLUS_GLASS_FLOW_V8_20261014",
+  "revision": "REPLUS_GLOBAL_FLOW_V9_20261014",
   "adoption": "CANDIDATE_ONLY",
   "products": [
     {
@@ -10,22 +10,22 @@
       "displayName": "リプラス 居室仕様",
       "productCategory": "sash",
       "uiCategory": "REFORM_WINDOW_ESTIMATE",
-      "packageVersion": "REPLUS_GLASS_FLOW_V8_20261014",
+      "packageVersion": "REPLUS_GLOBAL_FLOW_V9_20261014",
       "masterVersion": "v1.0",
       "schemaVersion": "2.0",
       "path": "candidates/RPL_ROOM.module.json",
-      "sha256": "cef749bd733d7e20ed2f5a782245fcf06bdcb06f46d4471a7136e052b585964c",
+      "sha256": "c50f495d6e0415409d0fb491a2cd40d5b734d32052280bd29e5fefa89f80559c",
       "candidate": true,
-      "sourceHash": "ed89d4170ab101e87b5c8206c2e352c9429f7eaa3026f17b694ebf2ea29d77a5",
+      "sourceHash": "c50f495d6e0415409d0fb491a2cd40d5b734d32052280bd29e5fefa89f80559c",
       "adapterType": "COMPOSED_PRODUCT_MODULE_V1",
       "uiFlowContract": {
         "schema": "REVIEWED_WINDOW_FLOW_V3",
-        "revision": "REPLUS_GLASS_FLOW_V8_20261014",
+        "revision": "REPLUS_GLOBAL_FLOW_V9_20261014",
         "status": "REVIEWED_DESIGN_CANDIDATE",
         "formalAdoption": false,
         "sourceFlow": {
           "path": "candidates/RPL_ROOM.json",
-          "sha256": "16f8e732781f93bfbbb8c691b36e83f02625e4d2cae97a1683aea3bf78158b61",
+          "sha256": "f2066494c516e130aa5daa7f90c30f457e69a0a5d00c34801e92aa23282756ac",
           "table": "01_入力フロー"
         },
         "groups": [
@@ -42,12 +42,12 @@
           {
             "id": "survey",
             "label": "現場採寸・取付条件",
-            "order": 11
+            "order": 12
           },
           {
             "id": "size",
             "label": "製品寸法",
-            "order": 12
+            "order": 13
           },
           {
             "id": "finish",
@@ -65,24 +65,29 @@
             "order": 6
           },
           {
-            "id": "parts",
-            "label": "カバー・部材色",
-            "order": 7
-          },
-          {
             "id": "native_options",
             "label": "新設サッシのオプション",
-            "order": 8
+            "order": 9
           },
           {
             "id": "options",
             "label": "追加部材・オプション",
-            "order": 9
+            "order": 10
           },
           {
             "id": "part_detail",
             "label": "選択した部材の仕様",
-            "order": 10
+            "order": 11
+          },
+          {
+            "id": "interior_finish",
+            "label": "室内側の仕上げ・アングルカバー",
+            "order": 7
+          },
+          {
+            "id": "exterior_finish",
+            "label": "室外側の仕上げ・化粧カバー",
+            "order": 8
           }
         ],
         "fields": {
@@ -96,7 +101,7 @@
             "sourceRefs": [
               {
                 "path": "candidates/RPL_ROOM.json",
-                "sha256": "16f8e732781f93bfbbb8c691b36e83f02625e4d2cae97a1683aea3bf78158b61",
+                "sha256": "f2066494c516e130aa5daa7f90c30f457e69a0a5d00c34801e92aa23282756ac",
                 "table": "02_窓種"
               }
             ],
@@ -112,7 +117,7 @@
             "sourceRefs": [
               {
                 "path": "candidates/RPL_ROOM.json",
-                "sha256": "16f8e732781f93bfbbb8c691b36e83f02625e4d2cae97a1683aea3bf78158b61",
+                "sha256": "f2066494c516e130aa5daa7f90c30f457e69a0a5d00c34801e92aa23282756ac",
                 "table": "03_枠仕様 / 04_窓種固有仕様"
               }
             ],
@@ -130,7 +135,7 @@
             "sourceRefs": [
               {
                 "path": "candidates/RPL_ROOM.json",
-                "sha256": "16f8e732781f93bfbbb8c691b36e83f02625e4d2cae97a1683aea3bf78158b61",
+                "sha256": "f2066494c516e130aa5daa7f90c30f457e69a0a5d00c34801e92aa23282756ac",
                 "table": "03_枠仕様 / 04_窓種固有仕様"
               }
             ],
@@ -148,12 +153,18 @@
             "sourceRefs": [
               {
                 "path": "candidates/RPL_ROOM.json",
-                "sha256": "16f8e732781f93bfbbb8c691b36e83f02625e4d2cae97a1683aea3bf78158b61",
+                "sha256": "f2066494c516e130aa5daa7f90c30f457e69a0a5d00c34801e92aa23282756ac",
                 "table": "03_枠仕様 / 04_窓種固有仕様"
               }
             ],
             "parents": [
-              "window_type"
+              "window_type",
+              "custom_width",
+              "custom_height"
+            ],
+            "deferredEvaluationParents": [
+              "custom_width",
+              "custom_height"
             ]
           },
           "spec_sash_configuration": {
@@ -166,12 +177,12 @@
             "sourceRefs": [
               {
                 "path": "candidates/RPL_ROOM.json",
-                "sha256": "16f8e732781f93bfbbb8c691b36e83f02625e4d2cae97a1683aea3bf78158b61",
+                "sha256": "f2066494c516e130aa5daa7f90c30f457e69a0a5d00c34801e92aa23282756ac",
                 "table": "03_枠仕様 / 04_窓種固有仕様"
               },
               {
                 "path": "candidates/RPL_ROOM.json",
-                "sha256": "16f8e732781f93bfbbb8c691b36e83f02625e4d2cae97a1683aea3bf78158b61",
+                "sha256": "f2066494c516e130aa5daa7f90c30f457e69a0a5d00c34801e92aa23282756ac",
                 "table": "04_窓種固有仕様",
                 "reviewedAllowedValueSelectors": {
                   "SS-SLD-HANDLE": {
@@ -199,7 +210,7 @@
             "sourceRefs": [
               {
                 "path": "candidates/RPL_ROOM.json",
-                "sha256": "16f8e732781f93bfbbb8c691b36e83f02625e4d2cae97a1683aea3bf78158b61",
+                "sha256": "f2066494c516e130aa5daa7f90c30f457e69a0a5d00c34801e92aa23282756ac",
                 "table": "03_枠仕様 / 04_窓種固有仕様"
               }
             ],
@@ -217,7 +228,7 @@
             "sourceRefs": [
               {
                 "path": "candidates/RPL_ROOM.json",
-                "sha256": "16f8e732781f93bfbbb8c691b36e83f02625e4d2cae97a1683aea3bf78158b61",
+                "sha256": "f2066494c516e130aa5daa7f90c30f457e69a0a5d00c34801e92aa23282756ac",
                 "table": "07_網戸 / 07A_網戸適用条件"
               }
             ],
@@ -236,7 +247,7 @@
             "sourceRefs": [
               {
                 "path": "candidates/RPL_ROOM.json",
-                "sha256": "16f8e732781f93bfbbb8c691b36e83f02625e4d2cae97a1683aea3bf78158b61",
+                "sha256": "f2066494c516e130aa5daa7f90c30f457e69a0a5d00c34801e92aa23282756ac",
                 "table": "05_サイズルール / 01_入力フロー"
               }
             ],
@@ -253,7 +264,7 @@
             "sourceRefs": [
               {
                 "path": "candidates/RPL_ROOM.json",
-                "sha256": "16f8e732781f93bfbbb8c691b36e83f02625e4d2cae97a1683aea3bf78158b61",
+                "sha256": "f2066494c516e130aa5daa7f90c30f457e69a0a5d00c34801e92aa23282756ac",
                 "table": "05_サイズルール / 01_入力フロー"
               }
             ],
@@ -272,7 +283,7 @@
             "sourceRefs": [
               {
                 "path": "candidates/RPL_ROOM.json",
-                "sha256": "16f8e732781f93bfbbb8c691b36e83f02625e4d2cae97a1683aea3bf78158b61",
+                "sha256": "f2066494c516e130aa5daa7f90c30f457e69a0a5d00c34801e92aa23282756ac",
                 "table": "05_サイズルール / 01_入力フロー"
               }
             ],
@@ -291,7 +302,7 @@
             "sourceRefs": [
               {
                 "path": "candidates/RPL_ROOM.json",
-                "sha256": "16f8e732781f93bfbbb8c691b36e83f02625e4d2cae97a1683aea3bf78158b61",
+                "sha256": "f2066494c516e130aa5daa7f90c30f457e69a0a5d00c34801e92aa23282756ac",
                 "table": "06_色"
               }
             ],
@@ -307,43 +318,52 @@
             "sourceRefs": [
               {
                 "path": "candidates/RPL_ROOM.json",
-                "sha256": "16f8e732781f93bfbbb8c691b36e83f02625e4d2cae97a1683aea3bf78158b61",
+                "sha256": "f2066494c516e130aa5daa7f90c30f457e69a0a5d00c34801e92aa23282756ac",
                 "table": "06_色"
               }
             ],
-            "parents": []
+            "parents": [
+              "color_mode",
+              "sash_exterior_color"
+            ]
           },
           "exterior_cover_color": {
-            "label": "化粧カバー外観色",
-            "meaning": "本体色から独立したカバー・付属部材の色",
+            "label": "化粧カバー色（外観色に連動）",
+            "meaning": "本体色に連動する仕上げ色。独立した色指定は行わない。",
             "slot": "finish_color",
             "stage": "FINISH",
-            "group": "parts",
-            "rank": 1,
+            "group": "exterior_finish",
+            "rank": 5,
+            "parents": [
+              "sash_exterior_color"
+            ],
             "sourceRefs": [
               {
-                "path": "candidates/RPL_ROOM.json",
-                "sha256": "16f8e732781f93bfbbb8c691b36e83f02625e4d2cae97a1683aea3bf78158b61",
-                "table": "06_色 / 01_入力フロー"
+                "path": "flow/user-selection-policy.v9.json",
+                "sha256": "1e440046a291664a7914ff725ffdf1a46cedc43a628d22093d852481dbd3c970",
+                "table": "User-authorized application policy; manufacturer color catalogs carried forward"
               }
             ],
-            "parents": []
+            "readOnly": true
           },
           "interior_cover_color": {
-            "label": "化粧カバー内観色",
-            "meaning": "本体色から独立したカバー・付属部材の色",
+            "label": "室内カバー色（内観色に連動）",
+            "meaning": "本体色に連動する仕上げ色。独立した色指定は行わない。",
             "slot": "finish_color",
             "stage": "FINISH",
-            "group": "parts",
-            "rank": 2,
+            "group": "interior_finish",
+            "rank": 5,
+            "parents": [
+              "sash_interior_color"
+            ],
             "sourceRefs": [
               {
-                "path": "candidates/RPL_ROOM.json",
-                "sha256": "16f8e732781f93bfbbb8c691b36e83f02625e4d2cae97a1683aea3bf78158b61",
-                "table": "06_色 / 01_入力フロー"
+                "path": "flow/user-selection-policy.v9.json",
+                "sha256": "1e440046a291664a7914ff725ffdf1a46cedc43a628d22093d852481dbd3c970",
+                "table": "User-authorized application policy; manufacturer color catalogs carried forward"
               }
             ],
-            "parents": []
+            "readOnly": true
           },
           "wooden_casing_color": {
             "label": "木製ケーシング色",
@@ -355,7 +375,7 @@
             "sourceRefs": [
               {
                 "path": "candidates/RPL_ROOM.json",
-                "sha256": "16f8e732781f93bfbbb8c691b36e83f02625e4d2cae97a1683aea3bf78158b61",
+                "sha256": "f2066494c516e130aa5daa7f90c30f457e69a0a5d00c34801e92aa23282756ac",
                 "table": "06_色 / 09_OP / DELTA-CASING-EV-V4"
               }
             ],
@@ -373,7 +393,7 @@
             "sourceRefs": [
               {
                 "path": "candidates/RPL_ROOM.json",
-                "sha256": "16f8e732781f93bfbbb8c691b36e83f02625e4d2cae97a1683aea3bf78158b61",
+                "sha256": "f2066494c516e130aa5daa7f90c30f457e69a0a5d00c34801e92aa23282756ac",
                 "table": "09_OP / 09A_OP依存関係"
               }
             ],
@@ -391,7 +411,7 @@
             "sourceRefs": [
               {
                 "path": "candidates/RPL_ROOM.json",
-                "sha256": "16f8e732781f93bfbbb8c691b36e83f02625e4d2cae97a1683aea3bf78158b61",
+                "sha256": "f2066494c516e130aa5daa7f90c30f457e69a0a5d00c34801e92aa23282756ac",
                 "table": "10_適用条件 / 10B_現調項目 / 08_ガラス・08A_ガラス適用条件"
               }
             ],
@@ -407,7 +427,7 @@
             "sourceRefs": [
               {
                 "path": "candidates/RPL_ROOM.json",
-                "sha256": "16f8e732781f93bfbbb8c691b36e83f02625e4d2cae97a1683aea3bf78158b61",
+                "sha256": "f2066494c516e130aa5daa7f90c30f457e69a0a5d00c34801e92aa23282756ac",
                 "table": "10_適用条件 / 10B_現調項目 / 08_ガラス・08A_ガラス適用条件"
               }
             ],
@@ -423,7 +443,7 @@
             "sourceRefs": [
               {
                 "path": "candidates/RPL_ROOM.json",
-                "sha256": "16f8e732781f93bfbbb8c691b36e83f02625e4d2cae97a1683aea3bf78158b61",
+                "sha256": "f2066494c516e130aa5daa7f90c30f457e69a0a5d00c34801e92aa23282756ac",
                 "table": "10_適用条件 / 10B_現調項目 / 08_ガラス・08A_ガラス適用条件"
               }
             ],
@@ -439,7 +459,7 @@
             "sourceRefs": [
               {
                 "path": "candidates/RPL_ROOM.json",
-                "sha256": "16f8e732781f93bfbbb8c691b36e83f02625e4d2cae97a1683aea3bf78158b61",
+                "sha256": "f2066494c516e130aa5daa7f90c30f457e69a0a5d00c34801e92aa23282756ac",
                 "table": "10_適用条件 / 10B_現調項目 / 08_ガラス・08A_ガラス適用条件"
               }
             ],
@@ -455,7 +475,7 @@
             "sourceRefs": [
               {
                 "path": "candidates/RPL_ROOM.json",
-                "sha256": "16f8e732781f93bfbbb8c691b36e83f02625e4d2cae97a1683aea3bf78158b61",
+                "sha256": "f2066494c516e130aa5daa7f90c30f457e69a0a5d00c34801e92aa23282756ac",
                 "table": "08_ガラス / 08A_ガラス適用条件"
               },
               {
@@ -479,7 +499,7 @@
             "sourceRefs": [
               {
                 "path": "candidates/RPL_ROOM.json",
-                "sha256": "16f8e732781f93bfbbb8c691b36e83f02625e4d2cae97a1683aea3bf78158b61",
+                "sha256": "f2066494c516e130aa5daa7f90c30f457e69a0a5d00c34801e92aa23282756ac",
                 "table": "08_ガラス / 08A_ガラス適用条件"
               },
               {
@@ -504,7 +524,7 @@
             "sourceRefs": [
               {
                 "path": "candidates/RPL_ROOM.json",
-                "sha256": "16f8e732781f93bfbbb8c691b36e83f02625e4d2cae97a1683aea3bf78158b61",
+                "sha256": "f2066494c516e130aa5daa7f90c30f457e69a0a5d00c34801e92aa23282756ac",
                 "table": "08_ガラス / 08A_ガラス適用条件"
               },
               {
@@ -578,6 +598,115 @@
               }
             ],
             "helpText": "ガラス構成・窓種・寸法による製作可否は個別に見積確認してください。"
+          },
+          "color_mode": {
+            "label": "本体の色設定",
+            "meaning": "本体の内外色の組合せ区分。カバー独立色指定ではない。",
+            "slot": "finish_color",
+            "stage": "FINISH",
+            "group": "finish",
+            "rank": 0,
+            "parents": [],
+            "sourceRefs": [
+              {
+                "path": "flow/user-selection-policy.v9.json",
+                "sha256": "1e440046a291664a7914ff725ffdf1a46cedc43a628d22093d852481dbd3c970",
+                "table": "User-authorized application policy; manufacturer color catalogs carried forward"
+              }
+            ]
+          },
+          "interior_cover_type": {
+            "label": "室内側の仕上げ仕様",
+            "meaning": "室内の既設枠を覆う仕上げ部材を選定する。",
+            "slot": "option",
+            "stage": "OPTION",
+            "group": "interior_finish",
+            "rank": 1,
+            "parents": [],
+            "sourceRefs": [
+              {
+                "path": "flow/user-selection-policy.v9.json",
+                "sha256": "1e440046a291664a7914ff725ffdf1a46cedc43a628d22093d852481dbd3c970",
+                "table": "User-authorized application policy; manufacturer color catalogs carried forward"
+              }
+            ]
+          },
+          "exterior_cover_type": {
+            "label": "化粧カバーの大きさ・組合せ",
+            "meaning": "既設枠見付・枠仕様に対応する化粧カバーの見付と上下左右の組合せ。",
+            "slot": "option",
+            "stage": "OPTION",
+            "group": "exterior_finish",
+            "rank": 1,
+            "parents": [
+              "frame_type",
+              "survey_cover_top",
+              "survey_cover_bottom",
+              "survey_cover_side"
+            ],
+            "sourceRefs": [
+              {
+                "path": "flow/user-selection-policy.v9.json",
+                "sha256": "1e440046a291664a7914ff725ffdf1a46cedc43a628d22093d852481dbd3c970",
+                "table": "User-authorized application policy; manufacturer color catalogs carried forward"
+              }
+            ],
+            "deferredEvaluationParents": [
+              "survey_cover_top",
+              "survey_cover_bottom",
+              "survey_cover_side"
+            ]
+          },
+          "survey_cover_top": {
+            "label": "既設上枠の見付（mm）",
+            "meaning": "化粧カバーの適用範囲を再評価する現場採寸値。",
+            "slot": "installation",
+            "stage": "INSTALLATION_SURVEY",
+            "group": "survey",
+            "rank": 80,
+            "parents": [],
+            "sourceRefs": [
+              {
+                "path": "flow/user-selection-policy.v9.json",
+                "sha256": "1e440046a291664a7914ff725ffdf1a46cedc43a628d22093d852481dbd3c970",
+                "table": "User-authorized application policy; manufacturer color catalogs carried forward"
+              }
+            ],
+            "evaluationContext": true
+          },
+          "survey_cover_bottom": {
+            "label": "既設下枠の見付（mm）",
+            "meaning": "化粧カバーの適用範囲を再評価する現場採寸値。",
+            "slot": "installation",
+            "stage": "INSTALLATION_SURVEY",
+            "group": "survey",
+            "rank": 81,
+            "parents": [],
+            "sourceRefs": [
+              {
+                "path": "flow/user-selection-policy.v9.json",
+                "sha256": "1e440046a291664a7914ff725ffdf1a46cedc43a628d22093d852481dbd3c970",
+                "table": "User-authorized application policy; manufacturer color catalogs carried forward"
+              }
+            ],
+            "evaluationContext": true
+          },
+          "survey_cover_side": {
+            "label": "既設縦枠の見付（mm）",
+            "meaning": "化粧カバーの適用範囲を再評価する現場採寸値。",
+            "slot": "installation",
+            "stage": "INSTALLATION_SURVEY",
+            "group": "survey",
+            "rank": 82,
+            "parents": [],
+            "sourceRefs": [
+              {
+                "path": "flow/user-selection-policy.v9.json",
+                "sha256": "1e440046a291664a7914ff725ffdf1a46cedc43a628d22093d852481dbd3c970",
+                "table": "User-authorized application policy; manufacturer color catalogs carried forward"
+              }
+            ],
+            "evaluationContext": true
           }
         },
         "contextFields": [],
@@ -720,6 +849,11 @@
           {
             "path": "flow/official-glass-review.v8.json",
             "sha256": "4b9b3654885f17c68f2900abf6789bb539344d3ebb98cc1671e0fd94e198551f"
+          },
+          {
+            "path": "flow/user-selection-policy.v9.json",
+            "sha256": "1e440046a291664a7914ff725ffdf1a46cedc43a628d22093d852481dbd3c970",
+            "table": "User-authorized application policy; manufacturer color catalogs carried forward"
           }
         ]
       },
@@ -737,22 +871,22 @@
       "displayName": "リプラス 居室仕様 TWタイプ",
       "productCategory": "sash",
       "uiCategory": "REFORM_WINDOW_ESTIMATE",
-      "packageVersion": "REPLUS_GLASS_FLOW_V8_20261014",
+      "packageVersion": "REPLUS_GLOBAL_FLOW_V9_20261014",
       "masterVersion": "v1.0",
       "schemaVersion": "2.0",
       "path": "candidates/RPL_TW.module.json",
-      "sha256": "23ea472c11a76be3618453810649870bbad4ee9e96947de605d0a8c0c8701ffe",
+      "sha256": "c2b1aa394f16ac56684812e0ce07704ebcec12ea309d7faafa5bb10bf38f6880",
       "candidate": true,
-      "sourceHash": "a800470fee2286da87738b08c09a5333d1ced855166c53389aec58b3238ec82a",
+      "sourceHash": "c2b1aa394f16ac56684812e0ce07704ebcec12ea309d7faafa5bb10bf38f6880",
       "adapterType": "COMPOSED_PRODUCT_MODULE_V1",
       "uiFlowContract": {
         "schema": "REVIEWED_WINDOW_FLOW_V3",
-        "revision": "REPLUS_GLASS_FLOW_V8_20261014",
+        "revision": "REPLUS_GLOBAL_FLOW_V9_20261014",
         "status": "REVIEWED_DESIGN_CANDIDATE",
         "formalAdoption": false,
         "sourceFlow": {
           "path": "candidates/RPL_TW.json",
-          "sha256": "1dccfc6c4e8713b552dd29b8149fea4a630801bcb2772b5b21b0c00dfd8f358a",
+          "sha256": "a34c1a2428079dac864356ae67c89992e45ea7187a2e3cf0476fefa68cbb99b8",
           "table": "01_入力フロー"
         },
         "groups": [
@@ -769,12 +903,12 @@
           {
             "id": "survey",
             "label": "現場採寸・取付条件",
-            "order": 11
+            "order": 12
           },
           {
             "id": "size",
             "label": "製品寸法",
-            "order": 12
+            "order": 13
           },
           {
             "id": "finish",
@@ -792,24 +926,29 @@
             "order": 6
           },
           {
-            "id": "parts",
-            "label": "カバー・部材色",
-            "order": 7
-          },
-          {
             "id": "native_options",
             "label": "新設サッシのオプション",
-            "order": 8
+            "order": 9
           },
           {
             "id": "options",
             "label": "追加部材・オプション",
-            "order": 9
+            "order": 10
           },
           {
             "id": "part_detail",
             "label": "選択した部材の仕様",
-            "order": 10
+            "order": 11
+          },
+          {
+            "id": "interior_finish",
+            "label": "室内側の仕上げ・アングルカバー",
+            "order": 7
+          },
+          {
+            "id": "exterior_finish",
+            "label": "室外側の仕上げ・化粧カバー",
+            "order": 8
           }
         ],
         "fields": {
@@ -823,7 +962,7 @@
             "sourceRefs": [
               {
                 "path": "candidates/RPL_TW.json",
-                "sha256": "1dccfc6c4e8713b552dd29b8149fea4a630801bcb2772b5b21b0c00dfd8f358a",
+                "sha256": "a34c1a2428079dac864356ae67c89992e45ea7187a2e3cf0476fefa68cbb99b8",
                 "table": "02_窓種"
               }
             ],
@@ -839,7 +978,7 @@
             "sourceRefs": [
               {
                 "path": "candidates/RPL_TW.json",
-                "sha256": "1dccfc6c4e8713b552dd29b8149fea4a630801bcb2772b5b21b0c00dfd8f358a",
+                "sha256": "a34c1a2428079dac864356ae67c89992e45ea7187a2e3cf0476fefa68cbb99b8",
                 "table": "03_枠仕様 / 04_窓種固有仕様"
               }
             ],
@@ -857,7 +996,7 @@
             "sourceRefs": [
               {
                 "path": "candidates/RPL_TW.json",
-                "sha256": "1dccfc6c4e8713b552dd29b8149fea4a630801bcb2772b5b21b0c00dfd8f358a",
+                "sha256": "a34c1a2428079dac864356ae67c89992e45ea7187a2e3cf0476fefa68cbb99b8",
                 "table": "03_枠仕様 / 04_窓種固有仕様"
               }
             ],
@@ -875,12 +1014,18 @@
             "sourceRefs": [
               {
                 "path": "candidates/RPL_TW.json",
-                "sha256": "1dccfc6c4e8713b552dd29b8149fea4a630801bcb2772b5b21b0c00dfd8f358a",
+                "sha256": "a34c1a2428079dac864356ae67c89992e45ea7187a2e3cf0476fefa68cbb99b8",
                 "table": "03_枠仕様 / 04_窓種固有仕様"
               }
             ],
             "parents": [
-              "window_type"
+              "window_type",
+              "custom_width",
+              "custom_height"
+            ],
+            "deferredEvaluationParents": [
+              "custom_width",
+              "custom_height"
             ]
           },
           "spec_sash_configuration": {
@@ -893,12 +1038,12 @@
             "sourceRefs": [
               {
                 "path": "candidates/RPL_TW.json",
-                "sha256": "1dccfc6c4e8713b552dd29b8149fea4a630801bcb2772b5b21b0c00dfd8f358a",
+                "sha256": "a34c1a2428079dac864356ae67c89992e45ea7187a2e3cf0476fefa68cbb99b8",
                 "table": "03_枠仕様 / 04_窓種固有仕様"
               },
               {
                 "path": "candidates/RPL_TW.json",
-                "sha256": "1dccfc6c4e8713b552dd29b8149fea4a630801bcb2772b5b21b0c00dfd8f358a",
+                "sha256": "a34c1a2428079dac864356ae67c89992e45ea7187a2e3cf0476fefa68cbb99b8",
                 "table": "04_窓種固有仕様",
                 "reviewedAllowedValueSelectors": {
                   "TW-SS-HANDLE": {
@@ -927,7 +1072,7 @@
             "sourceRefs": [
               {
                 "path": "candidates/RPL_TW.json",
-                "sha256": "1dccfc6c4e8713b552dd29b8149fea4a630801bcb2772b5b21b0c00dfd8f358a",
+                "sha256": "a34c1a2428079dac864356ae67c89992e45ea7187a2e3cf0476fefa68cbb99b8",
                 "table": "07_網戸 / 07A_網戸適用条件"
               }
             ],
@@ -946,7 +1091,7 @@
             "sourceRefs": [
               {
                 "path": "candidates/RPL_TW.json",
-                "sha256": "1dccfc6c4e8713b552dd29b8149fea4a630801bcb2772b5b21b0c00dfd8f358a",
+                "sha256": "a34c1a2428079dac864356ae67c89992e45ea7187a2e3cf0476fefa68cbb99b8",
                 "table": "05_サイズルール / 01_入力フロー"
               }
             ],
@@ -963,7 +1108,7 @@
             "sourceRefs": [
               {
                 "path": "candidates/RPL_TW.json",
-                "sha256": "1dccfc6c4e8713b552dd29b8149fea4a630801bcb2772b5b21b0c00dfd8f358a",
+                "sha256": "a34c1a2428079dac864356ae67c89992e45ea7187a2e3cf0476fefa68cbb99b8",
                 "table": "05_サイズルール / 01_入力フロー"
               }
             ],
@@ -982,7 +1127,7 @@
             "sourceRefs": [
               {
                 "path": "candidates/RPL_TW.json",
-                "sha256": "1dccfc6c4e8713b552dd29b8149fea4a630801bcb2772b5b21b0c00dfd8f358a",
+                "sha256": "a34c1a2428079dac864356ae67c89992e45ea7187a2e3cf0476fefa68cbb99b8",
                 "table": "05_サイズルール / 01_入力フロー"
               }
             ],
@@ -1001,27 +1146,30 @@
             "sourceRefs": [
               {
                 "path": "candidates/RPL_TW.json",
-                "sha256": "1dccfc6c4e8713b552dd29b8149fea4a630801bcb2772b5b21b0c00dfd8f358a",
+                "sha256": "a34c1a2428079dac864356ae67c89992e45ea7187a2e3cf0476fefa68cbb99b8",
                 "table": "06_色"
               }
             ],
             "parents": []
           },
           "exterior_cover_color": {
-            "label": "化粧カバー外観色",
-            "meaning": "本体色から独立したカバー・付属部材の色",
+            "label": "化粧カバー色（外観色に連動）",
+            "meaning": "本体色に連動する仕上げ色。独立した色指定は行わない。",
             "slot": "finish_color",
             "stage": "FINISH",
-            "group": "parts",
-            "rank": 1,
+            "group": "exterior_finish",
+            "rank": 5,
+            "parents": [
+              "sash_exterior_color"
+            ],
             "sourceRefs": [
               {
-                "path": "candidates/RPL_TW.json",
-                "sha256": "1dccfc6c4e8713b552dd29b8149fea4a630801bcb2772b5b21b0c00dfd8f358a",
-                "table": "06_色 / 01_入力フロー"
+                "path": "flow/user-selection-policy.v9.json",
+                "sha256": "1e440046a291664a7914ff725ffdf1a46cedc43a628d22093d852481dbd3c970",
+                "table": "User-authorized application policy; manufacturer color catalogs carried forward"
               }
             ],
-            "parents": []
+            "readOnly": true
           },
           "sash_interior_color": {
             "label": "本体内観色",
@@ -1033,27 +1181,30 @@
             "sourceRefs": [
               {
                 "path": "candidates/RPL_TW.json",
-                "sha256": "1dccfc6c4e8713b552dd29b8149fea4a630801bcb2772b5b21b0c00dfd8f358a",
+                "sha256": "a34c1a2428079dac864356ae67c89992e45ea7187a2e3cf0476fefa68cbb99b8",
                 "table": "06_色"
               }
             ],
             "parents": []
           },
           "interior_cover_color": {
-            "label": "化粧カバー内観色",
-            "meaning": "本体色から独立したカバー・付属部材の色",
+            "label": "室内カバー色（内観色に連動）",
+            "meaning": "本体色に連動する仕上げ色。独立した色指定は行わない。",
             "slot": "finish_color",
             "stage": "FINISH",
-            "group": "parts",
-            "rank": 2,
+            "group": "interior_finish",
+            "rank": 5,
+            "parents": [
+              "sash_interior_color"
+            ],
             "sourceRefs": [
               {
-                "path": "candidates/RPL_TW.json",
-                "sha256": "1dccfc6c4e8713b552dd29b8149fea4a630801bcb2772b5b21b0c00dfd8f358a",
-                "table": "06_色 / 01_入力フロー"
+                "path": "flow/user-selection-policy.v9.json",
+                "sha256": "1e440046a291664a7914ff725ffdf1a46cedc43a628d22093d852481dbd3c970",
+                "table": "User-authorized application policy; manufacturer color catalogs carried forward"
               }
             ],
-            "parents": []
+            "readOnly": true
           },
           "wooden_casing_color": {
             "label": "木製ケーシング色",
@@ -1065,7 +1216,7 @@
             "sourceRefs": [
               {
                 "path": "candidates/RPL_TW.json",
-                "sha256": "1dccfc6c4e8713b552dd29b8149fea4a630801bcb2772b5b21b0c00dfd8f358a",
+                "sha256": "a34c1a2428079dac864356ae67c89992e45ea7187a2e3cf0476fefa68cbb99b8",
                 "table": "06_色 / 09_OP / DELTA-CASING-EV-V4"
               }
             ],
@@ -1083,7 +1234,7 @@
             "sourceRefs": [
               {
                 "path": "candidates/RPL_TW.json",
-                "sha256": "1dccfc6c4e8713b552dd29b8149fea4a630801bcb2772b5b21b0c00dfd8f358a",
+                "sha256": "a34c1a2428079dac864356ae67c89992e45ea7187a2e3cf0476fefa68cbb99b8",
                 "table": "09_OP / 09A_OP依存関係"
               }
             ],
@@ -1101,7 +1252,7 @@
             "sourceRefs": [
               {
                 "path": "candidates/RPL_TW.json",
-                "sha256": "1dccfc6c4e8713b552dd29b8149fea4a630801bcb2772b5b21b0c00dfd8f358a",
+                "sha256": "a34c1a2428079dac864356ae67c89992e45ea7187a2e3cf0476fefa68cbb99b8",
                 "table": "10_適用条件 / 10B_現調項目 / 08_ガラス・08A_ガラス適用条件"
               }
             ],
@@ -1117,7 +1268,7 @@
             "sourceRefs": [
               {
                 "path": "candidates/RPL_TW.json",
-                "sha256": "1dccfc6c4e8713b552dd29b8149fea4a630801bcb2772b5b21b0c00dfd8f358a",
+                "sha256": "a34c1a2428079dac864356ae67c89992e45ea7187a2e3cf0476fefa68cbb99b8",
                 "table": "10_適用条件 / 10B_現調項目 / 08_ガラス・08A_ガラス適用条件"
               }
             ],
@@ -1133,7 +1284,7 @@
             "sourceRefs": [
               {
                 "path": "candidates/RPL_TW.json",
-                "sha256": "1dccfc6c4e8713b552dd29b8149fea4a630801bcb2772b5b21b0c00dfd8f358a",
+                "sha256": "a34c1a2428079dac864356ae67c89992e45ea7187a2e3cf0476fefa68cbb99b8",
                 "table": "10_適用条件 / 10B_現調項目 / 08_ガラス・08A_ガラス適用条件"
               }
             ],
@@ -1149,7 +1300,7 @@
             "sourceRefs": [
               {
                 "path": "candidates/RPL_TW.json",
-                "sha256": "1dccfc6c4e8713b552dd29b8149fea4a630801bcb2772b5b21b0c00dfd8f358a",
+                "sha256": "a34c1a2428079dac864356ae67c89992e45ea7187a2e3cf0476fefa68cbb99b8",
                 "table": "08_ガラス / 08A_ガラス適用条件"
               },
               {
@@ -1173,7 +1324,7 @@
             "sourceRefs": [
               {
                 "path": "candidates/RPL_TW.json",
-                "sha256": "1dccfc6c4e8713b552dd29b8149fea4a630801bcb2772b5b21b0c00dfd8f358a",
+                "sha256": "a34c1a2428079dac864356ae67c89992e45ea7187a2e3cf0476fefa68cbb99b8",
                 "table": "08_ガラス / 08A_ガラス適用条件"
               },
               {
@@ -1198,7 +1349,7 @@
             "sourceRefs": [
               {
                 "path": "candidates/RPL_TW.json",
-                "sha256": "1dccfc6c4e8713b552dd29b8149fea4a630801bcb2772b5b21b0c00dfd8f358a",
+                "sha256": "a34c1a2428079dac864356ae67c89992e45ea7187a2e3cf0476fefa68cbb99b8",
                 "table": "08_ガラス / 08A_ガラス適用条件"
               },
               {
@@ -1222,7 +1373,7 @@
             "sourceRefs": [
               {
                 "path": "candidates/RPL_TW.json",
-                "sha256": "1dccfc6c4e8713b552dd29b8149fea4a630801bcb2772b5b21b0c00dfd8f358a",
+                "sha256": "a34c1a2428079dac864356ae67c89992e45ea7187a2e3cf0476fefa68cbb99b8",
                 "table": "08_ガラス / 08A_ガラス適用条件"
               },
               {
@@ -1278,6 +1429,98 @@
               }
             ],
             "helpText": "ガラス構成・窓種・寸法による製作可否は個別に見積確認してください。"
+          },
+          "interior_cover_type": {
+            "label": "室内側の仕上げ仕様",
+            "meaning": "室内の既設枠を覆う仕上げ部材を選定する。",
+            "slot": "option",
+            "stage": "OPTION",
+            "group": "interior_finish",
+            "rank": 1,
+            "parents": [],
+            "sourceRefs": [
+              {
+                "path": "flow/user-selection-policy.v9.json",
+                "sha256": "1e440046a291664a7914ff725ffdf1a46cedc43a628d22093d852481dbd3c970",
+                "table": "User-authorized application policy; manufacturer color catalogs carried forward"
+              }
+            ]
+          },
+          "exterior_cover_type": {
+            "label": "化粧カバーの大きさ・組合せ",
+            "meaning": "既設枠見付・枠仕様に対応する化粧カバーの見付と上下左右の組合せ。",
+            "slot": "option",
+            "stage": "OPTION",
+            "group": "exterior_finish",
+            "rank": 1,
+            "parents": [
+              "survey_cover_top",
+              "survey_cover_bottom",
+              "survey_cover_side"
+            ],
+            "sourceRefs": [
+              {
+                "path": "flow/user-selection-policy.v9.json",
+                "sha256": "1e440046a291664a7914ff725ffdf1a46cedc43a628d22093d852481dbd3c970",
+                "table": "User-authorized application policy; manufacturer color catalogs carried forward"
+              }
+            ],
+            "deferredEvaluationParents": [
+              "survey_cover_top",
+              "survey_cover_bottom",
+              "survey_cover_side"
+            ]
+          },
+          "survey_cover_top": {
+            "label": "既設上枠の見付（mm）",
+            "meaning": "化粧カバーの適用範囲を再評価する現場採寸値。",
+            "slot": "installation",
+            "stage": "INSTALLATION_SURVEY",
+            "group": "survey",
+            "rank": 77,
+            "parents": [],
+            "sourceRefs": [
+              {
+                "path": "flow/user-selection-policy.v9.json",
+                "sha256": "1e440046a291664a7914ff725ffdf1a46cedc43a628d22093d852481dbd3c970",
+                "table": "User-authorized application policy; manufacturer color catalogs carried forward"
+              }
+            ],
+            "evaluationContext": true
+          },
+          "survey_cover_bottom": {
+            "label": "既設下枠の見付（mm）",
+            "meaning": "化粧カバーの適用範囲を再評価する現場採寸値。",
+            "slot": "installation",
+            "stage": "INSTALLATION_SURVEY",
+            "group": "survey",
+            "rank": 78,
+            "parents": [],
+            "sourceRefs": [
+              {
+                "path": "flow/user-selection-policy.v9.json",
+                "sha256": "1e440046a291664a7914ff725ffdf1a46cedc43a628d22093d852481dbd3c970",
+                "table": "User-authorized application policy; manufacturer color catalogs carried forward"
+              }
+            ],
+            "evaluationContext": true
+          },
+          "survey_cover_side": {
+            "label": "既設縦枠の見付（mm）",
+            "meaning": "化粧カバーの適用範囲を再評価する現場採寸値。",
+            "slot": "installation",
+            "stage": "INSTALLATION_SURVEY",
+            "group": "survey",
+            "rank": 79,
+            "parents": [],
+            "sourceRefs": [
+              {
+                "path": "flow/user-selection-policy.v9.json",
+                "sha256": "1e440046a291664a7914ff725ffdf1a46cedc43a628d22093d852481dbd3c970",
+                "table": "User-authorized application policy; manufacturer color catalogs carried forward"
+              }
+            ],
+            "evaluationContext": true
           }
         },
         "contextFields": [],
@@ -1463,6 +1706,11 @@
           {
             "path": "flow/official-glass-review.v8.json",
             "sha256": "4b9b3654885f17c68f2900abf6789bb539344d3ebb98cc1671e0fd94e198551f"
+          },
+          {
+            "path": "flow/user-selection-policy.v9.json",
+            "sha256": "1e440046a291664a7914ff725ffdf1a46cedc43a628d22093d852481dbd3c970",
+            "table": "User-authorized application policy; manufacturer color catalogs carried forward"
           }
         ]
       },
@@ -1480,22 +1728,22 @@
       "displayName": "リプラス 居室仕様 EWタイプ",
       "productCategory": "sash",
       "uiCategory": "REFORM_WINDOW_ESTIMATE",
-      "packageVersion": "REPLUS_GLASS_FLOW_V8_20261014",
+      "packageVersion": "REPLUS_GLOBAL_FLOW_V9_20261014",
       "masterVersion": "v1.0",
       "schemaVersion": "2.0",
       "path": "candidates/RPL_EW.module.json",
-      "sha256": "c86ca4de2ef30566ab2ea110be5368c607f4f0647392a9ad7b4847759e009140",
+      "sha256": "16db161eb2f166ab9ef2110adfe8736eee3f1cd3f931720dd7745e98a566e8c7",
       "candidate": true,
-      "sourceHash": "c78002e5f015583d950f2fcdb9904816beb9a41c0bd6af68549d31f36ce8561f",
+      "sourceHash": "16db161eb2f166ab9ef2110adfe8736eee3f1cd3f931720dd7745e98a566e8c7",
       "adapterType": "COMPOSED_PRODUCT_MODULE_V1",
       "uiFlowContract": {
         "schema": "REVIEWED_WINDOW_FLOW_V3",
-        "revision": "REPLUS_GLASS_FLOW_V8_20261014",
+        "revision": "REPLUS_GLOBAL_FLOW_V9_20261014",
         "status": "REVIEWED_DESIGN_CANDIDATE",
         "formalAdoption": false,
         "sourceFlow": {
           "path": "candidates/RPL_EW.json",
-          "sha256": "1feae3d5a1fbc2f658829ee7b195ca472febb91ae0ad309ed450cca783d58747",
+          "sha256": "808833da35fe0fddcb2ecaae3092d30fae24ba62f87a6d268f878f197a17b575",
           "table": "01_入力フロー"
         },
         "groups": [
@@ -1512,12 +1760,12 @@
           {
             "id": "survey",
             "label": "現場採寸・取付条件",
-            "order": 11
+            "order": 12
           },
           {
             "id": "size",
             "label": "製品寸法",
-            "order": 12
+            "order": 13
           },
           {
             "id": "finish",
@@ -1535,24 +1783,29 @@
             "order": 6
           },
           {
-            "id": "parts",
-            "label": "カバー・部材色",
-            "order": 7
-          },
-          {
             "id": "native_options",
             "label": "新設サッシのオプション",
-            "order": 8
+            "order": 9
           },
           {
             "id": "options",
             "label": "追加部材・オプション",
-            "order": 9
+            "order": 10
           },
           {
             "id": "part_detail",
             "label": "選択した部材の仕様",
-            "order": 10
+            "order": 11
+          },
+          {
+            "id": "interior_finish",
+            "label": "室内側の仕上げ・アングルカバー",
+            "order": 7
+          },
+          {
+            "id": "exterior_finish",
+            "label": "室外側の仕上げ・化粧カバー",
+            "order": 8
           }
         ],
         "fields": {
@@ -1566,7 +1819,7 @@
             "sourceRefs": [
               {
                 "path": "candidates/RPL_EW.json",
-                "sha256": "1feae3d5a1fbc2f658829ee7b195ca472febb91ae0ad309ed450cca783d58747",
+                "sha256": "808833da35fe0fddcb2ecaae3092d30fae24ba62f87a6d268f878f197a17b575",
                 "table": "02_窓種"
               }
             ],
@@ -1582,7 +1835,7 @@
             "sourceRefs": [
               {
                 "path": "candidates/RPL_EW.json",
-                "sha256": "1feae3d5a1fbc2f658829ee7b195ca472febb91ae0ad309ed450cca783d58747",
+                "sha256": "808833da35fe0fddcb2ecaae3092d30fae24ba62f87a6d268f878f197a17b575",
                 "table": "03_枠仕様 / 04_窓種固有仕様"
               }
             ],
@@ -1600,7 +1853,7 @@
             "sourceRefs": [
               {
                 "path": "candidates/RPL_EW.json",
-                "sha256": "1feae3d5a1fbc2f658829ee7b195ca472febb91ae0ad309ed450cca783d58747",
+                "sha256": "808833da35fe0fddcb2ecaae3092d30fae24ba62f87a6d268f878f197a17b575",
                 "table": "03_枠仕様 / 04_窓種固有仕様"
               }
             ],
@@ -1618,12 +1871,18 @@
             "sourceRefs": [
               {
                 "path": "candidates/RPL_EW.json",
-                "sha256": "1feae3d5a1fbc2f658829ee7b195ca472febb91ae0ad309ed450cca783d58747",
+                "sha256": "808833da35fe0fddcb2ecaae3092d30fae24ba62f87a6d268f878f197a17b575",
                 "table": "03_枠仕様 / 04_窓種固有仕様"
               }
             ],
             "parents": [
-              "window_type"
+              "window_type",
+              "custom_width",
+              "custom_height"
+            ],
+            "deferredEvaluationParents": [
+              "custom_width",
+              "custom_height"
             ]
           },
           "spec_sash_configuration": {
@@ -1636,7 +1895,7 @@
             "sourceRefs": [
               {
                 "path": "candidates/RPL_EW.json",
-                "sha256": "1feae3d5a1fbc2f658829ee7b195ca472febb91ae0ad309ed450cca783d58747",
+                "sha256": "808833da35fe0fddcb2ecaae3092d30fae24ba62f87a6d268f878f197a17b575",
                 "table": "03_枠仕様 / 04_窓種固有仕様"
               }
             ],
@@ -1654,7 +1913,7 @@
             "sourceRefs": [
               {
                 "path": "candidates/RPL_EW.json",
-                "sha256": "1feae3d5a1fbc2f658829ee7b195ca472febb91ae0ad309ed450cca783d58747",
+                "sha256": "808833da35fe0fddcb2ecaae3092d30fae24ba62f87a6d268f878f197a17b575",
                 "table": "03_枠仕様 / 04_窓種固有仕様"
               }
             ],
@@ -1672,7 +1931,7 @@
             "sourceRefs": [
               {
                 "path": "candidates/RPL_EW.json",
-                "sha256": "1feae3d5a1fbc2f658829ee7b195ca472febb91ae0ad309ed450cca783d58747",
+                "sha256": "808833da35fe0fddcb2ecaae3092d30fae24ba62f87a6d268f878f197a17b575",
                 "table": "07_網戸 / 07A_網戸適用条件"
               }
             ],
@@ -1691,7 +1950,7 @@
             "sourceRefs": [
               {
                 "path": "candidates/RPL_EW.json",
-                "sha256": "1feae3d5a1fbc2f658829ee7b195ca472febb91ae0ad309ed450cca783d58747",
+                "sha256": "808833da35fe0fddcb2ecaae3092d30fae24ba62f87a6d268f878f197a17b575",
                 "table": "05_サイズルール / 01_入力フロー"
               }
             ],
@@ -1708,7 +1967,7 @@
             "sourceRefs": [
               {
                 "path": "candidates/RPL_EW.json",
-                "sha256": "1feae3d5a1fbc2f658829ee7b195ca472febb91ae0ad309ed450cca783d58747",
+                "sha256": "808833da35fe0fddcb2ecaae3092d30fae24ba62f87a6d268f878f197a17b575",
                 "table": "05_サイズルール / 01_入力フロー"
               }
             ],
@@ -1727,7 +1986,7 @@
             "sourceRefs": [
               {
                 "path": "candidates/RPL_EW.json",
-                "sha256": "1feae3d5a1fbc2f658829ee7b195ca472febb91ae0ad309ed450cca783d58747",
+                "sha256": "808833da35fe0fddcb2ecaae3092d30fae24ba62f87a6d268f878f197a17b575",
                 "table": "05_サイズルール / 01_入力フロー"
               }
             ],
@@ -1746,27 +2005,30 @@
             "sourceRefs": [
               {
                 "path": "candidates/RPL_EW.json",
-                "sha256": "1feae3d5a1fbc2f658829ee7b195ca472febb91ae0ad309ed450cca783d58747",
+                "sha256": "808833da35fe0fddcb2ecaae3092d30fae24ba62f87a6d268f878f197a17b575",
                 "table": "06_色"
               }
             ],
             "parents": []
           },
           "exterior_cover_color": {
-            "label": "化粧カバー外観色",
-            "meaning": "本体色から独立したカバー・付属部材の色",
+            "label": "化粧カバー色（外観色に連動）",
+            "meaning": "本体色に連動する仕上げ色。独立した色指定は行わない。",
             "slot": "finish_color",
             "stage": "FINISH",
-            "group": "parts",
-            "rank": 1,
+            "group": "exterior_finish",
+            "rank": 5,
+            "parents": [
+              "sash_exterior_color"
+            ],
             "sourceRefs": [
               {
-                "path": "candidates/RPL_EW.json",
-                "sha256": "1feae3d5a1fbc2f658829ee7b195ca472febb91ae0ad309ed450cca783d58747",
-                "table": "06_色 / 01_入力フロー"
+                "path": "flow/user-selection-policy.v9.json",
+                "sha256": "1e440046a291664a7914ff725ffdf1a46cedc43a628d22093d852481dbd3c970",
+                "table": "User-authorized application policy; manufacturer color catalogs carried forward"
               }
             ],
-            "parents": []
+            "readOnly": true
           },
           "sash_interior_color": {
             "label": "本体内観色",
@@ -1778,27 +2040,31 @@
             "sourceRefs": [
               {
                 "path": "candidates/RPL_EW.json",
-                "sha256": "1feae3d5a1fbc2f658829ee7b195ca472febb91ae0ad309ed450cca783d58747",
+                "sha256": "808833da35fe0fddcb2ecaae3092d30fae24ba62f87a6d268f878f197a17b575",
                 "table": "06_色"
               }
             ],
-            "parents": []
+            "parents": [],
+            "readOnly": true
           },
           "interior_resin_cover_color": {
-            "label": "内観樹脂カバー色",
-            "meaning": "本体色から独立したカバー・付属部材の色",
+            "label": "室内カバー色（内観色に連動）",
+            "meaning": "本体色に連動する仕上げ色。独立した色指定は行わない。",
             "slot": "finish_color",
             "stage": "FINISH",
-            "group": "parts",
-            "rank": 3,
+            "group": "interior_finish",
+            "rank": 5,
+            "parents": [
+              "sash_interior_color"
+            ],
             "sourceRefs": [
               {
-                "path": "candidates/RPL_EW.json",
-                "sha256": "1feae3d5a1fbc2f658829ee7b195ca472febb91ae0ad309ed450cca783d58747",
-                "table": "06_色 / 01_入力フロー"
+                "path": "flow/user-selection-policy.v9.json",
+                "sha256": "1e440046a291664a7914ff725ffdf1a46cedc43a628d22093d852481dbd3c970",
+                "table": "User-authorized application policy; manufacturer color catalogs carried forward"
               }
             ],
-            "parents": []
+            "readOnly": true
           },
           "wooden_casing_color": {
             "label": "木製ケーシング色",
@@ -1810,7 +2076,7 @@
             "sourceRefs": [
               {
                 "path": "candidates/RPL_EW.json",
-                "sha256": "1feae3d5a1fbc2f658829ee7b195ca472febb91ae0ad309ed450cca783d58747",
+                "sha256": "808833da35fe0fddcb2ecaae3092d30fae24ba62f87a6d268f878f197a17b575",
                 "table": "06_色 / 09_OP / DELTA-CASING-EV-V4"
               }
             ],
@@ -1828,7 +2094,7 @@
             "sourceRefs": [
               {
                 "path": "candidates/RPL_EW.json",
-                "sha256": "1feae3d5a1fbc2f658829ee7b195ca472febb91ae0ad309ed450cca783d58747",
+                "sha256": "808833da35fe0fddcb2ecaae3092d30fae24ba62f87a6d268f878f197a17b575",
                 "table": "09_OP / 09A_OP依存関係"
               }
             ],
@@ -1844,7 +2110,7 @@
             "sourceRefs": [
               {
                 "path": "candidates/RPL_EW.json",
-                "sha256": "1feae3d5a1fbc2f658829ee7b195ca472febb91ae0ad309ed450cca783d58747",
+                "sha256": "808833da35fe0fddcb2ecaae3092d30fae24ba62f87a6d268f878f197a17b575",
                 "table": "10_適用条件 / 10B_現調項目 / 08_ガラス・08A_ガラス適用条件"
               }
             ],
@@ -1860,7 +2126,7 @@
             "sourceRefs": [
               {
                 "path": "candidates/RPL_EW.json",
-                "sha256": "1feae3d5a1fbc2f658829ee7b195ca472febb91ae0ad309ed450cca783d58747",
+                "sha256": "808833da35fe0fddcb2ecaae3092d30fae24ba62f87a6d268f878f197a17b575",
                 "table": "10_適用条件 / 10B_現調項目 / 08_ガラス・08A_ガラス適用条件"
               }
             ],
@@ -1876,7 +2142,7 @@
             "sourceRefs": [
               {
                 "path": "candidates/RPL_EW.json",
-                "sha256": "1feae3d5a1fbc2f658829ee7b195ca472febb91ae0ad309ed450cca783d58747",
+                "sha256": "808833da35fe0fddcb2ecaae3092d30fae24ba62f87a6d268f878f197a17b575",
                 "table": "08_ガラス / 08A_ガラス適用条件"
               },
               {
@@ -1901,7 +2167,7 @@
             "sourceRefs": [
               {
                 "path": "candidates/RPL_EW.json",
-                "sha256": "1feae3d5a1fbc2f658829ee7b195ca472febb91ae0ad309ed450cca783d58747",
+                "sha256": "808833da35fe0fddcb2ecaae3092d30fae24ba62f87a6d268f878f197a17b575",
                 "table": "08_ガラス / 08A_ガラス適用条件"
               },
               {
@@ -1926,7 +2192,7 @@
             "sourceRefs": [
               {
                 "path": "candidates/RPL_EW.json",
-                "sha256": "1feae3d5a1fbc2f658829ee7b195ca472febb91ae0ad309ed450cca783d58747",
+                "sha256": "808833da35fe0fddcb2ecaae3092d30fae24ba62f87a6d268f878f197a17b575",
                 "table": "08_ガラス / 08A_ガラス適用条件"
               },
               {
@@ -1951,7 +2217,7 @@
             "sourceRefs": [
               {
                 "path": "candidates/RPL_EW.json",
-                "sha256": "1feae3d5a1fbc2f658829ee7b195ca472febb91ae0ad309ed450cca783d58747",
+                "sha256": "808833da35fe0fddcb2ecaae3092d30fae24ba62f87a6d268f878f197a17b575",
                 "table": "08_ガラス / 08A_ガラス適用条件"
               },
               {
@@ -2007,6 +2273,98 @@
               }
             ],
             "helpText": "ガラス構成・窓種・寸法による製作可否は個別に見積確認してください。"
+          },
+          "interior_cover_type": {
+            "label": "室内側の仕上げ仕様",
+            "meaning": "室内の既設枠を覆う仕上げ部材を選定する。",
+            "slot": "option",
+            "stage": "OPTION",
+            "group": "interior_finish",
+            "rank": 1,
+            "parents": [],
+            "sourceRefs": [
+              {
+                "path": "flow/user-selection-policy.v9.json",
+                "sha256": "1e440046a291664a7914ff725ffdf1a46cedc43a628d22093d852481dbd3c970",
+                "table": "User-authorized application policy; manufacturer color catalogs carried forward"
+              }
+            ]
+          },
+          "exterior_cover_type": {
+            "label": "化粧カバーの大きさ・組合せ",
+            "meaning": "既設枠見付・枠仕様に対応する化粧カバーの見付と上下左右の組合せ。",
+            "slot": "option",
+            "stage": "OPTION",
+            "group": "exterior_finish",
+            "rank": 1,
+            "parents": [
+              "survey_cover_top",
+              "survey_cover_bottom",
+              "survey_cover_side"
+            ],
+            "sourceRefs": [
+              {
+                "path": "flow/user-selection-policy.v9.json",
+                "sha256": "1e440046a291664a7914ff725ffdf1a46cedc43a628d22093d852481dbd3c970",
+                "table": "User-authorized application policy; manufacturer color catalogs carried forward"
+              }
+            ],
+            "deferredEvaluationParents": [
+              "survey_cover_top",
+              "survey_cover_bottom",
+              "survey_cover_side"
+            ]
+          },
+          "survey_cover_top": {
+            "label": "既設上枠の見付（mm）",
+            "meaning": "化粧カバーの適用範囲を再評価する現場採寸値。",
+            "slot": "installation",
+            "stage": "INSTALLATION_SURVEY",
+            "group": "survey",
+            "rank": 77,
+            "parents": [],
+            "sourceRefs": [
+              {
+                "path": "flow/user-selection-policy.v9.json",
+                "sha256": "1e440046a291664a7914ff725ffdf1a46cedc43a628d22093d852481dbd3c970",
+                "table": "User-authorized application policy; manufacturer color catalogs carried forward"
+              }
+            ],
+            "evaluationContext": true
+          },
+          "survey_cover_bottom": {
+            "label": "既設下枠の見付（mm）",
+            "meaning": "化粧カバーの適用範囲を再評価する現場採寸値。",
+            "slot": "installation",
+            "stage": "INSTALLATION_SURVEY",
+            "group": "survey",
+            "rank": 78,
+            "parents": [],
+            "sourceRefs": [
+              {
+                "path": "flow/user-selection-policy.v9.json",
+                "sha256": "1e440046a291664a7914ff725ffdf1a46cedc43a628d22093d852481dbd3c970",
+                "table": "User-authorized application policy; manufacturer color catalogs carried forward"
+              }
+            ],
+            "evaluationContext": true
+          },
+          "survey_cover_side": {
+            "label": "既設縦枠の見付（mm）",
+            "meaning": "化粧カバーの適用範囲を再評価する現場採寸値。",
+            "slot": "installation",
+            "stage": "INSTALLATION_SURVEY",
+            "group": "survey",
+            "rank": 79,
+            "parents": [],
+            "sourceRefs": [
+              {
+                "path": "flow/user-selection-policy.v9.json",
+                "sha256": "1e440046a291664a7914ff725ffdf1a46cedc43a628d22093d852481dbd3c970",
+                "table": "User-authorized application policy; manufacturer color catalogs carried forward"
+              }
+            ],
+            "evaluationContext": true
           }
         },
         "contextFields": [],
@@ -2199,6 +2557,11 @@
           {
             "path": "flow/official-glass-review.v8.json",
             "sha256": "4b9b3654885f17c68f2900abf6789bb539344d3ebb98cc1671e0fd94e198551f"
+          },
+          {
+            "path": "flow/user-selection-policy.v9.json",
+            "sha256": "1e440046a291664a7914ff725ffdf1a46cedc43a628d22093d852481dbd3c970",
+            "table": "User-authorized application policy; manufacturer color catalogs carried forward"
           }
         ]
       },
@@ -2216,22 +2579,22 @@
       "displayName": "リプラス 浴室仕様",
       "productCategory": "sash",
       "uiCategory": "REFORM_WINDOW_ESTIMATE",
-      "packageVersion": "REPLUS_GLASS_FLOW_V8_20261014",
+      "packageVersion": "REPLUS_GLOBAL_FLOW_V9_20261014",
       "masterVersion": "v1.0",
       "schemaVersion": "2.0",
       "path": "candidates/RPL_BATH.module.json",
-      "sha256": "1687ddbc4c35a4825ec9d6d69ad706885fbaa20947ec91d7455b860edec74ee4",
+      "sha256": "2e83a6ee6c8e2c1b55336786a649956ce166d41dd0d903ea233923925ca0c4b2",
       "candidate": true,
-      "sourceHash": "69e307f94d3d51e12eb8cb2854e929b06a9c6133cab30910e26deda5c9e91596",
+      "sourceHash": "2e83a6ee6c8e2c1b55336786a649956ce166d41dd0d903ea233923925ca0c4b2",
       "adapterType": "COMPOSED_PRODUCT_MODULE_V1",
       "uiFlowContract": {
         "schema": "REVIEWED_WINDOW_FLOW_V3",
-        "revision": "REPLUS_GLASS_FLOW_V8_20261014",
+        "revision": "REPLUS_GLOBAL_FLOW_V9_20261014",
         "status": "REVIEWED_DESIGN_CANDIDATE",
         "formalAdoption": false,
         "sourceFlow": {
           "path": "candidates/RPL_BATH.json",
-          "sha256": "adc2f9abf3ef5c2bc602eaa64057f4db8479d25d91e89e08a27578ade0fa78b4",
+          "sha256": "3b57aa1f1b2206246ad03b5ec4aa3033807f133fc2cab02e19c84f2b43c50b63",
           "table": "01_入力フロー"
         },
         "groups": [
@@ -2248,12 +2611,12 @@
           {
             "id": "survey",
             "label": "現場採寸・取付条件",
-            "order": 11
+            "order": 12
           },
           {
             "id": "size",
             "label": "製品寸法",
-            "order": 12
+            "order": 13
           },
           {
             "id": "finish",
@@ -2271,24 +2634,29 @@
             "order": 6
           },
           {
-            "id": "parts",
-            "label": "カバー・部材色",
-            "order": 7
-          },
-          {
             "id": "native_options",
             "label": "新設サッシのオプション",
-            "order": 8
+            "order": 9
           },
           {
             "id": "options",
             "label": "追加部材・オプション",
-            "order": 9
+            "order": 10
           },
           {
             "id": "part_detail",
             "label": "選択した部材の仕様",
-            "order": 10
+            "order": 11
+          },
+          {
+            "id": "interior_finish",
+            "label": "室内側の仕上げ・アングルカバー",
+            "order": 7
+          },
+          {
+            "id": "exterior_finish",
+            "label": "室外側の仕上げ・化粧カバー",
+            "order": 8
           }
         ],
         "fields": {
@@ -2302,7 +2670,7 @@
             "sourceRefs": [
               {
                 "path": "candidates/RPL_BATH.json",
-                "sha256": "adc2f9abf3ef5c2bc602eaa64057f4db8479d25d91e89e08a27578ade0fa78b4",
+                "sha256": "3b57aa1f1b2206246ad03b5ec4aa3033807f133fc2cab02e19c84f2b43c50b63",
                 "table": "02_窓種"
               }
             ],
@@ -2318,7 +2686,7 @@
             "sourceRefs": [
               {
                 "path": "candidates/RPL_BATH.json",
-                "sha256": "adc2f9abf3ef5c2bc602eaa64057f4db8479d25d91e89e08a27578ade0fa78b4",
+                "sha256": "3b57aa1f1b2206246ad03b5ec4aa3033807f133fc2cab02e19c84f2b43c50b63",
                 "table": "03_枠仕様 / 04_窓種固有仕様"
               }
             ],
@@ -2336,7 +2704,7 @@
             "sourceRefs": [
               {
                 "path": "candidates/RPL_BATH.json",
-                "sha256": "adc2f9abf3ef5c2bc602eaa64057f4db8479d25d91e89e08a27578ade0fa78b4",
+                "sha256": "3b57aa1f1b2206246ad03b5ec4aa3033807f133fc2cab02e19c84f2b43c50b63",
                 "table": "03_枠仕様 / 04_窓種固有仕様"
               }
             ],
@@ -2354,7 +2722,7 @@
             "sourceRefs": [
               {
                 "path": "candidates/RPL_BATH.json",
-                "sha256": "adc2f9abf3ef5c2bc602eaa64057f4db8479d25d91e89e08a27578ade0fa78b4",
+                "sha256": "3b57aa1f1b2206246ad03b5ec4aa3033807f133fc2cab02e19c84f2b43c50b63",
                 "table": "03_枠仕様 / 04_窓種固有仕様"
               }
             ],
@@ -2372,7 +2740,7 @@
             "sourceRefs": [
               {
                 "path": "candidates/RPL_BATH.json",
-                "sha256": "adc2f9abf3ef5c2bc602eaa64057f4db8479d25d91e89e08a27578ade0fa78b4",
+                "sha256": "3b57aa1f1b2206246ad03b5ec4aa3033807f133fc2cab02e19c84f2b43c50b63",
                 "table": "03_枠仕様 / 04_窓種固有仕様"
               }
             ],
@@ -2390,7 +2758,7 @@
             "sourceRefs": [
               {
                 "path": "candidates/RPL_BATH.json",
-                "sha256": "adc2f9abf3ef5c2bc602eaa64057f4db8479d25d91e89e08a27578ade0fa78b4",
+                "sha256": "3b57aa1f1b2206246ad03b5ec4aa3033807f133fc2cab02e19c84f2b43c50b63",
                 "table": "07_網戸 / 07A_網戸適用条件"
               }
             ],
@@ -2408,7 +2776,7 @@
             "sourceRefs": [
               {
                 "path": "candidates/RPL_BATH.json",
-                "sha256": "adc2f9abf3ef5c2bc602eaa64057f4db8479d25d91e89e08a27578ade0fa78b4",
+                "sha256": "3b57aa1f1b2206246ad03b5ec4aa3033807f133fc2cab02e19c84f2b43c50b63",
                 "table": "05_サイズルール / 01_入力フロー"
               }
             ],
@@ -2425,7 +2793,7 @@
             "sourceRefs": [
               {
                 "path": "candidates/RPL_BATH.json",
-                "sha256": "adc2f9abf3ef5c2bc602eaa64057f4db8479d25d91e89e08a27578ade0fa78b4",
+                "sha256": "3b57aa1f1b2206246ad03b5ec4aa3033807f133fc2cab02e19c84f2b43c50b63",
                 "table": "05_サイズルール / 01_入力フロー"
               }
             ],
@@ -2444,7 +2812,7 @@
             "sourceRefs": [
               {
                 "path": "candidates/RPL_BATH.json",
-                "sha256": "adc2f9abf3ef5c2bc602eaa64057f4db8479d25d91e89e08a27578ade0fa78b4",
+                "sha256": "3b57aa1f1b2206246ad03b5ec4aa3033807f133fc2cab02e19c84f2b43c50b63",
                 "table": "05_サイズルール / 01_入力フロー"
               }
             ],
@@ -2463,27 +2831,30 @@
             "sourceRefs": [
               {
                 "path": "candidates/RPL_BATH.json",
-                "sha256": "adc2f9abf3ef5c2bc602eaa64057f4db8479d25d91e89e08a27578ade0fa78b4",
+                "sha256": "3b57aa1f1b2206246ad03b5ec4aa3033807f133fc2cab02e19c84f2b43c50b63",
                 "table": "06_色"
               }
             ],
             "parents": []
           },
           "exterior_cover_color": {
-            "label": "化粧カバー外観色",
-            "meaning": "本体色から独立したカバー・付属部材の色",
+            "label": "化粧カバー色（外観色に連動）",
+            "meaning": "本体色に連動する仕上げ色。独立した色指定は行わない。",
             "slot": "finish_color",
             "stage": "FINISH",
-            "group": "parts",
-            "rank": 1,
+            "group": "exterior_finish",
+            "rank": 5,
+            "parents": [
+              "sash_exterior_color"
+            ],
             "sourceRefs": [
               {
-                "path": "candidates/RPL_BATH.json",
-                "sha256": "adc2f9abf3ef5c2bc602eaa64057f4db8479d25d91e89e08a27578ade0fa78b4",
-                "table": "06_色 / 01_入力フロー"
+                "path": "flow/user-selection-policy.v9.json",
+                "sha256": "1e440046a291664a7914ff725ffdf1a46cedc43a628d22093d852481dbd3c970",
+                "table": "User-authorized application policy; manufacturer color catalogs carried forward"
               }
             ],
-            "parents": []
+            "readOnly": true
           },
           "sash_interior_color": {
             "label": "本体内観色",
@@ -2495,27 +2866,30 @@
             "sourceRefs": [
               {
                 "path": "candidates/RPL_BATH.json",
-                "sha256": "adc2f9abf3ef5c2bc602eaa64057f4db8479d25d91e89e08a27578ade0fa78b4",
+                "sha256": "3b57aa1f1b2206246ad03b5ec4aa3033807f133fc2cab02e19c84f2b43c50b63",
                 "table": "06_色"
               }
             ],
             "parents": []
           },
           "interior_cover_color": {
-            "label": "化粧カバー内観色",
-            "meaning": "本体色から独立したカバー・付属部材の色",
+            "label": "室内カバー色（内観色に連動）",
+            "meaning": "本体色に連動する仕上げ色。独立した色指定は行わない。",
             "slot": "finish_color",
             "stage": "FINISH",
-            "group": "parts",
-            "rank": 2,
+            "group": "interior_finish",
+            "rank": 5,
+            "parents": [
+              "sash_interior_color"
+            ],
             "sourceRefs": [
               {
-                "path": "candidates/RPL_BATH.json",
-                "sha256": "adc2f9abf3ef5c2bc602eaa64057f4db8479d25d91e89e08a27578ade0fa78b4",
-                "table": "06_色 / 01_入力フロー"
+                "path": "flow/user-selection-policy.v9.json",
+                "sha256": "1e440046a291664a7914ff725ffdf1a46cedc43a628d22093d852481dbd3c970",
+                "table": "User-authorized application policy; manufacturer color catalogs carried forward"
               }
             ],
-            "parents": []
+            "readOnly": true
           },
           "options": {
             "label": "追加部材・オプション",
@@ -2527,7 +2901,7 @@
             "sourceRefs": [
               {
                 "path": "candidates/RPL_BATH.json",
-                "sha256": "adc2f9abf3ef5c2bc602eaa64057f4db8479d25d91e89e08a27578ade0fa78b4",
+                "sha256": "3b57aa1f1b2206246ad03b5ec4aa3033807f133fc2cab02e19c84f2b43c50b63",
                 "table": "09_OP / 09A_OP依存関係"
               }
             ],
@@ -2543,7 +2917,7 @@
             "sourceRefs": [
               {
                 "path": "candidates/RPL_BATH.json",
-                "sha256": "adc2f9abf3ef5c2bc602eaa64057f4db8479d25d91e89e08a27578ade0fa78b4",
+                "sha256": "3b57aa1f1b2206246ad03b5ec4aa3033807f133fc2cab02e19c84f2b43c50b63",
                 "table": "10_適用条件 / 10B_現調項目 / 08_ガラス・08A_ガラス適用条件"
               }
             ],
@@ -2559,7 +2933,7 @@
             "sourceRefs": [
               {
                 "path": "candidates/RPL_BATH.json",
-                "sha256": "adc2f9abf3ef5c2bc602eaa64057f4db8479d25d91e89e08a27578ade0fa78b4",
+                "sha256": "3b57aa1f1b2206246ad03b5ec4aa3033807f133fc2cab02e19c84f2b43c50b63",
                 "table": "10_適用条件 / 10B_現調項目 / 08_ガラス・08A_ガラス適用条件"
               }
             ],
@@ -2575,7 +2949,7 @@
             "sourceRefs": [
               {
                 "path": "candidates/RPL_BATH.json",
-                "sha256": "adc2f9abf3ef5c2bc602eaa64057f4db8479d25d91e89e08a27578ade0fa78b4",
+                "sha256": "3b57aa1f1b2206246ad03b5ec4aa3033807f133fc2cab02e19c84f2b43c50b63",
                 "table": "08_ガラス / 08A_ガラス適用条件"
               },
               {
@@ -2600,7 +2974,7 @@
             "sourceRefs": [
               {
                 "path": "candidates/RPL_BATH.json",
-                "sha256": "adc2f9abf3ef5c2bc602eaa64057f4db8479d25d91e89e08a27578ade0fa78b4",
+                "sha256": "3b57aa1f1b2206246ad03b5ec4aa3033807f133fc2cab02e19c84f2b43c50b63",
                 "table": "08_ガラス / 08A_ガラス適用条件"
               },
               {
@@ -2626,7 +3000,7 @@
             "sourceRefs": [
               {
                 "path": "candidates/RPL_BATH.json",
-                "sha256": "adc2f9abf3ef5c2bc602eaa64057f4db8479d25d91e89e08a27578ade0fa78b4",
+                "sha256": "3b57aa1f1b2206246ad03b5ec4aa3033807f133fc2cab02e19c84f2b43c50b63",
                 "table": "08_ガラス / 08A_ガラス適用条件"
               },
               {
@@ -2650,7 +3024,7 @@
             "sourceRefs": [
               {
                 "path": "candidates/RPL_BATH.json",
-                "sha256": "adc2f9abf3ef5c2bc602eaa64057f4db8479d25d91e89e08a27578ade0fa78b4",
+                "sha256": "3b57aa1f1b2206246ad03b5ec4aa3033807f133fc2cab02e19c84f2b43c50b63",
                 "table": "08_ガラス / 08A_ガラス適用条件"
               },
               {
@@ -2678,7 +3052,7 @@
             "sourceRefs": [
               {
                 "path": "candidates/RPL_BATH.json",
-                "sha256": "adc2f9abf3ef5c2bc602eaa64057f4db8479d25d91e89e08a27578ade0fa78b4",
+                "sha256": "3b57aa1f1b2206246ad03b5ec4aa3033807f133fc2cab02e19c84f2b43c50b63",
                 "table": "01_入力フロー / 04C_既設開口パターン"
               }
             ]
@@ -2723,6 +3097,101 @@
               }
             ],
             "helpText": "ガラス構成・窓種・寸法による製作可否は個別に見積確認してください。"
+          },
+          "interior_cover_type": {
+            "label": "室内側の仕上げ仕様",
+            "meaning": "室内の既設枠を覆う仕上げ部材を選定する。",
+            "slot": "option",
+            "stage": "OPTION",
+            "group": "interior_finish",
+            "rank": 1,
+            "parents": [
+              "bathroom_remodel_mode"
+            ],
+            "sourceRefs": [
+              {
+                "path": "flow/user-selection-policy.v9.json",
+                "sha256": "1e440046a291664a7914ff725ffdf1a46cedc43a628d22093d852481dbd3c970",
+                "table": "User-authorized application policy; manufacturer color catalogs carried forward"
+              }
+            ]
+          },
+          "exterior_cover_type": {
+            "label": "化粧カバーの大きさ・組合せ",
+            "meaning": "既設枠見付・枠仕様に対応する化粧カバーの見付と上下左右の組合せ。",
+            "slot": "option",
+            "stage": "OPTION",
+            "group": "exterior_finish",
+            "rank": 1,
+            "parents": [
+              "frame_type",
+              "survey_cover_top",
+              "survey_cover_bottom",
+              "survey_cover_side"
+            ],
+            "sourceRefs": [
+              {
+                "path": "flow/user-selection-policy.v9.json",
+                "sha256": "1e440046a291664a7914ff725ffdf1a46cedc43a628d22093d852481dbd3c970",
+                "table": "User-authorized application policy; manufacturer color catalogs carried forward"
+              }
+            ],
+            "deferredEvaluationParents": [
+              "survey_cover_top",
+              "survey_cover_bottom",
+              "survey_cover_side"
+            ]
+          },
+          "survey_cover_top": {
+            "label": "既設上枠の見付（mm）",
+            "meaning": "化粧カバーの適用範囲を再評価する現場採寸値。",
+            "slot": "installation",
+            "stage": "INSTALLATION_SURVEY",
+            "group": "survey",
+            "rank": 76,
+            "parents": [],
+            "sourceRefs": [
+              {
+                "path": "flow/user-selection-policy.v9.json",
+                "sha256": "1e440046a291664a7914ff725ffdf1a46cedc43a628d22093d852481dbd3c970",
+                "table": "User-authorized application policy; manufacturer color catalogs carried forward"
+              }
+            ],
+            "evaluationContext": true
+          },
+          "survey_cover_bottom": {
+            "label": "既設下枠の見付（mm）",
+            "meaning": "化粧カバーの適用範囲を再評価する現場採寸値。",
+            "slot": "installation",
+            "stage": "INSTALLATION_SURVEY",
+            "group": "survey",
+            "rank": 77,
+            "parents": [],
+            "sourceRefs": [
+              {
+                "path": "flow/user-selection-policy.v9.json",
+                "sha256": "1e440046a291664a7914ff725ffdf1a46cedc43a628d22093d852481dbd3c970",
+                "table": "User-authorized application policy; manufacturer color catalogs carried forward"
+              }
+            ],
+            "evaluationContext": true
+          },
+          "survey_cover_side": {
+            "label": "既設縦枠の見付（mm）",
+            "meaning": "化粧カバーの適用範囲を再評価する現場採寸値。",
+            "slot": "installation",
+            "stage": "INSTALLATION_SURVEY",
+            "group": "survey",
+            "rank": 78,
+            "parents": [],
+            "sourceRefs": [
+              {
+                "path": "flow/user-selection-policy.v9.json",
+                "sha256": "1e440046a291664a7914ff725ffdf1a46cedc43a628d22093d852481dbd3c970",
+                "table": "User-authorized application policy; manufacturer color catalogs carried forward"
+              }
+            ],
+            "evaluationContext": true
           }
         },
         "contextFields": [],
@@ -2911,6 +3380,11 @@
           {
             "path": "flow/official-glass-review.v8.json",
             "sha256": "4b9b3654885f17c68f2900abf6789bb539344d3ebb98cc1671e0fd94e198551f"
+          },
+          {
+            "path": "flow/user-selection-policy.v9.json",
+            "sha256": "1e440046a291664a7914ff725ffdf1a46cedc43a628d22093d852481dbd3c970",
+            "table": "User-authorized application policy; manufacturer color catalogs carried forward"
           }
         ]
       },
@@ -2928,22 +3402,22 @@
       "displayName": "リプラス アタッチ枠（TW用）",
       "productCategory": "sash",
       "uiCategory": "REFORM_WINDOW_ESTIMATE",
-      "packageVersion": "REPLUS_GLASS_FLOW_V8_20261014",
+      "packageVersion": "REPLUS_GLOBAL_FLOW_V9_20261014",
       "masterVersion": "v1.0",
       "schemaVersion": "2.0",
       "path": "candidates/RPL_ATT_TW.module.json",
-      "sha256": "20fc01e7116bfd9fef852bfc4cbe8800d66bd8ed13e0e8b701b7ab867777bb98",
+      "sha256": "e6f2ba562d162a4cce6bbd164db7e0e69f6dd3a55dd45c7f617bcd0b83ed6c03",
       "candidate": true,
-      "sourceHash": "00893080dd4f996b8814594e2355c51bc95504400670c2361d44e84c61e20905",
+      "sourceHash": "e6f2ba562d162a4cce6bbd164db7e0e69f6dd3a55dd45c7f617bcd0b83ed6c03",
       "adapterType": "COMPOSED_PRODUCT_MODULE_V1",
       "uiFlowContract": {
         "schema": "REVIEWED_WINDOW_FLOW_V3",
-        "revision": "REPLUS_GLASS_FLOW_V8_20261014",
+        "revision": "REPLUS_GLOBAL_FLOW_V9_20261014",
         "status": "REVIEWED_DESIGN_CANDIDATE",
         "formalAdoption": false,
         "sourceFlow": {
           "path": "candidates/RPL_ATT_TW.json",
-          "sha256": "3c6bb2ddc97fef7b9eda3b67d541fba01968b0cfc87e512e6d6bc650a6c52d78",
+          "sha256": "b25fe185ac300b8d7a91c300485e270fa6897f0267dbb028111f7a34162da06f",
           "table": "01_入力フロー"
         },
         "groups": [
@@ -2960,12 +3434,12 @@
           {
             "id": "survey",
             "label": "現場採寸・取付条件",
-            "order": 11
+            "order": 12
           },
           {
             "id": "size",
             "label": "製品寸法",
-            "order": 12
+            "order": 13
           },
           {
             "id": "finish",
@@ -2983,24 +3457,29 @@
             "order": 6
           },
           {
-            "id": "parts",
-            "label": "カバー・部材色",
-            "order": 7
-          },
-          {
             "id": "native_options",
             "label": "新設サッシのオプション",
-            "order": 8
+            "order": 9
           },
           {
             "id": "options",
             "label": "追加部材・オプション",
-            "order": 9
+            "order": 10
           },
           {
             "id": "part_detail",
             "label": "選択した部材の仕様",
-            "order": 10
+            "order": 11
+          },
+          {
+            "id": "interior_finish",
+            "label": "室内側の仕上げ・アングルカバー",
+            "order": 7
+          },
+          {
+            "id": "exterior_finish",
+            "label": "室外側の仕上げ・化粧カバー",
+            "order": 8
           }
         ],
         "fields": {
@@ -3014,7 +3493,7 @@
             "sourceRefs": [
               {
                 "path": "candidates/RPL_ATT_TW.json",
-                "sha256": "3c6bb2ddc97fef7b9eda3b67d541fba01968b0cfc87e512e6d6bc650a6c52d78",
+                "sha256": "b25fe185ac300b8d7a91c300485e270fa6897f0267dbb028111f7a34162da06f",
                 "table": "01_入力フロー / 12_共通参照"
               }
             ],
@@ -3030,7 +3509,7 @@
             "sourceRefs": [
               {
                 "path": "candidates/RPL_ATT_TW.json",
-                "sha256": "3c6bb2ddc97fef7b9eda3b67d541fba01968b0cfc87e512e6d6bc650a6c52d78",
+                "sha256": "b25fe185ac300b8d7a91c300485e270fa6897f0267dbb028111f7a34162da06f",
                 "table": "01_入力フロー / 12_共通参照"
               }
             ],
@@ -3039,36 +3518,42 @@
             ]
           },
           "exterior_cover_color": {
-            "label": "化粧カバー外観色",
-            "meaning": "本体色から独立したカバー・付属部材の色",
+            "label": "化粧カバー色（外観色に連動）",
+            "meaning": "本体色に連動する仕上げ色。独立した色指定は行わない。",
             "slot": "finish_color",
             "stage": "FINISH",
-            "group": "parts",
-            "rank": 1,
+            "group": "exterior_finish",
+            "rank": 5,
+            "parents": [
+              "new_sash_exterior_color"
+            ],
             "sourceRefs": [
               {
-                "path": "candidates/RPL_ATT_TW.json",
-                "sha256": "3c6bb2ddc97fef7b9eda3b67d541fba01968b0cfc87e512e6d6bc650a6c52d78",
-                "table": "06_色 / 01_入力フロー"
+                "path": "flow/user-selection-policy.v9.json",
+                "sha256": "1e440046a291664a7914ff725ffdf1a46cedc43a628d22093d852481dbd3c970",
+                "table": "User-authorized application policy; manufacturer color catalogs carried forward"
               }
             ],
-            "parents": []
+            "readOnly": true
           },
           "interior_cover_color": {
-            "label": "化粧カバー内観色",
-            "meaning": "本体色から独立したカバー・付属部材の色",
+            "label": "室内カバー色（内観色に連動）",
+            "meaning": "本体色に連動する仕上げ色。独立した色指定は行わない。",
             "slot": "finish_color",
             "stage": "FINISH",
-            "group": "parts",
-            "rank": 2,
+            "group": "interior_finish",
+            "rank": 5,
+            "parents": [
+              "new_sash_interior_color"
+            ],
             "sourceRefs": [
               {
-                "path": "candidates/RPL_ATT_TW.json",
-                "sha256": "3c6bb2ddc97fef7b9eda3b67d541fba01968b0cfc87e512e6d6bc650a6c52d78",
-                "table": "06_色 / 01_入力フロー"
+                "path": "flow/user-selection-policy.v9.json",
+                "sha256": "1e440046a291664a7914ff725ffdf1a46cedc43a628d22093d852481dbd3c970",
+                "table": "User-authorized application policy; manufacturer color catalogs carried forward"
               }
             ],
-            "parents": []
+            "readOnly": true
           },
           "wooden_casing_color": {
             "label": "木製ケーシング色",
@@ -3080,7 +3565,7 @@
             "sourceRefs": [
               {
                 "path": "candidates/RPL_ATT_TW.json",
-                "sha256": "3c6bb2ddc97fef7b9eda3b67d541fba01968b0cfc87e512e6d6bc650a6c52d78",
+                "sha256": "b25fe185ac300b8d7a91c300485e270fa6897f0267dbb028111f7a34162da06f",
                 "table": "06_色 / 09_OP / DELTA-CASING-EV-V4"
               }
             ],
@@ -3098,7 +3583,7 @@
             "sourceRefs": [
               {
                 "path": "candidates/RPL_ATT_TW.json",
-                "sha256": "3c6bb2ddc97fef7b9eda3b67d541fba01968b0cfc87e512e6d6bc650a6c52d78",
+                "sha256": "b25fe185ac300b8d7a91c300485e270fa6897f0267dbb028111f7a34162da06f",
                 "table": "09_OP / 09A_OP依存関係"
               }
             ],
@@ -3114,7 +3599,7 @@
             "sourceRefs": [
               {
                 "path": "candidates/RPL_ATT_TW.json",
-                "sha256": "3c6bb2ddc97fef7b9eda3b67d541fba01968b0cfc87e512e6d6bc650a6c52d78",
+                "sha256": "b25fe185ac300b8d7a91c300485e270fa6897f0267dbb028111f7a34162da06f",
                 "table": "10_適用条件 / 10B_現調項目 / 08_ガラス・08A_ガラス適用条件"
               }
             ],
@@ -3130,7 +3615,7 @@
             "sourceRefs": [
               {
                 "path": "candidates/RPL_ATT_TW.json",
-                "sha256": "3c6bb2ddc97fef7b9eda3b67d541fba01968b0cfc87e512e6d6bc650a6c52d78",
+                "sha256": "b25fe185ac300b8d7a91c300485e270fa6897f0267dbb028111f7a34162da06f",
                 "table": "10B_現調項目 / 05_サイズルール"
               }
             ],
@@ -3147,7 +3632,7 @@
             "sourceRefs": [
               {
                 "path": "candidates/RPL_ATT_TW.json",
-                "sha256": "3c6bb2ddc97fef7b9eda3b67d541fba01968b0cfc87e512e6d6bc650a6c52d78",
+                "sha256": "b25fe185ac300b8d7a91c300485e270fa6897f0267dbb028111f7a34162da06f",
                 "table": "10B_現調項目 / 05_サイズルール"
               }
             ],
@@ -3164,7 +3649,7 @@
             "sourceRefs": [
               {
                 "path": "candidates/RPL_ATT_TW.json",
-                "sha256": "3c6bb2ddc97fef7b9eda3b67d541fba01968b0cfc87e512e6d6bc650a6c52d78",
+                "sha256": "b25fe185ac300b8d7a91c300485e270fa6897f0267dbb028111f7a34162da06f",
                 "table": "10B_現調項目 / 05_サイズルール"
               }
             ],
@@ -3181,7 +3666,7 @@
             "sourceRefs": [
               {
                 "path": "candidates/RPL_ATT_TW.json",
-                "sha256": "3c6bb2ddc97fef7b9eda3b67d541fba01968b0cfc87e512e6d6bc650a6c52d78",
+                "sha256": "b25fe185ac300b8d7a91c300485e270fa6897f0267dbb028111f7a34162da06f",
                 "table": "10B_現調項目 / 05_サイズルール"
               }
             ],
@@ -3779,6 +4264,98 @@
                 "table": "fixed native semantic slots / reference-field-audit"
               }
             ]
+          },
+          "interior_cover_type": {
+            "label": "室内側の仕上げ仕様",
+            "meaning": "室内の既設枠を覆う仕上げ部材を選定する。",
+            "slot": "option",
+            "stage": "OPTION",
+            "group": "interior_finish",
+            "rank": 1,
+            "parents": [],
+            "sourceRefs": [
+              {
+                "path": "flow/user-selection-policy.v9.json",
+                "sha256": "1e440046a291664a7914ff725ffdf1a46cedc43a628d22093d852481dbd3c970",
+                "table": "User-authorized application policy; manufacturer color catalogs carried forward"
+              }
+            ]
+          },
+          "exterior_cover_type": {
+            "label": "化粧カバーの大きさ・組合せ",
+            "meaning": "既設枠見付・枠仕様に対応する化粧カバーの見付と上下左右の組合せ。",
+            "slot": "option",
+            "stage": "OPTION",
+            "group": "exterior_finish",
+            "rank": 1,
+            "parents": [
+              "survey_cover_top",
+              "survey_cover_bottom",
+              "survey_cover_side"
+            ],
+            "sourceRefs": [
+              {
+                "path": "flow/user-selection-policy.v9.json",
+                "sha256": "1e440046a291664a7914ff725ffdf1a46cedc43a628d22093d852481dbd3c970",
+                "table": "User-authorized application policy; manufacturer color catalogs carried forward"
+              }
+            ],
+            "deferredEvaluationParents": [
+              "survey_cover_top",
+              "survey_cover_bottom",
+              "survey_cover_side"
+            ]
+          },
+          "survey_cover_top": {
+            "label": "既設上枠の見付（mm）",
+            "meaning": "化粧カバーの適用範囲を再評価する現場採寸値。",
+            "slot": "installation",
+            "stage": "INSTALLATION_SURVEY",
+            "group": "survey",
+            "rank": 64,
+            "parents": [],
+            "sourceRefs": [
+              {
+                "path": "flow/user-selection-policy.v9.json",
+                "sha256": "1e440046a291664a7914ff725ffdf1a46cedc43a628d22093d852481dbd3c970",
+                "table": "User-authorized application policy; manufacturer color catalogs carried forward"
+              }
+            ],
+            "evaluationContext": true
+          },
+          "survey_cover_bottom": {
+            "label": "既設下枠の見付（mm）",
+            "meaning": "化粧カバーの適用範囲を再評価する現場採寸値。",
+            "slot": "installation",
+            "stage": "INSTALLATION_SURVEY",
+            "group": "survey",
+            "rank": 65,
+            "parents": [],
+            "sourceRefs": [
+              {
+                "path": "flow/user-selection-policy.v9.json",
+                "sha256": "1e440046a291664a7914ff725ffdf1a46cedc43a628d22093d852481dbd3c970",
+                "table": "User-authorized application policy; manufacturer color catalogs carried forward"
+              }
+            ],
+            "evaluationContext": true
+          },
+          "survey_cover_side": {
+            "label": "既設縦枠の見付（mm）",
+            "meaning": "化粧カバーの適用範囲を再評価する現場採寸値。",
+            "slot": "installation",
+            "stage": "INSTALLATION_SURVEY",
+            "group": "survey",
+            "rank": 66,
+            "parents": [],
+            "sourceRefs": [
+              {
+                "path": "flow/user-selection-policy.v9.json",
+                "sha256": "1e440046a291664a7914ff725ffdf1a46cedc43a628d22093d852481dbd3c970",
+                "table": "User-authorized application policy; manufacturer color catalogs carried forward"
+              }
+            ],
+            "evaluationContext": true
           }
         },
         "contextFields": [
@@ -3944,6 +4521,11 @@
           {
             "path": "flow/official-glass-review.v8.json",
             "sha256": "4b9b3654885f17c68f2900abf6789bb539344d3ebb98cc1671e0fd94e198551f"
+          },
+          {
+            "path": "flow/user-selection-policy.v9.json",
+            "sha256": "1e440046a291664a7914ff725ffdf1a46cedc43a628d22093d852481dbd3c970",
+            "table": "User-authorized application policy; manufacturer color catalogs carried forward"
           }
         ]
       },
@@ -3961,22 +4543,22 @@
       "displayName": "リプラス アタッチ枠（サーモス用）",
       "productCategory": "sash",
       "uiCategory": "REFORM_WINDOW_ESTIMATE",
-      "packageVersion": "REPLUS_GLASS_FLOW_V8_20261014",
+      "packageVersion": "REPLUS_GLOBAL_FLOW_V9_20261014",
       "masterVersion": "v1.1",
       "schemaVersion": "2.0",
       "path": "candidates/RPL_ATT_TH.module.json",
-      "sha256": "1bd2a14138e698c5aa0820c97c4617695c739992e8d5119e3137b7d074a7f302",
+      "sha256": "248927aa9497f7a99462d325bb10baaaf41c5768f4ac92c47bc0f8ec70f9c0e4",
       "candidate": true,
-      "sourceHash": "662a1b71237ff5477b2d9299137f7d56cac1f1d527bd69344f0b07f41829a384",
+      "sourceHash": "248927aa9497f7a99462d325bb10baaaf41c5768f4ac92c47bc0f8ec70f9c0e4",
       "adapterType": "COMPOSED_PRODUCT_MODULE_V1",
       "uiFlowContract": {
         "schema": "REVIEWED_WINDOW_FLOW_V3",
-        "revision": "REPLUS_GLASS_FLOW_V8_20261014",
+        "revision": "REPLUS_GLOBAL_FLOW_V9_20261014",
         "status": "REVIEWED_DESIGN_CANDIDATE",
         "formalAdoption": false,
         "sourceFlow": {
           "path": "candidates/RPL_ATT_TH.json",
-          "sha256": "113c407c5e3e9292135d061dc3e674316444481c94dc624f9a4545385fb3e107",
+          "sha256": "dee7395ecb971d66d147f2469f0550d13dc59d046ac38fb8ed7ccf8eeec572ef",
           "table": "01_入力フロー"
         },
         "groups": [
@@ -3993,12 +4575,12 @@
           {
             "id": "survey",
             "label": "現場採寸・取付条件",
-            "order": 11
+            "order": 12
           },
           {
             "id": "size",
             "label": "製品寸法",
-            "order": 12
+            "order": 13
           },
           {
             "id": "finish",
@@ -4016,24 +4598,29 @@
             "order": 6
           },
           {
-            "id": "parts",
-            "label": "カバー・部材色",
-            "order": 7
-          },
-          {
             "id": "native_options",
             "label": "新設サッシのオプション",
-            "order": 8
+            "order": 9
           },
           {
             "id": "options",
             "label": "追加部材・オプション",
-            "order": 9
+            "order": 10
           },
           {
             "id": "part_detail",
             "label": "選択した部材の仕様",
-            "order": 10
+            "order": 11
+          },
+          {
+            "id": "interior_finish",
+            "label": "室内側の仕上げ・アングルカバー",
+            "order": 7
+          },
+          {
+            "id": "exterior_finish",
+            "label": "室外側の仕上げ・化粧カバー",
+            "order": 8
           }
         ],
         "fields": {
@@ -4047,7 +4634,7 @@
             "sourceRefs": [
               {
                 "path": "candidates/RPL_ATT_TH.json",
-                "sha256": "113c407c5e3e9292135d061dc3e674316444481c94dc624f9a4545385fb3e107",
+                "sha256": "dee7395ecb971d66d147f2469f0550d13dc59d046ac38fb8ed7ccf8eeec572ef",
                 "table": "01_入力フロー / 12_共通参照"
               }
             ],
@@ -4063,7 +4650,7 @@
             "sourceRefs": [
               {
                 "path": "candidates/RPL_ATT_TH.json",
-                "sha256": "113c407c5e3e9292135d061dc3e674316444481c94dc624f9a4545385fb3e107",
+                "sha256": "dee7395ecb971d66d147f2469f0550d13dc59d046ac38fb8ed7ccf8eeec572ef",
                 "table": "01_入力フロー / 12_共通参照"
               }
             ],
@@ -4072,36 +4659,42 @@
             ]
           },
           "exterior_cover_color": {
-            "label": "化粧カバー外観色",
-            "meaning": "本体色から独立したカバー・付属部材の色",
+            "label": "化粧カバー色（外観色に連動）",
+            "meaning": "本体色に連動する仕上げ色。独立した色指定は行わない。",
             "slot": "finish_color",
             "stage": "FINISH",
-            "group": "parts",
-            "rank": 1,
+            "group": "exterior_finish",
+            "rank": 5,
+            "parents": [
+              "new_sash_exterior_color"
+            ],
             "sourceRefs": [
               {
-                "path": "candidates/RPL_ATT_TH.json",
-                "sha256": "113c407c5e3e9292135d061dc3e674316444481c94dc624f9a4545385fb3e107",
-                "table": "06_色 / 01_入力フロー"
+                "path": "flow/user-selection-policy.v9.json",
+                "sha256": "1e440046a291664a7914ff725ffdf1a46cedc43a628d22093d852481dbd3c970",
+                "table": "User-authorized application policy; manufacturer color catalogs carried forward"
               }
             ],
-            "parents": []
+            "readOnly": true
           },
           "interior_cover_color": {
-            "label": "化粧カバー内観色",
-            "meaning": "本体色から独立したカバー・付属部材の色",
+            "label": "室内カバー色（内観色に連動）",
+            "meaning": "本体色に連動する仕上げ色。独立した色指定は行わない。",
             "slot": "finish_color",
             "stage": "FINISH",
-            "group": "parts",
-            "rank": 2,
+            "group": "interior_finish",
+            "rank": 5,
+            "parents": [
+              "new_sash_interior_color"
+            ],
             "sourceRefs": [
               {
-                "path": "candidates/RPL_ATT_TH.json",
-                "sha256": "113c407c5e3e9292135d061dc3e674316444481c94dc624f9a4545385fb3e107",
-                "table": "06_色 / 01_入力フロー"
+                "path": "flow/user-selection-policy.v9.json",
+                "sha256": "1e440046a291664a7914ff725ffdf1a46cedc43a628d22093d852481dbd3c970",
+                "table": "User-authorized application policy; manufacturer color catalogs carried forward"
               }
             ],
-            "parents": []
+            "readOnly": true
           },
           "wooden_casing_color": {
             "label": "木製ケーシング色",
@@ -4113,7 +4706,7 @@
             "sourceRefs": [
               {
                 "path": "candidates/RPL_ATT_TH.json",
-                "sha256": "113c407c5e3e9292135d061dc3e674316444481c94dc624f9a4545385fb3e107",
+                "sha256": "dee7395ecb971d66d147f2469f0550d13dc59d046ac38fb8ed7ccf8eeec572ef",
                 "table": "06_色 / 09_OP / DELTA-CASING-EV-V4"
               }
             ],
@@ -4131,7 +4724,7 @@
             "sourceRefs": [
               {
                 "path": "candidates/RPL_ATT_TH.json",
-                "sha256": "113c407c5e3e9292135d061dc3e674316444481c94dc624f9a4545385fb3e107",
+                "sha256": "dee7395ecb971d66d147f2469f0550d13dc59d046ac38fb8ed7ccf8eeec572ef",
                 "table": "09_OP / 09A_OP依存関係"
               }
             ],
@@ -4147,7 +4740,7 @@
             "sourceRefs": [
               {
                 "path": "candidates/RPL_ATT_TH.json",
-                "sha256": "113c407c5e3e9292135d061dc3e674316444481c94dc624f9a4545385fb3e107",
+                "sha256": "dee7395ecb971d66d147f2469f0550d13dc59d046ac38fb8ed7ccf8eeec572ef",
                 "table": "10B_現調項目 / 05_サイズルール"
               }
             ],
@@ -4164,7 +4757,7 @@
             "sourceRefs": [
               {
                 "path": "candidates/RPL_ATT_TH.json",
-                "sha256": "113c407c5e3e9292135d061dc3e674316444481c94dc624f9a4545385fb3e107",
+                "sha256": "dee7395ecb971d66d147f2469f0550d13dc59d046ac38fb8ed7ccf8eeec572ef",
                 "table": "10B_現調項目 / 05_サイズルール"
               }
             ],
@@ -4181,7 +4774,7 @@
             "sourceRefs": [
               {
                 "path": "candidates/RPL_ATT_TH.json",
-                "sha256": "113c407c5e3e9292135d061dc3e674316444481c94dc624f9a4545385fb3e107",
+                "sha256": "dee7395ecb971d66d147f2469f0550d13dc59d046ac38fb8ed7ccf8eeec572ef",
                 "table": "10B_現調項目 / 05_サイズルール"
               }
             ],
@@ -4198,7 +4791,7 @@
             "sourceRefs": [
               {
                 "path": "candidates/RPL_ATT_TH.json",
-                "sha256": "113c407c5e3e9292135d061dc3e674316444481c94dc624f9a4545385fb3e107",
+                "sha256": "dee7395ecb971d66d147f2469f0550d13dc59d046ac38fb8ed7ccf8eeec572ef",
                 "table": "10B_現調項目 / 05_サイズルール"
               }
             ],
@@ -4796,6 +5389,98 @@
                 "table": "fixed native semantic slots / reference-field-audit"
               }
             ]
+          },
+          "interior_cover_type": {
+            "label": "室内側の仕上げ仕様",
+            "meaning": "室内の既設枠を覆う仕上げ部材を選定する。",
+            "slot": "option",
+            "stage": "OPTION",
+            "group": "interior_finish",
+            "rank": 1,
+            "parents": [],
+            "sourceRefs": [
+              {
+                "path": "flow/user-selection-policy.v9.json",
+                "sha256": "1e440046a291664a7914ff725ffdf1a46cedc43a628d22093d852481dbd3c970",
+                "table": "User-authorized application policy; manufacturer color catalogs carried forward"
+              }
+            ]
+          },
+          "exterior_cover_type": {
+            "label": "化粧カバーの大きさ・組合せ",
+            "meaning": "既設枠見付・枠仕様に対応する化粧カバーの見付と上下左右の組合せ。",
+            "slot": "option",
+            "stage": "OPTION",
+            "group": "exterior_finish",
+            "rank": 1,
+            "parents": [
+              "survey_cover_top",
+              "survey_cover_bottom",
+              "survey_cover_side"
+            ],
+            "sourceRefs": [
+              {
+                "path": "flow/user-selection-policy.v9.json",
+                "sha256": "1e440046a291664a7914ff725ffdf1a46cedc43a628d22093d852481dbd3c970",
+                "table": "User-authorized application policy; manufacturer color catalogs carried forward"
+              }
+            ],
+            "deferredEvaluationParents": [
+              "survey_cover_top",
+              "survey_cover_bottom",
+              "survey_cover_side"
+            ]
+          },
+          "survey_cover_top": {
+            "label": "既設上枠の見付（mm）",
+            "meaning": "化粧カバーの適用範囲を再評価する現場採寸値。",
+            "slot": "installation",
+            "stage": "INSTALLATION_SURVEY",
+            "group": "survey",
+            "rank": 63,
+            "parents": [],
+            "sourceRefs": [
+              {
+                "path": "flow/user-selection-policy.v9.json",
+                "sha256": "1e440046a291664a7914ff725ffdf1a46cedc43a628d22093d852481dbd3c970",
+                "table": "User-authorized application policy; manufacturer color catalogs carried forward"
+              }
+            ],
+            "evaluationContext": true
+          },
+          "survey_cover_bottom": {
+            "label": "既設下枠の見付（mm）",
+            "meaning": "化粧カバーの適用範囲を再評価する現場採寸値。",
+            "slot": "installation",
+            "stage": "INSTALLATION_SURVEY",
+            "group": "survey",
+            "rank": 64,
+            "parents": [],
+            "sourceRefs": [
+              {
+                "path": "flow/user-selection-policy.v9.json",
+                "sha256": "1e440046a291664a7914ff725ffdf1a46cedc43a628d22093d852481dbd3c970",
+                "table": "User-authorized application policy; manufacturer color catalogs carried forward"
+              }
+            ],
+            "evaluationContext": true
+          },
+          "survey_cover_side": {
+            "label": "既設縦枠の見付（mm）",
+            "meaning": "化粧カバーの適用範囲を再評価する現場採寸値。",
+            "slot": "installation",
+            "stage": "INSTALLATION_SURVEY",
+            "group": "survey",
+            "rank": 65,
+            "parents": [],
+            "sourceRefs": [
+              {
+                "path": "flow/user-selection-policy.v9.json",
+                "sha256": "1e440046a291664a7914ff725ffdf1a46cedc43a628d22093d852481dbd3c970",
+                "table": "User-authorized application policy; manufacturer color catalogs carried forward"
+              }
+            ],
+            "evaluationContext": true
           }
         },
         "contextFields": [
@@ -4967,6 +5652,11 @@
           {
             "path": "flow/official-glass-review.v8.json",
             "sha256": "4b9b3654885f17c68f2900abf6789bb539344d3ebb98cc1671e0fd94e198551f"
+          },
+          {
+            "path": "flow/user-selection-policy.v9.json",
+            "sha256": "1e440046a291664a7914ff725ffdf1a46cedc43a628d22093d852481dbd3c970",
+            "table": "User-authorized application policy; manufacturer color catalogs carried forward"
           }
         ]
       },
@@ -4984,22 +5674,22 @@
       "displayName": "リプラス 汎用カットモール",
       "productCategory": "sash",
       "uiCategory": "REFORM_WINDOW_ESTIMATE",
-      "packageVersion": "REPLUS_GLASS_FLOW_V8_20261014",
+      "packageVersion": "REPLUS_GLOBAL_FLOW_V9_20261014",
       "masterVersion": "v1.0",
       "schemaVersion": "2.0",
       "path": "candidates/RPL_CUT_MALL.module.json",
-      "sha256": "b276e6958812d9f3ba53660481a78e731e4e3117196bd1585e9d5be94f54a918",
+      "sha256": "a0e17dff4810990eb8d5b2d78969846350015661434733cdc3a5ea8ed209c28c",
       "candidate": true,
-      "sourceHash": "aa41d127ed98907f454aa1203048bfe5ccbad8169ce914ad1c5e017a1f7e0a5f",
+      "sourceHash": "a0e17dff4810990eb8d5b2d78969846350015661434733cdc3a5ea8ed209c28c",
       "adapterType": "COMPOSED_PRODUCT_MODULE_V1",
       "uiFlowContract": {
         "schema": "REVIEWED_WINDOW_FLOW_V3",
-        "revision": "REPLUS_GLASS_FLOW_V8_20261014",
+        "revision": "REPLUS_GLOBAL_FLOW_V9_20261014",
         "status": "REVIEWED_DESIGN_CANDIDATE",
         "formalAdoption": false,
         "sourceFlow": {
           "path": "candidates/RPL_CUT_MALL.json",
-          "sha256": "874e773568046afed9709a3e451ad6a3a2f9372c26c1e4eee665f8b110f53331",
+          "sha256": "bf22de82bca25104a18c93c4fe9a833d7d4d88ec45850f53d51205917382793b",
           "table": "01_入力フロー"
         },
         "groups": [
@@ -5016,12 +5706,12 @@
           {
             "id": "survey",
             "label": "現場採寸・取付条件",
-            "order": 11
+            "order": 12
           },
           {
             "id": "size",
             "label": "製品寸法",
-            "order": 12
+            "order": 13
           },
           {
             "id": "finish",
@@ -5039,24 +5729,29 @@
             "order": 6
           },
           {
-            "id": "parts",
-            "label": "カバー・部材色",
-            "order": 7
-          },
-          {
             "id": "native_options",
             "label": "新設サッシのオプション",
-            "order": 8
+            "order": 9
           },
           {
             "id": "options",
             "label": "追加部材・オプション",
-            "order": 9
+            "order": 10
           },
           {
             "id": "part_detail",
             "label": "選択した部材の仕様",
-            "order": 10
+            "order": 11
+          },
+          {
+            "id": "interior_finish",
+            "label": "室内側の仕上げ・アングルカバー",
+            "order": 7
+          },
+          {
+            "id": "exterior_finish",
+            "label": "室外側の仕上げ・化粧カバー",
+            "order": 8
           }
         ],
         "fields": {
@@ -5070,7 +5765,7 @@
             "sourceRefs": [
               {
                 "path": "candidates/RPL_CUT_MALL.json",
-                "sha256": "874e773568046afed9709a3e451ad6a3a2f9372c26c1e4eee665f8b110f53331",
+                "sha256": "bf22de82bca25104a18c93c4fe9a833d7d4d88ec45850f53d51205917382793b",
                 "table": "01_入力フロー / 12_共通参照"
               }
             ],
@@ -5086,7 +5781,7 @@
             "sourceRefs": [
               {
                 "path": "candidates/RPL_CUT_MALL.json",
-                "sha256": "874e773568046afed9709a3e451ad6a3a2f9372c26c1e4eee665f8b110f53331",
+                "sha256": "bf22de82bca25104a18c93c4fe9a833d7d4d88ec45850f53d51205917382793b",
                 "table": "01_入力フロー / 12_共通参照"
               }
             ],
@@ -5095,64 +5790,70 @@
             ]
           },
           "cut_mall_color": {
-            "label": "カットモール色",
-            "meaning": "本体色から独立したカバー・付属部材の色",
+            "label": "化粧カバー色（外観色に連動）",
+            "meaning": "本体色に連動する仕上げ色。独立した色指定は行わない。",
             "slot": "finish_color",
             "stage": "FINISH",
-            "group": "parts",
-            "rank": 1,
+            "group": "exterior_finish",
+            "rank": 5,
+            "parents": [
+              "new_sash_exterior_color"
+            ],
             "sourceRefs": [
               {
-                "path": "candidates/RPL_CUT_MALL.json",
-                "sha256": "874e773568046afed9709a3e451ad6a3a2f9372c26c1e4eee665f8b110f53331",
-                "table": "06_色 / 01_入力フロー"
+                "path": "flow/user-selection-policy.v9.json",
+                "sha256": "1e440046a291664a7914ff725ffdf1a46cedc43a628d22093d852481dbd3c970",
+                "table": "User-authorized application policy; manufacturer color catalogs carried forward"
               }
             ],
-            "parents": []
+            "readOnly": true
           },
           "new_construction_window_frame_color": {
             "label": "新設サッシ用窓枠色",
             "meaning": "本体色から独立したカバー・付属部材の色",
             "slot": "finish_color",
             "stage": "FINISH",
-            "group": "parts",
+            "group": "part_detail",
             "rank": 2,
             "sourceRefs": [
               {
                 "path": "candidates/RPL_CUT_MALL.json",
-                "sha256": "874e773568046afed9709a3e451ad6a3a2f9372c26c1e4eee665f8b110f53331",
+                "sha256": "bf22de82bca25104a18c93c4fe9a833d7d4d88ec45850f53d51205917382793b",
                 "table": "06_色 / 01_入力フロー"
               }
             ],
             "parents": []
           },
           "interior_adjustment_angle_color": {
-            "label": "内装調整アングル色",
-            "meaning": "本体色から独立したカバー・付属部材の色",
+            "label": "室内カバー色（内観色に連動）",
+            "meaning": "本体色に連動する仕上げ色。独立した色指定は行わない。",
             "slot": "finish_color",
             "stage": "FINISH",
-            "group": "parts",
-            "rank": 3,
+            "group": "interior_finish",
+            "rank": 5,
+            "parents": [
+              "new_sash_interior_color"
+            ],
             "sourceRefs": [
               {
-                "path": "candidates/RPL_CUT_MALL.json",
-                "sha256": "874e773568046afed9709a3e451ad6a3a2f9372c26c1e4eee665f8b110f53331",
-                "table": "06_色 / 01_入力フロー"
+                "path": "flow/user-selection-policy.v9.json",
+                "sha256": "1e440046a291664a7914ff725ffdf1a46cedc43a628d22093d852481dbd3c970",
+                "table": "User-authorized application policy; manufacturer color catalogs carried forward"
               }
             ],
-            "parents": []
+            "readOnly": true
           },
           "cut_mall_window_frame_color": {
             "label": "カットモール用窓枠色",
             "meaning": "本体色から独立したカバー・付属部材の色",
             "slot": "finish_color",
             "stage": "FINISH",
-            "group": "parts",
+            "group": "part_detail",
             "rank": 4,
             "sourceRefs": [
               {
                 "path": "candidates/RPL_CUT_MALL.json",
-                "sha256": "874e773568046afed9709a3e451ad6a3a2f9372c26c1e4eee665f8b110f53331",
+                "sha256": "bf22de82bca25104a18c93c4fe9a833d7d4d88ec45850f53d51205917382793b",
                 "table": "06_色 / 01_入力フロー"
               }
             ],
@@ -5168,7 +5869,7 @@
             "sourceRefs": [
               {
                 "path": "candidates/RPL_CUT_MALL.json",
-                "sha256": "874e773568046afed9709a3e451ad6a3a2f9372c26c1e4eee665f8b110f53331",
+                "sha256": "bf22de82bca25104a18c93c4fe9a833d7d4d88ec45850f53d51205917382793b",
                 "table": "10_適用条件 / 10B_現調項目 / 08_ガラス・08A_ガラス適用条件"
               }
             ],
@@ -5184,7 +5885,7 @@
             "sourceRefs": [
               {
                 "path": "candidates/RPL_CUT_MALL.json",
-                "sha256": "874e773568046afed9709a3e451ad6a3a2f9372c26c1e4eee665f8b110f53331",
+                "sha256": "bf22de82bca25104a18c93c4fe9a833d7d4d88ec45850f53d51205917382793b",
                 "table": "10_適用条件 / 10B_現調項目"
               }
             ],
@@ -5200,7 +5901,7 @@
             "sourceRefs": [
               {
                 "path": "candidates/RPL_CUT_MALL.json",
-                "sha256": "874e773568046afed9709a3e451ad6a3a2f9372c26c1e4eee665f8b110f53331",
+                "sha256": "bf22de82bca25104a18c93c4fe9a833d7d4d88ec45850f53d51205917382793b",
                 "table": "10_適用条件 / 10B_現調項目"
               }
             ],
@@ -5216,7 +5917,7 @@
             "sourceRefs": [
               {
                 "path": "candidates/RPL_CUT_MALL.json",
-                "sha256": "874e773568046afed9709a3e451ad6a3a2f9372c26c1e4eee665f8b110f53331",
+                "sha256": "bf22de82bca25104a18c93c4fe9a833d7d4d88ec45850f53d51205917382793b",
                 "table": "10_適用条件 / 10B_現調項目"
               }
             ],
@@ -5232,7 +5933,7 @@
             "sourceRefs": [
               {
                 "path": "candidates/RPL_CUT_MALL.json",
-                "sha256": "874e773568046afed9709a3e451ad6a3a2f9372c26c1e4eee665f8b110f53331",
+                "sha256": "bf22de82bca25104a18c93c4fe9a833d7d4d88ec45850f53d51205917382793b",
                 "table": "10_適用条件 / 10B_現調項目"
               }
             ],
@@ -5250,7 +5951,7 @@
             "sourceRefs": [
               {
                 "path": "candidates/RPL_CUT_MALL.json",
-                "sha256": "874e773568046afed9709a3e451ad6a3a2f9372c26c1e4eee665f8b110f53331",
+                "sha256": "bf22de82bca25104a18c93c4fe9a833d7d4d88ec45850f53d51205917382793b",
                 "table": "10_適用条件 / 10B_現調項目"
               }
             ],
@@ -5268,7 +5969,7 @@
             "sourceRefs": [
               {
                 "path": "candidates/RPL_CUT_MALL.json",
-                "sha256": "874e773568046afed9709a3e451ad6a3a2f9372c26c1e4eee665f8b110f53331",
+                "sha256": "bf22de82bca25104a18c93c4fe9a833d7d4d88ec45850f53d51205917382793b",
                 "table": "10B_現調項目 / 05_サイズルール"
               }
             ],
@@ -5285,7 +5986,7 @@
             "sourceRefs": [
               {
                 "path": "candidates/RPL_CUT_MALL.json",
-                "sha256": "874e773568046afed9709a3e451ad6a3a2f9372c26c1e4eee665f8b110f53331",
+                "sha256": "bf22de82bca25104a18c93c4fe9a833d7d4d88ec45850f53d51205917382793b",
                 "table": "10B_現調項目 / 05_サイズルール"
               }
             ],
@@ -6006,6 +6707,11 @@
           {
             "path": "flow/official-glass-review.v8.json",
             "sha256": "4b9b3654885f17c68f2900abf6789bb539344d3ebb98cc1671e0fd94e198551f"
+          },
+          {
+            "path": "flow/user-selection-policy.v9.json",
+            "sha256": "1e440046a291664a7914ff725ffdf1a46cedc43a628d22093d852481dbd3c970",
+            "table": "User-authorized application policy; manufacturer color catalogs carried forward"
           }
         ]
       },

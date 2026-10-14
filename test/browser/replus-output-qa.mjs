@@ -9,6 +9,7 @@ for(const item of seeds){
   'CANDIDATE:RPL_ROOM':{glass_category:'Low-E複層ガラス',glass:'GL-LOWE-CLEAR',glass_function:'DISASTER',glass_appearance:'FROST',glass_gas:'ARGON',glass_spacer:'RESIN'},
   'CANDIDATE:RPL_TW':{glass_category:'TW-GL-TRIPLE',glass:'TW-GL-CC',glass_function:'THIN',glass_appearance:'OBSCURE',glass_gas:'TW-GAS-KRYPTON'},
  }[item.row.id];if(extra)item.seed={...item.seed,...extra};
+ const colors={'CANDIDATE:RPL_ROOM':{color_mode:'FREE',sash_exterior_color:'G',sash_interior_color:'M'},'CANDIDATE:RPL_TW':{sash_exterior_color:'G',sash_interior_color:'M'},'CANDIDATE:RPL_EW':{sash_exterior_color:'G'},'CANDIDATE:RPL_BATH':{bathroom_remodel_mode:'WINDOW_ONLY',sash_exterior_color:'G',sash_interior_color:'M'}}[item.row.id];if(colors)item.seed={...item.seed,...colors};
 }
 const browser=await chromium.launch();
 try{
@@ -27,7 +28,7 @@ try{
   const model=createEstimateOutputModel({project:{project_id:'candidate-qa',project_name:'リプラス候補7構成',request_company:'QA会社',sales_person:'QA担当'},estimate:{estimate_id:'candidate-qa-estimate',project_id:'candidate-qa',estimate_title:'候補の仕様確認',estimate_no:1,revision_no:0},openings,generatedAt:'2026-10-14T09:00:00+09:00'});
   return {model,pdf:Array.from(createEstimatePdfBytes(model)),xlsx:Array.from(createEstimateXlsxBytes(model))};
  },seeds);
- assert.equal(result.model.rows.length,7);assert.ok(result.model.rows.every(r=>r.price===null));assert.equal(result.model.counts.complete,0);
+ assert.equal(result.model.rows.length,7);for(const row of result.model.rows.slice(0,4)){assert.ok(JSON.stringify(row).includes('オータムブラウン'),'linked exterior color missing from output');}assert.ok(result.model.rows.every(r=>r.price===null));assert.equal(result.model.counts.complete,0);
  assert.ok(process.env.SASH_CANDIDATE_MANIFEST_FILE_ID,'Saved candidate identity required');
  assert.ok(result.model.rows.every(r=>r.audit.runtime_manifest_identity===process.env.SASH_CANDIDATE_MANIFEST_FILE_ID));
  await writeFile(OUT+'/replus-candidate-estimate.pdf',new Uint8Array(result.pdf));

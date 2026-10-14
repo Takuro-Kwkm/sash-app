@@ -183,88 +183,106 @@
       "address": "A1:E12",
       "values": [
         [
-          "01_入力フロー｜Runtime selection flow",
-          null,
-          null,
-          null,
-          null
+          "リプラス住宅用・グローバルセレクションフロー"
         ],
+        [],
         [
-          "order",
-          "field",
-          "表示名",
-          "rule",
-          "mode"
+          "順番",
+          "表示項目",
+          "データキー",
+          "候補/入力",
+          "制御方針"
         ],
         [
           1,
-          "existing_condition",
-          "既設窓/建物条件",
-          "木造・土間・外付・同品種制限を先行判定",
-          "FILTER"
+          "商品・リプラス仕様",
+          "product / specification",
+          "リプラス住宅用 → 仕様",
+          "今回承認されたアプリ運用ルール"
         ],
         [
           2,
-          "referenced_series",
-          "対応新設シリーズ",
-          "TW / Ⅱ-H / L / A",
-          "SELECT"
+          "設置・施工条件",
+          "context",
+          "選択・確認",
+          "対応する項目のみ表示"
         ],
         [
           3,
-          "referenced_window",
-          "対応窓種",
-          "公式対応×正本active/selectable",
-          "FILTER"
+          "窓種・基本仕様",
+          "opening",
+          "選択・確認",
+          "対応する項目のみ表示"
         ],
         [
           4,
-          "referenced_spec",
-          "固有仕様",
-          "各正本へ委譲",
-          "REFERENCE"
+          "本体色",
+          "finish",
+          "選択・確認",
+          "対応する項目のみ表示"
         ],
         [
           5,
-          "new_sash_size",
-          "新設サッシW/H",
-          "正本サイズ可否",
-          "REFERENCE"
+          "網戸",
+          "screen",
+          "選択・確認",
+          "対応する項目のみ表示"
         ],
         [
           6,
-          "cut_mall_dimension",
-          "MW/MH",
-          "RPL_CUT_MALL公式寸法式",
-          "AUTO"
+          "ガラス",
+          "glazing",
+          "選択・確認",
+          "対応する項目のみ表示"
         ],
         [
           7,
-          "construction_check",
-          "施工スペース/壁切断/下地",
-          "ローカル判定",
-          "FILTER"
+          "室内側の仕上げ・アングルカバー",
+          "interior_finish",
+          "選択・確認",
+          "本体色に連動"
         ],
         [
           8,
-          "body_specs",
-          "色→網戸→ガラス→OP",
-          "参照正本から取得",
-          "REFERENCE"
+          "室外側の仕上げ・化粧カバー",
+          "exterior_finish",
+          "選択・確認",
+          "本体色に連動"
         ],
         [
           9,
-          "required_parts",
-          "施工部材",
-          "条件からAUTO_RESOLVED",
-          "AUTO"
+          "新設サッシのオプション",
+          "native_options",
+          "選択・確認",
+          "対応する項目のみ表示"
         ],
         [
           10,
-          "final",
-          "最終可否",
-          "不成立候補はHIDE/REJECT",
-          "RESOLVE"
+          "追加部材・オプション",
+          "options",
+          "選択・確認",
+          "対応する項目のみ表示"
+        ],
+        [
+          11,
+          "選択した部材の仕様",
+          "part_detail",
+          "選択・確認",
+          "対応する項目のみ表示"
+        ],
+        [
+          12,
+          "現場採寸・取付条件",
+          "survey",
+          "選択・確認",
+          "採寸後に再評価"
+        ],
+        [
+          13,
+          "製品寸法",
+          "size",
+          "選択・確認",
+          "採寸後に再評価"
         ]
       ]
     },
@@ -2929,6 +2947,154 @@
           "CM-EV-016"
         ]
       ]
+    },
+    "14_UI選択契約": {
+      "values": [
+        [
+          "リプラス住宅用・共通UI選択契約",
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        [
+          "分類",
+          "対象",
+          "依存元",
+          "処理",
+          "根拠区分",
+          "revision"
+        ],
+        [
+          "色連動",
+          "cut_mall_color",
+          "new_sash_exterior_color",
+          "{\"targetField\": \"cut_mall_color\", \"parents\": [\"new_sash_exterior_color\"], \"cases\": [{\"when\": {\"new_sash_exterior_color\": \"BLACK\"}, \"value\": \"T\"}, {\"when\": {\"new_sash_exterior_color\": \"T\"}, \"value\": \"T\"}, {\"when\": {\"new_sash_exterior_color\": \"EXT-T\"}, \"value\": \"T\"}, {\"when\": {\"new_sash_exterior_color\": \"EXT-LIX-T\"}, \"value\": \"T\"}, {\"when\": {\"new_sash_exterior_color\": \"AUTUMN_BROWN\"}, \"value\": \"G\"}, {\"when\": {\"new_sash_exterior_color\": \"G\"}, \"value\": \"G\"}, {\"when\": {\"new_sash_exterior_color\": \"EXT-G\"}, \"value\": \"G\"}, {\"when\": {\"new_sash_exterior_color\": \"EXT-LIX-G\"}, \"value\": \"G\"}, {\"when\": {\"new_sash_exterior_color\": \"SHINE_GRAY\"}, \"value\": \"K\"}, {\"when\": {\"new_sash_exterior_color\": \"K\"}, \"value\": \"K\"}, {\"when\": {\"new_sash_exterior_color\": \"EXT-K\"}, \"value\": \"K\"}, {\"when\": {\"new_sash_exterior_color\": \"EXT-LIX-K\"}, \"value\": \"K\"}, {\"when\": {\"new_sash_exterior_color\": \"NATURAL_SILVER\"}, \"value\": \"D\"}, {\"when\": {\"new_sash_exterior_color\": \"D\"}, \"value\": \"D\"}, {\"when\": {\"new_sash_exterior_color\": \"EXT-D\"}, \"value\": \"D\"}, {\"when\": {\"new_sash_exterior_color\": \"EXT-LIX-D\"}, \"value\": \"D\"}, {\"when\": {\"new_sash_exterior_color\": \"WHITE\"}, \"value\": \"W\"}, {\"when\": {\"new_sash_exterior_color\": \"W\"}, \"value\": \"W\"}, {\"when\": {\"new_sash_exterior_color\": \"EXT-W\"}, \"value\": \"W\"}, {\"when\": {\"new_sash_exterior_color\": \"EXT-LIX-W\"}, \"value\": \"W\"}], \"resolvedMessage\": \"本体外観色に連動しています。\", \"pendingMessage\": \"サッシ本体の色を選択してください。\", \"unavailableMessage\": \"本体色に対応するカバー部材の確認が必要です。\"}",
+          "USER_APPLICATION_POLICY",
+          "REPLUS_GLOBAL_FLOW_V9_20261014"
+        ],
+        [
+          "色連動",
+          "interior_adjustment_angle_color",
+          "new_sash_interior_color",
+          "{\"targetField\": \"interior_adjustment_angle_color\", \"parents\": [\"new_sash_interior_color\"], \"cases\": [{\"when\": {\"new_sash_interior_color\": \"BLACK\"}, \"value\": \"T\"}, {\"when\": {\"new_sash_interior_color\": \"M\"}, \"value\": \"T\"}, {\"when\": {\"new_sash_interior_color\": \"INT-M\"}, \"value\": \"T\"}, {\"when\": {\"new_sash_interior_color\": \"INT-LIX-M\"}, \"value\": \"T\"}, {\"when\": {\"new_sash_interior_color\": \"AUTUMN_BROWN\"}, \"value\": \"G\"}, {\"when\": {\"new_sash_interior_color\": \"G\"}, \"value\": \"G\"}, {\"when\": {\"new_sash_interior_color\": \"INT-G\"}, \"value\": \"G\"}, {\"when\": {\"new_sash_interior_color\": \"INT-LIX-G\"}, \"value\": \"G\"}, {\"when\": {\"new_sash_interior_color\": \"SHINE_GRAY\"}, \"value\": \"K\"}, {\"when\": {\"new_sash_interior_color\": \"K\"}, \"value\": \"K\"}, {\"when\": {\"new_sash_interior_color\": \"INT-K\"}, \"value\": \"K\"}, {\"when\": {\"new_sash_interior_color\": \"INT-LIX-K\"}, \"value\": \"K\"}, {\"when\": {\"new_sash_interior_color\": \"NATURAL_SILVER\"}, \"value\": \"D\"}, {\"when\": {\"new_sash_interior_color\": \"D\"}, \"value\": \"D\"}, {\"when\": {\"new_sash_interior_color\": \"INT-D\"}, \"value\": \"D\"}, {\"when\": {\"new_sash_interior_color\": \"INT-LIX-D\"}, \"value\": \"D\"}, {\"when\": {\"new_sash_interior_color\": \"WHITE\"}, \"value\": \"W\"}, {\"when\": {\"new_sash_interior_color\": \"W\"}, \"value\": \"W\"}, {\"when\": {\"new_sash_interior_color\": \"INT-W\"}, \"value\": \"W\"}, {\"when\": {\"new_sash_interior_color\": \"INT-LIX-W\"}, \"value\": \"W\"}, {\"when\": {\"new_sash_interior_color\": \"CREA_MOCHA\"}, \"value\": \"C\"}, {\"when\": {\"new_sash_interior_color\": \"C\"}, \"value\": \"C\"}, {\"when\": {\"new_sash_interior_color\": \"INT-C\"}, \"value\": \"C\"}, {\"when\": {\"new_sash_interior_color\": \"INT-LIX-C\"}, \"value\": \"C\"}, {\"when\": {\"new_sash_interior_color\": \"CREA_RUSK\"}, \"value\": \"B\"}, {\"when\": {\"new_sash_interior_color\": \"B\"}, \"value\": \"B\"}, {\"when\": {\"new_sash_interior_color\": \"INT-B\"}, \"value\": \"B\"}, {\"when\": {\"new_sash_interior_color\": \"INT-LIX-B\"}, \"value\": \"B\"}, {\"when\": {\"new_sash_interior_color\": \"CREA_PALE\"}, \"value\": \"P\"}, {\"when\": {\"new_sash_interior_color\": \"P\"}, \"value\": \"P\"}, {\"when\": {\"new_sash_interior_color\": \"INT-P\"}, \"value\": \"P\"}, {\"when\": {\"new_sash_interior_color\": \"INT-LIX-P\"}, \"value\": \"P\"}, {\"when\": {\"new_sash_interior_color\": \"PRECIOUS_WHITE\"}, \"value\": \"F\"}, {\"when\": {\"new_sash_interior_color\": \"F\"}, \"value\": \"F\"}, {\"when\": {\"new_sash_interior_color\": \"INT-F\"}, \"value\": \"F\"}, {\"when\": {\"new_sash_interior_color\": \"INT-LIX-F\"}, \"value\": \"F\"}], \"resolvedMessage\": \"本体内観色に連動しています。\", \"pendingMessage\": \"サッシ本体の色を選択してください。\", \"unavailableMessage\": \"本体色に対応するカバー部材の確認が必要です。\"}",
+          "USER_APPLICATION_POLICY",
+          "REPLUS_GLOBAL_FLOW_V9_20261014"
+        ],
+        [
+          "フロー",
+          "referenced_series_id",
+          "",
+          "{\"label\": \"新設サッシシリーズ\", \"group\": \"opening\", \"internal\": false}",
+          "UI_PRESENTATION",
+          "REPLUS_GLOBAL_FLOW_V9_20261014"
+        ],
+        [
+          "フロー",
+          "referenced_window_id",
+          "referenced_series_id",
+          "{\"label\": \"新設サッシ窓種\", \"group\": \"opening\", \"internal\": false}",
+          "UI_PRESENTATION",
+          "REPLUS_GLOBAL_FLOW_V9_20261014"
+        ],
+        [
+          "フロー",
+          "cut_mall_color",
+          "new_sash_exterior_color",
+          "{\"label\": \"化粧カバー色（外観色に連動）\", \"group\": \"exterior_finish\", \"internal\": false}",
+          "UI_PRESENTATION",
+          "REPLUS_GLOBAL_FLOW_V9_20261014"
+        ],
+        [
+          "フロー",
+          "new_construction_window_frame_color",
+          "",
+          "{\"label\": \"新設サッシ用窓枠色\", \"group\": \"part_detail\", \"internal\": false}",
+          "UI_PRESENTATION",
+          "REPLUS_GLOBAL_FLOW_V9_20261014"
+        ],
+        [
+          "フロー",
+          "interior_adjustment_angle_color",
+          "new_sash_interior_color",
+          "{\"label\": \"室内カバー色（内観色に連動）\", \"group\": \"interior_finish\", \"internal\": false}",
+          "UI_PRESENTATION",
+          "REPLUS_GLOBAL_FLOW_V9_20261014"
+        ],
+        [
+          "フロー",
+          "cut_mall_window_frame_color",
+          "",
+          "{\"label\": \"カットモール用窓枠色\", \"group\": \"part_detail\", \"internal\": false}",
+          "UI_PRESENTATION",
+          "REPLUS_GLOBAL_FLOW_V9_20261014"
+        ],
+        [
+          "フロー",
+          "building_structure",
+          "",
+          "{\"label\": \"建物構造\", \"group\": \"context\", \"internal\": false}",
+          "UI_PRESENTATION",
+          "REPLUS_GLOBAL_FLOW_V9_20261014"
+        ],
+        [
+          "フロー",
+          "existing_sash_mount",
+          "",
+          "{\"label\": \"既設サッシの取付方式\", \"group\": \"context\", \"internal\": false}",
+          "UI_PRESENTATION",
+          "REPLUS_GLOBAL_FLOW_V9_20261014"
+        ],
+        [
+          "フロー",
+          "new_sash_size_relation",
+          "",
+          "{\"label\": \"新設と既設のサイズ関係\", \"group\": \"context\", \"internal\": false}",
+          "UI_PRESENTATION",
+          "REPLUS_GLOBAL_FLOW_V9_20261014"
+        ],
+        [
+          "フロー",
+          "existing_window_type",
+          "",
+          "{\"label\": \"既設窓の付属設備\", \"group\": \"context\", \"internal\": false}",
+          "UI_PRESENTATION",
+          "REPLUS_GLOBAL_FLOW_V9_20261014"
+        ],
+        [
+          "フロー",
+          "new_sash_mount",
+          "existing_sash_mount",
+          "{\"label\": \"新設サッシの取付方式\", \"group\": \"context\", \"internal\": false}",
+          "UI_PRESENTATION",
+          "REPLUS_GLOBAL_FLOW_V9_20261014"
+        ],
+        [
+          "フロー",
+          "rain_pocket",
+          "existing_window_type",
+          "{\"label\": \"雨戸の戸袋仕様\", \"group\": \"context\", \"internal\": false}",
+          "UI_PRESENTATION",
+          "REPLUS_GLOBAL_FLOW_V9_20261014"
+        ],
+        [
+          "フロー",
+          "survey_w",
+          "",
+          "{\"label\": \"採寸幅 WS（mm）\", \"group\": \"survey\", \"internal\": false}",
+          "UI_PRESENTATION",
+          "REPLUS_GLOBAL_FLOW_V9_20261014"
+        ],
+        [
+          "フロー",
+          "survey_h",
+          "",
+          "{\"label\": \"採寸高さ HS（mm）\", \"group\": \"survey\", \"internal\": false}",
+          "UI_PRESENTATION",
+          "REPLUS_GLOBAL_FLOW_V9_20261014"
+        ]
+      ]
     }
   },
   "generated_at": "2026-09-01",
@@ -5013,5 +5179,5 @@
     "runtime_file_id": "182tZYMkcZyjTqOrU3seJizY6bcdhxC59",
     "authoring_file_id": "1RDR5StrhnOLi6DUBtdrGKqsb1mcXZDLi"
   },
-  "candidate_revision": "REPLUS_RUNTIME_UI_V5_20261014"
+  "candidate_revision": "REPLUS_GLOBAL_FLOW_V9_20261014"
 }
