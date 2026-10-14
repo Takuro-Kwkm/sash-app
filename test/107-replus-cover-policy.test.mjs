@@ -44,9 +44,10 @@ test('native reference colors use explicit mappings; unavailable dusk gray is ne
 test('glass then interior/exterior finishes precede final measurements across all seven',async()=>{
  for(const e of index.products){const d=JSON.parse(readFileSync(root+'/'+e.path));const b=d.composition?.bindings.find(v=>v.executable),name=d.baseline.component_id;const s=b?{referenced_series_id:b.series_id,referenced_window_id:b.window_id,new_sash_size_mode:'CUSTOM'}:{window_type:d.product_module.allowedValues.find(v=>v.specificationKey==='window_type').value,size_mode:'CUSTOM'};const r=await ui(name,s);let last=-1;for(const f of r.fields){const order=f.presentationGroup.order;assert.ok(order>=last,e.id);last=order;}assert.equal(field(r,'spec_height_category'),undefined);assert.equal(r.orderReady,false);assert.equal(r.pricing.price,null);}
 });
-test('late survey values re-evaluate and clear cover sizes without clearing valid body colors',async()=>{
+test('removed survey inputs cannot filter covers; frame changes still clear incompatible cover sizes',async()=>{
  let r=await ui('RPL_ROOM',{frame_type:'RPL_STD',window_type:'RPL_ROOM_SLD',sash_exterior_color:'G',exterior_cover_type:'COV-STD-SMALL',survey_cover_top:20,survey_cover_bottom:30,survey_cover_side:5});assert.equal(r.selection.exterior_cover_type,'COV-STD-SMALL');
- r=await ui('RPL_ROOM',{...r.selection,survey_cover_top:50});assert.equal(r.selection.exterior_cover_type,undefined);assert.ok(r.clearedFields.includes('exterior_cover_type'));assert.equal(r.selection.exterior_cover_color,'G');assert.ok(!field(r,'exterior_cover_type').values.some(v=>v.value==='COV-STD-SMALL'));
+ r=await ui('RPL_ROOM',{...r.selection,survey_cover_top:50});assert.equal(r.selection.survey_cover_top,undefined);assert.equal(r.selection.exterior_cover_type,'COV-STD-SMALL');assert.ok(r.manualWarnings.some(w=>w.includes('納まり・適合')));
+ r=await ui('RPL_ROOM',{...r.selection,frame_type:'RPL_BRIDGE'});assert.equal(r.selection.exterior_cover_type,undefined);assert.ok(r.clearedFields.includes('exterior_cover_type'));assert.equal(r.selection.exterior_cover_color,'G');assert.ok(!field(r,'exterior_cover_type').values.some(v=>v.value==='COV-STD-SMALL'));
 });
 test('dimensions derive hidden category, invalidate terrace sash, and hold overlapping ranges',async()=>{
  let r=await ui('RPL_TW',{window_type:'RPL_TW_SLD',frame_type:'RPL_TW_FRAME',spec_panel_configuration:'TW-SS-PANEL-2',spec_sash_configuration:'TW-SS-HANDLE',size_mode:'CUSTOM',custom_width:2000,custom_height:1800});assert.equal(r.selection.spec_height_category,'TW-SS-TER');assert.equal(r.selection.spec_sash_configuration,'TW-SS-HANDLE');
@@ -61,7 +62,7 @@ test('cover-only saved selections retain migration audit without a glass field',
   import {createCandidateRuntimePreview} from './src/server/candidate-runtime-preview.mjs';
   const input={options:['OP-ANGLE-COVER-CUT','OP-COVER-CASING']};
   await createCandidateRuntimePreview()({url:'/api/runtime-master/resolve?'+new URLSearchParams({productId:'CANDIDATE:RPL_ROOM',configurationVersion:'REPLUS_GLASS_FLOW_V8_20261014',selection:JSON.stringify(input)})},{writeHead(){},end(text){const r=JSON.parse(text);if(!r.configurationMigration?.originalSelection.options.includes('OP-ANGLE-COVER-CUT')||r.selection.interior_cover_type!=='OP-ANGLE-COVER-CUT'||!r.selection.options.includes('OP-COVER-CASING'))throw Error('COVER_MIGRATION_AUDIT_MISSING');console.log('PASS');}});
- `],{encoding:'utf8',env:{...process.env,SASH_CANDIDATE_MODE:'INSPECT_LOCAL',SASH_CANDIDATE_MANIFEST_FILE_ID:'1bjH30eC8yiz60ryXqzINxJz7qU4d_5LG',SASH_CANDIDATE_RUNTIME_INDEX:resolve(root,'index.json'),SASH_CANDIDATE_INDEX_SHA:createHash('sha256').update(readFileSync(root+'/index.json')).digest('hex')}});
+ `],{encoding:'utf8',env:{...process.env,SASH_CANDIDATE_MODE:'INSPECT_LOCAL',SASH_CANDIDATE_MANIFEST_FILE_ID:'1m9UMPr1xSNn73tjzkTyBinczePi66VE7',SASH_CANDIDATE_RUNTIME_INDEX:resolve(root,'index.json'),SASH_CANDIDATE_INDEX_SHA:createHash('sha256').update(readFileSync(root+'/index.json')).digest('hex')}});
  assert.equal(status,0,stderr);assert.match(stdout,/PASS/);
 });
 test('separately supplied trim and angle remain combinable and both migrate from saved options',async()=>{

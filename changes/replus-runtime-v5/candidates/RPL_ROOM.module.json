@@ -1,14 +1,14 @@
 {
   "schema": "PRODUCT_MODULE_CANDIDATE_V1",
-  "candidate_revision": "REPLUS_GLOBAL_FLOW_V9_20261014",
+  "candidate_revision": "REPLUS_SALES_FLOW_V10_20261014",
   "baseline": {
     "path": "candidates/RPL_ROOM.json",
     "component_id": "RPL_ROOM",
-    "sha256": "f2066494c516e130aa5daa7f90c30f457e69a0a5d00c34801e92aa23282756ac",
+    "sha256": "09d63b4c4c3965af91e1f0dadba0f9ba70e1b890bc4bdb6c86c5aa33018a92fe",
     "baseline_sha256": "bf8c26c5c139a12162b25851b65aa7ae39892bea6cb962c4b400bd7194882313",
     "baseline_component_version": "v1.0"
   },
-  "scope": "SELECTION_AND_ESTIMATE_HANDOFF; NO_AUTO_MANUFACTURE_NO_FORMAL_NO_RELEASE",
+  "scope": "SELECTION_AND_ESTIMATE_HANDOFF; NO_AUTO_MANUFACTURE_NO_FORMAL_NO_RELEASE; SALES_SITE_INPUTS_EXCLUDED_SOURCE_CONSTRAINTS_RETAINED",
   "product_module": {
     "product": {
       "id": "CANDIDATE:RPL_ROOM",
@@ -293,54 +293,6 @@
         "status": "ACTIVE"
       },
       {
-        "key": "usage_humidity",
-        "displayLabel": "使用環境",
-        "dataType": "ENUM",
-        "displayOrder": 180,
-        "autoSelectSingle": false,
-        "parentFields": [],
-        "selector": {},
-        "id": "CANDIDATE:RPL_ROOM:field:usage_humidity",
-        "productId": "CANDIDATE:RPL_ROOM",
-        "status": "ACTIVE"
-      },
-      {
-        "key": "building_structure",
-        "displayLabel": "建物構造",
-        "dataType": "ENUM",
-        "displayOrder": 190,
-        "autoSelectSingle": false,
-        "parentFields": [],
-        "selector": {},
-        "id": "CANDIDATE:RPL_ROOM:field:building_structure",
-        "productId": "CANDIDATE:RPL_ROOM",
-        "status": "ACTIVE"
-      },
-      {
-        "key": "installation_room",
-        "displayLabel": "設置場所",
-        "dataType": "ENUM",
-        "displayOrder": 200,
-        "autoSelectSingle": false,
-        "parentFields": [],
-        "selector": {},
-        "id": "CANDIDATE:RPL_ROOM:field:installation_room",
-        "productId": "CANDIDATE:RPL_ROOM",
-        "status": "ACTIVE"
-      },
-      {
-        "key": "work_space",
-        "displayLabel": "新設枠の振出し条件",
-        "dataType": "ENUM",
-        "displayOrder": 210,
-        "autoSelectSingle": false,
-        "parentFields": [],
-        "selector": {},
-        "id": "CANDIDATE:RPL_ROOM:field:work_space",
-        "productId": "CANDIDATE:RPL_ROOM",
-        "status": "ACTIVE"
-      },
-      {
         "key": "glass_category",
         "displayLabel": "ガラス種類",
         "dataType": "ENUM",
@@ -495,42 +447,6 @@
         ],
         "selector": {},
         "id": "CANDIDATE:RPL_ROOM:field:exterior_cover_type",
-        "productId": "CANDIDATE:RPL_ROOM",
-        "status": "ACTIVE"
-      },
-      {
-        "key": "survey_cover_top",
-        "displayLabel": "既設上枠の見付（mm）",
-        "dataType": "NUMBER",
-        "displayOrder": 900,
-        "autoSelectSingle": false,
-        "parentFields": [],
-        "selector": {},
-        "id": "CANDIDATE:RPL_ROOM:field:survey_cover_top",
-        "productId": "CANDIDATE:RPL_ROOM",
-        "status": "ACTIVE"
-      },
-      {
-        "key": "survey_cover_bottom",
-        "displayLabel": "既設下枠の見付（mm）",
-        "dataType": "NUMBER",
-        "displayOrder": 900,
-        "autoSelectSingle": false,
-        "parentFields": [],
-        "selector": {},
-        "id": "CANDIDATE:RPL_ROOM:field:survey_cover_bottom",
-        "productId": "CANDIDATE:RPL_ROOM",
-        "status": "ACTIVE"
-      },
-      {
-        "key": "survey_cover_side",
-        "displayLabel": "既設縦枠の見付（mm）",
-        "dataType": "NUMBER",
-        "displayOrder": 900,
-        "autoSelectSingle": false,
-        "parentFields": [],
-        "selector": {},
-        "id": "CANDIDATE:RPL_ROOM:field:survey_cover_side",
         "productId": "CANDIDATE:RPL_ROOM",
         "status": "ACTIVE"
       }
@@ -1873,111 +1789,6 @@
         "id": "CANDIDATE:RPL_ROOM:value:options:14",
         "productId": "CANDIDATE:RPL_ROOM",
         "specificationKey": "options",
-        "status": "ACTIVE"
-      },
-      {
-        "value": "GENERAL",
-        "displayLabel": "高温多湿箇所以外",
-        "evidenceIds": [
-          "DELTA-KEY-EV-V4"
-        ],
-        "selector": {},
-        "metadata": {
-          "manualCheck": false
-        },
-        "id": "CANDIDATE:RPL_ROOM:value:usage_humidity:0",
-        "productId": "CANDIDATE:RPL_ROOM",
-        "specificationKey": "usage_humidity",
-        "status": "ACTIVE"
-      },
-      {
-        "value": "HIGH_HUMIDITY",
-        "displayLabel": "高温多湿箇所",
-        "evidenceIds": [
-          "DELTA-KEY-EV-V4"
-        ],
-        "selector": {},
-        "metadata": {
-          "manualCheck": false
-        },
-        "id": "CANDIDATE:RPL_ROOM:value:usage_humidity:1",
-        "productId": "CANDIDATE:RPL_ROOM",
-        "specificationKey": "usage_humidity",
-        "status": "ACTIVE"
-      },
-      {
-        "value": "木造",
-        "displayLabel": "木造",
-        "evidenceIds": [
-          "EV-010"
-        ],
-        "selector": {},
-        "metadata": {
-          "manualCheck": false
-        },
-        "id": "CANDIDATE:RPL_ROOM:value:building_structure:0",
-        "productId": "CANDIDATE:RPL_ROOM",
-        "specificationKey": "building_structure",
-        "status": "ACTIVE"
-      },
-      {
-        "value": "RC造",
-        "displayLabel": "RC造",
-        "evidenceIds": [
-          "EV-010"
-        ],
-        "selector": {},
-        "metadata": {
-          "manualCheck": true
-        },
-        "id": "CANDIDATE:RPL_ROOM:value:building_structure:1",
-        "productId": "CANDIDATE:RPL_ROOM",
-        "specificationKey": "building_structure",
-        "status": "ACTIVE"
-      },
-      {
-        "value": "プレハブ/特殊納まり",
-        "displayLabel": "プレハブ/特殊納まり",
-        "evidenceIds": [
-          "EV-010"
-        ],
-        "selector": {},
-        "metadata": {
-          "manualCheck": true
-        },
-        "id": "CANDIDATE:RPL_ROOM:value:building_structure:2",
-        "productId": "CANDIDATE:RPL_ROOM",
-        "specificationKey": "building_structure",
-        "status": "ACTIVE"
-      },
-      {
-        "value": "居室",
-        "displayLabel": "居室",
-        "evidenceIds": [
-          "EV-010"
-        ],
-        "selector": {},
-        "metadata": {
-          "manualCheck": false
-        },
-        "id": "CANDIDATE:RPL_ROOM:value:installation_room:0",
-        "productId": "CANDIDATE:RPL_ROOM",
-        "specificationKey": "installation_room",
-        "status": "ACTIVE"
-      },
-      {
-        "value": "室内から施工時に新設枠を外側へ振り出せない",
-        "displayLabel": "室内から施工時に新設枠を外側へ振り出せない",
-        "evidenceIds": [
-          "EV-010"
-        ],
-        "selector": {},
-        "metadata": {
-          "manualCheck": true
-        },
-        "id": "CANDIDATE:RPL_ROOM:value:work_space:0",
-        "productId": "CANDIDATE:RPL_ROOM",
-        "specificationKey": "work_space",
         "status": "ACTIVE"
       },
       {
@@ -4466,27 +4277,6 @@
         "specificationKey": "exterior_cover_type",
         "required": true,
         "selector": {}
-      },
-      {
-        "id": "CANDIDATE:RPL_ROOM:required:survey_cover_top",
-        "productId": "CANDIDATE:RPL_ROOM",
-        "specificationKey": "survey_cover_top",
-        "required": true,
-        "selector": {}
-      },
-      {
-        "id": "CANDIDATE:RPL_ROOM:required:survey_cover_bottom",
-        "productId": "CANDIDATE:RPL_ROOM",
-        "specificationKey": "survey_cover_bottom",
-        "required": true,
-        "selector": {}
-      },
-      {
-        "id": "CANDIDATE:RPL_ROOM:required:survey_cover_side",
-        "productId": "CANDIDATE:RPL_ROOM",
-        "specificationKey": "survey_cover_side",
-        "required": true,
-        "selector": {}
       }
     ],
     "ruleSets": [
@@ -5835,6 +5625,17 @@
         "mode": "MANUAL_CHECK",
         "when": {},
         "message": "施工可否・図形境界・ガラス構成・部材数量・価格・発注コードは積算確認が必要です。候補のため正式採用・自動注文はできません。",
+        "productId": "CANDIDATE:RPL_ROOM"
+      },
+      {
+        "id": "CANDIDATE:RPL_ROOM:dependencies:external-cover-site-confirmation-v10",
+        "mode": "MANUAL_CHECK",
+        "when": {
+          "exterior_cover_type": {
+            "$exists": true
+          }
+        },
+        "message": "化粧カバーの納まり・適合は現調で確認してください。",
         "productId": "CANDIDATE:RPL_ROOM"
       }
     ],

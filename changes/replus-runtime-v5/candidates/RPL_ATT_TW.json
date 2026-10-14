@@ -499,7 +499,7 @@
       ]
     },
     "01_入力フロー": {
-      "address": "A1:E18",
+      "address": "A1:E10",
       "values": [
         [
           "リプラス住宅用・グローバルセレクションフロー"
@@ -521,85 +521,43 @@
         ],
         [
           2,
-          "設置・施工条件",
-          "context",
-          "選択・確認",
-          "対応する項目のみ表示"
-        ],
-        [
-          3,
           "窓種・基本仕様",
           "opening",
           "選択・確認",
           "対応する項目のみ表示"
         ],
         [
-          4,
-          "本体色",
-          "finish",
-          "選択・確認",
-          "対応する項目のみ表示"
-        ],
-        [
-          5,
-          "網戸",
-          "screen",
-          "選択・確認",
-          "対応する項目のみ表示"
-        ],
-        [
-          6,
-          "ガラス",
-          "glazing",
-          "選択・確認",
-          "対応する項目のみ表示"
-        ],
-        [
-          7,
+          3,
           "室内側の仕上げ・アングルカバー",
           "interior_finish",
           "選択・確認",
           "本体色に連動"
         ],
         [
-          8,
+          4,
           "室外側の仕上げ・化粧カバー",
           "exterior_finish",
           "選択・確認",
           "本体色に連動"
         ],
         [
-          9,
-          "新設サッシのオプション",
-          "native_options",
-          "選択・確認",
-          "対応する項目のみ表示"
-        ],
-        [
-          10,
+          5,
           "追加部材・オプション",
           "options",
           "選択・確認",
           "対応する項目のみ表示"
         ],
         [
-          11,
+          6,
           "選択した部材の仕様",
           "part_detail",
           "選択・確認",
           "対応する項目のみ表示"
         ],
         [
-          12,
+          7,
           "現場採寸・取付条件",
           "survey",
-          "選択・確認",
-          "採寸後に再評価"
-        ],
-        [
-          13,
-          "製品寸法",
-          "size",
           "選択・確認",
           "採寸後に再評価"
         ]
@@ -3317,7 +3275,7 @@
           "new_sash_exterior_color",
           "{\"targetField\": \"exterior_cover_color\", \"parents\": [\"new_sash_exterior_color\"], \"cases\": [{\"when\": {\"new_sash_exterior_color\": \"BLACK\"}, \"value\": \"T\"}, {\"when\": {\"new_sash_exterior_color\": \"T\"}, \"value\": \"T\"}, {\"when\": {\"new_sash_exterior_color\": \"EXT-T\"}, \"value\": \"T\"}, {\"when\": {\"new_sash_exterior_color\": \"EXT-LIX-T\"}, \"value\": \"T\"}, {\"when\": {\"new_sash_exterior_color\": \"AUTUMN_BROWN\"}, \"value\": \"G\"}, {\"when\": {\"new_sash_exterior_color\": \"G\"}, \"value\": \"G\"}, {\"when\": {\"new_sash_exterior_color\": \"EXT-G\"}, \"value\": \"G\"}, {\"when\": {\"new_sash_exterior_color\": \"EXT-LIX-G\"}, \"value\": \"G\"}, {\"when\": {\"new_sash_exterior_color\": \"SHINE_GRAY\"}, \"value\": \"K\"}, {\"when\": {\"new_sash_exterior_color\": \"K\"}, \"value\": \"K\"}, {\"when\": {\"new_sash_exterior_color\": \"EXT-K\"}, \"value\": \"K\"}, {\"when\": {\"new_sash_exterior_color\": \"EXT-LIX-K\"}, \"value\": \"K\"}, {\"when\": {\"new_sash_exterior_color\": \"NATURAL_SILVER\"}, \"value\": \"D\"}, {\"when\": {\"new_sash_exterior_color\": \"D\"}, \"value\": \"D\"}, {\"when\": {\"new_sash_exterior_color\": \"EXT-D\"}, \"value\": \"D\"}, {\"when\": {\"new_sash_exterior_color\": \"EXT-LIX-D\"}, \"value\": \"D\"}, {\"when\": {\"new_sash_exterior_color\": \"WHITE\"}, \"value\": \"W\"}, {\"when\": {\"new_sash_exterior_color\": \"W\"}, \"value\": \"W\"}, {\"when\": {\"new_sash_exterior_color\": \"EXT-W\"}, \"value\": \"W\"}, {\"when\": {\"new_sash_exterior_color\": \"EXT-LIX-W\"}, \"value\": \"W\"}], \"resolvedMessage\": \"本体外観色に連動しています。\", \"pendingMessage\": \"サッシ本体の色を選択してください。\", \"unavailableMessage\": \"本体色に対応するカバー部材の確認が必要です。\"}",
           "USER_APPLICATION_POLICY",
-          "REPLUS_GLOBAL_FLOW_V9_20261014"
+          "REPLUS_SALES_FLOW_V10_20261014"
         ],
         [
           "色連動",
@@ -3325,7 +3283,7 @@
           "new_sash_interior_color",
           "{\"targetField\": \"interior_cover_color\", \"parents\": [\"new_sash_interior_color\"], \"cases\": [{\"when\": {\"new_sash_interior_color\": \"BLACK\"}, \"value\": \"M\"}, {\"when\": {\"new_sash_interior_color\": \"M\"}, \"value\": \"M\"}, {\"when\": {\"new_sash_interior_color\": \"INT-M\"}, \"value\": \"M\"}, {\"when\": {\"new_sash_interior_color\": \"INT-LIX-M\"}, \"value\": \"M\"}, {\"when\": {\"new_sash_interior_color\": \"CREA_MOCHA\"}, \"value\": \"C\"}, {\"when\": {\"new_sash_interior_color\": \"C\"}, \"value\": \"C\"}, {\"when\": {\"new_sash_interior_color\": \"INT-C\"}, \"value\": \"C\"}, {\"when\": {\"new_sash_interior_color\": \"INT-LIX-C\"}, \"value\": \"C\"}, {\"when\": {\"new_sash_interior_color\": \"CREA_RUSK\"}, \"value\": \"B\"}, {\"when\": {\"new_sash_interior_color\": \"B\"}, \"value\": \"B\"}, {\"when\": {\"new_sash_interior_color\": \"INT-B\"}, \"value\": \"B\"}, {\"when\": {\"new_sash_interior_color\": \"INT-LIX-B\"}, \"value\": \"B\"}, {\"when\": {\"new_sash_interior_color\": \"CREA_PALE\"}, \"value\": \"P\"}, {\"when\": {\"new_sash_interior_color\": \"P\"}, \"value\": \"P\"}, {\"when\": {\"new_sash_interior_color\": \"INT-P\"}, \"value\": \"P\"}, {\"when\": {\"new_sash_interior_color\": \"INT-LIX-P\"}, \"value\": \"P\"}, {\"when\": {\"new_sash_interior_color\": \"PRECIOUS_WHITE\"}, \"value\": \"F\"}, {\"when\": {\"new_sash_interior_color\": \"F\"}, \"value\": \"F\"}, {\"when\": {\"new_sash_interior_color\": \"INT-F\"}, \"value\": \"F\"}, {\"when\": {\"new_sash_interior_color\": \"INT-LIX-F\"}, \"value\": \"F\"}], \"resolvedMessage\": \"本体内観色に連動しています。\", \"pendingMessage\": \"サッシ本体の色を選択してください。\", \"unavailableMessage\": \"本体色に対応するカバー部材の確認が必要です。\"}",
           "USER_APPLICATION_POLICY",
-          "REPLUS_GLOBAL_FLOW_V9_20261014"
+          "REPLUS_SALES_FLOW_V10_20261014"
         ],
         [
           "フロー",
@@ -3333,7 +3291,7 @@
           "",
           "{\"label\": \"新設サッシシリーズ\", \"group\": \"opening\", \"internal\": false}",
           "UI_PRESENTATION",
-          "REPLUS_GLOBAL_FLOW_V9_20261014"
+          "REPLUS_SALES_FLOW_V10_20261014"
         ],
         [
           "フロー",
@@ -3341,7 +3299,7 @@
           "referenced_series_id",
           "{\"label\": \"新設サッシ窓種\", \"group\": \"opening\", \"internal\": false}",
           "UI_PRESENTATION",
-          "REPLUS_GLOBAL_FLOW_V9_20261014"
+          "REPLUS_SALES_FLOW_V10_20261014"
         ],
         [
           "フロー",
@@ -3349,7 +3307,7 @@
           "new_sash_exterior_color",
           "{\"label\": \"化粧カバー色（外観色に連動）\", \"group\": \"exterior_finish\", \"internal\": false}",
           "UI_PRESENTATION",
-          "REPLUS_GLOBAL_FLOW_V9_20261014"
+          "REPLUS_SALES_FLOW_V10_20261014"
         ],
         [
           "フロー",
@@ -3357,7 +3315,7 @@
           "new_sash_interior_color",
           "{\"label\": \"室内カバー色（内観色に連動）\", \"group\": \"interior_finish\", \"internal\": false}",
           "UI_PRESENTATION",
-          "REPLUS_GLOBAL_FLOW_V9_20261014"
+          "REPLUS_SALES_FLOW_V10_20261014"
         ],
         [
           "フロー",
@@ -3365,7 +3323,7 @@
           "options",
           "{\"label\": \"木製ケーシング色\", \"group\": \"part_detail\", \"internal\": false}",
           "UI_PRESENTATION",
-          "REPLUS_GLOBAL_FLOW_V9_20261014"
+          "REPLUS_SALES_FLOW_V10_20261014"
         ],
         [
           "フロー",
@@ -3373,15 +3331,15 @@
           "",
           "{\"label\": \"追加部材・オプション\", \"group\": \"options\", \"internal\": false}",
           "UI_PRESENTATION",
-          "REPLUS_GLOBAL_FLOW_V9_20261014"
+          "REPLUS_SALES_FLOW_V10_20261014"
         ],
         [
           "フロー",
           "building_structure",
           "",
-          "{\"label\": \"建物構造\", \"group\": \"context\", \"internal\": false}",
-          "UI_PRESENTATION",
-          "REPLUS_GLOBAL_FLOW_V9_20261014"
+          "{\"label\": \"建物構造\", \"group\": \"context\", \"internal\": false, \"salesInput\": false, \"required\": false, \"externalSiteCheck\": true}",
+          "USER_APPLICATION_POLICY",
+          "REPLUS_SALES_FLOW_V10_20261014"
         ],
         [
           "フロー",
@@ -3389,7 +3347,7 @@
           "",
           "{\"label\": \"採寸幅 WS（mm）\", \"group\": \"survey\", \"internal\": false}",
           "UI_PRESENTATION",
-          "REPLUS_GLOBAL_FLOW_V9_20261014"
+          "REPLUS_SALES_FLOW_V10_20261014"
         ],
         [
           "フロー",
@@ -3397,7 +3355,7 @@
           "",
           "{\"label\": \"採寸高さ HS（mm）\", \"group\": \"survey\", \"internal\": false}",
           "UI_PRESENTATION",
-          "REPLUS_GLOBAL_FLOW_V9_20261014"
+          "REPLUS_SALES_FLOW_V10_20261014"
         ],
         [
           "フロー",
@@ -3405,7 +3363,7 @@
           "",
           "{\"label\": \"既設下枠の立上り（mm）\", \"group\": \"survey\", \"internal\": false}",
           "UI_PRESENTATION",
-          "REPLUS_GLOBAL_FLOW_V9_20261014"
+          "REPLUS_SALES_FLOW_V10_20261014"
         ],
         [
           "フロー",
@@ -3413,7 +3371,7 @@
           "",
           "{\"label\": \"既設枠見込み（mm）\", \"group\": \"survey\", \"internal\": false}",
           "UI_PRESENTATION",
-          "REPLUS_GLOBAL_FLOW_V9_20261014"
+          "REPLUS_SALES_FLOW_V10_20261014"
         ],
         [
           "フロー",
@@ -3421,7 +3379,7 @@
           "",
           "{\"label\": \"室内側の仕上げ仕様\", \"group\": \"interior_finish\", \"internal\": false, \"dataType\": \"MULTI_ENUM\", \"meaning\": \"アングルカバーと見切材の組合せを複数選択する。\"}",
           "UI_PRESENTATION",
-          "REPLUS_GLOBAL_FLOW_V9_20261014"
+          "REPLUS_SALES_FLOW_V10_20261014"
         ],
         [
           "フロー",
@@ -3429,36 +3387,36 @@
           "survey_cover_top,survey_cover_bottom,survey_cover_side",
           "{\"label\": \"化粧カバーの大きさ・組合せ\", \"group\": \"exterior_finish\", \"internal\": false}",
           "UI_PRESENTATION",
-          "REPLUS_GLOBAL_FLOW_V9_20261014"
+          "REPLUS_SALES_FLOW_V10_20261014"
         ],
         [
           "フロー",
           "survey_cover_top",
           "",
-          "{\"label\": \"既設上枠の見付（mm）\", \"group\": \"survey\", \"internal\": false}",
-          "UI_PRESENTATION",
-          "REPLUS_GLOBAL_FLOW_V9_20261014"
+          "{\"label\": \"既設上枠の見付（mm）\", \"group\": \"survey\", \"internal\": false, \"salesInput\": false, \"required\": false, \"externalSiteCheck\": true}",
+          "USER_APPLICATION_POLICY",
+          "REPLUS_SALES_FLOW_V10_20261014"
         ],
         [
           "フロー",
           "survey_cover_bottom",
           "",
-          "{\"label\": \"既設下枠の見付（mm）\", \"group\": \"survey\", \"internal\": false}",
-          "UI_PRESENTATION",
-          "REPLUS_GLOBAL_FLOW_V9_20261014"
+          "{\"label\": \"既設下枠の見付（mm）\", \"group\": \"survey\", \"internal\": false, \"salesInput\": false, \"required\": false, \"externalSiteCheck\": true}",
+          "USER_APPLICATION_POLICY",
+          "REPLUS_SALES_FLOW_V10_20261014"
         ],
         [
           "フロー",
           "survey_cover_side",
           "",
-          "{\"label\": \"既設縦枠の見付（mm）\", \"group\": \"survey\", \"internal\": false}",
-          "UI_PRESENTATION",
-          "REPLUS_GLOBAL_FLOW_V9_20261014"
+          "{\"label\": \"既設縦枠の見付（mm）\", \"group\": \"survey\", \"internal\": false, \"salesInput\": false, \"required\": false, \"externalSiteCheck\": true}",
+          "USER_APPLICATION_POLICY",
+          "REPLUS_SALES_FLOW_V10_20261014"
         ]
       ]
     }
   },
   "generated_at": "2026-09-01",
   "spec_version": "PRODUCT_MASTER_PACKAGE_STORAGE_GATE_v2.0",
-  "candidate_revision": "REPLUS_GLOBAL_FLOW_V9_20261014"
+  "candidate_revision": "REPLUS_SALES_FLOW_V10_20261014"
 }

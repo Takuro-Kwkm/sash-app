@@ -8,7 +8,7 @@ import {tmpdir} from 'node:os';
 const root=resolve('changes/replus-runtime-v5'),indexPath=resolve(root,'index.json');
 const index=JSON.parse(readFileSync(indexPath));
 const digest=b=>createHash('sha256').update(b).digest('hex');
-process.env.SASH_CANDIDATE_MANIFEST_FILE_ID='1bjH30eC8yiz60ryXqzINxJz7qU4d_5LG';process.env.SASH_CANDIDATE_RUNTIME_INDEX=indexPath;process.env.SASH_CANDIDATE_MODE='INSPECT_LOCAL';process.env.SASH_CANDIDATE_INDEX_SHA=digest(readFileSync(indexPath));
+process.env.SASH_CANDIDATE_MANIFEST_FILE_ID='1m9UMPr1xSNn73tjzkTyBinczePi66VE7';process.env.SASH_CANDIDATE_RUNTIME_INDEX=indexPath;process.env.SASH_CANDIDATE_MODE='INSPECT_LOCAL';process.env.SASH_CANDIDATE_INDEX_SHA=digest(readFileSync(indexPath));
 const {resolveRuntimeAppProduct,runtimeAppIntegrationInventory,getRuntimeAppIntegration}=await import('../src/catalog/runtime-master/runtime-app-bridge.mjs');
 const rows=index.products;
 const {candidateRuntimeEntries,readCandidateModule}=await import('../src/catalog/runtime-master/candidate-runtime-registry.mjs');
@@ -135,7 +135,8 @@ test('official revised options remain scoped and deny incompatible/humid selecti
   assert.ok(r.fields.find(f=>f.key==='options').values.some(v=>v.value===key));
   assert.ok(r.manualWarnings.some(w=>w.includes('要在庫確認')));
   const humid=await resolveUi('CANDIDATE:'+component,{window_type:component+'_SLD',usage_humidity:'HIGH_HUMIDITY',options:[key]});
-  assert.ok(!humid.selection.options?.includes(key));
+  assert.equal(humid.selection.usage_humidity,undefined);
+  assert.ok(humid.manualWarnings.some(w=>w.includes('高温多湿箇所には使用できません')));
   const d=readCandidateModule(candidateRuntimeEntries.find(e=>e.id==='CANDIDATE:'+component));
   const dependency=d.product_module.dependencies.find(d=>d.when?.options?.$contains===key&&d.targetValue?.includes('STOP'));
   if(dependency){

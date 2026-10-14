@@ -1,6 +1,6 @@
 {
   "schema": "CANDIDATE_RUNTIME_INDEX_V1",
-  "revision": "REPLUS_GLOBAL_FLOW_V9_20261014",
+  "revision": "REPLUS_SALES_FLOW_V10_20261014",
   "adoption": "CANDIDATE_ONLY",
   "products": [
     {
@@ -10,22 +10,22 @@
       "displayName": "リプラス 居室仕様",
       "productCategory": "sash",
       "uiCategory": "REFORM_WINDOW_ESTIMATE",
-      "packageVersion": "REPLUS_GLOBAL_FLOW_V9_20261014",
+      "packageVersion": "REPLUS_SALES_FLOW_V10_20261014",
       "masterVersion": "v1.0",
       "schemaVersion": "2.0",
       "path": "candidates/RPL_ROOM.module.json",
-      "sha256": "c50f495d6e0415409d0fb491a2cd40d5b734d32052280bd29e5fefa89f80559c",
+      "sha256": "0128831e186bd94d2c2a2680178a431ea119de06456cb33161b87fc573392059",
       "candidate": true,
-      "sourceHash": "c50f495d6e0415409d0fb491a2cd40d5b734d32052280bd29e5fefa89f80559c",
+      "sourceHash": "0128831e186bd94d2c2a2680178a431ea119de06456cb33161b87fc573392059",
       "adapterType": "COMPOSED_PRODUCT_MODULE_V1",
       "uiFlowContract": {
         "schema": "REVIEWED_WINDOW_FLOW_V3",
-        "revision": "REPLUS_GLOBAL_FLOW_V9_20261014",
+        "revision": "REPLUS_SALES_FLOW_V10_20261014",
         "status": "REVIEWED_DESIGN_CANDIDATE",
         "formalAdoption": false,
         "sourceFlow": {
           "path": "candidates/RPL_ROOM.json",
-          "sha256": "f2066494c516e130aa5daa7f90c30f457e69a0a5d00c34801e92aa23282756ac",
+          "sha256": "09d63b4c4c3965af91e1f0dadba0f9ba70e1b890bc4bdb6c86c5aa33018a92fe",
           "table": "01_入力フロー"
         },
         "groups": [
@@ -415,7 +415,8 @@
                 "table": "10_適用条件 / 10B_現調項目 / 08_ガラス・08A_ガラス適用条件"
               }
             ],
-            "parents": []
+            "parents": [],
+            "salesInput": false
           },
           "building_structure": {
             "label": "建物構造",
@@ -431,7 +432,8 @@
                 "table": "10_適用条件 / 10B_現調項目 / 08_ガラス・08A_ガラス適用条件"
               }
             ],
-            "parents": []
+            "parents": [],
+            "salesInput": false
           },
           "installation_room": {
             "label": "設置場所",
@@ -447,7 +449,8 @@
                 "table": "10_適用条件 / 10B_現調項目 / 08_ガラス・08A_ガラス適用条件"
               }
             ],
-            "parents": []
+            "parents": [],
+            "salesInput": false
           },
           "work_space": {
             "label": "新設枠の振出し条件",
@@ -463,7 +466,8 @@
                 "table": "10_適用条件 / 10B_現調項目 / 08_ガラス・08A_ガラス適用条件"
               }
             ],
-            "parents": []
+            "parents": [],
+            "salesInput": false
           },
           "glass_category": {
             "label": "ガラス種類",
@@ -672,7 +676,8 @@
                 "table": "User-authorized application policy; manufacturer color catalogs carried forward"
               }
             ],
-            "evaluationContext": true
+            "evaluationContext": true,
+            "salesInput": false
           },
           "survey_cover_bottom": {
             "label": "既設下枠の見付（mm）",
@@ -689,7 +694,8 @@
                 "table": "User-authorized application policy; manufacturer color catalogs carried forward"
               }
             ],
-            "evaluationContext": true
+            "evaluationContext": true,
+            "salesInput": false
           },
           "survey_cover_side": {
             "label": "既設縦枠の見付（mm）",
@@ -706,7 +712,8 @@
                 "table": "User-authorized application policy; manufacturer color catalogs carried forward"
               }
             ],
-            "evaluationContext": true
+            "evaluationContext": true,
+            "salesInput": false
           }
         },
         "contextFields": [],
@@ -854,6 +861,11 @@
             "path": "flow/user-selection-policy.v9.json",
             "sha256": "1e440046a291664a7914ff725ffdf1a46cedc43a628d22093d852481dbd3c970",
             "table": "User-authorized application policy; manufacturer color catalogs carried forward"
+          },
+          {
+            "path": "flow/user-selection-policy.v10.json",
+            "sha256": "f5ad1f3a4ecce9a330135ac222ba20ad24980c5ba35d10958282faf5bcb8e42c",
+            "table": "User-requested sales presentation exclusions"
           }
         ]
       },
@@ -871,22 +883,22 @@
       "displayName": "リプラス 居室仕様 TWタイプ",
       "productCategory": "sash",
       "uiCategory": "REFORM_WINDOW_ESTIMATE",
-      "packageVersion": "REPLUS_GLOBAL_FLOW_V9_20261014",
+      "packageVersion": "REPLUS_SALES_FLOW_V10_20261014",
       "masterVersion": "v1.0",
       "schemaVersion": "2.0",
       "path": "candidates/RPL_TW.module.json",
-      "sha256": "c2b1aa394f16ac56684812e0ce07704ebcec12ea309d7faafa5bb10bf38f6880",
+      "sha256": "5e9d6a9519a6b374c0b4bad27572edf7d10f59c20328bd3c36e18b63278655fb",
       "candidate": true,
-      "sourceHash": "c2b1aa394f16ac56684812e0ce07704ebcec12ea309d7faafa5bb10bf38f6880",
+      "sourceHash": "5e9d6a9519a6b374c0b4bad27572edf7d10f59c20328bd3c36e18b63278655fb",
       "adapterType": "COMPOSED_PRODUCT_MODULE_V1",
       "uiFlowContract": {
         "schema": "REVIEWED_WINDOW_FLOW_V3",
-        "revision": "REPLUS_GLOBAL_FLOW_V9_20261014",
+        "revision": "REPLUS_SALES_FLOW_V10_20261014",
         "status": "REVIEWED_DESIGN_CANDIDATE",
         "formalAdoption": false,
         "sourceFlow": {
           "path": "candidates/RPL_TW.json",
-          "sha256": "a34c1a2428079dac864356ae67c89992e45ea7187a2e3cf0476fefa68cbb99b8",
+          "sha256": "d7330dd0f653967b77fa3f187cfbde88c6ad15ccdd302af8adc17260f68c0594",
           "table": "01_入力フロー"
         },
         "groups": [
@@ -1256,7 +1268,8 @@
                 "table": "10_適用条件 / 10B_現調項目 / 08_ガラス・08A_ガラス適用条件"
               }
             ],
-            "parents": []
+            "parents": [],
+            "salesInput": false
           },
           "installation_method": {
             "label": "施工方法",
@@ -1486,7 +1499,8 @@
                 "table": "User-authorized application policy; manufacturer color catalogs carried forward"
               }
             ],
-            "evaluationContext": true
+            "evaluationContext": true,
+            "salesInput": false
           },
           "survey_cover_bottom": {
             "label": "既設下枠の見付（mm）",
@@ -1503,7 +1517,8 @@
                 "table": "User-authorized application policy; manufacturer color catalogs carried forward"
               }
             ],
-            "evaluationContext": true
+            "evaluationContext": true,
+            "salesInput": false
           },
           "survey_cover_side": {
             "label": "既設縦枠の見付（mm）",
@@ -1520,7 +1535,8 @@
                 "table": "User-authorized application policy; manufacturer color catalogs carried forward"
               }
             ],
-            "evaluationContext": true
+            "evaluationContext": true,
+            "salesInput": false
           }
         },
         "contextFields": [],
@@ -1711,6 +1727,11 @@
             "path": "flow/user-selection-policy.v9.json",
             "sha256": "1e440046a291664a7914ff725ffdf1a46cedc43a628d22093d852481dbd3c970",
             "table": "User-authorized application policy; manufacturer color catalogs carried forward"
+          },
+          {
+            "path": "flow/user-selection-policy.v10.json",
+            "sha256": "f5ad1f3a4ecce9a330135ac222ba20ad24980c5ba35d10958282faf5bcb8e42c",
+            "table": "User-requested sales presentation exclusions"
           }
         ]
       },
@@ -1728,22 +1749,22 @@
       "displayName": "リプラス 居室仕様 EWタイプ",
       "productCategory": "sash",
       "uiCategory": "REFORM_WINDOW_ESTIMATE",
-      "packageVersion": "REPLUS_GLOBAL_FLOW_V9_20261014",
+      "packageVersion": "REPLUS_SALES_FLOW_V10_20261014",
       "masterVersion": "v1.0",
       "schemaVersion": "2.0",
       "path": "candidates/RPL_EW.module.json",
-      "sha256": "16db161eb2f166ab9ef2110adfe8736eee3f1cd3f931720dd7745e98a566e8c7",
+      "sha256": "8046a0425a9267a0a22dd022a79a44ce09ef3cca122df080b785c2ab7517fe08",
       "candidate": true,
-      "sourceHash": "16db161eb2f166ab9ef2110adfe8736eee3f1cd3f931720dd7745e98a566e8c7",
+      "sourceHash": "8046a0425a9267a0a22dd022a79a44ce09ef3cca122df080b785c2ab7517fe08",
       "adapterType": "COMPOSED_PRODUCT_MODULE_V1",
       "uiFlowContract": {
         "schema": "REVIEWED_WINDOW_FLOW_V3",
-        "revision": "REPLUS_GLOBAL_FLOW_V9_20261014",
+        "revision": "REPLUS_SALES_FLOW_V10_20261014",
         "status": "REVIEWED_DESIGN_CANDIDATE",
         "formalAdoption": false,
         "sourceFlow": {
           "path": "candidates/RPL_EW.json",
-          "sha256": "808833da35fe0fddcb2ecaae3092d30fae24ba62f87a6d268f878f197a17b575",
+          "sha256": "a8f0a8beda1fac40f855cf3986133135758f384b2db0f6bf054a6eccabac8c5c",
           "table": "01_入力フロー"
         },
         "groups": [
@@ -2330,7 +2351,8 @@
                 "table": "User-authorized application policy; manufacturer color catalogs carried forward"
               }
             ],
-            "evaluationContext": true
+            "evaluationContext": true,
+            "salesInput": false
           },
           "survey_cover_bottom": {
             "label": "既設下枠の見付（mm）",
@@ -2347,7 +2369,8 @@
                 "table": "User-authorized application policy; manufacturer color catalogs carried forward"
               }
             ],
-            "evaluationContext": true
+            "evaluationContext": true,
+            "salesInput": false
           },
           "survey_cover_side": {
             "label": "既設縦枠の見付（mm）",
@@ -2364,7 +2387,8 @@
                 "table": "User-authorized application policy; manufacturer color catalogs carried forward"
               }
             ],
-            "evaluationContext": true
+            "evaluationContext": true,
+            "salesInput": false
           }
         },
         "contextFields": [],
@@ -2562,6 +2586,11 @@
             "path": "flow/user-selection-policy.v9.json",
             "sha256": "1e440046a291664a7914ff725ffdf1a46cedc43a628d22093d852481dbd3c970",
             "table": "User-authorized application policy; manufacturer color catalogs carried forward"
+          },
+          {
+            "path": "flow/user-selection-policy.v10.json",
+            "sha256": "f5ad1f3a4ecce9a330135ac222ba20ad24980c5ba35d10958282faf5bcb8e42c",
+            "table": "User-requested sales presentation exclusions"
           }
         ]
       },
@@ -2579,22 +2608,22 @@
       "displayName": "リプラス 浴室仕様",
       "productCategory": "sash",
       "uiCategory": "REFORM_WINDOW_ESTIMATE",
-      "packageVersion": "REPLUS_GLOBAL_FLOW_V9_20261014",
+      "packageVersion": "REPLUS_SALES_FLOW_V10_20261014",
       "masterVersion": "v1.0",
       "schemaVersion": "2.0",
       "path": "candidates/RPL_BATH.module.json",
-      "sha256": "2e83a6ee6c8e2c1b55336786a649956ce166d41dd0d903ea233923925ca0c4b2",
+      "sha256": "8d579e8e50b6b63b734ca59bbb2db9ef9a3b1c7daad1e9aa51eeab909600bef5",
       "candidate": true,
-      "sourceHash": "2e83a6ee6c8e2c1b55336786a649956ce166d41dd0d903ea233923925ca0c4b2",
+      "sourceHash": "8d579e8e50b6b63b734ca59bbb2db9ef9a3b1c7daad1e9aa51eeab909600bef5",
       "adapterType": "COMPOSED_PRODUCT_MODULE_V1",
       "uiFlowContract": {
         "schema": "REVIEWED_WINDOW_FLOW_V3",
-        "revision": "REPLUS_GLOBAL_FLOW_V9_20261014",
+        "revision": "REPLUS_SALES_FLOW_V10_20261014",
         "status": "REVIEWED_DESIGN_CANDIDATE",
         "formalAdoption": false,
         "sourceFlow": {
           "path": "candidates/RPL_BATH.json",
-          "sha256": "3b57aa1f1b2206246ad03b5ec4aa3033807f133fc2cab02e19c84f2b43c50b63",
+          "sha256": "4aaa15e47661ed86fc331d2ac59af4bf4dd25285dea48c1516703acfc03003d2",
           "table": "01_入力フロー"
         },
         "groups": [
@@ -3157,7 +3186,8 @@
                 "table": "User-authorized application policy; manufacturer color catalogs carried forward"
               }
             ],
-            "evaluationContext": true
+            "evaluationContext": true,
+            "salesInput": false
           },
           "survey_cover_bottom": {
             "label": "既設下枠の見付（mm）",
@@ -3174,7 +3204,8 @@
                 "table": "User-authorized application policy; manufacturer color catalogs carried forward"
               }
             ],
-            "evaluationContext": true
+            "evaluationContext": true,
+            "salesInput": false
           },
           "survey_cover_side": {
             "label": "既設縦枠の見付（mm）",
@@ -3191,7 +3222,8 @@
                 "table": "User-authorized application policy; manufacturer color catalogs carried forward"
               }
             ],
-            "evaluationContext": true
+            "evaluationContext": true,
+            "salesInput": false
           }
         },
         "contextFields": [],
@@ -3385,6 +3417,11 @@
             "path": "flow/user-selection-policy.v9.json",
             "sha256": "1e440046a291664a7914ff725ffdf1a46cedc43a628d22093d852481dbd3c970",
             "table": "User-authorized application policy; manufacturer color catalogs carried forward"
+          },
+          {
+            "path": "flow/user-selection-policy.v10.json",
+            "sha256": "f5ad1f3a4ecce9a330135ac222ba20ad24980c5ba35d10958282faf5bcb8e42c",
+            "table": "User-requested sales presentation exclusions"
           }
         ]
       },
@@ -3402,22 +3439,22 @@
       "displayName": "リプラス アタッチ枠（TW用）",
       "productCategory": "sash",
       "uiCategory": "REFORM_WINDOW_ESTIMATE",
-      "packageVersion": "REPLUS_GLOBAL_FLOW_V9_20261014",
+      "packageVersion": "REPLUS_SALES_FLOW_V10_20261014",
       "masterVersion": "v1.0",
       "schemaVersion": "2.0",
       "path": "candidates/RPL_ATT_TW.module.json",
-      "sha256": "7d8f9a2d8f60fc600f3c2b43fe743a5a733416804cbdc65f7b62d0442b7abfca",
+      "sha256": "89997fdcce9db95f0f4f8c5388ba60a6461afe3ff0a0a2af4248e12869e8f277",
       "candidate": true,
-      "sourceHash": "7d8f9a2d8f60fc600f3c2b43fe743a5a733416804cbdc65f7b62d0442b7abfca",
+      "sourceHash": "89997fdcce9db95f0f4f8c5388ba60a6461afe3ff0a0a2af4248e12869e8f277",
       "adapterType": "COMPOSED_PRODUCT_MODULE_V1",
       "uiFlowContract": {
         "schema": "REVIEWED_WINDOW_FLOW_V3",
-        "revision": "REPLUS_GLOBAL_FLOW_V9_20261014",
+        "revision": "REPLUS_SALES_FLOW_V10_20261014",
         "status": "REVIEWED_DESIGN_CANDIDATE",
         "formalAdoption": false,
         "sourceFlow": {
           "path": "candidates/RPL_ATT_TW.json",
-          "sha256": "f296e9c89dc38421f8540efe2d99c6255e50b84ba46554471494723b6a7bf25a",
+          "sha256": "b1e05786d8aa76072f62fb5fbc13f9d7da1bf49aa68bb1dd7af9d32fd87d64cf",
           "table": "01_入力フロー"
         },
         "groups": [
@@ -3603,7 +3640,8 @@
                 "table": "10_適用条件 / 10B_現調項目 / 08_ガラス・08A_ガラス適用条件"
               }
             ],
-            "parents": []
+            "parents": [],
+            "salesInput": false
           },
           "survey_w": {
             "label": "採寸幅 WS（mm）",
@@ -4321,7 +4359,8 @@
                 "table": "User-authorized application policy; manufacturer color catalogs carried forward"
               }
             ],
-            "evaluationContext": true
+            "evaluationContext": true,
+            "salesInput": false
           },
           "survey_cover_bottom": {
             "label": "既設下枠の見付（mm）",
@@ -4338,7 +4377,8 @@
                 "table": "User-authorized application policy; manufacturer color catalogs carried forward"
               }
             ],
-            "evaluationContext": true
+            "evaluationContext": true,
+            "salesInput": false
           },
           "survey_cover_side": {
             "label": "既設縦枠の見付（mm）",
@@ -4355,7 +4395,8 @@
                 "table": "User-authorized application policy; manufacturer color catalogs carried forward"
               }
             ],
-            "evaluationContext": true
+            "evaluationContext": true,
+            "salesInput": false
           }
         },
         "contextFields": [
@@ -4526,6 +4567,11 @@
             "path": "flow/user-selection-policy.v9.json",
             "sha256": "1e440046a291664a7914ff725ffdf1a46cedc43a628d22093d852481dbd3c970",
             "table": "User-authorized application policy; manufacturer color catalogs carried forward"
+          },
+          {
+            "path": "flow/user-selection-policy.v10.json",
+            "sha256": "f5ad1f3a4ecce9a330135ac222ba20ad24980c5ba35d10958282faf5bcb8e42c",
+            "table": "User-requested sales presentation exclusions"
           }
         ]
       },
@@ -4543,22 +4589,22 @@
       "displayName": "リプラス アタッチ枠（サーモス用）",
       "productCategory": "sash",
       "uiCategory": "REFORM_WINDOW_ESTIMATE",
-      "packageVersion": "REPLUS_GLOBAL_FLOW_V9_20261014",
+      "packageVersion": "REPLUS_SALES_FLOW_V10_20261014",
       "masterVersion": "v1.1",
       "schemaVersion": "2.0",
       "path": "candidates/RPL_ATT_TH.module.json",
-      "sha256": "248927aa9497f7a99462d325bb10baaaf41c5768f4ac92c47bc0f8ec70f9c0e4",
+      "sha256": "c12fd803d60839e4969cfccb4b0932defa1a3ae773ca3b33e6c45e85e2746c70",
       "candidate": true,
-      "sourceHash": "248927aa9497f7a99462d325bb10baaaf41c5768f4ac92c47bc0f8ec70f9c0e4",
+      "sourceHash": "c12fd803d60839e4969cfccb4b0932defa1a3ae773ca3b33e6c45e85e2746c70",
       "adapterType": "COMPOSED_PRODUCT_MODULE_V1",
       "uiFlowContract": {
         "schema": "REVIEWED_WINDOW_FLOW_V3",
-        "revision": "REPLUS_GLOBAL_FLOW_V9_20261014",
+        "revision": "REPLUS_SALES_FLOW_V10_20261014",
         "status": "REVIEWED_DESIGN_CANDIDATE",
         "formalAdoption": false,
         "sourceFlow": {
           "path": "candidates/RPL_ATT_TH.json",
-          "sha256": "dee7395ecb971d66d147f2469f0550d13dc59d046ac38fb8ed7ccf8eeec572ef",
+          "sha256": "5eb4ab80f4fe905f812ab8bb4497a769d09028f5d63d3730fb2bf310a42d8601",
           "table": "01_入力フロー"
         },
         "groups": [
@@ -5446,7 +5492,8 @@
                 "table": "User-authorized application policy; manufacturer color catalogs carried forward"
               }
             ],
-            "evaluationContext": true
+            "evaluationContext": true,
+            "salesInput": false
           },
           "survey_cover_bottom": {
             "label": "既設下枠の見付（mm）",
@@ -5463,7 +5510,8 @@
                 "table": "User-authorized application policy; manufacturer color catalogs carried forward"
               }
             ],
-            "evaluationContext": true
+            "evaluationContext": true,
+            "salesInput": false
           },
           "survey_cover_side": {
             "label": "既設縦枠の見付（mm）",
@@ -5480,7 +5528,8 @@
                 "table": "User-authorized application policy; manufacturer color catalogs carried forward"
               }
             ],
-            "evaluationContext": true
+            "evaluationContext": true,
+            "salesInput": false
           }
         },
         "contextFields": [
@@ -5657,6 +5706,11 @@
             "path": "flow/user-selection-policy.v9.json",
             "sha256": "1e440046a291664a7914ff725ffdf1a46cedc43a628d22093d852481dbd3c970",
             "table": "User-authorized application policy; manufacturer color catalogs carried forward"
+          },
+          {
+            "path": "flow/user-selection-policy.v10.json",
+            "sha256": "f5ad1f3a4ecce9a330135ac222ba20ad24980c5ba35d10958282faf5bcb8e42c",
+            "table": "User-requested sales presentation exclusions"
           }
         ]
       },
@@ -5674,22 +5728,22 @@
       "displayName": "リプラス 汎用カットモール",
       "productCategory": "sash",
       "uiCategory": "REFORM_WINDOW_ESTIMATE",
-      "packageVersion": "REPLUS_GLOBAL_FLOW_V9_20261014",
+      "packageVersion": "REPLUS_SALES_FLOW_V10_20261014",
       "masterVersion": "v1.0",
       "schemaVersion": "2.0",
       "path": "candidates/RPL_CUT_MALL.module.json",
-      "sha256": "a0e17dff4810990eb8d5b2d78969846350015661434733cdc3a5ea8ed209c28c",
+      "sha256": "5c203c646f3f66047c680b215fbff4bc90af5d89ca5ebba3901225cdeb926a1d",
       "candidate": true,
-      "sourceHash": "a0e17dff4810990eb8d5b2d78969846350015661434733cdc3a5ea8ed209c28c",
+      "sourceHash": "5c203c646f3f66047c680b215fbff4bc90af5d89ca5ebba3901225cdeb926a1d",
       "adapterType": "COMPOSED_PRODUCT_MODULE_V1",
       "uiFlowContract": {
         "schema": "REVIEWED_WINDOW_FLOW_V3",
-        "revision": "REPLUS_GLOBAL_FLOW_V9_20261014",
+        "revision": "REPLUS_SALES_FLOW_V10_20261014",
         "status": "REVIEWED_DESIGN_CANDIDATE",
         "formalAdoption": false,
         "sourceFlow": {
           "path": "candidates/RPL_CUT_MALL.json",
-          "sha256": "bf22de82bca25104a18c93c4fe9a833d7d4d88ec45850f53d51205917382793b",
+          "sha256": "93f6cee195f6efd7602d8379b30ce565d8051d237faab5066ec8f57f86376aea",
           "table": "01_入力フロー"
         },
         "groups": [
@@ -5873,7 +5927,8 @@
                 "table": "10_適用条件 / 10B_現調項目 / 08_ガラス・08A_ガラス適用条件"
               }
             ],
-            "parents": []
+            "parents": [],
+            "salesInput": false
           },
           "existing_sash_mount": {
             "label": "既設サッシの取付方式",
@@ -6712,6 +6767,11 @@
             "path": "flow/user-selection-policy.v9.json",
             "sha256": "1e440046a291664a7914ff725ffdf1a46cedc43a628d22093d852481dbd3c970",
             "table": "User-authorized application policy; manufacturer color catalogs carried forward"
+          },
+          {
+            "path": "flow/user-selection-policy.v10.json",
+            "sha256": "f5ad1f3a4ecce9a330135ac222ba20ad24980c5ba35d10958282faf5bcb8e42c",
+            "table": "User-requested sales presentation exclusions"
           }
         ]
       },

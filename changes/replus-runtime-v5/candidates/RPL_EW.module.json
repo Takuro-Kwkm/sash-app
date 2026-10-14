@@ -1,14 +1,14 @@
 {
   "schema": "PRODUCT_MODULE_CANDIDATE_V1",
-  "candidate_revision": "REPLUS_GLOBAL_FLOW_V9_20261014",
+  "candidate_revision": "REPLUS_SALES_FLOW_V10_20261014",
   "baseline": {
     "path": "candidates/RPL_EW.json",
     "component_id": "RPL_EW",
-    "sha256": "808833da35fe0fddcb2ecaae3092d30fae24ba62f87a6d268f878f197a17b575",
+    "sha256": "a8f0a8beda1fac40f855cf3986133135758f384b2db0f6bf054a6eccabac8c5c",
     "baseline_sha256": "add0ed3eaafc45cca0db683dbeb0a54bc408ab1a4270c109905c0d84d55df473",
     "baseline_component_version": "v1.0"
   },
-  "scope": "SELECTION_AND_ESTIMATE_HANDOFF; NO_AUTO_MANUFACTURE_NO_FORMAL_NO_RELEASE",
+  "scope": "SELECTION_AND_ESTIMATE_HANDOFF; NO_AUTO_MANUFACTURE_NO_FORMAL_NO_RELEASE; SALES_SITE_INPUTS_EXCLUDED_SOURCE_CONSTRAINTS_RETAINED",
   "product_module": {
     "product": {
       "id": "CANDIDATE:RPL_EW",
@@ -446,42 +446,6 @@
         ],
         "selector": {},
         "id": "CANDIDATE:RPL_EW:field:exterior_cover_type",
-        "productId": "CANDIDATE:RPL_EW",
-        "status": "ACTIVE"
-      },
-      {
-        "key": "survey_cover_top",
-        "displayLabel": "既設上枠の見付（mm）",
-        "dataType": "NUMBER",
-        "displayOrder": 900,
-        "autoSelectSingle": false,
-        "parentFields": [],
-        "selector": {},
-        "id": "CANDIDATE:RPL_EW:field:survey_cover_top",
-        "productId": "CANDIDATE:RPL_EW",
-        "status": "ACTIVE"
-      },
-      {
-        "key": "survey_cover_bottom",
-        "displayLabel": "既設下枠の見付（mm）",
-        "dataType": "NUMBER",
-        "displayOrder": 900,
-        "autoSelectSingle": false,
-        "parentFields": [],
-        "selector": {},
-        "id": "CANDIDATE:RPL_EW:field:survey_cover_bottom",
-        "productId": "CANDIDATE:RPL_EW",
-        "status": "ACTIVE"
-      },
-      {
-        "key": "survey_cover_side",
-        "displayLabel": "既設縦枠の見付（mm）",
-        "dataType": "NUMBER",
-        "displayOrder": 900,
-        "autoSelectSingle": false,
-        "parentFields": [],
-        "selector": {},
-        "id": "CANDIDATE:RPL_EW:field:survey_cover_side",
         "productId": "CANDIDATE:RPL_EW",
         "status": "ACTIVE"
       }
@@ -2021,27 +1985,6 @@
         "specificationKey": "exterior_cover_type",
         "required": true,
         "selector": {}
-      },
-      {
-        "id": "CANDIDATE:RPL_EW:required:survey_cover_top",
-        "productId": "CANDIDATE:RPL_EW",
-        "specificationKey": "survey_cover_top",
-        "required": true,
-        "selector": {}
-      },
-      {
-        "id": "CANDIDATE:RPL_EW:required:survey_cover_bottom",
-        "productId": "CANDIDATE:RPL_EW",
-        "specificationKey": "survey_cover_bottom",
-        "required": true,
-        "selector": {}
-      },
-      {
-        "id": "CANDIDATE:RPL_EW:required:survey_cover_side",
-        "productId": "CANDIDATE:RPL_EW",
-        "specificationKey": "survey_cover_side",
-        "required": true,
-        "selector": {}
       }
     ],
     "ruleSets": [
@@ -2780,6 +2723,17 @@
         "mode": "MANUAL_CHECK",
         "when": {},
         "message": "施工可否・図形境界・ガラス構成・部材数量・価格・発注コードは積算確認が必要です。候補のため正式採用・自動注文はできません。",
+        "productId": "CANDIDATE:RPL_EW"
+      },
+      {
+        "id": "CANDIDATE:RPL_EW:dependencies:external-cover-site-confirmation-v10",
+        "mode": "MANUAL_CHECK",
+        "when": {
+          "exterior_cover_type": {
+            "$exists": true
+          }
+        },
+        "message": "化粧カバーの納まり・適合は現調で確認してください。",
         "productId": "CANDIDATE:RPL_EW"
       }
     ],

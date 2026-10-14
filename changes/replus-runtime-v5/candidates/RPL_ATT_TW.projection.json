@@ -1,6 +1,6 @@
 {
   "schema": "NATIVE_TABLE_PROJECTION_V1",
-  "candidate_revision": "REPLUS_GLOBAL_FLOW_V9_20261014",
+  "candidate_revision": "REPLUS_SALES_FLOW_V10_20261014",
   "product": {
     "id": "CANDIDATE:RPL_ATT_TW",
     "manufacturer": "LIXIL",
@@ -13,11 +13,11 @@
   "source": {
     "path": "candidates/RPL_ATT_TW.json",
     "component_id": "RPL_ATT_TW",
-    "sha256": "f296e9c89dc38421f8540efe2d99c6255e50b84ba46554471494723b6a7bf25a",
+    "sha256": "b1e05786d8aa76072f62fb5fbc13f9d7da1bf49aa68bb1dd7af9d32fd87d64cf",
     "baseline_sha256": "7f93dfc7874ad874a72096be5839ced3e8269c6d9abdc1b1cb1e804f710059f1",
     "baseline_component_version": "v1.0"
   },
-  "scope": "SELECTION_AND_ESTIMATE_HANDOFF; NO_AUTO_MANUFACTURE_NO_FORMAL_NO_RELEASE",
+  "scope": "SELECTION_AND_ESTIMATE_HANDOFF; NO_AUTO_MANUFACTURE_NO_FORMAL_NO_RELEASE; SALES_SITE_INPUTS_EXCLUDED_SOURCE_CONSTRAINTS_RETAINED",
   "fields": [
     {
       "key": "referenced_series_id",
@@ -585,51 +585,6 @@
       "selector": {}
     },
     {
-      "key": "building_structure",
-      "displayLabel": "建物構造",
-      "dataType": "ENUM",
-      "displayOrder": 70,
-      "choices": [
-        {
-          "value": "木造",
-          "displayLabel": "木造",
-          "evidenceIds": [
-            "ATT-TW-EV-007"
-          ],
-          "selector": {},
-          "metadata": {
-            "manualCheck": false
-          }
-        },
-        {
-          "value": "RC造3階以下",
-          "displayLabel": "RC造3階以下",
-          "evidenceIds": [
-            "ATT-TW-EV-007"
-          ],
-          "selector": {},
-          "metadata": {
-            "manualCheck": true
-          }
-        },
-        {
-          "value": "プレハブ等特殊納まり",
-          "displayLabel": "プレハブ等特殊納まり",
-          "evidenceIds": [
-            "ATT-TW-EV-007"
-          ],
-          "selector": {},
-          "metadata": {
-            "manualCheck": true
-          }
-        }
-      ],
-      "required": false,
-      "autoSelectSingle": false,
-      "parentFields": [],
-      "selector": {}
-    },
-    {
       "key": "survey_w",
       "displayLabel": "採寸幅 WS（mm）",
       "dataType": "NUMBER",
@@ -890,39 +845,6 @@
         "survey_cover_side"
       ],
       "selector": {}
-    },
-    {
-      "key": "survey_cover_top",
-      "displayLabel": "既設上枠の見付（mm）",
-      "dataType": "NUMBER",
-      "displayOrder": 900,
-      "choices": [],
-      "required": true,
-      "autoSelectSingle": false,
-      "parentFields": [],
-      "selector": {}
-    },
-    {
-      "key": "survey_cover_bottom",
-      "displayLabel": "既設下枠の見付（mm）",
-      "dataType": "NUMBER",
-      "displayOrder": 900,
-      "choices": [],
-      "required": true,
-      "autoSelectSingle": false,
-      "parentFields": [],
-      "selector": {}
-    },
-    {
-      "key": "survey_cover_side",
-      "displayLabel": "既設縦枠の見付（mm）",
-      "dataType": "NUMBER",
-      "displayOrder": 900,
-      "choices": [],
-      "required": true,
-      "autoSelectSingle": false,
-      "parentFields": [],
-      "selector": {}
     }
   ],
   "dependencies": [
@@ -931,6 +853,16 @@
       "mode": "MANUAL_CHECK",
       "when": {},
       "message": "施工可否・図形境界・ガラス構成・部材数量・価格・発注コードは積算確認が必要です。候補のため正式採用・自動注文はできません。"
+    },
+    {
+      "id": "external-cover-site-confirmation-v10",
+      "mode": "MANUAL_CHECK",
+      "when": {
+        "exterior_cover_type": {
+          "$exists": true
+        }
+      },
+      "message": "化粧カバーの納まり・適合は現調で確認してください。"
     }
   ],
   "ruleSets": [

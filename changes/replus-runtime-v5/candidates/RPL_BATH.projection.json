@@ -1,6 +1,6 @@
 {
   "schema": "NATIVE_TABLE_PROJECTION_V1",
-  "candidate_revision": "REPLUS_GLOBAL_FLOW_V9_20261014",
+  "candidate_revision": "REPLUS_SALES_FLOW_V10_20261014",
   "product": {
     "id": "CANDIDATE:RPL_BATH",
     "manufacturer": "LIXIL",
@@ -13,11 +13,11 @@
   "source": {
     "path": "candidates/RPL_BATH.json",
     "component_id": "RPL_BATH",
-    "sha256": "3b57aa1f1b2206246ad03b5ec4aa3033807f133fc2cab02e19c84f2b43c50b63",
+    "sha256": "4aaa15e47661ed86fc331d2ac59af4bf4dd25285dea48c1516703acfc03003d2",
     "baseline_sha256": "e96a29afcfe83d3707823c1b01b8b0b2bf227ea0b9d9971bf2d48e04e2927f00",
     "baseline_component_version": "v1.0"
   },
-  "scope": "SELECTION_AND_ESTIMATE_HANDOFF; NO_AUTO_MANUFACTURE_NO_FORMAL_NO_RELEASE",
+  "scope": "SELECTION_AND_ESTIMATE_HANDOFF; NO_AUTO_MANUFACTURE_NO_FORMAL_NO_RELEASE; SALES_SITE_INPUTS_EXCLUDED_SOURCE_CONSTRAINTS_RETAINED",
   "fields": [
     {
       "key": "window_type",
@@ -2757,39 +2757,6 @@
         "survey_cover_side"
       ],
       "selector": {}
-    },
-    {
-      "key": "survey_cover_top",
-      "displayLabel": "既設上枠の見付（mm）",
-      "dataType": "NUMBER",
-      "displayOrder": 900,
-      "choices": [],
-      "required": true,
-      "autoSelectSingle": false,
-      "parentFields": [],
-      "selector": {}
-    },
-    {
-      "key": "survey_cover_bottom",
-      "displayLabel": "既設下枠の見付（mm）",
-      "dataType": "NUMBER",
-      "displayOrder": 900,
-      "choices": [],
-      "required": true,
-      "autoSelectSingle": false,
-      "parentFields": [],
-      "selector": {}
-    },
-    {
-      "key": "survey_cover_side",
-      "displayLabel": "既設縦枠の見付（mm）",
-      "dataType": "NUMBER",
-      "displayOrder": 900,
-      "choices": [],
-      "required": true,
-      "autoSelectSingle": false,
-      "parentFields": [],
-      "selector": {}
     }
   ],
   "dependencies": [
@@ -2822,6 +2789,16 @@
       "mode": "MANUAL_CHECK",
       "when": {},
       "message": "施工可否・図形境界・ガラス構成・部材数量・価格・発注コードは積算確認が必要です。候補のため正式採用・自動注文はできません。"
+    },
+    {
+      "id": "external-cover-site-confirmation-v10",
+      "mode": "MANUAL_CHECK",
+      "when": {
+        "exterior_cover_type": {
+          "$exists": true
+        }
+      },
+      "message": "化粧カバーの納まり・適合は現調で確認してください。"
     }
   ],
   "ruleSets": [

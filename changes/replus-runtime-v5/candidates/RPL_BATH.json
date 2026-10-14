@@ -423,7 +423,7 @@
       ]
     },
     "01_入力フロー": {
-      "address": "A1:E22",
+      "address": "A1:E13",
       "values": [
         [
           "リプラス住宅用・グローバルセレクションフロー"
@@ -494,34 +494,13 @@
         ],
         [
           9,
-          "新設サッシのオプション",
-          "native_options",
-          "選択・確認",
-          "対応する項目のみ表示"
-        ],
-        [
-          10,
           "追加部材・オプション",
           "options",
           "選択・確認",
           "対応する項目のみ表示"
         ],
         [
-          11,
-          "選択した部材の仕様",
-          "part_detail",
-          "選択・確認",
-          "対応する項目のみ表示"
-        ],
-        [
-          12,
-          "現場採寸・取付条件",
-          "survey",
-          "選択・確認",
-          "採寸後に再評価"
-        ],
-        [
-          13,
+          10,
           "製品寸法",
           "size",
           "選択・確認",
@@ -5095,7 +5074,7 @@
           "sash_exterior_color",
           "{\"targetField\": \"exterior_cover_color\", \"parents\": [\"sash_exterior_color\"], \"cases\": [{\"when\": {\"sash_exterior_color\": \"T\"}, \"value\": \"T\"}, {\"when\": {\"sash_exterior_color\": \"G\"}, \"value\": \"G\"}, {\"when\": {\"sash_exterior_color\": \"K\"}, \"value\": \"K\"}, {\"when\": {\"sash_exterior_color\": \"D\"}, \"value\": \"D\"}, {\"when\": {\"sash_exterior_color\": \"W\"}, \"value\": \"W\"}], \"resolvedMessage\": \"本体外観色に連動しています。\", \"pendingMessage\": \"サッシ本体の色を選択してください。\", \"unavailableMessage\": \"本体色に対応するカバー部材の確認が必要です。\"}",
           "USER_APPLICATION_POLICY",
-          "REPLUS_GLOBAL_FLOW_V9_20261014"
+          "REPLUS_SALES_FLOW_V10_20261014"
         ],
         [
           "色連動",
@@ -5103,7 +5082,7 @@
           "sash_interior_color",
           "{\"targetField\": \"interior_cover_color\", \"parents\": [\"sash_interior_color\"], \"cases\": [{\"when\": {\"sash_interior_color\": \"M\"}, \"value\": \"M\"}, {\"when\": {\"sash_interior_color\": \"F\"}, \"value\": \"F\"}], \"resolvedMessage\": \"本体内観色に連動しています。\", \"pendingMessage\": \"サッシ本体の色を選択してください。\", \"unavailableMessage\": \"本体色に対応するカバー部材の確認が必要です。\"}",
           "USER_APPLICATION_POLICY",
-          "REPLUS_GLOBAL_FLOW_V9_20261014"
+          "REPLUS_SALES_FLOW_V10_20261014"
         ],
         [
           "フロー",
@@ -5111,7 +5090,7 @@
           "",
           "{\"label\": \"窓種\", \"group\": \"opening\", \"internal\": false}",
           "UI_PRESENTATION",
-          "REPLUS_GLOBAL_FLOW_V9_20261014"
+          "REPLUS_SALES_FLOW_V10_20261014"
         ],
         [
           "フロー",
@@ -5119,7 +5098,7 @@
           "window_type",
           "{\"label\": \"枠仕様\", \"group\": \"opening\", \"internal\": false}",
           "UI_PRESENTATION",
-          "REPLUS_GLOBAL_FLOW_V9_20261014"
+          "REPLUS_SALES_FLOW_V10_20261014"
         ],
         [
           "フロー",
@@ -5127,7 +5106,7 @@
           "window_type",
           "{\"label\": \"建数\", \"group\": \"opening\", \"internal\": false}",
           "UI_PRESENTATION",
-          "REPLUS_GLOBAL_FLOW_V9_20261014"
+          "REPLUS_SALES_FLOW_V10_20261014"
         ],
         [
           "フロー",
@@ -5135,7 +5114,7 @@
           "window_type",
           "{\"label\": \"障子仕様\", \"group\": \"opening\", \"internal\": false}",
           "UI_PRESENTATION",
-          "REPLUS_GLOBAL_FLOW_V9_20261014"
+          "REPLUS_SALES_FLOW_V10_20261014"
         ],
         [
           "フロー",
@@ -5143,7 +5122,7 @@
           "window_type",
           "{\"label\": \"操作方式\", \"group\": \"opening\", \"internal\": false}",
           "UI_PRESENTATION",
-          "REPLUS_GLOBAL_FLOW_V9_20261014"
+          "REPLUS_SALES_FLOW_V10_20261014"
         ],
         [
           "フロー",
@@ -5151,7 +5130,7 @@
           "window_type",
           "{\"label\": \"網戸\", \"group\": \"screen\", \"internal\": false}",
           "UI_PRESENTATION",
-          "REPLUS_GLOBAL_FLOW_V9_20261014"
+          "REPLUS_SALES_FLOW_V10_20261014"
         ],
         [
           "フロー",
@@ -5159,7 +5138,7 @@
           "",
           "{\"label\": \"寸法の指定方法\", \"group\": \"size\", \"internal\": false}",
           "UI_PRESENTATION",
-          "REPLUS_GLOBAL_FLOW_V9_20261014"
+          "REPLUS_SALES_FLOW_V10_20261014"
         ],
         [
           "フロー",
@@ -5167,7 +5146,7 @@
           "size_mode",
           "{\"label\": \"製品仕上がり幅 W（mm）\", \"group\": \"size\", \"internal\": false}",
           "UI_PRESENTATION",
-          "REPLUS_GLOBAL_FLOW_V9_20261014"
+          "REPLUS_SALES_FLOW_V10_20261014"
         ],
         [
           "フロー",
@@ -5175,7 +5154,7 @@
           "size_mode",
           "{\"label\": \"製品仕上がり高さ H（mm）\", \"group\": \"size\", \"internal\": false}",
           "UI_PRESENTATION",
-          "REPLUS_GLOBAL_FLOW_V9_20261014"
+          "REPLUS_SALES_FLOW_V10_20261014"
         ],
         [
           "フロー",
@@ -5183,7 +5162,7 @@
           "",
           "{\"label\": \"本体外観色\", \"group\": \"finish\", \"internal\": false}",
           "UI_PRESENTATION",
-          "REPLUS_GLOBAL_FLOW_V9_20261014"
+          "REPLUS_SALES_FLOW_V10_20261014"
         ],
         [
           "フロー",
@@ -5191,7 +5170,7 @@
           "sash_exterior_color",
           "{\"label\": \"化粧カバー色（外観色に連動）\", \"group\": \"exterior_finish\", \"internal\": false}",
           "UI_PRESENTATION",
-          "REPLUS_GLOBAL_FLOW_V9_20261014"
+          "REPLUS_SALES_FLOW_V10_20261014"
         ],
         [
           "フロー",
@@ -5199,7 +5178,7 @@
           "",
           "{\"label\": \"本体内観色\", \"group\": \"finish\", \"internal\": false}",
           "UI_PRESENTATION",
-          "REPLUS_GLOBAL_FLOW_V9_20261014"
+          "REPLUS_SALES_FLOW_V10_20261014"
         ],
         [
           "フロー",
@@ -5207,7 +5186,7 @@
           "sash_interior_color",
           "{\"label\": \"室内カバー色（内観色に連動）\", \"group\": \"interior_finish\", \"internal\": false}",
           "UI_PRESENTATION",
-          "REPLUS_GLOBAL_FLOW_V9_20261014"
+          "REPLUS_SALES_FLOW_V10_20261014"
         ],
         [
           "フロー",
@@ -5215,7 +5194,7 @@
           "",
           "{\"label\": \"追加部材・オプション\", \"group\": \"options\", \"internal\": false}",
           "UI_PRESENTATION",
-          "REPLUS_GLOBAL_FLOW_V9_20261014"
+          "REPLUS_SALES_FLOW_V10_20261014"
         ],
         [
           "フロー",
@@ -5223,7 +5202,7 @@
           "",
           "{\"label\": \"浴室改修モード\", \"group\": \"context\", \"internal\": false}",
           "UI_PRESENTATION",
-          "REPLUS_GLOBAL_FLOW_V9_20261014"
+          "REPLUS_SALES_FLOW_V10_20261014"
         ],
         [
           "フロー",
@@ -5231,7 +5210,7 @@
           "",
           "{\"label\": \"設置地域\", \"group\": \"context\", \"internal\": false}",
           "UI_PRESENTATION",
-          "REPLUS_GLOBAL_FLOW_V9_20261014"
+          "REPLUS_SALES_FLOW_V10_20261014"
         ],
         [
           "フロー",
@@ -5239,7 +5218,7 @@
           "frame_type,installation_region,window_type",
           "{\"label\": \"ガラス種類\", \"group\": \"glazing\", \"internal\": false}",
           "UI_PRESENTATION",
-          "REPLUS_GLOBAL_FLOW_V9_20261014"
+          "REPLUS_SALES_FLOW_V10_20261014"
         ],
         [
           "フロー",
@@ -5247,7 +5226,7 @@
           "frame_type,glass_category,installation_region,window_type",
           "{\"label\": \"ガラス詳細・Low-E仕様\", \"group\": \"glazing\", \"internal\": false}",
           "UI_PRESENTATION",
-          "REPLUS_GLOBAL_FLOW_V9_20261014"
+          "REPLUS_SALES_FLOW_V10_20261014"
         ],
         [
           "フロー",
@@ -5255,7 +5234,7 @@
           "frame_type,glass_category",
           "{\"label\": \"中空層\", \"group\": \"glazing\", \"internal\": false}",
           "UI_PRESENTATION",
-          "REPLUS_GLOBAL_FLOW_V9_20261014"
+          "REPLUS_SALES_FLOW_V10_20261014"
         ],
         [
           "フロー",
@@ -5263,7 +5242,7 @@
           "frame_type,glass_category,glass_gas",
           "{\"label\": \"スペーサー\", \"group\": \"glazing\", \"internal\": false}",
           "UI_PRESENTATION",
-          "REPLUS_GLOBAL_FLOW_V9_20261014"
+          "REPLUS_SALES_FLOW_V10_20261014"
         ],
         [
           "フロー",
@@ -5271,7 +5250,7 @@
           "bathroom_remodel_mode",
           "{\"label\": \"既設開口パターン\", \"group\": \"context\", \"internal\": false}",
           "UI_PRESENTATION",
-          "REPLUS_GLOBAL_FLOW_V9_20261014"
+          "REPLUS_SALES_FLOW_V10_20261014"
         ],
         [
           "フロー",
@@ -5279,7 +5258,7 @@
           "glass_category,glass,window_type",
           "{\"label\": \"ガラス追加機能\", \"group\": \"glazing\", \"internal\": false}",
           "UI_PRESENTATION",
-          "REPLUS_GLOBAL_FLOW_V9_20261014"
+          "REPLUS_SALES_FLOW_V10_20261014"
         ],
         [
           "フロー",
@@ -5287,7 +5266,7 @@
           "glass,glass_function",
           "{\"label\": \"ガラス仕上げ・目隠し\", \"group\": \"glazing\", \"internal\": false}",
           "UI_PRESENTATION",
-          "REPLUS_GLOBAL_FLOW_V9_20261014"
+          "REPLUS_SALES_FLOW_V10_20261014"
         ],
         [
           "フロー",
@@ -5295,7 +5274,7 @@
           "bathroom_remodel_mode",
           "{\"label\": \"室内側の仕上げ仕様\", \"group\": \"interior_finish\", \"internal\": false}",
           "UI_PRESENTATION",
-          "REPLUS_GLOBAL_FLOW_V9_20261014"
+          "REPLUS_SALES_FLOW_V10_20261014"
         ],
         [
           "フロー",
@@ -5303,36 +5282,36 @@
           "frame_type,survey_cover_top,survey_cover_bottom,survey_cover_side",
           "{\"label\": \"化粧カバーの大きさ・組合せ\", \"group\": \"exterior_finish\", \"internal\": false}",
           "UI_PRESENTATION",
-          "REPLUS_GLOBAL_FLOW_V9_20261014"
+          "REPLUS_SALES_FLOW_V10_20261014"
         ],
         [
           "フロー",
           "survey_cover_top",
           "",
-          "{\"label\": \"既設上枠の見付（mm）\", \"group\": \"survey\", \"internal\": false}",
-          "UI_PRESENTATION",
-          "REPLUS_GLOBAL_FLOW_V9_20261014"
+          "{\"label\": \"既設上枠の見付（mm）\", \"group\": \"survey\", \"internal\": false, \"salesInput\": false, \"required\": false, \"externalSiteCheck\": true}",
+          "USER_APPLICATION_POLICY",
+          "REPLUS_SALES_FLOW_V10_20261014"
         ],
         [
           "フロー",
           "survey_cover_bottom",
           "",
-          "{\"label\": \"既設下枠の見付（mm）\", \"group\": \"survey\", \"internal\": false}",
-          "UI_PRESENTATION",
-          "REPLUS_GLOBAL_FLOW_V9_20261014"
+          "{\"label\": \"既設下枠の見付（mm）\", \"group\": \"survey\", \"internal\": false, \"salesInput\": false, \"required\": false, \"externalSiteCheck\": true}",
+          "USER_APPLICATION_POLICY",
+          "REPLUS_SALES_FLOW_V10_20261014"
         ],
         [
           "フロー",
           "survey_cover_side",
           "",
-          "{\"label\": \"既設縦枠の見付（mm）\", \"group\": \"survey\", \"internal\": false}",
-          "UI_PRESENTATION",
-          "REPLUS_GLOBAL_FLOW_V9_20261014"
+          "{\"label\": \"既設縦枠の見付（mm）\", \"group\": \"survey\", \"internal\": false, \"salesInput\": false, \"required\": false, \"externalSiteCheck\": true}",
+          "USER_APPLICATION_POLICY",
+          "REPLUS_SALES_FLOW_V10_20261014"
         ]
       ]
     }
   },
   "generated_at": "2026-09-01",
   "spec_version": "PRODUCT_MASTER_PACKAGE_STORAGE_GATE_v2.0",
-  "candidate_revision": "REPLUS_GLOBAL_FLOW_V9_20261014"
+  "candidate_revision": "REPLUS_SALES_FLOW_V10_20261014"
 }

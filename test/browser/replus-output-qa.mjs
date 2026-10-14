@@ -1,11 +1,12 @@
 import assert from 'node:assert/strict';
 import {readFile,writeFile,mkdir} from 'node:fs/promises';
 import {chromium} from 'playwright';
-const BASE=process.env.QA_BASE_URL??'http://127.0.0.1:4193',OUT='artifacts/replus-runtime-v5/output';
+const BASE=process.env.QA_BASE_URL??'http://127.0.0.1:4198',OUT='artifacts/replus-global-flow-v10/output';
 const index=JSON.parse(await readFile('changes/replus-runtime-v5/index.json'));await mkdir(OUT,{recursive:true});
 const seeds=await Promise.all(index.products.map(async row=>({row,seed:JSON.parse(await readFile('artifacts/replus-runtime-v5/'+row.id.replace(':','-')+'.json')).selection})));
 for(const item of seeds){
- const extra={
+  item.seed={...item.seed,survey_cover_top:50,survey_cover_bottom:70,survey_cover_side:20,building_structure:'RC造',installation_room:'居室',usage_humidity:'HIGH_HUMIDITY',work_space:'室内から施工時に新設枠を外側へ振り出せない'};
+  const extra={
   'CANDIDATE:RPL_ROOM':{glass_category:'Low-E複層ガラス',glass:'GL-LOWE-CLEAR',glass_function:'DISASTER',glass_appearance:'FROST',glass_gas:'ARGON',glass_spacer:'RESIN'},
   'CANDIDATE:RPL_TW':{glass_category:'TW-GL-TRIPLE',glass:'TW-GL-CC',glass_function:'THIN',glass_appearance:'OBSCURE',glass_gas:'TW-GAS-KRYPTON'},
  }[item.row.id];if(extra)item.seed={...item.seed,...extra};
@@ -29,6 +30,7 @@ try{
   return {model,pdf:Array.from(createEstimatePdfBytes(model)),xlsx:Array.from(createEstimateXlsxBytes(model))};
  },seeds);
  assert.equal(result.model.rows.length,7);for(const row of result.model.rows.slice(0,4)){assert.ok(JSON.stringify(row).includes('オータムブラウン'),'linked exterior color missing from output');}assert.ok(result.model.rows.every(r=>r.price===null));assert.equal(result.model.counts.complete,0);
+ for(const label of ['既設上枠の見付','既設下枠の見付','既設縦枠の見付','建物構造','設置場所','使用環境','新設枠の振出し条件'])assert.ok(!JSON.stringify(result.model.rows).includes(label),'removed input leaked into output: '+label);
  assert.ok(process.env.SASH_CANDIDATE_MANIFEST_FILE_ID,'Saved candidate identity required');
  assert.ok(result.model.rows.every(r=>r.audit.runtime_manifest_identity===process.env.SASH_CANDIDATE_MANIFEST_FILE_ID));
  await writeFile(OUT+'/replus-candidate-estimate.pdf',new Uint8Array(result.pdf));

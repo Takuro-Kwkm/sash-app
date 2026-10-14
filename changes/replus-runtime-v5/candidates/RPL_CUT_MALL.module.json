@@ -1,14 +1,14 @@
 {
   "schema": "PRODUCT_MODULE_CANDIDATE_V1",
-  "candidate_revision": "REPLUS_GLOBAL_FLOW_V9_20261014",
+  "candidate_revision": "REPLUS_SALES_FLOW_V10_20261014",
   "baseline": {
     "path": "candidates/RPL_CUT_MALL.json",
     "component_id": "RPL_CUT_MALL",
-    "sha256": "bf22de82bca25104a18c93c4fe9a833d7d4d88ec45850f53d51205917382793b",
+    "sha256": "93f6cee195f6efd7602d8379b30ce565d8051d237faab5066ec8f57f86376aea",
     "baseline_sha256": "874fb588a399c30f90cd3d745d5479cd74ddf8e1cdb08357613ee272022f6270",
     "baseline_component_version": "v1.0"
   },
-  "scope": "SELECTION_AND_ESTIMATE_HANDOFF; NO_AUTO_MANUFACTURE_NO_FORMAL_NO_RELEASE",
+  "scope": "SELECTION_AND_ESTIMATE_HANDOFF; NO_AUTO_MANUFACTURE_NO_FORMAL_NO_RELEASE; SALES_SITE_INPUTS_EXCLUDED_SOURCE_CONSTRAINTS_RETAINED",
   "product_module": {
     "product": {
       "id": "CANDIDATE:RPL_CUT_MALL",
@@ -99,18 +99,6 @@
         "parentFields": [],
         "selector": {},
         "id": "CANDIDATE:RPL_CUT_MALL:field:cut_mall_window_frame_color",
-        "productId": "CANDIDATE:RPL_CUT_MALL",
-        "status": "ACTIVE"
-      },
-      {
-        "key": "building_structure",
-        "displayLabel": "建物構造",
-        "dataType": "ENUM",
-        "displayOrder": 70,
-        "autoSelectSingle": false,
-        "parentFields": [],
-        "selector": {},
-        "id": "CANDIDATE:RPL_CUT_MALL:field:building_structure",
         "productId": "CANDIDATE:RPL_CUT_MALL",
         "status": "ACTIVE"
       },
@@ -1215,21 +1203,6 @@
         "id": "CANDIDATE:RPL_CUT_MALL:value:cut_mall_window_frame_color:5",
         "productId": "CANDIDATE:RPL_CUT_MALL",
         "specificationKey": "cut_mall_window_frame_color",
-        "status": "ACTIVE"
-      },
-      {
-        "value": "木造",
-        "displayLabel": "木造",
-        "evidenceIds": [
-          "CM-EV-011"
-        ],
-        "selector": {},
-        "metadata": {
-          "manualCheck": false
-        },
-        "id": "CANDIDATE:RPL_CUT_MALL:value:building_structure:0",
-        "productId": "CANDIDATE:RPL_CUT_MALL",
-        "specificationKey": "building_structure",
         "status": "ACTIVE"
       },
       {
