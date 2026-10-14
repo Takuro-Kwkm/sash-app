@@ -33,10 +33,6 @@ export function mergeWorkflowData(previous={},incoming={}){
   for(const [key,record] of Object.entries(incoming?.site_survey?.contexts??{}))contexts[key]={...contexts[key],...record,values:{...contexts[key]?.values,...record.values}};
   return Object.keys(contexts).length?{...previous,schema_version:'1.0',site_survey:{...previous.site_survey,contexts}}:previous;
 }
-export function withConfigurationMigrationAudit(snapshot,previousSnapshot,migration){
-  const audit=migration??(previousSnapshot?.product_id===snapshot.product_id?previousSnapshot.configuration_migration:null);
-  return audit?{...snapshot,configuration_migration:globalThis.structuredClone?structuredClone(audit):JSON.parse(JSON.stringify(audit))}:snapshot;
-}
 export function projectEstimateResult(result,input={}){
   const {estimate:selection}=splitWorkflowSelection(result.selection);
   const {siteSurvey:values}=splitWorkflowSelection(input);

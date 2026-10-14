@@ -49,4 +49,4 @@
 
 670 Repositoryテスト、lint/typecheck、7仕様×1280/768/390の選択・条件変更・Clear・保存再表示、意味別表示とガラス／部材依存のBrowser QA、共通PDF/XLSX出力を検証。保存はBROWSER_LOCAL_STORAGE。DB／複数端末E2Eは未実施。既存TW・EWの回帰もPASS。8商品×3画面幅の保存再表示と共通出力、通常アプリのRelease regressionも確認。詳細証跡は新しい保存Packetに固定し、PRと正確なHEADへ結ぶ。
 
-CIの初回HEAD 0103084ではdomain.mjsの固定実装hashでTW Gateが拒否した。検査・採用契約を変更せず、移行履歴の付与を共通Editorと既存workflow metadata helperへ移したsuccessorで、固定実装照合と変更Scope QAを再検証する。
+CIの初回HEAD 0103084ではdomain.mjsの固定実装hashでTW Gateが拒否した。検査・採用契約を変更せず、移行履歴の付与を共通Editorと独立したconfiguration-migration helperへ移したsuccessorで、固定実装照合と変更Scope QAを再検証。field-workflow-scope.mjsもウチリモの採用済み依存として完全保持し、依存契約・Validatorは変更しない。

@@ -6,7 +6,7 @@ import {resolve,dirname} from 'node:path';
 // existing function. No catalog package is removed from its src/** bundle.
 export const staticFiles=[
   ...['index.html','app.js','theme.js','product-configuration-editor.mjs','product-choice-model.mjs','estimate-output-integration.mjs','styles.css','styles-wave3.css','work-management.css','estimate-output.css','theme.css'].map(p=>'src/ui/web/'+p),
-  ...['domain.mjs','storage.mjs','repositories.mjs','service.mjs','field-workflow-scope.mjs'].map(p=>'src/work-management/'+p),
+  ...['domain.mjs','storage.mjs','repositories.mjs','service.mjs','field-workflow-scope.mjs','configuration-migration.mjs'].map(p=>'src/work-management/'+p),
   ...['model.mjs','pdf-renderer.mjs','xlsx-renderer.mjs'].map(p=>'src/estimate-output/'+p),
 ];
 const output=resolve('artifacts/deployment-static');

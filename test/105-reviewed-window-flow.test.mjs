@@ -102,7 +102,7 @@ test('bathroom mode precedes opening pattern; a mode change clears the pattern',
 });
 test('migration retains original saved input for review without leaking to a different product',async()=>{
  const {createProductConfigurationSnapshot}=await import('../src/work-management/domain.mjs');
- const {withConfigurationMigrationAudit}=await import('../src/work-management/field-workflow-scope.mjs');
+ const {withConfigurationMigrationAudit}=await import('../src/work-management/configuration-migration.mjs');
  const product={id:'CANDIDATE:RPL_TW',manufacturer:'LIXIL',series:'TW'};
  const result={source:'RUNTIME_MASTER',selection:{glass_category:'TW-GL-TRIPLE',glass:'TW-GL-CC'},fields:[],validation:{errors:[],missingRequiredFields:[]},runtimeMaster:{packageVersion:'V7'},configurationMigration:{from:'V6',to:'V7',originalSelection:{glass:'TW-GL-CC'}}};
  const first=withConfigurationMigrationAudit(createProductConfigurationSnapshot({product,result}),null,result.configurationMigration);assert.deepEqual(first.configuration_migration.originalSelection,{glass:'TW-GL-CC'});

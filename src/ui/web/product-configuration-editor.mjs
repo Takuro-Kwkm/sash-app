@@ -1,6 +1,6 @@
 import { createProductConfigurationSnapshot } from '/work-management/domain.mjs';
 import { productChoices, choiceForMember, memberForChoice } from '/product-choice-model.mjs';
-import { withConfigurationMigrationAudit } from '/work-management/field-workflow-scope.mjs';
+import { withConfigurationMigrationAudit } from '/work-management/configuration-migration.mjs';
 
 const esc=(value)=>String(value??'').replace(/[&<>'\"]/g,(character)=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'\"':"&quot;"})[character]);
 const reviewChoiceLabel=(value)=>`${esc(value.displayLabel)}${value.manualCheck&&!String(value.displayLabel).includes('要確認')?'（要確認）':''}`;
