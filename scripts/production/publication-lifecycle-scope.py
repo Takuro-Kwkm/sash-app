@@ -16,9 +16,12 @@ ALLOWED = {
     '.github/workflows/ew-output-successor.yml',
     'contracts/production/authority-successors/publication-lifecycle-predecessor-profile.v1.json',
     'contracts/production/authority-successors/publication-lifecycle-predecessor-selection.v1.json',
+    'contracts/production/authority-successors/publication-lifecycle-predecessor-build-profile.v1.json',
     'contracts/production/authority-successors/publication-lifecycle.v1.json',
     'contracts/production/current-authority-successor.json',
     'contracts/production/current-architecture.json',
+    'contracts/production/work-connections.v2.json',
+    'contracts/production/product-master-build-profile.v1.json',
     'contracts/production/publication-lifecycle.v1.json', SCOPE_PATH, PROFILE, REGISTRY,
     'contracts/production/release-profiles/order5-batch3-thermosl.v1.json',
     'contracts/production/release-profiles/order5-batch3-tw.v1.json',
@@ -34,6 +37,8 @@ ALLOWED = {
     'scripts/production/publication-lifecycle-scope.py',
     'scripts/production/prepare-publication-lifecycle.py',
     'scripts/production/release-batch.py',
+    'scripts/production/unpack-build-authority.py',
+    'scripts/production/unpack-release-authority.py',
     'scripts/production/validate-order4-release.py',
     'scripts/production/validate-order5-release.py',
     'scripts/production/test_publication_lifecycle.py',
@@ -88,8 +93,22 @@ def validate(root):
         assert config['repository'] == original['repository'] and config['target_gate'] == 'RELEASE_COMPLETED', 'LIFECYCLE_CONFIG'
         pointer = json.loads((root / 'contracts/production/current-architecture.json').read_bytes())
         prior_pointer = json.loads(before['contracts/production/current-architecture.json'])
-        assert {key: value for key, value in pointer.items() if key != 'shared_router_files'} == {key: value for key, value in prior_pointer.items() if key != 'shared_router_files'}, 'ARCHITECTURE_AXIS_CHANGED'
+        assert {key: value for key, value in pointer.items() if key not in ('shared_router_files', 'new_product_build_profile')} == {key: value for key, value in prior_pointer.items() if key not in ('shared_router_files', 'new_product_build_profile')}, 'ARCHITECTURE_AXIS_CHANGED'
         assert {key: value for key, value in pointer['shared_router_files'].items() if key != 'harness/architecture.py'} == {key: value for key, value in prior_pointer['shared_router_files'].items() if key != 'harness/architecture.py'}, 'UNRELATED_ROUTER_PIN_CHANGED'
+        build_path = 'contracts/production/product-master-build-profile.v1.json'
+        build = json.loads((root / build_path).read_bytes())
+        prior_build = json.loads(before[build_path])
+        expected_build = json.loads(before[build_path])
+        expected_build['refs']['current_authority']['sha256'] = build['refs']['current_authority']['sha256']
+        assert build == expected_build, 'BUILD_PROFILE_GUARANTEE_CHANGED'
+        assert (root / 'contracts/production/authority-successors/publication-lifecycle-predecessor-build-profile.v1.json').read_bytes() == before[build_path], 'PREDECESSOR_BUILD_PROFILE_DRIFT'
+        expected_entry = {**prior_pointer['new_product_build_profile'], 'sha256': digest((root / build_path).read_bytes())}
+        assert pointer['new_product_build_profile'] == expected_entry, 'BUILD_PROFILE_POINTER_DRIFT'
+        connections_path = 'contracts/production/work-connections.v2.json'
+        connections = json.loads((root / connections_path).read_bytes())
+        expected_connections = json.loads(before[connections_path])
+        expected_connections['new_product_build_profile'] = expected_entry
+        assert connections == expected_connections, 'UNRELATED_CONNECTION_CHANGED'
         assert (root / 'contracts/production/authority-successors/publication-lifecycle-predecessor-profile.v1.json').read_bytes() == before[PROFILE], 'PREDECESSOR_PROFILE_DRIFT'
         assert (root / 'contracts/production/authority-successors/publication-lifecycle-predecessor-selection.v1.json').read_bytes() == before['contracts/production/current-authority-successor.json'], 'PREDECESSOR_SELECTION_DRIFT'
         for entry in registry['profiles']:
@@ -99,6 +118,7 @@ def validate(root):
             assert {key: value for key, value in profile.items() if key not in mutable} == {key: value for key, value in old.items() if key not in mutable}, 'RELEASE_GUARANTEE_CHANGED'
             assert set(profile['required_ci']) >= set(old['required_ci']), 'CI_WEAKENED'
             assert pointer['shared_router_files']['harness/architecture.py'] == profile['shared_contract']['files']['harness/architecture.py'], 'ROUTER_IMPLEMENTATION_PIN_MISMATCH'
+            assert build['refs']['current_authority']['sha256'] == profile['shared_contract']['files']['harness/current_authority.py'], 'BUILD_AUTHORITY_IMPLEMENTATION_PIN_MISMATCH'
             assert profile['lifecycle'] == {'mode': 'EXISTING_V2_RELEASE_LIFECYCLE_V1', 'entry': 'scripts/production/publication-lifecycle.mjs', 'configuration': 'contracts/production/publication-lifecycle.v1.json', 'storage_destination': {'provider': 'GOOGLE_DRIVE', 'parent_id': '1l8BoCcT-rTh8x9vdpkO7gf1c0C7cKEmx'}, 'shared_entry': 'scripts/release-provider-host.mjs'}, 'LIFECYCLE_ENTRY'
             assert config['qa_command'] == ['node', 'scripts/production/publication-lifecycle-qa.mjs', '--profile', '{profile}', '--url', '{url}', '--expect-commit', '{sha}', '--output-dir', '{output}'], 'NATIVE_QA_COMMAND_NOT_BOUND'
             assert profile['qa_command'] == 'node scripts/production/publication-lifecycle-qa.mjs --profile PROFILE --url URL --expect-commit SHA --output-dir EVIDENCE', 'QA_COMMAND_MISMATCH'

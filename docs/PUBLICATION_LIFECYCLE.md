@@ -68,6 +68,13 @@ checks the bounded native diff. It reports `PREPARED_NOT_ADOPTED`. Exact-head
 native CI, reviewed adoption and remote readback are still required. Product
 facts, unknown values, previous Human Decisions and terminal Work are unchanged.
 
+The existing isolated Build CI entry acquires that same V7 release carrier when
+this scope is selected. The original Build carrier remains byte-for-byte intact.
+The Build Profile successor changes only the `current_authority.py` hash and its
+two native profile hash pointers; its original bytes are archived under
+`authority-successors`. Build semantics, QA, adapters, validators and Skills are
+unchanged. The scope guard verifies these nested pointer-only differences.
+
 Release records append new immutable files to existing Drive folder
 `1l8BoCcT-rTh8x9vdpkO7gf1c0C7cKEmx`. Its live metadata name is
 `ORDER5_BATCH2_RELEASE_CONTINUATION_20261010`; the folder was also used for the

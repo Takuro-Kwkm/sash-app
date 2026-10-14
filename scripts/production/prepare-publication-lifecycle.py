@@ -31,6 +31,11 @@ def main():
     selection_snapshot = authority / 'publication-lifecycle-predecessor-selection.v1.json'
     profile_snapshot.write_bytes(before[guard.PROFILE])
     selection_snapshot.write_bytes(before['contracts/production/current-authority-successor.json'])
+    build_path = 'contracts/production/product-master-build-profile.v1.json'
+    (authority / 'publication-lifecycle-predecessor-build-profile.v1.json').write_bytes(before[build_path])
+    build = json.loads(before[build_path])
+    build['refs']['current_authority']['sha256'] = guard.digest((central / 'harness/current_authority.py').read_bytes())
+    write(ROOT / build_path, build)
     original = json.loads(before[guard.PROFILE])
     shared_files = set(original['shared_contract']['files']) | {'schemas/ci-impact.v1.schema.json', 'scripts/release-lifecycle-cli.mjs', 'harness/architecture.py'}
     for name in shared_files:
@@ -50,7 +55,11 @@ def main():
     write(ROOT / 'contracts/production/shared-release-authority.v1.json', metadata)
     pointer = json.loads(before['contracts/production/current-architecture.json'])
     pointer['shared_router_files']['harness/architecture.py'] = guard.digest((central / 'harness/architecture.py').read_bytes())
+    pointer['new_product_build_profile']['sha256'] = guard.digest((ROOT / build_path).read_bytes())
     write(ROOT / 'contracts/production/current-architecture.json', pointer)
+    connections = json.loads(before['contracts/production/work-connections.v2.json'])
+    connections['new_product_build_profile'] = pointer['new_product_build_profile']
+    write(ROOT / 'contracts/production/work-connections.v2.json', connections)
     paths = set(original['native_paths']) | (guard.ALLOWED - guard.CYCLIC)
     native_files = {name: guard.digest((ROOT / name).read_bytes()) for name in sorted(paths)}
     protected = {name: guard.digest((ROOT / name).read_bytes()) for name in original['publication_policy']['protected_files']}

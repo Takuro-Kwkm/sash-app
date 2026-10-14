@@ -1,7 +1,9 @@
 """Readback the exact adopted Central dependency for isolated CI only."""
-import hashlib,json,tarfile,sys
+import hashlib,json,tarfile,sys,subprocess
 from pathlib import Path
 root=Path(__file__).resolve().parents[2]
+if (root/'contracts/production/publication-lifecycle-scope.v1.json').exists():
+    raise SystemExit(subprocess.call([sys.executable,'-B',str(root/'scripts/production/unpack-release-authority.py'),sys.argv[1]]))
 manifest=json.loads((root/'contracts/production/shared-build-authority.json').read_text())
 archive=root/'contracts/production/shared-build-authority.tar.gz'
 assert hashlib.sha256(archive.read_bytes()).hexdigest()==manifest['archive_sha256']

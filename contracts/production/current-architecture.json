@@ -31,6 +31,6 @@
   "new_product_build_profile": {
     "profile_id": "sash-new-product-master-v1",
     "path": "contracts/production/product-master-build-profile.v1.json",
-    "sha256": "9d22ba1fe2ae26fd91bba6d04ed8e29764178f94c020c1a0d18843bdbed4fb57"
+    "sha256": "ecb2b2ee63762e1c62ba622c0f6c72e0f4dcc92707221275329fef1c472e5d0a"
   }
 }
