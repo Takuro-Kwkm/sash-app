@@ -8,7 +8,7 @@ import {tmpdir} from 'node:os';
 const root=resolve('changes/replus-runtime-v5'),indexPath=resolve(root,'index.json');
 const index=JSON.parse(readFileSync(indexPath));
 const digest=b=>createHash('sha256').update(b).digest('hex');
-process.env.SASH_CANDIDATE_MANIFEST_FILE_ID='1m9UMPr1xSNn73tjzkTyBinczePi66VE7';process.env.SASH_CANDIDATE_RUNTIME_INDEX=indexPath;process.env.SASH_CANDIDATE_MODE='INSPECT_LOCAL';process.env.SASH_CANDIDATE_INDEX_SHA=digest(readFileSync(indexPath));
+process.env.SASH_CANDIDATE_MANIFEST_FILE_ID='1I2bA_jd4KeVR3IFDGB99JIH9rDn33yg7';process.env.SASH_CANDIDATE_RUNTIME_INDEX=indexPath;process.env.SASH_CANDIDATE_MODE='INSPECT_LOCAL';process.env.SASH_CANDIDATE_INDEX_SHA=digest(readFileSync(indexPath));
 const {resolveRuntimeAppProduct,runtimeAppIntegrationInventory,getRuntimeAppIntegration}=await import('../src/catalog/runtime-master/runtime-app-bridge.mjs');
 const rows=index.products;
 const {candidateRuntimeEntries,readCandidateModule}=await import('../src/catalog/runtime-master/candidate-runtime-registry.mjs');
@@ -72,7 +72,7 @@ test('native dimension min/max outside blocked, inside graph review',async()=>{
   assert.ok(rules.length,row.id);
   const bounds=rules[0].bounds;
   for(const [w,h,expected] of [[bounds.minW,bounds.minH,'REVIEW_REQUIRED'],[bounds.maxW,bounds.maxH,'REVIEW_REQUIRED'],[0,bounds.minH,'BLOCK'],[bounds.maxW+10000,bounds.maxH,'BLOCK']]){
-   const a=await resolveUi(row.id,{...r.selection,custom_width:w,custom_height:h});assert.equal(a.dimensionResult.status,expected,row.id);
+   const a=await resolveUi(row.id,{...r.selection,dimension_basis:'FINISHED',custom_width:w,custom_height:h});assert.equal(a.dimensionResult.status,expected,row.id);
   }
  }
 });

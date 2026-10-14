@@ -1,0 +1,54 @@
+{
+  "schema": "REVIEWED_OFFICIAL_DIMENSION_INSTALLATION_V1",
+  "revision": "REPLUS_DIMENSIONS_INNER_FIT_V11_20261014",
+  "manufacturerSourceAdoption": false,
+  "source": "SN1200 2025-08; existing adopted source bytes rechecked",
+  "source_sha256": "b837ce209c8b55b2b66b412a4e3c2694a78fd5de823efc7b2b960688a5668098",
+  "pages": {
+    "dimension_direct": {
+      "pdf": [
+        252,
+        254
+      ],
+      "printed": [
+        248,
+        250
+      ],
+      "formula": "WD=WS-10; HD=HS-10; standard/inner-fit share the same formula"
+    },
+    "installation": {
+      "pdf": [
+        212,
+        231,
+        233,
+        247,
+        249,
+        251
+      ],
+      "printed": [
+        208,
+        227,
+        229,
+        243,
+        245,
+        247
+      ]
+    },
+    "attachment": {
+      "pdf": [
+        255,
+        256,
+        266,
+        268
+      ],
+      "printed": [
+        251,
+        252,
+        262,
+        264
+      ]
+    }
+  },
+  "manualBoundary": "Installation suitability and shaded inner-fit manufacturing polygons remain MANUAL_CHECK; no price/BOM/set code inferred",
+  "userPresentation": "glass → inner-fit specification → inner cover → outer cover; both measured and finished sizes at the end"
+}

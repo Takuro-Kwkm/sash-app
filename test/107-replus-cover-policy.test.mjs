@@ -62,7 +62,7 @@ test('cover-only saved selections retain migration audit without a glass field',
   import {createCandidateRuntimePreview} from './src/server/candidate-runtime-preview.mjs';
   const input={options:['OP-ANGLE-COVER-CUT','OP-COVER-CASING']};
   await createCandidateRuntimePreview()({url:'/api/runtime-master/resolve?'+new URLSearchParams({productId:'CANDIDATE:RPL_ROOM',configurationVersion:'REPLUS_GLASS_FLOW_V8_20261014',selection:JSON.stringify(input)})},{writeHead(){},end(text){const r=JSON.parse(text);if(!r.configurationMigration?.originalSelection.options.includes('OP-ANGLE-COVER-CUT')||r.selection.interior_cover_type!=='OP-ANGLE-COVER-CUT'||!r.selection.options.includes('OP-COVER-CASING'))throw Error('COVER_MIGRATION_AUDIT_MISSING');console.log('PASS');}});
- `],{encoding:'utf8',env:{...process.env,SASH_CANDIDATE_MODE:'INSPECT_LOCAL',SASH_CANDIDATE_MANIFEST_FILE_ID:'1m9UMPr1xSNn73tjzkTyBinczePi66VE7',SASH_CANDIDATE_RUNTIME_INDEX:resolve(root,'index.json'),SASH_CANDIDATE_INDEX_SHA:createHash('sha256').update(readFileSync(root+'/index.json')).digest('hex')}});
+ `],{encoding:'utf8',env:{...process.env,SASH_CANDIDATE_MODE:'INSPECT_LOCAL',SASH_CANDIDATE_MANIFEST_FILE_ID:'1I2bA_jd4KeVR3IFDGB99JIH9rDn33yg7',SASH_CANDIDATE_RUNTIME_INDEX:resolve(root,'index.json'),SASH_CANDIDATE_INDEX_SHA:createHash('sha256').update(readFileSync(root+'/index.json')).digest('hex')}});
  assert.equal(status,0,stderr);assert.match(stdout,/PASS/);
 });
 test('separately supplied trim and angle remain combinable and both migrate from saved options',async()=>{

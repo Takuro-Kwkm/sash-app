@@ -1,10 +1,10 @@
 {
   "schema": "PRODUCT_MODULE_CANDIDATE_V1",
-  "candidate_revision": "REPLUS_SALES_FLOW_V10_20261014",
+  "candidate_revision": "REPLUS_DIMENSIONS_INNER_FIT_V11_20261014",
   "baseline": {
     "path": "candidates/RPL_CUT_MALL.json",
     "component_id": "RPL_CUT_MALL",
-    "sha256": "93f6cee195f6efd7602d8379b30ce565d8051d237faab5066ec8f57f86376aea",
+    "sha256": "f5ee2d3df3b4670cd1b0452fb4c0d36f99ec5675ddb9b5fc18d34e8f95519568",
     "baseline_sha256": "874fb588a399c30f90cd3d745d5479cd74ddf8e1cdb08357613ee272022f6270",
     "baseline_component_version": "v1.0"
   },

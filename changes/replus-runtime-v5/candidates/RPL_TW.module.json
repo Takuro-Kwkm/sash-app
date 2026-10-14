@@ -1,10 +1,10 @@
 {
   "schema": "PRODUCT_MODULE_CANDIDATE_V1",
-  "candidate_revision": "REPLUS_SALES_FLOW_V10_20261014",
+  "candidate_revision": "REPLUS_DIMENSIONS_INNER_FIT_V11_20261014",
   "baseline": {
     "path": "candidates/RPL_TW.json",
     "component_id": "RPL_TW",
-    "sha256": "d7330dd0f653967b77fa3f187cfbde88c6ad15ccdd302af8adc17260f68c0594",
+    "sha256": "bc38641b7dc72dc7e82ff03b7ec40a1065200f95afa08187a141450d83f6a990",
     "baseline_sha256": "5700bd83280a7d20e233116a22ffc8137a274412529513052bd303b7a0634e74",
     "baseline_component_version": "v1.0"
   },
@@ -141,42 +141,11 @@
         "displayLabel": "寸法の指定方法",
         "dataType": "ENUM",
         "displayOrder": 80,
-        "autoSelectSingle": false,
+        "autoSelectSingle": true,
         "parentFields": [],
         "selector": {},
+        "internal": true,
         "id": "CANDIDATE:RPL_TW:field:size_mode",
-        "productId": "CANDIDATE:RPL_TW",
-        "status": "ACTIVE"
-      },
-      {
-        "key": "custom_width",
-        "displayLabel": "製品仕上がり幅 W（mm）",
-        "dataType": "NUMBER",
-        "displayOrder": 90,
-        "autoSelectSingle": false,
-        "parentFields": [
-          "size_mode"
-        ],
-        "selector": {
-          "size_mode": "CUSTOM"
-        },
-        "id": "CANDIDATE:RPL_TW:field:custom_width",
-        "productId": "CANDIDATE:RPL_TW",
-        "status": "ACTIVE"
-      },
-      {
-        "key": "custom_height",
-        "displayLabel": "製品仕上がり高さ H（mm）",
-        "dataType": "NUMBER",
-        "displayOrder": 100,
-        "autoSelectSingle": false,
-        "parentFields": [
-          "size_mode"
-        ],
-        "selector": {
-          "size_mode": "CUSTOM"
-        },
-        "id": "CANDIDATE:RPL_TW:field:custom_height",
         "productId": "CANDIDATE:RPL_TW",
         "status": "ACTIVE"
       },
@@ -261,18 +230,6 @@
         ],
         "selector": {},
         "id": "CANDIDATE:RPL_TW:field:options",
-        "productId": "CANDIDATE:RPL_TW",
-        "status": "ACTIVE"
-      },
-      {
-        "key": "installation_method",
-        "displayLabel": "施工方法",
-        "dataType": "ENUM",
-        "displayOrder": 180,
-        "autoSelectSingle": false,
-        "parentFields": [],
-        "selector": {},
-        "id": "CANDIDATE:RPL_TW:field:installation_method",
         "productId": "CANDIDATE:RPL_TW",
         "status": "ACTIVE"
       },
@@ -429,6 +386,124 @@
         ],
         "selector": {},
         "id": "CANDIDATE:RPL_TW:field:exterior_cover_type",
+        "productId": "CANDIDATE:RPL_TW",
+        "status": "ACTIVE"
+      },
+      {
+        "key": "installation_method",
+        "displayLabel": "内はめ仕様",
+        "dataType": "ENUM",
+        "displayOrder": 900,
+        "autoSelectSingle": false,
+        "parentFields": [
+          "window_type"
+        ],
+        "selector": {
+          "window_type": {
+            "$exists": true
+          }
+        },
+        "id": "CANDIDATE:RPL_TW:field:installation_method",
+        "productId": "CANDIDATE:RPL_TW",
+        "status": "ACTIVE"
+      },
+      {
+        "key": "inner_fit_required_component",
+        "displayLabel": "内はめ用の必須部材",
+        "dataType": "ENUM",
+        "displayOrder": 900,
+        "autoSelectSingle": false,
+        "parentFields": [
+          "installation_method"
+        ],
+        "selector": {
+          "window_type": {
+            "$exists": true
+          },
+          "installation_method": {
+            "$in": [
+              "INNER_FIT_INSET",
+              "INNER_FIT_OUTSET"
+            ]
+          }
+        },
+        "id": "CANDIDATE:RPL_TW:field:inner_fit_required_component",
+        "productId": "CANDIDATE:RPL_TW",
+        "status": "ACTIVE"
+      },
+      {
+        "key": "dimension_basis",
+        "displayLabel": "入力する寸法",
+        "dataType": "ENUM",
+        "displayOrder": 900,
+        "autoSelectSingle": false,
+        "parentFields": [],
+        "selector": {},
+        "id": "CANDIDATE:RPL_TW:field:dimension_basis",
+        "productId": "CANDIDATE:RPL_TW",
+        "status": "ACTIVE"
+      },
+      {
+        "key": "survey_width",
+        "displayLabel": "採寸幅 WS（mm）",
+        "dataType": "NUMBER",
+        "displayOrder": 900,
+        "autoSelectSingle": false,
+        "parentFields": [
+          "dimension_basis"
+        ],
+        "selector": {
+          "size_mode": "CUSTOM"
+        },
+        "id": "CANDIDATE:RPL_TW:field:survey_width",
+        "productId": "CANDIDATE:RPL_TW",
+        "status": "ACTIVE"
+      },
+      {
+        "key": "survey_height",
+        "displayLabel": "採寸高さ HS（mm）",
+        "dataType": "NUMBER",
+        "displayOrder": 900,
+        "autoSelectSingle": false,
+        "parentFields": [
+          "dimension_basis"
+        ],
+        "selector": {
+          "size_mode": "CUSTOM"
+        },
+        "id": "CANDIDATE:RPL_TW:field:survey_height",
+        "productId": "CANDIDATE:RPL_TW",
+        "status": "ACTIVE"
+      },
+      {
+        "key": "custom_width",
+        "displayLabel": "製品仕上がり幅 WD（mm）",
+        "dataType": "NUMBER",
+        "displayOrder": 900,
+        "autoSelectSingle": false,
+        "parentFields": [
+          "dimension_basis"
+        ],
+        "selector": {
+          "size_mode": "CUSTOM"
+        },
+        "id": "CANDIDATE:RPL_TW:field:custom_width",
+        "productId": "CANDIDATE:RPL_TW",
+        "status": "ACTIVE"
+      },
+      {
+        "key": "custom_height",
+        "displayLabel": "製品仕上がり高さ HD（mm）",
+        "dataType": "NUMBER",
+        "displayOrder": 900,
+        "autoSelectSingle": false,
+        "parentFields": [
+          "dimension_basis"
+        ],
+        "selector": {
+          "size_mode": "CUSTOM"
+        },
+        "id": "CANDIDATE:RPL_TW:field:custom_height",
         "productId": "CANDIDATE:RPL_TW",
         "status": "ACTIVE"
       }
@@ -1077,21 +1152,6 @@
         "status": "ACTIVE"
       },
       {
-        "value": "TW-OP-UPPER-BASE",
-        "displayLabel": "既設上枠ベース材",
-        "evidenceIds": [
-          "TW-EV-005,006"
-        ],
-        "selector": {},
-        "metadata": {
-          "manualCheck": true
-        },
-        "id": "CANDIDATE:RPL_TW:value:options:0",
-        "productId": "CANDIDATE:RPL_TW",
-        "specificationKey": "options",
-        "status": "ACTIVE"
-      },
-      {
         "value": "TW-OP-CASING",
         "displayLabel": "カバー用ケーシング",
         "evidenceIds": [
@@ -1101,7 +1161,7 @@
         "metadata": {
           "manualCheck": true
         },
-        "id": "CANDIDATE:RPL_TW:value:options:1",
+        "id": "CANDIDATE:RPL_TW:value:options:0",
         "productId": "CANDIDATE:RPL_TW",
         "specificationKey": "options",
         "status": "ACTIVE"
@@ -1116,7 +1176,7 @@
         "metadata": {
           "manualCheck": true
         },
-        "id": "CANDIDATE:RPL_TW:value:options:2",
+        "id": "CANDIDATE:RPL_TW:value:options:1",
         "productId": "CANDIDATE:RPL_TW",
         "specificationKey": "options",
         "status": "ACTIVE"
@@ -1131,7 +1191,7 @@
         "metadata": {
           "manualCheck": true
         },
-        "id": "CANDIDATE:RPL_TW:value:options:3",
+        "id": "CANDIDATE:RPL_TW:value:options:2",
         "productId": "CANDIDATE:RPL_TW",
         "specificationKey": "options",
         "status": "ACTIVE"
@@ -1146,7 +1206,7 @@
         "metadata": {
           "manualCheck": true
         },
-        "id": "CANDIDATE:RPL_TW:value:options:4",
+        "id": "CANDIDATE:RPL_TW:value:options:3",
         "productId": "CANDIDATE:RPL_TW",
         "specificationKey": "options",
         "status": "ACTIVE"
@@ -1161,7 +1221,7 @@
         "metadata": {
           "manualCheck": true
         },
-        "id": "CANDIDATE:RPL_TW:value:options:5",
+        "id": "CANDIDATE:RPL_TW:value:options:4",
         "productId": "CANDIDATE:RPL_TW",
         "specificationKey": "options",
         "status": "ACTIVE"
@@ -1176,7 +1236,7 @@
         "metadata": {
           "manualCheck": true
         },
-        "id": "CANDIDATE:RPL_TW:value:options:6",
+        "id": "CANDIDATE:RPL_TW:value:options:5",
         "productId": "CANDIDATE:RPL_TW",
         "specificationKey": "options",
         "status": "ACTIVE"
@@ -1191,7 +1251,7 @@
         "metadata": {
           "manualCheck": true
         },
-        "id": "CANDIDATE:RPL_TW:value:options:7",
+        "id": "CANDIDATE:RPL_TW:value:options:6",
         "productId": "CANDIDATE:RPL_TW",
         "specificationKey": "options",
         "status": "ACTIVE"
@@ -1206,7 +1266,7 @@
         "metadata": {
           "manualCheck": true
         },
-        "id": "CANDIDATE:RPL_TW:value:options:8",
+        "id": "CANDIDATE:RPL_TW:value:options:7",
         "productId": "CANDIDATE:RPL_TW",
         "specificationKey": "options",
         "status": "ACTIVE"
@@ -1221,7 +1281,7 @@
         "metadata": {
           "manualCheck": true
         },
-        "id": "CANDIDATE:RPL_TW:value:options:9",
+        "id": "CANDIDATE:RPL_TW:value:options:8",
         "productId": "CANDIDATE:RPL_TW",
         "specificationKey": "options",
         "status": "ACTIVE"
@@ -1236,7 +1296,7 @@
         "metadata": {
           "manualCheck": true
         },
-        "id": "CANDIDATE:RPL_TW:value:options:10",
+        "id": "CANDIDATE:RPL_TW:value:options:9",
         "productId": "CANDIDATE:RPL_TW",
         "specificationKey": "options",
         "status": "ACTIVE"
@@ -1251,7 +1311,7 @@
         "metadata": {
           "manualCheck": true
         },
-        "id": "CANDIDATE:RPL_TW:value:options:11",
+        "id": "CANDIDATE:RPL_TW:value:options:10",
         "productId": "CANDIDATE:RPL_TW",
         "specificationKey": "options",
         "status": "ACTIVE"
@@ -1266,7 +1326,7 @@
         "metadata": {
           "manualCheck": true
         },
-        "id": "CANDIDATE:RPL_TW:value:options:12",
+        "id": "CANDIDATE:RPL_TW:value:options:11",
         "productId": "CANDIDATE:RPL_TW",
         "specificationKey": "options",
         "status": "ACTIVE"
@@ -1281,7 +1341,7 @@
         "metadata": {
           "manualCheck": true
         },
-        "id": "CANDIDATE:RPL_TW:value:options:13",
+        "id": "CANDIDATE:RPL_TW:value:options:12",
         "productId": "CANDIDATE:RPL_TW",
         "specificationKey": "options",
         "status": "ACTIVE"
@@ -1296,7 +1356,7 @@
         "metadata": {
           "manualCheck": true
         },
-        "id": "CANDIDATE:RPL_TW:value:options:14",
+        "id": "CANDIDATE:RPL_TW:value:options:13",
         "productId": "CANDIDATE:RPL_TW",
         "specificationKey": "options",
         "status": "ACTIVE"
@@ -1311,7 +1371,7 @@
         "metadata": {
           "manualCheck": true
         },
-        "id": "CANDIDATE:RPL_TW:value:options:15",
+        "id": "CANDIDATE:RPL_TW:value:options:14",
         "productId": "CANDIDATE:RPL_TW",
         "specificationKey": "options",
         "status": "ACTIVE"
@@ -1328,7 +1388,7 @@
         "metadata": {
           "manualCheck": true
         },
-        "id": "CANDIDATE:RPL_TW:value:options:16",
+        "id": "CANDIDATE:RPL_TW:value:options:15",
         "productId": "CANDIDATE:RPL_TW",
         "specificationKey": "options",
         "status": "ACTIVE"
@@ -1343,7 +1403,7 @@
         "metadata": {
           "manualCheck": true
         },
-        "id": "CANDIDATE:RPL_TW:value:options:17",
+        "id": "CANDIDATE:RPL_TW:value:options:16",
         "productId": "CANDIDATE:RPL_TW",
         "specificationKey": "options",
         "status": "ACTIVE"
@@ -1358,24 +1418,9 @@
         "metadata": {
           "manualCheck": true
         },
-        "id": "CANDIDATE:RPL_TW:value:options:18",
+        "id": "CANDIDATE:RPL_TW:value:options:17",
         "productId": "CANDIDATE:RPL_TW",
         "specificationKey": "options",
-        "status": "ACTIVE"
-      },
-      {
-        "value": "内嵌め用",
-        "displayLabel": "内嵌め用",
-        "evidenceIds": [
-          "TW-EV-005,011"
-        ],
-        "selector": {},
-        "metadata": {
-          "manualCheck": true
-        },
-        "id": "CANDIDATE:RPL_TW:value:installation_method:0",
-        "productId": "CANDIDATE:RPL_TW",
-        "specificationKey": "installation_method",
         "status": "ACTIVE"
       },
       {
@@ -2232,6 +2277,96 @@
         "productId": "CANDIDATE:RPL_TW",
         "specificationKey": "exterior_cover_type",
         "status": "ACTIVE"
+      },
+      {
+        "value": "STANDARD",
+        "displayLabel": "標準用",
+        "evidenceIds": [
+          "EV-DIMENSIONS-INNER-FIT-V11"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_TW:value:installation_method:0",
+        "productId": "CANDIDATE:RPL_TW",
+        "specificationKey": "installation_method",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "INNER_FIT_INSET",
+        "displayLabel": "内はめ用（既設内付・半外付）",
+        "evidenceIds": [
+          "EV-DIMENSIONS-INNER-FIT-V11"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_TW:value:installation_method:1",
+        "productId": "CANDIDATE:RPL_TW",
+        "specificationKey": "installation_method",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "INNER_FIT_OUTSET",
+        "displayLabel": "内はめ用（既設外付）",
+        "evidenceIds": [
+          "EV-DIMENSIONS-INNER-FIT-V11"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_TW:value:installation_method:2",
+        "productId": "CANDIDATE:RPL_TW",
+        "specificationKey": "installation_method",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "TW-OP-UPPER-BASE",
+        "displayLabel": "既設上枠ベース材（必須・価格要確認）",
+        "evidenceIds": [
+          "EV-DIMENSIONS-INNER-FIT-V11"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_TW:value:inner_fit_required_component:0",
+        "productId": "CANDIDATE:RPL_TW",
+        "specificationKey": "inner_fit_required_component",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "SURVEY",
+        "displayLabel": "採寸寸法から入力",
+        "evidenceIds": [
+          "EV-DIMENSIONS-INNER-FIT-V11"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": false
+        },
+        "id": "CANDIDATE:RPL_TW:value:dimension_basis:0",
+        "productId": "CANDIDATE:RPL_TW",
+        "specificationKey": "dimension_basis",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "FINISHED",
+        "displayLabel": "仕上がり寸法から入力",
+        "evidenceIds": [
+          "EV-DIMENSIONS-INNER-FIT-V11"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": false
+        },
+        "id": "CANDIDATE:RPL_TW:value:dimension_basis:1",
+        "productId": "CANDIDATE:RPL_TW",
+        "specificationKey": "dimension_basis",
+        "status": "ACTIVE"
       }
     ],
     "requiredFieldRules": [
@@ -2287,6 +2422,49 @@
         "selector": {}
       },
       {
+        "id": "CANDIDATE:RPL_TW:required:exterior_cover_type",
+        "productId": "CANDIDATE:RPL_TW",
+        "specificationKey": "exterior_cover_type",
+        "required": true,
+        "selector": {}
+      },
+      {
+        "id": "CANDIDATE:RPL_TW:required:installation_method",
+        "productId": "CANDIDATE:RPL_TW",
+        "specificationKey": "installation_method",
+        "required": true,
+        "selector": {
+          "window_type": {
+            "$exists": true
+          }
+        }
+      },
+      {
+        "id": "CANDIDATE:RPL_TW:required:dimension_basis",
+        "productId": "CANDIDATE:RPL_TW",
+        "specificationKey": "dimension_basis",
+        "required": true,
+        "selector": {}
+      },
+      {
+        "id": "CANDIDATE:RPL_TW:required:survey_width",
+        "productId": "CANDIDATE:RPL_TW",
+        "specificationKey": "survey_width",
+        "required": true,
+        "selector": {
+          "size_mode": "CUSTOM"
+        }
+      },
+      {
+        "id": "CANDIDATE:RPL_TW:required:survey_height",
+        "productId": "CANDIDATE:RPL_TW",
+        "specificationKey": "survey_height",
+        "required": true,
+        "selector": {
+          "size_mode": "CUSTOM"
+        }
+      },
+      {
         "id": "CANDIDATE:RPL_TW:required:custom_width",
         "productId": "CANDIDATE:RPL_TW",
         "specificationKey": "custom_width",
@@ -2303,13 +2481,6 @@
         "selector": {
           "size_mode": "CUSTOM"
         }
-      },
-      {
-        "id": "CANDIDATE:RPL_TW:required:exterior_cover_type",
-        "productId": "CANDIDATE:RPL_TW",
-        "specificationKey": "exterior_cover_type",
-        "required": true,
-        "selector": {}
       }
     ],
     "ruleSets": [
@@ -2911,6 +3082,85 @@
           }
         ],
         "productId": "CANDIDATE:RPL_TW"
+      },
+      {
+        "id": "CANDIDATE:RPL_TW:ruleSets:numeric-input-pairs-v11",
+        "type": "NUMERIC_INPUT_PAIRS",
+        "status": "ACTIVE",
+        "payload": [
+          {
+            "basisField": "dimension_basis",
+            "measuredBasis": "SURVEY",
+            "finishedBasis": "FINISHED",
+            "legacyBasis": "FINISHED",
+            "evaluationAssignments": {
+              "size_mode": "CUSTOM"
+            },
+            "pairs": [
+              {
+                "measuredField": "survey_width",
+                "finishedField": "custom_width",
+                "offset": -10,
+                "message": "公式換算：仕上がり寸法 = 採寸寸法 − 10mm。"
+              },
+              {
+                "measuredField": "survey_height",
+                "finishedField": "custom_height",
+                "offset": -10,
+                "message": "公式換算：仕上がり寸法 = 採寸寸法 − 10mm。"
+              }
+            ]
+          }
+        ],
+        "evidenceIds": [
+          "EV-DIMENSIONS-INNER-FIT-V11"
+        ],
+        "productId": "CANDIDATE:RPL_TW"
+      },
+      {
+        "id": "CANDIDATE:RPL_TW:ruleSets:installation-component-links-v11",
+        "type": "SELECTION_LINKS",
+        "status": "ACTIVE",
+        "payload": [
+          {
+            "targetField": "inner_fit_required_component",
+            "parents": [
+              "installation_method"
+            ],
+            "applicability": {
+              "window_type": {
+                "$exists": true
+              },
+              "installation_method": {
+                "$in": [
+                  "INNER_FIT_INSET",
+                  "INNER_FIT_OUTSET"
+                ]
+              }
+            },
+            "cases": [
+              {
+                "when": {
+                  "installation_method": "INNER_FIT_INSET"
+                },
+                "value": "TW-OP-UPPER-BASE"
+              },
+              {
+                "when": {
+                  "installation_method": "INNER_FIT_OUTSET"
+                },
+                "value": "TW-OP-UPPER-BASE"
+              }
+            ],
+            "resolvedMessage": "内はめ用のため必要です。数量・価格は積算で確認してください。",
+            "pendingMessage": "内はめ仕様を選択してください。",
+            "unavailableMessage": "必要な内はめ部材の対応を確認してください。"
+          }
+        ],
+        "evidenceIds": [
+          "EV-DIMENSIONS-INNER-FIT-V11"
+        ],
+        "productId": "CANDIDATE:RPL_TW"
       }
     ],
     "dependencies": [
@@ -3186,6 +3436,20 @@
           }
         },
         "message": "化粧カバーの納まり・適合は現調で確認してください。",
+        "productId": "CANDIDATE:RPL_TW"
+      },
+      {
+        "id": "CANDIDATE:RPL_TW:dependencies:installation-confirmation-v11",
+        "mode": "MANUAL_CHECK",
+        "when": {
+          "installation_method": {
+            "$in": [
+              "INNER_FIT_INSET",
+              "INNER_FIT_OUTSET"
+            ]
+          }
+        },
+        "message": "内はめ用の製作範囲・既設枠への取付可否は現調・積算で確認してください。",
         "productId": "CANDIDATE:RPL_TW"
       }
     ],
@@ -3523,6 +3787,16 @@
           ]
         },
         "productId": "CANDIDATE:RPL_TW"
+      },
+      {
+        "id": "CANDIDATE:RPL_TW:evidence:EV-DIMENSIONS-INNER-FIT-V11",
+        "source_id": "EV-DIMENSIONS-INNER-FIT-V11",
+        "source_type": "ADOPTED_OFFICIAL_SOURCE_REVIEW",
+        "document": "SN1200",
+        "sha256": "b837ce209c8b55b2b66b412a4e3c2694a78fd5de823efc7b2b960688a5668098",
+        "locator": "PDF252/254 dimensions, 212/231/233/247/249/251 installation, 255/256 attachments",
+        "status": "REVIEWED_CANDIDATE_BINDING",
+        "productId": "CANDIDATE:RPL_TW"
       }
     ]
   },
@@ -3694,6 +3968,13 @@
       "assign": {
         "interior_cover_type": "TW-OP-ANGLE-TER"
       }
+    },
+    {
+      "source": "installation_method",
+      "value": "内嵌め用",
+      "clearSource": true,
+      "assign": {},
+      "reason": "Legacy value does not specify existing mount. Require explicit choice; never guess INSET/OUTSET."
     }
   ],
   "formal_adoption": false,

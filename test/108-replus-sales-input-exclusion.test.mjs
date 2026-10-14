@@ -27,9 +27,9 @@ test('manufacturer tables, numeric boundaries, dependencies and color rules surv
  const hash=x=>createHash('sha256').update(JSON.stringify(canonical(x))).digest('hex');
  for(const entry of index.products){
   const name=entry.id.split(':')[1];const current=JSON.parse(readFileSync(root+'/candidates/'+name+'.json'));
-  for(const [key,digest] of Object.entries(proof[name].tables))assert.equal(hash(current.tables[key]),digest);
+  for(const [key,digest] of Object.entries(proof[name].tables)){const table=structuredClone(current.tables[key]);if(key==='90_Evidence')table.values=table.values.slice(0,proof[name].evidence_row_count);assert.equal(hash(table),digest);}
   const doc=JSON.parse(readFileSync(root+'/'+entry.path));
-  assert.equal(hash(doc.numeric_constraints),proof[name].numeric);assert.equal(hash(doc.product_module.ruleSets),proof[name].rules);
-  assert.equal(hash(doc.product_module.dependencies.filter(d=>!d.id.endsWith('external-cover-site-confirmation-v10'))),proof[name].dependencies);
+  assert.equal(hash(doc.numeric_constraints),proof[name].numeric);assert.equal(hash(doc.product_module.ruleSets.filter(d=>!d.id.endsWith('-v11'))),proof[name].rules);
+  assert.equal(hash(doc.product_module.dependencies.filter(d=>!d.id.endsWith('external-cover-site-confirmation-v10')&&!d.id.endsWith('-v11'))),proof[name].dependencies);
  }
 });

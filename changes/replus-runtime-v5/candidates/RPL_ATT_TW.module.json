@@ -1,10 +1,10 @@
 {
   "schema": "PRODUCT_MODULE_CANDIDATE_V1",
-  "candidate_revision": "REPLUS_SALES_FLOW_V10_20261014",
+  "candidate_revision": "REPLUS_DIMENSIONS_INNER_FIT_V11_20261014",
   "baseline": {
     "path": "candidates/RPL_ATT_TW.json",
     "component_id": "RPL_ATT_TW",
-    "sha256": "b1e05786d8aa76072f62fb5fbc13f9d7da1bf49aa68bb1dd7af9d32fd87d64cf",
+    "sha256": "fab59fa9276fa899df9a16793be7f33c84a91037f112bc7e2aa1af9cef224587",
     "baseline_sha256": "7f93dfc7874ad874a72096be5839ced3e8269c6d9abdc1b1cb1e804f710059f1",
     "baseline_component_version": "v1.0"
   },
@@ -181,6 +181,74 @@
         ],
         "selector": {},
         "id": "CANDIDATE:RPL_ATT_TW:field:exterior_cover_type",
+        "productId": "CANDIDATE:RPL_ATT_TW",
+        "status": "ACTIVE"
+      },
+      {
+        "key": "installation_method",
+        "displayLabel": "内はめ仕様",
+        "dataType": "ENUM",
+        "displayOrder": 900,
+        "autoSelectSingle": false,
+        "parentFields": [
+          "referenced_window_id"
+        ],
+        "selector": {
+          "referenced_window_id": {
+            "$exists": true
+          }
+        },
+        "id": "CANDIDATE:RPL_ATT_TW:field:installation_method",
+        "productId": "CANDIDATE:RPL_ATT_TW",
+        "status": "ACTIVE"
+      },
+      {
+        "key": "attachment_frame_spec",
+        "displayLabel": "アタッチ枠仕様",
+        "dataType": "ENUM",
+        "displayOrder": 900,
+        "autoSelectSingle": false,
+        "parentFields": [
+          "installation_method"
+        ],
+        "selector": {
+          "referenced_window_id": {
+            "$exists": true
+          }
+        },
+        "id": "CANDIDATE:RPL_ATT_TW:field:attachment_frame_spec",
+        "productId": "CANDIDATE:RPL_ATT_TW",
+        "status": "ACTIVE"
+      },
+      {
+        "key": "attachment_finished_w",
+        "displayLabel": "アタッチ枠仕上がり幅 WD（mm）",
+        "dataType": "NUMBER",
+        "displayOrder": 900,
+        "autoSelectSingle": false,
+        "parentFields": [
+          "survey_w"
+        ],
+        "selector": {},
+        "selectionMode": "DERIVED",
+        "userSelectable": false,
+        "id": "CANDIDATE:RPL_ATT_TW:field:attachment_finished_w",
+        "productId": "CANDIDATE:RPL_ATT_TW",
+        "status": "ACTIVE"
+      },
+      {
+        "key": "attachment_finished_h",
+        "displayLabel": "アタッチ枠仕上がり高さ HD（mm）",
+        "dataType": "NUMBER",
+        "displayOrder": 900,
+        "autoSelectSingle": false,
+        "parentFields": [
+          "survey_h"
+        ],
+        "selector": {},
+        "selectionMode": "DERIVED",
+        "userSelectable": false,
+        "id": "CANDIDATE:RPL_ATT_TW:field:attachment_finished_h",
         "productId": "CANDIDATE:RPL_ATT_TW",
         "status": "ACTIVE"
       }
@@ -1036,6 +1104,81 @@
         "productId": "CANDIDATE:RPL_ATT_TW",
         "specificationKey": "exterior_cover_type",
         "status": "ACTIVE"
+      },
+      {
+        "value": "STANDARD",
+        "displayLabel": "標準用",
+        "evidenceIds": [
+          "EV-DIMENSIONS-INNER-FIT-V11"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ATT_TW:value:installation_method:0",
+        "productId": "CANDIDATE:RPL_ATT_TW",
+        "specificationKey": "installation_method",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "INNER_FIT_INSET",
+        "displayLabel": "内はめ用（既設内付・半外付）",
+        "evidenceIds": [
+          "EV-DIMENSIONS-INNER-FIT-V11"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ATT_TW:value:installation_method:1",
+        "productId": "CANDIDATE:RPL_ATT_TW",
+        "specificationKey": "installation_method",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "INNER_FIT_OUTSET",
+        "displayLabel": "内はめ用（既設外付）",
+        "evidenceIds": [
+          "EV-DIMENSIONS-INNER-FIT-V11"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ATT_TW:value:installation_method:2",
+        "productId": "CANDIDATE:RPL_ATT_TW",
+        "specificationKey": "installation_method",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "ATT-TW-FRAME-STD",
+        "displayLabel": "標準用アタッチ枠",
+        "evidenceIds": [
+          "EV-DIMENSIONS-INNER-FIT-V11"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": false
+        },
+        "id": "CANDIDATE:RPL_ATT_TW:value:attachment_frame_spec:0",
+        "productId": "CANDIDATE:RPL_ATT_TW",
+        "specificationKey": "attachment_frame_spec",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "ATT-TW-FRAME-INNER-SINGLE",
+        "displayLabel": "既設単体・内はめ用アタッチ枠",
+        "evidenceIds": [
+          "EV-DIMENSIONS-INNER-FIT-V11"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ATT_TW:value:attachment_frame_spec:1",
+        "productId": "CANDIDATE:RPL_ATT_TW",
+        "specificationKey": "attachment_frame_spec",
+        "status": "ACTIVE"
       }
     ],
     "requiredFieldRules": [
@@ -1063,6 +1206,17 @@
         "specificationKey": "exterior_cover_type",
         "required": true,
         "selector": {}
+      },
+      {
+        "id": "CANDIDATE:RPL_ATT_TW:required:installation_method",
+        "productId": "CANDIDATE:RPL_ATT_TW",
+        "specificationKey": "installation_method",
+        "required": true,
+        "selector": {
+          "referenced_window_id": {
+            "$exists": true
+          }
+        }
       }
     ],
     "ruleSets": [
@@ -1338,6 +1492,46 @@
           "APP-POLICY-V9"
         ],
         "productId": "CANDIDATE:RPL_ATT_TW"
+      },
+      {
+        "id": "CANDIDATE:RPL_ATT_TW:ruleSets:installation-component-links-v11",
+        "type": "SELECTION_LINKS",
+        "status": "ACTIVE",
+        "payload": [
+          {
+            "targetField": "attachment_frame_spec",
+            "parents": [
+              "installation_method"
+            ],
+            "cases": [
+              {
+                "when": {
+                  "installation_method": "STANDARD"
+                },
+                "value": "ATT-TW-FRAME-STD"
+              },
+              {
+                "when": {
+                  "installation_method": "INNER_FIT_INSET"
+                },
+                "value": "ATT-TW-FRAME-INNER-SINGLE"
+              },
+              {
+                "when": {
+                  "installation_method": "INNER_FIT_OUTSET"
+                },
+                "value": "ATT-TW-FRAME-INNER-SINGLE"
+              }
+            ],
+            "resolvedMessage": "施工仕様に連動しています。",
+            "pendingMessage": "内はめ仕様を選択してください。",
+            "unavailableMessage": "アタッチ枠の対応を確認してください。"
+          }
+        ],
+        "evidenceIds": [
+          "EV-DIMENSIONS-INNER-FIT-V11"
+        ],
+        "productId": "CANDIDATE:RPL_ATT_TW"
       }
     ],
     "dependencies": [
@@ -1357,6 +1551,20 @@
           }
         },
         "message": "化粧カバーの納まり・適合は現調で確認してください。",
+        "productId": "CANDIDATE:RPL_ATT_TW"
+      },
+      {
+        "id": "CANDIDATE:RPL_ATT_TW:dependencies:installation-confirmation-v11",
+        "mode": "MANUAL_CHECK",
+        "when": {
+          "installation_method": {
+            "$in": [
+              "INNER_FIT_INSET",
+              "INNER_FIT_OUTSET"
+            ]
+          }
+        },
+        "message": "内はめ用の製作範囲・既設枠への取付可否は現調・積算で確認してください。",
         "productId": "CANDIDATE:RPL_ATT_TW"
       }
     ],
@@ -1709,6 +1917,16 @@
             "size"
           ]
         },
+        "productId": "CANDIDATE:RPL_ATT_TW"
+      },
+      {
+        "id": "CANDIDATE:RPL_ATT_TW:evidence:EV-DIMENSIONS-INNER-FIT-V11",
+        "source_id": "EV-DIMENSIONS-INNER-FIT-V11",
+        "source_type": "ADOPTED_OFFICIAL_SOURCE_REVIEW",
+        "document": "SN1200",
+        "sha256": "b837ce209c8b55b2b66b412a4e3c2694a78fd5de823efc7b2b960688a5668098",
+        "locator": "PDF252/254 dimensions, 212/231/233/247/249/251 installation, 255/256 attachments",
+        "status": "REVIEWED_CANDIDATE_BINDING",
         "productId": "CANDIDATE:RPL_ATT_TW"
       }
     ]
@@ -2546,6 +2764,13 @@
         ]
       },
       "mergeArrays": true
+    },
+    {
+      "source": "installation_method",
+      "value": "内嵌め用",
+      "clearSource": true,
+      "assign": {},
+      "reason": "Legacy value does not specify existing mount. Require explicit choice; never guess INSET/OUTSET."
     }
   ],
   "formal_adoption": false,

@@ -1,6 +1,6 @@
 {
   "schema": "NATIVE_TABLE_PROJECTION_V1",
-  "candidate_revision": "REPLUS_SALES_FLOW_V10_20261014",
+  "candidate_revision": "REPLUS_DIMENSIONS_INNER_FIT_V11_20261014",
   "product": {
     "id": "CANDIDATE:RPL_BATH",
     "manufacturer": "LIXIL",
@@ -13,7 +13,7 @@
   "source": {
     "path": "candidates/RPL_BATH.json",
     "component_id": "RPL_BATH",
-    "sha256": "4aaa15e47661ed86fc331d2ac59af4bf4dd25285dea48c1516703acfc03003d2",
+    "sha256": "414c874b96f2dbeea22823e8a0a724025af9a45fcc3dc4e4eadcdd2650bd91fd",
     "baseline_sha256": "e96a29afcfe83d3707823c1b01b8b0b2bf227ea0b9d9971bf2d48e04e2927f00",
     "baseline_component_version": "v1.0"
   },
@@ -433,39 +433,10 @@
         }
       ],
       "required": true,
-      "autoSelectSingle": false,
+      "autoSelectSingle": true,
       "parentFields": [],
-      "selector": {}
-    },
-    {
-      "key": "custom_width",
-      "displayLabel": "製品仕上がり幅 W（mm）",
-      "dataType": "NUMBER",
-      "displayOrder": 80,
-      "choices": [],
-      "required": true,
-      "autoSelectSingle": false,
-      "parentFields": [
-        "size_mode"
-      ],
-      "selector": {
-        "size_mode": "CUSTOM"
-      }
-    },
-    {
-      "key": "custom_height",
-      "displayLabel": "製品仕上がり高さ H（mm）",
-      "dataType": "NUMBER",
-      "displayOrder": 90,
-      "choices": [],
-      "required": true,
-      "autoSelectSingle": false,
-      "parentFields": [
-        "size_mode"
-      ],
-      "selector": {
-        "size_mode": "CUSTOM"
-      }
+      "selector": {},
+      "internal": true
     },
     {
       "key": "sash_exterior_color",
@@ -681,17 +652,6 @@
       "dataType": "MULTI_ENUM",
       "displayOrder": 140,
       "choices": [
-        {
-          "value": "BATH-OP-UPPER-BASE",
-          "displayLabel": "既設上枠ベース材",
-          "evidenceIds": [
-            "BATH-EV-005,009"
-          ],
-          "selector": {},
-          "metadata": {
-            "manualCheck": true
-          }
-        },
         {
           "value": "BATH-OP-CASING",
           "displayLabel": "カバー用ケーシング",
@@ -2757,6 +2717,186 @@
         "survey_cover_side"
       ],
       "selector": {}
+    },
+    {
+      "key": "installation_method",
+      "displayLabel": "内はめ仕様",
+      "dataType": "ENUM",
+      "displayOrder": 900,
+      "choices": [
+        {
+          "value": "STANDARD",
+          "displayLabel": "標準用",
+          "evidenceIds": [
+            "EV-DIMENSIONS-INNER-FIT-V11"
+          ],
+          "selector": {},
+          "metadata": {
+            "manualCheck": true
+          }
+        },
+        {
+          "value": "INNER_FIT_INSET",
+          "displayLabel": "内はめ用（既設内付・半外付）",
+          "evidenceIds": [
+            "EV-DIMENSIONS-INNER-FIT-V11"
+          ],
+          "selector": {},
+          "metadata": {
+            "manualCheck": true
+          }
+        },
+        {
+          "value": "INNER_FIT_OUTSET",
+          "displayLabel": "内はめ用（既設外付）",
+          "evidenceIds": [
+            "EV-DIMENSIONS-INNER-FIT-V11"
+          ],
+          "selector": {},
+          "metadata": {
+            "manualCheck": true
+          }
+        }
+      ],
+      "required": true,
+      "autoSelectSingle": false,
+      "parentFields": [
+        "window_type"
+      ],
+      "selector": {
+        "window_type": {
+          "$exists": true
+        }
+      }
+    },
+    {
+      "key": "inner_fit_required_component",
+      "displayLabel": "内はめ用の必須部材",
+      "dataType": "ENUM",
+      "displayOrder": 900,
+      "choices": [
+        {
+          "value": "BATH-OP-UPPER-BASE",
+          "displayLabel": "既設上枠ベース材（必須・価格要確認）",
+          "evidenceIds": [
+            "EV-DIMENSIONS-INNER-FIT-V11"
+          ],
+          "selector": {},
+          "metadata": {
+            "manualCheck": true
+          }
+        }
+      ],
+      "required": false,
+      "autoSelectSingle": false,
+      "parentFields": [
+        "installation_method"
+      ],
+      "selector": {
+        "window_type": {
+          "$exists": true
+        },
+        "installation_method": {
+          "$in": [
+            "INNER_FIT_INSET",
+            "INNER_FIT_OUTSET"
+          ]
+        }
+      }
+    },
+    {
+      "key": "dimension_basis",
+      "displayLabel": "入力する寸法",
+      "dataType": "ENUM",
+      "displayOrder": 900,
+      "choices": [
+        {
+          "value": "SURVEY",
+          "displayLabel": "採寸寸法から入力",
+          "evidenceIds": [
+            "EV-DIMENSIONS-INNER-FIT-V11"
+          ],
+          "selector": {},
+          "metadata": {
+            "manualCheck": false
+          }
+        },
+        {
+          "value": "FINISHED",
+          "displayLabel": "仕上がり寸法から入力",
+          "evidenceIds": [
+            "EV-DIMENSIONS-INNER-FIT-V11"
+          ],
+          "selector": {},
+          "metadata": {
+            "manualCheck": false
+          }
+        }
+      ],
+      "required": true,
+      "autoSelectSingle": false,
+      "parentFields": [],
+      "selector": {}
+    },
+    {
+      "key": "survey_width",
+      "displayLabel": "採寸幅 WS（mm）",
+      "dataType": "NUMBER",
+      "displayOrder": 900,
+      "choices": [],
+      "required": true,
+      "autoSelectSingle": false,
+      "parentFields": [
+        "dimension_basis"
+      ],
+      "selector": {
+        "size_mode": "CUSTOM"
+      }
+    },
+    {
+      "key": "survey_height",
+      "displayLabel": "採寸高さ HS（mm）",
+      "dataType": "NUMBER",
+      "displayOrder": 900,
+      "choices": [],
+      "required": true,
+      "autoSelectSingle": false,
+      "parentFields": [
+        "dimension_basis"
+      ],
+      "selector": {
+        "size_mode": "CUSTOM"
+      }
+    },
+    {
+      "key": "custom_width",
+      "displayLabel": "製品仕上がり幅 WD（mm）",
+      "dataType": "NUMBER",
+      "displayOrder": 900,
+      "choices": [],
+      "required": true,
+      "autoSelectSingle": false,
+      "parentFields": [
+        "dimension_basis"
+      ],
+      "selector": {
+        "size_mode": "CUSTOM"
+      }
+    },
+    {
+      "key": "custom_height",
+      "displayLabel": "製品仕上がり高さ HD（mm）",
+      "dataType": "NUMBER",
+      "displayOrder": 900,
+      "choices": [],
+      "required": true,
+      "autoSelectSingle": false,
+      "parentFields": [
+        "dimension_basis"
+      ],
+      "selector": {
+        "size_mode": "CUSTOM"
+      }
     }
   ],
   "dependencies": [
@@ -2799,6 +2939,19 @@
         }
       },
       "message": "化粧カバーの納まり・適合は現調で確認してください。"
+    },
+    {
+      "id": "installation-confirmation-v11",
+      "mode": "MANUAL_CHECK",
+      "when": {
+        "installation_method": {
+          "$in": [
+            "INNER_FIT_INSET",
+            "INNER_FIT_OUTSET"
+          ]
+        }
+      },
+      "message": "内はめ用の製作範囲・既設枠への取付可否は現調・積算で確認してください。"
     }
   ],
   "ruleSets": [
@@ -4649,6 +4802,83 @@
       "evidenceIds": [
         "APP-POLICY-V9"
       ]
+    },
+    {
+      "id": "numeric-input-pairs-v11",
+      "type": "NUMERIC_INPUT_PAIRS",
+      "status": "ACTIVE",
+      "payload": [
+        {
+          "basisField": "dimension_basis",
+          "measuredBasis": "SURVEY",
+          "finishedBasis": "FINISHED",
+          "legacyBasis": "FINISHED",
+          "evaluationAssignments": {
+            "size_mode": "CUSTOM"
+          },
+          "pairs": [
+            {
+              "measuredField": "survey_width",
+              "finishedField": "custom_width",
+              "offset": -10,
+              "message": "公式換算：仕上がり寸法 = 採寸寸法 − 10mm。"
+            },
+            {
+              "measuredField": "survey_height",
+              "finishedField": "custom_height",
+              "offset": -10,
+              "message": "公式換算：仕上がり寸法 = 採寸寸法 − 10mm。"
+            }
+          ]
+        }
+      ],
+      "evidenceIds": [
+        "EV-DIMENSIONS-INNER-FIT-V11"
+      ]
+    },
+    {
+      "id": "installation-component-links-v11",
+      "type": "SELECTION_LINKS",
+      "status": "ACTIVE",
+      "payload": [
+        {
+          "targetField": "inner_fit_required_component",
+          "parents": [
+            "installation_method"
+          ],
+          "applicability": {
+            "window_type": {
+              "$exists": true
+            },
+            "installation_method": {
+              "$in": [
+                "INNER_FIT_INSET",
+                "INNER_FIT_OUTSET"
+              ]
+            }
+          },
+          "cases": [
+            {
+              "when": {
+                "installation_method": "INNER_FIT_INSET"
+              },
+              "value": "BATH-OP-UPPER-BASE"
+            },
+            {
+              "when": {
+                "installation_method": "INNER_FIT_OUTSET"
+              },
+              "value": "BATH-OP-UPPER-BASE"
+            }
+          ],
+          "resolvedMessage": "内はめ用のため必要です。数量・価格は積算で確認してください。",
+          "pendingMessage": "内はめ仕様を選択してください。",
+          "unavailableMessage": "必要な内はめ部材の対応を確認してください。"
+        }
+      ],
+      "evidenceIds": [
+        "EV-DIMENSIONS-INNER-FIT-V11"
+      ]
     }
   ],
   "evidence": [
@@ -4905,6 +5135,15 @@
           "size"
         ]
       }
+    },
+    {
+      "id": "EV-DIMENSIONS-INNER-FIT-V11",
+      "source_id": "EV-DIMENSIONS-INNER-FIT-V11",
+      "source_type": "ADOPTED_OFFICIAL_SOURCE_REVIEW",
+      "document": "SN1200",
+      "sha256": "b837ce209c8b55b2b66b412a4e3c2694a78fd5de823efc7b2b960688a5668098",
+      "locator": "PDF252/254 dimensions, 212/231/233/247/249/251 installation, 255/256 attachments",
+      "status": "REVIEWED_CANDIDATE_BINDING"
     }
   ],
   "composition": null,
@@ -5001,6 +5240,13 @@
       "assign": {
         "interior_cover_type": "BATH-OP-ANGLE-NOMITER"
       }
+    },
+    {
+      "source": "installation_method",
+      "value": "内嵌め用",
+      "clearSource": true,
+      "assign": {},
+      "reason": "Legacy value does not specify existing mount. Require explicit choice; never guess INSET/OUTSET."
     }
   ]
 }

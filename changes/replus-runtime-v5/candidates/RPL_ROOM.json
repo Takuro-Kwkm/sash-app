@@ -373,6 +373,17 @@
           "2026-10-14",
           "HIGH",
           "既存カバー用ケーシングの選択ID補完。価格/BOM/SetCode未確定"
+        ],
+        [
+          "EV-DIMENSIONS-INNER-FIT-V11",
+          "公式商品カタログ",
+          "リプラス SN1200",
+          "2025-08",
+          "PDF252/254・231/233/247/249/251",
+          "https://drive.google.com/file/d/1wH1nhmsftl6y8Mp7y6twtoXSi6rxqxzT/view",
+          "2026-10-14",
+          "HIGH",
+          "採寸/出来寸の相互換算と標準/内はめの施工仕様を共通Runtimeへ接続"
         ]
       ]
     },
@@ -537,7 +548,7 @@
       ]
     },
     "01_入力フロー": {
-      "address": "A1:E13",
+      "address": "A1:E14",
       "values": [
         [
           "リプラス住宅用・グローバルセレクションフロー"
@@ -555,7 +566,7 @@
           "商品・リプラス仕様",
           "product / specification",
           "リプラス住宅用 → 仕様",
-          "今回承認されたアプリ運用ルール"
+          "アプリ運用ルール"
         ],
         [
           2,
@@ -587,38 +598,45 @@
         ],
         [
           6,
-          "室内側の仕上げ・アングルカバー",
-          "interior_finish",
+          "内はめ仕様",
+          "inner_fit",
           "選択・確認",
-          "本体色に連動"
+          "ガラスの後で選択"
         ],
         [
           7,
-          "室外側の仕上げ・化粧カバー",
-          "exterior_finish",
+          "室内側の仕上げ・アングルカバー",
+          "interior_finish",
           "選択・確認",
-          "本体色に連動"
+          "対応する項目のみ表示"
         ],
         [
           8,
+          "室外側の仕上げ・化粧カバー",
+          "exterior_finish",
+          "選択・確認",
+          "対応する項目のみ表示"
+        ],
+        [
+          9,
           "追加部材・オプション",
           "options",
           "選択・確認",
           "対応する項目のみ表示"
         ],
         [
-          9,
+          10,
           "選択した部材の仕様",
           "part_detail",
           "選択・確認",
           "対応する項目のみ表示"
         ],
         [
-          10,
+          11,
           "製品寸法",
           "size",
           "選択・確認",
-          "採寸後に再評価"
+          "採寸と仕上がりを併記"
         ]
       ]
     },
@@ -4511,28 +4529,44 @@
           "revision"
         ],
         [
-          "色連動",
+          "SELECTION_LINKS",
           "sash_interior_color",
           "color_mode,sash_exterior_color",
           "{\"targetField\": \"sash_interior_color\", \"applicability\": {\"color_mode\": \"SAME\"}, \"parents\": [\"color_mode\", \"sash_exterior_color\"], \"cases\": [{\"when\": {\"sash_exterior_color\": \"T\"}, \"value\": \"M\"}, {\"when\": {\"sash_exterior_color\": \"G\"}, \"value\": \"G\"}, {\"when\": {\"sash_exterior_color\": \"K\"}, \"value\": \"K\"}, {\"when\": {\"sash_exterior_color\": \"D\"}, \"value\": \"D\"}, {\"when\": {\"sash_exterior_color\": \"W\"}, \"value\": \"W\"}], \"resolvedMessage\": \"外観色に連動しています。\", \"pendingMessage\": \"本体外観色を選択してください。\", \"unavailableMessage\": \"本体内観色の対応を確認してください。\"}",
           "USER_APPLICATION_POLICY",
-          "REPLUS_SALES_FLOW_V10_20261014"
+          "REPLUS_DIMENSIONS_INNER_FIT_V11_20261014"
         ],
         [
-          "色連動",
+          "SELECTION_LINKS",
           "exterior_cover_color",
           "sash_exterior_color",
           "{\"targetField\": \"exterior_cover_color\", \"parents\": [\"sash_exterior_color\"], \"cases\": [{\"when\": {\"sash_exterior_color\": \"T\"}, \"value\": \"T\"}, {\"when\": {\"sash_exterior_color\": \"G\"}, \"value\": \"G\"}, {\"when\": {\"sash_exterior_color\": \"K\"}, \"value\": \"K\"}, {\"when\": {\"sash_exterior_color\": \"D\"}, \"value\": \"D\"}, {\"when\": {\"sash_exterior_color\": \"W\"}, \"value\": \"W\"}], \"resolvedMessage\": \"本体外観色に連動しています。\", \"pendingMessage\": \"サッシ本体の色を選択してください。\", \"unavailableMessage\": \"本体色に対応するカバー部材の確認が必要です。\"}",
           "USER_APPLICATION_POLICY",
-          "REPLUS_SALES_FLOW_V10_20261014"
+          "REPLUS_DIMENSIONS_INNER_FIT_V11_20261014"
         ],
         [
-          "色連動",
+          "SELECTION_LINKS",
           "interior_cover_color",
           "sash_interior_color",
           "{\"targetField\": \"interior_cover_color\", \"parents\": [\"sash_interior_color\"], \"cases\": [{\"when\": {\"sash_interior_color\": \"M\"}, \"value\": \"M\"}, {\"when\": {\"sash_interior_color\": \"G\"}, \"value\": \"G\"}, {\"when\": {\"sash_interior_color\": \"K\"}, \"value\": \"K\"}, {\"when\": {\"sash_interior_color\": \"D\"}, \"value\": \"D\"}, {\"when\": {\"sash_interior_color\": \"W\"}, \"value\": \"W\"}, {\"when\": {\"sash_interior_color\": \"C\"}, \"value\": \"C\"}, {\"when\": {\"sash_interior_color\": \"B\"}, \"value\": \"B\"}, {\"when\": {\"sash_interior_color\": \"P\"}, \"value\": \"P\"}, {\"when\": {\"sash_interior_color\": \"F\"}, \"value\": \"F\"}], \"resolvedMessage\": \"本体内観色に連動しています。\", \"pendingMessage\": \"サッシ本体の色を選択してください。\", \"unavailableMessage\": \"本体色に対応するカバー部材の確認が必要です。\"}",
           "USER_APPLICATION_POLICY",
-          "REPLUS_SALES_FLOW_V10_20261014"
+          "REPLUS_DIMENSIONS_INNER_FIT_V11_20261014"
+        ],
+        [
+          "NUMERIC_INPUT_PAIRS",
+          "dimension_basis",
+          "",
+          "{\"basisField\": \"dimension_basis\", \"measuredBasis\": \"SURVEY\", \"finishedBasis\": \"FINISHED\", \"legacyBasis\": \"FINISHED\", \"evaluationAssignments\": {\"size_mode\": \"CUSTOM\"}, \"pairs\": [{\"measuredField\": \"survey_width\", \"finishedField\": \"custom_width\", \"offset\": -10, \"message\": \"公式換算：仕上がり寸法 = 採寸寸法 − 10mm。\"}, {\"measuredField\": \"survey_height\", \"finishedField\": \"custom_height\", \"offset\": -10, \"message\": \"公式換算：仕上がり寸法 = 採寸寸法 − 10mm。\"}]}",
+          "OFFICIAL_SOURCE_REVIEW",
+          "REPLUS_DIMENSIONS_INNER_FIT_V11_20261014"
+        ],
+        [
+          "SELECTION_LINKS",
+          "inner_fit_required_component",
+          "installation_method",
+          "{\"targetField\": \"inner_fit_required_component\", \"parents\": [\"installation_method\"], \"applicability\": {\"window_type\": {\"$exists\": true}, \"installation_method\": {\"$in\": [\"INNER_FIT_INSET\", \"INNER_FIT_OUTSET\"]}}, \"cases\": [{\"when\": {\"installation_method\": \"INNER_FIT_INSET\"}, \"value\": \"ROOM-UPPER-BASE\"}, {\"when\": {\"installation_method\": \"INNER_FIT_OUTSET\"}, \"value\": \"ROOM-UPPER-BASE\"}], \"resolvedMessage\": \"内はめ用のため必要です。数量・価格は積算で確認してください。\", \"pendingMessage\": \"内はめ仕様を選択してください。\", \"unavailableMessage\": \"必要な内はめ部材の対応を確認してください。\"}",
+          "OFFICIAL_SOURCE_REVIEW",
+          "REPLUS_DIMENSIONS_INNER_FIT_V11_20261014"
         ],
         [
           "フロー",
@@ -4540,7 +4574,7 @@
           "",
           "{\"label\": \"窓種\", \"group\": \"opening\", \"internal\": false}",
           "UI_PRESENTATION",
-          "REPLUS_SALES_FLOW_V10_20261014"
+          "REPLUS_DIMENSIONS_INNER_FIT_V11_20261014"
         ],
         [
           "フロー",
@@ -4548,7 +4582,7 @@
           "window_type",
           "{\"label\": \"枠仕様\", \"group\": \"opening\", \"internal\": false}",
           "UI_PRESENTATION",
-          "REPLUS_SALES_FLOW_V10_20261014"
+          "REPLUS_DIMENSIONS_INNER_FIT_V11_20261014"
         ],
         [
           "フロー",
@@ -4556,7 +4590,7 @@
           "window_type",
           "{\"label\": \"建数\", \"group\": \"opening\", \"internal\": false}",
           "UI_PRESENTATION",
-          "REPLUS_SALES_FLOW_V10_20261014"
+          "REPLUS_DIMENSIONS_INNER_FIT_V11_20261014"
         ],
         [
           "フロー",
@@ -4564,7 +4598,7 @@
           "window_type,custom_width,custom_height",
           "{\"label\": \"マド／テラス\", \"group\": \"opening\", \"internal\": true}",
           "UI_PRESENTATION",
-          "REPLUS_SALES_FLOW_V10_20261014"
+          "REPLUS_DIMENSIONS_INNER_FIT_V11_20261014"
         ],
         [
           "フロー",
@@ -4572,7 +4606,7 @@
           "spec_height_category,spec_panel_configuration,window_type",
           "{\"label\": \"障子仕様\", \"group\": \"opening\", \"internal\": false}",
           "UI_PRESENTATION",
-          "REPLUS_SALES_FLOW_V10_20261014"
+          "REPLUS_DIMENSIONS_INNER_FIT_V11_20261014"
         ],
         [
           "フロー",
@@ -4580,7 +4614,7 @@
           "window_type",
           "{\"label\": \"開口形式\", \"group\": \"opening\", \"internal\": false}",
           "UI_PRESENTATION",
-          "REPLUS_SALES_FLOW_V10_20261014"
+          "REPLUS_DIMENSIONS_INNER_FIT_V11_20261014"
         ],
         [
           "フロー",
@@ -4588,31 +4622,15 @@
           "spec_height_category,window_type",
           "{\"label\": \"網戸\", \"group\": \"screen\", \"internal\": false}",
           "UI_PRESENTATION",
-          "REPLUS_SALES_FLOW_V10_20261014"
+          "REPLUS_DIMENSIONS_INNER_FIT_V11_20261014"
         ],
         [
           "フロー",
           "size_mode",
           "",
-          "{\"label\": \"寸法の指定方法\", \"group\": \"size\", \"internal\": false}",
+          "{\"label\": \"寸法の指定方法\", \"group\": \"size\", \"internal\": true}",
           "UI_PRESENTATION",
-          "REPLUS_SALES_FLOW_V10_20261014"
-        ],
-        [
-          "フロー",
-          "custom_width",
-          "size_mode",
-          "{\"label\": \"製品仕上がり幅 W（mm）\", \"group\": \"size\", \"internal\": false}",
-          "UI_PRESENTATION",
-          "REPLUS_SALES_FLOW_V10_20261014"
-        ],
-        [
-          "フロー",
-          "custom_height",
-          "size_mode",
-          "{\"label\": \"製品仕上がり高さ H（mm）\", \"group\": \"size\", \"internal\": false}",
-          "UI_PRESENTATION",
-          "REPLUS_SALES_FLOW_V10_20261014"
+          "REPLUS_DIMENSIONS_INNER_FIT_V11_20261014"
         ],
         [
           "フロー",
@@ -4620,7 +4638,7 @@
           "",
           "{\"label\": \"本体外観色\", \"group\": \"finish\", \"internal\": false}",
           "UI_PRESENTATION",
-          "REPLUS_SALES_FLOW_V10_20261014"
+          "REPLUS_DIMENSIONS_INNER_FIT_V11_20261014"
         ],
         [
           "フロー",
@@ -4628,7 +4646,7 @@
           "color_mode,sash_exterior_color",
           "{\"label\": \"本体内観色\", \"group\": \"finish\", \"internal\": false}",
           "UI_PRESENTATION",
-          "REPLUS_SALES_FLOW_V10_20261014"
+          "REPLUS_DIMENSIONS_INNER_FIT_V11_20261014"
         ],
         [
           "フロー",
@@ -4636,7 +4654,7 @@
           "sash_exterior_color",
           "{\"label\": \"化粧カバー色（外観色に連動）\", \"group\": \"exterior_finish\", \"internal\": false}",
           "UI_PRESENTATION",
-          "REPLUS_SALES_FLOW_V10_20261014"
+          "REPLUS_DIMENSIONS_INNER_FIT_V11_20261014"
         ],
         [
           "フロー",
@@ -4644,7 +4662,7 @@
           "sash_interior_color",
           "{\"label\": \"室内カバー色（内観色に連動）\", \"group\": \"interior_finish\", \"internal\": false}",
           "UI_PRESENTATION",
-          "REPLUS_SALES_FLOW_V10_20261014"
+          "REPLUS_DIMENSIONS_INNER_FIT_V11_20261014"
         ],
         [
           "フロー",
@@ -4652,7 +4670,7 @@
           "options",
           "{\"label\": \"木製ケーシング色\", \"group\": \"part_detail\", \"internal\": false}",
           "UI_PRESENTATION",
-          "REPLUS_SALES_FLOW_V10_20261014"
+          "REPLUS_DIMENSIONS_INNER_FIT_V11_20261014"
         ],
         [
           "フロー",
@@ -4660,39 +4678,7 @@
           "window_type",
           "{\"label\": \"追加部材・オプション\", \"group\": \"options\", \"internal\": false}",
           "UI_PRESENTATION",
-          "REPLUS_SALES_FLOW_V10_20261014"
-        ],
-        [
-          "フロー",
-          "usage_humidity",
-          "",
-          "{\"label\": \"使用環境\", \"group\": \"context\", \"internal\": false, \"salesInput\": false, \"required\": false, \"externalSiteCheck\": true}",
-          "USER_APPLICATION_POLICY",
-          "REPLUS_SALES_FLOW_V10_20261014"
-        ],
-        [
-          "フロー",
-          "building_structure",
-          "",
-          "{\"label\": \"建物構造\", \"group\": \"context\", \"internal\": false, \"salesInput\": false, \"required\": false, \"externalSiteCheck\": true}",
-          "USER_APPLICATION_POLICY",
-          "REPLUS_SALES_FLOW_V10_20261014"
-        ],
-        [
-          "フロー",
-          "installation_room",
-          "",
-          "{\"label\": \"設置場所\", \"group\": \"context\", \"internal\": false, \"salesInput\": false, \"required\": false, \"externalSiteCheck\": true}",
-          "USER_APPLICATION_POLICY",
-          "REPLUS_SALES_FLOW_V10_20261014"
-        ],
-        [
-          "フロー",
-          "work_space",
-          "",
-          "{\"label\": \"新設枠の振出し条件\", \"group\": \"context\", \"internal\": false, \"salesInput\": false, \"required\": false, \"externalSiteCheck\": true}",
-          "USER_APPLICATION_POLICY",
-          "REPLUS_SALES_FLOW_V10_20261014"
+          "REPLUS_DIMENSIONS_INNER_FIT_V11_20261014"
         ],
         [
           "フロー",
@@ -4700,7 +4686,7 @@
           "window_type,frame_type",
           "{\"label\": \"ガラス種類\", \"group\": \"glazing\", \"internal\": false}",
           "UI_PRESENTATION",
-          "REPLUS_SALES_FLOW_V10_20261014"
+          "REPLUS_DIMENSIONS_INNER_FIT_V11_20261014"
         ],
         [
           "フロー",
@@ -4708,7 +4694,7 @@
           "glass_category,window_type,frame_type",
           "{\"label\": \"ガラス詳細・Low-E仕様\", \"group\": \"glazing\", \"internal\": false}",
           "UI_PRESENTATION",
-          "REPLUS_SALES_FLOW_V10_20261014"
+          "REPLUS_DIMENSIONS_INNER_FIT_V11_20261014"
         ],
         [
           "フロー",
@@ -4716,7 +4702,7 @@
           "frame_type,glass_category",
           "{\"label\": \"中空層\", \"group\": \"glazing\", \"internal\": false}",
           "UI_PRESENTATION",
-          "REPLUS_SALES_FLOW_V10_20261014"
+          "REPLUS_DIMENSIONS_INNER_FIT_V11_20261014"
         ],
         [
           "フロー",
@@ -4724,7 +4710,7 @@
           "frame_type,glass_category,glass_gas",
           "{\"label\": \"スペーサー\", \"group\": \"glazing\", \"internal\": false}",
           "UI_PRESENTATION",
-          "REPLUS_SALES_FLOW_V10_20261014"
+          "REPLUS_DIMENSIONS_INNER_FIT_V11_20261014"
         ],
         [
           "フロー",
@@ -4732,7 +4718,7 @@
           "glass_category,glass,window_type",
           "{\"label\": \"ガラス追加機能\", \"group\": \"glazing\", \"internal\": false}",
           "UI_PRESENTATION",
-          "REPLUS_SALES_FLOW_V10_20261014"
+          "REPLUS_DIMENSIONS_INNER_FIT_V11_20261014"
         ],
         [
           "フロー",
@@ -4740,7 +4726,7 @@
           "glass,glass_function",
           "{\"label\": \"ガラス仕上げ・目隠し\", \"group\": \"glazing\", \"internal\": false}",
           "UI_PRESENTATION",
-          "REPLUS_SALES_FLOW_V10_20261014"
+          "REPLUS_DIMENSIONS_INNER_FIT_V11_20261014"
         ],
         [
           "フロー",
@@ -4748,7 +4734,7 @@
           "",
           "{\"label\": \"本体の色設定\", \"group\": \"finish\", \"internal\": false}",
           "UI_PRESENTATION",
-          "REPLUS_SALES_FLOW_V10_20261014"
+          "REPLUS_DIMENSIONS_INNER_FIT_V11_20261014"
         ],
         [
           "フロー",
@@ -4756,7 +4742,7 @@
           "",
           "{\"label\": \"室内側の仕上げ仕様\", \"group\": \"interior_finish\", \"internal\": false}",
           "UI_PRESENTATION",
-          "REPLUS_SALES_FLOW_V10_20261014"
+          "REPLUS_DIMENSIONS_INNER_FIT_V11_20261014"
         ],
         [
           "フロー",
@@ -4764,36 +4750,68 @@
           "frame_type,survey_cover_top,survey_cover_bottom,survey_cover_side",
           "{\"label\": \"化粧カバーの大きさ・組合せ\", \"group\": \"exterior_finish\", \"internal\": false}",
           "UI_PRESENTATION",
-          "REPLUS_SALES_FLOW_V10_20261014"
+          "REPLUS_DIMENSIONS_INNER_FIT_V11_20261014"
         ],
         [
           "フロー",
-          "survey_cover_top",
-          "",
-          "{\"label\": \"既設上枠の見付（mm）\", \"group\": \"survey\", \"internal\": false, \"salesInput\": false, \"required\": false, \"externalSiteCheck\": true}",
-          "USER_APPLICATION_POLICY",
-          "REPLUS_SALES_FLOW_V10_20261014"
+          "installation_method",
+          "window_type",
+          "{\"label\": \"内はめ仕様\", \"group\": \"inner_fit\", \"internal\": false}",
+          "UI_PRESENTATION",
+          "REPLUS_DIMENSIONS_INNER_FIT_V11_20261014"
         ],
         [
           "フロー",
-          "survey_cover_bottom",
-          "",
-          "{\"label\": \"既設下枠の見付（mm）\", \"group\": \"survey\", \"internal\": false, \"salesInput\": false, \"required\": false, \"externalSiteCheck\": true}",
-          "USER_APPLICATION_POLICY",
-          "REPLUS_SALES_FLOW_V10_20261014"
+          "inner_fit_required_component",
+          "installation_method",
+          "{\"label\": \"内はめ用の必須部材\", \"group\": \"inner_fit\", \"internal\": false}",
+          "UI_PRESENTATION",
+          "REPLUS_DIMENSIONS_INNER_FIT_V11_20261014"
         ],
         [
           "フロー",
-          "survey_cover_side",
+          "dimension_basis",
           "",
-          "{\"label\": \"既設縦枠の見付（mm）\", \"group\": \"survey\", \"internal\": false, \"salesInput\": false, \"required\": false, \"externalSiteCheck\": true}",
-          "USER_APPLICATION_POLICY",
-          "REPLUS_SALES_FLOW_V10_20261014"
+          "{\"label\": \"入力する寸法\", \"group\": \"size\", \"internal\": false}",
+          "UI_PRESENTATION",
+          "REPLUS_DIMENSIONS_INNER_FIT_V11_20261014"
+        ],
+        [
+          "フロー",
+          "survey_width",
+          "dimension_basis",
+          "{\"label\": \"採寸幅 WS（mm）\", \"group\": \"size\", \"internal\": false}",
+          "UI_PRESENTATION",
+          "REPLUS_DIMENSIONS_INNER_FIT_V11_20261014"
+        ],
+        [
+          "フロー",
+          "survey_height",
+          "dimension_basis",
+          "{\"label\": \"採寸高さ HS（mm）\", \"group\": \"size\", \"internal\": false}",
+          "UI_PRESENTATION",
+          "REPLUS_DIMENSIONS_INNER_FIT_V11_20261014"
+        ],
+        [
+          "フロー",
+          "custom_width",
+          "dimension_basis",
+          "{\"label\": \"製品仕上がり幅 WD（mm）\", \"group\": \"size\", \"internal\": false}",
+          "UI_PRESENTATION",
+          "REPLUS_DIMENSIONS_INNER_FIT_V11_20261014"
+        ],
+        [
+          "フロー",
+          "custom_height",
+          "dimension_basis",
+          "{\"label\": \"製品仕上がり高さ HD（mm）\", \"group\": \"size\", \"internal\": false}",
+          "UI_PRESENTATION",
+          "REPLUS_DIMENSIONS_INNER_FIT_V11_20261014"
         ]
       ]
     }
   },
   "generated_at": "2026-09-01",
   "spec_version": "PRODUCT_MASTER_PACKAGE_STORAGE_GATE_v2.0",
-  "candidate_revision": "REPLUS_SALES_FLOW_V10_20261014"
+  "candidate_revision": "REPLUS_DIMENSIONS_INNER_FIT_V11_20261014"
 }

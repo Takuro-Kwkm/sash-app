@@ -31,7 +31,8 @@
     },
     "numeric": "718f1668987689f0586bf903c527e7c1b6cd4cfcd804d2ed77fcc7efcd066755",
     "rules": "d9a59e2045defca78a10976ab9f82887867f83dcf7565584eb267ee76d1808fc",
-    "dependencies": "c96d6356c5d41b21a01f400dbd696e973bcfeb7101b3a358df45aa9685094323"
+    "dependencies": "c96d6356c5d41b21a01f400dbd696e973bcfeb7101b3a358df45aa9685094323",
+    "evidence_row_count": 32
   },
   "RPL_TW": {
     "tables": {
@@ -66,7 +67,8 @@
     },
     "numeric": "718f1668987689f0586bf903c527e7c1b6cd4cfcd804d2ed77fcc7efcd066755",
     "rules": "ef7d091749416c7a46461ba948f70c7facdc8e06adf7b35bc0508099e437008c",
-    "dependencies": "3e6c9c6d022ed46af2d5b5207f3e64903a7e93645237d773a0d939bb4e556aa0"
+    "dependencies": "3e6c9c6d022ed46af2d5b5207f3e64903a7e93645237d773a0d939bb4e556aa0",
+    "evidence_row_count": 22
   },
   "RPL_EW": {
     "tables": {
@@ -103,7 +105,8 @@
     },
     "numeric": "718f1668987689f0586bf903c527e7c1b6cd4cfcd804d2ed77fcc7efcd066755",
     "rules": "746f51287d2810ec05102527f59dc44284d94a574432eadda82b1b0daced5055",
-    "dependencies": "1235c91b4cf323e96eaad54f54041ed498cd97df3b6f7fab8d93ce0b162489fd"
+    "dependencies": "1235c91b4cf323e96eaad54f54041ed498cd97df3b6f7fab8d93ce0b162489fd",
+    "evidence_row_count": 21
   },
   "RPL_BATH": {
     "tables": {
@@ -143,7 +146,8 @@
     },
     "numeric": "718f1668987689f0586bf903c527e7c1b6cd4cfcd804d2ed77fcc7efcd066755",
     "rules": "f151f0c2a2457f94bd53ce5b66e15cffcdb166c3e4e423403222f15b500b05b0",
-    "dependencies": "a2ca74be945aedd032b55afad1347286738e5c7eca3c02d038d1b510c332176d"
+    "dependencies": "a2ca74be945aedd032b55afad1347286738e5c7eca3c02d038d1b510c332176d",
+    "evidence_row_count": 18
   },
   "RPL_ATT_TW": {
     "tables": {
@@ -183,7 +187,8 @@
     },
     "numeric": "324830baa65c70db28d73ba9745dc306ad6e7aed05ea7dd99edb08089d0bc058",
     "rules": "0fdc4699d44607ead0c589dd40d577961d0f343101419c3d4ade6efc9d273034",
-    "dependencies": "d1595b4ce32d94519e52c3fa938719373ce7bc1beca77c88dfc99568f06e65c7"
+    "dependencies": "d1595b4ce32d94519e52c3fa938719373ce7bc1beca77c88dfc99568f06e65c7",
+    "evidence_row_count": 24
   },
   "RPL_ATT_TH": {
     "tables": {
@@ -226,7 +231,8 @@
     },
     "numeric": "d0f9ccf52e1d570ff8bb2939f4c943fdcd175f104f4d5772fcf9d2099c921ef0",
     "rules": "5e4c2a56d7f1e2e78ab13f1dd9d89e92f8e79c8e9c13e14e8f3540e7e533379e",
-    "dependencies": "9aefb6368aba8110dcb35aa046595f6b4743c7797ce3a2ff7309faa0a2388bbe"
+    "dependencies": "9aefb6368aba8110dcb35aa046595f6b4743c7797ce3a2ff7309faa0a2388bbe",
+    "evidence_row_count": 29
   },
   "RPL_CUT_MALL": {
     "tables": {
@@ -259,6 +265,7 @@
     },
     "numeric": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
     "rules": "08197a6ca7c4d764e4219ee9c25df14fc8a4b61795caead181183b104c7d005d",
-    "dependencies": "dc72c5e187d5daf6aa6020cce8132758ff12ea294225f818490d30c321528b61"
+    "dependencies": "dc72c5e187d5daf6aa6020cce8132758ff12ea294225f818490d30c321528b61",
+    "evidence_row_count": 24
   }
 }

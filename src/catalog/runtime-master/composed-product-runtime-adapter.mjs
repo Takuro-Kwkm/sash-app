@@ -50,6 +50,12 @@ export async function adaptComposedProductRuntime(document,entry,loadReference){
     for(const rule of document.linear_transforms??[]){
       const value=result.selection[rule.input];
       if(has(value)&&Number.isFinite(Number(value)))transforms[rule.output]={value:Number(value)+rule.offset,evidenceIds:rule.evidenceIds,ruleId:rule.id};
+      const definition=document.product_module.specificationDefinitions.find(d=>d.key===rule.output);
+      if(definition?.selectionMode==='DERIVED'){
+        delete result.selection[rule.output];
+        const field=result.fields.find(f=>f.key===rule.output);
+        if(field){field.readOnly=true;field.disabled=true;field.selectionMode='DERIVED';field.emptyLabel='採寸寸法の入力後に表示';if(transforms[rule.output])result.selection[rule.output]=transforms[rule.output].value;}
+      }
     }
     for(const rule of document.numeric_constraints??[]){
       const value=result.selection[rule.field];if(!has(value))continue;
@@ -98,7 +104,7 @@ export async function adaptComposedProductRuntime(document,entry,loadReference){
     result.manualWarnings=[...new Set(warnings)];result.derivedMeasurements=transforms;
     result.validation.errors=errors;
     result.validation.missingRequiredFields=[...new Set(missing)];
-    result.validation.status=errors.length?'INVALID':missing.length?'INCOMPLETE':'MANUAL_CHECK';
+    result.validation.status=errors.length||result.dimensionResult?.status==='BLOCK'?'INVALID':missing.length?'INCOMPLETE':'MANUAL_CHECK';
     result.orderReady=false;result.pricing={price:null,bom:null,set_code:null};
     result.runtimeMaster={masterVersion:entry.masterVersion,packageVersion:entry.packageVersion,schemaVersion:entry.schemaVersion,adapterType:entry.adapterType,sourceHash:entry.sha256,canonicalRuntimeReference:entry.canonicalRuntimeReference,candidateOnly:true,candidateRuntimeReference:entry.candidateRuntimeReference,sourcePackageIntegrity:{expected:entry.sha256,actual:entry.sha256,match:true}};
     result.runtimeCapabilities={candidateOnly:true,automaticManufacturing:false,automaticPricing:false,sourceAdoption:false,formalAdoption:false};

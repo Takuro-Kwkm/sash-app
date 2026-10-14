@@ -307,7 +307,8 @@ export class ProductConfigurationEditor {
     const required=field.required?'<span class="required">必須</span>':'';
     if(field.readOnly&&field.selectionMode==='DERIVED'){
       const choice=field.values.find(value=>String(value.value)===String(this.state.selection[field.key]));
-      return `<div class="field" data-key="${esc(field.key)}"><label>${esc(field.displayLabel)}</label><output class="runtime-derived-value" data-spec-key="${esc(field.key)}" ${dataAttributes}>${esc(choice?.displayLabel??'本体色の選択後に表示')}</output>${field.helpText?`<small class="field-help">${esc(field.helpText)}</small>`:''}</div>`;
+      const display=field.dataType==='NUMBER'?(this.state.selection[field.key]??field.emptyLabel??'寸法の入力後に表示'):(choice?.displayLabel??'本体色の選択後に表示');
+      return `<div class="field" data-key="${esc(field.key)}"><label>${esc(field.displayLabel)}</label><output class="runtime-derived-value" data-spec-key="${esc(field.key)}" ${dataAttributes}>${esc(display)}</output>${field.helpText?`<small class="field-help">${esc(field.helpText)}</small>`:''}</div>`;
     }
     if(field.dataType==='NUMBER')return `<div class="field" data-key="${esc(field.key)}"><label>${esc(field.displayLabel)}${required}</label><div class="number-input"><input type="number" inputmode="decimal" step="${esc(field.step??'any')}" data-spec-key="${esc(field.key)}" ${attributes} value="${esc(this.state.selection[field.key]??'')}" placeholder="数値を入力">${field.unit?`<span>${esc(field.unit)}</span>`:''}</div>${field.helpText?`<small class="field-help">${esc(field.helpText)}</small>`:''}</div>`;
     if(field.dataType==='TEXT')return `<div class="field" data-key="${esc(field.key)}"><label>${esc(field.displayLabel)}${required}</label><input type="text" data-spec-key="${esc(field.key)}" ${attributes} value="${esc(this.state.selection[field.key]??'')}" placeholder="入力してください"></div>`;

@@ -1,6 +1,6 @@
 {
   "schema": "NATIVE_TABLE_PROJECTION_V1",
-  "candidate_revision": "REPLUS_SALES_FLOW_V10_20261014",
+  "candidate_revision": "REPLUS_DIMENSIONS_INNER_FIT_V11_20261014",
   "product": {
     "id": "CANDIDATE:RPL_ATT_TH",
     "manufacturer": "LIXIL",
@@ -13,7 +13,7 @@
   "source": {
     "path": "candidates/RPL_ATT_TH.json",
     "component_id": "RPL_ATT_TH",
-    "sha256": "5eb4ab80f4fe905f812ab8bb4497a769d09028f5d63d3730fb2bf310a42d8601",
+    "sha256": "2aab1a7e3a218dc1ee828136b51183dfafb9f0ddd93c6eee4030a89e5cad6d9b",
     "baseline_sha256": "64ba5575015706f485909406f7ed8dbb5b86000554534546a3f30fd229ffe71f",
     "baseline_component_version": "v1.1"
   },
@@ -1021,6 +1021,127 @@
         "survey_cover_side"
       ],
       "selector": {}
+    },
+    {
+      "key": "installation_method",
+      "displayLabel": "内はめ仕様",
+      "dataType": "ENUM",
+      "displayOrder": 900,
+      "choices": [
+        {
+          "value": "STANDARD",
+          "displayLabel": "標準用",
+          "evidenceIds": [
+            "EV-DIMENSIONS-INNER-FIT-V11"
+          ],
+          "selector": {},
+          "metadata": {
+            "manualCheck": true
+          }
+        },
+        {
+          "value": "INNER_FIT_INSET",
+          "displayLabel": "内はめ用（既設内付・半外付）",
+          "evidenceIds": [
+            "EV-DIMENSIONS-INNER-FIT-V11"
+          ],
+          "selector": {},
+          "metadata": {
+            "manualCheck": true
+          }
+        },
+        {
+          "value": "INNER_FIT_OUTSET",
+          "displayLabel": "内はめ用（既設外付）",
+          "evidenceIds": [
+            "EV-DIMENSIONS-INNER-FIT-V11"
+          ],
+          "selector": {},
+          "metadata": {
+            "manualCheck": true
+          }
+        }
+      ],
+      "required": true,
+      "autoSelectSingle": false,
+      "parentFields": [
+        "referenced_window_id"
+      ],
+      "selector": {
+        "referenced_window_id": {
+          "$exists": true
+        }
+      }
+    },
+    {
+      "key": "attachment_frame_spec",
+      "displayLabel": "アタッチ枠仕様",
+      "dataType": "ENUM",
+      "displayOrder": 900,
+      "choices": [
+        {
+          "value": "ATT-TH-FRAME-STD",
+          "displayLabel": "標準用アタッチ枠",
+          "evidenceIds": [
+            "EV-DIMENSIONS-INNER-FIT-V11"
+          ],
+          "selector": {},
+          "metadata": {
+            "manualCheck": false
+          }
+        },
+        {
+          "value": "ATT-TH-FRAME-INNER-SINGLE",
+          "displayLabel": "既設単体・内はめ用アタッチ枠",
+          "evidenceIds": [
+            "EV-DIMENSIONS-INNER-FIT-V11"
+          ],
+          "selector": {},
+          "metadata": {
+            "manualCheck": true
+          }
+        }
+      ],
+      "required": false,
+      "autoSelectSingle": false,
+      "parentFields": [
+        "installation_method"
+      ],
+      "selector": {
+        "referenced_window_id": {
+          "$exists": true
+        }
+      }
+    },
+    {
+      "key": "attachment_finished_w",
+      "displayLabel": "アタッチ枠仕上がり幅 WD（mm）",
+      "dataType": "NUMBER",
+      "displayOrder": 900,
+      "choices": [],
+      "required": false,
+      "autoSelectSingle": false,
+      "parentFields": [
+        "survey_w"
+      ],
+      "selector": {},
+      "selectionMode": "DERIVED",
+      "userSelectable": false
+    },
+    {
+      "key": "attachment_finished_h",
+      "displayLabel": "アタッチ枠仕上がり高さ HD（mm）",
+      "dataType": "NUMBER",
+      "displayOrder": 900,
+      "choices": [],
+      "required": false,
+      "autoSelectSingle": false,
+      "parentFields": [
+        "survey_h"
+      ],
+      "selector": {},
+      "selectionMode": "DERIVED",
+      "userSelectable": false
     }
   ],
   "dependencies": [
@@ -1039,6 +1160,19 @@
         }
       },
       "message": "化粧カバーの納まり・適合は現調で確認してください。"
+    },
+    {
+      "id": "installation-confirmation-v11",
+      "mode": "MANUAL_CHECK",
+      "when": {
+        "installation_method": {
+          "$in": [
+            "INNER_FIT_INSET",
+            "INNER_FIT_OUTSET"
+          ]
+        }
+      },
+      "message": "内はめ用の製作範囲・既設枠への取付可否は現調・積算で確認してください。"
     }
   ],
   "ruleSets": [
@@ -1408,6 +1542,45 @@
       ],
       "evidenceIds": [
         "APP-POLICY-V9"
+      ]
+    },
+    {
+      "id": "installation-component-links-v11",
+      "type": "SELECTION_LINKS",
+      "status": "ACTIVE",
+      "payload": [
+        {
+          "targetField": "attachment_frame_spec",
+          "parents": [
+            "installation_method"
+          ],
+          "cases": [
+            {
+              "when": {
+                "installation_method": "STANDARD"
+              },
+              "value": "ATT-TH-FRAME-STD"
+            },
+            {
+              "when": {
+                "installation_method": "INNER_FIT_INSET"
+              },
+              "value": "ATT-TH-FRAME-INNER-SINGLE"
+            },
+            {
+              "when": {
+                "installation_method": "INNER_FIT_OUTSET"
+              },
+              "value": "ATT-TH-FRAME-INNER-SINGLE"
+            }
+          ],
+          "resolvedMessage": "施工仕様に連動しています。",
+          "pendingMessage": "内はめ仕様を選択してください。",
+          "unavailableMessage": "アタッチ枠の対応を確認してください。"
+        }
+      ],
+      "evidenceIds": [
+        "EV-DIMENSIONS-INNER-FIT-V11"
       ]
     }
   ],
@@ -1815,6 +1988,15 @@
           "size"
         ]
       }
+    },
+    {
+      "id": "EV-DIMENSIONS-INNER-FIT-V11",
+      "source_id": "EV-DIMENSIONS-INNER-FIT-V11",
+      "source_type": "ADOPTED_OFFICIAL_SOURCE_REVIEW",
+      "document": "SN1200",
+      "sha256": "b837ce209c8b55b2b66b412a4e3c2694a78fd5de823efc7b2b960688a5668098",
+      "locator": "PDF252/254 dimensions, 212/231/233/247/249/251 installation, 255/256 attachments",
+      "status": "REVIEWED_CANDIDATE_BINDING"
     }
   ],
   "composition": {
@@ -5031,6 +5213,13 @@
       "assign": {
         "interior_cover_type": "ATT-TH-OP-ANGLE-NOMITER"
       }
+    },
+    {
+      "source": "installation_method",
+      "value": "内嵌め用",
+      "clearSource": true,
+      "assign": {},
+      "reason": "Legacy value does not specify existing mount. Require explicit choice; never guess INSET/OUTSET."
     }
   ]
 }
