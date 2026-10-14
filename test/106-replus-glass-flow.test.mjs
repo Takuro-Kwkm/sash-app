@@ -21,13 +21,13 @@ test('official double and triple functions restore separate functional and appea
   ['RPL_EW',{window_type:'RPL_EW_SLD',spec_sash_configuration:'EW-SS-PG',glass_category:'EW-GL-DOUBLE',glass:'EW-D-CLEAR'},['NONE','SAFETY','MILKY']],
   ['RPL_BATH',{window_type:'RPL_BATH_SLD',frame_type:'BATH-STD',glass_category:'LOW_E_DOUBLE',glass:'BATH-GL-LOWE-CLEAR'},['NONE','SAFETY','DISASTER','MILKY','GRID','BLIND']],
  ]){
-  const r=await ui(component,seed);assert.deepEqual(values(r,'glass_function'),expected,component);
-  assert.deepEqual(values(r,'glass_appearance'),['CLEAR','OBSCURE','FROST']);
+  const r=await ui(component,seed);assert.deepEqual(values(r,'glass_function'),expected.filter(v=>v!=='MILKY'),component);
+  assert.deepEqual(values(r,'glass_appearance'),['CLEAR','OBSCURE','FROST','MILKY']);
   assert.equal(field(r,'glass_gas').displayLabel,'中空層');
-  const white=await ui(component,{...r.selection,glass_function:'MILKY',glass_appearance:'CLEAR'});
-  assert.deepEqual(values(white,'glass_appearance'),['MILKY']);assert.equal(white.selection.glass_appearance,undefined);
-  assert.ok(white.clearedFields.includes('glass_appearance'));
-  const selectedWhite=await ui(component,{...white.selection,glass_appearance:'MILKY'});assert.equal(selectedWhite.selection.glass_appearance,'MILKY');
+  const conflict=await ui(component,{...r.selection,glass_function:'MILKY',glass_appearance:'CLEAR'});
+  assert.equal(conflict.selection.glass_appearance,'CLEAR');assert.equal(conflict.selection.glass_function,undefined);assert.ok(conflict.clearedFields.includes('glass_function'));
+  const white=await ui(component,{...r.selection,glass_appearance:'MILKY'});assert.deepEqual(values(white,'glass_function'),['MILKY']);
+  const selectedWhite=await ui(component,{...white.selection,glass_function:'MILKY'});assert.equal(selectedWhite.selection.glass_appearance,'MILKY');assert.equal(selectedWhite.selection.glass_function,'MILKY');
   assert.equal(r.orderReady,false);assert.equal(r.pricing.price,null);
   assert.ok(field(r,'glass_function').values.filter(v=>v.value!=='NONE').every(v=>v.manualCheck));
  }

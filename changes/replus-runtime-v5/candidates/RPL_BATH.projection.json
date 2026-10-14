@@ -1,6 +1,6 @@
 {
   "schema": "NATIVE_TABLE_PROJECTION_V1",
-  "candidate_revision": "REPLUS_HIDE_DERIVED_CONFIRMATIONS_V12_20261014",
+  "candidate_revision": "REPLUS_GLASS_APPEARANCE_FIRST_V13_20261014",
   "product": {
     "id": "CANDIDATE:RPL_BATH",
     "manufacturer": "LIXIL",
@@ -13,7 +13,7 @@
   "source": {
     "path": "candidates/RPL_BATH.json",
     "component_id": "RPL_BATH",
-    "sha256": "c4e82fba2e4c5cffccb9877c184d84a3c234e609fbfb3f340e5f8aeb4387fa4b",
+    "sha256": "ecaba72ed0112062b4e9065712fa24d2e82a3967aa1ebe33a320b22464e07c4b",
     "baseline_sha256": "e96a29afcfe83d3707823c1b01b8b0b2bf227ea0b9d9971bf2d48e04e2927f00",
     "baseline_component_version": "v1.0"
   },
@@ -1007,7 +1007,7 @@
       "key": "glass",
       "displayLabel": "ガラス詳細・Low-E仕様",
       "dataType": "ENUM",
-      "displayOrder": 700,
+      "displayOrder": 720,
       "choices": [
         {
           "value": "BATH-GL-GENERAL",
@@ -1187,6 +1187,7 @@
       "autoSelectSingle": false,
       "parentFields": [
         "frame_type",
+        "glass_appearance",
         "glass_category",
         "installation_region",
         "window_type"
@@ -1490,11 +1491,12 @@
       "key": "glass_function",
       "displayLabel": "ガラス追加機能",
       "dataType": "ENUM",
-      "displayOrder": 700,
+      "displayOrder": 730,
       "required": false,
       "autoSelectSingle": false,
       "parentFields": [
         "glass_category",
+        "glass_appearance",
         "glass",
         "window_type"
       ],
@@ -1508,10 +1510,19 @@
           "value": "NONE",
           "displayLabel": "なし（標準）",
           "selector": {
-            "glass_category": "GENERAL_DOUBLE",
-            "glass": {
-              "$exists": true
-            }
+            "all": [
+              {
+                "glass_category": "GENERAL_DOUBLE",
+                "glass": {
+                  "$exists": true
+                }
+              },
+              {
+                "not": {
+                  "glass_appearance": "MILKY"
+                }
+              }
+            ]
           },
           "evidenceIds": [
             "EV-V8-GLASS-DIAGRAM"
@@ -1526,10 +1537,19 @@
           "value": "SAFETY",
           "displayLabel": "安全合わせ",
           "selector": {
-            "glass_category": "GENERAL_DOUBLE",
-            "glass": {
-              "$exists": true
-            }
+            "all": [
+              {
+                "glass_category": "GENERAL_DOUBLE",
+                "glass": {
+                  "$exists": true
+                }
+              },
+              {
+                "not": {
+                  "glass_appearance": "MILKY"
+                }
+              }
+            ]
           },
           "evidenceIds": [
             "EV-V8-GLASS-DIAGRAM"
@@ -1544,10 +1564,19 @@
           "value": "DISASTER",
           "displayLabel": "防災安全合わせ",
           "selector": {
-            "glass_category": "GENERAL_DOUBLE",
-            "glass": {
-              "$exists": true
-            }
+            "all": [
+              {
+                "glass_category": "GENERAL_DOUBLE",
+                "glass": {
+                  "$exists": true
+                }
+              },
+              {
+                "not": {
+                  "glass_appearance": "MILKY"
+                }
+              }
+            ]
           },
           "evidenceIds": [
             "EV-V8-GLASS-DIAGRAM"
@@ -1562,10 +1591,17 @@
           "value": "MILKY",
           "displayLabel": "安全合わせ乳白タイプ",
           "selector": {
-            "glass_category": "GENERAL_DOUBLE",
-            "glass": {
-              "$exists": true
-            }
+            "all": [
+              {
+                "glass_category": "GENERAL_DOUBLE",
+                "glass": {
+                  "$exists": true
+                }
+              },
+              {
+                "glass_appearance": "MILKY"
+              }
+            ]
           },
           "evidenceIds": [
             "EV-V8-GLASS-DIAGRAM"
@@ -1580,10 +1616,19 @@
           "value": "GRID",
           "displayLabel": "格子入り",
           "selector": {
-            "glass_category": "GENERAL_DOUBLE",
-            "glass": {
-              "$exists": true
-            }
+            "all": [
+              {
+                "glass_category": "GENERAL_DOUBLE",
+                "glass": {
+                  "$exists": true
+                }
+              },
+              {
+                "not": {
+                  "glass_appearance": "MILKY"
+                }
+              }
+            ]
           },
           "evidenceIds": [
             "EV-V8-GLASS-DIAGRAM"
@@ -1598,10 +1643,19 @@
           "value": "BLIND",
           "displayLabel": "ブラインドインPG",
           "selector": {
-            "glass_category": "GENERAL_DOUBLE",
-            "glass": {
-              "$exists": true
-            }
+            "all": [
+              {
+                "glass_category": "GENERAL_DOUBLE",
+                "glass": {
+                  "$exists": true
+                }
+              },
+              {
+                "not": {
+                  "glass_appearance": "MILKY"
+                }
+              }
+            ]
           },
           "evidenceIds": [
             "EV-V8-GLASS-DIAGRAM"
@@ -1616,10 +1670,19 @@
           "value": "NONE",
           "displayLabel": "なし（標準）",
           "selector": {
-            "glass_category": "LOW_E_DOUBLE",
-            "glass": {
-              "$exists": true
-            }
+            "all": [
+              {
+                "glass_category": "LOW_E_DOUBLE",
+                "glass": {
+                  "$exists": true
+                }
+              },
+              {
+                "not": {
+                  "glass_appearance": "MILKY"
+                }
+              }
+            ]
           },
           "evidenceIds": [
             "EV-V8-GLASS-DIAGRAM"
@@ -1634,10 +1697,19 @@
           "value": "SAFETY",
           "displayLabel": "安全合わせ",
           "selector": {
-            "glass_category": "LOW_E_DOUBLE",
-            "glass": {
-              "$exists": true
-            }
+            "all": [
+              {
+                "glass_category": "LOW_E_DOUBLE",
+                "glass": {
+                  "$exists": true
+                }
+              },
+              {
+                "not": {
+                  "glass_appearance": "MILKY"
+                }
+              }
+            ]
           },
           "evidenceIds": [
             "EV-V8-GLASS-DIAGRAM"
@@ -1652,10 +1724,19 @@
           "value": "DISASTER",
           "displayLabel": "防災安全合わせ",
           "selector": {
-            "glass_category": "LOW_E_DOUBLE",
-            "glass": {
-              "$exists": true
-            }
+            "all": [
+              {
+                "glass_category": "LOW_E_DOUBLE",
+                "glass": {
+                  "$exists": true
+                }
+              },
+              {
+                "not": {
+                  "glass_appearance": "MILKY"
+                }
+              }
+            ]
           },
           "evidenceIds": [
             "EV-V8-GLASS-DIAGRAM"
@@ -1670,10 +1751,17 @@
           "value": "MILKY",
           "displayLabel": "安全合わせ乳白タイプ",
           "selector": {
-            "glass_category": "LOW_E_DOUBLE",
-            "glass": {
-              "$exists": true
-            }
+            "all": [
+              {
+                "glass_category": "LOW_E_DOUBLE",
+                "glass": {
+                  "$exists": true
+                }
+              },
+              {
+                "glass_appearance": "MILKY"
+              }
+            ]
           },
           "evidenceIds": [
             "EV-V8-GLASS-DIAGRAM"
@@ -1688,10 +1776,19 @@
           "value": "GRID",
           "displayLabel": "格子入り",
           "selector": {
-            "glass_category": "LOW_E_DOUBLE",
-            "glass": {
-              "$exists": true
-            }
+            "all": [
+              {
+                "glass_category": "LOW_E_DOUBLE",
+                "glass": {
+                  "$exists": true
+                }
+              },
+              {
+                "not": {
+                  "glass_appearance": "MILKY"
+                }
+              }
+            ]
           },
           "evidenceIds": [
             "EV-V8-GLASS-DIAGRAM"
@@ -1706,10 +1803,19 @@
           "value": "BLIND",
           "displayLabel": "ブラインドインPG",
           "selector": {
-            "glass_category": "LOW_E_DOUBLE",
-            "glass": {
-              "$exists": true
-            }
+            "all": [
+              {
+                "glass_category": "LOW_E_DOUBLE",
+                "glass": {
+                  "$exists": true
+                }
+              },
+              {
+                "not": {
+                  "glass_appearance": "MILKY"
+                }
+              }
+            ]
           },
           "evidenceIds": [
             "EV-V8-GLASS-DIAGRAM"
@@ -1724,10 +1830,19 @@
           "value": "NONE",
           "displayLabel": "なし（標準）",
           "selector": {
-            "glass_category": "TRIPLE",
-            "glass": {
-              "$exists": true
-            }
+            "all": [
+              {
+                "glass_category": "TRIPLE",
+                "glass": {
+                  "$exists": true
+                }
+              },
+              {
+                "not": {
+                  "glass_appearance": "MILKY"
+                }
+              }
+            ]
           },
           "evidenceIds": [
             "EV-V8-GLASS-DIAGRAM"
@@ -1742,10 +1857,19 @@
           "value": "SAFETY",
           "displayLabel": "安全合わせ",
           "selector": {
-            "glass_category": "TRIPLE",
-            "glass": {
-              "$exists": true
-            }
+            "all": [
+              {
+                "glass_category": "TRIPLE",
+                "glass": {
+                  "$exists": true
+                }
+              },
+              {
+                "not": {
+                  "glass_appearance": "MILKY"
+                }
+              }
+            ]
           },
           "evidenceIds": [
             "EV-V8-GLASS-DIAGRAM"
@@ -1760,10 +1884,19 @@
           "value": "DISASTER",
           "displayLabel": "防災安全合わせ",
           "selector": {
-            "glass_category": "TRIPLE",
-            "glass": {
-              "$exists": true
-            }
+            "all": [
+              {
+                "glass_category": "TRIPLE",
+                "glass": {
+                  "$exists": true
+                }
+              },
+              {
+                "not": {
+                  "glass_appearance": "MILKY"
+                }
+              }
+            ]
           },
           "evidenceIds": [
             "EV-V8-GLASS-DIAGRAM"
@@ -1778,10 +1911,17 @@
           "value": "MILKY",
           "displayLabel": "安全合わせ乳白タイプ",
           "selector": {
-            "glass_category": "TRIPLE",
-            "glass": {
-              "$exists": true
-            }
+            "all": [
+              {
+                "glass_category": "TRIPLE",
+                "glass": {
+                  "$exists": true
+                }
+              },
+              {
+                "glass_appearance": "MILKY"
+              }
+            ]
           },
           "evidenceIds": [
             "EV-V8-GLASS-DIAGRAM"
@@ -1796,10 +1936,19 @@
           "value": "THIN",
           "displayLabel": "特殊薄板合わせ",
           "selector": {
-            "glass_category": "TRIPLE",
-            "glass": {
-              "$exists": true
-            }
+            "all": [
+              {
+                "glass_category": "TRIPLE",
+                "glass": {
+                  "$exists": true
+                }
+              },
+              {
+                "not": {
+                  "glass_appearance": "MILKY"
+                }
+              }
+            ]
           },
           "evidenceIds": [
             "EV-V8-GLASS-DIAGRAM"
@@ -1814,17 +1963,16 @@
     },
     {
       "key": "glass_appearance",
-      "displayLabel": "ガラス仕上げ・目隠し",
+      "displayLabel": "ガラス種",
       "dataType": "ENUM",
-      "displayOrder": 700,
+      "displayOrder": 710,
       "required": false,
       "autoSelectSingle": false,
       "parentFields": [
-        "glass",
-        "glass_function"
+        "glass_category"
       ],
       "selector": {
-        "glass": {
+        "glass_category": {
           "$exists": true
         }
       },
@@ -1833,7 +1981,26 @@
           "value": "MILKY",
           "displayLabel": "乳白",
           "selector": {
-            "glass_function": "MILKY"
+            "glass_category": {
+              "$exists": true
+            }
+          },
+          "evidenceIds": [
+            "EV-V8-GLASS-DIAGRAM"
+          ],
+          "metadata": {
+            "manualCheck": true,
+            "estimateConfirmationRequired": true
+          },
+          "displayOrder": 4
+        },
+        {
+          "value": "CLEAR",
+          "displayLabel": "透明",
+          "selector": {
+            "glass_category": {
+              "$exists": true
+            }
           },
           "evidenceIds": [
             "EV-V8-GLASS-DIAGRAM"
@@ -1845,14 +2012,11 @@
           "displayOrder": 1
         },
         {
-          "value": "CLEAR",
-          "displayLabel": "透明",
+          "value": "OBSCURE",
+          "displayLabel": "型板",
           "selector": {
-            "glass": {
+            "glass_category": {
               "$exists": true
-            },
-            "not": {
-              "glass_function": "MILKY"
             }
           },
           "evidenceIds": [
@@ -1865,14 +2029,11 @@
           "displayOrder": 2
         },
         {
-          "value": "OBSCURE",
-          "displayLabel": "型板",
+          "value": "FROST",
+          "displayLabel": "フロスト",
           "selector": {
-            "glass": {
+            "glass_category": {
               "$exists": true
-            },
-            "not": {
-              "glass_function": "MILKY"
             }
           },
           "evidenceIds": [
@@ -1883,26 +2044,6 @@
             "estimateConfirmationRequired": true
           },
           "displayOrder": 3
-        },
-        {
-          "value": "FROST",
-          "displayLabel": "フロスト",
-          "selector": {
-            "glass": {
-              "$exists": true
-            },
-            "not": {
-              "glass_function": "MILKY"
-            }
-          },
-          "evidenceIds": [
-            "EV-V8-GLASS-DIAGRAM"
-          ],
-          "metadata": {
-            "manualCheck": true,
-            "estimateConfirmationRequired": true
-          },
-          "displayOrder": 4
         }
       ]
     },

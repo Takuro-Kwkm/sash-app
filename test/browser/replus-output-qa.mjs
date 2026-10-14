@@ -1,15 +1,17 @@
 import assert from 'node:assert/strict';
 import {readFile,writeFile,mkdir} from 'node:fs/promises';
 import {chromium} from 'playwright';
-const BASE=process.env.QA_BASE_URL??'http://127.0.0.1:4198',OUT='artifacts/replus-flow-v12/output';
+const BASE=process.env.QA_BASE_URL??'http://127.0.0.1:4198',OUT='artifacts/replus-flow-v13/output';
 const index=JSON.parse(await readFile('changes/replus-runtime-v5/index.json'));await mkdir(OUT,{recursive:true});
 const seeds=await Promise.all(index.products.map(async row=>({row,seed:JSON.parse(await readFile('artifacts/replus-runtime-v5/'+row.id.replace(':','-')+'.json')).selection})));
 for(const item of seeds){
   item.seed={...item.seed,survey_cover_top:50,survey_cover_bottom:70,survey_cover_side:20,building_structure:'RC造',installation_room:'居室',usage_humidity:'HIGH_HUMIDITY',work_space:'室内から施工時に新設枠を外側へ振り出せない'};
   if(!['CANDIDATE:RPL_ATT_TW','CANDIDATE:RPL_ATT_TH','CANDIDATE:RPL_CUT_MALL'].includes(item.row.id))item.seed={...item.seed,dimension_basis:'SURVEY',survey_width:1010,survey_height:1010,installation_method:'INNER_FIT_INSET'};
   const extra={
-  'CANDIDATE:RPL_ROOM':{glass_category:'Low-E複層ガラス',glass:'GL-LOWE-CLEAR',glass_function:'DISASTER',glass_appearance:'FROST',glass_gas:'ARGON',glass_spacer:'RESIN'},
-  'CANDIDATE:RPL_TW':{glass_category:'TW-GL-TRIPLE',glass:'TW-GL-CC',glass_function:'THIN',glass_appearance:'OBSCURE',glass_gas:'TW-GAS-KRYPTON'},
+  'CANDIDATE:RPL_ROOM':{window_type:'RPL_ROOM_SLD',frame_type:'RPL_STD',glass_category:'Low-E複層ガラス',glass:'GL-LOWE-CLEAR',glass_function:'DISASTER',glass_appearance:'FROST',glass_gas:'ARGON',glass_spacer:'RESIN'},
+  'CANDIDATE:RPL_TW':{window_type:'RPL_TW_SLD',frame_type:'RPL_TW_FRAME',glass_category:'TW-GL-TRIPLE',glass:'TW-GL-CC',glass_function:'THIN',glass_appearance:'OBSCURE',glass_gas:'TW-GAS-KRYPTON'},
+ 'CANDIDATE:RPL_EW':{window_type:'RPL_EW_SLD',frame_type:'RPL_EW_FRAME',spec_sash_configuration:'EW-SS-PG',glass_category:'EW-GL-DOUBLE',glass:'EW-D-CLEAR',glass_appearance:'OBSCURE',glass_function:'SAFETY'},
+ 'CANDIDATE:RPL_BATH':{window_type:'RPL_BATH_SLD',frame_type:'BATH-STD',glass_category:'LOW_E_DOUBLE',glass:'BATH-GL-LOWE-CLEAR',glass_appearance:'FROST',glass_function:'DISASTER'},
  }[item.row.id];if(extra)item.seed={...item.seed,...extra};
  const colors={'CANDIDATE:RPL_ROOM':{color_mode:'FREE',sash_exterior_color:'G',sash_interior_color:'M'},'CANDIDATE:RPL_TW':{sash_exterior_color:'G',sash_interior_color:'M'},'CANDIDATE:RPL_EW':{sash_exterior_color:'G'},'CANDIDATE:RPL_BATH':{bathroom_remodel_mode:'WINDOW_ONLY',sash_exterior_color:'G',sash_interior_color:'M'}}[item.row.id];if(colors)item.seed={...item.seed,...colors};
 }
@@ -30,7 +32,7 @@ try{
   const model=createEstimateOutputModel({project:{project_id:'candidate-qa',project_name:'リプラス候補7構成',request_company:'QA会社',sales_person:'QA担当'},estimate:{estimate_id:'candidate-qa-estimate',project_id:'candidate-qa',estimate_title:'候補の仕様確認',estimate_no:1,revision_no:0},openings,generatedAt:'2026-10-14T09:00:00+09:00'});
   return {model,pdf:Array.from(createEstimatePdfBytes(model)),xlsx:Array.from(createEstimateXlsxBytes(model))};
  },seeds);
- assert.equal(result.model.rows.length,7);for(const row of result.model.rows.slice(0,4)){assert.ok(JSON.stringify(row).includes('オータムブラウン'),'linked exterior color missing from output');assert.ok(JSON.stringify(row).includes('採寸幅 WS'));assert.ok(JSON.stringify(row).includes('製品仕上がり幅 WD'));assert.ok(JSON.stringify(row).includes('内はめ用'));assert.ok(!JSON.stringify(row).includes('既設上枠ベース材')); }assert.ok(result.model.rows.every(r=>r.price===null));assert.equal(result.model.counts.complete,0);
+ assert.equal(result.model.rows.length,7);for(const row of result.model.rows.slice(0,4)){assert.ok(JSON.stringify(row).includes('オータムブラウン'),'linked exterior color missing from output');assert.ok(JSON.stringify(row).includes('採寸幅 WS'));assert.ok(JSON.stringify(row).includes('製品仕上がり幅 WD'));assert.ok(JSON.stringify(row).includes('内はめ用'));assert.ok(!JSON.stringify(row).includes('既設上枠ベース材'));assert.deepEqual(row.display_summary.filter(f=>['glass_category','glass_appearance','glass','glass_function'].includes(f.key)).map(f=>f.key),['glass_category','glass_appearance','glass','glass_function']); }assert.ok(result.model.rows.every(r=>r.price===null));assert.equal(result.model.counts.complete,0);
  for(const label of ['既設上枠の見付','既設下枠の見付','既設縦枠の見付','建物構造','設置場所','使用環境','新設枠の振出し条件'])assert.ok(!JSON.stringify(result.model.rows).includes(label),'removed input leaked into output: '+label);
  assert.ok(process.env.SASH_CANDIDATE_MANIFEST_FILE_ID,'Saved candidate identity required');
  assert.ok(result.model.rows.every(r=>r.audit.runtime_manifest_identity===process.env.SASH_CANDIDATE_MANIFEST_FILE_ID));

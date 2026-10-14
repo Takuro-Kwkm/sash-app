@@ -5092,7 +5092,7 @@
           "sash_exterior_color",
           "{\"targetField\": \"exterior_cover_color\", \"parents\": [\"sash_exterior_color\"], \"cases\": [{\"when\": {\"sash_exterior_color\": \"T\"}, \"value\": \"T\"}, {\"when\": {\"sash_exterior_color\": \"G\"}, \"value\": \"G\"}, {\"when\": {\"sash_exterior_color\": \"K\"}, \"value\": \"K\"}, {\"when\": {\"sash_exterior_color\": \"D\"}, \"value\": \"D\"}, {\"when\": {\"sash_exterior_color\": \"W\"}, \"value\": \"W\"}], \"resolvedMessage\": \"本体外観色に連動しています。\", \"pendingMessage\": \"サッシ本体の色を選択してください。\", \"unavailableMessage\": \"本体色に対応するカバー部材の確認が必要です。\"}",
           "USER_APPLICATION_POLICY",
-          "REPLUS_HIDE_DERIVED_CONFIRMATIONS_V12_20261014"
+          "REPLUS_GLASS_APPEARANCE_FIRST_V13_20261014"
         ],
         [
           "SELECTION_LINKS",
@@ -5100,7 +5100,7 @@
           "sash_interior_color",
           "{\"targetField\": \"interior_cover_color\", \"parents\": [\"sash_interior_color\"], \"cases\": [{\"when\": {\"sash_interior_color\": \"M\"}, \"value\": \"M\"}, {\"when\": {\"sash_interior_color\": \"F\"}, \"value\": \"F\"}], \"resolvedMessage\": \"本体内観色に連動しています。\", \"pendingMessage\": \"サッシ本体の色を選択してください。\", \"unavailableMessage\": \"本体色に対応するカバー部材の確認が必要です。\"}",
           "USER_APPLICATION_POLICY",
-          "REPLUS_HIDE_DERIVED_CONFIRMATIONS_V12_20261014"
+          "REPLUS_GLASS_APPEARANCE_FIRST_V13_20261014"
         ],
         [
           "NUMERIC_INPUT_PAIRS",
@@ -5108,7 +5108,7 @@
           "",
           "{\"basisField\": \"dimension_basis\", \"measuredBasis\": \"SURVEY\", \"finishedBasis\": \"FINISHED\", \"legacyBasis\": \"FINISHED\", \"evaluationAssignments\": {\"size_mode\": \"CUSTOM\"}, \"pairs\": [{\"measuredField\": \"survey_width\", \"finishedField\": \"custom_width\", \"offset\": -10, \"message\": \"公式換算：仕上がり寸法 = 採寸寸法 − 10mm。\"}, {\"measuredField\": \"survey_height\", \"finishedField\": \"custom_height\", \"offset\": -10, \"message\": \"公式換算：仕上がり寸法 = 採寸寸法 − 10mm。\"}]}",
           "OFFICIAL_SOURCE_REVIEW",
-          "REPLUS_HIDE_DERIVED_CONFIRMATIONS_V12_20261014"
+          "REPLUS_GLASS_APPEARANCE_FIRST_V13_20261014"
         ],
         [
           "SELECTION_LINKS",
@@ -5116,7 +5116,7 @@
           "installation_method",
           "{\"targetField\": \"inner_fit_required_component\", \"parents\": [\"installation_method\"], \"applicability\": {\"window_type\": {\"$exists\": true}, \"installation_method\": {\"$in\": [\"INNER_FIT_INSET\", \"INNER_FIT_OUTSET\"]}}, \"cases\": [{\"when\": {\"installation_method\": \"INNER_FIT_INSET\"}, \"value\": \"BATH-OP-UPPER-BASE\"}, {\"when\": {\"installation_method\": \"INNER_FIT_OUTSET\"}, \"value\": \"BATH-OP-UPPER-BASE\"}], \"resolvedMessage\": \"内はめ用のため必要です。数量・価格は積算で確認してください。\", \"pendingMessage\": \"内はめ仕様を選択してください。\", \"unavailableMessage\": \"必要な内はめ部材の対応を確認してください。\", \"resolvedNoticeVisibility\": \"INTERNAL_ONLY\"}",
           "OFFICIAL_SOURCE_REVIEW",
-          "REPLUS_HIDE_DERIVED_CONFIRMATIONS_V12_20261014"
+          "REPLUS_GLASS_APPEARANCE_FIRST_V13_20261014"
         ],
         [
           "フロー",
@@ -5124,7 +5124,7 @@
           "",
           "{\"label\": \"窓種\", \"group\": \"opening\", \"internal\": false}",
           "UI_PRESENTATION",
-          "REPLUS_HIDE_DERIVED_CONFIRMATIONS_V12_20261014"
+          "REPLUS_GLASS_APPEARANCE_FIRST_V13_20261014"
         ],
         [
           "フロー",
@@ -5132,7 +5132,7 @@
           "window_type",
           "{\"label\": \"枠仕様\", \"group\": \"opening\", \"internal\": false}",
           "UI_PRESENTATION",
-          "REPLUS_HIDE_DERIVED_CONFIRMATIONS_V12_20261014"
+          "REPLUS_GLASS_APPEARANCE_FIRST_V13_20261014"
         ],
         [
           "フロー",
@@ -5140,7 +5140,7 @@
           "window_type",
           "{\"label\": \"建数\", \"group\": \"opening\", \"internal\": false}",
           "UI_PRESENTATION",
-          "REPLUS_HIDE_DERIVED_CONFIRMATIONS_V12_20261014"
+          "REPLUS_GLASS_APPEARANCE_FIRST_V13_20261014"
         ],
         [
           "フロー",
@@ -5148,7 +5148,7 @@
           "window_type",
           "{\"label\": \"障子仕様\", \"group\": \"opening\", \"internal\": false}",
           "UI_PRESENTATION",
-          "REPLUS_HIDE_DERIVED_CONFIRMATIONS_V12_20261014"
+          "REPLUS_GLASS_APPEARANCE_FIRST_V13_20261014"
         ],
         [
           "フロー",
@@ -5156,7 +5156,7 @@
           "window_type",
           "{\"label\": \"操作方式\", \"group\": \"opening\", \"internal\": false}",
           "UI_PRESENTATION",
-          "REPLUS_HIDE_DERIVED_CONFIRMATIONS_V12_20261014"
+          "REPLUS_GLASS_APPEARANCE_FIRST_V13_20261014"
         ],
         [
           "フロー",
@@ -5164,7 +5164,7 @@
           "window_type",
           "{\"label\": \"網戸\", \"group\": \"screen\", \"internal\": false}",
           "UI_PRESENTATION",
-          "REPLUS_HIDE_DERIVED_CONFIRMATIONS_V12_20261014"
+          "REPLUS_GLASS_APPEARANCE_FIRST_V13_20261014"
         ],
         [
           "フロー",
@@ -5172,7 +5172,7 @@
           "",
           "{\"label\": \"寸法の指定方法\", \"group\": \"size\", \"internal\": true}",
           "UI_PRESENTATION",
-          "REPLUS_HIDE_DERIVED_CONFIRMATIONS_V12_20261014"
+          "REPLUS_GLASS_APPEARANCE_FIRST_V13_20261014"
         ],
         [
           "フロー",
@@ -5180,7 +5180,7 @@
           "",
           "{\"label\": \"本体外観色\", \"group\": \"finish\", \"internal\": false}",
           "UI_PRESENTATION",
-          "REPLUS_HIDE_DERIVED_CONFIRMATIONS_V12_20261014"
+          "REPLUS_GLASS_APPEARANCE_FIRST_V13_20261014"
         ],
         [
           "フロー",
@@ -5188,7 +5188,7 @@
           "sash_exterior_color",
           "{\"label\": \"化粧カバー色（外観色に連動）\", \"group\": \"exterior_finish\", \"internal\": true, \"salesDisplay\": false}",
           "USER_PRESENTATION_POLICY",
-          "REPLUS_HIDE_DERIVED_CONFIRMATIONS_V12_20261014"
+          "REPLUS_GLASS_APPEARANCE_FIRST_V13_20261014"
         ],
         [
           "フロー",
@@ -5196,7 +5196,7 @@
           "",
           "{\"label\": \"本体内観色\", \"group\": \"finish\", \"internal\": false}",
           "UI_PRESENTATION",
-          "REPLUS_HIDE_DERIVED_CONFIRMATIONS_V12_20261014"
+          "REPLUS_GLASS_APPEARANCE_FIRST_V13_20261014"
         ],
         [
           "フロー",
@@ -5204,7 +5204,7 @@
           "sash_interior_color",
           "{\"label\": \"室内カバー色（内観色に連動）\", \"group\": \"interior_finish\", \"internal\": true, \"salesDisplay\": false}",
           "USER_PRESENTATION_POLICY",
-          "REPLUS_HIDE_DERIVED_CONFIRMATIONS_V12_20261014"
+          "REPLUS_GLASS_APPEARANCE_FIRST_V13_20261014"
         ],
         [
           "フロー",
@@ -5212,7 +5212,7 @@
           "",
           "{\"label\": \"追加部材・オプション\", \"group\": \"options\", \"internal\": false}",
           "UI_PRESENTATION",
-          "REPLUS_HIDE_DERIVED_CONFIRMATIONS_V12_20261014"
+          "REPLUS_GLASS_APPEARANCE_FIRST_V13_20261014"
         ],
         [
           "フロー",
@@ -5220,7 +5220,7 @@
           "",
           "{\"label\": \"浴室改修モード\", \"group\": \"context\", \"internal\": false}",
           "UI_PRESENTATION",
-          "REPLUS_HIDE_DERIVED_CONFIRMATIONS_V12_20261014"
+          "REPLUS_GLASS_APPEARANCE_FIRST_V13_20261014"
         ],
         [
           "フロー",
@@ -5228,23 +5228,23 @@
           "",
           "{\"label\": \"設置地域\", \"group\": \"context\", \"internal\": false}",
           "UI_PRESENTATION",
-          "REPLUS_HIDE_DERIVED_CONFIRMATIONS_V12_20261014"
+          "REPLUS_GLASS_APPEARANCE_FIRST_V13_20261014"
         ],
         [
           "フロー",
           "glass_category",
           "frame_type,installation_region,window_type",
-          "{\"label\": \"ガラス種類\", \"group\": \"glazing\", \"internal\": false}",
+          "{\"label\": \"ガラス種類\", \"group\": \"glazing\", \"internal\": false, \"rank\": 1}",
           "UI_PRESENTATION",
-          "REPLUS_HIDE_DERIVED_CONFIRMATIONS_V12_20261014"
+          "REPLUS_GLASS_APPEARANCE_FIRST_V13_20261014"
         ],
         [
           "フロー",
           "glass",
-          "frame_type,glass_category,installation_region,window_type",
-          "{\"label\": \"ガラス詳細・Low-E仕様\", \"group\": \"glazing\", \"internal\": false}",
+          "frame_type,glass_appearance,glass_category,installation_region,window_type",
+          "{\"label\": \"ガラス詳細・Low-E仕様\", \"group\": \"glazing\", \"internal\": false, \"rank\": 3}",
           "UI_PRESENTATION",
-          "REPLUS_HIDE_DERIVED_CONFIRMATIONS_V12_20261014"
+          "REPLUS_GLASS_APPEARANCE_FIRST_V13_20261014"
         ],
         [
           "フロー",
@@ -5252,7 +5252,7 @@
           "frame_type,glass_category",
           "{\"label\": \"中空層\", \"group\": \"glazing\", \"internal\": false}",
           "UI_PRESENTATION",
-          "REPLUS_HIDE_DERIVED_CONFIRMATIONS_V12_20261014"
+          "REPLUS_GLASS_APPEARANCE_FIRST_V13_20261014"
         ],
         [
           "フロー",
@@ -5260,7 +5260,7 @@
           "frame_type,glass_category,glass_gas",
           "{\"label\": \"スペーサー\", \"group\": \"glazing\", \"internal\": false}",
           "UI_PRESENTATION",
-          "REPLUS_HIDE_DERIVED_CONFIRMATIONS_V12_20261014"
+          "REPLUS_GLASS_APPEARANCE_FIRST_V13_20261014"
         ],
         [
           "フロー",
@@ -5268,23 +5268,23 @@
           "bathroom_remodel_mode",
           "{\"label\": \"既設開口パターン\", \"group\": \"context\", \"internal\": false}",
           "UI_PRESENTATION",
-          "REPLUS_HIDE_DERIVED_CONFIRMATIONS_V12_20261014"
+          "REPLUS_GLASS_APPEARANCE_FIRST_V13_20261014"
         ],
         [
           "フロー",
           "glass_function",
-          "glass_category,glass,window_type",
-          "{\"label\": \"ガラス追加機能\", \"group\": \"glazing\", \"internal\": false}",
+          "glass_category,glass_appearance,glass,window_type",
+          "{\"label\": \"ガラス追加機能\", \"group\": \"glazing\", \"internal\": false, \"rank\": 4}",
           "UI_PRESENTATION",
-          "REPLUS_HIDE_DERIVED_CONFIRMATIONS_V12_20261014"
+          "REPLUS_GLASS_APPEARANCE_FIRST_V13_20261014"
         ],
         [
           "フロー",
           "glass_appearance",
-          "glass,glass_function",
-          "{\"label\": \"ガラス仕上げ・目隠し\", \"group\": \"glazing\", \"internal\": false}",
+          "glass_category",
+          "{\"label\": \"ガラス種\", \"group\": \"glazing\", \"internal\": false, \"rank\": 2}",
           "UI_PRESENTATION",
-          "REPLUS_HIDE_DERIVED_CONFIRMATIONS_V12_20261014"
+          "REPLUS_GLASS_APPEARANCE_FIRST_V13_20261014"
         ],
         [
           "フロー",
@@ -5292,7 +5292,7 @@
           "bathroom_remodel_mode",
           "{\"label\": \"室内側の仕上げ仕様\", \"group\": \"interior_finish\", \"internal\": false}",
           "UI_PRESENTATION",
-          "REPLUS_HIDE_DERIVED_CONFIRMATIONS_V12_20261014"
+          "REPLUS_GLASS_APPEARANCE_FIRST_V13_20261014"
         ],
         [
           "フロー",
@@ -5300,7 +5300,7 @@
           "frame_type,survey_cover_top,survey_cover_bottom,survey_cover_side",
           "{\"label\": \"化粧カバーの大きさ・組合せ\", \"group\": \"exterior_finish\", \"internal\": false}",
           "UI_PRESENTATION",
-          "REPLUS_HIDE_DERIVED_CONFIRMATIONS_V12_20261014"
+          "REPLUS_GLASS_APPEARANCE_FIRST_V13_20261014"
         ],
         [
           "フロー",
@@ -5308,7 +5308,7 @@
           "window_type",
           "{\"label\": \"内はめ仕様\", \"group\": \"inner_fit\", \"internal\": false}",
           "UI_PRESENTATION",
-          "REPLUS_HIDE_DERIVED_CONFIRMATIONS_V12_20261014"
+          "REPLUS_GLASS_APPEARANCE_FIRST_V13_20261014"
         ],
         [
           "フロー",
@@ -5316,7 +5316,7 @@
           "installation_method",
           "{\"label\": \"内はめ用の必須部材\", \"group\": \"inner_fit\", \"internal\": true, \"salesDisplay\": false}",
           "USER_PRESENTATION_POLICY",
-          "REPLUS_HIDE_DERIVED_CONFIRMATIONS_V12_20261014"
+          "REPLUS_GLASS_APPEARANCE_FIRST_V13_20261014"
         ],
         [
           "フロー",
@@ -5324,7 +5324,7 @@
           "",
           "{\"label\": \"入力する寸法\", \"group\": \"size\", \"internal\": false}",
           "UI_PRESENTATION",
-          "REPLUS_HIDE_DERIVED_CONFIRMATIONS_V12_20261014"
+          "REPLUS_GLASS_APPEARANCE_FIRST_V13_20261014"
         ],
         [
           "フロー",
@@ -5332,7 +5332,7 @@
           "dimension_basis",
           "{\"label\": \"採寸幅 WS（mm）\", \"group\": \"size\", \"internal\": false}",
           "UI_PRESENTATION",
-          "REPLUS_HIDE_DERIVED_CONFIRMATIONS_V12_20261014"
+          "REPLUS_GLASS_APPEARANCE_FIRST_V13_20261014"
         ],
         [
           "フロー",
@@ -5340,7 +5340,7 @@
           "dimension_basis",
           "{\"label\": \"採寸高さ HS（mm）\", \"group\": \"size\", \"internal\": false}",
           "UI_PRESENTATION",
-          "REPLUS_HIDE_DERIVED_CONFIRMATIONS_V12_20261014"
+          "REPLUS_GLASS_APPEARANCE_FIRST_V13_20261014"
         ],
         [
           "フロー",
@@ -5348,7 +5348,7 @@
           "dimension_basis",
           "{\"label\": \"製品仕上がり幅 WD（mm）\", \"group\": \"size\", \"internal\": false}",
           "UI_PRESENTATION",
-          "REPLUS_HIDE_DERIVED_CONFIRMATIONS_V12_20261014"
+          "REPLUS_GLASS_APPEARANCE_FIRST_V13_20261014"
         ],
         [
           "フロー",
@@ -5356,12 +5356,36 @@
           "dimension_basis",
           "{\"label\": \"製品仕上がり高さ HD（mm）\", \"group\": \"size\", \"internal\": false}",
           "UI_PRESENTATION",
-          "REPLUS_HIDE_DERIVED_CONFIRMATIONS_V12_20261014"
+          "REPLUS_GLASS_APPEARANCE_FIRST_V13_20261014"
+        ],
+        [
+          "FIELD_PATCH",
+          "glass_appearance",
+          "glass_category",
+          "{\"key\": \"glass_appearance\", \"displayLabel\": \"ガラス種\", \"dataType\": \"ENUM\", \"displayOrder\": 710, \"required\": false, \"autoSelectSingle\": false, \"parentFields\": [\"glass_category\"], \"selector\": {\"glass_category\": {\"$exists\": true}}, \"choices\": [{\"value\": \"MILKY\", \"displayLabel\": \"乳白\", \"selector\": {\"glass_category\": {\"$exists\": true}}, \"evidenceIds\": [\"EV-V8-GLASS-DIAGRAM\"], \"metadata\": {\"manualCheck\": true, \"estimateConfirmationRequired\": true}, \"displayOrder\": 4}, {\"value\": \"CLEAR\", \"displayLabel\": \"透明\", \"selector\": {\"glass_category\": {\"$exists\": true}}, \"evidenceIds\": [\"EV-V8-GLASS-DIAGRAM\"], \"metadata\": {\"manualCheck\": true, \"estimateConfirmationRequired\": true}, \"displayOrder\": 1}, {\"value\": \"OBSCURE\", \"displayLabel\": \"型板\", \"selector\": {\"glass_category\": {\"$exists\": true}}, \"evidenceIds\": [\"EV-V8-GLASS-DIAGRAM\"], \"metadata\": {\"manualCheck\": true, \"estimateConfirmationRequired\": true}, \"displayOrder\": 2}, {\"value\": \"FROST\", \"displayLabel\": \"フロスト\", \"selector\": {\"glass_category\": {\"$exists\": true}}, \"evidenceIds\": [\"EV-V8-GLASS-DIAGRAM\"], \"metadata\": {\"manualCheck\": true, \"estimateConfirmationRequired\": true}, \"displayOrder\": 3}]}",
+          "USER_FLOW_POLICY_WITH_EXISTING_EVIDENCE",
+          "REPLUS_GLASS_APPEARANCE_FIRST_V13_20261014"
+        ],
+        [
+          "FIELD_PATCH",
+          "glass",
+          "frame_type,glass_appearance,glass_category,installation_region,window_type",
+          "{\"key\": \"glass\", \"displayLabel\": \"ガラス詳細・Low-E仕様\", \"dataType\": \"ENUM\", \"displayOrder\": 720, \"choices\": [{\"value\": \"BATH-GL-GENERAL\", \"displayLabel\": \"一般複層ガラス\", \"evidenceIds\": [\"BATH-EV-004,010\"], \"selector\": {\"window_type\": {\"$exists\": true}, \"frame_type\": \"BATH-STD\", \"glass_category\": \"GENERAL_DOUBLE\"}, \"metadata\": {\"manualCheck\": true}}, {\"value\": \"BATH-GL-LOWE-CLEAR\", \"displayLabel\": \"Low-E複層 クリア\", \"evidenceIds\": [\"BATH-EV-004,010\"], \"selector\": {\"window_type\": {\"$exists\": true}, \"frame_type\": {\"$exists\": true}, \"glass_category\": \"LOW_E_DOUBLE\"}, \"metadata\": {\"manualCheck\": true}}, {\"value\": \"BATH-GL-LOWE-GREEN\", \"displayLabel\": \"Low-E複層 グリーン\", \"evidenceIds\": [\"BATH-EV-004,010\"], \"selector\": {\"window_type\": {\"$exists\": true}, \"frame_type\": {\"$exists\": true}, \"glass_category\": \"LOW_E_DOUBLE\"}, \"metadata\": {\"manualCheck\": true}}, {\"value\": \"BATH-GL-LOWE-HS\", \"displayLabel\": \"Low-E複層 グリーン（高遮熱仕様）\", \"evidenceIds\": [\"BATH-EV-004,010\"], \"selector\": {\"window_type\": {\"$exists\": true}, \"frame_type\": {\"$exists\": true}, \"glass_category\": \"LOW_E_DOUBLE\"}, \"metadata\": {\"manualCheck\": true}}, {\"value\": \"BATH-GL-LOWE-BRONZE\", \"displayLabel\": \"Low-E複層 ブロンズ\", \"evidenceIds\": [\"BATH-EV-010\"], \"selector\": {\"window_type\": {\"$exists\": true}, \"frame_type\": {\"$exists\": true}, \"installation_region\": {\"$in\": [\"北海道\", \"東北\"]}, \"glass_category\": \"LOW_E_DOUBLE\"}, \"metadata\": {\"manualCheck\": true}}, {\"value\": \"BATH-GL-T-CC\", \"displayLabel\": \"トリプル クリア×クリア\", \"evidenceIds\": [\"BATH-EV-004,010\"], \"selector\": {\"window_type\": \"RPL_BATH_DHFS\", \"frame_type\": {\"$exists\": true}, \"glass_category\": \"TRIPLE\"}, \"metadata\": {\"manualCheck\": true}}, {\"value\": \"BATH-GL-T-GG\", \"displayLabel\": \"トリプル グリーン×グリーン\", \"evidenceIds\": [\"BATH-EV-004,010\"], \"selector\": {\"window_type\": \"RPL_BATH_DHFS\", \"frame_type\": {\"$exists\": true}, \"glass_category\": \"TRIPLE\"}, \"metadata\": {\"manualCheck\": true}}, {\"value\": \"BATH-GL-T-CG\", \"displayLabel\": \"トリプル クリア×グリーン\", \"evidenceIds\": [\"BATH-EV-010\"], \"selector\": {\"window_type\": \"RPL_BATH_DHFS\", \"frame_type\": {\"$exists\": true}, \"glass_category\": \"TRIPLE\"}, \"metadata\": {\"manualCheck\": true}}, {\"value\": \"BATH-GL-T-CB\", \"displayLabel\": \"トリプル クリア×ブロンズ\", \"evidenceIds\": [\"BATH-EV-010\"], \"selector\": {\"window_type\": \"RPL_BATH_DHFS\", \"frame_type\": {\"$exists\": true}, \"installation_region\": {\"$in\": [\"北海道\", \"東北\"]}, \"glass_category\": \"TRIPLE\"}, \"metadata\": {\"manualCheck\": true}}], \"required\": false, \"autoSelectSingle\": false, \"parentFields\": [\"frame_type\", \"glass_appearance\", \"glass_category\", \"installation_region\", \"window_type\"], \"selector\": {\"glass_category\": {\"$exists\": true}}}",
+          "USER_FLOW_POLICY_WITH_EXISTING_EVIDENCE",
+          "REPLUS_GLASS_APPEARANCE_FIRST_V13_20261014"
+        ],
+        [
+          "FIELD_PATCH",
+          "glass_function",
+          "glass_category,glass_appearance,glass,window_type",
+          "{\"key\": \"glass_function\", \"displayLabel\": \"ガラス追加機能\", \"dataType\": \"ENUM\", \"displayOrder\": 730, \"required\": false, \"autoSelectSingle\": false, \"parentFields\": [\"glass_category\", \"glass_appearance\", \"glass\", \"window_type\"], \"selector\": {\"glass\": {\"$exists\": true}}, \"choices\": [{\"value\": \"NONE\", \"displayLabel\": \"なし（標準）\", \"selector\": {\"all\": [{\"glass_category\": \"GENERAL_DOUBLE\", \"glass\": {\"$exists\": true}}, {\"not\": {\"glass_appearance\": \"MILKY\"}}]}, \"evidenceIds\": [\"EV-V8-GLASS-DIAGRAM\"], \"metadata\": {\"manualCheck\": false, \"estimateConfirmationRequired\": false}, \"displayOrder\": 1}, {\"value\": \"SAFETY\", \"displayLabel\": \"安全合わせ\", \"selector\": {\"all\": [{\"glass_category\": \"GENERAL_DOUBLE\", \"glass\": {\"$exists\": true}}, {\"not\": {\"glass_appearance\": \"MILKY\"}}]}, \"evidenceIds\": [\"EV-V8-GLASS-DIAGRAM\"], \"metadata\": {\"manualCheck\": true, \"estimateConfirmationRequired\": true}, \"displayOrder\": 2}, {\"value\": \"DISASTER\", \"displayLabel\": \"防災安全合わせ\", \"selector\": {\"all\": [{\"glass_category\": \"GENERAL_DOUBLE\", \"glass\": {\"$exists\": true}}, {\"not\": {\"glass_appearance\": \"MILKY\"}}]}, \"evidenceIds\": [\"EV-V8-GLASS-DIAGRAM\"], \"metadata\": {\"manualCheck\": true, \"estimateConfirmationRequired\": true}, \"displayOrder\": 3}, {\"value\": \"MILKY\", \"displayLabel\": \"安全合わせ乳白タイプ\", \"selector\": {\"all\": [{\"glass_category\": \"GENERAL_DOUBLE\", \"glass\": {\"$exists\": true}}, {\"glass_appearance\": \"MILKY\"}]}, \"evidenceIds\": [\"EV-V8-GLASS-DIAGRAM\"], \"metadata\": {\"manualCheck\": true, \"estimateConfirmationRequired\": true}, \"displayOrder\": 4}, {\"value\": \"GRID\", \"displayLabel\": \"格子入り\", \"selector\": {\"all\": [{\"glass_category\": \"GENERAL_DOUBLE\", \"glass\": {\"$exists\": true}}, {\"not\": {\"glass_appearance\": \"MILKY\"}}]}, \"evidenceIds\": [\"EV-V8-GLASS-DIAGRAM\"], \"metadata\": {\"manualCheck\": true, \"estimateConfirmationRequired\": true}, \"displayOrder\": 5}, {\"value\": \"BLIND\", \"displayLabel\": \"ブラインドインPG\", \"selector\": {\"all\": [{\"glass_category\": \"GENERAL_DOUBLE\", \"glass\": {\"$exists\": true}}, {\"not\": {\"glass_appearance\": \"MILKY\"}}]}, \"evidenceIds\": [\"EV-V8-GLASS-DIAGRAM\"], \"metadata\": {\"manualCheck\": true, \"estimateConfirmationRequired\": true}, \"displayOrder\": 6}, {\"value\": \"NONE\", \"displayLabel\": \"なし（標準）\", \"selector\": {\"all\": [{\"glass_category\": \"LOW_E_DOUBLE\", \"glass\": {\"$exists\": true}}, {\"not\": {\"glass_appearance\": \"MILKY\"}}]}, \"evidenceIds\": [\"EV-V8-GLASS-DIAGRAM\"], \"metadata\": {\"manualCheck\": false, \"estimateConfirmationRequired\": false}, \"displayOrder\": 1}, {\"value\": \"SAFETY\", \"displayLabel\": \"安全合わせ\", \"selector\": {\"all\": [{\"glass_category\": \"LOW_E_DOUBLE\", \"glass\": {\"$exists\": true}}, {\"not\": {\"glass_appearance\": \"MILKY\"}}]}, \"evidenceIds\": [\"EV-V8-GLASS-DIAGRAM\"], \"metadata\": {\"manualCheck\": true, \"estimateConfirmationRequired\": true}, \"displayOrder\": 2}, {\"value\": \"DISASTER\", \"displayLabel\": \"防災安全合わせ\", \"selector\": {\"all\": [{\"glass_category\": \"LOW_E_DOUBLE\", \"glass\": {\"$exists\": true}}, {\"not\": {\"glass_appearance\": \"MILKY\"}}]}, \"evidenceIds\": [\"EV-V8-GLASS-DIAGRAM\"], \"metadata\": {\"manualCheck\": true, \"estimateConfirmationRequired\": true}, \"displayOrder\": 3}, {\"value\": \"MILKY\", \"displayLabel\": \"安全合わせ乳白タイプ\", \"selector\": {\"all\": [{\"glass_category\": \"LOW_E_DOUBLE\", \"glass\": {\"$exists\": true}}, {\"glass_appearance\": \"MILKY\"}]}, \"evidenceIds\": [\"EV-V8-GLASS-DIAGRAM\"], \"metadata\": {\"manualCheck\": true, \"estimateConfirmationRequired\": true}, \"displayOrder\": 4}, {\"value\": \"GRID\", \"displayLabel\": \"格子入り\", \"selector\": {\"all\": [{\"glass_category\": \"LOW_E_DOUBLE\", \"glass\": {\"$exists\": true}}, {\"not\": {\"glass_appearance\": \"MILKY\"}}]}, \"evidenceIds\": [\"EV-V8-GLASS-DIAGRAM\"], \"metadata\": {\"manualCheck\": true, \"estimateConfirmationRequired\": true}, \"displayOrder\": 5}, {\"value\": \"BLIND\", \"displayLabel\": \"ブラインドインPG\", \"selector\": {\"all\": [{\"glass_category\": \"LOW_E_DOUBLE\", \"glass\": {\"$exists\": true}}, {\"not\": {\"glass_appearance\": \"MILKY\"}}]}, \"evidenceIds\": [\"EV-V8-GLASS-DIAGRAM\"], \"metadata\": {\"manualCheck\": true, \"estimateConfirmationRequired\": true}, \"displayOrder\": 6}, {\"value\": \"NONE\", \"displayLabel\": \"なし（標準）\", \"selector\": {\"all\": [{\"glass_category\": \"TRIPLE\", \"glass\": {\"$exists\": true}}, {\"not\": {\"glass_appearance\": \"MILKY\"}}]}, \"evidenceIds\": [\"EV-V8-GLASS-DIAGRAM\"], \"metadata\": {\"manualCheck\": false, \"estimateConfirmationRequired\": false}, \"displayOrder\": 1}, {\"value\": \"SAFETY\", \"displayLabel\": \"安全合わせ\", \"selector\": {\"all\": [{\"glass_category\": \"TRIPLE\", \"glass\": {\"$exists\": true}}, {\"not\": {\"glass_appearance\": \"MILKY\"}}]}, \"evidenceIds\": [\"EV-V8-GLASS-DIAGRAM\"], \"metadata\": {\"manualCheck\": true, \"estimateConfirmationRequired\": true}, \"displayOrder\": 2}, {\"value\": \"DISASTER\", \"displayLabel\": \"防災安全合わせ\", \"selector\": {\"all\": [{\"glass_category\": \"TRIPLE\", \"glass\": {\"$exists\": true}}, {\"not\": {\"glass_appearance\": \"MILKY\"}}]}, \"evidenceIds\": [\"EV-V8-GLASS-DIAGRAM\"], \"metadata\": {\"manualCheck\": true, \"estimateConfirmationRequired\": true}, \"displayOrder\": 3}, {\"value\": \"MILKY\", \"displayLabel\": \"安全合わせ乳白タイプ\", \"selector\": {\"all\": [{\"glass_category\": \"TRIPLE\", \"glass\": {\"$exists\": true}}, {\"glass_appearance\": \"MILKY\"}]}, \"evidenceIds\": [\"EV-V8-GLASS-DIAGRAM\"], \"metadata\": {\"manualCheck\": true, \"estimateConfirmationRequired\": true}, \"displayOrder\": 4}, {\"value\": \"THIN\", \"displayLabel\": \"特殊薄板合わせ\", \"selector\": {\"all\": [{\"glass_category\": \"TRIPLE\", \"glass\": {\"$exists\": true}}, {\"not\": {\"glass_appearance\": \"MILKY\"}}]}, \"evidenceIds\": [\"EV-V8-GLASS-DIAGRAM\"], \"metadata\": {\"manualCheck\": true, \"estimateConfirmationRequired\": true}, \"displayOrder\": 7}]}",
+          "USER_FLOW_POLICY_WITH_EXISTING_EVIDENCE",
+          "REPLUS_GLASS_APPEARANCE_FIRST_V13_20261014"
         ]
       ]
     }
   },
   "generated_at": "2026-09-01",
   "spec_version": "PRODUCT_MASTER_PACKAGE_STORAGE_GATE_v2.0",
-  "candidate_revision": "REPLUS_HIDE_DERIVED_CONFIRMATIONS_V12_20261014"
+  "candidate_revision": "REPLUS_GLASS_APPEARANCE_FIRST_V13_20261014"
 }

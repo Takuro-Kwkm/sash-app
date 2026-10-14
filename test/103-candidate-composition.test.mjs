@@ -8,7 +8,7 @@ import {tmpdir} from 'node:os';
 const root=resolve('changes/replus-runtime-v5'),indexPath=resolve(root,'index.json');
 const index=JSON.parse(readFileSync(indexPath));
 const digest=b=>createHash('sha256').update(b).digest('hex');
-process.env.SASH_CANDIDATE_MANIFEST_FILE_ID='1vpE5a-2J9_2HcKmdGXZffcdliuUyV7-D';process.env.SASH_CANDIDATE_RUNTIME_INDEX=indexPath;process.env.SASH_CANDIDATE_MODE='INSPECT_LOCAL';process.env.SASH_CANDIDATE_INDEX_SHA=digest(readFileSync(indexPath));
+process.env.SASH_CANDIDATE_MANIFEST_FILE_ID='1KJ_wwzKnMm4I3l8J_ht4VrSCZUNEfnrJ';process.env.SASH_CANDIDATE_RUNTIME_INDEX=indexPath;process.env.SASH_CANDIDATE_MODE='INSPECT_LOCAL';process.env.SASH_CANDIDATE_INDEX_SHA=digest(readFileSync(indexPath));
 const {resolveRuntimeAppProduct,runtimeAppIntegrationInventory,getRuntimeAppIntegration}=await import('../src/catalog/runtime-master/runtime-app-bridge.mjs');
 const rows=index.products;
 const {candidateRuntimeEntries,readCandidateModule}=await import('../src/catalog/runtime-master/candidate-runtime-registry.mjs');
