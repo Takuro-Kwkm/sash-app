@@ -32,7 +32,7 @@
 
 ## 保存済み設定
 
-旧Snapshotは既存のstale表示を保持し、利用者が現在Runtimeで再検証した時だけ新しい分類へ対応付ける。旧ガラス選択の原本値を `configuration_migration.originalSelection` に保持する。新しい設定で種類をクリアしても旧版移行は再実行されない。対応できない旧値や条件不足は自動補完せず再確認へ送る。
+旧Snapshotは既存のstale表示を保持し、利用者が現在Runtimeで再検証した時だけ新しい分類へ対応付ける。旧ガラス選択の原本値を `configuration_migration.originalSelection` に保持する。共通Editorの既存拡張情報として保存し、TW採用契約でbytes固定されたdomain.mjsは完全に保持する。新しい設定で種類をクリアしても旧版移行は再実行されない。対応できない旧値や条件不足は自動補完せず再確認へ送る。
 
 ## 固定入力と到達状態
 
@@ -48,3 +48,5 @@
 ## QA
 
 670 Repositoryテスト、lint/typecheck、7仕様×1280/768/390の選択・条件変更・Clear・保存再表示、意味別表示とガラス／部材依存のBrowser QA、共通PDF/XLSX出力を検証。保存はBROWSER_LOCAL_STORAGE。DB／複数端末E2Eは未実施。既存TW・EWの回帰もPASS。8商品×3画面幅の保存再表示と共通出力、通常アプリのRelease regressionも確認。詳細証跡は新しい保存Packetに固定し、PRと正確なHEADへ結ぶ。
+
+CIの初回HEAD 0103084ではdomain.mjsの固定実装hashでTW Gateが拒否した。検査・採用契約を変更せず、移行履歴の付与を共通Editorと既存workflow metadata helperへ移したsuccessorで、固定実装照合と変更Scope QAを再検証する。

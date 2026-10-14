@@ -1,5 +1,6 @@
 import { createProductConfigurationSnapshot } from '/work-management/domain.mjs';
 import { productChoices, choiceForMember, memberForChoice } from '/product-choice-model.mjs';
+import { withConfigurationMigrationAudit } from '/work-management/field-workflow-scope.mjs';
 
 const esc=(value)=>String(value??'').replace(/[&<>'\"]/g,(character)=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'\"':"&quot;"})[character]);
 const reviewChoiceLabel=(value)=>`${esc(value.displayLabel)}${value.manualCheck&&!String(value.displayLabel).includes('要確認')?'（要確認）':''}`;
@@ -278,7 +279,7 @@ export class ProductConfigurationEditor {
     dynamicForm.dataset.resolveRevision=String(revision);
     this.renderWarnings(result);this.renderSummary(result);this.renderProductCodes(result);
     const product=this.state.products.find((row)=>row.id===productId);
-    this.state.snapshot=createProductConfigurationSnapshot({product,result,previousSnapshot:this.state.snapshot});
+    this.state.snapshot=withConfigurationMigrationAudit(createProductConfigurationSnapshot({product,result,previousSnapshot:this.state.snapshot}),this.state.snapshot,result.configurationMigration);
     const badge=this.root.querySelector('#runtimeVersionBadge');badge.hidden=false;badge.textContent=`${this.state.snapshot.source_mode==='CANONICAL_RUNTIME'?'Runtime':'Legacy'} ${this.state.snapshot.package_version}`;
     if(notify)this.onSnapshot(this.state.snapshot,result);
   }

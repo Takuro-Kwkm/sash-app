@@ -156,8 +156,6 @@ export function createProductConfigurationSnapshot({product,result,clock,previou
     runtime_manifest_identity:runtimeIdentity,
     runtime_integrity_hash:sourceHash,
     configuration:cloneValue(result.selection??{}),
-    ...(result.configurationMigration?{configuration_migration:cloneValue(result.configurationMigration)}:
-      previousSnapshot?.product_id===product.id&&previousSnapshot.configuration_migration?{configuration_migration:cloneValue(previousSnapshot.configuration_migration)}:{}),
     ...(Object.keys(workflowData).length?{workflow_data:cloneValue(workflowData)}:{}),
     ...(result.confirmationRequests?.length?{confirmation_requests:cloneValue(result.confirmationRequests)}:{}),
     ...(result.sales_request_handoff?{sales_request_handoff:cloneValue(result.sales_request_handoff),sales_request_state:result.sales_request_state}:{}),

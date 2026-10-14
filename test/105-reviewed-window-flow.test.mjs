@@ -102,11 +102,12 @@ test('bathroom mode precedes opening pattern; a mode change clears the pattern',
 });
 test('migration retains original saved input for review without leaking to a different product',async()=>{
  const {createProductConfigurationSnapshot}=await import('../src/work-management/domain.mjs');
+ const {withConfigurationMigrationAudit}=await import('../src/work-management/field-workflow-scope.mjs');
  const product={id:'CANDIDATE:RPL_TW',manufacturer:'LIXIL',series:'TW'};
  const result={source:'RUNTIME_MASTER',selection:{glass_category:'TW-GL-TRIPLE',glass:'TW-GL-CC'},fields:[],validation:{errors:[],missingRequiredFields:[]},runtimeMaster:{packageVersion:'V7'},configurationMigration:{from:'V6',to:'V7',originalSelection:{glass:'TW-GL-CC'}}};
- const first=createProductConfigurationSnapshot({product,result});assert.deepEqual(first.configuration_migration.originalSelection,{glass:'TW-GL-CC'});
- const next=createProductConfigurationSnapshot({product,result:{...result,configurationMigration:undefined},previousSnapshot:first});assert.deepEqual(next.configuration_migration,first.configuration_migration);
- const different=createProductConfigurationSnapshot({product:{...product,id:'OTHER'},result:{...result,configurationMigration:undefined},previousSnapshot:first});assert.equal(different.configuration_migration,undefined);
+ const first=withConfigurationMigrationAudit(createProductConfigurationSnapshot({product,result}),null,result.configurationMigration);assert.deepEqual(first.configuration_migration.originalSelection,{glass:'TW-GL-CC'});
+ const next=withConfigurationMigrationAudit(createProductConfigurationSnapshot({product,result:{...result,configurationMigration:undefined},previousSnapshot:first}),first);assert.deepEqual(next.configuration_migration,first.configuration_migration);
+ const different=withConfigurationMigrationAudit(createProductConfigurationSnapshot({product:{...product,id:'OTHER'},result:{...result,configurationMigration:undefined},previousSnapshot:first}),first);assert.equal(different.configuration_migration,undefined);
 });
 test('legacy gas survives a declared fixed base; missing window context is not fabricated',async()=>{
  await ui('RPL_TW');const doc=JSON.parse(readFileSync(resolve(root,'candidates/RPL_TW.module.json')));
