@@ -1,10 +1,10 @@
 name: EW Output Successor
 on:
   pull_request:
-    paths: ['src/estimate-output/xlsx-renderer.mjs', 'test/74-estimate-output.test.mjs', 'scripts/production/ew-change.py', 'scripts/production/prepare-ew.py', 'scripts/production/test_ew_output_successor.py', 'contracts/production/order5-*.json', '.github/workflows/ew-output-successor.yml']
+    paths: ['contracts/production/publication-lifecycle*.json', 'contracts/production/current-architecture.json', 'contracts/production/current-authority-successor.json', 'contracts/production/authority-successors/publication-lifecycle*.json', 'contracts/production/release-profile.v1.json', 'contracts/production/release-profiles/**', 'scripts/production/publication-lifecycle*.mjs', 'scripts/production/protected-qa-access.mjs', 'scripts/production/verify-app-release.mjs', 'test/protected-qa-access.test.mjs', 'scripts/production/publication-lifecycle-scope.py', 'scripts/production/prepare-publication-lifecycle.py', 'src/estimate-output/xlsx-renderer.mjs', 'test/74-estimate-output.test.mjs', 'scripts/production/ew-change.py', 'scripts/production/prepare-ew.py', 'scripts/production/test_ew_output_successor.py', 'contracts/production/order5-*.json', '.github/workflows/ew-output-successor.yml']
   push:
     branches: [main]
-    paths: ['src/estimate-output/xlsx-renderer.mjs', 'test/74-estimate-output.test.mjs', 'scripts/production/ew-change.py', 'scripts/production/prepare-ew.py', 'scripts/production/test_ew_output_successor.py', 'contracts/production/order5-*.json', '.github/workflows/ew-output-successor.yml']
+    paths: ['contracts/production/publication-lifecycle*.json', 'contracts/production/current-architecture.json', 'contracts/production/current-authority-successor.json', 'contracts/production/authority-successors/publication-lifecycle*.json', 'contracts/production/release-profile.v1.json', 'contracts/production/release-profiles/**', 'scripts/production/publication-lifecycle*.mjs', 'scripts/production/protected-qa-access.mjs', 'scripts/production/verify-app-release.mjs', 'test/protected-qa-access.test.mjs', 'scripts/production/publication-lifecycle-scope.py', 'scripts/production/prepare-publication-lifecycle.py', 'src/estimate-output/xlsx-renderer.mjs', 'test/74-estimate-output.test.mjs', 'scripts/production/ew-change.py', 'scripts/production/prepare-ew.py', 'scripts/production/test_ew_output_successor.py', 'contracts/production/order5-*.json', '.github/workflows/ew-output-successor.yml']
 permissions:
   contents: read
 jobs:

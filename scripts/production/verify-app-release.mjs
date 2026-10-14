@@ -6,6 +6,7 @@ import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { runtimeAppIntegrationInventory } from '../../src/catalog/runtime-master/runtime-app-bridge.mjs';
 import { releaseBuildMetadata } from '../../src/server/recovery-app.mjs';
+import { protectedQaFetch, safeQaError } from './protected-qa-access.mjs';
 
 const root=resolve(dirname(fileURLToPath(import.meta.url)), '../..');
 const args=process.argv.slice(2);
@@ -21,7 +22,7 @@ const identity=rows=>rows.map(({id,packageVersion,sourceHash,status,selectable,p
 const digest=b=>createHash('sha256').update(b).digest('hex');
 const report={status:'RUNNING',exactHead:head,expectedCommit,url:base.origin,checks:[],assets:[]};
 const get=async path=>{
-  const response=await fetch(new URL(path,base),{redirect:'error',signal:AbortSignal.timeout(30000)});
+  const response=await protectedQaFetch(new URL(path,base),{origin:base.origin});
   assert.equal(response.status,200,`HTTP_OR_PROTECTION_FAILURE:${path}:${response.status}`);
   return response;
 };
@@ -52,7 +53,7 @@ try {
   report.runtimeIdentitySha256=digest(JSON.stringify(identity(integrations)));
   report.buildId=health.buildId;report.releaseCommitSha=health.releaseCommitSha??null;
   report.status='PASS';
-} catch(error) {report.status='FAIL';report.reason=error.message;process.exitCode=1;}
+} catch(error) {report.status='FAIL';report.reason=safeQaError(error);process.exitCode=1;}
 await mkdir(dirname(output),{recursive:true});
 await writeFile(output,JSON.stringify(report,null,2)+'\n');
 console.log(JSON.stringify(report));

@@ -6,6 +6,8 @@ import subprocess
 import sys
 from pathlib import Path
 root=Path(__file__).resolve().parents[2]
+if (root/'contracts/production/publication-lifecycle-scope.v1.json').exists():
+ subprocess.check_call([sys.executable,'-B',str(root/'scripts/production/publication-lifecycle-scope.py')])
 profile=json.loads((root/'contracts/production/release-profile.v1.json').read_bytes())
 metadata=json.loads((root/'contracts/production/shared-release-authority.v1.json').read_bytes())
 carrier=root/'contracts/production/shared-release-authority.v1.bundle'

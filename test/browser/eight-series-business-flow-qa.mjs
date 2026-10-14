@@ -1,29 +1,41 @@
 import assert from 'node:assert/strict';
 import {mkdir,writeFile,readFile} from 'node:fs/promises';
 import {chromium} from 'playwright';
+import {configureProtectedQaBrowser,protectedQaGet,safeQaError} from '../../scripts/production/protected-qa-access.mjs';
 
 const BASE=process.env.QA_BASE_URL??'http://127.0.0.1:4173';
 const OUT=process.env.QA_OUTPUT_DIR??'artifacts/eight-series-business-flow';
-const products=[['LIXIL','SER-LIXIL-TW'],['LIXIL','SER-LIX-EW'],['LIXIL','SER-LIX-SAMOS2H'],['LIXIL','SER-LIX-SAMOSL'],['YKK AP','SER-YKK-APW430'],['YKK AP','SER-YKK-APW431'],['YKK AP','SER-YKKAP-UCHIRIMO'],['LIXIL','SER-LIXIL-INPLUS']];
+const declaredProducts=[['LIXIL','SER-LIXIL-TW'],['LIXIL','SER-LIX-EW'],['LIXIL','SER-LIX-SAMOS2H'],['LIXIL','SER-LIX-SAMOSL'],['YKK AP','SER-YKK-APW430'],['YKK AP','SER-YKK-APW431'],['YKK AP','SER-YKKAP-UCHIRIMO'],['LIXIL','SER-LIXIL-INPLUS']];
+const selectedProductIds=process.env.QA_PRODUCT_IDS?JSON.parse(process.env.QA_PRODUCT_IDS):declaredProducts.map(([,id])=>id);
+assert.ok(Array.isArray(selectedProductIds)&&selectedProductIds.length>0,'QA_PRODUCT_IDS must select existing QA products');
+assert.equal(new Set(selectedProductIds).size,selectedProductIds.length,'QA_PRODUCT_IDS must be unique');
+assert.ok(selectedProductIds.every(id=>declaredProducts.some(([,declared])=>declared===id)),'QA_PRODUCT_IDS contains an undeclared product');
+const products=declaredProducts.filter(([,id])=>selectedProductIds.includes(id));
+const includesUchirimo=selectedProductIds.includes('SER-YKKAP-UCHIRIMO');
 const report={status:'RUNNING',url:BASE,observedAt:new Date().toISOString(),persistence:'BROWSER_LOCAL_STORAGE',exactHead:process.env.GITHUB_SHA??null,viewports:[],errors:[]};
 await mkdir(OUT,{recursive:true});
 const browser=await chromium.launch({headless:true,executablePath:process.env.CHROME_EXECUTABLE_PATH||undefined});
 try{
  for(const width of [1280,768,390]){
   const context=await browser.newContext({storageState:process.env.PLAYWRIGHT_STORAGE_STATE||undefined,viewport:{width,height:900},acceptDownloads:true});
+  await configureProtectedQaBrowser(context,new URL(BASE).origin);
   const page=await context.newPage();
-  page.on('response',r=>{if(r.status()>=400)report.errors.push(`${r.status()} ${r.url()}`);});
-  page.on('pageerror',e=>report.errors.push(e.message));
-  page.on('console',m=>{if(m.type()==='error')report.errors.push(m.text());});
-  const entry=process.env.VERCEL_SHARE_TOKEN?`${BASE}/?_vercel_share=${encodeURIComponent(process.env.VERCEL_SHARE_TOKEN)}`:BASE;
-  await page.goto(entry,{waitUntil:'networkidle'});
+  page.on('response',r=>{if(r.status()>=400)report.errors.push(safeQaError(`${r.status()} ${r.url()}`));});
+  page.on('pageerror',e=>report.errors.push(safeQaError(e.message)));
+  page.on('console',m=>{if(m.type()==='error')report.errors.push(safeQaError(m.text()));});
+  await page.goto(BASE,{waitUntil:'networkidle'});
   assert.equal(new URL(page.url()).origin,new URL(BASE).origin,'QA origin changed');
-  const identityResponse=await context.request.get(`${BASE}/api/health`);
+  const identityResponse=await protectedQaGet(context.request,`${BASE}/api/health`,new URL(BASE).origin);
   assert.equal(identityResponse.status(),200);
   const identity=await identityResponse.json();assert.equal(identity.ok,true);
   if(process.env.QA_EXPECTED_COMMIT)assert.equal(identity.releaseCommitSha,process.env.QA_EXPECTED_COMMIT);
   report.observedCommit=identity.releaseCommitSha??null;
   await writeFile(`${OUT}/health-${width}.json`,JSON.stringify(identity,null,2)+'\n');
+  for(const [,id] of products){
+   await page.goto(`${BASE}/runtime-lab?product=${encodeURIComponent(id)}`,{waitUntil:'networkidle'});
+   await page.waitForFunction(product=>document.querySelector('#product')?.value===product&&document.querySelectorAll('#dynamicForm [data-spec-key]').length>0,id);
+  }
+  await page.goto(BASE,{waitUntil:'networkidle'});
   await page.getByRole('button',{name:'新しい案件'}).first().click();
   await page.locator('[name="project_name"]').fill(`8シリーズ統合QA ${width}`);
   const address=`熊本県熊本市中央区QA-${width}-1-2-3 テスト101号`;
@@ -92,22 +104,24 @@ try{
    const reopened=await page.evaluate(product=>window.__sashWorkApp.readDatabase().openings.find(o=>!o.deleted_at&&o.product_configuration_snapshot?.product_id===product)?.product_configuration_snapshot,id);
    assert.deepEqual(reopened.configuration,saved.configuration,`${id}:save/reopen changed selection`);
    assert.equal(reopened.runtime_manifest_identity,saved.runtime_manifest_identity,`${id}:identity changed`);
+   await writeFile(`${OUT}/snapshot-${id}-${width}.json`,JSON.stringify({saved,reopened},null,2)+'\n');
    const overflow=await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth);assert.ok(overflow<=1,`${id}:overflow ${overflow}`);
    checks.push({id,selectedFields:Object.keys(saved.configuration).length,validationState:saved.validation_state,saveReopen:'PASS'});
    await page.goto(estimateUrl,{waitUntil:'networkidle'});
   }
-  assert.equal(await page.locator('.opening-card').count(),8);
+  assert.equal(await page.locator('.opening-card').count(),products.length);
   await page.click('#estimateOutputLaunch');await page.waitForSelector('#estimateOutputExcel');
-  assert.equal(await page.locator('.estimate-output-table-wrap tbody tr').count(),8);
+  assert.equal(await page.locator('.estimate-output-table-wrap tbody tr').count(),products.length);
   const output=await page.locator('.estimate-output-table-wrap').innerText();
-  for(const label of ['TW','EW','サーモス','430','431','ウチリモ','インプラス'])assert.ok(output.includes(label),`output missing ${label}`);
-  for(const label of ['洋風タイプ WA01（樹脂格子）','外窓用 取替用クレセント（汎用クレセント）','外窓用汎用ハンドル'])assert.ok(output.includes(label),`R6 output missing ${label}`);
+  if(!process.env.QA_PRODUCT_IDS)for(const label of ['TW','EW','サーモス','430','431','ウチリモ','インプラス'])assert.ok(output.includes(label),`output missing ${label}`);
+  if(includesUchirimo)for(const label of ['洋風タイプ WA01（樹脂格子）','外窓用 取替用クレセント（汎用クレセント）','外窓用汎用ハンドル'])assert.ok(output.includes(label),`R6 output missing ${label}`);
   const pending=page.waitForEvent('download');await page.click('#estimateOutputExcel');const download=await pending;
   assert.match(download.suggestedFilename(),/\.xlsx$/);assert.equal(await download.failure(),null);
   const excelBytes=await readFile(await download.path());
   await writeFile(`${OUT}/output-${width}.xlsx`,excelBytes);
   const excelText=excelBytes.toString('utf8');
-  for(const label of ['洋風タイプ WA01（樹脂格子）','外窓用 取替用クレセント（汎用クレセント）','外窓用汎用ハンドル','メーカー見積で確認'])assert.ok(excelText.includes(label),`R6 Excel missing ${label}`);
+  if(includesUchirimo)for(const label of ['洋風タイプ WA01（樹脂格子）','外窓用 取替用クレセント（汎用クレセント）','外窓用汎用ハンドル','メーカー見積で確認'])assert.ok(excelText.includes(label),`R6 Excel missing ${label}`);
+  assert.ok(excelText.includes('0円には置換せず要確認'),'Excel lost unknown amount confirmation');
   await page.evaluate(()=>{
    window.__pdfText=[];window.__pdfBounds=[];
    const fill=CanvasRenderingContext2D.prototype.fillText,stroke=CanvasRenderingContext2D.prototype.strokeRect;
@@ -121,17 +135,18 @@ try{
   const dimensionKeys=new Set(['window_type','opening_type','door_type','size','custom_width','width','custom_height','height','size_w','size_h','order_width','order_height']);
   for(const row of pdfEvidence.summaries.filter(r=>!dimensionKeys.has(r.key)))assert.ok(pdfEvidence.text.includes(`${row.label}: ${row.value}`),`PDF truncated ${row.key}`);
   assert.ok(pdfEvidence.bounds.every(r=>r.y+r.h<=1650),'PDF row crosses footer');
-  assert.ok(pdfEvidence.text.includes('メーカー見積で確認'),'PDF lost manufacturer confirmation');
+  if(includesUchirimo)assert.ok(pdfEvidence.text.includes('メーカー見積で確認'),'PDF lost manufacturer confirmation');
+  assert.ok(pdfEvidence.text.includes('0円には置換せず要確認'),'PDF lost unknown amount confirmation');
   await page.evaluate(()=>{window.__qaPrinted=false;window.print=()=>{window.__qaPrinted=true;};});await page.click('#estimateOutputPrint');assert.equal(await page.evaluate(()=>window.__qaPrinted),true);
   await page.emulateMedia({media:'print'});assert.equal(await page.locator('.estimate-output-actions').evaluate(e=>getComputedStyle(e).display),'none');await page.emulateMedia({media:'screen'});
   await page.screenshot({path:`${OUT}/output-${width}.png`,fullPage:true});
-  report.viewports.push({width,products:checks,outputRows:8,excel:'PASS',pdf:'PASS',print:'PASS'});
+  report.viewports.push({width,products:checks,outputRows:products.length,excel:'PASS',pdf:'PASS',print:'PASS',print_boundary:'PRINT_HANDLER_AND_CSS; PDF_VISUAL_ACCEPTANCE_IS_SEPARATE'});
   await context.close();
  }
  assert.deepEqual(report.errors,[]);
  report.results=report.viewports.flatMap(v=>v.products.map(p=>({name:`save-reopen-${v.width}-${p.id}`,status:p.saveReopen,selectedFields:p.selectedFields})));
  report.pass=report.results.filter(row=>row.status==='PASS').length;
- assert.equal(report.pass,24);report.status='PASS';
-}catch(error){report.status='FAIL';report.failure=error.stack;throw error;}
+ assert.equal(report.pass,3*products.length);report.status='PASS';
+}catch(error){report.status='FAIL';report.failure=safeQaError(error);throw new Error(safeQaError(error));}
 finally{await writeFile(`${OUT}/report.json`,JSON.stringify(report,null,2)+'\n');await browser.close();}
 console.log(JSON.stringify(report));
