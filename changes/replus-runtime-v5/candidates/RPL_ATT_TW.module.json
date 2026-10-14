@@ -1,10 +1,10 @@
 {
   "schema": "PRODUCT_MODULE_CANDIDATE_V1",
-  "candidate_revision": "REPLUS_DIMENSIONS_INNER_FIT_V11_20261014",
+  "candidate_revision": "REPLUS_HIDE_DERIVED_CONFIRMATIONS_V12_20261014",
   "baseline": {
     "path": "candidates/RPL_ATT_TW.json",
     "component_id": "RPL_ATT_TW",
-    "sha256": "fab59fa9276fa899df9a16793be7f33c84a91037f112bc7e2aa1af9cef224587",
+    "sha256": "39e532f20efca68cd5c9c467aec7e682c99363a6f6ebc8dc956ffbabc8f693ff",
     "baseline_sha256": "7f93dfc7874ad874a72096be5839ced3e8269c6d9abdc1b1cb1e804f710059f1",
     "baseline_component_version": "v1.0"
   },
@@ -60,6 +60,7 @@
           "new_sash_exterior_color"
         ],
         "selector": {},
+        "internal": true,
         "id": "CANDIDATE:RPL_ATT_TW:field:exterior_cover_color",
         "productId": "CANDIDATE:RPL_ATT_TW",
         "status": "ACTIVE"
@@ -74,6 +75,7 @@
           "new_sash_interior_color"
         ],
         "selector": {},
+        "internal": true,
         "id": "CANDIDATE:RPL_ATT_TW:field:interior_cover_color",
         "productId": "CANDIDATE:RPL_ATT_TW",
         "status": "ACTIVE"

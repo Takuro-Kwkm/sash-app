@@ -1,6 +1,6 @@
 {
   "schema": "NATIVE_TABLE_PROJECTION_V1",
-  "candidate_revision": "REPLUS_DIMENSIONS_INNER_FIT_V11_20261014",
+  "candidate_revision": "REPLUS_HIDE_DERIVED_CONFIRMATIONS_V12_20261014",
   "product": {
     "id": "CANDIDATE:RPL_ROOM",
     "manufacturer": "LIXIL",
@@ -13,7 +13,7 @@
   "source": {
     "path": "candidates/RPL_ROOM.json",
     "component_id": "RPL_ROOM",
-    "sha256": "ba21ae57910f173f78bbaf00d477ee7c7eefa9cff4ea94fb1abe03ef6a687899",
+    "sha256": "ba3010bf101d852497768682ab3e8715979d4a6fb335c6e9bd22291dfa5994c4",
     "baseline_sha256": "bf8c26c5c139a12162b25851b65aa7ae39892bea6cb962c4b400bd7194882313",
     "baseline_component_version": "v1.0"
   },
@@ -888,7 +888,8 @@
       "parentFields": [
         "sash_exterior_color"
       ],
-      "selector": {}
+      "selector": {},
+      "internal": true
     },
     {
       "key": "interior_cover_color",
@@ -1012,7 +1013,8 @@
       "parentFields": [
         "sash_interior_color"
       ],
-      "selector": {}
+      "selector": {},
+      "internal": true
     },
     {
       "key": "wooden_casing_color",
@@ -3530,7 +3532,8 @@
             "INNER_FIT_OUTSET"
           ]
         }
-      }
+      },
+      "internal": true
     },
     {
       "key": "dimension_basis",
@@ -5050,7 +5053,8 @@
           ],
           "resolvedMessage": "内はめ用のため必要です。数量・価格は積算で確認してください。",
           "pendingMessage": "内はめ仕様を選択してください。",
-          "unavailableMessage": "必要な内はめ部材の対応を確認してください。"
+          "unavailableMessage": "必要な内はめ部材の対応を確認してください。",
+          "resolvedNoticeVisibility": "INTERNAL_ONLY"
         }
       ],
       "evidenceIds": [

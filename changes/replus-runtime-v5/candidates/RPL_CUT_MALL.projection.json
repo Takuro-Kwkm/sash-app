@@ -1,6 +1,6 @@
 {
   "schema": "NATIVE_TABLE_PROJECTION_V1",
-  "candidate_revision": "REPLUS_DIMENSIONS_INNER_FIT_V11_20261014",
+  "candidate_revision": "REPLUS_HIDE_DERIVED_CONFIRMATIONS_V12_20261014",
   "product": {
     "id": "CANDIDATE:RPL_CUT_MALL",
     "manufacturer": "LIXIL",
@@ -13,7 +13,7 @@
   "source": {
     "path": "candidates/RPL_CUT_MALL.json",
     "component_id": "RPL_CUT_MALL",
-    "sha256": "f5ee2d3df3b4670cd1b0452fb4c0d36f99ec5675ddb9b5fc18d34e8f95519568",
+    "sha256": "64057355af1ac35b41ab2d5a76442ef23ce3ac3205ce3f83b1d416b7df5c14c6",
     "baseline_sha256": "874fb588a399c30f90cd3d745d5479cd74ddf8e1cdb08357613ee272022f6270",
     "baseline_component_version": "v1.0"
   },
@@ -576,7 +576,8 @@
       "parentFields": [
         "new_sash_exterior_color"
       ],
-      "selector": {}
+      "selector": {},
+      "internal": true
     },
     {
       "key": "new_construction_window_frame_color",
@@ -778,7 +779,8 @@
       "parentFields": [
         "new_sash_interior_color"
       ],
-      "selector": {}
+      "selector": {},
+      "internal": true
     },
     {
       "key": "cut_mall_window_frame_color",

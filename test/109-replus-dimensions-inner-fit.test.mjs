@@ -2,8 +2,8 @@ import test from 'node:test';import assert from 'node:assert/strict';import {rea
 import {adaptComposedProductRuntime,resolveMigratedCandidateSelection} from '../src/catalog/runtime-master/composed-product-runtime-adapter.mjs';
 import {applyDeclaredWindowFlow} from '../src/catalog/runtime-master/declared-window-flow.mjs';import {getRuntimeAppIntegration} from '../src/catalog/runtime-master/runtime-app-bridge.mjs';import {loadRegisteredRuntime} from '../src/catalog/runtime-master/runtime-master-registry.mjs';
 const root='changes/replus-runtime-v5',index=JSON.parse(readFileSync(root+'/index.json')),readers=new Map();
-async function ui(name,input={}){const e=index.products.find(e=>e.id==='CANDIDATE:'+name);if(!readers.has(name))readers.set(name,await adaptComposedProductRuntime(JSON.parse(readFileSync(root+'/'+e.path)),e,async id=>{const m=getRuntimeAppIntegration(id);return loadRegisteredRuntime(m.manufacturer,m.series)}));const r=readers.get(name).uiResolver(input);r.fields=applyDeclaredWindowFlow(r.fields,e);return r;}
-const field=(r,k)=>r.fields.find(f=>f.key===k);
+async function ui(name,input={}){const e=index.products.find(e=>e.id==='CANDIDATE:'+name);if(!readers.has(name))readers.set(name,await adaptComposedProductRuntime(JSON.parse(readFileSync(root+'/'+e.path)),e,async id=>{const m=getRuntimeAppIntegration(id);return loadRegisteredRuntime(m.manufacturer,m.series)}));const r=readers.get(name).uiResolver(input);r.internalFields=r.fields;r.fields=applyDeclaredWindowFlow(r.fields,e);return r;}
+const field=(r,k)=>r.fields.find(f=>f.key===k)??r.internalFields?.find(f=>f.key===k);
 test('both dimensions are visible; only selected basis is editable and required across four direct variants',async()=>{
  for(const name of ['RPL_ROOM','RPL_TW','RPL_EW','RPL_BATH']){
   let r=await ui(name,{window_type:name+'_SLD',dimension_basis:'SURVEY',survey_width:1010,survey_height:1810,custom_width:9999,custom_height:9999});

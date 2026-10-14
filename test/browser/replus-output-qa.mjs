@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import {readFile,writeFile,mkdir} from 'node:fs/promises';
 import {chromium} from 'playwright';
-const BASE=process.env.QA_BASE_URL??'http://127.0.0.1:4198',OUT='artifacts/replus-flow-v11/output';
+const BASE=process.env.QA_BASE_URL??'http://127.0.0.1:4198',OUT='artifacts/replus-flow-v12/output';
 const index=JSON.parse(await readFile('changes/replus-runtime-v5/index.json'));await mkdir(OUT,{recursive:true});
 const seeds=await Promise.all(index.products.map(async row=>({row,seed:JSON.parse(await readFile('artifacts/replus-runtime-v5/'+row.id.replace(':','-')+'.json')).selection})));
 for(const item of seeds){
@@ -30,7 +30,7 @@ try{
   const model=createEstimateOutputModel({project:{project_id:'candidate-qa',project_name:'リプラス候補7構成',request_company:'QA会社',sales_person:'QA担当'},estimate:{estimate_id:'candidate-qa-estimate',project_id:'candidate-qa',estimate_title:'候補の仕様確認',estimate_no:1,revision_no:0},openings,generatedAt:'2026-10-14T09:00:00+09:00'});
   return {model,pdf:Array.from(createEstimatePdfBytes(model)),xlsx:Array.from(createEstimateXlsxBytes(model))};
  },seeds);
- assert.equal(result.model.rows.length,7);for(const row of result.model.rows.slice(0,4)){assert.ok(JSON.stringify(row).includes('オータムブラウン'),'linked exterior color missing from output');assert.ok(JSON.stringify(row).includes('採寸幅 WS'));assert.ok(JSON.stringify(row).includes('製品仕上がり幅 WD'));assert.ok(JSON.stringify(row).includes('内はめ用'));assert.ok(JSON.stringify(row).includes('既設上枠ベース材')); }assert.ok(result.model.rows.every(r=>r.price===null));assert.equal(result.model.counts.complete,0);
+ assert.equal(result.model.rows.length,7);for(const row of result.model.rows.slice(0,4)){assert.ok(JSON.stringify(row).includes('オータムブラウン'),'linked exterior color missing from output');assert.ok(JSON.stringify(row).includes('採寸幅 WS'));assert.ok(JSON.stringify(row).includes('製品仕上がり幅 WD'));assert.ok(JSON.stringify(row).includes('内はめ用'));assert.ok(!JSON.stringify(row).includes('既設上枠ベース材')); }assert.ok(result.model.rows.every(r=>r.price===null));assert.equal(result.model.counts.complete,0);
  for(const label of ['既設上枠の見付','既設下枠の見付','既設縦枠の見付','建物構造','設置場所','使用環境','新設枠の振出し条件'])assert.ok(!JSON.stringify(result.model.rows).includes(label),'removed input leaked into output: '+label);
  assert.ok(process.env.SASH_CANDIDATE_MANIFEST_FILE_ID,'Saved candidate identity required');
  assert.ok(result.model.rows.every(r=>r.audit.runtime_manifest_identity===process.env.SASH_CANDIDATE_MANIFEST_FILE_ID));

@@ -1,0 +1,103 @@
+{
+  "schema": "CANDIDATE_UI_SUCCESSOR_BINDING_V1",
+  "revision": "REPLUS_HIDE_DERIVED_CONFIRMATIONS_V12_20261014",
+  "parent_commit": "9fd0333c26cad370553023f8c0fbbee6dfef7f92",
+  "current_authority": {
+    "repository": "Takuro-Kwkm/product-ui-contracts",
+    "head": "f7759305a53ed206280a395c0fce166476f2327f",
+    "registry_sha256": "361c3bdbceeac3b4e97720e0c8837c54a577d127e6d83bc8d280bd6e5bc03cd1",
+    "skill_authority_sha256": "39efeca95214ea29816c6666b53c8127e665c821e74e34de3738761cc797e7d3"
+  },
+  "consumer_adopted_implementation": "68f2fe69831a33ab92789526bdcd7a49446122a2",
+  "native_state": "FAIL_CLOSED:NATIVE_ADAPTER_UNAVAILABLE",
+  "formal_adoption": false,
+  "human_decision": null,
+  "release": false,
+  "application_policy": "USER_AUTHORIZED_COVER_COLORS_FOLLOW_SASH",
+  "index": {
+    "drive_file_id": "1vpE5a-2J9_2HcKmdGXZffcdliuUyV7-D",
+    "sha256": "451c680a37a93ac3949fd9b8b4038a6bdaa3b6ccbbb7647b11c0e2e04f158ff5",
+    "bytes": 262801,
+    "readback": "MATCH"
+  },
+  "modules": [
+    {
+      "id": "CANDIDATE:RPL_ROOM",
+      "sha256": "778fcc918196ad46b48f354172cf010030ae2a7f963e6f1a1d11ec512825fa39"
+    },
+    {
+      "id": "CANDIDATE:RPL_TW",
+      "sha256": "2a421fa2f40ba47cbc26af0d11e0e2725ea35dcd100e70520a1d897adc65d9fa"
+    },
+    {
+      "id": "CANDIDATE:RPL_EW",
+      "sha256": "bf41a66e7ff6a78908a3a3fc7e0ba3699f82814c324e4d7887596dee604452c3"
+    },
+    {
+      "id": "CANDIDATE:RPL_BATH",
+      "sha256": "03ec6f1bffcbfd428025c641229ead93cf306fe5d33e807810603c6a5e3f7d96"
+    },
+    {
+      "id": "CANDIDATE:RPL_ATT_TW",
+      "sha256": "90854a05c2e0e8cb047c373d918bc5d093f0f21727f135fdaf78dd2dd46f541d"
+    },
+    {
+      "id": "CANDIDATE:RPL_ATT_TH",
+      "sha256": "6c20997561ea95211619810c6e57d27596a8c9e3a55fed830ae37924fa8ecfc6"
+    },
+    {
+      "id": "CANDIDATE:RPL_CUT_MALL",
+      "sha256": "f4853f08c4b65fa7a3a374d4b8834db3861811f5e8adad5398320b8f951c0178"
+    }
+  ],
+  "protected_files": {
+    "src/work-management/domain.mjs": "ec77668d877126b656382ca2105842f37e1fd4a188fb51fadf5c42d4d1368f41",
+    "src/work-management/field-workflow-scope.mjs": "6458a62cbbc2bbf29f541ab6d5faea3698f085cb2fdbb739ce435dc24fd5f905"
+  },
+  "qa": {
+    "state": "PASS",
+    "unit_tests": 694,
+    "focused_tests": 59,
+    "candidate_browser_cases": 25,
+    "dimensions_browser_cases": 3,
+    "normal_browser_cases": 24,
+    "widths": [
+      1280,
+      768,
+      390
+    ],
+    "page_errors": 0,
+    "common_output_rows": 7,
+    "pdf_pages": 2,
+    "lint": "PASS",
+    "typecheck": "PASS",
+    "persistence": "BROWSER_LOCAL_STORAGE",
+    "protected_files": "UNCHANGED",
+    "authoring_contract_cells": "MATCH",
+    "authoring_untargeted_members": "IDENTICAL"
+  },
+  "pre_qa_index": {
+    "drive_file_id": "1I2bA_jd4KeVR3IFDGB99JIH9rDn33yg7",
+    "sha256": "f26877ed855e0757b9bb70b0a957d4b4f125cc9fc16360eae307422f5afe3de7",
+    "bytes": 260849,
+    "readback": "MATCH",
+    "scope": "PREDECESSOR_V11_ONLY"
+  },
+  "excluded_sales_fields": [
+    "building_structure",
+    "installation_room",
+    "survey_cover_bottom",
+    "survey_cover_side",
+    "survey_cover_top",
+    "usage_humidity",
+    "work_space"
+  ],
+  "hidden_sales_confirmations": [
+    "cut_mall_color",
+    "exterior_cover_color",
+    "inner_fit_required_component",
+    "interior_adjustment_angle_color",
+    "interior_cover_color",
+    "interior_resin_cover_color"
+  ]
+}

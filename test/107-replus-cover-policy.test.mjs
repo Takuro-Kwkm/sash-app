@@ -4,8 +4,8 @@ import {adaptComposedProductRuntime,migrateCandidateSelection} from '../src/cata
 import {applyDeclaredWindowFlow} from '../src/catalog/runtime-master/declared-window-flow.mjs';
 import {getRuntimeAppIntegration} from '../src/catalog/runtime-master/runtime-app-bridge.mjs';import {loadRegisteredRuntime} from '../src/catalog/runtime-master/runtime-master-registry.mjs';
 const root='changes/replus-runtime-v5',index=JSON.parse(readFileSync(root+'/index.json')),readers=new Map();
-async function ui(name,input={}){const e=index.products.find(e=>e.id==='CANDIDATE:'+name);if(!readers.has(name))readers.set(name,await adaptComposedProductRuntime(JSON.parse(readFileSync(root+'/'+e.path)),e,async id=>{const m=getRuntimeAppIntegration(id);return loadRegisteredRuntime(m.manufacturer,m.series)}));const r=readers.get(name).uiResolver(input);r.fields=applyDeclaredWindowFlow(r.fields,e);return r;}
-const field=(r,k)=>r.fields.find(f=>f.key===k);
+async function ui(name,input={}){const e=index.products.find(e=>e.id==='CANDIDATE:'+name);if(!readers.has(name))readers.set(name,await adaptComposedProductRuntime(JSON.parse(readFileSync(root+'/'+e.path)),e,async id=>{const m=getRuntimeAppIntegration(id);return loadRegisteredRuntime(m.manufacturer,m.series)}));const r=readers.get(name).uiResolver(input);r.internalFields=r.fields;r.fields=applyDeclaredWindowFlow(r.fields,e);return r;}
+const field=(r,k)=>r.fields.find(f=>f.key===k)??r.internalFields?.find(f=>f.key===k);
 test('both cover colors follow body colors, override stale/tampered values, and clear when source is removed',async()=>{
  for(const name of ['RPL_ROOM','RPL_TW','RPL_EW','RPL_BATH']){
   const seed={sash_exterior_color:'G',sash_interior_color:name==='RPL_EW'?'F':'M',color_mode:'FREE',bathroom_remodel_mode:'WINDOW_ONLY',exterior_cover_color:'W',interior_cover_color:'P'};
@@ -42,7 +42,7 @@ test('native reference colors use explicit mappings; unavailable dusk gray is ne
  }
 });
 test('glass then interior/exterior finishes precede final measurements across all seven',async()=>{
- for(const e of index.products){const d=JSON.parse(readFileSync(root+'/'+e.path));const b=d.composition?.bindings.find(v=>v.executable),name=d.baseline.component_id;const s=b?{referenced_series_id:b.series_id,referenced_window_id:b.window_id,new_sash_size_mode:'CUSTOM'}:{window_type:d.product_module.allowedValues.find(v=>v.specificationKey==='window_type').value,size_mode:'CUSTOM'};const r=await ui(name,s);let last=-1;for(const f of r.fields){const order=f.presentationGroup.order;assert.ok(order>=last,e.id);last=order;}assert.equal(field(r,'spec_height_category'),undefined);assert.equal(r.orderReady,false);assert.equal(r.pricing.price,null);}
+ for(const e of index.products){const d=JSON.parse(readFileSync(root+'/'+e.path));const b=d.composition?.bindings.find(v=>v.executable),name=d.baseline.component_id;const s=b?{referenced_series_id:b.series_id,referenced_window_id:b.window_id,new_sash_size_mode:'CUSTOM'}:{window_type:d.product_module.allowedValues.find(v=>v.specificationKey==='window_type').value,size_mode:'CUSTOM'};const r=await ui(name,s);let last=-1;for(const f of r.fields){const order=f.presentationGroup.order;assert.ok(order>=last,e.id);last=order;}assert.equal(r.fields.find(f=>f.key==='spec_height_category'),undefined);assert.equal(r.orderReady,false);assert.equal(r.pricing.price,null);}
 });
 test('removed survey inputs cannot filter covers; frame changes still clear incompatible cover sizes',async()=>{
  let r=await ui('RPL_ROOM',{frame_type:'RPL_STD',window_type:'RPL_ROOM_SLD',sash_exterior_color:'G',exterior_cover_type:'COV-STD-SMALL',survey_cover_top:20,survey_cover_bottom:30,survey_cover_side:5});assert.equal(r.selection.exterior_cover_type,'COV-STD-SMALL');
@@ -62,7 +62,7 @@ test('cover-only saved selections retain migration audit without a glass field',
   import {createCandidateRuntimePreview} from './src/server/candidate-runtime-preview.mjs';
   const input={options:['OP-ANGLE-COVER-CUT','OP-COVER-CASING']};
   await createCandidateRuntimePreview()({url:'/api/runtime-master/resolve?'+new URLSearchParams({productId:'CANDIDATE:RPL_ROOM',configurationVersion:'REPLUS_GLASS_FLOW_V8_20261014',selection:JSON.stringify(input)})},{writeHead(){},end(text){const r=JSON.parse(text);if(!r.configurationMigration?.originalSelection.options.includes('OP-ANGLE-COVER-CUT')||r.selection.interior_cover_type!=='OP-ANGLE-COVER-CUT'||!r.selection.options.includes('OP-COVER-CASING'))throw Error('COVER_MIGRATION_AUDIT_MISSING');console.log('PASS');}});
- `],{encoding:'utf8',env:{...process.env,SASH_CANDIDATE_MODE:'INSPECT_LOCAL',SASH_CANDIDATE_MANIFEST_FILE_ID:'1I2bA_jd4KeVR3IFDGB99JIH9rDn33yg7',SASH_CANDIDATE_RUNTIME_INDEX:resolve(root,'index.json'),SASH_CANDIDATE_INDEX_SHA:createHash('sha256').update(readFileSync(root+'/index.json')).digest('hex')}});
+ `],{encoding:'utf8',env:{...process.env,SASH_CANDIDATE_MODE:'INSPECT_LOCAL',SASH_CANDIDATE_MANIFEST_FILE_ID:'1vpE5a-2J9_2HcKmdGXZffcdliuUyV7-D',SASH_CANDIDATE_RUNTIME_INDEX:resolve(root,'index.json'),SASH_CANDIDATE_INDEX_SHA:createHash('sha256').update(readFileSync(root+'/index.json')).digest('hex')}});
  assert.equal(status,0,stderr);assert.match(stdout,/PASS/);
 });
 test('separately supplied trim and angle remain combinable and both migrate from saved options',async()=>{

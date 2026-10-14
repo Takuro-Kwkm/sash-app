@@ -35,7 +35,7 @@ test('cycles, undeclared parents and canonical semantic drift are refused',()=>{
 test('installation labels are distinct and survey dimensions are not production dimensions',async()=>{
  const room=await ui('RPL_ROOM');assert.equal(field(room,'installation_room'),undefined);assert.equal(field(room,'work_space'),undefined);
  const attach=await ui('RPL_ATT_TH');assert.equal(field(attach,'survey_w').presentationGroup.id,'survey');assert.match(field(attach,'survey_w').fieldMeaning,/製品仕上がり寸法とは区別/);
- const ew=await ui('RPL_EW',{window_type:'RPL_EW_SLD'});assert.equal(field(ew,'spec_crescent_position').displayLabel,'クレセント位置');assert.equal(field(ew,'interior_resin_cover_color').displayLabel,'室内カバー色（内観色に連動）');
+ const ew=await ui('RPL_EW',{window_type:'RPL_EW_SLD'});assert.equal(field(ew,'spec_crescent_position').displayLabel,'クレセント位置');assert.equal(field(ew,'interior_resin_cover_color'),undefined);
 });
 test('selected part precedes its color, and removing the part clears its color',async()=>{
  for(const component of ['RPL_ROOM','RPL_TW','RPL_EW','RPL_ATT_TW','RPL_ATT_TH']){

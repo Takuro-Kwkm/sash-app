@@ -40,6 +40,10 @@ export function applyDeclaredSelectionLinks(result, module) {
       if (has(value)) {
         result.selection[rule.targetField] = value;
         field.feedback = {severity:'info', message:rule.resolvedMessage};
+        if(field.internal&&rule.resolvedNoticeVisibility==='INTERNAL_ONLY'){
+          const notices=new Set((module.allowedValues??[]).filter(row=>row.specificationKey===rule.targetField).map(row=>`${row.displayLabel}: 公式資料で最終確認`));
+          for(let i=result.manualWarnings.length-1;i>=0;i--)if(notices.has(result.manualWarnings[i]))result.manualWarnings.splice(i,1);
+        }
       } else {
         field.feedback = {severity:'warning', message:rule.parents.every(key => has(result.selection[key])) ? rule.unavailableMessage : rule.pendingMessage};
         if (rule.parents.every(key => has(result.selection[key]))) result.manualWarnings.push(rule.unavailableMessage);

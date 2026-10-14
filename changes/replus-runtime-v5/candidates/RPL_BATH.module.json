@@ -1,10 +1,10 @@
 {
   "schema": "PRODUCT_MODULE_CANDIDATE_V1",
-  "candidate_revision": "REPLUS_DIMENSIONS_INNER_FIT_V11_20261014",
+  "candidate_revision": "REPLUS_HIDE_DERIVED_CONFIRMATIONS_V12_20261014",
   "baseline": {
     "path": "candidates/RPL_BATH.json",
     "component_id": "RPL_BATH",
-    "sha256": "414c874b96f2dbeea22823e8a0a724025af9a45fcc3dc4e4eadcdd2650bd91fd",
+    "sha256": "c4e82fba2e4c5cffccb9877c184d84a3c234e609fbfb3f340e5f8aeb4387fa4b",
     "baseline_sha256": "e96a29afcfe83d3707823c1b01b8b0b2bf227ea0b9d9971bf2d48e04e2927f00",
     "baseline_component_version": "v1.0"
   },
@@ -172,6 +172,7 @@
           "sash_exterior_color"
         ],
         "selector": {},
+        "internal": true,
         "id": "CANDIDATE:RPL_BATH:field:exterior_cover_color",
         "productId": "CANDIDATE:RPL_BATH",
         "status": "ACTIVE"
@@ -200,6 +201,7 @@
         "selector": {
           "bathroom_remodel_mode": "WINDOW_ONLY"
         },
+        "internal": true,
         "id": "CANDIDATE:RPL_BATH:field:interior_cover_color",
         "productId": "CANDIDATE:RPL_BATH",
         "status": "ACTIVE"
@@ -446,6 +448,7 @@
             ]
           }
         },
+        "internal": true,
         "id": "CANDIDATE:RPL_BATH:field:inner_fit_required_component",
         "productId": "CANDIDATE:RPL_BATH",
         "status": "ACTIVE"
@@ -5478,7 +5481,8 @@
             ],
             "resolvedMessage": "内はめ用のため必要です。数量・価格は積算で確認してください。",
             "pendingMessage": "内はめ仕様を選択してください。",
-            "unavailableMessage": "必要な内はめ部材の対応を確認してください。"
+            "unavailableMessage": "必要な内はめ部材の対応を確認してください。",
+            "resolvedNoticeVisibility": "INTERNAL_ONLY"
           }
         ],
         "evidenceIds": [

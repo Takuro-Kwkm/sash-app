@@ -1,10 +1,10 @@
 {
   "schema": "PRODUCT_MODULE_CANDIDATE_V1",
-  "candidate_revision": "REPLUS_DIMENSIONS_INNER_FIT_V11_20261014",
+  "candidate_revision": "REPLUS_HIDE_DERIVED_CONFIRMATIONS_V12_20261014",
   "baseline": {
     "path": "candidates/RPL_TW.json",
     "component_id": "RPL_TW",
-    "sha256": "bc38641b7dc72dc7e82ff03b7ec40a1065200f95afa08187a141450d83f6a990",
+    "sha256": "e5ce857c1156bc95e8937ad8faafb173522bc3a3aedf5c64472119fd668af47b",
     "baseline_sha256": "5700bd83280a7d20e233116a22ffc8137a274412529513052bd303b7a0634e74",
     "baseline_component_version": "v1.0"
   },
@@ -171,6 +171,7 @@
           "sash_exterior_color"
         ],
         "selector": {},
+        "internal": true,
         "id": "CANDIDATE:RPL_TW:field:exterior_cover_color",
         "productId": "CANDIDATE:RPL_TW",
         "status": "ACTIVE"
@@ -197,6 +198,7 @@
           "sash_interior_color"
         ],
         "selector": {},
+        "internal": true,
         "id": "CANDIDATE:RPL_TW:field:interior_cover_color",
         "productId": "CANDIDATE:RPL_TW",
         "status": "ACTIVE"
@@ -427,6 +429,7 @@
             ]
           }
         },
+        "internal": true,
         "id": "CANDIDATE:RPL_TW:field:inner_fit_required_component",
         "productId": "CANDIDATE:RPL_TW",
         "status": "ACTIVE"
@@ -3154,7 +3157,8 @@
             ],
             "resolvedMessage": "内はめ用のため必要です。数量・価格は積算で確認してください。",
             "pendingMessage": "内はめ仕様を選択してください。",
-            "unavailableMessage": "必要な内はめ部材の対応を確認してください。"
+            "unavailableMessage": "必要な内はめ部材の対応を確認してください。",
+            "resolvedNoticeVisibility": "INTERNAL_ONLY"
           }
         ],
         "evidenceIds": [

@@ -1,6 +1,6 @@
 {
   "schema": "NATIVE_TABLE_PROJECTION_V1",
-  "candidate_revision": "REPLUS_DIMENSIONS_INNER_FIT_V11_20261014",
+  "candidate_revision": "REPLUS_HIDE_DERIVED_CONFIRMATIONS_V12_20261014",
   "product": {
     "id": "CANDIDATE:RPL_ATT_TW",
     "manufacturer": "LIXIL",
@@ -13,7 +13,7 @@
   "source": {
     "path": "candidates/RPL_ATT_TW.json",
     "component_id": "RPL_ATT_TW",
-    "sha256": "fab59fa9276fa899df9a16793be7f33c84a91037f112bc7e2aa1af9cef224587",
+    "sha256": "39e532f20efca68cd5c9c467aec7e682c99363a6f6ebc8dc956ffbabc8f693ff",
     "baseline_sha256": "7f93dfc7874ad874a72096be5839ced3e8269c6d9abdc1b1cb1e804f710059f1",
     "baseline_component_version": "v1.0"
   },
@@ -296,7 +296,8 @@
       "parentFields": [
         "new_sash_exterior_color"
       ],
-      "selector": {}
+      "selector": {},
+      "internal": true
     },
     {
       "key": "interior_cover_color",
@@ -365,7 +366,8 @@
       "parentFields": [
         "new_sash_interior_color"
       ],
-      "selector": {}
+      "selector": {},
+      "internal": true
     },
     {
       "key": "wooden_casing_color",
