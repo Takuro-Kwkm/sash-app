@@ -142,7 +142,7 @@ export function createProductConfigurationSnapshot({product,result,clock,previou
     ??product.canonicalRuntimeReference?.runtimeManifestDriveFileId
     ??null;
   const canonical=result.source==='RUNTIME_MASTER';
-  const runtimeIdentity=manifestId??(!canonical?product.source?.id??null:null);
+  const runtimeIdentity=manifestId??runtime?.candidateRuntimeReference?.sha256??(!canonical?product.source?.id??null:null);
   let workflowData=mergeWorkflowData(previousSnapshot?.workflow_data,result.workflow_data);
   if(previousSnapshot&&isSeparatedEstimateContext(previousSnapshot.product_id,previousSnapshot.configuration)){
     const values=splitWorkflowSelection(previousSnapshot.configuration).siteSurvey;
@@ -155,6 +155,7 @@ export function createProductConfigurationSnapshot({product,result,clock,previou
     package_version:packageVersion,
     runtime_manifest_identity:runtimeIdentity,
     runtime_integrity_hash:sourceHash,
+    ...(runtime?.candidateOnly?{candidate_state:'CANDIDATE_ONLY',candidate_runtime_reference:cloneValue(runtime.candidateRuntimeReference),pricing:{price:null,bom:null,set_code:null}}:{}),
     configuration:cloneValue(result.selection??{}),
     ...(Object.keys(workflowData).length?{workflow_data:cloneValue(workflowData)}:{}),
     ...(result.confirmationRequests?.length?{confirmation_requests:cloneValue(result.confirmationRequests)}:{}),
