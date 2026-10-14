@@ -5,6 +5,7 @@
   "product_fact_mutation_allowed": false,
   "allowed_paths": [
     ".github/workflows/common-release-contract.yml",
+    ".github/workflows/ew-output-successor.yml",
     "contracts/production/authority-successors/publication-lifecycle-predecessor-profile.v1.json",
     "contracts/production/authority-successors/publication-lifecycle-predecessor-selection.v1.json",
     "contracts/production/authority-successors/publication-lifecycle.v1.json",
@@ -22,6 +23,7 @@
     "contracts/production/shared-release-authority.v1.json",
     "docs/PUBLICATION_LIFECYCLE.md",
     "scripts/production/prepare-publication-lifecycle.py",
+    "scripts/production/protected-qa-access.mjs",
     "scripts/production/publication-lifecycle-qa.mjs",
     "scripts/production/publication-lifecycle-scope.py",
     "scripts/production/publication-lifecycle.mjs",
@@ -29,7 +31,9 @@
     "scripts/production/test_publication_lifecycle.py",
     "scripts/production/validate-order4-release.py",
     "scripts/production/validate-order5-release.py",
-    "test/browser/eight-series-business-flow-qa.mjs"
+    "scripts/production/verify-app-release.mjs",
+    "test/browser/eight-series-business-flow-qa.mjs",
+    "test/protected-qa-access.test.mjs"
   ],
   "protected_sha256": {
     ".github/workflows/app-production-hotfix.yml": "1cd7d4d20d5a61d5a1c3215191ff91a6f5dc39015576ac8303087641fefceabd",
@@ -38,7 +42,6 @@
     ".github/workflows/estimate-output-production.yml": "673a591f1b8da995358911fc14a1e6fb27a62aac6c551e9d665d8433c7ee8757",
     ".github/workflows/estimate-output-qa.yml": "e5afe16765747e27f82a2fdf8eee8180ed5567ee1bceac761ce98b60abe2c6e6",
     ".github/workflows/ew-catalog-202610.yml": "e05f8d3dbbe633d57a988c4d20f64f69e989e3f58d0aac7c37d3cd9116d120e3",
-    ".github/workflows/ew-output-successor.yml": "8efd66b381957da107cd2f4947030038a91bf69c3c87da9755fb2aa7243689b0",
     ".github/workflows/ew-production-finalize.yml": "61e74232dcf43c657db52e93bda5b735cadf9ff99ee881b61ac1c9d966082e2e",
     ".github/workflows/global-window-selection-flow-gate.yml": "cf288f70ca2234e8ce9820a2d917004b74b236548a141407f1368dea3cb733e6",
     ".github/workflows/governance-authorization.yml": "5e974cdb5b35d1014adde4242cb7b1604de6032b5002019816eb295ee5acfc07",
@@ -460,7 +463,6 @@
     "scripts/production/validate-current-authority-successor.py": "35b38b2f906202cea36ef07f6f12a3b83cb4f8291d382d750910fa5f7f98b083",
     "scripts/production/validate-product-master-build.py": "e27ec8b9469f24b420103777ad0b3aef8a705ea272ee8afdc867da7d6e182ed5",
     "scripts/production/validate-product-master-profile.py": "aec961f3ea8d7ac09f775c5fe8eb192d2c786cd1ca8c7ab38714774d8a6ce45a",
-    "scripts/production/verify-app-release.mjs": "0e5f3301de89c6b9cf041ada3683b3bfa1056727598ed41342606267d3e101ba",
     "scripts/stage-a-custom-dimension-boundary-partition-proof-v2.mjs": "37bbccf7bc71f31dcaca3efb00639819c65cd9a33abd4770b71e2e5dc5f5f4a9",
     "scripts/stage-a-custom-dimension-boundary-partition-proof.mjs": "4562b77d9f58fad1abd347becb6110b80646d4dff6f176d27db7acb06bc62cab",
     "scripts/stage-a-custom-dimension-source-shape-diagnostic.mjs": "cbbac6aeeae3a5c5d2ea2787c252f5d882ed743317faf59f095299ac8631809b",
@@ -961,23 +963,27 @@
     "vercel.json": "1d2210ec1d8fd44369362cc4939804e424a474f5487950c80a599aa80163d768"
   },
   "candidate_files_sha256": {
-    ".github/workflows/common-release-contract.yml": "e084aadfdd78310e288bca8a6d6d8b91b12328751cf41b34ed50200a25b18ebd",
+    ".github/workflows/common-release-contract.yml": "9eb3ae7d3e735938cf82d9188592469da72b396aa46e9342d554243838c24a5c",
+    ".github/workflows/ew-output-successor.yml": "f0e9a404f58f705e05107da22990d2c8228210ac732a53a5b2ef6f12c6547ca6",
     "contracts/production/authority-successors/publication-lifecycle-predecessor-profile.v1.json": "bbb952fd50a6528e9a04a87d083502940a34f11b940de76ad9ec40557ca1d12c",
     "contracts/production/authority-successors/publication-lifecycle-predecessor-selection.v1.json": "fd3ebccfcd734763741dc4047f87f59c5ba6ea4a3477c543c4cf50a876e96a1e",
     "contracts/production/current-architecture.json": "b8aefe774696f5e4b1bed63a652c37a6ffe0da49e282998e59cdc0dab32ecda7",
     "contracts/production/publication-lifecycle.v1.json": "6b101d1522c303aee5425a04ae198f8a31c78ccd4b7334a9d6679a9687734c83",
     "contracts/production/release-profiles.v1.json": "eaabf3b46b9180a06f9e72454c32c145021a024873e288e2fd7f612d201a163e",
-    "contracts/production/shared-release-authority.v1.bundle": "93d8cc04714192e129140f0b0c75fa82e4150a54f3491b6d4efb0a610b64949d",
-    "contracts/production/shared-release-authority.v1.json": "eb98867bb426cc7bd6952a5cf65d618aeeb142539204c8880b4819c0e8fb14bb",
-    "docs/PUBLICATION_LIFECYCLE.md": "3960c7a4b0a9ab7d2a5362e13a7f59c95e037708bf0cf4392632a0c76593ea5c",
+    "contracts/production/shared-release-authority.v1.bundle": "edb9acd01dcd51900df9fdf2a79c10ad6264d27fab9d5e5bdec4f259d67094ff",
+    "contracts/production/shared-release-authority.v1.json": "6483be9222726efb575e431328d3a1f38f33220629f69095b8805b4ff8a641b5",
+    "docs/PUBLICATION_LIFECYCLE.md": "ca5307d34860255a7b203377df19a17e360d003b68edd6cbb3ebe67956d80857",
     "scripts/production/prepare-publication-lifecycle.py": "84791f06585824978a60aadcfd33fe831cdfa55af5380adce03a95809b9668aa",
+    "scripts/production/protected-qa-access.mjs": "4c3ed8fe38a228278b308cdc34b9633cbd303d788d74a3a16fbd385b7b432e45",
     "scripts/production/publication-lifecycle-qa.mjs": "2b9722d887ab6516e988c09284cd9489b842f1396a0c0ada8f29502a87a48066",
-    "scripts/production/publication-lifecycle-scope.py": "41587424df360bc91852378fa55c678ccbe0ecd3784aab6bb93807d2037b17c3",
+    "scripts/production/publication-lifecycle-scope.py": "7d07e373359c25670b9ec51a024e222b4cc6fad145f87219d55327e50149c1e2",
     "scripts/production/publication-lifecycle.mjs": "97a5af337000d9c63ff92b0d37ccb894e2503d0e5070b60f643ff73e056973f1",
     "scripts/production/release-batch.py": "a7e26336a3f2ddef7656100394984c5cd463e9b67108c1890c20de75b446d546",
     "scripts/production/test_publication_lifecycle.py": "7305e8b7b7e17b9db12467f78d2255e484663cad175f5a8e8e97b7e070c03c7b",
     "scripts/production/validate-order4-release.py": "0c714578eec0f272d9b9207be8be914f93defba1a6641c627bd81ddecd3b18fd",
     "scripts/production/validate-order5-release.py": "fe48082b95a3214be6f155a990d3747f852953d6056e8de42c373e28e3205a3c",
-    "test/browser/eight-series-business-flow-qa.mjs": "4646559d6197e4ed22f67d211485cd3abb48ba16d446bf8e4638f3f506e1c42e"
+    "scripts/production/verify-app-release.mjs": "d48d138e7717738ac9cc9eb8ea3eb6ea2acd47fd1c85fe2c2e16147bede457ac",
+    "test/browser/eight-series-business-flow-qa.mjs": "27ef735409788afc34c5489b63b9729a67ecc40aefbb29907e02f41f2695c8e1",
+    "test/protected-qa-access.test.mjs": "d7b788b72a2446f758e8d23c64d0738bd3f5c4c6e3ac00fa7b863677b9f5e8dd"
   }
 }

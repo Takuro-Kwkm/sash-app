@@ -13,6 +13,7 @@ REGISTRY = 'contracts/production/release-profiles.v1.json'
 SCOPE_PATH = 'contracts/production/publication-lifecycle-scope.v1.json'
 ALLOWED = {
     '.github/workflows/common-release-contract.yml',
+    '.github/workflows/ew-output-successor.yml',
     'contracts/production/authority-successors/publication-lifecycle-predecessor-profile.v1.json',
     'contracts/production/authority-successors/publication-lifecycle-predecessor-selection.v1.json',
     'contracts/production/authority-successors/publication-lifecycle.v1.json',
@@ -28,6 +29,8 @@ ALLOWED = {
     'docs/PUBLICATION_LIFECYCLE.md',
     'scripts/production/publication-lifecycle.mjs',
     'scripts/production/publication-lifecycle-qa.mjs',
+    'scripts/production/protected-qa-access.mjs',
+    'scripts/production/verify-app-release.mjs',
     'scripts/production/publication-lifecycle-scope.py',
     'scripts/production/prepare-publication-lifecycle.py',
     'scripts/production/release-batch.py',
@@ -35,6 +38,7 @@ ALLOWED = {
     'scripts/production/validate-order5-release.py',
     'scripts/production/test_publication_lifecycle.py',
     'test/browser/eight-series-business-flow-qa.mjs',
+    'test/protected-qa-access.test.mjs',
 }
 CYCLIC = {SCOPE_PATH, PROFILE, 'contracts/production/current-authority-successor.json',
           'contracts/production/authority-successors/publication-lifecycle.v1.json',

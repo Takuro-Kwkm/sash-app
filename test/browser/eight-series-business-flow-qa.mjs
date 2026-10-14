@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import {mkdir,writeFile,readFile} from 'node:fs/promises';
 import {chromium} from 'playwright';
+import {configureProtectedQaBrowser,protectedQaGet,safeQaError} from '../../scripts/production/protected-qa-access.mjs';
 
 const BASE=process.env.QA_BASE_URL??'http://127.0.0.1:4173';
 const OUT=process.env.QA_OUTPUT_DIR??'artifacts/eight-series-business-flow';
@@ -17,14 +18,14 @@ const browser=await chromium.launch({headless:true,executablePath:process.env.CH
 try{
  for(const width of [1280,768,390]){
   const context=await browser.newContext({storageState:process.env.PLAYWRIGHT_STORAGE_STATE||undefined,viewport:{width,height:900},acceptDownloads:true});
+  await configureProtectedQaBrowser(context,new URL(BASE).origin);
   const page=await context.newPage();
-  page.on('response',r=>{if(r.status()>=400)report.errors.push(`${r.status()} ${r.url()}`);});
-  page.on('pageerror',e=>report.errors.push(e.message));
-  page.on('console',m=>{if(m.type()==='error')report.errors.push(m.text());});
-  const entry=process.env.VERCEL_SHARE_TOKEN?`${BASE}/?_vercel_share=${encodeURIComponent(process.env.VERCEL_SHARE_TOKEN)}`:BASE;
-  await page.goto(entry,{waitUntil:'networkidle'});
+  page.on('response',r=>{if(r.status()>=400)report.errors.push(safeQaError(`${r.status()} ${r.url()}`));});
+  page.on('pageerror',e=>report.errors.push(safeQaError(e.message)));
+  page.on('console',m=>{if(m.type()==='error')report.errors.push(safeQaError(m.text()));});
+  await page.goto(BASE,{waitUntil:'networkidle'});
   assert.equal(new URL(page.url()).origin,new URL(BASE).origin,'QA origin changed');
-  const identityResponse=await context.request.get(`${BASE}/api/health`);
+  const identityResponse=await protectedQaGet(context.request,`${BASE}/api/health`,new URL(BASE).origin);
   assert.equal(identityResponse.status(),200);
   const identity=await identityResponse.json();assert.equal(identity.ok,true);
   if(process.env.QA_EXPECTED_COMMIT)assert.equal(identity.releaseCommitSha,process.env.QA_EXPECTED_COMMIT);
@@ -146,6 +147,6 @@ try{
  report.results=report.viewports.flatMap(v=>v.products.map(p=>({name:`save-reopen-${v.width}-${p.id}`,status:p.saveReopen,selectedFields:p.selectedFields})));
  report.pass=report.results.filter(row=>row.status==='PASS').length;
  assert.equal(report.pass,3*products.length);report.status='PASS';
-}catch(error){report.status='FAIL';report.failure=error.stack;throw error;}
+}catch(error){report.status='FAIL';report.failure=safeQaError(error);throw new Error(safeQaError(error));}
 finally{await writeFile(`${OUT}/report.json`,JSON.stringify(report,null,2)+'\n');await browser.close();}
 console.log(JSON.stringify(report));

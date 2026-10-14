@@ -16,11 +16,11 @@
   },
   "compatibility_implementation": {
     "repository": "Takuro-Kwkm/product-ui-contracts",
-    "ref": "dd158fa80828ef07668b252595fd4c285f65b30d"
+    "ref": "690ebb22a5104f5affa0e7296bb8e424ecf111e4"
   },
   "release_profile": {
     "path": "contracts/production/release-profile.v1.json",
-    "sha256": "93e64e8f5574c213d2daba5ebe0a3b4b5113f5d7d21a21c0dedf8c7dc7e41863"
+    "sha256": "44c69896013a0b2af0afd1c471a2d1caef9c49176905a9677d09fe5ad95acca0"
   },
   "semantic_delta": {
     "added": {
@@ -33,7 +33,7 @@
       },
       "harness/current_authority.py": {
         "before": "b4421835433173b9fe18e0c9e0e0c44024636b3be982d0872f917a47a1e7c5af",
-        "after": "61d7d1e0a13f500a747b778ca6a6fffbeea242309865d9ee8a9ec32d3102ef86"
+        "after": "320f2435e53845702dbe3c2c0a2177bf303345aa236ad51fcfff99bcb652cf45"
       },
       "harness/release_admission.py": {
         "before": "2218f702ceda727a742068d372446039d0a5c25275bb05095175379532a80ffd",
@@ -41,7 +41,7 @@
       },
       "harness/release_publication.py": {
         "before": "2026ce72941999380d3b5cddb9bc4d5e3b39a289b91fcf0b966279061a4ad2e6",
-        "after": "3ce497f0dbd52cd6a56b562506ff94e713edb755fb68353404ca02e527dd7d63"
+        "after": "360d430206ffb06a70534cf76c09fa9d80278c119683f02a3b0949272d893335"
       }
     }
   },
@@ -84,13 +84,13 @@
       "harness/changed_path.py": "bccb5c91c2a2f6055286a914fd0afa88159b97b5e4622f5a711638f6a65471d0",
       "harness/cli.py": "66f77f109e3980c1a48d8c8c2907dc677b118a8b466bcd8e45d252a7b04e1f8f",
       "harness/core.py": "e35467a495a4c800fc5dc4bc642fad234f1fc3da07a7bf39727eefd4112bb203",
-      "harness/current_authority.py": "61d7d1e0a13f500a747b778ca6a6fffbeea242309865d9ee8a9ec32d3102ef86",
+      "harness/current_authority.py": "320f2435e53845702dbe3c2c0a2177bf303345aa236ad51fcfff99bcb652cf45",
       "harness/github_bridge.py": "4a544f318c2cc9b2e8ebb55ac0a290607c83ed41092495c35087260014564cce",
       "harness/production.py": "fd34204892b420587a7c9c744473980c392a0ec48c7f6b05e5e16ce3a17b57f6",
       "harness/production_recovery.py": "8b2703a504d7574bf03460c944e75975efba31f1172ae7976450ef19713a1f1f",
       "harness/release.py": "0cc0d42f711d7fb52ef6bd781505a20ea27753031abc225ab6286c94c7cf1538",
       "harness/release_admission.py": "7921e01a917907320880a228f141d21054e896e4c30731697f9a4a7007ab6284",
-      "harness/release_publication.py": "3ce497f0dbd52cd6a56b562506ff94e713edb755fb68353404ca02e527dd7d63",
+      "harness/release_publication.py": "360d430206ffb06a70534cf76c09fa9d80278c119683f02a3b0949272d893335",
       "harness/release_restore.py": "9a2903eea8887efa66b55ec92f9909e1353ff7ea631b90459d0ba548bb4b6a7a",
       "harness/resolvers.py": "cb1704e92446cb6552f9da80ad30928928ed1aa4d05aedcce13ee69e07229a57",
       "harness/verified_downstream_continuation.py": "6f504b820f823594e950e790cd0ac6c9eada57465b3ab1548f1e1ce61b310e22",
@@ -573,7 +573,7 @@
         "harness/architecture.py": {
           "scope": "EXISTING_ROUTES_ONLY",
           "prior_sha256": "f18203cb7f16f3155378d810c33961c373641b3fbc8da08b47491f9ac2ea36ef",
-          "current_sha256": "b25215311e6f89ca078d2a8e720bf25948e7ead3f2b9e1c345cd215913203d27",
+          "current_sha256": "40f147d488ea556527e7e1f1ced453fd2c7484551fdf45a93195647eb50b6afe",
           "prior_ref": "784afba8fe277b92031da6158c25721a25aafd78",
           "policy": "Only acquired consumers without new-product profile use retained existing routes; new bootstrap requires explicit profile adoption"
         }

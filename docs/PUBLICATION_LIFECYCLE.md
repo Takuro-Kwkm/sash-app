@@ -48,6 +48,14 @@ uses an isolated context and tests save/reopen. Its persistence guarantee is
 actual PDF visual acceptance remains separately evidenced. Deployment logs are
 `NOT_EXECUTED` in browser evidence and must be supplied from the actual provider.
 
+Protected candidate and staged production QA accepts a temporary
+`VERCEL_SHARE_TOKEN` or `VERCEL_OIDC_TOKEN` through the process environment with
+`QA_AUTH_ORIGIN` equal to that exact deployment origin. Authentication stays in
+memory. Native HTTP and browser requests resolve at most five same-origin
+redirect hops, reject cross-origin redirects, and redact access tokens from
+errors. Browser navigation retains its original clean URL. Protected redirects
+for methods other than GET/HEAD fail closed. Production policy is not modified.
+
 Prepare byte pins only after the shared implementation is committed:
 
 ```sh
