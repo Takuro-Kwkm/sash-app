@@ -22,7 +22,7 @@
 
 ## 検証
 
-- lint/typecheck PASS。全682テストPASS、変更範囲47テストPASS。
+- lint/typecheck PASS。全684テストPASS、変更範囲49テストPASS。
 - 1280/768/390px：色変更、SAME/FREE変更、室外見付のClear、最終寸法、横はみ出しを検証。
 - 候補7構成×3幅の保存・再表示21ケース。両カバー色を選定して再表示後の確認値を比較。
 - 既存8シリーズ×3幅の業務回帰24ケースPASS。
@@ -34,4 +34,4 @@
 
 ローカル候補版。Native routerはNATIVE_ADAPTER_UNAVAILABLEを返し、正式採用・Current切替・main merge・本番配信をしていない。保存QAはBROWSER_LOCAL_STORAGEで、Live DB/複数端末は未実施。以前のV8成果・Formal・既存の業務ドメイン2ファイルは保持する。
 
-詳細の入力・Source・Current Authority・候補索引の完全SHAはchanges/replus-runtime-v5/binding.v9.jsonへ固定した。Google Drive候補索引は1nfyc1mPuppzfgR5zSJ6puisjvRJ7S5Hf、237999 bytes、SHA256 2050769e30af2f567a56c21372d8c0382b9f5edcdaa2e9ac826f111e2409817a、読み戻し完全一致。
+詳細の入力・Source・Current Authority・候補索引の完全SHAはchanges/replus-runtime-v5/binding.v9.jsonへ固定した。Google Drive候補索引は1bjH30eC8yiz60ryXqzINxJz7qU4d_5LG、237999 bytes、SHA256 073d41095a8e04f2bd886206e3127bc4debb89c95b01184262f723d2311f8e56、読み戻し完全一致。

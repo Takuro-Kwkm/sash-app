@@ -1,3 +1,4 @@
+import {spawnSync} from 'node:child_process';import {resolve} from 'node:path';import {createHash} from 'node:crypto';
 import test from 'node:test';import assert from 'node:assert/strict';import {readFileSync} from 'node:fs';
 import {adaptComposedProductRuntime,migrateCandidateSelection} from '../src/catalog/runtime-master/composed-product-runtime-adapter.mjs';
 import {applyDeclaredWindowFlow} from '../src/catalog/runtime-master/declared-window-flow.mjs';
@@ -54,4 +55,17 @@ test('dimensions derive hidden category, invalidate terrace sash, and hold overl
 });
 test('old cover options migrate into dedicated flow without dropping unrelated options',()=>{
  const d=JSON.parse(readFileSync(root+'/candidates/RPL_ROOM.module.json'));const s=migrateCandidateSelection({options:['OP-ANGLE-COVER-CUT','OP-COVER-CASING']},d.selection_migrations);assert.equal(s.interior_cover_type,'OP-ANGLE-COVER-CUT');assert.deepEqual(s.options,['OP-COVER-CASING']);
+});
+test('cover-only saved selections retain migration audit without a glass field',()=>{
+ const {stdout,stderr,status}=spawnSync(process.execPath,['--input-type=module','-e',`
+  import {createCandidateRuntimePreview} from './src/server/candidate-runtime-preview.mjs';
+  const input={options:['OP-ANGLE-COVER-CUT','OP-COVER-CASING']};
+  await createCandidateRuntimePreview()({url:'/api/runtime-master/resolve?'+new URLSearchParams({productId:'CANDIDATE:RPL_ROOM',configurationVersion:'REPLUS_GLASS_FLOW_V8_20261014',selection:JSON.stringify(input)})},{writeHead(){},end(text){const r=JSON.parse(text);if(!r.configurationMigration?.originalSelection.options.includes('OP-ANGLE-COVER-CUT')||r.selection.interior_cover_type!=='OP-ANGLE-COVER-CUT'||!r.selection.options.includes('OP-COVER-CASING'))throw Error('COVER_MIGRATION_AUDIT_MISSING');console.log('PASS');}});
+ `],{encoding:'utf8',env:{...process.env,SASH_CANDIDATE_MODE:'INSPECT_LOCAL',SASH_CANDIDATE_MANIFEST_FILE_ID:'1bjH30eC8yiz60ryXqzINxJz7qU4d_5LG',SASH_CANDIDATE_RUNTIME_INDEX:resolve(root,'index.json'),SASH_CANDIDATE_INDEX_SHA:createHash('sha256').update(readFileSync(root+'/index.json')).digest('hex')}});
+ assert.equal(status,0,stderr);assert.match(stdout,/PASS/);
+});
+test('separately supplied trim and angle remain combinable and both migrate from saved options',async()=>{
+ const d=JSON.parse(readFileSync(root+'/candidates/RPL_ATT_TW.module.json'));const migrated=migrateCandidateSelection({options:['ATT-TW-OP-ANGLE-COVER','ATT-TW-OP-TRIM','ATT-TW-OP-CONNECT-SCREW']},d.selection_migrations);
+ assert.deepEqual(migrated.interior_cover_type,['ATT-TW-OP-ANGLE-COVER','ATT-TW-OP-TRIM']);assert.deepEqual(migrated.options,['ATT-TW-OP-CONNECT-SCREW']);
+ const r=await ui('RPL_ATT_TW',migrated);assert.equal(field(r,'interior_cover_type').dataType,'MULTI_ENUM');assert.deepEqual(r.selection.interior_cover_type,migrated.interior_cover_type);
 });

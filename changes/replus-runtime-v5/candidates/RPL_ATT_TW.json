@@ -3419,7 +3419,7 @@
           "フロー",
           "interior_cover_type",
           "",
-          "{\"label\": \"室内側の仕上げ仕様\", \"group\": \"interior_finish\", \"internal\": false}",
+          "{\"label\": \"室内側の仕上げ仕様\", \"group\": \"interior_finish\", \"internal\": false, \"dataType\": \"MULTI_ENUM\", \"meaning\": \"アングルカバーと見切材の組合せを複数選択する。\"}",
           "UI_PRESENTATION",
           "REPLUS_GLOBAL_FLOW_V9_20261014"
         ],

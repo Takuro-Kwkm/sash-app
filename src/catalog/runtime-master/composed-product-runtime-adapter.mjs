@@ -10,7 +10,10 @@ export function migrateCandidateSelection(input,migrations=[]){
     if(!match)continue;
     if(migration.clearValue)selection[migration.source]=selection[migration.source].filter(value=>value!==migration.value);
     else if(migration.clearSource)delete selection[migration.source];
-    for(const [key,value] of Object.entries(migration.assign))if(!own(selection,key))selection[key]=value;
+    for(const [key,value] of Object.entries(migration.assign)){
+      if(!own(selection,key))selection[key]=value;
+      else if(migration.mergeArrays&&Array.isArray(selection[key])&&Array.isArray(value))selection[key]=[...new Set([...selection[key],...value])];
+    }
   }
   return selection;
 }

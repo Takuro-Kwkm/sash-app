@@ -13,7 +13,7 @@
   "source": {
     "path": "candidates/RPL_ATT_TW.json",
     "component_id": "RPL_ATT_TW",
-    "sha256": "b25fe185ac300b8d7a91c300485e270fa6897f0267dbb028111f7a34162da06f",
+    "sha256": "f296e9c89dc38421f8540efe2d99c6255e50b84ba46554471494723b6a7bf25a",
     "baseline_sha256": "7f93dfc7874ad874a72096be5839ced3e8269c6d9abdc1b1cb1e804f710059f1",
     "baseline_component_version": "v1.0"
   },
@@ -676,7 +676,7 @@
     {
       "key": "interior_cover_type",
       "displayLabel": "室内側の仕上げ仕様",
-      "dataType": "ENUM",
+      "dataType": "MULTI_ENUM",
       "displayOrder": 900,
       "choices": [
         {
@@ -2354,8 +2354,11 @@
       "value": "ATT-TW-OP-ANGLE-COVER",
       "clearValue": true,
       "assign": {
-        "interior_cover_type": "ATT-TW-OP-ANGLE-COVER"
-      }
+        "interior_cover_type": [
+          "ATT-TW-OP-ANGLE-COVER"
+        ]
+      },
+      "mergeArrays": true
     },
     {
       "source": "options",
@@ -2363,8 +2366,11 @@
       "value": "ATT-TW-OP-TRIM",
       "clearValue": true,
       "assign": {
-        "interior_cover_type": "ATT-TW-OP-TRIM"
-      }
+        "interior_cover_type": [
+          "ATT-TW-OP-TRIM"
+        ]
+      },
+      "mergeArrays": true
     }
   ]
 }
