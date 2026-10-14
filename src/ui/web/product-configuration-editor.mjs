@@ -66,7 +66,6 @@ function identityFor(product,configuration={}){
   if(variant?.identity)return variant.identity;
   const canonical=product.sourceType==='RUNTIME_MASTER';
   return product.canonicalRuntimeReference?.runtimeManifestDriveFileId
-    ??product.canonicalRuntimeReference?.candidateSha256
     ??(!canonical?product.source?.id??null:null);
 }
 
@@ -85,7 +84,7 @@ export class ProductConfigurationEditor {
   async mount(){
     this.root.innerHTML=`
       <section class="card runtime-editor">
-        <div class="section-heading"><div><h2>商品仕様</h2><p class="lead">商品を選択すると、その構成に対応する選択項目を表示します。</p></div><span id="runtimeVersionBadge" class="version-badge" hidden></span></div>
+        <div class="section-heading"><div><h2>商品仕様</h2><p class="lead">正式Runtime / 既存共通Catalogから商品設定を入力します。</p></div><span id="runtimeVersionBadge" class="version-badge" hidden></span></div>
         <div id="runtimeStaleNotice"></div>
         <div class="field"><label for="manufacturer">メーカー</label><select id="manufacturer"><option value="">選択してください</option></select></div>
         <div class="field"><label for="product">商品</label><select id="product" disabled><option value="">選択してください</option></select></div>
@@ -227,7 +226,7 @@ export class ProductConfigurationEditor {
     this.renderWarnings(result);this.renderSummary(result);this.renderProductCodes(result);
     const product=this.state.products.find((row)=>row.id===productId);
     this.state.snapshot=createProductConfigurationSnapshot({product,result,previousSnapshot:this.state.snapshot});
-    const badge=this.root.querySelector('#runtimeVersionBadge');badge.hidden=false;badge.textContent=this.state.snapshot.candidate_state==='CANDIDATE_ONLY'?'候補（正式採用前）':`${this.state.snapshot.source_mode==='CANONICAL_RUNTIME'?'Runtime':'Legacy'} ${this.state.snapshot.package_version}`;
+    const badge=this.root.querySelector('#runtimeVersionBadge');badge.hidden=false;badge.textContent=`${this.state.snapshot.source_mode==='CANONICAL_RUNTIME'?'Runtime':'Legacy'} ${this.state.snapshot.package_version}`;
     if(notify)this.onSnapshot(this.state.snapshot,result);
   }
 
