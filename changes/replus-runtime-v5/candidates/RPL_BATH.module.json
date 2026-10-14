@@ -1,0 +1,3273 @@
+{
+  "schema": "PRODUCT_MODULE_CANDIDATE_V1",
+  "candidate_revision": "REPLUS_RUNTIME_UI_V5_20261014",
+  "baseline": {
+    "path": "candidates/RPL_BATH.json",
+    "component_id": "RPL_BATH",
+    "sha256": "adc2f9abf3ef5c2bc602eaa64057f4db8479d25d91e89e08a27578ade0fa78b4",
+    "baseline_sha256": "e96a29afcfe83d3707823c1b01b8b0b2bf227ea0b9d9971bf2d48e04e2927f00",
+    "baseline_component_version": "v1.0"
+  },
+  "scope": "SELECTION_AND_ESTIMATE_HANDOFF; NO_AUTO_MANUFACTURE_NO_FORMAL_NO_RELEASE",
+  "product_module": {
+    "product": {
+      "id": "CANDIDATE:RPL_BATH",
+      "manufacturer": "LIXIL",
+      "displayName": "リプラス 浴室仕様",
+      "source": {
+        "id": "RPL_BATH",
+        "version": "REPLUS_RUNTIME_UI_V5_20261014"
+      }
+    },
+    "specificationDefinitions": [
+      {
+        "key": "window_type",
+        "displayLabel": "窓種",
+        "dataType": "ENUM",
+        "displayOrder": 10,
+        "autoSelectSingle": false,
+        "parentFields": [],
+        "selector": {},
+        "id": "CANDIDATE:RPL_BATH:field:window_type",
+        "productId": "CANDIDATE:RPL_BATH",
+        "status": "ACTIVE"
+      },
+      {
+        "key": "frame_type",
+        "displayLabel": "枠仕様",
+        "dataType": "ENUM",
+        "displayOrder": 20,
+        "autoSelectSingle": false,
+        "parentFields": [
+          "window_type"
+        ],
+        "selector": {
+          "window_type": {
+            "$exists": true
+          }
+        },
+        "id": "CANDIDATE:RPL_BATH:field:frame_type",
+        "productId": "CANDIDATE:RPL_BATH",
+        "status": "ACTIVE"
+      },
+      {
+        "key": "spec_panel_configuration",
+        "displayLabel": "枚数",
+        "dataType": "ENUM",
+        "displayOrder": 30,
+        "autoSelectSingle": false,
+        "parentFields": [
+          "window_type"
+        ],
+        "selector": {
+          "window_type": {
+            "$in": [
+              "RPL_BATH_SLD"
+            ]
+          }
+        },
+        "id": "CANDIDATE:RPL_BATH:field:spec_panel_configuration",
+        "productId": "CANDIDATE:RPL_BATH",
+        "status": "ACTIVE"
+      },
+      {
+        "key": "spec_sash_configuration",
+        "displayLabel": "障子仕様",
+        "dataType": "ENUM",
+        "displayOrder": 40,
+        "autoSelectSingle": false,
+        "parentFields": [
+          "window_type"
+        ],
+        "selector": {
+          "window_type": {
+            "$in": [
+              "RPL_BATH_SLD"
+            ]
+          }
+        },
+        "id": "CANDIDATE:RPL_BATH:field:spec_sash_configuration",
+        "productId": "CANDIDATE:RPL_BATH",
+        "status": "ACTIVE"
+      },
+      {
+        "key": "spec_operation_type",
+        "displayLabel": "操作方式",
+        "dataType": "ENUM",
+        "displayOrder": 50,
+        "autoSelectSingle": false,
+        "parentFields": [
+          "window_type"
+        ],
+        "selector": {
+          "window_type": {
+            "$in": [
+              "RPL_BATH_VSOP",
+              "RPL_BATH_VSCAM",
+              "RPL_BATH_HSOP",
+              "RPL_BATH_HSCAM"
+            ]
+          }
+        },
+        "id": "CANDIDATE:RPL_BATH:field:spec_operation_type",
+        "productId": "CANDIDATE:RPL_BATH",
+        "status": "ACTIVE"
+      },
+      {
+        "key": "screen",
+        "displayLabel": "網戸",
+        "dataType": "ENUM",
+        "displayOrder": 60,
+        "autoSelectSingle": false,
+        "parentFields": [
+          "window_type",
+          "spec_height_category"
+        ],
+        "selector": {
+          "window_type": {
+            "$in": [
+              "RPL_BATH_SLD",
+              "RPL_BATH_VSOP",
+              "RPL_BATH_VSCAM",
+              "RPL_BATH_HSCAM",
+              "RPL_BATH_DHFS"
+            ]
+          }
+        },
+        "id": "CANDIDATE:RPL_BATH:field:screen",
+        "productId": "CANDIDATE:RPL_BATH",
+        "status": "ACTIVE"
+      },
+      {
+        "key": "size_mode",
+        "displayLabel": "寸法指定",
+        "dataType": "ENUM",
+        "displayOrder": 70,
+        "autoSelectSingle": false,
+        "parentFields": [],
+        "selector": {},
+        "id": "CANDIDATE:RPL_BATH:field:size_mode",
+        "productId": "CANDIDATE:RPL_BATH",
+        "status": "ACTIVE"
+      },
+      {
+        "key": "custom_width",
+        "displayLabel": "仕上がり幅 W（mm）",
+        "dataType": "NUMBER",
+        "displayOrder": 80,
+        "autoSelectSingle": false,
+        "parentFields": [],
+        "selector": {
+          "size_mode": "CUSTOM"
+        },
+        "id": "CANDIDATE:RPL_BATH:field:custom_width",
+        "productId": "CANDIDATE:RPL_BATH",
+        "status": "ACTIVE"
+      },
+      {
+        "key": "custom_height",
+        "displayLabel": "仕上がり高さ H（mm）",
+        "dataType": "NUMBER",
+        "displayOrder": 90,
+        "autoSelectSingle": false,
+        "parentFields": [],
+        "selector": {
+          "size_mode": "CUSTOM"
+        },
+        "id": "CANDIDATE:RPL_BATH:field:custom_height",
+        "productId": "CANDIDATE:RPL_BATH",
+        "status": "ACTIVE"
+      },
+      {
+        "key": "sash_exterior_color",
+        "displayLabel": "本体外観色",
+        "dataType": "ENUM",
+        "displayOrder": 100,
+        "autoSelectSingle": false,
+        "parentFields": [],
+        "selector": {},
+        "id": "CANDIDATE:RPL_BATH:field:sash_exterior_color",
+        "productId": "CANDIDATE:RPL_BATH",
+        "status": "ACTIVE"
+      },
+      {
+        "key": "exterior_cover_color",
+        "displayLabel": "化粧カバー外観色",
+        "dataType": "ENUM",
+        "displayOrder": 110,
+        "autoSelectSingle": false,
+        "parentFields": [],
+        "selector": {},
+        "id": "CANDIDATE:RPL_BATH:field:exterior_cover_color",
+        "productId": "CANDIDATE:RPL_BATH",
+        "status": "ACTIVE"
+      },
+      {
+        "key": "sash_interior_color",
+        "displayLabel": "本体内観色",
+        "dataType": "ENUM",
+        "displayOrder": 120,
+        "autoSelectSingle": false,
+        "parentFields": [],
+        "selector": {},
+        "id": "CANDIDATE:RPL_BATH:field:sash_interior_color",
+        "productId": "CANDIDATE:RPL_BATH",
+        "status": "ACTIVE"
+      },
+      {
+        "key": "interior_cover_color",
+        "displayLabel": "化粧カバー内観色",
+        "dataType": "ENUM",
+        "displayOrder": 130,
+        "autoSelectSingle": false,
+        "parentFields": [],
+        "selector": {},
+        "id": "CANDIDATE:RPL_BATH:field:interior_cover_color",
+        "productId": "CANDIDATE:RPL_BATH",
+        "status": "ACTIVE"
+      },
+      {
+        "key": "options",
+        "displayLabel": "追加部材・オプション",
+        "dataType": "MULTI_ENUM",
+        "displayOrder": 140,
+        "autoSelectSingle": false,
+        "parentFields": [],
+        "selector": {},
+        "id": "CANDIDATE:RPL_BATH:field:options",
+        "productId": "CANDIDATE:RPL_BATH",
+        "status": "ACTIVE"
+      },
+      {
+        "key": "bathroom_remodel_mode",
+        "displayLabel": "施工条件",
+        "dataType": "ENUM",
+        "displayOrder": 150,
+        "autoSelectSingle": false,
+        "parentFields": [],
+        "selector": {},
+        "id": "CANDIDATE:RPL_BATH:field:bathroom_remodel_mode",
+        "productId": "CANDIDATE:RPL_BATH",
+        "status": "ACTIVE"
+      }
+    ],
+    "allowedValues": [
+      {
+        "value": "RPL_BATH_SLD",
+        "displayLabel": "引違い窓",
+        "evidenceIds": [
+          "BATH-EV-003,006"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": false
+        },
+        "id": "CANDIDATE:RPL_BATH:value:window_type:0",
+        "productId": "CANDIDATE:RPL_BATH",
+        "specificationKey": "window_type",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "RPL_BATH_VSOP",
+        "displayLabel": "縦すべり出し窓（オペレーター）",
+        "evidenceIds": [
+          "BATH-EV-003,007"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": false
+        },
+        "id": "CANDIDATE:RPL_BATH:value:window_type:1",
+        "productId": "CANDIDATE:RPL_BATH",
+        "specificationKey": "window_type",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "RPL_BATH_VSCAM",
+        "displayLabel": "縦すべり出し窓（カムラッチ）",
+        "evidenceIds": [
+          "BATH-EV-003,007"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": false
+        },
+        "id": "CANDIDATE:RPL_BATH:value:window_type:2",
+        "productId": "CANDIDATE:RPL_BATH",
+        "specificationKey": "window_type",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "RPL_BATH_HSOP",
+        "displayLabel": "横すべり出し窓（オペレーター）",
+        "evidenceIds": [
+          "BATH-EV-003,007"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": false
+        },
+        "id": "CANDIDATE:RPL_BATH:value:window_type:3",
+        "productId": "CANDIDATE:RPL_BATH",
+        "specificationKey": "window_type",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "RPL_BATH_HSCAM",
+        "displayLabel": "横すべり出し窓（カムラッチ）",
+        "evidenceIds": [
+          "BATH-EV-003,007"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": false
+        },
+        "id": "CANDIDATE:RPL_BATH:value:window_type:4",
+        "productId": "CANDIDATE:RPL_BATH",
+        "specificationKey": "window_type",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "RPL_BATH_DHFS",
+        "displayLabel": "上げ下げ窓FS（フラットスライド）",
+        "evidenceIds": [
+          "BATH-EV-003,007"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": false
+        },
+        "id": "CANDIDATE:RPL_BATH:value:window_type:5",
+        "productId": "CANDIDATE:RPL_BATH",
+        "specificationKey": "window_type",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "RPL_BATH_FIXOUT",
+        "displayLabel": "FIX窓（外押縁タイプ）",
+        "evidenceIds": [
+          "BATH-EV-003,008"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": false
+        },
+        "id": "CANDIDATE:RPL_BATH:value:window_type:6",
+        "productId": "CANDIDATE:RPL_BATH",
+        "specificationKey": "window_type",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "RPL_BATH_FIXIN",
+        "displayLabel": "FIX窓（内押縁タイプ）",
+        "evidenceIds": [
+          "BATH-EV-003,008"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": false
+        },
+        "id": "CANDIDATE:RPL_BATH:value:window_type:7",
+        "productId": "CANDIDATE:RPL_BATH",
+        "specificationKey": "window_type",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "BATH-STD",
+        "displayLabel": "標準枠",
+        "evidenceIds": [
+          "BATH-EV-003,006"
+        ],
+        "selector": {
+          "window_type": {
+            "$in": [
+              "RPL_BATH_SLD",
+              "RPL_BATH_VSOP",
+              "RPL_BATH_VSCAM",
+              "RPL_BATH_HSOP",
+              "RPL_BATH_HSCAM",
+              "RPL_BATH_DHFS",
+              "RPL_BATH_FIXOUT",
+              "RPL_BATH_FIXIN"
+            ]
+          }
+        },
+        "metadata": {
+          "manualCheck": false
+        },
+        "id": "CANDIDATE:RPL_BATH:value:frame_type:0",
+        "productId": "CANDIDATE:RPL_BATH",
+        "specificationKey": "frame_type",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "BATH-BRG",
+        "displayLabel": "ブリッジ枠",
+        "evidenceIds": [
+          "BATH-EV-003,006"
+        ],
+        "selector": {
+          "window_type": {
+            "$in": [
+              "RPL_BATH_SLD"
+            ]
+          }
+        },
+        "metadata": {
+          "manualCheck": false
+        },
+        "id": "CANDIDATE:RPL_BATH:value:frame_type:1",
+        "productId": "CANDIDATE:RPL_BATH",
+        "specificationKey": "frame_type",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "BATH-SS-SLD2",
+        "displayLabel": "2枚建",
+        "evidenceIds": [
+          "BATH-EV-005,006"
+        ],
+        "selector": {
+          "window_type": "RPL_BATH_SLD"
+        },
+        "metadata": {
+          "manualCheck": false,
+          "panel_configuration": "2枚建"
+        },
+        "id": "CANDIDATE:RPL_BATH:value:spec_panel_configuration:0",
+        "productId": "CANDIDATE:RPL_BATH",
+        "specificationKey": "spec_panel_configuration",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "BATH-SS-SLD-PG",
+        "displayLabel": "PG障子",
+        "evidenceIds": [
+          "BATH-EV-005"
+        ],
+        "selector": {
+          "window_type": "RPL_BATH_SLD"
+        },
+        "metadata": {
+          "manualCheck": false,
+          "sash_configuration": "PG障子"
+        },
+        "id": "CANDIDATE:RPL_BATH:value:spec_sash_configuration:0",
+        "productId": "CANDIDATE:RPL_BATH",
+        "specificationKey": "spec_sash_configuration",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "BATH-SS-VSOP",
+        "displayLabel": "オペレーター",
+        "evidenceIds": [
+          "BATH-EV-003"
+        ],
+        "selector": {
+          "window_type": "RPL_BATH_VSOP"
+        },
+        "metadata": {
+          "manualCheck": false,
+          "operation_type": "オペレーター"
+        },
+        "id": "CANDIDATE:RPL_BATH:value:spec_operation_type:0",
+        "productId": "CANDIDATE:RPL_BATH",
+        "specificationKey": "spec_operation_type",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "BATH-SS-VSCAM",
+        "displayLabel": "カムラッチ",
+        "evidenceIds": [
+          "BATH-EV-003"
+        ],
+        "selector": {
+          "window_type": "RPL_BATH_VSCAM"
+        },
+        "metadata": {
+          "manualCheck": false,
+          "operation_type": "カムラッチ"
+        },
+        "id": "CANDIDATE:RPL_BATH:value:spec_operation_type:1",
+        "productId": "CANDIDATE:RPL_BATH",
+        "specificationKey": "spec_operation_type",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "BATH-SS-HSOP",
+        "displayLabel": "オペレーター",
+        "evidenceIds": [
+          "BATH-EV-003"
+        ],
+        "selector": {
+          "window_type": "RPL_BATH_HSOP"
+        },
+        "metadata": {
+          "manualCheck": false,
+          "operation_type": "オペレーター"
+        },
+        "id": "CANDIDATE:RPL_BATH:value:spec_operation_type:2",
+        "productId": "CANDIDATE:RPL_BATH",
+        "specificationKey": "spec_operation_type",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "BATH-SS-HSCAM",
+        "displayLabel": "カムラッチ",
+        "evidenceIds": [
+          "BATH-EV-003"
+        ],
+        "selector": {
+          "window_type": "RPL_BATH_HSCAM"
+        },
+        "metadata": {
+          "manualCheck": false,
+          "operation_type": "カムラッチ"
+        },
+        "id": "CANDIDATE:RPL_BATH:value:spec_operation_type:3",
+        "productId": "CANDIDATE:RPL_BATH",
+        "specificationKey": "spec_operation_type",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "BATH-SCR-SLD",
+        "displayLabel": "引違い網戸",
+        "evidenceIds": [
+          "BATH-EV-005"
+        ],
+        "selector": {
+          "window_type": "RPL_BATH_SLD"
+        },
+        "metadata": {
+          "manualCheck": false
+        },
+        "id": "CANDIDATE:RPL_BATH:value:screen:0",
+        "productId": "CANDIDATE:RPL_BATH",
+        "specificationKey": "screen",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "BATH-SCR-FIX-FR",
+        "displayLabel": "固定式網戸（フレーム付）",
+        "evidenceIds": [
+          "BATH-EV-005"
+        ],
+        "selector": {
+          "window_type": "RPL_BATH_VSOP"
+        },
+        "metadata": {
+          "manualCheck": false
+        },
+        "id": "CANDIDATE:RPL_BATH:value:screen:1",
+        "productId": "CANDIDATE:RPL_BATH",
+        "specificationKey": "screen",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "BATH-SCR-ROLL-H",
+        "displayLabel": "横引きロール網戸",
+        "evidenceIds": [
+          "BATH-EV-005"
+        ],
+        "selector": {
+          "window_type": "RPL_BATH_VSCAM"
+        },
+        "metadata": {
+          "manualCheck": false
+        },
+        "id": "CANDIDATE:RPL_BATH:value:screen:2",
+        "productId": "CANDIDATE:RPL_BATH",
+        "specificationKey": "screen",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "BATH-SCR-ROLL-H",
+        "displayLabel": "横引きロール網戸",
+        "evidenceIds": [
+          "BATH-EV-005"
+        ],
+        "selector": {
+          "window_type": "RPL_BATH_HSCAM"
+        },
+        "metadata": {
+          "manualCheck": false
+        },
+        "id": "CANDIDATE:RPL_BATH:value:screen:3",
+        "productId": "CANDIDATE:RPL_BATH",
+        "specificationKey": "screen",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "BATH-SCR-DH",
+        "displayLabel": "上げ下げ式網戸",
+        "evidenceIds": [
+          "BATH-EV-005"
+        ],
+        "selector": {
+          "window_type": "RPL_BATH_DHFS"
+        },
+        "metadata": {
+          "manualCheck": false
+        },
+        "id": "CANDIDATE:RPL_BATH:value:screen:4",
+        "productId": "CANDIDATE:RPL_BATH",
+        "specificationKey": "screen",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "CUSTOM",
+        "displayLabel": "仕上がり寸法",
+        "evidenceIds": [
+          "05_サイズルール"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": false
+        },
+        "id": "CANDIDATE:RPL_BATH:value:size_mode:0",
+        "productId": "CANDIDATE:RPL_BATH",
+        "specificationKey": "size_mode",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "T",
+        "displayLabel": "ブラック",
+        "evidenceIds": [
+          "BATH-EV-003,004"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_BATH:value:sash_exterior_color:0",
+        "productId": "CANDIDATE:RPL_BATH",
+        "specificationKey": "sash_exterior_color",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "G",
+        "displayLabel": "オータムブラウン",
+        "evidenceIds": [
+          "BATH-EV-003,004"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_BATH:value:sash_exterior_color:1",
+        "productId": "CANDIDATE:RPL_BATH",
+        "specificationKey": "sash_exterior_color",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "K",
+        "displayLabel": "シャイングレー",
+        "evidenceIds": [
+          "BATH-EV-003,004"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_BATH:value:sash_exterior_color:2",
+        "productId": "CANDIDATE:RPL_BATH",
+        "specificationKey": "sash_exterior_color",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "D",
+        "displayLabel": "ナチュラルシルバー",
+        "evidenceIds": [
+          "BATH-EV-003,004"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_BATH:value:sash_exterior_color:3",
+        "productId": "CANDIDATE:RPL_BATH",
+        "specificationKey": "sash_exterior_color",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "W",
+        "displayLabel": "ホワイト",
+        "evidenceIds": [
+          "BATH-EV-003,004"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_BATH:value:sash_exterior_color:4",
+        "productId": "CANDIDATE:RPL_BATH",
+        "specificationKey": "sash_exterior_color",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "T",
+        "displayLabel": "ブラック",
+        "evidenceIds": [
+          "BATH-EV-003,004"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_BATH:value:exterior_cover_color:0",
+        "productId": "CANDIDATE:RPL_BATH",
+        "specificationKey": "exterior_cover_color",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "G",
+        "displayLabel": "オータムブラウン",
+        "evidenceIds": [
+          "BATH-EV-003,004"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_BATH:value:exterior_cover_color:1",
+        "productId": "CANDIDATE:RPL_BATH",
+        "specificationKey": "exterior_cover_color",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "K",
+        "displayLabel": "シャイングレー",
+        "evidenceIds": [
+          "BATH-EV-003,004"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_BATH:value:exterior_cover_color:2",
+        "productId": "CANDIDATE:RPL_BATH",
+        "specificationKey": "exterior_cover_color",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "D",
+        "displayLabel": "ナチュラルシルバー",
+        "evidenceIds": [
+          "BATH-EV-003,004"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_BATH:value:exterior_cover_color:3",
+        "productId": "CANDIDATE:RPL_BATH",
+        "specificationKey": "exterior_cover_color",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "W",
+        "displayLabel": "ホワイト",
+        "evidenceIds": [
+          "BATH-EV-003,004"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_BATH:value:exterior_cover_color:4",
+        "productId": "CANDIDATE:RPL_BATH",
+        "specificationKey": "exterior_cover_color",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "M",
+        "displayLabel": "ブラック",
+        "evidenceIds": [
+          "BATH-EV-003,004"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_BATH:value:sash_interior_color:0",
+        "productId": "CANDIDATE:RPL_BATH",
+        "specificationKey": "sash_interior_color",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "F",
+        "displayLabel": "プレシャスホワイトP",
+        "evidenceIds": [
+          "BATH-EV-003,004"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_BATH:value:sash_interior_color:1",
+        "productId": "CANDIDATE:RPL_BATH",
+        "specificationKey": "sash_interior_color",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "M",
+        "displayLabel": "ブラック",
+        "evidenceIds": [
+          "BATH-EV-003,004"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_BATH:value:interior_cover_color:0",
+        "productId": "CANDIDATE:RPL_BATH",
+        "specificationKey": "interior_cover_color",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "F",
+        "displayLabel": "プレシャスホワイトP",
+        "evidenceIds": [
+          "BATH-EV-003,004"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_BATH:value:interior_cover_color:1",
+        "productId": "CANDIDATE:RPL_BATH",
+        "specificationKey": "interior_cover_color",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "BATH-OP-UPPER-BASE",
+        "displayLabel": "既設上枠ベース材",
+        "evidenceIds": [
+          "BATH-EV-005,009"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_BATH:value:options:0",
+        "productId": "CANDIDATE:RPL_BATH",
+        "specificationKey": "options",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "BATH-OP-ANGLE-NOMITER",
+        "displayLabel": "樹脂アングルカバー（見切材無）",
+        "evidenceIds": [
+          "BATH-EV-003,005"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_BATH:value:options:1",
+        "productId": "CANDIDATE:RPL_BATH",
+        "specificationKey": "options",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "BATH-OP-CASING",
+        "displayLabel": "カバー用ケーシング",
+        "evidenceIds": [
+          "BATH-EV-011"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_BATH:value:options:2",
+        "productId": "CANDIDATE:RPL_BATH",
+        "specificationKey": "options",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "BATH-OP-SIDE-COVER",
+        "displayLabel": "サイド化粧カバー",
+        "evidenceIds": [
+          "BATH-EV-011"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_BATH:value:options:3",
+        "productId": "CANDIDATE:RPL_BATH",
+        "specificationKey": "options",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "BATH-OP-DEPTH",
+        "displayLabel": "見込みふかし部材",
+        "evidenceIds": [
+          "BATH-EV-011"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_BATH:value:options:4",
+        "productId": "CANDIDATE:RPL_BATH",
+        "specificationKey": "options",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "BATH-OP-SMALL-STOP",
+        "displayLabel": "小開口ストッパー",
+        "evidenceIds": [
+          "BATH-EV-011"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_BATH:value:options:5",
+        "productId": "CANDIDATE:RPL_BATH",
+        "specificationKey": "options",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "BATH-OP-SMART-CRESCENT",
+        "displayLabel": "スマートクレセント",
+        "evidenceIds": [
+          "BATH-EV-011"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_BATH:value:options:6",
+        "productId": "CANDIDATE:RPL_BATH",
+        "specificationKey": "options",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "BATH-OP-UPPER-VENT",
+        "displayLabel": "上枠一体換気部材",
+        "evidenceIds": [
+          "BATH-EV-011"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_BATH:value:options:7",
+        "productId": "CANDIDATE:RPL_BATH",
+        "specificationKey": "options",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "BATH-OP-FIX-GROOVE",
+        "displayLabel": "固定式網戸溝カバー",
+        "evidenceIds": [
+          "BATH-EV-005,011"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_BATH:value:options:8",
+        "productId": "CANDIDATE:RPL_BATH",
+        "specificationKey": "options",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "BATH-OP-ROLL-SEAL",
+        "displayLabel": "網戸隙間防止シール",
+        "evidenceIds": [
+          "BATH-EV-005"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_BATH:value:options:9",
+        "productId": "CANDIDATE:RPL_BATH",
+        "specificationKey": "options",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "BATH-OP-SMALL-ARM",
+        "displayLabel": "小開口アーム",
+        "evidenceIds": [
+          "BATH-EV-005,011"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_BATH:value:options:10",
+        "productId": "CANDIDATE:RPL_BATH",
+        "specificationKey": "options",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "BATH-OP-POST-BEAD",
+        "displayLabel": "後付ビード",
+        "evidenceIds": [
+          "BATH-EV-005"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_BATH:value:options:11",
+        "productId": "CANDIDATE:RPL_BATH",
+        "specificationKey": "options",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "BATH-OP-SB-TRIM",
+        "displayLabel": "システムバス額縁",
+        "evidenceIds": [
+          "BATH-EV-004,009"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_BATH:value:options:12",
+        "productId": "CANDIDATE:RPL_BATH",
+        "specificationKey": "options",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "RPL_BATH-OP-V5-SPACER-15-20",
+        "displayLabel": "施工調整スペーサー 15×20",
+        "evidenceIds": [
+          "DELTA-SPACER-EV-V4"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_BATH:value:options:13",
+        "productId": "CANDIDATE:RPL_BATH",
+        "specificationKey": "options",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "SYSTEM_BATH_SIMULTANEOUS",
+        "displayLabel": "システムバス同時工事",
+        "evidenceIds": [
+          "BATH-EV-003,009"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": false
+        },
+        "id": "CANDIDATE:RPL_BATH:value:bathroom_remodel_mode:0",
+        "productId": "CANDIDATE:RPL_BATH",
+        "specificationKey": "bathroom_remodel_mode",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "WINDOW_ONLY",
+        "displayLabel": "窓のみ取替",
+        "evidenceIds": [
+          "BATH-EV-009"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_BATH:value:bathroom_remodel_mode:1",
+        "productId": "CANDIDATE:RPL_BATH",
+        "specificationKey": "bathroom_remodel_mode",
+        "status": "ACTIVE"
+      }
+    ],
+    "requiredFieldRules": [
+      {
+        "id": "CANDIDATE:RPL_BATH:required:window_type",
+        "productId": "CANDIDATE:RPL_BATH",
+        "specificationKey": "window_type",
+        "required": true,
+        "selector": {}
+      },
+      {
+        "id": "CANDIDATE:RPL_BATH:required:frame_type",
+        "productId": "CANDIDATE:RPL_BATH",
+        "specificationKey": "frame_type",
+        "required": true,
+        "selector": {
+          "window_type": {
+            "$exists": true
+          }
+        }
+      },
+      {
+        "id": "CANDIDATE:RPL_BATH:required:spec_panel_configuration",
+        "productId": "CANDIDATE:RPL_BATH",
+        "specificationKey": "spec_panel_configuration",
+        "required": true,
+        "selector": {
+          "window_type": {
+            "$in": [
+              "RPL_BATH_SLD"
+            ]
+          }
+        }
+      },
+      {
+        "id": "CANDIDATE:RPL_BATH:required:spec_sash_configuration",
+        "productId": "CANDIDATE:RPL_BATH",
+        "specificationKey": "spec_sash_configuration",
+        "required": true,
+        "selector": {
+          "window_type": {
+            "$in": [
+              "RPL_BATH_SLD"
+            ]
+          }
+        }
+      },
+      {
+        "id": "CANDIDATE:RPL_BATH:required:spec_operation_type",
+        "productId": "CANDIDATE:RPL_BATH",
+        "specificationKey": "spec_operation_type",
+        "required": true,
+        "selector": {
+          "window_type": {
+            "$in": [
+              "RPL_BATH_VSOP",
+              "RPL_BATH_VSCAM",
+              "RPL_BATH_HSOP",
+              "RPL_BATH_HSCAM"
+            ]
+          }
+        }
+      },
+      {
+        "id": "CANDIDATE:RPL_BATH:required:size_mode",
+        "productId": "CANDIDATE:RPL_BATH",
+        "specificationKey": "size_mode",
+        "required": true,
+        "selector": {}
+      },
+      {
+        "id": "CANDIDATE:RPL_BATH:required:custom_width",
+        "productId": "CANDIDATE:RPL_BATH",
+        "specificationKey": "custom_width",
+        "required": true,
+        "selector": {
+          "size_mode": "CUSTOM"
+        }
+      },
+      {
+        "id": "CANDIDATE:RPL_BATH:required:custom_height",
+        "productId": "CANDIDATE:RPL_BATH",
+        "specificationKey": "custom_height",
+        "required": true,
+        "selector": {
+          "size_mode": "CUSTOM"
+        }
+      }
+    ],
+    "ruleSets": [
+      {
+        "id": "CANDIDATE:RPL_BATH:ruleSets:finished-envelope",
+        "type": "DIMENSION_RULES",
+        "status": "ACTIVE",
+        "payload": [
+          {
+            "id": "BATH-SZ-SLD-STD-FULL95",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 774,
+              "maxW": 2051,
+              "minH": 337,
+              "maxH": 1601
+            },
+            "selector": {
+              "window_type": "RPL_BATH_SLD",
+              "frame_type": "BATH-STD"
+            },
+            "source": {
+              "size_rule_id": "BATH-SZ-SLD-STD-FULL95",
+              "window_type_id": "RPL_BATH_SLD",
+              "frame_type_id": "BATH-STD",
+              "opening_pattern_id": "FULL95",
+              "finished_w_min": 774,
+              "finished_w_max": 2051,
+              "finished_h_min": 337,
+              "finished_h_max": 1601,
+              "survey_w_min": 784,
+              "survey_w_max": 2061,
+              "survey_h_min": 347,
+              "survey_h_max": 1611,
+              "boundary_rule_id": "BATH-BR-SLD-STD",
+              "status": "COMPLETE",
+              "evidence": "BATH-EV-006"
+            }
+          },
+          {
+            "id": "BATH-SZ-SLD-STD-FULL195",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 973,
+              "maxW": 2250,
+              "minH": 337,
+              "maxH": 1601
+            },
+            "selector": {
+              "window_type": "RPL_BATH_SLD",
+              "frame_type": "BATH-STD"
+            },
+            "source": {
+              "size_rule_id": "BATH-SZ-SLD-STD-FULL195",
+              "window_type_id": "RPL_BATH_SLD",
+              "frame_type_id": "BATH-STD",
+              "opening_pattern_id": "FULL195",
+              "finished_w_min": 973,
+              "finished_w_max": 2250,
+              "finished_h_min": 337,
+              "finished_h_max": 1601,
+              "survey_w_min": 983,
+              "survey_w_max": 2260,
+              "survey_h_min": 347,
+              "survey_h_max": 1611,
+              "boundary_rule_id": "BATH-BR-SLD-STD",
+              "status": "COMPLETE",
+              "evidence": "BATH-EV-006"
+            }
+          },
+          {
+            "id": "BATH-SZ-SLD-STD-OFFSET_L95",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 711,
+              "maxW": 1988,
+              "minH": 337,
+              "maxH": 1601
+            },
+            "selector": {
+              "window_type": "RPL_BATH_SLD",
+              "frame_type": "BATH-STD"
+            },
+            "source": {
+              "size_rule_id": "BATH-SZ-SLD-STD-OFFSET_L95",
+              "window_type_id": "RPL_BATH_SLD",
+              "frame_type_id": "BATH-STD",
+              "opening_pattern_id": "OFFSET_L95",
+              "finished_w_min": 711,
+              "finished_w_max": 1988,
+              "finished_h_min": 337,
+              "finished_h_max": 1601,
+              "survey_w_min": 721,
+              "survey_w_max": 1998,
+              "survey_h_min": 347,
+              "survey_h_max": 1611,
+              "boundary_rule_id": "BATH-BR-SLD-STD",
+              "status": "COMPLETE",
+              "evidence": "BATH-EV-006"
+            }
+          },
+          {
+            "id": "BATH-SZ-SLD-STD-OFFSET_L195",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 810,
+              "maxW": 2087,
+              "minH": 337,
+              "maxH": 1601
+            },
+            "selector": {
+              "window_type": "RPL_BATH_SLD",
+              "frame_type": "BATH-STD"
+            },
+            "source": {
+              "size_rule_id": "BATH-SZ-SLD-STD-OFFSET_L195",
+              "window_type_id": "RPL_BATH_SLD",
+              "frame_type_id": "BATH-STD",
+              "opening_pattern_id": "OFFSET_L195",
+              "finished_w_min": 810,
+              "finished_w_max": 2087,
+              "finished_h_min": 337,
+              "finished_h_max": 1601,
+              "survey_w_min": 820,
+              "survey_w_max": 2097,
+              "survey_h_min": 347,
+              "survey_h_max": 1611,
+              "boundary_rule_id": "BATH-BR-SLD-STD",
+              "status": "COMPLETE",
+              "evidence": "BATH-EV-006"
+            }
+          },
+          {
+            "id": "BATH-SZ-SLD-STD-OFFSET_R95",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 711,
+              "maxW": 1988,
+              "minH": 337,
+              "maxH": 1601
+            },
+            "selector": {
+              "window_type": "RPL_BATH_SLD",
+              "frame_type": "BATH-STD"
+            },
+            "source": {
+              "size_rule_id": "BATH-SZ-SLD-STD-OFFSET_R95",
+              "window_type_id": "RPL_BATH_SLD",
+              "frame_type_id": "BATH-STD",
+              "opening_pattern_id": "OFFSET_R95",
+              "finished_w_min": 711,
+              "finished_w_max": 1988,
+              "finished_h_min": 337,
+              "finished_h_max": 1601,
+              "survey_w_min": 721,
+              "survey_w_max": 1998,
+              "survey_h_min": 347,
+              "survey_h_max": 1611,
+              "boundary_rule_id": "BATH-BR-SLD-STD",
+              "status": "COMPLETE",
+              "evidence": "BATH-EV-006"
+            }
+          },
+          {
+            "id": "BATH-SZ-SLD-STD-OFFSET_R195",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 810,
+              "maxW": 2087,
+              "minH": 337,
+              "maxH": 1601
+            },
+            "selector": {
+              "window_type": "RPL_BATH_SLD",
+              "frame_type": "BATH-STD"
+            },
+            "source": {
+              "size_rule_id": "BATH-SZ-SLD-STD-OFFSET_R195",
+              "window_type_id": "RPL_BATH_SLD",
+              "frame_type_id": "BATH-STD",
+              "opening_pattern_id": "OFFSET_R195",
+              "finished_w_min": 810,
+              "finished_w_max": 2087,
+              "finished_h_min": 337,
+              "finished_h_max": 1601,
+              "survey_w_min": 820,
+              "survey_w_max": 2097,
+              "survey_h_min": 347,
+              "survey_h_max": 1611,
+              "boundary_rule_id": "BATH-BR-SLD-STD",
+              "status": "COMPLETE",
+              "evidence": "BATH-EV-006"
+            }
+          },
+          {
+            "id": "BATH-SZ-SLD-STD-CUTOUT",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 647,
+              "maxW": 1924,
+              "minH": 337,
+              "maxH": 1601
+            },
+            "selector": {
+              "window_type": "RPL_BATH_SLD",
+              "frame_type": "BATH-STD"
+            },
+            "source": {
+              "size_rule_id": "BATH-SZ-SLD-STD-CUTOUT",
+              "window_type_id": "RPL_BATH_SLD",
+              "frame_type_id": "BATH-STD",
+              "opening_pattern_id": "CUTOUT",
+              "finished_w_min": 647,
+              "finished_w_max": 1924,
+              "finished_h_min": 337,
+              "finished_h_max": 1601,
+              "survey_w_min": 657,
+              "survey_w_max": 1934,
+              "survey_h_min": 347,
+              "survey_h_max": 1611,
+              "boundary_rule_id": "BATH-BR-SLD-STD",
+              "status": "COMPLETE",
+              "evidence": "BATH-EV-006"
+            }
+          },
+          {
+            "id": "BATH-SZ-SLD-STD-WINDOW_ONLY",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 647,
+              "maxW": 1924,
+              "minH": 337,
+              "maxH": 1601
+            },
+            "selector": {
+              "window_type": "RPL_BATH_SLD",
+              "frame_type": "BATH-STD"
+            },
+            "source": {
+              "size_rule_id": "BATH-SZ-SLD-STD-WINDOW_ONLY",
+              "window_type_id": "RPL_BATH_SLD",
+              "frame_type_id": "BATH-STD",
+              "opening_pattern_id": "WINDOW_ONLY",
+              "finished_w_min": 647,
+              "finished_w_max": 1924,
+              "finished_h_min": 337,
+              "finished_h_max": 1601,
+              "survey_w_min": 657,
+              "survey_w_max": 1934,
+              "survey_h_min": 347,
+              "survey_h_max": 1611,
+              "boundary_rule_id": "BATH-BR-SLD-STD",
+              "status": "COMPLETE",
+              "evidence": "BATH-EV-006"
+            }
+          },
+          {
+            "id": "BATH-SZ-SLD-BRG-FULL95",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 744,
+              "maxW": 2051,
+              "minH": 342,
+              "maxH": 1601
+            },
+            "selector": {
+              "window_type": "RPL_BATH_SLD",
+              "frame_type": "BATH-BRG"
+            },
+            "source": {
+              "size_rule_id": "BATH-SZ-SLD-BRG-FULL95",
+              "window_type_id": "RPL_BATH_SLD",
+              "frame_type_id": "BATH-BRG",
+              "opening_pattern_id": "FULL95",
+              "finished_w_min": 744,
+              "finished_w_max": 2051,
+              "finished_h_min": 342,
+              "finished_h_max": 1601,
+              "survey_w_min": 754,
+              "survey_w_max": 2061,
+              "survey_h_min": 352,
+              "survey_h_max": 1611,
+              "boundary_rule_id": "BATH-BR-SLD-BRG",
+              "status": "COMPLETE_WITH_EXTERNAL_CHECK",
+              "evidence": "BATH-EV-006"
+            }
+          },
+          {
+            "id": "BATH-SZ-SLD-BRG-FULL195",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 973,
+              "maxW": 2250,
+              "minH": 342,
+              "maxH": 1601
+            },
+            "selector": {
+              "window_type": "RPL_BATH_SLD",
+              "frame_type": "BATH-BRG"
+            },
+            "source": {
+              "size_rule_id": "BATH-SZ-SLD-BRG-FULL195",
+              "window_type_id": "RPL_BATH_SLD",
+              "frame_type_id": "BATH-BRG",
+              "opening_pattern_id": "FULL195",
+              "finished_w_min": 973,
+              "finished_w_max": 2250,
+              "finished_h_min": 342,
+              "finished_h_max": 1601,
+              "survey_w_min": 983,
+              "survey_w_max": 2260,
+              "survey_h_min": 352,
+              "survey_h_max": 1611,
+              "boundary_rule_id": "BATH-BR-SLD-BRG",
+              "status": "COMPLETE",
+              "evidence": "BATH-EV-006"
+            }
+          },
+          {
+            "id": "BATH-SZ-SLD-BRG-OFFSET_L95",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 711,
+              "maxW": 1988,
+              "minH": 342,
+              "maxH": 1601
+            },
+            "selector": {
+              "window_type": "RPL_BATH_SLD",
+              "frame_type": "BATH-BRG"
+            },
+            "source": {
+              "size_rule_id": "BATH-SZ-SLD-BRG-OFFSET_L95",
+              "window_type_id": "RPL_BATH_SLD",
+              "frame_type_id": "BATH-BRG",
+              "opening_pattern_id": "OFFSET_L95",
+              "finished_w_min": 711,
+              "finished_w_max": 1988,
+              "finished_h_min": 342,
+              "finished_h_max": 1601,
+              "survey_w_min": 721,
+              "survey_w_max": 1998,
+              "survey_h_min": 352,
+              "survey_h_max": 1611,
+              "boundary_rule_id": "BATH-BR-SLD-BRG",
+              "status": "COMPLETE",
+              "evidence": "BATH-EV-006"
+            }
+          },
+          {
+            "id": "BATH-SZ-SLD-BRG-OFFSET_L195",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 810,
+              "maxW": 2087,
+              "minH": 342,
+              "maxH": 1601
+            },
+            "selector": {
+              "window_type": "RPL_BATH_SLD",
+              "frame_type": "BATH-BRG"
+            },
+            "source": {
+              "size_rule_id": "BATH-SZ-SLD-BRG-OFFSET_L195",
+              "window_type_id": "RPL_BATH_SLD",
+              "frame_type_id": "BATH-BRG",
+              "opening_pattern_id": "OFFSET_L195",
+              "finished_w_min": 810,
+              "finished_w_max": 2087,
+              "finished_h_min": 342,
+              "finished_h_max": 1601,
+              "survey_w_min": 820,
+              "survey_w_max": 2097,
+              "survey_h_min": 352,
+              "survey_h_max": 1611,
+              "boundary_rule_id": "BATH-BR-SLD-BRG",
+              "status": "COMPLETE",
+              "evidence": "BATH-EV-006"
+            }
+          },
+          {
+            "id": "BATH-SZ-SLD-BRG-OFFSET_R95",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 711,
+              "maxW": 1988,
+              "minH": 342,
+              "maxH": 1601
+            },
+            "selector": {
+              "window_type": "RPL_BATH_SLD",
+              "frame_type": "BATH-BRG"
+            },
+            "source": {
+              "size_rule_id": "BATH-SZ-SLD-BRG-OFFSET_R95",
+              "window_type_id": "RPL_BATH_SLD",
+              "frame_type_id": "BATH-BRG",
+              "opening_pattern_id": "OFFSET_R95",
+              "finished_w_min": 711,
+              "finished_w_max": 1988,
+              "finished_h_min": 342,
+              "finished_h_max": 1601,
+              "survey_w_min": 721,
+              "survey_w_max": 1998,
+              "survey_h_min": 352,
+              "survey_h_max": 1611,
+              "boundary_rule_id": "BATH-BR-SLD-BRG",
+              "status": "COMPLETE",
+              "evidence": "BATH-EV-006"
+            }
+          },
+          {
+            "id": "BATH-SZ-SLD-BRG-OFFSET_R195",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 810,
+              "maxW": 2087,
+              "minH": 342,
+              "maxH": 1601
+            },
+            "selector": {
+              "window_type": "RPL_BATH_SLD",
+              "frame_type": "BATH-BRG"
+            },
+            "source": {
+              "size_rule_id": "BATH-SZ-SLD-BRG-OFFSET_R195",
+              "window_type_id": "RPL_BATH_SLD",
+              "frame_type_id": "BATH-BRG",
+              "opening_pattern_id": "OFFSET_R195",
+              "finished_w_min": 810,
+              "finished_w_max": 2087,
+              "finished_h_min": 342,
+              "finished_h_max": 1601,
+              "survey_w_min": 820,
+              "survey_w_max": 2097,
+              "survey_h_min": 352,
+              "survey_h_max": 1611,
+              "boundary_rule_id": "BATH-BR-SLD-BRG",
+              "status": "COMPLETE",
+              "evidence": "BATH-EV-006"
+            }
+          },
+          {
+            "id": "BATH-SZ-SLD-BRG-CUTOUT",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 647,
+              "maxW": 1924,
+              "minH": 342,
+              "maxH": 1601
+            },
+            "selector": {
+              "window_type": "RPL_BATH_SLD",
+              "frame_type": "BATH-BRG"
+            },
+            "source": {
+              "size_rule_id": "BATH-SZ-SLD-BRG-CUTOUT",
+              "window_type_id": "RPL_BATH_SLD",
+              "frame_type_id": "BATH-BRG",
+              "opening_pattern_id": "CUTOUT",
+              "finished_w_min": 647,
+              "finished_w_max": 1924,
+              "finished_h_min": 342,
+              "finished_h_max": 1601,
+              "survey_w_min": 657,
+              "survey_w_max": 1934,
+              "survey_h_min": 352,
+              "survey_h_max": 1611,
+              "boundary_rule_id": "BATH-BR-SLD-BRG",
+              "status": "COMPLETE",
+              "evidence": "BATH-EV-006"
+            }
+          },
+          {
+            "id": "BATH-SZ-SLD-BRG-WINDOW_ONLY",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 647,
+              "maxW": 1924,
+              "minH": 342,
+              "maxH": 1601
+            },
+            "selector": {
+              "window_type": "RPL_BATH_SLD",
+              "frame_type": "BATH-BRG"
+            },
+            "source": {
+              "size_rule_id": "BATH-SZ-SLD-BRG-WINDOW_ONLY",
+              "window_type_id": "RPL_BATH_SLD",
+              "frame_type_id": "BATH-BRG",
+              "opening_pattern_id": "WINDOW_ONLY",
+              "finished_w_min": 647,
+              "finished_w_max": 1924,
+              "finished_h_min": 342,
+              "finished_h_max": 1601,
+              "survey_w_min": 657,
+              "survey_w_max": 1934,
+              "survey_h_min": 352,
+              "survey_h_max": 1611,
+              "boundary_rule_id": "BATH-BR-SLD-BRG",
+              "status": "COMPLETE",
+              "evidence": "BATH-EV-006"
+            }
+          },
+          {
+            "id": "BATH-SZ-VSOP-OFFSET_L95",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 331,
+              "maxW": 861,
+              "minH": 376,
+              "maxH": 1601
+            },
+            "selector": {
+              "window_type": "RPL_BATH_VSOP",
+              "frame_type": "BATH-STD"
+            },
+            "source": {
+              "size_rule_id": "BATH-SZ-VSOP-OFFSET_L95",
+              "window_type_id": "RPL_BATH_VSOP",
+              "frame_type_id": "BATH-STD",
+              "opening_pattern_id": "OFFSET_L95",
+              "finished_w_min": 331,
+              "finished_w_max": 861,
+              "finished_h_min": 376,
+              "finished_h_max": 1601,
+              "survey_w_min": 341,
+              "survey_w_max": 871,
+              "survey_h_min": 386,
+              "survey_h_max": 1611,
+              "boundary_rule_id": "BATH-BR-VSOP",
+              "status": "COMPLETE",
+              "evidence": "BATH-EV-007"
+            }
+          },
+          {
+            "id": "BATH-SZ-VSOP-OFFSET_R95",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 331,
+              "maxW": 861,
+              "minH": 376,
+              "maxH": 1601
+            },
+            "selector": {
+              "window_type": "RPL_BATH_VSOP",
+              "frame_type": "BATH-STD"
+            },
+            "source": {
+              "size_rule_id": "BATH-SZ-VSOP-OFFSET_R95",
+              "window_type_id": "RPL_BATH_VSOP",
+              "frame_type_id": "BATH-STD",
+              "opening_pattern_id": "OFFSET_R95",
+              "finished_w_min": 331,
+              "finished_w_max": 861,
+              "finished_h_min": 376,
+              "finished_h_max": 1601,
+              "survey_w_min": 341,
+              "survey_w_max": 871,
+              "survey_h_min": 386,
+              "survey_h_max": 1611,
+              "boundary_rule_id": "BATH-BR-VSOP",
+              "status": "COMPLETE",
+              "evidence": "BATH-EV-007"
+            }
+          },
+          {
+            "id": "BATH-SZ-VSOP-OFFSET_L195",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 430,
+              "maxW": 960,
+              "minH": 376,
+              "maxH": 1601
+            },
+            "selector": {
+              "window_type": "RPL_BATH_VSOP",
+              "frame_type": "BATH-STD"
+            },
+            "source": {
+              "size_rule_id": "BATH-SZ-VSOP-OFFSET_L195",
+              "window_type_id": "RPL_BATH_VSOP",
+              "frame_type_id": "BATH-STD",
+              "opening_pattern_id": "OFFSET_L195",
+              "finished_w_min": 430,
+              "finished_w_max": 960,
+              "finished_h_min": 376,
+              "finished_h_max": 1601,
+              "survey_w_min": 440,
+              "survey_w_max": 970,
+              "survey_h_min": 386,
+              "survey_h_max": 1611,
+              "boundary_rule_id": "BATH-BR-VSOP",
+              "status": "COMPLETE",
+              "evidence": "BATH-EV-007"
+            }
+          },
+          {
+            "id": "BATH-SZ-VSOP-OFFSET_R195",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 430,
+              "maxW": 960,
+              "minH": 376,
+              "maxH": 1601
+            },
+            "selector": {
+              "window_type": "RPL_BATH_VSOP",
+              "frame_type": "BATH-STD"
+            },
+            "source": {
+              "size_rule_id": "BATH-SZ-VSOP-OFFSET_R195",
+              "window_type_id": "RPL_BATH_VSOP",
+              "frame_type_id": "BATH-STD",
+              "opening_pattern_id": "OFFSET_R195",
+              "finished_w_min": 430,
+              "finished_w_max": 960,
+              "finished_h_min": 376,
+              "finished_h_max": 1601,
+              "survey_w_min": 440,
+              "survey_w_max": 970,
+              "survey_h_min": 386,
+              "survey_h_max": 1611,
+              "boundary_rule_id": "BATH-BR-VSOP",
+              "status": "COMPLETE",
+              "evidence": "BATH-EV-007"
+            }
+          },
+          {
+            "id": "BATH-SZ-VSOP-CUTOUT",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 267,
+              "maxW": 797,
+              "minH": 376,
+              "maxH": 1601
+            },
+            "selector": {
+              "window_type": "RPL_BATH_VSOP",
+              "frame_type": "BATH-STD"
+            },
+            "source": {
+              "size_rule_id": "BATH-SZ-VSOP-CUTOUT",
+              "window_type_id": "RPL_BATH_VSOP",
+              "frame_type_id": "BATH-STD",
+              "opening_pattern_id": "CUTOUT",
+              "finished_w_min": 267,
+              "finished_w_max": 797,
+              "finished_h_min": 376,
+              "finished_h_max": 1601,
+              "survey_w_min": 277,
+              "survey_w_max": 807,
+              "survey_h_min": 386,
+              "survey_h_max": 1611,
+              "boundary_rule_id": "BATH-BR-VSOP",
+              "status": "COMPLETE",
+              "evidence": "BATH-EV-007"
+            }
+          },
+          {
+            "id": "BATH-SZ-VSOP-WINDOW_ONLY",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 267,
+              "maxW": 797,
+              "minH": 376,
+              "maxH": 1601
+            },
+            "selector": {
+              "window_type": "RPL_BATH_VSOP",
+              "frame_type": "BATH-STD"
+            },
+            "source": {
+              "size_rule_id": "BATH-SZ-VSOP-WINDOW_ONLY",
+              "window_type_id": "RPL_BATH_VSOP",
+              "frame_type_id": "BATH-STD",
+              "opening_pattern_id": "WINDOW_ONLY",
+              "finished_w_min": 267,
+              "finished_w_max": 797,
+              "finished_h_min": 376,
+              "finished_h_max": 1601,
+              "survey_w_min": 277,
+              "survey_w_max": 807,
+              "survey_h_min": 386,
+              "survey_h_max": 1611,
+              "boundary_rule_id": "BATH-BR-VSOP",
+              "status": "COMPLETE",
+              "evidence": "BATH-EV-007"
+            }
+          },
+          {
+            "id": "BATH-SZ-VSCAM-OFFSET_L95",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 331,
+              "maxW": 731,
+              "minH": 346,
+              "maxH": 1601
+            },
+            "selector": {
+              "window_type": "RPL_BATH_VSCAM",
+              "frame_type": "BATH-STD"
+            },
+            "source": {
+              "size_rule_id": "BATH-SZ-VSCAM-OFFSET_L95",
+              "window_type_id": "RPL_BATH_VSCAM",
+              "frame_type_id": "BATH-STD",
+              "opening_pattern_id": "OFFSET_L95",
+              "finished_w_min": 331,
+              "finished_w_max": 731,
+              "finished_h_min": 346,
+              "finished_h_max": 1601,
+              "survey_w_min": 341,
+              "survey_w_max": 741,
+              "survey_h_min": 356,
+              "survey_h_max": 1611,
+              "boundary_rule_id": "BATH-BR-VSCAM",
+              "status": "COMPLETE_WITH_EXTERNAL_CHECK",
+              "evidence": "BATH-EV-007"
+            }
+          },
+          {
+            "id": "BATH-SZ-VSCAM-OFFSET_R95",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 331,
+              "maxW": 731,
+              "minH": 346,
+              "maxH": 1601
+            },
+            "selector": {
+              "window_type": "RPL_BATH_VSCAM",
+              "frame_type": "BATH-STD"
+            },
+            "source": {
+              "size_rule_id": "BATH-SZ-VSCAM-OFFSET_R95",
+              "window_type_id": "RPL_BATH_VSCAM",
+              "frame_type_id": "BATH-STD",
+              "opening_pattern_id": "OFFSET_R95",
+              "finished_w_min": 331,
+              "finished_w_max": 731,
+              "finished_h_min": 346,
+              "finished_h_max": 1601,
+              "survey_w_min": 341,
+              "survey_w_max": 741,
+              "survey_h_min": 356,
+              "survey_h_max": 1611,
+              "boundary_rule_id": "BATH-BR-VSCAM",
+              "status": "COMPLETE_WITH_EXTERNAL_CHECK",
+              "evidence": "BATH-EV-007"
+            }
+          },
+          {
+            "id": "BATH-SZ-VSCAM-OFFSET_L195",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 430,
+              "maxW": 830,
+              "minH": 346,
+              "maxH": 1601
+            },
+            "selector": {
+              "window_type": "RPL_BATH_VSCAM",
+              "frame_type": "BATH-STD"
+            },
+            "source": {
+              "size_rule_id": "BATH-SZ-VSCAM-OFFSET_L195",
+              "window_type_id": "RPL_BATH_VSCAM",
+              "frame_type_id": "BATH-STD",
+              "opening_pattern_id": "OFFSET_L195",
+              "finished_w_min": 430,
+              "finished_w_max": 830,
+              "finished_h_min": 346,
+              "finished_h_max": 1601,
+              "survey_w_min": 440,
+              "survey_w_max": 840,
+              "survey_h_min": 356,
+              "survey_h_max": 1611,
+              "boundary_rule_id": "BATH-BR-VSCAM",
+              "status": "COMPLETE_WITH_EXTERNAL_CHECK",
+              "evidence": "BATH-EV-007"
+            }
+          },
+          {
+            "id": "BATH-SZ-VSCAM-OFFSET_R195",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 430,
+              "maxW": 830,
+              "minH": 346,
+              "maxH": 1601
+            },
+            "selector": {
+              "window_type": "RPL_BATH_VSCAM",
+              "frame_type": "BATH-STD"
+            },
+            "source": {
+              "size_rule_id": "BATH-SZ-VSCAM-OFFSET_R195",
+              "window_type_id": "RPL_BATH_VSCAM",
+              "frame_type_id": "BATH-STD",
+              "opening_pattern_id": "OFFSET_R195",
+              "finished_w_min": 430,
+              "finished_w_max": 830,
+              "finished_h_min": 346,
+              "finished_h_max": 1601,
+              "survey_w_min": 440,
+              "survey_w_max": 840,
+              "survey_h_min": 356,
+              "survey_h_max": 1611,
+              "boundary_rule_id": "BATH-BR-VSCAM",
+              "status": "COMPLETE_WITH_EXTERNAL_CHECK",
+              "evidence": "BATH-EV-007"
+            }
+          },
+          {
+            "id": "BATH-SZ-VSCAM-CUTOUT",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 267,
+              "maxW": 667,
+              "minH": 346,
+              "maxH": 1601
+            },
+            "selector": {
+              "window_type": "RPL_BATH_VSCAM",
+              "frame_type": "BATH-STD"
+            },
+            "source": {
+              "size_rule_id": "BATH-SZ-VSCAM-CUTOUT",
+              "window_type_id": "RPL_BATH_VSCAM",
+              "frame_type_id": "BATH-STD",
+              "opening_pattern_id": "CUTOUT",
+              "finished_w_min": 267,
+              "finished_w_max": 667,
+              "finished_h_min": 346,
+              "finished_h_max": 1601,
+              "survey_w_min": 277,
+              "survey_w_max": 677,
+              "survey_h_min": 356,
+              "survey_h_max": 1611,
+              "boundary_rule_id": "BATH-BR-VSCAM",
+              "status": "COMPLETE_WITH_EXTERNAL_CHECK",
+              "evidence": "BATH-EV-007"
+            }
+          },
+          {
+            "id": "BATH-SZ-VSCAM-WINDOW_ONLY",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 267,
+              "maxW": 667,
+              "minH": 346,
+              "maxH": 1601
+            },
+            "selector": {
+              "window_type": "RPL_BATH_VSCAM",
+              "frame_type": "BATH-STD"
+            },
+            "source": {
+              "size_rule_id": "BATH-SZ-VSCAM-WINDOW_ONLY",
+              "window_type_id": "RPL_BATH_VSCAM",
+              "frame_type_id": "BATH-STD",
+              "opening_pattern_id": "WINDOW_ONLY",
+              "finished_w_min": 267,
+              "finished_w_max": 667,
+              "finished_h_min": 346,
+              "finished_h_max": 1601,
+              "survey_w_min": 277,
+              "survey_w_max": 677,
+              "survey_h_min": 356,
+              "survey_h_max": 1611,
+              "boundary_rule_id": "BATH-BR-VSCAM",
+              "status": "COMPLETE_WITH_EXTERNAL_CHECK",
+              "evidence": "BATH-EV-007"
+            }
+          },
+          {
+            "id": "BATH-SZ-HSOP-OFFSET_L95",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 381,
+              "maxW": 1316,
+              "minH": 316,
+              "maxH": 1251
+            },
+            "selector": {
+              "window_type": "RPL_BATH_HSOP",
+              "frame_type": "BATH-STD"
+            },
+            "source": {
+              "size_rule_id": "BATH-SZ-HSOP-OFFSET_L95",
+              "window_type_id": "RPL_BATH_HSOP",
+              "frame_type_id": "BATH-STD",
+              "opening_pattern_id": "OFFSET_L95",
+              "finished_w_min": 381,
+              "finished_w_max": 1316,
+              "finished_h_min": 316,
+              "finished_h_max": 1251,
+              "survey_w_min": 391,
+              "survey_w_max": 1326,
+              "survey_h_min": 326,
+              "survey_h_max": 1261,
+              "boundary_rule_id": "BATH-BR-HSOP",
+              "status": "COMPLETE_WITH_EXTERNAL_CHECK",
+              "evidence": "BATH-EV-007"
+            }
+          },
+          {
+            "id": "BATH-SZ-HSOP-OFFSET_R95",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 381,
+              "maxW": 1316,
+              "minH": 316,
+              "maxH": 1251
+            },
+            "selector": {
+              "window_type": "RPL_BATH_HSOP",
+              "frame_type": "BATH-STD"
+            },
+            "source": {
+              "size_rule_id": "BATH-SZ-HSOP-OFFSET_R95",
+              "window_type_id": "RPL_BATH_HSOP",
+              "frame_type_id": "BATH-STD",
+              "opening_pattern_id": "OFFSET_R95",
+              "finished_w_min": 381,
+              "finished_w_max": 1316,
+              "finished_h_min": 316,
+              "finished_h_max": 1251,
+              "survey_w_min": 391,
+              "survey_w_max": 1326,
+              "survey_h_min": 326,
+              "survey_h_max": 1261,
+              "boundary_rule_id": "BATH-BR-HSOP",
+              "status": "COMPLETE_WITH_EXTERNAL_CHECK",
+              "evidence": "BATH-EV-007"
+            }
+          },
+          {
+            "id": "BATH-SZ-HSOP-OFFSET_L195",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 480,
+              "maxW": 1415,
+              "minH": 316,
+              "maxH": 1251
+            },
+            "selector": {
+              "window_type": "RPL_BATH_HSOP",
+              "frame_type": "BATH-STD"
+            },
+            "source": {
+              "size_rule_id": "BATH-SZ-HSOP-OFFSET_L195",
+              "window_type_id": "RPL_BATH_HSOP",
+              "frame_type_id": "BATH-STD",
+              "opening_pattern_id": "OFFSET_L195",
+              "finished_w_min": 480,
+              "finished_w_max": 1415,
+              "finished_h_min": 316,
+              "finished_h_max": 1251,
+              "survey_w_min": 490,
+              "survey_w_max": 1425,
+              "survey_h_min": 326,
+              "survey_h_max": 1261,
+              "boundary_rule_id": "BATH-BR-HSOP",
+              "status": "COMPLETE_WITH_EXTERNAL_CHECK",
+              "evidence": "BATH-EV-007"
+            }
+          },
+          {
+            "id": "BATH-SZ-HSOP-OFFSET_R195",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 480,
+              "maxW": 1415,
+              "minH": 316,
+              "maxH": 1251
+            },
+            "selector": {
+              "window_type": "RPL_BATH_HSOP",
+              "frame_type": "BATH-STD"
+            },
+            "source": {
+              "size_rule_id": "BATH-SZ-HSOP-OFFSET_R195",
+              "window_type_id": "RPL_BATH_HSOP",
+              "frame_type_id": "BATH-STD",
+              "opening_pattern_id": "OFFSET_R195",
+              "finished_w_min": 480,
+              "finished_w_max": 1415,
+              "finished_h_min": 316,
+              "finished_h_max": 1251,
+              "survey_w_min": 490,
+              "survey_w_max": 1425,
+              "survey_h_min": 326,
+              "survey_h_max": 1261,
+              "boundary_rule_id": "BATH-BR-HSOP",
+              "status": "COMPLETE_WITH_EXTERNAL_CHECK",
+              "evidence": "BATH-EV-007"
+            }
+          },
+          {
+            "id": "BATH-SZ-HSOP-CUTOUT",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 317,
+              "maxW": 1252,
+              "minH": 316,
+              "maxH": 1251
+            },
+            "selector": {
+              "window_type": "RPL_BATH_HSOP",
+              "frame_type": "BATH-STD"
+            },
+            "source": {
+              "size_rule_id": "BATH-SZ-HSOP-CUTOUT",
+              "window_type_id": "RPL_BATH_HSOP",
+              "frame_type_id": "BATH-STD",
+              "opening_pattern_id": "CUTOUT",
+              "finished_w_min": 317,
+              "finished_w_max": 1252,
+              "finished_h_min": 316,
+              "finished_h_max": 1251,
+              "survey_w_min": 327,
+              "survey_w_max": 1262,
+              "survey_h_min": 326,
+              "survey_h_max": 1261,
+              "boundary_rule_id": "BATH-BR-HSOP",
+              "status": "COMPLETE_WITH_EXTERNAL_CHECK",
+              "evidence": "BATH-EV-007"
+            }
+          },
+          {
+            "id": "BATH-SZ-HSOP-WINDOW_ONLY",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 317,
+              "maxW": 1252,
+              "minH": 316,
+              "maxH": 1251
+            },
+            "selector": {
+              "window_type": "RPL_BATH_HSOP",
+              "frame_type": "BATH-STD"
+            },
+            "source": {
+              "size_rule_id": "BATH-SZ-HSOP-WINDOW_ONLY",
+              "window_type_id": "RPL_BATH_HSOP",
+              "frame_type_id": "BATH-STD",
+              "opening_pattern_id": "WINDOW_ONLY",
+              "finished_w_min": 317,
+              "finished_w_max": 1252,
+              "finished_h_min": 316,
+              "finished_h_max": 1251,
+              "survey_w_min": 327,
+              "survey_w_max": 1262,
+              "survey_h_min": 326,
+              "survey_h_max": 1261,
+              "boundary_rule_id": "BATH-BR-HSOP",
+              "status": "COMPLETE_WITH_EXTERNAL_CHECK",
+              "evidence": "BATH-EV-007"
+            }
+          },
+          {
+            "id": "BATH-SZ-HSCAM-OFFSET_L95",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 381,
+              "maxW": 951,
+              "minH": 316,
+              "maxH": 1016
+            },
+            "selector": {
+              "window_type": "RPL_BATH_HSCAM",
+              "frame_type": "BATH-STD"
+            },
+            "source": {
+              "size_rule_id": "BATH-SZ-HSCAM-OFFSET_L95",
+              "window_type_id": "RPL_BATH_HSCAM",
+              "frame_type_id": "BATH-STD",
+              "opening_pattern_id": "OFFSET_L95",
+              "finished_w_min": 381,
+              "finished_w_max": 951,
+              "finished_h_min": 316,
+              "finished_h_max": 1016,
+              "survey_w_min": 391,
+              "survey_w_max": 961,
+              "survey_h_min": 326,
+              "survey_h_max": 1026,
+              "boundary_rule_id": "BATH-BR-HSCAM",
+              "status": "COMPLETE_WITH_EXTERNAL_CHECK",
+              "evidence": "BATH-EV-007"
+            }
+          },
+          {
+            "id": "BATH-SZ-HSCAM-OFFSET_R95",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 381,
+              "maxW": 951,
+              "minH": 316,
+              "maxH": 1016
+            },
+            "selector": {
+              "window_type": "RPL_BATH_HSCAM",
+              "frame_type": "BATH-STD"
+            },
+            "source": {
+              "size_rule_id": "BATH-SZ-HSCAM-OFFSET_R95",
+              "window_type_id": "RPL_BATH_HSCAM",
+              "frame_type_id": "BATH-STD",
+              "opening_pattern_id": "OFFSET_R95",
+              "finished_w_min": 381,
+              "finished_w_max": 951,
+              "finished_h_min": 316,
+              "finished_h_max": 1016,
+              "survey_w_min": 391,
+              "survey_w_max": 961,
+              "survey_h_min": 326,
+              "survey_h_max": 1026,
+              "boundary_rule_id": "BATH-BR-HSCAM",
+              "status": "COMPLETE_WITH_EXTERNAL_CHECK",
+              "evidence": "BATH-EV-007"
+            }
+          },
+          {
+            "id": "BATH-SZ-HSCAM-OFFSET_L195",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 480,
+              "maxW": 1050,
+              "minH": 316,
+              "maxH": 1016
+            },
+            "selector": {
+              "window_type": "RPL_BATH_HSCAM",
+              "frame_type": "BATH-STD"
+            },
+            "source": {
+              "size_rule_id": "BATH-SZ-HSCAM-OFFSET_L195",
+              "window_type_id": "RPL_BATH_HSCAM",
+              "frame_type_id": "BATH-STD",
+              "opening_pattern_id": "OFFSET_L195",
+              "finished_w_min": 480,
+              "finished_w_max": 1050,
+              "finished_h_min": 316,
+              "finished_h_max": 1016,
+              "survey_w_min": 490,
+              "survey_w_max": 1060,
+              "survey_h_min": 326,
+              "survey_h_max": 1026,
+              "boundary_rule_id": "BATH-BR-HSCAM",
+              "status": "COMPLETE_WITH_EXTERNAL_CHECK",
+              "evidence": "BATH-EV-007"
+            }
+          },
+          {
+            "id": "BATH-SZ-HSCAM-OFFSET_R195",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 480,
+              "maxW": 1050,
+              "minH": 316,
+              "maxH": 1016
+            },
+            "selector": {
+              "window_type": "RPL_BATH_HSCAM",
+              "frame_type": "BATH-STD"
+            },
+            "source": {
+              "size_rule_id": "BATH-SZ-HSCAM-OFFSET_R195",
+              "window_type_id": "RPL_BATH_HSCAM",
+              "frame_type_id": "BATH-STD",
+              "opening_pattern_id": "OFFSET_R195",
+              "finished_w_min": 480,
+              "finished_w_max": 1050,
+              "finished_h_min": 316,
+              "finished_h_max": 1016,
+              "survey_w_min": 490,
+              "survey_w_max": 1060,
+              "survey_h_min": 326,
+              "survey_h_max": 1026,
+              "boundary_rule_id": "BATH-BR-HSCAM",
+              "status": "COMPLETE_WITH_EXTERNAL_CHECK",
+              "evidence": "BATH-EV-007"
+            }
+          },
+          {
+            "id": "BATH-SZ-HSCAM-CUTOUT",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 317,
+              "maxW": 887,
+              "minH": 316,
+              "maxH": 1016
+            },
+            "selector": {
+              "window_type": "RPL_BATH_HSCAM",
+              "frame_type": "BATH-STD"
+            },
+            "source": {
+              "size_rule_id": "BATH-SZ-HSCAM-CUTOUT",
+              "window_type_id": "RPL_BATH_HSCAM",
+              "frame_type_id": "BATH-STD",
+              "opening_pattern_id": "CUTOUT",
+              "finished_w_min": 317,
+              "finished_w_max": 887,
+              "finished_h_min": 316,
+              "finished_h_max": 1016,
+              "survey_w_min": 327,
+              "survey_w_max": 897,
+              "survey_h_min": 326,
+              "survey_h_max": 1026,
+              "boundary_rule_id": "BATH-BR-HSCAM",
+              "status": "COMPLETE_WITH_EXTERNAL_CHECK",
+              "evidence": "BATH-EV-007"
+            }
+          },
+          {
+            "id": "BATH-SZ-HSCAM-WINDOW_ONLY",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 317,
+              "maxW": 887,
+              "minH": 316,
+              "maxH": 1016
+            },
+            "selector": {
+              "window_type": "RPL_BATH_HSCAM",
+              "frame_type": "BATH-STD"
+            },
+            "source": {
+              "size_rule_id": "BATH-SZ-HSCAM-WINDOW_ONLY",
+              "window_type_id": "RPL_BATH_HSCAM",
+              "frame_type_id": "BATH-STD",
+              "opening_pattern_id": "WINDOW_ONLY",
+              "finished_w_min": 317,
+              "finished_w_max": 887,
+              "finished_h_min": 316,
+              "finished_h_max": 1016,
+              "survey_w_min": 327,
+              "survey_w_max": 897,
+              "survey_h_min": 326,
+              "survey_h_max": 1026,
+              "boundary_rule_id": "BATH-BR-HSCAM",
+              "status": "COMPLETE_WITH_EXTERNAL_CHECK",
+              "evidence": "BATH-EV-007"
+            }
+          },
+          {
+            "id": "BATH-SZ-DHFS-OFFSET_L95",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 381,
+              "maxW": 951,
+              "minH": 606,
+              "maxH": 1601
+            },
+            "selector": {
+              "window_type": "RPL_BATH_DHFS",
+              "frame_type": "BATH-STD"
+            },
+            "source": {
+              "size_rule_id": "BATH-SZ-DHFS-OFFSET_L95",
+              "window_type_id": "RPL_BATH_DHFS",
+              "frame_type_id": "BATH-STD",
+              "opening_pattern_id": "OFFSET_L95",
+              "finished_w_min": 381,
+              "finished_w_max": 951,
+              "finished_h_min": 606,
+              "finished_h_max": 1601,
+              "survey_w_min": 391,
+              "survey_w_max": 961,
+              "survey_h_min": 616,
+              "survey_h_max": 1611,
+              "boundary_rule_id": "BATH-BR-DHFS",
+              "status": "COMPLETE_WITH_EXTERNAL_CHECK",
+              "evidence": "BATH-EV-007"
+            }
+          },
+          {
+            "id": "BATH-SZ-DHFS-OFFSET_R95",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 381,
+              "maxW": 951,
+              "minH": 606,
+              "maxH": 1601
+            },
+            "selector": {
+              "window_type": "RPL_BATH_DHFS",
+              "frame_type": "BATH-STD"
+            },
+            "source": {
+              "size_rule_id": "BATH-SZ-DHFS-OFFSET_R95",
+              "window_type_id": "RPL_BATH_DHFS",
+              "frame_type_id": "BATH-STD",
+              "opening_pattern_id": "OFFSET_R95",
+              "finished_w_min": 381,
+              "finished_w_max": 951,
+              "finished_h_min": 606,
+              "finished_h_max": 1601,
+              "survey_w_min": 391,
+              "survey_w_max": 961,
+              "survey_h_min": 616,
+              "survey_h_max": 1611,
+              "boundary_rule_id": "BATH-BR-DHFS",
+              "status": "COMPLETE_WITH_EXTERNAL_CHECK",
+              "evidence": "BATH-EV-007"
+            }
+          },
+          {
+            "id": "BATH-SZ-DHFS-CUTOUT",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 317,
+              "maxW": 887,
+              "minH": 606,
+              "maxH": 1601
+            },
+            "selector": {
+              "window_type": "RPL_BATH_DHFS",
+              "frame_type": "BATH-STD"
+            },
+            "source": {
+              "size_rule_id": "BATH-SZ-DHFS-CUTOUT",
+              "window_type_id": "RPL_BATH_DHFS",
+              "frame_type_id": "BATH-STD",
+              "opening_pattern_id": "CUTOUT",
+              "finished_w_min": 317,
+              "finished_w_max": 887,
+              "finished_h_min": 606,
+              "finished_h_max": 1601,
+              "survey_w_min": 327,
+              "survey_w_max": 897,
+              "survey_h_min": 616,
+              "survey_h_max": 1611,
+              "boundary_rule_id": "BATH-BR-DHFS",
+              "status": "COMPLETE_WITH_EXTERNAL_CHECK",
+              "evidence": "BATH-EV-007"
+            }
+          },
+          {
+            "id": "BATH-SZ-DHFS-WINDOW_ONLY",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 317,
+              "maxW": 887,
+              "minH": 606,
+              "maxH": 1601
+            },
+            "selector": {
+              "window_type": "RPL_BATH_DHFS",
+              "frame_type": "BATH-STD"
+            },
+            "source": {
+              "size_rule_id": "BATH-SZ-DHFS-WINDOW_ONLY",
+              "window_type_id": "RPL_BATH_DHFS",
+              "frame_type_id": "BATH-STD",
+              "opening_pattern_id": "WINDOW_ONLY",
+              "finished_w_min": 317,
+              "finished_w_max": 887,
+              "finished_h_min": 606,
+              "finished_h_max": 1601,
+              "survey_w_min": 327,
+              "survey_w_max": 897,
+              "survey_h_min": 616,
+              "survey_h_max": 1611,
+              "boundary_rule_id": "BATH-BR-DHFS",
+              "status": "COMPLETE_WITH_EXTERNAL_CHECK",
+              "evidence": "BATH-EV-007"
+            }
+          },
+          {
+            "id": "BATH-SZ-FIXOUT-FULL95",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 344,
+              "maxW": 2051,
+              "minH": 188,
+              "maxH": 1601
+            },
+            "selector": {
+              "window_type": "RPL_BATH_FIXOUT",
+              "frame_type": "BATH-STD"
+            },
+            "source": {
+              "size_rule_id": "BATH-SZ-FIXOUT-FULL95",
+              "window_type_id": "RPL_BATH_FIXOUT",
+              "frame_type_id": "BATH-STD",
+              "opening_pattern_id": "FULL95",
+              "finished_w_min": 344,
+              "finished_w_max": 2051,
+              "finished_h_min": 188,
+              "finished_h_max": 1601,
+              "survey_w_min": 354,
+              "survey_w_max": 2061,
+              "survey_h_min": 198,
+              "survey_h_max": 1611,
+              "boundary_rule_id": "BATH-BR-FIXOUT",
+              "status": "COMPLETE_WITH_EXTERNAL_CHECK",
+              "evidence": "BATH-EV-008"
+            }
+          },
+          {
+            "id": "BATH-SZ-FIXOUT-FULL195",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 543,
+              "maxW": 2250,
+              "minH": 188,
+              "maxH": 1601
+            },
+            "selector": {
+              "window_type": "RPL_BATH_FIXOUT",
+              "frame_type": "BATH-STD"
+            },
+            "source": {
+              "size_rule_id": "BATH-SZ-FIXOUT-FULL195",
+              "window_type_id": "RPL_BATH_FIXOUT",
+              "frame_type_id": "BATH-STD",
+              "opening_pattern_id": "FULL195",
+              "finished_w_min": 543,
+              "finished_w_max": 2250,
+              "finished_h_min": 188,
+              "finished_h_max": 1601,
+              "survey_w_min": 553,
+              "survey_w_max": 2260,
+              "survey_h_min": 198,
+              "survey_h_max": 1611,
+              "boundary_rule_id": "BATH-BR-FIXOUT",
+              "status": "COMPLETE_WITH_EXTERNAL_CHECK",
+              "evidence": "BATH-EV-008"
+            }
+          },
+          {
+            "id": "BATH-SZ-FIXOUT-OFFSET_L95",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 281,
+              "maxW": 1988,
+              "minH": 188,
+              "maxH": 1601
+            },
+            "selector": {
+              "window_type": "RPL_BATH_FIXOUT",
+              "frame_type": "BATH-STD"
+            },
+            "source": {
+              "size_rule_id": "BATH-SZ-FIXOUT-OFFSET_L95",
+              "window_type_id": "RPL_BATH_FIXOUT",
+              "frame_type_id": "BATH-STD",
+              "opening_pattern_id": "OFFSET_L95",
+              "finished_w_min": 281,
+              "finished_w_max": 1988,
+              "finished_h_min": 188,
+              "finished_h_max": 1601,
+              "survey_w_min": 291,
+              "survey_w_max": 1998,
+              "survey_h_min": 198,
+              "survey_h_max": 1611,
+              "boundary_rule_id": "BATH-BR-FIXOUT",
+              "status": "COMPLETE_WITH_EXTERNAL_CHECK",
+              "evidence": "BATH-EV-008"
+            }
+          },
+          {
+            "id": "BATH-SZ-FIXOUT-OFFSET_R95",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 281,
+              "maxW": 1988,
+              "minH": 188,
+              "maxH": 1601
+            },
+            "selector": {
+              "window_type": "RPL_BATH_FIXOUT",
+              "frame_type": "BATH-STD"
+            },
+            "source": {
+              "size_rule_id": "BATH-SZ-FIXOUT-OFFSET_R95",
+              "window_type_id": "RPL_BATH_FIXOUT",
+              "frame_type_id": "BATH-STD",
+              "opening_pattern_id": "OFFSET_R95",
+              "finished_w_min": 281,
+              "finished_w_max": 1988,
+              "finished_h_min": 188,
+              "finished_h_max": 1601,
+              "survey_w_min": 291,
+              "survey_w_max": 1998,
+              "survey_h_min": 198,
+              "survey_h_max": 1611,
+              "boundary_rule_id": "BATH-BR-FIXOUT",
+              "status": "COMPLETE_WITH_EXTERNAL_CHECK",
+              "evidence": "BATH-EV-008"
+            }
+          },
+          {
+            "id": "BATH-SZ-FIXOUT-OFFSET_L195",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 380,
+              "maxW": 2087,
+              "minH": 188,
+              "maxH": 1601
+            },
+            "selector": {
+              "window_type": "RPL_BATH_FIXOUT",
+              "frame_type": "BATH-STD"
+            },
+            "source": {
+              "size_rule_id": "BATH-SZ-FIXOUT-OFFSET_L195",
+              "window_type_id": "RPL_BATH_FIXOUT",
+              "frame_type_id": "BATH-STD",
+              "opening_pattern_id": "OFFSET_L195",
+              "finished_w_min": 380,
+              "finished_w_max": 2087,
+              "finished_h_min": 188,
+              "finished_h_max": 1601,
+              "survey_w_min": 390,
+              "survey_w_max": 2097,
+              "survey_h_min": 198,
+              "survey_h_max": 1611,
+              "boundary_rule_id": "BATH-BR-FIXOUT",
+              "status": "COMPLETE_WITH_EXTERNAL_CHECK",
+              "evidence": "BATH-EV-008"
+            }
+          },
+          {
+            "id": "BATH-SZ-FIXOUT-OFFSET_R195",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 380,
+              "maxW": 2087,
+              "minH": 188,
+              "maxH": 1601
+            },
+            "selector": {
+              "window_type": "RPL_BATH_FIXOUT",
+              "frame_type": "BATH-STD"
+            },
+            "source": {
+              "size_rule_id": "BATH-SZ-FIXOUT-OFFSET_R195",
+              "window_type_id": "RPL_BATH_FIXOUT",
+              "frame_type_id": "BATH-STD",
+              "opening_pattern_id": "OFFSET_R195",
+              "finished_w_min": 380,
+              "finished_w_max": 2087,
+              "finished_h_min": 188,
+              "finished_h_max": 1601,
+              "survey_w_min": 390,
+              "survey_w_max": 2097,
+              "survey_h_min": 198,
+              "survey_h_max": 1611,
+              "boundary_rule_id": "BATH-BR-FIXOUT",
+              "status": "COMPLETE_WITH_EXTERNAL_CHECK",
+              "evidence": "BATH-EV-008"
+            }
+          },
+          {
+            "id": "BATH-SZ-FIXOUT-CUTOUT",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 217,
+              "maxW": 1924,
+              "minH": 188,
+              "maxH": 1601
+            },
+            "selector": {
+              "window_type": "RPL_BATH_FIXOUT",
+              "frame_type": "BATH-STD"
+            },
+            "source": {
+              "size_rule_id": "BATH-SZ-FIXOUT-CUTOUT",
+              "window_type_id": "RPL_BATH_FIXOUT",
+              "frame_type_id": "BATH-STD",
+              "opening_pattern_id": "CUTOUT",
+              "finished_w_min": 217,
+              "finished_w_max": 1924,
+              "finished_h_min": 188,
+              "finished_h_max": 1601,
+              "survey_w_min": 227,
+              "survey_w_max": 1934,
+              "survey_h_min": 198,
+              "survey_h_max": 1611,
+              "boundary_rule_id": "BATH-BR-FIXOUT",
+              "status": "COMPLETE_WITH_EXTERNAL_CHECK",
+              "evidence": "BATH-EV-008"
+            }
+          },
+          {
+            "id": "BATH-SZ-FIXOUT-WINDOW_ONLY",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 217,
+              "maxW": 1924,
+              "minH": 188,
+              "maxH": 1601
+            },
+            "selector": {
+              "window_type": "RPL_BATH_FIXOUT",
+              "frame_type": "BATH-STD"
+            },
+            "source": {
+              "size_rule_id": "BATH-SZ-FIXOUT-WINDOW_ONLY",
+              "window_type_id": "RPL_BATH_FIXOUT",
+              "frame_type_id": "BATH-STD",
+              "opening_pattern_id": "WINDOW_ONLY",
+              "finished_w_min": 217,
+              "finished_w_max": 1924,
+              "finished_h_min": 188,
+              "finished_h_max": 1601,
+              "survey_w_min": 227,
+              "survey_w_max": 1934,
+              "survey_h_min": 198,
+              "survey_h_max": 1611,
+              "boundary_rule_id": "BATH-BR-FIXOUT",
+              "status": "COMPLETE_WITH_EXTERNAL_CHECK",
+              "evidence": "BATH-EV-008"
+            }
+          },
+          {
+            "id": "BATH-SZ-FIXIN-FULL95",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 321,
+              "maxW": 2051,
+              "minH": 240,
+              "maxH": 1601
+            },
+            "selector": {
+              "window_type": "RPL_BATH_FIXIN",
+              "frame_type": "BATH-STD"
+            },
+            "source": {
+              "size_rule_id": "BATH-SZ-FIXIN-FULL95",
+              "window_type_id": "RPL_BATH_FIXIN",
+              "frame_type_id": "BATH-STD",
+              "opening_pattern_id": "FULL95",
+              "finished_w_min": 321,
+              "finished_w_max": 2051,
+              "finished_h_min": 240,
+              "finished_h_max": 1601,
+              "survey_w_min": 331,
+              "survey_w_max": 2061,
+              "survey_h_min": 250,
+              "survey_h_max": 1611,
+              "boundary_rule_id": "BATH-BR-FIXIN",
+              "status": "COMPLETE_WITH_EXTERNAL_CHECK",
+              "evidence": "BATH-EV-008"
+            }
+          },
+          {
+            "id": "BATH-SZ-FIXIN-OFFSET_L95",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 258,
+              "maxW": 1988,
+              "minH": 240,
+              "maxH": 1601
+            },
+            "selector": {
+              "window_type": "RPL_BATH_FIXIN",
+              "frame_type": "BATH-STD"
+            },
+            "source": {
+              "size_rule_id": "BATH-SZ-FIXIN-OFFSET_L95",
+              "window_type_id": "RPL_BATH_FIXIN",
+              "frame_type_id": "BATH-STD",
+              "opening_pattern_id": "OFFSET_L95",
+              "finished_w_min": 258,
+              "finished_w_max": 1988,
+              "finished_h_min": 240,
+              "finished_h_max": 1601,
+              "survey_w_min": 268,
+              "survey_w_max": 1998,
+              "survey_h_min": 250,
+              "survey_h_max": 1611,
+              "boundary_rule_id": "BATH-BR-FIXIN",
+              "status": "COMPLETE_WITH_EXTERNAL_CHECK",
+              "evidence": "BATH-EV-008"
+            }
+          },
+          {
+            "id": "BATH-SZ-FIXIN-OFFSET_R95",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 258,
+              "maxW": 1988,
+              "minH": 240,
+              "maxH": 1601
+            },
+            "selector": {
+              "window_type": "RPL_BATH_FIXIN",
+              "frame_type": "BATH-STD"
+            },
+            "source": {
+              "size_rule_id": "BATH-SZ-FIXIN-OFFSET_R95",
+              "window_type_id": "RPL_BATH_FIXIN",
+              "frame_type_id": "BATH-STD",
+              "opening_pattern_id": "OFFSET_R95",
+              "finished_w_min": 258,
+              "finished_w_max": 1988,
+              "finished_h_min": 240,
+              "finished_h_max": 1601,
+              "survey_w_min": 268,
+              "survey_w_max": 1998,
+              "survey_h_min": 250,
+              "survey_h_max": 1611,
+              "boundary_rule_id": "BATH-BR-FIXIN",
+              "status": "COMPLETE_WITH_EXTERNAL_CHECK",
+              "evidence": "BATH-EV-008"
+            }
+          },
+          {
+            "id": "BATH-SZ-FIXIN-CUTOUT",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 194,
+              "maxW": 1924,
+              "minH": 240,
+              "maxH": 1601
+            },
+            "selector": {
+              "window_type": "RPL_BATH_FIXIN",
+              "frame_type": "BATH-STD"
+            },
+            "source": {
+              "size_rule_id": "BATH-SZ-FIXIN-CUTOUT",
+              "window_type_id": "RPL_BATH_FIXIN",
+              "frame_type_id": "BATH-STD",
+              "opening_pattern_id": "CUTOUT",
+              "finished_w_min": 194,
+              "finished_w_max": 1924,
+              "finished_h_min": 240,
+              "finished_h_max": 1601,
+              "survey_w_min": 204,
+              "survey_w_max": 1934,
+              "survey_h_min": 250,
+              "survey_h_max": 1611,
+              "boundary_rule_id": "BATH-BR-FIXIN",
+              "status": "COMPLETE_WITH_EXTERNAL_CHECK",
+              "evidence": "BATH-EV-008"
+            }
+          },
+          {
+            "id": "BATH-SZ-FIXIN-WINDOW_ONLY",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 194,
+              "maxW": 1924,
+              "minH": 240,
+              "maxH": 1601
+            },
+            "selector": {
+              "window_type": "RPL_BATH_FIXIN",
+              "frame_type": "BATH-STD"
+            },
+            "source": {
+              "size_rule_id": "BATH-SZ-FIXIN-WINDOW_ONLY",
+              "window_type_id": "RPL_BATH_FIXIN",
+              "frame_type_id": "BATH-STD",
+              "opening_pattern_id": "WINDOW_ONLY",
+              "finished_w_min": 194,
+              "finished_w_max": 1924,
+              "finished_h_min": 240,
+              "finished_h_max": 1601,
+              "survey_w_min": 204,
+              "survey_w_max": 1934,
+              "survey_h_min": 250,
+              "survey_h_max": 1611,
+              "boundary_rule_id": "BATH-BR-FIXIN",
+              "status": "COMPLETE_WITH_EXTERNAL_CHECK",
+              "evidence": "BATH-EV-008"
+            }
+          }
+        ],
+        "productId": "CANDIDATE:RPL_BATH"
+      }
+    ],
+    "dependencies": [
+      {
+        "id": "CANDIDATE:RPL_BATH:dependencies:BATH-OD-003",
+        "mode": "AUTO",
+        "when": {
+          "options": {
+            "$contains": "BATH-OP-CASING"
+          }
+        },
+        "targetField": "options",
+        "action": "deny_candidate",
+        "targetValue": "BATH-OP-ANGLE-NOMITER",
+        "productId": "CANDIDATE:RPL_BATH"
+      },
+      {
+        "id": "CANDIDATE:RPL_BATH:dependencies:BATH-OD-004",
+        "mode": "AUTO",
+        "when": {
+          "options": {
+            "$contains": "BATH-OP-DEPTH"
+          }
+        },
+        "targetField": "options",
+        "action": "deny_candidate",
+        "targetValue": "BATH-OP-SIDE-COVER",
+        "productId": "CANDIDATE:RPL_BATH"
+      },
+      {
+        "id": "CANDIDATE:RPL_BATH:dependencies:estimate-confirm",
+        "mode": "MANUAL_CHECK",
+        "when": {},
+        "message": "施工可否・図形境界・ガラス構成・部材数量・価格・発注コードは積算確認が必要です。候補のため正式採用・自動注文はできません。",
+        "productId": "CANDIDATE:RPL_BATH"
+      }
+    ],
+    "evidence": [
+      {
+        "id": "CANDIDATE:RPL_BATH:evidence:BATH-EV-001",
+        "source_id": "BATH-EV-001",
+        "payload": {
+          "evidence_id": "BATH-EV-001",
+          "情報源種別": "共通仕様",
+          "資料名": "サッシ商品マスター共通仕様書_v0.1",
+          "発行年月": "2026-08-30更新",
+          "ページ/箇所": "§31-34ほか",
+          "URL": "https://docs.google.com/document/d/1MfixkbV1cZ__DtBknEKsix_nnrXQqjc-LZtXUHwJv_A/edit",
+          "確認日": "2026-08-31",
+          "確度": "HIGH",
+          "根拠内容": "条件判定・Evidence・特殊案件"
+        },
+        "productId": "CANDIDATE:RPL_BATH"
+      },
+      {
+        "id": "CANDIDATE:RPL_BATH:evidence:BATH-EV-002",
+        "source_id": "BATH-EV-002",
+        "payload": {
+          "evidence_id": "BATH-EV-002",
+          "情報源種別": "業務用資料集",
+          "資料名": "リプラス・リプラスマンション用 取替窓 業務用資料集",
+          "発行年月": "2026-04",
+          "ページ/箇所": "浴室仕様 p52～",
+          "URL": "https://drive.google.com/file/d/1D1HPMXhOMYd_Lu10XNzzJR2TH3aDHVUr/view",
+          "確認日": "2026-08-31",
+          "確度": "HIGH",
+          "根拠内容": "浴室商品体系・価格表"
+        },
+        "productId": "CANDIDATE:RPL_BATH"
+      },
+      {
+        "id": "CANDIDATE:RPL_BATH:evidence:BATH-EV-003",
+        "source_id": "BATH-EV-003",
+        "payload": {
+          "evidence_id": "BATH-EV-003",
+          "情報源種別": "商品カタログ",
+          "資料名": "LIXIL リプラス 商品カタログ SN1200",
+          "発行年月": "2025-08",
+          "ページ/箇所": "p30-32",
+          "URL": "https://drive.google.com/file/d/1wH1nhmsftl6y8Mp7y6twtoXSi6rxqxzT/view",
+          "確認日": "2026-08-31",
+          "確度": "HIGH",
+          "根拠内容": "改修モード・8窓種・開口縮小・色"
+        },
+        "productId": "CANDIDATE:RPL_BATH"
+      },
+      {
+        "id": "CANDIDATE:RPL_BATH:evidence:BATH-EV-004",
+        "source_id": "BATH-EV-004",
+        "payload": {
+          "evidence_id": "BATH-EV-004",
+          "情報源種別": "公式Web",
+          "資料名": "LIXIL リプラス 浴室仕様",
+          "発行年月": "現行",
+          "ページ/箇所": "品種/色/ガラス/網戸",
+          "URL": "https://www.lixil.co.jp/lineup/window/replus/variation/bathroom/",
+          "確認日": "2026-08-31",
+          "確度": "HIGH",
+          "根拠内容": "現行品種・既設樹脂/木不可・トリプル注記"
+        },
+        "productId": "CANDIDATE:RPL_BATH"
+      },
+      {
+        "id": "CANDIDATE:RPL_BATH:evidence:BATH-EV-005",
+        "source_id": "BATH-EV-005",
+        "payload": {
+          "evidence_id": "BATH-EV-005",
+          "情報源種別": "業務用資料集",
+          "資料名": "同上",
+          "発行年月": "2026-04",
+          "ページ/箇所": "浴室仕様 完成品価格表",
+          "URL": "https://drive.google.com/file/d/1D1HPMXhOMYd_Lu10XNzzJR2TH3aDHVUr/view",
+          "確認日": "2026-08-31",
+          "確度": "HIGH",
+          "根拠内容": "窓種別網戸・ガラス・部材・依存"
+        },
+        "productId": "CANDIDATE:RPL_BATH"
+      },
+      {
+        "id": "CANDIDATE:RPL_BATH:evidence:BATH-EV-006",
+        "source_id": "BATH-EV-006",
+        "payload": {
+          "evidence_id": "BATH-EV-006",
+          "情報源種別": "商品カタログ",
+          "資料名": "同上",
+          "発行年月": "2025-08",
+          "ページ/箇所": "p100",
+          "URL": "https://drive.google.com/file/d/1wH1nhmsftl6y8Mp7y6twtoXSi6rxqxzT/view",
+          "確認日": "2026-08-31",
+          "確度": "HIGH",
+          "根拠内容": "引違い標準/ブリッジ寸法・A/B/C/D・式"
+        },
+        "productId": "CANDIDATE:RPL_BATH"
+      },
+      {
+        "id": "CANDIDATE:RPL_BATH:evidence:BATH-EV-007",
+        "source_id": "BATH-EV-007",
+        "payload": {
+          "evidence_id": "BATH-EV-007",
+          "情報源種別": "商品カタログ",
+          "資料名": "同上",
+          "発行年月": "2025-08",
+          "ページ/箇所": "p112",
+          "URL": "https://drive.google.com/file/d/1wH1nhmsftl6y8Mp7y6twtoXSi6rxqxzT/view",
+          "確認日": "2026-08-31",
+          "確度": "HIGH",
+          "根拠内容": "装飾窓/上げ下げFS寸法・重量・清掃アーム"
+        },
+        "productId": "CANDIDATE:RPL_BATH"
+      },
+      {
+        "id": "CANDIDATE:RPL_BATH:evidence:BATH-EV-008",
+        "source_id": "BATH-EV-008",
+        "payload": {
+          "evidence_id": "BATH-EV-008",
+          "情報源種別": "商品カタログ",
+          "資料名": "同上",
+          "発行年月": "2025-08",
+          "ページ/箇所": "p113",
+          "URL": "https://drive.google.com/file/d/1wH1nhmsftl6y8Mp7y6twtoXSi6rxqxzT/view",
+          "確認日": "2026-08-31",
+          "確度": "HIGH",
+          "根拠内容": "FIX・連窓・段窓・断熱パネル・総W式"
+        },
+        "productId": "CANDIDATE:RPL_BATH"
+      },
+      {
+        "id": "CANDIDATE:RPL_BATH:evidence:BATH-EV-009",
+        "source_id": "BATH-EV-009",
+        "payload": {
+          "evidence_id": "BATH-EV-009",
+          "情報源種別": "商品カタログ",
+          "資料名": "同上",
+          "発行年月": "2025-08",
+          "ページ/箇所": "p205-211/現調資料",
+          "URL": "https://drive.google.com/file/d/1wH1nhmsftl6y8Mp7y6twtoXSi6rxqxzT/view",
+          "確認日": "2026-08-31",
+          "確度": "HIGH",
+          "根拠内容": "SB同時/窓単独・3点採寸・補強金具・見付・防水条件"
+        },
+        "productId": "CANDIDATE:RPL_BATH"
+      },
+      {
+        "id": "CANDIDATE:RPL_BATH:evidence:BATH-EV-010",
+        "source_id": "BATH-EV-010",
+        "payload": {
+          "evidence_id": "BATH-EV-010",
+          "情報源種別": "商品カタログ",
+          "資料名": "同上",
+          "発行年月": "2025-08",
+          "ページ/箇所": "p48/p55付近",
+          "URL": "https://drive.google.com/file/d/1wH1nhmsftl6y8Mp7y6twtoXSi6rxqxzT/view",
+          "確認日": "2026-08-31",
+          "確度": "HIGH",
+          "根拠内容": "複層/トリプルガラス体系・中空層・スペーサー"
+        },
+        "productId": "CANDIDATE:RPL_BATH"
+      },
+      {
+        "id": "CANDIDATE:RPL_BATH:evidence:BATH-EV-011",
+        "source_id": "BATH-EV-011",
+        "payload": {
+          "evidence_id": "BATH-EV-011",
+          "情報源種別": "商品カタログ/業務用資料",
+          "資料名": "同上",
+          "発行年月": "2025-08/2026-04",
+          "ページ/箇所": "有償品取付可否/浴室各価格表",
+          "URL": "https://drive.google.com/file/d/1wH1nhmsftl6y8Mp7y6twtoXSi6rxqxzT/view",
+          "確認日": "2026-08-31",
+          "確度": "HIGH",
+          "根拠内容": "有償品・併用不可・浴室不可OP"
+        },
+        "productId": "CANDIDATE:RPL_BATH"
+      },
+      {
+        "id": "CANDIDATE:RPL_BATH:evidence:BATH-EV-012",
+        "source_id": "BATH-EV-012",
+        "payload": {
+          "evidence_id": "BATH-EV-012",
+          "情報源種別": "商品カタログ",
+          "資料名": "同上",
+          "発行年月": "2025-08",
+          "ページ/箇所": "p206/連段・ガラス制限",
+          "URL": "https://drive.google.com/file/d/1wH1nhmsftl6y8Mp7y6twtoXSi6rxqxzT/view",
+          "確認日": "2026-08-31",
+          "確度": "HIGH",
+          "根拠内容": "無目露出不可・特殊複合・ガラス/耐荷重"
+        },
+        "productId": "CANDIDATE:RPL_BATH"
+      },
+      {
+        "id": "CANDIDATE:RPL_BATH:evidence:DELTA-SPACER-EV-V4",
+        "source_id": "DELTA-SPACER-EV-V4",
+        "payload": {
+          "evidence_id": "DELTA-SPACER-EV-V4",
+          "情報源種別": "公式業務用資料集",
+          "資料名": "IS9800",
+          "発行年月": "2026-10",
+          "ページ/箇所": "PDF 52,104,116,120",
+          "URL": "https://webcatalog.lixil.co.jp/cgi-bin/openCatalog.cgi?c=IS9800&d=newinter",
+          "確認日": "2026-10-14",
+          "確度": "HIGH",
+          "根拠内容": "ADD_15x20_SPACER / NEW_CANDIDATE、Current未採用"
+        },
+        "productId": "CANDIDATE:RPL_BATH"
+      },
+      {
+        "id": "CANDIDATE:RPL_BATH:evidence:DELTA-BATH-TABLE-EV-V4",
+        "source_id": "DELTA-BATH-TABLE-EV-V4",
+        "payload": {
+          "evidence_id": "DELTA-BATH-TABLE-EV-V4",
+          "情報源種別": "公式業務用資料集",
+          "資料名": "IS9800",
+          "発行年月": "2026-10",
+          "ページ/箇所": "PDF 95,96",
+          "URL": "https://webcatalog.lixil.co.jp/cgi-bin/openCatalog.cgi?c=IS9800&d=newinter",
+          "確認日": "2026-10-14",
+          "確度": "HIGH",
+          "根拠内容": "SOURCE_PRICE_BAND_CORRECTION_NO_SIZE_RULE_PATCH / NEW_CANDIDATE、Current未採用"
+        },
+        "productId": "CANDIDATE:RPL_BATH"
+      }
+    ]
+  },
+  "composition": null,
+  "numeric_constraints": [],
+  "linear_transforms": [],
+  "unsupported_rules": [
+    {
+      "sheet": "05_サイズルール",
+      "reason": "NATIVE_PROSE_OR_COMPOUND_RULE_REQUIRES_MANUAL_REVIEW"
+    },
+    {
+      "sheet": "05A_サイズ区間",
+      "reason": "NATIVE_PROSE_OR_COMPOUND_RULE_REQUIRES_MANUAL_REVIEW"
+    },
+    {
+      "sheet": "05B_境界ルール",
+      "reason": "NATIVE_PROSE_OR_COMPOUND_RULE_REQUIRES_MANUAL_REVIEW"
+    },
+    {
+      "sheet": "07A_網戸適用条件",
+      "reason": "NATIVE_PROSE_OR_COMPOUND_RULE_REQUIRES_MANUAL_REVIEW"
+    },
+    {
+      "sheet": "08A_ガラス適用条件",
+      "reason": "NATIVE_PROSE_OR_COMPOUND_RULE_REQUIRES_MANUAL_REVIEW"
+    },
+    {
+      "sheet": "09A_OP依存関係",
+      "reason": "NATIVE_PROSE_OR_COMPOUND_RULE_REQUIRES_MANUAL_REVIEW"
+    },
+    {
+      "sheet": "10_適用条件",
+      "reason": "NATIVE_PROSE_OR_COMPOUND_RULE_REQUIRES_MANUAL_REVIEW"
+    },
+    {
+      "sheet": "10A_既設窓互換",
+      "reason": "NATIVE_PROSE_OR_COMPOUND_RULE_REQUIRES_MANUAL_REVIEW"
+    },
+    {
+      "sheet": "10B_現調項目",
+      "reason": "NATIVE_PROSE_OR_COMPOUND_RULE_REQUIRES_MANUAL_REVIEW"
+    },
+    {
+      "sheet": "10C_化粧カバー見付",
+      "reason": "NATIVE_PROSE_OR_COMPOUND_RULE_REQUIRES_MANUAL_REVIEW"
+    },
+    {
+      "sheet": "05C_開口ポイント",
+      "reason": "NATIVE_PROSE_OR_COMPOUND_RULE_REQUIRES_MANUAL_REVIEW"
+    },
+    {
+      "sheet": "10D_浴室現場条件",
+      "reason": "NATIVE_PROSE_OR_COMPOUND_RULE_REQUIRES_MANUAL_REVIEW"
+    },
+    {
+      "sheet": "12_共通参照",
+      "reason": "NATIVE_PROSE_OR_COMPOUND_RULE_REQUIRES_MANUAL_REVIEW"
+    }
+  ],
+  "formal_adoption": false,
+  "source_adoption": false,
+  "pricing": {
+    "price": null,
+    "bom": null,
+    "set_code": null
+  }
+}

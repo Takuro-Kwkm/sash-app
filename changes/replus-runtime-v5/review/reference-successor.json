@@ -1,0 +1,315 @@
+{
+  "scope": "REFERENCE_REVIEW_SUCCESSOR_ONLY",
+  "items": [
+    {
+      "component": "RPL_ATT_TW",
+      "source_sheet": "02B_参照商品",
+      "source_row": 4,
+      "before": [
+        "REF-TW-MASTER",
+        "LIXIL",
+        "TW",
+        "SER-LIX-TW",
+        "1ordbcPQS7XhptLMjRON2oxmdsPhs-aY-Wm7quPHvM9U",
+        "サッシ商品マスター_v0.1",
+        "SINGLE_SOURCE_OF_TRUTH",
+        "COMPLETE",
+        "ATT-TW-EV-003"
+      ],
+      "after_fixed_references": [
+        {
+          "key": "tw_authoring",
+          "id": "10-ygy_wcdXN2u9brqU1AhucboJv5N5qk",
+          "bytes": 600183,
+          "sha256": "5062503d3387999c2eed0862b3386e5248ae131008cbc37975956d709d598ba6"
+        },
+        {
+          "key": "tw_runtime",
+          "id": "1r946VJlEi_qmIFrV-TULmfgJ8XhYV230",
+          "bytes": 3764442,
+          "sha256": "17e2a7468f5f9a2c6bfdd275281307c6a9739b994a18faa6fef90dc6fddb4491"
+        }
+      ],
+      "old_evidence_id_retained": true,
+      "new_evidence_id": "REF-TW-CURRENT-20261009-V4",
+      "data_applied_to_formal": false,
+      "source_rule": "CURRENT_MANIFEST_AND_FULL_BYTES",
+      "body_fact_duplication": false
+    },
+    {
+      "component": "RPL_ATT_TH",
+      "source_sheet": "02B_参照商品",
+      "source_row": 5,
+      "before": [
+        "REF-S2H",
+        "LIXIL",
+        "サーモスⅡ-H",
+        "SER-LIX-SAMOS2H",
+        "1zHi-XsMqJp0MKH-sDoTcnTqkLMGcuRdo",
+        "サーモスⅡH_商品マスター_v0.7_完全完成版.xlsx",
+        "SINGLE_SOURCE_OF_TRUTH",
+        "ACTIVE",
+        "COMPLETE",
+        "ATT-TH-EV-003",
+        "v0.7"
+      ],
+      "after_fixed_references": [
+        {
+          "key": "s2_authoring",
+          "id": "1_p-xJ9Mv7FecoR8Me0E43f3LEEkpVQSP",
+          "bytes": 661883,
+          "sha256": "eeb285689a1e8a78469d5d13d1e015083d7f2e71ab274427dcfd413e33adc8e4"
+        },
+        {
+          "key": "s2_runtime",
+          "id": "1Cqy4X23hWNFuhmKMzI7iTtUqOaH_N5S_",
+          "bytes": 7578445,
+          "sha256": "b12ed0a5184da2cfa39a16133079e52f14a301030ed1d230e471b18af6f8d7fd"
+        },
+        {
+          "key": "s2_schema",
+          "id": "1mGXoPvmeEN-clO2mrvQ6R1bVtmVP0uIW",
+          "bytes": 3862,
+          "sha256": "8db1faafaf013054c6b22a7c006b93c82dce26821c1abe0c52ffcb7b8cc52c30"
+        }
+      ],
+      "old_evidence_id_retained": true,
+      "new_evidence_id": "REF-S2-CURRENT-20261009-V4",
+      "data_applied_to_formal": false,
+      "source_rule": "CURRENT_MANIFEST_AND_FULL_BYTES",
+      "body_fact_duplication": false
+    },
+    {
+      "component": "RPL_ATT_TH",
+      "source_sheet": "02B_参照商品",
+      "source_row": 6,
+      "before": [
+        "REF-SL",
+        "LIXIL",
+        "サーモスL",
+        "SER-LIX-SAMOSL",
+        "17lVzBZ1hp4RVcGv0yNdnrKt25SFO2FhL",
+        "サーモスL_商品マスター_v0.7_特注寸法発注アプリ投入完成版_QA確定.xlsx",
+        "SINGLE_SOURCE_OF_TRUTH",
+        "ACTIVE",
+        "COMPLETE",
+        "ATT-TH-EV-005",
+        "v0.7"
+      ],
+      "after_fixed_references": [
+        {
+          "key": "sl_authoring",
+          "id": "19sjSAPwyd30fF5akazldGs0wkhOGZF9v",
+          "bytes": 886084,
+          "sha256": "42a1a159c199ac0290f4862b20381abf2450b686ae8a8a2abdaa2d428a8c73f8"
+        },
+        {
+          "key": "sl_runtime",
+          "id": "1l35TQI_sQJnd5191Us9kt2PMgnV71U7e",
+          "bytes": 5149779,
+          "sha256": "1fd121e1dbcd0acc90eeb53dd5faed1a3193ff16b46159efee3ae0c1dcf12fd9"
+        }
+      ],
+      "old_evidence_id_retained": true,
+      "new_evidence_id": "REF-SL-CURRENT-20261009-V4",
+      "data_applied_to_formal": false,
+      "source_rule": "CURRENT_MANIFEST_AND_FULL_BYTES",
+      "body_fact_duplication": false
+    },
+    {
+      "component": "RPL_ATT_TH",
+      "source_sheet": "02B_参照商品",
+      "source_row": 7,
+      "before": [
+        "REF-SA",
+        "LIXIL",
+        "サーモスA",
+        "SER-LIX-SAMOSA",
+        "1cDEFzi0g1DzM5YoeGvZtHuXionD7tmFD",
+        "サーモスA_商品マスター_v0.7.xlsx",
+        "SINGLE_SOURCE_OF_TRUTH",
+        "ACTIVE",
+        "COMPLETE",
+        "ATT-TH-EV-016,017",
+        "v0.7"
+      ],
+      "after_fixed_references": [
+        {
+          "key": "a_authoring",
+          "id": "1cDEFzi0g1DzM5YoeGvZtHuXionD7tmFD",
+          "bytes": 130967,
+          "sha256": "1aae676ab404e9110ec6bb5aab522c6c0dc2fdc856a0d7c734fd2561fc5dfe47"
+        },
+        {
+          "key": "a_runtime",
+          "id": "1a-vPD8ROIDwumrsduzEcb3Ze3VjHCWmY",
+          "bytes": 870830,
+          "sha256": "febf0135a52f48fdc3cd827f1f65e6dcc75ff74e7d6c4d36d0282b9294199f2e"
+        },
+        {
+          "key": "a_schema",
+          "id": "1bW634qkR5lgN6UdjYHI3j9JxS3mZBwCq",
+          "bytes": 1245,
+          "sha256": "5821fd52c2b91af28056e0a3b132ad04367a26c5a232db742861361b9b6d52fe"
+        }
+      ],
+      "old_evidence_id_retained": true,
+      "new_evidence_id": "REF-A-CURRENT-20261009-V4",
+      "data_applied_to_formal": false,
+      "source_rule": "CURRENT_MANIFEST_AND_FULL_BYTES",
+      "body_fact_duplication": false
+    },
+    {
+      "component": "RPL_CUT_MALL",
+      "source_sheet": "02B_参照商品",
+      "source_row": 3,
+      "before": [
+        "CM-REF-01",
+        "TW",
+        "SER-LIX-TW",
+        "1ordbcPQS7XhptLMjRON2oxmdsPhs-aY-Wm7quPHvM9U",
+        "サッシ商品マスター_v0.1",
+        "integrated-v0.1",
+        "SINGLE_SOURCE_OF_TRUTH",
+        "COMPLETE",
+        "CM-EV-003"
+      ],
+      "after_fixed_references": [
+        {
+          "key": "tw_authoring",
+          "id": "10-ygy_wcdXN2u9brqU1AhucboJv5N5qk",
+          "bytes": 600183,
+          "sha256": "5062503d3387999c2eed0862b3386e5248ae131008cbc37975956d709d598ba6"
+        },
+        {
+          "key": "tw_runtime",
+          "id": "1r946VJlEi_qmIFrV-TULmfgJ8XhYV230",
+          "bytes": 3764442,
+          "sha256": "17e2a7468f5f9a2c6bfdd275281307c6a9739b994a18faa6fef90dc6fddb4491"
+        }
+      ],
+      "old_evidence_id_retained": true,
+      "new_evidence_id": "REF-TW-CURRENT-20261009-V4",
+      "data_applied_to_formal": false,
+      "source_rule": "CURRENT_MANIFEST_AND_FULL_BYTES",
+      "body_fact_duplication": false
+    },
+    {
+      "component": "RPL_CUT_MALL",
+      "source_sheet": "02B_参照商品",
+      "source_row": 4,
+      "before": [
+        "CM-REF-02",
+        "サーモスⅡ-H",
+        "SER-LIX-SAMOS2H",
+        "1zHi-XsMqJp0MKH-sDoTcnTqkLMGcuRdo",
+        "サーモスⅡH_商品マスター_v0.7_完全完成版.xlsx",
+        "v0.7",
+        "SINGLE_SOURCE_OF_TRUTH",
+        "COMPLETE",
+        "CM-EV-004"
+      ],
+      "after_fixed_references": [
+        {
+          "key": "s2_authoring",
+          "id": "1_p-xJ9Mv7FecoR8Me0E43f3LEEkpVQSP",
+          "bytes": 661883,
+          "sha256": "eeb285689a1e8a78469d5d13d1e015083d7f2e71ab274427dcfd413e33adc8e4"
+        },
+        {
+          "key": "s2_runtime",
+          "id": "1Cqy4X23hWNFuhmKMzI7iTtUqOaH_N5S_",
+          "bytes": 7578445,
+          "sha256": "b12ed0a5184da2cfa39a16133079e52f14a301030ed1d230e471b18af6f8d7fd"
+        },
+        {
+          "key": "s2_schema",
+          "id": "1mGXoPvmeEN-clO2mrvQ6R1bVtmVP0uIW",
+          "bytes": 3862,
+          "sha256": "8db1faafaf013054c6b22a7c006b93c82dce26821c1abe0c52ffcb7b8cc52c30"
+        }
+      ],
+      "old_evidence_id_retained": true,
+      "new_evidence_id": "REF-S2-CURRENT-20261009-V4",
+      "data_applied_to_formal": false,
+      "source_rule": "CURRENT_MANIFEST_AND_FULL_BYTES",
+      "body_fact_duplication": false
+    },
+    {
+      "component": "RPL_CUT_MALL",
+      "source_sheet": "02B_参照商品",
+      "source_row": 5,
+      "before": [
+        "CM-REF-03",
+        "サーモスL",
+        "SER-LIX-SAMOSL",
+        "17lVzBZ1hp4RVcGv0yNdnrKt25SFO2FhL",
+        "サーモスL_商品マスター_v0.7_特注寸法発注アプリ投入完成版_QA確定.xlsx",
+        "v0.7",
+        "SINGLE_SOURCE_OF_TRUTH",
+        "COMPLETE",
+        "CM-EV-005"
+      ],
+      "after_fixed_references": [
+        {
+          "key": "sl_authoring",
+          "id": "19sjSAPwyd30fF5akazldGs0wkhOGZF9v",
+          "bytes": 886084,
+          "sha256": "42a1a159c199ac0290f4862b20381abf2450b686ae8a8a2abdaa2d428a8c73f8"
+        },
+        {
+          "key": "sl_runtime",
+          "id": "1l35TQI_sQJnd5191Us9kt2PMgnV71U7e",
+          "bytes": 5149779,
+          "sha256": "1fd121e1dbcd0acc90eeb53dd5faed1a3193ff16b46159efee3ae0c1dcf12fd9"
+        }
+      ],
+      "old_evidence_id_retained": true,
+      "new_evidence_id": "REF-SL-CURRENT-20261009-V4",
+      "data_applied_to_formal": false,
+      "source_rule": "CURRENT_MANIFEST_AND_FULL_BYTES",
+      "body_fact_duplication": false
+    },
+    {
+      "component": "RPL_CUT_MALL",
+      "source_sheet": "02B_参照商品",
+      "source_row": 6,
+      "before": [
+        "CM-REF-04",
+        "サーモスA",
+        "SER-LIX-SAMOSA",
+        "1cDEFzi0g1DzM5YoeGvZtHuXionD7tmFD",
+        "サーモスA_商品マスター_v0.7.xlsx",
+        "v0.7",
+        "SINGLE_SOURCE_OF_TRUTH",
+        "COMPLETE",
+        "CM-EV-006"
+      ],
+      "after_fixed_references": [
+        {
+          "key": "a_authoring",
+          "id": "1cDEFzi0g1DzM5YoeGvZtHuXionD7tmFD",
+          "bytes": 130967,
+          "sha256": "1aae676ab404e9110ec6bb5aab522c6c0dc2fdc856a0d7c734fd2561fc5dfe47"
+        },
+        {
+          "key": "a_runtime",
+          "id": "1a-vPD8ROIDwumrsduzEcb3Ze3VjHCWmY",
+          "bytes": 870830,
+          "sha256": "febf0135a52f48fdc3cd827f1f65e6dcc75ff74e7d6c4d36d0282b9294199f2e"
+        },
+        {
+          "key": "a_schema",
+          "id": "1bW634qkR5lgN6UdjYHI3j9JxS3mZBwCq",
+          "bytes": 1245,
+          "sha256": "5821fd52c2b91af28056e0a3b132ad04367a26c5a232db742861361b9b6d52fe"
+        }
+      ],
+      "old_evidence_id_retained": true,
+      "new_evidence_id": "REF-A-CURRENT-20261009-V4",
+      "data_applied_to_formal": false,
+      "source_rule": "CURRENT_MANIFEST_AND_FULL_BYTES",
+      "body_fact_duplication": false
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "component": "RPL_CUT_MALL",
+  "patched_cells": 161,
+  "changed_sheet_xml": [
+    "xl/worksheets/sheet13.xml",
+    "xl/worksheets/sheet18.xml",
+    "xl/worksheets/sheet26.xml",
+    "xl/worksheets/sheet6.xml"
+  ],
+  "styles_xml_identical": true,
+  "untargeted_members_identical": true
+}

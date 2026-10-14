@@ -1,0 +1,974 @@
+{
+  "schema": "CANDIDATE_RUNTIME_INDEX_V1",
+  "revision": "REPLUS_RUNTIME_UI_V5_20261014",
+  "adoption": "CANDIDATE_ONLY",
+  "products": [
+    {
+      "id": "CANDIDATE:RPL_ROOM",
+      "manufacturer": "LIXIL",
+      "series": "リプラス 居室仕様",
+      "displayName": "リプラス 居室仕様",
+      "productCategory": "sash",
+      "uiCategory": "REFORM_WINDOW_ESTIMATE",
+      "packageVersion": "REPLUS_RUNTIME_UI_V5_20261014",
+      "masterVersion": "v1.0",
+      "schemaVersion": "2.0",
+      "path": "candidates/RPL_ROOM.module.json",
+      "sha256": "ed89d4170ab101e87b5c8206c2e352c9429f7eaa3026f17b694ebf2ea29d77a5",
+      "candidate": true,
+      "sourceHash": "ed89d4170ab101e87b5c8206c2e352c9429f7eaa3026f17b694ebf2ea29d77a5",
+      "adapterType": "COMPOSED_PRODUCT_MODULE_V1",
+      "uiFlowContract": {
+        "schema": "DECLARED_WINDOW_FLOW_V1",
+        "fields": {
+          "window_type": {
+            "slot": "window_type",
+            "stage": "OPENING"
+          },
+          "frame_type": {
+            "slot": "frame_type",
+            "stage": "CONFIGURATION"
+          },
+          "spec_panel_configuration": {
+            "slot": "spec_panel_configuration",
+            "stage": "CONFIGURATION"
+          },
+          "spec_height_category": {
+            "slot": "spec_height_category",
+            "stage": "CONFIGURATION"
+          },
+          "spec_sash_configuration": {
+            "slot": "spec_sash_configuration",
+            "stage": "CONFIGURATION"
+          },
+          "spec_opening_form": {
+            "slot": "spec_opening_form",
+            "stage": "CONFIGURATION"
+          },
+          "screen": {
+            "slot": "screen",
+            "stage": "SCREEN"
+          },
+          "glass": {
+            "slot": "glass",
+            "stage": "GLAZING"
+          },
+          "size_mode": {
+            "slot": "size_mode",
+            "stage": "SIZE"
+          },
+          "custom_width": {
+            "slot": "custom_width",
+            "stage": "SIZE"
+          },
+          "custom_height": {
+            "slot": "custom_height",
+            "stage": "SIZE"
+          },
+          "sash_exterior_color": {
+            "slot": "sash_exterior_color",
+            "stage": "FINISH"
+          },
+          "sash_interior_color": {
+            "slot": "sash_interior_color",
+            "stage": "FINISH"
+          },
+          "exterior_cover_color": {
+            "slot": "exterior_cover_color",
+            "stage": "FINISH"
+          },
+          "interior_cover_color": {
+            "slot": "interior_cover_color",
+            "stage": "FINISH"
+          },
+          "wooden_casing_color": {
+            "slot": "wooden_casing_color",
+            "stage": "FINISH"
+          },
+          "options": {
+            "slot": "options",
+            "stage": "OPTION"
+          },
+          "usage_humidity": {
+            "slot": "usage_humidity",
+            "stage": "INSTALLATION_SURVEY"
+          },
+          "building_structure": {
+            "slot": "building_structure",
+            "stage": "INSTALLATION_SURVEY"
+          },
+          "installation_room": {
+            "slot": "installation_room",
+            "stage": "INSTALLATION_SURVEY"
+          },
+          "work_space": {
+            "slot": "work_space",
+            "stage": "INSTALLATION_SURVEY"
+          }
+        },
+        "slotOrder": [
+          "window_type",
+          "frame_type",
+          "spec_panel_configuration",
+          "spec_height_category",
+          "spec_sash_configuration",
+          "spec_opening_form",
+          "screen",
+          "glass",
+          "size_mode",
+          "custom_width",
+          "custom_height",
+          "sash_exterior_color",
+          "sash_interior_color",
+          "exterior_cover_color",
+          "interior_cover_color",
+          "wooden_casing_color",
+          "options",
+          "usage_humidity",
+          "building_structure",
+          "installation_room",
+          "work_space"
+        ]
+      }
+    },
+    {
+      "id": "CANDIDATE:RPL_TW",
+      "manufacturer": "LIXIL",
+      "series": "リプラス 居室仕様 TWタイプ",
+      "displayName": "リプラス 居室仕様 TWタイプ",
+      "productCategory": "sash",
+      "uiCategory": "REFORM_WINDOW_ESTIMATE",
+      "packageVersion": "REPLUS_RUNTIME_UI_V5_20261014",
+      "masterVersion": "v1.0",
+      "schemaVersion": "2.0",
+      "path": "candidates/RPL_TW.module.json",
+      "sha256": "a800470fee2286da87738b08c09a5333d1ced855166c53389aec58b3238ec82a",
+      "candidate": true,
+      "sourceHash": "a800470fee2286da87738b08c09a5333d1ced855166c53389aec58b3238ec82a",
+      "adapterType": "COMPOSED_PRODUCT_MODULE_V1",
+      "uiFlowContract": {
+        "schema": "DECLARED_WINDOW_FLOW_V1",
+        "fields": {
+          "window_type": {
+            "slot": "window_type",
+            "stage": "OPENING"
+          },
+          "frame_type": {
+            "slot": "frame_type",
+            "stage": "CONFIGURATION"
+          },
+          "spec_panel_configuration": {
+            "slot": "spec_panel_configuration",
+            "stage": "CONFIGURATION"
+          },
+          "spec_height_category": {
+            "slot": "spec_height_category",
+            "stage": "CONFIGURATION"
+          },
+          "spec_sash_configuration": {
+            "slot": "spec_sash_configuration",
+            "stage": "CONFIGURATION"
+          },
+          "screen": {
+            "slot": "screen",
+            "stage": "SCREEN"
+          },
+          "glass": {
+            "slot": "glass",
+            "stage": "GLAZING"
+          },
+          "size_mode": {
+            "slot": "size_mode",
+            "stage": "SIZE"
+          },
+          "custom_width": {
+            "slot": "custom_width",
+            "stage": "SIZE"
+          },
+          "custom_height": {
+            "slot": "custom_height",
+            "stage": "SIZE"
+          },
+          "sash_exterior_color": {
+            "slot": "sash_exterior_color",
+            "stage": "FINISH"
+          },
+          "exterior_cover_color": {
+            "slot": "exterior_cover_color",
+            "stage": "FINISH"
+          },
+          "sash_interior_color": {
+            "slot": "sash_interior_color",
+            "stage": "FINISH"
+          },
+          "interior_cover_color": {
+            "slot": "interior_cover_color",
+            "stage": "FINISH"
+          },
+          "wooden_casing_color": {
+            "slot": "wooden_casing_color",
+            "stage": "FINISH"
+          },
+          "options": {
+            "slot": "options",
+            "stage": "OPTION"
+          },
+          "usage_humidity": {
+            "slot": "usage_humidity",
+            "stage": "INSTALLATION_SURVEY"
+          },
+          "installation_method": {
+            "slot": "installation_method",
+            "stage": "INSTALLATION_SURVEY"
+          }
+        },
+        "slotOrder": [
+          "window_type",
+          "frame_type",
+          "spec_panel_configuration",
+          "spec_height_category",
+          "spec_sash_configuration",
+          "screen",
+          "glass",
+          "size_mode",
+          "custom_width",
+          "custom_height",
+          "sash_exterior_color",
+          "exterior_cover_color",
+          "sash_interior_color",
+          "interior_cover_color",
+          "wooden_casing_color",
+          "options",
+          "usage_humidity",
+          "installation_method"
+        ]
+      }
+    },
+    {
+      "id": "CANDIDATE:RPL_EW",
+      "manufacturer": "LIXIL",
+      "series": "リプラス 居室仕様 EWタイプ",
+      "displayName": "リプラス 居室仕様 EWタイプ",
+      "productCategory": "sash",
+      "uiCategory": "REFORM_WINDOW_ESTIMATE",
+      "packageVersion": "REPLUS_RUNTIME_UI_V5_20261014",
+      "masterVersion": "v1.0",
+      "schemaVersion": "2.0",
+      "path": "candidates/RPL_EW.module.json",
+      "sha256": "c78002e5f015583d950f2fcdb9904816beb9a41c0bd6af68549d31f36ce8561f",
+      "candidate": true,
+      "sourceHash": "c78002e5f015583d950f2fcdb9904816beb9a41c0bd6af68549d31f36ce8561f",
+      "adapterType": "COMPOSED_PRODUCT_MODULE_V1",
+      "uiFlowContract": {
+        "schema": "DECLARED_WINDOW_FLOW_V1",
+        "fields": {
+          "window_type": {
+            "slot": "window_type",
+            "stage": "OPENING"
+          },
+          "frame_type": {
+            "slot": "frame_type",
+            "stage": "CONFIGURATION"
+          },
+          "spec_panel_configuration": {
+            "slot": "spec_panel_configuration",
+            "stage": "CONFIGURATION"
+          },
+          "spec_height_category": {
+            "slot": "spec_height_category",
+            "stage": "CONFIGURATION"
+          },
+          "spec_sash_configuration": {
+            "slot": "spec_sash_configuration",
+            "stage": "CONFIGURATION"
+          },
+          "spec_crescent_position": {
+            "slot": "spec_crescent_position",
+            "stage": "CONFIGURATION"
+          },
+          "screen": {
+            "slot": "screen",
+            "stage": "SCREEN"
+          },
+          "glass": {
+            "slot": "glass",
+            "stage": "GLAZING"
+          },
+          "size_mode": {
+            "slot": "size_mode",
+            "stage": "SIZE"
+          },
+          "custom_width": {
+            "slot": "custom_width",
+            "stage": "SIZE"
+          },
+          "custom_height": {
+            "slot": "custom_height",
+            "stage": "SIZE"
+          },
+          "sash_exterior_color": {
+            "slot": "sash_exterior_color",
+            "stage": "FINISH"
+          },
+          "exterior_cover_color": {
+            "slot": "exterior_cover_color",
+            "stage": "FINISH"
+          },
+          "sash_interior_color": {
+            "slot": "sash_interior_color",
+            "stage": "FINISH"
+          },
+          "interior_resin_cover_color": {
+            "slot": "interior_resin_cover_color",
+            "stage": "FINISH"
+          },
+          "wooden_casing_color": {
+            "slot": "wooden_casing_color",
+            "stage": "FINISH"
+          },
+          "options": {
+            "slot": "options",
+            "stage": "OPTION"
+          },
+          "installation_method": {
+            "slot": "installation_method",
+            "stage": "INSTALLATION_SURVEY"
+          }
+        },
+        "slotOrder": [
+          "window_type",
+          "frame_type",
+          "spec_panel_configuration",
+          "spec_height_category",
+          "spec_sash_configuration",
+          "spec_crescent_position",
+          "screen",
+          "glass",
+          "size_mode",
+          "custom_width",
+          "custom_height",
+          "sash_exterior_color",
+          "exterior_cover_color",
+          "sash_interior_color",
+          "interior_resin_cover_color",
+          "wooden_casing_color",
+          "options",
+          "installation_method"
+        ]
+      }
+    },
+    {
+      "id": "CANDIDATE:RPL_BATH",
+      "manufacturer": "LIXIL",
+      "series": "リプラス 浴室仕様",
+      "displayName": "リプラス 浴室仕様",
+      "productCategory": "sash",
+      "uiCategory": "REFORM_WINDOW_ESTIMATE",
+      "packageVersion": "REPLUS_RUNTIME_UI_V5_20261014",
+      "masterVersion": "v1.0",
+      "schemaVersion": "2.0",
+      "path": "candidates/RPL_BATH.module.json",
+      "sha256": "69e307f94d3d51e12eb8cb2854e929b06a9c6133cab30910e26deda5c9e91596",
+      "candidate": true,
+      "sourceHash": "69e307f94d3d51e12eb8cb2854e929b06a9c6133cab30910e26deda5c9e91596",
+      "adapterType": "COMPOSED_PRODUCT_MODULE_V1",
+      "uiFlowContract": {
+        "schema": "DECLARED_WINDOW_FLOW_V1",
+        "fields": {
+          "window_type": {
+            "slot": "window_type",
+            "stage": "OPENING"
+          },
+          "frame_type": {
+            "slot": "frame_type",
+            "stage": "CONFIGURATION"
+          },
+          "spec_panel_configuration": {
+            "slot": "spec_panel_configuration",
+            "stage": "CONFIGURATION"
+          },
+          "spec_sash_configuration": {
+            "slot": "spec_sash_configuration",
+            "stage": "CONFIGURATION"
+          },
+          "spec_operation_type": {
+            "slot": "spec_operation_type",
+            "stage": "CONFIGURATION"
+          },
+          "screen": {
+            "slot": "screen",
+            "stage": "SCREEN"
+          },
+          "size_mode": {
+            "slot": "size_mode",
+            "stage": "SIZE"
+          },
+          "custom_width": {
+            "slot": "custom_width",
+            "stage": "SIZE"
+          },
+          "custom_height": {
+            "slot": "custom_height",
+            "stage": "SIZE"
+          },
+          "sash_exterior_color": {
+            "slot": "sash_exterior_color",
+            "stage": "FINISH"
+          },
+          "exterior_cover_color": {
+            "slot": "exterior_cover_color",
+            "stage": "FINISH"
+          },
+          "sash_interior_color": {
+            "slot": "sash_interior_color",
+            "stage": "FINISH"
+          },
+          "interior_cover_color": {
+            "slot": "interior_cover_color",
+            "stage": "FINISH"
+          },
+          "options": {
+            "slot": "options",
+            "stage": "OPTION"
+          },
+          "bathroom_remodel_mode": {
+            "slot": "bathroom_remodel_mode",
+            "stage": "INSTALLATION_SURVEY"
+          }
+        },
+        "slotOrder": [
+          "window_type",
+          "frame_type",
+          "spec_panel_configuration",
+          "spec_sash_configuration",
+          "spec_operation_type",
+          "screen",
+          "size_mode",
+          "custom_width",
+          "custom_height",
+          "sash_exterior_color",
+          "exterior_cover_color",
+          "sash_interior_color",
+          "interior_cover_color",
+          "options",
+          "bathroom_remodel_mode"
+        ]
+      }
+    },
+    {
+      "id": "CANDIDATE:RPL_ATT_TW",
+      "manufacturer": "LIXIL",
+      "series": "リプラス アタッチ枠（TW用）",
+      "displayName": "リプラス アタッチ枠（TW用）",
+      "productCategory": "sash",
+      "uiCategory": "REFORM_WINDOW_ESTIMATE",
+      "packageVersion": "REPLUS_RUNTIME_UI_V5_20261014",
+      "masterVersion": "v1.0",
+      "schemaVersion": "2.0",
+      "path": "candidates/RPL_ATT_TW.module.json",
+      "sha256": "00893080dd4f996b8814594e2355c51bc95504400670c2361d44e84c61e20905",
+      "candidate": true,
+      "sourceHash": "00893080dd4f996b8814594e2355c51bc95504400670c2361d44e84c61e20905",
+      "adapterType": "COMPOSED_PRODUCT_MODULE_V1",
+      "uiFlowContract": {
+        "schema": "DECLARED_WINDOW_FLOW_V1",
+        "fields": {
+          "referenced_series_id": {
+            "slot": "referenced_series_id",
+            "stage": "PRODUCT"
+          },
+          "referenced_window_id": {
+            "slot": "referenced_window_id",
+            "stage": "OPENING"
+          },
+          "exterior_cover_color": {
+            "slot": "exterior_cover_color",
+            "stage": "FINISH"
+          },
+          "interior_cover_color": {
+            "slot": "interior_cover_color",
+            "stage": "FINISH"
+          },
+          "wooden_casing_color": {
+            "slot": "wooden_casing_color",
+            "stage": "FINISH"
+          },
+          "options": {
+            "slot": "options",
+            "stage": "OPTION"
+          },
+          "building_structure": {
+            "slot": "building_structure",
+            "stage": "INSTALLATION_SURVEY"
+          },
+          "survey_w": {
+            "slot": "survey_w",
+            "stage": "SIZE"
+          },
+          "survey_h": {
+            "slot": "survey_h",
+            "stage": "SIZE"
+          },
+          "lower_frame_rise": {
+            "slot": "lower_frame_rise",
+            "stage": "INSTALLATION_SURVEY"
+          },
+          "existing_frame_depth": {
+            "slot": "existing_frame_depth",
+            "stage": "INSTALLATION_SURVEY"
+          },
+          "new_sash_handing": {
+            "slot": "new_sash_handing",
+            "stage": "CONFIGURATION"
+          },
+          "new_sash_size_mode": {
+            "slot": "new_sash_size_mode",
+            "stage": "SIZE"
+          },
+          "new_sash_size": {
+            "slot": "new_sash_size",
+            "stage": "SIZE"
+          },
+          "new_sash_exterior_color": {
+            "slot": "new_sash_exterior_color",
+            "stage": "FINISH"
+          },
+          "new_sash_glass_base": {
+            "slot": "new_sash_glass_base",
+            "stage": "GLAZING"
+          },
+          "new_sash_interior_color": {
+            "slot": "new_sash_interior_color",
+            "stage": "FINISH"
+          },
+          "new_sash_screen_presence": {
+            "slot": "new_sash_screen_presence",
+            "stage": "SCREEN"
+          },
+          "new_sash_glass_type": {
+            "slot": "new_sash_glass_type",
+            "stage": "GLAZING"
+          },
+          "new_sash_option": {
+            "slot": "new_sash_option",
+            "stage": "OPTION"
+          },
+          "new_sash_glass_detail": {
+            "slot": "new_sash_glass_detail",
+            "stage": "GLAZING"
+          },
+          "new_sash_glass_function": {
+            "slot": "new_sash_glass_function",
+            "stage": "GLAZING"
+          },
+          "new_sash_glass_spacer": {
+            "slot": "new_sash_glass_spacer",
+            "stage": "GLAZING"
+          },
+          "new_sash_glass_air_layer": {
+            "slot": "new_sash_glass_air_layer",
+            "stage": "GLAZING"
+          },
+          "new_sash_operation_type": {
+            "slot": "new_sash_window_spec",
+            "stage": "CONFIGURATION"
+          },
+          "new_sash_operator_position": {
+            "slot": "new_sash_window_spec",
+            "stage": "CONFIGURATION"
+          },
+          "new_sash_grille_type": {
+            "slot": "new_sash_window_spec",
+            "stage": "CONFIGURATION"
+          }
+        },
+        "slotOrder": [
+          "referenced_series_id",
+          "referenced_window_id",
+          "exterior_cover_color",
+          "interior_cover_color",
+          "wooden_casing_color",
+          "options",
+          "building_structure",
+          "survey_w",
+          "survey_h",
+          "lower_frame_rise",
+          "existing_frame_depth",
+          "new_sash_handing",
+          "new_sash_size_mode",
+          "new_sash_size",
+          "new_sash_exterior_color",
+          "new_sash_glass_base",
+          "new_sash_interior_color",
+          "new_sash_screen_presence",
+          "new_sash_glass_type",
+          "new_sash_option",
+          "new_sash_glass_detail",
+          "new_sash_glass_function",
+          "new_sash_glass_spacer",
+          "new_sash_glass_air_layer",
+          "new_sash_window_spec"
+        ]
+      }
+    },
+    {
+      "id": "CANDIDATE:RPL_ATT_TH",
+      "manufacturer": "LIXIL",
+      "series": "リプラス アタッチ枠（サーモス用）",
+      "displayName": "リプラス アタッチ枠（サーモス用）",
+      "productCategory": "sash",
+      "uiCategory": "REFORM_WINDOW_ESTIMATE",
+      "packageVersion": "REPLUS_RUNTIME_UI_V5_20261014",
+      "masterVersion": "v1.1",
+      "schemaVersion": "2.0",
+      "path": "candidates/RPL_ATT_TH.module.json",
+      "sha256": "662a1b71237ff5477b2d9299137f7d56cac1f1d527bd69344f0b07f41829a384",
+      "candidate": true,
+      "sourceHash": "662a1b71237ff5477b2d9299137f7d56cac1f1d527bd69344f0b07f41829a384",
+      "adapterType": "COMPOSED_PRODUCT_MODULE_V1",
+      "uiFlowContract": {
+        "schema": "DECLARED_WINDOW_FLOW_V1",
+        "fields": {
+          "referenced_series_id": {
+            "slot": "referenced_series_id",
+            "stage": "PRODUCT"
+          },
+          "referenced_window_id": {
+            "slot": "referenced_window_id",
+            "stage": "OPENING"
+          },
+          "exterior_cover_color": {
+            "slot": "exterior_cover_color",
+            "stage": "FINISH"
+          },
+          "interior_cover_color": {
+            "slot": "interior_cover_color",
+            "stage": "FINISH"
+          },
+          "wooden_casing_color": {
+            "slot": "wooden_casing_color",
+            "stage": "FINISH"
+          },
+          "options": {
+            "slot": "options",
+            "stage": "OPTION"
+          },
+          "survey_w": {
+            "slot": "survey_w",
+            "stage": "SIZE"
+          },
+          "survey_h": {
+            "slot": "survey_h",
+            "stage": "SIZE"
+          },
+          "existing_frame_depth": {
+            "slot": "existing_frame_depth",
+            "stage": "INSTALLATION_SURVEY"
+          },
+          "lower_frame_rise": {
+            "slot": "lower_frame_rise",
+            "stage": "INSTALLATION_SURVEY"
+          },
+          "new_sash_handle_configuration": {
+            "slot": "new_sash_window_spec",
+            "stage": "CONFIGURATION"
+          },
+          "new_sash_size_mode": {
+            "slot": "new_sash_size_mode",
+            "stage": "SIZE"
+          },
+          "new_sash_exterior_color": {
+            "slot": "new_sash_exterior_color",
+            "stage": "FINISH"
+          },
+          "new_sash_interior_color": {
+            "slot": "new_sash_interior_color",
+            "stage": "FINISH"
+          },
+          "new_sash_glass_base": {
+            "slot": "new_sash_glass_base",
+            "stage": "GLAZING"
+          },
+          "new_sash_glass_type": {
+            "slot": "new_sash_glass_type",
+            "stage": "GLAZING"
+          },
+          "new_sash_glass_detail": {
+            "slot": "new_sash_glass_detail",
+            "stage": "GLAZING"
+          },
+          "new_sash_glass_function": {
+            "slot": "new_sash_glass_function",
+            "stage": "GLAZING"
+          },
+          "new_sash_glass_spacer": {
+            "slot": "new_sash_glass_spacer",
+            "stage": "GLAZING"
+          },
+          "new_sash_glass_gas": {
+            "slot": "new_sash_glass_air_layer",
+            "stage": "GLAZING"
+          },
+          "new_sash_options": {
+            "slot": "new_sash_option",
+            "stage": "OPTION"
+          },
+          "new_sash_handing": {
+            "slot": "new_sash_handing",
+            "stage": "CONFIGURATION"
+          },
+          "new_sash_screen_presence": {
+            "slot": "new_sash_screen_presence",
+            "stage": "SCREEN"
+          },
+          "new_sash_size": {
+            "slot": "new_sash_size",
+            "stage": "SIZE"
+          },
+          "new_sash_handle_type": {
+            "slot": "new_sash_window_spec",
+            "stage": "CONFIGURATION"
+          },
+          "new_sash_operation_method": {
+            "slot": "new_sash_window_spec",
+            "stage": "CONFIGURATION"
+          },
+          "new_sash_grille_type": {
+            "slot": "new_sash_window_spec",
+            "stage": "CONFIGURATION"
+          },
+          "new_sash_composition_type": {
+            "slot": "new_sash_window_spec",
+            "stage": "CONFIGURATION"
+          },
+          "new_sash_door_grille_type": {
+            "slot": "new_sash_window_spec",
+            "stage": "CONFIGURATION"
+          },
+          "new_sash_glass_air_layer": {
+            "slot": "new_sash_glass_air_layer",
+            "stage": "GLAZING"
+          }
+        },
+        "slotOrder": [
+          "referenced_series_id",
+          "referenced_window_id",
+          "exterior_cover_color",
+          "interior_cover_color",
+          "wooden_casing_color",
+          "options",
+          "survey_w",
+          "survey_h",
+          "existing_frame_depth",
+          "lower_frame_rise",
+          "new_sash_window_spec",
+          "new_sash_size_mode",
+          "new_sash_exterior_color",
+          "new_sash_interior_color",
+          "new_sash_glass_base",
+          "new_sash_glass_type",
+          "new_sash_glass_detail",
+          "new_sash_glass_function",
+          "new_sash_glass_spacer",
+          "new_sash_glass_air_layer",
+          "new_sash_option",
+          "new_sash_handing",
+          "new_sash_screen_presence",
+          "new_sash_size"
+        ]
+      }
+    },
+    {
+      "id": "CANDIDATE:RPL_CUT_MALL",
+      "manufacturer": "LIXIL",
+      "series": "リプラス 汎用カットモール",
+      "displayName": "リプラス 汎用カットモール",
+      "productCategory": "sash",
+      "uiCategory": "REFORM_WINDOW_ESTIMATE",
+      "packageVersion": "REPLUS_RUNTIME_UI_V5_20261014",
+      "masterVersion": "v1.0",
+      "schemaVersion": "2.0",
+      "path": "candidates/RPL_CUT_MALL.module.json",
+      "sha256": "aa41d127ed98907f454aa1203048bfe5ccbad8169ce914ad1c5e017a1f7e0a5f",
+      "candidate": true,
+      "sourceHash": "aa41d127ed98907f454aa1203048bfe5ccbad8169ce914ad1c5e017a1f7e0a5f",
+      "adapterType": "COMPOSED_PRODUCT_MODULE_V1",
+      "uiFlowContract": {
+        "schema": "DECLARED_WINDOW_FLOW_V1",
+        "fields": {
+          "referenced_series_id": {
+            "slot": "referenced_series_id",
+            "stage": "PRODUCT"
+          },
+          "referenced_window_id": {
+            "slot": "referenced_window_id",
+            "stage": "OPENING"
+          },
+          "cut_mall_color": {
+            "slot": "cut_mall_color",
+            "stage": "FINISH"
+          },
+          "new_construction_window_frame_color": {
+            "slot": "new_construction_window_frame_color",
+            "stage": "FINISH"
+          },
+          "interior_adjustment_angle_color": {
+            "slot": "interior_adjustment_angle_color",
+            "stage": "FINISH"
+          },
+          "cut_mall_window_frame_color": {
+            "slot": "cut_mall_window_frame_color",
+            "stage": "FINISH"
+          },
+          "building_structure": {
+            "slot": "building_structure",
+            "stage": "INSTALLATION_SURVEY"
+          },
+          "existing_sash_mount": {
+            "slot": "existing_sash_mount",
+            "stage": "INSTALLATION_SURVEY"
+          },
+          "new_sash_size_relation": {
+            "slot": "new_sash_size_relation",
+            "stage": "INSTALLATION_SURVEY"
+          },
+          "existing_window_type": {
+            "slot": "existing_window_type",
+            "stage": "INSTALLATION_SURVEY"
+          },
+          "new_sash_mount": {
+            "slot": "new_sash_mount",
+            "stage": "INSTALLATION_SURVEY"
+          },
+          "rain_pocket": {
+            "slot": "rain_pocket",
+            "stage": "INSTALLATION_SURVEY"
+          },
+          "survey_w": {
+            "slot": "survey_w",
+            "stage": "SIZE"
+          },
+          "survey_h": {
+            "slot": "survey_h",
+            "stage": "SIZE"
+          },
+          "new_sash_size_mode": {
+            "slot": "new_sash_size_mode",
+            "stage": "SIZE"
+          },
+          "new_sash_panel_count": {
+            "slot": "new_sash_panel_count",
+            "stage": "SIZE"
+          },
+          "new_sash_size": {
+            "slot": "new_sash_size",
+            "stage": "SIZE"
+          },
+          "new_sash_exterior_color": {
+            "slot": "new_sash_exterior_color",
+            "stage": "FINISH"
+          },
+          "new_sash_glass_base": {
+            "slot": "new_sash_glass_base",
+            "stage": "GLAZING"
+          },
+          "new_sash_interior_color": {
+            "slot": "new_sash_interior_color",
+            "stage": "FINISH"
+          },
+          "new_sash_screen_presence": {
+            "slot": "new_sash_screen_presence",
+            "stage": "SCREEN"
+          },
+          "new_sash_glass_type": {
+            "slot": "new_sash_glass_type",
+            "stage": "GLAZING"
+          },
+          "new_sash_option": {
+            "slot": "new_sash_option",
+            "stage": "OPTION"
+          },
+          "new_sash_glass_detail": {
+            "slot": "new_sash_glass_detail",
+            "stage": "GLAZING"
+          },
+          "new_sash_glass_function": {
+            "slot": "new_sash_glass_function",
+            "stage": "GLAZING"
+          },
+          "new_sash_glass_spacer": {
+            "slot": "new_sash_glass_spacer",
+            "stage": "GLAZING"
+          },
+          "new_sash_glass_air_layer": {
+            "slot": "new_sash_glass_air_layer",
+            "stage": "GLAZING"
+          },
+          "new_sash_shutter_type": {
+            "slot": "new_sash_window_spec",
+            "stage": "CONFIGURATION"
+          },
+          "new_sash_handing": {
+            "slot": "new_sash_handing",
+            "stage": "CONFIGURATION"
+          },
+          "new_sash_glass_gas": {
+            "slot": "new_sash_glass_air_layer",
+            "stage": "GLAZING"
+          },
+          "new_sash_options": {
+            "slot": "new_sash_option",
+            "stage": "OPTION"
+          },
+          "new_sash_rain_shutter_type": {
+            "slot": "new_sash_window_spec",
+            "stage": "CONFIGURATION"
+          },
+          "new_sash_handle_configuration": {
+            "slot": "new_sash_window_spec",
+            "stage": "CONFIGURATION"
+          },
+          "new_sash_handle_type": {
+            "slot": "new_sash_window_spec",
+            "stage": "CONFIGURATION"
+          },
+          "new_sash_door_grille_type": {
+            "slot": "new_sash_window_spec",
+            "stage": "CONFIGURATION"
+          }
+        },
+        "slotOrder": [
+          "referenced_series_id",
+          "referenced_window_id",
+          "cut_mall_color",
+          "new_construction_window_frame_color",
+          "interior_adjustment_angle_color",
+          "cut_mall_window_frame_color",
+          "building_structure",
+          "existing_sash_mount",
+          "new_sash_size_relation",
+          "existing_window_type",
+          "new_sash_mount",
+          "rain_pocket",
+          "survey_w",
+          "survey_h",
+          "new_sash_size_mode",
+          "new_sash_panel_count",
+          "new_sash_size",
+          "new_sash_exterior_color",
+          "new_sash_glass_base",
+          "new_sash_interior_color",
+          "new_sash_screen_presence",
+          "new_sash_glass_type",
+          "new_sash_option",
+          "new_sash_glass_detail",
+          "new_sash_glass_function",
+          "new_sash_glass_spacer",
+          "new_sash_glass_air_layer",
+          "new_sash_window_spec",
+          "new_sash_handing"
+        ]
+      }
+    }
+  ]
+}

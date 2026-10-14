@@ -1,0 +1,772 @@
+[
+  {
+    "delta_id": "DELTA-KEY",
+    "components": [
+      "RPL_ROOM",
+      "RPL_TW"
+    ],
+    "source": "IS9800",
+    "pdf_pages": [
+      3,
+      44,
+      49
+    ],
+    "printed_pages": [
+      1,
+      42,
+      47
+    ],
+    "action": "ADD_OPTION_AND_DENY_COMBINATION",
+    "before_native_rows": [
+      {
+        "component": "RPL_ROOM",
+        "sheet": "09_その他OP",
+        "row": 8,
+        "before": [
+          "OP-SMART-CRESCENT",
+          "スマートクレセント",
+          "施錠",
+          "選択",
+          "COMPLETE",
+          "EV-018",
+          null,
+          null
+        ]
+      },
+      {
+        "component": "RPL_ROOM",
+        "sheet": "09_その他OP",
+        "row": 9,
+        "before": [
+          "OP-SMALL-OPEN-STOP",
+          "小開口ストッパー",
+          "開口制限",
+          "選択",
+          "COMPLETE",
+          "EV-018",
+          null,
+          null
+        ]
+      },
+      {
+        "component": "RPL_ROOM",
+        "sheet": "09_その他OP",
+        "row": 10,
+        "before": [
+          "OP-SMALL-OPEN-ARM",
+          "小開口アーム",
+          "開口制限",
+          "選択",
+          "COMPLETE",
+          "EV-018",
+          null,
+          null
+        ]
+      },
+      {
+        "component": "RPL_ROOM",
+        "sheet": "09_その他OP",
+        "row": 11,
+        "before": [
+          "OP-SMALL-OPEN-ARM-F",
+          "小開口アーム（固定タイプ）",
+          "開口制限",
+          "選択",
+          "COMPLETE",
+          "EV-018",
+          null,
+          null
+        ]
+      },
+      {
+        "component": "RPL_ROOM",
+        "sheet": "09A_OP依存関係",
+        "row": 6,
+        "before": [
+          "OD-003",
+          "OP-SMALL-OPEN-STOP",
+          "RPL_ROOM_SLD",
+          "REQUIRES",
+          "専用クレセント",
+          "標準クレセント不可",
+          "COMPLETE",
+          "EV-018"
+        ]
+      },
+      {
+        "component": "RPL_TW",
+        "sheet": "09_その他OP",
+        "row": 11,
+        "before": [
+          "TW-OP-SMALL-STOP-70",
+          "小開口ストッパー 70mm",
+          "開口制限",
+          "USER_SELECT",
+          "2枚建のみ",
+          "COMPLETE",
+          "TW-EV-009,010",
+          null
+        ]
+      },
+      {
+        "component": "RPL_TW",
+        "sheet": "09_その他OP",
+        "row": 12,
+        "before": [
+          "TW-OP-SMALL-STOP-110",
+          "小開口ストッパー 110mm",
+          "開口制限",
+          "USER_SELECT",
+          "2枚建のみ",
+          "COMPLETE",
+          "TW-EV-009,010",
+          null
+        ]
+      },
+      {
+        "component": "RPL_TW",
+        "sheet": "09_その他OP",
+        "row": 13,
+        "before": [
+          "TW-OP-DEDICATED-CRESCENT",
+          "小開口ストッパー用専用クレセント",
+          "施錠",
+          "CONDITIONAL_REQUIRED",
+          "小開口ストッパー選択時",
+          "COMPLETE",
+          "TW-EV-010",
+          null
+        ]
+      },
+      {
+        "component": "RPL_TW",
+        "sheet": "09_その他OP",
+        "row": 14,
+        "before": [
+          "TW-OP-SMART-CRESCENT",
+          "スマートクレセント",
+          "施錠",
+          "USER_SELECT",
+          "小開口ストッパーと併用不可",
+          "COMPLETE",
+          "TW-EV-009,010",
+          null
+        ]
+      },
+      {
+        "component": "RPL_TW",
+        "sheet": "09A_OP依存関係",
+        "row": 8,
+        "before": [
+          "TW-OD-005",
+          "TW-OP-SMALL-STOP-70",
+          "RPL_TW_SLD",
+          "REQUIRES",
+          "TW-OP-DEDICATED-CRESCENT",
+          "専用クレセント必須",
+          "COMPLETE",
+          "TW-EV-010"
+        ]
+      },
+      {
+        "component": "RPL_TW",
+        "sheet": "09A_OP依存関係",
+        "row": 9,
+        "before": [
+          "TW-OD-006",
+          "TW-OP-SMALL-STOP-110",
+          "RPL_TW_SLD",
+          "REQUIRES",
+          "TW-OP-DEDICATED-CRESCENT",
+          "専用クレセント必須",
+          "COMPLETE",
+          "TW-EV-010"
+        ]
+      }
+    ],
+    "after_review_fact": {
+      "option": "キー付クレセント",
+      "window": "引違い",
+      "two_panels": "L",
+      "four_panels": "L_AND_R",
+      "humidity": "PROHIBITED",
+      "incompatible": "小開口ストッパー",
+      "price": null,
+      "bom": null,
+      "set_code": null
+    },
+    "runtime_effect": "REVIEW_ONLY_NOT_APPLIED",
+    "source_adoption_required": true,
+    "new_evidence_id": "DELTA-KEY-EV-V4",
+    "old_evidence_retained": true,
+    "reverse_dependencies": [
+      "Selector",
+      "Dependency",
+      "saved specification snapshot",
+      "output evidence",
+      "estimator handoff"
+    ],
+    "pricing_bom_code_guess": false,
+    "disposition": "OFFICIAL_BYTES_VERIFIED_CANDIDATE_ONLY_CURRENT_ADOPTION_PENDING"
+  },
+  {
+    "delta_id": "DELTA-SPACER",
+    "components": [
+      "RPL_ROOM",
+      "RPL_TW",
+      "RPL_EW",
+      "RPL_BATH",
+      "RPL_ATT_TW",
+      "RPL_ATT_TH"
+    ],
+    "source": "IS9800",
+    "pdf_pages": [
+      52,
+      104,
+      116,
+      120
+    ],
+    "printed_pages": [
+      50,
+      102,
+      114,
+      118
+    ],
+    "action": "ADD_15x20_SPACER",
+    "before_native_rows": [
+      {
+        "component": "RPL_ATT_TW",
+        "sheet": "09_その他OP",
+        "row": 13,
+        "before": [
+          "ATT-TW-OP-ADJ-SPACER",
+          "施工調整スペーサー",
+          "施工部材",
+          "CONDITIONAL_REQUIRED",
+          "枠調整/下枠立上り差分",
+          "COMPLETE",
+          "ATT-TW-EV-006,010,014",
+          null
+        ]
+      },
+      {
+        "component": "RPL_ATT_TH",
+        "sheet": "09_その他OP",
+        "row": 11,
+        "before": [
+          "ATT-TH-OP-FRAME-SPACER-S",
+          "枠施工スペーサー小",
+          "施工部材",
+          "CONDITIONAL_REQUIRED",
+          "新設サッシ取付調整",
+          "COMPLETE",
+          "ATT-TH-EV-013",
+          null
+        ]
+      },
+      {
+        "component": "RPL_ATT_TH",
+        "sheet": "09_その他OP",
+        "row": 12,
+        "before": [
+          "ATT-TH-OP-ADJ-SPACER",
+          "汎用施工調整スペーサー",
+          "施工部材",
+          "CONDITIONAL_REQUIRED",
+          "下枠/枠調整",
+          "COMPLETE",
+          "ATT-TH-EV-010,013",
+          null
+        ]
+      },
+      {
+        "component": "RPL_ATT_TH",
+        "sheet": "09A_OP依存関係",
+        "row": 9,
+        "before": [
+          "ATT-TH-OD-006",
+          "ATT-TH-OP-ADJ-SPACER",
+          "REQUIRED_IF",
+          "lower_frame_rise<34 OR lower_frame_rise>53",
+          "公式差分スペーサー対応。発注寸法補正を伴う",
+          "COMPLETE_WITH_EXTERNAL_CHECK",
+          "ATT-TH-EV-010",
+          null
+        ]
+      }
+    ],
+    "after_review_fact": {
+      "cross_section_mm": [
+        15,
+        20
+      ],
+      "official_component_code": "Z-04-BWSJ",
+      "auto_select": false,
+      "qty": null,
+      "price": null,
+      "cut_mall_applicability": "NOT_PROVEN_BY_THIS_PAGE"
+    },
+    "runtime_effect": "REVIEW_ONLY_NOT_APPLIED",
+    "source_adoption_required": true,
+    "new_evidence_id": "DELTA-SPACER-EV-V4",
+    "old_evidence_retained": true,
+    "reverse_dependencies": [
+      "Selector",
+      "Dependency",
+      "saved specification snapshot",
+      "output evidence",
+      "estimator handoff"
+    ],
+    "pricing_bom_code_guess": false,
+    "disposition": "OFFICIAL_BYTES_VERIFIED_CANDIDATE_ONLY_CURRENT_ADOPTION_PENDING"
+  },
+  {
+    "delta_id": "DELTA-CASING",
+    "components": [
+      "RPL_ROOM",
+      "RPL_TW",
+      "RPL_EW",
+      "RPL_ATT_TW",
+      "RPL_ATT_TH"
+    ],
+    "source": "IS9800",
+    "pdf_pages": [
+      51,
+      115,
+      119
+    ],
+    "printed_pages": [
+      49,
+      113,
+      117
+    ],
+    "action": "UPDATE_WOODEN_CASING_COLOR_SCOPE",
+    "before_native_rows": [
+      {
+        "component": "RPL_ROOM",
+        "sheet": "09A_OP依存関係",
+        "row": 10,
+        "before": [
+          "OD-007",
+          "OP-INTERIOR-RESIN-COVER",
+          "ANY",
+          "INCOMPATIBLE",
+          "OP-COVER-CASING",
+          "室内樹脂カバーとカバー用ケーシング併用不可",
+          "COMPLETE",
+          "EV-018"
+        ]
+      },
+      {
+        "component": "RPL_TW",
+        "sheet": "09_その他OP",
+        "row": 8,
+        "before": [
+          "TW-OP-CASING",
+          "カバー用ケーシング",
+          "室内部材",
+          "USER_SELECT",
+          "樹脂アングルカバーを使わない場合",
+          "COMPLETE",
+          "TW-EV-009,011",
+          null
+        ]
+      },
+      {
+        "component": "RPL_EW",
+        "sheet": "09_その他OP",
+        "row": 6,
+        "before": [
+          "EW-OP-CASING",
+          "カバー用ケーシング",
+          "室内部材",
+          "USER_SELECT",
+          "室内樹脂カバーと併用不可",
+          "COMPLETE",
+          "EW-EV-009,011",
+          null
+        ]
+      },
+      {
+        "component": "RPL_ATT_TH",
+        "sheet": "09_その他OP",
+        "row": 14,
+        "before": [
+          "ATT-TH-OP-CASING",
+          "カバー用ケーシング",
+          "室内部材",
+          "USER_SELECT",
+          "共通有償品対応",
+          "COMPLETE",
+          "ATT-TH-EV-013",
+          null
+        ]
+      }
+    ],
+    "after_review_fact": {
+      "retain": [
+        "D:クリエダーク",
+        "M:クリエモカ",
+        "Y:プレシャスホワイト"
+      ],
+      "add": [
+        "AD:クリエチェリー",
+        "AC:クリエオーク",
+        "WA:クリエアイボリー"
+      ],
+      "remove_from_this_part": [
+        "L:クリエラスク",
+        "P:クリエペール"
+      ],
+      "exclude": [
+        "sash_interior_color",
+        "interior_cover_color",
+        "exterior_cover_color"
+      ]
+    },
+    "runtime_effect": "REVIEW_ONLY_NOT_APPLIED",
+    "source_adoption_required": true,
+    "new_evidence_id": "DELTA-CASING-EV-V4",
+    "old_evidence_retained": true,
+    "reverse_dependencies": [
+      "Selector",
+      "Dependency",
+      "saved specification snapshot",
+      "output evidence",
+      "estimator handoff"
+    ],
+    "pricing_bom_code_guess": false,
+    "disposition": "OFFICIAL_BYTES_VERIFIED_CANDIDATE_ONLY_CURRENT_ADOPTION_PENDING"
+  },
+  {
+    "delta_id": "DELTA-FILLER",
+    "components": [
+      "RPL_ROOM",
+      "RPL_TW",
+      "RPL_EW",
+      "RPL_ATT_TW",
+      "RPL_ATT_TH"
+    ],
+    "source": "IS9800",
+    "pdf_pages": [
+      51,
+      115,
+      119
+    ],
+    "printed_pages": [
+      49,
+      113,
+      117
+    ],
+    "action": "UPDATE_FILLER_NAME_AND_VARIANTS",
+    "before_native_rows": [
+      {
+        "component": "RPL_ATT_TH",
+        "sheet": "09_その他OP",
+        "row": 13,
+        "before": [
+          "ATT-TH-OP-FILLER",
+          "充てん材",
+          "室内部材",
+          "USER_SELECT",
+          "樹脂アングルカバー室内仕上げ",
+          "COMPLETE",
+          "ATT-TH-EV-013",
+          null
+        ]
+      }
+    ],
+    "after_review_fact": {
+      "name": "充てん剤",
+      "component_codes": [
+        "NZZM180",
+        "NZZW180",
+        "NZZZ322",
+        "NZZZ321",
+        "NZZZ149"
+      ],
+      "scope": "finish material variants only",
+      "price": null,
+      "bom": null
+    },
+    "runtime_effect": "REVIEW_ONLY_NOT_APPLIED",
+    "source_adoption_required": true,
+    "new_evidence_id": "DELTA-FILLER-EV-V4",
+    "old_evidence_retained": true,
+    "reverse_dependencies": [
+      "Selector",
+      "Dependency",
+      "saved specification snapshot",
+      "output evidence",
+      "estimator handoff"
+    ],
+    "pricing_bom_code_guess": false,
+    "disposition": "OFFICIAL_BYTES_VERIFIED_CANDIDATE_ONLY_CURRENT_ADOPTION_PENDING"
+  },
+  {
+    "delta_id": "DELTA-CUT-WOOD",
+    "components": [
+      "RPL_CUT_MALL"
+    ],
+    "source": "IS9800",
+    "pdf_pages": [
+      122
+    ],
+    "printed_pages": [
+      120
+    ],
+    "action": "UPDATE_CUT_MALL_WINDOW_FRAME_COLOR_ONLY",
+    "before_native_rows": [
+      {
+        "component": "RPL_CUT_MALL",
+        "sheet": "06_色",
+        "row": 9,
+        "before": [
+          "CM-COLOR-WF-D",
+          "cut_mall_window_frame_color",
+          "D",
+          "クリエダーク",
+          "USER_SELECT",
+          "COMPLETE",
+          "CM-EV-015"
+        ]
+      },
+      {
+        "component": "RPL_CUT_MALL",
+        "sheet": "06_色",
+        "row": 10,
+        "before": [
+          "CM-COLOR-WF-Y",
+          "cut_mall_window_frame_color",
+          "Y",
+          "プレシャスホワイト",
+          "USER_SELECT",
+          "COMPLETE",
+          "CM-EV-015"
+        ]
+      },
+      {
+        "component": "RPL_CUT_MALL",
+        "sheet": "06_色",
+        "row": 11,
+        "before": [
+          "CM-COLOR-WF-M",
+          "cut_mall_window_frame_color",
+          "M",
+          "クリエモカ",
+          "USER_SELECT",
+          "COMPLETE",
+          "CM-EV-015"
+        ]
+      },
+      {
+        "component": "RPL_CUT_MALL",
+        "sheet": "06_色",
+        "row": 12,
+        "before": [
+          "CM-COLOR-WF-L",
+          "cut_mall_window_frame_color",
+          "L",
+          "クリエラスク",
+          "USER_SELECT",
+          "COMPLETE",
+          "CM-EV-015"
+        ]
+      },
+      {
+        "component": "RPL_CUT_MALL",
+        "sheet": "06_色",
+        "row": 13,
+        "before": [
+          "CM-COLOR-WF-P",
+          "cut_mall_window_frame_color",
+          "P",
+          "クリエペール",
+          "USER_SELECT",
+          "COMPLETE",
+          "CM-EV-015"
+        ]
+      },
+      {
+        "component": "RPL_CUT_MALL",
+        "sheet": "06_色",
+        "row": 14,
+        "before": [
+          "CM-COLOR-WF-WA",
+          "cut_mall_window_frame_color",
+          "WA",
+          "クリエアイボリー",
+          "USER_SELECT",
+          "COMPLETE",
+          "CM-EV-015"
+        ]
+      }
+    ],
+    "after_review_fact": {
+      "affected_key": "cut_mall_window_frame_color",
+      "add": [
+        "AD",
+        "AC"
+      ],
+      "remove": [
+        "L",
+        "P"
+      ],
+      "retain": [
+        "D",
+        "M",
+        "Y",
+        "WA"
+      ],
+      "new_construction_window_frame_color": "SUPPLIER_REFERENCE_NOT_GLOBAL_RENAME",
+      "interior_adjustment_angle_color": "CARRY_FORWARD"
+    },
+    "runtime_effect": "REVIEW_ONLY_NOT_APPLIED",
+    "source_adoption_required": true,
+    "new_evidence_id": "DELTA-CUT-WOOD-EV-V4",
+    "old_evidence_retained": true,
+    "reverse_dependencies": [
+      "Selector",
+      "Dependency",
+      "saved specification snapshot",
+      "output evidence",
+      "estimator handoff"
+    ],
+    "pricing_bom_code_guess": false,
+    "disposition": "OFFICIAL_BYTES_VERIFIED_CANDIDATE_ONLY_CURRENT_ADOPTION_PENDING"
+  },
+  {
+    "delta_id": "DELTA-BATH-TABLE",
+    "components": [
+      "RPL_BATH"
+    ],
+    "source": "IS9800",
+    "pdf_pages": [
+      95,
+      96
+    ],
+    "printed_pages": [
+      93,
+      94
+    ],
+    "action": "SOURCE_PRICE_BAND_CORRECTION_NO_SIZE_RULE_PATCH",
+    "before_native_rows": [],
+    "after_review_fact": {
+      "reason": "old erroneous numeric labels not found as dimension rules in native Master",
+      "manufacturability_changed": false
+    },
+    "runtime_effect": "REVIEW_ONLY_NOT_APPLIED",
+    "source_adoption_required": true,
+    "new_evidence_id": "DELTA-BATH-TABLE-EV-V4",
+    "old_evidence_retained": true,
+    "reverse_dependencies": [
+      "Selector",
+      "Dependency",
+      "saved specification snapshot",
+      "output evidence",
+      "estimator handoff"
+    ],
+    "pricing_bom_code_guess": false,
+    "disposition": "OFFICIAL_BYTES_VERIFIED_CANDIDATE_ONLY_CURRENT_ADOPTION_PENDING"
+  },
+  {
+    "delta_id": "DELTA-EW-CAPTION",
+    "components": [
+      "RPL_EW"
+    ],
+    "source": "IS9800",
+    "pdf_pages": [
+      42
+    ],
+    "printed_pages": [
+      40
+    ],
+    "action": "CARRY_FORWARD_TECHNICAL_DIMENSIONS",
+    "before_native_rows": [
+      {
+        "component": "RPL_EW",
+        "sheet": "10C_化粧カバー見付",
+        "row": 1,
+        "before": [
+          "10C_化粧カバー見付｜EWタイプ",
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ]
+      },
+      {
+        "component": "RPL_EW",
+        "sheet": "10C_化粧カバー見付",
+        "row": 3,
+        "before": [
+          "rule_id",
+          "cover_type",
+          "上枠見付",
+          "下枠見付",
+          "縦枠見付",
+          "施工区分",
+          "status",
+          "evidence",
+          null
+        ]
+      }
+    ],
+    "after_review_fact": {
+      "dimension_rule_changed": false
+    },
+    "runtime_effect": "REVIEW_ONLY_NOT_APPLIED",
+    "source_adoption_required": true,
+    "new_evidence_id": "DELTA-EW-CAPTION-EV-V4",
+    "old_evidence_retained": true,
+    "reverse_dependencies": [
+      "Selector",
+      "Dependency",
+      "saved specification snapshot",
+      "output evidence",
+      "estimator handoff"
+    ],
+    "pricing_bom_code_guess": false,
+    "disposition": "OFFICIAL_BYTES_VERIFIED_CANDIDATE_ONLY_CURRENT_ADOPTION_PENDING"
+  },
+  {
+    "delta_id": "DELTA-LEADTIME",
+    "components": [
+      "RPL_ROOM",
+      "RPL_TW",
+      "RPL_EW",
+      "RPL_ATT_TW",
+      "RPL_ATT_TH"
+    ],
+    "source": "IS9800",
+    "pdf_pages": [
+      235
+    ],
+    "printed_pages": [
+      233
+    ],
+    "action": "SOURCE_NOTE_ONLY",
+    "before_native_rows": [],
+    "after_review_fact": {
+      "stock_confirmation": true,
+      "absolute_delivery_days": null
+    },
+    "runtime_effect": "REVIEW_ONLY_NOT_APPLIED",
+    "source_adoption_required": true,
+    "new_evidence_id": "DELTA-LEADTIME-EV-V4",
+    "old_evidence_retained": true,
+    "reverse_dependencies": [
+      "Selector",
+      "Dependency",
+      "saved specification snapshot",
+      "output evidence",
+      "estimator handoff"
+    ],
+    "pricing_bom_code_guess": false,
+    "disposition": "OFFICIAL_BYTES_VERIFIED_CANDIDATE_ONLY_CURRENT_ADOPTION_PENDING"
+  }
+]

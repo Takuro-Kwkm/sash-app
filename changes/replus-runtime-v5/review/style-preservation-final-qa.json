@@ -1,0 +1,72 @@
+[
+  {
+    "component": "RPL_ROOM",
+    "unexpected_styles": 0,
+    "unexpected_values": 0,
+    "changed_cells": 142,
+    "formulas_preserved": 3,
+    "runtime_constant_and_cached_values_match": true,
+    "sheet_order_preserved": true,
+    "native_application_recalculation": "NOT_EXECUTED; formula source and cached values retained"
+  },
+  {
+    "component": "RPL_TW",
+    "unexpected_styles": 0,
+    "unexpected_values": 0,
+    "changed_cells": 162,
+    "formulas_preserved": 6,
+    "runtime_constant_and_cached_values_match": true,
+    "sheet_order_preserved": true,
+    "native_application_recalculation": "NOT_EXECUTED; formula source and cached values retained"
+  },
+  {
+    "component": "RPL_EW",
+    "unexpected_styles": 0,
+    "unexpected_values": 0,
+    "changed_cells": 107,
+    "formulas_preserved": 6,
+    "runtime_constant_and_cached_values_match": true,
+    "sheet_order_preserved": true,
+    "native_application_recalculation": "NOT_EXECUTED; formula source and cached values retained"
+  },
+  {
+    "component": "RPL_BATH",
+    "unexpected_styles": 0,
+    "unexpected_values": 0,
+    "changed_cells": 25,
+    "formulas_preserved": 6,
+    "runtime_constant_and_cached_values_match": true,
+    "sheet_order_preserved": true,
+    "native_application_recalculation": "NOT_EXECUTED; formula source and cached values retained"
+  },
+  {
+    "component": "RPL_ATT_TW",
+    "unexpected_styles": 0,
+    "unexpected_values": 0,
+    "changed_cells": 117,
+    "formulas_preserved": 9,
+    "runtime_constant_and_cached_values_match": true,
+    "sheet_order_preserved": true,
+    "native_application_recalculation": "NOT_EXECUTED; formula source and cached values retained"
+  },
+  {
+    "component": "RPL_ATT_TH",
+    "unexpected_styles": 0,
+    "unexpected_values": 0,
+    "changed_cells": 130,
+    "formulas_preserved": 15,
+    "runtime_constant_and_cached_values_match": true,
+    "sheet_order_preserved": true,
+    "native_application_recalculation": "NOT_EXECUTED; formula source and cached values retained"
+  },
+  {
+    "component": "RPL_CUT_MALL",
+    "unexpected_styles": 0,
+    "unexpected_values": 0,
+    "changed_cells": 161,
+    "formulas_preserved": 12,
+    "runtime_constant_and_cached_values_match": true,
+    "sheet_order_preserved": true,
+    "native_application_recalculation": "NOT_EXECUTED; formula source and cached values retained"
+  }
+]

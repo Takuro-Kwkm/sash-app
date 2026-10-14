@@ -1,0 +1,3940 @@
+{
+  "schema": "PRODUCT_MODULE_CANDIDATE_V1",
+  "candidate_revision": "REPLUS_RUNTIME_UI_V5_20261014",
+  "baseline": {
+    "path": "candidates/RPL_ROOM.json",
+    "component_id": "RPL_ROOM",
+    "sha256": "16f8e732781f93bfbbb8c691b36e83f02625e4d2cae97a1683aea3bf78158b61",
+    "baseline_sha256": "bf8c26c5c139a12162b25851b65aa7ae39892bea6cb962c4b400bd7194882313",
+    "baseline_component_version": "v1.0"
+  },
+  "scope": "SELECTION_AND_ESTIMATE_HANDOFF; NO_AUTO_MANUFACTURE_NO_FORMAL_NO_RELEASE",
+  "product_module": {
+    "product": {
+      "id": "CANDIDATE:RPL_ROOM",
+      "manufacturer": "LIXIL",
+      "displayName": "リプラス 居室仕様",
+      "source": {
+        "id": "RPL_ROOM",
+        "version": "REPLUS_RUNTIME_UI_V5_20261014"
+      }
+    },
+    "specificationDefinitions": [
+      {
+        "key": "window_type",
+        "displayLabel": "窓種",
+        "dataType": "ENUM",
+        "displayOrder": 10,
+        "autoSelectSingle": false,
+        "parentFields": [],
+        "selector": {},
+        "id": "CANDIDATE:RPL_ROOM:field:window_type",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "status": "ACTIVE"
+      },
+      {
+        "key": "frame_type",
+        "displayLabel": "枠仕様",
+        "dataType": "ENUM",
+        "displayOrder": 20,
+        "autoSelectSingle": false,
+        "parentFields": [
+          "window_type"
+        ],
+        "selector": {
+          "window_type": {
+            "$exists": true
+          }
+        },
+        "id": "CANDIDATE:RPL_ROOM:field:frame_type",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "status": "ACTIVE"
+      },
+      {
+        "key": "spec_panel_configuration",
+        "displayLabel": "枚数",
+        "dataType": "ENUM",
+        "displayOrder": 30,
+        "autoSelectSingle": false,
+        "parentFields": [
+          "window_type"
+        ],
+        "selector": {
+          "window_type": {
+            "$in": [
+              "RPL_ROOM_SLD"
+            ]
+          }
+        },
+        "id": "CANDIDATE:RPL_ROOM:field:spec_panel_configuration",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "status": "ACTIVE"
+      },
+      {
+        "key": "spec_height_category",
+        "displayLabel": "マド／テラス",
+        "dataType": "ENUM",
+        "displayOrder": 40,
+        "autoSelectSingle": false,
+        "parentFields": [
+          "window_type"
+        ],
+        "selector": {
+          "window_type": {
+            "$in": [
+              "RPL_ROOM_SLD"
+            ]
+          }
+        },
+        "id": "CANDIDATE:RPL_ROOM:field:spec_height_category",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "status": "ACTIVE"
+      },
+      {
+        "key": "spec_sash_configuration",
+        "displayLabel": "障子仕様",
+        "dataType": "ENUM",
+        "displayOrder": 50,
+        "autoSelectSingle": false,
+        "parentFields": [
+          "window_type"
+        ],
+        "selector": {
+          "window_type": {
+            "$in": [
+              "RPL_ROOM_SLD"
+            ]
+          }
+        },
+        "id": "CANDIDATE:RPL_ROOM:field:spec_sash_configuration",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "status": "ACTIVE"
+      },
+      {
+        "key": "spec_opening_form",
+        "displayLabel": "開口形式",
+        "dataType": "ENUM",
+        "displayOrder": 60,
+        "autoSelectSingle": false,
+        "parentFields": [
+          "window_type"
+        ],
+        "selector": {
+          "window_type": {
+            "$in": [
+              "RPL_ROOM_VS_OP"
+            ]
+          }
+        },
+        "id": "CANDIDATE:RPL_ROOM:field:spec_opening_form",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "status": "ACTIVE"
+      },
+      {
+        "key": "screen",
+        "displayLabel": "網戸",
+        "dataType": "ENUM",
+        "displayOrder": 70,
+        "autoSelectSingle": false,
+        "parentFields": [
+          "window_type",
+          "spec_height_category"
+        ],
+        "selector": {
+          "window_type": {
+            "$in": [
+              "RPL_ROOM_SLD",
+              "RPL_ROOM_VS_OP",
+              "RPL_ROOM_HS_OP",
+              "RPL_ROOM_VS_CAM",
+              "RPL_ROOM_HS_CAM",
+              "RPL_ROOM_DHFS"
+            ]
+          }
+        },
+        "id": "CANDIDATE:RPL_ROOM:field:screen",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "status": "ACTIVE"
+      },
+      {
+        "key": "glass",
+        "displayLabel": "ガラス",
+        "dataType": "ENUM",
+        "displayOrder": 80,
+        "autoSelectSingle": false,
+        "parentFields": [
+          "window_type"
+        ],
+        "selector": {
+          "window_type": {
+            "$exists": true
+          }
+        },
+        "id": "CANDIDATE:RPL_ROOM:field:glass",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "status": "ACTIVE"
+      },
+      {
+        "key": "size_mode",
+        "displayLabel": "寸法指定",
+        "dataType": "ENUM",
+        "displayOrder": 90,
+        "autoSelectSingle": false,
+        "parentFields": [],
+        "selector": {},
+        "id": "CANDIDATE:RPL_ROOM:field:size_mode",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "status": "ACTIVE"
+      },
+      {
+        "key": "custom_width",
+        "displayLabel": "仕上がり幅 W（mm）",
+        "dataType": "NUMBER",
+        "displayOrder": 100,
+        "autoSelectSingle": false,
+        "parentFields": [],
+        "selector": {
+          "size_mode": "CUSTOM"
+        },
+        "id": "CANDIDATE:RPL_ROOM:field:custom_width",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "status": "ACTIVE"
+      },
+      {
+        "key": "custom_height",
+        "displayLabel": "仕上がり高さ H（mm）",
+        "dataType": "NUMBER",
+        "displayOrder": 110,
+        "autoSelectSingle": false,
+        "parentFields": [],
+        "selector": {
+          "size_mode": "CUSTOM"
+        },
+        "id": "CANDIDATE:RPL_ROOM:field:custom_height",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "status": "ACTIVE"
+      },
+      {
+        "key": "sash_exterior_color",
+        "displayLabel": "本体外観色",
+        "dataType": "ENUM",
+        "displayOrder": 120,
+        "autoSelectSingle": false,
+        "parentFields": [],
+        "selector": {},
+        "id": "CANDIDATE:RPL_ROOM:field:sash_exterior_color",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "status": "ACTIVE"
+      },
+      {
+        "key": "sash_interior_color",
+        "displayLabel": "本体内観色",
+        "dataType": "ENUM",
+        "displayOrder": 130,
+        "autoSelectSingle": false,
+        "parentFields": [],
+        "selector": {},
+        "id": "CANDIDATE:RPL_ROOM:field:sash_interior_color",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "status": "ACTIVE"
+      },
+      {
+        "key": "exterior_cover_color",
+        "displayLabel": "化粧カバー外観色",
+        "dataType": "ENUM",
+        "displayOrder": 140,
+        "autoSelectSingle": false,
+        "parentFields": [],
+        "selector": {},
+        "id": "CANDIDATE:RPL_ROOM:field:exterior_cover_color",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "status": "ACTIVE"
+      },
+      {
+        "key": "interior_cover_color",
+        "displayLabel": "化粧カバー内観色",
+        "dataType": "ENUM",
+        "displayOrder": 150,
+        "autoSelectSingle": false,
+        "parentFields": [],
+        "selector": {},
+        "id": "CANDIDATE:RPL_ROOM:field:interior_cover_color",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "status": "ACTIVE"
+      },
+      {
+        "key": "wooden_casing_color",
+        "displayLabel": "木製ケーシング色",
+        "dataType": "ENUM",
+        "displayOrder": 160,
+        "autoSelectSingle": false,
+        "parentFields": [],
+        "selector": {
+          "options": {
+            "$contains": "OP-COVER-CASING"
+          }
+        },
+        "id": "CANDIDATE:RPL_ROOM:field:wooden_casing_color",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "status": "ACTIVE"
+      },
+      {
+        "key": "options",
+        "displayLabel": "追加部材・オプション",
+        "dataType": "MULTI_ENUM",
+        "displayOrder": 170,
+        "autoSelectSingle": false,
+        "parentFields": [],
+        "selector": {},
+        "id": "CANDIDATE:RPL_ROOM:field:options",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "status": "ACTIVE"
+      },
+      {
+        "key": "usage_humidity",
+        "displayLabel": "使用環境",
+        "dataType": "ENUM",
+        "displayOrder": 180,
+        "autoSelectSingle": false,
+        "parentFields": [],
+        "selector": {},
+        "id": "CANDIDATE:RPL_ROOM:field:usage_humidity",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "status": "ACTIVE"
+      },
+      {
+        "key": "building_structure",
+        "displayLabel": "建物構造",
+        "dataType": "ENUM",
+        "displayOrder": 190,
+        "autoSelectSingle": false,
+        "parentFields": [],
+        "selector": {},
+        "id": "CANDIDATE:RPL_ROOM:field:building_structure",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "status": "ACTIVE"
+      },
+      {
+        "key": "installation_room",
+        "displayLabel": "施工条件",
+        "dataType": "ENUM",
+        "displayOrder": 200,
+        "autoSelectSingle": false,
+        "parentFields": [],
+        "selector": {},
+        "id": "CANDIDATE:RPL_ROOM:field:installation_room",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "status": "ACTIVE"
+      },
+      {
+        "key": "work_space",
+        "displayLabel": "施工条件",
+        "dataType": "ENUM",
+        "displayOrder": 210,
+        "autoSelectSingle": false,
+        "parentFields": [],
+        "selector": {},
+        "id": "CANDIDATE:RPL_ROOM:field:work_space",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "status": "ACTIVE"
+      }
+    ],
+    "allowedValues": [
+      {
+        "value": "RPL_ROOM_SLD",
+        "displayLabel": "引違い窓",
+        "evidenceIds": [
+          "EV-002,003"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": false
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:window_type:0",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "window_type",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "RPL_ROOM_VS_OP",
+        "displayLabel": "縦すべり出し窓（オペレーター）",
+        "evidenceIds": [
+          "EV-002,003"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": false,
+          "sash_configuration": "単窓"
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:window_type:1",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "window_type",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "RPL_ROOM_VS_CAM",
+        "displayLabel": "縦すべり出し窓（カムラッチ）",
+        "evidenceIds": [
+          "EV-002,003"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": false,
+          "sash_configuration": "単窓"
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:window_type:2",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "window_type",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "RPL_ROOM_HS_OP",
+        "displayLabel": "横すべり出し窓（オペレーター）",
+        "evidenceIds": [
+          "EV-002,003"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": false,
+          "sash_configuration": "単窓"
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:window_type:3",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "window_type",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "RPL_ROOM_HS_CAM",
+        "displayLabel": "横すべり出し窓（カムラッチ）",
+        "evidenceIds": [
+          "EV-002,003"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": false,
+          "sash_configuration": "単窓"
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:window_type:4",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "window_type",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "RPL_ROOM_DHFS",
+        "displayLabel": "上げ下げ窓FS（フラットスライド）",
+        "evidenceIds": [
+          "EV-002,003"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": false,
+          "sash_configuration": "単窓"
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:window_type:5",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "window_type",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "RPL_ROOM_FIX_OUT",
+        "displayLabel": "FIX窓（外押縁タイプ）",
+        "evidenceIds": [
+          "EV-002,003"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": false,
+          "sash_configuration": "単窓"
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:window_type:6",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "window_type",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "RPL_ROOM_FIX_IN",
+        "displayLabel": "FIX窓（内押縁タイプ）",
+        "evidenceIds": [
+          "EV-002,003"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": false,
+          "sash_configuration": "単窓"
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:window_type:7",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "window_type",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "RPL_STD",
+        "displayLabel": "標準枠",
+        "evidenceIds": [
+          "EV-002,003"
+        ],
+        "selector": {
+          "window_type": {
+            "$in": [
+              "RPL_ROOM_SLD",
+              "RPL_ROOM_VS_OP",
+              "RPL_ROOM_VS_CAM",
+              "RPL_ROOM_HS_OP",
+              "RPL_ROOM_HS_CAM",
+              "RPL_ROOM_DHFS",
+              "RPL_ROOM_FIX_OUT",
+              "RPL_ROOM_FIX_IN"
+            ]
+          }
+        },
+        "metadata": {
+          "manualCheck": false
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:frame_type:0",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "frame_type",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "RPL_BRIDGE",
+        "displayLabel": "ブリッジ枠",
+        "evidenceIds": [
+          "EV-007,014"
+        ],
+        "selector": {
+          "window_type": {
+            "$in": [
+              "RPL_ROOM_SLD"
+            ]
+          }
+        },
+        "metadata": {
+          "manualCheck": false
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:frame_type:1",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "frame_type",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "SS-SLD-PANEL-2",
+        "displayLabel": "2枚建",
+        "evidenceIds": [
+          "EV-006,007"
+        ],
+        "selector": {
+          "window_type": "RPL_ROOM_SLD"
+        },
+        "metadata": {
+          "manualCheck": false,
+          "panel_configuration": "2枚建"
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:spec_panel_configuration:0",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "spec_panel_configuration",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "SS-SLD-PANEL-4",
+        "displayLabel": "4枚建",
+        "evidenceIds": [
+          "EV-006,007"
+        ],
+        "selector": {
+          "window_type": "RPL_ROOM_SLD"
+        },
+        "metadata": {
+          "manualCheck": false,
+          "panel_configuration": "4枚建"
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:spec_panel_configuration:1",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "spec_panel_configuration",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "SS-SLD-MAD",
+        "displayLabel": "マド",
+        "evidenceIds": [
+          "EV-006,007"
+        ],
+        "selector": {
+          "window_type": "RPL_ROOM_SLD"
+        },
+        "metadata": {
+          "manualCheck": false,
+          "height_category": "マド"
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:spec_height_category:0",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "spec_height_category",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "SS-SLD-TER",
+        "displayLabel": "テラス",
+        "evidenceIds": [
+          "EV-006,007"
+        ],
+        "selector": {
+          "window_type": "RPL_ROOM_SLD"
+        },
+        "metadata": {
+          "manualCheck": false,
+          "height_category": "テラス"
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:spec_height_category:1",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "spec_height_category",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "SS-SLD-PG",
+        "displayLabel": "PG障子",
+        "evidenceIds": [
+          "EV-006,007"
+        ],
+        "selector": {
+          "window_type": "RPL_ROOM_SLD"
+        },
+        "metadata": {
+          "manualCheck": false,
+          "sash_configuration": "PG障子"
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:spec_sash_configuration:0",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "spec_sash_configuration",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "SS-SLD-HANDLE",
+        "displayLabel": "把手障子",
+        "evidenceIds": [
+          "EV-006,007"
+        ],
+        "selector": {
+          "window_type": "RPL_ROOM_SLD"
+        },
+        "metadata": {
+          "manualCheck": false,
+          "sash_configuration": "把手障子"
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:spec_sash_configuration:1",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "spec_sash_configuration",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "SS-SLD-WASHI",
+        "displayLabel": "大壁和室用障子",
+        "evidenceIds": [
+          "EV-006,007"
+        ],
+        "selector": {
+          "window_type": "RPL_ROOM_SLD"
+        },
+        "metadata": {
+          "manualCheck": false,
+          "sash_configuration": "大壁和室用障子"
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:spec_sash_configuration:2",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "spec_sash_configuration",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "SS-VSOP-NORMAL",
+        "displayLabel": "単窓",
+        "evidenceIds": [
+          "EV-008"
+        ],
+        "selector": {
+          "window_type": "RPL_ROOM_VS_OP"
+        },
+        "metadata": {
+          "manualCheck": false,
+          "opening_form": "単窓"
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:spec_opening_form:0",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "spec_opening_form",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "SS-VSOP-TF",
+        "displayLabel": "TF",
+        "evidenceIds": [
+          "EV-008,009"
+        ],
+        "selector": {
+          "window_type": "RPL_ROOM_VS_OP"
+        },
+        "metadata": {
+          "manualCheck": true,
+          "opening_form": "TF"
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:spec_opening_form:1",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "spec_opening_form",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "SS-VSOP-TFT",
+        "displayLabel": "TFT",
+        "evidenceIds": [
+          "EV-008,009"
+        ],
+        "selector": {
+          "window_type": "RPL_ROOM_VS_OP"
+        },
+        "metadata": {
+          "manualCheck": true,
+          "opening_form": "TFT"
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:spec_opening_form:2",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "spec_opening_form",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "SCR-SLD-MAD-NOBAR",
+        "displayLabel": "マドサイズ引違い網戸（中桟無）",
+        "evidenceIds": [
+          "EV-017,022"
+        ],
+        "selector": {
+          "window_type": "RPL_ROOM_SLD",
+          "height_category": "マド"
+        },
+        "metadata": {
+          "manualCheck": false
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:screen:0",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "screen",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "SCR-SLD-TER-NOBAR",
+        "displayLabel": "テラスサイズ引違い網戸（中桟無）",
+        "evidenceIds": [
+          "EV-017,022"
+        ],
+        "selector": {
+          "window_type": "RPL_ROOM_SLD",
+          "height_category": "テラス"
+        },
+        "metadata": {
+          "manualCheck": false
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:screen:1",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "screen",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "SCR-SLD-TER-BAR",
+        "displayLabel": "テラスサイズ引違い網戸（中桟付）",
+        "evidenceIds": [
+          "EV-017,022"
+        ],
+        "selector": {
+          "window_type": "RPL_ROOM_SLD",
+          "height_category": "テラス"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:screen:2",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "screen",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "SCR-FIXED",
+        "displayLabel": "固定式網戸",
+        "evidenceIds": [
+          "EV-017"
+        ],
+        "selector": {
+          "window_type": "RPL_ROOM_VS_OP"
+        },
+        "metadata": {
+          "manualCheck": false
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:screen:3",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "screen",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "SCR-FIXED",
+        "displayLabel": "固定式網戸",
+        "evidenceIds": [
+          "EV-017"
+        ],
+        "selector": {
+          "window_type": "RPL_ROOM_HS_OP"
+        },
+        "metadata": {
+          "manualCheck": false
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:screen:4",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "screen",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "SCR-HROLL",
+        "displayLabel": "横引きロール網戸",
+        "evidenceIds": [
+          "EV-017"
+        ],
+        "selector": {
+          "window_type": "RPL_ROOM_VS_CAM"
+        },
+        "metadata": {
+          "manualCheck": false
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:screen:5",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "screen",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "SCR-HROLL",
+        "displayLabel": "横引きロール網戸",
+        "evidenceIds": [
+          "EV-017"
+        ],
+        "selector": {
+          "window_type": "RPL_ROOM_HS_CAM"
+        },
+        "metadata": {
+          "manualCheck": false
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:screen:6",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "screen",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "SCR-DH",
+        "displayLabel": "上げ下げ式網戸",
+        "evidenceIds": [
+          "EV-017"
+        ],
+        "selector": {
+          "window_type": "RPL_ROOM_DHFS"
+        },
+        "metadata": {
+          "manualCheck": false
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:screen:7",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "screen",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "GL-PG",
+        "displayLabel": "一般複層ガラス",
+        "evidenceIds": [
+          "EV-020"
+        ],
+        "selector": {
+          "window_type": "RPL_ROOM_SLD"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:glass:0",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "glass",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "GL-PG",
+        "displayLabel": "一般複層ガラス",
+        "evidenceIds": [
+          "EV-020"
+        ],
+        "selector": {
+          "window_type": "RPL_ROOM_VS_OP"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:glass:1",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "glass",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "GL-PG",
+        "displayLabel": "一般複層ガラス",
+        "evidenceIds": [
+          "EV-020"
+        ],
+        "selector": {
+          "window_type": "RPL_ROOM_VS_CAM"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:glass:2",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "glass",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "GL-PG",
+        "displayLabel": "一般複層ガラス",
+        "evidenceIds": [
+          "EV-020"
+        ],
+        "selector": {
+          "window_type": "RPL_ROOM_HS_OP"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:glass:3",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "glass",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "GL-PG",
+        "displayLabel": "一般複層ガラス",
+        "evidenceIds": [
+          "EV-020"
+        ],
+        "selector": {
+          "window_type": "RPL_ROOM_HS_CAM"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:glass:4",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "glass",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "GL-PG",
+        "displayLabel": "一般複層ガラス",
+        "evidenceIds": [
+          "EV-020"
+        ],
+        "selector": {
+          "window_type": "RPL_ROOM_FIX_OUT"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:glass:5",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "glass",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "GL-PG",
+        "displayLabel": "一般複層ガラス",
+        "evidenceIds": [
+          "EV-020"
+        ],
+        "selector": {
+          "window_type": "RPL_ROOM_FIX_IN"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:glass:6",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "glass",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "GL-PG",
+        "displayLabel": "一般複層ガラス",
+        "evidenceIds": [
+          "EV-020"
+        ],
+        "selector": {
+          "window_type": "RPL_ROOM_DHFS"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:glass:7",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "glass",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "GL-LOWE-CLEAR",
+        "displayLabel": "Low-E複層ガラス クリア",
+        "evidenceIds": [
+          "EV-020"
+        ],
+        "selector": {
+          "window_type": "RPL_ROOM_SLD"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:glass:8",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "glass",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "GL-LOWE-CLEAR",
+        "displayLabel": "Low-E複層ガラス クリア",
+        "evidenceIds": [
+          "EV-020"
+        ],
+        "selector": {
+          "window_type": "RPL_ROOM_VS_OP"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:glass:9",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "glass",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "GL-LOWE-CLEAR",
+        "displayLabel": "Low-E複層ガラス クリア",
+        "evidenceIds": [
+          "EV-020"
+        ],
+        "selector": {
+          "window_type": "RPL_ROOM_VS_CAM"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:glass:10",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "glass",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "GL-LOWE-CLEAR",
+        "displayLabel": "Low-E複層ガラス クリア",
+        "evidenceIds": [
+          "EV-020"
+        ],
+        "selector": {
+          "window_type": "RPL_ROOM_HS_OP"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:glass:11",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "glass",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "GL-LOWE-CLEAR",
+        "displayLabel": "Low-E複層ガラス クリア",
+        "evidenceIds": [
+          "EV-020"
+        ],
+        "selector": {
+          "window_type": "RPL_ROOM_HS_CAM"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:glass:12",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "glass",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "GL-LOWE-CLEAR",
+        "displayLabel": "Low-E複層ガラス クリア",
+        "evidenceIds": [
+          "EV-020"
+        ],
+        "selector": {
+          "window_type": "RPL_ROOM_FIX_OUT"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:glass:13",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "glass",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "GL-LOWE-CLEAR",
+        "displayLabel": "Low-E複層ガラス クリア",
+        "evidenceIds": [
+          "EV-020"
+        ],
+        "selector": {
+          "window_type": "RPL_ROOM_FIX_IN"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:glass:14",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "glass",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "GL-LOWE-CLEAR",
+        "displayLabel": "Low-E複層ガラス クリア",
+        "evidenceIds": [
+          "EV-020"
+        ],
+        "selector": {
+          "window_type": "RPL_ROOM_DHFS"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:glass:15",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "glass",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "GL-LOWE-GREEN",
+        "displayLabel": "Low-E複層ガラス グリーン",
+        "evidenceIds": [
+          "EV-020"
+        ],
+        "selector": {
+          "window_type": "RPL_ROOM_SLD"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:glass:16",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "glass",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "GL-LOWE-GREEN",
+        "displayLabel": "Low-E複層ガラス グリーン",
+        "evidenceIds": [
+          "EV-020"
+        ],
+        "selector": {
+          "window_type": "RPL_ROOM_VS_OP"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:glass:17",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "glass",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "GL-LOWE-GREEN",
+        "displayLabel": "Low-E複層ガラス グリーン",
+        "evidenceIds": [
+          "EV-020"
+        ],
+        "selector": {
+          "window_type": "RPL_ROOM_VS_CAM"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:glass:18",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "glass",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "GL-LOWE-GREEN",
+        "displayLabel": "Low-E複層ガラス グリーン",
+        "evidenceIds": [
+          "EV-020"
+        ],
+        "selector": {
+          "window_type": "RPL_ROOM_HS_OP"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:glass:19",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "glass",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "GL-LOWE-GREEN",
+        "displayLabel": "Low-E複層ガラス グリーン",
+        "evidenceIds": [
+          "EV-020"
+        ],
+        "selector": {
+          "window_type": "RPL_ROOM_HS_CAM"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:glass:20",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "glass",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "GL-LOWE-GREEN",
+        "displayLabel": "Low-E複層ガラス グリーン",
+        "evidenceIds": [
+          "EV-020"
+        ],
+        "selector": {
+          "window_type": "RPL_ROOM_FIX_OUT"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:glass:21",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "glass",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "GL-LOWE-GREEN",
+        "displayLabel": "Low-E複層ガラス グリーン",
+        "evidenceIds": [
+          "EV-020"
+        ],
+        "selector": {
+          "window_type": "RPL_ROOM_FIX_IN"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:glass:22",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "glass",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "GL-LOWE-GREEN",
+        "displayLabel": "Low-E複層ガラス グリーン",
+        "evidenceIds": [
+          "EV-020"
+        ],
+        "selector": {
+          "window_type": "RPL_ROOM_DHFS"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:glass:23",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "glass",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "GL-LOWE-GREEN-HS",
+        "displayLabel": "Low-E複層ガラス グリーン（高遮熱仕様）",
+        "evidenceIds": [
+          "EV-020"
+        ],
+        "selector": {
+          "window_type": "RPL_ROOM_SLD"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:glass:24",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "glass",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "GL-LOWE-GREEN-HS",
+        "displayLabel": "Low-E複層ガラス グリーン（高遮熱仕様）",
+        "evidenceIds": [
+          "EV-020"
+        ],
+        "selector": {
+          "window_type": "RPL_ROOM_VS_OP"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:glass:25",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "glass",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "GL-LOWE-GREEN-HS",
+        "displayLabel": "Low-E複層ガラス グリーン（高遮熱仕様）",
+        "evidenceIds": [
+          "EV-020"
+        ],
+        "selector": {
+          "window_type": "RPL_ROOM_VS_CAM"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:glass:26",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "glass",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "GL-LOWE-GREEN-HS",
+        "displayLabel": "Low-E複層ガラス グリーン（高遮熱仕様）",
+        "evidenceIds": [
+          "EV-020"
+        ],
+        "selector": {
+          "window_type": "RPL_ROOM_HS_OP"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:glass:27",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "glass",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "GL-LOWE-GREEN-HS",
+        "displayLabel": "Low-E複層ガラス グリーン（高遮熱仕様）",
+        "evidenceIds": [
+          "EV-020"
+        ],
+        "selector": {
+          "window_type": "RPL_ROOM_HS_CAM"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:glass:28",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "glass",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "GL-LOWE-GREEN-HS",
+        "displayLabel": "Low-E複層ガラス グリーン（高遮熱仕様）",
+        "evidenceIds": [
+          "EV-020"
+        ],
+        "selector": {
+          "window_type": "RPL_ROOM_FIX_OUT"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:glass:29",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "glass",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "GL-LOWE-GREEN-HS",
+        "displayLabel": "Low-E複層ガラス グリーン（高遮熱仕様）",
+        "evidenceIds": [
+          "EV-020"
+        ],
+        "selector": {
+          "window_type": "RPL_ROOM_FIX_IN"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:glass:30",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "glass",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "GL-LOWE-GREEN-HS",
+        "displayLabel": "Low-E複層ガラス グリーン（高遮熱仕様）",
+        "evidenceIds": [
+          "EV-020"
+        ],
+        "selector": {
+          "window_type": "RPL_ROOM_DHFS"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:glass:31",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "glass",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "GL-SAFETY",
+        "displayLabel": "安全合わせ複層ガラス",
+        "evidenceIds": [
+          "EV-020"
+        ],
+        "selector": {
+          "window_type": "RPL_ROOM_SLD"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:glass:32",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "glass",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "GL-SAFETY",
+        "displayLabel": "安全合わせ複層ガラス",
+        "evidenceIds": [
+          "EV-020"
+        ],
+        "selector": {
+          "window_type": "RPL_ROOM_VS_OP"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:glass:33",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "glass",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "GL-SAFETY",
+        "displayLabel": "安全合わせ複層ガラス",
+        "evidenceIds": [
+          "EV-020"
+        ],
+        "selector": {
+          "window_type": "RPL_ROOM_VS_CAM"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:glass:34",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "glass",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "GL-SAFETY",
+        "displayLabel": "安全合わせ複層ガラス",
+        "evidenceIds": [
+          "EV-020"
+        ],
+        "selector": {
+          "window_type": "RPL_ROOM_HS_OP"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:glass:35",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "glass",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "GL-SAFETY",
+        "displayLabel": "安全合わせ複層ガラス",
+        "evidenceIds": [
+          "EV-020"
+        ],
+        "selector": {
+          "window_type": "RPL_ROOM_HS_CAM"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:glass:36",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "glass",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "GL-SAFETY",
+        "displayLabel": "安全合わせ複層ガラス",
+        "evidenceIds": [
+          "EV-020"
+        ],
+        "selector": {
+          "window_type": "RPL_ROOM_DHFS"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:glass:37",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "glass",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "GL-TRIPLE-DHFS",
+        "displayLabel": "トリプルガラス",
+        "evidenceIds": [
+          "EV-014,020"
+        ],
+        "selector": {
+          "window_type": "RPL_ROOM_DHFS"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:glass:38",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "glass",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "CUSTOM",
+        "displayLabel": "仕上がり寸法",
+        "evidenceIds": [
+          "05_サイズルール"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": false
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:size_mode:0",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "size_mode",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "T",
+        "displayLabel": "ブラック",
+        "evidenceIds": [
+          "EV-003,014"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:sash_exterior_color:0",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "sash_exterior_color",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "G",
+        "displayLabel": "オータムブラウン",
+        "evidenceIds": [
+          "EV-003,014"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:sash_exterior_color:1",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "sash_exterior_color",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "K",
+        "displayLabel": "シャイングレー",
+        "evidenceIds": [
+          "EV-003,014"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:sash_exterior_color:2",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "sash_exterior_color",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "D",
+        "displayLabel": "ナチュラルシルバー",
+        "evidenceIds": [
+          "EV-003,014"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:sash_exterior_color:3",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "sash_exterior_color",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "W",
+        "displayLabel": "ホワイト",
+        "evidenceIds": [
+          "EV-003,014"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:sash_exterior_color:4",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "sash_exterior_color",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "LINK_EXT",
+        "displayLabel": "外観色連動（外観色・内観色同一）",
+        "evidenceIds": [
+          "EV-003,014"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:sash_interior_color:0",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "sash_interior_color",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "M",
+        "displayLabel": "ブラック",
+        "evidenceIds": [
+          "EV-003,014"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:sash_interior_color:1",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "sash_interior_color",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "C",
+        "displayLabel": "クリエモカP",
+        "evidenceIds": [
+          "EV-003,014"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:sash_interior_color:2",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "sash_interior_color",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "B",
+        "displayLabel": "クリエラスクP",
+        "evidenceIds": [
+          "EV-003,014"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:sash_interior_color:3",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "sash_interior_color",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "P",
+        "displayLabel": "クリエペールP",
+        "evidenceIds": [
+          "EV-003,014"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:sash_interior_color:4",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "sash_interior_color",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "F",
+        "displayLabel": "プレシャスホワイトP",
+        "evidenceIds": [
+          "EV-003,014"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:sash_interior_color:5",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "sash_interior_color",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "T",
+        "displayLabel": "ブラック",
+        "evidenceIds": [
+          "EV-003,014"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:exterior_cover_color:0",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "exterior_cover_color",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "G",
+        "displayLabel": "オータムブラウン",
+        "evidenceIds": [
+          "EV-003,014"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:exterior_cover_color:1",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "exterior_cover_color",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "K",
+        "displayLabel": "シャイングレー",
+        "evidenceIds": [
+          "EV-003,014"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:exterior_cover_color:2",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "exterior_cover_color",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "D",
+        "displayLabel": "ナチュラルシルバー",
+        "evidenceIds": [
+          "EV-003,014"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:exterior_cover_color:3",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "exterior_cover_color",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "W",
+        "displayLabel": "ホワイト",
+        "evidenceIds": [
+          "EV-003,014"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:exterior_cover_color:4",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "exterior_cover_color",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "M",
+        "displayLabel": "ブラック",
+        "evidenceIds": [
+          "EV-003,014"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:interior_cover_color:0",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "interior_cover_color",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "G",
+        "displayLabel": "オータムブラウン",
+        "evidenceIds": [
+          "EV-003,014"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:interior_cover_color:1",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "interior_cover_color",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "K",
+        "displayLabel": "シャイングレー",
+        "evidenceIds": [
+          "EV-003,014"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:interior_cover_color:2",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "interior_cover_color",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "D",
+        "displayLabel": "ナチュラルシルバー",
+        "evidenceIds": [
+          "EV-003,014"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:interior_cover_color:3",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "interior_cover_color",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "W",
+        "displayLabel": "ホワイト",
+        "evidenceIds": [
+          "EV-003,014"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:interior_cover_color:4",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "interior_cover_color",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "M",
+        "displayLabel": "ブラック",
+        "evidenceIds": [
+          "EV-003,014"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:interior_cover_color:5",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "interior_cover_color",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "C",
+        "displayLabel": "クリエモカP",
+        "evidenceIds": [
+          "EV-003,014"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:interior_cover_color:6",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "interior_cover_color",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "B",
+        "displayLabel": "クリエラスクP",
+        "evidenceIds": [
+          "EV-003,014"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:interior_cover_color:7",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "interior_cover_color",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "P",
+        "displayLabel": "クリエペールP",
+        "evidenceIds": [
+          "EV-003,014"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:interior_cover_color:8",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "interior_cover_color",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "F",
+        "displayLabel": "プレシャスホワイトP",
+        "evidenceIds": [
+          "EV-003,014"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:interior_cover_color:9",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "interior_cover_color",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "D",
+        "displayLabel": "クリエダーク",
+        "evidenceIds": [
+          "DELTA-CASING-EV-V4"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:wooden_casing_color:0",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "wooden_casing_color",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "M",
+        "displayLabel": "クリエモカ",
+        "evidenceIds": [
+          "DELTA-CASING-EV-V4"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:wooden_casing_color:1",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "wooden_casing_color",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "Y",
+        "displayLabel": "プレシャスホワイト",
+        "evidenceIds": [
+          "DELTA-CASING-EV-V4"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:wooden_casing_color:2",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "wooden_casing_color",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "AD",
+        "displayLabel": "クリエチェリー",
+        "evidenceIds": [
+          "DELTA-CASING-EV-V4"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:wooden_casing_color:3",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "wooden_casing_color",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "AC",
+        "displayLabel": "クリエオーク",
+        "evidenceIds": [
+          "DELTA-CASING-EV-V4"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:wooden_casing_color:4",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "wooden_casing_color",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "WA",
+        "displayLabel": "クリエアイボリー",
+        "evidenceIds": [
+          "DELTA-CASING-EV-V4"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:wooden_casing_color:5",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "wooden_casing_color",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "OP-ANGLE-COVER-CUT",
+        "displayLabel": "樹脂アングルカバー（見切材付）",
+        "evidenceIds": [
+          "EV-018"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:options:0",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "options",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "OP-ANGLE-COVER-NOCUT",
+        "displayLabel": "樹脂アングルカバー（見切材無）",
+        "evidenceIds": [
+          "EV-018"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:options:1",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "options",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "OP-ANGLE-COVER-TERRACE",
+        "displayLabel": "樹脂アングルカバーテラス用（見切材付）",
+        "evidenceIds": [
+          "EV-018"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:options:2",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "options",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "OP-INTERIOR-RESIN-COVER",
+        "displayLabel": "室内樹脂カバー",
+        "evidenceIds": [
+          "EV-018"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:options:3",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "options",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "OP-SMART-CRESCENT",
+        "displayLabel": "スマートクレセント",
+        "evidenceIds": [
+          "EV-018"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:options:4",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "options",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "OP-SMALL-OPEN-STOP",
+        "displayLabel": "小開口ストッパー",
+        "evidenceIds": [
+          "EV-018"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:options:5",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "options",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "OP-SMALL-OPEN-ARM",
+        "displayLabel": "小開口アーム",
+        "evidenceIds": [
+          "EV-018"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:options:6",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "options",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "OP-SMALL-OPEN-ARM-F",
+        "displayLabel": "小開口アーム（固定タイプ）",
+        "evidenceIds": [
+          "EV-018"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:options:7",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "options",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "OP-SCREEN-GROOVE-COVER-FIX",
+        "displayLabel": "固定式網戸溝カバー",
+        "evidenceIds": [
+          "EV-018"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:options:8",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "options",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "OP-SCREEN-GROOVE-COVER-MOV",
+        "displayLabel": "可動式網戸溝カバー",
+        "evidenceIds": [
+          "EV-018"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:options:9",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "options",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "OP-RETRO-BEAD",
+        "displayLabel": "後付ビード",
+        "evidenceIds": [
+          "EV-018"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:options:10",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "options",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "OP-LARGE-HANDLE",
+        "displayLabel": "大型把手",
+        "evidenceIds": [
+          "EV-018"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:options:11",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "options",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "OP-ASSIST-HANDLE",
+        "displayLabel": "アシスト把手",
+        "evidenceIds": [
+          "EV-018"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:options:12",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "options",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "OP-DEPTH-EXTENSION",
+        "displayLabel": "見込みふかし部材",
+        "evidenceIds": [
+          "EV-021"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:options:13",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "options",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "RPL_ROOM-OP-V5-KEY-CRESCENT",
+        "displayLabel": "キー付クレセント",
+        "evidenceIds": [
+          "DELTA-KEY-EV-V4"
+        ],
+        "selector": {
+          "window_type": "RPL_ROOM_SLD"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:options:14",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "options",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "RPL_ROOM-OP-V5-SPACER-15-20",
+        "displayLabel": "施工調整スペーサー 15×20",
+        "evidenceIds": [
+          "DELTA-SPACER-EV-V4"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:options:15",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "options",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "OP-COVER-CASING",
+        "displayLabel": "カバー用ケーシング",
+        "evidenceIds": [
+          "DELTA-CASING-EV-V4;EV-V5-CASING"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:options:16",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "options",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "RPL_ROOM-OP-V5-FILLER",
+        "displayLabel": "充てん剤",
+        "evidenceIds": [
+          "DELTA-FILLER-EV-V4"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:options:17",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "options",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "GENERAL",
+        "displayLabel": "高温多湿箇所以外",
+        "evidenceIds": [
+          "DELTA-KEY-EV-V4"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": false
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:usage_humidity:0",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "usage_humidity",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "HIGH_HUMIDITY",
+        "displayLabel": "高温多湿箇所",
+        "evidenceIds": [
+          "DELTA-KEY-EV-V4"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": false
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:usage_humidity:1",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "usage_humidity",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "木造",
+        "displayLabel": "木造",
+        "evidenceIds": [
+          "EV-010"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": false
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:building_structure:0",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "building_structure",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "RC造",
+        "displayLabel": "RC造",
+        "evidenceIds": [
+          "EV-010"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:building_structure:1",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "building_structure",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "プレハブ/特殊納まり",
+        "displayLabel": "プレハブ/特殊納まり",
+        "evidenceIds": [
+          "EV-010"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:building_structure:2",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "building_structure",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "居室",
+        "displayLabel": "居室",
+        "evidenceIds": [
+          "EV-010"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": false
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:installation_room:0",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "installation_room",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "室内から施工時に新設枠を外側へ振り出せない",
+        "displayLabel": "室内から施工時に新設枠を外側へ振り出せない",
+        "evidenceIds": [
+          "EV-010"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_ROOM:value:work_space:0",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "work_space",
+        "status": "ACTIVE"
+      }
+    ],
+    "requiredFieldRules": [
+      {
+        "id": "CANDIDATE:RPL_ROOM:required:window_type",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "window_type",
+        "required": true,
+        "selector": {}
+      },
+      {
+        "id": "CANDIDATE:RPL_ROOM:required:frame_type",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "frame_type",
+        "required": true,
+        "selector": {
+          "window_type": {
+            "$exists": true
+          }
+        }
+      },
+      {
+        "id": "CANDIDATE:RPL_ROOM:required:spec_panel_configuration",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "spec_panel_configuration",
+        "required": true,
+        "selector": {
+          "window_type": {
+            "$in": [
+              "RPL_ROOM_SLD"
+            ]
+          }
+        }
+      },
+      {
+        "id": "CANDIDATE:RPL_ROOM:required:spec_height_category",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "spec_height_category",
+        "required": true,
+        "selector": {
+          "window_type": {
+            "$in": [
+              "RPL_ROOM_SLD"
+            ]
+          }
+        }
+      },
+      {
+        "id": "CANDIDATE:RPL_ROOM:required:spec_sash_configuration",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "spec_sash_configuration",
+        "required": true,
+        "selector": {
+          "window_type": {
+            "$in": [
+              "RPL_ROOM_SLD"
+            ]
+          }
+        }
+      },
+      {
+        "id": "CANDIDATE:RPL_ROOM:required:spec_opening_form",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "spec_opening_form",
+        "required": true,
+        "selector": {
+          "window_type": {
+            "$in": [
+              "RPL_ROOM_VS_OP"
+            ]
+          }
+        }
+      },
+      {
+        "id": "CANDIDATE:RPL_ROOM:required:size_mode",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "size_mode",
+        "required": true,
+        "selector": {}
+      },
+      {
+        "id": "CANDIDATE:RPL_ROOM:required:custom_width",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "custom_width",
+        "required": true,
+        "selector": {
+          "size_mode": "CUSTOM"
+        }
+      },
+      {
+        "id": "CANDIDATE:RPL_ROOM:required:custom_height",
+        "productId": "CANDIDATE:RPL_ROOM",
+        "specificationKey": "custom_height",
+        "required": true,
+        "selector": {
+          "size_mode": "CUSTOM"
+        }
+      }
+    ],
+    "ruleSets": [
+      {
+        "id": "CANDIDATE:RPL_ROOM:ruleSets:finished-envelope",
+        "type": "DIMENSION_RULES",
+        "status": "ACTIVE",
+        "payload": [
+          {
+            "id": "SZ-STD-SLD-MAD2",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 647,
+              "maxW": 3017,
+              "minH": 337,
+              "maxH": 1637
+            },
+            "selector": {
+              "window_type": "RPL_ROOM_SLD",
+              "frame_type": "RPL_STD",
+              "panel_configuration": {
+                "$in": [
+                  "2枚建"
+                ]
+              },
+              "height_category": {
+                "$in": [
+                  "マド"
+                ]
+              },
+              "sash_configuration": {
+                "$in": [
+                  "PG障子",
+                  "大壁和室用障子"
+                ]
+              }
+            },
+            "source": {
+              "size_rule_id": "SZ-STD-SLD-MAD2",
+              "window_type_id": "RPL_ROOM_SLD",
+              "frame_type_id": "RPL_STD",
+              "panel_configuration": "2枚建",
+              "height_category": "マド",
+              "sash_configuration": "PG障子/大壁和室用障子",
+              "finished_w_min": 647,
+              "finished_w_max": 3017,
+              "finished_h_min": 337,
+              "finished_h_max": 1637,
+              "survey_w_min": 657,
+              "survey_w_max": 3027,
+              "survey_h_min": 347,
+              "survey_h_max": 1647,
+              "boundary_rule_id": "BR-STD-MAD2",
+              "判定方針": "基本包絡のみ自動。斜線/上側曲線は追加境界確認",
+              "status": "COMPLETE",
+              "evidence": "EV-006"
+            }
+          },
+          {
+            "id": "SZ-STD-SLD-MAD4",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 1227,
+              "maxW": 4017,
+              "minH": 337,
+              "maxH": 1637
+            },
+            "selector": {
+              "window_type": "RPL_ROOM_SLD",
+              "frame_type": "RPL_STD",
+              "panel_configuration": {
+                "$in": [
+                  "4枚建"
+                ]
+              },
+              "height_category": {
+                "$in": [
+                  "マド"
+                ]
+              },
+              "sash_configuration": {
+                "$in": [
+                  "PG障子"
+                ]
+              }
+            },
+            "source": {
+              "size_rule_id": "SZ-STD-SLD-MAD4",
+              "window_type_id": "RPL_ROOM_SLD",
+              "frame_type_id": "RPL_STD",
+              "panel_configuration": "4枚建",
+              "height_category": "マド",
+              "sash_configuration": "PG障子",
+              "finished_w_min": 1227,
+              "finished_w_max": 4017,
+              "finished_h_min": 337,
+              "finished_h_max": 1637,
+              "survey_w_min": 1237,
+              "survey_w_max": 4027,
+              "survey_h_min": 347,
+              "survey_h_max": 1647,
+              "boundary_rule_id": "BR-STD-MAD4",
+              "判定方針": "基本包絡のみ自動。斜線/上側曲線は追加境界確認",
+              "status": "COMPLETE",
+              "evidence": "EV-006"
+            }
+          },
+          {
+            "id": "SZ-STD-SLD-TER2",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 977,
+              "maxW": 3017,
+              "minH": 1208,
+              "maxH": 2527
+            },
+            "selector": {
+              "window_type": "RPL_ROOM_SLD",
+              "frame_type": "RPL_STD",
+              "panel_configuration": {
+                "$in": [
+                  "2枚建"
+                ]
+              },
+              "height_category": {
+                "$in": [
+                  "テラス"
+                ]
+              },
+              "sash_configuration": {
+                "$in": [
+                  "PG障子",
+                  "把手障子"
+                ]
+              }
+            },
+            "source": {
+              "size_rule_id": "SZ-STD-SLD-TER2",
+              "window_type_id": "RPL_ROOM_SLD",
+              "frame_type_id": "RPL_STD",
+              "panel_configuration": "2枚建",
+              "height_category": "テラス",
+              "sash_configuration": "PG障子/把手障子",
+              "finished_w_min": 977,
+              "finished_w_max": 3017,
+              "finished_h_min": 1208,
+              "finished_h_max": 2527,
+              "survey_w_min": 987,
+              "survey_w_max": 3027,
+              "survey_h_min": 1218,
+              "survey_h_max": 2537,
+              "boundary_rule_id": "BR-STD-TER2",
+              "判定方針": "基本包絡のみ自動。斜線/上側曲線、ガラス面積は追加確認",
+              "status": "COMPLETE",
+              "evidence": "EV-006"
+            }
+          },
+          {
+            "id": "SZ-STD-SLD-TER4",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 1897,
+              "maxW": 4017,
+              "minH": 1208,
+              "maxH": 2527
+            },
+            "selector": {
+              "window_type": "RPL_ROOM_SLD",
+              "frame_type": "RPL_STD",
+              "panel_configuration": {
+                "$in": [
+                  "4枚建"
+                ]
+              },
+              "height_category": {
+                "$in": [
+                  "テラス"
+                ]
+              },
+              "sash_configuration": {
+                "$in": [
+                  "PG障子",
+                  "把手障子"
+                ]
+              }
+            },
+            "source": {
+              "size_rule_id": "SZ-STD-SLD-TER4",
+              "window_type_id": "RPL_ROOM_SLD",
+              "frame_type_id": "RPL_STD",
+              "panel_configuration": "4枚建",
+              "height_category": "テラス",
+              "sash_configuration": "PG障子/把手障子",
+              "finished_w_min": 1897,
+              "finished_w_max": 4017,
+              "finished_h_min": 1208,
+              "finished_h_max": 2527,
+              "survey_w_min": 1907,
+              "survey_w_max": 4027,
+              "survey_h_min": 1218,
+              "survey_h_max": 2537,
+              "boundary_rule_id": "BR-STD-TER4",
+              "判定方針": "基本包絡のみ自動。斜線/上側曲線、ガラス面積は追加確認",
+              "status": "COMPLETE",
+              "evidence": "EV-006"
+            }
+          },
+          {
+            "id": "SZ-STD-SLD-TER2W",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 977,
+              "maxW": 3017,
+              "minH": 1537,
+              "maxH": 2527
+            },
+            "selector": {
+              "window_type": "RPL_ROOM_SLD",
+              "frame_type": "RPL_STD",
+              "panel_configuration": {
+                "$in": [
+                  "2枚建"
+                ]
+              },
+              "height_category": {
+                "$in": [
+                  "テラス"
+                ]
+              },
+              "sash_configuration": {
+                "$in": [
+                  "大壁和室用障子"
+                ]
+              }
+            },
+            "source": {
+              "size_rule_id": "SZ-STD-SLD-TER2W",
+              "window_type_id": "RPL_ROOM_SLD",
+              "frame_type_id": "RPL_STD",
+              "panel_configuration": "2枚建",
+              "height_category": "テラス",
+              "sash_configuration": "大壁和室用障子",
+              "finished_w_min": 977,
+              "finished_w_max": 3017,
+              "finished_h_min": 1537,
+              "finished_h_max": 2527,
+              "survey_w_min": 987,
+              "survey_w_max": 3027,
+              "survey_h_min": 1547,
+              "survey_h_max": 2537,
+              "boundary_rule_id": "BR-STD-TER2W",
+              "判定方針": "上側曲線あり。追加境界確認",
+              "status": "COMPLETE",
+              "evidence": "EV-006"
+            }
+          },
+          {
+            "id": "SZ-BRG-SLD-MAD2",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 647,
+              "maxW": 3017,
+              "minH": 342,
+              "maxH": 1637
+            },
+            "selector": {
+              "window_type": "RPL_ROOM_SLD",
+              "frame_type": "RPL_BRIDGE",
+              "panel_configuration": {
+                "$in": [
+                  "2枚建"
+                ]
+              },
+              "height_category": {
+                "$in": [
+                  "マド"
+                ]
+              },
+              "sash_configuration": {
+                "$in": [
+                  "PG障子",
+                  "大壁和室用障子"
+                ]
+              }
+            },
+            "source": {
+              "size_rule_id": "SZ-BRG-SLD-MAD2",
+              "window_type_id": "RPL_ROOM_SLD",
+              "frame_type_id": "RPL_BRIDGE",
+              "panel_configuration": "2枚建",
+              "height_category": "マド",
+              "sash_configuration": "PG障子/大壁和室用障子",
+              "finished_w_min": 647,
+              "finished_w_max": 3017,
+              "finished_h_min": 342,
+              "finished_h_max": 1637,
+              "survey_w_min": 657,
+              "survey_w_max": 3027,
+              "survey_h_min": 352,
+              "survey_h_max": 1647,
+              "boundary_rule_id": "BR-BRG-MAD2",
+              "判定方針": "基本包絡のみ自動。斜線/上側曲線は追加境界確認",
+              "status": "COMPLETE",
+              "evidence": "EV-007"
+            }
+          },
+          {
+            "id": "SZ-BRG-SLD-MAD4",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 1227,
+              "maxW": 4017,
+              "minH": 342,
+              "maxH": 1637
+            },
+            "selector": {
+              "window_type": "RPL_ROOM_SLD",
+              "frame_type": "RPL_BRIDGE",
+              "panel_configuration": {
+                "$in": [
+                  "4枚建"
+                ]
+              },
+              "height_category": {
+                "$in": [
+                  "マド"
+                ]
+              },
+              "sash_configuration": {
+                "$in": [
+                  "PG障子"
+                ]
+              }
+            },
+            "source": {
+              "size_rule_id": "SZ-BRG-SLD-MAD4",
+              "window_type_id": "RPL_ROOM_SLD",
+              "frame_type_id": "RPL_BRIDGE",
+              "panel_configuration": "4枚建",
+              "height_category": "マド",
+              "sash_configuration": "PG障子",
+              "finished_w_min": 1227,
+              "finished_w_max": 4017,
+              "finished_h_min": 342,
+              "finished_h_max": 1637,
+              "survey_w_min": 1237,
+              "survey_w_max": 4027,
+              "survey_h_min": 352,
+              "survey_h_max": 1647,
+              "boundary_rule_id": "BR-BRG-MAD4",
+              "判定方針": "基本包絡のみ自動。斜線/上側曲線は追加境界確認",
+              "status": "COMPLETE",
+              "evidence": "EV-007"
+            }
+          },
+          {
+            "id": "SZ-BRG-SLD-TER2",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 977,
+              "maxW": 3017,
+              "minH": 1213,
+              "maxH": 2527
+            },
+            "selector": {
+              "window_type": "RPL_ROOM_SLD",
+              "frame_type": "RPL_BRIDGE",
+              "panel_configuration": {
+                "$in": [
+                  "2枚建"
+                ]
+              },
+              "height_category": {
+                "$in": [
+                  "テラス"
+                ]
+              },
+              "sash_configuration": {
+                "$in": [
+                  "PG障子",
+                  "把手障子"
+                ]
+              }
+            },
+            "source": {
+              "size_rule_id": "SZ-BRG-SLD-TER2",
+              "window_type_id": "RPL_ROOM_SLD",
+              "frame_type_id": "RPL_BRIDGE",
+              "panel_configuration": "2枚建",
+              "height_category": "テラス",
+              "sash_configuration": "PG障子/把手障子",
+              "finished_w_min": 977,
+              "finished_w_max": 3017,
+              "finished_h_min": 1213,
+              "finished_h_max": 2527,
+              "survey_w_min": 987,
+              "survey_w_max": 3027,
+              "survey_h_min": 1223,
+              "survey_h_max": 2537,
+              "boundary_rule_id": "BR-BRG-TER2",
+              "判定方針": "基本包絡のみ自動。斜線/上側曲線は追加境界確認",
+              "status": "COMPLETE",
+              "evidence": "EV-007"
+            }
+          },
+          {
+            "id": "SZ-BRG-SLD-TER4",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 1897,
+              "maxW": 4017,
+              "minH": 1213,
+              "maxH": 2527
+            },
+            "selector": {
+              "window_type": "RPL_ROOM_SLD",
+              "frame_type": "RPL_BRIDGE",
+              "panel_configuration": {
+                "$in": [
+                  "4枚建"
+                ]
+              },
+              "height_category": {
+                "$in": [
+                  "テラス"
+                ]
+              },
+              "sash_configuration": {
+                "$in": [
+                  "PG障子",
+                  "把手障子"
+                ]
+              }
+            },
+            "source": {
+              "size_rule_id": "SZ-BRG-SLD-TER4",
+              "window_type_id": "RPL_ROOM_SLD",
+              "frame_type_id": "RPL_BRIDGE",
+              "panel_configuration": "4枚建",
+              "height_category": "テラス",
+              "sash_configuration": "PG障子/把手障子",
+              "finished_w_min": 1897,
+              "finished_w_max": 4017,
+              "finished_h_min": 1213,
+              "finished_h_max": 2527,
+              "survey_w_min": 1907,
+              "survey_w_max": 4027,
+              "survey_h_min": 1223,
+              "survey_h_max": 2537,
+              "boundary_rule_id": "BR-BRG-TER4",
+              "判定方針": "基本包絡のみ自動。斜線/上側曲線は追加境界確認",
+              "status": "COMPLETE",
+              "evidence": "EV-007"
+            }
+          },
+          {
+            "id": "SZ-BRG-SLD-TER2W",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 977,
+              "maxW": 3017,
+              "minH": 1542,
+              "maxH": 2527
+            },
+            "selector": {
+              "window_type": "RPL_ROOM_SLD",
+              "frame_type": "RPL_BRIDGE",
+              "panel_configuration": {
+                "$in": [
+                  "2枚建"
+                ]
+              },
+              "height_category": {
+                "$in": [
+                  "テラス"
+                ]
+              },
+              "sash_configuration": {
+                "$in": [
+                  "大壁和室用障子"
+                ]
+              }
+            },
+            "source": {
+              "size_rule_id": "SZ-BRG-SLD-TER2W",
+              "window_type_id": "RPL_ROOM_SLD",
+              "frame_type_id": "RPL_BRIDGE",
+              "panel_configuration": "2枚建",
+              "height_category": "テラス",
+              "sash_configuration": "大壁和室用障子",
+              "finished_w_min": 977,
+              "finished_w_max": 3017,
+              "finished_h_min": 1542,
+              "finished_h_max": 2527,
+              "survey_w_min": 987,
+              "survey_w_max": 3027,
+              "survey_h_min": 1552,
+              "survey_h_max": 2537,
+              "boundary_rule_id": "BR-BRG-TER2W",
+              "判定方針": "上側曲線あり。追加境界確認",
+              "status": "COMPLETE",
+              "evidence": "EV-007"
+            }
+          },
+          {
+            "id": "SZ-VSOP",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 267,
+              "maxW": 797,
+              "minH": 376,
+              "maxH": 2286
+            },
+            "selector": {
+              "window_type": "RPL_ROOM_VS_OP",
+              "frame_type": "RPL_STD",
+              "sash_configuration": {
+                "$in": [
+                  "単窓"
+                ]
+              }
+            },
+            "source": {
+              "size_rule_id": "SZ-VSOP",
+              "window_type_id": "RPL_ROOM_VS_OP",
+              "frame_type_id": "RPL_STD",
+              "panel_configuration": "—",
+              "height_category": "—",
+              "sash_configuration": "単窓",
+              "finished_w_min": 267,
+              "finished_w_max": 797,
+              "finished_h_min": 376,
+              "finished_h_max": 2286,
+              "survey_w_min": 277,
+              "survey_w_max": 807,
+              "survey_h_min": 386,
+              "survey_h_max": 2296,
+              "boundary_rule_id": "STEP-VSOP",
+              "判定方針": "05Aの3区間で基本製作範囲を機械判定可",
+              "status": "COMPLETE",
+              "evidence": "EV-008"
+            }
+          },
+          {
+            "id": "SZ-VSCAM",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 267,
+              "maxW": 667,
+              "minH": 346,
+              "maxH": 2390
+            },
+            "selector": {
+              "window_type": "RPL_ROOM_VS_CAM",
+              "frame_type": "RPL_STD",
+              "sash_configuration": {
+                "$in": [
+                  "単窓"
+                ]
+              }
+            },
+            "source": {
+              "size_rule_id": "SZ-VSCAM",
+              "window_type_id": "RPL_ROOM_VS_CAM",
+              "frame_type_id": "RPL_STD",
+              "panel_configuration": "—",
+              "height_category": "—",
+              "sash_configuration": "単窓",
+              "finished_w_min": 267,
+              "finished_w_max": 667,
+              "finished_h_min": 346,
+              "finished_h_max": 2390,
+              "survey_w_min": 277,
+              "survey_w_max": 677,
+              "survey_h_min": 356,
+              "survey_h_max": 2400,
+              "boundary_rule_id": "STEP-VSCAM",
+              "判定方針": "05Aの3区間で基本製作範囲を機械判定可",
+              "status": "COMPLETE",
+              "evidence": "EV-008"
+            }
+          },
+          {
+            "id": "SZ-HSOP",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 317,
+              "maxW": 1252,
+              "minH": 316,
+              "maxH": 1251
+            },
+            "selector": {
+              "window_type": "RPL_ROOM_HS_OP",
+              "frame_type": "RPL_STD",
+              "sash_configuration": {
+                "$in": [
+                  "単窓"
+                ]
+              }
+            },
+            "source": {
+              "size_rule_id": "SZ-HSOP",
+              "window_type_id": "RPL_ROOM_HS_OP",
+              "frame_type_id": "RPL_STD",
+              "panel_configuration": "—",
+              "height_category": "—",
+              "sash_configuration": "単窓",
+              "finished_w_min": 317,
+              "finished_w_max": 1252,
+              "finished_h_min": 316,
+              "finished_h_max": 1251,
+              "survey_w_min": 327,
+              "survey_w_max": 1262,
+              "survey_h_min": 326,
+              "survey_h_max": 1261,
+              "boundary_rule_id": "STEP-HSOP",
+              "判定方針": "05Aの2区間で基本製作範囲を機械判定可",
+              "status": "COMPLETE",
+              "evidence": "EV-008"
+            }
+          },
+          {
+            "id": "SZ-HSCAM",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 317,
+              "maxW": 887,
+              "minH": 316,
+              "maxH": 1016
+            },
+            "selector": {
+              "window_type": "RPL_ROOM_HS_CAM",
+              "frame_type": "RPL_STD",
+              "sash_configuration": {
+                "$in": [
+                  "単窓"
+                ]
+              }
+            },
+            "source": {
+              "size_rule_id": "SZ-HSCAM",
+              "window_type_id": "RPL_ROOM_HS_CAM",
+              "frame_type_id": "RPL_STD",
+              "panel_configuration": "—",
+              "height_category": "—",
+              "sash_configuration": "単窓",
+              "finished_w_min": 317,
+              "finished_w_max": 887,
+              "finished_h_min": 316,
+              "finished_h_max": 1016,
+              "survey_w_min": 327,
+              "survey_w_max": 897,
+              "survey_h_min": 326,
+              "survey_h_max": 1026,
+              "boundary_rule_id": "STEP-HSCAM",
+              "判定方針": "05Aの2区間で基本製作範囲を機械判定可",
+              "status": "COMPLETE",
+              "evidence": "EV-008"
+            }
+          },
+          {
+            "id": "SZ-DHFS",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 317,
+              "maxW": 887,
+              "minH": 606,
+              "maxH": 1706
+            },
+            "selector": {
+              "window_type": "RPL_ROOM_DHFS",
+              "frame_type": "RPL_STD",
+              "sash_configuration": {
+                "$in": [
+                  "単窓"
+                ]
+              }
+            },
+            "source": {
+              "size_rule_id": "SZ-DHFS",
+              "window_type_id": "RPL_ROOM_DHFS",
+              "frame_type_id": "RPL_STD",
+              "panel_configuration": "—",
+              "height_category": "—",
+              "sash_configuration": "単窓",
+              "finished_w_min": 317,
+              "finished_w_max": 887,
+              "finished_h_min": 606,
+              "finished_h_max": 1706,
+              "survey_w_min": 327,
+              "survey_w_max": 897,
+              "survey_h_min": 616,
+              "survey_h_max": 1716,
+              "boundary_rule_id": "STEP-DHFS",
+              "判定方針": "05Aの2区間で基本製作範囲を機械判定可。ガラス重量別確認あり",
+              "status": "COMPLETE",
+              "evidence": "EV-008"
+            }
+          },
+          {
+            "id": "SZ-FIXOUT",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 217,
+              "maxW": 3017,
+              "minH": 188,
+              "maxH": 2458
+            },
+            "selector": {
+              "window_type": "RPL_ROOM_FIX_OUT",
+              "frame_type": "RPL_STD",
+              "sash_configuration": {
+                "$in": [
+                  "単窓"
+                ]
+              }
+            },
+            "source": {
+              "size_rule_id": "SZ-FIXOUT",
+              "window_type_id": "RPL_ROOM_FIX_OUT",
+              "frame_type_id": "RPL_STD",
+              "panel_configuration": "—",
+              "height_category": "—",
+              "sash_configuration": "単窓",
+              "finished_w_min": 217,
+              "finished_w_max": 3017,
+              "finished_h_min": 188,
+              "finished_h_max": 2458,
+              "survey_w_min": 227,
+              "survey_w_max": 3027,
+              "survey_h_min": 198,
+              "survey_h_max": 2468,
+              "boundary_rule_id": "BR-FIXOUT",
+              "判定方針": "上側曲線があるため包絡＋公式曲線確認",
+              "status": "PARTIAL",
+              "evidence": "EV-009"
+            }
+          },
+          {
+            "id": "SZ-FIXIN",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 194,
+              "maxW": 2994,
+              "minH": 240,
+              "maxH": 2460
+            },
+            "selector": {
+              "window_type": "RPL_ROOM_FIX_IN",
+              "frame_type": "RPL_STD",
+              "sash_configuration": {
+                "$in": [
+                  "単窓"
+                ]
+              }
+            },
+            "source": {
+              "size_rule_id": "SZ-FIXIN",
+              "window_type_id": "RPL_ROOM_FIX_IN",
+              "frame_type_id": "RPL_STD",
+              "panel_configuration": "—",
+              "height_category": "—",
+              "sash_configuration": "単窓",
+              "finished_w_min": 194,
+              "finished_w_max": 2994,
+              "finished_h_min": 240,
+              "finished_h_max": 2460,
+              "survey_w_min": 204,
+              "survey_w_max": 3004,
+              "survey_h_min": 250,
+              "survey_h_max": 2470,
+              "boundary_rule_id": "BR-FIXIN",
+              "判定方針": "上側曲線があるため包絡＋公式曲線確認",
+              "status": "PARTIAL",
+              "evidence": "EV-009"
+            }
+          }
+        ],
+        "productId": "CANDIDATE:RPL_ROOM"
+      }
+    ],
+    "dependencies": [
+      {
+        "id": "CANDIDATE:RPL_ROOM:dependencies:spec-terrace-SS-SLD-HANDLE",
+        "mode": "AUTO",
+        "when": {
+          "not": {
+            "height_category": "テラス"
+          }
+        },
+        "targetField": "spec_sash_configuration",
+        "action": "deny_candidate",
+        "targetValue": "SS-SLD-HANDLE",
+        "productId": "CANDIDATE:RPL_ROOM"
+      },
+      {
+        "id": "CANDIDATE:RPL_ROOM:dependencies:spec-panel-SS-SLD-WASHI",
+        "mode": "AUTO",
+        "when": {
+          "not": {
+            "panel_configuration": "2枚建"
+          }
+        },
+        "targetField": "spec_sash_configuration",
+        "action": "deny_candidate",
+        "targetValue": "SS-SLD-WASHI",
+        "productId": "CANDIDATE:RPL_ROOM"
+      },
+      {
+        "id": "CANDIDATE:RPL_ROOM:dependencies:key-humidity",
+        "mode": "AUTO",
+        "when": {
+          "usage_humidity": "HIGH_HUMIDITY"
+        },
+        "targetField": "options",
+        "action": "deny_candidate",
+        "targetValue": "RPL_ROOM-OP-V5-KEY-CRESCENT",
+        "productId": "CANDIDATE:RPL_ROOM"
+      },
+      {
+        "id": "CANDIDATE:RPL_ROOM:dependencies:key-stock",
+        "mode": "MANUAL_CHECK",
+        "when": {
+          "options": {
+            "$contains": "RPL_ROOM-OP-V5-KEY-CRESCENT"
+          }
+        },
+        "message": "キー付クレセントは要在庫確認。2枚建はL、4枚建はL/Rの条件を確認してください。小開口ストッパー・高温多湿箇所には使用できません。",
+        "productId": "CANDIDATE:RPL_ROOM"
+      },
+      {
+        "id": "CANDIDATE:RPL_ROOM:dependencies:scope-OD-001",
+        "mode": "AUTO",
+        "when": {
+          "not": {
+            "window_type": "RPL_ROOM_SLD"
+          }
+        },
+        "targetField": "options",
+        "action": "deny_candidate",
+        "targetValue": "OP-LARGE-HANDLE",
+        "productId": "CANDIDATE:RPL_ROOM"
+      },
+      {
+        "id": "CANDIDATE:RPL_ROOM:dependencies:scope-OD-002",
+        "mode": "AUTO",
+        "when": {
+          "not": {
+            "window_type": "RPL_ROOM_SLD"
+          }
+        },
+        "targetField": "options",
+        "action": "deny_candidate",
+        "targetValue": "OP-SMALL-OPEN-STOP",
+        "productId": "CANDIDATE:RPL_ROOM"
+      },
+      {
+        "id": "CANDIDATE:RPL_ROOM:dependencies:scope-OD-003",
+        "mode": "AUTO",
+        "when": {
+          "not": {
+            "window_type": "RPL_ROOM_SLD"
+          }
+        },
+        "targetField": "options",
+        "action": "deny_candidate",
+        "targetValue": "OP-SMALL-OPEN-STOP",
+        "productId": "CANDIDATE:RPL_ROOM"
+      },
+      {
+        "id": "CANDIDATE:RPL_ROOM:dependencies:OD-004",
+        "mode": "AUTO",
+        "when": {
+          "options": {
+            "$contains": "OP-SMALL-OPEN-STOP"
+          }
+        },
+        "targetField": "options",
+        "action": "deny_candidate",
+        "targetValue": "OP-SMART-CRESCENT",
+        "productId": "CANDIDATE:RPL_ROOM"
+      },
+      {
+        "id": "CANDIDATE:RPL_ROOM:dependencies:scope-OD-005",
+        "mode": "AUTO",
+        "when": {
+          "not": {
+            "window_type": "RPL_ROOM_VS_OP"
+          }
+        },
+        "targetField": "options",
+        "action": "deny_candidate",
+        "targetValue": "OP-SMALL-OPEN-ARM",
+        "productId": "CANDIDATE:RPL_ROOM"
+      },
+      {
+        "id": "CANDIDATE:RPL_ROOM:dependencies:scope-OD-006",
+        "mode": "AUTO",
+        "when": {
+          "not": {
+            "window_type": "RPL_ROOM_VS_OP"
+          }
+        },
+        "targetField": "options",
+        "action": "deny_candidate",
+        "targetValue": "OP-SMALL-OPEN-ARM-F",
+        "productId": "CANDIDATE:RPL_ROOM"
+      },
+      {
+        "id": "CANDIDATE:RPL_ROOM:dependencies:OD-007",
+        "mode": "AUTO",
+        "when": {
+          "options": {
+            "$contains": "OP-INTERIOR-RESIN-COVER"
+          }
+        },
+        "targetField": "options",
+        "action": "deny_candidate",
+        "targetValue": "OP-COVER-CASING",
+        "productId": "CANDIDATE:RPL_ROOM"
+      },
+      {
+        "id": "CANDIDATE:RPL_ROOM:dependencies:scope-OD-008",
+        "mode": "AUTO",
+        "when": {
+          "not": {
+            "window_type": "RPL_ROOM_SLD"
+          }
+        },
+        "targetField": "options",
+        "action": "deny_candidate",
+        "targetValue": "OP-DEPTH-EXTENSION",
+        "productId": "CANDIDATE:RPL_ROOM"
+      },
+      {
+        "id": "CANDIDATE:RPL_ROOM:dependencies:V5-KEY-DENY-0-RPL_ROOM-OP-V5-KEY-CRESCENT",
+        "mode": "AUTO",
+        "when": {
+          "options": {
+            "$contains": "RPL_ROOM-OP-V5-KEY-CRESCENT"
+          }
+        },
+        "targetField": "options",
+        "action": "deny_candidate",
+        "targetValue": "OP-SMALL-OPEN-STOP",
+        "productId": "CANDIDATE:RPL_ROOM"
+      },
+      {
+        "id": "CANDIDATE:RPL_ROOM:dependencies:V5-KEY-DENY-0-OP-SMALL-OPEN-STOP",
+        "mode": "AUTO",
+        "when": {
+          "options": {
+            "$contains": "OP-SMALL-OPEN-STOP"
+          }
+        },
+        "targetField": "options",
+        "action": "deny_candidate",
+        "targetValue": "RPL_ROOM-OP-V5-KEY-CRESCENT",
+        "productId": "CANDIDATE:RPL_ROOM"
+      },
+      {
+        "id": "CANDIDATE:RPL_ROOM:dependencies:estimate-confirm",
+        "mode": "MANUAL_CHECK",
+        "when": {},
+        "message": "施工可否・図形境界・ガラス構成・部材数量・価格・発注コードは積算確認が必要です。候補のため正式採用・自動注文はできません。",
+        "productId": "CANDIDATE:RPL_ROOM"
+      }
+    ],
+    "evidence": [
+      {
+        "id": "CANDIDATE:RPL_ROOM:evidence:EV-001",
+        "source_id": "EV-001",
+        "payload": {
+          "evidence_id": "EV-001",
+          "情報源種別": "共通仕様",
+          "資料名": "サッシ商品マスター共通仕様書_v0.1",
+          "発行年月": "2026-08-30更新",
+          "ページ/箇所": "全体",
+          "URL": "https://docs.google.com/document/d/1MfixkbV1cZ__DtBknEKsix_nnrXQqjc-LZtXUHwJv_A/edit",
+          "確認日": "2026-08-30",
+          "確度": "HIGH",
+          "根拠内容": "共通階層・条件判定・Evidence・UI非表示ルール"
+        },
+        "productId": "CANDIDATE:RPL_ROOM"
+      },
+      {
+        "id": "CANDIDATE:RPL_ROOM:evidence:EV-002",
+        "source_id": "EV-002",
+        "payload": {
+          "evidence_id": "EV-002",
+          "情報源種別": "業務用資料集",
+          "資料名": "リプラス・リプラスマンション用 取替窓 業務用資料集",
+          "発行年月": "2026-04",
+          "ページ/箇所": "目次・居室仕様価格表/納まり",
+          "URL": "https://drive.google.com/file/d/1D1HPMXhOMYd_Lu10XNzzJR2TH3aDHVUr/view",
+          "確認日": "2026-08-30",
+          "確度": "HIGH",
+          "根拠内容": "現行業務用資料。居室仕様の窓種、標準枠/ブリッジ枠、価格表・納まり"
+        },
+        "productId": "CANDIDATE:RPL_ROOM"
+      },
+      {
+        "id": "CANDIDATE:RPL_ROOM:evidence:EV-003",
+        "source_id": "EV-003",
+        "payload": {
+          "evidence_id": "EV-003",
+          "情報源種別": "商品カタログ",
+          "資料名": "LIXIL リプラス 商品カタログ SN1200",
+          "発行年月": "2025-08",
+          "ページ/箇所": "p.28",
+          "URL": "https://drive.google.com/file/d/1wH1nhmsftl6y8Mp7y6twtoXSi6rxqxzT/view",
+          "確認日": "2026-08-30",
+          "確度": "HIGH",
+          "根拠内容": "居室仕様の8窓種、色体系、既設窓取替可否の基本説明"
+        },
+        "productId": "CANDIDATE:RPL_ROOM"
+      },
+      {
+        "id": "CANDIDATE:RPL_ROOM:evidence:EV-004",
+        "source_id": "EV-004",
+        "payload": {
+          "evidence_id": "EV-004",
+          "情報源種別": "商品カタログ",
+          "資料名": "LIXIL リプラス 商品カタログ SN1200",
+          "発行年月": "2025-08",
+          "ページ/箇所": "p.48～",
+          "URL": "https://drive.google.com/file/d/1wH1nhmsftl6y8Mp7y6twtoXSi6rxqxzT/view",
+          "確認日": "2026-08-30",
+          "確度": "HIGH",
+          "根拠内容": "ガラスバリエーション"
+        },
+        "productId": "CANDIDATE:RPL_ROOM"
+      },
+      {
+        "id": "CANDIDATE:RPL_ROOM:evidence:EV-005",
+        "source_id": "EV-005",
+        "payload": {
+          "evidence_id": "EV-005",
+          "情報源種別": "商品カタログ",
+          "資料名": "LIXIL リプラス 商品カタログ SN1200",
+          "発行年月": "2025-08",
+          "ページ/箇所": "p.64-65",
+          "URL": "https://drive.google.com/file/d/1wH1nhmsftl6y8Mp7y6twtoXSi6rxqxzT/view",
+          "確認日": "2026-08-30",
+          "確度": "HIGH",
+          "根拠内容": "網戸形式・機能性ネット・シリーズ設定表"
+        },
+        "productId": "CANDIDATE:RPL_ROOM"
+      },
+      {
+        "id": "CANDIDATE:RPL_ROOM:evidence:EV-006",
+        "source_id": "EV-006",
+        "payload": {
+          "evidence_id": "EV-006",
+          "情報源種別": "商品カタログ",
+          "資料名": "LIXIL リプラス 商品カタログ SN1200",
+          "発行年月": "2025-08",
+          "ページ/箇所": "p.97",
+          "URL": "https://drive.google.com/file/d/1wH1nhmsftl6y8Mp7y6twtoXSi6rxqxzT/view",
+          "確認日": "2026-08-30",
+          "確度": "HIGH",
+          "根拠内容": "居室仕様 引違い窓 標準枠 寸法特注範囲"
+        },
+        "productId": "CANDIDATE:RPL_ROOM"
+      },
+      {
+        "id": "CANDIDATE:RPL_ROOM:evidence:EV-007",
+        "source_id": "EV-007",
+        "payload": {
+          "evidence_id": "EV-007",
+          "情報源種別": "商品カタログ",
+          "資料名": "LIXIL リプラス 商品カタログ SN1200",
+          "発行年月": "2025-08",
+          "ページ/箇所": "p.98",
+          "URL": "https://drive.google.com/file/d/1wH1nhmsftl6y8Mp7y6twtoXSi6rxqxzT/view",
+          "確認日": "2026-08-30",
+          "確度": "HIGH",
+          "根拠内容": "居室仕様 引違い窓 ブリッジ枠 寸法特注範囲"
+        },
+        "productId": "CANDIDATE:RPL_ROOM"
+      },
+      {
+        "id": "CANDIDATE:RPL_ROOM:evidence:EV-008",
+        "source_id": "EV-008",
+        "payload": {
+          "evidence_id": "EV-008",
+          "情報源種別": "商品カタログ",
+          "資料名": "LIXIL リプラス 商品カタログ SN1200",
+          "発行年月": "2025-08",
+          "ページ/箇所": "p.110",
+          "URL": "https://drive.google.com/file/d/1wH1nhmsftl6y8Mp7y6twtoXSi6rxqxzT/view",
+          "確認日": "2026-08-30",
+          "確度": "HIGH",
+          "根拠内容": "居室仕様 装飾窓 寸法特注範囲"
+        },
+        "productId": "CANDIDATE:RPL_ROOM"
+      },
+      {
+        "id": "CANDIDATE:RPL_ROOM:evidence:EV-009",
+        "source_id": "EV-009",
+        "payload": {
+          "evidence_id": "EV-009",
+          "情報源種別": "商品カタログ",
+          "資料名": "LIXIL リプラス 商品カタログ SN1200",
+          "発行年月": "2025-08",
+          "ページ/箇所": "p.111",
+          "URL": "https://drive.google.com/file/d/1wH1nhmsftl6y8Mp7y6twtoXSi6rxqxzT/view",
+          "確認日": "2026-08-30",
+          "確度": "HIGH",
+          "根拠内容": "FIX窓、連窓方立、段窓無目 寸法特注範囲"
+        },
+        "productId": "CANDIDATE:RPL_ROOM"
+      },
+      {
+        "id": "CANDIDATE:RPL_ROOM:evidence:EV-010",
+        "source_id": "EV-010",
+        "payload": {
+          "evidence_id": "EV-010",
+          "情報源種別": "商品カタログ",
+          "資料名": "LIXIL リプラス 商品カタログ SN1200",
+          "発行年月": "2025-08",
+          "ページ/箇所": "p.194-200",
+          "URL": "https://drive.google.com/file/d/1wH1nhmsftl6y8Mp7y6twtoXSi6rxqxzT/view",
+          "確認日": "2026-08-30",
+          "確度": "HIGH",
+          "根拠内容": "現場調査フロー、構造/防火/既設サッシ条件"
+        },
+        "productId": "CANDIDATE:RPL_ROOM"
+      },
+      {
+        "id": "CANDIDATE:RPL_ROOM:evidence:EV-011",
+        "source_id": "EV-011",
+        "payload": {
+          "evidence_id": "EV-011",
+          "情報源種別": "商品カタログ",
+          "資料名": "LIXIL リプラス 商品カタログ SN1200",
+          "発行年月": "2025-08",
+          "ページ/箇所": "p.200",
+          "URL": "https://drive.google.com/file/d/1wH1nhmsftl6y8Mp7y6twtoXSi6rxqxzT/view",
+          "確認日": "2026-08-30",
+          "確度": "HIGH",
+          "根拠内容": "既設窓種対応可否表"
+        },
+        "productId": "CANDIDATE:RPL_ROOM"
+      },
+      {
+        "id": "CANDIDATE:RPL_ROOM:evidence:EV-012",
+        "source_id": "EV-012",
+        "payload": {
+          "evidence_id": "EV-012",
+          "情報源種別": "商品カタログ",
+          "資料名": "LIXIL リプラス 商品カタログ SN1200",
+          "発行年月": "2025-08",
+          "ページ/箇所": "p.204-209付近",
+          "URL": "https://drive.google.com/file/d/1wH1nhmsftl6y8Mp7y6twtoXSi6rxqxzT/view",
+          "確認日": "2026-08-30",
+          "確度": "HIGH",
+          "根拠内容": "採寸・下枠補強金具・枠見付確認"
+        },
+        "productId": "CANDIDATE:RPL_ROOM"
+      },
+      {
+        "id": "CANDIDATE:RPL_ROOM:evidence:EV-013",
+        "source_id": "EV-013",
+        "payload": {
+          "evidence_id": "EV-013",
+          "情報源種別": "商品カタログ",
+          "資料名": "LIXIL リプラス 商品カタログ SN1200",
+          "発行年月": "2025-08",
+          "ページ/箇所": "納まり参考図 p.152以降",
+          "URL": "https://drive.google.com/file/d/1wH1nhmsftl6y8Mp7y6twtoXSi6rxqxzT/view",
+          "確認日": "2026-08-30",
+          "確度": "HIGH",
+          "根拠内容": "出来寸W=WS-10、出来寸H=HS-10の寸法表記"
+        },
+        "productId": "CANDIDATE:RPL_ROOM"
+      },
+      {
+        "id": "CANDIDATE:RPL_ROOM:evidence:EV-014",
+        "source_id": "EV-014",
+        "payload": {
+          "evidence_id": "EV-014",
+          "情報源種別": "公式Web",
+          "資料名": "LIXIL リプラス 居室仕様",
+          "発行年月": "現行",
+          "ページ/箇所": "ブリッジ枠・色・ガラス・網戸",
+          "URL": "https://www.lixil.co.jp/lineup/window/replus/variation/dedicated-frame/",
+          "確認日": "2026-08-30",
+          "確度": "HIGH",
+          "根拠内容": "ブリッジ枠は引違い窓で選択可。色/ガラス/網戸の現行掲載"
+        },
+        "productId": "CANDIDATE:RPL_ROOM"
+      },
+      {
+        "id": "CANDIDATE:RPL_ROOM:evidence:EV-015",
+        "source_id": "EV-015",
+        "payload": {
+          "evidence_id": "EV-015",
+          "情報源種別": "公式Webカタログ",
+          "資料名": "リプラス・リプラスマンション用 業務用資料集 IS8000",
+          "発行年月": "2026-04",
+          "ページ/箇所": "244ページ",
+          "URL": "https://webcatalog.lixil.co.jp/iportal/CatalogDetail.do?catalogID=18008840000&categoryID=1680000&designID=newinter&method=initial_screen&position=25&type=mc&volumeID=LXL13001",
+          "確認日": "2026-08-30",
+          "確度": "HIGH",
+          "根拠内容": "現行業務用資料の発行年月確認"
+        },
+        "productId": "CANDIDATE:RPL_ROOM"
+      },
+      {
+        "id": "CANDIDATE:RPL_ROOM:evidence:EV-016",
+        "source_id": "EV-016",
+        "payload": {
+          "evidence_id": "EV-016",
+          "情報源種別": "LIXIL KIN-KEN",
+          "資料名": "リプラス 商品資料一覧",
+          "発行年月": "現行",
+          "ページ/箇所": "商品資料",
+          "URL": "https://kinken.lixil.co.jp/e/products/csseresdet_2671800/documents/webcatalog",
+          "確認日": "2026-08-30",
+          "確度": "HIGH",
+          "根拠内容": "現行資料コード/発行時期の確認"
+        },
+        "productId": "CANDIDATE:RPL_ROOM"
+      },
+      {
+        "id": "CANDIDATE:RPL_ROOM:evidence:EV-017",
+        "source_id": "EV-017",
+        "payload": {
+          "evidence_id": "EV-017",
+          "情報源種別": "商品カタログ",
+          "資料名": "LIXIL リプラス 商品カタログ SN1200",
+          "発行年月": "2025-08",
+          "ページ/箇所": "p.64-65 / p.69",
+          "URL": "https://drive.google.com/file/d/1wH1nhmsftl6y8Mp7y6twtoXSi6rxqxzT/view",
+          "確認日": "2026-08-30",
+          "確度": "HIGH",
+          "根拠内容": "居室仕様の網戸形式・機能性ネット・新設サッシ別代表網戸"
+        },
+        "productId": "CANDIDATE:RPL_ROOM"
+      },
+      {
+        "id": "CANDIDATE:RPL_ROOM:evidence:EV-018",
+        "source_id": "EV-018",
+        "payload": {
+          "evidence_id": "EV-018",
+          "情報源種別": "商品カタログ",
+          "資料名": "LIXIL リプラス 商品カタログ SN1200",
+          "発行年月": "2025-08",
+          "ページ/箇所": "p.124",
+          "URL": "https://drive.google.com/file/d/1wH1nhmsftl6y8Mp7y6twtoXSi6rxqxzT/view",
+          "確認日": "2026-08-30",
+          "確度": "HIGH",
+          "根拠内容": "有償品取付可否表・注記1～16"
+        },
+        "productId": "CANDIDATE:RPL_ROOM"
+      },
+      {
+        "id": "CANDIDATE:RPL_ROOM:evidence:EV-019",
+        "source_id": "EV-019",
+        "payload": {
+          "evidence_id": "EV-019",
+          "情報源種別": "商品カタログ",
+          "資料名": "LIXIL リプラス 商品カタログ SN1200",
+          "発行年月": "2025-08",
+          "ページ/箇所": "p.208-211",
+          "URL": "https://drive.google.com/file/d/1wH1nhmsftl6y8Mp7y6twtoXSi6rxqxzT/view",
+          "確認日": "2026-08-30",
+          "確度": "HIGH",
+          "根拠内容": "標準施工/内嵌め判定・下枠補強金具・3点採寸・化粧カバー見付範囲"
+        },
+        "productId": "CANDIDATE:RPL_ROOM"
+      },
+      {
+        "id": "CANDIDATE:RPL_ROOM:evidence:EV-020",
+        "source_id": "EV-020",
+        "payload": {
+          "evidence_id": "EV-020",
+          "情報源種別": "商品カタログ",
+          "資料名": "LIXIL リプラス 商品カタログ SN1200",
+          "発行年月": "2025-08",
+          "ページ/箇所": "p.48-49",
+          "URL": "https://drive.google.com/file/d/1wH1nhmsftl6y8Mp7y6twtoXSi6rxqxzT/view",
+          "確認日": "2026-08-30",
+          "確度": "HIGH",
+          "根拠内容": "居室仕様の複層ガラス体系・Low-E・中空層・追加機能"
+        },
+        "productId": "CANDIDATE:RPL_ROOM"
+      },
+      {
+        "id": "CANDIDATE:RPL_ROOM:evidence:EV-021",
+        "source_id": "EV-021",
+        "payload": {
+          "evidence_id": "EV-021",
+          "情報源種別": "商品カタログ",
+          "資料名": "LIXIL リプラス 商品カタログ SN1200",
+          "発行年月": "2025-08",
+          "ページ/箇所": "p.76",
+          "URL": "https://drive.google.com/file/d/1wH1nhmsftl6y8Mp7y6twtoXSi6rxqxzT/view",
+          "確認日": "2026-08-30",
+          "確度": "HIGH",
+          "根拠内容": "見込みふかし部材の適用条件"
+        },
+        "productId": "CANDIDATE:RPL_ROOM"
+      },
+      {
+        "id": "CANDIDATE:RPL_ROOM:evidence:EV-022",
+        "source_id": "EV-022",
+        "payload": {
+          "evidence_id": "EV-022",
+          "情報源種別": "業務用資料集",
+          "資料名": "リプラス・リプラスマンション用 取替窓 業務用資料集",
+          "発行年月": "2026-04",
+          "ページ/箇所": "居室仕様完成品価格表・有償品",
+          "URL": "https://drive.google.com/file/d/1D1HPMXhOMYd_Lu10XNzzJR2TH3aDHVUr/view",
+          "確認日": "2026-08-30",
+          "確度": "HIGH",
+          "根拠内容": "中桟有無・有償品・価格区分の現行確認"
+        },
+        "productId": "CANDIDATE:RPL_ROOM"
+      },
+      {
+        "id": "CANDIDATE:RPL_ROOM:evidence:DELTA-KEY-EV-V4",
+        "source_id": "DELTA-KEY-EV-V4",
+        "payload": {
+          "evidence_id": "DELTA-KEY-EV-V4",
+          "情報源種別": "公式業務用資料集",
+          "資料名": "IS9800",
+          "発行年月": "2026-10",
+          "ページ/箇所": "PDF 3,44,49",
+          "URL": "https://webcatalog.lixil.co.jp/cgi-bin/openCatalog.cgi?c=IS9800&d=newinter",
+          "確認日": "2026-10-14",
+          "確度": "HIGH",
+          "根拠内容": "ADD_OPTION_AND_DENY_COMBINATION / NEW_CANDIDATE、Current未採用"
+        },
+        "productId": "CANDIDATE:RPL_ROOM"
+      },
+      {
+        "id": "CANDIDATE:RPL_ROOM:evidence:DELTA-SPACER-EV-V4",
+        "source_id": "DELTA-SPACER-EV-V4",
+        "payload": {
+          "evidence_id": "DELTA-SPACER-EV-V4",
+          "情報源種別": "公式業務用資料集",
+          "資料名": "IS9800",
+          "発行年月": "2026-10",
+          "ページ/箇所": "PDF 52,104,116,120",
+          "URL": "https://webcatalog.lixil.co.jp/cgi-bin/openCatalog.cgi?c=IS9800&d=newinter",
+          "確認日": "2026-10-14",
+          "確度": "HIGH",
+          "根拠内容": "ADD_15x20_SPACER / NEW_CANDIDATE、Current未採用"
+        },
+        "productId": "CANDIDATE:RPL_ROOM"
+      },
+      {
+        "id": "CANDIDATE:RPL_ROOM:evidence:DELTA-CASING-EV-V4",
+        "source_id": "DELTA-CASING-EV-V4",
+        "payload": {
+          "evidence_id": "DELTA-CASING-EV-V4",
+          "情報源種別": "公式業務用資料集",
+          "資料名": "IS9800",
+          "発行年月": "2026-10",
+          "ページ/箇所": "PDF 51,115,119",
+          "URL": "https://webcatalog.lixil.co.jp/cgi-bin/openCatalog.cgi?c=IS9800&d=newinter",
+          "確認日": "2026-10-14",
+          "確度": "HIGH",
+          "根拠内容": "UPDATE_WOODEN_CASING_COLOR_SCOPE / NEW_CANDIDATE、Current未採用"
+        },
+        "productId": "CANDIDATE:RPL_ROOM"
+      },
+      {
+        "id": "CANDIDATE:RPL_ROOM:evidence:DELTA-FILLER-EV-V4",
+        "source_id": "DELTA-FILLER-EV-V4",
+        "payload": {
+          "evidence_id": "DELTA-FILLER-EV-V4",
+          "情報源種別": "公式業務用資料集",
+          "資料名": "IS9800",
+          "発行年月": "2026-10",
+          "ページ/箇所": "PDF 51,115,119",
+          "URL": "https://webcatalog.lixil.co.jp/cgi-bin/openCatalog.cgi?c=IS9800&d=newinter",
+          "確認日": "2026-10-14",
+          "確度": "HIGH",
+          "根拠内容": "UPDATE_FILLER_NAME_AND_VARIANTS / NEW_CANDIDATE、Current未採用"
+        },
+        "productId": "CANDIDATE:RPL_ROOM"
+      },
+      {
+        "id": "CANDIDATE:RPL_ROOM:evidence:DELTA-LEADTIME-EV-V4",
+        "source_id": "DELTA-LEADTIME-EV-V4",
+        "payload": {
+          "evidence_id": "DELTA-LEADTIME-EV-V4",
+          "情報源種別": "公式業務用資料集",
+          "資料名": "IS9800",
+          "発行年月": "2026-10",
+          "ページ/箇所": "PDF 235",
+          "URL": "https://webcatalog.lixil.co.jp/cgi-bin/openCatalog.cgi?c=IS9800&d=newinter",
+          "確認日": "2026-10-14",
+          "確度": "HIGH",
+          "根拠内容": "SOURCE_NOTE_ONLY / NEW_CANDIDATE、Current未採用"
+        },
+        "productId": "CANDIDATE:RPL_ROOM"
+      },
+      {
+        "id": "CANDIDATE:RPL_ROOM:evidence:EV-V5-CASING",
+        "source_id": "EV-V5-CASING",
+        "payload": {
+          "evidence_id": "EV-V5-CASING",
+          "情報源種別": "業務用資料集",
+          "資料名": "IS8000",
+          "発行年月": "2026-04",
+          "ページ/箇所": "PDF51 印刷49",
+          "URL": "https://drive.google.com/file/d/1D1HPMXhOMYd_Lu10XNzzJR2TH3aDHVUr/view",
+          "確認日": "2026-10-14",
+          "確度": "HIGH",
+          "根拠内容": "既存カバー用ケーシングの選択ID補完。価格/BOM/SetCode未確定"
+        },
+        "productId": "CANDIDATE:RPL_ROOM"
+      }
+    ]
+  },
+  "composition": null,
+  "numeric_constraints": [],
+  "linear_transforms": [],
+  "unsupported_rules": [
+    {
+      "sheet": "05_サイズルール",
+      "reason": "NATIVE_PROSE_OR_COMPOUND_RULE_REQUIRES_MANUAL_REVIEW"
+    },
+    {
+      "sheet": "05A_サイズ区間",
+      "reason": "NATIVE_PROSE_OR_COMPOUND_RULE_REQUIRES_MANUAL_REVIEW"
+    },
+    {
+      "sheet": "05B_境界ルール",
+      "reason": "NATIVE_PROSE_OR_COMPOUND_RULE_REQUIRES_MANUAL_REVIEW"
+    },
+    {
+      "sheet": "07A_網戸適用条件",
+      "reason": "NATIVE_PROSE_OR_COMPOUND_RULE_REQUIRES_MANUAL_REVIEW"
+    },
+    {
+      "sheet": "08A_ガラス適用条件",
+      "reason": "NATIVE_PROSE_OR_COMPOUND_RULE_REQUIRES_MANUAL_REVIEW"
+    },
+    {
+      "sheet": "09A_OP依存関係",
+      "reason": "NATIVE_PROSE_OR_COMPOUND_RULE_REQUIRES_MANUAL_REVIEW"
+    },
+    {
+      "sheet": "10_適用条件",
+      "reason": "NATIVE_PROSE_OR_COMPOUND_RULE_REQUIRES_MANUAL_REVIEW"
+    },
+    {
+      "sheet": "10A_既設窓互換",
+      "reason": "NATIVE_PROSE_OR_COMPOUND_RULE_REQUIRES_MANUAL_REVIEW"
+    },
+    {
+      "sheet": "10B_現調項目",
+      "reason": "NATIVE_PROSE_OR_COMPOUND_RULE_REQUIRES_MANUAL_REVIEW"
+    },
+    {
+      "sheet": "10C_化粧カバー見付",
+      "reason": "NATIVE_PROSE_OR_COMPOUND_RULE_REQUIRES_MANUAL_REVIEW"
+    }
+  ],
+  "formal_adoption": false,
+  "source_adoption": false,
+  "pricing": {
+    "price": null,
+    "bom": null,
+    "set_code": null
+  }
+}

@@ -1,0 +1,2492 @@
+{
+  "schema": "PRODUCT_MODULE_CANDIDATE_V1",
+  "candidate_revision": "REPLUS_RUNTIME_UI_V5_20261014",
+  "baseline": {
+    "path": "candidates/RPL_TW.json",
+    "component_id": "RPL_TW",
+    "sha256": "1dccfc6c4e8713b552dd29b8149fea4a630801bcb2772b5b21b0c00dfd8f358a",
+    "baseline_sha256": "5700bd83280a7d20e233116a22ffc8137a274412529513052bd303b7a0634e74",
+    "baseline_component_version": "v1.0"
+  },
+  "scope": "SELECTION_AND_ESTIMATE_HANDOFF; NO_AUTO_MANUFACTURE_NO_FORMAL_NO_RELEASE",
+  "product_module": {
+    "product": {
+      "id": "CANDIDATE:RPL_TW",
+      "manufacturer": "LIXIL",
+      "displayName": "リプラス 居室仕様 TWタイプ",
+      "source": {
+        "id": "RPL_TW",
+        "version": "REPLUS_RUNTIME_UI_V5_20261014"
+      }
+    },
+    "specificationDefinitions": [
+      {
+        "key": "window_type",
+        "displayLabel": "窓種",
+        "dataType": "ENUM",
+        "displayOrder": 10,
+        "autoSelectSingle": false,
+        "parentFields": [],
+        "selector": {},
+        "id": "CANDIDATE:RPL_TW:field:window_type",
+        "productId": "CANDIDATE:RPL_TW",
+        "status": "ACTIVE"
+      },
+      {
+        "key": "frame_type",
+        "displayLabel": "枠仕様",
+        "dataType": "ENUM",
+        "displayOrder": 20,
+        "autoSelectSingle": false,
+        "parentFields": [
+          "window_type"
+        ],
+        "selector": {
+          "window_type": {
+            "$exists": true
+          }
+        },
+        "id": "CANDIDATE:RPL_TW:field:frame_type",
+        "productId": "CANDIDATE:RPL_TW",
+        "status": "ACTIVE"
+      },
+      {
+        "key": "spec_panel_configuration",
+        "displayLabel": "枚数",
+        "dataType": "ENUM",
+        "displayOrder": 30,
+        "autoSelectSingle": false,
+        "parentFields": [
+          "window_type"
+        ],
+        "selector": {
+          "window_type": {
+            "$in": [
+              "RPL_TW_SLD"
+            ]
+          }
+        },
+        "id": "CANDIDATE:RPL_TW:field:spec_panel_configuration",
+        "productId": "CANDIDATE:RPL_TW",
+        "status": "ACTIVE"
+      },
+      {
+        "key": "spec_height_category",
+        "displayLabel": "マド／テラス",
+        "dataType": "ENUM",
+        "displayOrder": 40,
+        "autoSelectSingle": false,
+        "parentFields": [
+          "window_type"
+        ],
+        "selector": {
+          "window_type": {
+            "$in": [
+              "RPL_TW_SLD"
+            ]
+          }
+        },
+        "id": "CANDIDATE:RPL_TW:field:spec_height_category",
+        "productId": "CANDIDATE:RPL_TW",
+        "status": "ACTIVE"
+      },
+      {
+        "key": "spec_sash_configuration",
+        "displayLabel": "障子仕様",
+        "dataType": "ENUM",
+        "displayOrder": 50,
+        "autoSelectSingle": false,
+        "parentFields": [
+          "window_type"
+        ],
+        "selector": {
+          "window_type": {
+            "$in": [
+              "RPL_TW_SLD"
+            ]
+          }
+        },
+        "id": "CANDIDATE:RPL_TW:field:spec_sash_configuration",
+        "productId": "CANDIDATE:RPL_TW",
+        "status": "ACTIVE"
+      },
+      {
+        "key": "screen",
+        "displayLabel": "網戸",
+        "dataType": "ENUM",
+        "displayOrder": 60,
+        "autoSelectSingle": false,
+        "parentFields": [
+          "window_type",
+          "spec_height_category"
+        ],
+        "selector": {
+          "window_type": {
+            "$in": [
+              "RPL_TW_SLD"
+            ]
+          }
+        },
+        "id": "CANDIDATE:RPL_TW:field:screen",
+        "productId": "CANDIDATE:RPL_TW",
+        "status": "ACTIVE"
+      },
+      {
+        "key": "glass",
+        "displayLabel": "ガラス",
+        "dataType": "ENUM",
+        "displayOrder": 70,
+        "autoSelectSingle": false,
+        "parentFields": [
+          "window_type"
+        ],
+        "selector": {
+          "window_type": {
+            "$exists": true
+          }
+        },
+        "id": "CANDIDATE:RPL_TW:field:glass",
+        "productId": "CANDIDATE:RPL_TW",
+        "status": "ACTIVE"
+      },
+      {
+        "key": "size_mode",
+        "displayLabel": "寸法指定",
+        "dataType": "ENUM",
+        "displayOrder": 80,
+        "autoSelectSingle": false,
+        "parentFields": [],
+        "selector": {},
+        "id": "CANDIDATE:RPL_TW:field:size_mode",
+        "productId": "CANDIDATE:RPL_TW",
+        "status": "ACTIVE"
+      },
+      {
+        "key": "custom_width",
+        "displayLabel": "仕上がり幅 W（mm）",
+        "dataType": "NUMBER",
+        "displayOrder": 90,
+        "autoSelectSingle": false,
+        "parentFields": [],
+        "selector": {
+          "size_mode": "CUSTOM"
+        },
+        "id": "CANDIDATE:RPL_TW:field:custom_width",
+        "productId": "CANDIDATE:RPL_TW",
+        "status": "ACTIVE"
+      },
+      {
+        "key": "custom_height",
+        "displayLabel": "仕上がり高さ H（mm）",
+        "dataType": "NUMBER",
+        "displayOrder": 100,
+        "autoSelectSingle": false,
+        "parentFields": [],
+        "selector": {
+          "size_mode": "CUSTOM"
+        },
+        "id": "CANDIDATE:RPL_TW:field:custom_height",
+        "productId": "CANDIDATE:RPL_TW",
+        "status": "ACTIVE"
+      },
+      {
+        "key": "sash_exterior_color",
+        "displayLabel": "本体外観色",
+        "dataType": "ENUM",
+        "displayOrder": 110,
+        "autoSelectSingle": false,
+        "parentFields": [],
+        "selector": {},
+        "id": "CANDIDATE:RPL_TW:field:sash_exterior_color",
+        "productId": "CANDIDATE:RPL_TW",
+        "status": "ACTIVE"
+      },
+      {
+        "key": "exterior_cover_color",
+        "displayLabel": "化粧カバー外観色",
+        "dataType": "ENUM",
+        "displayOrder": 120,
+        "autoSelectSingle": false,
+        "parentFields": [],
+        "selector": {},
+        "id": "CANDIDATE:RPL_TW:field:exterior_cover_color",
+        "productId": "CANDIDATE:RPL_TW",
+        "status": "ACTIVE"
+      },
+      {
+        "key": "sash_interior_color",
+        "displayLabel": "本体内観色",
+        "dataType": "ENUM",
+        "displayOrder": 130,
+        "autoSelectSingle": false,
+        "parentFields": [],
+        "selector": {},
+        "id": "CANDIDATE:RPL_TW:field:sash_interior_color",
+        "productId": "CANDIDATE:RPL_TW",
+        "status": "ACTIVE"
+      },
+      {
+        "key": "interior_cover_color",
+        "displayLabel": "化粧カバー内観色",
+        "dataType": "ENUM",
+        "displayOrder": 140,
+        "autoSelectSingle": false,
+        "parentFields": [],
+        "selector": {},
+        "id": "CANDIDATE:RPL_TW:field:interior_cover_color",
+        "productId": "CANDIDATE:RPL_TW",
+        "status": "ACTIVE"
+      },
+      {
+        "key": "wooden_casing_color",
+        "displayLabel": "木製ケーシング色",
+        "dataType": "ENUM",
+        "displayOrder": 150,
+        "autoSelectSingle": false,
+        "parentFields": [],
+        "selector": {
+          "options": {
+            "$contains": "TW-OP-CASING"
+          }
+        },
+        "id": "CANDIDATE:RPL_TW:field:wooden_casing_color",
+        "productId": "CANDIDATE:RPL_TW",
+        "status": "ACTIVE"
+      },
+      {
+        "key": "options",
+        "displayLabel": "追加部材・オプション",
+        "dataType": "MULTI_ENUM",
+        "displayOrder": 160,
+        "autoSelectSingle": false,
+        "parentFields": [],
+        "selector": {},
+        "id": "CANDIDATE:RPL_TW:field:options",
+        "productId": "CANDIDATE:RPL_TW",
+        "status": "ACTIVE"
+      },
+      {
+        "key": "usage_humidity",
+        "displayLabel": "使用環境",
+        "dataType": "ENUM",
+        "displayOrder": 170,
+        "autoSelectSingle": false,
+        "parentFields": [],
+        "selector": {},
+        "id": "CANDIDATE:RPL_TW:field:usage_humidity",
+        "productId": "CANDIDATE:RPL_TW",
+        "status": "ACTIVE"
+      },
+      {
+        "key": "installation_method",
+        "displayLabel": "施工条件",
+        "dataType": "ENUM",
+        "displayOrder": 180,
+        "autoSelectSingle": false,
+        "parentFields": [],
+        "selector": {},
+        "id": "CANDIDATE:RPL_TW:field:installation_method",
+        "productId": "CANDIDATE:RPL_TW",
+        "status": "ACTIVE"
+      }
+    ],
+    "allowedValues": [
+      {
+        "value": "RPL_TW_SLD",
+        "displayLabel": "引違い窓",
+        "evidenceIds": [
+          "TW-EV-002,003,004"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": false
+        },
+        "id": "CANDIDATE:RPL_TW:value:window_type:0",
+        "productId": "CANDIDATE:RPL_TW",
+        "specificationKey": "window_type",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "RPL_TW_FRAME",
+        "displayLabel": "枠",
+        "evidenceIds": [
+          "TW-EV-002,005"
+        ],
+        "selector": {
+          "window_type": {
+            "$in": [
+              "RPL_TW_SLD"
+            ]
+          }
+        },
+        "metadata": {
+          "manualCheck": false
+        },
+        "id": "CANDIDATE:RPL_TW:value:frame_type:0",
+        "productId": "CANDIDATE:RPL_TW",
+        "specificationKey": "frame_type",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "TW-SS-PANEL-2",
+        "displayLabel": "2枚建",
+        "evidenceIds": [
+          "TW-EV-005,006"
+        ],
+        "selector": {
+          "window_type": "RPL_TW_SLD"
+        },
+        "metadata": {
+          "manualCheck": false,
+          "panel_configuration": "2枚建"
+        },
+        "id": "CANDIDATE:RPL_TW:value:spec_panel_configuration:0",
+        "productId": "CANDIDATE:RPL_TW",
+        "specificationKey": "spec_panel_configuration",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "TW-SS-PANEL-4",
+        "displayLabel": "4枚建",
+        "evidenceIds": [
+          "TW-EV-005,006"
+        ],
+        "selector": {
+          "window_type": "RPL_TW_SLD"
+        },
+        "metadata": {
+          "manualCheck": false,
+          "panel_configuration": "4枚建"
+        },
+        "id": "CANDIDATE:RPL_TW:value:spec_panel_configuration:1",
+        "productId": "CANDIDATE:RPL_TW",
+        "specificationKey": "spec_panel_configuration",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "TW-SS-MAD",
+        "displayLabel": "マド",
+        "evidenceIds": [
+          "TW-EV-005,006"
+        ],
+        "selector": {
+          "window_type": "RPL_TW_SLD"
+        },
+        "metadata": {
+          "manualCheck": false,
+          "height_category": "マド"
+        },
+        "id": "CANDIDATE:RPL_TW:value:spec_height_category:0",
+        "productId": "CANDIDATE:RPL_TW",
+        "specificationKey": "spec_height_category",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "TW-SS-TER",
+        "displayLabel": "テラス",
+        "evidenceIds": [
+          "TW-EV-005,006"
+        ],
+        "selector": {
+          "window_type": "RPL_TW_SLD"
+        },
+        "metadata": {
+          "manualCheck": false,
+          "height_category": "テラス"
+        },
+        "id": "CANDIDATE:RPL_TW:value:spec_height_category:1",
+        "productId": "CANDIDATE:RPL_TW",
+        "specificationKey": "spec_height_category",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "TW-SS-TG",
+        "displayLabel": "TG障子",
+        "evidenceIds": [
+          "TW-EV-005,006"
+        ],
+        "selector": {
+          "window_type": "RPL_TW_SLD"
+        },
+        "metadata": {
+          "manualCheck": false,
+          "sash_configuration": "TG障子"
+        },
+        "id": "CANDIDATE:RPL_TW:value:spec_sash_configuration:0",
+        "productId": "CANDIDATE:RPL_TW",
+        "specificationKey": "spec_sash_configuration",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "TW-SS-HANDLE",
+        "displayLabel": "把手障子",
+        "evidenceIds": [
+          "TW-EV-005,007"
+        ],
+        "selector": {
+          "window_type": "RPL_TW_SLD"
+        },
+        "metadata": {
+          "manualCheck": false,
+          "sash_configuration": "把手障子"
+        },
+        "id": "CANDIDATE:RPL_TW:value:spec_sash_configuration:1",
+        "productId": "CANDIDATE:RPL_TW",
+        "specificationKey": "spec_sash_configuration",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "TW-SS-WASHI",
+        "displayLabel": "大壁和室用障子",
+        "evidenceIds": [
+          "TW-EV-005,007"
+        ],
+        "selector": {
+          "window_type": "RPL_TW_SLD"
+        },
+        "metadata": {
+          "manualCheck": false,
+          "sash_configuration": "大壁和室用障子"
+        },
+        "id": "CANDIDATE:RPL_TW:value:spec_sash_configuration:2",
+        "productId": "CANDIDATE:RPL_TW",
+        "specificationKey": "spec_sash_configuration",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "TW-SCR-NONE",
+        "displayLabel": "なし",
+        "evidenceIds": [
+          "TW-EV-005,006"
+        ],
+        "selector": {
+          "window_type": "RPL_TW_SLD"
+        },
+        "metadata": {
+          "manualCheck": false
+        },
+        "id": "CANDIDATE:RPL_TW:value:screen:0",
+        "productId": "CANDIDATE:RPL_TW",
+        "specificationKey": "screen",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "TW-SCR-NOBAR",
+        "displayLabel": "引違い網戸（中桟無）",
+        "evidenceIds": [
+          "TW-EV-005,006"
+        ],
+        "selector": {
+          "window_type": "RPL_TW_SLD"
+        },
+        "metadata": {
+          "manualCheck": false
+        },
+        "id": "CANDIDATE:RPL_TW:value:screen:1",
+        "productId": "CANDIDATE:RPL_TW",
+        "specificationKey": "screen",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "TW-SCR-BAR",
+        "displayLabel": "引違い網戸（中桟付）",
+        "evidenceIds": [
+          "TW-EV-005,006"
+        ],
+        "selector": {
+          "window_type": "RPL_TW_SLD"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_TW:value:screen:2",
+        "productId": "CANDIDATE:RPL_TW",
+        "specificationKey": "screen",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "TW-GL-TRIPLE",
+        "displayLabel": "Low-Eトリプルガラス（ダブルLow-E）",
+        "evidenceIds": [
+          "TW-EV-004,008"
+        ],
+        "selector": {
+          "window_type": "RPL_TW_SLD"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_TW:value:glass:0",
+        "productId": "CANDIDATE:RPL_TW",
+        "specificationKey": "glass",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "TW-GL-CC",
+        "displayLabel": "クリア×クリア",
+        "evidenceIds": [
+          "TW-EV-004,008"
+        ],
+        "selector": {
+          "window_type": "RPL_TW_SLD"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_TW:value:glass:1",
+        "productId": "CANDIDATE:RPL_TW",
+        "specificationKey": "glass",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "TW-GL-GG",
+        "displayLabel": "グリーン×グリーン",
+        "evidenceIds": [
+          "TW-EV-004,008"
+        ],
+        "selector": {
+          "window_type": "RPL_TW_SLD"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_TW:value:glass:2",
+        "productId": "CANDIDATE:RPL_TW",
+        "specificationKey": "glass",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "TW-GL-CG",
+        "displayLabel": "クリア×グリーン",
+        "evidenceIds": [
+          "TW-EV-004,008"
+        ],
+        "selector": {
+          "window_type": "RPL_TW_SLD"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_TW:value:glass:3",
+        "productId": "CANDIDATE:RPL_TW",
+        "specificationKey": "glass",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "TW-GL-CB",
+        "displayLabel": "クリア×ブロンズ",
+        "evidenceIds": [
+          "TW-EV-008"
+        ],
+        "selector": {
+          "window_type": "RPL_TW_SLD"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_TW:value:glass:4",
+        "productId": "CANDIDATE:RPL_TW",
+        "specificationKey": "glass",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "TW-GL-GENERAL-CLEAR",
+        "displayLabel": "一般×クリア",
+        "evidenceIds": [
+          "TW-EV-008"
+        ],
+        "selector": {
+          "window_type": "RPL_TW_SLD"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_TW:value:glass:5",
+        "productId": "CANDIDATE:RPL_TW",
+        "specificationKey": "glass",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "TW-GAS-ARGON",
+        "displayLabel": "アルゴンガス",
+        "evidenceIds": [
+          "TW-EV-005,006,008"
+        ],
+        "selector": {
+          "window_type": "RPL_TW_SLD"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_TW:value:glass:6",
+        "productId": "CANDIDATE:RPL_TW",
+        "specificationKey": "glass",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "TW-GAS-KRYPTON",
+        "displayLabel": "クリプトンガス",
+        "evidenceIds": [
+          "TW-EV-005,006,008"
+        ],
+        "selector": {
+          "window_type": "RPL_TW_SLD"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_TW:value:glass:7",
+        "productId": "CANDIDATE:RPL_TW",
+        "specificationKey": "glass",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "TW-SPACER-RESIN",
+        "displayLabel": "樹脂スペーサー",
+        "evidenceIds": [
+          "TW-EV-005,008"
+        ],
+        "selector": {
+          "window_type": "RPL_TW_SLD"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_TW:value:glass:8",
+        "productId": "CANDIDATE:RPL_TW",
+        "specificationKey": "glass",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "CUSTOM",
+        "displayLabel": "仕上がり寸法",
+        "evidenceIds": [
+          "05_サイズルール"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": false
+        },
+        "id": "CANDIDATE:RPL_TW:value:size_mode:0",
+        "productId": "CANDIDATE:RPL_TW",
+        "specificationKey": "size_mode",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "T",
+        "displayLabel": "ブラック",
+        "evidenceIds": [
+          "TW-EV-003,004"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_TW:value:sash_exterior_color:0",
+        "productId": "CANDIDATE:RPL_TW",
+        "specificationKey": "sash_exterior_color",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "G",
+        "displayLabel": "オータムブラウン",
+        "evidenceIds": [
+          "TW-EV-003,004"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_TW:value:sash_exterior_color:1",
+        "productId": "CANDIDATE:RPL_TW",
+        "specificationKey": "sash_exterior_color",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "K",
+        "displayLabel": "シャイングレー",
+        "evidenceIds": [
+          "TW-EV-003,004"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_TW:value:sash_exterior_color:2",
+        "productId": "CANDIDATE:RPL_TW",
+        "specificationKey": "sash_exterior_color",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "D",
+        "displayLabel": "ナチュラルシルバー",
+        "evidenceIds": [
+          "TW-EV-003,004"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_TW:value:sash_exterior_color:3",
+        "productId": "CANDIDATE:RPL_TW",
+        "specificationKey": "sash_exterior_color",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "W",
+        "displayLabel": "ホワイト",
+        "evidenceIds": [
+          "TW-EV-003,004"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_TW:value:sash_exterior_color:4",
+        "productId": "CANDIDATE:RPL_TW",
+        "specificationKey": "sash_exterior_color",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "T",
+        "displayLabel": "ブラック",
+        "evidenceIds": [
+          "TW-EV-003,004"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_TW:value:exterior_cover_color:0",
+        "productId": "CANDIDATE:RPL_TW",
+        "specificationKey": "exterior_cover_color",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "G",
+        "displayLabel": "オータムブラウン",
+        "evidenceIds": [
+          "TW-EV-003,004"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_TW:value:exterior_cover_color:1",
+        "productId": "CANDIDATE:RPL_TW",
+        "specificationKey": "exterior_cover_color",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "K",
+        "displayLabel": "シャイングレー",
+        "evidenceIds": [
+          "TW-EV-003,004"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_TW:value:exterior_cover_color:2",
+        "productId": "CANDIDATE:RPL_TW",
+        "specificationKey": "exterior_cover_color",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "D",
+        "displayLabel": "ナチュラルシルバー",
+        "evidenceIds": [
+          "TW-EV-003,004"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_TW:value:exterior_cover_color:3",
+        "productId": "CANDIDATE:RPL_TW",
+        "specificationKey": "exterior_cover_color",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "W",
+        "displayLabel": "ホワイト",
+        "evidenceIds": [
+          "TW-EV-003,004"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_TW:value:exterior_cover_color:4",
+        "productId": "CANDIDATE:RPL_TW",
+        "specificationKey": "exterior_cover_color",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "M",
+        "displayLabel": "ブラック",
+        "evidenceIds": [
+          "TW-EV-003,004"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_TW:value:sash_interior_color:0",
+        "productId": "CANDIDATE:RPL_TW",
+        "specificationKey": "sash_interior_color",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "C",
+        "displayLabel": "クリエモカP",
+        "evidenceIds": [
+          "TW-EV-003,004"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_TW:value:sash_interior_color:1",
+        "productId": "CANDIDATE:RPL_TW",
+        "specificationKey": "sash_interior_color",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "B",
+        "displayLabel": "クリエラスクP",
+        "evidenceIds": [
+          "TW-EV-003,004"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_TW:value:sash_interior_color:2",
+        "productId": "CANDIDATE:RPL_TW",
+        "specificationKey": "sash_interior_color",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "P",
+        "displayLabel": "クリエペールP",
+        "evidenceIds": [
+          "TW-EV-003,004"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_TW:value:sash_interior_color:3",
+        "productId": "CANDIDATE:RPL_TW",
+        "specificationKey": "sash_interior_color",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "F",
+        "displayLabel": "プレシャスホワイトP",
+        "evidenceIds": [
+          "TW-EV-003,004"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_TW:value:sash_interior_color:4",
+        "productId": "CANDIDATE:RPL_TW",
+        "specificationKey": "sash_interior_color",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "M",
+        "displayLabel": "ブラック",
+        "evidenceIds": [
+          "TW-EV-003,004"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_TW:value:interior_cover_color:0",
+        "productId": "CANDIDATE:RPL_TW",
+        "specificationKey": "interior_cover_color",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "C",
+        "displayLabel": "クリエモカP",
+        "evidenceIds": [
+          "TW-EV-003,004"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_TW:value:interior_cover_color:1",
+        "productId": "CANDIDATE:RPL_TW",
+        "specificationKey": "interior_cover_color",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "B",
+        "displayLabel": "クリエラスクP",
+        "evidenceIds": [
+          "TW-EV-003,004"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_TW:value:interior_cover_color:2",
+        "productId": "CANDIDATE:RPL_TW",
+        "specificationKey": "interior_cover_color",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "P",
+        "displayLabel": "クリエペールP",
+        "evidenceIds": [
+          "TW-EV-003,004"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_TW:value:interior_cover_color:3",
+        "productId": "CANDIDATE:RPL_TW",
+        "specificationKey": "interior_cover_color",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "F",
+        "displayLabel": "プレシャスホワイトP",
+        "evidenceIds": [
+          "TW-EV-003,004"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_TW:value:interior_cover_color:4",
+        "productId": "CANDIDATE:RPL_TW",
+        "specificationKey": "interior_cover_color",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "D",
+        "displayLabel": "クリエダーク",
+        "evidenceIds": [
+          "DELTA-CASING-EV-V4"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_TW:value:wooden_casing_color:0",
+        "productId": "CANDIDATE:RPL_TW",
+        "specificationKey": "wooden_casing_color",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "M",
+        "displayLabel": "クリエモカ",
+        "evidenceIds": [
+          "DELTA-CASING-EV-V4"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_TW:value:wooden_casing_color:1",
+        "productId": "CANDIDATE:RPL_TW",
+        "specificationKey": "wooden_casing_color",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "Y",
+        "displayLabel": "プレシャスホワイト",
+        "evidenceIds": [
+          "DELTA-CASING-EV-V4"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_TW:value:wooden_casing_color:2",
+        "productId": "CANDIDATE:RPL_TW",
+        "specificationKey": "wooden_casing_color",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "AD",
+        "displayLabel": "クリエチェリー",
+        "evidenceIds": [
+          "DELTA-CASING-EV-V4"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_TW:value:wooden_casing_color:3",
+        "productId": "CANDIDATE:RPL_TW",
+        "specificationKey": "wooden_casing_color",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "AC",
+        "displayLabel": "クリエオーク",
+        "evidenceIds": [
+          "DELTA-CASING-EV-V4"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_TW:value:wooden_casing_color:4",
+        "productId": "CANDIDATE:RPL_TW",
+        "specificationKey": "wooden_casing_color",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "WA",
+        "displayLabel": "クリエアイボリー",
+        "evidenceIds": [
+          "DELTA-CASING-EV-V4"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_TW:value:wooden_casing_color:5",
+        "productId": "CANDIDATE:RPL_TW",
+        "specificationKey": "wooden_casing_color",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "TW-OP-UPPER-BASE",
+        "displayLabel": "既設上枠ベース材",
+        "evidenceIds": [
+          "TW-EV-005,006"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_TW:value:options:0",
+        "productId": "CANDIDATE:RPL_TW",
+        "specificationKey": "options",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "TW-OP-ANGLE-MITER",
+        "displayLabel": "樹脂アングルカバー（見切材付）",
+        "evidenceIds": [
+          "TW-EV-009,011"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_TW:value:options:1",
+        "productId": "CANDIDATE:RPL_TW",
+        "specificationKey": "options",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "TW-OP-ANGLE-NOMITER",
+        "displayLabel": "樹脂アングルカバー（見切材無）",
+        "evidenceIds": [
+          "TW-EV-009,011"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_TW:value:options:2",
+        "productId": "CANDIDATE:RPL_TW",
+        "specificationKey": "options",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "TW-OP-ANGLE-TER",
+        "displayLabel": "樹脂アングルカバー テラス用（見切材付）",
+        "evidenceIds": [
+          "TW-EV-009,011"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_TW:value:options:3",
+        "productId": "CANDIDATE:RPL_TW",
+        "specificationKey": "options",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "TW-OP-CASING",
+        "displayLabel": "カバー用ケーシング",
+        "evidenceIds": [
+          "TW-EV-009,011"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_TW:value:options:4",
+        "productId": "CANDIDATE:RPL_TW",
+        "specificationKey": "options",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "TW-OP-SIDE-COVER",
+        "displayLabel": "サイド化粧カバー",
+        "evidenceIds": [
+          "TW-EV-009"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_TW:value:options:5",
+        "productId": "CANDIDATE:RPL_TW",
+        "specificationKey": "options",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "TW-OP-LARGE-HANDLE",
+        "displayLabel": "大型把手",
+        "evidenceIds": [
+          "TW-EV-005,009"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_TW:value:options:6",
+        "productId": "CANDIDATE:RPL_TW",
+        "specificationKey": "options",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "TW-OP-SMALL-STOP-70",
+        "displayLabel": "小開口ストッパー 70mm",
+        "evidenceIds": [
+          "TW-EV-009,010"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_TW:value:options:7",
+        "productId": "CANDIDATE:RPL_TW",
+        "specificationKey": "options",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "TW-OP-SMALL-STOP-110",
+        "displayLabel": "小開口ストッパー 110mm",
+        "evidenceIds": [
+          "TW-EV-009,010"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_TW:value:options:8",
+        "productId": "CANDIDATE:RPL_TW",
+        "specificationKey": "options",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "TW-OP-DEDICATED-CRESCENT",
+        "displayLabel": "小開口ストッパー用専用クレセント",
+        "evidenceIds": [
+          "TW-EV-010"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_TW:value:options:9",
+        "productId": "CANDIDATE:RPL_TW",
+        "specificationKey": "options",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "TW-OP-SMART-CRESCENT",
+        "displayLabel": "スマートクレセント",
+        "evidenceIds": [
+          "TW-EV-009,010"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_TW:value:options:10",
+        "productId": "CANDIDATE:RPL_TW",
+        "specificationKey": "options",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "TW-OP-GRILLE-V",
+        "displayLabel": "縦面格子",
+        "evidenceIds": [
+          "TW-EV-009,011"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_TW:value:options:11",
+        "productId": "CANDIDATE:RPL_TW",
+        "specificationKey": "options",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "TW-OP-GRILLE-H",
+        "displayLabel": "横面格子",
+        "evidenceIds": [
+          "TW-EV-009,011"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_TW:value:options:12",
+        "productId": "CANDIDATE:RPL_TW",
+        "specificationKey": "options",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "TW-OP-GRILLE-DIA",
+        "displayLabel": "ヒシクロス面格子",
+        "evidenceIds": [
+          "TW-EV-009,011"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_TW:value:options:13",
+        "productId": "CANDIDATE:RPL_TW",
+        "specificationKey": "options",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "TW-OP-GRILLE-IGETA",
+        "displayLabel": "井桁面格子",
+        "evidenceIds": [
+          "TW-EV-009,011"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_TW:value:options:14",
+        "productId": "CANDIDATE:RPL_TW",
+        "specificationKey": "options",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "TW-OP-DEPTH",
+        "displayLabel": "見込みふかし部材",
+        "evidenceIds": [
+          "TW-EV-009"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_TW:value:options:15",
+        "productId": "CANDIDATE:RPL_TW",
+        "specificationKey": "options",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "TW-OP-UPPER-VENT",
+        "displayLabel": "上枠一体換気部材",
+        "evidenceIds": [
+          "TW-EV-009"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_TW:value:options:16",
+        "productId": "CANDIDATE:RPL_TW",
+        "specificationKey": "options",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "TW-OP-ASSIST",
+        "displayLabel": "アシスト把手",
+        "evidenceIds": [
+          "TW-EV-009"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_TW:value:options:17",
+        "productId": "CANDIDATE:RPL_TW",
+        "specificationKey": "options",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "TW-OP-INTERIOR-RESIN-COVER",
+        "displayLabel": "室内樹脂カバー",
+        "evidenceIds": [
+          "TW-EV-009"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_TW:value:options:18",
+        "productId": "CANDIDATE:RPL_TW",
+        "specificationKey": "options",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "RPL_TW-OP-V5-KEY-CRESCENT",
+        "displayLabel": "キー付クレセント",
+        "evidenceIds": [
+          "DELTA-KEY-EV-V4"
+        ],
+        "selector": {
+          "window_type": "RPL_TW_SLD"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_TW:value:options:19",
+        "productId": "CANDIDATE:RPL_TW",
+        "specificationKey": "options",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "RPL_TW-OP-V5-SPACER-15-20",
+        "displayLabel": "施工調整スペーサー 15×20",
+        "evidenceIds": [
+          "DELTA-SPACER-EV-V4"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_TW:value:options:20",
+        "productId": "CANDIDATE:RPL_TW",
+        "specificationKey": "options",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "RPL_TW-OP-V5-FILLER",
+        "displayLabel": "充てん剤",
+        "evidenceIds": [
+          "DELTA-FILLER-EV-V4"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_TW:value:options:21",
+        "productId": "CANDIDATE:RPL_TW",
+        "specificationKey": "options",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "GENERAL",
+        "displayLabel": "高温多湿箇所以外",
+        "evidenceIds": [
+          "DELTA-KEY-EV-V4"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": false
+        },
+        "id": "CANDIDATE:RPL_TW:value:usage_humidity:0",
+        "productId": "CANDIDATE:RPL_TW",
+        "specificationKey": "usage_humidity",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "HIGH_HUMIDITY",
+        "displayLabel": "高温多湿箇所",
+        "evidenceIds": [
+          "DELTA-KEY-EV-V4"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": false
+        },
+        "id": "CANDIDATE:RPL_TW:value:usage_humidity:1",
+        "productId": "CANDIDATE:RPL_TW",
+        "specificationKey": "usage_humidity",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "内嵌め用",
+        "displayLabel": "内嵌め用",
+        "evidenceIds": [
+          "TW-EV-005,011"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "CANDIDATE:RPL_TW:value:installation_method:0",
+        "productId": "CANDIDATE:RPL_TW",
+        "specificationKey": "installation_method",
+        "status": "ACTIVE"
+      }
+    ],
+    "requiredFieldRules": [
+      {
+        "id": "CANDIDATE:RPL_TW:required:window_type",
+        "productId": "CANDIDATE:RPL_TW",
+        "specificationKey": "window_type",
+        "required": true,
+        "selector": {}
+      },
+      {
+        "id": "CANDIDATE:RPL_TW:required:frame_type",
+        "productId": "CANDIDATE:RPL_TW",
+        "specificationKey": "frame_type",
+        "required": true,
+        "selector": {
+          "window_type": {
+            "$exists": true
+          }
+        }
+      },
+      {
+        "id": "CANDIDATE:RPL_TW:required:spec_panel_configuration",
+        "productId": "CANDIDATE:RPL_TW",
+        "specificationKey": "spec_panel_configuration",
+        "required": true,
+        "selector": {
+          "window_type": {
+            "$in": [
+              "RPL_TW_SLD"
+            ]
+          }
+        }
+      },
+      {
+        "id": "CANDIDATE:RPL_TW:required:spec_height_category",
+        "productId": "CANDIDATE:RPL_TW",
+        "specificationKey": "spec_height_category",
+        "required": true,
+        "selector": {
+          "window_type": {
+            "$in": [
+              "RPL_TW_SLD"
+            ]
+          }
+        }
+      },
+      {
+        "id": "CANDIDATE:RPL_TW:required:spec_sash_configuration",
+        "productId": "CANDIDATE:RPL_TW",
+        "specificationKey": "spec_sash_configuration",
+        "required": true,
+        "selector": {
+          "window_type": {
+            "$in": [
+              "RPL_TW_SLD"
+            ]
+          }
+        }
+      },
+      {
+        "id": "CANDIDATE:RPL_TW:required:size_mode",
+        "productId": "CANDIDATE:RPL_TW",
+        "specificationKey": "size_mode",
+        "required": true,
+        "selector": {}
+      },
+      {
+        "id": "CANDIDATE:RPL_TW:required:custom_width",
+        "productId": "CANDIDATE:RPL_TW",
+        "specificationKey": "custom_width",
+        "required": true,
+        "selector": {
+          "size_mode": "CUSTOM"
+        }
+      },
+      {
+        "id": "CANDIDATE:RPL_TW:required:custom_height",
+        "productId": "CANDIDATE:RPL_TW",
+        "specificationKey": "custom_height",
+        "required": true,
+        "selector": {
+          "size_mode": "CUSTOM"
+        }
+      }
+    ],
+    "ruleSets": [
+      {
+        "id": "CANDIDATE:RPL_TW:ruleSets:finished-envelope",
+        "type": "DIMENSION_RULES",
+        "status": "ACTIVE",
+        "payload": [
+          {
+            "id": "TW-SZ-MAD2",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 647,
+              "maxW": 3017,
+              "minH": 347,
+              "maxH": 1647
+            },
+            "selector": {
+              "window_type": "RPL_TW_SLD",
+              "frame_type": "RPL_TW_FRAME",
+              "panel_configuration": {
+                "$in": [
+                  "2枚建"
+                ]
+              },
+              "height_category": {
+                "$in": [
+                  "マド"
+                ]
+              },
+              "sash_configuration": {
+                "$in": [
+                  "TG障子"
+                ]
+              }
+            },
+            "source": {
+              "size_rule_id": "TW-SZ-MAD2",
+              "window_type_id": "RPL_TW_SLD",
+              "frame_type_id": "RPL_TW_FRAME",
+              "panel_configuration": "2枚建",
+              "height_category": "マド",
+              "sash_configuration": "TG障子",
+              "finished_w_min": 647,
+              "finished_w_max": 3017,
+              "finished_h_min": 347,
+              "finished_h_max": 1647,
+              "survey_w_min": 657,
+              "survey_w_max": 3027,
+              "survey_h_min": 357,
+              "survey_h_max": 1657,
+              "boundary_rule_id": "TW-BR-MAD2",
+              "auto_mode": "AUTO_WITH_BOUNDARY",
+              "status": "COMPLETE",
+              "evidence": "TW-EV-007"
+            }
+          },
+          {
+            "id": "TW-SZ-MAD4",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 1394,
+              "maxW": 4017,
+              "minH": 1167,
+              "maxH": 1647
+            },
+            "selector": {
+              "window_type": "RPL_TW_SLD",
+              "frame_type": "RPL_TW_FRAME",
+              "panel_configuration": {
+                "$in": [
+                  "4枚建"
+                ]
+              },
+              "height_category": {
+                "$in": [
+                  "マド"
+                ]
+              },
+              "sash_configuration": {
+                "$in": [
+                  "TG障子"
+                ]
+              }
+            },
+            "source": {
+              "size_rule_id": "TW-SZ-MAD4",
+              "window_type_id": "RPL_TW_SLD",
+              "frame_type_id": "RPL_TW_FRAME",
+              "panel_configuration": "4枚建",
+              "height_category": "マド",
+              "sash_configuration": "TG障子",
+              "finished_w_min": 1394,
+              "finished_w_max": 4017,
+              "finished_h_min": 1167,
+              "finished_h_max": 1647,
+              "survey_w_min": 1404,
+              "survey_w_max": 4027,
+              "survey_h_min": 1177,
+              "survey_h_max": 1657,
+              "boundary_rule_id": "TW-BR-MAD4",
+              "auto_mode": "AUTO_WITH_BOUNDARY",
+              "status": "COMPLETE",
+              "evidence": "TW-EV-007"
+            }
+          },
+          {
+            "id": "TW-SZ-TER2-TG",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 977,
+              "maxW": 3017,
+              "minH": 1547,
+              "maxH": 2527
+            },
+            "selector": {
+              "window_type": "RPL_TW_SLD",
+              "frame_type": "RPL_TW_FRAME",
+              "panel_configuration": {
+                "$in": [
+                  "2枚建"
+                ]
+              },
+              "height_category": {
+                "$in": [
+                  "テラス"
+                ]
+              },
+              "sash_configuration": {
+                "$in": [
+                  "TG障子"
+                ]
+              }
+            },
+            "source": {
+              "size_rule_id": "TW-SZ-TER2-TG",
+              "window_type_id": "RPL_TW_SLD",
+              "frame_type_id": "RPL_TW_FRAME",
+              "panel_configuration": "2枚建",
+              "height_category": "テラス",
+              "sash_configuration": "TG障子",
+              "finished_w_min": 977,
+              "finished_w_max": 3017,
+              "finished_h_min": 1547,
+              "finished_h_max": 2527,
+              "survey_w_min": 987,
+              "survey_w_max": 3027,
+              "survey_h_min": 1557,
+              "survey_h_max": 2537,
+              "boundary_rule_id": "TW-BR-TER2",
+              "auto_mode": "AUTO_PLUS_EXTERNAL_ZONE",
+              "status": "COMPLETE_WITH_EXTERNAL_CHECK",
+              "evidence": "TW-EV-007"
+            }
+          },
+          {
+            "id": "TW-SZ-TER4-TG",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 1897,
+              "maxW": 4017,
+              "minH": 1547,
+              "maxH": 2527
+            },
+            "selector": {
+              "window_type": "RPL_TW_SLD",
+              "frame_type": "RPL_TW_FRAME",
+              "panel_configuration": {
+                "$in": [
+                  "4枚建"
+                ]
+              },
+              "height_category": {
+                "$in": [
+                  "テラス"
+                ]
+              },
+              "sash_configuration": {
+                "$in": [
+                  "TG障子"
+                ]
+              }
+            },
+            "source": {
+              "size_rule_id": "TW-SZ-TER4-TG",
+              "window_type_id": "RPL_TW_SLD",
+              "frame_type_id": "RPL_TW_FRAME",
+              "panel_configuration": "4枚建",
+              "height_category": "テラス",
+              "sash_configuration": "TG障子",
+              "finished_w_min": 1897,
+              "finished_w_max": 4017,
+              "finished_h_min": 1547,
+              "finished_h_max": 2527,
+              "survey_w_min": 1907,
+              "survey_w_max": 4027,
+              "survey_h_min": 1557,
+              "survey_h_max": 2537,
+              "boundary_rule_id": "TW-BR-TER4",
+              "auto_mode": "AUTO_WITH_BOUNDARY",
+              "status": "COMPLETE",
+              "evidence": "TW-EV-007"
+            }
+          },
+          {
+            "id": "TW-SZ-TER2-HANDLE",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 977,
+              "maxW": 3017,
+              "minH": 1547,
+              "maxH": 2527
+            },
+            "selector": {
+              "window_type": "RPL_TW_SLD",
+              "frame_type": "RPL_TW_FRAME",
+              "panel_configuration": {
+                "$in": [
+                  "2枚建"
+                ]
+              },
+              "height_category": {
+                "$in": [
+                  "テラス"
+                ]
+              },
+              "sash_configuration": {
+                "$in": [
+                  "把手障子"
+                ]
+              }
+            },
+            "source": {
+              "size_rule_id": "TW-SZ-TER2-HANDLE",
+              "window_type_id": "RPL_TW_SLD",
+              "frame_type_id": "RPL_TW_FRAME",
+              "panel_configuration": "2枚建",
+              "height_category": "テラス",
+              "sash_configuration": "把手障子",
+              "finished_w_min": 977,
+              "finished_w_max": 3017,
+              "finished_h_min": 1547,
+              "finished_h_max": 2527,
+              "survey_w_min": 987,
+              "survey_w_max": 3027,
+              "survey_h_min": 1557,
+              "survey_h_max": 2537,
+              "boundary_rule_id": "TW-BR-TER2",
+              "auto_mode": "AUTO_PLUS_EXTERNAL_ZONE",
+              "status": "COMPLETE_WITH_EXTERNAL_CHECK",
+              "evidence": "TW-EV-007"
+            }
+          },
+          {
+            "id": "TW-SZ-TER4-HANDLE",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 1897,
+              "maxW": 4017,
+              "minH": 1547,
+              "maxH": 2527
+            },
+            "selector": {
+              "window_type": "RPL_TW_SLD",
+              "frame_type": "RPL_TW_FRAME",
+              "panel_configuration": {
+                "$in": [
+                  "4枚建"
+                ]
+              },
+              "height_category": {
+                "$in": [
+                  "テラス"
+                ]
+              },
+              "sash_configuration": {
+                "$in": [
+                  "把手障子"
+                ]
+              }
+            },
+            "source": {
+              "size_rule_id": "TW-SZ-TER4-HANDLE",
+              "window_type_id": "RPL_TW_SLD",
+              "frame_type_id": "RPL_TW_FRAME",
+              "panel_configuration": "4枚建",
+              "height_category": "テラス",
+              "sash_configuration": "把手障子",
+              "finished_w_min": 1897,
+              "finished_w_max": 4017,
+              "finished_h_min": 1547,
+              "finished_h_max": 2527,
+              "survey_w_min": 1907,
+              "survey_w_max": 4027,
+              "survey_h_min": 1557,
+              "survey_h_max": 2537,
+              "boundary_rule_id": "TW-BR-TER4",
+              "auto_mode": "AUTO_WITH_BOUNDARY",
+              "status": "COMPLETE",
+              "evidence": "TW-EV-007"
+            }
+          },
+          {
+            "id": "TW-SZ-TER2-WASHI",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 977,
+              "maxW": 3017,
+              "minH": 1547,
+              "maxH": 2527
+            },
+            "selector": {
+              "window_type": "RPL_TW_SLD",
+              "frame_type": "RPL_TW_FRAME",
+              "panel_configuration": {
+                "$in": [
+                  "2枚建"
+                ]
+              },
+              "height_category": {
+                "$in": [
+                  "テラス"
+                ]
+              },
+              "sash_configuration": {
+                "$in": [
+                  "大壁和室用障子"
+                ]
+              }
+            },
+            "source": {
+              "size_rule_id": "TW-SZ-TER2-WASHI",
+              "window_type_id": "RPL_TW_SLD",
+              "frame_type_id": "RPL_TW_FRAME",
+              "panel_configuration": "2枚建",
+              "height_category": "テラス",
+              "sash_configuration": "大壁和室用障子",
+              "finished_w_min": 977,
+              "finished_w_max": 3017,
+              "finished_h_min": 1547,
+              "finished_h_max": 2527,
+              "survey_w_min": 987,
+              "survey_w_max": 3027,
+              "survey_h_min": 1557,
+              "survey_h_max": 2537,
+              "boundary_rule_id": "TW-BR-TER2",
+              "auto_mode": "AUTO_PLUS_EXTERNAL_ZONE",
+              "status": "COMPLETE_WITH_EXTERNAL_CHECK",
+              "evidence": "TW-EV-007"
+            }
+          }
+        ],
+        "productId": "CANDIDATE:RPL_TW"
+      }
+    ],
+    "dependencies": [
+      {
+        "id": "CANDIDATE:RPL_TW:dependencies:key-humidity",
+        "mode": "AUTO",
+        "when": {
+          "usage_humidity": "HIGH_HUMIDITY"
+        },
+        "targetField": "options",
+        "action": "deny_candidate",
+        "targetValue": "RPL_TW-OP-V5-KEY-CRESCENT",
+        "productId": "CANDIDATE:RPL_TW"
+      },
+      {
+        "id": "CANDIDATE:RPL_TW:dependencies:key-stock",
+        "mode": "MANUAL_CHECK",
+        "when": {
+          "options": {
+            "$contains": "RPL_TW-OP-V5-KEY-CRESCENT"
+          }
+        },
+        "message": "キー付クレセントは要在庫確認。2枚建はL、4枚建はL/Rの条件を確認してください。小開口ストッパー・高温多湿箇所には使用できません。",
+        "productId": "CANDIDATE:RPL_TW"
+      },
+      {
+        "id": "CANDIDATE:RPL_TW:dependencies:scope-TW-OD-001",
+        "mode": "AUTO",
+        "when": {
+          "not": {
+            "window_type": "RPL_TW_SLD"
+          }
+        },
+        "targetField": "options",
+        "action": "deny_candidate",
+        "targetValue": "TW-OP-UPPER-BASE",
+        "productId": "CANDIDATE:RPL_TW"
+      },
+      {
+        "id": "CANDIDATE:RPL_TW:dependencies:scope-TW-OD-002",
+        "mode": "AUTO",
+        "when": {
+          "not": {
+            "window_type": "RPL_TW_SLD"
+          }
+        },
+        "targetField": "options",
+        "action": "deny_candidate",
+        "targetValue": "TW-OP-LARGE-HANDLE",
+        "productId": "CANDIDATE:RPL_TW"
+      },
+      {
+        "id": "CANDIDATE:RPL_TW:dependencies:scope-TW-OD-003",
+        "mode": "AUTO",
+        "when": {
+          "not": {
+            "window_type": "RPL_TW_SLD"
+          }
+        },
+        "targetField": "options",
+        "action": "deny_candidate",
+        "targetValue": "TW-OP-SMALL-STOP-70",
+        "productId": "CANDIDATE:RPL_TW"
+      },
+      {
+        "id": "CANDIDATE:RPL_TW:dependencies:scope-TW-OD-004",
+        "mode": "AUTO",
+        "when": {
+          "not": {
+            "window_type": "RPL_TW_SLD"
+          }
+        },
+        "targetField": "options",
+        "action": "deny_candidate",
+        "targetValue": "TW-OP-SMALL-STOP-110",
+        "productId": "CANDIDATE:RPL_TW"
+      },
+      {
+        "id": "CANDIDATE:RPL_TW:dependencies:scope-TW-OD-005",
+        "mode": "AUTO",
+        "when": {
+          "not": {
+            "window_type": "RPL_TW_SLD"
+          }
+        },
+        "targetField": "options",
+        "action": "deny_candidate",
+        "targetValue": "TW-OP-SMALL-STOP-70",
+        "productId": "CANDIDATE:RPL_TW"
+      },
+      {
+        "id": "CANDIDATE:RPL_TW:dependencies:scope-TW-OD-006",
+        "mode": "AUTO",
+        "when": {
+          "not": {
+            "window_type": "RPL_TW_SLD"
+          }
+        },
+        "targetField": "options",
+        "action": "deny_candidate",
+        "targetValue": "TW-OP-SMALL-STOP-110",
+        "productId": "CANDIDATE:RPL_TW"
+      },
+      {
+        "id": "CANDIDATE:RPL_TW:dependencies:TW-OD-007",
+        "mode": "AUTO",
+        "when": {
+          "options": {
+            "$contains": "TW-OP-SMALL-STOP-70"
+          }
+        },
+        "targetField": "options",
+        "action": "deny_candidate",
+        "targetValue": "TW-OP-SMART-CRESCENT",
+        "productId": "CANDIDATE:RPL_TW"
+      },
+      {
+        "id": "CANDIDATE:RPL_TW:dependencies:TW-OD-008",
+        "mode": "AUTO",
+        "when": {
+          "options": {
+            "$contains": "TW-OP-SMALL-STOP-110"
+          }
+        },
+        "targetField": "options",
+        "action": "deny_candidate",
+        "targetValue": "TW-OP-SMART-CRESCENT",
+        "productId": "CANDIDATE:RPL_TW"
+      },
+      {
+        "id": "CANDIDATE:RPL_TW:dependencies:scope-TW-OD-010",
+        "mode": "AUTO",
+        "when": {
+          "not": {
+            "window_type": "RPL_TW_SLD"
+          }
+        },
+        "targetField": "options",
+        "action": "deny_candidate",
+        "targetValue": "TW-OP-DEPTH",
+        "productId": "CANDIDATE:RPL_TW"
+      },
+      {
+        "id": "CANDIDATE:RPL_TW:dependencies:scope-TW-OD-011",
+        "mode": "AUTO",
+        "when": {
+          "not": {
+            "window_type": "RPL_TW_SLD"
+          }
+        },
+        "targetField": "options",
+        "action": "deny_candidate",
+        "targetValue": "TW-OP-UPPER-VENT",
+        "productId": "CANDIDATE:RPL_TW"
+      },
+      {
+        "id": "CANDIDATE:RPL_TW:dependencies:scope-TW-OD-012",
+        "mode": "AUTO",
+        "when": {
+          "not": {
+            "window_type": "RPL_TW_SLD"
+          }
+        },
+        "targetField": "options",
+        "action": "deny_candidate",
+        "targetValue": "TW-OP-ASSIST",
+        "productId": "CANDIDATE:RPL_TW"
+      },
+      {
+        "id": "CANDIDATE:RPL_TW:dependencies:scope-TW-OD-013",
+        "mode": "AUTO",
+        "when": {
+          "not": {
+            "window_type": "RPL_TW_SLD"
+          }
+        },
+        "targetField": "options",
+        "action": "deny_candidate",
+        "targetValue": "TW-OP-INTERIOR-RESIN-COVER",
+        "productId": "CANDIDATE:RPL_TW"
+      },
+      {
+        "id": "CANDIDATE:RPL_TW:dependencies:V5-KEY-DENY-0-RPL_TW-OP-V5-KEY-CRESCENT",
+        "mode": "AUTO",
+        "when": {
+          "options": {
+            "$contains": "RPL_TW-OP-V5-KEY-CRESCENT"
+          }
+        },
+        "targetField": "options",
+        "action": "deny_candidate",
+        "targetValue": "TW-OP-SMALL-STOP-70",
+        "productId": "CANDIDATE:RPL_TW"
+      },
+      {
+        "id": "CANDIDATE:RPL_TW:dependencies:V5-KEY-DENY-0-TW-OP-SMALL-STOP-70",
+        "mode": "AUTO",
+        "when": {
+          "options": {
+            "$contains": "TW-OP-SMALL-STOP-70"
+          }
+        },
+        "targetField": "options",
+        "action": "deny_candidate",
+        "targetValue": "RPL_TW-OP-V5-KEY-CRESCENT",
+        "productId": "CANDIDATE:RPL_TW"
+      },
+      {
+        "id": "CANDIDATE:RPL_TW:dependencies:V5-KEY-DENY-1-RPL_TW-OP-V5-KEY-CRESCENT",
+        "mode": "AUTO",
+        "when": {
+          "options": {
+            "$contains": "RPL_TW-OP-V5-KEY-CRESCENT"
+          }
+        },
+        "targetField": "options",
+        "action": "deny_candidate",
+        "targetValue": "TW-OP-SMALL-STOP-110",
+        "productId": "CANDIDATE:RPL_TW"
+      },
+      {
+        "id": "CANDIDATE:RPL_TW:dependencies:V5-KEY-DENY-1-TW-OP-SMALL-STOP-110",
+        "mode": "AUTO",
+        "when": {
+          "options": {
+            "$contains": "TW-OP-SMALL-STOP-110"
+          }
+        },
+        "targetField": "options",
+        "action": "deny_candidate",
+        "targetValue": "RPL_TW-OP-V5-KEY-CRESCENT",
+        "productId": "CANDIDATE:RPL_TW"
+      },
+      {
+        "id": "CANDIDATE:RPL_TW:dependencies:V5-KEY-DENY-2-RPL_TW-OP-V5-KEY-CRESCENT",
+        "mode": "AUTO",
+        "when": {
+          "options": {
+            "$contains": "RPL_TW-OP-V5-KEY-CRESCENT"
+          }
+        },
+        "targetField": "options",
+        "action": "deny_candidate",
+        "targetValue": "TW-OP-DEDICATED-CRESCENT",
+        "productId": "CANDIDATE:RPL_TW"
+      },
+      {
+        "id": "CANDIDATE:RPL_TW:dependencies:V5-KEY-DENY-2-TW-OP-DEDICATED-CRESCENT",
+        "mode": "AUTO",
+        "when": {
+          "options": {
+            "$contains": "TW-OP-DEDICATED-CRESCENT"
+          }
+        },
+        "targetField": "options",
+        "action": "deny_candidate",
+        "targetValue": "RPL_TW-OP-V5-KEY-CRESCENT",
+        "productId": "CANDIDATE:RPL_TW"
+      },
+      {
+        "id": "CANDIDATE:RPL_TW:dependencies:estimate-confirm",
+        "mode": "MANUAL_CHECK",
+        "when": {},
+        "message": "施工可否・図形境界・ガラス構成・部材数量・価格・発注コードは積算確認が必要です。候補のため正式採用・自動注文はできません。",
+        "productId": "CANDIDATE:RPL_TW"
+      }
+    ],
+    "evidence": [
+      {
+        "id": "CANDIDATE:RPL_TW:evidence:TW-EV-001",
+        "source_id": "TW-EV-001",
+        "payload": {
+          "evidence_id": "TW-EV-001",
+          "情報源種別": "共通仕様",
+          "資料名": "サッシ商品マスター共通仕様書_v0.1",
+          "発行年月": "2026-08-30更新",
+          "ページ/箇所": "§31-34ほか",
+          "URL": "https://docs.google.com/document/d/1MfixkbV1cZ__DtBknEKsix_nnrXQqjc-LZtXUHwJv_A/edit",
+          "確認日": "2026-08-30",
+          "確度": "HIGH",
+          "根拠内容": "条件判定、耐風圧特殊案件、OP依存、固有仕様の数値条件"
+        },
+        "productId": "CANDIDATE:RPL_TW"
+      },
+      {
+        "id": "CANDIDATE:RPL_TW:evidence:TW-EV-002",
+        "source_id": "TW-EV-002",
+        "payload": {
+          "evidence_id": "TW-EV-002",
+          "情報源種別": "業務用資料集",
+          "資料名": "リプラス・リプラスマンション用 取替窓 業務用資料集",
+          "発行年月": "2026-04",
+          "ページ/箇所": "目次/居室仕様TWタイプ完成品価格表",
+          "URL": "https://drive.google.com/file/d/1D1HPMXhOMYd_Lu10XNzzJR2TH3aDHVUr/view",
+          "確認日": "2026-08-30",
+          "確度": "HIGH",
+          "根拠内容": "TWタイプ=引違い窓、構成、価格表・部材構成"
+        },
+        "productId": "CANDIDATE:RPL_TW"
+      },
+      {
+        "id": "CANDIDATE:RPL_TW:evidence:TW-EV-003",
+        "source_id": "TW-EV-003",
+        "payload": {
+          "evidence_id": "TW-EV-003",
+          "情報源種別": "商品カタログ",
+          "資料名": "LIXIL リプラス 商品カタログ SN1200",
+          "発行年月": "2025-08",
+          "ページ/箇所": "p.27",
+          "URL": "https://drive.google.com/file/d/1wH1nhmsftl6y8Mp7y6twtoXSi6rxqxzT/view",
+          "確認日": "2026-08-30",
+          "確度": "HIGH",
+          "根拠内容": "TWタイプ商品体系・色・引違い窓"
+        },
+        "productId": "CANDIDATE:RPL_TW"
+      },
+      {
+        "id": "CANDIDATE:RPL_TW:evidence:TW-EV-004",
+        "source_id": "TW-EV-004",
+        "payload": {
+          "evidence_id": "TW-EV-004",
+          "情報源種別": "公式Web",
+          "資料名": "LIXIL リプラス 居室仕様 TWタイプ",
+          "発行年月": "現行",
+          "ページ/箇所": "品種/色/ガラス/網戸",
+          "URL": "https://www.lixil.co.jp/lineup/window/replus/variation/tw-type/",
+          "確認日": "2026-08-30",
+          "確度": "HIGH",
+          "根拠内容": "現行Webで引違い窓、色5×5、主要Low-E構成、ネット4種"
+        },
+        "productId": "CANDIDATE:RPL_TW"
+      },
+      {
+        "id": "CANDIDATE:RPL_TW:evidence:TW-EV-005",
+        "source_id": "TW-EV-005",
+        "payload": {
+          "evidence_id": "TW-EV-005",
+          "情報源種別": "業務用資料集",
+          "資料名": "同上",
+          "発行年月": "2026-04",
+          "ページ/箇所": "p.4-7相当",
+          "URL": "https://drive.google.com/file/d/1D1HPMXhOMYd_Lu10XNzzJR2TH3aDHVUr/view",
+          "確認日": "2026-08-30",
+          "確度": "HIGH",
+          "根拠内容": "TG/把手/大壁和室用、2/4枚建、採寸/出来寸、ガス、網戸"
+        },
+        "productId": "CANDIDATE:RPL_TW"
+      },
+      {
+        "id": "CANDIDATE:RPL_TW:evidence:TW-EV-006",
+        "source_id": "TW-EV-006",
+        "payload": {
+          "evidence_id": "TW-EV-006",
+          "情報源種別": "業務用資料集",
+          "資料名": "同上",
+          "発行年月": "2026-04",
+          "ページ/箇所": "TWタイプ部材構成図/網戸注記",
+          "URL": "https://drive.google.com/file/d/1D1HPMXhOMYd_Lu10XNzzJR2TH3aDHVUr/view",
+          "確認日": "2026-08-30",
+          "確度": "HIGH",
+          "根拠内容": "中桟付網戸 1648≤HD≤2405、内嵌め時既設上枠ベース材"
+        },
+        "productId": "CANDIDATE:RPL_TW"
+      },
+      {
+        "id": "CANDIDATE:RPL_TW:evidence:TW-EV-007",
+        "source_id": "TW-EV-007",
+        "payload": {
+          "evidence_id": "TW-EV-007",
+          "情報源種別": "商品カタログ",
+          "資料名": "LIXIL リプラス 商品カタログ SN1200",
+          "発行年月": "2025-08",
+          "ページ/箇所": "p.96",
+          "URL": "https://drive.google.com/file/d/1wH1nhmsftl6y8Mp7y6twtoXSi6rxqxzT/view",
+          "確認日": "2026-08-30",
+          "確度": "HIGH",
+          "根拠内容": "TWタイプ寸法特注範囲・境界式・耐風圧/ガラス制限注記"
+        },
+        "productId": "CANDIDATE:RPL_TW"
+      },
+      {
+        "id": "CANDIDATE:RPL_TW:evidence:TW-EV-008",
+        "source_id": "TW-EV-008",
+        "payload": {
+          "evidence_id": "TW-EV-008",
+          "情報源種別": "商品カタログ",
+          "資料名": "同上",
+          "発行年月": "2025-08",
+          "ページ/箇所": "p.56",
+          "URL": "https://drive.google.com/file/d/1wH1nhmsftl6y8Mp7y6twtoXSi6rxqxzT/view",
+          "確認日": "2026-08-30",
+          "確度": "HIGH",
+          "根拠内容": "専用Low-Eトリプル、Low-E構成、アルゴン/クリプトン、樹脂スペーサー、追加機能"
+        },
+        "productId": "CANDIDATE:RPL_TW"
+      },
+      {
+        "id": "CANDIDATE:RPL_TW:evidence:TW-EV-009",
+        "source_id": "TW-EV-009",
+        "payload": {
+          "evidence_id": "TW-EV-009",
+          "情報源種別": "商品カタログ",
+          "資料名": "同上",
+          "発行年月": "2025-08",
+          "ページ/箇所": "p.124",
+          "URL": "https://drive.google.com/file/d/1wH1nhmsftl6y8Mp7y6twtoXSi6rxqxzT/view",
+          "確認日": "2026-08-30",
+          "確度": "HIGH",
+          "根拠内容": "有償品取付可否、TW非適用OP、共通既設窓可否"
+        },
+        "productId": "CANDIDATE:RPL_TW"
+      },
+      {
+        "id": "CANDIDATE:RPL_TW:evidence:TW-EV-010",
+        "source_id": "TW-EV-010",
+        "payload": {
+          "evidence_id": "TW-EV-010",
+          "情報源種別": "業務用資料集",
+          "資料名": "同上",
+          "発行年月": "2026-04",
+          "ページ/箇所": "TWタイプ有償品",
+          "URL": "https://drive.google.com/file/d/1D1HPMXhOMYd_Lu10XNzzJR2TH3aDHVUr/view",
+          "確認日": "2026-08-30",
+          "確度": "HIGH",
+          "根拠内容": "小開口ストッパー70/110、専用クレセント、4枚建不可、スマートクレセント併用不可"
+        },
+        "productId": "CANDIDATE:RPL_TW"
+      },
+      {
+        "id": "CANDIDATE:RPL_TW:evidence:TW-EV-011",
+        "source_id": "TW-EV-011",
+        "payload": {
+          "evidence_id": "TW-EV-011",
+          "情報源種別": "商品カタログ",
+          "資料名": "LIXIL リプラス 商品カタログ SN1200",
+          "発行年月": "2025-08",
+          "ページ/箇所": "p.227",
+          "URL": "https://drive.google.com/file/d/1wH1nhmsftl6y8Mp7y6twtoXSi6rxqxzT/view",
+          "確認日": "2026-08-30",
+          "確度": "HIGH",
+          "根拠内容": "TW専用現調/発注シート：採寸、見付、枠見込み、施工区分、色、網戸、OP"
+        },
+        "productId": "CANDIDATE:RPL_TW"
+      },
+      {
+        "id": "CANDIDATE:RPL_TW:evidence:TW-EV-012",
+        "source_id": "TW-EV-012",
+        "payload": {
+          "evidence_id": "TW-EV-012",
+          "情報源種別": "商品カタログ",
+          "資料名": "同上",
+          "発行年月": "2025-08",
+          "ページ/箇所": "ガラス面積/戸車耐荷重表",
+          "URL": "https://drive.google.com/file/d/1wH1nhmsftl6y8Mp7y6twtoXSi6rxqxzT/view",
+          "確認日": "2026-08-30",
+          "確度": "HIGH",
+          "根拠内容": "ガラス構成により製作不可となる特殊境界"
+        },
+        "productId": "CANDIDATE:RPL_TW"
+      },
+      {
+        "id": "CANDIDATE:RPL_TW:evidence:TW-EV-013",
+        "source_id": "TW-EV-013",
+        "payload": {
+          "evidence_id": "TW-EV-013",
+          "情報源種別": "Evidence差異",
+          "資料名": "商品体系p.56・現行Web vs 現調/発注p.227",
+          "発行年月": "2025-08/現行",
+          "ページ/箇所": "Low-E構成",
+          "URL": "https://drive.google.com/file/d/1wH1nhmsftl6y8Mp7y6twtoXSi6rxqxzT/view",
+          "確認日": "2026-08-30",
+          "確度": "REVIEW",
+          "根拠内容": "p.227にグリーン×クリア記載、一方p.56/現行WebのTW主要構成に未掲載。通常UIでは非表示とする。"
+        },
+        "productId": "CANDIDATE:RPL_TW"
+      },
+      {
+        "id": "CANDIDATE:RPL_TW:evidence:DELTA-KEY-EV-V4",
+        "source_id": "DELTA-KEY-EV-V4",
+        "payload": {
+          "evidence_id": "DELTA-KEY-EV-V4",
+          "情報源種別": "公式業務用資料集",
+          "資料名": "IS9800",
+          "発行年月": "2026-10",
+          "ページ/箇所": "PDF 3,44,49",
+          "URL": "https://webcatalog.lixil.co.jp/cgi-bin/openCatalog.cgi?c=IS9800&d=newinter",
+          "確認日": "2026-10-14",
+          "確度": "HIGH",
+          "根拠内容": "ADD_OPTION_AND_DENY_COMBINATION / NEW_CANDIDATE、Current未採用"
+        },
+        "productId": "CANDIDATE:RPL_TW"
+      },
+      {
+        "id": "CANDIDATE:RPL_TW:evidence:DELTA-SPACER-EV-V4",
+        "source_id": "DELTA-SPACER-EV-V4",
+        "payload": {
+          "evidence_id": "DELTA-SPACER-EV-V4",
+          "情報源種別": "公式業務用資料集",
+          "資料名": "IS9800",
+          "発行年月": "2026-10",
+          "ページ/箇所": "PDF 52,104,116,120",
+          "URL": "https://webcatalog.lixil.co.jp/cgi-bin/openCatalog.cgi?c=IS9800&d=newinter",
+          "確認日": "2026-10-14",
+          "確度": "HIGH",
+          "根拠内容": "ADD_15x20_SPACER / NEW_CANDIDATE、Current未採用"
+        },
+        "productId": "CANDIDATE:RPL_TW"
+      },
+      {
+        "id": "CANDIDATE:RPL_TW:evidence:DELTA-CASING-EV-V4",
+        "source_id": "DELTA-CASING-EV-V4",
+        "payload": {
+          "evidence_id": "DELTA-CASING-EV-V4",
+          "情報源種別": "公式業務用資料集",
+          "資料名": "IS9800",
+          "発行年月": "2026-10",
+          "ページ/箇所": "PDF 51,115,119",
+          "URL": "https://webcatalog.lixil.co.jp/cgi-bin/openCatalog.cgi?c=IS9800&d=newinter",
+          "確認日": "2026-10-14",
+          "確度": "HIGH",
+          "根拠内容": "UPDATE_WOODEN_CASING_COLOR_SCOPE / NEW_CANDIDATE、Current未採用"
+        },
+        "productId": "CANDIDATE:RPL_TW"
+      },
+      {
+        "id": "CANDIDATE:RPL_TW:evidence:DELTA-FILLER-EV-V4",
+        "source_id": "DELTA-FILLER-EV-V4",
+        "payload": {
+          "evidence_id": "DELTA-FILLER-EV-V4",
+          "情報源種別": "公式業務用資料集",
+          "資料名": "IS9800",
+          "発行年月": "2026-10",
+          "ページ/箇所": "PDF 51,115,119",
+          "URL": "https://webcatalog.lixil.co.jp/cgi-bin/openCatalog.cgi?c=IS9800&d=newinter",
+          "確認日": "2026-10-14",
+          "確度": "HIGH",
+          "根拠内容": "UPDATE_FILLER_NAME_AND_VARIANTS / NEW_CANDIDATE、Current未採用"
+        },
+        "productId": "CANDIDATE:RPL_TW"
+      },
+      {
+        "id": "CANDIDATE:RPL_TW:evidence:DELTA-LEADTIME-EV-V4",
+        "source_id": "DELTA-LEADTIME-EV-V4",
+        "payload": {
+          "evidence_id": "DELTA-LEADTIME-EV-V4",
+          "情報源種別": "公式業務用資料集",
+          "資料名": "IS9800",
+          "発行年月": "2026-10",
+          "ページ/箇所": "PDF 235",
+          "URL": "https://webcatalog.lixil.co.jp/cgi-bin/openCatalog.cgi?c=IS9800&d=newinter",
+          "確認日": "2026-10-14",
+          "確度": "HIGH",
+          "根拠内容": "SOURCE_NOTE_ONLY / NEW_CANDIDATE、Current未採用"
+        },
+        "productId": "CANDIDATE:RPL_TW"
+      }
+    ]
+  },
+  "composition": null,
+  "numeric_constraints": [],
+  "linear_transforms": [],
+  "unsupported_rules": [
+    {
+      "sheet": "05_サイズルール",
+      "reason": "NATIVE_PROSE_OR_COMPOUND_RULE_REQUIRES_MANUAL_REVIEW"
+    },
+    {
+      "sheet": "05A_サイズ区間",
+      "reason": "NATIVE_PROSE_OR_COMPOUND_RULE_REQUIRES_MANUAL_REVIEW"
+    },
+    {
+      "sheet": "05B_境界ルール",
+      "reason": "NATIVE_PROSE_OR_COMPOUND_RULE_REQUIRES_MANUAL_REVIEW"
+    },
+    {
+      "sheet": "07A_網戸適用条件",
+      "reason": "NATIVE_PROSE_OR_COMPOUND_RULE_REQUIRES_MANUAL_REVIEW"
+    },
+    {
+      "sheet": "08A_ガラス適用条件",
+      "reason": "NATIVE_PROSE_OR_COMPOUND_RULE_REQUIRES_MANUAL_REVIEW"
+    },
+    {
+      "sheet": "09A_OP依存関係",
+      "reason": "NATIVE_PROSE_OR_COMPOUND_RULE_REQUIRES_MANUAL_REVIEW"
+    },
+    {
+      "sheet": "10_適用条件",
+      "reason": "NATIVE_PROSE_OR_COMPOUND_RULE_REQUIRES_MANUAL_REVIEW"
+    },
+    {
+      "sheet": "10A_既設窓互換",
+      "reason": "NATIVE_PROSE_OR_COMPOUND_RULE_REQUIRES_MANUAL_REVIEW"
+    },
+    {
+      "sheet": "10B_現調項目",
+      "reason": "NATIVE_PROSE_OR_COMPOUND_RULE_REQUIRES_MANUAL_REVIEW"
+    },
+    {
+      "sheet": "10C_化粧カバー見付",
+      "reason": "NATIVE_PROSE_OR_COMPOUND_RULE_REQUIRES_MANUAL_REVIEW"
+    },
+    {
+      "sheet": "12_共通参照",
+      "reason": "NATIVE_PROSE_OR_COMPOUND_RULE_REQUIRES_MANUAL_REVIEW"
+    }
+  ],
+  "formal_adoption": false,
+  "source_adoption": false,
+  "pricing": {
+    "price": null,
+    "bom": null,
+    "set_code": null
+  }
+}

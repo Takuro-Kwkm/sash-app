@@ -1,0 +1,177 @@
+[
+  {
+    "sheet": "90_Evidence",
+    "row": 17,
+    "column": 1,
+    "before": null,
+    "after": "DELTA-SPACER-EV-V4"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 17,
+    "column": 2,
+    "before": null,
+    "after": "公式業務用資料集"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 17,
+    "column": 3,
+    "before": null,
+    "after": "IS9800"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 17,
+    "column": 4,
+    "before": null,
+    "after": "2026-10"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 17,
+    "column": 5,
+    "before": null,
+    "after": "PDF 52,104,116,120"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 17,
+    "column": 6,
+    "before": null,
+    "after": "https://webcatalog.lixil.co.jp/cgi-bin/openCatalog.cgi?c=IS9800&d=newinter"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 17,
+    "column": 7,
+    "before": null,
+    "after": "2026-10-14"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 17,
+    "column": 8,
+    "before": null,
+    "after": "HIGH"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 17,
+    "column": 9,
+    "before": null,
+    "after": "ADD_15x20_SPACER / NEW_CANDIDATE、Current未採用"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 18,
+    "column": 1,
+    "before": null,
+    "after": "DELTA-BATH-TABLE-EV-V4"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 18,
+    "column": 2,
+    "before": null,
+    "after": "公式業務用資料集"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 18,
+    "column": 3,
+    "before": null,
+    "after": "IS9800"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 18,
+    "column": 4,
+    "before": null,
+    "after": "2026-10"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 18,
+    "column": 5,
+    "before": null,
+    "after": "PDF 95,96"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 18,
+    "column": 6,
+    "before": null,
+    "after": "https://webcatalog.lixil.co.jp/cgi-bin/openCatalog.cgi?c=IS9800&d=newinter"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 18,
+    "column": 7,
+    "before": null,
+    "after": "2026-10-14"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 18,
+    "column": 8,
+    "before": null,
+    "after": "HIGH"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 18,
+    "column": 9,
+    "before": null,
+    "after": "SOURCE_PRICE_BAND_CORRECTION_NO_SIZE_RULE_PATCH / NEW_CANDIDATE、Current未採用"
+  },
+  {
+    "sheet": "09_その他OP",
+    "row": 18,
+    "column": 1,
+    "before": null,
+    "after": "RPL_BATH-OP-V5-SPACER-15-20"
+  },
+  {
+    "sheet": "09_その他OP",
+    "row": 18,
+    "column": 2,
+    "before": null,
+    "after": "施工調整スペーサー 15×20"
+  },
+  {
+    "sheet": "09_その他OP",
+    "row": 18,
+    "column": 3,
+    "before": null,
+    "after": "施工部材"
+  },
+  {
+    "sheet": "09_その他OP",
+    "row": 18,
+    "column": 4,
+    "before": null,
+    "after": "USER_SELECT"
+  },
+  {
+    "sheet": "09_その他OP",
+    "row": 18,
+    "column": 5,
+    "before": null,
+    "after": "Z-04-BWSJ。数量・価格・BOM未確定、自動選択しない"
+  },
+  {
+    "sheet": "09_その他OP",
+    "row": 18,
+    "column": 6,
+    "before": null,
+    "after": "COMPLETE"
+  },
+  {
+    "sheet": "09_その他OP",
+    "row": 18,
+    "column": 7,
+    "before": null,
+    "after": "DELTA-SPACER-EV-V4"
+  }
+]
