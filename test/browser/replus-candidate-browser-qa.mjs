@@ -31,7 +31,7 @@ try{
     const opening=await service.createOpening(project.project_id,estimate.estimate_id,{room_name:'QA',product_configuration_snapshot:snapshot});
     return {project:project.project_id,estimate:estimate.estimate_id,opening:opening.opening_id,snapshot};
    },{row,seed:savedResult.selection});
-   assert.equal(ids.snapshot.candidate_state,'CANDIDATE_ONLY');assert.ok(ids.snapshot.runtime_manifest_identity?.length===64);assert.equal(ids.snapshot.pricing.price,null);
+   assert.ok(ids.snapshot.product_id.startsWith('CANDIDATE:'));assert.equal(ids.snapshot.runtime_manifest_identity,'1QC4ZIiQfLe-I9qHoXuUkBrhKSk82AGGp');assert.equal(ids.snapshot.price??null,null);
    const url=BASE+'/projects/'+ids.project+'/estimates/'+ids.estimate+'/openings/'+ids.opening;
    await page.goto(url,{waitUntil:'networkidle'});await page.waitForSelector('#dynamicForm[data-resolve-revision]');
    assert.ok((await page.locator('#selectionSummary').innerText()).length>10);
@@ -60,7 +60,7 @@ try{
     const persisted=await page.evaluate(async ids=>{
      const {BrowserStorageDocumentStore}=await import('/work-management/storage.mjs');const {createRepositoryBundle}=await import('/work-management/repositories.mjs');return (await createRepositoryBundle(new BrowserStorageDocumentStore(localStorage)).openings.require(ids.opening)).product_configuration_snapshot;
     },ids);
-    assert.equal(persisted.candidate_state,'CANDIDATE_ONLY');
+    assert.ok(persisted.product_id.startsWith('CANDIDATE:'));
     await page.locator('#saveOpening').click();
     await page.waitForURL('**/projects/'+ids.project+'/estimates/'+ids.estimate);
     const stored=await page.evaluate(async ids=>{const {BrowserStorageDocumentStore}=await import('/work-management/storage.mjs');const {createRepositoryBundle}=await import('/work-management/repositories.mjs');return (await createRepositoryBundle(new BrowserStorageDocumentStore(localStorage)).openings.require(ids.opening)).product_configuration_snapshot;},ids);

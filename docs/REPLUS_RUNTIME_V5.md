@@ -18,7 +18,7 @@
 
 汎用compile-table-projection.pyが明示projectionから既存Catalog contractへ変換する。商品差は7 projectionのSelector/Dependency/RuleSet/Evidenceデータ。商品専用Form/Output/AllowedValue Resolverは追加していない。既存ProductModule/Common Rule/Global Window Selection Flow/Output/WorkManagementを使用する。
 
-候補はINSPECT_LOCAL、固定Index SHA、localhostが必要。production/VERCEL、SHA改ざん、critical ref欠落、symlink、未登録Scopeを拒否。default Runtime Registry、runtime-app-bridge、ウチリモSource contractは元bytesを保持。
+候補はINSPECT_LOCAL、固定Index SHA、localhostが必要。production/VERCEL、SHA改ざん、critical ref欠落、symlink、未登録Scopeを拒否。default Runtime Registry、runtime-app-bridge、既存UI/保存処理、ウチリモ/TW Source contractは元bytesを保持。候補Indexの実Drive File IDをSnapshot identityへ渡す。
 
 全構成の自動製作・自動価格・自動注文を無効にする。包絡外はBLOCK、包絡内はSOURCE_GRAPH_GATE/個別確認。未機械化の施工/組合せ、図形、価格/数量は確認事項として保持。PENDING解消やnative全責務自動化を主張しない。
 
@@ -44,6 +44,6 @@ native wrapperと直接SharedはNATIVE_ADAPTER_UNAVAILABLE。fresh Central a3c92
 
 bundled Node24、Python、artifact-tool/Playwrightを使用。validate-runtime-candidate.mjsへchanges/replus-runtime-v5/index.jsonを渡し、node --test test/103-candidate-composition.test.mjsで検査する。
 
-プレビューentryはscripts/start-candidate-runtime.mjs。SASH_CANDIDATE_MODE=INSPECT_LOCAL、SASH_CANDIDATE_RUNTIME_INDEX、実測SASH_CANDIDATE_INDEX_SHA、HOST=127.0.0.1、PORT=4193が必要。production経路へ追加しない。
+プレビューentryはscripts/start-candidate-runtime.mjs。SASH_CANDIDATE_MODE=INSPECT_LOCAL、SASH_CANDIDATE_RUNTIME_INDEX、実測SASH_CANDIDATE_INDEX_SHA、SASH_CANDIDATE_MANIFEST_FILE_ID（保存・読み戻し済みIndex ID）、HOST=127.0.0.1、PORT=4193が必要。production経路へ追加しない。
 
 後続はCurrent互換採用と限定native Profile admission、native DAG/Validator/CI/Resume。その後に固定Human packetで正式採用、Merge、Releaseを別々に判定する。
