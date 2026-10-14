@@ -74,6 +74,7 @@ export function createRecoveryRequestHandler({backend="node:http recovery server
     if(url.pathname==="/app.js") return staticFile(res,"app.js","text/javascript; charset=utf-8");
     if(url.pathname==="/theme.js") return staticFile(res,"theme.js","text/javascript; charset=utf-8");
     if(url.pathname==="/product-configuration-editor.mjs") return staticFile(res,"product-configuration-editor.mjs","text/javascript; charset=utf-8");
+    if(url.pathname==="/product-choice-model.mjs") return staticFile(res,"product-choice-model.mjs","text/javascript; charset=utf-8");
     if(url.pathname==="/estimate-output-integration.mjs") return staticFile(res,"estimate-output-integration.mjs","text/javascript; charset=utf-8");
     if(url.pathname==="/styles.css") return staticFile(res,"styles.css","text/css; charset=utf-8");
     if(url.pathname==="/styles-wave3.css") return staticFile(res,"styles-wave3.css","text/css; charset=utf-8");

@@ -31,9 +31,13 @@ try{
     const opening=await service.createOpening(project.project_id,estimate.estimate_id,{room_name:'QA',product_configuration_snapshot:snapshot});
     return {project:project.project_id,estimate:estimate.estimate_id,opening:opening.opening_id,snapshot};
    },{row,seed:savedResult.selection});
-   assert.ok(ids.snapshot.product_id.startsWith('CANDIDATE:'));assert.equal(ids.snapshot.runtime_manifest_identity,'1QC4ZIiQfLe-I9qHoXuUkBrhKSk82AGGp');assert.equal(ids.snapshot.price??null,null);
+   assert.ok(ids.snapshot.product_id.startsWith('CANDIDATE:'));assert.equal(ids.snapshot.runtime_manifest_identity,process.env.SASH_CANDIDATE_MANIFEST_FILE_ID);assert.equal(ids.snapshot.price??null,null);
    const url=BASE+'/projects/'+ids.project+'/estimates/'+ids.estimate+'/openings/'+ids.opening;
    await page.goto(url,{waitUntil:'networkidle'});await page.waitForSelector('#dynamicForm[data-resolve-revision]');
+   assert.equal(await page.locator('#product').inputValue(),row.productSelectionGroup.id);
+   assert.equal(await page.locator('#productSpecification').inputValue(),row.id);
+   assert.equal(await page.locator('#product option').filter({hasText:'リプラス住宅用'}).count(),1);
+   assert.equal(await page.locator('#product option').filter({hasText:/リプラス (居室|浴室|アタッチ|汎用)/}).count(),0);
    assert.ok((await page.locator('#selectionSummary').innerText()).length>10);
    assert.ok(await page.locator('#warnings').innerText());
    assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+2),false,'horizontal overflow '+row.id+' '+width);
@@ -69,6 +73,8 @@ try{
    }
    await page.screenshot({path:OUT+'/'+row.id.replace(':','-')+'-'+width+'.png',fullPage:true});
    await page.reload({waitUntil:'networkidle'});await page.waitForSelector('#dynamicForm[data-resolve-revision]');
+   assert.equal(await page.locator('#product').inputValue(),row.productSelectionGroup.id);
+   assert.equal(await page.locator('#productSpecification').inputValue(),row.id);
    const actual=await page.evaluate(async ids=>{
     const {BrowserStorageDocumentStore}=await import('/work-management/storage.mjs');const {createRepositoryBundle}=await import('/work-management/repositories.mjs');return (await createRepositoryBundle(new BrowserStorageDocumentStore(localStorage)).openings.require(ids.opening)).product_configuration_snapshot;
    },ids);

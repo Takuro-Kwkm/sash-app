@@ -1,6 +1,6 @@
 {
   "schema": "CANDIDATE_RUNTIME_INDEX_V1",
-  "revision": "REPLUS_RUNTIME_UI_V5_20261014",
+  "revision": "REPLUS_RUNTIME_UI_V6_PRODUCT_SPEC_20261014",
   "adoption": "CANDIDATE_ONLY",
   "products": [
     {
@@ -129,6 +129,12 @@
           "installation_room",
           "work_space"
         ]
+      },
+      "productSelectionGroup": {
+        "id": "CANDIDATE:RPL_RESIDENTIAL",
+        "displayName": "リプラス住宅用",
+        "specificationLabel": "リプラスの仕様",
+        "specificationName": "居室仕様"
       }
     },
     {
@@ -242,6 +248,12 @@
           "usage_humidity",
           "installation_method"
         ]
+      },
+      "productSelectionGroup": {
+        "id": "CANDIDATE:RPL_RESIDENTIAL",
+        "displayName": "リプラス住宅用",
+        "specificationLabel": "リプラスの仕様",
+        "specificationName": "居室仕様 TWタイプ"
       }
     },
     {
@@ -355,6 +367,12 @@
           "options",
           "installation_method"
         ]
+      },
+      "productSelectionGroup": {
+        "id": "CANDIDATE:RPL_RESIDENTIAL",
+        "displayName": "リプラス住宅用",
+        "specificationLabel": "リプラスの仕様",
+        "specificationName": "居室仕様 EWタイプ"
       }
     },
     {
@@ -453,6 +471,12 @@
           "options",
           "bathroom_remodel_mode"
         ]
+      },
+      "productSelectionGroup": {
+        "id": "CANDIDATE:RPL_RESIDENTIAL",
+        "displayName": "リプラス住宅用",
+        "specificationLabel": "リプラスの仕様",
+        "specificationName": "浴室仕様"
       }
     },
     {
@@ -609,6 +633,12 @@
           "new_sash_glass_air_layer",
           "new_sash_window_spec"
         ]
+      },
+      "productSelectionGroup": {
+        "id": "CANDIDATE:RPL_RESIDENTIAL",
+        "displayName": "リプラス住宅用",
+        "specificationLabel": "リプラスの仕様",
+        "specificationName": "アタッチ枠（TW用）"
       }
     },
     {
@@ -776,6 +806,12 @@
           "new_sash_screen_presence",
           "new_sash_size"
         ]
+      },
+      "productSelectionGroup": {
+        "id": "CANDIDATE:RPL_RESIDENTIAL",
+        "displayName": "リプラス住宅用",
+        "specificationLabel": "リプラスの仕様",
+        "specificationName": "アタッチ枠（サーモス用）"
       }
     },
     {
@@ -968,6 +1004,12 @@
           "new_sash_window_spec",
           "new_sash_handing"
         ]
+      },
+      "productSelectionGroup": {
+        "id": "CANDIDATE:RPL_RESIDENTIAL",
+        "displayName": "リプラス住宅用",
+        "specificationLabel": "リプラスの仕様",
+        "specificationName": "汎用カットモール"
       }
     }
   ]

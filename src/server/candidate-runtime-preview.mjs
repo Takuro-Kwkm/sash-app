@@ -8,7 +8,7 @@ import {applyDeclaredWindowFlow} from '../catalog/runtime-master/declared-window
 
 export function createCandidateRuntimePreview(){
   if(!candidateRuntimeEntries.length)throw new Error('CANDIDATE_INDEX_REQUIRED');
-  const identity=createHash('sha256').update(JSON.stringify(candidateRuntimeEntries.map(r=>[r.id,r.sha256,r.uiFlowContract]))).digest('hex');
+  const identity=createHash('sha256').update(JSON.stringify(candidateRuntimeEntries.map(r=>[r.id,r.sha256,r.uiFlowContract,r.productSelectionGroup??null,r.candidateRuntimeReference.indexSha256]))).digest('hex');
   const integrations=candidateRuntimeEntries.map(row=>({...row,status:'CANDIDATE_LOCAL_READY',selectable:true,source:'RUNTIME_MASTER',candidateOnly:true}));
   const base=createRecoveryRequestHandler({backend:'node:http isolated candidate preview',entrypoint:'scripts/start-candidate-runtime.mjs'});
   const adapters=new Map();

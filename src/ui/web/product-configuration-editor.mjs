@@ -1,4 +1,5 @@
 import { createProductConfigurationSnapshot } from '/work-management/domain.mjs';
+import { productChoices, choiceForMember, memberForChoice } from '/product-choice-model.mjs';
 
 const esc=(value)=>String(value??'').replace(/[&<>'\"]/g,(character)=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'\"':"&quot;"})[character]);
 const reviewChoiceLabel=(value)=>`${esc(value.displayLabel)}${value.manualCheck&&!String(value.displayLabel).includes('要確認')?'（要確認）':''}`;
@@ -76,7 +77,7 @@ function packageVersionFor(product,configuration={}){
 export class ProductConfigurationEditor {
   constructor(root,{initialSnapshot=null,initialProductId=null,onSnapshot=()=>{},showInventory=false}={}){
     this.root=root;this.initialSnapshot=initialSnapshot;this.initialProductId=initialProductId;this.onSnapshot=onSnapshot;this.showInventory=showInventory;
-    this.state={products:[],productId:null,productSource:'CATALOG',selection:{},resolved:null,resolveRevision:0,snapshot:initialSnapshot,stale:false};
+    this.state={products:[],productChoiceId:null,productId:null,productSource:'CATALOG',selection:{},resolved:null,resolveRevision:0,snapshot:initialSnapshot,stale:false};
     this.boundChange=(event)=>this.handleChange(event);
     this.boundClick=(event)=>this.handleClick(event);
   }
@@ -88,6 +89,7 @@ export class ProductConfigurationEditor {
         <div id="runtimeStaleNotice"></div>
         <div class="field"><label for="manufacturer">メーカー</label><select id="manufacturer"><option value="">選択してください</option></select></div>
         <div class="field"><label for="product">商品</label><select id="product" disabled><option value="">選択してください</option></select></div>
+        <div id="productSpecificationField" class="field" hidden><label for="productSpecification">仕様<span class="required">必須</span></label><select id="productSpecification" required disabled><option value="">選択してください</option></select></div>
         <div id="dynamicForm"></div><div id="warnings"></div>
       </section>
       <section class="card compact"><h2>選択内容</h2><div id="selectionSummary" class="summary muted">商品を選択してください。</div></section>
@@ -105,6 +107,7 @@ export class ProductConfigurationEditor {
       ...catalogProducts.filter((row)=>!runtimeIds.has(row.id)).map((row)=>({...row,sourceType:'CATALOG'})),
       ...runtimeProducts.map((row)=>({...row,sourceType:'RUNTIME_MASTER'})),
     ];
+    this.productChoices=productChoices(this.state.products);
     const manufacturers=[...new Set(this.state.products.map((row)=>row.manufacturer))].sort((a,b)=>a.localeCompare(b,'ja'));
     fill(this.root.querySelector('#manufacturer'),manufacturers.map((value)=>({value,label:value})));
     if(this.showInventory)this.renderInventory(health);
@@ -115,9 +118,16 @@ export class ProductConfigurationEditor {
     await this.restoreSnapshot();
     if(!this.initialSnapshot&&this.initialProductId){
       const product=this.state.products.find(row=>row.id===this.initialProductId);
+      const choice=choiceForMember(this.productChoices,this.initialProductId);
+      if(!product&&choice?.grouped&&choice.selectable!==false){
+        this.selectManufacturer(choice.manufacturer);
+        this.root.querySelector('#product').value=choice.id;
+        this.state.productChoiceId=choice.id;this.renderSpecificationChoice(choice);
+        this.root.querySelector('#selectionSummary').textContent=`${choice.specificationLabel}を選択してください。`;
+        return;
+      }
       if(!product||product.selectable===false)throw Error('指定した商品Runtimeを利用できません。');
-      this.selectManufacturer(product.manufacturer);
-      this.root.querySelector('#product').value=product.id;
+      this.restoreProductControls(product);
       this.state.productId=product.id;this.state.productSource=product.sourceType;
       await this.resolve({notify:false});
     }
@@ -129,13 +139,37 @@ export class ProductConfigurationEditor {
   productsForManufacturer(manufacturer){return this.state.products.filter((row)=>row.manufacturer===manufacturer);}
   selectManufacturer(manufacturer){
     this.root.querySelector('#manufacturer').value=manufacturer??'';
-    fill(this.root.querySelector('#product'),this.productsForManufacturer(manufacturer).map((row)=>({
+    fill(this.root.querySelector('#product'),this.productChoices.filter(row=>row.manufacturer===manufacturer).map((row)=>({
       value:row.id,
-      label:row.sourceType==='RUNTIME_MASTER'
+      label:row.grouped?row.displayName:row.sourceType==='RUNTIME_MASTER'
         ?(row.selectable===false?`${row.displayName??row.series}（利用不可）`:`${row.displayName??row.series} [Runtime]`)
         :(row.displayName??row.series),
       disabled:row.selectable===false,
     })));
+    this.root.querySelector('#product').value='';this.renderSpecificationChoice(null);
+  }
+
+  renderSpecificationChoice(choice){
+    const field=this.root.querySelector('#productSpecificationField'),select=this.root.querySelector('#productSpecification');
+    field.hidden=!choice?.grouped;
+    fill(select,(choice?.members??[]).map(member=>({value:member.id,label:member.productSelectionGroup.specificationName,disabled:member.selectable===false})));
+    select.value='';select.required=Boolean(choice?.grouped);
+    if(choice?.grouped)field.querySelector('label').innerHTML=`${esc(choice.specificationLabel)}<span class="required">必須</span>`;
+  }
+
+  restoreProductControls(product){
+    this.selectManufacturer(product.manufacturer);
+    const choice=choiceForMember(this.productChoices,product.id);
+    this.state.productChoiceId=choice.id;this.root.querySelector('#product').value=choice.id;
+    this.renderSpecificationChoice(choice);
+    if(choice.grouped)this.root.querySelector('#productSpecification').value=product.id;
+  }
+
+  resetProductConfiguration(){
+    this.state.resolveRevision+=1;this.state.productId=null;this.state.selection={};this.state.resolved=null;this.state.snapshot=null;this.state.stale=false;
+    for(const id of ['dynamicForm','warnings','runtimeStaleNotice'])this.root.querySelector('#'+id).innerHTML='';
+    this.root.querySelector('#runtimeVersionBadge').hidden=true;this.root.querySelector('#productCodeCard').hidden=true;
+    this.root.querySelector('#selectionSummary').textContent='商品を選択してください。';
   }
 
   async restoreSnapshot(){
@@ -143,8 +177,7 @@ export class ProductConfigurationEditor {
     if(!snapshot)return;
     const product=this.state.products.find((row)=>row.id===snapshot.product_id);
     if(!product){this.renderFrozenSnapshot('保存時の商品経路を現在のアプリで読み込めません。');return;}
-    this.selectManufacturer(product.manufacturer);
-    this.root.querySelector('#product').value=product.id;
+    this.restoreProductControls(product);
     this.state.productId=product.id;this.state.productSource=product.sourceType;this.state.selection={...snapshot.configuration};
     for(const field of product.salesRequestExtension?.fields??[]){
       const value=snapshot.sales_request_handoff?.[field.handoffKey];
@@ -175,15 +208,34 @@ export class ProductConfigurationEditor {
   async handleChange(event){
     const target=event.target;
     if(target.id==='manufacturer'){
-      this.state.resolveRevision+=1;this.state.productId=null;this.state.selection={};this.state.resolved=null;this.state.snapshot=null;this.state.stale=false;
+      this.resetProductConfiguration();this.state.productChoiceId=null;
       this.selectManufacturer(target.value);
       this.root.querySelector('#dynamicForm').innerHTML='';this.root.querySelector('#warnings').innerHTML='';
       this.root.querySelector('#selectionSummary').textContent='商品を選択してください。';this.root.querySelector('#productCodeCard').hidden=true;
       this.onSnapshot(null);return;
     }
     if(target.id==='product'){
-      this.state.productId=target.value||null;this.state.selection={};this.state.resolved=null;this.state.snapshot=null;this.state.stale=false;
+      this.resetProductConfiguration();this.state.productChoiceId=target.value||null;
+      const choice=this.productChoices.find(row=>row.id===this.state.productChoiceId);
+      this.renderSpecificationChoice(choice);
+      if(choice?.grouped){
+        this.root.querySelector('#selectionSummary').textContent=`${choice.specificationLabel}を選択してください。`;
+        this.onSnapshot(null);return;
+      }
+      this.state.productId=choice?.id??null;
       const product=this.state.products.find((row)=>row.id===this.state.productId);this.state.productSource=product?.sourceType??'CATALOG';
+      if(!product){this.onSnapshot(null);return;}
+      await this.resolve({notify:true});return;
+    }
+    if(target.id==='productSpecification'){
+      this.resetProductConfiguration();
+      const choice=this.productChoices.find(row=>row.id===this.state.productChoiceId);
+      const product=memberForChoice(choice,target.value);
+      if(!product){
+        target.value='';this.root.querySelector('#selectionSummary').textContent=`${choice?.specificationLabel??'仕様'}を選択してください。`;
+        this.onSnapshot(null);return;
+      }
+      this.state.productId=product.id;this.state.productSource=product.sourceType;
       await this.resolve({notify:true});return;
     }
     const multiGroup=target.closest?.('[data-multi-enum="true"][data-multi-key]')??null;
