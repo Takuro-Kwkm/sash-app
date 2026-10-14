@@ -8,7 +8,7 @@ import {tmpdir} from 'node:os';
 const root=resolve('changes/replus-runtime-v5'),indexPath=resolve(root,'index.json');
 const index=JSON.parse(readFileSync(indexPath));
 const digest=b=>createHash('sha256').update(b).digest('hex');
-process.env.SASH_CANDIDATE_MANIFEST_FILE_ID='1bHTZZhbSOc-KdtVsiLXTefXX-ccvxNWe';process.env.SASH_CANDIDATE_RUNTIME_INDEX=indexPath;process.env.SASH_CANDIDATE_MODE='INSPECT_LOCAL';process.env.SASH_CANDIDATE_INDEX_SHA=digest(readFileSync(indexPath));
+process.env.SASH_CANDIDATE_MANIFEST_FILE_ID='1YYSdnp75fqgVGoDB_-x2_mvPfgdbFB2V';process.env.SASH_CANDIDATE_RUNTIME_INDEX=indexPath;process.env.SASH_CANDIDATE_MODE='INSPECT_LOCAL';process.env.SASH_CANDIDATE_INDEX_SHA=digest(readFileSync(indexPath));
 const {resolveRuntimeAppProduct,runtimeAppIntegrationInventory,getRuntimeAppIntegration}=await import('../src/catalog/runtime-master/runtime-app-bridge.mjs');
 const rows=index.products;
 const {candidateRuntimeEntries,readCandidateModule}=await import('../src/catalog/runtime-master/candidate-runtime-registry.mjs');
@@ -112,6 +112,9 @@ test('default process excludes all candidates, production and corruption refuse'
   cpSync(resolve(root,d.products[0].path),resolve(folder,d.products[0].path));
   writeFileSync(resolve(folder,d.products[0].uiFlowContract.sourceFlow.path),'{}');
   const source=exec({...process.env,SASH_CANDIDATE_RUNTIME_INDEX:ix});assert.notEqual(source.status,0);assert.match(source.stderr,/WINDOW_FLOW_SOURCE_BYTES_CHANGED/);
+  cpSync(resolve(root,d.products[0].uiFlowContract.sourceFlow.path),resolve(folder,d.products[0].uiFlowContract.sourceFlow.path));
+  writeFileSync(resolve(folder,d.products[0].uiFlowContract.reviewSources[0].path),'{}');
+  const reviewed=exec({...process.env,SASH_CANDIDATE_RUNTIME_INDEX:ix});assert.notEqual(reviewed.status,0);assert.match(reviewed.stderr,/WINDOW_FLOW_SOURCE_BYTES_CHANGED/);
  }finally{rmSync(folder,{recursive:true});}
 });
 test('reference runtime hash and critical schema are immutable admission inputs',async()=>{

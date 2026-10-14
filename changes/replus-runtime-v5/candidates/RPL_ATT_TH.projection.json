@@ -1,13 +1,13 @@
 {
   "schema": "NATIVE_TABLE_PROJECTION_V1",
-  "candidate_revision": "REPLUS_SEMANTIC_FLOW_V7_R2_20261014",
+  "candidate_revision": "REPLUS_GLASS_FLOW_V8_20261014",
   "product": {
     "id": "CANDIDATE:RPL_ATT_TH",
     "manufacturer": "LIXIL",
     "displayName": "リプラス アタッチ枠（サーモス用）",
     "source": {
       "id": "RPL_ATT_TH",
-      "version": "REPLUS_SEMANTIC_FLOW_V7_R2_20261014"
+      "version": "REPLUS_GLASS_FLOW_V8_20261014"
     }
   },
   "source": {

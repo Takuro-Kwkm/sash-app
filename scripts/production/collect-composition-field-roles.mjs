@@ -3,7 +3,7 @@ import {resolve,dirname} from 'node:path';
 import {createHash} from 'node:crypto';
 import {validateReviewedWindowFlow} from '../../src/catalog/runtime-master/declared-window-flow.mjs';
 const path=resolve(process.argv[2]),root=dirname(path),index=JSON.parse(readFileSync(path));
-const reviewed=JSON.parse(readFileSync(resolve(root,'flow/reviewed-global-selection-flow.v7.json')));
+const reviewed=JSON.parse(readFileSync(resolve(root,process.argv[3]??'flow/reviewed-global-selection-flow.v7.json')));
 const digest=bytes=>createHash('sha256').update(bytes).digest('hex');
 for(const row of index.products){
   const document=JSON.parse(readFileSync(resolve(root,row.path)));

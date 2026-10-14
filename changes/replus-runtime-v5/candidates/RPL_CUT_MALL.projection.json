@@ -1,13 +1,13 @@
 {
   "schema": "NATIVE_TABLE_PROJECTION_V1",
-  "candidate_revision": "REPLUS_SEMANTIC_FLOW_V7_R2_20261014",
+  "candidate_revision": "REPLUS_GLASS_FLOW_V8_20261014",
   "product": {
     "id": "CANDIDATE:RPL_CUT_MALL",
     "manufacturer": "LIXIL",
     "displayName": "リプラス 汎用カットモール",
     "source": {
       "id": "RPL_CUT_MALL",
-      "version": "REPLUS_SEMANTIC_FLOW_V7_R2_20261014"
+      "version": "REPLUS_GLASS_FLOW_V8_20261014"
     }
   },
   "source": {

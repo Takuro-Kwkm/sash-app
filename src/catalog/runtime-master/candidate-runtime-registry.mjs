@@ -5,9 +5,11 @@ import {resolve,dirname,relative,isAbsolute} from 'node:path';
 const digest=bytes=>createHash('sha256').update(bytes).digest('hex');
 function fail(code){throw Object.assign(new Error(code),{code});}
 function verifyFlowSource(entry,root){
-  if(entry.uiFlowContract?.schema!=='REVIEWED_WINDOW_FLOW_V2')return;
-  const source=entry.uiFlowContract.sourceFlow,path=resolve(root,source.path),rel=relative(root,path);
-  if(rel.startsWith('..')||isAbsolute(rel)||lstatSync(path).isSymbolicLink()||digest(readFileSync(path))!==source.sha256)fail('WINDOW_FLOW_SOURCE_BYTES_CHANGED');
+  if(!['REVIEWED_WINDOW_FLOW_V2','REVIEWED_WINDOW_FLOW_V3'].includes(entry.uiFlowContract?.schema))return;
+  for(const source of [entry.uiFlowContract.sourceFlow,...(entry.uiFlowContract.reviewSources??[])]){
+    const path=resolve(root,source.path),rel=relative(root,path);
+    if(rel.startsWith('..')||isAbsolute(rel)||lstatSync(path).isSymbolicLink()||digest(readFileSync(path))!==source.sha256)fail('WINDOW_FLOW_SOURCE_BYTES_CHANGED');
+  }
 }
 function readIndex(){
   const path=process.env.SASH_CANDIDATE_RUNTIME_INDEX;

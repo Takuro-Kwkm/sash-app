@@ -1,6 +1,6 @@
 {
   "schema": "CANDIDATE_RUNTIME_INDEX_V1",
-  "revision": "REPLUS_SEMANTIC_FLOW_V7_R2_20261014",
+  "revision": "REPLUS_GLASS_FLOW_V8_20261014",
   "adoption": "CANDIDATE_ONLY",
   "products": [
     {
@@ -10,17 +10,17 @@
       "displayName": "リプラス 居室仕様",
       "productCategory": "sash",
       "uiCategory": "REFORM_WINDOW_ESTIMATE",
-      "packageVersion": "REPLUS_SEMANTIC_FLOW_V7_R2_20261014",
+      "packageVersion": "REPLUS_GLASS_FLOW_V8_20261014",
       "masterVersion": "v1.0",
       "schemaVersion": "2.0",
       "path": "candidates/RPL_ROOM.module.json",
-      "sha256": "93e45e01dfb8b19d143f20617dd6fd55cfe914ca5ac9841ba4349ddd3957eb96",
+      "sha256": "cef749bd733d7e20ed2f5a782245fcf06bdcb06f46d4471a7136e052b585964c",
       "candidate": true,
       "sourceHash": "ed89d4170ab101e87b5c8206c2e352c9429f7eaa3026f17b694ebf2ea29d77a5",
       "adapterType": "COMPOSED_PRODUCT_MODULE_V1",
       "uiFlowContract": {
-        "schema": "REVIEWED_WINDOW_FLOW_V2",
-        "revision": "REPLUS_GLOBAL_SELECTION_FLOW_V7_R2_20261014",
+        "schema": "REVIEWED_WINDOW_FLOW_V3",
+        "revision": "REPLUS_GLASS_FLOW_V8_20261014",
         "status": "REVIEWED_DESIGN_CANDIDATE",
         "formalAdoption": false,
         "sourceFlow": {
@@ -42,12 +42,12 @@
           {
             "id": "survey",
             "label": "現場採寸・取付条件",
-            "order": 2
+            "order": 11
           },
           {
             "id": "size",
             "label": "製品寸法",
-            "order": 3
+            "order": 12
           },
           {
             "id": "finish",
@@ -240,7 +240,8 @@
                 "table": "05_サイズルール / 01_入力フロー"
               }
             ],
-            "parents": []
+            "parents": [],
+            "evaluationContext": true
           },
           "custom_width": {
             "label": "製品仕上がり幅 W（mm）",
@@ -258,7 +259,8 @@
             ],
             "parents": [
               "size_mode"
-            ]
+            ],
+            "evaluationContext": true
           },
           "custom_height": {
             "label": "製品仕上がり高さ H（mm）",
@@ -276,7 +278,8 @@
             ],
             "parents": [
               "size_mode"
-            ]
+            ],
+            "evaluationContext": true
           },
           "sash_exterior_color": {
             "label": "本体外観色",
@@ -454,10 +457,16 @@
                 "path": "candidates/RPL_ROOM.json",
                 "sha256": "16f8e732781f93bfbbb8c691b36e83f02625e4d2cae97a1683aea3bf78158b61",
                 "table": "08_ガラス / 08A_ガラス適用条件"
+              },
+              {
+                "path": "flow/official-glass-review.v8.json",
+                "sha256": "4b9b3654885f17c68f2900abf6789bb539344d3ebb98cc1671e0fd94e198551f",
+                "table": "SN1200 PDF52/56/60 rendered glass product diagrams"
               }
             ],
             "parents": [
-              "window_type"
+              "window_type",
+              "frame_type"
             ]
           },
           "glass": {
@@ -472,11 +481,17 @@
                 "path": "candidates/RPL_ROOM.json",
                 "sha256": "16f8e732781f93bfbbb8c691b36e83f02625e4d2cae97a1683aea3bf78158b61",
                 "table": "08_ガラス / 08A_ガラス適用条件"
+              },
+              {
+                "path": "flow/official-glass-review.v8.json",
+                "sha256": "4b9b3654885f17c68f2900abf6789bb539344d3ebb98cc1671e0fd94e198551f",
+                "table": "SN1200 PDF52/56/60 rendered glass product diagrams"
               }
             ],
             "parents": [
               "glass_category",
-              "window_type"
+              "window_type",
+              "frame_type"
             ]
           },
           "glass_function": {
@@ -491,12 +506,78 @@
                 "path": "candidates/RPL_ROOM.json",
                 "sha256": "16f8e732781f93bfbbb8c691b36e83f02625e4d2cae97a1683aea3bf78158b61",
                 "table": "08_ガラス / 08A_ガラス適用条件"
+              },
+              {
+                "path": "flow/official-glass-review.v8.json",
+                "sha256": "4b9b3654885f17c68f2900abf6789bb539344d3ebb98cc1671e0fd94e198551f",
+                "table": "SN1200 PDF52/56/60 rendered glass product diagrams"
               }
             ],
             "parents": [
+              "glass_category",
               "glass",
               "window_type"
+            ],
+            "helpText": "ガラス構成・窓種・寸法による製作可否は個別に見積確認してください。"
+          },
+          "glass_gas": {
+            "label": "中空層",
+            "meaning": "中空層の充填内容（乾燥空気・ガス種）。厚さを任意指定する項目ではない。",
+            "slot": "glass_air_layer",
+            "stage": "GLAZING",
+            "group": "glazing",
+            "rank": 5,
+            "parents": [
+              "frame_type",
+              "glass_category"
+            ],
+            "sourceRefs": [
+              {
+                "path": "flow/official-glass-review.v8.json",
+                "sha256": "4b9b3654885f17c68f2900abf6789bb539344d3ebb98cc1671e0fd94e198551f",
+                "table": "SN1200 PDF52/56/60 rendered glass product diagrams"
+              }
             ]
+          },
+          "glass_spacer": {
+            "label": "スペーサー",
+            "meaning": "公式ガラス体系図に基づく追加機能。組合せと製作寸法は個別見積確認。",
+            "slot": "glass_spacer",
+            "stage": "GLAZING",
+            "group": "glazing",
+            "rank": 6,
+            "parents": [
+              "frame_type",
+              "glass_category",
+              "glass_gas"
+            ],
+            "sourceRefs": [
+              {
+                "path": "flow/official-glass-review.v8.json",
+                "sha256": "4b9b3654885f17c68f2900abf6789bb539344d3ebb98cc1671e0fd94e198551f",
+                "table": "SN1200 PDF52/56/60 rendered glass product diagrams"
+              }
+            ]
+          },
+          "glass_appearance": {
+            "label": "ガラス仕上げ・目隠し",
+            "meaning": "透明・型板・フロスト等の仕上げ。乳白合わせ選択時は乳白のみ。",
+            "slot": "glass_type",
+            "stage": "GLAZING",
+            "group": "glazing",
+            "rank": 4,
+            "parents": [
+              "glass",
+              "glass_function"
+            ],
+            "sourceRefs": [
+              {
+                "path": "flow/official-glass-review.v8.json",
+                "sha256": "4b9b3654885f17c68f2900abf6789bb539344d3ebb98cc1671e0fd94e198551f",
+                "table": "SN1200 PDF52/56/60 rendered glass product diagrams"
+              }
+            ],
+            "helpText": "ガラス構成・窓種・寸法による製作可否は個別に見積確認してください。"
           }
         },
         "contextFields": [],
@@ -634,7 +715,13 @@
           "specification": "居室仕様",
           "formalSourceRevision": "v1.0",
           "adoption": "CANDIDATE_ONLY"
-        }
+        },
+        "reviewSources": [
+          {
+            "path": "flow/official-glass-review.v8.json",
+            "sha256": "4b9b3654885f17c68f2900abf6789bb539344d3ebb98cc1671e0fd94e198551f"
+          }
+        ]
       },
       "productSelectionGroup": {
         "id": "CANDIDATE:RPL_RESIDENTIAL",
@@ -650,17 +737,17 @@
       "displayName": "リプラス 居室仕様 TWタイプ",
       "productCategory": "sash",
       "uiCategory": "REFORM_WINDOW_ESTIMATE",
-      "packageVersion": "REPLUS_SEMANTIC_FLOW_V7_R2_20261014",
+      "packageVersion": "REPLUS_GLASS_FLOW_V8_20261014",
       "masterVersion": "v1.0",
       "schemaVersion": "2.0",
       "path": "candidates/RPL_TW.module.json",
-      "sha256": "6dbb6b7ce0de8121a51e1a8ca24c3df2d05f6115d7b3338d7b4bdeede6245f46",
+      "sha256": "23ea472c11a76be3618453810649870bbad4ee9e96947de605d0a8c0c8701ffe",
       "candidate": true,
       "sourceHash": "a800470fee2286da87738b08c09a5333d1ced855166c53389aec58b3238ec82a",
       "adapterType": "COMPOSED_PRODUCT_MODULE_V1",
       "uiFlowContract": {
-        "schema": "REVIEWED_WINDOW_FLOW_V2",
-        "revision": "REPLUS_GLOBAL_SELECTION_FLOW_V7_R2_20261014",
+        "schema": "REVIEWED_WINDOW_FLOW_V3",
+        "revision": "REPLUS_GLASS_FLOW_V8_20261014",
         "status": "REVIEWED_DESIGN_CANDIDATE",
         "formalAdoption": false,
         "sourceFlow": {
@@ -682,12 +769,12 @@
           {
             "id": "survey",
             "label": "現場採寸・取付条件",
-            "order": 2
+            "order": 11
           },
           {
             "id": "size",
             "label": "製品寸法",
-            "order": 3
+            "order": 12
           },
           {
             "id": "finish",
@@ -863,7 +950,8 @@
                 "table": "05_サイズルール / 01_入力フロー"
               }
             ],
-            "parents": []
+            "parents": [],
+            "evaluationContext": true
           },
           "custom_width": {
             "label": "製品仕上がり幅 W（mm）",
@@ -881,7 +969,8 @@
             ],
             "parents": [
               "size_mode"
-            ]
+            ],
+            "evaluationContext": true
           },
           "custom_height": {
             "label": "製品仕上がり高さ H（mm）",
@@ -899,7 +988,8 @@
             ],
             "parents": [
               "size_mode"
-            ]
+            ],
+            "evaluationContext": true
           },
           "sash_exterior_color": {
             "label": "本体外観色",
@@ -1061,6 +1151,11 @@
                 "path": "candidates/RPL_TW.json",
                 "sha256": "1dccfc6c4e8713b552dd29b8149fea4a630801bcb2772b5b21b0c00dfd8f358a",
                 "table": "08_ガラス / 08A_ガラス適用条件"
+              },
+              {
+                "path": "flow/official-glass-review.v8.json",
+                "sha256": "4b9b3654885f17c68f2900abf6789bb539344d3ebb98cc1671e0fd94e198551f",
+                "table": "SN1200 PDF52/56/60 rendered glass product diagrams"
               }
             ],
             "parents": [
@@ -1080,6 +1175,11 @@
                 "path": "candidates/RPL_TW.json",
                 "sha256": "1dccfc6c4e8713b552dd29b8149fea4a630801bcb2772b5b21b0c00dfd8f358a",
                 "table": "08_ガラス / 08A_ガラス適用条件"
+              },
+              {
+                "path": "flow/official-glass-review.v8.json",
+                "sha256": "4b9b3654885f17c68f2900abf6789bb539344d3ebb98cc1671e0fd94e198551f",
+                "table": "SN1200 PDF52/56/60 rendered glass product diagrams"
               }
             ],
             "parents": [
@@ -1089,17 +1189,22 @@
             ]
           },
           "glass_gas": {
-            "label": "ガス",
-            "meaning": "中空層のガス種。ガラス種類とは別の軸",
+            "label": "中空層",
+            "meaning": "中空層の充填内容（乾燥空気・ガス種）。厚さを任意指定する項目ではない。",
             "slot": "glass_air_layer",
             "stage": "GLAZING",
             "group": "glazing",
-            "rank": 4,
+            "rank": 5,
             "sourceRefs": [
               {
                 "path": "candidates/RPL_TW.json",
                 "sha256": "1dccfc6c4e8713b552dd29b8149fea4a630801bcb2772b5b21b0c00dfd8f358a",
                 "table": "08_ガラス / 08A_ガラス適用条件"
+              },
+              {
+                "path": "flow/official-glass-review.v8.json",
+                "sha256": "4b9b3654885f17c68f2900abf6789bb539344d3ebb98cc1671e0fd94e198551f",
+                "table": "SN1200 PDF52/56/60 rendered glass product diagrams"
               }
             ],
             "parents": [
@@ -1113,12 +1218,17 @@
             "slot": "glass_spacer",
             "stage": "GLAZING",
             "group": "glazing",
-            "rank": 5,
+            "rank": 6,
             "sourceRefs": [
               {
                 "path": "candidates/RPL_TW.json",
                 "sha256": "1dccfc6c4e8713b552dd29b8149fea4a630801bcb2772b5b21b0c00dfd8f358a",
                 "table": "08_ガラス / 08A_ガラス適用条件"
+              },
+              {
+                "path": "flow/official-glass-review.v8.json",
+                "sha256": "4b9b3654885f17c68f2900abf6789bb539344d3ebb98cc1671e0fd94e198551f",
+                "table": "SN1200 PDF52/56/60 rendered glass product diagrams"
               }
             ],
             "parents": [
@@ -1127,6 +1237,47 @@
               "window_type"
             ],
             "readOnly": true
+          },
+          "glass_function": {
+            "label": "ガラス追加機能",
+            "meaning": "公式ガラス体系図に基づく追加機能。組合せと製作寸法は個別見積確認。",
+            "slot": "glass_function",
+            "stage": "GLAZING",
+            "group": "glazing",
+            "rank": 3,
+            "parents": [
+              "glass_category",
+              "glass",
+              "window_type"
+            ],
+            "sourceRefs": [
+              {
+                "path": "flow/official-glass-review.v8.json",
+                "sha256": "4b9b3654885f17c68f2900abf6789bb539344d3ebb98cc1671e0fd94e198551f",
+                "table": "SN1200 PDF52/56/60 rendered glass product diagrams"
+              }
+            ],
+            "helpText": "ガラス構成・窓種・寸法による製作可否は個別に見積確認してください。"
+          },
+          "glass_appearance": {
+            "label": "ガラス仕上げ・目隠し",
+            "meaning": "透明・型板・フロスト等の仕上げ。乳白合わせ選択時は乳白のみ。",
+            "slot": "glass_type",
+            "stage": "GLAZING",
+            "group": "glazing",
+            "rank": 4,
+            "parents": [
+              "glass",
+              "glass_function"
+            ],
+            "sourceRefs": [
+              {
+                "path": "flow/official-glass-review.v8.json",
+                "sha256": "4b9b3654885f17c68f2900abf6789bb539344d3ebb98cc1671e0fd94e198551f",
+                "table": "SN1200 PDF52/56/60 rendered glass product diagrams"
+              }
+            ],
+            "helpText": "ガラス構成・窓種・寸法による製作可否は個別に見積確認してください。"
           }
         },
         "contextFields": [],
@@ -1307,7 +1458,13 @@
           "specification": "居室仕様 TWタイプ",
           "formalSourceRevision": "v1.0",
           "adoption": "CANDIDATE_ONLY"
-        }
+        },
+        "reviewSources": [
+          {
+            "path": "flow/official-glass-review.v8.json",
+            "sha256": "4b9b3654885f17c68f2900abf6789bb539344d3ebb98cc1671e0fd94e198551f"
+          }
+        ]
       },
       "productSelectionGroup": {
         "id": "CANDIDATE:RPL_RESIDENTIAL",
@@ -1323,17 +1480,17 @@
       "displayName": "リプラス 居室仕様 EWタイプ",
       "productCategory": "sash",
       "uiCategory": "REFORM_WINDOW_ESTIMATE",
-      "packageVersion": "REPLUS_SEMANTIC_FLOW_V7_R2_20261014",
+      "packageVersion": "REPLUS_GLASS_FLOW_V8_20261014",
       "masterVersion": "v1.0",
       "schemaVersion": "2.0",
       "path": "candidates/RPL_EW.module.json",
-      "sha256": "10a81bcad5cf5836dc283f37e6a5276ebf0dbb3b73ee3f92e264d2b847429072",
+      "sha256": "c86ca4de2ef30566ab2ea110be5368c607f4f0647392a9ad7b4847759e009140",
       "candidate": true,
       "sourceHash": "c78002e5f015583d950f2fcdb9904816beb9a41c0bd6af68549d31f36ce8561f",
       "adapterType": "COMPOSED_PRODUCT_MODULE_V1",
       "uiFlowContract": {
-        "schema": "REVIEWED_WINDOW_FLOW_V2",
-        "revision": "REPLUS_GLOBAL_SELECTION_FLOW_V7_R2_20261014",
+        "schema": "REVIEWED_WINDOW_FLOW_V3",
+        "revision": "REPLUS_GLASS_FLOW_V8_20261014",
         "status": "REVIEWED_DESIGN_CANDIDATE",
         "formalAdoption": false,
         "sourceFlow": {
@@ -1355,12 +1512,12 @@
           {
             "id": "survey",
             "label": "現場採寸・取付条件",
-            "order": 2
+            "order": 11
           },
           {
             "id": "size",
             "label": "製品寸法",
-            "order": 3
+            "order": 12
           },
           {
             "id": "finish",
@@ -1538,7 +1695,8 @@
                 "table": "05_サイズルール / 01_入力フロー"
               }
             ],
-            "parents": []
+            "parents": [],
+            "evaluationContext": true
           },
           "custom_width": {
             "label": "製品仕上がり幅 W（mm）",
@@ -1556,7 +1714,8 @@
             ],
             "parents": [
               "size_mode"
-            ]
+            ],
+            "evaluationContext": true
           },
           "custom_height": {
             "label": "製品仕上がり高さ H（mm）",
@@ -1574,7 +1733,8 @@
             ],
             "parents": [
               "size_mode"
-            ]
+            ],
+            "evaluationContext": true
           },
           "sash_exterior_color": {
             "label": "本体外観色",
@@ -1718,6 +1878,11 @@
                 "path": "candidates/RPL_EW.json",
                 "sha256": "1feae3d5a1fbc2f658829ee7b195ca472febb91ae0ad309ed450cca783d58747",
                 "table": "08_ガラス / 08A_ガラス適用条件"
+              },
+              {
+                "path": "flow/official-glass-review.v8.json",
+                "sha256": "4b9b3654885f17c68f2900abf6789bb539344d3ebb98cc1671e0fd94e198551f",
+                "table": "SN1200 PDF52/56/60 rendered glass product diagrams"
               }
             ],
             "parents": [
@@ -1738,6 +1903,11 @@
                 "path": "candidates/RPL_EW.json",
                 "sha256": "1feae3d5a1fbc2f658829ee7b195ca472febb91ae0ad309ed450cca783d58747",
                 "table": "08_ガラス / 08A_ガラス適用条件"
+              },
+              {
+                "path": "flow/official-glass-review.v8.json",
+                "sha256": "4b9b3654885f17c68f2900abf6789bb539344d3ebb98cc1671e0fd94e198551f",
+                "table": "SN1200 PDF52/56/60 rendered glass product diagrams"
               }
             ],
             "parents": [
@@ -1747,17 +1917,22 @@
             ]
           },
           "glass_gas": {
-            "label": "ガス",
-            "meaning": "中空層のガス種。ガラス種類とは別の軸",
+            "label": "中空層",
+            "meaning": "中空層の充填内容（乾燥空気・ガス種）。厚さを任意指定する項目ではない。",
             "slot": "glass_air_layer",
             "stage": "GLAZING",
             "group": "glazing",
-            "rank": 4,
+            "rank": 5,
             "sourceRefs": [
               {
                 "path": "candidates/RPL_EW.json",
                 "sha256": "1feae3d5a1fbc2f658829ee7b195ca472febb91ae0ad309ed450cca783d58747",
                 "table": "08_ガラス / 08A_ガラス適用条件"
+              },
+              {
+                "path": "flow/official-glass-review.v8.json",
+                "sha256": "4b9b3654885f17c68f2900abf6789bb539344d3ebb98cc1671e0fd94e198551f",
+                "table": "SN1200 PDF52/56/60 rendered glass product diagrams"
               }
             ],
             "parents": [
@@ -1772,12 +1947,17 @@
             "slot": "glass_spacer",
             "stage": "GLAZING",
             "group": "glazing",
-            "rank": 5,
+            "rank": 6,
             "sourceRefs": [
               {
                 "path": "candidates/RPL_EW.json",
                 "sha256": "1feae3d5a1fbc2f658829ee7b195ca472febb91ae0ad309ed450cca783d58747",
                 "table": "08_ガラス / 08A_ガラス適用条件"
+              },
+              {
+                "path": "flow/official-glass-review.v8.json",
+                "sha256": "4b9b3654885f17c68f2900abf6789bb539344d3ebb98cc1671e0fd94e198551f",
+                "table": "SN1200 PDF52/56/60 rendered glass product diagrams"
               }
             ],
             "parents": [
@@ -1786,6 +1966,47 @@
               "window_type"
             ],
             "readOnly": true
+          },
+          "glass_function": {
+            "label": "ガラス追加機能",
+            "meaning": "公式ガラス体系図に基づく追加機能。組合せと製作寸法は個別見積確認。",
+            "slot": "glass_function",
+            "stage": "GLAZING",
+            "group": "glazing",
+            "rank": 3,
+            "parents": [
+              "glass_category",
+              "glass",
+              "window_type"
+            ],
+            "sourceRefs": [
+              {
+                "path": "flow/official-glass-review.v8.json",
+                "sha256": "4b9b3654885f17c68f2900abf6789bb539344d3ebb98cc1671e0fd94e198551f",
+                "table": "SN1200 PDF52/56/60 rendered glass product diagrams"
+              }
+            ],
+            "helpText": "ガラス構成・窓種・寸法による製作可否は個別に見積確認してください。"
+          },
+          "glass_appearance": {
+            "label": "ガラス仕上げ・目隠し",
+            "meaning": "透明・型板・フロスト等の仕上げ。乳白合わせ選択時は乳白のみ。",
+            "slot": "glass_type",
+            "stage": "GLAZING",
+            "group": "glazing",
+            "rank": 4,
+            "parents": [
+              "glass",
+              "glass_function"
+            ],
+            "sourceRefs": [
+              {
+                "path": "flow/official-glass-review.v8.json",
+                "sha256": "4b9b3654885f17c68f2900abf6789bb539344d3ebb98cc1671e0fd94e198551f",
+                "table": "SN1200 PDF52/56/60 rendered glass product diagrams"
+              }
+            ],
+            "helpText": "ガラス構成・窓種・寸法による製作可否は個別に見積確認してください。"
           }
         },
         "contextFields": [],
@@ -1973,7 +2194,13 @@
           "specification": "居室仕様 EWタイプ",
           "formalSourceRevision": "v1.0",
           "adoption": "CANDIDATE_ONLY"
-        }
+        },
+        "reviewSources": [
+          {
+            "path": "flow/official-glass-review.v8.json",
+            "sha256": "4b9b3654885f17c68f2900abf6789bb539344d3ebb98cc1671e0fd94e198551f"
+          }
+        ]
       },
       "productSelectionGroup": {
         "id": "CANDIDATE:RPL_RESIDENTIAL",
@@ -1989,17 +2216,17 @@
       "displayName": "リプラス 浴室仕様",
       "productCategory": "sash",
       "uiCategory": "REFORM_WINDOW_ESTIMATE",
-      "packageVersion": "REPLUS_SEMANTIC_FLOW_V7_R2_20261014",
+      "packageVersion": "REPLUS_GLASS_FLOW_V8_20261014",
       "masterVersion": "v1.0",
       "schemaVersion": "2.0",
       "path": "candidates/RPL_BATH.module.json",
-      "sha256": "c341763278218bdc97f0c28e47ece5916e15421e2609f56274ec4686a493573b",
+      "sha256": "1687ddbc4c35a4825ec9d6d69ad706885fbaa20947ec91d7455b860edec74ee4",
       "candidate": true,
       "sourceHash": "69e307f94d3d51e12eb8cb2854e929b06a9c6133cab30910e26deda5c9e91596",
       "adapterType": "COMPOSED_PRODUCT_MODULE_V1",
       "uiFlowContract": {
-        "schema": "REVIEWED_WINDOW_FLOW_V2",
-        "revision": "REPLUS_GLOBAL_SELECTION_FLOW_V7_R2_20261014",
+        "schema": "REVIEWED_WINDOW_FLOW_V3",
+        "revision": "REPLUS_GLASS_FLOW_V8_20261014",
         "status": "REVIEWED_DESIGN_CANDIDATE",
         "formalAdoption": false,
         "sourceFlow": {
@@ -2021,12 +2248,12 @@
           {
             "id": "survey",
             "label": "現場採寸・取付条件",
-            "order": 2
+            "order": 11
           },
           {
             "id": "size",
             "label": "製品寸法",
-            "order": 3
+            "order": 12
           },
           {
             "id": "finish",
@@ -2185,7 +2412,8 @@
                 "table": "05_サイズルール / 01_入力フロー"
               }
             ],
-            "parents": []
+            "parents": [],
+            "evaluationContext": true
           },
           "custom_width": {
             "label": "製品仕上がり幅 W（mm）",
@@ -2203,7 +2431,8 @@
             ],
             "parents": [
               "size_mode"
-            ]
+            ],
+            "evaluationContext": true
           },
           "custom_height": {
             "label": "製品仕上がり高さ H（mm）",
@@ -2221,7 +2450,8 @@
             ],
             "parents": [
               "size_mode"
-            ]
+            ],
+            "evaluationContext": true
           },
           "sash_exterior_color": {
             "label": "本体外観色",
@@ -2347,6 +2577,11 @@
                 "path": "candidates/RPL_BATH.json",
                 "sha256": "adc2f9abf3ef5c2bc602eaa64057f4db8479d25d91e89e08a27578ade0fa78b4",
                 "table": "08_ガラス / 08A_ガラス適用条件"
+              },
+              {
+                "path": "flow/official-glass-review.v8.json",
+                "sha256": "4b9b3654885f17c68f2900abf6789bb539344d3ebb98cc1671e0fd94e198551f",
+                "table": "SN1200 PDF52/56/60 rendered glass product diagrams"
               }
             ],
             "parents": [
@@ -2367,6 +2602,11 @@
                 "path": "candidates/RPL_BATH.json",
                 "sha256": "adc2f9abf3ef5c2bc602eaa64057f4db8479d25d91e89e08a27578ade0fa78b4",
                 "table": "08_ガラス / 08A_ガラス適用条件"
+              },
+              {
+                "path": "flow/official-glass-review.v8.json",
+                "sha256": "4b9b3654885f17c68f2900abf6789bb539344d3ebb98cc1671e0fd94e198551f",
+                "table": "SN1200 PDF52/56/60 rendered glass product diagrams"
               }
             ],
             "parents": [
@@ -2377,17 +2617,22 @@
             ]
           },
           "glass_gas": {
-            "label": "ガス",
-            "meaning": "中空層のガス種。ガラス種類とは別の軸",
+            "label": "中空層",
+            "meaning": "中空層の充填内容（乾燥空気・ガス種）。厚さを任意指定する項目ではない。",
             "slot": "glass_air_layer",
             "stage": "GLAZING",
             "group": "glazing",
-            "rank": 4,
+            "rank": 5,
             "sourceRefs": [
               {
                 "path": "candidates/RPL_BATH.json",
                 "sha256": "adc2f9abf3ef5c2bc602eaa64057f4db8479d25d91e89e08a27578ade0fa78b4",
                 "table": "08_ガラス / 08A_ガラス適用条件"
+              },
+              {
+                "path": "flow/official-glass-review.v8.json",
+                "sha256": "4b9b3654885f17c68f2900abf6789bb539344d3ebb98cc1671e0fd94e198551f",
+                "table": "SN1200 PDF52/56/60 rendered glass product diagrams"
               }
             ],
             "parents": [
@@ -2401,12 +2646,17 @@
             "slot": "glass_spacer",
             "stage": "GLAZING",
             "group": "glazing",
-            "rank": 5,
+            "rank": 6,
             "sourceRefs": [
               {
                 "path": "candidates/RPL_BATH.json",
                 "sha256": "adc2f9abf3ef5c2bc602eaa64057f4db8479d25d91e89e08a27578ade0fa78b4",
                 "table": "08_ガラス / 08A_ガラス適用条件"
+              },
+              {
+                "path": "flow/official-glass-review.v8.json",
+                "sha256": "4b9b3654885f17c68f2900abf6789bb539344d3ebb98cc1671e0fd94e198551f",
+                "table": "SN1200 PDF52/56/60 rendered glass product diagrams"
               }
             ],
             "parents": [
@@ -2432,6 +2682,47 @@
                 "table": "01_入力フロー / 04C_既設開口パターン"
               }
             ]
+          },
+          "glass_function": {
+            "label": "ガラス追加機能",
+            "meaning": "公式ガラス体系図に基づく追加機能。組合せと製作寸法は個別見積確認。",
+            "slot": "glass_function",
+            "stage": "GLAZING",
+            "group": "glazing",
+            "rank": 3,
+            "parents": [
+              "glass_category",
+              "glass",
+              "window_type"
+            ],
+            "sourceRefs": [
+              {
+                "path": "flow/official-glass-review.v8.json",
+                "sha256": "4b9b3654885f17c68f2900abf6789bb539344d3ebb98cc1671e0fd94e198551f",
+                "table": "SN1200 PDF52/56/60 rendered glass product diagrams"
+              }
+            ],
+            "helpText": "ガラス構成・窓種・寸法による製作可否は個別に見積確認してください。"
+          },
+          "glass_appearance": {
+            "label": "ガラス仕上げ・目隠し",
+            "meaning": "透明・型板・フロスト等の仕上げ。乳白合わせ選択時は乳白のみ。",
+            "slot": "glass_type",
+            "stage": "GLAZING",
+            "group": "glazing",
+            "rank": 4,
+            "parents": [
+              "glass",
+              "glass_function"
+            ],
+            "sourceRefs": [
+              {
+                "path": "flow/official-glass-review.v8.json",
+                "sha256": "4b9b3654885f17c68f2900abf6789bb539344d3ebb98cc1671e0fd94e198551f",
+                "table": "SN1200 PDF52/56/60 rendered glass product diagrams"
+              }
+            ],
+            "helpText": "ガラス構成・窓種・寸法による製作可否は個別に見積確認してください。"
           }
         },
         "contextFields": [],
@@ -2615,7 +2906,13 @@
           "specification": "浴室仕様",
           "formalSourceRevision": "v1.0",
           "adoption": "CANDIDATE_ONLY"
-        }
+        },
+        "reviewSources": [
+          {
+            "path": "flow/official-glass-review.v8.json",
+            "sha256": "4b9b3654885f17c68f2900abf6789bb539344d3ebb98cc1671e0fd94e198551f"
+          }
+        ]
       },
       "productSelectionGroup": {
         "id": "CANDIDATE:RPL_RESIDENTIAL",
@@ -2631,17 +2928,17 @@
       "displayName": "リプラス アタッチ枠（TW用）",
       "productCategory": "sash",
       "uiCategory": "REFORM_WINDOW_ESTIMATE",
-      "packageVersion": "REPLUS_SEMANTIC_FLOW_V7_R2_20261014",
+      "packageVersion": "REPLUS_GLASS_FLOW_V8_20261014",
       "masterVersion": "v1.0",
       "schemaVersion": "2.0",
       "path": "candidates/RPL_ATT_TW.module.json",
-      "sha256": "cc8f2c043fcd1b1177f8a2de444cc35dfae0d1aaf41a76e04f8bb59b357f433f",
+      "sha256": "20fc01e7116bfd9fef852bfc4cbe8800d66bd8ed13e0e8b701b7ab867777bb98",
       "candidate": true,
       "sourceHash": "00893080dd4f996b8814594e2355c51bc95504400670c2361d44e84c61e20905",
       "adapterType": "COMPOSED_PRODUCT_MODULE_V1",
       "uiFlowContract": {
-        "schema": "REVIEWED_WINDOW_FLOW_V2",
-        "revision": "REPLUS_GLOBAL_SELECTION_FLOW_V7_R2_20261014",
+        "schema": "REVIEWED_WINDOW_FLOW_V3",
+        "revision": "REPLUS_GLASS_FLOW_V8_20261014",
         "status": "REVIEWED_DESIGN_CANDIDATE",
         "formalAdoption": false,
         "sourceFlow": {
@@ -2663,12 +2960,12 @@
           {
             "id": "survey",
             "label": "現場採寸・取付条件",
-            "order": 2
+            "order": 11
           },
           {
             "id": "size",
             "label": "製品寸法",
-            "order": 3
+            "order": 12
           },
           {
             "id": "finish",
@@ -2837,7 +3134,8 @@
                 "table": "10B_現調項目 / 05_サイズルール"
               }
             ],
-            "parents": []
+            "parents": [],
+            "evaluationContext": true
           },
           "survey_h": {
             "label": "採寸高さ HS（mm）",
@@ -2853,7 +3151,8 @@
                 "table": "10B_現調項目 / 05_サイズルール"
               }
             ],
-            "parents": []
+            "parents": [],
+            "evaluationContext": true
           },
           "lower_frame_rise": {
             "label": "既設下枠の立上り（mm）",
@@ -2869,7 +3168,8 @@
                 "table": "10B_現調項目 / 05_サイズルール"
               }
             ],
-            "parents": []
+            "parents": [],
+            "evaluationContext": true
           },
           "existing_frame_depth": {
             "label": "既設枠見込み（mm）",
@@ -2885,7 +3185,8 @@
                 "table": "10B_現調項目 / 05_サイズルール"
               }
             ],
-            "parents": []
+            "parents": [],
+            "evaluationContext": true
           },
           "new_sash_handing": {
             "slot": "handing",
@@ -3107,7 +3408,8 @@
                 "sha256": "558539005d8381952c0b72620178e37eac91f904c81e8409271073da756dc9b6",
                 "table": "fixed native semantic slots / reference-field-audit"
               }
-            ]
+            ],
+            "evaluationContext": true
           },
           "new_sash_panel_count": {
             "slot": "panel_count",
@@ -3127,7 +3429,8 @@
                 "sha256": "558539005d8381952c0b72620178e37eac91f904c81e8409271073da756dc9b6",
                 "table": "fixed native semantic slots / reference-field-audit"
               }
-            ]
+            ],
+            "evaluationContext": true
           },
           "new_sash_size": {
             "slot": "size",
@@ -3148,7 +3451,8 @@
                 "sha256": "558539005d8381952c0b72620178e37eac91f904c81e8409271073da756dc9b6",
                 "table": "fixed native semantic slots / reference-field-audit"
               }
-            ]
+            ],
+            "evaluationContext": true
           },
           "new_sash_custom_width": {
             "slot": "size",
@@ -3168,7 +3472,8 @@
                 "sha256": "558539005d8381952c0b72620178e37eac91f904c81e8409271073da756dc9b6",
                 "table": "fixed native semantic slots / reference-field-audit"
               }
-            ]
+            ],
+            "evaluationContext": true
           },
           "new_sash_custom_height": {
             "slot": "size",
@@ -3188,7 +3493,8 @@
                 "sha256": "558539005d8381952c0b72620178e37eac91f904c81e8409271073da756dc9b6",
                 "table": "fixed native semantic slots / reference-field-audit"
               }
-            ]
+            ],
+            "evaluationContext": true
           },
           "new_sash_exterior_color": {
             "slot": "exterior_color",
@@ -3208,6 +3514,9 @@
                 "sha256": "558539005d8381952c0b72620178e37eac91f904c81e8409271073da756dc9b6",
                 "table": "fixed native semantic slots / reference-field-audit"
               }
+            ],
+            "deferredEvaluationParents": [
+              "new_sash_size"
             ]
           },
           "new_sash_interior_color": {
@@ -3229,6 +3538,9 @@
                 "sha256": "558539005d8381952c0b72620178e37eac91f904c81e8409271073da756dc9b6",
                 "table": "fixed native semantic slots / reference-field-audit"
               }
+            ],
+            "deferredEvaluationParents": [
+              "new_sash_size"
             ]
           },
           "new_sash_screen_presence": {
@@ -3251,6 +3563,9 @@
                 "sha256": "558539005d8381952c0b72620178e37eac91f904c81e8409271073da756dc9b6",
                 "table": "fixed native semantic slots / reference-field-audit"
               }
+            ],
+            "deferredEvaluationParents": [
+              "new_sash_size"
             ]
           },
           "new_sash_glass_base": {
@@ -3271,6 +3586,9 @@
                 "sha256": "558539005d8381952c0b72620178e37eac91f904c81e8409271073da756dc9b6",
                 "table": "fixed native semantic slots / reference-field-audit"
               }
+            ],
+            "deferredEvaluationParents": [
+              "new_sash_size"
             ]
           },
           "new_sash_glass_type": {
@@ -3292,6 +3610,9 @@
                 "sha256": "558539005d8381952c0b72620178e37eac91f904c81e8409271073da756dc9b6",
                 "table": "fixed native semantic slots / reference-field-audit"
               }
+            ],
+            "deferredEvaluationParents": [
+              "new_sash_size"
             ]
           },
           "new_sash_glass_detail": {
@@ -3314,6 +3635,9 @@
                 "sha256": "558539005d8381952c0b72620178e37eac91f904c81e8409271073da756dc9b6",
                 "table": "fixed native semantic slots / reference-field-audit"
               }
+            ],
+            "deferredEvaluationParents": [
+              "new_sash_size"
             ]
           },
           "new_sash_glass_function": {
@@ -3336,6 +3660,9 @@
                 "sha256": "558539005d8381952c0b72620178e37eac91f904c81e8409271073da756dc9b6",
                 "table": "fixed native semantic slots / reference-field-audit"
               }
+            ],
+            "deferredEvaluationParents": [
+              "new_sash_size"
             ]
           },
           "new_sash_glass_gas": {
@@ -3377,6 +3704,9 @@
                 "sha256": "558539005d8381952c0b72620178e37eac91f904c81e8409271073da756dc9b6",
                 "table": "fixed native semantic slots / reference-field-audit"
               }
+            ],
+            "deferredEvaluationParents": [
+              "new_sash_size"
             ]
           },
           "new_sash_glass_air_layer": {
@@ -3401,6 +3731,9 @@
                 "sha256": "558539005d8381952c0b72620178e37eac91f904c81e8409271073da756dc9b6",
                 "table": "fixed native semantic slots / reference-field-audit"
               }
+            ],
+            "deferredEvaluationParents": [
+              "new_sash_size"
             ]
           },
           "new_sash_option": {
@@ -3424,6 +3757,9 @@
                 "sha256": "558539005d8381952c0b72620178e37eac91f904c81e8409271073da756dc9b6",
                 "table": "fixed native semantic slots / reference-field-audit"
               }
+            ],
+            "deferredEvaluationParents": [
+              "new_sash_size"
             ]
           },
           "new_sash_options": {
@@ -3603,7 +3939,13 @@
           "specification": "アタッチ枠（TW用）",
           "formalSourceRevision": "v1.0",
           "adoption": "CANDIDATE_ONLY"
-        }
+        },
+        "reviewSources": [
+          {
+            "path": "flow/official-glass-review.v8.json",
+            "sha256": "4b9b3654885f17c68f2900abf6789bb539344d3ebb98cc1671e0fd94e198551f"
+          }
+        ]
       },
       "productSelectionGroup": {
         "id": "CANDIDATE:RPL_RESIDENTIAL",
@@ -3619,17 +3961,17 @@
       "displayName": "リプラス アタッチ枠（サーモス用）",
       "productCategory": "sash",
       "uiCategory": "REFORM_WINDOW_ESTIMATE",
-      "packageVersion": "REPLUS_SEMANTIC_FLOW_V7_R2_20261014",
+      "packageVersion": "REPLUS_GLASS_FLOW_V8_20261014",
       "masterVersion": "v1.1",
       "schemaVersion": "2.0",
       "path": "candidates/RPL_ATT_TH.module.json",
-      "sha256": "0ffa15c21dde71ec052c9ade5112b992a2fbc78d1a0c714c50a699429ea02efe",
+      "sha256": "1bd2a14138e698c5aa0820c97c4617695c739992e8d5119e3137b7d074a7f302",
       "candidate": true,
       "sourceHash": "662a1b71237ff5477b2d9299137f7d56cac1f1d527bd69344f0b07f41829a384",
       "adapterType": "COMPOSED_PRODUCT_MODULE_V1",
       "uiFlowContract": {
-        "schema": "REVIEWED_WINDOW_FLOW_V2",
-        "revision": "REPLUS_GLOBAL_SELECTION_FLOW_V7_R2_20261014",
+        "schema": "REVIEWED_WINDOW_FLOW_V3",
+        "revision": "REPLUS_GLASS_FLOW_V8_20261014",
         "status": "REVIEWED_DESIGN_CANDIDATE",
         "formalAdoption": false,
         "sourceFlow": {
@@ -3651,12 +3993,12 @@
           {
             "id": "survey",
             "label": "現場採寸・取付条件",
-            "order": 2
+            "order": 11
           },
           {
             "id": "size",
             "label": "製品寸法",
-            "order": 3
+            "order": 12
           },
           {
             "id": "finish",
@@ -3809,7 +4151,8 @@
                 "table": "10B_現調項目 / 05_サイズルール"
               }
             ],
-            "parents": []
+            "parents": [],
+            "evaluationContext": true
           },
           "survey_h": {
             "label": "採寸高さ HS（mm）",
@@ -3825,7 +4168,8 @@
                 "table": "10B_現調項目 / 05_サイズルール"
               }
             ],
-            "parents": []
+            "parents": [],
+            "evaluationContext": true
           },
           "existing_frame_depth": {
             "label": "既設枠見込み（mm）",
@@ -3841,7 +4185,8 @@
                 "table": "10B_現調項目 / 05_サイズルール"
               }
             ],
-            "parents": []
+            "parents": [],
+            "evaluationContext": true
           },
           "lower_frame_rise": {
             "label": "既設下枠の立上り（mm）",
@@ -3857,7 +4202,8 @@
                 "table": "10B_現調項目 / 05_サイズルール"
               }
             ],
-            "parents": []
+            "parents": [],
+            "evaluationContext": true
           },
           "new_sash_handing": {
             "slot": "handing",
@@ -4079,7 +4425,8 @@
                 "sha256": "558539005d8381952c0b72620178e37eac91f904c81e8409271073da756dc9b6",
                 "table": "fixed native semantic slots / reference-field-audit"
               }
-            ]
+            ],
+            "evaluationContext": true
           },
           "new_sash_panel_count": {
             "slot": "panel_count",
@@ -4099,7 +4446,8 @@
                 "sha256": "558539005d8381952c0b72620178e37eac91f904c81e8409271073da756dc9b6",
                 "table": "fixed native semantic slots / reference-field-audit"
               }
-            ]
+            ],
+            "evaluationContext": true
           },
           "new_sash_size": {
             "slot": "size",
@@ -4120,7 +4468,8 @@
                 "sha256": "558539005d8381952c0b72620178e37eac91f904c81e8409271073da756dc9b6",
                 "table": "fixed native semantic slots / reference-field-audit"
               }
-            ]
+            ],
+            "evaluationContext": true
           },
           "new_sash_custom_width": {
             "slot": "size",
@@ -4140,7 +4489,8 @@
                 "sha256": "558539005d8381952c0b72620178e37eac91f904c81e8409271073da756dc9b6",
                 "table": "fixed native semantic slots / reference-field-audit"
               }
-            ]
+            ],
+            "evaluationContext": true
           },
           "new_sash_custom_height": {
             "slot": "size",
@@ -4160,7 +4510,8 @@
                 "sha256": "558539005d8381952c0b72620178e37eac91f904c81e8409271073da756dc9b6",
                 "table": "fixed native semantic slots / reference-field-audit"
               }
-            ]
+            ],
+            "evaluationContext": true
           },
           "new_sash_exterior_color": {
             "slot": "exterior_color",
@@ -4180,6 +4531,9 @@
                 "sha256": "558539005d8381952c0b72620178e37eac91f904c81e8409271073da756dc9b6",
                 "table": "fixed native semantic slots / reference-field-audit"
               }
+            ],
+            "deferredEvaluationParents": [
+              "new_sash_size"
             ]
           },
           "new_sash_interior_color": {
@@ -4201,6 +4555,9 @@
                 "sha256": "558539005d8381952c0b72620178e37eac91f904c81e8409271073da756dc9b6",
                 "table": "fixed native semantic slots / reference-field-audit"
               }
+            ],
+            "deferredEvaluationParents": [
+              "new_sash_size"
             ]
           },
           "new_sash_screen_presence": {
@@ -4223,6 +4580,9 @@
                 "sha256": "558539005d8381952c0b72620178e37eac91f904c81e8409271073da756dc9b6",
                 "table": "fixed native semantic slots / reference-field-audit"
               }
+            ],
+            "deferredEvaluationParents": [
+              "new_sash_size"
             ]
           },
           "new_sash_glass_base": {
@@ -4243,6 +4603,9 @@
                 "sha256": "558539005d8381952c0b72620178e37eac91f904c81e8409271073da756dc9b6",
                 "table": "fixed native semantic slots / reference-field-audit"
               }
+            ],
+            "deferredEvaluationParents": [
+              "new_sash_size"
             ]
           },
           "new_sash_glass_type": {
@@ -4264,6 +4627,9 @@
                 "sha256": "558539005d8381952c0b72620178e37eac91f904c81e8409271073da756dc9b6",
                 "table": "fixed native semantic slots / reference-field-audit"
               }
+            ],
+            "deferredEvaluationParents": [
+              "new_sash_size"
             ]
           },
           "new_sash_glass_detail": {
@@ -4286,6 +4652,9 @@
                 "sha256": "558539005d8381952c0b72620178e37eac91f904c81e8409271073da756dc9b6",
                 "table": "fixed native semantic slots / reference-field-audit"
               }
+            ],
+            "deferredEvaluationParents": [
+              "new_sash_size"
             ]
           },
           "new_sash_glass_function": {
@@ -4308,6 +4677,9 @@
                 "sha256": "558539005d8381952c0b72620178e37eac91f904c81e8409271073da756dc9b6",
                 "table": "fixed native semantic slots / reference-field-audit"
               }
+            ],
+            "deferredEvaluationParents": [
+              "new_sash_size"
             ]
           },
           "new_sash_glass_gas": {
@@ -4349,6 +4721,9 @@
                 "sha256": "558539005d8381952c0b72620178e37eac91f904c81e8409271073da756dc9b6",
                 "table": "fixed native semantic slots / reference-field-audit"
               }
+            ],
+            "deferredEvaluationParents": [
+              "new_sash_size"
             ]
           },
           "new_sash_glass_air_layer": {
@@ -4373,6 +4748,9 @@
                 "sha256": "558539005d8381952c0b72620178e37eac91f904c81e8409271073da756dc9b6",
                 "table": "fixed native semantic slots / reference-field-audit"
               }
+            ],
+            "deferredEvaluationParents": [
+              "new_sash_size"
             ]
           },
           "new_sash_option": {
@@ -4396,6 +4774,9 @@
                 "sha256": "558539005d8381952c0b72620178e37eac91f904c81e8409271073da756dc9b6",
                 "table": "fixed native semantic slots / reference-field-audit"
               }
+            ],
+            "deferredEvaluationParents": [
+              "new_sash_size"
             ]
           },
           "new_sash_options": {
@@ -4581,7 +4962,13 @@
           "specification": "アタッチ枠（サーモス用）",
           "formalSourceRevision": "v1.1",
           "adoption": "CANDIDATE_ONLY"
-        }
+        },
+        "reviewSources": [
+          {
+            "path": "flow/official-glass-review.v8.json",
+            "sha256": "4b9b3654885f17c68f2900abf6789bb539344d3ebb98cc1671e0fd94e198551f"
+          }
+        ]
       },
       "productSelectionGroup": {
         "id": "CANDIDATE:RPL_RESIDENTIAL",
@@ -4597,17 +4984,17 @@
       "displayName": "リプラス 汎用カットモール",
       "productCategory": "sash",
       "uiCategory": "REFORM_WINDOW_ESTIMATE",
-      "packageVersion": "REPLUS_SEMANTIC_FLOW_V7_R2_20261014",
+      "packageVersion": "REPLUS_GLASS_FLOW_V8_20261014",
       "masterVersion": "v1.0",
       "schemaVersion": "2.0",
       "path": "candidates/RPL_CUT_MALL.module.json",
-      "sha256": "a47284dd499ce319b195551bb1ba7238a3eb6a18b9a18747a0ba6e5ff90cd4bc",
+      "sha256": "b276e6958812d9f3ba53660481a78e731e4e3117196bd1585e9d5be94f54a918",
       "candidate": true,
       "sourceHash": "aa41d127ed98907f454aa1203048bfe5ccbad8169ce914ad1c5e017a1f7e0a5f",
       "adapterType": "COMPOSED_PRODUCT_MODULE_V1",
       "uiFlowContract": {
-        "schema": "REVIEWED_WINDOW_FLOW_V2",
-        "revision": "REPLUS_GLOBAL_SELECTION_FLOW_V7_R2_20261014",
+        "schema": "REVIEWED_WINDOW_FLOW_V3",
+        "revision": "REPLUS_GLASS_FLOW_V8_20261014",
         "status": "REVIEWED_DESIGN_CANDIDATE",
         "formalAdoption": false,
         "sourceFlow": {
@@ -4629,12 +5016,12 @@
           {
             "id": "survey",
             "label": "現場採寸・取付条件",
-            "order": 2
+            "order": 11
           },
           {
             "id": "size",
             "label": "製品寸法",
-            "order": 3
+            "order": 12
           },
           {
             "id": "finish",
@@ -4885,7 +5272,8 @@
                 "table": "10B_現調項目 / 05_サイズルール"
               }
             ],
-            "parents": []
+            "parents": [],
+            "evaluationContext": true
           },
           "survey_h": {
             "label": "採寸高さ HS（mm）",
@@ -4901,7 +5289,8 @@
                 "table": "10B_現調項目 / 05_サイズルール"
               }
             ],
-            "parents": []
+            "parents": [],
+            "evaluationContext": true
           },
           "new_sash_handing": {
             "slot": "handing",
@@ -5123,7 +5512,8 @@
                 "sha256": "558539005d8381952c0b72620178e37eac91f904c81e8409271073da756dc9b6",
                 "table": "fixed native semantic slots / reference-field-audit"
               }
-            ]
+            ],
+            "evaluationContext": true
           },
           "new_sash_panel_count": {
             "slot": "panel_count",
@@ -5143,7 +5533,8 @@
                 "sha256": "558539005d8381952c0b72620178e37eac91f904c81e8409271073da756dc9b6",
                 "table": "fixed native semantic slots / reference-field-audit"
               }
-            ]
+            ],
+            "evaluationContext": true
           },
           "new_sash_size": {
             "slot": "size",
@@ -5164,7 +5555,8 @@
                 "sha256": "558539005d8381952c0b72620178e37eac91f904c81e8409271073da756dc9b6",
                 "table": "fixed native semantic slots / reference-field-audit"
               }
-            ]
+            ],
+            "evaluationContext": true
           },
           "new_sash_custom_width": {
             "slot": "size",
@@ -5184,7 +5576,8 @@
                 "sha256": "558539005d8381952c0b72620178e37eac91f904c81e8409271073da756dc9b6",
                 "table": "fixed native semantic slots / reference-field-audit"
               }
-            ]
+            ],
+            "evaluationContext": true
           },
           "new_sash_custom_height": {
             "slot": "size",
@@ -5204,7 +5597,8 @@
                 "sha256": "558539005d8381952c0b72620178e37eac91f904c81e8409271073da756dc9b6",
                 "table": "fixed native semantic slots / reference-field-audit"
               }
-            ]
+            ],
+            "evaluationContext": true
           },
           "new_sash_exterior_color": {
             "slot": "exterior_color",
@@ -5224,6 +5618,9 @@
                 "sha256": "558539005d8381952c0b72620178e37eac91f904c81e8409271073da756dc9b6",
                 "table": "fixed native semantic slots / reference-field-audit"
               }
+            ],
+            "deferredEvaluationParents": [
+              "new_sash_size"
             ]
           },
           "new_sash_interior_color": {
@@ -5245,6 +5642,9 @@
                 "sha256": "558539005d8381952c0b72620178e37eac91f904c81e8409271073da756dc9b6",
                 "table": "fixed native semantic slots / reference-field-audit"
               }
+            ],
+            "deferredEvaluationParents": [
+              "new_sash_size"
             ]
           },
           "new_sash_screen_presence": {
@@ -5267,6 +5667,9 @@
                 "sha256": "558539005d8381952c0b72620178e37eac91f904c81e8409271073da756dc9b6",
                 "table": "fixed native semantic slots / reference-field-audit"
               }
+            ],
+            "deferredEvaluationParents": [
+              "new_sash_size"
             ]
           },
           "new_sash_glass_base": {
@@ -5287,6 +5690,9 @@
                 "sha256": "558539005d8381952c0b72620178e37eac91f904c81e8409271073da756dc9b6",
                 "table": "fixed native semantic slots / reference-field-audit"
               }
+            ],
+            "deferredEvaluationParents": [
+              "new_sash_size"
             ]
           },
           "new_sash_glass_type": {
@@ -5308,6 +5714,9 @@
                 "sha256": "558539005d8381952c0b72620178e37eac91f904c81e8409271073da756dc9b6",
                 "table": "fixed native semantic slots / reference-field-audit"
               }
+            ],
+            "deferredEvaluationParents": [
+              "new_sash_size"
             ]
           },
           "new_sash_glass_detail": {
@@ -5330,6 +5739,9 @@
                 "sha256": "558539005d8381952c0b72620178e37eac91f904c81e8409271073da756dc9b6",
                 "table": "fixed native semantic slots / reference-field-audit"
               }
+            ],
+            "deferredEvaluationParents": [
+              "new_sash_size"
             ]
           },
           "new_sash_glass_function": {
@@ -5352,6 +5764,9 @@
                 "sha256": "558539005d8381952c0b72620178e37eac91f904c81e8409271073da756dc9b6",
                 "table": "fixed native semantic slots / reference-field-audit"
               }
+            ],
+            "deferredEvaluationParents": [
+              "new_sash_size"
             ]
           },
           "new_sash_glass_gas": {
@@ -5393,6 +5808,9 @@
                 "sha256": "558539005d8381952c0b72620178e37eac91f904c81e8409271073da756dc9b6",
                 "table": "fixed native semantic slots / reference-field-audit"
               }
+            ],
+            "deferredEvaluationParents": [
+              "new_sash_size"
             ]
           },
           "new_sash_glass_air_layer": {
@@ -5417,6 +5835,9 @@
                 "sha256": "558539005d8381952c0b72620178e37eac91f904c81e8409271073da756dc9b6",
                 "table": "fixed native semantic slots / reference-field-audit"
               }
+            ],
+            "deferredEvaluationParents": [
+              "new_sash_size"
             ]
           },
           "new_sash_option": {
@@ -5440,6 +5861,9 @@
                 "sha256": "558539005d8381952c0b72620178e37eac91f904c81e8409271073da756dc9b6",
                 "table": "fixed native semantic slots / reference-field-audit"
               }
+            ],
+            "deferredEvaluationParents": [
+              "new_sash_size"
             ]
           },
           "new_sash_options": {
@@ -5577,7 +6001,13 @@
           "specification": "汎用カットモール",
           "formalSourceRevision": "v1.0",
           "adoption": "CANDIDATE_ONLY"
-        }
+        },
+        "reviewSources": [
+          {
+            "path": "flow/official-glass-review.v8.json",
+            "sha256": "4b9b3654885f17c68f2900abf6789bb539344d3ebb98cc1671e0fd94e198551f"
+          }
+        ]
       },
       "productSelectionGroup": {
         "id": "CANDIDATE:RPL_RESIDENTIAL",

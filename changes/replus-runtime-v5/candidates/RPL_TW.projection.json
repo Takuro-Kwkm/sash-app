@@ -1,13 +1,13 @@
 {
   "schema": "NATIVE_TABLE_PROJECTION_V1",
-  "candidate_revision": "REPLUS_SEMANTIC_FLOW_V7_R2_20261014",
+  "candidate_revision": "REPLUS_GLASS_FLOW_V8_20261014",
   "product": {
     "id": "CANDIDATE:RPL_TW",
     "manufacturer": "LIXIL",
     "displayName": "リプラス 居室仕様 TWタイプ",
     "source": {
       "id": "RPL_TW",
-      "version": "REPLUS_SEMANTIC_FLOW_V7_R2_20261014"
+      "version": "REPLUS_GLASS_FLOW_V8_20261014"
     }
   },
   "source": {
@@ -1180,7 +1180,7 @@
     },
     {
       "key": "glass_gas",
-      "displayLabel": "ガス",
+      "displayLabel": "中空層",
       "dataType": "ENUM",
       "displayOrder": 700,
       "choices": [
@@ -1198,7 +1198,8 @@
           },
           "metadata": {
             "manualCheck": true
-          }
+          },
+          "displayOrder": 1
         },
         {
           "value": "TW-GAS-KRYPTON",
@@ -1214,7 +1215,8 @@
           },
           "metadata": {
             "manualCheck": true
-          }
+          },
+          "displayOrder": 2
         }
       ],
       "required": false,
@@ -1249,7 +1251,8 @@
           },
           "metadata": {
             "manualCheck": false
-          }
+          },
+          "displayOrder": 1
         }
       ],
       "required": false,
@@ -1264,6 +1267,210 @@
           "$exists": true
         }
       }
+    },
+    {
+      "key": "glass_function",
+      "displayLabel": "ガラス追加機能",
+      "dataType": "ENUM",
+      "displayOrder": 700,
+      "required": false,
+      "autoSelectSingle": false,
+      "parentFields": [
+        "glass_category",
+        "glass",
+        "window_type"
+      ],
+      "selector": {
+        "glass": {
+          "$exists": true
+        }
+      },
+      "choices": [
+        {
+          "value": "NONE",
+          "displayLabel": "なし（標準）",
+          "selector": {
+            "glass_category": "TW-GL-TRIPLE",
+            "glass": {
+              "$exists": true
+            }
+          },
+          "evidenceIds": [
+            "EV-V8-GLASS-DIAGRAM"
+          ],
+          "metadata": {
+            "manualCheck": false,
+            "estimateConfirmationRequired": false
+          },
+          "displayOrder": 1
+        },
+        {
+          "value": "SAFETY",
+          "displayLabel": "安全合わせ",
+          "selector": {
+            "glass_category": "TW-GL-TRIPLE",
+            "glass": {
+              "$exists": true
+            }
+          },
+          "evidenceIds": [
+            "EV-V8-GLASS-DIAGRAM"
+          ],
+          "metadata": {
+            "manualCheck": true,
+            "estimateConfirmationRequired": true
+          },
+          "displayOrder": 2
+        },
+        {
+          "value": "DISASTER",
+          "displayLabel": "防災安全合わせ",
+          "selector": {
+            "glass_category": "TW-GL-TRIPLE",
+            "glass": {
+              "$exists": true
+            }
+          },
+          "evidenceIds": [
+            "EV-V8-GLASS-DIAGRAM"
+          ],
+          "metadata": {
+            "manualCheck": true,
+            "estimateConfirmationRequired": true
+          },
+          "displayOrder": 3
+        },
+        {
+          "value": "MILKY",
+          "displayLabel": "安全合わせ乳白タイプ",
+          "selector": {
+            "glass_category": "TW-GL-TRIPLE",
+            "glass": {
+              "$exists": true
+            }
+          },
+          "evidenceIds": [
+            "EV-V8-GLASS-DIAGRAM"
+          ],
+          "metadata": {
+            "manualCheck": true,
+            "estimateConfirmationRequired": true
+          },
+          "displayOrder": 4
+        },
+        {
+          "value": "THIN",
+          "displayLabel": "特殊薄板合わせ",
+          "selector": {
+            "glass_category": "TW-GL-TRIPLE",
+            "glass": {
+              "$exists": true
+            }
+          },
+          "evidenceIds": [
+            "EV-V8-GLASS-DIAGRAM"
+          ],
+          "metadata": {
+            "manualCheck": true,
+            "estimateConfirmationRequired": true
+          },
+          "displayOrder": 5
+        }
+      ]
+    },
+    {
+      "key": "glass_appearance",
+      "displayLabel": "ガラス仕上げ・目隠し",
+      "dataType": "ENUM",
+      "displayOrder": 700,
+      "required": false,
+      "autoSelectSingle": false,
+      "parentFields": [
+        "glass",
+        "glass_function"
+      ],
+      "selector": {
+        "glass": {
+          "$exists": true
+        }
+      },
+      "choices": [
+        {
+          "value": "MILKY",
+          "displayLabel": "乳白",
+          "selector": {
+            "glass_function": "MILKY"
+          },
+          "evidenceIds": [
+            "EV-V8-GLASS-DIAGRAM"
+          ],
+          "metadata": {
+            "manualCheck": true,
+            "estimateConfirmationRequired": true
+          },
+          "displayOrder": 1
+        },
+        {
+          "value": "CLEAR",
+          "displayLabel": "透明",
+          "selector": {
+            "glass": {
+              "$exists": true
+            },
+            "not": {
+              "glass_function": "MILKY"
+            }
+          },
+          "evidenceIds": [
+            "EV-V8-GLASS-DIAGRAM"
+          ],
+          "metadata": {
+            "manualCheck": true,
+            "estimateConfirmationRequired": true
+          },
+          "displayOrder": 2
+        },
+        {
+          "value": "OBSCURE",
+          "displayLabel": "型板",
+          "selector": {
+            "glass": {
+              "$exists": true
+            },
+            "not": {
+              "glass_function": "MILKY"
+            }
+          },
+          "evidenceIds": [
+            "EV-V8-GLASS-DIAGRAM"
+          ],
+          "metadata": {
+            "manualCheck": true,
+            "estimateConfirmationRequired": true
+          },
+          "displayOrder": 3
+        },
+        {
+          "value": "FROST",
+          "displayLabel": "フロスト",
+          "selector": {
+            "glass": {
+              "$exists": true
+            },
+            "not": {
+              "glass_function": "MILKY"
+            }
+          },
+          "evidenceIds": [
+            "EV-V8-GLASS-DIAGRAM"
+          ],
+          "metadata": {
+            "manualCheck": true,
+            "estimateConfirmationRequired": true
+          },
+          "displayOrder": 4
+        }
+      ]
     }
   ],
   "dependencies": [
@@ -2131,6 +2338,21 @@
         "確認日": "2026-10-14",
         "確度": "HIGH",
         "根拠内容": "SOURCE_NOTE_ONLY / NEW_CANDIDATE、Current未採用"
+      }
+    },
+    {
+      "id": "EV-V8-GLASS-DIAGRAM",
+      "source_id": "EV-V8-GLASS-DIAGRAM",
+      "payload": {
+        "evidence_id": "EV-V8-GLASS-DIAGRAM",
+        "資料名": "SN1200",
+        "発行年月": "2025-08",
+        "ページ/箇所": "PDF52 印刷48 / PDF56 印刷52 / PDF60 印刷56",
+        "URL": "https://webcatalog.lixil.co.jp/cgi-bin/openCatalog.cgi?c=SN1200&d=newinter",
+        "確認日": "2026-10-14",
+        "確度": "HIGH",
+        "sha256": "b837ce209c8b55b2b66b412a4e3c2694a78fd5de823efc7b2b960688a5668098",
+        "根拠内容": "公式ガラス体系図から候補UI投影を補完。組合せ・寸法は見積確認。価格/BOM/SetCode未確定。"
       }
     }
   ],

@@ -4,6 +4,12 @@ import {chromium} from 'playwright';
 const BASE=process.env.QA_BASE_URL??'http://127.0.0.1:4193',OUT='artifacts/replus-runtime-v5/output';
 const index=JSON.parse(await readFile('changes/replus-runtime-v5/index.json'));await mkdir(OUT,{recursive:true});
 const seeds=await Promise.all(index.products.map(async row=>({row,seed:JSON.parse(await readFile('artifacts/replus-runtime-v5/'+row.id.replace(':','-')+'.json')).selection})));
+for(const item of seeds){
+ const extra={
+  'CANDIDATE:RPL_ROOM':{glass_category:'Low-E複層ガラス',glass:'GL-LOWE-CLEAR',glass_function:'DISASTER',glass_appearance:'FROST',glass_gas:'ARGON',glass_spacer:'RESIN'},
+  'CANDIDATE:RPL_TW':{glass_category:'TW-GL-TRIPLE',glass:'TW-GL-CC',glass_function:'THIN',glass_appearance:'OBSCURE',glass_gas:'TW-GAS-KRYPTON'},
+ }[item.row.id];if(extra)item.seed={...item.seed,...extra};
+}
 const browser=await chromium.launch();
 try{
  const page=await browser.newPage();await page.goto(BASE);
