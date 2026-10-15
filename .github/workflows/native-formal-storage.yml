@@ -1,0 +1,24 @@
+name: Native Master Formal Storage
+on:
+  pull_request:
+    paths: ['contracts/production/**', 'scripts/production/**', '.github/workflows/native-formal-storage.yml']
+  push:
+    branches: [main]
+    paths: ['contracts/production/**', 'scripts/production/**', '.github/workflows/native-formal-storage.yml']
+jobs:
+  formal-boundaries:
+    runs-on: ubuntu-latest
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0}
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - run: pip install jsonschema==4.25.1 openpyxl==3.1.5
+      - run: python -B scripts/production/unpack-release-authority.py /tmp/native-formal-shared
+      - run: python -B scripts/production/formal-connection-scope.py
+      - run: python -B scripts/production/validate-sheet-package-connection.py
+      - run: python -B -m unittest discover -s scripts/production -p 'test_sheet_package_formal.py'
+        env:
+          SHARED_HARNESS_ROOT: /tmp/native-formal-shared

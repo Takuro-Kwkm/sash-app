@@ -404,6 +404,10 @@
         "sha256": "7b7544ca2f9124987286934bdb861e4194524926408277144663bd5598aa0a95",
         "mode": "EXISTING_FORMAL_SUCCESSOR",
         "native_preparer": "scripts/production/prepare-sheet-package-change.py"
+      },
+      "formal_profile": {
+        "path": "contracts/production/giesta2-formal-profile.v1.json",
+        "sha256": "09b5b1eece7625b0399c13c9a300ac97c34ebb54f33e2d6073f6604b8156aff8"
       }
     },
     {
