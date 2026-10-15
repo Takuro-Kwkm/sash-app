@@ -5,7 +5,7 @@
     "sha256": "0541a759e74bdcd1700da09756b4b68efe648ee4d60e6045d6f8efdbf07c7a5b",
     "implementation_sha": "68f2fe69831a33ab92789526bdcd7a49446122a2"
   },
-  "predecessor_native_commit": "54f397a8ef3b5061f35fd4d0b9100db7b159d88a",
+  "predecessor_native_commit": "5cca65e07e4a8051173dcd2862f145d5a5ff2553",
   "predecessor_profile": {
     "path": "contracts/production/authority-successors/giesta2-formal-predecessor-profile.v1.json",
     "sha256": "53684c248503fc863dcf686449cd93f2ee57c91b78d4ee6af28b55ffd6c25cfb"
@@ -20,7 +20,7 @@
   },
   "release_profile": {
     "path": "contracts/production/release-profile.v1.json",
-    "sha256": "49ab280a931d91581d2c5d319ccad9137c35cd8af1918f4176d200d792e79813"
+    "sha256": "2276257bb330458aa4868c72210de364b4e3461212960443e65ed5d3ad9ea359"
   },
   "semantic_delta": {
     "added": {},

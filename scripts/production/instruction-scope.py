@@ -54,6 +54,11 @@ def validate(root):
         module=importlib.util.module_from_spec(definition);definition.loader.exec_module(module)
         return module.validate(root)
     try:
+        if (Path(root)/'contracts/production/working-master-sales-scope.v1.json').exists():
+            file=Path(root)/'scripts/production/native-change-scope.py'
+            definition=importlib.util.spec_from_file_location('working_sales_native_guard',file)
+            module=importlib.util.module_from_spec(definition);definition.loader.exec_module(module)
+            return module.validate(root)
         result = verify(root)
         with tempfile.TemporaryDirectory(prefix='instruction-inspect-') as directory:
             baseline = Path(directory)/'native'

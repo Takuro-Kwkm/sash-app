@@ -739,15 +739,39 @@
         "ドアリモ玄関ドア 非防火"
       ],
       "repository": "Takuro-Kwkm/sash-app",
-      "connection_state": "ADAPTER_PENDING",
-      "current_formal_version": "v1.0-LEGACY-RECOVERY",
+      "connection_state": "CONNECTED",
+      "connection_scope": "EXISTING_WORKING_SALES_QA",
+      "current_working_version": "v1.0-LEGACY-RECOVERY",
       "formal_registry_selector": "YKK AP::ドアリモ玄関ドア 非防火",
-      "safe_failure": {
-        "state": "FAIL_CLOSED",
-        "code": "NATIVE_ADAPTER_UNAVAILABLE",
-        "writes": 0,
-        "fallback": false,
-        "next_action": "Registry-only product: bind a native adapter successor before mutation"
+      "default_gate": "QA_READY",
+      "baseline_selector": {
+        "registry_id": "1HMMZ8JdsbJPtL_8LjQfxMF8P_Zb4-LReqvPMFn1pJks",
+        "manufacturer": "YKK AP",
+        "series": "ドアリモ玄関ドア 非防火",
+        "state": "WORKING_RECOVERY"
+      },
+      "source_selector": {
+        "from": "LIVE_NATIVE_WORKING + REVIEWED_OFFICIAL_BYTES",
+        "role": "REVIEWED_CURRENT_NONFIRE_SALES_SCOPE",
+        "scope": "Working candidate only; no automatic price/Source promotion"
+      },
+      "native_adapter": "scripts/production/working-master-business-qa.py",
+      "prepare_adapter": "scripts/production/prepare-working-master-business-qa.py",
+      "validators": [
+        "native-working-identity",
+        "official-source-byte-review",
+        "shared-domain-qa",
+        "sales-request-handoff"
+      ],
+      "resume_selector": "IMMUTABLE_SPEC_AND_SHARED_V2_JOURNAL; completed recovery is INSPECT_ONLY",
+      "build_profile": {
+        "profile_id": "sash-existing-working-sales-qa-v1",
+        "path": "contracts/production/working-master-recovery/doorremo-nonfire.business-qa.v1.json",
+        "sha256": "3cf620e58ecdf8543831c71bbdf800da5d14c595ef2e00ed016f2cb5a979959b"
+      },
+      "unsupported_gates": {
+        "FORMAL": "NATIVE_FORMAL_PROFILE_AND_EXTERNAL_DECISION_REQUIRED",
+        "INTEGRATION": "NATIVE_RUNTIME_ADAPTER_UNAVAILABLE"
       }
     },
     {

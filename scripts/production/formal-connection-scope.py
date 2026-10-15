@@ -5,7 +5,7 @@ import json
 from pathlib import Path
 
 PATH = 'contracts/production/giesta2-formal-scope.v1.json'
-BASE = '54f397a8ef3b5061f35fd4d0b9100db7b159d88a'
+BASE = '5cca65e07e4a8051173dcd2862f145d5a5ff2553'
 FIXED = {
     PATH, '.github/workflows/native-formal-storage.yml',
     'contracts/production/giesta2-formal-profile.v1.json',

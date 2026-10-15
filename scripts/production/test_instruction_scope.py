@@ -24,19 +24,26 @@ class InstructionScopeTests(unittest.TestCase):
                 subprocess.run([sys.executable,'-B',str(baseline/'scripts/production/test_instruction_scope.py')],check=True)
             return
         with tempfile.TemporaryDirectory() as directory:
-            root=Path(directory)/'native';guard.materialize(ROOT,root)
-            for path in guard.ALLOWED:
-                target=root/path;target.parent.mkdir(parents=True,exist_ok=True);shutil.copy2(ROOT/path,target)
-            self.assertEqual(guard.verify(root)['status'],'PASS')
-            scope=json.loads((root/guard.SCOPE).read_text())
+            # The documentation Work is complete. Test its original guard at
+            # its sealed main, not against later authorized product changes.
+            sealed=Path(directory)/'sealed'
+            subprocess.run(['git','clone','--quiet','--shared','--dissociate',str(ROOT),str(sealed)],check=True)
+            subprocess.run(['git','checkout','--quiet','--detach','54f397a8ef3b5061f35fd4d0b9100db7b159d88a'],cwd=sealed,check=True)
+            definition=importlib.util.spec_from_file_location('sealed_instruction_guard',sealed/'scripts/production/instruction-scope.py')
+            original_guard=importlib.util.module_from_spec(definition);definition.loader.exec_module(original_guard)
+            root=Path(directory)/'native';original_guard.materialize(sealed,root)
+            for path in original_guard.ALLOWED:
+                target=root/path;target.parent.mkdir(parents=True,exist_ok=True);shutil.copy2(sealed/path,target)
+            self.assertEqual(original_guard.verify(root)['status'],'PASS')
+            scope=json.loads((root/original_guard.SCOPE).read_text())
             protected=next(p for p in scope['protected_sha256'] if p.startswith('contracts/production/') and p.endswith('.json'))
             target=root/protected;original=target.read_bytes();target.write_bytes(original+b' ')
-            with self.assertRaisesRegex(AssertionError,'BYTE_DRIFT'):guard.verify(root)
+            with self.assertRaisesRegex(AssertionError,'BYTE_DRIFT'):original_guard.verify(root)
             target.write_bytes(original)
             foreign=root/'unapproved-instruction.txt';foreign.write_text('extra')
-            with self.assertRaisesRegex(AssertionError,'OUT_OF_SCOPE'):guard.verify(root)
+            with self.assertRaisesRegex(AssertionError,'OUT_OF_SCOPE'):original_guard.verify(root)
             foreign.unlink()
-            scope['allowed_paths'].append('unapproved-instruction.txt');(root/guard.SCOPE).write_text(json.dumps(scope))
-            with self.assertRaisesRegex(AssertionError,'SCOPE_EXPANSION'):guard.verify(root)
+            scope['allowed_paths'].append('unapproved-instruction.txt');(root/original_guard.SCOPE).write_text(json.dumps(scope))
+            with self.assertRaisesRegex(AssertionError,'SCOPE_EXPANSION'):original_guard.verify(root)
 
 if __name__=='__main__':unittest.main()
