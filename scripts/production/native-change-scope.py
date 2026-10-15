@@ -12,7 +12,10 @@ def snapshot(root, revision):
 def validate(root):
     root=Path(root); errors=[]
     try:
-        s=json.loads((root/SCOPE_PATH).read_bytes())
+        # A later native Work owns a new immutable record. Preserve the completed
+        # release scope and inspect its original bytes at the sealed revision.
+        active=root/'contracts/production/working-master-sales-scope.v1.json'
+        s=json.loads((active if active.exists() else root/SCOPE_PATH).read_bytes())
         assert s['schema']=='NATIVE_IMMUTABLE_CHANGE_SCOPE_V1' and s['formal_writes_before_human'] is False, 'SCOPE_IDENTITY'
         before=snapshot(root,s['baseline_commit']); allowed=set(s['allowed_paths'])
         protected={p:digest(b) for p,b in before.items() if p not in allowed}

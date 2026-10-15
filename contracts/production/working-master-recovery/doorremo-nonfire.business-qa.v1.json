@@ -1,0 +1,30 @@
+{
+  "profile_id": "sash-existing-working-sales-qa-v1",
+  "status": "ADOPTED",
+  "scope": "EXISTING_WORKING_SALES_QA",
+  "repository": "Takuro-Kwkm/sash-app",
+  "product_id": "NATIVE_REGISTRY:YKK AP::ドアリモ玄関ドア 非防火",
+  "manufacturer": "YKK AP",
+  "working_folder_id": "1BMEgyMXkB3Enn2C3PCedMsBN-Y1iWVtd",
+  "native_adapter": "scripts/production/working-master-business-qa.py",
+  "native_prepare": "scripts/production/prepare-working-master-business-qa.py",
+  "target_gate": "QA_READY",
+  "predecessor_profile": {
+    "profile_id": "sash-working-master-recovery-v1",
+    "path": "contracts/production/working-master-recovery/doorremo-nonfire.v1.json",
+    "sha256": "de0aadf76563f9d09faacaa1d97ee0c34f77a6186396cd469e4cc7b9763564da"
+  },
+  "mutation_policy": "WORKING_CANDIDATE_ONLY; no Formal/Registry/Runtime/UI/Release writes",
+  "shared_owners": [
+    "product_master/build.py",
+    "product_master/validators/validate.py",
+    "harness/workflow.py",
+    "harness/production.py"
+  ],
+  "source_policy": "Actual official bytes, reviewed Source locators, fixed candidate hash; no historical PASS reuse",
+  "implementation_hashes": {
+    "scripts/production/working-master-business-qa.py": "479e98491eec6c329b7a49b9c967264a262fbdfc87d64f0d157075e3f50822c0",
+    "scripts/production/prepare-working-master-business-qa.py": "08ed2cfc4384094a5822ac1323a4c98daa3b81e2b6820ce95851497d45f2d20c",
+    "scripts/production/validate-working-master-business-qa.py": "10538db16a8262ce75735130fc3cbf955faa7de8440aac88c06a7b9fd582bbef"
+  }
+}
