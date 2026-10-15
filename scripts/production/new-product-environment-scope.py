@@ -3,6 +3,10 @@ import argparse,importlib.util,json,os,subprocess,sys,tempfile
 from pathlib import Path
 
 def validate(root):
+    if (Path(root)/'contracts/production/harness-instructions-scope.v1.json').exists():
+        definition=importlib.util.spec_from_file_location('instruction_scope',Path(root)/'scripts/production/instruction-scope.py')
+        module=importlib.util.module_from_spec(definition);definition.loader.exec_module(module)
+        return module.validate(root)
     root=Path(root).resolve()
     if (root/'contracts/production/native-change-scope.v1.json').exists():
         definition=importlib.util.spec_from_file_location('current_native_scope',root/'scripts/production/native-change-scope.py')
@@ -29,4 +33,8 @@ def main():
         subprocess.run(['git','checkout','--quiet','--detach',scope['starting_main']],cwd=destination,check=True)
         result.update(predecessor=str(destination),inspection='INSPECT_ONLY; NO_WORK_REPLAY')
     print(json.dumps({k:v for k,v in result.items() if k not in ('authorized_paths','verified_unchanged_sha256')}));return 0 if result['status']=='PASS' else 2
+if __name__=='__main__' and (Path(__file__).resolve().parents[2]/'contracts/production/harness-instructions-scope.v1.json').exists():
+    definition=importlib.util.spec_from_file_location('instruction_cli',Path(__file__).with_name('instruction-scope.py'))
+    module=importlib.util.module_from_spec(definition);definition.loader.exec_module(module)
+    raise SystemExit(module.delegate_cli(Path(__file__).resolve().parents[2],__file__,sys.argv[1:]))
 if __name__=='__main__':raise SystemExit(main())
