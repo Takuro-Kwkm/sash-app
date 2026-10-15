@@ -4,6 +4,7 @@
   "product_work_mutation_allowed": false,
   "allowed_paths": [
     ".github/workflows/harness-instructions.yml",
+    ".github/workflows/new-product-actual-build.yml",
     "AGENTS.md",
     "contracts/production/harness-instructions-scope.v1.json",
     "scripts/production/instruction-scope.py",
@@ -12,8 +13,9 @@
   ],
   "candidate_sha256": {
     ".github/workflows/harness-instructions.yml": "13188fccc798d9529312b051d4122aa92e482fa2bbd18aae4055095cd4dae1ec",
+    ".github/workflows/new-product-actual-build.yml": "22ee48622d43c1234be4b915c7d888916eee4a317e811092768fbe519adf9f6a",
     "AGENTS.md": "f4a68819f94d35f93c74638303850bfd2cba61bdd96beeaba70928d891a9d6c6",
-    "scripts/production/instruction-scope.py": "47992e95229736021e9615627d4296a31de9fdb353150d44353a6bc5462cfe85",
+    "scripts/production/instruction-scope.py": "445f56eb055ffe28f5395d64f2373d9c12b1ac95447254a0b0f261e872cb32b9",
     "scripts/production/new-product-environment-scope.py": "ec52c7c0e8324c5a1fd4178e324f239f5fdb9f84a91f3adfc8b94dfb225959b9",
     "scripts/production/test_instruction_scope.py": "a011e4d1aa4725711ee4134019547f35b210b77f452a67939f57549673eca8c6"
   },
@@ -30,7 +32,6 @@
     ".github/workflows/global-window-selection-flow-gate.yml": "cf288f70ca2234e8ce9820a2d917004b74b236548a141407f1368dea3cb733e6",
     ".github/workflows/governance-authorization.yml": "5e974cdb5b35d1014adde4242cb7b1604de6032b5002019816eb295ee5acfc07",
     ".github/workflows/native-sheets-connection.yml": "535fb6b398fba30efecc1b4a449c91db827dab43dca85e9a9167cd7e33ee2049",
-    ".github/workflows/new-product-actual-build.yml": "ce0bf598dafc34fb88f1c7928699117e3067390d5c46faa30cdf13c16337dd48",
     ".github/workflows/production-connection.yml": "9f3534a641271c2158fae9dd87fb112d7195685d65d99531c5852046f88dad0c",
     ".github/workflows/project-governance-gate.yml": "d139995c129cebe20f2aadf0069043d0a1aa4c4c005c0f0c4c52250093998291",
     ".github/workflows/rechent-estimate-integration.yml": "dfaaa689ca87ae90d57a7dab9ad5edc6eb52dbe2a37a0d413e834b6b37bdf6bf",

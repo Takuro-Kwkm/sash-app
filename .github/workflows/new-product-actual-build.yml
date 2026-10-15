@@ -22,7 +22,9 @@ jobs:
       - uses: actions/setup-python@v5
         with: {python-version: '3.12.14'}
       - name: Read back exact adopted shared dependency snapshot
-        run: python -B scripts/production/unpack-build-authority.py "$SHARED_HARNESS_ROOT"
+        run: |
+          python -B scripts/production/instruction-scope.py --parent /tmp/instruction-build-parent
+          python -B /tmp/instruction-build-parent/scripts/production/unpack-build-authority.py "$SHARED_HARNESS_ROOT"
       - run: python -m pip install -r "$SHARED_HARNESS_ROOT/requirements.txt"
       - run: python -m pip install openpyxl==3.1.5
       - name: Verify new-product environment without a registered product

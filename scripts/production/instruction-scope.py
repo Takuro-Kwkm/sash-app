@@ -13,6 +13,7 @@ from pathlib import Path
 BASE = '3f9f1668c92dd2dbb1561ced681158d2c53bbeab'
 SCOPE = 'contracts/production/harness-instructions-scope.v1.json'
 ALLOWED = {
+    '.github/workflows/new-product-actual-build.yml',
     '.github/workflows/harness-instructions.yml','scripts/production/new-product-environment-scope.py', 'contracts/production/harness-instructions-scope.v1.json', 'scripts/production/instruction-scope.py', 'AGENTS.md', 'scripts/production/test_instruction_scope.py'}
 
 def digest(data): return hashlib.sha256(data).hexdigest()
