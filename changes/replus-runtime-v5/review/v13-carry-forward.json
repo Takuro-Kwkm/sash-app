@@ -1,0 +1,18 @@
+{
+  "predecessor": "760d579199ccd445ff84bb24523f24c23c5c8f0b",
+  "sha256": {
+    "candidates/RPL_ATT_TW.json": "39e532f20efca68cd5c9c467aec7e682c99363a6f6ebc8dc956ffbabc8f693ff",
+    "candidates/RPL_ATT_TW.projection.json": "58b32931d37e0adbc0d6207553cdf387ede7650663655c29a9e34b0cc6a590c0",
+    "candidates/RPL_ATT_TW.module.json": "90854a05c2e0e8cb047c373d918bc5d093f0f21727f135fdaf78dd2dd46f541d",
+    "candidates/RPL_ATT_TW.xlsx": "83ef112eaf31406ebeb88890874d6021b345063cf05dd530cc4388888792b97d",
+    "candidates/RPL_ATT_TH.json": "c3f0772e1f867fc5a2343af7638d1bd4b17cc39f26a850bb39d01080629dc228",
+    "candidates/RPL_ATT_TH.projection.json": "0a612180f7e6bb657f37efac57766588fd73aa2a31151f479939c3984f7f02bf",
+    "candidates/RPL_ATT_TH.module.json": "6c20997561ea95211619810c6e57d27596a8c9e3a55fed830ae37924fa8ecfc6",
+    "candidates/RPL_ATT_TH.xlsx": "ba82a1fdb0ea1f37e099416ec8972c252e8bf361e3650cc9ec042ce2d1bd1fa2",
+    "candidates/RPL_CUT_MALL.json": "64057355af1ac35b41ab2d5a76442ef23ce3ac3205ce3f83b1d416b7df5c14c6",
+    "candidates/RPL_CUT_MALL.projection.json": "4d5dab86c8bbc7ad858348e388fb3f5254ab9f76b15deafae93294f88d621b83",
+    "candidates/RPL_CUT_MALL.module.json": "f4853f08c4b65fa7a3a374d4b8834db3861811f5e8adad5398320b8f951c0178",
+    "candidates/RPL_CUT_MALL.xlsx": "6d774be659bf4e47ba1d5435ca8ddcd149f129fb12d1333608fa565f132c32d5",
+    "flow/official-glass-review.v8.json": "4b9b3654885f17c68f2900abf6789bb539344d3ebb98cc1671e0fd94e198551f"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "component": "RPL_ATT_TH",
+  "patched_cells": 130,
+  "changed_sheet_xml": [
+    "xl/worksheets/sheet1.xml",
+    "xl/worksheets/sheet14.xml",
+    "xl/worksheets/sheet20.xml",
+    "xl/worksheets/sheet29.xml"
+  ],
+  "styles_xml_identical": true,
+  "untargeted_members_identical": true
+}

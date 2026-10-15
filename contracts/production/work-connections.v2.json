@@ -337,15 +337,31 @@
         "リプラス"
       ],
       "repository": "Takuro-Kwkm/sash-app",
-      "connection_state": "ADAPTER_PENDING",
+      "connection_state": "CONNECTED",
       "current_formal_version": "v1.1",
       "formal_registry_selector": "LIXIL::リプラス",
-      "safe_failure": {
-        "state": "FAIL_CLOSED",
-        "code": "NATIVE_ADAPTER_UNAVAILABLE",
-        "writes": 0,
-        "fallback": false,
-        "next_action": "Registry-only product: bind a native adapter successor before mutation"
+      "default_gate": "FORMAL_CHANGE_ADOPTION",
+      "baseline_selector": {
+        "registry_id": "1HMMZ8JdsbJPtL_8LjQfxMF8P_Zb4-LReqvPMFn1pJks",
+        "manufacturer": "LIXIL",
+        "series": "リプラス"
+      },
+      "source_selector": {
+        "from": "ACQUIRED_CURRENT_FORMAL_AND_V13_REVIEWED_SOURCES",
+        "mode": "REVIEWED_CLAIMS_ONLY"
+      },
+      "native_adapter": "scripts/production/table-package-change.py",
+      "validators": [
+        "native-table-parity",
+        "official-evidence-identity",
+        "reviewed-flow-registration",
+        "controlled-unresolved-handoff",
+        "shared-human-formal-save"
+      ],
+      "resume_selector": "IMMUTABLE_SPEC_AND_JOURNAL",
+      "native_change_profile": {
+        "path": "contracts/production/native-change-profiles/replus-v13.json",
+        "sha256": "bfdbf6947ae998c2cd70d47c941b08651c7890c8653cfd2c410de79fb65a77a0"
       }
     },
     {

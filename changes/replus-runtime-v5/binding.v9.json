@@ -1,0 +1,89 @@
+{
+  "schema": "CANDIDATE_UI_SUCCESSOR_BINDING_V1",
+  "revision": "REPLUS_GLOBAL_FLOW_V9_20261014",
+  "parent_commit": "4f373da8c6b657e21963919ca1cd33c0e5d147ac",
+  "current_authority": {
+    "repository": "Takuro-Kwkm/product-ui-contracts",
+    "head": "f7759305a53ed206280a395c0fce166476f2327f",
+    "registry_sha256": "361c3bdbceeac3b4e97720e0c8837c54a577d127e6d83bc8d280bd6e5bc03cd1",
+    "skill_authority_sha256": "39efeca95214ea29816c6666b53c8127e665c821e74e34de3738761cc797e7d3"
+  },
+  "consumer_adopted_implementation": "68f2fe69831a33ab92789526bdcd7a49446122a2",
+  "native_state": "FAIL_CLOSED:NATIVE_ADAPTER_UNAVAILABLE",
+  "formal_adoption": false,
+  "human_decision": null,
+  "release": false,
+  "application_policy": "USER_AUTHORIZED_COVER_COLORS_FOLLOW_SASH",
+  "index": {
+    "drive_file_id": "1bjH30eC8yiz60ryXqzINxJz7qU4d_5LG",
+    "bytes": 237999,
+    "sha256": "073d41095a8e04f2bd886206e3127bc4debb89c95b01184262f723d2311f8e56",
+    "readback": "MATCH"
+  },
+  "modules": [
+    {
+      "id": "CANDIDATE:RPL_ROOM",
+      "sha256": "c50f495d6e0415409d0fb491a2cd40d5b734d32052280bd29e5fefa89f80559c"
+    },
+    {
+      "id": "CANDIDATE:RPL_TW",
+      "sha256": "c2b1aa394f16ac56684812e0ce07704ebcec12ea309d7faafa5bb10bf38f6880"
+    },
+    {
+      "id": "CANDIDATE:RPL_EW",
+      "sha256": "16db161eb2f166ab9ef2110adfe8736eee3f1cd3f931720dd7745e98a566e8c7"
+    },
+    {
+      "id": "CANDIDATE:RPL_BATH",
+      "sha256": "2e83a6ee6c8e2c1b55336786a649956ce166d41dd0d903ea233923925ca0c4b2"
+    },
+    {
+      "id": "CANDIDATE:RPL_ATT_TW",
+      "sha256": "7d8f9a2d8f60fc600f3c2b43fe743a5a733416804cbdc65f7b62d0442b7abfca"
+    },
+    {
+      "id": "CANDIDATE:RPL_ATT_TH",
+      "sha256": "248927aa9497f7a99462d325bb10baaaf41c5768f4ac92c47bc0f8ec70f9c0e4"
+    },
+    {
+      "id": "CANDIDATE:RPL_CUT_MALL",
+      "sha256": "a0e17dff4810990eb8d5b2d78969846350015661434733cdc3a5ea8ed209c28c"
+    }
+  ],
+  "protected_files": {
+    "src/work-management/domain.mjs": "ec77668d877126b656382ca2105842f37e1fd4a188fb51fadf5c42d4d1368f41",
+    "src/work-management/field-workflow-scope.mjs": "6458a62cbbc2bbf29f541ab6d5faea3698f085cb2fdbb739ce435dc24fd5f905"
+  },
+  "qa": {
+    "unit_tests": {
+      "passed": 684,
+      "failed": 0
+    },
+    "focused": {
+      "passed": 49,
+      "failed": 0
+    },
+    "browser_widths": [
+      1280,
+      768,
+      390
+    ],
+    "candidate_save_reload_cases": 21,
+    "normal_business_cases": 24,
+    "persistence": "BROWSER_LOCAL_STORAGE",
+    "db_multi_device": "NOT_EXECUTED",
+    "native_authoring_components": 7,
+    "native_authoring_untargeted_bytes": "IDENTICAL",
+    "common_output_rows": 7,
+    "pdf_visual_pages": [
+      1,
+      2
+    ]
+  },
+  "pre_qa_index": {
+    "drive_file_id": "1nfyc1mPuppzfgR5zSJ6puisjvRJ7S5Hf",
+    "sha256": "2050769e30af2f567a56c21372d8c0382b9f5edcdaa2e9ac826f111e2409817a",
+    "bytes": 237999,
+    "readback": "MATCH"
+  }
+}

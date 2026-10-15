@@ -1,0 +1,23 @@
+{
+  "schema": "EXACT_SHARED_IMPLEMENTATION_DELTA_V1",
+  "scope": "Add optional composed-runtime metadata and declared flow only; existing TW response bytes unchanged",
+  "files": {
+    "src/catalog/runtime-master/new-construction-sash-runtime-ui-contract.mjs": {
+      "predecessor_sha256": "c6718a2b8b742867647881582328c4a65c4481bde80c163a6e9c335daf636a2c",
+      "sha256": "6bf80f2293b8d0393e2f93da24de21b47caa41007f9ce59826782f107fa6e14f",
+      "additions": [
+        "import {applyDeclaredWindowFlow} from './declared-window-flow.mjs';\n",
+        "  if(integration.uiFlowContract)return applyDeclaredWindowFlow(fields,integration);\n"
+      ]
+    },
+    "src/catalog/runtime-master/runtime-app-bridge.mjs": {
+      "predecessor_sha256": "3f61f87dc9e2a5cb2f64999d8989c5486b6b9747cd74e1639198725ae2dc3c33",
+      "sha256": "b2d89591856745b002859350e157f11d9b30d303ec8c97e5aad43108e2c6fc7e",
+      "additions": [
+        ",...(metadata?.productSelectionGroup?{productSelectionGroup:metadata.productSelectionGroup}:{}),...(metadata?.uiFlowContract?{uiFlowContract:metadata.uiFlowContract}:{})",
+        ",...(raw.pricing?{pricing:raw.pricing}:{}),...(raw.referenceResult?{referenceResult:raw.referenceResult}:{}),...(raw.derivedMeasurements?{derivedMeasurements:raw.derivedMeasurements}:{})"
+      ]
+    }
+  },
+  "independent_regression": "test/formal-composed-runtime-integration.test.mjs; 36 predecessor serialized response hashes"
+}

@@ -1,0 +1,18 @@
+{
+  "schema": "USER_SELECTION_POLICY_V1",
+  "revision": "REPLUS_SALES_FLOW_V10_20261014",
+  "parent_revision": "REPLUS_GLOBAL_FLOW_V9_20261014",
+  "formalAdoption": false,
+  "manufacturerFactsChanged": false,
+  "excludedSalesFields": [
+    "building_structure",
+    "installation_room",
+    "survey_cover_bottom",
+    "survey_cover_side",
+    "survey_cover_top",
+    "usage_humidity",
+    "work_space"
+  ],
+  "missingSiteConditions": "MANUAL_CHECK; never defaulted to suitable",
+  "scope": "Remove seven photographed sales inputs, required checks and obsolete saved selections; preserve source constraints, cover links and final dimensions"
+}

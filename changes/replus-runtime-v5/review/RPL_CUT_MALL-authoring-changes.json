@@ -1,0 +1,1129 @@
+[
+  {
+    "sheet": "02B_参照商品",
+    "row": 3,
+    "column": 4,
+    "before": "1ordbcPQS7XhptLMjRON2oxmdsPhs-aY-Wm7quPHvM9U",
+    "after": "10-ygy_wcdXN2u9brqU1AhucboJv5N5qk"
+  },
+  {
+    "sheet": "02B_参照商品",
+    "row": 3,
+    "column": 5,
+    "before": "サッシ商品マスター_v0.1",
+    "after": "integrated-v0.5 Current Authoring（固定SHA別記）"
+  },
+  {
+    "sheet": "02B_参照商品",
+    "row": 3,
+    "column": 6,
+    "before": "integrated-v0.1",
+    "after": "integrated-v0.5"
+  },
+  {
+    "sheet": "02B_参照商品",
+    "row": 3,
+    "column": 9,
+    "before": "CM-EV-003",
+    "after": "CM-EV-003;REF-TW-CURRENT-20261009-V4"
+  },
+  {
+    "sheet": "02B_参照商品",
+    "row": 4,
+    "column": 4,
+    "before": "1zHi-XsMqJp0MKH-sDoTcnTqkLMGcuRdo",
+    "after": "1_p-xJ9Mv7FecoR8Me0E43f3LEEkpVQSP"
+  },
+  {
+    "sheet": "02B_参照商品",
+    "row": 4,
+    "column": 5,
+    "before": "サーモスⅡH_商品マスター_v0.7_完全完成版.xlsx",
+    "after": "v0.9-R4 Current Authoring（固定SHA別記）"
+  },
+  {
+    "sheet": "02B_参照商品",
+    "row": 4,
+    "column": 6,
+    "before": "v0.7",
+    "after": "v0.9-R4"
+  },
+  {
+    "sheet": "02B_参照商品",
+    "row": 4,
+    "column": 9,
+    "before": "CM-EV-004",
+    "after": "CM-EV-004;REF-S2-CURRENT-20261009-V4"
+  },
+  {
+    "sheet": "02B_参照商品",
+    "row": 5,
+    "column": 4,
+    "before": "17lVzBZ1hp4RVcGv0yNdnrKt25SFO2FhL",
+    "after": "19sjSAPwyd30fF5akazldGs0wkhOGZF9v"
+  },
+  {
+    "sheet": "02B_参照商品",
+    "row": 5,
+    "column": 5,
+    "before": "サーモスL_商品マスター_v0.7_特注寸法発注アプリ投入完成版_QA確定.xlsx",
+    "after": "v0.7-R3 Current Authoring（固定SHA別記）"
+  },
+  {
+    "sheet": "02B_参照商品",
+    "row": 5,
+    "column": 6,
+    "before": "v0.7",
+    "after": "v0.7-R3"
+  },
+  {
+    "sheet": "02B_参照商品",
+    "row": 5,
+    "column": 9,
+    "before": "CM-EV-005",
+    "after": "CM-EV-005;REF-SL-CURRENT-20261009-V4"
+  },
+  {
+    "sheet": "02B_参照商品",
+    "row": 6,
+    "column": 5,
+    "before": "サーモスA_商品マスター_v0.7.xlsx",
+    "after": "v0.7 Current Authoring（固定SHA別記）"
+  },
+  {
+    "sheet": "02B_参照商品",
+    "row": 6,
+    "column": 9,
+    "before": "CM-EV-006",
+    "after": "CM-EV-006;REF-A-CURRENT-20261009-V4"
+  },
+  {
+    "sheet": "06_色",
+    "row": 9,
+    "column": 1,
+    "before": "CM-COLOR-WF-D",
+    "after": "CM-COLOR-NEW-WF-Y"
+  },
+  {
+    "sheet": "06_色",
+    "row": 9,
+    "column": 2,
+    "before": "cut_mall_window_frame_color",
+    "after": "new_construction_window_frame_color"
+  },
+  {
+    "sheet": "06_色",
+    "row": 9,
+    "column": 3,
+    "before": "D",
+    "after": "Y"
+  },
+  {
+    "sheet": "06_色",
+    "row": 9,
+    "column": 4,
+    "before": "クリエダーク",
+    "after": "プレシャスホワイト"
+  },
+  {
+    "sheet": "06_色",
+    "row": 10,
+    "column": 1,
+    "before": "CM-COLOR-WF-Y",
+    "after": "CM-COLOR-NEW-WF-WA"
+  },
+  {
+    "sheet": "06_色",
+    "row": 10,
+    "column": 2,
+    "before": "cut_mall_window_frame_color",
+    "after": "new_construction_window_frame_color"
+  },
+  {
+    "sheet": "06_色",
+    "row": 10,
+    "column": 3,
+    "before": "Y",
+    "after": "WA"
+  },
+  {
+    "sheet": "06_色",
+    "row": 10,
+    "column": 4,
+    "before": "プレシャスホワイト",
+    "after": "クリエアイボリー"
+  },
+  {
+    "sheet": "06_色",
+    "row": 11,
+    "column": 1,
+    "before": "CM-COLOR-WF-M",
+    "after": "CM-COLOR-NEW-WF-VM"
+  },
+  {
+    "sheet": "06_色",
+    "row": 11,
+    "column": 2,
+    "before": "cut_mall_window_frame_color",
+    "after": "new_construction_window_frame_color"
+  },
+  {
+    "sheet": "06_色",
+    "row": 11,
+    "column": 3,
+    "before": "M",
+    "after": "VM"
+  },
+  {
+    "sheet": "06_色",
+    "row": 11,
+    "column": 4,
+    "before": "クリエモカ",
+    "after": "ブラック"
+  },
+  {
+    "sheet": "06_色",
+    "row": 12,
+    "column": 1,
+    "before": "CM-COLOR-WF-L",
+    "after": "CM-COLOR-NEW-WF-D"
+  },
+  {
+    "sheet": "06_色",
+    "row": 12,
+    "column": 2,
+    "before": "cut_mall_window_frame_color",
+    "after": "new_construction_window_frame_color"
+  },
+  {
+    "sheet": "06_色",
+    "row": 12,
+    "column": 3,
+    "before": "L",
+    "after": "D"
+  },
+  {
+    "sheet": "06_色",
+    "row": 12,
+    "column": 4,
+    "before": "クリエラスク",
+    "after": "クリエダーク"
+  },
+  {
+    "sheet": "06_色",
+    "row": 13,
+    "column": 1,
+    "before": "CM-COLOR-WF-P",
+    "after": "CM-COLOR-NEW-WF-M"
+  },
+  {
+    "sheet": "06_色",
+    "row": 13,
+    "column": 2,
+    "before": "cut_mall_window_frame_color",
+    "after": "new_construction_window_frame_color"
+  },
+  {
+    "sheet": "06_色",
+    "row": 13,
+    "column": 3,
+    "before": "P",
+    "after": "M"
+  },
+  {
+    "sheet": "06_色",
+    "row": 13,
+    "column": 4,
+    "before": "クリエペール",
+    "after": "クリエモカ"
+  },
+  {
+    "sheet": "06_色",
+    "row": 14,
+    "column": 1,
+    "before": "CM-COLOR-WF-WA",
+    "after": "CM-COLOR-NEW-WF-L"
+  },
+  {
+    "sheet": "06_色",
+    "row": 14,
+    "column": 2,
+    "before": "cut_mall_window_frame_color",
+    "after": "new_construction_window_frame_color"
+  },
+  {
+    "sheet": "06_色",
+    "row": 14,
+    "column": 3,
+    "before": "WA",
+    "after": "L"
+  },
+  {
+    "sheet": "06_色",
+    "row": 14,
+    "column": 4,
+    "before": "クリエアイボリー",
+    "after": "クリエラスク"
+  },
+  {
+    "sheet": "06_色",
+    "row": 15,
+    "column": 1,
+    "before": "CM-COLOR-NEW-WF-Y",
+    "after": "CM-COLOR-NEW-WF-P"
+  },
+  {
+    "sheet": "06_色",
+    "row": 15,
+    "column": 3,
+    "before": "Y",
+    "after": "P"
+  },
+  {
+    "sheet": "06_色",
+    "row": 15,
+    "column": 4,
+    "before": "プレシャスホワイト",
+    "after": "クリエペール"
+  },
+  {
+    "sheet": "06_色",
+    "row": 16,
+    "column": 1,
+    "before": "CM-COLOR-NEW-WF-WA",
+    "after": "CM-COLOR-ANG-T"
+  },
+  {
+    "sheet": "06_色",
+    "row": 16,
+    "column": 2,
+    "before": "new_construction_window_frame_color",
+    "after": "interior_adjustment_angle_color"
+  },
+  {
+    "sheet": "06_色",
+    "row": 16,
+    "column": 3,
+    "before": "WA",
+    "after": "T"
+  },
+  {
+    "sheet": "06_色",
+    "row": 16,
+    "column": 4,
+    "before": "クリエアイボリー",
+    "after": "ブラック"
+  },
+  {
+    "sheet": "06_色",
+    "row": 17,
+    "column": 1,
+    "before": "CM-COLOR-NEW-WF-VM",
+    "after": "CM-COLOR-ANG-G"
+  },
+  {
+    "sheet": "06_色",
+    "row": 17,
+    "column": 2,
+    "before": "new_construction_window_frame_color",
+    "after": "interior_adjustment_angle_color"
+  },
+  {
+    "sheet": "06_色",
+    "row": 17,
+    "column": 3,
+    "before": "VM",
+    "after": "G"
+  },
+  {
+    "sheet": "06_色",
+    "row": 17,
+    "column": 4,
+    "before": "ブラック",
+    "after": "オータムブラウン"
+  },
+  {
+    "sheet": "06_色",
+    "row": 18,
+    "column": 1,
+    "before": "CM-COLOR-NEW-WF-D",
+    "after": "CM-COLOR-ANG-K"
+  },
+  {
+    "sheet": "06_色",
+    "row": 18,
+    "column": 2,
+    "before": "new_construction_window_frame_color",
+    "after": "interior_adjustment_angle_color"
+  },
+  {
+    "sheet": "06_色",
+    "row": 18,
+    "column": 3,
+    "before": "D",
+    "after": "K"
+  },
+  {
+    "sheet": "06_色",
+    "row": 18,
+    "column": 4,
+    "before": "クリエダーク",
+    "after": "シャイングレー"
+  },
+  {
+    "sheet": "06_色",
+    "row": 19,
+    "column": 1,
+    "before": "CM-COLOR-NEW-WF-M",
+    "after": "CM-COLOR-ANG-D"
+  },
+  {
+    "sheet": "06_色",
+    "row": 19,
+    "column": 2,
+    "before": "new_construction_window_frame_color",
+    "after": "interior_adjustment_angle_color"
+  },
+  {
+    "sheet": "06_色",
+    "row": 19,
+    "column": 3,
+    "before": "M",
+    "after": "D"
+  },
+  {
+    "sheet": "06_色",
+    "row": 19,
+    "column": 4,
+    "before": "クリエモカ",
+    "after": "ナチュラルシルバー"
+  },
+  {
+    "sheet": "06_色",
+    "row": 20,
+    "column": 1,
+    "before": "CM-COLOR-NEW-WF-L",
+    "after": "CM-COLOR-ANG-W"
+  },
+  {
+    "sheet": "06_色",
+    "row": 20,
+    "column": 2,
+    "before": "new_construction_window_frame_color",
+    "after": "interior_adjustment_angle_color"
+  },
+  {
+    "sheet": "06_色",
+    "row": 20,
+    "column": 3,
+    "before": "L",
+    "after": "W"
+  },
+  {
+    "sheet": "06_色",
+    "row": 20,
+    "column": 4,
+    "before": "クリエラスク",
+    "after": "ホワイト"
+  },
+  {
+    "sheet": "06_色",
+    "row": 21,
+    "column": 1,
+    "before": "CM-COLOR-NEW-WF-P",
+    "after": "CM-COLOR-ANG-C"
+  },
+  {
+    "sheet": "06_色",
+    "row": 21,
+    "column": 2,
+    "before": "new_construction_window_frame_color",
+    "after": "interior_adjustment_angle_color"
+  },
+  {
+    "sheet": "06_色",
+    "row": 21,
+    "column": 3,
+    "before": "P",
+    "after": "C"
+  },
+  {
+    "sheet": "06_色",
+    "row": 21,
+    "column": 4,
+    "before": "クリエペール",
+    "after": "クリエモカP"
+  },
+  {
+    "sheet": "06_色",
+    "row": 22,
+    "column": 1,
+    "before": "CM-COLOR-ANG-T",
+    "after": "CM-COLOR-ANG-B"
+  },
+  {
+    "sheet": "06_色",
+    "row": 22,
+    "column": 3,
+    "before": "T",
+    "after": "B"
+  },
+  {
+    "sheet": "06_色",
+    "row": 22,
+    "column": 4,
+    "before": "ブラック",
+    "after": "クリエラスクP"
+  },
+  {
+    "sheet": "06_色",
+    "row": 23,
+    "column": 1,
+    "before": "CM-COLOR-ANG-G",
+    "after": "CM-COLOR-ANG-P"
+  },
+  {
+    "sheet": "06_色",
+    "row": 23,
+    "column": 3,
+    "before": "G",
+    "after": "P"
+  },
+  {
+    "sheet": "06_色",
+    "row": 23,
+    "column": 4,
+    "before": "オータムブラウン",
+    "after": "クリエペールP"
+  },
+  {
+    "sheet": "06_色",
+    "row": 24,
+    "column": 1,
+    "before": "CM-COLOR-ANG-K",
+    "after": "CM-COLOR-ANG-F"
+  },
+  {
+    "sheet": "06_色",
+    "row": 24,
+    "column": 3,
+    "before": "K",
+    "after": "F"
+  },
+  {
+    "sheet": "06_色",
+    "row": 24,
+    "column": 4,
+    "before": "シャイングレー",
+    "after": "プレシャスホワイトP"
+  },
+  {
+    "sheet": "06_色",
+    "row": 25,
+    "column": 1,
+    "before": "CM-COLOR-ANG-D",
+    "after": "V5-CM-WOOD-D"
+  },
+  {
+    "sheet": "06_色",
+    "row": 25,
+    "column": 2,
+    "before": "interior_adjustment_angle_color",
+    "after": "cut_mall_window_frame_color"
+  },
+  {
+    "sheet": "06_色",
+    "row": 25,
+    "column": 4,
+    "before": "ナチュラルシルバー",
+    "after": "クリエダーク"
+  },
+  {
+    "sheet": "06_色",
+    "row": 25,
+    "column": 7,
+    "before": "CM-EV-015",
+    "after": "DELTA-CUT-WOOD-EV-V4"
+  },
+  {
+    "sheet": "06_色",
+    "row": 26,
+    "column": 1,
+    "before": "CM-COLOR-ANG-W",
+    "after": "V5-CM-WOOD-M"
+  },
+  {
+    "sheet": "06_色",
+    "row": 26,
+    "column": 2,
+    "before": "interior_adjustment_angle_color",
+    "after": "cut_mall_window_frame_color"
+  },
+  {
+    "sheet": "06_色",
+    "row": 26,
+    "column": 3,
+    "before": "W",
+    "after": "M"
+  },
+  {
+    "sheet": "06_色",
+    "row": 26,
+    "column": 4,
+    "before": "ホワイト",
+    "after": "クリエモカ"
+  },
+  {
+    "sheet": "06_色",
+    "row": 26,
+    "column": 7,
+    "before": "CM-EV-015",
+    "after": "DELTA-CUT-WOOD-EV-V4"
+  },
+  {
+    "sheet": "06_色",
+    "row": 27,
+    "column": 1,
+    "before": "CM-COLOR-ANG-C",
+    "after": "V5-CM-WOOD-Y"
+  },
+  {
+    "sheet": "06_色",
+    "row": 27,
+    "column": 2,
+    "before": "interior_adjustment_angle_color",
+    "after": "cut_mall_window_frame_color"
+  },
+  {
+    "sheet": "06_色",
+    "row": 27,
+    "column": 3,
+    "before": "C",
+    "after": "Y"
+  },
+  {
+    "sheet": "06_色",
+    "row": 27,
+    "column": 4,
+    "before": "クリエモカP",
+    "after": "プレシャスホワイト"
+  },
+  {
+    "sheet": "06_色",
+    "row": 27,
+    "column": 7,
+    "before": "CM-EV-015",
+    "after": "DELTA-CUT-WOOD-EV-V4"
+  },
+  {
+    "sheet": "06_色",
+    "row": 28,
+    "column": 1,
+    "before": "CM-COLOR-ANG-B",
+    "after": "V5-CM-WOOD-AD"
+  },
+  {
+    "sheet": "06_色",
+    "row": 28,
+    "column": 2,
+    "before": "interior_adjustment_angle_color",
+    "after": "cut_mall_window_frame_color"
+  },
+  {
+    "sheet": "06_色",
+    "row": 28,
+    "column": 3,
+    "before": "B",
+    "after": "AD"
+  },
+  {
+    "sheet": "06_色",
+    "row": 28,
+    "column": 4,
+    "before": "クリエラスクP",
+    "after": "クリエチェリー"
+  },
+  {
+    "sheet": "06_色",
+    "row": 28,
+    "column": 7,
+    "before": "CM-EV-015",
+    "after": "DELTA-CUT-WOOD-EV-V4"
+  },
+  {
+    "sheet": "06_色",
+    "row": 29,
+    "column": 1,
+    "before": "CM-COLOR-ANG-P",
+    "after": "V5-CM-WOOD-AC"
+  },
+  {
+    "sheet": "06_色",
+    "row": 29,
+    "column": 2,
+    "before": "interior_adjustment_angle_color",
+    "after": "cut_mall_window_frame_color"
+  },
+  {
+    "sheet": "06_色",
+    "row": 29,
+    "column": 3,
+    "before": "P",
+    "after": "AC"
+  },
+  {
+    "sheet": "06_色",
+    "row": 29,
+    "column": 4,
+    "before": "クリエペールP",
+    "after": "クリエオーク"
+  },
+  {
+    "sheet": "06_色",
+    "row": 29,
+    "column": 7,
+    "before": "CM-EV-015",
+    "after": "DELTA-CUT-WOOD-EV-V4"
+  },
+  {
+    "sheet": "06_色",
+    "row": 30,
+    "column": 1,
+    "before": "CM-COLOR-ANG-F",
+    "after": "V5-CM-WOOD-WA"
+  },
+  {
+    "sheet": "06_色",
+    "row": 30,
+    "column": 2,
+    "before": "interior_adjustment_angle_color",
+    "after": "cut_mall_window_frame_color"
+  },
+  {
+    "sheet": "06_色",
+    "row": 30,
+    "column": 3,
+    "before": "F",
+    "after": "WA"
+  },
+  {
+    "sheet": "06_色",
+    "row": 30,
+    "column": 4,
+    "before": "プレシャスホワイトP",
+    "after": "クリエアイボリー"
+  },
+  {
+    "sheet": "06_色",
+    "row": 30,
+    "column": 7,
+    "before": "CM-EV-015",
+    "after": "DELTA-CUT-WOOD-EV-V4"
+  },
+  {
+    "sheet": "10_適用条件",
+    "row": 8,
+    "column": 4,
+    "before": "UNAVAILABLE",
+    "after": "MANUAL_CHECK"
+  },
+  {
+    "sheet": "10_適用条件",
+    "row": 8,
+    "column": 5,
+    "before": "HIDE",
+    "after": "外付新設必須・条件付き確認"
+  },
+  {
+    "sheet": "10_適用条件",
+    "row": 8,
+    "column": 6,
+    "before": "COMPLETE",
+    "after": "COMPLETE_WITH_EXTERNAL_CHECK"
+  },
+  {
+    "sheet": "10_適用条件",
+    "row": 8,
+    "column": 7,
+    "before": "CM-EV-012",
+    "after": "CM-EV-012;EV-V5-CUT-EXTERNAL"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 19,
+    "column": 1,
+    "before": null,
+    "after": "DELTA-CUT-WOOD-EV-V4"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 19,
+    "column": 2,
+    "before": null,
+    "after": "公式業務用資料集"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 19,
+    "column": 3,
+    "before": null,
+    "after": "IS9800"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 19,
+    "column": 4,
+    "before": null,
+    "after": "2026-10"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 19,
+    "column": 5,
+    "before": null,
+    "after": "PDF 122"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 19,
+    "column": 6,
+    "before": null,
+    "after": "https://webcatalog.lixil.co.jp/cgi-bin/openCatalog.cgi?c=IS9800&d=newinter"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 19,
+    "column": 7,
+    "before": null,
+    "after": "2026-10-14"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 19,
+    "column": 8,
+    "before": null,
+    "after": "HIGH"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 19,
+    "column": 9,
+    "before": null,
+    "after": "UPDATE_CUT_MALL_WINDOW_FRAME_COLOR_ONLY / NEW_CANDIDATE、Current未採用"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 20,
+    "column": 1,
+    "before": null,
+    "after": "REF-TW-CURRENT-20261009-V4"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 20,
+    "column": 2,
+    "before": null,
+    "after": "Current正本参照"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 20,
+    "column": 3,
+    "before": null,
+    "after": "integrated-v0.5 Current Authoring"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 20,
+    "column": 4,
+    "before": null,
+    "after": "2026-10-14"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 20,
+    "column": 5,
+    "before": null,
+    "after": "固定参照ID/SHA"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 20,
+    "column": 6,
+    "before": null,
+    "after": "https://drive.google.com/file/d/10-ygy_wcdXN2u9brqU1AhucboJv5N5qk/view"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 20,
+    "column": 7,
+    "before": null,
+    "after": "2026-10-14"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 20,
+    "column": 8,
+    "before": null,
+    "after": "HIGH"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 20,
+    "column": 9,
+    "before": null,
+    "after": "5062503d3387999c2eed0862b3386e5248ae131008cbc37975956d709d598ba6"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 21,
+    "column": 1,
+    "before": null,
+    "after": "REF-S2-CURRENT-20261009-V4"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 21,
+    "column": 2,
+    "before": null,
+    "after": "Current正本参照"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 21,
+    "column": 3,
+    "before": null,
+    "after": "v0.9-R4 Current Authoring"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 21,
+    "column": 4,
+    "before": null,
+    "after": "2026-10-14"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 21,
+    "column": 5,
+    "before": null,
+    "after": "固定参照ID/SHA"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 21,
+    "column": 6,
+    "before": null,
+    "after": "https://drive.google.com/file/d/1_p-xJ9Mv7FecoR8Me0E43f3LEEkpVQSP/view"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 21,
+    "column": 7,
+    "before": null,
+    "after": "2026-10-14"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 21,
+    "column": 8,
+    "before": null,
+    "after": "HIGH"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 21,
+    "column": 9,
+    "before": null,
+    "after": "eeb285689a1e8a78469d5d13d1e015083d7f2e71ab274427dcfd413e33adc8e4"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 22,
+    "column": 1,
+    "before": null,
+    "after": "REF-SL-CURRENT-20261009-V4"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 22,
+    "column": 2,
+    "before": null,
+    "after": "Current正本参照"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 22,
+    "column": 3,
+    "before": null,
+    "after": "v0.7-R3 Current Authoring"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 22,
+    "column": 4,
+    "before": null,
+    "after": "2026-10-14"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 22,
+    "column": 5,
+    "before": null,
+    "after": "固定参照ID/SHA"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 22,
+    "column": 6,
+    "before": null,
+    "after": "https://drive.google.com/file/d/19sjSAPwyd30fF5akazldGs0wkhOGZF9v/view"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 22,
+    "column": 7,
+    "before": null,
+    "after": "2026-10-14"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 22,
+    "column": 8,
+    "before": null,
+    "after": "HIGH"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 22,
+    "column": 9,
+    "before": null,
+    "after": "42a1a159c199ac0290f4862b20381abf2450b686ae8a8a2abdaa2d428a8c73f8"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 23,
+    "column": 1,
+    "before": null,
+    "after": "REF-A-CURRENT-20261009-V4"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 23,
+    "column": 2,
+    "before": null,
+    "after": "Current正本参照"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 23,
+    "column": 3,
+    "before": null,
+    "after": "v0.7 Current Authoring"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 23,
+    "column": 4,
+    "before": null,
+    "after": "2026-10-14"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 23,
+    "column": 5,
+    "before": null,
+    "after": "固定参照ID/SHA"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 23,
+    "column": 6,
+    "before": null,
+    "after": "https://drive.google.com/file/d/1cDEFzi0g1DzM5YoeGvZtHuXionD7tmFD/view"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 23,
+    "column": 7,
+    "before": null,
+    "after": "2026-10-14"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 23,
+    "column": 8,
+    "before": null,
+    "after": "HIGH"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 23,
+    "column": 9,
+    "before": null,
+    "after": "1aae676ab404e9110ec6bb5aab522c6c0dc2fdc856a0d7c734fd2561fc5dfe47"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 24,
+    "column": 1,
+    "before": null,
+    "after": "EV-V5-CUT-EXTERNAL"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 24,
+    "column": 2,
+    "before": null,
+    "after": "公式カタログ"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 24,
+    "column": 3,
+    "before": null,
+    "after": "SN1200"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 24,
+    "column": 4,
+    "before": null,
+    "after": "2025-08"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 24,
+    "column": 5,
+    "before": null,
+    "after": "PDF277/280 印刷273/276"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 24,
+    "column": 6,
+    "before": null,
+    "after": "https://drive.google.com/file/d/1wH1nhmsftl6y8Mp7y6twtoXSi6rxqxzT/view"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 24,
+    "column": 7,
+    "before": null,
+    "after": "2026-10-14"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 24,
+    "column": 8,
+    "before": null,
+    "after": "HIGH"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 24,
+    "column": 9,
+    "before": null,
+    "after": "外付→外付新設、雨戸は鏡板付戸袋のみ、取付幅W+c。自動施工可にしない"
+  }
+]

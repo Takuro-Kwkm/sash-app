@@ -1,0 +1,912 @@
+[
+  {
+    "sheet": "90_Evidence",
+    "row": 23,
+    "column": 1,
+    "before": null,
+    "after": "DELTA-SPACER-EV-V4"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 23,
+    "column": 2,
+    "before": null,
+    "after": "公式業務用資料集"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 23,
+    "column": 3,
+    "before": null,
+    "after": "IS9800"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 23,
+    "column": 4,
+    "before": null,
+    "after": "2026-10"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 23,
+    "column": 5,
+    "before": null,
+    "after": "PDF 52,104,116,120"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 23,
+    "column": 6,
+    "before": null,
+    "after": "https://webcatalog.lixil.co.jp/cgi-bin/openCatalog.cgi?c=IS9800&d=newinter"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 23,
+    "column": 7,
+    "before": null,
+    "after": "2026-10-14"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 23,
+    "column": 8,
+    "before": null,
+    "after": "HIGH"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 23,
+    "column": 9,
+    "before": null,
+    "after": "ADD_15x20_SPACER / NEW_CANDIDATE、Current未採用"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 24,
+    "column": 1,
+    "before": null,
+    "after": "DELTA-CASING-EV-V4"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 24,
+    "column": 2,
+    "before": null,
+    "after": "公式業務用資料集"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 24,
+    "column": 3,
+    "before": null,
+    "after": "IS9800"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 24,
+    "column": 4,
+    "before": null,
+    "after": "2026-10"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 24,
+    "column": 5,
+    "before": null,
+    "after": "PDF 51,115,119"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 24,
+    "column": 6,
+    "before": null,
+    "after": "https://webcatalog.lixil.co.jp/cgi-bin/openCatalog.cgi?c=IS9800&d=newinter"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 24,
+    "column": 7,
+    "before": null,
+    "after": "2026-10-14"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 24,
+    "column": 8,
+    "before": null,
+    "after": "HIGH"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 24,
+    "column": 9,
+    "before": null,
+    "after": "UPDATE_WOODEN_CASING_COLOR_SCOPE / NEW_CANDIDATE、Current未採用"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 25,
+    "column": 1,
+    "before": null,
+    "after": "DELTA-FILLER-EV-V4"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 25,
+    "column": 2,
+    "before": null,
+    "after": "公式業務用資料集"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 25,
+    "column": 3,
+    "before": null,
+    "after": "IS9800"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 25,
+    "column": 4,
+    "before": null,
+    "after": "2026-10"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 25,
+    "column": 5,
+    "before": null,
+    "after": "PDF 51,115,119"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 25,
+    "column": 6,
+    "before": null,
+    "after": "https://webcatalog.lixil.co.jp/cgi-bin/openCatalog.cgi?c=IS9800&d=newinter"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 25,
+    "column": 7,
+    "before": null,
+    "after": "2026-10-14"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 25,
+    "column": 8,
+    "before": null,
+    "after": "HIGH"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 25,
+    "column": 9,
+    "before": null,
+    "after": "UPDATE_FILLER_NAME_AND_VARIANTS / NEW_CANDIDATE、Current未採用"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 26,
+    "column": 1,
+    "before": null,
+    "after": "DELTA-LEADTIME-EV-V4"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 26,
+    "column": 2,
+    "before": null,
+    "after": "公式業務用資料集"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 26,
+    "column": 3,
+    "before": null,
+    "after": "IS9800"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 26,
+    "column": 4,
+    "before": null,
+    "after": "2026-10"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 26,
+    "column": 5,
+    "before": null,
+    "after": "PDF 235"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 26,
+    "column": 6,
+    "before": null,
+    "after": "https://webcatalog.lixil.co.jp/cgi-bin/openCatalog.cgi?c=IS9800&d=newinter"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 26,
+    "column": 7,
+    "before": null,
+    "after": "2026-10-14"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 26,
+    "column": 8,
+    "before": null,
+    "after": "HIGH"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 26,
+    "column": 9,
+    "before": null,
+    "after": "SOURCE_NOTE_ONLY / NEW_CANDIDATE、Current未採用"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 27,
+    "column": 1,
+    "before": null,
+    "after": "REF-S2-CURRENT-20261009-V4"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 27,
+    "column": 2,
+    "before": null,
+    "after": "Current正本参照"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 27,
+    "column": 3,
+    "before": null,
+    "after": "v0.9-R4 Current Authoring"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 27,
+    "column": 4,
+    "before": null,
+    "after": "2026-10-14"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 27,
+    "column": 5,
+    "before": null,
+    "after": "固定参照ID/SHA"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 27,
+    "column": 6,
+    "before": null,
+    "after": "https://drive.google.com/file/d/1_p-xJ9Mv7FecoR8Me0E43f3LEEkpVQSP/view"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 27,
+    "column": 7,
+    "before": null,
+    "after": "2026-10-14"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 27,
+    "column": 8,
+    "before": null,
+    "after": "HIGH"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 27,
+    "column": 9,
+    "before": null,
+    "after": "eeb285689a1e8a78469d5d13d1e015083d7f2e71ab274427dcfd413e33adc8e4"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 28,
+    "column": 1,
+    "before": null,
+    "after": "REF-SL-CURRENT-20261009-V4"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 28,
+    "column": 2,
+    "before": null,
+    "after": "Current正本参照"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 28,
+    "column": 3,
+    "before": null,
+    "after": "v0.7-R3 Current Authoring"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 28,
+    "column": 4,
+    "before": null,
+    "after": "2026-10-14"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 28,
+    "column": 5,
+    "before": null,
+    "after": "固定参照ID/SHA"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 28,
+    "column": 6,
+    "before": null,
+    "after": "https://drive.google.com/file/d/19sjSAPwyd30fF5akazldGs0wkhOGZF9v/view"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 28,
+    "column": 7,
+    "before": null,
+    "after": "2026-10-14"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 28,
+    "column": 8,
+    "before": null,
+    "after": "HIGH"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 28,
+    "column": 9,
+    "before": null,
+    "after": "42a1a159c199ac0290f4862b20381abf2450b686ae8a8a2abdaa2d428a8c73f8"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 29,
+    "column": 1,
+    "before": null,
+    "after": "REF-A-CURRENT-20261009-V4"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 29,
+    "column": 2,
+    "before": null,
+    "after": "Current正本参照"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 29,
+    "column": 3,
+    "before": null,
+    "after": "v0.7 Current Authoring"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 29,
+    "column": 4,
+    "before": null,
+    "after": "2026-10-14"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 29,
+    "column": 5,
+    "before": null,
+    "after": "固定参照ID/SHA"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 29,
+    "column": 6,
+    "before": null,
+    "after": "https://drive.google.com/file/d/1cDEFzi0g1DzM5YoeGvZtHuXionD7tmFD/view"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 29,
+    "column": 7,
+    "before": null,
+    "after": "2026-10-14"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 29,
+    "column": 8,
+    "before": null,
+    "after": "HIGH"
+  },
+  {
+    "sheet": "90_Evidence",
+    "row": 29,
+    "column": 9,
+    "before": null,
+    "after": "1aae676ab404e9110ec6bb5aab522c6c0dc2fdc856a0d7c734fd2561fc5dfe47"
+  },
+  {
+    "sheet": "06_色",
+    "row": 21,
+    "column": 1,
+    "before": null,
+    "after": "RPL_ATT_TH-CASING-D"
+  },
+  {
+    "sheet": "06_色",
+    "row": 21,
+    "column": 2,
+    "before": null,
+    "after": "wooden_casing_color"
+  },
+  {
+    "sheet": "06_色",
+    "row": 21,
+    "column": 3,
+    "before": null,
+    "after": "D"
+  },
+  {
+    "sheet": "06_色",
+    "row": 21,
+    "column": 4,
+    "before": null,
+    "after": "クリエダーク"
+  },
+  {
+    "sheet": "06_色",
+    "row": 21,
+    "column": 5,
+    "before": null,
+    "after": "USER_SELECT"
+  },
+  {
+    "sheet": "06_色",
+    "row": 21,
+    "column": 6,
+    "before": null,
+    "after": "木製ケーシング"
+  },
+  {
+    "sheet": "06_色",
+    "row": 21,
+    "column": 7,
+    "before": null,
+    "after": "COMPLETE"
+  },
+  {
+    "sheet": "06_色",
+    "row": 21,
+    "column": 8,
+    "before": null,
+    "after": "DELTA-CASING-EV-V4"
+  },
+  {
+    "sheet": "06_色",
+    "row": 22,
+    "column": 1,
+    "before": null,
+    "after": "RPL_ATT_TH-CASING-M"
+  },
+  {
+    "sheet": "06_色",
+    "row": 22,
+    "column": 2,
+    "before": null,
+    "after": "wooden_casing_color"
+  },
+  {
+    "sheet": "06_色",
+    "row": 22,
+    "column": 3,
+    "before": null,
+    "after": "M"
+  },
+  {
+    "sheet": "06_色",
+    "row": 22,
+    "column": 4,
+    "before": null,
+    "after": "クリエモカ"
+  },
+  {
+    "sheet": "06_色",
+    "row": 22,
+    "column": 5,
+    "before": null,
+    "after": "USER_SELECT"
+  },
+  {
+    "sheet": "06_色",
+    "row": 22,
+    "column": 6,
+    "before": null,
+    "after": "木製ケーシング"
+  },
+  {
+    "sheet": "06_色",
+    "row": 22,
+    "column": 7,
+    "before": null,
+    "after": "COMPLETE"
+  },
+  {
+    "sheet": "06_色",
+    "row": 22,
+    "column": 8,
+    "before": null,
+    "after": "DELTA-CASING-EV-V4"
+  },
+  {
+    "sheet": "06_色",
+    "row": 23,
+    "column": 1,
+    "before": null,
+    "after": "RPL_ATT_TH-CASING-Y"
+  },
+  {
+    "sheet": "06_色",
+    "row": 23,
+    "column": 2,
+    "before": null,
+    "after": "wooden_casing_color"
+  },
+  {
+    "sheet": "06_色",
+    "row": 23,
+    "column": 3,
+    "before": null,
+    "after": "Y"
+  },
+  {
+    "sheet": "06_色",
+    "row": 23,
+    "column": 4,
+    "before": null,
+    "after": "プレシャスホワイト"
+  },
+  {
+    "sheet": "06_色",
+    "row": 23,
+    "column": 5,
+    "before": null,
+    "after": "USER_SELECT"
+  },
+  {
+    "sheet": "06_色",
+    "row": 23,
+    "column": 6,
+    "before": null,
+    "after": "木製ケーシング"
+  },
+  {
+    "sheet": "06_色",
+    "row": 23,
+    "column": 7,
+    "before": null,
+    "after": "COMPLETE"
+  },
+  {
+    "sheet": "06_色",
+    "row": 23,
+    "column": 8,
+    "before": null,
+    "after": "DELTA-CASING-EV-V4"
+  },
+  {
+    "sheet": "06_色",
+    "row": 24,
+    "column": 1,
+    "before": null,
+    "after": "RPL_ATT_TH-CASING-AD"
+  },
+  {
+    "sheet": "06_色",
+    "row": 24,
+    "column": 2,
+    "before": null,
+    "after": "wooden_casing_color"
+  },
+  {
+    "sheet": "06_色",
+    "row": 24,
+    "column": 3,
+    "before": null,
+    "after": "AD"
+  },
+  {
+    "sheet": "06_色",
+    "row": 24,
+    "column": 4,
+    "before": null,
+    "after": "クリエチェリー"
+  },
+  {
+    "sheet": "06_色",
+    "row": 24,
+    "column": 5,
+    "before": null,
+    "after": "USER_SELECT"
+  },
+  {
+    "sheet": "06_色",
+    "row": 24,
+    "column": 6,
+    "before": null,
+    "after": "木製ケーシング"
+  },
+  {
+    "sheet": "06_色",
+    "row": 24,
+    "column": 7,
+    "before": null,
+    "after": "COMPLETE"
+  },
+  {
+    "sheet": "06_色",
+    "row": 24,
+    "column": 8,
+    "before": null,
+    "after": "DELTA-CASING-EV-V4"
+  },
+  {
+    "sheet": "06_色",
+    "row": 25,
+    "column": 1,
+    "before": null,
+    "after": "RPL_ATT_TH-CASING-AC"
+  },
+  {
+    "sheet": "06_色",
+    "row": 25,
+    "column": 2,
+    "before": null,
+    "after": "wooden_casing_color"
+  },
+  {
+    "sheet": "06_色",
+    "row": 25,
+    "column": 3,
+    "before": null,
+    "after": "AC"
+  },
+  {
+    "sheet": "06_色",
+    "row": 25,
+    "column": 4,
+    "before": null,
+    "after": "クリエオーク"
+  },
+  {
+    "sheet": "06_色",
+    "row": 25,
+    "column": 5,
+    "before": null,
+    "after": "USER_SELECT"
+  },
+  {
+    "sheet": "06_色",
+    "row": 25,
+    "column": 6,
+    "before": null,
+    "after": "木製ケーシング"
+  },
+  {
+    "sheet": "06_色",
+    "row": 25,
+    "column": 7,
+    "before": null,
+    "after": "COMPLETE"
+  },
+  {
+    "sheet": "06_色",
+    "row": 25,
+    "column": 8,
+    "before": null,
+    "after": "DELTA-CASING-EV-V4"
+  },
+  {
+    "sheet": "06_色",
+    "row": 26,
+    "column": 1,
+    "before": null,
+    "after": "RPL_ATT_TH-CASING-WA"
+  },
+  {
+    "sheet": "06_色",
+    "row": 26,
+    "column": 2,
+    "before": null,
+    "after": "wooden_casing_color"
+  },
+  {
+    "sheet": "06_色",
+    "row": 26,
+    "column": 3,
+    "before": null,
+    "after": "WA"
+  },
+  {
+    "sheet": "06_色",
+    "row": 26,
+    "column": 4,
+    "before": null,
+    "after": "クリエアイボリー"
+  },
+  {
+    "sheet": "06_色",
+    "row": 26,
+    "column": 5,
+    "before": null,
+    "after": "USER_SELECT"
+  },
+  {
+    "sheet": "06_色",
+    "row": 26,
+    "column": 6,
+    "before": null,
+    "after": "木製ケーシング"
+  },
+  {
+    "sheet": "06_色",
+    "row": 26,
+    "column": 7,
+    "before": null,
+    "after": "COMPLETE"
+  },
+  {
+    "sheet": "06_色",
+    "row": 26,
+    "column": 8,
+    "before": null,
+    "after": "DELTA-CASING-EV-V4"
+  },
+  {
+    "sheet": "09_その他OP",
+    "row": 13,
+    "column": 2,
+    "before": "充てん材",
+    "after": "充てん剤"
+  },
+  {
+    "sheet": "09_その他OP",
+    "row": 13,
+    "column": 7,
+    "before": "ATT-TH-EV-013",
+    "after": "ATT-TH-EV-013;DELTA-FILLER-EV-V4"
+  },
+  {
+    "sheet": "09_その他OP",
+    "row": 18,
+    "column": 1,
+    "before": null,
+    "after": "RPL_ATT_TH-OP-V5-SPACER-15-20"
+  },
+  {
+    "sheet": "09_その他OP",
+    "row": 18,
+    "column": 2,
+    "before": null,
+    "after": "施工調整スペーサー 15×20"
+  },
+  {
+    "sheet": "09_その他OP",
+    "row": 18,
+    "column": 3,
+    "before": null,
+    "after": "施工部材"
+  },
+  {
+    "sheet": "09_その他OP",
+    "row": 18,
+    "column": 4,
+    "before": null,
+    "after": "USER_SELECT"
+  },
+  {
+    "sheet": "09_その他OP",
+    "row": 18,
+    "column": 5,
+    "before": null,
+    "after": "Z-04-BWSJ。数量・価格・BOM未確定、自動選択しない"
+  },
+  {
+    "sheet": "09_その他OP",
+    "row": 18,
+    "column": 6,
+    "before": null,
+    "after": "COMPLETE"
+  },
+  {
+    "sheet": "09_その他OP",
+    "row": 18,
+    "column": 7,
+    "before": null,
+    "after": "DELTA-SPACER-EV-V4"
+  },
+  {
+    "sheet": "02B_参照商品",
+    "row": 5,
+    "column": 5,
+    "before": "1zHi-XsMqJp0MKH-sDoTcnTqkLMGcuRdo",
+    "after": "1_p-xJ9Mv7FecoR8Me0E43f3LEEkpVQSP"
+  },
+  {
+    "sheet": "02B_参照商品",
+    "row": 5,
+    "column": 6,
+    "before": "サーモスⅡH_商品マスター_v0.7_完全完成版.xlsx",
+    "after": "v0.9-R4 Current Authoring（固定SHA別記）"
+  },
+  {
+    "sheet": "02B_参照商品",
+    "row": 5,
+    "column": 10,
+    "before": "ATT-TH-EV-003",
+    "after": "ATT-TH-EV-003;REF-S2-CURRENT-20261009-V4"
+  },
+  {
+    "sheet": "02B_参照商品",
+    "row": 5,
+    "column": 11,
+    "before": "v0.7",
+    "after": "v0.9-R4"
+  },
+  {
+    "sheet": "02B_参照商品",
+    "row": 6,
+    "column": 5,
+    "before": "17lVzBZ1hp4RVcGv0yNdnrKt25SFO2FhL",
+    "after": "19sjSAPwyd30fF5akazldGs0wkhOGZF9v"
+  },
+  {
+    "sheet": "02B_参照商品",
+    "row": 6,
+    "column": 6,
+    "before": "サーモスL_商品マスター_v0.7_特注寸法発注アプリ投入完成版_QA確定.xlsx",
+    "after": "v0.7-R3 Current Authoring（固定SHA別記）"
+  },
+  {
+    "sheet": "02B_参照商品",
+    "row": 6,
+    "column": 10,
+    "before": "ATT-TH-EV-005",
+    "after": "ATT-TH-EV-005;REF-SL-CURRENT-20261009-V4"
+  },
+  {
+    "sheet": "02B_参照商品",
+    "row": 6,
+    "column": 11,
+    "before": "v0.7",
+    "after": "v0.7-R3"
+  },
+  {
+    "sheet": "02B_参照商品",
+    "row": 7,
+    "column": 6,
+    "before": "サーモスA_商品マスター_v0.7.xlsx",
+    "after": "v0.7 Current Authoring（固定SHA別記）"
+  },
+  {
+    "sheet": "02B_参照商品",
+    "row": 7,
+    "column": 10,
+    "before": "ATT-TH-EV-016,017",
+    "after": "ATT-TH-EV-016,017;REF-A-CURRENT-20261009-V4"
+  }
+]

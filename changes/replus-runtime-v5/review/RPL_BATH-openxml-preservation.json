@@ -1,0 +1,10 @@
+{
+  "component": "RPL_BATH",
+  "patched_cells": 25,
+  "changed_sheet_xml": [
+    "xl/worksheets/sheet1.xml",
+    "xl/worksheets/sheet20.xml"
+  ],
+  "styles_xml_identical": true,
+  "untargeted_members_identical": true
+}

@@ -1,0 +1,74 @@
+[
+  {
+    "component": "RPL_ROOM",
+    "unexpected_semantic_styles": 3392,
+    "examples": [
+      [
+        "90_Evidence",
+        "A1"
+      ],
+      [
+        "90_Evidence",
+        "B1"
+      ],
+      [
+        "90_Evidence",
+        "C1"
+      ]
+    ]
+  },
+  {
+    "component": "RPL_ATT_TW",
+    "unexpected_semantic_styles": 3922,
+    "examples": [
+      [
+        "90_Evidence",
+        "A1"
+      ],
+      [
+        "90_Evidence",
+        "B1"
+      ],
+      [
+        "90_Evidence",
+        "C1"
+      ]
+    ]
+  },
+  {
+    "component": "RPL_ATT_TH",
+    "unexpected_semantic_styles": 4686,
+    "examples": [
+      [
+        "90_Evidence",
+        "A1"
+      ],
+      [
+        "90_Evidence",
+        "B1"
+      ],
+      [
+        "90_Evidence",
+        "C1"
+      ]
+    ]
+  },
+  {
+    "component": "RPL_CUT_MALL",
+    "unexpected_semantic_styles": 12192,
+    "examples": [
+      [
+        "00_INDEX",
+        "A1"
+      ],
+      [
+        "00_INDEX",
+        "B1"
+      ],
+      [
+        "00_INDEX",
+        "C1"
+      ]
+    ]
+  }
+]

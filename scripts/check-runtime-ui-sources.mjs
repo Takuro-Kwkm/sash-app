@@ -13,6 +13,7 @@ const files = [
   'src/catalog/runtime-master/runtime-master-registry.mjs',
   'src/ui/web/app.js',
   'src/ui/web/product-configuration-editor.mjs',
+  'src/ui/web/product-choice-model.mjs',
   'src/work-management/domain.mjs',
   'src/work-management/field-workflow-scope.mjs',
   'src/estimate-output/model.mjs',

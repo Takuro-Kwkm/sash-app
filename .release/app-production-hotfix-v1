@@ -1,9 +1,9 @@
 {
   "schema": "APP_PRODUCTION_HOTFIX_V1",
   "scope": "NON_PRODUCT_MASTER_UI",
-  "change": "ORDER2_THERMOSL_R3_SAME_BYTES_COMMON_RELEASE",
-  "date": "2026-10-07",
-  "source_commit": "53fdabda20bfd2bbcee64b0b2c94e3640af7f411",
-  "notes": "Infrastructure release successor. Carry Forward ThermosL v0.7-R3 OP-SL-EMERGENCY-SKIRT / MANUAL_STANDARD_ONLY with identical Formal/Runtime/UI/Output bytes and original product Decision. Merge is gated by actual Human Release Decision on fixed common payload and PR HEAD; marker itself is not approval. Use existing production workflow and save release receipts/readback. No product mutation, DB migration or protection changes.",
+  "change": "REPLUS_V12R1_FORMAL_RUNTIME_UI_RELEASE_20261015_R1",
+  "date": "2026-10-15",
+  "source_commit": "a50dc9f732e6cb3da44c36a5317bf22b3293b527",
+  "notes": "Release the separately reviewed Runtime/UI integration for the adopted Product Master v1.2-R1. Preserve manufacturer confirmation and null pricing; no Product Master edits, DB migration or Protection change. Exact-head Preview, CI and fixed Human Release Decision remain required.",
   "trigger": "PR_MERGE_PUSH_AFTER_FIXED_HUMAN_RELEASE_DECISION"
 }

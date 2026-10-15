@@ -1,0 +1,2499 @@
+{
+  "schema": "NATIVE_TABLE_PROJECTION_V1",
+  "candidate_revision": "REPLUS_HIDE_DERIVED_CONFIRMATIONS_V12_20261014",
+  "product": {
+    "id": "CANDIDATE:RPL_ATT_TW",
+    "manufacturer": "LIXIL",
+    "displayName": "リプラス アタッチ枠（TW用）",
+    "source": {
+      "id": "RPL_ATT_TW",
+      "version": "REPLUS_GLOBAL_FLOW_V9_20261014"
+    }
+  },
+  "source": {
+    "path": "candidates/RPL_ATT_TW.json",
+    "component_id": "RPL_ATT_TW",
+    "sha256": "39e532f20efca68cd5c9c467aec7e682c99363a6f6ebc8dc956ffbabc8f693ff",
+    "baseline_sha256": "7f93dfc7874ad874a72096be5839ced3e8269c6d9abdc1b1cb1e804f710059f1",
+    "baseline_component_version": "v1.0"
+  },
+  "scope": "SELECTION_AND_ESTIMATE_HANDOFF; NO_AUTO_MANUFACTURE_NO_FORMAL_NO_RELEASE; SALES_SITE_INPUTS_EXCLUDED_SOURCE_CONSTRAINTS_RETAINED",
+  "fields": [
+    {
+      "key": "referenced_series_id",
+      "displayLabel": "新設サッシシリーズ",
+      "dataType": "ENUM",
+      "displayOrder": 10,
+      "choices": [
+        {
+          "value": "SER-LIX-TW",
+          "displayLabel": "TW",
+          "evidenceIds": [
+            "FIXED_REFERENCE_V4"
+          ],
+          "selector": {},
+          "metadata": {
+            "manualCheck": false
+          }
+        }
+      ],
+      "required": true,
+      "autoSelectSingle": false,
+      "parentFields": [],
+      "selector": {}
+    },
+    {
+      "key": "referenced_window_id",
+      "displayLabel": "新設サッシ窓種",
+      "dataType": "ENUM",
+      "displayOrder": 20,
+      "choices": [
+        {
+          "value": "SWT-LIX-TW-TATE-GREMON-T",
+          "displayLabel": "縦すべり出し窓 T（グレモン）",
+          "evidenceIds": [
+            "ATT-TW-SW-001"
+          ],
+          "selector": {
+            "referenced_series_id": "SER-LIX-TW"
+          },
+          "metadata": {
+            "manualCheck": false
+          }
+        },
+        {
+          "value": "SWT-LIX-TW-TATE-GREMON-TF",
+          "displayLabel": "縦すべり出し窓 TF（グレモン）",
+          "evidenceIds": [
+            "ATT-TW-SW-002"
+          ],
+          "selector": {
+            "referenced_series_id": "SER-LIX-TW"
+          },
+          "metadata": {
+            "manualCheck": false
+          }
+        },
+        {
+          "value": "SWT-LIX-TW-TATE-GREMON-TFT",
+          "displayLabel": "縦すべり出し窓 TFT（グレモン）",
+          "evidenceIds": [
+            "ATT-TW-SW-003"
+          ],
+          "selector": {
+            "referenced_series_id": "SER-LIX-TW"
+          },
+          "metadata": {
+            "manualCheck": false
+          }
+        },
+        {
+          "value": "SWT-LIX-TW-YOKO-GREMON",
+          "displayLabel": "横すべり出し窓（グレモン）",
+          "evidenceIds": [
+            "ATT-TW-SW-004"
+          ],
+          "selector": {
+            "referenced_series_id": "SER-LIX-TW"
+          },
+          "metadata": {
+            "manualCheck": false
+          }
+        },
+        {
+          "value": "SWT-LIX-TW-HIGH-YOKO",
+          "displayLabel": "高所用横すべり出し窓",
+          "evidenceIds": [
+            "ATT-TW-SW-005"
+          ],
+          "selector": {
+            "referenced_series_id": "SER-LIX-TW"
+          },
+          "metadata": {
+            "manualCheck": false
+          }
+        },
+        {
+          "value": "SWT-LIX-TW-AGE-SAGE",
+          "displayLabel": "上げ下げ窓",
+          "evidenceIds": [
+            "ATT-TW-SW-006"
+          ],
+          "selector": {
+            "referenced_series_id": "SER-LIX-TW"
+          },
+          "metadata": {
+            "manualCheck": false
+          }
+        },
+        {
+          "value": "SWT-LIX-TW-FIX-IN-MADO",
+          "displayLabel": "FIX窓（内押縁タイプ）マド",
+          "evidenceIds": [
+            "ATT-TW-SW-007"
+          ],
+          "selector": {
+            "referenced_series_id": "SER-LIX-TW"
+          },
+          "metadata": {
+            "manualCheck": false
+          }
+        },
+        {
+          "value": "SWT-LIX-TW-FIX-IN-TR-ZAIRAI",
+          "displayLabel": "FIX窓（内押縁タイプ）在来テラス",
+          "evidenceIds": [
+            "ATT-TW-SW-008"
+          ],
+          "selector": {
+            "referenced_series_id": "SER-LIX-TW"
+          },
+          "metadata": {
+            "manualCheck": false
+          }
+        },
+        {
+          "value": "SWT-LIX-TW-FIX-IN-TR-204",
+          "displayLabel": "FIX窓（内押縁タイプ）204テラス",
+          "evidenceIds": [
+            "ATT-TW-SW-009"
+          ],
+          "selector": {
+            "referenced_series_id": "SER-LIX-TW"
+          },
+          "metadata": {
+            "manualCheck": false
+          }
+        },
+        {
+          "value": "SWT-LIX-TW-FIX-IN-TR-204-STEP",
+          "displayLabel": "FIX窓（内押縁タイプ）204テラス単純段差",
+          "evidenceIds": [
+            "ATT-TW-SW-010"
+          ],
+          "selector": {
+            "referenced_series_id": "SER-LIX-TW"
+          },
+          "metadata": {
+            "manualCheck": false
+          }
+        },
+        {
+          "value": "SWT-LIX-TW-TATE-OP-T",
+          "displayLabel": "縦すべり出し窓 T（オペレーター）",
+          "evidenceIds": [
+            "ATT-TW-SW-011"
+          ],
+          "selector": {
+            "referenced_series_id": "SER-LIX-TW"
+          },
+          "metadata": {
+            "manualCheck": false
+          }
+        },
+        {
+          "value": "SWT-LIX-TW-YOKO-OP",
+          "displayLabel": "横すべり出し窓（オペレーター）",
+          "evidenceIds": [
+            "ATT-TW-SW-012"
+          ],
+          "selector": {
+            "referenced_series_id": "SER-LIX-TW"
+          },
+          "metadata": {
+            "manualCheck": false
+          }
+        },
+        {
+          "value": "SWT-LIX-TW-GRILLE-AGE",
+          "displayLabel": "面格子付上げ下げ窓",
+          "evidenceIds": [
+            "ATT-TW-SW-013"
+          ],
+          "selector": {
+            "referenced_series_id": "SER-LIX-TW"
+          },
+          "metadata": {
+            "manualCheck": false
+          }
+        }
+      ],
+      "required": true,
+      "autoSelectSingle": false,
+      "parentFields": [
+        "referenced_series_id"
+      ],
+      "selector": {
+        "referenced_series_id": {
+          "$exists": true
+        }
+      }
+    },
+    {
+      "key": "exterior_cover_color",
+      "displayLabel": "化粧カバー色（外観色に連動）",
+      "dataType": "ENUM",
+      "displayOrder": 30,
+      "choices": [
+        {
+          "value": "T",
+          "displayLabel": "ブラック",
+          "evidenceIds": [
+            "ATT-TW-EV-002"
+          ],
+          "selector": {},
+          "metadata": {
+            "manualCheck": false
+          }
+        },
+        {
+          "value": "G",
+          "displayLabel": "オータムブラウン",
+          "evidenceIds": [
+            "ATT-TW-EV-002"
+          ],
+          "selector": {},
+          "metadata": {
+            "manualCheck": false
+          }
+        },
+        {
+          "value": "K",
+          "displayLabel": "シャイングレー",
+          "evidenceIds": [
+            "ATT-TW-EV-002"
+          ],
+          "selector": {},
+          "metadata": {
+            "manualCheck": false
+          }
+        },
+        {
+          "value": "D",
+          "displayLabel": "ナチュラルシルバー",
+          "evidenceIds": [
+            "ATT-TW-EV-002"
+          ],
+          "selector": {},
+          "metadata": {
+            "manualCheck": false
+          }
+        },
+        {
+          "value": "W",
+          "displayLabel": "ホワイト",
+          "evidenceIds": [
+            "ATT-TW-EV-002"
+          ],
+          "selector": {},
+          "metadata": {
+            "manualCheck": false
+          }
+        }
+      ],
+      "required": false,
+      "autoSelectSingle": false,
+      "parentFields": [
+        "new_sash_exterior_color"
+      ],
+      "selector": {},
+      "internal": true
+    },
+    {
+      "key": "interior_cover_color",
+      "displayLabel": "室内カバー色（内観色に連動）",
+      "dataType": "ENUM",
+      "displayOrder": 40,
+      "choices": [
+        {
+          "value": "M",
+          "displayLabel": "ブラック",
+          "evidenceIds": [
+            "ATT-TW-EV-002"
+          ],
+          "selector": {},
+          "metadata": {
+            "manualCheck": false
+          }
+        },
+        {
+          "value": "C",
+          "displayLabel": "クリエモカP",
+          "evidenceIds": [
+            "ATT-TW-EV-002"
+          ],
+          "selector": {},
+          "metadata": {
+            "manualCheck": false
+          }
+        },
+        {
+          "value": "B",
+          "displayLabel": "クリエラスクP",
+          "evidenceIds": [
+            "ATT-TW-EV-002"
+          ],
+          "selector": {},
+          "metadata": {
+            "manualCheck": false
+          }
+        },
+        {
+          "value": "P",
+          "displayLabel": "クリエペールP",
+          "evidenceIds": [
+            "ATT-TW-EV-002"
+          ],
+          "selector": {},
+          "metadata": {
+            "manualCheck": false
+          }
+        },
+        {
+          "value": "F",
+          "displayLabel": "プレシャスホワイトP",
+          "evidenceIds": [
+            "ATT-TW-EV-002"
+          ],
+          "selector": {},
+          "metadata": {
+            "manualCheck": false
+          }
+        }
+      ],
+      "required": false,
+      "autoSelectSingle": false,
+      "parentFields": [
+        "new_sash_interior_color"
+      ],
+      "selector": {},
+      "internal": true
+    },
+    {
+      "key": "wooden_casing_color",
+      "displayLabel": "木製ケーシング色",
+      "dataType": "ENUM",
+      "displayOrder": 50,
+      "choices": [
+        {
+          "value": "D",
+          "displayLabel": "クリエダーク",
+          "evidenceIds": [
+            "DELTA-CASING-EV-V4"
+          ],
+          "selector": {},
+          "metadata": {
+            "manualCheck": true
+          }
+        },
+        {
+          "value": "M",
+          "displayLabel": "クリエモカ",
+          "evidenceIds": [
+            "DELTA-CASING-EV-V4"
+          ],
+          "selector": {},
+          "metadata": {
+            "manualCheck": true
+          }
+        },
+        {
+          "value": "Y",
+          "displayLabel": "プレシャスホワイト",
+          "evidenceIds": [
+            "DELTA-CASING-EV-V4"
+          ],
+          "selector": {},
+          "metadata": {
+            "manualCheck": true
+          }
+        },
+        {
+          "value": "AD",
+          "displayLabel": "クリエチェリー",
+          "evidenceIds": [
+            "DELTA-CASING-EV-V4"
+          ],
+          "selector": {},
+          "metadata": {
+            "manualCheck": true
+          }
+        },
+        {
+          "value": "AC",
+          "displayLabel": "クリエオーク",
+          "evidenceIds": [
+            "DELTA-CASING-EV-V4"
+          ],
+          "selector": {},
+          "metadata": {
+            "manualCheck": true
+          }
+        },
+        {
+          "value": "WA",
+          "displayLabel": "クリエアイボリー",
+          "evidenceIds": [
+            "DELTA-CASING-EV-V4"
+          ],
+          "selector": {},
+          "metadata": {
+            "manualCheck": true
+          }
+        }
+      ],
+      "required": false,
+      "autoSelectSingle": false,
+      "parentFields": [
+        "options"
+      ],
+      "selector": {
+        "options": {
+          "$contains": "RPL_ATT_TW-OP-V5-CASING"
+        }
+      }
+    },
+    {
+      "key": "options",
+      "displayLabel": "追加部材・オプション",
+      "dataType": "MULTI_ENUM",
+      "displayOrder": 60,
+      "choices": [
+        {
+          "value": "ATT-TW-OP-SMALL-ARM",
+          "displayLabel": "小開口アーム",
+          "evidenceIds": [
+            "ATT-TW-EV-013"
+          ],
+          "selector": {},
+          "metadata": {
+            "manualCheck": true
+          }
+        },
+        {
+          "value": "ATT-TW-OP-FIX-GROOVE",
+          "displayLabel": "固定式網戸溝カバー",
+          "evidenceIds": [
+            "ATT-TW-EV-013"
+          ],
+          "selector": {},
+          "metadata": {
+            "manualCheck": true
+          }
+        },
+        {
+          "value": "ATT-TW-OP-MOVABLE-GROOVE",
+          "displayLabel": "可動式網戸溝カバー",
+          "evidenceIds": [
+            "ATT-TW-EV-013"
+          ],
+          "selector": {},
+          "metadata": {
+            "manualCheck": true
+          }
+        },
+        {
+          "value": "ATT-TW-OP-POST-BEAD",
+          "displayLabel": "後付ビード",
+          "evidenceIds": [
+            "ATT-TW-EV-013"
+          ],
+          "selector": {},
+          "metadata": {
+            "manualCheck": true
+          }
+        },
+        {
+          "value": "ATT-TW-OP-MULLION",
+          "displayLabel": "連窓方立",
+          "evidenceIds": [
+            "ATT-TW-EV-004,013"
+          ],
+          "selector": {},
+          "metadata": {
+            "manualCheck": true
+          }
+        },
+        {
+          "value": "ATT-TW-OP-TRANSOM",
+          "displayLabel": "段窓無目",
+          "evidenceIds": [
+            "ATT-TW-EV-004,013,015"
+          ],
+          "selector": {},
+          "metadata": {
+            "manualCheck": true
+          }
+        },
+        {
+          "value": "ATT-TW-OP-ADJ-SPACER",
+          "displayLabel": "施工調整スペーサー",
+          "evidenceIds": [
+            "ATT-TW-EV-006,010,014"
+          ],
+          "selector": {},
+          "metadata": {
+            "manualCheck": true
+          }
+        },
+        {
+          "value": "ATT-TW-OP-CONNECT-SCREW",
+          "displayLabel": "アタッチ枠連結ねじ",
+          "evidenceIds": [
+            "ATT-TW-EV-004,014"
+          ],
+          "selector": {},
+          "metadata": {
+            "manualCheck": true
+          }
+        },
+        {
+          "value": "RPL_ATT_TW-OP-V5-SPACER-15-20",
+          "displayLabel": "施工調整スペーサー 15×20",
+          "evidenceIds": [
+            "DELTA-SPACER-EV-V4"
+          ],
+          "selector": {},
+          "metadata": {
+            "manualCheck": true
+          }
+        },
+        {
+          "value": "RPL_ATT_TW-OP-V5-CASING",
+          "displayLabel": "カバー用ケーシング",
+          "evidenceIds": [
+            "DELTA-CASING-EV-V4"
+          ],
+          "selector": {},
+          "metadata": {
+            "manualCheck": true
+          }
+        },
+        {
+          "value": "RPL_ATT_TW-OP-V5-FILLER",
+          "displayLabel": "充てん剤",
+          "evidenceIds": [
+            "DELTA-FILLER-EV-V4"
+          ],
+          "selector": {},
+          "metadata": {
+            "manualCheck": true
+          }
+        }
+      ],
+      "required": false,
+      "autoSelectSingle": false,
+      "parentFields": [],
+      "selector": {}
+    },
+    {
+      "key": "survey_w",
+      "displayLabel": "採寸幅 WS（mm）",
+      "dataType": "NUMBER",
+      "displayOrder": 80,
+      "choices": [],
+      "required": false,
+      "autoSelectSingle": false,
+      "parentFields": [],
+      "selector": {}
+    },
+    {
+      "key": "survey_h",
+      "displayLabel": "採寸高さ HS（mm）",
+      "dataType": "NUMBER",
+      "displayOrder": 90,
+      "choices": [],
+      "required": false,
+      "autoSelectSingle": false,
+      "parentFields": [],
+      "selector": {}
+    },
+    {
+      "key": "lower_frame_rise",
+      "displayLabel": "既設下枠の立上り（mm）",
+      "dataType": "NUMBER",
+      "displayOrder": 100,
+      "choices": [],
+      "required": false,
+      "autoSelectSingle": false,
+      "parentFields": [],
+      "selector": {}
+    },
+    {
+      "key": "existing_frame_depth",
+      "displayLabel": "既設枠見込み（mm）",
+      "dataType": "NUMBER",
+      "displayOrder": 110,
+      "choices": [],
+      "required": false,
+      "autoSelectSingle": false,
+      "parentFields": [],
+      "selector": {}
+    },
+    {
+      "key": "interior_cover_type",
+      "displayLabel": "室内側の仕上げ仕様",
+      "dataType": "MULTI_ENUM",
+      "displayOrder": 900,
+      "choices": [
+        {
+          "value": "ATT-TW-OP-ANGLE-COVER",
+          "displayLabel": "アングルカバー",
+          "evidenceIds": [
+            "ATT-TW-EV-006,014"
+          ],
+          "selector": {},
+          "metadata": {
+            "manualCheck": true
+          }
+        },
+        {
+          "value": "ATT-TW-OP-TRIM",
+          "displayLabel": "見切材",
+          "evidenceIds": [
+            "ATT-TW-EV-006,014"
+          ],
+          "selector": {},
+          "metadata": {
+            "manualCheck": true
+          }
+        }
+      ],
+      "required": false,
+      "autoSelectSingle": false,
+      "parentFields": [],
+      "selector": {}
+    },
+    {
+      "key": "exterior_cover_type",
+      "displayLabel": "化粧カバーの大きさ・組合せ",
+      "dataType": "ENUM",
+      "displayOrder": 900,
+      "choices": [
+        {
+          "value": "ATT-TW-COV-L",
+          "displayLabel": "大",
+          "selector": {
+            "all": [
+              {
+                "any": [
+                  {
+                    "survey_cover_top": {
+                      "$exists": false
+                    }
+                  },
+                  {
+                    "survey_cover_top": {
+                      "$lte": 71.5
+                    }
+                  }
+                ]
+              },
+              {
+                "any": [
+                  {
+                    "survey_cover_bottom": {
+                      "$exists": false
+                    }
+                  },
+                  {
+                    "survey_cover_bottom": {
+                      "$lte": 91
+                    }
+                  }
+                ]
+              },
+              {
+                "any": [
+                  {
+                    "survey_cover_side": {
+                      "$exists": false
+                    }
+                  },
+                  {
+                    "survey_cover_side": {
+                      "$lte": 34
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "evidenceIds": [
+            "ATT-TW-EV-011"
+          ],
+          "metadata": {
+            "manualCheck": false
+          }
+        },
+        {
+          "value": "ATT-TW-COV-M",
+          "displayLabel": "中",
+          "selector": {
+            "all": [
+              {
+                "any": [
+                  {
+                    "survey_cover_top": {
+                      "$exists": false
+                    }
+                  },
+                  {
+                    "survey_cover_top": {
+                      "$lte": 36.5
+                    }
+                  }
+                ]
+              },
+              {
+                "any": [
+                  {
+                    "survey_cover_bottom": {
+                      "$exists": false
+                    }
+                  },
+                  {
+                    "survey_cover_bottom": {
+                      "$lte": 56
+                    }
+                  }
+                ]
+              },
+              {
+                "any": [
+                  {
+                    "survey_cover_side": {
+                      "$exists": false
+                    }
+                  },
+                  {
+                    "survey_cover_side": {
+                      "$lte": 34
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "evidenceIds": [
+            "ATT-TW-EV-011"
+          ],
+          "metadata": {
+            "manualCheck": false
+          }
+        },
+        {
+          "value": "ATT-TW-COV-S",
+          "displayLabel": "小",
+          "selector": {
+            "all": [
+              {
+                "any": [
+                  {
+                    "survey_cover_top": {
+                      "$exists": false
+                    }
+                  },
+                  {
+                    "survey_cover_top": {
+                      "$lte": 16.5
+                    }
+                  }
+                ]
+              },
+              {
+                "any": [
+                  {
+                    "survey_cover_bottom": {
+                      "$exists": false
+                    }
+                  },
+                  {
+                    "survey_cover_bottom": {
+                      "$lte": 36
+                    }
+                  }
+                ]
+              },
+              {
+                "any": [
+                  {
+                    "survey_cover_side": {
+                      "$exists": false
+                    }
+                  },
+                  {
+                    "survey_cover_side": {
+                      "$lte": 9
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "evidenceIds": [
+            "ATT-TW-EV-011"
+          ],
+          "metadata": {
+            "manualCheck": false
+          }
+        }
+      ],
+      "required": true,
+      "autoSelectSingle": false,
+      "parentFields": [
+        "survey_cover_top",
+        "survey_cover_bottom",
+        "survey_cover_side"
+      ],
+      "selector": {}
+    },
+    {
+      "key": "installation_method",
+      "displayLabel": "内はめ仕様",
+      "dataType": "ENUM",
+      "displayOrder": 900,
+      "choices": [
+        {
+          "value": "STANDARD",
+          "displayLabel": "標準用",
+          "evidenceIds": [
+            "EV-DIMENSIONS-INNER-FIT-V11"
+          ],
+          "selector": {},
+          "metadata": {
+            "manualCheck": true
+          }
+        },
+        {
+          "value": "INNER_FIT_INSET",
+          "displayLabel": "内はめ用（既設内付・半外付）",
+          "evidenceIds": [
+            "EV-DIMENSIONS-INNER-FIT-V11"
+          ],
+          "selector": {},
+          "metadata": {
+            "manualCheck": true
+          }
+        },
+        {
+          "value": "INNER_FIT_OUTSET",
+          "displayLabel": "内はめ用（既設外付）",
+          "evidenceIds": [
+            "EV-DIMENSIONS-INNER-FIT-V11"
+          ],
+          "selector": {},
+          "metadata": {
+            "manualCheck": true
+          }
+        }
+      ],
+      "required": true,
+      "autoSelectSingle": false,
+      "parentFields": [
+        "referenced_window_id"
+      ],
+      "selector": {
+        "referenced_window_id": {
+          "$exists": true
+        }
+      }
+    },
+    {
+      "key": "attachment_frame_spec",
+      "displayLabel": "アタッチ枠仕様",
+      "dataType": "ENUM",
+      "displayOrder": 900,
+      "choices": [
+        {
+          "value": "ATT-TW-FRAME-STD",
+          "displayLabel": "標準用アタッチ枠",
+          "evidenceIds": [
+            "EV-DIMENSIONS-INNER-FIT-V11"
+          ],
+          "selector": {},
+          "metadata": {
+            "manualCheck": false
+          }
+        },
+        {
+          "value": "ATT-TW-FRAME-INNER-SINGLE",
+          "displayLabel": "既設単体・内はめ用アタッチ枠",
+          "evidenceIds": [
+            "EV-DIMENSIONS-INNER-FIT-V11"
+          ],
+          "selector": {},
+          "metadata": {
+            "manualCheck": true
+          }
+        }
+      ],
+      "required": false,
+      "autoSelectSingle": false,
+      "parentFields": [
+        "installation_method"
+      ],
+      "selector": {
+        "referenced_window_id": {
+          "$exists": true
+        }
+      }
+    },
+    {
+      "key": "attachment_finished_w",
+      "displayLabel": "アタッチ枠仕上がり幅 WD（mm）",
+      "dataType": "NUMBER",
+      "displayOrder": 900,
+      "choices": [],
+      "required": false,
+      "autoSelectSingle": false,
+      "parentFields": [
+        "survey_w"
+      ],
+      "selector": {},
+      "selectionMode": "DERIVED",
+      "userSelectable": false
+    },
+    {
+      "key": "attachment_finished_h",
+      "displayLabel": "アタッチ枠仕上がり高さ HD（mm）",
+      "dataType": "NUMBER",
+      "displayOrder": 900,
+      "choices": [],
+      "required": false,
+      "autoSelectSingle": false,
+      "parentFields": [
+        "survey_h"
+      ],
+      "selector": {},
+      "selectionMode": "DERIVED",
+      "userSelectable": false
+    }
+  ],
+  "dependencies": [
+    {
+      "id": "estimate-confirm",
+      "mode": "MANUAL_CHECK",
+      "when": {},
+      "message": "施工可否・図形境界・ガラス構成・部材数量・価格・発注コードは積算確認が必要です。候補のため正式採用・自動注文はできません。"
+    },
+    {
+      "id": "external-cover-site-confirmation-v10",
+      "mode": "MANUAL_CHECK",
+      "when": {
+        "exterior_cover_type": {
+          "$exists": true
+        }
+      },
+      "message": "化粧カバーの納まり・適合は現調で確認してください。"
+    },
+    {
+      "id": "installation-confirmation-v11",
+      "mode": "MANUAL_CHECK",
+      "when": {
+        "installation_method": {
+          "$in": [
+            "INNER_FIT_INSET",
+            "INNER_FIT_OUTSET"
+          ]
+        }
+      },
+      "message": "内はめ用の製作範囲・既設枠への取付可否は現調・積算で確認してください。"
+    }
+  ],
+  "ruleSets": [
+    {
+      "id": "cover-color-links",
+      "type": "SELECTION_LINKS",
+      "status": "ACTIVE",
+      "payload": [
+        {
+          "targetField": "exterior_cover_color",
+          "parents": [
+            "new_sash_exterior_color"
+          ],
+          "cases": [
+            {
+              "when": {
+                "new_sash_exterior_color": "BLACK"
+              },
+              "value": "T"
+            },
+            {
+              "when": {
+                "new_sash_exterior_color": "T"
+              },
+              "value": "T"
+            },
+            {
+              "when": {
+                "new_sash_exterior_color": "EXT-T"
+              },
+              "value": "T"
+            },
+            {
+              "when": {
+                "new_sash_exterior_color": "EXT-LIX-T"
+              },
+              "value": "T"
+            },
+            {
+              "when": {
+                "new_sash_exterior_color": "AUTUMN_BROWN"
+              },
+              "value": "G"
+            },
+            {
+              "when": {
+                "new_sash_exterior_color": "G"
+              },
+              "value": "G"
+            },
+            {
+              "when": {
+                "new_sash_exterior_color": "EXT-G"
+              },
+              "value": "G"
+            },
+            {
+              "when": {
+                "new_sash_exterior_color": "EXT-LIX-G"
+              },
+              "value": "G"
+            },
+            {
+              "when": {
+                "new_sash_exterior_color": "SHINE_GRAY"
+              },
+              "value": "K"
+            },
+            {
+              "when": {
+                "new_sash_exterior_color": "K"
+              },
+              "value": "K"
+            },
+            {
+              "when": {
+                "new_sash_exterior_color": "EXT-K"
+              },
+              "value": "K"
+            },
+            {
+              "when": {
+                "new_sash_exterior_color": "EXT-LIX-K"
+              },
+              "value": "K"
+            },
+            {
+              "when": {
+                "new_sash_exterior_color": "NATURAL_SILVER"
+              },
+              "value": "D"
+            },
+            {
+              "when": {
+                "new_sash_exterior_color": "D"
+              },
+              "value": "D"
+            },
+            {
+              "when": {
+                "new_sash_exterior_color": "EXT-D"
+              },
+              "value": "D"
+            },
+            {
+              "when": {
+                "new_sash_exterior_color": "EXT-LIX-D"
+              },
+              "value": "D"
+            },
+            {
+              "when": {
+                "new_sash_exterior_color": "WHITE"
+              },
+              "value": "W"
+            },
+            {
+              "when": {
+                "new_sash_exterior_color": "W"
+              },
+              "value": "W"
+            },
+            {
+              "when": {
+                "new_sash_exterior_color": "EXT-W"
+              },
+              "value": "W"
+            },
+            {
+              "when": {
+                "new_sash_exterior_color": "EXT-LIX-W"
+              },
+              "value": "W"
+            }
+          ],
+          "resolvedMessage": "本体外観色に連動しています。",
+          "pendingMessage": "サッシ本体の色を選択してください。",
+          "unavailableMessage": "本体色に対応するカバー部材の確認が必要です。"
+        },
+        {
+          "targetField": "interior_cover_color",
+          "parents": [
+            "new_sash_interior_color"
+          ],
+          "cases": [
+            {
+              "when": {
+                "new_sash_interior_color": "BLACK"
+              },
+              "value": "M"
+            },
+            {
+              "when": {
+                "new_sash_interior_color": "M"
+              },
+              "value": "M"
+            },
+            {
+              "when": {
+                "new_sash_interior_color": "INT-M"
+              },
+              "value": "M"
+            },
+            {
+              "when": {
+                "new_sash_interior_color": "INT-LIX-M"
+              },
+              "value": "M"
+            },
+            {
+              "when": {
+                "new_sash_interior_color": "CREA_MOCHA"
+              },
+              "value": "C"
+            },
+            {
+              "when": {
+                "new_sash_interior_color": "C"
+              },
+              "value": "C"
+            },
+            {
+              "when": {
+                "new_sash_interior_color": "INT-C"
+              },
+              "value": "C"
+            },
+            {
+              "when": {
+                "new_sash_interior_color": "INT-LIX-C"
+              },
+              "value": "C"
+            },
+            {
+              "when": {
+                "new_sash_interior_color": "CREA_RUSK"
+              },
+              "value": "B"
+            },
+            {
+              "when": {
+                "new_sash_interior_color": "B"
+              },
+              "value": "B"
+            },
+            {
+              "when": {
+                "new_sash_interior_color": "INT-B"
+              },
+              "value": "B"
+            },
+            {
+              "when": {
+                "new_sash_interior_color": "INT-LIX-B"
+              },
+              "value": "B"
+            },
+            {
+              "when": {
+                "new_sash_interior_color": "CREA_PALE"
+              },
+              "value": "P"
+            },
+            {
+              "when": {
+                "new_sash_interior_color": "P"
+              },
+              "value": "P"
+            },
+            {
+              "when": {
+                "new_sash_interior_color": "INT-P"
+              },
+              "value": "P"
+            },
+            {
+              "when": {
+                "new_sash_interior_color": "INT-LIX-P"
+              },
+              "value": "P"
+            },
+            {
+              "when": {
+                "new_sash_interior_color": "PRECIOUS_WHITE"
+              },
+              "value": "F"
+            },
+            {
+              "when": {
+                "new_sash_interior_color": "F"
+              },
+              "value": "F"
+            },
+            {
+              "when": {
+                "new_sash_interior_color": "INT-F"
+              },
+              "value": "F"
+            },
+            {
+              "when": {
+                "new_sash_interior_color": "INT-LIX-F"
+              },
+              "value": "F"
+            }
+          ],
+          "resolvedMessage": "本体内観色に連動しています。",
+          "pendingMessage": "サッシ本体の色を選択してください。",
+          "unavailableMessage": "本体色に対応するカバー部材の確認が必要です。"
+        }
+      ],
+      "evidenceIds": [
+        "APP-POLICY-V9"
+      ]
+    },
+    {
+      "id": "installation-component-links-v11",
+      "type": "SELECTION_LINKS",
+      "status": "ACTIVE",
+      "payload": [
+        {
+          "targetField": "attachment_frame_spec",
+          "parents": [
+            "installation_method"
+          ],
+          "cases": [
+            {
+              "when": {
+                "installation_method": "STANDARD"
+              },
+              "value": "ATT-TW-FRAME-STD"
+            },
+            {
+              "when": {
+                "installation_method": "INNER_FIT_INSET"
+              },
+              "value": "ATT-TW-FRAME-INNER-SINGLE"
+            },
+            {
+              "when": {
+                "installation_method": "INNER_FIT_OUTSET"
+              },
+              "value": "ATT-TW-FRAME-INNER-SINGLE"
+            }
+          ],
+          "resolvedMessage": "施工仕様に連動しています。",
+          "pendingMessage": "内はめ仕様を選択してください。",
+          "unavailableMessage": "アタッチ枠の対応を確認してください。"
+        }
+      ],
+      "evidenceIds": [
+        "EV-DIMENSIONS-INNER-FIT-V11"
+      ]
+    }
+  ],
+  "evidence": [
+    {
+      "id": "ATT-TW-EV-001",
+      "source_id": "ATT-TW-EV-001",
+      "payload": {
+        "evidence_id": "ATT-TW-EV-001",
+        "情報源種別": "共通仕様",
+        "資料名": "サッシ商品マスター共通仕様書_v0.1",
+        "発行年月": "2026-08-30更新",
+        "ページ/箇所": "§5,9,23-34",
+        "URL": "https://docs.google.com/document/d/1MfixkbV1cZ__DtBknEKsix_nnrXQqjc-LZtXUHwJv_A/edit",
+        "確認日": "2026-08-31",
+        "確度": "HIGH",
+        "根拠内容": "防火別体系、Evidence、UI非表示、耐風圧特殊案件、OP依存"
+      }
+    },
+    {
+      "id": "ATT-TW-EV-002",
+      "source_id": "ATT-TW-EV-002",
+      "payload": {
+        "evidence_id": "ATT-TW-EV-002",
+        "情報源種別": "商品カタログ",
+        "資料名": "LIXIL リプラス 商品カタログ",
+        "発行年月": "現行",
+        "ページ/箇所": "p.35",
+        "URL": "https://drive.google.com/file/d/1wH1nhmsftl6y8Mp7y6twtoXSi6rxqxzT/view",
+        "確認日": "2026-08-31",
+        "確度": "HIGH",
+        "根拠内容": "アタッチ枠TW商品構造、対応シリーズ、釘打ちフィンカット、色、浴室不可"
+      }
+    },
+    {
+      "id": "ATT-TW-EV-003",
+      "source_id": "ATT-TW-EV-003",
+      "payload": {
+        "evidence_id": "ATT-TW-EV-003",
+        "情報源種別": "TW正本",
+        "資料名": "サッシ商品マスター_v0.1",
+        "発行年月": "現行",
+        "ページ/箇所": "02_シリーズ / 03A_シリーズ窓種設定",
+        "URL": "https://docs.google.com/spreadsheets/d/1ordbcPQS7XhptLMjRON2oxmdsPhs-aY-Wm7quPHvM9U/edit",
+        "確認日": "2026-08-31",
+        "確度": "HIGH",
+        "根拠内容": "SER-LIX-TW、正式SWT ID。TW本体Single Source of Truth"
+      }
+    },
+    {
+      "id": "ATT-TW-EV-004",
+      "source_id": "ATT-TW-EV-004",
+      "payload": {
+        "evidence_id": "ATT-TW-EV-004",
+        "情報源種別": "商品カタログ",
+        "資料名": "LIXIL リプラス 商品カタログ",
+        "発行年月": "現行",
+        "ページ/箇所": "p.203",
+        "URL": "https://drive.google.com/file/d/1wH1nhmsftl6y8Mp7y6twtoXSi6rxqxzT/view",
+        "確認日": "2026-08-31",
+        "確度": "HIGH",
+        "根拠内容": "アタッチ枠TW新設サッシ/TW別手配の対応品種可否、連結ねじ注記"
+      }
+    },
+    {
+      "id": "ATT-TW-EV-005",
+      "source_id": "ATT-TW-EV-005",
+      "payload": {
+        "evidence_id": "ATT-TW-EV-005",
+        "情報源種別": "TW正本",
+        "資料名": "サッシ商品マスター_v0.1",
+        "発行年月": "現行",
+        "ページ/箇所": "03A_シリーズ窓種設定",
+        "URL": "https://docs.google.com/spreadsheets/d/1ordbcPQS7XhptLMjRON2oxmdsPhs-aY-Wm7quPHvM9U/edit",
+        "確認日": "2026-08-31",
+        "確度": "HIGH",
+        "根拠内容": "グレモンT/TF/TFT、OP、横、High、上げ下げ、FIX分割IDの正本確認"
+      }
+    },
+    {
+      "id": "ATT-TW-EV-006",
+      "source_id": "ATT-TW-EV-006",
+      "payload": {
+        "evidence_id": "ATT-TW-EV-006",
+        "情報源種別": "商品カタログ",
+        "資料名": "LIXIL リプラス 商品カタログ",
+        "発行年月": "現行",
+        "ページ/箇所": "p.188 基本寸法/納まり参考図",
+        "URL": "https://drive.google.com/file/d/1wH1nhmsftl6y8Mp7y6twtoXSi6rxqxzT/view",
+        "確認日": "2026-08-31",
+        "確度": "HIGH",
+        "根拠内容": "WD=WS-10、HD=HS-10、TW_W=WS-38、TW_H=HS-50"
+      }
+    },
+    {
+      "id": "ATT-TW-EV-007",
+      "source_id": "ATT-TW-EV-007",
+      "payload": {
+        "evidence_id": "ATT-TW-EV-007",
+        "情報源種別": "商品カタログ",
+        "資料名": "LIXIL リプラス 商品カタログ",
+        "発行年月": "現行",
+        "ページ/箇所": "p.196,200",
+        "URL": "https://drive.google.com/file/d/1wH1nhmsftl6y8Mp7y6twtoXSi6rxqxzT/view",
+        "確認日": "2026-08-31",
+        "確度": "HIGH",
+        "根拠内容": "構造/防火/既設材質、既設窓対応表、雨戸/シャッターのアタッチ枠不可"
+      }
+    },
+    {
+      "id": "ATT-TW-EV-008",
+      "source_id": "ATT-TW-EV-008",
+      "payload": {
+        "evidence_id": "ATT-TW-EV-008",
+        "情報源種別": "商品カタログ",
+        "資料名": "LIXIL リプラス 商品カタログ",
+        "発行年月": "現行",
+        "ページ/箇所": "p.201",
+        "URL": "https://drive.google.com/file/d/1wH1nhmsftl6y8Mp7y6twtoXSi6rxqxzT/view",
+        "確認日": "2026-08-31",
+        "確度": "HIGH",
+        "根拠内容": "アタッチ枠TW 既設枠見込み100mm以下"
+      }
+    },
+    {
+      "id": "ATT-TW-EV-009",
+      "source_id": "ATT-TW-EV-009",
+      "payload": {
+        "evidence_id": "ATT-TW-EV-009",
+        "情報源種別": "商品カタログ",
+        "資料名": "LIXIL リプラス 商品カタログ",
+        "発行年月": "現行",
+        "ページ/箇所": "p.208-210",
+        "URL": "https://drive.google.com/file/d/1wH1nhmsftl6y8Mp7y6twtoXSi6rxqxzT/view",
+        "確認日": "2026-08-31",
+        "確度": "HIGH",
+        "根拠内容": "3点採寸、変形/たおれ、既設枠測定、二重サッシ採寸"
+      }
+    },
+    {
+      "id": "ATT-TW-EV-010",
+      "source_id": "ATT-TW-EV-010",
+      "payload": {
+        "evidence_id": "ATT-TW-EV-010",
+        "情報源種別": "商品カタログ",
+        "資料名": "LIXIL リプラス 商品カタログ",
+        "発行年月": "現行",
+        "ページ/箇所": "p.209",
+        "URL": "https://drive.google.com/file/d/1wH1nhmsftl6y8Mp7y6twtoXSi6rxqxzT/view",
+        "確認日": "2026-08-31",
+        "確度": "HIGH",
+        "根拠内容": "下枠補強金具29～48mmとスペーサー補正"
+      }
+    },
+    {
+      "id": "ATT-TW-EV-011",
+      "source_id": "ATT-TW-EV-011",
+      "payload": {
+        "evidence_id": "ATT-TW-EV-011",
+        "情報源種別": "商品カタログ",
+        "資料名": "LIXIL リプラス 商品カタログ",
+        "発行年月": "現行",
+        "ページ/箇所": "p.211",
+        "URL": "https://drive.google.com/file/d/1wH1nhmsftl6y8Mp7y6twtoXSi6rxqxzT/view",
+        "確認日": "2026-08-31",
+        "確度": "HIGH",
+        "根拠内容": "アタッチ枠TW 化粧カバー見付 大/中/小：上71.5/36.5/16.5、下91/56/36、縦34/34/9"
+      }
+    },
+    {
+      "id": "ATT-TW-EV-012",
+      "source_id": "ATT-TW-EV-012",
+      "payload": {
+        "evidence_id": "ATT-TW-EV-012",
+        "情報源種別": "商品カタログ",
+        "資料名": "LIXIL リプラス 商品カタログ",
+        "発行年月": "現行",
+        "ページ/箇所": "p.262",
+        "URL": "https://drive.google.com/file/d/1wH1nhmsftl6y8Mp7y6twtoXSi6rxqxzT/view",
+        "確認日": "2026-08-31",
+        "確度": "HIGH",
+        "根拠内容": "アタッチ枠装飾窓：標準 / 既設単体 内嵌め用の部材詳細"
+      }
+    },
+    {
+      "id": "ATT-TW-EV-013",
+      "source_id": "ATT-TW-EV-013",
+      "payload": {
+        "evidence_id": "ATT-TW-EV-013",
+        "情報源種別": "商品カタログ",
+        "資料名": "LIXIL リプラス 商品カタログ",
+        "発行年月": "現行",
+        "ページ/箇所": "p.72 有償品対応一覧",
+        "URL": "https://drive.google.com/file/d/1wH1nhmsftl6y8Mp7y6twtoXSi6rxqxzT/view",
+        "確認日": "2026-08-31",
+        "確度": "HIGH",
+        "根拠内容": "小開口アーム、固定/可動網戸溝カバー、後付ビード、連窓方立、段窓無目の設定"
+      }
+    },
+    {
+      "id": "ATT-TW-EV-014",
+      "source_id": "ATT-TW-EV-014",
+      "payload": {
+        "evidence_id": "ATT-TW-EV-014",
+        "情報源種別": "商品カタログ",
+        "資料名": "LIXIL リプラス 商品カタログ",
+        "発行年月": "現行",
+        "ページ/箇所": "p.73,188,263",
+        "URL": "https://drive.google.com/file/d/1wH1nhmsftl6y8Mp7y6twtoXSi6rxqxzT/view",
+        "確認日": "2026-08-31",
+        "確度": "HIGH",
+        "根拠内容": "気密テープ、調整スペーサー、アングルカバー、見切材、連結ねじ等施工部材"
+      }
+    },
+    {
+      "id": "ATT-TW-EV-015",
+      "source_id": "ATT-TW-EV-015",
+      "payload": {
+        "evidence_id": "ATT-TW-EV-015",
+        "情報源種別": "公式資料横断",
+        "資料名": "リプラス/TW公式資料",
+        "発行年月": "現行",
+        "ページ/箇所": "特殊寸法・ガラス/耐風圧/連段",
+        "URL": "https://drive.google.com/file/d/1D1HPMXhOMYd_Lu10XNzzJR2TH3aDHVUr/view",
+        "確認日": "2026-08-31",
+        "確度": "HIGH",
+        "根拠内容": "通常見積外の特殊案件は公式表/見積システム最終確認"
+      }
+    },
+    {
+      "id": "DELTA-SPACER-EV-V4",
+      "source_id": "DELTA-SPACER-EV-V4",
+      "payload": {
+        "evidence_id": "DELTA-SPACER-EV-V4",
+        "情報源種別": "公式業務用資料集",
+        "資料名": "IS9800",
+        "発行年月": "2026-10",
+        "ページ/箇所": "PDF 52,104,116,120",
+        "URL": "https://webcatalog.lixil.co.jp/cgi-bin/openCatalog.cgi?c=IS9800&d=newinter",
+        "確認日": "2026-10-14",
+        "確度": "HIGH",
+        "根拠内容": "ADD_15x20_SPACER / NEW_CANDIDATE、Current未採用"
+      }
+    },
+    {
+      "id": "DELTA-CASING-EV-V4",
+      "source_id": "DELTA-CASING-EV-V4",
+      "payload": {
+        "evidence_id": "DELTA-CASING-EV-V4",
+        "情報源種別": "公式業務用資料集",
+        "資料名": "IS9800",
+        "発行年月": "2026-10",
+        "ページ/箇所": "PDF 51,115,119",
+        "URL": "https://webcatalog.lixil.co.jp/cgi-bin/openCatalog.cgi?c=IS9800&d=newinter",
+        "確認日": "2026-10-14",
+        "確度": "HIGH",
+        "根拠内容": "UPDATE_WOODEN_CASING_COLOR_SCOPE / NEW_CANDIDATE、Current未採用"
+      }
+    },
+    {
+      "id": "DELTA-FILLER-EV-V4",
+      "source_id": "DELTA-FILLER-EV-V4",
+      "payload": {
+        "evidence_id": "DELTA-FILLER-EV-V4",
+        "情報源種別": "公式業務用資料集",
+        "資料名": "IS9800",
+        "発行年月": "2026-10",
+        "ページ/箇所": "PDF 51,115,119",
+        "URL": "https://webcatalog.lixil.co.jp/cgi-bin/openCatalog.cgi?c=IS9800&d=newinter",
+        "確認日": "2026-10-14",
+        "確度": "HIGH",
+        "根拠内容": "UPDATE_FILLER_NAME_AND_VARIANTS / NEW_CANDIDATE、Current未採用"
+      }
+    },
+    {
+      "id": "DELTA-LEADTIME-EV-V4",
+      "source_id": "DELTA-LEADTIME-EV-V4",
+      "payload": {
+        "evidence_id": "DELTA-LEADTIME-EV-V4",
+        "情報源種別": "公式業務用資料集",
+        "資料名": "IS9800",
+        "発行年月": "2026-10",
+        "ページ/箇所": "PDF 235",
+        "URL": "https://webcatalog.lixil.co.jp/cgi-bin/openCatalog.cgi?c=IS9800&d=newinter",
+        "確認日": "2026-10-14",
+        "確度": "HIGH",
+        "根拠内容": "SOURCE_NOTE_ONLY / NEW_CANDIDATE、Current未採用"
+      }
+    },
+    {
+      "id": "REF-TW-CURRENT-20261009-V4",
+      "source_id": "REF-TW-CURRENT-20261009-V4",
+      "payload": {
+        "evidence_id": "REF-TW-CURRENT-20261009-V4",
+        "情報源種別": "Current正本参照",
+        "資料名": "integrated-v0.5 Current Authoring",
+        "発行年月": "2026-10-14",
+        "ページ/箇所": "固定参照ID/SHA",
+        "URL": "https://drive.google.com/file/d/10-ygy_wcdXN2u9brqU1AhucboJv5N5qk/view",
+        "確認日": "2026-10-14",
+        "確度": "HIGH",
+        "根拠内容": "5062503d3387999c2eed0862b3386e5248ae131008cbc37975956d709d598ba6"
+      }
+    },
+    {
+      "id": "APP-POLICY-V9",
+      "source_id": "APP-POLICY-V9",
+      "payload": {
+        "schema": "USER_SELECTION_POLICY_V1",
+        "revision": "REPLUS_GLOBAL_FLOW_V9_20261014",
+        "decision": "User requested both covers follow sash colors on 2026-10-14; implementation and QA subsequently authorized.",
+        "manufacturer_same_color_required": null,
+        "mapping_basis": "Existing official component color palettes, explicit product-specific value mappings. No equality based on code or label heuristics.",
+        "source_catalog": "SN1200",
+        "source_sha256": "b837ce209c8b55b2b66b412a4e3c2694a78fd5de823efc7b2b960688a5668098",
+        "scope": "LOCAL_CANDIDATE_ONLY",
+        "formal_adoption": false,
+        "flow_order": [
+          "context",
+          "opening",
+          "finish",
+          "screen",
+          "glazing",
+          "interior_finish",
+          "exterior_finish",
+          "native_options",
+          "options",
+          "part_detail",
+          "survey",
+          "size"
+        ]
+      }
+    },
+    {
+      "id": "EV-DIMENSIONS-INNER-FIT-V11",
+      "source_id": "EV-DIMENSIONS-INNER-FIT-V11",
+      "source_type": "ADOPTED_OFFICIAL_SOURCE_REVIEW",
+      "document": "SN1200",
+      "sha256": "b837ce209c8b55b2b66b412a4e3c2694a78fd5de823efc7b2b960688a5668098",
+      "locator": "PDF252/254 dimensions, 212/231/233/247/249/251 installation, 255/256 attachments",
+      "status": "REVIEWED_CANDIDATE_BINDING"
+    }
+  ],
+  "composition": {
+    "series_field": "referenced_series_id",
+    "window_field": "referenced_window_id",
+    "prefix": "new_sash_",
+    "bindings": [
+      {
+        "component": "RPL_ATT_TW",
+        "source_sheet": "03C_対応TW窓種",
+        "source_row": 5,
+        "rule_id": "ATT-TW-SW-001",
+        "series_id": "SER-LIX-TW",
+        "window_id": "SWT-LIX-TW-TATE-GREMON-T",
+        "original_row": [
+          "ATT-TW-SW-001",
+          "SWT-LIX-TW-TATE-GREMON-T",
+          "縦すべり出し窓 T（グレモン）",
+          "ATTACH_DEDICATED",
+          true,
+          "専用品○ / TW別手配○",
+          "COMPLETE",
+          "ATT-TW-EV-003,004"
+        ],
+        "bound_files": [
+          {
+            "key": "tw_authoring",
+            "id": "10-ygy_wcdXN2u9brqU1AhucboJv5N5qk",
+            "bytes": 600183,
+            "sha256": "5062503d3387999c2eed0862b3386e5248ae131008cbc37975956d709d598ba6"
+          },
+          {
+            "key": "tw_runtime",
+            "id": "1r946VJlEi_qmIFrV-TULmfgJ8XhYV230",
+            "bytes": 3764442,
+            "sha256": "17e2a7468f5f9a2c6bfdd275281307c6a9739b994a18faa6fef90dc6fddb4491"
+          }
+        ],
+        "native_window": {
+          "id": "SWT-LIX-TW-TATE-GREMON-T",
+          "common_window_id": "WT-TATE-SUBERI",
+          "label": "縦すべり出し窓 T（グレモン）",
+          "category": "装飾窓",
+          "spec_type": "なし",
+          "display_order": 60,
+          "active": true
+        },
+        "active_specs_at_fixed_revision": [],
+        "canonical_fields": [],
+        "native_dependencies": [],
+        "native_rule_bundles": [],
+        "native_presentation_rules": [],
+        "native_projection_state": "REFERENCE_IDENTITIES_VERIFIED",
+        "automatic_replus_execution": "REFUSED_REPLUS_ADAPTER_PENDING",
+        "readiness_inherited_from_authoring": false,
+        "consumer_product_id": "SER-LIXIL-TW",
+        "executable": true
+      },
+      {
+        "component": "RPL_ATT_TW",
+        "source_sheet": "03C_対応TW窓種",
+        "source_row": 6,
+        "rule_id": "ATT-TW-SW-002",
+        "series_id": "SER-LIX-TW",
+        "window_id": "SWT-LIX-TW-TATE-GREMON-TF",
+        "original_row": [
+          "ATT-TW-SW-002",
+          "SWT-LIX-TW-TATE-GREMON-TF",
+          "縦すべり出し窓 TF（グレモン）",
+          "ATTACH_DEDICATED",
+          true,
+          "専用品は内押縁のみ / TW別手配○",
+          "COMPLETE",
+          "ATT-TW-EV-003,004"
+        ],
+        "bound_files": [
+          {
+            "key": "tw_authoring",
+            "id": "10-ygy_wcdXN2u9brqU1AhucboJv5N5qk",
+            "bytes": 600183,
+            "sha256": "5062503d3387999c2eed0862b3386e5248ae131008cbc37975956d709d598ba6"
+          },
+          {
+            "key": "tw_runtime",
+            "id": "1r946VJlEi_qmIFrV-TULmfgJ8XhYV230",
+            "bytes": 3764442,
+            "sha256": "17e2a7468f5f9a2c6bfdd275281307c6a9739b994a18faa6fef90dc6fddb4491"
+          }
+        ],
+        "native_window": {
+          "id": "SWT-LIX-TW-TATE-GREMON-TF",
+          "common_window_id": "WT-TATE-SUBERI",
+          "label": "縦すべり出し窓 TF（グレモン）",
+          "category": "装飾窓",
+          "spec_type": "なし",
+          "display_order": 61,
+          "active": true
+        },
+        "active_specs_at_fixed_revision": [],
+        "canonical_fields": [],
+        "native_dependencies": [],
+        "native_rule_bundles": [],
+        "native_presentation_rules": [],
+        "native_projection_state": "REFERENCE_IDENTITIES_VERIFIED",
+        "automatic_replus_execution": "REFUSED_REPLUS_ADAPTER_PENDING",
+        "readiness_inherited_from_authoring": false,
+        "consumer_product_id": "SER-LIXIL-TW",
+        "executable": true
+      },
+      {
+        "component": "RPL_ATT_TW",
+        "source_sheet": "03C_対応TW窓種",
+        "source_row": 7,
+        "rule_id": "ATT-TW-SW-003",
+        "series_id": "SER-LIX-TW",
+        "window_id": "SWT-LIX-TW-TATE-GREMON-TFT",
+        "original_row": [
+          "ATT-TW-SW-003",
+          "SWT-LIX-TW-TATE-GREMON-TFT",
+          "縦すべり出し窓 TFT（グレモン）",
+          "ATTACH_DEDICATED",
+          true,
+          "専用品は内押縁のみ / TW別手配○",
+          "COMPLETE",
+          "ATT-TW-EV-003,004"
+        ],
+        "bound_files": [
+          {
+            "key": "tw_authoring",
+            "id": "10-ygy_wcdXN2u9brqU1AhucboJv5N5qk",
+            "bytes": 600183,
+            "sha256": "5062503d3387999c2eed0862b3386e5248ae131008cbc37975956d709d598ba6"
+          },
+          {
+            "key": "tw_runtime",
+            "id": "1r946VJlEi_qmIFrV-TULmfgJ8XhYV230",
+            "bytes": 3764442,
+            "sha256": "17e2a7468f5f9a2c6bfdd275281307c6a9739b994a18faa6fef90dc6fddb4491"
+          }
+        ],
+        "native_window": {
+          "id": "SWT-LIX-TW-TATE-GREMON-TFT",
+          "common_window_id": "WT-TATE-SUBERI",
+          "label": "縦すべり出し窓 TFT（グレモン）",
+          "category": "装飾窓",
+          "spec_type": "なし",
+          "display_order": 62,
+          "active": true
+        },
+        "active_specs_at_fixed_revision": [],
+        "canonical_fields": [],
+        "native_dependencies": [],
+        "native_rule_bundles": [],
+        "native_presentation_rules": [],
+        "native_projection_state": "REFERENCE_IDENTITIES_VERIFIED",
+        "automatic_replus_execution": "REFUSED_REPLUS_ADAPTER_PENDING",
+        "readiness_inherited_from_authoring": false,
+        "consumer_product_id": "SER-LIXIL-TW",
+        "executable": true
+      },
+      {
+        "component": "RPL_ATT_TW",
+        "source_sheet": "03C_対応TW窓種",
+        "source_row": 8,
+        "rule_id": "ATT-TW-SW-004",
+        "series_id": "SER-LIX-TW",
+        "window_id": "SWT-LIX-TW-YOKO-GREMON",
+        "original_row": [
+          "ATT-TW-SW-004",
+          "SWT-LIX-TW-YOKO-GREMON",
+          "横すべり出し窓（グレモン）",
+          "ATTACH_DEDICATED",
+          true,
+          "専用品○ / TW別手配○",
+          "COMPLETE",
+          "ATT-TW-EV-003,004"
+        ],
+        "bound_files": [
+          {
+            "key": "tw_authoring",
+            "id": "10-ygy_wcdXN2u9brqU1AhucboJv5N5qk",
+            "bytes": 600183,
+            "sha256": "5062503d3387999c2eed0862b3386e5248ae131008cbc37975956d709d598ba6"
+          },
+          {
+            "key": "tw_runtime",
+            "id": "1r946VJlEi_qmIFrV-TULmfgJ8XhYV230",
+            "bytes": 3764442,
+            "sha256": "17e2a7468f5f9a2c6bfdd275281307c6a9739b994a18faa6fef90dc6fddb4491"
+          }
+        ],
+        "native_window": {
+          "id": "SWT-LIX-TW-YOKO-GREMON",
+          "common_window_id": "WT-YOKO-SUBERI",
+          "label": "横すべり出し窓（グレモン）",
+          "category": "装飾窓",
+          "spec_type": "なし",
+          "display_order": 70,
+          "active": true
+        },
+        "active_specs_at_fixed_revision": [],
+        "canonical_fields": [],
+        "native_dependencies": [],
+        "native_rule_bundles": [],
+        "native_presentation_rules": [],
+        "native_projection_state": "REFERENCE_IDENTITIES_VERIFIED",
+        "automatic_replus_execution": "REFUSED_REPLUS_ADAPTER_PENDING",
+        "readiness_inherited_from_authoring": false,
+        "consumer_product_id": "SER-LIXIL-TW",
+        "executable": true
+      },
+      {
+        "component": "RPL_ATT_TW",
+        "source_sheet": "03C_対応TW窓種",
+        "source_row": 9,
+        "rule_id": "ATT-TW-SW-005",
+        "series_id": "SER-LIX-TW",
+        "window_id": "SWT-LIX-TW-HIGH-YOKO",
+        "original_row": [
+          "ATT-TW-SW-005",
+          "SWT-LIX-TW-HIGH-YOKO",
+          "高所用横すべり出し窓",
+          "ATTACH_DEDICATED",
+          true,
+          "専用品○ / TW別手配○",
+          "COMPLETE",
+          "ATT-TW-EV-003,004"
+        ],
+        "bound_files": [
+          {
+            "key": "tw_authoring",
+            "id": "10-ygy_wcdXN2u9brqU1AhucboJv5N5qk",
+            "bytes": 600183,
+            "sha256": "5062503d3387999c2eed0862b3386e5248ae131008cbc37975956d709d598ba6"
+          },
+          {
+            "key": "tw_runtime",
+            "id": "1r946VJlEi_qmIFrV-TULmfgJ8XhYV230",
+            "bytes": 3764442,
+            "sha256": "17e2a7468f5f9a2c6bfdd275281307c6a9739b994a18faa6fef90dc6fddb4491"
+          }
+        ],
+        "native_window": {
+          "id": "SWT-LIX-TW-HIGH-YOKO",
+          "common_window_id": "WT-KOSHO-YOKO-SUBERI",
+          "label": "高所用横すべり出し窓",
+          "category": "装飾窓",
+          "spec_type": "操作仕様",
+          "display_order": 80,
+          "active": true
+        },
+        "active_specs_at_fixed_revision": [],
+        "canonical_fields": [],
+        "native_dependencies": [],
+        "native_rule_bundles": [],
+        "native_presentation_rules": [],
+        "native_projection_state": "REFERENCE_IDENTITIES_VERIFIED",
+        "automatic_replus_execution": "REFUSED_REPLUS_ADAPTER_PENDING",
+        "readiness_inherited_from_authoring": false,
+        "consumer_product_id": "SER-LIXIL-TW",
+        "executable": true
+      },
+      {
+        "component": "RPL_ATT_TW",
+        "source_sheet": "03C_対応TW窓種",
+        "source_row": 10,
+        "rule_id": "ATT-TW-SW-006",
+        "series_id": "SER-LIX-TW",
+        "window_id": "SWT-LIX-TW-AGE-SAGE",
+        "original_row": [
+          "ATT-TW-SW-006",
+          "SWT-LIX-TW-AGE-SAGE",
+          "上げ下げ窓",
+          "ATTACH_DEDICATED",
+          true,
+          "専用品○ / TW別手配○",
+          "COMPLETE",
+          "ATT-TW-EV-003,004"
+        ],
+        "bound_files": [
+          {
+            "key": "tw_authoring",
+            "id": "10-ygy_wcdXN2u9brqU1AhucboJv5N5qk",
+            "bytes": 600183,
+            "sha256": "5062503d3387999c2eed0862b3386e5248ae131008cbc37975956d709d598ba6"
+          },
+          {
+            "key": "tw_runtime",
+            "id": "1r946VJlEi_qmIFrV-TULmfgJ8XhYV230",
+            "bytes": 3764442,
+            "sha256": "17e2a7468f5f9a2c6bfdd275281307c6a9739b994a18faa6fef90dc6fddb4491"
+          }
+        ],
+        "native_window": {
+          "id": "SWT-LIX-TW-AGE-SAGE",
+          "common_window_id": "WT-AGE-SAGE",
+          "label": "上げ下げ窓",
+          "category": "装飾窓",
+          "spec_type": "なし",
+          "display_order": 90,
+          "active": true
+        },
+        "active_specs_at_fixed_revision": [],
+        "canonical_fields": [],
+        "native_dependencies": [],
+        "native_rule_bundles": [],
+        "native_presentation_rules": [],
+        "native_projection_state": "REFERENCE_IDENTITIES_VERIFIED",
+        "automatic_replus_execution": "REFUSED_REPLUS_ADAPTER_PENDING",
+        "readiness_inherited_from_authoring": false,
+        "consumer_product_id": "SER-LIXIL-TW",
+        "executable": true
+      },
+      {
+        "component": "RPL_ATT_TW",
+        "source_sheet": "03C_対応TW窓種",
+        "source_row": 11,
+        "rule_id": "ATT-TW-SW-007",
+        "series_id": "SER-LIX-TW",
+        "window_id": "SWT-LIX-TW-FIX-IN-MADO",
+        "original_row": [
+          "ATT-TW-SW-007",
+          "SWT-LIX-TW-FIX-IN-MADO",
+          "FIX窓（内押縁タイプ）マド",
+          "ATTACH_DEDICATED",
+          true,
+          "FIX内押縁タイプとして専用品○ / TW別手配○",
+          "COMPLETE",
+          "ATT-TW-EV-003,004"
+        ],
+        "bound_files": [
+          {
+            "key": "tw_authoring",
+            "id": "10-ygy_wcdXN2u9brqU1AhucboJv5N5qk",
+            "bytes": 600183,
+            "sha256": "5062503d3387999c2eed0862b3386e5248ae131008cbc37975956d709d598ba6"
+          },
+          {
+            "key": "tw_runtime",
+            "id": "1r946VJlEi_qmIFrV-TULmfgJ8XhYV230",
+            "bytes": 3764442,
+            "sha256": "17e2a7468f5f9a2c6bfdd275281307c6a9739b994a18faa6fef90dc6fddb4491"
+          }
+        ],
+        "native_window": {
+          "id": "SWT-LIX-TW-FIX-IN-MADO",
+          "common_window_id": "WT-FIX",
+          "label": "FIX窓（内押縁タイプ）マド",
+          "category": "装飾窓",
+          "spec_type": "なし",
+          "display_order": 110,
+          "active": true
+        },
+        "active_specs_at_fixed_revision": [],
+        "canonical_fields": [],
+        "native_dependencies": [],
+        "native_rule_bundles": [],
+        "native_presentation_rules": [],
+        "native_projection_state": "REFERENCE_IDENTITIES_VERIFIED",
+        "automatic_replus_execution": "REFUSED_REPLUS_ADAPTER_PENDING",
+        "readiness_inherited_from_authoring": false,
+        "consumer_product_id": "SER-LIXIL-TW",
+        "executable": true
+      },
+      {
+        "component": "RPL_ATT_TW",
+        "source_sheet": "03C_対応TW窓種",
+        "source_row": 12,
+        "rule_id": "ATT-TW-SW-008",
+        "series_id": "SER-LIX-TW",
+        "window_id": "SWT-LIX-TW-FIX-IN-TR-ZAIRAI",
+        "original_row": [
+          "ATT-TW-SW-008",
+          "SWT-LIX-TW-FIX-IN-TR-ZAIRAI",
+          "FIX窓（内押縁タイプ）在来テラス",
+          "TW_SEPARATE",
+          true,
+          "TW正本FIX内押縁系列として参照",
+          "COMPLETE",
+          "ATT-TW-EV-003,004"
+        ],
+        "bound_files": [
+          {
+            "key": "tw_authoring",
+            "id": "10-ygy_wcdXN2u9brqU1AhucboJv5N5qk",
+            "bytes": 600183,
+            "sha256": "5062503d3387999c2eed0862b3386e5248ae131008cbc37975956d709d598ba6"
+          },
+          {
+            "key": "tw_runtime",
+            "id": "1r946VJlEi_qmIFrV-TULmfgJ8XhYV230",
+            "bytes": 3764442,
+            "sha256": "17e2a7468f5f9a2c6bfdd275281307c6a9739b994a18faa6fef90dc6fddb4491"
+          }
+        ],
+        "native_window": {
+          "id": "SWT-LIX-TW-FIX-IN-TR-ZAIRAI",
+          "common_window_id": "WT-FIX",
+          "label": "FIX窓（内押縁タイプ）在来テラス",
+          "category": "装飾窓",
+          "spec_type": "なし",
+          "display_order": 111,
+          "active": true
+        },
+        "active_specs_at_fixed_revision": [],
+        "canonical_fields": [],
+        "native_dependencies": [],
+        "native_rule_bundles": [],
+        "native_presentation_rules": [],
+        "native_projection_state": "REFERENCE_IDENTITIES_VERIFIED",
+        "automatic_replus_execution": "REFUSED_REPLUS_ADAPTER_PENDING",
+        "readiness_inherited_from_authoring": false,
+        "consumer_product_id": "SER-LIXIL-TW",
+        "executable": true
+      },
+      {
+        "component": "RPL_ATT_TW",
+        "source_sheet": "03C_対応TW窓種",
+        "source_row": 13,
+        "rule_id": "ATT-TW-SW-009",
+        "series_id": "SER-LIX-TW",
+        "window_id": "SWT-LIX-TW-FIX-IN-TR-204",
+        "original_row": [
+          "ATT-TW-SW-009",
+          "SWT-LIX-TW-FIX-IN-TR-204",
+          "FIX窓（内押縁タイプ）204テラス",
+          "TW_SEPARATE",
+          true,
+          "TW正本FIX内押縁系列として参照",
+          "COMPLETE",
+          "ATT-TW-EV-003,004"
+        ],
+        "bound_files": [
+          {
+            "key": "tw_authoring",
+            "id": "10-ygy_wcdXN2u9brqU1AhucboJv5N5qk",
+            "bytes": 600183,
+            "sha256": "5062503d3387999c2eed0862b3386e5248ae131008cbc37975956d709d598ba6"
+          },
+          {
+            "key": "tw_runtime",
+            "id": "1r946VJlEi_qmIFrV-TULmfgJ8XhYV230",
+            "bytes": 3764442,
+            "sha256": "17e2a7468f5f9a2c6bfdd275281307c6a9739b994a18faa6fef90dc6fddb4491"
+          }
+        ],
+        "native_window": {
+          "id": "SWT-LIX-TW-FIX-IN-TR-204",
+          "common_window_id": "WT-FIX",
+          "label": "FIX窓（内押縁タイプ）204テラス",
+          "category": "装飾窓",
+          "spec_type": "なし",
+          "display_order": 112,
+          "active": true
+        },
+        "active_specs_at_fixed_revision": [],
+        "canonical_fields": [],
+        "native_dependencies": [],
+        "native_rule_bundles": [],
+        "native_presentation_rules": [],
+        "native_projection_state": "REFERENCE_IDENTITIES_VERIFIED",
+        "automatic_replus_execution": "REFUSED_REPLUS_ADAPTER_PENDING",
+        "readiness_inherited_from_authoring": false,
+        "consumer_product_id": "SER-LIXIL-TW",
+        "executable": true
+      },
+      {
+        "component": "RPL_ATT_TW",
+        "source_sheet": "03C_対応TW窓種",
+        "source_row": 14,
+        "rule_id": "ATT-TW-SW-010",
+        "series_id": "SER-LIX-TW",
+        "window_id": "SWT-LIX-TW-FIX-IN-TR-204-STEP",
+        "original_row": [
+          "ATT-TW-SW-010",
+          "SWT-LIX-TW-FIX-IN-TR-204-STEP",
+          "FIX窓（内押縁タイプ）204テラス単純段差",
+          "TW_SEPARATE",
+          true,
+          "TW正本FIX内押縁系列として参照",
+          "COMPLETE",
+          "ATT-TW-EV-003,004"
+        ],
+        "bound_files": [
+          {
+            "key": "tw_authoring",
+            "id": "10-ygy_wcdXN2u9brqU1AhucboJv5N5qk",
+            "bytes": 600183,
+            "sha256": "5062503d3387999c2eed0862b3386e5248ae131008cbc37975956d709d598ba6"
+          },
+          {
+            "key": "tw_runtime",
+            "id": "1r946VJlEi_qmIFrV-TULmfgJ8XhYV230",
+            "bytes": 3764442,
+            "sha256": "17e2a7468f5f9a2c6bfdd275281307c6a9739b994a18faa6fef90dc6fddb4491"
+          }
+        ],
+        "native_window": {
+          "id": "SWT-LIX-TW-FIX-IN-TR-204-STEP",
+          "common_window_id": "WT-FIX",
+          "label": "FIX窓（内押縁タイプ）204テラス単純段差",
+          "category": "装飾窓",
+          "spec_type": "なし",
+          "display_order": 113,
+          "active": true
+        },
+        "active_specs_at_fixed_revision": [],
+        "canonical_fields": [],
+        "native_dependencies": [],
+        "native_rule_bundles": [],
+        "native_presentation_rules": [],
+        "native_projection_state": "REFERENCE_IDENTITIES_VERIFIED",
+        "automatic_replus_execution": "REFUSED_REPLUS_ADAPTER_PENDING",
+        "readiness_inherited_from_authoring": false,
+        "consumer_product_id": "SER-LIXIL-TW",
+        "executable": true
+      },
+      {
+        "component": "RPL_ATT_TW",
+        "source_sheet": "03C_対応TW窓種",
+        "source_row": 15,
+        "rule_id": "ATT-TW-SW-011",
+        "series_id": "SER-LIX-TW",
+        "window_id": "SWT-LIX-TW-TATE-OP-T",
+        "original_row": [
+          "ATT-TW-SW-011",
+          "SWT-LIX-TW-TATE-OP-T",
+          "縦すべり出し窓 T（オペレーター）",
+          "TW_SEPARATE",
+          true,
+          "専用品設定なし / TW別手配○",
+          "COMPLETE",
+          "ATT-TW-EV-003,004"
+        ],
+        "bound_files": [
+          {
+            "key": "tw_authoring",
+            "id": "10-ygy_wcdXN2u9brqU1AhucboJv5N5qk",
+            "bytes": 600183,
+            "sha256": "5062503d3387999c2eed0862b3386e5248ae131008cbc37975956d709d598ba6"
+          },
+          {
+            "key": "tw_runtime",
+            "id": "1r946VJlEi_qmIFrV-TULmfgJ8XhYV230",
+            "bytes": 3764442,
+            "sha256": "17e2a7468f5f9a2c6bfdd275281307c6a9739b994a18faa6fef90dc6fddb4491"
+          }
+        ],
+        "native_window": {
+          "id": "SWT-LIX-TW-TATE-OP-T",
+          "common_window_id": "WT-TATE-SUBERI",
+          "label": "縦すべり出し窓 T（オペレーター）",
+          "category": "装飾窓",
+          "spec_type": "なし",
+          "display_order": 63,
+          "active": true
+        },
+        "active_specs_at_fixed_revision": [],
+        "canonical_fields": [],
+        "native_dependencies": [],
+        "native_rule_bundles": [],
+        "native_presentation_rules": [],
+        "native_projection_state": "REFERENCE_IDENTITIES_VERIFIED",
+        "automatic_replus_execution": "REFUSED_REPLUS_ADAPTER_PENDING",
+        "readiness_inherited_from_authoring": false,
+        "consumer_product_id": "SER-LIXIL-TW",
+        "executable": true
+      },
+      {
+        "component": "RPL_ATT_TW",
+        "source_sheet": "03C_対応TW窓種",
+        "source_row": 16,
+        "rule_id": "ATT-TW-SW-012",
+        "series_id": "SER-LIX-TW",
+        "window_id": "SWT-LIX-TW-YOKO-OP",
+        "original_row": [
+          "ATT-TW-SW-012",
+          "SWT-LIX-TW-YOKO-OP",
+          "横すべり出し窓（オペレーター）",
+          "TW_SEPARATE",
+          true,
+          "専用品設定なし / TW別手配○",
+          "COMPLETE",
+          "ATT-TW-EV-003,004"
+        ],
+        "bound_files": [
+          {
+            "key": "tw_authoring",
+            "id": "10-ygy_wcdXN2u9brqU1AhucboJv5N5qk",
+            "bytes": 600183,
+            "sha256": "5062503d3387999c2eed0862b3386e5248ae131008cbc37975956d709d598ba6"
+          },
+          {
+            "key": "tw_runtime",
+            "id": "1r946VJlEi_qmIFrV-TULmfgJ8XhYV230",
+            "bytes": 3764442,
+            "sha256": "17e2a7468f5f9a2c6bfdd275281307c6a9739b994a18faa6fef90dc6fddb4491"
+          }
+        ],
+        "native_window": {
+          "id": "SWT-LIX-TW-YOKO-OP",
+          "common_window_id": "WT-YOKO-SUBERI",
+          "label": "横すべり出し窓（オペレーター）",
+          "category": "装飾窓",
+          "spec_type": "なし",
+          "display_order": 71,
+          "active": true
+        },
+        "active_specs_at_fixed_revision": [],
+        "canonical_fields": [],
+        "native_dependencies": [],
+        "native_rule_bundles": [],
+        "native_presentation_rules": [],
+        "native_projection_state": "REFERENCE_IDENTITIES_VERIFIED",
+        "automatic_replus_execution": "REFUSED_REPLUS_ADAPTER_PENDING",
+        "readiness_inherited_from_authoring": false,
+        "consumer_product_id": "SER-LIXIL-TW",
+        "executable": true
+      },
+      {
+        "component": "RPL_ATT_TW",
+        "source_sheet": "03C_対応TW窓種",
+        "source_row": 17,
+        "rule_id": "ATT-TW-SW-013",
+        "series_id": "SER-LIX-TW",
+        "window_id": "SWT-LIX-TW-GRILLE-AGE",
+        "original_row": [
+          "ATT-TW-SW-013",
+          "SWT-LIX-TW-GRILLE-AGE",
+          "面格子付上げ下げ窓",
+          "TW_SEPARATE",
+          true,
+          "専用品設定なし / TW別手配○",
+          "COMPLETE",
+          "ATT-TW-EV-003,004"
+        ],
+        "bound_files": [
+          {
+            "key": "tw_authoring",
+            "id": "10-ygy_wcdXN2u9brqU1AhucboJv5N5qk",
+            "bytes": 600183,
+            "sha256": "5062503d3387999c2eed0862b3386e5248ae131008cbc37975956d709d598ba6"
+          },
+          {
+            "key": "tw_runtime",
+            "id": "1r946VJlEi_qmIFrV-TULmfgJ8XhYV230",
+            "bytes": 3764442,
+            "sha256": "17e2a7468f5f9a2c6bfdd275281307c6a9739b994a18faa6fef90dc6fddb4491"
+          }
+        ],
+        "native_window": {
+          "id": "SWT-LIX-TW-GRILLE-AGE",
+          "common_window_id": "WT-MENKOSHI-AGE-SAGE",
+          "label": "面格子付上げ下げ窓",
+          "category": "装飾窓",
+          "spec_type": "面格子種類",
+          "display_order": 100,
+          "active": true
+        },
+        "active_specs_at_fixed_revision": [],
+        "canonical_fields": [],
+        "native_dependencies": [],
+        "native_rule_bundles": [],
+        "native_presentation_rules": [],
+        "native_projection_state": "REFERENCE_IDENTITIES_VERIFIED",
+        "automatic_replus_execution": "REFUSED_REPLUS_ADAPTER_PENDING",
+        "readiness_inherited_from_authoring": false,
+        "consumer_product_id": "SER-LIXIL-TW",
+        "executable": true
+      }
+    ]
+  },
+  "numeric_constraints": [
+    {
+      "id": "ATT-TW-SILL",
+      "field": "lower_frame_rise",
+      "min": 29,
+      "max": 48,
+      "outside": "MANUAL_CHECK",
+      "message": "補強金具と既設下枠間に差分スペーサー",
+      "evidenceIds": [
+        "ATT-TW-EV-010"
+      ]
+    },
+    {
+      "id": "ATT-TW-DEPTH",
+      "field": "existing_frame_depth",
+      "min": 0,
+      "max": 100,
+      "outside": "BLOCK",
+      "message": "取付不可/個別確認",
+      "evidenceIds": [
+        "ATT-TW-EV-008"
+      ]
+    },
+    {
+      "id": "nonnegative-survey_cover_top",
+      "field": "survey_cover_top",
+      "min": 0,
+      "outside": "BLOCK",
+      "evidenceIds": [
+        "APP-POLICY-V9"
+      ]
+    },
+    {
+      "id": "nonnegative-survey_cover_bottom",
+      "field": "survey_cover_bottom",
+      "min": 0,
+      "outside": "BLOCK",
+      "evidenceIds": [
+        "APP-POLICY-V9"
+      ]
+    },
+    {
+      "id": "nonnegative-survey_cover_side",
+      "field": "survey_cover_side",
+      "min": 0,
+      "outside": "BLOCK",
+      "evidenceIds": [
+        "APP-POLICY-V9"
+      ]
+    }
+  ],
+  "linear_transforms": [
+    {
+      "id": "ATT-TW-F-WD",
+      "input": "survey_w",
+      "output": "attachment_finished_w",
+      "offset": -10,
+      "evidenceIds": [
+        "ATT-TW-EV-006"
+      ]
+    },
+    {
+      "id": "ATT-TW-F-HD",
+      "input": "survey_h",
+      "output": "attachment_finished_h",
+      "offset": -10,
+      "evidenceIds": [
+        "ATT-TW-EV-006"
+      ]
+    },
+    {
+      "id": "ATT-TW-F-TWW",
+      "input": "survey_w",
+      "output": "referenced_TW_w",
+      "offset": -38,
+      "evidenceIds": [
+        "ATT-TW-EV-006"
+      ]
+    },
+    {
+      "id": "ATT-TW-F-TWH",
+      "input": "survey_h",
+      "output": "referenced_TW_h",
+      "offset": -50,
+      "evidenceIds": [
+        "ATT-TW-EV-006"
+      ]
+    }
+  ],
+  "unsupported_rules": [
+    {
+      "sheet": "05_サイズルール",
+      "reason": "NATIVE_PROSE_OR_COMPOUND_RULE_REQUIRES_MANUAL_REVIEW"
+    },
+    {
+      "sheet": "05A_サイズ区間",
+      "reason": "NATIVE_PROSE_OR_COMPOUND_RULE_REQUIRES_MANUAL_REVIEW"
+    },
+    {
+      "sheet": "05B_境界ルール",
+      "reason": "NATIVE_PROSE_OR_COMPOUND_RULE_REQUIRES_MANUAL_REVIEW"
+    },
+    {
+      "sheet": "07A_網戸適用条件",
+      "reason": "NATIVE_PROSE_OR_COMPOUND_RULE_REQUIRES_MANUAL_REVIEW"
+    },
+    {
+      "sheet": "08A_ガラス適用条件",
+      "reason": "NATIVE_PROSE_OR_COMPOUND_RULE_REQUIRES_MANUAL_REVIEW"
+    },
+    {
+      "sheet": "09A_OP依存関係",
+      "reason": "NATIVE_PROSE_OR_COMPOUND_RULE_REQUIRES_MANUAL_REVIEW"
+    },
+    {
+      "sheet": "10_適用条件",
+      "reason": "NATIVE_PROSE_OR_COMPOUND_RULE_REQUIRES_MANUAL_REVIEW"
+    },
+    {
+      "sheet": "10A_既設窓互換",
+      "reason": "NATIVE_PROSE_OR_COMPOUND_RULE_REQUIRES_MANUAL_REVIEW"
+    },
+    {
+      "sheet": "10B_現調項目",
+      "reason": "NATIVE_PROSE_OR_COMPOUND_RULE_REQUIRES_MANUAL_REVIEW"
+    },
+    {
+      "sheet": "10C_化粧カバー見付",
+      "reason": "NATIVE_PROSE_OR_COMPOUND_RULE_REQUIRES_MANUAL_REVIEW"
+    },
+    {
+      "sheet": "05C_寸法変換",
+      "reason": "NATIVE_PROSE_OR_COMPOUND_RULE_REQUIRES_MANUAL_REVIEW"
+    },
+    {
+      "sheet": "12_共通参照",
+      "reason": "NATIVE_PROSE_OR_COMPOUND_RULE_REQUIRES_MANUAL_REVIEW"
+    }
+  ],
+  "selection_migrations": [
+    {
+      "source": "options",
+      "match": "CONTAINS",
+      "value": "ATT-TW-OP-ANGLE-COVER",
+      "clearValue": true,
+      "assign": {
+        "interior_cover_type": [
+          "ATT-TW-OP-ANGLE-COVER"
+        ]
+      },
+      "mergeArrays": true
+    },
+    {
+      "source": "options",
+      "match": "CONTAINS",
+      "value": "ATT-TW-OP-TRIM",
+      "clearValue": true,
+      "assign": {
+        "interior_cover_type": [
+          "ATT-TW-OP-TRIM"
+        ]
+      },
+      "mergeArrays": true
+    },
+    {
+      "source": "installation_method",
+      "value": "内嵌め用",
+      "clearSource": true,
+      "assign": {},
+      "reason": "Legacy value does not specify existing mount. Require explicit choice; never guess INSET/OUTSET."
+    }
+  ]
+}

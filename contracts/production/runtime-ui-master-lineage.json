@@ -1,0 +1,48 @@
+{
+  "schema": "ADOPTED_PRODUCT_MASTER_LINEAGE_V1",
+  "product_id": "NATIVE_REGISTRY:LIXIL::リプラス",
+  "package_version": "v1.2-R1",
+  "status": "FORMAL_PASS",
+  "manifest_file_id": "1whrtMK-GJqWkDj4VorROf3ZA6k56GSpH",
+  "completed_record_file_id": "1UCT0bmqEJpl-sDgKEADT8n-93I-tfrnc",
+  "completed_record_sha256": "f5c01e4e3e9f3cbea0668d03b26d1cdd8297af820b377b2b42bb7bcbcab38bc2",
+  "masters": [
+    {
+      "file_id": "19UlR8tQZjIB1ZYpvqKJZVyYVMfth9e1Y",
+      "sha256": "2e248105eb158a62c7f4b54715e0f3704aa68e4af47c62be9b64d41d1b920cb1",
+      "file_name": "LIXIL_REPLUS_RPL_ROOM_v1.2-R1_FORMAL.xlsx"
+    },
+    {
+      "file_id": "1qEu4nbaBQE-TxvMcO1mX34kiJuiOJmZE",
+      "sha256": "824d81c7a3f7fe0e912e06589d85f0f5b11894ae975d632627db63d4cde36fc0",
+      "file_name": "LIXIL_REPLUS_RPL_TW_v1.2-R1_FORMAL.xlsx"
+    },
+    {
+      "file_id": "1dMh8_o_SJCeVRN0QPy6pKsWtF19ZF5U_",
+      "sha256": "948dbae082cda07034f81939ac5679c3e1ec41cd1ce64080e5ec417d935a514c",
+      "file_name": "LIXIL_REPLUS_RPL_EW_v1.2-R1_FORMAL.xlsx"
+    },
+    {
+      "file_id": "1iMxw3_Ydp8j6Rrwnn_rMg7ESiA6dM7qR",
+      "sha256": "7d54f17240c04e6c8ff845ab4c1d05c88201804d4e5b29eafb9c157b1bca810d",
+      "file_name": "LIXIL_REPLUS_RPL_BATH_v1.2-R1_FORMAL.xlsx"
+    },
+    {
+      "file_id": "1-ifqm-h9-RiCifFisfM7UcSZU2kgPBDO",
+      "sha256": "83ef112eaf31406ebeb88890874d6021b345063cf05dd530cc4388888792b97d",
+      "file_name": "LIXIL_REPLUS_RPL_ATT_TW_v1.2-R1_FORMAL.xlsx"
+    },
+    {
+      "file_id": "1a2Z0momPYU4WUi9VpGjYHHqhtZ0pz0kV",
+      "sha256": "ba82a1fdb0ea1f37e099416ec8972c252e8bf361e3650cc9ec042ce2d1bd1fa2",
+      "file_name": "LIXIL_REPLUS_RPL_ATT_TH_v1.2-R1_FORMAL.xlsx"
+    },
+    {
+      "file_id": "1MhoYDuE1sm1QCm116ezFjidPpK9Y0_oP",
+      "sha256": "6d774be659bf4e47ba1d5435ca8ddcd149f129fb12d1333608fa565f132c32d5",
+      "file_name": "LIXIL_REPLUS_RPL_CUT_MALL_v1.2-R1_FORMAL.xlsx"
+    }
+  ],
+  "runtime_scope_at_master_adoption": "NOT_INCLUDED_IN_PRODUCT_MASTER_FORMAL",
+  "master_re_adoption": "NOT_PERFORMED"
+}

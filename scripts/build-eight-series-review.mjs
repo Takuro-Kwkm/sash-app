@@ -38,6 +38,12 @@ function sourcePath(importer,specifier){
 function collect(path){
  if(Object.hasOwn(modules,path))return;
 	let source=path===registryPath?registry:readFileSync(path,'utf8');
+	// This standalone artifact deliberately materializes only the selected legacy packages.
+	// The normal server continues to verify all composed package files on every request.
+	if(path==='src/catalog/runtime-master/formal-composed-runtime-registry.mjs'){
+	 if(entries.some(entry=>entry.packageType==='FORMAL_COMPOSED_PRODUCT_RUNTIME'))throw new Error('COMPOSED_PACKAGE_REQUIRES_NORMAL_SERVER_PREVIEW');
+	 source="export const formalComposedRuntimeEntries=[];export function readFormalComposedModule(){throw new Error('Package outside standalone preview scope');}";
+	}
 	if(path.endsWith('.json'))source=`export default ${source.trim()};`;
 	else source=source.replace(/(from\s*['"][^'"]+\.json['"])\s+with\s*\{\s*type\s*:\s*['"]json['"]\s*\}/g,'$1');
  if(path==='src/catalog/runtime-master/uchirimo-glass-rule-model.mjs')source=source.replace("import { createHash } from 'node:crypto';","const createHash=()=>{throw new Error('Authoring normalization is not part of this read-only preview');};");

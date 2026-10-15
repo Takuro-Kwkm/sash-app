@@ -24,7 +24,7 @@ if (candidatePath) {
 }
 const integration = getRuntimeAppIntegration('SER-YKKAP-UCHIRIMO');
 const [htmlSource, appSource, styles, waveStyles, workStyles, estimateStyles, adapterSource, glassRuleSource,
-  domainSource, storageSource, repositoriesSource, serviceSource, editorSource] = await Promise.all([
+  domainSource, storageSource, repositoriesSource, serviceSource, editorSource, productChoiceSource, migrationAuditSource] = await Promise.all([
   readFile(join(webRoot, 'index.html'), 'utf8'),
   readFile(join(webRoot, 'app.js'), 'utf8'),
   readFile(join(webRoot, 'styles.css'), 'utf8'),
@@ -35,9 +35,11 @@ const [htmlSource, appSource, styles, waveStyles, workStyles, estimateStyles, ad
   readFile(join(root, 'src/catalog/runtime-master/uchirimo-glass-rule-model.mjs'), 'utf8'),
   ...['domain','storage','repositories','service'].map(name=>readFile(join(root,'src/work-management',`${name}.mjs`),'utf8')),
   readFile(join(webRoot,'product-configuration-editor.mjs'),'utf8'),
+  readFile(join(webRoot,'product-choice-model.mjs'),'utf8'),
+  readFile(join(root,'src/work-management/configuration-migration.mjs'),'utf8'),
 ]);
 const generatedAt = new Date().toISOString();
-const buildId = `UCHIRIMO-UI-${createHash('sha256').update(appSource).update(editorSource).update(adapterSource).update(glassRuleSource).update(candidateHash ?? '').update(JSON.stringify(runtimePackage.manifest)).digest('hex').slice(0, 12)}`;
+const buildId = `UCHIRIMO-UI-${createHash('sha256').update(appSource).update(editorSource).update(productChoiceSource).update(migrationAuditSource).update(adapterSource).update(glassRuleSource).update(candidateHash ?? '').update(JSON.stringify(runtimePackage.manifest)).digest('hex').slice(0, 12)}`;
 const json = (value) => JSON.stringify(value).replaceAll('</script', '<\\/script');
 const order = {
   room_specification:25, window_type:30, sash_configuration:32, size_class:34, reverse_handing:36,
@@ -61,7 +63,9 @@ const domainUrl=moduleUrl(${json(domainSource)});
 const storageUrl=moduleUrl(${json(storageSource)}.replace('./domain.mjs',domainUrl));
 const repositoriesUrl=moduleUrl(${json(repositoriesSource)}.replace('./domain.mjs',domainUrl));
 const serviceUrl=moduleUrl(${json(serviceSource)}.replace('./domain.mjs',domainUrl));
-const editorUrl=moduleUrl(${json(editorSource)}.replace('/work-management/domain.mjs',domainUrl));
+const productChoiceUrl=moduleUrl(${json(productChoiceSource)});
+const migrationAuditUrl=moduleUrl(${json(migrationAuditSource)});
+const editorUrl=moduleUrl(${json(editorSource)}.replace('/work-management/domain.mjs',domainUrl).replace('/product-choice-model.mjs',productChoiceUrl).replace('/work-management/configuration-migration.mjs',migrationAuditUrl));
 // The browser is read-only: normalization/ID hashing is never invoked here.
 const glassRuleUrl=URL.createObjectURL(new Blob([${json(glassRuleSource.replace("import { createHash } from 'node:crypto';", "const createHash=()=>{throw new Error('PREVIEW_NORMALIZATION_NOT_SUPPORTED')};"))}],{type:"text/javascript"}));
 const adapterUrl=URL.createObjectURL(new Blob([${json(browserAdapter)}.replace('./uchirimo-glass-rule-model.mjs',glassRuleUrl)],{type:"text/javascript"}));

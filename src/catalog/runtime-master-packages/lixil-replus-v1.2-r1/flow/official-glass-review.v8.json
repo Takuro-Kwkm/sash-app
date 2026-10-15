@@ -1,0 +1,103 @@
+{
+  "schema": "OFFICIAL_GLASS_PROJECTION_REVIEW_V1",
+  "revision": "REPLUS_GLASS_FLOW_V8_20261014",
+  "source": {
+    "catalog": "SN1200",
+    "sha256": "b837ce209c8b55b2b66b412a4e3c2694a78fd5de823efc7b2b960688a5668098",
+    "pages": [
+      52,
+      56,
+      60
+    ],
+    "printed_pages": [
+      48,
+      52,
+      56
+    ],
+    "url": "https://webcatalog.lixil.co.jp/cgi-bin/openCatalog.cgi?c=SN1200&d=newinter"
+  },
+  "review": "Rendered catalog diagrams inspected. Appearance and functions are separate axes; cavity denotes fill, not independently selectable thickness. Configuration/dimensions require individual estimate confirmation.",
+  "families": {
+    "ROOM_BATH_DOUBLE": {
+      "functions": [
+        "NONE",
+        "SAFETY",
+        "DISASTER",
+        "MILKY",
+        "GRID",
+        "BLIND"
+      ],
+      "appearance": [
+        "CLEAR",
+        "OBSCURE",
+        "FROST"
+      ],
+      "cavity": {
+        "GENERAL": [
+          "DRY_AIR"
+        ],
+        "LOW_E": [
+          "ARGON",
+          "DRY_AIR"
+        ]
+      },
+      "bridge": "LOW_E + ARGON + RESIN only"
+    },
+    "TW_ROOM_BATH_TRIPLE": {
+      "functions": [
+        "NONE",
+        "SAFETY",
+        "DISASTER",
+        "MILKY",
+        "THIN"
+      ],
+      "appearance": [
+        "CLEAR",
+        "OBSCURE",
+        "FROST"
+      ],
+      "cavity": [
+        "ARGON",
+        "KRYPTON"
+      ],
+      "spacer": [
+        "RESIN"
+      ]
+    },
+    "EW_DOUBLE": {
+      "functions": [
+        "NONE",
+        "SAFETY",
+        "MILKY"
+      ],
+      "appearance": [
+        "CLEAR",
+        "OBSCURE",
+        "FROST"
+      ],
+      "cavity": [
+        "ARGON"
+      ],
+      "spacer": [
+        "RESIN"
+      ]
+    },
+    "EW_TRIPLE": {
+      "functions": [
+        "NONE",
+        "SAFETY",
+        "MILKY",
+        "THIN"
+      ],
+      "scope": "Carry forward raw EW safety/milky/thin; do not import disaster/grid/blind from other specifications."
+    }
+  },
+  "held": [
+    "Independent cavity thickness selector",
+    "Tempered as product option without application evidence",
+    "Unverified manufacturing combinations",
+    "Green-clear triple conflict choice"
+  ],
+  "currentAuthority": "f7759305a53ed206280a395c0fce166476f2327f",
+  "formalAdoption": false
+}

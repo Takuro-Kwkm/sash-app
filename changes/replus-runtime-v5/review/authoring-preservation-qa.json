@@ -1,0 +1,34 @@
+[
+  {
+    "component": "RPL_ROOM",
+    "expected_cell_changes": 15,
+    "unexpected_values": [],
+    "style_id_differences": 183,
+    "original_formulas": 3,
+    "candidate_formulas": 3
+  },
+  {
+    "component": "RPL_CUT_MALL",
+    "expected_cell_changes": 63,
+    "unexpected_values": [],
+    "style_id_differences": 0,
+    "original_formulas": 12,
+    "candidate_formulas": 12
+  },
+  {
+    "component": "RPL_ATT_TH",
+    "expected_cell_changes": 37,
+    "unexpected_values": [],
+    "style_id_differences": 0,
+    "original_formulas": 15,
+    "candidate_formulas": 15
+  },
+  {
+    "component": "RPL_ATT_TW",
+    "expected_cell_changes": 12,
+    "unexpected_values": [],
+    "style_id_differences": 545,
+    "original_formulas": 9,
+    "candidate_formulas": 9
+  }
+]

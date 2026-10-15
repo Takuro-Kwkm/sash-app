@@ -1,0 +1,6088 @@
+{
+  "schema": "FORMAL_COMPOSED_PRODUCT_MODULE_V1",
+  "candidate_revision": "REPLUS_GLASS_APPEARANCE_FIRST_V13_20261014",
+  "baseline": {
+    "path": "candidates/RPL_BATH.json",
+    "component_id": "RPL_BATH",
+    "sha256": "ecaba72ed0112062b4e9065712fa24d2e82a3967aa1ebe33a320b22464e07c4b",
+    "baseline_sha256": "e96a29afcfe83d3707823c1b01b8b0b2bf227ea0b9d9971bf2d48e04e2927f00",
+    "baseline_component_version": "v1.0"
+  },
+  "scope": "SELECTION_AND_ESTIMATE_HANDOFF; NO_AUTO_MANUFACTURE_NO_FORMAL_NO_RELEASE; SALES_SITE_INPUTS_EXCLUDED_SOURCE_CONSTRAINTS_RETAINED",
+  "product_module": {
+    "product": {
+      "id": "SER-LIXIL-REPLUS-BATH",
+      "manufacturer": "LIXIL",
+      "displayName": "リプラス 浴室仕様",
+      "source": {
+        "id": "RPL_BATH",
+        "version": "REPLUS_GLOBAL_FLOW_V9_20261014"
+      }
+    },
+    "specificationDefinitions": [
+      {
+        "key": "window_type",
+        "displayLabel": "窓種",
+        "dataType": "ENUM",
+        "displayOrder": 10,
+        "autoSelectSingle": false,
+        "parentFields": [],
+        "selector": {},
+        "id": "SER-LIXIL-REPLUS-BATH:field:window_type",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "status": "ACTIVE"
+      },
+      {
+        "key": "frame_type",
+        "displayLabel": "枠仕様",
+        "dataType": "ENUM",
+        "displayOrder": 20,
+        "autoSelectSingle": false,
+        "parentFields": [
+          "window_type"
+        ],
+        "selector": {
+          "window_type": {
+            "$exists": true
+          }
+        },
+        "id": "SER-LIXIL-REPLUS-BATH:field:frame_type",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "status": "ACTIVE"
+      },
+      {
+        "key": "spec_panel_configuration",
+        "displayLabel": "建数",
+        "dataType": "ENUM",
+        "displayOrder": 30,
+        "autoSelectSingle": false,
+        "parentFields": [
+          "window_type"
+        ],
+        "selector": {
+          "window_type": {
+            "$in": [
+              "RPL_BATH_SLD"
+            ]
+          }
+        },
+        "id": "SER-LIXIL-REPLUS-BATH:field:spec_panel_configuration",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "status": "ACTIVE"
+      },
+      {
+        "key": "spec_sash_configuration",
+        "displayLabel": "障子仕様",
+        "dataType": "ENUM",
+        "displayOrder": 40,
+        "autoSelectSingle": false,
+        "parentFields": [
+          "window_type"
+        ],
+        "selector": {
+          "window_type": {
+            "$in": [
+              "RPL_BATH_SLD"
+            ]
+          }
+        },
+        "id": "SER-LIXIL-REPLUS-BATH:field:spec_sash_configuration",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "status": "ACTIVE"
+      },
+      {
+        "key": "spec_operation_type",
+        "displayLabel": "操作方式",
+        "dataType": "ENUM",
+        "displayOrder": 50,
+        "autoSelectSingle": false,
+        "parentFields": [
+          "window_type"
+        ],
+        "selector": {
+          "window_type": {
+            "$in": [
+              "RPL_BATH_VSOP",
+              "RPL_BATH_VSCAM",
+              "RPL_BATH_HSOP",
+              "RPL_BATH_HSCAM"
+            ]
+          }
+        },
+        "id": "SER-LIXIL-REPLUS-BATH:field:spec_operation_type",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "status": "ACTIVE"
+      },
+      {
+        "key": "screen",
+        "displayLabel": "網戸",
+        "dataType": "ENUM",
+        "displayOrder": 60,
+        "autoSelectSingle": false,
+        "parentFields": [
+          "window_type"
+        ],
+        "selector": {
+          "window_type": {
+            "$in": [
+              "RPL_BATH_SLD",
+              "RPL_BATH_VSOP",
+              "RPL_BATH_VSCAM",
+              "RPL_BATH_HSCAM",
+              "RPL_BATH_DHFS"
+            ]
+          }
+        },
+        "id": "SER-LIXIL-REPLUS-BATH:field:screen",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "status": "ACTIVE"
+      },
+      {
+        "key": "size_mode",
+        "displayLabel": "寸法の指定方法",
+        "dataType": "ENUM",
+        "displayOrder": 70,
+        "autoSelectSingle": true,
+        "parentFields": [],
+        "selector": {},
+        "internal": true,
+        "id": "SER-LIXIL-REPLUS-BATH:field:size_mode",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "status": "ACTIVE"
+      },
+      {
+        "key": "sash_exterior_color",
+        "displayLabel": "本体外観色",
+        "dataType": "ENUM",
+        "displayOrder": 100,
+        "autoSelectSingle": false,
+        "parentFields": [],
+        "selector": {},
+        "id": "SER-LIXIL-REPLUS-BATH:field:sash_exterior_color",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "status": "ACTIVE"
+      },
+      {
+        "key": "exterior_cover_color",
+        "displayLabel": "化粧カバー色（外観色に連動）",
+        "dataType": "ENUM",
+        "displayOrder": 110,
+        "autoSelectSingle": false,
+        "parentFields": [
+          "sash_exterior_color"
+        ],
+        "selector": {},
+        "internal": true,
+        "id": "SER-LIXIL-REPLUS-BATH:field:exterior_cover_color",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "status": "ACTIVE"
+      },
+      {
+        "key": "sash_interior_color",
+        "displayLabel": "本体内観色",
+        "dataType": "ENUM",
+        "displayOrder": 120,
+        "autoSelectSingle": false,
+        "parentFields": [],
+        "selector": {},
+        "id": "SER-LIXIL-REPLUS-BATH:field:sash_interior_color",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "status": "ACTIVE"
+      },
+      {
+        "key": "interior_cover_color",
+        "displayLabel": "室内カバー色（内観色に連動）",
+        "dataType": "ENUM",
+        "displayOrder": 130,
+        "autoSelectSingle": false,
+        "parentFields": [
+          "sash_interior_color"
+        ],
+        "selector": {
+          "bathroom_remodel_mode": "WINDOW_ONLY"
+        },
+        "internal": true,
+        "id": "SER-LIXIL-REPLUS-BATH:field:interior_cover_color",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "status": "ACTIVE"
+      },
+      {
+        "key": "options",
+        "displayLabel": "追加部材・オプション",
+        "dataType": "MULTI_ENUM",
+        "displayOrder": 140,
+        "autoSelectSingle": false,
+        "parentFields": [],
+        "selector": {},
+        "id": "SER-LIXIL-REPLUS-BATH:field:options",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "status": "ACTIVE"
+      },
+      {
+        "key": "bathroom_remodel_mode",
+        "displayLabel": "浴室改修モード",
+        "dataType": "ENUM",
+        "displayOrder": 150,
+        "autoSelectSingle": false,
+        "parentFields": [],
+        "selector": {},
+        "id": "SER-LIXIL-REPLUS-BATH:field:bathroom_remodel_mode",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "status": "ACTIVE"
+      },
+      {
+        "key": "installation_region",
+        "displayLabel": "設置地域",
+        "dataType": "ENUM",
+        "displayOrder": 700,
+        "autoSelectSingle": false,
+        "parentFields": [],
+        "selector": {},
+        "id": "SER-LIXIL-REPLUS-BATH:field:installation_region",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "status": "ACTIVE"
+      },
+      {
+        "key": "glass_category",
+        "displayLabel": "ガラス種類",
+        "dataType": "ENUM",
+        "displayOrder": 700,
+        "autoSelectSingle": false,
+        "parentFields": [
+          "frame_type",
+          "installation_region",
+          "window_type"
+        ],
+        "selector": {
+          "frame_type": {
+            "$exists": true
+          }
+        },
+        "id": "SER-LIXIL-REPLUS-BATH:field:glass_category",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "status": "ACTIVE"
+      },
+      {
+        "key": "glass",
+        "displayLabel": "ガラス詳細・Low-E仕様",
+        "dataType": "ENUM",
+        "displayOrder": 720,
+        "autoSelectSingle": false,
+        "parentFields": [
+          "frame_type",
+          "glass_appearance",
+          "glass_category",
+          "installation_region",
+          "window_type"
+        ],
+        "selector": {
+          "glass_category": {
+            "$exists": true
+          }
+        },
+        "id": "SER-LIXIL-REPLUS-BATH:field:glass",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "status": "ACTIVE"
+      },
+      {
+        "key": "glass_gas",
+        "displayLabel": "中空層",
+        "dataType": "ENUM",
+        "displayOrder": 700,
+        "autoSelectSingle": false,
+        "parentFields": [
+          "frame_type",
+          "glass_category"
+        ],
+        "selector": {
+          "glass_category": {
+            "$exists": true
+          }
+        },
+        "id": "SER-LIXIL-REPLUS-BATH:field:glass_gas",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "status": "ACTIVE"
+      },
+      {
+        "key": "glass_spacer",
+        "displayLabel": "スペーサー",
+        "dataType": "ENUM",
+        "displayOrder": 700,
+        "autoSelectSingle": false,
+        "parentFields": [
+          "frame_type",
+          "glass_category",
+          "glass_gas"
+        ],
+        "selector": {
+          "glass_gas": {
+            "$exists": true
+          }
+        },
+        "id": "SER-LIXIL-REPLUS-BATH:field:glass_spacer",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "status": "ACTIVE"
+      },
+      {
+        "key": "bathroom_opening_pattern",
+        "displayLabel": "既設開口パターン",
+        "dataType": "ENUM",
+        "displayOrder": 25,
+        "autoSelectSingle": false,
+        "parentFields": [
+          "bathroom_remodel_mode"
+        ],
+        "selector": {
+          "bathroom_remodel_mode": "SYSTEM_BATH_SIMULTANEOUS"
+        },
+        "id": "SER-LIXIL-REPLUS-BATH:field:bathroom_opening_pattern",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "status": "ACTIVE"
+      },
+      {
+        "key": "glass_function",
+        "displayLabel": "ガラス追加機能",
+        "dataType": "ENUM",
+        "displayOrder": 730,
+        "autoSelectSingle": false,
+        "parentFields": [
+          "glass_category",
+          "glass_appearance",
+          "glass",
+          "window_type"
+        ],
+        "selector": {
+          "glass": {
+            "$exists": true
+          }
+        },
+        "id": "SER-LIXIL-REPLUS-BATH:field:glass_function",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "status": "ACTIVE"
+      },
+      {
+        "key": "glass_appearance",
+        "displayLabel": "ガラス種",
+        "dataType": "ENUM",
+        "displayOrder": 710,
+        "autoSelectSingle": false,
+        "parentFields": [
+          "glass_category"
+        ],
+        "selector": {
+          "glass_category": {
+            "$exists": true
+          }
+        },
+        "id": "SER-LIXIL-REPLUS-BATH:field:glass_appearance",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "status": "ACTIVE"
+      },
+      {
+        "key": "interior_cover_type",
+        "displayLabel": "室内側の仕上げ仕様",
+        "dataType": "ENUM",
+        "displayOrder": 900,
+        "autoSelectSingle": false,
+        "parentFields": [
+          "bathroom_remodel_mode"
+        ],
+        "selector": {
+          "bathroom_remodel_mode": "WINDOW_ONLY"
+        },
+        "id": "SER-LIXIL-REPLUS-BATH:field:interior_cover_type",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "status": "ACTIVE"
+      },
+      {
+        "key": "exterior_cover_type",
+        "displayLabel": "化粧カバーの大きさ・組合せ",
+        "dataType": "ENUM",
+        "displayOrder": 900,
+        "autoSelectSingle": false,
+        "parentFields": [
+          "frame_type",
+          "survey_cover_top",
+          "survey_cover_bottom",
+          "survey_cover_side"
+        ],
+        "selector": {},
+        "id": "SER-LIXIL-REPLUS-BATH:field:exterior_cover_type",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "status": "ACTIVE"
+      },
+      {
+        "key": "installation_method",
+        "displayLabel": "内はめ仕様",
+        "dataType": "ENUM",
+        "displayOrder": 900,
+        "autoSelectSingle": false,
+        "parentFields": [
+          "window_type"
+        ],
+        "selector": {
+          "window_type": {
+            "$exists": true
+          }
+        },
+        "id": "SER-LIXIL-REPLUS-BATH:field:installation_method",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "status": "ACTIVE"
+      },
+      {
+        "key": "inner_fit_required_component",
+        "displayLabel": "内はめ用の必須部材",
+        "dataType": "ENUM",
+        "displayOrder": 900,
+        "autoSelectSingle": false,
+        "parentFields": [
+          "installation_method"
+        ],
+        "selector": {
+          "window_type": {
+            "$exists": true
+          },
+          "installation_method": {
+            "$in": [
+              "INNER_FIT_INSET",
+              "INNER_FIT_OUTSET"
+            ]
+          }
+        },
+        "internal": true,
+        "id": "SER-LIXIL-REPLUS-BATH:field:inner_fit_required_component",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "status": "ACTIVE"
+      },
+      {
+        "key": "dimension_basis",
+        "displayLabel": "入力する寸法",
+        "dataType": "ENUM",
+        "displayOrder": 900,
+        "autoSelectSingle": false,
+        "parentFields": [],
+        "selector": {},
+        "id": "SER-LIXIL-REPLUS-BATH:field:dimension_basis",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "status": "ACTIVE"
+      },
+      {
+        "key": "survey_width",
+        "displayLabel": "採寸幅 WS（mm）",
+        "dataType": "NUMBER",
+        "displayOrder": 900,
+        "autoSelectSingle": false,
+        "parentFields": [
+          "dimension_basis"
+        ],
+        "selector": {
+          "size_mode": "CUSTOM"
+        },
+        "id": "SER-LIXIL-REPLUS-BATH:field:survey_width",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "status": "ACTIVE"
+      },
+      {
+        "key": "survey_height",
+        "displayLabel": "採寸高さ HS（mm）",
+        "dataType": "NUMBER",
+        "displayOrder": 900,
+        "autoSelectSingle": false,
+        "parentFields": [
+          "dimension_basis"
+        ],
+        "selector": {
+          "size_mode": "CUSTOM"
+        },
+        "id": "SER-LIXIL-REPLUS-BATH:field:survey_height",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "status": "ACTIVE"
+      },
+      {
+        "key": "custom_width",
+        "displayLabel": "製品仕上がり幅 WD（mm）",
+        "dataType": "NUMBER",
+        "displayOrder": 900,
+        "autoSelectSingle": false,
+        "parentFields": [
+          "dimension_basis"
+        ],
+        "selector": {
+          "size_mode": "CUSTOM"
+        },
+        "id": "SER-LIXIL-REPLUS-BATH:field:custom_width",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "status": "ACTIVE"
+      },
+      {
+        "key": "custom_height",
+        "displayLabel": "製品仕上がり高さ HD（mm）",
+        "dataType": "NUMBER",
+        "displayOrder": 900,
+        "autoSelectSingle": false,
+        "parentFields": [
+          "dimension_basis"
+        ],
+        "selector": {
+          "size_mode": "CUSTOM"
+        },
+        "id": "SER-LIXIL-REPLUS-BATH:field:custom_height",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "status": "ACTIVE"
+      }
+    ],
+    "allowedValues": [
+      {
+        "value": "RPL_BATH_SLD",
+        "displayLabel": "引違い窓",
+        "evidenceIds": [
+          "BATH-EV-003,006"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": false
+        },
+        "id": "SER-LIXIL-REPLUS-BATH:value:window_type:0",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "window_type",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "RPL_BATH_VSOP",
+        "displayLabel": "縦すべり出し窓（オペレーター）",
+        "evidenceIds": [
+          "BATH-EV-003,007"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": false
+        },
+        "id": "SER-LIXIL-REPLUS-BATH:value:window_type:1",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "window_type",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "RPL_BATH_VSCAM",
+        "displayLabel": "縦すべり出し窓（カムラッチ）",
+        "evidenceIds": [
+          "BATH-EV-003,007"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": false
+        },
+        "id": "SER-LIXIL-REPLUS-BATH:value:window_type:2",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "window_type",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "RPL_BATH_HSOP",
+        "displayLabel": "横すべり出し窓（オペレーター）",
+        "evidenceIds": [
+          "BATH-EV-003,007"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": false
+        },
+        "id": "SER-LIXIL-REPLUS-BATH:value:window_type:3",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "window_type",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "RPL_BATH_HSCAM",
+        "displayLabel": "横すべり出し窓（カムラッチ）",
+        "evidenceIds": [
+          "BATH-EV-003,007"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": false
+        },
+        "id": "SER-LIXIL-REPLUS-BATH:value:window_type:4",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "window_type",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "RPL_BATH_DHFS",
+        "displayLabel": "上げ下げ窓FS（フラットスライド）",
+        "evidenceIds": [
+          "BATH-EV-003,007"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": false
+        },
+        "id": "SER-LIXIL-REPLUS-BATH:value:window_type:5",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "window_type",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "RPL_BATH_FIXOUT",
+        "displayLabel": "FIX窓（外押縁タイプ）",
+        "evidenceIds": [
+          "BATH-EV-003,008"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": false
+        },
+        "id": "SER-LIXIL-REPLUS-BATH:value:window_type:6",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "window_type",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "RPL_BATH_FIXIN",
+        "displayLabel": "FIX窓（内押縁タイプ）",
+        "evidenceIds": [
+          "BATH-EV-003,008"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": false
+        },
+        "id": "SER-LIXIL-REPLUS-BATH:value:window_type:7",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "window_type",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "BATH-STD",
+        "displayLabel": "標準枠",
+        "evidenceIds": [
+          "BATH-EV-003,006"
+        ],
+        "selector": {
+          "window_type": {
+            "$in": [
+              "RPL_BATH_SLD",
+              "RPL_BATH_VSOP",
+              "RPL_BATH_VSCAM",
+              "RPL_BATH_HSOP",
+              "RPL_BATH_HSCAM",
+              "RPL_BATH_DHFS",
+              "RPL_BATH_FIXOUT",
+              "RPL_BATH_FIXIN"
+            ]
+          }
+        },
+        "metadata": {
+          "manualCheck": false
+        },
+        "id": "SER-LIXIL-REPLUS-BATH:value:frame_type:0",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "frame_type",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "BATH-BRG",
+        "displayLabel": "ブリッジ枠",
+        "evidenceIds": [
+          "BATH-EV-003,006"
+        ],
+        "selector": {
+          "window_type": {
+            "$in": [
+              "RPL_BATH_SLD"
+            ]
+          }
+        },
+        "metadata": {
+          "manualCheck": false
+        },
+        "id": "SER-LIXIL-REPLUS-BATH:value:frame_type:1",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "frame_type",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "BATH-SS-SLD2",
+        "displayLabel": "2枚建",
+        "evidenceIds": [
+          "BATH-EV-005,006"
+        ],
+        "selector": {
+          "window_type": "RPL_BATH_SLD"
+        },
+        "metadata": {
+          "manualCheck": false,
+          "panel_configuration": "2枚建"
+        },
+        "id": "SER-LIXIL-REPLUS-BATH:value:spec_panel_configuration:0",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "spec_panel_configuration",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "BATH-SS-SLD-PG",
+        "displayLabel": "PG障子",
+        "evidenceIds": [
+          "BATH-EV-005"
+        ],
+        "selector": {
+          "window_type": "RPL_BATH_SLD"
+        },
+        "metadata": {
+          "manualCheck": false,
+          "sash_configuration": "PG障子"
+        },
+        "id": "SER-LIXIL-REPLUS-BATH:value:spec_sash_configuration:0",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "spec_sash_configuration",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "BATH-SS-VSOP",
+        "displayLabel": "オペレーター",
+        "evidenceIds": [
+          "BATH-EV-003"
+        ],
+        "selector": {
+          "window_type": "RPL_BATH_VSOP"
+        },
+        "metadata": {
+          "manualCheck": false,
+          "operation_type": "オペレーター"
+        },
+        "id": "SER-LIXIL-REPLUS-BATH:value:spec_operation_type:0",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "spec_operation_type",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "BATH-SS-VSCAM",
+        "displayLabel": "カムラッチ",
+        "evidenceIds": [
+          "BATH-EV-003"
+        ],
+        "selector": {
+          "window_type": "RPL_BATH_VSCAM"
+        },
+        "metadata": {
+          "manualCheck": false,
+          "operation_type": "カムラッチ"
+        },
+        "id": "SER-LIXIL-REPLUS-BATH:value:spec_operation_type:1",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "spec_operation_type",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "BATH-SS-HSOP",
+        "displayLabel": "オペレーター",
+        "evidenceIds": [
+          "BATH-EV-003"
+        ],
+        "selector": {
+          "window_type": "RPL_BATH_HSOP"
+        },
+        "metadata": {
+          "manualCheck": false,
+          "operation_type": "オペレーター"
+        },
+        "id": "SER-LIXIL-REPLUS-BATH:value:spec_operation_type:2",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "spec_operation_type",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "BATH-SS-HSCAM",
+        "displayLabel": "カムラッチ",
+        "evidenceIds": [
+          "BATH-EV-003"
+        ],
+        "selector": {
+          "window_type": "RPL_BATH_HSCAM"
+        },
+        "metadata": {
+          "manualCheck": false,
+          "operation_type": "カムラッチ"
+        },
+        "id": "SER-LIXIL-REPLUS-BATH:value:spec_operation_type:3",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "spec_operation_type",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "BATH-SCR-SLD",
+        "displayLabel": "引違い網戸",
+        "evidenceIds": [
+          "BATH-EV-005"
+        ],
+        "selector": {
+          "window_type": "RPL_BATH_SLD"
+        },
+        "metadata": {
+          "manualCheck": false
+        },
+        "id": "SER-LIXIL-REPLUS-BATH:value:screen:0",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "screen",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "BATH-SCR-FIX-FR",
+        "displayLabel": "固定式網戸（フレーム付）",
+        "evidenceIds": [
+          "BATH-EV-005"
+        ],
+        "selector": {
+          "window_type": "RPL_BATH_VSOP"
+        },
+        "metadata": {
+          "manualCheck": false
+        },
+        "id": "SER-LIXIL-REPLUS-BATH:value:screen:1",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "screen",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "BATH-SCR-ROLL-H",
+        "displayLabel": "横引きロール網戸",
+        "evidenceIds": [
+          "BATH-EV-005"
+        ],
+        "selector": {
+          "window_type": "RPL_BATH_VSCAM"
+        },
+        "metadata": {
+          "manualCheck": false
+        },
+        "id": "SER-LIXIL-REPLUS-BATH:value:screen:2",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "screen",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "BATH-SCR-ROLL-H",
+        "displayLabel": "横引きロール網戸",
+        "evidenceIds": [
+          "BATH-EV-005"
+        ],
+        "selector": {
+          "window_type": "RPL_BATH_HSCAM"
+        },
+        "metadata": {
+          "manualCheck": false
+        },
+        "id": "SER-LIXIL-REPLUS-BATH:value:screen:3",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "screen",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "BATH-SCR-DH",
+        "displayLabel": "上げ下げ式網戸",
+        "evidenceIds": [
+          "BATH-EV-005"
+        ],
+        "selector": {
+          "window_type": "RPL_BATH_DHFS"
+        },
+        "metadata": {
+          "manualCheck": false
+        },
+        "id": "SER-LIXIL-REPLUS-BATH:value:screen:4",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "screen",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "CUSTOM",
+        "displayLabel": "仕上がり寸法",
+        "evidenceIds": [
+          "05_サイズルール"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": false
+        },
+        "id": "SER-LIXIL-REPLUS-BATH:value:size_mode:0",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "size_mode",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "T",
+        "displayLabel": "ブラック",
+        "evidenceIds": [
+          "BATH-EV-003,004"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "SER-LIXIL-REPLUS-BATH:value:sash_exterior_color:0",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "sash_exterior_color",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "G",
+        "displayLabel": "オータムブラウン",
+        "evidenceIds": [
+          "BATH-EV-003,004"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "SER-LIXIL-REPLUS-BATH:value:sash_exterior_color:1",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "sash_exterior_color",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "K",
+        "displayLabel": "シャイングレー",
+        "evidenceIds": [
+          "BATH-EV-003,004"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "SER-LIXIL-REPLUS-BATH:value:sash_exterior_color:2",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "sash_exterior_color",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "D",
+        "displayLabel": "ナチュラルシルバー",
+        "evidenceIds": [
+          "BATH-EV-003,004"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "SER-LIXIL-REPLUS-BATH:value:sash_exterior_color:3",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "sash_exterior_color",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "W",
+        "displayLabel": "ホワイト",
+        "evidenceIds": [
+          "BATH-EV-003,004"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "SER-LIXIL-REPLUS-BATH:value:sash_exterior_color:4",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "sash_exterior_color",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "T",
+        "displayLabel": "ブラック",
+        "evidenceIds": [
+          "BATH-EV-003,004"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": false
+        },
+        "id": "SER-LIXIL-REPLUS-BATH:value:exterior_cover_color:0",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "exterior_cover_color",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "G",
+        "displayLabel": "オータムブラウン",
+        "evidenceIds": [
+          "BATH-EV-003,004"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": false
+        },
+        "id": "SER-LIXIL-REPLUS-BATH:value:exterior_cover_color:1",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "exterior_cover_color",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "K",
+        "displayLabel": "シャイングレー",
+        "evidenceIds": [
+          "BATH-EV-003,004"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": false
+        },
+        "id": "SER-LIXIL-REPLUS-BATH:value:exterior_cover_color:2",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "exterior_cover_color",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "D",
+        "displayLabel": "ナチュラルシルバー",
+        "evidenceIds": [
+          "BATH-EV-003,004"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": false
+        },
+        "id": "SER-LIXIL-REPLUS-BATH:value:exterior_cover_color:3",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "exterior_cover_color",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "W",
+        "displayLabel": "ホワイト",
+        "evidenceIds": [
+          "BATH-EV-003,004"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": false
+        },
+        "id": "SER-LIXIL-REPLUS-BATH:value:exterior_cover_color:4",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "exterior_cover_color",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "M",
+        "displayLabel": "ブラック",
+        "evidenceIds": [
+          "BATH-EV-003,004"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "SER-LIXIL-REPLUS-BATH:value:sash_interior_color:0",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "sash_interior_color",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "F",
+        "displayLabel": "プレシャスホワイトP",
+        "evidenceIds": [
+          "BATH-EV-003,004"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "SER-LIXIL-REPLUS-BATH:value:sash_interior_color:1",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "sash_interior_color",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "M",
+        "displayLabel": "ブラック",
+        "evidenceIds": [
+          "BATH-EV-003,004"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": false
+        },
+        "id": "SER-LIXIL-REPLUS-BATH:value:interior_cover_color:0",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "interior_cover_color",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "F",
+        "displayLabel": "プレシャスホワイトP",
+        "evidenceIds": [
+          "BATH-EV-003,004"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": false
+        },
+        "id": "SER-LIXIL-REPLUS-BATH:value:interior_cover_color:1",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "interior_cover_color",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "BATH-OP-CASING",
+        "displayLabel": "カバー用ケーシング",
+        "evidenceIds": [
+          "BATH-EV-011"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "SER-LIXIL-REPLUS-BATH:value:options:0",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "options",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "BATH-OP-SIDE-COVER",
+        "displayLabel": "サイド化粧カバー",
+        "evidenceIds": [
+          "BATH-EV-011"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "SER-LIXIL-REPLUS-BATH:value:options:1",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "options",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "BATH-OP-DEPTH",
+        "displayLabel": "見込みふかし部材",
+        "evidenceIds": [
+          "BATH-EV-011"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "SER-LIXIL-REPLUS-BATH:value:options:2",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "options",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "BATH-OP-SMALL-STOP",
+        "displayLabel": "小開口ストッパー",
+        "evidenceIds": [
+          "BATH-EV-011"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "SER-LIXIL-REPLUS-BATH:value:options:3",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "options",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "BATH-OP-SMART-CRESCENT",
+        "displayLabel": "スマートクレセント",
+        "evidenceIds": [
+          "BATH-EV-011"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "SER-LIXIL-REPLUS-BATH:value:options:4",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "options",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "BATH-OP-UPPER-VENT",
+        "displayLabel": "上枠一体換気部材",
+        "evidenceIds": [
+          "BATH-EV-011"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "SER-LIXIL-REPLUS-BATH:value:options:5",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "options",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "BATH-OP-FIX-GROOVE",
+        "displayLabel": "固定式網戸溝カバー",
+        "evidenceIds": [
+          "BATH-EV-005,011"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "SER-LIXIL-REPLUS-BATH:value:options:6",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "options",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "BATH-OP-ROLL-SEAL",
+        "displayLabel": "網戸隙間防止シール",
+        "evidenceIds": [
+          "BATH-EV-005"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "SER-LIXIL-REPLUS-BATH:value:options:7",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "options",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "BATH-OP-SMALL-ARM",
+        "displayLabel": "小開口アーム",
+        "evidenceIds": [
+          "BATH-EV-005,011"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "SER-LIXIL-REPLUS-BATH:value:options:8",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "options",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "BATH-OP-POST-BEAD",
+        "displayLabel": "後付ビード",
+        "evidenceIds": [
+          "BATH-EV-005"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "SER-LIXIL-REPLUS-BATH:value:options:9",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "options",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "BATH-OP-SB-TRIM",
+        "displayLabel": "システムバス額縁",
+        "evidenceIds": [
+          "BATH-EV-004,009"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "SER-LIXIL-REPLUS-BATH:value:options:10",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "options",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "RPL_BATH-OP-V5-SPACER-15-20",
+        "displayLabel": "施工調整スペーサー 15×20",
+        "evidenceIds": [
+          "DELTA-SPACER-EV-V4"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "SER-LIXIL-REPLUS-BATH:value:options:11",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "options",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "SYSTEM_BATH_SIMULTANEOUS",
+        "displayLabel": "システムバス同時工事",
+        "evidenceIds": [
+          "BATH-EV-003,009"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": false
+        },
+        "id": "SER-LIXIL-REPLUS-BATH:value:bathroom_remodel_mode:0",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "bathroom_remodel_mode",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "WINDOW_ONLY",
+        "displayLabel": "窓のみ取替",
+        "evidenceIds": [
+          "BATH-EV-009"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "SER-LIXIL-REPLUS-BATH:value:bathroom_remodel_mode:1",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "bathroom_remodel_mode",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "北海道",
+        "displayLabel": "北海道",
+        "evidenceIds": [
+          "BATH-EV-010"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "SER-LIXIL-REPLUS-BATH:value:installation_region:0",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "installation_region",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "東北",
+        "displayLabel": "東北",
+        "evidenceIds": [
+          "BATH-EV-010"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "SER-LIXIL-REPLUS-BATH:value:installation_region:1",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "installation_region",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "その他地域",
+        "displayLabel": "その他地域",
+        "evidenceIds": [
+          "BATH-EV-010"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "SER-LIXIL-REPLUS-BATH:value:installation_region:2",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "installation_region",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "GENERAL_DOUBLE",
+        "displayLabel": "一般複層ガラス",
+        "evidenceIds": [
+          "BATH-EV-004,010"
+        ],
+        "selector": {
+          "window_type": {
+            "$exists": true
+          },
+          "frame_type": "BATH-STD"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "SER-LIXIL-REPLUS-BATH:value:glass_category:0",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "glass_category",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "LOW_E_DOUBLE",
+        "displayLabel": "Low-E複層ガラス",
+        "evidenceIds": [
+          "BATH-EV-004,010"
+        ],
+        "selector": {
+          "window_type": {
+            "$exists": true
+          },
+          "frame_type": {
+            "$exists": true
+          }
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "SER-LIXIL-REPLUS-BATH:value:glass_category:1",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "glass_category",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "LOW_E_DOUBLE",
+        "displayLabel": "Low-E複層ガラス",
+        "evidenceIds": [
+          "BATH-EV-010"
+        ],
+        "selector": {
+          "window_type": {
+            "$exists": true
+          },
+          "frame_type": {
+            "$exists": true
+          },
+          "installation_region": {
+            "$in": [
+              "北海道",
+              "東北"
+            ]
+          }
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "SER-LIXIL-REPLUS-BATH:value:glass_category:2",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "glass_category",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "TRIPLE",
+        "displayLabel": "トリプルガラス",
+        "evidenceIds": [
+          "BATH-EV-004,010"
+        ],
+        "selector": {
+          "window_type": "RPL_BATH_DHFS",
+          "frame_type": {
+            "$exists": true
+          }
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "SER-LIXIL-REPLUS-BATH:value:glass_category:3",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "glass_category",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "TRIPLE",
+        "displayLabel": "トリプルガラス",
+        "evidenceIds": [
+          "BATH-EV-010"
+        ],
+        "selector": {
+          "window_type": "RPL_BATH_DHFS",
+          "frame_type": {
+            "$exists": true
+          }
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "SER-LIXIL-REPLUS-BATH:value:glass_category:4",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "glass_category",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "TRIPLE",
+        "displayLabel": "トリプルガラス",
+        "evidenceIds": [
+          "BATH-EV-010"
+        ],
+        "selector": {
+          "window_type": "RPL_BATH_DHFS",
+          "frame_type": {
+            "$exists": true
+          },
+          "installation_region": {
+            "$in": [
+              "北海道",
+              "東北"
+            ]
+          }
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "SER-LIXIL-REPLUS-BATH:value:glass_category:5",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "glass_category",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "BATH-GL-GENERAL",
+        "displayLabel": "一般複層ガラス",
+        "evidenceIds": [
+          "BATH-EV-004,010"
+        ],
+        "selector": {
+          "window_type": {
+            "$exists": true
+          },
+          "frame_type": "BATH-STD",
+          "glass_category": "GENERAL_DOUBLE"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "SER-LIXIL-REPLUS-BATH:value:glass:0",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "glass",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "BATH-GL-LOWE-CLEAR",
+        "displayLabel": "Low-E複層 クリア",
+        "evidenceIds": [
+          "BATH-EV-004,010"
+        ],
+        "selector": {
+          "window_type": {
+            "$exists": true
+          },
+          "frame_type": {
+            "$exists": true
+          },
+          "glass_category": "LOW_E_DOUBLE"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "SER-LIXIL-REPLUS-BATH:value:glass:1",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "glass",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "BATH-GL-LOWE-GREEN",
+        "displayLabel": "Low-E複層 グリーン",
+        "evidenceIds": [
+          "BATH-EV-004,010"
+        ],
+        "selector": {
+          "window_type": {
+            "$exists": true
+          },
+          "frame_type": {
+            "$exists": true
+          },
+          "glass_category": "LOW_E_DOUBLE"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "SER-LIXIL-REPLUS-BATH:value:glass:2",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "glass",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "BATH-GL-LOWE-HS",
+        "displayLabel": "Low-E複層 グリーン（高遮熱仕様）",
+        "evidenceIds": [
+          "BATH-EV-004,010"
+        ],
+        "selector": {
+          "window_type": {
+            "$exists": true
+          },
+          "frame_type": {
+            "$exists": true
+          },
+          "glass_category": "LOW_E_DOUBLE"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "SER-LIXIL-REPLUS-BATH:value:glass:3",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "glass",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "BATH-GL-LOWE-BRONZE",
+        "displayLabel": "Low-E複層 ブロンズ",
+        "evidenceIds": [
+          "BATH-EV-010"
+        ],
+        "selector": {
+          "window_type": {
+            "$exists": true
+          },
+          "frame_type": {
+            "$exists": true
+          },
+          "installation_region": {
+            "$in": [
+              "北海道",
+              "東北"
+            ]
+          },
+          "glass_category": "LOW_E_DOUBLE"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "SER-LIXIL-REPLUS-BATH:value:glass:4",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "glass",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "BATH-GL-T-CC",
+        "displayLabel": "トリプル クリア×クリア",
+        "evidenceIds": [
+          "BATH-EV-004,010"
+        ],
+        "selector": {
+          "window_type": "RPL_BATH_DHFS",
+          "frame_type": {
+            "$exists": true
+          },
+          "glass_category": "TRIPLE"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "SER-LIXIL-REPLUS-BATH:value:glass:5",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "glass",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "BATH-GL-T-GG",
+        "displayLabel": "トリプル グリーン×グリーン",
+        "evidenceIds": [
+          "BATH-EV-004,010"
+        ],
+        "selector": {
+          "window_type": "RPL_BATH_DHFS",
+          "frame_type": {
+            "$exists": true
+          },
+          "glass_category": "TRIPLE"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "SER-LIXIL-REPLUS-BATH:value:glass:6",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "glass",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "BATH-GL-T-CG",
+        "displayLabel": "トリプル クリア×グリーン",
+        "evidenceIds": [
+          "BATH-EV-010"
+        ],
+        "selector": {
+          "window_type": "RPL_BATH_DHFS",
+          "frame_type": {
+            "$exists": true
+          },
+          "glass_category": "TRIPLE"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "SER-LIXIL-REPLUS-BATH:value:glass:7",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "glass",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "BATH-GL-T-CB",
+        "displayLabel": "トリプル クリア×ブロンズ",
+        "evidenceIds": [
+          "BATH-EV-010"
+        ],
+        "selector": {
+          "window_type": "RPL_BATH_DHFS",
+          "frame_type": {
+            "$exists": true
+          },
+          "installation_region": {
+            "$in": [
+              "北海道",
+              "東北"
+            ]
+          },
+          "glass_category": "TRIPLE"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "SER-LIXIL-REPLUS-BATH:value:glass:8",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "glass",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "DRY_AIR",
+        "displayLabel": "乾燥空気",
+        "evidenceIds": [
+          "BATH-EV-010"
+        ],
+        "selector": {
+          "glass_category": "GENERAL_DOUBLE"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "displayOrder": 1,
+        "id": "SER-LIXIL-REPLUS-BATH:value:glass_gas:0",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "glass_gas",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "ARGON",
+        "displayLabel": "アルゴンガス",
+        "evidenceIds": [
+          "BATH-EV-010"
+        ],
+        "selector": {
+          "glass_category": "LOW_E_DOUBLE"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "displayOrder": 2,
+        "id": "SER-LIXIL-REPLUS-BATH:value:glass_gas:1",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "glass_gas",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "DRY_AIR",
+        "displayLabel": "乾燥空気",
+        "evidenceIds": [
+          "BATH-EV-010"
+        ],
+        "selector": {
+          "glass_category": "LOW_E_DOUBLE",
+          "frame_type": "BATH-STD"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "displayOrder": 1,
+        "id": "SER-LIXIL-REPLUS-BATH:value:glass_gas:2",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "glass_gas",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "ARGON",
+        "displayLabel": "アルゴンガス",
+        "evidenceIds": [
+          "BATH-EV-010"
+        ],
+        "selector": {
+          "glass_category": "TRIPLE"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "displayOrder": 2,
+        "id": "SER-LIXIL-REPLUS-BATH:value:glass_gas:3",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "glass_gas",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "KRYPTON",
+        "displayLabel": "クリプトンガス",
+        "evidenceIds": [
+          "BATH-EV-010"
+        ],
+        "selector": {
+          "glass_category": "TRIPLE"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "displayOrder": 3,
+        "id": "SER-LIXIL-REPLUS-BATH:value:glass_gas:4",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "glass_gas",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "ALUMINUM",
+        "displayLabel": "アルミスペーサー",
+        "evidenceIds": [
+          "BATH-EV-010"
+        ],
+        "selector": {
+          "glass_category": "GENERAL_DOUBLE",
+          "glass_gas": "DRY_AIR",
+          "frame_type": "BATH-STD"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "displayOrder": 1,
+        "id": "SER-LIXIL-REPLUS-BATH:value:glass_spacer:0",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "glass_spacer",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "ALUMINUM",
+        "displayLabel": "アルミスペーサー",
+        "evidenceIds": [
+          "BATH-EV-010"
+        ],
+        "selector": {
+          "glass_category": "LOW_E_DOUBLE",
+          "glass_gas": {
+            "$in": [
+              "ARGON",
+              "DRY_AIR"
+            ]
+          },
+          "frame_type": "BATH-STD"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "displayOrder": 1,
+        "id": "SER-LIXIL-REPLUS-BATH:value:glass_spacer:1",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "glass_spacer",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "RESIN",
+        "displayLabel": "樹脂スペーサー",
+        "evidenceIds": [
+          "BATH-EV-010"
+        ],
+        "selector": {
+          "glass_category": "LOW_E_DOUBLE",
+          "glass_gas": "ARGON"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "displayOrder": 2,
+        "id": "SER-LIXIL-REPLUS-BATH:value:glass_spacer:2",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "glass_spacer",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "RESIN",
+        "displayLabel": "樹脂スペーサー",
+        "evidenceIds": [
+          "BATH-EV-010"
+        ],
+        "selector": {
+          "glass_category": "TRIPLE",
+          "glass_gas": {
+            "$in": [
+              "ARGON",
+              "KRYPTON"
+            ]
+          }
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "displayOrder": 2,
+        "id": "SER-LIXIL-REPLUS-BATH:value:glass_spacer:3",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "glass_spacer",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "FULL95",
+        "displayLabel": "全面開口（見付95）",
+        "evidenceIds": [
+          "BATH-EV-003,009"
+        ],
+        "selector": {
+          "bathroom_remodel_mode": "SYSTEM_BATH_SIMULTANEOUS"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "SER-LIXIL-REPLUS-BATH:value:bathroom_opening_pattern:0",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "bathroom_opening_pattern",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "FULL195",
+        "displayLabel": "全面開口（見付195）",
+        "evidenceIds": [
+          "BATH-EV-003,009"
+        ],
+        "selector": {
+          "bathroom_remodel_mode": "SYSTEM_BATH_SIMULTANEOUS"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "SER-LIXIL-REPLUS-BATH:value:bathroom_opening_pattern:1",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "bathroom_opening_pattern",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "OFFSET_L95",
+        "displayLabel": "片寄開口 左寄（見付95）",
+        "evidenceIds": [
+          "BATH-EV-003,009"
+        ],
+        "selector": {
+          "bathroom_remodel_mode": "SYSTEM_BATH_SIMULTANEOUS"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "SER-LIXIL-REPLUS-BATH:value:bathroom_opening_pattern:2",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "bathroom_opening_pattern",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "OFFSET_L195",
+        "displayLabel": "片寄開口 左寄（見付195）",
+        "evidenceIds": [
+          "BATH-EV-003,009"
+        ],
+        "selector": {
+          "bathroom_remodel_mode": "SYSTEM_BATH_SIMULTANEOUS"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "SER-LIXIL-REPLUS-BATH:value:bathroom_opening_pattern:3",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "bathroom_opening_pattern",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "OFFSET_R95",
+        "displayLabel": "片寄開口 右寄（見付95）",
+        "evidenceIds": [
+          "BATH-EV-003,009"
+        ],
+        "selector": {
+          "bathroom_remodel_mode": "SYSTEM_BATH_SIMULTANEOUS"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "SER-LIXIL-REPLUS-BATH:value:bathroom_opening_pattern:4",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "bathroom_opening_pattern",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "OFFSET_R195",
+        "displayLabel": "片寄開口 右寄（見付195）",
+        "evidenceIds": [
+          "BATH-EV-003,009"
+        ],
+        "selector": {
+          "bathroom_remodel_mode": "SYSTEM_BATH_SIMULTANEOUS"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "SER-LIXIL-REPLUS-BATH:value:bathroom_opening_pattern:5",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "bathroom_opening_pattern",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "CUTOUT",
+        "displayLabel": "くり抜き開口",
+        "evidenceIds": [
+          "BATH-EV-003,009"
+        ],
+        "selector": {
+          "bathroom_remodel_mode": "SYSTEM_BATH_SIMULTANEOUS"
+        },
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "SER-LIXIL-REPLUS-BATH:value:bathroom_opening_pattern:6",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "bathroom_opening_pattern",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "NONE",
+        "displayLabel": "なし（標準）",
+        "selector": {
+          "all": [
+            {
+              "glass_category": "GENERAL_DOUBLE",
+              "glass": {
+                "$exists": true
+              }
+            },
+            {
+              "not": {
+                "glass_appearance": "MILKY"
+              }
+            }
+          ]
+        },
+        "evidenceIds": [
+          "EV-V8-GLASS-DIAGRAM"
+        ],
+        "metadata": {
+          "manualCheck": false,
+          "estimateConfirmationRequired": false
+        },
+        "displayOrder": 1,
+        "id": "SER-LIXIL-REPLUS-BATH:value:glass_function:0",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "glass_function",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "SAFETY",
+        "displayLabel": "安全合わせ",
+        "selector": {
+          "all": [
+            {
+              "glass_category": "GENERAL_DOUBLE",
+              "glass": {
+                "$exists": true
+              }
+            },
+            {
+              "not": {
+                "glass_appearance": "MILKY"
+              }
+            }
+          ]
+        },
+        "evidenceIds": [
+          "EV-V8-GLASS-DIAGRAM"
+        ],
+        "metadata": {
+          "manualCheck": true,
+          "estimateConfirmationRequired": true
+        },
+        "displayOrder": 2,
+        "id": "SER-LIXIL-REPLUS-BATH:value:glass_function:1",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "glass_function",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "DISASTER",
+        "displayLabel": "防災安全合わせ",
+        "selector": {
+          "all": [
+            {
+              "glass_category": "GENERAL_DOUBLE",
+              "glass": {
+                "$exists": true
+              }
+            },
+            {
+              "not": {
+                "glass_appearance": "MILKY"
+              }
+            }
+          ]
+        },
+        "evidenceIds": [
+          "EV-V8-GLASS-DIAGRAM"
+        ],
+        "metadata": {
+          "manualCheck": true,
+          "estimateConfirmationRequired": true
+        },
+        "displayOrder": 3,
+        "id": "SER-LIXIL-REPLUS-BATH:value:glass_function:2",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "glass_function",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "MILKY",
+        "displayLabel": "安全合わせ乳白タイプ",
+        "selector": {
+          "all": [
+            {
+              "glass_category": "GENERAL_DOUBLE",
+              "glass": {
+                "$exists": true
+              }
+            },
+            {
+              "glass_appearance": "MILKY"
+            }
+          ]
+        },
+        "evidenceIds": [
+          "EV-V8-GLASS-DIAGRAM"
+        ],
+        "metadata": {
+          "manualCheck": true,
+          "estimateConfirmationRequired": true
+        },
+        "displayOrder": 4,
+        "id": "SER-LIXIL-REPLUS-BATH:value:glass_function:3",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "glass_function",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "GRID",
+        "displayLabel": "格子入り",
+        "selector": {
+          "all": [
+            {
+              "glass_category": "GENERAL_DOUBLE",
+              "glass": {
+                "$exists": true
+              }
+            },
+            {
+              "not": {
+                "glass_appearance": "MILKY"
+              }
+            }
+          ]
+        },
+        "evidenceIds": [
+          "EV-V8-GLASS-DIAGRAM"
+        ],
+        "metadata": {
+          "manualCheck": true,
+          "estimateConfirmationRequired": true
+        },
+        "displayOrder": 5,
+        "id": "SER-LIXIL-REPLUS-BATH:value:glass_function:4",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "glass_function",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "BLIND",
+        "displayLabel": "ブラインドインPG",
+        "selector": {
+          "all": [
+            {
+              "glass_category": "GENERAL_DOUBLE",
+              "glass": {
+                "$exists": true
+              }
+            },
+            {
+              "not": {
+                "glass_appearance": "MILKY"
+              }
+            }
+          ]
+        },
+        "evidenceIds": [
+          "EV-V8-GLASS-DIAGRAM"
+        ],
+        "metadata": {
+          "manualCheck": true,
+          "estimateConfirmationRequired": true
+        },
+        "displayOrder": 6,
+        "id": "SER-LIXIL-REPLUS-BATH:value:glass_function:5",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "glass_function",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "NONE",
+        "displayLabel": "なし（標準）",
+        "selector": {
+          "all": [
+            {
+              "glass_category": "LOW_E_DOUBLE",
+              "glass": {
+                "$exists": true
+              }
+            },
+            {
+              "not": {
+                "glass_appearance": "MILKY"
+              }
+            }
+          ]
+        },
+        "evidenceIds": [
+          "EV-V8-GLASS-DIAGRAM"
+        ],
+        "metadata": {
+          "manualCheck": false,
+          "estimateConfirmationRequired": false
+        },
+        "displayOrder": 1,
+        "id": "SER-LIXIL-REPLUS-BATH:value:glass_function:6",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "glass_function",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "SAFETY",
+        "displayLabel": "安全合わせ",
+        "selector": {
+          "all": [
+            {
+              "glass_category": "LOW_E_DOUBLE",
+              "glass": {
+                "$exists": true
+              }
+            },
+            {
+              "not": {
+                "glass_appearance": "MILKY"
+              }
+            }
+          ]
+        },
+        "evidenceIds": [
+          "EV-V8-GLASS-DIAGRAM"
+        ],
+        "metadata": {
+          "manualCheck": true,
+          "estimateConfirmationRequired": true
+        },
+        "displayOrder": 2,
+        "id": "SER-LIXIL-REPLUS-BATH:value:glass_function:7",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "glass_function",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "DISASTER",
+        "displayLabel": "防災安全合わせ",
+        "selector": {
+          "all": [
+            {
+              "glass_category": "LOW_E_DOUBLE",
+              "glass": {
+                "$exists": true
+              }
+            },
+            {
+              "not": {
+                "glass_appearance": "MILKY"
+              }
+            }
+          ]
+        },
+        "evidenceIds": [
+          "EV-V8-GLASS-DIAGRAM"
+        ],
+        "metadata": {
+          "manualCheck": true,
+          "estimateConfirmationRequired": true
+        },
+        "displayOrder": 3,
+        "id": "SER-LIXIL-REPLUS-BATH:value:glass_function:8",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "glass_function",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "MILKY",
+        "displayLabel": "安全合わせ乳白タイプ",
+        "selector": {
+          "all": [
+            {
+              "glass_category": "LOW_E_DOUBLE",
+              "glass": {
+                "$exists": true
+              }
+            },
+            {
+              "glass_appearance": "MILKY"
+            }
+          ]
+        },
+        "evidenceIds": [
+          "EV-V8-GLASS-DIAGRAM"
+        ],
+        "metadata": {
+          "manualCheck": true,
+          "estimateConfirmationRequired": true
+        },
+        "displayOrder": 4,
+        "id": "SER-LIXIL-REPLUS-BATH:value:glass_function:9",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "glass_function",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "GRID",
+        "displayLabel": "格子入り",
+        "selector": {
+          "all": [
+            {
+              "glass_category": "LOW_E_DOUBLE",
+              "glass": {
+                "$exists": true
+              }
+            },
+            {
+              "not": {
+                "glass_appearance": "MILKY"
+              }
+            }
+          ]
+        },
+        "evidenceIds": [
+          "EV-V8-GLASS-DIAGRAM"
+        ],
+        "metadata": {
+          "manualCheck": true,
+          "estimateConfirmationRequired": true
+        },
+        "displayOrder": 5,
+        "id": "SER-LIXIL-REPLUS-BATH:value:glass_function:10",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "glass_function",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "BLIND",
+        "displayLabel": "ブラインドインPG",
+        "selector": {
+          "all": [
+            {
+              "glass_category": "LOW_E_DOUBLE",
+              "glass": {
+                "$exists": true
+              }
+            },
+            {
+              "not": {
+                "glass_appearance": "MILKY"
+              }
+            }
+          ]
+        },
+        "evidenceIds": [
+          "EV-V8-GLASS-DIAGRAM"
+        ],
+        "metadata": {
+          "manualCheck": true,
+          "estimateConfirmationRequired": true
+        },
+        "displayOrder": 6,
+        "id": "SER-LIXIL-REPLUS-BATH:value:glass_function:11",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "glass_function",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "NONE",
+        "displayLabel": "なし（標準）",
+        "selector": {
+          "all": [
+            {
+              "glass_category": "TRIPLE",
+              "glass": {
+                "$exists": true
+              }
+            },
+            {
+              "not": {
+                "glass_appearance": "MILKY"
+              }
+            }
+          ]
+        },
+        "evidenceIds": [
+          "EV-V8-GLASS-DIAGRAM"
+        ],
+        "metadata": {
+          "manualCheck": false,
+          "estimateConfirmationRequired": false
+        },
+        "displayOrder": 1,
+        "id": "SER-LIXIL-REPLUS-BATH:value:glass_function:12",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "glass_function",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "SAFETY",
+        "displayLabel": "安全合わせ",
+        "selector": {
+          "all": [
+            {
+              "glass_category": "TRIPLE",
+              "glass": {
+                "$exists": true
+              }
+            },
+            {
+              "not": {
+                "glass_appearance": "MILKY"
+              }
+            }
+          ]
+        },
+        "evidenceIds": [
+          "EV-V8-GLASS-DIAGRAM"
+        ],
+        "metadata": {
+          "manualCheck": true,
+          "estimateConfirmationRequired": true
+        },
+        "displayOrder": 2,
+        "id": "SER-LIXIL-REPLUS-BATH:value:glass_function:13",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "glass_function",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "DISASTER",
+        "displayLabel": "防災安全合わせ",
+        "selector": {
+          "all": [
+            {
+              "glass_category": "TRIPLE",
+              "glass": {
+                "$exists": true
+              }
+            },
+            {
+              "not": {
+                "glass_appearance": "MILKY"
+              }
+            }
+          ]
+        },
+        "evidenceIds": [
+          "EV-V8-GLASS-DIAGRAM"
+        ],
+        "metadata": {
+          "manualCheck": true,
+          "estimateConfirmationRequired": true
+        },
+        "displayOrder": 3,
+        "id": "SER-LIXIL-REPLUS-BATH:value:glass_function:14",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "glass_function",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "MILKY",
+        "displayLabel": "安全合わせ乳白タイプ",
+        "selector": {
+          "all": [
+            {
+              "glass_category": "TRIPLE",
+              "glass": {
+                "$exists": true
+              }
+            },
+            {
+              "glass_appearance": "MILKY"
+            }
+          ]
+        },
+        "evidenceIds": [
+          "EV-V8-GLASS-DIAGRAM"
+        ],
+        "metadata": {
+          "manualCheck": true,
+          "estimateConfirmationRequired": true
+        },
+        "displayOrder": 4,
+        "id": "SER-LIXIL-REPLUS-BATH:value:glass_function:15",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "glass_function",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "THIN",
+        "displayLabel": "特殊薄板合わせ",
+        "selector": {
+          "all": [
+            {
+              "glass_category": "TRIPLE",
+              "glass": {
+                "$exists": true
+              }
+            },
+            {
+              "not": {
+                "glass_appearance": "MILKY"
+              }
+            }
+          ]
+        },
+        "evidenceIds": [
+          "EV-V8-GLASS-DIAGRAM"
+        ],
+        "metadata": {
+          "manualCheck": true,
+          "estimateConfirmationRequired": true
+        },
+        "displayOrder": 7,
+        "id": "SER-LIXIL-REPLUS-BATH:value:glass_function:16",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "glass_function",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "MILKY",
+        "displayLabel": "乳白",
+        "selector": {
+          "glass_category": {
+            "$exists": true
+          }
+        },
+        "evidenceIds": [
+          "EV-V8-GLASS-DIAGRAM"
+        ],
+        "metadata": {
+          "manualCheck": true,
+          "estimateConfirmationRequired": true
+        },
+        "displayOrder": 4,
+        "id": "SER-LIXIL-REPLUS-BATH:value:glass_appearance:0",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "glass_appearance",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "CLEAR",
+        "displayLabel": "透明",
+        "selector": {
+          "glass_category": {
+            "$exists": true
+          }
+        },
+        "evidenceIds": [
+          "EV-V8-GLASS-DIAGRAM"
+        ],
+        "metadata": {
+          "manualCheck": true,
+          "estimateConfirmationRequired": true
+        },
+        "displayOrder": 1,
+        "id": "SER-LIXIL-REPLUS-BATH:value:glass_appearance:1",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "glass_appearance",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "OBSCURE",
+        "displayLabel": "型板",
+        "selector": {
+          "glass_category": {
+            "$exists": true
+          }
+        },
+        "evidenceIds": [
+          "EV-V8-GLASS-DIAGRAM"
+        ],
+        "metadata": {
+          "manualCheck": true,
+          "estimateConfirmationRequired": true
+        },
+        "displayOrder": 2,
+        "id": "SER-LIXIL-REPLUS-BATH:value:glass_appearance:2",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "glass_appearance",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "FROST",
+        "displayLabel": "フロスト",
+        "selector": {
+          "glass_category": {
+            "$exists": true
+          }
+        },
+        "evidenceIds": [
+          "EV-V8-GLASS-DIAGRAM"
+        ],
+        "metadata": {
+          "manualCheck": true,
+          "estimateConfirmationRequired": true
+        },
+        "displayOrder": 3,
+        "id": "SER-LIXIL-REPLUS-BATH:value:glass_appearance:3",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "glass_appearance",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "BATH-OP-ANGLE-NOMITER",
+        "displayLabel": "樹脂アングルカバー（見切材無）",
+        "evidenceIds": [
+          "BATH-EV-003,005"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "SER-LIXIL-REPLUS-BATH:value:interior_cover_type:0",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "interior_cover_type",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "BATH-COV-STD-L",
+        "displayLabel": "大",
+        "selector": {
+          "frame_type": "BATH-STD",
+          "all": [
+            {
+              "any": [
+                {
+                  "survey_cover_top": {
+                    "$exists": false
+                  }
+                },
+                {
+                  "survey_cover_top": {
+                    "$lte": 84.5
+                  }
+                }
+              ]
+            },
+            {
+              "any": [
+                {
+                  "survey_cover_bottom": {
+                    "$exists": false
+                  }
+                },
+                {
+                  "survey_cover_bottom": {
+                    "$lte": 98.5
+                  }
+                }
+              ]
+            },
+            {
+              "any": [
+                {
+                  "survey_cover_side": {
+                    "$exists": false
+                  }
+                },
+                {
+                  "survey_cover_side": {
+                    "$lte": 82.5
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "evidenceIds": [
+          "BATH-EV-009"
+        ],
+        "metadata": {
+          "manualCheck": false
+        },
+        "id": "SER-LIXIL-REPLUS-BATH:value:exterior_cover_type:0",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "exterior_cover_type",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "BATH-COV-STD-LVM",
+        "displayLabel": "大（縦のみ中）",
+        "selector": {
+          "frame_type": "BATH-STD",
+          "all": [
+            {
+              "any": [
+                {
+                  "survey_cover_top": {
+                    "$exists": false
+                  }
+                },
+                {
+                  "survey_cover_top": {
+                    "$lte": 84.5
+                  }
+                }
+              ]
+            },
+            {
+              "any": [
+                {
+                  "survey_cover_bottom": {
+                    "$exists": false
+                  }
+                },
+                {
+                  "survey_cover_bottom": {
+                    "$lte": 98.5
+                  }
+                }
+              ]
+            },
+            {
+              "any": [
+                {
+                  "survey_cover_side": {
+                    "$exists": false
+                  }
+                },
+                {
+                  "survey_cover_side": {
+                    "$lte": 32.5
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "evidenceIds": [
+          "BATH-EV-009"
+        ],
+        "metadata": {
+          "manualCheck": false
+        },
+        "id": "SER-LIXIL-REPLUS-BATH:value:exterior_cover_type:1",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "exterior_cover_type",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "BATH-COV-STD-M",
+        "displayLabel": "中",
+        "selector": {
+          "frame_type": "BATH-STD",
+          "all": [
+            {
+              "any": [
+                {
+                  "survey_cover_top": {
+                    "$exists": false
+                  }
+                },
+                {
+                  "survey_cover_top": {
+                    "$lte": 49.5
+                  }
+                }
+              ]
+            },
+            {
+              "any": [
+                {
+                  "survey_cover_bottom": {
+                    "$exists": false
+                  }
+                },
+                {
+                  "survey_cover_bottom": {
+                    "$lte": 63.5
+                  }
+                }
+              ]
+            },
+            {
+              "any": [
+                {
+                  "survey_cover_side": {
+                    "$exists": false
+                  }
+                },
+                {
+                  "survey_cover_side": {
+                    "$lte": 32.5
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "evidenceIds": [
+          "BATH-EV-009"
+        ],
+        "metadata": {
+          "manualCheck": false
+        },
+        "id": "SER-LIXIL-REPLUS-BATH:value:exterior_cover_type:2",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "exterior_cover_type",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "BATH-COV-STD-MVL",
+        "displayLabel": "中（縦のみ大）",
+        "selector": {
+          "frame_type": "BATH-STD",
+          "all": [
+            {
+              "any": [
+                {
+                  "survey_cover_top": {
+                    "$exists": false
+                  }
+                },
+                {
+                  "survey_cover_top": {
+                    "$lte": 49.5
+                  }
+                }
+              ]
+            },
+            {
+              "any": [
+                {
+                  "survey_cover_bottom": {
+                    "$exists": false
+                  }
+                },
+                {
+                  "survey_cover_bottom": {
+                    "$lte": 63.5
+                  }
+                }
+              ]
+            },
+            {
+              "any": [
+                {
+                  "survey_cover_side": {
+                    "$exists": false
+                  }
+                },
+                {
+                  "survey_cover_side": {
+                    "$lte": 82.5
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "evidenceIds": [
+          "BATH-EV-009"
+        ],
+        "metadata": {
+          "manualCheck": false
+        },
+        "id": "SER-LIXIL-REPLUS-BATH:value:exterior_cover_type:3",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "exterior_cover_type",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "BATH-COV-STD-S",
+        "displayLabel": "小",
+        "selector": {
+          "frame_type": "BATH-STD",
+          "all": [
+            {
+              "any": [
+                {
+                  "survey_cover_top": {
+                    "$exists": false
+                  }
+                },
+                {
+                  "survey_cover_top": {
+                    "$lte": 24.5
+                  }
+                }
+              ]
+            },
+            {
+              "any": [
+                {
+                  "survey_cover_bottom": {
+                    "$exists": false
+                  }
+                },
+                {
+                  "survey_cover_bottom": {
+                    "$lte": 38.5
+                  }
+                }
+              ]
+            },
+            {
+              "any": [
+                {
+                  "survey_cover_side": {
+                    "$exists": false
+                  }
+                },
+                {
+                  "survey_cover_side": {
+                    "$lte": 7.5
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "evidenceIds": [
+          "BATH-EV-009"
+        ],
+        "metadata": {
+          "manualCheck": false
+        },
+        "id": "SER-LIXIL-REPLUS-BATH:value:exterior_cover_type:4",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "exterior_cover_type",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "BATH-COV-STD-SBM",
+        "displayLabel": "小（下のみ中）",
+        "selector": {
+          "frame_type": "BATH-STD",
+          "all": [
+            {
+              "any": [
+                {
+                  "survey_cover_top": {
+                    "$exists": false
+                  }
+                },
+                {
+                  "survey_cover_top": {
+                    "$lte": 24.5
+                  }
+                }
+              ]
+            },
+            {
+              "any": [
+                {
+                  "survey_cover_bottom": {
+                    "$exists": false
+                  }
+                },
+                {
+                  "survey_cover_bottom": {
+                    "$lte": 63.5
+                  }
+                }
+              ]
+            },
+            {
+              "any": [
+                {
+                  "survey_cover_side": {
+                    "$exists": false
+                  }
+                },
+                {
+                  "survey_cover_side": {
+                    "$lte": 7.5
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "evidenceIds": [
+          "BATH-EV-009"
+        ],
+        "metadata": {
+          "manualCheck": false
+        },
+        "id": "SER-LIXIL-REPLUS-BATH:value:exterior_cover_type:5",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "exterior_cover_type",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "BATH-COV-STD-XS",
+        "displayLabel": "特小",
+        "selector": {
+          "frame_type": "BATH-STD",
+          "all": [
+            {
+              "any": [
+                {
+                  "survey_cover_top": {
+                    "$exists": false
+                  }
+                },
+                {
+                  "survey_cover_top": {
+                    "$lte": 24.5
+                  }
+                }
+              ]
+            },
+            {
+              "any": [
+                {
+                  "survey_cover_bottom": {
+                    "$exists": false
+                  }
+                },
+                {
+                  "survey_cover_bottom": {
+                    "$lte": 38.5
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "evidenceIds": [
+          "BATH-EV-009"
+        ],
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "SER-LIXIL-REPLUS-BATH:value:exterior_cover_type:6",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "exterior_cover_type",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "BATH-COV-BRG-L",
+        "displayLabel": "大",
+        "selector": {
+          "frame_type": "BATH-BRG",
+          "all": [
+            {
+              "any": [
+                {
+                  "survey_cover_top": {
+                    "$exists": false
+                  }
+                },
+                {
+                  "survey_cover_top": {
+                    "$lte": 84.5
+                  }
+                }
+              ]
+            },
+            {
+              "any": [
+                {
+                  "survey_cover_bottom": {
+                    "$exists": false
+                  }
+                },
+                {
+                  "survey_cover_bottom": {
+                    "$lte": 93.5
+                  }
+                }
+              ]
+            },
+            {
+              "any": [
+                {
+                  "survey_cover_side": {
+                    "$exists": false
+                  }
+                },
+                {
+                  "survey_cover_side": {
+                    "$lte": 82.5
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "evidenceIds": [
+          "BATH-EV-009"
+        ],
+        "metadata": {
+          "manualCheck": false
+        },
+        "id": "SER-LIXIL-REPLUS-BATH:value:exterior_cover_type:7",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "exterior_cover_type",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "BATH-COV-BRG-LVM",
+        "displayLabel": "大（縦のみ中）",
+        "selector": {
+          "frame_type": "BATH-BRG",
+          "all": [
+            {
+              "any": [
+                {
+                  "survey_cover_top": {
+                    "$exists": false
+                  }
+                },
+                {
+                  "survey_cover_top": {
+                    "$lte": 84.5
+                  }
+                }
+              ]
+            },
+            {
+              "any": [
+                {
+                  "survey_cover_bottom": {
+                    "$exists": false
+                  }
+                },
+                {
+                  "survey_cover_bottom": {
+                    "$lte": 93.5
+                  }
+                }
+              ]
+            },
+            {
+              "any": [
+                {
+                  "survey_cover_side": {
+                    "$exists": false
+                  }
+                },
+                {
+                  "survey_cover_side": {
+                    "$lte": 32.5
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "evidenceIds": [
+          "BATH-EV-009"
+        ],
+        "metadata": {
+          "manualCheck": false
+        },
+        "id": "SER-LIXIL-REPLUS-BATH:value:exterior_cover_type:8",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "exterior_cover_type",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "BATH-COV-BRG-M",
+        "displayLabel": "中",
+        "selector": {
+          "frame_type": "BATH-BRG",
+          "all": [
+            {
+              "any": [
+                {
+                  "survey_cover_top": {
+                    "$exists": false
+                  }
+                },
+                {
+                  "survey_cover_top": {
+                    "$lte": 49.5
+                  }
+                }
+              ]
+            },
+            {
+              "any": [
+                {
+                  "survey_cover_bottom": {
+                    "$exists": false
+                  }
+                },
+                {
+                  "survey_cover_bottom": {
+                    "$lte": 58.5
+                  }
+                }
+              ]
+            },
+            {
+              "any": [
+                {
+                  "survey_cover_side": {
+                    "$exists": false
+                  }
+                },
+                {
+                  "survey_cover_side": {
+                    "$lte": 32.5
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "evidenceIds": [
+          "BATH-EV-009"
+        ],
+        "metadata": {
+          "manualCheck": false
+        },
+        "id": "SER-LIXIL-REPLUS-BATH:value:exterior_cover_type:9",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "exterior_cover_type",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "BATH-COV-BRG-MVL",
+        "displayLabel": "中（縦のみ大）",
+        "selector": {
+          "frame_type": "BATH-BRG",
+          "all": [
+            {
+              "any": [
+                {
+                  "survey_cover_top": {
+                    "$exists": false
+                  }
+                },
+                {
+                  "survey_cover_top": {
+                    "$lte": 49.5
+                  }
+                }
+              ]
+            },
+            {
+              "any": [
+                {
+                  "survey_cover_bottom": {
+                    "$exists": false
+                  }
+                },
+                {
+                  "survey_cover_bottom": {
+                    "$lte": 58.5
+                  }
+                }
+              ]
+            },
+            {
+              "any": [
+                {
+                  "survey_cover_side": {
+                    "$exists": false
+                  }
+                },
+                {
+                  "survey_cover_side": {
+                    "$lte": 82.5
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "evidenceIds": [
+          "BATH-EV-009"
+        ],
+        "metadata": {
+          "manualCheck": false
+        },
+        "id": "SER-LIXIL-REPLUS-BATH:value:exterior_cover_type:10",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "exterior_cover_type",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "BATH-COV-BRG-S",
+        "displayLabel": "小",
+        "selector": {
+          "frame_type": "BATH-BRG",
+          "all": [
+            {
+              "any": [
+                {
+                  "survey_cover_top": {
+                    "$exists": false
+                  }
+                },
+                {
+                  "survey_cover_top": {
+                    "$lte": 24.5
+                  }
+                }
+              ]
+            },
+            {
+              "any": [
+                {
+                  "survey_cover_bottom": {
+                    "$exists": false
+                  }
+                },
+                {
+                  "survey_cover_bottom": {
+                    "$lte": 33.5
+                  }
+                }
+              ]
+            },
+            {
+              "any": [
+                {
+                  "survey_cover_side": {
+                    "$exists": false
+                  }
+                },
+                {
+                  "survey_cover_side": {
+                    "$lte": 7.5
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "evidenceIds": [
+          "BATH-EV-009"
+        ],
+        "metadata": {
+          "manualCheck": false
+        },
+        "id": "SER-LIXIL-REPLUS-BATH:value:exterior_cover_type:11",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "exterior_cover_type",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "BATH-COV-BRG-SBM",
+        "displayLabel": "小（下のみ中）",
+        "selector": {
+          "frame_type": "BATH-BRG",
+          "all": [
+            {
+              "any": [
+                {
+                  "survey_cover_top": {
+                    "$exists": false
+                  }
+                },
+                {
+                  "survey_cover_top": {
+                    "$lte": 24.5
+                  }
+                }
+              ]
+            },
+            {
+              "any": [
+                {
+                  "survey_cover_bottom": {
+                    "$exists": false
+                  }
+                },
+                {
+                  "survey_cover_bottom": {
+                    "$lte": 58.5
+                  }
+                }
+              ]
+            },
+            {
+              "any": [
+                {
+                  "survey_cover_side": {
+                    "$exists": false
+                  }
+                },
+                {
+                  "survey_cover_side": {
+                    "$lte": 7.5
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "evidenceIds": [
+          "BATH-EV-009"
+        ],
+        "metadata": {
+          "manualCheck": false
+        },
+        "id": "SER-LIXIL-REPLUS-BATH:value:exterior_cover_type:12",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "exterior_cover_type",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "BATH-COV-BRG-XS",
+        "displayLabel": "特小",
+        "selector": {
+          "frame_type": "BATH-BRG",
+          "all": [
+            {
+              "any": [
+                {
+                  "survey_cover_top": {
+                    "$exists": false
+                  }
+                },
+                {
+                  "survey_cover_top": {
+                    "$lte": 24.5
+                  }
+                }
+              ]
+            },
+            {
+              "any": [
+                {
+                  "survey_cover_bottom": {
+                    "$exists": false
+                  }
+                },
+                {
+                  "survey_cover_bottom": {
+                    "$lte": 33.5
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "evidenceIds": [
+          "BATH-EV-009"
+        ],
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "SER-LIXIL-REPLUS-BATH:value:exterior_cover_type:13",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "exterior_cover_type",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "STANDARD",
+        "displayLabel": "標準用",
+        "evidenceIds": [
+          "EV-DIMENSIONS-INNER-FIT-V11"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "SER-LIXIL-REPLUS-BATH:value:installation_method:0",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "installation_method",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "INNER_FIT_INSET",
+        "displayLabel": "内はめ用（既設内付・半外付）",
+        "evidenceIds": [
+          "EV-DIMENSIONS-INNER-FIT-V11"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "SER-LIXIL-REPLUS-BATH:value:installation_method:1",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "installation_method",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "INNER_FIT_OUTSET",
+        "displayLabel": "内はめ用（既設外付）",
+        "evidenceIds": [
+          "EV-DIMENSIONS-INNER-FIT-V11"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "SER-LIXIL-REPLUS-BATH:value:installation_method:2",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "installation_method",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "BATH-OP-UPPER-BASE",
+        "displayLabel": "既設上枠ベース材（必須・価格要確認）",
+        "evidenceIds": [
+          "EV-DIMENSIONS-INNER-FIT-V11"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": true
+        },
+        "id": "SER-LIXIL-REPLUS-BATH:value:inner_fit_required_component:0",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "inner_fit_required_component",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "SURVEY",
+        "displayLabel": "採寸寸法から入力",
+        "evidenceIds": [
+          "EV-DIMENSIONS-INNER-FIT-V11"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": false
+        },
+        "id": "SER-LIXIL-REPLUS-BATH:value:dimension_basis:0",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "dimension_basis",
+        "status": "ACTIVE"
+      },
+      {
+        "value": "FINISHED",
+        "displayLabel": "仕上がり寸法から入力",
+        "evidenceIds": [
+          "EV-DIMENSIONS-INNER-FIT-V11"
+        ],
+        "selector": {},
+        "metadata": {
+          "manualCheck": false
+        },
+        "id": "SER-LIXIL-REPLUS-BATH:value:dimension_basis:1",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "dimension_basis",
+        "status": "ACTIVE"
+      }
+    ],
+    "requiredFieldRules": [
+      {
+        "id": "SER-LIXIL-REPLUS-BATH:required:window_type",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "window_type",
+        "required": true,
+        "selector": {}
+      },
+      {
+        "id": "SER-LIXIL-REPLUS-BATH:required:frame_type",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "frame_type",
+        "required": true,
+        "selector": {
+          "window_type": {
+            "$exists": true
+          }
+        }
+      },
+      {
+        "id": "SER-LIXIL-REPLUS-BATH:required:spec_panel_configuration",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "spec_panel_configuration",
+        "required": true,
+        "selector": {
+          "window_type": {
+            "$in": [
+              "RPL_BATH_SLD"
+            ]
+          }
+        }
+      },
+      {
+        "id": "SER-LIXIL-REPLUS-BATH:required:spec_sash_configuration",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "spec_sash_configuration",
+        "required": true,
+        "selector": {
+          "window_type": {
+            "$in": [
+              "RPL_BATH_SLD"
+            ]
+          }
+        }
+      },
+      {
+        "id": "SER-LIXIL-REPLUS-BATH:required:spec_operation_type",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "spec_operation_type",
+        "required": true,
+        "selector": {
+          "window_type": {
+            "$in": [
+              "RPL_BATH_VSOP",
+              "RPL_BATH_VSCAM",
+              "RPL_BATH_HSOP",
+              "RPL_BATH_HSCAM"
+            ]
+          }
+        }
+      },
+      {
+        "id": "SER-LIXIL-REPLUS-BATH:required:size_mode",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "size_mode",
+        "required": true,
+        "selector": {}
+      },
+      {
+        "id": "SER-LIXIL-REPLUS-BATH:required:bathroom_remodel_mode",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "bathroom_remodel_mode",
+        "required": true,
+        "selector": {}
+      },
+      {
+        "id": "SER-LIXIL-REPLUS-BATH:required:bathroom_opening_pattern",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "bathroom_opening_pattern",
+        "required": true,
+        "selector": {
+          "bathroom_remodel_mode": "SYSTEM_BATH_SIMULTANEOUS"
+        }
+      },
+      {
+        "id": "SER-LIXIL-REPLUS-BATH:required:exterior_cover_type",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "exterior_cover_type",
+        "required": true,
+        "selector": {}
+      },
+      {
+        "id": "SER-LIXIL-REPLUS-BATH:required:installation_method",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "installation_method",
+        "required": true,
+        "selector": {
+          "window_type": {
+            "$exists": true
+          }
+        }
+      },
+      {
+        "id": "SER-LIXIL-REPLUS-BATH:required:dimension_basis",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "dimension_basis",
+        "required": true,
+        "selector": {}
+      },
+      {
+        "id": "SER-LIXIL-REPLUS-BATH:required:survey_width",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "survey_width",
+        "required": true,
+        "selector": {
+          "size_mode": "CUSTOM"
+        }
+      },
+      {
+        "id": "SER-LIXIL-REPLUS-BATH:required:survey_height",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "survey_height",
+        "required": true,
+        "selector": {
+          "size_mode": "CUSTOM"
+        }
+      },
+      {
+        "id": "SER-LIXIL-REPLUS-BATH:required:custom_width",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "custom_width",
+        "required": true,
+        "selector": {
+          "size_mode": "CUSTOM"
+        }
+      },
+      {
+        "id": "SER-LIXIL-REPLUS-BATH:required:custom_height",
+        "productId": "SER-LIXIL-REPLUS-BATH",
+        "specificationKey": "custom_height",
+        "required": true,
+        "selector": {
+          "size_mode": "CUSTOM"
+        }
+      }
+    ],
+    "ruleSets": [
+      {
+        "id": "SER-LIXIL-REPLUS-BATH:ruleSets:finished-envelope",
+        "type": "DIMENSION_RULES",
+        "status": "ACTIVE",
+        "payload": [
+          {
+            "id": "BATH-SZ-SLD-STD-FULL95",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 774,
+              "maxW": 2051,
+              "minH": 337,
+              "maxH": 1601
+            },
+            "selector": {
+              "window_type": "RPL_BATH_SLD",
+              "frame_type": "BATH-STD"
+            },
+            "source": {
+              "size_rule_id": "BATH-SZ-SLD-STD-FULL95",
+              "window_type_id": "RPL_BATH_SLD",
+              "frame_type_id": "BATH-STD",
+              "opening_pattern_id": "FULL95",
+              "finished_w_min": 774,
+              "finished_w_max": 2051,
+              "finished_h_min": 337,
+              "finished_h_max": 1601,
+              "survey_w_min": 784,
+              "survey_w_max": 2061,
+              "survey_h_min": 347,
+              "survey_h_max": 1611,
+              "boundary_rule_id": "BATH-BR-SLD-STD",
+              "status": "COMPLETE",
+              "evidence": "BATH-EV-006"
+            }
+          },
+          {
+            "id": "BATH-SZ-SLD-STD-FULL195",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 973,
+              "maxW": 2250,
+              "minH": 337,
+              "maxH": 1601
+            },
+            "selector": {
+              "window_type": "RPL_BATH_SLD",
+              "frame_type": "BATH-STD"
+            },
+            "source": {
+              "size_rule_id": "BATH-SZ-SLD-STD-FULL195",
+              "window_type_id": "RPL_BATH_SLD",
+              "frame_type_id": "BATH-STD",
+              "opening_pattern_id": "FULL195",
+              "finished_w_min": 973,
+              "finished_w_max": 2250,
+              "finished_h_min": 337,
+              "finished_h_max": 1601,
+              "survey_w_min": 983,
+              "survey_w_max": 2260,
+              "survey_h_min": 347,
+              "survey_h_max": 1611,
+              "boundary_rule_id": "BATH-BR-SLD-STD",
+              "status": "COMPLETE",
+              "evidence": "BATH-EV-006"
+            }
+          },
+          {
+            "id": "BATH-SZ-SLD-STD-OFFSET_L95",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 711,
+              "maxW": 1988,
+              "minH": 337,
+              "maxH": 1601
+            },
+            "selector": {
+              "window_type": "RPL_BATH_SLD",
+              "frame_type": "BATH-STD"
+            },
+            "source": {
+              "size_rule_id": "BATH-SZ-SLD-STD-OFFSET_L95",
+              "window_type_id": "RPL_BATH_SLD",
+              "frame_type_id": "BATH-STD",
+              "opening_pattern_id": "OFFSET_L95",
+              "finished_w_min": 711,
+              "finished_w_max": 1988,
+              "finished_h_min": 337,
+              "finished_h_max": 1601,
+              "survey_w_min": 721,
+              "survey_w_max": 1998,
+              "survey_h_min": 347,
+              "survey_h_max": 1611,
+              "boundary_rule_id": "BATH-BR-SLD-STD",
+              "status": "COMPLETE",
+              "evidence": "BATH-EV-006"
+            }
+          },
+          {
+            "id": "BATH-SZ-SLD-STD-OFFSET_L195",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 810,
+              "maxW": 2087,
+              "minH": 337,
+              "maxH": 1601
+            },
+            "selector": {
+              "window_type": "RPL_BATH_SLD",
+              "frame_type": "BATH-STD"
+            },
+            "source": {
+              "size_rule_id": "BATH-SZ-SLD-STD-OFFSET_L195",
+              "window_type_id": "RPL_BATH_SLD",
+              "frame_type_id": "BATH-STD",
+              "opening_pattern_id": "OFFSET_L195",
+              "finished_w_min": 810,
+              "finished_w_max": 2087,
+              "finished_h_min": 337,
+              "finished_h_max": 1601,
+              "survey_w_min": 820,
+              "survey_w_max": 2097,
+              "survey_h_min": 347,
+              "survey_h_max": 1611,
+              "boundary_rule_id": "BATH-BR-SLD-STD",
+              "status": "COMPLETE",
+              "evidence": "BATH-EV-006"
+            }
+          },
+          {
+            "id": "BATH-SZ-SLD-STD-OFFSET_R95",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 711,
+              "maxW": 1988,
+              "minH": 337,
+              "maxH": 1601
+            },
+            "selector": {
+              "window_type": "RPL_BATH_SLD",
+              "frame_type": "BATH-STD"
+            },
+            "source": {
+              "size_rule_id": "BATH-SZ-SLD-STD-OFFSET_R95",
+              "window_type_id": "RPL_BATH_SLD",
+              "frame_type_id": "BATH-STD",
+              "opening_pattern_id": "OFFSET_R95",
+              "finished_w_min": 711,
+              "finished_w_max": 1988,
+              "finished_h_min": 337,
+              "finished_h_max": 1601,
+              "survey_w_min": 721,
+              "survey_w_max": 1998,
+              "survey_h_min": 347,
+              "survey_h_max": 1611,
+              "boundary_rule_id": "BATH-BR-SLD-STD",
+              "status": "COMPLETE",
+              "evidence": "BATH-EV-006"
+            }
+          },
+          {
+            "id": "BATH-SZ-SLD-STD-OFFSET_R195",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 810,
+              "maxW": 2087,
+              "minH": 337,
+              "maxH": 1601
+            },
+            "selector": {
+              "window_type": "RPL_BATH_SLD",
+              "frame_type": "BATH-STD"
+            },
+            "source": {
+              "size_rule_id": "BATH-SZ-SLD-STD-OFFSET_R195",
+              "window_type_id": "RPL_BATH_SLD",
+              "frame_type_id": "BATH-STD",
+              "opening_pattern_id": "OFFSET_R195",
+              "finished_w_min": 810,
+              "finished_w_max": 2087,
+              "finished_h_min": 337,
+              "finished_h_max": 1601,
+              "survey_w_min": 820,
+              "survey_w_max": 2097,
+              "survey_h_min": 347,
+              "survey_h_max": 1611,
+              "boundary_rule_id": "BATH-BR-SLD-STD",
+              "status": "COMPLETE",
+              "evidence": "BATH-EV-006"
+            }
+          },
+          {
+            "id": "BATH-SZ-SLD-STD-CUTOUT",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 647,
+              "maxW": 1924,
+              "minH": 337,
+              "maxH": 1601
+            },
+            "selector": {
+              "window_type": "RPL_BATH_SLD",
+              "frame_type": "BATH-STD"
+            },
+            "source": {
+              "size_rule_id": "BATH-SZ-SLD-STD-CUTOUT",
+              "window_type_id": "RPL_BATH_SLD",
+              "frame_type_id": "BATH-STD",
+              "opening_pattern_id": "CUTOUT",
+              "finished_w_min": 647,
+              "finished_w_max": 1924,
+              "finished_h_min": 337,
+              "finished_h_max": 1601,
+              "survey_w_min": 657,
+              "survey_w_max": 1934,
+              "survey_h_min": 347,
+              "survey_h_max": 1611,
+              "boundary_rule_id": "BATH-BR-SLD-STD",
+              "status": "COMPLETE",
+              "evidence": "BATH-EV-006"
+            }
+          },
+          {
+            "id": "BATH-SZ-SLD-STD-WINDOW_ONLY",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 647,
+              "maxW": 1924,
+              "minH": 337,
+              "maxH": 1601
+            },
+            "selector": {
+              "window_type": "RPL_BATH_SLD",
+              "frame_type": "BATH-STD"
+            },
+            "source": {
+              "size_rule_id": "BATH-SZ-SLD-STD-WINDOW_ONLY",
+              "window_type_id": "RPL_BATH_SLD",
+              "frame_type_id": "BATH-STD",
+              "opening_pattern_id": "WINDOW_ONLY",
+              "finished_w_min": 647,
+              "finished_w_max": 1924,
+              "finished_h_min": 337,
+              "finished_h_max": 1601,
+              "survey_w_min": 657,
+              "survey_w_max": 1934,
+              "survey_h_min": 347,
+              "survey_h_max": 1611,
+              "boundary_rule_id": "BATH-BR-SLD-STD",
+              "status": "COMPLETE",
+              "evidence": "BATH-EV-006"
+            }
+          },
+          {
+            "id": "BATH-SZ-SLD-BRG-FULL95",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 744,
+              "maxW": 2051,
+              "minH": 342,
+              "maxH": 1601
+            },
+            "selector": {
+              "window_type": "RPL_BATH_SLD",
+              "frame_type": "BATH-BRG"
+            },
+            "source": {
+              "size_rule_id": "BATH-SZ-SLD-BRG-FULL95",
+              "window_type_id": "RPL_BATH_SLD",
+              "frame_type_id": "BATH-BRG",
+              "opening_pattern_id": "FULL95",
+              "finished_w_min": 744,
+              "finished_w_max": 2051,
+              "finished_h_min": 342,
+              "finished_h_max": 1601,
+              "survey_w_min": 754,
+              "survey_w_max": 2061,
+              "survey_h_min": 352,
+              "survey_h_max": 1611,
+              "boundary_rule_id": "BATH-BR-SLD-BRG",
+              "status": "COMPLETE_WITH_EXTERNAL_CHECK",
+              "evidence": "BATH-EV-006"
+            }
+          },
+          {
+            "id": "BATH-SZ-SLD-BRG-FULL195",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 973,
+              "maxW": 2250,
+              "minH": 342,
+              "maxH": 1601
+            },
+            "selector": {
+              "window_type": "RPL_BATH_SLD",
+              "frame_type": "BATH-BRG"
+            },
+            "source": {
+              "size_rule_id": "BATH-SZ-SLD-BRG-FULL195",
+              "window_type_id": "RPL_BATH_SLD",
+              "frame_type_id": "BATH-BRG",
+              "opening_pattern_id": "FULL195",
+              "finished_w_min": 973,
+              "finished_w_max": 2250,
+              "finished_h_min": 342,
+              "finished_h_max": 1601,
+              "survey_w_min": 983,
+              "survey_w_max": 2260,
+              "survey_h_min": 352,
+              "survey_h_max": 1611,
+              "boundary_rule_id": "BATH-BR-SLD-BRG",
+              "status": "COMPLETE",
+              "evidence": "BATH-EV-006"
+            }
+          },
+          {
+            "id": "BATH-SZ-SLD-BRG-OFFSET_L95",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 711,
+              "maxW": 1988,
+              "minH": 342,
+              "maxH": 1601
+            },
+            "selector": {
+              "window_type": "RPL_BATH_SLD",
+              "frame_type": "BATH-BRG"
+            },
+            "source": {
+              "size_rule_id": "BATH-SZ-SLD-BRG-OFFSET_L95",
+              "window_type_id": "RPL_BATH_SLD",
+              "frame_type_id": "BATH-BRG",
+              "opening_pattern_id": "OFFSET_L95",
+              "finished_w_min": 711,
+              "finished_w_max": 1988,
+              "finished_h_min": 342,
+              "finished_h_max": 1601,
+              "survey_w_min": 721,
+              "survey_w_max": 1998,
+              "survey_h_min": 352,
+              "survey_h_max": 1611,
+              "boundary_rule_id": "BATH-BR-SLD-BRG",
+              "status": "COMPLETE",
+              "evidence": "BATH-EV-006"
+            }
+          },
+          {
+            "id": "BATH-SZ-SLD-BRG-OFFSET_L195",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 810,
+              "maxW": 2087,
+              "minH": 342,
+              "maxH": 1601
+            },
+            "selector": {
+              "window_type": "RPL_BATH_SLD",
+              "frame_type": "BATH-BRG"
+            },
+            "source": {
+              "size_rule_id": "BATH-SZ-SLD-BRG-OFFSET_L195",
+              "window_type_id": "RPL_BATH_SLD",
+              "frame_type_id": "BATH-BRG",
+              "opening_pattern_id": "OFFSET_L195",
+              "finished_w_min": 810,
+              "finished_w_max": 2087,
+              "finished_h_min": 342,
+              "finished_h_max": 1601,
+              "survey_w_min": 820,
+              "survey_w_max": 2097,
+              "survey_h_min": 352,
+              "survey_h_max": 1611,
+              "boundary_rule_id": "BATH-BR-SLD-BRG",
+              "status": "COMPLETE",
+              "evidence": "BATH-EV-006"
+            }
+          },
+          {
+            "id": "BATH-SZ-SLD-BRG-OFFSET_R95",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 711,
+              "maxW": 1988,
+              "minH": 342,
+              "maxH": 1601
+            },
+            "selector": {
+              "window_type": "RPL_BATH_SLD",
+              "frame_type": "BATH-BRG"
+            },
+            "source": {
+              "size_rule_id": "BATH-SZ-SLD-BRG-OFFSET_R95",
+              "window_type_id": "RPL_BATH_SLD",
+              "frame_type_id": "BATH-BRG",
+              "opening_pattern_id": "OFFSET_R95",
+              "finished_w_min": 711,
+              "finished_w_max": 1988,
+              "finished_h_min": 342,
+              "finished_h_max": 1601,
+              "survey_w_min": 721,
+              "survey_w_max": 1998,
+              "survey_h_min": 352,
+              "survey_h_max": 1611,
+              "boundary_rule_id": "BATH-BR-SLD-BRG",
+              "status": "COMPLETE",
+              "evidence": "BATH-EV-006"
+            }
+          },
+          {
+            "id": "BATH-SZ-SLD-BRG-OFFSET_R195",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 810,
+              "maxW": 2087,
+              "minH": 342,
+              "maxH": 1601
+            },
+            "selector": {
+              "window_type": "RPL_BATH_SLD",
+              "frame_type": "BATH-BRG"
+            },
+            "source": {
+              "size_rule_id": "BATH-SZ-SLD-BRG-OFFSET_R195",
+              "window_type_id": "RPL_BATH_SLD",
+              "frame_type_id": "BATH-BRG",
+              "opening_pattern_id": "OFFSET_R195",
+              "finished_w_min": 810,
+              "finished_w_max": 2087,
+              "finished_h_min": 342,
+              "finished_h_max": 1601,
+              "survey_w_min": 820,
+              "survey_w_max": 2097,
+              "survey_h_min": 352,
+              "survey_h_max": 1611,
+              "boundary_rule_id": "BATH-BR-SLD-BRG",
+              "status": "COMPLETE",
+              "evidence": "BATH-EV-006"
+            }
+          },
+          {
+            "id": "BATH-SZ-SLD-BRG-CUTOUT",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 647,
+              "maxW": 1924,
+              "minH": 342,
+              "maxH": 1601
+            },
+            "selector": {
+              "window_type": "RPL_BATH_SLD",
+              "frame_type": "BATH-BRG"
+            },
+            "source": {
+              "size_rule_id": "BATH-SZ-SLD-BRG-CUTOUT",
+              "window_type_id": "RPL_BATH_SLD",
+              "frame_type_id": "BATH-BRG",
+              "opening_pattern_id": "CUTOUT",
+              "finished_w_min": 647,
+              "finished_w_max": 1924,
+              "finished_h_min": 342,
+              "finished_h_max": 1601,
+              "survey_w_min": 657,
+              "survey_w_max": 1934,
+              "survey_h_min": 352,
+              "survey_h_max": 1611,
+              "boundary_rule_id": "BATH-BR-SLD-BRG",
+              "status": "COMPLETE",
+              "evidence": "BATH-EV-006"
+            }
+          },
+          {
+            "id": "BATH-SZ-SLD-BRG-WINDOW_ONLY",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 647,
+              "maxW": 1924,
+              "minH": 342,
+              "maxH": 1601
+            },
+            "selector": {
+              "window_type": "RPL_BATH_SLD",
+              "frame_type": "BATH-BRG"
+            },
+            "source": {
+              "size_rule_id": "BATH-SZ-SLD-BRG-WINDOW_ONLY",
+              "window_type_id": "RPL_BATH_SLD",
+              "frame_type_id": "BATH-BRG",
+              "opening_pattern_id": "WINDOW_ONLY",
+              "finished_w_min": 647,
+              "finished_w_max": 1924,
+              "finished_h_min": 342,
+              "finished_h_max": 1601,
+              "survey_w_min": 657,
+              "survey_w_max": 1934,
+              "survey_h_min": 352,
+              "survey_h_max": 1611,
+              "boundary_rule_id": "BATH-BR-SLD-BRG",
+              "status": "COMPLETE",
+              "evidence": "BATH-EV-006"
+            }
+          },
+          {
+            "id": "BATH-SZ-VSOP-OFFSET_L95",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 331,
+              "maxW": 861,
+              "minH": 376,
+              "maxH": 1601
+            },
+            "selector": {
+              "window_type": "RPL_BATH_VSOP",
+              "frame_type": "BATH-STD"
+            },
+            "source": {
+              "size_rule_id": "BATH-SZ-VSOP-OFFSET_L95",
+              "window_type_id": "RPL_BATH_VSOP",
+              "frame_type_id": "BATH-STD",
+              "opening_pattern_id": "OFFSET_L95",
+              "finished_w_min": 331,
+              "finished_w_max": 861,
+              "finished_h_min": 376,
+              "finished_h_max": 1601,
+              "survey_w_min": 341,
+              "survey_w_max": 871,
+              "survey_h_min": 386,
+              "survey_h_max": 1611,
+              "boundary_rule_id": "BATH-BR-VSOP",
+              "status": "COMPLETE",
+              "evidence": "BATH-EV-007"
+            }
+          },
+          {
+            "id": "BATH-SZ-VSOP-OFFSET_R95",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 331,
+              "maxW": 861,
+              "minH": 376,
+              "maxH": 1601
+            },
+            "selector": {
+              "window_type": "RPL_BATH_VSOP",
+              "frame_type": "BATH-STD"
+            },
+            "source": {
+              "size_rule_id": "BATH-SZ-VSOP-OFFSET_R95",
+              "window_type_id": "RPL_BATH_VSOP",
+              "frame_type_id": "BATH-STD",
+              "opening_pattern_id": "OFFSET_R95",
+              "finished_w_min": 331,
+              "finished_w_max": 861,
+              "finished_h_min": 376,
+              "finished_h_max": 1601,
+              "survey_w_min": 341,
+              "survey_w_max": 871,
+              "survey_h_min": 386,
+              "survey_h_max": 1611,
+              "boundary_rule_id": "BATH-BR-VSOP",
+              "status": "COMPLETE",
+              "evidence": "BATH-EV-007"
+            }
+          },
+          {
+            "id": "BATH-SZ-VSOP-OFFSET_L195",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 430,
+              "maxW": 960,
+              "minH": 376,
+              "maxH": 1601
+            },
+            "selector": {
+              "window_type": "RPL_BATH_VSOP",
+              "frame_type": "BATH-STD"
+            },
+            "source": {
+              "size_rule_id": "BATH-SZ-VSOP-OFFSET_L195",
+              "window_type_id": "RPL_BATH_VSOP",
+              "frame_type_id": "BATH-STD",
+              "opening_pattern_id": "OFFSET_L195",
+              "finished_w_min": 430,
+              "finished_w_max": 960,
+              "finished_h_min": 376,
+              "finished_h_max": 1601,
+              "survey_w_min": 440,
+              "survey_w_max": 970,
+              "survey_h_min": 386,
+              "survey_h_max": 1611,
+              "boundary_rule_id": "BATH-BR-VSOP",
+              "status": "COMPLETE",
+              "evidence": "BATH-EV-007"
+            }
+          },
+          {
+            "id": "BATH-SZ-VSOP-OFFSET_R195",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 430,
+              "maxW": 960,
+              "minH": 376,
+              "maxH": 1601
+            },
+            "selector": {
+              "window_type": "RPL_BATH_VSOP",
+              "frame_type": "BATH-STD"
+            },
+            "source": {
+              "size_rule_id": "BATH-SZ-VSOP-OFFSET_R195",
+              "window_type_id": "RPL_BATH_VSOP",
+              "frame_type_id": "BATH-STD",
+              "opening_pattern_id": "OFFSET_R195",
+              "finished_w_min": 430,
+              "finished_w_max": 960,
+              "finished_h_min": 376,
+              "finished_h_max": 1601,
+              "survey_w_min": 440,
+              "survey_w_max": 970,
+              "survey_h_min": 386,
+              "survey_h_max": 1611,
+              "boundary_rule_id": "BATH-BR-VSOP",
+              "status": "COMPLETE",
+              "evidence": "BATH-EV-007"
+            }
+          },
+          {
+            "id": "BATH-SZ-VSOP-CUTOUT",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 267,
+              "maxW": 797,
+              "minH": 376,
+              "maxH": 1601
+            },
+            "selector": {
+              "window_type": "RPL_BATH_VSOP",
+              "frame_type": "BATH-STD"
+            },
+            "source": {
+              "size_rule_id": "BATH-SZ-VSOP-CUTOUT",
+              "window_type_id": "RPL_BATH_VSOP",
+              "frame_type_id": "BATH-STD",
+              "opening_pattern_id": "CUTOUT",
+              "finished_w_min": 267,
+              "finished_w_max": 797,
+              "finished_h_min": 376,
+              "finished_h_max": 1601,
+              "survey_w_min": 277,
+              "survey_w_max": 807,
+              "survey_h_min": 386,
+              "survey_h_max": 1611,
+              "boundary_rule_id": "BATH-BR-VSOP",
+              "status": "COMPLETE",
+              "evidence": "BATH-EV-007"
+            }
+          },
+          {
+            "id": "BATH-SZ-VSOP-WINDOW_ONLY",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 267,
+              "maxW": 797,
+              "minH": 376,
+              "maxH": 1601
+            },
+            "selector": {
+              "window_type": "RPL_BATH_VSOP",
+              "frame_type": "BATH-STD"
+            },
+            "source": {
+              "size_rule_id": "BATH-SZ-VSOP-WINDOW_ONLY",
+              "window_type_id": "RPL_BATH_VSOP",
+              "frame_type_id": "BATH-STD",
+              "opening_pattern_id": "WINDOW_ONLY",
+              "finished_w_min": 267,
+              "finished_w_max": 797,
+              "finished_h_min": 376,
+              "finished_h_max": 1601,
+              "survey_w_min": 277,
+              "survey_w_max": 807,
+              "survey_h_min": 386,
+              "survey_h_max": 1611,
+              "boundary_rule_id": "BATH-BR-VSOP",
+              "status": "COMPLETE",
+              "evidence": "BATH-EV-007"
+            }
+          },
+          {
+            "id": "BATH-SZ-VSCAM-OFFSET_L95",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 331,
+              "maxW": 731,
+              "minH": 346,
+              "maxH": 1601
+            },
+            "selector": {
+              "window_type": "RPL_BATH_VSCAM",
+              "frame_type": "BATH-STD"
+            },
+            "source": {
+              "size_rule_id": "BATH-SZ-VSCAM-OFFSET_L95",
+              "window_type_id": "RPL_BATH_VSCAM",
+              "frame_type_id": "BATH-STD",
+              "opening_pattern_id": "OFFSET_L95",
+              "finished_w_min": 331,
+              "finished_w_max": 731,
+              "finished_h_min": 346,
+              "finished_h_max": 1601,
+              "survey_w_min": 341,
+              "survey_w_max": 741,
+              "survey_h_min": 356,
+              "survey_h_max": 1611,
+              "boundary_rule_id": "BATH-BR-VSCAM",
+              "status": "COMPLETE_WITH_EXTERNAL_CHECK",
+              "evidence": "BATH-EV-007"
+            }
+          },
+          {
+            "id": "BATH-SZ-VSCAM-OFFSET_R95",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 331,
+              "maxW": 731,
+              "minH": 346,
+              "maxH": 1601
+            },
+            "selector": {
+              "window_type": "RPL_BATH_VSCAM",
+              "frame_type": "BATH-STD"
+            },
+            "source": {
+              "size_rule_id": "BATH-SZ-VSCAM-OFFSET_R95",
+              "window_type_id": "RPL_BATH_VSCAM",
+              "frame_type_id": "BATH-STD",
+              "opening_pattern_id": "OFFSET_R95",
+              "finished_w_min": 331,
+              "finished_w_max": 731,
+              "finished_h_min": 346,
+              "finished_h_max": 1601,
+              "survey_w_min": 341,
+              "survey_w_max": 741,
+              "survey_h_min": 356,
+              "survey_h_max": 1611,
+              "boundary_rule_id": "BATH-BR-VSCAM",
+              "status": "COMPLETE_WITH_EXTERNAL_CHECK",
+              "evidence": "BATH-EV-007"
+            }
+          },
+          {
+            "id": "BATH-SZ-VSCAM-OFFSET_L195",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 430,
+              "maxW": 830,
+              "minH": 346,
+              "maxH": 1601
+            },
+            "selector": {
+              "window_type": "RPL_BATH_VSCAM",
+              "frame_type": "BATH-STD"
+            },
+            "source": {
+              "size_rule_id": "BATH-SZ-VSCAM-OFFSET_L195",
+              "window_type_id": "RPL_BATH_VSCAM",
+              "frame_type_id": "BATH-STD",
+              "opening_pattern_id": "OFFSET_L195",
+              "finished_w_min": 430,
+              "finished_w_max": 830,
+              "finished_h_min": 346,
+              "finished_h_max": 1601,
+              "survey_w_min": 440,
+              "survey_w_max": 840,
+              "survey_h_min": 356,
+              "survey_h_max": 1611,
+              "boundary_rule_id": "BATH-BR-VSCAM",
+              "status": "COMPLETE_WITH_EXTERNAL_CHECK",
+              "evidence": "BATH-EV-007"
+            }
+          },
+          {
+            "id": "BATH-SZ-VSCAM-OFFSET_R195",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 430,
+              "maxW": 830,
+              "minH": 346,
+              "maxH": 1601
+            },
+            "selector": {
+              "window_type": "RPL_BATH_VSCAM",
+              "frame_type": "BATH-STD"
+            },
+            "source": {
+              "size_rule_id": "BATH-SZ-VSCAM-OFFSET_R195",
+              "window_type_id": "RPL_BATH_VSCAM",
+              "frame_type_id": "BATH-STD",
+              "opening_pattern_id": "OFFSET_R195",
+              "finished_w_min": 430,
+              "finished_w_max": 830,
+              "finished_h_min": 346,
+              "finished_h_max": 1601,
+              "survey_w_min": 440,
+              "survey_w_max": 840,
+              "survey_h_min": 356,
+              "survey_h_max": 1611,
+              "boundary_rule_id": "BATH-BR-VSCAM",
+              "status": "COMPLETE_WITH_EXTERNAL_CHECK",
+              "evidence": "BATH-EV-007"
+            }
+          },
+          {
+            "id": "BATH-SZ-VSCAM-CUTOUT",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 267,
+              "maxW": 667,
+              "minH": 346,
+              "maxH": 1601
+            },
+            "selector": {
+              "window_type": "RPL_BATH_VSCAM",
+              "frame_type": "BATH-STD"
+            },
+            "source": {
+              "size_rule_id": "BATH-SZ-VSCAM-CUTOUT",
+              "window_type_id": "RPL_BATH_VSCAM",
+              "frame_type_id": "BATH-STD",
+              "opening_pattern_id": "CUTOUT",
+              "finished_w_min": 267,
+              "finished_w_max": 667,
+              "finished_h_min": 346,
+              "finished_h_max": 1601,
+              "survey_w_min": 277,
+              "survey_w_max": 677,
+              "survey_h_min": 356,
+              "survey_h_max": 1611,
+              "boundary_rule_id": "BATH-BR-VSCAM",
+              "status": "COMPLETE_WITH_EXTERNAL_CHECK",
+              "evidence": "BATH-EV-007"
+            }
+          },
+          {
+            "id": "BATH-SZ-VSCAM-WINDOW_ONLY",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 267,
+              "maxW": 667,
+              "minH": 346,
+              "maxH": 1601
+            },
+            "selector": {
+              "window_type": "RPL_BATH_VSCAM",
+              "frame_type": "BATH-STD"
+            },
+            "source": {
+              "size_rule_id": "BATH-SZ-VSCAM-WINDOW_ONLY",
+              "window_type_id": "RPL_BATH_VSCAM",
+              "frame_type_id": "BATH-STD",
+              "opening_pattern_id": "WINDOW_ONLY",
+              "finished_w_min": 267,
+              "finished_w_max": 667,
+              "finished_h_min": 346,
+              "finished_h_max": 1601,
+              "survey_w_min": 277,
+              "survey_w_max": 677,
+              "survey_h_min": 356,
+              "survey_h_max": 1611,
+              "boundary_rule_id": "BATH-BR-VSCAM",
+              "status": "COMPLETE_WITH_EXTERNAL_CHECK",
+              "evidence": "BATH-EV-007"
+            }
+          },
+          {
+            "id": "BATH-SZ-HSOP-OFFSET_L95",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 381,
+              "maxW": 1316,
+              "minH": 316,
+              "maxH": 1251
+            },
+            "selector": {
+              "window_type": "RPL_BATH_HSOP",
+              "frame_type": "BATH-STD"
+            },
+            "source": {
+              "size_rule_id": "BATH-SZ-HSOP-OFFSET_L95",
+              "window_type_id": "RPL_BATH_HSOP",
+              "frame_type_id": "BATH-STD",
+              "opening_pattern_id": "OFFSET_L95",
+              "finished_w_min": 381,
+              "finished_w_max": 1316,
+              "finished_h_min": 316,
+              "finished_h_max": 1251,
+              "survey_w_min": 391,
+              "survey_w_max": 1326,
+              "survey_h_min": 326,
+              "survey_h_max": 1261,
+              "boundary_rule_id": "BATH-BR-HSOP",
+              "status": "COMPLETE_WITH_EXTERNAL_CHECK",
+              "evidence": "BATH-EV-007"
+            }
+          },
+          {
+            "id": "BATH-SZ-HSOP-OFFSET_R95",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 381,
+              "maxW": 1316,
+              "minH": 316,
+              "maxH": 1251
+            },
+            "selector": {
+              "window_type": "RPL_BATH_HSOP",
+              "frame_type": "BATH-STD"
+            },
+            "source": {
+              "size_rule_id": "BATH-SZ-HSOP-OFFSET_R95",
+              "window_type_id": "RPL_BATH_HSOP",
+              "frame_type_id": "BATH-STD",
+              "opening_pattern_id": "OFFSET_R95",
+              "finished_w_min": 381,
+              "finished_w_max": 1316,
+              "finished_h_min": 316,
+              "finished_h_max": 1251,
+              "survey_w_min": 391,
+              "survey_w_max": 1326,
+              "survey_h_min": 326,
+              "survey_h_max": 1261,
+              "boundary_rule_id": "BATH-BR-HSOP",
+              "status": "COMPLETE_WITH_EXTERNAL_CHECK",
+              "evidence": "BATH-EV-007"
+            }
+          },
+          {
+            "id": "BATH-SZ-HSOP-OFFSET_L195",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 480,
+              "maxW": 1415,
+              "minH": 316,
+              "maxH": 1251
+            },
+            "selector": {
+              "window_type": "RPL_BATH_HSOP",
+              "frame_type": "BATH-STD"
+            },
+            "source": {
+              "size_rule_id": "BATH-SZ-HSOP-OFFSET_L195",
+              "window_type_id": "RPL_BATH_HSOP",
+              "frame_type_id": "BATH-STD",
+              "opening_pattern_id": "OFFSET_L195",
+              "finished_w_min": 480,
+              "finished_w_max": 1415,
+              "finished_h_min": 316,
+              "finished_h_max": 1251,
+              "survey_w_min": 490,
+              "survey_w_max": 1425,
+              "survey_h_min": 326,
+              "survey_h_max": 1261,
+              "boundary_rule_id": "BATH-BR-HSOP",
+              "status": "COMPLETE_WITH_EXTERNAL_CHECK",
+              "evidence": "BATH-EV-007"
+            }
+          },
+          {
+            "id": "BATH-SZ-HSOP-OFFSET_R195",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 480,
+              "maxW": 1415,
+              "minH": 316,
+              "maxH": 1251
+            },
+            "selector": {
+              "window_type": "RPL_BATH_HSOP",
+              "frame_type": "BATH-STD"
+            },
+            "source": {
+              "size_rule_id": "BATH-SZ-HSOP-OFFSET_R195",
+              "window_type_id": "RPL_BATH_HSOP",
+              "frame_type_id": "BATH-STD",
+              "opening_pattern_id": "OFFSET_R195",
+              "finished_w_min": 480,
+              "finished_w_max": 1415,
+              "finished_h_min": 316,
+              "finished_h_max": 1251,
+              "survey_w_min": 490,
+              "survey_w_max": 1425,
+              "survey_h_min": 326,
+              "survey_h_max": 1261,
+              "boundary_rule_id": "BATH-BR-HSOP",
+              "status": "COMPLETE_WITH_EXTERNAL_CHECK",
+              "evidence": "BATH-EV-007"
+            }
+          },
+          {
+            "id": "BATH-SZ-HSOP-CUTOUT",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 317,
+              "maxW": 1252,
+              "minH": 316,
+              "maxH": 1251
+            },
+            "selector": {
+              "window_type": "RPL_BATH_HSOP",
+              "frame_type": "BATH-STD"
+            },
+            "source": {
+              "size_rule_id": "BATH-SZ-HSOP-CUTOUT",
+              "window_type_id": "RPL_BATH_HSOP",
+              "frame_type_id": "BATH-STD",
+              "opening_pattern_id": "CUTOUT",
+              "finished_w_min": 317,
+              "finished_w_max": 1252,
+              "finished_h_min": 316,
+              "finished_h_max": 1251,
+              "survey_w_min": 327,
+              "survey_w_max": 1262,
+              "survey_h_min": 326,
+              "survey_h_max": 1261,
+              "boundary_rule_id": "BATH-BR-HSOP",
+              "status": "COMPLETE_WITH_EXTERNAL_CHECK",
+              "evidence": "BATH-EV-007"
+            }
+          },
+          {
+            "id": "BATH-SZ-HSOP-WINDOW_ONLY",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 317,
+              "maxW": 1252,
+              "minH": 316,
+              "maxH": 1251
+            },
+            "selector": {
+              "window_type": "RPL_BATH_HSOP",
+              "frame_type": "BATH-STD"
+            },
+            "source": {
+              "size_rule_id": "BATH-SZ-HSOP-WINDOW_ONLY",
+              "window_type_id": "RPL_BATH_HSOP",
+              "frame_type_id": "BATH-STD",
+              "opening_pattern_id": "WINDOW_ONLY",
+              "finished_w_min": 317,
+              "finished_w_max": 1252,
+              "finished_h_min": 316,
+              "finished_h_max": 1251,
+              "survey_w_min": 327,
+              "survey_w_max": 1262,
+              "survey_h_min": 326,
+              "survey_h_max": 1261,
+              "boundary_rule_id": "BATH-BR-HSOP",
+              "status": "COMPLETE_WITH_EXTERNAL_CHECK",
+              "evidence": "BATH-EV-007"
+            }
+          },
+          {
+            "id": "BATH-SZ-HSCAM-OFFSET_L95",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 381,
+              "maxW": 951,
+              "minH": 316,
+              "maxH": 1016
+            },
+            "selector": {
+              "window_type": "RPL_BATH_HSCAM",
+              "frame_type": "BATH-STD"
+            },
+            "source": {
+              "size_rule_id": "BATH-SZ-HSCAM-OFFSET_L95",
+              "window_type_id": "RPL_BATH_HSCAM",
+              "frame_type_id": "BATH-STD",
+              "opening_pattern_id": "OFFSET_L95",
+              "finished_w_min": 381,
+              "finished_w_max": 951,
+              "finished_h_min": 316,
+              "finished_h_max": 1016,
+              "survey_w_min": 391,
+              "survey_w_max": 961,
+              "survey_h_min": 326,
+              "survey_h_max": 1026,
+              "boundary_rule_id": "BATH-BR-HSCAM",
+              "status": "COMPLETE_WITH_EXTERNAL_CHECK",
+              "evidence": "BATH-EV-007"
+            }
+          },
+          {
+            "id": "BATH-SZ-HSCAM-OFFSET_R95",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 381,
+              "maxW": 951,
+              "minH": 316,
+              "maxH": 1016
+            },
+            "selector": {
+              "window_type": "RPL_BATH_HSCAM",
+              "frame_type": "BATH-STD"
+            },
+            "source": {
+              "size_rule_id": "BATH-SZ-HSCAM-OFFSET_R95",
+              "window_type_id": "RPL_BATH_HSCAM",
+              "frame_type_id": "BATH-STD",
+              "opening_pattern_id": "OFFSET_R95",
+              "finished_w_min": 381,
+              "finished_w_max": 951,
+              "finished_h_min": 316,
+              "finished_h_max": 1016,
+              "survey_w_min": 391,
+              "survey_w_max": 961,
+              "survey_h_min": 326,
+              "survey_h_max": 1026,
+              "boundary_rule_id": "BATH-BR-HSCAM",
+              "status": "COMPLETE_WITH_EXTERNAL_CHECK",
+              "evidence": "BATH-EV-007"
+            }
+          },
+          {
+            "id": "BATH-SZ-HSCAM-OFFSET_L195",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 480,
+              "maxW": 1050,
+              "minH": 316,
+              "maxH": 1016
+            },
+            "selector": {
+              "window_type": "RPL_BATH_HSCAM",
+              "frame_type": "BATH-STD"
+            },
+            "source": {
+              "size_rule_id": "BATH-SZ-HSCAM-OFFSET_L195",
+              "window_type_id": "RPL_BATH_HSCAM",
+              "frame_type_id": "BATH-STD",
+              "opening_pattern_id": "OFFSET_L195",
+              "finished_w_min": 480,
+              "finished_w_max": 1050,
+              "finished_h_min": 316,
+              "finished_h_max": 1016,
+              "survey_w_min": 490,
+              "survey_w_max": 1060,
+              "survey_h_min": 326,
+              "survey_h_max": 1026,
+              "boundary_rule_id": "BATH-BR-HSCAM",
+              "status": "COMPLETE_WITH_EXTERNAL_CHECK",
+              "evidence": "BATH-EV-007"
+            }
+          },
+          {
+            "id": "BATH-SZ-HSCAM-OFFSET_R195",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 480,
+              "maxW": 1050,
+              "minH": 316,
+              "maxH": 1016
+            },
+            "selector": {
+              "window_type": "RPL_BATH_HSCAM",
+              "frame_type": "BATH-STD"
+            },
+            "source": {
+              "size_rule_id": "BATH-SZ-HSCAM-OFFSET_R195",
+              "window_type_id": "RPL_BATH_HSCAM",
+              "frame_type_id": "BATH-STD",
+              "opening_pattern_id": "OFFSET_R195",
+              "finished_w_min": 480,
+              "finished_w_max": 1050,
+              "finished_h_min": 316,
+              "finished_h_max": 1016,
+              "survey_w_min": 490,
+              "survey_w_max": 1060,
+              "survey_h_min": 326,
+              "survey_h_max": 1026,
+              "boundary_rule_id": "BATH-BR-HSCAM",
+              "status": "COMPLETE_WITH_EXTERNAL_CHECK",
+              "evidence": "BATH-EV-007"
+            }
+          },
+          {
+            "id": "BATH-SZ-HSCAM-CUTOUT",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 317,
+              "maxW": 887,
+              "minH": 316,
+              "maxH": 1016
+            },
+            "selector": {
+              "window_type": "RPL_BATH_HSCAM",
+              "frame_type": "BATH-STD"
+            },
+            "source": {
+              "size_rule_id": "BATH-SZ-HSCAM-CUTOUT",
+              "window_type_id": "RPL_BATH_HSCAM",
+              "frame_type_id": "BATH-STD",
+              "opening_pattern_id": "CUTOUT",
+              "finished_w_min": 317,
+              "finished_w_max": 887,
+              "finished_h_min": 316,
+              "finished_h_max": 1016,
+              "survey_w_min": 327,
+              "survey_w_max": 897,
+              "survey_h_min": 326,
+              "survey_h_max": 1026,
+              "boundary_rule_id": "BATH-BR-HSCAM",
+              "status": "COMPLETE_WITH_EXTERNAL_CHECK",
+              "evidence": "BATH-EV-007"
+            }
+          },
+          {
+            "id": "BATH-SZ-HSCAM-WINDOW_ONLY",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 317,
+              "maxW": 887,
+              "minH": 316,
+              "maxH": 1016
+            },
+            "selector": {
+              "window_type": "RPL_BATH_HSCAM",
+              "frame_type": "BATH-STD"
+            },
+            "source": {
+              "size_rule_id": "BATH-SZ-HSCAM-WINDOW_ONLY",
+              "window_type_id": "RPL_BATH_HSCAM",
+              "frame_type_id": "BATH-STD",
+              "opening_pattern_id": "WINDOW_ONLY",
+              "finished_w_min": 317,
+              "finished_w_max": 887,
+              "finished_h_min": 316,
+              "finished_h_max": 1016,
+              "survey_w_min": 327,
+              "survey_w_max": 897,
+              "survey_h_min": 326,
+              "survey_h_max": 1026,
+              "boundary_rule_id": "BATH-BR-HSCAM",
+              "status": "COMPLETE_WITH_EXTERNAL_CHECK",
+              "evidence": "BATH-EV-007"
+            }
+          },
+          {
+            "id": "BATH-SZ-DHFS-OFFSET_L95",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 381,
+              "maxW": 951,
+              "minH": 606,
+              "maxH": 1601
+            },
+            "selector": {
+              "window_type": "RPL_BATH_DHFS",
+              "frame_type": "BATH-STD"
+            },
+            "source": {
+              "size_rule_id": "BATH-SZ-DHFS-OFFSET_L95",
+              "window_type_id": "RPL_BATH_DHFS",
+              "frame_type_id": "BATH-STD",
+              "opening_pattern_id": "OFFSET_L95",
+              "finished_w_min": 381,
+              "finished_w_max": 951,
+              "finished_h_min": 606,
+              "finished_h_max": 1601,
+              "survey_w_min": 391,
+              "survey_w_max": 961,
+              "survey_h_min": 616,
+              "survey_h_max": 1611,
+              "boundary_rule_id": "BATH-BR-DHFS",
+              "status": "COMPLETE_WITH_EXTERNAL_CHECK",
+              "evidence": "BATH-EV-007"
+            }
+          },
+          {
+            "id": "BATH-SZ-DHFS-OFFSET_R95",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 381,
+              "maxW": 951,
+              "minH": 606,
+              "maxH": 1601
+            },
+            "selector": {
+              "window_type": "RPL_BATH_DHFS",
+              "frame_type": "BATH-STD"
+            },
+            "source": {
+              "size_rule_id": "BATH-SZ-DHFS-OFFSET_R95",
+              "window_type_id": "RPL_BATH_DHFS",
+              "frame_type_id": "BATH-STD",
+              "opening_pattern_id": "OFFSET_R95",
+              "finished_w_min": 381,
+              "finished_w_max": 951,
+              "finished_h_min": 606,
+              "finished_h_max": 1601,
+              "survey_w_min": 391,
+              "survey_w_max": 961,
+              "survey_h_min": 616,
+              "survey_h_max": 1611,
+              "boundary_rule_id": "BATH-BR-DHFS",
+              "status": "COMPLETE_WITH_EXTERNAL_CHECK",
+              "evidence": "BATH-EV-007"
+            }
+          },
+          {
+            "id": "BATH-SZ-DHFS-CUTOUT",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 317,
+              "maxW": 887,
+              "minH": 606,
+              "maxH": 1601
+            },
+            "selector": {
+              "window_type": "RPL_BATH_DHFS",
+              "frame_type": "BATH-STD"
+            },
+            "source": {
+              "size_rule_id": "BATH-SZ-DHFS-CUTOUT",
+              "window_type_id": "RPL_BATH_DHFS",
+              "frame_type_id": "BATH-STD",
+              "opening_pattern_id": "CUTOUT",
+              "finished_w_min": 317,
+              "finished_w_max": 887,
+              "finished_h_min": 606,
+              "finished_h_max": 1601,
+              "survey_w_min": 327,
+              "survey_w_max": 897,
+              "survey_h_min": 616,
+              "survey_h_max": 1611,
+              "boundary_rule_id": "BATH-BR-DHFS",
+              "status": "COMPLETE_WITH_EXTERNAL_CHECK",
+              "evidence": "BATH-EV-007"
+            }
+          },
+          {
+            "id": "BATH-SZ-DHFS-WINDOW_ONLY",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 317,
+              "maxW": 887,
+              "minH": 606,
+              "maxH": 1601
+            },
+            "selector": {
+              "window_type": "RPL_BATH_DHFS",
+              "frame_type": "BATH-STD"
+            },
+            "source": {
+              "size_rule_id": "BATH-SZ-DHFS-WINDOW_ONLY",
+              "window_type_id": "RPL_BATH_DHFS",
+              "frame_type_id": "BATH-STD",
+              "opening_pattern_id": "WINDOW_ONLY",
+              "finished_w_min": 317,
+              "finished_w_max": 887,
+              "finished_h_min": 606,
+              "finished_h_max": 1601,
+              "survey_w_min": 327,
+              "survey_w_max": 897,
+              "survey_h_min": 616,
+              "survey_h_max": 1611,
+              "boundary_rule_id": "BATH-BR-DHFS",
+              "status": "COMPLETE_WITH_EXTERNAL_CHECK",
+              "evidence": "BATH-EV-007"
+            }
+          },
+          {
+            "id": "BATH-SZ-FIXOUT-FULL95",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 344,
+              "maxW": 2051,
+              "minH": 188,
+              "maxH": 1601
+            },
+            "selector": {
+              "window_type": "RPL_BATH_FIXOUT",
+              "frame_type": "BATH-STD"
+            },
+            "source": {
+              "size_rule_id": "BATH-SZ-FIXOUT-FULL95",
+              "window_type_id": "RPL_BATH_FIXOUT",
+              "frame_type_id": "BATH-STD",
+              "opening_pattern_id": "FULL95",
+              "finished_w_min": 344,
+              "finished_w_max": 2051,
+              "finished_h_min": 188,
+              "finished_h_max": 1601,
+              "survey_w_min": 354,
+              "survey_w_max": 2061,
+              "survey_h_min": 198,
+              "survey_h_max": 1611,
+              "boundary_rule_id": "BATH-BR-FIXOUT",
+              "status": "COMPLETE_WITH_EXTERNAL_CHECK",
+              "evidence": "BATH-EV-008"
+            }
+          },
+          {
+            "id": "BATH-SZ-FIXOUT-FULL195",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 543,
+              "maxW": 2250,
+              "minH": 188,
+              "maxH": 1601
+            },
+            "selector": {
+              "window_type": "RPL_BATH_FIXOUT",
+              "frame_type": "BATH-STD"
+            },
+            "source": {
+              "size_rule_id": "BATH-SZ-FIXOUT-FULL195",
+              "window_type_id": "RPL_BATH_FIXOUT",
+              "frame_type_id": "BATH-STD",
+              "opening_pattern_id": "FULL195",
+              "finished_w_min": 543,
+              "finished_w_max": 2250,
+              "finished_h_min": 188,
+              "finished_h_max": 1601,
+              "survey_w_min": 553,
+              "survey_w_max": 2260,
+              "survey_h_min": 198,
+              "survey_h_max": 1611,
+              "boundary_rule_id": "BATH-BR-FIXOUT",
+              "status": "COMPLETE_WITH_EXTERNAL_CHECK",
+              "evidence": "BATH-EV-008"
+            }
+          },
+          {
+            "id": "BATH-SZ-FIXOUT-OFFSET_L95",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 281,
+              "maxW": 1988,
+              "minH": 188,
+              "maxH": 1601
+            },
+            "selector": {
+              "window_type": "RPL_BATH_FIXOUT",
+              "frame_type": "BATH-STD"
+            },
+            "source": {
+              "size_rule_id": "BATH-SZ-FIXOUT-OFFSET_L95",
+              "window_type_id": "RPL_BATH_FIXOUT",
+              "frame_type_id": "BATH-STD",
+              "opening_pattern_id": "OFFSET_L95",
+              "finished_w_min": 281,
+              "finished_w_max": 1988,
+              "finished_h_min": 188,
+              "finished_h_max": 1601,
+              "survey_w_min": 291,
+              "survey_w_max": 1998,
+              "survey_h_min": 198,
+              "survey_h_max": 1611,
+              "boundary_rule_id": "BATH-BR-FIXOUT",
+              "status": "COMPLETE_WITH_EXTERNAL_CHECK",
+              "evidence": "BATH-EV-008"
+            }
+          },
+          {
+            "id": "BATH-SZ-FIXOUT-OFFSET_R95",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 281,
+              "maxW": 1988,
+              "minH": 188,
+              "maxH": 1601
+            },
+            "selector": {
+              "window_type": "RPL_BATH_FIXOUT",
+              "frame_type": "BATH-STD"
+            },
+            "source": {
+              "size_rule_id": "BATH-SZ-FIXOUT-OFFSET_R95",
+              "window_type_id": "RPL_BATH_FIXOUT",
+              "frame_type_id": "BATH-STD",
+              "opening_pattern_id": "OFFSET_R95",
+              "finished_w_min": 281,
+              "finished_w_max": 1988,
+              "finished_h_min": 188,
+              "finished_h_max": 1601,
+              "survey_w_min": 291,
+              "survey_w_max": 1998,
+              "survey_h_min": 198,
+              "survey_h_max": 1611,
+              "boundary_rule_id": "BATH-BR-FIXOUT",
+              "status": "COMPLETE_WITH_EXTERNAL_CHECK",
+              "evidence": "BATH-EV-008"
+            }
+          },
+          {
+            "id": "BATH-SZ-FIXOUT-OFFSET_L195",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 380,
+              "maxW": 2087,
+              "minH": 188,
+              "maxH": 1601
+            },
+            "selector": {
+              "window_type": "RPL_BATH_FIXOUT",
+              "frame_type": "BATH-STD"
+            },
+            "source": {
+              "size_rule_id": "BATH-SZ-FIXOUT-OFFSET_L195",
+              "window_type_id": "RPL_BATH_FIXOUT",
+              "frame_type_id": "BATH-STD",
+              "opening_pattern_id": "OFFSET_L195",
+              "finished_w_min": 380,
+              "finished_w_max": 2087,
+              "finished_h_min": 188,
+              "finished_h_max": 1601,
+              "survey_w_min": 390,
+              "survey_w_max": 2097,
+              "survey_h_min": 198,
+              "survey_h_max": 1611,
+              "boundary_rule_id": "BATH-BR-FIXOUT",
+              "status": "COMPLETE_WITH_EXTERNAL_CHECK",
+              "evidence": "BATH-EV-008"
+            }
+          },
+          {
+            "id": "BATH-SZ-FIXOUT-OFFSET_R195",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 380,
+              "maxW": 2087,
+              "minH": 188,
+              "maxH": 1601
+            },
+            "selector": {
+              "window_type": "RPL_BATH_FIXOUT",
+              "frame_type": "BATH-STD"
+            },
+            "source": {
+              "size_rule_id": "BATH-SZ-FIXOUT-OFFSET_R195",
+              "window_type_id": "RPL_BATH_FIXOUT",
+              "frame_type_id": "BATH-STD",
+              "opening_pattern_id": "OFFSET_R195",
+              "finished_w_min": 380,
+              "finished_w_max": 2087,
+              "finished_h_min": 188,
+              "finished_h_max": 1601,
+              "survey_w_min": 390,
+              "survey_w_max": 2097,
+              "survey_h_min": 198,
+              "survey_h_max": 1611,
+              "boundary_rule_id": "BATH-BR-FIXOUT",
+              "status": "COMPLETE_WITH_EXTERNAL_CHECK",
+              "evidence": "BATH-EV-008"
+            }
+          },
+          {
+            "id": "BATH-SZ-FIXOUT-CUTOUT",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 217,
+              "maxW": 1924,
+              "minH": 188,
+              "maxH": 1601
+            },
+            "selector": {
+              "window_type": "RPL_BATH_FIXOUT",
+              "frame_type": "BATH-STD"
+            },
+            "source": {
+              "size_rule_id": "BATH-SZ-FIXOUT-CUTOUT",
+              "window_type_id": "RPL_BATH_FIXOUT",
+              "frame_type_id": "BATH-STD",
+              "opening_pattern_id": "CUTOUT",
+              "finished_w_min": 217,
+              "finished_w_max": 1924,
+              "finished_h_min": 188,
+              "finished_h_max": 1601,
+              "survey_w_min": 227,
+              "survey_w_max": 1934,
+              "survey_h_min": 198,
+              "survey_h_max": 1611,
+              "boundary_rule_id": "BATH-BR-FIXOUT",
+              "status": "COMPLETE_WITH_EXTERNAL_CHECK",
+              "evidence": "BATH-EV-008"
+            }
+          },
+          {
+            "id": "BATH-SZ-FIXOUT-WINDOW_ONLY",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 217,
+              "maxW": 1924,
+              "minH": 188,
+              "maxH": 1601
+            },
+            "selector": {
+              "window_type": "RPL_BATH_FIXOUT",
+              "frame_type": "BATH-STD"
+            },
+            "source": {
+              "size_rule_id": "BATH-SZ-FIXOUT-WINDOW_ONLY",
+              "window_type_id": "RPL_BATH_FIXOUT",
+              "frame_type_id": "BATH-STD",
+              "opening_pattern_id": "WINDOW_ONLY",
+              "finished_w_min": 217,
+              "finished_w_max": 1924,
+              "finished_h_min": 188,
+              "finished_h_max": 1601,
+              "survey_w_min": 227,
+              "survey_w_max": 1934,
+              "survey_h_min": 198,
+              "survey_h_max": 1611,
+              "boundary_rule_id": "BATH-BR-FIXOUT",
+              "status": "COMPLETE_WITH_EXTERNAL_CHECK",
+              "evidence": "BATH-EV-008"
+            }
+          },
+          {
+            "id": "BATH-SZ-FIXIN-FULL95",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 321,
+              "maxW": 2051,
+              "minH": 240,
+              "maxH": 1601
+            },
+            "selector": {
+              "window_type": "RPL_BATH_FIXIN",
+              "frame_type": "BATH-STD"
+            },
+            "source": {
+              "size_rule_id": "BATH-SZ-FIXIN-FULL95",
+              "window_type_id": "RPL_BATH_FIXIN",
+              "frame_type_id": "BATH-STD",
+              "opening_pattern_id": "FULL95",
+              "finished_w_min": 321,
+              "finished_w_max": 2051,
+              "finished_h_min": 240,
+              "finished_h_max": 1601,
+              "survey_w_min": 331,
+              "survey_w_max": 2061,
+              "survey_h_min": 250,
+              "survey_h_max": 1611,
+              "boundary_rule_id": "BATH-BR-FIXIN",
+              "status": "COMPLETE_WITH_EXTERNAL_CHECK",
+              "evidence": "BATH-EV-008"
+            }
+          },
+          {
+            "id": "BATH-SZ-FIXIN-OFFSET_L95",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 258,
+              "maxW": 1988,
+              "minH": 240,
+              "maxH": 1601
+            },
+            "selector": {
+              "window_type": "RPL_BATH_FIXIN",
+              "frame_type": "BATH-STD"
+            },
+            "source": {
+              "size_rule_id": "BATH-SZ-FIXIN-OFFSET_L95",
+              "window_type_id": "RPL_BATH_FIXIN",
+              "frame_type_id": "BATH-STD",
+              "opening_pattern_id": "OFFSET_L95",
+              "finished_w_min": 258,
+              "finished_w_max": 1988,
+              "finished_h_min": 240,
+              "finished_h_max": 1601,
+              "survey_w_min": 268,
+              "survey_w_max": 1998,
+              "survey_h_min": 250,
+              "survey_h_max": 1611,
+              "boundary_rule_id": "BATH-BR-FIXIN",
+              "status": "COMPLETE_WITH_EXTERNAL_CHECK",
+              "evidence": "BATH-EV-008"
+            }
+          },
+          {
+            "id": "BATH-SZ-FIXIN-OFFSET_R95",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 258,
+              "maxW": 1988,
+              "minH": 240,
+              "maxH": 1601
+            },
+            "selector": {
+              "window_type": "RPL_BATH_FIXIN",
+              "frame_type": "BATH-STD"
+            },
+            "source": {
+              "size_rule_id": "BATH-SZ-FIXIN-OFFSET_R95",
+              "window_type_id": "RPL_BATH_FIXIN",
+              "frame_type_id": "BATH-STD",
+              "opening_pattern_id": "OFFSET_R95",
+              "finished_w_min": 258,
+              "finished_w_max": 1988,
+              "finished_h_min": 240,
+              "finished_h_max": 1601,
+              "survey_w_min": 268,
+              "survey_w_max": 1998,
+              "survey_h_min": 250,
+              "survey_h_max": 1611,
+              "boundary_rule_id": "BATH-BR-FIXIN",
+              "status": "COMPLETE_WITH_EXTERNAL_CHECK",
+              "evidence": "BATH-EV-008"
+            }
+          },
+          {
+            "id": "BATH-SZ-FIXIN-CUTOUT",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 194,
+              "maxW": 1924,
+              "minH": 240,
+              "maxH": 1601
+            },
+            "selector": {
+              "window_type": "RPL_BATH_FIXIN",
+              "frame_type": "BATH-STD"
+            },
+            "source": {
+              "size_rule_id": "BATH-SZ-FIXIN-CUTOUT",
+              "window_type_id": "RPL_BATH_FIXIN",
+              "frame_type_id": "BATH-STD",
+              "opening_pattern_id": "CUTOUT",
+              "finished_w_min": 194,
+              "finished_w_max": 1924,
+              "finished_h_min": 240,
+              "finished_h_max": 1601,
+              "survey_w_min": 204,
+              "survey_w_max": 1934,
+              "survey_h_min": 250,
+              "survey_h_max": 1611,
+              "boundary_rule_id": "BATH-BR-FIXIN",
+              "status": "COMPLETE_WITH_EXTERNAL_CHECK",
+              "evidence": "BATH-EV-008"
+            }
+          },
+          {
+            "id": "BATH-SZ-FIXIN-WINDOW_ONLY",
+            "type": "SOURCE_GRAPH_GATE",
+            "bounds": {
+              "minW": 194,
+              "maxW": 1924,
+              "minH": 240,
+              "maxH": 1601
+            },
+            "selector": {
+              "window_type": "RPL_BATH_FIXIN",
+              "frame_type": "BATH-STD"
+            },
+            "source": {
+              "size_rule_id": "BATH-SZ-FIXIN-WINDOW_ONLY",
+              "window_type_id": "RPL_BATH_FIXIN",
+              "frame_type_id": "BATH-STD",
+              "opening_pattern_id": "WINDOW_ONLY",
+              "finished_w_min": 194,
+              "finished_w_max": 1924,
+              "finished_h_min": 240,
+              "finished_h_max": 1601,
+              "survey_w_min": 204,
+              "survey_w_max": 1934,
+              "survey_h_min": 250,
+              "survey_h_max": 1611,
+              "boundary_rule_id": "BATH-BR-FIXIN",
+              "status": "COMPLETE_WITH_EXTERNAL_CHECK",
+              "evidence": "BATH-EV-008"
+            }
+          }
+        ],
+        "productId": "SER-LIXIL-REPLUS-BATH"
+      },
+      {
+        "id": "SER-LIXIL-REPLUS-BATH:ruleSets:cover-color-links",
+        "type": "SELECTION_LINKS",
+        "status": "ACTIVE",
+        "payload": [
+          {
+            "targetField": "exterior_cover_color",
+            "parents": [
+              "sash_exterior_color"
+            ],
+            "cases": [
+              {
+                "when": {
+                  "sash_exterior_color": "T"
+                },
+                "value": "T"
+              },
+              {
+                "when": {
+                  "sash_exterior_color": "G"
+                },
+                "value": "G"
+              },
+              {
+                "when": {
+                  "sash_exterior_color": "K"
+                },
+                "value": "K"
+              },
+              {
+                "when": {
+                  "sash_exterior_color": "D"
+                },
+                "value": "D"
+              },
+              {
+                "when": {
+                  "sash_exterior_color": "W"
+                },
+                "value": "W"
+              }
+            ],
+            "resolvedMessage": "本体外観色に連動しています。",
+            "pendingMessage": "サッシ本体の色を選択してください。",
+            "unavailableMessage": "本体色に対応するカバー部材の確認が必要です。"
+          },
+          {
+            "targetField": "interior_cover_color",
+            "parents": [
+              "sash_interior_color"
+            ],
+            "cases": [
+              {
+                "when": {
+                  "sash_interior_color": "M"
+                },
+                "value": "M"
+              },
+              {
+                "when": {
+                  "sash_interior_color": "F"
+                },
+                "value": "F"
+              }
+            ],
+            "resolvedMessage": "本体内観色に連動しています。",
+            "pendingMessage": "サッシ本体の色を選択してください。",
+            "unavailableMessage": "本体色に対応するカバー部材の確認が必要です。"
+          }
+        ],
+        "evidenceIds": [
+          "APP-POLICY-V9"
+        ],
+        "productId": "SER-LIXIL-REPLUS-BATH"
+      },
+      {
+        "id": "SER-LIXIL-REPLUS-BATH:ruleSets:numeric-input-pairs-v11",
+        "type": "NUMERIC_INPUT_PAIRS",
+        "status": "ACTIVE",
+        "payload": [
+          {
+            "basisField": "dimension_basis",
+            "measuredBasis": "SURVEY",
+            "finishedBasis": "FINISHED",
+            "legacyBasis": "FINISHED",
+            "evaluationAssignments": {
+              "size_mode": "CUSTOM"
+            },
+            "pairs": [
+              {
+                "measuredField": "survey_width",
+                "finishedField": "custom_width",
+                "offset": -10,
+                "message": "公式換算：仕上がり寸法 = 採寸寸法 − 10mm。"
+              },
+              {
+                "measuredField": "survey_height",
+                "finishedField": "custom_height",
+                "offset": -10,
+                "message": "公式換算：仕上がり寸法 = 採寸寸法 − 10mm。"
+              }
+            ]
+          }
+        ],
+        "evidenceIds": [
+          "EV-DIMENSIONS-INNER-FIT-V11"
+        ],
+        "productId": "SER-LIXIL-REPLUS-BATH"
+      },
+      {
+        "id": "SER-LIXIL-REPLUS-BATH:ruleSets:installation-component-links-v11",
+        "type": "SELECTION_LINKS",
+        "status": "ACTIVE",
+        "payload": [
+          {
+            "targetField": "inner_fit_required_component",
+            "parents": [
+              "installation_method"
+            ],
+            "applicability": {
+              "window_type": {
+                "$exists": true
+              },
+              "installation_method": {
+                "$in": [
+                  "INNER_FIT_INSET",
+                  "INNER_FIT_OUTSET"
+                ]
+              }
+            },
+            "cases": [
+              {
+                "when": {
+                  "installation_method": "INNER_FIT_INSET"
+                },
+                "value": "BATH-OP-UPPER-BASE"
+              },
+              {
+                "when": {
+                  "installation_method": "INNER_FIT_OUTSET"
+                },
+                "value": "BATH-OP-UPPER-BASE"
+              }
+            ],
+            "resolvedMessage": "内はめ用のため必要です。数量・価格は積算で確認してください。",
+            "pendingMessage": "内はめ仕様を選択してください。",
+            "unavailableMessage": "必要な内はめ部材の対応を確認してください。",
+            "resolvedNoticeVisibility": "INTERNAL_ONLY"
+          }
+        ],
+        "evidenceIds": [
+          "EV-DIMENSIONS-INNER-FIT-V11"
+        ],
+        "productId": "SER-LIXIL-REPLUS-BATH"
+      }
+    ],
+    "dependencies": [
+      {
+        "id": "SER-LIXIL-REPLUS-BATH:dependencies:BATH-OD-003",
+        "mode": "AUTO",
+        "when": {
+          "options": {
+            "$contains": "BATH-OP-CASING"
+          }
+        },
+        "targetField": "interior_cover_type",
+        "action": "deny_candidate",
+        "targetValue": "BATH-OP-ANGLE-NOMITER",
+        "productId": "SER-LIXIL-REPLUS-BATH"
+      },
+      {
+        "id": "SER-LIXIL-REPLUS-BATH:dependencies:BATH-OD-004",
+        "mode": "AUTO",
+        "when": {
+          "options": {
+            "$contains": "BATH-OP-DEPTH"
+          }
+        },
+        "targetField": "options",
+        "action": "deny_candidate",
+        "targetValue": "BATH-OP-SIDE-COVER",
+        "productId": "SER-LIXIL-REPLUS-BATH"
+      },
+      {
+        "id": "SER-LIXIL-REPLUS-BATH:dependencies:estimate-confirm",
+        "mode": "MANUAL_CHECK",
+        "when": {},
+        "message": "施工可否・図形境界・ガラス構成・部材数量・価格・発注コードは積算確認が必要です。候補のため正式採用・自動注文はできません。",
+        "productId": "SER-LIXIL-REPLUS-BATH"
+      },
+      {
+        "id": "SER-LIXIL-REPLUS-BATH:dependencies:external-cover-site-confirmation-v10",
+        "mode": "MANUAL_CHECK",
+        "when": {
+          "exterior_cover_type": {
+            "$exists": true
+          }
+        },
+        "message": "化粧カバーの納まり・適合は現調で確認してください。",
+        "productId": "SER-LIXIL-REPLUS-BATH"
+      },
+      {
+        "id": "SER-LIXIL-REPLUS-BATH:dependencies:installation-confirmation-v11",
+        "mode": "MANUAL_CHECK",
+        "when": {
+          "installation_method": {
+            "$in": [
+              "INNER_FIT_INSET",
+              "INNER_FIT_OUTSET"
+            ]
+          }
+        },
+        "message": "内はめ用の製作範囲・既設枠への取付可否は現調・積算で確認してください。",
+        "productId": "SER-LIXIL-REPLUS-BATH"
+      }
+    ],
+    "evidence": [
+      {
+        "id": "SER-LIXIL-REPLUS-BATH:evidence:BATH-EV-001",
+        "source_id": "BATH-EV-001",
+        "payload": {
+          "evidence_id": "BATH-EV-001",
+          "情報源種別": "共通仕様",
+          "資料名": "サッシ商品マスター共通仕様書_v0.1",
+          "発行年月": "2026-08-30更新",
+          "ページ/箇所": "§31-34ほか",
+          "URL": "https://docs.google.com/document/d/1MfixkbV1cZ__DtBknEKsix_nnrXQqjc-LZtXUHwJv_A/edit",
+          "確認日": "2026-08-31",
+          "確度": "HIGH",
+          "根拠内容": "条件判定・Evidence・特殊案件"
+        },
+        "productId": "SER-LIXIL-REPLUS-BATH"
+      },
+      {
+        "id": "SER-LIXIL-REPLUS-BATH:evidence:BATH-EV-002",
+        "source_id": "BATH-EV-002",
+        "payload": {
+          "evidence_id": "BATH-EV-002",
+          "情報源種別": "業務用資料集",
+          "資料名": "リプラス・リプラスマンション用 取替窓 業務用資料集",
+          "発行年月": "2026-04",
+          "ページ/箇所": "浴室仕様 p52～",
+          "URL": "https://drive.google.com/file/d/1D1HPMXhOMYd_Lu10XNzzJR2TH3aDHVUr/view",
+          "確認日": "2026-08-31",
+          "確度": "HIGH",
+          "根拠内容": "浴室商品体系・価格表"
+        },
+        "productId": "SER-LIXIL-REPLUS-BATH"
+      },
+      {
+        "id": "SER-LIXIL-REPLUS-BATH:evidence:BATH-EV-003",
+        "source_id": "BATH-EV-003",
+        "payload": {
+          "evidence_id": "BATH-EV-003",
+          "情報源種別": "商品カタログ",
+          "資料名": "LIXIL リプラス 商品カタログ SN1200",
+          "発行年月": "2025-08",
+          "ページ/箇所": "p30-32",
+          "URL": "https://drive.google.com/file/d/1wH1nhmsftl6y8Mp7y6twtoXSi6rxqxzT/view",
+          "確認日": "2026-08-31",
+          "確度": "HIGH",
+          "根拠内容": "改修モード・8窓種・開口縮小・色"
+        },
+        "productId": "SER-LIXIL-REPLUS-BATH"
+      },
+      {
+        "id": "SER-LIXIL-REPLUS-BATH:evidence:BATH-EV-004",
+        "source_id": "BATH-EV-004",
+        "payload": {
+          "evidence_id": "BATH-EV-004",
+          "情報源種別": "公式Web",
+          "資料名": "LIXIL リプラス 浴室仕様",
+          "発行年月": "現行",
+          "ページ/箇所": "品種/色/ガラス/網戸",
+          "URL": "https://www.lixil.co.jp/lineup/window/replus/variation/bathroom/",
+          "確認日": "2026-08-31",
+          "確度": "HIGH",
+          "根拠内容": "現行品種・既設樹脂/木不可・トリプル注記"
+        },
+        "productId": "SER-LIXIL-REPLUS-BATH"
+      },
+      {
+        "id": "SER-LIXIL-REPLUS-BATH:evidence:BATH-EV-005",
+        "source_id": "BATH-EV-005",
+        "payload": {
+          "evidence_id": "BATH-EV-005",
+          "情報源種別": "業務用資料集",
+          "資料名": "同上",
+          "発行年月": "2026-04",
+          "ページ/箇所": "浴室仕様 完成品価格表",
+          "URL": "https://drive.google.com/file/d/1D1HPMXhOMYd_Lu10XNzzJR2TH3aDHVUr/view",
+          "確認日": "2026-08-31",
+          "確度": "HIGH",
+          "根拠内容": "窓種別網戸・ガラス・部材・依存"
+        },
+        "productId": "SER-LIXIL-REPLUS-BATH"
+      },
+      {
+        "id": "SER-LIXIL-REPLUS-BATH:evidence:BATH-EV-006",
+        "source_id": "BATH-EV-006",
+        "payload": {
+          "evidence_id": "BATH-EV-006",
+          "情報源種別": "商品カタログ",
+          "資料名": "同上",
+          "発行年月": "2025-08",
+          "ページ/箇所": "p100",
+          "URL": "https://drive.google.com/file/d/1wH1nhmsftl6y8Mp7y6twtoXSi6rxqxzT/view",
+          "確認日": "2026-08-31",
+          "確度": "HIGH",
+          "根拠内容": "引違い標準/ブリッジ寸法・A/B/C/D・式"
+        },
+        "productId": "SER-LIXIL-REPLUS-BATH"
+      },
+      {
+        "id": "SER-LIXIL-REPLUS-BATH:evidence:BATH-EV-007",
+        "source_id": "BATH-EV-007",
+        "payload": {
+          "evidence_id": "BATH-EV-007",
+          "情報源種別": "商品カタログ",
+          "資料名": "同上",
+          "発行年月": "2025-08",
+          "ページ/箇所": "p112",
+          "URL": "https://drive.google.com/file/d/1wH1nhmsftl6y8Mp7y6twtoXSi6rxqxzT/view",
+          "確認日": "2026-08-31",
+          "確度": "HIGH",
+          "根拠内容": "装飾窓/上げ下げFS寸法・重量・清掃アーム"
+        },
+        "productId": "SER-LIXIL-REPLUS-BATH"
+      },
+      {
+        "id": "SER-LIXIL-REPLUS-BATH:evidence:BATH-EV-008",
+        "source_id": "BATH-EV-008",
+        "payload": {
+          "evidence_id": "BATH-EV-008",
+          "情報源種別": "商品カタログ",
+          "資料名": "同上",
+          "発行年月": "2025-08",
+          "ページ/箇所": "p113",
+          "URL": "https://drive.google.com/file/d/1wH1nhmsftl6y8Mp7y6twtoXSi6rxqxzT/view",
+          "確認日": "2026-08-31",
+          "確度": "HIGH",
+          "根拠内容": "FIX・連窓・段窓・断熱パネル・総W式"
+        },
+        "productId": "SER-LIXIL-REPLUS-BATH"
+      },
+      {
+        "id": "SER-LIXIL-REPLUS-BATH:evidence:BATH-EV-009",
+        "source_id": "BATH-EV-009",
+        "payload": {
+          "evidence_id": "BATH-EV-009",
+          "情報源種別": "商品カタログ",
+          "資料名": "同上",
+          "発行年月": "2025-08",
+          "ページ/箇所": "p205-211/現調資料",
+          "URL": "https://drive.google.com/file/d/1wH1nhmsftl6y8Mp7y6twtoXSi6rxqxzT/view",
+          "確認日": "2026-08-31",
+          "確度": "HIGH",
+          "根拠内容": "SB同時/窓単独・3点採寸・補強金具・見付・防水条件"
+        },
+        "productId": "SER-LIXIL-REPLUS-BATH"
+      },
+      {
+        "id": "SER-LIXIL-REPLUS-BATH:evidence:BATH-EV-010",
+        "source_id": "BATH-EV-010",
+        "payload": {
+          "evidence_id": "BATH-EV-010",
+          "情報源種別": "商品カタログ",
+          "資料名": "同上",
+          "発行年月": "2025-08",
+          "ページ/箇所": "p48/p55付近",
+          "URL": "https://drive.google.com/file/d/1wH1nhmsftl6y8Mp7y6twtoXSi6rxqxzT/view",
+          "確認日": "2026-08-31",
+          "確度": "HIGH",
+          "根拠内容": "複層/トリプルガラス体系・中空層・スペーサー"
+        },
+        "productId": "SER-LIXIL-REPLUS-BATH"
+      },
+      {
+        "id": "SER-LIXIL-REPLUS-BATH:evidence:BATH-EV-011",
+        "source_id": "BATH-EV-011",
+        "payload": {
+          "evidence_id": "BATH-EV-011",
+          "情報源種別": "商品カタログ/業務用資料",
+          "資料名": "同上",
+          "発行年月": "2025-08/2026-04",
+          "ページ/箇所": "有償品取付可否/浴室各価格表",
+          "URL": "https://drive.google.com/file/d/1wH1nhmsftl6y8Mp7y6twtoXSi6rxqxzT/view",
+          "確認日": "2026-08-31",
+          "確度": "HIGH",
+          "根拠内容": "有償品・併用不可・浴室不可OP"
+        },
+        "productId": "SER-LIXIL-REPLUS-BATH"
+      },
+      {
+        "id": "SER-LIXIL-REPLUS-BATH:evidence:BATH-EV-012",
+        "source_id": "BATH-EV-012",
+        "payload": {
+          "evidence_id": "BATH-EV-012",
+          "情報源種別": "商品カタログ",
+          "資料名": "同上",
+          "発行年月": "2025-08",
+          "ページ/箇所": "p206/連段・ガラス制限",
+          "URL": "https://drive.google.com/file/d/1wH1nhmsftl6y8Mp7y6twtoXSi6rxqxzT/view",
+          "確認日": "2026-08-31",
+          "確度": "HIGH",
+          "根拠内容": "無目露出不可・特殊複合・ガラス/耐荷重"
+        },
+        "productId": "SER-LIXIL-REPLUS-BATH"
+      },
+      {
+        "id": "SER-LIXIL-REPLUS-BATH:evidence:DELTA-SPACER-EV-V4",
+        "source_id": "DELTA-SPACER-EV-V4",
+        "payload": {
+          "evidence_id": "DELTA-SPACER-EV-V4",
+          "情報源種別": "公式業務用資料集",
+          "資料名": "IS9800",
+          "発行年月": "2026-10",
+          "ページ/箇所": "PDF 52,104,116,120",
+          "URL": "https://webcatalog.lixil.co.jp/cgi-bin/openCatalog.cgi?c=IS9800&d=newinter",
+          "確認日": "2026-10-14",
+          "確度": "HIGH",
+          "根拠内容": "ADD_15x20_SPACER / NEW_CANDIDATE、Current未採用"
+        },
+        "productId": "SER-LIXIL-REPLUS-BATH"
+      },
+      {
+        "id": "SER-LIXIL-REPLUS-BATH:evidence:DELTA-BATH-TABLE-EV-V4",
+        "source_id": "DELTA-BATH-TABLE-EV-V4",
+        "payload": {
+          "evidence_id": "DELTA-BATH-TABLE-EV-V4",
+          "情報源種別": "公式業務用資料集",
+          "資料名": "IS9800",
+          "発行年月": "2026-10",
+          "ページ/箇所": "PDF 95,96",
+          "URL": "https://webcatalog.lixil.co.jp/cgi-bin/openCatalog.cgi?c=IS9800&d=newinter",
+          "確認日": "2026-10-14",
+          "確度": "HIGH",
+          "根拠内容": "SOURCE_PRICE_BAND_CORRECTION_NO_SIZE_RULE_PATCH / NEW_CANDIDATE、Current未採用"
+        },
+        "productId": "SER-LIXIL-REPLUS-BATH"
+      },
+      {
+        "id": "SER-LIXIL-REPLUS-BATH:evidence:EV-V8-GLASS-DIAGRAM",
+        "source_id": "EV-V8-GLASS-DIAGRAM",
+        "payload": {
+          "evidence_id": "EV-V8-GLASS-DIAGRAM",
+          "資料名": "SN1200",
+          "発行年月": "2025-08",
+          "ページ/箇所": "PDF52 印刷48 / PDF56 印刷52 / PDF60 印刷56",
+          "URL": "https://webcatalog.lixil.co.jp/cgi-bin/openCatalog.cgi?c=SN1200&d=newinter",
+          "確認日": "2026-10-14",
+          "確度": "HIGH",
+          "sha256": "b837ce209c8b55b2b66b412a4e3c2694a78fd5de823efc7b2b960688a5668098",
+          "根拠内容": "公式ガラス体系図から候補UI投影を補完。組合せ・寸法は見積確認。価格/BOM/SetCode未確定。"
+        },
+        "productId": "SER-LIXIL-REPLUS-BATH"
+      },
+      {
+        "id": "SER-LIXIL-REPLUS-BATH:evidence:APP-POLICY-V9",
+        "source_id": "APP-POLICY-V9",
+        "payload": {
+          "schema": "USER_SELECTION_POLICY_V1",
+          "revision": "REPLUS_GLOBAL_FLOW_V9_20261014",
+          "decision": "User requested both covers follow sash colors on 2026-10-14; implementation and QA subsequently authorized.",
+          "manufacturer_same_color_required": null,
+          "mapping_basis": "Existing official component color palettes, explicit product-specific value mappings. No equality based on code or label heuristics.",
+          "source_catalog": "SN1200",
+          "source_sha256": "b837ce209c8b55b2b66b412a4e3c2694a78fd5de823efc7b2b960688a5668098",
+          "scope": "LOCAL_CANDIDATE_ONLY",
+          "formal_adoption": false,
+          "flow_order": [
+            "context",
+            "opening",
+            "finish",
+            "screen",
+            "glazing",
+            "interior_finish",
+            "exterior_finish",
+            "native_options",
+            "options",
+            "part_detail",
+            "survey",
+            "size"
+          ]
+        },
+        "productId": "SER-LIXIL-REPLUS-BATH"
+      },
+      {
+        "id": "SER-LIXIL-REPLUS-BATH:evidence:EV-DIMENSIONS-INNER-FIT-V11",
+        "source_id": "EV-DIMENSIONS-INNER-FIT-V11",
+        "source_type": "ADOPTED_OFFICIAL_SOURCE_REVIEW",
+        "document": "SN1200",
+        "sha256": "b837ce209c8b55b2b66b412a4e3c2694a78fd5de823efc7b2b960688a5668098",
+        "locator": "PDF252/254 dimensions, 212/231/233/247/249/251 installation, 255/256 attachments",
+        "status": "REVIEWED_CANDIDATE_BINDING",
+        "productId": "SER-LIXIL-REPLUS-BATH"
+      }
+    ]
+  },
+  "composition": null,
+  "numeric_constraints": [
+    {
+      "id": "nonnegative-survey_cover_top",
+      "field": "survey_cover_top",
+      "min": 0,
+      "outside": "BLOCK",
+      "evidenceIds": [
+        "APP-POLICY-V9"
+      ]
+    },
+    {
+      "id": "nonnegative-survey_cover_bottom",
+      "field": "survey_cover_bottom",
+      "min": 0,
+      "outside": "BLOCK",
+      "evidenceIds": [
+        "APP-POLICY-V9"
+      ]
+    },
+    {
+      "id": "nonnegative-survey_cover_side",
+      "field": "survey_cover_side",
+      "min": 0,
+      "outside": "BLOCK",
+      "evidenceIds": [
+        "APP-POLICY-V9"
+      ]
+    }
+  ],
+  "linear_transforms": [],
+  "unsupported_rules": [
+    {
+      "sheet": "05_サイズルール",
+      "reason": "NATIVE_PROSE_OR_COMPOUND_RULE_REQUIRES_MANUAL_REVIEW"
+    },
+    {
+      "sheet": "05A_サイズ区間",
+      "reason": "NATIVE_PROSE_OR_COMPOUND_RULE_REQUIRES_MANUAL_REVIEW"
+    },
+    {
+      "sheet": "05B_境界ルール",
+      "reason": "NATIVE_PROSE_OR_COMPOUND_RULE_REQUIRES_MANUAL_REVIEW"
+    },
+    {
+      "sheet": "07A_網戸適用条件",
+      "reason": "NATIVE_PROSE_OR_COMPOUND_RULE_REQUIRES_MANUAL_REVIEW"
+    },
+    {
+      "sheet": "08A_ガラス適用条件",
+      "reason": "NATIVE_PROSE_OR_COMPOUND_RULE_REQUIRES_MANUAL_REVIEW"
+    },
+    {
+      "sheet": "09A_OP依存関係",
+      "reason": "NATIVE_PROSE_OR_COMPOUND_RULE_REQUIRES_MANUAL_REVIEW"
+    },
+    {
+      "sheet": "10_適用条件",
+      "reason": "NATIVE_PROSE_OR_COMPOUND_RULE_REQUIRES_MANUAL_REVIEW"
+    },
+    {
+      "sheet": "10A_既設窓互換",
+      "reason": "NATIVE_PROSE_OR_COMPOUND_RULE_REQUIRES_MANUAL_REVIEW"
+    },
+    {
+      "sheet": "10B_現調項目",
+      "reason": "NATIVE_PROSE_OR_COMPOUND_RULE_REQUIRES_MANUAL_REVIEW"
+    },
+    {
+      "sheet": "10C_化粧カバー見付",
+      "reason": "NATIVE_PROSE_OR_COMPOUND_RULE_REQUIRES_MANUAL_REVIEW"
+    },
+    {
+      "sheet": "05C_開口ポイント",
+      "reason": "NATIVE_PROSE_OR_COMPOUND_RULE_REQUIRES_MANUAL_REVIEW"
+    },
+    {
+      "sheet": "10D_浴室現場条件",
+      "reason": "NATIVE_PROSE_OR_COMPOUND_RULE_REQUIRES_MANUAL_REVIEW"
+    },
+    {
+      "sheet": "12_共通参照",
+      "reason": "NATIVE_PROSE_OR_COMPOUND_RULE_REQUIRES_MANUAL_REVIEW"
+    }
+  ],
+  "selection_migrations": [
+    {
+      "source": "options",
+      "match": "CONTAINS",
+      "value": "BATH-OP-ANGLE-NOMITER",
+      "clearValue": true,
+      "assign": {
+        "interior_cover_type": "BATH-OP-ANGLE-NOMITER"
+      }
+    },
+    {
+      "source": "installation_method",
+      "value": "内嵌め用",
+      "clearSource": true,
+      "assign": {},
+      "reason": "Legacy value does not specify existing mount. Require explicit choice; never guess INSET/OUTSET."
+    }
+  ],
+  "formal_adoption": true,
+  "source_adoption": false,
+  "pricing": {
+    "price": null,
+    "bom": null,
+    "set_code": null
+  }
+}

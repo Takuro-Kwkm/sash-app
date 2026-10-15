@@ -1,0 +1,36 @@
+{
+  "schema": "PRODUCT_SELECTION_FLOW_REGISTRY_V1",
+  "scope": "LOCAL_PRODUCT_FLOW_DESIGN",
+  "active_registration_id": "REPLUS_RESIDENTIAL_GLOBAL_SELECTION_FLOW_R1",
+  "entries": [
+    {
+      "id": "REPLUS_RESIDENTIAL_GLOBAL_SELECTION_FLOW_R1",
+      "revision": "R1",
+      "status": "REGISTERED_PRODUCT_FLOW_DESIGN",
+      "product_label": "リプラス住宅用",
+      "product_ids": [
+        "CANDIDATE:RPL_ROOM",
+        "CANDIDATE:RPL_TW",
+        "CANDIDATE:RPL_EW",
+        "CANDIDATE:RPL_BATH",
+        "CANDIDATE:RPL_ATT_TW",
+        "CANDIDATE:RPL_ATT_TH",
+        "CANDIDATE:RPL_CUT_MALL"
+      ],
+      "path": "replus-residential.r1.json",
+      "sha256": "056c10afb827389ae2d2182381a91973d1c461c03aabf858595d2a2322c2af93",
+      "runtime_index": {
+        "path": "../../index.json",
+        "sha256": "f21d585c63b5a9e445831ec5ae9a382e0f4102a440dd2114b69151182132f556",
+        "drive_file_id": "1KJ_wwzKnMm4I3l8J_ht4VrSCZUNEfnrJ"
+      },
+      "source_commit": "6745952fe43b7784794bd9423d0dd77db221f740",
+      "flow_source": {
+        "path": "flow/reviewed-global-selection-flow.v13.json",
+        "sha256": "e15ed13fc07cbcd3bc62bbf44dfb4253c1eea781ec2f55032998837db3a7e791"
+      },
+      "formal_product_adoption": false,
+      "central_category_formal_registration": false
+    }
+  ]
+}

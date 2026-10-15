@@ -1,0 +1,6 @@
+{
+  "schema": "CURRENT_AUTHORITY_SUCCESSOR_SELECTION_V1",
+  "path": "contracts/production/authority-successors/replus-current.v1.json",
+  "sha256": "e24701bda7a6a8277063c8fd5ed97d6682eac996472a50c2ee4b1e3d00066aec",
+  "implementation_sha": "a37a7b79160c1cf727a1e4d998da3bb723c3cd08"
+}

@@ -1,0 +1,363 @@
+{
+  "reads": 1055,
+  "fields": {
+    "handing": {
+      "meanings": [
+        {
+          "label": "開き勝手（吊元）",
+          "slot": "handing",
+          "stage": "CONFIGURATION"
+        }
+      ],
+      "parents": [
+        "window_type"
+      ]
+    },
+    "size_mode": {
+      "meanings": [
+        {
+          "label": "サイズ方式",
+          "slot": "size_mode",
+          "stage": "SIZE"
+        }
+      ],
+      "parents": [
+        "window_type"
+      ]
+    },
+    "size": {
+      "meanings": [
+        {
+          "label": "サイズ",
+          "slot": "size",
+          "stage": "SIZE"
+        }
+      ],
+      "parents": [
+        "window_type",
+        "size_mode",
+        "panel_count"
+      ]
+    },
+    "exterior_color": {
+      "meanings": [
+        {
+          "label": "外観色",
+          "slot": "exterior_color",
+          "stage": "FINISH"
+        }
+      ],
+      "parents": [
+        "window_type",
+        "size"
+      ]
+    },
+    "glass_base": {
+      "meanings": [
+        {
+          "label": "ガラス",
+          "slot": "glass_base",
+          "stage": "GLAZING"
+        }
+      ],
+      "parents": [
+        "window_type",
+        "size"
+      ]
+    },
+    "interior_color": {
+      "meanings": [
+        {
+          "label": "内観色",
+          "slot": "interior_color",
+          "stage": "FINISH"
+        }
+      ],
+      "parents": [
+        "window_type",
+        "size",
+        "exterior_color"
+      ]
+    },
+    "screen_presence": {
+      "meanings": [
+        {
+          "label": "網戸",
+          "slot": "screen_presence",
+          "stage": "SCREEN"
+        }
+      ],
+      "parents": [
+        "window_type",
+        "size",
+        "exterior_color",
+        "interior_color"
+      ]
+    },
+    "glass_type": {
+      "meanings": [
+        {
+          "label": "ガラス種",
+          "slot": "glass_type",
+          "stage": "GLAZING"
+        }
+      ],
+      "parents": [
+        "window_type",
+        "size",
+        "glass_base"
+      ]
+    },
+    "option": {
+      "meanings": [
+        {
+          "label": "その他オプション",
+          "slot": "option",
+          "stage": "OPTION"
+        }
+      ],
+      "parents": [
+        "window_type",
+        "size",
+        "exterior_color",
+        "interior_color",
+        "glass_base"
+      ]
+    },
+    "glass_detail": {
+      "meanings": [
+        {
+          "label": "ガラス詳細",
+          "slot": "glass_detail",
+          "stage": "GLAZING"
+        }
+      ],
+      "parents": [
+        "window_type",
+        "size",
+        "glass_base",
+        "glass_type"
+      ]
+    },
+    "glass_function": {
+      "meanings": [
+        {
+          "label": "ガラス追加機能",
+          "slot": "glass_function",
+          "stage": "GLAZING"
+        }
+      ],
+      "parents": [
+        "window_type",
+        "size",
+        "glass_base",
+        "glass_type"
+      ]
+    },
+    "glass_spacer": {
+      "meanings": [
+        {
+          "label": "スペーサー",
+          "slot": "glass_spacer",
+          "stage": "GLAZING"
+        }
+      ],
+      "parents": [
+        "window_type",
+        "size",
+        "glass_base",
+        "glass_type",
+        "glass_detail"
+      ]
+    },
+    "glass_air_layer": {
+      "meanings": [
+        {
+          "label": "中空層",
+          "slot": "glass_air_layer",
+          "stage": "GLAZING"
+        }
+      ],
+      "parents": [
+        "window_type",
+        "size",
+        "glass_base",
+        "glass_type",
+        "glass_detail",
+        "glass_spacer"
+      ]
+    },
+    "custom_width": {
+      "meanings": [
+        {
+          "label": "特注W（mm）",
+          "slot": "size",
+          "stage": "SIZE"
+        }
+      ],
+      "parents": [
+        "window_type",
+        "size_mode"
+      ]
+    },
+    "custom_height": {
+      "meanings": [
+        {
+          "label": "特注H（mm）",
+          "slot": "size",
+          "stage": "SIZE"
+        }
+      ],
+      "parents": [
+        "window_type",
+        "size_mode"
+      ]
+    },
+    "operation_type": {
+      "meanings": [
+        {
+          "label": "操作仕様",
+          "slot": "window_spec",
+          "stage": "CONFIGURATION"
+        }
+      ],
+      "parents": [
+        "window_type"
+      ]
+    },
+    "operator_position": {
+      "meanings": [
+        {
+          "label": "オペレーター位置",
+          "slot": "window_spec",
+          "stage": "CONFIGURATION"
+        }
+      ],
+      "parents": [
+        "window_type"
+      ]
+    },
+    "grille_type": {
+      "meanings": [
+        {
+          "label": "面格子種類",
+          "slot": "window_spec",
+          "stage": "CONFIGURATION"
+        },
+        {
+          "label": "格子種類",
+          "slot": "window_spec",
+          "stage": "CONFIGURATION"
+        }
+      ],
+      "parents": [
+        "window_type"
+      ]
+    },
+    "handle_configuration": {
+      "meanings": [
+        {
+          "label": "ハンドル・構成",
+          "slot": "window_spec",
+          "stage": "CONFIGURATION"
+        }
+      ],
+      "parents": []
+    },
+    "glass_gas": {
+      "meanings": [
+        {
+          "label": "中空層",
+          "slot": "glass_air_layer",
+          "stage": "GLAZING"
+        }
+      ],
+      "parents": []
+    },
+    "options": {
+      "meanings": [
+        {
+          "label": "その他オプション",
+          "slot": "option",
+          "stage": "OPTION"
+        }
+      ],
+      "parents": []
+    },
+    "handle_type": {
+      "meanings": [
+        {
+          "label": "ハンドル種類",
+          "slot": "window_spec",
+          "stage": "CONFIGURATION"
+        }
+      ],
+      "parents": []
+    },
+    "operation_method": {
+      "meanings": [
+        {
+          "label": "操作方式",
+          "slot": "window_spec",
+          "stage": "CONFIGURATION"
+        }
+      ],
+      "parents": []
+    },
+    "composition_type": {
+      "meanings": [
+        {
+          "label": "構成タイプ",
+          "slot": "window_spec",
+          "stage": "CONFIGURATION"
+        }
+      ],
+      "parents": []
+    },
+    "door_grille_type": {
+      "meanings": [
+        {
+          "label": "網付格子種類",
+          "slot": "window_spec",
+          "stage": "CONFIGURATION"
+        }
+      ],
+      "parents": []
+    },
+    "panel_count": {
+      "meanings": [
+        {
+          "label": "建具・枚数",
+          "slot": "panel_count",
+          "stage": "SIZE"
+        }
+      ],
+      "parents": [
+        "window_type",
+        "size_mode"
+      ]
+    },
+    "shutter_type": {
+      "meanings": [
+        {
+          "label": "シャッター種類",
+          "slot": "window_spec",
+          "stage": "CONFIGURATION"
+        }
+      ],
+      "parents": [
+        "window_type"
+      ]
+    },
+    "rain_shutter_type": {
+      "meanings": [
+        {
+          "label": "雨戸種類",
+          "slot": "window_spec",
+          "stage": "CONFIGURATION"
+        }
+      ],
+      "parents": []
+    }
+  }
+}

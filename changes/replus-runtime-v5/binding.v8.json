@@ -1,0 +1,101 @@
+{
+  "schema": "CANDIDATE_UI_SUCCESSOR_BINDING_V1",
+  "revision": "REPLUS_GLASS_FLOW_V8_20261014",
+  "parent_commit": "3da7d2794665fb810e9c73f1b3d65eec8d2d8dba",
+  "current_authority": {
+    "repository": "Takuro-Kwkm/product-ui-contracts",
+    "head": "f7759305a53ed206280a395c0fce166476f2327f",
+    "registry_sha256": "361c3bdbceeac3b4e97720e0c8837c54a577d127e6d83bc8d280bd6e5bc03cd1",
+    "skill_authority_sha256": "39efeca95214ea29816c6666b53c8127e665c821e74e34de3738761cc797e7d3"
+  },
+  "consumer_adopted_implementation": "68f2fe69831a33ab92789526bdcd7a49446122a2",
+  "native_state": "FAIL_CLOSED:NATIVE_ADAPTER_UNAVAILABLE",
+  "formal_adoption": false,
+  "human_decision": null,
+  "release": false,
+  "index": {
+    "drive_file_id": "1YYSdnp75fqgVGoDB_-x2_mvPfgdbFB2V",
+    "bytes": 207415,
+    "sha256": "a8f5ad37f51b5a133da1533b40a8f1fee7c63b46aee4105974cd7b6f02396bf2",
+    "readback": "MATCH"
+  },
+  "drive_current_inputs": {
+    "manifest": {
+      "bytes": 4820,
+      "sha256": "46c8071fae3992b619ae3c95c75ed454e59ff0619fbbbd2ac8e41f90735f61c4",
+      "unchanged_from_v7": true
+    },
+    "registry": {
+      "bytes": 43225,
+      "sha256": "fbc53529fd001541f8f2a17d8f5085043e1aacdd6c2cd2de10228a72f616f89c",
+      "unchanged_from_v7": false
+    },
+    "sources": {
+      "bytes": 20976,
+      "sha256": "c0fcb243445d46ac72ae3bb73a50b9bd2262dda9f0c94acfdbd7e4c655b28411",
+      "unchanged_from_v7": false
+    }
+  },
+  "official_glass_review": {
+    "path": "flow/official-glass-review.v8.json",
+    "sha256": "4b9b3654885f17c68f2900abf6789bb539344d3ebb98cc1671e0fd94e198551f"
+  },
+  "modules": [
+    {
+      "id": "CANDIDATE:RPL_ROOM",
+      "sha256": "cef749bd733d7e20ed2f5a782245fcf06bdcb06f46d4471a7136e052b585964c"
+    },
+    {
+      "id": "CANDIDATE:RPL_TW",
+      "sha256": "23ea472c11a76be3618453810649870bbad4ee9e96947de605d0a8c0c8701ffe"
+    },
+    {
+      "id": "CANDIDATE:RPL_EW",
+      "sha256": "c86ca4de2ef30566ab2ea110be5368c607f4f0647392a9ad7b4847759e009140"
+    },
+    {
+      "id": "CANDIDATE:RPL_BATH",
+      "sha256": "1687ddbc4c35a4825ec9d6d69ad706885fbaa20947ec91d7455b860edec74ee4"
+    },
+    {
+      "id": "CANDIDATE:RPL_ATT_TW",
+      "sha256": "20fc01e7116bfd9fef852bfc4cbe8800d66bd8ed13e0e8b701b7ab867777bb98"
+    },
+    {
+      "id": "CANDIDATE:RPL_ATT_TH",
+      "sha256": "1bd2a14138e698c5aa0820c97c4617695c739992e8d5119e3137b7d074a7f302"
+    },
+    {
+      "id": "CANDIDATE:RPL_CUT_MALL",
+      "sha256": "b276e6958812d9f3ba53660481a78e731e4e3117196bd1585e9d5be94f54a918"
+    }
+  ],
+  "protected_files": {
+    "src/work-management/domain.mjs": "ec77668d877126b656382ca2105842f37e1fd4a188fb51fadf5c42d4d1368f41",
+    "src/work-management/field-workflow-scope.mjs": "6458a62cbbc2bbf29f541ab6d5faea3698f085cb2fdbb739ce435dc24fd5f905"
+  },
+  "qa": {
+    "unit_tests": {
+      "passed": 674,
+      "failed": 0
+    },
+    "final_focused": {
+      "passed": 34,
+      "failed": 0
+    },
+    "browser_widths": [
+      1280,
+      768,
+      390
+    ],
+    "candidate_save_reload_cases": 21,
+    "normal_business_cases": 24,
+    "pdf_visual_pages": [
+      1,
+      2
+    ],
+    "xlsx_labels": "PASS",
+    "persistence": "BROWSER_LOCAL_STORAGE",
+    "db_multi_device": "NOT_EXECUTED"
+  }
+}

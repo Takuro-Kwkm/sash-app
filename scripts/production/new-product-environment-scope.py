@@ -4,6 +4,10 @@ from pathlib import Path
 
 def validate(root):
     root=Path(root).resolve()
+    if (root/'contracts/production/native-change-scope.v1.json').exists():
+        definition=importlib.util.spec_from_file_location('current_native_scope',root/'scripts/production/native-change-scope.py')
+        module=importlib.util.module_from_spec(definition);definition.loader.exec_module(module)
+        return module.validate(root)
     with tempfile.TemporaryDirectory(prefix='new-product-scope-') as directory:
         central=Path(directory)/'shared'
         result=subprocess.run([sys.executable,'-B',str(root/'scripts/production/unpack-release-authority.py'),str(central)],capture_output=True,text=True)

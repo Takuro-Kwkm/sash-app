@@ -1,0 +1,23 @@
+{
+  "schema": "NATIVE_RUNTIME_UI_CANDIDATE_PROFILE_V1",
+  "profile_id": "replus-runtime-ui-v5",
+  "product_id": "NATIVE_REGISTRY:LIXIL::リプラス",
+  "work_skill": "product-change-work",
+  "admission_state": "CANDIDATE_NOT_CURRENT",
+  "baseline_package_version": "v1.1",
+  "components": ["RPL_ROOM", "RPL_TW", "RPL_EW", "RPL_BATH", "RPL_ATT_TW", "RPL_ATT_TH", "RPL_CUT_MALL"],
+  "native_adapter": "scripts/production/runtime-candidate-work.py",
+  "compiler": "scripts/production/compile-table-projection.py",
+  "validator": "scripts/production/validate-runtime-candidate.mjs",
+  "runtime_index": "changes/replus-runtime-v5/index.json",
+  "consumer_entrypoint": "scripts/start-candidate-runtime.mjs",
+  "shared_entrypoint": "scripts/production-work.py",
+  "candidate_scope": "LOCAL_SELECTION_AND_ESTIMATE_HANDOFF_QA",
+  "automatic_manufacturing": false,
+  "automatic_price": false,
+  "formal_adoption": false,
+  "source_adoption": false,
+  "release": false,
+  "native_current_gate": "REQUIRES_CURRENT_AUTHORITY_AND_ADMITTED_CONNECTED_PROFILE",
+  "excluded": ["CURRENT_REGISTRY_WRITES", "CURRENT_SOURCE_SWITCH", "HUMAN_DECISION", "MERGE", "PUBLICATION", "PRODUCTION_QA"]
+}

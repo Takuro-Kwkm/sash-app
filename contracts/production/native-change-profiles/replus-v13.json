@@ -1,0 +1,46 @@
+{
+  "schema": "NATIVE_TABLE_PACKAGE_CHANGE_PROFILE_V1",
+  "product_id": "NATIVE_REGISTRY:LIXIL::リプラス",
+  "manufacturer": "LIXIL",
+  "series": "リプラス",
+  "scope": "REPLUS_V13_SALES_SELECTION_MASTER_CHANGE",
+  "baseline_revision": "v1.1",
+  "candidate_revision": "v1.2-R1",
+  "components": [
+    "RPL_ROOM",
+    "RPL_TW",
+    "RPL_EW",
+    "RPL_BATH",
+    "RPL_ATT_TW",
+    "RPL_ATT_TH",
+    "RPL_CUT_MALL"
+  ],
+  "worker": "scripts/production/table-package-change.py",
+  "validation_commands": [
+    [
+      "node",
+      "scripts/production/validate-runtime-candidate.mjs",
+      "changes/replus-runtime-v5/index.json"
+    ],
+    [
+      "node",
+      "scripts/production/verify-product-flow-registration.mjs"
+    ]
+  ],
+  "target_gate": "FORMAL_CHANGE_ADOPTION",
+  "runtime_scope": "NOT_INCLUDED_IN_PRODUCT_MASTER_FORMAL",
+  "automatic_price": false,
+  "automatic_manufacturing": false,
+  "human_gate": "HUMAN_ADOPTION",
+  "storage": "EXISTING_SHARED_V2_FORMAL_SAVE_WITH_AUTHENTICATED_NATIVE_RECEIPT",
+  "table_root": "changes/replus-runtime-v5",
+  "runtime_product_ids": {
+    "RPL_ROOM": "CANDIDATE:RPL_ROOM",
+    "RPL_TW": "CANDIDATE:RPL_TW",
+    "RPL_EW": "CANDIDATE:RPL_EW",
+    "RPL_BATH": "CANDIDATE:RPL_BATH",
+    "RPL_ATT_TW": "CANDIDATE:RPL_ATT_TW",
+    "RPL_ATT_TH": "CANDIDATE:RPL_ATT_TH",
+    "RPL_CUT_MALL": "CANDIDATE:RPL_CUT_MALL"
+  }
+}

@@ -55,6 +55,12 @@ def baseline(root):
 
 def validate(root):
     root = Path(root)
+    # A later immutable Work seals and inspects this adopted connection at its
+    # actual Main revision instead of reapplying its old whole-repository scope.
+    if (root/'contracts/production/native-change-scope.v1.json').exists():
+        spec=importlib.util.spec_from_file_location('current_native_scope',root/'scripts/production/native-change-scope.py')
+        module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)
+        return module.validate(root)
     errors = []
     protected = {}
     try:
