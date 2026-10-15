@@ -1,6 +1,6 @@
 {
   "schema": "CURRENT_AUTHORITY_SUCCESSOR_SELECTION_V1",
   "path": "contracts/production/authority-successors/new-product-environment-v7.json",
-  "sha256": "c20a0f6dc8287a60f670cbf907f4c8ba01c8c9aef0e499e6b7f963ef2abcace3",
+  "sha256": "d3d9002cb6b00eb13f379bfca9146b931a79cc05aa59ca858afb4738a8d2a8c9",
   "implementation_sha": "aba073131642552ac6bb05264e33459b9dcd4032"
 }
