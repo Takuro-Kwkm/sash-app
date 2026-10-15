@@ -24,5 +24,5 @@ def main():
         subprocess.run(['git','clone','--quiet','--shared','--dissociate',str(root),str(destination)],check=True)
         subprocess.run(['git','checkout','--quiet','--detach',scope['starting_main']],cwd=destination,check=True)
         result.update(predecessor=str(destination),inspection='INSPECT_ONLY; NO_WORK_REPLAY')
-    print(json.dumps(result));return 0 if result['status']=='PASS' else 2
+    print(json.dumps({k:v for k,v in result.items() if k not in ('authorized_paths','verified_unchanged_sha256')}));return 0 if result['status']=='PASS' else 2
 if __name__=='__main__':raise SystemExit(main())
