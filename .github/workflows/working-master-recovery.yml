@@ -16,7 +16,9 @@ jobs:
       SHARED_HARNESS_ROOT: /tmp/shared-recovery-authority
     steps:
       - uses: actions/checkout@v4
-        with: {ref: '${{ env.EXPECTED_HEAD }}'}
+        with:
+          ref: ${{ env.EXPECTED_HEAD }}
+          fetch-depth: 0
       - run: test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
       - uses: actions/setup-python@v5
         with: {python-version: '3.12.14'}
