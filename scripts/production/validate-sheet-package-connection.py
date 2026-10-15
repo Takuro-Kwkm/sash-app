@@ -33,6 +33,17 @@ def validate(root):
             assert declared['formal_writes_before_human'] == declared['runtime_ui_mutations'] == 0
             assert declared['automatic_orderability'] is False and declared['shared_engine'] == 'scripts/production-work.py'
             assert all((root/declared[k]).is_file() for k in ('native_preparer','native_worker'))
+    for product in config['products']:
+        if not product.get('formal_profile'): continue
+        entry=product['formal_profile'];path=root/entry['path'];profile=json.loads(path.read_text())
+        assert hashlib.sha256(path.read_bytes()).hexdigest()==entry['sha256']
+        assert profile['product_id']==product['product_id'] and profile['status']=='ADOPTED'
+        declared=validators['products'][product['product_id']]['formal_profile']
+        assert {k:declared[k] for k in ('path','sha256')}==entry
+        if profile.get('baseline_kind')=='EXISTING_WORKING_DOMAIN':
+            adapter=profile['domain_adapter'];file=(root/adapter['path']).resolve()
+            assert file.is_relative_to(root.resolve()) and hashlib.sha256(file.read_bytes()).hexdigest()==adapter['sha256']
+            assert profile['human_gate']=='HUMAN_ADOPTION' and profile['formal_writes_before_human']==0
     return {'status':'PASS','connections':len(matches),'business_qa':'NOT_EXECUTED_BY_CONNECTION_VALIDATOR','shared_engine_mutations':0}
 
 

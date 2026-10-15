@@ -772,6 +772,10 @@
       "unsupported_gates": {
         "FORMAL": "NATIVE_FORMAL_PROFILE_AND_EXTERNAL_DECISION_REQUIRED",
         "INTEGRATION": "NATIVE_RUNTIME_ADAPTER_UNAVAILABLE"
+      },
+      "formal_profile": {
+        "path": "contracts/production/working-master-recovery/doorremo-nonfire.formal.v1.json",
+        "sha256": "d53d88a618a8048af94574398c24fb85c081c5e0eef6cc167f5b33431d913934"
       }
     },
     {

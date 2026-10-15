@@ -43,8 +43,10 @@ def prepare(shared, checkout, captures, destination, instruction):
     worker.baseline(contract)
     worker.review(contract, root/'checkpoint')
     observations = {key: read_json(path) for key, path in c['observations'].items()}
-    require({'central_branch', 'native_registry', 'information_manifest', 'formal_authoring_metadata',
-             'working_authoring_metadata', 'canonical_listing'}.issubset(observations),
+    required_observations = {'central_branch', 'native_registry', 'information_manifest',
+                             'working_authoring_metadata', 'canonical_listing'}
+    if p.get('baseline_kind') != 'EXISTING_WORKING_DOMAIN': required_observations.add('formal_authoring_metadata')
+    require(required_observations.issubset(observations),
             'AUTHORITY_ACQUISITION_REQUIRED', 'Acquire live native identities and Current', 'PREPARE')
     require(connector_document(observations['central_branch'])['commit']['sha'] ==
             subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=shared, text=True).strip(),
@@ -68,11 +70,14 @@ def prepare(shared, checkout, captures, destination, instruction):
                 'args': ['--harness-root', str(shared), '--contract', '{input}', '--stage', stage,
                          '--work', '{work}', '--out', '{work}/'+stage+'.json'],
                 'output': '{work}/'+stage+'.json', 'result_path': ['status'], 'expected_result': 'PASS',
-                'timeout_seconds': 300}
+                'timeout_seconds': 1800 if stage == 'FORMAL_CONTENT_QA' else 300}
     for stage in worker.STAGES: steps.append(validator(stage, steps[-1]['id'] if steps else None))
     steps.append({'id': 'HUMAN_ADOPTION', 'kind': 'human', 'needs': ['FORMAL_REVIEW'],
                   'packet': '{work}/FORMAL_REVIEW.json', 'packet_destination': '{workflow_id}/HUMAN_ADOPTION.json'})
-    steps.append(validator('NATIVE_SAVE_REQUESTS', 'HUMAN_ADOPTION'))
+    prior = 'HUMAN_ADOPTION'
+    if p.get('baseline_kind') == 'EXISTING_WORKING_DOMAIN':
+        steps.append(validator('FORMAL_CONTENT_QA', prior)); prior = 'FORMAL_CONTENT_QA'
+    steps.append(validator('NATIVE_SAVE_REQUESTS', prior))
     steps.append(validator('NATIVE_REGISTRY_REQUEST', 'NATIVE_SAVE_REQUESTS'))
     steps.append(validator('NATIVE_FORMAL_READBACK', 'NATIVE_REGISTRY_REQUEST'))
     steps[-1]['side_outputs'] = ['{work}/native-formal-readback.json']

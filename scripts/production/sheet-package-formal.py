@@ -20,6 +20,32 @@ def document(ref):
     return json.loads(checked_bytes(ref))
 
 
+def domain_adapter(c):
+    if not c.get('profile'): return None  # legacy helper callers; run() still requires frozen_profile
+    profile = document(c['profile'])
+    if profile.get('baseline_kind') != 'EXISTING_WORKING_DOMAIN': return None
+    path = Path(c['checkout'])/profile['domain_adapter']['path']
+    require(sha(path.read_bytes()) == profile['domain_adapter']['sha256'],
+            'NATIVE_PROFILE_CHANGED', 'Working-domain adapter changed', 'FORMAL_REVIEW')
+    spec = importlib.util.spec_from_file_location('working_domain_formal', path)
+    module = importlib.util.module_from_spec(spec); spec.loader.exec_module(module); module.setup(c['harness_root'])
+    return module
+
+
+def selected_native_row(c, raw, after=False):
+    adapter = domain_adapter(c)
+    if adapter:
+        return adapter.native_row(raw, c['registry_before']['manufacturer'], c['registry_before']['series'],
+                                  ['FORMAL_PASS'] if after else ['WORKING_RECOVERY'])
+    from harness.production import native_registry
+    return native_registry(raw, c['registry_before']['manufacturer'], c['registry_before']['series'])
+
+
+def confirmations(c):
+    if domain_adapter(c): return document(c['review'])['confirmation_requests']
+    return document(c['master'])['confirmations']
+
+
 def frozen_profile(c):
     p = document(c['profile'])
     require(p['product_id'] == c['product_id'], 'NATIVE_PRODUCT', 'Wrong native Formal product', 'FORMAL_REVIEW')
@@ -37,6 +63,8 @@ def frozen_profile(c):
 
 def carry_forward(c):
     """Prove an existing execution; never turn a PASS label into new product QA."""
+    adapter = domain_adapter(c)
+    if adapter: return adapter.carry_forward(c)
     from harness.workflow import inspect
     from harness.core import package_members, inspect_package
     from jsonschema import Draft202012Validator
@@ -109,6 +137,8 @@ def carry_forward(c):
 def baseline(c):
     from harness.production import native_registry, connector_document, observation_fingerprint
     p = frozen_profile(c)
+    adapter = domain_adapter(c)
+    if adapter: return adapter.baseline(c, p)
     native = native_registry(document(c['registry_response']), p['manufacturer'], p['series'])
     require(native == c['registry_before'] and native['package_version'] == p['baseline_revision'],
             'NATIVE_FORMAL_DRIFT', 'Current row differs from fixed predecessor', 'CURRENT_FORMAL_RESOLUTION')
@@ -186,9 +216,12 @@ def review(c, work):
     result = {'status': 'PASS', 'product_id': c['product_id'], 'baseline_revision': before['package_version'],
               'candidate_revision': c['revision'], 'proposed_formal_plan_sha256': transaction,
               'native_registry_before': before, 'native_registry_after': after, 'native_storage': storage,
-              'qa': proof, 'scope': document(c['scope']), 'controlled_unresolved': document(c['master'])['confirmations'],
+              'qa': proof, 'scope': document(c['scope']), 'controlled_unresolved': confirmations(c),
               'predecessor_packet_sha256': c['predecessor_packet_sha256'],
               'formal_adoption': False, 'runtime_ui_mutations': 0, 'human_decision': 'NOT_ACCEPTED'}
+    if domain_adapter(c):
+        from product_master.identity import digest
+        result.update(proposed_master_sha256=c['master']['sha256'], proposed_domain_digest=digest(document(c['master'])))
     result['payload_sha256'] = fingerprint(result)
     return result
 
@@ -217,8 +250,7 @@ def requests(c, work):
     require(observation_path.is_file(), 'EXECUTION_OBSERVATIONS_REQUIRED',
             'Acquire fresh native Registry and old/new metadata after Human approval', 'NATIVE_SAVE_REQUESTS')
     observations = read_json(observation_path)
-    require(native_registry(document(observations['registry']), c['registry_before']['manufacturer'],
-                            c['registry_before']['series']) == c['registry_before'],
+    require(selected_native_row(c, document(observations['registry'])) == c['registry_before'],
             'REGISTRY_HEAD_DRIFT', 'Native row changed before mutation', 'NATIVE_SAVE_REQUESTS')
     storage = c['native_storage']
     steps = []
@@ -280,7 +312,7 @@ def registry_request(c, raw, packet, decision):
     approved_plan(c, packet, decision)
     verify_native_files(c, raw)
     current = document(raw['registry'])
-    require(native_registry(current, c['registry_before']['manufacturer'], c['registry_before']['series']) ==
+    require(selected_native_row(c, current) ==
             c['registry_before'], 'REGISTRY_HEAD_DRIFT', 'CAS failed after moves; do not write', 'NATIVE_REGISTRY_REQUEST')
     rows = list(csv.reader(io.StringIO(connector_document(current))))
     location = c['registry_location']; headers = location['headers']
@@ -308,8 +340,8 @@ def verify_native_readback(c, raw, packet, decision):
     from harness.production import connector_document, native_registry
     decision_ref, plan = approved_plan(c, packet, decision)
     downloaded = verify_native_files(c, raw)
-    before = native_registry(document(raw['registry_before']), c['registry_before']['manufacturer'], c['registry_before']['series'])
-    after = native_registry(document(raw['registry_after']), c['registry_before']['manufacturer'], c['registry_before']['series'])
+    before = selected_native_row(c, document(raw['registry_before']))
+    after = selected_native_row(c, document(raw['registry_after']), after=True)
     require(before == c['registry_before'] and after == c['registry_after'],
             'NATIVE_REGISTRY_READBACK', 'Wrong pre-write or post-write native row', 'NATIVE_FORMAL_READBACK')
     def others(ref):
@@ -333,6 +365,10 @@ def run(c, stage, work):
     if stage == 'CARRY_FORWARD_QA':
         return {'status': 'PASS', **carry_forward(c)}
     if stage == 'FORMAL_REVIEW': return review(c, work)
+    if stage == 'FORMAL_CONTENT_QA':
+        adapter = domain_adapter(c)
+        require(adapter is not None, 'NATIVE_PROFILE_CHANGED', 'Working-domain Formal profile required', stage)
+        return adapter.formal_content_qa(c, work)
     if stage == 'NATIVE_SAVE_REQUESTS': return requests(c, work)
     if stage == 'NATIVE_REGISTRY_REQUEST':
         path = Path(c['move_readback_path'])
@@ -352,7 +388,7 @@ def run(c, stage, work):
         require(saved['status'] == 'PASS' and saved['current']['revision'] == c['revision'],
                 'FORMAL_SAVE_REQUIRED', 'Existing Shared Formal save must complete', stage)
         return {'status': 'PASS', 'formal': 'FORMAL_PASS', 'revision': c['revision'],
-                'controlled_unresolved': len(document(c['master'])['confirmations']), 'runtime_ui_release': 'NOT_EXECUTED'}
+                'controlled_unresolved': len(confirmations(c)), 'runtime_ui_release': 'NOT_EXECUTED'}
     raise ValueError('Unsupported native Formal stage '+stage)
 
 

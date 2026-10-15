@@ -241,6 +241,10 @@
         "profile_id": "sash-existing-working-sales-qa-v1",
         "path": "contracts/production/working-master-recovery/doorremo-nonfire.business-qa.v1.json",
         "sha256": "3cf620e58ecdf8543831c71bbdf800da5d14c595ef2e00ed016f2cb5a979959b"
+      },
+      "formal_profile": {
+        "path": "contracts/production/working-master-recovery/doorremo-nonfire.formal.v1.json",
+        "sha256": "d53d88a618a8048af94574398c24fb85c081c5e0eef6cc167f5b33431d913934"
       }
     },
     "NATIVE_REGISTRY:YKK AP::ヴェナートD30": {
