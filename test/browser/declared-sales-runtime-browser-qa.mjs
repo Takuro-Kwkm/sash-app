@@ -5,13 +5,17 @@ import {mkdir,readFile,writeFile} from 'node:fs/promises';
 const BASE=process.env.QA_BASE_URL??'http://127.0.0.1:4195';
 const OUT=process.env.QA_OUTPUT_DIR,contract=JSON.parse(await readFile(process.env.QA_RUNTIME_QA_CONTRACT));
 assert.ok(OUT);await mkdir(OUT,{recursive:true});
-const report={status:'RUNNING',url:BASE,persistence:'BROWSER_LOCAL_STORAGE',multi_device_db_e2e:'NOT_EXECUTED',viewports:[],errors:[]};
+const report={status:'RUNNING',url:BASE,persistence:'BROWSER_LOCAL_STORAGE',multi_device_db_e2e:'NOT_EXECUTED',observedCommit:null,viewports:[],errors:[],consoleErrors:[],failedResponses:[]};
 const browser=await chromium.launch({headless:true});
 try{
   for(const width of contract.viewports){
     const context=await browser.newContext({viewport:{width,height:1100}}),page=await context.newPage();
     page.on('pageerror',error=>report.errors.push(error.message));
+    page.on('console',message=>{if(message.type()==='error')report.consoleErrors.push(message.text());});
+    page.on('response',response=>{if(response.status()>=400)report.failedResponses.push({url:response.url(),status:response.status()});});
     await page.goto(BASE,{waitUntil:'networkidle'});
+    const health=await(await context.request.get(BASE+'/api/health')).json();report.observedCommit=health.releaseCommitSha;
+    if(process.env.QA_EXPECTED_COMMIT)assert.equal(report.observedCommit,process.env.QA_EXPECTED_COMMIT);
     const snapshots=[],cases=[];
     for(const row of contract.rows){
       const saved=await page.evaluate(async({row,contract})=>{
@@ -88,6 +92,6 @@ try{
     report.viewports.push({width,products:cases,output:'GENERATED_AND_MODEL_VERIFIED',print:'NOT_VISUALLY_VERIFIED'});
     await context.close();console.log(JSON.stringify({width,status:'PASS',cases:cases.length}));
   }
-  assert.deepEqual(report.errors,[]);report.status='PASS';
+  assert.deepEqual(report.errors,[]);assert.deepEqual(report.consoleErrors,[]);assert.deepEqual(report.failedResponses,[]);report.status='PASS';
 }catch(error){report.status='FAIL';report.failure=error.stack;throw error;}
 finally{await writeFile(`${OUT}/report.json`,JSON.stringify(report,null,2)+'\n');await browser.close();}

@@ -17,6 +17,8 @@ def execute(shared, contract_path, stage, work, output):
     from product_master.identity import digest
     contract=read_json(contract_path); checkout=Path(contract['checkout']); work=Path(work); output=Path(output)
     require(output.resolve().is_relative_to(work.resolve()) and not output.is_symlink(), 'OUTPUT_PATH', 'Work-owned output required', stage)
+    require(subprocess.check_output(['git','rev-parse','HEAD'],cwd=checkout,text=True).strip()==contract['native_head'],
+            'NATIVE_HEAD_CHANGED','Use the fixed native checkout for this Work',stage)
     for ref in contract['inputs'].values(): capture(Path('/'),ref)
     profile=json.loads(capture(Path('/'),contract['profile']))
     require(profile['status']=='ADOPTED' and profile['admission_state']=='CANDIDATE_ONLY'
@@ -64,6 +66,16 @@ def execute(shared, contract_path, stage, work, output):
         require(report['status']=='PASS' and sum(row['cases'] for row in report['products'])==len(master['handoff_tests']),
                 'PARITY_FAILED','All adopted handoff cases must execute',stage)
         result=dict(status='PASS',report_sha256=sha(path.read_bytes()),cases=len(master['handoff_tests']))
+    elif stage=='FLOW_REVIEW_AUTHORIZATION':
+        from harness.core import validate_authorization
+        review=read_json(contract['inputs']['flow_review']['path']); authorization=read_json(contract['inputs']['flow_authorization']['path'])
+        validate_authorization(review['authorization_scope'],authorization)
+        expected=review['authorization_scope']['expected']
+        require(expected['index_sha256']==sha((base/'index.json').read_bytes()) and expected['module_sha256']==entry['sha256'],
+                'HUMAN_FLOW_REVIEW_REOPEN','Reviewed runtime/flow identity changed',stage)
+        for path,digest_ in expected['code_sha256'].items():
+            require(sha((checkout/path).read_bytes())==digest_,'HUMAN_FLOW_REVIEW_REOPEN','Reviewed implementation changed: '+path,stage)
+        result=dict(status='PASS',gate='HUMAN_FLOW_REVIEW_GATE',decision_ref=authorization['decision_ref'],review_payload_sha256=authorization['review_payload_sha256'])
     elif stage=='BROWSER':
         identity=read_json(contract['inputs']['saved_candidate_identity']['path'])
         require(identity['status']=='NATIVE_CANDIDATE_BYTES_READBACK_PASS' and identity['index_sha256']==sha((base/'index.json').read_bytes())
@@ -74,6 +86,7 @@ def execute(shared, contract_path, stage, work, output):
                    SASH_CANDIDATE_INDEX_SHA=identity['index_sha256'],SASH_CANDIDATE_MANIFEST_FILE_ID=identity['index_file_id'],
                    HOST='127.0.0.1',PORT=port,QA_BASE_URL='http://127.0.0.1:'+port,
                    QA_OUTPUT_DIR=str(work/'browser'),QA_RUNTIME_QA_CONTRACT=str(base/profile['qa_contract']))
+        env['QA_EXPECTED_COMMIT']=contract['native_head']
         if contract.get('playwright_module'):env['QA_PLAYWRIGHT_MODULE']=contract['playwright_module']
         require(not env.get('VERCEL') and env.get('NODE_ENV')!='production','LOCAL_CANDIDATE_ONLY','No production candidate fallback',stage)
         with (work/'candidate-server.log').open('w') as log:
@@ -99,7 +112,7 @@ def execute(shared, contract_path, stage, work, output):
         result=dict(status='PASS',cases=sum(len(row['products']) for row in report['viewports']),persistence='BROWSER_LOCAL_STORAGE',
                     pdf_visual_review='SEPARATE_REQUIRED',formal_adoption=False,release=False)
     elif stage=='REVIEW':
-        for name in ('FORMAL_IDENTITY','PROJECTION','PARITY','BROWSER'):
+        for name in ('FORMAL_IDENTITY','PROJECTION','FLOW_REVIEW_AUTHORIZATION','PARITY','BROWSER'):
             require(read_json(work/(name+'.json'))['status']=='PASS','QA_REQUIRED',name,stage)
         result=dict(status='PASS',state='RUNTIME_UI_CANDIDATE_QA_REVIEW',product_id=profile['product_id'],
                     index_sha256=sha((base/'index.json').read_bytes()),module_sha256=entry['sha256'],

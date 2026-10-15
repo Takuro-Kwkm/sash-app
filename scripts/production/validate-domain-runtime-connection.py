@@ -19,6 +19,7 @@ def validate(root):
         assert p['product_id']==connection['product_id'] and p['repository']==connection['repository']
         assert validators['products'][p['product_id']]['runtime_candidate_profile']==entry
         assert p['target_gate']=='RUNTIME_UI_CANDIDATE_QA_REVIEW' and p['shared_entrypoint']=='scripts/production-work.py'
+        assert p['human_review_required'] is True and p['human_review_validator']=='harness.core.validate_authorization'
         assert p['formal_adoption'] is p['source_adoption'] is p['release'] is p['automatic_manufacturing'] is p['automatic_price'] is False
         assert len(p['native_paths'])==len(set(p['native_paths']))
         for name in p['native_paths']:

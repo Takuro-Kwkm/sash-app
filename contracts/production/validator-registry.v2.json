@@ -248,7 +248,7 @@
       },
       "runtime_candidate_profile": {
         "path": "contracts/production/runtime-candidates/doorremo-nonfire-r1.profile.json",
-        "sha256": "8676fa5be711afabf7312001cdf10464212e6527124b7d4db74ec3ca85169332"
+        "sha256": "a2c607ed02aec830d64ad6c7b879dac78116d4f0d533a2533aefa5056ca1b18c"
       }
     },
     "NATIVE_REGISTRY:YKK AP::ヴェナートD30": {

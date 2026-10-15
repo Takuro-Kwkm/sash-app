@@ -13,6 +13,8 @@ def prepare(shared,checkout,captures,destination,instruction):
     from harness.current_authority import compatibility
     from harness.production import repository_binding,observation_fingerprint,connector_document
     compatibility(shared,checkout);c=read_json(captures)
+    require({'flow_review','flow_authorization'}.issubset(c['inputs']), 'HUMAN_FLOW_REVIEW_REQUIRED',
+            'Import actual approval of the fixed flow packet before candidate integration QA', 'PREPARE')
     route=route_instruction(shared,{c['repository']:str(checkout)},instruction,c['product_id'])
     require(route['product_id']==c['product_id'] and not root.exists(),'CANDIDATE_WORK_REQUIRED','Use a fresh immutable successor', 'PREPARE')
     def ref(p):
@@ -31,17 +33,17 @@ def prepare(shared,checkout,captures,destination,instruction):
     binding=repository_binding(c['repository'],read_json(c['branch']),read_json(c['tree']),{name:checkout/name for name in c['captured_paths']})
     binding.update(checkout=str(checkout),observations={k:observation_fingerprint(v) for k,v in observed.items()})
     root.mkdir(parents=True)
-    contract=dict(product_id=c['product_id'],profile=profile,checkout=str(checkout),node=c['node'],
+    contract=dict(product_id=c['product_id'],profile=profile,checkout=str(checkout),node=c['node'],native_head=binding['head_sha'],
                   inputs={k:ref(v) for k,v in c['inputs'].items()},upstream={**c['upstream'],'spec':ref(c['upstream']['spec'])})
     if c.get('playwright_module'):contract['playwright_module']=c['playwright_module']
     write_json(root/'contract.json',contract);write_json(root/'production-binding.json',binding)
     write_json(root/'live-state.json',dict(repository=read_json(c['branch']),observations=observed))
     steps=[];worker=ref(checkout/p['native_worker'])
-    for stage in ('FORMAL_IDENTITY','PROJECTION','PARITY','BROWSER','REVIEW'):
+    for stage in ('FORMAL_IDENTITY','PROJECTION','FLOW_REVIEW_AUTHORIZATION','PARITY','BROWSER','REVIEW'):
         steps.append(dict(id=stage,kind='validator',needs=[steps[-1]['id']] if steps else [],script=worker,
             args=['--harness-root',str(shared),'--contract','{input}','--stage',stage,'--work','{work}','--out','{work}/'+stage+'.json'],
             output='{work}/'+stage+'.json',result_path=['status'],expected_result='PASS',timeout_seconds=1800))
-    for name in ('FORMAL_IDENTITY.json','PROJECTION.json','domain-parity.json','BROWSER.json','browser/report.json','REVIEW.json'):
+    for name in ('FORMAL_IDENTITY.json','PROJECTION.json','FLOW_REVIEW_AUTHORIZATION.json','domain-parity.json','BROWSER.json','browser/report.json','REVIEW.json'):
         steps.append(dict(id='SAVE_'+name.replace('/','_').replace('.','_').replace('-','_').upper(),kind='storage',needs=[steps[-1]['id']],source='{work}/'+name,destination=name))
     workflow=dict(workflow_id='NATIVE_DOMAIN_RUNTIME_CANDIDATE_V1',version='1.0',status='CURRENT',work_skill='product-change-work',steps=steps,
         targets={'RUNTIME_UI_CANDIDATE_QA_REVIEW':[steps[-1]['id']]},scope='LOCAL_SALES_ESTIMATE_REQUEST_UI')

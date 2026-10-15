@@ -14,4 +14,8 @@ Current Manifestが指定するUI標準v2.1の11章に従い、下枠納まり�
 
 native profileは候補検証だけをadmitする。実行はCurrent `architecture-work.py`で対象を解決したうえで`prepare-domain-runtime-candidate.py`が固定specを作り、既存`production-work.py`のrun/resume/checkpointへ委譲する。第二のDAG・Evidence・保存・Release Engineは作らない。
 
+Current UI統合仕様31章のHuman Flow Reviewを後続工程の前提とする。承認前のローカルQAとCIは診断証跡であり、Formal Integration PASSへ昇格しない。固定フローPacketへの実際のHuman承認を既存Shared `validate_authorization`で確認し、対象Runtime・Flow・コードhashが一致した場合だけ後段の候補統合QAへ進む。
+
+自己完結HTMLは`build-composed-candidate-review-preview.mjs`で生成する。同じRuntime Module、共通Adapter、Flow、UI、Snapshot、Storage、PDF/XLSXコードを収録し、HTTP transportだけをファイル内呼出しへ置き換える。参照Runtimeを含む候補は未対応として拒否し、別のRule Engineや簡略UIを作らない。
+
 候補入口はlocalhostとINSPECT_LOCAL、保存読戻し済みIndexのFile IDとSHAが必要。通常のRuntime Registryへは追加しない。Runtimeの正式採用・通常UI接続・Merge後の配信・Production QA・Release完了は後続の固定Human Reviewと既存Release lifecycleで別々に判定する。

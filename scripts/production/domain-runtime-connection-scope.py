@@ -21,6 +21,8 @@ FIXED={
     'src/catalog/runtime-master/declared-selection-views.mjs','src/work-management/domain.mjs','src/estimate-output/model.mjs',
     'test/domain-runtime-projection.test.mjs','test/browser/declared-sales-runtime-browser-qa.mjs',
     'docs/DOORREMO_RUNTIME_UI_CANDIDATE.md',
+    'scripts/build-composed-candidate-review-preview.mjs','scripts/verify-tw-202610-adoption.mjs',
+    'contracts/tw-202610/runtime-implementation-successor.json',
     'changes/doorremo-runtime-ui-r1/candidates/module.json','changes/doorremo-runtime-ui-r1/index.json',
     'changes/doorremo-runtime-ui-r1/projection.json','changes/doorremo-runtime-ui-r1/review/browser-qa.json',
     'changes/doorremo-runtime-ui-r1/review/flow.json','changes/doorremo-runtime-ui-r1/review/formal-provenance.json',

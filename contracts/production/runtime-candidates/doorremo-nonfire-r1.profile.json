@@ -49,6 +49,7 @@
     "changes/doorremo-runtime-ui-r1/sources/PRODUCT_MASTER.json",
     "changes/doorremo-runtime-ui-r1/sources/UI_STANDARD_v2.1.docx",
     "contracts/production/runtime-candidates/doorremo-nonfire-r1.profile.json",
+    "scripts/build-composed-candidate-review-preview.mjs",
     "scripts/production/compile-domain-projection.py",
     "scripts/production/domain-runtime-candidate.py",
     "scripts/production/prepare-domain-runtime-candidate.py",
@@ -63,5 +64,7 @@
     "src/work-management/domain.mjs",
     "test/browser/declared-sales-runtime-browser-qa.mjs",
     "test/domain-runtime-projection.test.mjs"
-  ]
+  ],
+  "human_review_required": true,
+  "human_review_validator": "harness.core.validate_authorization"
 }

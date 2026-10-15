@@ -1,6 +1,6 @@
 {
-  "schema": "EXACT_SHARED_IMPLEMENTATION_DELTA_V1",
-  "scope": "Add optional composed-runtime metadata and declared flow only; existing TW response bytes unchanged",
+  "schema": "EXACT_SHARED_IMPLEMENTATION_DELTA_V2",
+  "scope": "Preserve original TW central proof and exact predecessor recovery; add only invalid handoff snapshot precedence, declared handoff dimensions and Japanese invalid output label. No TW manufacturer facts or flow changes.",
   "files": {
     "src/catalog/runtime-master/new-construction-sash-runtime-ui-contract.mjs": {
       "predecessor_sha256": "c6718a2b8b742867647881582328c4a65c4481bde80c163a6e9c335daf636a2c",
@@ -16,6 +16,26 @@
       "additions": [
         ",...(metadata?.productSelectionGroup?{productSelectionGroup:metadata.productSelectionGroup}:{}),...(metadata?.uiFlowContract?{uiFlowContract:metadata.uiFlowContract}:{})",
         ",...(raw.pricing?{pricing:raw.pricing}:{}),...(raw.referenceResult?{referenceResult:raw.referenceResult}:{}),...(raw.derivedMeasurements?{derivedMeasurements:raw.derivedMeasurements}:{})"
+      ]
+    },
+    "src/work-management/domain.mjs": {
+      "predecessor_sha256": "ec77668d877126b656382ca2105842f37e1fd4a188fb51fadf5c42d4d1368f41",
+      "sha256": "ce72c25993dec8098c598a8736c25f517c823af4bf4f294544a6541dddc87e6e",
+      "additions": [
+        "validationState(result)===ValidationState.INVALID?ValidationState.INVALID:"
+      ]
+    },
+    "src/estimate-output/model.mjs": {
+      "predecessor_sha256": "5c8f2869524464ee821536207bf7b1fbcc741ebc7b6eb3ab57323b9fcfecea22",
+      "sha256": "7dec48fdfba5c7df6a13184ea7dee874e600d54f6f36764decb5796f20a42c08",
+      "additions": [
+        "  const dimensions=snapshot?.sales_request_handoff?.dimensions;\n  if(dimensions?.width!==null&&dimensions?.width!==undefined&&dimensions?.height!==null&&dimensions?.height!==undefined){\n    return `${dimensions.label?text(dimensions.label)+' ':''}W ${text(dimensions.width)} × H ${text(dimensions.height)}${dimensions.unit?' '+text(dimensions.unit):''}`;\n  }\n"
+      ],
+      "replacements": [
+        {
+          "before": "message:'保存SnapshotがINVALIDです。'",
+          "after": "message:'保存した商品仕様が無効です。'"
+        }
       ]
     }
   },
