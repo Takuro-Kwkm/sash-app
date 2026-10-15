@@ -4,9 +4,9 @@
   "source_sha256": {
     "src/catalog/runtime-master/uchirimo-tabular-v1-adapter.mjs": "a6f3cdca31609a2cde44e11c972b2446440e31cf988f1a1908aff6ecfde971ee",
     "src/catalog/runtime-master/uchirimo-glass-rule-model.mjs": "0e8b1e37a05d25f80e7fc7f9a930c4349f8f97b5c43e9706c8aa99d1904c88b7",
-    "src/catalog/runtime-master/runtime-app-bridge.mjs": "3f61f87dc9e2a5cb2f64999d8989c5486b6b9747cd74e1639198725ae2dc3c33",
+    "src/catalog/runtime-master/runtime-app-bridge.mjs": "b2d89591856745b002859350e157f11d9b30d303ec8c97e5aad43108e2c6fc7e",
     "src/work-management/field-workflow-scope.mjs": "6458a62cbbc2bbf29f541ab6d5faea3698f085cb2fdbb739ce435dc24fd5f905",
-    "src/catalog/runtime-master/new-construction-sash-runtime-ui-contract.mjs": "c6718a2b8b742867647881582328c4a65c4481bde80c163a6e9c335daf636a2c",
+    "src/catalog/runtime-master/new-construction-sash-runtime-ui-contract.mjs": "6bf80f2293b8d0393e2f93da24de21b47caa41007f9ce59826782f107fa6e14f",
     "scripts/governance/uchirimo-selector-batch-runner.mjs": "29f26ef702d4c505ed3ab27de35eafc36b63f24bbbfe0d7fbaa55b631f920d74",
     "src/catalog/runtime-master/inner-window-runtime-ui-contract.mjs": "1c753f798e9f68e459506cd9f8f91b4dae3e8c0cd794863c6ddadb25c9c0a580",
     "src/catalog/runtime-master/global-window-selection-flow-engine.mjs": "2ef247ea40f4be459da5b37a524c2c1baf9f3e449d2a3e1a29436db69a7d4271",
@@ -114,5 +114,11 @@
       "authorization": "USER_EXPLICIT_TW_CATALOG_CHANGE_20261006",
       "review_type": "AUTOMATED_EXACT_BYTE_DELTA_AND_SHARED_REGRESSION"
     }
+  },
+  "runtime_bridge_successor": {
+    "prior_sha256": "3f61f87dc9e2a5cb2f64999d8989c5486b6b9747cd74e1639198725ae2dc3c33",
+    "scope": "GENERIC_COMPOSED_RUNTIME_METADATA_ONLY",
+    "product_rules_changed": false,
+    "proof": "test/formal-composed-runtime-integration.test.mjs"
   }
 }

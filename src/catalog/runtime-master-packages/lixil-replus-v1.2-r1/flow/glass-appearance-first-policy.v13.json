@@ -1,0 +1,20 @@
+{
+  "schema": "USER_GLASS_SELECTION_POLICY_V1",
+  "revision": "REPLUS_GLASS_APPEARANCE_FIRST_V13_20261014",
+  "formalAdoption": false,
+  "order": [
+    "glass_category",
+    "glass_appearance",
+    "glass",
+    "glass_function"
+  ],
+  "appearanceParent": "glass_category",
+  "functionParent": "glass_appearance",
+  "compatibility": "Existing MILKY appearance/function pairing is evaluated downstream; incompatible functions clear, valid detail and appearance values remain. No manufacturer availability or requiredness inferred.",
+  "evidenceCarryForward": "flow/official-glass-review.v8.json",
+  "unchangedReferenceComponents": [
+    "RPL_ATT_TW",
+    "RPL_ATT_TH",
+    "RPL_CUT_MALL"
+  ]
+}

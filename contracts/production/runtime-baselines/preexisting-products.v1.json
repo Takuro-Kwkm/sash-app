@@ -1,0 +1,288 @@
+{
+  "schema": "EXECUTED_RUNTIME_BEHAVIOR_BASELINE_V1",
+  "predecessor": "a50dc9f732e6cb3da44c36a5317bf22b3293b527",
+  "cases": [
+    {
+      "id": "SER-LIX-EW",
+      "selection": {},
+      "responseSha256": "9f61ce3b2a0536a24e337b3a265f61c0229cf62f2b9301cdeba58b3095a99850"
+    },
+    {
+      "id": "SER-LIX-EW",
+      "selection": {
+        "window_type": "WT-EW-TATE-SUBERI"
+      },
+      "responseSha256": "783fe71f53d86f47943744e5e84a44aa0f2b52dd0673e27c3ddb17fb5f3289e2"
+    },
+    {
+      "id": "SER-LIX-EW",
+      "selection": {
+        "window_type": "WT-EW-TATE-SUBERI",
+        "window_spec": "SP-EW-TATE-T"
+      },
+      "responseSha256": "5cd7b4fa1bf236284898a53e5b21b008f27cd50f28262e7e1100a25732087af2"
+    },
+    {
+      "id": "SER-LIX-EW",
+      "selection": {
+        "window_type": "WT-EW-TATE-SUBERI",
+        "window_spec": "SP-EW-TATE-T",
+        "variant": "VAR-EW-STD"
+      },
+      "responseSha256": "d2237da35e7906c1c00fdd81bf31564289e06dd5938f6dfcf29e13f30dc49124"
+    },
+    {
+      "id": "SER-LIXIL-TW",
+      "selection": {},
+      "responseSha256": "cea06def2320d721f85f056de394d010e347e857f5c5b51b0e386a4f4f41a6c3"
+    },
+    {
+      "id": "SER-LIXIL-TW",
+      "selection": {
+        "window_type": "SWT-LIX-TW-UNIT-HIKI-FLAT"
+      },
+      "responseSha256": "3b39b8b443c2a30fa2c196f97ae4887202d6b9c187f72a5f7e1e2e6656f9bd9c"
+    },
+    {
+      "id": "SER-LIXIL-TW",
+      "selection": {
+        "window_type": "SWT-LIX-TW-UNIT-HIKI-FLAT",
+        "size_mode": "STANDARD"
+      },
+      "responseSha256": "0322de7050cce7078cdb6c0535f9e9dd799637496b25dec9bb99444f42b2af58"
+    },
+    {
+      "id": "SER-LIXIL-TW",
+      "selection": {
+        "window_type": "SWT-LIX-TW-UNIT-HIKI-FLAT",
+        "size_mode": "STANDARD",
+        "panel_count": "2枚建"
+      },
+      "responseSha256": "f415842113c729b0fb8b7912970bd906d88696d504f0e27a21a5eb643954cb3e"
+    },
+    {
+      "id": "SER-LIXIL-INPLUS",
+      "selection": {},
+      "responseSha256": "7c1ea8d6a3371f3cd231e4ffd89e39280665ac690d63aef9490c92c053f25f04"
+    },
+    {
+      "id": "SER-LIXIL-INPLUS",
+      "selection": {
+        "manufacturer": "LIXIL",
+        "series": "インプラス",
+        "product_category": "内窓",
+        "size_mode": "CUSTOM",
+        "product_variant": "standard"
+      },
+      "responseSha256": "7c1ea8d6a3371f3cd231e4ffd89e39280665ac690d63aef9490c92c053f25f04"
+    },
+    {
+      "id": "SER-LIXIL-INPLUS",
+      "selection": {
+        "manufacturer": "LIXIL",
+        "series": "インプラス",
+        "product_category": "内窓",
+        "size_mode": "CUSTOM",
+        "product_variant": "standard",
+        "window_type": "引違い窓"
+      },
+      "responseSha256": "73345331d1da9443a43c7bc358f0c246e52a56db05f5534fd5a738b15b796e91"
+    },
+    {
+      "id": "SER-LIXIL-INPLUS",
+      "selection": {
+        "manufacturer": "LIXIL",
+        "series": "インプラス",
+        "product_category": "内窓",
+        "window_type": "引違い窓",
+        "size_mode": "CUSTOM",
+        "product_variant": "standard",
+        "sash_configuration": "2枚建"
+      },
+      "responseSha256": "718637801ba3208ff33d4287a8f13174afc3bc1ae30eee5bdf4f497edadce77b"
+    },
+    {
+      "id": "SER-LIX-SAMOS2H",
+      "selection": {},
+      "responseSha256": "bdc846cf9272fab7d10fd8b2cc9d8747eab5e748bdad625fab5ec082d51724f4"
+    },
+    {
+      "id": "SER-LIX-SAMOS2H",
+      "selection": {
+        "glass_type": "FROST",
+        "window_type": "WT-S2H-HIKICHIGAI"
+      },
+      "responseSha256": "e936f4740d1ff9f3eb3607c120311bcba1a2bffb9092eb1cea67753e581b25d5"
+    },
+    {
+      "id": "SER-LIX-SAMOS2H",
+      "selection": {
+        "glass_type": "FROST",
+        "window_type": "WT-S2H-HIKICHIGAI",
+        "size_mode": "STANDARD"
+      },
+      "responseSha256": "db97570e82edcacbf8267240ae7e0c9d95555abca9a200afaacfdb62b2ef5568"
+    },
+    {
+      "id": "SER-LIX-SAMOS2H",
+      "selection": {
+        "glass_type": "FROST",
+        "window_type": "WT-S2H-HIKICHIGAI",
+        "size_mode": "STANDARD",
+        "panel_count": 2
+      },
+      "responseSha256": "302a7ad4c7c8793184920bb007dcaac99c2a20c98476ad1ad8aabddf20d46bf9"
+    },
+    {
+      "id": "SER-LIX-SAMOSL",
+      "selection": {},
+      "responseSha256": "5746308580f76975bf124626e1c1fcbf44fb182847754e7fcaaa120a97c140d6"
+    },
+    {
+      "id": "SER-LIX-SAMOSL",
+      "selection": {
+        "window_type": "WT-SL-HIKICHIGAI"
+      },
+      "responseSha256": "8b8f415e51588d1ecd5b5946b1d1b46c72275c2642752ed804a71420620e6d3a"
+    },
+    {
+      "id": "SER-LIX-SAMOSL",
+      "selection": {
+        "window_type": "WT-SL-HIKICHIGAI",
+        "size_mode": "STANDARD"
+      },
+      "responseSha256": "fbe4413a8b217edcc4a3ea781283c63008dc7bd4a321ef20a3a05ef1296fbcdb"
+    },
+    {
+      "id": "SER-LIX-SAMOSL",
+      "selection": {
+        "window_type": "WT-SL-HIKICHIGAI",
+        "size_mode": "STANDARD",
+        "size": "SZ-SL-000001"
+      },
+      "responseSha256": "6bcccd8dc26f4adb36df2047e6c32d2c3afbcc31330d7b68b10265fc54664ed7"
+    },
+    {
+      "id": "SER-LIXIL-RECHENT-D3-NF",
+      "selection": {},
+      "responseSha256": "966f72961395066be9003c67ec6c1e2e1af13c7b80bdeac18230820998c2be4f"
+    },
+    {
+      "id": "SER-LIXIL-RECHENT-D3-NF",
+      "selection": {
+        "runtime_mode": "PRODUCT_SELECTION",
+        "thermal_spec": "HIGH_INSULATION"
+      },
+      "responseSha256": "5f76be0a01faf591eb3329be831e05a0184bdc51a66d3be01795798d4bb37ff7"
+    },
+    {
+      "id": "SER-LIXIL-RECHENT-D3-NF",
+      "selection": {
+        "runtime_mode": "PRODUCT_SELECTION",
+        "thermal_spec": "HIGH_INSULATION",
+        "transom": "NONE"
+      },
+      "responseSha256": "a1bdaf0d8751b26cff2de1b095035b6dc0a40f3794d204d407731624e4f92be6"
+    },
+    {
+      "id": "SER-LIXIL-RECHENT-D3-NF",
+      "selection": {
+        "runtime_mode": "PRODUCT_SELECTION",
+        "thermal_spec": "HIGH_INSULATION",
+        "transom": "NONE",
+        "opening_type": "SINGLE"
+      },
+      "responseSha256": "ecceb7affe6620318c54eff2ef1d4a99e577f0e92cd6cc7af35a5dcb9cdf5931"
+    },
+    {
+      "id": "SER-YKK-APW430",
+      "selection": {},
+      "responseSha256": "6866d76f925336664e09db2c739b30a96044a839f65a8a05dfd9640af7fa71b7"
+    },
+    {
+      "id": "SER-YKK-APW430",
+      "selection": {
+        "window_type": "SWT-YKK-APW430-FIX-MADO"
+      },
+      "responseSha256": "4384d6f7c2e6352c6a96585528047a58689d335f156fc74466b7569f4bd3856e"
+    },
+    {
+      "id": "SER-YKK-APW430",
+      "selection": {
+        "window_type": "SWT-YKK-APW430-FIX-MADO",
+        "size_mode": "STANDARD"
+      },
+      "responseSha256": "4384d6f7c2e6352c6a96585528047a58689d335f156fc74466b7569f4bd3856e"
+    },
+    {
+      "id": "SER-YKK-APW430",
+      "selection": {
+        "window_type": "SWT-YKK-APW430-FIX-MADO",
+        "size_mode": "STANDARD",
+        "size": "SZ-YKK-APW430-FIX-M-02609"
+      },
+      "responseSha256": "e9c18e16a9823c6b88b54d25ebc683b92e10a342338012d49b5cdcb0099024a7"
+    },
+    {
+      "id": "SER-YKK-APW431",
+      "selection": {},
+      "responseSha256": "10685dd83363f6798a757807824080315631eec1cb40f09429c9b3da553f18e1"
+    },
+    {
+      "id": "SER-YKK-APW431",
+      "selection": {
+        "window_type": "W431-001"
+      },
+      "responseSha256": "31f88e3397a64a54e3c689605356aec02b3f2f4d17836ee8c17807b747b79158"
+    },
+    {
+      "id": "SER-YKK-APW431",
+      "selection": {
+        "window_type": "W431-001",
+        "region_standard": "北海道"
+      },
+      "responseSha256": "6d451529a38c18543cee7d39490dbcfc8288bc5ad1486912d6d289ac4d08f880"
+    },
+    {
+      "id": "SER-YKK-APW431",
+      "selection": {
+        "window_type": "W431-001",
+        "region_standard": "北海道",
+        "panel_count": "2枚建"
+      },
+      "responseSha256": "32989fd790ff92e3278dc721c75102c636452c4f95945113fe0d0b12553be955"
+    },
+    {
+      "id": "SER-YKKAP-UCHIRIMO",
+      "selection": {},
+      "responseSha256": "0b8a35fa569e6abe9015ee27a7d974a25fc0f04f19f340a87021dc1cd3f560c1"
+    },
+    {
+      "id": "SER-YKKAP-UCHIRIMO",
+      "selection": {
+        "size_mode": "custom",
+        "window_type": "sliding_window"
+      },
+      "responseSha256": "b7d30a2a812d64a9cdaa206d86c39dbe8ec7d3710f0fb39fe3ace059d7e6f30e"
+    },
+    {
+      "id": "SER-YKKAP-UCHIRIMO",
+      "selection": {
+        "window_type": "sliding_window",
+        "size_mode": "custom",
+        "room_specification": "residential"
+      },
+      "responseSha256": "a06116c6d0ae005846c19b6225c3b0b1f24b61553c58b491abc4353a35ad6079"
+    },
+    {
+      "id": "SER-YKKAP-UCHIRIMO",
+      "selection": {
+        "room_specification": "residential",
+        "window_type": "sliding_window",
+        "size_mode": "custom",
+        "sash_configuration": "two_panel"
+      },
+      "responseSha256": "406e21533fc574123950feb1957d29bf988c91aeb6d14ca64b9c3eb14b6b83c3"
+    }
+  ]
+}

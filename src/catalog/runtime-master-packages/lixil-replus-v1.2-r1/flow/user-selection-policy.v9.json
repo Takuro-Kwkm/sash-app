@@ -1,0 +1,25 @@
+{
+  "schema": "USER_SELECTION_POLICY_V1",
+  "revision": "REPLUS_GLOBAL_FLOW_V9_20261014",
+  "decision": "User requested both covers follow sash colors on 2026-10-14; implementation and QA subsequently authorized.",
+  "manufacturer_same_color_required": null,
+  "mapping_basis": "Existing official component color palettes, explicit product-specific value mappings. No equality based on code or label heuristics.",
+  "source_catalog": "SN1200",
+  "source_sha256": "b837ce209c8b55b2b66b412a4e3c2694a78fd5de823efc7b2b960688a5668098",
+  "scope": "LOCAL_CANDIDATE_ONLY",
+  "formal_adoption": false,
+  "flow_order": [
+    "context",
+    "opening",
+    "finish",
+    "screen",
+    "glazing",
+    "interior_finish",
+    "exterior_finish",
+    "native_options",
+    "options",
+    "part_detail",
+    "survey",
+    "size"
+  ]
+}

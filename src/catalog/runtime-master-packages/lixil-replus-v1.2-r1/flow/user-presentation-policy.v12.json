@@ -1,0 +1,15 @@
+{
+  "schema": "USER_PRESENTATION_POLICY_V1",
+  "revision": "REPLUS_HIDE_DERIVED_CONFIRMATIONS_V12_20261014",
+  "formalAdoption": false,
+  "hiddenConfirmations": [
+    "cut_mall_color",
+    "exterior_cover_color",
+    "inner_fit_required_component",
+    "interior_adjustment_angle_color",
+    "interior_cover_color",
+    "interior_resin_cover_color"
+  ],
+  "calculation": "UNCHANGED; colors still follow body and inner-fit still requires upper-frame base",
+  "scope": "Sales display and resolved informational notices only; retain unknown mapping and installation/price holds"
+}

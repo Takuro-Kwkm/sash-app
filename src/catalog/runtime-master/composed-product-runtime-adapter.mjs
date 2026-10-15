@@ -24,7 +24,9 @@ export function resolveMigratedCandidateSelection(reader,input,migrations=[]){
   return reader.uiResolver({...prepared,...migrated});
 }
 export async function adaptComposedProductRuntime(document,entry,loadReference){
-  if(document.formal_adoption!==false||document.source_adoption!==false||document.schema!=='PRODUCT_MODULE_CANDIDATE_V1')throw Object.assign(new Error('CANDIDATE_SCOPE_INVALID'),{code:'CANDIDATE_SCOPE_INVALID'});
+  const formal=document.schema==='FORMAL_COMPOSED_PRODUCT_MODULE_V1'&&document.formal_adoption===true&&entry.packageType==='FORMAL_COMPOSED_PRODUCT_RUNTIME';
+  const candidate=document.schema==='PRODUCT_MODULE_CANDIDATE_V1'&&document.formal_adoption===false;
+  if((!formal&&!candidate)||document.source_adoption!==false)throw Object.assign(new Error('CANDIDATE_SCOPE_INVALID'),{code:'CANDIDATE_SCOPE_INVALID'});
   const references=new Map();
   for(const b of document.composition?.bindings??[]){
     if(!b.executable)continue;
@@ -106,8 +108,8 @@ export async function adaptComposedProductRuntime(document,entry,loadReference){
     result.validation.missingRequiredFields=[...new Set(missing)];
     result.validation.status=errors.length||result.dimensionResult?.status==='BLOCK'?'INVALID':missing.length?'INCOMPLETE':'MANUAL_CHECK';
     result.orderReady=false;result.pricing={price:null,bom:null,set_code:null};
-    result.runtimeMaster={masterVersion:entry.masterVersion,packageVersion:entry.packageVersion,schemaVersion:entry.schemaVersion,adapterType:entry.adapterType,sourceHash:entry.sha256,canonicalRuntimeReference:entry.canonicalRuntimeReference,candidateOnly:true,candidateRuntimeReference:entry.candidateRuntimeReference,sourcePackageIntegrity:{expected:entry.sha256,actual:entry.sha256,match:true}};
-    result.runtimeCapabilities={candidateOnly:true,automaticManufacturing:false,automaticPricing:false,sourceAdoption:false,formalAdoption:false};
+    result.runtimeMaster={masterVersion:entry.masterVersion,packageVersion:entry.packageVersion,schemaVersion:entry.schemaVersion,adapterType:entry.adapterType,sourceHash:entry.sha256,canonicalRuntimeReference:entry.canonicalRuntimeReference,candidateOnly:!formal,candidateRuntimeReference:entry.candidateRuntimeReference,sourcePackageIntegrity:{expected:entry.sha256,actual:entry.sha256,match:true}};
+    result.runtimeCapabilities={candidateOnly:!formal,automaticManufacturing:false,automaticPricing:false,sourceAdoption:false,formalAdoption:formal};
     return result;
   }};
 }

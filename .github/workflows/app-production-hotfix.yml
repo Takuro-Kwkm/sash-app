@@ -79,6 +79,7 @@ jobs:
           done
           GITHUB_SHA="$HEAD_SHA" npm run verify:app-release
           GITHUB_SHA="$HEAD_SHA" npm run test:browser:release
+          QA_RUNTIME_QA_CONTRACT=contracts/production/runtime-ui-qa/replus-v1.2-r1.json QA_EXPECTED_COMMIT="$HEAD_SHA" node test/browser/composed-runtime-browser-qa.mjs
       - if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
@@ -161,6 +162,7 @@ jobs:
           done
           npm run verify:app-release -- --output artifacts/app-hotfix-production/local-verification.json
           npm run test:browser:release
+          QA_RUNTIME_QA_CONTRACT=contracts/production/runtime-ui-qa/replus-v1.2-r1.json QA_EXPECTED_COMMIT="$GITHUB_SHA" node test/browser/composed-runtime-browser-qa.mjs
 
       - name: Prepare Vercel credential
         shell: bash

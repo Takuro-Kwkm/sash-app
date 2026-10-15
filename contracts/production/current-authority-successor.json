@@ -1,6 +1,6 @@
 {
   "schema": "CURRENT_AUTHORITY_SUCCESSOR_SELECTION_V1",
-  "path": "contracts/production/authority-successors/replus-current.v1.json",
-  "sha256": "e24701bda7a6a8277063c8fd5ed97d6682eac996472a50c2ee4b1e3d00066aec",
+  "path": "contracts/production/authority-successors/runtime-ui-release-current.v1.json",
+  "sha256": "70cbac669e26abb28dbb3880ecd302c9ea03f354d1586dcb6e2112f47a9fd853",
   "implementation_sha": "a37a7b79160c1cf727a1e4d998da3bb723c3cd08"
 }
