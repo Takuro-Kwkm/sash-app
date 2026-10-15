@@ -16,5 +16,8 @@
   "candidate_index_file_id": "1b8bgs_goVbtDD4EMiQUZjjPIPMaEvmsM",
   "candidate_module_file_id": "1e8KZZUAgDzRROgFO7OUx_Vjy38jRDNGS",
   "candidate_index_sha256": "3f1e66efccdba3fbd4bedf8868776a803100110e6e1aff89a3a19e6c58013590",
-  "source_manifest_boundary": "Immutable QA_READY/DRAFT snapshot was adopted as a package by the real Formal Human Decision and Registry. UI flow Human Review remains pending."
+  "source_manifest_boundary": "Immutable QA_READY/DRAFT snapshot was adopted as a package by the real Formal Human Decision and Registry. UI flow Human Review remains pending.",
+  "master_sha256": "f23760a601229f31bfcd4fdc5b3be6fc64a3392cff8eda31283bc4d3381c043b",
+  "completed_work": "APW511-FORMAL-20261016-F1",
+  "human_packet_sha256": "caea8ceee2cd78509071ed127a72ada2d8678028566aded833b15ce1edca38e7"
 }

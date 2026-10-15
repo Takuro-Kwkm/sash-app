@@ -255,6 +255,22 @@
       "state": "FAIL_CLOSED",
       "validators": [],
       "no_fallback": true
+    },
+    "NEW-CANDIDATE-d780d8e7c8cdae7ba41675eb": {
+      "state": "READY",
+      "scope": "LOCAL_SALES_ESTIMATE_REQUEST_UI_CANDIDATE_ONLY",
+      "validators": [
+        "native-formal-identity",
+        "fixed-domain-projection",
+        "human-flow-review-authorization",
+        "source-handoff-parity",
+        "declared-sales-runtime-browser"
+      ],
+      "no_fallback": true,
+      "runtime_candidate_profile": {
+        "path": "contracts/production/runtime-candidates/apw511-r2.profile.json",
+        "sha256": "88531179ef46aec411c997ba81e912a2895ce21596e2538018f7d88859042f7c"
+      }
     }
   },
   "build_profiles": {

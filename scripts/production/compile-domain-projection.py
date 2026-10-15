@@ -39,7 +39,7 @@ def selector(condition, assigned=None):
     return {key: {'$' + op: value}}
 
 
-def compile_profile(profile, root):
+def load_adopted_master(profile, root):
     source = root / profile['source']['path']
     assert hashlib.sha256(source.read_bytes()).hexdigest() == profile['source']['sha256'], 'SOURCE_BYTES_CHANGED'
     master = json.loads(source.read_bytes())
@@ -48,13 +48,20 @@ def compile_profile(profile, root):
         manifest_bytes = (root / receipt['path']).read_bytes()
         assert hashlib.sha256(manifest_bytes).hexdigest() == receipt['sha256'], 'FORMAL_MANIFEST_CHANGED'
         manifest = json.loads(manifest_bytes)
+        assert manifest['formal_state'] == 'ADOPTED_FOR_ADMITTED_STORAGE_TRANSACTION', 'ADOPTED_MASTER_REQUIRED'
         assert manifest['product_master_sha256'] == profile['source']['sha256'], 'ADOPTED_SNAPSHOT_CHANGED'
         assert manifest['product_id'] == master['product']['product_id'] and manifest['approved_packet_sha256'], 'ADOPTED_MASTER_REQUIRED'
+        assert manifest['product_master_revision'] == master['product']['revision'], 'REVISION_IDENTITY'
     else:
         assert master['lifecycle_status'] == 'FORMAL', 'ADOPTED_MASTER_REQUIRED'
     assert master['schema_version'] == '1.0', 'MASTER_SCHEMA_UNSUPPORTED'
     assert master['product']['product_id'] == profile['source']['product_id'], 'PRODUCT_IDENTITY'
     assert master['product']['revision'] == profile['source']['revision'], 'REVISION_IDENTITY'
+    return master
+
+
+def compile_profile(profile, root):
+    master = load_adopted_master(profile, root)
     fields = {f['field_id']: f for f in master['fields']}
     assert len(fields) == len(master['fields']) and set(fields) == set(profile['fields']), 'FIELD_SCOPE_CHANGED'
     pid = profile['product']['id']
