@@ -1,6 +1,6 @@
 {
   "schema": "CURRENT_AUTHORITY_SUCCESSOR_SELECTION_V1",
   "path": "contracts/production/authority-successors/runtime-ui-release-current.v1.json",
-  "sha256": "70cbac669e26abb28dbb3880ecd302c9ea03f354d1586dcb6e2112f47a9fd853",
+  "sha256": "569d855870e6f32d926d87e27f8ccf474cd80ea80b9e49185cf0517b91ab12e0",
   "implementation_sha": "a37a7b79160c1cf727a1e4d998da3bb723c3cd08"
 }

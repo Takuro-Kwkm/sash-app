@@ -2,7 +2,7 @@ import {chromium} from 'playwright';
 import assert from 'node:assert/strict';
 import {readFile,mkdir,writeFile} from 'node:fs/promises';
 import {configureProtectedQaBrowser,protectedQaGet} from '../../scripts/production/protected-qa-access.mjs';
-const BASE=process.env.QA_BASE_URL??'http://127.0.0.1:4201',OUT=process.env.QA_OUTPUT_DIR??'artifacts/replus-runtime-release/browser';
+const BASE=process.env.QA_BASE_URL??'http://127.0.0.1:4173',OUT=process.env.QA_OUTPUT_DIR??'artifacts/replus-runtime-release/browser';
 const contract=JSON.parse(await readFile(process.env.QA_RUNTIME_QA_CONTRACT??'contracts/production/runtime-ui-qa/replus-v1.2-r1.json'));
 await mkdir(OUT,{recursive:true});
 const report={status:'RUNNING',url:BASE,persistence:'BROWSER_LOCAL_STORAGE',observedCommit:null,viewports:[],errors:[]};
