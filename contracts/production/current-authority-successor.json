@@ -1,6 +1,6 @@
 {
   "schema": "CURRENT_AUTHORITY_SUCCESSOR_SELECTION_V1",
-  "path": "contracts/production/authority-successors/doorremo-formal-current.v1.json",
-  "sha256": "787c897733cff37490f2f0110cc8a3e34e23b6c870e2f8146cdee0a4f193ffa8",
+  "path": "contracts/production/authority-successors/doorremo-runtime-current.v1.json",
+  "sha256": "fc9471b6773d870ebe245ba19b7b43fbe7356efba7b3b0983e0952860edaa8cb",
   "implementation_sha": "16f4efd69e06adc994b5394ff1726c8a5e372cd3"
 }

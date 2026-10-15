@@ -10,6 +10,11 @@ def snapshot(root, revision):
         return {m.name: archive.extractfile(m).read() for m in archive if m.isfile()}
 
 def validate(root):
+    if SCOPE_PATH == 'contracts/production/native-change-scope.v1.json' and (Path(root)/'contracts/production/domain-runtime-candidate-scope.v1.json').exists():
+        import importlib.util
+        spec=importlib.util.spec_from_file_location('runtime_candidate_scope',Path(root)/'scripts/production/domain-runtime-connection-scope.py')
+        module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)
+        return module.validate(root)
     if SCOPE_PATH == 'contracts/production/native-change-scope.v1.json' and (Path(root)/'contracts/production/working-domain-formal-scope.v1.json').exists():
         import importlib.util
         spec=importlib.util.spec_from_file_location('working_formal_scope',Path(root)/'scripts/production/working-formal-connection-scope.py')
