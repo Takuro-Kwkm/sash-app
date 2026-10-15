@@ -17,6 +17,11 @@ def prepare(harness_root, checkout, captures, destination, instruction):
     compatibility(central, checkout)
     c = read_json(captures)
     route = route_instruction(central, {c['repository']: str(checkout)}, instruction, c['product_id'])
+    if route['target_gate'] == 'FORMAL_CHANGE_ADOPTION':
+        formal_entry = checkout / 'scripts/production/prepare-sheet-package-formal.py'
+        entry_spec = importlib.util.spec_from_file_location('native_formal_preparer', formal_entry)
+        entry = importlib.util.module_from_spec(entry_spec); entry_spec.loader.exec_module(entry)
+        return entry.prepare(central, checkout, captures, destination, instruction)
     requested_route = route
     if route['work_type'] == 'PRODUCT_MASTER_BUILD':
         require(route['native_profile'].get('mode') == 'EXISTING_FORMAL_SUCCESSOR',

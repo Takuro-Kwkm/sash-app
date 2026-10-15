@@ -10,12 +10,17 @@ def snapshot(root, revision):
         return {m.name: archive.extractfile(m).read() for m in archive if m.isfile()}
 
 def validate(root):
+    if SCOPE_PATH == 'contracts/production/native-change-scope.v1.json' and (Path(root)/'contracts/production/giesta2-formal-scope.v1.json').exists():
+        import importlib.util
+        spec=importlib.util.spec_from_file_location('formal_scope',Path(root)/'scripts/production/formal-connection-scope.py')
+        module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)
+        return module.validate(root)
     root=Path(root); errors=[]
     try:
         # A later native Work owns a new immutable record. Preserve the completed
         # release scope and inspect its original bytes at the sealed revision.
         active=root/'contracts/production/working-master-sales-scope.v1.json'
-        s=json.loads((active if active.exists() else root/SCOPE_PATH).read_bytes())
+        s=json.loads((active if SCOPE_PATH == 'contracts/production/native-change-scope.v1.json' and active.exists() else root/SCOPE_PATH).read_bytes())
         assert s['schema']=='NATIVE_IMMUTABLE_CHANGE_SCOPE_V1' and s['formal_writes_before_human'] is False, 'SCOPE_IDENTITY'
         before=snapshot(root,s['baseline_commit']); allowed=set(s['allowed_paths'])
         protected={p:digest(b) for p,b in before.items() if p not in allowed}

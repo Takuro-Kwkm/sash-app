@@ -123,7 +123,14 @@
         "sales-handoff-native-qa"
       ],
       "no_fallback": true,
-      "connection_validator": "scripts/production/validate-sheet-package-connection.py"
+      "connection_validator": "scripts/production/validate-sheet-package-connection.py",
+      "formal_profile": {
+        "path": "contracts/production/giesta2-formal-profile.v1.json",
+        "sha256": "09b5b1eece7625b0399c13c9a300ac97c34ebb54f33e2d6073f6604b8156aff8",
+        "target_gate": "FORMAL_CHANGE_ADOPTION",
+        "human_gate": "HUMAN_ADOPTION",
+        "storage": "NATIVE_ACTUAL_READBACK_THEN_EXISTING_SHARED_FORMAL_SAVE"
+      }
     },
     "NATIVE_REGISTRY:LIXIL::エルムーブ2": {
       "state": "FAIL_CLOSED",

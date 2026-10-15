@@ -49,6 +49,10 @@ def materialize(root, destination):
     subprocess.run(['git','-C',str(destination),'checkout','--quiet','--detach',BASE],check=True)
 
 def validate(root):
+    if (Path(root)/'contracts/production/giesta2-formal-scope.v1.json').exists():
+        definition=importlib.util.spec_from_file_location('formal_scope',Path(root)/'scripts/production/formal-connection-scope.py')
+        module=importlib.util.module_from_spec(definition);definition.loader.exec_module(module)
+        return module.validate(root)
     try:
         if (Path(root)/'contracts/production/working-master-sales-scope.v1.json').exists():
             file=Path(root)/'scripts/production/native-change-scope.py'

@@ -24,6 +24,15 @@ def validate(root):
         assert validators['products'][product['product_id']]['state']=='READY' and validators['products'][product['product_id']]['no_fallback'] is True
         for field in ('native_adapter','native_preparer','native_qa'):
             assert (root/profile[field]).is_file(), field
+        if product.get('formal_profile'):
+            formal = product['formal_profile']; path = root/formal['path']
+            assert hashlib.sha256(path.read_bytes()).hexdigest() == formal['sha256'], 'Formal profile hash drift'
+            declared = json.loads(path.read_text())
+            assert declared['product_id'] == product['product_id'] and declared['status'] == 'ADOPTED'
+            assert declared['target_gate'] == 'FORMAL_CHANGE_ADOPTION' and declared['human_gate'] == 'HUMAN_ADOPTION'
+            assert declared['formal_writes_before_human'] == declared['runtime_ui_mutations'] == 0
+            assert declared['automatic_orderability'] is False and declared['shared_engine'] == 'scripts/production-work.py'
+            assert all((root/declared[k]).is_file() for k in ('native_preparer','native_worker'))
     return {'status':'PASS','connections':len(matches),'business_qa':'NOT_EXECUTED_BY_CONNECTION_VALIDATOR','shared_engine_mutations':0}
 
 

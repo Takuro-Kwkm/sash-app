@@ -15,6 +15,14 @@ class InstructionScopeTests(unittest.TestCase):
         self.assertEqual(guard.validate(ROOT)['status'],'PASS')
 
     def test_mutations_and_scope_expansion_fail(self):
+        if (ROOT/'contracts/production/giesta2-formal-scope.v1.json').exists():
+            with tempfile.TemporaryDirectory() as folder:
+                baseline=Path(folder)/'sealed'
+                subprocess.run(['git','clone','--quiet','--shared','--dissociate',str(ROOT),str(baseline)],check=True)
+                subprocess.run(['git','-C',str(baseline),'checkout','--quiet','--detach','54f397a8ef3b5061f35fd4d0b9100db7b159d88a'],check=True)
+                import sys
+                subprocess.run([sys.executable,'-B',str(baseline/'scripts/production/test_instruction_scope.py')],check=True)
+            return
         with tempfile.TemporaryDirectory() as directory:
             # The documentation Work is complete. Test its original guard at
             # its sealed main, not against later authorized product changes.
