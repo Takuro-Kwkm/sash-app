@@ -232,7 +232,7 @@
     "contracts/production/authority-successors/runtime-ui-release-predecessor-selection.v1.json": "666e357dcd85445c61923c8e0933f517cb86206ad0375d7f19cec194a8053c65",
     "contracts/production/current-architecture.json": "d232488a382d16eed53eacf7a4e74b761883e91cb34e661dd16566ba165b1a9b",
     "contracts/production/native-change-profiles/replus-v13.json": "bfdbf6947ae998c2cd70d47c941b08651c7890c8653cfd2c410de79fb65a77a0",
-    "contracts/production/native-change-scope.v1.json": "f548f03cbe34abf52c37b91a33e14d83d124980f72ad486d6dbb1fe0270f0532",
+    "contracts/production/native-change-scope.v1.json": "504906f0188924a446869d0e9e3b2c443502afc21b0ef8c264674f3f5fdde13e",
     "contracts/production/order4-release-scope.v1.json": "14aec30175b54b19154dc934941bf10d727215540afcd985a660386a3da3d05d",
     "contracts/production/order5-assets.v2.json": "60e2e16f88338581cc4e8ed29534d9867906af30601c55b9dbc46fd5377e22a2",
     "contracts/production/order5-batch2-assets.v1.json": "6f8cb964b3d4e13c7bbe603701da56770c246ef77f69b084c55d154e30bc1bc9",
@@ -274,7 +274,7 @@
     "scripts/production/prepare-ew.py": "6d1497c7e48650cf32d7106972270b7c9e6a14d9a080fb53a29cc651a9014e4c",
     "scripts/production/prepare-publication-lifecycle.py": "a046ef12ce4110004d5e28334a398e203ef57a5b168171c2e087dc1bdcbb5d80",
     "scripts/production/prepare-table-package-change.py": "92b64facf32062a0497fb966a56d4aa72f57dbde4958879d8b39817f7156e45f",
-    "scripts/production/protected-qa-access.mjs": "4c3ed8fe38a228278b308cdc34b9633cbd303d788d74a3a16fbd385b7b432e45",
+    "scripts/production/protected-qa-access.mjs": "a6823cfa1b434200b7f51e510fef0a60086430b1fcf26ca0c1c86d68edd28c26",
     "scripts/production/publication-lifecycle-qa.mjs": "2b9722d887ab6516e988c09284cd9489b842f1396a0c0ada8f29502a87a48066",
     "scripts/production/publication-lifecycle-scope.py": "2f141b2c912b7eb0d96dd80876bc24b0426cc2104da94c0c7bf1b618fbfc9415",
     "scripts/production/publication-lifecycle.mjs": "97a5af337000d9c63ff92b0d37ccb894e2503d0e5070b60f643ff73e056973f1",
@@ -335,7 +335,7 @@
     "test/browser/ew-october-2026-browser-qa.mjs": "2b83118bc51b190608f054d7a4f5b02c0c25f28f163fb152dd6c7d5c612a995a",
     "test/browser/release-regression-browser-qa.mjs": "855d124bfcc79ef444a1bfabb2000261bab775f1a75116f04bf66a379c0e17b4",
     "test/formal-composed-runtime-integration.test.mjs": "5a872757d9364c81fe9d5a9238c43824af33c98efc598ced8a2594e958494c9e",
-    "test/protected-qa-access.test.mjs": "d7b788b72a2446f758e8d23c64d0738bd3f5c4c6e3ac00fa7b863677b9f5e8dd"
+    "test/protected-qa-access.test.mjs": "0e755e9a5586bd23094092f21906ff2a29215d1865a200fe7763937ed0f31c7d"
   },
   "scope_admission": {
     "mode": "INFRASTRUCTURE_RELEASE_SAME_BYTES",

@@ -51,6 +51,7 @@ test('Playwright HTTP uses one-hop requests and refuses a cross-origin redirect'
  assert.equal(calls.length,1);
  assert.equal(calls[0].options.maxRedirects,0);
  assert.equal(calls[0].options.headers['x-vercel-trusted-oidc-idp-token'],'test-oidc');
+ assert.equal(calls[0].options.headers['x-vercel-skip-toolbar'],'1');
 });
 
 test('browser interception keeps clean URLs and aborts a protected cross-origin redirect',async()=>{
@@ -74,4 +75,31 @@ test('native error serialization removes raw and URL-encoded access credentials'
   assert.ok(!serialized.includes(token));assert.ok(!serialized.includes(encodeURIComponent(token)));
  }
  assert.equal(serialized.match(/\[REDACTED\]/g)?.length,4);
+});
+
+test('share authentication follows its clean redirect once and preserves the issued cookie',async()=>{
+ const requests=[];
+ const app=await server((request,response)=>{
+  requests.push({url:request.url,cookie:request.headers.cookie});
+  if(request.url.includes('_vercel_share=')){response.writeHead(307,{location:'/health','set-cookie':'qa_access=granted; Path=/'});response.end();}
+  else if(request.headers.cookie==='qa_access=granted')response.end('verified');
+  else{response.writeHead(401);response.end();}
+ });
+ try{
+  const result=await protectedQaFetch(app.origin+'/health',{origin:app.origin,environment:{QA_AUTH_ORIGIN:app.origin,VERCEL_SHARE_TOKEN:'test-share'}});
+  assert.equal(await result.text(),'verified');assert.equal(requests.length,2);
+  assert.equal(requests[0].url,'/health?_vercel_share=test-share');assert.equal(requests[1].url,'/health');
+ }finally{await app.close();}
+});
+
+test('Playwright requests and browser routes omit the share parameter after its cookie redirect',async()=>{
+ const origin='https://approved.example',env={QA_AUTH_ORIGIN:origin,VERCEL_SHARE_TOKEN:'test-share'};
+ const urls=[];
+ const response=()=>({status:()=>urls.length===1?307:200,headers:()=>urls.length===1?{location:origin+'/health'}:{}});
+ const result=await protectedQaGet({get:async url=>{urls.push(url);return response();}},origin+'/health',origin,env);
+ assert.equal(result.status(),200);assert.deepEqual(urls,[origin+'/health?_vercel_share=test-share',origin+'/health']);
+ urls.length=0;let handler,fulfilled=false,aborted=false;
+ await configureProtectedQaBrowser({route:async(_pattern,callback)=>{handler=callback;}},origin,env);
+ await handler({request:()=>({url:()=>origin+'/health',headers:()=>({}),method:()=>'GET'}),fetch:async options=>{urls.push(options.url);return response();},fulfill:async()=>{fulfilled=true;},abort:async()=>{aborted=true;}});
+ assert.deepEqual(urls,[origin+'/health?_vercel_share=test-share',origin+'/health']);assert.equal(fulfilled,true);assert.equal(aborted,false);
 });

@@ -26,6 +26,7 @@
     "docs/REPLUS_RUNTIME_UI_RELEASE_R1.md",
     "docs/qa/window-flow-compliance/formal-evaluator-qa-contract.json",
     "scripts/build-eight-series-review.mjs",
+    "scripts/production/protected-qa-access.mjs",
     "scripts/production/runtime-integration-qa.mjs",
     "scripts/verify-tw-202610-adoption.mjs",
     "src/catalog/runtime-master-packages/lixil-replus-v1.2-r1/RPL_ATT_TH.module.json",
@@ -57,7 +58,8 @@
     "src/catalog/runtime-master/runtime-app-bridge.mjs",
     "src/catalog/runtime-master/runtime-master-registry.mjs",
     "test/browser/composed-runtime-browser-qa.mjs",
-    "test/formal-composed-runtime-integration.test.mjs"
+    "test/formal-composed-runtime-integration.test.mjs",
+    "test/protected-qa-access.test.mjs"
   ],
   "cyclic_paths": [
     "contracts/production/authority-successors/runtime-ui-release-current.v1.json",
@@ -617,7 +619,6 @@
     "scripts/production/preserve-replus-v13-authoring.py": "837b5fc0608a47393eb04806a657ab49ae23c2840a0ce732bbd9ca59643f2684",
     "scripts/production/preserve-replus-v9-authoring.py": "4026906d8d27de64c3746b844a6fb941c928eaddd4b3422645893bf3b50ce902",
     "scripts/production/product-master-build.py": "be272ec4ccdb82aebcad735b8ef2791d50b3dfff3475f29a831d514430a906b3",
-    "scripts/production/protected-qa-access.mjs": "4c3ed8fe38a228278b308cdc34b9633cbd303d788d74a3a16fbd385b7b432e45",
     "scripts/production/publication-lifecycle-qa.mjs": "2b9722d887ab6516e988c09284cd9489b842f1396a0c0ada8f29502a87a48066",
     "scripts/production/publication-lifecycle-scope.py": "2f141b2c912b7eb0d96dd80876bc24b0426cc2104da94c0c7bf1b618fbfc9415",
     "scripts/production/publication-lifecycle.mjs": "97a5af337000d9c63ff92b0d37ccb894e2503d0e5070b60f643ff73e056973f1",
@@ -1168,7 +1169,6 @@
     "test/helpers/formal-runtime-result.mjs": "c5aaf4faa76aa46537b1e1bb40c1cab26a93cf1d066f71cfd51d4d9d3b8d46d5",
     "test/helpers/legacy-inplus-source-result.mjs": "cec2e9da2d452659601bd160f93023af1c7abe5780c3973e20b8de3d2525c04a",
     "test/helpers/rechent-estimate-cases.mjs": "fa549d51db5e72c52e22cd91013e2b7cae6761e0e5e69eea735c642a4e38ac28",
-    "test/protected-qa-access.test.mjs": "d7b788b72a2446f758e8d23c64d0738bd3f5c4c6e3ac00fa7b863677b9f5e8dd",
     "test/vercel-staged-executor.test.mjs": "c1ee42543f0aee8d757117810fe55d61d068900b16fe7cede3ebc7fbadc223f3",
     "vercel.json": "1d2210ec1d8fd44369362cc4939804e424a474f5487950c80a599aa80163d768"
   },
@@ -1186,6 +1186,7 @@
     "docs/REPLUS_RUNTIME_UI_RELEASE_R1.md": "9d18175cf544ec38dc625e520a7168a1ad0a0030cc20c5244f323e777b53e5b5",
     "docs/qa/window-flow-compliance/formal-evaluator-qa-contract.json": "12c0c6ac46d0199b1df1a612756d36d69728bf9875f3eaf2ba5fb078da2fd67a",
     "scripts/build-eight-series-review.mjs": "b09cf5b225db8d62b032f68e0e09a38e3b114f146d7f6f5e6fdf7e82bd7d368c",
+    "scripts/production/protected-qa-access.mjs": "a6823cfa1b434200b7f51e510fef0a60086430b1fcf26ca0c1c86d68edd28c26",
     "scripts/production/runtime-integration-qa.mjs": "75d4d28e24bac0f8ace473d8eab8e7a65890b27840f16723afbbca9ce961afbd",
     "scripts/verify-tw-202610-adoption.mjs": "4366adba36ad3e1bf0f31f8c76cad072487feab6cf5ca8d12c18fd1d74f5553a",
     "src/catalog/runtime-master-packages/lixil-replus-v1.2-r1/RPL_ATT_TH.module.json": "6303f9ecaafc0b05028ad9b7f67fa0b783317ae3f8b4317e49438ce8e1cd795d",
@@ -1217,7 +1218,8 @@
     "src/catalog/runtime-master/runtime-app-bridge.mjs": "b2d89591856745b002859350e157f11d9b30d303ec8c97e5aad43108e2c6fc7e",
     "src/catalog/runtime-master/runtime-master-registry.mjs": "5c6442c504a28fd8ff403e2ec0616c94d00da4667ddf2eed925754349551b4f5",
     "test/browser/composed-runtime-browser-qa.mjs": "064934be2c834c554ed3f0ba653c4aa40e48e5941524a5634f75341fdac4db22",
-    "test/formal-composed-runtime-integration.test.mjs": "5a872757d9364c81fe9d5a9238c43824af33c98efc598ced8a2594e958494c9e"
+    "test/formal-composed-runtime-integration.test.mjs": "5a872757d9364c81fe9d5a9238c43824af33c98efc598ced8a2594e958494c9e",
+    "test/protected-qa-access.test.mjs": "0e755e9a5586bd23094092f21906ff2a29215d1865a200fe7763937ed0f31c7d"
   },
   "completed_work": {
     "commit": "8152f03883430716f520168ff01d60738e4a4b8f",
