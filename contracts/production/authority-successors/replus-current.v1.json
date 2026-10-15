@@ -16,11 +16,11 @@
   },
   "compatibility_implementation": {
     "repository": "Takuro-Kwkm/product-ui-contracts",
-    "ref": "11c3ce5ebc3db3fa6515c11123ad66ee4e1c0aec"
+    "ref": "a37a7b79160c1cf727a1e4d998da3bb723c3cd08"
   },
   "release_profile": {
     "path": "contracts/production/release-profile.v1.json",
-    "sha256": "b3f4fbb01677edf43931a221990abb4682b8398d8d3f46dd273cf01e7823c4ec"
+    "sha256": "9435f9b2386ae0d3ade42873690238e76dc1b69561f63b644d6bc4e367d4eac2"
   },
   "semantic_delta": {
     "added": {},

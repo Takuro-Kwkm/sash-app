@@ -2,7 +2,7 @@
 
 最新候補V13と商品別フロー登録R1を固定し、既存Shared Harness v2で7冊のAuthoring Masterを正式採用へ進めるための接続。候補の商品データ・表示契約は変更しない。価格・数量・BOM・発注コード・施工適合の要確認を保持する。
 
-Currentは中央remote mainから取得する。候補が保持していた旧実行部の差は、既存main `8152f03883430716f520168ff01d60738e4a4b8f` の採用内容を取り込んで解消する。その後の中央Current `11c3ce5ebc3db3fa6515c11123ad66ee4e1c0aec` への追随は、既存のV7 successor契約で行う。追加された別商品のrouteはリプラスへ転用しない。凍結されたShared Engine、Canonical Skill、旧採用記録、旧Workは変更しない。
+Currentは中央remote mainから取得する。候補が保持していた旧実行部の差は、既存main `8152f03883430716f520168ff01d60738e4a4b8f` の採用内容を取り込んで解消する。その後の中央Current `a37a7b79160c1cf727a1e4d998da3bb723c3cd08` への追随は、既存のV7 successor契約で行う。追加された別商品のrouteはリプラスへ転用しない。凍結されたShared Engine、Canonical Skill、旧採用記録、旧Workは変更しない。
 
 完了したpublication-lifecycle Workの全Repository用allowlistを、新しい商品変更に再適用しない。旧Workはmerge済みrevisionのbytesをINSPECT_ONLYで照合し、新Workは `native-change-scope.v1.json` の限定allowlistで検証する。候補7冊、Runtime/UI、他商品の正本は保護対象とする。これは旧Gateを省略したり不正な差分を許可したりするものではない。
 
