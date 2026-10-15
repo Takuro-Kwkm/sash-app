@@ -24,6 +24,12 @@ class LifecycleScopeTest(unittest.TestCase):
             successor = importlib.util.module_from_spec(successor_spec)
             successor_spec.loader.exec_module(successor)
             base, paths = successor.BASE, paths | successor.ALLOWED
+        if (ROOT / 'contracts/production/new-product-environment-scope.v1.json').exists():
+            scope = json.loads((ROOT / 'contracts/production/new-product-environment-scope.v1.json').read_text())
+            base, paths = scope['starting_main'], set(scope['allowed_paths'])
+            self.scope_path = 'contracts/production/new-product-environment-scope.v1.json'
+        else:
+            self.scope_path = guard.SCOPE_PATH
         subprocess.run(['git', 'checkout', '--quiet', '--detach', base], cwd=self.root, check=True)
         for name in paths:
             source = ROOT / name
@@ -56,7 +62,7 @@ class LifecycleScopeTest(unittest.TestCase):
         self.rejected()
 
     def test_scope_widening_rejected(self):
-        path = self.root / guard.SCOPE_PATH
+        path = self.root / self.scope_path
         value = json.loads(path.read_bytes())
         value['allowed_paths'].append('src/ui/web/app.js')
         path.write_text(json.dumps(value))

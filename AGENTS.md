@@ -22,3 +22,12 @@ All product development starts by acquiring `contracts/production/current-archit
 ## Canonical Skill source
 
 Canonical rootは中央の既存 `work_skills/`。`product-change-work` は既存原本を保持し、Builder / Quality Review / Architecture RouterはGA Contractから新規Canonical化されたSkillである。由来は中央 `docs/architecture-v2/canonical-skills.md` に従う。検出とnative build profile / QA /商品AdapterのREADYは別に検証する。
+
+## New Product Master startup
+
+新規商品は未登録を正常入力として扱う。新規Workは中央remote default branchを実取得し、
+中央 `scripts/start-product-master.py --source-checkout EXISTING_CHECKOUT` から開始する。
+既存checkoutはRepository識別用として保持し、開始処理が取得するfresh consumer / centralを使う。
+古いcheckoutのnative builderへ直接入って採用設定の不整合で停止しない。
+事前の環境確認には中央 `scripts/verify-new-product-environment.py` を使い、商品未登録と実行環境の障害を区別する。
+再開は保存済みstart-resolutionとimmutable bindingを維持し、fresh mainへ結び直さない。

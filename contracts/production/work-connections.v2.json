@@ -760,7 +760,7 @@
   "ga_adapter_policy": "CONNECTED_NATIVE_SCOPE_OR_EXPLICIT_FAIL_CLOSED; NO_REFERENCE_OR_LEGACY_FALLBACK",
   "new_product_build_profile": {
     "profile_id": "sash-new-product-master-v1",
-    "path": "contracts/production/product-master-build-profile.v1.json",
-    "sha256": "ecb2b2ee63762e1c62ba622c0f6c72e0f4dcc92707221275329fef1c472e5d0a"
+    "path": "contracts/production/product-master-build-profile.intake-v3.json",
+    "sha256": "02cba1a81fed886551c144952d8a91d7254fa87418a17c404c521491188d887b"
   }
 }

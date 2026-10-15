@@ -65,6 +65,12 @@ def baseline(root):
 
 
 def validate(root):
+    if (Path(root)/'contracts/production/new-product-environment-scope.v1.json').exists():
+        import importlib.util
+        shared = Path(root)/'scripts/production'
+        spec = importlib.util.spec_from_file_location('new_product_native_scope', shared/'new-product-environment-scope.py')
+        module = importlib.util.module_from_spec(spec); spec.loader.exec_module(module)
+        return module.validate(root)
     root = Path(root)
     if (root / 'contracts/production/giesta2-connection-scope.v1.json').exists():
         import importlib.util
