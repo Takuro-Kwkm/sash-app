@@ -19,6 +19,7 @@ FIXED={
     'scripts/production/validate-domain-runtime-connection.py','scripts/production/validate-domain-runtime-projection.mjs',
     'src/catalog/resolver-fields.mjs','src/catalog/runtime-master/composed-product-runtime-adapter.mjs',
     'src/catalog/runtime-master/declared-selection-views.mjs','src/work-management/domain.mjs','src/estimate-output/model.mjs',
+    'src/server/candidate-runtime-preview.mjs',
     'test/domain-runtime-projection.test.mjs','test/browser/declared-sales-runtime-browser-qa.mjs',
     'docs/DOORREMO_RUNTIME_UI_CANDIDATE.md',
     'scripts/build-composed-candidate-review-preview.mjs','scripts/verify-tw-202610-adoption.mjs',

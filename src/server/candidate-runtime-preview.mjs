@@ -1,4 +1,6 @@
 import {createHash} from 'node:crypto';
+import {execFileSync} from 'node:child_process';
+import {fileURLToPath} from 'node:url';
 import {createRecoveryRequestHandler,releaseBuildMetadata} from './recovery-app.mjs';
 import {candidateRuntimeEntries,readCandidateModule} from '../catalog/runtime-master/candidate-runtime-registry.mjs';
 import {adaptComposedProductRuntime,resolveMigratedCandidateSelection} from '../catalog/runtime-master/composed-product-runtime-adapter.mjs';
@@ -8,6 +10,7 @@ import {applyDeclaredWindowFlow} from '../catalog/runtime-master/declared-window
 
 export function createCandidateRuntimePreview(){
   if(!candidateRuntimeEntries.length)throw new Error('CANDIDATE_INDEX_REQUIRED');
+  const releaseCommitSha=execFileSync('git',['rev-parse','HEAD'],{cwd:fileURLToPath(new URL('../../',import.meta.url)),encoding:'utf8'}).trim();
   const identity=createHash('sha256').update(JSON.stringify(candidateRuntimeEntries.map(r=>[r.id,r.sha256,r.uiFlowContract,r.productSelectionGroup??null,r.candidateRuntimeReference.indexSha256]))).digest('hex');
   const integrations=candidateRuntimeEntries.map(row=>({...row,status:'CANDIDATE_LOCAL_READY',selectable:true,source:'RUNTIME_MASTER',candidateOnly:true}));
   const base=createRecoveryRequestHandler({backend:'node:http isolated candidate preview',entrypoint:'scripts/start-candidate-runtime.mjs'});
@@ -20,7 +23,7 @@ export function createCandidateRuntimePreview(){
   const json=(res,status,body)=>{res.writeHead(status,{'content-type':'application/json; charset=utf-8','cache-control':'no-store','x-sash-candidate-identity':identity});res.end(JSON.stringify(body));};
   return async(req,res)=>{
     const url=new URL(req.url,'http://127.0.0.1');
-    if(url.pathname==='/api/health'||url.pathname==='/health')return json(res,200,{ok:true,...releaseBuildMetadata,buildId:'CANDIDATE-'+identity.slice(0,16),entrypoint:'scripts/start-candidate-runtime.mjs',backend:'node:http isolated candidate preview',frontendRoot:'src/ui/web',candidateIdentity:identity,formalAdoption:false,release:false,inventory:[],runtimeMasterIntegrations:[...runtimeAppIntegrationInventory(),...integrations]});
+    if(url.pathname==='/api/health'||url.pathname==='/health')return json(res,200,{ok:true,...releaseBuildMetadata,releaseCommitSha,buildId:'CANDIDATE-'+identity.slice(0,16),entrypoint:'scripts/start-candidate-runtime.mjs',backend:'node:http isolated candidate preview',frontendRoot:'src/ui/web',candidateIdentity:identity,formalAdoption:false,release:false,inventory:[],runtimeMasterIntegrations:[...runtimeAppIntegrationInventory(),...integrations]});
     if(url.pathname==='/api/runtime-master/integrations')return json(res,200,[...runtimeAppIntegrationInventory(),...integrations]);
     if(url.pathname==='/api/runtime-master/resolve'){
       const entry=candidateRuntimeEntries.find(r=>r.id===url.searchParams.get('productId'));
