@@ -66,9 +66,9 @@ def baseline(root):
 
 def validate(root):
     if (Path(root)/'contracts/production/new-product-environment-scope.v1.json').exists():
-        import importlib.util, os
-        shared = Path(os.environ['SHARED_HARNESS_ROOT'])
-        spec = importlib.util.spec_from_file_location('new_product_native_scope', shared/'scripts/verify-new-product-native-scope.py')
+        import importlib.util
+        shared = Path(root)/'scripts/production'
+        spec = importlib.util.spec_from_file_location('new_product_native_scope', shared/'new-product-environment-scope.py')
         module = importlib.util.module_from_spec(spec); spec.loader.exec_module(module)
         return module.validate(root)
     root = Path(root)

@@ -17,9 +17,11 @@
     "contracts/production/shared-release-authority.v1.json",
     "contracts/production/work-connections.v2.json",
     "docs/NEW_PRODUCT_ENVIRONMENT.md",
+    "scripts/production/new-product-environment-scope.py",
     "scripts/production/publication-lifecycle-scope.py",
     "scripts/production/test_publication_lifecycle.py",
-    "scripts/production/unpack-release-authority.py"
+    "scripts/production/unpack-release-authority.py",
+    "scripts/production/validate-order5-release.py"
   ],
   "protected_sha256": {
     ".github/workflows/app-production-hotfix.yml": "1cd7d4d20d5a61d5a1c3215191ff91a6f5dc39015576ac8303087641fefceabd",
@@ -463,7 +465,6 @@
     "scripts/production/validate-catalogue-audit-profile.py": "1e9e3cc0802ca90f363eb81f56a2a96f03743471ffc139c16298de1c48aed01b",
     "scripts/production/validate-current-authority-successor.py": "35b38b2f906202cea36ef07f6f12a3b83cb4f8291d382d750910fa5f7f98b083",
     "scripts/production/validate-order4-release.py": "0c714578eec0f272d9b9207be8be914f93defba1a6641c627bd81ddecd3b18fd",
-    "scripts/production/validate-order5-release.py": "fe48082b95a3214be6f155a990d3747f852953d6056e8de42c373e28e3205a3c",
     "scripts/production/validate-product-master-build.py": "e27ec8b9469f24b420103777ad0b3aef8a705ea272ee8afdc867da7d6e182ed5",
     "scripts/production/validate-product-master-profile.py": "aec961f3ea8d7ac09f775c5fe8eb192d2c786cd1ca8c7ab38714774d8a6ce45a",
     "scripts/production/verify-app-release.mjs": "d48d138e7717738ac9cc9eb8ea3eb6ea2acd47fd1c85fe2c2e16147bede457ac",
@@ -973,14 +974,16 @@
     "AGENTS.md": "d5e7c5c93ea6dd8d3c0172968c024e855f64e1e38729d3580946d78282f5fc38",
     "contracts/production/authority-successors/new-product-predecessor-profile.json": "6b8e4032a3212b779659b6b6ca55058b07f02322a868e2a64a7e48ec899288b3",
     "contracts/production/authority-successors/new-product-predecessor-selection.json": "895df50b8ba71a6cb6eb5cd77c0a263bc781c6812088d36002e0ae7b9a9b8b4d",
-    "contracts/production/current-architecture.json": "63136d368339f361a8455329893eecfe74f13d03453b69b966e53e89b8db1d0d",
+    "contracts/production/current-architecture.json": "3cdd4bc009c31dcb34783ffcb1434e8ab243084839b8074dc84d7286d223c3d2",
     "contracts/production/product-master-build-profile.intake-v3.json": "02cba1a81fed886551c144952d8a91d7254fa87418a17c404c521491188d887b",
-    "contracts/production/shared-release-authority.v1.bundle": "2ff521da2bb687ca99c5c466f69d6933516c40cd14a5d309f4dbd764def658bc",
-    "contracts/production/shared-release-authority.v1.json": "5432796931592e2c4e4deab0575383a615ae741450e6b22b3859fe7b993f7a2c",
+    "contracts/production/shared-release-authority.v1.bundle": "67c16fffb340b0cf5f2a6259486e286e6c3a09469abff047bc82b1d1981da8d1",
+    "contracts/production/shared-release-authority.v1.json": "54cb305db155587853c995bc6cff51efe8bbc2813aa76bae10288c456dee89e2",
     "contracts/production/work-connections.v2.json": "efe9932a672a568d7670786fc31da55dff0d7a8ad13a3011887ced1de141028e",
     "docs/NEW_PRODUCT_ENVIRONMENT.md": "b10846f7adf0f1b7ad7e8e2276bc5e5db1dc0f2f13d287544f8c706fe78d0f03",
-    "scripts/production/publication-lifecycle-scope.py": "9320b0247aadf9bf00161805ba0804ec84af1ad8385b9ebb1f0d2b1a32784528",
+    "scripts/production/new-product-environment-scope.py": "8ba8ebda21505129c10284432856e4d81869fda79f0e3e514cde79ce44c87e2d",
+    "scripts/production/publication-lifecycle-scope.py": "9122ec2640798989797e6257466f24a470612346b945f9dc43841089355207ed",
     "scripts/production/test_publication_lifecycle.py": "e6faa1da81cec98d3cccb494f1766990dd1d411f490e07ff364de8abe169333c",
-    "scripts/production/unpack-release-authority.py": "55d673b2a9a9a5378f5f026ef7bf5ca37de674d7c654cb279365f1690a1cac20"
+    "scripts/production/unpack-release-authority.py": "55d673b2a9a9a5378f5f026ef7bf5ca37de674d7c654cb279365f1690a1cac20",
+    "scripts/production/validate-order5-release.py": "b28ae2c6e8598c8e9651f1c9ce646e0130b00a23773a31deb547032779da0a2e"
   }
 }
