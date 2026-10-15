@@ -45,13 +45,16 @@ try{
       for(const key of contract.number_fields)assert.equal(await page.locator(`[data-spec-key="${key}"]`).getAttribute('type'),'number');
       const visible=await page.locator('#dynamicForm').innerText();
       for(const token of contract.internal_tokens)assert.ok(!visible.includes(token),'INTERNAL_TOKEN:'+token);
+      const visibleKeys=await page.locator('#dynamicForm [data-spec-key]').evaluateAll(nodes=>nodes.map(node=>node.dataset.specKey));
+      const expectedOrder=(contract.ordered_fields??[]).filter(key=>visibleKeys.includes(key));
+      assert.deepEqual(visibleKeys.filter(key=>expectedOrder.includes(key)),expectedOrder);
       assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+2),false);
       await page.screenshot({path:`${OUT}/${row.id}-${width}.png`,fullPage:true});
       const transitions=[];
       for(const action of row.actions??[]){
         const control=page.locator(`[data-spec-key="${action.field}"]`),old=await page.locator('#dynamicForm').getAttribute('data-resolve-revision');
         const response=page.waitForResponse(r=>r.url().includes('/api/runtime-master/resolve')&&r.status()===200&&JSON.parse(new URL(r.url()).searchParams.get('selection'))[action.field]===action.value);
-        if(await control.getAttribute('type')==='number'){await control.fill(String(action.value));await control.dispatchEvent('change');}
+        if(['number','text'].includes(await control.getAttribute('type'))){await control.fill(String(action.value));await control.dispatchEvent('change');}
         else await control.selectOption(String(action.value));
         const result=await(await response).json();
         await page.waitForFunction(value=>document.querySelector('#dynamicForm')?.dataset.resolveRevision!==value,old);
@@ -83,7 +86,7 @@ try{
       return {model,pdf:Array.from(createEstimatePdfBytes(model)),xlsx:Array.from(createEstimateXlsxBytes(model))};
     },snapshots);
     assert.equal(output.model.rows.length,contract.rows.length);
-    assert.ok(output.model.rows.every(row=>row.price===null&&row.size.includes('新設枠発注寸法')));
+    assert.ok(output.model.rows.every(row=>row.price===null&&row.size.includes(contract.output_size_label??'新設枠発注寸法')));
     assert.deepEqual(output.model.rows.map(row=>row.request_quantity),contract.rows.map(row=>row.expected_quantity));
     assert.ok(output.model.rows.at(-1).issues.length);assert.equal(output.model.rows.at(-1).state,'INVALID');
     await writeFile(`${OUT}/output-${width}.pdf`,new Uint8Array(output.pdf));

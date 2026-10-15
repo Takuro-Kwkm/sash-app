@@ -4,6 +4,7 @@ import {resolve,dirname} from 'node:path';
 import {createHash} from 'node:crypto';
 import {adaptComposedProductRuntime} from '../../src/catalog/runtime-master/composed-product-runtime-adapter.mjs';
 import {applyDeclaredWindowFlow} from '../../src/catalog/runtime-master/declared-window-flow.mjs';
+import {applyDeclaredInputClears} from '../../src/work-management/domain.mjs';
 
 const [indexPath,outputPath]=process.argv.slice(2), root=dirname(resolve(indexPath));
 const read=path=>JSON.parse(readFileSync(resolve(root,path)));
@@ -11,13 +12,14 @@ const index=JSON.parse(readFileSync(resolve(indexPath))), report={status:'RUNNIN
 for(const entry of index.products){
   const bytes=readFileSync(resolve(root,entry.path));
   assert.equal(createHash('sha256').update(bytes).digest('hex'),entry.sha256);
-  const document=JSON.parse(bytes), master=read(document.baseline.path), keys=new Set(master.fields.map(row=>row.field_id));
+  const document=JSON.parse(bytes), master=read(document.baseline.path), keys=new Set(master.fields.filter(row=>row.knowledge_status==='KNOWN').map(row=>row.field_id));
   assert.equal(createHash('sha256').update(readFileSync(resolve(root,document.baseline.path))).digest('hex'),document.baseline.sha256);
   const reader=await adaptComposedProductRuntime(document,entry,()=>{throw new Error('UNEXPECTED_REFERENCE');});
   const normalize=selection=>Object.fromEntries(Object.entries(selection).filter(([key,value])=>keys.has(key)&&value!==null&&value!==undefined));
   let valid=0,invalid=0;
   for(const row of master.handoff_tests){
-    const input={...row.before,...row.changes,...(document.sales_handoff?{[document.sales_handoff.quantity_field]:1}:{})}, result=reader.uiResolver(input);
+    const changed=Object.keys(row.changes).filter(key=>JSON.stringify(row.before[key])!==JSON.stringify(row.changes[key]));
+    const input=applyDeclaredInputClears({...row.before,...row.changes,...(document.sales_handoff?{[document.sales_handoff.quantity_field]:1}:{})},changed,document.product_module.specificationDefinitions), result=reader.uiResolver(input);
     try{
       if(row.expected_valid){
         assert.equal(result.validation.status,'MANUAL_CHECK');

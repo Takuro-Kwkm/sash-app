@@ -172,3 +172,19 @@ export function openingDisplayName(opening) {
   const metadata=[opening.floor,opening.room_name,opening.location].filter(Boolean).join(' ');
   return [`開口 ${opening.opening_no}`,metadata].filter(Boolean).join('｜');
 }
+
+// Consume explicit Runtime CLEAR metadata. Valid-value reevaluation remains in
+// the existing Catalog resolver; this helper never infers product conditions.
+export function applyDeclaredInputClears(input, changedKeys, fields) {
+  const selection = {...input}, changed = new Set(changedKeys);
+  for (let pass = 0; pass <= fields.length; pass++) {
+    let cleared = false;
+    for (const field of fields) {
+      if (!Object.hasOwn(selection, field.key)) continue;
+      if (!(field.clearOnParentChange ?? []).some(key => changed.has(key))) continue;
+      delete selection[field.key]; changed.add(field.key); cleared = true;
+    }
+    if (!cleared) return selection;
+  }
+  throw new Error('DECLARED_CLEAR_DID_NOT_CONVERGE');
+}
