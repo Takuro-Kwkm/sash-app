@@ -121,6 +121,11 @@ def baseline(c):
                                                     Path(c['checkout'])/'scripts/production/sheet-package-change.py')
     worker = importlib.util.module_from_spec(module); module.loader.exec_module(worker); worker.setup(c['harness_root'])
     worker.baseline(previous, document(c['baseline_profile']))
+    require(checked_bytes(c['baseline_live_manifest']) == checked_bytes(previous['baseline_manifest']),
+            'NATIVE_FORMAL_DRIFT', 'Live predecessor Manifest bytes changed', 'CURRENT_FORMAL_RESOLUTION')
+    for name, source in previous['baseline_documents'].items():
+        require(checked_bytes(c['baseline_live_documents'][name]) == checked_bytes(source),
+                'NATIVE_FORMAL_DRIFT', 'Live predecessor bytes changed: '+name, 'CURRENT_FORMAL_RESOLUTION')
     old_meta = document(previous['baseline_authoring_metadata'])
     require(observation_fingerprint(old_meta) == observation_fingerprint(document(c['baseline_authoring_metadata'])),
             'AUTHORING_CHANGED', 'Current Formal authoring changed', 'CURRENT_FORMAL_RESOLUTION')
