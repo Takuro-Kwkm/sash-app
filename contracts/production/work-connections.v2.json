@@ -370,15 +370,40 @@
         "ジエスタ2"
       ],
       "repository": "Takuro-Kwkm/sash-app",
-      "connection_state": "ADAPTER_PENDING",
+      "connection_state": "CONNECTED",
       "current_formal_version": "v0.8-R3",
       "formal_registry_selector": "LIXIL::ジエスタ2",
-      "safe_failure": {
-        "state": "FAIL_CLOSED",
-        "code": "NATIVE_ADAPTER_UNAVAILABLE",
-        "writes": 0,
-        "fallback": false,
-        "next_action": "Registry-only product: bind a native adapter successor before mutation"
+      "default_gate": "QA_READY",
+      "baseline_selector": {
+        "registry_id": "1HMMZ8JdsbJPtL_8LjQfxMF8P_Zb4-LReqvPMFn1pJks",
+        "manufacturer": "LIXIL",
+        "series": "ジエスタ2"
+      },
+      "source_selector": {
+        "from": "LIVE_CURRENT_FORMAL + reviewed candidate official sources",
+        "role": "CURRENT_ADOPTED; NEW_CANDIDATE stays CANDIDATE",
+        "official_scope": "ジエスタ2 非防火・営業見積依頼"
+      },
+      "native_adapter": "scripts/production/sheet-package-change.py",
+      "validators": [
+        "native-sheets-identity",
+        "native-package-integrity",
+        "reviewed-exact-cell-delta",
+        "source-evidence-binding",
+        "sales-handoff-native-qa"
+      ],
+      "resume_selector": "work_id + immutable spec + source/authoring/authority/QA hashes",
+      "change_profile": {
+        "profile_id": "sash-giesta2-existing-formal-successor-v1",
+        "path": "contracts/production/giesta2-change-profile.v1.json",
+        "sha256": "7b7544ca2f9124987286934bdb861e4194524926408277144663bd5598aa0a95"
+      },
+      "build_profile": {
+        "profile_id": "sash-giesta2-existing-formal-successor-v1",
+        "path": "contracts/production/giesta2-change-profile.v1.json",
+        "sha256": "7b7544ca2f9124987286934bdb861e4194524926408277144663bd5598aa0a95",
+        "mode": "EXISTING_FORMAL_SUCCESSOR",
+        "native_preparer": "scripts/production/prepare-sheet-package-change.py"
       }
     },
     {

@@ -1,0 +1,38 @@
+name: Native Sheets Product Connection
+on:
+  pull_request:
+    paths:
+      - 'contracts/production/**'
+      - 'scripts/production/**'
+      - 'test/101-native-sheets-connection.test.mjs'
+      - '.github/workflows/native-sheets-connection.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'contracts/production/**'
+      - 'scripts/production/**'
+      - 'test/101-native-sheets-connection.test.mjs'
+      - '.github/workflows/native-sheets-connection.yml'
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install jsonschema==4.25.1 openpyxl==3.1.5
+      - run: python scripts/production/unpack-release-authority.py "$RUNNER_TEMP/native-sheets-shared"
+      - run: python scripts/production/validate-sheet-package-connection.py
+      - run: python scripts/production/giesta2-connection-scope.py
+      - run: python -m unittest discover -s scripts/production -p 'test_sheet_package_change.py'
+        env:
+          SHARED_HARNESS_ROOT: ${{ runner.temp }}/native-sheets-shared
+      - run: node --test test/101-native-sheets-connection.test.mjs
