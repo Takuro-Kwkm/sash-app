@@ -19,6 +19,6 @@ jobs:
       - run: python -B scripts/production/unpack-release-authority.py /tmp/native-formal-shared
       - run: python -B scripts/production/formal-connection-scope.py
       - run: python -B scripts/production/validate-sheet-package-connection.py
-      - run: python -B -m unittest discover -s scripts/production -p 'test_sheet_package_formal.py'
+      - run: python -B -m unittest discover -s scripts/production -p 'test_*formal.py'
         env:
           SHARED_HARNESS_ROOT: /tmp/native-formal-shared

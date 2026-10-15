@@ -1,0 +1,6 @@
+{
+  "schema": "CURRENT_AUTHORITY_SUCCESSOR_SELECTION_V1",
+  "path": "contracts/production/authority-successors/giesta2-formal-current.v1.json",
+  "sha256": "da59665d7b4581aeded810fa07f9fccbd1490bab01476f9a99a96a81147dec51",
+  "implementation_sha": "16f4efd69e06adc994b5394ff1726c8a5e372cd3"
+}
