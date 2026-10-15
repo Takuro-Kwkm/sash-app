@@ -1,9 +1,9 @@
 {
   "schema": "APP_PRODUCTION_HOTFIX_V1",
   "scope": "NON_PRODUCT_MASTER_UI",
-  "change": "REPLUS_V12R1_FORMAL_RUNTIME_UI_RELEASE_20261015_R1",
+  "change": "REPLUS_RUNTIME_UI_RELEASE_ARTIFACT_PIN_CORRECTION_20261015_R3",
   "date": "2026-10-15",
-  "source_commit": "a50dc9f732e6cb3da44c36a5317bf22b3293b527",
-  "notes": "Release the separately reviewed Runtime/UI integration for the adopted Product Master v1.2-R1. Preserve manufacturer confirmation and null pricing; no Product Master edits, DB migration or Protection change. Exact-head Preview, CI and fixed Human Release Decision remain required.",
+  "source_commit": "e58be968bab0ca617d0195ee0219963797da03d8",
+  "notes": "Correct2 stale publication HTTP pins and check all artifact bodies before review. Approved application388 bytes and Master/Runtime canonical adoption remain unchanged. Exact-head CI, browser QA and actual fixed successor Release decision are required.",
   "trigger": "PR_MERGE_PUSH_AFTER_FIXED_HUMAN_RELEASE_DECISION"
 }
