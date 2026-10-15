@@ -51,7 +51,12 @@ def prepare(shared, checkout, captures, destination, instruction):
             'CURRENT_AUTHORITY_UNVERIFIED', 'Central acquisition differs from executing checkout', 'PREPARE')
     binding = repository_binding(c['repository'], read_json(c['branch']), read_json(c['tree']),
                                  {path: checkout/path for path in c['captured_paths']})
-    binding.update(checkout=str(checkout), observations={key: observation_fingerprint(v) for key, v in observations.items()})
+    # These are planned native transaction targets, not immutable live authorities.
+    # Their exact before/after identities stay pinned in input/plan and native receipts.
+    owned = {'formal_authoring_metadata', 'canonical_listing'}
+    binding.update(checkout=str(checkout),
+                   observations={key: observation_fingerprint(v) for key, v in observations.items() if key not in owned},
+                   native_transaction_before={key: observation_fingerprint(v) for key, v in observations.items() if key in owned})
     root.mkdir(parents=True)
     write_json(root/'production-binding.json', binding)
     write_json(root/'live-state.json', {'repository': read_json(c['branch']), 'observations': observations})

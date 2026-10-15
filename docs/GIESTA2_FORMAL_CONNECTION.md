@@ -28,5 +28,13 @@ File ID/parent/name、全実bytes、Registry前後行と非対象行の一致を
 stale approvalでFORMALを出さない。完了後は次のWorkからnative Registryの
 authoring JSON/manifest/packageと今回保存したcurrent selectorを照合して参照する。
 
+予定されたRegistry変更後は中央の既存harness.approved_continuationを使う。
+native readback validatorのverify_native_readbackで実receiptをhost admissionし、
+同じspec/journal/Packetとbefore Registryを渡す。Shared承認済みcontinuationが
+正確な当該行の予定変更だけを許容し、DAGのreadback/formal-saveを続行する。
+旧正本metadata/canonical listingは予定されたmutation対象としてinput/planに固定し、
+不変Authorityのlive_guard対象とは分離する。その前後はnative validatorが照合する。
+独自のResume engineや、古いlive-stateを実観測として偽装する処理は作らない。
+
 Inputs・Code・Authority・Sources・spec・journal・Packet・receiptをWorkingへcheckpointし、
 Driveから実bytesを読み戻す。完了済みWorkはINSPECT_ONLY。UI・本番公開は別工程。

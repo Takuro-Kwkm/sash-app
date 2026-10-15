@@ -155,6 +155,9 @@ def review(c, work):
         require(checked_bytes(artifact['source']) == files[member],
                 'PACKAGE_PARITY', role+': every Formal sidecar is real packaged content', 'FORMAL_REVIEW')
     storage = c['native_storage']
+    require(plan['native_storage'] == storage and plan['native_registry_before'] == c['registry_before']
+            and plan['native_registry_id'] == c['native_registry_id'] and plan['registry_location'] == c['registry_location'],
+            'FORMAL_PLAN', 'Displayed native request and reviewed transaction must be identical', 'FORMAL_REVIEW')
     from harness.production import connector_document
     actual_old = connector_document(document(c['canonical_listing']))
     require({x['file_id'] for x in storage['old_artifacts']} == {x['id'] for x in actual_old['files']},
@@ -190,13 +193,26 @@ def review(c, work):
     return result
 
 
+def approved_plan(c, packet, decision):
+    from harness.changed_path import verify_decision, validate_plan
+    decision_ref = verify_decision(packet, decision)
+    plan = document(c['formal_plan'])
+    require(packet['native_packet']['proposed_formal_plan_sha256'] == validate_plan(plan)
+            and plan['native_storage'] == c['native_storage']
+            and plan['native_registry_before'] == c['registry_before']
+            and plan['native_registry_after'] == c['registry_after']
+            and plan['native_registry_id'] == c['native_registry_id']
+            and plan['registry_location'] == c['registry_location'],
+            'STALE_DECISION', 'Requests and readback must use exactly the approved transaction', 'NATIVE_SAVE_REQUESTS')
+    return decision_ref, plan
+
+
 def requests(c, work):
     """After the real same-wrapper Human Gate, expose bounded host connector requests."""
-    from harness.changed_path import verify_decision
     from harness.production import connector_document, native_registry
     packet = read_json(Path(work)/'review-packets/HUMAN_ADOPTION.json')
     decision = read_json(c['decision_path'])
-    decision_ref = verify_decision(packet, decision)
+    decision_ref, _ = approved_plan(c, packet, decision)
     observation_path = Path(c['execution_observations_path'])
     require(observation_path.is_file(), 'EXECUTION_OBSERVATIONS_REQUIRED',
             'Acquire fresh native Registry and old/new metadata after Human approval', 'NATIVE_SAVE_REQUESTS')
@@ -260,9 +276,8 @@ def verify_native_files(c, raw):
 
 def registry_request(c, raw, packet, decision):
     import csv, io
-    from harness.changed_path import verify_decision
     from harness.production import connector_document, native_registry
-    verify_decision(packet, decision)
+    approved_plan(c, packet, decision)
     verify_native_files(c, raw)
     current = document(raw['registry'])
     require(native_registry(current, c['registry_before']['manufacturer'], c['registry_before']['series']) ==
@@ -289,10 +304,9 @@ def registry_request(c, raw, packet, decision):
 
 
 def verify_native_readback(c, raw, packet, decision):
-    from harness.changed_path import verify_decision, validate_plan
+    from harness.changed_path import validate_plan
     from harness.production import connector_document, native_registry
-    decision_ref = verify_decision(packet, decision)
-    plan = document(c['formal_plan'])
+    decision_ref, plan = approved_plan(c, packet, decision)
     downloaded = verify_native_files(c, raw)
     before = native_registry(document(raw['registry_before']), c['registry_before']['manufacturer'], c['registry_before']['series'])
     after = native_registry(document(raw['registry_after']), c['registry_before']['manufacturer'], c['registry_before']['series'])

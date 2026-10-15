@@ -71,6 +71,20 @@ class FormalBoundaries(unittest.TestCase):
              'new':file('staged-meta.json',meta('new','working','staged-name'))},'downloaded':{'new':self.source}}
         self.file('execution.json',self.execution)
         self.c['registry_location']={'headers':list(before),'row_index':1,'sheet_id':1,'before_values':list(before.values())}
+        self.refresh_binding()
+
+    def refresh_binding(self):
+        self.plan.update(native_storage=self.c['native_storage'],native_registry_before=self.c['registry_before'],
+                         native_registry_after=self.c['registry_after'],native_registry_id=self.c['native_registry_id'],
+                         registry_location=self.c['registry_location'])
+        self.c['formal_plan']=self.file('plan.json',self.plan)
+        native={'proposed_formal_plan_sha256':validate_plan(self.plan)}
+        native['payload_sha256']=fingerprint(native)
+        self.packet={'gate':'HUMAN_ADOPTION','work_binding_sha256':'f'*64,'native_packet':native}
+        self.packet['payload_sha256']=fingerprint({'work_binding_sha256':'f'*64,'native_packet':native})
+        self.decision['payload_sha256']=self.packet['payload_sha256']
+        self.file('decision.json',self.decision)
+        self.file('review-packets/HUMAN_ADOPTION.json',self.packet)
 
     def rejected(self, raw=None, decision=None, code=None):
         with self.assertRaises(Blocked) as caught:
@@ -164,6 +178,7 @@ class FormalBoundaries(unittest.TestCase):
     def test_readable_csv_index_never_shifts_native_columns(self):
         self.c['registry_before']={'':'0',**self.c['registry_before']}
         self.c['registry_after']={'':'0',**self.c['registry_after']}
+        self.refresh_binding()
         raw=copy.deepcopy(self.raw)
         raw['registry']=self.file('indexed.json',{'content':',manufacturer,series,package_version,master_status\n0,TEST,FIXTURE,R3,FORMAL_PASS\n'})
         result=worker.registry_request(self.c,raw,self.packet,self.decision)
@@ -175,6 +190,12 @@ class FormalBoundaries(unittest.TestCase):
         raw=copy.deepcopy(self.raw);raw['registry']=self.registry_after
         with self.assertRaises(Blocked) as caught:worker.registry_request(self.c,raw,self.packet,self.decision)
         self.assertEqual(caught.exception.data['code'],'REGISTRY_HEAD_DRIFT')
+
+    def test_approved_packet_cannot_be_reused_for_other_file(self):
+        self.c['native_storage']=copy.deepcopy(self.c['native_storage'])
+        self.c['native_storage']['new_artifacts'][0]['file_id']='foreign'
+        with self.assertRaises(Blocked) as caught:worker.requests(self.c,self.root)
+        self.assertEqual(caught.exception.data['code'],'STALE_DECISION')
 
 
 if __name__=='__main__':unittest.main()
