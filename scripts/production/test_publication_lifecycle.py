@@ -18,19 +18,10 @@ class LifecycleScopeTest(unittest.TestCase):
         self.addCleanup(scratch.cleanup)
         self.root = Path(scratch.name) / 'native'
         subprocess.run(['git', 'clone', '--quiet', '--shared', str(ROOT), str(self.root)], check=True)
-        base, paths = guard.BASE, set(guard.ALLOWED)
-        if (ROOT / 'contracts/production/giesta2-connection-scope.v1.json').exists():
-            successor_spec = importlib.util.spec_from_file_location('sheets_scope', ROOT / 'scripts/production/giesta2-connection-scope.py')
-            successor = importlib.util.module_from_spec(successor_spec)
-            successor_spec.loader.exec_module(successor)
-            base, paths = successor.BASE, paths | successor.ALLOWED
-        subprocess.run(['git', 'checkout', '--quiet', '--detach', base], cwd=self.root, check=True)
-        for name in paths:
-            source = ROOT / name
-            if source.exists():
-                target = self.root / name
-                target.parent.mkdir(parents=True, exist_ok=True)
-                target.write_bytes(subprocess.check_output(['git','show','8152f03883430716f520168ff01d60738e4a4b8f:'+name],cwd=ROOT))
+        # Completed publication scope is inspected at its actual adopted commit.
+        # Current immutable successor rejection cases are in test_native_change_scope.
+        subprocess.run(['git','checkout','--quiet','--detach','8152f03883430716f520168ff01d60738e4a4b8f'],cwd=self.root,check=True)
+        self.scope_path = guard.SCOPE_PATH
 
     def rejected(self):
         result = guard.validate(self.root)
@@ -56,7 +47,7 @@ class LifecycleScopeTest(unittest.TestCase):
         self.rejected()
 
     def test_scope_widening_rejected(self):
-        path = self.root / guard.SCOPE_PATH
+        path = self.root / self.scope_path
         value = json.loads(path.read_bytes())
         value['allowed_paths'].append('src/ui/web/app.js')
         path.write_text(json.dumps(value))

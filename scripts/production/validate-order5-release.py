@@ -3,11 +3,11 @@ import hashlib,json,subprocess,sys
 from pathlib import Path
 ALLOWED={'contracts/production/order5-release-scope.v2.json', 'contracts/production/order5-ew-assets/selection-scope.json', 'test/74-estimate-output.test.mjs', 'scripts/production/release-contract.py', 'contracts/production/authority-successors/order5-ew-output-predecessor-profile.v1.json', 'contracts/production/order5-ew-assets/content-qa.json', 'contracts/production/order5-assets.v1.json', 'contracts/production/shared-release-authority.v1.bundle', 'contracts/production/current-authority-successor.json', 'contracts/production/work-connections.v2.json', 'contracts/production/order5-assets.v2.json', 'contracts/production/order5-ew-output.v2.json', 'contracts/production/order5-ew-assets/source-identity.json', 'contracts/production/authority-successors/order5-ew-output-predecessor-selection.v1.json', 'scripts/production/ew-change.py', '.github/workflows/common-release-contract.yml', 'contracts/production/authority-successors/order5-batch1-predecessor-profile.v1.json', 'test/browser/ew-october-2026-browser-qa.mjs', 'contracts/production/order5-ew-assets/PackageManifest.json', 'docs/ORDER5_BATCH1.md', 'contracts/production/shared-release-authority.v1.json', 'contracts/production/authority-successors/order5-batch1-predecessor-selection.v1.json', 'contracts/production/authority-successors/order5-ew-output.v4.json', 'src/estimate-output/xlsx-renderer.mjs', 'scripts/production/validate-order5-release.py', 'scripts/production/prepare-ew.py', '.github/workflows/ew-output-successor.yml', 'scripts/production/test_ew_output_successor.py', 'contracts/production/authority-successors/order5-batch1.v4.json', 'contracts/production/order5-ew-assets/PRODUCT_MASTER_MANIFEST.json', 'contracts/production/validator-registry.v2.json', 'contracts/production/release-profile.v1.json', 'contracts/production/order5-release-scope.v1.json'}
 def validate(root):
- if (Path(root)/'contracts/production/native-change-scope.v1.json').exists():
-  import importlib.util
-  spec=importlib.util.spec_from_file_location('native_scope',Path(root)/'scripts/production/native-change-scope.py')
-  native=importlib.util.module_from_spec(spec);spec.loader.exec_module(native)
-  return native.validate(root)
+ if (Path(root)/'contracts/production/new-product-environment-scope.v1.json').exists():
+     import importlib.util
+     definition=importlib.util.spec_from_file_location('new_product_scope',Path(root)/'scripts/production/new-product-environment-scope.py')
+     module=importlib.util.module_from_spec(definition);definition.loader.exec_module(module)
+     return module.validate(root)
  if (Path(root)/'contracts/production/publication-lifecycle-scope.v1.json').exists():
   import importlib.util
   spec=importlib.util.spec_from_file_location('lifecycle_scope',Path(root)/'scripts/production/publication-lifecycle-scope.py')

@@ -30,7 +30,13 @@
   },
   "new_product_build_profile": {
     "profile_id": "sash-new-product-master-v1",
-    "path": "contracts/production/product-master-build-profile.v1.json",
-    "sha256": "ecb2b2ee63762e1c62ba622c0f6c72e0f4dcc92707221275329fef1c472e5d0a"
+    "path": "contracts/production/product-master-build-profile.intake-v3.json",
+    "sha256": "02cba1a81fed886551c144952d8a91d7254fa87418a17c404c521491188d887b"
+  },
+  "isolated_build_authority": {
+    "metadata": "contracts/production/shared-release-authority.v1.json",
+    "entry": "scripts/production/unpack-release-authority.py",
+    "source_commit": "16f4efd69e06adc994b5394ff1726c8a5e372cd3",
+    "scope": "ISOLATED_CI_ONLY; live Current host acquisition separate"
   }
 }

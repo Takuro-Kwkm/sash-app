@@ -8,7 +8,7 @@ from pathlib import Path
 root=Path(__file__).resolve().parents[2]
 if (root/'contracts/production/native-change-scope.v1.json').exists():
  subprocess.check_call([sys.executable,'-B',str(root/'scripts/production/native-change-scope.py')])
-elif (root/'contracts/production/publication-lifecycle-scope.v1.json').exists():
+elif (root/'contracts/production/publication-lifecycle-scope.v1.json').exists() and not (root/'contracts/production/new-product-environment-scope.v1.json').exists():
  subprocess.check_call([sys.executable,'-B',str(root/'scripts/production/publication-lifecycle-scope.py')])
 profile=json.loads((root/'contracts/production/release-profile.v1.json').read_bytes())
 metadata=json.loads((root/'contracts/production/shared-release-authority.v1.json').read_bytes())
@@ -26,6 +26,8 @@ git('remote','add','origin','https://github.com/'+metadata['repository']+'.git')
 for name,digest in profile['shared_contract']['files'].items():
  assert hashlib.sha256((destination/name).read_bytes()).hexdigest()==digest,name
 sys.path.insert(0,str(destination))
+if (root/'contracts/production/new-product-environment-scope.v1.json').exists() and not (root/'contracts/production/native-change-scope.v1.json').exists():
+    subprocess.check_call([sys.executable,'-B',str(destination/'scripts/verify-new-product-native-scope.py'),'--checkout',str(root)])
 from harness.current_authority import compatibility
 assert compatibility(destination,root)['status']=='PASS'
 print(json.dumps({'status':'PASS','source_commit':metadata['source_commit'],'carrier_sha256':metadata['sha256'],

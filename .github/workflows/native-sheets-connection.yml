@@ -29,10 +29,14 @@ jobs:
         with:
           python-version: '3.12'
       - run: pip install jsonschema==4.25.1 openpyxl==3.1.5
-      - run: python scripts/production/unpack-release-authority.py "$RUNNER_TEMP/native-sheets-shared"
-      - run: python scripts/production/validate-sheet-package-connection.py
-      - run: python scripts/production/giesta2-connection-scope.py
-      - run: python -m unittest discover -s scripts/production -p 'test_sheet_package_change.py'
+      - name: Verify infrastructure successor and inspect retained native Sheets connection
+        run: |
+          python -B scripts/production/new-product-environment-scope.py --predecessor /tmp/new-product-sheets-predecessor
+          echo "SHEETS_CHECKOUT=/tmp/new-product-sheets-predecessor" >> "$GITHUB_ENV"
+      - run: python "$SHEETS_CHECKOUT/scripts/production/unpack-release-authority.py" "$RUNNER_TEMP/native-sheets-shared"
+      - run: python "$SHEETS_CHECKOUT/scripts/production/validate-sheet-package-connection.py"
+      - run: python "$SHEETS_CHECKOUT/scripts/production/giesta2-connection-scope.py"
+      - run: python -m unittest discover -s "$SHEETS_CHECKOUT/scripts/production" -p 'test_sheet_package_change.py'
         env:
           SHARED_HARNESS_ROOT: ${{ runner.temp }}/native-sheets-shared
-      - run: node --test test/101-native-sheets-connection.test.mjs
+      - run: node --test "$SHEETS_CHECKOUT/test/101-native-sheets-connection.test.mjs"
