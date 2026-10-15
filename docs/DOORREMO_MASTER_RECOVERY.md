@@ -35,3 +35,17 @@ native **Working復旧build profile**へ解決する。新規・Registry不在�
 積算確認として区分し、全BOM・価格・発注コードをQA_READYの上流条件にしない。
 
 11月価格改定版は候補Sourceとして保持する。適用日前に現行正式価格として自動使用しない。
+
+## 営業見積依頼QAの後継接続（2026-10-15）
+
+完了した構造復旧Work `DOORREMO-NF-RECOVERY-20261007-R0` はINSPECT_ONLYとする。
+後継profile `doorremo-nonfire.business-qa.v1.json` は、同一の既存Workingからレビュー済み観測を中央の
+`product_master/build.py` とValidatorへ渡す。ルール評価・再選択は共通の `handoff` を使い、
+実行・保存・Resume・Journalは既存v2 Harnessへ委譲する。
+
+固定した公式Source bytesとlocator、全Evidenceのレビュー、同一candidateの営業QAが必要。
+旧テストの静的PASSや構造復旧だけではQA_READYにならない。確認要求は対象条件・状態・確認先・質問を付け、
+営業の依頼数量とともに積算へ引き渡す。価格・BOM・Set Codeは未確定を保持する。
+このprofileはWorking候補のみを保存し、Formal Registry、Runtime/UI、公開は変更しない。
+
+この文書の上記の段落はR0構造復旧の履歴であり、後継profileの営業QA接続と区別する。

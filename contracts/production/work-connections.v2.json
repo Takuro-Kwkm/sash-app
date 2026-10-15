@@ -736,10 +736,10 @@
       ],
       "repository": "Takuro-Kwkm/sash-app",
       "connection_state": "CONNECTED",
-      "connection_scope": "STRUCTURAL_DRAFT_RECOVERY_ONLY",
+      "connection_scope": "EXISTING_WORKING_SALES_QA",
       "current_working_version": "v1.0-LEGACY-RECOVERY",
       "formal_registry_selector": "YKK AP::ドアリモ玄関ドア 非防火",
-      "default_gate": "WORKING_STRUCTURE_VERIFIED",
+      "default_gate": "QA_READY",
       "baseline_selector": {
         "registry_id": "1HMMZ8JdsbJPtL_8LjQfxMF8P_Zb4-LReqvPMFn1pJks",
         "manufacturer": "YKK AP",
@@ -747,21 +747,25 @@
         "state": "WORKING_RECOVERY"
       },
       "source_selector": {
-        "from": "LIVE_NATIVE_AUTHORING.Evidence_Master + captured official baseline",
-        "role": "INHERITED_REVIEW_REQUIRED",
-        "scope": "Existing non-fire Working Master; no automatic Source/price adoption"
+        "from": "LIVE_NATIVE_WORKING + REVIEWED_OFFICIAL_BYTES",
+        "role": "REVIEWED_CURRENT_NONFIRE_SALES_SCOPE",
+        "scope": "Working candidate only; no automatic price/Source promotion"
       },
-      "native_adapter": "scripts/production/working-master-recovery.py",
-      "prepare_adapter": "scripts/production/prepare-working-master-recovery.py",
-      "validators": ["native-working-identity", "native-authoring-parity", "native-structural-recovery"],
+      "native_adapter": "scripts/production/working-master-business-qa.py",
+      "prepare_adapter": "scripts/production/prepare-working-master-business-qa.py",
+      "validators": [
+        "native-working-identity",
+        "official-source-byte-review",
+        "shared-domain-qa",
+        "sales-request-handoff"
+      ],
       "resume_selector": "IMMUTABLE_SPEC_AND_SHARED_V2_JOURNAL; completed recovery is INSPECT_ONLY",
       "build_profile": {
-        "profile_id": "sash-working-master-recovery-v1",
-        "path": "contracts/production/working-master-recovery/doorremo-nonfire.v1.json",
-        "sha256": "de0aadf76563f9d09faacaa1d97ee0c34f77a6186396cd469e4cc7b9763564da"
+        "profile_id": "sash-existing-working-sales-qa-v1",
+        "path": "contracts/production/working-master-recovery/doorremo-nonfire.business-qa.v1.json",
+        "sha256": "f8d30bc8d1d100e0a72d36e40e6e8b8b86a309a5f720c14c2f3c01b1c4437538"
       },
       "unsupported_gates": {
-        "QA_READY": "NATIVE_BUSINESS_QA_PROFILE_REQUIRED",
         "FORMAL": "NATIVE_FORMAL_PROFILE_AND_EXTERNAL_DECISION_REQUIRED",
         "INTEGRATION": "NATIVE_RUNTIME_ADAPTER_UNAVAILABLE"
       }

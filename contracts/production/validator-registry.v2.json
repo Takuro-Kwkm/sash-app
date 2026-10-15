@@ -222,13 +222,18 @@
     },
     "NATIVE_REGISTRY:YKK AP::ドアリモ玄関ドア 非防火": {
       "state": "READY",
-      "scope": "STRUCTURAL_DRAFT_RECOVERY_ONLY",
-      "validators": ["native-working-identity", "native-authoring-parity", "native-structural-recovery"],
+      "scope": "EXISTING_WORKING_SALES_QA",
+      "validators": [
+        "native-working-identity",
+        "official-source-byte-review",
+        "shared-domain-qa",
+        "sales-request-handoff"
+      ],
       "no_fallback": true,
       "native_profile": {
-        "profile_id": "sash-working-master-recovery-v1",
-        "path": "contracts/production/working-master-recovery/doorremo-nonfire.v1.json",
-        "sha256": "de0aadf76563f9d09faacaa1d97ee0c34f77a6186396cd469e4cc7b9763564da"
+        "profile_id": "sash-existing-working-sales-qa-v1",
+        "path": "contracts/production/working-master-recovery/doorremo-nonfire.business-qa.v1.json",
+        "sha256": "f8d30bc8d1d100e0a72d36e40e6e8b8b86a309a5f720c14c2f3c01b1c4437538"
       }
     },
     "NATIVE_REGISTRY:YKK AP::ヴェナートD30": {
