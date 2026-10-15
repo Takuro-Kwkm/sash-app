@@ -1,0 +1,342 @@
+{
+  "schema": "NATIVE_TABLE_PATCH_CANDIDATE_V1",
+  "candidate_id": "REPLUS_CUT_MALL_WORKING_R1_20261009",
+  "product_id": "NATIVE_REGISTRY:LIXIL::リプラス",
+  "component_id": "RPL_CUT_MALL",
+  "state": "PREPARED_NOT_APPROVED_SOURCE_BLOCKED",
+  "base_authoring_sha256": "b08107290df4faf50389becf733e4ac02e4d4a188f7799470c95fdb7de76fa79",
+  "base_runtime_sha256": "874fb588a399c30f90cd3d745d5479cd74ddf8e1cdb08357613ee272022f6270",
+  "base_component_version": "v1.0",
+  "candidate_component_version": "v1.0-WORKING-R1",
+  "candidate_package_version": "v1.1-WORKING-R1",
+  "base_authoring_id": "1RDR5StrhnOLi6DUBtdrGKqsb1mcXZDLi",
+  "base_runtime_id": "182tZYMkcZyjTqOrU3seJizY6bcdhxC59",
+  "source_observation": {
+    "file": "SN1200.local.pdf",
+    "bytes": 82395744,
+    "sha256": "b837ce209c8b55b2b66b412a4e3c2694a78fd5de823efc7b2b960688a5668098",
+    "pages": 296,
+    "acquisition": "LOCAL_MIRROR; not asserted cloud bytes readback"
+  },
+  "official_locator": "https://webcatalog.lixil.co.jp/cgi-bin/openCatalogAuth.cgi?c=SN1200",
+  "visually_reviewed_local_pdf_pages": [
+    277,
+    280
+  ],
+  "visually_reviewed_printed_pages": [
+    273,
+    276
+  ],
+  "source_full_byte_readback": "ACQUISITION_FAILED_HTTP403",
+  "whole_source_semantic_review": "NOT_COMPLETE",
+  "automatic_orderability": false,
+  "price": null,
+  "bom": null,
+  "set_code": null,
+  "patches": [
+    {
+      "sheet": "10_適用条件",
+      "address": "D8",
+      "before": "UNAVAILABLE",
+      "after": "CONDITIONAL"
+    },
+    {
+      "sheet": "10_適用条件",
+      "address": "E8",
+      "before": "HIDE",
+      "after": "新設も外付型。正本・納まり要確認"
+    },
+    {
+      "sheet": "10_適用条件",
+      "address": "F8",
+      "before": "COMPLETE",
+      "after": "MANUAL_CHECK"
+    },
+    {
+      "sheet": "10_適用条件",
+      "address": "G8",
+      "before": "CM-EV-012",
+      "after": "CM-EV-017"
+    },
+    {
+      "sheet": "10_適用条件",
+      "address": "A16",
+      "before": null,
+      "after": "CM-AP-AMADO-POCKET"
+    },
+    {
+      "sheet": "10_適用条件",
+      "address": "B16",
+      "before": null,
+      "after": "existing_window_type"
+    },
+    {
+      "sheet": "10_適用条件",
+      "address": "C16",
+      "before": null,
+      "after": "既設雨戸付"
+    },
+    {
+      "sheet": "10_適用条件",
+      "address": "D16",
+      "before": null,
+      "after": "REQUIRED_PART_CONDITION"
+    },
+    {
+      "sheet": "10_適用条件",
+      "address": "E16",
+      "before": null,
+      "after": "鏡板付戸袋必須。鏡板無戸袋は不可"
+    },
+    {
+      "sheet": "10_適用条件",
+      "address": "F16",
+      "before": null,
+      "after": "MANUAL_CHECK"
+    },
+    {
+      "sheet": "10_適用条件",
+      "address": "G16",
+      "before": null,
+      "after": "CM-EV-017"
+    },
+    {
+      "sheet": "10C_施工スペース",
+      "address": "A7",
+      "before": null,
+      "after": "CM-SP-05"
+    },
+    {
+      "sheet": "10C_施工スペース",
+      "address": "B7",
+      "before": null,
+      "after": "雨戸付の戸袋側スペース"
+    },
+    {
+      "sheet": "10C_施工スペース",
+      "address": "C7",
+      "before": null,
+      "after": "新設戸袋納まりW＋c"
+    },
+    {
+      "sheet": "10C_施工スペース",
+      "address": "D7",
+      "before": null,
+      "after": ">="
+    },
+    {
+      "sheet": "10C_施工スペース",
+      "address": "E7",
+      "before": null,
+      "after": "CONDITIONAL"
+    },
+    {
+      "sheet": "10C_施工スペース",
+      "address": "F7",
+      "before": null,
+      "after": "MANUAL_CHECK"
+    },
+    {
+      "sheet": "10C_施工スペース",
+      "address": "G7",
+      "before": null,
+      "after": "CM-EV-017"
+    },
+    {
+      "sheet": "10D_施工条件",
+      "address": "A9",
+      "before": null,
+      "after": "CM-CON-AMADO-POCKET"
+    },
+    {
+      "sheet": "10D_施工条件",
+      "address": "B9",
+      "before": null,
+      "after": "雨戸付の戸袋"
+    },
+    {
+      "sheet": "10D_施工条件",
+      "address": "C9",
+      "before": null,
+      "after": "鏡板付戸袋"
+    },
+    {
+      "sheet": "10D_施工条件",
+      "address": "D9",
+      "before": null,
+      "after": "鏡板無戸袋は不可"
+    },
+    {
+      "sheet": "10D_施工条件",
+      "address": "E9",
+      "before": null,
+      "after": "MANUAL_CHECK"
+    },
+    {
+      "sheet": "10D_施工条件",
+      "address": "F9",
+      "before": null,
+      "after": "CM-EV-017"
+    },
+    {
+      "sheet": "90_Evidence",
+      "address": "I14",
+      "before": "外付不可/4シリーズ",
+      "after": "旧判定の記録。外付不可の一律判定は候補CM-EV-017で再評価。"
+    },
+    {
+      "sheet": "90_Evidence",
+      "address": "A19",
+      "before": null,
+      "after": "CM-EV-017"
+    },
+    {
+      "sheet": "90_Evidence",
+      "address": "B19",
+      "before": null,
+      "after": "LIXIL公式カタログのローカル取得・視覚確認"
+    },
+    {
+      "sheet": "90_Evidence",
+      "address": "C19",
+      "before": null,
+      "after": "リプラス 商品カタログ SN1200"
+    },
+    {
+      "sheet": "90_Evidence",
+      "address": "D19",
+      "before": null,
+      "after": "全PDFのlive bytes読み戻し未完了"
+    },
+    {
+      "sheet": "90_Evidence",
+      "address": "E19",
+      "before": null,
+      "after": "印刷P273注記1・2、P276交換可否表・取付スペース"
+    },
+    {
+      "sheet": "90_Evidence",
+      "address": "F19",
+      "before": null,
+      "after": "Drive:1wH1nhmsftl6y8Mp7y6twtoXSi6rxqxzT"
+    },
+    {
+      "sheet": "90_Evidence",
+      "address": "G19",
+      "before": null,
+      "after": "2026-10-09"
+    },
+    {
+      "sheet": "90_Evidence",
+      "address": "H19",
+      "before": null,
+      "after": "REVIEW_REQUIRED"
+    },
+    {
+      "sheet": "90_Evidence",
+      "address": "I19",
+      "before": null,
+      "after": "外付型一致、鏡板付戸袋、戸袋側W+c。正式採用は未実施。"
+    },
+    {
+      "sheet": "00_INDEX",
+      "address": "A1",
+      "before": "00_INDEX｜LIXIL リプラス 汎用カットモール v1.0",
+      "after": "00_INDEX｜汎用カットモール WORKING R1"
+    },
+    {
+      "sheet": "00_INDEX",
+      "address": "B6",
+      "before": "v1.0",
+      "after": "v1.0-WORKING-R1"
+    },
+    {
+      "sheet": "00_INDEX",
+      "address": "C6",
+      "before": "新規Authoring Master",
+      "after": "外付・雨戸付の施工条件修正候補"
+    },
+    {
+      "sheet": "00_INDEX",
+      "address": "B7",
+      "before": "v1.1",
+      "after": "v1.1-WORKING-R1"
+    },
+    {
+      "sheet": "00_INDEX",
+      "address": "C7",
+      "before": "Replus package release version",
+      "after": "Current v1.1からの隔離候補"
+    },
+    {
+      "sheet": "00_INDEX",
+      "address": "B14",
+      "before": "PASS",
+      "after": "WORKING_HOLD"
+    },
+    {
+      "sheet": "00_INDEX",
+      "address": "C14",
+      "before": "通常見積必須PENDING=0",
+      "after": "Source実bytes照合・承認待ち"
+    },
+    {
+      "sheet": "00_INDEX",
+      "address": "B15",
+      "before": "AUTHORING_PASS_RUNTIME_READY_TO_BUILD",
+      "after": "CANDIDATE_NOT_APPROVED"
+    },
+    {
+      "sheet": "00_INDEX",
+      "address": "C15",
+      "before": "Runtime/Manifestと同期対象",
+      "after": "Current／正式成果は未変更"
+    },
+    {
+      "sheet": "00_README",
+      "address": "B8",
+      "before": "v1.0",
+      "after": "v1.0-WORKING-R1"
+    },
+    {
+      "sheet": "00_README",
+      "address": "B9",
+      "before": "v1.1",
+      "after": "v1.1-WORKING-R1"
+    },
+    {
+      "sheet": "99_QA",
+      "address": "C18",
+      "before": "PASS",
+      "after": "HOLD"
+    },
+    {
+      "sheet": "99_QA",
+      "address": "D18",
+      "before": "通常見積必須PENDING=0",
+      "after": "Source全Scope照合・新候補QA待ち"
+    },
+    {
+      "sheet": "99_QA",
+      "address": "E18",
+      "before": null,
+      "after": "原本QAを新差分へ継承しない"
+    }
+  ],
+  "carry_forward_components": [
+    "RPL_ROOM",
+    "RPL_TW",
+    "RPL_EW",
+    "RPL_BATH",
+    "RPL_ATT_TW",
+    "RPL_ATT_TH"
+  ],
+  "nonimpact_policy": "All nonpatched cell values, formulas, formats and native features must survive; all other components are byte-identical",
+  "acceptance_conditions": [
+    "Full old/adopted and candidate Source bytes/readback and all-responsibility comparison",
+    "Current referenced-product semantic closure",
+    "Native RuleSet projection and product-specific QA",
+    "New fixed-payload Human Decision",
+    "Scoped CI and release gates; no waiver by technical audit PASS"
+  ]
+}

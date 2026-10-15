@@ -1,0 +1,14 @@
+{
+  "status": "PASS",
+  "value_changes": 48,
+  "out_of_scope_changes": 0,
+  "expanded_tables": [
+    "10_適用条件",
+    "10C_施工スペース",
+    "10D_施工条件",
+    "90_Evidence"
+  ],
+  "formula_cells_unchanged": true,
+  "nonmodified_table_addresses_unchanged": true,
+  "product_qa": "NOT_REISSUED"
+}

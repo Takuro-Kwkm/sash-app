@@ -1,0 +1,359 @@
+{
+  "sheet_names_preserved": true,
+  "changes": [
+    {
+      "sheet": "00_INDEX",
+      "cell": "A1",
+      "before": "00_INDEX｜LIXIL リプラス 汎用カットモール v1.0",
+      "after": "00_INDEX｜汎用カットモール WORKING R1",
+      "allowed": true
+    },
+    {
+      "sheet": "00_INDEX",
+      "cell": "B6",
+      "before": "v1.0",
+      "after": "v1.0-WORKING-R1",
+      "allowed": true
+    },
+    {
+      "sheet": "00_INDEX",
+      "cell": "C6",
+      "before": "新規Authoring Master",
+      "after": "外付・雨戸付の施工条件修正候補",
+      "allowed": true
+    },
+    {
+      "sheet": "00_INDEX",
+      "cell": "B7",
+      "before": "v1.1",
+      "after": "v1.1-WORKING-R1",
+      "allowed": true
+    },
+    {
+      "sheet": "00_INDEX",
+      "cell": "C7",
+      "before": "Replus package release version",
+      "after": "Current v1.1からの隔離候補",
+      "allowed": true
+    },
+    {
+      "sheet": "00_INDEX",
+      "cell": "B14",
+      "before": "PASS",
+      "after": "WORKING_HOLD",
+      "allowed": true
+    },
+    {
+      "sheet": "00_INDEX",
+      "cell": "C14",
+      "before": "通常見積必須PENDING=0",
+      "after": "Source実bytes照合・承認待ち",
+      "allowed": true
+    },
+    {
+      "sheet": "00_INDEX",
+      "cell": "B15",
+      "before": "AUTHORING_PASS_RUNTIME_READY_TO_BUILD",
+      "after": "CANDIDATE_NOT_APPROVED",
+      "allowed": true
+    },
+    {
+      "sheet": "00_INDEX",
+      "cell": "C15",
+      "before": "Runtime/Manifestと同期対象",
+      "after": "Current／正式成果は未変更",
+      "allowed": true
+    },
+    {
+      "sheet": "00_README",
+      "cell": "B8",
+      "before": "v1.0",
+      "after": "v1.0-WORKING-R1",
+      "allowed": true
+    },
+    {
+      "sheet": "00_README",
+      "cell": "B9",
+      "before": "v1.1",
+      "after": "v1.1-WORKING-R1",
+      "allowed": true
+    },
+    {
+      "sheet": "10_適用条件",
+      "cell": "D8",
+      "before": "UNAVAILABLE",
+      "after": "CONDITIONAL",
+      "allowed": true
+    },
+    {
+      "sheet": "10_適用条件",
+      "cell": "E8",
+      "before": "HIDE",
+      "after": "新設も外付型。正本・納まり要確認",
+      "allowed": true
+    },
+    {
+      "sheet": "10_適用条件",
+      "cell": "F8",
+      "before": "COMPLETE",
+      "after": "MANUAL_CHECK",
+      "allowed": true
+    },
+    {
+      "sheet": "10_適用条件",
+      "cell": "G8",
+      "before": "CM-EV-012",
+      "after": "CM-EV-017",
+      "allowed": true
+    },
+    {
+      "sheet": "10_適用条件",
+      "cell": "A16",
+      "before": null,
+      "after": "CM-AP-AMADO-POCKET",
+      "allowed": true
+    },
+    {
+      "sheet": "10_適用条件",
+      "cell": "B16",
+      "before": null,
+      "after": "existing_window_type",
+      "allowed": true
+    },
+    {
+      "sheet": "10_適用条件",
+      "cell": "C16",
+      "before": null,
+      "after": "既設雨戸付",
+      "allowed": true
+    },
+    {
+      "sheet": "10_適用条件",
+      "cell": "D16",
+      "before": null,
+      "after": "REQUIRED_PART_CONDITION",
+      "allowed": true
+    },
+    {
+      "sheet": "10_適用条件",
+      "cell": "E16",
+      "before": null,
+      "after": "鏡板付戸袋必須。鏡板無戸袋は不可",
+      "allowed": true
+    },
+    {
+      "sheet": "10_適用条件",
+      "cell": "F16",
+      "before": null,
+      "after": "MANUAL_CHECK",
+      "allowed": true
+    },
+    {
+      "sheet": "10_適用条件",
+      "cell": "G16",
+      "before": null,
+      "after": "CM-EV-017",
+      "allowed": true
+    },
+    {
+      "sheet": "10C_施工スペース",
+      "cell": "A7",
+      "before": null,
+      "after": "CM-SP-05",
+      "allowed": true
+    },
+    {
+      "sheet": "10C_施工スペース",
+      "cell": "B7",
+      "before": null,
+      "after": "雨戸付の戸袋側スペース",
+      "allowed": true
+    },
+    {
+      "sheet": "10C_施工スペース",
+      "cell": "C7",
+      "before": null,
+      "after": "新設戸袋納まりW＋c",
+      "allowed": true
+    },
+    {
+      "sheet": "10C_施工スペース",
+      "cell": "D7",
+      "before": null,
+      "after": ">=",
+      "allowed": true
+    },
+    {
+      "sheet": "10C_施工スペース",
+      "cell": "E7",
+      "before": null,
+      "after": "CONDITIONAL",
+      "allowed": true
+    },
+    {
+      "sheet": "10C_施工スペース",
+      "cell": "F7",
+      "before": null,
+      "after": "MANUAL_CHECK",
+      "allowed": true
+    },
+    {
+      "sheet": "10C_施工スペース",
+      "cell": "G7",
+      "before": null,
+      "after": "CM-EV-017",
+      "allowed": true
+    },
+    {
+      "sheet": "10D_施工条件",
+      "cell": "A9",
+      "before": null,
+      "after": "CM-CON-AMADO-POCKET",
+      "allowed": true
+    },
+    {
+      "sheet": "10D_施工条件",
+      "cell": "B9",
+      "before": null,
+      "after": "雨戸付の戸袋",
+      "allowed": true
+    },
+    {
+      "sheet": "10D_施工条件",
+      "cell": "C9",
+      "before": null,
+      "after": "鏡板付戸袋",
+      "allowed": true
+    },
+    {
+      "sheet": "10D_施工条件",
+      "cell": "D9",
+      "before": null,
+      "after": "鏡板無戸袋は不可",
+      "allowed": true
+    },
+    {
+      "sheet": "10D_施工条件",
+      "cell": "E9",
+      "before": null,
+      "after": "MANUAL_CHECK",
+      "allowed": true
+    },
+    {
+      "sheet": "10D_施工条件",
+      "cell": "F9",
+      "before": null,
+      "after": "CM-EV-017",
+      "allowed": true
+    },
+    {
+      "sheet": "90_Evidence",
+      "cell": "I14",
+      "before": "外付不可/4シリーズ",
+      "after": "旧判定の記録。外付不可の一律判定は候補CM-EV-017で再評価。",
+      "allowed": true
+    },
+    {
+      "sheet": "90_Evidence",
+      "cell": "A19",
+      "before": null,
+      "after": "CM-EV-017",
+      "allowed": true
+    },
+    {
+      "sheet": "90_Evidence",
+      "cell": "B19",
+      "before": null,
+      "after": "LIXIL公式カタログのローカル取得・視覚確認",
+      "allowed": true
+    },
+    {
+      "sheet": "90_Evidence",
+      "cell": "C19",
+      "before": null,
+      "after": "リプラス 商品カタログ SN1200",
+      "allowed": true
+    },
+    {
+      "sheet": "90_Evidence",
+      "cell": "D19",
+      "before": null,
+      "after": "全PDFのlive bytes読み戻し未完了",
+      "allowed": true
+    },
+    {
+      "sheet": "90_Evidence",
+      "cell": "E19",
+      "before": null,
+      "after": "印刷P273注記1・2、P276交換可否表・取付スペース",
+      "allowed": true
+    },
+    {
+      "sheet": "90_Evidence",
+      "cell": "F19",
+      "before": null,
+      "after": "Drive:1wH1nhmsftl6y8Mp7y6twtoXSi6rxqxzT",
+      "allowed": true
+    },
+    {
+      "sheet": "90_Evidence",
+      "cell": "G19",
+      "before": null,
+      "after": "2026-10-09",
+      "allowed": true
+    },
+    {
+      "sheet": "90_Evidence",
+      "cell": "H19",
+      "before": null,
+      "after": "REVIEW_REQUIRED",
+      "allowed": true
+    },
+    {
+      "sheet": "90_Evidence",
+      "cell": "I19",
+      "before": null,
+      "after": "外付型一致、鏡板付戸袋、戸袋側W+c。正式採用は未実施。",
+      "allowed": true
+    },
+    {
+      "sheet": "99_QA",
+      "cell": "C18",
+      "before": "PASS",
+      "after": "HOLD",
+      "allowed": true
+    },
+    {
+      "sheet": "99_QA",
+      "cell": "D18",
+      "before": "通常見積必須PENDING=0",
+      "after": "Source全Scope照合・新候補QA待ち",
+      "allowed": true
+    },
+    {
+      "sheet": "99_QA",
+      "cell": "E18",
+      "before": null,
+      "after": "原本QAを新差分へ継承しない",
+      "allowed": true
+    }
+  ],
+  "out_of_scope_value_changes": [],
+  "style_changes": [],
+  "formula_changes": [],
+  "patch_count": 48,
+  "actual_change_count": 48,
+  "candidate_sha256": "d721d3a62534b8b80453d1f1960f900d20af32e468fe171e5d7e2a77d7413919",
+  "native_feature_differences": [],
+  "formula_errors": [],
+  "uncached_formulas": [],
+  "status": "PASS",
+  "source_semantic_qa": "BLOCKED_FULL_SOURCE_ACQUISITION",
+  "product_qa": "NOT_REISSUED",
+  "visual_reviewed_sheets": [
+    "10_適用条件",
+    "10C_施工スペース",
+    "10D_施工条件",
+    "90_Evidence"
+  ]
+}
