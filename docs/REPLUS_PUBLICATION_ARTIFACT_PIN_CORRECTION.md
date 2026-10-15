@@ -1,0 +1,9 @@
+# 採用済みリプラスの公開照合値修正
+
+Runtime/UIの正本保存とPR88の取り込み後、本番切替前のHTTP照合で、リプラスRelease profileのstyles.cssとproduct-configuration-editor.mjsの期待SHAが旧版のままと判明した。実際の承認済みApplication388ファイル、商品マスター7冊、Runtime8ファイルは変更しない。本番URLは切り替えていない。
+
+リプラスRelease profileの2照合値を承認済み実ファイルへ修正する。既存のShared publication validator・固定HEAD判断・同一アプリbytes・段階配信・本番URLの保持条件は維持する。既存4商品のRelease profileのHTTP方針は変更しない。
+
+共通Runtime/UI QAの冒頭でpublication profileの全HTTP artifactとbuild identityを完全な応答bytesで照合し、旧照合値、別版、redirectをBrowser QAや公開判断前に拒否する。取得した全bodyを既存Shared validator向けの証跡として保存する。商品名分岐、新しいRelease/DAG/Approval engineは追加しない。
+
+前のimmutable successorは実main e58be968bab0ca617d0195ee0219963797da03d8とscope hashを固定してINSPECT_ONLYとする。元のUI/Output判断と正本採用を繰り返さず、この固定修正を含む後継Release判断で公開する。

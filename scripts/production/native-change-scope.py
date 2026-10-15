@@ -31,7 +31,9 @@ def validate(root):
         old=snapshot(root,s['completed_work']['commit'])
         scope=json.loads(old[s['completed_work']['scope_path']])
         assert digest(old[s['completed_work']['scope_path']])==s['completed_work']['scope_sha256'], 'SEALED_SCOPE_DRIFT'
-        for p,h in {**scope['protected_sha256'],**scope['candidate_files_sha256']}.items():
+        pins=scope.get('candidate_files_sha256',scope.get('candidate_sha256'))
+        assert isinstance(pins,dict) and pins, 'SEALED_CANDIDATE_PINS_REQUIRED'
+        for p,h in {**scope['protected_sha256'],**pins}.items():
             assert digest(old[p])==h, 'SEALED_WORK_DRIFT:'+p
         return {'status':'PASS','scope':s['scope_id'],'protected_files':len(protected),
                 'completed_work':'INSPECT_ONLY','formal_mutations':0,'release':'NOT_EXECUTED'}

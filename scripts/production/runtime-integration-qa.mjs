@@ -3,6 +3,7 @@ import {readFileSync,writeFileSync,mkdirSync} from 'node:fs';
 import {createHash} from 'node:crypto';
 import {resolve} from 'node:path';
 import {spawnSync} from 'node:child_process';
+import {captureReleaseHttp} from './release-http-artifacts.mjs';
 const args=process.argv.slice(2),v={};for(let i=0;i<args.length;i+=2)v[args[i]]=args[i+1];
 for(const k of ['--profile','--url','--expect-commit','--output-dir'])assert.ok(v[k]);
 const profilePath=resolve(v['--profile']),p=JSON.parse(readFileSync(profilePath)),scope=p.product_scope,out=resolve(v['--output-dir']);mkdirSync(out,{recursive:true});
@@ -10,6 +11,7 @@ assert.equal(p.repository,'Takuro-Kwkm/sash-app');assert.ok(scope?.product_id&&s
 const ref=path=>({path:resolve(path),sha256:createHash('sha256').update(readFileSync(path)).digest('hex'),location:resolve(path),observed_at:new Date().toISOString()});
 const run=(script,arguments_,env={})=>{const r=spawnSync(process.execPath,[script,...arguments_],{encoding:'utf8',env:{...process.env,...env}});if(r.status!==0){process.stderr.write(r.stderr||r.stdout);process.exit(r.status||2);}};
 const identity=resolve(out,'identity.json');run('scripts/production/verify-app-release.mjs',['--url',v['--url'],'--expect-commit',v['--expect-commit'],'--require-release-commit','--output',identity]);
+const http=await captureReleaseHttp(p,{url:v['--url'],gitSha:v['--expect-commit'],outputDir:resolve(out,'http-bodies')});writeFileSync(resolve(out,'http-artifacts.json'),JSON.stringify(http,null,2)+'\n');
 run(scope.browser_script,[],{QA_BASE_URL:v['--url'],QA_EXPECTED_COMMIT:v['--expect-commit'],QA_OUTPUT_DIR:resolve(out,'browser'),QA_RUNTIME_QA_CONTRACT:scope.qa_contract});
 const raw=JSON.parse(readFileSync(resolve(out,'browser/report.json')));assert.equal(raw.status,'PASS');assert.equal(raw.observedCommit,v['--expect-commit']);assert.deepEqual(raw.errors,[]);
 const results=raw.viewports.flatMap(view=>view.products.map(product=>({name:product.id+'-'+view.width,status:'PASS',detail:product})));
