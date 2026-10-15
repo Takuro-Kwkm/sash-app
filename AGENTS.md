@@ -1,10 +1,17 @@
 # sash-app — Repository Instructions
 
+## 共通ハーネス開始仕様（最初に読む）
+
+このRepository単独の新しいchat・checkoutでも、中央 `https://github.com/Takuro-Kwkm/product-ui-contracts.git` のremote default branchを実取得し、その `AGENTS.md` と `docs/architecture-v2/COMMON_HARNESS_INSTRUCTIONS.md` を作業開始前に全文読む。手元の過去checkoutや固定SHA、親directoryのhost設定の存在を前提にしない。取得した実HEADと文書bytes/hashを記録する。
+中央 `registries/current-architecture.v2.json` と `registries/skill-authority.v2.json` からCurrentとCanonical Skillを解決する。consumerの `architecture_authority.ref` は固定採用実装であり、live Current selectorではない。最新コードとの互換性は既存Validatorで確認し、pinやhashを書き換えて通さない。
+新規商品マスターは取得した中央の `scripts/start-product-master.py --source-checkout EXISTING_CHECKOUT` から始める。同じ未完了Workの続行は保存済みspec/start-resolution/binding/journal/checkpointを元の固定実装でresumeし、fresh mainへ結び直さない。完了WorkはINSPECT_ONLY。既存成果・未commit・未追跡成果を保持する。
+以下の記述と競合する場合、入口・Current取得・新規開始/再開の区別はこの節と共通仕様に従う。商品Governance、native Gate、公開の許可Scopeを維持する。
+
 `README.md` と `docs/RECOVERY_BASELINE.md` の既存設計ルールを維持する。商品名によるif / switch / case、商品専用Form / Output / Mapper / AllowedValue Resolverを追加しない。商品差はProductMaster / SpecificationDefinition / RuleSet / Evidence / Selector / Dependencyのデータで表し、CommonRuleEngineとOutput Engineの共通性を保つ。Evidenceなしメーカー仕様を確定せず、内部Enumをユーザーへ露出しない。変更Scopeに応じてpackage.jsonのlint / typecheck / testと必要なBrowser QAを使う。
 
 # Current App Development Architecture
 
-All product development starts by acquiring `contracts/production/current-architecture.json` and its exact shared Authority revision. Resolve short instructions through the shared `scripts/architecture-work.py`. The existing `scripts/production-work.py` executes the resolved native profile; it remains the single v2 DAG/Resume/Formal/CI implementation. Do not choose migration/reference profiles as the Current production workflow. PENDING products must return the declared FAIL_CLOSED contract without legacy or fixture fallback. Completed Work is inspected, never re-adopted.
+Acquire live Central Current first. Read `contracts/production/current-architecture.json` separately as the fixed consumer adoption contract. Resolve short instructions through the shared `scripts/architecture-work.py`. The existing `scripts/production-work.py` executes the resolved native profile; it remains the single v2 DAG/Resume/Formal/CI implementation. Do not choose migration/reference profiles as the Current production workflow. PENDING products must return the declared FAIL_CLOSED contract without legacy or fixture fallback. Completed Work is inspected, never re-adopted.
 
 ## Shared Skill / Current運用
 
