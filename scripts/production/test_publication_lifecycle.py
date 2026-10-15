@@ -18,8 +18,10 @@ class LifecycleScopeTest(unittest.TestCase):
         self.addCleanup(scratch.cleanup)
         self.root = Path(scratch.name) / 'native'
         subprocess.run(['git', 'clone', '--quiet', '--shared', str(ROOT), str(self.root)], check=True)
-        subprocess.run(['git', 'checkout', '--quiet', '--detach', guard.BASE], cwd=self.root, check=True)
-        for name in guard.ALLOWED:
+        scope = json.loads((ROOT / 'contracts/production/new-product-environment-scope.v1.json').read_text())
+        self.scope_path = 'contracts/production/new-product-environment-scope.v1.json'
+        subprocess.run(['git', 'checkout', '--quiet', '--detach', scope['starting_main']], cwd=self.root, check=True)
+        for name in scope['allowed_paths']:
             source = ROOT / name
             if source.exists():
                 target = self.root / name
@@ -50,7 +52,7 @@ class LifecycleScopeTest(unittest.TestCase):
         self.rejected()
 
     def test_scope_widening_rejected(self):
-        path = self.root / guard.SCOPE_PATH
+        path = self.root / self.scope_path
         value = json.loads(path.read_bytes())
         value['allowed_paths'].append('src/ui/web/app.js')
         path.write_text(json.dumps(value))
