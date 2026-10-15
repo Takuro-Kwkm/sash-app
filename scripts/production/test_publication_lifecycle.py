@@ -18,10 +18,20 @@ class LifecycleScopeTest(unittest.TestCase):
         self.addCleanup(scratch.cleanup)
         self.root = Path(scratch.name) / 'native'
         subprocess.run(['git', 'clone', '--quiet', '--shared', str(ROOT), str(self.root)], check=True)
-        scope = json.loads((ROOT / 'contracts/production/new-product-environment-scope.v1.json').read_text())
-        self.scope_path = 'contracts/production/new-product-environment-scope.v1.json'
-        subprocess.run(['git', 'checkout', '--quiet', '--detach', scope['starting_main']], cwd=self.root, check=True)
-        for name in scope['allowed_paths']:
+        base, paths = guard.BASE, set(guard.ALLOWED)
+        if (ROOT / 'contracts/production/giesta2-connection-scope.v1.json').exists():
+            successor_spec = importlib.util.spec_from_file_location('sheets_scope', ROOT / 'scripts/production/giesta2-connection-scope.py')
+            successor = importlib.util.module_from_spec(successor_spec)
+            successor_spec.loader.exec_module(successor)
+            base, paths = successor.BASE, paths | successor.ALLOWED
+        if (ROOT / 'contracts/production/new-product-environment-scope.v1.json').exists():
+            scope = json.loads((ROOT / 'contracts/production/new-product-environment-scope.v1.json').read_text())
+            base, paths = scope['starting_main'], set(scope['allowed_paths'])
+            self.scope_path = 'contracts/production/new-product-environment-scope.v1.json'
+        else:
+            self.scope_path = guard.SCOPE_PATH
+        subprocess.run(['git', 'checkout', '--quiet', '--detach', base], cwd=self.root, check=True)
+        for name in paths:
             source = ROOT / name
             if source.exists():
                 target = self.root / name

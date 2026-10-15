@@ -5,22 +5,22 @@
     "sha256": "0541a759e74bdcd1700da09756b4b68efe648ee4d60e6045d6f8efdbf07c7a5b",
     "implementation_sha": "68f2fe69831a33ab92789526bdcd7a49446122a2"
   },
-  "predecessor_native_commit": "8152f03883430716f520168ff01d60738e4a4b8f",
+  "predecessor_native_commit": "7b218c06539ad2e1fc13fd5ae63aa5a13b6ac8a6",
   "predecessor_profile": {
     "path": "contracts/production/authority-successors/new-product-predecessor-profile.json",
-    "sha256": "6b8e4032a3212b779659b6b6ca55058b07f02322a868e2a64a7e48ec899288b3"
+    "sha256": "7c90c69fa6dfbb8abd799c181805a8eb10f5e85d466ee4acc4218389d81b85e5"
   },
   "predecessor_selection": {
     "path": "contracts/production/authority-successors/new-product-predecessor-selection.json",
-    "sha256": "895df50b8ba71a6cb6eb5cd77c0a263bc781c6812088d36002e0ae7b9a9b8b4d"
+    "sha256": "79093b2030765f887414e5694fcaec74ddbbf9bdea97d7334a7a6f9de58b546c"
   },
   "compatibility_implementation": {
     "repository": "Takuro-Kwkm/product-ui-contracts",
-    "ref": "fff651fb6595dcaa0bd369c8fa351cb0c2691680"
+    "ref": "16f4efd69e06adc994b5394ff1726c8a5e372cd3"
   },
   "release_profile": {
     "path": "contracts/production/release-profile.v1.json",
-    "sha256": "875f3eaeb0625d450762af418dbcc2e100dcde11ba437d8b32c75367968b1c46"
+    "sha256": "4edc21a3e8c81777ad668c1d03a9fa685dab66dd2d2f0457469d43c9dfafbbc1"
   },
   "semantic_delta": {
     "added": {},

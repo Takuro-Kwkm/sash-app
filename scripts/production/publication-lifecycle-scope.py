@@ -72,6 +72,12 @@ def validate(root):
         module = importlib.util.module_from_spec(spec); spec.loader.exec_module(module)
         return module.validate(root)
     root = Path(root)
+    if (root / 'contracts/production/giesta2-connection-scope.v1.json').exists():
+        import importlib.util
+        spec = importlib.util.spec_from_file_location('giesta2_scope', root / 'scripts/production/giesta2-connection-scope.py')
+        successor = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(successor)
+        return successor.validate(root)
     errors = []
     protected = {}
     try:
