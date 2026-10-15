@@ -102,9 +102,16 @@
       "no_fallback": true
     },
     "NATIVE_REGISTRY:LIXIL::ジエスタ2": {
-      "state": "FAIL_CLOSED",
-      "validators": [],
-      "no_fallback": true
+      "state": "READY",
+      "validators": [
+        "native-sheets-identity",
+        "native-package-integrity",
+        "reviewed-exact-cell-delta",
+        "source-evidence-binding",
+        "sales-handoff-native-qa"
+      ],
+      "no_fallback": true,
+      "connection_validator": "scripts/production/validate-sheet-package-connection.py"
     },
     "NATIVE_REGISTRY:LIXIL::エルムーブ2": {
       "state": "FAIL_CLOSED",

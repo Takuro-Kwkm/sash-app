@@ -1,0 +1,6 @@
+{
+  "schema": "CURRENT_AUTHORITY_SUCCESSOR_SELECTION_V1",
+  "path": "contracts/production/authority-successors/publication-lifecycle.v1.json",
+  "sha256": "43ae3b5e0f034eac36a4f67acc2081629cf63d3291eaf15bceac23e9fb7ca3a7",
+  "implementation_sha": "690ebb22a5104f5affa0e7296bb8e424ecf111e4"
+}
