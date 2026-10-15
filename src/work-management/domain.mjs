@@ -160,7 +160,7 @@ export function createProductConfigurationSnapshot({product,result,clock,previou
     ...(result.confirmationRequests?.length?{confirmation_requests:cloneValue(result.confirmationRequests)}:{}),
     ...(result.sales_request_handoff?{sales_request_handoff:cloneValue(result.sales_request_handoff),sales_request_state:result.sales_request_state}:{}),
     display_summary:displaySummary(result),
-    validation_state:result.sales_request_handoff?ValidationState.NEEDS_REVALIDATION:validationState(result),
+    validation_state:validationState(result)===ValidationState.INVALID?ValidationState.INVALID:result.sales_request_handoff?ValidationState.NEEDS_REVALIDATION:validationState(result),
     source_mode:canonical?'CANONICAL_RUNTIME':'LEGACY_CATALOG',
     product_id:product.id,
     product_source:result.source??product.sourceType??product.source??'CATALOG',

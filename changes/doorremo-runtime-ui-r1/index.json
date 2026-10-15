@@ -1,0 +1,661 @@
+{
+  "schema": "CANDIDATE_RUNTIME_INDEX_V1",
+  "revision": "DOORREMO_RUNTIME_UI_R1_20261015",
+  "adoption": "CANDIDATE_ONLY",
+  "products": [
+    {
+      "id": "CANDIDATE:DOORREMO_NONFIRE",
+      "manufacturer": "YKK AP",
+      "series": "ドアリモ玄関ドア 非防火",
+      "displayName": "ドアリモ玄関ドア 非防火",
+      "productCategory": "door",
+      "uiCategory": "ENTRY_DOOR_COVER",
+      "packageVersion": "DOORREMO_RUNTIME_UI_R1_20261015",
+      "masterVersion": "v1.1-R4-F1-20261015",
+      "schemaVersion": "1.0",
+      "path": "candidates/module.json",
+      "sha256": "a8657d5d817d7a7b94d49e488f77b24f5c1050339a6dfa986a4e5331d067f614",
+      "sourceHash": "a8657d5d817d7a7b94d49e488f77b24f5c1050339a6dfa986a4e5331d067f614",
+      "candidate": true,
+      "adapterType": "COMPOSED_PRODUCT_MODULE_V1",
+      "uiFlowContract": {
+        "schema": "REVIEWED_WINDOW_FLOW_V3",
+        "revision": "DOORREMO_RUNTIME_UI_R1_20261015",
+        "status": "REVIEWED_DESIGN_CANDIDATE",
+        "formalAdoption": false,
+        "sourceFlow": {
+          "path": "sources/PRODUCT_MASTER.json",
+          "sha256": "f4149b78d6f1d83e8a72c325b49362638e49b72d45efa4fce8795afb846f0187"
+        },
+        "reviewSources": [
+          {
+            "path": "sources/UI_STANDARD_v2.1.docx",
+            "sha256": "e14b802dd96c1b90ea39809137ea03824878db2b7c07aa058657f3603a928e9a"
+          }
+        ],
+        "groups": [
+          {
+            "id": "spec",
+            "label": "商品仕様・断熱仕様",
+            "order": 0
+          },
+          {
+            "id": "opening",
+            "label": "開き形式・ランマ",
+            "order": 1
+          },
+          {
+            "id": "design",
+            "label": "デザイン・子扉",
+            "order": 2
+          },
+          {
+            "id": "glazing",
+            "label": "別途ガラス手配",
+            "order": 3
+          },
+          {
+            "id": "finish",
+            "label": "本体色・枠色",
+            "order": 4
+          },
+          {
+            "id": "handing",
+            "label": "吊元",
+            "order": 5
+          },
+          {
+            "id": "hardware",
+            "label": "施解錠・ハンドル",
+            "order": 6
+          },
+          {
+            "id": "trim",
+            "label": "額縁",
+            "order": 7
+          },
+          {
+            "id": "threshold",
+            "label": "下枠納まり",
+            "order": 8
+          },
+          {
+            "id": "size",
+            "label": "サイズ・新設枠発注寸法",
+            "order": 9
+          },
+          {
+            "id": "survey",
+            "label": "既設条件・現場確認",
+            "order": 10
+          },
+          {
+            "id": "request",
+            "label": "見積依頼数量",
+            "order": 11
+          }
+        ],
+        "fields": {
+          "product_grade": {
+            "meaning": "商品仕様",
+            "label": "商品仕様",
+            "sourceRefs": [
+              "EV-IDENTITY-R1"
+            ],
+            "group": "spec",
+            "rank": 0,
+            "parents": [],
+            "slot": "product",
+            "stage": "PRODUCT"
+          },
+          "thermal_spec": {
+            "meaning": "断熱仕様",
+            "label": "断熱仕様",
+            "sourceRefs": [
+              "EV-IDENTITY-R1",
+              "EV-D50-MATRIX-R1",
+              "EV-D30-MATRIX-R1"
+            ],
+            "group": "spec",
+            "rank": 1,
+            "parents": [
+              "product_grade"
+            ],
+            "slot": "window_spec",
+            "stage": "CONFIGURATION"
+          },
+          "transom_presence": {
+            "meaning": "ランマ",
+            "label": "ランマ",
+            "sourceRefs": [
+              "EV-FRAME-R1"
+            ],
+            "group": "opening",
+            "rank": 0,
+            "parents": [],
+            "slot": "window_spec",
+            "stage": "CONFIGURATION"
+          },
+          "frame_configuration": {
+            "meaning": "枠形式",
+            "label": "開き形式",
+            "sourceRefs": [
+              "EV-FRAME-R1"
+            ],
+            "group": "opening",
+            "rank": 1,
+            "parents": [
+              "product_grade"
+            ],
+            "slot": "window_type",
+            "stage": "OPENING"
+          },
+          "design_id": {
+            "meaning": "デザイン",
+            "label": "デザイン",
+            "sourceRefs": [
+              "EV-D50-MATRIX-R1",
+              "EV-D30-MATRIX-R1",
+              "EV-ALUMINUM-MATRIX-R1"
+            ],
+            "group": "design",
+            "rank": 0,
+            "parents": [
+              "frame_configuration",
+              "product_grade",
+              "transom_presence"
+            ],
+            "slot": "window_spec",
+            "stage": "CONFIGURATION"
+          },
+          "secondary_leaf_design_id": {
+            "meaning": "子扉・副扉デザイン",
+            "label": "子扉・副扉デザイン",
+            "sourceRefs": [
+              "EV-SECONDARY-R1"
+            ],
+            "group": "design",
+            "rank": 1,
+            "parents": [
+              "design_id",
+              "frame_configuration",
+              "product_grade"
+            ],
+            "slot": "window_spec",
+            "stage": "CONFIGURATION",
+            "helpText": "本扉とのデザイン・色の最終組合せ、子扉幅配分は積算確認"
+          },
+          "sidelight_structure": {
+            "meaning": "袖FIX中桟",
+            "label": "袖FIX中桟",
+            "sourceRefs": [
+              "EV-D30-DIM-R1",
+              "EV-ALUMINUM-DIM-R1"
+            ],
+            "group": "design",
+            "rank": 2,
+            "parents": [
+              "design_id",
+              "frame_configuration",
+              "product_grade"
+            ],
+            "slot": "window_spec",
+            "stage": "CONFIGURATION"
+          },
+          "sidelight_glass_required": {
+            "meaning": "袖FIXガラス別途手配",
+            "label": "袖FIXガラス別途手配",
+            "sourceRefs": [
+              "EV-GLASS-R1"
+            ],
+            "group": "glazing",
+            "rank": 0,
+            "parents": [
+              "frame_configuration"
+            ],
+            "slot": "glass_base",
+            "stage": "GLAZING"
+          },
+          "transom_glass_required": {
+            "meaning": "ランマガラス別途手配",
+            "label": "ランマガラス別途手配",
+            "sourceRefs": [
+              "EV-GLASS-R1"
+            ],
+            "group": "glazing",
+            "rank": 1,
+            "parents": [
+              "transom_presence"
+            ],
+            "slot": "glass_base",
+            "stage": "GLAZING"
+          },
+          "door_color": {
+            "meaning": "ドア本体色",
+            "label": "ドア本体色",
+            "sourceRefs": [
+              "EV-D50-MATRIX-R1",
+              "EV-D30-MATRIX-R1",
+              "EV-ALUMINUM-MATRIX-R1"
+            ],
+            "group": "finish",
+            "rank": 0,
+            "parents": [
+              "design_id"
+            ],
+            "slot": "finish_color",
+            "stage": "FINISH"
+          },
+          "frame_color": {
+            "meaning": "枠色",
+            "label": "枠色",
+            "sourceRefs": [
+              "EV-D50-MATRIX-R1",
+              "EV-D30-MATRIX-R1",
+              "EV-ALUMINUM-MATRIX-R1"
+            ],
+            "group": "finish",
+            "rank": 1,
+            "parents": [
+              "design_id",
+              "door_color"
+            ],
+            "slot": "finish_color",
+            "stage": "FINISH"
+          },
+          "accent_color": {
+            "meaning": "アクセント色",
+            "label": "アクセント色",
+            "sourceRefs": [
+              "EV-D50-MATRIX-R1"
+            ],
+            "group": "finish",
+            "rank": 2,
+            "parents": [
+              "design_id"
+            ],
+            "slot": "finish_color",
+            "stage": "FINISH"
+          },
+          "handing": {
+            "meaning": "勝手",
+            "label": "吊元",
+            "sourceRefs": [
+              "EV-FRAME-R1"
+            ],
+            "group": "handing",
+            "rank": 0,
+            "parents": [],
+            "slot": "handing",
+            "stage": "CONFIGURATION",
+            "helpText": "外観/内観の図示基準は原資料PDF11,49,109参照"
+          },
+          "entry_system": {
+            "meaning": "施解錠方式",
+            "label": "施解錠方式",
+            "sourceRefs": [
+              "EV-HARDWARE-R1"
+            ],
+            "group": "hardware",
+            "rank": 0,
+            "parents": [],
+            "slot": "window_spec",
+            "stage": "CONFIGURATION"
+          },
+          "smart_key_system": {
+            "meaning": "スマートキー",
+            "label": "スマートキー",
+            "sourceRefs": [
+              "EV-HARDWARE-R1"
+            ],
+            "group": "hardware",
+            "rank": 1,
+            "parents": [
+              "entry_system"
+            ],
+            "slot": "window_spec",
+            "stage": "CONFIGURATION"
+          },
+          "power_supply": {
+            "meaning": "電源方式",
+            "label": "電源方式",
+            "sourceRefs": [
+              "EV-HARDWARE-R1"
+            ],
+            "group": "hardware",
+            "rank": 2,
+            "parents": [
+              "entry_system",
+              "frame_configuration",
+              "smart_key_system",
+              "transom_presence"
+            ],
+            "slot": "window_spec",
+            "stage": "CONFIGURATION"
+          },
+          "handle_type": {
+            "meaning": "ハンドル",
+            "label": "ハンドル",
+            "sourceRefs": [
+              "EV-HARDWARE-R1"
+            ],
+            "group": "hardware",
+            "rank": 3,
+            "parents": [
+              "entry_system",
+              "frame_configuration",
+              "product_grade"
+            ],
+            "slot": "window_spec",
+            "stage": "CONFIGURATION"
+          },
+          "handle_color": {
+            "meaning": "ハンドル色",
+            "label": "ハンドル色",
+            "sourceRefs": [
+              "EV-HARDWARE-R1"
+            ],
+            "group": "hardware",
+            "rank": 4,
+            "parents": [
+              "handle_type"
+            ],
+            "slot": "window_spec",
+            "stage": "CONFIGURATION",
+            "helpText": "ゴールドは手動シリンダーの仕上であり、ハンドル色へ混在させない"
+          },
+          "manual_cylinder_finish": {
+            "meaning": "手動シリンダー仕上",
+            "label": "手動シリンダー仕上",
+            "sourceRefs": [
+              "EV-HARDWARE-R1"
+            ],
+            "group": "hardware",
+            "rank": 5,
+            "parents": [
+              "entry_system",
+              "product_grade"
+            ],
+            "slot": "window_spec",
+            "stage": "CONFIGURATION"
+          },
+          "exterior_trim": {
+            "meaning": "外額縁",
+            "label": "外額縁",
+            "sourceRefs": [
+              "EV-TRIM-R1"
+            ],
+            "group": "trim",
+            "rank": 0,
+            "parents": [],
+            "slot": "installation",
+            "stage": "INSTALLATION_SURVEY"
+          },
+          "interior_trim_system": {
+            "meaning": "内額縁",
+            "label": "内額縁",
+            "sourceRefs": [
+              "EV-TRIM-R1"
+            ],
+            "group": "trim",
+            "rank": 1,
+            "parents": [],
+            "slot": "installation",
+            "stage": "INSTALLATION_SURVEY"
+          },
+          "interior_trim": {
+            "meaning": "アルミ内額縁寸法",
+            "label": "アルミ内額縁寸法",
+            "sourceRefs": [
+              "EV-TRIM-R1"
+            ],
+            "group": "trim",
+            "rank": 2,
+            "parents": [
+              "interior_trim_system",
+              "product_grade"
+            ],
+            "slot": "installation",
+            "stage": "INSTALLATION_SURVEY"
+          },
+          "new_frame_type": {
+            "meaning": "新設枠タイプ",
+            "label": "新設枠タイプ",
+            "sourceRefs": [
+              "EV-SITE-R1"
+            ],
+            "group": "threshold",
+            "rank": 0,
+            "parents": [
+              "product_grade"
+            ],
+            "slot": "installation",
+            "stage": "INSTALLATION_SURVEY"
+          },
+          "lower_flat_material": {
+            "meaning": "標準枠用下枠フラット材",
+            "label": "標準枠用下枠フラット材",
+            "sourceRefs": [
+              "EV-NONWOOD-R1"
+            ],
+            "group": "threshold",
+            "rank": 1,
+            "parents": [],
+            "slot": "installation",
+            "stage": "INSTALLATION_SURVEY"
+          },
+          "lower_frame_layout": {
+            "meaning": "採用済み新設枠と下枠フラット材の組合せを営業向け3択として表示",
+            "label": "下枠納まり",
+            "sourceRefs": [
+              "UI_STANDARD_v2.1:11.1.2",
+              "EV-SITE-R1",
+              "EV-NONWOOD-R1"
+            ],
+            "group": "threshold",
+            "rank": 2,
+            "parents": [
+              "product_grade",
+              "lower_skirt",
+              "lower_reinforcement_angle"
+            ],
+            "slot": "installation",
+            "stage": "INSTALLATION_SURVEY",
+            "deferredEvaluationParents": [
+              "lower_skirt",
+              "lower_reinforcement_angle"
+            ]
+          },
+          "lower_frame_treatment": {
+            "meaning": "既設下枠の処理",
+            "label": "既設下枠の処理",
+            "sourceRefs": [
+              "EV-SITE-R1"
+            ],
+            "group": "threshold",
+            "rank": 3,
+            "parents": [],
+            "slot": "installation",
+            "stage": "INSTALLATION_SURVEY"
+          },
+          "lower_skirt": {
+            "meaning": "下枠幅木",
+            "label": "下枠幅木",
+            "sourceRefs": [
+              "EV-TRIM-R1"
+            ],
+            "group": "threshold",
+            "rank": 4,
+            "parents": [],
+            "slot": "installation",
+            "stage": "INSTALLATION_SURVEY",
+            "evaluationContext": true
+          },
+          "lower_reinforcement_angle": {
+            "meaning": "下枠補強アングル",
+            "label": "下枠補強アングル",
+            "sourceRefs": [
+              "EV-TRIM-R1"
+            ],
+            "group": "threshold",
+            "rank": 5,
+            "parents": [],
+            "slot": "installation",
+            "stage": "INSTALLATION_SURVEY",
+            "evaluationContext": true
+          },
+          "frame_w": {
+            "meaning": "新設枠W",
+            "label": "新設枠W",
+            "sourceRefs": [
+              "EV-DIM-R1"
+            ],
+            "group": "size",
+            "rank": 0,
+            "parents": [
+              "design_id",
+              "frame_configuration",
+              "product_grade",
+              "secondary_leaf_design_id"
+            ],
+            "slot": "size",
+            "stage": "SIZE",
+            "helpText": "新設枠発注寸法。既設開口・枠外寸法と区別。本扉DWの子扉/袖との幅配分、施工調査は積算確認。"
+          },
+          "wf": {
+            "meaning": "袖FIX幅WF",
+            "label": "袖FIX幅WF",
+            "sourceRefs": [
+              "EV-DIM-R1"
+            ],
+            "group": "size",
+            "rank": 1,
+            "parents": [
+              "design_id",
+              "frame_configuration",
+              "frame_w",
+              "product_grade",
+              "sidelight_structure",
+              "transom_presence"
+            ],
+            "slot": "size",
+            "stage": "SIZE",
+            "helpText": "新設枠発注寸法。既設開口・枠外寸法と区別。本扉DWの子扉/袖との幅配分、施工調査は積算確認。"
+          },
+          "hr": {
+            "meaning": "ランマH",
+            "label": "ランマH",
+            "sourceRefs": [
+              "EV-DIM-R1"
+            ],
+            "group": "size",
+            "rank": 2,
+            "parents": [
+              "frame_configuration",
+              "product_grade",
+              "sidelight_structure",
+              "transom_presence"
+            ],
+            "slot": "size",
+            "stage": "SIZE",
+            "helpText": "新設枠発注寸法。既設開口・枠外寸法と区別。本扉DWの子扉/袖との幅配分、施工調査は積算確認。"
+          },
+          "frame_h": {
+            "meaning": "新設枠H",
+            "label": "新設枠H",
+            "sourceRefs": [
+              "EV-DIM-R1"
+            ],
+            "group": "size",
+            "rank": 3,
+            "parents": [
+              "design_id",
+              "frame_configuration",
+              "hr",
+              "product_grade",
+              "secondary_leaf_design_id",
+              "sidelight_structure",
+              "transom_presence"
+            ],
+            "slot": "size",
+            "stage": "SIZE",
+            "helpText": "新設枠発注寸法。既設開口・枠外寸法と区別。本扉DWの子扉/袖との幅配分、施工調査は積算確認。"
+          },
+          "building_structure": {
+            "meaning": "建物構造",
+            "label": "建物構造",
+            "sourceRefs": [
+              "EV-SITE-R1"
+            ],
+            "group": "survey",
+            "rank": 0,
+            "parents": [],
+            "slot": "installation",
+            "stage": "INSTALLATION_SURVEY"
+          },
+          "existing_frame_material": {
+            "meaning": "既設枠材質",
+            "label": "既設枠材質",
+            "sourceRefs": [
+              "EV-SITE-R1"
+            ],
+            "group": "survey",
+            "rank": 1,
+            "parents": [],
+            "slot": "installation",
+            "stage": "INSTALLATION_SURVEY"
+          },
+          "existing_frame_mount_type": {
+            "meaning": "既設枠の納まり",
+            "label": "既設枠の納まり",
+            "sourceRefs": [
+              "EV-SITE-R1"
+            ],
+            "group": "survey",
+            "rank": 2,
+            "parents": [],
+            "slot": "installation",
+            "stage": "INSTALLATION_SURVEY"
+          },
+          "site_floor_context": {
+            "meaning": "設置階・床条件",
+            "label": "設置階・床条件",
+            "sourceRefs": [
+              "EV-SITE-R1"
+            ],
+            "group": "survey",
+            "rank": 3,
+            "parents": [],
+            "slot": "installation",
+            "stage": "INSTALLATION_SURVEY"
+          },
+          "quantity": {
+            "meaning": "営業見積依頼の数量。部材BOMの数量ではない",
+            "label": "依頼数量",
+            "sourceRefs": [
+              "SALES_REQUEST_BOUNDARY"
+            ],
+            "group": "request",
+            "rank": 0,
+            "parents": [],
+            "slot": "option",
+            "stage": "OPTION",
+            "helpText": "見積を依頼する数量を入力してください。部材数量は積算で確認します。"
+          }
+        },
+        "contextFields": [],
+        "slotOrder": [
+          "product",
+          "window_type",
+          "window_spec",
+          "handing",
+          "size",
+          "finish_color",
+          "glass_base",
+          "installation",
+          "option"
+        ]
+      }
+    }
+  ]
+}

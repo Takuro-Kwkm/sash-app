@@ -1,0 +1,331 @@
+{
+  "schema": "DECLARED_SALES_RUNTIME_BROWSER_QA_V1",
+  "product_id": "CANDIDATE:DOORREMO_NONFIRE",
+  "manifest_file_id": "1_L0uitQb5iqGER5lCkE0YpFOCdOHxdj2",
+  "viewports": [
+    1280,
+    768,
+    390
+  ],
+  "hidden_fields": [
+    "new_frame_type",
+    "lower_flat_material"
+  ],
+  "number_fields": [
+    "frame_w",
+    "frame_h",
+    "quantity"
+  ],
+  "internal_tokens": [
+    "ALUMINUM",
+    "WITHOUT_TRANSOM",
+    "GROUND_FLOOR_DIRT",
+    "EXTERNAL_PROCUREMENT",
+    "CONF-",
+    "MANUAL_CHECK",
+    "ESTIMATE_CONFIRM_REQUIRED"
+  ],
+  "rows": [
+    {
+      "id": "D50-request",
+      "seed": {
+        "product_grade": "D50",
+        "thermal_spec": "HIGH_INSULATION",
+        "building_structure": "WOOD",
+        "existing_frame_material": "ALUMINUM",
+        "existing_frame_mount_type": "SEMI_OUTER",
+        "site_floor_context": "GROUND_FLOOR_DIRT",
+        "transom_presence": "WITHOUT_TRANSOM",
+        "frame_configuration": "SINGLE",
+        "handing": "RIGHT",
+        "design_id": "N40N",
+        "door_color": "BE",
+        "frame_color": "BE",
+        "frame_w": 900,
+        "frame_h": 2200,
+        "entry_system": "MANUAL",
+        "handle_type": "MANUAL_D50_STRAIGHT",
+        "handle_color": "SILVER",
+        "manual_cylinder_finish": "SILVER",
+        "new_frame_type": "STANDARD",
+        "lower_frame_treatment": "NORMAL",
+        "exterior_trim": "EXT_50",
+        "interior_trim_system": "ALUMINUM",
+        "interior_trim": "INT_AL_40",
+        "lower_flat_material": false,
+        "lower_skirt": false,
+        "lower_reinforcement_angle": false,
+        "quantity": 1
+      },
+      "expected_valid": true,
+      "expected_confirmation_ids": [
+        "CONF-SITE",
+        "CONF-ORDER",
+        "CONF-TRIM"
+      ],
+      "expected_quantity": 1,
+      "actions": [
+        {
+          "field": "design_id",
+          "value": "N41N",
+          "expected": {
+            "frame_w": 900,
+            "door_color": "BE"
+          }
+        },
+        {
+          "field": "frame_w",
+          "value": 10000,
+          "cleared": [
+            "frame_w"
+          ],
+          "missing": [
+            "frame_w"
+          ]
+        },
+        {
+          "field": "frame_w",
+          "value": 900,
+          "expected": {
+            "frame_w": 900,
+            "design_id": "N41N"
+          }
+        }
+      ]
+    },
+    {
+      "id": "D30-request",
+      "seed": {
+        "product_grade": "D30",
+        "thermal_spec": "D2",
+        "building_structure": "WOOD",
+        "existing_frame_material": "ALUMINUM",
+        "existing_frame_mount_type": "SEMI_OUTER",
+        "site_floor_context": "GROUND_FLOOR_DIRT",
+        "transom_presence": "WITHOUT_TRANSOM",
+        "frame_configuration": "SINGLE",
+        "handing": "RIGHT",
+        "design_id": "C03N",
+        "door_color": "H2",
+        "frame_color": "H2",
+        "frame_w": 900,
+        "frame_h": 2200,
+        "entry_system": "MANUAL",
+        "handle_type": "MANUAL_01_ROUND_STRAIGHT",
+        "handle_color": "SILVER",
+        "manual_cylinder_finish": "SILVER",
+        "new_frame_type": "STANDARD",
+        "lower_frame_treatment": "NORMAL",
+        "exterior_trim": "EXT_50",
+        "interior_trim_system": "ALUMINUM",
+        "interior_trim": "INT_AL_40",
+        "lower_flat_material": false,
+        "lower_skirt": false,
+        "lower_reinforcement_angle": false,
+        "quantity": 2
+      },
+      "expected_valid": true,
+      "expected_confirmation_ids": [
+        "CONF-SITE",
+        "CONF-ORDER",
+        "CONF-TRIM"
+      ],
+      "expected_quantity": 2,
+      "actions": [
+        {
+          "field": "lower_frame_layout",
+          "value": "STANDARD_WITH_FLAT",
+          "expected": {
+            "new_frame_type": "STANDARD",
+            "lower_flat_material": true
+          }
+        }
+      ]
+    },
+    {
+      "id": "AL-request",
+      "seed": {
+        "product_grade": "ALUMINUM",
+        "building_structure": "WOOD",
+        "existing_frame_material": "ALUMINUM",
+        "existing_frame_mount_type": "SEMI_OUTER",
+        "site_floor_context": "GROUND_FLOOR_DIRT",
+        "transom_presence": "WITHOUT_TRANSOM",
+        "frame_configuration": "SINGLE",
+        "handing": "RIGHT",
+        "design_id": "S03",
+        "door_color": "YW",
+        "frame_color": "YW",
+        "frame_w": 900,
+        "frame_h": 2200,
+        "entry_system": "MANUAL",
+        "handle_type": "MANUAL_01_ROUND_STRAIGHT",
+        "handle_color": "SILVER",
+        "manual_cylinder_finish": "SILVER",
+        "new_frame_type": "STANDARD",
+        "lower_frame_treatment": "NORMAL",
+        "exterior_trim": "EXT_50",
+        "interior_trim_system": "ALUMINUM",
+        "interior_trim": "INT_AL_40",
+        "lower_flat_material": false,
+        "lower_skirt": false,
+        "lower_reinforcement_angle": false,
+        "quantity": 1
+      },
+      "expected_valid": true,
+      "expected_confirmation_ids": [
+        "CONF-SITE",
+        "CONF-ORDER",
+        "CONF-TRIM"
+      ],
+      "expected_quantity": 1,
+      "actions": [
+        {
+          "field": "quantity",
+          "value": 3,
+          "expected": {
+            "quantity": 3
+          }
+        }
+      ]
+    },
+    {
+      "id": "both-glasses-handoff",
+      "seed": {
+        "product_grade": "D30",
+        "thermal_spec": "D2",
+        "building_structure": "WOOD",
+        "existing_frame_material": "ALUMINUM",
+        "existing_frame_mount_type": "SEMI_OUTER",
+        "site_floor_context": "GROUND_FLOOR_DIRT",
+        "transom_presence": "WITH_TRANSOM",
+        "frame_configuration": "DOUBLE_SIDELIGHT",
+        "handing": "RIGHT",
+        "design_id": "C03N",
+        "door_color": "H2",
+        "frame_color": "H2",
+        "frame_w": 1600,
+        "frame_h": 2400,
+        "entry_system": "MANUAL",
+        "handle_type": "MANUAL_01_ROUND_STRAIGHT",
+        "handle_color": "SILVER",
+        "manual_cylinder_finish": "SILVER",
+        "new_frame_type": "STANDARD",
+        "lower_frame_treatment": "NORMAL",
+        "exterior_trim": "EXT_50",
+        "interior_trim_system": "ALUMINUM",
+        "interior_trim": "INT_AL_40",
+        "lower_flat_material": false,
+        "lower_skirt": false,
+        "lower_reinforcement_angle": false,
+        "sidelight_structure": "NO_MIDRAIL",
+        "wf": 350,
+        "hr": 300,
+        "sidelight_glass_required": "EXTERNAL_PROCUREMENT",
+        "transom_glass_required": "EXTERNAL_PROCUREMENT",
+        "quantity": 2
+      },
+      "expected_valid": true,
+      "expected_confirmation_ids": [
+        "CONF-SITE",
+        "CONF-ORDER",
+        "CONF-TRIM",
+        "CONF-ALLOCATION",
+        "CONF-GLASS"
+      ],
+      "expected_quantity": 2,
+      "actions": [
+        {
+          "field": "quantity",
+          "value": 3,
+          "expected": {
+            "quantity": 3,
+            "sidelight_glass_required": "EXTERNAL_PROCUREMENT",
+            "transom_glass_required": "EXTERNAL_PROCUREMENT"
+          }
+        }
+      ]
+    },
+    {
+      "id": "parent-child-request",
+      "seed": {
+        "product_grade": "D30",
+        "thermal_spec": "D2",
+        "building_structure": "WOOD",
+        "existing_frame_material": "ALUMINUM",
+        "existing_frame_mount_type": "SEMI_OUTER",
+        "site_floor_context": "GROUND_FLOOR_DIRT",
+        "transom_presence": "WITHOUT_TRANSOM",
+        "frame_configuration": "PARENT_CHILD",
+        "handing": "RIGHT",
+        "design_id": "C03N",
+        "door_color": "H2",
+        "frame_color": "H2",
+        "frame_w": 900,
+        "frame_h": 2200,
+        "entry_system": "MANUAL",
+        "handle_type": "MANUAL_01_ROUND_STRAIGHT",
+        "handle_color": "SILVER",
+        "manual_cylinder_finish": "SILVER",
+        "new_frame_type": "STANDARD",
+        "lower_frame_treatment": "NORMAL",
+        "exterior_trim": "EXT_50",
+        "interior_trim_system": "ALUMINUM",
+        "interior_trim": "INT_AL_40",
+        "lower_flat_material": false,
+        "lower_skirt": false,
+        "lower_reinforcement_angle": false,
+        "secondary_leaf_design_id": "K01N",
+        "quantity": 1
+      },
+      "expected_valid": true,
+      "expected_confirmation_ids": [
+        "CONF-SITE",
+        "CONF-ORDER",
+        "CONF-TRIM",
+        "CONF-ALLOCATION",
+        "CONF-SECONDARY"
+      ],
+      "expected_quantity": 1
+    },
+    {
+      "id": "site-floor-denied",
+      "seed": {
+        "product_grade": "D50",
+        "thermal_spec": "HIGH_INSULATION",
+        "building_structure": "WOOD",
+        "existing_frame_material": "ALUMINUM",
+        "existing_frame_mount_type": "SEMI_OUTER",
+        "site_floor_context": "OTHER",
+        "transom_presence": "WITHOUT_TRANSOM",
+        "frame_configuration": "SINGLE",
+        "handing": "RIGHT",
+        "design_id": "N40N",
+        "door_color": "BE",
+        "frame_color": "BE",
+        "frame_w": 900,
+        "frame_h": 2200,
+        "entry_system": "MANUAL",
+        "handle_type": "MANUAL_D50_STRAIGHT",
+        "handle_color": "SILVER",
+        "manual_cylinder_finish": "SILVER",
+        "new_frame_type": "STANDARD",
+        "lower_frame_treatment": "NORMAL",
+        "exterior_trim": "EXT_50",
+        "interior_trim_system": "ALUMINUM",
+        "interior_trim": "INT_AL_40",
+        "lower_flat_material": false,
+        "lower_skirt": false,
+        "lower_reinforcement_angle": false,
+        "quantity": 1
+      },
+      "expected_valid": false,
+      "expected_confirmation_ids": [
+        "CONF-SITE",
+        "CONF-ORDER",
+        "CONF-TRIM"
+      ],
+      "expected_quantity": 1
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "formal_status": "FORMAL_PASS",
+  "revision": "v1.1-R4-F1-20261015",
+  "master_file_id": "11iUqLNL85qcQ6hdIhDUQH9HSw2AbXksE",
+  "master_sha256": "f4149b78d6f1d83e8a72c325b49362638e49b72d45efa4fce8795afb846f0187",
+  "manifest_file_id": "1AyGNK49SGuaH9LBiUxGgBEcKYUqhC-I8",
+  "package_file_id": "1tK4g0swK3cQsVClYsTQxn_OomlOEVBlY",
+  "human_packet_sha256": "402aad1867d935bd61200faa57326e27954ae657c28b31cff660cebdcb603ec9",
+  "human_decision_ref": "USER_QUESTION_REPLY:call_c601331af34c4f328682f08f7593004b:0",
+  "completed_work": "DOORREMO-NF-FORMAL-20261015-F1",
+  "completed_checkpoint_file_id": "17YcyrN9cf26D3X91FsFWqKpQSHGpXz-Z",
+  "completed_checkpoint_sha256": "c04b8377e85056fd8b62a1b214a3b59806bc1330ee27cc5623d0bb59f9ff82d9",
+  "receipt": "POST_SAVE_VERIFIED",
+  "terminal_policy": "INSPECT_ONLY",
+  "manifest_boundary": "Immutable manifest retains pre-approval snapshot flags. Actual adoption authority is the admitted Human Decision, completed Formal receipt and current native Registry. Never infer adoption from the filename alone.",
+  "runtime_ui": "CANDIDATE_ONLY",
+  "product_master_mutations": 0
+}

@@ -245,6 +245,10 @@
       "formal_profile": {
         "path": "contracts/production/working-master-recovery/doorremo-nonfire.formal.v1.json",
         "sha256": "d53d88a618a8048af94574398c24fb85c081c5e0eef6cc167f5b33431d913934"
+      },
+      "runtime_candidate_profile": {
+        "path": "contracts/production/runtime-candidates/doorremo-nonfire-r1.profile.json",
+        "sha256": "8676fa5be711afabf7312001cdf10464212e6527124b7d4db74ec3ca85169332"
       }
     },
     "NATIVE_REGISTRY:YKK AP::ヴェナートD30": {

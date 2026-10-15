@@ -1,0 +1,312 @@
+{
+  "schema": "STANDARD_DOMAIN_RUNTIME_PROJECTION_V1",
+  "product": {
+    "id": "CANDIDATE:DOORREMO_NONFIRE",
+    "manufacturer": "YKK AP",
+    "displayName": "ドアリモ玄関ドア 非防火"
+  },
+  "source": {
+    "path": "sources/PRODUCT_MASTER.json",
+    "sha256": "f4149b78d6f1d83e8a72c325b49362638e49b72d45efa4fce8795afb846f0187",
+    "product_id": "NATIVE_REGISTRY:YKK AP::ドアリモ玄関ドア 非防火",
+    "revision": "v1.1-R4-F1-20261015"
+  },
+  "candidate_revision": "DOORREMO_RUNTIME_UI_R1_20261015",
+  "scope": "LOCAL_SALES_ESTIMATE_REQUEST_UI",
+  "fields": {
+    "product_grade": {
+      "source_field": "product_grade"
+    },
+    "thermal_spec": {
+      "source_field": "thermal_spec"
+    },
+    "building_structure": {
+      "source_field": "building_structure"
+    },
+    "existing_frame_material": {
+      "source_field": "existing_frame_material"
+    },
+    "existing_frame_mount_type": {
+      "source_field": "existing_frame_mount_type"
+    },
+    "site_floor_context": {
+      "source_field": "site_floor_context"
+    },
+    "transom_presence": {
+      "source_field": "transom_presence"
+    },
+    "frame_configuration": {
+      "source_field": "frame_configuration"
+    },
+    "handing": {
+      "source_field": "handing"
+    },
+    "design_id": {
+      "source_field": "design_id"
+    },
+    "secondary_leaf_design_id": {
+      "source_field": "secondary_leaf_design_id"
+    },
+    "door_color": {
+      "source_field": "door_color"
+    },
+    "frame_color": {
+      "source_field": "frame_color"
+    },
+    "accent_color": {
+      "source_field": "accent_color"
+    },
+    "sidelight_structure": {
+      "source_field": "sidelight_structure"
+    },
+    "frame_w": {
+      "source_field": "frame_w"
+    },
+    "frame_h": {
+      "source_field": "frame_h"
+    },
+    "wf": {
+      "source_field": "wf"
+    },
+    "hr": {
+      "source_field": "hr"
+    },
+    "entry_system": {
+      "source_field": "entry_system"
+    },
+    "smart_key_system": {
+      "source_field": "smart_key_system"
+    },
+    "power_supply": {
+      "source_field": "power_supply"
+    },
+    "handle_type": {
+      "source_field": "handle_type"
+    },
+    "handle_color": {
+      "source_field": "handle_color"
+    },
+    "manual_cylinder_finish": {
+      "source_field": "manual_cylinder_finish"
+    },
+    "new_frame_type": {
+      "source_field": "new_frame_type"
+    },
+    "lower_frame_treatment": {
+      "source_field": "lower_frame_treatment"
+    },
+    "exterior_trim": {
+      "source_field": "exterior_trim"
+    },
+    "interior_trim_system": {
+      "source_field": "interior_trim_system"
+    },
+    "interior_trim": {
+      "source_field": "interior_trim"
+    },
+    "sidelight_glass_required": {
+      "source_field": "sidelight_glass_required"
+    },
+    "transom_glass_required": {
+      "source_field": "transom_glass_required"
+    },
+    "lower_flat_material": {
+      "source_field": "lower_flat_material"
+    },
+    "lower_skirt": {
+      "source_field": "lower_skirt"
+    },
+    "lower_reinforcement_angle": {
+      "source_field": "lower_reinforcement_angle"
+    }
+  },
+  "confirmation_requests": [
+    {
+      "id": "CONF-SITE",
+      "condition": true,
+      "status": "MANUAL_CHECK",
+      "owner": "積算担当（必要に応じメーカー/施工担当）",
+      "question": "既設枠の状態・腐食・躯体固定・ねじのかかり（木造20mm以上、RC/鉄骨25mm以上）・干渉・搬入/施工スペースを調査票で確認。はつり時はKH採寸基準を確認。",
+      "source_reason": "業務用PDF312,314,386,388。見積依頼で施工成立を断言しない",
+      "target_gate": "FINAL_ESTIMATE_OR_ORDER",
+      "reopen_condition": "新公式Source・版改訂・対象Scope変更・新矛盾・関連入力変更",
+      "automatic_resolution": false
+    },
+    {
+      "id": "CONF-ORDER",
+      "condition": true,
+      "status": "ESTIMATE_CONFIRM_REQUIRED",
+      "owner": "積算担当（必要に応じメーカー/施工担当）",
+      "question": "依頼数量を基に部材拾い数量、正式商品コード、BOM、Set Code、正式価格、案件時点の価格版を確定。11月改定資料を現行価格として自動適用しない。",
+      "source_reason": "営業見積依頼責務境界Contract v1.1。部材・価格・コードは後段責務",
+      "target_gate": "FINAL_ESTIMATE_OR_ORDER",
+      "reopen_condition": "新公式Source・版改訂・対象Scope変更・新矛盾・関連入力変更",
+      "automatic_resolution": false
+    },
+    {
+      "id": "CONF-TRIM",
+      "condition": true,
+      "status": "ESTIMATE_CONFIRM_REQUIRED",
+      "owner": "積算担当（必要に応じメーカー/施工担当）",
+      "question": "外額縁は上/左右の希望寸法、薄見込/厚見込、内額縁・下枠部品の長さ/切詰を現場寸法と確認。D50への補強アングル適用は資料で直接確認できないため、希望時はメーカーへ確認し、使用可能と自動確定しない。選択値は営業希望を表し部材の最終拾いではない。",
+      "source_reason": "受発注用PDF11,49,109,188,190,192-193",
+      "target_gate": "FINAL_ESTIMATE_OR_ORDER",
+      "reopen_condition": "新公式Source・版改訂・対象Scope変更・新矛盾・関連入力変更",
+      "automatic_resolution": false
+    },
+    {
+      "id": "CONF-ALLOCATION",
+      "condition": {
+        "field": "frame_configuration",
+        "op": "in",
+        "value": [
+          "PARENT_CHILD",
+          "DOUBLE",
+          "SINGLE_SIDELIGHT",
+          "DOUBLE_SIDELIGHT",
+          "SIDELIGHT_PARENT_CHILD"
+        ]
+      },
+      "status": "ESTIMATE_CONFIRM_REQUIRED",
+      "owner": "積算担当（必要に応じメーカー/施工担当）",
+      "question": "選択デザインのDW/DH製作範囲、子扉DSW、左右袖FIX幅の配分を枠W/H・HR・WFと照合して確定。W/Hは新設枠発注寸法であり既設開口・枠外寸法ではない。営業Scopeでは自動製作可否を出さない。",
+      "source_reason": "受発注用PDF28-31,86-91,130-133の公式・製作範囲。標準配分を確定値として自動採用しない",
+      "target_gate": "FINAL_ESTIMATE_OR_ORDER",
+      "reopen_condition": "新公式Source・版改訂・対象Scope変更・新矛盾・関連入力変更",
+      "automatic_resolution": false
+    },
+    {
+      "id": "CONF-GLASS",
+      "condition": {
+        "any": [
+          {
+            "field": "transom_presence",
+            "op": "eq",
+            "value": "WITH_TRANSOM"
+          },
+          {
+            "field": "frame_configuration",
+            "op": "in",
+            "value": [
+              "SINGLE_SIDELIGHT",
+              "DOUBLE_SIDELIGHT",
+              "SIDELIGHT_PARENT_CHILD"
+            ]
+          }
+        ]
+      },
+      "status": "ESTIMATE_CONFIRM_REQUIRED",
+      "owner": "積算担当（必要に応じメーカー/施工担当）",
+      "question": "ランマ/袖FIXの両方がある場合は両方の別途ガラスを手配対象へ含め、種類・厚み・寸法を積算で確定する。",
+      "source_reason": "受発注用PDF10,48,51,108,111。別途手配フラグは片方で上書きしない",
+      "target_gate": "FINAL_ESTIMATE_OR_ORDER",
+      "reopen_condition": "新公式Source・版改訂・対象Scope変更・新矛盾・関連入力変更",
+      "automatic_resolution": false
+    },
+    {
+      "id": "CONF-SECONDARY",
+      "condition": {
+        "field": "frame_configuration",
+        "op": "in",
+        "value": [
+          "PARENT_CHILD",
+          "DOUBLE",
+          "SIDELIGHT_PARENT_CHILD"
+        ]
+      },
+      "status": "ESTIMATE_CONFIRM_REQUIRED",
+      "owner": "積算担当（必要に応じメーカー/施工担当）",
+      "question": "子扉/副扉の指定デザイン・色・幅配分、ポスト/通風の希望と本扉との組合せを見積時に照合。",
+      "source_reason": "受発注用PDF18-25,31,66-81,91,122-125,133",
+      "target_gate": "FINAL_ESTIMATE_OR_ORDER",
+      "reopen_condition": "新公式Source・版改訂・対象Scope変更・新矛盾・関連入力変更",
+      "automatic_resolution": false
+    }
+  ],
+  "request_fields": [
+    {
+      "key": "quantity",
+      "label": "依頼数量",
+      "unit": "セット",
+      "role": "SALES_REQUEST_COUNT",
+      "minimum": 1,
+      "integer": true
+    }
+  ],
+  "sales_handoff": {
+    "quantity_field": "quantity",
+    "request_fields": [
+      "quantity"
+    ],
+    "dimensions": {
+      "width": "frame_w",
+      "height": "frame_h",
+      "unit": "mm",
+      "label": "新設枠発注寸法"
+    }
+  },
+  "fixed_handoff_facts": [
+    {
+      "label": "防火区分",
+      "value": "非防火",
+      "evidence_ids": [
+        "EV-IDENTITY-R1"
+      ]
+    },
+    {
+      "label": "施工方式",
+      "value": "既設枠を残すカバー工法。現場調査による成立確認が必要",
+      "evidence_ids": [
+        "EV-SITE-R1"
+      ]
+    },
+    {
+      "label": "本扉ガラス",
+      "value": "選択デザインのメーカー仕様に従う。採光部なしのデザインを含む。袖FIX・ランマは別途手配",
+      "evidence_ids": [
+        "EV-GLASS-R1"
+      ]
+    }
+  ],
+  "selection_views": [
+    {
+      "key": "lower_frame_layout",
+      "label": "下枠納まり",
+      "source_fields": [
+        "new_frame_type",
+        "lower_flat_material"
+      ],
+      "parents": [
+        "product_grade",
+        "lower_skirt",
+        "lower_reinforcement_angle"
+      ],
+      "choices": [
+        {
+          "value": "STANDARD",
+          "label": "標準納まり",
+          "assign": {
+            "new_frame_type": "STANDARD",
+            "lower_flat_material": false
+          }
+        },
+        {
+          "value": "FLAT",
+          "label": "フラット納まり",
+          "assign": {
+            "new_frame_type": "FLAT",
+            "lower_flat_material": false
+          }
+        },
+        {
+          "value": "STANDARD_WITH_FLAT",
+          "label": "標準枠＋下枠フラット材",
+          "assign": {
+            "new_frame_type": "STANDARD",
+            "lower_flat_material": true
+          }
+        }
+      ]
+    }
+  ]
+}

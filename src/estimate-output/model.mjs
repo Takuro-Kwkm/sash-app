@@ -42,6 +42,10 @@ function sizeText(snapshot){
   if(width!==null&&height!==null&&secondaryHeight!==null)return `W ${text(width)} × H1 ${text(height)} / H2 ${text(secondaryHeight)}`;
   if(width!==null&&height!==null)return `${text(width)} × ${text(height)}`;
   if(width!==null)return text(width);
+  const dimensions=snapshot?.sales_request_handoff?.dimensions;
+  if(dimensions?.width!==null&&dimensions?.width!==undefined&&dimensions?.height!==null&&dimensions?.height!==undefined){
+    return `${dimensions.label?text(dimensions.label)+' ':''}W ${text(dimensions.width)} × H ${text(dimensions.height)}${dimensions.unit?' '+text(dimensions.unit):''}`;
+  }
   return null;
 }
 
@@ -68,7 +72,7 @@ function classifyRow(opening,snapshot,price){
   issues.push(...(snapshot.confirmation_requests??[]));
   if(snapshot.sales_request_handoff?.glass_structure==='MANUFACTURER_ESTIMATE_CONFIRMATION')issues.push({code:'GLASS_STRUCTURE_MANUFACTURER_ESTIMATE',message:'ガラスの厚みと最終仕様はメーカー見積で確認してください。'});
   if(snapshot.validation_state==='INVALID'){
-    issues.push({code:'PRODUCT_SNAPSHOT_INVALID',message:'保存SnapshotがINVALIDです。'});
+    issues.push({code:'PRODUCT_SNAPSHOT_INVALID',message:'保存した商品仕様が無効です。'});
     return {state:EstimateOutputState.INVALID,issues};
   }
   if(opening?.status!=='COMPLETE'){

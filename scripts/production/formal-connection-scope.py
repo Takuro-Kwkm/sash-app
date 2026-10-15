@@ -31,6 +31,10 @@ FIXED = {
 
 def validate(root):
     root = Path(root)
+    if (root/'contracts/production/domain-runtime-candidate-scope.v1.json').exists():
+        spec=importlib.util.spec_from_file_location('runtime_candidate_scope',root/'scripts/production/domain-runtime-connection-scope.py')
+        module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)
+        return module.validate(root)
     if (root/'contracts/production/working-domain-formal-scope.v1.json').exists():
         spec=importlib.util.spec_from_file_location('working_formal_scope',root/'scripts/production/working-formal-connection-scope.py')
         module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)

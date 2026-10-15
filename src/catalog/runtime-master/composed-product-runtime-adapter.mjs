@@ -1,5 +1,6 @@
 import {adaptProductModuleRuntimeV1} from './product-module-runtime-adapter.mjs';
 import {applyDeclaredSelectionLinks} from './declared-selection-policy.mjs';
+import {resolveDeclaredSelectionViews, declaredSelectionErrors, attachDeclaredSalesHandoff} from './declared-selection-views.mjs';
 
 const has=value=>value!==undefined&&value!==null&&value!=='';
 const own=(object,key)=>Object.prototype.hasOwnProperty.call(object,key);
@@ -44,10 +45,10 @@ export async function adaptComposedProductRuntime(document,entry,loadReference){
   return {...primary,uiResolver:input=>{
     const contract=document.composition,prefix=contract?.prefix;
     const localInput=Object.fromEntries(Object.entries(input??{}).filter(([key])=>!prefix||!key.startsWith(prefix)));
-    const result=primary.uiResolver(localInput);
+    const result=resolveDeclaredSelectionViews(primary,document,localInput);
     result.dependencyFields=result.fields.map(field=>({key:field.key,parentFields:document.product_module.specificationDefinitions.find(d=>d.key===field.key)?.parentFields??[]}));
     for(const field of result.fields)field.parentFields=result.dependencyFields.find(d=>d.key===field.key).parentFields;
-    const errors=[...(result.validation?.errors??[])],warnings=[...(result.manualWarnings??[])],missing=[...(result.validation?.missingRequiredFields??[])];
+    const errors=[...(result.validation?.errors??[]),...declaredSelectionErrors(document.product_module,localInput,result.selection)],warnings=[...(result.manualWarnings??[])],missing=[...(result.validation?.missingRequiredFields??[])];
     const transforms={};
     for(const rule of document.linear_transforms??[]){
       const value=result.selection[rule.input];
@@ -108,6 +109,7 @@ export async function adaptComposedProductRuntime(document,entry,loadReference){
     result.validation.missingRequiredFields=[...new Set(missing)];
     result.validation.status=errors.length||result.dimensionResult?.status==='BLOCK'?'INVALID':missing.length?'INCOMPLETE':'MANUAL_CHECK';
     result.orderReady=false;result.pricing={price:null,bom:null,set_code:null};
+    attachDeclaredSalesHandoff(result,document);
     result.runtimeMaster={masterVersion:entry.masterVersion,packageVersion:entry.packageVersion,schemaVersion:entry.schemaVersion,adapterType:entry.adapterType,sourceHash:entry.sha256,canonicalRuntimeReference:entry.canonicalRuntimeReference,candidateOnly:!formal,candidateRuntimeReference:entry.candidateRuntimeReference,sourcePackageIntegrity:{expected:entry.sha256,actual:entry.sha256,match:true}};
     result.runtimeCapabilities={candidateOnly:!formal,automaticManufacturing:false,automaticPricing:false,sourceAdoption:false,formalAdoption:formal};
     return result;
