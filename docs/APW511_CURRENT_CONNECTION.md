@@ -2,7 +2,7 @@
 
 ユーザーの「UIのCurrent接続登録を行ってください」に基づく、既存候補R2の接続登録です。正式Product Masterの40項目・16制約、Runtime module、Global Window Selection Flow、UIコードと候補indexを引き継ぎます。
 
-中央 `registries/current-architecture.v2.json` の APW511 / APW 511 / YKK AP APW511 は、商品ID `NEW-CANDIDATE-d780d8e7c8cdae7ba41675eb` に一致します。consumerの `work-connections.v2.json` と `validator-registry.v2.json` が同一hashの `runtime-candidates/apw511-r2.profile.json` を選びます。
+中央 `registries/current-architecture.v2.json` の APW511 / APW 511 / YKK AP APW511 は、商品ID `NATIVE_REGISTRY:YKK AP::APW511` に一致します。consumerの `work-connections.v2.json` と `validator-registry.v2.json` が同一hashの `runtime-candidates/apw511-r2.profile.json` を選びます。
 
 接続Scopeは `LOCAL_SALES_ESTIMATE_REQUEST_UI_CANDIDATE_ONLY`、到達Gateは `RUNTIME_UI_CANDIDATE_QA_REVIEW` です。入口はCurrent `architecture-work.py`、prepareは既存 `prepare-domain-runtime-candidate.py`、実行は既存 `runtime-candidate-work.py` → Shared `production-work.py` / `harness/workflow.py` です。
 
@@ -22,3 +22,5 @@ node scripts/production/validate-domain-runtime-projection.mjs \
 ```
 
 接続登録とUIの正式採用、通常アプリへの配信、Production QAは別Gateです。今回のCurrent登録はMaster Registry、商品Fact、画面の採用状態、本番を変更しません。
+
+Currentの商品IDは正式Registry行の識別です。authoring_product_idとして元の `NEW-CANDIDATE-d780d8e7c8cdae7ba41675eb` を保持し、正式マスターの内部IDを改変しません。

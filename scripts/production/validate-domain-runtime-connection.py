@@ -37,6 +37,7 @@ def validate(root):
             loader=importlib.util.spec_from_file_location('adopted_domain',root/p['compiler'])
             compiler=importlib.util.module_from_spec(loader);loader.loader.exec_module(compiler)
             assert compiler.load_adopted_master(projection,base)==master
+            assert master['product']['product_id']==p['authoring_product_id']
             manifest=read((Path(p['candidate_root'])/projection['adopted_snapshot_manifest']['path']).as_posix())
             assert manifest['formal_revision']==p['baseline_package_version']
             assert master['product']['revision']==p['baseline_snapshot_revision']

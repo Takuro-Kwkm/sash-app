@@ -34,7 +34,7 @@ def execute(shared, contract_path, stage, work, output):
     definition=importlib.util.spec_from_file_location('domain_compiler',checkout/profile['compiler'])
     compiler=importlib.util.module_from_spec(definition);definition.loader.exec_module(compiler)
     require(compiler.load_adopted_master(projection,base)==master
-            and master['product']['product_id']==profile['product_id']
+            and master['product']['product_id']==profile.get('authoring_product_id',profile['product_id'])
             and master['product']['revision']==profile.get('baseline_snapshot_revision',profile['baseline_package_version']),
             'ADOPTED_MASTER_REQUIRED', 'Do not reopen Product Master adoption', stage)
     node=contract['node']; env={**os.environ,'PYTHONDONTWRITEBYTECODE':'1'}

@@ -4,7 +4,7 @@
   "repository": "Takuro-Kwkm/sash-app",
   "status": "ADOPTED",
   "admission_state": "CANDIDATE_ONLY",
-  "product_id": "NEW-CANDIDATE-d780d8e7c8cdae7ba41675eb",
+  "product_id": "NATIVE_REGISTRY:YKK AP::APW511",
   "runtime_product_id": "CANDIDATE:APW511",
   "manufacturer": "YKK AP",
   "series": "APW511",
@@ -73,5 +73,6 @@
   "human_review_required": true,
   "human_review_validator": "harness.core.validate_authorization",
   "baseline_snapshot_revision": "20261016-catalog-r3-sales-request",
-  "formal_storage_adapter": "SHARED_CORE_DRIVE_BRIDGE"
+  "formal_storage_adapter": "SHARED_CORE_DRIVE_BRIDGE",
+  "authoring_product_id": "NEW-CANDIDATE-d780d8e7c8cdae7ba41675eb"
 }

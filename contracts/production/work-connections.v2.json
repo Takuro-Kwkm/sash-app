@@ -800,7 +800,7 @@
       }
     },
     {
-      "product_id": "NEW-CANDIDATE-d780d8e7c8cdae7ba41675eb",
+      "product_id": "NATIVE_REGISTRY:YKK AP::APW511",
       "aliases": [
         "APW511",
         "APW 511",
@@ -835,7 +835,7 @@
       "resume_selector": "IMMUTABLE_SPEC_AND_SHARED_V2_JOURNAL; completed Formal is INSPECT_ONLY",
       "runtime_candidate_profile": {
         "path": "contracts/production/runtime-candidates/apw511-r2.profile.json",
-        "sha256": "88531179ef46aec411c997ba81e912a2895ce21596e2538018f7d88859042f7c"
+        "sha256": "fa8c1db847ec30e4d6889bbe4e64d3acece6f77a1feb8102fb194c70eeed3e78"
       },
       "unsupported_gates": {
         "FORMAL": "COMPLETED_PRODUCT_MASTER_INSPECT_ONLY",

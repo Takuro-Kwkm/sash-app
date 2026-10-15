@@ -1,6 +1,6 @@
 {
   "schema": "EXACT_SHARED_IMPLEMENTATION_DELTA_V2",
-  "scope": "Preserve original TW central proof and exact predecessor recovery; add only invalid handoff snapshot precedence, declared handoff dimensions and Japanese invalid output label. No TW manufacturer facts or flow changes.",
+  "scope": "Preserve original TW central proof and exact predecessor recovery; add only invalid handoff snapshot precedence, declared handoff dimensions and Japanese invalid output label. No TW manufacturer facts or flow changes. Preserve the exact additive declared CLEAR helper for APW511; TW predecessor bytes remain recoverable.",
   "files": {
     "src/catalog/runtime-master/new-construction-sash-runtime-ui-contract.mjs": {
       "predecessor_sha256": "c6718a2b8b742867647881582328c4a65c4481bde80c163a6e9c335daf636a2c",
@@ -20,9 +20,10 @@
     },
     "src/work-management/domain.mjs": {
       "predecessor_sha256": "ec77668d877126b656382ca2105842f37e1fd4a188fb51fadf5c42d4d1368f41",
-      "sha256": "ce72c25993dec8098c598a8736c25f517c823af4bf4f294544a6541dddc87e6e",
+      "sha256": "53d970f22d7fabe3002b32411c843c596b2f7413373cb56d06b71dba7a4fe48a",
       "additions": [
-        "validationState(result)===ValidationState.INVALID?ValidationState.INVALID:"
+        "validationState(result)===ValidationState.INVALID?ValidationState.INVALID:",
+        "\n// Consume explicit Runtime CLEAR metadata. Valid-value reevaluation remains in\n// the existing Catalog resolver; this helper never infers product conditions.\nexport function applyDeclaredInputClears(input, changedKeys, fields) {\n  const selection = {...input}, changed = new Set(changedKeys);\n  for (let pass = 0; pass <= fields.length; pass++) {\n    let cleared = false;\n    for (const field of fields) {\n      if (!Object.hasOwn(selection, field.key)) continue;\n      if (!(field.clearOnParentChange ?? []).some(key => changed.has(key))) continue;\n      delete selection[field.key]; changed.add(field.key); cleared = true;\n    }\n    if (!cleared) return selection;\n  }\n  throw new Error('DECLARED_CLEAR_DID_NOT_CONVERGE');\n}\n"
       ]
     },
     "src/estimate-output/model.mjs": {
