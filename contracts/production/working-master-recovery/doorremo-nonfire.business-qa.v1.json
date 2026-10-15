@@ -23,7 +23,7 @@
   ],
   "source_policy": "Actual official bytes, reviewed Source locators, fixed candidate hash; no historical PASS reuse",
   "implementation_hashes": {
-    "scripts/production/working-master-business-qa.py": "c99dda9a13fdcf18dd60efc1e05d6e82db2eb70044297c6752179d29aa006f2a",
+    "scripts/production/working-master-business-qa.py": "479e98491eec6c329b7a49b9c967264a262fbdfc87d64f0d157075e3f50822c0",
     "scripts/production/prepare-working-master-business-qa.py": "08ed2cfc4384094a5822ac1323a4c98daa3b81e2b6820ce95851497d45f2d20c",
     "scripts/production/validate-working-master-business-qa.py": "10538db16a8262ce75735130fc3cbf955faa7de8440aac88c06a7b9fd582bbef"
   }

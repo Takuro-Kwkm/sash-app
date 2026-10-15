@@ -79,6 +79,7 @@ def request_envelope(master, review, request):
     confirmations=[r for r in review['confirmation_requests'] if condition(r['condition'],output)]
     return dict(product=master['product'],quantity=quantity,quantity_role='SALES_REQUEST_COUNT',
                 request_valid=valid,selection=output,errors=errors,confirmation_requests=confirmations,
+                fixed_handoff_facts=review.get('fixed_handoff_facts',[]),
                 automatic_orderability=False,manufacturing_approval=False,price=None,bom=None,set_code=None)
 
 
