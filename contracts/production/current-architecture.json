@@ -9,7 +9,7 @@
     "live_current_selector": "live_architecture_selector"
   },
   "current_router": "scripts/architecture-work.py",
-  "shared_harness_sha": "7293f818685bbd1e7386d78757fb82b930af5572",
+  "shared_harness_sha": "659d5ca2bf333cc6acf2ab4c6bdcf408fbad0c7a",
   "adapter_registry": "contracts/production/work-connections.v2.json",
   "validator_registry": "contracts/production/validator-registry.v2.json",
   "resume": "contracts/production/current-work.json",
@@ -30,13 +30,13 @@
   },
   "new_product_build_profile": {
     "profile_id": "sash-new-product-master-v1",
-    "path": "contracts/production/product-master-build-profile.intake-v3.json",
-    "sha256": "02cba1a81fed886551c144952d8a91d7254fa87418a17c404c521491188d887b"
+    "path": "contracts/production/product-master-build-profile.intake-v4.json",
+    "sha256": "7827ccec77574923a57fa2ca3f837ba1b246bd93c745f3f6f21b0420a2c8711c"
   },
   "isolated_build_authority": {
-    "metadata": "contracts/production/shared-release-authority.v1.json",
-    "entry": "scripts/production/unpack-release-authority.py",
-    "source_commit": "16f4efd69e06adc994b5394ff1726c8a5e372cd3",
+    "metadata": "contracts/production/shared-product-master-conditions.v1.json",
+    "entry": "scripts/production/unpack-product-master-conditions.py",
+    "source_commit": "f408946fc1e5836e07298a7f9b4defe64964b1cd",
     "scope": "ISOLATED_CI_ONLY; live Current host acquisition separate"
   }
 }

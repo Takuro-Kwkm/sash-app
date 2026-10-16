@@ -2,6 +2,11 @@
 import argparse,importlib.util,json,os,subprocess,sys,tempfile
 from pathlib import Path
 
+# Versioned Product Master infrastructure successor; inspect preserved predecessor.
+if (Path(__file__).resolve().parents[2]/'contracts/production/product-master-conditions-scope.v1.json').exists() and __name__=='__main__':
+    import subprocess as _pm_subprocess,sys as _pm_sys
+    raise SystemExit(_pm_subprocess.call([_pm_sys.executable,'-B',str(Path(__file__).with_name('product-conditions-scope.py')),*_pm_sys.argv[1:]]))
+
 def validate(root):
     if (Path(root)/'contracts/production/harness-instructions-scope.v1.json').exists():
         definition=importlib.util.spec_from_file_location('instruction_scope',Path(root)/'scripts/production/instruction-scope.py')
