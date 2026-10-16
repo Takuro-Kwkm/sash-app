@@ -17,7 +17,14 @@ const registry=JSON.parse(readFileSync(resolve(HERE,'formal-composed-runtime-reg
 const seen=new Set();
 export const formalComposedRuntimeEntries=Object.freeze(registry.indexes.flatMap(ref=>{
   const {path,bytes}=checked(resolve(HERE,'..'),ref),root=dirname(path),index=JSON.parse(bytes);
-  if(index.schema!=='FORMAL_COMPOSED_RUNTIME_INDEX_V1'||index.authoring.packageVersion!==index.packageVersion||!index.authoring.manifestFileId)fail('FORMAL_COMPOSITION_INDEX_INVALID');
+  if(index.schema!=='FORMAL_COMPOSED_RUNTIME_INDEX_V1'||(!index.runtimeOnlyAdoption&&index.authoring.packageVersion!==index.packageVersion)||!index.authoring.manifestFileId)fail('FORMAL_COMPOSITION_INDEX_INVALID');
+  if(index.runtimeOnlyAdoption){
+    const adoption=index.runtimeOnlyAdoption;
+    if(adoption.schema!=='HUMAN_ADOPTED_RUNTIME_ONLY_V1'||adoption.productMasterMutations!==0||adoption.release!==false)fail('FORMAL_RUNTIME_ADOPTION_INVALID');
+    for(const ref of [adoption.candidateIndex,adoption.authorization,adoption.review,adoption.humanSource])checked(root,ref);
+    const approval=JSON.parse(checked(root,adoption.authorization).bytes);
+    if(approval.decision!=='APPROVED'||approval.authorization_kind!=='EXPLICIT_USER_SCOPE'||!approval.decision_ref)fail('FORMAL_RUNTIME_APPROVAL_REQUIRED');
+  }
   return index.products.map(row=>{
     if(seen.has(row.id)||row.candidate||row.adapterType!=='COMPOSED_PRODUCT_MODULE_V1')fail('FORMAL_COMPOSITION_ENTRY_INVALID');
     seen.add(row.id);checked(root,row);

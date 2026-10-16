@@ -44,6 +44,8 @@ def validate(root):
             assert compiler.compile_profile(projection,base)==document, 'PROJECTION_CHANGED'
         else:
             assert master['lifecycle_status']=='FORMAL' and master['product']['revision']==p['baseline_package_version']
+        for name,digest in p.get('predecessor_sha256',{}).items():
+            assert hashlib.sha256((root/name).read_bytes()).hexdigest()==digest, 'COMPLETED_PREDECESSOR_CHANGED:'+name
         count+=1
     assert count, 'NO_ADMITTED_CANDIDATE_PROFILE'
     return dict(status='PASS',profiles=count,formal_adoption=False,release=False)

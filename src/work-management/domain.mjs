@@ -183,6 +183,9 @@ export function applyDeclaredInputClears(input, changedKeys, fields) {
       if (!Object.hasOwn(selection, field.key)) continue;
       if (!(field.clearOnParentChange ?? []).some(key => changed.has(key))) continue;
       delete selection[field.key]; changed.add(field.key); cleared = true;
+      for (const linked of field.clearLinkedFields ?? []) {
+        delete selection[linked]; changed.add(linked);
+      }
     }
     if (!cleared) return selection;
   }

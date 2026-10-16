@@ -7,7 +7,10 @@ const own = (object, key) => Object.prototype.hasOwnProperty.call(object, key);
 export function resolveDeclaredSelectionViews(primary, document, input = {}) {
   const views = document.selection_views ?? [];
   const selection = {...input};
+  const context = buildCatalogContext(document.product_module, document.product_module.product.id);
+  const active = view => selectorMatches(view.selector ?? {}, selection, context);
   for (const view of views) {
+    if (!active(view)) { delete selection[view.key]; continue; }
     let choice = view.choices.find(row => row.value === selection[view.key]);
     if (!own(selection, view.key)) {
       const matches = view.choices.filter(row => Object.entries(row.assign).every(([key, value]) => own(selection, key) && selection[key] === value));
@@ -21,6 +24,7 @@ export function resolveDeclaredSelectionViews(primary, document, input = {}) {
   let result = primary.uiResolver(selection);
   let changed = false;
   for (const view of views) {
+    if (!active(view)) continue;
     if (!own(selection, view.key) || own(result.selection, view.key)) continue;
     for (const key of view.source_fields) delete selection[key];
     delete selection[view.key];
@@ -28,9 +32,15 @@ export function resolveDeclaredSelectionViews(primary, document, input = {}) {
   }
   if (changed) result = primary.uiResolver(selection);
   const hidden = new Set(document.product_module.specificationDefinitions.filter(row => row.uiHidden).map(row => row.key));
-  result.fields = result.fields.filter(field => !hidden.has(field.key));
+  result.fields = result.fields.filter(field => {
+    const definition = document.product_module.specificationDefinitions.find(row => row.key === field.key);
+    return !hidden.has(field.key) && (!definition.presentationWhen || selectorMatches(definition.presentationWhen, result.selection, context));
+  }).map(field => {
+    const view = views.find(row => row.key === field.key);
+    return view?.clear_on_change ? {...field, clearLinkedFields:view.source_fields} : field;
+  });
   result.validation.missingRequiredFields = [...new Set(result.validation.missingRequiredFields.map(key =>
-    views.find(view => view.source_fields.includes(key))?.key ?? key))];
+    views.find(view => active(view) && view.source_fields.includes(key))?.key ?? key))];
   return result;
 }
 
@@ -76,5 +86,7 @@ export function attachDeclaredSalesHandoff(result, document) {
     confirmation_requests: result.confirmationRequests, fixed_handoff_facts: document.fixed_handoff_facts,
     request_valid: valid, automatic_orderability: false, manufacturing_approval: false, price: null, bom: null, set_code: null,
   };
+  if (document.request_selectors?.length) result.sales_request_handoff.request_choices = Object.fromEntries(
+    document.request_selectors.filter(row => own(result.selection, row.key)).map(row => [row.key, result.selection[row.key]]));
   result.sales_request_state=valid?'READY_FOR_MANUFACTURER_ESTIMATE':'INCOMPLETE';
 }

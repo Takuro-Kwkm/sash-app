@@ -1,0 +1,9 @@
+{
+  "schema": "USER_UI_REVIEW_SCOPE_V1",
+  "work_id": "APW511-UI-R3-20261016",
+  "request": "ハーネスに従ってAPW511のUIをTW・サーモスⅡHと同じ共通フローに整える。規格サイズは選択式、シャッターは希望しないを明示し、項目順と依存関係を修正した画面をレビューする。",
+  "manufacturer_fact_change": false,
+  "flow_approval": false,
+  "formal_adoption": false,
+  "release": false
+}

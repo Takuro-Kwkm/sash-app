@@ -39,14 +39,19 @@ def prepare(shared,checkout,captures,destination,instruction):
     write_json(root/'contract.json',contract);write_json(root/'production-binding.json',binding)
     write_json(root/'live-state.json',dict(repository=read_json(c['branch']),observations=observed))
     steps=[];worker=ref(checkout/p['native_worker'])
-    for stage in ('FORMAL_IDENTITY','PROJECTION','FLOW_REVIEW_AUTHORIZATION','PARITY','BROWSER','REVIEW'):
+    adoption=p.get('runtime_ui_adoption');stages=['FORMAL_IDENTITY','PROJECTION','FLOW_REVIEW_AUTHORIZATION','PARITY','BROWSER','REVIEW']
+    if adoption:stages+=['UI_ADOPTION_IDENTITY','UI_ADOPTION_BROWSER','UI_ADOPTION']
+    target_gate=adoption['target_gate'] if adoption else 'RUNTIME_UI_CANDIDATE_QA_REVIEW'
+    for stage in stages:
         steps.append(dict(id=stage,kind='validator',needs=[steps[-1]['id']] if steps else [],script=worker,
             args=['--harness-root',str(shared),'--contract','{input}','--stage',stage,'--work','{work}','--out','{work}/'+stage+'.json'],
             output='{work}/'+stage+'.json',result_path=['status'],expected_result='PASS',timeout_seconds=1800))
-    for name in ('FORMAL_IDENTITY.json','PROJECTION.json','FLOW_REVIEW_AUTHORIZATION.json','domain-parity.json','BROWSER.json','browser/report.json','REVIEW.json'):
+    saved=['FORMAL_IDENTITY.json','PROJECTION.json','FLOW_REVIEW_AUTHORIZATION.json','domain-parity.json','BROWSER.json','browser/report.json','REVIEW.json']
+    if adoption:saved+=['UI_ADOPTION_IDENTITY.json','UI_ADOPTION_BROWSER.json','UI_ADOPTION.json','formal-parity.json','formal-browser/report.json']
+    for name in saved:
         steps.append(dict(id='SAVE_'+name.replace('/','_').replace('.','_').replace('-','_').upper(),kind='storage',needs=[steps[-1]['id']],source='{work}/'+name,destination=name))
     workflow=dict(workflow_id='NATIVE_DOMAIN_RUNTIME_CANDIDATE_V1',version='1.0',status='CURRENT',work_skill='product-change-work',steps=steps,
-        targets={'RUNTIME_UI_CANDIDATE_QA_REVIEW':[steps[-1]['id']]},scope='LOCAL_SALES_ESTIMATE_REQUEST_UI')
+        targets={target_gate:[steps[-1]['id']]},scope='LOCAL_SALES_ESTIMATE_REQUEST_UI')
     write_json(root/'workflow.json',workflow)
     authorities=[dict(**ref(path),authority_id=k,authority_type=k,repository='LIVE_DRIVE_SASH_GOVERNANCE',version=c['authority_versions'][k],
         status='ACTIVE',scope_axis='PROJECT_CURRENT',resolution_source='LIVE_CURRENT_INFORMATION_SOURCE_MANIFEST') for k,path in c['authorities'].items()]
@@ -54,7 +59,7 @@ def prepare(shared,checkout,captures,destination,instruction):
     write_json(root/'authority-index.json',dict(status='CURRENT',entries=authorities))
     write_json(root/'registry.json',dict(registry_id='NATIVE_FORMAL_RUNTIME_CANDIDATE',version=p['baseline_package_version'],status='CURRENT',products=[dict(product_id=c['product_id'],aliases=[p['series']],master_state='PRESENT',current_revision=p['baseline_package_version'])]))
     refs=[ref(checkout/name) for name in p['native_paths']]+list(contract['inputs'].values())+[contract['upstream']['spec']]+[ref(shared/name) for name in ('registries/current-architecture.v2.json','registries/skill-authority.v2.json')]
-    spec=dict(workflow_id=c['work_id'],work_skill='product-change-work',target=c['product_id'],target_gate='RUNTIME_UI_CANDIDATE_QA_REVIEW',skill_root=str(checkout/'scripts/production'),
+    spec=dict(workflow_id=c['work_id'],work_skill='product-change-work',target=c['product_id'],target_gate=target_gate,skill_root=str(checkout/'scripts/production'),
         authority_index=ref(root/'authority-index.json'),authorities=authorities,registry=ref(root/'registry.json'),sources=c['sources'],workflow=ref(root/'workflow.json'),input=ref(root/'contract.json'),
         runtime_refs=refs,storage_root=c['storage_root'],production_binding=ref(root/'production-binding.json'),production_routing=ref(checkout/'contracts/production/work-connections.v2.json'))
     write_json(root/'spec.json',spec)

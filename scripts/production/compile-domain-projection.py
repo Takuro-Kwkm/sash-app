@@ -7,6 +7,7 @@ Authoring bytes and manufacturer facts are never changed by this projection.
 import argparse
 import hashlib
 import json
+from itertools import product
 from pathlib import Path
 
 
@@ -67,7 +68,29 @@ def compile_profile(profile, root):
     pid = profile['product']['id']
     module = {'product': profile['product'], **{k: [] for k in
               ('specificationDefinitions', 'allowedValues', 'requiredFieldRules', 'ruleSets', 'dependencies', 'evidence')}}
-    hidden = {k for v in profile.get('selection_views', []) for k in v['source_fields']}
+    hidden = {k for v in profile.get('selection_views', []) if 'applicability' not in v for k in v['source_fields']}
+    views = []
+    for declared in profile.get('selection_views', []):
+        view = dict(declared)
+        if 'applicability' in view: view['selector'] = selector(view['applicability'])
+        if view.get('source_constraint'):
+            constraint = next(c for c in master['constraints'] if c['rule_id'] == view['source_constraint'])
+            # Enumerate only the finite tuples explicitly admitted by this source rule.
+            # Its original selector still owns context and combination validity.
+            branches = next(c['not']['any'] for c in constraint['when']['all'] if 'not' in c)
+            tuples = set()
+            for branch in branches:
+                axes = []
+                for key in view['source_fields']:
+                    axis = next(c for c in branch['all'] if c.get('field') == key)
+                    assert axis['op'] == 'in' and all(type(v) in (int, float) for v in axis['value']), 'FINITE_SOURCE_TUPLES_REQUIRED'
+                    axes.append(axis['value'])
+                tuples.update(product(*axes))
+            assert len(view['source_fields']) == 2 and constraint['kind'] == 'FORBID', 'STANDARD_SIZE_SOURCE_REQUIRED'
+            view['choices'] = [dict(value='x'.join(map(str, values)),
+                label='W ' + str(values[0]) + ' × H ' + str(values[1]) + ' mm',
+                assign=dict(zip(view['source_fields'], values))) for values in sorted(tuples)]
+        views.append(view)
     for index, (key, f) in enumerate(fields.items()):
         presentation = profile['fields'][key]
         confirmation = presentation.get('role') == 'CONFIRMATION_ONLY'
@@ -86,10 +109,18 @@ def compile_profile(profile, root):
                           parentFields=f['dependency'], autoSelectSingle=False,
                           evidenceIds=f['evidence_id'], helpText=f['notes'], uiHidden=key in hidden or confirmation)
         if presentation.get('user_selectable') is True: definition['userSelectable'] = True
+        if 'presentation_when' in presentation: definition['presentationWhen'] = selector(presentation['presentation_when'])
+        if 'input_when' in presentation:
+            definition['selector'] = {'all': [definition['selector'], selector(presentation['input_when'])]}
+        if presentation.get('additional_parents'):
+            definition['parentFields'] = list(dict.fromkeys(definition['parentFields'] + presentation['additional_parents']))
+        if presentation.get('auto_select_single'): definition['autoSelectSingle'] = True
         if datatype == 'NUMBER': definition.update(unit=f['unit'], step=1)
         if confirmation: definition.update(internal=True, technical=True)
         clear = [r['on_change'] for r in f['reset_condition'] if r['action'] == 'CLEAR']
         if clear: definition['clearOnParentChange'] = clear
+        if presentation.get('clear_on_change'):
+            definition['clearOnParentChange'] = list(dict.fromkeys(clear + presentation['clear_on_change']))
         if presentation.get('fixed_single'):
             assert len(opts) == 1, 'FIXED_SINGLE_REQUIRED'
             definition['autoSelectSingle'] = True
@@ -100,6 +131,9 @@ def compile_profile(profile, root):
         if f['required'] and not confirmation and (f['knowledge_status'] == 'KNOWN' or presentation.get('request_required') is True):
             module['requiredFieldRules'].append(dict(id=pid + ':required:' + key, productId=pid,
                 specificationKey=key, required=True, selector={'all': [selector(f['visibility_condition']), selector(f['required_when'])]}))
+        if presentation.get('request_required_when'):
+            module['requiredFieldRules'].append(dict(id=pid + ':request-required:' + key, productId=pid,
+                specificationKey=key, required=True, selector=selector(presentation['request_required_when'])))
         if f['data_type'] == 'boolean':
             opts = [dict(value=v, label='はい' if v else 'いいえ', when=True, evidence_ids=f['evidence_id']) for v in (False, True)]
         for i, o in enumerate(opts):
@@ -120,13 +154,30 @@ def compile_profile(profile, root):
             selector={}, parentFields=[], autoSelectSingle=False, unit=field['unit'], step=1, requestField=True))
         module['requiredFieldRules'].append(dict(id=pid + ':required:' + key, productId=pid,
             specificationKey=key, required=True, selector={}))
-    for view in profile.get('selection_views', []):
+    for request in profile.get('request_selectors', []):
+        key = request['key']
+        assert key not in fields and request['role'] == 'SALES_REQUEST_CHOICE', 'REQUEST_SELECTOR_SCOPE'
+        scope = profile['request_scope']
+        assert hashlib.sha256((root / scope['path']).read_bytes()).hexdigest() == scope['sha256'], 'REQUEST_SCOPE_CHANGED'
+        module['specificationDefinitions'].append(dict(id=pid + ':field:' + key, productId=pid, key=key,
+            displayLabel=request['label'], dataType='ENUM', displayOrder=len(fields), status='ACTIVE',
+            selector=selector(request['when']), parentFields=request['parents'],
+            clearOnParentChange=request.get('clear_on_change', []), autoSelectSingle=False,
+            requestField=True, helpText=request['help_text']))
+        module['requiredFieldRules'].append(dict(id=pid + ':required:' + key, productId=pid,
+            specificationKey=key, required=True, selector=selector(request['when'])))
+        for i, choice in enumerate(request['choices']):
+            module['allowedValues'].append(dict(id=pid + ':request:' + key + ':' + str(i), productId=pid,
+                specificationKey=key, value=choice['value'], displayLabel=choice['label'], displayOrder=i,
+                selector={}, status='ACTIVE', evidenceIds=[request['evidence_id']]))
+    for view in views:
         key = view['key']; assert key not in fields and set(view['source_fields']) <= set(fields), 'VIEW_SCOPE'
         module['specificationDefinitions'].append(dict(id=pid + ':field:' + key, productId=pid, key=key,
             displayLabel=view['label'], dataType='ENUM', displayOrder=len(fields), status='ACTIVE',
-            selector={}, parentFields=view['parents'], autoSelectSingle=False))
+            selector=selector(view.get('applicability', True)), parentFields=view['parents'], autoSelectSingle=False,
+            **({'clearOnParentChange': view['clear_on_change']} if view.get('clear_on_change') else {})))
         module['requiredFieldRules'].append(dict(id=pid + ':required:' + key, productId=pid,
-            specificationKey=key, required=True, selector={}))
+            specificationKey=key, required=True, selector=selector(view.get('applicability', True))))
         for i, choice in enumerate(view['choices']):
             assigned = choice['assign']; assert set(assigned) == set(view['source_fields']), 'INCOMPLETE_VIEW'
             conditions = []
@@ -134,8 +185,11 @@ def compile_profile(profile, root):
             for source_key, value in assigned.items():
                 f = fields[source_key]
                 matches = [o for o in f['selectable_values'] if type(o['value']) is type(value) and o['value'] == value]
-                assert matches, 'VIEW_VALUE_NOT_IN_MASTER'
-                conditions.append({'any': [selector(o['when'], assigned) for o in matches]})
+                if view.get('source_constraint'):
+                    assert f['data_type'] == 'number' and type(value) in (int, float), 'VIEW_NUMERIC_SOURCE_REQUIRED'
+                else:
+                    assert matches, 'VIEW_VALUE_NOT_IN_MASTER'
+                    conditions.append({'any': [selector(o['when'], assigned) for o in matches]})
                 conditions.append(selector(f['visibility_condition'], assigned))
                 evidence.update(f['evidence_id'])
             for c in master['constraints']:
@@ -152,7 +206,7 @@ def compile_profile(profile, root):
     module['evidence'] = [{**e, 'id': pid + ':' + e['evidence_id'], 'productId': pid} for e in master['evidence']]
     return dict(schema='PRODUCT_MODULE_CANDIDATE_V1', candidate_revision=profile['candidate_revision'],
         baseline=profile['source'], scope=profile['scope'], product_module=module,
-        selection_views=profile.get('selection_views', []), formal_adoption=False, source_adoption=False,
+        selection_views=views, **({'request_selectors': profile['request_selectors']} if profile.get('request_selectors') else {}), formal_adoption=False, source_adoption=False,
         sales_handoff=profile.get('sales_handoff'), fixed_handoff_facts=profile.get('fixed_handoff_facts', []),
         pricing={'price': None, 'bom': None, 'set_code': None})
 

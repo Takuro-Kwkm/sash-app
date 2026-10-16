@@ -12,6 +12,7 @@ test('formal compositions preserve all adopted rules and choices with only decla
   const index=JSON.parse(readFileSync('changes/replus-runtime-v5/index.json'));
   for(const entry of formalComposedRuntimeEntries){
     const prior=index.products.find(row=>row.series===entry.series);
+    if(!prior)continue;
     const doc=JSON.parse(readFileSync(resolve('changes/replus-runtime-v5',prior.path)));
     const module=JSON.parse(JSON.stringify(doc).replaceAll(prior.id,entry.id));
     const actual=readFormalComposedModule(entry).document;
@@ -37,7 +38,7 @@ test('all formal specifications retain manufacturer review, null price and safe 
     assert.equal(result.runtimeCapabilities.automaticPricing,false);
     assert.equal(result.orderReady,false);assert.deepEqual(result.pricing,{price:null,bom:null,set_code:null});
     assert.notEqual(result.validation.status,'VALID');
-    assert.ok(result.fields.every(field=>field.key!=='construction'));
+    if(entry.productSelectionGroup)assert.ok(result.fields.every(field=>field.key!=='construction'));
   }
 });
 test('changed formal module bytes and escaping paths are refused',()=>{

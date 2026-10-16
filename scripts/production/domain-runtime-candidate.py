@@ -133,6 +133,50 @@ def execute(shared, contract_path, stage, work, output):
                 'BROWSER_QA_FAILED','Actual rendering, transitions, save/reopen and outputs required',stage)
         result=dict(status='PASS',cases=sum(len(row['products']) for row in report['viewports']),persistence='BROWSER_LOCAL_STORAGE',
                     pdf_visual_review='SEPARATE_REQUIRED',formal_adoption=False,release=False)
+    elif stage=='UI_ADOPTION_IDENTITY':
+        adoption=profile.get('runtime_ui_adoption')
+        require(adoption,'UI_ADOPTION_NOT_ADMITTED','Explicit admitted adoption profile required',stage)
+        identity=read_json(contract['inputs']['saved_formal_identity']['path'])
+        require(identity['status']=='FORMAL_RUNTIME_BYTES_READBACK_PASS','FORMAL_RUNTIME_STORAGE_REQUIRED','Actual saved runtime bytes required',stage)
+        formal_index=checkout/adoption['formal_index'];formal=read_json(formal_index)
+        for item in identity['files']:
+            path=formal_index if item['kind']=='index' else formal_index.parent/formal['products'][0]['path']
+            require(item['sha256']==sha(path.read_bytes()) and item['bytes']==len(path.read_bytes()),'FORMAL_RUNTIME_STORAGE_CHANGED','Saved/readback bytes changed',stage)
+        require(next(item['file_id'] for item in identity['files'] if item['kind']=='index')==adoption['formal_manifest_file_id'], 'FORMAL_RUNTIME_STORAGE_CHANGED','Registered Drive identity differs',stage)
+        run(adoption['validator'],[formal_index,base/'index.json'])
+        path=work/'formal-parity.json';run(profile['parity_validator'],[formal_index,path])
+        require(read_json(path)['status']=='PASS','FORMAL_PARITY_FAILED','Normal UI runtime must preserve all source handoff cases',stage)
+        result=dict(status='PASS',formal_product_id=adoption['formal_product_id'],formal_index_sha256=sha(formal_index.read_bytes()),source_cases=len(master['handoff_tests']),product_master_mutations=0)
+    elif stage=='UI_ADOPTION_BROWSER':
+        adoption=profile['runtime_ui_adoption'];port=str(adoption['normal_ui_port'])
+        env.update(HOST='127.0.0.1',PORT=port,QA_BASE_URL='http://127.0.0.1:'+port,QA_OUTPUT_DIR=str(work/'formal-browser'),
+            QA_RUNTIME_QA_CONTRACT=str(checkout/adoption['qa_contract']),QA_EXPECTED_COMMIT=contract['native_head'],SASH_RELEASE_COMMIT_SHA=contract['native_head'])
+        if contract.get('playwright_module'):env['QA_PLAYWRIGHT_MODULE']=contract['playwright_module']
+        require(not any(env.get(key) for key in ['SASH_CANDIDATE_MODE','SASH_CANDIDATE_RUNTIME_INDEX','VERCEL']),'NORMAL_UI_REQUIRED','Adopted UI must execute the normal manifest loader',stage)
+        with (work/'formal-server.log').open('w') as log:
+            server=subprocess.Popen([node,str(checkout/'scripts/start-step8-ui.mjs')],cwd=checkout,env=env,stdout=log,stderr=log)
+            try:
+                import time,urllib.request
+                for _ in range(100):
+                    require(server.poll() is None,'LOCAL_SERVER_FAILED','Normal UI server did not start',stage)
+                    try:
+                        with urllib.request.urlopen(env['QA_BASE_URL']+'/api/health',timeout=1) as response:health=json.load(response)
+                        if health.get('releaseCommitSha')==contract['native_head']:break
+                    except OSError:time.sleep(0.1)
+                else:require(False,'LOCAL_SERVER_FAILED','No same-HEAD normal UI health',stage)
+                run(profile['browser_script'],[])
+            finally:
+                server.terminate()
+                try:server.wait(timeout=10)
+                except subprocess.TimeoutExpired:server.kill();server.wait()
+        report=read_json(work/'formal-browser/report.json')
+        require(report['status']=='PASS' and report['errors']==[] and {r['width'] for r in report['viewports']}=={1440,768,390},'BROWSER_QA_FAILED','Normal product navigation, flow, save/restore and output required',stage)
+        result=dict(status='PASS',cases=sum(len(row['products']) for row in report['viewports']),persistence='BROWSER_LOCAL_STORAGE',production=False)
+    elif stage=='UI_ADOPTION':
+        for name in ('REVIEW','UI_ADOPTION_IDENTITY','UI_ADOPTION_BROWSER'):
+            require(read_json(work/(name+'.json'))['status']=='PASS','ADOPTION_QA_REQUIRED',name,stage)
+        result=dict(status='PASS',state='RUNTIME_UI_ADOPTED',formal_product_id=profile['runtime_ui_adoption']['formal_product_id'],human_decision='IMPORTED_EXPLICIT_USER_R3_ADOPTION',
+            product_master='COMPLETED_INSPECT_ONLY',APP_INTEGRATION_READY=False,full_coverage='SEPARATE_GATE_REQUIRED',release=False,source_adoption=False)
     elif stage=='REVIEW':
         for name in ('FORMAL_IDENTITY','PROJECTION','FLOW_REVIEW_AUTHORIZATION','PARITY','BROWSER'):
             require(read_json(work/(name+'.json'))['status']=='PASS','QA_REQUIRED',name,stage)

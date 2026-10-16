@@ -1,0 +1,9 @@
+{
+  "actor": "USER",
+  "text": "修正版R3を採用します。ハーネスに従って正式なUI接続・採用へ進め、CIと保存証跡まで確認してください。",
+  "reference": "CURRENT_CONVERSATION_EXPLICIT_USER_R3_ADOPTION_20261016",
+  "review_url": "http://127.0.0.1:4208/review.html",
+  "review_receipt_sha256": "16412f6191a0910de70b42dae91aed7808014ea99ee741b3b88edc500ff90f8f",
+  "candidate_zip_file_id": "1RuoSEqcqDcN5tx1g8_IOoXSn6QzCAoRj",
+  "candidate_zip_sha256": "cd88052a54132455cba5b24eb0d530b026338775a00307e63e0099d641890aef"
+}

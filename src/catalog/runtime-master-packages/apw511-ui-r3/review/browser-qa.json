@@ -1,0 +1,358 @@
+{
+  "schema": "DECLARED_SALES_RUNTIME_BROWSER_QA",
+  "product_id": "CANDIDATE:APW511",
+  "manifest_file_id": "1sNMGXRkVZh4xdKf9lP13FpSxeVLE-Img",
+  "viewports": [
+    1280,
+    768,
+    390
+  ],
+  "hidden_fields": [
+    "estimator_confirmation",
+    "manufacture_confirmation"
+  ],
+  "number_fields": [
+    "request_quantity"
+  ],
+  "internal_tokens": [
+    "NON_BATHROOM",
+    "ESTIMATE_CONFIRM_REQUIRED",
+    "FORMAL_CONTROLLED_UNRESOLVED"
+  ],
+  "ordered_fields": [
+    "window_type",
+    "construction",
+    "fix_type",
+    "frame_installation",
+    "shutter_requested",
+    "shutter_type",
+    "shutter_box",
+    "shutter_color",
+    "shutter_jema",
+    "shutter_emergency",
+    "shutter_box_as_eave",
+    "handing",
+    "size_mode",
+    "dimension_basis",
+    "standard_size",
+    "sash_width_mm",
+    "sash_height_mm",
+    "custom_request_route",
+    "raw_measurements",
+    "exterior_color",
+    "interior_color",
+    "handle_color",
+    "screen_requested",
+    "screen_specification",
+    "glass_specification",
+    "glass_surface",
+    "glass_solar",
+    "glass_color",
+    "spacer",
+    "gas",
+    "installation_environment",
+    "standalone_fire_use",
+    "collision_seal",
+    "drainage_blocked",
+    "attachment_above_rail",
+    "glass_assembly_route",
+    "site_conditions",
+    "estimator_confirmation",
+    "manufacture_confirmation",
+    "main_options",
+    "hardware_options",
+    "request_quantity"
+  ],
+  "output_size_label": "サッシ外寸 W / H",
+  "rows": [
+    {
+      "seed": {
+        "window_type": "片引き窓（均等）",
+        "size_mode": "規格",
+        "construction": "在来工法",
+        "exterior_color": "H2",
+        "interior_color": "ET",
+        "handle_color": "シルバー",
+        "glass_specification": "Low-E複層ガラス",
+        "glass_solar": "日射取得型（断熱タイプ）",
+        "glass_color": "ニュートラル",
+        "glass_surface": "透明",
+        "gas": "アルゴンガス入",
+        "spacer": "樹脂スペーサー",
+        "screen_specification": "クリアネット",
+        "handing": "R",
+        "frame_installation": "在来・テラス納まり",
+        "installation_environment": "NON_BATHROOM",
+        "standalone_fire_use": false,
+        "collision_seal": true,
+        "drainage_blocked": false,
+        "site_conditions": null,
+        "request_quantity": 2,
+        "estimator_confirmation": null,
+        "screen_requested": true,
+        "dimension_basis": "サッシ外寸W/H（mm）",
+        "glass_assembly_route": "標準構成表と部位別ガラス厚・押縁を積算で照合し確定",
+        "manufacture_confirmation": null,
+        "shutter_requested": false,
+        "standard_size": "1640x2030"
+      },
+      "expected_valid": true,
+      "expected_quantity": 2,
+      "expected_confirmation_ids": [
+        "G_ESTIMATE_CONFIRM",
+        "G_FINAL_MANUFACTURE_CONFIRMATION"
+      ],
+      "id": "standard-and-transition",
+      "actions": [
+        {
+          "field": "standard_size",
+          "value": "1690x2030",
+          "expected": {
+            "sash_width_mm": 1690,
+            "sash_height_mm": 2030
+          }
+        },
+        {
+          "field": "size_mode",
+          "value": "サイズオーダー",
+          "cleared": [
+            "standard_size",
+            "sash_width_mm",
+            "sash_height_mm"
+          ]
+        },
+        {
+          "field": "sash_width_mm",
+          "value": 1600,
+          "expected": {
+            "sash_width_mm": 1600
+          }
+        },
+        {
+          "field": "sash_height_mm",
+          "value": 2000,
+          "expected": {
+            "sash_height_mm": 2000
+          }
+        },
+        {
+          "field": "size_mode",
+          "value": "規格",
+          "cleared": [
+            "sash_width_mm",
+            "sash_height_mm"
+          ]
+        },
+        {
+          "field": "standard_size",
+          "value": "1640x2030",
+          "expected": {
+            "sash_width_mm": 1640,
+            "sash_height_mm": 2030
+          }
+        },
+        {
+          "field": "shutter_requested",
+          "value": true,
+          "missing": [
+            "shutter_type"
+          ]
+        },
+        {
+          "field": "shutter_type",
+          "value": "リモコンシャッター",
+          "expected": {
+            "shutter_type": "リモコンシャッター"
+          }
+        },
+        {
+          "field": "shutter_requested",
+          "value": false,
+          "cleared": [
+            "shutter_type",
+            "shutter_box",
+            "shutter_color",
+            "shutter_jema",
+            "shutter_emergency"
+          ],
+          "expected": {
+            "shutter_requested": false
+          }
+        },
+        {
+          "field": "shutter_requested",
+          "value": true,
+          "missing": [
+            "shutter_type"
+          ]
+        },
+        {
+          "field": "shutter_requested",
+          "value": false,
+          "expected": {
+            "shutter_requested": false
+          }
+        },
+        {
+          "field": "site_conditions",
+          "value": "搬入経路・足場は現場で確認予定",
+          "expected": {
+            "site_conditions": "搬入経路・足場は現場で確認予定"
+          }
+        },
+        {
+          "field": "exterior_color",
+          "value": "3B",
+          "cleared": [
+            "interior_color",
+            "handle_color"
+          ]
+        },
+        {
+          "field": "construction",
+          "value": "2×4工法",
+          "cleared": [
+            "sash_width_mm",
+            "sash_height_mm",
+            "standard_size"
+          ],
+          "expected": {
+            "exterior_color": "3B"
+          }
+        },
+        {
+          "field": "window_type",
+          "value": "FIX窓",
+          "cleared": [
+            "handing",
+            "screen_requested",
+            "screen_specification",
+            "handle_color"
+          ]
+        }
+      ],
+      "hidden_fields": [
+        "sash_width_mm",
+        "sash_height_mm",
+        "shutter_type"
+      ],
+      "control_expectations": {
+        "standard_size": {
+          "tag": "SELECT"
+        },
+        "shutter_requested": {
+          "tag": "SELECT",
+          "labels": [
+            "希望しない",
+            "希望する"
+          ]
+        }
+      }
+    },
+    {
+      "seed": {
+        "window_type": "片引き窓（均等）",
+        "size_mode": "サイズオーダー",
+        "construction": "在来工法",
+        "sash_width_mm": 1670,
+        "sash_height_mm": 2100,
+        "exterior_color": "H2",
+        "interior_color": "ET",
+        "handle_color": "シルバー",
+        "glass_specification": "Low-E複層ガラス",
+        "glass_solar": "日射取得型（断熱タイプ）",
+        "glass_color": "ニュートラル",
+        "glass_surface": "透明",
+        "gas": "アルゴンガス入",
+        "spacer": "樹脂スペーサー",
+        "screen_specification": "クリアネット",
+        "handing": "R",
+        "frame_installation": "在来・テラス納まり",
+        "installation_environment": "NON_BATHROOM",
+        "standalone_fire_use": false,
+        "collision_seal": true,
+        "drainage_blocked": false,
+        "site_conditions": null,
+        "request_quantity": 2,
+        "estimator_confirmation": null,
+        "screen_requested": true,
+        "dimension_basis": "サッシ外寸W/H（mm）",
+        "glass_assembly_route": "標準構成表と部位別ガラス厚・押縁を積算で照合し確定",
+        "manufacture_confirmation": null,
+        "custom_request_route": "製作可否・障子割付をメーカー確認する見積依頼",
+        "shutter_requested": false
+      },
+      "expected_valid": true,
+      "expected_quantity": 2,
+      "expected_confirmation_ids": [
+        "G_ESTIMATE_CONFIRM",
+        "G_FINAL_MANUFACTURE_CONFIRMATION"
+      ],
+      "id": "order-request",
+      "number_fields": [
+        "sash_width_mm",
+        "sash_height_mm"
+      ],
+      "hidden_fields": [
+        "standard_size",
+        "shutter_type"
+      ]
+    },
+    {
+      "seed": {
+        "window_type": "片引き窓（均等）",
+        "size_mode": "規格",
+        "construction": "在来工法",
+        "exterior_color": "H2",
+        "interior_color": "ET",
+        "handle_color": "シルバー",
+        "glass_specification": "Low-E複層ガラス",
+        "glass_solar": "日射取得型（断熱タイプ）",
+        "glass_color": "ニュートラル",
+        "glass_surface": "透明",
+        "gas": "アルゴンガス入",
+        "spacer": "樹脂スペーサー",
+        "screen_specification": "クリアネット",
+        "handing": "R",
+        "frame_installation": "在来・テラス納まり",
+        "installation_environment": "NON_BATHROOM",
+        "standalone_fire_use": true,
+        "collision_seal": true,
+        "drainage_blocked": false,
+        "site_conditions": null,
+        "request_quantity": 2,
+        "estimator_confirmation": null,
+        "screen_requested": true,
+        "dimension_basis": "サッシ外寸W/H（mm）",
+        "glass_assembly_route": "標準構成表と部位別ガラス厚・押縁を積算で照合し確定",
+        "manufacture_confirmation": null,
+        "shutter_requested": false,
+        "standard_size": "1640x2030"
+      },
+      "expected_valid": false,
+      "expected_quantity": 2,
+      "expected_confirmation_ids": [
+        "G_ESTIMATE_CONFIRM",
+        "G_FINAL_MANUFACTURE_CONFIRMATION"
+      ],
+      "id": "known-prohibition",
+      "hidden_fields": [
+        "sash_width_mm",
+        "sash_height_mm",
+        "shutter_type"
+      ],
+      "control_expectations": {
+        "standard_size": {
+          "tag": "SELECT"
+        },
+        "shutter_requested": {
+          "tag": "SELECT",
+          "labels": [
+            "希望しない",
+            "希望する"
+          ]
+        }
+      }
+    }
+  ]
+}

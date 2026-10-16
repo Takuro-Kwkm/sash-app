@@ -33,6 +33,10 @@ FIXED={
 
 def validate(root):
     root=Path(root)
+    if (root/'contracts/production/apw511-r3-ui-adoption-scope.v1.json').exists():
+        definition=importlib.util.spec_from_file_location('runtime_ui_adoption_scope',root/'scripts/production/runtime-ui-adoption-scope.py')
+        module=importlib.util.module_from_spec(definition);definition.loader.exec_module(module)
+        return module.validate(root)
     if (root/'contracts/production/apw511-runtime-connection-scope.v1.json').exists():
         definition=importlib.util.spec_from_file_location('apw511_connection_scope',root/'scripts/production/apw511-runtime-connection-scope.py')
         module=importlib.util.module_from_spec(definition);definition.loader.exec_module(module)
