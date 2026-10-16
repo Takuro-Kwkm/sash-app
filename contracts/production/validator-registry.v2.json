@@ -264,7 +264,10 @@
         "fixed-domain-projection",
         "human-flow-review-authorization",
         "source-handoff-parity",
-        "declared-sales-runtime-browser"
+        "declared-sales-runtime-browser",
+        "declared-factored-full-coverage",
+        "all-flow-browser-qa",
+        "exact-head-ci"
       ],
       "no_fallback": true,
       "runtime_candidate_profile": {
