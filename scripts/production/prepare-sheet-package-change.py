@@ -38,7 +38,7 @@ def prepare(harness_root, checkout, captures, destination, instruction):
     module_spec = importlib.util.spec_from_file_location('native_sheets', checkout / route['native_adapter'])
     worker = importlib.util.module_from_spec(module_spec); module_spec.loader.exec_module(worker); worker.setup(central)
     contract = {key:value for key,value in c['contract'].items()}
-    contract.update(profile=ref(checkout/profile['path']), product_id=route['product_id'], scope_id=c['scope_id'],
+    contract.update(checkout=str(checkout), harness_root=str(central), profile=ref(checkout/profile['path']), product_id=route['product_id'], scope_id=c['scope_id'],
                     qa_worker=ref(checkout/'scripts/production/sheet-candidate-qa.mjs'))
     worker.baseline(contract, read_json(checkout/profile['path']))
     worker.review(contract, read_json(checkout/profile['path']))
