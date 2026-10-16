@@ -41,6 +41,8 @@ def prepare(shared,checkout,captures,destination,instruction):
     steps=[];worker=ref(checkout/p['native_worker'])
     adoption=p.get('runtime_ui_adoption');stages=['FORMAL_IDENTITY','PROJECTION','FLOW_REVIEW_AUTHORIZATION','PARITY','BROWSER','REVIEW']
     if adoption:stages+=['UI_ADOPTION_IDENTITY','UI_ADOPTION_BROWSER','UI_ADOPTION']
+    full=p.get('runtime_full_coverage')
+    if full:stages=['FORMAL_IDENTITY','FLOW_REVIEW_AUTHORIZATION','CARRY_FORWARD_UI_ADOPTION','FULL_COVERAGE_MODEL','FULL_COVERAGE_RUNTIME','FULL_COVERAGE_BROWSER','APP_INTEGRATION_READY']
     target_gate=adoption['target_gate'] if adoption else 'RUNTIME_UI_CANDIDATE_QA_REVIEW'
     for stage in stages:
         steps.append(dict(id=stage,kind='validator',needs=[steps[-1]['id']] if steps else [],script=worker,
@@ -48,6 +50,7 @@ def prepare(shared,checkout,captures,destination,instruction):
             output='{work}/'+stage+'.json',result_path=['status'],expected_result='PASS',timeout_seconds=1800))
     saved=['FORMAL_IDENTITY.json','PROJECTION.json','FLOW_REVIEW_AUTHORIZATION.json','domain-parity.json','BROWSER.json','browser/report.json','REVIEW.json']
     if adoption:saved+=['UI_ADOPTION_IDENTITY.json','UI_ADOPTION_BROWSER.json','UI_ADOPTION.json','formal-parity.json','formal-browser/report.json']
+    if full:saved=['FORMAL_IDENTITY.json','FLOW_REVIEW_AUTHORIZATION.json','CARRY_FORWARD_UI_ADOPTION.json','FULL_COVERAGE_MODEL.json','FULL_COVERAGE_RUNTIME.json','FULL_COVERAGE_BROWSER.json','APP_INTEGRATION_READY.json','coverage/runtime-proof.json','coverage/transition-proof.json','coverage/flow-signatures.json','coverage-browser/report.json','browser-projection-report.json']
     for name in saved:
         steps.append(dict(id='SAVE_'+name.replace('/','_').replace('.','_').replace('-','_').upper(),kind='storage',needs=[steps[-1]['id']],source='{work}/'+name,destination=name))
     workflow=dict(workflow_id='NATIVE_DOMAIN_RUNTIME_CANDIDATE_V1',version='1.0',status='CURRENT',work_skill='product-change-work',steps=steps,

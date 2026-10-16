@@ -9,7 +9,7 @@ const report={status:'RUNNING',url:BASE,persistence:'BROWSER_LOCAL_STORAGE',mult
 const browser=await chromium.launch({headless:true});
 try{
   for(const width of contract.viewports){
-    const context=await browser.newContext({viewport:{width,height:1100}}),page=await context.newPage();
+    const context=await browser.newContext({viewport:{width,height:contract.heights?.[width]??1100}}),page=await context.newPage();
     page.on('pageerror',error=>report.errors.push(error.message));
     page.on('console',message=>{if(message.type()==='error')report.consoleErrors.push(message.text());});
     page.on('response',response=>{if(response.status()>=400)report.failedResponses.push({url:response.url(),status:response.status()});});

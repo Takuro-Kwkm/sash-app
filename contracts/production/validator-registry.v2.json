@@ -268,8 +268,8 @@
       ],
       "no_fallback": true,
       "runtime_candidate_profile": {
-        "path": "contracts/production/runtime-candidates/apw511-r3-adoption.profile.json",
-        "sha256": "0932596d8143a492e68e5cd650f9948a442cd1107a55b39e9914c0db5f231e0d"
+        "path": "contracts/production/runtime-candidates/apw511-r3-full-coverage.profile.json",
+        "sha256": "b61d9a91dae1c794f0ca22f4e2b56d948d7bea5eb747e71c1d45b05ad689ed10"
       }
     }
   },
