@@ -1,0 +1,12 @@
+{
+  "unchanged": "PASS",
+  "proposed": {
+    "status": "FAIL_CLOSED",
+    "reason": {
+      "code": "CURRENT_AUTHORITY_INCOMPATIBLE",
+      "reason": "Only native build profile and reviewed frozen revision may advance",
+      "target_gate": "INITIALIZATION",
+      "resolution_condition": "Correct the named input; resume the same work."
+    }
+  }
+}

@@ -23,7 +23,7 @@ def document(ref):
 def domain_adapter(c):
     if not c.get('profile'): return None  # legacy helper callers; run() still requires frozen_profile
     profile = document(c['profile'])
-    if profile.get('baseline_kind') != 'EXISTING_WORKING_DOMAIN': return None
+    if profile.get('baseline_kind') not in ('EXISTING_WORKING_DOMAIN', 'EXISTING_FORMAL_JSON'): return None
     path = Path(c['checkout'])/profile['domain_adapter']['path']
     require(sha(path.read_bytes()) == profile['domain_adapter']['sha256'],
             'NATIVE_PROFILE_CHANGED', 'Working-domain adapter changed', 'FORMAL_REVIEW')
@@ -36,13 +36,14 @@ def selected_native_row(c, raw, after=False):
     adapter = domain_adapter(c)
     if adapter:
         return adapter.native_row(raw, c['registry_before']['manufacturer'], c['registry_before']['series'],
-                                  ['FORMAL_PASS'] if after else ['WORKING_RECOVERY'])
+                                  ['FORMAL_PASS'] if after or document(c['profile']).get('baseline_kind') == 'EXISTING_FORMAL_JSON' else ['WORKING_RECOVERY'])
     from harness.production import native_registry
     return native_registry(raw, c['registry_before']['manufacturer'], c['registry_before']['series'])
 
 
 def confirmations(c):
-    if domain_adapter(c): return document(c['review'])['confirmation_requests']
+    if domain_adapter(c) and document(c['profile']).get('baseline_kind') == 'EXISTING_WORKING_DOMAIN':
+        return document(c['review'])['confirmation_requests']
     return document(c['master'])['confirmations']
 
 
@@ -219,7 +220,7 @@ def review(c, work):
               'qa': proof, 'scope': document(c['scope']), 'controlled_unresolved': confirmations(c),
               'predecessor_packet_sha256': c['predecessor_packet_sha256'],
               'formal_adoption': False, 'runtime_ui_mutations': 0, 'human_decision': 'NOT_ACCEPTED'}
-    if domain_adapter(c):
+    if domain_adapter(c) and document(c['profile']).get('baseline_kind') == 'EXISTING_WORKING_DOMAIN':
         from product_master.identity import digest
         result.update(proposed_master_sha256=c['master']['sha256'], proposed_domain_digest=digest(document(c['master'])))
     result['payload_sha256'] = fingerprint(result)
