@@ -1,11 +1,33 @@
 {
-  "state": "FAIL_CLOSED",
-  "blocking_reason": {
-    "code": "PRODUCTION_TARGET_AMBIGUOUS",
-    "reason": "One explicit product or saved Work binding required",
-    "target_gate": "ROUTER",
-    "resolution_condition": "Correct the named input; resume the same work."
+  "repository": "Takuro-Kwkm/sash-app",
+  "product_id": "NATIVE_REGISTRY:YKK AP::APW511",
+  "work_skill": "product-change-work",
+  "work_type": "PRODUCT_MASTER_CHANGE",
+  "target_gate": "RUNTIME_UI_CANDIDATE_QA_REVIEW",
+  "operation": "RUN",
+  "baseline_selector": {
+    "registry_id": "1HMMZ8JdsbJPtL_8LjQfxMF8P_Zb4-LReqvPMFn1pJks",
+    "manufacturer": "YKK AP",
+    "series": "APW511",
+    "state": "FORMAL_PASS",
+    "package_version": "v1.0-F1-20261016"
   },
-  "legacy_selection": 0,
-  "reference_fallback": false
+  "source_selector": {
+    "from": "LIVE_NATIVE_FORMAL + FIXED_REVIEWED_RUNTIME_UI_CANDIDATE",
+    "role": "READ_ONLY_ADOPTED_MASTER",
+    "scope": "Product Master INSPECT_ONLY; no Source switch or manufacturer Fact mutation"
+  },
+  "native_adapter": "scripts/production/runtime-candidate-work.py",
+  "validators": [
+    "native-formal-identity",
+    "fixed-domain-projection",
+    "human-flow-review-authorization",
+    "source-handoff-parity",
+    "declared-sales-runtime-browser"
+  ],
+  "resume_selector": "IMMUTABLE_SPEC_AND_SHARED_V2_JOURNAL; completed Formal is INSPECT_ONLY",
+  "current_architecture": "APP_DEVELOPMENT_SKILL_ARCHITECTURE_V2",
+  "current_router": "scripts/architecture-work.py",
+  "shared_harness_sha": "7293f818685bbd1e7386d78757fb82b930af5572",
+  "legacy_selection": 0
 }
