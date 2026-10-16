@@ -810,7 +810,7 @@
       "connection_state": "CONNECTED",
       "connection_scope": "HUMAN_ADOPTED_SALES_ESTIMATE_REQUEST_RUNTIME_UI",
       "formal_registry_selector": "YKK AP::APW511",
-      "default_gate": "RUNTIME_UI_ADOPTED",
+      "default_gate": "APP_INTEGRATION_READY",
       "baseline_selector": {
         "registry_id": "1HMMZ8JdsbJPtL_8LjQfxMF8P_Zb4-LReqvPMFn1pJks",
         "manufacturer": "YKK AP",
@@ -830,16 +830,19 @@
         "fixed-domain-projection",
         "human-flow-review-authorization",
         "source-handoff-parity",
-        "declared-sales-runtime-browser"
+        "declared-sales-runtime-browser",
+        "declared-factored-full-coverage",
+        "all-flow-browser-qa",
+        "exact-head-ci"
       ],
       "resume_selector": "IMMUTABLE_SPEC_AND_SHARED_V2_JOURNAL; completed Formal is INSPECT_ONLY",
       "runtime_candidate_profile": {
-        "path": "contracts/production/runtime-candidates/apw511-r3-adoption.profile.json",
-        "sha256": "0932596d8143a492e68e5cd650f9948a442cd1107a55b39e9914c0db5f231e0d"
+        "path": "contracts/production/runtime-candidates/apw511-r3-full-coverage.profile.json",
+        "sha256": "b61d9a91dae1c794f0ca22f4e2b56d948d7bea5eb747e71c1d45b05ad689ed10"
       },
       "unsupported_gates": {
         "FORMAL": "COMPLETED_PRODUCT_MASTER_INSPECT_ONLY",
-        "INTEGRATION": "FULL_COVERAGE_QA_REQUIRED_FOR_APP_INTEGRATION_READY",
+        "INTEGRATION": "REQUIRES_FIXED_FULL_COVERAGE_QA_AND_EXACT_HEAD_CI",
         "RELEASE": "NATIVE_RELEASE_PROFILE_AND_EXTERNAL_DECISION_REQUIRED"
       }
     }

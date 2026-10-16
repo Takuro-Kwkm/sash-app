@@ -36,3 +36,5 @@ jobs:
       - run: node scripts/production/validate-domain-runtime-projection.mjs changes/apw511-runtime-ui-r3/index.json /tmp/apw511-r3-parity.json
       - run: node scripts/production/validate-domain-runtime-projection.mjs src/catalog/runtime-master-packages/apw511-ui-r3/runtime_index.json /tmp/apw511-formal-parity.json
       - run: node scripts/production/validate-runtime-ui-adoption.mjs src/catalog/runtime-master-packages/apw511-ui-r3/runtime_index.json changes/apw511-runtime-ui-r3/index.json
+      - run: node scripts/production/declared-full-coverage/model.mjs src/catalog/runtime-master-packages/apw511-ui-r3/runtime_index.json /tmp/apw511-full-model.json
+      - run: node scripts/production/declared-full-coverage/verify.mjs src/catalog/runtime-master-packages/apw511-ui-r3/runtime_index.json /tmp/apw511-full-model.json /tmp/apw511-full-proof

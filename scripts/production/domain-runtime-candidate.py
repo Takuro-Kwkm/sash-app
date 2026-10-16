@@ -133,6 +133,60 @@ def execute(shared, contract_path, stage, work, output):
                 'BROWSER_QA_FAILED','Actual rendering, transitions, save/reopen and outputs required',stage)
         result=dict(status='PASS',cases=sum(len(row['products']) for row in report['viewports']),persistence='BROWSER_LOCAL_STORAGE',
                     pdf_visual_review='SEPARATE_REQUIRED',formal_adoption=False,release=False)
+    elif stage=='CARRY_FORWARD_UI_ADOPTION':
+        from harness.workflow import inspect
+        old_spec=read_json(contract['inputs']['ui_adoption_spec']['path']);old_contract=read_json(contract['inputs']['ui_adoption_contract']['path'])
+        old_work=Path(contract['inputs']['ui_adoption_state']['path']).parent
+        state=inspect(Path(old_contract['checkout']),old_work,old_spec)[0]
+        receipt=read_json(contract['inputs']['ui_adoption_state']['path'])
+        require(state['state']=='COMPLETED' and receipt['state']=='RUNTIME_UI_ADOPTED','ADOPTED_UI_WORK_REQUIRED','Inspect original completed adoption work','QA')
+        original=read_json(contract['inputs']['flow_review']['path'])['authorization_scope']['expected']
+        for name,digest_ in original['code_sha256'].items():require(sha((checkout/name).read_bytes())==digest_,'HUMAN_FLOW_REVIEW_REOPEN',name,stage)
+        saved=read_json(contract['inputs']['formal_runtime_readback']['path']);formal_index=checkout/profile['runtime_ui_adoption']['formal_index'];formal=read_json(formal_index)
+        require(saved['status']=='ACTUAL_FORMAL_RUNTIME_BYTES_MATCH' and saved['files'][0]['sha256']==sha(formal_index.read_bytes()) and saved['files'][0]['file_id']==profile['runtime_ui_adoption']['formal_manifest_file_id'] and saved['files'][1]['sha256']==sha((formal_index.parent/formal['products'][0]['path']).read_bytes()),'SAVED_FORMAL_RUNTIME_CHANGED','Fresh actual Drive byte identity must match',stage)
+        result=dict(status='PASS',completed_adoption='INSPECT_ONLY',source_head=old_contract['native_head'],current_head=contract['native_head'],reviewed_implementation_files=len(original['code_sha256']),runtime_index_sha256=sha((checkout/profile['runtime_ui_adoption']['formal_index']).read_bytes()))
+    elif stage in ('FULL_COVERAGE_MODEL','FULL_COVERAGE_RUNTIME'):
+        full=profile['runtime_full_coverage'];index=checkout/profile['runtime_ui_adoption']['formal_index']
+        if stage=='FULL_COVERAGE_MODEL':
+            run(full['model'],[index,work/'coverage-model.json']);report=read_json(work/'coverage-model.json')
+            result=dict(status=report['status'],proof_model=report['PROOF_MODEL_VERSION'],contexts=report['contexts'],standard_cells=report['standard_cells'],numeric_partitions=report['custom_partition_cells'],model_sha256=sha((work/'coverage-model.json').read_bytes()))
+        else:
+            run(full['validator'],[index,work/'coverage-model.json',work/'coverage']);report=read_json(work/'coverage/runtime-proof.json')
+            require(report['status']=='PASS' and report['unverified_runtime_classes']==report['unverified_flow_signatures']==report['unverified_continuous_partitions']==report['unverified_transition_classes']==0,'FULL_COVERAGE_REQUIRED','Exact factored domain and every transition class required',stage)
+            result=dict(status='PASS',report_sha256=sha((work/'coverage/runtime-proof.json').read_bytes()),materialized=report['materialized_runtime_cases'],flow_signatures=report['flow_signature_count'])
+    elif stage=='FULL_COVERAGE_BROWSER':
+        full=profile['runtime_full_coverage'];port=str(full['normal_ui_port'])
+        env.update(HOST='127.0.0.1',PORT=port,QA_BASE_URL='http://127.0.0.1:'+port,QA_OUTPUT_DIR=str(work/'coverage-browser'),QA_RUNTIME_QA_CONTRACT=str(work/'coverage/browser-qa.json'),QA_EXPECTED_COMMIT=contract['native_head'],SASH_RELEASE_COMMIT_SHA=contract['native_head'])
+        if contract.get('playwright_module'):env['QA_PLAYWRIGHT_MODULE']=contract['playwright_module']
+        require(not any(env.get(k) for k in ('SASH_CANDIDATE_MODE','SASH_CANDIDATE_RUNTIME_INDEX','VERCEL')),'NORMAL_UI_REQUIRED','Full coverage uses the normal adopted UI',stage)
+        with (work/'coverage-server.log').open('w') as log:
+            server=subprocess.Popen([node,str(checkout/'scripts/start-step8-ui.mjs')],cwd=checkout,env=env,stdout=log,stderr=log)
+            try:
+                import time,urllib.request
+                for _ in range(100):
+                    require(server.poll() is None,'LOCAL_SERVER_FAILED','Normal UI server did not start',stage)
+                    try:
+                        with urllib.request.urlopen(env['QA_BASE_URL']+'/api/health',timeout=1) as response:health=json.load(response)
+                        if health.get('releaseCommitSha')==contract['native_head']:break
+                    except OSError:time.sleep(.1)
+                else:require(False,'LOCAL_SERVER_FAILED','Same-HEAD normal UI required',stage)
+                run(full['browser_projection'],[work/'coverage/browser-field-projections.json',work/'browser-projection-report.json'])
+                run(profile['browser_script'],[])
+            finally:
+                server.terminate()
+                try:server.wait(timeout=10)
+                except subprocess.TimeoutExpired:server.kill();server.wait()
+        browser=read_json(work/'coverage-browser/report.json');projection=read_json(work/'browser-projection-report.json');qa=read_json(work/'coverage/browser-qa.json')
+        require(browser['status']=='PASS' and projection['status']=='PASS' and browser['errors']==browser['consoleErrors']==browser['failedResponses']==[] and projection['verified']==projection['classes'] and all(len(v['products'])==len(qa['rows']) for v in browser['viewports']),'FULL_BROWSER_REQUIRED','Every generated flow signature and parameterized field projection required',stage)
+        result=dict(status='PASS',flow_signatures=read_json(work/'coverage/runtime-proof.json')['flow_signature_count'],browser_cases=sum(len(v['products']) for v in browser['viewports']),field_projection_classes=projection['classes'],unverified_browser_classes=0,persistence='BROWSER_LOCAL_STORAGE',production=False)
+    elif stage=='APP_INTEGRATION_READY':
+        for gate in ('FORMAL_IDENTITY','FLOW_REVIEW_AUTHORIZATION','CARRY_FORWARD_UI_ADOPTION','FULL_COVERAGE_MODEL','FULL_COVERAGE_RUNTIME','FULL_COVERAGE_BROWSER'):
+            require(read_json(work/(gate+'.json'))['status']=='PASS','INTEGRATION_QA_REQUIRED',gate,stage)
+        ci_path=work/'ci-readback.json'
+        require(ci_path.is_file(),'EXACT_HEAD_CI_REQUIRED','Import actual GitHub connector runs through the existing CI bridge',stage)
+        ci=read_json(ci_path)
+        require(ci['status']=='PASS' and ci['repository']==profile['repository'] and ci['head_sha']==contract['native_head'],'EXACT_HEAD_CI_REQUIRED','CI must match this fixed work HEAD',stage)
+        result=dict(status='PASS',state='APP_INTEGRATION_READY',APP_INTEGRATION_READY=True,product_id=profile['runtime_ui_adoption']['formal_product_id'],runtime_index_sha256=sha((checkout/profile['runtime_ui_adoption']['formal_index']).read_bytes()),current_exact_head=contract['native_head'],full_window_coverage_gate='PASS',custom_size_coverage_gate='PASS',full_browser_flow_qa_gate='PASS',global_window_selection_flow_gate='PASS',repository_gate='PASS',ci_sha256=sha(ci_path.read_bytes()),persistence='BROWSER_LOCAL_STORAGE',product_master_mutations=0,production_release=False,publication_gate='USER_REVIEW_BEFORE_PUBLICATION')
     elif stage=='UI_ADOPTION_IDENTITY':
         adoption=profile.get('runtime_ui_adoption')
         require(adoption,'UI_ADOPTION_NOT_ADMITTED','Explicit admitted adoption profile required',stage)
