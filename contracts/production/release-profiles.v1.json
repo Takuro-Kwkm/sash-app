@@ -30,6 +30,11 @@
       "product_id": "NATIVE_REGISTRY:LIXIL::リプラス",
       "scope": "REPLUS_V12R1_FORMAL_RUNTIME_UI_RELEASE_20261015_R1",
       "path": "contracts/production/release-profiles/replus-runtime-ui-v1.2-r1.json"
+    },
+    {
+      "product_id": "NATIVE_REGISTRY:YKK AP::APW511",
+      "scope": "APW511_R3_ADOPTED_SALES_UI_PUBLICATION_20261016_R1",
+      "path": "contracts/production/release-profiles/apw511-r3.v1.json"
     }
   ],
   "publication": "NEW_EXACT_PRODUCT_SCOPE_HUMAN_DECISION_REQUIRED"
