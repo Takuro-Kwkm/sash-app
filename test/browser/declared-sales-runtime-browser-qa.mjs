@@ -43,6 +43,13 @@ try{
       assert.equal(await page.locator('#product').inputValue(),contract.product_id);
       for(const key of contract.hidden_fields)assert.equal(await page.locator(`[data-spec-key="${key}"]`).count(),0);
       for(const key of contract.number_fields)assert.equal(await page.locator(`[data-spec-key="${key}"]`).getAttribute('type'),'number');
+      for(const key of row.number_fields??[])assert.equal(await page.locator(`[data-spec-key="${key}"]`).getAttribute('type'),'number');
+      for(const key of row.hidden_fields??[])assert.equal(await page.locator(`[data-spec-key="${key}"]`).count(),0);
+      for(const [key,expected] of Object.entries(row.control_expectations??{})){
+        const control=page.locator(`[data-spec-key="${key}"]`);
+        assert.equal(await control.evaluate(node=>node.tagName),expected.tag,key);
+        if(expected.labels)assert.deepEqual(await control.locator('option').allTextContents(),['選択してください',...expected.labels],key);
+      }
       const visible=await page.locator('#dynamicForm').innerText();
       for(const token of contract.internal_tokens)assert.ok(!visible.includes(token),'INTERNAL_TOKEN:'+token);
       const visibleKeys=await page.locator('#dynamicForm [data-spec-key]').evaluateAll(nodes=>nodes.map(node=>node.dataset.specKey));

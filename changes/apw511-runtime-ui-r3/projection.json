@@ -1,0 +1,341 @@
+{
+  "schema": "STANDARD_DOMAIN_RUNTIME_PROJECTION_V1",
+  "product": {
+    "id": "CANDIDATE:APW511",
+    "manufacturer": "YKK AP",
+    "displayName": "APW 511"
+  },
+  "source": {
+    "path": "sources/PRODUCT_MASTER.json",
+    "sha256": "f23760a601229f31bfcd4fdc5b3be6fc64a3392cff8eda31283bc4d3381c043b",
+    "product_id": "NEW-CANDIDATE-d780d8e7c8cdae7ba41675eb",
+    "revision": "20261016-catalog-r3-sales-request"
+  },
+  "adopted_snapshot_manifest": {
+    "path": "sources/PRODUCT_MASTER_MANIFEST.json",
+    "sha256": "60d2e75674d64100a66e68618229dfdc4ce591ec247df78dfbb382f15b475b8c"
+  },
+  "candidate_revision": "APW511_RUNTIME_UI_REVIEW_R3_20261016",
+  "scope": "LOCAL_SALES_ESTIMATE_REQUEST_UI; USER_REVIEW_PENDING",
+  "fields": {
+    "window_type": {
+      "role": "ADOPTED_FACT"
+    },
+    "construction": {
+      "role": "ADOPTED_FACT",
+      "user_selectable": true
+    },
+    "fix_type": {
+      "role": "ADOPTED_FACT"
+    },
+    "frame_installation": {
+      "role": "ADOPTED_FACT"
+    },
+    "shutter_type": {
+      "role": "ADOPTED_FACT",
+      "input_when": {
+        "field": "shutter_requested",
+        "op": "eq",
+        "value": true
+      },
+      "additional_parents": [
+        "shutter_requested",
+        "window_type"
+      ],
+      "clear_on_change": [
+        "shutter_requested",
+        "window_type"
+      ],
+      "request_required_when": {
+        "all": [
+          {
+            "field": "shutter_requested",
+            "op": "eq",
+            "value": true
+          },
+          {
+            "field": "window_type",
+            "op": "ne",
+            "value": "FIX窓"
+          }
+        ]
+      }
+    },
+    "shutter_box": {
+      "role": "ADOPTED_FACT"
+    },
+    "shutter_color": {
+      "role": "ADOPTED_FACT"
+    },
+    "shutter_jema": {
+      "role": "ADOPTED_FACT"
+    },
+    "shutter_emergency": {
+      "role": "ADOPTED_FACT"
+    },
+    "shutter_box_as_eave": {
+      "role": "ADOPTED_FACT"
+    },
+    "handing": {
+      "role": "ADOPTED_FACT"
+    },
+    "size_mode": {
+      "role": "ADOPTED_FACT"
+    },
+    "dimension_basis": {
+      "role": "ADOPTED_FACT"
+    },
+    "sash_width_mm": {
+      "role": "ADOPTED_FACT",
+      "presentation_when": {
+        "field": "size_mode",
+        "op": "eq",
+        "value": "サイズオーダー"
+      }
+    },
+    "sash_height_mm": {
+      "role": "ADOPTED_FACT",
+      "presentation_when": {
+        "field": "size_mode",
+        "op": "eq",
+        "value": "サイズオーダー"
+      }
+    },
+    "custom_request_route": {
+      "role": "ADOPTED_FACT"
+    },
+    "raw_measurements": {
+      "role": "ADOPTED_FACT"
+    },
+    "exterior_color": {
+      "role": "ADOPTED_FACT",
+      "value_labels": {
+        "3B": "チーク（3B）",
+        "3C": "ブラックウォールナット（3C）",
+        "B1": "ブラウン（B1）",
+        "B7": "カームブラック（B7）",
+        "H2": "プラチナステン（H2）",
+        "S1": "ピュアシルバー（S1）",
+        "YW": "ホワイト（YW）"
+      }
+    },
+    "interior_color": {
+      "role": "ADOPTED_FACT",
+      "value_labels": {
+        "3B": "チーク（3B）",
+        "3C": "ブラックウォールナット（3C）",
+        "B1": "ブラウン（B1）",
+        "B7": "カームブラック（B7）",
+        "ET": "プラチナステン（ET）",
+        "CD": "クリア（CD）",
+        "CE": "ナチュラル（CE）",
+        "CM": "ダークブラウン（CM）",
+        "YW": "ホワイト（YW）"
+      }
+    },
+    "handle_color": {
+      "role": "ADOPTED_FACT"
+    },
+    "screen_requested": {
+      "role": "ADOPTED_FACT"
+    },
+    "screen_specification": {
+      "role": "ADOPTED_FACT"
+    },
+    "glass_specification": {
+      "role": "ADOPTED_FACT"
+    },
+    "glass_surface": {
+      "role": "ADOPTED_FACT"
+    },
+    "glass_solar": {
+      "role": "ADOPTED_FACT"
+    },
+    "glass_color": {
+      "role": "ADOPTED_FACT"
+    },
+    "spacer": {
+      "role": "ADOPTED_FACT"
+    },
+    "gas": {
+      "role": "ADOPTED_FACT"
+    },
+    "main_options": {
+      "role": "ADOPTED_FACT"
+    },
+    "hardware_options": {
+      "role": "ADOPTED_FACT"
+    },
+    "installation_environment": {
+      "role": "ADOPTED_FACT",
+      "value_labels": {
+        "NON_BATHROOM": "浴室・高温多湿を除く環境（確認済み）",
+        "BATHROOM": "浴室",
+        "高温・多湿": "高温・多湿"
+      }
+    },
+    "standalone_fire_use": {
+      "role": "ADOPTED_FACT"
+    },
+    "collision_seal": {
+      "role": "ADOPTED_FACT"
+    },
+    "drainage_blocked": {
+      "role": "ADOPTED_FACT"
+    },
+    "attachment_above_rail": {
+      "role": "ADOPTED_FACT"
+    },
+    "glass_assembly_route": {
+      "role": "ADOPTED_FACT"
+    },
+    "site_conditions": {
+      "role": "SALES_REQUEST_INPUT"
+    },
+    "estimator_confirmation": {
+      "role": "CONFIRMATION_ONLY"
+    },
+    "manufacture_confirmation": {
+      "role": "CONFIRMATION_ONLY"
+    },
+    "request_quantity": {
+      "role": "SALES_REQUEST_INPUT",
+      "request_required": true
+    }
+  },
+  "request_fields": [],
+  "numeric_fields": [
+    {
+      "key": "request_quantity",
+      "integer": true,
+      "minimum": 1,
+      "message": "見積依頼数量は1以上の整数で入力してください。"
+    },
+    {
+      "key": "sash_width_mm",
+      "integer": true,
+      "minimum": 1,
+      "message": "サッシ外寸Wはmmの正の整数で入力してください。"
+    },
+    {
+      "key": "sash_height_mm",
+      "integer": true,
+      "minimum": 1,
+      "message": "サッシ外寸Hはmmの正の整数で入力してください。"
+    }
+  ],
+  "confirmation_requests": [
+    {
+      "id": "G_ESTIMATE_CONFIRM",
+      "condition": true,
+      "owner": "積算 / メーカー",
+      "question": "本体構成と未決定項目・原寸法・現場情報を積算へ渡しメーカー確認。自動価格/部材拾い/コード生成/発注を行わない。",
+      "original_status": "UNKNOWN",
+      "field_ids": [
+        "site_conditions",
+        "request_quantity",
+        "estimator_confirmation"
+      ],
+      "automatic_resolution": false
+    },
+    {
+      "id": "G_FINAL_MANUFACTURE_CONFIRMATION",
+      "condition": true,
+      "owner": "積算担当 / YKK AP・ガラスメーカー",
+      "question": "依頼の窓種・工法・外寸W/H(mm)・ガラス仕様・色・網戸・シャッター・納まり/現場原文と原図を渡し確認。未確認経路を自動成立・自動発注に利用しない。",
+      "original_status": "UNKNOWN",
+      "field_ids": [
+        "manufacture_confirmation"
+      ],
+      "automatic_resolution": false
+    }
+  ],
+  "sales_handoff": {
+    "quantity_field": "request_quantity",
+    "dimensions": {
+      "width": "sash_width_mm",
+      "height": "sash_height_mm",
+      "label": "サッシ外寸 W / H",
+      "unit": "mm"
+    },
+    "request_fields": [
+      "request_quantity",
+      "site_conditions",
+      "estimator_confirmation",
+      "manufacture_confirmation",
+      "shutter_requested"
+    ]
+  },
+  "fixed_handoff_facts": [
+    {
+      "label": "正式化",
+      "value": "APW511 v1.0-F1-20261016。最終製作・価格・BOM・発注可否は積算／メーカー確認。",
+      "evidence_ids": []
+    }
+  ],
+  "selection_views": [
+    {
+      "key": "standard_size",
+      "label": "規格サイズ",
+      "source_fields": [
+        "sash_width_mm",
+        "sash_height_mm"
+      ],
+      "parents": [
+        "window_type",
+        "construction",
+        "fix_type",
+        "size_mode"
+      ],
+      "clear_on_change": [
+        "window_type",
+        "construction",
+        "fix_type",
+        "size_mode"
+      ],
+      "applicability": {
+        "field": "size_mode",
+        "op": "eq",
+        "value": "規格"
+      },
+      "source_constraint": "R_STANDARD_CELL"
+    }
+  ],
+  "request_scope": {
+    "path": "review/request-scope.json",
+    "sha256": "74510a7199a05c0bebe0724981989b0f5beaabc894a42bb81bc99896a74e93e2"
+  },
+  "request_selectors": [
+    {
+      "key": "shutter_requested",
+      "role": "SALES_REQUEST_CHOICE",
+      "parity_context": {
+        "source_presence_field": "shutter_type"
+      },
+      "label": "シャッター希望",
+      "when": {
+        "field": "window_type",
+        "op": "ne",
+        "value": "FIX窓"
+      },
+      "parents": [
+        "window_type"
+      ],
+      "clear_on_change": [
+        "window_type"
+      ],
+      "choices": [
+        {
+          "value": false,
+          "label": "希望しない"
+        },
+        {
+          "value": true,
+          "label": "希望する"
+        }
+      ],
+      "evidence_id": "USER_SCOPE_APW511_UI_R3",
+      "help_text": "シャッターを見積依頼するか選びます。「希望する」の場合に種類・詳細を選択します。"
+    }
+  ]
+}

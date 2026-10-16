@@ -19,7 +19,12 @@ for(const entry of index.products){
   let valid=0,invalid=0;
   for(const row of master.handoff_tests){
     const changed=Object.keys(row.changes).filter(key=>JSON.stringify(row.before[key])!==JSON.stringify(row.changes[key]));
-    const input=applyDeclaredInputClears({...row.before,...row.changes,...(document.sales_handoff?{[document.sales_handoff.quantity_field]:1}:{})},changed,document.product_module.specificationDefinitions), result=reader.uiResolver(input);
+    // New sales-intent controls have no manufacturer-fact counterpart. Supply
+    // their explicit baseline context only for source-parity replay, never as UI defaults.
+    const sourceInput={...row.before,...row.changes};
+    const requestContext=Object.fromEntries((document.request_selectors??[]).filter(r=>r.parity_context).map(r=>
+      [r.key,sourceInput[r.parity_context.source_presence_field]!==undefined&&sourceInput[r.parity_context.source_presence_field]!==null]));
+    const input=applyDeclaredInputClears({...sourceInput,...requestContext,...(document.sales_handoff?{[document.sales_handoff.quantity_field]:1}:{})},changed,document.product_module.specificationDefinitions), result=reader.uiResolver(input);
     try{
       if(row.expected_valid){
         assert.equal(result.validation.status,'MANUAL_CHECK');
