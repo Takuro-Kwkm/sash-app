@@ -798,6 +798,50 @@
         "fallback": false,
         "next_action": "Registry-only product: bind a native adapter successor before mutation"
       }
+    },
+    {
+      "product_id": "NATIVE_REGISTRY:YKK AP::APW511",
+      "aliases": [
+        "APW511",
+        "APW 511",
+        "YKK AP APW511"
+      ],
+      "repository": "Takuro-Kwkm/sash-app",
+      "connection_state": "CONNECTED",
+      "connection_scope": "LOCAL_SALES_ESTIMATE_REQUEST_UI_CANDIDATE_ONLY",
+      "formal_registry_selector": "YKK AP::APW511",
+      "default_gate": "RUNTIME_UI_CANDIDATE_QA_REVIEW",
+      "baseline_selector": {
+        "registry_id": "1HMMZ8JdsbJPtL_8LjQfxMF8P_Zb4-LReqvPMFn1pJks",
+        "manufacturer": "YKK AP",
+        "series": "APW511",
+        "state": "FORMAL_PASS",
+        "package_version": "v1.0-F1-20261016"
+      },
+      "source_selector": {
+        "from": "LIVE_NATIVE_FORMAL + FIXED_REVIEWED_RUNTIME_UI_CANDIDATE",
+        "role": "READ_ONLY_ADOPTED_MASTER",
+        "scope": "Product Master INSPECT_ONLY; no Source switch or manufacturer Fact mutation"
+      },
+      "native_adapter": "scripts/production/runtime-candidate-work.py",
+      "prepare_adapter": "scripts/production/prepare-domain-runtime-candidate.py",
+      "validators": [
+        "native-formal-identity",
+        "fixed-domain-projection",
+        "human-flow-review-authorization",
+        "source-handoff-parity",
+        "declared-sales-runtime-browser"
+      ],
+      "resume_selector": "IMMUTABLE_SPEC_AND_SHARED_V2_JOURNAL; completed Formal is INSPECT_ONLY",
+      "runtime_candidate_profile": {
+        "path": "contracts/production/runtime-candidates/apw511-r2.profile.json",
+        "sha256": "fa8c1db847ec30e4d6889bbe4e64d3acece6f77a1feb8102fb194c70eeed3e78"
+      },
+      "unsupported_gates": {
+        "FORMAL": "COMPLETED_PRODUCT_MASTER_INSPECT_ONLY",
+        "INTEGRATION": "HUMAN_RUNTIME_UI_ADOPTION_REQUIRED",
+        "RELEASE": "NATIVE_RELEASE_PROFILE_AND_EXTERNAL_DECISION_REQUIRED"
+      }
     }
   ],
   "shared_authority": {

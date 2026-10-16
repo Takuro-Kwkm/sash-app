@@ -1,0 +1,11 @@
+{
+  "state": "FAIL_CLOSED",
+  "blocking_reason": {
+    "code": "PRODUCTION_TARGET_AMBIGUOUS",
+    "reason": "One explicit product or saved Work binding required",
+    "target_gate": "ROUTER",
+    "resolution_condition": "Correct the named input; resume the same work."
+  },
+  "legacy_selection": 0,
+  "reference_fallback": false
+}

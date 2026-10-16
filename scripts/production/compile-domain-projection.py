@@ -39,13 +39,29 @@ def selector(condition, assigned=None):
     return {key: {'$' + op: value}}
 
 
-def compile_profile(profile, root):
+def load_adopted_master(profile, root):
     source = root / profile['source']['path']
     assert hashlib.sha256(source.read_bytes()).hexdigest() == profile['source']['sha256'], 'SOURCE_BYTES_CHANGED'
     master = json.loads(source.read_bytes())
-    assert master['schema_version'] == '1.0' and master['lifecycle_status'] == 'FORMAL', 'ADOPTED_MASTER_REQUIRED'
+    if profile.get('adopted_snapshot_manifest'):
+        receipt = profile['adopted_snapshot_manifest']
+        manifest_bytes = (root / receipt['path']).read_bytes()
+        assert hashlib.sha256(manifest_bytes).hexdigest() == receipt['sha256'], 'FORMAL_MANIFEST_CHANGED'
+        manifest = json.loads(manifest_bytes)
+        assert manifest['formal_state'] == 'ADOPTED_FOR_ADMITTED_STORAGE_TRANSACTION', 'ADOPTED_MASTER_REQUIRED'
+        assert manifest['product_master_sha256'] == profile['source']['sha256'], 'ADOPTED_SNAPSHOT_CHANGED'
+        assert manifest['product_id'] == master['product']['product_id'] and manifest['approved_packet_sha256'], 'ADOPTED_MASTER_REQUIRED'
+        assert manifest['product_master_revision'] == master['product']['revision'], 'REVISION_IDENTITY'
+    else:
+        assert master['lifecycle_status'] == 'FORMAL', 'ADOPTED_MASTER_REQUIRED'
+    assert master['schema_version'] == '1.0', 'MASTER_SCHEMA_UNSUPPORTED'
     assert master['product']['product_id'] == profile['source']['product_id'], 'PRODUCT_IDENTITY'
     assert master['product']['revision'] == profile['source']['revision'], 'REVISION_IDENTITY'
+    return master
+
+
+def compile_profile(profile, root):
+    master = load_adopted_master(profile, root)
     fields = {f['field_id']: f for f in master['fields']}
     assert len(fields) == len(master['fields']) and set(fields) == set(profile['fields']), 'FIELD_SCOPE_CHANGED'
     pid = profile['product']['id']
@@ -53,26 +69,42 @@ def compile_profile(profile, root):
               ('specificationDefinitions', 'allowedValues', 'requiredFieldRules', 'ruleSets', 'dependencies', 'evidence')}}
     hidden = {k for v in profile.get('selection_views', []) for k in v['source_fields']}
     for index, (key, f) in enumerate(fields.items()):
-        assert f['roles']['sales_input'] and f['knowledge_status'] == 'KNOWN', 'UNREVIEWED_FIELD'
-        assert all(r['action'] == 'REEVALUATE' for r in f['reset_condition']), 'UNSUPPORTED_RESET'
+        presentation = profile['fields'][key]
+        confirmation = presentation.get('role') == 'CONFIRMATION_ONLY'
+        request = presentation.get('role') == 'SALES_REQUEST_INPUT'
+        assert f['roles']['sales_input'] and (f['knowledge_status'] == 'KNOWN' or confirmation or request), 'UNREVIEWED_FIELD'
+        if f['knowledge_status'] != 'KNOWN':
+            assert any(key in g['field_ids'] and not g['result_in_scope'] and g['confirmation_in_scope'] for g in master['gaps']), 'UNCONTROLLED_UNKNOWN'
+        assert all(r['action'] in ('REEVALUATE','CLEAR') for r in f['reset_condition']), 'UNSUPPORTED_RESET'
         opts = f['selectable_values']
         numeric = bool(opts) and all(type(o['value']) in (int, float) for o in opts)
-        assert f['data_type'] in ('enum', 'multi_enum'), 'UNSUPPORTED_DOMAIN_TYPE'
+        assert f['data_type'] in ('enum', 'multi_enum', 'number', 'text', 'boolean'), 'UNSUPPORTED_DOMAIN_TYPE'
+        datatype = {'multi_enum':'MULTI_ENUM', 'number':'NUMBER', 'text':'TEXT'}.get(f['data_type'], 'ENUM')
         definition = dict(id=pid + ':field:' + key, productId=pid, key=key, displayLabel=f['label'],
-                          dataType='MULTI_ENUM' if f['data_type'] == 'multi_enum' else 'ENUM',
+                          dataType=datatype,
                           displayOrder=index, status='ACTIVE', selector=selector(f['visibility_condition']),
                           parentFields=f['dependency'], autoSelectSingle=False,
-                          evidenceIds=f['evidence_id'], helpText=f['notes'], uiHidden=key in hidden)
+                          evidenceIds=f['evidence_id'], helpText=f['notes'], uiHidden=key in hidden or confirmation)
+        if presentation.get('user_selectable') is True: definition['userSelectable'] = True
+        if datatype == 'NUMBER': definition.update(unit=f['unit'], step=1)
+        if confirmation: definition.update(internal=True, technical=True)
+        clear = [r['on_change'] for r in f['reset_condition'] if r['action'] == 'CLEAR']
+        if clear: definition['clearOnParentChange'] = clear
+        if presentation.get('fixed_single'):
+            assert len(opts) == 1, 'FIXED_SINGLE_REQUIRED'
+            definition['autoSelectSingle'] = True
         if numeric:
             # Keep ENUM membership in the resolver, with number-input presentation.
             definition.update(uiControl='NUMBER', unit=f['unit'], step=1)
         module['specificationDefinitions'].append(definition)
-        if f['required']:
+        if f['required'] and not confirmation and (f['knowledge_status'] == 'KNOWN' or presentation.get('request_required') is True):
             module['requiredFieldRules'].append(dict(id=pid + ':required:' + key, productId=pid,
                 specificationKey=key, required=True, selector={'all': [selector(f['visibility_condition']), selector(f['required_when'])]}))
+        if f['data_type'] == 'boolean':
+            opts = [dict(value=v, label='はい' if v else 'いいえ', when=True, evidence_ids=f['evidence_id']) for v in (False, True)]
         for i, o in enumerate(opts):
             module['allowedValues'].append(dict(id=pid + ':value:' + key + ':' + str(i), productId=pid,
-                specificationKey=key, value=o['value'], displayLabel=o['label'], displayOrder=i,
+                specificationKey=key, value=o['value'], displayLabel=presentation.get('value_labels', {}).get(str(o['value']), o['label']), displayOrder=i,
                 selector=selector(o['when']), status='ACTIVE', evidenceIds=o['evidence_ids']))
     rules = []
     for c in master['constraints']:
@@ -80,7 +112,7 @@ def compile_profile(profile, root):
         rules.append(dict(id=c['rule_id'], when=selector(c['when']), fields=c['field_ids'],
                           message='選択した条件は適用範囲外です。仕様・現場条件を見直してください。', evidenceIds=c['evidence_ids']))
     module['ruleSets'].append(dict(id=pid + ':selection-validation', productId=pid, type='SELECTION_VALIDATION',
-        status='ACTIVE', payload={'rejectUnknownFields': True, 'rules': rules, 'numbers': profile.get('request_fields', [])}))
+        status='ACTIVE', payload={'rejectUnknownFields': True, 'rules': rules, 'numbers': profile.get('request_fields', []) + profile.get('numeric_fields', [])}))
     for field in profile.get('request_fields', []):
         key=field['key']; assert key not in fields and field['role']=='SALES_REQUEST_COUNT', 'REQUEST_FIELD_SCOPE'
         module['specificationDefinitions'].append(dict(id=pid + ':field:' + key, productId=pid, key=key,

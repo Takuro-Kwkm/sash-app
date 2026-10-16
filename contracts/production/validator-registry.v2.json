@@ -255,6 +255,22 @@
       "state": "FAIL_CLOSED",
       "validators": [],
       "no_fallback": true
+    },
+    "NATIVE_REGISTRY:YKK AP::APW511": {
+      "state": "READY",
+      "scope": "LOCAL_SALES_ESTIMATE_REQUEST_UI_CANDIDATE_ONLY",
+      "validators": [
+        "native-formal-identity",
+        "fixed-domain-projection",
+        "human-flow-review-authorization",
+        "source-handoff-parity",
+        "declared-sales-runtime-browser"
+      ],
+      "no_fallback": true,
+      "runtime_candidate_profile": {
+        "path": "contracts/production/runtime-candidates/apw511-r2.profile.json",
+        "sha256": "fa8c1db847ec30e4d6889bbe4e64d3acece6f77a1feb8102fb194c70eeed3e78"
+      }
     }
   },
   "build_profiles": {

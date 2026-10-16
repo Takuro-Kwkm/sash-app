@@ -1,4 +1,4 @@
-import { createProductConfigurationSnapshot } from '/work-management/domain.mjs';
+import { createProductConfigurationSnapshot, applyDeclaredInputClears } from '/work-management/domain.mjs';
 import { productChoices, choiceForMember, memberForChoice } from '/product-choice-model.mjs';
 import { withConfigurationMigrationAudit } from '/work-management/configuration-migration.mjs';
 
@@ -243,6 +243,7 @@ export class ProductConfigurationEditor {
     const control=multiGroup??target;
     if(!multiGroup&&!control.matches?.('[data-spec-key]'))return;
     const key=multiGroup?.dataset.multiKey??control.dataset.specKey;
+    const previousValue=JSON.stringify(this.state.selection[key]);
     const field=this.state.resolved?.fields?.find((row)=>row.key===key);
     const canonicalChoice=(raw)=>{
       const match=field?.values?.find((row)=>String(row.value)===String(raw));
@@ -262,6 +263,7 @@ export class ProductConfigurationEditor {
       const values=[...target.selectedOptions].map((option)=>canonicalChoice(option.value));
       if(values.length)this.state.selection[key]=values;else delete this.state.selection[key];
     }else if(target.value)this.state.selection[key]=canonicalChoice(target.value);else delete this.state.selection[key];
+    if(previousValue!==JSON.stringify(this.state.selection[key]))this.state.selection=applyDeclaredInputClears(this.state.selection,[key],this.state.resolved?.fields??[]);
     await this.resolve({notify:true});
   }
 
@@ -311,7 +313,7 @@ export class ProductConfigurationEditor {
       return `<div class="field" data-key="${esc(field.key)}"><label>${esc(field.displayLabel)}</label><output class="runtime-derived-value" data-spec-key="${esc(field.key)}" ${dataAttributes}>${esc(display)}</output>${field.helpText?`<small class="field-help">${esc(field.helpText)}</small>`:''}</div>`;
     }
     if(field.dataType==='NUMBER')return `<div class="field" data-key="${esc(field.key)}"><label>${esc(field.displayLabel)}${required}</label><div class="number-input"><input type="number" inputmode="decimal" step="${esc(field.step??'any')}" data-spec-key="${esc(field.key)}" ${attributes} value="${esc(this.state.selection[field.key]??'')}" placeholder="数値を入力">${field.unit?`<span>${esc(field.unit)}</span>`:''}</div>${field.helpText?`<small class="field-help">${esc(field.helpText)}</small>`:''}</div>`;
-    if(field.dataType==='TEXT')return `<div class="field" data-key="${esc(field.key)}"><label>${esc(field.displayLabel)}${required}</label><input type="text" data-spec-key="${esc(field.key)}" ${attributes} value="${esc(this.state.selection[field.key]??'')}" placeholder="入力してください"></div>`;
+    if(field.dataType==='TEXT')return `<div class="field" data-key="${esc(field.key)}"><label>${esc(field.displayLabel)}${required}</label><input type="text" data-spec-key="${esc(field.key)}" ${attributes} value="${esc(this.state.selection[field.key]??'')}" placeholder="入力してください">${field.helpText?`<small class="field-help">${esc(field.helpText)}</small>`:''}</div>`;
     const selected=Array.isArray(this.state.selection[field.key])?this.state.selection[field.key]:[this.state.selection[field.key]];
     const multi=field.dataType==='MULTI_ENUM';
     if(multi){

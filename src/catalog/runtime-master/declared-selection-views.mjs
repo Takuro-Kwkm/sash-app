@@ -49,7 +49,7 @@ export function declaredSelectionErrors(module, input, selection) {
       if (value === undefined || value === null || value === '') continue;
       if (typeof value !== 'number' || !Number.isFinite(value) || rule.integer && !Number.isInteger(value) ||
         rule.minimum !== undefined && value < rule.minimum || rule.maximum !== undefined && value > rule.maximum) errors.push({
-        errorCode: 'DECLARED_REQUEST_NUMBER_INVALID', field: rule.key, message: '依頼数量は1以上の整数で入力してください。',
+        errorCode: 'DECLARED_REQUEST_NUMBER_INVALID', field: rule.key, message: rule.message ?? '依頼数量は1以上の整数で入力してください。',
       });
     }
     for (const rule of set.payload.rules) if (selectorMatches(rule.when, selection, context)) errors.push({

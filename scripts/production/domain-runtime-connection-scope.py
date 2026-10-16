@@ -33,6 +33,10 @@ FIXED={
 
 def validate(root):
     root=Path(root)
+    if (root/'contracts/production/apw511-runtime-connection-scope.v1.json').exists():
+        definition=importlib.util.spec_from_file_location('apw511_connection_scope',root/'scripts/production/apw511-runtime-connection-scope.py')
+        module=importlib.util.module_from_spec(definition);definition.loader.exec_module(module)
+        return module.validate(root)
     definition=importlib.util.spec_from_file_location('immutable_scope',root/'scripts/production/native-change-scope.py')
     guard=importlib.util.module_from_spec(definition);definition.loader.exec_module(guard);guard.SCOPE_PATH=PATH
     result=guard.validate(root)

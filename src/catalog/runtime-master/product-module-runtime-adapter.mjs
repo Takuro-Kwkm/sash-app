@@ -29,7 +29,7 @@ function runtimeDocument(runtimePackage, entry) {
 
 function internalDefinition(definition) {
   return definition?.internal === true || definition?.technical === true || definition?.userSelectable === false ||
-    definition?.selectionMode === 'DERIVED' || definition?.applicability === 'INTERNAL_RESOLVED' || definition?.key === 'construction';
+    definition?.selectionMode === 'DERIVED' || definition?.applicability === 'INTERNAL_RESOLVED' || (definition?.key === 'construction' && definition?.userSelectable !== true);
 }
 
 function constructionFromSelector(selector, fallback = null) {
@@ -196,7 +196,7 @@ export function adaptProductModuleRuntimeV1(runtimePackage, entry) {
 
   function resolveUi(inputSelection = {}) {
     const original = { ...(inputSelection ?? {}) };
-    delete original.construction;
+    if (constructionDef?.userSelectable !== true) delete original.construction;
     delete original.internal_construction;
     for(const definition of module.specificationDefinitions){
       if(definition.dataType==='NUMBER'&&Object.prototype.hasOwnProperty.call(original,definition.key)&&
@@ -260,7 +260,7 @@ export function adaptProductModuleRuntimeV1(runtimePackage, entry) {
     })), resolved),numericPairs);
 
     const publicSelection = glazingBridge.toCanonicalSelection(resolved);
-    delete publicSelection.construction;
+    if (constructionDef?.userSelectable !== true) delete publicSelection.construction;
     delete publicSelection.internal_construction;
     const missingRequiredFields = fields.filter((field) => {
       const definition = module.specificationDefinitions.find((def) => def.key === field.key);

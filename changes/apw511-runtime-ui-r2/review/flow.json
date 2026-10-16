@@ -1,0 +1,685 @@
+{
+  "schema": "REVIEWED_WINDOW_FLOW_V3",
+  "revision": "APW511_RUNTIME_UI_REVIEW_R2_20261016",
+  "status": "HUMAN_REVIEW_PENDING",
+  "formalAdoption": false,
+  "sourceFlow": {
+    "path": "sources/PRODUCT_MASTER.json",
+    "sha256": "f23760a601229f31bfcd4fdc5b3be6fc64a3392cff8eda31283bc4d3381c043b"
+  },
+  "reviewSources": [
+    {
+      "path": "sources/UI_STANDARD_v2.1.docx",
+      "sha256": "e14b802dd96c1b90ea39809137ea03824878db2b7c07aa058657f3603a928e9a"
+    }
+  ],
+  "groups": [
+    {
+      "id": "opening",
+      "label": "窓の種類",
+      "order": 0
+    },
+    {
+      "id": "configuration",
+      "label": "窓種固有仕様",
+      "order": 1
+    },
+    {
+      "id": "handing",
+      "label": "開き勝手",
+      "order": 2
+    },
+    {
+      "id": "size",
+      "label": "サイズ",
+      "order": 3
+    },
+    {
+      "id": "finish",
+      "label": "色",
+      "order": 4
+    },
+    {
+      "id": "screen",
+      "label": "網戸",
+      "order": 5
+    },
+    {
+      "id": "glass",
+      "label": "ガラス",
+      "order": 6
+    },
+    {
+      "id": "options",
+      "label": "その他オプション",
+      "order": 7
+    },
+    {
+      "id": "survey",
+      "label": "現場・確認事項",
+      "order": 8
+    },
+    {
+      "id": "request",
+      "label": "見積依頼数量",
+      "order": 9
+    }
+  ],
+  "fields": {
+    "window_type": {
+      "meaning": "窓種",
+      "label": "窓種",
+      "sourceRefs": [
+        "E_LINEUP"
+      ],
+      "group": "opening",
+      "rank": 0,
+      "parents": [],
+      "slot": "window_type",
+      "stage": "OPENING",
+      "helpText": ""
+    },
+    "construction": {
+      "meaning": "工法",
+      "label": "工法",
+      "sourceRefs": [
+        "E_DIM",
+        "E_SITE"
+      ],
+      "group": "configuration",
+      "rank": 0,
+      "parents": [],
+      "slot": "window_spec",
+      "stage": "CONFIGURATION",
+      "helpText": "木造用。在来/2×4のみ適用。ALC鉄骨造/RC造は禁止入力の診断値であり製品選択肢として許可しない。"
+    },
+    "fix_type": {
+      "meaning": "FIX区分",
+      "label": "FIX区分",
+      "sourceRefs": [
+        "E_DIM"
+      ],
+      "group": "configuration",
+      "rank": 1,
+      "parents": [
+        "window_type",
+        "construction"
+      ],
+      "slot": "window_spec",
+      "stage": "CONFIGURATION",
+      "helpText": "在来窓タイプとテラスタイプを区別。2×4規格はテラスのみ。"
+    },
+    "frame_installation": {
+      "meaning": "枠・下枠・納まり",
+      "label": "枠・下枠の納まり",
+      "sourceRefs": [
+        "E_DRAWINGS",
+        "E_FRAME"
+      ],
+      "group": "configuration",
+      "rank": 2,
+      "parents": [
+        "construction",
+        "window_type",
+        "fix_type"
+      ],
+      "slot": "window_spec",
+      "stage": "CONFIGURATION",
+      "helpText": "窓種/工法と一致するカタログ固定納まりを依頼へ渡す。枠幅148mmの独立変更、枠アングル等の未証明オプションを作らない。現場取付は別確認。"
+    },
+    "shutter_type": {
+      "meaning": "シャッター希望",
+      "label": "シャッター希望",
+      "sourceRefs": [
+        "E_SHUTTER",
+        "E_SHUTTER_DETAIL"
+      ],
+      "group": "configuration",
+      "rank": 3,
+      "parents": [],
+      "slot": "window_spec",
+      "stage": "CONFIGURATION",
+      "helpText": "APW511現行別冊XAAAA-H26-005-1 pp42-47/102-103の専用設定。FIX不可、防火片引きはRのみ。詳細寸法はpp53/105とpp70-71/112-113の原図による。APW511 p36の尺系表記をmmへ推測換算しない。2027年4月予定仕様は採用しない。"
+    },
+    "shutter_box": {
+      "meaning": "シャッターボックスカバー",
+      "label": "シャッターボックスカバー",
+      "sourceRefs": [
+        "E_BOX"
+      ],
+      "group": "configuration",
+      "rank": 4,
+      "parents": [
+        "shutter_type"
+      ],
+      "slot": "window_spec",
+      "stage": "CONFIGURATION",
+      "helpText": "p37の選択表:スリットGRはスチール不可。防火Gはアルミ/フラット不可。防火G軒天用をひさしとして使用不可。"
+    },
+    "shutter_color": {
+      "meaning": "シャッター色",
+      "label": "シャッター色",
+      "sourceRefs": [
+        "E_SHUTTER_DETAIL"
+      ],
+      "group": "configuration",
+      "rank": 5,
+      "parents": [
+        "shutter_type"
+      ],
+      "slot": "window_spec",
+      "stage": "CONFIGURATION",
+      "helpText": ""
+    },
+    "shutter_jema": {
+      "meaning": "JEM-A端子付の依頼",
+      "label": "JEM-A端子付の依頼",
+      "sourceRefs": [
+        "E_SHUTTER"
+      ],
+      "group": "configuration",
+      "rank": 6,
+      "parents": [
+        "shutter_type"
+      ],
+      "slot": "window_spec",
+      "stage": "CONFIGURATION",
+      "helpText": "pp36,43の商品体系に端子付の設定。HEMS機器/変換アダプター/施工の適合認定ではない。"
+    },
+    "shutter_emergency": {
+      "meaning": "シャッター非常開放機構",
+      "label": "シャッター非常開放機構",
+      "sourceRefs": [
+        "E_SHUTTER_DETAIL"
+      ],
+      "group": "configuration",
+      "rank": 7,
+      "parents": [
+        "shutter_type"
+      ],
+      "slot": "window_spec",
+      "stage": "CONFIGURATION",
+      "helpText": "APW511専用は標準装備。取り外し希望を許可しない。非常開放時の経路は現場確認。"
+    },
+    "shutter_box_as_eave": {
+      "meaning": "軒天用ボックスカバーをひさしに使用する計画",
+      "label": "軒天用ボックスカバーをひさしに使用する計画",
+      "sourceRefs": [
+        "E_BOX"
+      ],
+      "group": "configuration",
+      "rank": 8,
+      "parents": [
+        "shutter_type",
+        "shutter_box"
+      ],
+      "slot": "window_spec",
+      "stage": "CONFIGURATION",
+      "helpText": ""
+    },
+    "handing": {
+      "meaning": "片引き窓勝手",
+      "label": "片引き窓勝手",
+      "sourceRefs": [
+        "E_SCREEN"
+      ],
+      "group": "handing",
+      "rank": 0,
+      "parents": [
+        "window_type"
+      ],
+      "slot": "handing",
+      "stage": "CONFIGURATION",
+      "helpText": "外観図基準の右勝手R／左勝手L。網戸は本体と同勝手。"
+    },
+    "size_mode": {
+      "meaning": "規格／サイズオーダー",
+      "label": "規格／サイズオーダー",
+      "sourceRefs": [
+        "E_LINEUP"
+      ],
+      "group": "size",
+      "rank": 0,
+      "parents": [],
+      "slot": "size_mode",
+      "stage": "SIZE",
+      "helpText": "H27表記を全窓種に一律適用しない。製作範囲はpp74-77。"
+    },
+    "dimension_basis": {
+      "meaning": "入力寸法の基準",
+      "label": "入力寸法の基準",
+      "sourceRefs": [
+        "E_ORDER_ROUTE"
+      ],
+      "group": "size",
+      "rank": 1,
+      "parents": [],
+      "slot": "size",
+      "stage": "SIZE",
+      "helpText": "呼称、内法、ROW/ROHをサッシW/Hと混同しない。原文メモを自動変換しない。"
+    },
+    "sash_width_mm": {
+      "meaning": "希望サッシW",
+      "label": "希望サッシW",
+      "sourceRefs": [
+        "E_DIM"
+      ],
+      "group": "size",
+      "rank": 2,
+      "parents": [
+        "window_type",
+        "construction",
+        "size_mode",
+        "fix_type"
+      ],
+      "slot": "size",
+      "stage": "SIZE",
+      "helpText": "希望サッシ外寸の数値（mm）。規格は公式表セルを検証する。オーダーは確認依頼値であり製作寸法確定値ではない。丸め/開口寸法からの換算をしない。"
+    },
+    "sash_height_mm": {
+      "meaning": "希望サッシH",
+      "label": "希望サッシH",
+      "sourceRefs": [
+        "E_DIM"
+      ],
+      "group": "size",
+      "rank": 3,
+      "parents": [
+        "window_type",
+        "construction",
+        "size_mode",
+        "fix_type"
+      ],
+      "slot": "size",
+      "stage": "SIZE",
+      "helpText": "希望サッシ外寸の数値（mm）。規格は公式表セルを検証する。オーダーは確認依頼値であり製作寸法確定値ではない。丸め/開口寸法からの換算をしない。"
+    },
+    "custom_request_route": {
+      "meaning": "オーダー寸法の引渡し区分",
+      "label": "オーダー寸法の引渡し区分",
+      "sourceRefs": [
+        "E_ORDER_ROUTE"
+      ],
+      "group": "size",
+      "rank": 4,
+      "parents": [
+        "size_mode"
+      ],
+      "slot": "size",
+      "stage": "SIZE",
+      "helpText": "依頼値を製作可能と判定しない。最終WS/WF・細長比・重量・耐風圧・ガラス構成はメーカー照会。確認前の自動製作/発注禁止。"
+    },
+    "raw_measurements": {
+      "meaning": "呼称・内法・開口寸法原文",
+      "label": "呼称・内法・開口寸法原文",
+      "sourceRefs": [
+        "E_DIM"
+      ],
+      "group": "size",
+      "rank": 5,
+      "parents": [],
+      "slot": "size",
+      "stage": "SIZE",
+      "helpText": "呼称・内法・開口寸法など、受け取った寸法を原文のまま記入します。ここから希望サッシW/Hへの自動換算は行いません。"
+    },
+    "exterior_color": {
+      "meaning": "外観色",
+      "label": "外観色",
+      "sourceRefs": [
+        "E_COLOR"
+      ],
+      "group": "finish",
+      "rank": 0,
+      "parents": [],
+      "slot": "exterior_color",
+      "stage": "FINISH",
+      "helpText": ""
+    },
+    "interior_color": {
+      "meaning": "内観色",
+      "label": "内観色",
+      "sourceRefs": [
+        "E_COLOR"
+      ],
+      "group": "finish",
+      "rank": 1,
+      "parents": [
+        "exterior_color"
+      ],
+      "slot": "interior_color",
+      "stage": "FINISH",
+      "helpText": "p23接続図。YW/YWはp60規格表で確認。25有限ペア。"
+    },
+    "handle_color": {
+      "meaning": "ハンドル色",
+      "label": "ハンドル色",
+      "sourceRefs": [
+        "E_COLOR"
+      ],
+      "group": "finish",
+      "rank": 2,
+      "parents": [
+        "interior_color",
+        "window_type"
+      ],
+      "slot": "finish_color",
+      "stage": "FINISH",
+      "helpText": "任意の別色選択を許可しない。FIX時は出力から除外。自動計算せず適用色の選択確認。"
+    },
+    "screen_requested": {
+      "meaning": "スライド網戸を見積依頼する",
+      "label": "スライド網戸を見積依頼する",
+      "sourceRefs": [
+        "E_SCREEN"
+      ],
+      "group": "screen",
+      "rank": 0,
+      "parents": [
+        "window_type"
+      ],
+      "slot": "screen_presence",
+      "stage": "SCREEN",
+      "helpText": "営業の希望入力。本体と網戸は規格表で別建て。falseは網戸なしの依頼、nullは未入力。施工可否を認定しない。"
+    },
+    "screen_specification": {
+      "meaning": "スライド網戸ネット",
+      "label": "網戸ネット",
+      "sourceRefs": [
+        "E_SCREEN"
+      ],
+      "group": "screen",
+      "rank": 1,
+      "parents": [
+        "window_type",
+        "construction",
+        "sash_height_mm",
+        "screen_requested"
+      ],
+      "slot": "screen_net",
+      "stage": "SCREEN",
+      "helpText": "網戸を依頼する場合のみネットを選ぶ。網戸勝手は本体と同勝手。在来H>2530/2×4H>2560はクリアネットのみ。"
+    },
+    "glass_specification": {
+      "meaning": "ガラス種類",
+      "label": "ガラス種類",
+      "sourceRefs": [
+        "E_GLASS",
+        "E_GLASS_LIMIT"
+      ],
+      "group": "glass",
+      "rank": 0,
+      "parents": [
+        "window_type",
+        "construction",
+        "size_mode",
+        "fix_type",
+        "sash_width_mm",
+        "sash_height_mm"
+      ],
+      "slot": "glass_base",
+      "stage": "GLAZING",
+      "helpText": "p34-35のガラス体系。規格H25および在来FIX窓タイプW251/256はLow-E複層のみ。最終部位別構成/押縁はglass_assembly_routeで積算へ渡す。"
+    },
+    "glass_surface": {
+      "meaning": "ガラス透明／型",
+      "label": "ガラス種",
+      "sourceRefs": [
+        "E_GLASS_DETAIL"
+      ],
+      "group": "glass",
+      "rank": 1,
+      "parents": [
+        "glass_specification"
+      ],
+      "slot": "glass_type",
+      "stage": "GLAZING",
+      "helpText": ""
+    },
+    "glass_solar": {
+      "meaning": "日射・Low-E配置",
+      "label": "Low-E性能",
+      "sourceRefs": [
+        "E_GLASS_DETAIL"
+      ],
+      "group": "glass",
+      "rank": 2,
+      "parents": [
+        "glass_specification"
+      ],
+      "slot": "glass_detail",
+      "stage": "GLAZING",
+      "helpText": ""
+    },
+    "glass_color": {
+      "meaning": "ガラス色",
+      "label": "ガラス色",
+      "sourceRefs": [
+        "E_GLASS_DETAIL"
+      ],
+      "group": "glass",
+      "rank": 3,
+      "parents": [
+        "glass_solar"
+      ],
+      "slot": "glass_detail",
+      "stage": "GLAZING",
+      "helpText": ""
+    },
+    "spacer": {
+      "meaning": "スペーサー",
+      "label": "スペーサー",
+      "sourceRefs": [
+        "E_GLASS_DETAIL"
+      ],
+      "group": "glass",
+      "rank": 4,
+      "parents": [],
+      "slot": "glass_spacer",
+      "stage": "GLAZING",
+      "helpText": ""
+    },
+    "gas": {
+      "meaning": "中空層",
+      "label": "中空層（ガス）",
+      "sourceRefs": [
+        "E_GLASS_DETAIL"
+      ],
+      "group": "glass",
+      "rank": 5,
+      "parents": [
+        "glass_specification"
+      ],
+      "slot": "glass_air_layer",
+      "stage": "GLAZING",
+      "helpText": ""
+    },
+    "main_options": {
+      "meaning": "主要オプション・関連商品希望",
+      "label": "主要オプション・関連商品希望",
+      "sourceRefs": [
+        "E_OPTIONS"
+      ],
+      "group": "options",
+      "rank": 0,
+      "parents": [
+        "construction",
+        "window_type",
+        "screen_requested"
+      ],
+      "slot": "option",
+      "stage": "OPTION",
+      "helpText": "希望として積算へ渡す。フレームⅡは木造柱梁・在来/金物工法の記載。関連商品の掲載を任意現場への適合証明にしない。別カタログの適合・納まりはMANUAL_CHECK。"
+    },
+    "hardware_options": {
+      "meaning": "標準金物に関する依頼備考",
+      "label": "標準金物に関する依頼備考",
+      "sourceRefs": [
+        "E_HARDWARE"
+      ],
+      "group": "options",
+      "rank": 1,
+      "parents": [
+        "window_type"
+      ],
+      "slot": "option",
+      "stage": "OPTION",
+      "helpText": "標準操作金物はカタログpp26-33の固定仕様参照。ハンドル色はhandle_colorで制御。ここは営業の依頼備考であり、鍵付錠や別色等をメーカー選択肢として許可する入力ではない。FIX時は除外。"
+    },
+    "installation_environment": {
+      "meaning": "設置環境",
+      "label": "設置環境",
+      "sourceRefs": [
+        "E_SITE"
+      ],
+      "group": "survey",
+      "rank": 0,
+      "parents": [],
+      "slot": "installation",
+      "stage": "INSTALLATION_SURVEY",
+      "helpText": "浴室以外で、高温多湿にも該当しないことを確認して選びます。未確認のまま選択しません。"
+    },
+    "standalone_fire_use": {
+      "meaning": "本商品単独を防火設備として使用する計画",
+      "label": "本商品単独を防火設備として使用する計画",
+      "sourceRefs": [
+        "E_SITE"
+      ],
+      "group": "survey",
+      "rank": 1,
+      "parents": [],
+      "slot": "installation",
+      "stage": "INSTALLATION_SURVEY",
+      "helpText": ""
+    },
+    "collision_seal": {
+      "meaning": "ガラス面の衝突防止シール貼付条件",
+      "label": "ガラス面の衝突防止シール貼付条件",
+      "sourceRefs": [
+        "E_COLLISION"
+      ],
+      "group": "survey",
+      "rank": 2,
+      "parents": [],
+      "slot": "installation",
+      "stage": "INSTALLATION_SURVEY",
+      "helpText": "true=貼付が必要な条件を引渡す。施工済みの証明ではない。"
+    },
+    "drainage_blocked": {
+      "meaning": "下枠前面排水弁をふさぐ計画",
+      "label": "下枠前面排水弁をふさぐ計画",
+      "sourceRefs": [
+        "E_DRAIN"
+      ],
+      "group": "survey",
+      "rank": 3,
+      "parents": [
+        "window_type",
+        "fix_type"
+      ],
+      "slot": "installation",
+      "stage": "INSTALLATION_SURVEY",
+      "helpText": "未確認はnull。閉塞計画=trueを禁止。"
+    },
+    "attachment_above_rail": {
+      "meaning": "下枠アタッチメントがレール上端より上がる計画",
+      "label": "下枠アタッチメントがレール上端より上がる計画",
+      "sourceRefs": [
+        "E_DRAIN",
+        "E_FRAME"
+      ],
+      "group": "survey",
+      "rank": 4,
+      "parents": [
+        "construction",
+        "window_type"
+      ],
+      "slot": "installation",
+      "stage": "INSTALLATION_SURVEY",
+      "helpText": ""
+    },
+    "glass_assembly_route": {
+      "meaning": "ガラス構成・押縁の確認引渡し",
+      "label": "ガラス構成・押縁の確認引渡し",
+      "sourceRefs": [
+        "E_GLASS_ASSEMBLY"
+      ],
+      "group": "survey",
+      "rank": 5,
+      "parents": [],
+      "slot": "installation",
+      "stage": "INSTALLATION_SURVEY",
+      "helpText": "営業見積依頼の主要ガラス仕様と、最終ガラス構成/強度/押縁の確定を区別。価格/BOM/発注可能の出力は作らない。"
+    },
+    "site_conditions": {
+      "meaning": "現場条件",
+      "label": "現場条件",
+      "sourceRefs": [
+        "FORMAL_CONTROLLED_UNRESOLVED"
+      ],
+      "group": "survey",
+      "rank": 6,
+      "parents": [],
+      "slot": "installation",
+      "stage": "INSTALLATION_SURVEY",
+      "helpText": "搬入経路、外壁仕上前の先付け、外側ガラス交換スペース、2階以上の足場、高地800m超の事前相談などを積算へ引き渡します。未確認事項は確認待ちで保持します。"
+    },
+    "estimator_confirmation": {
+      "meaning": "積算確認事項",
+      "label": "積算確認事項",
+      "sourceRefs": [
+        "FORMAL_CONTROLLED_UNRESOLVED"
+      ],
+      "group": "survey",
+      "rank": 7,
+      "parents": [],
+      "slot": "installation",
+      "stage": "INSTALLATION_SURVEY",
+      "helpText": "UNKNOWN/null。正式価格/BOM/部材数量/メーカー最終商品・Setコード/現場適合性/製作可否は積算・メーカー確認。"
+    },
+    "manufacture_confirmation": {
+      "meaning": "メーカー最終製作・ガラス構成確認結果",
+      "label": "メーカー最終製作・ガラス構成確認結果",
+      "sourceRefs": [
+        "FORMAL_CONTROLLED_UNRESOLVED"
+      ],
+      "group": "survey",
+      "rank": 8,
+      "parents": [],
+      "slot": "installation",
+      "stage": "INSTALLATION_SURVEY",
+      "helpText": "UNKNOWN/nullのまま。WS/WF、重量/細長比、最終ガラス構成/押縁・強度、納まり、HEMS適合/電源/避難経路、価格/BOM/最終コードの確定前。主要仕様の既知禁止とは分離。"
+    },
+    "request_quantity": {
+      "meaning": "営業依頼数量",
+      "label": "営業依頼数量",
+      "sourceRefs": [
+        "FORMAL_CONTROLLED_UNRESOLVED"
+      ],
+      "group": "request",
+      "rank": 0,
+      "parents": [],
+      "slot": "option",
+      "stage": "OPTION",
+      "helpText": "見積を依頼する窓本体の数量を入力します。部材数量とは区別し、未入力を自動補完しません。"
+    }
+  },
+  "contextFields": [],
+  "slotOrder": [
+    "window_type",
+    "window_spec",
+    "handing",
+    "size_mode",
+    "size",
+    "exterior_color",
+    "interior_color",
+    "screen_presence",
+    "screen_net",
+    "glass_base",
+    "glass_type",
+    "glass_detail",
+    "glass_spacer",
+    "glass_air_layer",
+    "option",
+    "installation"
+  ]
+}

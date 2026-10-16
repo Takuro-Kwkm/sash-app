@@ -1,5 +1,6 @@
 """Validate candidate profile admission; never grant Runtime Formal or release."""
 import hashlib
+import importlib.util
 import json
 from pathlib import Path
 
@@ -31,7 +32,18 @@ def validate(root):
         assert document['formal_adoption'] is document['source_adoption'] is False
         assert document['pricing']=={'price':None,'bom':None,'set_code':None}
         master=read((Path(p['candidate_root'])/document['baseline']['path']).as_posix())
-        assert master['lifecycle_status']=='FORMAL' and master['product']['revision']==p['baseline_package_version']
+        if p.get('formal_storage_adapter') == 'SHARED_CORE_DRIVE_BRIDGE':
+            base=root/p['candidate_root']; projection=read((Path(p['candidate_root'])/'projection.json').as_posix())
+            loader=importlib.util.spec_from_file_location('adopted_domain',root/p['compiler'])
+            compiler=importlib.util.module_from_spec(loader);loader.loader.exec_module(compiler)
+            assert compiler.load_adopted_master(projection,base)==master
+            assert master['product']['product_id']==p['authoring_product_id']
+            manifest=read((Path(p['candidate_root'])/projection['adopted_snapshot_manifest']['path']).as_posix())
+            assert manifest['formal_revision']==p['baseline_package_version']
+            assert master['product']['revision']==p['baseline_snapshot_revision']
+            assert compiler.compile_profile(projection,base)==document, 'PROJECTION_CHANGED'
+        else:
+            assert master['lifecycle_status']=='FORMAL' and master['product']['revision']==p['baseline_package_version']
         count+=1
     assert count, 'NO_ADMITTED_CANDIDATE_PROFILE'
     return dict(status='PASS',profiles=count,formal_adoption=False,release=False)

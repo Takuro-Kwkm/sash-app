@@ -30,8 +30,12 @@ def execute(shared, contract_path, stage, work, output):
             and entry['id']==profile['runtime_product_id'] and document['baseline']==projection['source'],
             'CANDIDATE_IDENTITY', 'Fixed native candidate bytes required', stage)
     master=read_json(base/document['baseline']['path']); provenance=read_json(base/'review/formal-provenance.json')
-    require(master['product']['product_id']==profile['product_id'] and master['lifecycle_status']=='FORMAL'
-            and master['product']['revision']==profile['baseline_package_version'],
+    snapshot=profile.get('formal_storage_adapter')=='SHARED_CORE_DRIVE_BRIDGE'
+    definition=importlib.util.spec_from_file_location('domain_compiler',checkout/profile['compiler'])
+    compiler=importlib.util.module_from_spec(definition);definition.loader.exec_module(compiler)
+    require(compiler.load_adopted_master(projection,base)==master
+            and master['product']['product_id']==profile.get('authoring_product_id',profile['product_id'])
+            and master['product']['revision']==profile.get('baseline_snapshot_revision',profile['baseline_package_version']),
             'ADOPTED_MASTER_REQUIRED', 'Do not reopen Product Master adoption', stage)
     node=contract['node']; env={**os.environ,'PYTHONDONTWRITEBYTECODE':'1'}
     def run(script,args):
@@ -45,16 +49,34 @@ def execute(shared, contract_path, stage, work, output):
         require(sha(capture(Path('/'),contract['inputs']['master_bytes']))==provenance['master_sha256']==sha((base/document['baseline']['path']).read_bytes()),
                 'FORMAL_BYTES_CHANGED','Acquired native bytes differ from projection baseline',stage)
         upstream=contract['upstream']; spec=read_json(upstream['spec']['path']); capture(Path('/'),upstream['spec'])
-        state=inspect(Path(upstream['root']),Path(upstream['work']),spec)[0]
         receipt=read_json(contract['inputs']['formal_receipt']['path']); decision=read_json(contract['inputs']['formal_decision']['path'])
-        require(receipt==read_json(Path(upstream['work'])/'native-formal-readback.json')
-                and decision==read_json(Path(upstream['spec']['path']).parent/'human-decision.json'),
-                'COMPLETED_FORMAL_REQUIRED','Reuse exact original completion receipt and admitted Human Decision',stage)
-        require(state['state']=='COMPLETED' and spec['workflow_id']==provenance['completed_work']
-                and receipt['status']=='POST_SAVE_VERIFIED' and decision['actor_kind']=='HUMAN' and decision['decision']=='APPROVED'
-                and decision['payload_sha256']==provenance['human_packet_sha256'],
-                'COMPLETED_FORMAL_REQUIRED','Inspect original completed Work and actual external adoption evidence',stage)
-        result=dict(status='PASS',formal_work=spec['workflow_id'],terminal_policy='INSPECT_ONLY',master_sha256=provenance['master_sha256'])
+        if snapshot:
+            from harness.core import plan,validate_authorization
+            manifest=read_json(base/projection['adopted_snapshot_manifest']['path'])
+            validate_authorization(spec,decision)
+            require(receipt==json.loads(capture(Path('/'),upstream['completion_receipt']))
+                    and decision==json.loads(capture(Path('/'),upstream['authorization']))
+                    and plan(Path(upstream['work']),spec)['status']=='POST_SAVE_VERIFIED'
+                    and spec['work_id']==provenance['completed_work'] and spec['adapter']=='drive_bridge'
+                    and receipt['storage_state']=='POST_SAVE_VERIFIED' and receipt['state']=='FORMAL_PASS'
+                    and receipt['candidate_sha256']==provenance['master_sha256']
+                    and receipt['master_file_id']==metadata['id'] and receipt['formal_revision']==row['package_version']
+                    and spec['expected']['revision']==manifest['formal_revision']==row['package_version']
+                    and spec['expected']['package_sha256']==receipt['package_sha256']==provenance['package_sha256']
+                    and manifest['decision_ref']==decision['decision_ref'],
+                    'COMPLETED_FORMAL_REQUIRED','Inspect original core storage journal and same-payload authorization',stage)
+            work_id=spec['work_id']
+        else:
+            state=inspect(Path(upstream['root']),Path(upstream['work']),spec)[0]
+            require(receipt==read_json(Path(upstream['work'])/'native-formal-readback.json')
+                    and decision==read_json(Path(upstream['spec']['path']).parent/'human-decision.json'),
+                    'COMPLETED_FORMAL_REQUIRED','Reuse exact original completion receipt and admitted Human Decision',stage)
+            require(state['state']=='COMPLETED' and spec['workflow_id']==provenance['completed_work']
+                    and receipt['status']=='POST_SAVE_VERIFIED' and decision['actor_kind']=='HUMAN' and decision['decision']=='APPROVED'
+                    and decision['payload_sha256']==provenance['human_packet_sha256'],
+                    'COMPLETED_FORMAL_REQUIRED','Inspect original completed Work and actual external adoption evidence',stage)
+            work_id=spec['workflow_id']
+        result=dict(status='PASS',formal_work=work_id,terminal_policy='INSPECT_ONLY',master_sha256=provenance['master_sha256'])
     elif stage=='PROJECTION':
         definition=importlib.util.spec_from_file_location('domain_compiler',checkout/profile['compiler'])
         compiler=importlib.util.module_from_spec(definition);definition.loader.exec_module(compiler)

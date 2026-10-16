@@ -1,0 +1,3273 @@
+{
+  "source_sha256": "f23760a601229f31bfcd4fdc5b3be6fc64a3392cff8eda31283bc4d3381c043b",
+  "field_count": 40,
+  "fields": [
+    {
+      "key": "window_type",
+      "label": "窓種",
+      "group": "opening",
+      "parents": [],
+      "visibility": true,
+      "required": true,
+      "required_when": true,
+      "option_conditions": [
+        {
+          "value": "片引き窓（偏芯）",
+          "label": "片引き窓（偏芯）",
+          "evidence_ids": [
+            "E_LINEUP"
+          ],
+          "when": true
+        },
+        {
+          "value": "片引き窓（均等）",
+          "label": "片引き窓（均等）",
+          "evidence_ids": [
+            "E_LINEUP"
+          ],
+          "when": true
+        },
+        {
+          "value": "両袖片引き窓",
+          "label": "両袖片引き窓",
+          "evidence_ids": [
+            "E_LINEUP"
+          ],
+          "when": true
+        },
+        {
+          "value": "FIX窓",
+          "label": "FIX窓",
+          "evidence_ids": [
+            "E_LINEUP"
+          ],
+          "when": true
+        }
+      ],
+      "reset": [],
+      "knowledge_status": "KNOWN"
+    },
+    {
+      "key": "size_mode",
+      "label": "規格／サイズオーダー",
+      "group": "size",
+      "parents": [],
+      "visibility": true,
+      "required": true,
+      "required_when": true,
+      "option_conditions": [
+        {
+          "value": "規格",
+          "label": "規格",
+          "evidence_ids": [
+            "E_LINEUP"
+          ],
+          "when": true
+        },
+        {
+          "value": "サイズオーダー",
+          "label": "サイズオーダー",
+          "evidence_ids": [
+            "E_LINEUP"
+          ],
+          "when": true
+        }
+      ],
+      "reset": [],
+      "knowledge_status": "KNOWN"
+    },
+    {
+      "key": "construction",
+      "label": "工法",
+      "group": "configuration",
+      "parents": [],
+      "visibility": true,
+      "required": true,
+      "required_when": true,
+      "option_conditions": [
+        {
+          "value": "在来工法",
+          "label": "在来工法",
+          "evidence_ids": [
+            "E_DIM"
+          ],
+          "when": true
+        },
+        {
+          "value": "2×4工法",
+          "label": "2×4工法",
+          "evidence_ids": [
+            "E_DIM"
+          ],
+          "when": true
+        },
+        {
+          "value": "ALC鉄骨造",
+          "label": "ALC鉄骨造",
+          "evidence_ids": [
+            "E_SITE"
+          ],
+          "when": true
+        },
+        {
+          "value": "RC造",
+          "label": "RC造",
+          "evidence_ids": [
+            "E_SITE"
+          ],
+          "when": true
+        }
+      ],
+      "reset": [],
+      "knowledge_status": "KNOWN"
+    },
+    {
+      "key": "glass_specification",
+      "label": "ガラス種類",
+      "group": "glass",
+      "parents": [
+        "window_type",
+        "construction",
+        "size_mode",
+        "fix_type",
+        "sash_width_mm",
+        "sash_height_mm"
+      ],
+      "visibility": true,
+      "required": true,
+      "required_when": true,
+      "option_conditions": [
+        {
+          "value": "Low-E複層ガラス",
+          "label": "Low-E複層ガラス",
+          "evidence_ids": [
+            "E_GLASS"
+          ],
+          "when": true
+        },
+        {
+          "value": "安全合わせLow-E複層ガラス",
+          "label": "安全合わせLow-E複層ガラス",
+          "evidence_ids": [
+            "E_GLASS"
+          ],
+          "when": {
+            "not": {
+              "any": [
+                {
+                  "all": [
+                    {
+                      "field": "size_mode",
+                      "op": "eq",
+                      "value": "規格"
+                    },
+                    {
+                      "any": [
+                        {
+                          "all": [
+                            {
+                              "field": "construction",
+                              "op": "eq",
+                              "value": "在来工法"
+                            },
+                            {
+                              "field": "sash_height_mm",
+                              "op": "eq",
+                              "value": 2530
+                            }
+                          ]
+                        },
+                        {
+                          "all": [
+                            {
+                              "field": "construction",
+                              "op": "eq",
+                              "value": "2×4工法"
+                            },
+                            {
+                              "field": "sash_height_mm",
+                              "op": "eq",
+                              "value": 2560
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "all": [
+                    {
+                      "field": "size_mode",
+                      "op": "eq",
+                      "value": "規格"
+                    },
+                    {
+                      "field": "window_type",
+                      "op": "eq",
+                      "value": "FIX窓"
+                    },
+                    {
+                      "field": "construction",
+                      "op": "eq",
+                      "value": "在来工法"
+                    },
+                    {
+                      "field": "fix_type",
+                      "op": "eq",
+                      "value": "窓タイプ"
+                    },
+                    {
+                      "field": "sash_width_mm",
+                      "op": "in",
+                      "value": [
+                        2550,
+                        2600
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "value": "トリプルガラス",
+          "label": "トリプルガラス",
+          "evidence_ids": [
+            "E_GLASS"
+          ],
+          "when": {
+            "not": {
+              "any": [
+                {
+                  "all": [
+                    {
+                      "field": "size_mode",
+                      "op": "eq",
+                      "value": "規格"
+                    },
+                    {
+                      "any": [
+                        {
+                          "all": [
+                            {
+                              "field": "construction",
+                              "op": "eq",
+                              "value": "在来工法"
+                            },
+                            {
+                              "field": "sash_height_mm",
+                              "op": "eq",
+                              "value": 2530
+                            }
+                          ]
+                        },
+                        {
+                          "all": [
+                            {
+                              "field": "construction",
+                              "op": "eq",
+                              "value": "2×4工法"
+                            },
+                            {
+                              "field": "sash_height_mm",
+                              "op": "eq",
+                              "value": 2560
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "all": [
+                    {
+                      "field": "size_mode",
+                      "op": "eq",
+                      "value": "規格"
+                    },
+                    {
+                      "field": "window_type",
+                      "op": "eq",
+                      "value": "FIX窓"
+                    },
+                    {
+                      "field": "construction",
+                      "op": "eq",
+                      "value": "在来工法"
+                    },
+                    {
+                      "field": "fix_type",
+                      "op": "eq",
+                      "value": "窓タイプ"
+                    },
+                    {
+                      "field": "sash_width_mm",
+                      "op": "in",
+                      "value": [
+                        2550,
+                        2600
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "reset": [
+        {
+          "on_change": "window_type",
+          "action": "REEVALUATE"
+        },
+        {
+          "on_change": "construction",
+          "action": "REEVALUATE"
+        },
+        {
+          "on_change": "size_mode",
+          "action": "REEVALUATE"
+        },
+        {
+          "on_change": "fix_type",
+          "action": "REEVALUATE"
+        },
+        {
+          "on_change": "sash_width_mm",
+          "action": "REEVALUATE"
+        },
+        {
+          "on_change": "sash_height_mm",
+          "action": "REEVALUATE"
+        }
+      ],
+      "knowledge_status": "KNOWN"
+    },
+    {
+      "key": "screen_specification",
+      "label": "網戸ネット",
+      "group": "screen",
+      "parents": [
+        "window_type",
+        "construction",
+        "sash_height_mm",
+        "screen_requested"
+      ],
+      "visibility": {
+        "all": [
+          {
+            "field": "window_type",
+            "op": "ne",
+            "value": "FIX窓"
+          },
+          {
+            "field": "screen_requested",
+            "op": "eq",
+            "value": true
+          }
+        ]
+      },
+      "required": true,
+      "required_when": true,
+      "option_conditions": [
+        {
+          "value": "クリアネット",
+          "label": "クリアネット",
+          "evidence_ids": [
+            "E_SCREEN"
+          ],
+          "when": true
+        },
+        {
+          "value": "ブラックネット",
+          "label": "ブラックネット",
+          "evidence_ids": [
+            "E_SCREEN"
+          ],
+          "when": {
+            "not": {
+              "any": [
+                {
+                  "all": [
+                    {
+                      "field": "construction",
+                      "op": "eq",
+                      "value": "在来工法"
+                    },
+                    {
+                      "not": {
+                        "field": "sash_height_mm",
+                        "op": "lte",
+                        "value": 2530
+                      }
+                    },
+                    {
+                      "field": "sash_height_mm",
+                      "op": "exists",
+                      "value": true
+                    }
+                  ]
+                },
+                {
+                  "all": [
+                    {
+                      "field": "construction",
+                      "op": "eq",
+                      "value": "2×4工法"
+                    },
+                    {
+                      "not": {
+                        "field": "sash_height_mm",
+                        "op": "lte",
+                        "value": 2560
+                      }
+                    },
+                    {
+                      "field": "sash_height_mm",
+                      "op": "exists",
+                      "value": true
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "reset": [
+        {
+          "on_change": "window_type",
+          "action": "REEVALUATE"
+        },
+        {
+          "on_change": "construction",
+          "action": "REEVALUATE"
+        },
+        {
+          "on_change": "sash_height_mm",
+          "action": "REEVALUATE"
+        },
+        {
+          "on_change": "screen_requested",
+          "action": "REEVALUATE"
+        }
+      ],
+      "knowledge_status": "KNOWN"
+    },
+    {
+      "key": "handing",
+      "label": "片引き窓勝手",
+      "group": "handing",
+      "parents": [
+        "window_type"
+      ],
+      "visibility": {
+        "field": "window_type",
+        "op": "in",
+        "value": [
+          "片引き窓（偏芯）",
+          "片引き窓（均等）"
+        ]
+      },
+      "required": true,
+      "required_when": true,
+      "option_conditions": [
+        {
+          "value": "R",
+          "label": "R",
+          "evidence_ids": [
+            "E_SCREEN"
+          ],
+          "when": true
+        },
+        {
+          "value": "L",
+          "label": "L",
+          "evidence_ids": [
+            "E_SCREEN"
+          ],
+          "when": true
+        }
+      ],
+      "reset": [
+        {
+          "on_change": "window_type",
+          "action": "CLEAR"
+        }
+      ],
+      "knowledge_status": "KNOWN"
+    },
+    {
+      "key": "hardware_options",
+      "label": "標準金物に関する依頼備考",
+      "group": "options",
+      "parents": [
+        "window_type"
+      ],
+      "visibility": {
+        "field": "window_type",
+        "op": "ne",
+        "value": "FIX窓"
+      },
+      "required": false,
+      "required_when": true,
+      "option_conditions": [],
+      "reset": [
+        {
+          "on_change": "window_type",
+          "action": "REEVALUATE"
+        }
+      ],
+      "knowledge_status": "KNOWN"
+    },
+    {
+      "key": "frame_installation",
+      "label": "枠・下枠の納まり",
+      "group": "configuration",
+      "parents": [
+        "construction",
+        "window_type",
+        "fix_type"
+      ],
+      "visibility": true,
+      "required": true,
+      "required_when": true,
+      "option_conditions": [
+        {
+          "value": "在来・テラス納まり",
+          "label": "在来・テラス納まり",
+          "evidence_ids": [
+            "E_DRAWINGS"
+          ],
+          "when": {
+            "all": [
+              {
+                "field": "construction",
+                "op": "eq",
+                "value": "在来工法"
+              },
+              {
+                "any": [
+                  {
+                    "field": "window_type",
+                    "op": "ne",
+                    "value": "FIX窓"
+                  },
+                  {
+                    "field": "fix_type",
+                    "op": "eq",
+                    "value": "テラスタイプ"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "value": "在来・FIX窓タイプ納まり",
+          "label": "在来・FIX窓タイプ納まり",
+          "evidence_ids": [
+            "E_DRAWINGS"
+          ],
+          "when": {
+            "all": [
+              {
+                "field": "construction",
+                "op": "eq",
+                "value": "在来工法"
+              },
+              {
+                "field": "window_type",
+                "op": "eq",
+                "value": "FIX窓"
+              },
+              {
+                "field": "fix_type",
+                "op": "eq",
+                "value": "窓タイプ"
+              }
+            ]
+          }
+        },
+        {
+          "value": "2×4・単純段差下枠仕様",
+          "label": "2×4・単純段差下枠仕様",
+          "evidence_ids": [
+            "E_DRAWINGS"
+          ],
+          "when": {
+            "field": "construction",
+            "op": "eq",
+            "value": "2×4工法"
+          }
+        }
+      ],
+      "reset": [
+        {
+          "on_change": "construction",
+          "action": "REEVALUATE"
+        },
+        {
+          "on_change": "window_type",
+          "action": "REEVALUATE"
+        },
+        {
+          "on_change": "fix_type",
+          "action": "REEVALUATE"
+        }
+      ],
+      "knowledge_status": "KNOWN"
+    },
+    {
+      "key": "main_options",
+      "label": "主要オプション・関連商品希望",
+      "group": "options",
+      "parents": [
+        "construction",
+        "window_type",
+        "screen_requested"
+      ],
+      "visibility": true,
+      "required": false,
+      "required_when": true,
+      "option_conditions": [
+        {
+          "value": "網戸用サインプレート",
+          "label": "網戸用サインプレート",
+          "evidence_ids": [
+            "E_OPTIONS"
+          ],
+          "when": {
+            "all": [
+              {
+                "field": "window_type",
+                "op": "ne",
+                "value": "FIX窓"
+              },
+              {
+                "field": "screen_requested",
+                "op": "eq",
+                "value": true
+              }
+            ]
+          }
+        },
+        {
+          "value": "フレームⅡ",
+          "label": "フレームⅡ",
+          "evidence_ids": [
+            "E_OPTIONS"
+          ],
+          "when": {
+            "field": "construction",
+            "op": "eq",
+            "value": "在来工法"
+          }
+        },
+        {
+          "value": "日よけ用アウターシェード",
+          "label": "日よけ用アウターシェード",
+          "evidence_ids": [
+            "E_OPTIONS"
+          ],
+          "when": true
+        },
+        {
+          "value": "リウッドデッキ S EG／S",
+          "label": "リウッドデッキ S EG／S",
+          "evidence_ids": [
+            "E_OPTIONS"
+          ],
+          "when": true
+        }
+      ],
+      "reset": [
+        {
+          "on_change": "construction",
+          "action": "REEVALUATE"
+        },
+        {
+          "on_change": "window_type",
+          "action": "REEVALUATE"
+        },
+        {
+          "on_change": "screen_requested",
+          "action": "REEVALUATE"
+        }
+      ],
+      "knowledge_status": "KNOWN"
+    },
+    {
+      "key": "shutter_type",
+      "label": "シャッター希望",
+      "group": "configuration",
+      "parents": [],
+      "visibility": true,
+      "required": false,
+      "required_when": true,
+      "option_conditions": [
+        {
+          "value": "リモコンスリットシャッターGR",
+          "label": "リモコンスリットシャッターGR",
+          "evidence_ids": [
+            "E_SHUTTER"
+          ],
+          "when": true
+        },
+        {
+          "value": "リモコンシャッター",
+          "label": "リモコンシャッター",
+          "evidence_ids": [
+            "E_SHUTTER"
+          ],
+          "when": true
+        },
+        {
+          "value": "防火窓Gシリーズ リモコンシャッターGR",
+          "label": "防火窓Gシリーズ リモコンシャッターGR",
+          "evidence_ids": [
+            "E_SHUTTER"
+          ],
+          "when": true
+        }
+      ],
+      "reset": [],
+      "knowledge_status": "KNOWN"
+    },
+    {
+      "key": "shutter_box",
+      "label": "シャッターボックスカバー",
+      "group": "configuration",
+      "parents": [
+        "shutter_type"
+      ],
+      "visibility": {
+        "field": "shutter_type",
+        "op": "exists",
+        "value": true
+      },
+      "required": true,
+      "required_when": true,
+      "option_conditions": [
+        {
+          "value": "ラウンド（スチール）",
+          "label": "ラウンド（スチール）",
+          "evidence_ids": [
+            "E_BOX"
+          ],
+          "when": true
+        },
+        {
+          "value": "ラウンド（アルミ）",
+          "label": "ラウンド（アルミ）",
+          "evidence_ids": [
+            "E_BOX"
+          ],
+          "when": true
+        },
+        {
+          "value": "フラット",
+          "label": "フラット",
+          "evidence_ids": [
+            "E_BOX"
+          ],
+          "when": true
+        },
+        {
+          "value": "軒天用",
+          "label": "軒天用",
+          "evidence_ids": [
+            "E_BOX"
+          ],
+          "when": true
+        }
+      ],
+      "reset": [
+        {
+          "on_change": "shutter_type",
+          "action": "CLEAR"
+        }
+      ],
+      "knowledge_status": "KNOWN"
+    },
+    {
+      "key": "site_conditions",
+      "label": "現場条件",
+      "group": "survey",
+      "parents": [],
+      "visibility": true,
+      "required": true,
+      "required_when": true,
+      "option_conditions": [],
+      "reset": [],
+      "knowledge_status": "UNKNOWN"
+    },
+    {
+      "key": "request_quantity",
+      "label": "営業依頼数量",
+      "group": "request",
+      "parents": [],
+      "visibility": true,
+      "required": true,
+      "required_when": true,
+      "option_conditions": [],
+      "reset": [],
+      "knowledge_status": "UNKNOWN"
+    },
+    {
+      "key": "estimator_confirmation",
+      "label": "積算確認事項",
+      "group": "survey",
+      "parents": [],
+      "visibility": true,
+      "required": true,
+      "required_when": true,
+      "option_conditions": [],
+      "reset": [],
+      "knowledge_status": "UNKNOWN"
+    },
+    {
+      "key": "exterior_color",
+      "label": "外観色",
+      "group": "finish",
+      "parents": [],
+      "visibility": true,
+      "required": true,
+      "required_when": true,
+      "option_conditions": [
+        {
+          "value": "3B",
+          "label": "3B",
+          "evidence_ids": [
+            "E_COLOR"
+          ],
+          "when": true
+        },
+        {
+          "value": "3C",
+          "label": "3C",
+          "evidence_ids": [
+            "E_COLOR"
+          ],
+          "when": true
+        },
+        {
+          "value": "B1",
+          "label": "B1",
+          "evidence_ids": [
+            "E_COLOR"
+          ],
+          "when": true
+        },
+        {
+          "value": "B7",
+          "label": "B7",
+          "evidence_ids": [
+            "E_COLOR"
+          ],
+          "when": true
+        },
+        {
+          "value": "H2",
+          "label": "H2",
+          "evidence_ids": [
+            "E_COLOR"
+          ],
+          "when": true
+        },
+        {
+          "value": "S1",
+          "label": "S1",
+          "evidence_ids": [
+            "E_COLOR"
+          ],
+          "when": true
+        },
+        {
+          "value": "YW",
+          "label": "YW",
+          "evidence_ids": [
+            "E_COLOR"
+          ],
+          "when": true
+        }
+      ],
+      "reset": [],
+      "knowledge_status": "KNOWN"
+    },
+    {
+      "key": "interior_color",
+      "label": "内観色",
+      "group": "finish",
+      "parents": [
+        "exterior_color"
+      ],
+      "visibility": true,
+      "required": true,
+      "required_when": true,
+      "option_conditions": [
+        {
+          "value": "3B",
+          "label": "3B",
+          "evidence_ids": [
+            "E_COLOR"
+          ],
+          "when": {
+            "field": "exterior_color",
+            "op": "eq",
+            "value": "3B"
+          }
+        },
+        {
+          "value": "3C",
+          "label": "3C",
+          "evidence_ids": [
+            "E_COLOR"
+          ],
+          "when": {
+            "field": "exterior_color",
+            "op": "eq",
+            "value": "3C"
+          }
+        },
+        {
+          "value": "B1",
+          "label": "B1",
+          "evidence_ids": [
+            "E_COLOR"
+          ],
+          "when": {
+            "field": "exterior_color",
+            "op": "eq",
+            "value": "B1"
+          }
+        },
+        {
+          "value": "B7",
+          "label": "B7",
+          "evidence_ids": [
+            "E_COLOR"
+          ],
+          "when": {
+            "field": "exterior_color",
+            "op": "eq",
+            "value": "B7"
+          }
+        },
+        {
+          "value": "ET",
+          "label": "ET",
+          "evidence_ids": [
+            "E_COLOR"
+          ],
+          "when": {
+            "field": "exterior_color",
+            "op": "eq",
+            "value": "H2"
+          }
+        },
+        {
+          "value": "CD",
+          "label": "CD",
+          "evidence_ids": [
+            "E_COLOR"
+          ],
+          "when": {
+            "field": "exterior_color",
+            "op": "in",
+            "value": [
+              "B1",
+              "B7",
+              "H2",
+              "S1",
+              "YW"
+            ]
+          }
+        },
+        {
+          "value": "CE",
+          "label": "CE",
+          "evidence_ids": [
+            "E_COLOR"
+          ],
+          "when": {
+            "field": "exterior_color",
+            "op": "in",
+            "value": [
+              "B1",
+              "B7",
+              "H2",
+              "S1",
+              "YW"
+            ]
+          }
+        },
+        {
+          "value": "CM",
+          "label": "CM",
+          "evidence_ids": [
+            "E_COLOR"
+          ],
+          "when": {
+            "field": "exterior_color",
+            "op": "in",
+            "value": [
+              "B1",
+              "B7",
+              "H2",
+              "S1",
+              "YW"
+            ]
+          }
+        },
+        {
+          "value": "YW",
+          "label": "YW",
+          "evidence_ids": [
+            "E_COLOR"
+          ],
+          "when": {
+            "field": "exterior_color",
+            "op": "in",
+            "value": [
+              "B1",
+              "B7",
+              "H2",
+              "S1",
+              "YW"
+            ]
+          }
+        }
+      ],
+      "reset": [
+        {
+          "on_change": "exterior_color",
+          "action": "REEVALUATE"
+        }
+      ],
+      "knowledge_status": "KNOWN"
+    },
+    {
+      "key": "handle_color",
+      "label": "ハンドル色",
+      "group": "finish",
+      "parents": [
+        "interior_color",
+        "window_type"
+      ],
+      "visibility": {
+        "field": "window_type",
+        "op": "ne",
+        "value": "FIX窓"
+      },
+      "required": true,
+      "required_when": true,
+      "option_conditions": [
+        {
+          "value": "ブラック",
+          "label": "ブラック",
+          "evidence_ids": [
+            "E_COLOR"
+          ],
+          "when": {
+            "field": "interior_color",
+            "op": "in",
+            "value": [
+              "3B",
+              "3C",
+              "B1",
+              "B7",
+              "CM"
+            ]
+          }
+        },
+        {
+          "value": "シルバー",
+          "label": "シルバー",
+          "evidence_ids": [
+            "E_COLOR"
+          ],
+          "when": {
+            "field": "interior_color",
+            "op": "in",
+            "value": [
+              "ET",
+              "CD",
+              "CE"
+            ]
+          }
+        },
+        {
+          "value": "ホワイト",
+          "label": "ホワイト",
+          "evidence_ids": [
+            "E_COLOR"
+          ],
+          "when": {
+            "field": "interior_color",
+            "op": "eq",
+            "value": "YW"
+          }
+        }
+      ],
+      "reset": [
+        {
+          "on_change": "interior_color",
+          "action": "REEVALUATE"
+        },
+        {
+          "on_change": "window_type",
+          "action": "REEVALUATE"
+        }
+      ],
+      "knowledge_status": "KNOWN"
+    },
+    {
+      "key": "fix_type",
+      "label": "FIX区分",
+      "group": "configuration",
+      "parents": [
+        "window_type",
+        "construction"
+      ],
+      "visibility": {
+        "field": "window_type",
+        "op": "eq",
+        "value": "FIX窓"
+      },
+      "required": true,
+      "required_when": true,
+      "option_conditions": [
+        {
+          "value": "窓タイプ",
+          "label": "窓タイプ",
+          "evidence_ids": [
+            "E_DIM"
+          ],
+          "when": {
+            "field": "construction",
+            "op": "eq",
+            "value": "在来工法"
+          }
+        },
+        {
+          "value": "テラスタイプ",
+          "label": "テラスタイプ",
+          "evidence_ids": [
+            "E_DIM"
+          ],
+          "when": true
+        }
+      ],
+      "reset": [
+        {
+          "on_change": "window_type",
+          "action": "REEVALUATE"
+        },
+        {
+          "on_change": "construction",
+          "action": "REEVALUATE"
+        }
+      ],
+      "knowledge_status": "KNOWN"
+    },
+    {
+      "key": "sash_width_mm",
+      "label": "希望サッシW",
+      "group": "size",
+      "parents": [
+        "window_type",
+        "construction",
+        "size_mode",
+        "fix_type"
+      ],
+      "visibility": true,
+      "required": true,
+      "required_when": true,
+      "option_conditions": [],
+      "reset": [
+        {
+          "on_change": "window_type",
+          "action": "CLEAR"
+        },
+        {
+          "on_change": "construction",
+          "action": "CLEAR"
+        },
+        {
+          "on_change": "size_mode",
+          "action": "CLEAR"
+        },
+        {
+          "on_change": "fix_type",
+          "action": "CLEAR"
+        }
+      ],
+      "knowledge_status": "KNOWN"
+    },
+    {
+      "key": "sash_height_mm",
+      "label": "希望サッシH",
+      "group": "size",
+      "parents": [
+        "window_type",
+        "construction",
+        "size_mode",
+        "fix_type"
+      ],
+      "visibility": true,
+      "required": true,
+      "required_when": true,
+      "option_conditions": [],
+      "reset": [
+        {
+          "on_change": "window_type",
+          "action": "CLEAR"
+        },
+        {
+          "on_change": "construction",
+          "action": "CLEAR"
+        },
+        {
+          "on_change": "size_mode",
+          "action": "CLEAR"
+        },
+        {
+          "on_change": "fix_type",
+          "action": "CLEAR"
+        }
+      ],
+      "knowledge_status": "KNOWN"
+    },
+    {
+      "key": "raw_measurements",
+      "label": "呼称・内法・開口寸法原文",
+      "group": "size",
+      "parents": [],
+      "visibility": true,
+      "required": false,
+      "required_when": true,
+      "option_conditions": [],
+      "reset": [],
+      "knowledge_status": "KNOWN"
+    },
+    {
+      "key": "installation_environment",
+      "label": "設置環境",
+      "group": "survey",
+      "parents": [],
+      "visibility": true,
+      "required": true,
+      "required_when": true,
+      "option_conditions": [
+        {
+          "value": "NON_BATHROOM",
+          "label": "NON_BATHROOM",
+          "evidence_ids": [
+            "E_SITE"
+          ],
+          "when": true
+        },
+        {
+          "value": "BATHROOM",
+          "label": "BATHROOM",
+          "evidence_ids": [
+            "E_SITE"
+          ],
+          "when": true
+        },
+        {
+          "value": "高温・多湿",
+          "label": "高温・多湿",
+          "evidence_ids": [
+            "E_SITE"
+          ],
+          "when": true
+        }
+      ],
+      "reset": [],
+      "knowledge_status": "KNOWN"
+    },
+    {
+      "key": "standalone_fire_use",
+      "label": "本商品単独を防火設備として使用する計画",
+      "group": "survey",
+      "parents": [],
+      "visibility": true,
+      "required": true,
+      "required_when": true,
+      "option_conditions": [],
+      "reset": [],
+      "knowledge_status": "KNOWN"
+    },
+    {
+      "key": "collision_seal",
+      "label": "ガラス面の衝突防止シール貼付条件",
+      "group": "survey",
+      "parents": [],
+      "visibility": true,
+      "required": true,
+      "required_when": true,
+      "option_conditions": [],
+      "reset": [],
+      "knowledge_status": "KNOWN"
+    },
+    {
+      "key": "drainage_blocked",
+      "label": "下枠前面排水弁をふさぐ計画",
+      "group": "survey",
+      "parents": [
+        "window_type",
+        "fix_type"
+      ],
+      "visibility": {
+        "any": [
+          {
+            "field": "window_type",
+            "op": "ne",
+            "value": "FIX窓"
+          },
+          {
+            "all": [
+              {
+                "field": "window_type",
+                "op": "eq",
+                "value": "FIX窓"
+              },
+              {
+                "field": "fix_type",
+                "op": "eq",
+                "value": "テラスタイプ"
+              }
+            ]
+          }
+        ]
+      },
+      "required": true,
+      "required_when": true,
+      "option_conditions": [],
+      "reset": [
+        {
+          "on_change": "window_type",
+          "action": "REEVALUATE"
+        },
+        {
+          "on_change": "fix_type",
+          "action": "REEVALUATE"
+        }
+      ],
+      "knowledge_status": "KNOWN"
+    },
+    {
+      "key": "attachment_above_rail",
+      "label": "下枠アタッチメントがレール上端より上がる計画",
+      "group": "survey",
+      "parents": [
+        "construction",
+        "window_type"
+      ],
+      "visibility": {
+        "all": [
+          {
+            "field": "construction",
+            "op": "eq",
+            "value": "2×4工法"
+          },
+          {
+            "field": "window_type",
+            "op": "ne",
+            "value": "FIX窓"
+          }
+        ]
+      },
+      "required": true,
+      "required_when": true,
+      "option_conditions": [],
+      "reset": [
+        {
+          "on_change": "construction",
+          "action": "REEVALUATE"
+        },
+        {
+          "on_change": "window_type",
+          "action": "REEVALUATE"
+        }
+      ],
+      "knowledge_status": "KNOWN"
+    },
+    {
+      "key": "glass_solar",
+      "label": "Low-E性能",
+      "group": "glass",
+      "parents": [
+        "glass_specification"
+      ],
+      "visibility": true,
+      "required": true,
+      "required_when": true,
+      "option_conditions": [
+        {
+          "value": "日射遮蔽型（ダブルLow-E）",
+          "label": "日射遮蔽型（ダブルLow-E）",
+          "evidence_ids": [
+            "E_GLASS_DETAIL"
+          ],
+          "when": {
+            "field": "glass_specification",
+            "op": "eq",
+            "value": "トリプルガラス"
+          }
+        },
+        {
+          "value": "日射遮蔽型（遮熱タイプ）",
+          "label": "日射遮蔽型（遮熱タイプ）",
+          "evidence_ids": [
+            "E_GLASS_DETAIL"
+          ],
+          "when": {
+            "field": "glass_specification",
+            "op": "ne",
+            "value": "トリプルガラス"
+          }
+        },
+        {
+          "value": "日射遮蔽型（断熱タイプ）",
+          "label": "日射遮蔽型（断熱タイプ）",
+          "evidence_ids": [
+            "E_GLASS_DETAIL"
+          ],
+          "when": {
+            "field": "glass_specification",
+            "op": "ne",
+            "value": "トリプルガラス"
+          }
+        },
+        {
+          "value": "日射取得型（断熱タイプ）",
+          "label": "日射取得型（断熱タイプ）",
+          "evidence_ids": [
+            "E_GLASS_DETAIL"
+          ],
+          "when": {
+            "field": "glass_specification",
+            "op": "ne",
+            "value": "トリプルガラス"
+          }
+        }
+      ],
+      "reset": [
+        {
+          "on_change": "glass_specification",
+          "action": "REEVALUATE"
+        }
+      ],
+      "knowledge_status": "KNOWN"
+    },
+    {
+      "key": "glass_color",
+      "label": "ガラス色",
+      "group": "glass",
+      "parents": [
+        "glass_solar"
+      ],
+      "visibility": true,
+      "required": true,
+      "required_when": true,
+      "option_conditions": [
+        {
+          "value": "ブルー",
+          "label": "ブルー",
+          "evidence_ids": [
+            "E_GLASS_DETAIL"
+          ],
+          "when": {
+            "field": "glass_solar",
+            "op": "ne",
+            "value": "日射取得型（断熱タイプ）"
+          }
+        },
+        {
+          "value": "ブロンズ",
+          "label": "ブロンズ",
+          "evidence_ids": [
+            "E_GLASS_DETAIL"
+          ],
+          "when": {
+            "field": "glass_solar",
+            "op": "in",
+            "value": [
+              "日射遮蔽型（ダブルLow-E）",
+              "日射遮蔽型（断熱タイプ）"
+            ]
+          }
+        },
+        {
+          "value": "ニュートラル",
+          "label": "ニュートラル",
+          "evidence_ids": [
+            "E_GLASS_DETAIL"
+          ],
+          "when": {
+            "field": "glass_solar",
+            "op": "in",
+            "value": [
+              "日射遮蔽型（ダブルLow-E）",
+              "日射取得型（断熱タイプ）"
+            ]
+          }
+        }
+      ],
+      "reset": [
+        {
+          "on_change": "glass_solar",
+          "action": "REEVALUATE"
+        }
+      ],
+      "knowledge_status": "KNOWN"
+    },
+    {
+      "key": "glass_surface",
+      "label": "ガラス種",
+      "group": "glass",
+      "parents": [
+        "glass_specification"
+      ],
+      "visibility": true,
+      "required": true,
+      "required_when": true,
+      "option_conditions": [
+        {
+          "value": "透明",
+          "label": "透明",
+          "evidence_ids": [
+            "E_GLASS_DETAIL"
+          ],
+          "when": true
+        },
+        {
+          "value": "型",
+          "label": "型",
+          "evidence_ids": [
+            "E_GLASS_DETAIL"
+          ],
+          "when": true
+        }
+      ],
+      "reset": [
+        {
+          "on_change": "glass_specification",
+          "action": "REEVALUATE"
+        }
+      ],
+      "knowledge_status": "KNOWN"
+    },
+    {
+      "key": "gas",
+      "label": "中空層（ガス）",
+      "group": "glass",
+      "parents": [
+        "glass_specification"
+      ],
+      "visibility": true,
+      "required": true,
+      "required_when": true,
+      "option_conditions": [
+        {
+          "value": "アルゴンガス入",
+          "label": "アルゴンガス入",
+          "evidence_ids": [
+            "E_GLASS_DETAIL"
+          ],
+          "when": true
+        },
+        {
+          "value": "乾燥空気",
+          "label": "乾燥空気",
+          "evidence_ids": [
+            "E_GLASS_DETAIL"
+          ],
+          "when": {
+            "field": "glass_specification",
+            "op": "ne",
+            "value": "トリプルガラス"
+          }
+        }
+      ],
+      "reset": [
+        {
+          "on_change": "glass_specification",
+          "action": "REEVALUATE"
+        }
+      ],
+      "knowledge_status": "KNOWN"
+    },
+    {
+      "key": "spacer",
+      "label": "スペーサー",
+      "group": "glass",
+      "parents": [],
+      "visibility": true,
+      "required": true,
+      "required_when": true,
+      "option_conditions": [
+        {
+          "value": "樹脂スペーサー",
+          "label": "樹脂スペーサー",
+          "evidence_ids": [
+            "E_GLASS_DETAIL"
+          ],
+          "when": true
+        },
+        {
+          "value": "アルミスペーサー",
+          "label": "アルミスペーサー",
+          "evidence_ids": [
+            "E_GLASS_DETAIL"
+          ],
+          "when": true
+        }
+      ],
+      "reset": [],
+      "knowledge_status": "KNOWN"
+    },
+    {
+      "key": "screen_requested",
+      "label": "スライド網戸を見積依頼する",
+      "group": "screen",
+      "parents": [
+        "window_type"
+      ],
+      "visibility": {
+        "field": "window_type",
+        "op": "ne",
+        "value": "FIX窓"
+      },
+      "required": true,
+      "required_when": true,
+      "option_conditions": [],
+      "reset": [
+        {
+          "on_change": "window_type",
+          "action": "REEVALUATE"
+        }
+      ],
+      "knowledge_status": "KNOWN"
+    },
+    {
+      "key": "shutter_box_as_eave",
+      "label": "軒天用ボックスカバーをひさしに使用する計画",
+      "group": "configuration",
+      "parents": [
+        "shutter_type",
+        "shutter_box"
+      ],
+      "visibility": {
+        "all": [
+          {
+            "field": "shutter_type",
+            "op": "eq",
+            "value": "防火窓Gシリーズ リモコンシャッターGR"
+          },
+          {
+            "field": "shutter_box",
+            "op": "eq",
+            "value": "軒天用"
+          }
+        ]
+      },
+      "required": true,
+      "required_when": true,
+      "option_conditions": [],
+      "reset": [
+        {
+          "on_change": "shutter_type",
+          "action": "REEVALUATE"
+        },
+        {
+          "on_change": "shutter_box",
+          "action": "REEVALUATE"
+        }
+      ],
+      "knowledge_status": "KNOWN"
+    },
+    {
+      "key": "shutter_jema",
+      "label": "JEM-A端子付の依頼",
+      "group": "configuration",
+      "parents": [
+        "shutter_type"
+      ],
+      "visibility": {
+        "field": "shutter_type",
+        "op": "exists",
+        "value": true
+      },
+      "required": true,
+      "required_when": true,
+      "option_conditions": [],
+      "reset": [
+        {
+          "on_change": "shutter_type",
+          "action": "REEVALUATE"
+        }
+      ],
+      "knowledge_status": "KNOWN"
+    },
+    {
+      "key": "shutter_color",
+      "label": "シャッター色",
+      "group": "configuration",
+      "parents": [
+        "shutter_type"
+      ],
+      "visibility": {
+        "field": "shutter_type",
+        "op": "exists",
+        "value": true
+      },
+      "required": true,
+      "required_when": true,
+      "option_conditions": [
+        {
+          "value": "B1 ブラウン",
+          "label": "B1 ブラウン",
+          "evidence_ids": [
+            "E_SHUTTER_DETAIL"
+          ],
+          "when": true
+        },
+        {
+          "value": "B7 カームブラック",
+          "label": "B7 カームブラック",
+          "evidence_ids": [
+            "E_SHUTTER_DETAIL"
+          ],
+          "when": true
+        },
+        {
+          "value": "H2 プラチナステン",
+          "label": "H2 プラチナステン",
+          "evidence_ids": [
+            "E_SHUTTER_DETAIL"
+          ],
+          "when": true
+        },
+        {
+          "value": "S1 ピュアシルバー",
+          "label": "S1 ピュアシルバー",
+          "evidence_ids": [
+            "E_SHUTTER_DETAIL"
+          ],
+          "when": true
+        },
+        {
+          "value": "YW ホワイト",
+          "label": "YW ホワイト",
+          "evidence_ids": [
+            "E_SHUTTER_DETAIL"
+          ],
+          "when": true
+        }
+      ],
+      "reset": [
+        {
+          "on_change": "shutter_type",
+          "action": "REEVALUATE"
+        }
+      ],
+      "knowledge_status": "KNOWN"
+    },
+    {
+      "key": "shutter_emergency",
+      "label": "シャッター非常開放機構",
+      "group": "configuration",
+      "parents": [
+        "shutter_type"
+      ],
+      "visibility": {
+        "field": "shutter_type",
+        "op": "exists",
+        "value": true
+      },
+      "required": true,
+      "required_when": true,
+      "option_conditions": [
+        {
+          "value": "標準装備",
+          "label": "標準装備",
+          "evidence_ids": [
+            "E_SHUTTER_DETAIL"
+          ],
+          "when": true
+        }
+      ],
+      "reset": [
+        {
+          "on_change": "shutter_type",
+          "action": "REEVALUATE"
+        }
+      ],
+      "knowledge_status": "KNOWN"
+    },
+    {
+      "key": "dimension_basis",
+      "label": "入力寸法の基準",
+      "group": "size",
+      "parents": [],
+      "visibility": true,
+      "required": true,
+      "required_when": true,
+      "option_conditions": [
+        {
+          "value": "サッシ外寸W/H（mm）",
+          "label": "サッシ外寸W/H（mm）",
+          "evidence_ids": [
+            "E_ORDER_ROUTE"
+          ],
+          "when": true
+        }
+      ],
+      "reset": [],
+      "knowledge_status": "KNOWN"
+    },
+    {
+      "key": "custom_request_route",
+      "label": "オーダー寸法の引渡し区分",
+      "group": "size",
+      "parents": [
+        "size_mode"
+      ],
+      "visibility": {
+        "field": "size_mode",
+        "op": "eq",
+        "value": "サイズオーダー"
+      },
+      "required": true,
+      "required_when": true,
+      "option_conditions": [
+        {
+          "value": "製作可否・障子割付をメーカー確認する見積依頼",
+          "label": "製作可否・障子割付をメーカー確認する見積依頼",
+          "evidence_ids": [
+            "E_ORDER_ROUTE"
+          ],
+          "when": true
+        }
+      ],
+      "reset": [
+        {
+          "on_change": "size_mode",
+          "action": "REEVALUATE"
+        }
+      ],
+      "knowledge_status": "KNOWN"
+    },
+    {
+      "key": "glass_assembly_route",
+      "label": "ガラス構成・押縁の確認引渡し",
+      "group": "survey",
+      "parents": [],
+      "visibility": true,
+      "required": true,
+      "required_when": true,
+      "option_conditions": [
+        {
+          "value": "標準構成表と部位別ガラス厚・押縁を積算で照合し確定",
+          "label": "標準構成表と部位別ガラス厚・押縁を積算で照合し確定",
+          "evidence_ids": [
+            "E_GLASS_ASSEMBLY"
+          ],
+          "when": true
+        }
+      ],
+      "reset": [],
+      "knowledge_status": "KNOWN"
+    },
+    {
+      "key": "manufacture_confirmation",
+      "label": "メーカー最終製作・ガラス構成確認結果",
+      "group": "survey",
+      "parents": [],
+      "visibility": true,
+      "required": true,
+      "required_when": true,
+      "option_conditions": [],
+      "reset": [],
+      "knowledge_status": "UNKNOWN"
+    }
+  ],
+  "constraints": [
+    {
+      "rule_id": "R_STRUCTURE",
+      "kind": "FORBID",
+      "when": {
+        "field": "construction",
+        "op": "in",
+        "value": [
+          "ALC鉄骨造",
+          "RC造"
+        ]
+      },
+      "field_ids": [
+        "construction"
+      ],
+      "evidence_ids": [
+        "E_SITE"
+      ]
+    },
+    {
+      "rule_id": "R_ENV",
+      "kind": "FORBID",
+      "when": {
+        "field": "installation_environment",
+        "op": "in",
+        "value": [
+          "BATHROOM",
+          "高温・多湿"
+        ]
+      },
+      "field_ids": [
+        "installation_environment"
+      ],
+      "evidence_ids": [
+        "E_SITE"
+      ]
+    },
+    {
+      "rule_id": "R_STANDALONE_FIRE",
+      "kind": "FORBID",
+      "when": {
+        "field": "standalone_fire_use",
+        "op": "eq",
+        "value": true
+      },
+      "field_ids": [
+        "standalone_fire_use"
+      ],
+      "evidence_ids": [
+        "E_SITE"
+      ]
+    },
+    {
+      "rule_id": "R_COLLISION_SEAL",
+      "kind": "FORBID",
+      "when": {
+        "field": "collision_seal",
+        "op": "eq",
+        "value": false
+      },
+      "field_ids": [
+        "collision_seal"
+      ],
+      "evidence_ids": [
+        "E_COLLISION"
+      ]
+    },
+    {
+      "rule_id": "R_DRAIN",
+      "kind": "FORBID",
+      "when": {
+        "field": "drainage_blocked",
+        "op": "eq",
+        "value": true
+      },
+      "field_ids": [
+        "drainage_blocked"
+      ],
+      "evidence_ids": [
+        "E_DRAIN"
+      ]
+    },
+    {
+      "rule_id": "R_ATTACHMENT",
+      "kind": "FORBID",
+      "when": {
+        "field": "attachment_above_rail",
+        "op": "eq",
+        "value": true
+      },
+      "field_ids": [
+        "attachment_above_rail"
+      ],
+      "evidence_ids": [
+        "E_DRAIN"
+      ]
+    },
+    {
+      "rule_id": "R_FIX_SHUTTER",
+      "kind": "FORBID",
+      "when": {
+        "all": [
+          {
+            "field": "window_type",
+            "op": "eq",
+            "value": "FIX窓"
+          },
+          {
+            "field": "shutter_type",
+            "op": "exists",
+            "value": true
+          }
+        ]
+      },
+      "field_ids": [
+        "window_type",
+        "shutter_type"
+      ],
+      "evidence_ids": [
+        "E_SHUTTER"
+      ]
+    },
+    {
+      "rule_id": "R_FIRE_LEFT",
+      "kind": "FORBID",
+      "when": {
+        "all": [
+          {
+            "field": "shutter_type",
+            "op": "eq",
+            "value": "防火窓Gシリーズ リモコンシャッターGR"
+          },
+          {
+            "field": "window_type",
+            "op": "in",
+            "value": [
+              "片引き窓（偏芯）",
+              "片引き窓（均等）"
+            ]
+          },
+          {
+            "field": "handing",
+            "op": "eq",
+            "value": "L"
+          }
+        ]
+      },
+      "field_ids": [
+        "shutter_type",
+        "window_type",
+        "handing"
+      ],
+      "evidence_ids": [
+        "E_SHUTTER"
+      ]
+    },
+    {
+      "rule_id": "R_SLIT_STEEL",
+      "kind": "FORBID",
+      "when": {
+        "all": [
+          {
+            "field": "shutter_type",
+            "op": "eq",
+            "value": "リモコンスリットシャッターGR"
+          },
+          {
+            "field": "shutter_box",
+            "op": "eq",
+            "value": "ラウンド（スチール）"
+          }
+        ]
+      },
+      "field_ids": [
+        "shutter_type",
+        "shutter_box"
+      ],
+      "evidence_ids": [
+        "E_BOX"
+      ]
+    },
+    {
+      "rule_id": "R_FIRE_COVER",
+      "kind": "FORBID",
+      "when": {
+        "all": [
+          {
+            "field": "shutter_type",
+            "op": "eq",
+            "value": "防火窓Gシリーズ リモコンシャッターGR"
+          },
+          {
+            "field": "shutter_box",
+            "op": "in",
+            "value": [
+              "ラウンド（アルミ）",
+              "フラット"
+            ]
+          }
+        ]
+      },
+      "field_ids": [
+        "shutter_type",
+        "shutter_box"
+      ],
+      "evidence_ids": [
+        "E_BOX"
+      ]
+    },
+    {
+      "rule_id": "R_STANDARD_CELL",
+      "kind": "FORBID",
+      "when": {
+        "all": [
+          {
+            "field": "size_mode",
+            "op": "eq",
+            "value": "規格"
+          },
+          {
+            "not": {
+              "any": [
+                {
+                  "all": [
+                    {
+                      "field": "construction",
+                      "op": "eq",
+                      "value": "在来工法"
+                    },
+                    {
+                      "field": "window_type",
+                      "op": "eq",
+                      "value": "片引き窓（偏芯）"
+                    },
+                    {
+                      "field": "sash_width_mm",
+                      "op": "in",
+                      "value": [
+                        2550,
+                        2600,
+                        2820,
+                        2870
+                      ]
+                    },
+                    {
+                      "field": "sash_height_mm",
+                      "op": "in",
+                      "value": [
+                        1830,
+                        2030,
+                        2230,
+                        2330,
+                        2430,
+                        2530
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "all": [
+                    {
+                      "field": "construction",
+                      "op": "eq",
+                      "value": "在来工法"
+                    },
+                    {
+                      "field": "window_type",
+                      "op": "eq",
+                      "value": "片引き窓（均等）"
+                    },
+                    {
+                      "field": "sash_width_mm",
+                      "op": "in",
+                      "value": [
+                        1640,
+                        1690,
+                        2550,
+                        2600,
+                        2820,
+                        2870
+                      ]
+                    },
+                    {
+                      "field": "sash_height_mm",
+                      "op": "in",
+                      "value": [
+                        1830,
+                        2030,
+                        2230,
+                        2330,
+                        2430,
+                        2530
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "all": [
+                    {
+                      "field": "construction",
+                      "op": "eq",
+                      "value": "在来工法"
+                    },
+                    {
+                      "field": "window_type",
+                      "op": "eq",
+                      "value": "両袖片引き窓"
+                    },
+                    {
+                      "field": "sash_width_mm",
+                      "op": "in",
+                      "value": [
+                        2550,
+                        2600
+                      ]
+                    },
+                    {
+                      "field": "sash_height_mm",
+                      "op": "in",
+                      "value": [
+                        1830,
+                        2030,
+                        2230,
+                        2330
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "all": [
+                    {
+                      "field": "construction",
+                      "op": "eq",
+                      "value": "在来工法"
+                    },
+                    {
+                      "field": "window_type",
+                      "op": "eq",
+                      "value": "両袖片引き窓"
+                    },
+                    {
+                      "field": "sash_width_mm",
+                      "op": "in",
+                      "value": [
+                        2820,
+                        2870,
+                        3510
+                      ]
+                    },
+                    {
+                      "field": "sash_height_mm",
+                      "op": "in",
+                      "value": [
+                        1830,
+                        2030,
+                        2230,
+                        2330,
+                        2430,
+                        2530
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "all": [
+                    {
+                      "field": "construction",
+                      "op": "eq",
+                      "value": "在来工法"
+                    },
+                    {
+                      "field": "window_type",
+                      "op": "eq",
+                      "value": "FIX窓"
+                    },
+                    {
+                      "field": "fix_type",
+                      "op": "eq",
+                      "value": "窓タイプ"
+                    },
+                    {
+                      "field": "sash_width_mm",
+                      "op": "in",
+                      "value": [
+                        730,
+                        1690,
+                        2550,
+                        2600
+                      ]
+                    },
+                    {
+                      "field": "sash_height_mm",
+                      "op": "in",
+                      "value": [
+                        770,
+                        970,
+                        1170,
+                        1370,
+                        1570
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "all": [
+                    {
+                      "field": "construction",
+                      "op": "eq",
+                      "value": "在来工法"
+                    },
+                    {
+                      "field": "window_type",
+                      "op": "eq",
+                      "value": "FIX窓"
+                    },
+                    {
+                      "field": "fix_type",
+                      "op": "eq",
+                      "value": "テラスタイプ"
+                    },
+                    {
+                      "field": "sash_width_mm",
+                      "op": "in",
+                      "value": [
+                        640,
+                        1640,
+                        1690
+                      ]
+                    },
+                    {
+                      "field": "sash_height_mm",
+                      "op": "in",
+                      "value": [
+                        1830,
+                        2030,
+                        2230,
+                        2330,
+                        2430,
+                        2530
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "all": [
+                    {
+                      "field": "construction",
+                      "op": "eq",
+                      "value": "2×4工法"
+                    },
+                    {
+                      "field": "window_type",
+                      "op": "eq",
+                      "value": "片引き窓（偏芯）"
+                    },
+                    {
+                      "field": "sash_width_mm",
+                      "op": "in",
+                      "value": [
+                        2470
+                      ]
+                    },
+                    {
+                      "field": "sash_height_mm",
+                      "op": "in",
+                      "value": [
+                        1860,
+                        2060,
+                        2260,
+                        2360,
+                        2460,
+                        2560
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "all": [
+                    {
+                      "field": "construction",
+                      "op": "eq",
+                      "value": "2×4工法"
+                    },
+                    {
+                      "field": "window_type",
+                      "op": "eq",
+                      "value": "片引き窓（均等）"
+                    },
+                    {
+                      "field": "sash_width_mm",
+                      "op": "in",
+                      "value": [
+                        1640,
+                        2470
+                      ]
+                    },
+                    {
+                      "field": "sash_height_mm",
+                      "op": "in",
+                      "value": [
+                        1860,
+                        2060,
+                        2260,
+                        2360,
+                        2460,
+                        2560
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "all": [
+                    {
+                      "field": "construction",
+                      "op": "eq",
+                      "value": "2×4工法"
+                    },
+                    {
+                      "field": "window_type",
+                      "op": "eq",
+                      "value": "両袖片引き窓"
+                    },
+                    {
+                      "field": "sash_width_mm",
+                      "op": "in",
+                      "value": [
+                        2740
+                      ]
+                    },
+                    {
+                      "field": "sash_height_mm",
+                      "op": "in",
+                      "value": [
+                        1860,
+                        2060,
+                        2260,
+                        2360,
+                        2460,
+                        2560
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "all": [
+                    {
+                      "field": "construction",
+                      "op": "eq",
+                      "value": "2×4工法"
+                    },
+                    {
+                      "field": "window_type",
+                      "op": "eq",
+                      "value": "FIX窓"
+                    },
+                    {
+                      "field": "fix_type",
+                      "op": "eq",
+                      "value": "テラスタイプ"
+                    },
+                    {
+                      "field": "sash_width_mm",
+                      "op": "in",
+                      "value": [
+                        1640
+                      ]
+                    },
+                    {
+                      "field": "sash_height_mm",
+                      "op": "in",
+                      "value": [
+                        1860,
+                        2060,
+                        2260,
+                        2360,
+                        2460,
+                        2560
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "field_ids": [
+        "size_mode",
+        "construction",
+        "window_type",
+        "fix_type",
+        "sash_width_mm",
+        "sash_height_mm"
+      ],
+      "evidence_ids": [
+        "E_STANDARD"
+      ]
+    },
+    {
+      "rule_id": "R_FIRE_EAVE",
+      "kind": "FORBID",
+      "when": {
+        "field": "shutter_box_as_eave",
+        "op": "eq",
+        "value": true
+      },
+      "field_ids": [
+        "shutter_box_as_eave"
+      ],
+      "evidence_ids": [
+        "E_BOX"
+      ]
+    },
+    {
+      "rule_id": "R_SHUTTER_DIMENSIONS",
+      "kind": "FORBID",
+      "when": {
+        "all": [
+          {
+            "field": "shutter_type",
+            "op": "exists",
+            "value": true
+          },
+          {
+            "field": "sash_width_mm",
+            "op": "exists",
+            "value": true
+          },
+          {
+            "field": "sash_height_mm",
+            "op": "exists",
+            "value": true
+          },
+          {
+            "not": {
+              "any": [
+                {
+                  "all": [
+                    {
+                      "all": [
+                        {
+                          "field": "shutter_type",
+                          "op": "exists",
+                          "value": true
+                        },
+                        {
+                          "not": {
+                            "field": "shutter_type",
+                            "op": "eq",
+                            "value": "防火窓Gシリーズ リモコンシャッターGR"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "field": "window_type",
+                      "op": "in",
+                      "value": [
+                        "片引き窓（偏芯）",
+                        "片引き窓（均等）"
+                      ]
+                    },
+                    {
+                      "all": [
+                        {
+                          "field": "sash_width_mm",
+                          "op": "gte",
+                          "value": 1540
+                        },
+                        {
+                          "field": "sash_width_mm",
+                          "op": "lte",
+                          "value": 3000
+                        }
+                      ]
+                    },
+                    {
+                      "any": [
+                        {
+                          "all": [
+                            {
+                              "field": "construction",
+                              "op": "eq",
+                              "value": "在来工法"
+                            },
+                            {
+                              "all": [
+                                {
+                                  "field": "sash_height_mm",
+                                  "op": "gte",
+                                  "value": 1530
+                                },
+                                {
+                                  "field": "sash_height_mm",
+                                  "op": "lte",
+                                  "value": 2470
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "all": [
+                            {
+                              "field": "construction",
+                              "op": "eq",
+                              "value": "2×4工法"
+                            },
+                            {
+                              "all": [
+                                {
+                                  "field": "sash_height_mm",
+                                  "op": "gte",
+                                  "value": 1560
+                                },
+                                {
+                                  "field": "sash_height_mm",
+                                  "op": "lte",
+                                  "value": 2500
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "all": [
+                    {
+                      "all": [
+                        {
+                          "field": "shutter_type",
+                          "op": "exists",
+                          "value": true
+                        },
+                        {
+                          "not": {
+                            "field": "shutter_type",
+                            "op": "eq",
+                            "value": "防火窓Gシリーズ リモコンシャッターGR"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "field": "window_type",
+                      "op": "eq",
+                      "value": "両袖片引き窓"
+                    },
+                    {
+                      "all": [
+                        {
+                          "field": "sash_width_mm",
+                          "op": "gte",
+                          "value": 2550
+                        },
+                        {
+                          "field": "sash_width_mm",
+                          "op": "lte",
+                          "value": 3004
+                        }
+                      ]
+                    },
+                    {
+                      "any": [
+                        {
+                          "all": [
+                            {
+                              "field": "construction",
+                              "op": "eq",
+                              "value": "在来工法"
+                            },
+                            {
+                              "all": [
+                                {
+                                  "field": "sash_height_mm",
+                                  "op": "gte",
+                                  "value": 1530
+                                },
+                                {
+                                  "field": "sash_height_mm",
+                                  "op": "lte",
+                                  "value": 2470
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "all": [
+                            {
+                              "field": "construction",
+                              "op": "eq",
+                              "value": "2×4工法"
+                            },
+                            {
+                              "all": [
+                                {
+                                  "field": "sash_height_mm",
+                                  "op": "gte",
+                                  "value": 1560
+                                },
+                                {
+                                  "field": "sash_height_mm",
+                                  "op": "lte",
+                                  "value": 2500
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "all": [
+                    {
+                      "field": "shutter_type",
+                      "op": "eq",
+                      "value": "防火窓Gシリーズ リモコンシャッターGR"
+                    },
+                    {
+                      "field": "window_type",
+                      "op": "ne",
+                      "value": "FIX窓"
+                    },
+                    {
+                      "all": [
+                        {
+                          "field": "sash_width_mm",
+                          "op": "gte",
+                          "value": 1184
+                        },
+                        {
+                          "field": "sash_width_mm",
+                          "op": "lte",
+                          "value": 2600
+                        }
+                      ]
+                    },
+                    {
+                      "any": [
+                        {
+                          "all": [
+                            {
+                              "field": "construction",
+                              "op": "eq",
+                              "value": "在来工法"
+                            },
+                            {
+                              "all": [
+                                {
+                                  "field": "sash_height_mm",
+                                  "op": "gte",
+                                  "value": 656
+                                },
+                                {
+                                  "field": "sash_height_mm",
+                                  "op": "lte",
+                                  "value": 2303
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "all": [
+                            {
+                              "field": "construction",
+                              "op": "eq",
+                              "value": "2×4工法"
+                            },
+                            {
+                              "all": [
+                                {
+                                  "field": "sash_height_mm",
+                                  "op": "gte",
+                                  "value": 686
+                                },
+                                {
+                                  "field": "sash_height_mm",
+                                  "op": "lte",
+                                  "value": 2333
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "field_ids": [
+        "shutter_type",
+        "window_type",
+        "construction",
+        "sash_width_mm",
+        "sash_height_mm"
+      ],
+      "evidence_ids": [
+        "E_SHUTTER_DETAIL"
+      ]
+    },
+    {
+      "rule_id": "R_REQUEST_OUTER_RANGE",
+      "kind": "FORBID",
+      "when": {
+        "all": [
+          {
+            "field": "sash_width_mm",
+            "op": "exists",
+            "value": true
+          },
+          {
+            "field": "sash_height_mm",
+            "op": "exists",
+            "value": true
+          },
+          {
+            "not": {
+              "any": [
+                {
+                  "all": [
+                    {
+                      "field": "window_type",
+                      "op": "in",
+                      "value": [
+                        "片引き窓（偏芯）",
+                        "片引き窓（均等）"
+                      ]
+                    },
+                    {
+                      "all": [
+                        {
+                          "field": "sash_width_mm",
+                          "op": "gte",
+                          "value": 1540
+                        },
+                        {
+                          "field": "sash_width_mm",
+                          "op": "lte",
+                          "value": 3000
+                        }
+                      ]
+                    },
+                    {
+                      "any": [
+                        {
+                          "all": [
+                            {
+                              "field": "construction",
+                              "op": "eq",
+                              "value": "在来工法"
+                            },
+                            {
+                              "all": [
+                                {
+                                  "field": "sash_height_mm",
+                                  "op": "gte",
+                                  "value": 1530
+                                },
+                                {
+                                  "field": "sash_height_mm",
+                                  "op": "lte",
+                                  "value": 2730
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "all": [
+                            {
+                              "field": "construction",
+                              "op": "eq",
+                              "value": "2×4工法"
+                            },
+                            {
+                              "all": [
+                                {
+                                  "field": "sash_height_mm",
+                                  "op": "gte",
+                                  "value": 1560
+                                },
+                                {
+                                  "field": "sash_height_mm",
+                                  "op": "lte",
+                                  "value": 2760
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "all": [
+                    {
+                      "field": "window_type",
+                      "op": "eq",
+                      "value": "両袖片引き窓"
+                    },
+                    {
+                      "all": [
+                        {
+                          "field": "sash_width_mm",
+                          "op": "gte",
+                          "value": 2550
+                        },
+                        {
+                          "field": "sash_width_mm",
+                          "op": "lte",
+                          "value": 5500
+                        }
+                      ]
+                    },
+                    {
+                      "any": [
+                        {
+                          "all": [
+                            {
+                              "field": "construction",
+                              "op": "eq",
+                              "value": "在来工法"
+                            },
+                            {
+                              "all": [
+                                {
+                                  "field": "sash_height_mm",
+                                  "op": "gte",
+                                  "value": 1530
+                                },
+                                {
+                                  "field": "sash_height_mm",
+                                  "op": "lte",
+                                  "value": 2730
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "all": [
+                            {
+                              "field": "construction",
+                              "op": "eq",
+                              "value": "2×4工法"
+                            },
+                            {
+                              "all": [
+                                {
+                                  "field": "sash_height_mm",
+                                  "op": "gte",
+                                  "value": 1560
+                                },
+                                {
+                                  "field": "sash_height_mm",
+                                  "op": "lte",
+                                  "value": 2760
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "all": [
+                    {
+                      "field": "window_type",
+                      "op": "eq",
+                      "value": "FIX窓"
+                    },
+                    {
+                      "field": "fix_type",
+                      "op": "eq",
+                      "value": "窓タイプ"
+                    },
+                    {
+                      "field": "construction",
+                      "op": "eq",
+                      "value": "在来工法"
+                    },
+                    {
+                      "all": [
+                        {
+                          "field": "sash_width_mm",
+                          "op": "gte",
+                          "value": 640
+                        },
+                        {
+                          "field": "sash_width_mm",
+                          "op": "lte",
+                          "value": 3000
+                        }
+                      ]
+                    },
+                    {
+                      "all": [
+                        {
+                          "field": "sash_height_mm",
+                          "op": "gte",
+                          "value": 370
+                        },
+                        {
+                          "field": "sash_height_mm",
+                          "op": "lte",
+                          "value": 1570
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "all": [
+                    {
+                      "field": "window_type",
+                      "op": "eq",
+                      "value": "FIX窓"
+                    },
+                    {
+                      "field": "fix_type",
+                      "op": "eq",
+                      "value": "テラスタイプ"
+                    },
+                    {
+                      "all": [
+                        {
+                          "field": "sash_width_mm",
+                          "op": "gte",
+                          "value": 640
+                        },
+                        {
+                          "field": "sash_width_mm",
+                          "op": "lte",
+                          "value": 2000
+                        }
+                      ]
+                    },
+                    {
+                      "any": [
+                        {
+                          "all": [
+                            {
+                              "field": "construction",
+                              "op": "eq",
+                              "value": "在来工法"
+                            },
+                            {
+                              "all": [
+                                {
+                                  "field": "sash_height_mm",
+                                  "op": "gte",
+                                  "value": 1530
+                                },
+                                {
+                                  "field": "sash_height_mm",
+                                  "op": "lte",
+                                  "value": 2730
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "all": [
+                            {
+                              "field": "construction",
+                              "op": "eq",
+                              "value": "2×4工法"
+                            },
+                            {
+                              "all": [
+                                {
+                                  "field": "sash_height_mm",
+                                  "op": "gte",
+                                  "value": 1560
+                                },
+                                {
+                                  "field": "sash_height_mm",
+                                  "op": "lte",
+                                  "value": 2760
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "field_ids": [
+        "window_type",
+        "construction",
+        "fix_type",
+        "sash_width_mm",
+        "sash_height_mm"
+      ],
+      "evidence_ids": [
+        "E_ORDER_ROUTE"
+      ]
+    },
+    {
+      "rule_id": "R_TRIPLE_FIX_MAX_W",
+      "kind": "FORBID",
+      "when": {
+        "all": [
+          {
+            "field": "window_type",
+            "op": "eq",
+            "value": "FIX窓"
+          },
+          {
+            "field": "fix_type",
+            "op": "eq",
+            "value": "窓タイプ"
+          },
+          {
+            "field": "glass_specification",
+            "op": "eq",
+            "value": "トリプルガラス"
+          },
+          {
+            "not": {
+              "field": "sash_width_mm",
+              "op": "lte",
+              "value": 2798
+            }
+          },
+          {
+            "field": "sash_width_mm",
+            "op": "exists",
+            "value": true
+          }
+        ]
+      },
+      "field_ids": [
+        "window_type",
+        "fix_type",
+        "glass_specification",
+        "sash_width_mm"
+      ],
+      "evidence_ids": [
+        "E_ORDER_ROUTE"
+      ]
+    },
+    {
+      "rule_id": "R_TRIPLE_DOUBLE_HIGH",
+      "kind": "FORBID",
+      "when": {
+        "all": [
+          {
+            "field": "window_type",
+            "op": "eq",
+            "value": "両袖片引き窓"
+          },
+          {
+            "field": "glass_specification",
+            "op": "eq",
+            "value": "トリプルガラス"
+          },
+          {
+            "not": {
+              "field": "sash_width_mm",
+              "op": "lte",
+              "value": 4000
+            }
+          },
+          {
+            "field": "sash_width_mm",
+            "op": "exists",
+            "value": true
+          },
+          {
+            "any": [
+              {
+                "all": [
+                  {
+                    "field": "construction",
+                    "op": "eq",
+                    "value": "在来工法"
+                  },
+                  {
+                    "not": {
+                      "field": "sash_height_mm",
+                      "op": "lte",
+                      "value": 2010
+                    }
+                  }
+                ]
+              },
+              {
+                "all": [
+                  {
+                    "field": "construction",
+                    "op": "eq",
+                    "value": "2×4工法"
+                  },
+                  {
+                    "not": {
+                      "field": "sash_height_mm",
+                      "op": "lte",
+                      "value": 2040
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "field": "sash_height_mm",
+            "op": "exists",
+            "value": true
+          }
+        ]
+      },
+      "field_ids": [
+        "window_type",
+        "glass_specification",
+        "sash_width_mm",
+        "sash_height_mm",
+        "construction"
+      ],
+      "evidence_ids": [
+        "E_ORDER_ROUTE"
+      ]
+    }
+  ],
+  "confirmed_boundary": [
+    {
+      "id": "G_ESTIMATE_CONFIRM",
+      "condition": true,
+      "owner": "積算 / メーカー",
+      "question": "本体構成と未決定項目・原寸法・現場情報を積算へ渡しメーカー確認。自動価格/部材拾い/コード生成/発注を行わない。",
+      "original_status": "UNKNOWN",
+      "field_ids": [
+        "site_conditions",
+        "request_quantity",
+        "estimator_confirmation"
+      ],
+      "automatic_resolution": false
+    },
+    {
+      "id": "G_FINAL_MANUFACTURE_CONFIRMATION",
+      "condition": true,
+      "owner": "積算担当 / YKK AP・ガラスメーカー",
+      "question": "依頼の窓種・工法・外寸W/H(mm)・ガラス仕様・色・網戸・シャッター・納まり/現場原文と原図を渡し確認。未確認経路を自動成立・自動発注に利用しない。",
+      "original_status": "UNKNOWN",
+      "field_ids": [
+        "manufacture_confirmation"
+      ],
+      "automatic_resolution": false
+    }
+  ]
+}

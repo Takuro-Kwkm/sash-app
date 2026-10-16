@@ -27,3 +27,8 @@ jobs:
       - run: python -B scripts/production/validate-domain-runtime-connection.py
       - run: node --test test/domain-runtime-projection.test.mjs
       - run: node scripts/production/validate-domain-runtime-projection.mjs changes/doorremo-runtime-ui-r1/index.json /tmp/domain-runtime-parity.json
+      - run: node --test test/apw511-runtime-ui.test.mjs
+      - run: node scripts/production/validate-domain-runtime-projection.mjs changes/apw511-runtime-ui-r2/index.json /tmp/apw511-runtime-parity.json
+      - run: python -B -m unittest discover -s scripts/production -p test_apw511_runtime_connection.py
+        env:
+          SHARED_HARNESS_ROOT: /tmp/native-formal-shared
