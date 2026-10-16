@@ -269,7 +269,7 @@
       "no_fallback": true,
       "runtime_candidate_profile": {
         "path": "contracts/production/runtime-candidates/apw511-r3-adoption.profile.json",
-        "sha256": "f4681941d7426752c48c14bb2145334d81b65fbce5ff91420e4ae031e4771b8a"
+        "sha256": "0932596d8143a492e68e5cd650f9948a442cd1107a55b39e9914c0db5f231e0d"
       }
     }
   },

@@ -1,6 +1,6 @@
 {
   "schema": "CURRENT_AUTHORITY_SUCCESSOR_SELECTION_V1",
   "path": "contracts/production/authority-successors/apw511-r3-ui-current.v1.json",
-  "sha256": "81d5436cfd29be017b6dbf579f2ca57e6c49c791f32a6dec2cd3cccfec770bd7",
+  "sha256": "4a66deb3268bfc5d266e9efea9266480c179d01f0a7daed7a7f9d6be1ce114fc",
   "implementation_sha": "16f4efd69e06adc994b5394ff1726c8a5e372cd3"
 }

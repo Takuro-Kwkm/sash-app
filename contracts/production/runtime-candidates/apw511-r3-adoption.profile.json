@@ -113,7 +113,7 @@
     "formal_product_id": "SER-YKK-APW511",
     "formal_index": "src/catalog/runtime-master-packages/apw511-ui-r3/runtime_index.json",
     "formal_manifest_file_id": "1KouHULpQocEghUthiytmwjAwrDxHSF_J",
-    "normal_ui_port": 4211,
+    "normal_ui_port": 49351,
     "qa_contract": "src/catalog/runtime-master-packages/apw511-ui-r3/adoption/browser-qa.json",
     "validator": "scripts/production/validate-runtime-ui-adoption.mjs",
     "registry": "src/catalog/runtime-master/formal-composed-runtime-registry.json",
