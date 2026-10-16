@@ -33,9 +33,10 @@ def execute(shared, contract_path, stage, work, output):
     snapshot=profile.get('formal_storage_adapter')=='SHARED_CORE_DRIVE_BRIDGE'
     definition=importlib.util.spec_from_file_location('domain_compiler',checkout/profile['compiler'])
     compiler=importlib.util.module_from_spec(definition);definition.loader.exec_module(compiler)
+    source_identity=compiler.source_identity(master) if hasattr(compiler,'source_identity') else master['product']
     require(compiler.load_adopted_master(projection,base)==master
-            and master['product']['product_id']==profile.get('authoring_product_id',profile['product_id'])
-            and master['product']['revision']==profile.get('baseline_snapshot_revision',profile['baseline_package_version']),
+            and source_identity['product_id']==profile.get('authoring_product_id',profile['product_id'])
+            and source_identity['revision']==profile.get('baseline_snapshot_revision',profile['baseline_package_version']),
             'ADOPTED_MASTER_REQUIRED', 'Do not reopen Product Master adoption', stage)
     node=contract['node']; env={**os.environ,'PYTHONDONTWRITEBYTECODE':'1'}
     def run(script,args):
@@ -85,9 +86,10 @@ def execute(shared, contract_path, stage, work, output):
         result=dict(status='PASS',module_sha256=entry['sha256'],manufacturer_fact_mutations=0,formal_adoption=False,source_adoption=False)
     elif stage=='PARITY':
         path=work/'domain-parity.json';run(profile['parity_validator'],[base/'index.json',path]); report=read_json(path)
-        require(report['status']=='PASS' and sum(row['cases'] for row in report['products'])==len(master['handoff_tests']),
+        count=compiler.parity_count(master,projection) if hasattr(compiler,'parity_count') else len(master['handoff_tests'])
+        require(report['status']=='PASS' and sum(row['cases'] for row in report['products'])==count,
                 'PARITY_FAILED','All adopted handoff cases must execute',stage)
-        result=dict(status='PASS',report_sha256=sha(path.read_bytes()),cases=len(master['handoff_tests']))
+        result=dict(status='PASS',report_sha256=sha(path.read_bytes()),cases=count)
     elif stage=='FLOW_REVIEW_AUTHORIZATION':
         from harness.core import validate_authorization
         review=read_json(contract['inputs']['flow_review']['path']); authorization=read_json(contract['inputs']['flow_authorization']['path'])

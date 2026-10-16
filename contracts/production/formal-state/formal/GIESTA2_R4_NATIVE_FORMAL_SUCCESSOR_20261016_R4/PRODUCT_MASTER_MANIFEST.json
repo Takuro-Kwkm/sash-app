@@ -1,0 +1,37 @@
+{
+  "manufacturer": "LIXIL",
+  "series": "ジエスタ2",
+  "canonical_product_id": "LIXIL_GIESTA2_NON_FIRE",
+  "formal_revision": "v0.8-R4",
+  "package_identity": "LIXIL_GIESTA2_NON_FIRE_v0.8-R4_CONNECTED_FORMAL_V2",
+  "evidence_identity": "GST2_R4_EVIDENCE_24095ef8bd2ca1593cbaf4e4",
+  "primary_master": "PRODUCT_MASTER.json",
+  "formal_content_qa": "FORMAL_CONTENT_QA.json",
+  "formal_selection_scope": "FORMAL_SELECTION_SCOPE.json",
+  "controlled_unresolved": "CONTROLLED_UNRESOLVED.json",
+  "runtime_scope": "NOT_INCLUDED_IN_PRODUCT_MASTER_FORMAL",
+  "status": "FORMAL_PACKAGE_CONTENT",
+  "authoring_source_id": "1oe68f18WT_k7HxLx7JrRwFYddaQb5EFKU0VCLerTtlI",
+  "authoring_snapshot_sha256": "bc0d1171adf0844d99ce1dd0b6834372e9df84563dbd21ea2c7ec52d7de2388e",
+  "proposed_formal_representation": "Machine-readable Product Master JSON is the Formal primary; original native Sheets stays as unchanged Working authoring. Formal Selection Scope explicitly freezes this representation.",
+  "old_formal_preserved_until_adoption": true,
+  "native_formal_execution": "CURRENT_NATIVE_FORMAL_PROFILE; EXISTING_SHARED_HUMAN_AND_NATIVE_READBACK_AND_FORMAL_SAVE; NO_MUTATION_BEFORE_DECISION",
+  "authority": "SASH_PACKAGE_STORAGE_GATE v2.2 sections 4-8",
+  "human_gate": "HUMAN_ADOPTION; exact immutable wrapper hash",
+  "primary_master_sha256": "8656beeb27ad8c7b44c85fc587b80af7db73340d721e6ea4c55bd31fe7dcd5bd",
+  "native_profile": {
+    "path": "contracts/production/giesta2-formal-profile.v1.json",
+    "sha256": "09b5b1eece7625b0399c13c9a300ac97c34ebb54f33e2d6073f6604b8156aff8"
+  },
+  "package_locator": {
+    "name": "20261015_LIXIL_ジエスタ2_ProductMaster_v0.8-R4_FORMAL.zip",
+    "canonical_folder_id": "1sR0e7FSgr6lVE8BHw0fXzYamC0nxCyXW"
+  },
+  "current_resolution": "Native Registry authoring_file_id selects exact Master JSON; documentation_file_id selects this Manifest; Package/Sources/QA/current selector are retained with the formal adoption record",
+  "adoption_state_authority": "Resolve actual native Current Registry and the saved Shared Human/native-readback/Formal-save record. This Manifest describes package content and does not issue adoption.",
+  "auxiliary_package_members": {
+    "promotion": "PROMOTION_PLAN.json",
+    "registry": "FORMAL_REGISTRY_PROPOSAL.json",
+    "authority": "AUTHORITY.json"
+  }
+}

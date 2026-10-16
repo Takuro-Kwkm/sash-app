@@ -1,0 +1,153 @@
+{
+  "status": "POST_SAVE_VERIFIED",
+  "plan_sha256": "84e95985fd3740940f2d82749f21215a17115ee313dbbced137e194dab8a2617",
+  "decision_ref": "/Users/takuro/マイドライブ/仕事用/01_住宅サッシ/04_商品マスター/01_LIXIL/ジエスタ2/90_作業中/formal-successor-v0.8-R4-20261016/work/human-decision-source.json",
+  "registry_entry": {
+    "": "8",
+    "manufacturer": "LIXIL",
+    "series": "ジエスタ2",
+    "package_version": "v0.8-R4",
+    "master_status": "FORMAL_PASS",
+    "authoring_status": "PASS",
+    "authoring_file_name": "LIXIL_ジエスタ2_PRODUCT_MASTER_v0.8-R4.json",
+    "authoring_file_id": "1CfLknmNZaUgabxRl8tNEnZqUIrDJ4tOB",
+    "runtime_status": "NOT_INCLUDED_IN_PRODUCT_MASTER_FORMAL",
+    "runtime_manifest_id": "",
+    "runtime_file_count": "0",
+    "documentation_status": "PASS",
+    "documentation_file_id": "1iQUbq2qqwsVtoC6PnD3wFL98zbCtdrZe",
+    "package_gate": "PASS",
+    "storage_gate": "PASS",
+    "duplicate_check": "PASS",
+    "version_check": "PASS",
+    "canonical_folder": "04_商品マスター/01_LIXIL/ジエスタ2/01_正本",
+    "canonical_folder_id": "1sR0e7FSgr6lVE8BHw0fXzYamC0nxCyXW",
+    "working_folder_id": "16uPFbdAcgcRcxSq7KLyum1NlhU6Clxx7",
+    "old_folder_id": "1ndxhw1b8HJcPX83UiBXCNcOUJZULDLxF",
+    "blocking_category": "NONE",
+    "blocking_items": "NONE",
+    "updated_at": "2026-10-15",
+    "next_action": "Product Master v0.8-R4 only; 6 ESTIMATE_CONFIRM_REQUIRED retained; Runtime/UI/production are separate gates."
+  },
+  "downloaded_artifact_hashes": {
+    "1CfLknmNZaUgabxRl8tNEnZqUIrDJ4tOB": "8656beeb27ad8c7b44c85fc587b80af7db73340d721e6ea4c55bd31fe7dcd5bd",
+    "1iQUbq2qqwsVtoC6PnD3wFL98zbCtdrZe": "0734f44d5ce2d800547ab2e7f12fddb3c298a96b54a71e1679f8e12fd3d4e06b",
+    "1AjmIeSg7eug7XD1ImAGg41LqGVSSdglc": "83e544ff5f6135a6c395d58ad5beb867f352349e742e82275cf4367c21c5c9b1"
+  },
+  "raw_connector_refs": [
+    {
+      "path": "/Users/takuro/マイドライブ/仕事用/01_住宅サッシ/04_商品マスター/01_LIXIL/ジエスタ2/90_作業中/formal-successor-v0.8-R4-20261016/work/native-execution/move-receipts/00-1RRhSxIf2z1hv6cQX2h_HfNswrGFUF6Ps8eETmrO_fuY.json",
+      "sha256": "2e4cd17cdd79ca90b6e98b8e18565983a7efca67b48b845b120a6716db455fe4"
+    },
+    {
+      "path": "/Users/takuro/マイドライブ/仕事用/01_住宅サッシ/04_商品マスター/01_LIXIL/ジエスタ2/90_作業中/formal-successor-v0.8-R4-20261016/work/native-execution/move-receipts/01-11UUdp1pFUgvVzEUGpgD47a14jfJXWv_0.json",
+      "sha256": "09987b0aacaa3c3c41e363d672cc63d9027142e1ec63c2a50fcc9b2b09085304"
+    },
+    {
+      "path": "/Users/takuro/マイドライブ/仕事用/01_住宅サッシ/04_商品マスター/01_LIXIL/ジエスタ2/90_作業中/formal-successor-v0.8-R4-20261016/work/native-execution/move-receipts/02-1VHaTO-I328izOus422pcPLs7_mkaVczb.json",
+      "sha256": "725c444a49b5220be1b0204e696e96f47e24e1fd783857592edfaf957e29d47f"
+    },
+    {
+      "path": "/Users/takuro/マイドライブ/仕事用/01_住宅サッシ/04_商品マスター/01_LIXIL/ジエスタ2/90_作業中/formal-successor-v0.8-R4-20261016/work/native-execution/move-receipts/03-175A5xbNj4FehjAUX_rnEtHZl7I6c0cY2.json",
+      "sha256": "05dc079815ce7b66b86a2ce18c1273dd1cf1ba9a52b5efdc6de78cae463e327e"
+    },
+    {
+      "path": "/Users/takuro/マイドライブ/仕事用/01_住宅サッシ/04_商品マスター/01_LIXIL/ジエスタ2/90_作業中/formal-successor-v0.8-R4-20261016/work/native-execution/move-receipts/04-1RJn-P9T9a-6q_lqDaw1ujota1Wd4KaUs.json",
+      "sha256": "05084f6c6fb63b9dadf9bde46cbe39dfa157c2a75afe51d04a0ca1ebd9889f67"
+    },
+    {
+      "path": "/Users/takuro/マイドライブ/仕事用/01_住宅サッシ/04_商品マスター/01_LIXIL/ジエスタ2/90_作業中/formal-successor-v0.8-R4-20261016/work/native-execution/move-receipts/05-1qtOzSrQZNJC7dNDWWohg3jN_za5jr_QF.json",
+      "sha256": "8c008e3db299642f39ce2dfdd9feb444b31926dd3ada785336aebda6b05ba7c6"
+    },
+    {
+      "path": "/Users/takuro/マイドライブ/仕事用/01_住宅サッシ/04_商品マスター/01_LIXIL/ジエスタ2/90_作業中/formal-successor-v0.8-R4-20261016/work/native-execution/move-receipts/06-1CfLknmNZaUgabxRl8tNEnZqUIrDJ4tOB.json",
+      "sha256": "532b931f62a3b1370b9a6a92d07176e1b04fc78282daa8e423904f1b5710c090"
+    },
+    {
+      "path": "/Users/takuro/マイドライブ/仕事用/01_住宅サッシ/04_商品マスター/01_LIXIL/ジエスタ2/90_作業中/formal-successor-v0.8-R4-20261016/work/native-execution/move-receipts/07-1iQUbq2qqwsVtoC6PnD3wFL98zbCtdrZe.json",
+      "sha256": "53f3548b9e8217d1a5eb8395dcce76c0542d835dbb4548b42183ea9a0a06093e"
+    },
+    {
+      "path": "/Users/takuro/マイドライブ/仕事用/01_住宅サッシ/04_商品マスター/01_LIXIL/ジエスタ2/90_作業中/formal-successor-v0.8-R4-20261016/work/native-execution/move-receipts/08-1AjmIeSg7eug7XD1ImAGg41LqGVSSdglc.json",
+      "sha256": "7aeaf64edb5d7ac5eee76ae0fde278157fb8abaa17316f9e99b78e29ce1da1ea"
+    },
+    {
+      "path": "/Users/takuro/マイドライブ/仕事用/01_住宅サッシ/04_商品マスター/01_LIXIL/ジエスタ2/90_作業中/formal-successor-v0.8-R4-20261016/work/native-execution/post-move/canonical.json",
+      "sha256": "b6d6ce8d6effc3bc08ad7e0abad564d2589801914101d4b7d959ebdae0dc7b03"
+    },
+    {
+      "path": "/Users/takuro/マイドライブ/仕事用/01_住宅サッシ/04_商品マスター/01_LIXIL/ジエスタ2/90_作業中/formal-successor-v0.8-R4-20261016/work/native-execution/post-move/metadata-11UUdp1pFUgvVzEUGpgD47a14jfJXWv_0.json",
+      "sha256": "a3cfe5b5fc0ae21c9ef2567d115772770a16131fae31701e76789926b08e0847"
+    },
+    {
+      "path": "/Users/takuro/マイドライブ/仕事用/01_住宅サッシ/04_商品マスター/01_LIXIL/ジエスタ2/90_作業中/formal-successor-v0.8-R4-20261016/work/native-execution/post-move/metadata-175A5xbNj4FehjAUX_rnEtHZl7I6c0cY2.json",
+      "sha256": "192085565eaae8334c20a17b10683ff347d9d7dcce92df1b03bbf652898cc8fa"
+    },
+    {
+      "path": "/Users/takuro/マイドライブ/仕事用/01_住宅サッシ/04_商品マスター/01_LIXIL/ジエスタ2/90_作業中/formal-successor-v0.8-R4-20261016/work/native-execution/post-move/metadata-1AjmIeSg7eug7XD1ImAGg41LqGVSSdglc.json",
+      "sha256": "85589d4d6311358c4a31f35437300457bedf37130419af38f380961dccaca165"
+    },
+    {
+      "path": "/Users/takuro/マイドライブ/仕事用/01_住宅サッシ/04_商品マスター/01_LIXIL/ジエスタ2/90_作業中/formal-successor-v0.8-R4-20261016/work/native-execution/post-move/metadata-1CfLknmNZaUgabxRl8tNEnZqUIrDJ4tOB.json",
+      "sha256": "eb718fd5bbb66eaa96a2a1eab53eba681a25714b10622a85200ba2031f509632"
+    },
+    {
+      "path": "/Users/takuro/マイドライブ/仕事用/01_住宅サッシ/04_商品マスター/01_LIXIL/ジエスタ2/90_作業中/formal-successor-v0.8-R4-20261016/work/native-execution/post-move/metadata-1RJn-P9T9a-6q_lqDaw1ujota1Wd4KaUs.json",
+      "sha256": "de76103a6119ceebdec412b14cf970fb76810663b9f04cdcc107b0f6b99e82d3"
+    },
+    {
+      "path": "/Users/takuro/マイドライブ/仕事用/01_住宅サッシ/04_商品マスター/01_LIXIL/ジエスタ2/90_作業中/formal-successor-v0.8-R4-20261016/work/native-execution/post-move/metadata-1RRhSxIf2z1hv6cQX2h_HfNswrGFUF6Ps8eETmrO_fuY.json",
+      "sha256": "b0c7877dbf8674d3c16bb971cb35fc918866c7c37ebcaad0a93039f11e8a8896"
+    },
+    {
+      "path": "/Users/takuro/マイドライブ/仕事用/01_住宅サッシ/04_商品マスター/01_LIXIL/ジエスタ2/90_作業中/formal-successor-v0.8-R4-20261016/work/native-execution/post-move/metadata-1VHaTO-I328izOus422pcPLs7_mkaVczb.json",
+      "sha256": "7c2f27d0b9144f72d46e9f3a764b55d914335f4a3337180f3696d41842e883c4"
+    },
+    {
+      "path": "/Users/takuro/マイドライブ/仕事用/01_住宅サッシ/04_商品マスター/01_LIXIL/ジエスタ2/90_作業中/formal-successor-v0.8-R4-20261016/work/native-execution/post-move/metadata-1iQUbq2qqwsVtoC6PnD3wFL98zbCtdrZe.json",
+      "sha256": "b3241f1c5d51a1e2d351192164bb7d2e927920e7f9367b6362da902380a7d9ff"
+    },
+    {
+      "path": "/Users/takuro/マイドライブ/仕事用/01_住宅サッシ/04_商品マスター/01_LIXIL/ジエスタ2/90_作業中/formal-successor-v0.8-R4-20261016/work/native-execution/post-move/metadata-1qtOzSrQZNJC7dNDWWohg3jN_za5jr_QF.json",
+      "sha256": "a8d535bab146c8136b5879f800ee3e021e1da559eacdbeced8f872074317687b"
+    },
+    {
+      "path": "/Users/takuro/マイドライブ/仕事用/01_住宅サッシ/04_商品マスター/01_LIXIL/ジエスタ2/90_作業中/formal-successor-v0.8-R4-20261016/work/native-execution/post-move/native-range.json",
+      "sha256": "c57a9c183430aaf83b5237f6d68cc910e8338403788b768cd8c2fabe73e04949"
+    },
+    {
+      "path": "/Users/takuro/マイドライブ/仕事用/01_住宅サッシ/04_商品マスター/01_LIXIL/ジエスタ2/90_作業中/formal-successor-v0.8-R4-20261016/work/native-execution/post-move/old.json",
+      "sha256": "2c91ffcfb8dcddda8e4e5d33a926903f4081247baa0ec3c4e339fc12f311e57f"
+    },
+    {
+      "path": "/Users/takuro/マイドライブ/仕事用/01_住宅サッシ/04_商品マスター/01_LIXIL/ジエスタ2/90_作業中/formal-successor-v0.8-R4-20261016/work/native-execution/post-move/registry.json",
+      "sha256": "ae7a5aba393eb67777dfd2f608d3e93f7a2e6bba45ae8a9ad039aa736ced66f5"
+    },
+    {
+      "path": "/Users/takuro/マイドライブ/仕事用/01_住宅サッシ/04_商品マスター/01_LIXIL/ジエスタ2/90_作業中/formal-successor-v0.8-R4-20261016/work/native-execution/registry-metadata.json",
+      "sha256": "6b77f1ff2605f5b0f035c53ac2f6a4094b5ffeedf43ba095f05b673ccd130992"
+    },
+    {
+      "path": "/Users/takuro/マイドライブ/仕事用/01_住宅サッシ/04_商品マスター/01_LIXIL/ジエスタ2/90_作業中/formal-successor-v0.8-R4-20261016/work/native-execution/registry-before-cells.json",
+      "sha256": "2ddc0281b3ca7931769c91032442bdd513f64aa0fe678943ee102fd564282ffe"
+    },
+    {
+      "path": "/Users/takuro/マイドライブ/仕事用/01_住宅サッシ/04_商品マスター/01_LIXIL/ジエスタ2/90_作業中/formal-successor-v0.8-R4-20261016/work/native-execution/registry-after-cells.json",
+      "sha256": "87d4cb03fd08c4010a5b1fc9c8e4024443e75091dac168ba7bfa69e642555b6b"
+    },
+    {
+      "path": "/Users/takuro/マイドライブ/仕事用/01_住宅サッシ/04_商品マスター/01_LIXIL/ジエスタ2/90_作業中/formal-successor-v0.8-R4-20261016/work/native-execution/registry-immediate-before.json",
+      "sha256": "ae7a5aba393eb67777dfd2f608d3e93f7a2e6bba45ae8a9ad039aa736ced66f5"
+    },
+    {
+      "path": "/Users/takuro/マイドライブ/仕事用/01_住宅サッシ/04_商品マスター/01_LIXIL/ジエスタ2/90_作業中/formal-successor-v0.8-R4-20261016/work/native-execution/registry-after.json",
+      "sha256": "f34298b68a5c6cac2d527e5a507e5be41c0a7cbf9a9fa4b7d801111a67c271d7"
+    },
+    {
+      "path": "/Users/takuro/マイドライブ/仕事用/01_住宅サッシ/04_商品マスター/01_LIXIL/ジエスタ2/90_作業中/formal-successor-v0.8-R4-20261016/work/native-execution/registry-update-receipt.json",
+      "sha256": "11d929f0d90580e73a20b21694a3e67d756b82b3c73f6d6b04c101236ca573c2"
+    }
+  ],
+  "unrelated_registry_rows": "UNCHANGED",
+  "runtime_scope": "NOT_INCLUDED_IN_PRODUCT_MASTER_FORMAL"
+}

@@ -1,0 +1,11 @@
+{
+  "completed_work": "GIESTA2_R4_NATIVE_FORMAL_SUCCESSOR_20261016_R4",
+  "master_file_id": "1CfLknmNZaUgabxRl8tNEnZqUIrDJ4tOB",
+  "master_sha256": "8656beeb27ad8c7b44c85fc587b80af7db73340d721e6ea4c55bd31fe7dcd5bd",
+  "package_file_id": "1AjmIeSg7eug7XD1ImAGg41LqGVSSdglc",
+  "package_sha256": "83e544ff5f6135a6c395d58ad5beb867f352349e742e82275cf4367c21c5c9b1",
+  "human_packet_sha256": "6974f747da1f8fb6cc7430b6cade9faa8581b5e4f461548a152cd6073a5b96eb",
+  "policy": "INSPECT_ONLY",
+  "qa195": "review/carried-content-qa.json",
+  "qa18": "../../contracts/production/formal-state/formal/GIESTA2_R4_NATIVE_FORMAL_SUCCESSOR_20261016_R4/FORMAL_CONTENT_QA.json"
+}

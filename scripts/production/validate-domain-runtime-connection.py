@@ -42,6 +42,13 @@ def validate(root):
             assert manifest['formal_revision']==p['baseline_package_version']
             assert master['product']['revision']==p['baseline_snapshot_revision']
             assert compiler.compile_profile(projection,base)==document, 'PROJECTION_CHANGED'
+        elif p.get('native_master_schema') == 'DECLARED_NATIVE_TABLES_V1':
+            base=root/p['candidate_root'];projection=read((Path(p['candidate_root'])/'projection.json').as_posix())
+            loader=importlib.util.spec_from_file_location('native_table_projection',root/p['compiler'])
+            compiler=importlib.util.module_from_spec(loader);loader.loader.exec_module(compiler)
+            assert compiler.load_adopted_master(projection,base)==master
+            assert compiler.source_identity(master)==dict(product_id=p['authoring_product_id'],revision=p['baseline_package_version'])
+            assert compiler.compile_profile(projection,base)==document, 'PROJECTION_CHANGED'
         else:
             assert master['lifecycle_status']=='FORMAL' and master['product']['revision']==p['baseline_package_version']
         for name,digest in p.get('predecessor_sha256',{}).items():

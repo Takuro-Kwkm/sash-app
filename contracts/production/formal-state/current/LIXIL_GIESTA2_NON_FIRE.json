@@ -1,0 +1,32 @@
+{
+  "product_id": "NATIVE_REGISTRY:LIXIL::ジエスタ2",
+  "revision": "v0.8-R4",
+  "lifecycle_state": "FORMAL",
+  "source_scope": {
+    "new_source_role": "CURRENT_ADOPTED",
+    "adoption_scope": "REVIEWED_SALES_ESTIMATE_CLAIMS_ONLY",
+    "whole_catalogue_adoption": false,
+    "runtime_scope": "NOT_INCLUDED_IN_PRODUCT_MASTER_FORMAL"
+  },
+  "native_registry_id": "1HMMZ8JdsbJPtL_8LjQfxMF8P_Zb4-LReqvPMFn1pJks",
+  "native_master_file_id": "1CfLknmNZaUgabxRl8tNEnZqUIrDJ4tOB",
+  "native_manifest_file_id": "1iQUbq2qqwsVtoC6PnD3wFL98zbCtdrZe",
+  "native_package_file_id": "1AjmIeSg7eug7XD1ImAGg41LqGVSSdglc",
+  "artifacts": {
+    "formal/GIESTA2_R4_NATIVE_FORMAL_SUCCESSOR_20261016_R4/PRODUCT_MASTER.json": "8656beeb27ad8c7b44c85fc587b80af7db73340d721e6ea4c55bd31fe7dcd5bd",
+    "formal/GIESTA2_R4_NATIVE_FORMAL_SUCCESSOR_20261016_R4/FORMAL_SELECTION_SCOPE.json": "323a799eefd185b05a87aded894b9f0c9f4c7ef6b04dacf84436689c23de3160",
+    "formal/GIESTA2_R4_NATIVE_FORMAL_SUCCESSOR_20261016_R4/EVIDENCE.json": "bdf15771accb434119b7e17b2cbe3985080445d5529ea29bb4b61c709210d199",
+    "formal/GIESTA2_R4_NATIVE_FORMAL_SUCCESSOR_20261016_R4/PROMOTION_PLAN.json": "a8e7cb07025b6bb3b8b92df0ccd3850c3cb9d68c54010a62f8cd2febefb276f4",
+    "formal/GIESTA2_R4_NATIVE_FORMAL_SUCCESSOR_20261016_R4/FORMAL_REGISTRY_PROPOSAL.json": "9b04c1f705be1f73f97137b65e122a8c92a7f4690b633fff1095e6ed5a4be8cd",
+    "formal/GIESTA2_R4_NATIVE_FORMAL_SUCCESSOR_20261016_R4/AUTHORITY.json": "46e36412033a10613b902a22ed4fa380f6657335c9bd18c7fbf209df68d9447e",
+    "formal/GIESTA2_R4_NATIVE_FORMAL_SUCCESSOR_20261016_R4/SOURCE_BASELINE.json": "b6b95abe179028160b33c6e07b5979214bfaf07c20472d0c498d27af3506493f",
+    "formal/GIESTA2_R4_NATIVE_FORMAL_SUCCESSOR_20261016_R4/FORMAL_CONTENT_QA.json": "ae80ba96e418743bcf0ae10943776e07b1968adab7bc141823987209ed309100",
+    "formal/GIESTA2_R4_NATIVE_FORMAL_SUCCESSOR_20261016_R4/PRODUCT_MASTER_MANIFEST.json": "0734f44d5ce2d800547ab2e7f12fddb3c298a96b54a71e1679f8e12fd3d4e06b",
+    "formal/GIESTA2_R4_NATIVE_FORMAL_SUCCESSOR_20261016_R4/ProductMaster_v0.8-R4.zip": "83e544ff5f6135a6c395d58ad5beb867f352349e742e82275cf4367c21c5c9b1"
+  },
+  "human_decision": {
+    "path": "formal/GIESTA2_R4_NATIVE_FORMAL_SUCCESSOR_20261016_R4/human-decision.json",
+    "sha256": "0d370eee6a97e264d0db1684079978a173e5cb24faa02b13b0eec4879a30d86f",
+    "decision_ref": "/Users/takuro/マイドライブ/仕事用/01_住宅サッシ/04_商品マスター/01_LIXIL/ジエスタ2/90_作業中/formal-successor-v0.8-R4-20261016/work/human-decision-source.json"
+  }
+}

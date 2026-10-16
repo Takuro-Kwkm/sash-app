@@ -1,0 +1,121 @@
+{
+  "target_gate": "QA_PASS",
+  "result": "PASS",
+  "scope_id": "GST2_R4_FORMAL_SELECTION_20261015",
+  "revision": "v0.8-R4",
+  "metrics": {
+    "UNKNOWN": 0,
+    "UNMAPPED": 0,
+    "SCHEMA_ERROR": 0,
+    "DUPLICATE_ID": 0,
+    "CRITICAL_VALIDATION_ERROR": 0
+  },
+  "checks": [
+    {
+      "check_id": "BASELINE_LIVE_REGISTRY",
+      "actual": "PASS",
+      "detail": "Exact unchanged native Current Formal row acquired"
+    },
+    {
+      "check_id": "PREDECESSOR_COMPLETED",
+      "actual": "PASS",
+      "detail": "Existing Work inspected, not readopted"
+    },
+    {
+      "check_id": "CANDIDATE_CLOUD_BYTES",
+      "actual": "PASS",
+      "detail": "Actual downloaded master equals executed QA input"
+    },
+    {
+      "check_id": "QA_CARRY_FORWARD_195",
+      "actual": "PASS",
+      "detail": "Source/scope/rules/model/facts unchanged; no business QA rerun"
+    },
+    {
+      "check_id": "AUTHORING_CARRY_FORWARD",
+      "actual": "PASS",
+      "detail": "Original 95-sheet snapshot, unchanged"
+    },
+    {
+      "check_id": "PROPOSED_FACT_PARITY",
+      "actual": "PASS",
+      "detail": "Only lifecycle metadata and proposed Source/Evidence adoption states change"
+    },
+    {
+      "check_id": "PROPOSED_SOURCE_FACT_PARITY",
+      "actual": "PASS",
+      "detail": "Source identities/hash/locators unchanged"
+    },
+    {
+      "check_id": "PROPOSED_EVIDENCE_FACT_PARITY",
+      "actual": "PASS",
+      "detail": "No manufacturer facts changed"
+    },
+    {
+      "check_id": "SCHEMA",
+      "actual": "PASS",
+      "detail": "Retained native table schema plus R4 lifecycle/confirmation constraints"
+    },
+    {
+      "check_id": "UNMAPPED",
+      "actual": "PASS",
+      "detail": "Every R4 rule, Source, Evidence and confirmation reference resolves"
+    },
+    {
+      "check_id": "DUPLICATE_ID",
+      "actual": "PASS",
+      "detail": "R4 Rule/Evidence/Source/Gap IDs unique"
+    },
+    {
+      "check_id": "UNRESOLVED_WITHIN_SCOPE",
+      "actual": "PASS",
+      "detail": "All reviewed source sections complete; six controlled confirmations retained"
+    },
+    {
+      "check_id": "CONTROLLED_UNRESOLVED_PRESERVED",
+      "actual": "PASS",
+      "detail": "All six gaps, owners, questions and reopen conditions unchanged"
+    },
+    {
+      "check_id": "COMMERCIAL_NULL",
+      "actual": "PASS",
+      "detail": "No guessed price/BOM/final Set Code"
+    },
+    {
+      "check_id": "NO_AUTOMATIC_ORDER",
+      "actual": "PASS",
+      "detail": "Controlled paths cannot authorize automatic order"
+    },
+    {
+      "check_id": "FORMAL_SOURCE_SCOPE",
+      "actual": "PASS",
+      "detail": "Nonfire product scope preserved"
+    },
+    {
+      "check_id": "RUNTIME_SCOPE",
+      "actual": "PASS",
+      "detail": "No empty Runtime or fake runtime_manifest"
+    },
+    {
+      "check_id": "ADOPTION_NOT_EXECUTED",
+      "actual": "PASS",
+      "detail": "Proposed formal bytes do not mutate live Current"
+    }
+  ],
+  "formal_pass_count": 18,
+  "formal_additional_checks": 18,
+  "executed": true,
+  "content_qa_carry_forward": {
+    "passed": 195,
+    "source": {
+      "path": "/Users/takuro/マイドライブ/仕事用/01_住宅サッシ/04_商品マスター/01_LIXIL/ジエスタ2/90_作業中/native-change-v0.8-R4-20261015/work/checkpoint/project-qa.json",
+      "sha256": "16be6ae038fa3a9454b3b31deee09c6d4545c623066ab590bd2b8611619dfd21"
+    },
+    "rerun": false
+  },
+  "product_master_sha256": "8656beeb27ad8c7b44c85fc587b80af7db73340d721e6ea4c55bd31fe7dcd5bd",
+  "controlled_unresolved": 6,
+  "formal_storage_gate": "NOT_EXECUTED",
+  "registry_gate": "NOT_EXECUTED",
+  "human_decision": "NOT_ISSUED"
+}

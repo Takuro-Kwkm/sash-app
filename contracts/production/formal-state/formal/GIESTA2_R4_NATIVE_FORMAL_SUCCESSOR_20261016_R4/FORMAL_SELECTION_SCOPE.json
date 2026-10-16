@@ -1,0 +1,408 @@
+{
+  "scope_id": "GST2_R4_FORMAL_SELECTION_20261015",
+  "revision": "v0.8-R4",
+  "manufacturer": "LIXIL",
+  "series": "ジエスタ2 非防火",
+  "mode": "ADOPTED_V0_8_R3_CARRY_FORWARD_PLUS_REVIEWED_R4_DELTA",
+  "business_scope": "SALES_ESTIMATE_REQUEST",
+  "baseline_formal": "v0.8-R3",
+  "accepted_baseline_tables": {
+    "masters": {
+      "P2_hinge_side_master": {
+        "records": 2,
+        "sha256": "a33f86460cb93e2225bc937dc7c5969d8c01fc70580d14f0313a37fa844a8795"
+      },
+      "P3_09_color_master": {
+        "records": 29,
+        "sha256": "9b638b9d6f50bead0a4501abe803db163fa9c9749c93961f74c838142bf7c714"
+      },
+      "P3_11_frame_color_master": {
+        "records": 6,
+        "sha256": "a5e50bc3358328f4c770691735e93c02275c99345dc790e3390344b87b72881c"
+      },
+      "P4_child_door_master": {
+        "records": 30,
+        "sha256": "85e9686e718e318ade7557287d5b924ec49880d8d8ce688f8544c276542bb343"
+      },
+      "P4_secondary_leaf_master": {
+        "records": 6,
+        "sha256": "8042d9fe1ce92a6a453439c1eb97836379bd9dd92a324476306a7c9a2eb0fd6e"
+      },
+      "P4_sidelight_master": {
+        "records": 2,
+        "sha256": "e7221522f008af67f17d8b6434121087d0c5c977bd90e51b15fd256a09c599ff"
+      },
+      "P4_handle_family_master": {
+        "records": 7,
+        "sha256": "9e2fd3bce96db08185bd0c5f122c76995e6a2e3302a2f11453dc51cdcbad9dd9"
+      },
+      "P4_handle_color_master": {
+        "records": 6,
+        "sha256": "2fb688c64ecacabdf0ded5fc8cab2fa421630d91ca9ff40ccd0baab98b28bd9f"
+      },
+      "P4_handle_option_master": {
+        "records": 32,
+        "sha256": "b35df3a399279f1ae49413ad61b3ede35df8c1a84653113f3e3b5dd76b0bb197"
+      },
+      "P5_lock_system_master": {
+        "records": 3,
+        "sha256": "3ec097e7f81725f7ccefe45ccbeaabc09fb15413bc640ad7f2f2526452155ff3"
+      },
+      "P5_power_supply_master": {
+        "records": 3,
+        "sha256": "dba2348406568da6b41506b445cd5b75fae455503fe044238f082f459eb99b8e"
+      },
+      "P5_lock_plan_master": {
+        "records": 5,
+        "sha256": "4c4e8f6ed99f644a538bb2986695294b344e2b4fa694a7e6fa78a2c19697d567"
+      },
+      "P5_credential_master": {
+        "records": 14,
+        "sha256": "2f5b28c63fdb7479ac07dea7ed652b782ba4e85a2b6eaec7808b96703cd51b65"
+      },
+      "P5_credential_package_master": {
+        "records": 8,
+        "sha256": "7e9ca8412be3baae74f9c39da5c88f6bf617d3a5d5ade2f97001a71a5d1b31e4"
+      },
+      "P5_operation_device_master": {
+        "records": 2,
+        "sha256": "81ab7e621c3de2f90e90888fdaeeb41fc1f1d20452dbbd341da9e3f9e0fe315f"
+      },
+      "P5_cylinder_master": {
+        "records": 3,
+        "sha256": "cd1284732a55940b25a7ceaf56f7236c1c6d7f6a5b928a088987e1d6a5d8d375"
+      },
+      "P5_key_system_master": {
+        "records": 3,
+        "sha256": "fea390cc920c7c3656dd1e1d6a57b2ce2c3ac6914f9dd03a28b7c754b88b768f"
+      },
+      "P6_glass_master": {
+        "records": 13,
+        "sha256": "f577e8d129285af50b692a2a9308ea3cf5e7fa5915d917773748f2eae4673bf3"
+      },
+      "P6_glass_layer_master": {
+        "records": 37,
+        "sha256": "21d61d67303b8fab4a25dfe884b506db82142112ac06a9fec9a411b558a54367"
+      },
+      "P6_glass_thickness_option": {
+        "records": 9,
+        "sha256": "bdd8caea5c602d9ae14674e166acd0ad0d1d171fa37541e3007485c450592560"
+      },
+      "P6_glazing_supply_mode": {
+        "records": 4,
+        "sha256": "68b89c513f417db5479833c68d92181fb08eb5fee8746c1e68f0da7240956ec2"
+      },
+      "P7_option_master": {
+        "records": 34,
+        "sha256": "841dd3504f6bb8383bc4fb708819c67c28dba3d444d9046cc4accabafa9e447c"
+      },
+      "P7_option_color_master": {
+        "records": 10,
+        "sha256": "11002ad676368b33f06923745d2c547c5755edf8e801482ae082d63c00a4fa5e"
+      },
+      "P7_door_closer_master": {
+        "records": 2,
+        "sha256": "0184cb7e945e7be377e1c8f0be15c6c106006edcb402a7137b688dcbcc9d900b"
+      },
+      "P2_size_capability_master": {
+        "records": 1,
+        "sha256": "7205deba892c595144964684b506e9d8550efb9a0a98b0d2dbf80bdae7851421"
+      },
+      "P2_size_mode_master": {
+        "records": 2,
+        "sha256": "14aacb10356d1b8d38164a371a7044623475b46af8c55835cbce3066ed087f85"
+      },
+      "P2_standard_size_master": {
+        "records": 6,
+        "sha256": "ffc26c365730e170ab9ff8c789cddc5370bd29b096c48a88911d2fefe992fbed"
+      }
+    },
+    "maps": {
+      "P2_configuration_hinge_map": {
+        "records": 12,
+        "sha256": "82d1f5fd845a06672c7493fa53ccb7f282292277df01e457b86e0d36b33e60e0"
+      },
+      "P2_hinge_dependency_rule_master": {
+        "records": 1,
+        "sha256": "9fff34326cea513696dbcc4308e953e3aff8ca9396eb3d444e47ba94f0033a4f"
+      },
+      "P3_design_color_summary": {
+        "records": 81,
+        "sha256": "7193f231348cc63aab190cffa9c1a888b76d1ecaf875cae119df7c9042e291fc"
+      },
+      "P3_10_design_color_map": {
+        "records": 2349,
+        "sha256": "f844c692d524f71f65cee186c49667ca3adec62da05e4f053db2ceda4db4af81"
+      },
+      "P3_color_config_map": {
+        "records": 14094,
+        "sha256": "27b91faa1cb9de3d779784aee9c7370c2428cf8e90e6686eb8f7e18a5b162461"
+      },
+      "P3_surface_color_map": {
+        "records": 76,
+        "sha256": "e79b9bc1abf1c1ada253a550930f28089a60fe78a8046d0dfbd2a3d17a534223"
+      },
+      "P3_high_size_color_map": {
+        "records": 58,
+        "sha256": "6ff54a259bd7fd73a7a459f18863900fd23828d39ded3c23d1e95cd050cb2adb"
+      },
+      "P3_accent_secondary_rules": {
+        "records": 35,
+        "sha256": "9ca9ef0cee4e4f19da7fa3df61a258e9a5c9361c1a3448169104cc5372e38e91"
+      },
+      "P4_child_door_thermal_map": {
+        "records": 60,
+        "sha256": "ea7967200972a60c612d6eb658cf6013999ceae428f9bc3ef13227b1a64a600b"
+      },
+      "P4_child_door_color_map": {
+        "records": 870,
+        "sha256": "adaaf53c7b91e2d49988a2ba0aa46fa2b71dc793f6fea6e074922f036eae8009"
+      },
+      "P4_design_child_door_map": {
+        "records": 2430,
+        "sha256": "6ab6e2edd94f7b8d59d178888ac1a1835bcb75afc09fa250b3d8f08a84433fbf"
+      },
+      "P4_design_secondary_leaf_map": {
+        "records": 486,
+        "sha256": "7c3c9c599c93534a72fe12ce6ec6d93d79096a50c05d74c2b880ff156e2f8d16"
+      },
+      "P4_handle_color_map": {
+        "records": 42,
+        "sha256": "f4050791c6bfdbb1c120fd949a6bde32fc9667dbd8b74a1819b05aac104c69be"
+      },
+      "P4_design_handle_map": {
+        "records": 567,
+        "sha256": "b0073846f079374d7e9db6a640904bf05c3084962bbde7faf9b2200a82a18942"
+      },
+      "P4_high_size_handle_map": {
+        "records": 14,
+        "sha256": "3f5cea7a9fa7a0a4ad08d4e8da82e172dd7786c084808c45beace2c3f155dc84"
+      },
+      "P4_configuration_handle_rules": {
+        "records": 2,
+        "sha256": "43da82868517c2a8b8243b64a19494a865f2d4a16c0c21dbc6b62d9a3daab7f5"
+      },
+      "P4_dependency_rule_master": {
+        "records": 16,
+        "sha256": "5128d625116c14e93644cae25d74daf463081e0018504e5c883d7243f64d398e"
+      },
+      "P5_lock_power_map": {
+        "records": 9,
+        "sha256": "74db3514c19609894a7d6ea4c32bb5ccf88ad47a950ace9cfd0b559bb4cbe311"
+      },
+      "P5_lock_credential_map": {
+        "records": 42,
+        "sha256": "40c2869f1baf8ee6964c1d636ceeb21ac69445362fae9b12ce9e1d16911eb9fc"
+      },
+      "P5_lock_credential_package_map": {
+        "records": 24,
+        "sha256": "b898914dd8ac04f9c5cd6a0d583c7dac4419c99b7177f3799c7193fc3578dbf9"
+      },
+      "P5_lock_cylinder_map": {
+        "records": 9,
+        "sha256": "7156d5840710785dea18858970c93dccb20d474cb68592a3e97e4d70199af604"
+      },
+      "P5_handle_cylinder_map": {
+        "records": 21,
+        "sha256": "cb922a3f8116b541c3d7c93e464ec7299f7051f05b362fdb48ec2b3858ca3b9e"
+      },
+      "P5_design_lock_map": {
+        "records": 243,
+        "sha256": "3b36ae577bf59db11e69a285549cf294a6f9bcfed0fca781ae9346b852a1681f"
+      },
+      "P5_configuration_lock_map": {
+        "records": 18,
+        "sha256": "10f85132ccb068bae53fdf1665c10b07956131cd44c89cab8ad9b8d9b7137935"
+      },
+      "P5_handle_lock_map": {
+        "records": 21,
+        "sha256": "fedfd7b8af5556b03dbbbb204f835468fe4969ac1968195a20a1f19e7d43be06"
+      },
+      "P5_handle_option_lock_map": {
+        "records": 96,
+        "sha256": "22af719be85f0d16f85c90a0cdcb8385c293ed7d9d76051f639c6229ba4d4f01"
+      },
+      "P5_high_size_lock_map": {
+        "records": 6,
+        "sha256": "5a43a1410211be9421abeb1d1675eb99f0cd2a7d435cf54942874abf4f79a3e0"
+      },
+      "P5_high_size_lock_power_map": {
+        "records": 6,
+        "sha256": "a8e5d5a5abd1ce9361dbc444066da02b94782f2a9f797748ad9fcb9058b852f9"
+      },
+      "P5_dependency_rule_master": {
+        "records": 17,
+        "sha256": "b4860cd613294975f8796c52f967d106b7c0566b84bbe30340acc7d88dc14546"
+      },
+      "P6_glass_thermal_map": {
+        "records": 26,
+        "sha256": "8ad01ac24ecb35fce830b106e79dfff88aaf585ce0afdaf9602fd5dad0761cd1"
+      },
+      "P6_design_glass_map": {
+        "records": 162,
+        "sha256": "53e9121d7a3438796cdcfffedc8821fdad31130e3e04a24bae940bd8848b2a13"
+      },
+      "P6_child_door_glass_map": {
+        "records": 60,
+        "sha256": "c46b9810d1696f69039f7431ee5db9ebd61501623892770abfc58c24c9ffb55e"
+      },
+      "P6_secondary_leaf_glass_map": {
+        "records": 12,
+        "sha256": "d7cd3ca6ea5d9ba311e440bb0a52930eec77e3f3375218a103d54ea3e64b5dfc"
+      },
+      "P6_sidelight_glass_map": {
+        "records": 16,
+        "sha256": "782ee31c883ad33bdab9c8717026440199a8ccb86da6ede285f86eec6fc96165"
+      },
+      "P6_glass_bead_rule_map": {
+        "records": 8,
+        "sha256": "4036a4546e651e165152e65e0c210bf1e3251c82359cd10ffb11da6d21f5d679"
+      },
+      "P6_dependency_rule_master": {
+        "records": 14,
+        "sha256": "28eb0d910e97144138b3f9ff2b0e5c5f2a79ba82034cc5ea41979fb2936dbea2"
+      },
+      "P7_option_color_map": {
+        "records": 12,
+        "sha256": "2647d938a45e40d6233d8b7cf93b71f2d85bd3e8f619df145f77afc6fe4b37e1"
+      },
+      "P7_design_option_map": {
+        "records": 486,
+        "sha256": "663bd6e00337c42cc4d82630b0d6cbc96c391b5321aefb12744a756914a232f0"
+      },
+      "P7_door_color_option_map": {
+        "records": 58,
+        "sha256": "4f3b06a44126746cdede60df82816c9981e31955588fac85c05be7db81319234"
+      },
+      "P7_led_configuration_map": {
+        "records": 6,
+        "sha256": "7976fb2a6900a2b6d0d40e01311ad3e45add215ae60479b2a67c4cae58aadac0"
+      },
+      "P7_configuration_option_map": {
+        "records": 30,
+        "sha256": "2a6942b3aaeba4169d28428e416d36ba422373c78d9d7521a173bb6530dea333"
+      },
+      "P7_child_door_option_map": {
+        "records": 60,
+        "sha256": "386027aaeae989d65895ad3bb86ce8acce329157170ea2c820798b520e7d45cf"
+      },
+      "P7_sill_plinth_color_rule": {
+        "records": 8,
+        "sha256": "c55598ef76257b23cbc448ee7d1bd9b711e21b25aa18cbebd8e51df6d90fa5b5"
+      },
+      "P7_lock_option_map": {
+        "records": 45,
+        "sha256": "894ea4449615ebab2bdfa4319dce28f9d3b674b2fb26c95cdd7d4c6b4df328b0"
+      },
+      "P7_lock_plan_option_map": {
+        "records": 45,
+        "sha256": "1f157c3058a1ea1e3c87a5aa87c8a2a8ec1d9e0e060048278492bb7d346d4d63"
+      },
+      "P7_option_dependency_map": {
+        "records": 11,
+        "sha256": "fb624e2b97d60b230e01b2f5aca7c83114989fa7a4c16c495677d0365ac0c617"
+      },
+      "P7_high_size_option_map": {
+        "records": 18,
+        "sha256": "fc373f8c023603d0590a94534c032aae5a7d67560a449ee3aa5aba333b2d8235"
+      },
+      "P7_option_ui_rule": {
+        "records": 10,
+        "sha256": "19ff868fea9fdd909fff8ed20b938845eb5d85d9f4aa6c66b7536413bd53f650"
+      },
+      "P2_design_body_size_rule": {
+        "records": 83,
+        "sha256": "8fa05f29224f96af6c2c5da277c2d0aef1a1e0498e37c183372ca84aa17c0db2"
+      },
+      "P2_child_door_size_rule": {
+        "records": 31,
+        "sha256": "8361862546c111bf54ca69180b501d43d6164927245ab6fdb2258108cf755b4f"
+      },
+      "P2_secondary_leaf_size_rule": {
+        "records": 6,
+        "sha256": "13863d753b22687ccfb3d1a8a85ab6625c27bf46e8437e9b1a4ee3f646e63a31"
+      },
+      "P2_sidelight_size_rule": {
+        "records": 2,
+        "sha256": "47dcee183d83a581f80e19691d84da5168820c3c02ba436253e645a246b36204"
+      },
+      "P2_configuration_size_rule": {
+        "records": 8,
+        "sha256": "8131e4f08e6880122b769e1870dce79a4415ea1a7aacc9dff886e78ceade2e93"
+      },
+      "P2_size_dependency_rule_master": {
+        "records": 14,
+        "sha256": "29f1490644301ed5e97f8f83f8848e7861ed20dfa4258d844b3b0019d3ed5bbb"
+      }
+    }
+  },
+  "new_rule_ids": [
+    "GST2_R4_WATCH_FAMILOCK_ONLY",
+    "GST2_R4_WATCH_SERIES_MIN",
+    "GST2_R4_WATCH_COMPATIBILITY",
+    "GST2_R4_WATCH_MANUAL_BACKUP",
+    "GST2_R4_LINK_FAMILOCK_ONLY",
+    "GST2_R4_LINK_PACKAGE",
+    "GST2_R4_DOORPHONE_PACKAGE",
+    "GST2_R4_LINK_SITE_CONFIRM",
+    "GST2_R4_CURRENT_ESTIMATE"
+  ],
+  "new_evidence_ids": [
+    "GST2_R4_E01",
+    "GST2_R4_E02",
+    "GST2_R4_E03",
+    "GST2_R4_E04",
+    "GST2_R4_E05",
+    "GST2_R4_E06"
+  ],
+  "formal_master_role": "PRODUCT_MASTER_JSON; 95-sheet Google Sheets remains original Working authoring and a pinned audit snapshot",
+  "runtime_scope": "NOT_INCLUDED_IN_PRODUCT_MASTER_FORMAL",
+  "exclusions": [
+    "ジエスタ2防火戸",
+    "自動価格/BOM/数量拾い/最終Set Code/発注確定",
+    "機種OSの最新適合の自動確定",
+    "現地通信/施工成立の自動確定",
+    "納期の自動確定",
+    "Runtime/Adapter/Canonical/UI/本番公開"
+  ],
+  "controlled_unresolved": [
+    {
+      "gap_id": "GST2_R4_G01",
+      "target_gate": "NONBLOCKING_ESTIMATE_CONFIRM",
+      "status": "ESTIMATE_CONFIRM_REQUIRED",
+      "automatic_orderability": false
+    },
+    {
+      "gap_id": "GST2_R4_G02",
+      "target_gate": "NONBLOCKING_ESTIMATE_CONFIRM",
+      "status": "ESTIMATE_CONFIRM_REQUIRED",
+      "automatic_orderability": false
+    },
+    {
+      "gap_id": "GST2_R4_G03",
+      "target_gate": "NONBLOCKING_ESTIMATE_CONFIRM",
+      "status": "ESTIMATE_CONFIRM_REQUIRED",
+      "automatic_orderability": false
+    },
+    {
+      "gap_id": "GST2_R4_G04",
+      "target_gate": "NONBLOCKING_ESTIMATE_CONFIRM",
+      "status": "ESTIMATE_CONFIRM_REQUIRED",
+      "automatic_orderability": false
+    },
+    {
+      "gap_id": "GST2_R4_G05",
+      "target_gate": "NONBLOCKING_ESTIMATE_CONFIRM",
+      "status": "ESTIMATE_CONFIRM_REQUIRED",
+      "automatic_orderability": false
+    },
+    {
+      "gap_id": "GST2_R4_G06",
+      "target_gate": "NONBLOCKING_ESTIMATE_CONFIRM",
+      "status": "ESTIMATE_CONFIRM_REQUIRED",
+      "automatic_orderability": false
+    }
+  ],
+  "formal_metrics_scope": "R4 reviewed facts/dependencies/confirmations plus byte-identical retained Formal baseline. Historical Authoring Universe unresolved is retained, not globally declared zero.",
+  "selection_behavior": "Manufacturer-forbidden combinations BLOCK; unverified installation/device/commercial facts hand off for confirmation and never enable automatic ordering"
+}

@@ -1,0 +1,9 @@
+{
+  "source": "ACTUAL_HUMAN_ASYNC_QUESTION_REPLY_IN_CURRENT_CONVERSATION",
+  "question_item_id": "[\"request_user_input_async\",\"call_09c90b7a1d804e6da041f3267fe7562c\",0]",
+  "answer": "更新後のbindingで正式保存を承認する",
+  "packet_payload_sha256": "6974f747da1f8fb6cc7430b6cade9faa8581b5e4f461548a152cd6073a5b96eb",
+  "packet_file_id": "1IHXCDTBPKzuyDvKvUEhqcgRjGm-yng8a",
+  "client_date_jst": "2026-10-16",
+  "scope": "GIESTA2_v0.8-R4_FORMAL_SAVE_REGISTRY_READBACK; no UI/Production"
+}

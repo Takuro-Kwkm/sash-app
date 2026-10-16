@@ -1,0 +1,62 @@
+[
+  {
+    "evidence_id": "GST2_R4_E01",
+    "field_name": "credential_id/watch_compatibility",
+    "asserted_value": "My Entrance for Watch、Apple Watch Series 6以降、FamiLock専用、2026年10月対応",
+    "source_id": "SRC_DL1400_202610_B",
+    "locator": "DL1400 紙面p195 / PDF199、表紙直後PDF4-5",
+    "status": "VERIFIED_OFFICIAL",
+    "reviewed_by": "AI_SOURCE_REVIEW",
+    "formal_adoption": "NOT_ADOPTED"
+  },
+  {
+    "evidence_id": "GST2_R4_E02",
+    "field_name": "lifeassist_requested/required_devices",
+    "asserted_value": "FamiLock Link＋ホームデバイス＋推奨ルーター、基本プラン電池式/ACアダプター",
+    "source_id": "SRC_DL1400_202610_B",
+    "locator": "DL1400 p202-204、208-211 / PDF206-208、212-215",
+    "status": "VERIFIED_OFFICIAL",
+    "reviewed_by": "AI_SOURCE_REVIEW",
+    "formal_adoption": "NOT_ADOPTED"
+  },
+  {
+    "evidence_id": "GST2_R4_E03",
+    "field_name": "remote_visitor_response_requested/installation",
+    "asserted_value": "Life Assist2ドアホン親機/玄関子機が必要。接続図の見通し2m/10m条件",
+    "source_id": "SRC_DL1400_202610_B",
+    "locator": "DL1400 p205、207、211 / PDF209、211、215",
+    "status": "VERIFIED_OFFICIAL",
+    "reviewed_by": "AI_SOURCE_REVIEW",
+    "formal_adoption": "NOT_ADOPTED"
+  },
+  {
+    "evidence_id": "GST2_R4_E04",
+    "field_name": "price_bom_order/lead_time",
+    "asserted_value": "2026年10月価格掲載版。個別価格/部材/発注と移設された納期一覧を案件で確認",
+    "source_id": "SRC_IG4400_202609_A;SRC_IG4400_202609_B",
+    "locator": "IG4400 非防火g1-g78 / PDF145-222、納期一覧PDF318",
+    "status": "VERIFIED_OFFICIAL",
+    "reviewed_by": "AI_SOURCE_REVIEW",
+    "formal_adoption": "NOT_ADOPTED"
+  },
+  {
+    "evidence_id": "GST2_R4_E05",
+    "field_name": "standard_size/custom_dimensions",
+    "asserted_value": "既存規格寸法・特注式と非防火寸法範囲の新版照合。数値変更なし",
+    "source_id": "SRC_DL1400_202610_B",
+    "locator": "DL1400 p272、284 / PDF276、288",
+    "status": "VERIFIED_OFFICIAL",
+    "reviewed_by": "AI_SOURCE_REVIEW",
+    "formal_adoption": "NOT_ADOPTED"
+  },
+  {
+    "evidence_id": "GST2_R4_E06",
+    "field_name": "existing_design_color_handle_glass_options",
+    "asserted_value": "非防火本体・部材体系をIG4400 g1-g78で照合。既存Source/Evidenceを削除せず新版を補強根拠へ追加",
+    "source_id": "SRC_IG4400_202609_A;SRC_IG4400_202609_B",
+    "locator": "IG4400 PDF145-222; DL1400 デザイン/子扉/ハンドル/ガラス/装備/納まり",
+    "status": "VERIFIED_OFFICIAL",
+    "reviewed_by": "AI_SOURCE_REVIEW",
+    "formal_adoption": "NOT_ADOPTED"
+  }
+]

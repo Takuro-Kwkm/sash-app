@@ -1,0 +1,386 @@
+{
+  "product_id": "CANDIDATE:GIESTA2_NONFIRE",
+  "manifest_file_id": "1lQ2I3rp1iR_726PqgqOi6mL_GNqUTYTK",
+  "output_size_label": "枠寸法",
+  "hidden_fields": [],
+  "number_fields": [
+    "quantity"
+  ],
+  "internal_tokens": [
+    "GST2_",
+    "ESTIMATE_CONFIRM_REQUIRED",
+    "NONBLOCKING_ESTIMATE_CONFIRM"
+  ],
+  "ordered_fields": [
+    "thermal_spec_id",
+    "door_configuration_id",
+    "design_id",
+    "child_door_id",
+    "secondary_leaf_id",
+    "sidelight_id",
+    "glass_id",
+    "child_glass_id",
+    "secondary_glass_id",
+    "sidelight_glass_id",
+    "door_color_code",
+    "interior_color_code",
+    "frame_color_id",
+    "child_door_color_code",
+    "hinge_side_id",
+    "door_closer_id",
+    "handle_id",
+    "official_handle_code",
+    "lock_kind",
+    "lock_system_id",
+    "power_supply_id",
+    "lock_plan_id",
+    "credential_package_id",
+    "credential_id",
+    "operation_device_id",
+    "watch_series",
+    "lifeassist_requested",
+    "remote_visitor_response_requested",
+    "cylinder_id",
+    "size_mode",
+    "standard_size_id",
+    "frame_w",
+    "frame_h",
+    "option_id",
+    "quantity"
+  ],
+  "rows": [
+    {
+      "id": "single",
+      "seed": {
+        "quantity": 1,
+        "door_configuration_id": "single",
+        "design_id": "GST2_C11",
+        "thermal_spec_id": "k2",
+        "lock_kind": false,
+        "size_mode": "STANDARD",
+        "door_color_code": "EA",
+        "frame_color_id": "GST2_FRAME_COLOR_NATURAL_SILVER",
+        "hinge_side_id": "GST2_HINGE_R",
+        "door_closer_id": "GST2_CLOSER_2STOP",
+        "handle_id": "GST2_HANDLE_S",
+        "official_handle_code": "S1B",
+        "lock_system_id": "GST2_LOCK_MANUAL",
+        "power_supply_id": "GST2_POWER_NONE",
+        "lock_plan_id": "GST2_PLAN_MANUAL_STANDARD",
+        "cylinder_id": "GST2_CYL_DN",
+        "standard_size_id": "GST2_STD_SINGLE_924x2330",
+        "frame_w": 924,
+        "frame_h": 2330
+      },
+      "expected_valid": true,
+      "expected_quantity": 1,
+      "expected_confirmation_ids": [
+        "GST2_R4_G06"
+      ],
+      "actions": []
+    },
+    {
+      "id": "parent_child",
+      "seed": {
+        "quantity": 1,
+        "door_configuration_id": "parent_child",
+        "design_id": "GST2_C11",
+        "thermal_spec_id": "k2",
+        "lock_kind": false,
+        "size_mode": "STANDARD",
+        "child_door_id": "GST2_CHILD_K11",
+        "child_glass_id": "GST2_GLASS_STD_K2",
+        "door_color_code": "EA",
+        "frame_color_id": "GST2_FRAME_COLOR_NATURAL_SILVER",
+        "child_door_color_code": "EH",
+        "hinge_side_id": "GST2_HINGE_R",
+        "door_closer_id": "GST2_CLOSER_2STOP",
+        "handle_id": "GST2_HANDLE_S",
+        "official_handle_code": "S1B",
+        "lock_system_id": "GST2_LOCK_MANUAL",
+        "power_supply_id": "GST2_POWER_NONE",
+        "lock_plan_id": "GST2_PLAN_MANUAL_STANDARD",
+        "cylinder_id": "GST2_CYL_DN",
+        "standard_size_id": "GST2_STD_PARENT_1240x2330",
+        "frame_w": 1240,
+        "frame_h": 2330
+      },
+      "expected_valid": true,
+      "expected_quantity": 1,
+      "expected_confirmation_ids": [
+        "GST2_R4_G06"
+      ],
+      "actions": []
+    },
+    {
+      "id": "single_sidelight",
+      "seed": {
+        "quantity": 1,
+        "door_configuration_id": "single_sidelight",
+        "design_id": "GST2_C11",
+        "thermal_spec_id": "k2",
+        "lock_kind": false,
+        "size_mode": "STANDARD",
+        "sidelight_id": "GST2_SIDE_SINGLE",
+        "sidelight_glass_id": "GST2_GLASS_SIDE_K2_MILKY",
+        "door_color_code": "EA",
+        "frame_color_id": "GST2_FRAME_COLOR_NATURAL_SILVER",
+        "hinge_side_id": "GST2_HINGE_R",
+        "door_closer_id": "GST2_CLOSER_2STOP",
+        "handle_id": "GST2_HANDLE_S",
+        "official_handle_code": "S1B",
+        "lock_system_id": "GST2_LOCK_MANUAL",
+        "power_supply_id": "GST2_POWER_NONE",
+        "lock_plan_id": "GST2_PLAN_MANUAL_STANDARD",
+        "cylinder_id": "GST2_CYL_DN",
+        "standard_size_id": "GST2_STD_SINGLE_SIDE_1240x2330",
+        "frame_w": 1240,
+        "frame_h": 2330
+      },
+      "expected_valid": true,
+      "expected_quantity": 1,
+      "expected_confirmation_ids": [
+        "GST2_R4_G06"
+      ],
+      "actions": []
+    },
+    {
+      "id": "double_sidelight",
+      "seed": {
+        "quantity": 1,
+        "door_configuration_id": "double_sidelight",
+        "design_id": "GST2_C11",
+        "thermal_spec_id": "k2",
+        "lock_kind": false,
+        "size_mode": "STANDARD",
+        "sidelight_id": "GST2_SIDE_DOUBLE",
+        "sidelight_glass_id": "GST2_GLASS_SIDE_K2_MILKY",
+        "door_color_code": "EA",
+        "frame_color_id": "GST2_FRAME_COLOR_NATURAL_SILVER",
+        "hinge_side_id": "GST2_HINGE_R",
+        "door_closer_id": "GST2_CLOSER_2STOP",
+        "handle_id": "GST2_HANDLE_S",
+        "official_handle_code": "S1B",
+        "lock_system_id": "GST2_LOCK_MANUAL",
+        "power_supply_id": "GST2_POWER_NONE",
+        "lock_plan_id": "GST2_PLAN_MANUAL_STANDARD",
+        "cylinder_id": "GST2_CYL_DN",
+        "standard_size_id": "GST2_STD_DOUBLE_SIDE_1240x2330",
+        "frame_w": 1240,
+        "frame_h": 2330
+      },
+      "expected_valid": true,
+      "expected_quantity": 1,
+      "expected_confirmation_ids": [
+        "GST2_R4_G06"
+      ],
+      "actions": []
+    },
+    {
+      "id": "parent_child_corner",
+      "seed": {
+        "quantity": 1,
+        "door_configuration_id": "parent_child_corner",
+        "design_id": "GST2_C11",
+        "thermal_spec_id": "k2",
+        "lock_kind": false,
+        "size_mode": "STANDARD",
+        "child_door_id": "GST2_CHILD_K11C",
+        "child_glass_id": "GST2_GLASS_STD_K2",
+        "door_color_code": "EA",
+        "frame_color_id": "GST2_FRAME_COLOR_NATURAL_SILVER",
+        "child_door_color_code": "EH",
+        "hinge_side_id": "GST2_HINGE_R",
+        "door_closer_id": "GST2_CLOSER_2STOP",
+        "handle_id": "GST2_HANDLE_S",
+        "official_handle_code": "S1B",
+        "lock_system_id": "GST2_LOCK_MANUAL",
+        "power_supply_id": "GST2_POWER_NONE",
+        "lock_plan_id": "GST2_PLAN_MANUAL_STANDARD",
+        "cylinder_id": "GST2_CYL_DN",
+        "standard_size_id": "GST2_STD_PARENT_CORNER_1138x2330",
+        "frame_w": 1138,
+        "frame_h": 2330
+      },
+      "expected_valid": true,
+      "expected_quantity": 1,
+      "expected_confirmation_ids": [
+        "GST2_R4_G06"
+      ],
+      "actions": []
+    },
+    {
+      "id": "double_door",
+      "seed": {
+        "quantity": 1,
+        "door_configuration_id": "double_door",
+        "design_id": "GST2_C13",
+        "thermal_spec_id": "k2",
+        "lock_kind": false,
+        "size_mode": "STANDARD",
+        "glass_id": "GST2_GLASS_STD_K2",
+        "secondary_leaf_id": "GST2_SECONDARY_C13",
+        "secondary_glass_id": "GST2_GLASS_STD_K2",
+        "door_color_code": "EA",
+        "frame_color_id": "GST2_FRAME_COLOR_NATURAL_SILVER",
+        "hinge_side_id": "GST2_HINGE_R",
+        "door_closer_id": "GST2_CLOSER_2STOP",
+        "handle_id": "GST2_HANDLE_S",
+        "official_handle_code": "S1B",
+        "lock_system_id": "GST2_LOCK_MANUAL",
+        "power_supply_id": "GST2_POWER_NONE",
+        "lock_plan_id": "GST2_PLAN_MANUAL_STANDARD",
+        "cylinder_id": "GST2_CYL_DN",
+        "standard_size_id": "GST2_STD_DOUBLE_DOOR_1692x2330",
+        "frame_w": 1692,
+        "frame_h": 2330
+      },
+      "expected_valid": true,
+      "expected_quantity": 1,
+      "expected_confirmation_ids": [
+        "GST2_R4_G06"
+      ],
+      "actions": []
+    },
+    {
+      "id": "familock-watch-link",
+      "seed": {
+        "quantity": 2,
+        "door_configuration_id": "single",
+        "design_id": "GST2_C11",
+        "thermal_spec_id": "k2",
+        "lock_kind": true,
+        "size_mode": "STANDARD",
+        "door_color_code": "EA",
+        "frame_color_id": "GST2_FRAME_COLOR_NATURAL_SILVER",
+        "hinge_side_id": "GST2_HINGE_R",
+        "door_closer_id": "GST2_CLOSER_2STOP",
+        "handle_id": "GST2_HANDLE_S",
+        "official_handle_code": "S1A",
+        "lock_system_id": "GST2_LOCK_FAMILOCK",
+        "power_supply_id": "GST2_POWER_BATTERY",
+        "cylinder_id": "GST2_CYL_DN",
+        "standard_size_id": "GST2_STD_SINGLE_924x2330",
+        "frame_w": 924,
+        "frame_h": 2330,
+        "credential_id": "GST2_CRED_APPLE_WATCH",
+        "watch_series": 8,
+        "lifeassist_requested": true,
+        "remote_visitor_response_requested": true,
+        "lock_plan_id": "GST2_PLAN_FAM_BASIC_BATTERY",
+        "credential_package_id": "GST2_PKG_FAM_CARD_R0"
+      },
+      "expected_valid": true,
+      "expected_quantity": 2,
+      "expected_confirmation_ids": [
+        "GST2_R4_G01",
+        "GST2_R4_G02",
+        "GST2_R4_G03",
+        "GST2_R4_G04",
+        "GST2_R4_G05",
+        "GST2_R4_G06"
+      ],
+      "number_fields": [
+        "watch_series"
+      ],
+      "actions": [
+        {
+          "field": "credential_id",
+          "value": "GST2_CRED_MANUAL_KEY",
+          "cleared": [
+            "watch_series"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "custom",
+      "seed": {
+        "quantity": 1,
+        "door_configuration_id": "single",
+        "design_id": "GST2_C11",
+        "thermal_spec_id": "k2",
+        "lock_kind": false,
+        "size_mode": "CUSTOM",
+        "door_color_code": "EA",
+        "frame_color_id": "GST2_FRAME_COLOR_NATURAL_SILVER",
+        "hinge_side_id": "GST2_HINGE_R",
+        "door_closer_id": "GST2_CLOSER_2STOP",
+        "handle_id": "GST2_HANDLE_S",
+        "official_handle_code": "S1B",
+        "lock_system_id": "GST2_LOCK_MANUAL",
+        "power_supply_id": "GST2_POWER_NONE",
+        "lock_plan_id": "GST2_PLAN_MANUAL_STANDARD",
+        "cylinder_id": "GST2_CYL_DN",
+        "frame_w": 924,
+        "frame_h": 2330
+      },
+      "expected_valid": true,
+      "expected_quantity": 1,
+      "expected_confirmation_ids": [
+        "GST2_R4_G06"
+      ],
+      "number_fields": [
+        "frame_w",
+        "frame_h"
+      ],
+      "actions": [
+        {
+          "field": "size_mode",
+          "value": "STANDARD",
+          "cleared": [
+            "frame_w",
+            "frame_h"
+          ],
+          "missing": [
+            "standard_size_id"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "watch-series-outside",
+      "seed": {
+        "quantity": 2,
+        "door_configuration_id": "single",
+        "design_id": "GST2_C11",
+        "thermal_spec_id": "k2",
+        "lock_kind": true,
+        "size_mode": "STANDARD",
+        "door_color_code": "EA",
+        "frame_color_id": "GST2_FRAME_COLOR_NATURAL_SILVER",
+        "hinge_side_id": "GST2_HINGE_R",
+        "door_closer_id": "GST2_CLOSER_2STOP",
+        "handle_id": "GST2_HANDLE_S",
+        "official_handle_code": "S1A",
+        "lock_system_id": "GST2_LOCK_FAMILOCK",
+        "power_supply_id": "GST2_POWER_BATTERY",
+        "cylinder_id": "GST2_CYL_DN",
+        "standard_size_id": "GST2_STD_SINGLE_924x2330",
+        "frame_w": 924,
+        "frame_h": 2330,
+        "credential_id": "GST2_CRED_APPLE_WATCH",
+        "watch_series": 5,
+        "lifeassist_requested": true,
+        "remote_visitor_response_requested": true,
+        "lock_plan_id": "GST2_PLAN_FAM_BASIC_BATTERY",
+        "credential_package_id": "GST2_PKG_FAM_CARD_R0"
+      },
+      "expected_valid": false,
+      "expected_quantity": 2,
+      "expected_confirmation_ids": [
+        "GST2_R4_G01",
+        "GST2_R4_G02",
+        "GST2_R4_G03",
+        "GST2_R4_G04",
+        "GST2_R4_G05",
+        "GST2_R4_G06"
+      ],
+      "number_fields": [
+        "watch_series"
+      ],
+      "actions": []
+    }
+  ],
+  "qa_state": "NOT_EXECUTED_HUMAN_FLOW_REVIEW_REQUIRED"
+}

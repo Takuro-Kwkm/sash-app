@@ -1,0 +1,23 @@
+{
+  "status": "NATIVE_CANDIDATE_BYTES_READBACK_PASS",
+  "index_file_id": "1lQ2I3rp1iR_726PqgqOi6mL_GNqUTYTK",
+  "module_file_id": "1AvbSH21qA4EGbKQUkoVRWibMgGBPf_lS",
+  "index_sha256": "51a151f2fd074d5148fad2fd814fc371515d6faf437359419b99bd09f0511c6c",
+  "module_sha256": "b381ac5b7e2d470557886ac206fa2ebe1ae9dde40b6bfcc9e42a570486d73308",
+  "owner": "koryu06@gmail.com",
+  "parent": "16uPFbdAcgcRcxSq7KLyum1NlhU6Clxx7",
+  "files": [
+    {
+      "path": "index.json",
+      "bytes": 20774,
+      "sha256": "51a151f2fd074d5148fad2fd814fc371515d6faf437359419b99bd09f0511c6c",
+      "file_id": "1lQ2I3rp1iR_726PqgqOi6mL_GNqUTYTK"
+    },
+    {
+      "path": "candidates/module.json",
+      "bytes": 774517,
+      "sha256": "b381ac5b7e2d470557886ac206fa2ebe1ae9dde40b6bfcc9e42a570486d73308",
+      "file_id": "1AvbSH21qA4EGbKQUkoVRWibMgGBPf_lS"
+    }
+  ]
+}

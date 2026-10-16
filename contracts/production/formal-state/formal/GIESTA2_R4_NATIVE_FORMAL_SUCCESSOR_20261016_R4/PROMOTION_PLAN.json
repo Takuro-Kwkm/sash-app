@@ -1,0 +1,17 @@
+{
+  "product_id": "NATIVE_REGISTRY:LIXIL::ジエスタ2",
+  "from_revision": "v0.8-R3",
+  "to_revision": "v0.8-R4",
+  "state": "PROPOSED_ADOPTION_ONLY",
+  "formal_primary": "PRODUCT_MASTER.json",
+  "master_sha256": "8656beeb27ad8c7b44c85fc587b80af7db73340d721e6ea4c55bd31fe7dcd5bd",
+  "qa_scope": "GST2_R4_FORMAL_SELECTION_20261015",
+  "qa_sha256": "ae80ba96e418743bcf0ae10943776e07b1968adab7bc141823987209ed309100",
+  "carried_content_checks": 195,
+  "formal_scope_checks": 18,
+  "controlled_unresolved": 6,
+  "unresolved": "RETAINED; no inference/auto-order",
+  "runtime_scope": "NOT_INCLUDED_IN_PRODUCT_MASTER_FORMAL",
+  "effective_condition": "Actual same-wrapper Human Decision and Native POST_SAVE_VERIFIED then Shared Formal save",
+  "human_decision": "PENDING_EXTERNAL_HUMAN; never pre-generated"
+}

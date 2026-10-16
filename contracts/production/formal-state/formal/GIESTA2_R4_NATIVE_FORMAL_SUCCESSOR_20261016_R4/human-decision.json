@@ -1,0 +1,8 @@
+{
+  "actor_kind": "HUMAN",
+  "gate": "HUMAN_ADOPTION",
+  "decision": "APPROVED",
+  "payload_sha256": "6974f747da1f8fb6cc7430b6cade9faa8581b5e4f461548a152cd6073a5b96eb",
+  "decision_ref": "/Users/takuro/マイドライブ/仕事用/01_住宅サッシ/04_商品マスター/01_LIXIL/ジエスタ2/90_作業中/formal-successor-v0.8-R4-20261016/work/human-decision-source.json",
+  "source_evidence_sha256": "ee1d2518cb883a4c571f9ade9199eb91480631cbfe4fc54315d98da537427227"
+}

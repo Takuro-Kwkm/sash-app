@@ -1,0 +1,75 @@
+{
+  "current_axis": "PROJECT_CURRENT",
+  "central_repository": "Takuro-Kwkm/product-ui-contracts",
+  "central_head": "a66ecca3db80e57a4bbd6c7a611d991c5d60c10c",
+  "current_architecture": {
+    "path": "/private/tmp/giesta2-formal-adoption-20261015-current/registries/current-architecture.v2.json",
+    "sha256": "e9134734618c3191b784e73fbad175364a38bb6c51897cbf1492d272ab444220"
+  },
+  "skill_authority": {
+    "path": "/private/tmp/giesta2-formal-adoption-20261015-current/registries/skill-authority.v2.json",
+    "sha256": "39efeca95214ea29816c6666b53c8127e665c821e74e34de3738761cc797e7d3"
+  },
+  "canonical_skill": {
+    "path": "/private/tmp/giesta2-formal-adoption-20261015-current/work_skills/product-change-work/SKILL.md",
+    "sha256": "5aa334ccbd3630334b935999f9ac57238b84050dfc09f014b5c69bd1a4c087ad"
+  },
+  "consumer_adopted_implementation": "68f2fe69831a33ab92789526bdcd7a49446122a2",
+  "native_profile": {
+    "path": "contracts/production/giesta2-formal-profile.v1.json",
+    "sha256": "09b5b1eece7625b0399c13c9a300ac97c34ebb54f33e2d6073f6604b8156aff8"
+  },
+  "native_execution_head": "BOUND_BY_IMMUTABLE_WORK_SPEC_AFTER_CONNECTION_MAIN_ADOPTION",
+  "governance": {
+    "APP_CHANGE_GUARDRAIL": {
+      "file_id": "1HjmbESId59vmZ9IPE5ryJRqGEqBr_6K1OoRQ-faK37M",
+      "modified_time": "2026-08-29T14:50:30.872Z",
+      "readable_content_sha256": "c4940eabad0e76285f84c855d83dd51f5d454aca9fbaa4ea9158923d09cb4181"
+    },
+    "COMMON_PRODUCT_APP_STANDARD": {
+      "file_id": "1dFNkgVQP8dBfuWNG5UhumGBeVZvVOVzih4FHB9PZ0MU",
+      "modified_time": "2026-09-27T11:44:22.489Z",
+      "readable_content_sha256": "68117c4eb74adf518ebb38b3cb2ab0a10ca4ba5c51dfbd857796ebc7547e58e8"
+    },
+    "PRODUCT_MASTER_COMPLETION_POLICY": {
+      "file_id": "1v2fTNZZq1VxbrDK5MixM_OZTP4KftejRhERIMNMAAqQ",
+      "modified_time": "2026-09-29T07:38:16.349Z",
+      "readable_content_sha256": "3b41c273b19804a68b8663ae5c8f120aa09565a8d8b219bb9aa02ceb2d416d80"
+    },
+    "CONTROLLED_UNRESOLVED_GOVERNANCE": {
+      "file_id": "1ZZUD4FNCYQRe48FLzW43mcewS_bCi5gVVuvffrO-NF4",
+      "modified_time": "2026-09-27T11:48:14.284Z",
+      "readable_content_sha256": "e09c54d58b482e95797e1490def0364bc335e9d19d6cc6e550eec734db551b37"
+    },
+    "EVIDENCE_GOVERNANCE": {
+      "file_id": "1MFGkRIBveWe1OtaTJtKxJ30cZM4FqPCcN_L2fs-T8TE",
+      "modified_time": "2026-09-27T11:46:25.888Z",
+      "readable_content_sha256": "62a1e0fcac4c305f19e613840af0de4e14aba4179e468f02a7e768517a4937f3"
+    },
+    "DATA_DICTIONARY": {
+      "file_id": "1YQzUudx8ft3igY-vvEFtnqHzgsVj6udV7jGOaaNnM38",
+      "modified_time": "2026-08-27T22:19:34.958Z",
+      "readable_content_sha256": "7e55018e561740891ccc2159cf64fac6857b8e8835ac82425ada01f2cf4f38d3"
+    },
+    "SASH_PROJECT_INSTRUCTIONS": {
+      "file_id": "1vuexA-sGCeoO6gOeqogvdQvHpDmAr0wia14tRPYen1k",
+      "modified_time": "2026-09-29T07:38:11.223Z",
+      "readable_content_sha256": "397a0cbb9a569cc418eff8fbf74bb4d82ae019a50ef6b6267b1d3e6845bcd4a3"
+    },
+    "SALES_ESTIMATE_REQUEST_BOUNDARY": {
+      "file_id": "1_kKAVLQe2cJeKspQE6fYqnUl2_rSjlCGpxZVwIu4YsY",
+      "modified_time": "2026-09-29T07:38:13.395Z",
+      "readable_content_sha256": "703ae881cdb313dc3b83bb17cf86ffbfee350b04687747ee27892da944e651b9"
+    },
+    "SASH_PRODUCT_MASTER_COMMON": {
+      "file_id": "1MfixkbV1cZ__DtBknEKsix_nnrXQqjc-LZtXUHwJv_A",
+      "modified_time": "2026-09-27T11:46:20.062Z",
+      "readable_content_sha256": "2ddb3f2062afdc39177aef7bbb735a4ff5f8d3f992a12083310912ffa1991268"
+    },
+    "SASH_PACKAGE_STORAGE_GATE": {
+      "file_id": "1X8qLOZ1y6QpqwD1l4VOq3m6ow8-eGNDJppVeEWEluo4",
+      "modified_time": "2026-09-29T07:38:18.627Z",
+      "readable_content_sha256": "b862051bcd52c00aa6df5ae02770e194c979a263e8046ad8ff0e278d54717cae"
+    }
+  }
+}

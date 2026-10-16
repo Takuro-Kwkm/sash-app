@@ -54,6 +54,18 @@ export function declaredSelectionErrors(module, input, selection) {
         errorCode: 'UNDECLARED_SELECTION_FIELD', field: key, message: '未対応の入力項目があります。選択内容を確認してください。',
       });
     }
+    if (set.payload.rejectDiscardedSelection) {
+      for (const definition of module.specificationDefinitions) {
+        const key = definition.key, value = input?.[key];
+        if (value === undefined || value === null || value === '' || !selectorMatches(definition.selector, input, context)) continue;
+        const admitted = module.allowedValues.filter(row => row.specificationKey === key && row.status !== 'INACTIVE' && selectorMatches(row.selector, input, context));
+        if (!module.allowedValues.some(row => row.specificationKey === key)) continue;
+        const values = Array.isArray(value) ? value : [value];
+        if (values.some(one => !admitted.some(row => Object.is(row.value, one)))) errors.push({
+          errorCode: 'DECLARED_CHOICE_NOT_ADMITTED', field: key, message: '選択した条件では利用できない値が含まれています。選び直してください。',
+        });
+      }
+    }
     for (const rule of set.payload.numbers ?? []) {
       const value = input?.[rule.key];
       if (value === undefined || value === null || value === '') continue;

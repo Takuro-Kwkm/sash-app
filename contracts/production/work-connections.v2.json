@@ -371,7 +371,7 @@
       ],
       "repository": "Takuro-Kwkm/sash-app",
       "connection_state": "CONNECTED",
-      "current_formal_version": "v0.8-R3",
+      "current_formal_version": "v0.8-R4",
       "formal_registry_selector": "LIXIL::ジエスタ2",
       "default_gate": "QA_READY",
       "baseline_selector": {
@@ -408,7 +408,13 @@
       "formal_profile": {
         "path": "contracts/production/giesta2-formal-profile.v1.json",
         "sha256": "09b5b1eece7625b0399c13c9a300ac97c34ebb54f33e2d6073f6604b8156aff8"
-      }
+      },
+      "runtime_candidate_profile": {
+        "path": "contracts/production/runtime-candidates/giesta2-nonfire-r4.profile.json",
+        "sha256": "48acdd93fdbd5bf6cb4c4650d583c63a839d5d91f51c79945ab7fb20a8072d69"
+      },
+      "formal_state_root": "contracts/production/formal-state",
+      "current_formal_selector": "contracts/production/formal-state/current/LIXIL_GIESTA2_NON_FIRE.json"
     },
     {
       "product_id": "NATIVE_REGISTRY:LIXIL::エルムーブ2",
