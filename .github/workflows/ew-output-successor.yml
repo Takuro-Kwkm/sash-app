@@ -1,10 +1,49 @@
 name: EW Output Successor
-on:
+"on":
   pull_request:
-    paths: ['contracts/production/publication-lifecycle*.json', 'contracts/production/current-architecture.json', 'contracts/production/current-authority-successor.json', 'contracts/production/authority-successors/publication-lifecycle*.json', 'contracts/production/release-profile.v1.json', 'contracts/production/release-profiles/**', 'scripts/production/publication-lifecycle*.mjs', 'scripts/production/protected-qa-access.mjs', 'scripts/production/verify-app-release.mjs', 'test/protected-qa-access.test.mjs', 'scripts/production/publication-lifecycle-scope.py', 'scripts/production/prepare-publication-lifecycle.py', 'src/estimate-output/xlsx-renderer.mjs', 'test/74-estimate-output.test.mjs', 'scripts/production/ew-change.py', 'scripts/production/prepare-ew.py', 'scripts/production/test_ew_output_successor.py', 'contracts/production/order5-*.json', '.github/workflows/ew-output-successor.yml']
+    paths:
+      - contracts/production/publication-lifecycle*.json
+      - contracts/production/current-architecture.json
+      - contracts/production/current-authority-successor.json
+      - contracts/production/authority-successors/publication-lifecycle*.json
+      - contracts/production/release-profile.v1.json
+      - contracts/production/release-profiles/**
+      - scripts/production/publication-lifecycle*.mjs
+      - scripts/production/protected-qa-access.mjs
+      - scripts/production/verify-app-release.mjs
+      - test/protected-qa-access.test.mjs
+      - scripts/production/publication-lifecycle-scope.py
+      - scripts/production/prepare-publication-lifecycle.py
+      - src/estimate-output/xlsx-renderer.mjs
+      - test/74-estimate-output.test.mjs
+      - scripts/production/ew-change.py
+      - scripts/production/prepare-ew.py
+      - scripts/production/test_ew_output_successor.py
+      - contracts/production/order5-*.json
+      - .github/workflows/ew-output-successor.yml
   push:
-    branches: [main]
-    paths: ['contracts/production/publication-lifecycle*.json', 'contracts/production/current-architecture.json', 'contracts/production/current-authority-successor.json', 'contracts/production/authority-successors/publication-lifecycle*.json', 'contracts/production/release-profile.v1.json', 'contracts/production/release-profiles/**', 'scripts/production/publication-lifecycle*.mjs', 'scripts/production/protected-qa-access.mjs', 'scripts/production/verify-app-release.mjs', 'test/protected-qa-access.test.mjs', 'scripts/production/publication-lifecycle-scope.py', 'scripts/production/prepare-publication-lifecycle.py', 'src/estimate-output/xlsx-renderer.mjs', 'test/74-estimate-output.test.mjs', 'scripts/production/ew-change.py', 'scripts/production/prepare-ew.py', 'scripts/production/test_ew_output_successor.py', 'contracts/production/order5-*.json', '.github/workflows/ew-output-successor.yml']
+    branches:
+      - main
+    paths:
+      - contracts/production/publication-lifecycle*.json
+      - contracts/production/current-architecture.json
+      - contracts/production/current-authority-successor.json
+      - contracts/production/authority-successors/publication-lifecycle*.json
+      - contracts/production/release-profile.v1.json
+      - contracts/production/release-profiles/**
+      - scripts/production/publication-lifecycle*.mjs
+      - scripts/production/protected-qa-access.mjs
+      - scripts/production/verify-app-release.mjs
+      - test/protected-qa-access.test.mjs
+      - scripts/production/publication-lifecycle-scope.py
+      - scripts/production/prepare-publication-lifecycle.py
+      - src/estimate-output/xlsx-renderer.mjs
+      - test/74-estimate-output.test.mjs
+      - scripts/production/ew-change.py
+      - scripts/production/prepare-ew.py
+      - scripts/production/test_ew_output_successor.py
+      - contracts/production/order5-*.json
+      - .github/workflows/ew-output-successor.yml
 permissions:
   contents: read
 jobs:
@@ -14,24 +53,35 @@ jobs:
       SHARED_HARNESS_ROOT: /tmp/order5-shared-release
     steps:
       - uses: actions/checkout@v4
-        with: {ref: '${{ github.event.pull_request.head.sha || github.sha }}', fetch-depth: 0}
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+      - name: Verify conditions successor and inspect preserved predecessor
+        run: |-
+          python3 -B scripts/production/product-conditions-scope.py --predecessor /tmp/product-conditions-predecessor
+          python3 -B scripts/production/test_product_conditions_scope.py
+        working-directory: ${{ github.workspace }}
       - uses: actions/setup-node@v4
-        with: {node-version: '24.19.0'}
+        with:
+          node-version: 24.19.0
       - uses: actions/setup-python@v5
-        with: {python-version: '3.12.14'}
+        with:
+          python-version: 3.12.14
       - run: python -B scripts/production/unpack-release-authority.py /tmp/order5-shared-release
+        working-directory: /tmp/product-conditions-predecessor
       - run: python -B scripts/production/test_ew_output_successor.py
+        working-directory: /tmp/product-conditions-predecessor
       - run: node --test test/74-estimate-output.test.mjs
       - run: npm install --ignore-scripts --no-save playwright@1.55.0
       - run: npx playwright install --with-deps chromium
       - name: Native EW and eight-series browser/output regression
         env:
-          SASH_RELEASE_COMMIT_SHA: '${{ github.event.pull_request.head.sha || github.sha }}'
+          SASH_RELEASE_COMMIT_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
           EW_QA_URL: http://127.0.0.1:4173
-          EW_EXPECTED_COMMIT: '${{ github.event.pull_request.head.sha || github.sha }}'
+          EW_EXPECTED_COMMIT: ${{ github.event.pull_request.head.sha || github.sha }}
           EW_QA_OUTPUT: artifacts/order5-ew-output/ew
           QA_BASE_URL: http://127.0.0.1:4173
-          QA_EXPECTED_COMMIT: '${{ github.event.pull_request.head.sha || github.sha }}'
+          QA_EXPECTED_COMMIT: ${{ github.event.pull_request.head.sha || github.sha }}
           QA_OUTPUT_DIR: artifacts/order5-ew-output/eight-series
         shell: bash
         run: |
@@ -47,4 +97,7 @@ jobs:
           node test/browser/ew-october-2026-browser-qa.mjs
           node test/browser/eight-series-business-flow-qa.mjs
       - uses: actions/upload-artifact@v4
-        with: {name: order5-ew-output, path: artifacts/order5-ew-output, if-no-files-found: error}
+        with:
+          name: order5-ew-output
+          path: artifacts/order5-ew-output
+          if-no-files-found: error

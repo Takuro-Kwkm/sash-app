@@ -2,6 +2,8 @@
 import hashlib,json,tarfile,sys,subprocess
 from pathlib import Path
 root=Path(__file__).resolve().parents[2]
+if (root/'contracts/production/product-master-conditions-scope.v1.json').exists():
+    raise SystemExit(subprocess.call([sys.executable,'-B',str(root/'scripts/production/unpack-product-master-conditions.py'),sys.argv[1]]))
 if (root/'contracts/production/publication-lifecycle-scope.v1.json').exists():
     raise SystemExit(subprocess.call([sys.executable,'-B',str(root/'scripts/production/unpack-release-authority.py'),sys.argv[1]]))
 manifest=json.loads((root/'contracts/production/shared-build-authority.json').read_text())

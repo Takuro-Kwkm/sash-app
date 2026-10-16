@@ -10,6 +10,11 @@ import tarfile
 import tempfile
 from pathlib import Path
 
+# Versioned Product Master infrastructure successor; inspect preserved predecessor.
+if (Path(__file__).resolve().parents[2]/'contracts/production/product-master-conditions-scope.v1.json').exists() and __name__=='__main__':
+    import subprocess as _pm_subprocess,sys as _pm_sys
+    raise SystemExit(_pm_subprocess.call([_pm_sys.executable,'-B',str(Path(__file__).with_name('product-conditions-scope.py')),*_pm_sys.argv[1:]]))
+
 BASE = '3f9f1668c92dd2dbb1561ced681158d2c53bbeab'
 SCOPE = 'contracts/production/harness-instructions-scope.v1.json'
 ALLOWED = {

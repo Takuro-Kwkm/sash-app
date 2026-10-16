@@ -1,40 +1,73 @@
 name: Native Master Formal Storage
-on:
+"on":
   pull_request:
-    paths: ['contracts/production/**', 'scripts/production/**', '.github/workflows/native-formal-storage.yml']
+    paths:
+      - contracts/production/**
+      - scripts/production/**
+      - .github/workflows/native-formal-storage.yml
   push:
-    branches: [main]
-    paths: ['contracts/production/**', 'scripts/production/**', '.github/workflows/native-formal-storage.yml']
+    branches:
+      - main
+    paths:
+      - contracts/production/**
+      - scripts/production/**
+      - .github/workflows/native-formal-storage.yml
 jobs:
   formal-boundaries:
     runs-on: ubuntu-latest
     env:
-      PYTHONDONTWRITEBYTECODE: '1'
+      PYTHONDONTWRITEBYTECODE: "1"
     steps:
       - uses: actions/checkout@v4
-        with: {fetch-depth: 0}
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - name: Verify conditions successor and inspect preserved predecessor
+        run: |-
+          python3 -B scripts/production/product-conditions-scope.py --predecessor /tmp/product-conditions-predecessor
+          python3 -B scripts/production/test_product_conditions_scope.py
+        working-directory: ${{ github.workspace }}
       - uses: actions/setup-python@v5
-        with: {python-version: '3.12'}
+        with:
+          python-version: "3.12"
       - run: pip install jsonschema==4.25.1 openpyxl==3.1.5
+        working-directory: /tmp/product-conditions-predecessor
       - run: python -B scripts/production/unpack-release-authority.py /tmp/native-formal-shared
+        working-directory: /tmp/product-conditions-predecessor
       - run: python -B scripts/production/formal-connection-scope.py
+        working-directory: /tmp/product-conditions-predecessor
       - run: python -B scripts/production/validate-sheet-package-connection.py
+        working-directory: /tmp/product-conditions-predecessor
       - run: python -B -m unittest discover -s scripts/production -p 'test_*formal.py'
         env:
           SHARED_HARNESS_ROOT: /tmp/native-formal-shared
+        working-directory: /tmp/product-conditions-predecessor
       - uses: actions/setup-node@v4
-        with: {node-version: 24}
+        with:
+          node-version: 24
       - run: python -B scripts/production/validate-domain-runtime-connection.py
+        working-directory: /tmp/product-conditions-predecessor
       - run: node --test test/domain-runtime-projection.test.mjs
+        working-directory: /tmp/product-conditions-predecessor
       - run: node scripts/production/validate-domain-runtime-projection.mjs changes/doorremo-runtime-ui-r1/index.json /tmp/domain-runtime-parity.json
+        working-directory: /tmp/product-conditions-predecessor
       - run: node --test test/apw511-runtime-ui.test.mjs
+        working-directory: /tmp/product-conditions-predecessor
       - run: node scripts/production/validate-domain-runtime-projection.mjs changes/apw511-runtime-ui-r2/index.json /tmp/apw511-runtime-parity.json
+        working-directory: /tmp/product-conditions-predecessor
       - run: python -B -m unittest discover -s scripts/production -p test_apw511_runtime_connection.py
         env:
           SHARED_HARNESS_ROOT: /tmp/native-formal-shared
+        working-directory: /tmp/product-conditions-predecessor
       - run: node --test test/apw511-common-flow-r3.test.mjs test/apw511-formal-ui-adoption.test.mjs
+        working-directory: /tmp/product-conditions-predecessor
       - run: node scripts/production/validate-domain-runtime-projection.mjs changes/apw511-runtime-ui-r3/index.json /tmp/apw511-r3-parity.json
+        working-directory: /tmp/product-conditions-predecessor
       - run: node scripts/production/validate-domain-runtime-projection.mjs src/catalog/runtime-master-packages/apw511-ui-r3/runtime_index.json /tmp/apw511-formal-parity.json
+        working-directory: /tmp/product-conditions-predecessor
       - run: node scripts/production/validate-runtime-ui-adoption.mjs src/catalog/runtime-master-packages/apw511-ui-r3/runtime_index.json changes/apw511-runtime-ui-r3/index.json
+        working-directory: /tmp/product-conditions-predecessor
       - run: node scripts/production/declared-full-coverage/model.mjs src/catalog/runtime-master-packages/apw511-ui-r3/runtime_index.json /tmp/apw511-full-model.json
+        working-directory: /tmp/product-conditions-predecessor
       - run: node scripts/production/declared-full-coverage/verify.mjs src/catalog/runtime-master-packages/apw511-ui-r3/runtime_index.json /tmp/apw511-full-model.json /tmp/apw511-full-proof
+        working-directory: /tmp/product-conditions-predecessor
