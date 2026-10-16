@@ -808,9 +808,9 @@
       ],
       "repository": "Takuro-Kwkm/sash-app",
       "connection_state": "CONNECTED",
-      "connection_scope": "LOCAL_SALES_ESTIMATE_REQUEST_UI_CANDIDATE_ONLY",
+      "connection_scope": "HUMAN_ADOPTED_SALES_ESTIMATE_REQUEST_RUNTIME_UI",
       "formal_registry_selector": "YKK AP::APW511",
-      "default_gate": "RUNTIME_UI_CANDIDATE_QA_REVIEW",
+      "default_gate": "RUNTIME_UI_ADOPTED",
       "baseline_selector": {
         "registry_id": "1HMMZ8JdsbJPtL_8LjQfxMF8P_Zb4-LReqvPMFn1pJks",
         "manufacturer": "YKK AP",
@@ -834,12 +834,12 @@
       ],
       "resume_selector": "IMMUTABLE_SPEC_AND_SHARED_V2_JOURNAL; completed Formal is INSPECT_ONLY",
       "runtime_candidate_profile": {
-        "path": "contracts/production/runtime-candidates/apw511-r2.profile.json",
-        "sha256": "fa8c1db847ec30e4d6889bbe4e64d3acece6f77a1feb8102fb194c70eeed3e78"
+        "path": "contracts/production/runtime-candidates/apw511-r3-adoption.profile.json",
+        "sha256": "f4681941d7426752c48c14bb2145334d81b65fbce5ff91420e4ae031e4771b8a"
       },
       "unsupported_gates": {
         "FORMAL": "COMPLETED_PRODUCT_MASTER_INSPECT_ONLY",
-        "INTEGRATION": "HUMAN_RUNTIME_UI_ADOPTION_REQUIRED",
+        "INTEGRATION": "FULL_COVERAGE_QA_REQUIRED_FOR_APP_INTEGRATION_READY",
         "RELEASE": "NATIVE_RELEASE_PROFILE_AND_EXTERNAL_DECISION_REQUIRED"
       }
     }

@@ -1,0 +1,78 @@
+{
+  "authorization_scope": {
+    "work_id": "APW511-R3-UI-ADOPTION-20261016",
+    "product_id": "NATIVE_REGISTRY:YKK AP::APW511",
+    "adapter": "NATIVE_RUNTIME_UI",
+    "target_gate": "RUNTIME_UI_ADOPTED",
+    "expected": {
+      "index_sha256": "eb52bcbb423e0e013ff99be7776ab4c16d3637cb5e0380480c6cf88f3dde1531",
+      "module_sha256": "63c09154877f9766d6a7a18d4e26fc30f6653ea596e938ec1f2d2728f457d2bb",
+      "code_sha256": {
+        "src/catalog/runtime-master/composed-product-runtime-adapter.mjs": "3515bcc4c8b957a581f55c1e07a8207dfe2bd035d225ba75165becf8b5fb628d",
+        "src/catalog/runtime-master/product-module-runtime-adapter.mjs": "0e383a6c6a06edc5aa639052f7cf4f77ae9c3fe8fff1f97491e91e6b205fd2e3",
+        "src/catalog/catalog-adapter.mjs": "3a89f08835ece9b522e18a79259b8aa395aa975166d3647cd0da0aad3a2481ec",
+        "src/catalog/catalog-roles.mjs": "da2368ca4be4f0cc3161b7a922a09134434c8dd61428064a4559fce4e91805f7",
+        "src/catalog/catalog-validation.mjs": "076b352a7074d112d4f78ef7d431565f653c4ff9e423914703ede770fe53adbe",
+        "src/catalog/catalog-resolver.mjs": "c07024cf4281c4a43c79cc7da540717f0d6dcc72243ecc0976af0afe49da0849",
+        "src/catalog/selector.mjs": "ecfe3d8863040080a63a2897b80b8edbdd74a976a11b538eccb15a47b5a470c7",
+        "src/catalog/selector-ops.mjs": "58090dcc6f9a26b1abfc5f3778705e2cae46ed7ed561d2350ea7c192e8c21de4",
+        "src/catalog/resolver-values.mjs": "157bbe9f82a740b272f77e0dae8a00ad0f974e65332ff4c4e66b19e8efc5fbe5",
+        "src/catalog/resolver-auto.mjs": "78ff3f8c8d3a62a59bd8ed0fc43eab129774ce5596665f289da753abfe25c406",
+        "src/catalog/resolver-fields.mjs": "7bbe2ad3da0d9773d6f3c129275fb855cb5442e287c3d0061b8f35a38dc6ba41",
+        "src/catalog/dimension-resolver.mjs": "cab3841254d161a5f2c9992735ca619f52ffb524be26eb5c30720b086dfdb3ac",
+        "src/catalog/runtime-master/product-module-glazing-normalizer.mjs": "9147610f1c483da226180648f29a9442a79d2ff40411e94bbfdb860ede3544b5",
+        "src/catalog/runtime-master/canonical-window-semantic-schema.mjs": "03ace90218363f62ad89280c77a328bb2e05efd362f6b17eca8989f0d52edeb7",
+        "src/catalog/runtime-master/product-module-glass-manufacturability.mjs": "16197c2faec52686637275d83ab627c08fd9c715523cd02eef0a09e51a15edec",
+        "src/catalog/runtime-master/declared-selection-policy.mjs": "0bbe2c254b7b4e284422283d5402b997110ac2b11427644e61bf20966a5da817",
+        "src/catalog/runtime-master/declared-numeric-input-pairs.mjs": "cf2b99dd3e128e49fa6da656d19d81a2c81e5e1e119c57c8169b3b022511512a",
+        "src/catalog/runtime-master/declared-selection-views.mjs": "54550cbf683f90bd2918e7bf534b39a5230b72b4539c7007ba75f2b35e99b6a1",
+        "src/catalog/runtime-master/new-construction-sash-runtime-ui-contract.mjs": "6bf80f2293b8d0393e2f93da24de21b47caa41007f9ce59826782f107fa6e14f",
+        "src/catalog/runtime-master/declared-window-flow.mjs": "1a698ad4b51b232a42287144432ad5bd2f8248e96636fb8cd03d179cf383dde9",
+        "src/catalog/runtime-master/global-window-selection-flow-engine.mjs": "2ef247ea40f4be459da5b37a524c2c1baf9f3e449d2a3e1a29436db69a7d4271",
+        "src/catalog/runtime-master/inner-window-runtime-ui-contract.mjs": "1c753f798e9f68e459506cd9f8f91b4dae3e8c0cd794863c6ddadb25c9c0a580",
+        "src/catalog/runtime-master/entry-door-cover-runtime-ui-contract.mjs": "0c4545dc0065f55682ede1e514383f16ad98169b5574c5430bee0102e16ecce5",
+        "src/ui/web/app.js": "8767f968393bd0dd3df15da9906525939002ca58ff5dca0560b744e1a85b39eb",
+        "src/work-management/domain.mjs": "8d0375bf6d7561a2a5a34c0e99335bd0bf40bb6150fcbb1fc3b4b2bf0aea49da",
+        "src/work-management/field-workflow-scope.mjs": "6458a62cbbc2bbf29f541ab6d5faea3698f085cb2fdbb739ce435dc24fd5f905",
+        "src/work-management/storage.mjs": "823d8e2aa316602024751f844096ff9078d2da58f58869e5e0b9af7c04d4dfb8",
+        "src/work-management/repositories.mjs": "bf565ff5144157b58fc8b82e3c5f5436426ed16fd7cfa49635f1d43d7d0cbc17",
+        "src/work-management/service.mjs": "79e1451ea52a3bf66dfca4184b70e3ed21526ac21cf20c8c9008a2cfff3d7cf9",
+        "src/ui/web/product-configuration-editor.mjs": "4bbd5783ce6ee5d1e22ff103b598e20ee0b9b68083038048829a07fa11db8357",
+        "src/ui/web/product-choice-model.mjs": "6b207d1b6fc0b90c322fbb4f7eb1b6f86be56b60c1cd59875604359db240d378",
+        "src/work-management/configuration-migration.mjs": "93ae2f70a0317882f608aba714fee4f78b4815d4f137d5d08b3a1f5044f3d626",
+        "src/ui/web/estimate-output-integration.mjs": "0088dca6579f734ffc8b9b09373bbdd39b0b7f63c489ccef05d615996add8c24",
+        "src/estimate-output/model.mjs": "7dec48fdfba5c7df6a13184ea7dee874e600d54f6f36764decb5796f20a42c08",
+        "src/estimate-output/pdf-renderer.mjs": "df0c6fd852fb0d60f0e00634f928850c589a59d9c5469806279c4a65a74206ae",
+        "src/estimate-output/xlsx-renderer.mjs": "0c23b759e306f87ce5e7fd04316d6378d5135c45aaa56d2ab71ffc7c2dbd8508"
+      },
+      "source_head": "ec5ecaea057ad7b25eaee4e2448dc3514dccc113",
+      "human_source_sha256": "41ff408871ffddcabed8a77448bd98fa25334f5701968594a9659a79b1bd2195",
+      "allowed_transform": [
+        "PRODUCT_ID",
+        "FORMAL_MODULE_SCHEMA",
+        "RUNTIME_ADOPTION_FLAGS",
+        "APP_REGISTRY_REFERENCE"
+      ],
+      "product_master_mutations": 0
+    },
+    "baseline": "v1.0-F1-20261016",
+    "baseline_refs": {
+      "master_sha256": "f23760a601229f31bfcd4fdc5b3be6fc64a3392cff8eda31283bc4d3381c043b"
+    },
+    "destination": {
+      "repository": "Takuro-Kwkm/sash-app",
+      "branch": "main",
+      "scope": "SALES_ESTIMATE_REQUEST_RUNTIME_UI",
+      "drive_folder_id": "1gkfW0cseuYHjzrQ3EP8pcr1qG853hXYX"
+    },
+    "registry": {
+      "kind": "APP_RUNTIME_INTEGRATION_REGISTRY_ONLY"
+    }
+  },
+  "review_artifact": {
+    "source_head": "ec5ecaea057ad7b25eaee4e2448dc3514dccc113",
+    "build_id": "CANDIDATE-HTML-37a5e85142ff2c88",
+    "index_file_id": "1sNMGXRkVZh4xdKf9lP13FpSxeVLE-Img",
+    "module_file_id": "1vTQi8MrqkdkELjMP-a-pkctSW3rwRI1C"
+  }
+}

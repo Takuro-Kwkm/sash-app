@@ -5,6 +5,11 @@
       "path": "runtime-master-packages/lixil-replus-v1.2-r1/runtime_index.json",
       "sha256": "c29e7e8a45779dafb6ea60e79c7cbf7848e298dc32521ccbe89db292b189585e",
       "manifestFileId": "1FhRqfjc0kfeRzhHt256yyjbQ7y-dB0-h"
+    },
+    {
+      "path": "runtime-master-packages/apw511-ui-r3/runtime_index.json",
+      "sha256": "a47c69d82dec187f92c38e6a731b59dbbf9517e90b683d7566ef3fcfce587edd",
+      "manifestFileId": "1KouHULpQocEghUthiytmwjAwrDxHSF_J"
     }
   ]
 }

@@ -20,10 +20,10 @@
     },
     "src/work-management/domain.mjs": {
       "predecessor_sha256": "ec77668d877126b656382ca2105842f37e1fd4a188fb51fadf5c42d4d1368f41",
-      "sha256": "53d970f22d7fabe3002b32411c843c596b2f7413373cb56d06b71dba7a4fe48a",
+      "sha256": "8d0375bf6d7561a2a5a34c0e99335bd0bf40bb6150fcbb1fc3b4b2bf0aea49da",
       "additions": [
         "validationState(result)===ValidationState.INVALID?ValidationState.INVALID:",
-        "\n// Consume explicit Runtime CLEAR metadata. Valid-value reevaluation remains in\n// the existing Catalog resolver; this helper never infers product conditions.\nexport function applyDeclaredInputClears(input, changedKeys, fields) {\n  const selection = {...input}, changed = new Set(changedKeys);\n  for (let pass = 0; pass <= fields.length; pass++) {\n    let cleared = false;\n    for (const field of fields) {\n      if (!Object.hasOwn(selection, field.key)) continue;\n      if (!(field.clearOnParentChange ?? []).some(key => changed.has(key))) continue;\n      delete selection[field.key]; changed.add(field.key); cleared = true;\n    }\n    if (!cleared) return selection;\n  }\n  throw new Error('DECLARED_CLEAR_DID_NOT_CONVERGE');\n}\n"
+        "\n// Consume explicit Runtime CLEAR metadata. Valid-value reevaluation remains in\n// the existing Catalog resolver; this helper never infers product conditions.\nexport function applyDeclaredInputClears(input, changedKeys, fields) {\n  const selection = {...input}, changed = new Set(changedKeys);\n  for (let pass = 0; pass <= fields.length; pass++) {\n    let cleared = false;\n    for (const field of fields) {\n      if (!Object.hasOwn(selection, field.key)) continue;\n      if (!(field.clearOnParentChange ?? []).some(key => changed.has(key))) continue;\n      delete selection[field.key]; changed.add(field.key); cleared = true;\n      for (const linked of field.clearLinkedFields ?? []) {\n        delete selection[linked]; changed.add(linked);\n      }\n    }\n    if (!cleared) return selection;\n  }\n  throw new Error('DECLARED_CLEAR_DID_NOT_CONVERGE');\n}\n"
       ]
     },
     "src/estimate-output/model.mjs": {

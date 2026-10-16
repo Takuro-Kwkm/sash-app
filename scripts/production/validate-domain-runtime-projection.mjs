@@ -4,6 +4,7 @@ import {resolve,dirname} from 'node:path';
 import {createHash} from 'node:crypto';
 import {adaptComposedProductRuntime} from '../../src/catalog/runtime-master/composed-product-runtime-adapter.mjs';
 import {applyDeclaredWindowFlow} from '../../src/catalog/runtime-master/declared-window-flow.mjs';
+import {formalComposedRuntimeEntries} from '../../src/catalog/runtime-master/formal-composed-runtime-registry.mjs';
 import {applyDeclaredInputClears} from '../../src/work-management/domain.mjs';
 
 const [indexPath,outputPath]=process.argv.slice(2), root=dirname(resolve(indexPath));
@@ -14,7 +15,9 @@ for(const entry of index.products){
   assert.equal(createHash('sha256').update(bytes).digest('hex'),entry.sha256);
   const document=JSON.parse(bytes), master=read(document.baseline.path), keys=new Set(master.fields.filter(row=>row.knowledge_status==='KNOWN').map(row=>row.field_id));
   assert.equal(createHash('sha256').update(readFileSync(resolve(root,document.baseline.path))).digest('hex'),document.baseline.sha256);
-  const reader=await adaptComposedProductRuntime(document,entry,()=>{throw new Error('UNEXPECTED_REFERENCE');});
+  const registered=index.schema==='FORMAL_COMPOSED_RUNTIME_INDEX_V1'?formalComposedRuntimeEntries.find(row=>row.id===entry.id&&row.sha256===entry.sha256):entry;
+  assert.ok(registered,'FORMAL_RUNTIME_NOT_REGISTERED');
+  const reader=await adaptComposedProductRuntime(document,registered,()=>{throw new Error('UNEXPECTED_REFERENCE');});
   const normalize=selection=>Object.fromEntries(Object.entries(selection).filter(([key,value])=>keys.has(key)&&value!==null&&value!==undefined));
   let valid=0,invalid=0;
   for(const row of master.handoff_tests){

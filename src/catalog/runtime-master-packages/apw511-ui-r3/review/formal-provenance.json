@@ -1,0 +1,23 @@
+{
+  "state": "FORMAL_PASS",
+  "formal_revision": "v1.0-F1-20261016",
+  "storage_state": "POST_SAVE_VERIFIED",
+  "candidate_sha256": "f23760a601229f31bfcd4fdc5b3be6fc64a3392cff8eda31283bc4d3381c043b",
+  "package_sha256": "45bfed99673f02c9320925a68784e577b3836c5214785537f4d0e2878c939d6d",
+  "master_file_id": "1wd9gn2HrMuSFJqg1Jp0lUEQvGkXtwbN2",
+  "manifest_file_id": "1mjKJRyIReX8jBL4IDkBv5EzEfK3f3B06",
+  "package_file_id": "1iQM02MjZQmxh17PZuRy_z9qe6KV7M5rp",
+  "registry_range": "'正本Registry'!A38:X38",
+  "product_master_mutations": 0,
+  "terminal_policy": "INSPECT_ONLY",
+  "runtime_ui": "CANDIDATE_ONLY",
+  "formal_work": "APW511-FORMAL-20261016-F1",
+  "formal_receipt_file_id": "1wRE78LBMBcyjhdPRub8F21aAnJn7il-m",
+  "candidate_index_file_id": "1b8bgs_goVbtDD4EMiQUZjjPIPMaEvmsM",
+  "candidate_module_file_id": "1e8KZZUAgDzRROgFO7OUx_Vjy38jRDNGS",
+  "candidate_index_sha256": "3f1e66efccdba3fbd4bedf8868776a803100110e6e1aff89a3a19e6c58013590",
+  "source_manifest_boundary": "Immutable QA_READY/DRAFT snapshot was adopted as a package by the real Formal Human Decision and Registry. UI flow Human Review remains pending.",
+  "master_sha256": "f23760a601229f31bfcd4fdc5b3be6fc64a3392cff8eda31283bc4d3381c043b",
+  "completed_work": "APW511-FORMAL-20261016-F1",
+  "human_packet_sha256": "caea8ceee2cd78509071ed127a72ada2d8678028566aded833b15ce1edca38e7"
+}

@@ -1,0 +1,11 @@
+{
+  "decision": "APPROVED",
+  "reviewer": "USER",
+  "decision_ref": "CURRENT_CONVERSATION_EXPLICIT_USER_R3_ADOPTION_20261016",
+  "authorization_kind": "EXPLICIT_USER_SCOPE",
+  "review_payload_sha256": "8268293bae2a0b21959c495eeec6d444da6a8b45dd48cd3eca551aa10899d81a",
+  "work_id": "APW511-R3-UI-ADOPTION-20261016",
+  "product_id": "NATIVE_REGISTRY:YKK AP::APW511",
+  "imported_user_statement": "修正版R3を採用します。ハーネスに従って正式なUI接続・採用へ進め、CIと保存証跡まで確認してください。",
+  "generated_by_workflow": false
+}

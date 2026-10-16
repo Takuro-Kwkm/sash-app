@@ -17,7 +17,7 @@ try:
  assert route['product_id']==profile['product_id']
  assert all(getattr(a,k) for k in ('spec','work','live_state','root'))
  spec=json.loads(Path(a.spec).read_bytes())
- assert spec['target']==profile['product_id'] and spec['target_gate']=='RUNTIME_UI_CANDIDATE_QA_REVIEW'
+ assert spec['target']==profile['product_id'] and spec['target_gate']==profile.get('runtime_ui_adoption',{}).get('target_gate','RUNTIME_UI_CANDIDATE_QA_REVIEW')
  refs=spec['runtime_refs']
  assert any(Path(r['path']).resolve()==profile_path and r['sha256']==hashlib.sha256(profile_path.read_bytes()).hexdigest() for r in refs)
  assert not profile['formal_adoption'] and not profile['source_adoption'] and not profile['release']
