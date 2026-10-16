@@ -5,14 +5,14 @@
     "sha256": "0541a759e74bdcd1700da09756b4b68efe648ee4d60e6045d6f8efdbf07c7a5b",
     "implementation_sha": "68f2fe69831a33ab92789526bdcd7a49446122a2"
   },
-  "predecessor_native_commit": "429d7b603d9646795df5ba63f9be263880c865c0",
+  "predecessor_native_commit": "0d82db9e860ad6ca8fcaa898fb59b74c37e5c4b6",
   "predecessor_profile": {
     "path": "contracts/production/authority-successors/before-product-conditions-build-profile.v1.json",
     "sha256": "02cba1a81fed886551c144952d8a91d7254fa87418a17c404c521491188d887b"
   },
   "predecessor_selection": {
     "path": "contracts/production/authority-successors/before-product-conditions-selector.v7.json",
-    "sha256": "5f216f68c7a4f7264af651a8c963be6e381a908b13d41961bd21cc6215819bd8"
+    "sha256": "f80f86dc44748f0520cf569c4db933f98c9046998a3f74b688eff1f539c7524c"
   },
   "compatibility_implementation": {
     "repository": "Takuro-Kwkm/product-ui-contracts",

@@ -1,0 +1,73 @@
+{
+  "schema": "NATIVE_PUBLICATION_LIFECYCLE_V1",
+  "repository": "Takuro-Kwkm/sash-app",
+  "target_gate": "RELEASE_COMPLETED",
+  "destination_source": {
+    "path": "contracts/production/app-release.v1.json",
+    "pointers": {
+      "alias": [
+        "deployment",
+        "production_url"
+      ],
+      "project_id": [
+        "deployment",
+        "project_id"
+      ],
+      "team_id": [
+        "deployment",
+        "team_id"
+      ],
+      "provider": [
+        "deployment",
+        "provider"
+      ],
+      "production_branch": [
+        "production_branch"
+      ]
+    }
+  },
+  "connections": [
+    {
+      "product_id": "NATIVE_REGISTRY:YKK AP::APW511",
+      "scope": "APW511_R3_ADOPTED_SALES_UI_PUBLICATION_20261016_R1",
+      "connection_product_id": "NATIVE_REGISTRY:YKK AP::APW511"
+    }
+  ],
+  "release_profile_registry": "contracts/production/release-profiles.v1.json",
+  "shared_entry": "scripts/release-contract.py",
+  "preflight_command": [
+    "python3",
+    "-B",
+    "{shared}/scripts/release-contract.py",
+    "preflight",
+    "--native",
+    "{native}",
+    "--plan",
+    "{plan}"
+  ],
+  "qa_command": [
+    "node",
+    "scripts/production/runtime-integration-qa.mjs",
+    "--profile",
+    "{profile}",
+    "--url",
+    "{url}",
+    "--expect-commit",
+    "{sha}",
+    "--output-dir",
+    "{output}"
+  ],
+  "qa_evidence": "{output}/evidence.json",
+  "native_qa_keys": [
+    "release_identity",
+    "runtime_ui_product"
+  ],
+  "scope_guard": "contracts/production/publication-lifecycle-scope.v1.json",
+  "scope_validator": "scripts/production/publication-lifecycle-scope.py",
+  "state_owner": "Shared Harness v2; no native DAG or approval issuer",
+  "upstream_policy": "Inspect completed Work; preserve exact Formal, Evidence and Human Decisions",
+  "checkpoint_policy": "Shared release-contract checkpoint and native Work storage readback",
+  "deployment_policy": "Reuse verified existing deployment; fixed-ID promotion only after Shared authorization",
+  "persistence_boundary": "BROWSER_LOCAL_STORAGE",
+  "print_boundary": "Existing PDF visual acceptance is separate from automated print handler and CSS checks"
+}
