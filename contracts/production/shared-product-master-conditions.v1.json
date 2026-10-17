@@ -1,8 +1,8 @@
 {
   "schema": "SHARED_PRODUCT_MASTER_CONDITIONS_GIT_CARRIER_V1",
   "repository": "Takuro-Kwkm/product-ui-contracts",
-  "source_commit": "3c230863aac1ebf93b8b98133d66d45cd3a9ce04",
-  "sha256": "2fb5808f4dfbd41a421aeb6497ccc324ec4c102971c976a6f0fa16bb824f8b31",
-  "bytes": 1697499,
+  "source_commit": "69a41fb74ffe8ee5d56989f5d0dcf9fe23a6d516",
+  "sha256": "da5d27f2a11c2ae2d53f7fafc8655024da4e7fea7c0bbd7db3a944b84fcbe718",
+  "bytes": 1720506,
   "scope": "ISOLATED_CI_ONLY; NO_PRODUCT_FACTS_OR_INSTALLED_RUNTIME"
 }

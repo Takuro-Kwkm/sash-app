@@ -20,14 +20,14 @@
     "test/browser/sales-runtime-contract-browser-qa.mjs"
   ],
   "candidate_sha256": {
-    "contracts/production/current-architecture.json": "abe21e0e79f731d3825f307381eb93aba89dbb58650dc05df019da6f4495468a",
+    "contracts/production/current-architecture.json": "5e176d41dabf24e532474c3605299d0ba195169a2058b0f580cb6a6cad851951",
     "contracts/production/giesta2-publication-lifecycle.v1.json": "22c95e84b9f221ee19bca59f90ca13def48d714ad9746084c7bd45de517c9352",
     "contracts/production/product-master-build-profile.native-v16.json": "1eb366f977ea6eb1d17e2ee8e980cf5d1b08b74ecf804c25de7b793225640e7c",
     "contracts/production/release-profiles.v1.json": "f18af69d2e02271b992358ab0862eb42015a1f21992c4ed7908ca07553b63615",
-    "contracts/production/release-profiles/giesta2-r14.v1.json": "6edebccc72b3e02f68d3c41a7ffadce76129ecca7f52bd54a5acb252c6ca400b",
+    "contracts/production/release-profiles/giesta2-r14.v1.json": "bd02e4dd8bcc9f99b257be70b82949df07a4d7644906eefc464f4f0efc2acf48",
     "contracts/production/runtime-ui-qa/giesta2-r14.json": "4852d6ab2672b7dce7f996fbde6e9a84e716bd9de86f252f6d5cf323123f6381",
-    "contracts/production/shared-product-master-conditions.v1.bundle": "2fb5808f4dfbd41a421aeb6497ccc324ec4c102971c976a6f0fa16bb824f8b31",
-    "contracts/production/shared-product-master-conditions.v1.json": "9135dbac3700bdb2cbb5b4ff6bc619bb0963ab5214b33d9bacb71c2a0e31fd6c",
+    "contracts/production/shared-product-master-conditions.v1.bundle": "da5d27f2a11c2ae2d53f7fafc8655024da4e7fea7c0bbd7db3a944b84fcbe718",
+    "contracts/production/shared-product-master-conditions.v1.json": "0638d4796479697a8252d7a7555e571535a4b230d9e2424ec0dee9ae6b7a2e24",
     "contracts/production/work-connections.v2.json": "244a800c503c44aee09cb596c610b6a280ba8044fcb0a06934eb0bc590d306d9",
     "scripts/production/product-conditions-scope.py": "990b4d3201e642a7e210dc50fa4505e5b00fde963012a89f00a30ec5580472f1",
     "scripts/production/product-publication-lifecycle.mjs": "d567476e4b9dcbd593855c7a40342194e18f77bd47b5f2c3b8e240dc13707aa8",
