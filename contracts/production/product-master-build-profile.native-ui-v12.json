@@ -59,7 +59,7 @@
     "current_authority": {
       "owner": "shared",
       "path": "harness/current_authority.py",
-      "sha256": "354bd52e0f7963615b1f6a8f8c9b5d698ae2695b2330f94e0b5ad4c737192f85"
+      "sha256": "6f61d904fc046b2365de9b670b0a82df07ae8e8af4eb310b74e2cf041d2ccf99"
     }
   },
   "contracts": {
