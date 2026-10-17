@@ -1,7 +1,8 @@
-import {chromium} from 'playwright';
 import assert from 'node:assert/strict';
 import {mkdir,readFile,writeFile} from 'node:fs/promises';
 import {configureProtectedQaBrowser,protectedQaGet} from '../../scripts/production/protected-qa-access.mjs';
+
+const {chromium}=await import(process.env.QA_PLAYWRIGHT_MODULE??'playwright');
 
 const base=process.env.QA_BASE_URL;
 const output=process.env.QA_OUTPUT_DIR;

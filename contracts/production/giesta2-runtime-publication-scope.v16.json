@@ -20,11 +20,11 @@
     "contracts/production/giesta2-publication-lifecycle.v1.json": "22c95e84b9f221ee19bca59f90ca13def48d714ad9746084c7bd45de517c9352",
     "contracts/production/product-master-build-profile.native-v16.json": "a2a002c2858826a7c4ce93b6e9992314c21b0a407c37f51cea4c742ac7c22b2d",
     "contracts/production/release-profiles.v1.json": "f18af69d2e02271b992358ab0862eb42015a1f21992c4ed7908ca07553b63615",
-    "contracts/production/release-profiles/giesta2-r14.v1.json": "0fd7e0cc927c38d9742f5dcb3dde25a1896120fcf248e6f07fcb4aa46a62dbf1",
+    "contracts/production/release-profiles/giesta2-r14.v1.json": "0d5cfd63bb1653153d9a6cbbdc770f24bf680a103af1c899e558a0a6c2dc3c48",
     "contracts/production/runtime-ui-qa/giesta2-r14.json": "4852d6ab2672b7dce7f996fbde6e9a84e716bd9de86f252f6d5cf323123f6381",
     "scripts/production/product-publication-lifecycle.mjs": "d567476e4b9dcbd593855c7a40342194e18f77bd47b5f2c3b8e240dc13707aa8",
     "src/catalog/runtime-master/formal-composed-runtime-registry.json": "4434252336990b5dc3abbaf4a77a7524cca4fbf9b8ff2e5d4aa7250cb642c56a",
-    "test/browser/sales-runtime-contract-browser-qa.mjs": "5195b47dbc3352dcc4e5dad93d571d63e634a6a1637b892ebf101621c05a1c1b"
+    "test/browser/sales-runtime-contract-browser-qa.mjs": "f5689ed68929c5078998cd2170665cd930f03889cac1427408d761db38debe25"
   },
   "protected_sha256": {
     ".github/workflows/app-production-hotfix.yml": "5866475344b22137eb05d0eb5946d67b97cd2b0b5c944cdbfde6da21dcc7816c",
