@@ -30,13 +30,13 @@
   },
   "new_product_build_profile": {
     "profile_id": "sash-new-product-master-v1",
-    "path": "contracts/production/product-master-build-profile.intake-v4.json",
-    "sha256": "7827ccec77574923a57fa2ca3f837ba1b246bd93c745f3f6f21b0420a2c8711c"
+    "path": "contracts/production/product-master-build-profile.transport-v10.json",
+    "sha256": "f620e2423b9f6636cd8cb6c96bc2196d895d8552494f63489fe50d3c4fab4c1a"
   },
   "isolated_build_authority": {
     "metadata": "contracts/production/shared-product-master-conditions.v1.json",
     "entry": "scripts/production/unpack-product-master-conditions.py",
-    "source_commit": "f408946fc1e5836e07298a7f9b4defe64964b1cd",
+    "source_commit": "7ff8c7a014e7d761bbfcc9ef6392587ebc9d7dc0",
     "scope": "ISOLATED_CI_ONLY; live Current host acquisition separate"
   }
 }
