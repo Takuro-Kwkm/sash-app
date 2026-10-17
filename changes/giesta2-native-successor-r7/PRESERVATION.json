@@ -1,0 +1,11 @@
+{
+  "status": "PASS",
+  "live_formal_sha256": "8656beeb27ad8c7b44c85fc587b80af7db73340d721e6ea4c55bd31fe7dcd5bd",
+  "live_formal_bytes": 7254433,
+  "confirmation_count": 6,
+  "qa_195_sha256": "16be6ae038fa3a9454b3b31deee09c6d4545c623066ab590bd2b8611619dfd21",
+  "qa_18_sha256": "ae80ba96e418743bcf0ae10943776e07b1968adab7bc141823987209ed309100",
+  "master_and_qa_bytes": "IDENTICAL_TO_ADOPTED_PACKAGE",
+  "formal_writes": 0,
+  "registry_writes": 0
+}

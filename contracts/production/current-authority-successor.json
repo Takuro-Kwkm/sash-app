@@ -1,6 +1,6 @@
 {
   "schema": "CURRENT_AUTHORITY_SUCCESSOR_SELECTION_V1",
-  "path": "contracts/production/authority-successors/product-master-conditions.v8.json",
-  "sha256": "ac91eb832186799181d7d931c981c154537d4d5db9664628edc01ae693efde33",
-  "implementation_sha": "f408946fc1e5836e07298a7f9b4defe64964b1cd"
+  "path": "contracts/production/authority-successors/native-connection.v9.json",
+  "sha256": "b32a8949a13ca6b5051b2c78db570104526fbfaea64d8fead07cd8cbbbde6edb",
+  "implementation_sha": "3ef622ed98a769e89d2c8132c2d05dc238f4dd0f"
 }

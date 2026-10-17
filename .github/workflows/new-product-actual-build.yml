@@ -40,3 +40,7 @@ jobs:
           python -B scripts/production/validate-product-master-profile.py
           python -B scripts/production/test-product-master-build.py
           python -B scripts/production/test_actual_build.py
+      - name: Verify JSON successor preserves existing Formal and QA boundaries
+        run: |
+          python -B scripts/production/test_json_master_formal.py "$SHARED_HARNESS_ROOT"
+          python -B -m unittest discover -s scripts/production -p test_json_master_change.py -v

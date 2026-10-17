@@ -1,0 +1,266 @@
+{
+  "status": "PARTIAL_REVIEW_NOT_QA_READY",
+  "review_ref": "R6-JSON-CONNECTION-AND-DETAILS-20261016",
+  "baseline_sha256": "f7d91dd7663ff383305b5027e1f47e2f8400a830e2662ac570e5c95d09517e3c",
+  "candidate_sha256": "74070a77be370fa7dc99e4fcfb9aaae5df7ea0dce0caa7f79dc3fd7d1cef9b9b",
+  "delta": [
+    {
+      "path": "/evidence_registry",
+      "before_present": true,
+      "after_present": true,
+      "before_sha256": "5c7d0e8e5ca0913a82ae1c9d9f4d387e73588762a4b72b517941cb9a6037ec30",
+      "after_sha256": "559c43b2bb78fb7f4b070f0ba22156ef223c822ed8103ba8bd77e1f1bd1247a6"
+    },
+    {
+      "path": "/maps/P2_frame_configuration_map",
+      "before_present": false,
+      "after_present": true,
+      "before_sha256": null,
+      "after_sha256": "f5af27a3367477406f127d031ff47370c81b586a0da0eda26b20c28810ab00e5"
+    },
+    {
+      "path": "/maps/P5_home_master_key_requirement",
+      "before_present": false,
+      "after_present": true,
+      "before_sha256": null,
+      "after_sha256": "1a7a2b773e2481b1f0834b3d8aaf5afc13a18cdd903fa428615773664cf60a06"
+    },
+    {
+      "path": "/maps/P6_sidelight_bead_detail_map",
+      "before_present": false,
+      "after_present": true,
+      "before_sha256": null,
+      "after_sha256": "b6263dca03c7f449c44fa0d8760ba6318ccb77dab214ee8b152e00636e463742"
+    },
+    {
+      "path": "/maps/P7_closer_backcheck_map",
+      "before_present": false,
+      "after_present": true,
+      "before_sha256": null,
+      "after_sha256": "117b9fd77d4f537f03cc373f511fcfb47da905df20638aa9ae8b59584239d3b4"
+    },
+    {
+      "path": "/maps/P7_interior_trim_color_detail",
+      "before_present": false,
+      "after_present": true,
+      "before_sha256": null,
+      "after_sha256": "2cd87af34ac508a9af9a6ffd272cbd7ca53f4f08ca196a972706547fd4eb09f8"
+    },
+    {
+      "path": "/maps/P7_interior_trim_requirement",
+      "before_present": false,
+      "after_present": true,
+      "before_sha256": null,
+      "after_sha256": "6a95dc29bbec01849283e7bccc5087ceb1a0685fe9406d902ec59efd6fcfcc4b"
+    },
+    {
+      "path": "/maps/P7_option_dependency_map",
+      "before_present": true,
+      "after_present": true,
+      "before_sha256": "fb624e2b97d60b230e01b2f5aca7c83114989fa7a4c16c495677d0365ac0c617",
+      "after_sha256": "7ea2d8e2936817e0038578c5e50a62352679c242650ba4ff8660a290b5df5990"
+    },
+    {
+      "path": "/maps/P7_sill_plinth_frame_color_detail",
+      "before_present": false,
+      "after_present": true,
+      "before_sha256": null,
+      "after_sha256": "769b86fcb9ee34c45d0db7cda7a7c16e911368e9897a25dbf0e347d38d2bfea4"
+    },
+    {
+      "path": "/masters/P2_frame_angle_master",
+      "before_present": false,
+      "after_present": true,
+      "before_sha256": null,
+      "after_sha256": "9feb6b14c60f901622b0907e03d2fd837243edbf65eb76d2dee75a435c7cbbcc"
+    },
+    {
+      "path": "/masters/P2_frame_form_master",
+      "before_present": false,
+      "after_present": true,
+      "before_sha256": null,
+      "after_sha256": "806ff97b4b9d909d38db570fc2cfc7e7f7c1dc4070b59f19550ece1d13a1c66b"
+    },
+    {
+      "path": "/masters/P5_home_master_target_master",
+      "before_present": false,
+      "after_present": true,
+      "before_sha256": null,
+      "after_sha256": "c70dc17497cd07a05ef7406f27fe07eeb6187162df6c4b56561dfc2313e39b00"
+    },
+    {
+      "path": "/masters/P7_closer_backcheck_master",
+      "before_present": false,
+      "after_present": true,
+      "before_sha256": null,
+      "after_sha256": "ba645e5e40ff7342b091b79e72ec39c55ba69ca04ff14f27f1b9931e25532c33"
+    },
+    {
+      "path": "/masters/P7_interior_trim_type_master",
+      "before_present": false,
+      "after_present": true,
+      "before_sha256": null,
+      "after_sha256": "19dfeb7db35e35b85edc5e951e2ec3a0aae7af0cc58ef9443d391d5aaf8b6f52"
+    },
+    {
+      "path": "/metadata/adoption_effective",
+      "before_present": true,
+      "after_present": true,
+      "before_sha256": "dc7750e080497fb6383ed5d742f21af88f0347ae937c49c5d274860988b89d4b",
+      "after_sha256": "ceb21530577a55bd62406cab40cbf229327bc6d1dfea1825875aee1df00400a7"
+    },
+    {
+      "path": "/metadata/baseline_authoring_id",
+      "before_present": true,
+      "after_present": true,
+      "before_sha256": "b2d5f1e371e2bbac93cb5c1fee39e83f8edb1b78d7fa2b1af22cb5953ea30118",
+      "after_sha256": "d3748acd82875ef45d1efd3295742f1244296e1bc6570ad0c490e99042c133d9"
+    },
+    {
+      "path": "/metadata/baseline_revision",
+      "before_present": true,
+      "after_present": true,
+      "before_sha256": "de97f2f49702da6b932ee8fea5fdc428a75c3d458b84c9a69767537e1d9098d5",
+      "after_sha256": "f7b0894e7b00e6518a3bf5fee638b91500901c9c770adeff6611ba4462f95863"
+    },
+    {
+      "path": "/metadata/baseline_sha256",
+      "before_present": false,
+      "after_present": true,
+      "before_sha256": null,
+      "after_sha256": "b4b17b0a7db078d90c139ca5f965e00b9f5e196c53ac23a767a7eae24d3d7e5d"
+    },
+    {
+      "path": "/metadata/canonical_mutation",
+      "before_present": true,
+      "after_present": true,
+      "before_sha256": "b5bea41b6c623f7c09f1bf24dcae58ebab3c0cdd90ad966bc43a45b44867e12b",
+      "after_sha256": "fcbcf165908dd18a9e49f7ff27810176db8e9f63b4352213741664245224f8aa"
+    },
+    {
+      "path": "/metadata/formal_pass",
+      "before_present": true,
+      "after_present": true,
+      "before_sha256": "b5bea41b6c623f7c09f1bf24dcae58ebab3c0cdd90ad966bc43a45b44867e12b",
+      "after_sha256": "fcbcf165908dd18a9e49f7ff27810176db8e9f63b4352213741664245224f8aa"
+    },
+    {
+      "path": "/metadata/generated_at",
+      "before_present": true,
+      "after_present": true,
+      "before_sha256": "9770e6de784e0d441cb9cdf1499c69c839421b3882d2b00132e8b3f899ece9d9",
+      "after_sha256": "de936b9b36d6a0dd8450fade2c7fa75c875ad7a4bda2120b6583a96fe7c08b76"
+    },
+    {
+      "path": "/metadata/package_version",
+      "before_present": true,
+      "after_present": true,
+      "before_sha256": "f7b0894e7b00e6518a3bf5fee638b91500901c9c770adeff6611ba4462f95863",
+      "after_sha256": "e05d12ffc2dfac551a958368085b56e77596f1dcc6235f8d642e6c54aba32320"
+    },
+    {
+      "path": "/metadata/registry_mutation",
+      "before_present": true,
+      "after_present": true,
+      "before_sha256": "b5bea41b6c623f7c09f1bf24dcae58ebab3c0cdd90ad966bc43a45b44867e12b",
+      "after_sha256": "fcbcf165908dd18a9e49f7ff27810176db8e9f63b4352213741664245224f8aa"
+    },
+    {
+      "path": "/metadata/revision",
+      "before_present": true,
+      "after_present": true,
+      "before_sha256": "a19a99019cb8385f3f6b13d6fe44a6d799c5c8ae86771ba36cae7bac59e15e14",
+      "after_sha256": "699ae5949194fac8d8e944faee314aac891678cf83787b1523191382f00864b4"
+    },
+    {
+      "path": "/metadata/status",
+      "before_present": true,
+      "after_present": true,
+      "before_sha256": "582c3380861bef070dec4733f865f3f88d573fa6971290e338c2b5beb2936eed",
+      "after_sha256": "c6741366c1b7c3d698949046d43e41a0cc5942adfb7839202accbc4d3ef43476"
+    },
+    {
+      "path": "/reviewed_rules",
+      "before_present": true,
+      "after_present": true,
+      "before_sha256": "b7afd8e63a1c6892bbbc3d2527460dac7ce26325af2d5877091b72513ba05d68",
+      "after_sha256": "3023d804f7c596dd4b3ca15c175688055b734562547ebf7cdb50b35384ff026e"
+    },
+    {
+      "path": "/selection_contract/additional_detail_contract",
+      "before_present": false,
+      "after_present": true,
+      "before_sha256": null,
+      "after_sha256": "8ba7ef7027681a4360ac6725ca8a9a8d75b56fbb2da3f6107ee4506f197a04be"
+    },
+    {
+      "path": "/selection_contract/flow",
+      "before_present": true,
+      "after_present": true,
+      "before_sha256": "457194d9eb06bd314c7f9fed9894d8d8875451db6365b9ed65a29d9b34f635b9",
+      "after_sha256": "b50b9cfbe8e1f638c53c17c4266b7b872b176ce9ca086f7b21bce57a5a04d01e"
+    },
+    {
+      "path": "/selection_contract/frame_contract",
+      "before_present": false,
+      "after_present": true,
+      "before_sha256": null,
+      "after_sha256": "96c5f7f0af66a940e2ee8761ed52ab14796cd9b919e17e7b866102bb5dc3d436"
+    }
+  ],
+  "blockers": [
+    {
+      "code": "NATIVE_JSON_PROFILE_NOT_ADMITTED",
+      "detail": "既存V8はwork-connections変更を拒否。中央のレビュー済み後継接続契約が必要。変更案で実行しFAIL_CLOSEDを確認。"
+    },
+    {
+      "code": "CUSTOM_HIGH_SIZE_FRAME_SCOPE_REVIEW_REQUIRED",
+      "detail": "規格H2330の136組合せは確認済み。特注・ハイサイズで全4枠組合せを許可する根拠は未確定。価格例だけで推定しない。"
+    },
+    {
+      "code": "RUNTIME_ADOPTED_MASTER_REQUIRED",
+      "detail": "新規枠項目を実行UIへコンパイルするには、対応マスターの正式採用と既存runtime接続の後継bindingが必要。"
+    }
+  ],
+  "qa_input_sha256": "d91eeb39708b320e486776a1fea53fade8efc9be0d18c88e26cb6d2bed35ae64",
+  "source_review": [
+    {
+      "source": "IG4400 202609",
+      "locators": [
+        "g14-g15",
+        "g54-g55",
+        "g72",
+        "g74",
+        "g75"
+      ],
+      "visual_review": true
+    },
+    {
+      "source": "DL1400 202610",
+      "locators": [
+        "p243",
+        "p272"
+      ],
+      "visual_review": true
+    },
+    {
+      "source": "LIXIL high-size variation PDF",
+      "url": "https://www.lixil.co.jp/lineup/entrance/s/giesta-hi/pdf/giesta-hi_variation.pdf",
+      "sha256": "f166a2e0bcd1b56b5834ad3a14d4072174fd5cbb89793c6853f925dc3a148865",
+      "locator": "p1",
+      "conclusion": "価格例にアングル付フラット枠。全枠適用の証明ではない。",
+      "visual_review": true
+    }
+  ],
+  "new_confirmations_added": 0,
+  "original_confirmations_preserved": 6,
+  "carried_qa": {
+    "content": 195,
+    "formal_scope": 18,
+    "new_fields_certified_by_old_qa": false
+  },
+  "new_native_content_checks": 113,
+  "formal_adoption_packet": "NOT_CREATED",
+  "runtime_preview": "NOT_CREATED",
+  "browser_qa": "NOT_EXECUTED"
+}

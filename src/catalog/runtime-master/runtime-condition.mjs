@@ -7,6 +7,8 @@ export function evaluateCondition(condition, state) {
   if (Array.isArray(condition?.any)) return condition.any.some((x) => evaluateCondition(x, state));
   const value = valueOf(state, condition.field);
   switch (condition.operator) {
+    case 'CONTAINS': return Array.isArray(value) && value.some((x) => Object.is(x, condition.value));
+    case 'NOT_CONTAINS': return !Array.isArray(value) || !value.some((x) => Object.is(x, condition.value));
     case 'EQ': return Object.is(value, condition.value);
     case 'NEQ': return !Object.is(value, condition.value);
     case 'IN': return (condition.values ?? []).some((x) => Object.is(x, value));

@@ -9,6 +9,25 @@ def validate(root=ROOT):
  try:
   with tempfile.TemporaryDirectory(prefix='product-conditions-scope-') as d:
    central=Path(d)/'shared';load('conditions_unpack',root/'scripts/production/unpack-product-master-conditions.py').unpack(root,central)
+   selection=json.loads((root/'contracts/production/current-authority-successor.json').read_text())
+   successor=json.loads((root/selection['path']).read_text())
+   if successor.get('schema')=='CURRENT_AUTHORITY_NATIVE_CONNECTION_SUCCESSOR_V9':
+    # unpack() already delegates exact admission to the selected shared checker.
+    # Keep the original protected product bytes except explicitly hash-bound
+    # native dependencies, and inspect the original scope record unchanged.
+    import hashlib
+    prior=successor['predecessor_native_commit']
+    path='contracts/production/product-master-conditions-scope.v1.json'
+    original=subprocess.check_output(['git','show',prior+':'+path],cwd=root)
+    assert (root/path).read_bytes()==original,'PREDECESSOR_SCOPE_CHANGED'
+    scope=json.loads(original);bound={r['path']:r['sha256'] for r in successor['native_files']}
+    checked={}
+    for name,digest in scope['protected_sha256'].items():
+     actual=hashlib.sha256((root/name).read_bytes()).hexdigest()
+     expected=bound.get(name,digest)
+     assert actual==expected,'PROTECTED_BYTES_CHANGED: '+name
+     checked[name]=actual
+    return {'status':'PASS','scope':'V9_EXACT_SHARED_ADMISSION_WITH_RETAINED_PRODUCT_PROTECTION','authorized_paths':list(bound),'verified_unchanged_sha256':checked,'deployment':'NOT_EXECUTED'}
    return load('conditions_scope_guard',central/'scripts/verify-product-master-conditions-native-scope.py').validate(root)
  except Exception as e:return {'status':'FAIL_CLOSED','errors':[str(e)],'authorized_paths':[],'verified_unchanged_sha256':{},'deployment':'NOT_EXECUTED'}
 def main():

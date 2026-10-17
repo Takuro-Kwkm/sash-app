@@ -1,0 +1,17 @@
+test_changed_profile_bytes_rejected (tests.test_native_connection_successor_v9.NativeSuccessor.test_changed_profile_bytes_rejected) ... ok
+test_exact_opt_in_passes (tests.test_native_connection_successor_v9.NativeSuccessor.test_exact_opt_in_passes) ... ok
+test_frozen_engine_change_rejected (tests.test_native_connection_successor_v9.NativeSuccessor.test_frozen_engine_change_rejected) ... ok
+test_missing_native_dependency_rejected (tests.test_native_connection_successor_v9.NativeSuccessor.test_missing_native_dependency_rejected) ... ok
+test_native_source_policy_rejected (tests.test_native_connection_successor_v9.NativeSuccessor.test_native_source_policy_rejected) ... ok
+test_predecessor_selector_rejected (tests.test_native_connection_successor_v9.NativeSuccessor.test_predecessor_selector_rejected) ... ok
+test_unchanged_v8_consumer_passes_without_rebinding (tests.test_native_connection_successor_v9.NativeSuccessor.test_unchanged_v8_consumer_passes_without_rebinding) ... ok
+test_unrelated_native_connection_rejected (tests.test_native_connection_successor_v9.NativeSuccessor.test_unrelated_native_connection_rejected) ... ok
+test_validator_registry_rejected (tests.test_native_connection_successor_v9.NativeSuccessor.test_validator_registry_rejected) ... ok
+test_dirty_checker_is_rejected (tests.test_native_connection_successor_v9.SharedScope.test_dirty_checker_is_rejected) ... ok
+test_only_committed_checker_extension (tests.test_native_connection_successor_v9.SharedScope.test_only_committed_checker_extension) ... ok
+test_unreviewed_skill_change_is_rejected (tests.test_native_connection_successor_v9.SharedScope.test_unreviewed_skill_change_is_rejected) ... ok
+
+----------------------------------------------------------------------
+Ran 12 tests in 23.081s
+
+OK

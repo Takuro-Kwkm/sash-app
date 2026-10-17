@@ -1,0 +1,33 @@
+{
+  "status": "BLOCKED_BEFORE_FORMAL_PACKET",
+  "central_head": "d9ad95302b10b2910b8523745b5f10032fc2ad4d",
+  "consumer_base_head": "8618e395cd6181eb400dd68d4f0072387c480a08",
+  "branch": "codex/giesta2-json-change-20261016",
+  "baseline_live_sha256": "8656beeb27ad8c7b44c85fc587b80af7db73340d721e6ea4c55bd31fe7dcd5bd",
+  "candidate_sha256": "720b58d28a01c4bab5d5551c5ad6af980f8b493d3dcd49088384c97b0ab4d4aa",
+  "adapter_tests": 8,
+  "formal_regression_tests": 20,
+  "node_tests": 740,
+  "native_content_checks": 113,
+  "lint": "PASS",
+  "typecheck": "PASS",
+  "schema": "PASS",
+  "formal_mutations": 0,
+  "registry_mutations": 0,
+  "runtime_ui_mutations": 0,
+  "blockers": [
+    {
+      "code": "NATIVE_JSON_PROFILE_NOT_ADMITTED",
+      "detail": "既存V8はwork-connections変更を拒否。中央のレビュー済み後継接続契約が必要。変更案で実行しFAIL_CLOSEDを確認。"
+    },
+    {
+      "code": "CUSTOM_HIGH_SIZE_FRAME_SCOPE_REVIEW_REQUIRED",
+      "detail": "規格H2330の136組合せは確認済み。特注・ハイサイズで全4枠組合せを許可する根拠は未確定。価格例だけで推定しない。"
+    },
+    {
+      "code": "RUNTIME_ADOPTED_MASTER_REQUIRED",
+      "detail": "新規枠項目を実行UIへコンパイルするには、対応マスターの正式採用と既存runtime接続の後継bindingが必要。"
+    }
+  ],
+  "cloud_sync": "NOT_VERIFIED"
+}
