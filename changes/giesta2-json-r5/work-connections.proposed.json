@@ -1,0 +1,865 @@
+{
+  "registry_id": "window-production-connections-v2",
+  "version": "2.2.0",
+  "status": "CURRENT",
+  "change_triggers": [
+    "変更",
+    "改訂",
+    "更新",
+    "反映",
+    "再開",
+    "正式採用",
+    "catalog change",
+    "最新版",
+    "確認",
+    "current-state",
+    "商品マスター"
+  ],
+  "products": [
+    {
+      "product_id": "SER-LIX-EW",
+      "aliases": [
+        "EW",
+        "LIXIL EW"
+      ],
+      "repository": "Takuro-Kwkm/sash-app",
+      "connection_state": "CONNECTED",
+      "default_gate": "FORMAL_CHANGE_ADOPTION",
+      "baseline_selector": {
+        "registry_id": "1HMMZ8JdsbJPtL_8LjQfxMF8P_Zb4-LReqvPMFn1pJks",
+        "manufacturer": "LIXIL",
+        "series": "EW"
+      },
+      "source_selector": {
+        "from": "CURRENT_FORMAL.runtime_manifest.catalog_change",
+        "role": "CURRENT_ADOPTED",
+        "official_scope": "東北以南・通常EW・EW防火戸除外"
+      },
+      "native_adapter": "scripts/production/ew-change.py",
+      "validators": [
+        "native-package-integrity",
+        "native-registry-identity",
+        "official-source-identity",
+        "ew-runtime-parity",
+        "window-selection-contract",
+        "scoped-regression"
+      ],
+      "resume_selector": "work_id + immutable spec hash + source/master/authority/runtime byte hashes",
+      "current_runtime_version": "v1.4",
+      "current_formal_version": "v1.4",
+      "formal_registry_selector": "LIXIL::EW",
+      "runtime_adapter": "CANONICAL_WORKBOOK_REFERENCE_V1",
+      "runtime_source": "src/catalog/runtime-master/app-runtime-integration-registry.mjs",
+      "native_output_successor": {
+        "profile": "contracts/production/order5-ew-output.v2.json",
+        "scope": "EW_NORMAL_29_FIELDS_XLSX_ORDER5_BATCH1_V2",
+        "native_preparer": "scripts/production/prepare-ew.py --output-profile",
+        "native_adapter": "scripts/production/ew-change.py",
+        "target_gate": "EW_NATIVE_OUTPUT_ADOPTION",
+        "ready_conditions": [
+          "EXACT_CURRENT_FORMAL_CARRY_FORWARD",
+          "COMPLETE_UNCHANGED_FILE_COVERAGE",
+          "SOURCE_BOUND_BROWSER_OUTPUT_QA",
+          "FRESH_HUMAN_RUNTIME_UI_ADOPTION",
+          "SHARED_DOWNSTREAM_READBACK"
+        ],
+        "unsupported_scope": "All other output, engine, manufacturer and product changes rejected"
+      }
+    },
+    {
+      "product_id": "SER-LIX-SAMOSL",
+      "aliases": [
+        "サーモスL",
+        "サーモスＬ",
+        "ThermosL"
+      ],
+      "repository": "Takuro-Kwkm/sash-app",
+      "connection_state": "CONNECTED",
+      "default_gate": "FORMAL_CHANGE_ADOPTION",
+      "baseline_selector": {
+        "manufacturer": "LIXIL",
+        "series": "サーモスL",
+        "registry_id": "1HMMZ8JdsbJPtL_8LjQfxMF8P_Zb4-LReqvPMFn1pJks"
+      },
+      "source_selector": {
+        "official_id": "1nxDq-qDTb3Gi_s8qPT6d3WpT5MzahCSe",
+        "scope": "ONE_OPTION_ONLY"
+      },
+      "native_adapter": "scripts/production/thermosl-change.py",
+      "validators": [
+        "native-sheet-preservation",
+        "scoped-official-claim",
+        "actual-runtime-ui-candidate"
+      ],
+      "resume_selector": "IMMUTABLE_SPEC_AND_JOURNAL",
+      "current_formal_selector": "contracts/production/formal-state/current/SER-LIX-SAMOSL.json",
+      "formal_state_root": "contracts/production/formal-state",
+      "current_runtime_version": "v0.7-R3",
+      "current_formal_version": "v0.7-R3",
+      "formal_registry_selector": "LIXIL::サーモスL",
+      "runtime_adapter": "PRODUCT_MODULE_RUNTIME_V1",
+      "runtime_source": "src/catalog/runtime-master/app-runtime-integration-registry.mjs"
+    },
+    {
+      "product_id": "SER-LIX-EW-FIRE",
+      "aliases": [
+        "EW防火戸"
+      ],
+      "repository": "Takuro-Kwkm/sash-app",
+      "connection_state": "ADAPTER_PENDING",
+      "safe_failure": {
+        "state": "FAIL_CLOSED",
+        "code": "NATIVE_ADAPTER_UNAVAILABLE",
+        "target_gate": "ROUTER",
+        "writes": 0,
+        "fallback": false,
+        "next_action": "Acquire and review a native adapter successor Work; Current Formal/Runtime remain read-only"
+      }
+    },
+    {
+      "product_id": "SER-LIXIL-TW",
+      "aliases": [
+        "TW"
+      ],
+      "repository": "Takuro-Kwkm/sash-app",
+      "connection_state": "ADAPTER_PENDING",
+      "current_runtime_version": "integrated-v0.5",
+      "current_formal_version": "integrated-v0.5",
+      "formal_registry_selector": "LIXIL::TW",
+      "runtime_adapter": "TW_CANONICAL_WORKBOOK_REFERENCE_V2",
+      "runtime_source": "src/catalog/runtime-master/app-runtime-integration-registry.mjs",
+      "safe_failure": {
+        "state": "FAIL_CLOSED",
+        "code": "NATIVE_ADAPTER_UNAVAILABLE",
+        "target_gate": "ROUTER",
+        "writes": 0,
+        "fallback": false,
+        "next_action": "Acquire and review a native adapter successor Work; Current Formal/Runtime remain read-only"
+      }
+    },
+    {
+      "product_id": "SER-LIX-SAMOS2H",
+      "aliases": [
+        "サーモスⅡ-H",
+        "サーモスⅡH"
+      ],
+      "repository": "Takuro-Kwkm/sash-app",
+      "connection_state": "CONNECTED",
+      "current_runtime_version": "v0.9-R4",
+      "current_formal_version": "v0.9-R4",
+      "formal_registry_selector": "LIXIL::サーモスⅡH",
+      "runtime_adapter": "PRODUCT_MODULE_RUNTIME_V1",
+      "runtime_source": "src/catalog/runtime-master/app-runtime-integration-registry.mjs",
+      "default_gate": "SOURCE_AUDIT_VERIFIED",
+      "baseline_selector": {
+        "registry_id": "1HMMZ8JdsbJPtL_8LjQfxMF8P_Zb4-LReqvPMFn1pJks",
+        "manufacturer": "LIXIL",
+        "series": "サーモスⅡH"
+      },
+      "source_selector": {
+        "role": "CURRENT_ADOPTED_PLUS_NEW_CANDIDATE",
+        "current_official_id": "1x4lovMcyfkyFzulYiQIv8OE5dpq6wDor",
+        "candidate_official_id": "18UFIudvFxFKNVzxOdn_ZIOyR8doze8xJ",
+        "scope": "ENTIRE_PRIMARY_PRICE_CATALOGUE; other source revisions are separately scoped",
+        "latest_discovery": "LIVE_OFFICIAL_INDEX_REQUIRED"
+      },
+      "native_adapter": "scripts/production/catalog-change-audit.py",
+      "native_prepare": "scripts/production/prepare-catalog-change-audit.py",
+      "validators": [
+        "native-formal-byte-identity",
+        "complete-catalogue-text-and-visual-review",
+        "native-impact-mapping",
+        "no-formal-runtime-mutation"
+      ],
+      "resume_selector": "IMMUTABLE_SPEC_AND_HASH_JOURNAL",
+      "catalogue_audit_profile": {
+        "path": "contracts/production/catalogue-audit/SER-LIX-SAMOS2H/profile.json",
+        "sha256": "081a71b91990169136bbec0adb129c1610c5bd29c1c1b75cf7c31e8813d8bca8",
+        "mutation_policy": "NONE",
+        "target_gate": "SOURCE_AUDIT_VERIFIED"
+      },
+      "reviewed_ui_profile": {
+        "path": "contracts/production/reviewed-ui-profiles/order5-batch2.v1.json",
+        "sha256": "335f6bca06e1816e21a66317be5fc12d7fba8388e23665674f5b6c9d1920e64a",
+        "scope": "SAMOS2H_V09R4_SELECTION_SAVE_OUTPUT_ORDER5_BATCH2_V1",
+        "status": "FIXED_CANDIDATE",
+        "workflow": "SHARED:production-work/REVIEWED_UI_ADOPTION",
+        "publication": "FRESH_HUMAN_RELEASE_REQUIRED"
+      }
+    },
+    {
+      "product_id": "SER-LIXIL-RECHENT-D3-NF",
+      "aliases": [
+        "リシェント玄関ドア3 非防火"
+      ],
+      "repository": "Takuro-Kwkm/sash-app",
+      "connection_state": "ADAPTER_PENDING",
+      "current_runtime_version": "v0.8-R8",
+      "current_formal_version": "v0.8-R8",
+      "formal_registry_selector": "LIXIL::リシェント玄関ドア3 非防火",
+      "runtime_adapter": "RECHENT_DOOR3_NONFIRE_V1",
+      "runtime_source": "src/catalog/runtime-master/app-runtime-integration-registry.mjs",
+      "safe_failure": {
+        "state": "FAIL_CLOSED",
+        "code": "NATIVE_ADAPTER_UNAVAILABLE",
+        "target_gate": "ROUTER",
+        "writes": 0,
+        "fallback": false,
+        "next_action": "Acquire and review a native adapter successor Work; Current Formal/Runtime remain read-only"
+      }
+    },
+    {
+      "product_id": "SER-YKK-APW430",
+      "aliases": [
+        "APW430"
+      ],
+      "repository": "Takuro-Kwkm/sash-app",
+      "connection_state": "ADAPTER_PENDING",
+      "current_runtime_version": "20260918-R3",
+      "current_formal_version": "20260918-R3",
+      "formal_registry_selector": "YKK AP::APW430",
+      "runtime_adapter": "APW430_FORMAL_SPLIT_V1",
+      "runtime_source": "src/catalog/runtime-master/app-runtime-integration-registry.mjs",
+      "safe_failure": {
+        "state": "FAIL_CLOSED",
+        "code": "NATIVE_ADAPTER_UNAVAILABLE",
+        "target_gate": "ROUTER",
+        "writes": 0,
+        "fallback": false,
+        "next_action": "Acquire and review a native adapter successor Work; Current Formal/Runtime remain read-only"
+      }
+    },
+    {
+      "product_id": "SER-YKK-APW431",
+      "aliases": [
+        "APW431"
+      ],
+      "repository": "Takuro-Kwkm/sash-app",
+      "connection_state": "ADAPTER_PENDING",
+      "current_runtime_version": "v1.2",
+      "current_formal_version": "v1.2",
+      "formal_registry_selector": "YKK AP::APW431",
+      "runtime_adapter": "APW431_FORMAL_SPLIT_V1",
+      "runtime_source": "src/catalog/runtime-master/app-runtime-integration-registry.mjs",
+      "safe_failure": {
+        "state": "FAIL_CLOSED",
+        "code": "NATIVE_ADAPTER_UNAVAILABLE",
+        "target_gate": "ROUTER",
+        "writes": 0,
+        "fallback": false,
+        "next_action": "Acquire and review a native adapter successor Work; Current Formal/Runtime remain read-only"
+      }
+    },
+    {
+      "product_id": "SER-YKKAP-UCHIRIMO",
+      "aliases": [
+        "ウチリモ 内窓",
+        "ウチリモ"
+      ],
+      "repository": "Takuro-Kwkm/sash-app",
+      "connection_state": "ADAPTER_PENDING",
+      "current_runtime_version": "v1.0-P7R1-R5",
+      "current_formal_version": "v1.0-P7R1-R6",
+      "formal_registry_selector": "YKK AP::ウチリモ 内窓",
+      "runtime_adapter": "UCHIRIMO_TABULAR_V1",
+      "runtime_source": "src/catalog/runtime-master/app-runtime-integration-registry.mjs",
+      "safe_failure": {
+        "state": "FAIL_CLOSED",
+        "code": "NATIVE_ADAPTER_UNAVAILABLE",
+        "target_gate": "ROUTER",
+        "writes": 0,
+        "fallback": false,
+        "next_action": "Acquire and review a native adapter successor Work; Current Formal/Runtime remain read-only"
+      }
+    },
+    {
+      "product_id": "SER-LIXIL-INPLUS",
+      "aliases": [
+        "インプラス"
+      ],
+      "repository": "Takuro-Kwkm/sash-app",
+      "connection_state": "ADAPTER_PENDING",
+      "current_runtime_version": "v0.4-R3",
+      "current_formal_version": "v0.4-R3",
+      "formal_registry_selector": "LIXIL::インプラス",
+      "runtime_adapter": "SEMANTIC_TABLE_BUNDLE_V2",
+      "runtime_source": "src/catalog/runtime-master/app-runtime-integration-registry.mjs",
+      "safe_failure": {
+        "state": "FAIL_CLOSED",
+        "code": "NATIVE_ADAPTER_UNAVAILABLE",
+        "target_gate": "ROUTER",
+        "writes": 0,
+        "fallback": false,
+        "next_action": "Acquire and review a native adapter successor Work; Current Formal/Runtime remain read-only"
+      }
+    },
+    {
+      "product_id": "LIXIL_INPLUS_BATHROOM",
+      "aliases": [
+        "インプラス 浴室仕様",
+        "インプラス浴室"
+      ],
+      "repository": "Takuro-Kwkm/sash-app",
+      "connection_state": "ADAPTER_PENDING",
+      "current_formal_version": "v1.0",
+      "formal_registry_selector": "app-runtime-integration-registry:productVariantContract:bathroom",
+      "runtime_adapter": "INPLUS_BATHROOM_FORMAL_V1",
+      "runtime_source": "src/catalog/runtime-master/app-runtime-integration-registry.mjs",
+      "safe_failure": {
+        "state": "FAIL_CLOSED",
+        "code": "NATIVE_ADAPTER_UNAVAILABLE",
+        "target_gate": "ROUTER",
+        "writes": 0,
+        "fallback": false,
+        "next_action": "Acquire and review a native adapter successor Work; Current Formal/Runtime remain read-only"
+      }
+    },
+    {
+      "product_id": "NATIVE_REGISTRY:LIXIL::TW防火戸",
+      "aliases": [
+        "TW防火戸"
+      ],
+      "repository": "Takuro-Kwkm/sash-app",
+      "connection_state": "ADAPTER_PENDING",
+      "current_formal_version": "v0.5",
+      "formal_registry_selector": "LIXIL::TW防火戸",
+      "safe_failure": {
+        "state": "FAIL_CLOSED",
+        "code": "NATIVE_ADAPTER_UNAVAILABLE",
+        "writes": 0,
+        "fallback": false,
+        "next_action": "Registry-only product: bind a native adapter successor before mutation"
+      }
+    },
+    {
+      "product_id": "NATIVE_REGISTRY:LIXIL::リプラス",
+      "aliases": [
+        "リプラス"
+      ],
+      "repository": "Takuro-Kwkm/sash-app",
+      "connection_state": "CONNECTED",
+      "current_formal_version": "v1.1",
+      "formal_registry_selector": "LIXIL::リプラス",
+      "default_gate": "FORMAL_CHANGE_ADOPTION",
+      "baseline_selector": {
+        "registry_id": "1HMMZ8JdsbJPtL_8LjQfxMF8P_Zb4-LReqvPMFn1pJks",
+        "manufacturer": "LIXIL",
+        "series": "リプラス"
+      },
+      "source_selector": {
+        "from": "ACQUIRED_CURRENT_FORMAL_AND_V13_REVIEWED_SOURCES",
+        "mode": "REVIEWED_CLAIMS_ONLY"
+      },
+      "native_adapter": "scripts/production/table-package-change.py",
+      "validators": [
+        "native-table-parity",
+        "official-evidence-identity",
+        "reviewed-flow-registration",
+        "controlled-unresolved-handoff",
+        "shared-human-formal-save"
+      ],
+      "resume_selector": "IMMUTABLE_SPEC_AND_JOURNAL",
+      "native_change_profile": {
+        "path": "contracts/production/native-change-profiles/replus-v13.json",
+        "sha256": "bfdbf6947ae998c2cd70d47c941b08651c7890c8653cfd2c410de79fb65a77a0"
+      }
+    },
+    {
+      "product_id": "NATIVE_REGISTRY:LIXIL::ジエスタ2",
+      "aliases": [
+        "ジエスタ2"
+      ],
+      "repository": "Takuro-Kwkm/sash-app",
+      "connection_state": "CONNECTED",
+      "current_formal_version": "v0.8-R4",
+      "formal_registry_selector": "LIXIL::ジエスタ2",
+      "default_gate": "QA_READY",
+      "baseline_selector": {
+        "registry_id": "1HMMZ8JdsbJPtL_8LjQfxMF8P_Zb4-LReqvPMFn1pJks",
+        "manufacturer": "LIXIL",
+        "series": "ジエスタ2"
+      },
+      "source_selector": {
+        "from": "LIVE_CURRENT_FORMAL + reviewed candidate official sources",
+        "role": "CURRENT_ADOPTED; NEW_CANDIDATE stays CANDIDATE",
+        "official_scope": "ジエスタ2 非防火・営業見積依頼"
+      },
+      "native_adapter": "scripts/production/sheet-package-change.py",
+      "validators": [
+        "native-sheets-identity",
+        "native-package-integrity",
+        "reviewed-exact-cell-delta",
+        "source-evidence-binding",
+        "sales-handoff-native-qa"
+      ],
+      "resume_selector": "work_id + immutable spec + source/authoring/authority/QA hashes",
+      "change_profile": {
+        "profile_id": "sash-giesta2-existing-formal-successor-v1",
+        "path": "contracts/production/giesta2-change-profile.v1.json",
+        "sha256": "7b7544ca2f9124987286934bdb861e4194524926408277144663bd5598aa0a95"
+      },
+      "build_profile": {
+        "profile_id": "sash-giesta2-existing-formal-successor-v1",
+        "path": "contracts/production/giesta2-change-profile.v1.json",
+        "sha256": "7b7544ca2f9124987286934bdb861e4194524926408277144663bd5598aa0a95",
+        "mode": "EXISTING_FORMAL_SUCCESSOR",
+        "native_preparer": "scripts/production/prepare-sheet-package-change.py"
+      },
+      "formal_profile": {
+        "path": "contracts/production/giesta2-json-formal-profile.v1.json",
+        "sha256": "e0dfe3c7e6dd5431d687bf908523d98f34be9eb9d58ca6cf9e22e0135c0dc589"
+      }
+    },
+    {
+      "product_id": "NATIVE_REGISTRY:LIXIL::エルムーブ2",
+      "aliases": [
+        "エルムーブ2"
+      ],
+      "repository": "Takuro-Kwkm/sash-app",
+      "connection_state": "ADAPTER_PENDING",
+      "current_formal_version": "WORKING",
+      "formal_registry_selector": "LIXIL::エルムーブ2",
+      "safe_failure": {
+        "state": "FAIL_CLOSED",
+        "code": "NATIVE_ADAPTER_UNAVAILABLE",
+        "writes": 0,
+        "fallback": false,
+        "next_action": "Registry-only product: bind a native adapter successor before mutation"
+      }
+    },
+    {
+      "product_id": "NATIVE_REGISTRY:LIXIL::サーモスA",
+      "aliases": [
+        "サーモスA"
+      ],
+      "repository": "Takuro-Kwkm/sash-app",
+      "connection_state": "ADAPTER_PENDING",
+      "current_formal_version": "v0.7",
+      "formal_registry_selector": "LIXIL::サーモスA",
+      "safe_failure": {
+        "state": "FAIL_CLOSED",
+        "code": "NATIVE_ADAPTER_UNAVAILABLE",
+        "writes": 0,
+        "fallback": false,
+        "next_action": "Registry-only product: bind a native adapter successor before mutation"
+      }
+    },
+    {
+      "product_id": "NATIVE_REGISTRY:LIXIL::玄関ドアXE",
+      "aliases": [
+        "玄関ドアXE"
+      ],
+      "repository": "Takuro-Kwkm/sash-app",
+      "connection_state": "ADAPTER_PENDING",
+      "current_formal_version": "v1.0-RC",
+      "formal_registry_selector": "LIXIL::玄関ドアXE",
+      "safe_failure": {
+        "state": "FAIL_CLOSED",
+        "code": "NATIVE_ADAPTER_UNAVAILABLE",
+        "writes": 0,
+        "fallback": false,
+        "next_action": "Registry-only product: bind a native adapter successor before mutation"
+      }
+    },
+    {
+      "product_id": "NATIVE_REGISTRY:YKK AP::APW330",
+      "aliases": [
+        "APW330"
+      ],
+      "repository": "Takuro-Kwkm/sash-app",
+      "connection_state": "ADAPTER_PENDING",
+      "current_formal_version": "v1.0",
+      "formal_registry_selector": "YKK AP::APW330",
+      "safe_failure": {
+        "state": "FAIL_CLOSED",
+        "code": "NATIVE_ADAPTER_UNAVAILABLE",
+        "writes": 0,
+        "fallback": false,
+        "next_action": "Registry-only product: bind a native adapter successor before mutation"
+      }
+    },
+    {
+      "product_id": "NATIVE_REGISTRY:YKK AP::APW331",
+      "aliases": [
+        "APW331"
+      ],
+      "repository": "Takuro-Kwkm/sash-app",
+      "connection_state": "ADAPTER_PENDING",
+      "current_formal_version": "UNREGISTERED",
+      "formal_registry_selector": "YKK AP::APW331",
+      "safe_failure": {
+        "state": "FAIL_CLOSED",
+        "code": "NATIVE_ADAPTER_UNAVAILABLE",
+        "writes": 0,
+        "fallback": false,
+        "next_action": "Registry-only product: bind a native adapter successor before mutation"
+      }
+    },
+    {
+      "product_id": "NATIVE_REGISTRY:YKK AP::マドリモ 戸建用",
+      "aliases": [
+        "マドリモ 戸建用"
+      ],
+      "repository": "Takuro-Kwkm/sash-app",
+      "connection_state": "ADAPTER_PENDING",
+      "current_formal_version": "v1.0-R2",
+      "formal_registry_selector": "YKK AP::マドリモ 戸建用",
+      "safe_failure": {
+        "state": "FAIL_CLOSED",
+        "code": "NATIVE_ADAPTER_UNAVAILABLE",
+        "writes": 0,
+        "fallback": false,
+        "next_action": "Registry-only product: bind a native adapter successor before mutation"
+      }
+    },
+    {
+      "product_id": "NATIVE_REGISTRY:YKK AP::コンコードS30",
+      "aliases": [
+        "コンコードS30"
+      ],
+      "repository": "Takuro-Kwkm/sash-app",
+      "connection_state": "ADAPTER_PENDING",
+      "current_formal_version": "v1.0",
+      "formal_registry_selector": "YKK AP::コンコードS30",
+      "safe_failure": {
+        "state": "FAIL_CLOSED",
+        "code": "NATIVE_ADAPTER_UNAVAILABLE",
+        "writes": 0,
+        "fallback": false,
+        "next_action": "Registry-only product: bind a native adapter successor before mutation"
+      }
+    },
+    {
+      "product_id": "NATIVE_REGISTRY:LIXIL::リシェント玄関引戸2",
+      "aliases": [
+        "リシェント玄関引戸2"
+      ],
+      "repository": "Takuro-Kwkm/sash-app",
+      "connection_state": "ADAPTER_PENDING",
+      "current_formal_version": "v0.1-R25",
+      "formal_registry_selector": "LIXIL::リシェント玄関引戸2",
+      "safe_failure": {
+        "state": "FAIL_CLOSED",
+        "code": "NATIVE_ADAPTER_UNAVAILABLE",
+        "writes": 0,
+        "fallback": false,
+        "next_action": "Registry-only product: bind a native adapter successor before mutation"
+      }
+    },
+    {
+      "product_id": "NATIVE_REGISTRY:YKK AP::エピソードⅡ",
+      "aliases": [
+        "エピソードⅡ"
+      ],
+      "repository": "Takuro-Kwkm/sash-app",
+      "connection_state": "ADAPTER_PENDING",
+      "current_formal_version": "v0.4-R1-SR3-WORKING",
+      "formal_registry_selector": "YKK AP::エピソードⅡ",
+      "safe_failure": {
+        "state": "FAIL_CLOSED",
+        "code": "NATIVE_ADAPTER_UNAVAILABLE",
+        "writes": 0,
+        "fallback": false,
+        "next_action": "Registry-only product: bind a native adapter successor before mutation"
+      }
+    },
+    {
+      "product_id": "NATIVE_REGISTRY:LIXIL::リフォームシャッター",
+      "aliases": [
+        "リフォームシャッター"
+      ],
+      "repository": "Takuro-Kwkm/sash-app",
+      "connection_state": "ADAPTER_PENDING",
+      "current_formal_version": "v1.0-R3",
+      "formal_registry_selector": "LIXIL::リフォームシャッター",
+      "safe_failure": {
+        "state": "FAIL_CLOSED",
+        "code": "NATIVE_ADAPTER_UNAVAILABLE",
+        "writes": 0,
+        "fallback": false,
+        "next_action": "Registry-only product: bind a native adapter successor before mutation"
+      }
+    },
+    {
+      "product_id": "NATIVE_REGISTRY:YKK AP::ドアリモ玄関引戸",
+      "aliases": [
+        "ドアリモ玄関引戸"
+      ],
+      "repository": "Takuro-Kwkm/sash-app",
+      "connection_state": "ADAPTER_PENDING",
+      "current_formal_version": "v1.0",
+      "formal_registry_selector": "YKK AP::ドアリモ玄関引戸",
+      "safe_failure": {
+        "state": "FAIL_CLOSED",
+        "code": "NATIVE_ADAPTER_UNAVAILABLE",
+        "writes": 0,
+        "fallback": false,
+        "next_action": "Registry-only product: bind a native adapter successor before mutation"
+      }
+    },
+    {
+      "product_id": "NATIVE_REGISTRY:YKK AP::ドアリモ アウトセット玄関引戸",
+      "aliases": [
+        "ドアリモ アウトセット玄関引戸"
+      ],
+      "repository": "Takuro-Kwkm/sash-app",
+      "connection_state": "ADAPTER_PENDING",
+      "current_formal_version": "v1.0-RC-R2",
+      "formal_registry_selector": "YKK AP::ドアリモ アウトセット玄関引戸",
+      "safe_failure": {
+        "state": "FAIL_CLOSED",
+        "code": "NATIVE_ADAPTER_UNAVAILABLE",
+        "writes": 0,
+        "fallback": false,
+        "next_action": "Registry-only product: bind a native adapter successor before mutation"
+      }
+    },
+    {
+      "product_id": "NATIVE_REGISTRY:LIXIL::防火戸FG-H",
+      "aliases": [
+        "防火戸FG-H"
+      ],
+      "repository": "Takuro-Kwkm/sash-app",
+      "connection_state": "ADAPTER_PENDING",
+      "current_formal_version": "v1.0",
+      "formal_registry_selector": "LIXIL::防火戸FG-H",
+      "safe_failure": {
+        "state": "FAIL_CLOSED",
+        "code": "NATIVE_ADAPTER_UNAVAILABLE",
+        "writes": 0,
+        "fallback": false,
+        "next_action": "Registry-only product: bind a native adapter successor before mutation"
+      }
+    },
+    {
+      "product_id": "NATIVE_REGISTRY:LIXIL::リシェント浴室ドア",
+      "aliases": [
+        "リシェント浴室ドア"
+      ],
+      "repository": "Takuro-Kwkm/sash-app",
+      "connection_state": "ADAPTER_PENDING",
+      "current_formal_version": "v0.5-R1",
+      "formal_registry_selector": "LIXIL::リシェント浴室ドア",
+      "safe_failure": {
+        "state": "FAIL_CLOSED",
+        "code": "NATIVE_ADAPTER_UNAVAILABLE",
+        "writes": 0,
+        "fallback": false,
+        "next_action": "Registry-only product: bind a native adapter successor before mutation"
+      }
+    },
+    {
+      "product_id": "NATIVE_REGISTRY:LIXIL::リフォーム雨戸（雨戸一筋）",
+      "aliases": [
+        "リフォーム雨戸（雨戸一筋）"
+      ],
+      "repository": "Takuro-Kwkm/sash-app",
+      "connection_state": "ADAPTER_PENDING",
+      "current_formal_version": "v0.4-PHASE4-WORKING",
+      "formal_registry_selector": "LIXIL::リフォーム雨戸（雨戸一筋）",
+      "safe_failure": {
+        "state": "FAIL_CLOSED",
+        "code": "NATIVE_ADAPTER_UNAVAILABLE",
+        "writes": 0,
+        "fallback": false,
+        "next_action": "Registry-only product: bind a native adapter successor before mutation"
+      }
+    },
+    {
+      "product_id": "NATIVE_REGISTRY:YKK AP::イノベスト",
+      "aliases": [
+        "イノベスト"
+      ],
+      "repository": "Takuro-Kwkm/sash-app",
+      "connection_state": "ADAPTER_PENDING",
+      "current_formal_version": "v1.0.1",
+      "formal_registry_selector": "YKK AP::イノベスト",
+      "safe_failure": {
+        "state": "FAIL_CLOSED",
+        "code": "NATIVE_ADAPTER_UNAVAILABLE",
+        "writes": 0,
+        "fallback": false,
+        "next_action": "Registry-only product: bind a native adapter successor before mutation"
+      }
+    },
+    {
+      "product_id": "NATIVE_REGISTRY:LIXIL::防火戸FG-L",
+      "aliases": [
+        "防火戸FG-L"
+      ],
+      "repository": "Takuro-Kwkm/sash-app",
+      "connection_state": "ADAPTER_PENDING",
+      "current_formal_version": "v0.4-WORKING",
+      "formal_registry_selector": "LIXIL::防火戸FG-L",
+      "safe_failure": {
+        "state": "FAIL_CLOSED",
+        "code": "NATIVE_ADAPTER_UNAVAILABLE",
+        "writes": 0,
+        "fallback": false,
+        "next_action": "Registry-only product: bind a native adapter successor before mutation"
+      }
+    },
+    {
+      "product_id": "NATIVE_REGISTRY:LIXIL::グランデル2",
+      "aliases": [
+        "グランデル2"
+      ],
+      "repository": "Takuro-Kwkm/sash-app",
+      "connection_state": "ADAPTER_PENDING",
+      "current_formal_version": "v0.4-WORKING",
+      "formal_registry_selector": "LIXIL::グランデル2",
+      "safe_failure": {
+        "state": "FAIL_CLOSED",
+        "code": "NATIVE_ADAPTER_UNAVAILABLE",
+        "writes": 0,
+        "fallback": false,
+        "next_action": "Registry-only product: bind a native adapter successor before mutation"
+      }
+    },
+    {
+      "product_id": "NATIVE_REGISTRY:LIXIL::店舗・汎用ドア・引戸",
+      "aliases": [
+        "店舗・汎用ドア・引戸"
+      ],
+      "repository": "Takuro-Kwkm/sash-app",
+      "connection_state": "ADAPTER_PENDING",
+      "current_formal_version": "v0.4-R1-PHASE2R1-WORKING",
+      "formal_registry_selector": "LIXIL::店舗・汎用ドア・引戸",
+      "safe_failure": {
+        "state": "FAIL_CLOSED",
+        "code": "NATIVE_ADAPTER_UNAVAILABLE",
+        "writes": 0,
+        "fallback": false,
+        "next_action": "Registry-only product: bind a native adapter successor before mutation"
+      }
+    },
+    {
+      "product_id": "NATIVE_REGISTRY:YKK AP::ドアリモ玄関ドア 非防火",
+      "aliases": [
+        "ドアリモ玄関ドア 非防火"
+      ],
+      "repository": "Takuro-Kwkm/sash-app",
+      "connection_state": "CONNECTED",
+      "connection_scope": "EXISTING_WORKING_SALES_QA",
+      "current_working_version": "v1.0-LEGACY-RECOVERY",
+      "formal_registry_selector": "YKK AP::ドアリモ玄関ドア 非防火",
+      "default_gate": "QA_READY",
+      "baseline_selector": {
+        "registry_id": "1HMMZ8JdsbJPtL_8LjQfxMF8P_Zb4-LReqvPMFn1pJks",
+        "manufacturer": "YKK AP",
+        "series": "ドアリモ玄関ドア 非防火",
+        "state": "WORKING_RECOVERY"
+      },
+      "source_selector": {
+        "from": "LIVE_NATIVE_WORKING + REVIEWED_OFFICIAL_BYTES",
+        "role": "REVIEWED_CURRENT_NONFIRE_SALES_SCOPE",
+        "scope": "Working candidate only; no automatic price/Source promotion"
+      },
+      "native_adapter": "scripts/production/working-master-business-qa.py",
+      "prepare_adapter": "scripts/production/prepare-working-master-business-qa.py",
+      "validators": [
+        "native-working-identity",
+        "official-source-byte-review",
+        "shared-domain-qa",
+        "sales-request-handoff"
+      ],
+      "resume_selector": "IMMUTABLE_SPEC_AND_SHARED_V2_JOURNAL; completed recovery is INSPECT_ONLY",
+      "build_profile": {
+        "profile_id": "sash-existing-working-sales-qa-v1",
+        "path": "contracts/production/working-master-recovery/doorremo-nonfire.business-qa.v1.json",
+        "sha256": "3cf620e58ecdf8543831c71bbdf800da5d14c595ef2e00ed016f2cb5a979959b"
+      },
+      "unsupported_gates": {
+        "FORMAL": "NATIVE_FORMAL_PROFILE_AND_EXTERNAL_DECISION_REQUIRED",
+        "INTEGRATION": "NATIVE_RUNTIME_ADAPTER_UNAVAILABLE"
+      },
+      "formal_profile": {
+        "path": "contracts/production/working-master-recovery/doorremo-nonfire.formal.v1.json",
+        "sha256": "d53d88a618a8048af94574398c24fb85c081c5e0eef6cc167f5b33431d913934"
+      },
+      "runtime_candidate_profile": {
+        "path": "contracts/production/runtime-candidates/doorremo-nonfire-r1.profile.json",
+        "sha256": "a2c607ed02aec830d64ad6c7b879dac78116d4f0d533a2533aefa5056ca1b18c"
+      }
+    },
+    {
+      "product_id": "NATIVE_REGISTRY:YKK AP::ヴェナートD30",
+      "aliases": [
+        "ヴェナートD30"
+      ],
+      "repository": "Takuro-Kwkm/sash-app",
+      "connection_state": "ADAPTER_PENDING",
+      "current_formal_version": "v0.7-R2",
+      "formal_registry_selector": "YKK AP::ヴェナートD30",
+      "safe_failure": {
+        "state": "FAIL_CLOSED",
+        "code": "NATIVE_ADAPTER_UNAVAILABLE",
+        "writes": 0,
+        "fallback": false,
+        "next_action": "Registry-only product: bind a native adapter successor before mutation"
+      }
+    },
+    {
+      "product_id": "NATIVE_REGISTRY:YKK AP::APW511",
+      "aliases": [
+        "APW511",
+        "APW 511",
+        "YKK AP APW511"
+      ],
+      "repository": "Takuro-Kwkm/sash-app",
+      "connection_state": "CONNECTED",
+      "connection_scope": "HUMAN_ADOPTED_SALES_ESTIMATE_REQUEST_RUNTIME_UI",
+      "formal_registry_selector": "YKK AP::APW511",
+      "default_gate": "APP_INTEGRATION_READY",
+      "baseline_selector": {
+        "registry_id": "1HMMZ8JdsbJPtL_8LjQfxMF8P_Zb4-LReqvPMFn1pJks",
+        "manufacturer": "YKK AP",
+        "series": "APW511",
+        "state": "FORMAL_PASS",
+        "package_version": "v1.0-F1-20261016"
+      },
+      "source_selector": {
+        "from": "LIVE_NATIVE_FORMAL + FIXED_REVIEWED_RUNTIME_UI_CANDIDATE",
+        "role": "READ_ONLY_ADOPTED_MASTER",
+        "scope": "Product Master INSPECT_ONLY; no Source switch or manufacturer Fact mutation"
+      },
+      "native_adapter": "scripts/production/runtime-candidate-work.py",
+      "prepare_adapter": "scripts/production/prepare-domain-runtime-candidate.py",
+      "validators": [
+        "native-formal-identity",
+        "fixed-domain-projection",
+        "human-flow-review-authorization",
+        "source-handoff-parity",
+        "declared-sales-runtime-browser",
+        "declared-factored-full-coverage",
+        "all-flow-browser-qa",
+        "exact-head-ci"
+      ],
+      "resume_selector": "IMMUTABLE_SPEC_AND_SHARED_V2_JOURNAL; completed Formal is INSPECT_ONLY",
+      "runtime_candidate_profile": {
+        "path": "contracts/production/runtime-candidates/apw511-r3-full-coverage.profile.json",
+        "sha256": "b61d9a91dae1c794f0ca22f4e2b56d948d7bea5eb747e71c1d45b05ad689ed10"
+      },
+      "unsupported_gates": {
+        "FORMAL": "COMPLETED_PRODUCT_MASTER_INSPECT_ONLY",
+        "INTEGRATION": "REQUIRES_FIXED_FULL_COVERAGE_QA_AND_EXACT_HEAD_CI",
+        "RELEASE": "NATIVE_RELEASE_PROFILE_AND_EXTERNAL_DECISION_REQUIRED"
+      }
+    }
+  ],
+  "shared_authority": {
+    "repository": "Takuro-Kwkm/product-ui-contracts",
+    "commit": "68f2fe69831a33ab92789526bdcd7a49446122a2",
+    "harness_revision": "659d5ca2bf333cc6acf2ab4c6bdcf408fbad0c7a",
+    "entry_point": "scripts/production-work.py",
+    "current_router": "scripts/architecture-work.py",
+    "policy": "PINNED_SHARED_ENGINE_NATIVE_ADAPTERS_ONLY"
+  },
+  "current_architecture_pointer": "contracts/production/current-architecture.json",
+  "ga_adapter_policy": "CONNECTED_NATIVE_SCOPE_OR_EXPLICIT_FAIL_CLOSED; NO_REFERENCE_OR_LEGACY_FALLBACK",
+  "new_product_build_profile": {
+    "profile_id": "sash-new-product-master-v1",
+    "path": "contracts/production/product-master-build-profile.intake-v4.json",
+    "sha256": "7827ccec77574923a57fa2ca3f837ba1b246bd93c745f3f6f21b0420a2c8711c"
+  }
+}

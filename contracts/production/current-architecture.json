@@ -36,7 +36,7 @@
   "isolated_build_authority": {
     "metadata": "contracts/production/shared-product-master-conditions.v1.json",
     "entry": "scripts/production/unpack-product-master-conditions.py",
-    "source_commit": "7ff8c7a014e7d761bbfcc9ef6392587ebc9d7dc0",
+    "source_commit": "a693f917fe6d40804255368d35c792fba4ffe32c",
     "scope": "ISOLATED_CI_ONLY; live Current host acquisition separate"
   }
 }

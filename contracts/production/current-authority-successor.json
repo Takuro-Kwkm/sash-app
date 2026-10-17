@@ -1,6 +1,6 @@
 {
   "schema": "CURRENT_AUTHORITY_SUCCESSOR_SELECTION_V1",
   "path": "contracts/production/authority-successors/initialization-transport.v10.json",
-  "sha256": "6f7ed545a6590b835f95c81ebae2f796227d21372313cb6c612ef2b820be1616",
-  "implementation_sha": "7ff8c7a014e7d761bbfcc9ef6392587ebc9d7dc0"
+  "sha256": "3e2c080227bf36cd988dc73546ffdd813acdf0999885c63676cdacd08aafa180",
+  "implementation_sha": "a693f917fe6d40804255368d35c792fba4ffe32c"
 }

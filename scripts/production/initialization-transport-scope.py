@@ -1,5 +1,5 @@
 """Delegate bounded initialization transport admission to its pinned shared carrier."""
-import argparse,importlib.util,json,subprocess,tempfile
+import argparse,importlib.util,json,subprocess,sys,tempfile
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[2]
 def load(name,path):
@@ -12,14 +12,16 @@ def validate(root=ROOT):
    return load('transport_guard',central/'scripts/verify-initialization-transport-native-scope.py').validate(root)
  except Exception as e:return {'status':'FAIL_CLOSED','errors':[str(e)],'authorized_paths':[],'verified_unchanged_sha256':{},'deployment':'NOT_EXECUTED'}
 def main():
- p=argparse.ArgumentParser();p.add_argument('--predecessor');p.add_argument('--parent');a=p.parse_args();r=validate()
- if r['status']=='PASS' and (a.predecessor or a.parent):
-  dest=Path(a.predecessor or a.parent).resolve();assert not dest.exists() and not dest.is_relative_to(ROOT)
+ p=argparse.ArgumentParser();p.add_argument('--predecessor');p.add_argument('--parent');p.add_argument('--transport-predecessor');a=p.parse_args();r=validate()
+ if r['status']=='PASS' and (a.predecessor or a.parent or a.transport_predecessor):
+  dest=Path(a.predecessor or a.parent or a.transport_predecessor).resolve();assert not dest.exists() and not dest.is_relative_to(ROOT)
   base=json.loads((ROOT/'contracts/production/initialization-transport-scope.v1.json').read_text())['starting_main']
   with tempfile.TemporaryDirectory(prefix='transport-predecessor-') as tmp:
    prior=Path(tmp)/'native';subprocess.run(['git','clone','--quiet','--shared',str(ROOT),str(prior)],check=True)
    subprocess.run(['git','checkout','--quiet','--detach',base],cwd=prior,check=True)
-   subprocess.run(['python3','-B',str(prior/'scripts/production/product-conditions-scope.py'),'--predecessor',str(dest)],cwd=prior,check=True)
+   if a.transport_predecessor:
+    subprocess.run(['git','clone','--quiet','--shared','--dissociate',str(prior),str(dest)],check=True)
+   else:subprocess.run([sys.executable,'-B',str(prior/'scripts/production/product-conditions-scope.py'),'--predecessor',str(dest)],cwd=prior,check=True)
   r['predecessor']=str(dest)
  print(json.dumps({k:v for k,v in r.items() if k not in ('authorized_paths','verified_unchanged_sha256')}));return 0 if r['status']=='PASS' else 2
 if __name__=='__main__':raise SystemExit(main())

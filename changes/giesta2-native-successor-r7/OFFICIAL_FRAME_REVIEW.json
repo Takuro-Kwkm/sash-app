@@ -1,0 +1,40 @@
+{
+  "status": "SOURCE_AUDIT_PARTIAL_BLOCKING",
+  "claims": [
+    {
+      "scope": "ハイサイズ k2 片開き H2730",
+      "fact": "アングル無・巾木付の縦断面図が存在する",
+      "source": "H200G11008.pdf",
+      "visual_verified": true,
+      "availability_interpretation": "DRAWING_CONFIRMED; 全枠組合せへの拡張不可",
+      "sha256": "0540d96c0932dfb6eb4c12a7535e5805b706f1eb0f90b04de48dfc961d0ffa0f"
+    },
+    {
+      "scope": "ハイサイズ k4 片開き・親子 H2730",
+      "fact": "アングル付・巾木無の縦断面図にフラット枠の場合の縦枠下端を明記",
+      "source": "H200G14008_CADDS.pdf",
+      "visual_verified": true,
+      "availability_interpretation": "DRAWING_CONFIRMED; 枠全組合せへの拡張不可",
+      "sha256": "cdd47062c2e934c9579d0594f6b3fa6c530ffe570562208f6655df9d754daeb7"
+    }
+  ],
+  "custom_size": {
+    "source": "DL1400 2026-10 p284",
+    "finding": "枠W/Hの計算式・製作範囲あり。枠形状×アングルの特注全組合せを直接列挙する資料は未確認。標準H2330の136行を全特注寸法へ複製しない。",
+    "frame_cross_product": "NOT_VERIFIED",
+    "visual_verified": true,
+    "capture": "official-cad/custom-p284.png"
+  },
+  "additional_conflict": {
+    "source": "https://www.lixil.co.jp/lineup/entrance/s/giesta-hi/default.htm",
+    "finding": "Web本文はハイサイズFamiLockのみ。CAD姿図LDGDG065/064は手動用ハンドルも掲載。資料の適用時点・優先関係の照合が必要。",
+    "resolution": "DO_NOT_CHANGE_ADOPTED_LOCK_ROWS"
+  },
+  "preservation": {
+    "formal_master": "UNCHANGED_v0.8-R4",
+    "confirmations": 6,
+    "content_qa": 195,
+    "formal_scope_qa": 18
+  },
+  "approval_scope": "CENTRAL_CONNECTION_ONLY; PRODUCT_FORMAL_NOT_READY"
+}

@@ -1,0 +1,1017 @@
+{
+  "candidate": {
+    "path": "/private/tmp/giesta2-json-successor-sash/changes/giesta2-json-r5/PRODUCT_MASTER_CANDIDATE.json",
+    "sha256": "720b58d28a01c4bab5d5551c5ad6af980f8b493d3dcd49088384c97b0ab4d4aa"
+  },
+  "candidate_authoring_sha256": "720b58d28a01c4bab5d5551c5ad6af980f8b493d3dcd49088384c97b0ab4d4aa",
+  "assertions": [
+    {
+      "id": "CARRY_P2_hinge_side_master",
+      "path": "/masters/P2_hinge_side_master",
+      "operation": "prefix_hash",
+      "expected": "5001034d10ab69293f94f0875fd1995b83ddd079d5f5fb2a0844f590362d8a1e",
+      "length": 2
+    },
+    {
+      "id": "CARRY_P3_09_color_master",
+      "path": "/masters/P3_09_color_master",
+      "operation": "prefix_hash",
+      "expected": "36c87dce5c917c27bb3fef93b199d7c0b44b8cfe6bcd223b9a15e1cbcc0192af",
+      "length": 29
+    },
+    {
+      "id": "CARRY_P3_11_frame_color_master",
+      "path": "/masters/P3_11_frame_color_master",
+      "operation": "prefix_hash",
+      "expected": "332e6f2568a663ee7e4f9bfba2a36fa6a6e74b89c2e621450b5987bc0035c38c",
+      "length": 6
+    },
+    {
+      "id": "CARRY_P4_child_door_master",
+      "path": "/masters/P4_child_door_master",
+      "operation": "prefix_hash",
+      "expected": "4637e0b19d6dd93bd95e47bd44f75e82a3d9b6f244160b21945327a7a7524a6f",
+      "length": 30
+    },
+    {
+      "id": "CARRY_P4_secondary_leaf_master",
+      "path": "/masters/P4_secondary_leaf_master",
+      "operation": "prefix_hash",
+      "expected": "594eaf54a99046ada3e442da9b9ac85dacfb55927c44d74e1cfaede8d53b3483",
+      "length": 6
+    },
+    {
+      "id": "CARRY_P4_sidelight_master",
+      "path": "/masters/P4_sidelight_master",
+      "operation": "prefix_hash",
+      "expected": "0d2b447e23b968877717a2c456a62340b40097c2ff23d43e156c7b9388022ba0",
+      "length": 2
+    },
+    {
+      "id": "CARRY_P4_handle_family_master",
+      "path": "/masters/P4_handle_family_master",
+      "operation": "prefix_hash",
+      "expected": "65828589f290f44dc2589248e41260765592e21b32b1b7b2bd510cd4825a5256",
+      "length": 7
+    },
+    {
+      "id": "CARRY_P4_handle_color_master",
+      "path": "/masters/P4_handle_color_master",
+      "operation": "prefix_hash",
+      "expected": "237b2909c4749723d3b9a6fde9d81e47bb59a45a8aab86c851b20c5218737a51",
+      "length": 6
+    },
+    {
+      "id": "CARRY_P4_handle_option_master",
+      "path": "/masters/P4_handle_option_master",
+      "operation": "prefix_hash",
+      "expected": "fee982d78acda6eebfcf01f249744e333ecc5d66ca4d315edd922b4c7ef088b4",
+      "length": 32
+    },
+    {
+      "id": "CARRY_P5_lock_system_master",
+      "path": "/masters/P5_lock_system_master",
+      "operation": "prefix_hash",
+      "expected": "ac3c5ecea0f554d20c6fee87e46a79bcd4502860459dc62de2dae6f8c7c09b46",
+      "length": 3
+    },
+    {
+      "id": "CARRY_P5_power_supply_master",
+      "path": "/masters/P5_power_supply_master",
+      "operation": "prefix_hash",
+      "expected": "d8412ce30fb90157a6ad96c723781d062700db92093c8cbad7217a14de5a8dd6",
+      "length": 3
+    },
+    {
+      "id": "CARRY_P5_lock_plan_master",
+      "path": "/masters/P5_lock_plan_master",
+      "operation": "prefix_hash",
+      "expected": "4601d5b7d92c9c8980d5045dd99c35f30c52883bf76875478b136745da111d51",
+      "length": 5
+    },
+    {
+      "id": "CARRY_P5_credential_master",
+      "path": "/masters/P5_credential_master",
+      "operation": "prefix_hash",
+      "expected": "f78f21afc2bd60005ab5ac71fa6f5bc48cc99079b04b780a7da5555811e9a6ad",
+      "length": 14
+    },
+    {
+      "id": "CARRY_P5_credential_package_master",
+      "path": "/masters/P5_credential_package_master",
+      "operation": "prefix_hash",
+      "expected": "be21156c268fc501a07908f6e80d5fc24391615500714e23c125d4f9d8c2f582",
+      "length": 8
+    },
+    {
+      "id": "CARRY_P5_operation_device_master",
+      "path": "/masters/P5_operation_device_master",
+      "operation": "prefix_hash",
+      "expected": "188e0a6c43429fecd1011343f886dcf1961754044bb6b29d47b3b9ace3068279",
+      "length": 2
+    },
+    {
+      "id": "CARRY_P5_cylinder_master",
+      "path": "/masters/P5_cylinder_master",
+      "operation": "prefix_hash",
+      "expected": "7b287c51fbebbfa6601929e37478c55618d1c6a878785dac0b694535a55eaeca",
+      "length": 3
+    },
+    {
+      "id": "CARRY_P5_key_system_master",
+      "path": "/masters/P5_key_system_master",
+      "operation": "prefix_hash",
+      "expected": "a1744034e68cfe0a1fac7e9ed9701755f7b8fc40bb22fb22115e805037a509b7",
+      "length": 3
+    },
+    {
+      "id": "CARRY_P6_glass_master",
+      "path": "/masters/P6_glass_master",
+      "operation": "prefix_hash",
+      "expected": "97e778e4569ccf0a8a87e2e92b8b6aeac59e70e227265fa9772868ba50e676b6",
+      "length": 13
+    },
+    {
+      "id": "CARRY_P6_glass_layer_master",
+      "path": "/masters/P6_glass_layer_master",
+      "operation": "prefix_hash",
+      "expected": "7376fb9f36b2cdf4391870c494ec29ba06b22689039d9df695eb5d6c6f54f86f",
+      "length": 37
+    },
+    {
+      "id": "CARRY_P6_glass_thickness_option",
+      "path": "/masters/P6_glass_thickness_option",
+      "operation": "prefix_hash",
+      "expected": "7686bb8b92b8f0b4e8b7d85f9f58d3fee446899c5be392cbb9cf24bc4f6306e6",
+      "length": 9
+    },
+    {
+      "id": "CARRY_P6_glazing_supply_mode",
+      "path": "/masters/P6_glazing_supply_mode",
+      "operation": "prefix_hash",
+      "expected": "932fa4947dc7e117f20e9f577e4df8ee01035e32569c37e1112bdce49d6dadba",
+      "length": 4
+    },
+    {
+      "id": "CARRY_P7_option_master",
+      "path": "/masters/P7_option_master",
+      "operation": "prefix_hash",
+      "expected": "5ba5de05a0c6448fb69e65a37e3823ddb0c3b9e81aea040a20f63926df35ee61",
+      "length": 34
+    },
+    {
+      "id": "CARRY_P7_option_color_master",
+      "path": "/masters/P7_option_color_master",
+      "operation": "prefix_hash",
+      "expected": "f5a952322b54b8a09177230a7fb1440e0285af88ffa1714ace1d8b64453c9ac2",
+      "length": 10
+    },
+    {
+      "id": "CARRY_P7_door_closer_master",
+      "path": "/masters/P7_door_closer_master",
+      "operation": "prefix_hash",
+      "expected": "6ffe6f8a9d231277632c8783253801e08c54c6b4eef8dcd171028f32b630e41d",
+      "length": 2
+    },
+    {
+      "id": "CARRY_P2_size_capability_master",
+      "path": "/masters/P2_size_capability_master",
+      "operation": "prefix_hash",
+      "expected": "c934b92a91cef06f6630b6a00fddc9426e49cf8b026e2886cb3449a4ec01f7c9",
+      "length": 1
+    },
+    {
+      "id": "CARRY_P2_size_mode_master",
+      "path": "/masters/P2_size_mode_master",
+      "operation": "prefix_hash",
+      "expected": "c09aa028d5ebe0cc83d1a79fdb6840473276e5b72a17756834247a9f9399984e",
+      "length": 2
+    },
+    {
+      "id": "CARRY_P2_standard_size_master",
+      "path": "/masters/P2_standard_size_master",
+      "operation": "prefix_hash",
+      "expected": "17a428228f4fd94137b3c958cbc16f6e98e97275994118f3fb3bae4e980d215c",
+      "length": 6
+    },
+    {
+      "id": "CARRY_P2_configuration_hinge_map",
+      "path": "/maps/P2_configuration_hinge_map",
+      "operation": "prefix_hash",
+      "expected": "5db83db7e0c7a21c20fe7e1f2a4d15fe9a7bb4f49f6a2a720339fe6986b43fd5",
+      "length": 12
+    },
+    {
+      "id": "CARRY_P2_hinge_dependency_rule_master",
+      "path": "/maps/P2_hinge_dependency_rule_master",
+      "operation": "prefix_hash",
+      "expected": "3379685d8a791ccae6d3e2b7826917b31436a6a39d2766223b948d448eb7bfbd",
+      "length": 1
+    },
+    {
+      "id": "CARRY_P3_design_color_summary",
+      "path": "/maps/P3_design_color_summary",
+      "operation": "prefix_hash",
+      "expected": "63bd96ec696a665ee74e25e40ef719b64d5014d569fe7b8fe4e259c357953fdc",
+      "length": 81
+    },
+    {
+      "id": "CARRY_P3_10_design_color_map",
+      "path": "/maps/P3_10_design_color_map",
+      "operation": "prefix_hash",
+      "expected": "5e574d4a6179b447b5aee16de197962a34651ca4cebbcb5d201db0eaee611c7e",
+      "length": 2349
+    },
+    {
+      "id": "CARRY_P3_color_config_map",
+      "path": "/maps/P3_color_config_map",
+      "operation": "prefix_hash",
+      "expected": "5659e148a264601f462f39910f318fb72c2d029a05e70e216dc8d66626de9da2",
+      "length": 14094
+    },
+    {
+      "id": "CARRY_P3_surface_color_map",
+      "path": "/maps/P3_surface_color_map",
+      "operation": "prefix_hash",
+      "expected": "e86eb529e630a67a1ab2ffd0f357a9cb3c18e6ffd2fa5b23cea092ecc7102a0d",
+      "length": 76
+    },
+    {
+      "id": "CARRY_P3_high_size_color_map",
+      "path": "/maps/P3_high_size_color_map",
+      "operation": "prefix_hash",
+      "expected": "02885a91ed6dec17584a1b2f180f6130cd2e2794da6503bd087ad574f900d4fe",
+      "length": 58
+    },
+    {
+      "id": "CARRY_P3_accent_secondary_rules",
+      "path": "/maps/P3_accent_secondary_rules",
+      "operation": "prefix_hash",
+      "expected": "4da2cc724d04556a4fe0fd15486e0554d45eee459e4ae182cf79b2316014b7ea",
+      "length": 35
+    },
+    {
+      "id": "CARRY_P4_child_door_thermal_map",
+      "path": "/maps/P4_child_door_thermal_map",
+      "operation": "prefix_hash",
+      "expected": "316b03f493535e2cd098be64f5187fcba2737fe1503d657972633bc234706145",
+      "length": 60
+    },
+    {
+      "id": "CARRY_P4_child_door_color_map",
+      "path": "/maps/P4_child_door_color_map",
+      "operation": "prefix_hash",
+      "expected": "9620a0cbafc181cf7d5e0d975b55660b86491664bf98c86c9a37b22a00315c80",
+      "length": 870
+    },
+    {
+      "id": "CARRY_P4_design_child_door_map",
+      "path": "/maps/P4_design_child_door_map",
+      "operation": "prefix_hash",
+      "expected": "922cdc32a1a77c7044055a9412508651290fa78ec6f82a68d8babbc83bb116b9",
+      "length": 2430
+    },
+    {
+      "id": "CARRY_P4_design_secondary_leaf_map",
+      "path": "/maps/P4_design_secondary_leaf_map",
+      "operation": "prefix_hash",
+      "expected": "a17812a179b26140d13cc76b2ef78b7bbc777e8b4486fea8498e445a369b3708",
+      "length": 486
+    },
+    {
+      "id": "CARRY_P4_handle_color_map",
+      "path": "/maps/P4_handle_color_map",
+      "operation": "prefix_hash",
+      "expected": "8a20a36cf306255c7de2f66ecee90f8ca5dfd1e8c9afcfb958ff1dfd66aa87d3",
+      "length": 42
+    },
+    {
+      "id": "CARRY_P4_design_handle_map",
+      "path": "/maps/P4_design_handle_map",
+      "operation": "prefix_hash",
+      "expected": "0188d96a573aaefa60e3e7908c40678f7f9730594a4fd0bc16522f8059d65c9f",
+      "length": 567
+    },
+    {
+      "id": "CARRY_P4_high_size_handle_map",
+      "path": "/maps/P4_high_size_handle_map",
+      "operation": "prefix_hash",
+      "expected": "3c197af69bee4b852b694b2ab8d7e8e04263c2e739c34cd6aa1d255cffac86c8",
+      "length": 14
+    },
+    {
+      "id": "CARRY_P4_configuration_handle_rules",
+      "path": "/maps/P4_configuration_handle_rules",
+      "operation": "prefix_hash",
+      "expected": "876798a51dafa4d6fe8d661dbd88220e68de9793b14181e0349bfea2bb28d41e",
+      "length": 2
+    },
+    {
+      "id": "CARRY_P4_dependency_rule_master",
+      "path": "/maps/P4_dependency_rule_master",
+      "operation": "prefix_hash",
+      "expected": "14cc74a0308c28947e21298b43918d7011e4c2fd28a1466478b6f9b9767c6c8f",
+      "length": 16
+    },
+    {
+      "id": "CARRY_P5_lock_power_map",
+      "path": "/maps/P5_lock_power_map",
+      "operation": "prefix_hash",
+      "expected": "3c6f07f35ddb16c010140c7707c7261e821e472ae78cb817d3cd4bb4682293ad",
+      "length": 9
+    },
+    {
+      "id": "CARRY_P5_lock_credential_map",
+      "path": "/maps/P5_lock_credential_map",
+      "operation": "prefix_hash",
+      "expected": "2bf119431adf14cff4529b43f00f7a5c9e1fe38fecafed76d052f01d0a08055a",
+      "length": 42
+    },
+    {
+      "id": "CARRY_P5_lock_credential_package_map",
+      "path": "/maps/P5_lock_credential_package_map",
+      "operation": "prefix_hash",
+      "expected": "d58b0e2a8457c1cd13ff452fccb00d8e12341cd1af329274dbf935ee1544d299",
+      "length": 24
+    },
+    {
+      "id": "CARRY_P5_lock_cylinder_map",
+      "path": "/maps/P5_lock_cylinder_map",
+      "operation": "prefix_hash",
+      "expected": "efabdf3d993412a40dc622d87e50ec820d402f56168f1cc891e0cc4e3e7b09ac",
+      "length": 9
+    },
+    {
+      "id": "CARRY_P5_handle_cylinder_map",
+      "path": "/maps/P5_handle_cylinder_map",
+      "operation": "prefix_hash",
+      "expected": "2d2f7a6c070f4e5f805f688631ee2f036c9c672f5e9e4ffa61d223de12068b1d",
+      "length": 21
+    },
+    {
+      "id": "CARRY_P5_design_lock_map",
+      "path": "/maps/P5_design_lock_map",
+      "operation": "prefix_hash",
+      "expected": "1ef755ba691b2a662e24b9fe1e18a12475272e09e7054992463f2370387fa57d",
+      "length": 243
+    },
+    {
+      "id": "CARRY_P5_configuration_lock_map",
+      "path": "/maps/P5_configuration_lock_map",
+      "operation": "prefix_hash",
+      "expected": "762fec1f2de4ad7822913c719c5f9db29b1f2ff86b3932819cd175801dd92f70",
+      "length": 18
+    },
+    {
+      "id": "CARRY_P5_handle_lock_map",
+      "path": "/maps/P5_handle_lock_map",
+      "operation": "prefix_hash",
+      "expected": "54770e4beee6847b1d7af40c3e658b21f202cc8ba32bdbe5fa050ca9aeab2e4a",
+      "length": 21
+    },
+    {
+      "id": "CARRY_P5_handle_option_lock_map",
+      "path": "/maps/P5_handle_option_lock_map",
+      "operation": "prefix_hash",
+      "expected": "072a3c33636c7ea4b2258955aed8ada7cdfb3ee6988c5845422e242f4615d1f8",
+      "length": 96
+    },
+    {
+      "id": "CARRY_P5_high_size_lock_map",
+      "path": "/maps/P5_high_size_lock_map",
+      "operation": "prefix_hash",
+      "expected": "6372d1ca2c2b03e6187106f8d20f5800116023531ee1d9e23fd1e33677d5e4b1",
+      "length": 6
+    },
+    {
+      "id": "CARRY_P5_high_size_lock_power_map",
+      "path": "/maps/P5_high_size_lock_power_map",
+      "operation": "prefix_hash",
+      "expected": "b17b40924ebcf1df6ad31fb4df55d1e19a8d15b6e1982e3d986d29b8f82cc2c3",
+      "length": 6
+    },
+    {
+      "id": "CARRY_P5_dependency_rule_master",
+      "path": "/maps/P5_dependency_rule_master",
+      "operation": "prefix_hash",
+      "expected": "883bc7675b556852d50be59c421bfd72332d1ecd99447bd6c7f53fb7d224efd8",
+      "length": 17
+    },
+    {
+      "id": "CARRY_P6_glass_thermal_map",
+      "path": "/maps/P6_glass_thermal_map",
+      "operation": "prefix_hash",
+      "expected": "f14258925d29e081efcc200d4068ccd317fc02ef969d4cd60fd19468c687c414",
+      "length": 26
+    },
+    {
+      "id": "CARRY_P6_design_glass_map",
+      "path": "/maps/P6_design_glass_map",
+      "operation": "prefix_hash",
+      "expected": "c6b7d2d0da18da9907316d4766f9466268acb5b6d4596db29d9ebc557278206c",
+      "length": 162
+    },
+    {
+      "id": "CARRY_P6_child_door_glass_map",
+      "path": "/maps/P6_child_door_glass_map",
+      "operation": "prefix_hash",
+      "expected": "5c7bd76e73bee9fab9513af1c2f6c432a6188ff38a0e5416f8d652ffe83fe37f",
+      "length": 60
+    },
+    {
+      "id": "CARRY_P6_secondary_leaf_glass_map",
+      "path": "/maps/P6_secondary_leaf_glass_map",
+      "operation": "prefix_hash",
+      "expected": "51d4b5e3fd08e61003c31c92f7285ada9d4f6e65a74dd138cbe218f033f777ec",
+      "length": 12
+    },
+    {
+      "id": "CARRY_P6_sidelight_glass_map",
+      "path": "/maps/P6_sidelight_glass_map",
+      "operation": "prefix_hash",
+      "expected": "db78cbb0e8da378034e903353446c3a3e597596234cd5137f0336e52fd06c0b0",
+      "length": 16
+    },
+    {
+      "id": "CARRY_P6_glass_bead_rule_map",
+      "path": "/maps/P6_glass_bead_rule_map",
+      "operation": "prefix_hash",
+      "expected": "cd5388d9340d6f8104bd9e5886abb8f31e25a1692f64367902ee7232e48f031a",
+      "length": 8
+    },
+    {
+      "id": "CARRY_P6_dependency_rule_master",
+      "path": "/maps/P6_dependency_rule_master",
+      "operation": "prefix_hash",
+      "expected": "a5b78be74770caf0f398b85649ff24b59eaab300f751a021f4203e4a259fb3d4",
+      "length": 14
+    },
+    {
+      "id": "CARRY_P7_option_color_map",
+      "path": "/maps/P7_option_color_map",
+      "operation": "prefix_hash",
+      "expected": "cc18f7c9794340b10e99fabe7c9bb6e6a10f52b2eb49015fe9606ee6f644fe07",
+      "length": 12
+    },
+    {
+      "id": "CARRY_P7_design_option_map",
+      "path": "/maps/P7_design_option_map",
+      "operation": "prefix_hash",
+      "expected": "157f38040e0c9ea64e4abb19c19b07d981e89b1f2637ebf60077146cf168b28d",
+      "length": 486
+    },
+    {
+      "id": "CARRY_P7_door_color_option_map",
+      "path": "/maps/P7_door_color_option_map",
+      "operation": "prefix_hash",
+      "expected": "ca0b73eb1b13d50426fb34bf51c2afcd1964396c8118e26b468965a45a74d0ef",
+      "length": 58
+    },
+    {
+      "id": "CARRY_P7_led_configuration_map",
+      "path": "/maps/P7_led_configuration_map",
+      "operation": "prefix_hash",
+      "expected": "55a19ec886ef7c844846e94c9c1d64f1f6f2285bdee72cb5753f8d493aa9f890",
+      "length": 6
+    },
+    {
+      "id": "CARRY_P7_configuration_option_map",
+      "path": "/maps/P7_configuration_option_map",
+      "operation": "prefix_hash",
+      "expected": "40d57f5ea841e467e6af8f4ce34542e9617d178b153d2660439c2d4a37729730",
+      "length": 30
+    },
+    {
+      "id": "CARRY_P7_child_door_option_map",
+      "path": "/maps/P7_child_door_option_map",
+      "operation": "prefix_hash",
+      "expected": "817cd0f73d48f87fef0856bb7d3f3ff0ab31e115d39f3e52fd089a756b1c174f",
+      "length": 60
+    },
+    {
+      "id": "CARRY_P7_sill_plinth_color_rule",
+      "path": "/maps/P7_sill_plinth_color_rule",
+      "operation": "prefix_hash",
+      "expected": "1ff8ee2296ffca10dfb12a53299eed664370c069e4b93e0a5e118135cc830133",
+      "length": 8
+    },
+    {
+      "id": "CARRY_P7_lock_option_map",
+      "path": "/maps/P7_lock_option_map",
+      "operation": "prefix_hash",
+      "expected": "4c6bf3fe9bdfceed2b7a5efb03b8f5450861e318043f39be80e4f9d8619f98cc",
+      "length": 45
+    },
+    {
+      "id": "CARRY_P7_lock_plan_option_map",
+      "path": "/maps/P7_lock_plan_option_map",
+      "operation": "prefix_hash",
+      "expected": "04b85fc561933e2422e08bdce311078194fc937a71d781a8a5dd54623bedf656",
+      "length": 45
+    },
+    {
+      "id": "CARRY_P7_option_dependency_map",
+      "path": "/maps/P7_option_dependency_map",
+      "operation": "prefix_hash",
+      "expected": "7d7a4a37cc39805c744811ee271b7e2698317e542d4e5e420e8b547e7d38ba3b",
+      "length": 11
+    },
+    {
+      "id": "CARRY_P7_high_size_option_map",
+      "path": "/maps/P7_high_size_option_map",
+      "operation": "prefix_hash",
+      "expected": "669f1d9e20f652568e8b46787679c03900458b6bff41399563e5dfbcd2cd2527",
+      "length": 18
+    },
+    {
+      "id": "CARRY_P7_option_ui_rule",
+      "path": "/maps/P7_option_ui_rule",
+      "operation": "prefix_hash",
+      "expected": "8541ed56fbbb06b0874432d929dc9c686ae9bfd5dffebbd373b8f70e23479ce2",
+      "length": 10
+    },
+    {
+      "id": "CARRY_P2_design_body_size_rule",
+      "path": "/maps/P2_design_body_size_rule",
+      "operation": "prefix_hash",
+      "expected": "1015b55a1ad89b75c9ef19fb8517d3a3e1c21b171543ba37af73ca7d20e29184",
+      "length": 83
+    },
+    {
+      "id": "CARRY_P2_child_door_size_rule",
+      "path": "/maps/P2_child_door_size_rule",
+      "operation": "prefix_hash",
+      "expected": "59826d512fc11eaebe6da1d48c096b7924e52ab1ccd963aaefe4e25487792534",
+      "length": 31
+    },
+    {
+      "id": "CARRY_P2_secondary_leaf_size_rule",
+      "path": "/maps/P2_secondary_leaf_size_rule",
+      "operation": "prefix_hash",
+      "expected": "8ed51a195029da58c21518ffa08961df8b9d2e732a468d1a094877c8ae42a62f",
+      "length": 6
+    },
+    {
+      "id": "CARRY_P2_sidelight_size_rule",
+      "path": "/maps/P2_sidelight_size_rule",
+      "operation": "prefix_hash",
+      "expected": "b6599a8c3cfea5da37537ef664e564048451571e2440235628bb2312c0702695",
+      "length": 2
+    },
+    {
+      "id": "CARRY_P2_configuration_size_rule",
+      "path": "/maps/P2_configuration_size_rule",
+      "operation": "prefix_hash",
+      "expected": "b547d34ec1c9fea88116b5cb585ef32a48072bc2cedd5f319d9f5f7b6fb6bbcd",
+      "length": 8
+    },
+    {
+      "id": "CARRY_P2_size_dependency_rule_master",
+      "path": "/maps/P2_size_dependency_rule_master",
+      "operation": "prefix_hash",
+      "expected": "d6a05736273cebb451cbbe324e35cc69b3124db7d0f8016e6938901b413b6e2f",
+      "length": 14
+    },
+    {
+      "id": "PRESERVE_confirmations",
+      "path": "/confirmations",
+      "operation": "equals",
+      "expected": [
+        {
+          "gap_id": "GST2_R4_G01",
+          "scope": "Apple Watchの機種/OS/更新/登録",
+          "status": "ESTIMATE_CONFIRM_REQUIRED",
+          "target_gate": "NONBLOCKING_ESTIMATE_CONFIRM",
+          "confirmation_owner": "積算担当（機種/施工条件はメーカー・施工担当へ確認）",
+          "handoff_question": "対応機種一覧・OS・FamiLock本体ファームウェアと登録条件を確認してください。",
+          "automatic_orderability": false,
+          "price": null,
+          "bom": null,
+          "final_set_code": null,
+          "evidence_id": "GST2_R4_E01",
+          "reopen_condition": "新公式資料・案件の確認結果・対象Scope変更"
+        },
+        {
+          "gap_id": "GST2_R4_G02",
+          "scope": "Apple Watch使用時の非常時対応",
+          "status": "ESTIMATE_CONFIRM_REQUIRED",
+          "target_gate": "NONBLOCKING_ESTIMATE_CONFIRM",
+          "confirmation_owner": "積算担当（機種/施工条件はメーカー・施工担当へ確認）",
+          "handoff_question": "電池切れ・停電・故障時に備え、外出時の手動キー携帯を確認してください。",
+          "automatic_orderability": false,
+          "price": null,
+          "bom": null,
+          "final_set_code": null,
+          "evidence_id": "GST2_R4_E01",
+          "reopen_condition": "新公式資料・案件の確認結果・対象Scope変更"
+        },
+        {
+          "gap_id": "GST2_R4_G03",
+          "scope": "Life Assist2連携機器",
+          "status": "ESTIMATE_CONFIRM_REQUIRED",
+          "target_gate": "NONBLOCKING_ESTIMATE_CONFIRM",
+          "confirmation_owner": "積算担当（機種/施工条件はメーカー・施工担当へ確認）",
+          "handoff_question": "FamiLock Link、ホームデバイス、推奨無線LANルーターとインターネット接続を確認してください。",
+          "automatic_orderability": false,
+          "price": null,
+          "bom": null,
+          "final_set_code": null,
+          "evidence_id": "GST2_R4_E02",
+          "reopen_condition": "新公式資料・案件の確認結果・対象Scope変更"
+        },
+        {
+          "gap_id": "GST2_R4_G04",
+          "scope": "遠隔来訪応対",
+          "status": "ESTIMATE_CONFIRM_REQUIRED",
+          "target_gate": "NONBLOCKING_ESTIMATE_CONFIRM",
+          "confirmation_owner": "積算担当（機種/施工条件はメーカー・施工担当へ確認）",
+          "handoff_question": "Life Assist2ドアホン親機・玄関子機、FamiLock Linkとホームデバイスを含む必要機器を確認してください。",
+          "automatic_orderability": false,
+          "price": null,
+          "bom": null,
+          "final_set_code": null,
+          "evidence_id": "GST2_R4_E03",
+          "reopen_condition": "新公式資料・案件の確認結果・対象Scope変更"
+        },
+        {
+          "gap_id": "GST2_R4_G05",
+          "scope": "Life Assist2設置・通信",
+          "status": "ESTIMATE_CONFIRM_REQUIRED",
+          "target_gate": "NONBLOCKING_ESTIMATE_CONFIRM",
+          "confirmation_owner": "積算担当（機種/施工条件はメーカー・施工担当へ確認）",
+          "handoff_question": "遮蔽物のない見通し2m以内/10m以内の接続図条件、通信環境・対応設備を施工担当とメーカー資料で確認してください。",
+          "automatic_orderability": false,
+          "price": null,
+          "bom": null,
+          "final_set_code": null,
+          "evidence_id": "GST2_R4_E03",
+          "reopen_condition": "新公式資料・案件の確認結果・対象Scope変更"
+        },
+        {
+          "gap_id": "GST2_R4_G06",
+          "scope": "正式見積・価格・納期・BOM・発注コード",
+          "status": "ESTIMATE_CONFIRM_REQUIRED",
+          "target_gate": "NONBLOCKING_ESTIMATE_CONFIRM",
+          "confirmation_owner": "積算担当（機種/施工条件はメーカー・施工担当へ確認）",
+          "handoff_question": "2026年10月価格版DL1400/IG4400を参照し、案件の正式価格・BOM/数量・最終商品コード・納期・製作可否を積算で確定してください。旧価格を現行価格として自動使用しません。",
+          "automatic_orderability": false,
+          "price": null,
+          "bom": null,
+          "final_set_code": null,
+          "evidence_id": "GST2_R4_E04",
+          "reopen_condition": "新公式資料・案件の確認結果・対象Scope変更"
+        }
+      ]
+    },
+    {
+      "id": "PRESERVE_commercial_policy",
+      "path": "/commercial_policy",
+      "operation": "equals",
+      "expected": {
+        "price_baseline": "DL1400/IG4400 2026年10月価格掲載版",
+        "automatic_pricing": false,
+        "automatic_orderability": false,
+        "price": null,
+        "bom": null,
+        "final_set_code": null
+      }
+    },
+    {
+      "id": "PRESERVE_unchanged_baseline",
+      "path": "/unchanged_baseline",
+      "operation": "equals",
+      "expected": {
+        "core_sha256": "9bc387bec5a1e149a7c53bff47aed7f75a9965e6261523a9fb4dba406a1e1297",
+        "maps_sha256": "d50bfd58071521496d12d25b09cb22613eafe8742c63e9aa26c1651e122ce5e9",
+        "evidence_policy": "Original Evidence IDs, native row identities and adopted decisions preserved"
+      }
+    },
+    {
+      "id": "CARRY_source_registry",
+      "path": "/source_registry",
+      "operation": "prefix_hash",
+      "expected": "b23f916399bcfba6efe5b8fbe717c661f5b3b3dc9adac83695f10df2b6f97c23",
+      "length": 4
+    },
+    {
+      "id": "CARRY_evidence_registry",
+      "path": "/evidence_registry",
+      "operation": "prefix_hash",
+      "expected": "94831dbab839774644718d62e598d176243ef7bcee08d94b8ef2602ea24b936c",
+      "length": 6
+    },
+    {
+      "id": "CARRY_reviewed_rules",
+      "path": "/reviewed_rules",
+      "operation": "prefix_hash",
+      "expected": "32ce1ab81c3e94424de851dda16edbcf686c47ae75d5b896611d4c894a4a75c3",
+      "length": 9
+    },
+    {
+      "id": "FRAME_136",
+      "path": "/maps/P2_frame_configuration_map",
+      "operation": "length",
+      "expected": 136
+    },
+    {
+      "id": "FRAME_TUPLE_UNIQUE",
+      "path": "/maps/P2_frame_configuration_map",
+      "operation": "unique",
+      "expected": null,
+      "keys": [
+        "lock_system_id",
+        "thermal_spec_id",
+        "door_configuration_id",
+        "frame_form_id",
+        "frame_angle",
+        "size_mode"
+      ]
+    },
+    {
+      "id": "TRIM_TYPES",
+      "path": "/masters/P7_interior_trim_type_master",
+      "operation": "length",
+      "expected": 4
+    },
+    {
+      "id": "BEAD_K2_MILK",
+      "path": "/maps/P6_sidelight_bead_detail_map",
+      "operation": "contains",
+      "expected": {
+        "glass_id": "GST2_GLASS_SIDE_K2_MILKY",
+        "required_bead_nominal_mm": 26,
+        "peeling_required": true
+      }
+    },
+    {
+      "id": "BEAD_K4_PATTERN",
+      "path": "/maps/P6_sidelight_bead_detail_map",
+      "operation": "contains",
+      "expected": {
+        "glass_id": "GST2_GLASS_SIDE_K4_PATTERN",
+        "required_bead_nominal_mm": 19
+      }
+    },
+    {
+      "id": "PLINTH_LIGHT",
+      "path": "/maps/P7_sill_plinth_frame_color_detail",
+      "operation": "contains",
+      "expected": {
+        "frame_color_code": "EH",
+        "plinth_color_code": "AD"
+      }
+    },
+    {
+      "id": "PLINTH_OAK",
+      "path": "/maps/P7_sill_plinth_frame_color_detail",
+      "operation": "contains",
+      "expected": {
+        "frame_color_code": "HD",
+        "plinth_color_code": "AK"
+      }
+    },
+    {
+      "id": "PLINTH_DARK",
+      "path": "/maps/P7_sill_plinth_frame_color_detail",
+      "operation": "contains",
+      "expected": {
+        "frame_color_code": "CB",
+        "plinth_color_code": "AG"
+      }
+    },
+    {
+      "id": "TRIM_TWO_TONE",
+      "path": "/maps/P7_interior_trim_color_detail",
+      "operation": "contains",
+      "expected": {
+        "frame_color_code": "XA",
+        "trim_color_code": "FW"
+      }
+    }
+  ],
+  "business_cases": [
+    {
+      "id": "GST2_OPT_SILL_PLINTH_invalid",
+      "input": {
+        "option_id": [
+          "GST2_OPT_SILL_PLINTH"
+        ],
+        "frame_form_id": "FLAT"
+      },
+      "expected_rules": [
+        "GST2_R5_REQUIRE_GST2_OPT_SILL_PLINTH"
+      ],
+      "expected_blocked": true,
+      "expected_confirmations": []
+    },
+    {
+      "id": "GST2_OPT_SILL_PLINTH_valid",
+      "input": {
+        "option_id": [
+          "GST2_OPT_SILL_PLINTH"
+        ],
+        "frame_form_id": "RAISED"
+      },
+      "expected_rules": [],
+      "expected_blocked": false,
+      "expected_confirmations": []
+    },
+    {
+      "id": "GST2_OPT_SILL_KICKPLATE_invalid",
+      "input": {
+        "option_id": [
+          "GST2_OPT_SILL_KICKPLATE"
+        ],
+        "frame_form_id": "FLAT"
+      },
+      "expected_rules": [
+        "GST2_R5_REQUIRE_GST2_OPT_SILL_KICKPLATE"
+      ],
+      "expected_blocked": true,
+      "expected_confirmations": []
+    },
+    {
+      "id": "GST2_OPT_SILL_KICKPLATE_valid",
+      "input": {
+        "option_id": [
+          "GST2_OPT_SILL_KICKPLATE"
+        ],
+        "frame_form_id": "RAISED"
+      },
+      "expected_rules": [],
+      "expected_blocked": false,
+      "expected_confirmations": []
+    },
+    {
+      "id": "GST2_OPT_AL_INTERIOR_TRIM_invalid",
+      "input": {
+        "option_id": [
+          "GST2_OPT_AL_INTERIOR_TRIM"
+        ],
+        "frame_angle": "WITH_ANGLE"
+      },
+      "expected_rules": [
+        "GST2_R5_REQUIRE_GST2_OPT_AL_INTERIOR_TRIM"
+      ],
+      "expected_blocked": true,
+      "expected_confirmations": []
+    },
+    {
+      "id": "GST2_OPT_AL_INTERIOR_TRIM_valid",
+      "input": {
+        "option_id": [
+          "GST2_OPT_AL_INTERIOR_TRIM"
+        ],
+        "frame_angle": "WITHOUT_ANGLE"
+      },
+      "expected_rules": [],
+      "expected_blocked": false,
+      "expected_confirmations": []
+    },
+    {
+      "id": "GST2_OPT_TRIM_FIX_ANGLE_invalid",
+      "input": {
+        "option_id": [
+          "GST2_OPT_TRIM_FIX_ANGLE"
+        ],
+        "frame_angle": "WITH_ANGLE"
+      },
+      "expected_rules": [
+        "GST2_R5_REQUIRE_GST2_OPT_TRIM_FIX_ANGLE"
+      ],
+      "expected_blocked": true,
+      "expected_confirmations": []
+    },
+    {
+      "id": "GST2_OPT_TRIM_FIX_ANGLE_valid",
+      "input": {
+        "option_id": [
+          "GST2_OPT_TRIM_FIX_ANGLE"
+        ],
+        "frame_angle": "WITHOUT_ANGLE"
+      },
+      "expected_rules": [],
+      "expected_blocked": false,
+      "expected_confirmations": []
+    },
+    {
+      "id": "HOME_W_REJECT",
+      "input": {
+        "home_master_key_requested": true,
+        "key_system_id": "GST2_KEY_W"
+      },
+      "expected_rules": [
+        "GST2_R5_HOME_KEY_DN"
+      ],
+      "expected_blocked": true,
+      "expected_confirmations": []
+    },
+    {
+      "id": "HOME_FACE_REJECT",
+      "input": {
+        "home_master_key_requested": true,
+        "key_system_id": "GST2_KEY_F22",
+        "lock_system_id": "GST2_LOCK_FACE"
+      },
+      "expected_rules": [
+        "GST2_R5_HOME_KEY_DN",
+        "GST2_R5_HOME_KEY_FACE"
+      ],
+      "expected_blocked": true,
+      "expected_confirmations": []
+    },
+    {
+      "id": "HOME_DN_MANUAL",
+      "input": {
+        "home_master_key_requested": true,
+        "key_system_id": "GST2_KEY_DN",
+        "lock_system_id": "GST2_LOCK_MANUAL"
+      },
+      "expected_rules": [],
+      "expected_blocked": false,
+      "expected_confirmations": []
+    },
+    {
+      "id": "HOME_DN_FAMILOCK",
+      "input": {
+        "home_master_key_requested": true,
+        "key_system_id": "GST2_KEY_DN",
+        "lock_system_id": "GST2_LOCK_FAMILOCK"
+      },
+      "expected_rules": [],
+      "expected_blocked": false,
+      "expected_confirmations": []
+    },
+    {
+      "id": "TRIM_DOUBLE_CF",
+      "input": {
+        "option_id": [
+          "GST2_OPT_AL_INTERIOR_TRIM"
+        ],
+        "frame_angle": "WITHOUT_ANGLE",
+        "door_configuration_id": "double_door",
+        "frame_color_code": "CF"
+      },
+      "expected_rules": [
+        "GST2_R5_TRIM_DOUBLE_COLOR"
+      ],
+      "expected_blocked": true,
+      "expected_confirmations": []
+    },
+    {
+      "id": "TRIM_DOUBLE_CE",
+      "input": {
+        "option_id": [
+          "GST2_OPT_AL_INTERIOR_TRIM"
+        ],
+        "frame_angle": "WITHOUT_ANGLE",
+        "door_configuration_id": "double_door",
+        "frame_color_code": "CE"
+      },
+      "expected_rules": [
+        "GST2_R5_TRIM_DOUBLE_COLOR"
+      ],
+      "expected_blocked": true,
+      "expected_confirmations": []
+    },
+    {
+      "id": "TRIM_DOUBLE_HD",
+      "input": {
+        "option_id": [
+          "GST2_OPT_AL_INTERIOR_TRIM"
+        ],
+        "frame_angle": "WITHOUT_ANGLE",
+        "door_configuration_id": "double_door",
+        "frame_color_code": "HD"
+      },
+      "expected_rules": [
+        "GST2_R5_TRIM_DOUBLE_COLOR"
+      ],
+      "expected_blocked": true,
+      "expected_confirmations": []
+    },
+    {
+      "id": "TRIM_SINGLE_CHERRY",
+      "input": {
+        "option_id": [
+          "GST2_OPT_AL_INTERIOR_TRIM"
+        ],
+        "frame_angle": "WITHOUT_ANGLE",
+        "door_configuration_id": "single",
+        "frame_color_code": "CF"
+      },
+      "expected_rules": [],
+      "expected_blocked": false,
+      "expected_confirmations": []
+    },
+    {
+      "id": "NO_OPTIONS",
+      "input": {
+        "option_id": []
+      },
+      "expected_rules": [],
+      "expected_blocked": false,
+      "expected_confirmations": []
+    }
+  ]
+}

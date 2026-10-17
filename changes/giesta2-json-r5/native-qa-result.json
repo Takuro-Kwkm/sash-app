@@ -1,0 +1,465 @@
+{
+  "status": "PASS",
+  "executed": true,
+  "candidate_sha256": "720b58d28a01c4bab5d5551c5ad6af980f8b493d3dcd49088384c97b0ab4d4aa",
+  "product_master_sha256": "720b58d28a01c4bab5d5551c5ad6af980f8b493d3dcd49088384c97b0ab4d4aa",
+  "business_scope": "SALES_ESTIMATE_REQUEST",
+  "passed": 113,
+  "failed": 0,
+  "tests": [
+    {
+      "id": "CARRY_P2_hinge_side_master",
+      "status": "PASS"
+    },
+    {
+      "id": "CARRY_P3_09_color_master",
+      "status": "PASS"
+    },
+    {
+      "id": "CARRY_P3_11_frame_color_master",
+      "status": "PASS"
+    },
+    {
+      "id": "CARRY_P4_child_door_master",
+      "status": "PASS"
+    },
+    {
+      "id": "CARRY_P4_secondary_leaf_master",
+      "status": "PASS"
+    },
+    {
+      "id": "CARRY_P4_sidelight_master",
+      "status": "PASS"
+    },
+    {
+      "id": "CARRY_P4_handle_family_master",
+      "status": "PASS"
+    },
+    {
+      "id": "CARRY_P4_handle_color_master",
+      "status": "PASS"
+    },
+    {
+      "id": "CARRY_P4_handle_option_master",
+      "status": "PASS"
+    },
+    {
+      "id": "CARRY_P5_lock_system_master",
+      "status": "PASS"
+    },
+    {
+      "id": "CARRY_P5_power_supply_master",
+      "status": "PASS"
+    },
+    {
+      "id": "CARRY_P5_lock_plan_master",
+      "status": "PASS"
+    },
+    {
+      "id": "CARRY_P5_credential_master",
+      "status": "PASS"
+    },
+    {
+      "id": "CARRY_P5_credential_package_master",
+      "status": "PASS"
+    },
+    {
+      "id": "CARRY_P5_operation_device_master",
+      "status": "PASS"
+    },
+    {
+      "id": "CARRY_P5_cylinder_master",
+      "status": "PASS"
+    },
+    {
+      "id": "CARRY_P5_key_system_master",
+      "status": "PASS"
+    },
+    {
+      "id": "CARRY_P6_glass_master",
+      "status": "PASS"
+    },
+    {
+      "id": "CARRY_P6_glass_layer_master",
+      "status": "PASS"
+    },
+    {
+      "id": "CARRY_P6_glass_thickness_option",
+      "status": "PASS"
+    },
+    {
+      "id": "CARRY_P6_glazing_supply_mode",
+      "status": "PASS"
+    },
+    {
+      "id": "CARRY_P7_option_master",
+      "status": "PASS"
+    },
+    {
+      "id": "CARRY_P7_option_color_master",
+      "status": "PASS"
+    },
+    {
+      "id": "CARRY_P7_door_closer_master",
+      "status": "PASS"
+    },
+    {
+      "id": "CARRY_P2_size_capability_master",
+      "status": "PASS"
+    },
+    {
+      "id": "CARRY_P2_size_mode_master",
+      "status": "PASS"
+    },
+    {
+      "id": "CARRY_P2_standard_size_master",
+      "status": "PASS"
+    },
+    {
+      "id": "CARRY_P2_configuration_hinge_map",
+      "status": "PASS"
+    },
+    {
+      "id": "CARRY_P2_hinge_dependency_rule_master",
+      "status": "PASS"
+    },
+    {
+      "id": "CARRY_P3_design_color_summary",
+      "status": "PASS"
+    },
+    {
+      "id": "CARRY_P3_10_design_color_map",
+      "status": "PASS"
+    },
+    {
+      "id": "CARRY_P3_color_config_map",
+      "status": "PASS"
+    },
+    {
+      "id": "CARRY_P3_surface_color_map",
+      "status": "PASS"
+    },
+    {
+      "id": "CARRY_P3_high_size_color_map",
+      "status": "PASS"
+    },
+    {
+      "id": "CARRY_P3_accent_secondary_rules",
+      "status": "PASS"
+    },
+    {
+      "id": "CARRY_P4_child_door_thermal_map",
+      "status": "PASS"
+    },
+    {
+      "id": "CARRY_P4_child_door_color_map",
+      "status": "PASS"
+    },
+    {
+      "id": "CARRY_P4_design_child_door_map",
+      "status": "PASS"
+    },
+    {
+      "id": "CARRY_P4_design_secondary_leaf_map",
+      "status": "PASS"
+    },
+    {
+      "id": "CARRY_P4_handle_color_map",
+      "status": "PASS"
+    },
+    {
+      "id": "CARRY_P4_design_handle_map",
+      "status": "PASS"
+    },
+    {
+      "id": "CARRY_P4_high_size_handle_map",
+      "status": "PASS"
+    },
+    {
+      "id": "CARRY_P4_configuration_handle_rules",
+      "status": "PASS"
+    },
+    {
+      "id": "CARRY_P4_dependency_rule_master",
+      "status": "PASS"
+    },
+    {
+      "id": "CARRY_P5_lock_power_map",
+      "status": "PASS"
+    },
+    {
+      "id": "CARRY_P5_lock_credential_map",
+      "status": "PASS"
+    },
+    {
+      "id": "CARRY_P5_lock_credential_package_map",
+      "status": "PASS"
+    },
+    {
+      "id": "CARRY_P5_lock_cylinder_map",
+      "status": "PASS"
+    },
+    {
+      "id": "CARRY_P5_handle_cylinder_map",
+      "status": "PASS"
+    },
+    {
+      "id": "CARRY_P5_design_lock_map",
+      "status": "PASS"
+    },
+    {
+      "id": "CARRY_P5_configuration_lock_map",
+      "status": "PASS"
+    },
+    {
+      "id": "CARRY_P5_handle_lock_map",
+      "status": "PASS"
+    },
+    {
+      "id": "CARRY_P5_handle_option_lock_map",
+      "status": "PASS"
+    },
+    {
+      "id": "CARRY_P5_high_size_lock_map",
+      "status": "PASS"
+    },
+    {
+      "id": "CARRY_P5_high_size_lock_power_map",
+      "status": "PASS"
+    },
+    {
+      "id": "CARRY_P5_dependency_rule_master",
+      "status": "PASS"
+    },
+    {
+      "id": "CARRY_P6_glass_thermal_map",
+      "status": "PASS"
+    },
+    {
+      "id": "CARRY_P6_design_glass_map",
+      "status": "PASS"
+    },
+    {
+      "id": "CARRY_P6_child_door_glass_map",
+      "status": "PASS"
+    },
+    {
+      "id": "CARRY_P6_secondary_leaf_glass_map",
+      "status": "PASS"
+    },
+    {
+      "id": "CARRY_P6_sidelight_glass_map",
+      "status": "PASS"
+    },
+    {
+      "id": "CARRY_P6_glass_bead_rule_map",
+      "status": "PASS"
+    },
+    {
+      "id": "CARRY_P6_dependency_rule_master",
+      "status": "PASS"
+    },
+    {
+      "id": "CARRY_P7_option_color_map",
+      "status": "PASS"
+    },
+    {
+      "id": "CARRY_P7_design_option_map",
+      "status": "PASS"
+    },
+    {
+      "id": "CARRY_P7_door_color_option_map",
+      "status": "PASS"
+    },
+    {
+      "id": "CARRY_P7_led_configuration_map",
+      "status": "PASS"
+    },
+    {
+      "id": "CARRY_P7_configuration_option_map",
+      "status": "PASS"
+    },
+    {
+      "id": "CARRY_P7_child_door_option_map",
+      "status": "PASS"
+    },
+    {
+      "id": "CARRY_P7_sill_plinth_color_rule",
+      "status": "PASS"
+    },
+    {
+      "id": "CARRY_P7_lock_option_map",
+      "status": "PASS"
+    },
+    {
+      "id": "CARRY_P7_lock_plan_option_map",
+      "status": "PASS"
+    },
+    {
+      "id": "CARRY_P7_option_dependency_map",
+      "status": "PASS"
+    },
+    {
+      "id": "CARRY_P7_high_size_option_map",
+      "status": "PASS"
+    },
+    {
+      "id": "CARRY_P7_option_ui_rule",
+      "status": "PASS"
+    },
+    {
+      "id": "CARRY_P2_design_body_size_rule",
+      "status": "PASS"
+    },
+    {
+      "id": "CARRY_P2_child_door_size_rule",
+      "status": "PASS"
+    },
+    {
+      "id": "CARRY_P2_secondary_leaf_size_rule",
+      "status": "PASS"
+    },
+    {
+      "id": "CARRY_P2_sidelight_size_rule",
+      "status": "PASS"
+    },
+    {
+      "id": "CARRY_P2_configuration_size_rule",
+      "status": "PASS"
+    },
+    {
+      "id": "CARRY_P2_size_dependency_rule_master",
+      "status": "PASS"
+    },
+    {
+      "id": "PRESERVE_confirmations",
+      "status": "PASS"
+    },
+    {
+      "id": "PRESERVE_commercial_policy",
+      "status": "PASS"
+    },
+    {
+      "id": "PRESERVE_unchanged_baseline",
+      "status": "PASS"
+    },
+    {
+      "id": "CARRY_source_registry",
+      "status": "PASS"
+    },
+    {
+      "id": "CARRY_evidence_registry",
+      "status": "PASS"
+    },
+    {
+      "id": "CARRY_reviewed_rules",
+      "status": "PASS"
+    },
+    {
+      "id": "FRAME_136",
+      "status": "PASS"
+    },
+    {
+      "id": "FRAME_TUPLE_UNIQUE",
+      "status": "PASS"
+    },
+    {
+      "id": "TRIM_TYPES",
+      "status": "PASS"
+    },
+    {
+      "id": "BEAD_K2_MILK",
+      "status": "PASS"
+    },
+    {
+      "id": "BEAD_K4_PATTERN",
+      "status": "PASS"
+    },
+    {
+      "id": "PLINTH_LIGHT",
+      "status": "PASS"
+    },
+    {
+      "id": "PLINTH_OAK",
+      "status": "PASS"
+    },
+    {
+      "id": "PLINTH_DARK",
+      "status": "PASS"
+    },
+    {
+      "id": "TRIM_TWO_TONE",
+      "status": "PASS"
+    },
+    {
+      "id": "GST2_OPT_SILL_PLINTH_invalid",
+      "status": "PASS"
+    },
+    {
+      "id": "GST2_OPT_SILL_PLINTH_valid",
+      "status": "PASS"
+    },
+    {
+      "id": "GST2_OPT_SILL_KICKPLATE_invalid",
+      "status": "PASS"
+    },
+    {
+      "id": "GST2_OPT_SILL_KICKPLATE_valid",
+      "status": "PASS"
+    },
+    {
+      "id": "GST2_OPT_AL_INTERIOR_TRIM_invalid",
+      "status": "PASS"
+    },
+    {
+      "id": "GST2_OPT_AL_INTERIOR_TRIM_valid",
+      "status": "PASS"
+    },
+    {
+      "id": "GST2_OPT_TRIM_FIX_ANGLE_invalid",
+      "status": "PASS"
+    },
+    {
+      "id": "GST2_OPT_TRIM_FIX_ANGLE_valid",
+      "status": "PASS"
+    },
+    {
+      "id": "HOME_W_REJECT",
+      "status": "PASS"
+    },
+    {
+      "id": "HOME_FACE_REJECT",
+      "status": "PASS"
+    },
+    {
+      "id": "HOME_DN_MANUAL",
+      "status": "PASS"
+    },
+    {
+      "id": "HOME_DN_FAMILOCK",
+      "status": "PASS"
+    },
+    {
+      "id": "TRIM_DOUBLE_CF",
+      "status": "PASS"
+    },
+    {
+      "id": "TRIM_DOUBLE_CE",
+      "status": "PASS"
+    },
+    {
+      "id": "TRIM_DOUBLE_HD",
+      "status": "PASS"
+    },
+    {
+      "id": "TRIM_SINGLE_CHERRY",
+      "status": "PASS"
+    },
+    {
+      "id": "NO_OPTIONS",
+      "status": "PASS"
+    }
+  ],
+  "rule_evaluator": "EXISTING_COMMON_RUNTIME_CONDITION",
+  "runtime_ui_adoption": "NOT_EXECUTED"
+}

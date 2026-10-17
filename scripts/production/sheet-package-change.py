@@ -13,7 +13,8 @@ STAGES = ('BASELINE_RESOLUTION', 'SOURCE_DELTA', 'IMPACT_SCOPE', 'CARRY_FORWARD'
 
 def setup(harness_root):
     sys.path.insert(0, str(Path(harness_root).resolve()))
-    global require, sha, read_json, write_json, Blocked
+    global require, sha, read_json, write_json, Blocked, SHARED_ROOT
+    SHARED_ROOT = str(Path(harness_root).resolve())
     from harness.core import require, sha, read_json, write_json, Blocked
 
 
@@ -23,6 +24,18 @@ def verified(ref):
     data = path.read_bytes()
     require(sha(data) == ref['sha256'], 'NATIVE_INPUT_CHANGED', str(path), 'INPUT')
     return data
+
+
+def json_adapter(c, profile):
+    if profile.get('baseline_kind') != 'EXISTING_FORMAL_JSON': return None
+    import importlib.util
+    ref = profile['domain_adapter']
+    path = Path(c['checkout']) / ref['path']
+    verified({'path':str(path), 'sha256':ref['sha256']})
+    spec = importlib.util.spec_from_file_location('json_change_domain', path)
+    module = importlib.util.module_from_spec(spec); spec.loader.exec_module(module)
+    module.setup(SHARED_ROOT)
+    return module
 
 
 def workbook(ref):
@@ -64,6 +77,10 @@ def delta(before, after):
 
 
 def baseline(c, profile):
+    adapter = json_adapter(c, profile)
+    if adapter:
+        row = adapter.baseline(c, profile)
+        return json.loads(verified(c["baseline_live_manifest"])), row
     from harness.production import native_registry, connector_document
     row = native_registry(json.loads(verified(c['native_registry'])), profile['manufacturer'], profile['registry_series'])
     manifest = json.loads(verified(c['baseline_manifest']))
@@ -93,6 +110,15 @@ def baseline(c, profile):
 
 
 def review(c, profile):
+    adapter = json_adapter(c, profile)
+    if adapter:
+        value = json.loads(verified(c["review"]))
+        adapter.validate_change(json.loads(verified(c["baseline_master"])), json.loads(verified(c["candidate_master"])), value)
+        require(value["product_id"] == c["product_id"] and value["scope_id"] == c["scope_id"], "SOURCE_BINDING", "Wrong review scope", "SOURCE_DELTA")
+        sources = {r["sha256"] for r in c["sources"]}
+        for ref in c["sources"]: verified(ref)
+        require(all(r["source_sha256"] in sources for r in value["claims"]), "SOURCE_BINDING", "Uncaptured claim source", "SOURCE_DELTA")
+        return value, value["delta"]
     value = json.loads(verified(c['review']))
     require(value['status'] == 'COMPLETE_REVIEWED' and value.get('review_ref')
             and value['product_id'] == c['product_id'] and value['scope_id'] == c['scope_id']
@@ -143,6 +169,7 @@ def candidate_parity(c):
 def stage(c, gate, work):
     from harness.production import COMPONENTS
     profile = json.loads(verified(c['profile']))
+    is_json = profile.get("baseline_kind") == "EXISTING_FORMAL_JSON"
     require(c['product_id'] == profile['product_id'], 'NATIVE_PRODUCT', 'Wrong native product', gate)
     manifest, row = baseline(c, profile)
     reviewed, changes = review(c, profile)
@@ -151,7 +178,7 @@ def stage(c, gate, work):
     previous = lambda name: read_json(Path(work) / (name + '.json'))
     if gate == 'BASELINE_RESOLUTION':
         result.update(formal_revision=manifest['package_version'], native_registry_entry=row,
-                      canonical_product_id=manifest['canonical_product_id'], authoring_identity='LIVE_NATIVE_SHEETS_EXPORT')
+                      canonical_product_id=manifest['canonical_product_id'], authoring_identity='LIVE_NATIVE_JSON' if is_json else 'LIVE_NATIVE_SHEETS_EXPORT')
     elif gate == 'SOURCE_DELTA':
         result.update(classification='MODIFIED', review_ref=reviewed['review_ref'], findings=reviewed['findings'],
                       source_role='NEW_CANDIDATE', changed_cells=len(changes))
@@ -160,10 +187,20 @@ def stage(c, gate, work):
                 'IMPACT_MAPPING_REQUIRED', 'Complete reverse consumer coverage required', gate)
         result.update(changed_fields=reviewed['changed_fields'], components=reviewed['components'])
     elif gate == 'CARRY_FORWARD':
-        old, new = workbook(c['baseline_authoring']), workbook(c['candidate_authoring'])
-        retained = sum(value == new[sheet].get(cell) for sheet, cells in old.items() for cell, value in cells.items())
-        result.update(existing_sheets=len(old), unchanged_cells=retained,
-                      evidence_ids='PRESERVED', accepted_decisions='PRESERVED', baseline_formal='PRESERVED')
+        if is_json:
+            from harness.core import package_members, inspect_package
+            package = verified(c['baseline_package'])
+            info = inspect_package(package); _, files = package_members(package)
+            require(info['revision'] == profile['baseline_revision'] and files['PRODUCT_MASTER.json'] == verified(c['baseline_master'])
+                    and files['CARRIED_CONTENT_QA.json'] == verified(c['carried_content_qa'])
+                    and files['FORMAL_CONTENT_QA.json'] == verified(c['carried_formal_qa']),
+                    'CARRY_FORWARD_QA_CHANGED', 'Exact adopted package/QA required', gate)
+            result.update(existing_qa='BYTE_IDENTICAL', controlled_unresolved='BYTE_IDENTICAL', baseline_formal='PRESERVED')
+        else:
+            old, new = workbook(c['baseline_authoring']), workbook(c['candidate_authoring'])
+            retained = sum(value == new[sheet].get(cell) for sheet, cells in old.items() for cell, value in cells.items())
+            result.update(existing_sheets=len(old), unchanged_cells=retained,
+                          evidence_ids='PRESERVED', accepted_decisions='PRESERVED', baseline_formal='PRESERVED')
     elif gate == 'CHANGE_APPLICATION':
         destination = Path(work) / 'candidate'
         destination.mkdir(exist_ok=True)
@@ -179,10 +216,16 @@ def stage(c, gate, work):
         qa_path = Path(work) / 'project-qa.json'
         verified(c['qa_worker'])
         verified(c['qa_input'])
-        parity=candidate_parity(c)
+        if is_json:
+            qa_input = read_json(c['qa_input']['path'])
+            require(c['qa_input']['sha256'] == reviewed['qa_input_sha256'] and qa_input['candidate'] == c['candidate_master']
+                    and qa_input['assertions'] and qa_input['business_cases'], 'NATIVE_QA_BINDING', 'Exact candidate and substantive QA required', gate)
+            parity = 0
+        else:
+            parity=candidate_parity(c)
         subprocess.run([c['node_executable'], c['qa_worker']['path'], '--input', c['qa_input']['path'], '--out', str(qa_path)], check=True)
         qa = read_json(qa_path)
-        require(qa['status'] == 'PASS' and qa['candidate_sha256'] == c['candidate_authoring']['sha256']
+        require(qa['status'] == 'PASS' and qa['product_master_sha256' if is_json else 'candidate_sha256'] == c['candidate_master' if is_json else 'candidate_authoring']['sha256']
                 and qa['failed'] == 0 and qa['executed'] is True and qa['tests'],
                 'NATIVE_QA_REQUIRED', 'Same-candidate executed business QA required', gate)
         result.update(qa=qa, candidate_parity_cells=parity)

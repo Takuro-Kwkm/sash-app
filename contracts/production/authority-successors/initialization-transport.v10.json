@@ -1,11 +1,11 @@
 {
   "schema": "CURRENT_AUTHORITY_INITIALIZATION_TRANSPORT_SUCCESSOR_V10",
   "reviewed_repair_commit": "7cd65085c852574465dc1b84ddb04d6927a87495",
-  "predecessor_native_commit": "8618e395cd6181eb400dd68d4f0072387c480a08",
-  "predecessor_selector_sha256": "b223ccb3d028796ac2d25e00d7a6e2749ad063fe4624668644df7817e22f3edd",
+  "predecessor_native_commit": "b4ee90de802976c7cd29ce5d547d5d517c6533d1",
+  "predecessor_selector_sha256": "c4941390259b7918887f1fe574a61bec34a0fd442f4915400b7fbe3e6b4d51f2",
   "compatibility_implementation": {
     "repository": "Takuro-Kwkm/product-ui-contracts",
-    "ref": "7ff8c7a014e7d761bbfcc9ef6392587ebc9d7dc0"
+    "ref": "a693f917fe6d40804255368d35c792fba4ffe32c"
   },
   "build_profile": {
     "path": "contracts/production/product-master-build-profile.transport-v10.json",
@@ -14,11 +14,11 @@
   "carrier_files": [
     {
       "path": "contracts/production/shared-product-master-conditions.v1.json",
-      "sha256": "9a85224f4ef22c5d95e90d71307bd1e9e2e2667ea8e9ba57ec396605de625f42"
+      "sha256": "4c14ad567509647a7c6174a8584db1a7acc99959376150176dbe2b8c75d1dcc8"
     },
     {
       "path": "contracts/production/shared-product-master-conditions.v1.bundle",
-      "sha256": "98225f8128706b95cecbd8357573baea230cc3746f26239fc5804cd95ae5694e"
+      "sha256": "dbff02f955648a9fe6f055cda0636cf0c91ab1cf3a101a6bcaf8e9eb70bdeb99"
     }
   ],
   "adoption": {
@@ -449,6 +449,85 @@
           "aliases": [
             "ヴェナートD30"
           ]
+        },
+        {
+          "repository": "Takuro-Kwkm/interior-estimator",
+          "product_id": "NEW-CANDIDATE-15fbfdece6cb7e7d6cc72649",
+          "aliases": [
+            "ラシッサS クローゼットドア",
+            "クローゼットドア"
+          ]
+        },
+        {
+          "repository": "Takuro-Kwkm/interior-estimator",
+          "product_id": "NEW-CANDIDATE-3cc8f1c16094b5ef36e2e86e",
+          "aliases": [
+            "ラシッサ 室内用窓 デコマド",
+            "デコマド"
+          ]
+        },
+        {
+          "repository": "Takuro-Kwkm/interior-estimator",
+          "product_id": "NEW-CANDIDATE-98a9922d3649fae4f196b9df",
+          "aliases": [
+            "ラシッサS 室内引戸 上吊方式",
+            "上吊引戸",
+            "上吊り方式"
+          ]
+        },
+        {
+          "repository": "Takuro-Kwkm/exterior-estimator",
+          "product_id": "PRD-LIXIL-SPEENE",
+          "aliases": [
+            "スピーネ",
+            "LIXIL スピーネ",
+            "Speene"
+          ]
+        },
+        {
+          "repository": "Takuro-Kwkm/interior-estimator",
+          "product_id": "P_LIXIL_LS_FUNCTION_FOLD",
+          "aliases": [
+            "ラシッサS 中折れドア",
+            "中折れドア",
+            "中折ドア"
+          ]
+        },
+        {
+          "repository": "Takuro-Kwkm/interior-estimator",
+          "product_id": "NEW-CANDIDATE-5249071fca123089579b36a6",
+          "aliases": [
+            "ラシッサS 室内引戸 アウトセット方式",
+            "アウトセット方式",
+            "アウトセット引戸"
+          ]
+        },
+        {
+          "repository": "Takuro-Kwkm/exterior-estimator",
+          "product_id": "NEW-CANDIDATE-714559f1140933da2359d517",
+          "aliases": [
+            "プレーンルーフ",
+            "YKK AP プレーンルーフ",
+            "YKKAPプレーンルーフ"
+          ]
+        },
+        {
+          "repository": "Takuro-Kwkm/sash-app",
+          "product_id": "NATIVE_REGISTRY:YKK AP::APW511",
+          "aliases": [
+            "APW511",
+            "APW 511",
+            "YKK AP APW511"
+          ]
+        },
+        {
+          "repository": "Takuro-Kwkm/exterior-estimator",
+          "product_id": "NEW-CANDIDATE-93f569887c70f9518ada36b8",
+          "aliases": [
+            "カーポートSW",
+            "LIXIL カーポートSW",
+            "Carport SW"
+          ]
         }
       ],
       "new_product_build_profiles": {
@@ -572,7 +651,7 @@
     "added": {},
     "replaced": {
       "harness/current_authority.py": {
-        "before": "38cca7e6486e543bec62f7766b5dc8df098564d4957f52a151aac3e7bd4ef561",
+        "before": "a581a498d1f14160e4e565b9266abb916c0ccdcb3ffc5692e69e3634e114fb0e",
         "after": "58102dd0862228b70054afb012ae506bfba5745b4a3fb038a03fc6734a68891e"
       },
       "product_master/execution.py": {

@@ -1,0 +1,64 @@
+[
+  {
+    "repository": "Takuro-Kwkm/sash-app",
+    "product_id": "NATIVE_REGISTRY:LIXIL::ジエスタ2",
+    "work_skill": "product-change-work",
+    "work_type": "PRODUCT_MASTER_CHANGE",
+    "target_gate": "QA_READY",
+    "operation": "RUN",
+    "baseline_selector": {
+      "registry_id": "1HMMZ8JdsbJPtL_8LjQfxMF8P_Zb4-LReqvPMFn1pJks",
+      "manufacturer": "LIXIL",
+      "series": "ジエスタ2"
+    },
+    "source_selector": {
+      "from": "LIVE_CURRENT_FORMAL + reviewed candidate official sources",
+      "role": "CURRENT_ADOPTED; NEW_CANDIDATE stays CANDIDATE",
+      "official_scope": "ジエスタ2 非防火・営業見積依頼"
+    },
+    "native_adapter": "scripts/production/sheet-package-change.py",
+    "validators": [
+      "native-sheets-identity",
+      "native-package-integrity",
+      "reviewed-exact-cell-delta",
+      "source-evidence-binding",
+      "sales-handoff-native-qa"
+    ],
+    "resume_selector": "work_id + immutable spec + source/authoring/authority/QA hashes",
+    "current_architecture": "APP_DEVELOPMENT_SKILL_ARCHITECTURE_V2",
+    "current_router": "scripts/architecture-work.py",
+    "shared_harness_sha": "659d5ca2bf333cc6acf2ab4c6bdcf408fbad0c7a",
+    "legacy_selection": 0
+  },
+  {
+    "repository": "Takuro-Kwkm/sash-app",
+    "product_id": "NATIVE_REGISTRY:LIXIL::ジエスタ2",
+    "work_skill": "product-change-work",
+    "work_type": "PRODUCT_MASTER_CHANGE",
+    "target_gate": "FORMAL_CHANGE_ADOPTION",
+    "operation": "RUN",
+    "baseline_selector": {
+      "registry_id": "1HMMZ8JdsbJPtL_8LjQfxMF8P_Zb4-LReqvPMFn1pJks",
+      "manufacturer": "LIXIL",
+      "series": "ジエスタ2"
+    },
+    "source_selector": {
+      "from": "LIVE_CURRENT_FORMAL + reviewed candidate official sources",
+      "role": "CURRENT_ADOPTED; NEW_CANDIDATE stays CANDIDATE",
+      "official_scope": "ジエスタ2 非防火・営業見積依頼"
+    },
+    "native_adapter": "scripts/production/sheet-package-change.py",
+    "validators": [
+      "native-sheets-identity",
+      "native-package-integrity",
+      "reviewed-exact-cell-delta",
+      "source-evidence-binding",
+      "sales-handoff-native-qa"
+    ],
+    "resume_selector": "work_id + immutable spec + source/authoring/authority/QA hashes",
+    "current_architecture": "APP_DEVELOPMENT_SKILL_ARCHITECTURE_V2",
+    "current_router": "scripts/architecture-work.py",
+    "shared_harness_sha": "659d5ca2bf333cc6acf2ab4c6bdcf408fbad0c7a",
+    "legacy_selection": 0
+  }
+]

@@ -1,0 +1,791 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Giesta2 R5 candidate schema; not adopted",
+  "type": "object",
+  "required": [
+    "metadata",
+    "masters",
+    "maps",
+    "selection_contract",
+    "source_registry",
+    "evidence_registry",
+    "reviewed_rules",
+    "confirmations",
+    "commercial_policy"
+  ],
+  "properties": {
+    "metadata": {
+      "type": "object",
+      "required": [
+        "manufacturer",
+        "series",
+        "package_version",
+        "status",
+        "runtime_target"
+      ],
+      "properties": {
+        "manufacturer": {
+          "const": "LIXIL"
+        },
+        "series": {
+          "const": "ジエスタ2"
+        },
+        "package_version": {
+          "const": "v0.8-R5-DRAFT"
+        },
+        "status": {
+          "const": "DRAFT"
+        },
+        "runtime_target": {
+          "const": "SALES_PRODUCT_SELECTION"
+        },
+        "formal_pass": {
+          "const": false
+        }
+      }
+    },
+    "masters": {
+      "type": "object",
+      "required": [
+        "P2_frame_form_master",
+        "P2_frame_angle_master",
+        "P7_closer_backcheck_master",
+        "P5_home_master_target_master",
+        "P7_interior_trim_type_master"
+      ],
+      "properties": {
+        "P2_frame_form_master": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2,
+          "items": {
+            "type": "object",
+            "required": [
+              "frame_form_id",
+              "display_name_ja",
+              "status",
+              "evidence_id"
+            ]
+          }
+        },
+        "P2_frame_angle_master": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2,
+          "items": {
+            "type": "object",
+            "required": [
+              "frame_angle",
+              "display_name_ja",
+              "status",
+              "evidence_id"
+            ]
+          }
+        },
+        "P7_closer_backcheck_master": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2,
+          "items": {
+            "type": "object",
+            "required": [
+              "closer_backcheck_id",
+              "display_name_ja",
+              "status",
+              "evidence_id"
+            ]
+          }
+        },
+        "P5_home_master_target_master": {
+          "type": "array",
+          "minItems": 6,
+          "maxItems": 6,
+          "items": {
+            "type": "object",
+            "required": [
+              "target_id",
+              "official_name",
+              "evidence_id"
+            ]
+          }
+        },
+        "P7_interior_trim_type_master": {
+          "type": "array",
+          "minItems": 4,
+          "maxItems": 4,
+          "items": {
+            "type": "object",
+            "required": [
+              "trim_type_id",
+              "official_name",
+              "evidence_id"
+            ]
+          }
+        }
+      }
+    },
+    "maps": {
+      "type": "object",
+      "required": [
+        "P2_frame_configuration_map",
+        "P7_closer_backcheck_map",
+        "P5_home_master_key_requirement",
+        "P6_sidelight_bead_detail_map",
+        "P7_sill_plinth_frame_color_detail",
+        "P7_interior_trim_color_detail",
+        "P7_interior_trim_requirement"
+      ],
+      "properties": {
+        "P2_frame_configuration_map": {
+          "type": "array",
+          "minItems": 136,
+          "maxItems": 136,
+          "items": {
+            "type": "object",
+            "required": [
+              "lock_system_id",
+              "thermal_spec_id",
+              "door_configuration_id",
+              "frame_form_id",
+              "frame_angle",
+              "size_mode",
+              "frame_height_mm",
+              "availability",
+              "evidence_id"
+            ]
+          }
+        },
+        "P7_closer_backcheck_map": {
+          "type": "array",
+          "minItems": 4,
+          "maxItems": 4,
+          "items": {
+            "type": "object",
+            "required": [
+              "door_closer_id",
+              "closer_backcheck_id",
+              "availability",
+              "part_code_pattern",
+              "evidence_id"
+            ]
+          }
+        },
+        "P5_home_master_key_requirement": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2,
+          "items": {
+            "type": "object",
+            "required": [
+              "key_system_id",
+              "lock_system_id",
+              "available",
+              "separate_cylinder_set_required",
+              "three_or_more_locations",
+              "gazeria_required_cylinder",
+              "target_cylinder_reference_required",
+              "construction_key_scope",
+              "final_order_code",
+              "evidence_id"
+            ]
+          }
+        },
+        "P6_sidelight_bead_detail_map": {
+          "type": "array",
+          "minItems": 4,
+          "maxItems": 4,
+          "items": {
+            "type": "object",
+            "required": [
+              "glass_id",
+              "thermal_spec_id",
+              "overall_thickness_mm",
+              "required_bead_nominal_mm",
+              "bead_reference_code",
+              "peeling_required",
+              "bead_color",
+              "glass_double_sidelight_pack_count",
+              "final_order_code",
+              "evidence_id"
+            ]
+          }
+        },
+        "P7_sill_plinth_frame_color_detail": {
+          "type": "array",
+          "minItems": 28,
+          "maxItems": 28,
+          "items": {
+            "type": "object",
+            "required": [
+              "frame_color_code",
+              "plinth_color_code",
+              "evidence_id"
+            ]
+          }
+        },
+        "P7_interior_trim_color_detail": {
+          "type": "array",
+          "minItems": 28,
+          "maxItems": 28,
+          "items": {
+            "type": "object",
+            "required": [
+              "frame_color_code",
+              "trim_color_code",
+              "unavailable_configuration_ids",
+              "evidence_id"
+            ]
+          }
+        },
+        "P7_interior_trim_requirement": {
+          "type": "array",
+          "minItems": 4,
+          "maxItems": 4,
+          "items": {
+            "type": "object",
+            "required": [
+              "trim_type_id",
+              "required_frame_angle",
+              "nominal_height_mm",
+              "shorter_height",
+              "above_nominal_height",
+              "corner_pair",
+              "final_order_code",
+              "evidence_id"
+            ]
+          }
+        }
+      }
+    },
+    "selection_contract": {
+      "type": "object",
+      "required": [
+        "flow",
+        "flow_semantics",
+        "presentation_order_authority",
+        "size_contract"
+      ],
+      "properties": {
+        "flow": {
+          "type": "array",
+          "contains": {
+            "const": "size_mode"
+          }
+        },
+        "flow_semantics": {
+          "const": "DEPENDENCY_EVALUATION_ONLY_NOT_PRESENTATION_ORDER"
+        },
+        "presentation_order_authority": {
+          "const": "GLOBAL_WINDOW_SELECTION_FLOW"
+        },
+        "size_contract": {
+          "type": "object",
+          "required": [
+            "capability_id",
+            "standard_supported",
+            "custom_supported",
+            "unit",
+            "step_mm",
+            "mode_field",
+            "standard_record_field",
+            "custom_dimension_fields",
+            "invalid_input_effect",
+            "upstream_change_effect",
+            "presentation_order_defined_here"
+          ],
+          "properties": {
+            "capability_id": {
+              "const": "GST2_SIZE_CAPABILITY_V1"
+            },
+            "standard_supported": {
+              "const": true
+            },
+            "custom_supported": {
+              "const": true
+            },
+            "unit": {
+              "const": "mm"
+            },
+            "step_mm": {
+              "const": 1
+            },
+            "mode_field": {
+              "const": "size_mode"
+            },
+            "standard_record_field": {
+              "const": "standard_size_id"
+            },
+            "custom_dimension_fields": {
+              "const": [
+                "custom_width_mm",
+                "custom_height_mm"
+              ]
+            },
+            "invalid_input_effect": {
+              "const": "BLOCK"
+            },
+            "upstream_change_effect": {
+              "const": "CLEAR_AND_REEVALUATE"
+            },
+            "presentation_order_defined_here": {
+              "const": false
+            }
+          }
+        }
+      }
+    },
+    "commercial_policy": {
+      "type": "object",
+      "required": [
+        "automatic_pricing",
+        "automatic_orderability",
+        "price",
+        "bom",
+        "final_set_code"
+      ],
+      "properties": {
+        "automatic_pricing": {
+          "const": false
+        },
+        "automatic_orderability": {
+          "const": false
+        },
+        "price": {
+          "type": "null"
+        },
+        "bom": {
+          "type": "null"
+        },
+        "final_set_code": {
+          "type": "null"
+        }
+      }
+    },
+    "reviewed_rules": {
+      "type": "array",
+      "minItems": 16,
+      "maxItems": 16,
+      "items": {
+        "type": "object",
+        "required": [
+          "rule_id",
+          "conditions",
+          "effect",
+          "target_field",
+          "evidence_id"
+        ],
+        "properties": {
+          "effect": {
+            "enum": [
+              "BLOCK",
+              "ESTIMATE_CONFIRM"
+            ]
+          },
+          "conditions": {
+            "type": "object"
+          }
+        }
+      }
+    },
+    "confirmations": {
+      "type": "array",
+      "minItems": 6,
+      "maxItems": 6,
+      "items": {
+        "type": "object",
+        "required": [
+          "gap_id",
+          "scope",
+          "status",
+          "confirmation_owner",
+          "handoff_question",
+          "automatic_orderability",
+          "evidence_id"
+        ],
+        "properties": {
+          "status": {
+            "const": "ESTIMATE_CONFIRM_REQUIRED"
+          },
+          "automatic_orderability": {
+            "const": false
+          }
+        }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "required": [
+          "masters"
+        ]
+      },
+      "then": {
+        "properties": {
+          "masters": {
+            "required": [
+              "P2_hinge_side_master"
+            ],
+            "properties": {
+              "P2_hinge_side_master": {
+                "type": "array",
+                "minItems": 2,
+                "maxItems": 2,
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "hinge_side_id",
+                    "official_code",
+                    "display_name_ja",
+                    "reference_view",
+                    "status"
+                  ],
+                  "properties": {
+                    "hinge_side_id": {
+                      "enum": [
+                        "GST2_HINGE_R",
+                        "GST2_HINGE_L"
+                      ]
+                    },
+                    "official_code": {
+                      "enum": [
+                        "R",
+                        "L"
+                      ]
+                    },
+                    "display_name_ja": {
+                      "enum": [
+                        "右吊元",
+                        "左吊元"
+                      ]
+                    },
+                    "reference_view": {
+                      "const": "室外側（外観）"
+                    },
+                    "status": {
+                      "const": "ACTIVE"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "required": [
+          "maps"
+        ]
+      },
+      "then": {
+        "properties": {
+          "maps": {
+            "required": [
+              "P2_configuration_hinge_map",
+              "P2_hinge_dependency_rule_master",
+              "P4_dependency_rule_master"
+            ],
+            "properties": {
+              "P2_configuration_hinge_map": {
+                "type": "array",
+                "minItems": 12,
+                "maxItems": 12,
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "door_configuration_id",
+                    "hinge_side_id",
+                    "availability",
+                    "reference_view",
+                    "status"
+                  ],
+                  "properties": {
+                    "door_configuration_id": {
+                      "enum": [
+                        "single",
+                        "parent_child",
+                        "single_sidelight",
+                        "double_sidelight",
+                        "parent_child_corner",
+                        "double_door"
+                      ]
+                    },
+                    "hinge_side_id": {
+                      "enum": [
+                        "GST2_HINGE_R",
+                        "GST2_HINGE_L"
+                      ]
+                    },
+                    "availability": {
+                      "const": "AVAILABLE"
+                    },
+                    "reference_view": {
+                      "const": "室外側（外観）"
+                    },
+                    "status": {
+                      "const": "ACTIVE"
+                    }
+                  }
+                }
+              },
+              "P2_hinge_dependency_rule_master": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "rule_id",
+                    "condition",
+                    "target",
+                    "effect",
+                    "implementation_note"
+                  ],
+                  "properties": {
+                    "target": {
+                      "const": "hinge_side_id"
+                    },
+                    "effect": {
+                      "const": "REQUIRED"
+                    }
+                  }
+                }
+              },
+              "P4_dependency_rule_master": {
+                "type": "array",
+                "minItems": 16,
+                "maxItems": 16,
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "rule_id",
+                    "condition",
+                    "target",
+                    "effect",
+                    "implementation_note"
+                  ],
+                  "additionalProperties": false,
+                  "properties": {
+                    "rule_id": {
+                      "type": "string",
+                      "pattern": "^R-GST2-P4-"
+                    },
+                    "condition": {
+                      "type": "string"
+                    },
+                    "target": {
+                      "type": "string"
+                    },
+                    "effect": {
+                      "type": "string"
+                    },
+                    "implementation_note": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "required": [
+          "masters"
+        ]
+      },
+      "then": {
+        "properties": {
+          "masters": {
+            "required": [
+              "P2_size_capability_master",
+              "P2_size_mode_master",
+              "P2_standard_size_master"
+            ],
+            "properties": {
+              "P2_size_capability_master": {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": 1,
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "capability_id",
+                    "standard_supported",
+                    "custom_supported",
+                    "unit",
+                    "step_mm",
+                    "standard_record_count",
+                    "source_id",
+                    "status"
+                  ],
+                  "properties": {
+                    "capability_id": {
+                      "const": "GST2_SIZE_CAPABILITY_V1"
+                    },
+                    "standard_supported": {
+                      "const": true
+                    },
+                    "custom_supported": {
+                      "const": true
+                    },
+                    "unit": {
+                      "const": "mm"
+                    },
+                    "step_mm": {
+                      "const": 1
+                    },
+                    "standard_record_count": {
+                      "const": 6
+                    },
+                    "status": {
+                      "const": "ACTIVE"
+                    }
+                  }
+                }
+              },
+              "P2_size_mode_master": {
+                "type": "array",
+                "minItems": 2,
+                "maxItems": 2,
+                "uniqueItems": true,
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "size_mode_id",
+                    "user_selectable",
+                    "source_id",
+                    "status"
+                  ],
+                  "properties": {
+                    "size_mode_id": {
+                      "enum": [
+                        "STANDARD",
+                        "CUSTOM"
+                      ]
+                    },
+                    "user_selectable": {
+                      "const": true
+                    },
+                    "status": {
+                      "const": "ACTIVE"
+                    }
+                  }
+                }
+              },
+              "P2_standard_size_master": {
+                "type": "array",
+                "minItems": 6,
+                "maxItems": 6,
+                "uniqueItems": true,
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "standard_size_id",
+                    "door_configuration_id",
+                    "frame_width_mm",
+                    "frame_height_mm",
+                    "size_mode",
+                    "size_series",
+                    "source_id",
+                    "evidence",
+                    "status"
+                  ],
+                  "properties": {
+                    "door_configuration_id": {
+                      "enum": [
+                        "single",
+                        "parent_child",
+                        "parent_child_corner",
+                        "single_sidelight",
+                        "double_sidelight",
+                        "double_door"
+                      ]
+                    },
+                    "size_mode": {
+                      "const": "STANDARD"
+                    },
+                    "size_series": {
+                      "const": "regular"
+                    },
+                    "status": {
+                      "const": "ACTIVE"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "required": [
+          "maps"
+        ]
+      },
+      "then": {
+        "properties": {
+          "maps": {
+            "required": [
+              "P2_design_body_size_rule",
+              "P2_child_door_size_rule",
+              "P2_secondary_leaf_size_rule",
+              "P2_sidelight_size_rule",
+              "P2_configuration_size_rule",
+              "P2_size_dependency_rule_master"
+            ],
+            "properties": {
+              "P2_design_body_size_rule": {
+                "type": "array",
+                "minItems": 83,
+                "maxItems": 83
+              },
+              "P2_child_door_size_rule": {
+                "type": "array",
+                "minItems": 31,
+                "maxItems": 31
+              },
+              "P2_secondary_leaf_size_rule": {
+                "type": "array",
+                "minItems": 6,
+                "maxItems": 6
+              },
+              "P2_sidelight_size_rule": {
+                "type": "array",
+                "minItems": 2,
+                "maxItems": 2
+              },
+              "P2_configuration_size_rule": {
+                "type": "array",
+                "minItems": 8,
+                "maxItems": 8
+              },
+              "P2_size_dependency_rule_master": {
+                "type": "array",
+                "minItems": 14,
+                "maxItems": 14,
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "rule_id",
+                    "condition",
+                    "target",
+                    "effect",
+                    "implementation_note",
+                    "source_id"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "additionalProperties": true
+}
