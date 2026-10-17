@@ -86,7 +86,7 @@
         "resume_selector": "work_id + immutable spec + source/authoring/authority/QA hashes",
         "change_profile": {
           "path": "contracts/production/giesta2-json-change-profile.v1.json",
-          "sha256": "d39ee587edf746597dc577b36a493ee96d601ae171a0d777b3e64f6c79eef3cc"
+          "sha256": "0d6a999dcae082d33355615982cb29e324ca05c07dbdb7cc9c52a835c820fdc7"
         },
         "build_profile": {
           "profile_id": "sash-giesta2-existing-formal-successor-v1",
@@ -97,7 +97,7 @@
         },
         "formal_profile": {
           "path": "contracts/production/giesta2-json-formal-profile.v1.json",
-          "sha256": "e0dfe3c7e6dd5431d687bf908523d98f34be9eb9d58ca6cf9e22e0135c0dc589"
+          "sha256": "b70972cece030fdc2349d6c88282f777a65ae4f34a7907d9494fae87b1d3f875"
         }
       }
     }
@@ -105,7 +105,7 @@
   "native_files": [
     {
       "path": "scripts/production/sheet-package-change.py",
-      "sha256": "539e67f3bf299ef346923410b8dcbfadf943a16a7f1859cf52f6dae060ee54ee"
+      "sha256": "4498924fa0bedcea3efe2e24ce23c57e2bd70d1c45eec35bdd582cb1685387f5"
     },
     {
       "path": "scripts/production/prepare-sheet-package-change.py",
@@ -125,7 +125,7 @@
     },
     {
       "path": "scripts/production/json-master-formal.py",
-      "sha256": "8d73d542c5a9da8ee542770ab144ac676eb3c1d5e34b5ac1511889c5fc29adec"
+      "sha256": "5411d143fbb8f3b29466bf9221f5748078b23ba246c7f758f92754b96eace479"
     },
     {
       "path": "scripts/production/unpack-product-master-conditions.py",
@@ -137,11 +137,11 @@
     },
     {
       "path": "contracts/production/giesta2-json-change-profile.v1.json",
-      "sha256": "d39ee587edf746597dc577b36a493ee96d601ae171a0d777b3e64f6c79eef3cc"
+      "sha256": "0d6a999dcae082d33355615982cb29e324ca05c07dbdb7cc9c52a835c820fdc7"
     },
     {
       "path": "contracts/production/giesta2-json-formal-profile.v1.json",
-      "sha256": "e0dfe3c7e6dd5431d687bf908523d98f34be9eb9d58ca6cf9e22e0135c0dc589"
+      "sha256": "b70972cece030fdc2349d6c88282f777a65ae4f34a7907d9494fae87b1d3f875"
     },
     {
       "path": "contracts/production/shared-product-master-conditions.v1.json",
