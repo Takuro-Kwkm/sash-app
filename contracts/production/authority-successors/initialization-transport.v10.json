@@ -1,8 +1,8 @@
 {
   "schema": "CURRENT_AUTHORITY_INITIALIZATION_TRANSPORT_SUCCESSOR_V10",
   "reviewed_repair_commit": "7cd65085c852574465dc1b84ddb04d6927a87495",
-  "predecessor_native_commit": "b4ee90de802976c7cd29ce5d547d5d517c6533d1",
-  "predecessor_selector_sha256": "c4941390259b7918887f1fe574a61bec34a0fd442f4915400b7fbe3e6b4d51f2",
+  "predecessor_native_commit": "4cc5d31085f7ffb2605c5b90e11644f6bcf6e1cb",
+  "predecessor_selector_sha256": "d511985cbdf9443c67efd0469061a15b773b5fc35c74c10b0e31145e98881950",
   "compatibility_implementation": {
     "repository": "Takuro-Kwkm/product-ui-contracts",
     "ref": "a693f917fe6d40804255368d35c792fba4ffe32c"

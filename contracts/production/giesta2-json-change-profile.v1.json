@@ -12,7 +12,7 @@
   "baseline_kind": "EXISTING_FORMAL_JSON",
   "domain_adapter": {
     "path": "scripts/production/json-master-formal.py",
-    "sha256": "8d73d542c5a9da8ee542770ab144ac676eb3c1d5e34b5ac1511889c5fc29adec"
+    "sha256": "5411d143fbb8f3b29466bf9221f5748078b23ba246c7f758f92754b96eace479"
   },
   "schema": "NATIVE_JSON_PACKAGE_CHANGE_PROFILE_V1",
   "profile_id": "sash-giesta2-json-change-r4-v1",

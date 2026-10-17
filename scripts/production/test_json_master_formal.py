@@ -1,4 +1,4 @@
-import unittest,importlib.util,copy,sys
+import unittest,importlib.util,copy,sys,json,tempfile,csv,io
 from pathlib import Path
 spec=importlib.util.spec_from_file_location('adapter',Path(__file__).with_name('json-master-formal.py'))
 a=importlib.util.module_from_spec(spec);spec.loader.exec_module(a);a.setup(sys.argv[1]);sys.argv=sys.argv[:1]
@@ -32,4 +32,29 @@ class JsonMasterChange(unittest.TestCase):
         with self.assertRaises(Blocked):a.validate_change(self.before,self.after,r)
     def test_missing_is_not_null(self):
         delta=a.changed_sections({}, {'a':None});self.assertFalse(delta[0]['before_present']);self.assertTrue(delta[0]['after_present'])
+class JsonFormalBaseline(unittest.TestCase):
+    def setUp(self):
+        self.temp=tempfile.TemporaryDirectory();self.addCleanup(self.temp.cleanup)
+        self.root=Path(self.temp.name)
+        def ref(name,value):
+            p=self.root/name;p.write_text(json.dumps(value));return {'path':str(p),'sha256':a.sha(p.read_bytes())}
+        self.ref=ref
+        master=json.loads((Path(__file__).resolve().parents[2]/'changes/giesta2-json-r5/sources/ADOPTED_R4.json').read_text())
+        self.profile=json.loads((Path(__file__).resolve().parents[2]/'contracts/production/giesta2-json-formal-profile.v1.json').read_text())
+        self.row=dict(manufacturer='LIXIL',series='ジエスタ2',master_status='FORMAL_PASS',package_version='v0.8-R4',authoring_file_id='master',**{k:self.profile[k] for k in ['canonical_folder_id','old_folder_id','working_folder_id']})
+        csv_data=io.StringIO();w=csv.DictWriter(csv_data,fieldnames=list(self.row));w.writeheader();w.writerow(self.row)
+        self.master_ref=ref('master.json',master)
+        self.manifest=dict(formal_revision='v0.8-R4',canonical_product_id=self.profile['canonical_product_id'],primary_master_sha256=self.master_ref['sha256'])
+        self.c=dict(registry_response=ref('registry.json',{'content':csv_data.getvalue()}),registry_before=self.row,baseline_master=self.master_ref,baseline_live_master=self.master_ref,baseline_live_manifest=ref('manifest.json',self.manifest),baseline_authoring_metadata=ref('metadata.json',dict(id='master',mime_type='application/json',parent_ids=[self.profile['canonical_folder_id']])))
+    def test_formal_revision_without_package_version(self):
+        self.assertEqual(a.baseline(self.c,self.profile),self.row)
+    def test_conflicting_revision_rejected(self):
+        self.manifest['package_version']='v0.8-R3';self.c['baseline_live_manifest']=self.ref('manifest.json',self.manifest)
+        with self.assertRaises(Blocked):a.baseline(self.c,self.profile)
+    def test_other_product_manifest_rejected(self):
+        self.manifest['canonical_product_id']='OTHER';self.c['baseline_live_manifest']=self.ref('manifest.json',self.manifest)
+        with self.assertRaises(Blocked):a.baseline(self.c,self.profile)
+    def test_stale_master_hash_rejected(self):
+        self.manifest['primary_master_sha256']='0'*64;self.c['baseline_live_manifest']=self.ref('manifest.json',self.manifest)
+        with self.assertRaises(Blocked):a.baseline(self.c,self.profile)
 if __name__=='__main__':unittest.main()

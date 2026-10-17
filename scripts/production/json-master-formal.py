@@ -83,7 +83,10 @@ def baseline(c, profile):
     require(meta['id']==row['authoring_file_id'] and meta['mime_type']=='application/json'
             and meta['parent_ids']==[profile['canonical_folder_id']], 'NATIVE_JSON_IDENTITY','Wrong live JSON identity','CURRENT_FORMAL_RESOLUTION')
     require(checked_bytes(c['baseline_master'])==checked_bytes(c['baseline_live_master'])
-            and manifest['package_version']==profile['baseline_revision'], 'NATIVE_FORMAL_DRIFT','Live JSON/manifest bytes differ','CURRENT_FORMAL_RESOLUTION')
+            and manifest.get('formal_revision',manifest.get('package_version'))==profile['baseline_revision']
+            and ('package_version' not in manifest or manifest['package_version']==profile['baseline_revision'])
+            and manifest['canonical_product_id']==profile['canonical_product_id']
+            and manifest['primary_master_sha256']==c['baseline_master']['sha256'], 'NATIVE_FORMAL_DRIFT','Live JSON/manifest bytes differ','CURRENT_FORMAL_RESOLUTION')
     for key in ('canonical_folder_id','old_folder_id','working_folder_id'):
         require(row[key]==profile[key],'NATIVE_FOLDER_DRIFT',key,'CURRENT_FORMAL_RESOLUTION')
     return row
