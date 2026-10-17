@@ -1,0 +1,17 @@
+{
+  "schema": "CURRENT_AUTHORITY_GIESTA2_RUNTIME_PUBLICATION_V16",
+  "predecessor_native_commit": "6899f05705dfd1360ed92e3b098960a62d7193fa",
+  "native_scope": {
+    "path": "contracts/production/giesta2-runtime-publication-scope.v16.json",
+    "sha256": "2dfaa6024a3d124b7d62048c34d70fdd3021f281994b8748c205eb2c6f4bea3b"
+  },
+  "release_profile": {
+    "path": "contracts/production/release-profiles/giesta2-r14.v1.json",
+    "sha256": "0fd7e0cc927c38d9742f5dcb3dde25a1896120fcf248e6f07fcb4aa46a62dbf1"
+  },
+  "build_profile": {
+    "path": "contracts/production/product-master-build-profile.native-v16.json",
+    "sha256": "a2a002c2858826a7c4ce93b6e9992314c21b0a407c37f51cea4c742ac7c22b2d"
+  },
+  "terminal_policy": "PRESERVE_R5_FORMAL_QA_UNRESOLVED; RUNTIME_UI_AND_RELEASE_SEPARATE_GATES"
+}

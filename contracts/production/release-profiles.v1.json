@@ -35,6 +35,11 @@
       "product_id": "NATIVE_REGISTRY:YKK AP::APW511",
       "scope": "APW511_R3_ADOPTED_SALES_UI_PUBLICATION_20261016_R1",
       "path": "contracts/production/release-profiles/apw511-r3.v1.json"
+    },
+    {
+      "product_id": "NATIVE_REGISTRY:LIXIL::ジエスタ2",
+      "scope": "GIESTA2_R14_RUNTIME_UI_PUBLICATION_20261017_R1",
+      "path": "contracts/production/release-profiles/giesta2-r14.v1.json"
     }
   ],
   "publication": "NEW_EXACT_PRODUCT_SCOPE_HUMAN_DECISION_REQUIRED"

@@ -29,14 +29,14 @@
     "policy": "Acquire fresh Current HEAD and content; freeze that observation into the Work separately from consumer implementation adoption"
   },
   "new_product_build_profile": {
-    "path": "contracts/production/product-master-build-profile.native-v15.json",
-    "sha256": "175e3f21221afdb42221436de6f156b32b80988983cc9c68c33b4f806ee21e4a",
+    "path": "contracts/production/product-master-build-profile.native-v16.json",
+    "sha256": "a2a002c2858826a7c4ce93b6e9992314c21b0a407c37f51cea4c742ac7c22b2d",
     "profile_id": "sash-new-product-master-v1"
   },
   "isolated_build_authority": {
     "metadata": "contracts/production/shared-product-master-conditions.v1.json",
     "entry": "scripts/production/unpack-product-master-conditions.py",
-    "source_commit": "a7e449d13db3889c34fc0e8a19db34bf27f35da9",
+    "source_commit": "47baba92be30dc93c65c9a57e50f2ef05200b19a",
     "scope": "ISOLATED_CI_ONLY; live Current host acquisition separate"
   }
 }

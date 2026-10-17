@@ -1,0 +1,108 @@
+{
+  "schema": "SALES_RUNTIME_CONTRACT_BROWSER_QA_V1",
+  "product_id": "SER-LIXIL-GIESTA2-NF",
+  "manifest_file_id": "1609frxC4E8wOHffKYCN3yAbGhBQelp-h",
+  "viewports": [
+    1280,
+    768,
+    390
+  ],
+  "ordered_fields": [
+    "thermal_spec_id",
+    "door_configuration_id",
+    "frame_form_id",
+    "frame_angle",
+    "design_id",
+    "child_glazing_requested",
+    "child_post_requested",
+    "glass_id",
+    "door_color_code",
+    "frame_color_id",
+    "hinge_side_id",
+    "door_closer_id",
+    "closer_backcheck_id",
+    "handle_id",
+    "handle_color_name",
+    "official_handle_code",
+    "lock_kind",
+    "cylinder_id",
+    "size_mode",
+    "frame_w",
+    "frame_h",
+    "option_id",
+    "home_master_key_requested",
+    "quantity"
+  ],
+  "rows": [
+    {
+      "id": "parent-child-glazing",
+      "seed": {
+        "thermal_spec_id": "k2",
+        "door_configuration_id": "parent_child",
+        "frame_form_id": "FLAT",
+        "frame_angle": "WITH_ANGLE",
+        "design_id": "GST2_G12",
+        "child_glazing_requested": "YES",
+        "child_post_requested": "NO",
+        "size_mode": "CUSTOM",
+        "frame_w": 1241,
+        "frame_h": 2415,
+        "quantity": 1
+      },
+      "selection": {
+        "child_glazing_requested": "YES",
+        "child_post_requested": "NO",
+        "frame_w": 1241,
+        "frame_h": 2415
+      },
+      "visible": [
+        "child_glazing_requested",
+        "child_post_requested",
+        "frame_form_id",
+        "frame_angle",
+        "frame_w",
+        "frame_h"
+      ],
+      "hidden": [
+        "secondary_leaf_id"
+      ]
+    },
+    {
+      "id": "single-no-child",
+      "seed": {
+        "thermal_spec_id": "k2",
+        "door_configuration_id": "single",
+        "frame_form_id": "FLAT",
+        "frame_angle": "WITH_ANGLE",
+        "design_id": "GST2_C11",
+        "size_mode": "CUSTOM",
+        "frame_w": 900,
+        "frame_h": 2100,
+        "quantity": 1
+      },
+      "selection": {
+        "door_configuration_id": "single",
+        "frame_w": 900,
+        "frame_h": 2100
+      },
+      "visible": [
+        "frame_form_id",
+        "frame_angle",
+        "frame_w",
+        "frame_h"
+      ],
+      "hidden": [
+        "secondary_leaf_id",
+        "child_glazing_requested",
+        "child_post_requested"
+      ]
+    }
+  ],
+  "preservation": {
+    "formal_master_sha256": "f1922b6396ae30cc2c9bd60ece5866fe935fc116eec91f830c83ee45e3dd55a6",
+    "controlled_unresolved": 6,
+    "carried_qa_passed": 195,
+    "carried_qa_failed": 0
+  },
+  "boundary": "Sales request only; no automatic order, price, BOM or Set Code"
+}
