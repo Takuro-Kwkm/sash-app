@@ -16,7 +16,7 @@
   "legacy_selection": 0,
   "terminal_policy": "Inspect completed Work; next change must acquire Current and create a new immutable binding",
   "shared_router_files": {
-    "harness/architecture.py": "40f147d488ea556527e7e1f1ced453fd2c7484551fdf45a93195647eb50b6afe",
+    "harness/architecture.py": "dd0ad3baa7ca66c5ba38ff80a736e2001ce713d530d789d86ae57343adb38f06",
     "scripts/architecture-work.py": "7722d8e93431a705bb782bf9384612f478c5fcb6d989b8fe5d6fc2b4f44fb4e7",
     "scripts/production-work.py": "d6b157c982be933ad91a80708b7b042216a6762d4a98be639c45768415c1723b",
     "scripts/prepare-current-state.py": "a2937c61b0c3d3bba44c896eb520391bb7b355794ca54e318468dec71c07185d",
@@ -29,14 +29,14 @@
     "policy": "Acquire fresh Current HEAD and content; freeze that observation into the Work separately from consumer implementation adoption"
   },
   "new_product_build_profile": {
-    "profile_id": "sash-new-product-master-v1",
-    "path": "contracts/production/product-master-build-profile.transport-v10.json",
-    "sha256": "f620e2423b9f6636cd8cb6c96bc2196d895d8552494f63489fe50d3c4fab4c1a"
+    "path": "contracts/production/product-master-build-profile.native-ui-v12.json",
+    "sha256": "fc5cb07891c50cf2df502d488747f84092ff7e55d38c9c7e65c4de385b250b7b",
+    "profile_id": "sash-new-product-master-v1"
   },
   "isolated_build_authority": {
     "metadata": "contracts/production/shared-product-master-conditions.v1.json",
     "entry": "scripts/production/unpack-product-master-conditions.py",
-    "source_commit": "a693f917fe6d40804255368d35c792fba4ffe32c",
+    "source_commit": "126fc582c4f46e29bedb318fef59f6414671e590",
     "scope": "ISOLATED_CI_ONLY; live Current host acquisition separate"
   }
 }
