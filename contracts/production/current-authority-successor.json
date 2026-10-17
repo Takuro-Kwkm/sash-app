@@ -1,6 +1,6 @@
 {
   "schema": "CURRENT_AUTHORITY_SUCCESSOR_SELECTION_V1",
-  "path": "contracts/production/authority-successors/native-ui-candidate.v12.json",
-  "sha256": "036f31cc5d744c15649184dba5b42d5356dcc50a6856fd568a0292cf70d805f6",
-  "implementation_sha": "c11df58f2c2645e85320e49e0ccf731de19d415f"
+  "path": "contracts/production/authority-successors/giesta2-runtime-ui.v15.json",
+  "sha256": "c39935780c0718c00d190fcea8f7cf284d01efc5437d0faf8936214e7c21c91b",
+  "implementation_sha": "f690bcc98a4faf8456a3ddbbdd47e9cc7998b56d"
 }

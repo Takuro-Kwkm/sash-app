@@ -130,6 +130,10 @@
         "target_gate": "FORMAL_CHANGE_ADOPTION",
         "human_gate": "HUMAN_ADOPTION",
         "storage": "NATIVE_ACTUAL_READBACK_THEN_EXISTING_SHARED_FORMAL_SAVE"
+      },
+      "runtime_ui_adoption_profile": {
+        "path": "contracts/production/giesta2-runtime-ui-adoption.v1.json",
+        "sha256": "3b1a154692e193ba447c5670ac11a85d28682a2acfcd0edd0c1a8b9a61159577"
       }
     },
     "NATIVE_REGISTRY:LIXIL::エルムーブ2": {

@@ -1,0 +1,28 @@
+{
+  "authorization_scope": {
+    "work_id": "GIESTA2_R5_RUNTIME_UI_ADOPTION_R14_20261017",
+    "product_id": "NATIVE_REGISTRY:LIXIL::ジエスタ2",
+    "target_gate": "RUNTIME_UI_ADOPTED",
+    "expected": {
+      "index_sha256": "3f60a44ef7d67691260093abaac199490b485b77c11dad773a55bc06f11d2502",
+      "module_sha256": "6ad6f375621a762b6dd118e773d3d9fbfbe15ab1abcc339835daaa35e5164a53",
+      "preview_qa_sha256": "aae3ffa5676218a89837b398da07f460f055e8eb2bb9e63d857f0c32250db833",
+      "formal_master_sha256": "f1922b6396ae30cc2c9bd60ece5866fe935fc116eec91f830c83ee45e3dd55a6",
+      "allowed_transform": [
+        "PRODUCT_ID",
+        "FORMAL_MODULE_SCHEMA",
+        "RUNTIME_ADOPTION_FLAGS",
+        "APP_REGISTRY_REFERENCE"
+      ],
+      "product_master_mutations": 0
+    }
+  },
+  "preservation": {
+    "formal_revision": "v0.8-R5",
+    "controlled_unresolved_count": 6,
+    "carried_qa_passed": 195,
+    "carried_qa_failed": 0,
+    "candidate_qa": "PASS",
+    "candidate_qa_sha256": "aae3ffa5676218a89837b398da07f460f055e8eb2bb9e63d857f0c32250db833"
+  }
+}

@@ -1,0 +1,6555 @@
+{
+  "schema": "EVIDENCE_BOUND_UI_CANDIDATE_CORRECTION",
+  "revision": "GIESTA2_RUNTIME_UI_R4_FLOW_R3_20261016",
+  "formal_master_mutations": 0,
+  "formal_adoption": false,
+  "source_adoption": false,
+  "source_files": [
+    {
+      "source_id": "SRC_DL1400_202610_A",
+      "sha256": "38c14d044de866d879a8471f452a9bc477f4320c861842a0dd487754d4dedc8b",
+      "source_path": "/Users/takuro/マイドライブ/仕事用/01_住宅サッシ/01_LIXIL/02_ドア/ジエスタ2/202610_LIXIL_ジエスタ２・ジエスタ２防火戸_DL1400_p1-156.pdf",
+      "drive_file_id": "1gb2A2Jr2SQx6U8_RTrxR6t12yohP-p29"
+    },
+    {
+      "source_id": "SRC_DL1400_202610_B",
+      "sha256": "035ad3d200c8eb02e8a5f43b5187016ea3931e0fba5d334133eca48d8a4e25dd",
+      "source_path": "/Users/takuro/マイドライブ/仕事用/01_住宅サッシ/01_LIXIL/02_ドア/ジエスタ2/202610_LIXIL_ジエスタ２・ジエスタ２防火戸_DL1400_p157-312.pdf",
+      "drive_file_id": "14LhzZivEvPephclt_EZi8wJ1BJq0njFL"
+    },
+    {
+      "source_id": "SRC_IG4400_202609_A",
+      "sha256": "f71a536ef28e7a68aac48076a3f14afdca40911d6e048f717cc846ab78670dc3",
+      "source_path": "/Users/takuro/マイドライブ/仕事用/01_住宅サッシ/01_LIXIL/02_ドア/ジエスタ2/202609_LIXIL_玄関ドア受発注資料集_IG4400_p1-160.pdf",
+      "drive_file_id": "1QNXQs68VU9B7Kd157h7BMxoVkYWpCGTJ"
+    },
+    {
+      "source_id": "SRC_IG4400_202609_B",
+      "sha256": "185689807625b2834646540db91d963f8904438dfd6992a987454e134e84fdbd",
+      "source_path": "/Users/takuro/マイドライブ/仕事用/01_住宅サッシ/01_LIXIL/02_ドア/ジエスタ2/202609_LIXIL_玄関ドア受発注資料集_IG4400_p161-320.pdf",
+      "drive_file_id": "1QBl1fgG6oDvkOyqP81gnHlAXIMwKGChs"
+    }
+  ],
+  "manufacturer_evidence": [
+    "IG4400 g10-g12: five option subplans and controller included in key package",
+    "IG4400 g14-g15: frame colors and restrictions",
+    "DL1400 design pages: fixed glass-frame colors; metallic/black-walnut exceptions; M22/M24/M27 wood frame allowed; M94 inside white"
+  ],
+  "frame_default_policy": "USER_REQUEST_MATCH_BODY_WHEN_AVAILABLE; OEM_EXCEPTION_FIRST",
+  "frame_rows": [
+    {
+      "design_id": "GST2_C11",
+      "door_color_code": "BA",
+      "preferred_frame_code": "BA",
+      "allowed_frame_codes": [
+        "BA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_C11",
+      "door_color_code": "CA",
+      "preferred_frame_code": "CA",
+      "allowed_frame_codes": [
+        "CA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_C11",
+      "door_color_code": "CC",
+      "preferred_frame_code": "CC",
+      "allowed_frame_codes": [
+        "CC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_C11",
+      "door_color_code": "CJ",
+      "preferred_frame_code": "CJ",
+      "allowed_frame_codes": [
+        "CJ"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_C11",
+      "door_color_code": "EA",
+      "preferred_frame_code": "EA",
+      "allowed_frame_codes": [
+        "EA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_C11",
+      "door_color_code": "EF",
+      "preferred_frame_code": "EF",
+      "allowed_frame_codes": [
+        "EF"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_C12",
+      "door_color_code": "BA",
+      "preferred_frame_code": "BA",
+      "allowed_frame_codes": [
+        "BA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_C12",
+      "door_color_code": "CA",
+      "preferred_frame_code": "CA",
+      "allowed_frame_codes": [
+        "CA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_C12",
+      "door_color_code": "CC",
+      "preferred_frame_code": "CC",
+      "allowed_frame_codes": [
+        "CC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_C12",
+      "door_color_code": "CJ",
+      "preferred_frame_code": "CJ",
+      "allowed_frame_codes": [
+        "CJ"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_C12",
+      "door_color_code": "EA",
+      "preferred_frame_code": "EA",
+      "allowed_frame_codes": [
+        "EA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_C12",
+      "door_color_code": "EF",
+      "preferred_frame_code": "EF",
+      "allowed_frame_codes": [
+        "EF"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_C13",
+      "door_color_code": "BA",
+      "preferred_frame_code": "BA",
+      "allowed_frame_codes": [
+        "BA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_C13",
+      "door_color_code": "CA",
+      "preferred_frame_code": "CA",
+      "allowed_frame_codes": [
+        "CA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_C13",
+      "door_color_code": "CC",
+      "preferred_frame_code": "CC",
+      "allowed_frame_codes": [
+        "CC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_C13",
+      "door_color_code": "CJ",
+      "preferred_frame_code": "CJ",
+      "allowed_frame_codes": [
+        "CJ"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_C13",
+      "door_color_code": "EA",
+      "preferred_frame_code": "EA",
+      "allowed_frame_codes": [
+        "EA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_C13",
+      "door_color_code": "EF",
+      "preferred_frame_code": "EF",
+      "allowed_frame_codes": [
+        "EF"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_C14",
+      "door_color_code": "BA",
+      "preferred_frame_code": "BA",
+      "allowed_frame_codes": [
+        "BA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_C14",
+      "door_color_code": "CA",
+      "preferred_frame_code": "CA",
+      "allowed_frame_codes": [
+        "CA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_C14",
+      "door_color_code": "CC",
+      "preferred_frame_code": "CC",
+      "allowed_frame_codes": [
+        "CC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_C14",
+      "door_color_code": "CJ",
+      "preferred_frame_code": "CJ",
+      "allowed_frame_codes": [
+        "CJ"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_C14",
+      "door_color_code": "EA",
+      "preferred_frame_code": "EA",
+      "allowed_frame_codes": [
+        "EA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_C14",
+      "door_color_code": "EF",
+      "preferred_frame_code": "EF",
+      "allowed_frame_codes": [
+        "EF"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_C72",
+      "door_color_code": "BA",
+      "preferred_frame_code": "BA",
+      "allowed_frame_codes": [
+        "BA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_C72",
+      "door_color_code": "CA",
+      "preferred_frame_code": "CA",
+      "allowed_frame_codes": [
+        "CA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_C72",
+      "door_color_code": "CC",
+      "preferred_frame_code": "CC",
+      "allowed_frame_codes": [
+        "CC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_C72",
+      "door_color_code": "CJ",
+      "preferred_frame_code": "CJ",
+      "allowed_frame_codes": [
+        "CJ"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_C72",
+      "door_color_code": "EA",
+      "preferred_frame_code": "EA",
+      "allowed_frame_codes": [
+        "EA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_C72",
+      "door_color_code": "EF",
+      "preferred_frame_code": "EF",
+      "allowed_frame_codes": [
+        "EF"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_C73",
+      "door_color_code": "BA",
+      "preferred_frame_code": "BA",
+      "allowed_frame_codes": [
+        "BA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_C73",
+      "door_color_code": "CA",
+      "preferred_frame_code": "CA",
+      "allowed_frame_codes": [
+        "CA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_C73",
+      "door_color_code": "CC",
+      "preferred_frame_code": "CC",
+      "allowed_frame_codes": [
+        "CC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_C73",
+      "door_color_code": "CJ",
+      "preferred_frame_code": "CJ",
+      "allowed_frame_codes": [
+        "CJ"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_C73",
+      "door_color_code": "EA",
+      "preferred_frame_code": "EA",
+      "allowed_frame_codes": [
+        "EA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_C73",
+      "door_color_code": "EF",
+      "preferred_frame_code": "EF",
+      "allowed_frame_codes": [
+        "EF"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_C74",
+      "door_color_code": "BA",
+      "preferred_frame_code": "BA",
+      "allowed_frame_codes": [
+        "BA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_C74",
+      "door_color_code": "CA",
+      "preferred_frame_code": "CA",
+      "allowed_frame_codes": [
+        "CA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_C74",
+      "door_color_code": "CC",
+      "preferred_frame_code": "CC",
+      "allowed_frame_codes": [
+        "CC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_C74",
+      "door_color_code": "CJ",
+      "preferred_frame_code": "CJ",
+      "allowed_frame_codes": [
+        "CJ"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_C74",
+      "door_color_code": "EA",
+      "preferred_frame_code": "EA",
+      "allowed_frame_codes": [
+        "EA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_C74",
+      "door_color_code": "EF",
+      "preferred_frame_code": "EF",
+      "allowed_frame_codes": [
+        "EF"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_C92",
+      "door_color_code": "BA",
+      "preferred_frame_code": "BA",
+      "allowed_frame_codes": [
+        "BA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_C92",
+      "door_color_code": "CA",
+      "preferred_frame_code": "CA",
+      "allowed_frame_codes": [
+        "CA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_C92",
+      "door_color_code": "CC",
+      "preferred_frame_code": "CC",
+      "allowed_frame_codes": [
+        "CC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_C92",
+      "door_color_code": "CJ",
+      "preferred_frame_code": "CJ",
+      "allowed_frame_codes": [
+        "CJ"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_C92",
+      "door_color_code": "EA",
+      "preferred_frame_code": "EA",
+      "allowed_frame_codes": [
+        "EA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_C92",
+      "door_color_code": "EF",
+      "preferred_frame_code": "EF",
+      "allowed_frame_codes": [
+        "EF"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_C93",
+      "door_color_code": "BA",
+      "preferred_frame_code": "BA",
+      "allowed_frame_codes": [
+        "BA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_C93",
+      "door_color_code": "CA",
+      "preferred_frame_code": "CA",
+      "allowed_frame_codes": [
+        "CA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_C93",
+      "door_color_code": "CC",
+      "preferred_frame_code": "CC",
+      "allowed_frame_codes": [
+        "CC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_C93",
+      "door_color_code": "CJ",
+      "preferred_frame_code": "CJ",
+      "allowed_frame_codes": [
+        "CJ"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_C93",
+      "door_color_code": "EA",
+      "preferred_frame_code": "EA",
+      "allowed_frame_codes": [
+        "EA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_C93",
+      "door_color_code": "EF",
+      "preferred_frame_code": "EF",
+      "allowed_frame_codes": [
+        "EF"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D11",
+      "door_color_code": "BA",
+      "preferred_frame_code": "BA",
+      "allowed_frame_codes": [
+        "BA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D11",
+      "door_color_code": "CA",
+      "preferred_frame_code": "CA",
+      "allowed_frame_codes": [
+        "CA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D11",
+      "door_color_code": "CC",
+      "preferred_frame_code": "CC",
+      "allowed_frame_codes": [
+        "CC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D11",
+      "door_color_code": "CJ",
+      "preferred_frame_code": "CJ",
+      "allowed_frame_codes": [
+        "CJ"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D11",
+      "door_color_code": "EA",
+      "preferred_frame_code": "EA",
+      "allowed_frame_codes": [
+        "EA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D11",
+      "door_color_code": "EF",
+      "preferred_frame_code": "EF",
+      "allowed_frame_codes": [
+        "EF"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D11",
+      "door_color_code": "HC",
+      "preferred_frame_code": "HC",
+      "allowed_frame_codes": [
+        "HC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D12",
+      "door_color_code": "BA",
+      "preferred_frame_code": "BA",
+      "allowed_frame_codes": [
+        "BA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D12",
+      "door_color_code": "CA",
+      "preferred_frame_code": "CA",
+      "allowed_frame_codes": [
+        "CA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D12",
+      "door_color_code": "CC",
+      "preferred_frame_code": "CC",
+      "allowed_frame_codes": [
+        "CC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D12",
+      "door_color_code": "CJ",
+      "preferred_frame_code": "CJ",
+      "allowed_frame_codes": [
+        "CJ"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D12",
+      "door_color_code": "EA",
+      "preferred_frame_code": "EA",
+      "allowed_frame_codes": [
+        "EA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D12",
+      "door_color_code": "EF",
+      "preferred_frame_code": "EF",
+      "allowed_frame_codes": [
+        "EF"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D12",
+      "door_color_code": "HC",
+      "preferred_frame_code": "HC",
+      "allowed_frame_codes": [
+        "HC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D32",
+      "door_color_code": "BA",
+      "preferred_frame_code": "BA",
+      "allowed_frame_codes": [
+        "BA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D32",
+      "door_color_code": "CA",
+      "preferred_frame_code": "CA",
+      "allowed_frame_codes": [
+        "CA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D32",
+      "door_color_code": "CC",
+      "preferred_frame_code": "CC",
+      "allowed_frame_codes": [
+        "CC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D32",
+      "door_color_code": "CJ",
+      "preferred_frame_code": "CJ",
+      "allowed_frame_codes": [
+        "CJ"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D32",
+      "door_color_code": "EA",
+      "preferred_frame_code": "EA",
+      "allowed_frame_codes": [
+        "EA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D32",
+      "door_color_code": "EF",
+      "preferred_frame_code": "EF",
+      "allowed_frame_codes": [
+        "EF"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D32",
+      "door_color_code": "HC",
+      "preferred_frame_code": "HC",
+      "allowed_frame_codes": [
+        "HC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D33",
+      "door_color_code": "BA",
+      "preferred_frame_code": "BA",
+      "allowed_frame_codes": [
+        "BA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D33",
+      "door_color_code": "CA",
+      "preferred_frame_code": "CA",
+      "allowed_frame_codes": [
+        "CA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D33",
+      "door_color_code": "CC",
+      "preferred_frame_code": "CC",
+      "allowed_frame_codes": [
+        "CC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D33",
+      "door_color_code": "CJ",
+      "preferred_frame_code": "CJ",
+      "allowed_frame_codes": [
+        "CJ"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D33",
+      "door_color_code": "EA",
+      "preferred_frame_code": "EA",
+      "allowed_frame_codes": [
+        "EA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D33",
+      "door_color_code": "EF",
+      "preferred_frame_code": "EF",
+      "allowed_frame_codes": [
+        "EF"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D33",
+      "door_color_code": "HC",
+      "preferred_frame_code": "HC",
+      "allowed_frame_codes": [
+        "HC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D34",
+      "door_color_code": "BA",
+      "preferred_frame_code": "BA",
+      "allowed_frame_codes": [
+        "BA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D34",
+      "door_color_code": "CA",
+      "preferred_frame_code": "CA",
+      "allowed_frame_codes": [
+        "CA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D34",
+      "door_color_code": "CC",
+      "preferred_frame_code": "CC",
+      "allowed_frame_codes": [
+        "CC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D34",
+      "door_color_code": "CJ",
+      "preferred_frame_code": "CJ",
+      "allowed_frame_codes": [
+        "CJ"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D34",
+      "door_color_code": "EA",
+      "preferred_frame_code": "EA",
+      "allowed_frame_codes": [
+        "EA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D34",
+      "door_color_code": "EF",
+      "preferred_frame_code": "EF",
+      "allowed_frame_codes": [
+        "EF"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D34",
+      "door_color_code": "HC",
+      "preferred_frame_code": "HC",
+      "allowed_frame_codes": [
+        "HC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D41",
+      "door_color_code": "BA",
+      "preferred_frame_code": "BA",
+      "allowed_frame_codes": [
+        "BA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D41",
+      "door_color_code": "CA",
+      "preferred_frame_code": "CA",
+      "allowed_frame_codes": [
+        "CA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D41",
+      "door_color_code": "CC",
+      "preferred_frame_code": "CC",
+      "allowed_frame_codes": [
+        "CC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D41",
+      "door_color_code": "CJ",
+      "preferred_frame_code": "CJ",
+      "allowed_frame_codes": [
+        "CJ"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D41",
+      "door_color_code": "EA",
+      "preferred_frame_code": "EA",
+      "allowed_frame_codes": [
+        "EA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D41",
+      "door_color_code": "EF",
+      "preferred_frame_code": "EF",
+      "allowed_frame_codes": [
+        "EF"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D41",
+      "door_color_code": "HC",
+      "preferred_frame_code": "HC",
+      "allowed_frame_codes": [
+        "HC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D42",
+      "door_color_code": "BA",
+      "preferred_frame_code": "BA",
+      "allowed_frame_codes": [
+        "BA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D42",
+      "door_color_code": "CA",
+      "preferred_frame_code": "CA",
+      "allowed_frame_codes": [
+        "CA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D42",
+      "door_color_code": "CC",
+      "preferred_frame_code": "CC",
+      "allowed_frame_codes": [
+        "CC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D42",
+      "door_color_code": "CJ",
+      "preferred_frame_code": "CJ",
+      "allowed_frame_codes": [
+        "CJ"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D42",
+      "door_color_code": "EA",
+      "preferred_frame_code": "EA",
+      "allowed_frame_codes": [
+        "EA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D42",
+      "door_color_code": "EF",
+      "preferred_frame_code": "EF",
+      "allowed_frame_codes": [
+        "EF"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D42",
+      "door_color_code": "HC",
+      "preferred_frame_code": "HC",
+      "allowed_frame_codes": [
+        "HC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D43",
+      "door_color_code": "BA",
+      "preferred_frame_code": "BA",
+      "allowed_frame_codes": [
+        "BA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D43",
+      "door_color_code": "CA",
+      "preferred_frame_code": "CA",
+      "allowed_frame_codes": [
+        "CA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D43",
+      "door_color_code": "CC",
+      "preferred_frame_code": "CC",
+      "allowed_frame_codes": [
+        "CC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D43",
+      "door_color_code": "CJ",
+      "preferred_frame_code": "CJ",
+      "allowed_frame_codes": [
+        "CJ"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D43",
+      "door_color_code": "EA",
+      "preferred_frame_code": "EA",
+      "allowed_frame_codes": [
+        "EA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D43",
+      "door_color_code": "EF",
+      "preferred_frame_code": "EF",
+      "allowed_frame_codes": [
+        "EF"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D43",
+      "door_color_code": "HC",
+      "preferred_frame_code": "HC",
+      "allowed_frame_codes": [
+        "HC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D44",
+      "door_color_code": "BA",
+      "preferred_frame_code": "BA",
+      "allowed_frame_codes": [
+        "BA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D44",
+      "door_color_code": "CA",
+      "preferred_frame_code": "CA",
+      "allowed_frame_codes": [
+        "CA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D44",
+      "door_color_code": "CC",
+      "preferred_frame_code": "CC",
+      "allowed_frame_codes": [
+        "CC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D44",
+      "door_color_code": "CJ",
+      "preferred_frame_code": "CJ",
+      "allowed_frame_codes": [
+        "CJ"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D44",
+      "door_color_code": "EA",
+      "preferred_frame_code": "EA",
+      "allowed_frame_codes": [
+        "EA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D44",
+      "door_color_code": "EF",
+      "preferred_frame_code": "EF",
+      "allowed_frame_codes": [
+        "EF"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D44",
+      "door_color_code": "HC",
+      "preferred_frame_code": "HC",
+      "allowed_frame_codes": [
+        "HC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D45",
+      "door_color_code": "BA",
+      "preferred_frame_code": "BA",
+      "allowed_frame_codes": [
+        "BA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D45",
+      "door_color_code": "CA",
+      "preferred_frame_code": "CA",
+      "allowed_frame_codes": [
+        "CA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D45",
+      "door_color_code": "CC",
+      "preferred_frame_code": "CC",
+      "allowed_frame_codes": [
+        "CC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D45",
+      "door_color_code": "CJ",
+      "preferred_frame_code": "CJ",
+      "allowed_frame_codes": [
+        "CJ"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D45",
+      "door_color_code": "EA",
+      "preferred_frame_code": "EA",
+      "allowed_frame_codes": [
+        "EA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D45",
+      "door_color_code": "EF",
+      "preferred_frame_code": "EF",
+      "allowed_frame_codes": [
+        "EF"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D45",
+      "door_color_code": "HC",
+      "preferred_frame_code": "HC",
+      "allowed_frame_codes": [
+        "HC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D52",
+      "door_color_code": "BA",
+      "preferred_frame_code": "BA",
+      "allowed_frame_codes": [
+        "BA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D52",
+      "door_color_code": "CA",
+      "preferred_frame_code": "CA",
+      "allowed_frame_codes": [
+        "CA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D52",
+      "door_color_code": "CC",
+      "preferred_frame_code": "CC",
+      "allowed_frame_codes": [
+        "CC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D52",
+      "door_color_code": "CJ",
+      "preferred_frame_code": "CJ",
+      "allowed_frame_codes": [
+        "CJ"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D52",
+      "door_color_code": "EA",
+      "preferred_frame_code": "EA",
+      "allowed_frame_codes": [
+        "EA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D52",
+      "door_color_code": "EF",
+      "preferred_frame_code": "EF",
+      "allowed_frame_codes": [
+        "EF"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D52",
+      "door_color_code": "HC",
+      "preferred_frame_code": "HC",
+      "allowed_frame_codes": [
+        "HC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D53",
+      "door_color_code": "BA",
+      "preferred_frame_code": "BA",
+      "allowed_frame_codes": [
+        "BA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D53",
+      "door_color_code": "CA",
+      "preferred_frame_code": "CA",
+      "allowed_frame_codes": [
+        "CA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D53",
+      "door_color_code": "CC",
+      "preferred_frame_code": "CC",
+      "allowed_frame_codes": [
+        "CC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D53",
+      "door_color_code": "CJ",
+      "preferred_frame_code": "CJ",
+      "allowed_frame_codes": [
+        "CJ"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D53",
+      "door_color_code": "EA",
+      "preferred_frame_code": "EA",
+      "allowed_frame_codes": [
+        "EA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D53",
+      "door_color_code": "EF",
+      "preferred_frame_code": "EF",
+      "allowed_frame_codes": [
+        "EF"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D53",
+      "door_color_code": "HC",
+      "preferred_frame_code": "HC",
+      "allowed_frame_codes": [
+        "HC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D54",
+      "door_color_code": "BA",
+      "preferred_frame_code": "BA",
+      "allowed_frame_codes": [
+        "BA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D54",
+      "door_color_code": "CA",
+      "preferred_frame_code": "CA",
+      "allowed_frame_codes": [
+        "CA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D54",
+      "door_color_code": "CC",
+      "preferred_frame_code": "CC",
+      "allowed_frame_codes": [
+        "CC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D54",
+      "door_color_code": "CJ",
+      "preferred_frame_code": "CJ",
+      "allowed_frame_codes": [
+        "CJ"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D54",
+      "door_color_code": "EA",
+      "preferred_frame_code": "EA",
+      "allowed_frame_codes": [
+        "EA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D54",
+      "door_color_code": "EF",
+      "preferred_frame_code": "EF",
+      "allowed_frame_codes": [
+        "EF"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D54",
+      "door_color_code": "HC",
+      "preferred_frame_code": "HC",
+      "allowed_frame_codes": [
+        "HC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D61",
+      "door_color_code": "BA",
+      "preferred_frame_code": "BA",
+      "allowed_frame_codes": [
+        "BA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D61",
+      "door_color_code": "CA",
+      "preferred_frame_code": "CA",
+      "allowed_frame_codes": [
+        "CA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D61",
+      "door_color_code": "CC",
+      "preferred_frame_code": "CC",
+      "allowed_frame_codes": [
+        "CC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D61",
+      "door_color_code": "CJ",
+      "preferred_frame_code": "CJ",
+      "allowed_frame_codes": [
+        "CJ"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D61",
+      "door_color_code": "EA",
+      "preferred_frame_code": "EA",
+      "allowed_frame_codes": [
+        "EA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D61",
+      "door_color_code": "EF",
+      "preferred_frame_code": "EF",
+      "allowed_frame_codes": [
+        "EF"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D61",
+      "door_color_code": "HC",
+      "preferred_frame_code": "HC",
+      "allowed_frame_codes": [
+        "HC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D62",
+      "door_color_code": "BA",
+      "preferred_frame_code": "BA",
+      "allowed_frame_codes": [
+        "BA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D62",
+      "door_color_code": "CA",
+      "preferred_frame_code": "CA",
+      "allowed_frame_codes": [
+        "CA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D62",
+      "door_color_code": "CC",
+      "preferred_frame_code": "CC",
+      "allowed_frame_codes": [
+        "CC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D62",
+      "door_color_code": "CJ",
+      "preferred_frame_code": "CJ",
+      "allowed_frame_codes": [
+        "CJ"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D62",
+      "door_color_code": "EA",
+      "preferred_frame_code": "EA",
+      "allowed_frame_codes": [
+        "EA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D62",
+      "door_color_code": "EF",
+      "preferred_frame_code": "EF",
+      "allowed_frame_codes": [
+        "EF"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D62",
+      "door_color_code": "HC",
+      "preferred_frame_code": "HC",
+      "allowed_frame_codes": [
+        "HC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D63",
+      "door_color_code": "BA",
+      "preferred_frame_code": "BA",
+      "allowed_frame_codes": [
+        "BA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D63",
+      "door_color_code": "CA",
+      "preferred_frame_code": "CA",
+      "allowed_frame_codes": [
+        "CA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D63",
+      "door_color_code": "CC",
+      "preferred_frame_code": "CC",
+      "allowed_frame_codes": [
+        "CC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D63",
+      "door_color_code": "CJ",
+      "preferred_frame_code": "CJ",
+      "allowed_frame_codes": [
+        "CJ"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D63",
+      "door_color_code": "EA",
+      "preferred_frame_code": "EA",
+      "allowed_frame_codes": [
+        "EA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D63",
+      "door_color_code": "EF",
+      "preferred_frame_code": "EF",
+      "allowed_frame_codes": [
+        "EF"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D63",
+      "door_color_code": "HC",
+      "preferred_frame_code": "HC",
+      "allowed_frame_codes": [
+        "HC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D64",
+      "door_color_code": "BA",
+      "preferred_frame_code": "BA",
+      "allowed_frame_codes": [
+        "BA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D64",
+      "door_color_code": "CA",
+      "preferred_frame_code": "CA",
+      "allowed_frame_codes": [
+        "CA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D64",
+      "door_color_code": "CC",
+      "preferred_frame_code": "CC",
+      "allowed_frame_codes": [
+        "CC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D64",
+      "door_color_code": "CJ",
+      "preferred_frame_code": "CJ",
+      "allowed_frame_codes": [
+        "CJ"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D64",
+      "door_color_code": "EA",
+      "preferred_frame_code": "EA",
+      "allowed_frame_codes": [
+        "EA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D64",
+      "door_color_code": "EF",
+      "preferred_frame_code": "EF",
+      "allowed_frame_codes": [
+        "EF"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D64",
+      "door_color_code": "HC",
+      "preferred_frame_code": "HC",
+      "allowed_frame_codes": [
+        "HC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D65",
+      "door_color_code": "BA",
+      "preferred_frame_code": "BA",
+      "allowed_frame_codes": [
+        "BA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D65",
+      "door_color_code": "CA",
+      "preferred_frame_code": "CA",
+      "allowed_frame_codes": [
+        "CA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D65",
+      "door_color_code": "CC",
+      "preferred_frame_code": "CC",
+      "allowed_frame_codes": [
+        "CC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D65",
+      "door_color_code": "CJ",
+      "preferred_frame_code": "CJ",
+      "allowed_frame_codes": [
+        "CJ"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D65",
+      "door_color_code": "EA",
+      "preferred_frame_code": "EA",
+      "allowed_frame_codes": [
+        "EA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D65",
+      "door_color_code": "EF",
+      "preferred_frame_code": "EF",
+      "allowed_frame_codes": [
+        "EF"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D65",
+      "door_color_code": "HC",
+      "preferred_frame_code": "HC",
+      "allowed_frame_codes": [
+        "HC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D91",
+      "door_color_code": "BA",
+      "preferred_frame_code": "BA",
+      "allowed_frame_codes": [
+        "BA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D91",
+      "door_color_code": "CA",
+      "preferred_frame_code": "CA",
+      "allowed_frame_codes": [
+        "CA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D91",
+      "door_color_code": "CC",
+      "preferred_frame_code": "CC",
+      "allowed_frame_codes": [
+        "CC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D91",
+      "door_color_code": "CJ",
+      "preferred_frame_code": "CJ",
+      "allowed_frame_codes": [
+        "CJ"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D91",
+      "door_color_code": "EA",
+      "preferred_frame_code": "EA",
+      "allowed_frame_codes": [
+        "EA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D91",
+      "door_color_code": "EF",
+      "preferred_frame_code": "EF",
+      "allowed_frame_codes": [
+        "EF"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_D91",
+      "door_color_code": "HC",
+      "preferred_frame_code": "HC",
+      "allowed_frame_codes": [
+        "HC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_G11",
+      "door_color_code": "BB",
+      "preferred_frame_code": "BB",
+      "allowed_frame_codes": [
+        "BB"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_G11",
+      "door_color_code": "BC",
+      "preferred_frame_code": "BC",
+      "allowed_frame_codes": [
+        "BC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_G11",
+      "door_color_code": "BE",
+      "preferred_frame_code": "BE",
+      "allowed_frame_codes": [
+        "BE"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_G11",
+      "door_color_code": "CB",
+      "preferred_frame_code": "CB",
+      "allowed_frame_codes": [
+        "CB"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_G11",
+      "door_color_code": "CJ",
+      "preferred_frame_code": "CJ",
+      "allowed_frame_codes": [
+        "CJ"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_G11",
+      "door_color_code": "ED",
+      "preferred_frame_code": "ED",
+      "allowed_frame_codes": [
+        "ED"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_G11",
+      "door_color_code": "HA",
+      "preferred_frame_code": "HA",
+      "allowed_frame_codes": [
+        "HA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_G11",
+      "door_color_code": "HB",
+      "preferred_frame_code": "HB",
+      "allowed_frame_codes": [
+        "HB"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_G11",
+      "door_color_code": "HC",
+      "preferred_frame_code": "HC",
+      "allowed_frame_codes": [
+        "HC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_G12",
+      "door_color_code": "BB",
+      "preferred_frame_code": "BB",
+      "allowed_frame_codes": [
+        "BB"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_G12",
+      "door_color_code": "BC",
+      "preferred_frame_code": "BC",
+      "allowed_frame_codes": [
+        "BC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_G12",
+      "door_color_code": "BE",
+      "preferred_frame_code": "BE",
+      "allowed_frame_codes": [
+        "BE"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_G12",
+      "door_color_code": "CB",
+      "preferred_frame_code": "CB",
+      "allowed_frame_codes": [
+        "CB"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_G12",
+      "door_color_code": "CJ",
+      "preferred_frame_code": "CJ",
+      "allowed_frame_codes": [
+        "CJ"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_G12",
+      "door_color_code": "ED",
+      "preferred_frame_code": "ED",
+      "allowed_frame_codes": [
+        "ED"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_G12",
+      "door_color_code": "HA",
+      "preferred_frame_code": "HA",
+      "allowed_frame_codes": [
+        "HA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_G12",
+      "door_color_code": "HB",
+      "preferred_frame_code": "HB",
+      "allowed_frame_codes": [
+        "HB"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_G12",
+      "door_color_code": "HC",
+      "preferred_frame_code": "HC",
+      "allowed_frame_codes": [
+        "HC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_G13",
+      "door_color_code": "BB",
+      "preferred_frame_code": "BB",
+      "allowed_frame_codes": [
+        "BB"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_G13",
+      "door_color_code": "BC",
+      "preferred_frame_code": "BC",
+      "allowed_frame_codes": [
+        "BC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_G13",
+      "door_color_code": "BE",
+      "preferred_frame_code": "BE",
+      "allowed_frame_codes": [
+        "BE"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_G13",
+      "door_color_code": "CB",
+      "preferred_frame_code": "CB",
+      "allowed_frame_codes": [
+        "CB"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_G13",
+      "door_color_code": "CJ",
+      "preferred_frame_code": "CJ",
+      "allowed_frame_codes": [
+        "CJ"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_G13",
+      "door_color_code": "ED",
+      "preferred_frame_code": "ED",
+      "allowed_frame_codes": [
+        "ED"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_G13",
+      "door_color_code": "HA",
+      "preferred_frame_code": "HA",
+      "allowed_frame_codes": [
+        "HA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_G13",
+      "door_color_code": "HB",
+      "preferred_frame_code": "HB",
+      "allowed_frame_codes": [
+        "HB"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_G13",
+      "door_color_code": "HC",
+      "preferred_frame_code": "HC",
+      "allowed_frame_codes": [
+        "HC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_G14",
+      "door_color_code": "BB",
+      "preferred_frame_code": "BB",
+      "allowed_frame_codes": [
+        "BB"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_G14",
+      "door_color_code": "BC",
+      "preferred_frame_code": "BC",
+      "allowed_frame_codes": [
+        "BC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_G14",
+      "door_color_code": "BE",
+      "preferred_frame_code": "BE",
+      "allowed_frame_codes": [
+        "BE"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_G14",
+      "door_color_code": "CB",
+      "preferred_frame_code": "CB",
+      "allowed_frame_codes": [
+        "CB"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_G14",
+      "door_color_code": "CJ",
+      "preferred_frame_code": "CJ",
+      "allowed_frame_codes": [
+        "CJ"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_G14",
+      "door_color_code": "ED",
+      "preferred_frame_code": "ED",
+      "allowed_frame_codes": [
+        "ED"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_G14",
+      "door_color_code": "HA",
+      "preferred_frame_code": "HA",
+      "allowed_frame_codes": [
+        "HA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_G14",
+      "door_color_code": "HB",
+      "preferred_frame_code": "HB",
+      "allowed_frame_codes": [
+        "HB"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_G15",
+      "door_color_code": "BB",
+      "preferred_frame_code": "BB",
+      "allowed_frame_codes": [
+        "BB"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_G15",
+      "door_color_code": "BC",
+      "preferred_frame_code": "BC",
+      "allowed_frame_codes": [
+        "BC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_G15",
+      "door_color_code": "BE",
+      "preferred_frame_code": "BE",
+      "allowed_frame_codes": [
+        "BE"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_G15",
+      "door_color_code": "CB",
+      "preferred_frame_code": "CB",
+      "allowed_frame_codes": [
+        "CB"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_G15",
+      "door_color_code": "CJ",
+      "preferred_frame_code": "CJ",
+      "allowed_frame_codes": [
+        "CJ"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_G15",
+      "door_color_code": "ED",
+      "preferred_frame_code": "ED",
+      "allowed_frame_codes": [
+        "ED"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_G15",
+      "door_color_code": "HA",
+      "preferred_frame_code": "HA",
+      "allowed_frame_codes": [
+        "HA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_G15",
+      "door_color_code": "HB",
+      "preferred_frame_code": "HB",
+      "allowed_frame_codes": [
+        "HB"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_G81",
+      "door_color_code": "BB",
+      "preferred_frame_code": "BB",
+      "allowed_frame_codes": [
+        "BB"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_G81",
+      "door_color_code": "BC",
+      "preferred_frame_code": "BC",
+      "allowed_frame_codes": [
+        "BC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_G81",
+      "door_color_code": "BE",
+      "preferred_frame_code": "BE",
+      "allowed_frame_codes": [
+        "BE"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_G81",
+      "door_color_code": "CB",
+      "preferred_frame_code": "CB",
+      "allowed_frame_codes": [
+        "CB"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_G81",
+      "door_color_code": "CJ",
+      "preferred_frame_code": "CJ",
+      "allowed_frame_codes": [
+        "CJ"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_G81",
+      "door_color_code": "ED",
+      "preferred_frame_code": "ED",
+      "allowed_frame_codes": [
+        "ED"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_G81",
+      "door_color_code": "HA",
+      "preferred_frame_code": "HA",
+      "allowed_frame_codes": [
+        "HA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_G81",
+      "door_color_code": "HB",
+      "preferred_frame_code": "HB",
+      "allowed_frame_codes": [
+        "HB"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_G82",
+      "door_color_code": "BB",
+      "preferred_frame_code": "BB",
+      "allowed_frame_codes": [
+        "BB"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_G82",
+      "door_color_code": "BC",
+      "preferred_frame_code": "BC",
+      "allowed_frame_codes": [
+        "BC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_G82",
+      "door_color_code": "BE",
+      "preferred_frame_code": "BE",
+      "allowed_frame_codes": [
+        "BE"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_G82",
+      "door_color_code": "CB",
+      "preferred_frame_code": "CB",
+      "allowed_frame_codes": [
+        "CB"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_G82",
+      "door_color_code": "CJ",
+      "preferred_frame_code": "CJ",
+      "allowed_frame_codes": [
+        "CJ"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_G82",
+      "door_color_code": "ED",
+      "preferred_frame_code": "ED",
+      "allowed_frame_codes": [
+        "ED"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_G82",
+      "door_color_code": "HA",
+      "preferred_frame_code": "HA",
+      "allowed_frame_codes": [
+        "HA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_G82",
+      "door_color_code": "HB",
+      "preferred_frame_code": "HB",
+      "allowed_frame_codes": [
+        "HB"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M11",
+      "door_color_code": "BB",
+      "preferred_frame_code": "BB",
+      "allowed_frame_codes": [
+        "BB"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M11",
+      "door_color_code": "BC",
+      "preferred_frame_code": "BC",
+      "allowed_frame_codes": [
+        "BC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M11",
+      "door_color_code": "BE",
+      "preferred_frame_code": "BE",
+      "allowed_frame_codes": [
+        "BE"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M11",
+      "door_color_code": "CB",
+      "preferred_frame_code": "CB",
+      "allowed_frame_codes": [
+        "CB"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M11",
+      "door_color_code": "CD",
+      "preferred_frame_code": "CD",
+      "allowed_frame_codes": [
+        "CD"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M11",
+      "door_color_code": "ED",
+      "preferred_frame_code": "ED",
+      "allowed_frame_codes": [
+        "ED"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M11",
+      "door_color_code": "EG",
+      "preferred_frame_code": "EG",
+      "allowed_frame_codes": [
+        "EG"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M12",
+      "door_color_code": "BB",
+      "preferred_frame_code": "BB",
+      "allowed_frame_codes": [
+        "BB"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M12",
+      "door_color_code": "BC",
+      "preferred_frame_code": "BC",
+      "allowed_frame_codes": [
+        "BC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M12",
+      "door_color_code": "BE",
+      "preferred_frame_code": "BE",
+      "allowed_frame_codes": [
+        "BE"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M12",
+      "door_color_code": "CB",
+      "preferred_frame_code": "CB",
+      "allowed_frame_codes": [
+        "CB"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M12",
+      "door_color_code": "CD",
+      "preferred_frame_code": "CD",
+      "allowed_frame_codes": [
+        "CD"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M12",
+      "door_color_code": "CE",
+      "preferred_frame_code": "CE",
+      "allowed_frame_codes": [
+        "CE"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M12",
+      "door_color_code": "CF",
+      "preferred_frame_code": "CF",
+      "allowed_frame_codes": [
+        "CF"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M12",
+      "door_color_code": "EC",
+      "preferred_frame_code": "EC",
+      "allowed_frame_codes": [
+        "EC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M12",
+      "door_color_code": "ED",
+      "preferred_frame_code": "ED",
+      "allowed_frame_codes": [
+        "ED"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M12",
+      "door_color_code": "EG",
+      "preferred_frame_code": "EG",
+      "allowed_frame_codes": [
+        "EG"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M12",
+      "door_color_code": "EH",
+      "preferred_frame_code": "EH",
+      "allowed_frame_codes": [
+        "EH"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M12",
+      "door_color_code": "FA",
+      "preferred_frame_code": "AD",
+      "allowed_frame_codes": [
+        "AD"
+      ],
+      "reason": "本体金属調色に対する指定枠色"
+    },
+    {
+      "design_id": "GST2_M12",
+      "door_color_code": "HD",
+      "preferred_frame_code": "HD",
+      "allowed_frame_codes": [
+        "HD"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M13",
+      "door_color_code": "AA",
+      "preferred_frame_code": "AA",
+      "allowed_frame_codes": [
+        "AA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M13",
+      "door_color_code": "BB",
+      "preferred_frame_code": "BB",
+      "allowed_frame_codes": [
+        "BB"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M13",
+      "door_color_code": "BC",
+      "preferred_frame_code": "BC",
+      "allowed_frame_codes": [
+        "BC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M13",
+      "door_color_code": "BE",
+      "preferred_frame_code": "BE",
+      "allowed_frame_codes": [
+        "BE"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M13",
+      "door_color_code": "CB",
+      "preferred_frame_code": "CB",
+      "allowed_frame_codes": [
+        "CB"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M13",
+      "door_color_code": "CD",
+      "preferred_frame_code": "CD",
+      "allowed_frame_codes": [
+        "CD"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M13",
+      "door_color_code": "EC",
+      "preferred_frame_code": "EC",
+      "allowed_frame_codes": [
+        "EC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M13",
+      "door_color_code": "ED",
+      "preferred_frame_code": "ED",
+      "allowed_frame_codes": [
+        "ED"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M13",
+      "door_color_code": "EG",
+      "preferred_frame_code": "EG",
+      "allowed_frame_codes": [
+        "EG"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M13",
+      "door_color_code": "EH",
+      "preferred_frame_code": "EH",
+      "allowed_frame_codes": [
+        "EH"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M13",
+      "door_color_code": "FA",
+      "preferred_frame_code": "AD",
+      "allowed_frame_codes": [
+        "AD"
+      ],
+      "reason": "本体金属調色に対する指定枠色"
+    },
+    {
+      "design_id": "GST2_M13",
+      "door_color_code": "FD",
+      "preferred_frame_code": "AD",
+      "allowed_frame_codes": [
+        "AD"
+      ],
+      "reason": "本体金属調色に対する指定枠色"
+    },
+    {
+      "design_id": "GST2_M13",
+      "door_color_code": "FH",
+      "preferred_frame_code": "AD",
+      "allowed_frame_codes": [
+        "AD"
+      ],
+      "reason": "本体金属調色に対する指定枠色"
+    },
+    {
+      "design_id": "GST2_M13",
+      "door_color_code": "FW",
+      "preferred_frame_code": "FW",
+      "allowed_frame_codes": [
+        "FW"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M14",
+      "door_color_code": "AA",
+      "preferred_frame_code": "AA",
+      "allowed_frame_codes": [
+        "AA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M14",
+      "door_color_code": "BB",
+      "preferred_frame_code": "BB",
+      "allowed_frame_codes": [
+        "BB"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M14",
+      "door_color_code": "BC",
+      "preferred_frame_code": "BC",
+      "allowed_frame_codes": [
+        "BC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M14",
+      "door_color_code": "BE",
+      "preferred_frame_code": "BE",
+      "allowed_frame_codes": [
+        "BE"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M14",
+      "door_color_code": "CB",
+      "preferred_frame_code": "CB",
+      "allowed_frame_codes": [
+        "CB"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M14",
+      "door_color_code": "CD",
+      "preferred_frame_code": "CD",
+      "allowed_frame_codes": [
+        "CD"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M14",
+      "door_color_code": "EC",
+      "preferred_frame_code": "EC",
+      "allowed_frame_codes": [
+        "EC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M14",
+      "door_color_code": "ED",
+      "preferred_frame_code": "ED",
+      "allowed_frame_codes": [
+        "ED"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M14",
+      "door_color_code": "EG",
+      "preferred_frame_code": "EG",
+      "allowed_frame_codes": [
+        "EG"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M14",
+      "door_color_code": "EH",
+      "preferred_frame_code": "EH",
+      "allowed_frame_codes": [
+        "EH"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M14",
+      "door_color_code": "FA",
+      "preferred_frame_code": "AD",
+      "allowed_frame_codes": [
+        "AD"
+      ],
+      "reason": "本体金属調色に対する指定枠色"
+    },
+    {
+      "design_id": "GST2_M14",
+      "door_color_code": "FD",
+      "preferred_frame_code": "AD",
+      "allowed_frame_codes": [
+        "AD"
+      ],
+      "reason": "本体金属調色に対する指定枠色"
+    },
+    {
+      "design_id": "GST2_M14",
+      "door_color_code": "FH",
+      "preferred_frame_code": "AD",
+      "allowed_frame_codes": [
+        "AD"
+      ],
+      "reason": "本体金属調色に対する指定枠色"
+    },
+    {
+      "design_id": "GST2_M14",
+      "door_color_code": "FW",
+      "preferred_frame_code": "FW",
+      "allowed_frame_codes": [
+        "FW"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M15",
+      "door_color_code": "AA",
+      "preferred_frame_code": "AA",
+      "allowed_frame_codes": [
+        "AA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M15",
+      "door_color_code": "BB",
+      "preferred_frame_code": "BB",
+      "allowed_frame_codes": [
+        "BB"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M15",
+      "door_color_code": "BC",
+      "preferred_frame_code": "BC",
+      "allowed_frame_codes": [
+        "BC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M15",
+      "door_color_code": "BE",
+      "preferred_frame_code": "BE",
+      "allowed_frame_codes": [
+        "BE"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M15",
+      "door_color_code": "CB",
+      "preferred_frame_code": "CB",
+      "allowed_frame_codes": [
+        "CB"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M15",
+      "door_color_code": "CD",
+      "preferred_frame_code": "CD",
+      "allowed_frame_codes": [
+        "CD"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M15",
+      "door_color_code": "EC",
+      "preferred_frame_code": "EC",
+      "allowed_frame_codes": [
+        "EC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M15",
+      "door_color_code": "ED",
+      "preferred_frame_code": "ED",
+      "allowed_frame_codes": [
+        "ED"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M15",
+      "door_color_code": "EG",
+      "preferred_frame_code": "EG",
+      "allowed_frame_codes": [
+        "EG"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M15",
+      "door_color_code": "EH",
+      "preferred_frame_code": "EH",
+      "allowed_frame_codes": [
+        "EH"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M15",
+      "door_color_code": "FA",
+      "preferred_frame_code": "AD",
+      "allowed_frame_codes": [
+        "AD"
+      ],
+      "reason": "本体金属調色に対する指定枠色"
+    },
+    {
+      "design_id": "GST2_M15",
+      "door_color_code": "FD",
+      "preferred_frame_code": "AD",
+      "allowed_frame_codes": [
+        "AD"
+      ],
+      "reason": "本体金属調色に対する指定枠色"
+    },
+    {
+      "design_id": "GST2_M15",
+      "door_color_code": "FH",
+      "preferred_frame_code": "AD",
+      "allowed_frame_codes": [
+        "AD"
+      ],
+      "reason": "本体金属調色に対する指定枠色"
+    },
+    {
+      "design_id": "GST2_M15",
+      "door_color_code": "FW",
+      "preferred_frame_code": "FW",
+      "allowed_frame_codes": [
+        "FW"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M16",
+      "door_color_code": "AA",
+      "preferred_frame_code": "AA",
+      "allowed_frame_codes": [
+        "AA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M16",
+      "door_color_code": "AG",
+      "preferred_frame_code": "AG",
+      "allowed_frame_codes": [
+        "AG"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M16",
+      "door_color_code": "AK",
+      "preferred_frame_code": "AK",
+      "allowed_frame_codes": [
+        "AK"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M16",
+      "door_color_code": "BB",
+      "preferred_frame_code": "BB",
+      "allowed_frame_codes": [
+        "BB"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M16",
+      "door_color_code": "BC",
+      "preferred_frame_code": "BC",
+      "allowed_frame_codes": [
+        "BC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M16",
+      "door_color_code": "CB",
+      "preferred_frame_code": "CB",
+      "allowed_frame_codes": [
+        "CB"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M16",
+      "door_color_code": "CD",
+      "preferred_frame_code": "CD",
+      "allowed_frame_codes": [
+        "CD"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M16",
+      "door_color_code": "EC",
+      "preferred_frame_code": "EC",
+      "allowed_frame_codes": [
+        "EC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M16",
+      "door_color_code": "ED",
+      "preferred_frame_code": "ED",
+      "allowed_frame_codes": [
+        "ED"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M16",
+      "door_color_code": "FA",
+      "preferred_frame_code": "AD",
+      "allowed_frame_codes": [
+        "AD"
+      ],
+      "reason": "本体金属調色に対する指定枠色"
+    },
+    {
+      "design_id": "GST2_M16",
+      "door_color_code": "FD",
+      "preferred_frame_code": "AD",
+      "allowed_frame_codes": [
+        "AD"
+      ],
+      "reason": "本体金属調色に対する指定枠色"
+    },
+    {
+      "design_id": "GST2_M16",
+      "door_color_code": "FH",
+      "preferred_frame_code": "AD",
+      "allowed_frame_codes": [
+        "AD"
+      ],
+      "reason": "本体金属調色に対する指定枠色"
+    },
+    {
+      "design_id": "GST2_M16",
+      "door_color_code": "FW",
+      "preferred_frame_code": "FW",
+      "allowed_frame_codes": [
+        "FW"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M17",
+      "door_color_code": "AA",
+      "preferred_frame_code": "AA",
+      "allowed_frame_codes": [
+        "AA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M17",
+      "door_color_code": "AG",
+      "preferred_frame_code": "AG",
+      "allowed_frame_codes": [
+        "AG"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M17",
+      "door_color_code": "AK",
+      "preferred_frame_code": "AK",
+      "allowed_frame_codes": [
+        "AK"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M17",
+      "door_color_code": "BB",
+      "preferred_frame_code": "BB",
+      "allowed_frame_codes": [
+        "BB"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M17",
+      "door_color_code": "BC",
+      "preferred_frame_code": "BC",
+      "allowed_frame_codes": [
+        "BC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M17",
+      "door_color_code": "BD",
+      "preferred_frame_code": "AA",
+      "allowed_frame_codes": [
+        "AA"
+      ],
+      "reason": "本体ブラックウォールナットに対する指定枠色"
+    },
+    {
+      "design_id": "GST2_M17",
+      "door_color_code": "BE",
+      "preferred_frame_code": "BE",
+      "allowed_frame_codes": [
+        "BE"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M17",
+      "door_color_code": "CB",
+      "preferred_frame_code": "CB",
+      "allowed_frame_codes": [
+        "CB"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M17",
+      "door_color_code": "CD",
+      "preferred_frame_code": "CD",
+      "allowed_frame_codes": [
+        "CD"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M17",
+      "door_color_code": "CE",
+      "preferred_frame_code": "CE",
+      "allowed_frame_codes": [
+        "CE"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M17",
+      "door_color_code": "CF",
+      "preferred_frame_code": "CF",
+      "allowed_frame_codes": [
+        "CF"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M17",
+      "door_color_code": "EC",
+      "preferred_frame_code": "EC",
+      "allowed_frame_codes": [
+        "EC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M17",
+      "door_color_code": "ED",
+      "preferred_frame_code": "ED",
+      "allowed_frame_codes": [
+        "ED"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M17",
+      "door_color_code": "EG",
+      "preferred_frame_code": "EG",
+      "allowed_frame_codes": [
+        "EG"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M17",
+      "door_color_code": "EH",
+      "preferred_frame_code": "EH",
+      "allowed_frame_codes": [
+        "EH"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M17",
+      "door_color_code": "FA",
+      "preferred_frame_code": "AD",
+      "allowed_frame_codes": [
+        "AD"
+      ],
+      "reason": "本体金属調色に対する指定枠色"
+    },
+    {
+      "design_id": "GST2_M17",
+      "door_color_code": "FD",
+      "preferred_frame_code": "AD",
+      "allowed_frame_codes": [
+        "AD"
+      ],
+      "reason": "本体金属調色に対する指定枠色"
+    },
+    {
+      "design_id": "GST2_M17",
+      "door_color_code": "FH",
+      "preferred_frame_code": "AD",
+      "allowed_frame_codes": [
+        "AD"
+      ],
+      "reason": "本体金属調色に対する指定枠色"
+    },
+    {
+      "design_id": "GST2_M17",
+      "door_color_code": "FW",
+      "preferred_frame_code": "FW",
+      "allowed_frame_codes": [
+        "FW"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M17",
+      "door_color_code": "HA",
+      "preferred_frame_code": "HA",
+      "allowed_frame_codes": [
+        "HA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M17",
+      "door_color_code": "HB",
+      "preferred_frame_code": "HB",
+      "allowed_frame_codes": [
+        "HB"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M17",
+      "door_color_code": "HC",
+      "preferred_frame_code": "HC",
+      "allowed_frame_codes": [
+        "HC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M17",
+      "door_color_code": "HD",
+      "preferred_frame_code": "HD",
+      "allowed_frame_codes": [
+        "HD"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M18",
+      "door_color_code": "BB",
+      "preferred_frame_code": "BB",
+      "allowed_frame_codes": [
+        "BB"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M18",
+      "door_color_code": "BC",
+      "preferred_frame_code": "BC",
+      "allowed_frame_codes": [
+        "BC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M18",
+      "door_color_code": "BE",
+      "preferred_frame_code": "BE",
+      "allowed_frame_codes": [
+        "BE"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M18",
+      "door_color_code": "CB",
+      "preferred_frame_code": "CB",
+      "allowed_frame_codes": [
+        "CB"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M18",
+      "door_color_code": "CE",
+      "preferred_frame_code": "CE",
+      "allowed_frame_codes": [
+        "CE"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M18",
+      "door_color_code": "CF",
+      "preferred_frame_code": "CF",
+      "allowed_frame_codes": [
+        "CF"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M18",
+      "door_color_code": "EC",
+      "preferred_frame_code": "EC",
+      "allowed_frame_codes": [
+        "EC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M18",
+      "door_color_code": "ED",
+      "preferred_frame_code": "ED",
+      "allowed_frame_codes": [
+        "ED"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M18",
+      "door_color_code": "HA",
+      "preferred_frame_code": "HA",
+      "allowed_frame_codes": [
+        "HA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M18",
+      "door_color_code": "HB",
+      "preferred_frame_code": "HB",
+      "allowed_frame_codes": [
+        "HB"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M18",
+      "door_color_code": "HD",
+      "preferred_frame_code": "HD",
+      "allowed_frame_codes": [
+        "HD"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M19",
+      "door_color_code": "BB",
+      "preferred_frame_code": "BB",
+      "allowed_frame_codes": [
+        "BB"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M19",
+      "door_color_code": "BC",
+      "preferred_frame_code": "BC",
+      "allowed_frame_codes": [
+        "BC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M19",
+      "door_color_code": "BE",
+      "preferred_frame_code": "BE",
+      "allowed_frame_codes": [
+        "BE"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M19",
+      "door_color_code": "CB",
+      "preferred_frame_code": "CB",
+      "allowed_frame_codes": [
+        "CB"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M19",
+      "door_color_code": "EC",
+      "preferred_frame_code": "EC",
+      "allowed_frame_codes": [
+        "EC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M19",
+      "door_color_code": "ED",
+      "preferred_frame_code": "ED",
+      "allowed_frame_codes": [
+        "ED"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M19",
+      "door_color_code": "HA",
+      "preferred_frame_code": "HA",
+      "allowed_frame_codes": [
+        "HA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M19",
+      "door_color_code": "HB",
+      "preferred_frame_code": "HB",
+      "allowed_frame_codes": [
+        "HB"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M20",
+      "door_color_code": "BB",
+      "preferred_frame_code": "BB",
+      "allowed_frame_codes": [
+        "BB"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M20",
+      "door_color_code": "BC",
+      "preferred_frame_code": "BC",
+      "allowed_frame_codes": [
+        "BC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M20",
+      "door_color_code": "BE",
+      "preferred_frame_code": "BE",
+      "allowed_frame_codes": [
+        "BE"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M20",
+      "door_color_code": "CB",
+      "preferred_frame_code": "CB",
+      "allowed_frame_codes": [
+        "CB"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M20",
+      "door_color_code": "EC",
+      "preferred_frame_code": "EC",
+      "allowed_frame_codes": [
+        "EC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M20",
+      "door_color_code": "ED",
+      "preferred_frame_code": "ED",
+      "allowed_frame_codes": [
+        "ED"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M20",
+      "door_color_code": "HA",
+      "preferred_frame_code": "HA",
+      "allowed_frame_codes": [
+        "HA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M20",
+      "door_color_code": "HB",
+      "preferred_frame_code": "HB",
+      "allowed_frame_codes": [
+        "HB"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M21",
+      "door_color_code": "BB",
+      "preferred_frame_code": "BB",
+      "allowed_frame_codes": [
+        "BB"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M21",
+      "door_color_code": "BC",
+      "preferred_frame_code": "BC",
+      "allowed_frame_codes": [
+        "BC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M21",
+      "door_color_code": "BE",
+      "preferred_frame_code": "BE",
+      "allowed_frame_codes": [
+        "BE"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M21",
+      "door_color_code": "CB",
+      "preferred_frame_code": "CB",
+      "allowed_frame_codes": [
+        "CB"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M21",
+      "door_color_code": "EC",
+      "preferred_frame_code": "EC",
+      "allowed_frame_codes": [
+        "EC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M21",
+      "door_color_code": "ED",
+      "preferred_frame_code": "ED",
+      "allowed_frame_codes": [
+        "ED"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M21",
+      "door_color_code": "HA",
+      "preferred_frame_code": "HA",
+      "allowed_frame_codes": [
+        "HA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M21",
+      "door_color_code": "HB",
+      "preferred_frame_code": "HB",
+      "allowed_frame_codes": [
+        "HB"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M22",
+      "door_color_code": "AG",
+      "preferred_frame_code": "AG",
+      "allowed_frame_codes": [
+        "AG"
+      ],
+      "reason": "木目枠選択可：本体同色優先、標準アルミ枠も選択可"
+    },
+    {
+      "design_id": "GST2_M22",
+      "door_color_code": "AK",
+      "preferred_frame_code": "AK",
+      "allowed_frame_codes": [
+        "AK"
+      ],
+      "reason": "木目枠選択可：本体同色優先、標準アルミ枠も選択可"
+    },
+    {
+      "design_id": "GST2_M22",
+      "door_color_code": "BB",
+      "preferred_frame_code": "BB",
+      "allowed_frame_codes": [
+        "BB",
+        "AK"
+      ],
+      "reason": "木目枠選択可：本体同色優先、標準アルミ枠も選択可"
+    },
+    {
+      "design_id": "GST2_M22",
+      "door_color_code": "BC",
+      "preferred_frame_code": "BC",
+      "allowed_frame_codes": [
+        "BC",
+        "AD"
+      ],
+      "reason": "木目枠選択可：本体同色優先、標準アルミ枠も選択可"
+    },
+    {
+      "design_id": "GST2_M22",
+      "door_color_code": "BD",
+      "preferred_frame_code": "AA",
+      "allowed_frame_codes": [
+        "AA"
+      ],
+      "reason": "木目枠選択可：本体同色優先、標準アルミ枠も選択可"
+    },
+    {
+      "design_id": "GST2_M22",
+      "door_color_code": "BE",
+      "preferred_frame_code": "BE",
+      "allowed_frame_codes": [
+        "BE",
+        "AK"
+      ],
+      "reason": "木目枠選択可：本体同色優先、標準アルミ枠も選択可"
+    },
+    {
+      "design_id": "GST2_M22",
+      "door_color_code": "CB",
+      "preferred_frame_code": "CB",
+      "allowed_frame_codes": [
+        "CB",
+        "AK"
+      ],
+      "reason": "木目枠選択可：本体同色優先、標準アルミ枠も選択可"
+    },
+    {
+      "design_id": "GST2_M22",
+      "door_color_code": "CD",
+      "preferred_frame_code": "CD",
+      "allowed_frame_codes": [
+        "CD",
+        "AK"
+      ],
+      "reason": "木目枠選択可：本体同色優先、標準アルミ枠も選択可"
+    },
+    {
+      "design_id": "GST2_M22",
+      "door_color_code": "CE",
+      "preferred_frame_code": "CE",
+      "allowed_frame_codes": [
+        "CE",
+        "AA"
+      ],
+      "reason": "木目枠選択可：本体同色優先、標準アルミ枠も選択可"
+    },
+    {
+      "design_id": "GST2_M22",
+      "door_color_code": "CF",
+      "preferred_frame_code": "CF",
+      "allowed_frame_codes": [
+        "CF",
+        "AA"
+      ],
+      "reason": "木目枠選択可：本体同色優先、標準アルミ枠も選択可"
+    },
+    {
+      "design_id": "GST2_M22",
+      "door_color_code": "EC",
+      "preferred_frame_code": "EC",
+      "allowed_frame_codes": [
+        "EC",
+        "AK"
+      ],
+      "reason": "木目枠選択可：本体同色優先、標準アルミ枠も選択可"
+    },
+    {
+      "design_id": "GST2_M22",
+      "door_color_code": "ED",
+      "preferred_frame_code": "ED",
+      "allowed_frame_codes": [
+        "ED",
+        "AK"
+      ],
+      "reason": "木目枠選択可：本体同色優先、標準アルミ枠も選択可"
+    },
+    {
+      "design_id": "GST2_M22",
+      "door_color_code": "EG",
+      "preferred_frame_code": "EG",
+      "allowed_frame_codes": [
+        "EG",
+        "AK"
+      ],
+      "reason": "木目枠選択可：本体同色優先、標準アルミ枠も選択可"
+    },
+    {
+      "design_id": "GST2_M22",
+      "door_color_code": "EH",
+      "preferred_frame_code": "EH",
+      "allowed_frame_codes": [
+        "EH",
+        "AD"
+      ],
+      "reason": "木目枠選択可：本体同色優先、標準アルミ枠も選択可"
+    },
+    {
+      "design_id": "GST2_M22",
+      "door_color_code": "FA",
+      "preferred_frame_code": "AD",
+      "allowed_frame_codes": [
+        "AD"
+      ],
+      "reason": "木目枠選択可：本体同色優先、標準アルミ枠も選択可"
+    },
+    {
+      "design_id": "GST2_M22",
+      "door_color_code": "HD",
+      "preferred_frame_code": "HD",
+      "allowed_frame_codes": [
+        "HD",
+        "AK"
+      ],
+      "reason": "木目枠選択可：本体同色優先、標準アルミ枠も選択可"
+    },
+    {
+      "design_id": "GST2_M24",
+      "door_color_code": "AG",
+      "preferred_frame_code": "AG",
+      "allowed_frame_codes": [
+        "AG"
+      ],
+      "reason": "木目枠選択可：本体同色優先、標準アルミ枠も選択可"
+    },
+    {
+      "design_id": "GST2_M24",
+      "door_color_code": "AK",
+      "preferred_frame_code": "AK",
+      "allowed_frame_codes": [
+        "AK"
+      ],
+      "reason": "木目枠選択可：本体同色優先、標準アルミ枠も選択可"
+    },
+    {
+      "design_id": "GST2_M24",
+      "door_color_code": "BB",
+      "preferred_frame_code": "BB",
+      "allowed_frame_codes": [
+        "BB",
+        "AK"
+      ],
+      "reason": "木目枠選択可：本体同色優先、標準アルミ枠も選択可"
+    },
+    {
+      "design_id": "GST2_M24",
+      "door_color_code": "BC",
+      "preferred_frame_code": "BC",
+      "allowed_frame_codes": [
+        "BC",
+        "AD"
+      ],
+      "reason": "木目枠選択可：本体同色優先、標準アルミ枠も選択可"
+    },
+    {
+      "design_id": "GST2_M24",
+      "door_color_code": "BD",
+      "preferred_frame_code": "AA",
+      "allowed_frame_codes": [
+        "AA"
+      ],
+      "reason": "木目枠選択可：本体同色優先、標準アルミ枠も選択可"
+    },
+    {
+      "design_id": "GST2_M24",
+      "door_color_code": "BE",
+      "preferred_frame_code": "BE",
+      "allowed_frame_codes": [
+        "BE",
+        "AK"
+      ],
+      "reason": "木目枠選択可：本体同色優先、標準アルミ枠も選択可"
+    },
+    {
+      "design_id": "GST2_M24",
+      "door_color_code": "CB",
+      "preferred_frame_code": "CB",
+      "allowed_frame_codes": [
+        "CB",
+        "AK"
+      ],
+      "reason": "木目枠選択可：本体同色優先、標準アルミ枠も選択可"
+    },
+    {
+      "design_id": "GST2_M24",
+      "door_color_code": "CD",
+      "preferred_frame_code": "CD",
+      "allowed_frame_codes": [
+        "CD",
+        "AK"
+      ],
+      "reason": "木目枠選択可：本体同色優先、標準アルミ枠も選択可"
+    },
+    {
+      "design_id": "GST2_M24",
+      "door_color_code": "EC",
+      "preferred_frame_code": "EC",
+      "allowed_frame_codes": [
+        "EC",
+        "AK"
+      ],
+      "reason": "木目枠選択可：本体同色優先、標準アルミ枠も選択可"
+    },
+    {
+      "design_id": "GST2_M24",
+      "door_color_code": "ED",
+      "preferred_frame_code": "ED",
+      "allowed_frame_codes": [
+        "ED",
+        "AK"
+      ],
+      "reason": "木目枠選択可：本体同色優先、標準アルミ枠も選択可"
+    },
+    {
+      "design_id": "GST2_M24",
+      "door_color_code": "EG",
+      "preferred_frame_code": "EG",
+      "allowed_frame_codes": [
+        "EG",
+        "AK"
+      ],
+      "reason": "木目枠選択可：本体同色優先、標準アルミ枠も選択可"
+    },
+    {
+      "design_id": "GST2_M24",
+      "door_color_code": "EH",
+      "preferred_frame_code": "EH",
+      "allowed_frame_codes": [
+        "EH",
+        "AD"
+      ],
+      "reason": "木目枠選択可：本体同色優先、標準アルミ枠も選択可"
+    },
+    {
+      "design_id": "GST2_M24",
+      "door_color_code": "FA",
+      "preferred_frame_code": "AD",
+      "allowed_frame_codes": [
+        "AD"
+      ],
+      "reason": "木目枠選択可：本体同色優先、標準アルミ枠も選択可"
+    },
+    {
+      "design_id": "GST2_M26",
+      "door_color_code": "AG",
+      "preferred_frame_code": "AG",
+      "allowed_frame_codes": [
+        "AG"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M26",
+      "door_color_code": "AK",
+      "preferred_frame_code": "AK",
+      "allowed_frame_codes": [
+        "AK"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M26",
+      "door_color_code": "BB",
+      "preferred_frame_code": "BB",
+      "allowed_frame_codes": [
+        "BB"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M26",
+      "door_color_code": "BC",
+      "preferred_frame_code": "BC",
+      "allowed_frame_codes": [
+        "BC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M26",
+      "door_color_code": "BE",
+      "preferred_frame_code": "BE",
+      "allowed_frame_codes": [
+        "BE"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M26",
+      "door_color_code": "CB",
+      "preferred_frame_code": "CB",
+      "allowed_frame_codes": [
+        "CB"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M26",
+      "door_color_code": "CD",
+      "preferred_frame_code": "CD",
+      "allowed_frame_codes": [
+        "CD"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M26",
+      "door_color_code": "CE",
+      "preferred_frame_code": "CE",
+      "allowed_frame_codes": [
+        "CE"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M26",
+      "door_color_code": "CF",
+      "preferred_frame_code": "CF",
+      "allowed_frame_codes": [
+        "CF"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M26",
+      "door_color_code": "EC",
+      "preferred_frame_code": "EC",
+      "allowed_frame_codes": [
+        "EC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M26",
+      "door_color_code": "ED",
+      "preferred_frame_code": "ED",
+      "allowed_frame_codes": [
+        "ED"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M26",
+      "door_color_code": "EG",
+      "preferred_frame_code": "EG",
+      "allowed_frame_codes": [
+        "EG"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M26",
+      "door_color_code": "EH",
+      "preferred_frame_code": "EH",
+      "allowed_frame_codes": [
+        "EH"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M26",
+      "door_color_code": "FA",
+      "preferred_frame_code": "AD",
+      "allowed_frame_codes": [
+        "AD"
+      ],
+      "reason": "本体金属調色に対する指定枠色"
+    },
+    {
+      "design_id": "GST2_M26",
+      "door_color_code": "HD",
+      "preferred_frame_code": "HD",
+      "allowed_frame_codes": [
+        "HD"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M27",
+      "door_color_code": "BB",
+      "preferred_frame_code": "BB",
+      "allowed_frame_codes": [
+        "BB",
+        "AK"
+      ],
+      "reason": "木目枠選択可：本体同色優先、標準アルミ枠も選択可"
+    },
+    {
+      "design_id": "GST2_M27",
+      "door_color_code": "BC",
+      "preferred_frame_code": "BC",
+      "allowed_frame_codes": [
+        "BC",
+        "AD"
+      ],
+      "reason": "木目枠選択可：本体同色優先、標準アルミ枠も選択可"
+    },
+    {
+      "design_id": "GST2_M27",
+      "door_color_code": "BE",
+      "preferred_frame_code": "BE",
+      "allowed_frame_codes": [
+        "BE",
+        "AK"
+      ],
+      "reason": "木目枠選択可：本体同色優先、標準アルミ枠も選択可"
+    },
+    {
+      "design_id": "GST2_M27",
+      "door_color_code": "CB",
+      "preferred_frame_code": "CB",
+      "allowed_frame_codes": [
+        "CB",
+        "AK"
+      ],
+      "reason": "木目枠選択可：本体同色優先、標準アルミ枠も選択可"
+    },
+    {
+      "design_id": "GST2_M27",
+      "door_color_code": "CD",
+      "preferred_frame_code": "CD",
+      "allowed_frame_codes": [
+        "CD",
+        "AK"
+      ],
+      "reason": "木目枠選択可：本体同色優先、標準アルミ枠も選択可"
+    },
+    {
+      "design_id": "GST2_M27",
+      "door_color_code": "EC",
+      "preferred_frame_code": "EC",
+      "allowed_frame_codes": [
+        "EC",
+        "AK"
+      ],
+      "reason": "木目枠選択可：本体同色優先、標準アルミ枠も選択可"
+    },
+    {
+      "design_id": "GST2_M27",
+      "door_color_code": "ED",
+      "preferred_frame_code": "ED",
+      "allowed_frame_codes": [
+        "ED",
+        "AK"
+      ],
+      "reason": "木目枠選択可：本体同色優先、標準アルミ枠も選択可"
+    },
+    {
+      "design_id": "GST2_M27",
+      "door_color_code": "EG",
+      "preferred_frame_code": "EG",
+      "allowed_frame_codes": [
+        "EG",
+        "AK"
+      ],
+      "reason": "木目枠選択可：本体同色優先、標準アルミ枠も選択可"
+    },
+    {
+      "design_id": "GST2_M27",
+      "door_color_code": "EH",
+      "preferred_frame_code": "EH",
+      "allowed_frame_codes": [
+        "EH",
+        "AD"
+      ],
+      "reason": "木目枠選択可：本体同色優先、標準アルミ枠も選択可"
+    },
+    {
+      "design_id": "GST2_M27",
+      "door_color_code": "FA",
+      "preferred_frame_code": "AD",
+      "allowed_frame_codes": [
+        "AD"
+      ],
+      "reason": "木目枠選択可：本体同色優先、標準アルミ枠も選択可"
+    },
+    {
+      "design_id": "GST2_M28",
+      "door_color_code": "BB",
+      "preferred_frame_code": "BB",
+      "allowed_frame_codes": [
+        "BB"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M28",
+      "door_color_code": "BC",
+      "preferred_frame_code": "BC",
+      "allowed_frame_codes": [
+        "BC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M28",
+      "door_color_code": "BE",
+      "preferred_frame_code": "BE",
+      "allowed_frame_codes": [
+        "BE"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M28",
+      "door_color_code": "CB",
+      "preferred_frame_code": "CB",
+      "allowed_frame_codes": [
+        "CB"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M28",
+      "door_color_code": "CD",
+      "preferred_frame_code": "CD",
+      "allowed_frame_codes": [
+        "CD"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M28",
+      "door_color_code": "CE",
+      "preferred_frame_code": "CE",
+      "allowed_frame_codes": [
+        "CE"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M28",
+      "door_color_code": "CF",
+      "preferred_frame_code": "CF",
+      "allowed_frame_codes": [
+        "CF"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M28",
+      "door_color_code": "EC",
+      "preferred_frame_code": "EC",
+      "allowed_frame_codes": [
+        "EC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M28",
+      "door_color_code": "ED",
+      "preferred_frame_code": "ED",
+      "allowed_frame_codes": [
+        "ED"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M28",
+      "door_color_code": "EG",
+      "preferred_frame_code": "EG",
+      "allowed_frame_codes": [
+        "EG"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M28",
+      "door_color_code": "EH",
+      "preferred_frame_code": "EH",
+      "allowed_frame_codes": [
+        "EH"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M28",
+      "door_color_code": "FA",
+      "preferred_frame_code": "AD",
+      "allowed_frame_codes": [
+        "AD"
+      ],
+      "reason": "本体金属調色に対する指定枠色"
+    },
+    {
+      "design_id": "GST2_M28",
+      "door_color_code": "HD",
+      "preferred_frame_code": "HD",
+      "allowed_frame_codes": [
+        "HD"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M31",
+      "door_color_code": "BC",
+      "preferred_frame_code": "BC",
+      "allowed_frame_codes": [
+        "BC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M31",
+      "door_color_code": "CB",
+      "preferred_frame_code": "CB",
+      "allowed_frame_codes": [
+        "CB"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M31",
+      "door_color_code": "CE",
+      "preferred_frame_code": "CE",
+      "allowed_frame_codes": [
+        "CE"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M31",
+      "door_color_code": "CF",
+      "preferred_frame_code": "CF",
+      "allowed_frame_codes": [
+        "CF"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M31",
+      "door_color_code": "HD",
+      "preferred_frame_code": "HD",
+      "allowed_frame_codes": [
+        "HD"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M81",
+      "door_color_code": "BB",
+      "preferred_frame_code": "BB",
+      "allowed_frame_codes": [
+        "BB"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M81",
+      "door_color_code": "BC",
+      "preferred_frame_code": "BC",
+      "allowed_frame_codes": [
+        "BC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M81",
+      "door_color_code": "BE",
+      "preferred_frame_code": "BE",
+      "allowed_frame_codes": [
+        "BE"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M81",
+      "door_color_code": "CB",
+      "preferred_frame_code": "CB",
+      "allowed_frame_codes": [
+        "CB"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M81",
+      "door_color_code": "EC",
+      "preferred_frame_code": "EC",
+      "allowed_frame_codes": [
+        "EC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M81",
+      "door_color_code": "ED",
+      "preferred_frame_code": "ED",
+      "allowed_frame_codes": [
+        "ED"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M81",
+      "door_color_code": "HA",
+      "preferred_frame_code": "HA",
+      "allowed_frame_codes": [
+        "HA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M81",
+      "door_color_code": "HB",
+      "preferred_frame_code": "HB",
+      "allowed_frame_codes": [
+        "HB"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M82",
+      "door_color_code": "BB",
+      "preferred_frame_code": "BB",
+      "allowed_frame_codes": [
+        "BB"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M82",
+      "door_color_code": "BC",
+      "preferred_frame_code": "BC",
+      "allowed_frame_codes": [
+        "BC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M82",
+      "door_color_code": "BE",
+      "preferred_frame_code": "BE",
+      "allowed_frame_codes": [
+        "BE"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M82",
+      "door_color_code": "CB",
+      "preferred_frame_code": "CB",
+      "allowed_frame_codes": [
+        "CB"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M82",
+      "door_color_code": "EC",
+      "preferred_frame_code": "EC",
+      "allowed_frame_codes": [
+        "EC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M82",
+      "door_color_code": "ED",
+      "preferred_frame_code": "ED",
+      "allowed_frame_codes": [
+        "ED"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M82",
+      "door_color_code": "HA",
+      "preferred_frame_code": "HA",
+      "allowed_frame_codes": [
+        "HA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M82",
+      "door_color_code": "HB",
+      "preferred_frame_code": "HB",
+      "allowed_frame_codes": [
+        "HB"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M83",
+      "door_color_code": "BB",
+      "preferred_frame_code": "BB",
+      "allowed_frame_codes": [
+        "BB"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M83",
+      "door_color_code": "BC",
+      "preferred_frame_code": "BC",
+      "allowed_frame_codes": [
+        "BC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M83",
+      "door_color_code": "BE",
+      "preferred_frame_code": "BE",
+      "allowed_frame_codes": [
+        "BE"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M83",
+      "door_color_code": "CB",
+      "preferred_frame_code": "CB",
+      "allowed_frame_codes": [
+        "CB"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M83",
+      "door_color_code": "EC",
+      "preferred_frame_code": "EC",
+      "allowed_frame_codes": [
+        "EC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M83",
+      "door_color_code": "ED",
+      "preferred_frame_code": "ED",
+      "allowed_frame_codes": [
+        "ED"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M83",
+      "door_color_code": "HA",
+      "preferred_frame_code": "HA",
+      "allowed_frame_codes": [
+        "HA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M83",
+      "door_color_code": "HB",
+      "preferred_frame_code": "HB",
+      "allowed_frame_codes": [
+        "HB"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M84",
+      "door_color_code": "BB",
+      "preferred_frame_code": "BB",
+      "allowed_frame_codes": [
+        "BB"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M84",
+      "door_color_code": "BC",
+      "preferred_frame_code": "BC",
+      "allowed_frame_codes": [
+        "BC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M84",
+      "door_color_code": "BE",
+      "preferred_frame_code": "BE",
+      "allowed_frame_codes": [
+        "BE"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M84",
+      "door_color_code": "CB",
+      "preferred_frame_code": "CB",
+      "allowed_frame_codes": [
+        "CB"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M84",
+      "door_color_code": "EC",
+      "preferred_frame_code": "EC",
+      "allowed_frame_codes": [
+        "EC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M84",
+      "door_color_code": "ED",
+      "preferred_frame_code": "ED",
+      "allowed_frame_codes": [
+        "ED"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M84",
+      "door_color_code": "HA",
+      "preferred_frame_code": "HA",
+      "allowed_frame_codes": [
+        "HA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M84",
+      "door_color_code": "HB",
+      "preferred_frame_code": "HB",
+      "allowed_frame_codes": [
+        "HB"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M91",
+      "door_color_code": "AA",
+      "preferred_frame_code": "AA",
+      "allowed_frame_codes": [
+        "AA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M91",
+      "door_color_code": "BB",
+      "preferred_frame_code": "BB",
+      "allowed_frame_codes": [
+        "BB"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M91",
+      "door_color_code": "BC",
+      "preferred_frame_code": "BC",
+      "allowed_frame_codes": [
+        "BC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M91",
+      "door_color_code": "BE",
+      "preferred_frame_code": "BE",
+      "allowed_frame_codes": [
+        "BE"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M91",
+      "door_color_code": "CB",
+      "preferred_frame_code": "CB",
+      "allowed_frame_codes": [
+        "CB"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M91",
+      "door_color_code": "CD",
+      "preferred_frame_code": "CD",
+      "allowed_frame_codes": [
+        "CD"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M91",
+      "door_color_code": "EC",
+      "preferred_frame_code": "EC",
+      "allowed_frame_codes": [
+        "EC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M91",
+      "door_color_code": "ED",
+      "preferred_frame_code": "ED",
+      "allowed_frame_codes": [
+        "ED"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M91",
+      "door_color_code": "EG",
+      "preferred_frame_code": "EG",
+      "allowed_frame_codes": [
+        "EG"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M91",
+      "door_color_code": "EH",
+      "preferred_frame_code": "EH",
+      "allowed_frame_codes": [
+        "EH"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M91",
+      "door_color_code": "FA",
+      "preferred_frame_code": "AD",
+      "allowed_frame_codes": [
+        "AD"
+      ],
+      "reason": "本体金属調色に対する指定枠色"
+    },
+    {
+      "design_id": "GST2_M91",
+      "door_color_code": "FD",
+      "preferred_frame_code": "AD",
+      "allowed_frame_codes": [
+        "AD"
+      ],
+      "reason": "本体金属調色に対する指定枠色"
+    },
+    {
+      "design_id": "GST2_M91",
+      "door_color_code": "FH",
+      "preferred_frame_code": "AD",
+      "allowed_frame_codes": [
+        "AD"
+      ],
+      "reason": "本体金属調色に対する指定枠色"
+    },
+    {
+      "design_id": "GST2_M91",
+      "door_color_code": "FW",
+      "preferred_frame_code": "FW",
+      "allowed_frame_codes": [
+        "FW"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M92",
+      "door_color_code": "AA",
+      "preferred_frame_code": "AA",
+      "allowed_frame_codes": [
+        "AA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M92",
+      "door_color_code": "AG",
+      "preferred_frame_code": "AG",
+      "allowed_frame_codes": [
+        "AG"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M92",
+      "door_color_code": "AK",
+      "preferred_frame_code": "AK",
+      "allowed_frame_codes": [
+        "AK"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M92",
+      "door_color_code": "BB",
+      "preferred_frame_code": "BB",
+      "allowed_frame_codes": [
+        "BB"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M92",
+      "door_color_code": "BC",
+      "preferred_frame_code": "BC",
+      "allowed_frame_codes": [
+        "BC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M92",
+      "door_color_code": "CB",
+      "preferred_frame_code": "CB",
+      "allowed_frame_codes": [
+        "CB"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M92",
+      "door_color_code": "CD",
+      "preferred_frame_code": "CD",
+      "allowed_frame_codes": [
+        "CD"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M92",
+      "door_color_code": "EC",
+      "preferred_frame_code": "EC",
+      "allowed_frame_codes": [
+        "EC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M92",
+      "door_color_code": "ED",
+      "preferred_frame_code": "ED",
+      "allowed_frame_codes": [
+        "ED"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M92",
+      "door_color_code": "FA",
+      "preferred_frame_code": "AD",
+      "allowed_frame_codes": [
+        "AD"
+      ],
+      "reason": "本体金属調色に対する指定枠色"
+    },
+    {
+      "design_id": "GST2_M92",
+      "door_color_code": "FD",
+      "preferred_frame_code": "AD",
+      "allowed_frame_codes": [
+        "AD"
+      ],
+      "reason": "本体金属調色に対する指定枠色"
+    },
+    {
+      "design_id": "GST2_M92",
+      "door_color_code": "FH",
+      "preferred_frame_code": "AD",
+      "allowed_frame_codes": [
+        "AD"
+      ],
+      "reason": "本体金属調色に対する指定枠色"
+    },
+    {
+      "design_id": "GST2_M92",
+      "door_color_code": "FW",
+      "preferred_frame_code": "FW",
+      "allowed_frame_codes": [
+        "FW"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M93",
+      "door_color_code": "AA",
+      "preferred_frame_code": "AA",
+      "allowed_frame_codes": [
+        "AA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M93",
+      "door_color_code": "AG",
+      "preferred_frame_code": "AG",
+      "allowed_frame_codes": [
+        "AG"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M93",
+      "door_color_code": "AK",
+      "preferred_frame_code": "AK",
+      "allowed_frame_codes": [
+        "AK"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M93",
+      "door_color_code": "BB",
+      "preferred_frame_code": "BB",
+      "allowed_frame_codes": [
+        "BB"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M93",
+      "door_color_code": "BC",
+      "preferred_frame_code": "BC",
+      "allowed_frame_codes": [
+        "BC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M93",
+      "door_color_code": "BD",
+      "preferred_frame_code": "AA",
+      "allowed_frame_codes": [
+        "AA"
+      ],
+      "reason": "本体ブラックウォールナットに対する指定枠色"
+    },
+    {
+      "design_id": "GST2_M93",
+      "door_color_code": "BE",
+      "preferred_frame_code": "BE",
+      "allowed_frame_codes": [
+        "BE"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M93",
+      "door_color_code": "CB",
+      "preferred_frame_code": "CB",
+      "allowed_frame_codes": [
+        "CB"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M93",
+      "door_color_code": "CD",
+      "preferred_frame_code": "CD",
+      "allowed_frame_codes": [
+        "CD"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M93",
+      "door_color_code": "EC",
+      "preferred_frame_code": "EC",
+      "allowed_frame_codes": [
+        "EC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M93",
+      "door_color_code": "ED",
+      "preferred_frame_code": "ED",
+      "allowed_frame_codes": [
+        "ED"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M93",
+      "door_color_code": "EG",
+      "preferred_frame_code": "EG",
+      "allowed_frame_codes": [
+        "EG"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M93",
+      "door_color_code": "EH",
+      "preferred_frame_code": "EH",
+      "allowed_frame_codes": [
+        "EH"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M93",
+      "door_color_code": "FA",
+      "preferred_frame_code": "AD",
+      "allowed_frame_codes": [
+        "AD"
+      ],
+      "reason": "本体金属調色に対する指定枠色"
+    },
+    {
+      "design_id": "GST2_M93",
+      "door_color_code": "FD",
+      "preferred_frame_code": "AD",
+      "allowed_frame_codes": [
+        "AD"
+      ],
+      "reason": "本体金属調色に対する指定枠色"
+    },
+    {
+      "design_id": "GST2_M93",
+      "door_color_code": "FH",
+      "preferred_frame_code": "AD",
+      "allowed_frame_codes": [
+        "AD"
+      ],
+      "reason": "本体金属調色に対する指定枠色"
+    },
+    {
+      "design_id": "GST2_M93",
+      "door_color_code": "FW",
+      "preferred_frame_code": "FW",
+      "allowed_frame_codes": [
+        "FW"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M93",
+      "door_color_code": "HA",
+      "preferred_frame_code": "HA",
+      "allowed_frame_codes": [
+        "HA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M93",
+      "door_color_code": "HB",
+      "preferred_frame_code": "HB",
+      "allowed_frame_codes": [
+        "HB"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M93",
+      "door_color_code": "HC",
+      "preferred_frame_code": "HC",
+      "allowed_frame_codes": [
+        "HC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_M94",
+      "door_color_code": "AA",
+      "preferred_frame_code": "XA",
+      "allowed_frame_codes": [
+        "XA"
+      ],
+      "reason": "M94：室内側ナチュラルホワイト・k2片開き"
+    },
+    {
+      "design_id": "GST2_M94",
+      "door_color_code": "FA",
+      "preferred_frame_code": "XB",
+      "allowed_frame_codes": [
+        "XB"
+      ],
+      "reason": "M94：室内側ナチュラルホワイト・k2片開き"
+    },
+    {
+      "design_id": "GST2_P11",
+      "door_color_code": "BA",
+      "preferred_frame_code": "BA",
+      "allowed_frame_codes": [
+        "BA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P11",
+      "door_color_code": "BB",
+      "preferred_frame_code": "BB",
+      "allowed_frame_codes": [
+        "BB"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P11",
+      "door_color_code": "BC",
+      "preferred_frame_code": "BC",
+      "allowed_frame_codes": [
+        "BC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P11",
+      "door_color_code": "BE",
+      "preferred_frame_code": "BE",
+      "allowed_frame_codes": [
+        "BE"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P11",
+      "door_color_code": "CA",
+      "preferred_frame_code": "CA",
+      "allowed_frame_codes": [
+        "CA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P11",
+      "door_color_code": "CB",
+      "preferred_frame_code": "CB",
+      "allowed_frame_codes": [
+        "CB"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P11",
+      "door_color_code": "CD",
+      "preferred_frame_code": "CD",
+      "allowed_frame_codes": [
+        "CD"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P11",
+      "door_color_code": "CE",
+      "preferred_frame_code": "CE",
+      "allowed_frame_codes": [
+        "CE"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P11",
+      "door_color_code": "CF",
+      "preferred_frame_code": "CF",
+      "allowed_frame_codes": [
+        "CF"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P11",
+      "door_color_code": "EA",
+      "preferred_frame_code": "EA",
+      "allowed_frame_codes": [
+        "EA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P11",
+      "door_color_code": "ED",
+      "preferred_frame_code": "ED",
+      "allowed_frame_codes": [
+        "ED"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P11",
+      "door_color_code": "HC",
+      "preferred_frame_code": "HC",
+      "allowed_frame_codes": [
+        "HC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P11",
+      "door_color_code": "HD",
+      "preferred_frame_code": "HD",
+      "allowed_frame_codes": [
+        "HD"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P12",
+      "door_color_code": "BA",
+      "preferred_frame_code": "BA",
+      "allowed_frame_codes": [
+        "BA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P12",
+      "door_color_code": "BB",
+      "preferred_frame_code": "BB",
+      "allowed_frame_codes": [
+        "BB"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P12",
+      "door_color_code": "BC",
+      "preferred_frame_code": "BC",
+      "allowed_frame_codes": [
+        "BC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P12",
+      "door_color_code": "BE",
+      "preferred_frame_code": "BE",
+      "allowed_frame_codes": [
+        "BE"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P12",
+      "door_color_code": "CA",
+      "preferred_frame_code": "CA",
+      "allowed_frame_codes": [
+        "CA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P12",
+      "door_color_code": "CB",
+      "preferred_frame_code": "CB",
+      "allowed_frame_codes": [
+        "CB"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P12",
+      "door_color_code": "CD",
+      "preferred_frame_code": "CD",
+      "allowed_frame_codes": [
+        "CD"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P12",
+      "door_color_code": "CE",
+      "preferred_frame_code": "CE",
+      "allowed_frame_codes": [
+        "CE"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P12",
+      "door_color_code": "CF",
+      "preferred_frame_code": "CF",
+      "allowed_frame_codes": [
+        "CF"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P12",
+      "door_color_code": "EA",
+      "preferred_frame_code": "EA",
+      "allowed_frame_codes": [
+        "EA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P12",
+      "door_color_code": "ED",
+      "preferred_frame_code": "ED",
+      "allowed_frame_codes": [
+        "ED"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P12",
+      "door_color_code": "HC",
+      "preferred_frame_code": "HC",
+      "allowed_frame_codes": [
+        "HC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P12",
+      "door_color_code": "HD",
+      "preferred_frame_code": "HD",
+      "allowed_frame_codes": [
+        "HD"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P13",
+      "door_color_code": "BA",
+      "preferred_frame_code": "BA",
+      "allowed_frame_codes": [
+        "BA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P13",
+      "door_color_code": "BB",
+      "preferred_frame_code": "BB",
+      "allowed_frame_codes": [
+        "BB"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P13",
+      "door_color_code": "BC",
+      "preferred_frame_code": "BC",
+      "allowed_frame_codes": [
+        "BC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P13",
+      "door_color_code": "BE",
+      "preferred_frame_code": "BE",
+      "allowed_frame_codes": [
+        "BE"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P13",
+      "door_color_code": "CA",
+      "preferred_frame_code": "CA",
+      "allowed_frame_codes": [
+        "CA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P13",
+      "door_color_code": "CB",
+      "preferred_frame_code": "CB",
+      "allowed_frame_codes": [
+        "CB"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P13",
+      "door_color_code": "CC",
+      "preferred_frame_code": "CC",
+      "allowed_frame_codes": [
+        "CC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P13",
+      "door_color_code": "CD",
+      "preferred_frame_code": "CD",
+      "allowed_frame_codes": [
+        "CD"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P13",
+      "door_color_code": "EA",
+      "preferred_frame_code": "EA",
+      "allowed_frame_codes": [
+        "EA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P13",
+      "door_color_code": "ED",
+      "preferred_frame_code": "ED",
+      "allowed_frame_codes": [
+        "ED"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P13",
+      "door_color_code": "HC",
+      "preferred_frame_code": "HC",
+      "allowed_frame_codes": [
+        "HC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P14",
+      "door_color_code": "BA",
+      "preferred_frame_code": "BA",
+      "allowed_frame_codes": [
+        "BA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P14",
+      "door_color_code": "BB",
+      "preferred_frame_code": "BB",
+      "allowed_frame_codes": [
+        "BB"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P14",
+      "door_color_code": "BC",
+      "preferred_frame_code": "BC",
+      "allowed_frame_codes": [
+        "BC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P14",
+      "door_color_code": "BE",
+      "preferred_frame_code": "BE",
+      "allowed_frame_codes": [
+        "BE"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P14",
+      "door_color_code": "CA",
+      "preferred_frame_code": "CA",
+      "allowed_frame_codes": [
+        "CA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P14",
+      "door_color_code": "CB",
+      "preferred_frame_code": "CB",
+      "allowed_frame_codes": [
+        "CB"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P14",
+      "door_color_code": "CD",
+      "preferred_frame_code": "CD",
+      "allowed_frame_codes": [
+        "CD"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P14",
+      "door_color_code": "CE",
+      "preferred_frame_code": "CE",
+      "allowed_frame_codes": [
+        "CE"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P14",
+      "door_color_code": "CF",
+      "preferred_frame_code": "CF",
+      "allowed_frame_codes": [
+        "CF"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P14",
+      "door_color_code": "EA",
+      "preferred_frame_code": "EA",
+      "allowed_frame_codes": [
+        "EA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P14",
+      "door_color_code": "ED",
+      "preferred_frame_code": "ED",
+      "allowed_frame_codes": [
+        "ED"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P14",
+      "door_color_code": "HC",
+      "preferred_frame_code": "HC",
+      "allowed_frame_codes": [
+        "HC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P14",
+      "door_color_code": "HD",
+      "preferred_frame_code": "HD",
+      "allowed_frame_codes": [
+        "HD"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P15",
+      "door_color_code": "BA",
+      "preferred_frame_code": "BA",
+      "allowed_frame_codes": [
+        "BA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P15",
+      "door_color_code": "BB",
+      "preferred_frame_code": "BB",
+      "allowed_frame_codes": [
+        "BB"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P15",
+      "door_color_code": "BC",
+      "preferred_frame_code": "BC",
+      "allowed_frame_codes": [
+        "BC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P15",
+      "door_color_code": "BE",
+      "preferred_frame_code": "BE",
+      "allowed_frame_codes": [
+        "BE"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P15",
+      "door_color_code": "CA",
+      "preferred_frame_code": "CA",
+      "allowed_frame_codes": [
+        "CA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P15",
+      "door_color_code": "CB",
+      "preferred_frame_code": "CB",
+      "allowed_frame_codes": [
+        "CB"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P15",
+      "door_color_code": "CC",
+      "preferred_frame_code": "CC",
+      "allowed_frame_codes": [
+        "CC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P15",
+      "door_color_code": "CD",
+      "preferred_frame_code": "CD",
+      "allowed_frame_codes": [
+        "CD"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P15",
+      "door_color_code": "EA",
+      "preferred_frame_code": "EA",
+      "allowed_frame_codes": [
+        "EA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P15",
+      "door_color_code": "ED",
+      "preferred_frame_code": "ED",
+      "allowed_frame_codes": [
+        "ED"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P15",
+      "door_color_code": "HC",
+      "preferred_frame_code": "HC",
+      "allowed_frame_codes": [
+        "HC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P16",
+      "door_color_code": "BA",
+      "preferred_frame_code": "BA",
+      "allowed_frame_codes": [
+        "BA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P16",
+      "door_color_code": "BB",
+      "preferred_frame_code": "BB",
+      "allowed_frame_codes": [
+        "BB"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P16",
+      "door_color_code": "BC",
+      "preferred_frame_code": "BC",
+      "allowed_frame_codes": [
+        "BC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P16",
+      "door_color_code": "BE",
+      "preferred_frame_code": "BE",
+      "allowed_frame_codes": [
+        "BE"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P16",
+      "door_color_code": "CA",
+      "preferred_frame_code": "CA",
+      "allowed_frame_codes": [
+        "CA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P16",
+      "door_color_code": "CB",
+      "preferred_frame_code": "CB",
+      "allowed_frame_codes": [
+        "CB"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P16",
+      "door_color_code": "CC",
+      "preferred_frame_code": "CC",
+      "allowed_frame_codes": [
+        "CC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P16",
+      "door_color_code": "CD",
+      "preferred_frame_code": "CD",
+      "allowed_frame_codes": [
+        "CD"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P16",
+      "door_color_code": "EA",
+      "preferred_frame_code": "EA",
+      "allowed_frame_codes": [
+        "EA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P16",
+      "door_color_code": "ED",
+      "preferred_frame_code": "ED",
+      "allowed_frame_codes": [
+        "ED"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P16",
+      "door_color_code": "HC",
+      "preferred_frame_code": "HC",
+      "allowed_frame_codes": [
+        "HC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P17",
+      "door_color_code": "BA",
+      "preferred_frame_code": "BA",
+      "allowed_frame_codes": [
+        "BA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P17",
+      "door_color_code": "BB",
+      "preferred_frame_code": "BB",
+      "allowed_frame_codes": [
+        "BB"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P17",
+      "door_color_code": "BC",
+      "preferred_frame_code": "BC",
+      "allowed_frame_codes": [
+        "BC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P17",
+      "door_color_code": "BE",
+      "preferred_frame_code": "BE",
+      "allowed_frame_codes": [
+        "BE"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P17",
+      "door_color_code": "CA",
+      "preferred_frame_code": "CA",
+      "allowed_frame_codes": [
+        "CA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P17",
+      "door_color_code": "CB",
+      "preferred_frame_code": "CB",
+      "allowed_frame_codes": [
+        "CB"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P17",
+      "door_color_code": "CC",
+      "preferred_frame_code": "CC",
+      "allowed_frame_codes": [
+        "CC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P17",
+      "door_color_code": "CD",
+      "preferred_frame_code": "CD",
+      "allowed_frame_codes": [
+        "CD"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P17",
+      "door_color_code": "EA",
+      "preferred_frame_code": "EA",
+      "allowed_frame_codes": [
+        "EA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P17",
+      "door_color_code": "ED",
+      "preferred_frame_code": "ED",
+      "allowed_frame_codes": [
+        "ED"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P17",
+      "door_color_code": "HC",
+      "preferred_frame_code": "HC",
+      "allowed_frame_codes": [
+        "HC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P18",
+      "door_color_code": "BA",
+      "preferred_frame_code": "BA",
+      "allowed_frame_codes": [
+        "BA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P18",
+      "door_color_code": "BB",
+      "preferred_frame_code": "BB",
+      "allowed_frame_codes": [
+        "BB"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P18",
+      "door_color_code": "BC",
+      "preferred_frame_code": "BC",
+      "allowed_frame_codes": [
+        "BC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P18",
+      "door_color_code": "BE",
+      "preferred_frame_code": "BE",
+      "allowed_frame_codes": [
+        "BE"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P18",
+      "door_color_code": "CA",
+      "preferred_frame_code": "CA",
+      "allowed_frame_codes": [
+        "CA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P18",
+      "door_color_code": "CB",
+      "preferred_frame_code": "CB",
+      "allowed_frame_codes": [
+        "CB"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P18",
+      "door_color_code": "CD",
+      "preferred_frame_code": "CD",
+      "allowed_frame_codes": [
+        "CD"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P18",
+      "door_color_code": "EA",
+      "preferred_frame_code": "EA",
+      "allowed_frame_codes": [
+        "EA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P18",
+      "door_color_code": "ED",
+      "preferred_frame_code": "ED",
+      "allowed_frame_codes": [
+        "ED"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P19",
+      "door_color_code": "BA",
+      "preferred_frame_code": "BA",
+      "allowed_frame_codes": [
+        "BA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P19",
+      "door_color_code": "BB",
+      "preferred_frame_code": "BB",
+      "allowed_frame_codes": [
+        "BB"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P19",
+      "door_color_code": "BC",
+      "preferred_frame_code": "BC",
+      "allowed_frame_codes": [
+        "BC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P19",
+      "door_color_code": "CA",
+      "preferred_frame_code": "CA",
+      "allowed_frame_codes": [
+        "CA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P19",
+      "door_color_code": "CB",
+      "preferred_frame_code": "CB",
+      "allowed_frame_codes": [
+        "CB"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P19",
+      "door_color_code": "CC",
+      "preferred_frame_code": "CC",
+      "allowed_frame_codes": [
+        "CC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P19",
+      "door_color_code": "CE",
+      "preferred_frame_code": "CE",
+      "allowed_frame_codes": [
+        "CE"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P19",
+      "door_color_code": "CF",
+      "preferred_frame_code": "CF",
+      "allowed_frame_codes": [
+        "CF"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P19",
+      "door_color_code": "ED",
+      "preferred_frame_code": "ED",
+      "allowed_frame_codes": [
+        "ED"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P19",
+      "door_color_code": "HC",
+      "preferred_frame_code": "HC",
+      "allowed_frame_codes": [
+        "HC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P19",
+      "door_color_code": "HD",
+      "preferred_frame_code": "HD",
+      "allowed_frame_codes": [
+        "HD"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P20",
+      "door_color_code": "BA",
+      "preferred_frame_code": "BA",
+      "allowed_frame_codes": [
+        "BA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P20",
+      "door_color_code": "BB",
+      "preferred_frame_code": "BB",
+      "allowed_frame_codes": [
+        "BB"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P20",
+      "door_color_code": "BC",
+      "preferred_frame_code": "BC",
+      "allowed_frame_codes": [
+        "BC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P20",
+      "door_color_code": "CA",
+      "preferred_frame_code": "CA",
+      "allowed_frame_codes": [
+        "CA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P20",
+      "door_color_code": "CB",
+      "preferred_frame_code": "CB",
+      "allowed_frame_codes": [
+        "CB"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P20",
+      "door_color_code": "CC",
+      "preferred_frame_code": "CC",
+      "allowed_frame_codes": [
+        "CC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P20",
+      "door_color_code": "CE",
+      "preferred_frame_code": "CE",
+      "allowed_frame_codes": [
+        "CE"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P20",
+      "door_color_code": "CF",
+      "preferred_frame_code": "CF",
+      "allowed_frame_codes": [
+        "CF"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P20",
+      "door_color_code": "ED",
+      "preferred_frame_code": "ED",
+      "allowed_frame_codes": [
+        "ED"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P20",
+      "door_color_code": "HC",
+      "preferred_frame_code": "HC",
+      "allowed_frame_codes": [
+        "HC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P20",
+      "door_color_code": "HD",
+      "preferred_frame_code": "HD",
+      "allowed_frame_codes": [
+        "HD"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P21",
+      "door_color_code": "BA",
+      "preferred_frame_code": "BA",
+      "allowed_frame_codes": [
+        "BA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P21",
+      "door_color_code": "BB",
+      "preferred_frame_code": "BB",
+      "allowed_frame_codes": [
+        "BB"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P21",
+      "door_color_code": "BC",
+      "preferred_frame_code": "BC",
+      "allowed_frame_codes": [
+        "BC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P21",
+      "door_color_code": "CA",
+      "preferred_frame_code": "CA",
+      "allowed_frame_codes": [
+        "CA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P21",
+      "door_color_code": "CB",
+      "preferred_frame_code": "CB",
+      "allowed_frame_codes": [
+        "CB"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P21",
+      "door_color_code": "CC",
+      "preferred_frame_code": "CC",
+      "allowed_frame_codes": [
+        "CC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P21",
+      "door_color_code": "CE",
+      "preferred_frame_code": "CE",
+      "allowed_frame_codes": [
+        "CE"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P21",
+      "door_color_code": "CF",
+      "preferred_frame_code": "CF",
+      "allowed_frame_codes": [
+        "CF"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P21",
+      "door_color_code": "ED",
+      "preferred_frame_code": "ED",
+      "allowed_frame_codes": [
+        "ED"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P21",
+      "door_color_code": "HC",
+      "preferred_frame_code": "HC",
+      "allowed_frame_codes": [
+        "HC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P21",
+      "door_color_code": "HD",
+      "preferred_frame_code": "HD",
+      "allowed_frame_codes": [
+        "HD"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P81",
+      "door_color_code": "BA",
+      "preferred_frame_code": "BA",
+      "allowed_frame_codes": [
+        "BA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P81",
+      "door_color_code": "BB",
+      "preferred_frame_code": "BB",
+      "allowed_frame_codes": [
+        "BB"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P81",
+      "door_color_code": "BC",
+      "preferred_frame_code": "BC",
+      "allowed_frame_codes": [
+        "BC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P81",
+      "door_color_code": "BE",
+      "preferred_frame_code": "BE",
+      "allowed_frame_codes": [
+        "BE"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P81",
+      "door_color_code": "CA",
+      "preferred_frame_code": "CA",
+      "allowed_frame_codes": [
+        "CA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P81",
+      "door_color_code": "CB",
+      "preferred_frame_code": "CB",
+      "allowed_frame_codes": [
+        "CB"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P81",
+      "door_color_code": "CC",
+      "preferred_frame_code": "CC",
+      "allowed_frame_codes": [
+        "CC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P81",
+      "door_color_code": "CD",
+      "preferred_frame_code": "CD",
+      "allowed_frame_codes": [
+        "CD"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P81",
+      "door_color_code": "EA",
+      "preferred_frame_code": "EA",
+      "allowed_frame_codes": [
+        "EA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P81",
+      "door_color_code": "ED",
+      "preferred_frame_code": "ED",
+      "allowed_frame_codes": [
+        "ED"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P81",
+      "door_color_code": "HC",
+      "preferred_frame_code": "HC",
+      "allowed_frame_codes": [
+        "HC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P82",
+      "door_color_code": "BA",
+      "preferred_frame_code": "BA",
+      "allowed_frame_codes": [
+        "BA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P82",
+      "door_color_code": "BB",
+      "preferred_frame_code": "BB",
+      "allowed_frame_codes": [
+        "BB"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P82",
+      "door_color_code": "BC",
+      "preferred_frame_code": "BC",
+      "allowed_frame_codes": [
+        "BC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P82",
+      "door_color_code": "BE",
+      "preferred_frame_code": "BE",
+      "allowed_frame_codes": [
+        "BE"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P82",
+      "door_color_code": "CA",
+      "preferred_frame_code": "CA",
+      "allowed_frame_codes": [
+        "CA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P82",
+      "door_color_code": "CB",
+      "preferred_frame_code": "CB",
+      "allowed_frame_codes": [
+        "CB"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P82",
+      "door_color_code": "CC",
+      "preferred_frame_code": "CC",
+      "allowed_frame_codes": [
+        "CC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P82",
+      "door_color_code": "CD",
+      "preferred_frame_code": "CD",
+      "allowed_frame_codes": [
+        "CD"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P82",
+      "door_color_code": "EA",
+      "preferred_frame_code": "EA",
+      "allowed_frame_codes": [
+        "EA"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P82",
+      "door_color_code": "ED",
+      "preferred_frame_code": "ED",
+      "allowed_frame_codes": [
+        "ED"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_P82",
+      "door_color_code": "HC",
+      "preferred_frame_code": "HC",
+      "allowed_frame_codes": [
+        "HC"
+      ],
+      "reason": "本体同色を初期値（受発注資料の枠色に存在）"
+    },
+    {
+      "design_id": "GST2_S11",
+      "door_color_code": "FA",
+      "preferred_frame_code": "AD",
+      "allowed_frame_codes": [
+        "AD"
+      ],
+      "reason": "ガラス調デザインの枠指定色"
+    },
+    {
+      "design_id": "GST2_S11",
+      "door_color_code": "FD",
+      "preferred_frame_code": "AD",
+      "allowed_frame_codes": [
+        "AD"
+      ],
+      "reason": "ガラス調デザインの枠指定色"
+    },
+    {
+      "design_id": "GST2_S11",
+      "door_color_code": "FH",
+      "preferred_frame_code": "AD",
+      "allowed_frame_codes": [
+        "AD"
+      ],
+      "reason": "ガラス調デザインの枠指定色"
+    },
+    {
+      "design_id": "GST2_S11",
+      "door_color_code": "FW",
+      "preferred_frame_code": "AD",
+      "allowed_frame_codes": [
+        "AD"
+      ],
+      "reason": "ガラス調デザインの枠指定色"
+    },
+    {
+      "design_id": "GST2_S11",
+      "door_color_code": "HA",
+      "preferred_frame_code": "AD",
+      "allowed_frame_codes": [
+        "AD"
+      ],
+      "reason": "ガラス調デザインの枠指定色"
+    },
+    {
+      "design_id": "GST2_S11",
+      "door_color_code": "HB",
+      "preferred_frame_code": "AD",
+      "allowed_frame_codes": [
+        "AD"
+      ],
+      "reason": "ガラス調デザインの枠指定色"
+    },
+    {
+      "design_id": "GST2_S12",
+      "door_color_code": "AA",
+      "preferred_frame_code": "AA",
+      "allowed_frame_codes": [
+        "AA"
+      ],
+      "reason": "ガラス調デザインの枠指定色"
+    },
+    {
+      "design_id": "GST2_S12",
+      "door_color_code": "BD",
+      "preferred_frame_code": "AA",
+      "allowed_frame_codes": [
+        "AA"
+      ],
+      "reason": "ガラス調デザインの枠指定色"
+    },
+    {
+      "design_id": "GST2_S12",
+      "door_color_code": "FD",
+      "preferred_frame_code": "AA",
+      "allowed_frame_codes": [
+        "AA"
+      ],
+      "reason": "ガラス調デザインの枠指定色"
+    },
+    {
+      "design_id": "GST2_S12",
+      "door_color_code": "FH",
+      "preferred_frame_code": "AA",
+      "allowed_frame_codes": [
+        "AA"
+      ],
+      "reason": "ガラス調デザインの枠指定色"
+    },
+    {
+      "design_id": "GST2_S12",
+      "door_color_code": "HA",
+      "preferred_frame_code": "AA",
+      "allowed_frame_codes": [
+        "AA"
+      ],
+      "reason": "ガラス調デザインの枠指定色"
+    },
+    {
+      "design_id": "GST2_S12",
+      "door_color_code": "HB",
+      "preferred_frame_code": "AA",
+      "allowed_frame_codes": [
+        "AA"
+      ],
+      "reason": "ガラス調デザインの枠指定色"
+    },
+    {
+      "design_id": "GST2_S13",
+      "door_color_code": "FA",
+      "preferred_frame_code": "AD",
+      "allowed_frame_codes": [
+        "AD"
+      ],
+      "reason": "ガラス調デザインの枠指定色"
+    },
+    {
+      "design_id": "GST2_S13",
+      "door_color_code": "FD",
+      "preferred_frame_code": "AD",
+      "allowed_frame_codes": [
+        "AD"
+      ],
+      "reason": "ガラス調デザインの枠指定色"
+    },
+    {
+      "design_id": "GST2_S13",
+      "door_color_code": "FH",
+      "preferred_frame_code": "AD",
+      "allowed_frame_codes": [
+        "AD"
+      ],
+      "reason": "ガラス調デザインの枠指定色"
+    },
+    {
+      "design_id": "GST2_S13",
+      "door_color_code": "FW",
+      "preferred_frame_code": "AD",
+      "allowed_frame_codes": [
+        "AD"
+      ],
+      "reason": "ガラス調デザインの枠指定色"
+    },
+    {
+      "design_id": "GST2_S13",
+      "door_color_code": "HA",
+      "preferred_frame_code": "AD",
+      "allowed_frame_codes": [
+        "AD"
+      ],
+      "reason": "ガラス調デザインの枠指定色"
+    },
+    {
+      "design_id": "GST2_S13",
+      "door_color_code": "HB",
+      "preferred_frame_code": "AD",
+      "allowed_frame_codes": [
+        "AD"
+      ],
+      "reason": "ガラス調デザインの枠指定色"
+    },
+    {
+      "design_id": "GST2_S14",
+      "door_color_code": "AA",
+      "preferred_frame_code": "AA",
+      "allowed_frame_codes": [
+        "AA"
+      ],
+      "reason": "ガラス調デザインの枠指定色"
+    },
+    {
+      "design_id": "GST2_S14",
+      "door_color_code": "BD",
+      "preferred_frame_code": "AA",
+      "allowed_frame_codes": [
+        "AA"
+      ],
+      "reason": "ガラス調デザインの枠指定色"
+    },
+    {
+      "design_id": "GST2_S14",
+      "door_color_code": "FD",
+      "preferred_frame_code": "AA",
+      "allowed_frame_codes": [
+        "AA"
+      ],
+      "reason": "ガラス調デザインの枠指定色"
+    },
+    {
+      "design_id": "GST2_S14",
+      "door_color_code": "FH",
+      "preferred_frame_code": "AA",
+      "allowed_frame_codes": [
+        "AA"
+      ],
+      "reason": "ガラス調デザインの枠指定色"
+    },
+    {
+      "design_id": "GST2_S14",
+      "door_color_code": "HA",
+      "preferred_frame_code": "AA",
+      "allowed_frame_codes": [
+        "AA"
+      ],
+      "reason": "ガラス調デザインの枠指定色"
+    },
+    {
+      "design_id": "GST2_S14",
+      "door_color_code": "HB",
+      "preferred_frame_code": "AA",
+      "allowed_frame_codes": [
+        "AA"
+      ],
+      "reason": "ガラス調デザインの枠指定色"
+    },
+    {
+      "design_id": "GST2_S17",
+      "door_color_code": "FA",
+      "preferred_frame_code": "AD",
+      "allowed_frame_codes": [
+        "AD"
+      ],
+      "reason": "ガラス調デザインの枠指定色"
+    },
+    {
+      "design_id": "GST2_S17",
+      "door_color_code": "FD",
+      "preferred_frame_code": "AD",
+      "allowed_frame_codes": [
+        "AD"
+      ],
+      "reason": "ガラス調デザインの枠指定色"
+    },
+    {
+      "design_id": "GST2_S17",
+      "door_color_code": "FH",
+      "preferred_frame_code": "AD",
+      "allowed_frame_codes": [
+        "AD"
+      ],
+      "reason": "ガラス調デザインの枠指定色"
+    },
+    {
+      "design_id": "GST2_S17",
+      "door_color_code": "FW",
+      "preferred_frame_code": "AD",
+      "allowed_frame_codes": [
+        "AD"
+      ],
+      "reason": "ガラス調デザインの枠指定色"
+    },
+    {
+      "design_id": "GST2_S18",
+      "door_color_code": "AA",
+      "preferred_frame_code": "AA",
+      "allowed_frame_codes": [
+        "AA"
+      ],
+      "reason": "ガラス調デザインの枠指定色"
+    },
+    {
+      "design_id": "GST2_S18",
+      "door_color_code": "BD",
+      "preferred_frame_code": "AA",
+      "allowed_frame_codes": [
+        "AA"
+      ],
+      "reason": "ガラス調デザインの枠指定色"
+    },
+    {
+      "design_id": "GST2_S18",
+      "door_color_code": "FD",
+      "preferred_frame_code": "AA",
+      "allowed_frame_codes": [
+        "AA"
+      ],
+      "reason": "ガラス調デザインの枠指定色"
+    },
+    {
+      "design_id": "GST2_S18",
+      "door_color_code": "FH",
+      "preferred_frame_code": "AA",
+      "allowed_frame_codes": [
+        "AA"
+      ],
+      "reason": "ガラス調デザインの枠指定色"
+    },
+    {
+      "design_id": "GST2_S19",
+      "door_color_code": "FA",
+      "preferred_frame_code": "AD",
+      "allowed_frame_codes": [
+        "AD"
+      ],
+      "reason": "ガラス調デザインの枠指定色"
+    },
+    {
+      "design_id": "GST2_S19",
+      "door_color_code": "HA",
+      "preferred_frame_code": "AD",
+      "allowed_frame_codes": [
+        "AD"
+      ],
+      "reason": "ガラス調デザインの枠指定色"
+    },
+    {
+      "design_id": "GST2_S19",
+      "door_color_code": "HB",
+      "preferred_frame_code": "AD",
+      "allowed_frame_codes": [
+        "AD"
+      ],
+      "reason": "ガラス調デザインの枠指定色"
+    },
+    {
+      "design_id": "GST2_S20",
+      "door_color_code": "HA",
+      "preferred_frame_code": "AA",
+      "allowed_frame_codes": [
+        "AA"
+      ],
+      "reason": "ガラス調デザインの枠指定色"
+    },
+    {
+      "design_id": "GST2_S20",
+      "door_color_code": "HB",
+      "preferred_frame_code": "AA",
+      "allowed_frame_codes": [
+        "AA"
+      ],
+      "reason": "ガラス調デザインの枠指定色"
+    }
+  ],
+  "option_lookup_aliases": [
+    {
+      "value": "manual",
+      "label": "手動",
+      "selector": {
+        "lock_system_id": "GST2_LOCK_MANUAL"
+      },
+      "evidence": [
+        "P5_lock_system_master",
+        "P7_lock_option_map"
+      ]
+    },
+    {
+      "value": "familock",
+      "label": "FamiLock",
+      "selector": {
+        "lock_system_id": "GST2_LOCK_FAMILOCK"
+      },
+      "evidence": [
+        "P5_lock_system_master",
+        "P7_lock_option_map"
+      ]
+    },
+    {
+      "value": "face_authentication",
+      "label": "顔認証",
+      "selector": {
+        "lock_system_id": "GST2_LOCK_FACE"
+      },
+      "evidence": [
+        "P5_lock_system_master",
+        "P7_lock_option_map"
+      ]
+    }
+  ],
+  "controlled_unresolved": 6,
+  "content_qa195": "CARRY_FORWARD_BYTES_UNCHANGED",
+  "formal_scope_qa18": "CARRY_FORWARD_BYTES_UNCHANGED",
+  "gate": "PREPARED_NOT_APPROVED",
+  "automatic_bom": false
+}

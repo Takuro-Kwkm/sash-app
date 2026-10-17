@@ -1,0 +1,11 @@
+{
+  "decision": "APPROVED",
+  "reviewer": "USER",
+  "decision_ref": "CURRENT_CONVERSATION_EXPLICIT_USER_GIESTA2_STAGE11_12_20261017",
+  "authorization_kind": "EXPLICIT_USER_SCOPE",
+  "review_payload_sha256": "929aac882b4279b44a6b54143ea7c3285a23c10e101c03965bd712713b1b6145",
+  "work_id": "GIESTA2_R5_RUNTIME_UI_ADOPTION_R14_20261017",
+  "product_id": "NATIVE_REGISTRY:LIXIL::ジエスタ2",
+  "imported_user_statement": "11承認Main統合、12本番配信まで行ってください",
+  "generated_by_workflow": false
+}

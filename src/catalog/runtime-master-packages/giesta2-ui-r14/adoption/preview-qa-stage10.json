@@ -1,0 +1,65 @@
+{
+  "schema": "GIESTA2_STAGE10_PREVIEW_QA_COMPLETION_R14",
+  "status": "PASS",
+  "stage": 10,
+  "stage_name": "Preview QA",
+  "completed_at": "2026-10-17T13:27:09.384099+00:00",
+  "authority": {
+    "central_current_head": "b5a46f4bd01054cc8b0f35beec72c07a58d8bf3f",
+    "consumer_base_head": "31f2b687ff9ca7e2e4b504c9d3d2756f7100a0dd",
+    "consumer_candidate_commit": "97d89f8dea5064b782c85a3999aaad29f82169ee",
+    "formal_version": "v0.8-R5",
+    "formal_master_sha256": "f1922b6396ae30cc2c9bd60ece5866fe935fc116eec91f830c83ee45e3dd55a6",
+    "predecessor_candidate": "R13"
+  },
+  "candidate": {
+    "revision": "GIESTA2_R5_DIMENSION_REVIEW_PREVIEW_R14_20261017",
+    "index_sha256": "3f60a44ef7d67691260093abaac199490b485b77c11dad773a55bc06f11d2502",
+    "module_sha256": "6ad6f375621a762b6dd118e773d3d9fbfbe15ab1abcc339835daaa35e5164a53",
+    "drive_account": "koryu06@gmail.com",
+    "drive_folder_id": "16uPFbdAcgcRcxSq7KLyum1NlhU6Clxx7",
+    "index_file_id": "1-I730d4pVJ0mainll5HFhDCk2VlybFrX",
+    "module_file_id": "1EcK0e4n0TMDpeTRiILdQbjE2wyME3RaG",
+    "drive_readback_sha256_match": true
+  },
+  "preservation": {
+    "r13_candidate_changed": false,
+    "r14_files_changed_from_r13": [
+      "candidate/index.json",
+      "candidate/candidates/module.json"
+    ],
+    "formal_master_changed": false,
+    "controlled_unresolved_count": 6,
+    "carried_content_qa": {
+      "status": "PASS",
+      "passed": 195,
+      "failed": 0,
+      "sha256": "16be6ae038fa3a9454b3b31deee09c6d4545c623066ab590bd2b8611619dfd21"
+    }
+  },
+  "qa": {
+    "lint": "PASS",
+    "typecheck": "PASS",
+    "repository_tests": {
+      "passed": 740,
+      "failed": 0
+    },
+    "runtime_cases": {
+      "passed": 12,
+      "failed": 0
+    },
+    "browser_cases": {
+      "passed": 7,
+      "failed": 0,
+      "console_errors": 0
+    },
+    "runtime_report_sha256": "d9916d4ceb12b9fb62a519dfc1ad7350273da8640ae5ae1b766c853e0cd1f320",
+    "browser_report_sha256": "61af611630ec51a747da75fae54147cf1c6aa522db3ec5fb44be2946c9f35060"
+  },
+  "scope_boundary": {
+    "stage_11_merge": false,
+    "formal_adoption": false,
+    "production_release": false,
+    "automatic_manufacturing_or_pricing": false
+  }
+}
