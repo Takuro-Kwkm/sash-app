@@ -80,8 +80,7 @@
     "Common Release Contract",
     "Production Connection EW",
     "Actual New Product Master Build",
-    "EW Output Successor",
-    "Adopted App Production Release"
+    "EW Output Successor"
   ],
   "native_paths": [
     ".github/workflows/app-production-hotfix.yml",
