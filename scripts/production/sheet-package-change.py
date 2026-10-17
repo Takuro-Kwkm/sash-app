@@ -80,7 +80,8 @@ def baseline(c, profile):
     adapter = json_adapter(c, profile)
     if adapter:
         row = adapter.baseline(c, profile)
-        return json.loads(verified(c["baseline_live_manifest"])), row
+        manifest = json.loads(verified(c["baseline_live_manifest"]))
+        return {**manifest, "package_version": manifest.get("formal_revision", manifest.get("package_version"))}, row
     from harness.production import native_registry, connector_document
     row = native_registry(json.loads(verified(c['native_registry'])), profile['manufacturer'], profile['registry_series'])
     manifest = json.loads(verified(c['baseline_manifest']))

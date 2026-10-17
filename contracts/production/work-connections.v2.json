@@ -395,7 +395,7 @@
       "resume_selector": "work_id + immutable spec + source/authoring/authority/QA hashes",
       "change_profile": {
         "path": "contracts/production/giesta2-json-change-profile.v1.json",
-        "sha256": "d39ee587edf746597dc577b36a493ee96d601ae171a0d777b3e64f6c79eef3cc"
+        "sha256": "0d6a999dcae082d33355615982cb29e324ca05c07dbdb7cc9c52a835c820fdc7"
       },
       "build_profile": {
         "profile_id": "sash-giesta2-existing-formal-successor-v1",
@@ -406,7 +406,7 @@
       },
       "formal_profile": {
         "path": "contracts/production/giesta2-json-formal-profile.v1.json",
-        "sha256": "e0dfe3c7e6dd5431d687bf908523d98f34be9eb9d58ca6cf9e22e0135c0dc589"
+        "sha256": "b70972cece030fdc2349d6c88282f777a65ae4f34a7907d9494fae87b1d3f875"
       }
     },
     {
