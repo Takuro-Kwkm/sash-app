@@ -15,7 +15,7 @@ def validate(root=ROOT):
    selection=json.loads((root/'contracts/production/current-authority-successor.json').read_text())
    record=json.loads((root/selection['path']).read_text());scope=json.loads((root/record['native_scope']['path']).read_text())
    result=native_ui_scope(central,root,record)
-   return dict(result,scope_id=scope['schema'],authorized_paths=scope['allowed_paths'],verified_unchanged_sha256=scope['protected_sha256'],deployment='NOT_EXECUTED')
+   return dict(result,errors=[],scope_id=scope['schema'],authorized_paths=scope['allowed_paths'],verified_unchanged_sha256=scope['protected_sha256'],deployment='NOT_EXECUTED')
  except Exception as e:return {'status':'FAIL_CLOSED','errors':[str(e)],'authorized_paths':[],'verified_unchanged_sha256':{},'deployment':'NOT_EXECUTED'}
 def main():
  p=argparse.ArgumentParser();p.add_argument('--predecessor');p.add_argument('--parent');p.add_argument('--transport-predecessor');a=p.parse_args();r=validate()

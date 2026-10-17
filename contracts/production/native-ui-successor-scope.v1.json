@@ -24,7 +24,7 @@
     "contracts/production/validator-registry.v2.json": "af65fd86d56fc0bd967a487541a1ff6909cb04d1f8f02fe3ed4a48da81d84a59",
     "contracts/production/work-connections.v2.json": "07aafbfe752f8541d45fdc51a11a5135c2b64ea09164792b121dbccc8798bfea",
     "scripts/production/initialization-transport-scope.py": "3f68f3692643e9b4e9e64f3ba723a648a128050a48d03b8c28bd8d61df29edad",
-    "scripts/production/native-ui-successor-scope.py": "734a72762b16e88ff14f12f402b683e45738e92f1bddddefb78dddc0d3fa216c",
+    "scripts/production/native-ui-successor-scope.py": "1cbf59fe19fb09bfca93b44ee7d901d58dc00b16bb92ca154ca293c4a32c6b97",
     "scripts/production/product-conditions-scope.py": "44ec6dea3fc41c17d7089f5f6ea43568c9f1c82c36c72c9a0bc2953a92b7445e"
   },
   "protected_sha256": {

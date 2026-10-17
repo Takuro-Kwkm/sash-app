@@ -8,7 +8,7 @@
   },
   "native_scope": {
     "path": "contracts/production/native-ui-successor-scope.v1.json",
-    "sha256": "abecbeaee2bc76c5b7de5526465df9ea86c00915f07e303d723db497330637ce"
+    "sha256": "aa3a93547296ce063fec8ee42e148656498174b14b1500ce4b3680d4789e6f6a"
   },
   "connection_changes": [],
   "build_profile": {
