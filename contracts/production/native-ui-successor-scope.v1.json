@@ -16,12 +16,12 @@
     "scripts/production/native-ui-successor-scope.py"
   ],
   "candidate_sha256": {
-    "contracts/production/current-architecture.json": "a4ac87a8eea45360342397fb7c313f5fe8795e63eaeccad07238ad9667ee0055",
-    "contracts/production/product-master-build-profile.native-ui-v12.json": "fc5cb07891c50cf2df502d488747f84092ff7e55d38c9c7e65c4de385b250b7b",
-    "contracts/production/shared-product-master-conditions.v1.bundle": "fca52f84639fd308524e196c43d3ff75b6ec89888abf4b2c4597abd7b98f8ca3",
-    "contracts/production/shared-product-master-conditions.v1.json": "ddde803adc996c7248767389a94b10e9777495778aed2eec38229cf94540065f",
+    "contracts/production/current-architecture.json": "b0acc2f64b47e2221df9605bca02a86cd193d4d74414c0b5900c0c4e04cd64ac",
+    "contracts/production/product-master-build-profile.native-ui-v12.json": "a2d67e7a6a94148602b3e891b4136d65018d1e5bc5b3abb946fdcd80b9951400",
+    "contracts/production/shared-product-master-conditions.v1.bundle": "7dbdbf7d31e9bb72c8da88634810f69f52cd6c8892f95b69e976c084619869bc",
+    "contracts/production/shared-product-master-conditions.v1.json": "495e3f10836227f5bb27a5c7e671f0590005391d67a4da4c5b0abf503feaf3f2",
     "contracts/production/validator-registry.v2.json": "af65fd86d56fc0bd967a487541a1ff6909cb04d1f8f02fe3ed4a48da81d84a59",
-    "contracts/production/work-connections.v2.json": "15e278fe0a869eb98633ef880815430709575398e096b85c6f3548b8ff0b66ba",
+    "contracts/production/work-connections.v2.json": "159d32eded95d9931be7b02090e1c474a316d444ac0f873ebb9833c48912fb26",
     "scripts/production/initialization-transport-scope.py": "3f68f3692643e9b4e9e64f3ba723a648a128050a48d03b8c28bd8d61df29edad",
     "scripts/production/native-ui-successor-scope.py": "aba82a28b16cd8cd9d33185e09e732521ce7949df1559628f48758853df5d20f"
   },
