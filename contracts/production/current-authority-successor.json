@@ -1,6 +1,6 @@
 {
   "schema": "CURRENT_AUTHORITY_SUCCESSOR_SELECTION_V1",
-  "path": "contracts/production/authority-successors/native-connection.v9.json",
-  "sha256": "cb971acb7c09d33a969f6c2bce38ac3ca31843b5de38e9d00f695ddbea0983c1",
-  "implementation_sha": "3ef622ed98a769e89d2c8132c2d05dc238f4dd0f"
+  "path": "contracts/production/authority-successors/initialization-transport.v10.json",
+  "sha256": "30c99848f3f6b7c27e9744efb641268cd1d9a52b1e69656a399dbead3ab037ab",
+  "implementation_sha": "a693f917fe6d40804255368d35c792fba4ffe32c"
 }
