@@ -7,7 +7,9 @@ def load(name,path):
 def selected_giesta(root):
  try:
   selector=json.loads((root/'contracts/production/current-authority-successor.json').read_text())
-  return json.loads((root/selector['path']).read_text()).get('schema')=='CURRENT_AUTHORITY_GIESTA2_RUNTIME_UI_CONNECTION_V15'
+  return json.loads((root/selector['path']).read_text()).get('schema') in {
+   'CURRENT_AUTHORITY_GIESTA2_RUNTIME_UI_CONNECTION_V15',
+   'CURRENT_AUTHORITY_GIESTA2_RUNTIME_PUBLICATION_V16'}
  except (OSError,KeyError,ValueError):return False
 def validate(root=ROOT):
  root=Path(root).resolve()
@@ -19,11 +21,13 @@ def validate(root=ROOT):
    central=Path(d)/'shared';load('conditions_unpack',root/'scripts/production/unpack-product-master-conditions.py').unpack(root,central)
    selection=json.loads((root/'contracts/production/current-authority-successor.json').read_text())
    successor=json.loads((root/selection['path']).read_text())
-   if successor.get('schema')=='CURRENT_AUTHORITY_GIESTA2_RUNTIME_UI_CONNECTION_V15':
+   if successor.get('schema') in {
+     'CURRENT_AUTHORITY_GIESTA2_RUNTIME_UI_CONNECTION_V15',
+     'CURRENT_AUTHORITY_GIESTA2_RUNTIME_PUBLICATION_V16'}:
     # unpack() has already run the selected shared compatibility checker.
     # Preserve this existing CI entrypoint while delegating V15 admission.
     scope=json.loads((root/successor['native_scope']['path']).read_text())
-    return {'status':'PASS','scope':'V15_EXACT_SHARED_ADMISSION_WITH_RETAINED_PRODUCT_PROTECTION',
+    return {'status':'PASS','scope':'SELECTED_GIESTA_EXACT_SHARED_ADMISSION_WITH_RETAINED_PRODUCT_PROTECTION',
             'authorized_paths':scope['allowed_paths'],
             'verified_unchanged_sha256':scope['protected_sha256'],'deployment':'NOT_EXECUTED'}
    if successor.get('schema')=='CURRENT_AUTHORITY_NATIVE_CONNECTION_SUCCESSOR_V9':

@@ -10,6 +10,11 @@
       "path": "runtime-master-packages/apw511-ui-r3/runtime_index.json",
       "sha256": "a47c69d82dec187f92c38e6a731b59dbbf9517e90b683d7566ef3fcfce587edd",
       "manifestFileId": "1KouHULpQocEghUthiytmwjAwrDxHSF_J"
+    },
+    {
+      "path": "runtime-master-packages/giesta2-ui-r14/runtime_index.json",
+      "sha256": "457ab1c700c51aec112e1e8e0f28801667e8be7acfa456a76f6d6c9f4854cd8f",
+      "manifestFileId": "1609frxC4E8wOHffKYCN3yAbGhBQelp-h"
     }
   ]
 }
