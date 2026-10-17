@@ -407,6 +407,10 @@
       "formal_profile": {
         "path": "contracts/production/giesta2-json-formal-profile.v1.json",
         "sha256": "b70972cece030fdc2349d6c88282f777a65ae4f34a7907d9494fae87b1d3f875"
+      },
+      "runtime_ui_adoption_profile": {
+        "path": "contracts/production/giesta2-runtime-ui-adoption.v1.json",
+        "sha256": "3b1a154692e193ba447c5670ac11a85d28682a2acfcd0edd0c1a8b9a61159577"
       }
     },
     {
@@ -857,8 +861,8 @@
   "current_architecture_pointer": "contracts/production/current-architecture.json",
   "ga_adapter_policy": "CONNECTED_NATIVE_SCOPE_OR_EXPLICIT_FAIL_CLOSED; NO_REFERENCE_OR_LEGACY_FALLBACK",
   "new_product_build_profile": {
-    "path": "contracts/production/product-master-build-profile.native-ui-v12.json",
-    "sha256": "549cb71effcea068c828f3f2411005128338f155ba406de756836cd67e15f3bb",
+    "path": "contracts/production/product-master-build-profile.native-v15.json",
+    "sha256": "175e3f21221afdb42221436de6f156b32b80988983cc9c68c33b4f806ee21e4a",
     "profile_id": "sash-new-product-master-v1"
   }
 }

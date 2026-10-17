@@ -1,0 +1,17 @@
+{
+  "schema": "CURRENT_AUTHORITY_GIESTA2_RUNTIME_UI_CONNECTION_V15",
+  "predecessor_native_commit": "31f2b687ff9ca7e2e4b504c9d3d2756f7100a0dd",
+  "native_scope": {
+    "path": "contracts/production/giesta2-runtime-ui-scope.v15.json",
+    "sha256": "6004cd6e2568e1dd571459e363c2302afb432e12cf0eefd69a838d5a32f74bee"
+  },
+  "runtime_ui_adoption_profile": {
+    "path": "contracts/production/giesta2-runtime-ui-adoption.v1.json",
+    "sha256": "3b1a154692e193ba447c5670ac11a85d28682a2acfcd0edd0c1a8b9a61159577"
+  },
+  "build_profile": {
+    "path": "contracts/production/product-master-build-profile.native-v15.json",
+    "sha256": "175e3f21221afdb42221436de6f156b32b80988983cc9c68c33b4f806ee21e4a"
+  },
+  "terminal_policy": "PRESERVE_FORMAL_QA_UNRESOLVED_AND_PRIOR_ADOPTION; RUNTIME_UI_ADOPTION_ONLY; NO_RELEASE"
+}

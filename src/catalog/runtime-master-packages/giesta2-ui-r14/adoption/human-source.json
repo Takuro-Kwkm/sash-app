@@ -1,0 +1,11 @@
+{
+  "actor": "USER",
+  "text": "11承認Main統合、12本番配信まで行ってください",
+  "reference": "CURRENT_CONVERSATION_EXPLICIT_USER_GIESTA2_STAGE11_12_20261017",
+  "review_reference": "ユーザーのR13プレビュー操作確認とPreview QA実施承認、および本会話のStage 11/12実行指示",
+  "preview_qa_sha256": "aae3ffa5676218a89837b398da07f460f055e8eb2bb9e63d857f0c32250db833",
+  "candidate_index_sha256": "3f60a44ef7d67691260093abaac199490b485b77c11dad773a55bc06f11d2502",
+  "candidate_index_drive_file_id": "1-I730d4pVJ0mainll5HFhDCk2VlybFrX",
+  "candidate_module_sha256": "6ad6f375621a762b6dd118e773d3d9fbfbe15ab1abcc339835daaa35e5164a53",
+  "candidate_module_drive_file_id": "1EcK0e4n0TMDpeTRiILdQbjE2wyME3RaG"
+}

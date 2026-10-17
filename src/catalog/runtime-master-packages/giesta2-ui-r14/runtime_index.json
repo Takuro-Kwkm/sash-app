@@ -1,0 +1,811 @@
+{
+  "schema": "FORMAL_COMPOSED_RUNTIME_INDEX_V1",
+  "revision": "GIESTA2_R5_DIMENSION_REVIEW_PREVIEW_R14_20261017",
+  "adoption": "HUMAN_ADOPTED_RUNTIME_UI",
+  "packageVersion": "v0.8-R5-UI-R14",
+  "authoring": {
+    "packageVersion": "v0.8-R5",
+    "manifestFileId": "1609frxC4E8wOHffKYCN3yAbGhBQelp-h",
+    "masterFileId": "1stGZpZlFedJxMeQL1kO0BQ_xW2uo3kuK",
+    "masterSha256": "f1922b6396ae30cc2c9bd60ece5866fe935fc116eec91f830c83ee45e3dd55a6",
+    "runtimeScope": "ADOPTED_SEPARATELY_FROM_PRODUCT_MASTER_FORMAL"
+  },
+  "runtimeOnlyAdoption": {
+    "schema": "HUMAN_ADOPTED_RUNTIME_ONLY_V1",
+    "candidateIndex": {
+      "path": "adoption/reviewed-index.json",
+      "sha256": "3f60a44ef7d67691260093abaac199490b485b77c11dad773a55bc06f11d2502"
+    },
+    "candidateModuleSha256": "6ad6f375621a762b6dd118e773d3d9fbfbe15ab1abcc339835daaa35e5164a53",
+    "authorization": {
+      "path": "adoption/authorization.json",
+      "sha256": "9e8deef5577cfc0d85a269b7ab781caec7521acc8c06efe20ce16245ee9e6083"
+    },
+    "review": {
+      "path": "adoption/flow-review.json",
+      "sha256": "929aac882b4279b44a6b54143ea7c3285a23c10e101c03965bd712713b1b6145"
+    },
+    "humanSource": {
+      "path": "adoption/human-source.json",
+      "sha256": "85db55099ee8ba289beefa1361691dc466083024b678d5093a19ab26de21a331"
+    },
+    "productMasterMutations": 0,
+    "release": false
+  },
+  "products": [
+    {
+      "id": "SER-LIXIL-GIESTA2-NF",
+      "manufacturer": "LIXIL",
+      "series": "ジエスタ2",
+      "displayName": "ジエスタ２（非防火）",
+      "productCategory": "door",
+      "uiCategory": "ENTRY_DOOR",
+      "packageVersion": "v0.8-R5-UI-R14",
+      "masterVersion": "v0.8-R5",
+      "schemaVersion": "1.0",
+      "path": "module.json",
+      "sha256": "51de5d51f8298e33003a4fc5c20dfa2a800440e1a7ca88d8e42091859eb4af94",
+      "sourceHash": "51de5d51f8298e33003a4fc5c20dfa2a800440e1a7ca88d8e42091859eb4af94",
+      "candidate": false,
+      "adapterType": "COMPOSED_PRODUCT_MODULE_V1",
+      "uiFlowContract": {
+        "schema": "REVIEWED_WINDOW_FLOW_V3",
+        "revision": "GIESTA2_R5_CHILD_SALES_PREFERENCE_PREVIEW_R13_20261017",
+        "status": "HUMAN_REVIEW_PENDING",
+        "formalAdoption": false,
+        "sourceFlow": {
+          "path": "sources/PRODUCT_MASTER.json",
+          "sha256": "f1922b6396ae30cc2c9bd60ece5866fe935fc116eec91f830c83ee45e3dd55a6",
+          "product_id": "LIXIL_GIESTA2_NON_FIRE",
+          "revision": "v0.8-R5"
+        },
+        "reviewSources": [
+          {
+            "path": "sources/UI_STANDARD_v2.1.docx",
+            "sha256": "e14b802dd96c1b90ea39809137ea03824878db2b7c07aa058657f3603a928e9a"
+          },
+          {
+            "path": "review/color-plan-source-review.json",
+            "sha256": "e4d7795fdb1a363b9d9f2df18b9b269a58843ab4f2b534daeb7bd6e2fd116684"
+          }
+        ],
+        "groups": [
+          {
+            "id": "thermal",
+            "label": "断熱仕様",
+            "order": 0
+          },
+          {
+            "id": "opening",
+            "label": "開き形式",
+            "order": 1
+          },
+          {
+            "id": "frame",
+            "label": "枠形状・アングル",
+            "order": 2
+          },
+          {
+            "id": "design",
+            "label": "デザイン",
+            "order": 3
+          },
+          {
+            "id": "components",
+            "label": "構成部材",
+            "order": 4
+          },
+          {
+            "id": "glass",
+            "label": "ガラス",
+            "order": 5
+          },
+          {
+            "id": "colors",
+            "label": "本体色・枠色",
+            "order": 6
+          },
+          {
+            "id": "handing",
+            "label": "吊元",
+            "order": 7
+          },
+          {
+            "id": "closer",
+            "label": "ドアクローザ",
+            "order": 8
+          },
+          {
+            "id": "handle",
+            "label": "ハンドル種類",
+            "order": 9
+          },
+          {
+            "id": "handle_color",
+            "label": "ハンドル色・仕上",
+            "order": 10
+          },
+          {
+            "id": "lock",
+            "label": "錠仕様",
+            "order": 11
+          },
+          {
+            "id": "power",
+            "label": "電源方式",
+            "order": 12
+          },
+          {
+            "id": "plan",
+            "label": "電源・プラン",
+            "order": 13
+          },
+          {
+            "id": "electric",
+            "label": "電気錠仕様",
+            "order": 14
+          },
+          {
+            "id": "remote",
+            "label": "リモコンキー",
+            "order": 15
+          },
+          {
+            "id": "credentials",
+            "label": "シリンダー",
+            "order": 16
+          },
+          {
+            "id": "size",
+            "label": "サイズ",
+            "order": 17
+          },
+          {
+            "id": "options",
+            "label": "その他オプション",
+            "order": 18
+          },
+          {
+            "id": "request",
+            "label": "依頼数量",
+            "order": 19
+          }
+        ],
+        "fields": {
+          "thermal_spec_id": {
+            "meaning": "断熱仕様",
+            "label": "断熱仕様",
+            "sourceRefs": [
+              "SALES_REQUEST_BOUNDARY"
+            ],
+            "group": "thermal",
+            "rank": 0,
+            "parents": [],
+            "slot": "window_spec",
+            "stage": "CONFIGURATION",
+            "helpText": ""
+          },
+          "door_configuration_id": {
+            "meaning": "開き形式",
+            "label": "開き形式",
+            "sourceRefs": [
+              "P2_configuration_hinge_map"
+            ],
+            "group": "opening",
+            "rank": 0,
+            "parents": [],
+            "slot": "window_type",
+            "stage": "OPENING",
+            "helpText": ""
+          },
+          "design_id": {
+            "meaning": "デザイン",
+            "label": "デザイン",
+            "sourceRefs": [
+              "P3_design_color_summary",
+              "P3_color_config_map"
+            ],
+            "group": "design",
+            "rank": 0,
+            "parents": [
+              "door_configuration_id"
+            ],
+            "slot": "window_spec",
+            "stage": "CONFIGURATION",
+            "helpText": ""
+          },
+          "secondary_leaf_id": {
+            "meaning": "副扉",
+            "label": "副扉",
+            "sourceRefs": [
+              "P4_secondary_leaf_master",
+              "P4_design_secondary_leaf_map"
+            ],
+            "group": "components",
+            "rank": 3,
+            "parents": [
+              "design_id"
+            ],
+            "slot": "window_spec",
+            "stage": "CONFIGURATION",
+            "helpText": ""
+          },
+          "sidelight_id": {
+            "meaning": "袖",
+            "label": "袖",
+            "sourceRefs": [
+              "P4_sidelight_master",
+              "P4_sidelight_master"
+            ],
+            "group": "components",
+            "rank": 4,
+            "parents": [
+              "door_configuration_id"
+            ],
+            "slot": "window_spec",
+            "stage": "CONFIGURATION",
+            "helpText": ""
+          },
+          "glass_id": {
+            "meaning": "本扉ガラス",
+            "label": "本扉ガラス",
+            "sourceRefs": [
+              "P6_glass_master",
+              "P6_design_glass_map"
+            ],
+            "group": "glass",
+            "rank": 0,
+            "parents": [
+              "design_id",
+              "thermal_spec_id"
+            ],
+            "slot": "glass_base",
+            "stage": "GLAZING",
+            "helpText": ""
+          },
+          "secondary_glass_id": {
+            "meaning": "副扉ガラス",
+            "label": "副扉ガラス",
+            "sourceRefs": [
+              "P6_glass_master",
+              "P6_secondary_leaf_glass_map"
+            ],
+            "group": "glass",
+            "rank": 2,
+            "parents": [
+              "secondary_leaf_id",
+              "thermal_spec_id"
+            ],
+            "slot": "glass_base",
+            "stage": "GLAZING",
+            "helpText": ""
+          },
+          "sidelight_glass_id": {
+            "meaning": "袖ガラス",
+            "label": "袖ガラス",
+            "sourceRefs": [
+              "P6_glass_master",
+              "P6_sidelight_glass_map"
+            ],
+            "group": "glass",
+            "rank": 3,
+            "parents": [
+              "sidelight_id",
+              "thermal_spec_id"
+            ],
+            "slot": "glass_base",
+            "stage": "GLAZING",
+            "helpText": ""
+          },
+          "door_color_code": {
+            "meaning": "本扉色",
+            "label": "本扉色",
+            "sourceRefs": [
+              "P3_09_color_master",
+              "P3_color_config_map"
+            ],
+            "group": "colors",
+            "rank": 0,
+            "parents": [
+              "design_id",
+              "door_configuration_id"
+            ],
+            "slot": "finish_color",
+            "stage": "FINISH",
+            "helpText": ""
+          },
+          "interior_color_code": {
+            "meaning": "内観色（内外異色対応デザイン）",
+            "label": "内観色（内外異色対応デザイン）",
+            "sourceRefs": [
+              "P3_09_color_master",
+              "P3_surface_color_map"
+            ],
+            "group": "colors",
+            "rank": 1,
+            "parents": [
+              "design_id",
+              "door_color_code"
+            ],
+            "slot": "finish_color",
+            "stage": "FINISH",
+            "helpText": ""
+          },
+          "frame_color_id": {
+            "meaning": "枠色（本体色に連動）",
+            "label": "枠色（本体色に連動）",
+            "sourceRefs": [
+              "SRC_IG4400_202609_A:g14",
+              "SRC_DL1400_202610_A:DESIGN_COLOR_NOTES"
+            ],
+            "group": "colors",
+            "rank": 2,
+            "parents": [
+              "design_id",
+              "door_color_code",
+              "thermal_spec_id",
+              "door_configuration_id"
+            ],
+            "slot": "finish_color",
+            "stage": "FINISH",
+            "helpText": "対応する場合は本体同色を初期設定します。型番・本体色によるメーカー指定色を優先します。M22・M24・M27は対応する木目枠を優先し、標準アルミ枠も選択できます。"
+          },
+          "hinge_side_id": {
+            "meaning": "吊元（室外側から見て）",
+            "label": "吊元（室外側から見て）",
+            "sourceRefs": [
+              "P2_hinge_side_master",
+              "P2_configuration_hinge_map"
+            ],
+            "group": "handing",
+            "rank": 0,
+            "parents": [
+              "door_configuration_id"
+            ],
+            "slot": "handing",
+            "stage": "CONFIGURATION",
+            "helpText": ""
+          },
+          "door_closer_id": {
+            "meaning": "ドアクローザ",
+            "label": "ドアクローザ",
+            "sourceRefs": [
+              "P7_door_closer_master"
+            ],
+            "group": "closer",
+            "rank": 0,
+            "parents": [],
+            "slot": "window_spec",
+            "stage": "CONFIGURATION",
+            "helpText": ""
+          },
+          "handle_id": {
+            "meaning": "ハンドル種類",
+            "label": "ハンドル種類",
+            "sourceRefs": [
+              "P4_handle_family_master",
+              "P4_design_handle_map"
+            ],
+            "group": "handle",
+            "rank": 0,
+            "parents": [
+              "design_id"
+            ],
+            "slot": "window_spec",
+            "stage": "CONFIGURATION",
+            "helpText": ""
+          },
+          "official_handle_code": {
+            "meaning": "ハンドル仕上（室内側・表面加工）",
+            "label": "ハンドル仕上（室内側・表面加工）",
+            "sourceRefs": [
+              "P4_handle_option_master",
+              "P4_handle_option_master"
+            ],
+            "group": "handle_color",
+            "rank": 1,
+            "parents": [
+              "handle_color_name",
+              "handle_id"
+            ],
+            "slot": "window_spec",
+            "stage": "CONFIGURATION",
+            "helpText": "ハンドル色と分けて、室内側の仕上・表面加工を選択します。正式コードは選択した組合せから引き継ぎます。"
+          },
+          "lock_kind": {
+            "meaning": "錠仕様",
+            "label": "錠仕様",
+            "sourceRefs": [
+              "SALES_REQUEST_BOUNDARY"
+            ],
+            "group": "lock",
+            "rank": 0,
+            "parents": [],
+            "slot": "window_spec",
+            "stage": "CONFIGURATION",
+            "helpText": ""
+          },
+          "power_supply_id": {
+            "meaning": "電源方式",
+            "label": "電源方式",
+            "sourceRefs": [
+              "P5_power_supply_master",
+              "P5_lock_power_map"
+            ],
+            "group": "power",
+            "rank": 0,
+            "parents": [
+              "lock_system_id"
+            ],
+            "slot": "window_spec",
+            "stage": "CONFIGURATION",
+            "helpText": ""
+          },
+          "lock_plan_id": {
+            "meaning": "電源・プラン",
+            "label": "電源・プラン",
+            "sourceRefs": [
+              "P5_lock_plan_master",
+              "P5_lock_plan_master"
+            ],
+            "group": "plan",
+            "rank": 0,
+            "parents": [
+              "lock_system_id",
+              "power_supply_id"
+            ],
+            "slot": "window_spec",
+            "stage": "CONFIGURATION",
+            "helpText": ""
+          },
+          "cylinder_id": {
+            "meaning": "シリンダー",
+            "label": "シリンダー",
+            "sourceRefs": [
+              "P5_cylinder_master",
+              "P5_lock_cylinder_map",
+              "P5_handle_cylinder_map"
+            ],
+            "group": "credentials",
+            "rank": 5,
+            "parents": [
+              "lock_system_id",
+              "handle_id"
+            ],
+            "slot": "window_spec",
+            "stage": "CONFIGURATION",
+            "helpText": ""
+          },
+          "size_mode": {
+            "meaning": "サイズ方式",
+            "label": "サイズ方式",
+            "sourceRefs": [
+              "P2_size_mode_master"
+            ],
+            "group": "size",
+            "rank": 0,
+            "parents": [],
+            "slot": "size",
+            "stage": "SIZE",
+            "helpText": ""
+          },
+          "standard_size_id": {
+            "meaning": "規格サイズ（枠寸法）",
+            "label": "規格寸法（枠外寸法）",
+            "sourceRefs": [
+              "P2_standard_size_master",
+              "P2_standard_size_master"
+            ],
+            "group": "size",
+            "rank": 1,
+            "parents": [
+              "size_mode",
+              "door_configuration_id"
+            ],
+            "slot": "size",
+            "stage": "SIZE",
+            "helpText": "開き形式から自動確定します。特注寸法はサイズ方式で選択してください。"
+          },
+          "frame_w": {
+            "meaning": "希望枠W",
+            "label": "希望枠W",
+            "sourceRefs": [
+              "SALES_REQUEST_BOUNDARY"
+            ],
+            "group": "size",
+            "rank": 2,
+            "parents": [
+              "size_mode",
+              "door_configuration_id",
+              "design_id",
+              "secondary_leaf_id",
+              "child_glazing_requested",
+              "child_post_requested"
+            ],
+            "slot": "size",
+            "stage": "SIZE",
+            "helpText": "枠寸法を入力してください。部材の寸法配分・製作可否は積算で確認します。"
+          },
+          "frame_h": {
+            "meaning": "希望枠H",
+            "label": "希望枠H",
+            "sourceRefs": [
+              "SALES_REQUEST_BOUNDARY"
+            ],
+            "group": "size",
+            "rank": 3,
+            "parents": [
+              "size_mode",
+              "door_configuration_id",
+              "design_id",
+              "secondary_leaf_id",
+              "child_glazing_requested",
+              "child_post_requested"
+            ],
+            "slot": "size",
+            "stage": "SIZE",
+            "helpText": "枠寸法を入力してください。部材の寸法配分・製作可否は積算で確認します。"
+          },
+          "option_id": {
+            "meaning": "オプション（電気錠の追加機器・その他）",
+            "label": "オプション（電気錠の追加機器・その他）",
+            "sourceRefs": [
+              "P7_option_master",
+              "P7_design_option_map",
+              "P7_configuration_option_map",
+              "P7_door_color_option_map",
+              "P7_lock_option_map",
+              "P7_lock_plan_option_map"
+            ],
+            "group": "options",
+            "rank": 0,
+            "parents": [
+              "design_id",
+              "door_configuration_id",
+              "door_color_code",
+              "option_lock_lookup",
+              "lock_plan_id"
+            ],
+            "slot": "option",
+            "stage": "OPTION",
+            "helpText": "電気錠の追加機器もここで希望を指定します。オプションプランのコントローラーユニットはキーセットに同梱。プラン必須部材・付属品・追加数量は積算で確認します。"
+          },
+          "quantity": {
+            "meaning": "依頼数量",
+            "label": "依頼数量",
+            "sourceRefs": [
+              "SALES_REQUEST_BOUNDARY"
+            ],
+            "group": "request",
+            "rank": 0,
+            "parents": [],
+            "slot": "option",
+            "stage": "OPTION",
+            "helpText": "見積を依頼する数量です。部材拾い数量とは区別します。"
+          },
+          "handle_color_name": {
+            "meaning": "ハンドル色",
+            "label": "ハンドル色",
+            "sourceRefs": [
+              "P4_handle_option_master"
+            ],
+            "group": "handle_color",
+            "rank": 0,
+            "parents": [
+              "handle_id"
+            ],
+            "slot": "window_spec",
+            "stage": "CONFIGURATION",
+            "helpText": ""
+          },
+          "electric_key_type": {
+            "meaning": "電気錠仕様",
+            "label": "電気錠仕様",
+            "sourceRefs": [
+              "P5_credential_package_master"
+            ],
+            "group": "electric",
+            "rank": 0,
+            "parents": [
+              "lock_plan_id",
+              "lock_system_id"
+            ],
+            "slot": "window_spec",
+            "stage": "CONFIGURATION",
+            "helpText": ""
+          },
+          "remote_key_count": {
+            "meaning": "リモコンキー",
+            "label": "リモコンキー",
+            "sourceRefs": [
+              "P5_credential_package_master"
+            ],
+            "group": "remote",
+            "rank": 0,
+            "parents": [
+              "electric_key_type",
+              "lock_plan_id"
+            ],
+            "slot": "window_spec",
+            "stage": "CONFIGURATION",
+            "helpText": ""
+          },
+          "option_plan_detail_id": {
+            "meaning": "オプションプラン詳細",
+            "label": "オプションプラン詳細",
+            "sourceRefs": [
+              "SRC_IG4400_202609_A:g12"
+            ],
+            "group": "plan",
+            "rank": 1,
+            "parents": [
+              "lock_plan_id"
+            ],
+            "slot": "window_spec",
+            "stage": "CONFIGURATION",
+            "helpText": "希望する詳細プランを選択します。必須部材・同梱品・追加機器の数量は積算で確認します。"
+          },
+          "frame_form_id": {
+            "meaning": "枠形状",
+            "label": "枠形状",
+            "sourceRefs": [
+              "P2_frame_form_master"
+            ],
+            "group": "frame",
+            "rank": 1,
+            "parents": [],
+            "slot": "window_spec",
+            "stage": "CONFIGURATION",
+            "helpText": "規格H2,330の対応表で判定します。特注・ハイサイズは希望仕様として積算で製作可否を確認します。"
+          },
+          "frame_angle": {
+            "meaning": "枠アングル",
+            "label": "枠アングル",
+            "sourceRefs": [
+              "P2_frame_angle_master"
+            ],
+            "group": "frame",
+            "rank": 2,
+            "parents": [],
+            "slot": "window_spec",
+            "stage": "CONFIGURATION",
+            "helpText": ""
+          },
+          "closer_backcheck_id": {
+            "meaning": "バックチェック",
+            "label": "バックチェック",
+            "sourceRefs": [
+              "P7_closer_backcheck_master"
+            ],
+            "group": "closer",
+            "rank": 3,
+            "parents": [],
+            "slot": "window_spec",
+            "stage": "CONFIGURATION",
+            "helpText": ""
+          },
+          "home_master_key_requested": {
+            "meaning": "ホームマスターキー",
+            "label": "ホームマスターキー",
+            "sourceRefs": [
+              "GST2_R5_E_HOME_KEY"
+            ],
+            "group": "options",
+            "rank": 4,
+            "parents": [
+              "cylinder_id",
+              "lock_system_id"
+            ],
+            "slot": "option",
+            "stage": "OPTION",
+            "helpText": "DNキーの対象製品と共通キーにする希望です。対象シリンダーと最終手配は積算で確認します。"
+          },
+          "home_master_target_id": {
+            "meaning": "共通キーの対象製品",
+            "label": "共通キーの対象製品",
+            "sourceRefs": [
+              "P5_home_master_target_master"
+            ],
+            "group": "options",
+            "rank": 5,
+            "parents": [],
+            "slot": "option",
+            "stage": "OPTION",
+            "helpText": ""
+          },
+          "home_master_location_count": {
+            "meaning": "共通キーの対象箇所数",
+            "label": "共通キーの対象箇所数",
+            "sourceRefs": [
+              "GST2_R5_E_HOME_KEY"
+            ],
+            "group": "options",
+            "rank": 6,
+            "parents": [],
+            "slot": "option",
+            "stage": "OPTION",
+            "helpText": "3箇所以上は特注として積算で確認します。"
+          },
+          "home_master_target_cylinder_reference": {
+            "meaning": "対象製品のシリンダー情報",
+            "label": "対象製品のシリンダー情報",
+            "sourceRefs": [
+              "GST2_R5_E_HOME_KEY"
+            ],
+            "group": "options",
+            "rank": 7,
+            "parents": [],
+            "slot": "option",
+            "stage": "OPTION",
+            "helpText": "品番またはシリンダー仕様を入力してください。不明の場合は「不明」と記入し、積算へ確認を引き継ぎます。"
+          },
+          "interior_trim_type_id": {
+            "meaning": "アルミ室内額縁の種類",
+            "label": "アルミ室内額縁の種類",
+            "sourceRefs": [
+              "P7_interior_trim_type_master"
+            ],
+            "group": "options",
+            "rank": 8,
+            "parents": [],
+            "slot": "option",
+            "stage": "OPTION",
+            "helpText": "アングル無枠用。枠色に連動する額縁色、切詰め・高さ条件は積算へ引き継ぎます。"
+          },
+          "child_glazing_requested": {
+            "meaning": "子扉の採光",
+            "label": "子扉の採光",
+            "sourceRefs": [
+              "DL1400_CHILD_172_175"
+            ],
+            "group": "components",
+            "rank": 0,
+            "parents": [
+              "door_configuration_id",
+              "design_id"
+            ],
+            "slot": "window_spec",
+            "stage": "CONFIGURATION",
+            "helpText": "子扉の採光希望を選択します。実際の子扉型・ガラス仕様は、本体デザインと断熱仕様を確認して積算時に決定します。"
+          },
+          "child_post_requested": {
+            "meaning": "子扉のポスト",
+            "label": "子扉のポスト",
+            "sourceRefs": [
+              "DL1400_CHILD_172_175"
+            ],
+            "group": "components",
+            "rank": 1,
+            "parents": [
+              "door_configuration_id"
+            ],
+            "slot": "window_spec",
+            "stage": "CONFIGURATION",
+            "helpText": "ポストの有無だけを選択します。親子入隅用はポストなしの設定です。ポスト付の子扉型は積算時に確認します。"
+          }
+        },
+        "contextFields": [
+          "lock_system_id",
+          "credential_package_id",
+          "option_lock_lookup",
+          "credential_id",
+          "operation_device_id",
+          "watch_series",
+          "lifeassist_requested",
+          "remote_visitor_response_requested"
+        ],
+        "slotOrder": [
+          "product",
+          "window_type",
+          "window_spec",
+          "handing",
+          "size",
+          "finish_color",
+          "glass_base",
+          "option",
+          "installation"
+        ]
+      }
+    }
+  ]
+}

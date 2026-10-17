@@ -4,6 +4,31 @@ import {resolveDeclaredSelectionViews, declaredSelectionErrors, attachDeclaredSa
 
 const has=value=>value!==undefined&&value!==null&&value!=='';
 const own=(object,key)=>Object.prototype.hasOwnProperty.call(object,key);
+function declaredDimensionReview(document){
+  const review=document.dimension_review;
+  if(!review)return null;
+  const definitions=new Map(document.product_module.specificationDefinitions.map(row=>[row.key,row]));
+  const valid=review.mode_value==='CUSTOM'
+    && definitions.get(review.mode_field)?.dataType==='ENUM'
+    && definitions.get(review.width_field)?.dataType==='NUMBER'
+    && definitions.get(review.height_field)?.dataType==='NUMBER'
+    && review.width_field!==review.height_field
+    && typeof review.pending_message==='string'&&review.pending_message.length>0
+    && typeof review.review_message==='string'&&review.review_message.length>0
+    && Array.isArray(review.evidence_ids)&&review.evidence_ids.length>0;
+  if(!valid)throw Object.assign(new Error('DIMENSION_REVIEW_CONTRACT_INVALID'),{code:'DIMENSION_REVIEW_CONTRACT_INVALID'});
+  return review;
+}
+function applyDeclaredDimensionReview(result,review){
+  if(!review||result.selection[review.mode_field]!==review.mode_value)return;
+  if(result.dimensionResult&&result.dimensionResult.status!=='PENDING')return;
+  const fields=[review.width_field,review.height_field];
+  const entered=fields.every(key=>has(result.selection[key])&&Number.isFinite(Number(result.selection[key])));
+  result.dimensionResult={status:entered?'REVIEW_REQUIRED':'PENDING',
+    code:entered?'DECLARED_DIMENSION_REVIEW_REQUIRED':'DECLARED_DIMENSION_INPUT_PENDING',
+    message:entered?review.review_message:review.pending_message,
+    fields,evidenceIds:review.evidence_ids,matchedRuleIds:[],ruleTypes:[]};
+}
 export function migrateCandidateSelection(input,migrations=[]){
   const selection={...input};
   for(const migration of migrations){
@@ -41,11 +66,13 @@ export async function adaptComposedProductRuntime(document,entry,loadReference){
   }
   const bridge=await import('./runtime-app-bridge.mjs');
   const {applyRuntimeUiCategoryOrder}=await import('./new-construction-sash-runtime-ui-contract.mjs');
+  const dimensionReview=declaredDimensionReview(document);
   const primary=adaptProductModuleRuntimeV1({documents:{RUNTIME_JSON_PACKAGE:document}},entry);
   return {...primary,uiResolver:input=>{
     const contract=document.composition,prefix=contract?.prefix;
     const localInput=Object.fromEntries(Object.entries(input??{}).filter(([key])=>!prefix||!key.startsWith(prefix)));
     const result=resolveDeclaredSelectionViews(primary,document,localInput);
+    applyDeclaredDimensionReview(result,dimensionReview);
     result.dependencyFields=result.fields.map(field=>({key:field.key,parentFields:document.product_module.specificationDefinitions.find(d=>d.key===field.key)?.parentFields??[]}));
     for(const field of result.fields)field.parentFields=result.dependencyFields.find(d=>d.key===field.key).parentFields;
     const errors=[...(result.validation?.errors??[]),...declaredSelectionErrors(document.product_module,localInput,result.selection)],warnings=[...(result.manualWarnings??[])],missing=[...(result.validation?.missingRequiredFields??[])];
