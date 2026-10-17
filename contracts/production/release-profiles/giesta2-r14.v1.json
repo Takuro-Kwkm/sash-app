@@ -32,7 +32,7 @@
   "boundary_policy": "Actual native evidence only; Print requires inspected PDF/Print Preview; localStorage is not live DB E2E",
   "shared_contract": {
     "repository": "Takuro-Kwkm/product-ui-contracts",
-    "ref": "f25bd51f80f3aa568b107d1ad8819318d073d11b",
+    "ref": "281d1ea4e866435fcc7056d0f415878070e4787c",
     "entry": "scripts/release-contract.py",
     "files": {
       "contracts/common-release.v1.json": "826328619c8a465f389472537396e1564fc00f0fe8820d6e7963fb878c0663c4",
@@ -702,7 +702,7 @@
     "contracts/production/authority-successors/runtime-ui-release-r2-predecessor-selection.v1.json": "baf3b141c201e1358d42959622a6d86c856ffc20bc677421d1c3c64ffc832eb2",
     "contracts/production/authority-successors/runtime-ui-release-r3-predecessor-profile.v1.json": "112bead8a1c0d6a5e62182a7d1b35e22a99d7b1622ffd6b82f8aa8a7ce9d61c4",
     "contracts/production/authority-successors/runtime-ui-release-r3-predecessor-selection.v1.json": "7d2ee8ca4b0eafc3d51d6eb9a9f5469c4a9a86990c58a41271cbbcc647444886",
-    "contracts/production/current-architecture.json": "842f5befa0f7cba6534d4724e8a1c9e64e180c3a07b5dbd728a6f2f9e9801d8f",
+    "contracts/production/current-architecture.json": "1190037af837b388fde18411b4b08103743167a441632a7df76d81b3d26139a4",
     "contracts/production/giesta2-change-profile.v1.json": "7b7544ca2f9124987286934bdb861e4194524926408277144663bd5598aa0a95",
     "contracts/production/giesta2-formal-profile.v1.json": "09b5b1eece7625b0399c13c9a300ac97c34ebb54f33e2d6073f6604b8156aff8",
     "contracts/production/giesta2-publication-lifecycle.v1.json": "22c95e84b9f221ee19bca59f90ca13def48d714ad9746084c7bd45de517c9352",
@@ -736,8 +736,8 @@
     "contracts/production/runtime-ui-qa/giesta2-r14.json": "4852d6ab2672b7dce7f996fbde6e9a84e716bd9de86f252f6d5cf323123f6381",
     "contracts/production/runtime-ui-qa/replus-v1.2-r1.json": "92af6b535b4e9f019b44cb411ff685893022c9d1d7454919e144a50abe08bd37",
     "contracts/production/runtime-ui-release.v1.json": "f1f0f547f874503d9d4b5caa8ee31bb400ed268a4babf86f460229d5e77bff57",
-    "contracts/production/shared-product-master-conditions.v1.bundle": "1bcfc3a90919591fb8a2cd06e2e24928d383ae4efe469f50da6859f0206e854f",
-    "contracts/production/shared-product-master-conditions.v1.json": "6432de022ce61da36209db1706ed6176d910d02b04e0dcd2467479ff06a3072b",
+    "contracts/production/shared-product-master-conditions.v1.bundle": "63f30bbf45cd415222e8190a540a62e226f36960096db3e3c9848fe245b39cb8",
+    "contracts/production/shared-product-master-conditions.v1.json": "47c0e265215c25a74ca55fce943397a8ebc55c710d0b829317a8cd1c698bdc30",
     "contracts/production/shared-release-authority.v1.bundle": "bbedc31841a3cfc98d0ed1bbe5002010445506f798f355cd72fbe07bc9a91c75",
     "contracts/production/shared-release-authority.v1.json": "0d60f04012a1c285093d711ee14c1aac21aceb73d40bc400467d9942136dbebb",
     "contracts/production/validator-registry.v2.json": "36f6068b280ca9db3b25904f302acee9f5e4bec543343d15e3078ea30625cdb5",

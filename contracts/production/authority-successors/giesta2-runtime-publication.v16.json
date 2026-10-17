@@ -3,11 +3,11 @@
   "predecessor_native_commit": "6899f05705dfd1360ed92e3b098960a62d7193fa",
   "native_scope": {
     "path": "contracts/production/giesta2-runtime-publication-scope.v16.json",
-    "sha256": "2e2cff6435eb5e19a934b2f9bd0358772160a7109ef3fea386faf5bd603d5cbd"
+    "sha256": "49043d043062c28ca9078d1cc4b1fd8076bce53c379c4b305546e7edc5722814"
   },
   "release_profile": {
     "path": "contracts/production/release-profiles/giesta2-r14.v1.json",
-    "sha256": "56cc388d0fd41eb2bfcded22cab82334323db8c7ea472387096de122ba18499b"
+    "sha256": "9505126c293843c585fcd3bab699491003ecb42a0d72a682eda5a32cf7a3e203"
   },
   "build_profile": {
     "path": "contracts/production/product-master-build-profile.native-v16.json",

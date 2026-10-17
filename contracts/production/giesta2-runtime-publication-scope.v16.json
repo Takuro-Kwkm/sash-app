@@ -19,14 +19,14 @@
     "test/browser/sales-runtime-contract-browser-qa.mjs"
   ],
   "candidate_sha256": {
-    "contracts/production/current-architecture.json": "842f5befa0f7cba6534d4724e8a1c9e64e180c3a07b5dbd728a6f2f9e9801d8f",
+    "contracts/production/current-architecture.json": "1190037af837b388fde18411b4b08103743167a441632a7df76d81b3d26139a4",
     "contracts/production/giesta2-publication-lifecycle.v1.json": "22c95e84b9f221ee19bca59f90ca13def48d714ad9746084c7bd45de517c9352",
     "contracts/production/product-master-build-profile.native-v16.json": "a173525a5599c96d904c2080574054634257919b068ded037dde2016ec588247",
     "contracts/production/release-profiles.v1.json": "f18af69d2e02271b992358ab0862eb42015a1f21992c4ed7908ca07553b63615",
-    "contracts/production/release-profiles/giesta2-r14.v1.json": "56cc388d0fd41eb2bfcded22cab82334323db8c7ea472387096de122ba18499b",
+    "contracts/production/release-profiles/giesta2-r14.v1.json": "9505126c293843c585fcd3bab699491003ecb42a0d72a682eda5a32cf7a3e203",
     "contracts/production/runtime-ui-qa/giesta2-r14.json": "4852d6ab2672b7dce7f996fbde6e9a84e716bd9de86f252f6d5cf323123f6381",
-    "contracts/production/shared-product-master-conditions.v1.bundle": "1bcfc3a90919591fb8a2cd06e2e24928d383ae4efe469f50da6859f0206e854f",
-    "contracts/production/shared-product-master-conditions.v1.json": "6432de022ce61da36209db1706ed6176d910d02b04e0dcd2467479ff06a3072b",
+    "contracts/production/shared-product-master-conditions.v1.bundle": "63f30bbf45cd415222e8190a540a62e226f36960096db3e3c9848fe245b39cb8",
+    "contracts/production/shared-product-master-conditions.v1.json": "47c0e265215c25a74ca55fce943397a8ebc55c710d0b829317a8cd1c698bdc30",
     "scripts/production/product-conditions-scope.py": "990b4d3201e642a7e210dc50fa4505e5b00fde963012a89f00a30ec5580472f1",
     "scripts/production/product-publication-lifecycle.mjs": "d567476e4b9dcbd593855c7a40342194e18f77bd47b5f2c3b8e240dc13707aa8",
     "src/catalog/runtime-master/formal-composed-runtime-registry.json": "4434252336990b5dc3abbaf4a77a7524cca4fbf9b8ff2e5d4aa7250cb642c56a",
