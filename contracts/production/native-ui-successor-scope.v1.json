@@ -17,12 +17,12 @@
     "scripts/production/product-conditions-scope.py"
   ],
   "candidate_sha256": {
-    "contracts/production/current-architecture.json": "3030dbfa5129a8c60b395455170fce510fca11c03467681870f6db3f1d54ff6c",
-    "contracts/production/product-master-build-profile.native-ui-v12.json": "fb7773f2daa381da8186177e82a5f812ea453dafb8884b79e8041aff83ed339c",
-    "contracts/production/shared-product-master-conditions.v1.bundle": "3e54797c0acf05fdba514773e0b1861e004dcc416927e19b598243719e139df3",
-    "contracts/production/shared-product-master-conditions.v1.json": "1df5937ba666e88a635bcb2f39e78a3fe224aad08dfbdcdfa560afaee301e3d6",
+    "contracts/production/current-architecture.json": "93535f3a002ff26962af9b69eed9144b4ff2b4af816628eb772ef415b11cd9f4",
+    "contracts/production/product-master-build-profile.native-ui-v12.json": "bbc27841ded61df8121806516a9a423aeb7c92bb7f08d656bd1004ab8d549233",
+    "contracts/production/shared-product-master-conditions.v1.bundle": "81d609ac6009e1f336e7ed45e2ecf914fc98560635284dd08fac577d1c997e69",
+    "contracts/production/shared-product-master-conditions.v1.json": "add001042194a3c48b18defef4e49906ff69f7e8aab3ca7266905ca125dfacf9",
     "contracts/production/validator-registry.v2.json": "af65fd86d56fc0bd967a487541a1ff6909cb04d1f8f02fe3ed4a48da81d84a59",
-    "contracts/production/work-connections.v2.json": "9c436bda096cb46becb7b1013d5c05bf43552b44473093aa015d2bbd64fdc72c",
+    "contracts/production/work-connections.v2.json": "08c9d1c234690f4d2aa5581c43f3e3012481089965ceddbed592f9daeebbf8ee",
     "scripts/production/initialization-transport-scope.py": "3f68f3692643e9b4e9e64f3ba723a648a128050a48d03b8c28bd8d61df29edad",
     "scripts/production/native-ui-successor-scope.py": "734a72762b16e88ff14f12f402b683e45738e92f1bddddefb78dddc0d3fa216c",
     "scripts/production/product-conditions-scope.py": "44ec6dea3fc41c17d7089f5f6ea43568c9f1c82c36c72c9a0bc2953a92b7445e"
