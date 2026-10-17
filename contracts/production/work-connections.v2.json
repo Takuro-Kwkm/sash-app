@@ -857,8 +857,8 @@
   "current_architecture_pointer": "contracts/production/current-architecture.json",
   "ga_adapter_policy": "CONNECTED_NATIVE_SCOPE_OR_EXPLICIT_FAIL_CLOSED; NO_REFERENCE_OR_LEGACY_FALLBACK",
   "new_product_build_profile": {
-    "profile_id": "sash-new-product-master-v1",
-    "path": "contracts/production/product-master-build-profile.transport-v10.json",
-    "sha256": "f620e2423b9f6636cd8cb6c96bc2196d895d8552494f63489fe50d3c4fab4c1a"
+    "path": "contracts/production/product-master-build-profile.native-ui-v12.json",
+    "sha256": "549cb71effcea068c828f3f2411005128338f155ba406de756836cd67e15f3bb",
+    "profile_id": "sash-new-product-master-v1"
   }
 }
