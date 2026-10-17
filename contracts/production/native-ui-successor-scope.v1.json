@@ -13,17 +13,19 @@
     "contracts/production/validator-registry.v2.json",
     "contracts/production/work-connections.v2.json",
     "scripts/production/initialization-transport-scope.py",
-    "scripts/production/native-ui-successor-scope.py"
+    "scripts/production/native-ui-successor-scope.py",
+    "scripts/production/product-conditions-scope.py"
   ],
   "candidate_sha256": {
-    "contracts/production/current-architecture.json": "b0acc2f64b47e2221df9605bca02a86cd193d4d74414c0b5900c0c4e04cd64ac",
-    "contracts/production/product-master-build-profile.native-ui-v12.json": "a2d67e7a6a94148602b3e891b4136d65018d1e5bc5b3abb946fdcd80b9951400",
-    "contracts/production/shared-product-master-conditions.v1.bundle": "7dbdbf7d31e9bb72c8da88634810f69f52cd6c8892f95b69e976c084619869bc",
-    "contracts/production/shared-product-master-conditions.v1.json": "495e3f10836227f5bb27a5c7e671f0590005391d67a4da4c5b0abf503feaf3f2",
+    "contracts/production/current-architecture.json": "3030dbfa5129a8c60b395455170fce510fca11c03467681870f6db3f1d54ff6c",
+    "contracts/production/product-master-build-profile.native-ui-v12.json": "fb7773f2daa381da8186177e82a5f812ea453dafb8884b79e8041aff83ed339c",
+    "contracts/production/shared-product-master-conditions.v1.bundle": "3e54797c0acf05fdba514773e0b1861e004dcc416927e19b598243719e139df3",
+    "contracts/production/shared-product-master-conditions.v1.json": "1df5937ba666e88a635bcb2f39e78a3fe224aad08dfbdcdfa560afaee301e3d6",
     "contracts/production/validator-registry.v2.json": "af65fd86d56fc0bd967a487541a1ff6909cb04d1f8f02fe3ed4a48da81d84a59",
-    "contracts/production/work-connections.v2.json": "159d32eded95d9931be7b02090e1c474a316d444ac0f873ebb9833c48912fb26",
+    "contracts/production/work-connections.v2.json": "9c436bda096cb46becb7b1013d5c05bf43552b44473093aa015d2bbd64fdc72c",
     "scripts/production/initialization-transport-scope.py": "3f68f3692643e9b4e9e64f3ba723a648a128050a48d03b8c28bd8d61df29edad",
-    "scripts/production/native-ui-successor-scope.py": "aba82a28b16cd8cd9d33185e09e732521ce7949df1559628f48758853df5d20f"
+    "scripts/production/native-ui-successor-scope.py": "734a72762b16e88ff14f12f402b683e45738e92f1bddddefb78dddc0d3fa216c",
+    "scripts/production/product-conditions-scope.py": "44ec6dea3fc41c17d7089f5f6ea43568c9f1c82c36c72c9a0bc2953a92b7445e"
   },
   "protected_sha256": {
     ".github/workflows/app-production-hotfix.yml": "5866475344b22137eb05d0eb5946d67b97cd2b0b5c944cdbfde6da21dcc7816c",
@@ -785,7 +787,6 @@
     "scripts/production/preserve-replus-v12-authoring.py": "b9009692c84992fb5abce9ed2cbd7dd876f6e25bdb545649ed190bd442a1c0fd",
     "scripts/production/preserve-replus-v13-authoring.py": "837b5fc0608a47393eb04806a657ab49ae23c2840a0ce732bbd9ca59643f2684",
     "scripts/production/preserve-replus-v9-authoring.py": "4026906d8d27de64c3746b844a6fb941c928eaddd4b3422645893bf3b50ce902",
-    "scripts/production/product-conditions-scope.py": "96df0a4348829852b3d080442dda39e75ca3809239abf4ab61264c6047cc4672",
     "scripts/production/product-master-build.py": "be272ec4ccdb82aebcad735b8ef2791d50b3dfff3475f29a831d514430a906b3",
     "scripts/production/protected-qa-access.mjs": "a6823cfa1b434200b7f51e510fef0a60086430b1fcf26ca0c1c86d68edd28c26",
     "scripts/production/publication-lifecycle-qa.mjs": "2b9722d887ab6516e988c09284cd9489b842f1396a0c0ada8f29502a87a48066",

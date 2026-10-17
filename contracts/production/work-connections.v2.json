@@ -858,7 +858,7 @@
   "ga_adapter_policy": "CONNECTED_NATIVE_SCOPE_OR_EXPLICIT_FAIL_CLOSED; NO_REFERENCE_OR_LEGACY_FALLBACK",
   "new_product_build_profile": {
     "path": "contracts/production/product-master-build-profile.native-ui-v12.json",
-    "sha256": "a2d67e7a6a94148602b3e891b4136d65018d1e5bc5b3abb946fdcd80b9951400",
+    "sha256": "fb7773f2daa381da8186177e82a5f812ea453dafb8884b79e8041aff83ed339c",
     "profile_id": "sash-new-product-master-v1"
   }
 }

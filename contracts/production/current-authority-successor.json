@@ -1,6 +1,6 @@
 {
   "schema": "CURRENT_AUTHORITY_SUCCESSOR_SELECTION_V1",
   "path": "contracts/production/authority-successors/native-ui-candidate.v12.json",
-  "sha256": "2c69507a546e3907197e1b78a1d7fac7200ae96e97e30473031e179a87fb1e8f",
-  "implementation_sha": "c92372e66088674a9821702bd27185497f542a8c"
+  "sha256": "176ac73962d094db1e7e57b61fc4ed58069d506cecca85f656b688f580e9333c",
+  "implementation_sha": "48e06e4e68ba3961ecf949d00ea902ebcb4b5819"
 }

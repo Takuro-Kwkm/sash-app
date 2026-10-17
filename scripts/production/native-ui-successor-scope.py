@@ -25,7 +25,7 @@ def main():
   with tempfile.TemporaryDirectory(prefix='native-ui-predecessor-') as tmp:
    prior=Path(tmp)/'native';subprocess.run(['git','clone','--quiet','--shared','--dissociate',str(ROOT),str(prior)],check=True)
    subprocess.run(['git','checkout','--quiet','--detach',base],cwd=prior,check=True)
-   subprocess.run([sys.executable,'-B',str(prior/'scripts/production/initialization-transport-scope.py'),'--'+flag.replace('_','-'),str(dest)],cwd=prior,check=True)
+   subprocess.run([sys.executable,'-B',str(prior/'scripts/production/product-conditions-scope.py'),'--'+flag.replace('_','-'),str(dest)],cwd=prior,check=True)
   r['predecessor']=str(dest)
  print(json.dumps({k:v for k,v in r.items() if k not in ('authorized_paths','verified_unchanged_sha256')}));return 0 if r['status']=='PASS' else 2
 if __name__=='__main__':raise SystemExit(main())
