@@ -4,7 +4,7 @@
   "predecessor_selector_sha256": "b223ccb3d028796ac2d25e00d7a6e2749ad063fe4624668644df7817e22f3edd",
   "compatibility_implementation": {
     "repository": "Takuro-Kwkm/product-ui-contracts",
-    "ref": "3bdbec48396ad58d0049e49276307406b5bc1d75"
+    "ref": "3ef622ed98a769e89d2c8132c2d05dc238f4dd0f"
   },
   "connection_changes": [
     {
@@ -132,6 +132,10 @@
       "sha256": "e766731cd24d1065b512284ac94489be7eab33b28f123ffbc685d25e254aff6e"
     },
     {
+      "path": "scripts/production/product-conditions-scope.py",
+      "sha256": "63636412913be939ba9732fd42303abcca99843302bf133937fb228277b4c0ca"
+    },
+    {
       "path": "contracts/production/giesta2-json-change-profile.v1.json",
       "sha256": "d39ee587edf746597dc577b36a493ee96d601ae171a0d777b3e64f6c79eef3cc"
     },
@@ -141,15 +145,23 @@
     },
     {
       "path": "contracts/production/shared-product-master-conditions.v1.json",
-      "sha256": "b2067253d48be155d78916b0e47d428f6debbbd17393a7e91d3af899e88f07b4"
+      "sha256": "6f2a03feea441f766104fb21a2d84d48710a3e047c02073b32ba8f0af6d38d2a"
     },
     {
       "path": "contracts/production/shared-product-master-conditions.v1.bundle",
-      "sha256": "b729d5bdfa214fb75c4568944042d28fc3c035b457b35f6803b1349dc99cd1d8"
+      "sha256": "bb63d96cdb255a162bb7404f17cac5af2287e24ddea55d87ca93d4429774adbb"
     },
     {
       "path": "src/catalog/runtime-master/runtime-condition.mjs",
       "sha256": "ae5e442f90b5f7007ff8ea6fed46a0d7ce2937afbf5570f9fefefa2b113cdb8e"
+    },
+    {
+      "path": "test/101-native-sheets-connection.test.mjs",
+      "sha256": "e7a0d15aaa0b0126db67134a41093681435ff623709a8dee6a6bd633ca2faa8c"
+    },
+    {
+      "path": ".github/workflows/new-product-actual-build.yml",
+      "sha256": "404fe6e3bafb46ab5da0f4357fc18eaa2d10dbbb76b7480bf5a1a7b7afe9ed0e"
     }
   ],
   "build_profile": {
@@ -653,6 +665,15 @@
             "APW511",
             "APW 511",
             "YKK AP APW511"
+          ]
+        },
+        {
+          "repository": "Takuro-Kwkm/exterior-estimator",
+          "product_id": "NEW-CANDIDATE-93f569887c70f9518ada36b8",
+          "aliases": [
+            "カーポートSW",
+            "LIXIL カーポートSW",
+            "Carport SW"
           ]
         }
       ],

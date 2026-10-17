@@ -1,0 +1,48 @@
+{
+  "status": "PARTIAL_APPLICABILITY_VERIFIED",
+  "source_url": "https://www.lixil.co.jp/lineup/entrance/s/giesta-hi/pdf/giesta-hi_spec.pdf",
+  "source_sha256": "1cd872b0374bb3f3416afb9226f937c7791397dbe51eb972de5f5b8efe6a1231",
+  "visual_verified": true,
+  "checks": [
+    {
+      "configuration": "single",
+      "result": "PASS",
+      "source_width_range": [
+        788,
+        973
+      ],
+      "source_height_range": [
+        2414,
+        2730
+      ],
+      "adopted_master": "UNCHANGED"
+    },
+    {
+      "configuration": "parent_child",
+      "result": "PASS",
+      "source_width_range": [
+        1076,
+        1390
+      ],
+      "source_height_range": [
+        2414,
+        2730
+      ],
+      "adopted_master": "UNCHANGED"
+    }
+  ],
+  "lock_resolution": "ADOPTED_FAMILOCK_ONLY_RETAINED; historical/generic CAD handle illustration does not authorize manual-lock selection",
+  "frame_scope": {
+    "standard_H2330": "Prior candidate 136 source-bound rows retained",
+    "custom": "Frame dimensions verified; form/angle cross-product not directly established",
+    "high_size": "K2 no-angle plinth and K4 angle no-plinth drawings verified; all combinations not inferred"
+  },
+  "handoff_proposal": {
+    "status": "REVIEW_CANDIDATE_NOT_ADOPTED",
+    "standard": "Verified selection rows",
+    "custom_and_high_size": "Collect desired frame form/angle as estimate confirmation; do not assert manufacturer availability or automatic orderability",
+    "confirmations_existing_six": "UNCHANGED",
+    "target_gate": "Formal scope and handoff review before runtime compile"
+  },
+  "formal_writes": 0
+}
