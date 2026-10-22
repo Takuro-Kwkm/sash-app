@@ -1,6 +1,6 @@
 {
   "schema": "CURRENT_AUTHORITY_SUCCESSOR_SELECTION_V1",
-  "path": "contracts/production/authority-successors/giesta2-runtime-publication.v16.json",
-  "sha256": "24d62c33f67ccd9b7339f7d6e7d56fcc998796b30f6dc9eca8d5dea3781bf735",
-  "implementation_sha": "69a41fb74ffe8ee5d56989f5d0dcf9fe23a6d516"
+  "path": "contracts/production/authority-successors/sash-verification.v29.json",
+  "sha256": "e53ba4d1e21cb45bcac0f635a1d5b33e4ab02241b4aa6bbd90d3ff08660d8263",
+  "implementation_sha": "54f029e25e17b07bdd8203b9513b084a9f7a6c2f"
 }

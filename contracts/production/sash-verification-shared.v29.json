@@ -1,0 +1,8 @@
+{
+  "schema": "SASH_VERIFICATION_SHARED_GIT_CARRIER_V29",
+  "repository": "Takuro-Kwkm/product-ui-contracts",
+  "source_commit": "54f029e25e17b07bdd8203b9513b084a9f7a6c2f",
+  "sha256": "8c7462af8316942c1c814109bf5b61c2bfbc807f6f62d9c613b2b7476819a550",
+  "bytes": 1833356,
+  "scope": "INFRASTRUCTURE_COMPATIBILITY_ONLY; NO_INSTALLED_SHARED_COPY"
+}
