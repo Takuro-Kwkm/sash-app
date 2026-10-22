@@ -37,7 +37,7 @@ def main():
     result = assess_change(central, {'Takuro-Kwkm/sash-app': str(ROOT)}, args.base, args.head, args.event, environment)
     result['runner_identity'] = {name: os.environ.get(name) for name in ('GITHUB_RUN_ID', 'GITHUB_RUN_ATTEMPT', 'GITHUB_SHA')}
     output = Path(args.out).resolve()
-    if output.is_relative_to(ROOT) and not output.is_relative_to(ROOT / 'test-results'):
+    if output.is_relative_to(ROOT) and not output.is_relative_to(ROOT / 'artifacts' / 'authority'):
         raise ValueError('OBSERVATION_OUTPUT_SCOPE')
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps(result, ensure_ascii=False, indent=2) + '\n')

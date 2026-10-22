@@ -33,6 +33,10 @@ class SuccessorTests(unittest.TestCase):
             definition = importlib.util.spec_from_file_location('sash_successor_test', clone / 'scripts/production/sash-authority-successor.py')
             module = importlib.util.module_from_spec(definition)
             definition.loader.exec_module(module)
+            output = clone / 'artifacts' / 'authority' / 'generated.json'
+            output.parent.mkdir(parents=True)
+            output.write_text('{}\n')
+            self.assertEqual(module.validate(clone)['status'], 'PASS')
             for name in names:
                 with self.subTest(name=name):
                     path = clone / name
