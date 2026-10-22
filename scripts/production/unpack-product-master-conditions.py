@@ -4,6 +4,10 @@ from pathlib import Path
 ROOT=Path(__file__).resolve().parents[2]
 def unpack(root,destination):
  root=Path(root).resolve();destination=Path(destination).resolve()
+ import importlib.util
+ definition=importlib.util.spec_from_file_location('sash_successor_unpack',root/'scripts/production/sash-authority-successor.py')
+ successor=importlib.util.module_from_spec(definition);definition.loader.exec_module(successor)
+ if successor.selected(root):return successor.unpack(root,destination)
  assert not destination.exists() and not destination.is_relative_to(root),'ISOLATED_DESTINATION_REQUIRED'
  m=json.loads((root/'contracts/production/shared-product-master-conditions.v1.json').read_text())
  bundle=root/'contracts/production/shared-product-master-conditions.v1.bundle'
