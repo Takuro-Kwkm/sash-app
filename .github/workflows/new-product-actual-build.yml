@@ -43,13 +43,6 @@ jobs:
         run: |
           base="${BASE_SHA:-$(git rev-parse HEAD^)}"
           python -B scripts/ci/sash-change-observation.py --central "$SHARED_HARNESS_ROOT" --base "$base" --head "$EXPECTED_HEAD" --event "$EVENT" --out test-results/sash-change-observation.json
-      - name: Keep exact runner assessment and native environment evidence
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: sash-authority-successor-${{ env.EXPECTED_HEAD }}
-          path: test-results/*.json
-          if-no-files-found: error
       - name: Verify new-product environment without a registered product
         run: |
           python -c 'import json,os; print(json.dumps({os.environ["GITHUB_REPOSITORY"]:os.environ["GITHUB_WORKSPACE"]}))' > /tmp/native-new-product-repositories.json
@@ -64,3 +57,10 @@ jobs:
         run: |
           python -B scripts/production/test_json_master_formal.py "$SHARED_HARNESS_ROOT"
           python -B -m unittest discover -s scripts/production -p test_json_master_change.py -v
+      - name: Keep exact runner assessment and native environment evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: sash-authority-successor-${{ env.EXPECTED_HEAD }}
+          path: test-results/*.json
+          if-no-files-found: error
