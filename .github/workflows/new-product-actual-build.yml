@@ -4,7 +4,12 @@ name: Actual New Product Master Build
   push:
     branches:
       - main
-  workflow_dispatch: null
+  workflow_dispatch:
+    inputs:
+      base_sha:
+        description: Exact comparison base; omission uses first parent
+        required: false
+        type: string
 permissions:
   contents: read
 jobs:
@@ -27,9 +32,24 @@ jobs:
         run: |-
           python -B scripts/production/product-conditions-scope.py
           python -B scripts/production/test_product_conditions_scope.py
+          python -B scripts/production/test_sash_authority_successor.py
           python -B scripts/production/unpack-product-master-conditions.py "$SHARED_HARNESS_ROOT"
       - run: python -m pip install -r "$SHARED_HARNESS_ROOT/requirements.txt"
       - run: python -m pip install openpyxl==3.1.5
+      - name: Assess bounded infrastructure changes through the existing router
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before || inputs.base_sha }}
+          EVENT: ${{ github.event_name }}
+        run: |
+          base="${BASE_SHA:-$(git rev-parse HEAD^)}"
+          python -B scripts/ci/sash-change-observation.py --central "$SHARED_HARNESS_ROOT" --base "$base" --head "$EXPECTED_HEAD" --event "$EVENT" --out test-results/sash-change-observation.json
+      - name: Keep exact runner assessment and native environment evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: sash-authority-successor-${{ env.EXPECTED_HEAD }}
+          path: test-results/*.json
+          if-no-files-found: error
       - name: Verify new-product environment without a registered product
         run: |
           python -c 'import json,os; print(json.dumps({os.environ["GITHUB_REPOSITORY"]:os.environ["GITHUB_WORKSPACE"]}))' > /tmp/native-new-product-repositories.json

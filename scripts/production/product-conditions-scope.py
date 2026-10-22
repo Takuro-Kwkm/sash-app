@@ -13,6 +13,8 @@ def selected_giesta(root):
  except (OSError,KeyError,ValueError):return False
 def validate(root=ROOT):
  root=Path(root).resolve()
+ successor=load('sash_successor',root/'scripts/production/sash-authority-successor.py')
+ if successor.selected(root):return successor.validate(root)
  if not selected_giesta(root):
   if (root/'contracts/production/native-ui-successor-scope.v1.json').exists():return load('native_ui_scope',root/'scripts/production/native-ui-successor-scope.py').validate(root)
   if (root/'contracts/production/initialization-transport-scope.v1.json').exists():return load('transport_scope',root/'scripts/production/initialization-transport-scope.py').validate(root)
@@ -50,6 +52,8 @@ def validate(root=ROOT):
    return load('conditions_scope_guard',central/'scripts/verify-product-master-conditions-native-scope.py').validate(root)
  except Exception as e:return {'status':'FAIL_CLOSED','errors':[str(e)],'authorized_paths':[],'verified_unchanged_sha256':{},'deployment':'NOT_EXECUTED'}
 def main():
+ successor=load('sash_successor_main',ROOT/'scripts/production/sash-authority-successor.py')
+ if successor.selected(ROOT):return successor.main()
  if not selected_giesta(ROOT):
   if (ROOT/'contracts/production/native-ui-successor-scope.v1.json').exists():return load('native_ui_scope_main',ROOT/'scripts/production/native-ui-successor-scope.py').main()
   if (ROOT/'contracts/production/initialization-transport-scope.v1.json').exists():return load('transport_cli',ROOT/'scripts/production/initialization-transport-scope.py').main()
