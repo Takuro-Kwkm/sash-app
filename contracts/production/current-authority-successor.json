@@ -1,6 +1,6 @@
 {
   "schema": "CURRENT_AUTHORITY_SUCCESSOR_SELECTION_V1",
   "path": "contracts/production/authority-successors/sash-verification.v29.json",
-  "sha256": "e53ba4d1e21cb45bcac0f635a1d5b33e4ab02241b4aa6bbd90d3ff08660d8263",
-  "implementation_sha": "54f029e25e17b07bdd8203b9513b084a9f7a6c2f"
+  "sha256": "970a63e577577ab872ebdb09b1d768b4dca8c9a973f718fb021a20fa435e4c07",
+  "implementation_sha": "b74663e6a536d5fdda02a5bb54462771c0e6ff33"
 }

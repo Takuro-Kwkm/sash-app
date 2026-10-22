@@ -2,7 +2,7 @@
   "schema": "CURRENT_AUTHORITY_SASH_VERIFICATION_V29",
   "predecessor_central_commit": "b1e99f08fb2a1bb6106b3e3964a1e1e7d2b3fc64",
   "predecessor_native_commit": "e22ed49cf97301a727a6a0175afcd82120eef0d5",
-  "native_source_commit": "6bb77a860b9a09a97271b3712efb7727c4a36cc1",
-  "shared_implementation_sha": "54f029e25e17b07bdd8203b9513b084a9f7a6c2f",
+  "native_source_commit": "1775993f6d9ed7e5ee4fb8971fa4effffdeb7fdd",
+  "shared_implementation_sha": "b74663e6a536d5fdda02a5bb54462771c0e6ff33",
   "terminal_policy": "INFRASTRUCTURE_COMPATIBILITY_ONLY; SAVED_BINDING_INSPECT_ONLY; NO_RELEASE_ADMISSION; NO_QA_SKIP"
 }
