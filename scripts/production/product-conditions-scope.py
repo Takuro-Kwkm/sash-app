@@ -53,8 +53,7 @@ def validate(root=ROOT):
  except Exception as e:return {'status':'FAIL_CLOSED','errors':[str(e)],'authorized_paths':[],'verified_unchanged_sha256':{},'deployment':'NOT_EXECUTED'}
 def main():
  successor=load('sash_successor_main',ROOT/'scripts/production/sash-authority-successor.py')
- if successor.selected(ROOT):return successor.main()
- if not selected_giesta(ROOT):
+ if not successor.selected(ROOT) and not selected_giesta(ROOT):
   if (ROOT/'contracts/production/native-ui-successor-scope.v1.json').exists():return load('native_ui_scope_main',ROOT/'scripts/production/native-ui-successor-scope.py').main()
   if (ROOT/'contracts/production/initialization-transport-scope.v1.json').exists():return load('transport_cli',ROOT/'scripts/production/initialization-transport-scope.py').main()
  p=argparse.ArgumentParser();p.add_argument('--predecessor');p.add_argument('--parent');a=p.parse_args();r=validate()

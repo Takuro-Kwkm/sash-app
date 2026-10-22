@@ -38,7 +38,7 @@ def unpack(root, destination):
                       ('checkout', '--quiet', '--detach', implementation)):
         subprocess.run(['git', *arguments], cwd=destination, check=True, capture_output=True)
     result = subprocess.run([sys.executable, '-B', '-c',
-        'import json,sys;from harness.current_authority import compatibility;'
+        'import json,sys;from harness.sash_verification_scope import compatibility;'
         'print(json.dumps(compatibility(sys.argv[1],sys.argv[2])))', str(destination), str(root)],
         cwd=destination, capture_output=True, text=True, timeout=420)
     if result.returncode:
