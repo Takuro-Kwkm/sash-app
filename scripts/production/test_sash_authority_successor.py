@@ -3,6 +3,7 @@ import importlib.util
 import json
 from pathlib import Path
 import subprocess
+import sys
 import tempfile
 import unittest
 
@@ -10,6 +11,15 @@ ROOT = Path(__file__).resolve().parents[2]
 
 
 class SuccessorTests(unittest.TestCase):
+    def test_predecessor_cli_preserves_original_binding(self):
+        with tempfile.TemporaryDirectory(prefix='sash-predecessor-cli-') as temporary:
+            destination = Path(temporary) / 'prior'
+            result = subprocess.run([sys.executable, '-B', str(ROOT / 'scripts/production/product-conditions-scope.py'),
+                                     '--predecessor', str(destination)], capture_output=True, text=True)
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+            expected = json.loads((ROOT / 'contracts/production/product-master-conditions-scope.v1.json').read_bytes())['starting_main']
+            self.assertEqual(subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=destination, text=True).strip(), expected)
+
     def test_native_drift_is_rejected(self):
         names = ['contracts/production/work-connections.v2.json',
                  'contracts/production/validator-registry.v2.json',
