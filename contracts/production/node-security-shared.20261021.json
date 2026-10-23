@@ -1,8 +1,8 @@
 {
   "schema": "NODE_SECURITY_SHARED_GIT_CARRIER_V1",
   "repository": "Takuro-Kwkm/product-ui-contracts",
-  "source_commit": "96c9fb40c6333fffbb97be38cade9e2eff7b6e09",
-  "sha256": "511a5b7bcc2b59cb11733c54cb0eb8a23a336967caf001d89dd7619de151449e",
-  "bytes": 1955950,
+  "source_commit": "0f0f881025832552f166205527f25f17acb8e30c",
+  "sha256": "c7a6f54731302574bee84c113806c86a5df47333e3f6aae0010ea375664826da",
+  "bytes": 1955969,
   "scope": "NODE_RUNTIME_SECURITY_ONLY; SAVED_BINDING_INSPECT_ONLY; NO_PRODUCT_ADOPTION; NO_RELEASE_ADMISSION; NO_QA_SKIP"
 }
