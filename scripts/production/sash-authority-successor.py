@@ -12,9 +12,21 @@ RECORD = 'contracts/production/authority-successors/sash-verification.v29.json'
 META = 'contracts/production/sash-verification-shared.v29.json'
 BUNDLE = 'contracts/production/sash-verification-shared.v29.bundle'
 
+VERSIONS = {
+    RECORD: (META, BUNDLE, 'SASH_VERIFICATION_SHARED_GIT_CARRIER_V29',
+             'INFRASTRUCTURE_COMPATIBILITY_ONLY; NO_INSTALLED_SHARED_COPY',
+             'harness.sash_verification_scope'),
+    'contracts/production/authority-successors/working-recovery.v35.json': (
+        'contracts/production/working-recovery-shared.v35.json',
+        'contracts/production/working-recovery-shared.v35.bundle',
+        'WORKING_RECOVERY_SHARED_GIT_CARRIER_V35',
+        'EXISTING_WORKING_RECOVERY_SALES_QA_ONLY; NO_INSTALLED_SHARED_COPY',
+        'harness.working_recovery_scope'),
+}
+
 
 def selected(root):
-    return json.loads((Path(root) / 'contracts/production/current-authority-successor.json').read_bytes()).get('path') == RECORD
+    return json.loads((Path(root) / 'contracts/production/current-authority-successor.json').read_bytes()).get('path') in VERSIONS
 
 
 def unpack(root, destination):
@@ -22,14 +34,17 @@ def unpack(root, destination):
     if destination.exists() or destination.is_relative_to(root):
         raise ValueError('ISOLATED_DESTINATION_REQUIRED')
     selection = json.loads((root / 'contracts/production/current-authority-successor.json').read_bytes())
-    metadata = json.loads((root / META).read_bytes())
-    bundle = root / BUNDLE
+    if not selected(root):
+        raise ValueError('UNSELECTED_SUCCESSOR')
+    meta_path, bundle_path, schema, scope, module = VERSIONS[selection['path']]
+    metadata = json.loads((root / meta_path).read_bytes())
+    bundle = root / bundle_path
     implementation = selection['implementation_sha']
     if not selected(root) or metadata != {
-        'schema': 'SASH_VERIFICATION_SHARED_GIT_CARRIER_V29',
+        'schema': schema,
         'repository': 'Takuro-Kwkm/product-ui-contracts', 'source_commit': implementation,
         'sha256': hashlib.sha256(bundle.read_bytes()).hexdigest(), 'bytes': bundle.stat().st_size,
-        'scope': 'INFRASTRUCTURE_COMPATIBILITY_ONLY; NO_INSTALLED_SHARED_COPY',
+        'scope': scope,
     }:
         raise ValueError('SELECTED_CARRIER_IDENTITY')
     destination.mkdir(parents=True)
@@ -38,7 +53,7 @@ def unpack(root, destination):
                       ('checkout', '--quiet', '--detach', implementation)):
         subprocess.run(['git', *arguments], cwd=destination, check=True, capture_output=True)
     result = subprocess.run([sys.executable, '-B', '-c',
-        'import json,sys;from harness.sash_verification_scope import compatibility;'
+        'import json,sys;from ' + module + ' import compatibility;'
         'print(json.dumps(compatibility(sys.argv[1],sys.argv[2])))', str(destination), str(root)],
         cwd=destination, capture_output=True, text=True, timeout=420)
     if result.returncode:

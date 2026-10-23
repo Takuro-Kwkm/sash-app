@@ -162,9 +162,21 @@
       "no_fallback": true
     },
     "NATIVE_REGISTRY:YKK AP::マドリモ 戸建用": {
-      "state": "FAIL_CLOSED",
-      "validators": [],
-      "no_fallback": true
+      "state": "READY",
+      "scope": "EXISTING_WORKING_SALES_QA",
+      "validators": [
+        "native-working-identity",
+        "native-xlsx-bundle-readback",
+        "official-source-byte-review",
+        "shared-domain-qa",
+        "sales-request-handoff"
+      ],
+      "no_fallback": true,
+      "native_profile": {
+        "profile_id": "sash-existing-xlsx-working-sales-qa-v1",
+        "path": "contracts/production/working-master-recovery/madoremo.business-qa.v1.json",
+        "sha256": "c37e0de6af37621167895c65a0bb0fe2ddce9e5570a50139bbacf8028f2a4b05"
+      }
     },
     "NATIVE_REGISTRY:YKK AP::コンコードS30": {
       "state": "FAIL_CLOSED",
