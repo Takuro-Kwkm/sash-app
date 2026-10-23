@@ -31,7 +31,9 @@ jobs:
           python -m pip install -r "$RUNNER_TEMP/node-security-shared/requirements.txt"
           python -m pip check
       - name: Verify current scope and retained predecessor contracts
-        run: python -B scripts/production/node-security.py validate
+        run: |
+          python -c 'import json,os; print(json.dumps({os.environ["GITHUB_REPOSITORY"]: os.environ["GITHUB_WORKSPACE"]}))' > "$RUNNER_TEMP/node-security-repositories.json"
+          python -B "$RUNNER_TEMP/node-security-shared/scripts/architecture-work.py" resolve --repositories "$RUNNER_TEMP/node-security-repositories.json"
       - uses: actions/setup-node@v4
         with:
           node-version: '24.22.1'
