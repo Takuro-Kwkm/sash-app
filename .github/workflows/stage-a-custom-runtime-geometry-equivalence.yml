@@ -46,7 +46,7 @@ jobs:
           fetch-depth: 1
       - uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version: 24.22.1
       - name: Exact SHA gate
         shell: bash
         run: |

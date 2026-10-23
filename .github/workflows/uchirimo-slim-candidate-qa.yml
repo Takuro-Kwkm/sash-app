@@ -19,7 +19,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: '24'
+          node-version: '24.22.1'
       - run: node scripts/uchirimo-full-selector-proof.mjs
       - run: node scripts/governance/uchirimo-slim-checkpoint-inventory.mjs
       - uses: actions/upload-artifact@v4
@@ -34,7 +34,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: '22'
+          node-version: '22.23.4'
       - run: echo '4a3518c3f5706aa4cff6ddcc10532edcade4f00f84a81ad63e3d74fa98d85930  data/uchirimo-slim/working-candidate.json' | sha256sum --check
       - run: node scripts/governance/uchirimo-slim-recurring-qa.mjs
       - uses: actions/upload-artifact@v4
@@ -50,7 +50,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: '22'
+          node-version: '22.23.4'
       - run: node --test test/70-runtime-manifest-ew-integration.test.mjs test/70-runtime-manifest-tw-integration.test.mjs test/71-runtime-ui-tw-gate.test.mjs test/72-runtime-manifest-uchirimo-integration.test.mjs test/73-runtime-ui-uchirimo-gate.test.mjs test/74-new-construction-ui-v16.test.mjs test/81-ew-v12-formal-glazing-semantic.test.mjs test/82-ew-custom-glass-validation.test.mjs test/82-uchirimo-slim-canonical.test.mjs test/83-uchirimo-glass-rule-model.test.mjs test/84-uchirimo-factorized-selector.test.mjs
       - run: cp data/uchirimo-slim/runtime-support.json /tmp/uchirimo-runtime-support-before.json
       - run: node scripts/governance/uchirimo-slim-runtime-support.mjs
@@ -68,7 +68,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: '24'
+          node-version: '24.22.1'
       - run: node scripts/uchirimo-full-selector-proof.mjs
       - run: node scripts/governance/uchirimo-slim-selector-differential.mjs
       - uses: actions/upload-artifact@v4
@@ -84,7 +84,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: '24'
+          node-version: '24.22.1'
       - run: node scripts/governance/uchirimo-slim-dimension-differential.mjs
       - uses: actions/upload-artifact@v4
         if: always()
@@ -99,7 +99,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: '24'
+          node-version: '24.22.1'
       - run: UCHIRIMO_SLIM_PREVIEW_INPUT=data/uchirimo-slim/working-candidate.json node scripts/build-uchirimo-runtime-review-preview.mjs artifacts/uchirimo-slim/review-preview/index.html
       - run: |
           npm install --no-save playwright@1.55.0
@@ -124,7 +124,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: '24'
+          node-version: '24.22.1'
       - run: node scripts/uchirimo-full-selector-proof.mjs
       - run: node scripts/governance/uchirimo-slim-parent-differential.mjs
       - uses: actions/upload-artifact@v4
@@ -140,7 +140,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: '24'
+          node-version: '24.22.1'
       - run: node scripts/governance/uchirimo-slim-http-e2e.mjs
       - uses: actions/upload-artifact@v4
         if: always()
@@ -155,7 +155,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: '24'
+          node-version: '24.22.1'
       - run: node scripts/governance/uchirimo-slim-residual-replay.mjs
       - uses: actions/upload-artifact@v4
         if: always()
@@ -173,7 +173,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: '24'
+          node-version: '24.22.1'
       - run: node scripts/governance/uchirimo-slim-residual-replay.mjs
       - uses: actions/upload-artifact@v4
         if: always()
@@ -191,7 +191,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: '24'
+          node-version: '24.22.1'
       - run: node scripts/governance/uchirimo-slim-residual-replay.mjs
       - uses: actions/upload-artifact@v4
         if: always()
@@ -206,7 +206,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: '24'
+          node-version: '24.22.1'
       - run: node scripts/governance/uchirimo-slim-factorized-qa.mjs
       - run: node scripts/governance/uchirimo-slim-factorized-samples.mjs
       - uses: actions/upload-artifact@v4
@@ -229,7 +229,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: '24'
+          node-version: '24.22.1'
       - run: node scripts/uchirimo-full-selector-proof.mjs
       - run: node scripts/governance/uchirimo-slim-factorized-qa.mjs
       - uses: actions/upload-artifact@v4
@@ -248,7 +248,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: '24'
+          node-version: '24.22.1'
       - uses: actions/download-artifact@v4
         with:
           name: uchirimo-slim-factorized-selector

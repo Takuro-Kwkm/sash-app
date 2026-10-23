@@ -31,7 +31,7 @@ jobs:
           fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version: 24.22.1
       - run: node scripts/governance/build-human-flow-review.mjs
       - run: node scripts/governance/verify-human-flow-field-coverage.mjs
       - run: node scripts/governance/collect-qa-evidence.mjs

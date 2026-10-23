@@ -41,7 +41,7 @@ jobs:
           fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version: 24.22.1
       - name: Compute non-TW proof dependency fingerprint
         id: fingerprint
         run: node scripts/governance/proof-dependency-fingerprint.mjs --mode fingerprint --family NONTW_EXACT
@@ -92,7 +92,7 @@ jobs:
           fetch-depth: 1
       - uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version: 24.22.1
       - id: inventory
         name: Build exact non-TW window inventory
         shell: bash
@@ -159,7 +159,7 @@ jobs:
           fetch-depth: 1
       - uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version: 24.22.1
       - name: Exact SHA gate
         shell: bash
         run: |
@@ -215,7 +215,7 @@ jobs:
           fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version: 24.22.1
       - name: Download all per-window evidence
         uses: actions/download-artifact@v4
         with:

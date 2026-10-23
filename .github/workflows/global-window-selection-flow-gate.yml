@@ -59,7 +59,7 @@ jobs:
       - name: Setup Node 24
         uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version: 24.22.1
 
       - name: Verify project governance state
         run: node scripts/governance/verify-project-state.mjs
@@ -128,7 +128,7 @@ jobs:
       - name: Setup Node 24
         uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version: 24.22.1
 
       - name: Compute Uchirimo selector proof dependency fingerprint
         id: uchirimo-proof-fingerprint
@@ -195,7 +195,7 @@ jobs:
       - name: Setup Node 24
         uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version: 24.22.1
 
       - name: Install
         run: npm install --ignore-scripts
@@ -343,7 +343,7 @@ jobs:
       - name: Setup Node 24
         uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version: 24.22.1
 
       - name: Install
         run: npm install --ignore-scripts
@@ -395,7 +395,7 @@ jobs:
       - name: Setup Node 24
         uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version: 24.22.1
       - name: Install
         run: npm install --ignore-scripts
       - name: Download current-head partition carry-forward manifest
@@ -442,7 +442,7 @@ jobs:
       - name: Setup Node 24
         uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version: 24.22.1
       - name: Install
         run: npm install --ignore-scripts
       - name: Download current-head partition carry-forward manifest
@@ -489,7 +489,7 @@ jobs:
       - name: Setup Node 24
         uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version: 24.22.1
       - name: Install
         run: npm install --ignore-scripts
       - name: Download current-head partition carry-forward manifest
@@ -536,7 +536,7 @@ jobs:
       - name: Setup Node 24
         uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version: 24.22.1
       - name: Install
         run: npm install --ignore-scripts
       - name: Download current-head partition carry-forward manifest
@@ -583,7 +583,7 @@ jobs:
       - name: Setup Node 24
         uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version: 24.22.1
       - name: Install
         run: npm install --ignore-scripts
       - name: Download current-head partition carry-forward manifest
@@ -630,7 +630,7 @@ jobs:
       - name: Setup Node 24
         uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version: 24.22.1
       - name: Install
         run: npm install --ignore-scripts
       - name: Download current-head partition carry-forward manifest
@@ -677,7 +677,7 @@ jobs:
       - name: Setup Node 24
         uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version: 24.22.1
       - name: Install
         run: npm install --ignore-scripts
       - name: Download current-head partition carry-forward manifest
@@ -724,7 +724,7 @@ jobs:
       - name: Setup Node 24
         uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version: 24.22.1
       - name: Install
         run: npm install --ignore-scripts
       - name: Download current-head partition carry-forward manifest
@@ -771,7 +771,7 @@ jobs:
       - name: Setup Node 24
         uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version: 24.22.1
       - name: Install
         run: npm install --ignore-scripts
       - name: Download current-head partition carry-forward manifest
@@ -818,7 +818,7 @@ jobs:
       - name: Setup Node 24
         uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version: 24.22.1
       - name: Install
         run: npm install --ignore-scripts
       - name: Download current-head partition carry-forward manifest
@@ -865,7 +865,7 @@ jobs:
       - name: Setup Node 24
         uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version: 24.22.1
       - name: Install
         run: npm install --ignore-scripts
       - name: Download current-head partition carry-forward manifest
@@ -912,7 +912,7 @@ jobs:
       - name: Setup Node 24
         uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version: 24.22.1
       - name: Install
         run: npm install --ignore-scripts
       - name: Download current-head partition carry-forward manifest
@@ -959,7 +959,7 @@ jobs:
       - name: Setup Node 24
         uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version: 24.22.1
       - name: Install
         run: npm install --ignore-scripts
       - name: Download current-head partition carry-forward manifest
@@ -1006,7 +1006,7 @@ jobs:
       - name: Setup Node 24
         uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version: 24.22.1
       - name: Install
         run: npm install --ignore-scripts
       - name: Download current-head partition carry-forward manifest
@@ -1053,7 +1053,7 @@ jobs:
       - name: Setup Node 24
         uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version: 24.22.1
       - name: Install
         run: npm install --ignore-scripts
       - name: Download current-head partition carry-forward manifest
@@ -1100,7 +1100,7 @@ jobs:
       - name: Setup Node 24
         uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version: 24.22.1
       - name: Install
         run: npm install --ignore-scripts
       - name: Download current-head partition carry-forward manifest
@@ -1148,7 +1148,7 @@ jobs:
       - name: Setup Node 24
         uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version: 24.22.1
       - name: Install
         run: npm install --ignore-scripts
       - name: Run isolated Uchirimo selector batch lane 0
@@ -1195,7 +1195,7 @@ jobs:
       - name: Setup Node 24
         uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version: 24.22.1
       - name: Install
         run: npm install --ignore-scripts
       - name: Run isolated Uchirimo selector batch lane 1
@@ -1242,7 +1242,7 @@ jobs:
       - name: Setup Node 24
         uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version: 24.22.1
       - name: Install
         run: npm install --ignore-scripts
       - name: Run isolated Uchirimo selector batch lane 2
@@ -1289,7 +1289,7 @@ jobs:
       - name: Setup Node 24
         uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version: 24.22.1
       - name: Install
         run: npm install --ignore-scripts
       - name: Run isolated Uchirimo selector batch lane 3
@@ -1336,7 +1336,7 @@ jobs:
       - name: Setup Node 24
         uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version: 24.22.1
       - name: Install
         run: npm install --ignore-scripts
       - name: Run isolated Uchirimo selector batch lane 4
@@ -1383,7 +1383,7 @@ jobs:
       - name: Setup Node 24
         uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version: 24.22.1
       - name: Install
         run: npm install --ignore-scripts
       - name: Run isolated Uchirimo selector batch lane 5
@@ -1430,7 +1430,7 @@ jobs:
       - name: Setup Node 24
         uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version: 24.22.1
       - name: Install
         run: npm install --ignore-scripts
       - name: Run isolated Uchirimo selector batch lane 6
@@ -1477,7 +1477,7 @@ jobs:
       - name: Setup Node 24
         uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version: 24.22.1
       - name: Install
         run: npm install --ignore-scripts
       - name: Run isolated Uchirimo selector batch lane 7
@@ -1524,7 +1524,7 @@ jobs:
       - name: Setup Node 24
         uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version: 24.22.1
       - name: Install
         run: npm install --ignore-scripts
       - name: Run isolated Uchirimo selector batch lane 8
@@ -1571,7 +1571,7 @@ jobs:
       - name: Setup Node 24
         uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version: 24.22.1
       - name: Install
         run: npm install --ignore-scripts
       - name: Run isolated Uchirimo selector batch lane 9
@@ -1618,7 +1618,7 @@ jobs:
       - name: Setup Node 24
         uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version: 24.22.1
       - name: Install
         run: npm install --ignore-scripts
       - name: Run isolated Uchirimo selector batch lane 10
@@ -1665,7 +1665,7 @@ jobs:
       - name: Setup Node 24
         uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version: 24.22.1
       - name: Install
         run: npm install --ignore-scripts
       - name: Run isolated Uchirimo selector batch lane 11
@@ -1712,7 +1712,7 @@ jobs:
       - name: Setup Node 24
         uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version: 24.22.1
       - name: Install
         run: npm install --ignore-scripts
       - name: Run isolated Uchirimo selector batch lane 12
@@ -1759,7 +1759,7 @@ jobs:
       - name: Setup Node 24
         uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version: 24.22.1
       - name: Install
         run: npm install --ignore-scripts
       - name: Run isolated Uchirimo selector batch lane 13
@@ -1806,7 +1806,7 @@ jobs:
       - name: Setup Node 24
         uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version: 24.22.1
       - name: Install
         run: npm install --ignore-scripts
       - name: Run isolated Uchirimo selector batch lane 14
@@ -1853,7 +1853,7 @@ jobs:
       - name: Setup Node 24
         uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version: 24.22.1
       - name: Install
         run: npm install --ignore-scripts
       - name: Run isolated Uchirimo selector batch lane 15
@@ -1892,7 +1892,7 @@ jobs:
       - name: Setup Node 24
         uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version: 24.22.1
 
       - name: Install
         run: npm install --ignore-scripts
@@ -1972,7 +1972,7 @@ jobs:
       - name: Setup Node 24
         uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version: 24.22.1
 
       - name: Install
         run: npm install --ignore-scripts

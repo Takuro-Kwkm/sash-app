@@ -44,7 +44,7 @@ jobs:
           echo 'GITHUB_REF_NAME=main' >> "$GITHUB_ENV"
       - uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version: 24.22.1
       - name: Prepare deployment credential
         env:
           VERCEL_TOKEN_PRIMARY: ${{ secrets.VERCEL_TOKEN }}

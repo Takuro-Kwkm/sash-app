@@ -29,7 +29,7 @@ Current Product Registry、Formal package、Source、選択Contract、Runtime in
 
 ## ローカル起動とQA
 
-Node.js 24を使う。アプリ本体に追加の環境変数は不要。
+Node.js 24.22.1 以降の 24 系を使う。アプリ本体に追加の環境変数は不要。
 
 ```sh
 npm start

@@ -22,7 +22,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version: 24.22.1
       - name: Install
         run: npm install --ignore-scripts
       - name: Syntax checks
@@ -102,7 +102,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version: 24.22.1
       - name: Initialize release build audit
         run: |
           mkdir -p artifacts/release-build
@@ -165,7 +165,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version: 24.22.1
       - name: Initialize deployment audit
         run: |
           mkdir -p artifacts/production-deploy

@@ -30,7 +30,7 @@ jobs:
           fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version: 24.22.1
       - name: Verify user-approved application identity and prior gates
         env:
           GH_TOKEN: ${{ github.token }}

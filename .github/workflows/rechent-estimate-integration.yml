@@ -18,7 +18,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version: 24.22.1
       - run: npm run lint && npm run typecheck && npm test
       - name: Official R8 adoption and unrelated-series protection
         run: |
@@ -63,7 +63,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version: 24.22.1
       - name: Prepare preview credential
         env:
           VERCEL_TOKEN_PRIMARY: ${{ secrets.VERCEL_TOKEN }}
@@ -100,7 +100,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version: 24.22.1
       - uses: actions/download-artifact@v4
         with:
           name: rechent-local-qa-${{ github.sha }}

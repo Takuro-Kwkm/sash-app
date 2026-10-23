@@ -69,7 +69,7 @@ jobs:
       - name: Setup Node 24
         uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version: 24.22.1
       - name: Install
         run: npm install --ignore-scripts
       - name: Verify exact HEAD
@@ -186,7 +186,7 @@ jobs:
       - name: Setup Node 24
         uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version: 24.22.1
 
       - name: Install
         run: npm install --ignore-scripts
@@ -512,7 +512,7 @@ jobs:
       - name: Setup Node 24
         uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version: 24.22.1
 
       - name: Download Current Release Scope QA evidence
         uses: actions/download-artifact@v4
@@ -689,7 +689,7 @@ jobs:
         if: ${{ steps.changes.outputs.required == 'true' }}
         uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version: 24.22.1
 
       - name: Install
         if: ${{ steps.changes.outputs.required == 'true' }}
