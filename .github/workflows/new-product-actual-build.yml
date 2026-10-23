@@ -49,8 +49,9 @@ jobs:
           BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before || inputs.base_sha }}
           EVENT: ${{ github.event_name }}
         run: |
+          python -B scripts/production/node-security.py unpack "$RUNNER_TEMP/node-security-current-shared"
           base="${BASE_SHA:-$(git rev-parse HEAD^)}"
-          python -B scripts/ci/sash-change-observation.py --central "$SHARED_HARNESS_ROOT" --base "$base" --head "$EXPECTED_HEAD" --event "$EVENT" --out artifacts/authority/sash-change-observation.json
+          python -B scripts/ci/sash-change-observation.py --central "$RUNNER_TEMP/node-security-current-shared" --base "$base" --head "$EXPECTED_HEAD" --event "$EVENT" --out artifacts/authority/sash-change-observation.json
         working-directory: ${{ github.workspace }}
       - name: Verify new-product environment without a registered product
         run: |
@@ -74,5 +75,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: sash-authority-successor-${{ env.EXPECTED_HEAD }}
-          path: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/authority/*.json
+          path: |
+            ${{ github.workspace }}/artifacts/authority/*.json
+            ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}/artifacts/authority/*.json
           if-no-files-found: error
