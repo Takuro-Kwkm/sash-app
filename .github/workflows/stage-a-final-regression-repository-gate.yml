@@ -41,7 +41,7 @@ jobs:
       - name: Verify runtime maintenance scope and retain predecessor
         if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
         working-directory: ${{ github.workspace }}
-        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV"
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV" --workflow .github/workflows/stage-a-final-regression-repository-gate.yml
       - uses: actions/setup-node@v4
         with:
           node-version: 24.22.1
@@ -55,7 +55,7 @@ jobs:
           git diff --quiet "$BROWSER_EVIDENCE_HEAD" "$HEAD_SHA" -- src/ test/browser/stage-a-full-browser-qa.mjs
           echo 'FINAL_BROWSER_EVIDENCE_INVALIDATION_GATE=PASS'
 
-        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
+        working-directory: ${{ github.workspace }}
       - name: Download Full Browser QA evidence
         shell: bash
         env:
@@ -176,7 +176,7 @@ jobs:
           NODE
           echo 'PRODUCT_MASTER_MUTATION=0'
 
-        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
+        working-directory: ${{ github.workspace }}
       - name: Consolidate Stage A final gates
         shell: bash
         run: |

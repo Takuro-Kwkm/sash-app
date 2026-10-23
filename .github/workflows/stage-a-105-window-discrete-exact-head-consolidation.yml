@@ -42,7 +42,7 @@ jobs:
       - name: Verify runtime maintenance scope and retain predecessor
         if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
         working-directory: ${{ github.workspace }}
-        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV"
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV" --workflow .github/workflows/stage-a-105-window-discrete-exact-head-consolidation.yml
       - uses: actions/setup-node@v4
         with:
           node-version: 24.22.1

@@ -37,7 +37,6 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '24.22.1'
-          cache: npm
       - name: Verify patched runtime
         run: node --input-type=module -e 'if(process.versions.node !== "24.22.1") process.exit(1); console.log(process.version)'
       - run: npm install --ignore-scripts --package-lock=false

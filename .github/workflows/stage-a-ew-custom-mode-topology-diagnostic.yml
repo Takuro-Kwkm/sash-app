@@ -36,7 +36,7 @@ jobs:
       - name: Verify runtime maintenance scope and retain predecessor
         if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
         working-directory: ${{ github.workspace }}
-        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV"
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV" --workflow .github/workflows/stage-a-ew-custom-mode-topology-diagnostic.yml
       - uses: actions/setup-node@v4
         with:
           node-version: 24.22.1
@@ -48,7 +48,7 @@ jobs:
           git merge-base --is-ancestor "$CUSTOM_GEOMETRY_EVIDENCE_HEAD" "$HEAD_SHA"
           git diff --quiet "$CUSTOM_GEOMETRY_EVIDENCE_HEAD" "$HEAD_SHA" -- src/
           node --check scripts/stage-a-ew-custom-mode-topology-diagnostic.mjs
-        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
+        working-directory: ${{ github.workspace }}
       - name: Download reachability evidence
         uses: actions/download-artifact@v4
         with:

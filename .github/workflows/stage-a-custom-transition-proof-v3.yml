@@ -38,7 +38,7 @@ jobs:
       - name: Verify runtime maintenance scope and retain predecessor
         if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
         working-directory: ${{ github.workspace }}
-        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV"
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV" --workflow .github/workflows/stage-a-custom-transition-proof-v3.yml
       - uses: actions/setup-node@v4
         with:
           node-version: 24.22.1
@@ -53,7 +53,7 @@ jobs:
           node --check scripts/stage-a-custom-transition-proof-v3.mjs
           echo "EXACT_HEAD_GATE=PASS sha=$HEAD_SHA"
           echo "CUSTOM_GEOMETRY_EVIDENCE_INVARIANCE_GATE=PASS source_head=$CUSTOM_GEOMETRY_EVIDENCE_HEAD"
-        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
+        working-directory: ${{ github.workspace }}
       - name: Download exact CUSTOM geometry V5 evidence
         uses: actions/download-artifact@v4
         with:

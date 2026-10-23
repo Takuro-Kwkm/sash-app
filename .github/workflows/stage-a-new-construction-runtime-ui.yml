@@ -43,7 +43,7 @@ jobs:
       - name: Verify runtime maintenance scope and retain predecessor
         if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
         working-directory: ${{ github.workspace }}
-        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV"
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV" --workflow .github/workflows/stage-a-new-construction-runtime-ui.yml
       - name: Exact SHA and discrete-runtime invariance gate
         shell: bash
         run: |

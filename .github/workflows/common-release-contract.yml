@@ -79,7 +79,7 @@ jobs:
       - name: Verify runtime maintenance scope and retain predecessor
         if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
         working-directory: ${{ github.workspace }}
-        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV"
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV" --workflow .github/workflows/common-release-contract.yml
       - name: Verify conditions successor and inspect preserved predecessor
         run: |-
           python3 -B scripts/production/product-conditions-scope.py --predecessor /tmp/product-conditions-predecessor
@@ -89,7 +89,7 @@ jobs:
         env:
           EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
         run: test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
-        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
+        working-directory: ${{ github.workspace }}
       - uses: actions/setup-python@v5
         with:
           python-version: 3.12.14

@@ -69,7 +69,7 @@ jobs:
       - name: Verify runtime maintenance scope and retain predecessor
         if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
         working-directory: ${{ github.workspace }}
-        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV"
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV" --workflow .github/workflows/uchirimo-recovery-pilot.yml
       - name: Setup Node 24
         uses: actions/setup-node@v4
         with:
@@ -79,7 +79,7 @@ jobs:
         working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
       - name: Verify exact HEAD
         run: test "$(git rev-parse HEAD)" = "$HEAD_SHA"
-        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
+        working-directory: ${{ github.workspace }}
       - name: Run one isolated heavy partition to natural completion
         run: node scripts/governance/uchirimo-selector-batch-runner.mjs
         working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
@@ -196,7 +196,7 @@ jobs:
       - name: Verify runtime maintenance scope and retain predecessor
         if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
         working-directory: ${{ github.workspace }}
-        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV"
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV" --workflow .github/workflows/uchirimo-recovery-pilot.yml
       - name: Setup Node 24
         uses: actions/setup-node@v4
         with:
@@ -238,7 +238,7 @@ jobs:
           console.log('UCHIRIMO_RELEASE_ELIGIBILITY='+String(deferred.release_eligibility).toUpperCase());
           NODE
 
-        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
+        working-directory: ${{ github.workspace }}
       - name: Current Release Scope static and regression QA
         shell: bash
         run: |
@@ -533,7 +533,7 @@ jobs:
       - name: Verify runtime maintenance scope and retain predecessor
         if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
         working-directory: ${{ github.workspace }}
-        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV"
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV" --workflow .github/workflows/uchirimo-recovery-pilot.yml
       - name: Setup Node 24
         uses: actions/setup-node@v4
         with:
@@ -699,7 +699,7 @@ jobs:
       - name: Verify runtime maintenance scope and retain predecessor
         if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
         working-directory: ${{ github.workspace }}
-        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV"
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV" --workflow .github/workflows/uchirimo-recovery-pilot.yml
       - name: Detect recovery-analysis source change
         id: changes
         shell: bash
@@ -715,7 +715,7 @@ jobs:
             echo "UCHIRIMO_HEAVY_ANALYSIS_TRIGGER=SKIP_NO_SOURCE_CHANGE"
           fi
 
-        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
+        working-directory: ${{ github.workspace }}
       - name: Setup Node 24
         if: ${{ steps.changes.outputs.required == 'true' }}
         uses: actions/setup-node@v4

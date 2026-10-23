@@ -55,7 +55,7 @@ jobs:
       - name: Verify runtime maintenance scope and retain predecessor
         if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
         working-directory: ${{ github.workspace }}
-        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV"
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV" --workflow .github/workflows/uchirimo-v12-selector-controller.yml
       - uses: actions/setup-node@v4
         with:
           node-version: 24.22.1
@@ -224,7 +224,7 @@ jobs:
       - name: Verify runtime maintenance scope and retain predecessor
         if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
         working-directory: ${{ github.workspace }}
-        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV"
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV" --workflow .github/workflows/uchirimo-v12-selector-controller.yml
       - uses: actions/setup-node@v4
         with:
           node-version: 24.22.1
@@ -278,7 +278,7 @@ jobs:
       - name: Verify runtime maintenance scope and retain predecessor
         if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
         working-directory: ${{ github.workspace }}
-        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV"
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV" --workflow .github/workflows/uchirimo-v12-selector-controller.yml
       - uses: actions/setup-node@v4
         with:
           node-version: 24.22.1
@@ -332,7 +332,7 @@ jobs:
       - name: Verify runtime maintenance scope and retain predecessor
         if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
         working-directory: ${{ github.workspace }}
-        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV"
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV" --workflow .github/workflows/uchirimo-v12-selector-controller.yml
       - uses: actions/setup-node@v4
         with:
           node-version: 24.22.1
@@ -386,7 +386,7 @@ jobs:
       - name: Verify runtime maintenance scope and retain predecessor
         if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
         working-directory: ${{ github.workspace }}
-        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV"
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV" --workflow .github/workflows/uchirimo-v12-selector-controller.yml
       - uses: actions/setup-node@v4
         with:
           node-version: 24.22.1
@@ -440,7 +440,7 @@ jobs:
       - name: Verify runtime maintenance scope and retain predecessor
         if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
         working-directory: ${{ github.workspace }}
-        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV"
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV" --workflow .github/workflows/uchirimo-v12-selector-controller.yml
       - uses: actions/setup-node@v4
         with:
           node-version: 24.22.1
@@ -494,7 +494,7 @@ jobs:
       - name: Verify runtime maintenance scope and retain predecessor
         if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
         working-directory: ${{ github.workspace }}
-        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV"
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV" --workflow .github/workflows/uchirimo-v12-selector-controller.yml
       - uses: actions/setup-node@v4
         with:
           node-version: 24.22.1
@@ -548,7 +548,7 @@ jobs:
       - name: Verify runtime maintenance scope and retain predecessor
         if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
         working-directory: ${{ github.workspace }}
-        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV"
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV" --workflow .github/workflows/uchirimo-v12-selector-controller.yml
       - uses: actions/setup-node@v4
         with:
           node-version: 24.22.1
@@ -602,7 +602,7 @@ jobs:
       - name: Verify runtime maintenance scope and retain predecessor
         if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
         working-directory: ${{ github.workspace }}
-        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV"
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV" --workflow .github/workflows/uchirimo-v12-selector-controller.yml
       - uses: actions/setup-node@v4
         with:
           node-version: 24.22.1
@@ -656,7 +656,7 @@ jobs:
       - name: Verify runtime maintenance scope and retain predecessor
         if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
         working-directory: ${{ github.workspace }}
-        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV"
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV" --workflow .github/workflows/uchirimo-v12-selector-controller.yml
       - uses: actions/setup-node@v4
         with:
           node-version: 24.22.1
@@ -710,7 +710,7 @@ jobs:
       - name: Verify runtime maintenance scope and retain predecessor
         if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
         working-directory: ${{ github.workspace }}
-        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV"
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV" --workflow .github/workflows/uchirimo-v12-selector-controller.yml
       - uses: actions/setup-node@v4
         with:
           node-version: 24.22.1
@@ -764,7 +764,7 @@ jobs:
       - name: Verify runtime maintenance scope and retain predecessor
         if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
         working-directory: ${{ github.workspace }}
-        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV"
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV" --workflow .github/workflows/uchirimo-v12-selector-controller.yml
       - uses: actions/setup-node@v4
         with:
           node-version: 24.22.1
@@ -818,7 +818,7 @@ jobs:
       - name: Verify runtime maintenance scope and retain predecessor
         if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
         working-directory: ${{ github.workspace }}
-        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV"
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV" --workflow .github/workflows/uchirimo-v12-selector-controller.yml
       - uses: actions/setup-node@v4
         with:
           node-version: 24.22.1
@@ -872,7 +872,7 @@ jobs:
       - name: Verify runtime maintenance scope and retain predecessor
         if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
         working-directory: ${{ github.workspace }}
-        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV"
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV" --workflow .github/workflows/uchirimo-v12-selector-controller.yml
       - uses: actions/setup-node@v4
         with:
           node-version: 24.22.1
@@ -926,7 +926,7 @@ jobs:
       - name: Verify runtime maintenance scope and retain predecessor
         if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
         working-directory: ${{ github.workspace }}
-        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV"
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV" --workflow .github/workflows/uchirimo-v12-selector-controller.yml
       - uses: actions/setup-node@v4
         with:
           node-version: 24.22.1
@@ -980,7 +980,7 @@ jobs:
       - name: Verify runtime maintenance scope and retain predecessor
         if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
         working-directory: ${{ github.workspace }}
-        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV"
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV" --workflow .github/workflows/uchirimo-v12-selector-controller.yml
       - uses: actions/setup-node@v4
         with:
           node-version: 24.22.1
@@ -1034,7 +1034,7 @@ jobs:
       - name: Verify runtime maintenance scope and retain predecessor
         if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
         working-directory: ${{ github.workspace }}
-        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV"
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV" --workflow .github/workflows/uchirimo-v12-selector-controller.yml
       - uses: actions/setup-node@v4
         with:
           node-version: 24.22.1
@@ -1098,7 +1098,7 @@ jobs:
       - name: Verify runtime maintenance scope and retain predecessor
         if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
         working-directory: ${{ github.workspace }}
-        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV"
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV" --workflow .github/workflows/uchirimo-v12-selector-controller.yml
       - uses: actions/setup-node@v4
         with:
           node-version: 24.22.1
@@ -1111,7 +1111,7 @@ jobs:
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$HEAD_SHA"
           node scripts/governance/uchirimo-selector-batch-runner.mjs
-        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
+        working-directory: ${{ github.workspace }}
       - name: Upload batch evidence
         if: ${{ always() && matrix.skip != true }}
         uses: actions/upload-artifact@v4
@@ -1149,7 +1149,7 @@ jobs:
       - name: Verify runtime maintenance scope and retain predecessor
         if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
         working-directory: ${{ github.workspace }}
-        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV"
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV" --workflow .github/workflows/uchirimo-v12-selector-controller.yml
       - uses: actions/setup-node@v4
         with:
           node-version: 24.22.1
@@ -1162,7 +1162,7 @@ jobs:
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$HEAD_SHA"
           node scripts/governance/uchirimo-selector-batch-runner.mjs
-        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
+        working-directory: ${{ github.workspace }}
       - name: Upload batch evidence
         if: ${{ always() && matrix.skip != true }}
         uses: actions/upload-artifact@v4
@@ -1200,7 +1200,7 @@ jobs:
       - name: Verify runtime maintenance scope and retain predecessor
         if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
         working-directory: ${{ github.workspace }}
-        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV"
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV" --workflow .github/workflows/uchirimo-v12-selector-controller.yml
       - uses: actions/setup-node@v4
         with:
           node-version: 24.22.1
@@ -1213,7 +1213,7 @@ jobs:
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$HEAD_SHA"
           node scripts/governance/uchirimo-selector-batch-runner.mjs
-        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
+        working-directory: ${{ github.workspace }}
       - name: Upload batch evidence
         if: ${{ always() && matrix.skip != true }}
         uses: actions/upload-artifact@v4
@@ -1251,7 +1251,7 @@ jobs:
       - name: Verify runtime maintenance scope and retain predecessor
         if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
         working-directory: ${{ github.workspace }}
-        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV"
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV" --workflow .github/workflows/uchirimo-v12-selector-controller.yml
       - uses: actions/setup-node@v4
         with:
           node-version: 24.22.1
@@ -1264,7 +1264,7 @@ jobs:
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$HEAD_SHA"
           node scripts/governance/uchirimo-selector-batch-runner.mjs
-        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
+        working-directory: ${{ github.workspace }}
       - name: Upload batch evidence
         if: ${{ always() && matrix.skip != true }}
         uses: actions/upload-artifact@v4
@@ -1302,7 +1302,7 @@ jobs:
       - name: Verify runtime maintenance scope and retain predecessor
         if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
         working-directory: ${{ github.workspace }}
-        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV"
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV" --workflow .github/workflows/uchirimo-v12-selector-controller.yml
       - uses: actions/setup-node@v4
         with:
           node-version: 24.22.1
@@ -1315,7 +1315,7 @@ jobs:
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$HEAD_SHA"
           node scripts/governance/uchirimo-selector-batch-runner.mjs
-        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
+        working-directory: ${{ github.workspace }}
       - name: Upload batch evidence
         if: ${{ always() && matrix.skip != true }}
         uses: actions/upload-artifact@v4
@@ -1353,7 +1353,7 @@ jobs:
       - name: Verify runtime maintenance scope and retain predecessor
         if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
         working-directory: ${{ github.workspace }}
-        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV"
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV" --workflow .github/workflows/uchirimo-v12-selector-controller.yml
       - uses: actions/setup-node@v4
         with:
           node-version: 24.22.1
@@ -1366,7 +1366,7 @@ jobs:
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$HEAD_SHA"
           node scripts/governance/uchirimo-selector-batch-runner.mjs
-        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
+        working-directory: ${{ github.workspace }}
       - name: Upload batch evidence
         if: ${{ always() && matrix.skip != true }}
         uses: actions/upload-artifact@v4
@@ -1404,7 +1404,7 @@ jobs:
       - name: Verify runtime maintenance scope and retain predecessor
         if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
         working-directory: ${{ github.workspace }}
-        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV"
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV" --workflow .github/workflows/uchirimo-v12-selector-controller.yml
       - uses: actions/setup-node@v4
         with:
           node-version: 24.22.1
@@ -1417,7 +1417,7 @@ jobs:
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$HEAD_SHA"
           node scripts/governance/uchirimo-selector-batch-runner.mjs
-        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
+        working-directory: ${{ github.workspace }}
       - name: Upload batch evidence
         if: ${{ always() && matrix.skip != true }}
         uses: actions/upload-artifact@v4
@@ -1455,7 +1455,7 @@ jobs:
       - name: Verify runtime maintenance scope and retain predecessor
         if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
         working-directory: ${{ github.workspace }}
-        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV"
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV" --workflow .github/workflows/uchirimo-v12-selector-controller.yml
       - uses: actions/setup-node@v4
         with:
           node-version: 24.22.1
@@ -1468,7 +1468,7 @@ jobs:
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$HEAD_SHA"
           node scripts/governance/uchirimo-selector-batch-runner.mjs
-        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
+        working-directory: ${{ github.workspace }}
       - name: Upload batch evidence
         if: ${{ always() && matrix.skip != true }}
         uses: actions/upload-artifact@v4
@@ -1506,7 +1506,7 @@ jobs:
       - name: Verify runtime maintenance scope and retain predecessor
         if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
         working-directory: ${{ github.workspace }}
-        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV"
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV" --workflow .github/workflows/uchirimo-v12-selector-controller.yml
       - uses: actions/setup-node@v4
         with:
           node-version: 24.22.1
@@ -1519,7 +1519,7 @@ jobs:
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$HEAD_SHA"
           node scripts/governance/uchirimo-selector-batch-runner.mjs
-        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
+        working-directory: ${{ github.workspace }}
       - name: Upload batch evidence
         if: ${{ always() && matrix.skip != true }}
         uses: actions/upload-artifact@v4
@@ -1557,7 +1557,7 @@ jobs:
       - name: Verify runtime maintenance scope and retain predecessor
         if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
         working-directory: ${{ github.workspace }}
-        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV"
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV" --workflow .github/workflows/uchirimo-v12-selector-controller.yml
       - uses: actions/setup-node@v4
         with:
           node-version: 24.22.1
@@ -1570,7 +1570,7 @@ jobs:
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$HEAD_SHA"
           node scripts/governance/uchirimo-selector-batch-runner.mjs
-        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
+        working-directory: ${{ github.workspace }}
       - name: Upload batch evidence
         if: ${{ always() && matrix.skip != true }}
         uses: actions/upload-artifact@v4
@@ -1608,7 +1608,7 @@ jobs:
       - name: Verify runtime maintenance scope and retain predecessor
         if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
         working-directory: ${{ github.workspace }}
-        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV"
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV" --workflow .github/workflows/uchirimo-v12-selector-controller.yml
       - uses: actions/setup-node@v4
         with:
           node-version: 24.22.1
@@ -1621,7 +1621,7 @@ jobs:
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$HEAD_SHA"
           node scripts/governance/uchirimo-selector-batch-runner.mjs
-        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
+        working-directory: ${{ github.workspace }}
       - name: Upload batch evidence
         if: ${{ always() && matrix.skip != true }}
         uses: actions/upload-artifact@v4
@@ -1659,7 +1659,7 @@ jobs:
       - name: Verify runtime maintenance scope and retain predecessor
         if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
         working-directory: ${{ github.workspace }}
-        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV"
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV" --workflow .github/workflows/uchirimo-v12-selector-controller.yml
       - uses: actions/setup-node@v4
         with:
           node-version: 24.22.1
@@ -1672,7 +1672,7 @@ jobs:
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$HEAD_SHA"
           node scripts/governance/uchirimo-selector-batch-runner.mjs
-        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
+        working-directory: ${{ github.workspace }}
       - name: Upload batch evidence
         if: ${{ always() && matrix.skip != true }}
         uses: actions/upload-artifact@v4
@@ -1710,7 +1710,7 @@ jobs:
       - name: Verify runtime maintenance scope and retain predecessor
         if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
         working-directory: ${{ github.workspace }}
-        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV"
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV" --workflow .github/workflows/uchirimo-v12-selector-controller.yml
       - uses: actions/setup-node@v4
         with:
           node-version: 24.22.1
@@ -1723,7 +1723,7 @@ jobs:
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$HEAD_SHA"
           node scripts/governance/uchirimo-selector-batch-runner.mjs
-        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
+        working-directory: ${{ github.workspace }}
       - name: Upload batch evidence
         if: ${{ always() && matrix.skip != true }}
         uses: actions/upload-artifact@v4
@@ -1761,7 +1761,7 @@ jobs:
       - name: Verify runtime maintenance scope and retain predecessor
         if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
         working-directory: ${{ github.workspace }}
-        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV"
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV" --workflow .github/workflows/uchirimo-v12-selector-controller.yml
       - uses: actions/setup-node@v4
         with:
           node-version: 24.22.1
@@ -1774,7 +1774,7 @@ jobs:
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$HEAD_SHA"
           node scripts/governance/uchirimo-selector-batch-runner.mjs
-        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
+        working-directory: ${{ github.workspace }}
       - name: Upload batch evidence
         if: ${{ always() && matrix.skip != true }}
         uses: actions/upload-artifact@v4
@@ -1812,7 +1812,7 @@ jobs:
       - name: Verify runtime maintenance scope and retain predecessor
         if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
         working-directory: ${{ github.workspace }}
-        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV"
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV" --workflow .github/workflows/uchirimo-v12-selector-controller.yml
       - uses: actions/setup-node@v4
         with:
           node-version: 24.22.1
@@ -1825,7 +1825,7 @@ jobs:
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$HEAD_SHA"
           node scripts/governance/uchirimo-selector-batch-runner.mjs
-        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
+        working-directory: ${{ github.workspace }}
       - name: Upload batch evidence
         if: ${{ always() && matrix.skip != true }}
         uses: actions/upload-artifact@v4
@@ -1863,7 +1863,7 @@ jobs:
       - name: Verify runtime maintenance scope and retain predecessor
         if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
         working-directory: ${{ github.workspace }}
-        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV"
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV" --workflow .github/workflows/uchirimo-v12-selector-controller.yml
       - uses: actions/setup-node@v4
         with:
           node-version: 24.22.1
@@ -1876,7 +1876,7 @@ jobs:
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$HEAD_SHA"
           node scripts/governance/uchirimo-selector-batch-runner.mjs
-        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
+        working-directory: ${{ github.workspace }}
       - name: Upload batch evidence
         if: ${{ always() && matrix.skip != true }}
         uses: actions/upload-artifact@v4
@@ -1903,7 +1903,7 @@ jobs:
       - name: Verify runtime maintenance scope and retain predecessor
         if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
         working-directory: ${{ github.workspace }}
-        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV"
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV" --workflow .github/workflows/uchirimo-v12-selector-controller.yml
       - uses: actions/setup-node@v4
         with:
           node-version: 24.22.1
@@ -2032,7 +2032,7 @@ jobs:
       - name: Verify runtime maintenance scope and retain predecessor
         if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
         working-directory: ${{ github.workspace }}
-        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV"
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV" --workflow .github/workflows/uchirimo-v12-selector-controller.yml
       - uses: actions/setup-node@v4
         with:
           node-version: 24.22.1

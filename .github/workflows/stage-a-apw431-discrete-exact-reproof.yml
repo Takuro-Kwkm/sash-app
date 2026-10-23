@@ -41,7 +41,7 @@ jobs:
       - name: Verify runtime maintenance scope and retain predecessor
         if: hashFiles('contracts/production/authority-successors/node-security.20261021.json') != ''
         working-directory: ${{ github.workspace }}
-        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV"
+        run: python3 -B scripts/production/node-security.py prepare --github-env "$GITHUB_ENV" --workflow .github/workflows/stage-a-apw431-discrete-exact-reproof.yml
       - uses: actions/setup-node@v4
         with:
           node-version: 24.22.1
@@ -58,7 +58,7 @@ jobs:
           node --check scripts/stage-a-resolver-derived-contract-v2-pilot.mjs
           echo "APW431_DISCRETE_REPROOF_INVALIDATION_GATE=PASS changed=$changed"
 
-        working-directory: ${{ env.NODE_SECURITY_PREDECESSOR || github.workspace }}
+        working-directory: ${{ github.workspace }}
       - name: Reprove six APW431 windows exactly
         shell: bash
         run: |

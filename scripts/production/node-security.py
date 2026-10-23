@@ -55,19 +55,34 @@ def validate(root=ROOT, retained=True):
         return value
 
 
-def prepare(github_env, root=ROOT):
+def prepare(github_env, root=ROOT, workflow=None):
     result = validate(root, retained=False)
+    commit = result['predecessor_native_commit']
+    # These completed product checks predate later infrastructure successors.
+    # Their immutable inputs are replayed at their original accepted snapshots.
+    if result['repository'] == 'Takuro-Kwkm/sash-app' and workflow == '.github/workflows/window-seven-contracts.yml':
+        commit = '0758307d44ce8c831e4b023b97bf7cc553737c66'
+        subprocess.run(['git', 'diff', '--exit-code', commit, result['predecessor_native_commit'], '--',
+                        'contracts/window-seven/', 'scripts/contracts/'], cwd=root, check=True, capture_output=True)
+    elif result['repository'] == 'Takuro-Kwkm/exterior-estimator' and workflow in (
+            '.github/workflows/sw-selection-order.yml', '.github/workflows/sw-screen-stage09.yml'):
+        record = json.loads((Path(root) / 'contracts/production/authority-successors/exterior-verification.v30.json').read_bytes())
+        commit = 'fd9bdc8191cab04199ebb8dc146536ce05064643'
+        if record['predecessor_native_commit'] != commit:
+            raise ValueError('NODE_SECURITY_HISTORICAL_PRODUCT_IDENTITY')
+    subprocess.run(['git', 'merge-base', '--is-ancestor', commit, result['predecessor_native_commit']], cwd=root, check=True, capture_output=True)
     area = Path(tempfile.mkdtemp(prefix='node-security-predecessor-', dir=os.environ.get('RUNNER_TEMP')))
     prior = area / 'native'
     subprocess.run(['git', 'clone', '--quiet', '--no-local', str(root), str(prior)], check=True, capture_output=True)
     origin = subprocess.check_output(['git', 'remote', 'get-url', 'origin'], cwd=root, text=True).strip()
     subprocess.run(['git', 'remote', 'set-url', 'origin', origin], cwd=prior, check=True, capture_output=True)
-    subprocess.run(['git', 'checkout', '--quiet', '--detach', result['predecessor_native_commit']], cwd=prior, check=True, capture_output=True)
-    if subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=prior, text=True).strip() != result['predecessor_native_commit']:
+    subprocess.run(['git', 'checkout', '--quiet', '--detach', commit], cwd=prior, check=True, capture_output=True)
+    if subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=prior, text=True).strip() != commit:
         raise ValueError('NODE_SECURITY_PREDECESSOR_IDENTITY')
     with Path(github_env).open('a') as output:
         output.write('NODE_SECURITY_PREDECESSOR=' + str(prior) + '\n')
-    return {**result, 'predecessor_checkout': str(prior), 'current_qa': 'REQUIRED_SEPARATELY'}
+        output.write('NODE_SECURITY_PREDECESSOR_COMMIT=' + commit + '\n')
+    return {**result, 'predecessor_checkout': str(prior), 'historical_workflow_commit': commit, 'current_qa': 'REQUIRED_SEPARATELY'}
 
 
 def main():
@@ -75,6 +90,7 @@ def main():
     parser.add_argument('command', choices=('unpack', 'validate', 'prepare'))
     parser.add_argument('destination', nargs='?')
     parser.add_argument('--github-env')
+    parser.add_argument('--workflow')
     args = parser.parse_args()
     try:
         if args.command == 'unpack':
@@ -84,7 +100,7 @@ def main():
         elif args.command == 'prepare':
             if not args.github_env:
                 raise ValueError('NODE_SECURITY_GITHUB_ENV_REQUIRED')
-            result = prepare(args.github_env)
+            result = prepare(args.github_env, workflow=args.workflow)
         else:
             result = validate()
         print(json.dumps({key: value for key, value in result.items() if key != 'shared_semantic_hashes'}))
